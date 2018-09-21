@@ -7,15 +7,17 @@ import (
 	"github.com/haproxytech/models"
 )
 
-func (self *LBCTLConfigurationClient) GetListeners(frontend string) (*models.GetListenersOKBody, error) {
-	listenersString, err := self.executeLBCTL("l7-listener-dump", "", frontend)
+// GetListeners returns a struct with configuration version and an array of
+// configured listeners in the specified frontend. Returns error on fail.
+func (c *LBCTLConfigurationClient) GetListeners(frontend string) (*models.GetListenersOKBody, error) {
+	listenersString, err := c.executeLBCTL("l7-listener-dump", "", frontend)
 	if err != nil {
 		return nil, err
 	}
 
-	listeners := self.parseListeners(listenersString)
+	listeners := c.parseListeners(listenersString)
 
-	v, err := self.GetVersion()
+	v, err := c.GetVersion()
 	if err != nil {
 		return nil, err
 	}
@@ -23,16 +25,18 @@ func (self *LBCTLConfigurationClient) GetListeners(frontend string) (*models.Get
 	return &models.GetListenersOKBody{Version: v, Data: listeners}, nil
 }
 
-func (self *LBCTLConfigurationClient) GetListener(name string, frontend string) (*models.GetListenerOKBody, error) {
-	listenerStr, err := self.executeLBCTL("l7-listener-show", "", frontend, name)
+// GetListener returns a struct with configuration version and a requested listener
+// in the specified frontend. Returns error on fail or if listener does not exist.
+func (c *LBCTLConfigurationClient) GetListener(name string, frontend string) (*models.GetListenerOKBody, error) {
+	listenerStr, err := c.executeLBCTL("l7-listener-show", "", frontend, name)
 	if err != nil {
 		return nil, err
 	}
 	listener := &models.Listener{Name: name}
 
-	self.parseObject(listenerStr, listener)
+	c.parseObject(listenerStr, listener)
 
-	v, err := self.GetVersion()
+	v, err := c.GetVersion()
 	if err != nil {
 		return nil, err
 	}
@@ -40,32 +44,38 @@ func (self *LBCTLConfigurationClient) GetListener(name string, frontend string) 
 	return &models.GetListenerOKBody{Version: v, Data: listener}, nil
 }
 
-func (self *LBCTLConfigurationClient) DeleteListener(name string, frontend string, transactionID string, version int64) error {
-	return self.deleteObject(name, "listener", frontend, "", transactionID, version)
+// DeleteListener deletes a listener in configuration. One of version or transactionID is
+// mandatory. Returns error on fail, nil on success.
+func (c *LBCTLConfigurationClient) DeleteListener(name string, frontend string, transactionID string, version int64) error {
+	return c.deleteObject(name, "listener", frontend, "", transactionID, version)
 }
 
-func (self *LBCTLConfigurationClient) CreateListener(frontend string, data *models.Listener, transactionID string, version int64) error {
+// CreateListener creates a listener in configuration. One of version or transactionID is
+// mandatory. Returns error on fail, nil on success.
+func (c *LBCTLConfigurationClient) CreateListener(frontend string, data *models.Listener, transactionID string, version int64) error {
 	validationErr := data.Validate(strfmt.Default)
 	if validationErr != nil {
 		return validationErr
 	}
-	return self.createObject(data.Name, "listener", frontend, "", data, nil, transactionID, version)
+	return c.createObject(data.Name, "listener", frontend, "", data, nil, transactionID, version)
 }
 
-func (self *LBCTLConfigurationClient) EditListener(name string, frontend string, data *models.Listener, transactionID string, version int64) error {
+// EditListener edits a listener in configuration. One of version or transactionID is
+// mandatory. Returns error on fail, nil on success.
+func (c *LBCTLConfigurationClient) EditListener(name string, frontend string, data *models.Listener, transactionID string, version int64) error {
 	validationErr := data.Validate(strfmt.Default)
 	if validationErr != nil {
 		return validationErr
 	}
-	ondiskLst, err := self.GetListener(name, frontend)
+	ondiskLst, err := c.GetListener(name, frontend)
 	if err != nil {
 		return err
 	}
 
-	return self.editObject(name, "listener", frontend, "", data, ondiskLst.Data, nil, transactionID, version)
+	return c.editObject(name, "listener", frontend, "", data, ondiskLst.Data, nil, transactionID, version)
 }
 
-func (self *LBCTLConfigurationClient) parseListeners(response string) models.Listeners {
+func (c *LBCTLConfigurationClient) parseListeners(response string) models.Listeners {
 	listeners := make(models.Listeners, 0, 1)
 	for _, listenerStr := range strings.Split(response, "\n\n") {
 		if strings.TrimSpace(listenerStr) == "" {
@@ -74,7 +84,7 @@ func (self *LBCTLConfigurationClient) parseListeners(response string) models.Lis
 		name, _ := splitHeaderLine(listenerStr)
 
 		listenerObj := &models.Listener{Name: name}
-		self.parseObject(listenerStr, listenerObj)
+		c.parseObject(listenerStr, listenerObj)
 		listeners = append(listeners, listenerObj)
 	}
 	return listeners

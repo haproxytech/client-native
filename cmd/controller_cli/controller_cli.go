@@ -7,7 +7,6 @@ import (
 	"github.com/haproxytech/client-native/configuration"
 	"github.com/haproxytech/client-native/stats"
 	_ "github.com/haproxytech/models"
-
 )
 
 func main() {
@@ -18,12 +17,12 @@ func main() {
 
 	b, err := client.Configuration.GetBackends()
 
-	bJson, err := b.MarshalBinary()
+	bJSON, err := b.MarshalBinary()
 
-	if err != nil{
+	if err != nil {
 		fmt.Println(err)
 	}
 
-	fmt.Println("Backends: \n" + string(bJson) + "\n")
+	fmt.Println("Backends: \n" + string(bJSON) + "\n")
 
 }

@@ -4,20 +4,23 @@ import (
 	"github.com/haproxytech/models"
 )
 
-type ConfigurationClientParams struct {
+// ClientParams is just a placeholder for all client options
+type ClientParams struct {
 	configurationFile string
 }
 
 // NewConfigurationClientParams creates a new configuration client.
-func NewConfigurationClientParams(configurationFile string) *ConfigurationClientParams {
-	return &ConfigurationClientParams{configurationFile: configurationFile}
+func NewConfigurationClientParams(configurationFile string) *ClientParams {
+	return &ClientParams{configurationFile: configurationFile}
 }
 
 // ConfigurationFile changes the configuration file on the client
-func (self *ConfigurationClientParams) ConfigurationFile() string {
-	return self.configurationFile
+func (c *ClientParams) ConfigurationFile() string {
+	return c.configurationFile
 }
 
+// Client interface is the interface used for managing HAProxy configuration
+// file.
 type Client interface {
 	//transaction methods
 	GetTransactions(status string) (*models.Transactions, error)

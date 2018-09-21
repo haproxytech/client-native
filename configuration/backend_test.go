@@ -82,13 +82,13 @@ func TestGetBackends(t *testing.T) {
 		}
 	}
 
-	bJson, err := backends.MarshalBinary()
+	bJSON, err := backends.MarshalBinary()
 	if err != nil {
 		t.Error(err.Error())
 	}
 
 	if !t.Failed() {
-		fmt.Println("GetBackends succesful\nResponse: \n" + string(bJson) + "\n")
+		fmt.Println("GetBackends succesful\nResponse: \n" + string(bJSON) + "\n")
 	}
 }
 
@@ -162,7 +162,7 @@ func TestGetBackend(t *testing.T) {
 		t.Errorf("%v: ServerInactivityTimeout not 3: %v", b.Name, *b.ServerInactivityTimeout)
 	}
 
-	bJson, err := b.MarshalBinary()
+	bJSON, err := b.MarshalBinary()
 	if err != nil {
 		t.Error(err.Error())
 	}
@@ -173,7 +173,7 @@ func TestGetBackend(t *testing.T) {
 	}
 
 	if !t.Failed() {
-		fmt.Println("GetBackend succesful\nResponse: \n" + string(bJson) + "\n")
+		fmt.Println("GetBackend succesful\nResponse: \n" + string(bJSON) + "\n")
 	}
 }
 

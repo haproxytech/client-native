@@ -7,10 +7,13 @@ import (
 	"github.com/haproxytech/client-native/stats"
 )
 
-// default log function is from the stdlib
+// LogFunc - default log function is from the stdlib
 var LogFunc func(string, ...interface{}) = log.Printf
+
+// Default HAProxyClient using sane defaults
 var Default = New(nil, nil)
 
+// New HAProxyClient constructor
 func New(configurationClient configuration.Client, statsClient stats.Client) *HAProxyClient {
 	client := new(HAProxyClient)
 
@@ -28,6 +31,7 @@ func New(configurationClient configuration.Client, statsClient stats.Client) *HA
 	return client
 }
 
+// HAProxyClient Native client for managing configuration and spitting out HAProxy stats
 type HAProxyClient struct {
 	Configuration configuration.Client
 	Stats         stats.Client

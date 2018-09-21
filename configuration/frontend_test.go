@@ -61,13 +61,13 @@ func TestGetFrontends(t *testing.T) {
 		}
 	}
 
-	fJson, err := frontends.MarshalBinary()
+	fJSON, err := frontends.MarshalBinary()
 	if err != nil {
 		t.Error(err.Error())
 	}
 
 	if !t.Failed() {
-		fmt.Println("GetFrontends succesful\nResponse: \n" + string(fJson) + "\n")
+		fmt.Println("GetFrontends succesful\nResponse: \n" + string(fJSON) + "\n")
 	}
 }
 
@@ -123,7 +123,7 @@ func TestGetFrontend(t *testing.T) {
 		t.Errorf("%v: ClientInactivityTimeout not 4: %v", f.Name, *f.ClientInactivityTimeout)
 	}
 
-	fJson, err := f.MarshalBinary()
+	fJSON, err := f.MarshalBinary()
 	if err != nil {
 		t.Error(err.Error())
 	}
@@ -134,7 +134,7 @@ func TestGetFrontend(t *testing.T) {
 	}
 
 	if !t.Failed() {
-		fmt.Println("GetFrontend succesful\nResponse: \n" + string(fJson) + "\n")
+		fmt.Println("GetFrontend succesful\nResponse: \n" + string(fJSON) + "\n")
 	}
 }
 

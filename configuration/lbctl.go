@@ -15,27 +15,33 @@ import (
 	"github.com/haproxytech/client-native/misc"
 )
 
+// LBCTLError Custom error implementation for executing lbctl
 type LBCTLError struct {
 	msg    string
 	stderr string
 	cmd    string
 }
 
-func (self *LBCTLError) Error() string {
-	return fmt.Sprintf("Error executing: %s, %s. Output: %s", self.cmd, self.msg, self.stderr)
+// Error implementation for error
+func (c *LBCTLError) Error() string {
+	return fmt.Sprintf("Error executing: %s, %s. Output: %s", c.cmd, c.msg, c.stderr)
 }
 
+// LBCTLConfigurationClient configuration.Client implementation using lbctl
 type LBCTLConfigurationClient struct {
-	*ConfigurationClientParams
+	*ClientParams
 	LBCTLPath    string
 	LBCTLTmpPath string
 }
 
 const (
-	DefaultLBCTLPath    string = "/usr/sbin/lbctl"
+	// DefaultLBCTLPath sane default for path to lbctl
+	DefaultLBCTLPath string = "/usr/sbin/lbctl"
+	// DefaultLBCTLTmpPath sane default for path for lbctl transactions
 	DefaultLBCTLTmpPath string = "/tmp/lbctl"
 )
 
+// NewLBCTLClient constructor
 func NewLBCTLClient(configurationFile string, LBCTLPath string, LBCTLTmpPath string) *LBCTLConfigurationClient {
 	if LBCTLPath == "" {
 		LBCTLPath = DefaultLBCTLPath
@@ -48,11 +54,12 @@ func NewLBCTLClient(configurationFile string, LBCTLPath string, LBCTLTmpPath str
 	return &LBCTLConfigurationClient{NewConfigurationClientParams(configurationFile), LBCTLPath, LBCTLTmpPath}
 }
 
+// DefaultLBCTLClient returns LBCTLConfigurationClient with sane defaults
 func DefaultLBCTLClient() *LBCTLConfigurationClient {
 	return NewLBCTLClient("", "", "")
 }
 
-func (self *LBCTLConfigurationClient) executeLBCTL(command string, transaction string, args ...string) (string, error) {
+func (c *LBCTLConfigurationClient) executeLBCTL(command string, transaction string, args ...string) (string, error) {
 	// fmt.Println("executeLBCTL: command:" + command)
 	// fmt.Println("executeLBCTL: transaction:" + transaction)
 	// fmt.Printf("executeLBCTL: args: %v \n", args)
@@ -65,15 +72,16 @@ func (self *LBCTLConfigurationClient) executeLBCTL(command string, transaction s
 	}
 	lbctlArgs = append(lbctlArgs, args...)
 
-	cmd := exec.Command(self.LBCTLPath, lbctlArgs...)
-	if self.ConfigurationFile() != "" {
+	cmd := exec.Command(c.LBCTLPath, lbctlArgs...)
+	if c.ConfigurationFile() != "" {
 		cmd.Env = os.Environ()
-		cmd.Env = append(cmd.Env, "LBCTL_L7_HAPROXY_CONFIG="+self.ConfigurationFile())
+		cmd.Env = append(cmd.Env, "LBCTL_L7_HAPROXY_CONFIG="+c.ConfigurationFile())
+		cmd.Env = append(cmd.Env, "LBCTL_MODULES=l7")
 	}
 
-	if self.LBCTLTmpPath == "" {
+	if c.LBCTLTmpPath == "" {
 		cmd.Env = os.Environ()
-		cmd.Env = append(cmd.Env, "LBCTL_TRANS_DIR="+self.LBCTLTmpPath)
+		cmd.Env = append(cmd.Env, "LBCTL_TRANS_DIR="+c.LBCTLTmpPath)
 	}
 	var stdout, stderr bytes.Buffer
 	cmd.Stdout = &stdout
@@ -86,7 +94,7 @@ func (self *LBCTLConfigurationClient) executeLBCTL(command string, transaction s
 			if strings.Contains(output, "Transaction "+transaction+", not found") {
 				return "", ErrTransactionNotFound
 			} else if strings.HasSuffix(output, "does not exist") {
-				return "", ErrNotExists
+				return "", ErrObjectDoesNotExist
 			}
 		}
 		return "", &LBCTLError{err.Error(), output, cmd.Path}
@@ -95,10 +103,10 @@ func (self *LBCTLConfigurationClient) executeLBCTL(command string, transaction s
 	return string(stdout.Bytes()), nil
 }
 
-func (self *LBCTLConfigurationClient) createObject(name string, objType string, parent string, parentType string, data interface{}, skipFields []string, transactionID string, version int64) error {
+func (c *LBCTLConfigurationClient) createObject(name string, objType string, parent string, parentType string, data interface{}, skipFields []string, transactionID string, version int64) error {
 	var args []string
 
-	t, err := self.checkTransactionOrVersion(transactionID, version, false)
+	t, err := c.checkTransactionOrVersion(transactionID, version, false)
 	if err != nil {
 		return err
 	}
@@ -115,15 +123,15 @@ func (self *LBCTLConfigurationClient) createObject(name string, objType string, 
 
 	cmd = cmd + objType + "-create"
 	args = append(args, name)
-	args = append(args, self.serializeObject(data, nil, skipFields)...)
+	args = append(args, c.serializeObject(data, nil, skipFields)...)
 
-	_, err = self.executeLBCTL(cmd, t, args...)
+	_, err = c.executeLBCTL(cmd, t, args...)
 	if err != nil {
 		return err
 	}
 
 	if t == "" {
-		err = self.incrementVersion()
+		err = c.incrementVersion()
 		if err != nil {
 			return err
 		}
@@ -131,10 +139,10 @@ func (self *LBCTLConfigurationClient) createObject(name string, objType string, 
 	return nil
 }
 
-func (self *LBCTLConfigurationClient) editObject(name string, objType string, parent string, parentType string, data interface{}, ondisk interface{}, skipFields []string, transactionID string, version int64) error {
+func (c *LBCTLConfigurationClient) editObject(name string, objType string, parent string, parentType string, data interface{}, ondisk interface{}, skipFields []string, transactionID string, version int64) error {
 	var args []string
 
-	t, err := self.checkTransactionOrVersion(transactionID, version, false)
+	t, err := c.checkTransactionOrVersion(transactionID, version, false)
 	if err != nil {
 		return err
 	}
@@ -151,14 +159,14 @@ func (self *LBCTLConfigurationClient) editObject(name string, objType string, pa
 
 	cmd = cmd + objType + "-update"
 	args = append(args, name)
-	args = append(args, self.serializeObject(data, ondisk, skipFields)...)
+	args = append(args, c.serializeObject(data, ondisk, skipFields)...)
 
-	_, err = self.executeLBCTL(cmd, t, args...)
+	_, err = c.executeLBCTL(cmd, t, args...)
 	if err != nil {
 		return err
 	}
 	if t == "" {
-		err = self.incrementVersion()
+		err = c.incrementVersion()
 		if err != nil {
 			return err
 		}
@@ -166,10 +174,10 @@ func (self *LBCTLConfigurationClient) editObject(name string, objType string, pa
 	return nil
 }
 
-func (self *LBCTLConfigurationClient) deleteObject(name string, objType string, parent string, parentType string, transactionID string, version int64) error {
+func (c *LBCTLConfigurationClient) deleteObject(name string, objType string, parent string, parentType string, transactionID string, version int64) error {
 	args := make([]string, 0, 1)
 
-	t, err := self.checkTransactionOrVersion(transactionID, version, false)
+	t, err := c.checkTransactionOrVersion(transactionID, version, false)
 	if err != nil {
 		return err
 	}
@@ -186,12 +194,12 @@ func (self *LBCTLConfigurationClient) deleteObject(name string, objType string, 
 	cmd = cmd + objType + "-delete"
 	args = append(args, name)
 
-	_, err = self.executeLBCTL(cmd, t, args...)
+	_, err = c.executeLBCTL(cmd, t, args...)
 	if err != nil {
 		return err
 	}
 	if t == "" {
-		err = self.incrementVersion()
+		err = c.incrementVersion()
 		if err != nil {
 			return err
 		}
@@ -199,8 +207,9 @@ func (self *LBCTLConfigurationClient) deleteObject(name string, objType string, 
 	return nil
 }
 
-func (self *LBCTLConfigurationClient) GetVersion() (int64, error) {
-	file, err := os.Open(self.ConfigurationFile())
+// GetVersion returns configuration file version
+func (c *LBCTLConfigurationClient) GetVersion() (int64, error) {
+	file, err := os.Open(c.ConfigurationFile())
 	if err != nil {
 		return 0, ErrCannotReadConfFile
 	}
@@ -228,7 +237,7 @@ func (self *LBCTLConfigurationClient) GetVersion() (int64, error) {
 	return 0, ErrCannotReadVersion
 }
 
-func (self *LBCTLConfigurationClient) parseObject(str string, obj interface{}) {
+func (c *LBCTLConfigurationClient) parseObject(str string, obj interface{}) {
 	objValue := reflect.ValueOf(obj).Elem()
 	for _, line := range strings.Split(str, "\n") {
 		if strings.TrimSpace(line) == "" {
@@ -275,7 +284,7 @@ func (self *LBCTLConfigurationClient) parseObject(str string, obj interface{}) {
 	}
 }
 
-func (self *LBCTLConfigurationClient) serializeObject(obj interface{}, ondisk interface{}, skipFields []string) []string {
+func (c *LBCTLConfigurationClient) serializeObject(obj interface{}, ondisk interface{}, skipFields []string) []string {
 	var argsArr []string
 	objValue := reflect.ValueOf(obj).Elem()
 	for i := 0; i < objValue.NumField(); i++ {
@@ -347,7 +356,7 @@ func (self *LBCTLConfigurationClient) serializeObject(obj interface{}, ondisk in
 	return argsArr
 }
 
-func (self *LBCTLConfigurationClient) checkTransactionOrVersion(transactionID string, version int64, startTransaction bool) (string, error) {
+func (c *LBCTLConfigurationClient) checkTransactionOrVersion(transactionID string, version int64, startTransaction bool) (string, error) {
 	// start an implicit transaction for delete site (multiple operations required) if not already given
 	t := ""
 	if transactionID != "" && version != 0 {
@@ -357,12 +366,12 @@ func (self *LBCTLConfigurationClient) checkTransactionOrVersion(transactionID st
 	} else if transactionID != "" {
 		t = transactionID
 	} else {
-		v, _ := self.GetVersion()
+		v, _ := c.GetVersion()
 		if version != v {
 			return "", ErrVersionMismatch
 		}
 		if startTransaction {
-			transaction, err := self.StartTransaction(version)
+			transaction, err := c.StartTransaction(version)
 			if err != nil {
 				return "", err
 			}
@@ -386,14 +395,14 @@ func splitHeaderLine(obj string) (name string, parent string) {
 	return headerSpl[1], headerSpl[3]
 }
 
-func (self *LBCTLConfigurationClient) incrementVersion() error {
-	input, err := ioutil.ReadFile(self.ConfigurationFile())
+func (c *LBCTLConfigurationClient) incrementVersion() error {
+	input, err := ioutil.ReadFile(c.ConfigurationFile())
 
 	if err != nil {
 		return ErrCannotReadConfFile
 	}
 
-	v, err := self.GetVersion()
+	v, err := c.GetVersion()
 	if err != nil {
 		return err
 	}
@@ -403,7 +412,7 @@ func (self *LBCTLConfigurationClient) incrementVersion() error {
 
 	output := bytes.Replace(input, []byte(toReplace), []byte(replace), -1)
 
-	if err = ioutil.WriteFile(self.ConfigurationFile(), output, 0666); err != nil {
+	if err = ioutil.WriteFile(c.ConfigurationFile(), output, 0666); err != nil {
 		return ErrCannotIncrementVersion
 	}
 	return nil

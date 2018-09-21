@@ -2,10 +2,12 @@ package configuration
 
 import (
 	"strings"
+
 	"github.com/haproxytech/models"
 )
 
-func (self *LBCTLConfigurationClient) GetTransactions(status string) (*models.Transactions, error) {
+// GetTransactions returns an array of transactions
+func (c *LBCTLConfigurationClient) GetTransactions(status string) (*models.Transactions, error) {
 	// ts := &models.Transactions{}
 
 	// response, err := self.executeLBCTL("transaction-list")
@@ -17,18 +19,20 @@ func (self *LBCTLConfigurationClient) GetTransactions(status string) (*models.Tr
 	// 		ID: strings.TrimSpace(id),
 	// 	}
 	// 	ts = append(ts, t)
-	// } 
+	// }
 	return &models.Transactions{}, nil
 }
 
-func (self *LBCTLConfigurationClient) GetTransaction(id string) (*models.Transaction, error) {
+// GetTransaction returns transaction information by id
+func (c *LBCTLConfigurationClient) GetTransaction(id string) (*models.Transaction, error) {
 	return &models.Transaction{}, nil
 }
 
-func (self *LBCTLConfigurationClient) StartTransaction(version int64) (*models.Transaction, error) {
+// StartTransaction starts a new empty lbctl transaction
+func (c *LBCTLConfigurationClient) StartTransaction(version int64) (*models.Transaction, error) {
 	t := &models.Transaction{}
 
-	response, err := self.executeLBCTL("transaction-begin", "")
+	response, err := c.executeLBCTL("transaction-begin", "")
 	if err != nil {
 		return nil, err
 	}
@@ -40,12 +44,13 @@ func (self *LBCTLConfigurationClient) StartTransaction(version int64) (*models.T
 	return t, nil
 }
 
-func (self *LBCTLConfigurationClient) CommitTransaction(id string) error {
-	_, err := self.executeLBCTL("-T", id, "transaction-commit")
+// CommitTransaction commits a transaction by id.
+func (c *LBCTLConfigurationClient) CommitTransaction(id string) error {
+	_, err := c.executeLBCTL("-T", id, "transaction-commit")
 	if err != nil {
 		return err
 	}
-	err = self.incrementVersion()
+	err = c.incrementVersion()
 	if err != nil {
 		return err
 	}
