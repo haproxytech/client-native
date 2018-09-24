@@ -389,8 +389,8 @@ func (c *LBCTLConfigurationClient) parseSite(response string, name string) *mode
 		}
 
 		if strings.HasPrefix(obj, ".listener") {
-			name, parent := splitHeaderLine(obj)
-			l := &models.SiteFrontendListenersItems{}
+			n, parent := splitHeaderLine(obj)
+			l := &models.SiteFrontendListenersItems{Name: n}
 			if parent != name {
 				continue
 			}
@@ -399,11 +399,11 @@ func (c *LBCTLConfigurationClient) parseSite(response string, name string) *mode
 		}
 
 		if strings.HasPrefix(obj, ".server") {
-			name, parent := splitHeaderLine(obj)
+			n, parent := splitHeaderLine(obj)
 			if name == "" {
 				continue
 			}
-			s := &models.SiteBackendsItemsServersItems{}
+			s := &models.SiteBackendsItemsServersItems{Name: n}
 			c.parseObject(obj, s)
 			if a, ok := sCache[parent]; ok {
 				sCache[parent] = append(a, s)
