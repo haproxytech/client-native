@@ -4,6 +4,7 @@ import (
 	"strings"
 )
 
+// StringInSlice checks if a string is in a list of strings
 func StringInSlice(a string, list []string) bool {
 	for _, b := range list {
 		if b == a {
@@ -13,6 +14,7 @@ func StringInSlice(a string, list []string) bool {
 	return false
 }
 
+// CamelCase turns snake case to camel case string
 func CamelCase(fieldName string, initCase bool) string {
 	s := strings.Trim(fieldName, " ")
 	n := ""
@@ -46,6 +48,7 @@ func CamelCase(fieldName string, initCase bool) string {
 	return n
 }
 
+// SnakeCase turns camel case to snake case string
 func SnakeCase(fieldName string) string {
 	fieldName = strings.Trim(fieldName, " ")
 	n := ""
