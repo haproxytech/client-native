@@ -39,7 +39,7 @@ frontend test_2
   timeout http-request 2s
   timeout http-keep-alive 3s
   maxconn 2000
-  default_backend test
+  default_backend test_2
   timeout client 4s
   option clitcpka
 
