@@ -66,7 +66,7 @@ func (c *LBCTLConfigurationClient) CreateSite(data *models.Site, transactionID s
 
 	//create frontend
 	skip := []string{"Listeners"}
-	err = c.createObject(*data.Name, "service", "", "", data, skip, t, version)
+	err = c.createObject(data.Name, "service", "", "", data, skip, t, version)
 	if err != nil {
 		res = append(res, err)
 	}
@@ -77,7 +77,7 @@ func (c *LBCTLConfigurationClient) CreateSite(data *models.Site, transactionID s
 		if l.Name == "" {
 			l.Name = l.Address + ":" + string(*l.Port)
 		}
-		err = c.createObject(l.Name, "listener", *data.Name, "", l, nil, t, version)
+		err = c.createObject(l.Name, "listener", data.Name, "", l, nil, t, version)
 		if err != nil {
 			res = append(res, err)
 		}
@@ -102,7 +102,7 @@ func (c *LBCTLConfigurationClient) CreateSite(data *models.Site, transactionID s
 			}
 		}
 		//create bck-frontend relations
-		err = c.createBckFrontendRels(*data.Name, b, false, t)
+		err = c.createBckFrontendRels(data.Name, b, false, t)
 		if err != nil {
 			res = append(res, err)
 		}
@@ -154,7 +154,7 @@ func (c *LBCTLConfigurationClient) EditSite(name string, data *models.Site, tran
 				confLIface := misc.GetObjByField(listeners, "Name", l.Name)
 				if confLIface == nil {
 					// create
-					err = c.createObject(l.Name, "listener", *data.Name, "", l, nil, t, version)
+					err = c.createObject(l.Name, "listener", data.Name, "", l, nil, t, version)
 					if err != nil {
 						res = append(res, err)
 					}
@@ -162,7 +162,7 @@ func (c *LBCTLConfigurationClient) EditSite(name string, data *models.Site, tran
 					confL := confLIface.(*models.SiteFrontendListenersItems)
 					if !reflect.DeepEqual(l, confL) {
 						//edit
-						err = c.editObject(l.Name, "listener", *data.Name, "", l, confL, nil, t, version)
+						err = c.editObject(l.Name, "listener", data.Name, "", l, confL, nil, t, version)
 						if err != nil {
 							res = append(res, err)
 						}
@@ -178,7 +178,7 @@ func (c *LBCTLConfigurationClient) EditSite(name string, data *models.Site, tran
 					listeners[i] = data.Frontend.Listeners[i]
 				}
 				if misc.GetObjByField(listeners, "Name", l.Name) == nil {
-					err = c.deleteObject(l.Name, "listener", *data.Name, "", t, version)
+					err = c.deleteObject(l.Name, "listener", data.Name, "", t, version)
 					if err != nil {
 						res = append(res, err)
 					}
@@ -327,7 +327,7 @@ func (c *LBCTLConfigurationClient) DeleteSite(name string, transactionID string,
 		return err
 	}
 
-	err = c.DeleteFrontend(*site.Data.Name, t, 0)
+	err = c.DeleteFrontend(site.Data.Name, t, 0)
 	if err != nil {
 		res = append(res, err)
 	}
@@ -368,16 +368,16 @@ func (c *LBCTLConfigurationClient) parseSite(response string, name string) *mode
 				continue
 			}
 
-			site.Name = &n
+			site.Name = n
 			c.parseObject(obj, f)
 			site.Frontend = f
 
-			frBckRelsCache[*site.Name] = make([]map[string]string, 0, 1)
+			frBckRelsCache[site.Name] = make([]map[string]string, 0, 1)
 			// parse frontend-backend relations
 			if strings.Contains(obj, "+default_farm") {
 				bckName := strings.TrimSpace(obj[strings.Index(obj, "+default_farm ")+14:])
 				bckName = bckName[:strings.Index(bckName, "\n")]
-				frBckRelsCache[*site.Name] = append(frBckRelsCache[*site.Name], map[string]string{bckName: "default"})
+				frBckRelsCache[site.Name] = append(frBckRelsCache[site.Name], map[string]string{bckName: "default"})
 			}
 		}
 
@@ -447,7 +447,7 @@ func (c *LBCTLConfigurationClient) parseSite(response string, name string) *mode
 	site.Frontend.Listeners = lCache
 
 	// add backends
-	for _, bckObj := range frBckRelsCache[*site.Name] {
+	for _, bckObj := range frBckRelsCache[site.Name] {
 		for bck, val := range bckObj {
 			b := bckCache[bck]
 			if val == "default" {
@@ -488,16 +488,16 @@ func (c *LBCTLConfigurationClient) parseSites(response string) models.Sites {
 			if n == "" {
 				continue
 			}
-			site.Name = &n
+			site.Name = n
 			c.parseObject(obj, f)
 			site.Frontend = f
 
-			frBckRelsCache[*site.Name] = make([]map[string]string, 0, 1)
+			frBckRelsCache[site.Name] = make([]map[string]string, 0, 1)
 			// parse frontend-backend relations
 			if strings.Contains(obj, "+default_farm") {
 				bckName := strings.TrimSpace(obj[strings.Index(obj, "+default_farm ")+14:])
 				bckName = bckName[:strings.Index(bckName, "\n")]
-				frBckRelsCache[*site.Name] = append(frBckRelsCache[*site.Name], map[string]string{bckName: "default"})
+				frBckRelsCache[site.Name] = append(frBckRelsCache[site.Name], map[string]string{bckName: "default"})
 			}
 		}
 
@@ -513,7 +513,7 @@ func (c *LBCTLConfigurationClient) parseSites(response string) models.Sites {
 			if name == "" {
 				continue
 			}
-			l := &models.SiteFrontendListenersItems{}
+			l := &models.SiteFrontendListenersItems{Name: name}
 			c.parseObject(obj, l)
 			if a, ok := lCache[parent]; ok {
 				lCache[parent] = append(a, l)
@@ -528,7 +528,7 @@ func (c *LBCTLConfigurationClient) parseSites(response string) models.Sites {
 			if name == "" {
 				continue
 			}
-			s := &models.SiteBackendsItemsServersItems{}
+			s := &models.SiteBackendsItemsServersItems{Name: name}
 			c.parseObject(obj, s)
 			if a, ok := sCache[parent]; ok {
 				sCache[parent] = append(a, s)
@@ -567,16 +567,16 @@ func (c *LBCTLConfigurationClient) parseSites(response string) models.Sites {
 			frBckRelsCache[f] = append(frBckRelsCache[f], map[string]string{b: val})
 		}
 
-		if site.Name != nil {
+		if site.Name != "" {
 			sites = append(sites, site)
 		}
 	}
 	for _, site := range sites {
 		// get listeners for frontend
-		site.Frontend.Listeners = lCache[*site.Name]
+		site.Frontend.Listeners = lCache[site.Name]
 
 		// add backends
-		for _, bckObj := range frBckRelsCache[*site.Name] {
+		for _, bckObj := range frBckRelsCache[site.Name] {
 			for bck, val := range bckObj {
 				b := bckCache[bck]
 				if val == "default" {
