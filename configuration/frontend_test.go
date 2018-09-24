@@ -50,8 +50,8 @@ func TestGetFrontends(t *testing.T) {
 		if *f.HTTPKeepaliveTimeout != 3 {
 			t.Errorf("%v: HTTPKeepaliveTimeout not 3: %v", f.Name, *f.HTTPKeepaliveTimeout)
 		}
-		if f.DefaultFarm != "test" {
-			t.Errorf("%v: DefaultFarm not test: %v", f.Name, f.DefaultFarm)
+		if f.DefaultFarm != "test" && f.DefaultFarm != "test_2" {
+			t.Errorf("%v: DefaultFarm not test or test_2: %v", f.Name, f.DefaultFarm)
 		}
 		if *f.MaxConnections != 2000 {
 			t.Errorf("%v: MaxConnections not 2000: %v", f.Name, *f.MaxConnections)
@@ -86,8 +86,8 @@ func TestGetFrontend(t *testing.T) {
 	if f.Name != "test" {
 		t.Errorf("Expected only test, %v found", f.Name)
 	}
-	if f.Name != "test" && f.Name != "test_2" {
-		t.Errorf("Expected only test or test_2 frontend, %v found", f.Name)
+	if f.Name != "test" {
+		t.Errorf("Expected only test, %v found", f.Name)
 	}
 	if f.Protocol != "http" {
 		t.Errorf("%v: Protocol not http: %v", f.Name, f.Protocol)
@@ -138,7 +138,8 @@ func TestGetFrontend(t *testing.T) {
 	}
 }
 
-func TestCreateFrontend(t *testing.T) {
+func TestCreateEditDeleteFrontend(t *testing.T) {
+	// TestCreateFrontend
 	mConn := int64(3000)
 	tOut := int64(2)
 	f := &models.Frontend{
@@ -161,10 +162,8 @@ func TestCreateFrontend(t *testing.T) {
 		t.Error(err.Error())
 	}
 
-	fCreated := frontend.Data
-
-	if !reflect.DeepEqual(fCreated, f) {
-		fmt.Printf("Created frontend: %v\n", fCreated)
+	if !reflect.DeepEqual(frontend.Data, f) {
+		fmt.Printf("Created frontend: %v\n", frontend.Data)
 		fmt.Printf("Given frontend: %v\n", f)
 		t.Error("Created frontend not equal to given frontend")
 	}
@@ -182,32 +181,30 @@ func TestCreateFrontend(t *testing.T) {
 	if !t.Failed() {
 		fmt.Println("CreateFrontend successful")
 	}
-}
 
-func TestEditFrontend(t *testing.T) {
-	mConn := int64(4000)
-	f := &models.Frontend{
+	// TestEditBackend
+	mConn = int64(4000)
+	f = &models.Frontend{
 		Name:               "created",
 		Protocol:           "tcp",
 		MaxConnections:     &mConn,
 		HTTPConnectionMode: "tunnel",
 	}
 
-	err := client.EditFrontend("created", f, "", version)
+	err = client.EditFrontend("created", f, "", version)
 	if err != nil {
 		t.Error(err.Error())
 	} else {
 		version = version + 1
 	}
 
-	frontend, err := client.GetFrontend("created")
+	frontend, err = client.GetFrontend("created")
 	if err != nil {
 		t.Error(err.Error())
 	}
-	fEdited := frontend.Data
 
-	if !reflect.DeepEqual(fEdited, f) {
-		fmt.Printf("Edited frontend: %v\n", fEdited)
+	if !reflect.DeepEqual(frontend.Data, f) {
+		fmt.Printf("Edited frontend: %v\n", frontend.Data)
 		fmt.Printf("Given frontend: %v\n", f)
 		t.Error("Edited frontend not equal to given frontend")
 	}
@@ -219,10 +216,9 @@ func TestEditFrontend(t *testing.T) {
 	if !t.Failed() {
 		fmt.Println("EditFrontend successful")
 	}
-}
 
-func TestDeleteFrontend(t *testing.T) {
-	err := client.DeleteFrontend("test_2", "", version)
+	// TestDeleteBackend
+	err = client.DeleteFrontend("created", "", version)
 	if err != nil {
 		t.Error(err.Error())
 	} else {
@@ -233,14 +229,14 @@ func TestDeleteFrontend(t *testing.T) {
 		t.Error("Version not incremented")
 	}
 
-	err = client.DeleteFrontend("test_2", "", 999999)
+	err = client.DeleteFrontend("created", "", 999999)
 	if err != nil {
 		if err != ErrVersionMismatch {
 			t.Error("DeleteFrontend failed, should return version mismatch")
 		}
 	}
 
-	_, err = client.GetFrontend("test_2")
+	_, err = client.GetFrontend("created")
 	if err == nil {
 		t.Error("DeleteFrontend failed, frontend test still exists")
 	}

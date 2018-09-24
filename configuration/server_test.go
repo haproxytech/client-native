@@ -113,35 +113,8 @@ func TestGetServer(t *testing.T) {
 	}
 }
 
-func TestDeleteServer(t *testing.T) {
-	err := client.DeleteServer("webserv", "test", "", version)
-	if err != nil {
-		t.Error(err.Error())
-	} else {
-		version = version + 1
-	}
-
-	if v, _ := client.GetVersion(); v != version {
-		t.Error("Version not incremented")
-	}
-
-	_, err = client.GetServer("webserv", "test")
-	if err == nil {
-		t.Error("DeleteServer failed, server test still exists")
-	}
-
-	err = client.DeleteServer("webserv", "test2", "", version)
-	if err == nil {
-		t.Error("Should throw error, non existant server")
-		version = version + 1
-	}
-
-	if !t.Failed() {
-		fmt.Println("DeleteServer successful")
-	}
-}
-
-func TestCreateServer(t *testing.T) {
+func TestCreateEditDeleteServer(t *testing.T) {
+	// TestCreateServer
 	port := int64(4300)
 	s := &models.Server{
 		Name:        "created",
@@ -164,10 +137,8 @@ func TestCreateServer(t *testing.T) {
 		t.Error(err.Error())
 	}
 
-	sCreated := server.Data
-
-	if !reflect.DeepEqual(sCreated, s) {
-		fmt.Printf("Created server: %v\n", sCreated)
+	if !reflect.DeepEqual(server.Data, s) {
+		fmt.Printf("Created server: %v\n", server.Data)
 		fmt.Printf("Given server: %v\n", s)
 		t.Error("Created server not equal to given server")
 	}
@@ -185,31 +156,29 @@ func TestCreateServer(t *testing.T) {
 	if !t.Failed() {
 		fmt.Println("CreateServer successful")
 	}
-}
 
-func TestEditServer(t *testing.T) {
-	port := int64(5300)
-	s := &models.Server{
+	// TestEditServer
+	port = int64(5300)
+	s = &models.Server{
 		Name:    "created",
 		Address: "192.168.3.1",
 		Port:    &port,
 	}
 
-	err := client.EditServer("created", "test", s, "", version)
+	err = client.EditServer("created", "test", s, "", version)
 	if err != nil {
 		t.Error(err.Error())
 	} else {
 		version = version + 1
 	}
 
-	server, err := client.GetServer("created", "test")
+	server, err = client.GetServer("created", "test")
 	if err != nil {
 		t.Error(err.Error())
 	}
-	sEdited := server.Data
 
-	if !reflect.DeepEqual(sEdited, s) {
-		fmt.Printf("Edited server: %v\n", sEdited)
+	if !reflect.DeepEqual(server.Data, s) {
+		fmt.Printf("Edited server: %v\n", server.Data)
 		fmt.Printf("Given server: %v\n", s)
 		t.Error("Edited server not equal to given server")
 	}
@@ -220,5 +189,32 @@ func TestEditServer(t *testing.T) {
 
 	if !t.Failed() {
 		fmt.Println("EditServer successful")
+	}
+
+	// TestDeleteServer
+	err = client.DeleteServer("created", "test", "", version)
+	if err != nil {
+		t.Error(err.Error())
+	} else {
+		version = version + 1
+	}
+
+	if v, _ := client.GetVersion(); v != version {
+		t.Error("Version not incremented")
+	}
+
+	_, err = client.GetServer("created", "test")
+	if err == nil {
+		t.Error("DeleteServer failed, server test still exists")
+	}
+
+	err = client.DeleteServer("created", "test2", "", version)
+	if err == nil {
+		t.Error("Should throw error, non existant server")
+		version = version + 1
+	}
+
+	if !t.Failed() {
+		fmt.Println("DeleteServer successful")
 	}
 }

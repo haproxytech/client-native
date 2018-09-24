@@ -177,7 +177,8 @@ func TestGetBackend(t *testing.T) {
 	}
 }
 
-func TestCreateBackend(t *testing.T) {
+func TestCreateEditDeleteBackend(t *testing.T) {
+	// TestCreateBackend
 	tOut := int64(5)
 	b := &models.Backend{
 		Name:               "created",
@@ -199,10 +200,8 @@ func TestCreateBackend(t *testing.T) {
 		t.Error(err.Error())
 	}
 
-	bCreated := backend.Data
-
-	if !reflect.DeepEqual(bCreated, b) {
-		fmt.Printf("Created bck: %v\n", bCreated)
+	if !reflect.DeepEqual(backend.Data, b) {
+		fmt.Printf("Created bck: %v\n", backend.Data)
 		fmt.Printf("Given bck: %v\n", b)
 		t.Error("Created backend not equal to given backend")
 	}
@@ -220,11 +219,10 @@ func TestCreateBackend(t *testing.T) {
 	if !t.Failed() {
 		fmt.Println("CreateBackend successful")
 	}
-}
 
-func TestEditBackend(t *testing.T) {
-	tOut := int64(3)
-	b := &models.Backend{
+	// TestEditBackend
+	tOut = int64(3)
+	b = &models.Backend{
 		Name:               "created",
 		Protocol:           "http",
 		Balance:            "roundrobin",
@@ -232,21 +230,20 @@ func TestEditBackend(t *testing.T) {
 		ConnectTimeout:     &tOut,
 	}
 
-	err := client.EditBackend("created", b, "", version)
+	err = client.EditBackend("created", b, "", version)
 	if err != nil {
 		t.Error(err.Error())
 	} else {
 		version = version + 1
 	}
 
-	backend, err := client.GetBackend("created")
+	backend, err = client.GetBackend("created")
 	if err != nil {
 		t.Error(err.Error())
 	}
-	bEdited := backend.Data
 
-	if !reflect.DeepEqual(bEdited, b) {
-		fmt.Printf("Edited bck: %v\n", bEdited)
+	if !reflect.DeepEqual(backend.Data, b) {
+		fmt.Printf("Edited bck: %v\n", backend.Data)
 		fmt.Printf("Given bck: %v\n", b)
 		t.Error("Edited backend not equal to given backend")
 	}
@@ -258,10 +255,9 @@ func TestEditBackend(t *testing.T) {
 	if !t.Failed() {
 		fmt.Println("EditBackend successful")
 	}
-}
 
-func TestDeleteBackend(t *testing.T) {
-	err := client.DeleteBackend("test_2", "", version)
+	// TestDeleteBackend
+	err = client.DeleteBackend("created", "", version)
 	if err != nil {
 		t.Error(err.Error())
 	} else {
@@ -272,14 +268,14 @@ func TestDeleteBackend(t *testing.T) {
 		t.Error("Version not incremented")
 	}
 
-	err = client.DeleteBackend("test_2", "", 999999999)
+	err = client.DeleteBackend("created", "", 999999999)
 	if err != nil {
 		if err != ErrVersionMismatch {
 			t.Error("DeleteBackend failed, should return version mismatch")
 		}
 	}
 
-	_, err = client.GetBackend("test_2")
+	_, err = client.GetBackend("created")
 	if err == nil {
 		t.Error("DeleteBackend failed, bck test still exists")
 	}

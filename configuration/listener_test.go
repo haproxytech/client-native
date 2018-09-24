@@ -89,42 +89,15 @@ func TestGetListener(t *testing.T) {
 	}
 }
 
-func TestDeleteListener(t *testing.T) {
-	err := client.DeleteListener("webserv", "test", "", version)
-	if err != nil {
-		t.Error(err.Error())
-	} else {
-		version = version + 1
-	}
-
-	if v, _ := client.GetVersion(); v != version {
-		t.Error("Version not incremented")
-	}
-
-	_, err = client.GetListener("webserv", "test")
-	if err == nil {
-		t.Error("DeleteListener failed, listener test still exists")
-	}
-
-	err = client.DeleteListener("webserv", "test2", "", version)
-	if err == nil {
-		t.Error("Should throw error, non existant listener")
-		version = version + 1
-	}
-
-	if !t.Failed() {
-		fmt.Println("DeleteListener successful")
-	}
-}
-
-func TestCreateListener(t *testing.T) {
+func TestCreateEditDeleteListener(t *testing.T) {
+	// TestCreateListener
 	port := int64(4300)
 	l := &models.Listener{
 		Name:           "created",
 		Address:        "192.168.2.1",
 		Port:           &port,
 		Ssl:            "enabled",
-		SslCertificate: "/dummy.crt",
+		SslCertificate: "dummy.crt",
 	}
 
 	err := client.CreateListener("test", l, "", version)
@@ -139,10 +112,8 @@ func TestCreateListener(t *testing.T) {
 		t.Error(err.Error())
 	}
 
-	lCreated := listener.Data
-
-	if !reflect.DeepEqual(lCreated, l) {
-		fmt.Printf("Created listener: %v\n", lCreated)
+	if !reflect.DeepEqual(listener.Data, l) {
+		fmt.Printf("Created listener: %v\n", listener.Data)
 		fmt.Printf("Given listener: %v\n", l)
 		t.Error("Created listener not equal to given listener")
 	}
@@ -160,12 +131,11 @@ func TestCreateListener(t *testing.T) {
 	if !t.Failed() {
 		fmt.Println("CreateListener successful")
 	}
-}
 
-func TestEditListener(t *testing.T) {
-	port := int64(5300)
+	// TestEditListener
+	port = int64(5300)
 	tOut := int64(5)
-	l := &models.Listener{
+	l = &models.Listener{
 		Name:           "created",
 		Address:        "192.168.3.1",
 		Port:           &port,
@@ -173,21 +143,20 @@ func TestEditListener(t *testing.T) {
 		TCPUserTimeout: &tOut,
 	}
 
-	err := client.EditListener("created", "test", l, "", version)
+	err = client.EditListener("created", "test", l, "", version)
 	if err != nil {
 		t.Error(err.Error())
 	} else {
 		version = version + 1
 	}
 
-	listener, err := client.GetListener("created", "test")
+	listener, err = client.GetListener("created", "test")
 	if err != nil {
 		t.Error(err.Error())
 	}
-	lEdited := listener.Data
 
-	if !reflect.DeepEqual(lEdited, l) {
-		fmt.Printf("Edited listener: %v\n", lEdited)
+	if !reflect.DeepEqual(listener.Data, l) {
+		fmt.Printf("Edited listener: %v\n", listener.Data)
 		fmt.Printf("Given lsitener: %v\n", l)
 		t.Error("Edited listener not equal to given listener")
 	}
@@ -198,5 +167,32 @@ func TestEditListener(t *testing.T) {
 
 	if !t.Failed() {
 		fmt.Println("EditListener successful")
+	}
+
+	// TestDeleteListener
+	err = client.DeleteListener("created", "test", "", version)
+	if err != nil {
+		t.Error(err.Error())
+	} else {
+		version = version + 1
+	}
+
+	if v, _ := client.GetVersion(); v != version {
+		t.Error("Version not incremented")
+	}
+
+	_, err = client.GetListener("created", "test")
+	if err == nil {
+		t.Error("DeleteListener failed, listener test still exists")
+	}
+
+	err = client.DeleteListener("created", "test2", "", version)
+	if err == nil {
+		t.Error("Should throw error, non existant listener")
+		version = version + 1
+	}
+
+	if !t.Failed() {
+		fmt.Println("DeleteListener successful")
 	}
 }
