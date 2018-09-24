@@ -177,41 +177,6 @@ func TestGetBackend(t *testing.T) {
 	}
 }
 
-func TestDeleteBackend(t *testing.T) {
-	err := client.DeleteBackend("test", "", version)
-	if err != nil {
-		t.Error(err.Error())
-	} else {
-		version = version + 1
-	}
-
-	if v, _ := client.GetVersion(); v != version {
-		t.Error("Version not incremented")
-	}
-
-	err = client.DeleteBackend("test_2", "", 999999999)
-	if err != nil {
-		if err != ErrVersionMismatch {
-			t.Error("DeleteBackend failed, should return version mismatch")
-		}
-	}
-
-	_, err = client.GetBackend("test")
-	if err == nil {
-		t.Error("DeleteBackend failed, bck test still exists")
-	}
-
-	err = client.DeleteBackend("doesnotexist", "", version)
-	if err == nil {
-		t.Error("Should throw error, non existant bck")
-		version = version + 1
-	}
-
-	if !t.Failed() {
-		fmt.Println("DeleteBackend successful")
-	}
-}
-
 func TestCreateBackend(t *testing.T) {
 	tOut := int64(5)
 	b := &models.Backend{
@@ -292,5 +257,40 @@ func TestEditBackend(t *testing.T) {
 
 	if !t.Failed() {
 		fmt.Println("EditBackend successful")
+	}
+}
+
+func TestDeleteBackend(t *testing.T) {
+	err := client.DeleteBackend("test_2", "", version)
+	if err != nil {
+		t.Error(err.Error())
+	} else {
+		version = version + 1
+	}
+
+	if v, _ := client.GetVersion(); v != version {
+		t.Error("Version not incremented")
+	}
+
+	err = client.DeleteBackend("test_2", "", 999999999)
+	if err != nil {
+		if err != ErrVersionMismatch {
+			t.Error("DeleteBackend failed, should return version mismatch")
+		}
+	}
+
+	_, err = client.GetBackend("test_2")
+	if err == nil {
+		t.Error("DeleteBackend failed, bck test still exists")
+	}
+
+	err = client.DeleteBackend("doesnotexist", "", version)
+	if err == nil {
+		t.Error("Should throw error, non existant bck")
+		version = version + 1
+	}
+
+	if !t.Failed() {
+		fmt.Println("DeleteBackend successful")
 	}
 }

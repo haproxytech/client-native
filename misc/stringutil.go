@@ -5,14 +5,13 @@ import (
 )
 
 func StringInSlice(a string, list []string) bool {
-    for _, b := range list {
-        if b == a {
-            return true
-        }
-    }
-    return false
+	for _, b := range list {
+		if b == a {
+			return true
+		}
+	}
+	return false
 }
-
 
 func CamelCase(fieldName string, initCase bool) string {
 	s := strings.Trim(fieldName, " ")
@@ -43,6 +42,7 @@ func CamelCase(fieldName string, initCase bool) string {
 	n = strings.Replace(n, "http", "HTTP", -1)
 	n = strings.Replace(n, "tcp", "TCP", -1)
 	n = strings.Replace(n, "Tcp", "TCP", -1)
+	n = strings.Replace(n, "Id", "ID", -1)
 	return n
 }
 

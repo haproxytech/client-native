@@ -138,41 +138,6 @@ func TestGetFrontend(t *testing.T) {
 	}
 }
 
-func TestDeleteFrontend(t *testing.T) {
-	err := client.DeleteFrontend("test", "", version)
-	if err != nil {
-		t.Error(err.Error())
-	} else {
-		version = version + 1
-	}
-
-	if v, _ := client.GetVersion(); v != version {
-		t.Error("Version not incremented")
-	}
-
-	err = client.DeleteFrontend("test_2", "", 999999)
-	if err != nil {
-		if err != ErrVersionMismatch {
-			t.Error("DeleteFrontend failed, should return version mismatch")
-		}
-	}
-
-	_, err = client.GetFrontend("test")
-	if err == nil {
-		t.Error("DeleteFrontend failed, frontend test still exists")
-	}
-
-	err = client.DeleteFrontend("doesnotexist", "", version)
-	if err == nil {
-		t.Error("Should throw error, non existant frontend")
-		version = version + 1
-	}
-
-	if !t.Failed() {
-		fmt.Println("DeleteFrontend successful")
-	}
-}
-
 func TestCreateFrontend(t *testing.T) {
 	mConn := int64(3000)
 	tOut := int64(2)
@@ -253,5 +218,40 @@ func TestEditFrontend(t *testing.T) {
 
 	if !t.Failed() {
 		fmt.Println("EditFrontend successful")
+	}
+}
+
+func TestDeleteFrontend(t *testing.T) {
+	err := client.DeleteFrontend("test_2", "", version)
+	if err != nil {
+		t.Error(err.Error())
+	} else {
+		version = version + 1
+	}
+
+	if v, _ := client.GetVersion(); v != version {
+		t.Error("Version not incremented")
+	}
+
+	err = client.DeleteFrontend("test_2", "", 999999)
+	if err != nil {
+		if err != ErrVersionMismatch {
+			t.Error("DeleteFrontend failed, should return version mismatch")
+		}
+	}
+
+	_, err = client.GetFrontend("test_2")
+	if err == nil {
+		t.Error("DeleteFrontend failed, frontend test still exists")
+	}
+
+	err = client.DeleteFrontend("doesnotexist", "", version)
+	if err == nil {
+		t.Error("Should throw error, non existant frontend")
+		version = version + 1
+	}
+
+	if !t.Failed() {
+		fmt.Println("DeleteFrontend successful")
 	}
 }

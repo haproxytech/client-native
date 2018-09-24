@@ -119,6 +119,8 @@ func (c *LBCTLConfigurationClient) createObject(name string, objType string, par
 		} else {
 			return ErrNoParentSpecified
 		}
+	} else if parent != "" {
+		args = append(args, parent)
 	}
 
 	cmd = cmd + objType + "-create"
@@ -155,6 +157,8 @@ func (c *LBCTLConfigurationClient) editObject(name string, objType string, paren
 		} else {
 			return ErrNoParentSpecified
 		}
+	} else if parent != "" {
+		args = append(args, parent)
 	}
 
 	cmd = cmd + objType + "-update"
@@ -190,7 +194,10 @@ func (c *LBCTLConfigurationClient) deleteObject(name string, objType string, par
 		} else {
 			return ErrNoParentSpecified
 		}
+	} else if parent != "" {
+		args = append(args, parent)
 	}
+
 	cmd = cmd + objType + "-delete"
 	args = append(args, name)
 

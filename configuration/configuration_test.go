@@ -1,15 +1,17 @@
 package configuration
 
 import (
+	"fmt"
 	"os"
 	"testing"
-	"fmt"
 )
 
 const testConf = `
 # _version=1
 frontend test
   mode http                                                  #alctl: protocol analyser
+  bind 192.168.1.1:80 name webserv
+  bind 192.168.1.1:8080 name webserv2
   log global                                                 #alctl: log activation
   option httplog                                             #alctl: log format
   option dontlognull
@@ -59,6 +61,8 @@ backend test
   timeout tunnel 5s
   timeout server 3s
   cookie BLA
+  server webserv 192.168.1.1:9200 maxconn 1000 ssl weight 10 cookie BLAH
+  server webserv2 192.168.1.1:9300 maxconn 1000 ssl weight 10 cookie BLAH
 
 backend test_2
   mode http                                                  #alctl: protocol analyser
@@ -88,7 +92,7 @@ func TestMain(m *testing.M) {
 	err := prepareTestFile(testConf, testPath)
 	if err != nil {
 		fmt.Println("Could not prepare tests")
-		os.Exit(1)	
+		os.Exit(1)
 	}
 	defer deleteTestFile(testPath)
 	client = prepareClient(testPath)
@@ -96,34 +100,43 @@ func TestMain(m *testing.M) {
 	os.Exit(m.Run())
 }
 
-func prepareTestFile(conf string, path string) error {	
+func prepareTestFile(conf string, path string) error {
 	// detect if file exists
 	var _, err = os.Stat(path)
 	var file *os.File
 	// create file if not exists
 	if os.IsNotExist(err) {
 		file, err = os.Create(path)
-		if err != nil { return err }
+		if err != nil {
+			return err
+		}
 	}
 	defer file.Close()
 
 	file, err = os.OpenFile(path, os.O_RDWR, 0644)
-	if err != nil { return  err }
+	if err != nil {
+		return err
+	}
 	_, err = file.WriteString(conf)
-	if err != nil { return err}
+	if err != nil {
+		return err
+	}
 
 	err = file.Sync()
-	if err != nil { return err }
+	if err != nil {
+		return err
+	}
 	return nil
 }
 
 func deleteTestFile(path string) error {
 	err := os.Remove(path)
-	if err != nil { return err }
+	if err != nil {
+		return err
+	}
 	return nil
 }
 
 func prepareClient(path string) Client {
 	return NewLBCTLClient(path, "/usr/sbin/lbctl", "/tmp/lbctl")
 }
-
