@@ -609,7 +609,7 @@ func (c *LBCTLConfigurationClient) removeUseFarm(frontend string, backend string
 	}
 	for _, uf := range ufs {
 		if uf.TargetFarm == backend {
-			return c.deleteObject(string(*uf.ID), "usefarm", frontend, "service", t, 0)
+			return c.deleteObject(string(uf.ID), "usefarm", frontend, "service", t, 0)
 		}
 	}
 	return nil
@@ -640,13 +640,13 @@ func (c *LBCTLConfigurationClient) createBckFrontendRels(name string, b *models.
 		if b.Cond == "" || b.CondTest == "" {
 			res = append(res, fmt.Errorf("Backend %s set as conditional but no conditions provided", b.Name))
 		} else {
-			uf := &misc.UseFarm{
-				ID:         &id,
+			uf := &models.BackendSwitchingRule{
+				ID:         id,
 				TargetFarm: b.Name,
 				Cond:       b.Cond,
 				CondTest:   b.CondTest,
 			}
-			err = c.createObject(string(*uf.ID), "usefarm", name, "frontend", uf, nil, t, 0)
+			err = c.createObject(string(uf.ID), "usefarm", name, "frontend", uf, nil, t, 0)
 			if err != nil {
 				res = append(res, err)
 			}
@@ -674,28 +674,27 @@ func (c *LBCTLConfigurationClient) removeDefaultBckToFrontend(fName string, t st
 	return nil
 }
 
-func (c *LBCTLConfigurationClient) getUseFarms(parent string) ([]*misc.UseFarm, error) {
+func (c *LBCTLConfigurationClient) getUseFarms(parent string) ([]*models.BackendSwitchingRule, error) {
 	response, err := c.executeLBCTL("l7-service-usefarm-dump", "", parent)
 	if err != nil {
 		return nil, err
 	}
 
-	useFarms := make([]*misc.UseFarm, 0, 1)
+	useFarms := make([]*models.BackendSwitchingRule, 0, 1)
 	for _, ufString := range strings.Split(response, "\n\n") {
 		if strings.TrimSpace(ufString) == "" {
 			continue
 		}
 
-		uf := &misc.UseFarm{}
+		uf := &models.BackendSwitchingRule{}
 		for _, line := range strings.Split(ufString, "\n") {
 			if strings.HasPrefix(line, ".usefarm") {
 				w := strings.Split(line, " ")
 				idStr := w[len(w)-3]
-				id, err := strconv.ParseInt(idStr, 10, 64)
+				uf.ID, err = strconv.ParseInt(idStr, 10, 64)
 				if err != nil {
 					continue
 				}
-				uf.ID = &id
 			}
 			if strings.HasPrefix(line, "+target_farm") {
 				w := strings.Split(line, " ")
