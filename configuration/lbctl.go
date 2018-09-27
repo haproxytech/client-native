@@ -17,6 +17,7 @@ import (
 
 // LBCTLError Custom error implementation for executing lbctl
 type LBCTLError struct {
+	action string
 	msg    string
 	stderr string
 	cmd    string
@@ -24,7 +25,7 @@ type LBCTLError struct {
 
 // Error implementation for error
 func (c *LBCTLError) Error() string {
-	return fmt.Sprintf("Error executing: %s, %s. Output: %s", c.cmd, c.msg, c.stderr)
+	return fmt.Sprintf("Error executing: %s, %s, %s. Output: %s", c.cmd, c.action, c.msg, c.stderr)
 }
 
 // LBCTLConfigurationClient configuration.Client implementation using lbctl
@@ -73,16 +74,16 @@ func (c *LBCTLConfigurationClient) executeLBCTL(command string, transaction stri
 	lbctlArgs = append(lbctlArgs, args...)
 
 	cmd := exec.Command(c.LBCTLPath, lbctlArgs...)
-	if c.ConfigurationFile() != "" {
-		cmd.Env = os.Environ()
-		cmd.Env = append(cmd.Env, "LBCTL_L7_HAPROXY_CONFIG="+c.ConfigurationFile())
-		cmd.Env = append(cmd.Env, "LBCTL_MODULES=l7")
-	}
+	cmd.Env = os.Environ()
+	cmd.Env = append(cmd.Env, "LBCTL_MODULES=l7")
 
-	if c.LBCTLTmpPath == "" {
-		cmd.Env = os.Environ()
+	if c.ConfigurationFile() != "" {
+		cmd.Env = append(cmd.Env, "LBCTL_L7_HAPROXY_CONFIG="+c.ConfigurationFile())
+	}
+	if c.LBCTLTmpPath != "" {
 		cmd.Env = append(cmd.Env, "LBCTL_TRANS_DIR="+c.LBCTLTmpPath)
 	}
+
 	var stdout, stderr bytes.Buffer
 	cmd.Stdout = &stdout
 	cmd.Stderr = &stderr
@@ -97,7 +98,7 @@ func (c *LBCTLConfigurationClient) executeLBCTL(command string, transaction stri
 				return "", ErrObjectDoesNotExist
 			}
 		}
-		return "", &LBCTLError{err.Error(), output, cmd.Path}
+		return "", &LBCTLError{command, err.Error(), output, cmd.Path}
 	}
 
 	return string(stdout.Bytes()), nil

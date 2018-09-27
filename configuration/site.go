@@ -65,8 +65,7 @@ func (c *LBCTLConfigurationClient) CreateSite(data *models.Site, transactionID s
 	}
 
 	//create frontend
-	skip := []string{"Listeners"}
-	err = c.createObject(data.Name, "service", "", "", data, skip, t, version)
+	err = c.createObject(data.Name, "service", "", "", data.Frontend, []string{"Listeners"}, t, 0)
 	if err != nil {
 		res = append(res, err)
 	}
@@ -77,7 +76,7 @@ func (c *LBCTLConfigurationClient) CreateSite(data *models.Site, transactionID s
 		if l.Name == "" {
 			l.Name = l.Address + ":" + string(*l.Port)
 		}
-		err = c.createObject(l.Name, "listener", data.Name, "", l, nil, t, version)
+		err = c.createObject(l.Name, "listener", data.Name, "", l, nil, t, 0)
 		if err != nil {
 			res = append(res, err)
 		}
@@ -85,8 +84,7 @@ func (c *LBCTLConfigurationClient) CreateSite(data *models.Site, transactionID s
 
 	//create backends
 	for _, b := range data.Backends {
-		skip = []string{"Servers", "UseAs", "Cond", "CondTest"}
-		err = c.createObject(b.Name, "farm", "", "", b, nil, t, version)
+		err = c.createObject(b.Name, "farm", "", "", b, []string{"Servers", "UseAs", "Cond", "CondTest"}, t, 0)
 		if err != nil {
 			res = append(res, err)
 		}
@@ -96,7 +94,7 @@ func (c *LBCTLConfigurationClient) CreateSite(data *models.Site, transactionID s
 			if s.Name == "" {
 				s.Name = s.Address + ":" + string(*s.Port)
 			}
-			err = c.createObject(s.Name, "server", b.Name, "", s, nil, t, version)
+			err = c.createObject(s.Name, "server", b.Name, "", s, nil, t, 0)
 			if err != nil {
 				res = append(res, err)
 			}

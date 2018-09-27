@@ -46,7 +46,7 @@ func (c *LBCTLConfigurationClient) StartTransaction(version int64) (*models.Tran
 
 // CommitTransaction commits a transaction by id.
 func (c *LBCTLConfigurationClient) CommitTransaction(id string) error {
-	_, err := c.executeLBCTL("-T", id, "transaction-commit")
+	_, err := c.executeLBCTL("transaction-commit", id)
 	if err != nil {
 		return err
 	}
