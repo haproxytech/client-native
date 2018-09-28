@@ -76,6 +76,8 @@ func (c *LBCTLConfigurationClient) executeLBCTL(command string, transaction stri
 	cmd := exec.Command(c.LBCTLPath, lbctlArgs...)
 	cmd.Env = os.Environ()
 	cmd.Env = append(cmd.Env, "LBCTL_MODULES=l7")
+	cmd.Env = append(cmd.Env, "LBCTL_L7_SVC_CHECK_CMD=true")
+	cmd.Env = append(cmd.Env, "LBCTL_L7_SVC_APPLY_CMD=true")
 
 	if c.ConfigurationFile() != "" {
 		cmd.Env = append(cmd.Env, "LBCTL_L7_HAPROXY_CONFIG="+c.ConfigurationFile())
@@ -304,7 +306,7 @@ func (c *LBCTLConfigurationClient) serializeObject(obj interface{}, ondisk inter
 					continue
 				}
 			}
-			if typeField.Name != "Name" {
+			if typeField.Name != "Name" && typeField.Name != "ID" {
 				// fmt.Printf("serializeObject: typeField.Name: %v\n", typeField.Name)
 				if field.Kind() == reflect.Int64 {
 					// fmt.Printf("serializeObject: field.Kind(): Int64\n")
