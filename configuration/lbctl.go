@@ -312,7 +312,7 @@ func (c *LBCTLConfigurationClient) serializeObject(obj interface{}, ondisk inter
 					// fmt.Printf("serializeObject: field.Kind(): Int64\n")
 					if field.Int() != 0 {
 						argsArr = append(argsArr, "--"+misc.SnakeCase(typeField.Name))
-						argsArr = append(argsArr, string(field.Int()))
+						argsArr = append(argsArr, strconv.FormatInt(field.Int(), 10))
 					}
 				} else if field.Kind() == reflect.String {
 					// fmt.Printf("serializeObject: field.Kind(): String\n")
