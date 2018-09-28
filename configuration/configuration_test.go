@@ -110,6 +110,16 @@ func prepareTestFile(conf string, path string) error {
 		if err != nil {
 			return err
 		}
+	} else {
+		// if exists delete it and create again
+		err = deleteTestFile(path)
+		if err != nil {
+			return err
+		}
+		file, err = os.Create(path)
+		if err != nil {
+			return err
+		}
 	}
 	defer file.Close()
 
