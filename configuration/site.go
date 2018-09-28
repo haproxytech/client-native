@@ -38,7 +38,10 @@ func (c *LBCTLConfigurationClient) GetSite(name string) (*models.GetSiteOKBody, 
 		return nil, err
 	}
 
-	site := c.parseSite(response, name)
+	site, err := c.parseSite(response, name)
+	if err != nil {
+		return nil, err
+	}
 
 	v, err := c.GetVersion()
 	if err != nil {
@@ -74,7 +77,7 @@ func (c *LBCTLConfigurationClient) CreateSite(data *models.Site, transactionID s
 	for _, l := range data.Frontend.Listeners {
 		//sanitize name
 		if l.Name == "" {
-			l.Name = l.Address + ":" + string(*l.Port)
+			l.Name = l.Address + ":" + strconv.FormatInt(*l.Port, 10)
 		}
 		err = c.createObject(l.Name, "listener", data.Name, "", l, nil, t, 0)
 		if err != nil {
@@ -92,7 +95,7 @@ func (c *LBCTLConfigurationClient) CreateSite(data *models.Site, transactionID s
 		for _, s := range b.Servers {
 			//sanitize name
 			if s.Name == "" {
-				s.Name = s.Address + ":" + string(*s.Port)
+				s.Name = s.Address + ":" + strconv.FormatInt(*s.Port, 10)
 			}
 			err = c.createObject(s.Name, "server", b.Name, "", s, nil, t, 0)
 			if err != nil {
@@ -201,7 +204,7 @@ func (c *LBCTLConfigurationClient) EditSite(name string, data *models.Site, tran
 				for _, s := range b.Servers {
 					//sanitize name
 					if s.Name == "" {
-						s.Name = s.Address + ":" + string(*s.Port)
+						s.Name = s.Address + ":" + strconv.FormatInt(*s.Port, 10)
 					}
 					err = c.createObject(s.Name, "server", b.Name, "", s, nil, t, version)
 					if err != nil {
@@ -330,7 +333,7 @@ func (c *LBCTLConfigurationClient) DeleteSite(name string, transactionID string,
 		res = append(res, err)
 	}
 	for _, b := range site.Data.Backends {
-		err = c.DeleteBackend(b.Name, t, version)
+		err = c.DeleteBackend(b.Name, t, 0)
 		if err != nil {
 			res = append(res, err)
 		}
@@ -347,7 +350,7 @@ func (c *LBCTLConfigurationClient) DeleteSite(name string, transactionID string,
 	return nil
 }
 
-func (c *LBCTLConfigurationClient) parseSite(response string, name string) *models.Site {
+func (c *LBCTLConfigurationClient) parseSite(response string, name string) (*models.Site, error) {
 	bckCache := make(map[string]*models.SiteBackendsItems)
 	lCache := make([]*models.SiteFrontendListenersItems, 0, 1)
 	sCache := make(map[string][]*models.SiteBackendsItemsServersItems)
@@ -370,7 +373,9 @@ func (c *LBCTLConfigurationClient) parseSite(response string, name string) *mode
 			c.parseObject(obj, f)
 			site.Frontend = f
 
-			frBckRelsCache[site.Name] = make([]map[string]string, 0, 1)
+			if _, ok := frBckRelsCache[site.Name]; !ok {
+				frBckRelsCache[site.Name] = make([]map[string]string, 0, 1)
+			}
 			// parse frontend-backend relations
 			if strings.Contains(obj, "+default_farm") {
 				bckName := strings.TrimSpace(obj[strings.Index(obj, "+default_farm ")+14:])
@@ -419,17 +424,14 @@ func (c *LBCTLConfigurationClient) parseSite(response string, name string) *mode
 				if strings.HasPrefix(line, ".usefarm") {
 					w := strings.Split(line, " ")
 					f = w[len(w)-1]
-				}
-				if strings.HasPrefix(line, "+target_farm") {
+				} else if strings.HasPrefix(line, "+target_farm") {
 					b = strings.TrimSpace(strings.SplitN(line, " ", 2)[1])
-				}
-				if strings.HasPrefix(line, "+cond") {
-					w := strings.Split(line, " ")
-					val = w[1] + " " + val
-				}
-				if strings.HasPrefix(line, "+cond_test") {
+				} else if strings.HasPrefix(line, "+cond_test") {
 					w := strings.Split(line, " ")
 					val = val + " " + w[1]
+				} else if strings.HasPrefix(line, "+cond") {
+					w := strings.Split(line, " ")
+					val = w[1] + " " + val
 				}
 			}
 
@@ -439,6 +441,9 @@ func (c *LBCTLConfigurationClient) parseSite(response string, name string) *mode
 
 			frBckRelsCache[f] = append(frBckRelsCache[f], map[string]string{b: val})
 		}
+	}
+	if site.Frontend == nil {
+		return nil, ErrObjectDoesNotExist
 	}
 
 	// get listeners for frontend
@@ -452,7 +457,7 @@ func (c *LBCTLConfigurationClient) parseSite(response string, name string) *mode
 				b.UseAs = val
 			} else {
 				b.UseAs = "conditional"
-				split := strings.SplitN(val, " ", 1)
+				split := strings.SplitN(val, " ", 2)
 				b.Cond = strings.TrimSpace(split[0])
 				b.CondTest = strings.TrimSpace(split[1])
 			}
@@ -465,7 +470,7 @@ func (c *LBCTLConfigurationClient) parseSite(response string, name string) *mode
 	for _, bck := range site.Backends {
 		bck.Servers = sCache[bck.Name]
 	}
-	return site
+	return site, nil
 }
 
 func (c *LBCTLConfigurationClient) parseSites(response string) models.Sites {
@@ -607,7 +612,7 @@ func (c *LBCTLConfigurationClient) removeUseFarm(frontend string, backend string
 	}
 	for _, uf := range ufs {
 		if uf.TargetFarm == backend {
-			return c.deleteObject(string(uf.ID), "usefarm", frontend, "service", t, 0)
+			return c.deleteObject(strconv.FormatInt(uf.ID, 10), "usefarm", frontend, "service", t, 0)
 		}
 	}
 	return nil
@@ -616,7 +621,7 @@ func (c *LBCTLConfigurationClient) removeUseFarm(frontend string, backend string
 func (c *LBCTLConfigurationClient) createBckFrontendRels(name string, b *models.SiteBackendsItems, edit bool, t string) error {
 	var res []error
 	var err error
-	id := int64(0)
+	id := int64(1)
 	if b.UseAs == "default" {
 		if edit {
 			err = c.removeUseFarm(name, b.Name, t)
@@ -644,7 +649,7 @@ func (c *LBCTLConfigurationClient) createBckFrontendRels(name string, b *models.
 				Cond:       b.Cond,
 				CondTest:   b.CondTest,
 			}
-			err = c.createObject(string(uf.ID), "usefarm", name, "frontend", uf, nil, t, 0)
+			err = c.createObject(strconv.FormatInt(uf.ID, 10), "usefarm", name, "service", uf, nil, t, 0)
 			if err != nil {
 				res = append(res, err)
 			}
