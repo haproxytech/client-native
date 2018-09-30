@@ -129,7 +129,7 @@ func TestCreateEditDeleteServer(t *testing.T) {
 	if err != nil {
 		t.Error(err.Error())
 	} else {
-		version = version + 1
+		version++
 	}
 
 	server, err := client.GetServer("created", "test")
@@ -150,7 +150,7 @@ func TestCreateEditDeleteServer(t *testing.T) {
 	err = client.CreateServer("test", s, "", version)
 	if err == nil {
 		t.Error("Should throw error server already exists")
-		version = version + 1
+		version++
 	}
 
 	if !t.Failed() {
@@ -169,7 +169,7 @@ func TestCreateEditDeleteServer(t *testing.T) {
 	if err != nil {
 		t.Error(err.Error())
 	} else {
-		version = version + 1
+		version++
 	}
 
 	server, err = client.GetServer("created", "test")
@@ -196,7 +196,7 @@ func TestCreateEditDeleteServer(t *testing.T) {
 	if err != nil {
 		t.Error(err.Error())
 	} else {
-		version = version + 1
+		version++
 	}
 
 	if v, _ := client.GetVersion(); v != version {
@@ -211,7 +211,7 @@ func TestCreateEditDeleteServer(t *testing.T) {
 	err = client.DeleteServer("created", "test2", "", version)
 	if err == nil {
 		t.Error("Should throw error, non existant server")
-		version = version + 1
+		version++
 	}
 
 	if !t.Failed() {

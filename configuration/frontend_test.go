@@ -154,7 +154,7 @@ func TestCreateEditDeleteFrontend(t *testing.T) {
 	if err != nil {
 		t.Error(err.Error())
 	} else {
-		version = version + 1
+		version++
 	}
 
 	frontend, err := client.GetFrontend("created")
@@ -175,7 +175,7 @@ func TestCreateEditDeleteFrontend(t *testing.T) {
 	err = client.CreateFrontend(f, "", version)
 	if err == nil {
 		t.Error("Should throw error frontend already exists")
-		version = version + 1
+		version++
 	}
 
 	if !t.Failed() {
@@ -195,7 +195,7 @@ func TestCreateEditDeleteFrontend(t *testing.T) {
 	if err != nil {
 		t.Error(err.Error())
 	} else {
-		version = version + 1
+		version++
 	}
 
 	frontend, err = client.GetFrontend("created")
@@ -222,7 +222,7 @@ func TestCreateEditDeleteFrontend(t *testing.T) {
 	if err != nil {
 		t.Error(err.Error())
 	} else {
-		version = version + 1
+		version++
 	}
 
 	if v, _ := client.GetVersion(); v != version {
@@ -244,7 +244,7 @@ func TestCreateEditDeleteFrontend(t *testing.T) {
 	err = client.DeleteFrontend("doesnotexist", "", version)
 	if err == nil {
 		t.Error("Should throw error, non existant frontend")
-		version = version + 1
+		version++
 	}
 
 	if !t.Failed() {

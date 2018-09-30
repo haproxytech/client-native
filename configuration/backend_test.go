@@ -192,7 +192,7 @@ func TestCreateEditDeleteBackend(t *testing.T) {
 	if err != nil {
 		t.Error(err.Error())
 	} else {
-		version = version + 1
+		version++
 	}
 
 	backend, err := client.GetBackend("created")
@@ -213,7 +213,7 @@ func TestCreateEditDeleteBackend(t *testing.T) {
 	err = client.CreateBackend(b, "", version)
 	if err == nil {
 		t.Error("Should throw error bck already exists")
-		version = version + 1
+		version++
 	}
 
 	if !t.Failed() {
@@ -234,7 +234,7 @@ func TestCreateEditDeleteBackend(t *testing.T) {
 	if err != nil {
 		t.Error(err.Error())
 	} else {
-		version = version + 1
+		version++
 	}
 
 	backend, err = client.GetBackend("created")
@@ -261,7 +261,7 @@ func TestCreateEditDeleteBackend(t *testing.T) {
 	if err != nil {
 		t.Error(err.Error())
 	} else {
-		version = version + 1
+		version++
 	}
 
 	if v, _ := client.GetVersion(); v != version {
@@ -283,7 +283,7 @@ func TestCreateEditDeleteBackend(t *testing.T) {
 	err = client.DeleteBackend("doesnotexist", "", version)
 	if err == nil {
 		t.Error("Should throw error, non existant bck")
-		version = version + 1
+		version++
 	}
 
 	if !t.Failed() {
