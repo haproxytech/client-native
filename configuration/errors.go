@@ -38,3 +38,6 @@ var ErrCannotReadVersion = errors.New("Cannot read version from the configuratio
 
 // ErrCannotIncrementVersion when version isn't incremented correctly
 var ErrCannotIncrementVersion = errors.New("Cannot increment the version in the configuration file")
+
+// ErrMultipleDefaultBackends when multiple default backends are specified for frontend in site
+var ErrMultipleDefaultBackends = errors.New("Multiple default backends specified for frontend")
