@@ -27,6 +27,7 @@ type Client interface {
 	GetTransaction(id string) (*models.Transaction, error)
 	StartTransaction(version int64) (*models.Transaction, error)
 	CommitTransaction(id string) error
+	DeleteTransaction(id string) error
 	//version method
 	GetVersion() (int64, error)
 	//site methods
