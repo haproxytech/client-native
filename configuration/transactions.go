@@ -1,6 +1,7 @@
 package configuration
 
 import (
+	"fmt"
 	"strings"
 
 	"github.com/haproxytech/models"
@@ -8,10 +9,13 @@ import (
 
 // GetTransactions returns an array of transactions
 func (c *LBCTLConfigurationClient) GetTransactions(status string) (*models.Transactions, error) {
-	// ts := &models.Transactions{}
+	ts := &models.Transactions{}
 
-	// response, err := self.executeLBCTL("transaction-list")
-	// for _, id := range(strings.Split("\n")) {
+	// response, err := c.executeLBCTL("transaction-list", "")
+	// if err != nil {
+	// 	return nil, err
+	// }
+	// for _, id := range strings.Split(response, "\n") {
 	// 	if strings.TrimSpace(id) == "" {
 	// 		continue
 	// 	}
@@ -20,7 +24,7 @@ func (c *LBCTLConfigurationClient) GetTransactions(status string) (*models.Trans
 	// 	}
 	// 	ts = append(ts, t)
 	// }
-	return &models.Transactions{}, nil
+	return ts, nil
 }
 
 // GetTransaction returns transaction information by id
@@ -31,6 +35,15 @@ func (c *LBCTLConfigurationClient) GetTransaction(id string) (*models.Transactio
 // StartTransaction starts a new empty lbctl transaction
 func (c *LBCTLConfigurationClient) StartTransaction(version int64) (*models.Transaction, error) {
 	t := &models.Transaction{}
+
+	v, err := c.GetVersion()
+	if err != nil {
+		return nil, err
+	}
+
+	if version != v {
+		return nil, NewConfError(ErrVersionMismatch, fmt.Sprintf("Version in configuration file is %v, given version is %v", v, version))
+	}
 
 	response, err := c.executeLBCTL("transaction-begin", "")
 	if err != nil {

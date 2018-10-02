@@ -55,7 +55,7 @@ func (c *LBCTLConfigurationClient) DeleteServer(name string, backend string, tra
 func (c *LBCTLConfigurationClient) CreateServer(backend string, data *models.Server, transactionID string, version int64) error {
 	validationErr := data.Validate(strfmt.Default)
 	if validationErr != nil {
-		return validationErr
+		return NewConfError(ErrValidationError, validationErr.Error())
 	}
 	return c.createObject(data.Name, "server", backend, "", data, nil, transactionID, version)
 }
@@ -65,7 +65,7 @@ func (c *LBCTLConfigurationClient) CreateServer(backend string, data *models.Ser
 func (c *LBCTLConfigurationClient) EditServer(name string, backend string, data *models.Server, transactionID string, version int64) error {
 	validationErr := data.Validate(strfmt.Default)
 	if validationErr != nil {
-		return validationErr
+		return NewConfError(ErrValidationError, validationErr.Error())
 	}
 	ondiskSrv, err := c.GetServer(name, backend)
 	if err != nil {

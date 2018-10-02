@@ -15,19 +15,6 @@ import (
 	"github.com/haproxytech/client-native/misc"
 )
 
-// LBCTLError Custom error implementation for executing lbctl
-type LBCTLError struct {
-	action string
-	msg    string
-	stderr string
-	cmd    string
-}
-
-// Error implementation for error
-func (c *LBCTLError) Error() string {
-	return fmt.Sprintf("Error executing: %s, %s, %s. Output: %s", c.cmd, c.action, c.msg, c.stderr)
-}
-
 // LBCTLConfigurationClient configuration.Client implementation using lbctl
 type LBCTLConfigurationClient struct {
 	*ClientParams
@@ -92,15 +79,21 @@ func (c *LBCTLConfigurationClient) executeLBCTL(command string, transaction stri
 
 	err := cmd.Run()
 	if err != nil {
-		output := string(stderr.Bytes())
-		if strings.HasPrefix(output, "LBCTL Fatal:") {
-			if strings.Contains(output, "Transaction "+transaction+", not found") {
-				return "", ErrTransactionNotFound
-			} else if strings.HasSuffix(output, "does not exist") {
-				return "", ErrObjectDoesNotExist
+		switch err.(type) {
+		case *exec.ExitError:
+			errMsg := err.Error()
+			if strings.HasPrefix(errMsg, "exit status") {
+				words := strings.Split(errMsg, " ")
+				sCode := words[len(words)-1]
+				code, err := strconv.ParseInt(sCode, 10, 64)
+				if err != nil {
+					code = ErrGeneralError
+				}
+				return "", NewLBCTLError(int(code), cmd.Path, command, string(stderr.Bytes()))
 			}
+		default:
+			return "", NewLBCTLError(ErrGeneralError, cmd.Path, command, string(stderr.Bytes()))
 		}
-		return "", &LBCTLError{command, err.Error(), output, cmd.Path}
 	}
 
 	return string(stdout.Bytes()), nil
@@ -120,7 +113,7 @@ func (c *LBCTLConfigurationClient) createObject(name string, objType string, par
 		if parent != "" {
 			args = append(args, parent)
 		} else {
-			return ErrNoParentSpecified
+			return NewConfError(ErrNoParentSpecified, fmt.Sprintf("No parent specified when parent type is %v", parentType))
 		}
 	} else if parent != "" {
 		args = append(args, parent)
@@ -158,7 +151,7 @@ func (c *LBCTLConfigurationClient) editObject(name string, objType string, paren
 		if parent != "" {
 			args = append(args, parent)
 		} else {
-			return ErrNoParentSpecified
+			return NewConfError(ErrNoParentSpecified, fmt.Sprintf("No parent specified when parent type is %v", parentType))
 		}
 	} else if parent != "" {
 		args = append(args, parent)
@@ -195,7 +188,7 @@ func (c *LBCTLConfigurationClient) deleteObject(name string, objType string, par
 		if parent != "" {
 			args = append(args, parent)
 		} else {
-			return ErrNoParentSpecified
+			return NewConfError(ErrNoParentSpecified, fmt.Sprintf("No parent specified when parent type is %v", parentType))
 		}
 	} else if parent != "" {
 		args = append(args, parent)
@@ -221,7 +214,7 @@ func (c *LBCTLConfigurationClient) deleteObject(name string, objType string, par
 func (c *LBCTLConfigurationClient) GetVersion() (int64, error) {
 	file, err := os.Open(c.ConfigurationFile())
 	if err != nil {
-		return 0, ErrCannotReadConfFile
+		return 0, NewConfError(ErrCannotReadConfFile, fmt.Sprintf("Cannot read configuration file %v: %v", c.ConfigurationFile(), err.Error()))
 	}
 	defer file.Close()
 
@@ -231,20 +224,20 @@ func (c *LBCTLConfigurationClient) GetVersion() (int64, error) {
 		if strings.HasPrefix(line, "# _version=") {
 			w := strings.Split(line, "=")
 			if len(w) != 2 {
-				return 0, ErrCannotReadVersion
+				return 0, NewConfError(ErrCannotReadVersion, fmt.Sprintf("Cannot read version from file %v: %v", c.ConfigurationFile(), err.Error()))
 			}
 			version, err := strconv.ParseInt(w[1], 10, 64)
 			if err != nil {
-				return 0, ErrCannotReadVersion
+				return 0, NewConfError(ErrCannotReadVersion, fmt.Sprintf("Cannot read version from file %v: %v", c.ConfigurationFile(), err.Error()))
 			}
 			return version, nil
 		}
 	}
 
 	if err := scanner.Err(); err != nil {
-		return 0, ErrCannotReadConfFile
+		return 0, NewConfError(ErrCannotReadVersion, fmt.Sprintf("Cannot read version from file %v: %v", c.ConfigurationFile(), err.Error()))
 	}
-	return 0, ErrCannotReadVersion
+	return 0, NewConfError(ErrCannotReadVersion, fmt.Sprintf("Cannot read version from file %v:", c.ConfigurationFile()))
 }
 
 func (c *LBCTLConfigurationClient) parseObject(str string, obj interface{}) {
@@ -370,15 +363,18 @@ func (c *LBCTLConfigurationClient) checkTransactionOrVersion(transactionID strin
 	// start an implicit transaction for delete site (multiple operations required) if not already given
 	t := ""
 	if transactionID != "" && version != 0 {
-		return "", ErrBothVersionTransaction
+		return "", NewConfError(ErrBothVersionTransaction, "Both version and transaction specified, specify only one")
 	} else if transactionID == "" && version == 0 {
-		return "", ErrNoVersionTransaction
+		return "", NewConfError(ErrNoVersionTransaction, "Version or transaction not specified, specify only one")
 	} else if transactionID != "" {
 		t = transactionID
 	} else {
-		v, _ := c.GetVersion()
+		v, err := c.GetVersion()
+		if err != nil {
+			return "", err
+		}
 		if version != v {
-			return "", ErrVersionMismatch
+			return "", NewConfError(ErrVersionMismatch, fmt.Sprintf("Version in configuration file is %v, given version is %v", v, version))
 		}
 		if startTransaction {
 			transaction, err := c.StartTransaction(version)
@@ -389,6 +385,11 @@ func (c *LBCTLConfigurationClient) checkTransactionOrVersion(transactionID strin
 		}
 	}
 	return t, nil
+}
+
+func (c *LBCTLConfigurationClient) checkVersion(version int64) (bool, error) {
+	v, err := c.GetVersion()
+	return v == version, err
 }
 
 func splitHeaderLine(obj string) (name string, parent string) {
@@ -409,7 +410,7 @@ func (c *LBCTLConfigurationClient) incrementVersion() error {
 	input, err := ioutil.ReadFile(c.ConfigurationFile())
 
 	if err != nil {
-		return ErrCannotReadConfFile
+		return NewConfError(ErrCannotReadVersion, fmt.Sprintf("Cannot read version from file %v: %v", c.ConfigurationFile(), err.Error()))
 	}
 
 	v, err := c.GetVersion()
@@ -423,7 +424,7 @@ func (c *LBCTLConfigurationClient) incrementVersion() error {
 	output := bytes.Replace(input, []byte(toReplace), []byte(replace), -1)
 
 	if err = ioutil.WriteFile(c.ConfigurationFile(), output, 0666); err != nil {
-		return ErrCannotIncrementVersion
+		return NewConfError(ErrCannotIncrementVersion, fmt.Sprintf("Cannot increment version in file %v: %v", c.ConfigurationFile(), err.Error()))
 	}
 	return nil
 }

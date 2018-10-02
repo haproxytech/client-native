@@ -231,11 +231,15 @@ func TestCreateEditDeleteFrontend(t *testing.T) {
 
 	err = client.DeleteFrontend("created", "", 999999)
 	if err != nil {
-		if err != ErrVersionMismatch {
-			t.Error("DeleteFrontend failed, should return version mismatch")
+		switch err.(type) {
+		case *ConfError:
+			if err.(*ConfError).Code() != ErrVersionMismatch {
+				t.Error("Should throw ErrVersionMismatch error")
+			}
+		default:
+			t.Error("Should throw ErrVersionMismatch error")
 		}
 	}
-
 	_, err = client.GetFrontend("created")
 	if err == nil {
 		t.Error("DeleteFrontend failed, frontend test still exists")

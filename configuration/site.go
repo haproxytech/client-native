@@ -59,7 +59,7 @@ func (c *LBCTLConfigurationClient) CreateSite(data *models.Site, transactionID s
 
 	validationErr := data.Validate(strfmt.Default)
 	if validationErr != nil {
-		return validationErr
+		return NewConfError(ErrValidationError, validationErr.Error())
 	}
 	// start an implicit transaction for create site (multiple operations required) if not already given
 	t, err := c.checkTransactionOrVersion(transactionID, version, true)
@@ -125,6 +125,11 @@ func (c *LBCTLConfigurationClient) CreateSite(data *models.Site, transactionID s
 func (c *LBCTLConfigurationClient) EditSite(name string, data *models.Site, transactionID string, version int64) error {
 	var res []error
 	var err error
+
+	validationErr := data.Validate(strfmt.Default)
+	if validationErr != nil {
+		return NewConfError(ErrValidationError, validationErr.Error())
+	}
 
 	t, err := c.checkTransactionOrVersion(transactionID, version, true)
 	if err != nil {
@@ -213,7 +218,7 @@ func (c *LBCTLConfigurationClient) EditSite(name string, data *models.Site, tran
 					}
 				}
 				if b.UseAs == "default" && defaultBck != "" {
-					return ErrMultipleDefaultBackends
+					return NewConfError(ErrValidationError, fmt.Sprintf("Multiple default backends found in site: %v", name))
 				} else if b.UseAs == "default" && defaultBck == "" {
 					defaultBck = b.Name
 				}
@@ -228,7 +233,7 @@ func (c *LBCTLConfigurationClient) EditSite(name string, data *models.Site, tran
 					// check if use as has changed
 					if b.UseAs != confB.UseAs {
 						if b.UseAs == "default" && defaultBck != "" {
-							return ErrMultipleDefaultBackends
+							return NewConfError(ErrValidationError, fmt.Sprintf("Multiple default backends found in site: %v", name))
 						} else if b.UseAs == "default" && defaultBck == "" {
 							defaultBck = b.Name
 						}
@@ -455,7 +460,7 @@ func (c *LBCTLConfigurationClient) parseSite(response string, name string) (*mod
 		}
 	}
 	if site.Frontend == nil {
-		return nil, ErrObjectDoesNotExist
+		return nil, NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("Site %v does not exist", name))
 	}
 
 	// get listeners for frontend

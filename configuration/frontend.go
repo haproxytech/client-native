@@ -54,7 +54,7 @@ func (c *LBCTLConfigurationClient) DeleteFrontend(name string, transactionID str
 func (c *LBCTLConfigurationClient) EditFrontend(name string, data *models.Frontend, transactionID string, version int64) error {
 	validationErr := data.Validate(strfmt.Default)
 	if validationErr != nil {
-		return validationErr
+		return NewConfError(ErrValidationError, validationErr.Error())
 	}
 	ondiskFrontend, err := c.GetFrontend(name)
 	if err != nil {
@@ -68,7 +68,7 @@ func (c *LBCTLConfigurationClient) EditFrontend(name string, data *models.Fronte
 func (c *LBCTLConfigurationClient) CreateFrontend(data *models.Frontend, transactionID string, version int64) error {
 	validationErr := data.Validate(strfmt.Default)
 	if validationErr != nil {
-		return validationErr
+		return NewConfError(ErrValidationError, validationErr.Error())
 	}
 	return c.createObject(data.Name, "service", "", "", data, nil, transactionID, version)
 }

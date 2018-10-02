@@ -55,7 +55,7 @@ func (c *LBCTLConfigurationClient) DeleteListener(name string, frontend string, 
 func (c *LBCTLConfigurationClient) CreateListener(frontend string, data *models.Listener, transactionID string, version int64) error {
 	validationErr := data.Validate(strfmt.Default)
 	if validationErr != nil {
-		return validationErr
+		return NewConfError(ErrValidationError, validationErr.Error())
 	}
 	return c.createObject(data.Name, "listener", frontend, "", data, nil, transactionID, version)
 }
@@ -65,7 +65,7 @@ func (c *LBCTLConfigurationClient) CreateListener(frontend string, data *models.
 func (c *LBCTLConfigurationClient) EditListener(name string, frontend string, data *models.Listener, transactionID string, version int64) error {
 	validationErr := data.Validate(strfmt.Default)
 	if validationErr != nil {
-		return validationErr
+		return NewConfError(ErrValidationError, validationErr.Error())
 	}
 	ondiskLst, err := c.GetListener(name, frontend)
 	if err != nil {

@@ -270,8 +270,13 @@ func TestCreateEditDeleteBackend(t *testing.T) {
 
 	err = client.DeleteBackend("created", "", 999999999)
 	if err != nil {
-		if err != ErrVersionMismatch {
-			t.Error("DeleteBackend failed, should return version mismatch")
+		switch err.(type) {
+		case *ConfError:
+			if err.(*ConfError).Code() != ErrVersionMismatch {
+				t.Error("Should throw ErrVersionMismatch error")
+			}
+		default:
+			t.Error("Should throw ErrVersionMismatch error")
 		}
 	}
 

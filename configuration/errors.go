@@ -1,43 +1,85 @@
 package configuration
 
 import (
-	"errors"
+	"fmt"
 
 	oaerrors "github.com/go-openapi/errors"
 )
+
+const (
+	// General error, unknown cause
+	ErrGeneralError = 0
+
+	// Errors regarding configurations
+	ErrSyntaxWrong             = 1
+	ErrNoParentSpecified       = 10
+	ErrTransactionDoesNotExist = 20
+	ErrObjectAlreadyExists     = 23
+	ErrObjectDoesNotExist      = 22
+	ErrErrorChangingConfig     = 25
+	ErrCannotReadConfFile      = 30
+	ErrCannotReadVersion       = 31
+	ErrCannotIncrementVersion  = 32
+	ErrVersionMismatch         = 33
+	ErrBothVersionTransaction  = 34
+	ErrNoVersionTransaction    = 35
+	ErrValidationError         = 50
+
+	// Errors regarding executing LBCTL
+	ErrLBCTLNeedScope                  = 2
+	ErrLBCTLNeedTransaction            = 3
+	ErrLBCTLNeedScopeOrTransaction     = 4
+	ErrLBCTLCannotValidateConfig       = 101
+	ErrLBCTLCannotApplyConfig          = 102
+	ErrLBCTLCorruptedTransaction       = 110
+	ErrLBCTLCannotCreateTransaction    = 111
+	ErrLBCTLCannotCreateTransactionCtx = 112
+	ErrLBCTLCannotPrepareCtx           = 113
+	ErrLBCTLCannotBackupFile           = 114
+	ErrLBCTLCannotInstallConfig        = 115
+	ErrLBCTLAPILocked                  = 100
+)
+
+// ConfError general configuration client error
+type ConfError struct {
+	code int
+	msg  string
+}
+
+// LBCTLError error when executing lbctl, embeds ConfError
+type LBCTLError struct {
+	ConfError
+	action string
+	cmd    string
+}
+
+// Error implementation for ConfError
+func (e *ConfError) Error() string {
+	return fmt.Sprintf("%v: %s", e.code, e.msg)
+}
+
+// Code returns ConfError code, which is one of constants in this package
+func (e *ConfError) Code() int {
+	return e.code
+}
+
+// Error implementation for LBCTLError
+func (e *LBCTLError) Error() string {
+	return fmt.Sprintf("%v: Error executing LBCTL: %s, %s. Output: %s", e.code, e.cmd, e.action, e.msg)
+}
+
+// NewLBCTLError contstructor for LBCTLError
+func NewLBCTLError(code int, cmd, action, msg string) *LBCTLError {
+	return &LBCTLError{ConfError: ConfError{code: code, msg: msg}, action: action, cmd: cmd}
+}
+
+// NewConfError contstructor for ConfError
+func NewConfError(code int, msg string) *ConfError {
+	return &ConfError{code: code, msg: msg}
+}
 
 // CompositeTransactionError helper function to aggregate multiple errors
 // when calling multiple operations in transactions.
 func CompositeTransactionError(e ...error) *oaerrors.CompositeError {
 	return &oaerrors.CompositeError{Errors: append([]error{}, e...)}
 }
-
-// ErrVersionMismatch returned when configured and given version do not match
-var ErrVersionMismatch = errors.New("Version mismatch")
-
-// ErrBothVersionTransaction returned when you send both transaction and version
-var ErrBothVersionTransaction = errors.New("Cannot have both transactionID and version")
-
-// ErrNoVersionTransaction returned when you don't send transaction or version
-var ErrNoVersionTransaction = errors.New("Must have either transactionID and version")
-
-// ErrNoParentSpecified returned when parent is required but not given
-var ErrNoParentSpecified = errors.New("Parent not specified when parentType is")
-
-// ErrObjectDoesNotExist returned when requested object does not exist in configuration
-var ErrObjectDoesNotExist = errors.New("Requested object does not exist")
-
-// ErrTransactionNotFound when given transaction does not exist
-var ErrTransactionNotFound = errors.New("Given transaction does not exist")
-
-// ErrCannotReadConfFile when configuration file could not be read
-var ErrCannotReadConfFile = errors.New("Cannot read configuration file")
-
-// ErrCannotReadVersion when there is no version comment in configuration
-var ErrCannotReadVersion = errors.New("Cannot read version from the configuration file")
-
-// ErrCannotIncrementVersion when version isn't incremented correctly
-var ErrCannotIncrementVersion = errors.New("Cannot increment the version in the configuration file")
-
-// ErrMultipleDefaultBackends when multiple default backends are specified for frontend in site
-var ErrMultipleDefaultBackends = errors.New("Multiple default backends specified for frontend")
