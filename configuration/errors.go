@@ -19,7 +19,7 @@ const (
 	ErrErrorChangingConfig     = 25
 	ErrCannotReadConfFile      = 30
 	ErrCannotReadVersion       = 31
-	ErrCannotIncrementVersion  = 32
+	ErrCannotSetVersion        = 32
 	ErrVersionMismatch         = 33
 	ErrBothVersionTransaction  = 34
 	ErrNoVersionTransaction    = 35

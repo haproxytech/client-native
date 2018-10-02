@@ -219,25 +219,56 @@ func (c *LBCTLConfigurationClient) GetVersion() (int64, error) {
 	defer file.Close()
 
 	scanner := bufio.NewScanner(file)
+	// Read only first line, version MUST BE on the first line
+	lineNo := 0
 	for scanner.Scan() {
-		line := scanner.Text()
-		if strings.HasPrefix(line, "# _version=") {
-			w := strings.Split(line, "=")
-			if len(w) != 2 {
-				return 0, NewConfError(ErrCannotReadVersion, fmt.Sprintf("Cannot read version from file %v: %v", c.ConfigurationFile(), err.Error()))
+		if lineNo == 0 {
+			line := scanner.Text()
+			if strings.HasPrefix(line, "# _version=") {
+				w := strings.Split(line, "=")
+				if len(w) != 2 {
+					return c.setInitialVersion(true)
+				}
+				version, err := strconv.ParseInt(w[1], 10, 64)
+				if err != nil {
+					return c.setInitialVersion(true)
+				}
+				return version, nil
 			}
-			version, err := strconv.ParseInt(w[1], 10, 64)
-			if err != nil {
-				return 0, NewConfError(ErrCannotReadVersion, fmt.Sprintf("Cannot read version from file %v: %v", c.ConfigurationFile(), err.Error()))
-			}
-			return version, nil
+		} else {
+			break
 		}
+		lineNo++
 	}
 
 	if err := scanner.Err(); err != nil {
-		return 0, NewConfError(ErrCannotReadVersion, fmt.Sprintf("Cannot read version from file %v: %v", c.ConfigurationFile(), err.Error()))
+		return c.setInitialVersion(false)
 	}
-	return 0, NewConfError(ErrCannotReadVersion, fmt.Sprintf("Cannot read version from file %v:", c.ConfigurationFile()))
+	return c.setInitialVersion(true)
+}
+
+func (c *LBCTLConfigurationClient) setInitialVersion(hasVersion bool) (int64, error) {
+	input, err := ioutil.ReadFile(c.ConfigurationFile())
+
+	if err != nil {
+		return 0, NewConfError(ErrCannotReadConfFile, fmt.Sprintf("Cannot read configuration file %v: %v", c.ConfigurationFile(), err.Error()))
+	}
+
+	inputStr := string(input)
+
+	if hasVersion {
+		inputStrArr := strings.SplitAfterN(inputStr, "\n", 2)
+		if len(inputStrArr) == 2 {
+			inputStr = inputStrArr[1]
+		}
+	}
+
+	output := fmt.Sprintf("# _version=1\n%s", inputStr)
+
+	if err = ioutil.WriteFile(c.ConfigurationFile(), []byte(output), 0666); err != nil {
+		return 0, NewConfError(ErrCannotSetVersion, fmt.Sprintf("Cannot set initial version in file %v: %v", c.ConfigurationFile(), err.Error()))
+	}
+	return 0, nil
 }
 
 func (c *LBCTLConfigurationClient) parseObject(str string, obj interface{}) {
@@ -424,7 +455,7 @@ func (c *LBCTLConfigurationClient) incrementVersion() error {
 	output := bytes.Replace(input, []byte(toReplace), []byte(replace), -1)
 
 	if err = ioutil.WriteFile(c.ConfigurationFile(), output, 0666); err != nil {
-		return NewConfError(ErrCannotIncrementVersion, fmt.Sprintf("Cannot increment version in file %v: %v", c.ConfigurationFile(), err.Error()))
+		return NewConfError(ErrCannotSetVersion, fmt.Sprintf("Cannot increment version in file %v: %v", c.ConfigurationFile(), err.Error()))
 	}
 	return nil
 }
