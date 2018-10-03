@@ -23,6 +23,7 @@ const (
 	ErrVersionMismatch         = 33
 	ErrBothVersionTransaction  = 34
 	ErrNoVersionTransaction    = 35
+	ErrCannotParseTransaction  = 40
 	ErrValidationError         = 50
 
 	// Errors regarding executing LBCTL

@@ -222,23 +222,25 @@ func (c *LBCTLConfigurationClient) GetVersion() (int64, error) {
 	// Read only first line, version MUST BE on the first line
 	lineNo := 0
 	for scanner.Scan() {
-		if lineNo == 0 {
-			line := scanner.Text()
-			if strings.HasPrefix(line, "# _version=") {
-				w := strings.Split(line, "=")
-				if len(w) != 2 {
-					return c.setInitialVersion(true)
+		line := scanner.Text()
+		if strings.TrimSpace(line) != "" {
+			if lineNo == 0 {
+				if strings.HasPrefix(line, "# _version=") {
+					w := strings.Split(line, "=")
+					if len(w) != 2 {
+						return c.setInitialVersion(true)
+					}
+					version, err := strconv.ParseInt(w[1], 10, 64)
+					if err != nil {
+						return c.setInitialVersion(true)
+					}
+					return version, nil
 				}
-				version, err := strconv.ParseInt(w[1], 10, 64)
-				if err != nil {
-					return c.setInitialVersion(true)
-				}
-				return version, nil
+			} else {
+				break
 			}
-		} else {
-			break
+			lineNo++
 		}
-		lineNo++
 	}
 
 	if err := scanner.Err(); err != nil {
