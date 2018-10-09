@@ -78,4 +78,16 @@ type Client interface {
 	DeleteFilter(id int64, parentType, parentName string, transactionID string, version int64) error
 	CreateFilter(parentType, parentName string, data *models.Filter, transactionID string, version int64) error
 	EditFilter(id int64, parentType, parentName string, data *models.Filter, transactionID string, version int64) error
+	//HTTP Request Rules methods
+	GetHTTPRequestRules(parentType, parentName string) (*models.GetHTTPRequestRulesOKBody, error)
+	GetHTTPRequestRule(id int64, parentType, parentName string) (*models.GetHTTPRequestRuleOKBody, error)
+	DeleteHTTPRequestRule(id int64, parentType, parentName string, transactionID string, version int64) error
+	CreateHTTPRequestRule(parentType, parentName string, data *models.HTTPRequestRule, transactionID string, version int64) error
+	EditHTTPRequestRule(id int64, parentType, parentName string, data *models.HTTPRequestRule, transactionID string, version int64) error
+	//HTTP Response Rules methods
+	GetHTTPResponseRules(parentType, parentName string) (*models.GetHTTPResponseRulesOKBody, error)
+	GetHTTPResponseRule(id int64, parentType, parentName string) (*models.GetHTTPResponseRuleOKBody, error)
+	DeleteHTTPResponseRule(id int64, parentType, parentName string, transactionID string, version int64) error
+	CreateHTTPResponseRule(parentType, parentName string, data *models.HTTPResponseRule, transactionID string, version int64) error
+	EditHTTPResponseRule(id int64, parentType, parentName string, data *models.HTTPResponseRule, transactionID string, version int64) error
 }

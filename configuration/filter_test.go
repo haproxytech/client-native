@@ -147,7 +147,7 @@ func TestCreateEditDeleteFilter(t *testing.T) {
 		fmt.Println("CreateFilter successful")
 	}
 
-	// TestFilter
+	// TestEditFilter
 	f = &models.Filter{
 		ID:         1,
 		Type:       "spoe",
@@ -178,7 +178,7 @@ func TestCreateEditDeleteFilter(t *testing.T) {
 	}
 
 	if !t.Failed() {
-		fmt.Println("EditBackendSwitchingRule successful")
+		fmt.Println("EditFilter successful")
 	}
 
 	// TestDeleteFilter

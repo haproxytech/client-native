@@ -20,6 +20,12 @@ frontend test
   filter trace name BEFORE-HTTP-COMP random-parsing hexdump
   filter compression
   filter trace name AFTER-HTTP-COMP random-forwarding
+  http-request allow if src 192.168.0.0/16
+  http-request set-header X-SSL %[ssl_fc]
+  http-request set-var(req.my_var) req.fhdr(user-agent),lower
+  http-response allow if src 192.168.0.0/16
+  http-response set-header X-SSL %[ssl_fc]
+  http-response set-var(req.my_var) req.fhdr(user-agent),lower
   log-tag bla
   option httpclose
   timeout http-request 2s
