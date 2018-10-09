@@ -90,4 +90,16 @@ type Client interface {
 	DeleteHTTPResponseRule(id int64, parentType, parentName string, transactionID string, version int64) error
 	CreateHTTPResponseRule(parentType, parentName string, data *models.HTTPResponseRule, transactionID string, version int64) error
 	EditHTTPResponseRule(id int64, parentType, parentName string, data *models.HTTPResponseRule, transactionID string, version int64) error
+	//stick request rule methods
+	GetStickRequestRules(backend string) (*models.GetStickRequestRulesOKBody, error)
+	GetStickRequestRule(id int64, backend string) (*models.GetStickRequestRuleOKBody, error)
+	DeleteStickRequestRule(id int64, backend string, transactionID string, version int64) error
+	CreateStickRequestRule(backend string, data *models.StickRequestRule, transactionID string, version int64) error
+	EditStickRequestRule(id int64, backend string, data *models.StickRequestRule, transactionID string, version int64) error
+	//stick response rule methods
+	GetStickResponseRules(backend string) (*models.GetStickResponseRulesOKBody, error)
+	GetStickResponseRule(id int64, backend string) (*models.GetStickResponseRuleOKBody, error)
+	DeleteStickResponseRule(id int64, backend string, transactionID string, version int64) error
+	CreateStickResponseRule(backend string, data *models.StickResponseRule, transactionID string, version int64) error
+	EditStickResponseRule(id int64, backend string, data *models.StickResponseRule, transactionID string, version int64) error
 }

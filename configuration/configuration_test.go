@@ -65,6 +65,12 @@ backend test
   default-server rise 4
   default-server inter 5s
   default-server port 8888
+  stick store-request src table test
+  stick match src table test
+  stick on src table test
+  stick store-response src
+  stick store-response src_port table test_port
+  stick store-response src table test if TRUE
   option contstats
   timeout check 2s
   timeout tunnel 5s
