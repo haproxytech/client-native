@@ -72,4 +72,10 @@ type Client interface {
 	DeleteServerSwitchingRule(id int64, backend string, transactionID string, version int64) error
 	CreateServerSwitchingRule(backend string, data *models.ServerSwitchingRule, transactionID string, version int64) error
 	EditServerSwitchingRule(id int64, backend string, data *models.ServerSwitchingRule, transactionID string, version int64) error
+	//filter methods
+	GetFilters(parentType, parentName string) (*models.GetFiltersOKBody, error)
+	GetFilter(id int64, parentType, parentName string) (*models.GetFilterOKBody, error)
+	DeleteFilter(id int64, parentType, parentName string, transactionID string, version int64) error
+	CreateFilter(parentType, parentName string, data *models.Filter, transactionID string, version int64) error
+	EditFilter(id int64, parentType, parentName string, data *models.Filter, transactionID string, version int64) error
 }

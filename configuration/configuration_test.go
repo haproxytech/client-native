@@ -9,14 +9,17 @@ import (
 const testConf = `
 # _version=1
 frontend test
-  mode http                                                  #alctl: protocol analyser
+  mode http
   bind 192.168.1.1:80 name webserv
   bind 192.168.1.1:8080 name webserv2
-  log global                                                 #alctl: log activation
-  option httplog                                             #alctl: log format
+  log global
+  option httplog
   option dontlognull
   option contstats
   option log-separate-errors
+  filter trace name BEFORE-HTTP-COMP random-parsing hexdump
+  filter compression
+  filter trace name AFTER-HTTP-COMP random-forwarding
   log-tag bla
   option httpclose
   timeout http-request 2s
@@ -28,9 +31,9 @@ frontend test
   option clitcpka
 
 frontend test_2
-  mode http                                                  #alctl: protocol analyser
-  log global                                                 #alctl: log activation
-  option httplog                                             #alctl: log format
+  mode http
+  log global
+  option httplog
   option dontlognull
   option contstats
   option log-separate-errors
@@ -44,12 +47,12 @@ frontend test_2
   option clitcpka
 
 backend test
-  mode http                                                  #alctl: protocol analyser
+  mode http
   balance roundrobin
-  log global                                                 #alctl: log activation
+  log global
   log-tag bla
-  option httplog                                             #alctl: log format
-  option http-keep-alive                                     #alctl: http connection mode
+  option httplog
+  option http-keep-alive
   option forwardfor header X-Forwarded-For
   option httpchk HEAD /
   default-server fall 2
@@ -67,12 +70,12 @@ backend test
   server webserv2 192.168.1.1:9300 maxconn 1000 ssl weight 10 cookie BLAH
 
 backend test_2
-  mode http                                                  #alctl: protocol analyser
+  mode http
   balance roundrobin
   log global  
-  log-tag bla                                                #alctl: log activation
-  option httplog                                             #alctl: log format
-  option http-keep-alive                                     #alctl: http connection mode
+  log-tag bla
+  option httplog
+  option http-keep-alive
   option forwardfor header X-Forwarded-For
   option httpchk HEAD /
   default-server fall 2

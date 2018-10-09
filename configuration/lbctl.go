@@ -461,3 +461,43 @@ func (c *LBCTLConfigurationClient) incrementVersion() error {
 	}
 	return nil
 }
+
+func lbctlTypeToType(lType string) string {
+	switch lType {
+	case "farm":
+		return "Backend"
+	case "service":
+		return "Frontend"
+	case "usefarm":
+		return "BackendSwitchingRule"
+	case "useserver":
+		return "ServerSwitchingRule"
+	case "stickreq":
+		return "StickRequestRule"
+	case "stickrsp":
+		return "StickResponseRule"
+	case "httpreq":
+		return "HTTPRequestRule"
+	case "httprsp":
+		return "HTTPResponseRule"
+	case "tcpreqconn":
+		return "TCPConnectionRule"
+	case "tcpreqcont":
+	case "tcprspcont":
+		return "TCPConnectionRule"
+	default:
+		return misc.CamelCase(lType, true)
+	}
+	return misc.CamelCase(lType, true)
+}
+
+func typeToLbctlType(oType string) string {
+	switch oType {
+	case "frontend":
+		return "service"
+	case "backend":
+		return "farm"
+	default:
+		return ""
+	}
+}
