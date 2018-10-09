@@ -48,7 +48,7 @@ func TestGetServerSwitchingRules(t *testing.T) {
 		}
 	}
 
-	brJSON, err := srvRules.MarshalBinary()
+	srJSON, err := srvRules.MarshalBinary()
 	if err != nil {
 		t.Error(err.Error())
 	}
@@ -62,7 +62,7 @@ func TestGetServerSwitchingRules(t *testing.T) {
 	}
 
 	if !t.Failed() {
-		fmt.Println("GetServerSwitchingRules succesful\nResponse: \n" + string(brJSON) + "\n")
+		fmt.Println("GetServerSwitchingRules succesful\nResponse: \n" + string(srJSON) + "\n")
 	}
 }
 
@@ -84,7 +84,7 @@ func TestGetServerSwitchingRule(t *testing.T) {
 		t.Errorf("%v: CondTest not TRUE: %v", sr.ID, sr.CondTest)
 	}
 
-	brJSON, err := sr.MarshalBinary()
+	srJSON, err := sr.MarshalBinary()
 	if err != nil {
 		t.Error(err.Error())
 	}
@@ -95,7 +95,7 @@ func TestGetServerSwitchingRule(t *testing.T) {
 	}
 
 	if !t.Failed() {
-		fmt.Println("GetServerSwitchingRule succesful\nResponse: \n" + string(brJSON) + "\n")
+		fmt.Println("GetServerSwitchingRule succesful\nResponse: \n" + string(srJSON) + "\n")
 	}
 }
 
