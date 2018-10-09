@@ -68,12 +68,12 @@ func (c *LBCTLConfigurationClient) EditServerSwitchingRule(id int64, backend str
 	if validationErr != nil {
 		return NewConfError(ErrValidationError, validationErr.Error())
 	}
-	ondiskBr, err := c.GetServerSwitchingRule(id, backend)
+	ondiskSr, err := c.GetServerSwitchingRule(id, backend)
 	if err != nil {
 		return err
 	}
 
-	return c.editObject(strconv.FormatInt(data.ID, 10), "useserver", backend, "farm", data, ondiskBr, nil, transactionID, version)
+	return c.editObject(strconv.FormatInt(data.ID, 10), "useserver", backend, "farm", data, ondiskSr, nil, transactionID, version)
 }
 
 func (c *LBCTLConfigurationClient) parseServerSwitchingRules(response string) models.ServerSwitchingRules {
