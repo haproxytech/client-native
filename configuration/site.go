@@ -228,15 +228,15 @@ func (c *LBCTLConfigurationClient) EditSite(name string, data *models.Site, tran
 					res = append(res, err)
 				}
 			} else {
+				if b.UseAs == "default" && defaultBck != "" {
+					return NewConfError(ErrValidationError, fmt.Sprintf("Multiple default backends found in site: %v", name))
+				} else if b.UseAs == "default" && defaultBck == "" {
+					defaultBck = b.Name
+				}
 				confB := confBIface.(*models.SiteBackendsItems)
 				if !reflect.DeepEqual(b, confB) {
 					// check if use as has changed
 					if b.UseAs != confB.UseAs {
-						if b.UseAs == "default" && defaultBck != "" {
-							return NewConfError(ErrValidationError, fmt.Sprintf("Multiple default backends found in site: %v", name))
-						} else if b.UseAs == "default" && defaultBck == "" {
-							defaultBck = b.Name
-						}
 						err = c.createBckFrontendRels(name, b, true, t)
 						if err != nil {
 							res = append(res, err)
