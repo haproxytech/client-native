@@ -23,7 +23,7 @@ frontend test
   timeout http-keep-alive 3s
   maxconn 2000
   default_backend test
-  use-backend test_2 if TRUE
+  use_backend test_2 if TRUE
   timeout client 4s
   option clitcpka
 
@@ -61,6 +61,8 @@ backend test
   timeout tunnel 5s
   timeout server 3s
   cookie BLA
+  use-server webserv if TRUE
+  use-server webserv2 unless TRUE
   server webserv 192.168.1.1:9200 maxconn 1000 ssl weight 10 cookie BLAH
   server webserv2 192.168.1.1:9300 maxconn 1000 ssl weight 10 cookie BLAH
 

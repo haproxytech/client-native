@@ -60,4 +60,16 @@ type Client interface {
 	DeleteListener(name string, frontend string, transactionID string, version int64) error
 	CreateListener(frontend string, data *models.Listener, transactionID string, version int64) error
 	EditListener(name string, frontend string, data *models.Listener, transactionID string, version int64) error
+	//backend switching rule methods
+	GetBackendSwitchingRules(frontend string) (*models.GetBackendSwitchingRulesOKBody, error)
+	GetBackendSwitchingRule(id int64, frontend string) (*models.GetBackendSwitchingRuleOKBody, error)
+	DeleteBackendSwitchingRule(id int64, frontend string, transactionID string, version int64) error
+	CreateBackendSwitchingRule(frontend string, data *models.BackendSwitchingRule, transactionID string, version int64) error
+	EditBackendSwitchingRule(id int64, frontend string, data *models.BackendSwitchingRule, transactionID string, version int64) error
+	//server switching rule methods
+	GetServerSwitchingRules(backend string) (*models.GetServerSwitchingRulesOKBody, error)
+	GetServerSwitchingRule(id int64, backend string) (*models.GetServerSwitchingRuleOKBody, error)
+	DeleteServerSwitchingRule(id int64, backend string, transactionID string, version int64) error
+	CreateServerSwitchingRule(backend string, data *models.ServerSwitchingRule, transactionID string, version int64) error
+	EditServerSwitchingRule(id int64, backend string, data *models.ServerSwitchingRule, transactionID string, version int64) error
 }
