@@ -10,8 +10,8 @@ import (
 
 // GetServerSwitchingRules returns a struct with configuration version and an array of
 // configured server switching rules in the specified backend. Returns error on fail.
-func (c *LBCTLConfigurationClient) GetServerSwitchingRules(backend string) (*models.GetServerSwitchingRulesOKBody, error) {
-	srvRulesString, err := c.executeLBCTL("l7-farm-useserver-dump", "", backend)
+func (c *LBCTLConfigurationClient) GetServerSwitchingRules(backend string, transactionID string) (*models.GetServerSwitchingRulesOKBody, error) {
+	srvRulesString, err := c.executeLBCTL("l7-farm-useserver-dump", transactionID, backend)
 	if err != nil {
 		return nil, err
 	}
@@ -28,8 +28,8 @@ func (c *LBCTLConfigurationClient) GetServerSwitchingRules(backend string) (*mod
 
 // GetServerSwitchingRule returns a struct with configuration version and a requested server switching rule
 // in the specified backend. Returns error on fail or if server switching rule does not exist.
-func (c *LBCTLConfigurationClient) GetServerSwitchingRule(id int64, backend string) (*models.GetServerSwitchingRuleOKBody, error) {
-	srvRuleStr, err := c.executeLBCTL("l7-farm-useserver-show", "", backend, strconv.FormatInt(id, 10))
+func (c *LBCTLConfigurationClient) GetServerSwitchingRule(id int64, backend string, transactionID string) (*models.GetServerSwitchingRuleOKBody, error) {
+	srvRuleStr, err := c.executeLBCTL("l7-farm-useserver-show", transactionID, backend, strconv.FormatInt(id, 10))
 	if err != nil {
 		return nil, err
 	}
@@ -68,7 +68,7 @@ func (c *LBCTLConfigurationClient) EditServerSwitchingRule(id int64, backend str
 	if validationErr != nil {
 		return NewConfError(ErrValidationError, validationErr.Error())
 	}
-	ondiskSr, err := c.GetServerSwitchingRule(id, backend)
+	ondiskSr, err := c.GetServerSwitchingRule(id, backend, transactionID)
 	if err != nil {
 		return err
 	}

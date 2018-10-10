@@ -9,8 +9,8 @@ import (
 
 // GetServers returns a struct with configuration version and an array of
 // configured servers in the specified backend. Returns error on fail.
-func (c *LBCTLConfigurationClient) GetServers(backend string) (*models.GetServersOKBody, error) {
-	serversString, err := c.executeLBCTL("l7-server-dump", "", backend)
+func (c *LBCTLConfigurationClient) GetServers(backend string, transactionID string) (*models.GetServersOKBody, error) {
+	serversString, err := c.executeLBCTL("l7-server-dump", transactionID, backend)
 	if err != nil {
 		return nil, err
 	}
@@ -27,8 +27,8 @@ func (c *LBCTLConfigurationClient) GetServers(backend string) (*models.GetServer
 
 // GetServer returns a struct with configuration version and a requested server
 // in the specified backend. Returns error on fail or if server does not exist.
-func (c *LBCTLConfigurationClient) GetServer(name string, backend string) (*models.GetServerOKBody, error) {
-	serverStr, err := c.executeLBCTL("l7-server-show", "", backend, name)
+func (c *LBCTLConfigurationClient) GetServer(name string, backend string, transactionID string) (*models.GetServerOKBody, error) {
+	serverStr, err := c.executeLBCTL("l7-server-show", transactionID, backend, name)
 	if err != nil {
 		return nil, err
 	}
@@ -67,7 +67,7 @@ func (c *LBCTLConfigurationClient) EditServer(name string, backend string, data 
 	if validationErr != nil {
 		return NewConfError(ErrValidationError, validationErr.Error())
 	}
-	ondiskSrv, err := c.GetServer(name, backend)
+	ondiskSrv, err := c.GetServer(name, backend, transactionID)
 	if err != nil {
 		return err
 	}

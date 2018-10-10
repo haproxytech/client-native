@@ -11,13 +11,13 @@ import (
 
 // GetFilters returns a struct with configuration version and an array of
 // configured filters in the specified parent. Returns error on fail.
-func (c *LBCTLConfigurationClient) GetFilters(parentType, parentName string) (*models.GetFiltersOKBody, error) {
+func (c *LBCTLConfigurationClient) GetFilters(parentType, parentName string, transactionID string) (*models.GetFiltersOKBody, error) {
 	lbctlType := typeToLbctlType(parentType)
 	if lbctlType == "" {
 		return nil, NewConfError(ErrValidationError, fmt.Sprintf("Parent type %v not recognized", parentType))
 	}
 
-	filtersStr, err := c.executeLBCTL("l7-"+lbctlType+"-filter-dump", "", parentName)
+	filtersStr, err := c.executeLBCTL("l7-"+lbctlType+"-filter-dump", transactionID, parentName)
 	if err != nil {
 		return nil, err
 	}
@@ -34,13 +34,13 @@ func (c *LBCTLConfigurationClient) GetFilters(parentType, parentName string) (*m
 
 // GetFilter returns a struct with configuration version and a requested filter
 // in the specified parent. Returns error on fail or if filter does not exist.
-func (c *LBCTLConfigurationClient) GetFilter(id int64, parentType, parentName string) (*models.GetFilterOKBody, error) {
+func (c *LBCTLConfigurationClient) GetFilter(id int64, parentType, parentName string, transactionID string) (*models.GetFilterOKBody, error) {
 	lbctlType := typeToLbctlType(parentType)
 	if lbctlType == "" {
 		return nil, NewConfError(ErrValidationError, fmt.Sprintf("Parent type %v not recognized", parentType))
 	}
 
-	filterStr, err := c.executeLBCTL("l7-"+lbctlType+"-filter-show", "", parentName, strconv.FormatInt(id, 10))
+	filterStr, err := c.executeLBCTL("l7-"+lbctlType+"-filter-show", transactionID, parentName, strconv.FormatInt(id, 10))
 	if err != nil {
 		return nil, err
 	}
@@ -96,7 +96,7 @@ func (c *LBCTLConfigurationClient) EditFilter(id int64, parentType string, paren
 		return NewConfError(ErrValidationError, fmt.Sprintf("Parent type %v not recognized", parentType))
 	}
 
-	ondiskF, err := c.GetFilter(id, parentType, parentName)
+	ondiskF, err := c.GetFilter(id, parentType, parentName, transactionID)
 	if err != nil {
 		return err
 	}

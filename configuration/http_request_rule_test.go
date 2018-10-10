@@ -9,7 +9,7 @@ import (
 )
 
 func TestGetHTTPRequestRules(t *testing.T) {
-	hRules, err := client.GetHTTPRequestRules("frontend", "test")
+	hRules, err := client.GetHTTPRequestRules("frontend", "test", "")
 	if err != nil {
 		t.Error(err.Error())
 	}
@@ -63,7 +63,7 @@ func TestGetHTTPRequestRules(t *testing.T) {
 		t.Error(err.Error())
 	}
 
-	hRules, err = client.GetHTTPRequestRules("backend", "test2")
+	hRules, err = client.GetHTTPRequestRules("backend", "test2", "")
 	if err != nil {
 		t.Error(err.Error())
 	}
@@ -77,7 +77,7 @@ func TestGetHTTPRequestRules(t *testing.T) {
 }
 
 func TestGetHTTPRequestRule(t *testing.T) {
-	hRule, err := client.GetHTTPRequestRule(1, "frontend", "test")
+	hRule, err := client.GetHTTPRequestRule(1, "frontend", "test", "")
 	if err != nil {
 		t.Error(err.Error())
 	}
@@ -102,7 +102,7 @@ func TestGetHTTPRequestRule(t *testing.T) {
 		t.Error(err.Error())
 	}
 
-	_, err = client.GetFilter(3, "backend", "test2")
+	_, err = client.GetFilter(3, "backend", "test2", "")
 	if err == nil {
 		t.Error("Should throw error, non existant HTTP Request Rule")
 	}
@@ -129,7 +129,7 @@ func TestCreateEditDeleteHTTPRequestRule(t *testing.T) {
 		version++
 	}
 
-	ondiskR, err := client.GetHTTPRequestRule(1, "frontend", "test")
+	ondiskR, err := client.GetHTTPRequestRule(1, "frontend", "test", "")
 	if err != nil {
 		t.Error(err.Error())
 	}
@@ -164,7 +164,7 @@ func TestCreateEditDeleteHTTPRequestRule(t *testing.T) {
 		version++
 	}
 
-	ondiskR, err = client.GetHTTPRequestRule(1, "frontend", "test")
+	ondiskR, err = client.GetHTTPRequestRule(1, "frontend", "test", "")
 	if err != nil {
 		t.Error(err.Error())
 	}
@@ -195,7 +195,7 @@ func TestCreateEditDeleteHTTPRequestRule(t *testing.T) {
 		t.Error("Version not incremented")
 	}
 
-	_, err = client.GetHTTPRequestRule(4, "frontend", "test")
+	_, err = client.GetHTTPRequestRule(4, "frontend", "test", "")
 	if err == nil {
 		t.Error("DeleteHTTPRequestRule failed, HTTP Request Rule 4 still exists")
 	}

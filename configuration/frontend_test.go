@@ -9,7 +9,7 @@ import (
 )
 
 func TestGetFrontends(t *testing.T) {
-	frontends, err := client.GetFrontends()
+	frontends, err := client.GetFrontends("")
 	if err != nil {
 		t.Error(err.Error())
 	}
@@ -72,7 +72,7 @@ func TestGetFrontends(t *testing.T) {
 }
 
 func TestGetFrontend(t *testing.T) {
-	frontend, err := client.GetFrontend("test")
+	frontend, err := client.GetFrontend("test", "")
 	if err != nil {
 		t.Error(err.Error())
 	}
@@ -128,7 +128,7 @@ func TestGetFrontend(t *testing.T) {
 		t.Error(err.Error())
 	}
 
-	_, err = client.GetFrontend("doesnotexist")
+	_, err = client.GetFrontend("doesnotexist", "")
 	if err == nil {
 		t.Error("Should throw error, non existant frontend")
 	}
@@ -157,7 +157,7 @@ func TestCreateEditDeleteFrontend(t *testing.T) {
 		version++
 	}
 
-	frontend, err := client.GetFrontend("created")
+	frontend, err := client.GetFrontend("created", "")
 	if err != nil {
 		t.Error(err.Error())
 	}
@@ -198,7 +198,7 @@ func TestCreateEditDeleteFrontend(t *testing.T) {
 		version++
 	}
 
-	frontend, err = client.GetFrontend("created")
+	frontend, err = client.GetFrontend("created", "")
 	if err != nil {
 		t.Error(err.Error())
 	}
@@ -240,7 +240,7 @@ func TestCreateEditDeleteFrontend(t *testing.T) {
 			t.Error("Should throw ErrVersionMismatch error")
 		}
 	}
-	_, err = client.GetFrontend("created")
+	_, err = client.GetFrontend("created", "")
 	if err == nil {
 		t.Error("DeleteFrontend failed, frontend test still exists")
 	}

@@ -10,8 +10,8 @@ import (
 
 // GetBackendSwitchingRules returns a struct with configuration version and an array of
 // configured backend switching rules in the specified frontend. Returns error on fail.
-func (c *LBCTLConfigurationClient) GetBackendSwitchingRules(frontend string) (*models.GetBackendSwitchingRulesOKBody, error) {
-	bckRulesString, err := c.executeLBCTL("l7-service-usefarm-dump", "", frontend)
+func (c *LBCTLConfigurationClient) GetBackendSwitchingRules(frontend string, transactionID string) (*models.GetBackendSwitchingRulesOKBody, error) {
+	bckRulesString, err := c.executeLBCTL("l7-service-usefarm-dump", transactionID, frontend)
 	if err != nil {
 		return nil, err
 	}
@@ -28,8 +28,8 @@ func (c *LBCTLConfigurationClient) GetBackendSwitchingRules(frontend string) (*m
 
 // GetBackendSwitchingRule returns a struct with configuration version and a requested backend switching rule
 // in the specified frontend. Returns error on fail or if backend switching rule does not exist.
-func (c *LBCTLConfigurationClient) GetBackendSwitchingRule(id int64, frontend string) (*models.GetBackendSwitchingRuleOKBody, error) {
-	bckRuleStr, err := c.executeLBCTL("l7-service-usefarm-show", "", frontend, strconv.FormatInt(id, 10))
+func (c *LBCTLConfigurationClient) GetBackendSwitchingRule(id int64, frontend string, transactionID string) (*models.GetBackendSwitchingRuleOKBody, error) {
+	bckRuleStr, err := c.executeLBCTL("l7-service-usefarm-show", transactionID, frontend, strconv.FormatInt(id, 10))
 	if err != nil {
 		return nil, err
 	}
@@ -68,7 +68,7 @@ func (c *LBCTLConfigurationClient) EditBackendSwitchingRule(id int64, frontend s
 	if validationErr != nil {
 		return NewConfError(ErrValidationError, validationErr.Error())
 	}
-	ondiskBr, err := c.GetBackendSwitchingRule(id, frontend)
+	ondiskBr, err := c.GetBackendSwitchingRule(id, frontend, transactionID)
 	if err != nil {
 		return err
 	}

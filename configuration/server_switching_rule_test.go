@@ -9,7 +9,7 @@ import (
 )
 
 func TestGetServerSwitchingRules(t *testing.T) {
-	srvRules, err := client.GetServerSwitchingRules("test")
+	srvRules, err := client.GetServerSwitchingRules("test", "")
 	if err != nil {
 		t.Error(err.Error())
 	}
@@ -53,7 +53,7 @@ func TestGetServerSwitchingRules(t *testing.T) {
 		t.Error(err.Error())
 	}
 
-	srvRules, err = client.GetServerSwitchingRules("test2")
+	srvRules, err = client.GetServerSwitchingRules("test2", "")
 	if err != nil {
 		t.Error(err.Error())
 	}
@@ -67,7 +67,7 @@ func TestGetServerSwitchingRules(t *testing.T) {
 }
 
 func TestGetServerSwitchingRule(t *testing.T) {
-	srvRule, err := client.GetServerSwitchingRule(1, "test")
+	srvRule, err := client.GetServerSwitchingRule(1, "test", "")
 	if err != nil {
 		t.Error(err.Error())
 	}
@@ -89,7 +89,7 @@ func TestGetServerSwitchingRule(t *testing.T) {
 		t.Error(err.Error())
 	}
 
-	_, err = client.GetServerSwitchingRule(3, "test2")
+	_, err = client.GetServerSwitchingRule(3, "test2", "")
 	if err == nil {
 		t.Error("Should throw error, non existant server switching rule")
 	}
@@ -115,7 +115,7 @@ func TestCreateEditDeleteServerSwitchingRule(t *testing.T) {
 		version++
 	}
 
-	srvRule, err := client.GetServerSwitchingRule(2, "test")
+	srvRule, err := client.GetServerSwitchingRule(2, "test", "")
 	if err != nil {
 		t.Error(err.Error())
 	}
@@ -149,7 +149,7 @@ func TestCreateEditDeleteServerSwitchingRule(t *testing.T) {
 		version++
 	}
 
-	srvRule, err = client.GetServerSwitchingRule(2, "test")
+	srvRule, err = client.GetServerSwitchingRule(2, "test", "")
 	if err != nil {
 		t.Error(err.Error())
 	}
@@ -180,7 +180,7 @@ func TestCreateEditDeleteServerSwitchingRule(t *testing.T) {
 		t.Error("Version not incremented")
 	}
 
-	_, err = client.GetServerSwitchingRule(3, "test")
+	_, err = client.GetServerSwitchingRule(3, "test", "")
 	if err == nil {
 		t.Error("DeleteServerSwitchingRule failed, server switching rule 3 still exists")
 	}

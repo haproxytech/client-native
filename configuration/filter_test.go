@@ -9,7 +9,7 @@ import (
 )
 
 func TestGetFilters(t *testing.T) {
-	filters, err := client.GetFilters("frontend", "test")
+	filters, err := client.GetFilters("frontend", "test", "")
 	if err != nil {
 		t.Error(err.Error())
 	}
@@ -60,7 +60,7 @@ func TestGetFilters(t *testing.T) {
 		t.Error(err.Error())
 	}
 
-	filters, err = client.GetFilters("backend", "test2")
+	filters, err = client.GetFilters("backend", "test2", "")
 	if err != nil {
 		t.Error(err.Error())
 	}
@@ -74,7 +74,7 @@ func TestGetFilters(t *testing.T) {
 }
 
 func TestGetFilter(t *testing.T) {
-	filter, err := client.GetFilter(1, "frontend", "test")
+	filter, err := client.GetFilter(1, "frontend", "test", "")
 	if err != nil {
 		t.Error(err.Error())
 	}
@@ -102,7 +102,7 @@ func TestGetFilter(t *testing.T) {
 		t.Error(err.Error())
 	}
 
-	_, err = client.GetFilter(3, "backend", "test2")
+	_, err = client.GetFilter(3, "backend", "test2", "")
 	if err == nil {
 		t.Error("Should throw error, non existant filter")
 	}
@@ -128,7 +128,7 @@ func TestCreateEditDeleteFilter(t *testing.T) {
 		version++
 	}
 
-	ondiskF, err := client.GetFilter(1, "frontend", "test")
+	ondiskF, err := client.GetFilter(1, "frontend", "test", "")
 	if err != nil {
 		t.Error(err.Error())
 	}
@@ -162,7 +162,7 @@ func TestCreateEditDeleteFilter(t *testing.T) {
 		version++
 	}
 
-	ondiskF, err = client.GetFilter(1, "frontend", "test")
+	ondiskF, err = client.GetFilter(1, "frontend", "test", "")
 	if err != nil {
 		t.Error(err.Error())
 	}
@@ -193,7 +193,7 @@ func TestCreateEditDeleteFilter(t *testing.T) {
 		t.Error("Version not incremented")
 	}
 
-	_, err = client.GetFilter(4, "frontend", "test")
+	_, err = client.GetFilter(4, "frontend", "test", "")
 	if err == nil {
 		t.Error("DeleteFilter failed, filter 4 still exists")
 	}

@@ -11,13 +11,13 @@ import (
 
 // GetHTTPRequestRules returns a struct with configuration version and an array of
 // configured http request rules in the specified parent. Returns error on fail.
-func (c *LBCTLConfigurationClient) GetHTTPRequestRules(parentType, parentName string) (*models.GetHTTPRequestRulesOKBody, error) {
+func (c *LBCTLConfigurationClient) GetHTTPRequestRules(parentType, parentName string, transactionID string) (*models.GetHTTPRequestRulesOKBody, error) {
 	lbctlType := typeToLbctlType(parentType)
 	if lbctlType == "" {
 		return nil, NewConfError(ErrValidationError, fmt.Sprintf("Parent type %v not recognized", parentType))
 	}
 
-	httpRulesStr, err := c.executeLBCTL("l7-"+lbctlType+"-httpreq-dump", "", parentName)
+	httpRulesStr, err := c.executeLBCTL("l7-"+lbctlType+"-httpreq-dump", transactionID, parentName)
 	if err != nil {
 		return nil, err
 	}
@@ -34,13 +34,13 @@ func (c *LBCTLConfigurationClient) GetHTTPRequestRules(parentType, parentName st
 
 // GetHTTPRequestRule returns a struct with configuration version and a requested http request rule
 // in the specified parent. Returns error on fail or if http request rule does not exist.
-func (c *LBCTLConfigurationClient) GetHTTPRequestRule(id int64, parentType, parentName string) (*models.GetHTTPRequestRuleOKBody, error) {
+func (c *LBCTLConfigurationClient) GetHTTPRequestRule(id int64, parentType, parentName string, transactionID string) (*models.GetHTTPRequestRuleOKBody, error) {
 	lbctlType := typeToLbctlType(parentType)
 	if lbctlType == "" {
 		return nil, NewConfError(ErrValidationError, fmt.Sprintf("Parent type %v not recognized", parentType))
 	}
 
-	httpRuleStr, err := c.executeLBCTL("l7-"+lbctlType+"-httpreq-show", "", parentName, strconv.FormatInt(id, 10))
+	httpRuleStr, err := c.executeLBCTL("l7-"+lbctlType+"-httpreq-show", transactionID, parentName, strconv.FormatInt(id, 10))
 	if err != nil {
 		return nil, err
 	}
@@ -96,7 +96,7 @@ func (c *LBCTLConfigurationClient) EditHTTPRequestRule(id int64, parentType stri
 		return NewConfError(ErrValidationError, fmt.Sprintf("Parent type %v not recognized", parentType))
 	}
 
-	ondiskR, err := c.GetHTTPRequestRule(id, parentType, parentName)
+	ondiskR, err := c.GetHTTPRequestRule(id, parentType, parentName, transactionID)
 	if err != nil {
 		return err
 	}

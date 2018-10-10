@@ -14,8 +14,8 @@ import (
 
 // GetSites returns a struct with configuration version and an array of
 // configured sites. Returns error on fail.
-func (c *LBCTLConfigurationClient) GetSites() (*models.GetSitesOKBody, error) {
-	response, err := c.executeLBCTL("l7-dump", "")
+func (c *LBCTLConfigurationClient) GetSites(transactionID string) (*models.GetSitesOKBody, error) {
+	response, err := c.executeLBCTL("l7-dump", transactionID)
 	if err != nil {
 		return nil, err
 	}
@@ -32,8 +32,8 @@ func (c *LBCTLConfigurationClient) GetSites() (*models.GetSitesOKBody, error) {
 
 // GetSite returns a struct with configuration version and a requested site.
 // Returns error on fail or if backend does not exist.
-func (c *LBCTLConfigurationClient) GetSite(name string) (*models.GetSiteOKBody, error) {
-	response, err := c.executeLBCTL("l7-dump", "")
+func (c *LBCTLConfigurationClient) GetSite(name string, transactionID string) (*models.GetSiteOKBody, error) {
+	response, err := c.executeLBCTL("l7-dump", transactionID)
 	if err != nil {
 		return nil, err
 	}
@@ -136,7 +136,7 @@ func (c *LBCTLConfigurationClient) EditSite(name string, data *models.Site, tran
 		return err
 	}
 
-	site, err := c.GetSite(name)
+	site, err := c.GetSite(name, transactionID)
 	if err != nil {
 		return err
 	}
@@ -340,7 +340,7 @@ func (c *LBCTLConfigurationClient) DeleteSite(name string, transactionID string,
 		return err
 	}
 
-	site, err := c.GetSite(name)
+	site, err := c.GetSite(name, transactionID)
 	if err != nil {
 		return err
 	}

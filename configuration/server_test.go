@@ -9,7 +9,7 @@ import (
 )
 
 func TestGetServers(t *testing.T) {
-	servers, err := client.GetServers("test")
+	servers, err := client.GetServers("test", "")
 	if err != nil {
 		t.Error(err.Error())
 	}
@@ -51,7 +51,7 @@ func TestGetServers(t *testing.T) {
 		t.Error(err.Error())
 	}
 
-	servers, err = client.GetServers("test2")
+	servers, err = client.GetServers("test2", "")
 	if err != nil {
 		t.Error(err.Error())
 	}
@@ -65,7 +65,7 @@ func TestGetServers(t *testing.T) {
 }
 
 func TestGetServer(t *testing.T) {
-	server, err := client.GetServer("webserv", "test")
+	server, err := client.GetServer("webserv", "test", "")
 	if err != nil {
 		t.Error(err.Error())
 	}
@@ -103,7 +103,7 @@ func TestGetServer(t *testing.T) {
 		t.Error(err.Error())
 	}
 
-	_, err = client.GetServer("webserv", "test2")
+	_, err = client.GetServer("webserv", "test2", "")
 	if err == nil {
 		t.Error("Should throw error, non existant server")
 	}
@@ -132,7 +132,7 @@ func TestCreateEditDeleteServer(t *testing.T) {
 		version++
 	}
 
-	server, err := client.GetServer("created", "test")
+	server, err := client.GetServer("created", "test", "")
 	if err != nil {
 		t.Error(err.Error())
 	}
@@ -172,7 +172,7 @@ func TestCreateEditDeleteServer(t *testing.T) {
 		version++
 	}
 
-	server, err = client.GetServer("created", "test")
+	server, err = client.GetServer("created", "test", "")
 	if err != nil {
 		t.Error(err.Error())
 	}
@@ -203,7 +203,7 @@ func TestCreateEditDeleteServer(t *testing.T) {
 		t.Error("Version not incremented")
 	}
 
-	_, err = client.GetServer("created", "test")
+	_, err = client.GetServer("created", "test", "")
 	if err == nil {
 		t.Error("DeleteServer failed, server test still exists")
 	}

@@ -9,7 +9,7 @@ import (
 )
 
 func TestGetBackends(t *testing.T) {
-	backends, err := client.GetBackends()
+	backends, err := client.GetBackends("")
 	if err != nil {
 		t.Error(err.Error())
 	}
@@ -93,7 +93,7 @@ func TestGetBackends(t *testing.T) {
 }
 
 func TestGetBackend(t *testing.T) {
-	backend, err := client.GetBackend("test")
+	backend, err := client.GetBackend("test", "")
 	if err != nil {
 		t.Error(err.Error())
 	}
@@ -167,7 +167,7 @@ func TestGetBackend(t *testing.T) {
 		t.Error(err.Error())
 	}
 
-	_, err = client.GetBackend("doesnotexist")
+	_, err = client.GetBackend("doesnotexist", "")
 	if err == nil {
 		t.Error("Should throw error, non existant bck")
 	}
@@ -195,7 +195,7 @@ func TestCreateEditDeleteBackend(t *testing.T) {
 		version++
 	}
 
-	backend, err := client.GetBackend("created")
+	backend, err := client.GetBackend("created", "")
 	if err != nil {
 		t.Error(err.Error())
 	}
@@ -237,7 +237,7 @@ func TestCreateEditDeleteBackend(t *testing.T) {
 		version++
 	}
 
-	backend, err = client.GetBackend("created")
+	backend, err = client.GetBackend("created", "")
 	if err != nil {
 		t.Error(err.Error())
 	}
@@ -280,7 +280,7 @@ func TestCreateEditDeleteBackend(t *testing.T) {
 		}
 	}
 
-	_, err = client.GetBackend("created")
+	_, err = client.GetBackend("created", "")
 	if err == nil {
 		t.Error("DeleteBackend failed, bck test still exists")
 	}

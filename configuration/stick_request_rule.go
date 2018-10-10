@@ -10,8 +10,8 @@ import (
 
 // GetStickRequestRules returns a struct with configuration version and an array of
 // configured stick request rules in the specified backend. Returns error on fail.
-func (c *LBCTLConfigurationClient) GetStickRequestRules(backend string) (*models.GetStickRequestRulesOKBody, error) {
-	stickReqRulesString, err := c.executeLBCTL("l7-farm-stickreq-dump", "", backend)
+func (c *LBCTLConfigurationClient) GetStickRequestRules(backend string, transactionID string) (*models.GetStickRequestRulesOKBody, error) {
+	stickReqRulesString, err := c.executeLBCTL("l7-farm-stickreq-dump", transactionID, backend)
 	if err != nil {
 		return nil, err
 	}
@@ -28,8 +28,8 @@ func (c *LBCTLConfigurationClient) GetStickRequestRules(backend string) (*models
 
 // GetStickRequestRule returns a struct with configuration version and a requested stick request rule
 // in the specified backend. Returns error on fail or if stick request rule does not exist.
-func (c *LBCTLConfigurationClient) GetStickRequestRule(id int64, backend string) (*models.GetStickRequestRuleOKBody, error) {
-	stickReqRuleStr, err := c.executeLBCTL("l7-farm-stickreq-show", "", backend, strconv.FormatInt(id, 10))
+func (c *LBCTLConfigurationClient) GetStickRequestRule(id int64, backend string, transactionID string) (*models.GetStickRequestRuleOKBody, error) {
+	stickReqRuleStr, err := c.executeLBCTL("l7-farm-stickreq-show", transactionID, backend, strconv.FormatInt(id, 10))
 	if err != nil {
 		return nil, err
 	}
@@ -68,7 +68,7 @@ func (c *LBCTLConfigurationClient) EditStickRequestRule(id int64, backend string
 	if validationErr != nil {
 		return NewConfError(ErrValidationError, validationErr.Error())
 	}
-	ondiskR, err := c.GetStickRequestRule(id, backend)
+	ondiskR, err := c.GetStickRequestRule(id, backend, transactionID)
 	if err != nil {
 		return err
 	}

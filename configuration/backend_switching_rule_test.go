@@ -9,7 +9,7 @@ import (
 )
 
 func TestGetBackendSwitchingRules(t *testing.T) {
-	bckRules, err := client.GetBackendSwitchingRules("test")
+	bckRules, err := client.GetBackendSwitchingRules("test", "")
 	if err != nil {
 		t.Error(err.Error())
 	}
@@ -42,7 +42,7 @@ func TestGetBackendSwitchingRules(t *testing.T) {
 		t.Error(err.Error())
 	}
 
-	bckRules, err = client.GetBackendSwitchingRules("test2")
+	bckRules, err = client.GetBackendSwitchingRules("test2", "")
 	if err != nil {
 		t.Error(err.Error())
 	}
@@ -56,7 +56,7 @@ func TestGetBackendSwitchingRules(t *testing.T) {
 }
 
 func TestGetBackendSwitchingRule(t *testing.T) {
-	bckRule, err := client.GetBackendSwitchingRule(1, "test")
+	bckRule, err := client.GetBackendSwitchingRule(1, "test", "")
 	if err != nil {
 		t.Error(err.Error())
 	}
@@ -81,7 +81,7 @@ func TestGetBackendSwitchingRule(t *testing.T) {
 		t.Error(err.Error())
 	}
 
-	_, err = client.GetBackendSwitchingRule(3, "test2")
+	_, err = client.GetBackendSwitchingRule(3, "test2", "")
 	if err == nil {
 		t.Error("Should throw error, non existant backend switching rule")
 	}
@@ -107,7 +107,7 @@ func TestCreateEditDeleteBackendSwitchingRule(t *testing.T) {
 		version++
 	}
 
-	bckRule, err := client.GetBackendSwitchingRule(1, "test")
+	bckRule, err := client.GetBackendSwitchingRule(1, "test", "")
 	if err != nil {
 		t.Error(err.Error())
 	}
@@ -141,7 +141,7 @@ func TestCreateEditDeleteBackendSwitchingRule(t *testing.T) {
 		version++
 	}
 
-	bckRule, err = client.GetBackendSwitchingRule(1, "test")
+	bckRule, err = client.GetBackendSwitchingRule(1, "test", "")
 	if err != nil {
 		t.Error(err.Error())
 	}
@@ -172,7 +172,7 @@ func TestCreateEditDeleteBackendSwitchingRule(t *testing.T) {
 		t.Error("Version not incremented")
 	}
 
-	_, err = client.GetBackendSwitchingRule(2, "test")
+	_, err = client.GetBackendSwitchingRule(2, "test", "")
 	if err == nil {
 		t.Error("DeleteBackendSwitchingRule failed, backend switching rule 2 still exists")
 	}

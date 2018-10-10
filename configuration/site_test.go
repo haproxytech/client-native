@@ -10,7 +10,7 @@ import (
 )
 
 func TestGetSites(t *testing.T) {
-	sites, err := client.GetSites()
+	sites, err := client.GetSites("")
 	if err != nil {
 		t.Error(err.Error())
 	}
@@ -173,7 +173,7 @@ func TestGetSites(t *testing.T) {
 }
 
 func TestGetSite(t *testing.T) {
-	site, err := client.GetSite("test")
+	site, err := client.GetSite("test", "")
 	if err != nil {
 		t.Error(err.Error())
 	}
@@ -352,7 +352,7 @@ func TestCreateEditDeleteSite(t *testing.T) {
 		version++
 	}
 
-	site, err := client.GetSite("created")
+	site, err := client.GetSite("created", "")
 	if err != nil {
 		t.Error(err.Error())
 	}
@@ -432,7 +432,7 @@ func TestCreateEditDeleteSite(t *testing.T) {
 		version++
 	}
 
-	site, err = client.GetSite("created")
+	site, err = client.GetSite("created", "")
 	if err != nil {
 		t.Error(err.Error())
 	}
@@ -463,7 +463,7 @@ func TestCreateEditDeleteSite(t *testing.T) {
 		t.Error("Version not incremented")
 	}
 
-	_, err = client.GetSite("created")
+	_, err = client.GetSite("created", "")
 	if err == nil {
 		t.Error("DeleteSite failed, site test still exists")
 	}

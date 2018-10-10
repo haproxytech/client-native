@@ -9,8 +9,8 @@ import (
 
 // GetBackends returns a struct with configuration version and an array of
 // configured backends. Returns error on fail.
-func (c *LBCTLConfigurationClient) GetBackends() (*models.GetBackendsOKBody, error) {
-	backendsString, err := c.executeLBCTL("l7-farm-dump", "")
+func (c *LBCTLConfigurationClient) GetBackends(transactionID string) (*models.GetBackendsOKBody, error) {
+	backendsString, err := c.executeLBCTL("l7-farm-dump", transactionID)
 	if err != nil {
 		return nil, err
 	}
@@ -27,8 +27,8 @@ func (c *LBCTLConfigurationClient) GetBackends() (*models.GetBackendsOKBody, err
 
 // GetBackend returns a struct with configuration version and a requested backend.
 // Returns error on fail or if backend does not exist.
-func (c *LBCTLConfigurationClient) GetBackend(name string) (*models.GetBackendOKBody, error) {
-	backendStr, err := c.executeLBCTL("l7-farm-show", "", name)
+func (c *LBCTLConfigurationClient) GetBackend(name string, transactionID string) (*models.GetBackendOKBody, error) {
+	backendStr, err := c.executeLBCTL("l7-farm-show", transactionID, name)
 	if err != nil {
 		return nil, err
 	}
@@ -67,7 +67,7 @@ func (c *LBCTLConfigurationClient) EditBackend(name string, data *models.Backend
 	if validationErr != nil {
 		return NewConfError(ErrValidationError, validationErr.Error())
 	}
-	ondiskBck, err := c.GetBackend(name)
+	ondiskBck, err := c.GetBackend(name, transactionID)
 	if err != nil {
 		return err
 	}

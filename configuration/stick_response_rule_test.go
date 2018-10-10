@@ -9,7 +9,7 @@ import (
 )
 
 func TestGetStickResponseRules(t *testing.T) {
-	sRules, err := client.GetStickResponseRules("test")
+	sRules, err := client.GetStickResponseRules("test", "")
 	if err != nil {
 		t.Error(err.Error())
 	}
@@ -60,7 +60,7 @@ func TestGetStickResponseRules(t *testing.T) {
 		t.Error(err.Error())
 	}
 
-	sRules, err = client.GetStickResponseRules("test2")
+	sRules, err = client.GetStickResponseRules("test2", "")
 	if err != nil {
 		t.Error(err.Error())
 	}
@@ -74,7 +74,7 @@ func TestGetStickResponseRules(t *testing.T) {
 }
 
 func TestGetStickResponseRule(t *testing.T) {
-	sRule, err := client.GetStickResponseRule(3, "test")
+	sRule, err := client.GetStickResponseRule(3, "test", "")
 	if err != nil {
 		t.Error(err.Error())
 	}
@@ -102,7 +102,7 @@ func TestGetStickResponseRule(t *testing.T) {
 		t.Error(err.Error())
 	}
 
-	_, err = client.GetStickResponseRule(5, "test2")
+	_, err = client.GetStickResponseRule(5, "test2", "")
 	if err == nil {
 		t.Error("Should throw error, non existant stick response rule")
 	}
@@ -129,7 +129,7 @@ func TestCreateEditDeleteStickResponseRule(t *testing.T) {
 		version++
 	}
 
-	sRule, err := client.GetStickResponseRule(1, "test")
+	sRule, err := client.GetStickResponseRule(1, "test", "")
 	if err != nil {
 		t.Error(err.Error())
 	}
@@ -165,7 +165,7 @@ func TestCreateEditDeleteStickResponseRule(t *testing.T) {
 		version++
 	}
 
-	sRule, err = client.GetStickResponseRule(1, "test")
+	sRule, err = client.GetStickResponseRule(1, "test", "")
 	if err != nil {
 		t.Error(err.Error())
 	}
@@ -196,7 +196,7 @@ func TestCreateEditDeleteStickResponseRule(t *testing.T) {
 		t.Error("Version not incremented")
 	}
 
-	_, err = client.GetStickResponseRule(4, "test")
+	_, err = client.GetStickResponseRule(4, "test", "")
 	if err == nil {
 		t.Error("DeleteStickResponseRule failed, stick response rule 3 still exists")
 	}

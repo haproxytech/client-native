@@ -9,8 +9,8 @@ import (
 
 // GetListeners returns a struct with configuration version and an array of
 // configured listeners in the specified frontend. Returns error on fail.
-func (c *LBCTLConfigurationClient) GetListeners(frontend string) (*models.GetListenersOKBody, error) {
-	listenersString, err := c.executeLBCTL("l7-listener-dump", "", frontend)
+func (c *LBCTLConfigurationClient) GetListeners(frontend string, transactionID string) (*models.GetListenersOKBody, error) {
+	listenersString, err := c.executeLBCTL("l7-listener-dump", transactionID, frontend)
 	if err != nil {
 		return nil, err
 	}
@@ -27,8 +27,8 @@ func (c *LBCTLConfigurationClient) GetListeners(frontend string) (*models.GetLis
 
 // GetListener returns a struct with configuration version and a requested listener
 // in the specified frontend. Returns error on fail or if listener does not exist.
-func (c *LBCTLConfigurationClient) GetListener(name string, frontend string) (*models.GetListenerOKBody, error) {
-	listenerStr, err := c.executeLBCTL("l7-listener-show", "", frontend, name)
+func (c *LBCTLConfigurationClient) GetListener(name string, frontend string, transactionID string) (*models.GetListenerOKBody, error) {
+	listenerStr, err := c.executeLBCTL("l7-listener-show", transactionID, frontend, name)
 	if err != nil {
 		return nil, err
 	}
@@ -67,7 +67,7 @@ func (c *LBCTLConfigurationClient) EditListener(name string, frontend string, da
 	if validationErr != nil {
 		return NewConfError(ErrValidationError, validationErr.Error())
 	}
-	ondiskLst, err := c.GetListener(name, frontend)
+	ondiskLst, err := c.GetListener(name, frontend, transactionID)
 	if err != nil {
 		return err
 	}

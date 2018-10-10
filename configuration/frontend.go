@@ -9,8 +9,8 @@ import (
 
 // GetFrontends returns a struct with configuration version and an array of
 // configured frontends. Returns error on fail.
-func (c *LBCTLConfigurationClient) GetFrontends() (*models.GetFrontendsOKBody, error) {
-	frontendsStr, err := c.executeLBCTL("l7-service-dump", "")
+func (c *LBCTLConfigurationClient) GetFrontends(transactionID string) (*models.GetFrontendsOKBody, error) {
+	frontendsStr, err := c.executeLBCTL("l7-service-dump", transactionID)
 	if err != nil {
 		return nil, err
 	}
@@ -26,8 +26,8 @@ func (c *LBCTLConfigurationClient) GetFrontends() (*models.GetFrontendsOKBody, e
 
 // GetFrontend returns a struct with configuration version and a requested frontend.
 // Returns error on fail or if frontend does not exist.
-func (c *LBCTLConfigurationClient) GetFrontend(name string) (*models.GetFrontendOKBody, error) {
-	frontendStr, err := c.executeLBCTL("l7-service-show", "", name)
+func (c *LBCTLConfigurationClient) GetFrontend(name string, transactionID string) (*models.GetFrontendOKBody, error) {
+	frontendStr, err := c.executeLBCTL("l7-service-show", transactionID, name)
 	if err != nil {
 		return nil, err
 	}
@@ -56,7 +56,7 @@ func (c *LBCTLConfigurationClient) EditFrontend(name string, data *models.Fronte
 	if validationErr != nil {
 		return NewConfError(ErrValidationError, validationErr.Error())
 	}
-	ondiskFrontend, err := c.GetFrontend(name)
+	ondiskFrontend, err := c.GetFrontend(name, transactionID)
 	if err != nil {
 		return err
 	}

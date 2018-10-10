@@ -9,7 +9,7 @@ import (
 )
 
 func TestGetListeners(t *testing.T) {
-	listeners, err := client.GetListeners("test")
+	listeners, err := client.GetListeners("test", "")
 	if err != nil {
 		t.Error(err.Error())
 	}
@@ -39,7 +39,7 @@ func TestGetListeners(t *testing.T) {
 		t.Error(err.Error())
 	}
 
-	listeners, err = client.GetListeners("test2")
+	listeners, err = client.GetListeners("test2", "")
 	if err != nil {
 		t.Error(err.Error())
 	}
@@ -53,7 +53,7 @@ func TestGetListeners(t *testing.T) {
 }
 
 func TestGetListener(t *testing.T) {
-	listener, err := client.GetListener("webserv", "test")
+	listener, err := client.GetListener("webserv", "test", "")
 	if err != nil {
 		t.Error(err.Error())
 	}
@@ -79,7 +79,7 @@ func TestGetListener(t *testing.T) {
 		t.Error(err.Error())
 	}
 
-	_, err = client.GetListener("webserv", "test2")
+	_, err = client.GetListener("webserv", "test2", "")
 	if err == nil {
 		t.Error("Should throw error, non existant listener")
 	}
@@ -107,7 +107,7 @@ func TestCreateEditDeleteListener(t *testing.T) {
 		version++
 	}
 
-	listener, err := client.GetListener("created", "test")
+	listener, err := client.GetListener("created", "test", "")
 	if err != nil {
 		t.Error(err.Error())
 	}
@@ -150,7 +150,7 @@ func TestCreateEditDeleteListener(t *testing.T) {
 		version++
 	}
 
-	listener, err = client.GetListener("created", "test")
+	listener, err = client.GetListener("created", "test", "")
 	if err != nil {
 		t.Error(err.Error())
 	}
@@ -181,7 +181,7 @@ func TestCreateEditDeleteListener(t *testing.T) {
 		t.Error("Version not incremented")
 	}
 
-	_, err = client.GetListener("created", "test")
+	_, err = client.GetListener("created", "test", "")
 	if err == nil {
 		t.Error("DeleteListener failed, listener test still exists")
 	}
