@@ -102,4 +102,10 @@ type Client interface {
 	DeleteStickResponseRule(id int64, backend string, transactionID string, version int64) error
 	CreateStickResponseRule(backend string, data *models.StickResponseRule, transactionID string, version int64) error
 	EditStickResponseRule(id int64, backend string, data *models.StickResponseRule, transactionID string, version int64) error
+	//stick response rule methods
+	GetTCPConnectionRules(backend string) (*models.GetTCPConnectionRulesOKBody, error)
+	GetTCPConnectionRule(id int64, backend string) (*models.GetTCPConnectionRuleOKBody, error)
+	DeleteTCPConnectionRule(id int64, backend string, transactionID string, version int64) error
+	CreateTCPConnectionRule(backend string, data *models.TCPRule, transactionID string, version int64) error
+	EditTCPConnectionRule(id int64, backend string, data *models.TCPRule, transactionID string, version int64) error
 }
