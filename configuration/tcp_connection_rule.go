@@ -10,8 +10,8 @@ import (
 
 // GetTCPConnectionRules returns a struct with configuration version and an array of
 // configured tcp connection rules in the specified frontend. Returns error on fail.
-func (c *LBCTLConfigurationClient) GetTCPConnectionRules(frontend string) (*models.GetTCPConnectionRulesOKBody, error) {
-	tcpRulesStr, err := c.executeLBCTL("l7-service-tcpreqconn-dump", "", frontend)
+func (c *LBCTLConfigurationClient) GetTCPConnectionRules(frontend string, transactionID string) (*models.GetTCPConnectionRulesOKBody, error) {
+	tcpRulesStr, err := c.executeLBCTL("l7-service-tcpreqconn-dump", transactionID, frontend)
 	if err != nil {
 		return nil, err
 	}
@@ -28,8 +28,8 @@ func (c *LBCTLConfigurationClient) GetTCPConnectionRules(frontend string) (*mode
 
 // GetTCPConnectionRule returns a struct with configuration version and a requested tcp connection rule
 // in the specified frontend. Returns error on fail or if tcp connection rule does not exist.
-func (c *LBCTLConfigurationClient) GetTCPConnectionRule(id int64, frontend string) (*models.GetTCPConnectionRuleOKBody, error) {
-	tcpRuleStr, err := c.executeLBCTL("l7-service-tcpreqconn-show", "", frontend, strconv.FormatInt(id, 10))
+func (c *LBCTLConfigurationClient) GetTCPConnectionRule(id int64, frontend string, transactionID string) (*models.GetTCPConnectionRuleOKBody, error) {
+	tcpRuleStr, err := c.executeLBCTL("l7-service-tcpreqconn-show", transactionID, frontend, strconv.FormatInt(id, 10))
 	if err != nil {
 		return nil, err
 	}
@@ -68,7 +68,7 @@ func (c *LBCTLConfigurationClient) EditTCPConnectionRule(id int64, frontend stri
 	if validationErr != nil {
 		return NewConfError(ErrValidationError, validationErr.Error())
 	}
-	ondiskBr, err := c.GetTCPConnectionRule(id, frontend)
+	ondiskBr, err := c.GetTCPConnectionRule(id, frontend, transactionID)
 	if err != nil {
 		return err
 	}

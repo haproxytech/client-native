@@ -9,7 +9,7 @@ import (
 )
 
 func TestGetTCPConnectionRules(t *testing.T) {
-	tRules, err := client.GetTCPConnectionRules("test")
+	tRules, err := client.GetTCPConnectionRules("test", "")
 	if err != nil {
 		t.Error(err.Error())
 	}
@@ -54,7 +54,7 @@ func TestGetTCPConnectionRules(t *testing.T) {
 		t.Error(err.Error())
 	}
 
-	tRules, err = client.GetTCPConnectionRules("test2")
+	tRules, err = client.GetTCPConnectionRules("test2", "")
 	if err != nil {
 		t.Error(err.Error())
 	}
@@ -68,7 +68,7 @@ func TestGetTCPConnectionRules(t *testing.T) {
 }
 
 func TestGetTCPConnectionRule(t *testing.T) {
-	tRule, err := client.GetTCPConnectionRule(1, "test")
+	tRule, err := client.GetTCPConnectionRule(1, "test", "")
 	if err != nil {
 		t.Error(err.Error())
 	}
@@ -93,7 +93,7 @@ func TestGetTCPConnectionRule(t *testing.T) {
 		t.Error(err.Error())
 	}
 
-	_, err = client.GetTCPConnectionRule(3, "test2")
+	_, err = client.GetTCPConnectionRule(3, "test2", "")
 	if err == nil {
 		t.Error("Should throw error, non existant TCP connection rule")
 	}
@@ -119,7 +119,7 @@ func TestCreateEditDeleteTCPConnectionRule(t *testing.T) {
 		version++
 	}
 
-	tRule, err := client.GetTCPConnectionRule(1, "test")
+	tRule, err := client.GetTCPConnectionRule(1, "test", "")
 	if err != nil {
 		t.Error(err.Error())
 	}
@@ -153,7 +153,7 @@ func TestCreateEditDeleteTCPConnectionRule(t *testing.T) {
 		version++
 	}
 
-	tRule, err = client.GetTCPConnectionRule(1, "test")
+	tRule, err = client.GetTCPConnectionRule(1, "test", "")
 	if err != nil {
 		t.Error(err.Error())
 	}
@@ -184,7 +184,7 @@ func TestCreateEditDeleteTCPConnectionRule(t *testing.T) {
 		t.Error("Version not incremented")
 	}
 
-	_, err = client.GetTCPConnectionRule(3, "test")
+	_, err = client.GetTCPConnectionRule(3, "test", "")
 	if err == nil {
 		t.Error("DeleteTCPConnectionRule failed, TCP connection rule 2 still exists")
 	}
