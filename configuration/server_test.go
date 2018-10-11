@@ -117,12 +117,15 @@ func TestCreateEditDeleteServer(t *testing.T) {
 	// TestCreateServer
 	port := int64(4300)
 	s := &models.Server{
-		Name:        "created",
-		Address:     "192.168.2.1",
-		Port:        &port,
-		Sorry:       "enabled",
-		Check:       "enabled",
-		Maintenance: "enabled",
+		Name:           "created",
+		Address:        "192.168.2.1",
+		Port:           &port,
+		Sorry:          "enabled",
+		Check:          "enabled",
+		Maintenance:    "enabled",
+		Ssl:            "enabled",
+		SslCertificate: "dummy.crt",
+		TLSTickets:     "enabled",
 	}
 
 	err := client.CreateServer("test", s, "", version)
@@ -160,9 +163,13 @@ func TestCreateEditDeleteServer(t *testing.T) {
 	// TestEditServer
 	port = int64(5300)
 	s = &models.Server{
-		Name:    "created",
-		Address: "192.168.3.1",
-		Port:    &port,
+		Name:           "created",
+		Address:        "192.168.3.1",
+		Port:           &port,
+		Ssl:            "enabled",
+		SslCertificate: "dummy.crt",
+		SslCafile:      "dummy.ca",
+		TLSTickets:     "disabled",
 	}
 
 	err = client.EditServer("created", "test", s, "", version)

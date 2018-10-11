@@ -39,12 +39,14 @@ func CamelCase(fieldName string, initCase bool) string {
 			capNext = false
 		}
 	}
+	// special cases
 	n = strings.Replace(n, "Http", "HTTP", -1)
 	n = strings.Replace(n, "Uri", "URI", -1)
 	n = strings.Replace(n, "http", "HTTP", -1)
 	n = strings.Replace(n, "tcp", "TCP", -1)
 	n = strings.Replace(n, "Tcp", "TCP", -1)
 	n = strings.Replace(n, "Id", "ID", -1)
+	n = strings.Replace(n, "Tls", "TLS", -1)
 	return n
 }
 
