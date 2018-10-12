@@ -7,16 +7,22 @@ import (
 // ClientParams is just a placeholder for all client options
 type ClientParams struct {
 	configurationFile string
+	haproxy           string
 }
 
 // NewConfigurationClientParams creates a new configuration client.
-func NewConfigurationClientParams(configurationFile string) *ClientParams {
-	return &ClientParams{configurationFile: configurationFile}
+func NewConfigurationClientParams(configurationFile string, haproxy string) *ClientParams {
+	return &ClientParams{configurationFile: configurationFile, haproxy: haproxy}
 }
 
-// ConfigurationFile changes the configuration file on the client
+// ConfigurationFile returns the configuration file of the client
 func (c *ClientParams) ConfigurationFile() string {
 	return c.configurationFile
+}
+
+// Haproxy returns the haproxy executable path
+func (c *ClientParams) Haproxy() string {
+	return c.haproxy
 }
 
 // Client interface is the interface used for managing HAProxy configuration

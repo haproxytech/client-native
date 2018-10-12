@@ -30,7 +30,7 @@ const (
 )
 
 // NewLBCTLClient constructor
-func NewLBCTLClient(configurationFile string, LBCTLPath string, LBCTLTmpPath string) *LBCTLConfigurationClient {
+func NewLBCTLClient(configurationFile string, haproxy string, LBCTLPath string, LBCTLTmpPath string) *LBCTLConfigurationClient {
 	if LBCTLPath == "" {
 		LBCTLPath = DefaultLBCTLPath
 	}
@@ -39,12 +39,12 @@ func NewLBCTLClient(configurationFile string, LBCTLPath string, LBCTLTmpPath str
 		LBCTLTmpPath = DefaultLBCTLTmpPath
 	}
 
-	return &LBCTLConfigurationClient{NewConfigurationClientParams(configurationFile), LBCTLPath, LBCTLTmpPath}
+	return &LBCTLConfigurationClient{NewConfigurationClientParams(configurationFile, haproxy), LBCTLPath, LBCTLTmpPath}
 }
 
 // DefaultLBCTLClient returns LBCTLConfigurationClient with sane defaults
 func DefaultLBCTLClient() *LBCTLConfigurationClient {
-	return NewLBCTLClient("", "", "")
+	return NewLBCTLClient("", "", "", "")
 }
 
 func (c *LBCTLConfigurationClient) executeLBCTL(command string, transaction string, args ...string) (string, error) {
@@ -63,12 +63,19 @@ func (c *LBCTLConfigurationClient) executeLBCTL(command string, transaction stri
 	cmd := exec.Command(c.LBCTLPath, lbctlArgs...)
 	cmd.Env = os.Environ()
 	cmd.Env = append(cmd.Env, "LBCTL_MODULES=l7")
-	cmd.Env = append(cmd.Env, "LBCTL_L7_SVC_CHECK_CMD=true")
 	cmd.Env = append(cmd.Env, "LBCTL_L7_SVC_APPLY_CMD=true")
 
 	if c.ConfigurationFile() != "" {
 		cmd.Env = append(cmd.Env, "LBCTL_L7_HAPROXY_CONFIG="+c.ConfigurationFile())
+		if c.Haproxy() != "" {
+			cmd.Env = append(cmd.Env, "LBCTL_L7_SVC_CHECK_CMD=\""+c.Haproxy()+" -f "+c.ConfigurationFile()+" -c\"")
+		} else {
+			cmd.Env = append(cmd.Env, "LBCTL_L7_SVC_CHECK_CMD=true")
+		}
+	} else {
+		cmd.Env = append(cmd.Env, "LBCTL_L7_SVC_CHECK_CMD=true")
 	}
+
 	if c.LBCTLTmpPath != "" {
 		cmd.Env = append(cmd.Env, "LBCTL_TRANS_DIR="+c.LBCTLTmpPath)
 	}

@@ -107,6 +107,7 @@ backend test_2
   cookie BLA
 `
 const testPath = "/tmp/haproxy-test.cfg"
+const haproxyExec = "/usr/sbin/haproxy"
 
 var client Client
 var version int64 = 1
@@ -171,5 +172,5 @@ func deleteTestFile(path string) error {
 }
 
 func prepareClient(path string) Client {
-	return NewLBCTLClient(path, "/usr/sbin/lbctl", "/tmp/lbctl")
+	return NewLBCTLClient(path, "", "/usr/sbin/lbctl", "/tmp/lbctl")
 }
