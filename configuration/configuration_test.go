@@ -28,6 +28,8 @@ frontend test
   http-response set-var(req.my_var) req.fhdr(user-agent),lower
   tcp-request connection accept if TRUE
   tcp-request connection reject if FALSE
+  tcp-request content accept if TRUE
+  tcp-request content reject if FALSE
   log-tag bla
   option httpclose
   timeout http-request 2s
@@ -73,6 +75,8 @@ backend test
   stick store-response src
   stick store-response src_port table test_port
   stick store-response src table test if TRUE
+  tcp-response content accept if TRUE
+  tcp-response content reject if FALSE
   option contstats
   timeout check 2s
   timeout tunnel 5s

@@ -78,13 +78,13 @@ type Client interface {
 	DeleteFilter(id int64, parentType, parentName string, transactionID string, version int64) error
 	CreateFilter(parentType, parentName string, data *models.Filter, transactionID string, version int64) error
 	EditFilter(id int64, parentType, parentName string, data *models.Filter, transactionID string, version int64) error
-	//HTTP Request Rules methods
+	//HTTP request rules methods
 	GetHTTPRequestRules(parentType, parentName string, transactionID string) (*models.GetHTTPRequestRulesOKBody, error)
 	GetHTTPRequestRule(id int64, parentType, parentName string, transactionID string) (*models.GetHTTPRequestRuleOKBody, error)
 	DeleteHTTPRequestRule(id int64, parentType, parentName string, transactionID string, version int64) error
 	CreateHTTPRequestRule(parentType, parentName string, data *models.HTTPRequestRule, transactionID string, version int64) error
 	EditHTTPRequestRule(id int64, parentType, parentName string, data *models.HTTPRequestRule, transactionID string, version int64) error
-	//HTTP Response Rules methods
+	//HTTP response rules methods
 	GetHTTPResponseRules(parentType, parentName string, transactionID string) (*models.GetHTTPResponseRulesOKBody, error)
 	GetHTTPResponseRule(id int64, parentType, parentName string, transactionID string) (*models.GetHTTPResponseRuleOKBody, error)
 	DeleteHTTPResponseRule(id int64, parentType, parentName string, transactionID string, version int64) error
@@ -102,10 +102,16 @@ type Client interface {
 	DeleteStickResponseRule(id int64, backend string, transactionID string, version int64) error
 	CreateStickResponseRule(backend string, data *models.StickResponseRule, transactionID string, version int64) error
 	EditStickResponseRule(id int64, backend string, data *models.StickResponseRule, transactionID string, version int64) error
-	//stick response rule methods
+	//TCP connection rule methods
 	GetTCPConnectionRules(backend string, transactionID string) (*models.GetTCPConnectionRulesOKBody, error)
 	GetTCPConnectionRule(id int64, backend string, transactionID string) (*models.GetTCPConnectionRuleOKBody, error)
 	DeleteTCPConnectionRule(id int64, backend string, transactionID string, version int64) error
 	CreateTCPConnectionRule(backend string, data *models.TCPRule, transactionID string, version int64) error
 	EditTCPConnectionRule(id int64, backend string, data *models.TCPRule, transactionID string, version int64) error
+	//TCP connection rule methods
+	GetTCPContentRules(parentName, parentType, ruleType, transactionID string) (*models.GetTCPContentRulesOKBody, error)
+	GetTCPContentRule(id int64, parentName, parentType, ruleType, transactionID string) (*models.GetTCPContentRuleOKBody, error)
+	DeleteTCPContentRule(id int64, parentName, parentType, ruleType, transactionID string, version int64) error
+	CreateTCPContentRule(parentName, parentType, ruleType string, data *models.TCPRule, transactionID string, version int64) error
+	EditTCPContentRule(id int64, parentName, parentType, ruleType string, data *models.TCPRule, transactionID string, version int64) error
 }
