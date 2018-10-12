@@ -102,7 +102,7 @@ func TestGetHTTPRequestRule(t *testing.T) {
 		t.Error(err.Error())
 	}
 
-	_, err = client.GetFilter(3, "backend", "test2", "")
+	_, err = client.GetHTTPRequestRule(3, "backend", "test2", "")
 	if err == nil {
 		t.Error("Should throw error, non existant HTTP Request Rule")
 	}
