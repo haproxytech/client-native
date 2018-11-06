@@ -27,7 +27,7 @@ func main() {
 	}
 	log.Println(result)
 
-	result, err = client.GetRawData("show env")
+	result, err = client.ExecuteRaw("show env")
 	if err != nil {
 		log.Println(err)
 	}

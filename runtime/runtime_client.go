@@ -6,6 +6,9 @@ import (
 	"net"
 	"strings"
 	"time"
+
+	"github.com/mitchellh/mapstructure"
+	"github.com/haproxytech/models"
 )
 
 //Task has command to execute on runtime api, and response channel for result
@@ -47,7 +50,6 @@ func (s *SingleRuntime) handleIncommingJobs(c net.Conn) {
 	for {
 		select {
 		case job := <-s.jobs:
-			log.Println(job)
 			result, err := s.readFromSocket(c, job.command)
 			if err != nil {
 				job.response <- ""
@@ -107,8 +109,8 @@ func (s *SingleRuntime) readFromSocketClean(command string) (string, error) {
 	return data.String(), nil
 }
 
-//GetRawData executes command on runtime API
-func (s *SingleRuntime) GetRawData(command string) (string, error) {
+//ExecuteRaw executes command on runtime API and returns raw result
+func (s *SingleRuntime) ExecuteRaw(command string) (string, error) {
 	response := make(chan string)
 	task := Task{
 		command:  command,
@@ -119,26 +121,46 @@ func (s *SingleRuntime) GetRawData(command string) (string, error) {
 }
 
 //GetStats fetches HAProxy stats from runtime API
-func (s *SingleRuntime) GetStats() ([]string, error) {
-	response := make(chan string)
-	task := Task{
-		command:  "show stat",
-		response: response,
+func (s *SingleRuntime) GetStats() (models.NativeStats, error) {
+	rawdata, err := s.ExecuteRaw("show stat")
+	if err != nil {
+		return nil, err
 	}
-	s.jobs <- task
-	data := <-response
-	lines := strings.Split(data, "\n")
-	return lines, nil
+	lines := strings.Split(rawdata[2:], "\n")
+	result := models.NativeStats{}
+	keys := strings.Split(lines[0], ",")
+	//data := []map[string]string{}
+	for i := 1; i < len(lines); i++ {
+		data := map[string]string{}
+		line := strings.Split(lines[i], ",")
+		if len(line) < len(keys) {
+			continue
+		}
+		for index, key := range keys {
+			if len(line[index]) > 0 {
+				data[key] = line[index]
+			}
+		}
+		oneLineData := &models.NativeStatsItems{
+			Name: line[0],
+			Type: strings.ToLower(line[1]),
+		}
+		var st models.NativeStatsItemsStats
+		err := mapstructure.WeakDecode(data, &st)
+		if err != nil {
+			continue
+		}
+		oneLineData.Stats = &st
+		result = append(result, oneLineData)
+	}
+	return result, nil
 }
 
 //GetInfo fetches HAProxy info from runtime API
 func (s *SingleRuntime) GetInfo() (string, error) {
-	response := make(chan string)
-	task := Task{
-		command:  "show info",
-		response: response,
+	data, err := s.ExecuteRaw("show stat")
+	if err != nil {
+		return "", err
 	}
-	s.jobs <- task
-	data := <-response
 	return data, nil
 }
