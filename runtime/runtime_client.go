@@ -11,10 +11,16 @@ import (
 	"github.com/haproxytech/models"
 )
 
-//Task has command to execute on runtime api, and response channel for result
-type Task struct {
+//RuntimeTaskResponse ...
+type RuntimeTaskResponse struct {
+	result string
+	err    error
+}
+
+//RuntimeTask has command to execute on runtime api, and response channel for result
+type RuntimeTask struct {
 	command  string
-	response chan string
+	response chan RuntimeTaskResponse
 }
 
 //Client handles multiple HAProxy clients
@@ -24,49 +30,70 @@ type Client struct {
 
 //SingleRuntime handles one runtime API
 type SingleRuntime struct {
-	socketOpen bool
-	jobs       chan Task
-	socketPath string
+	socketOpen       bool
+	jobs             chan RuntimeTask
+	socketPath       string
+	autoReconnect    bool
+	runtimeAPIsocket net.Conn
 }
 
 //Init must be given path to runtime socket
-func (s *SingleRuntime) Init(socketPath string) error {
+func (s *SingleRuntime) Init(socketPath string, autoReconnect bool) error {
 	s.socketPath = socketPath
-	c, err := net.Dial("unix", socketPath)
-	if err != nil {
-		return err
-	}
-	s.jobs = make(chan Task)
-	go s.handleIncommingJobs(c)
+	s.autoReconnect = autoReconnect
+	s.jobs = make(chan RuntimeTask)
+	s.socketConnect()
+	go s.handleIncommingJobs()
 	return nil
 }
 
-func (s *SingleRuntime) handleIncommingJobs(c net.Conn) {
-	_, err := c.Write([]byte(fmt.Sprintf("prompt\n")))
+func (s *SingleRuntime) socketConnect() error {
+	var err error
+	s.runtimeAPIsocket, err = net.Dial("unix", s.socketPath)
 	if err != nil {
-		return
+		if s.autoReconnect {
+			go func() {
+				time.Sleep(time.Second * 1)
+				s.socketConnect()
+			}()
+		}
+		return err
 	}
+	s.socketOpen = true
+	_, err = s.runtimeAPIsocket.Write([]byte(fmt.Sprintf("prompt\n")))
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (s *SingleRuntime) handleIncommingJobs() {
 	log.Println("start")
 	for {
 		select {
 		case job := <-s.jobs:
-			result, err := s.readFromSocket(c, job.command)
+			result, err := s.readFromSocket(s.runtimeAPIsocket, job.command)
 			if err != nil {
-				job.response <- ""
+				job.response <- RuntimeTaskResponse{err: err}
 			} else {
-				job.response <- result
+				job.response <- RuntimeTaskResponse{result: result}
 			}
 		case <-time.After(time.Duration(60) * time.Second):
-			log.Println(s.readFromSocket(c, "show env"))
+			log.Println(s.readFromSocket(s.runtimeAPIsocket, "show env"))
 		}
 	}
-	defer c.Close()
+	defer s.runtimeAPIsocket.Close()
 }
 
 func (s *SingleRuntime) readFromSocket(c net.Conn, command string) (string, error) {
+	if !s.socketOpen {
+		return "", fmt.Errorf("no connection")
+	}
 	_, err := c.Write([]byte(fmt.Sprintf("%s\n", command)))
 	if err != nil {
-		return "", nil
+		s.socketOpen = false
+		c.Close()
+		return "", err
 	}
 	time.Sleep(1e9)
 	bufferSize := 1024
@@ -82,7 +109,7 @@ func (s *SingleRuntime) readFromSocket(c net.Conn, command string) (string, erro
 			break
 		}
 	}
-	return data.String(), nil
+	return strings.TrimSuffix(data.String(), "\n\n> "), nil
 }
 
 func (s *SingleRuntime) readFromSocketClean(command string) (string, error) {
@@ -111,13 +138,30 @@ func (s *SingleRuntime) readFromSocketClean(command string) (string, error) {
 
 //ExecuteRaw executes command on runtime API and returns raw result
 func (s *SingleRuntime) ExecuteRaw(command string) (string, error) {
-	response := make(chan string)
-	task := Task{
+	//allow one retry if connection breaks temporarily
+	return s.executeRaw(command, 1)
+}
+
+func (s *SingleRuntime) executeRaw(command string, retry int) (string, error) {
+	response := make(chan RuntimeTaskResponse)
+	RuntimeTask := RuntimeTask{
 		command:  command,
 		response: response,
 	}
-	s.jobs <- task
-	return <-response, nil
+	s.jobs <- RuntimeTask
+	select {
+	case rsp := <-response:
+		if rsp.err != nil && retry > 0 {
+			if !s.socketOpen || s.runtimeAPIsocket == nil {
+				s.socketConnect()
+			}
+			retry--
+			return s.executeRaw(command, retry)
+		}
+		return rsp.result, rsp.err
+	case <-time.After(time.Duration(30) * time.Second):
+		return "", fmt.Errorf("timeout reached")
+	}
 }
 
 //GetStats fetches HAProxy stats from runtime API
