@@ -68,7 +68,7 @@ func (c *LBCTLConfigurationClient) executeLBCTL(command string, transaction stri
 	if c.ConfigurationFile() != "" {
 		cmd.Env = append(cmd.Env, "LBCTL_L7_HAPROXY_CONFIG="+c.ConfigurationFile())
 		if c.Haproxy() != "" {
-			cmd.Env = append(cmd.Env, "LBCTL_L7_SVC_CHECK_CMD=\""+c.Haproxy()+" -f "+c.ConfigurationFile()+" -c\"")
+			cmd.Env = append(cmd.Env, "LBCTL_L7_SVC_CHECK_CMD="+c.Haproxy()+" -f "+c.ConfigurationFile()+" -c")
 		} else {
 			cmd.Env = append(cmd.Env, "LBCTL_L7_SVC_CHECK_CMD=true")
 		}
