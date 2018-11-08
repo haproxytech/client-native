@@ -40,6 +40,11 @@ func (c *LBCTLConfigurationClient) GetTransaction(id string) (*models.Transactio
 func (c *LBCTLConfigurationClient) StartTransaction(version int64) (*models.Transaction, error) {
 	t := &models.Transaction{}
 
+	err := c.GlobalParser.LoadData(c.ClientParams.GlobalConfigurationFile())
+	if err != nil {
+		return nil, err
+	}
+
 	v, err := c.GetVersion()
 	if err != nil {
 		return nil, err
@@ -82,6 +87,12 @@ func (c *LBCTLConfigurationClient) CommitTransaction(id string) error {
 	if err != nil {
 		return err
 	}
+
+	/*err = c.GlobalParser.Save(c.ClientParams.GlobalConfigurationFile())
+	if err != nil {
+		return err
+	}*/
+
 	return nil
 }
 

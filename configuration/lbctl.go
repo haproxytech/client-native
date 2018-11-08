@@ -13,6 +13,7 @@ import (
 	"unsafe"
 
 	"github.com/haproxytech/client-native/misc"
+	parser "github.com/haproxytech/config-parser"
 )
 
 // LBCTLConfigurationClient configuration.Client implementation using lbctl
@@ -20,6 +21,7 @@ type LBCTLConfigurationClient struct {
 	*ClientParams
 	LBCTLPath    string
 	LBCTLTmpPath string
+	GlobalParser parser.Parser
 }
 
 const (
@@ -30,7 +32,7 @@ const (
 )
 
 // NewLBCTLClient constructor
-func NewLBCTLClient(configurationFile string, haproxy string, LBCTLPath string, LBCTLTmpPath string) *LBCTLConfigurationClient {
+func NewLBCTLClient(configurationFile string, globalConfigurationFile string, haproxy string, LBCTLPath string, LBCTLTmpPath string) *LBCTLConfigurationClient {
 	if LBCTLPath == "" {
 		LBCTLPath = DefaultLBCTLPath
 	}
@@ -39,12 +41,12 @@ func NewLBCTLClient(configurationFile string, haproxy string, LBCTLPath string, 
 		LBCTLTmpPath = DefaultLBCTLTmpPath
 	}
 
-	return &LBCTLConfigurationClient{NewConfigurationClientParams(configurationFile, haproxy), LBCTLPath, LBCTLTmpPath}
+	return &LBCTLConfigurationClient{NewConfigurationClientParams(configurationFile, globalConfigurationFile, haproxy), LBCTLPath, LBCTLTmpPath, parser.Parser{}}
 }
 
 // DefaultLBCTLClient returns LBCTLConfigurationClient with sane defaults
 func DefaultLBCTLClient() *LBCTLConfigurationClient {
-	return NewLBCTLClient("", "", "", "")
+	return NewLBCTLClient("", "", "", "", "")
 }
 
 func (c *LBCTLConfigurationClient) executeLBCTL(command string, transaction string, args ...string) (string, error) {
