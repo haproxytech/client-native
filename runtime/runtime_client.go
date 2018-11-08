@@ -2,22 +2,21 @@ package runtime
 
 import (
 	"fmt"
-	"log"
 	"net"
 	"strings"
 	"time"
 )
 
-//RuntimeTaskResponse ...
-type RuntimeTaskResponse struct {
+//TaskResponse ...
+type TaskResponse struct {
 	result string
 	err    error
 }
 
-//RuntimeTask has command to execute on runtime api, and response channel for result
-type RuntimeTask struct {
+//Task has command to execute on runtime api, and response channel for result
+type Task struct {
 	command  string
-	response chan RuntimeTaskResponse
+	response chan TaskResponse
 }
 
 //Client handles multiple HAProxy clients
@@ -28,7 +27,7 @@ type Client struct {
 //SingleRuntime handles one runtime API
 type SingleRuntime struct {
 	socketOpen       bool
-	jobs             chan RuntimeTask
+	jobs             chan Task
 	socketPath       string
 	autoReconnect    bool
 	runtimeAPIsocket net.Conn
@@ -38,7 +37,7 @@ type SingleRuntime struct {
 func (s *SingleRuntime) Init(socketPath string, autoReconnect bool) error {
 	s.socketPath = socketPath
 	s.autoReconnect = autoReconnect
-	s.jobs = make(chan RuntimeTask)
+	s.jobs = make(chan Task)
 	s.socketConnect()
 	go s.handleIncommingJobs()
 	return nil
@@ -65,21 +64,18 @@ func (s *SingleRuntime) socketConnect() error {
 }
 
 func (s *SingleRuntime) handleIncommingJobs() {
-	log.Println("start")
 	for {
 		select {
 		case job := <-s.jobs:
 			result, err := s.readFromSocket(s.runtimeAPIsocket, job.command)
 			if err != nil {
-				job.response <- RuntimeTaskResponse{err: err}
+				job.response <- TaskResponse{err: err}
 			} else {
-				job.response <- RuntimeTaskResponse{result: result}
+				job.response <- TaskResponse{result: result}
 			}
 		case <-time.After(time.Duration(60) * time.Second):
-			log.Println(s.readFromSocket(s.runtimeAPIsocket, "show env"))
 		}
 	}
-	defer s.runtimeAPIsocket.Close()
 }
 
 func (s *SingleRuntime) readFromSocket(c net.Conn, command string) (string, error) {
@@ -140,12 +136,12 @@ func (s *SingleRuntime) ExecuteRaw(command string) (string, error) {
 }
 
 func (s *SingleRuntime) executeRaw(command string, retry int) (string, error) {
-	response := make(chan RuntimeTaskResponse)
-	RuntimeTask := RuntimeTask{
+	response := make(chan TaskResponse)
+	Task := Task{
 		command:  command,
 		response: response,
 	}
-	s.jobs <- RuntimeTask
+	s.jobs <- Task
 	select {
 	case rsp := <-response:
 		if rsp.err != nil && retry > 0 {
