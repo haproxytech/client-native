@@ -42,6 +42,19 @@ func ServerStateValid(state string) bool {
 	return ok
 }
 
+//ServerHealthValid checks if server state is valid
+func ServerHealthValid(state string) bool {
+	oncePossibleStates.Do(func() {
+		possibleStates = map[string]struct{}{
+			"on":       {},
+			"stopping": {},
+			"down":     {},
+		}
+	})
+	_, ok := possibleStates[state]
+	return ok
+}
+
 //ServerWeightValid checks if server state is valid
 func ServerWeightValid(weight string) bool {
 	var n int64
