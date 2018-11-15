@@ -60,8 +60,7 @@ func (s *SingleRuntime) SetServerState(backend, server string, state string) (Ru
 	if strings.Contains(rawdata, "No such server") {
 		return RuntimeResponse{HTTPLikeStatus: HTTPLikeStatusNotFound}, fmt.Errorf("server not found")
 	}
-	status := HTTPLikeStatusOK
-	return RuntimeResponse{HTTPLikeStatus: status, Message: rawdata}, nil
+	return RuntimeResponse{HTTPLikeStatus: HTTPLikeStatusOK, Message: rawdata}, nil
 }
 
 //SetServerWeight set ip [port] for server
@@ -84,8 +83,7 @@ func (s *SingleRuntime) SetServerWeight(backend, server string, weight string) (
 	if strings.Contains(rawdata, "No such server") {
 		return RuntimeResponse{HTTPLikeStatus: HTTPLikeStatusNotFound}, fmt.Errorf("server not found")
 	}
-	status := HTTPLikeStatusOK
-	return RuntimeResponse{HTTPLikeStatus: status, Message: rawdata}, nil
+	return RuntimeResponse{HTTPLikeStatus: HTTPLikeStatusOK, Message: rawdata}, nil
 }
 
 //SetServerHealth set health for server
@@ -108,6 +106,5 @@ func (s *SingleRuntime) SetServerHealth(backend, server string, health string) (
 	if strings.Contains(rawdata, "No such server") {
 		return RuntimeResponse{HTTPLikeStatus: HTTPLikeStatusNotFound}, fmt.Errorf("server not found")
 	}
-	status := HTTPLikeStatusOK
-	return RuntimeResponse{HTTPLikeStatus: status, Message: rawdata}, nil
+	return RuntimeResponse{HTTPLikeStatus: HTTPLikeStatusOK, Message: rawdata}, nil
 }

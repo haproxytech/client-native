@@ -102,7 +102,9 @@ func (s *SingleRuntime) readFromSocket(c net.Conn, command string) (string, erro
 			break
 		}
 	}
-	return strings.TrimSuffix(data.String(), "\n\n> "), nil
+	result := strings.TrimSuffix(data.String(), "\n> ")
+	result = strings.TrimSuffix(result, "\n")
+	return result, nil
 }
 
 func (s *SingleRuntime) readFromSocketClean(command string) (string, error) {
