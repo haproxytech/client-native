@@ -50,7 +50,7 @@ func (s *SingleRuntime) SetServerState(backend, server string, state string) (Ru
 	if !ServerStateValid(state) {
 		return RuntimeResponse{HTTPLikeStatus: HTTPLikeStatusBadRequest}, fmt.Errorf("bad request")
 	}
-	cmd := fmt.Sprintf("set server %s/%s state %s", state)
+	cmd := fmt.Sprintf("set server %s/%s state %s", backend, server, state)
 	rawdata, err := s.ExecuteRaw(cmd)
 	if err != nil {
 		return RuntimeResponse{HTTPLikeStatus: HTTPLikeStatusInternalServerError}, err
@@ -74,7 +74,31 @@ func (s *SingleRuntime) SetServerWeight(backend, server string, weight string) (
 	if !ServerWeightValid(weight) {
 		return RuntimeResponse{HTTPLikeStatus: HTTPLikeStatusBadRequest}, fmt.Errorf("bad request")
 	}
-	cmd := fmt.Sprintf("set server %s/%s weight %s", weight)
+	cmd := fmt.Sprintf("set server %s/%s weight %s", backend, server, weight)
+	rawdata, err := s.ExecuteRaw(cmd)
+	if err != nil {
+		return RuntimeResponse{HTTPLikeStatus: HTTPLikeStatusInternalServerError}, err
+	}
+	//No such server.
+	//empty response
+	if strings.Contains(rawdata, "No such server") {
+		return RuntimeResponse{HTTPLikeStatus: HTTPLikeStatusNotFound}, fmt.Errorf("server not found")
+	}
+	status := HTTPLikeStatusOK
+	return RuntimeResponse{HTTPLikeStatus: status, Message: rawdata}, nil
+}
+
+//SetServerHealth set health for server
+//possible responses:
+// - HTTPLikeStatusOK
+// - HTTPLikeStatusNotFound
+// - HTTPLikeStatusInternalServerError
+// TODO see if we can have here permission denied !!
+func (s *SingleRuntime) SetServerHealth(backend, server string, health string) (RuntimeResponse, error) {
+	if !ServerHealthValid(health) {
+		return RuntimeResponse{HTTPLikeStatus: HTTPLikeStatusBadRequest}, fmt.Errorf("bad request")
+	}
+	cmd := fmt.Sprintf("set server %s/%s health %s", backend, server, health)
 	rawdata, err := s.ExecuteRaw(cmd)
 	if err != nil {
 		return RuntimeResponse{HTTPLikeStatus: HTTPLikeStatusInternalServerError}, err
