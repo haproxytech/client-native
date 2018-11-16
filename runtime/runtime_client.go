@@ -60,6 +60,10 @@ func (s *SingleRuntime) socketConnect() error {
 	if err != nil {
 		return err
 	}
+	_, err = s.runtimeAPIsocket.Write([]byte(fmt.Sprintf("set severity-output number\n")))
+	if err != nil {
+		return err
+	}
 	return nil
 }
 

@@ -6,26 +6,6 @@ import (
 	"sync"
 )
 
-//HTTPLikeStatus status simulates http status responses
-type HTTPLikeStatus int
-
-//HTTPLikeStatus possible response
-const (
-	HTTPLikeStatusOK                  HTTPLikeStatus = 200
-	HTTPLikeStatusCreated             HTTPLikeStatus = 201
-	HTTPLikeStatusAccepted            HTTPLikeStatus = 202
-	HTTPLikeStatusNoContent           HTTPLikeStatus = 204
-	HTTPLikeStatusNotModified         HTTPLikeStatus = 304
-	HTTPLikeStatusBadRequest          HTTPLikeStatus = 400
-	HTTPLikeStatusUnauthorized        HTTPLikeStatus = 401
-	HTTPLikeStatusForbidden           HTTPLikeStatus = 403
-	HTTPLikeStatusNotFound            HTTPLikeStatus = 404
-	HTTPLikeStatusTimeout             HTTPLikeStatus = 408
-	HTTPLikeStatusConflict            HTTPLikeStatus = 409
-	HTTPLikeStatusInternalServerError HTTPLikeStatus = 500
-	HTTPLikeStatusNotImplemented      HTTPLikeStatus = 501
-)
-
 var possibleStates map[string]struct{}
 var oncePossibleStates sync.Once
 
