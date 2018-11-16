@@ -141,6 +141,21 @@ func (s *SingleRuntime) ExecuteRaw(command string) (string, error) {
 	return s.executeRaw(command, 1)
 }
 
+//Execute executes command on runtime API
+func (s *SingleRuntime) Execute(command string) error {
+	rawdata, err := s.ExecuteRaw(command)
+	if err != nil {
+		return err
+	}
+	if len(rawdata) > 1 {
+		switch rawdata[1] {
+		case '3', '2', '1', '0':
+			return fmt.Errorf(rawdata[3:])
+		}
+	}
+	return nil
+}
+
 func (s *SingleRuntime) executeRaw(command string, retry int) (string, error) {
 	response := make(chan TaskResponse)
 	Task := Task{
