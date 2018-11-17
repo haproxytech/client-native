@@ -249,11 +249,10 @@ func (c *LBCTLConfigurationClient) GetVersion() (int64, error) {
 			lineNo++
 		}
 	}
-
 	if err := scanner.Err(); err != nil {
 		return c.setInitialVersion(false)
 	}
-	return c.setInitialVersion(true)
+	return c.setInitialVersion(false)
 }
 
 func (c *LBCTLConfigurationClient) setInitialVersion(hasVersion bool) (int64, error) {
@@ -273,7 +272,6 @@ func (c *LBCTLConfigurationClient) setInitialVersion(hasVersion bool) (int64, er
 	}
 
 	output := fmt.Sprintf("# _version=1\n%s", inputStr)
-
 	if err = ioutil.WriteFile(c.ConfigurationFile(), []byte(output), 0666); err != nil {
 		return 0, NewConfError(ErrCannotSetVersion, fmt.Sprintf("Cannot set initial version in file %v: %v", c.ConfigurationFile(), err.Error()))
 	}
