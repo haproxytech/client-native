@@ -11,7 +11,7 @@ import (
 
 // GetTCPContentRules returns a struct with configuration version and an array of
 // configured tcp content rules in the specified parent. Returns error on fail.
-func (c *LBCTLConfigurationClient) GetTCPContentRules(parentType, parentName, ruleType, transactionID string) (*models.GetTCPContentRulesOKBody, error) {
+func (c *LBCTLClient) GetTCPContentRules(parentType, parentName, ruleType, transactionID string) (*models.GetTCPContentRulesOKBody, error) {
 	lbctlType := typeToLbctlType(parentType)
 	if lbctlType == "" {
 		return nil, NewConfError(ErrValidationError, fmt.Sprintf("Parent type %v not recognized", parentType))
@@ -48,7 +48,7 @@ func (c *LBCTLConfigurationClient) GetTCPContentRules(parentType, parentName, ru
 
 // GetTCPContentRule returns a struct with configuration version and a requested tcp content rule
 // in the specified parent. Returns error on fail or if tcp content rule does not exist.
-func (c *LBCTLConfigurationClient) GetTCPContentRule(id int64, parentType, parentName, ruleType, transactionID string) (*models.GetTCPContentRuleOKBody, error) {
+func (c *LBCTLClient) GetTCPContentRule(id int64, parentType, parentName, ruleType, transactionID string) (*models.GetTCPContentRuleOKBody, error) {
 	lbctlType := typeToLbctlType(parentType)
 	if lbctlType == "" {
 		return nil, NewConfError(ErrValidationError, fmt.Sprintf("Parent type %v not recognized", parentType))
@@ -86,7 +86,7 @@ func (c *LBCTLConfigurationClient) GetTCPContentRule(id int64, parentType, paren
 
 // DeleteTCPContentRule deletes a tcp content rule in configuration. One of version or transactionID is
 // mandatory. Returns error on fail, nil on success.
-func (c *LBCTLConfigurationClient) DeleteTCPContentRule(id int64, parentType, parentName, ruleType string, transactionID string, version int64) error {
+func (c *LBCTLClient) DeleteTCPContentRule(id int64, parentType, parentName, ruleType string, transactionID string, version int64) error {
 	lbctlType := typeToLbctlType(parentType)
 	if lbctlType == "" {
 		return NewConfError(ErrValidationError, fmt.Sprintf("Parent type %v not recognized", parentType))
@@ -111,7 +111,7 @@ func (c *LBCTLConfigurationClient) DeleteTCPContentRule(id int64, parentType, pa
 
 // CreateTCPContentRule creates a tcp content rule in configuration. One of version or transactionID is
 // mandatory. Returns error on fail, nil on success.
-func (c *LBCTLConfigurationClient) CreateTCPContentRule(parentType, parentName, ruleType string, data *models.TCPRule, transactionID string, version int64) error {
+func (c *LBCTLClient) CreateTCPContentRule(parentType, parentName, ruleType string, data *models.TCPRule, transactionID string, version int64) error {
 	validationErr := data.Validate(strfmt.Default)
 	if validationErr != nil {
 		return NewConfError(ErrValidationError, validationErr.Error())
@@ -141,7 +141,7 @@ func (c *LBCTLConfigurationClient) CreateTCPContentRule(parentType, parentName, 
 
 // EditTCPContentRule edits a tcp content rule in configuration. One of version or transactionID is
 // mandatory. Returns error on fail, nil on success.
-func (c *LBCTLConfigurationClient) EditTCPContentRule(id int64, parentType, parentName, ruleType string, data *models.TCPRule, transactionID string, version int64) error {
+func (c *LBCTLClient) EditTCPContentRule(id int64, parentType, parentName, ruleType string, data *models.TCPRule, transactionID string, version int64) error {
 	validationErr := data.Validate(strfmt.Default)
 	if validationErr != nil {
 		return NewConfError(ErrValidationError, validationErr.Error())
@@ -175,7 +175,7 @@ func (c *LBCTLConfigurationClient) EditTCPContentRule(id int64, parentType, pare
 	return c.editObject(strconv.FormatInt(data.ID, 10), lbctlRType, parentName, lbctlType, data, ondiskBr, nil, transactionID, version)
 }
 
-func (c *LBCTLConfigurationClient) parseTCPContentRules(response string) models.TCPRules {
+func (c *LBCTLClient) parseTCPContentRules(response string) models.TCPRules {
 	tcpRules := make(models.TCPRules, 0, 1)
 	for _, tcpRulesStr := range strings.Split(response, "\n\n") {
 		if strings.TrimSpace(tcpRulesStr) == "" {

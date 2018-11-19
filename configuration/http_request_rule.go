@@ -11,7 +11,7 @@ import (
 
 // GetHTTPRequestRules returns a struct with configuration version and an array of
 // configured http request rules in the specified parent. Returns error on fail.
-func (c *LBCTLConfigurationClient) GetHTTPRequestRules(parentType, parentName string, transactionID string) (*models.GetHTTPRequestRulesOKBody, error) {
+func (c *LBCTLClient) GetHTTPRequestRules(parentType, parentName string, transactionID string) (*models.GetHTTPRequestRulesOKBody, error) {
 	lbctlType := typeToLbctlType(parentType)
 	if lbctlType == "" {
 		return nil, NewConfError(ErrValidationError, fmt.Sprintf("Parent type %v not recognized", parentType))
@@ -34,7 +34,7 @@ func (c *LBCTLConfigurationClient) GetHTTPRequestRules(parentType, parentName st
 
 // GetHTTPRequestRule returns a struct with configuration version and a requested http request rule
 // in the specified parent. Returns error on fail or if http request rule does not exist.
-func (c *LBCTLConfigurationClient) GetHTTPRequestRule(id int64, parentType, parentName string, transactionID string) (*models.GetHTTPRequestRuleOKBody, error) {
+func (c *LBCTLClient) GetHTTPRequestRule(id int64, parentType, parentName string, transactionID string) (*models.GetHTTPRequestRuleOKBody, error) {
 	lbctlType := typeToLbctlType(parentType)
 	if lbctlType == "" {
 		return nil, NewConfError(ErrValidationError, fmt.Sprintf("Parent type %v not recognized", parentType))
@@ -58,7 +58,7 @@ func (c *LBCTLConfigurationClient) GetHTTPRequestRule(id int64, parentType, pare
 
 // DeleteHTTPRequestRule deletes a http request rule in configuration. One of version or transactionID is
 // mandatory. Returns error on fail, nil on success.
-func (c *LBCTLConfigurationClient) DeleteHTTPRequestRule(id int64, parentType string, parentName string, transactionID string, version int64) error {
+func (c *LBCTLClient) DeleteHTTPRequestRule(id int64, parentType string, parentName string, transactionID string, version int64) error {
 	lbctlType := typeToLbctlType(parentType)
 	if lbctlType == "" {
 		return NewConfError(ErrValidationError, fmt.Sprintf("Parent type %v not recognized", parentType))
@@ -69,7 +69,7 @@ func (c *LBCTLConfigurationClient) DeleteHTTPRequestRule(id int64, parentType st
 
 // CreateHTTPRequestRule creates a http request rule in configuration. One of version or transactionID is
 // mandatory. Returns error on fail, nil on success.
-func (c *LBCTLConfigurationClient) CreateHTTPRequestRule(parentType string, parentName string, data *models.HTTPRequestRule, transactionID string, version int64) error {
+func (c *LBCTLClient) CreateHTTPRequestRule(parentType string, parentName string, data *models.HTTPRequestRule, transactionID string, version int64) error {
 	validationErr := data.Validate(strfmt.Default)
 	if validationErr != nil {
 		return NewConfError(ErrValidationError, validationErr.Error())
@@ -85,7 +85,7 @@ func (c *LBCTLConfigurationClient) CreateHTTPRequestRule(parentType string, pare
 
 // EditHTTPRequestRule edits a http request rule in configuration. One of version or transactionID is
 // mandatory. Returns error on fail, nil on success.
-func (c *LBCTLConfigurationClient) EditHTTPRequestRule(id int64, parentType string, parentName string, data *models.HTTPRequestRule, transactionID string, version int64) error {
+func (c *LBCTLClient) EditHTTPRequestRule(id int64, parentType string, parentName string, data *models.HTTPRequestRule, transactionID string, version int64) error {
 	validationErr := data.Validate(strfmt.Default)
 	if validationErr != nil {
 		return NewConfError(ErrValidationError, validationErr.Error())
@@ -104,7 +104,7 @@ func (c *LBCTLConfigurationClient) EditHTTPRequestRule(id int64, parentType stri
 	return c.editObject(strconv.FormatInt(data.ID, 10), "httpreq", parentName, lbctlType, data, ondiskR, nil, transactionID, version)
 }
 
-func (c *LBCTLConfigurationClient) parseHTTPRequestRules(response string) models.HTTPRequestRules {
+func (c *LBCTLClient) parseHTTPRequestRules(response string) models.HTTPRequestRules {
 	httpRules := make(models.HTTPRequestRules, 0, 1)
 	for _, httpRulesStr := range strings.Split(response, "\n\n") {
 		if strings.TrimSpace(httpRulesStr) == "" {

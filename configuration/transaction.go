@@ -11,7 +11,7 @@ import (
 )
 
 // GetTransactions returns an array of transactions
-func (c *LBCTLConfigurationClient) GetTransactions(status string) (*models.Transactions, error) {
+func (c *LBCTLClient) GetTransactions(status string) (*models.Transactions, error) {
 	ts := models.Transactions{}
 
 	response, err := c.executeLBCTL("transaction-list", "")
@@ -32,12 +32,12 @@ func (c *LBCTLConfigurationClient) GetTransactions(status string) (*models.Trans
 }
 
 // GetTransaction returns transaction information by id
-func (c *LBCTLConfigurationClient) GetTransaction(id string) (*models.Transaction, error) {
+func (c *LBCTLClient) GetTransaction(id string) (*models.Transaction, error) {
 	return c.parseTransaction(id)
 }
 
 // StartTransaction starts a new empty lbctl transaction
-func (c *LBCTLConfigurationClient) StartTransaction(version int64) (*models.Transaction, error) {
+func (c *LBCTLClient) StartTransaction(version int64) (*models.Transaction, error) {
 	t := &models.Transaction{}
 
 	err := c.GlobalParser.LoadData(c.ClientParams.GlobalConfigurationFile())
@@ -67,7 +67,7 @@ func (c *LBCTLConfigurationClient) StartTransaction(version int64) (*models.Tran
 }
 
 // CommitTransaction commits a transaction by id.
-func (c *LBCTLConfigurationClient) CommitTransaction(id string) error {
+func (c *LBCTLClient) CommitTransaction(id string) error {
 	// do a version check before commiting
 	version, err := c.GetVersion()
 	if err != nil {
@@ -97,7 +97,7 @@ func (c *LBCTLConfigurationClient) CommitTransaction(id string) error {
 }
 
 // DeleteTransaction deletes a transaction by id.
-func (c *LBCTLConfigurationClient) DeleteTransaction(id string) error {
+func (c *LBCTLClient) DeleteTransaction(id string) error {
 	_, err := c.executeLBCTL("transaction-cancel", id)
 	if err != nil {
 		return err
@@ -105,7 +105,7 @@ func (c *LBCTLConfigurationClient) DeleteTransaction(id string) error {
 	return nil
 }
 
-func (c *LBCTLConfigurationClient) parseTransaction(id string) (*models.Transaction, error) {
+func (c *LBCTLClient) parseTransaction(id string) (*models.Transaction, error) {
 	tPath := c.LBCTLTmpPath + "/" + "tmp." + id
 	info, err := os.Stat(tPath)
 
@@ -146,7 +146,7 @@ func (c *LBCTLConfigurationClient) parseTransaction(id string) (*models.Transact
 	return t, nil
 }
 
-func (c *LBCTLConfigurationClient) parseOperation(operationStr string) (*models.TransactionOperationsItems, error) {
+func (c *LBCTLClient) parseOperation(operationStr string) (*models.TransactionOperationsItems, error) {
 	op := &models.TransactionOperationsItems{}
 	// Operation and options are split by ^K - rune with ascii code 11
 	words := strings.Split(operationStr, string(11))
@@ -215,7 +215,7 @@ func lbctlOpToOp(lOp string) string {
 	return lOp
 }
 
-func (c *LBCTLConfigurationClient) getTransactionVersion(id string) int64 {
+func (c *LBCTLClient) getTransactionVersion(id string) int64 {
 	// get original version from the ex file
 	tPath := c.LBCTLTmpPath + "/" + "tmp." + id
 	file, err := os.Open(tPath + "/l7/ctx/haproxy.cfg.ex")

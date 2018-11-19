@@ -11,7 +11,7 @@ import (
 
 // GetFilters returns a struct with configuration version and an array of
 // configured filters in the specified parent. Returns error on fail.
-func (c *LBCTLConfigurationClient) GetFilters(parentType, parentName string, transactionID string) (*models.GetFiltersOKBody, error) {
+func (c *LBCTLClient) GetFilters(parentType, parentName string, transactionID string) (*models.GetFiltersOKBody, error) {
 	lbctlType := typeToLbctlType(parentType)
 	if lbctlType == "" {
 		return nil, NewConfError(ErrValidationError, fmt.Sprintf("Parent type %v not recognized", parentType))
@@ -34,7 +34,7 @@ func (c *LBCTLConfigurationClient) GetFilters(parentType, parentName string, tra
 
 // GetFilter returns a struct with configuration version and a requested filter
 // in the specified parent. Returns error on fail or if filter does not exist.
-func (c *LBCTLConfigurationClient) GetFilter(id int64, parentType, parentName string, transactionID string) (*models.GetFilterOKBody, error) {
+func (c *LBCTLClient) GetFilter(id int64, parentType, parentName string, transactionID string) (*models.GetFilterOKBody, error) {
 	lbctlType := typeToLbctlType(parentType)
 	if lbctlType == "" {
 		return nil, NewConfError(ErrValidationError, fmt.Sprintf("Parent type %v not recognized", parentType))
@@ -58,7 +58,7 @@ func (c *LBCTLConfigurationClient) GetFilter(id int64, parentType, parentName st
 
 // DeleteFilter deletes a filter in configuration. One of version or transactionID is
 // mandatory. Returns error on fail, nil on success.
-func (c *LBCTLConfigurationClient) DeleteFilter(id int64, parentType string, parentName string, transactionID string, version int64) error {
+func (c *LBCTLClient) DeleteFilter(id int64, parentType string, parentName string, transactionID string, version int64) error {
 	lbctlType := typeToLbctlType(parentType)
 	if lbctlType == "" {
 		return NewConfError(ErrValidationError, fmt.Sprintf("Parent type %v not recognized", parentType))
@@ -69,7 +69,7 @@ func (c *LBCTLConfigurationClient) DeleteFilter(id int64, parentType string, par
 
 // CreateFilter creates a filter in configuration. One of version or transactionID is
 // mandatory. Returns error on fail, nil on success.
-func (c *LBCTLConfigurationClient) CreateFilter(parentType string, parentName string, data *models.Filter, transactionID string, version int64) error {
+func (c *LBCTLClient) CreateFilter(parentType string, parentName string, data *models.Filter, transactionID string, version int64) error {
 	validationErr := data.Validate(strfmt.Default)
 	if validationErr != nil {
 		return NewConfError(ErrValidationError, validationErr.Error())
@@ -85,7 +85,7 @@ func (c *LBCTLConfigurationClient) CreateFilter(parentType string, parentName st
 
 // EditFilter edits a filter in configuration. One of version or transactionID is
 // mandatory. Returns error on fail, nil on success.
-func (c *LBCTLConfigurationClient) EditFilter(id int64, parentType string, parentName string, data *models.Filter, transactionID string, version int64) error {
+func (c *LBCTLClient) EditFilter(id int64, parentType string, parentName string, data *models.Filter, transactionID string, version int64) error {
 	validationErr := data.Validate(strfmt.Default)
 	if validationErr != nil {
 		return NewConfError(ErrValidationError, validationErr.Error())
@@ -104,7 +104,7 @@ func (c *LBCTLConfigurationClient) EditFilter(id int64, parentType string, paren
 	return c.editObject(strconv.FormatInt(data.ID, 10), "filter", parentName, lbctlType, data, ondiskF, nil, transactionID, version)
 }
 
-func (c *LBCTLConfigurationClient) parseFilters(response string) models.Filters {
+func (c *LBCTLClient) parseFilters(response string) models.Filters {
 	filters := make(models.Filters, 0, 1)
 	for _, filtersStr := range strings.Split(response, "\n\n") {
 		if strings.TrimSpace(filtersStr) == "" {

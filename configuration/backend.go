@@ -9,7 +9,7 @@ import (
 
 // GetBackends returns a struct with configuration version and an array of
 // configured backends. Returns error on fail.
-func (c *LBCTLConfigurationClient) GetBackends(transactionID string) (*models.GetBackendsOKBody, error) {
+func (c *LBCTLClient) GetBackends(transactionID string) (*models.GetBackendsOKBody, error) {
 	backendsString, err := c.executeLBCTL("l7-farm-dump", transactionID)
 	if err != nil {
 		return nil, err
@@ -27,7 +27,7 @@ func (c *LBCTLConfigurationClient) GetBackends(transactionID string) (*models.Ge
 
 // GetBackend returns a struct with configuration version and a requested backend.
 // Returns error on fail or if backend does not exist.
-func (c *LBCTLConfigurationClient) GetBackend(name string, transactionID string) (*models.GetBackendOKBody, error) {
+func (c *LBCTLClient) GetBackend(name string, transactionID string) (*models.GetBackendOKBody, error) {
 	backendStr, err := c.executeLBCTL("l7-farm-show", transactionID, name)
 	if err != nil {
 		return nil, err
@@ -46,13 +46,13 @@ func (c *LBCTLConfigurationClient) GetBackend(name string, transactionID string)
 
 // DeleteBackend deletes a backend in configuration. One of version or transactionID is
 // mandatory. Returns error on fail, nil on success.
-func (c *LBCTLConfigurationClient) DeleteBackend(name string, transactionID string, version int64) error {
+func (c *LBCTLClient) DeleteBackend(name string, transactionID string, version int64) error {
 	return c.deleteObject(name, "farm", "", "", transactionID, version)
 }
 
 // CreateBackend creates a backend in configuration. One of version or transactionID is
 // mandatory. Returns error on fail, nil on success.
-func (c *LBCTLConfigurationClient) CreateBackend(data *models.Backend, transactionID string, version int64) error {
+func (c *LBCTLClient) CreateBackend(data *models.Backend, transactionID string, version int64) error {
 	validationErr := data.Validate(strfmt.Default)
 	if validationErr != nil {
 		return NewConfError(ErrValidationError, validationErr.Error())
@@ -62,7 +62,7 @@ func (c *LBCTLConfigurationClient) CreateBackend(data *models.Backend, transacti
 
 // EditBackend edits a backend in configuration. One of version or transactionID is
 // mandatory. Returns error on fail, nil on success.
-func (c *LBCTLConfigurationClient) EditBackend(name string, data *models.Backend, transactionID string, version int64) error {
+func (c *LBCTLClient) EditBackend(name string, data *models.Backend, transactionID string, version int64) error {
 	validationErr := data.Validate(strfmt.Default)
 	if validationErr != nil {
 		return NewConfError(ErrValidationError, validationErr.Error())
@@ -74,7 +74,7 @@ func (c *LBCTLConfigurationClient) EditBackend(name string, data *models.Backend
 	return c.editObject(name, "farm", "", "", data, ondiskBck.Data, nil, transactionID, version)
 }
 
-func (c *LBCTLConfigurationClient) parseBackends(response string) models.Backends {
+func (c *LBCTLClient) parseBackends(response string) models.Backends {
 	backends := make(models.Backends, 0, 1)
 	for _, backendStr := range strings.Split(response, "\n\n") {
 		if strings.TrimSpace(backendStr) == "" {

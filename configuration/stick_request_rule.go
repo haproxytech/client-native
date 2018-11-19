@@ -10,7 +10,7 @@ import (
 
 // GetStickRequestRules returns a struct with configuration version and an array of
 // configured stick request rules in the specified backend. Returns error on fail.
-func (c *LBCTLConfigurationClient) GetStickRequestRules(backend string, transactionID string) (*models.GetStickRequestRulesOKBody, error) {
+func (c *LBCTLClient) GetStickRequestRules(backend string, transactionID string) (*models.GetStickRequestRulesOKBody, error) {
 	stickReqRulesString, err := c.executeLBCTL("l7-farm-stickreq-dump", transactionID, backend)
 	if err != nil {
 		return nil, err
@@ -28,7 +28,7 @@ func (c *LBCTLConfigurationClient) GetStickRequestRules(backend string, transact
 
 // GetStickRequestRule returns a struct with configuration version and a requested stick request rule
 // in the specified backend. Returns error on fail or if stick request rule does not exist.
-func (c *LBCTLConfigurationClient) GetStickRequestRule(id int64, backend string, transactionID string) (*models.GetStickRequestRuleOKBody, error) {
+func (c *LBCTLClient) GetStickRequestRule(id int64, backend string, transactionID string) (*models.GetStickRequestRuleOKBody, error) {
 	stickReqRuleStr, err := c.executeLBCTL("l7-farm-stickreq-show", transactionID, backend, strconv.FormatInt(id, 10))
 	if err != nil {
 		return nil, err
@@ -47,13 +47,13 @@ func (c *LBCTLConfigurationClient) GetStickRequestRule(id int64, backend string,
 
 // DeleteStickRequestRule deletes a stick request rule in configuration. One of version or transactionID is
 // mandatory. Returns error on fail, nil on success.
-func (c *LBCTLConfigurationClient) DeleteStickRequestRule(id int64, backend string, transactionID string, version int64) error {
+func (c *LBCTLClient) DeleteStickRequestRule(id int64, backend string, transactionID string, version int64) error {
 	return c.deleteObject(strconv.FormatInt(id, 10), "stickreq", backend, "farm", transactionID, version)
 }
 
 // CreateStickRequestRule creates a stick request rule in configuration. One of version or transactionID is
 // mandatory. Returns error on fail, nil on success.
-func (c *LBCTLConfigurationClient) CreateStickRequestRule(backend string, data *models.StickRequestRule, transactionID string, version int64) error {
+func (c *LBCTLClient) CreateStickRequestRule(backend string, data *models.StickRequestRule, transactionID string, version int64) error {
 	validationErr := data.Validate(strfmt.Default)
 	if validationErr != nil {
 		return NewConfError(ErrValidationError, validationErr.Error())
@@ -63,7 +63,7 @@ func (c *LBCTLConfigurationClient) CreateStickRequestRule(backend string, data *
 
 // EditStickRequestRule edits a stick request rule in configuration. One of version or transactionID is
 // mandatory. Returns error on fail, nil on success.
-func (c *LBCTLConfigurationClient) EditStickRequestRule(id int64, backend string, data *models.StickRequestRule, transactionID string, version int64) error {
+func (c *LBCTLClient) EditStickRequestRule(id int64, backend string, data *models.StickRequestRule, transactionID string, version int64) error {
 	validationErr := data.Validate(strfmt.Default)
 	if validationErr != nil {
 		return NewConfError(ErrValidationError, validationErr.Error())
@@ -76,7 +76,7 @@ func (c *LBCTLConfigurationClient) EditStickRequestRule(id int64, backend string
 	return c.editObject(strconv.FormatInt(data.ID, 10), "stickreq", backend, "farm", data, ondiskR, nil, transactionID, version)
 }
 
-func (c *LBCTLConfigurationClient) parseStickRequestRules(response string) models.StickRequestRules {
+func (c *LBCTLClient) parseStickRequestRules(response string) models.StickRequestRules {
 	stickReqRules := make(models.StickRequestRules, 0, 1)
 	for _, stickReqRulesStr := range strings.Split(response, "\n\n") {
 		if strings.TrimSpace(stickReqRulesStr) == "" {

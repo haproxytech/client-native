@@ -11,12 +11,29 @@ type Client struct {
 	runtimes []SingleRuntime
 }
 
+const (
+	// DefaultSocketPath sane default for runtime API socket path
+	DefaultSocketPath string = "/var/run/haproxy.sock"
+	// DefaultSocketAutoRecconect sane default for runtime API autoReconnect
+	DefaultSocketAutoRecconect bool = true
+)
+
+// DefaultClient return runtime Client with sane defaults
+func DefaultClient() (*Client, error) {
+	c := &Client{}
+	err := c.Init([]string{DefaultSocketPath}, DefaultSocketAutoRecconect)
+	if err != nil {
+		return nil, err
+	}
+	return c, nil
+}
+
 //Init must be given path to runtime socket
 func (c *Client) Init(socketPath []string, autoReconnect bool) error {
 	c.runtimes = make([]SingleRuntime, len(socketPath))
 	for index, path := range socketPath {
 		runtime := SingleRuntime{}
-		err := runtime.Init(path, true)
+		err := runtime.Init(path, autoReconnect)
 		if err != nil {
 			return err
 		}

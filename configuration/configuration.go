@@ -11,11 +11,6 @@ type ClientParams struct {
 	haproxy                 string
 }
 
-// NewConfigurationClientParams creates a new configuration client.
-func NewConfigurationClientParams(configurationFile string, globalConfigurationFile string, haproxy string) *ClientParams {
-	return &ClientParams{configurationFile: configurationFile, globalConfigurationFile: globalConfigurationFile, haproxy: haproxy}
-}
-
 // ConfigurationFile returns the configuration file of the client
 func (c *ClientParams) ConfigurationFile() string {
 	return c.configurationFile
