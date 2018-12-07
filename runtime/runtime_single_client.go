@@ -62,6 +62,12 @@ func (s *SingleRuntime) socketConnect() error {
 	return nil
 }
 
+//Reload closes connection and open new one
+func (s *SingleRuntime) Reload() error {
+	s.readFromSocket(s.runtimeAPIsocket, "quit")
+	return s.socketConnect()
+}
+
 func (s *SingleRuntime) handleIncommingJobs() {
 	for {
 		select {
@@ -86,6 +92,9 @@ func (s *SingleRuntime) readFromSocket(c net.Conn, command string) (string, erro
 	if err != nil {
 		s.socketOpen = false
 		c.Close()
+		if s.autoReconnect {
+			s.socketConnect()
+		}
 		return "", err
 	}
 	time.Sleep(1e9)
@@ -141,12 +150,12 @@ func (s *SingleRuntime) ExecuteRaw(command string) (string, error) {
 func (s *SingleRuntime) Execute(command string) error {
 	rawdata, err := s.ExecuteRaw(command)
 	if err != nil {
-		return err
+		return fmt.Errorf("%s [%s]", err.Error(), command)
 	}
 	if len(rawdata) > 1 {
 		switch rawdata[1] {
 		case '3', '2', '1', '0':
-			return fmt.Errorf(rawdata[3:])
+			return fmt.Errorf("[%c] %s [%s]", rawdata[1], rawdata[3:], command)
 		}
 	}
 	return nil
@@ -163,7 +172,7 @@ func (s *SingleRuntime) executeRaw(command string, retry int) (string, error) {
 	case rsp := <-response:
 		if rsp.err != nil && retry > 0 {
 			if !s.socketOpen || s.runtimeAPIsocket == nil {
-				s.socketConnect()
+				time.Sleep(time.Second)
 			}
 			retry--
 			return s.executeRaw(command, retry)

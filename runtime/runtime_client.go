@@ -42,6 +42,18 @@ func (c *Client) Init(socketPath []string, autoReconnect bool) error {
 	return nil
 }
 
+//Reload must be issues after haproxy restart
+func (c *Client) Reload() error {
+	var status error
+	for _, runtime := range c.runtimes {
+		err := runtime.Reload()
+		if err != nil {
+			status = err
+		}
+	}
+	return status
+}
+
 func (c *Client) GetStats() ([]models.NativeStats, error) {
 	result := make([]models.NativeStats, len(c.runtimes))
 	for index, runtime := range c.runtimes {
