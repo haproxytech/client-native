@@ -73,6 +73,7 @@ func (s *SingleRuntime) handleIncommingJobs() {
 				job.response <- TaskResponse{result: result}
 			}
 		case <-time.After(time.Duration(60) * time.Second):
+			s.readFromSocket(s.runtimeAPIsocket, "")
 		}
 	}
 }
