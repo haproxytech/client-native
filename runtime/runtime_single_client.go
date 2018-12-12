@@ -21,88 +21,58 @@ type Task struct {
 
 //SingleRuntime handles one runtime API
 type SingleRuntime struct {
-	socketOpen       bool
-	jobs             chan Task
-	socketPath       string
-	autoReconnect    bool
-	runtimeAPIsocket net.Conn
+	jobs       chan Task
+	socketPath string
 }
 
 //Init must be given path to runtime socket
 func (s *SingleRuntime) Init(socketPath string, autoReconnect bool) error {
 	s.socketPath = socketPath
-	s.autoReconnect = autoReconnect
 	s.jobs = make(chan Task)
-	s.socketConnect()
 	go s.handleIncommingJobs()
-	return nil
-}
-
-func (s *SingleRuntime) socketConnect() error {
-	var err error
-	s.runtimeAPIsocket, err = net.Dial("unix", s.socketPath)
-	if err != nil {
-		if s.autoReconnect {
-			go func() {
-				time.Sleep(time.Second * 1)
-				s.socketConnect()
-			}()
-		}
-		return err
-	}
-	s.socketOpen = true
-	_, err = s.runtimeAPIsocket.Write([]byte(fmt.Sprintf("prompt\n")))
-	if err != nil {
-		return err
-	}
-	_, err = s.runtimeAPIsocket.Write([]byte(fmt.Sprintf("set severity-output number\n")))
-	if err != nil {
-		return err
-	}
 	return nil
 }
 
 //Reload closes connection and open new one
 func (s *SingleRuntime) Reload() error {
-	s.readFromSocket(s.runtimeAPIsocket, "quit")
-	return s.socketConnect()
+	_, err := s.readFromSocket("quit")
+	return err
 }
 
 func (s *SingleRuntime) handleIncommingJobs() {
 	for {
 		select {
 		case job := <-s.jobs:
-			result, err := s.readFromSocket(s.runtimeAPIsocket, job.command)
+			result, err := s.readFromSocket(job.command)
 			if err != nil {
 				job.response <- TaskResponse{err: err}
 			} else {
 				job.response <- TaskResponse{result: result}
 			}
-		case <-time.After(time.Duration(60) * time.Second):
-			s.readFromSocket(s.runtimeAPIsocket, "")
 		}
 	}
 }
 
-func (s *SingleRuntime) readFromSocket(c net.Conn, command string) (string, error) {
-	if !s.socketOpen {
-		return "", fmt.Errorf("no connection")
-	}
-	_, err := c.Write([]byte(fmt.Sprintf("%s\n", command)))
+func (s *SingleRuntime) readFromSocket(command string) (string, error) {
+	api, err := net.Dial("unix", s.socketPath)
 	if err != nil {
-		s.socketOpen = false
-		c.Close()
-		if s.autoReconnect {
-			s.socketConnect()
-		}
 		return "", err
+	}
+	_, err = api.Write([]byte(fmt.Sprintf("set severity-output number;%s\n", command)))
+	if err != nil {
+		return "", err
+	}
+	return "", nil
+
+	if api == nil {
+		return "", fmt.Errorf("no connection")
 	}
 	time.Sleep(1e9)
 	bufferSize := 1024
 	buf := make([]byte, bufferSize)
 	var data strings.Builder
 	for {
-		n, err := c.Read(buf[:])
+		n, err := api.Read(buf[:])
 		if err != nil {
 			break
 		}
@@ -111,19 +81,23 @@ func (s *SingleRuntime) readFromSocket(c net.Conn, command string) (string, erro
 			break
 		}
 	}
+	api.Close()
+	if err != nil {
+		return "", err
+	}
 	result := strings.TrimSuffix(data.String(), "\n> ")
 	result = strings.TrimSuffix(result, "\n")
 	return result, nil
 }
 
 func (s *SingleRuntime) readFromSocketClean(command string) (string, error) {
-	c, err := net.Dial("unix", s.socketPath)
+	api, err := net.Dial("unix", s.socketPath)
 	if err != nil {
 		return "", err
 	}
-	defer c.Close()
+	defer api.Close()
 
-	_, err = c.Write([]byte(fmt.Sprintf("%s\n", command)))
+	_, err = api.Write([]byte(fmt.Sprintf("%s\n", command)))
 	if err != nil {
 		return "", nil
 	}
@@ -131,7 +105,7 @@ func (s *SingleRuntime) readFromSocketClean(command string) (string, error) {
 	buf := make([]byte, 1024)
 	var data strings.Builder
 	for {
-		n, err := c.Read(buf[:])
+		n, err := api.Read(buf[:])
 		if err != nil {
 			break
 		}
@@ -171,9 +145,6 @@ func (s *SingleRuntime) executeRaw(command string, retry int) (string, error) {
 	select {
 	case rsp := <-response:
 		if rsp.err != nil && retry > 0 {
-			if !s.socketOpen || s.runtimeAPIsocket == nil {
-				time.Sleep(time.Second)
-			}
 			retry--
 			return s.executeRaw(command, retry)
 		}
