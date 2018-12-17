@@ -29,6 +29,9 @@ func (c *ClientParams) Haproxy() string {
 // Client interface is the interface used for managing HAProxy configuration
 // file.
 type Client interface {
+	//raw config
+	GetRawConfiguration() (*models.GetHAProxyConfigurationOKBody, error)
+	PostRawConfiguration(config *string, version int64) error
 	//transaction methods
 	GetTransactions(status string) (*models.Transactions, error)
 	GetTransaction(id string) (*models.Transaction, error)
@@ -116,9 +119,9 @@ type Client interface {
 	CreateTCPConnectionRule(backend string, data *models.TCPRule, transactionID string, version int64) error
 	EditTCPConnectionRule(id int64, backend string, data *models.TCPRule, transactionID string, version int64) error
 	//TCP connection rule methods
-	GetTCPContentRules(parentName, parentType, ruleType, transactionID string) (*models.GetTCPContentRulesOKBody, error)
-	GetTCPContentRule(id int64, parentName, parentType, ruleType, transactionID string) (*models.GetTCPContentRuleOKBody, error)
-	DeleteTCPContentRule(id int64, parentName, parentType, ruleType, transactionID string, version int64) error
-	CreateTCPContentRule(parentName, parentType, ruleType string, data *models.TCPRule, transactionID string, version int64) error
-	EditTCPContentRule(id int64, parentName, parentType, ruleType string, data *models.TCPRule, transactionID string, version int64) error
+	GetTCPContentRules(parentType, parentName, ruleType, transactionID string) (*models.GetTCPContentRulesOKBody, error)
+	GetTCPContentRule(id int64, parentType, parentName, ruleType, transactionID string) (*models.GetTCPContentRuleOKBody, error)
+	DeleteTCPContentRule(id int64, parentType, parentName, ruleType, transactionID string, version int64) error
+	CreateTCPContentRule(parentType, parentName, ruleType string, data *models.TCPRule, transactionID string, version int64) error
+	EditTCPContentRule(id int64, parentType, parentName, ruleType string, data *models.TCPRule, transactionID string, version int64) error
 }
