@@ -62,7 +62,7 @@ func (s *SingleRuntime) readFromSocket(command string) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	return "", nil
+	// return "", nil
 
 	if api == nil {
 		return "", fmt.Errorf("no connection")

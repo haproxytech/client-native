@@ -54,6 +54,7 @@ func (c *Client) Reload() error {
 	return status
 }
 
+//GetStats returns stats from the socket
 func (c *Client) GetStats() ([]models.NativeStats, error) {
 	result := make([]models.NativeStats, len(c.runtimes))
 	for index, runtime := range c.runtimes {
@@ -66,8 +67,9 @@ func (c *Client) GetStats() ([]models.NativeStats, error) {
 	return result, nil
 }
 
-func (c *Client) GetInfo() ([]string, error) {
-	result := make([]string, len(c.runtimes))
+//GetInfo returns info from the socket
+func (c *Client) GetInfo() ([]models.ProcessInfoHaproxy, error) {
+	result := make([]models.ProcessInfoHaproxy, len(c.runtimes))
 	for index, runtime := range c.runtimes {
 		stats, err := runtime.GetInfo()
 		if err != nil {

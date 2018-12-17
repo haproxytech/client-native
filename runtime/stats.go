@@ -1,7 +1,12 @@
 package runtime
 
 import (
+	"fmt"
+	"strconv"
 	"strings"
+	"time"
+
+	"github.com/go-openapi/strfmt"
 
 	"github.com/mitchellh/mapstructure"
 	"github.com/haproxytech/models"
@@ -28,10 +33,17 @@ func (s *SingleRuntime) GetStats() (models.NativeStats, error) {
 				data[key] = line[index]
 			}
 		}
-		oneLineData := &models.NativeStatsItems{
-			Name: line[0],
-			Type: strings.ToLower(line[1]),
+		oneLineData := &models.NativeStatsItems{}
+		tString := strings.ToLower(line[1])
+		if tString == "backend" || tString == "frontend" {
+			oneLineData.Name = line[0]
+			oneLineData.Type = tString
+		} else {
+			oneLineData.Name = tString
+			oneLineData.Type = "server"
+			oneLineData.BackendName = line[0]
 		}
+
 		var st models.NativeStatsItemsStats
 		err := mapstructure.WeakDecode(data, &st)
 		if err != nil {
@@ -44,10 +56,44 @@ func (s *SingleRuntime) GetStats() (models.NativeStats, error) {
 }
 
 //GetInfo fetches HAProxy info from runtime API
-func (s *SingleRuntime) GetInfo() (string, error) {
-	data, err := s.ExecuteRaw("show stat")
+func (s *SingleRuntime) GetInfo() (models.ProcessInfoHaproxy, error) {
+	dataStr, err := s.ExecuteRaw("show info typed")
+	data := models.ProcessInfoHaproxy{}
 	if err != nil {
-		return "", err
+		fmt.Println(err.Error())
+		return data, err
 	}
+	return parseInfo(dataStr)
+}
+
+func parseInfo(info string) (models.ProcessInfoHaproxy, error) {
+	data := models.ProcessInfoHaproxy{}
+
+	for _, line := range strings.Split(info, "\n") {
+		fields := strings.Split(line, ":")
+		fID := strings.TrimSpace(strings.Split(fields[0], ".")[0])
+		switch fID {
+		case "1":
+			data.Version = fields[3]
+		case "2":
+			d := strfmt.Date{}
+			err := d.Scan(strings.Replace(fields[3], "/", "-", -1))
+			if err == nil {
+				data.ReleaseDate = d
+			}
+		case "4":
+			nbproc, err := strconv.ParseInt(fields[3], 10, 64)
+			if err == nil {
+				data.Processes = &nbproc
+			}
+		case "8":
+			uptime, err := strconv.ParseInt(fields[3], 10, 64)
+			if err == nil {
+				data.Uptime = &uptime
+			}
+		}
+		data.Time = strfmt.DateTime(time.Now())
+	}
+
 	return data, nil
 }
