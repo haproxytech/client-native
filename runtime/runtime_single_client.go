@@ -26,17 +26,11 @@ type SingleRuntime struct {
 }
 
 //Init must be given path to runtime socket
-func (s *SingleRuntime) Init(socketPath string, autoReconnect bool) error {
+func (s *SingleRuntime) Init(socketPath string) error {
 	s.socketPath = socketPath
 	s.jobs = make(chan Task)
 	go s.handleIncommingJobs()
 	return nil
-}
-
-//Reload closes connection and open new one
-func (s *SingleRuntime) Reload() error {
-	_, err := s.readFromSocket("quit")
-	return err
 }
 
 func (s *SingleRuntime) handleIncommingJobs() {
