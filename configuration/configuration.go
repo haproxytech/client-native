@@ -40,6 +40,9 @@ type Client interface {
 	DeleteTransaction(id string) error
 	//version method
 	GetVersion() (int64, error)
+	// global methods
+	GetGlobalConfiguration() (*models.GetGlobalOKBody, error)
+	PushGlobalConfiguration(data *models.Global, version int64) error
 	//site methods
 	GetSites(transactionID string) (*models.GetSitesOKBody, error)
 	GetSite(name string, transactionID string) (*models.GetSiteOKBody, error)

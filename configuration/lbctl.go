@@ -232,9 +232,25 @@ func (c *LBCTLClient) deleteObject(name string, objType string, parent string, p
 	return nil
 }
 
+// GetGlobalVersion returns global configuration file version
+func (c *LBCTLClient) GetGlobalVersion() (int64, error) {
+	return c.getVersion("global")
+}
+
 // GetVersion returns configuration file version
 func (c *LBCTLClient) GetVersion() (int64, error) {
-	file, err := os.Open(c.ConfigurationFile())
+	return c.getVersion("config")
+}
+
+func (c *LBCTLClient) getVersion(t string) (int64, error) {
+	var file *os.File
+	var err error
+	if t == "global" {
+		file, err = os.Open(c.GlobalConfigurationFile())
+	} else {
+		file, err = os.Open(c.ConfigurationFile())
+	}
+
 	if err != nil {
 		return 0, NewConfError(ErrCannotReadConfFile, fmt.Sprintf("Cannot read configuration file %v: %v", c.ConfigurationFile(), err.Error()))
 	}
@@ -250,11 +266,11 @@ func (c *LBCTLClient) GetVersion() (int64, error) {
 				if strings.HasPrefix(line, "# _version=") {
 					w := strings.Split(line, "=")
 					if len(w) != 2 {
-						return c.setInitialVersion(true)
+						return c.setInitialVersion(true, t)
 					}
 					version, err := strconv.ParseInt(w[1], 10, 64)
 					if err != nil {
-						return c.setInitialVersion(true)
+						return c.setInitialVersion(true, t)
 					}
 					return version, nil
 				}
@@ -265,16 +281,24 @@ func (c *LBCTLClient) GetVersion() (int64, error) {
 		}
 	}
 	if err := scanner.Err(); err != nil {
-		return c.setInitialVersion(false)
+		return c.setInitialVersion(false, t)
 	}
-	return c.setInitialVersion(false)
+	return c.setInitialVersion(false, t)
 }
 
-func (c *LBCTLClient) setInitialVersion(hasVersion bool) (int64, error) {
-	input, err := ioutil.ReadFile(c.ConfigurationFile())
+func (c *LBCTLClient) setInitialVersion(hasVersion bool, t string) (int64, error) {
+	var cFile string
+	var err error
+	if t == "global" {
+		cFile = c.GlobalConfigurationFile()
+	} else {
+		cFile = c.ConfigurationFile()
+	}
+
+	input, err := ioutil.ReadFile(cFile)
 
 	if err != nil {
-		return 0, NewConfError(ErrCannotReadConfFile, fmt.Sprintf("Cannot read configuration file %v: %v", c.ConfigurationFile(), err.Error()))
+		return 0, NewConfError(ErrCannotReadConfFile, fmt.Sprintf("Cannot read configuration file %v: %v", cFile, err.Error()))
 	}
 
 	inputStr := string(input)
@@ -287,8 +311,8 @@ func (c *LBCTLClient) setInitialVersion(hasVersion bool) (int64, error) {
 	}
 
 	output := fmt.Sprintf("# _version=1\n%s", inputStr)
-	if err = ioutil.WriteFile(c.ConfigurationFile(), []byte(output), 0666); err != nil {
-		return 0, NewConfError(ErrCannotSetVersion, fmt.Sprintf("Cannot set initial version in file %v: %v", c.ConfigurationFile(), err.Error()))
+	if err = ioutil.WriteFile(cFile, []byte(output), 0666); err != nil {
+		return 0, NewConfError(ErrCannotSetVersion, fmt.Sprintf("Cannot set initial version in file %v: %v", cFile, err.Error()))
 	}
 	return 0, nil
 }
@@ -478,6 +502,29 @@ func (c *LBCTLClient) incrementVersion() error {
 
 	if err = ioutil.WriteFile(c.ConfigurationFile(), output, 0666); err != nil {
 		return NewConfError(ErrCannotSetVersion, fmt.Sprintf("Cannot increment version in file %v: %v", c.ConfigurationFile(), err.Error()))
+	}
+	return nil
+}
+
+func (c *LBCTLClient) incrementGlobalVersion() error {
+	input, err := ioutil.ReadFile(c.GlobalConfigurationFile())
+
+	if err != nil {
+		return NewConfError(ErrCannotReadVersion, fmt.Sprintf("Cannot read version from file %v: %v", c.GlobalConfigurationFile(), err.Error()))
+	}
+
+	v, err := c.GetGlobalVersion()
+	if err != nil {
+		return err
+	}
+
+	toReplace := fmt.Sprintf("# _version=%v", v)
+	replace := fmt.Sprintf("# _version=%v", v+1)
+
+	output := bytes.Replace(input, []byte(toReplace), []byte(replace), -1)
+
+	if err = ioutil.WriteFile(c.GlobalConfigurationFile(), output, 0666); err != nil {
+		return NewConfError(ErrCannotSetVersion, fmt.Sprintf("Cannot increment version in file %v: %v", c.GlobalConfigurationFile(), err.Error()))
 	}
 	return nil
 }
