@@ -112,11 +112,12 @@ func (c *LBCTLClient) DeleteTCPContentRule(id int64, parentType, parentName, rul
 // CreateTCPContentRule creates a tcp content rule in configuration. One of version or transactionID is
 // mandatory. Returns error on fail, nil on success.
 func (c *LBCTLClient) CreateTCPContentRule(parentType, parentName, ruleType string, data *models.TCPRule, transactionID string, version int64) error {
-	validationErr := data.Validate(strfmt.Default)
-	if validationErr != nil {
-		return NewConfError(ErrValidationError, validationErr.Error())
+	if c.UseValidation() {
+		validationErr := data.Validate(strfmt.Default)
+		if validationErr != nil {
+			return NewConfError(ErrValidationError, validationErr.Error())
+		}
 	}
-
 	var lbctlRType string
 	switch ruleType {
 	case "request":
@@ -142,11 +143,12 @@ func (c *LBCTLClient) CreateTCPContentRule(parentType, parentName, ruleType stri
 // EditTCPContentRule edits a tcp content rule in configuration. One of version or transactionID is
 // mandatory. Returns error on fail, nil on success.
 func (c *LBCTLClient) EditTCPContentRule(id int64, parentType, parentName, ruleType string, data *models.TCPRule, transactionID string, version int64) error {
-	validationErr := data.Validate(strfmt.Default)
-	if validationErr != nil {
-		return NewConfError(ErrValidationError, validationErr.Error())
+	if c.UseValidation() {
+		validationErr := data.Validate(strfmt.Default)
+		if validationErr != nil {
+			return NewConfError(ErrValidationError, validationErr.Error())
+		}
 	}
-
 	lbctlType := typeToLbctlType(parentType)
 	if lbctlType == "" {
 		return NewConfError(ErrValidationError, fmt.Sprintf("Parent type %v not recognized", parentType))

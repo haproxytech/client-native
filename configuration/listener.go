@@ -53,9 +53,11 @@ func (c *LBCTLClient) DeleteListener(name string, frontend string, transactionID
 // CreateListener creates a listener in configuration. One of version or transactionID is
 // mandatory. Returns error on fail, nil on success.
 func (c *LBCTLClient) CreateListener(frontend string, data *models.Listener, transactionID string, version int64) error {
-	validationErr := data.Validate(strfmt.Default)
-	if validationErr != nil {
-		return NewConfError(ErrValidationError, validationErr.Error())
+	if c.UseValidation() {
+		validationErr := data.Validate(strfmt.Default)
+		if validationErr != nil {
+			return NewConfError(ErrValidationError, validationErr.Error())
+		}
 	}
 	return c.createObject(data.Name, "listener", frontend, "", data, nil, transactionID, version)
 }
@@ -63,9 +65,11 @@ func (c *LBCTLClient) CreateListener(frontend string, data *models.Listener, tra
 // EditListener edits a listener in configuration. One of version or transactionID is
 // mandatory. Returns error on fail, nil on success.
 func (c *LBCTLClient) EditListener(name string, frontend string, data *models.Listener, transactionID string, version int64) error {
-	validationErr := data.Validate(strfmt.Default)
-	if validationErr != nil {
-		return NewConfError(ErrValidationError, validationErr.Error())
+	if c.UseValidation() {
+		validationErr := data.Validate(strfmt.Default)
+		if validationErr != nil {
+			return NewConfError(ErrValidationError, validationErr.Error())
+		}
 	}
 	ondiskLst, err := c.GetListener(name, frontend, transactionID)
 	if err != nil {

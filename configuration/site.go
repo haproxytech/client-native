@@ -57,9 +57,11 @@ func (c *LBCTLClient) CreateSite(data *models.Site, transactionID string, versio
 	var res []error
 	var err error
 
-	validationErr := data.Validate(strfmt.Default)
-	if validationErr != nil {
-		return NewConfError(ErrValidationError, validationErr.Error())
+	if c.UseValidation() {
+		validationErr := data.Validate(strfmt.Default)
+		if validationErr != nil {
+			return NewConfError(ErrValidationError, validationErr.Error())
+		}
 	}
 	// start an implicit transaction for create site (multiple operations required) if not already given
 	t, err := c.checkTransactionOrVersion(transactionID, version, true)
@@ -126,11 +128,12 @@ func (c *LBCTLClient) EditSite(name string, data *models.Site, transactionID str
 	var res []error
 	var err error
 
-	validationErr := data.Validate(strfmt.Default)
-	if validationErr != nil {
-		return NewConfError(ErrValidationError, validationErr.Error())
+	if c.UseValidation() {
+		validationErr := data.Validate(strfmt.Default)
+		if validationErr != nil {
+			return NewConfError(ErrValidationError, validationErr.Error())
+		}
 	}
-
 	t, err := c.checkTransactionOrVersion(transactionID, version, true)
 	if err != nil {
 		return err

@@ -53,9 +53,11 @@ func (c *LBCTLClient) DeleteServer(name string, backend string, transactionID st
 // CreateServer creates a server in configuration. One of version or transactionID is
 // mandatory. Returns error on fail, nil on success.
 func (c *LBCTLClient) CreateServer(backend string, data *models.Server, transactionID string, version int64) error {
-	validationErr := data.Validate(strfmt.Default)
-	if validationErr != nil {
-		return NewConfError(ErrValidationError, validationErr.Error())
+	if c.UseValidation() {
+		validationErr := data.Validate(strfmt.Default)
+		if validationErr != nil {
+			return NewConfError(ErrValidationError, validationErr.Error())
+		}
 	}
 	return c.createObject(data.Name, "server", backend, "", data, nil, transactionID, version)
 }
@@ -63,9 +65,11 @@ func (c *LBCTLClient) CreateServer(backend string, data *models.Server, transact
 // EditServer edits a server in configuration. One of version or transactionID is
 // mandatory. Returns error on fail, nil on success.
 func (c *LBCTLClient) EditServer(name string, backend string, data *models.Server, transactionID string, version int64) error {
-	validationErr := data.Validate(strfmt.Default)
-	if validationErr != nil {
-		return NewConfError(ErrValidationError, validationErr.Error())
+	if c.UseValidation() {
+		validationErr := data.Validate(strfmt.Default)
+		if validationErr != nil {
+			return NewConfError(ErrValidationError, validationErr.Error())
+		}
 	}
 	ondiskSrv, err := c.GetServer(name, backend, transactionID)
 	if err != nil {

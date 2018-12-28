@@ -9,6 +9,7 @@ type ClientParams struct {
 	configurationFile       string
 	globalConfigurationFile string
 	haproxy                 string
+	useValidation           bool
 }
 
 // ConfigurationFile returns the configuration file of the client
@@ -24,6 +25,12 @@ func (c *ClientParams) GlobalConfigurationFile() string {
 // Haproxy returns the haproxy executable path
 func (c *ClientParams) Haproxy() string {
 	return c.haproxy
+}
+
+// UseValidation indicates whether configuration client will perform validation in
+// create and edit functions
+func (c *ClientParams) UseValidation() bool {
+	return c.useValidation
 }
 
 // Client interface is the interface used for managing HAProxy configuration

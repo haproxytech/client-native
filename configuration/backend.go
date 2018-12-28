@@ -53,9 +53,11 @@ func (c *LBCTLClient) DeleteBackend(name string, transactionID string, version i
 // CreateBackend creates a backend in configuration. One of version or transactionID is
 // mandatory. Returns error on fail, nil on success.
 func (c *LBCTLClient) CreateBackend(data *models.Backend, transactionID string, version int64) error {
-	validationErr := data.Validate(strfmt.Default)
-	if validationErr != nil {
-		return NewConfError(ErrValidationError, validationErr.Error())
+	if c.UseValidation() {
+		validationErr := data.Validate(strfmt.Default)
+		if validationErr != nil {
+			return NewConfError(ErrValidationError, validationErr.Error())
+		}
 	}
 	return c.createObject(data.Name, "farm", "", "", data, nil, transactionID, version)
 }
@@ -63,9 +65,11 @@ func (c *LBCTLClient) CreateBackend(data *models.Backend, transactionID string, 
 // EditBackend edits a backend in configuration. One of version or transactionID is
 // mandatory. Returns error on fail, nil on success.
 func (c *LBCTLClient) EditBackend(name string, data *models.Backend, transactionID string, version int64) error {
-	validationErr := data.Validate(strfmt.Default)
-	if validationErr != nil {
-		return NewConfError(ErrValidationError, validationErr.Error())
+	if c.UseValidation() {
+		validationErr := data.Validate(strfmt.Default)
+		if validationErr != nil {
+			return NewConfError(ErrValidationError, validationErr.Error())
+		}
 	}
 	ondiskBck, err := c.GetBackend(name, transactionID)
 	if err != nil {

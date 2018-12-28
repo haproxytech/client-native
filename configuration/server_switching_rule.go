@@ -54,9 +54,11 @@ func (c *LBCTLClient) DeleteServerSwitchingRule(id int64, backend string, transa
 // CreateServerSwitchingRule creates a server switching rule in configuration. One of version or transactionID is
 // mandatory. Returns error on fail, nil on success.
 func (c *LBCTLClient) CreateServerSwitchingRule(backend string, data *models.ServerSwitchingRule, transactionID string, version int64) error {
-	validationErr := data.Validate(strfmt.Default)
-	if validationErr != nil {
-		return NewConfError(ErrValidationError, validationErr.Error())
+	if c.UseValidation() {
+		validationErr := data.Validate(strfmt.Default)
+		if validationErr != nil {
+			return NewConfError(ErrValidationError, validationErr.Error())
+		}
 	}
 	return c.createObject(strconv.FormatInt(data.ID, 10), "useserver", backend, "farm", data, nil, transactionID, version)
 }
@@ -64,9 +66,11 @@ func (c *LBCTLClient) CreateServerSwitchingRule(backend string, data *models.Ser
 // EditServerSwitchingRule edits a server switching rule in configuration. One of version or transactionID is
 // mandatory. Returns error on fail, nil on success.
 func (c *LBCTLClient) EditServerSwitchingRule(id int64, backend string, data *models.ServerSwitchingRule, transactionID string, version int64) error {
-	validationErr := data.Validate(strfmt.Default)
-	if validationErr != nil {
-		return NewConfError(ErrValidationError, validationErr.Error())
+	if c.UseValidation() {
+		validationErr := data.Validate(strfmt.Default)
+		if validationErr != nil {
+			return NewConfError(ErrValidationError, validationErr.Error())
+		}
 	}
 	ondiskSr, err := c.GetServerSwitchingRule(id, backend, transactionID)
 	if err != nil {

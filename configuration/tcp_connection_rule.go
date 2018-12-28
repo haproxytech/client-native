@@ -54,9 +54,11 @@ func (c *LBCTLClient) DeleteTCPConnectionRule(id int64, frontend string, transac
 // CreateTCPConnectionRule creates a tcp connection rule in configuration. One of version or transactionID is
 // mandatory. Returns error on fail, nil on success.
 func (c *LBCTLClient) CreateTCPConnectionRule(frontend string, data *models.TCPRule, transactionID string, version int64) error {
-	validationErr := data.Validate(strfmt.Default)
-	if validationErr != nil {
-		return NewConfError(ErrValidationError, validationErr.Error())
+	if c.UseValidation() {
+		validationErr := data.Validate(strfmt.Default)
+		if validationErr != nil {
+			return NewConfError(ErrValidationError, validationErr.Error())
+		}
 	}
 	return c.createObject(strconv.FormatInt(data.ID, 10), "tcpreqconn", frontend, "service", data, nil, transactionID, version)
 }
@@ -64,9 +66,11 @@ func (c *LBCTLClient) CreateTCPConnectionRule(frontend string, data *models.TCPR
 // EditTCPConnectionRule edits a tcp connection rule in configuration. One of version or transactionID is
 // mandatory. Returns error on fail, nil on success.
 func (c *LBCTLClient) EditTCPConnectionRule(id int64, frontend string, data *models.TCPRule, transactionID string, version int64) error {
-	validationErr := data.Validate(strfmt.Default)
-	if validationErr != nil {
-		return NewConfError(ErrValidationError, validationErr.Error())
+	if c.UseValidation() {
+		validationErr := data.Validate(strfmt.Default)
+		if validationErr != nil {
+			return NewConfError(ErrValidationError, validationErr.Error())
+		}
 	}
 	ondiskBr, err := c.GetTCPConnectionRule(id, frontend, transactionID)
 	if err != nil {

@@ -54,9 +54,11 @@ func (c *LBCTLClient) DeleteStickRequestRule(id int64, backend string, transacti
 // CreateStickRequestRule creates a stick request rule in configuration. One of version or transactionID is
 // mandatory. Returns error on fail, nil on success.
 func (c *LBCTLClient) CreateStickRequestRule(backend string, data *models.StickRequestRule, transactionID string, version int64) error {
-	validationErr := data.Validate(strfmt.Default)
-	if validationErr != nil {
-		return NewConfError(ErrValidationError, validationErr.Error())
+	if c.UseValidation() {
+		validationErr := data.Validate(strfmt.Default)
+		if validationErr != nil {
+			return NewConfError(ErrValidationError, validationErr.Error())
+		}
 	}
 	return c.createObject(strconv.FormatInt(data.ID, 10), "stickreq", backend, "farm", data, nil, transactionID, version)
 }
@@ -64,9 +66,11 @@ func (c *LBCTLClient) CreateStickRequestRule(backend string, data *models.StickR
 // EditStickRequestRule edits a stick request rule in configuration. One of version or transactionID is
 // mandatory. Returns error on fail, nil on success.
 func (c *LBCTLClient) EditStickRequestRule(id int64, backend string, data *models.StickRequestRule, transactionID string, version int64) error {
-	validationErr := data.Validate(strfmt.Default)
-	if validationErr != nil {
-		return NewConfError(ErrValidationError, validationErr.Error())
+	if c.UseValidation() {
+		validationErr := data.Validate(strfmt.Default)
+		if validationErr != nil {
+			return NewConfError(ErrValidationError, validationErr.Error())
+		}
 	}
 	ondiskR, err := c.GetStickRequestRule(id, backend, transactionID)
 	if err != nil {

@@ -54,9 +54,11 @@ func (c *LBCTLClient) DeleteBackendSwitchingRule(id int64, frontend string, tran
 // CreateBackendSwitchingRule creates a backend switching rule in configuration. One of version or transactionID is
 // mandatory. Returns error on fail, nil on success.
 func (c *LBCTLClient) CreateBackendSwitchingRule(frontend string, data *models.BackendSwitchingRule, transactionID string, version int64) error {
-	validationErr := data.Validate(strfmt.Default)
-	if validationErr != nil {
-		return NewConfError(ErrValidationError, validationErr.Error())
+	if c.UseValidation() {
+		validationErr := data.Validate(strfmt.Default)
+		if validationErr != nil {
+			return NewConfError(ErrValidationError, validationErr.Error())
+		}
 	}
 	return c.createObject(strconv.FormatInt(data.ID, 10), "usefarm", frontend, "service", data, nil, transactionID, version)
 }
@@ -64,9 +66,11 @@ func (c *LBCTLClient) CreateBackendSwitchingRule(frontend string, data *models.B
 // EditBackendSwitchingRule edits a backend switching rule in configuration. One of version or transactionID is
 // mandatory. Returns error on fail, nil on success.
 func (c *LBCTLClient) EditBackendSwitchingRule(id int64, frontend string, data *models.BackendSwitchingRule, transactionID string, version int64) error {
-	validationErr := data.Validate(strfmt.Default)
-	if validationErr != nil {
-		return NewConfError(ErrValidationError, validationErr.Error())
+	if c.UseValidation() {
+		validationErr := data.Validate(strfmt.Default)
+		if validationErr != nil {
+			return NewConfError(ErrValidationError, validationErr.Error())
+		}
 	}
 	ondiskBr, err := c.GetBackendSwitchingRule(id, frontend, transactionID)
 	if err != nil {

@@ -52,9 +52,11 @@ func (c *LBCTLClient) DeleteFrontend(name string, transactionID string, version 
 // EditFrontend edits a frontend in configuration. One of version or transactionID is
 // mandatory. Returns error on fail, nil on success.
 func (c *LBCTLClient) EditFrontend(name string, data *models.Frontend, transactionID string, version int64) error {
-	validationErr := data.Validate(strfmt.Default)
-	if validationErr != nil {
-		return NewConfError(ErrValidationError, validationErr.Error())
+	if c.UseValidation() {
+		validationErr := data.Validate(strfmt.Default)
+		if validationErr != nil {
+			return NewConfError(ErrValidationError, validationErr.Error())
+		}
 	}
 	ondiskFrontend, err := c.GetFrontend(name, transactionID)
 	if err != nil {
@@ -66,9 +68,11 @@ func (c *LBCTLClient) EditFrontend(name string, data *models.Frontend, transacti
 // CreateFrontend creates a frontend in configuration. One of version or transactionID is
 // mandatory. Returns error on fail, nil on success.
 func (c *LBCTLClient) CreateFrontend(data *models.Frontend, transactionID string, version int64) error {
-	validationErr := data.Validate(strfmt.Default)
-	if validationErr != nil {
-		return NewConfError(ErrValidationError, validationErr.Error())
+	if c.UseValidation() {
+		validationErr := data.Validate(strfmt.Default)
+		if validationErr != nil {
+			return NewConfError(ErrValidationError, validationErr.Error())
+		}
 	}
 	return c.createObject(data.Name, "service", "", "", data, nil, transactionID, version)
 }

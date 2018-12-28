@@ -34,7 +34,7 @@ const (
 // DefaultLBCTLClient returns LBCTLClient with sane defaults
 func DefaultLBCTLClient() (*LBCTLClient, error) {
 	c := &LBCTLClient{}
-	err := c.Init("", "", "", "", "")
+	err := c.Init("", "", "", true, "", "")
 
 	if err != nil {
 		return nil, err
@@ -44,7 +44,7 @@ func DefaultLBCTLClient() (*LBCTLClient, error) {
 }
 
 // Init initializes a LBCTLClient
-func (c *LBCTLClient) Init(configurationFile string, globalConfigurationFile string, haproxy string, LBCTLPath string, LBCTLTmpPath string) error {
+func (c *LBCTLClient) Init(configurationFile string, globalConfigurationFile string, haproxy string, useValidation bool, LBCTLPath string, LBCTLTmpPath string) error {
 	if LBCTLPath == "" {
 		LBCTLPath = DefaultLBCTLPath
 	}
@@ -56,6 +56,7 @@ func (c *LBCTLClient) Init(configurationFile string, globalConfigurationFile str
 	c.configurationFile = configurationFile
 	c.globalConfigurationFile = globalConfigurationFile
 	c.haproxy = haproxy
+	c.useValidation = useValidation
 	c.LBCTLPath = LBCTLPath
 	c.LBCTLTmpPath = LBCTLTmpPath
 
