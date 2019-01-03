@@ -10,6 +10,12 @@ import (
 // GetFrontends returns a struct with configuration version and an array of
 // configured frontends. Returns error on fail.
 func (c *LBCTLClient) GetFrontends(transactionID string) (*models.GetFrontendsOKBody, error) {
+	if c.Cache.Enabled() {
+		frontends, found := c.Cache.Frontends.Get(transactionID)
+		if found {
+			return &models.GetFrontendsOKBody{Version: c.Cache.Version.Get(), Data: frontends}, nil
+		}
+	}
 	frontendsStr, err := c.executeLBCTL("l7-service-dump", transactionID)
 	if err != nil {
 		return nil, err
@@ -21,12 +27,21 @@ func (c *LBCTLClient) GetFrontends(transactionID string) (*models.GetFrontendsOK
 		return nil, err
 	}
 
+	if c.Cache.Enabled() {
+		c.Cache.Frontends.SetAll(transactionID, frontends)
+	}
 	return &models.GetFrontendsOKBody{Version: v, Data: frontends}, nil
 }
 
 // GetFrontend returns a struct with configuration version and a requested frontend.
 // Returns error on fail or if frontend does not exist.
 func (c *LBCTLClient) GetFrontend(name string, transactionID string) (*models.GetFrontendOKBody, error) {
+	if c.Cache.Enabled() {
+		frontend, found := c.Cache.Frontends.GetOne(name, transactionID)
+		if found {
+			return &models.GetFrontendOKBody{Version: c.Cache.Version.Get(), Data: frontend}, nil
+		}
+	}
 	frontendStr, err := c.executeLBCTL("l7-service-show", transactionID, name)
 	if err != nil {
 		return nil, err
@@ -40,13 +55,23 @@ func (c *LBCTLClient) GetFrontend(name string, transactionID string) (*models.Ge
 		return nil, err
 	}
 
+	if c.Cache.Enabled() {
+		c.Cache.Frontends.Set(frontend.Name, transactionID, frontend)
+	}
 	return &models.GetFrontendOKBody{Version: v, Data: frontend}, nil
 }
 
 // DeleteFrontend deletes a frontend in configuration. One of version or transactionID is
 // mandatory. Returns error on fail, nil on success.
 func (c *LBCTLClient) DeleteFrontend(name string, transactionID string, version int64) error {
-	return c.deleteObject(name, "service", "", "", transactionID, version)
+	err := c.deleteObject(name, "service", "", "", transactionID, version)
+	if err != nil {
+		return err
+	}
+	if c.Cache.Enabled() {
+		c.Cache.DeleteFrontendCache(name, transactionID)
+	}
+	return err
 }
 
 // EditFrontend edits a frontend in configuration. One of version or transactionID is
@@ -62,7 +87,14 @@ func (c *LBCTLClient) EditFrontend(name string, data *models.Frontend, transacti
 	if err != nil {
 		return err
 	}
-	return c.editObject(name, "service", "", "", data, ondiskFrontend.Data, nil, transactionID, version)
+	err = c.editObject(name, "service", "", "", data, ondiskFrontend.Data, nil, transactionID, version)
+	if err != nil {
+		return err
+	}
+	if c.Cache.Enabled() {
+		c.Cache.Frontends.Set(name, transactionID, data)
+	}
+	return nil
 }
 
 // CreateFrontend creates a frontend in configuration. One of version or transactionID is
@@ -74,7 +106,14 @@ func (c *LBCTLClient) CreateFrontend(data *models.Frontend, transactionID string
 			return NewConfError(ErrValidationError, validationErr.Error())
 		}
 	}
-	return c.createObject(data.Name, "service", "", "", data, nil, transactionID, version)
+	err := c.createObject(data.Name, "service", "", "", data, nil, transactionID, version)
+	if err != nil {
+		return err
+	}
+	if c.Cache.Enabled() {
+		c.Cache.Frontends.Set(data.Name, transactionID, data)
+	}
+	return nil
 }
 
 func (c *LBCTLClient) parseFrontends(response string) models.Frontends {

@@ -88,6 +88,9 @@ func (c *LBCTLClient) PostRawConfiguration(config *string, version int64) error 
 		return NewConfError(ErrGeneralError, e.Error())
 	}
 
+	if c.Cache.Enabled() {
+		c.Cache.InvalidateCache()
+	}
 	return nil
 }
 

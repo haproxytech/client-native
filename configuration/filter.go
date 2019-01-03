@@ -12,6 +12,12 @@ import (
 // GetFilters returns a struct with configuration version and an array of
 // configured filters in the specified parent. Returns error on fail.
 func (c *LBCTLClient) GetFilters(parentType, parentName string, transactionID string) (*models.GetFiltersOKBody, error) {
+	if c.Cache.Enabled() {
+		filters, found := c.Cache.Filters.Get(parentName, parentType, transactionID)
+		if found {
+			return &models.GetFiltersOKBody{Version: c.Cache.Version.Get(), Data: filters}, nil
+		}
+	}
 	lbctlType := typeToLbctlType(parentType)
 	if lbctlType == "" {
 		return nil, NewConfError(ErrValidationError, fmt.Sprintf("Parent type %v not recognized", parentType))
@@ -29,12 +35,21 @@ func (c *LBCTLClient) GetFilters(parentType, parentName string, transactionID st
 		return nil, err
 	}
 
+	if c.Cache.Enabled() {
+		c.Cache.Filters.SetAll(parentName, parentType, transactionID, filters)
+	}
 	return &models.GetFiltersOKBody{Version: v, Data: filters}, nil
 }
 
 // GetFilter returns a struct with configuration version and a requested filter
 // in the specified parent. Returns error on fail or if filter does not exist.
 func (c *LBCTLClient) GetFilter(id int64, parentType, parentName string, transactionID string) (*models.GetFilterOKBody, error) {
+	if c.Cache.Enabled() {
+		filter, found := c.Cache.Filters.GetOne(id, parentName, parentType, transactionID)
+		if found {
+			return &models.GetFilterOKBody{Version: c.Cache.Version.Get(), Data: filter}, nil
+		}
+	}
 	lbctlType := typeToLbctlType(parentType)
 	if lbctlType == "" {
 		return nil, NewConfError(ErrValidationError, fmt.Sprintf("Parent type %v not recognized", parentType))
@@ -64,7 +79,14 @@ func (c *LBCTLClient) DeleteFilter(id int64, parentType string, parentName strin
 		return NewConfError(ErrValidationError, fmt.Sprintf("Parent type %v not recognized", parentType))
 	}
 
-	return c.deleteObject(strconv.FormatInt(id, 10), "filter", parentName, lbctlType, transactionID, version)
+	err := c.deleteObject(strconv.FormatInt(id, 10), "filter", parentName, lbctlType, transactionID, version)
+	if err != nil {
+		return err
+	}
+	if c.Cache.Enabled() {
+		c.Cache.Filters.InvalidateParent(transactionID, parentName, parentType)
+	}
+	return nil
 }
 
 // CreateFilter creates a filter in configuration. One of version or transactionID is
@@ -82,7 +104,14 @@ func (c *LBCTLClient) CreateFilter(parentType string, parentName string, data *m
 		return NewConfError(ErrValidationError, fmt.Sprintf("Parent type %v not recognized", parentType))
 	}
 
-	return c.createObject(strconv.FormatInt(data.ID, 10), "filter", parentName, lbctlType, data, nil, transactionID, version)
+	err := c.createObject(strconv.FormatInt(data.ID, 10), "filter", parentName, lbctlType, data, nil, transactionID, version)
+	if err != nil {
+		return err
+	}
+	if c.Cache.Enabled() {
+		c.Cache.Filters.InvalidateParent(transactionID, parentName, parentType)
+	}
+	return nil
 }
 
 // EditFilter edits a filter in configuration. One of version or transactionID is
@@ -104,7 +133,14 @@ func (c *LBCTLClient) EditFilter(id int64, parentType string, parentName string,
 		return err
 	}
 
-	return c.editObject(strconv.FormatInt(data.ID, 10), "filter", parentName, lbctlType, data, ondiskF, nil, transactionID, version)
+	err = c.editObject(strconv.FormatInt(data.ID, 10), "filter", parentName, lbctlType, data, ondiskF, nil, transactionID, version)
+	if err != nil {
+		return err
+	}
+	if c.Cache.Enabled() {
+		c.Cache.Filters.InvalidateParent(transactionID, parentName, parentType)
+	}
+	return nil
 }
 
 func (c *LBCTLClient) parseFilters(response string) models.Filters {

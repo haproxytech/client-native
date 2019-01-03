@@ -12,6 +12,19 @@ import (
 // GetTCPContentRules returns a struct with configuration version and an array of
 // configured tcp content rules in the specified parent. Returns error on fail.
 func (c *LBCTLClient) GetTCPContentRules(parentType, parentName, ruleType, transactionID string) (*models.GetTCPContentRulesOKBody, error) {
+	if c.Cache.Enabled() {
+		found := false
+		var tcpRules models.TCPRules
+		if ruleType == "request" {
+			tcpRules, found = c.Cache.TcpContentRequestRules.Get(parentName, parentType, transactionID)
+		} else if ruleType == "response" {
+			tcpRules, found = c.Cache.TcpContentResponseRules.Get(parentName, transactionID)
+		}
+		if found {
+			return &models.GetTCPContentRulesOKBody{Version: c.Cache.Version.Get(), Data: tcpRules}, nil
+		}
+
+	}
 	lbctlType := typeToLbctlType(parentType)
 	if lbctlType == "" {
 		return nil, NewConfError(ErrValidationError, fmt.Sprintf("Parent type %v not recognized", parentType))
@@ -43,12 +56,32 @@ func (c *LBCTLClient) GetTCPContentRules(parentType, parentName, ruleType, trans
 		return nil, err
 	}
 
+	if c.Cache.Enabled() {
+		if ruleType == "request" {
+			c.Cache.TcpContentRequestRules.SetAll(parentName, parentType, transactionID, tcpRules)
+		} else if ruleType == "response" {
+			c.Cache.TcpContentResponseRules.SetAll(parentName, transactionID, tcpRules)
+		}
+	}
 	return &models.GetTCPContentRulesOKBody{Version: v, Data: tcpRules}, nil
 }
 
 // GetTCPContentRule returns a struct with configuration version and a requested tcp content rule
 // in the specified parent. Returns error on fail or if tcp content rule does not exist.
 func (c *LBCTLClient) GetTCPContentRule(id int64, parentType, parentName, ruleType, transactionID string) (*models.GetTCPContentRuleOKBody, error) {
+	if c.Cache.Enabled() {
+		found := false
+		var tcpRule *models.TCPRule
+		if ruleType == "request" {
+			tcpRule, found = c.Cache.TcpContentRequestRules.GetOne(id, parentName, parentType, transactionID)
+		} else if ruleType == "response" {
+			tcpRule, found = c.Cache.TcpContentResponseRules.GetOne(id, parentName, transactionID)
+		}
+		if found {
+			return &models.GetTCPContentRuleOKBody{Version: c.Cache.Version.Get(), Data: tcpRule}, nil
+		}
+
+	}
 	lbctlType := typeToLbctlType(parentType)
 	if lbctlType == "" {
 		return nil, NewConfError(ErrValidationError, fmt.Sprintf("Parent type %v not recognized", parentType))
@@ -106,7 +139,18 @@ func (c *LBCTLClient) DeleteTCPContentRule(id int64, parentType, parentName, rul
 		return NewConfError(ErrValidationError, fmt.Sprintf("Rule type %v not recognized", ruleType))
 	}
 
-	return c.deleteObject(strconv.FormatInt(id, 10), lbctlRType, parentName, lbctlType, transactionID, version)
+	err := c.deleteObject(strconv.FormatInt(id, 10), lbctlRType, parentName, lbctlType, transactionID, version)
+	if err != nil {
+		return err
+	}
+	if c.Cache.Enabled() {
+		if ruleType == "request" {
+			c.Cache.TcpContentRequestRules.InvalidateParent(transactionID, parentName, parentType)
+		} else if ruleType == "response" {
+			c.Cache.TcpContentResponseRules.InvalidateBackend(transactionID, parentName)
+		}
+	}
+	return nil
 }
 
 // CreateTCPContentRule creates a tcp content rule in configuration. One of version or transactionID is
@@ -137,7 +181,18 @@ func (c *LBCTLClient) CreateTCPContentRule(parentType, parentName, ruleType stri
 		return NewConfError(ErrValidationError, fmt.Sprintf("Parent type %v not recognized", parentType))
 	}
 
-	return c.createObject(strconv.FormatInt(data.ID, 10), lbctlRType, parentName, lbctlType, data, nil, transactionID, version)
+	err := c.createObject(strconv.FormatInt(data.ID, 10), lbctlRType, parentName, lbctlType, data, nil, transactionID, version)
+	if err != nil {
+		return err
+	}
+	if c.Cache.Enabled() {
+		if ruleType == "request" {
+			c.Cache.TcpContentRequestRules.InvalidateParent(transactionID, parentName, parentType)
+		} else if ruleType == "response" {
+			c.Cache.TcpContentResponseRules.InvalidateBackend(transactionID, parentName)
+		}
+	}
+	return nil
 }
 
 // EditTCPContentRule edits a tcp content rule in configuration. One of version or transactionID is
@@ -174,7 +229,18 @@ func (c *LBCTLClient) EditTCPContentRule(id int64, parentType, parentName, ruleT
 		return err
 	}
 
-	return c.editObject(strconv.FormatInt(data.ID, 10), lbctlRType, parentName, lbctlType, data, ondiskBr, nil, transactionID, version)
+	err = c.editObject(strconv.FormatInt(data.ID, 10), lbctlRType, parentName, lbctlType, data, ondiskBr, nil, transactionID, version)
+	if err != nil {
+		return err
+	}
+	if c.Cache.Enabled() {
+		if ruleType == "request" {
+			c.Cache.TcpContentRequestRules.InvalidateParent(transactionID, parentName, parentType)
+		} else if ruleType == "response" {
+			c.Cache.TcpContentResponseRules.InvalidateBackend(transactionID, parentName)
+		}
+	}
+	return nil
 }
 
 func (c *LBCTLClient) parseTCPContentRules(response string) models.TCPRules {

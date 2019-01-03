@@ -12,6 +12,12 @@ import (
 // GetHTTPRequestRules returns a struct with configuration version and an array of
 // configured http request rules in the specified parent. Returns error on fail.
 func (c *LBCTLClient) GetHTTPRequestRules(parentType, parentName string, transactionID string) (*models.GetHTTPRequestRulesOKBody, error) {
+	if c.Cache.Enabled() {
+		httpRules, found := c.Cache.HttpRequestRules.Get(parentName, parentType, transactionID)
+		if found {
+			return &models.GetHTTPRequestRulesOKBody{Version: c.Cache.Version.Get(), Data: httpRules}, nil
+		}
+	}
 	lbctlType := typeToLbctlType(parentType)
 	if lbctlType == "" {
 		return nil, NewConfError(ErrValidationError, fmt.Sprintf("Parent type %v not recognized", parentType))
@@ -28,13 +34,21 @@ func (c *LBCTLClient) GetHTTPRequestRules(parentType, parentName string, transac
 	if err != nil {
 		return nil, err
 	}
-
+	if c.Cache.Enabled() {
+		c.Cache.HttpRequestRules.SetAll(parentName, parentType, transactionID, httpRules)
+	}
 	return &models.GetHTTPRequestRulesOKBody{Version: v, Data: httpRules}, nil
 }
 
 // GetHTTPRequestRule returns a struct with configuration version and a requested http request rule
 // in the specified parent. Returns error on fail or if http request rule does not exist.
 func (c *LBCTLClient) GetHTTPRequestRule(id int64, parentType, parentName string, transactionID string) (*models.GetHTTPRequestRuleOKBody, error) {
+	if c.Cache.Enabled() {
+		httpRule, found := c.Cache.HttpRequestRules.GetOne(id, parentName, parentType, transactionID)
+		if found {
+			return &models.GetHTTPRequestRuleOKBody{Version: c.Cache.Version.Get(), Data: httpRule}, nil
+		}
+	}
 	lbctlType := typeToLbctlType(parentType)
 	if lbctlType == "" {
 		return nil, NewConfError(ErrValidationError, fmt.Sprintf("Parent type %v not recognized", parentType))
@@ -64,7 +78,14 @@ func (c *LBCTLClient) DeleteHTTPRequestRule(id int64, parentType string, parentN
 		return NewConfError(ErrValidationError, fmt.Sprintf("Parent type %v not recognized", parentType))
 	}
 
-	return c.deleteObject(strconv.FormatInt(id, 10), "httpreq", parentName, lbctlType, transactionID, version)
+	err := c.deleteObject(strconv.FormatInt(id, 10), "httpreq", parentName, lbctlType, transactionID, version)
+	if err != nil {
+		return err
+	}
+	if c.Cache.Enabled() {
+		c.Cache.HttpRequestRules.InvalidateParent(transactionID, parentName, parentType)
+	}
+	return nil
 }
 
 // CreateHTTPRequestRule creates a http request rule in configuration. One of version or transactionID is
@@ -82,7 +103,14 @@ func (c *LBCTLClient) CreateHTTPRequestRule(parentType string, parentName string
 		return NewConfError(ErrValidationError, fmt.Sprintf("Parent type %v not recognized", parentType))
 	}
 
-	return c.createObject(strconv.FormatInt(data.ID, 10), "httpreq", parentName, lbctlType, data, nil, transactionID, version)
+	err := c.createObject(strconv.FormatInt(data.ID, 10), "httpreq", parentName, lbctlType, data, nil, transactionID, version)
+	if err != nil {
+		return err
+	}
+	if c.Cache.Enabled() {
+		c.Cache.HttpRequestRules.InvalidateParent(transactionID, parentName, parentType)
+	}
+	return nil
 }
 
 // EditHTTPRequestRule edits a http request rule in configuration. One of version or transactionID is
@@ -105,7 +133,14 @@ func (c *LBCTLClient) EditHTTPRequestRule(id int64, parentType string, parentNam
 		return err
 	}
 
-	return c.editObject(strconv.FormatInt(data.ID, 10), "httpreq", parentName, lbctlType, data, ondiskR, nil, transactionID, version)
+	err = c.editObject(strconv.FormatInt(data.ID, 10), "httpreq", parentName, lbctlType, data, ondiskR, nil, transactionID, version)
+	if err != nil {
+		return err
+	}
+	if c.Cache.Enabled() {
+		c.Cache.HttpRequestRules.InvalidateParent(transactionID, parentName, parentType)
+	}
+	return nil
 }
 
 func (c *LBCTLClient) parseHTTPRequestRules(response string) models.HTTPRequestRules {

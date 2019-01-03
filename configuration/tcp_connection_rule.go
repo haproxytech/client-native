@@ -11,6 +11,12 @@ import (
 // GetTCPConnectionRules returns a struct with configuration version and an array of
 // configured tcp connection rules in the specified frontend. Returns error on fail.
 func (c *LBCTLClient) GetTCPConnectionRules(frontend string, transactionID string) (*models.GetTCPConnectionRulesOKBody, error) {
+	if c.Cache.Enabled() {
+		tcpRules, found := c.Cache.TcpConnectionRules.Get(frontend, transactionID)
+		if found {
+			return &models.GetTCPConnectionRulesOKBody{Version: c.Cache.Version.Get(), Data: tcpRules}, nil
+		}
+	}
 	tcpRulesStr, err := c.executeLBCTL("l7-service-tcpreqconn-dump", transactionID, frontend)
 	if err != nil {
 		return nil, err
@@ -23,12 +29,21 @@ func (c *LBCTLClient) GetTCPConnectionRules(frontend string, transactionID strin
 		return nil, err
 	}
 
+	if c.Cache.Enabled() {
+		c.Cache.TcpConnectionRules.SetAll(frontend, transactionID, tcpRules)
+	}
 	return &models.GetTCPConnectionRulesOKBody{Version: v, Data: tcpRules}, nil
 }
 
 // GetTCPConnectionRule returns a struct with configuration version and a requested tcp connection rule
 // in the specified frontend. Returns error on fail or if tcp connection rule does not exist.
 func (c *LBCTLClient) GetTCPConnectionRule(id int64, frontend string, transactionID string) (*models.GetTCPConnectionRuleOKBody, error) {
+	if c.Cache.Enabled() {
+		tcpRule, found := c.Cache.TcpConnectionRules.GetOne(id, frontend, transactionID)
+		if found {
+			return &models.GetTCPConnectionRuleOKBody{Version: c.Cache.Version.Get(), Data: tcpRule}, nil
+		}
+	}
 	tcpRuleStr, err := c.executeLBCTL("l7-service-tcpreqconn-show", transactionID, frontend, strconv.FormatInt(id, 10))
 	if err != nil {
 		return nil, err
@@ -48,7 +63,14 @@ func (c *LBCTLClient) GetTCPConnectionRule(id int64, frontend string, transactio
 // DeleteTCPConnectionRule deletes a tcp connection rule in configuration. One of version or transactionID is
 // mandatory. Returns error on fail, nil on success.
 func (c *LBCTLClient) DeleteTCPConnectionRule(id int64, frontend string, transactionID string, version int64) error {
-	return c.deleteObject(strconv.FormatInt(id, 10), "tcpreqconn", frontend, "service", transactionID, version)
+	err := c.deleteObject(strconv.FormatInt(id, 10), "tcpreqconn", frontend, "service", transactionID, version)
+	if err != nil {
+		return err
+	}
+	if c.Cache.Enabled() {
+		c.Cache.TcpConnectionRules.InvalidateFrontend(transactionID, frontend)
+	}
+	return nil
 }
 
 // CreateTCPConnectionRule creates a tcp connection rule in configuration. One of version or transactionID is
@@ -60,7 +82,14 @@ func (c *LBCTLClient) CreateTCPConnectionRule(frontend string, data *models.TCPR
 			return NewConfError(ErrValidationError, validationErr.Error())
 		}
 	}
-	return c.createObject(strconv.FormatInt(data.ID, 10), "tcpreqconn", frontend, "service", data, nil, transactionID, version)
+	err := c.createObject(strconv.FormatInt(data.ID, 10), "tcpreqconn", frontend, "service", data, nil, transactionID, version)
+	if err != nil {
+		return err
+	}
+	if c.Cache.Enabled() {
+		c.Cache.TcpConnectionRules.InvalidateFrontend(transactionID, frontend)
+	}
+	return nil
 }
 
 // EditTCPConnectionRule edits a tcp connection rule in configuration. One of version or transactionID is
@@ -77,7 +106,14 @@ func (c *LBCTLClient) EditTCPConnectionRule(id int64, frontend string, data *mod
 		return err
 	}
 
-	return c.editObject(strconv.FormatInt(data.ID, 10), "tcpreqconn", frontend, "service", data, ondiskBr, nil, transactionID, version)
+	err = c.editObject(strconv.FormatInt(data.ID, 10), "tcpreqconn", frontend, "service", data, ondiskBr, nil, transactionID, version)
+	if err != nil {
+		return err
+	}
+	if c.Cache.Enabled() {
+		c.Cache.TcpConnectionRules.InvalidateFrontend(transactionID, frontend)
+	}
+	return nil
 }
 
 func (c *LBCTLClient) parseTCPConnectionRules(response string) models.TCPRules {

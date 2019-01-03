@@ -173,6 +173,6 @@ func deleteTestFile(path string) error {
 
 func prepareClient(path string) Client {
 	c := &LBCTLClient{}
-	c.Init(path, "", "", true, "/usr/sbin/lbctl", "/tmp/lbctl")
+	c.Init(path, "", "", true, true, "/usr/sbin/lbctl", "/tmp/lbctl")
 	return c
 }

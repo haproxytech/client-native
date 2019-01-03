@@ -63,6 +63,10 @@ func (c *LBCTLClient) StartTransaction(version int64) (*models.Transaction, erro
 	t.Version = version
 	t.Status = "in_progress"
 
+	if c.Cache.Enabled() {
+		c.Cache.InitTransactionCache(t.ID)
+	}
+
 	return t, nil
 }
 
@@ -88,6 +92,11 @@ func (c *LBCTLClient) CommitTransaction(id string) error {
 		return err
 	}
 
+	if c.Cache.Enabled() {
+		c.Cache.DeleteTransactionCache(id)
+		c.Cache.InvalidateCache()
+	}
+
 	/*err = c.GlobalParser.Save(c.ClientParams.GlobalConfigurationFile())
 	if err != nil {
 		return err
@@ -101,6 +110,9 @@ func (c *LBCTLClient) DeleteTransaction(id string) error {
 	_, err := c.executeLBCTL("transaction-cancel", id)
 	if err != nil {
 		return err
+	}
+	if c.Cache.Enabled() {
+		c.Cache.DeleteTransactionCache(id)
 	}
 	return nil
 }

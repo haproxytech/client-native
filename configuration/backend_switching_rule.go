@@ -11,6 +11,12 @@ import (
 // GetBackendSwitchingRules returns a struct with configuration version and an array of
 // configured backend switching rules in the specified frontend. Returns error on fail.
 func (c *LBCTLClient) GetBackendSwitchingRules(frontend string, transactionID string) (*models.GetBackendSwitchingRulesOKBody, error) {
+	if c.Cache.Enabled() {
+		bckRules, found := c.Cache.BackendSwitchingRules.Get(frontend, transactionID)
+		if found {
+			return &models.GetBackendSwitchingRulesOKBody{Version: c.Cache.Version.Get(), Data: bckRules}, nil
+		}
+	}
 	bckRulesString, err := c.executeLBCTL("l7-service-usefarm-dump", transactionID, frontend)
 	if err != nil {
 		return nil, err
@@ -23,12 +29,21 @@ func (c *LBCTLClient) GetBackendSwitchingRules(frontend string, transactionID st
 		return nil, err
 	}
 
+	if c.Cache.Enabled() {
+		c.Cache.BackendSwitchingRules.SetAll(frontend, transactionID, bckRules)
+	}
 	return &models.GetBackendSwitchingRulesOKBody{Version: v, Data: bckRules}, nil
 }
 
 // GetBackendSwitchingRule returns a struct with configuration version and a requested backend switching rule
 // in the specified frontend. Returns error on fail or if backend switching rule does not exist.
 func (c *LBCTLClient) GetBackendSwitchingRule(id int64, frontend string, transactionID string) (*models.GetBackendSwitchingRuleOKBody, error) {
+	if c.Cache.Enabled() {
+		bckRule, found := c.Cache.BackendSwitchingRules.GetOne(id, frontend, transactionID)
+		if found {
+			return &models.GetBackendSwitchingRuleOKBody{Version: c.Cache.Version.Get(), Data: bckRule}, nil
+		}
+	}
 	bckRuleStr, err := c.executeLBCTL("l7-service-usefarm-show", transactionID, frontend, strconv.FormatInt(id, 10))
 	if err != nil {
 		return nil, err
@@ -48,7 +63,14 @@ func (c *LBCTLClient) GetBackendSwitchingRule(id int64, frontend string, transac
 // DeleteBackendSwitchingRule deletes a backend switching rule in configuration. One of version or transactionID is
 // mandatory. Returns error on fail, nil on success.
 func (c *LBCTLClient) DeleteBackendSwitchingRule(id int64, frontend string, transactionID string, version int64) error {
-	return c.deleteObject(strconv.FormatInt(id, 10), "usefarm", frontend, "service", transactionID, version)
+	err := c.deleteObject(strconv.FormatInt(id, 10), "usefarm", frontend, "service", transactionID, version)
+	if err != nil {
+		return err
+	}
+	if c.Cache.Enabled() {
+		c.Cache.BackendSwitchingRules.InvalidateFrontend(transactionID, frontend)
+	}
+	return nil
 }
 
 // CreateBackendSwitchingRule creates a backend switching rule in configuration. One of version or transactionID is
@@ -60,7 +82,14 @@ func (c *LBCTLClient) CreateBackendSwitchingRule(frontend string, data *models.B
 			return NewConfError(ErrValidationError, validationErr.Error())
 		}
 	}
-	return c.createObject(strconv.FormatInt(data.ID, 10), "usefarm", frontend, "service", data, nil, transactionID, version)
+	err := c.createObject(strconv.FormatInt(data.ID, 10), "usefarm", frontend, "service", data, nil, transactionID, version)
+	if err != nil {
+		return err
+	}
+	if c.Cache.Enabled() {
+		c.Cache.BackendSwitchingRules.InvalidateFrontend(transactionID, frontend)
+	}
+	return nil
 }
 
 // EditBackendSwitchingRule edits a backend switching rule in configuration. One of version or transactionID is
@@ -77,7 +106,14 @@ func (c *LBCTLClient) EditBackendSwitchingRule(id int64, frontend string, data *
 		return err
 	}
 
-	return c.editObject(strconv.FormatInt(data.ID, 10), "usefarm", frontend, "service", data, ondiskBr, nil, transactionID, version)
+	err = c.editObject(strconv.FormatInt(data.ID, 10), "usefarm", frontend, "service", data, ondiskBr, nil, transactionID, version)
+	if err != nil {
+		return err
+	}
+	if c.Cache.Enabled() {
+		c.Cache.BackendSwitchingRules.InvalidateFrontend(transactionID, frontend)
+	}
+	return nil
 }
 
 func (c *LBCTLClient) parseBackendSwitchingRules(response string) models.BackendSwitchingRules {

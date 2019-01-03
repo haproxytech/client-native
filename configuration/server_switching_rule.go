@@ -11,6 +11,12 @@ import (
 // GetServerSwitchingRules returns a struct with configuration version and an array of
 // configured server switching rules in the specified backend. Returns error on fail.
 func (c *LBCTLClient) GetServerSwitchingRules(backend string, transactionID string) (*models.GetServerSwitchingRulesOKBody, error) {
+	if c.Cache.Enabled() {
+		srvRules, found := c.Cache.ServerSwitchingRules.Get(backend, transactionID)
+		if found {
+			return &models.GetServerSwitchingRulesOKBody{Version: c.Cache.Version.Get(), Data: srvRules}, nil
+		}
+	}
 	srvRulesString, err := c.executeLBCTL("l7-farm-useserver-dump", transactionID, backend)
 	if err != nil {
 		return nil, err
@@ -23,12 +29,21 @@ func (c *LBCTLClient) GetServerSwitchingRules(backend string, transactionID stri
 		return nil, err
 	}
 
+	if c.Cache.Enabled() {
+		c.Cache.ServerSwitchingRules.SetAll(backend, transactionID, srvRules)
+	}
 	return &models.GetServerSwitchingRulesOKBody{Version: v, Data: srvRules}, nil
 }
 
 // GetServerSwitchingRule returns a struct with configuration version and a requested server switching rule
 // in the specified backend. Returns error on fail or if server switching rule does not exist.
 func (c *LBCTLClient) GetServerSwitchingRule(id int64, backend string, transactionID string) (*models.GetServerSwitchingRuleOKBody, error) {
+	if c.Cache.Enabled() {
+		srvRule, found := c.Cache.ServerSwitchingRules.GetOne(id, backend, transactionID)
+		if found {
+			return &models.GetServerSwitchingRuleOKBody{Version: c.Cache.Version.Get(), Data: srvRule}, nil
+		}
+	}
 	srvRuleStr, err := c.executeLBCTL("l7-farm-useserver-show", transactionID, backend, strconv.FormatInt(id, 10))
 	if err != nil {
 		return nil, err
@@ -48,7 +63,14 @@ func (c *LBCTLClient) GetServerSwitchingRule(id int64, backend string, transacti
 // DeleteServerSwitchingRule deletes a server switching rule in configuration. One of version or transactionID is
 // mandatory. Returns error on fail, nil on success.
 func (c *LBCTLClient) DeleteServerSwitchingRule(id int64, backend string, transactionID string, version int64) error {
-	return c.deleteObject(strconv.FormatInt(id, 10), "useserver", backend, "farm", transactionID, version)
+	err := c.deleteObject(strconv.FormatInt(id, 10), "useserver", backend, "farm", transactionID, version)
+	if err != nil {
+		return err
+	}
+	if c.Cache.Enabled() {
+		c.Cache.ServerSwitchingRules.InvalidateBackend(transactionID, backend)
+	}
+	return nil
 }
 
 // CreateServerSwitchingRule creates a server switching rule in configuration. One of version or transactionID is
@@ -60,7 +82,14 @@ func (c *LBCTLClient) CreateServerSwitchingRule(backend string, data *models.Ser
 			return NewConfError(ErrValidationError, validationErr.Error())
 		}
 	}
-	return c.createObject(strconv.FormatInt(data.ID, 10), "useserver", backend, "farm", data, nil, transactionID, version)
+	err := c.createObject(strconv.FormatInt(data.ID, 10), "useserver", backend, "farm", data, nil, transactionID, version)
+	if err != nil {
+		return err
+	}
+	if c.Cache.Enabled() {
+		c.Cache.ServerSwitchingRules.InvalidateBackend(transactionID, backend)
+	}
+	return nil
 }
 
 // EditServerSwitchingRule edits a server switching rule in configuration. One of version or transactionID is
@@ -77,7 +106,14 @@ func (c *LBCTLClient) EditServerSwitchingRule(id int64, backend string, data *mo
 		return err
 	}
 
-	return c.editObject(strconv.FormatInt(data.ID, 10), "useserver", backend, "farm", data, ondiskSr, nil, transactionID, version)
+	err = c.editObject(strconv.FormatInt(data.ID, 10), "useserver", backend, "farm", data, ondiskSr, nil, transactionID, version)
+	if err != nil {
+		return err
+	}
+	if c.Cache.Enabled() {
+		c.Cache.ServerSwitchingRules.InvalidateBackend(transactionID, backend)
+	}
+	return nil
 }
 
 func (c *LBCTLClient) parseServerSwitchingRules(response string) models.ServerSwitchingRules {

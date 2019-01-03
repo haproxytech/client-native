@@ -1,6 +1,7 @@
 package configuration
 
 import (
+	"github.com/haproxytech/client-native/configuration/cache"
 	"github.com/haproxytech/models"
 )
 
@@ -10,6 +11,7 @@ type ClientParams struct {
 	globalConfigurationFile string
 	haproxy                 string
 	useValidation           bool
+	cache.Cache
 }
 
 // ConfigurationFile returns the configuration file of the client

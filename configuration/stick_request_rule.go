@@ -11,6 +11,12 @@ import (
 // GetStickRequestRules returns a struct with configuration version and an array of
 // configured stick request rules in the specified backend. Returns error on fail.
 func (c *LBCTLClient) GetStickRequestRules(backend string, transactionID string) (*models.GetStickRequestRulesOKBody, error) {
+	if c.Cache.Enabled() {
+		stickReqRules, found := c.Cache.StickRequestRules.Get(backend, transactionID)
+		if found {
+			return &models.GetStickRequestRulesOKBody{Version: c.Cache.Version.Get(), Data: stickReqRules}, nil
+		}
+	}
 	stickReqRulesString, err := c.executeLBCTL("l7-farm-stickreq-dump", transactionID, backend)
 	if err != nil {
 		return nil, err
@@ -23,12 +29,21 @@ func (c *LBCTLClient) GetStickRequestRules(backend string, transactionID string)
 		return nil, err
 	}
 
+	if c.Cache.Enabled() {
+		c.Cache.StickRequestRules.SetAll(backend, transactionID, stickReqRules)
+	}
 	return &models.GetStickRequestRulesOKBody{Version: v, Data: stickReqRules}, nil
 }
 
 // GetStickRequestRule returns a struct with configuration version and a requested stick request rule
 // in the specified backend. Returns error on fail or if stick request rule does not exist.
 func (c *LBCTLClient) GetStickRequestRule(id int64, backend string, transactionID string) (*models.GetStickRequestRuleOKBody, error) {
+	if c.Cache.Enabled() {
+		stickReqRule, found := c.Cache.StickRequestRules.GetOne(id, backend, transactionID)
+		if found {
+			return &models.GetStickRequestRuleOKBody{Version: c.Cache.Version.Get(), Data: stickReqRule}, nil
+		}
+	}
 	stickReqRuleStr, err := c.executeLBCTL("l7-farm-stickreq-show", transactionID, backend, strconv.FormatInt(id, 10))
 	if err != nil {
 		return nil, err
@@ -48,7 +63,14 @@ func (c *LBCTLClient) GetStickRequestRule(id int64, backend string, transactionI
 // DeleteStickRequestRule deletes a stick request rule in configuration. One of version or transactionID is
 // mandatory. Returns error on fail, nil on success.
 func (c *LBCTLClient) DeleteStickRequestRule(id int64, backend string, transactionID string, version int64) error {
-	return c.deleteObject(strconv.FormatInt(id, 10), "stickreq", backend, "farm", transactionID, version)
+	err := c.deleteObject(strconv.FormatInt(id, 10), "stickreq", backend, "farm", transactionID, version)
+	if err != nil {
+		return err
+	}
+	if c.Cache.Enabled() {
+		c.Cache.StickRequestRules.InvalidateBackend(transactionID, backend)
+	}
+	return nil
 }
 
 // CreateStickRequestRule creates a stick request rule in configuration. One of version or transactionID is
@@ -60,7 +82,14 @@ func (c *LBCTLClient) CreateStickRequestRule(backend string, data *models.StickR
 			return NewConfError(ErrValidationError, validationErr.Error())
 		}
 	}
-	return c.createObject(strconv.FormatInt(data.ID, 10), "stickreq", backend, "farm", data, nil, transactionID, version)
+	err := c.createObject(strconv.FormatInt(data.ID, 10), "stickreq", backend, "farm", data, nil, transactionID, version)
+	if err != nil {
+		return err
+	}
+	if c.Cache.Enabled() {
+		c.Cache.StickRequestRules.InvalidateBackend(transactionID, backend)
+	}
+	return nil
 }
 
 // EditStickRequestRule edits a stick request rule in configuration. One of version or transactionID is
@@ -77,7 +106,14 @@ func (c *LBCTLClient) EditStickRequestRule(id int64, backend string, data *model
 		return err
 	}
 
-	return c.editObject(strconv.FormatInt(data.ID, 10), "stickreq", backend, "farm", data, ondiskR, nil, transactionID, version)
+	err = c.editObject(strconv.FormatInt(data.ID, 10), "stickreq", backend, "farm", data, ondiskR, nil, transactionID, version)
+	if err != nil {
+		return err
+	}
+	if c.Cache.Enabled() {
+		c.Cache.StickRequestRules.InvalidateBackend(transactionID, backend)
+	}
+	return nil
 }
 
 func (c *LBCTLClient) parseStickRequestRules(response string) models.StickRequestRules {

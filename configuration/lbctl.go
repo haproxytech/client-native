@@ -12,6 +12,8 @@ import (
 	"strings"
 	"unsafe"
 
+	"github.com/haproxytech/client-native/configuration/cache"
+
 	"github.com/haproxytech/client-native/misc"
 	parser "github.com/haproxytech/config-parser"
 )
@@ -34,7 +36,7 @@ const (
 // DefaultLBCTLClient returns LBCTLClient with sane defaults
 func DefaultLBCTLClient() (*LBCTLClient, error) {
 	c := &LBCTLClient{}
-	err := c.Init("", "", "", true, "", "")
+	err := c.Init("", "", "", true, false, "", "")
 
 	if err != nil {
 		return nil, err
@@ -44,7 +46,7 @@ func DefaultLBCTLClient() (*LBCTLClient, error) {
 }
 
 // Init initializes a LBCTLClient
-func (c *LBCTLClient) Init(configurationFile string, globalConfigurationFile string, haproxy string, useValidation bool, LBCTLPath string, LBCTLTmpPath string) error {
+func (c *LBCTLClient) Init(configurationFile string, globalConfigurationFile string, haproxy string, useValidation bool, useCache bool, LBCTLPath string, LBCTLTmpPath string) error {
 	if LBCTLPath == "" {
 		LBCTLPath = DefaultLBCTLPath
 	}
@@ -59,6 +61,12 @@ func (c *LBCTLClient) Init(configurationFile string, globalConfigurationFile str
 	c.useValidation = useValidation
 	c.LBCTLPath = LBCTLPath
 	c.LBCTLTmpPath = LBCTLTmpPath
+
+	c.Cache = cache.Cache{}
+	v, err := c.GetVersion()
+	if err == nil {
+		c.Cache.Init(v)
+	}
 
 	return nil
 }
@@ -84,7 +92,7 @@ func (c *LBCTLClient) executeLBCTL(command string, transaction string, args ...s
 	if c.ConfigurationFile() != "" {
 		cmd.Env = append(cmd.Env, "LBCTL_L7_HAPROXY_CONFIG="+c.ConfigurationFile())
 		if c.Haproxy() != "" {
-			cmd.Env = append(cmd.Env, "LBCTL_L7_SVC_CHECK_CMD="+c.Haproxy()+" -f "+c.ConfigurationFile()+" -c")
+			cmd.Env = append(cmd.Env, "LBCTL_L7_SVC_CHECK_CMD="+c.Haproxy()+" -f "+c.GlobalConfigurationFile()+" -f "+c.ConfigurationFile()+" -c")
 		} else {
 			cmd.Env = append(cmd.Env, "LBCTL_L7_SVC_CHECK_CMD=true")
 		}
@@ -503,6 +511,9 @@ func (c *LBCTLClient) incrementVersion() error {
 
 	if err = ioutil.WriteFile(c.ConfigurationFile(), output, 0666); err != nil {
 		return NewConfError(ErrCannotSetVersion, fmt.Sprintf("Cannot increment version in file %v: %v", c.ConfigurationFile(), err.Error()))
+	}
+	if c.Cache.Enabled() {
+		c.Cache.Version.Set(v + 1)
 	}
 	return nil
 }
