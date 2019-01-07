@@ -14,7 +14,7 @@ import (
 
 // GetSites returns a struct with configuration version and an array of
 // configured sites. Returns error on fail.
-func (c *LBCTLClient) GetSites(transactionID string) (*models.GetSitesOKBody, error) {
+func (c *Client) GetSites(transactionID string) (*models.GetSitesOKBody, error) {
 	response, err := c.executeLBCTL("l7-dump", transactionID)
 	if err != nil {
 		return nil, err
@@ -32,7 +32,7 @@ func (c *LBCTLClient) GetSites(transactionID string) (*models.GetSitesOKBody, er
 
 // GetSite returns a struct with configuration version and a requested site.
 // Returns error on fail or if backend does not exist.
-func (c *LBCTLClient) GetSite(name string, transactionID string) (*models.GetSiteOKBody, error) {
+func (c *Client) GetSite(name string, transactionID string) (*models.GetSiteOKBody, error) {
 	response, err := c.executeLBCTL("l7-dump", transactionID)
 	if err != nil {
 		return nil, err
@@ -53,11 +53,11 @@ func (c *LBCTLClient) GetSite(name string, transactionID string) (*models.GetSit
 
 // CreateSite creates a site in configuration. One of version or transactionID is
 // mandatory. Returns error on fail, nil on success.
-func (c *LBCTLClient) CreateSite(data *models.Site, transactionID string, version int64) error {
+func (c *Client) CreateSite(data *models.Site, transactionID string, version int64) error {
 	var res []error
 	var err error
 
-	if c.UseValidation() {
+	if c.UseValidation {
 		validationErr := data.Validate(strfmt.Default)
 		if validationErr != nil {
 			return NewConfError(ErrValidationError, validationErr.Error())
@@ -124,11 +124,11 @@ func (c *LBCTLClient) CreateSite(data *models.Site, transactionID string, versio
 
 // EditSite edits a site in configuration. One of version or transactionID is
 // mandatory. Returns error on fail, nil on success.
-func (c *LBCTLClient) EditSite(name string, data *models.Site, transactionID string, version int64) error {
+func (c *Client) EditSite(name string, data *models.Site, transactionID string, version int64) error {
 	var res []error
 	var err error
 
-	if c.UseValidation() {
+	if c.UseValidation {
 		validationErr := data.Validate(strfmt.Default)
 		if validationErr != nil {
 			return NewConfError(ErrValidationError, validationErr.Error())
@@ -333,7 +333,7 @@ func (c *LBCTLClient) EditSite(name string, data *models.Site, transactionID str
 
 // DeleteSite deletes a site in configuration. One of version or transactionID is
 // mandatory. Returns error on fail, nil on success.
-func (c *LBCTLClient) DeleteSite(name string, transactionID string, version int64) error {
+func (c *Client) DeleteSite(name string, transactionID string, version int64) error {
 	var res []error
 	var err error
 
@@ -370,7 +370,7 @@ func (c *LBCTLClient) DeleteSite(name string, transactionID string, version int6
 	return nil
 }
 
-func (c *LBCTLClient) parseSite(response string, name string) (*models.Site, error) {
+func (c *Client) parseSite(response string, name string) (*models.Site, error) {
 	bckCache := make(map[string]*models.SiteBackendsItems)
 	lCache := make([]*models.SiteFrontendListenersItems, 0, 1)
 	sCache := make(map[string][]*models.SiteBackendsItemsServersItems)
@@ -493,7 +493,7 @@ func (c *LBCTLClient) parseSite(response string, name string) (*models.Site, err
 	return site, nil
 }
 
-func (c *LBCTLClient) parseSites(response string) models.Sites {
+func (c *Client) parseSites(response string) models.Sites {
 	bckCache := make(map[string]*models.SiteBackendsItems)
 	lCache := make(map[string][]*models.SiteFrontendListenersItems)
 	sCache := make(map[string][]*models.SiteBackendsItemsServersItems)
@@ -625,7 +625,7 @@ func (c *LBCTLClient) parseSites(response string) models.Sites {
 }
 
 // frontend backend relation helper methods
-func (c *LBCTLClient) removeUseFarm(frontend string, backend string, t string) error {
+func (c *Client) removeUseFarm(frontend string, backend string, t string) error {
 	ufs, err := c.getUseFarms(frontend)
 	if err != nil {
 		return err
@@ -638,7 +638,7 @@ func (c *LBCTLClient) removeUseFarm(frontend string, backend string, t string) e
 	return nil
 }
 
-func (c *LBCTLClient) createBckFrontendRels(name string, b *models.SiteBackendsItems, edit bool, t string) error {
+func (c *Client) createBckFrontendRels(name string, b *models.SiteBackendsItems, edit bool, t string) error {
 	var res []error
 	var err error
 	if b.UseAs == "default" {
@@ -673,7 +673,7 @@ func (c *LBCTLClient) createBckFrontendRels(name string, b *models.SiteBackendsI
 	return nil
 }
 
-func (c *LBCTLClient) addDefaultBckToFrontend(fName string, bName string, t string) error {
+func (c *Client) addDefaultBckToFrontend(fName string, bName string, t string) error {
 	response, err := c.executeLBCTL("l7-service-update", t, fName, "--default_farm", bName)
 	if err != nil {
 		return errors.New(err.Error() + ": " + response)
@@ -681,7 +681,7 @@ func (c *LBCTLClient) addDefaultBckToFrontend(fName string, bName string, t stri
 	return nil
 }
 
-func (c *LBCTLClient) removeDefaultBckToFrontend(fName string, t string) error {
+func (c *Client) removeDefaultBckToFrontend(fName string, t string) error {
 	response, err := c.executeLBCTL("l7-service-update", t, fName, "--reset-default_farm")
 	if err != nil {
 		return errors.New(err.Error() + ": " + response)
@@ -689,7 +689,7 @@ func (c *LBCTLClient) removeDefaultBckToFrontend(fName string, t string) error {
 	return nil
 }
 
-func (c *LBCTLClient) getUseFarms(parent string) ([]*models.BackendSwitchingRule, error) {
+func (c *Client) getUseFarms(parent string) ([]*models.BackendSwitchingRule, error) {
 	response, err := c.executeLBCTL("l7-service-usefarm-dump", "", parent)
 	if err != nil {
 		return nil, err

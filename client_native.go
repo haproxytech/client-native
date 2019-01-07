@@ -22,10 +22,10 @@ func DefaultClient() (*HAProxyClient, error) {
 }
 
 // Init HAProxyClient
-func (c *HAProxyClient) Init(configurationClient configuration.Client, runtimeClient *runtime.Client) error {
+func (c *HAProxyClient) Init(configurationClient *configuration.Client, runtimeClient *runtime.Client) error {
 	var err error
 	if configurationClient == nil {
-		configurationClient, err = configuration.DefaultLBCTLClient()
+		configurationClient, err = configuration.DefaultClient()
 		if err != nil {
 			return err
 		}
@@ -45,6 +45,6 @@ func (c *HAProxyClient) Init(configurationClient configuration.Client, runtimeCl
 
 // HAProxyClient Native client for managing configuration and spitting out HAProxy stats
 type HAProxyClient struct {
-	Configuration configuration.Client
+	Configuration *configuration.Client
 	Runtime       *runtime.Client
 }

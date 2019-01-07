@@ -15,8 +15,8 @@ import (
 
 // GetGlobalConfiguration returns a struct with configuration version and a
 // struct representing Global configuration
-func (c *LBCTLClient) GetGlobalConfiguration() (*models.GetGlobalOKBody, error) {
-	err := c.GlobalParser.LoadData(c.GlobalConfigurationFile())
+func (c *Client) GetGlobalConfiguration() (*models.GetGlobalOKBody, error) {
+	err := c.GlobalParser.LoadData(c.GlobalConfigurationFile)
 	if err != nil {
 		return nil, err
 	}
@@ -109,7 +109,7 @@ func (c *LBCTLClient) GetGlobalConfiguration() (*models.GetGlobalOKBody, error) 
 
 // PushGlobalConfiguration pushes a Global config struct to global
 // config gile
-func (c *LBCTLClient) PushGlobalConfiguration(data *models.Global, version int64) error {
+func (c *Client) PushGlobalConfiguration(data *models.Global, version int64) error {
 	ondiskV, _ := c.GetGlobalVersion()
 	if ondiskV != version {
 		return NewConfError(ErrVersionMismatch, fmt.Sprintf("Version in configuration file is %v, given version is %v", ondiskV, version))
@@ -120,7 +120,7 @@ func (c *LBCTLClient) PushGlobalConfiguration(data *models.Global, version int64
 		return NewConfError(ErrValidationError, validationErr.Error())
 	}
 
-	err := c.GlobalParser.LoadData(c.GlobalConfigurationFile())
+	err := c.GlobalParser.LoadData(c.GlobalConfigurationFile)
 	if err != nil {
 		return nil
 	}
@@ -212,7 +212,7 @@ func (c *LBCTLClient) PushGlobalConfiguration(data *models.Global, version int64
 	c.GlobalParser.Global.Set(pDhParams)
 
 	fmt.Println(c.GlobalParser.String())
-	err = c.GlobalParser.Save(c.GlobalConfigurationFile())
+	err = c.GlobalParser.Save(c.GlobalConfigurationFile)
 	if err != nil {
 		return err
 	}

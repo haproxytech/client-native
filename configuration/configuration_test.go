@@ -109,7 +109,7 @@ backend test_2
 const testPath = "/tmp/haproxy-test.cfg"
 const haproxyExec = "/usr/sbin/haproxy"
 
-var client Client
+var client *Client
 var version int64 = 1
 
 func TestMain(m *testing.M) {
@@ -171,8 +171,17 @@ func deleteTestFile(path string) error {
 	return nil
 }
 
-func prepareClient(path string) Client {
-	c := &LBCTLClient{}
-	c.Init(path, "", "", true, true, "/usr/sbin/lbctl", "/tmp/lbctl")
-	return c
+func prepareClient(path string) *Client {
+	c := Client{}
+	p := ClientParams{
+		ConfigurationFile:       path,
+		GlobalConfigurationFile: "",
+		Haproxy:                 "",
+		UseValidation:           true,
+		UseCache:                true,
+		LBCTLPath:               "/usr/sbin/lbctl",
+		LBCTLTmpPath:            "/tmp/lbctl",
+	}
+	c.Init(p)
+	return &c
 }

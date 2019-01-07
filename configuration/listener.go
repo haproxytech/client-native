@@ -9,7 +9,7 @@ import (
 
 // GetListeners returns a struct with configuration version and an array of
 // configured listeners in the specified frontend. Returns error on fail.
-func (c *LBCTLClient) GetListeners(frontend string, transactionID string) (*models.GetListenersOKBody, error) {
+func (c *Client) GetListeners(frontend string, transactionID string) (*models.GetListenersOKBody, error) {
 	if c.Cache.Enabled() {
 		listeners, found := c.Cache.Listeners.Get(frontend, transactionID)
 		if found {
@@ -36,7 +36,7 @@ func (c *LBCTLClient) GetListeners(frontend string, transactionID string) (*mode
 
 // GetListener returns a struct with configuration version and a requested listener
 // in the specified frontend. Returns error on fail or if listener does not exist.
-func (c *LBCTLClient) GetListener(name string, frontend string, transactionID string) (*models.GetListenerOKBody, error) {
+func (c *Client) GetListener(name string, frontend string, transactionID string) (*models.GetListenerOKBody, error) {
 	if c.Cache.Enabled() {
 		listener, found := c.Cache.Listeners.GetOne(name, frontend, transactionID)
 		if found {
@@ -64,7 +64,7 @@ func (c *LBCTLClient) GetListener(name string, frontend string, transactionID st
 
 // DeleteListener deletes a listener in configuration. One of version or transactionID is
 // mandatory. Returns error on fail, nil on success.
-func (c *LBCTLClient) DeleteListener(name string, frontend string, transactionID string, version int64) error {
+func (c *Client) DeleteListener(name string, frontend string, transactionID string, version int64) error {
 	err := c.deleteObject(name, "listener", frontend, "", transactionID, version)
 	if err != nil {
 		return err
@@ -77,8 +77,8 @@ func (c *LBCTLClient) DeleteListener(name string, frontend string, transactionID
 
 // CreateListener creates a listener in configuration. One of version or transactionID is
 // mandatory. Returns error on fail, nil on success.
-func (c *LBCTLClient) CreateListener(frontend string, data *models.Listener, transactionID string, version int64) error {
-	if c.UseValidation() {
+func (c *Client) CreateListener(frontend string, data *models.Listener, transactionID string, version int64) error {
+	if c.UseValidation {
 		validationErr := data.Validate(strfmt.Default)
 		if validationErr != nil {
 			return NewConfError(ErrValidationError, validationErr.Error())
@@ -96,8 +96,8 @@ func (c *LBCTLClient) CreateListener(frontend string, data *models.Listener, tra
 
 // EditListener edits a listener in configuration. One of version or transactionID is
 // mandatory. Returns error on fail, nil on success.
-func (c *LBCTLClient) EditListener(name string, frontend string, data *models.Listener, transactionID string, version int64) error {
-	if c.UseValidation() {
+func (c *Client) EditListener(name string, frontend string, data *models.Listener, transactionID string, version int64) error {
+	if c.UseValidation {
 		validationErr := data.Validate(strfmt.Default)
 		if validationErr != nil {
 			return NewConfError(ErrValidationError, validationErr.Error())
@@ -119,7 +119,7 @@ func (c *LBCTLClient) EditListener(name string, frontend string, data *models.Li
 	return nil
 }
 
-func (c *LBCTLClient) parseListeners(response string) models.Listeners {
+func (c *Client) parseListeners(response string) models.Listeners {
 	listeners := make(models.Listeners, 0, 1)
 	for _, listenerStr := range strings.Split(response, "\n\n") {
 		if strings.TrimSpace(listenerStr) == "" {

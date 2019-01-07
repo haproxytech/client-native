@@ -11,7 +11,7 @@ import (
 
 // GetTCPContentRules returns a struct with configuration version and an array of
 // configured tcp content rules in the specified parent. Returns error on fail.
-func (c *LBCTLClient) GetTCPContentRules(parentType, parentName, ruleType, transactionID string) (*models.GetTCPContentRulesOKBody, error) {
+func (c *Client) GetTCPContentRules(parentType, parentName, ruleType, transactionID string) (*models.GetTCPContentRulesOKBody, error) {
 	if c.Cache.Enabled() {
 		found := false
 		var tcpRules models.TCPRules
@@ -68,7 +68,7 @@ func (c *LBCTLClient) GetTCPContentRules(parentType, parentName, ruleType, trans
 
 // GetTCPContentRule returns a struct with configuration version and a requested tcp content rule
 // in the specified parent. Returns error on fail or if tcp content rule does not exist.
-func (c *LBCTLClient) GetTCPContentRule(id int64, parentType, parentName, ruleType, transactionID string) (*models.GetTCPContentRuleOKBody, error) {
+func (c *Client) GetTCPContentRule(id int64, parentType, parentName, ruleType, transactionID string) (*models.GetTCPContentRuleOKBody, error) {
 	if c.Cache.Enabled() {
 		found := false
 		var tcpRule *models.TCPRule
@@ -127,7 +127,7 @@ func (c *LBCTLClient) GetTCPContentRule(id int64, parentType, parentName, ruleTy
 
 // DeleteTCPContentRule deletes a tcp content rule in configuration. One of version or transactionID is
 // mandatory. Returns error on fail, nil on success.
-func (c *LBCTLClient) DeleteTCPContentRule(id int64, parentType, parentName, ruleType string, transactionID string, version int64) error {
+func (c *Client) DeleteTCPContentRule(id int64, parentType, parentName, ruleType string, transactionID string, version int64) error {
 	lbctlType := typeToLbctlType(parentType)
 	if lbctlType == "" {
 		return NewConfError(ErrValidationError, fmt.Sprintf("Parent type %v not recognized", parentType))
@@ -163,8 +163,8 @@ func (c *LBCTLClient) DeleteTCPContentRule(id int64, parentType, parentName, rul
 
 // CreateTCPContentRule creates a tcp content rule in configuration. One of version or transactionID is
 // mandatory. Returns error on fail, nil on success.
-func (c *LBCTLClient) CreateTCPContentRule(parentType, parentName, ruleType string, data *models.TCPRule, transactionID string, version int64) error {
-	if c.UseValidation() {
+func (c *Client) CreateTCPContentRule(parentType, parentName, ruleType string, data *models.TCPRule, transactionID string, version int64) error {
+	if c.UseValidation {
 		validationErr := data.Validate(strfmt.Default)
 		if validationErr != nil {
 			return NewConfError(ErrValidationError, validationErr.Error())
@@ -205,8 +205,8 @@ func (c *LBCTLClient) CreateTCPContentRule(parentType, parentName, ruleType stri
 
 // EditTCPContentRule edits a tcp content rule in configuration. One of version or transactionID is
 // mandatory. Returns error on fail, nil on success.
-func (c *LBCTLClient) EditTCPContentRule(id int64, parentType, parentName, ruleType string, data *models.TCPRule, transactionID string, version int64) error {
-	if c.UseValidation() {
+func (c *Client) EditTCPContentRule(id int64, parentType, parentName, ruleType string, data *models.TCPRule, transactionID string, version int64) error {
+	if c.UseValidation {
 		validationErr := data.Validate(strfmt.Default)
 		if validationErr != nil {
 			return NewConfError(ErrValidationError, validationErr.Error())
@@ -251,7 +251,7 @@ func (c *LBCTLClient) EditTCPContentRule(id int64, parentType, parentName, ruleT
 	return nil
 }
 
-func (c *LBCTLClient) parseTCPContentRules(response string) models.TCPRules {
+func (c *Client) parseTCPContentRules(response string) models.TCPRules {
 	tcpRules := make(models.TCPRules, 0, 1)
 	for _, tcpRulesStr := range strings.Split(response, "\n\n") {
 		if strings.TrimSpace(tcpRulesStr) == "" {

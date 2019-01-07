@@ -16,8 +16,8 @@ import (
 
 // GetRawConfiguration returns a struct with configuration version and a
 // string containing raw config file
-func (c *LBCTLClient) GetRawConfiguration() (*models.GetHAProxyConfigurationOKBody, error) {
-	file, err := os.Open(c.ConfigurationFile())
+func (c *Client) GetRawConfiguration() (*models.GetHAProxyConfigurationOKBody, error) {
+	file, err := os.Open(c.ConfigurationFile)
 	if err != nil {
 		return nil, NewConfError(ErrCannotReadConfFile, err.Error())
 	}
@@ -55,13 +55,13 @@ func (c *LBCTLClient) GetRawConfiguration() (*models.GetHAProxyConfigurationOKBo
 
 // PostRawConfiguration pushes given string to the config file if the version
 // matches
-func (c *LBCTLClient) PostRawConfiguration(config *string, version int64) error {
+func (c *Client) PostRawConfiguration(config *string, version int64) error {
 	ondiskV, _ := c.GetVersion()
 	if ondiskV != version {
 		return NewConfError(ErrVersionMismatch, fmt.Sprintf("Version in configuration file is %v, given version is %v", ondiskV, version))
 	}
 
-	tmp, e := ioutil.TempFile(filepath.Dir(c.ConfigurationFile()), filepath.Base(c.ConfigurationFile()))
+	tmp, e := ioutil.TempFile(filepath.Dir(c.ConfigurationFile), filepath.Base(c.ConfigurationFile))
 	defer tmp.Close()
 
 	if e != nil {
@@ -82,7 +82,7 @@ func (c *LBCTLClient) PostRawConfiguration(config *string, version int64) error 
 		return err
 	}
 
-	err = os.Rename(tmpPath, c.ConfigurationFile())
+	err = os.Rename(tmpPath, c.ConfigurationFile)
 	if err != nil {
 		os.Remove(tmpPath)
 		return NewConfError(ErrGeneralError, e.Error())
@@ -94,8 +94,8 @@ func (c *LBCTLClient) PostRawConfiguration(config *string, version int64) error 
 	return nil
 }
 
-func (c *LBCTLClient) validateConfigFile(confFile string) error {
-	cmd := exec.Command(c.Haproxy())
+func (c *Client) validateConfigFile(confFile string) error {
+	cmd := exec.Command(c.Haproxy)
 	cmd.Args = append(cmd.Args, "-c")
 
 	if confFile != "" {
@@ -103,7 +103,7 @@ func (c *LBCTLClient) validateConfigFile(confFile string) error {
 		cmd.Args = append(cmd.Args, confFile)
 	} else {
 		cmd.Args = append(cmd.Args, "-f")
-		cmd.Args = append(cmd.Args, c.ConfigurationFile())
+		cmd.Args = append(cmd.Args, c.ConfigurationFile)
 	}
 
 	var stdout, stderr bytes.Buffer

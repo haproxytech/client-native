@@ -11,7 +11,7 @@ import (
 
 // GetHTTPResponseRules returns a struct with configuration version and an array of
 // configured http response rules in the specified parent. Returns error on fail.
-func (c *LBCTLClient) GetHTTPResponseRules(parentType, parentName string, transactionID string) (*models.GetHTTPResponseRulesOKBody, error) {
+func (c *Client) GetHTTPResponseRules(parentType, parentName string, transactionID string) (*models.GetHTTPResponseRulesOKBody, error) {
 	if c.Cache.Enabled() {
 		httpRules, found := c.Cache.HttpResponseRules.Get(parentName, parentType, transactionID)
 		if found {
@@ -42,7 +42,7 @@ func (c *LBCTLClient) GetHTTPResponseRules(parentType, parentName string, transa
 
 // GetHTTPResponseRule returns a struct with configuration version and a responseed http response rule
 // in the specified parent. Returns error on fail or if http response rule does not exist.
-func (c *LBCTLClient) GetHTTPResponseRule(id int64, parentType, parentName string, transactionID string) (*models.GetHTTPResponseRuleOKBody, error) {
+func (c *Client) GetHTTPResponseRule(id int64, parentType, parentName string, transactionID string) (*models.GetHTTPResponseRuleOKBody, error) {
 	if c.Cache.Enabled() {
 		httpRule, found := c.Cache.HttpResponseRules.GetOne(id, parentName, parentType, transactionID)
 		if found {
@@ -76,7 +76,7 @@ func (c *LBCTLClient) GetHTTPResponseRule(id int64, parentType, parentName strin
 
 // DeleteHTTPResponseRule deletes a http response rule in configuration. One of version or transactionID is
 // mandatory. Returns error on fail, nil on success.
-func (c *LBCTLClient) DeleteHTTPResponseRule(id int64, parentType string, parentName string, transactionID string, version int64) error {
+func (c *Client) DeleteHTTPResponseRule(id int64, parentType string, parentName string, transactionID string, version int64) error {
 	lbctlType := typeToLbctlType(parentType)
 	if lbctlType == "" {
 		return NewConfError(ErrValidationError, fmt.Sprintf("Parent type %v not recognized", parentType))
@@ -94,8 +94,8 @@ func (c *LBCTLClient) DeleteHTTPResponseRule(id int64, parentType string, parent
 
 // CreateHTTPResponseRule creates a http response rule in configuration. One of version or transactionID is
 // mandatory. Returns error on fail, nil on success.
-func (c *LBCTLClient) CreateHTTPResponseRule(parentType string, parentName string, data *models.HTTPResponseRule, transactionID string, version int64) error {
-	if c.UseValidation() {
+func (c *Client) CreateHTTPResponseRule(parentType string, parentName string, data *models.HTTPResponseRule, transactionID string, version int64) error {
+	if c.UseValidation {
 		validationErr := data.Validate(strfmt.Default)
 		if validationErr != nil {
 			return NewConfError(ErrValidationError, validationErr.Error())
@@ -118,8 +118,8 @@ func (c *LBCTLClient) CreateHTTPResponseRule(parentType string, parentName strin
 
 // EditHTTPResponseRule edits a http response rule in configuration. One of version or transactionID is
 // mandatory. Returns error on fail, nil on success.
-func (c *LBCTLClient) EditHTTPResponseRule(id int64, parentType string, parentName string, data *models.HTTPResponseRule, transactionID string, version int64) error {
-	if c.UseValidation() {
+func (c *Client) EditHTTPResponseRule(id int64, parentType string, parentName string, data *models.HTTPResponseRule, transactionID string, version int64) error {
+	if c.UseValidation {
 		validationErr := data.Validate(strfmt.Default)
 		if validationErr != nil {
 			return NewConfError(ErrValidationError, validationErr.Error())
@@ -146,7 +146,7 @@ func (c *LBCTLClient) EditHTTPResponseRule(id int64, parentType string, parentNa
 	return nil
 }
 
-func (c *LBCTLClient) parseHTTPResponseRules(response string) models.HTTPResponseRules {
+func (c *Client) parseHTTPResponseRules(response string) models.HTTPResponseRules {
 	httpRules := make(models.HTTPResponseRules, 0, 1)
 	for _, httpRulesStr := range strings.Split(response, "\n\n") {
 		if strings.TrimSpace(httpRulesStr) == "" {

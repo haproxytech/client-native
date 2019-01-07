@@ -9,7 +9,7 @@ import (
 
 // GetBackends returns a struct with configuration version and an array of
 // configured backends. Returns error on fail.
-func (c *LBCTLClient) GetBackends(transactionID string) (*models.GetBackendsOKBody, error) {
+func (c *Client) GetBackends(transactionID string) (*models.GetBackendsOKBody, error) {
 	if c.Cache.Enabled() {
 		backends, found := c.Cache.Backends.Get(transactionID)
 		if found {
@@ -37,7 +37,7 @@ func (c *LBCTLClient) GetBackends(transactionID string) (*models.GetBackendsOKBo
 
 // GetBackend returns a struct with configuration version and a requested backend.
 // Returns error on fail or if backend does not exist.
-func (c *LBCTLClient) GetBackend(name string, transactionID string) (*models.GetBackendOKBody, error) {
+func (c *Client) GetBackend(name string, transactionID string) (*models.GetBackendOKBody, error) {
 	if c.Cache.Enabled() {
 		backend, found := c.Cache.Backends.GetOne(name, transactionID)
 		if found {
@@ -66,7 +66,7 @@ func (c *LBCTLClient) GetBackend(name string, transactionID string) (*models.Get
 
 // DeleteBackend deletes a backend in configuration. One of version or transactionID is
 // mandatory. Returns error on fail, nil on success.
-func (c *LBCTLClient) DeleteBackend(name string, transactionID string, version int64) error {
+func (c *Client) DeleteBackend(name string, transactionID string, version int64) error {
 	err := c.deleteObject(name, "farm", "", "", transactionID, version)
 	if err != nil {
 		return err
@@ -79,8 +79,8 @@ func (c *LBCTLClient) DeleteBackend(name string, transactionID string, version i
 
 // CreateBackend creates a backend in configuration. One of version or transactionID is
 // mandatory. Returns error on fail, nil on success.
-func (c *LBCTLClient) CreateBackend(data *models.Backend, transactionID string, version int64) error {
-	if c.UseValidation() {
+func (c *Client) CreateBackend(data *models.Backend, transactionID string, version int64) error {
+	if c.UseValidation {
 		validationErr := data.Validate(strfmt.Default)
 		if validationErr != nil {
 			return NewConfError(ErrValidationError, validationErr.Error())
@@ -98,8 +98,8 @@ func (c *LBCTLClient) CreateBackend(data *models.Backend, transactionID string, 
 
 // EditBackend edits a backend in configuration. One of version or transactionID is
 // mandatory. Returns error on fail, nil on success.
-func (c *LBCTLClient) EditBackend(name string, data *models.Backend, transactionID string, version int64) error {
-	if c.UseValidation() {
+func (c *Client) EditBackend(name string, data *models.Backend, transactionID string, version int64) error {
+	if c.UseValidation {
 		validationErr := data.Validate(strfmt.Default)
 		if validationErr != nil {
 			return NewConfError(ErrValidationError, validationErr.Error())
@@ -120,7 +120,7 @@ func (c *LBCTLClient) EditBackend(name string, data *models.Backend, transaction
 	return nil
 }
 
-func (c *LBCTLClient) parseBackends(response string) models.Backends {
+func (c *Client) parseBackends(response string) models.Backends {
 	backends := make(models.Backends, 0, 1)
 	for _, backendStr := range strings.Split(response, "\n\n") {
 		if strings.TrimSpace(backendStr) == "" {

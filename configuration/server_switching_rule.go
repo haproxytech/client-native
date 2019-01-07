@@ -10,7 +10,7 @@ import (
 
 // GetServerSwitchingRules returns a struct with configuration version and an array of
 // configured server switching rules in the specified backend. Returns error on fail.
-func (c *LBCTLClient) GetServerSwitchingRules(backend string, transactionID string) (*models.GetServerSwitchingRulesOKBody, error) {
+func (c *Client) GetServerSwitchingRules(backend string, transactionID string) (*models.GetServerSwitchingRulesOKBody, error) {
 	if c.Cache.Enabled() {
 		srvRules, found := c.Cache.ServerSwitchingRules.Get(backend, transactionID)
 		if found {
@@ -37,7 +37,7 @@ func (c *LBCTLClient) GetServerSwitchingRules(backend string, transactionID stri
 
 // GetServerSwitchingRule returns a struct with configuration version and a requested server switching rule
 // in the specified backend. Returns error on fail or if server switching rule does not exist.
-func (c *LBCTLClient) GetServerSwitchingRule(id int64, backend string, transactionID string) (*models.GetServerSwitchingRuleOKBody, error) {
+func (c *Client) GetServerSwitchingRule(id int64, backend string, transactionID string) (*models.GetServerSwitchingRuleOKBody, error) {
 	if c.Cache.Enabled() {
 		srvRule, found := c.Cache.ServerSwitchingRules.GetOne(id, backend, transactionID)
 		if found {
@@ -65,7 +65,7 @@ func (c *LBCTLClient) GetServerSwitchingRule(id int64, backend string, transacti
 
 // DeleteServerSwitchingRule deletes a server switching rule in configuration. One of version or transactionID is
 // mandatory. Returns error on fail, nil on success.
-func (c *LBCTLClient) DeleteServerSwitchingRule(id int64, backend string, transactionID string, version int64) error {
+func (c *Client) DeleteServerSwitchingRule(id int64, backend string, transactionID string, version int64) error {
 	err := c.deleteObject(strconv.FormatInt(id, 10), "useserver", backend, "farm", transactionID, version)
 	if err != nil {
 		return err
@@ -78,8 +78,8 @@ func (c *LBCTLClient) DeleteServerSwitchingRule(id int64, backend string, transa
 
 // CreateServerSwitchingRule creates a server switching rule in configuration. One of version or transactionID is
 // mandatory. Returns error on fail, nil on success.
-func (c *LBCTLClient) CreateServerSwitchingRule(backend string, data *models.ServerSwitchingRule, transactionID string, version int64) error {
-	if c.UseValidation() {
+func (c *Client) CreateServerSwitchingRule(backend string, data *models.ServerSwitchingRule, transactionID string, version int64) error {
+	if c.UseValidation {
 		validationErr := data.Validate(strfmt.Default)
 		if validationErr != nil {
 			return NewConfError(ErrValidationError, validationErr.Error())
@@ -97,8 +97,8 @@ func (c *LBCTLClient) CreateServerSwitchingRule(backend string, data *models.Ser
 
 // EditServerSwitchingRule edits a server switching rule in configuration. One of version or transactionID is
 // mandatory. Returns error on fail, nil on success.
-func (c *LBCTLClient) EditServerSwitchingRule(id int64, backend string, data *models.ServerSwitchingRule, transactionID string, version int64) error {
-	if c.UseValidation() {
+func (c *Client) EditServerSwitchingRule(id int64, backend string, data *models.ServerSwitchingRule, transactionID string, version int64) error {
+	if c.UseValidation {
 		validationErr := data.Validate(strfmt.Default)
 		if validationErr != nil {
 			return NewConfError(ErrValidationError, validationErr.Error())
@@ -119,7 +119,7 @@ func (c *LBCTLClient) EditServerSwitchingRule(id int64, backend string, data *mo
 	return nil
 }
 
-func (c *LBCTLClient) parseServerSwitchingRules(response string) models.ServerSwitchingRules {
+func (c *Client) parseServerSwitchingRules(response string) models.ServerSwitchingRules {
 	srvRules := make(models.ServerSwitchingRules, 0, 1)
 	for _, srvRulesStr := range strings.Split(response, "\n\n") {
 		if strings.TrimSpace(srvRulesStr) == "" {

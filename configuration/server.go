@@ -9,7 +9,7 @@ import (
 
 // GetServers returns a struct with configuration version and an array of
 // configured servers in the specified backend. Returns error on fail.
-func (c *LBCTLClient) GetServers(backend string, transactionID string) (*models.GetServersOKBody, error) {
+func (c *Client) GetServers(backend string, transactionID string) (*models.GetServersOKBody, error) {
 	if c.Cache.Enabled() {
 		servers, found := c.Cache.Servers.Get(backend, transactionID)
 		if found {
@@ -36,7 +36,7 @@ func (c *LBCTLClient) GetServers(backend string, transactionID string) (*models.
 
 // GetServer returns a struct with configuration version and a requested server
 // in the specified backend. Returns error on fail or if server does not exist.
-func (c *LBCTLClient) GetServer(name string, backend string, transactionID string) (*models.GetServerOKBody, error) {
+func (c *Client) GetServer(name string, backend string, transactionID string) (*models.GetServerOKBody, error) {
 	if c.Cache.Enabled() {
 		server, found := c.Cache.Servers.GetOne(name, backend, transactionID)
 		if found {
@@ -64,7 +64,7 @@ func (c *LBCTLClient) GetServer(name string, backend string, transactionID strin
 
 // DeleteServer deletes a server in configuration. One of version or transactionID is
 // mandatory. Returns error on fail, nil on success.
-func (c *LBCTLClient) DeleteServer(name string, backend string, transactionID string, version int64) error {
+func (c *Client) DeleteServer(name string, backend string, transactionID string, version int64) error {
 	err := c.deleteObject(name, "server", backend, "", transactionID, version)
 	if err != nil {
 		return err
@@ -77,8 +77,8 @@ func (c *LBCTLClient) DeleteServer(name string, backend string, transactionID st
 
 // CreateServer creates a server in configuration. One of version or transactionID is
 // mandatory. Returns error on fail, nil on success.
-func (c *LBCTLClient) CreateServer(backend string, data *models.Server, transactionID string, version int64) error {
-	if c.UseValidation() {
+func (c *Client) CreateServer(backend string, data *models.Server, transactionID string, version int64) error {
+	if c.UseValidation {
 		validationErr := data.Validate(strfmt.Default)
 		if validationErr != nil {
 			return NewConfError(ErrValidationError, validationErr.Error())
@@ -97,8 +97,8 @@ func (c *LBCTLClient) CreateServer(backend string, data *models.Server, transact
 
 // EditServer edits a server in configuration. One of version or transactionID is
 // mandatory. Returns error on fail, nil on success.
-func (c *LBCTLClient) EditServer(name string, backend string, data *models.Server, transactionID string, version int64) error {
-	if c.UseValidation() {
+func (c *Client) EditServer(name string, backend string, data *models.Server, transactionID string, version int64) error {
+	if c.UseValidation {
 		validationErr := data.Validate(strfmt.Default)
 		if validationErr != nil {
 			return NewConfError(ErrValidationError, validationErr.Error())
@@ -120,7 +120,7 @@ func (c *LBCTLClient) EditServer(name string, backend string, data *models.Serve
 	return nil
 }
 
-func (c *LBCTLClient) parseServers(response string) models.Servers {
+func (c *Client) parseServers(response string) models.Servers {
 	servers := make(models.Servers, 0, 1)
 	for _, serverStr := range strings.Split(response, "\n\n") {
 		if strings.TrimSpace(serverStr) == "" {

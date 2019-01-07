@@ -9,7 +9,7 @@ import (
 
 // GetFrontends returns a struct with configuration version and an array of
 // configured frontends. Returns error on fail.
-func (c *LBCTLClient) GetFrontends(transactionID string) (*models.GetFrontendsOKBody, error) {
+func (c *Client) GetFrontends(transactionID string) (*models.GetFrontendsOKBody, error) {
 	if c.Cache.Enabled() {
 		frontends, found := c.Cache.Frontends.Get(transactionID)
 		if found {
@@ -35,7 +35,7 @@ func (c *LBCTLClient) GetFrontends(transactionID string) (*models.GetFrontendsOK
 
 // GetFrontend returns a struct with configuration version and a requested frontend.
 // Returns error on fail or if frontend does not exist.
-func (c *LBCTLClient) GetFrontend(name string, transactionID string) (*models.GetFrontendOKBody, error) {
+func (c *Client) GetFrontend(name string, transactionID string) (*models.GetFrontendOKBody, error) {
 	if c.Cache.Enabled() {
 		frontend, found := c.Cache.Frontends.GetOne(name, transactionID)
 		if found {
@@ -63,7 +63,7 @@ func (c *LBCTLClient) GetFrontend(name string, transactionID string) (*models.Ge
 
 // DeleteFrontend deletes a frontend in configuration. One of version or transactionID is
 // mandatory. Returns error on fail, nil on success.
-func (c *LBCTLClient) DeleteFrontend(name string, transactionID string, version int64) error {
+func (c *Client) DeleteFrontend(name string, transactionID string, version int64) error {
 	err := c.deleteObject(name, "service", "", "", transactionID, version)
 	if err != nil {
 		return err
@@ -76,8 +76,8 @@ func (c *LBCTLClient) DeleteFrontend(name string, transactionID string, version 
 
 // EditFrontend edits a frontend in configuration. One of version or transactionID is
 // mandatory. Returns error on fail, nil on success.
-func (c *LBCTLClient) EditFrontend(name string, data *models.Frontend, transactionID string, version int64) error {
-	if c.UseValidation() {
+func (c *Client) EditFrontend(name string, data *models.Frontend, transactionID string, version int64) error {
+	if c.UseValidation {
 		validationErr := data.Validate(strfmt.Default)
 		if validationErr != nil {
 			return NewConfError(ErrValidationError, validationErr.Error())
@@ -99,8 +99,8 @@ func (c *LBCTLClient) EditFrontend(name string, data *models.Frontend, transacti
 
 // CreateFrontend creates a frontend in configuration. One of version or transactionID is
 // mandatory. Returns error on fail, nil on success.
-func (c *LBCTLClient) CreateFrontend(data *models.Frontend, transactionID string, version int64) error {
-	if c.UseValidation() {
+func (c *Client) CreateFrontend(data *models.Frontend, transactionID string, version int64) error {
+	if c.UseValidation {
 		validationErr := data.Validate(strfmt.Default)
 		if validationErr != nil {
 			return NewConfError(ErrValidationError, validationErr.Error())
@@ -116,7 +116,7 @@ func (c *LBCTLClient) CreateFrontend(data *models.Frontend, transactionID string
 	return nil
 }
 
-func (c *LBCTLClient) parseFrontends(response string) models.Frontends {
+func (c *Client) parseFrontends(response string) models.Frontends {
 	frontends := make(models.Frontends, 0, 1)
 	for _, frontendStr := range strings.Split(response, "\n\n") {
 		if strings.TrimSpace(frontendStr) == "" {
