@@ -57,6 +57,10 @@ func (c *LBCTLClient) GetTCPConnectionRule(id int64, frontend string, transactio
 		return nil, err
 	}
 
+	if c.Cache.Enabled() {
+		c.Cache.TcpConnectionRules.Set(id, frontend, transactionID, tcpRule)
+	}
+
 	return &models.GetTCPConnectionRuleOKBody{Version: v, Data: tcpRule}, nil
 }
 

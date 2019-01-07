@@ -57,6 +57,10 @@ func (c *LBCTLClient) GetBackendSwitchingRule(id int64, frontend string, transac
 		return nil, err
 	}
 
+	if c.Cache.Enabled() {
+		c.Cache.BackendSwitchingRules.Set(id, frontend, transactionID, bckRule)
+	}
+
 	return &models.GetBackendSwitchingRuleOKBody{Version: v, Data: bckRule}, nil
 }
 

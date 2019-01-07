@@ -57,6 +57,10 @@ func (c *LBCTLClient) GetStickResponseRule(id int64, backend string, transaction
 		return nil, err
 	}
 
+	if c.Cache.Enabled() {
+		c.Cache.StickResponseRules.Set(id, backend, transactionID, stickResRule)
+	}
+
 	return &models.GetStickResponseRuleOKBody{Version: v, Data: stickResRule}, nil
 }
 

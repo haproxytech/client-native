@@ -56,6 +56,9 @@ func (c *LBCTLClient) GetServerSwitchingRule(id int64, backend string, transacti
 	if err != nil {
 		return nil, err
 	}
+	if c.Cache.Enabled() {
+		c.Cache.ServerSwitchingRules.Set(id, backend, transactionID, srvRule)
+	}
 
 	return &models.GetServerSwitchingRuleOKBody{Version: v, Data: srvRule}, nil
 }

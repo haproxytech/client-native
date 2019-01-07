@@ -67,6 +67,10 @@ func (c *LBCTLClient) GetHTTPResponseRule(id int64, parentType, parentName strin
 		return nil, err
 	}
 
+	if c.Cache.Enabled() {
+		c.Cache.HttpResponseRules.Set(id, parentName, parentType, transactionID, httpRule)
+	}
+
 	return &models.GetHTTPResponseRuleOKBody{Version: v, Data: httpRule}, nil
 }
 

@@ -68,6 +68,10 @@ func (c *LBCTLClient) GetFilter(id int64, parentType, parentName string, transac
 		return nil, err
 	}
 
+	if c.Cache.Enabled() {
+		c.Cache.Filters.Set(id, parentName, parentType, transactionID, filter)
+	}
+
 	return &models.GetFilterOKBody{Version: v, Data: filter}, nil
 }
 

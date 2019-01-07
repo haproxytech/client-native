@@ -114,6 +114,14 @@ func (c *LBCTLClient) GetTCPContentRule(id int64, parentType, parentName, ruleTy
 		return nil, err
 	}
 
+	if c.Cache.Enabled() {
+		if ruleType == "request" {
+			c.Cache.TcpContentRequestRules.Set(id, parentName, parentType, transactionID, tcpRule)
+		} else if ruleType == "response" {
+			c.Cache.TcpContentResponseRules.Set(id, parentName, transactionID, tcpRule)
+		}
+	}
+
 	return &models.GetTCPContentRuleOKBody{Version: v, Data: tcpRule}, nil
 }
 
