@@ -40,10 +40,10 @@ func (c *LBCTLClient) GetTransaction(id string) (*models.Transaction, error) {
 func (c *LBCTLClient) StartTransaction(version int64) (*models.Transaction, error) {
 	t := &models.Transaction{}
 
-	err := c.GlobalParser.LoadData(c.ClientParams.GlobalConfigurationFile())
-	if err != nil {
-		return nil, err
-	}
+	// err := c.GlobalParser.LoadData(c.ClientParams.GlobalConfigurationFile())
+	// if err != nil {
+	// 	return nil, err
+	// }
 
 	v, err := c.GetVersion()
 	if err != nil {
