@@ -66,6 +66,17 @@ func (c *Client) GetInfo() ([]models.ProcessInfoHaproxy, error) {
 	return result, nil
 }
 
+//SetFrontendMaxConn set maxconn for frontend
+func (c *Client) SetFrontendMaxConn(frontend string, maxconn int) error {
+	for _, runtime := range c.runtimes {
+		err := runtime.SetFrontendMaxConn(frontend, maxconn)
+		if err != nil {
+			return fmt.Errorf("%s %s", runtime.socketPath, err)
+		}
+	}
+	return nil
+}
+
 //SetServerAddr set ip [port] for server
 func (c *Client) SetServerAddr(backend, server string, ip string, port int) error {
 	for _, runtime := range c.runtimes {
