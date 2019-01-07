@@ -109,3 +109,16 @@ func (c *Client) SetServerHealth(backend, server string, health string) error {
 	}
 	return nil
 }
+
+//ExecuteRaw does not procces response, just returns its values for all processes
+func (c *Client) ExecuteRaw(command string) ([]string, error) {
+	result := make([]string, len(c.runtimes))
+	for index, runtime := range c.runtimes {
+		r, err := runtime.ExecuteRaw(command)
+		if err != nil {
+			return nil, fmt.Errorf("%s %s", runtime.socketPath, err)
+		}
+		result[index] = r
+	}
+	return result, nil
+}
