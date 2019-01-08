@@ -176,7 +176,7 @@ func prepareClient(path string) *Client {
 	p := ClientParams{
 		ConfigurationFile:       path,
 		GlobalConfigurationFile: "",
-		Haproxy:                 "",
+		Haproxy:                 "echo",
 		UseValidation:           true,
 		UseCache:                true,
 		LBCTLPath:               "/usr/sbin/lbctl",
