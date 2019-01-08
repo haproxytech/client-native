@@ -66,8 +66,6 @@ func DefaultClient() (*Client, error) {
 		return nil, err
 	}
 
-	c.GlobalParser.LoadData(c.GlobalConfigurationFile)
-
 	return c, err
 }
 
@@ -81,16 +79,35 @@ func (c *Client) Init(options ClientParams) error {
 		options.LBCTLTmpPath = DefaultLBCTLTmpPath
 	}
 
+	if options.ConfigurationFile == "" {
+		options.ConfigurationFile = DefaultConfigurationFile
+	}
+
+	if options.GlobalConfigurationFile == "" {
+		options.GlobalConfigurationFile = DefaultGlobalConfigurationFile
+	}
+
+	if options.Haproxy == "" {
+		options.Haproxy = DefaultHaproxy
+	}
+
 	c.ClientParams = options
 
 	c.Cache = cache.Cache{}
 
 	if c.UseCache {
 		v, err := c.GetVersion()
-		if err == nil {
-			c.Cache.Init(v)
+		if err != nil {
+			return err
 		}
+		c.Cache.Init(v)
 	}
+
+	err := c.GlobalParser.LoadData(c.GlobalConfigurationFile)
+	if err != nil {
+		return err
+	}
+
 	return nil
 }
 
