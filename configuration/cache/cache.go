@@ -254,7 +254,8 @@ func (fc *frontendCache) Get(t string) ([]*models.Frontend, bool) {
 
 	fs := make([]*models.Frontend, 0, len(items))
 	for _, val := range items {
-		fs = append(fs, &val)
+		fCopy := val
+		fs = append(fs, &fCopy)
 	}
 	return fs, true
 }
@@ -321,7 +322,8 @@ func (bc *backendCache) Get(t string) ([]*models.Backend, bool) {
 
 	bs := make([]*models.Backend, 0, len(items))
 	for _, val := range items {
-		bs = append(bs, &val)
+		bCopy := val
+		bs = append(bs, &bCopy)
 	}
 	return bs, true
 }
@@ -392,7 +394,8 @@ func (lc *listenerCache) Get(frontend, t string) (models.Listeners, bool) {
 
 	ls := make([]*models.Listener, 0, len(listeners))
 	for _, l := range listeners {
-		ls = append(ls, &l)
+		lCopy := l
+		ls = append(ls, &lCopy)
 	}
 	return ls, true
 }
@@ -480,7 +483,8 @@ func (sc *serverCache) Get(backend, t string) (models.Servers, bool) {
 
 	ss := make([]*models.Server, 0, len(servers))
 	for _, s := range servers {
-		ss = append(ss, &s)
+		sCopy := s
+		ss = append(ss, &sCopy)
 	}
 	return ss, true
 }
@@ -575,7 +579,8 @@ func (c *backendSwitchingCache) Get(frontend, t string) (models.BackendSwitching
 
 	rs := make([]*models.BackendSwitchingRule, 0, len(rules))
 	for _, r := range rules {
-		rs = append(rs, &r)
+		rCopy := r
+		rs = append(rs, &rCopy)
 	}
 	return rs, true
 }
@@ -665,7 +670,8 @@ func (c *filterCache) Get(parent, parentType, t string) (models.Filters, bool) {
 
 	rs := make([]*models.Filter, 0, len(rules))
 	for _, r := range rules {
-		rs = append(rs, &r)
+		rCopy := r
+		rs = append(rs, &rCopy)
 	}
 	return rs, true
 }
@@ -755,7 +761,8 @@ func (c *httpReqCache) Get(parent, parentType, t string) (models.HTTPRequestRule
 
 	rs := make([]*models.HTTPRequestRule, 0, len(rules))
 	for _, r := range rules {
-		rs = append(rs, &r)
+		rCopy := r
+		rs = append(rs, &rCopy)
 	}
 	return rs, true
 }
@@ -845,7 +852,8 @@ func (c *httpResCache) Get(parent, parentType, t string) (models.HTTPResponseRul
 
 	rs := make([]*models.HTTPResponseRule, 0, len(rules))
 	for _, r := range rules {
-		rs = append(rs, &r)
+		rCopy := r
+		rs = append(rs, &rCopy)
 	}
 	return rs, true
 }
@@ -935,7 +943,8 @@ func (c *serverSwitchingCache) Get(backend, t string) (models.ServerSwitchingRul
 
 	rs := make([]*models.ServerSwitchingRule, 0, len(rules))
 	for _, r := range rules {
-		rs = append(rs, &r)
+		rCopy := r
+		rs = append(rs, &rCopy)
 	}
 	return rs, true
 }
@@ -1025,7 +1034,8 @@ func (c *stickRequestCache) Get(backend, t string) (models.StickRequestRules, bo
 
 	rs := make([]*models.StickRequestRule, 0, len(rules))
 	for _, r := range rules {
-		rs = append(rs, &r)
+		rCopy := r
+		rs = append(rs, &rCopy)
 	}
 	return rs, true
 }
@@ -1115,7 +1125,8 @@ func (c *stickResponseCache) Get(backend, t string) (models.StickResponseRules, 
 
 	rs := make([]*models.StickResponseRule, 0, len(rules))
 	for _, r := range rules {
-		rs = append(rs, &r)
+		rCopy := r
+		rs = append(rs, &rCopy)
 	}
 	return rs, true
 }
@@ -1205,7 +1216,8 @@ func (c *tcpConnCache) Get(frontend, t string) (models.TCPRules, bool) {
 
 	rs := make([]*models.TCPRule, 0, len(rules))
 	for _, r := range rules {
-		rs = append(rs, &r)
+		rCopy := r
+		rs = append(rs, &rCopy)
 	}
 	return rs, true
 }
@@ -1295,7 +1307,8 @@ func (c *tcpContReqCache) Get(parent, parentType, t string) (models.TCPRules, bo
 
 	rs := make([]*models.TCPRule, 0, len(rules))
 	for _, r := range rules {
-		rs = append(rs, &r)
+		rCopy := r
+		rs = append(rs, &rCopy)
 	}
 	return rs, true
 }
@@ -1385,7 +1398,8 @@ func (c *tcpContResCache) Get(backend, t string) (models.TCPRules, bool) {
 
 	rs := make([]*models.TCPRule, 0, len(rules))
 	for _, r := range rules {
-		rs = append(rs, &r)
+		rCopy := r
+		rs = append(rs, &rCopy)
 	}
 	return rs, true
 }
