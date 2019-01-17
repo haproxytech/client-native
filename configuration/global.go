@@ -211,7 +211,6 @@ func (c *Client) PushGlobalConfiguration(data *models.Global, version int64) err
 	}
 	c.GlobalParser.Global.Set(pDhParams)
 
-	fmt.Println(c.GlobalParser.String())
 	err = c.GlobalParser.Save(c.GlobalConfigurationFile)
 	if err != nil {
 		return err
