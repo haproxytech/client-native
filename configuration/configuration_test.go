@@ -118,8 +118,15 @@ func TestMain(m *testing.M) {
 		fmt.Println("Could not prepare tests")
 		os.Exit(1)
 	}
+
+	err = prepareTestFile(testGlobalConf, globalPath)
+	if err != nil {
+		fmt.Println("Could not prepare tests")
+		os.Exit(1)
+	}
+	defer deleteTestFile(globalPath)
 	defer deleteTestFile(testPath)
-	client = prepareClient(testPath)
+	client = prepareClient(testPath, globalPath)
 
 	os.Exit(m.Run())
 }
@@ -171,11 +178,11 @@ func deleteTestFile(path string) error {
 	return nil
 }
 
-func prepareClient(path string) *Client {
+func prepareClient(path string, globalPath string) *Client {
 	c := Client{}
 	p := ClientParams{
 		ConfigurationFile:       path,
-		GlobalConfigurationFile: "",
+		GlobalConfigurationFile: globalPath,
 		Haproxy:                 "echo",
 		UseValidation:           true,
 		UseCache:                true,

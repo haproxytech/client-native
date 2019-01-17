@@ -122,7 +122,7 @@ func (c *Client) PushGlobalConfiguration(data *models.Global, version int64) err
 
 	err := c.GlobalParser.LoadData(c.GlobalConfigurationFile)
 	if err != nil {
-		return nil
+		return err
 	}
 
 	pDaemon := &parsers.Daemon{}
