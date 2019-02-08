@@ -303,6 +303,7 @@ func (c *Client) failTransaction(id string) {
 	configFile := c.getTransactionFile(c.ConfigurationFile, id)
 	failedConfigFile := c.getFailedTransactionFile(c.ConfigurationFile, id)
 	copyFile(configFile, failedConfigFile)
+	os.Remove(configFile)
 }
 
 func copyFile(src, dest string) error {
@@ -322,7 +323,5 @@ func copyFile(src, dest string) error {
 	if err != nil {
 		return err
 	}
-	destContent.Sync()
-
-	return os.Remove(src)
+	return destContent.Sync()
 }
