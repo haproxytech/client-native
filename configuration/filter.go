@@ -15,7 +15,7 @@ func (c *Client) GetFilters(parentType, parentName string, transactionID string)
 	if c.Cache.Enabled() {
 		filters, found := c.Cache.Filters.Get(parentName, parentType, transactionID)
 		if found {
-			return &models.GetFiltersOKBody{Version: c.Cache.Version.Get(), Data: filters}, nil
+			return &models.GetFiltersOKBody{Version: c.Cache.Version.Get(transactionID), Data: filters}, nil
 		}
 	}
 	lbctlType := typeToLbctlType(parentType)
@@ -30,7 +30,7 @@ func (c *Client) GetFilters(parentType, parentName string, transactionID string)
 
 	filters := c.parseFilters(filtersStr)
 
-	v, err := c.GetVersion()
+	v, err := c.GetVersion(transactionID)
 	if err != nil {
 		return nil, err
 	}
@@ -47,7 +47,7 @@ func (c *Client) GetFilter(id int64, parentType, parentName string, transactionI
 	if c.Cache.Enabled() {
 		filter, found := c.Cache.Filters.GetOne(id, parentName, parentType, transactionID)
 		if found {
-			return &models.GetFilterOKBody{Version: c.Cache.Version.Get(), Data: filter}, nil
+			return &models.GetFilterOKBody{Version: c.Cache.Version.Get(transactionID), Data: filter}, nil
 		}
 	}
 	lbctlType := typeToLbctlType(parentType)
@@ -63,7 +63,7 @@ func (c *Client) GetFilter(id int64, parentType, parentName string, transactionI
 
 	c.parseObject(filterStr, filter)
 
-	v, err := c.GetVersion()
+	v, err := c.GetVersion(transactionID)
 	if err != nil {
 		return nil, err
 	}

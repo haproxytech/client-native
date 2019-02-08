@@ -56,7 +56,7 @@ func (c *Client) GetRawConfiguration() (*models.GetHAProxyConfigurationOKBody, e
 // PostRawConfiguration pushes given string to the config file if the version
 // matches
 func (c *Client) PostRawConfiguration(config *string, version int64) error {
-	ondiskV, _ := c.GetVersion()
+	ondiskV, _ := c.GetVersion("")
 	if ondiskV != version {
 		return NewConfError(ErrVersionMismatch, fmt.Sprintf("Version in configuration file is %v, given version is %v", ondiskV, version))
 	}

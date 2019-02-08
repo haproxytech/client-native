@@ -187,7 +187,7 @@ func TestCreateEditDeleteHTTPResponseRule(t *testing.T) {
 		version++
 	}
 
-	if v, _ := client.GetVersion(); v != version {
+	if v, _ := client.GetVersion(""); v != version {
 		t.Error("Version not incremented")
 	}
 

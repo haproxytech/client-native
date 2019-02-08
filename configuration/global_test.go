@@ -18,7 +18,7 @@ global
 	stats socket /var/run/haproxy.sock level admin mode 0660
 `
 
-const globalPath = "/tmp/haproxy-test.cfg"
+const globalPath = "/tmp/global-test.cfg"
 
 func TestGetGlobal(t *testing.T) {
 	global, err := client.GetGlobalConfiguration()

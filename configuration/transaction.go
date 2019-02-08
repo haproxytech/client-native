@@ -1,34 +1,21 @@
 package configuration
 
 import (
-	"bufio"
 	"fmt"
+	"io"
+	"io/ioutil"
 	"os"
-	"strconv"
+	"os/exec"
+	"path/filepath"
 	"strings"
 
+	"github.com/google/uuid"
 	"github.com/haproxytech/models"
 )
 
 // GetTransactions returns an array of transactions
 func (c *Client) GetTransactions(status string) (*models.Transactions, error) {
-	ts := models.Transactions{}
-
-	response, err := c.executeLBCTL("transaction-list", "")
-	if err != nil {
-		return nil, err
-	}
-	for _, id := range strings.Split(response, "\n") {
-		if strings.TrimSpace(id) == "" {
-			continue
-		}
-		t, err := c.parseTransaction(id)
-		if err != nil {
-			return nil, err
-		}
-		ts = append(ts, t)
-	}
-	return &ts, nil
+	return c.parseTransactions(status)
 }
 
 // GetTransaction returns transaction information by id
@@ -40,12 +27,7 @@ func (c *Client) GetTransaction(id string) (*models.Transaction, error) {
 func (c *Client) StartTransaction(version int64) (*models.Transaction, error) {
 	t := &models.Transaction{}
 
-	// err := c.GlobalParser.LoadData(c.ClientParams.GlobalConfigurationFile())
-	// if err != nil {
-	// 	return nil, err
-	// }
-
-	v, err := c.GetVersion()
+	v, err := c.GetVersion("")
 	if err != nil {
 		return nil, err
 	}
@@ -54,17 +36,17 @@ func (c *Client) StartTransaction(version int64) (*models.Transaction, error) {
 		return nil, NewConfError(ErrVersionMismatch, fmt.Sprintf("Version in configuration file is %v, given version is %v", v, version))
 	}
 
-	response, err := c.executeLBCTL("transaction-begin", "")
+	t.ID = uuid.New().String()
+	err = c.createTransactionFiles(t.ID)
 	if err != nil {
 		return nil, err
 	}
 
-	t.ID = strings.TrimSpace(response)
 	t.Version = version
 	t.Status = "in_progress"
 
 	if c.Cache.Enabled() {
-		c.Cache.InitTransactionCache(t.ID)
+		c.Cache.InitTransactionCache(t.ID, version)
 	}
 
 	return t, nil
@@ -73,22 +55,36 @@ func (c *Client) StartTransaction(version int64) (*models.Transaction, error) {
 // CommitTransaction commits a transaction by id.
 func (c *Client) CommitTransaction(id string) error {
 	// do a version check before commiting
-	version, err := c.GetVersion()
-	if err != nil {
-		return err
-	}
-	tVersion := c.getTransactionVersion(id)
-	if tVersion != version {
-		return NewConfError(ErrVersionMismatch, fmt.Sprintf("Version mismatch, transaction version: %v, configured version: %v", tVersion, version))
-	}
-
-	_, err = c.executeLBCTL("transaction-commit", id)
+	version, err := c.GetVersion("")
 	if err != nil {
 		return err
 	}
 
-	err = c.incrementVersion()
+	t, err := c.parseTransaction(id)
 	if err != nil {
+		return err
+	}
+
+	if t.Version != version {
+		c.failTransaction(id)
+		return NewConfError(ErrVersionMismatch, fmt.Sprintf("Version mismatch, transaction version: %v, configured version: %v", t.Version, version))
+	}
+
+	if err = c.checkTransactionFile(id); err != nil {
+		c.failTransaction(id)
+		return err
+	}
+
+	if err = copyFile(c.getTransactionFile(c.ConfigurationFile, id), c.ConfigurationFile); err != nil {
+		c.failTransaction(id)
+		return err
+	}
+
+	if err = c.incrementVersion(); err != nil {
+		return err
+	}
+
+	if err = c.deleteTransactionFiles(id); err != nil {
 		return err
 	}
 
@@ -97,17 +93,22 @@ func (c *Client) CommitTransaction(id string) error {
 		c.Cache.InvalidateCache()
 	}
 
-	/*err = c.GlobalParser.Save(c.ClientParams.GlobalConfigurationFile())
+	return nil
+}
+
+func (c *Client) checkTransactionFile(id string) error {
+	cmd := exec.Command(c.Haproxy, "-f", c.GlobalConfigurationFile, "-f", c.ConfigurationFile, "-c")
+
+	err := cmd.Run()
 	if err != nil {
 		return err
-	}*/
-
+	}
 	return nil
 }
 
 // DeleteTransaction deletes a transaction by id.
 func (c *Client) DeleteTransaction(id string) error {
-	_, err := c.executeLBCTL("transaction-cancel", id)
+	err := c.deleteTransactionFiles(id)
 	if err != nil {
 		return err
 	}
@@ -117,150 +118,211 @@ func (c *Client) DeleteTransaction(id string) error {
 	return nil
 }
 
-func (c *Client) parseTransaction(id string) (*models.Transaction, error) {
-	tPath := c.LBCTLTmpPath + "/" + "tmp." + id
-	info, err := os.Stat(tPath)
-
-	// check if transaction exists and is a dir
-	if os.IsNotExist(err) {
-		return nil, NewConfError(ErrTransactionDoesNotExist, "Transaction with id "+id+" does not exist")
-	}
-	if !info.IsDir() {
-		return nil, NewConfError(ErrTransactionDoesNotExist, "Transaction with id "+id+" is not a dir")
-	}
-
-	t := &models.Transaction{ID: id, Status: "in_progress"}
-
-	// check status, if it has merged dir it is a failed transaction
-	info, err = os.Stat(tPath + "/l7/merged")
-	if err == nil && info.IsDir() {
-		t.Status = "failed"
-	}
-	t.Version = c.getTransactionVersion(id)
-	// populate operations
-	file, err := os.Open(tPath + "/history")
-	if err != nil {
-		return nil, NewConfError(ErrCannotReadConfFile, fmt.Sprintf("Cannot read operations file for transaction %v: %v", id, err.Error()))
-	}
-	defer file.Close()
-
-	ops := []*models.TransactionOperationsItems{}
-	scanner := bufio.NewScanner(file)
-	for scanner.Scan() {
-		line := scanner.Text()
-		op, err := c.parseOperation(line)
-		if err != nil {
-			continue
-		}
-		ops = append(ops, op)
-	}
-	t.Operations = ops
-	return t, nil
-}
-
-func (c *Client) parseOperation(operationStr string) (*models.TransactionOperationsItems, error) {
-	op := &models.TransactionOperationsItems{}
-	// Operation and options are split by ^K - rune with ascii code 11
-	words := strings.Split(operationStr, string(11))
-	if len(words) < 2 {
-		return nil, NewConfError(ErrCannotParseTransaction, "Operation "+operationStr+" Cannot be parsed")
-	}
-
-	// parse operation
-	w := strings.Split(words[0], "_")
-	if len(w) < 3 {
-		return nil, NewConfError(ErrCannotParseTransaction, "Operation "+operationStr+" Cannot be parsed")
-	}
-	if w[0] != "l7" {
-		return nil, NewConfError(ErrCannotParseTransaction, "Operation "+operationStr+" Cannot be parsed")
-	}
-
-	objType := ""
-	opType := ""
-	parentType := ""
-	if len(w) == 3 {
-		objType = lbctlTypeToType(w[1])
-		opType = lbctlTypeToType(w[2])
-	} else {
-		parentType = lbctlTypeToType(w[1])
-		objType = lbctlTypeToType(w[2])
-		opType = lbctlOpToOp(w[3])
-	}
-
-	// Get operation data
-	op.Operation = opType + objType
-	data := make(map[string]string)
-
-	if parentType != "" {
-		data["parentType"] = parentType
-	}
-
-	var options []string
-	if strings.HasPrefix(words[1], "--") && strings.HasPrefix(words[2], "--") {
-		data["parent"] = words[1]
-		data["name"] = words[2]
-		options = words[2:]
-	} else if !strings.HasPrefix(words[1], "--") {
-		data["name"] = words[1]
-		options = words[1:]
-	}
-
-	for i := 0; i < len(options); i++ {
-		if strings.HasPrefix(options[i], "--reset") {
-			continue
-		} else if strings.HasPrefix(options[i], "--") {
-			fieldName := options[i][2:]
-			i++
-			fieldValue := options[i]
-			data[fieldName] = fieldValue
-		}
-	}
-	op.Data = data
-
-	return op, nil
-}
-
-func lbctlOpToOp(lOp string) string {
-	if lOp == "update" {
-		return "replace"
-	}
-	return lOp
-}
-
-func (c *Client) getTransactionVersion(id string) int64 {
+func (c *Client) getTransactionVersion(id string, failed bool) int64 {
 	// get original version from the ex file
-	tPath := c.LBCTLTmpPath + "/" + "tmp." + id
-	file, err := os.Open(tPath + "/l7/ctx/haproxy.cfg.ex")
+	confFileName := filepath.Base(c.ConfigurationFile)
+	var tPath string
+	if failed {
+		tPath = filepath.Join(c.TransactionDir, "failed", confFileName+"."+id)
+	} else {
+		tPath = filepath.Join(c.TransactionDir, confFileName+"."+id)
+	}
+	file, err := os.Open(tPath)
 	if err != nil {
 		return 1
 	}
 	defer file.Close()
 
-	scanner := bufio.NewScanner(file)
+	v, err := c.readVersionFromFile(file)
+	if err != nil {
+		return 1
+	}
+	return v
+}
 
-	// Read only first line, version MUST BE on the first line, if not set or malformatted, use 1
-	lineNo := 0
-	for scanner.Scan() {
-		line := scanner.Text()
-		if strings.TrimSpace(line) != "" {
-			if lineNo == 0 {
-				if strings.HasPrefix(line, "# _version=") {
-					w := strings.Split(line, "=")
-					if len(w) != 2 {
-						return 1
-					}
-					version, err := strconv.ParseInt(w[1], 10, 64)
-					if err != nil {
-						return 1
-					}
-					return version
-				}
-			} else {
-				break
+func (c *Client) parseTransactions(status string) (*models.Transactions, error) {
+	confFileName := filepath.Base(c.ConfigurationFile)
+
+	_, err := os.Stat(c.TransactionDir)
+	if err != nil && os.IsNotExist(err) {
+		err := os.MkdirAll(c.TransactionDir, 0755)
+		if err != nil {
+			return nil, err
+		}
+		return &models.Transactions{}, nil
+	}
+
+	transactions := models.Transactions{}
+	files, err := ioutil.ReadDir(c.TransactionDir)
+	if err != nil {
+		return nil, err
+	}
+	for _, f := range files {
+		if !f.IsDir() && status != "failed" {
+			if strings.HasPrefix(f.Name(), confFileName) {
+				transactions = append(transactions, c.parseTransactionFile(f, "in_progress"))
 			}
-			lineNo++
+		} else {
+			if f.Name() == "failed" && status != "in_progress" {
+				ffiles, err := ioutil.ReadDir(filepath.Join(c.TransactionDir, "failed"))
+				if err != nil {
+					return nil, err
+				}
+				for _, ff := range ffiles {
+					if !ff.IsDir() {
+						if strings.HasPrefix(ff.Name(), confFileName) {
+							transactions = append(transactions, c.parseTransactionFile(ff, "failed"))
+						}
+					}
+				}
+			}
 		}
 	}
 
-	return 1
+	return &transactions, nil
+}
+
+func (c *Client) parseTransaction(id string) (*models.Transaction, error) {
+	_, err := os.Stat(c.TransactionDir)
+	if err != nil && os.IsNotExist(err) {
+		err := os.MkdirAll(c.TransactionDir, 0755)
+		if err != nil {
+			return nil, err
+		}
+		return nil, NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("Transaction %v does not exist", id))
+	}
+
+	fName := filepath.Base(c.ConfigurationFile) + "." + id
+
+	//Check if there is a file in transaction directory
+	inProgressFile := filepath.Join(c.TransactionDir, fName)
+	f, err := os.Stat(inProgressFile)
+	if err != nil && !os.IsNotExist(err) {
+		return nil, err
+	}
+	if f != nil {
+		return c.parseTransactionFile(f, "in_progress"), nil
+	}
+
+	//Check if there is a file in failed directory
+	failedFile := filepath.Join(c.TransactionDir, "failed", fName)
+	f, err = os.Stat(failedFile)
+	if err != nil {
+		if os.IsNotExist(err) {
+			return nil, NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("Transaction %v does not exist", id))
+		}
+		return nil, err
+	}
+	if f != nil {
+		return c.parseTransactionFile(f, "failed"), nil
+	}
+	return nil, NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("Transaction %v does not exist", id))
+}
+
+func (c *Client) parseTransactionFile(f os.FileInfo, status string) *models.Transaction {
+	s := strings.Split(f.Name(), ".")
+	tID := s[len(s)-1]
+	v := int64(0)
+	if status == "in_progress" {
+		v = c.getTransactionVersion(tID, false)
+	} else {
+		v = c.getTransactionVersion(tID, true)
+	}
+	t := &models.Transaction{
+		ID:      tID,
+		Status:  status,
+		Version: v,
+	}
+	return t
+}
+
+func (c *Client) createTransactionFiles(transactionID string) error {
+	transDir, err := os.Stat(c.TransactionDir)
+
+	if err != nil && os.IsNotExist(err) {
+		err := os.MkdirAll(c.TransactionDir, 0755)
+		if err != nil {
+			return err
+		}
+	} else {
+		if !transDir.Mode().IsDir() {
+			return fmt.Errorf("Transaction dir %s is a file", c.TransactionDir)
+		}
+	}
+
+	confFilePath := c.getTransactionFile(c.ConfigurationFile, transactionID)
+
+	err = copyFile(c.ConfigurationFile, confFilePath)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (c *Client) deleteTransactionFiles(transactionID string) error {
+	confFilePath := c.getTransactionFile(c.ConfigurationFile, transactionID)
+
+	err := os.Remove(confFilePath)
+	if err != nil {
+		if !os.IsNotExist(err) {
+			return err
+		}
+	}
+
+	failedConfFilePath := c.getFailedTransactionFile(c.ConfigurationFile, transactionID)
+	err = os.Remove(failedConfFilePath)
+	if err != nil {
+		if !os.IsNotExist(err) {
+			return err
+		}
+	}
+	return nil
+}
+
+func (c *Client) getTransactionFile(filePath string, transactionID string) string {
+	fileName := filepath.Base(filepath.Clean(filePath))
+	fileName = fileName + "." + transactionID
+
+	return filepath.Join(c.TransactionDir, fileName)
+}
+
+func (c *Client) getFailedTransactionFile(filePath string, transactionID string) string {
+	fileName := filepath.Base(filepath.Clean(filePath))
+	fileName = fileName + "." + transactionID
+
+	return filepath.Join(c.TransactionDir, "failed", fileName)
+}
+
+func (c *Client) failTransaction(id string) {
+	failedDir := filepath.Join(c.TransactionDir, "failed")
+	if _, err := os.Stat(failedDir); os.IsNotExist(err) {
+		os.Mkdir(failedDir, 0755)
+	}
+
+	configFile := c.getTransactionFile(c.ConfigurationFile, id)
+	failedConfigFile := c.getFailedTransactionFile(c.ConfigurationFile, id)
+	copyFile(configFile, failedConfigFile)
+}
+
+func copyFile(src, dest string) error {
+	srcContent, err := os.Open(src)
+	if err != nil {
+		return err
+	}
+	defer srcContent.Close()
+
+	destContent, err := os.Create(dest)
+	if err != nil {
+		return err
+	}
+	defer destContent.Close()
+
+	_, err = io.Copy(destContent, srcContent)
+	if err != nil {
+		return err
+	}
+	destContent.Sync()
+
+	return os.Remove(src)
 }

@@ -14,7 +14,7 @@ func (c *Client) GetStickRequestRules(backend string, transactionID string) (*mo
 	if c.Cache.Enabled() {
 		stickReqRules, found := c.Cache.StickRequestRules.Get(backend, transactionID)
 		if found {
-			return &models.GetStickRequestRulesOKBody{Version: c.Cache.Version.Get(), Data: stickReqRules}, nil
+			return &models.GetStickRequestRulesOKBody{Version: c.Cache.Version.Get(transactionID), Data: stickReqRules}, nil
 		}
 	}
 	stickReqRulesString, err := c.executeLBCTL("l7-farm-stickreq-dump", transactionID, backend)
@@ -24,7 +24,7 @@ func (c *Client) GetStickRequestRules(backend string, transactionID string) (*mo
 
 	stickReqRules := c.parseStickRequestRules(stickReqRulesString)
 
-	v, err := c.GetVersion()
+	v, err := c.GetVersion(transactionID)
 	if err != nil {
 		return nil, err
 	}
@@ -41,7 +41,7 @@ func (c *Client) GetStickRequestRule(id int64, backend string, transactionID str
 	if c.Cache.Enabled() {
 		stickReqRule, found := c.Cache.StickRequestRules.GetOne(id, backend, transactionID)
 		if found {
-			return &models.GetStickRequestRuleOKBody{Version: c.Cache.Version.Get(), Data: stickReqRule}, nil
+			return &models.GetStickRequestRuleOKBody{Version: c.Cache.Version.Get(transactionID), Data: stickReqRule}, nil
 		}
 	}
 	stickReqRuleStr, err := c.executeLBCTL("l7-farm-stickreq-show", transactionID, backend, strconv.FormatInt(id, 10))
@@ -52,7 +52,7 @@ func (c *Client) GetStickRequestRule(id int64, backend string, transactionID str
 
 	c.parseObject(stickReqRuleStr, stickReqRule)
 
-	v, err := c.GetVersion()
+	v, err := c.GetVersion(transactionID)
 	if err != nil {
 		return nil, err
 	}

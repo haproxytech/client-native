@@ -14,7 +14,7 @@ func (c *Client) GetBackendSwitchingRules(frontend string, transactionID string)
 	if c.Cache.Enabled() {
 		bckRules, found := c.Cache.BackendSwitchingRules.Get(frontend, transactionID)
 		if found {
-			return &models.GetBackendSwitchingRulesOKBody{Version: c.Cache.Version.Get(), Data: bckRules}, nil
+			return &models.GetBackendSwitchingRulesOKBody{Version: c.Cache.Version.Get(transactionID), Data: bckRules}, nil
 		}
 	}
 	bckRulesString, err := c.executeLBCTL("l7-service-usefarm-dump", transactionID, frontend)
@@ -24,7 +24,7 @@ func (c *Client) GetBackendSwitchingRules(frontend string, transactionID string)
 
 	bckRules := c.parseBackendSwitchingRules(bckRulesString)
 
-	v, err := c.GetVersion()
+	v, err := c.GetVersion(transactionID)
 	if err != nil {
 		return nil, err
 	}
@@ -41,7 +41,7 @@ func (c *Client) GetBackendSwitchingRule(id int64, frontend string, transactionI
 	if c.Cache.Enabled() {
 		bckRule, found := c.Cache.BackendSwitchingRules.GetOne(id, frontend, transactionID)
 		if found {
-			return &models.GetBackendSwitchingRuleOKBody{Version: c.Cache.Version.Get(), Data: bckRule}, nil
+			return &models.GetBackendSwitchingRuleOKBody{Version: c.Cache.Version.Get(transactionID), Data: bckRule}, nil
 		}
 	}
 	bckRuleStr, err := c.executeLBCTL("l7-service-usefarm-show", transactionID, frontend, strconv.FormatInt(id, 10))
@@ -52,7 +52,7 @@ func (c *Client) GetBackendSwitchingRule(id int64, frontend string, transactionI
 
 	c.parseObject(bckRuleStr, bckRule)
 
-	v, err := c.GetVersion()
+	v, err := c.GetVersion(transactionID)
 	if err != nil {
 		return nil, err
 	}

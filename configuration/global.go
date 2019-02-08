@@ -156,7 +156,7 @@ func (c *Client) PushGlobalConfiguration(data *models.Global, version int64) err
 			c.GlobalParser.Set(parser.Global, parser.GlobalSectionName, "stats socket", nil)
 		}
 	} else {
-		sockets := ondisk.(*[]types.Socket)
+		sockets := ondisk.([]types.Socket)
 		if data.RuntimeAPI != "" {
 			pStatsSocket := types.Socket{
 				Path: data.RuntimeAPI,
@@ -165,7 +165,7 @@ func (c *Client) PushGlobalConfiguration(data *models.Global, version int64) err
 					&params.BindOptionValue{Name: "mode", Value: data.RuntimeAPIMode},
 				},
 			}
-			(*sockets)[0] = pStatsSocket
+			(sockets)[0] = pStatsSocket
 		}
 		c.GlobalParser.Set(parser.Global, parser.GlobalSectionName, "stats socket", sockets)
 	}

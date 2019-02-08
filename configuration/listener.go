@@ -13,7 +13,7 @@ func (c *Client) GetListeners(frontend string, transactionID string) (*models.Ge
 	if c.Cache.Enabled() {
 		listeners, found := c.Cache.Listeners.Get(frontend, transactionID)
 		if found {
-			return &models.GetListenersOKBody{Version: c.Cache.Version.Get(), Data: listeners}, nil
+			return &models.GetListenersOKBody{Version: c.Cache.Version.Get(transactionID), Data: listeners}, nil
 		}
 	}
 	listenersString, err := c.executeLBCTL("l7-listener-dump", transactionID, frontend)
@@ -23,7 +23,7 @@ func (c *Client) GetListeners(frontend string, transactionID string) (*models.Ge
 
 	listeners := c.parseListeners(listenersString)
 
-	v, err := c.GetVersion()
+	v, err := c.GetVersion(transactionID)
 	if err != nil {
 		return nil, err
 	}
@@ -40,7 +40,7 @@ func (c *Client) GetListener(name string, frontend string, transactionID string)
 	if c.Cache.Enabled() {
 		listener, found := c.Cache.Listeners.GetOne(name, frontend, transactionID)
 		if found {
-			return &models.GetListenerOKBody{Version: c.Cache.Version.Get(), Data: listener}, nil
+			return &models.GetListenerOKBody{Version: c.Cache.Version.Get(transactionID), Data: listener}, nil
 		}
 	}
 	listenerStr, err := c.executeLBCTL("l7-listener-show", transactionID, frontend, name)
@@ -51,7 +51,7 @@ func (c *Client) GetListener(name string, frontend string, transactionID string)
 
 	c.parseObject(listenerStr, listener)
 
-	v, err := c.GetVersion()
+	v, err := c.GetVersion(transactionID)
 	if err != nil {
 		return nil, err
 	}

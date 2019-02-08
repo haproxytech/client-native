@@ -21,7 +21,7 @@ func (c *Client) GetTCPContentRules(parentType, parentName, ruleType, transactio
 			tcpRules, found = c.Cache.TcpContentResponseRules.Get(parentName, transactionID)
 		}
 		if found {
-			return &models.GetTCPContentRulesOKBody{Version: c.Cache.Version.Get(), Data: tcpRules}, nil
+			return &models.GetTCPContentRulesOKBody{Version: c.Cache.Version.Get(transactionID), Data: tcpRules}, nil
 		}
 
 	}
@@ -51,7 +51,7 @@ func (c *Client) GetTCPContentRules(parentType, parentName, ruleType, transactio
 
 	tcpRules := c.parseTCPContentRules(tcpRulesStr)
 
-	v, err := c.GetVersion()
+	v, err := c.GetVersion(transactionID)
 	if err != nil {
 		return nil, err
 	}
@@ -78,7 +78,7 @@ func (c *Client) GetTCPContentRule(id int64, parentType, parentName, ruleType, t
 			tcpRule, found = c.Cache.TcpContentResponseRules.GetOne(id, parentName, transactionID)
 		}
 		if found {
-			return &models.GetTCPContentRuleOKBody{Version: c.Cache.Version.Get(), Data: tcpRule}, nil
+			return &models.GetTCPContentRuleOKBody{Version: c.Cache.Version.Get(transactionID), Data: tcpRule}, nil
 		}
 
 	}
@@ -109,7 +109,7 @@ func (c *Client) GetTCPContentRule(id int64, parentType, parentName, ruleType, t
 
 	c.parseObject(tcpRuleStr, tcpRule)
 
-	v, err := c.GetVersion()
+	v, err := c.GetVersion(transactionID)
 	if err != nil {
 		return nil, err
 	}

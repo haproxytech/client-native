@@ -14,7 +14,7 @@ func (c *Client) GetServerSwitchingRules(backend string, transactionID string) (
 	if c.Cache.Enabled() {
 		srvRules, found := c.Cache.ServerSwitchingRules.Get(backend, transactionID)
 		if found {
-			return &models.GetServerSwitchingRulesOKBody{Version: c.Cache.Version.Get(), Data: srvRules}, nil
+			return &models.GetServerSwitchingRulesOKBody{Version: c.Cache.Version.Get(transactionID), Data: srvRules}, nil
 		}
 	}
 	srvRulesString, err := c.executeLBCTL("l7-farm-useserver-dump", transactionID, backend)
@@ -24,7 +24,7 @@ func (c *Client) GetServerSwitchingRules(backend string, transactionID string) (
 
 	srvRules := c.parseServerSwitchingRules(srvRulesString)
 
-	v, err := c.GetVersion()
+	v, err := c.GetVersion(transactionID)
 	if err != nil {
 		return nil, err
 	}
@@ -41,7 +41,7 @@ func (c *Client) GetServerSwitchingRule(id int64, backend string, transactionID 
 	if c.Cache.Enabled() {
 		srvRule, found := c.Cache.ServerSwitchingRules.GetOne(id, backend, transactionID)
 		if found {
-			return &models.GetServerSwitchingRuleOKBody{Version: c.Cache.Version.Get(), Data: srvRule}, nil
+			return &models.GetServerSwitchingRuleOKBody{Version: c.Cache.Version.Get(transactionID), Data: srvRule}, nil
 		}
 	}
 	srvRuleStr, err := c.executeLBCTL("l7-farm-useserver-show", transactionID, backend, strconv.FormatInt(id, 10))
@@ -52,7 +52,7 @@ func (c *Client) GetServerSwitchingRule(id int64, backend string, transactionID 
 
 	c.parseObject(srvRuleStr, srvRule)
 
-	v, err := c.GetVersion()
+	v, err := c.GetVersion(transactionID)
 	if err != nil {
 		return nil, err
 	}

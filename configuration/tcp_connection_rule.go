@@ -14,7 +14,7 @@ func (c *Client) GetTCPConnectionRules(frontend string, transactionID string) (*
 	if c.Cache.Enabled() {
 		tcpRules, found := c.Cache.TcpConnectionRules.Get(frontend, transactionID)
 		if found {
-			return &models.GetTCPConnectionRulesOKBody{Version: c.Cache.Version.Get(), Data: tcpRules}, nil
+			return &models.GetTCPConnectionRulesOKBody{Version: c.Cache.Version.Get(transactionID), Data: tcpRules}, nil
 		}
 	}
 	tcpRulesStr, err := c.executeLBCTL("l7-service-tcpreqconn-dump", transactionID, frontend)
@@ -24,7 +24,7 @@ func (c *Client) GetTCPConnectionRules(frontend string, transactionID string) (*
 
 	tcpRules := c.parseTCPConnectionRules(tcpRulesStr)
 
-	v, err := c.GetVersion()
+	v, err := c.GetVersion(transactionID)
 	if err != nil {
 		return nil, err
 	}
@@ -41,7 +41,7 @@ func (c *Client) GetTCPConnectionRule(id int64, frontend string, transactionID s
 	if c.Cache.Enabled() {
 		tcpRule, found := c.Cache.TcpConnectionRules.GetOne(id, frontend, transactionID)
 		if found {
-			return &models.GetTCPConnectionRuleOKBody{Version: c.Cache.Version.Get(), Data: tcpRule}, nil
+			return &models.GetTCPConnectionRuleOKBody{Version: c.Cache.Version.Get(transactionID), Data: tcpRule}, nil
 		}
 	}
 	tcpRuleStr, err := c.executeLBCTL("l7-service-tcpreqconn-show", transactionID, frontend, strconv.FormatInt(id, 10))
@@ -52,7 +52,7 @@ func (c *Client) GetTCPConnectionRule(id int64, frontend string, transactionID s
 
 	c.parseObject(tcpRuleStr, tcpRule)
 
-	v, err := c.GetVersion()
+	v, err := c.GetVersion(transactionID)
 	if err != nil {
 		return nil, err
 	}

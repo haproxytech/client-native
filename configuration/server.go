@@ -13,7 +13,7 @@ func (c *Client) GetServers(backend string, transactionID string) (*models.GetSe
 	if c.Cache.Enabled() {
 		servers, found := c.Cache.Servers.Get(backend, transactionID)
 		if found {
-			return &models.GetServersOKBody{Version: c.Cache.Version.Get(), Data: servers}, nil
+			return &models.GetServersOKBody{Version: c.Cache.Version.Get(transactionID), Data: servers}, nil
 		}
 	}
 	serversString, err := c.executeLBCTL("l7-server-dump", transactionID, backend)
@@ -23,7 +23,7 @@ func (c *Client) GetServers(backend string, transactionID string) (*models.GetSe
 
 	servers := c.parseServers(serversString)
 
-	v, err := c.GetVersion()
+	v, err := c.GetVersion(transactionID)
 	if err != nil {
 		return nil, err
 	}
@@ -40,7 +40,7 @@ func (c *Client) GetServer(name string, backend string, transactionID string) (*
 	if c.Cache.Enabled() {
 		server, found := c.Cache.Servers.GetOne(name, backend, transactionID)
 		if found {
-			return &models.GetServerOKBody{Version: c.Cache.Version.Get(), Data: server}, nil
+			return &models.GetServerOKBody{Version: c.Cache.Version.Get(transactionID), Data: server}, nil
 		}
 	}
 	serverStr, err := c.executeLBCTL("l7-server-show", transactionID, backend, name)
@@ -51,7 +51,7 @@ func (c *Client) GetServer(name string, backend string, transactionID string) (*
 
 	c.parseObject(serverStr, server)
 
-	v, err := c.GetVersion()
+	v, err := c.GetVersion(transactionID)
 	if err != nil {
 		return nil, err
 	}

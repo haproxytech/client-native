@@ -13,7 +13,7 @@ func (c *Client) GetBackends(transactionID string) (*models.GetBackendsOKBody, e
 	if c.Cache.Enabled() {
 		backends, found := c.Cache.Backends.Get(transactionID)
 		if found {
-			return &models.GetBackendsOKBody{Version: c.Cache.Version.Get(), Data: backends}, nil
+			return &models.GetBackendsOKBody{Version: c.Cache.Version.Get(transactionID), Data: backends}, nil
 		}
 	}
 
@@ -24,7 +24,7 @@ func (c *Client) GetBackends(transactionID string) (*models.GetBackendsOKBody, e
 
 	backends := c.parseBackends(backendsString)
 
-	v, err := c.GetVersion()
+	v, err := c.GetVersion(transactionID)
 	if err != nil {
 		return nil, err
 	}
@@ -41,7 +41,7 @@ func (c *Client) GetBackend(name string, transactionID string) (*models.GetBacke
 	if c.Cache.Enabled() {
 		backend, found := c.Cache.Backends.GetOne(name, transactionID)
 		if found {
-			return &models.GetBackendOKBody{Version: c.Cache.Version.Get(), Data: backend}, nil
+			return &models.GetBackendOKBody{Version: c.Cache.Version.Get(transactionID), Data: backend}, nil
 		}
 	}
 
@@ -53,7 +53,7 @@ func (c *Client) GetBackend(name string, transactionID string) (*models.GetBacke
 
 	c.parseObject(backendStr, backend)
 
-	v, err := c.GetVersion()
+	v, err := c.GetVersion(transactionID)
 	if err != nil {
 		return nil, err
 	}

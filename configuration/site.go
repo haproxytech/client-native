@@ -22,7 +22,7 @@ func (c *Client) GetSites(transactionID string) (*models.GetSitesOKBody, error) 
 
 	sites := c.parseSites(response)
 
-	v, err := c.GetVersion()
+	v, err := c.GetVersion(transactionID)
 	if err != nil {
 		return nil, err
 	}
@@ -43,7 +43,7 @@ func (c *Client) GetSite(name string, transactionID string) (*models.GetSiteOKBo
 		return nil, err
 	}
 
-	v, err := c.GetVersion()
+	v, err := c.GetVersion(transactionID)
 	if err != nil {
 		return nil, err
 	}

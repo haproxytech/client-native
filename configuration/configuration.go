@@ -26,8 +26,8 @@ const (
 	DefaultUseCache bool = false
 	// DefaultLBCTLPath sane default for path to lbctl
 	DefaultLBCTLPath string = "/usr/sbin/lbctl"
-	// DefaultLBCTLTmpPath sane default for path for lbctl transactions
-	DefaultLBCTLTmpPath string = "/tmp/lbctl"
+	// DefaultTransactionDir sane default for path for transactions
+	DefaultTransactionDir string = "/tmp/haproxy"
 )
 
 // ClientParams is just a placeholder for all client options
@@ -38,7 +38,7 @@ type ClientParams struct {
 	UseValidation           bool
 	UseCache                bool
 	LBCTLPath               string
-	LBCTLTmpPath            string
+	TransactionDir          string
 }
 
 // Client configuration client
@@ -57,7 +57,7 @@ func DefaultClient() (*Client, error) {
 		UseValidation:           DefaultUseValidation,
 		UseCache:                DefaultUseCache,
 		LBCTLPath:               DefaultLBCTLPath,
-		LBCTLTmpPath:            DefaultLBCTLTmpPath,
+		TransactionDir:          DefaultTransactionDir,
 	}
 	c := &Client{}
 	err := c.Init(p)
@@ -75,8 +75,8 @@ func (c *Client) Init(options ClientParams) error {
 		options.LBCTLPath = DefaultLBCTLPath
 	}
 
-	if options.LBCTLTmpPath == "" {
-		options.LBCTLTmpPath = DefaultLBCTLTmpPath
+	if options.TransactionDir == "" {
+		options.TransactionDir = DefaultTransactionDir
 	}
 
 	if options.ConfigurationFile == "" {
@@ -96,7 +96,7 @@ func (c *Client) Init(options ClientParams) error {
 	c.Cache = cache.Cache{}
 
 	if c.UseCache {
-		v, err := c.GetVersion()
+		v, err := c.GetVersion("")
 		if err != nil {
 			return err
 		}
@@ -113,21 +113,32 @@ func (c *Client) Init(options ClientParams) error {
 
 // GetGlobalVersion returns global configuration file version
 func (c *Client) GetGlobalVersion() (int64, error) {
-	return c.getVersion("global")
+	return c.getVersion("global", "")
 }
 
 // GetVersion returns configuration file version
-func (c *Client) GetVersion() (int64, error) {
-	return c.getVersion("config")
+func (c *Client) GetVersion(transaction string) (int64, error) {
+	v, err := c.getVersion("config", transaction)
+	if err == nil && c.Cache.Enabled() {
+		c.Cache.Version.Set(v, transaction)
+	}
+	return v, err
 }
 
-func (c *Client) getVersion(t string) (int64, error) {
+func (c *Client) getVersion(t string, transaction string) (int64, error) {
 	var file *os.File
 	var err error
 	if t == "global" {
 		file, err = os.Open(c.GlobalConfigurationFile)
 	} else {
-		file, err = os.Open(c.ConfigurationFile)
+		if transaction == "" {
+			file, err = os.Open(c.ConfigurationFile)
+		} else {
+			file, err = os.Open(c.getTransactionFile(c.ConfigurationFile, transaction))
+			if err != nil && os.IsNotExist(err) {
+				file, err = os.Open(c.getFailedTransactionFile(c.ConfigurationFile, transaction))
+			}
+		}
 	}
 
 	if err != nil {
@@ -135,6 +146,10 @@ func (c *Client) getVersion(t string) (int64, error) {
 	}
 	defer file.Close()
 
+	return c.readVersionFromFile(file)
+}
+
+func (c *Client) readVersionFromFile(file *os.File) (int64, error) {
 	scanner := bufio.NewScanner(file)
 	// Read only first line, version MUST BE on the first line
 	lineNo := 0
@@ -145,11 +160,11 @@ func (c *Client) getVersion(t string) (int64, error) {
 				if strings.HasPrefix(line, "# _version=") {
 					w := strings.Split(line, "=")
 					if len(w) != 2 {
-						return c.setInitialVersion(true, t)
+						return c.setInitialVersion(true, file)
 					}
 					version, err := strconv.ParseInt(w[1], 10, 64)
 					if err != nil {
-						return c.setInitialVersion(true, t)
+						return c.setInitialVersion(true, file)
 					}
 					return version, nil
 				}
@@ -160,24 +175,16 @@ func (c *Client) getVersion(t string) (int64, error) {
 		}
 	}
 	if err := scanner.Err(); err != nil {
-		return c.setInitialVersion(false, t)
+		return c.setInitialVersion(false, file)
 	}
-	return c.setInitialVersion(false, t)
+	return c.setInitialVersion(false, file)
 }
 
-func (c *Client) setInitialVersion(hasVersion bool, t string) (int64, error) {
-	var cFile string
-	var err error
-	if t == "global" {
-		cFile = c.GlobalConfigurationFile
-	} else {
-		cFile = c.ConfigurationFile
-	}
-
-	input, err := ioutil.ReadFile(cFile)
-
+func (c *Client) setInitialVersion(hasVersion bool, file *os.File) (int64, error) {
+	var input []byte
+	_, err := file.Read(input)
 	if err != nil {
-		return 0, NewConfError(ErrCannotReadConfFile, fmt.Sprintf("Cannot read configuration file %v: %v", cFile, err.Error()))
+		return 0, NewConfError(ErrCannotReadConfFile, fmt.Sprintf("Cannot read configuration file %v: %v", file.Name(), err.Error()))
 	}
 
 	inputStr := string(input)
@@ -190,15 +197,10 @@ func (c *Client) setInitialVersion(hasVersion bool, t string) (int64, error) {
 	}
 
 	output := fmt.Sprintf("# _version=1\n%s", inputStr)
-	if err = ioutil.WriteFile(cFile, []byte(output), 0666); err != nil {
-		return 0, NewConfError(ErrCannotSetVersion, fmt.Sprintf("Cannot set initial version in file %v: %v", cFile, err.Error()))
+	if _, err = file.Write([]byte(output)); err != nil {
+		return 0, NewConfError(ErrCannotSetVersion, fmt.Sprintf("Cannot set initial version in file %v: %v", file.Name(), err.Error()))
 	}
 	return 0, nil
-}
-
-func (c *Client) checkVersion(version int64) (bool, error) {
-	v, err := c.GetVersion()
-	return v == version, err
 }
 
 func (c *Client) incrementVersion() error {
@@ -208,7 +210,7 @@ func (c *Client) incrementVersion() error {
 		return NewConfError(ErrCannotReadVersion, fmt.Sprintf("Cannot read version from file %v: %v", c.ConfigurationFile, err.Error()))
 	}
 
-	v, err := c.GetVersion()
+	v, err := c.GetVersion("")
 	if err != nil {
 		return err
 	}
@@ -222,7 +224,7 @@ func (c *Client) incrementVersion() error {
 		return NewConfError(ErrCannotSetVersion, fmt.Sprintf("Cannot increment version in file %v: %v", c.ConfigurationFile, err.Error()))
 	}
 	if c.Cache.Enabled() {
-		c.Cache.Version.Set(v + 1)
+		c.Cache.Version.Set(v+1, "")
 	}
 	return nil
 }
@@ -260,7 +262,7 @@ func (c *Client) checkTransactionOrVersion(transactionID string, version int64, 
 	} else if transactionID != "" {
 		t = transactionID
 	} else {
-		v, err := c.GetVersion()
+		v, err := c.GetVersion("")
 		if err != nil {
 			return "", err
 		}

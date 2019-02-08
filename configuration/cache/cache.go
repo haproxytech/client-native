@@ -97,8 +97,8 @@ type tcpContResCache struct {
 }
 
 type versionCache struct {
-	v  int64
-	mu sync.RWMutex
+	items map[string]int64
+	mu    sync.RWMutex
 }
 
 type Cache struct {
@@ -122,7 +122,8 @@ type Cache struct {
 
 func (c *Cache) Init(v int64) {
 	c.enabled = true
-	c.Version.Set(v)
+	c.Version.items = make(map[string]int64)
+	c.Version.Set(v, "")
 
 	c.Frontends.items = make(map[string]map[string]models.Frontend)
 	c.Backends.items = make(map[string]map[string]models.Backend)
@@ -141,7 +142,8 @@ func (c *Cache) Init(v int64) {
 	c.InvalidateCache()
 }
 
-func (c *Cache) InitTransactionCache(t string) {
+func (c *Cache) InitTransactionCache(t string, v int64) {
+	c.Version.Set(v, t)
 	c.Frontends.items[t] = make(map[string]models.Frontend)
 	c.Backends.items[t] = make(map[string]models.Backend)
 	c.Servers.items[t] = make(map[string]servers)
@@ -159,6 +161,7 @@ func (c *Cache) InitTransactionCache(t string) {
 }
 
 func (c *Cache) DeleteTransactionCache(t string) {
+	delete(c.Version.items, t)
 	delete(c.Frontends.items, t)
 	delete(c.Backends.items, t)
 	delete(c.Servers.items, t)
@@ -219,22 +222,22 @@ func (c *Cache) Enabled() bool {
 	return c.enabled
 }
 
-func (vc *versionCache) Get() int64 {
+func (vc *versionCache) Get(transaction string) int64 {
 	vc.mu.RLock()
 	defer vc.mu.RUnlock()
-	return vc.v
+	return vc.items[transaction]
 }
 
-func (vc *versionCache) Set(v int64) {
+func (vc *versionCache) Set(v int64, transaction string) {
 	vc.mu.Lock()
 	defer vc.mu.Unlock()
-	vc.v = v
+	vc.items[transaction] = v
 }
 
 func (vc *versionCache) Increment() {
 	vc.mu.Lock()
 	defer vc.mu.Unlock()
-	vc.v++
+	vc.items[""]++
 }
 
 func (fc *frontendCache) Invalidate() {

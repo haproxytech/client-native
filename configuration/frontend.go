@@ -13,7 +13,7 @@ func (c *Client) GetFrontends(transactionID string) (*models.GetFrontendsOKBody,
 	if c.Cache.Enabled() {
 		frontends, found := c.Cache.Frontends.Get(transactionID)
 		if found {
-			return &models.GetFrontendsOKBody{Version: c.Cache.Version.Get(), Data: frontends}, nil
+			return &models.GetFrontendsOKBody{Version: c.Cache.Version.Get(transactionID), Data: frontends}, nil
 		}
 	}
 	frontendsStr, err := c.executeLBCTL("l7-service-dump", transactionID)
@@ -22,7 +22,7 @@ func (c *Client) GetFrontends(transactionID string) (*models.GetFrontendsOKBody,
 	}
 	frontends := c.parseFrontends(frontendsStr)
 
-	v, err := c.GetVersion()
+	v, err := c.GetVersion(transactionID)
 	if err != nil {
 		return nil, err
 	}
@@ -39,7 +39,7 @@ func (c *Client) GetFrontend(name string, transactionID string) (*models.GetFron
 	if c.Cache.Enabled() {
 		frontend, found := c.Cache.Frontends.GetOne(name, transactionID)
 		if found {
-			return &models.GetFrontendOKBody{Version: c.Cache.Version.Get(), Data: frontend}, nil
+			return &models.GetFrontendOKBody{Version: c.Cache.Version.Get(transactionID), Data: frontend}, nil
 		}
 	}
 	frontendStr, err := c.executeLBCTL("l7-service-show", transactionID, name)
@@ -50,7 +50,7 @@ func (c *Client) GetFrontend(name string, transactionID string) (*models.GetFron
 
 	c.parseObject(frontendStr, frontend)
 
-	v, err := c.GetVersion()
+	v, err := c.GetVersion(transactionID)
 	if err != nil {
 		return nil, err
 	}

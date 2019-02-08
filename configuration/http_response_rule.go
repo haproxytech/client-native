@@ -15,7 +15,7 @@ func (c *Client) GetHTTPResponseRules(parentType, parentName string, transaction
 	if c.Cache.Enabled() {
 		httpRules, found := c.Cache.HttpResponseRules.Get(parentName, parentType, transactionID)
 		if found {
-			return &models.GetHTTPResponseRulesOKBody{Version: c.Cache.Version.Get(), Data: httpRules}, nil
+			return &models.GetHTTPResponseRulesOKBody{Version: c.Cache.Version.Get(transactionID), Data: httpRules}, nil
 		}
 	}
 	lbctlType := typeToLbctlType(parentType)
@@ -30,7 +30,7 @@ func (c *Client) GetHTTPResponseRules(parentType, parentName string, transaction
 
 	httpRules := c.parseHTTPResponseRules(httpRulesStr)
 
-	v, err := c.GetVersion()
+	v, err := c.GetVersion(transactionID)
 	if err != nil {
 		return nil, err
 	}
@@ -46,7 +46,7 @@ func (c *Client) GetHTTPResponseRule(id int64, parentType, parentName string, tr
 	if c.Cache.Enabled() {
 		httpRule, found := c.Cache.HttpResponseRules.GetOne(id, parentName, parentType, transactionID)
 		if found {
-			return &models.GetHTTPResponseRuleOKBody{Version: c.Cache.Version.Get(), Data: httpRule}, nil
+			return &models.GetHTTPResponseRuleOKBody{Version: c.Cache.Version.Get(transactionID), Data: httpRule}, nil
 		}
 	}
 	lbctlType := typeToLbctlType(parentType)
@@ -62,7 +62,7 @@ func (c *Client) GetHTTPResponseRule(id int64, parentType, parentName string, tr
 
 	c.parseObject(httpRuleStr, httpRule)
 
-	v, err := c.GetVersion()
+	v, err := c.GetVersion(transactionID)
 	if err != nil {
 		return nil, err
 	}

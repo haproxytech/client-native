@@ -187,7 +187,7 @@ func prepareClient(path string, globalPath string) *Client {
 		UseValidation:           true,
 		UseCache:                true,
 		LBCTLPath:               "/usr/sbin/lbctl",
-		LBCTLTmpPath:            "/tmp/lbctl",
+		TransactionDir:          "/tmp/haproxy",
 	}
 	c.Init(p)
 	return &c

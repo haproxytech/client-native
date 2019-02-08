@@ -18,12 +18,7 @@ func (c *Client) executeLBCTL(command string, transaction string, args ...string
 	// fmt.Println("executeLBCTL: transaction:" + transaction)
 	// fmt.Printf("executeLBCTL: args: %v \n", args)
 
-	var lbctlArgs []string
-	if transaction == "" {
-		lbctlArgs = []string{"-S", "root", command}
-	} else {
-		lbctlArgs = []string{"-T", transaction, command}
-	}
+	lbctlArgs := []string{"-S", "root", command}
 	lbctlArgs = append(lbctlArgs, args...)
 
 	cmd := exec.Command(c.LBCTLPath, lbctlArgs...)
@@ -31,19 +26,26 @@ func (c *Client) executeLBCTL(command string, transaction string, args ...string
 	cmd.Env = append(cmd.Env, "LBCTL_MODULES=l7")
 	cmd.Env = append(cmd.Env, "LBCTL_L7_SVC_APPLY_CMD=true")
 
+	confFile := c.ConfigurationFile
+
+	if transaction != "" {
+		confFile = c.getTransactionFile(confFile, transaction)
+		// If transaction file does not exist, use the failed transactions dir
+		_, err := os.Stat(confFile)
+		if err != nil && os.IsNotExist(err) {
+			confFile = c.getFailedTransactionFile(c.ConfigurationFile, transaction)
+		}
+	}
+
 	if c.ConfigurationFile != "" {
-		cmd.Env = append(cmd.Env, "LBCTL_L7_HAPROXY_CONFIG="+c.ConfigurationFile)
+		cmd.Env = append(cmd.Env, "LBCTL_L7_HAPROXY_CONFIG="+confFile)
 		if c.Haproxy != "" {
-			cmd.Env = append(cmd.Env, "LBCTL_L7_SVC_CHECK_CMD="+c.Haproxy+" -f "+c.GlobalConfigurationFile+" -f "+c.ConfigurationFile+" -c")
+			cmd.Env = append(cmd.Env, "LBCTL_L7_SVC_CHECK_CMD="+c.Haproxy+" -f "+c.GlobalConfigurationFile+" -f "+confFile+" -c")
 		} else {
 			cmd.Env = append(cmd.Env, "LBCTL_L7_SVC_CHECK_CMD=true")
 		}
 	} else {
 		cmd.Env = append(cmd.Env, "LBCTL_L7_SVC_CHECK_CMD=true")
-	}
-
-	if c.LBCTLTmpPath != "" {
-		cmd.Env = append(cmd.Env, "LBCTL_TRANS_DIR="+c.LBCTLTmpPath)
 	}
 
 	var stdout, stderr bytes.Buffer
