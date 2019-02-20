@@ -1,10 +1,12 @@
 package configuration
 
 import (
-	"strconv"
-	"strings"
+	"fmt"
 
 	strfmt "github.com/go-openapi/strfmt"
+	parser "github.com/haproxytech/config-parser"
+	parser_errors "github.com/haproxytech/config-parser/errors"
+	"github.com/haproxytech/config-parser/types"
 	"github.com/haproxytech/models"
 )
 
@@ -17,18 +19,22 @@ func (c *Client) GetServerSwitchingRules(backend string, transactionID string) (
 			return &models.GetServerSwitchingRulesOKBody{Version: c.Cache.Version.Get(transactionID), Data: srvRules}, nil
 		}
 	}
-	srvRulesString, err := c.executeLBCTL("l7-farm-useserver-dump", transactionID, backend)
-	if err != nil {
+	if err := c.ConfigParser.LoadData(c.getTransactionFile(transactionID)); err != nil {
 		return nil, err
 	}
 
-	srvRules := c.parseServerSwitchingRules(srvRulesString)
+	srvRules, err := c.parseServerSwitchingRules(backend)
+	if err != nil {
+		if err == parser_errors.SectionMissingErr {
+			return nil, NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("Backend %s does not exist", backend))
+		}
+		return nil, err
+	}
 
 	v, err := c.GetVersion(transactionID)
 	if err != nil {
 		return nil, err
 	}
-
 	if c.Cache.Enabled() {
 		c.Cache.ServerSwitchingRules.SetAll(backend, transactionID, srvRules)
 	}
@@ -44,18 +50,29 @@ func (c *Client) GetServerSwitchingRule(id int64, backend string, transactionID 
 			return &models.GetServerSwitchingRuleOKBody{Version: c.Cache.Version.Get(transactionID), Data: srvRule}, nil
 		}
 	}
-	srvRuleStr, err := c.executeLBCTL("l7-farm-useserver-show", transactionID, backend, strconv.FormatInt(id, 10))
-	if err != nil {
+	if err := c.ConfigParser.LoadData(c.getTransactionFile(transactionID)); err != nil {
 		return nil, err
 	}
-	srvRule := &models.ServerSwitchingRule{ID: id}
 
-	c.parseObject(srvRuleStr, srvRule)
+	data, err := c.ConfigParser.GetOne(parser.Backends, backend, "use-server", int(id))
+	if err != nil {
+		if err == parser_errors.SectionMissingErr {
+			return nil, NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("Backend %s does not exist", backend))
+		}
+		if err == parser_errors.FetchError {
+			return nil, NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("Server Switching Rule %v does not exist in backend %s", id, backend))
+		}
+		return nil, err
+	}
+
+	srvRule := parseServerSwitchingRule(data.(types.UseServer))
+	srvRule.ID = &id
 
 	v, err := c.GetVersion(transactionID)
 	if err != nil {
 		return nil, err
 	}
+
 	if c.Cache.Enabled() {
 		c.Cache.ServerSwitchingRules.Set(id, backend, transactionID, srvRule)
 	}
@@ -66,8 +83,22 @@ func (c *Client) GetServerSwitchingRule(id int64, backend string, transactionID 
 // DeleteServerSwitchingRule deletes a server switching rule in configuration. One of version or transactionID is
 // mandatory. Returns error on fail, nil on success.
 func (c *Client) DeleteServerSwitchingRule(id int64, backend string, transactionID string, version int64) error {
-	err := c.deleteObject(strconv.FormatInt(id, 10), "useserver", backend, "farm", transactionID, version)
+	t, err := c.loadDataForChange(transactionID, version)
 	if err != nil {
+		return err
+	}
+
+	if err := c.ConfigParser.Delete(parser.Backends, backend, "use-server", int(id)); err != nil {
+		if err == parser_errors.SectionMissingErr {
+			return NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("Backend %s does not exist", backend))
+		}
+		if err == parser_errors.FetchError {
+			return NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("Server Switching Rule %v does not exist in backend %s", id, backend))
+		}
+		return err
+	}
+
+	if err := c.saveData(t, transactionID); err != nil {
 		return err
 	}
 	if c.Cache.Enabled() {
@@ -85,10 +116,26 @@ func (c *Client) CreateServerSwitchingRule(backend string, data *models.ServerSw
 			return NewConfError(ErrValidationError, validationErr.Error())
 		}
 	}
-	err := c.createObject(strconv.FormatInt(data.ID, 10), "useserver", backend, "farm", data, nil, transactionID, version)
+	t, err := c.loadDataForChange(transactionID, version)
 	if err != nil {
 		return err
 	}
+
+	if err := c.ConfigParser.Insert(parser.Backends, backend, "use-server", serializeServerSwitchingRule(*data), int(*data.ID)); err != nil {
+		if err == parser_errors.IndexOutOfRange {
+			return c.errAndDeleteTransaction(NewConfError(ErrObjectIndexOutOfRange,
+				fmt.Sprintf("Server Switching Rule with id %v in backend %s out of range", int(*data.ID), backend)), t, transactionID == "")
+		}
+		if err == parser_errors.SectionMissingErr {
+			return NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("Backend %s does not exist", backend))
+		}
+		return c.errAndDeleteTransaction(err, t, transactionID == "")
+	}
+
+	if err := c.saveData(t, transactionID); err != nil {
+		return err
+	}
+
 	if c.Cache.Enabled() {
 		c.Cache.ServerSwitchingRules.InvalidateBackend(transactionID, backend)
 	}
@@ -104,13 +151,30 @@ func (c *Client) EditServerSwitchingRule(id int64, backend string, data *models.
 			return NewConfError(ErrValidationError, validationErr.Error())
 		}
 	}
-	ondiskSr, err := c.GetServerSwitchingRule(id, backend, transactionID)
+	t, err := c.loadDataForChange(transactionID, version)
 	if err != nil {
 		return err
 	}
 
-	err = c.editObject(strconv.FormatInt(data.ID, 10), "useserver", backend, "farm", data, ondiskSr, nil, transactionID, version)
-	if err != nil {
+	if _, err := c.ConfigParser.GetOne(parser.Backends, backend, "use-server", int(id)); err != nil {
+		if err == parser_errors.SectionMissingErr {
+			return NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("Backend %s does not exist", backend))
+		}
+		if err == parser_errors.FetchError {
+			return NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("Server Switching Rule %v does not exist in backend %s", id, backend))
+		}
+		return err
+	}
+
+	if err := c.ConfigParser.Set(parser.Backends, backend, "use-server", serializeServerSwitchingRule(*data), int(id)); err != nil {
+		if err == parser_errors.IndexOutOfRange {
+			return c.errAndDeleteTransaction(NewConfError(ErrObjectIndexOutOfRange,
+				fmt.Sprintf("Server Switching Rule with id %v in backend %s out of range", int(*data.ID), backend)), t, transactionID == "")
+		}
+		return c.errAndDeleteTransaction(err, t, transactionID == "")
+	}
+
+	if err := c.saveData(t, transactionID); err != nil {
 		return err
 	}
 	if c.Cache.Enabled() {
@@ -119,21 +183,41 @@ func (c *Client) EditServerSwitchingRule(id int64, backend string, data *models.
 	return nil
 }
 
-func (c *Client) parseServerSwitchingRules(response string) models.ServerSwitchingRules {
-	srvRules := make(models.ServerSwitchingRules, 0, 1)
-	for _, srvRulesStr := range strings.Split(response, "\n\n") {
-		if strings.TrimSpace(srvRulesStr) == "" {
-			continue
-		}
-		idStr, _ := splitHeaderLine(srvRulesStr)
-		id, err := strconv.ParseInt(idStr, 10, 64)
-		if err != nil {
-			id = 0
-		}
+func (c *Client) parseServerSwitchingRules(backend string) (models.ServerSwitchingRules, error) {
+	sr := models.ServerSwitchingRules{}
 
-		srvRulesObj := &models.ServerSwitchingRule{ID: id}
-		c.parseObject(srvRulesStr, srvRulesObj)
-		srvRules = append(srvRules, srvRulesObj)
+	data, err := c.ConfigParser.Get(parser.Backends, backend, "use-server", false)
+	if err != nil {
+		if err == parser_errors.FetchError {
+			return sr, nil
+		}
+		return nil, err
 	}
-	return srvRules
+
+	sRules := data.([]types.UseServer)
+	for i, sRule := range sRules {
+		id := int64(i)
+		s := parseServerSwitchingRule(sRule)
+		if s != nil {
+			s.ID = &id
+			sr = append(sr, s)
+		}
+	}
+	return sr, nil
+}
+
+func parseServerSwitchingRule(us types.UseServer) *models.ServerSwitchingRule {
+	return &models.ServerSwitchingRule{
+		TargetServer: us.Name,
+		Cond:         us.Cond,
+		CondTest:     us.CondTest,
+	}
+}
+
+func serializeServerSwitchingRule(sRule models.ServerSwitchingRule) types.UseServer {
+	return types.UseServer{
+		Name:     sRule.TargetServer,
+		Cond:     sRule.Cond,
+		CondTest: sRule.CondTest,
+	}
 }

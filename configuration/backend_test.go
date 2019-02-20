@@ -26,59 +26,53 @@ func TestGetBackends(t *testing.T) {
 		if b.Name != "test" && b.Name != "test_2" {
 			t.Errorf("Expected only test or test_2 backend, %v found", b.Name)
 		}
-		if b.AdvCheck != "http" {
-			t.Errorf("%v: Adv check not http: %v", b.Name, b.AdvCheck)
+		if b.Httpchk.Method != "HEAD" {
+			t.Errorf("%v: Httpchk.Method not HEAD: %v", b.Name, b.Httpchk.Method)
 		}
-		if b.Protocol != "http" {
-			t.Errorf("%v: Protocol not http: %v", b.Name, b.Protocol)
+		if b.Httpchk.URI != "/" {
+			t.Errorf("%v: Httpchk.URI not HEAD: %v", b.Name, b.Httpchk.URI)
 		}
-		if b.Balance != "roundrobin" {
-			t.Errorf("%v: Balance not roundrobin: %v", b.Name, b.Balance)
+		if b.Mode != "http" {
+			t.Errorf("%v: Mode not http: %v", b.Name, b.Mode)
 		}
-		if b.Log != "enabled" {
-			t.Errorf("%v: Log not enabled: %v", b.Name, b.Log)
+		if b.Balance.Algorithm != "roundrobin" {
+			t.Errorf("%v: Balance.Algorithm not roundrobin: %v", b.Name, b.Balance.Algorithm)
+		}
+		if b.Log != true {
+			t.Errorf("%v: Log not true: %v", b.Name, b.Log)
 		}
 		if b.LogFormat != "http" {
 			t.Errorf("%v: LogFormat not http: %v", b.Name, b.LogFormat)
 		}
-		if b.HTTPConnectionMode != "keep-alive" {
-			t.Errorf("%v: HTTPConnectionMode not keep-alive: %v", b.Name, b.HTTPConnectionMode)
+		if b.HTTPConnectionMode != "http-keep-alive" {
+			t.Errorf("%v: HTTPConnectionMode not http-keep-alive: %v", b.Name, b.HTTPConnectionMode)
 		}
-		if b.HTTPXffHeaderInsert != "enabled" {
-			t.Errorf("%v: HTTPXffHeaderInsert not enabled: %v", b.Name, b.HTTPXffHeaderInsert)
+		if b.Forwardfor != "enabled" {
+			t.Errorf("%v: Forwardfor not enabled: %v", b.Name, b.Forwardfor)
 		}
-		if b.AdvCheckHTTPMethod != "HEAD" {
-			t.Errorf("%v: AdvCheckHTTPMethod not HEAD: %v", b.Name, b.AdvCheckHTTPMethod)
+		if *b.DefaultServer.Fall != 2000 {
+			t.Errorf("%v: DefaultServer.Fall not 2000: %v", b.Name, *b.DefaultServer.Fall)
 		}
-		if b.AdvCheckHTTPURI != "/" {
-			t.Errorf("%v: AdvCheckHTTPURI not /: %v", b.Name, b.AdvCheckHTTPURI)
+		if *b.DefaultServer.Rise != 4000 {
+			t.Errorf("%v: DefaultServer.Rise not 4000: %v", b.Name, *b.DefaultServer.Rise)
 		}
-		if *b.CheckFall != 2 {
-			t.Errorf("%v: CheckFall not 2: %v", b.Name, *b.CheckFall)
+		if *b.DefaultServer.Inter != 5000 {
+			t.Errorf("%v: DefaultServer.Inter not 5000: %v", b.Name, *b.DefaultServer.Inter)
 		}
-		if *b.CheckRise != 4 {
-			t.Errorf("%v: CheckRise not 4: %v", b.Name, *b.CheckRise)
+		if *b.DefaultServer.Port != 8888 {
+			t.Errorf("%v: DefaultServer.Port not 8888: %v", b.Name, *b.DefaultServer.Port)
 		}
-		if *b.CheckInterval != 5 {
-			t.Errorf("%v: CheckInterval not 5: %v", b.Name, *b.CheckInterval)
+		if b.Contstats != "enabled" {
+			t.Errorf("%v: ContinuousStatistics not enabled: %v", b.Name, b.Contstats)
 		}
-		if *b.CheckPort != 8888 {
-			t.Errorf("%v: CheckPort not 8888: %v", b.Name, *b.CheckPort)
+		if b.Cookie != "BLA" {
+			t.Errorf("%v: HTTPCookieName not BLA: %v", b.Name, b.Cookie)
 		}
-		if b.ContinuousStatistics != "enabled" {
-			t.Errorf("%v: ContinuousStatistics not enabled: %v", b.Name, b.ContinuousStatistics)
+		if *b.CheckTimeout != 2000 {
+			t.Errorf("%v: CheckTimeout not 2000: %v", b.Name, *b.CheckTimeout)
 		}
-		if b.HTTPCookie != "enabled" {
-			t.Errorf("%v: HTTPCookie not enabled: %v", b.Name, b.HTTPCookie)
-		}
-		if b.HTTPCookieName != "BLA" {
-			t.Errorf("%v: HTTPCookieName not BLA: %v", b.Name, b.HTTPCookieName)
-		}
-		if *b.CheckTimeout != 2 {
-			t.Errorf("%v: CheckTimeout not 2: %v", b.Name, *b.CheckTimeout)
-		}
-		if *b.ServerInactivityTimeout != 3 {
-			t.Errorf("%v: ServerInactivityTimeout not 3: %v", b.Name, *b.ServerInactivityTimeout)
+		if *b.ServerTimeout != 3000 {
+			t.Errorf("%v: ServerTimeout not 3000: %v", b.Name, *b.ServerTimeout)
 		}
 	}
 
@@ -107,59 +101,53 @@ func TestGetBackend(t *testing.T) {
 	if b.Name != "test" {
 		t.Errorf("Expected only test, %v found", b.Name)
 	}
-	if b.AdvCheck != "http" {
-		t.Errorf("%v: Adv check not http: %v", b.Name, b.AdvCheck)
+	if b.Httpchk.Method != "HEAD" {
+		t.Errorf("%v: Httpchk.Method not HEAD: %v", b.Name, b.Httpchk.Method)
 	}
-	if b.Protocol != "http" {
-		t.Errorf("%v: Protocol not http: %v", b.Name, b.Protocol)
+	if b.Httpchk.URI != "/" {
+		t.Errorf("%v: Httpchk.URI not HEAD: %v", b.Name, b.Httpchk.URI)
 	}
-	if b.Balance != "roundrobin" {
-		t.Errorf("%v: Balance not roundrobin: %v", b.Name, b.Balance)
+	if b.Mode != "http" {
+		t.Errorf("%v: Mode not http: %v", b.Name, b.Mode)
 	}
-	if b.Log != "enabled" {
-		t.Errorf("%v: Log not enabled: %v", b.Name, b.Log)
+	if b.Balance.Algorithm != "roundrobin" {
+		t.Errorf("%v: Balance.Algorithm not roundrobin: %v", b.Name, b.Balance.Algorithm)
+	}
+	if b.Log != true {
+		t.Errorf("%v: Log not true: %v", b.Name, b.Log)
 	}
 	if b.LogFormat != "http" {
 		t.Errorf("%v: LogFormat not http: %v", b.Name, b.LogFormat)
 	}
-	if b.HTTPConnectionMode != "keep-alive" {
-		t.Errorf("%v: HTTPConnectionMode not keep-alive: %v", b.Name, b.HTTPConnectionMode)
+	if b.HTTPConnectionMode != "http-keep-alive" {
+		t.Errorf("%v: HTTPConnectionMode not http-keep-alive: %v", b.Name, b.HTTPConnectionMode)
 	}
-	if b.HTTPXffHeaderInsert != "enabled" {
-		t.Errorf("%v: HTTPXffHeaderInsert not enabled: %v", b.Name, b.HTTPXffHeaderInsert)
+	if b.Forwardfor != "enabled" {
+		t.Errorf("%v: Forwardfor not enabled: %v", b.Name, b.Forwardfor)
 	}
-	if b.AdvCheckHTTPMethod != "HEAD" {
-		t.Errorf("%v: AdvCheckHTTPMethod not HEAD: %v", b.Name, b.AdvCheckHTTPMethod)
+	if *b.DefaultServer.Fall != 2000 {
+		t.Errorf("%v: DefaultServer.Fall not 2000: %v", b.Name, *b.DefaultServer)
 	}
-	if b.AdvCheckHTTPURI != "/" {
-		t.Errorf("%v: AdvCheckHTTPURI not /: %v", b.Name, b.AdvCheckHTTPURI)
+	if *b.DefaultServer.Rise != 4000 {
+		t.Errorf("%v: DefaultServer.Rise not 4000: %v", b.Name, *b.DefaultServer.Rise)
 	}
-	if *b.CheckFall != 2 {
-		t.Errorf("%v: CheckFall not 2: %v", b.Name, *b.CheckFall)
+	if *b.DefaultServer.Inter != 5000 {
+		t.Errorf("%v: DefaultServer.Inter not 5000: %v", b.Name, *b.DefaultServer.Inter)
 	}
-	if *b.CheckRise != 4 {
-		t.Errorf("%v: CheckRise not 4: %v", b.Name, *b.CheckRise)
+	if *b.DefaultServer.Port != 8888 {
+		t.Errorf("%v: DefaultServer.Port not 8888: %v", b.Name, *b.DefaultServer.Port)
 	}
-	if *b.CheckInterval != 5 {
-		t.Errorf("%v: CheckInterval not 5: %v", b.Name, *b.CheckInterval)
+	if b.Contstats != "enabled" {
+		t.Errorf("%v: ContinuousStatistics not enabled: %v", b.Name, b.Contstats)
 	}
-	if *b.CheckPort != 8888 {
-		t.Errorf("%v: CheckPort not 8888: %v", b.Name, *b.CheckPort)
+	if b.Cookie != "BLA" {
+		t.Errorf("%v: HTTPCookieName not BLA: %v", b.Name, b.Cookie)
 	}
-	if b.ContinuousStatistics != "enabled" {
-		t.Errorf("%v: ContinuousStatistics not enabled: %v", b.Name, b.ContinuousStatistics)
+	if *b.CheckTimeout != 2000 {
+		t.Errorf("%v: CheckTimeout not 2000: %v", b.Name, *b.CheckTimeout)
 	}
-	if b.HTTPCookie != "enabled" {
-		t.Errorf("%v: HTTPCookie not enabled: %v", b.Name, b.HTTPCookie)
-	}
-	if b.HTTPCookieName != "BLA" {
-		t.Errorf("%v: HTTPCookieName not BLA: %v", b.Name, b.HTTPCookieName)
-	}
-	if *b.CheckTimeout != 2 {
-		t.Errorf("%v: CheckTimeout not 2: %v", b.Name, *b.CheckTimeout)
-	}
-	if *b.ServerInactivityTimeout != 3 {
-		t.Errorf("%v: ServerInactivityTimeout not 3: %v", b.Name, *b.ServerInactivityTimeout)
+	if *b.ServerTimeout != 3000 {
+		t.Errorf("%v: ServerTimeout not 3000: %v", b.Name, *b.ServerTimeout)
 	}
 
 	bJSON, err := b.MarshalBinary()
@@ -182,9 +170,9 @@ func TestCreateEditDeleteBackend(t *testing.T) {
 	tOut := int64(5)
 	b := &models.Backend{
 		Name:               "created",
-		Protocol:           "http",
-		Balance:            "hash-uri",
-		HTTPConnectionMode: "keep-alive",
+		Mode:               "http",
+		Balance:            &models.BackendBalance{Algorithm: "uri"},
+		HTTPConnectionMode: "http-keep-alive",
 		ConnectTimeout:     &tOut,
 	}
 
@@ -224,9 +212,9 @@ func TestCreateEditDeleteBackend(t *testing.T) {
 	tOut = int64(3)
 	b = &models.Backend{
 		Name:               "created",
-		Protocol:           "http",
-		Balance:            "roundrobin",
-		HTTPConnectionMode: "tunnel",
+		Mode:               "http",
+		Balance:            &models.BackendBalance{Algorithm: "roundrobin"},
+		HTTPConnectionMode: "http-tunnel",
 		ConnectTimeout:     &tOut,
 	}
 

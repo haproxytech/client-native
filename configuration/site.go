@@ -1,26 +1,27 @@
 package configuration
 
 import (
-	"errors"
 	"fmt"
 	"reflect"
 	"strconv"
-	"strings"
 
 	strfmt "github.com/go-openapi/strfmt"
 	"github.com/haproxytech/client-native/misc"
+	parser "github.com/haproxytech/config-parser"
 	"github.com/haproxytech/models"
 )
 
 // GetSites returns a struct with configuration version and an array of
 // configured sites. Returns error on fail.
 func (c *Client) GetSites(transactionID string) (*models.GetSitesOKBody, error) {
-	response, err := c.executeLBCTL("l7-dump", transactionID)
-	if err != nil {
+	if err := c.ConfigParser.LoadData(c.getTransactionFile(transactionID)); err != nil {
 		return nil, err
 	}
 
-	sites := c.parseSites(response)
+	sites, err := c.parseSites()
+	if err != nil {
+		return nil, err
+	}
 
 	v, err := c.GetVersion(transactionID)
 	if err != nil {
@@ -33,14 +34,13 @@ func (c *Client) GetSites(transactionID string) (*models.GetSitesOKBody, error) 
 // GetSite returns a struct with configuration version and a requested site.
 // Returns error on fail or if backend does not exist.
 func (c *Client) GetSite(name string, transactionID string) (*models.GetSiteOKBody, error) {
-	response, err := c.executeLBCTL("l7-dump", transactionID)
-	if err != nil {
+	if err := c.ConfigParser.LoadData(c.getTransactionFile(transactionID)); err != nil {
 		return nil, err
 	}
 
-	site, err := c.parseSite(response, name)
-	if err != nil {
-		return nil, err
+	site := c.parseSite(name)
+	if site == nil {
+		return nil, NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("Site %s does not exist", name))
 	}
 
 	v, err := c.GetVersion(transactionID)
@@ -64,32 +64,43 @@ func (c *Client) CreateSite(data *models.Site, transactionID string, version int
 		}
 	}
 	// start an implicit transaction for create site (multiple operations required) if not already given
-	t, err := c.checkTransactionOrVersion(transactionID, version, true)
+	t, err := c.loadDataForChange(transactionID, version)
 	if err != nil {
 		return err
 	}
 
 	//create frontend
-	err = c.createObject(data.Name, "service", "", "", data.Frontend, []string{"Listeners"}, t, 0)
-	if err != nil {
-		res = append(res, err)
-	}
+	frontend := serializeServiceToFrontend(data.Service, data.Name)
 
-	//create listeners
-	for _, l := range data.Frontend.Listeners {
-		//sanitize name
-		if l.Name == "" {
-			l.Name = l.Address + ":" + strconv.FormatInt(*l.Port, 10)
-		}
-		err = c.createObject(l.Name, "listener", data.Name, "", l, nil, t, 0)
+	if frontend != nil {
+		err = c.CreateFrontend(frontend, t, 0)
 		if err != nil {
 			res = append(res, err)
 		}
 	}
 
+	//create listeners
+	for _, l := range data.Service.Listeners {
+		//sanitize name
+		if l.Name == "" {
+			l.Name = l.Address + ":" + strconv.FormatInt(*l.Port, 10)
+		}
+		bind := serializeListenerToBind(l)
+		if bind != nil {
+			err = c.CreateBind(data.Name, bind, t, 0)
+			if err != nil {
+				res = append(res, err)
+			}
+		}
+	}
+
 	//create backends
-	for _, b := range data.Backends {
-		err = c.createObject(b.Name, "farm", "", "", b, []string{"Servers", "UseAs", "Cond", "CondTest"}, t, 0)
+	for _, b := range data.Farms {
+		backend := serializeFarmToBackend(b)
+		if backend == nil {
+			continue
+		}
+		err = c.CreateBackend(backend, t, 0)
 		if err != nil {
 			res = append(res, err)
 		}
@@ -99,7 +110,8 @@ func (c *Client) CreateSite(data *models.Site, transactionID string, version int
 			if s.Name == "" {
 				s.Name = s.Address + ":" + strconv.FormatInt(*s.Port, 10)
 			}
-			err = c.createObject(s.Name, "server", b.Name, "", s, nil, t, 0)
+			server := serializeSiteServer(s)
+			err = c.CreateServer(b.Name, server, t, 0)
 			if err != nil {
 				res = append(res, err)
 			}
@@ -111,11 +123,10 @@ func (c *Client) CreateSite(data *models.Site, transactionID string, version int
 		}
 	}
 	if len(res) > 0 {
-		return CompositeTransactionError(res...)
+		return c.errAndDeleteTransaction(CompositeTransactionError(res...), t, transactionID == "")
 	}
 
-	err = c.CommitTransaction(t)
-	if err != nil {
+	if err := c.saveData(t, transactionID); err != nil {
 		return err
 	}
 
@@ -134,7 +145,8 @@ func (c *Client) EditSite(name string, data *models.Site, transactionID string, 
 			return NewConfError(ErrValidationError, validationErr.Error())
 		}
 	}
-	t, err := c.checkTransactionOrVersion(transactionID, version, true)
+	// start an implicit transaction for create site (multiple operations required) if not already given
+	t, err := c.loadDataForChange(transactionID, version)
 	if err != nil {
 		return err
 	}
@@ -146,32 +158,34 @@ func (c *Client) EditSite(name string, data *models.Site, transactionID string, 
 	confS := site.Data
 
 	//edit frontend
-	if !reflect.DeepEqual(data.Frontend, confS.Frontend) {
-		err := c.editObject(name, "service", "", "", data.Frontend, confS.Frontend, []string{"Listeners"}, t, 0)
+	if !reflect.DeepEqual(data.Service, confS.Service) {
+		err := c.editService(data.Name, data.Service, t)
 		if err != nil {
 			res = append(res, err)
 		}
 		//compare listeners
-		if !reflect.DeepEqual(confS.Frontend.Listeners, data.Frontend.Listeners) {
+		if !reflect.DeepEqual(confS.Service.Listeners, data.Service.Listeners) {
 			//add missing listeners by name, edit existing
-			for _, l := range data.Frontend.Listeners {
-				listeners := make([]interface{}, len(confS.Frontend.Listeners))
-				for i := range confS.Frontend.Listeners {
-					listeners[i] = confS.Frontend.Listeners[i]
+			for _, l := range data.Service.Listeners {
+				listeners := make([]interface{}, len(confS.Service.Listeners))
+				for i := range confS.Service.Listeners {
+					listeners[i] = confS.Service.Listeners[i]
 				}
 
 				confLIface := misc.GetObjByField(listeners, "Name", l.Name)
 				if confLIface == nil {
 					// create
-					err = c.createObject(l.Name, "listener", data.Name, "", l, nil, t, 0)
-					if err != nil {
-						res = append(res, err)
+					bind := serializeListenerToBind(l)
+					if bind != nil {
+						err = c.CreateBind(data.Name, bind, t, 0)
+						if err != nil {
+							res = append(res, err)
+						}
 					}
 				} else {
-					confL := confLIface.(*models.SiteFrontendListenersItems)
+					confL := confLIface.(*models.SiteServiceListenersItems)
 					if !reflect.DeepEqual(l, confL) {
-						//edit
-						err = c.editObject(l.Name, "listener", data.Name, "", l, confL, nil, t, 0)
+						err := c.editListener(l.Name, data.Name, l, t)
 						if err != nil {
 							res = append(res, err)
 						}
@@ -181,13 +195,13 @@ func (c *Client) EditSite(name string, data *models.Site, transactionID string, 
 				}
 			}
 			//delete non existing listeners
-			for _, l := range confS.Frontend.Listeners {
-				listeners := make([]interface{}, len(data.Frontend.Listeners))
-				for i := range data.Frontend.Listeners {
-					listeners[i] = data.Frontend.Listeners[i]
+			for _, l := range confS.Service.Listeners {
+				listeners := make([]interface{}, len(data.Service.Listeners))
+				for i := range data.Service.Listeners {
+					listeners[i] = data.Service.Listeners[i]
 				}
 				if misc.GetObjByField(listeners, "Name", l.Name) == nil {
-					err = c.deleteObject(l.Name, "listener", data.Name, "", t, 0)
+					err = c.DeleteBind(l.Name, data.Name, t, 0)
 					if err != nil {
 						res = append(res, err)
 					}
@@ -195,40 +209,46 @@ func (c *Client) EditSite(name string, data *models.Site, transactionID string, 
 			}
 		}
 	}
-	bcks := make([]interface{}, len(confS.Backends))
-	for i := range confS.Backends {
-		bcks[i] = confS.Backends[i]
+	bcks := make([]interface{}, len(confS.Farms))
+	for i := range confS.Farms {
+		bcks[i] = confS.Farms[i]
 	}
 	defaultBck := ""
 	// check if backends changed
-	if !reflect.DeepEqual(confS.Backends, data.Backends) {
-		for _, b := range data.Backends {
+	if !reflect.DeepEqual(confS.Farms, data.Farms) {
+		for _, b := range data.Farms {
 			// add missing backends
 			confBIface := misc.GetObjByField(bcks, "Name", b.Name)
 			if confBIface == nil {
-				err = c.createObject(b.Name, "farm", "", "", b, []string{"Servers", "UseAs", "Cond", "CondTest"}, t, 0)
-				if err != nil {
-					res = append(res, err)
-				}
-				for _, s := range b.Servers {
-					//sanitize name
-					if s.Name == "" {
-						s.Name = s.Address + ":" + strconv.FormatInt(*s.Port, 10)
-					}
-					err = c.createObject(s.Name, "server", b.Name, "", s, nil, t, 0)
+				backend := serializeFarmToBackend(b)
+				if b != nil {
+					err = c.CreateBackend(backend, t, 0)
 					if err != nil {
 						res = append(res, err)
 					}
-				}
-				if b.UseAs == "default" && defaultBck != "" {
-					return NewConfError(ErrValidationError, fmt.Sprintf("Multiple default backends found in site: %v", name))
-				} else if b.UseAs == "default" && defaultBck == "" {
-					defaultBck = b.Name
-				}
-				//create bck-frontend relations
-				err = c.createBckFrontendRels(name, b, false, t)
-				if err != nil {
-					res = append(res, err)
+					for _, s := range b.Servers {
+						//sanitize name
+						if s.Name == "" {
+							s.Name = s.Address + ":" + strconv.FormatInt(*s.Port, 10)
+						}
+						server := serializeSiteServer(s)
+						if server != nil {
+							err := c.CreateServer(b.Name, server, t, 0)
+							if err != nil {
+								res = append(res, err)
+							}
+						}
+					}
+					if b.UseAs == "default" && defaultBck != "" {
+						return NewConfError(ErrValidationError, fmt.Sprintf("Multiple default backends found in site: %v", name))
+					} else if b.UseAs == "default" && defaultBck == "" {
+						defaultBck = b.Name
+					}
+					//create bck-frontend relations
+					err = c.createBckFrontendRels(name, b, false, t)
+					if err != nil {
+						res = append(res, err)
+					}
 				}
 			} else {
 				if b.UseAs == "default" && defaultBck != "" {
@@ -236,16 +256,16 @@ func (c *Client) EditSite(name string, data *models.Site, transactionID string, 
 				} else if b.UseAs == "default" && defaultBck == "" {
 					defaultBck = b.Name
 				}
-				confB := confBIface.(*models.SiteBackendsItems)
+				confB := confBIface.(*models.SiteFarmsItems)
 				if !reflect.DeepEqual(b, confB) {
 					// check if use as has changed
 					if b.UseAs != confB.UseAs {
-						err = c.createBckFrontendRels(name, b, true, t)
+						err := c.createBckFrontendRels(name, b, true, t)
 						if err != nil {
 							res = append(res, err)
 						}
 					}
-					err = c.editObject(b.Name, "farm", "", "", b, confB, []string{"Servers", "UseAs", "Cond", "CondTest"}, t, 0)
+					err := c.editFarm(b.Name, b, t)
 					if err != nil {
 						res = append(res, err)
 					}
@@ -257,15 +277,18 @@ func (c *Client) EditSite(name string, data *models.Site, transactionID string, 
 						confSrvIFace := misc.GetObjByField(servers, "Name", srv.Name)
 						if confSrvIFace == nil {
 							// create
-							err = c.createObject(srv.Name, "server", b.Name, "", srv, nil, t, 0)
-							if err != nil {
-								res = append(res, err)
+							server := serializeSiteServer(srv)
+							if server != nil {
+								err := c.CreateServer(b.Name, server, t, 0)
+								if err != nil {
+									res = append(res, err)
+								}
 							}
 						} else {
-							confSrv := confSrvIFace.(*models.SiteBackendsItemsServersItems)
+							confSrv := confSrvIFace.(*models.SiteFarmsItemsServersItems)
 							if !reflect.DeepEqual(srv, confSrv) {
 								//edit
-								err = c.editObject(srv.Name, "server", b.Name, "", srv, confSrv, nil, t, 0)
+								err := c.editSiteServer(srv.Name, b.Name, srv, t)
 								if err != nil {
 									res = append(res, err)
 								}
@@ -281,31 +304,32 @@ func (c *Client) EditSite(name string, data *models.Site, transactionID string, 
 					//delete non existing servers
 					for _, srv := range confB.Servers {
 						if misc.GetObjByField(servers, "Name", srv.Name) == nil {
-							err = c.deleteObject(srv.Name, "server", b.Name, "", t, 0)
+							err := c.DeleteServer(srv.Name, b.Name, t, 0)
 							if err != nil {
 								res = append(res, err)
 							}
 						}
 					}
+
 				}
 			}
 		}
-		bcks = make([]interface{}, len(data.Backends))
-		for i := range data.Backends {
-			bcks[i] = data.Backends[i]
+		bcks = make([]interface{}, len(data.Farms))
+		for i := range data.Farms {
+			bcks[i] = data.Farms[i]
 		}
 		// delete non existing backends and remove uses in frontends
-		for _, b := range confS.Backends {
+		for _, b := range confS.Farms {
 			if misc.GetObjByField(bcks, "Name", b.Name) == nil {
 				// default_bck
 				if b.UseAs == "conditional" {
 					// find the correct usefarm and remove it
-					err = c.removeUseFarm(name, b.Name, t)
+					err := c.removeUseFarm(name, b.Name, t)
 					if err != nil {
 						res = append(res, err)
 					}
 				}
-				err = c.deleteObject(b.Name, "farm", "", "", t, 0)
+				err := c.DeleteBackend(b.Name, t, 0)
 				if err != nil {
 					res = append(res, err)
 				}
@@ -338,12 +362,12 @@ func (c *Client) DeleteSite(name string, transactionID string, version int64) er
 	var err error
 
 	// start an implicit transaction for delete site (multiple operations required) if not already given
-	t, err := c.checkTransactionOrVersion(transactionID, version, true)
+	t, err := c.loadDataForChange(transactionID, version)
 	if err != nil {
 		return err
 	}
 
-	site, err := c.GetSite(name, transactionID)
+	site, err := c.GetSite(name, t)
 	if err != nil {
 		return err
 	}
@@ -352,7 +376,8 @@ func (c *Client) DeleteSite(name string, transactionID string, version int64) er
 	if err != nil {
 		res = append(res, err)
 	}
-	for _, b := range site.Data.Backends {
+
+	for _, b := range site.Data.Farms {
 		err = c.DeleteBackend(b.Name, t, 0)
 		if err != nil {
 			res = append(res, err)
@@ -363,282 +388,199 @@ func (c *Client) DeleteSite(name string, transactionID string, version int64) er
 		return CompositeTransactionError(res...)
 	}
 
-	err = c.CommitTransaction(t)
-	if err != nil {
+	if err := c.saveData(t, transactionID); err != nil {
 		return err
+	}
+
+	return nil
+}
+
+func (c *Client) parseSites() (models.Sites, error) {
+	sites := models.Sites{}
+	fNames, err := c.ConfigParser.SectionsGet(parser.Frontends)
+	if err != nil {
+		return nil, err
+	}
+
+	for _, s := range fNames {
+		site := c.parseSite(s)
+		if site != nil {
+			sites = append(sites, site)
+		}
+
+	}
+	return sites, nil
+}
+
+func (c *Client) parseSite(s string) *models.Site {
+	frontend := &models.Frontend{Name: s}
+	if err := c.parseSection(frontend, parser.Frontends, s); err != nil {
+		return nil
+	}
+	site := &models.Site{
+		Name: s,
+		Service: &models.SiteService{
+			HTTPConnectionMode: frontend.HTTPConnectionMode,
+			Log:                frontend.Log,
+			Maxconn:            frontend.Maxconn,
+			Mode:               frontend.Mode,
+			Listeners:          c.parseServiceListeners(s),
+		},
+		Farms: []*models.SiteFarmsItems{},
+	}
+
+	// Find backends using default_backend and use_backends
+	if frontend.DefaultBackend != "" {
+		// parse default backend
+		farm := c.parseFarm(frontend.DefaultBackend, "default", "", "")
+		if farm != nil {
+			site.Farms = append(site.Farms, farm)
+		}
+	}
+	ubs, err := c.parseBackendSwitchingRules(s)
+	if err == nil {
+		for _, ub := range ubs {
+			farm := c.parseFarm(ub.Name, "conditional", ub.Cond, ub.CondTest)
+			if farm != nil {
+				site.Farms = append(site.Farms, farm)
+			}
+		}
+	}
+	return site
+}
+
+func (c *Client) parseServiceListeners(service string) []*models.SiteServiceListenersItems {
+	listeners := []*models.SiteServiceListenersItems{}
+	binds, err := c.parseBinds(service)
+	if err == nil {
+		for _, b := range binds {
+			li := &models.SiteServiceListenersItems{
+				Address:        b.Address,
+				Name:           b.Name,
+				Port:           b.Port,
+				Ssl:            b.Ssl,
+				SslCertificate: b.SslCertificate,
+			}
+			listeners = append(listeners, li)
+		}
+	}
+	return listeners
+}
+
+func (c *Client) parseFarm(name string, useAs string, cond string, condTest string) *models.SiteFarmsItems {
+	backend := &models.Backend{Name: name}
+	if err := c.parseSection(backend, parser.Backends, name); err == nil {
+		farm := &models.SiteFarmsItems{
+			UseAs:    useAs,
+			Cond:     cond,
+			CondTest: condTest,
+			Log:      backend.Log,
+			Mode:     backend.Mode,
+			Name:     backend.Name,
+			Servers:  c.parseFarmServers(backend.Name),
+		}
+		if backend.Forwardfor == "enabled" {
+			farm.Forwardfor = true
+		}
+		if backend.Balance != nil {
+			farm.Balance = &models.SiteFarmsItemsBalance{
+				Algorithm: backend.Balance.Algorithm,
+				Arguments: backend.Balance.Arguments,
+			}
+		}
+		return farm
 	}
 	return nil
 }
 
-func (c *Client) parseSite(response string, name string) (*models.Site, error) {
-	bckCache := make(map[string]*models.SiteBackendsItems)
-	lCache := make([]*models.SiteFrontendListenersItems, 0, 1)
-	sCache := make(map[string][]*models.SiteBackendsItemsServersItems)
-	frBckRelsCache := make(map[string][]map[string]string)
+func (c *Client) parseFarmServers(farm string) []*models.SiteFarmsItemsServersItems {
+	servers := []*models.SiteFarmsItemsServersItems{}
 
-	site := &models.Site{}
-
-	for _, obj := range strings.Split(response, "\n\n") {
-		if strings.TrimSpace(obj) == "" {
-			continue
-		}
-		if strings.HasPrefix(obj, ".service") {
-			f := &models.SiteFrontend{}
-			n := strings.TrimSpace(obj[strings.Index(obj, ".service ")+9 : strings.Index(obj, "\n")])
-			if n != name {
-				continue
-			}
-
-			site.Name = n
-			c.parseObject(obj, f)
-			site.Frontend = f
-
-			if _, ok := frBckRelsCache[site.Name]; !ok {
-				frBckRelsCache[site.Name] = make([]map[string]string, 0, 1)
-			}
-			// parse frontend-backend relations
-			if strings.Contains(obj, "+default_farm") {
-				bckName := strings.TrimSpace(obj[strings.Index(obj, "+default_farm ")+14:])
-				bckName = bckName[:strings.Index(bckName, "\n")]
-				frBckRelsCache[site.Name] = append(frBckRelsCache[site.Name], map[string]string{bckName: "default"})
-			}
-		}
-
-		if strings.HasPrefix(obj, ".farm") {
-			b := &models.SiteBackendsItems{}
-			b.Name = strings.TrimSpace(obj[strings.Index(obj, ".farm ")+6 : strings.Index(obj, "\n")])
-			c.parseObject(obj, b)
-			bckCache[b.Name] = b
-		}
-
-		if strings.HasPrefix(obj, ".listener") {
-			n, parent := splitHeaderLine(obj)
-			l := &models.SiteFrontendListenersItems{Name: n}
-			if parent != name {
-				continue
-			}
-			c.parseObject(obj, l)
-			lCache = append(lCache, l)
-		}
-
-		if strings.HasPrefix(obj, ".server") {
-			n, parent := splitHeaderLine(obj)
-			if name == "" {
-				continue
-			}
-			s := &models.SiteBackendsItemsServersItems{Name: n}
-			c.parseObject(obj, s)
-			if a, ok := sCache[parent]; ok {
-				sCache[parent] = append(a, s)
-			} else {
-				a := make([]*models.SiteBackendsItemsServersItems, 0, 1)
-				sCache[parent] = append(a, s)
-			}
-		}
-
-		if strings.HasPrefix(obj, ".usefarm") {
-			f := ""
-			b := ""
-			val := ""
-			for _, line := range strings.Split(obj, "\n") {
-				if strings.HasPrefix(line, ".usefarm") {
-					w := strings.Split(line, " ")
-					f = w[len(w)-1]
-				} else if strings.HasPrefix(line, "+target_farm") {
-					b = strings.TrimSpace(strings.SplitN(line, " ", 2)[1])
-				} else if strings.HasPrefix(line, "+cond_test") {
-					w := strings.Split(line, " ")
-					val = val + " " + w[1]
-				} else if strings.HasPrefix(line, "+cond") {
-					w := strings.Split(line, " ")
-					val = w[1] + " " + val
-				}
-			}
-
-			if _, ok := frBckRelsCache[f]; !ok {
-				frBckRelsCache[f] = make([]map[string]string, 0, 1)
-			}
-
-			frBckRelsCache[f] = append(frBckRelsCache[f], map[string]string{b: val})
-		}
-	}
-	if site.Frontend == nil {
-		return nil, NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("Site %v does not exist", name))
+	srvs, err := c.parseServers(farm)
+	if err != nil {
+		return servers
 	}
 
-	// get listeners for frontend
-	site.Frontend.Listeners = lCache
-
-	// add backends
-	for _, bckObj := range frBckRelsCache[site.Name] {
-		for bck, val := range bckObj {
-			b := bckCache[bck]
-			if val == "default" {
-				b.UseAs = val
-			} else {
-				b.UseAs = "conditional"
-				split := strings.SplitN(val, " ", 2)
-				b.Cond = strings.TrimSpace(split[0])
-				b.CondTest = strings.TrimSpace(split[1])
-			}
-
-			site.Backends = append(site.Backends, b)
+	for _, s := range srvs {
+		server := &models.SiteFarmsItemsServersItems{
+			Name:           s.Name,
+			Address:        s.Address,
+			Port:           s.Port,
+			SslCertificate: s.SslCertificate,
+			Weight:         s.Weight,
 		}
+		if s.Ssl == "enabled" {
+			server.Ssl = true
+		}
+		servers = append(servers, server)
 	}
-
-	// get servers for backends
-	for _, bck := range site.Backends {
-		bck.Servers = sCache[bck.Name]
-	}
-	return site, nil
+	return servers
 }
 
-func (c *Client) parseSites(response string) models.Sites {
-	bckCache := make(map[string]*models.SiteBackendsItems)
-	lCache := make(map[string][]*models.SiteFrontendListenersItems)
-	sCache := make(map[string][]*models.SiteBackendsItemsServersItems)
-	sites := make([]*models.Site, 0, 1)
-	frBckRelsCache := make(map[string][]map[string]string)
-
-	for _, obj := range strings.Split(response, "\n\n") {
-		site := &models.Site{}
-		if strings.TrimSpace(obj) == "" {
-			continue
-		}
-		if strings.HasPrefix(obj, ".service") {
-			f := &models.SiteFrontend{}
-			n := strings.TrimSpace(obj[strings.Index(obj, ".service ")+9 : strings.Index(obj, "\n")])
-			if n == "" {
-				continue
-			}
-			site.Name = n
-			c.parseObject(obj, f)
-			site.Frontend = f
-
-			frBckRelsCache[site.Name] = make([]map[string]string, 0, 1)
-			// parse frontend-backend relations
-			if strings.Contains(obj, "+default_farm") {
-				bckName := strings.TrimSpace(obj[strings.Index(obj, "+default_farm ")+14:])
-				bckName = bckName[:strings.Index(bckName, "\n")]
-				frBckRelsCache[site.Name] = append(frBckRelsCache[site.Name], map[string]string{bckName: "default"})
-			}
-		}
-
-		if strings.HasPrefix(obj, ".farm") {
-			b := &models.SiteBackendsItems{}
-			b.Name = strings.TrimSpace(obj[strings.Index(obj, ".farm ")+6 : strings.Index(obj, "\n")])
-			c.parseObject(obj, b)
-			bckCache[b.Name] = b
-		}
-
-		if strings.HasPrefix(obj, ".listener") {
-			name, parent := splitHeaderLine(obj)
-			if name == "" {
-				continue
-			}
-			l := &models.SiteFrontendListenersItems{Name: name}
-			c.parseObject(obj, l)
-			if a, ok := lCache[parent]; ok {
-				lCache[parent] = append(a, l)
-			} else {
-				a := make([]*models.SiteFrontendListenersItems, 0, 1)
-				lCache[parent] = append(a, l)
-			}
-		}
-
-		if strings.HasPrefix(obj, ".server") {
-			name, parent := splitHeaderLine(obj)
-			if name == "" {
-				continue
-			}
-			s := &models.SiteBackendsItemsServersItems{Name: name}
-			c.parseObject(obj, s)
-			if a, ok := sCache[parent]; ok {
-				sCache[parent] = append(a, s)
-			} else {
-				a := make([]*models.SiteBackendsItemsServersItems, 0, 1)
-				sCache[parent] = append(a, s)
-			}
-		}
-
-		if strings.HasPrefix(obj, ".usefarm") {
-			f := ""
-			b := ""
-			val := ""
-			for _, line := range strings.Split(obj, "\n") {
-				if strings.HasPrefix(line, ".usefarm") {
-					w := strings.Split(line, " ")
-					f = w[len(w)-1]
-				}
-				if strings.HasPrefix(line, "+target_farm") {
-					b = strings.TrimSpace(strings.SplitN(line, " ", 2)[1])
-				}
-				if strings.HasPrefix(line, "+cond") {
-					w := strings.Split(line, " ")
-					val = w[1] + " " + val
-				}
-				if strings.HasPrefix(line, "+cond_test") {
-					w := strings.Split(line, " ")
-					val = val + " " + w[1]
-				}
-			}
-
-			if _, ok := frBckRelsCache[f]; !ok {
-				frBckRelsCache[f] = make([]map[string]string, 0, 1)
-			}
-
-			frBckRelsCache[f] = append(frBckRelsCache[f], map[string]string{b: val})
-		}
-
-		if site.Name != "" {
-			sites = append(sites, site)
-		}
+func serializeServiceToFrontend(service *models.SiteService, name string) *models.Frontend {
+	return &models.Frontend{
+		Name:               name,
+		Mode:               service.Mode,
+		Maxconn:            service.Maxconn,
+		Log:                service.Log,
+		HTTPConnectionMode: service.HTTPConnectionMode,
 	}
-	for _, site := range sites {
-		// get listeners for frontend
-		site.Frontend.Listeners = lCache[site.Name]
+}
 
-		// add backends
-		for _, bckObj := range frBckRelsCache[site.Name] {
-			for bck, val := range bckObj {
-				b := bckCache[bck]
-				if val == "default" {
-					b.UseAs = val
-				} else {
-					b.UseAs = "conditional"
-					split := strings.SplitN(val, " ", 2)
-					b.Cond = strings.TrimSpace(split[0])
-					b.CondTest = strings.TrimSpace(split[1])
-				}
-
-				site.Backends = append(site.Backends, b)
-			}
-		}
-
-		// get servers for backends
-		for _, bck := range site.Backends {
-			bck.Servers = sCache[bck.Name]
-		}
+func serializeFarmToBackend(farm *models.SiteFarmsItems) *models.Backend {
+	backend := &models.Backend{
+		Name: farm.Name,
+		Log:  farm.Log,
+		Mode: farm.Mode,
 	}
+	if farm.Forwardfor {
+		backend.Forwardfor = "enabled"
+	}
+	if farm.Balance != nil {
+		backend.Balance = &models.BackendBalance{Algorithm: farm.Balance.Algorithm, Arguments: farm.Balance.Arguments}
+	}
+	return backend
+}
 
-	return sites
+func serializeListenerToBind(listener *models.SiteServiceListenersItems) *models.Bind {
+	return &models.Bind{
+		Name:           listener.Name,
+		Address:        listener.Address,
+		Port:           listener.Port,
+		Ssl:            listener.Ssl,
+		SslCertificate: listener.SslCertificate,
+	}
+}
+
+func serializeSiteServer(srv *models.SiteFarmsItemsServersItems) *models.Server {
+	server := &models.Server{
+		Address:        srv.Address,
+		Name:           srv.Name,
+		Port:           srv.Port,
+		SslCertificate: srv.SslCertificate,
+		Weight:         srv.Weight,
+	}
+	if srv.Ssl {
+		server.Ssl = "enabled"
+	}
+	return server
 }
 
 // frontend backend relation helper methods
 func (c *Client) removeUseFarm(frontend string, backend string, t string) error {
-	ufs, err := c.getUseFarms(frontend)
+	ufs, err := c.parseBackendSwitchingRules(frontend)
 	if err != nil {
 		return err
 	}
-	for _, uf := range ufs {
-		if uf.TargetFarm == backend {
-			return c.deleteObject(strconv.FormatInt(uf.ID, 10), "usefarm", frontend, "service", t, 0)
+	for i, uf := range ufs {
+		if uf.Name == backend {
+			return c.DeleteBackendSwitchingRule(int64(i), frontend, t, 0)
 		}
 	}
 	return nil
 }
 
-func (c *Client) createBckFrontendRels(name string, b *models.SiteBackendsItems, edit bool, t string) error {
+func (c *Client) createBckFrontendRels(name string, b *models.SiteFarmsItems, edit bool, t string) error {
 	var res []error
 	var err error
 	if b.UseAs == "default" {
@@ -656,12 +598,14 @@ func (c *Client) createBckFrontendRels(name string, b *models.SiteBackendsItems,
 		if b.Cond == "" || b.CondTest == "" {
 			res = append(res, fmt.Errorf("Backend %s set as conditional but no conditions provided", b.Name))
 		} else {
+			i := int64(0)
 			uf := &models.BackendSwitchingRule{
-				TargetFarm: b.Name,
-				Cond:       b.Cond,
-				CondTest:   b.CondTest,
+				ID:       &i,
+				Name:     b.Name,
+				Cond:     b.Cond,
+				CondTest: b.CondTest,
 			}
-			err = c.createObject("tail", "usefarm", name, "service", uf, nil, t, 0)
+			err = c.CreateBackendSwitchingRule(name, uf, t, 0)
 			if err != nil {
 				res = append(res, err)
 			}
@@ -674,57 +618,104 @@ func (c *Client) createBckFrontendRels(name string, b *models.SiteBackendsItems,
 }
 
 func (c *Client) addDefaultBckToFrontend(fName string, bName string, t string) error {
-	response, err := c.executeLBCTL("l7-service-update", t, fName, "--default_farm", bName)
-	if err != nil {
-		return errors.New(err.Error() + ": " + response)
+	frontend := &models.Frontend{Name: fName}
+
+	if err := c.parseSection(frontend, parser.Frontends, fName); err != nil {
+		return err
+	}
+	frontend.DefaultBackend = bName
+	if err := c.EditFrontend(fName, frontend, t, 0); err != nil {
+		return err
 	}
 	return nil
 }
 
 func (c *Client) removeDefaultBckToFrontend(fName string, t string) error {
-	response, err := c.executeLBCTL("l7-service-update", t, fName, "--reset-default_farm")
-	if err != nil {
-		return errors.New(err.Error() + ": " + response)
+	frontend := &models.Frontend{Name: fName}
+	if err := c.parseSection(frontend, parser.Frontends, fName); err != nil {
+		return err
+	}
+	frontend.DefaultBackend = ""
+	if err := c.EditFrontend(fName, frontend, t, 0); err != nil {
+		return err
 	}
 	return nil
 }
 
-func (c *Client) getUseFarms(parent string) ([]*models.BackendSwitchingRule, error) {
-	response, err := c.executeLBCTL("l7-service-usefarm-dump", "", parent)
+func (c *Client) editService(name string, service *models.SiteService, t string) error {
+	frontend := &models.Frontend{Name: name}
+	if err := c.parseSection(frontend, parser.Frontends, name); err != nil {
+		return err
+	}
+
+	frontend.HTTPConnectionMode = service.HTTPConnectionMode
+	frontend.Log = service.Log
+	frontend.Maxconn = service.Maxconn
+	frontend.Mode = service.Mode
+
+	if err := c.EditFrontend(name, frontend, t, 0); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (c *Client) editFarm(name string, farm *models.SiteFarmsItems, t string) error {
+	backend := &models.Backend{Name: name}
+	if err := c.parseSection(backend, parser.Backends, name); err != nil {
+		return err
+	}
+
+	backend.Mode = farm.Mode
+	backend.Log = farm.Log
+	if farm.Forwardfor {
+		backend.Forwardfor = "enabled"
+	} else {
+		backend.Forwardfor = ""
+	}
+	if farm.Balance != nil {
+		backend.Balance = &models.BackendBalance{Algorithm: farm.Balance.Algorithm, Arguments: farm.Balance.Arguments}
+	} else {
+		backend.Balance = nil
+	}
+	if err := c.EditBackend(name, backend, t, 0); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (c *Client) editListener(name string, frontend string, listener *models.SiteServiceListenersItems, t string) error {
+	bind, err := c.GetBind(name, frontend, t)
 	if err != nil {
-		return nil, err
+		return err
+	}
+	bind.Data.Address = listener.Address
+	bind.Data.Port = listener.Port
+	bind.Data.Ssl = listener.Ssl
+	bind.Data.SslCertificate = listener.SslCertificate
+
+	if err := c.EditBind(name, frontend, bind.Data, t, 0); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (c *Client) editSiteServer(name string, backend string, server *models.SiteFarmsItemsServersItems, t string) error {
+	srv, err := c.GetServer(name, backend, t)
+	if err != nil {
+		return err
+	}
+	srv.Data.Address = server.Address
+	srv.Data.Port = server.Port
+	srv.Data.SslCertificate = server.SslCertificate
+	srv.Data.Weight = server.Weight
+	if server.Ssl {
+		srv.Data.Ssl = "enabled"
+	} else {
+		srv.Data.Ssl = ""
 	}
 
-	useFarms := make([]*models.BackendSwitchingRule, 0, 1)
-	for _, ufString := range strings.Split(response, "\n\n") {
-		if strings.TrimSpace(ufString) == "" {
-			continue
-		}
-
-		uf := &models.BackendSwitchingRule{}
-		for _, line := range strings.Split(ufString, "\n") {
-			if strings.HasPrefix(line, ".usefarm") {
-				w := strings.Split(line, " ")
-				idStr := w[len(w)-3]
-				uf.ID, err = strconv.ParseInt(idStr, 10, 64)
-				if err != nil {
-					continue
-				}
-			}
-			if strings.HasPrefix(line, "+target_farm") {
-				w := strings.Split(line, " ")
-				uf.TargetFarm = w[1]
-			}
-			if strings.HasPrefix(line, "+cond") {
-				w := strings.Split(line, " ")
-				uf.Cond = w[1]
-			}
-			if strings.HasPrefix(line, "+cond_test") {
-				w := strings.Split(line, " ")
-				uf.CondTest = w[1]
-			}
-		}
-		useFarms = append(useFarms, uf)
+	if err := c.EditServer(name, backend, srv.Data, t, 0); err != nil {
+		return err
 	}
-	return useFarms, nil
+	return nil
 }

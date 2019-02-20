@@ -23,38 +23,41 @@ func TestGetHTTPResponseRules(t *testing.T) {
 	}
 
 	for _, r := range hRules.Data {
-		if r.ID == 1 {
+		if *r.ID == 0 {
 			if r.Type != "allow" {
-				t.Errorf("%v: Type not allow: %v", r.ID, r.Type)
+				t.Errorf("%v: Type not allow: %v", *r.ID, r.Type)
 			}
 			if r.Cond != "if" {
-				t.Errorf("%v: Cond not if: %v", r.ID, r.Cond)
+				t.Errorf("%v: Cond not if: %v", *r.ID, r.Cond)
 			}
 			if r.CondTest != "src 192.168.0.0/16" {
-				t.Errorf("%v: CondTest not src 192.168.0.0/16: %v", r.ID, r.CondTest)
+				t.Errorf("%v: CondTest not src 192.168.0.0/16: %v", *r.ID, r.CondTest)
 			}
-		} else if r.ID == 2 {
+		} else if *r.ID == 1 {
 			if r.Type != "set-header" {
-				t.Errorf("%v: Type not set-header: %v", r.ID, r.Type)
+				t.Errorf("%v: Type not set-header: %v", *r.ID, r.Type)
 			}
 			if r.HdrName != "X-SSL" {
-				t.Errorf("%v: HdrName not X-SSL: %v", r.ID, r.HdrName)
+				t.Errorf("%v: HdrName not X-SSL: %v", *r.ID, r.HdrName)
 			}
-			if r.HdrValue != "%[ssl_fc]" {
-				t.Errorf("%v: HdrValue not [ssl_fc]: %v", r.ID, r.HdrValue)
+			if r.HdrFormat != "%[ssl_fc]" {
+				t.Errorf("%v: HdrValue not [ssl_fc]: %v", *r.ID, r.HdrFormat)
 			}
-		} else if r.ID == 3 {
+		} else if *r.ID == 2 {
 			if r.Type != "set-var" {
-				t.Errorf("%v: Type not set-var: %v", r.ID, r.Type)
+				t.Errorf("%v: Type not set-var: %v", *r.ID, r.Type)
 			}
-			if r.VarName != "req.my_var" {
-				t.Errorf("%v: VarName not req.my_var: %v", r.ID, r.VarName)
+			if r.VarName != "my_var" {
+				t.Errorf("%v: VarName not my_var: %v", *r.ID, r.VarName)
 			}
-			if r.VarPattern != "req.fhdr(user-agent),lower" {
-				t.Errorf("%v: VarPattern not req.fhdr(user-agent),lower: %v", r.ID, r.VarPattern)
+			if r.VarScope != "req" {
+				t.Errorf("%v: VarName not req: %v", *r.ID, r.VarScope)
+			}
+			if r.VarExpr != "req.fhdr(user-agent),lower" {
+				t.Errorf("%v: VarExpr not req.fhdr(user-agent),lower: %v", *r.ID, r.VarExpr)
 			}
 		} else {
-			t.Errorf("Expext only filter 1, 2 or 3, %v found", r.ID)
+			t.Errorf("Expext only http-response 0, 1 or 2, %v found", *r.ID)
 		}
 	}
 
@@ -63,7 +66,7 @@ func TestGetHTTPResponseRules(t *testing.T) {
 		t.Error(err.Error())
 	}
 
-	hRules, err = client.GetHTTPResponseRules("backend", "test2", "")
+	hRules, err = client.GetHTTPResponseRules("backend", "test_2", "")
 	if err != nil {
 		t.Error(err.Error())
 	}
@@ -77,24 +80,24 @@ func TestGetHTTPResponseRules(t *testing.T) {
 }
 
 func TestGetHTTPResponseRule(t *testing.T) {
-	hRule, err := client.GetHTTPResponseRule(1, "frontend", "test", "")
+	hRule, err := client.GetHTTPResponseRule(0, "frontend", "test", "")
 	if err != nil {
 		t.Error(err.Error())
 	}
 
 	r := hRule.Data
 
-	if r.ID != 1 {
-		t.Errorf("HTTPResponse Rule ID not 1, %v found", r.ID)
+	if *r.ID != 0 {
+		t.Errorf("HTTPResponse Rule ID not 0, %v found", *r.ID)
 	}
 	if r.Type != "allow" {
-		t.Errorf("%v: Type not allow: %v", r.ID, r.Type)
+		t.Errorf("%v: Type not allow: %v", *r.ID, r.Type)
 	}
 	if r.Cond != "if" {
-		t.Errorf("%v: Cond not if: %v", r.ID, r.Cond)
+		t.Errorf("%v: Cond not if: %v", *r.ID, r.Cond)
 	}
 	if r.CondTest != "src 192.168.0.0/16" {
-		t.Errorf("%v: CondTest not src 192.168.0.0/16: %v", r.ID, r.CondTest)
+		t.Errorf("%v: CondTest not src 192.168.0.0/16: %v", *r.ID, r.CondTest)
 	}
 
 	rJSON, err := r.MarshalBinary()
@@ -113,9 +116,10 @@ func TestGetHTTPResponseRule(t *testing.T) {
 }
 
 func TestCreateEditDeleteHTTPResponseRule(t *testing.T) {
+	id := int64(1)
 	// TestCreateHTTPResponseRule
 	r := &models.HTTPResponseRule{
-		ID:       1,
+		ID:       &id,
 		Type:     "set-log-level",
 		LogLevel: "alert",
 	}
@@ -148,7 +152,7 @@ func TestCreateEditDeleteHTTPResponseRule(t *testing.T) {
 
 	// TestEditHTTPResponseRule
 	r = &models.HTTPResponseRule{
-		ID:       1,
+		ID:       &id,
 		Type:     "set-log-level",
 		LogLevel: "warning",
 	}

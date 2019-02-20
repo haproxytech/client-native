@@ -35,11 +35,11 @@ func TestGetServers(t *testing.T) {
 		if s.Ssl != "enabled" {
 			t.Errorf("%v: Ssl not enabled: %v", s.Name, s.Ssl)
 		}
-		if s.HTTPCookieID != "BLAH" {
-			t.Errorf("%v: HTTPCookieID not BLAH: %v", s.Name, s.HTTPCookieID)
+		if s.Cookie != "BLAH" {
+			t.Errorf("%v: Cookie not BLAH: %v", s.Name, s.Cookie)
 		}
-		if *s.MaxConnections != 1000 {
-			t.Errorf("%v: MaxConnections not 1000: %v", s.Name, *s.MaxConnections)
+		if *s.Maxconn != 1000 {
+			t.Errorf("%v: Maxconn not 1000: %v", s.Name, *s.Maxconn)
 		}
 		if *s.Weight != 10 {
 			t.Errorf("%v: Weight not 10: %v", s.Name, *s.Weight)
@@ -51,7 +51,7 @@ func TestGetServers(t *testing.T) {
 		t.Error(err.Error())
 	}
 
-	servers, err = client.GetServers("test2", "")
+	servers, err = client.GetServers("test_2", "")
 	if err != nil {
 		t.Error(err.Error())
 	}
@@ -88,11 +88,11 @@ func TestGetServer(t *testing.T) {
 	if s.Ssl != "enabled" {
 		t.Errorf("%v: Ssl not enabled: %v", s.Name, s.Ssl)
 	}
-	if s.HTTPCookieID != "BLAH" {
-		t.Errorf("%v: HTTPCookieID not BLAH: %v", s.Name, s.HTTPCookieID)
+	if s.Cookie != "BLAH" {
+		t.Errorf("%v: HTTPCookieID not BLAH: %v", s.Name, s.Cookie)
 	}
-	if *s.MaxConnections != 1000 {
-		t.Errorf("%v: MaxConnections not 1000: %v", s.Name, *s.MaxConnections)
+	if *s.Maxconn != 1000 {
+		t.Errorf("%v: MaxConnections not 1000: %v", s.Name, *s.Maxconn)
 	}
 	if *s.Weight != 10 {
 		t.Errorf("%v: Weight not 10: %v", s.Name, *s.Weight)
@@ -103,7 +103,7 @@ func TestGetServer(t *testing.T) {
 		t.Error(err.Error())
 	}
 
-	_, err = client.GetServer("webserv", "test2", "")
+	_, err = client.GetServer("webserv", "test_2", "")
 	if err == nil {
 		t.Error("Should throw error, non existant server")
 	}
@@ -120,7 +120,7 @@ func TestCreateEditDeleteServer(t *testing.T) {
 		Name:           "created",
 		Address:        "192.168.2.1",
 		Port:           &port,
-		Sorry:          "enabled",
+		Backup:         "enabled",
 		Check:          "enabled",
 		Maintenance:    "enabled",
 		Ssl:            "enabled",
@@ -215,7 +215,7 @@ func TestCreateEditDeleteServer(t *testing.T) {
 		t.Error("DeleteServer failed, server test still exists")
 	}
 
-	err = client.DeleteServer("created", "test2", "", version)
+	err = client.DeleteServer("created", "test_2", "", version)
 	if err == nil {
 		t.Error("Should throw error, non existant server")
 		version++

@@ -8,6 +8,12 @@ import (
 
 const testConf = `
 # _version=1
+global 
+	daemon
+	nbproc 4
+	maxconn 2000
+	stats socket /var/run/haproxy.sock level admin mode 0660
+
 frontend test
   mode http
   bind 192.168.1.1:80 name webserv
@@ -65,10 +71,7 @@ backend test
   option http-keep-alive
   option forwardfor header X-Forwarded-For
   option httpchk HEAD /
-  default-server fall 2
-  default-server rise 4
-  default-server inter 5s
-  default-server port 8888
+  default-server fall 2s rise 4s inter 5s port 8888
   stick store-request src table test
   stick match src table test
   stick on src table test
@@ -96,10 +99,7 @@ backend test_2
   option http-keep-alive
   option forwardfor header X-Forwarded-For
   option httpchk HEAD /
-  default-server fall 2
-  default-server rise 4
-  default-server inter 5s
-  default-server port 8888
+  default-server fall 2s rise 4s inter 5s port 8888
   option contstats
   timeout check 2s
   timeout tunnel 5s
@@ -119,14 +119,8 @@ func TestMain(m *testing.M) {
 		os.Exit(1)
 	}
 
-	err = prepareTestFile(testGlobalConf, globalPath)
-	if err != nil {
-		fmt.Println("Could not prepare tests")
-		os.Exit(1)
-	}
-	defer deleteTestFile(globalPath)
 	defer deleteTestFile(testPath)
-	client = prepareClient(testPath, globalPath)
+	client = prepareClient(testPath)
 
 	os.Exit(m.Run())
 }
@@ -178,16 +172,14 @@ func deleteTestFile(path string) error {
 	return nil
 }
 
-func prepareClient(path string, globalPath string) *Client {
+func prepareClient(path string) *Client {
 	c := Client{}
 	p := ClientParams{
-		ConfigurationFile:       path,
-		GlobalConfigurationFile: globalPath,
-		Haproxy:                 "echo",
-		UseValidation:           true,
-		UseCache:                true,
-		LBCTLPath:               "/usr/sbin/lbctl",
-		TransactionDir:          "/tmp/haproxy",
+		ConfigurationFile: path,
+		Haproxy:           "echo",
+		UseValidation:     true,
+		UseCache:          true,
+		TransactionDir:    "/tmp/haproxy",
 	}
 	c.Init(p)
 	return &c

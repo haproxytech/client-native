@@ -1,9 +1,11 @@
 package configuration
 
 import (
-	"strings"
+	"fmt"
 
 	strfmt "github.com/go-openapi/strfmt"
+	"github.com/haproxytech/client-native/misc"
+	parser "github.com/haproxytech/config-parser"
 	"github.com/haproxytech/models"
 )
 
@@ -16,13 +18,23 @@ func (c *Client) GetBackends(transactionID string) (*models.GetBackendsOKBody, e
 			return &models.GetBackendsOKBody{Version: c.Cache.Version.Get(transactionID), Data: backends}, nil
 		}
 	}
+	if err := c.ConfigParser.LoadData(c.getTransactionFile(transactionID)); err != nil {
+		return nil, err
+	}
 
-	backendsString, err := c.executeLBCTL("l7-farm-dump", transactionID)
+	bNames, err := c.ConfigParser.SectionsGet(parser.Backends)
 	if err != nil {
 		return nil, err
 	}
 
-	backends := c.parseBackends(backendsString)
+	backends := []*models.Backend{}
+	for _, name := range bNames {
+		b := &models.Backend{Name: name}
+		if err := c.parseSection(b, parser.Backends, name); err != nil {
+			continue
+		}
+		backends = append(backends, b)
+	}
 
 	v, err := c.GetVersion(transactionID)
 	if err != nil {
@@ -44,14 +56,24 @@ func (c *Client) GetBackend(name string, transactionID string) (*models.GetBacke
 			return &models.GetBackendOKBody{Version: c.Cache.Version.Get(transactionID), Data: backend}, nil
 		}
 	}
+	if err := c.ConfigParser.LoadData(c.getTransactionFile(transactionID)); err != nil {
+		return nil, err
+	}
 
-	backendStr, err := c.executeLBCTL("l7-farm-show", transactionID, name)
+	backends, err := c.ConfigParser.SectionsGet(parser.Backends)
 	if err != nil {
 		return nil, err
 	}
-	backend := &models.Backend{Name: name}
 
-	c.parseObject(backendStr, backend)
+	if !misc.StringInSlice(name, backends) {
+		return nil, NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("Backend %s does not exist", name))
+	}
+
+	backend := &models.Backend{Name: name}
+	if err := c.parseSection(backend, parser.Backends, name); err != nil {
+		return nil, err
+
+	}
 
 	v, err := c.GetVersion(transactionID)
 	if err != nil {
@@ -67,8 +89,7 @@ func (c *Client) GetBackend(name string, transactionID string) (*models.GetBacke
 // DeleteBackend deletes a backend in configuration. One of version or transactionID is
 // mandatory. Returns error on fail, nil on success.
 func (c *Client) DeleteBackend(name string, transactionID string, version int64) error {
-	err := c.deleteObject(name, "farm", "", "", transactionID, version)
-	if err != nil {
+	if err := c.deleteSection(parser.Backends, name, transactionID, version); err != nil {
 		return err
 	}
 	if c.Cache.Enabled() {
@@ -86,8 +107,7 @@ func (c *Client) CreateBackend(data *models.Backend, transactionID string, versi
 			return NewConfError(ErrValidationError, validationErr.Error())
 		}
 	}
-	err := c.createObject(data.Name, "farm", "", "", data, nil, transactionID, version)
-	if err != nil {
+	if err := c.createSection(parser.Backends, data.Name, data, transactionID, version); err != nil {
 		return err
 	}
 	if c.Cache.Enabled() {
@@ -105,32 +125,11 @@ func (c *Client) EditBackend(name string, data *models.Backend, transactionID st
 			return NewConfError(ErrValidationError, validationErr.Error())
 		}
 	}
-	ondiskBck, err := c.GetBackend(name, transactionID)
-	if err != nil {
+	if err := c.editSection(parser.Backends, name, data, transactionID, version); err != nil {
 		return err
 	}
-	err = c.editObject(name, "farm", "", "", data, ondiskBck.Data, nil, transactionID, version)
-	if err != nil {
-		return err
-	}
-
 	if c.Cache.Enabled() {
 		c.Cache.Backends.Set(name, transactionID, data)
 	}
 	return nil
-}
-
-func (c *Client) parseBackends(response string) models.Backends {
-	backends := make(models.Backends, 0, 1)
-	for _, backendStr := range strings.Split(response, "\n\n") {
-		if strings.TrimSpace(backendStr) == "" {
-			continue
-		}
-		name := strings.TrimSpace(backendStr[strings.Index(backendStr, ".farm ")+6 : strings.Index(backendStr, "\n")])
-
-		backendObj := &models.Backend{Name: name}
-		c.parseObject(backendStr, backendObj)
-		backends = append(backends, backendObj)
-	}
-	return backends
 }

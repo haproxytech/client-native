@@ -25,6 +25,10 @@ func (c *Client) GetTransaction(id string) (*models.Transaction, error) {
 
 // StartTransaction starts a new empty lbctl transaction
 func (c *Client) StartTransaction(version int64) (*models.Transaction, error) {
+	return c.startTransaction(version, true)
+}
+
+func (c *Client) startTransaction(version int64, initCache bool) (*models.Transaction, error) {
 	t := &models.Transaction{}
 
 	v, err := c.GetVersion("")
@@ -45,7 +49,7 @@ func (c *Client) StartTransaction(version int64) (*models.Transaction, error) {
 	t.Version = version
 	t.Status = "in_progress"
 
-	if c.Cache.Enabled() {
+	if c.Cache.Enabled() && initCache {
 		c.Cache.InitTransactionCache(t.ID, version)
 	}
 
@@ -54,6 +58,10 @@ func (c *Client) StartTransaction(version int64) (*models.Transaction, error) {
 
 // CommitTransaction commits a transaction by id.
 func (c *Client) CommitTransaction(id string) error {
+	return c.commitTransaction(id, true)
+}
+
+func (c *Client) commitTransaction(id string, invalidateCache bool) error {
 	// do a version check before commiting
 	version, err := c.GetVersion("")
 	if err != nil {
@@ -75,7 +83,7 @@ func (c *Client) CommitTransaction(id string) error {
 		return err
 	}
 
-	if err = copyFile(c.getTransactionFile(c.ConfigurationFile, id), c.ConfigurationFile); err != nil {
+	if err = copyFile(c.getTransactionFile(id), c.ConfigurationFile); err != nil {
 		c.failTransaction(id)
 		return err
 	}
@@ -88,7 +96,7 @@ func (c *Client) CommitTransaction(id string) error {
 		return err
 	}
 
-	if c.Cache.Enabled() {
+	if c.Cache.Enabled() && invalidateCache {
 		c.Cache.DeleteTransactionCache(id)
 		c.Cache.InvalidateCache()
 	}
@@ -97,7 +105,7 @@ func (c *Client) CommitTransaction(id string) error {
 }
 
 func (c *Client) checkTransactionFile(id string) error {
-	cmd := exec.Command(c.Haproxy, "-f", c.GlobalConfigurationFile, "-f", c.ConfigurationFile, "-c")
+	cmd := exec.Command(c.Haproxy, "-f", c.ConfigurationFile, "-c")
 
 	err := cmd.Run()
 	if err != nil {
@@ -108,36 +116,17 @@ func (c *Client) checkTransactionFile(id string) error {
 
 // DeleteTransaction deletes a transaction by id.
 func (c *Client) DeleteTransaction(id string) error {
-	err := c.deleteTransactionFiles(id)
-	if err != nil {
-		return err
-	}
-	if c.Cache.Enabled() {
-		c.Cache.DeleteTransactionCache(id)
+	if id != "" {
+		err := c.deleteTransactionFiles(id)
+		if err != nil {
+			return err
+		}
+
+		if c.Cache.Enabled() {
+			c.Cache.DeleteTransactionCache(id)
+		}
 	}
 	return nil
-}
-
-func (c *Client) getTransactionVersion(id string, failed bool) int64 {
-	// get original version from the ex file
-	confFileName := filepath.Base(c.ConfigurationFile)
-	var tPath string
-	if failed {
-		tPath = filepath.Join(c.TransactionDir, "failed", confFileName+"."+id)
-	} else {
-		tPath = filepath.Join(c.TransactionDir, confFileName+"."+id)
-	}
-	file, err := os.Open(tPath)
-	if err != nil {
-		return 1
-	}
-	defer file.Close()
-
-	v, err := c.readVersionFromFile(file)
-	if err != nil {
-		return 1
-	}
-	return v
 }
 
 func (c *Client) parseTransactions(status string) (*models.Transactions, error) {
@@ -224,9 +213,9 @@ func (c *Client) parseTransactionFile(f os.FileInfo, status string) *models.Tran
 	tID := s[len(s)-1]
 	v := int64(0)
 	if status == "in_progress" {
-		v = c.getTransactionVersion(tID, false)
+		v, _ = c.GetVersion(tID)
 	} else {
-		v = c.getTransactionVersion(tID, true)
+		v, _ = c.GetVersion(tID)
 	}
 	t := &models.Transaction{
 		ID:      tID,
@@ -250,7 +239,7 @@ func (c *Client) createTransactionFiles(transactionID string) error {
 		}
 	}
 
-	confFilePath := c.getTransactionFile(c.ConfigurationFile, transactionID)
+	confFilePath := c.getTransactionFile(transactionID)
 
 	err = copyFile(c.ConfigurationFile, confFilePath)
 	if err != nil {
@@ -261,17 +250,9 @@ func (c *Client) createTransactionFiles(transactionID string) error {
 }
 
 func (c *Client) deleteTransactionFiles(transactionID string) error {
-	confFilePath := c.getTransactionFile(c.ConfigurationFile, transactionID)
+	confFilePath := c.getTransactionFile(transactionID)
 
 	err := os.Remove(confFilePath)
-	if err != nil {
-		if !os.IsNotExist(err) {
-			return err
-		}
-	}
-
-	failedConfFilePath := c.getFailedTransactionFile(c.ConfigurationFile, transactionID)
-	err = os.Remove(failedConfFilePath)
 	if err != nil {
 		if !os.IsNotExist(err) {
 			return err
@@ -280,18 +261,27 @@ func (c *Client) deleteTransactionFiles(transactionID string) error {
 	return nil
 }
 
-func (c *Client) getTransactionFile(filePath string, transactionID string) string {
-	fileName := filepath.Base(filepath.Clean(filePath))
-	fileName = fileName + "." + transactionID
+func (c *Client) getTransactionFile(transactionID string) string {
+	if transactionID == "" {
+		return c.ConfigurationFile
+	}
+	// First find failed transaction file
+	baseFileName := filepath.Base(filepath.Clean(c.ConfigurationFile))
+	transactionFileName := baseFileName + "." + transactionID
 
-	return filepath.Join(c.TransactionDir, fileName)
+	fPath := filepath.Join(c.TransactionDir, "failed", transactionFileName)
+	if _, err := os.Stat(fPath); err == nil {
+		return fPath
+	}
+	// Return in progress transaction file
+	return filepath.Join(c.TransactionDir, transactionFileName)
 }
 
-func (c *Client) getFailedTransactionFile(filePath string, transactionID string) string {
-	fileName := filepath.Base(filepath.Clean(filePath))
-	fileName = fileName + "." + transactionID
+func (c *Client) getTransactionFileFailed(transactionID string) string {
+	baseFileName := filepath.Base(filepath.Clean(c.ConfigurationFile))
+	transactionFileName := baseFileName + "." + transactionID
 
-	return filepath.Join(c.TransactionDir, "failed", fileName)
+	return filepath.Join(c.TransactionDir, "failed", transactionFileName)
 }
 
 func (c *Client) failTransaction(id string) {
@@ -300,8 +290,8 @@ func (c *Client) failTransaction(id string) {
 		os.Mkdir(failedDir, 0755)
 	}
 
-	configFile := c.getTransactionFile(c.ConfigurationFile, id)
-	failedConfigFile := c.getFailedTransactionFile(c.ConfigurationFile, id)
+	configFile := c.getTransactionFile(id)
+	failedConfigFile := c.getTransactionFileFailed(id)
 	copyFile(configFile, failedConfigFile)
 	os.Remove(configFile)
 }

@@ -1,9 +1,12 @@
 package configuration
 
 import (
-	"strings"
+	"fmt"
+
+	"github.com/haproxytech/client-native/misc"
 
 	strfmt "github.com/go-openapi/strfmt"
+	parser "github.com/haproxytech/config-parser"
 	"github.com/haproxytech/models"
 )
 
@@ -16,11 +19,23 @@ func (c *Client) GetFrontends(transactionID string) (*models.GetFrontendsOKBody,
 			return &models.GetFrontendsOKBody{Version: c.Cache.Version.Get(transactionID), Data: frontends}, nil
 		}
 	}
-	frontendsStr, err := c.executeLBCTL("l7-service-dump", transactionID)
+	if err := c.ConfigParser.LoadData(c.getTransactionFile(transactionID)); err != nil {
+		return nil, err
+	}
+
+	fNames, err := c.ConfigParser.SectionsGet(parser.Frontends)
 	if err != nil {
 		return nil, err
 	}
-	frontends := c.parseFrontends(frontendsStr)
+
+	frontends := []*models.Frontend{}
+	for _, name := range fNames {
+		f := &models.Frontend{Name: name}
+		if err := c.parseSection(f, parser.Frontends, name); err != nil {
+			continue
+		}
+		frontends = append(frontends, f)
+	}
 
 	v, err := c.GetVersion(transactionID)
 	if err != nil {
@@ -42,13 +57,24 @@ func (c *Client) GetFrontend(name string, transactionID string) (*models.GetFron
 			return &models.GetFrontendOKBody{Version: c.Cache.Version.Get(transactionID), Data: frontend}, nil
 		}
 	}
-	frontendStr, err := c.executeLBCTL("l7-service-show", transactionID, name)
+
+	if err := c.ConfigParser.LoadData(c.getTransactionFile(transactionID)); err != nil {
+		return nil, err
+	}
+
+	frontends, err := c.ConfigParser.SectionsGet(parser.Frontends)
 	if err != nil {
 		return nil, err
 	}
-	frontend := &models.Frontend{Name: name}
 
-	c.parseObject(frontendStr, frontend)
+	if !misc.StringInSlice(name, frontends) {
+		return nil, NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("Frontend %s does not exist", name))
+	}
+
+	frontend := &models.Frontend{Name: name}
+	if err := c.parseSection(frontend, parser.Frontends, name); err != nil {
+		return nil, err
+	}
 
 	v, err := c.GetVersion(transactionID)
 	if err != nil {
@@ -64,14 +90,13 @@ func (c *Client) GetFrontend(name string, transactionID string) (*models.GetFron
 // DeleteFrontend deletes a frontend in configuration. One of version or transactionID is
 // mandatory. Returns error on fail, nil on success.
 func (c *Client) DeleteFrontend(name string, transactionID string, version int64) error {
-	err := c.deleteObject(name, "service", "", "", transactionID, version)
-	if err != nil {
+	if err := c.deleteSection(parser.Frontends, name, transactionID, version); err != nil {
 		return err
 	}
 	if c.Cache.Enabled() {
 		c.Cache.DeleteFrontendCache(name, transactionID)
 	}
-	return err
+	return nil
 }
 
 // EditFrontend edits a frontend in configuration. One of version or transactionID is
@@ -83,16 +108,13 @@ func (c *Client) EditFrontend(name string, data *models.Frontend, transactionID 
 			return NewConfError(ErrValidationError, validationErr.Error())
 		}
 	}
-	ondiskFrontend, err := c.GetFrontend(name, transactionID)
-	if err != nil {
+
+	if err := c.editSection(parser.Frontends, name, data, transactionID, version); err != nil {
 		return err
 	}
-	err = c.editObject(name, "service", "", "", data, ondiskFrontend.Data, nil, transactionID, version)
-	if err != nil {
-		return err
-	}
+
 	if c.Cache.Enabled() {
-		c.Cache.Frontends.Set(name, transactionID, data)
+		c.Cache.Frontends.Set(data.Name, transactionID, data)
 	}
 	return nil
 }
@@ -106,27 +128,13 @@ func (c *Client) CreateFrontend(data *models.Frontend, transactionID string, ver
 			return NewConfError(ErrValidationError, validationErr.Error())
 		}
 	}
-	err := c.createObject(data.Name, "service", "", "", data, nil, transactionID, version)
-	if err != nil {
+
+	if err := c.createSection(parser.Frontends, data.Name, data, transactionID, version); err != nil {
 		return err
 	}
+
 	if c.Cache.Enabled() {
 		c.Cache.Frontends.Set(data.Name, transactionID, data)
 	}
 	return nil
-}
-
-func (c *Client) parseFrontends(response string) models.Frontends {
-	frontends := make(models.Frontends, 0, 1)
-	for _, frontendStr := range strings.Split(response, "\n\n") {
-		if strings.TrimSpace(frontendStr) == "" {
-			continue
-		}
-		name := strings.TrimSpace(frontendStr[strings.Index(frontendStr, ".service ")+9 : strings.Index(frontendStr, "\n")])
-
-		frontendObj := &models.Frontend{Name: name}
-		c.parseObject(frontendStr, frontendObj)
-		frontends = append(frontends, frontendObj)
-	}
-	return frontends
 }

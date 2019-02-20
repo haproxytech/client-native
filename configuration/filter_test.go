@@ -23,35 +23,35 @@ func TestGetFilters(t *testing.T) {
 	}
 
 	for _, f := range filters.Data {
-		if f.ID == 1 {
+		if *f.ID == 0 {
 			if f.Type != "trace" {
-				t.Errorf("%v: Type not trace: %v", f.ID, f.Type)
+				t.Errorf("%v: Type not trace: %v", *f.ID, f.Type)
 			}
 			if f.TraceName != "BEFORE-HTTP-COMP" {
-				t.Errorf("%v: TraceName not BEFORE-HTTP-COMP: %v", f.ID, f.TraceName)
+				t.Errorf("%v: TraceName not BEFORE-HTTP-COMP: %v", *f.ID, f.TraceName)
 			}
-			if f.TraceRndParsing != "enabled" {
-				t.Errorf("%v: TraceRndParsing not enabled: %v", f.ID, f.TraceRndParsing)
+			if f.TraceRndParsing != true {
+				t.Errorf("%v: TraceRndParsing not true: %v", *f.ID, f.TraceRndParsing)
 			}
-			if f.TraceHexdump != "enabled" {
-				t.Errorf("%v: TraceHexdump not enabled: %v", f.ID, f.TraceHexdump)
+			if f.TraceHexdump != true {
+				t.Errorf("%v: TraceHexdump not true: %v", *f.ID, f.TraceHexdump)
 			}
-		} else if f.ID == 2 {
+		} else if *f.ID == 1 {
 			if f.Type != "compression" {
-				t.Errorf("%v: Type not compression: %v", f.ID, f.Type)
+				t.Errorf("%v: Type not compression: %v", *f.ID, f.Type)
 			}
-		} else if f.ID == 3 {
+		} else if *f.ID == 2 {
 			if f.Type != "trace" {
-				t.Errorf("%v: Type not trace: %v", f.ID, f.Type)
+				t.Errorf("%v: Type not trace: %v", *f.ID, f.Type)
 			}
 			if f.TraceName != "AFTER-HTTP-COMP" {
-				t.Errorf("%v: TraceName not AFTER-HTTP-COMP: %v", f.ID, f.TraceName)
+				t.Errorf("%v: TraceName not AFTER-HTTP-COMP: %v", *f.ID, f.TraceName)
 			}
-			if f.TraceRndForwarding != "enabled" {
-				t.Errorf("%v: TraceRndForwarding not enabled: %v", f.ID, f.TraceRndForwarding)
+			if f.TraceRndForwarding != true {
+				t.Errorf("%v: TraceRndForwarding not true: %v", *f.ID, f.TraceRndForwarding)
 			}
 		} else {
-			t.Errorf("Expext only filter 1, 2 or 3, %v found", f.ID)
+			t.Errorf("Expext only filter 1, 2 or 3, %v found", *f.ID)
 		}
 	}
 
@@ -60,7 +60,7 @@ func TestGetFilters(t *testing.T) {
 		t.Error(err.Error())
 	}
 
-	filters, err = client.GetFilters("backend", "test2", "")
+	filters, err = client.GetFilters("backend", "test_2", "")
 	if err != nil {
 		t.Error(err.Error())
 	}
@@ -74,27 +74,27 @@ func TestGetFilters(t *testing.T) {
 }
 
 func TestGetFilter(t *testing.T) {
-	filter, err := client.GetFilter(1, "frontend", "test", "")
+	filter, err := client.GetFilter(0, "frontend", "test", "")
 	if err != nil {
 		t.Error(err.Error())
 	}
 
 	f := filter.Data
 
-	if f.ID != 1 {
-		t.Errorf("Filter ID 1, %v found", f.ID)
+	if *f.ID != 0 {
+		t.Errorf("Filter ID 0, %v found", *f.ID)
 	}
 	if f.Type != "trace" {
-		t.Errorf("%v: Type not trace: %v", f.ID, f.Type)
+		t.Errorf("%v: Type not trace: %v", *f.ID, f.Type)
 	}
 	if f.TraceName != "BEFORE-HTTP-COMP" {
-		t.Errorf("%v: TraceName not BEFORE-HTTP-COMP: %v", f.ID, f.TraceName)
+		t.Errorf("%v: TraceName not BEFORE-HTTP-COMP: %v", *f.ID, f.TraceName)
 	}
-	if f.TraceRndParsing != "enabled" {
-		t.Errorf("%v: TraceRndParsing not enabled: %v", f.ID, f.TraceRndParsing)
+	if f.TraceRndParsing != true {
+		t.Errorf("%v: TraceRndParsing not true: %v", *f.ID, f.TraceRndParsing)
 	}
-	if f.TraceHexdump != "enabled" {
-		t.Errorf("%v: TraceHexdump not enabled: %v", f.ID, f.TraceHexdump)
+	if f.TraceHexdump != true {
+		t.Errorf("%v: TraceHexdump not true: %v", *f.ID, f.TraceHexdump)
 	}
 
 	fJSON, err := f.MarshalBinary()
@@ -114,8 +114,9 @@ func TestGetFilter(t *testing.T) {
 
 func TestCreateEditDeleteFilter(t *testing.T) {
 	// TestCreateFilter
+	id := int64(1)
 	f := &models.Filter{
-		ID:         1,
+		ID:         &id,
 		Type:       "spoe",
 		SpoeEngine: "test",
 		SpoeConfig: "test.cfg",
@@ -149,7 +150,7 @@ func TestCreateEditDeleteFilter(t *testing.T) {
 
 	// TestEditFilter
 	f = &models.Filter{
-		ID:         1,
+		ID:         &id,
 		Type:       "spoe",
 		SpoeConfig: "bla.cfg",
 		SpoeEngine: "bla",
@@ -182,7 +183,7 @@ func TestCreateEditDeleteFilter(t *testing.T) {
 	}
 
 	// TestDeleteFilter
-	err = client.DeleteFilter(4, "frontend", "test", "", version)
+	err = client.DeleteFilter(3, "frontend", "test", "", version)
 	if err != nil {
 		t.Error(err.Error())
 	} else {
@@ -193,12 +194,12 @@ func TestCreateEditDeleteFilter(t *testing.T) {
 		t.Error("Version not incremented")
 	}
 
-	_, err = client.GetFilter(4, "frontend", "test", "")
+	_, err = client.GetFilter(3, "frontend", "test", "")
 	if err == nil {
-		t.Error("DeleteFilter failed, filter 4 still exists")
+		t.Error("DeleteFilter failed, filter 3 still exists")
 	}
 
-	err = client.DeleteFilter(2, "backend", "test2", "", version)
+	err = client.DeleteFilter(1, "backend", "test_2", "", version)
 	if err == nil {
 		t.Error("Should throw error, non existant filter")
 		version++

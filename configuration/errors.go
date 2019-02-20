@@ -16,6 +16,7 @@ const (
 	ErrTransactionDoesNotExist = 20
 	ErrObjectAlreadyExists     = 23
 	ErrObjectDoesNotExist      = 22
+	ErrObjectIndexOutOfRange   = 26
 	ErrErrorChangingConfig     = 25
 	ErrCannotReadConfFile      = 30
 	ErrCannotReadVersion       = 31
@@ -25,20 +26,6 @@ const (
 	ErrNoVersionTransaction    = 35
 	ErrCannotParseTransaction  = 40
 	ErrValidationError         = 50
-
-	// Errors regarding executing LBCTL
-	ErrLBCTLNeedScope                  = 2
-	ErrLBCTLNeedTransaction            = 3
-	ErrLBCTLNeedScopeOrTransaction     = 4
-	ErrLBCTLCannotValidateConfig       = 101
-	ErrLBCTLCannotApplyConfig          = 102
-	ErrLBCTLCorruptedTransaction       = 110
-	ErrLBCTLCannotCreateTransaction    = 111
-	ErrLBCTLCannotCreateTransactionCtx = 112
-	ErrLBCTLCannotPrepareCtx           = 113
-	ErrLBCTLCannotBackupFile           = 114
-	ErrLBCTLCannotInstallConfig        = 115
-	ErrLBCTLAPILocked                  = 100
 )
 
 // ConfError general configuration client error

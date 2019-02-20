@@ -23,28 +23,28 @@ func TestGetServerSwitchingRules(t *testing.T) {
 	}
 
 	for _, sr := range srvRules.Data {
-		if sr.ID == 1 {
+		if *sr.ID == 0 {
 			if sr.TargetServer != "webserv" {
-				t.Errorf("%v: TargetServer not webserv: %v", sr.ID, sr.TargetServer)
+				t.Errorf("%v: TargetServer not webserv: %v", *sr.ID, sr.TargetServer)
 			}
 			if sr.Cond != "if" {
-				t.Errorf("%v: Cond not if: %v", sr.ID, sr.Cond)
+				t.Errorf("%v: Cond not if: %v", *sr.ID, sr.Cond)
 			}
 			if sr.CondTest != "TRUE" {
-				t.Errorf("%v: CondTest not TRUE: %v", sr.ID, sr.CondTest)
+				t.Errorf("%v: CondTest not TRUE: %v", *sr.ID, sr.CondTest)
 			}
-		} else if sr.ID == 2 {
+		} else if *sr.ID == 1 {
 			if sr.TargetServer != "webserv2" {
-				t.Errorf("%v: TargetServer not webserv2: %v", sr.ID, sr.TargetServer)
+				t.Errorf("%v: TargetServer not webserv2: %v", *sr.ID, sr.TargetServer)
 			}
 			if sr.Cond != "unless" {
-				t.Errorf("%v: Cond not if: %v", sr.ID, sr.Cond)
+				t.Errorf("%v: Cond not if: %v", *sr.ID, sr.Cond)
 			}
 			if sr.CondTest != "TRUE" {
-				t.Errorf("%v: CondTest not TRUE: %v", sr.ID, sr.CondTest)
+				t.Errorf("%v: CondTest not TRUE: %v", *sr.ID, sr.CondTest)
 			}
 		} else {
-			t.Errorf("Expext only server switching rule 1 or 2, %v found", sr.ID)
+			t.Errorf("Expext only server switching rule 0 or 1, %v found", *sr.ID)
 		}
 	}
 
@@ -53,7 +53,7 @@ func TestGetServerSwitchingRules(t *testing.T) {
 		t.Error(err.Error())
 	}
 
-	srvRules, err = client.GetServerSwitchingRules("test2", "")
+	srvRules, err = client.GetServerSwitchingRules("test_2", "")
 	if err != nil {
 		t.Error(err.Error())
 	}
@@ -67,7 +67,7 @@ func TestGetServerSwitchingRules(t *testing.T) {
 }
 
 func TestGetServerSwitchingRule(t *testing.T) {
-	srvRule, err := client.GetServerSwitchingRule(1, "test", "")
+	srvRule, err := client.GetServerSwitchingRule(0, "test", "")
 	if err != nil {
 		t.Error(err.Error())
 	}
@@ -100,9 +100,10 @@ func TestGetServerSwitchingRule(t *testing.T) {
 }
 
 func TestCreateEditDeleteServerSwitchingRule(t *testing.T) {
+	id := int64(2)
 	// TestCreateServerSwitchingRule
 	sr := &models.ServerSwitchingRule{
-		ID:           2,
+		ID:           &id,
 		TargetServer: "webserv2",
 		Cond:         "unless",
 		CondTest:     "TRUE",
@@ -136,7 +137,7 @@ func TestCreateEditDeleteServerSwitchingRule(t *testing.T) {
 
 	// TestServerSwitchingRule
 	sr = &models.ServerSwitchingRule{
-		ID:           2,
+		ID:           &id,
 		TargetServer: "webserv2",
 		Cond:         "if",
 		CondTest:     "TRUE",
@@ -169,7 +170,7 @@ func TestCreateEditDeleteServerSwitchingRule(t *testing.T) {
 	}
 
 	// TestDeleteServerSwitchingRule
-	err = client.DeleteServerSwitchingRule(3, "test", "", version)
+	err = client.DeleteServerSwitchingRule(2, "test", "", version)
 	if err != nil {
 		t.Error(err.Error())
 	} else {
@@ -180,12 +181,12 @@ func TestCreateEditDeleteServerSwitchingRule(t *testing.T) {
 		t.Error("Version not incremented")
 	}
 
-	_, err = client.GetServerSwitchingRule(3, "test", "")
+	_, err = client.GetServerSwitchingRule(2, "test", "")
 	if err == nil {
 		t.Error("DeleteServerSwitchingRule failed, server switching rule 3 still exists")
 	}
 
-	err = client.DeleteServerSwitchingRule(3, "test2", "", version)
+	err = client.DeleteServerSwitchingRule(2, "test_2", "", version)
 	if err == nil {
 		t.Error("Should throw error, non existant server switching rule")
 		version++

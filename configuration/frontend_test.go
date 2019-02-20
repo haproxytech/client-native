@@ -26,38 +26,38 @@ func TestGetFrontends(t *testing.T) {
 		if f.Name != "test" && f.Name != "test_2" {
 			t.Errorf("Expected only test or test_2 frontend, %v found", f.Name)
 		}
-		if f.Protocol != "http" {
-			t.Errorf("%v: Protocol not http: %v", f.Name, f.Protocol)
+		if f.Mode != "http" {
+			t.Errorf("%v: Mode not http: %v", f.Name, f.Mode)
 		}
-		if f.Log != "enabled" {
-			t.Errorf("%v: Log not enabled: %v", f.Name, f.Log)
+		if f.Log != true {
+			t.Errorf("%v: Log not true: %v", f.Name, f.Log)
 		}
 		if f.LogFormat != "http" {
 			t.Errorf("%v: LogFormat not http: %v", f.Name, f.LogFormat)
 		}
-		if f.LogIgnoreNull != "enabled" {
-			t.Errorf("%v: LogIgnoreNull not enabled: %v", f.Name, f.LogIgnoreNull)
+		if f.Dontlognull != "enabled" {
+			t.Errorf("%v: Dontlognull not enabled: %v", f.Name, f.Dontlognull)
 		}
-		if f.HTTPConnectionMode != "passive-close" {
-			t.Errorf("%v: HTTPConnectionMode not passive-close: %v", f.Name, f.HTTPConnectionMode)
+		if f.HTTPConnectionMode != "httpclose" {
+			t.Errorf("%v: HTTPConnectionMode not httpclose: %v", f.Name, f.HTTPConnectionMode)
 		}
-		if f.ContinuousStatistics != "enabled" {
-			t.Errorf("%v: ContinuousStatistics not enabled: %v", f.Name, f.ContinuousStatistics)
+		if f.Contstats != "enabled" {
+			t.Errorf("%v: Contstats not enabled: %v", f.Name, f.Contstats)
 		}
-		if *f.HTTPRequestTimeout != 2 {
+		if *f.HTTPRequestTimeout != 2000 {
 			t.Errorf("%v: HTTPRequestTimeout not 2: %v", f.Name, *f.HTTPRequestTimeout)
 		}
-		if *f.HTTPKeepaliveTimeout != 3 {
-			t.Errorf("%v: HTTPKeepaliveTimeout not 3: %v", f.Name, *f.HTTPKeepaliveTimeout)
+		if *f.HTTPKeepAliveTimeout != 3000 {
+			t.Errorf("%v: HTTPKeepAliveTimeout not 3: %v", f.Name, *f.HTTPKeepAliveTimeout)
 		}
-		if f.DefaultFarm != "test" && f.DefaultFarm != "test_2" {
-			t.Errorf("%v: DefaultFarm not test or test_2: %v", f.Name, f.DefaultFarm)
+		if f.DefaultBackend != "test" && f.DefaultBackend != "test_2" {
+			t.Errorf("%v: DefaultFarm not test or test_2: %v", f.Name, f.DefaultBackend)
 		}
-		if *f.MaxConnections != 2000 {
-			t.Errorf("%v: MaxConnections not 2000: %v", f.Name, *f.MaxConnections)
+		if *f.Maxconn != 2000 {
+			t.Errorf("%v: Maxconn not 2000: %v", f.Name, *f.Maxconn)
 		}
-		if *f.ClientInactivityTimeout != 4 {
-			t.Errorf("%v: ClientInactivityTimeout not 4: %v", f.Name, *f.ClientInactivityTimeout)
+		if *f.ClientTimeout != 4000 {
+			t.Errorf("%v: ClientTimeout not 4: %v", f.Name, *f.ClientTimeout)
 		}
 	}
 
@@ -89,38 +89,38 @@ func TestGetFrontend(t *testing.T) {
 	if f.Name != "test" {
 		t.Errorf("Expected only test, %v found", f.Name)
 	}
-	if f.Protocol != "http" {
-		t.Errorf("%v: Protocol not http: %v", f.Name, f.Protocol)
+	if f.Mode != "http" {
+		t.Errorf("%v: Mode not http: %v", f.Name, f.Mode)
 	}
-	if f.Log != "enabled" {
-		t.Errorf("%v: Log not enabled: %v", f.Name, f.Log)
+	if f.Log != true {
+		t.Errorf("%v: Log not true: %v", f.Name, f.Log)
 	}
 	if f.LogFormat != "http" {
 		t.Errorf("%v: LogFormat not http: %v", f.Name, f.LogFormat)
 	}
-	if f.LogIgnoreNull != "enabled" {
-		t.Errorf("%v: LogIgnoreNull not enabled: %v", f.Name, f.LogIgnoreNull)
+	if f.Dontlognull != "enabled" {
+		t.Errorf("%v: Dontlognull not enabled: %v", f.Name, f.Dontlognull)
 	}
-	if f.HTTPConnectionMode != "passive-close" {
-		t.Errorf("%v: HTTPConnectionMode not passive-close: %v", f.Name, f.HTTPConnectionMode)
+	if f.HTTPConnectionMode != "httpclose" {
+		t.Errorf("%v: HTTPConnectionMode not httpclose: %v", f.Name, f.HTTPConnectionMode)
 	}
-	if f.ContinuousStatistics != "enabled" {
-		t.Errorf("%v: ContinuousStatistics not enabled: %v", f.Name, f.ContinuousStatistics)
+	if f.Contstats != "enabled" {
+		t.Errorf("%v: Contstats not enabled: %v", f.Name, f.Contstats)
 	}
-	if *f.HTTPRequestTimeout != 2 {
-		t.Errorf("%v: HTTPRequestTimeout not 2: %v", f.Name, *f.HTTPRequestTimeout)
+	if *f.HTTPRequestTimeout != 2000 {
+		t.Errorf("%v: HTTPRequestTimeout not 2000: %v", f.Name, *f.HTTPRequestTimeout)
 	}
-	if *f.HTTPKeepaliveTimeout != 3 {
-		t.Errorf("%v: HTTPKeepaliveTimeout not 3: %v", f.Name, *f.HTTPKeepaliveTimeout)
+	if *f.HTTPKeepAliveTimeout != 3000 {
+		t.Errorf("%v: HTTPKeepAliveTimeout not 3000: %v", f.Name, *f.HTTPKeepAliveTimeout)
 	}
-	if f.DefaultFarm != "test" {
-		t.Errorf("%v: DefaultFarm not test: %v", f.Name, f.DefaultFarm)
+	if f.DefaultBackend != "test" {
+		t.Errorf("%v: DefaultBackend not test: %v", f.Name, f.DefaultBackend)
 	}
-	if *f.MaxConnections != 2000 {
-		t.Errorf("%v: MaxConnections not 2000: %v", f.Name, *f.MaxConnections)
+	if *f.Maxconn != 2000 {
+		t.Errorf("%v: Maxconn not 2000: %v", f.Name, *f.Maxconn)
 	}
-	if *f.ClientInactivityTimeout != 4 {
-		t.Errorf("%v: ClientInactivityTimeout not 4: %v", f.Name, *f.ClientInactivityTimeout)
+	if *f.ClientTimeout != 4000 {
+		t.Errorf("%v: ClientTimeout not 4000: %v", f.Name, *f.ClientTimeout)
 	}
 
 	fJSON, err := f.MarshalBinary()
@@ -144,10 +144,10 @@ func TestCreateEditDeleteFrontend(t *testing.T) {
 	tOut := int64(2)
 	f := &models.Frontend{
 		Name:                 "created",
-		Protocol:             "tcp",
-		MaxConnections:       &mConn,
-		HTTPConnectionMode:   "keep-alive",
-		HTTPKeepaliveTimeout: &tOut,
+		Mode:                 "tcp",
+		Maxconn:              &mConn,
+		HTTPConnectionMode:   "http-keep-alive",
+		HTTPKeepAliveTimeout: &tOut,
 	}
 
 	err := client.CreateFrontend(f, "", version)
@@ -186,9 +186,9 @@ func TestCreateEditDeleteFrontend(t *testing.T) {
 	mConn = int64(4000)
 	f = &models.Frontend{
 		Name:               "created",
-		Protocol:           "tcp",
-		MaxConnections:     &mConn,
-		HTTPConnectionMode: "tunnel",
+		Mode:               "tcp",
+		Maxconn:            &mConn,
+		HTTPConnectionMode: "http-tunnel",
 	}
 
 	err = client.EditFrontend("created", f, "", version)

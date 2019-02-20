@@ -1,7 +1,6 @@
 package configuration
 
 import (
-	"fmt"
 	"strings"
 
 	strfmt "github.com/go-openapi/strfmt"
@@ -14,33 +13,33 @@ import (
 
 // GetGlobalConfiguration returns a struct with configuration version and a
 // struct representing Global configuration
-func (c *Client) GetGlobalConfiguration() (*models.GetGlobalOKBody, error) {
-	err := c.GlobalParser.LoadData(c.GlobalConfigurationFile)
+func (c *Client) GetGlobalConfiguration(transactionID string) (*models.GetGlobalOKBody, error) {
+	err := c.ConfigParser.LoadData(c.getTransactionFile(transactionID))
 	if err != nil {
 		return nil, err
 	}
 
-	_, err = c.GlobalParser.Get(parser.Global, parser.GlobalSectionName, "daemon")
+	_, err = c.ConfigParser.Get(parser.Global, parser.GlobalSectionName, "daemon")
 	d := "enabled"
 	if err == errors.FetchError {
 		d = "disabled"
 	}
 
-	data, err := c.GlobalParser.Get(parser.Global, parser.GlobalSectionName, "maxconn")
+	data, err := c.ConfigParser.Get(parser.Global, parser.GlobalSectionName, "maxconn")
 	mConn := int64(0)
 	if err == nil {
 		maxConn := data.(*types.Int64C)
 		mConn = maxConn.Value
 	}
 
-	data, err = c.GlobalParser.Get(parser.Global, parser.GlobalSectionName, "nbproc")
+	data, err = c.ConfigParser.Get(parser.Global, parser.GlobalSectionName, "nbproc")
 	nbproc := int64(0)
 	if err == nil {
 		nbProcParser := data.(*types.Int64C)
 		nbproc = nbProcParser.Value
 	}
 
-	data, err = c.GlobalParser.Get(parser.Global, parser.GlobalSectionName, "stats socket")
+	data, err = c.ConfigParser.Get(parser.Global, parser.GlobalSectionName, "stats socket")
 	rAPI := ""
 	rLevel := ""
 	rMode := ""
@@ -60,21 +59,21 @@ func (c *Client) GetGlobalConfiguration() (*models.GetGlobalOKBody, error) {
 		}
 	}
 
-	data, err = c.GlobalParser.Get(parser.Global, parser.GlobalSectionName, "ssl-default-bind-ciphers")
+	data, err = c.ConfigParser.Get(parser.Global, parser.GlobalSectionName, "ssl-default-bind-ciphers")
 	sslCiphers := ""
 	if err == nil {
 		sslCiphersParser := data.(*types.StringC)
 		sslCiphers = sslCiphersParser.Value
 	}
 
-	data, err = c.GlobalParser.Get(parser.Global, parser.GlobalSectionName, "ssl-default-bind-options")
+	data, err = c.ConfigParser.Get(parser.Global, parser.GlobalSectionName, "ssl-default-bind-options")
 	sslOptions := ""
 	if err == nil {
 		sslOptionsParser := data.(*types.StringSliceC)
 		sslOptions = strings.Join(sslOptionsParser.Value, " ")
 	}
 
-	data, err = c.GlobalParser.Get(parser.Global, parser.GlobalSectionName, "tune.ssl.default-dh-param")
+	data, err = c.ConfigParser.Get(parser.Global, parser.GlobalSectionName, "tune.ssl.default-dh-param")
 	dhParam := int64(0)
 	if err == nil {
 		dhParamsParser := data.(*types.Int64C)
@@ -93,7 +92,7 @@ func (c *Client) GetGlobalConfiguration() (*models.GetGlobalOKBody, error) {
 		TuneSslDefaultDhParam: dhParam,
 	}
 
-	v, err := c.GetGlobalVersion()
+	v, err := c.GetVersion(transactionID)
 	if err != nil {
 		return nil, err
 	}
@@ -103,27 +102,24 @@ func (c *Client) GetGlobalConfiguration() (*models.GetGlobalOKBody, error) {
 
 // PushGlobalConfiguration pushes a Global config struct to global
 // config gile
-func (c *Client) PushGlobalConfiguration(data *models.Global, version int64) error {
-	ondiskV, _ := c.GetGlobalVersion()
-	if ondiskV != version {
-		return NewConfError(ErrVersionMismatch, fmt.Sprintf("Version in configuration file is %v, given version is %v", ondiskV, version))
+func (c *Client) PushGlobalConfiguration(data *models.Global, transactionID string, version int64) error {
+	if c.UseValidation {
+		validationErr := data.Validate(strfmt.Default)
+		if validationErr != nil {
+			return NewConfError(ErrValidationError, validationErr.Error())
+		}
 	}
 
-	validationErr := data.Validate(strfmt.Default)
-	if validationErr != nil {
-		return NewConfError(ErrValidationError, validationErr.Error())
-	}
-
-	err := c.GlobalParser.LoadData(c.GlobalConfigurationFile)
+	t, err := c.loadDataForChange(transactionID, version)
 	if err != nil {
 		return err
 	}
-
+	
 	pDaemon := &types.Enabled{}
 	if data.Daemon != "enabled" {
 		pDaemon = nil
 	}
-	c.GlobalParser.Set(parser.Global, parser.GlobalSectionName, "daemon", pDaemon)
+	c.ConfigParser.Set(parser.Global, parser.GlobalSectionName, "daemon", pDaemon)
 
 	pMaxConn := &types.Int64C{
 		Value: data.Maxconn,
@@ -131,7 +127,7 @@ func (c *Client) PushGlobalConfiguration(data *models.Global, version int64) err
 	if data.Maxconn == 0 {
 		pMaxConn = nil
 	}
-	c.GlobalParser.Set(parser.Global, parser.GlobalSectionName, "maxconn", pMaxConn)
+	c.ConfigParser.Set(parser.Global, parser.GlobalSectionName, "maxconn", pMaxConn)
 
 	pNbProc := &types.Int64C{
 		Value: data.Nbproc,
@@ -139,9 +135,9 @@ func (c *Client) PushGlobalConfiguration(data *models.Global, version int64) err
 	if data.Nbproc == 0 {
 		pNbProc = nil
 	}
-	c.GlobalParser.Set(parser.Global, parser.GlobalSectionName, "nbproc", pNbProc)
+	c.ConfigParser.Set(parser.Global, parser.GlobalSectionName, "nbproc", pNbProc)
 
-	ondisk, err := c.GlobalParser.Get(parser.Global, parser.GlobalSectionName, "stats socket")
+	ondisk, err := c.ConfigParser.Get(parser.Global, parser.GlobalSectionName, "stats socket")
 	if err != nil {
 		if data.RuntimeAPI != "" {
 			pStatsSocket := types.Socket{
@@ -151,9 +147,9 @@ func (c *Client) PushGlobalConfiguration(data *models.Global, version int64) err
 					&params.BindOptionValue{Name: "mode", Value: data.RuntimeAPIMode},
 				},
 			}
-			c.GlobalParser.Set(parser.Global, parser.GlobalSectionName, "stats socket", pStatsSocket)
+			c.ConfigParser.Set(parser.Global, parser.GlobalSectionName, "stats socket", pStatsSocket)
 		} else {
-			c.GlobalParser.Set(parser.Global, parser.GlobalSectionName, "stats socket", nil)
+			c.ConfigParser.Set(parser.Global, parser.GlobalSectionName, "stats socket", nil)
 		}
 	} else {
 		sockets := ondisk.([]types.Socket)
@@ -167,7 +163,7 @@ func (c *Client) PushGlobalConfiguration(data *models.Global, version int64) err
 			}
 			(sockets)[0] = pStatsSocket
 		}
-		c.GlobalParser.Set(parser.Global, parser.GlobalSectionName, "stats socket", sockets)
+		c.ConfigParser.Set(parser.Global, parser.GlobalSectionName, "stats socket", sockets)
 	}
 
 	pSSLCiphers := &types.StringC{
@@ -176,7 +172,7 @@ func (c *Client) PushGlobalConfiguration(data *models.Global, version int64) err
 	if data.SslDefaultBindCiphers == "" {
 		pSSLCiphers = nil
 	}
-	c.GlobalParser.Set(parser.Global, parser.GlobalSectionName, "ssl-default-bind-ciphers", pSSLCiphers)
+	c.ConfigParser.Set(parser.Global, parser.GlobalSectionName, "ssl-default-bind-ciphers", pSSLCiphers)
 
 	pSSLOptions := &types.StringSliceC{
 		Value: strings.Split(data.SslDefaultBindOptions, " "),
@@ -184,7 +180,7 @@ func (c *Client) PushGlobalConfiguration(data *models.Global, version int64) err
 	if data.SslDefaultBindCiphers == "" {
 		pSSLOptions = nil
 	}
-	c.GlobalParser.Set(parser.Global, parser.GlobalSectionName, "ssl-default-bind-options", pSSLOptions)
+	c.ConfigParser.Set(parser.Global, parser.GlobalSectionName, "ssl-default-bind-options", pSSLOptions)
 
 	pDhParams := &types.Int64C{
 		Value: data.TuneSslDefaultDhParam,
@@ -192,14 +188,9 @@ func (c *Client) PushGlobalConfiguration(data *models.Global, version int64) err
 	if data.TuneSslDefaultDhParam == 0 {
 		pDhParams = nil
 	}
-	c.GlobalParser.Set(parser.Global, parser.GlobalSectionName, "tune.ssl.default-dh-param", pDhParams)
+	c.ConfigParser.Set(parser.Global, parser.GlobalSectionName, "tune.ssl.default-dh-param", pDhParams)
 
-	err = c.GlobalParser.Save(c.GlobalConfigurationFile)
-	if err != nil {
-		return err
-	}
-	err = c.incrementGlobalVersion()
-	if err != nil {
+	if err := c.saveData(t, transactionID); err != nil {
 		return err
 	}
 	return nil

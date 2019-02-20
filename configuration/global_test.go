@@ -8,26 +8,14 @@ import (
 	"github.com/haproxytech/models"
 )
 
-const testGlobalConf = `
-# _version=3
-
-global 
-	daemon
-	nbproc 4
-	maxconn 2000
-	stats socket /var/run/haproxy.sock level admin mode 0660
-`
-
-const globalPath = "/tmp/global-test.cfg"
-
 func TestGetGlobal(t *testing.T) {
-	global, err := client.GetGlobalConfiguration()
+	global, err := client.GetGlobalConfiguration("")
 	if err != nil {
 		t.Error(err.Error())
 	}
 
-	if global.Version != 3 {
-		t.Errorf("Version %v returned, expected %v", global.Version, 3)
+	if global.Version != version {
+		t.Errorf("Version %v returned, expected %v", global.Version, version)
 	}
 
 	if global.Data.Daemon != "enabled" {
@@ -61,13 +49,15 @@ func TestPutGlobal(t *testing.T) {
 		TuneSslDefaultDhParam: 1024,
 	}
 
-	err := client.PushGlobalConfiguration(g, 3)
+	err := client.PushGlobalConfiguration(g, "", version)
 
 	if err != nil {
 		t.Error(err.Error())
+	} else {
+		version++
 	}
 
-	global, err := client.GetGlobalConfiguration()
+	global, err := client.GetGlobalConfiguration("")
 	if err != nil {
 		t.Error(err.Error())
 	}
@@ -78,11 +68,11 @@ func TestPutGlobal(t *testing.T) {
 		t.Error("Created global config not equal to given global config")
 	}
 
-	if global.Version != 4 {
+	if global.Version != version {
 		t.Error("Version not incremented!")
 	}
 
-	err = client.PushGlobalConfiguration(g, 55)
+	err = client.PushGlobalConfiguration(g, "", 55)
 
 	if err == nil {
 		t.Error("Should have returned version conflict.")

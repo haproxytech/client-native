@@ -25,22 +25,22 @@ func TestGetSites(t *testing.T) {
 
 	for _, s := range sites.Data {
 		if s.Name == "test" {
-			if *s.Frontend.MaxConnections != 2000 {
-				t.Errorf("%v: MaxConnections not 2000: %v", s.Name, *s.Frontend.MaxConnections)
+			if *s.Service.Maxconn != 2000 {
+				t.Errorf("%v: Maxconn not 2000: %v", s.Name, *s.Service.Maxconn)
 			}
-			if s.Frontend.Log != "enabled" {
-				t.Errorf("%v: Log not enabled: %v", s.Name, s.Frontend.Log)
+			if s.Service.Log != true {
+				t.Errorf("%v: Log not true: %v", s.Name, s.Service.Log)
 			}
-			if s.Frontend.Protocol != "http" {
-				t.Errorf("%v: Protocol not http: %v", s.Name, s.Frontend.Protocol)
+			if s.Service.Mode != "http" {
+				t.Errorf("%v: Mode not http: %v", s.Name, s.Service.Mode)
 			}
-			if s.Frontend.HTTPConnectionMode != "passive-close" {
-				t.Errorf("%v: HTTPConnectionMode not passive-close: %v", s.Name, s.Frontend.HTTPConnectionMode)
+			if s.Service.HTTPConnectionMode != "httpclose" {
+				t.Errorf("%v: HTTPConnectionMode not httpclose: %v", s.Name, s.Service.HTTPConnectionMode)
 			}
-			if len(s.Frontend.Listeners) != 2 {
-				t.Errorf("%v: Got %v listeners, expected 2", s.Name, len(s.Frontend.Listeners))
+			if len(s.Service.Listeners) != 2 {
+				t.Errorf("%v: Got %v listeners, expected 2", s.Name, len(s.Service.Listeners))
 			}
-			for _, l := range s.Frontend.Listeners {
+			for _, l := range s.Service.Listeners {
 				if l.Name != "webserv" && l.Name != "webserv2" {
 					t.Errorf("Expected only webserv or webserv2 listeners, %v found", l.Name)
 				}
@@ -51,22 +51,22 @@ func TestGetSites(t *testing.T) {
 					t.Errorf("%v: Port not 80 or 8080: %v", l.Name, *l.Port)
 				}
 			}
-			for _, b := range s.Backends {
+			for _, b := range s.Farms {
 				if b.Name == "test" {
 					if b.UseAs != "default" {
 						t.Errorf("%v: %v: UseAs not default: %v", s.Name, b.Name, b.UseAs)
 					}
-					if b.Balance != "roundrobin" {
-						t.Errorf("%v: %v: Balance not roundrobin: %v", s.Name, b.Name, b.Balance)
+					if b.Balance.Algorithm != "roundrobin" {
+						t.Errorf("%v: %v: Balance not roundrobin: %v", s.Name, b.Name, b.Balance.Algorithm)
 					}
-					if b.HTTPXffHeaderInsert != "enabled" {
-						t.Errorf("%v: %v: HTTPXffHeaderInsert not enabled: %v", s.Name, b.Name, b.HTTPXffHeaderInsert)
+					if b.Forwardfor != true {
+						t.Errorf("%v: %v: Forwardfor not true: %v", s.Name, b.Name, b.Forwardfor)
 					}
-					if b.Log != "enabled" {
-						t.Errorf("%v: %v: Log not enabled: %v", s.Name, b.Name, b.Log)
+					if b.Log != true {
+						t.Errorf("%v: %v: Log not true: %v", s.Name, b.Name, b.Log)
 					}
-					if b.Protocol != "http" {
-						t.Errorf("%v: %v: Protocol not http: %v", s.Name, b.Name, b.Protocol)
+					if b.Mode != "http" {
+						t.Errorf("%v: %v: Protocol not http: %v", s.Name, b.Name, b.Mode)
 					}
 					if len(b.Servers) != 2 {
 						t.Errorf("%v: %v: Got %v servers, expected 2", s.Name, b.Name, len(b.Servers))
@@ -81,8 +81,8 @@ func TestGetSites(t *testing.T) {
 						if *srv.Port != 9300 && *srv.Port != 9200 {
 							t.Errorf("%v: %v: %v: Port not 9300 or 9200: %v", s.Name, b.Name, srv.Name, *srv.Port)
 						}
-						if srv.Ssl != "enabled" {
-							t.Errorf("%v: %v: %v: Ssl not enabled: %v", s.Name, b.Name, srv.Name, srv.Ssl)
+						if srv.Ssl != true {
+							t.Errorf("%v: %v: %v: Ssl not true: %v", s.Name, b.Name, srv.Name, srv.Ssl)
 						}
 						if *srv.Weight != 10 {
 							t.Errorf("%v: %v: %v: Weight not 10: %v", s.Name, b.Name, srv.Name, *srv.Weight)
@@ -98,17 +98,17 @@ func TestGetSites(t *testing.T) {
 					if b.CondTest != "TRUE" {
 						t.Errorf("%v: %v: CondTest not TRUE: %v", s.Name, b.Name, b.CondTest)
 					}
-					if b.Balance != "roundrobin" {
-						t.Errorf("%v: %v: Balance not roundrobin: %v", s.Name, b.Name, b.Balance)
+					if b.Balance.Algorithm != "roundrobin" {
+						t.Errorf("%v: %v: Balance not roundrobin: %v", s.Name, b.Name, b.Balance.Algorithm)
 					}
-					if b.HTTPXffHeaderInsert != "enabled" {
-						t.Errorf("%v: %v: HTTPXffHeaderInsert not enabled: %v", s.Name, b.Name, b.HTTPXffHeaderInsert)
+					if b.Forwardfor != true {
+						t.Errorf("%v: %v: Forwardfor not true: %v", s.Name, b.Name, b.Forwardfor)
 					}
-					if b.Log != "enabled" {
-						t.Errorf("%v: %v: Log not enabled: %v", s.Name, b.Name, b.Log)
+					if b.Log != true {
+						t.Errorf("%v: %v: Log not true: %v", s.Name, b.Name, b.Log)
 					}
-					if b.Protocol != "http" {
-						t.Errorf("%v: %v: Protocol not http: %v", s.Name, b.Name, b.Protocol)
+					if b.Mode != "http" {
+						t.Errorf("%v: %v: Mode not http: %v", s.Name, b.Name, b.Mode)
 					}
 					if len(b.Servers) != 0 {
 						t.Errorf("%v: %v: Got %v servers, expected 0", s.Name, b.Name, len(b.Servers))
@@ -118,37 +118,37 @@ func TestGetSites(t *testing.T) {
 				}
 			}
 		} else if s.Name == "test_2" {
-			if *s.Frontend.MaxConnections != 2000 {
-				t.Errorf("%v: MaxConnections not 2000: %v", s.Name, *s.Frontend.MaxConnections)
+			if *s.Service.Maxconn != 2000 {
+				t.Errorf("%v: MaxConnections not 2000: %v", s.Name, *s.Service.Maxconn)
 			}
-			if s.Frontend.Log != "enabled" {
-				t.Errorf("%v: Log not enabled: %v", s.Name, s.Frontend.Log)
+			if s.Service.Log != true {
+				t.Errorf("%v: Log not true: %v", s.Name, s.Service.Log)
 			}
-			if s.Frontend.Protocol != "http" {
-				t.Errorf("%v: Protocol not http: %v", s.Name, s.Frontend.Protocol)
+			if s.Service.Mode != "http" {
+				t.Errorf("%v: Protocol not http: %v", s.Name, s.Service.Mode)
 			}
-			if s.Frontend.HTTPConnectionMode != "passive-close" {
-				t.Errorf("%v: HTTPConnectionMode not passive-close: %v", s.Name, s.Frontend.HTTPConnectionMode)
+			if s.Service.HTTPConnectionMode != "httpclose" {
+				t.Errorf("%v: HTTPConnectionMode not httpclose: %v", s.Name, s.Service.HTTPConnectionMode)
 			}
-			if len(s.Frontend.Listeners) != 0 {
-				t.Errorf("%v: Got %v listeners, expected 0", s.Name, len(s.Frontend.Listeners))
+			if len(s.Service.Listeners) != 0 {
+				t.Errorf("%v: Got %v listeners, expected 0", s.Name, len(s.Service.Listeners))
 			}
-			for _, b := range s.Backends {
+			for _, b := range s.Farms {
 				if b.Name == "test_2" {
 					if b.UseAs != "default" {
 						t.Errorf("%v: %v: UseAs not default: %v", s.Name, b.Name, b.UseAs)
 					}
-					if b.Balance != "roundrobin" {
-						t.Errorf("%v: %v: Balance not roundrobin: %v", s.Name, b.Name, b.Balance)
+					if b.Balance.Algorithm != "roundrobin" {
+						t.Errorf("%v: %v: Balance not roundrobin: %v", s.Name, b.Name, b.Balance.Algorithm)
 					}
-					if b.HTTPXffHeaderInsert != "enabled" {
-						t.Errorf("%v: %v: HTTPXffHeaderInsert not enabled: %v", s.Name, b.Name, b.HTTPXffHeaderInsert)
+					if b.Forwardfor != true {
+						t.Errorf("%v: %v: Forwardfor not true: %v", s.Name, b.Name, b.Forwardfor)
 					}
-					if b.Log != "enabled" {
-						t.Errorf("%v: %v: Log not enabled: %v", s.Name, b.Name, b.Log)
+					if b.Log != true {
+						t.Errorf("%v: %v: Log not true: %v", s.Name, b.Name, b.Log)
 					}
-					if b.Protocol != "http" {
-						t.Errorf("%v: %v: Protocol not http: %v", s.Name, b.Name, b.Protocol)
+					if b.Mode != "http" {
+						t.Errorf("%v: %v: Protocol not http: %v", s.Name, b.Name, b.Mode)
 					}
 					if len(b.Servers) != 0 {
 						t.Errorf("%v: %v: Got %v servers, expected 0", s.Name, b.Name, len(b.Servers))
@@ -187,22 +187,22 @@ func TestGetSite(t *testing.T) {
 	if s.Name != "test" {
 		t.Errorf("Name not test: %v", s.Name)
 	}
-	if *s.Frontend.MaxConnections != 2000 {
-		t.Errorf("%v: MaxConnections not 2000: %v", s.Name, *s.Frontend.MaxConnections)
+	if *s.Service.Maxconn != 2000 {
+		t.Errorf("%v: MaxConnections not 2000: %v", s.Name, *s.Service.Maxconn)
 	}
-	if s.Frontend.Log != "enabled" {
-		t.Errorf("%v: Log not enabled: %v", s.Name, s.Frontend.Log)
+	if s.Service.Log != true {
+		t.Errorf("%v: Log not true: %v", s.Name, s.Service.Log)
 	}
-	if s.Frontend.Protocol != "http" {
-		t.Errorf("%v: Protocol not http: %v", s.Name, s.Frontend.Protocol)
+	if s.Service.Mode != "http" {
+		t.Errorf("%v: Protocol not http: %v", s.Name, s.Service.Mode)
 	}
-	if s.Frontend.HTTPConnectionMode != "passive-close" {
-		t.Errorf("%v: HTTPConnectionMode not passive-close: %v", s.Name, s.Frontend.HTTPConnectionMode)
+	if s.Service.HTTPConnectionMode != "httpclose" {
+		t.Errorf("%v: HTTPConnectionMode not httpclose: %v", s.Name, s.Service.HTTPConnectionMode)
 	}
-	if len(s.Frontend.Listeners) != 2 {
-		t.Errorf("%v: Got %v listeners, expected 2", s.Name, len(s.Frontend.Listeners))
+	if len(s.Service.Listeners) != 2 {
+		t.Errorf("%v: Got %v listeners, expected 2", s.Name, len(s.Service.Listeners))
 	}
-	for _, l := range s.Frontend.Listeners {
+	for _, l := range s.Service.Listeners {
 		if l.Name != "webserv" && l.Name != "webserv2" {
 			t.Errorf("Expected only webserv or webserv2 listeners, %v found", l.Name)
 		}
@@ -213,22 +213,22 @@ func TestGetSite(t *testing.T) {
 			t.Errorf("%v: Port not 80 or 8080: %v", l.Name, *l.Port)
 		}
 	}
-	for _, b := range s.Backends {
+	for _, b := range s.Farms {
 		if b.Name == "test" {
 			if b.UseAs != "default" {
 				t.Errorf("%v: %v: UseAs not default: %v", s.Name, b.Name, b.UseAs)
 			}
-			if b.Balance != "roundrobin" {
-				t.Errorf("%v: %v: Balance not roundrobin: %v", s.Name, b.Name, b.Balance)
+			if b.Balance.Algorithm != "roundrobin" {
+				t.Errorf("%v: %v: Balance not roundrobin: %v", s.Name, b.Name, b.Balance.Algorithm)
 			}
-			if b.HTTPXffHeaderInsert != "enabled" {
-				t.Errorf("%v: %v: HTTPXffHeaderInsert not enabled: %v", s.Name, b.Name, b.HTTPXffHeaderInsert)
+			if b.Forwardfor != true {
+				t.Errorf("%v: %v: HTTPXffHeaderInsert not true: %v", s.Name, b.Name, b.Forwardfor)
 			}
-			if b.Log != "enabled" {
-				t.Errorf("%v: %v: Log not enabled: %v", s.Name, b.Name, b.Log)
+			if b.Log != true {
+				t.Errorf("%v: %v: Log not true: %v", s.Name, b.Name, b.Log)
 			}
-			if b.Protocol != "http" {
-				t.Errorf("%v: %v: Protocol not http: %v", s.Name, b.Name, b.Protocol)
+			if b.Mode != "http" {
+				t.Errorf("%v: %v: Protocol not http: %v", s.Name, b.Name, b.Mode)
 			}
 			if len(b.Servers) != 2 {
 				t.Errorf("%v: %v: Got %v servers, expected 2", s.Name, b.Name, len(b.Servers))
@@ -243,8 +243,8 @@ func TestGetSite(t *testing.T) {
 				if *srv.Port != 9300 && *srv.Port != 9200 {
 					t.Errorf("%v: %v: %v: Port not 9300 or 9200: %v", s.Name, b.Name, srv.Name, *srv.Port)
 				}
-				if srv.Ssl != "enabled" {
-					t.Errorf("%v: %v: %v: Ssl not enabled: %v", s.Name, b.Name, srv.Name, srv.Ssl)
+				if srv.Ssl != true {
+					t.Errorf("%v: %v: %v: Ssl not true: %v", s.Name, b.Name, srv.Name, srv.Ssl)
 				}
 				if *srv.Weight != 10 {
 					t.Errorf("%v: %v: %v: Weight not 10: %v", s.Name, b.Name, srv.Name, *srv.Weight)
@@ -260,17 +260,17 @@ func TestGetSite(t *testing.T) {
 			if b.CondTest != "TRUE" {
 				t.Errorf("%v: %v: CondTest not TRUE: %v", s.Name, b.Name, b.CondTest)
 			}
-			if b.Balance != "roundrobin" {
-				t.Errorf("%v: %v: Balance not roundrobin: %v", s.Name, b.Name, b.Balance)
+			if b.Balance.Algorithm != "roundrobin" {
+				t.Errorf("%v: %v: Balance not roundrobin: %v", s.Name, b.Name, b.Balance.Algorithm)
 			}
-			if b.HTTPXffHeaderInsert != "enabled" {
-				t.Errorf("%v: %v: HTTPXffHeaderInsert not enabled: %v", s.Name, b.Name, b.HTTPXffHeaderInsert)
+			if b.Forwardfor != true {
+				t.Errorf("%v: %v: Forwardfor not true: %v", s.Name, b.Name, b.Forwardfor)
 			}
-			if b.Log != "enabled" {
-				t.Errorf("%v: %v: Log not enabled: %v", s.Name, b.Name, b.Log)
+			if b.Log != true {
+				t.Errorf("%v: %v: Log not true: %v", s.Name, b.Name, b.Log)
 			}
-			if b.Protocol != "http" {
-				t.Errorf("%v: %v: Protocol not http: %v", s.Name, b.Name, b.Protocol)
+			if b.Mode != "http" {
+				t.Errorf("%v: %v: Mode not http: %v", s.Name, b.Name, b.Mode)
 			}
 			if len(b.Servers) != 0 {
 				t.Errorf("%v: %v: Got %v servers, expected 0", s.Name, b.Name, len(b.Servers))
@@ -294,53 +294,53 @@ func TestCreateEditDeleteSite(t *testing.T) {
 	port := int64(5000)
 	s := &models.Site{
 		Name: "created",
-		Frontend: &models.SiteFrontend{
-			Protocol:       "http",
-			Log:            "enabled",
-			MaxConnections: &mConn,
-			Listeners: []*models.SiteFrontendListenersItems{
-				&models.SiteFrontendListenersItems{
+		Service: &models.SiteService{
+			Mode:    "http",
+			Log:     true,
+			Maxconn: &mConn,
+			Listeners: []*models.SiteServiceListenersItems{
+				&models.SiteServiceListenersItems{
 					Name:    "created1",
 					Address: "127.0.0.1",
 					Port:    &port,
 				},
-				&models.SiteFrontendListenersItems{
+				&models.SiteServiceListenersItems{
 					Name:    "created2",
 					Address: "127.0.0.2",
 					Port:    &port,
 				},
 			},
 		},
-		Backends: []*models.SiteBackendsItems{
-			&models.SiteBackendsItems{
-				Name:                "createdBck",
-				Balance:             "hash-uri",
-				UseAs:               "default",
-				Log:                 "enabled",
-				HTTPXffHeaderInsert: "enabled",
-				Servers: []*models.SiteBackendsItemsServersItems{
-					&models.SiteBackendsItemsServersItems{
+		Farms: []*models.SiteFarmsItems{
+			&models.SiteFarmsItems{
+				Name:       "createdBck",
+				Balance:    &models.SiteFarmsItemsBalance{Algorithm: "uri"},
+				UseAs:      "default",
+				Log:        true,
+				Forwardfor: true,
+				Servers: []*models.SiteFarmsItemsServersItems{
+					&models.SiteFarmsItemsServersItems{
 						Name:    "created1",
 						Address: "127.0.1.1",
 						Port:    &port,
-						Ssl:     "enabled",
+						Ssl:     true,
 					},
-					&models.SiteBackendsItemsServersItems{
+					&models.SiteFarmsItemsServersItems{
 						Name:    "created2",
 						Address: "127.0.1.2",
 						Port:    &port,
-						Ssl:     "enabled",
+						Ssl:     true,
 					},
 				},
 			},
-			&models.SiteBackendsItems{
-				Name:                "createdBck2",
-				Balance:             "hash-uri",
-				UseAs:               "conditional",
-				Cond:                "if",
-				CondTest:            "TRUE",
-				Log:                 "enabled",
-				HTTPXffHeaderInsert: "enabled",
+			&models.SiteFarmsItems{
+				Name:       "createdBck2",
+				Balance:    &models.SiteFarmsItemsBalance{Algorithm: "uri"},
+				UseAs:      "conditional",
+				Cond:       "if",
+				CondTest:   "TRUE",
+				Log:        true,
+				Forwardfor: true,
 			},
 		},
 	}
@@ -380,42 +380,42 @@ func TestCreateEditDeleteSite(t *testing.T) {
 	// TestEditSite
 	s = &models.Site{
 		Name: "created",
-		Frontend: &models.SiteFrontend{
-			Protocol:       "tcp",
-			Log:            "enabled",
-			MaxConnections: &mConn,
-			Listeners: []*models.SiteFrontendListenersItems{
-				&models.SiteFrontendListenersItems{
+		Service: &models.SiteService{
+			Mode:    "tcp",
+			Log:     true,
+			Maxconn: &mConn,
+			Listeners: []*models.SiteServiceListenersItems{
+				&models.SiteServiceListenersItems{
 					Name:    "created1",
 					Address: "127.0.0.2",
 					Port:    &port,
 				},
 			},
 		},
-		Backends: []*models.SiteBackendsItems{
-			&models.SiteBackendsItems{
-				Name:                "createdBck3",
-				Balance:             "hash-uri",
-				UseAs:               "conditional",
-				Cond:                "if",
-				CondTest:            "TRUE",
-				Log:                 "enabled",
-				HTTPXffHeaderInsert: "enabled",
-				Servers: []*models.SiteBackendsItemsServersItems{
-					&models.SiteBackendsItemsServersItems{
+		Farms: []*models.SiteFarmsItems{
+			&models.SiteFarmsItems{
+				Name:       "createdBck3",
+				Balance:    &models.SiteFarmsItemsBalance{Algorithm: "uri"},
+				UseAs:      "conditional",
+				Cond:       "if",
+				CondTest:   "TRUE",
+				Log:        true,
+				Forwardfor: true,
+				Servers: []*models.SiteFarmsItemsServersItems{
+					&models.SiteFarmsItemsServersItems{
 						Name:    "created3",
 						Address: "127.0.1.2",
 						Port:    &port,
-						Ssl:     "enabled",
+						Ssl:     true,
 					},
 				},
 			},
-			&models.SiteBackendsItems{
+			&models.SiteFarmsItems{
 				Name:    "createdBck2",
-				Balance: "roundrobin",
+				Balance: &models.SiteFarmsItemsBalance{Algorithm: "roundrobin"},
 				UseAs:   "default",
-				Servers: []*models.SiteBackendsItemsServersItems{
-					&models.SiteBackendsItemsServersItems{
+				Servers: []*models.SiteFarmsItemsServersItems{
+					&models.SiteFarmsItemsServersItems{
 						Name:    "created2",
 						Address: "127.0.1.2",
 						Port:    &port,
@@ -484,45 +484,45 @@ func siteDeepEqual(x, y *models.Site, t *testing.T) bool {
 	}
 
 	// check frontend listeners
-	if len(x.Frontend.Listeners) != len(x.Frontend.Listeners) {
+	if len(x.Service.Listeners) != len(x.Service.Listeners) {
 		return false
 	}
-	if !assert.ElementsMatch(t, x.Frontend.Listeners, y.Frontend.Listeners) {
+	if !assert.ElementsMatch(t, x.Service.Listeners, y.Service.Listeners) {
 		return false
 	}
-	// Check Frontend
-	if x.Frontend.HTTPConnectionMode != y.Frontend.HTTPConnectionMode {
+	// Check Service
+	if x.Service.HTTPConnectionMode != y.Service.HTTPConnectionMode {
 		return false
 	}
-	if x.Frontend.Log != y.Frontend.Log {
+	if x.Service.Log != y.Service.Log {
 		return false
 	}
-	if *x.Frontend.MaxConnections != *y.Frontend.MaxConnections {
+	if *x.Service.Maxconn != *y.Service.Maxconn {
 		return false
 	}
-	if x.Frontend.Protocol != y.Frontend.Protocol {
+	if x.Service.Mode != y.Service.Mode {
 		return false
 	}
 
-	// Check Backends
-	if len(x.Backends) != len(y.Backends) {
+	// Check Farms
+	if len(x.Farms) != len(y.Farms) {
 		return false
 	}
-	backends := make([]interface{}, len(y.Backends))
-	for i := range x.Backends {
-		backends[i] = y.Backends[i]
+	backends := make([]interface{}, len(y.Farms))
+	for i := range x.Farms {
+		backends[i] = y.Farms[i]
 	}
-	for _, b := range x.Backends {
+	for _, b := range x.Farms {
 		b2Interface := misc.GetObjByField(backends, "Name", b.Name)
 		if b2Interface == nil {
 			return false
 		}
-		b2 := b2Interface.(*models.SiteBackendsItems)
+		b2 := b2Interface.(*models.SiteFarmsItems)
 		// Compare backends
 		if b.Balance != b2.Balance {
 			return false
 		}
-		if b.Protocol != b2.Protocol {
+		if b.Mode != b2.Mode {
 			return false
 		}
 		if b.Cond != b2.Cond {

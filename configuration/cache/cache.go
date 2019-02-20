@@ -23,10 +23,10 @@ type serverCache struct {
 	mu    sync.RWMutex
 }
 
-type listeners map[string]models.Listener
+type binds map[string]models.Bind
 
-type listenerCache struct {
-	items map[string]map[string]listeners
+type bindCache struct {
+	items map[string]map[string]binds
 	mu    sync.RWMutex
 }
 
@@ -65,34 +65,24 @@ type serverSwitchingCache struct {
 	mu    sync.RWMutex
 }
 
-type stickRequestRules map[int64]models.StickRequestRule
+type stickRules map[int64]models.StickRule
 
-type stickRequestCache struct {
-	items map[string]map[string]stickRequestRules
+type stickCache struct {
+	items map[string]map[string]stickRules
 	mu    sync.RWMutex
 }
 
-type stickResponseRules map[int64]models.StickResponseRule
+type tcpRequestRules map[int64]models.TCPRequestRule
 
-type stickResponseCache struct {
-	items map[string]map[string]stickResponseRules
+type tcpRequestCache struct {
+	items map[string]map[string]tcpRequestRules
 	mu    sync.RWMutex
 }
 
-type tcpRules map[int64]models.TCPRule
+type tcpResponseRules map[int64]models.TCPResponseRule
 
-type tcpConnCache struct {
-	items map[string]map[string]tcpRules
-	mu    sync.RWMutex
-}
-
-type tcpContReqCache struct {
-	items map[string]map[string]tcpRules
-	mu    sync.RWMutex
-}
-
-type tcpContResCache struct {
-	items map[string]map[string]tcpRules
+type tcpResponseCache struct {
+	items map[string]map[string]tcpResponseRules
 	mu    sync.RWMutex
 }
 
@@ -102,22 +92,20 @@ type versionCache struct {
 }
 
 type Cache struct {
-	enabled                 bool
-	Frontends               frontendCache
-	Backends                backendCache
-	Servers                 serverCache
-	Listeners               listenerCache
-	BackendSwitchingRules   backendSwitchingCache
-	Filters                 filterCache
-	HttpRequestRules        httpReqCache
-	HttpResponseRules       httpResCache
-	ServerSwitchingRules    serverSwitchingCache
-	StickRequestRules       stickRequestCache
-	StickResponseRules      stickResponseCache
-	TcpConnectionRules      tcpConnCache
-	TcpContentRequestRules  tcpContReqCache
-	TcpContentResponseRules tcpContResCache
-	Version                 versionCache
+	enabled               bool
+	Frontends             frontendCache
+	Backends              backendCache
+	Servers               serverCache
+	Binds                 bindCache
+	BackendSwitchingRules backendSwitchingCache
+	Filters               filterCache
+	HttpRequestRules      httpReqCache
+	HttpResponseRules     httpResCache
+	ServerSwitchingRules  serverSwitchingCache
+	StickRules            stickCache
+	TcpRequestRules       tcpRequestCache
+	TcpResponseRules      tcpResponseCache
+	Version               versionCache
 }
 
 func (c *Cache) Init(v int64) {
@@ -127,18 +115,16 @@ func (c *Cache) Init(v int64) {
 
 	c.Frontends.items = make(map[string]map[string]models.Frontend)
 	c.Backends.items = make(map[string]map[string]models.Backend)
-	c.Listeners.items = make(map[string]map[string]listeners)
+	c.Binds.items = make(map[string]map[string]binds)
 	c.Servers.items = make(map[string]map[string]servers)
 	c.BackendSwitchingRules.items = make(map[string]map[string]backendSwitchingRules)
 	c.Filters.items = make(map[string]map[string]filters)
 	c.HttpRequestRules.items = make(map[string]map[string]httpReqRules)
 	c.HttpResponseRules.items = make(map[string]map[string]httpResRules)
 	c.ServerSwitchingRules.items = make(map[string]map[string]serverSwitchingRules)
-	c.StickRequestRules.items = make(map[string]map[string]stickRequestRules)
-	c.StickResponseRules.items = make(map[string]map[string]stickResponseRules)
-	c.TcpConnectionRules.items = make(map[string]map[string]tcpRules)
-	c.TcpContentRequestRules.items = make(map[string]map[string]tcpRules)
-	c.TcpContentResponseRules.items = make(map[string]map[string]tcpRules)
+	c.StickRules.items = make(map[string]map[string]stickRules)
+	c.TcpRequestRules.items = make(map[string]map[string]tcpRequestRules)
+	c.TcpResponseRules.items = make(map[string]map[string]tcpResponseRules)
 	c.InvalidateCache()
 }
 
@@ -147,17 +133,15 @@ func (c *Cache) InitTransactionCache(t string, v int64) {
 	c.Frontends.items[t] = make(map[string]models.Frontend)
 	c.Backends.items[t] = make(map[string]models.Backend)
 	c.Servers.items[t] = make(map[string]servers)
-	c.Listeners.items[t] = make(map[string]listeners)
+	c.Binds.items[t] = make(map[string]binds)
 	c.BackendSwitchingRules.items[t] = make(map[string]backendSwitchingRules)
 	c.Filters.items[t] = make(map[string]filters)
 	c.HttpRequestRules.items[t] = make(map[string]httpReqRules)
 	c.HttpResponseRules.items[t] = make(map[string]httpResRules)
 	c.ServerSwitchingRules.items[t] = make(map[string]serverSwitchingRules)
-	c.StickRequestRules.items[t] = make(map[string]stickRequestRules)
-	c.StickResponseRules.items[t] = make(map[string]stickResponseRules)
-	c.TcpConnectionRules.items[t] = make(map[string]tcpRules)
-	c.TcpContentRequestRules.items[t] = make(map[string]tcpRules)
-	c.TcpContentResponseRules.items[t] = make(map[string]tcpRules)
+	c.StickRules.items[t] = make(map[string]stickRules)
+	c.TcpRequestRules.items[t] = make(map[string]tcpRequestRules)
+	c.TcpResponseRules.items[t] = make(map[string]tcpResponseRules)
 }
 
 func (c *Cache) DeleteTransactionCache(t string) {
@@ -165,27 +149,24 @@ func (c *Cache) DeleteTransactionCache(t string) {
 	delete(c.Frontends.items, t)
 	delete(c.Backends.items, t)
 	delete(c.Servers.items, t)
-	delete(c.Listeners.items, t)
+	delete(c.Binds.items, t)
 	delete(c.BackendSwitchingRules.items, t)
 	delete(c.Filters.items, t)
 	delete(c.HttpRequestRules.items, t)
 	delete(c.ServerSwitchingRules.items, t)
-	delete(c.StickRequestRules.items, t)
-	delete(c.StickResponseRules.items, t)
-	delete(c.TcpConnectionRules.items, t)
-	delete(c.TcpContentRequestRules.items, t)
-	delete(c.TcpContentResponseRules.items, t)
+	delete(c.StickRules.items, t)
+	delete(c.TcpRequestRules.items, t)
+	delete(c.TcpResponseRules.items, t)
 }
 
 func (c *Cache) DeleteFrontendCache(name, t string) {
 	c.Frontends.delete(name, t)
-	delete(c.Listeners.items[t], name)
+	delete(c.Binds.items[t], name)
 	delete(c.BackendSwitchingRules.items[t], name)
 	delete(c.Filters.items[t], "frontend "+name)
 	delete(c.HttpRequestRules.items[t], "frontend "+name)
 	delete(c.HttpResponseRules.items[t], "frontend "+name)
-	delete(c.TcpConnectionRules.items[t], name)
-	delete(c.TcpContentRequestRules.items[t], "frontend "+name)
+	delete(c.TcpRequestRules.items[t], "frontend "+name)
 }
 
 func (c *Cache) DeleteBackendCache(name, t string) {
@@ -195,27 +176,24 @@ func (c *Cache) DeleteBackendCache(name, t string) {
 	delete(c.HttpRequestRules.items[t], "backend "+name)
 	delete(c.HttpResponseRules.items[t], "backend "+name)
 	delete(c.ServerSwitchingRules.items[t], name)
-	delete(c.StickRequestRules.items[t], name)
-	delete(c.StickResponseRules.items[t], name)
-	delete(c.TcpContentRequestRules.items[t], "backend "+name)
-	delete(c.TcpContentResponseRules.items[t], "backend "+name)
+	delete(c.StickRules.items[t], name)
+	delete(c.TcpRequestRules.items[t], "backend "+name)
+	delete(c.TcpResponseRules.items[t], "backend "+name)
 }
 
 func (c *Cache) InvalidateCache() {
 	c.Frontends.Invalidate()
 	c.Backends.Invalidate()
 	c.Servers.Invalidate()
-	c.Listeners.Invalidate()
+	c.Binds.Invalidate()
 	c.BackendSwitchingRules.Invalidate()
 	c.Filters.Invalidate()
 	c.HttpRequestRules.Invalidate()
 	c.HttpResponseRules.Invalidate()
 	c.ServerSwitchingRules.Invalidate()
-	c.StickRequestRules.Invalidate()
-	c.StickResponseRules.Invalidate()
-	c.TcpConnectionRules.Invalidate()
-	c.TcpContentRequestRules.Invalidate()
-	c.TcpContentResponseRules.Invalidate()
+	c.StickRules.Invalidate()
+	c.TcpRequestRules.Invalidate()
+	c.TcpResponseRules.Invalidate()
 }
 
 func (c *Cache) Enabled() bool {
@@ -225,7 +203,11 @@ func (c *Cache) Enabled() bool {
 func (vc *versionCache) Get(transaction string) int64 {
 	vc.mu.RLock()
 	defer vc.mu.RUnlock()
-	return vc.items[transaction]
+	v, found := vc.items[transaction]
+	if !found {
+		return 0
+	}
+	return v
 }
 
 func (vc *versionCache) Set(v int64, transaction string) {
@@ -375,13 +357,13 @@ func (bc *backendCache) delete(name, t string) {
 	delete(bc.items[t], name)
 }
 
-func (lc *listenerCache) Invalidate() {
+func (lc *bindCache) Invalidate() {
 	lc.mu.Lock()
-	lc.items[""] = make(map[string]listeners)
+	lc.items[""] = make(map[string]binds)
 	lc.mu.Unlock()
 }
 
-func (lc *listenerCache) Get(frontend, t string) (models.Listeners, bool) {
+func (lc *bindCache) Get(frontend, t string) (models.Binds, bool) {
 	lc.mu.RLock()
 	defer lc.mu.RUnlock()
 
@@ -390,20 +372,20 @@ func (lc *listenerCache) Get(frontend, t string) (models.Listeners, bool) {
 		return nil, false
 	}
 
-	listeners, found := items[frontend]
-	if !found || len(listeners) == 0 {
+	binds, found := items[frontend]
+	if !found || len(binds) == 0 {
 		return nil, false
 	}
 
-	ls := make([]*models.Listener, 0, len(listeners))
-	for _, l := range listeners {
+	ls := make([]*models.Bind, 0, len(binds))
+	for _, l := range binds {
 		lCopy := l
 		ls = append(ls, &lCopy)
 	}
 	return ls, true
 }
 
-func (lc *listenerCache) GetOne(name, frontend, t string) (*models.Listener, bool) {
+func (lc *bindCache) GetOne(name, frontend, t string) (*models.Bind, bool) {
 	lc.mu.RLock()
 	defer lc.mu.RUnlock()
 
@@ -424,41 +406,41 @@ func (lc *listenerCache) GetOne(name, frontend, t string) (*models.Listener, boo
 	return &l, true
 }
 
-func (lc *listenerCache) Set(name, frontend, t string, l *models.Listener) {
+func (lc *bindCache) Set(name, frontend, t string, l *models.Bind) {
 	lc.mu.Lock()
 	defer lc.mu.Unlock()
 
 	_, found := lc.items[t]
 	if !found {
-		lc.items[t] = make(map[string]listeners)
+		lc.items[t] = make(map[string]binds)
 	}
 
 	_, found = lc.items[t][frontend]
 	if !found {
-		lc.items[t][frontend] = make(listeners)
+		lc.items[t][frontend] = make(binds)
 	}
 	lc.items[t][frontend][name] = *l
 }
 
-func (lc *listenerCache) SetAll(frontend, t string, ls models.Listeners) {
+func (lc *bindCache) SetAll(frontend, t string, ls models.Binds) {
 	lc.mu.Lock()
 	defer lc.mu.Unlock()
 
 	_, found := lc.items[t]
 	if !found {
-		lc.items[t] = make(map[string]listeners)
+		lc.items[t] = make(map[string]binds)
 	}
 
 	_, found = lc.items[t][frontend]
 	if !found {
-		lc.items[t][frontend] = make(listeners)
+		lc.items[t][frontend] = make(binds)
 	}
 	for _, l := range ls {
 		lc.items[t][frontend][l.Name] = *l
 	}
 }
 
-func (lc *listenerCache) Delete(name, frontend, t string) {
+func (lc *bindCache) Delete(name, frontend, t string) {
 	lc.mu.Lock()
 	defer lc.mu.Unlock()
 	delete(lc.items[t][frontend], name)
@@ -638,7 +620,7 @@ func (c *backendSwitchingCache) SetAll(frontend, t string, rs models.BackendSwit
 		c.items[t][frontend] = make(backendSwitchingRules)
 	}
 	for _, r := range rs {
-		c.items[t][frontend][r.ID] = *r
+		c.items[t][frontend][*r.ID] = *r
 	}
 }
 
@@ -729,7 +711,7 @@ func (c *filterCache) SetAll(parent, parentType, t string, rs models.Filters) {
 		c.items[t][parentType+" "+parent] = make(filters)
 	}
 	for _, r := range rs {
-		c.items[t][parentType+" "+parent][r.ID] = *r
+		c.items[t][parentType+" "+parent][*r.ID] = *r
 	}
 }
 
@@ -820,7 +802,7 @@ func (c *httpReqCache) SetAll(parent, parentType, t string, rs models.HTTPReques
 		c.items[t][parentType+" "+parent] = make(httpReqRules)
 	}
 	for _, r := range rs {
-		c.items[t][parentType+" "+parent][r.ID] = *r
+		c.items[t][parentType+" "+parent][*r.ID] = *r
 	}
 }
 
@@ -911,7 +893,7 @@ func (c *httpResCache) SetAll(parent, parentType, t string, rs models.HTTPRespon
 		c.items[t][parentType+" "+parent] = make(httpResRules)
 	}
 	for _, r := range rs {
-		c.items[t][parentType+" "+parent][r.ID] = *r
+		c.items[t][parentType+" "+parent][*r.ID] = *r
 	}
 }
 
@@ -1002,26 +984,26 @@ func (c *serverSwitchingCache) SetAll(backend, t string, rs models.ServerSwitchi
 		c.items[t][backend] = make(serverSwitchingRules)
 	}
 	for _, r := range rs {
-		c.items[t][backend][r.ID] = *r
+		c.items[t][backend][*r.ID] = *r
 	}
 }
 
-func (c *stickRequestCache) Invalidate() {
+func (c *stickCache) Invalidate() {
 	c.mu.Lock()
-	c.items[""] = make(map[string]stickRequestRules)
+	c.items[""] = make(map[string]stickRules)
 	c.mu.Unlock()
 }
 
-func (c *stickRequestCache) InvalidateBackend(t string, backend string) {
+func (c *stickCache) InvalidateBackend(t string, backend string) {
 	c.mu.Lock()
 	_, found := c.items[t]
 	if found {
-		c.items[t][backend] = make(stickRequestRules)
+		c.items[t][backend] = make(stickRules)
 	}
 	c.mu.Unlock()
 }
 
-func (c *stickRequestCache) Get(backend, t string) (models.StickRequestRules, bool) {
+func (c *stickCache) Get(backend, t string) (models.StickRules, bool) {
 	c.mu.RLock()
 	defer c.mu.RUnlock()
 
@@ -1035,7 +1017,7 @@ func (c *stickRequestCache) Get(backend, t string) (models.StickRequestRules, bo
 		return nil, false
 	}
 
-	rs := make([]*models.StickRequestRule, 0, len(rules))
+	rs := make([]*models.StickRule, 0, len(rules))
 	for _, r := range rules {
 		rCopy := r
 		rs = append(rs, &rCopy)
@@ -1043,7 +1025,7 @@ func (c *stickRequestCache) Get(backend, t string) (models.StickRequestRules, bo
 	return rs, true
 }
 
-func (c *stickRequestCache) GetOne(id int64, backend, t string) (*models.StickRequestRule, bool) {
+func (c *stickCache) GetOne(id int64, backend, t string) (*models.StickRule, bool) {
 	c.mu.RLock()
 	defer c.mu.RUnlock()
 
@@ -1064,237 +1046,55 @@ func (c *stickRequestCache) GetOne(id int64, backend, t string) (*models.StickRe
 	return &r, true
 }
 
-func (c *stickRequestCache) Set(id int64, backend, t string, r *models.StickRequestRule) {
+func (c *stickCache) Set(id int64, backend, t string, r *models.StickRule) {
 	c.mu.Lock()
 	defer c.mu.Unlock()
 
 	_, found := c.items[t]
 	if !found {
-		c.items[t] = make(map[string]stickRequestRules)
+		c.items[t] = make(map[string]stickRules)
 	}
 	_, found = c.items[t][backend]
 	if !found {
-		c.items[t][backend] = make(stickRequestRules)
+		c.items[t][backend] = make(stickRules)
 	}
 	c.items[t][backend][id] = *r
 }
 
-func (c *stickRequestCache) SetAll(backend, t string, rs models.StickRequestRules) {
+func (c *stickCache) SetAll(backend, t string, rs models.StickRules) {
 	c.mu.Lock()
 	defer c.mu.Unlock()
 
 	_, found := c.items[t]
 	if !found {
-		c.items[t] = make(map[string]stickRequestRules)
+		c.items[t] = make(map[string]stickRules)
 	}
 
 	_, found = c.items[t][backend]
 	if !found {
-		c.items[t][backend] = make(stickRequestRules)
+		c.items[t][backend] = make(stickRules)
 	}
 	for _, r := range rs {
-		c.items[t][backend][r.ID] = *r
+		c.items[t][backend][*r.ID] = *r
 	}
 }
 
-func (c *stickResponseCache) Invalidate() {
+func (c *tcpRequestCache) Invalidate() {
 	c.mu.Lock()
-	c.items[""] = make(map[string]stickResponseRules)
+	c.items[""] = make(map[string]tcpRequestRules)
 	c.mu.Unlock()
 }
 
-func (c *stickResponseCache) InvalidateBackend(t string, backend string) {
+func (c *tcpRequestCache) InvalidateParent(t, parent, parentType string) {
 	c.mu.Lock()
 	_, found := c.items[t]
 	if found {
-		c.items[t][backend] = make(stickResponseRules)
+		c.items[t][parentType+" "+parent] = make(tcpRequestRules)
 	}
 	c.mu.Unlock()
 }
 
-func (c *stickResponseCache) Get(backend, t string) (models.StickResponseRules, bool) {
-	c.mu.RLock()
-	defer c.mu.RUnlock()
-
-	items, found := c.items[t]
-	if !found || len(items) == 0 {
-		return nil, false
-	}
-
-	rules, found := items[backend]
-	if !found || len(rules) == 0 {
-		return nil, false
-	}
-
-	rs := make([]*models.StickResponseRule, 0, len(rules))
-	for _, r := range rules {
-		rCopy := r
-		rs = append(rs, &rCopy)
-	}
-	return rs, true
-}
-
-func (c *stickResponseCache) GetOne(id int64, backend, t string) (*models.StickResponseRule, bool) {
-	c.mu.RLock()
-	defer c.mu.RUnlock()
-
-	items, found := c.items[t]
-	if !found {
-		return nil, false
-	}
-
-	rs, found := items[backend]
-	if !found {
-		return nil, false
-	}
-
-	r, found := rs[id]
-	if !found {
-		return nil, false
-	}
-	return &r, true
-}
-
-func (c *stickResponseCache) Set(id int64, backend, t string, r *models.StickResponseRule) {
-	c.mu.Lock()
-	defer c.mu.Unlock()
-
-	_, found := c.items[t]
-	if !found {
-		c.items[t] = make(map[string]stickResponseRules)
-	}
-	_, found = c.items[t][backend]
-	if !found {
-		c.items[t][backend] = make(stickResponseRules)
-	}
-	c.items[t][backend][id] = *r
-}
-
-func (c *stickResponseCache) SetAll(backend, t string, rs models.StickResponseRules) {
-	c.mu.Lock()
-	defer c.mu.Unlock()
-
-	_, found := c.items[t]
-	if !found {
-		c.items[t] = make(map[string]stickResponseRules)
-	}
-
-	_, found = c.items[t][backend]
-	if !found {
-		c.items[t][backend] = make(stickResponseRules)
-	}
-	for _, r := range rs {
-		c.items[t][backend][r.ID] = *r
-	}
-}
-
-func (c *tcpConnCache) Invalidate() {
-	c.mu.Lock()
-	c.items[""] = make(map[string]tcpRules)
-	c.mu.Unlock()
-}
-
-func (c *tcpConnCache) InvalidateFrontend(t string, frontend string) {
-	c.mu.Lock()
-	_, found := c.items[t]
-	if found {
-		c.items[t][frontend] = make(tcpRules)
-	}
-	c.mu.Unlock()
-}
-
-func (c *tcpConnCache) Get(frontend, t string) (models.TCPRules, bool) {
-	c.mu.RLock()
-	defer c.mu.RUnlock()
-
-	items, found := c.items[t]
-	if !found || len(items) == 0 {
-		return nil, false
-	}
-
-	rules, found := items[frontend]
-	if !found || len(rules) == 0 {
-		return nil, false
-	}
-
-	rs := make([]*models.TCPRule, 0, len(rules))
-	for _, r := range rules {
-		rCopy := r
-		rs = append(rs, &rCopy)
-	}
-	return rs, true
-}
-
-func (c *tcpConnCache) GetOne(id int64, frontend, t string) (*models.TCPRule, bool) {
-	c.mu.RLock()
-	defer c.mu.RUnlock()
-
-	items, found := c.items[t]
-	if !found {
-		return nil, false
-	}
-
-	rs, found := items[frontend]
-	if !found {
-		return nil, false
-	}
-
-	r, found := rs[id]
-	if !found {
-		return nil, false
-	}
-	return &r, true
-}
-
-func (c *tcpConnCache) Set(id int64, frontend, t string, r *models.TCPRule) {
-	c.mu.Lock()
-	defer c.mu.Unlock()
-
-	_, found := c.items[t]
-	if !found {
-		c.items[t] = make(map[string]tcpRules)
-	}
-	_, found = c.items[t][frontend]
-	if !found {
-		c.items[t][frontend] = make(tcpRules)
-	}
-	c.items[t][frontend][id] = *r
-}
-
-func (c *tcpConnCache) SetAll(frontend, t string, rs models.TCPRules) {
-	c.mu.Lock()
-	defer c.mu.Unlock()
-
-	_, found := c.items[t]
-	if !found {
-		c.items[t] = make(map[string]tcpRules)
-	}
-
-	_, found = c.items[t][frontend]
-	if !found {
-		c.items[t][frontend] = make(tcpRules)
-	}
-	for _, r := range rs {
-		c.items[t][frontend][r.ID] = *r
-	}
-}
-
-func (c *tcpContReqCache) Invalidate() {
-	c.mu.Lock()
-	c.items[""] = make(map[string]tcpRules)
-	c.mu.Unlock()
-}
-
-func (c *tcpContReqCache) InvalidateParent(t, parent, parentType string) {
-	c.mu.Lock()
-	_, found := c.items[t]
-	if found {
-		c.items[t][parentType+" "+parent] = make(tcpRules)
-	}
-	c.mu.Unlock()
-}
-
-func (c *tcpContReqCache) Get(parent, parentType, t string) (models.TCPRules, bool) {
+func (c *tcpRequestCache) Get(parent, parentType, t string) (models.TCPRequestRules, bool) {
 	c.mu.RLock()
 	defer c.mu.RUnlock()
 
@@ -1308,7 +1108,7 @@ func (c *tcpContReqCache) Get(parent, parentType, t string) (models.TCPRules, bo
 		return nil, false
 	}
 
-	rs := make([]*models.TCPRule, 0, len(rules))
+	rs := make([]*models.TCPRequestRule, 0, len(rules))
 	for _, r := range rules {
 		rCopy := r
 		rs = append(rs, &rCopy)
@@ -1316,7 +1116,7 @@ func (c *tcpContReqCache) Get(parent, parentType, t string) (models.TCPRules, bo
 	return rs, true
 }
 
-func (c *tcpContReqCache) GetOne(id int64, parent, parentType, t string) (*models.TCPRule, bool) {
+func (c *tcpRequestCache) GetOne(id int64, parent, parentType, t string) (*models.TCPRequestRule, bool) {
 	c.mu.RLock()
 	defer c.mu.RUnlock()
 
@@ -1337,55 +1137,55 @@ func (c *tcpContReqCache) GetOne(id int64, parent, parentType, t string) (*model
 	return &r, true
 }
 
-func (c *tcpContReqCache) Set(id int64, parent, parentType, t string, r *models.TCPRule) {
+func (c *tcpRequestCache) Set(id int64, parent, parentType, t string, r *models.TCPRequestRule) {
 	c.mu.Lock()
 	defer c.mu.Unlock()
 
 	_, found := c.items[t]
 	if !found {
-		c.items[t] = make(map[string]tcpRules)
+		c.items[t] = make(map[string]tcpRequestRules)
 	}
 	_, found = c.items[t][parentType+" "+parent]
 	if !found {
-		c.items[t][parentType+" "+parent] = make(tcpRules)
+		c.items[t][parentType+" "+parent] = make(tcpRequestRules)
 	}
 	c.items[t][parentType+" "+parent][id] = *r
 }
 
-func (c *tcpContReqCache) SetAll(parent, parentType, t string, rs models.TCPRules) {
+func (c *tcpRequestCache) SetAll(parent, parentType, t string, rs models.TCPRequestRules) {
 	c.mu.Lock()
 	defer c.mu.Unlock()
 
 	_, found := c.items[t]
 	if !found {
-		c.items[t] = make(map[string]tcpRules)
+		c.items[t] = make(map[string]tcpRequestRules)
 	}
 
 	_, found = c.items[t][parentType+" "+parent]
 	if !found {
-		c.items[t][parentType+" "+parent] = make(tcpRules)
+		c.items[t][parentType+" "+parent] = make(tcpRequestRules)
 	}
 	for _, r := range rs {
-		c.items[t][parentType+" "+parent][r.ID] = *r
+		c.items[t][parentType+" "+parent][*r.ID] = *r
 	}
 }
 
-func (c *tcpContResCache) Invalidate() {
+func (c *tcpResponseCache) Invalidate() {
 	c.mu.Lock()
-	c.items[""] = make(map[string]tcpRules)
+	c.items[""] = make(map[string]tcpResponseRules)
 	c.mu.Unlock()
 }
 
-func (c *tcpContResCache) InvalidateBackend(t string, backend string) {
+func (c *tcpResponseCache) InvalidateBackend(t string, backend string) {
 	c.mu.Lock()
 	_, found := c.items[t]
 	if found {
-		c.items[t][backend] = make(tcpRules)
+		c.items[t][backend] = make(tcpResponseRules)
 	}
 	c.mu.Unlock()
 }
 
-func (c *tcpContResCache) Get(backend, t string) (models.TCPRules, bool) {
+func (c *tcpResponseCache) Get(backend, t string) (models.TCPResponseRules, bool) {
 	c.mu.RLock()
 	defer c.mu.RUnlock()
 
@@ -1399,7 +1199,7 @@ func (c *tcpContResCache) Get(backend, t string) (models.TCPRules, bool) {
 		return nil, false
 	}
 
-	rs := make([]*models.TCPRule, 0, len(rules))
+	rs := make([]*models.TCPResponseRule, 0, len(rules))
 	for _, r := range rules {
 		rCopy := r
 		rs = append(rs, &rCopy)
@@ -1407,7 +1207,7 @@ func (c *tcpContResCache) Get(backend, t string) (models.TCPRules, bool) {
 	return rs, true
 }
 
-func (c *tcpContResCache) GetOne(id int64, backend, t string) (*models.TCPRule, bool) {
+func (c *tcpResponseCache) GetOne(id int64, backend, t string) (*models.TCPResponseRule, bool) {
 	c.mu.RLock()
 	defer c.mu.RUnlock()
 
@@ -1428,35 +1228,35 @@ func (c *tcpContResCache) GetOne(id int64, backend, t string) (*models.TCPRule, 
 	return &r, true
 }
 
-func (c *tcpContResCache) Set(id int64, backend, t string, r *models.TCPRule) {
+func (c *tcpResponseCache) Set(id int64, backend, t string, r *models.TCPResponseRule) {
 	c.mu.Lock()
 	defer c.mu.Unlock()
 
 	_, found := c.items[t]
 	if !found {
-		c.items[t] = make(map[string]tcpRules)
+		c.items[t] = make(map[string]tcpResponseRules)
 	}
 	_, found = c.items[t][backend]
 	if !found {
-		c.items[t][backend] = make(tcpRules)
+		c.items[t][backend] = make(tcpResponseRules)
 	}
 	c.items[t][backend][id] = *r
 }
 
-func (c *tcpContResCache) SetAll(backend, t string, rs models.TCPRules) {
+func (c *tcpResponseCache) SetAll(backend, t string, rs models.TCPResponseRules) {
 	c.mu.Lock()
 	defer c.mu.Unlock()
 
 	_, found := c.items[t]
 	if !found {
-		c.items[t] = make(map[string]tcpRules)
+		c.items[t] = make(map[string]tcpResponseRules)
 	}
 
 	_, found = c.items[t][backend]
 	if !found {
-		c.items[t][backend] = make(tcpRules)
+		c.items[t][backend] = make(tcpResponseRules)
 	}
 	for _, r := range rs {
-		c.items[t][backend][r.ID] = *r
+		c.items[t][backend][*r.ID] = *r
 	}
 }

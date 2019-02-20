@@ -23,17 +23,17 @@ func TestGetBackendSwitchingRules(t *testing.T) {
 	}
 
 	for _, br := range bckRules.Data {
-		if br.ID != 1 {
-			t.Errorf("ID only backend switching rule 1, %v found", br.ID)
+		if *br.ID != 0 {
+			t.Errorf("ID only backend switching rule 0, %v found", *br.ID)
 		}
-		if br.TargetFarm != "test_2" {
-			t.Errorf("%v: TargetFarm not test_2: %v", br.ID, br.TargetFarm)
+		if br.Name != "test_2" {
+			t.Errorf("%v: Name not test_2: %v", *br.ID, br.Name)
 		}
 		if br.Cond != "if" {
-			t.Errorf("%v: Cond not if: %v", br.ID, br.Cond)
+			t.Errorf("%v: Cond not if: %v", *br.ID, br.Cond)
 		}
 		if br.CondTest != "TRUE" {
-			t.Errorf("%v: CondTest not TRUE: %v", br.ID, br.CondTest)
+			t.Errorf("%v: CondTest not TRUE: %v", *br.ID, br.CondTest)
 		}
 	}
 
@@ -42,7 +42,7 @@ func TestGetBackendSwitchingRules(t *testing.T) {
 		t.Error(err.Error())
 	}
 
-	bckRules, err = client.GetBackendSwitchingRules("test2", "")
+	bckRules, err = client.GetBackendSwitchingRules("test_2", "")
 	if err != nil {
 		t.Error(err.Error())
 	}
@@ -56,24 +56,24 @@ func TestGetBackendSwitchingRules(t *testing.T) {
 }
 
 func TestGetBackendSwitchingRule(t *testing.T) {
-	bckRule, err := client.GetBackendSwitchingRule(1, "test", "")
+	bckRule, err := client.GetBackendSwitchingRule(0, "test", "")
 	if err != nil {
 		t.Error(err.Error())
 	}
 
 	br := bckRule.Data
 
-	if br.ID != 1 {
-		t.Errorf("ID only backend switching rule 1, %v found", br.ID)
+	if *br.ID != 0 {
+		t.Errorf("ID only backend switching rule 0, %v found", *br.ID)
 	}
-	if br.TargetFarm != "test_2" {
-		t.Errorf("%v: TargetFarm not test_2: %v", br.ID, br.TargetFarm)
+	if br.Name != "test_2" {
+		t.Errorf("%v: Name not test_2: %v", *br.ID, br.Name)
 	}
 	if br.Cond != "if" {
-		t.Errorf("%v: Cond not if: %v", br.ID, br.Cond)
+		t.Errorf("%v: Cond not if: %v", *br.ID, br.Cond)
 	}
 	if br.CondTest != "TRUE" {
-		t.Errorf("%v: CondTest not TRUE: %v", br.ID, br.CondTest)
+		t.Errorf("%v: CondTest not TRUE: %v", *br.ID, br.CondTest)
 	}
 
 	brJSON, err := br.MarshalBinary()
@@ -93,11 +93,12 @@ func TestGetBackendSwitchingRule(t *testing.T) {
 
 func TestCreateEditDeleteBackendSwitchingRule(t *testing.T) {
 	// TestCreateBackendSwitchingRule
+	id := int64(0)
 	br := &models.BackendSwitchingRule{
-		ID:         1,
-		TargetFarm: "test",
-		Cond:       "unless",
-		CondTest:   "TRUE",
+		ID:       &id,
+		Name:     "test",
+		Cond:     "unless",
+		CondTest: "TRUE",
 	}
 
 	err := client.CreateBackendSwitchingRule("test", br, "", version)
@@ -107,7 +108,7 @@ func TestCreateEditDeleteBackendSwitchingRule(t *testing.T) {
 		version++
 	}
 
-	bckRule, err := client.GetBackendSwitchingRule(1, "test", "")
+	bckRule, err := client.GetBackendSwitchingRule(0, "test", "")
 	if err != nil {
 		t.Error(err.Error())
 	}
@@ -128,20 +129,20 @@ func TestCreateEditDeleteBackendSwitchingRule(t *testing.T) {
 
 	// TestBackendSwitchingRule
 	br = &models.BackendSwitchingRule{
-		ID:         1,
-		TargetFarm: "test",
-		Cond:       "if",
-		CondTest:   "TRUE",
+		ID:       &id,
+		Name:     "test",
+		Cond:     "if",
+		CondTest: "TRUE",
 	}
 
-	err = client.EditBackendSwitchingRule(1, "test", br, "", version)
+	err = client.EditBackendSwitchingRule(0, "test", br, "", version)
 	if err != nil {
 		t.Error(err.Error())
 	} else {
 		version++
 	}
 
-	bckRule, err = client.GetBackendSwitchingRule(1, "test", "")
+	bckRule, err = client.GetBackendSwitchingRule(0, "test", "")
 	if err != nil {
 		t.Error(err.Error())
 	}
@@ -161,7 +162,7 @@ func TestCreateEditDeleteBackendSwitchingRule(t *testing.T) {
 	}
 
 	// TestBackendSwitchingRule
-	err = client.DeleteBackendSwitchingRule(2, "test", "", version)
+	err = client.DeleteBackendSwitchingRule(1, "test", "", version)
 	if err != nil {
 		t.Error(err.Error())
 	} else {
@@ -172,12 +173,12 @@ func TestCreateEditDeleteBackendSwitchingRule(t *testing.T) {
 		t.Error("Version not incremented")
 	}
 
-	_, err = client.GetBackendSwitchingRule(2, "test", "")
+	_, err = client.GetBackendSwitchingRule(1, "test", "")
 	if err == nil {
 		t.Error("DeleteBackendSwitchingRule failed, backend switching rule 2 still exists")
 	}
 
-	err = client.DeleteBackendSwitchingRule(2, "test2", "", version)
+	err = client.DeleteBackendSwitchingRule(1, "test2", "", version)
 	if err == nil {
 		t.Error("Should throw error, non existant backend switching rule")
 		version++

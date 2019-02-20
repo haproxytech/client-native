@@ -83,3 +83,37 @@ func SnakeCase(fieldName string) string {
 	n = strings.Replace(n, "httpuri", "http_uri", -1)
 	return n
 }
+
+// DashCase turns camel case to snake case string
+func DashCase(fieldName string) string {
+	fieldName = strings.Trim(fieldName, " ")
+	n := ""
+	for i, v := range fieldName {
+		// treat acronyms as words, eg for JSONData -> JSON is a whole word
+		nextCaseIsChanged := false
+		if i+1 < len(fieldName) {
+			next := fieldName[i+1]
+			if (v >= 'A' && v <= 'Z' && next >= 'a' && next <= 'z') || (v >= 'a' && v <= 'z' && next >= 'A' && next <= 'Z') {
+				nextCaseIsChanged = true
+			}
+		}
+
+		if i > 0 && n[len(n)-1] != '-' && nextCaseIsChanged {
+			// add underscore if next letter case type is changed
+			if v >= 'A' && v <= 'Z' {
+				n += "-" + string(v)
+			} else if v >= 'a' && v <= 'z' {
+				n += string(v) + "-"
+			}
+		} else if v == ' ' {
+			// replace spaces with underscores
+			n += "-"
+		} else {
+			n = n + string(v)
+		}
+	}
+	n = strings.ToLower(n)
+	// special case
+	n = strings.Replace(n, "httpuri", "http-uri", -1)
+	return n
+}
