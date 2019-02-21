@@ -184,7 +184,7 @@ func TestCreateEditDeleteHTTPResponseRule(t *testing.T) {
 	}
 
 	// TestDeleteFilter
-	err = client.DeleteHTTPResponseRule(4, "frontend", "test", "", version)
+	err = client.DeleteHTTPResponseRule(3, "frontend", "test", "", version)
 	if err != nil {
 		t.Error(err.Error())
 	} else {
@@ -195,12 +195,12 @@ func TestCreateEditDeleteHTTPResponseRule(t *testing.T) {
 		t.Error("Version not incremented")
 	}
 
-	_, err = client.GetHTTPResponseRule(4, "frontend", "test", "")
+	_, err = client.GetHTTPResponseRule(3, "frontend", "test", "")
 	if err == nil {
 		t.Error("DeleteHTTPResponseRule failed, HTTPResponse Rule 4 still exists")
 	}
 
-	err = client.DeleteHTTPResponseRule(2, "backend", "test2", "", version)
+	err = client.DeleteHTTPResponseRule(2, "backend", "test_2", "", version)
 	if err == nil {
 		t.Error("Should throw error, non existant HTTPResponse Rule")
 		version++

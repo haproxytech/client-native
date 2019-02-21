@@ -493,7 +493,7 @@ func (c *Client) setFieldValue(p parser.Section, sectionName string, fieldName s
 			Algorithm: b.Algorithm,
 			Arguments: b.Arguments,
 		}
-		if err := c.ConfigParser.Set(p, sectionName, "balance", d); err != nil {
+		if err := c.ConfigParser.Set(p, sectionName, "balance", &d); err != nil {
 			return err
 		}
 		return nil
@@ -503,7 +503,7 @@ func (c *Client) setFieldValue(p parser.Section, sectionName string, fieldName s
 	}
 	if fieldName == "StickTable" {
 		if valueIsNil(field) {
-			if err := c.ConfigParser.Set(p, sectionName, "balance", nil); err != nil {
+			if err := c.ConfigParser.Set(p, sectionName, "stick-table", nil); err != nil {
 				return err
 			}
 			return nil
@@ -579,22 +579,24 @@ func (c *Client) setFieldValue(p parser.Section, sectionName string, fieldName s
 			}
 		}
 		dataArr := make([]types.Log, 0, 0)
-		if data != nil {
-			dataArr = data.([]types.Log)
-		}
 		newDataArr := make([]types.Log, len(dataArr))
 		found := false
-		for _, l := range dataArr {
-			if !l.Global {
+		if data != nil {
+			dataArr = data.([]types.Log)
+
+			for _, l := range dataArr {
+				if !l.Global {
+					newDataArr = append(newDataArr, l)
+					continue
+				}
+				if valueIsNil(field) {
+					continue
+				}
 				newDataArr = append(newDataArr, l)
-				continue
+				found = true
 			}
-			if valueIsNil(field) {
-				continue
-			}
-			found = true
 		}
-		if !found {
+		if !found && !valueIsNil(field) {
 			newDataArr = append(newDataArr, types.Log{Global: true})
 		}
 		if err := c.ConfigParser.Set(p, sectionName, "log", newDataArr); err != nil {
