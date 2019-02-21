@@ -3,8 +3,6 @@ package configuration
 import (
 	"fmt"
 
-	"github.com/haproxytech/client-native/misc"
-
 	strfmt "github.com/go-openapi/strfmt"
 	parser "github.com/haproxytech/config-parser"
 	"github.com/haproxytech/models"
@@ -62,12 +60,7 @@ func (c *Client) GetFrontend(name string, transactionID string) (*models.GetFron
 		return nil, err
 	}
 
-	frontends, err := c.ConfigParser.SectionsGet(parser.Frontends)
-	if err != nil {
-		return nil, err
-	}
-
-	if !misc.StringInSlice(name, frontends) {
+	if !c.checkSectionExists(parser.Frontends, name) {
 		return nil, NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("Frontend %s does not exist", name))
 	}
 

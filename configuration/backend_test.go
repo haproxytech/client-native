@@ -5,6 +5,7 @@ import (
 	"reflect"
 	"testing"
 
+	"github.com/stretchr/testify/assert"
 	"github.com/haproxytech/models"
 )
 
@@ -37,12 +38,6 @@ func TestGetBackends(t *testing.T) {
 		}
 		if b.Balance.Algorithm != "roundrobin" {
 			t.Errorf("%v: Balance.Algorithm not roundrobin: %v", b.Name, b.Balance.Algorithm)
-		}
-		if b.Log != true {
-			t.Errorf("%v: Log not true: %v", b.Name, b.Log)
-		}
-		if b.LogFormat != "http" {
-			t.Errorf("%v: LogFormat not http: %v", b.Name, b.LogFormat)
 		}
 		if b.HTTPConnectionMode != "http-keep-alive" {
 			t.Errorf("%v: HTTPConnectionMode not http-keep-alive: %v", b.Name, b.HTTPConnectionMode)
@@ -113,12 +108,6 @@ func TestGetBackend(t *testing.T) {
 	if b.Balance.Algorithm != "roundrobin" {
 		t.Errorf("%v: Balance.Algorithm not roundrobin: %v", b.Name, b.Balance.Algorithm)
 	}
-	if b.Log != true {
-		t.Errorf("%v: Log not true: %v", b.Name, b.Log)
-	}
-	if b.LogFormat != "http" {
-		t.Errorf("%v: LogFormat not http: %v", b.Name, b.LogFormat)
-	}
 	if b.HTTPConnectionMode != "http-keep-alive" {
 		t.Errorf("%v: HTTPConnectionMode not http-keep-alive: %v", b.Name, b.HTTPConnectionMode)
 	}
@@ -188,7 +177,7 @@ func TestCreateEditDeleteBackend(t *testing.T) {
 		t.Error(err.Error())
 	}
 
-	if !reflect.DeepEqual(backend.Data, b) {
+	if !compareBackends(backend.Data, b, t) {
 		fmt.Printf("Created bck: %v\n", backend.Data)
 		fmt.Printf("Given bck: %v\n", b)
 		t.Error("Created backend not equal to given backend")
@@ -230,7 +219,7 @@ func TestCreateEditDeleteBackend(t *testing.T) {
 		t.Error(err.Error())
 	}
 
-	if !reflect.DeepEqual(backend.Data, b) {
+	if !compareBackends(backend.Data, b, t) {
 		fmt.Printf("Edited bck: %v\n", backend.Data)
 		fmt.Printf("Given bck: %v\n", b)
 		t.Error("Edited backend not equal to given backend")
@@ -282,4 +271,48 @@ func TestCreateEditDeleteBackend(t *testing.T) {
 	if !t.Failed() {
 		fmt.Println("DeleteBackend successful")
 	}
+}
+
+func compareBackends(x, y *models.Backend, t *testing.T) bool {
+
+	if x.Balance.Algorithm != y.Balance.Algorithm {
+		return false
+	}
+
+	if len(x.Balance.Arguments) != len(y.Balance.Arguments) {
+		return false
+	}
+
+	if !assert.ElementsMatch(t, x.Balance.Arguments, y.Balance.Arguments) {
+		return false
+	}
+
+	x.Balance = nil
+	y.Balance = nil
+
+	if !reflect.DeepEqual(x.DefaultServer, y.DefaultServer) {
+		return false
+	}
+
+	x.DefaultServer = nil
+	y.DefaultServer = nil
+
+	if !reflect.DeepEqual(x.Httpchk, y.Httpchk) {
+		return false
+	}
+
+	x.Httpchk = nil
+	y.Httpchk = nil
+
+	if !reflect.DeepEqual(x.StickTable, y.StickTable) {
+		return false
+	}
+
+	x.StickTable = nil
+	y.StickTable = nil
+
+	if !reflect.DeepEqual(x, y) {
+		return false
+	}
+	return true
 }

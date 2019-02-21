@@ -86,6 +86,13 @@ type tcpResponseCache struct {
 	mu    sync.RWMutex
 }
 
+type logTargets map[int64]models.LogTarget
+
+type logTargetCache struct {
+	items map[string]map[string]logTargets
+	mu    sync.RWMutex
+}
+
 type versionCache struct {
 	items map[string]int64
 	mu    sync.RWMutex
@@ -105,6 +112,7 @@ type Cache struct {
 	StickRules            stickCache
 	TcpRequestRules       tcpRequestCache
 	TcpResponseRules      tcpResponseCache
+	LogTargets            logTargetCache
 	Version               versionCache
 }
 
@@ -125,6 +133,7 @@ func (c *Cache) Init(v int64) {
 	c.StickRules.items = make(map[string]map[string]stickRules)
 	c.TcpRequestRules.items = make(map[string]map[string]tcpRequestRules)
 	c.TcpResponseRules.items = make(map[string]map[string]tcpResponseRules)
+	c.LogTargets.items = make(map[string]map[string]logTargets)
 	c.InvalidateCache()
 }
 
@@ -142,6 +151,7 @@ func (c *Cache) InitTransactionCache(t string, v int64) {
 	c.StickRules.items[t] = make(map[string]stickRules)
 	c.TcpRequestRules.items[t] = make(map[string]tcpRequestRules)
 	c.TcpResponseRules.items[t] = make(map[string]tcpResponseRules)
+	c.LogTargets.items[t] = make(map[string]logTargets)
 }
 
 func (c *Cache) DeleteTransactionCache(t string) {
@@ -157,6 +167,7 @@ func (c *Cache) DeleteTransactionCache(t string) {
 	delete(c.StickRules.items, t)
 	delete(c.TcpRequestRules.items, t)
 	delete(c.TcpResponseRules.items, t)
+	delete(c.LogTargets.items, t)
 }
 
 func (c *Cache) DeleteFrontendCache(name, t string) {
@@ -167,6 +178,7 @@ func (c *Cache) DeleteFrontendCache(name, t string) {
 	delete(c.HttpRequestRules.items[t], "frontend "+name)
 	delete(c.HttpResponseRules.items[t], "frontend "+name)
 	delete(c.TcpRequestRules.items[t], "frontend "+name)
+	delete(c.LogTargets.items[t], "frontend "+name)
 }
 
 func (c *Cache) DeleteBackendCache(name, t string) {
@@ -179,6 +191,7 @@ func (c *Cache) DeleteBackendCache(name, t string) {
 	delete(c.StickRules.items[t], name)
 	delete(c.TcpRequestRules.items[t], "backend "+name)
 	delete(c.TcpResponseRules.items[t], "backend "+name)
+	delete(c.LogTargets.items[t], "backend "+name)
 }
 
 func (c *Cache) InvalidateCache() {
@@ -194,6 +207,7 @@ func (c *Cache) InvalidateCache() {
 	c.StickRules.Invalidate()
 	c.TcpRequestRules.Invalidate()
 	c.TcpResponseRules.Invalidate()
+	c.LogTargets.Invalidate()
 }
 
 func (c *Cache) Enabled() bool {
@@ -1258,5 +1272,96 @@ func (c *tcpResponseCache) SetAll(backend, t string, rs models.TCPResponseRules)
 	}
 	for _, r := range rs {
 		c.items[t][backend][*r.ID] = *r
+	}
+}
+
+func (c *logTargetCache) Invalidate() {
+	c.mu.Lock()
+	c.items[""] = make(map[string]logTargets)
+	c.mu.Unlock()
+}
+
+func (c *logTargetCache) InvalidateParent(t, parent, parentType string) {
+	c.mu.Lock()
+	_, found := c.items[t]
+	if found {
+		c.items[t][parentType+" "+parent] = make(logTargets)
+	}
+	c.mu.Unlock()
+}
+
+func (c *logTargetCache) Get(parent, parentType, t string) (models.LogTargets, bool) {
+	c.mu.RLock()
+	defer c.mu.RUnlock()
+
+	items, found := c.items[t]
+	if !found || len(items) == 0 {
+		return nil, false
+	}
+
+	rules, found := items[parentType+" "+parent]
+	if !found || len(rules) == 0 {
+		return nil, false
+	}
+
+	rs := make([]*models.LogTarget, 0, len(rules))
+	for _, r := range rules {
+		rCopy := r
+		rs = append(rs, &rCopy)
+	}
+	return rs, true
+}
+
+func (c *logTargetCache) GetOne(id int64, parent, parentType, t string) (*models.LogTarget, bool) {
+	c.mu.RLock()
+	defer c.mu.RUnlock()
+
+	items, found := c.items[t]
+	if !found {
+		return nil, false
+	}
+
+	rs, found := items[parentType+" "+parent]
+	if !found {
+		return nil, false
+	}
+
+	r, found := rs[id]
+	if !found {
+		return nil, false
+	}
+	return &r, true
+}
+
+func (c *logTargetCache) Set(id int64, parent, parentType, t string, r *models.LogTarget) {
+	c.mu.Lock()
+	defer c.mu.Unlock()
+
+	_, found := c.items[t]
+	if !found {
+		c.items[t] = make(map[string]logTargets)
+	}
+	_, found = c.items[t][parentType+" "+parent]
+	if !found {
+		c.items[t][parentType+" "+parent] = make(logTargets)
+	}
+	c.items[t][parentType+" "+parent][id] = *r
+}
+
+func (c *logTargetCache) SetAll(parent, parentType, t string, rs models.LogTargets) {
+	c.mu.Lock()
+	defer c.mu.Unlock()
+
+	_, found := c.items[t]
+	if !found {
+		c.items[t] = make(map[string]logTargets)
+	}
+
+	_, found = c.items[t][parentType+" "+parent]
+	if !found {
+		c.items[t][parentType+" "+parent] = make(logTargets)
+	}
+	for _, r := range rs {
+		c.items[t][parentType+" "+parent][*r.ID] = *r
 	}
 }

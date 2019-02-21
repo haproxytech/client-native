@@ -4,7 +4,6 @@ import (
 	"fmt"
 
 	strfmt "github.com/go-openapi/strfmt"
-	"github.com/haproxytech/client-native/misc"
 	parser "github.com/haproxytech/config-parser"
 	"github.com/haproxytech/models"
 )
@@ -60,12 +59,7 @@ func (c *Client) GetBackend(name string, transactionID string) (*models.GetBacke
 		return nil, err
 	}
 
-	backends, err := c.ConfigParser.SectionsGet(parser.Backends)
-	if err != nil {
-		return nil, err
-	}
-
-	if !misc.StringInSlice(name, backends) {
+	if !c.checkSectionExists(parser.Backends, name) {
 		return nil, NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("Backend %s does not exist", name))
 	}
 

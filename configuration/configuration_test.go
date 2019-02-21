@@ -18,7 +18,6 @@ frontend test
   mode http
   bind 192.168.1.1:80 name webserv
   bind 192.168.1.1:8080 name webserv2
-  log global
   option httplog
   option dontlognull
   option contstats
@@ -36,6 +35,9 @@ frontend test
   tcp-request connection reject if FALSE
   tcp-request content accept if TRUE
   tcp-request content reject if FALSE
+  log global
+  no log
+  log 127.0.0.1:514 local0 notice notice
   log-tag bla
   option httpclose
   timeout http-request 2s
@@ -48,7 +50,6 @@ frontend test
 
 frontend test_2
   mode http
-  log global
   option httplog
   option dontlognull
   option contstats
@@ -65,9 +66,7 @@ frontend test_2
 backend test
   mode http
   balance roundrobin
-  log global
   log-tag bla
-  option httplog
   option http-keep-alive
   option forwardfor header X-Forwarded-For
   option httpchk HEAD /
@@ -93,9 +92,7 @@ backend test
 backend test_2
   mode http
   balance roundrobin
-  log global  
   log-tag bla
-  option httplog
   option http-keep-alive
   option forwardfor header X-Forwarded-For
   option httpchk HEAD /

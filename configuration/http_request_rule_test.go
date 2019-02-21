@@ -71,7 +71,7 @@ func TestGetHTTPRequestRules(t *testing.T) {
 		t.Error(err.Error())
 	}
 	if len(hRules.Data) > 0 {
-		t.Errorf("%v filters returned, expected 0", len(hRules.Data))
+		t.Errorf("%v HTTP Request Ruless returned, expected 0", len(hRules.Data))
 	}
 
 	if !t.Failed() {
@@ -188,7 +188,7 @@ func TestCreateEditDeleteHTTPRequestRule(t *testing.T) {
 		fmt.Println("EditHTTPRequestRule successful")
 	}
 
-	// TestDeleteFilter
+	// TestDeleteHTTPRequest
 	err = client.DeleteHTTPRequestRule(3, "frontend", "test", "", version)
 	if err != nil {
 		t.Error(err.Error())
@@ -200,9 +200,9 @@ func TestCreateEditDeleteHTTPRequestRule(t *testing.T) {
 		t.Error("Version not incremented")
 	}
 
-	_, err = client.GetHTTPRequestRule(4, "frontend", "test", "")
+	_, err = client.GetHTTPRequestRule(3, "frontend", "test", "")
 	if err == nil {
-		t.Error("DeleteHTTPRequestRule failed, HTTP Request Rule 4 still exists")
+		t.Error("DeleteHTTPRequestRule failed, HTTP Request Rule 3 still exists")
 	}
 
 	err = client.DeleteHTTPRequestRule(2, "backend", "test_2", "", version)

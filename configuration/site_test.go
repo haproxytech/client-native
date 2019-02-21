@@ -28,9 +28,6 @@ func TestGetSites(t *testing.T) {
 			if *s.Service.Maxconn != 2000 {
 				t.Errorf("%v: Maxconn not 2000: %v", s.Name, *s.Service.Maxconn)
 			}
-			if s.Service.Log != true {
-				t.Errorf("%v: Log not true: %v", s.Name, s.Service.Log)
-			}
 			if s.Service.Mode != "http" {
 				t.Errorf("%v: Mode not http: %v", s.Name, s.Service.Mode)
 			}
@@ -61,9 +58,6 @@ func TestGetSites(t *testing.T) {
 					}
 					if b.Forwardfor != true {
 						t.Errorf("%v: %v: Forwardfor not true: %v", s.Name, b.Name, b.Forwardfor)
-					}
-					if b.Log != true {
-						t.Errorf("%v: %v: Log not true: %v", s.Name, b.Name, b.Log)
 					}
 					if b.Mode != "http" {
 						t.Errorf("%v: %v: Protocol not http: %v", s.Name, b.Name, b.Mode)
@@ -104,9 +98,6 @@ func TestGetSites(t *testing.T) {
 					if b.Forwardfor != true {
 						t.Errorf("%v: %v: Forwardfor not true: %v", s.Name, b.Name, b.Forwardfor)
 					}
-					if b.Log != true {
-						t.Errorf("%v: %v: Log not true: %v", s.Name, b.Name, b.Log)
-					}
 					if b.Mode != "http" {
 						t.Errorf("%v: %v: Mode not http: %v", s.Name, b.Name, b.Mode)
 					}
@@ -120,9 +111,6 @@ func TestGetSites(t *testing.T) {
 		} else if s.Name == "test_2" {
 			if *s.Service.Maxconn != 2000 {
 				t.Errorf("%v: MaxConnections not 2000: %v", s.Name, *s.Service.Maxconn)
-			}
-			if s.Service.Log != true {
-				t.Errorf("%v: Log not true: %v", s.Name, s.Service.Log)
 			}
 			if s.Service.Mode != "http" {
 				t.Errorf("%v: Protocol not http: %v", s.Name, s.Service.Mode)
@@ -143,9 +131,6 @@ func TestGetSites(t *testing.T) {
 					}
 					if b.Forwardfor != true {
 						t.Errorf("%v: %v: Forwardfor not true: %v", s.Name, b.Name, b.Forwardfor)
-					}
-					if b.Log != true {
-						t.Errorf("%v: %v: Log not true: %v", s.Name, b.Name, b.Log)
 					}
 					if b.Mode != "http" {
 						t.Errorf("%v: %v: Protocol not http: %v", s.Name, b.Name, b.Mode)
@@ -190,9 +175,6 @@ func TestGetSite(t *testing.T) {
 	if *s.Service.Maxconn != 2000 {
 		t.Errorf("%v: MaxConnections not 2000: %v", s.Name, *s.Service.Maxconn)
 	}
-	if s.Service.Log != true {
-		t.Errorf("%v: Log not true: %v", s.Name, s.Service.Log)
-	}
 	if s.Service.Mode != "http" {
 		t.Errorf("%v: Protocol not http: %v", s.Name, s.Service.Mode)
 	}
@@ -223,9 +205,6 @@ func TestGetSite(t *testing.T) {
 			}
 			if b.Forwardfor != true {
 				t.Errorf("%v: %v: HTTPXffHeaderInsert not true: %v", s.Name, b.Name, b.Forwardfor)
-			}
-			if b.Log != true {
-				t.Errorf("%v: %v: Log not true: %v", s.Name, b.Name, b.Log)
 			}
 			if b.Mode != "http" {
 				t.Errorf("%v: %v: Protocol not http: %v", s.Name, b.Name, b.Mode)
@@ -266,9 +245,6 @@ func TestGetSite(t *testing.T) {
 			if b.Forwardfor != true {
 				t.Errorf("%v: %v: Forwardfor not true: %v", s.Name, b.Name, b.Forwardfor)
 			}
-			if b.Log != true {
-				t.Errorf("%v: %v: Log not true: %v", s.Name, b.Name, b.Log)
-			}
 			if b.Mode != "http" {
 				t.Errorf("%v: %v: Mode not http: %v", s.Name, b.Name, b.Mode)
 			}
@@ -296,7 +272,6 @@ func TestCreateEditDeleteSite(t *testing.T) {
 		Name: "created",
 		Service: &models.SiteService{
 			Mode:    "http",
-			Log:     true,
 			Maxconn: &mConn,
 			Listeners: []*models.SiteServiceListenersItems{
 				&models.SiteServiceListenersItems{
@@ -316,7 +291,6 @@ func TestCreateEditDeleteSite(t *testing.T) {
 				Name:       "createdBck",
 				Balance:    &models.SiteFarmsItemsBalance{Algorithm: "uri"},
 				UseAs:      "default",
-				Log:        true,
 				Forwardfor: true,
 				Servers: []*models.SiteFarmsItemsServersItems{
 					&models.SiteFarmsItemsServersItems{
@@ -339,7 +313,6 @@ func TestCreateEditDeleteSite(t *testing.T) {
 				UseAs:      "conditional",
 				Cond:       "if",
 				CondTest:   "TRUE",
-				Log:        true,
 				Forwardfor: true,
 			},
 		},
@@ -382,7 +355,6 @@ func TestCreateEditDeleteSite(t *testing.T) {
 		Name: "created",
 		Service: &models.SiteService{
 			Mode:    "tcp",
-			Log:     true,
 			Maxconn: &mConn,
 			Listeners: []*models.SiteServiceListenersItems{
 				&models.SiteServiceListenersItems{
@@ -399,7 +371,6 @@ func TestCreateEditDeleteSite(t *testing.T) {
 				UseAs:      "conditional",
 				Cond:       "if",
 				CondTest:   "TRUE",
-				Log:        true,
 				Forwardfor: true,
 				Servers: []*models.SiteFarmsItemsServersItems{
 					&models.SiteFarmsItemsServersItems{
@@ -494,9 +465,6 @@ func siteDeepEqual(x, y *models.Site, t *testing.T) bool {
 	if x.Service.HTTPConnectionMode != y.Service.HTTPConnectionMode {
 		return false
 	}
-	if x.Service.Log != y.Service.Log {
-		return false
-	}
 	if *x.Service.Maxconn != *y.Service.Maxconn {
 		return false
 	}
@@ -519,7 +487,10 @@ func siteDeepEqual(x, y *models.Site, t *testing.T) bool {
 		}
 		b2 := b2Interface.(*models.SiteFarmsItems)
 		// Compare backends
-		if b.Balance != b2.Balance {
+		if b.Balance.Algorithm != b2.Balance.Algorithm {
+			return false
+		}
+		if !assert.ElementsMatch(t, b.Balance.Arguments, b2.Balance.Arguments) {
 			return false
 		}
 		if b.Mode != b2.Mode {
@@ -532,9 +503,6 @@ func siteDeepEqual(x, y *models.Site, t *testing.T) bool {
 			return false
 		}
 		if b.UseAs != b2.UseAs {
-			return false
-		}
-		if b.Log != b2.Log {
 			return false
 		}
 

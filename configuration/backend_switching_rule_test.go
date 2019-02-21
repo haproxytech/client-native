@@ -93,7 +93,7 @@ func TestGetBackendSwitchingRule(t *testing.T) {
 
 func TestCreateEditDeleteBackendSwitchingRule(t *testing.T) {
 	// TestCreateBackendSwitchingRule
-	id := int64(0)
+	id := int64(1)
 	br := &models.BackendSwitchingRule{
 		ID:       &id,
 		Name:     "test",
@@ -108,7 +108,7 @@ func TestCreateEditDeleteBackendSwitchingRule(t *testing.T) {
 		version++
 	}
 
-	bckRule, err := client.GetBackendSwitchingRule(0, "test", "")
+	bckRule, err := client.GetBackendSwitchingRule(1, "test", "")
 	if err != nil {
 		t.Error(err.Error())
 	}
@@ -135,14 +135,14 @@ func TestCreateEditDeleteBackendSwitchingRule(t *testing.T) {
 		CondTest: "TRUE",
 	}
 
-	err = client.EditBackendSwitchingRule(0, "test", br, "", version)
+	err = client.EditBackendSwitchingRule(1, "test", br, "", version)
 	if err != nil {
 		t.Error(err.Error())
 	} else {
 		version++
 	}
 
-	bckRule, err = client.GetBackendSwitchingRule(0, "test", "")
+	bckRule, err = client.GetBackendSwitchingRule(1, "test", "")
 	if err != nil {
 		t.Error(err.Error())
 	}

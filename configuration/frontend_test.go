@@ -29,12 +29,6 @@ func TestGetFrontends(t *testing.T) {
 		if f.Mode != "http" {
 			t.Errorf("%v: Mode not http: %v", f.Name, f.Mode)
 		}
-		if f.Log != true {
-			t.Errorf("%v: Log not true: %v", f.Name, f.Log)
-		}
-		if f.LogFormat != "http" {
-			t.Errorf("%v: LogFormat not http: %v", f.Name, f.LogFormat)
-		}
 		if f.Dontlognull != "enabled" {
 			t.Errorf("%v: Dontlognull not enabled: %v", f.Name, f.Dontlognull)
 		}
@@ -92,12 +86,6 @@ func TestGetFrontend(t *testing.T) {
 	if f.Mode != "http" {
 		t.Errorf("%v: Mode not http: %v", f.Name, f.Mode)
 	}
-	if f.Log != true {
-		t.Errorf("%v: Log not true: %v", f.Name, f.Log)
-	}
-	if f.LogFormat != "http" {
-		t.Errorf("%v: LogFormat not http: %v", f.Name, f.LogFormat)
-	}
 	if f.Dontlognull != "enabled" {
 		t.Errorf("%v: Dontlognull not enabled: %v", f.Name, f.Dontlognull)
 	}
@@ -148,7 +136,6 @@ func TestCreateEditDeleteFrontend(t *testing.T) {
 		Maxconn:              &mConn,
 		HTTPConnectionMode:   "http-keep-alive",
 		HTTPKeepAliveTimeout: &tOut,
-		Log:                  true,
 	}
 
 	err := client.CreateFrontend(f, "", version)

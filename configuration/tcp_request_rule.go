@@ -278,6 +278,7 @@ func parseTCPRequestRule(f types.TCPAction) *models.TCPRequestRule {
 	case *actions.InspectDelay:
 		t, _ := strconv.ParseInt(v.Timeout, 10, 64)
 		return &models.TCPRequestRule{
+			Type:    "inspect-delay",
 			Timeout: &t,
 		}
 	case *actions.Session:

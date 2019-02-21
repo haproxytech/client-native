@@ -343,38 +343,25 @@ func (c *Client) parseField(p parser.Section, sectionName string, fieldName stri
 		bck := data.(*types.StringC)
 		return bck.Value
 	}
-	if fieldName == "Log" {
-		data, err := c.ConfigParser.Get(p, sectionName, "log", false)
-		if err != nil {
-			return nil
-		}
-		dataArr := data.([]types.Log)
-		for _, l := range dataArr {
-			if l.Global {
-				return "enabled"
-			}
-		}
-		return nil
-	}
-	if fieldName == "LogFormat" {
+	if fieldName == "Clflog" {
 		data, err := c.ConfigParser.Get(p, sectionName, "option httplog", false)
 		if err == nil {
 			d := data.(*types.OptionHTTPLog)
 			if !d.NoOption {
-				if d.Clf {
-					return "clf"
-				}
-				return "http"
+				return d.Clf
 			}
 		}
-
-		data, err = c.ConfigParser.Get(p, sectionName, "option tcplog", false)
+		return nil
+	}
+	if fieldName == "Httplog" {
+		data, err := c.ConfigParser.Get(p, sectionName, "option httplog", false)
 		if err == nil {
-			d := data.(*types.SimpleOption)
+			d := data.(*types.OptionHTTPLog)
 			if !d.NoOption {
-				return "tcplog"
+				return !d.Clf
 			}
 		}
+		return nil
 	}
 	if fieldName == "HTTPConnectionMode" {
 		data, err := c.ConfigParser.Get(p, sectionName, "option http-tunnel", false)
@@ -571,64 +558,6 @@ func (c *Client) setFieldValue(p parser.Section, sectionName string, fieldName s
 		}
 		return nil
 	}
-	if fieldName == "Log" {
-		data, err := c.ConfigParser.Get(p, sectionName, "log", false)
-		if err != nil {
-			if err != parser_errors.FetchError {
-				return nil
-			}
-		}
-		dataArr := make([]types.Log, 0, 0)
-		newDataArr := make([]types.Log, len(dataArr))
-		found := false
-		if data != nil {
-			dataArr = data.([]types.Log)
-
-			for _, l := range dataArr {
-				if !l.Global {
-					newDataArr = append(newDataArr, l)
-					continue
-				}
-				if valueIsNil(field) {
-					continue
-				}
-				newDataArr = append(newDataArr, l)
-				found = true
-			}
-		}
-		if !found && !valueIsNil(field) {
-			newDataArr = append(newDataArr, types.Log{Global: true})
-		}
-		if err := c.ConfigParser.Set(p, sectionName, "log", newDataArr); err != nil {
-			return err
-		}
-		return nil
-	}
-	if fieldName == "LogFormat" {
-		if err := c.ConfigParser.Set(p, sectionName, "option httplog", nil); err != nil {
-			return err
-		}
-		if err := c.ConfigParser.Set(p, sectionName, "option tcplog", nil); err != nil {
-			return err
-		}
-		if !valueIsNil(field) {
-			lf := field.String()
-			if lf == "tcp" {
-				if err := c.ConfigParser.Set(p, sectionName, "option tcplog", &types.SimpleOption{NoOption: false}); err != nil {
-					return err
-				}
-			} else {
-				l := &types.OptionHTTPLog{NoOption: false}
-				if lf == "clf" {
-					l.Clf = true
-				}
-				if err := c.ConfigParser.Set(p, sectionName, "option tcplog", l); err != nil {
-					return err
-				}
-			}
-		}
-		return nil
-	}
 	if fieldName == "HTTPConnectionMode" {
 		if err := c.ConfigParser.Set(p, sectionName, "option http-tunnel", nil); err != nil {
 			return err
@@ -654,6 +583,55 @@ func (c *Client) setFieldValue(p parser.Section, sectionName string, fieldName s
 			if err := c.ConfigParser.Set(p, sectionName, pName, d); err != nil {
 				return err
 			}
+		}
+		return nil
+	}
+	if fieldName == "Clflog" {
+		if valueIsNil(field) {
+			// check if httplog exists, if not do nothing
+			d, err := c.ConfigParser.Get(p, sectionName, "option httplog", false)
+			if err != nil {
+				if err != parser_errors.FetchError {
+					return err
+				}
+				return nil
+			}
+			o := d.(*types.OptionHTTPLog)
+			if o.Clf {
+				o.Clf = false
+				if err := c.ConfigParser.Set(p, sectionName, "option httplog", o); err != nil {
+					return err
+				}
+			}
+			return nil
+		}
+		o := &types.OptionHTTPLog{Clf: true}
+		if err := c.ConfigParser.Set(p, sectionName, "option httplog", o); err != nil {
+			return err
+		}
+		return nil
+	}
+	if fieldName == "Httplog" {
+		if valueIsNil(field) {
+			// check if clflog is active, if yes, do nothing
+			d, err := c.ConfigParser.Get(p, sectionName, "option httplog", false)
+			if err != nil {
+				if err != parser_errors.FetchError {
+					return err
+				}
+				return nil
+			}
+			o := d.(*types.OptionHTTPLog)
+			if !o.Clf {
+				if err := c.ConfigParser.Set(p, sectionName, "option httplog", nil); err != nil {
+					return err
+				}
+			}
+			return nil
+		}
+		o := &types.OptionHTTPLog{}
+		if err := c.ConfigParser.Set(p, sectionName, "option httplog", o); err != nil {
+			return err
 		}
 		return nil
 	}

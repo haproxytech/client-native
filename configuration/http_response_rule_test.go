@@ -71,7 +71,7 @@ func TestGetHTTPResponseRules(t *testing.T) {
 		t.Error(err.Error())
 	}
 	if len(hRules.Data) > 0 {
-		t.Errorf("%v filters returned, expected 0", len(hRules.Data))
+		t.Errorf("%v HTTP Response Rules returned, expected 0", len(hRules.Data))
 	}
 
 	if !t.Failed() {
@@ -183,7 +183,7 @@ func TestCreateEditDeleteHTTPResponseRule(t *testing.T) {
 		fmt.Println("EditHTTPResponseRule successful")
 	}
 
-	// TestDeleteFilter
+	// TestDeleteHTTPResponse
 	err = client.DeleteHTTPResponseRule(3, "frontend", "test", "", version)
 	if err != nil {
 		t.Error(err.Error())
@@ -197,7 +197,7 @@ func TestCreateEditDeleteHTTPResponseRule(t *testing.T) {
 
 	_, err = client.GetHTTPResponseRule(3, "frontend", "test", "")
 	if err == nil {
-		t.Error("DeleteHTTPResponseRule failed, HTTPResponse Rule 4 still exists")
+		t.Error("DeleteHTTPResponseRule failed, HTTPResponse Rule 3 still exists")
 	}
 
 	err = client.DeleteHTTPResponseRule(2, "backend", "test_2", "", version)

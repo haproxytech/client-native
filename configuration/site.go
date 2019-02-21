@@ -38,6 +38,10 @@ func (c *Client) GetSite(name string, transactionID string) (*models.GetSiteOKBo
 		return nil, err
 	}
 
+	if !c.checkSectionExists(parser.Frontends, name) {
+		return nil, NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("Site %s does not exist", name))
+	}
+
 	site := c.parseSite(name)
 	if site == nil {
 		return nil, NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("Site %s does not exist", name))
@@ -421,7 +425,6 @@ func (c *Client) parseSite(s string) *models.Site {
 		Name: s,
 		Service: &models.SiteService{
 			HTTPConnectionMode: frontend.HTTPConnectionMode,
-			Log:                frontend.Log,
 			Maxconn:            frontend.Maxconn,
 			Mode:               frontend.Mode,
 			Listeners:          c.parseServiceListeners(s),
@@ -474,7 +477,6 @@ func (c *Client) parseFarm(name string, useAs string, cond string, condTest stri
 			UseAs:    useAs,
 			Cond:     cond,
 			CondTest: condTest,
-			Log:      backend.Log,
 			Mode:     backend.Mode,
 			Name:     backend.Name,
 			Servers:  c.parseFarmServers(backend.Name),
@@ -522,7 +524,6 @@ func serializeServiceToFrontend(service *models.SiteService, name string) *model
 		Name:               name,
 		Mode:               service.Mode,
 		Maxconn:            service.Maxconn,
-		Log:                service.Log,
 		HTTPConnectionMode: service.HTTPConnectionMode,
 	}
 }
@@ -530,7 +531,6 @@ func serializeServiceToFrontend(service *models.SiteService, name string) *model
 func serializeFarmToBackend(farm *models.SiteFarmsItems) *models.Backend {
 	backend := &models.Backend{
 		Name: farm.Name,
-		Log:  farm.Log,
 		Mode: farm.Mode,
 	}
 	if farm.Forwardfor {
@@ -649,7 +649,6 @@ func (c *Client) editService(name string, service *models.SiteService, t string)
 	}
 
 	frontend.HTTPConnectionMode = service.HTTPConnectionMode
-	frontend.Log = service.Log
 	frontend.Maxconn = service.Maxconn
 	frontend.Mode = service.Mode
 
@@ -666,7 +665,6 @@ func (c *Client) editFarm(name string, farm *models.SiteFarmsItems, t string) er
 	}
 
 	backend.Mode = farm.Mode
-	backend.Log = farm.Log
 	if farm.Forwardfor {
 		backend.Forwardfor = "enabled"
 	} else {

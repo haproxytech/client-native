@@ -228,6 +228,7 @@ func parseTCPResponseRule(t types.TCPAction) *models.TCPResponseRule {
 	case *actions.InspectDelay:
 		tOut, _ := strconv.ParseInt(v.Timeout, 10, 64)
 		return &models.TCPResponseRule{
+			Type:    "inspect-delay",
 			Timeout: &tOut,
 		}
 	}
