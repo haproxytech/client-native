@@ -8,7 +8,7 @@
 
 ### Internal dependencies
 
-The native client currently depends on the [config-parser](http://github.com/haproxytech/config-parser) and the [lbctl](http://github.com/HAPEE/lbctl) parser. The tendency is to drop the **lbctl** in favour of the native **config-parser** as the later project is developed.
+The native client depends on the [config-parser](http://github.com/haproxytech/config-parser).
 
 ### External dependencies
 
@@ -32,41 +32,48 @@ The native client currently depends on the [config-parser](http://github.com/hap
 ## Usage Example
 
 ```
-confClient, err = configuration.DefaultClient()
+// Initialize HAProxy native client
+confClient := &configuration.Client{}
+confParams := configuration.ClientParams{
+    ConfigurationFile: "/etc/haproxy/haproxy.cfg",
+    Haproxy:           "/usr/sbin/haproxy",
+    UseValidation:     true,
+    UseCache:          true,
+    TransactionDir:    "/tmp/haproxy",
+}
+err := confClient.Init(confParams)
 if err != nil {
-    fmt.Println("Error setting up default configuration client, exiting...")
+    fmt.Println("Error setting up configuration client, using default one")
+    confClient, err = configuration.DefaultClient()
+    if err != nil {
+        fmt.Println("Error setting up default configuration client, exiting...")
+        api.ServerShutdown()
+    }
 }
 
-var nbproc int64
-data, err := confClient.GlobalParser.GetGlobalAttr("nbproc")
+runtimeClient := &runtime_api.Client{}
+globalConf, err := confClient.GetGlobalConfiguration("")
+
 if err != nil {
-    nbproc = int64(1)
-} else {
-    d := data.(*simple.SimpleNumber)
-    nbproc = d.Value
-}
-
-statsSocket := ""
-data, err = confClient.GlobalParser.GetGlobalAttr("stats socket")
-if err == nil {
-    statsSockets := data.(*stats.SocketLines)
-    statsSocket = statsSockets.SocketLines[0].Path
-} else {
-    fmt.Println("Error getting stats socket")
-    fmt.Println(err.Error())
-}
-
-if statsSocket == "" {
     fmt.Println("Stats socket not configured, no runtime client initiated")
-    runtimeClient = nil
+}
+
+nbproc := globalConf.Data.Nbproc
+if nbproc == 0 {
+    nbproc = 1
+}
+
+runtimeAPI := globalConf.Data.RuntimeAPI
+if runtimeAPI == "" {
+    fmt.Println("Stats socket not configured, no runtime client initiated")
 } else {
     socketList := make([]string, 0, 1)
     if nbproc > 1 {
         for i := int64(0); i < nbproc; i++ {
-            socketList = append(socketList, fmt.Sprintf("%v.%v", statsSocket, i))
+            socketList = append(socketList, fmt.Sprintf("%v.%v", runtimeAPI, i))
         }
     } else {
-        socketList = append(socketList, statsSocket)
+        socketList = append(socketList, runtimeAPI)
     }
     err := runtimeClient.Init(socketList)
     if err != nil {
@@ -75,12 +82,24 @@ if statsSocket == "" {
     }
 }
 
-client := &HAProxyClient{}
+client := &client_native.HAProxyClient{}
 client.Init(confClient, runtimeClient)
 
-rawConfig, err := client.Configuration.GetRawConfiguration()
+bcks, err := h.Client.Configuration.GetBackends(t)
+if err != nil {
+    fmt.Println(err.Error())
+}
+//...
 
-stats, err := client.Runtime.GetStats()
+backendsJSON, err := bcks.MarshallBinary()
+
+if err != nil {
+    fmt.Println(err.Error())
+}
+
+fmt.Println(string(backendsJSON))
+//...
+
 ```
 
 
