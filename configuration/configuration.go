@@ -92,7 +92,7 @@ func (c *Client) GetParser(transaction string) (*parser.Parser, error) {
 	}
 	p, ok := c.parsers[transaction]
 	if !ok {
-		return nil, errors.Errorf("Parser for %s does not exist", transaction)
+		return nil, NewConfError(ErrTransactionDoesNotExist, fmt.Sprintf("Parser for %s does not exist", transaction))
 	}
 	return p, nil
 }
@@ -103,7 +103,7 @@ func (c *Client) AddParser(transaction string) error {
 	}
 	_, ok := c.parsers[transaction]
 	if ok {
-		return errors.Errorf("Parser for %s already exists", transaction)
+		return NewConfError(ErrObjectAlreadyExists, fmt.Sprintf("Parser for %s already exists", transaction))
 	}
 
 	p := &parser.Parser{}
@@ -120,7 +120,7 @@ func (c *Client) DeleteParser(transaction string) error {
 	}
 	_, ok := c.parsers[transaction]
 	if !ok {
-		return errors.Errorf("Parser for %s does not exist", transaction)
+		return NewConfError(ErrTransactionDoesNotExist, fmt.Sprintf("Parser for %s does not exist", transaction))
 	}
 	delete(c.parsers, transaction)
 	return nil
@@ -132,7 +132,7 @@ func (c *Client) CommitParser(transaction string) error {
 	}
 	p, ok := c.parsers[transaction]
 	if !ok {
-		return errors.Errorf("Parser for %s does not exist", transaction)
+		return NewConfError(ErrTransactionDoesNotExist, fmt.Sprintf("Parser for %s does not exist", transaction))
 	}
 	c.Parser = p
 	delete(c.parsers, transaction)
@@ -163,8 +163,8 @@ func (c *Client) incrementVersion() error {
 	return c.Parser.Save(c.ConfigurationFile)
 }
 
-func (c *Client) checkTransactionOrVersion(transactionID string, version int64, startTransaction bool) (string, error) {
-	// start an implicit transaction for delete site (multiple operations required) if not already given
+func (c *Client) checkTransactionOrVersion(transactionID string, version int64) (string, error) {
+	// start an implicit transaction if transaction is not already given
 	t := ""
 	if transactionID != "" && version != 0 {
 		return "", NewConfError(ErrBothVersionTransaction, "Both version and transaction specified, specify only one")
@@ -180,13 +180,13 @@ func (c *Client) checkTransactionOrVersion(transactionID string, version int64, 
 		if version != v {
 			return "", NewConfError(ErrVersionMismatch, fmt.Sprintf("Version in configuration file is %v, given version is %v", v, version))
 		}
-		if startTransaction {
-			transaction, err := c.startTransaction(version, false)
-			if err != nil {
-				return "", err
-			}
-			t = transaction.ID
+
+		transaction, err := c.startTransaction(version, false)
+		if err != nil {
+			return "", err
 		}
+		t = transaction.ID
+
 	}
 	return t, nil
 }
@@ -728,6 +728,7 @@ func (c *Client) handleError(id, parentType, parentName, transaction string, imp
 	} else {
 		e = err
 	}
+
 	if implicit {
 		return c.errAndDeleteTransaction(e, transaction)
 	}
@@ -735,7 +736,9 @@ func (c *Client) handleError(id, parentType, parentName, transaction string, imp
 }
 
 func (c *Client) errAndDeleteTransaction(err error, tID string) error {
+	// Just a safety to not delete the master files by mistake
 	if tID != "" {
+		c.DeleteTransaction(tID)
 		return err
 	}
 	return err
@@ -824,21 +827,18 @@ func (c *Client) checkSectionExists(section parser.Section, sectionName string, 
 }
 
 func (c *Client) loadDataForChange(transactionID string, version int64) (*parser.Parser, string, error) {
-	t, err := c.checkTransactionOrVersion(transactionID, version, true)
+	t, err := c.checkTransactionOrVersion(transactionID, version)
 	if err != nil {
-		err, ok := err.(*ConfError)
-		if !ok {
-			if transactionID == "" {
-				return nil, "", c.errAndDeleteTransaction(err, t)
-			}
-			return nil, "", err
+		// if transaction is implicit, return err and delete transaction
+		if transactionID == "" && t != "" {
+			return nil, "", c.errAndDeleteTransaction(err, t)
 		}
 		return nil, "", err
 	}
 
 	p, err := c.GetParser(t)
 	if err != nil {
-		if transactionID == "" {
+		if transactionID == "" && t != "" {
 			return nil, "", c.errAndDeleteTransaction(err, t)
 		}
 		return nil, "", err
@@ -855,7 +855,7 @@ func (c *Client) saveData(p *parser.Parser, t string, commitImplicit bool) error
 	}
 
 	if commitImplicit {
-		if err := c.commitTransaction(t, false); err != nil {
+		if err := c.CommitTransaction(t); err != nil {
 			return err
 		}
 	}

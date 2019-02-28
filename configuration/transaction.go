@@ -1,6 +1,7 @@
 package configuration
 
 import (
+	"bytes"
 	"fmt"
 	"io"
 	"io/ioutil"
@@ -58,10 +59,6 @@ func (c *Client) startTransaction(version int64, initCache bool) (*models.Transa
 
 // CommitTransaction commits a transaction by id.
 func (c *Client) CommitTransaction(id string) error {
-	return c.commitTransaction(id, true)
-}
-
-func (c *Client) commitTransaction(id string, invalidateCache bool) error {
 	// do a version check before commiting
 	version, err := c.GetVersion("")
 	if err != nil {
@@ -105,11 +102,15 @@ func (c *Client) commitTransaction(id string, invalidateCache bool) error {
 }
 
 func (c *Client) checkTransactionFile(id string) error {
-	cmd := exec.Command(c.Haproxy, "-f", c.ConfigurationFile, "-c")
+	cmd := exec.Command(c.Haproxy, "-f", c.getTransactionFile(id), "-c")
+
+	var stdout, stderr bytes.Buffer
+	cmd.Stdout = &stdout
+	cmd.Stderr = &stderr
 
 	err := cmd.Run()
 	if err != nil {
-		return err
+		return NewConfError(ErrValidationError, string(stderr.Bytes()))
 	}
 	return nil
 }
