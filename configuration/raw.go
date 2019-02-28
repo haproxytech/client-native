@@ -47,8 +47,8 @@ func (c *Client) GetRawConfiguration() (*models.GetHAProxyConfigurationOKBody, e
 	}
 
 	data := &models.GetHAProxyConfigurationOKBody{
-		Configuration: dataStr,
-		Version:       ondiskV,
+		Data:    dataStr,
+		Version: ondiskV,
 	}
 	return data, nil
 }
