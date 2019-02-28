@@ -1,7 +1,7 @@
 package configuration
 
 import (
-	"fmt"
+	"strconv"
 
 	"github.com/haproxytech/config-parser/parsers/filters"
 
@@ -15,23 +15,14 @@ import (
 // GetFilters returns a struct with configuration version and an array of
 // configured filters in the specified parent. Returns error on fail.
 func (c *Client) GetFilters(parentType, parentName string, transactionID string) (*models.GetFiltersOKBody, error) {
-	if c.Cache.Enabled() {
-		filters, found := c.Cache.Filters.Get(parentName, parentType, transactionID)
-		if found {
-			return &models.GetFiltersOKBody{Version: c.Cache.Version.Get(transactionID), Data: filters}, nil
-		}
-	}
-
-	if err := c.ConfigParser.LoadData(c.getTransactionFile(transactionID)); err != nil {
-		return nil, err
-	}
-
-	filters, err := c.parseFilters(parentType, parentName)
+	p, err := c.GetParser(transactionID)
 	if err != nil {
-		if err == parser_errors.SectionMissingErr {
-			return nil, NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("%s %s does not exist", parentType, parentName))
-		}
 		return nil, err
+	}
+
+	filters, err := c.parseFilters(parentType, parentName, p)
+	if err != nil {
+		return nil, c.handleError("", parentType, parentName, "", false, err)
 	}
 
 	v, err := c.GetVersion(transactionID)
@@ -39,41 +30,27 @@ func (c *Client) GetFilters(parentType, parentName string, transactionID string)
 		return nil, err
 	}
 
-	if c.Cache.Enabled() {
-		c.Cache.Filters.SetAll(parentName, parentType, transactionID, filters)
-	}
 	return &models.GetFiltersOKBody{Version: v, Data: filters}, nil
 }
 
 // GetFilter returns a struct with configuration version and a requested filter
 // in the specified parent. Returns error on fail or if filter does not exist.
 func (c *Client) GetFilter(id int64, parentType, parentName string, transactionID string) (*models.GetFilterOKBody, error) {
-	if c.Cache.Enabled() {
-		filter, found := c.Cache.Filters.GetOne(id, parentName, parentType, transactionID)
-		if found {
-			return &models.GetFilterOKBody{Version: c.Cache.Version.Get(transactionID), Data: filter}, nil
-		}
-	}
-	if err := c.ConfigParser.LoadData(c.getTransactionFile(transactionID)); err != nil {
-		return nil, err
-	}
-
-	var p parser.Section
-	if parentType == "backend" {
-		p = parser.Backends
-	} else if parentType == "frontend" {
-		p = parser.Frontends
-	}
-
-	data, err := c.ConfigParser.GetOne(p, parentName, "filter", int(id))
+	p, err := c.GetParser(transactionID)
 	if err != nil {
-		if err == parser_errors.SectionMissingErr {
-			return nil, NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("%s %s does not exist", parentType, parentName))
-		}
-		if err == parser_errors.FetchError {
-			return nil, NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("Filter %v does not exist in %s %s", id, parentType, parentName))
-		}
 		return nil, err
+	}
+
+	var section parser.Section
+	if parentType == "backend" {
+		section = parser.Backends
+	} else if parentType == "frontend" {
+		section = parser.Frontends
+	}
+
+	data, err := p.GetOne(section, parentName, "filter", int(id))
+	if err != nil {
+		return nil, c.handleError(strconv.FormatInt(id, 10), parentType, parentName, "", false, err)
 	}
 
 	filter := parseFilter(data.(types.Filter))
@@ -84,45 +61,32 @@ func (c *Client) GetFilter(id int64, parentType, parentName string, transactionI
 		return nil, err
 	}
 
-	if c.Cache.Enabled() {
-		c.Cache.Filters.Set(id, parentName, parentType, transactionID, filter)
-	}
-
 	return &models.GetFilterOKBody{Version: v, Data: filter}, nil
 }
 
 // DeleteFilter deletes a filter in configuration. One of version or transactionID is
 // mandatory. Returns error on fail, nil on success.
 func (c *Client) DeleteFilter(id int64, parentType string, parentName string, transactionID string, version int64) error {
-	t, err := c.loadDataForChange(transactionID, version)
+	p, t, err := c.loadDataForChange(transactionID, version)
 	if err != nil {
 		return err
 	}
 
-	var p parser.Section
+	var section parser.Section
 	if parentType == "backend" {
-		p = parser.Backends
+		section = parser.Backends
 	} else if parentType == "frontend" {
-		p = parser.Frontends
+		section = parser.Frontends
 	}
 
-	if err := c.ConfigParser.Delete(p, parentName, "filter", int(id)); err != nil {
-		if err == parser_errors.SectionMissingErr {
-			return NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("%s %s does not exist", parentName, parentType))
-		}
-		if err == parser_errors.FetchError {
-			return NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("Filter %v does not exist in %s %s", id, parentName, parentType))
-		}
+	if err := p.Delete(section, parentName, "filter", int(id)); err != nil {
+		return c.handleError(strconv.FormatInt(id, 10), parentType, parentName, t, transactionID == "", err)
+	}
+
+	if err := c.saveData(p, t, transactionID == ""); err != nil {
 		return err
 	}
 
-	if err := c.saveData(t, transactionID); err != nil {
-		return err
-	}
-
-	if c.Cache.Enabled() {
-		c.Cache.Filters.InvalidateParent(transactionID, parentName, parentType)
-	}
 	return nil
 }
 
@@ -136,34 +100,24 @@ func (c *Client) CreateFilter(parentType string, parentName string, data *models
 		}
 	}
 
-	t, err := c.loadDataForChange(transactionID, version)
+	p, t, err := c.loadDataForChange(transactionID, version)
 	if err != nil {
 		return err
 	}
 
-	var p parser.Section
+	var section parser.Section
 	if parentType == "backend" {
-		p = parser.Backends
+		section = parser.Backends
 	} else if parentType == "frontend" {
-		p = parser.Frontends
+		section = parser.Frontends
 	}
 
-	if err := c.ConfigParser.Insert(p, parentName, "filter", serializeFilter(*data), int(*data.ID)); err != nil {
-		if err == parser_errors.IndexOutOfRange {
-			return c.errAndDeleteTransaction(NewConfError(ErrObjectIndexOutOfRange,
-				fmt.Sprintf("Filter with id %v in %s %s out of range", int(*data.ID), parentType, parentName)), t, transactionID == "")
-		}
-		if err == parser_errors.SectionMissingErr {
-			return NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("%s %s does not exist", parentType, parentName))
-		}
-		return c.errAndDeleteTransaction(err, t, transactionID == "")
+	if err := p.Insert(section, parentName, "filter", serializeFilter(*data), int(*data.ID)); err != nil {
+		return c.handleError(strconv.FormatInt(*data.ID, 10), parentType, parentName, t, transactionID == "", err)
 	}
 
-	if err := c.saveData(t, transactionID); err != nil {
+	if err := c.saveData(p, t, transactionID == ""); err != nil {
 		return err
-	}
-	if c.Cache.Enabled() {
-		c.Cache.Filters.InvalidateParent(transactionID, parentName, parentType)
 	}
 	return nil
 }
@@ -177,56 +131,43 @@ func (c *Client) EditFilter(id int64, parentType string, parentName string, data
 			return NewConfError(ErrValidationError, validationErr.Error())
 		}
 	}
-	t, err := c.loadDataForChange(transactionID, version)
+	p, t, err := c.loadDataForChange(transactionID, version)
 	if err != nil {
 		return err
 	}
 
-	var p parser.Section
+	var section parser.Section
 	if parentType == "backend" {
-		p = parser.Backends
+		section = parser.Backends
 	} else if parentType == "frontend" {
-		p = parser.Frontends
+		section = parser.Frontends
 	}
 
-	if _, err := c.ConfigParser.GetOne(p, parentName, "filter", int(id)); err != nil {
-		if err == parser_errors.SectionMissingErr {
-			return NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("%s %s does not exist", parentType, parentName))
-		}
-		if err == parser_errors.FetchError {
-			return NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("Filter %v does not exist in %s %s", id, parentType, parentName))
-		}
+	if _, err := p.GetOne(section, parentName, "filter", int(id)); err != nil {
+		return c.handleError(strconv.FormatInt(id, 10), parentType, parentName, t, transactionID == "", err)
+	}
+
+	if err := p.Set(section, parentName, "filter", serializeFilter(*data), int(id)); err != nil {
+		return c.handleError(strconv.FormatInt(id, 10), parentType, parentName, t, transactionID == "", err)
+	}
+
+	if err := c.saveData(p, t, transactionID == ""); err != nil {
 		return err
 	}
 
-	if err := c.ConfigParser.Set(p, parentName, "filter", serializeFilter(*data), int(id)); err != nil {
-		if err == parser_errors.IndexOutOfRange {
-			return c.errAndDeleteTransaction(NewConfError(ErrObjectIndexOutOfRange,
-				fmt.Sprintf("Filter with id %v in %s %s out of range", int(*data.ID), parentType, parentName)), t, transactionID == "")
-		}
-		return c.errAndDeleteTransaction(err, t, transactionID == "")
-	}
-
-	if err := c.saveData(t, transactionID); err != nil {
-		return err
-	}
-
-	if c.Cache.Enabled() {
-		c.Cache.Filters.InvalidateParent(transactionID, parentName, parentType)
-	}
 	return nil
 }
 
-func (c *Client) parseFilters(t, pName string) (models.Filters, error) {
-	p := parser.Global
+func (c *Client) parseFilters(t, pName string, p *parser.Parser) (models.Filters, error) {
+	section := parser.Global
 	if t == "frontend" {
-		p = parser.Frontends
+		section = parser.Frontends
 	} else if t == "backend" {
-		p = parser.Backends
+		section = parser.Backends
 	}
 
 	f := models.Filters{}
-	data, err := c.ConfigParser.Get(p, pName, "filter", false)
+	data, err := p.Get(section, pName, "filter", false)
 	if err != nil {
 		if err == parser_errors.FetchError {
 			return f, nil

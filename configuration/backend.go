@@ -11,17 +11,12 @@ import (
 // GetBackends returns a struct with configuration version and an array of
 // configured backends. Returns error on fail.
 func (c *Client) GetBackends(transactionID string) (*models.GetBackendsOKBody, error) {
-	if c.Cache.Enabled() {
-		backends, found := c.Cache.Backends.Get(transactionID)
-		if found {
-			return &models.GetBackendsOKBody{Version: c.Cache.Version.Get(transactionID), Data: backends}, nil
-		}
-	}
-	if err := c.ConfigParser.LoadData(c.getTransactionFile(transactionID)); err != nil {
+	p, err := c.GetParser(transactionID)
+	if err != nil {
 		return nil, err
 	}
 
-	bNames, err := c.ConfigParser.SectionsGet(parser.Backends)
+	bNames, err := p.SectionsGet(parser.Backends)
 	if err != nil {
 		return nil, err
 	}
@@ -29,7 +24,7 @@ func (c *Client) GetBackends(transactionID string) (*models.GetBackendsOKBody, e
 	backends := []*models.Backend{}
 	for _, name := range bNames {
 		b := &models.Backend{Name: name}
-		if err := c.parseSection(b, parser.Backends, name); err != nil {
+		if err := c.parseSection(b, parser.Backends, name, p); err != nil {
 			continue
 		}
 		backends = append(backends, b)
@@ -40,31 +35,23 @@ func (c *Client) GetBackends(transactionID string) (*models.GetBackendsOKBody, e
 		return nil, err
 	}
 
-	if c.Cache.Enabled() {
-		c.Cache.Backends.SetAll(transactionID, backends)
-	}
 	return &models.GetBackendsOKBody{Version: v, Data: backends}, nil
 }
 
 // GetBackend returns a struct with configuration version and a requested backend.
 // Returns error on fail or if backend does not exist.
 func (c *Client) GetBackend(name string, transactionID string) (*models.GetBackendOKBody, error) {
-	if c.Cache.Enabled() {
-		backend, found := c.Cache.Backends.GetOne(name, transactionID)
-		if found {
-			return &models.GetBackendOKBody{Version: c.Cache.Version.Get(transactionID), Data: backend}, nil
-		}
-	}
-	if err := c.ConfigParser.LoadData(c.getTransactionFile(transactionID)); err != nil {
+	p, err := c.GetParser(transactionID)
+	if err != nil {
 		return nil, err
 	}
 
-	if !c.checkSectionExists(parser.Backends, name) {
+	if !c.checkSectionExists(parser.Backends, name, p) {
 		return nil, NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("Backend %s does not exist", name))
 	}
 
 	backend := &models.Backend{Name: name}
-	if err := c.parseSection(backend, parser.Backends, name); err != nil {
+	if err := c.parseSection(backend, parser.Backends, name, p); err != nil {
 		return nil, err
 
 	}
@@ -74,9 +61,6 @@ func (c *Client) GetBackend(name string, transactionID string) (*models.GetBacke
 		return nil, err
 	}
 
-	if c.Cache.Enabled() {
-		c.Cache.Backends.Set(name, transactionID, backend)
-	}
 	return &models.GetBackendOKBody{Version: v, Data: backend}, nil
 }
 
@@ -85,9 +69,6 @@ func (c *Client) GetBackend(name string, transactionID string) (*models.GetBacke
 func (c *Client) DeleteBackend(name string, transactionID string, version int64) error {
 	if err := c.deleteSection(parser.Backends, name, transactionID, version); err != nil {
 		return err
-	}
-	if c.Cache.Enabled() {
-		c.Cache.DeleteBackendCache(name, transactionID)
 	}
 	return nil
 }
@@ -104,9 +85,6 @@ func (c *Client) CreateBackend(data *models.Backend, transactionID string, versi
 	if err := c.createSection(parser.Backends, data.Name, data, transactionID, version); err != nil {
 		return err
 	}
-	if c.Cache.Enabled() {
-		c.Cache.Backends.Set(data.Name, transactionID, data)
-	}
 	return nil
 }
 
@@ -121,9 +99,6 @@ func (c *Client) EditBackend(name string, data *models.Backend, transactionID st
 	}
 	if err := c.editSection(parser.Backends, name, data, transactionID, version); err != nil {
 		return err
-	}
-	if c.Cache.Enabled() {
-		c.Cache.Backends.Set(name, transactionID, data)
 	}
 	return nil
 }

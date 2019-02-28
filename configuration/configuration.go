@@ -9,7 +9,6 @@ import (
 	"github.com/pkg/errors"
 	"github.com/haproxytech/config-parser/common"
 
-	"github.com/haproxytech/client-native/configuration/cache"
 	"github.com/haproxytech/client-native/misc"
 	parser "github.com/haproxytech/config-parser"
 	parser_errors "github.com/haproxytech/config-parser/errors"
@@ -25,8 +24,6 @@ const (
 	DefaultHaproxy string = "/usr/sbin/haproxy"
 	//DefaultUseValidation sane default using validation in client native
 	DefaultUseValidation bool = true
-	//DefaultUseCache sane default using caching in client native
-	DefaultUseCache bool = false
 	// DefaultTransactionDir sane default for path for transactions
 	DefaultTransactionDir string = "/tmp/haproxy"
 )
@@ -36,15 +33,14 @@ type ClientParams struct {
 	ConfigurationFile string
 	Haproxy           string
 	UseValidation     bool
-	UseCache          bool
 	TransactionDir    string
 }
 
 // Client configuration client
 type Client struct {
 	ClientParams
-	cache.Cache
-	ConfigParser parser.Parser
+	parsers map[string]*parser.Parser
+	Parser  *parser.Parser
 }
 
 // DefaultClient returns Client with sane defaults
@@ -53,7 +49,6 @@ func DefaultClient() (*Client, error) {
 		ConfigurationFile: DefaultConfigurationFile,
 		Haproxy:           DefaultHaproxy,
 		UseValidation:     DefaultUseValidation,
-		UseCache:          DefaultUseCache,
 		TransactionDir:    DefaultTransactionDir,
 	}
 	c := &Client{}
@@ -82,64 +77,90 @@ func (c *Client) Init(options ClientParams) error {
 
 	c.ClientParams = options
 
-	c.Cache = cache.Cache{}
-
-	if c.UseCache {
-		v, err := c.GetVersion("")
-		if err != nil {
-			return err
-		}
-		c.Cache.Init(v)
+	c.parsers = make(map[string]*parser.Parser)
+	c.Parser = &parser.Parser{}
+	if err := c.Parser.LoadData(options.ConfigurationFile); err != nil {
+		return err
 	}
 
 	return nil
 }
 
+func (c *Client) GetParser(transaction string) (*parser.Parser, error) {
+	if transaction == "" {
+		return c.Parser, nil
+	}
+	p, ok := c.parsers[transaction]
+	if !ok {
+		return nil, errors.Errorf("Parser for %s does not exist", transaction)
+	}
+	return p, nil
+}
+
+func (c *Client) AddParser(transaction string) error {
+	if transaction == "" {
+		return errors.Errorf("Not a valid transaction")
+	}
+	_, ok := c.parsers[transaction]
+	if ok {
+		return errors.Errorf("Parser for %s already exists", transaction)
+	}
+
+	p := &parser.Parser{}
+	if err := p.LoadData(c.getTransactionFile(transaction)); err != nil {
+		return err
+	}
+	c.parsers[transaction] = p
+	return nil
+}
+
+func (c *Client) DeleteParser(transaction string) error {
+	if transaction == "" {
+		return errors.Errorf("Not a valid transaction")
+	}
+	_, ok := c.parsers[transaction]
+	if !ok {
+		return errors.Errorf("Parser for %s does not exist", transaction)
+	}
+	delete(c.parsers, transaction)
+	return nil
+}
+
+func (c *Client) CommitParser(transaction string) error {
+	if transaction == "" {
+		return errors.Errorf("Not a valid transaction")
+	}
+	p, ok := c.parsers[transaction]
+	if !ok {
+		return errors.Errorf("Parser for %s does not exist", transaction)
+	}
+	c.Parser = p
+	delete(c.parsers, transaction)
+	return nil
+}
+
 // GetVersion returns configuration file version
 func (c *Client) GetVersion(transaction string) (int64, error) {
-	if c.Cache.Enabled() {
-		v := c.Cache.Version.Get(transaction)
-		if v != 0 {
-			return v, nil
-		}
-	}
-	v, err := c.getVersion(transaction)
-	if err == nil && c.Cache.Enabled() {
-		c.Cache.Version.Set(v, transaction)
-	}
-	return v, err
+	return c.getVersion(transaction)
 }
 
 func (c *Client) getVersion(transaction string) (int64, error) {
-	var configFile string
-	if transaction == "" {
-		configFile = c.ConfigurationFile
-	} else {
-		configFile = c.getTransactionFile(transaction)
-	}
-
-	err := c.ConfigParser.LoadData(configFile)
+	p, err := c.GetParser(transaction)
 	if err != nil {
 		return 0, err
 	}
-	data, _ := c.ConfigParser.Get(parser.Comments, parser.CommentsSectionName, "# _version", true)
+
+	data, _ := p.Get(parser.Comments, parser.CommentsSectionName, "# _version", true)
 	ver, _ := data.(*types.ConfigVersion)
 	return ver.Value, nil
 }
 
 func (c *Client) incrementVersion() error {
-	err := c.ConfigParser.LoadData(c.ConfigurationFile)
-	if err != nil {
-		return err
-	}
-	data, _ := c.ConfigParser.Get(parser.Comments, parser.CommentsSectionName, "# _version", true)
+	data, _ := c.Parser.Get(parser.Comments, parser.CommentsSectionName, "# _version", true)
 	ver, _ := data.(*types.ConfigVersion)
 	ver.Value = ver.Value + 1
 
-	if c.Cache.Enabled() {
-		c.Version.Set(ver.Value, "")
-	}
-	return c.ConfigParser.Save(c.ConfigurationFile)
+	return c.Parser.Save(c.ConfigurationFile)
 }
 
 func (c *Client) checkTransactionOrVersion(transactionID string, version int64, startTransaction bool) (string, error) {
@@ -170,13 +191,13 @@ func (c *Client) checkTransactionOrVersion(transactionID string, version int64, 
 	return t, nil
 }
 
-func (c *Client) parseSection(object interface{}, p parser.Section, pName string) error {
+func (c *Client) parseSection(object interface{}, section parser.Section, pName string, p *parser.Parser) error {
 	objValue := reflect.ValueOf(object).Elem()
 	for i := 0; i < objValue.NumField(); i++ {
 		typeField := objValue.Type().Field(i)
 		field := objValue.FieldByName(typeField.Name)
 		if typeField.Name != "Name" && typeField.Name != "ID" {
-			val := c.parseField(p, pName, typeField.Name)
+			val := c.parseField(section, pName, typeField.Name, p)
 			if val != nil {
 				if field.Kind() == reflect.Bool {
 					if val == "enabled" {
@@ -194,15 +215,15 @@ func (c *Client) parseSection(object interface{}, p parser.Section, pName string
 	return nil
 }
 
-func (c *Client) parseField(p parser.Section, sectionName string, fieldName string) interface{} {
+func (c *Client) parseField(section parser.Section, sectionName string, fieldName string, p *parser.Parser) interface{} {
 	//Handle special cases
 	if fieldName == "Httpchk" {
-		data, err := c.ConfigParser.Get(p, sectionName, "option httpchk", false)
+		data, err := p.Get(section, sectionName, "option httpchk", false)
 		if err != nil {
 			return nil
 		}
 		d := data.(*types.OptionHttpchk)
-		if p == parser.Backends {
+		if section == parser.Backends {
 			return &models.BackendHttpchk{
 				Method:  d.Method,
 				URI:     d.Uri,
@@ -211,7 +232,7 @@ func (c *Client) parseField(p parser.Section, sectionName string, fieldName stri
 		}
 	}
 	if fieldName == "Balance" {
-		data, err := c.ConfigParser.Get(p, sectionName, "balance", false)
+		data, err := p.Get(section, sectionName, "balance", false)
 		if err != nil {
 			return nil
 		}
@@ -222,12 +243,12 @@ func (c *Client) parseField(p parser.Section, sectionName string, fieldName stri
 		}
 	}
 	if fieldName == "DefaultServer" {
-		data, err := c.ConfigParser.Get(p, sectionName, "default-server", false)
+		data, err := p.Get(section, sectionName, "default-server", false)
 		if err != nil {
 			return nil
 		}
 		d := data.([]types.DefaultServer)
-		if p == parser.Backends {
+		if section == parser.Backends {
 			dServer := &models.BackendDefaultServer{}
 			for _, ds := range d {
 				dsParams := ds.Params
@@ -242,9 +263,9 @@ func (c *Client) parseField(p parser.Section, sectionName string, fieldName stri
 						case "rise":
 							dServer.Rise = parseTimeout(v.Value)
 						case "port":
-							p, err := strconv.ParseInt(v.Value, 10, 64)
+							port, err := strconv.ParseInt(v.Value, 10, 64)
 							if err == nil {
-								dServer.Port = &p
+								dServer.Port = &port
 							}
 						}
 					}
@@ -255,12 +276,12 @@ func (c *Client) parseField(p parser.Section, sectionName string, fieldName stri
 		return nil
 	}
 	if fieldName == "StickTable" {
-		data, err := c.ConfigParser.Get(p, sectionName, "stick-table", false)
+		data, err := p.Get(section, sectionName, "stick-table", false)
 		if err != nil {
 			return nil
 		}
 		d := data.(*types.StickTable)
-		if p == parser.Backends {
+		if section == parser.Backends {
 			st := &models.BackendStickTable{
 				Type:   d.Type,
 				Size:   parseSize(d.Size),
@@ -279,7 +300,7 @@ func (c *Client) parseField(p parser.Section, sectionName string, fieldName stri
 		return nil
 	}
 	if fieldName == "AdvCheck" {
-		data, err := c.ConfigParser.Get(p, sectionName, "option ssl-hello-check", false)
+		data, err := p.Get(section, sectionName, "option ssl-hello-check", false)
 		if err == nil {
 			d := data.(*types.SimpleOption)
 			if !d.NoOption {
@@ -287,7 +308,7 @@ func (c *Client) parseField(p parser.Section, sectionName string, fieldName stri
 			}
 		}
 
-		data, err = c.ConfigParser.Get(p, sectionName, "option smtpchk", false)
+		data, err = p.Get(section, sectionName, "option smtpchk", false)
 		if err == nil {
 			d := data.(*types.SimpleOption)
 			if !d.NoOption {
@@ -295,7 +316,7 @@ func (c *Client) parseField(p parser.Section, sectionName string, fieldName stri
 			}
 		}
 
-		data, err = c.ConfigParser.Get(p, sectionName, "option ldap-check", false)
+		data, err = p.Get(section, sectionName, "option ldap-check", false)
 		if err == nil {
 			d := data.(*types.SimpleOption)
 			if !d.NoOption {
@@ -303,7 +324,7 @@ func (c *Client) parseField(p parser.Section, sectionName string, fieldName stri
 			}
 		}
 
-		data, err = c.ConfigParser.Get(p, sectionName, "option mysql-check", false)
+		data, err = p.Get(section, sectionName, "option mysql-check", false)
 		if err == nil {
 			d := data.(*types.SimpleOption)
 			if !d.NoOption {
@@ -311,7 +332,7 @@ func (c *Client) parseField(p parser.Section, sectionName string, fieldName stri
 			}
 		}
 
-		data, err = c.ConfigParser.Get(p, sectionName, "option pgsql-check", false)
+		data, err = p.Get(section, sectionName, "option pgsql-check", false)
 		if err == nil {
 			d := data.(*types.SimpleOption)
 			if !d.NoOption {
@@ -319,7 +340,7 @@ func (c *Client) parseField(p parser.Section, sectionName string, fieldName stri
 			}
 		}
 
-		data, err = c.ConfigParser.Get(p, sectionName, "option tcp-check", false)
+		data, err = p.Get(section, sectionName, "option tcp-check", false)
 		if err == nil {
 			d := data.(*types.SimpleOption)
 			if !d.NoOption {
@@ -327,7 +348,7 @@ func (c *Client) parseField(p parser.Section, sectionName string, fieldName stri
 			}
 		}
 
-		data, err = c.ConfigParser.Get(p, sectionName, "option redis-check", false)
+		data, err = p.Get(section, sectionName, "option redis-check", false)
 		if err == nil {
 			d := data.(*types.SimpleOption)
 			if !d.NoOption {
@@ -336,7 +357,7 @@ func (c *Client) parseField(p parser.Section, sectionName string, fieldName stri
 		}
 	}
 	if fieldName == "DefaultBackend" {
-		data, err := c.ConfigParser.Get(p, sectionName, "default_backend", false)
+		data, err := p.Get(section, sectionName, "default_backend", false)
 		if err != nil {
 			return nil
 		}
@@ -344,7 +365,7 @@ func (c *Client) parseField(p parser.Section, sectionName string, fieldName stri
 		return bck.Value
 	}
 	if fieldName == "Clflog" {
-		data, err := c.ConfigParser.Get(p, sectionName, "option httplog", false)
+		data, err := p.Get(section, sectionName, "option httplog", false)
 		if err == nil {
 			d := data.(*types.OptionHTTPLog)
 			if !d.NoOption {
@@ -354,7 +375,7 @@ func (c *Client) parseField(p parser.Section, sectionName string, fieldName stri
 		return nil
 	}
 	if fieldName == "Httplog" {
-		data, err := c.ConfigParser.Get(p, sectionName, "option httplog", false)
+		data, err := p.Get(section, sectionName, "option httplog", false)
 		if err == nil {
 			d := data.(*types.OptionHTTPLog)
 			if !d.NoOption {
@@ -364,7 +385,7 @@ func (c *Client) parseField(p parser.Section, sectionName string, fieldName stri
 		return nil
 	}
 	if fieldName == "HTTPConnectionMode" {
-		data, err := c.ConfigParser.Get(p, sectionName, "option http-tunnel", false)
+		data, err := p.Get(section, sectionName, "option http-tunnel", false)
 		if err == nil {
 			d := data.(*types.SimpleOption)
 			if !d.NoOption {
@@ -372,7 +393,7 @@ func (c *Client) parseField(p parser.Section, sectionName string, fieldName stri
 			}
 		}
 
-		data, err = c.ConfigParser.Get(p, sectionName, "option httpclose", false)
+		data, err = p.Get(section, sectionName, "option httpclose", false)
 		if err == nil {
 			d := data.(*types.SimpleOption)
 			if !d.NoOption {
@@ -380,7 +401,7 @@ func (c *Client) parseField(p parser.Section, sectionName string, fieldName stri
 			}
 		}
 
-		data, err = c.ConfigParser.Get(p, sectionName, "option forceclose", false)
+		data, err = p.Get(section, sectionName, "option forceclose", false)
 		if err == nil {
 			d := data.(*types.SimpleOption)
 			if !d.NoOption {
@@ -388,7 +409,7 @@ func (c *Client) parseField(p parser.Section, sectionName string, fieldName stri
 			}
 		}
 
-		data, err = c.ConfigParser.Get(p, sectionName, "option http-server-close", false)
+		data, err = p.Get(section, sectionName, "option http-server-close", false)
 		if err == nil {
 			d := data.(*types.SimpleOption)
 			if !d.NoOption {
@@ -396,7 +417,7 @@ func (c *Client) parseField(p parser.Section, sectionName string, fieldName stri
 			}
 		}
 
-		data, err = c.ConfigParser.Get(p, sectionName, "option http-keep-alive", false)
+		data, err = p.Get(section, sectionName, "option http-keep-alive", false)
 		if err == nil {
 			d := data.(*types.SimpleOption)
 			if !d.NoOption {
@@ -406,8 +427,8 @@ func (c *Client) parseField(p parser.Section, sectionName string, fieldName stri
 	}
 	//Check Timeouts
 	if strings.HasSuffix(fieldName, "Timeout") {
-		if pName := translateTimeout(fieldName); c.ConfigParser.HasParser(p, pName) {
-			data, err := c.ConfigParser.Get(p, sectionName, pName, false)
+		if pName := translateTimeout(fieldName); p.HasParser(section, pName) {
+			data, err := p.Get(section, sectionName, pName, false)
 			if err != nil {
 				return nil
 			}
@@ -416,16 +437,16 @@ func (c *Client) parseField(p parser.Section, sectionName string, fieldName stri
 		}
 	}
 	//Check single line
-	if pName := misc.DashCase(fieldName); c.ConfigParser.HasParser(p, pName) {
-		data, err := c.ConfigParser.Get(p, sectionName, pName, false)
+	if pName := misc.DashCase(fieldName); p.HasParser(section, pName) {
+		data, err := p.Get(section, sectionName, pName, false)
 		if err != nil {
 			return nil
 		}
 		return parseOption(data)
 	}
 	//Check options
-	if pName := fmt.Sprintf("option %s", misc.DashCase(fieldName)); c.ConfigParser.HasParser(p, pName) {
-		data, err := c.ConfigParser.Get(p, sectionName, pName, false)
+	if pName := fmt.Sprintf("option %s", misc.DashCase(fieldName)); p.HasParser(section, pName) {
+		data, err := p.Get(section, sectionName, pName, false)
 		if err != nil {
 			return nil
 		}
@@ -434,13 +455,13 @@ func (c *Client) parseField(p parser.Section, sectionName string, fieldName stri
 	return nil
 }
 
-func (c *Client) createEditSection(object interface{}, p parser.Section, pName string) error {
+func (c *Client) createEditSection(object interface{}, section parser.Section, pName string, p *parser.Parser) error {
 	objValue := reflect.ValueOf(object).Elem()
 	for i := 0; i < objValue.NumField(); i++ {
 		typeField := objValue.Type().Field(i)
 		field := objValue.FieldByName(typeField.Name)
 		if typeField.Name != "Name" && typeField.Name != "ID" {
-			if err := c.setFieldValue(p, pName, typeField.Name, field); err != nil {
+			if err := c.setFieldValue(section, pName, typeField.Name, field, p); err != nil {
 				return err
 			}
 		}
@@ -448,11 +469,11 @@ func (c *Client) createEditSection(object interface{}, p parser.Section, pName s
 	return nil
 }
 
-func (c *Client) setFieldValue(p parser.Section, sectionName string, fieldName string, field reflect.Value) error {
+func (c *Client) setFieldValue(section parser.Section, sectionName string, fieldName string, field reflect.Value, p *parser.Parser) error {
 	//Handle special cases
 	if fieldName == "Httpchk" {
 		if valueIsNil(field) {
-			if err := c.ConfigParser.Set(p, sectionName, "option httpchk", nil); err != nil {
+			if err := p.Set(section, sectionName, "option httpchk", nil); err != nil {
 				return err
 			}
 			return nil
@@ -463,14 +484,14 @@ func (c *Client) setFieldValue(p parser.Section, sectionName string, fieldName s
 			Version: hc.Version,
 			Uri:     hc.URI,
 		}
-		if err := c.ConfigParser.Set(p, sectionName, "option httpchk", d); err != nil {
+		if err := p.Set(section, sectionName, "option httpchk", d); err != nil {
 			return err
 		}
 		return nil
 	}
 	if fieldName == "Balance" {
 		if valueIsNil(field) {
-			if err := c.ConfigParser.Set(p, sectionName, "balance", nil); err != nil {
+			if err := p.Set(section, sectionName, "balance", nil); err != nil {
 				return err
 			}
 			return nil
@@ -480,7 +501,7 @@ func (c *Client) setFieldValue(p parser.Section, sectionName string, fieldName s
 			Algorithm: b.Algorithm,
 			Arguments: b.Arguments,
 		}
-		if err := c.ConfigParser.Set(p, sectionName, "balance", &d); err != nil {
+		if err := p.Set(section, sectionName, "balance", &d); err != nil {
 			return err
 		}
 		return nil
@@ -490,7 +511,7 @@ func (c *Client) setFieldValue(p parser.Section, sectionName string, fieldName s
 	}
 	if fieldName == "StickTable" {
 		if valueIsNil(field) {
-			if err := c.ConfigParser.Set(p, sectionName, "stick-table", nil); err != nil {
+			if err := p.Set(section, sectionName, "stick-table", nil); err != nil {
 				return err
 			}
 			return nil
@@ -503,31 +524,31 @@ func (c *Client) setFieldValue(p parser.Section, sectionName string, fieldName s
 			Expire: strconv.FormatInt(*st.Expire, 10),
 			Peers:  st.Peers,
 		}
-		if err := c.ConfigParser.Set(p, sectionName, "stick-table", d); err != nil {
+		if err := p.Set(section, sectionName, "stick-table", d); err != nil {
 			return err
 		}
 		return nil
 	}
 	if fieldName == "AdvCheck" {
-		if err := c.ConfigParser.Set(p, sectionName, "option ssl-hello-check", nil); err != nil {
+		if err := p.Set(section, sectionName, "option ssl-hello-check", nil); err != nil {
 			return err
 		}
-		if err := c.ConfigParser.Set(p, sectionName, "option smtpchk", nil); err != nil {
+		if err := p.Set(section, sectionName, "option smtpchk", nil); err != nil {
 			return err
 		}
-		if err := c.ConfigParser.Set(p, sectionName, "option ldap-check", nil); err != nil {
+		if err := p.Set(section, sectionName, "option ldap-check", nil); err != nil {
 			return err
 		}
-		if err := c.ConfigParser.Set(p, sectionName, "option mysql-check", nil); err != nil {
+		if err := p.Set(section, sectionName, "option mysql-check", nil); err != nil {
 			return err
 		}
-		if err := c.ConfigParser.Set(p, sectionName, "option pgsql-check", nil); err != nil {
+		if err := p.Set(section, sectionName, "option pgsql-check", nil); err != nil {
 			return err
 		}
-		if err := c.ConfigParser.Set(p, sectionName, "option tcp-check", nil); err != nil {
+		if err := p.Set(section, sectionName, "option tcp-check", nil); err != nil {
 			return err
 		}
-		if err := c.ConfigParser.Set(p, sectionName, "option redis-check", nil); err != nil {
+		if err := p.Set(section, sectionName, "option redis-check", nil); err != nil {
 			return err
 		}
 
@@ -536,7 +557,7 @@ func (c *Client) setFieldValue(p parser.Section, sectionName string, fieldName s
 			d := &types.SimpleOption{
 				NoOption: false,
 			}
-			if err := c.ConfigParser.Set(p, sectionName, pName, d); err != nil {
+			if err := p.Set(section, sectionName, pName, d); err != nil {
 				return err
 			}
 		}
@@ -544,7 +565,7 @@ func (c *Client) setFieldValue(p parser.Section, sectionName string, fieldName s
 	}
 	if fieldName == "DefaultBackend" {
 		if valueIsNil(field) {
-			if err := c.ConfigParser.Set(p, sectionName, "default_backend", nil); err != nil {
+			if err := p.Set(section, sectionName, "default_backend", nil); err != nil {
 				return err
 			}
 			return nil
@@ -553,25 +574,25 @@ func (c *Client) setFieldValue(p parser.Section, sectionName string, fieldName s
 		d := &types.StringC{
 			Value: bck,
 		}
-		if err := c.ConfigParser.Set(p, sectionName, "default_backend", d); err != nil {
+		if err := p.Set(section, sectionName, "default_backend", d); err != nil {
 			return err
 		}
 		return nil
 	}
 	if fieldName == "HTTPConnectionMode" {
-		if err := c.ConfigParser.Set(p, sectionName, "option http-tunnel", nil); err != nil {
+		if err := p.Set(section, sectionName, "option http-tunnel", nil); err != nil {
 			return err
 		}
-		if err := c.ConfigParser.Set(p, sectionName, "option httpclose", nil); err != nil {
+		if err := p.Set(section, sectionName, "option httpclose", nil); err != nil {
 			return err
 		}
-		if err := c.ConfigParser.Set(p, sectionName, "option forceclose", nil); err != nil {
+		if err := p.Set(section, sectionName, "option forceclose", nil); err != nil {
 			return err
 		}
-		if err := c.ConfigParser.Set(p, sectionName, "option http-server-close", nil); err != nil {
+		if err := p.Set(section, sectionName, "option http-server-close", nil); err != nil {
 			return err
 		}
-		if err := c.ConfigParser.Set(p, sectionName, "option http-keep-alive", nil); err != nil {
+		if err := p.Set(section, sectionName, "option http-keep-alive", nil); err != nil {
 			return err
 		}
 
@@ -580,7 +601,7 @@ func (c *Client) setFieldValue(p parser.Section, sectionName string, fieldName s
 			d := &types.SimpleOption{
 				NoOption: false,
 			}
-			if err := c.ConfigParser.Set(p, sectionName, pName, d); err != nil {
+			if err := p.Set(section, sectionName, pName, d); err != nil {
 				return err
 			}
 		}
@@ -589,7 +610,7 @@ func (c *Client) setFieldValue(p parser.Section, sectionName string, fieldName s
 	if fieldName == "Clflog" {
 		if valueIsNil(field) {
 			// check if httplog exists, if not do nothing
-			d, err := c.ConfigParser.Get(p, sectionName, "option httplog", false)
+			d, err := p.Get(section, sectionName, "option httplog", false)
 			if err != nil {
 				if err != parser_errors.FetchError {
 					return err
@@ -599,14 +620,14 @@ func (c *Client) setFieldValue(p parser.Section, sectionName string, fieldName s
 			o := d.(*types.OptionHTTPLog)
 			if o.Clf {
 				o.Clf = false
-				if err := c.ConfigParser.Set(p, sectionName, "option httplog", o); err != nil {
+				if err := p.Set(section, sectionName, "option httplog", o); err != nil {
 					return err
 				}
 			}
 			return nil
 		}
 		o := &types.OptionHTTPLog{Clf: true}
-		if err := c.ConfigParser.Set(p, sectionName, "option httplog", o); err != nil {
+		if err := p.Set(section, sectionName, "option httplog", o); err != nil {
 			return err
 		}
 		return nil
@@ -614,7 +635,7 @@ func (c *Client) setFieldValue(p parser.Section, sectionName string, fieldName s
 	if fieldName == "Httplog" {
 		if valueIsNil(field) {
 			// check if clflog is active, if yes, do nothing
-			d, err := c.ConfigParser.Get(p, sectionName, "option httplog", false)
+			d, err := p.Get(section, sectionName, "option httplog", false)
 			if err != nil {
 				if err != parser_errors.FetchError {
 					return err
@@ -623,39 +644,39 @@ func (c *Client) setFieldValue(p parser.Section, sectionName string, fieldName s
 			}
 			o := d.(*types.OptionHTTPLog)
 			if !o.Clf {
-				if err := c.ConfigParser.Set(p, sectionName, "option httplog", nil); err != nil {
+				if err := p.Set(section, sectionName, "option httplog", nil); err != nil {
 					return err
 				}
 			}
 			return nil
 		}
 		o := &types.OptionHTTPLog{}
-		if err := c.ConfigParser.Set(p, sectionName, "option httplog", o); err != nil {
+		if err := p.Set(section, sectionName, "option httplog", o); err != nil {
 			return err
 		}
 		return nil
 	}
 	// check timeouts
 	if strings.HasSuffix(fieldName, "Timeout") {
-		if pName := translateTimeout(fieldName); c.ConfigParser.HasParser(p, pName) {
+		if pName := translateTimeout(fieldName); p.HasParser(section, pName) {
 			if valueIsNil(field) {
-				if err := c.ConfigParser.Set(p, sectionName, pName, nil); err != nil {
+				if err := p.Set(section, sectionName, pName, nil); err != nil {
 					return err
 				}
 				return nil
 			}
 			t := &types.SimpleTimeout{}
 			t.Value = strconv.FormatInt(field.Elem().Int(), 10)
-			if err := c.ConfigParser.Set(p, sectionName, pName, t); err != nil {
+			if err := p.Set(section, sectionName, pName, t); err != nil {
 				return err
 			}
 		}
 		return nil
 	}
 	//Check options
-	if pName := fmt.Sprintf("option %s", misc.DashCase(fieldName)); c.ConfigParser.HasParser(p, pName) {
+	if pName := fmt.Sprintf("option %s", misc.DashCase(fieldName)); p.HasParser(section, pName) {
 		if valueIsNil(field) {
-			if err := c.ConfigParser.Set(p, sectionName, pName, nil); err != nil {
+			if err := p.Set(section, sectionName, pName, nil); err != nil {
 				return err
 			}
 			return nil
@@ -666,111 +687,132 @@ func (c *Client) setFieldValue(p parser.Section, sectionName string, fieldName s
 				o.NoOption = true
 			}
 		}
-		if err := c.ConfigParser.Set(p, sectionName, pName, o); err != nil {
+		if err := p.Set(section, sectionName, pName, o); err != nil {
 			return err
 		}
 		return nil
 	}
 	//Check single line
-	if pName := misc.DashCase(fieldName); c.ConfigParser.HasParser(p, pName) {
+	if pName := misc.DashCase(fieldName); p.HasParser(section, pName) {
 		if valueIsNil(field) {
-			if err := c.ConfigParser.Set(p, sectionName, pName, nil); err != nil {
+			if err := p.Set(section, sectionName, pName, nil); err != nil {
 				return err
 			}
 			return nil
 		}
 		d := translateToParserData(field)
 		if d == nil {
-			return errors.Errorf("Cannot parse type for %s %s: %s", p, sectionName, fieldName)
+			return errors.Errorf("Cannot parse type for %s %s: %s", section, sectionName, fieldName)
 		}
-		if err := c.ConfigParser.Set(p, sectionName, pName, d); err != nil {
+		if err := p.Set(section, sectionName, pName, d); err != nil {
 			return err
 		}
 		return nil
 	}
 
-	return errors.Errorf("Cannot parse option for %s %s: %s", p, sectionName, fieldName)
+	return errors.Errorf("Cannot parse option for %s %s: %s", section, sectionName, fieldName)
 }
 
-func (c *Client) errAndDeleteTransaction(err error, tID string, delete bool) error {
-	if delete {
-		c.DeleteTransaction(tID)
+func (c *Client) handleError(id, parentType, parentName, transaction string, implicit bool, err error) error {
+	var e error
+	if err == parser_errors.SectionMissingErr {
+		if parentName != "" {
+			e = NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("%s %s does not exist", parentType, parentName))
+		} else {
+			e = NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("Object %s does not exist", id))
+		}
+	} else if err == parser_errors.FetchError {
+		e = NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("Object %v does not exist in %s %s", id, parentType, parentName))
+	} else if err == parser_errors.IndexOutOfRange {
+		e = NewConfError(ErrObjectIndexOutOfRange, fmt.Sprintf("Object with id %v in %s %s out of range", id, parentType, parentName))
+	} else {
+		e = err
+	}
+	if implicit {
+		return c.errAndDeleteTransaction(e, transaction)
+	}
+	return e
+}
+
+func (c *Client) errAndDeleteTransaction(err error, tID string) error {
+	if tID != "" {
+		return err
 	}
 	return err
 }
 
-func (c *Client) deleteSection(p parser.Section, name string, transactionID string, version int64) error {
-	t, err := c.loadDataForChange(transactionID, version)
+func (c *Client) deleteSection(section parser.Section, name string, transactionID string, version int64) error {
+	p, t, err := c.loadDataForChange(transactionID, version)
 	if err != nil {
 		return err
 	}
 
-	if !c.checkSectionExists(p, name) {
-		return c.errAndDeleteTransaction(NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("%s %s does not exist", p, name)),
-			t, transactionID == "")
+	if !c.checkSectionExists(section, name, p) {
+		e := NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("%s %s does not exist", section, name))
+		return c.handleError(name, "", "", t, transactionID == "", e)
 	}
 
-	if c.ConfigParser.SectionsDelete(p, name); err != nil {
-		return c.errAndDeleteTransaction(err, t, transactionID == "")
+	if p.SectionsDelete(section, name); err != nil {
+		return c.handleError(name, "", "", t, transactionID == "", err)
 	}
 
-	if err := c.saveData(t, transactionID); err != nil {
+	if err := c.saveData(p, t, transactionID == ""); err != nil {
 		return err
 	}
 
 	return nil
 }
 
-func (c *Client) editSection(p parser.Section, name string, data interface{}, transactionID string, version int64) error {
-	t, err := c.loadDataForChange(transactionID, version)
+func (c *Client) editSection(section parser.Section, name string, data interface{}, transactionID string, version int64) error {
+	p, t, err := c.loadDataForChange(transactionID, version)
 	if err != nil {
 		return err
 	}
 
-	if !c.checkSectionExists(p, name) {
-		return c.errAndDeleteTransaction(NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("%s %s does not exist", p, name)),
-			t, transactionID == "")
+	if !c.checkSectionExists(section, name, p) {
+		e := NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("%s %s does not exist", section, name))
+		return c.handleError(name, "", "", t, transactionID == "", e)
 	}
 
-	if err := c.createEditSection(data, p, name); err != nil {
-		return c.errAndDeleteTransaction(err, t, transactionID == "")
+	if err := c.createEditSection(data, section, name, p); err != nil {
+		return c.handleError(name, "", "", t, transactionID == "", err)
 	}
 
-	if err := c.saveData(t, transactionID); err != nil {
+	if err := c.saveData(p, t, transactionID == ""); err != nil {
 		return err
 	}
 
 	return nil
 }
 
-func (c *Client) createSection(p parser.Section, name string, data interface{}, transactionID string, version int64) error {
-	t, err := c.loadDataForChange(transactionID, version)
+func (c *Client) createSection(section parser.Section, name string, data interface{}, transactionID string, version int64) error {
+	p, t, err := c.loadDataForChange(transactionID, version)
 	if err != nil {
 		return err
 	}
 
-	if c.checkSectionExists(p, name) {
-		return c.errAndDeleteTransaction(NewConfError(ErrObjectAlreadyExists, fmt.Sprintf("%s %s already exists", p, name)),
-			t, transactionID == "")
+	if c.checkSectionExists(section, name, p) {
+		e := NewConfError(ErrObjectAlreadyExists, fmt.Sprintf("%s %s already exists", section, name))
+		return c.handleError(name, "", "", t, transactionID == "", e)
 	}
 
-	if err := c.ConfigParser.SectionsCreate(p, name); err != nil {
-		return c.errAndDeleteTransaction(err, t, transactionID == "")
+	if err := p.SectionsCreate(section, name); err != nil {
+		return c.handleError(name, "", "", t, transactionID == "", err)
 	}
 
-	if err := c.createEditSection(data, p, name); err != nil {
-		return c.errAndDeleteTransaction(err, t, transactionID == "")
+	if err := c.createEditSection(data, section, name, p); err != nil {
+		return c.handleError(name, "", "", t, transactionID == "", err)
 	}
 
-	if err := c.saveData(t, transactionID); err != nil {
+	if err := c.saveData(p, t, transactionID == ""); err != nil {
 		return err
 	}
 
 	return nil
 }
 
-func (c *Client) checkSectionExists(p parser.Section, sectionName string) bool {
-	sections, err := c.ConfigParser.SectionsGet(p)
+func (c *Client) checkSectionExists(section parser.Section, sectionName string, p *parser.Parser) bool {
+	sections, err := p.SectionsGet(section)
 	if err != nil {
 		return false
 	}
@@ -781,28 +823,38 @@ func (c *Client) checkSectionExists(p parser.Section, sectionName string) bool {
 	return false
 }
 
-func (c *Client) loadDataForChange(transactionID string, version int64) (string, error) {
+func (c *Client) loadDataForChange(transactionID string, version int64) (*parser.Parser, string, error) {
 	t, err := c.checkTransactionOrVersion(transactionID, version, true)
 	if err != nil {
 		err, ok := err.(*ConfError)
 		if !ok {
-			return "", c.errAndDeleteTransaction(err, t, transactionID == "")
+			if transactionID == "" {
+				return nil, "", c.errAndDeleteTransaction(err, t)
+			}
+			return nil, "", err
 		}
-		return "", err
+		return nil, "", err
 	}
 
-	if err := c.ConfigParser.LoadData(c.getTransactionFile(t)); err != nil {
-		return "", c.errAndDeleteTransaction(err, t, transactionID == "")
+	p, err := c.GetParser(t)
+	if err != nil {
+		if transactionID == "" {
+			return nil, "", c.errAndDeleteTransaction(err, t)
+		}
+		return nil, "", err
 	}
-	return t, nil
+	return p, t, nil
 }
 
-func (c *Client) saveData(t, transactionID string) error {
-	if err := c.ConfigParser.Save(c.getTransactionFile(t)); err != nil {
-		return c.errAndDeleteTransaction(err, t, transactionID == "")
+func (c *Client) saveData(p *parser.Parser, t string, commitImplicit bool) error {
+	if err := p.Save(c.getTransactionFile(t)); err != nil {
+		if commitImplicit {
+			return c.errAndDeleteTransaction(err, t)
+		}
+		return err
 	}
 
-	if transactionID == "" {
+	if commitImplicit {
 		if err := c.commitTransaction(t, false); err != nil {
 			return err
 		}

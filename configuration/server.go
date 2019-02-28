@@ -17,22 +17,14 @@ import (
 // GetServers returns a struct with configuration version and an array of
 // configured servers in the specified backend. Returns error on fail.
 func (c *Client) GetServers(backend string, transactionID string) (*models.GetServersOKBody, error) {
-	if c.Cache.Enabled() {
-		servers, found := c.Cache.Servers.Get(backend, transactionID)
-		if found {
-			return &models.GetServersOKBody{Version: c.Cache.Version.Get(transactionID), Data: servers}, nil
-		}
-	}
-	if err := c.ConfigParser.LoadData(c.getTransactionFile(transactionID)); err != nil {
+	p, err := c.GetParser(transactionID)
+	if err != nil {
 		return nil, err
 	}
 
-	servers, err := c.parseServers(backend)
+	servers, err := c.parseServers(backend, p)
 	if err != nil {
-		if err == parser_errors.SectionMissingErr {
-			return nil, NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("Backend %s does not exist", backend))
-		}
-		return nil, err
+		return nil, c.handleError("", "backend", backend, "", false, err)
 	}
 
 	v, err := c.GetVersion(transactionID)
@@ -40,26 +32,18 @@ func (c *Client) GetServers(backend string, transactionID string) (*models.GetSe
 		return nil, err
 	}
 
-	if c.Cache.Enabled() {
-		c.Cache.Servers.SetAll(backend, transactionID, servers)
-	}
 	return &models.GetServersOKBody{Version: v, Data: servers}, nil
 }
 
 // GetServer returns a struct with configuration version and a requested server
 // in the specified backend. Returns error on fail or if server does not exist.
 func (c *Client) GetServer(name string, backend string, transactionID string) (*models.GetServerOKBody, error) {
-	if c.Cache.Enabled() {
-		server, found := c.Cache.Servers.GetOne(name, backend, transactionID)
-		if found {
-			return &models.GetServerOKBody{Version: c.Cache.Version.Get(transactionID), Data: server}, nil
-		}
-	}
-	if err := c.ConfigParser.LoadData(c.getTransactionFile(transactionID)); err != nil {
+	p, err := c.GetParser(transactionID)
+	if err != nil {
 		return nil, err
 	}
 
-	server, _ := c.getServerByName(name, backend)
+	server, _ := c.getServerByName(name, backend, p)
 	if server == nil {
 		return nil, NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("Server %s does not exist in backend %s", name, backend))
 	}
@@ -69,42 +53,31 @@ func (c *Client) GetServer(name string, backend string, transactionID string) (*
 		return nil, err
 	}
 
-	if c.Cache.Enabled() {
-		c.Cache.Servers.Set(name, backend, transactionID, server)
-	}
 	return &models.GetServerOKBody{Version: v, Data: server}, nil
 }
 
 // DeleteServer deletes a server in configuration. One of version or transactionID is
 // mandatory. Returns error on fail, nil on success.
 func (c *Client) DeleteServer(name string, backend string, transactionID string, version int64) error {
-	t, err := c.loadDataForChange(transactionID, version)
+	p, t, err := c.loadDataForChange(transactionID, version)
 	if err != nil {
 		return err
 	}
 
-	server, i := c.getServerByName(name, backend)
+	server, i := c.getServerByName(name, backend, p)
 	if server == nil {
-		return NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("Server %s does not exist in backend %s", name, backend))
+		e := NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("Server %s does not exist in backend %s", name, backend))
+		return c.handleError(name, "backend", backend, t, transactionID == "", e)
 	}
 
-	if err := c.ConfigParser.Delete(parser.Backends, backend, "server", i); err != nil {
-		if err == parser_errors.SectionMissingErr {
-			return NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("Backend %s does not exist", backend))
-		}
-		if err == parser_errors.FetchError {
-			return NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("Server %s does not exist in backend %s", name, backend))
-		}
+	if err := p.Delete(parser.Backends, backend, "server", i); err != nil {
+		return c.handleError(name, "backend", backend, t, transactionID == "", err)
+	}
+
+	if err := c.saveData(p, t, transactionID == ""); err != nil {
 		return err
 	}
 
-	if err := c.saveData(t, transactionID); err != nil {
-		return err
-	}
-
-	if c.Cache.Enabled() {
-		c.Cache.Servers.Delete(name, backend, transactionID)
-	}
 	return nil
 }
 
@@ -117,30 +90,23 @@ func (c *Client) CreateServer(backend string, data *models.Server, transactionID
 			return NewConfError(ErrValidationError, validationErr.Error())
 		}
 	}
-	t, err := c.loadDataForChange(transactionID, version)
+	p, t, err := c.loadDataForChange(transactionID, version)
 	if err != nil {
 		return err
 	}
 
-	server, _ := c.getServerByName(data.Name, backend)
+	server, _ := c.getServerByName(data.Name, backend, p)
 	if server != nil {
-		return c.errAndDeleteTransaction(NewConfError(ErrObjectAlreadyExists, fmt.Sprintf("Server %s already exists in backend %s", data.Name, backend)),
-			t, transactionID == "")
+		e := NewConfError(ErrObjectAlreadyExists, fmt.Sprintf("Server %s already exists in backend %s", data.Name, backend))
+		return c.handleError(data.Name, "backend", backend, t, transactionID == "", e)
 	}
 
-	if err := c.ConfigParser.Insert(parser.Backends, backend, "server", serializeServer(*data), -1); err != nil {
-		if err == parser_errors.SectionMissingErr {
-			return NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("Backend %s does not exist", backend))
-		}
-		return c.errAndDeleteTransaction(err, t, transactionID == "")
+	if err := p.Insert(parser.Backends, backend, "server", serializeServer(*data), -1); err != nil {
+		return c.handleError(data.Name, "backend", backend, t, transactionID == "", err)
 	}
 
-	if err := c.saveData(t, transactionID); err != nil {
+	if err := c.saveData(p, t, transactionID == ""); err != nil {
 		return err
-	}
-
-	if c.Cache.Enabled() {
-		c.Cache.Servers.Set(data.Name, backend, transactionID, data)
 	}
 	return nil
 }
@@ -154,34 +120,31 @@ func (c *Client) EditServer(name string, backend string, data *models.Server, tr
 			return NewConfError(ErrValidationError, validationErr.Error())
 		}
 	}
-	t, err := c.loadDataForChange(transactionID, version)
+	p, t, err := c.loadDataForChange(transactionID, version)
 	if err != nil {
 		return err
 	}
 
-	server, i := c.getServerByName(name, backend)
+	server, i := c.getServerByName(name, backend, p)
 	if server == nil {
-		return NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("Server %v does not exist in backend %s", name, backend))
+		e := NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("Server %v does not exist in backend %s", name, backend))
+		return c.handleError(data.Name, "backend", backend, t, transactionID == "", e)
 	}
 
-	if err := c.ConfigParser.Set(parser.Backends, backend, "server", serializeServer(*data), i); err != nil {
-		return c.errAndDeleteTransaction(err, t, transactionID == "")
+	if err := p.Set(parser.Backends, backend, "server", serializeServer(*data), i); err != nil {
+		return c.handleError(data.Name, "backend", backend, t, transactionID == "", err)
 	}
 
-	if err := c.saveData(t, transactionID); err != nil {
+	if err := c.saveData(p, t, transactionID == ""); err != nil {
 		return err
-	}
-
-	if c.Cache.Enabled() {
-		c.Cache.Servers.Set(name, backend, transactionID, data)
 	}
 	return nil
 }
 
-func (c *Client) parseServers(backend string) (models.Servers, error) {
+func (c *Client) parseServers(backend string, p *parser.Parser) (models.Servers, error) {
 	servers := models.Servers{}
 
-	data, err := c.ConfigParser.Get(parser.Backends, backend, "server", false)
+	data, err := p.Get(parser.Backends, backend, "server", false)
 	if err != nil {
 		if err == parser_errors.FetchError {
 			return servers, nil
@@ -324,8 +287,8 @@ func serializeServer(s models.Server) types.Server {
 	return srv
 }
 
-func (c *Client) getServerByName(name string, backend string) (*models.Server, int) {
-	servers, err := c.parseServers(backend)
+func (c *Client) getServerByName(name string, backend string, p *parser.Parser) (*models.Server, int) {
+	servers, err := c.parseServers(backend, p)
 	if err != nil {
 		return nil, 0
 	}

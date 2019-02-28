@@ -14,11 +14,12 @@ import (
 // GetSites returns a struct with configuration version and an array of
 // configured sites. Returns error on fail.
 func (c *Client) GetSites(transactionID string) (*models.GetSitesOKBody, error) {
-	if err := c.ConfigParser.LoadData(c.getTransactionFile(transactionID)); err != nil {
+	p, err := c.GetParser(transactionID)
+	if err != nil {
 		return nil, err
 	}
 
-	sites, err := c.parseSites()
+	sites, err := c.parseSites(p)
 	if err != nil {
 		return nil, err
 	}
@@ -34,15 +35,16 @@ func (c *Client) GetSites(transactionID string) (*models.GetSitesOKBody, error) 
 // GetSite returns a struct with configuration version and a requested site.
 // Returns error on fail or if backend does not exist.
 func (c *Client) GetSite(name string, transactionID string) (*models.GetSiteOKBody, error) {
-	if err := c.ConfigParser.LoadData(c.getTransactionFile(transactionID)); err != nil {
+	p, err := c.GetParser(transactionID)
+	if err != nil {
 		return nil, err
 	}
 
-	if !c.checkSectionExists(parser.Frontends, name) {
+	if !c.checkSectionExists(parser.Frontends, name, p) {
 		return nil, NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("Site %s does not exist", name))
 	}
 
-	site := c.parseSite(name)
+	site := c.parseSite(name, p)
 	if site == nil {
 		return nil, NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("Site %s does not exist", name))
 	}
@@ -68,7 +70,7 @@ func (c *Client) CreateSite(data *models.Site, transactionID string, version int
 		}
 	}
 	// start an implicit transaction for create site (multiple operations required) if not already given
-	t, err := c.loadDataForChange(transactionID, version)
+	p, t, err := c.loadDataForChange(transactionID, version)
 	if err != nil {
 		return err
 	}
@@ -121,16 +123,16 @@ func (c *Client) CreateSite(data *models.Site, transactionID string, version int
 			}
 		}
 		//create bck-frontend relations
-		err = c.createBckFrontendRels(data.Name, b, false, t)
+		err = c.createBckFrontendRels(data.Name, b, false, t, p)
 		if err != nil {
 			res = append(res, err)
 		}
 	}
 	if len(res) > 0 {
-		return c.errAndDeleteTransaction(CompositeTransactionError(res...), t, transactionID == "")
+		return c.handleError(data.Name, "", "", t, transactionID == "", CompositeTransactionError(res...))
 	}
 
-	if err := c.saveData(t, transactionID); err != nil {
+	if err := c.saveData(p, t, transactionID == ""); err != nil {
 		return err
 	}
 
@@ -150,7 +152,7 @@ func (c *Client) EditSite(name string, data *models.Site, transactionID string, 
 		}
 	}
 	// start an implicit transaction for create site (multiple operations required) if not already given
-	t, err := c.loadDataForChange(transactionID, version)
+	p, t, err := c.loadDataForChange(transactionID, version)
 	if err != nil {
 		return err
 	}
@@ -163,7 +165,7 @@ func (c *Client) EditSite(name string, data *models.Site, transactionID string, 
 
 	//edit frontend
 	if !reflect.DeepEqual(data.Service, confS.Service) {
-		err := c.editService(data.Name, data.Service, t)
+		err := c.editService(data.Name, data.Service, t, p)
 		if err != nil {
 			res = append(res, err)
 		}
@@ -249,7 +251,7 @@ func (c *Client) EditSite(name string, data *models.Site, transactionID string, 
 						defaultBck = b.Name
 					}
 					//create bck-frontend relations
-					err = c.createBckFrontendRels(name, b, false, t)
+					err = c.createBckFrontendRels(name, b, false, t, p)
 					if err != nil {
 						res = append(res, err)
 					}
@@ -264,12 +266,12 @@ func (c *Client) EditSite(name string, data *models.Site, transactionID string, 
 				if !reflect.DeepEqual(b, confB) {
 					// check if use as has changed
 					if b.UseAs != confB.UseAs {
-						err := c.createBckFrontendRels(name, b, true, t)
+						err := c.createBckFrontendRels(name, b, true, t, p)
 						if err != nil {
 							res = append(res, err)
 						}
 					}
-					err := c.editFarm(b.Name, b, t)
+					err := c.editFarm(b.Name, b, t, p)
 					if err != nil {
 						res = append(res, err)
 					}
@@ -328,7 +330,7 @@ func (c *Client) EditSite(name string, data *models.Site, transactionID string, 
 				// default_bck
 				if b.UseAs == "conditional" {
 					// find the correct usefarm and remove it
-					err := c.removeUseFarm(name, b.Name, t)
+					err := c.removeUseFarm(name, b.Name, t, p)
 					if err != nil {
 						res = append(res, err)
 					}
@@ -342,17 +344,17 @@ func (c *Client) EditSite(name string, data *models.Site, transactionID string, 
 	}
 	// remove default backend if no default backends specified
 	if defaultBck == "" {
-		err = c.removeDefaultBckToFrontend(name, t)
+		err = c.removeDefaultBckToFrontend(name, t, p)
 		if err != nil {
 			res = append(res, err)
 		}
 	}
 
 	if len(res) > 0 {
-		return CompositeTransactionError(res...)
+		return c.handleError(data.Name, "", "", t, transactionID == "", CompositeTransactionError(res...))
 	}
-	err = c.CommitTransaction(t)
-	if err != nil {
+
+	if err := c.saveData(p, t, transactionID == ""); err != nil {
 		return err
 	}
 
@@ -366,7 +368,7 @@ func (c *Client) DeleteSite(name string, transactionID string, version int64) er
 	var err error
 
 	// start an implicit transaction for delete site (multiple operations required) if not already given
-	t, err := c.loadDataForChange(transactionID, version)
+	p, t, err := c.loadDataForChange(transactionID, version)
 	if err != nil {
 		return err
 	}
@@ -389,36 +391,35 @@ func (c *Client) DeleteSite(name string, transactionID string, version int64) er
 	}
 
 	if len(res) > 0 {
-		return CompositeTransactionError(res...)
+		return c.handleError(name, "", "", t, transactionID == "", CompositeTransactionError(res...))
 	}
 
-	if err := c.saveData(t, transactionID); err != nil {
+	if err := c.saveData(p, t, transactionID == ""); err != nil {
 		return err
 	}
 
 	return nil
 }
 
-func (c *Client) parseSites() (models.Sites, error) {
+func (c *Client) parseSites(p *parser.Parser) (models.Sites, error) {
 	sites := models.Sites{}
-	fNames, err := c.ConfigParser.SectionsGet(parser.Frontends)
+	fNames, err := p.SectionsGet(parser.Frontends)
 	if err != nil {
 		return nil, err
 	}
 
 	for _, s := range fNames {
-		site := c.parseSite(s)
+		site := c.parseSite(s, p)
 		if site != nil {
 			sites = append(sites, site)
 		}
-
 	}
 	return sites, nil
 }
 
-func (c *Client) parseSite(s string) *models.Site {
+func (c *Client) parseSite(s string, p *parser.Parser) *models.Site {
 	frontend := &models.Frontend{Name: s}
-	if err := c.parseSection(frontend, parser.Frontends, s); err != nil {
+	if err := c.parseSection(frontend, parser.Frontends, s, p); err != nil {
 		return nil
 	}
 	site := &models.Site{
@@ -427,7 +428,7 @@ func (c *Client) parseSite(s string) *models.Site {
 			HTTPConnectionMode: frontend.HTTPConnectionMode,
 			Maxconn:            frontend.Maxconn,
 			Mode:               frontend.Mode,
-			Listeners:          c.parseServiceListeners(s),
+			Listeners:          c.parseServiceListeners(s, p),
 		},
 		Farms: []*models.SiteFarmsItems{},
 	}
@@ -435,15 +436,15 @@ func (c *Client) parseSite(s string) *models.Site {
 	// Find backends using default_backend and use_backends
 	if frontend.DefaultBackend != "" {
 		// parse default backend
-		farm := c.parseFarm(frontend.DefaultBackend, "default", "", "")
+		farm := c.parseFarm(frontend.DefaultBackend, "default", "", "", p)
 		if farm != nil {
 			site.Farms = append(site.Farms, farm)
 		}
 	}
-	ubs, err := c.parseBackendSwitchingRules(s)
+	ubs, err := c.parseBackendSwitchingRules(s, p)
 	if err == nil {
 		for _, ub := range ubs {
-			farm := c.parseFarm(ub.Name, "conditional", ub.Cond, ub.CondTest)
+			farm := c.parseFarm(ub.Name, "conditional", ub.Cond, ub.CondTest, p)
 			if farm != nil {
 				site.Farms = append(site.Farms, farm)
 			}
@@ -452,9 +453,9 @@ func (c *Client) parseSite(s string) *models.Site {
 	return site
 }
 
-func (c *Client) parseServiceListeners(service string) []*models.SiteServiceListenersItems {
+func (c *Client) parseServiceListeners(service string, p *parser.Parser) []*models.SiteServiceListenersItems {
 	listeners := []*models.SiteServiceListenersItems{}
-	binds, err := c.parseBinds(service)
+	binds, err := c.parseBinds(service, p)
 	if err == nil {
 		for _, b := range binds {
 			li := &models.SiteServiceListenersItems{
@@ -470,16 +471,16 @@ func (c *Client) parseServiceListeners(service string) []*models.SiteServiceList
 	return listeners
 }
 
-func (c *Client) parseFarm(name string, useAs string, cond string, condTest string) *models.SiteFarmsItems {
+func (c *Client) parseFarm(name string, useAs string, cond string, condTest string, p *parser.Parser) *models.SiteFarmsItems {
 	backend := &models.Backend{Name: name}
-	if err := c.parseSection(backend, parser.Backends, name); err == nil {
+	if err := c.parseSection(backend, parser.Backends, name, p); err == nil {
 		farm := &models.SiteFarmsItems{
 			UseAs:    useAs,
 			Cond:     cond,
 			CondTest: condTest,
 			Mode:     backend.Mode,
 			Name:     backend.Name,
-			Servers:  c.parseFarmServers(backend.Name),
+			Servers:  c.parseFarmServers(backend.Name, p),
 		}
 		if backend.Forwardfor == "enabled" {
 			farm.Forwardfor = true
@@ -495,10 +496,10 @@ func (c *Client) parseFarm(name string, useAs string, cond string, condTest stri
 	return nil
 }
 
-func (c *Client) parseFarmServers(farm string) []*models.SiteFarmsItemsServersItems {
+func (c *Client) parseFarmServers(farm string, p *parser.Parser) []*models.SiteFarmsItemsServersItems {
 	servers := []*models.SiteFarmsItemsServersItems{}
 
-	srvs, err := c.parseServers(farm)
+	srvs, err := c.parseServers(farm, p)
 	if err != nil {
 		return servers
 	}
@@ -567,8 +568,8 @@ func serializeSiteServer(srv *models.SiteFarmsItemsServersItems) *models.Server 
 }
 
 // frontend backend relation helper methods
-func (c *Client) removeUseFarm(frontend string, backend string, t string) error {
-	ufs, err := c.parseBackendSwitchingRules(frontend)
+func (c *Client) removeUseFarm(frontend string, backend string, t string, p *parser.Parser) error {
+	ufs, err := c.parseBackendSwitchingRules(frontend, p)
 	if err != nil {
 		return err
 	}
@@ -580,17 +581,17 @@ func (c *Client) removeUseFarm(frontend string, backend string, t string) error 
 	return nil
 }
 
-func (c *Client) createBckFrontendRels(name string, b *models.SiteFarmsItems, edit bool, t string) error {
+func (c *Client) createBckFrontendRels(name string, b *models.SiteFarmsItems, edit bool, t string, p *parser.Parser) error {
 	var res []error
 	var err error
 	if b.UseAs == "default" {
 		if edit {
-			err = c.removeUseFarm(name, b.Name, t)
+			err = c.removeUseFarm(name, b.Name, t, p)
 			if err != nil {
 				res = append(res, err)
 			}
 		}
-		err = c.addDefaultBckToFrontend(name, b.Name, t)
+		err = c.addDefaultBckToFrontend(name, b.Name, t, p)
 		if err != nil {
 			res = append(res, err)
 		}
@@ -617,10 +618,10 @@ func (c *Client) createBckFrontendRels(name string, b *models.SiteFarmsItems, ed
 	return nil
 }
 
-func (c *Client) addDefaultBckToFrontend(fName string, bName string, t string) error {
+func (c *Client) addDefaultBckToFrontend(fName string, bName string, t string, p *parser.Parser) error {
 	frontend := &models.Frontend{Name: fName}
 
-	if err := c.parseSection(frontend, parser.Frontends, fName); err != nil {
+	if err := c.parseSection(frontend, parser.Frontends, fName, p); err != nil {
 		return err
 	}
 	frontend.DefaultBackend = bName
@@ -630,9 +631,9 @@ func (c *Client) addDefaultBckToFrontend(fName string, bName string, t string) e
 	return nil
 }
 
-func (c *Client) removeDefaultBckToFrontend(fName string, t string) error {
+func (c *Client) removeDefaultBckToFrontend(fName string, t string, p *parser.Parser) error {
 	frontend := &models.Frontend{Name: fName}
-	if err := c.parseSection(frontend, parser.Frontends, fName); err != nil {
+	if err := c.parseSection(frontend, parser.Frontends, fName, p); err != nil {
 		return err
 	}
 	frontend.DefaultBackend = ""
@@ -642,9 +643,9 @@ func (c *Client) removeDefaultBckToFrontend(fName string, t string) error {
 	return nil
 }
 
-func (c *Client) editService(name string, service *models.SiteService, t string) error {
+func (c *Client) editService(name string, service *models.SiteService, t string, p *parser.Parser) error {
 	frontend := &models.Frontend{Name: name}
-	if err := c.parseSection(frontend, parser.Frontends, name); err != nil {
+	if err := c.parseSection(frontend, parser.Frontends, name, p); err != nil {
 		return err
 	}
 
@@ -658,9 +659,9 @@ func (c *Client) editService(name string, service *models.SiteService, t string)
 	return nil
 }
 
-func (c *Client) editFarm(name string, farm *models.SiteFarmsItems, t string) error {
+func (c *Client) editFarm(name string, farm *models.SiteFarmsItems, t string, p *parser.Parser) error {
 	backend := &models.Backend{Name: name}
-	if err := c.parseSection(backend, parser.Backends, name); err != nil {
+	if err := c.parseSection(backend, parser.Backends, name, p); err != nil {
 		return err
 	}
 

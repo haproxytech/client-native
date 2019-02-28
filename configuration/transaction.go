@@ -49,10 +49,10 @@ func (c *Client) startTransaction(version int64, initCache bool) (*models.Transa
 	t.Version = version
 	t.Status = "in_progress"
 
-	if c.Cache.Enabled() && initCache {
-		c.Cache.InitTransactionCache(t.ID, version)
+	if err := c.AddParser(t.ID); err != nil {
+		c.deleteTransactionFiles(t.ID)
+		return nil, err
 	}
-
 	return t, nil
 }
 
@@ -88,17 +88,17 @@ func (c *Client) commitTransaction(id string, invalidateCache bool) error {
 		return err
 	}
 
+	if err = c.deleteTransactionFiles(id); err != nil {
+		return nil
+	}
+
+	if err := c.CommitParser(id); err != nil {
+		c.Parser.LoadData(c.ConfigurationFile)
+		return nil
+	}
+
 	if err = c.incrementVersion(); err != nil {
 		return err
-	}
-
-	if err = c.deleteTransactionFiles(id); err != nil {
-		return err
-	}
-
-	if c.Cache.Enabled() && invalidateCache {
-		c.Cache.DeleteTransactionCache(id)
-		c.Cache.InvalidateCache()
 	}
 
 	return nil
@@ -117,13 +117,11 @@ func (c *Client) checkTransactionFile(id string) error {
 // DeleteTransaction deletes a transaction by id.
 func (c *Client) DeleteTransaction(id string) error {
 	if id != "" {
-		err := c.deleteTransactionFiles(id)
-		if err != nil {
+		if err := c.deleteTransactionFiles(id); err != nil {
 			return err
 		}
-
-		if c.Cache.Enabled() {
-			c.Cache.DeleteTransactionCache(id)
+		if err := c.DeleteParser(id); err != nil {
+			return err
 		}
 	}
 	return nil

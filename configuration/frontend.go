@@ -11,17 +11,12 @@ import (
 // GetFrontends returns a struct with configuration version and an array of
 // configured frontends. Returns error on fail.
 func (c *Client) GetFrontends(transactionID string) (*models.GetFrontendsOKBody, error) {
-	if c.Cache.Enabled() {
-		frontends, found := c.Cache.Frontends.Get(transactionID)
-		if found {
-			return &models.GetFrontendsOKBody{Version: c.Cache.Version.Get(transactionID), Data: frontends}, nil
-		}
-	}
-	if err := c.ConfigParser.LoadData(c.getTransactionFile(transactionID)); err != nil {
+	p, err := c.GetParser(transactionID)
+	if err != nil {
 		return nil, err
 	}
 
-	fNames, err := c.ConfigParser.SectionsGet(parser.Frontends)
+	fNames, err := p.SectionsGet(parser.Frontends)
 	if err != nil {
 		return nil, err
 	}
@@ -29,7 +24,7 @@ func (c *Client) GetFrontends(transactionID string) (*models.GetFrontendsOKBody,
 	frontends := []*models.Frontend{}
 	for _, name := range fNames {
 		f := &models.Frontend{Name: name}
-		if err := c.parseSection(f, parser.Frontends, name); err != nil {
+		if err := c.parseSection(f, parser.Frontends, name, p); err != nil {
 			continue
 		}
 		frontends = append(frontends, f)
@@ -40,32 +35,23 @@ func (c *Client) GetFrontends(transactionID string) (*models.GetFrontendsOKBody,
 		return nil, err
 	}
 
-	if c.Cache.Enabled() {
-		c.Cache.Frontends.SetAll(transactionID, frontends)
-	}
 	return &models.GetFrontendsOKBody{Version: v, Data: frontends}, nil
 }
 
 // GetFrontend returns a struct with configuration version and a requested frontend.
 // Returns error on fail or if frontend does not exist.
 func (c *Client) GetFrontend(name string, transactionID string) (*models.GetFrontendOKBody, error) {
-	if c.Cache.Enabled() {
-		frontend, found := c.Cache.Frontends.GetOne(name, transactionID)
-		if found {
-			return &models.GetFrontendOKBody{Version: c.Cache.Version.Get(transactionID), Data: frontend}, nil
-		}
-	}
-
-	if err := c.ConfigParser.LoadData(c.getTransactionFile(transactionID)); err != nil {
+	p, err := c.GetParser(transactionID)
+	if err != nil {
 		return nil, err
 	}
 
-	if !c.checkSectionExists(parser.Frontends, name) {
+	if !c.checkSectionExists(parser.Frontends, name, p) {
 		return nil, NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("Frontend %s does not exist", name))
 	}
 
 	frontend := &models.Frontend{Name: name}
-	if err := c.parseSection(frontend, parser.Frontends, name); err != nil {
+	if err := c.parseSection(frontend, parser.Frontends, name, p); err != nil {
 		return nil, err
 	}
 
@@ -74,9 +60,6 @@ func (c *Client) GetFrontend(name string, transactionID string) (*models.GetFron
 		return nil, err
 	}
 
-	if c.Cache.Enabled() {
-		c.Cache.Frontends.Set(frontend.Name, transactionID, frontend)
-	}
 	return &models.GetFrontendOKBody{Version: v, Data: frontend}, nil
 }
 
@@ -85,9 +68,6 @@ func (c *Client) GetFrontend(name string, transactionID string) (*models.GetFron
 func (c *Client) DeleteFrontend(name string, transactionID string, version int64) error {
 	if err := c.deleteSection(parser.Frontends, name, transactionID, version); err != nil {
 		return err
-	}
-	if c.Cache.Enabled() {
-		c.Cache.DeleteFrontendCache(name, transactionID)
 	}
 	return nil
 }
@@ -106,9 +86,6 @@ func (c *Client) EditFrontend(name string, data *models.Frontend, transactionID 
 		return err
 	}
 
-	if c.Cache.Enabled() {
-		c.Cache.Frontends.Set(data.Name, transactionID, data)
-	}
 	return nil
 }
 
@@ -126,8 +103,5 @@ func (c *Client) CreateFrontend(data *models.Frontend, transactionID string, ver
 		return err
 	}
 
-	if c.Cache.Enabled() {
-		c.Cache.Frontends.Set(data.Name, transactionID, data)
-	}
 	return nil
 }

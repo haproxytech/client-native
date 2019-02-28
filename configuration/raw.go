@@ -88,9 +88,10 @@ func (c *Client) PostRawConfiguration(config *string, version int64) error {
 		return NewConfError(ErrGeneralError, e.Error())
 	}
 
-	if c.Cache.Enabled() {
-		c.Cache.InvalidateCache()
+	if err := c.Parser.LoadData(c.ConfigurationFile); err != nil {
+		return err
 	}
+
 	return nil
 }
 

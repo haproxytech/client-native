@@ -14,32 +14,32 @@ import (
 // GetGlobalConfiguration returns a struct with configuration version and a
 // struct representing Global configuration
 func (c *Client) GetGlobalConfiguration(transactionID string) (*models.GetGlobalOKBody, error) {
-	err := c.ConfigParser.LoadData(c.getTransactionFile(transactionID))
+	p, err := c.GetParser(transactionID)
 	if err != nil {
 		return nil, err
 	}
 
-	_, err = c.ConfigParser.Get(parser.Global, parser.GlobalSectionName, "daemon")
+	_, err = p.Get(parser.Global, parser.GlobalSectionName, "daemon")
 	d := "enabled"
 	if err == errors.FetchError {
 		d = "disabled"
 	}
 
-	data, err := c.ConfigParser.Get(parser.Global, parser.GlobalSectionName, "maxconn")
+	data, err := p.Get(parser.Global, parser.GlobalSectionName, "maxconn")
 	mConn := int64(0)
 	if err == nil {
 		maxConn := data.(*types.Int64C)
 		mConn = maxConn.Value
 	}
 
-	data, err = c.ConfigParser.Get(parser.Global, parser.GlobalSectionName, "nbproc")
+	data, err = p.Get(parser.Global, parser.GlobalSectionName, "nbproc")
 	nbproc := int64(0)
 	if err == nil {
 		nbProcParser := data.(*types.Int64C)
 		nbproc = nbProcParser.Value
 	}
 
-	data, err = c.ConfigParser.Get(parser.Global, parser.GlobalSectionName, "stats socket")
+	data, err = p.Get(parser.Global, parser.GlobalSectionName, "stats socket")
 	rAPI := ""
 	rLevel := ""
 	rMode := ""
@@ -59,21 +59,21 @@ func (c *Client) GetGlobalConfiguration(transactionID string) (*models.GetGlobal
 		}
 	}
 
-	data, err = c.ConfigParser.Get(parser.Global, parser.GlobalSectionName, "ssl-default-bind-ciphers")
+	data, err = p.Get(parser.Global, parser.GlobalSectionName, "ssl-default-bind-ciphers")
 	sslCiphers := ""
 	if err == nil {
 		sslCiphersParser := data.(*types.StringC)
 		sslCiphers = sslCiphersParser.Value
 	}
 
-	data, err = c.ConfigParser.Get(parser.Global, parser.GlobalSectionName, "ssl-default-bind-options")
+	data, err = p.Get(parser.Global, parser.GlobalSectionName, "ssl-default-bind-options")
 	sslOptions := ""
 	if err == nil {
 		sslOptionsParser := data.(*types.StringSliceC)
 		sslOptions = strings.Join(sslOptionsParser.Value, " ")
 	}
 
-	data, err = c.ConfigParser.Get(parser.Global, parser.GlobalSectionName, "tune.ssl.default-dh-param")
+	data, err = p.Get(parser.Global, parser.GlobalSectionName, "tune.ssl.default-dh-param")
 	dhParam := int64(0)
 	if err == nil {
 		dhParamsParser := data.(*types.Int64C)
@@ -110,16 +110,16 @@ func (c *Client) PushGlobalConfiguration(data *models.Global, transactionID stri
 		}
 	}
 
-	t, err := c.loadDataForChange(transactionID, version)
+	p, t, err := c.loadDataForChange(transactionID, version)
 	if err != nil {
 		return err
 	}
-	
+
 	pDaemon := &types.Enabled{}
 	if data.Daemon != "enabled" {
 		pDaemon = nil
 	}
-	c.ConfigParser.Set(parser.Global, parser.GlobalSectionName, "daemon", pDaemon)
+	p.Set(parser.Global, parser.GlobalSectionName, "daemon", pDaemon)
 
 	pMaxConn := &types.Int64C{
 		Value: data.Maxconn,
@@ -127,7 +127,7 @@ func (c *Client) PushGlobalConfiguration(data *models.Global, transactionID stri
 	if data.Maxconn == 0 {
 		pMaxConn = nil
 	}
-	c.ConfigParser.Set(parser.Global, parser.GlobalSectionName, "maxconn", pMaxConn)
+	p.Set(parser.Global, parser.GlobalSectionName, "maxconn", pMaxConn)
 
 	pNbProc := &types.Int64C{
 		Value: data.Nbproc,
@@ -135,9 +135,9 @@ func (c *Client) PushGlobalConfiguration(data *models.Global, transactionID stri
 	if data.Nbproc == 0 {
 		pNbProc = nil
 	}
-	c.ConfigParser.Set(parser.Global, parser.GlobalSectionName, "nbproc", pNbProc)
+	p.Set(parser.Global, parser.GlobalSectionName, "nbproc", pNbProc)
 
-	ondisk, err := c.ConfigParser.Get(parser.Global, parser.GlobalSectionName, "stats socket")
+	ondisk, err := p.Get(parser.Global, parser.GlobalSectionName, "stats socket")
 	if err != nil {
 		if data.RuntimeAPI != "" {
 			pStatsSocket := types.Socket{
@@ -147,9 +147,9 @@ func (c *Client) PushGlobalConfiguration(data *models.Global, transactionID stri
 					&params.BindOptionValue{Name: "mode", Value: data.RuntimeAPIMode},
 				},
 			}
-			c.ConfigParser.Set(parser.Global, parser.GlobalSectionName, "stats socket", pStatsSocket)
+			p.Set(parser.Global, parser.GlobalSectionName, "stats socket", pStatsSocket)
 		} else {
-			c.ConfigParser.Set(parser.Global, parser.GlobalSectionName, "stats socket", nil)
+			p.Set(parser.Global, parser.GlobalSectionName, "stats socket", nil)
 		}
 	} else {
 		sockets := ondisk.([]types.Socket)
@@ -163,7 +163,7 @@ func (c *Client) PushGlobalConfiguration(data *models.Global, transactionID stri
 			}
 			(sockets)[0] = pStatsSocket
 		}
-		c.ConfigParser.Set(parser.Global, parser.GlobalSectionName, "stats socket", sockets)
+		p.Set(parser.Global, parser.GlobalSectionName, "stats socket", sockets)
 	}
 
 	pSSLCiphers := &types.StringC{
@@ -172,7 +172,7 @@ func (c *Client) PushGlobalConfiguration(data *models.Global, transactionID stri
 	if data.SslDefaultBindCiphers == "" {
 		pSSLCiphers = nil
 	}
-	c.ConfigParser.Set(parser.Global, parser.GlobalSectionName, "ssl-default-bind-ciphers", pSSLCiphers)
+	p.Set(parser.Global, parser.GlobalSectionName, "ssl-default-bind-ciphers", pSSLCiphers)
 
 	pSSLOptions := &types.StringSliceC{
 		Value: strings.Split(data.SslDefaultBindOptions, " "),
@@ -180,7 +180,7 @@ func (c *Client) PushGlobalConfiguration(data *models.Global, transactionID stri
 	if data.SslDefaultBindCiphers == "" {
 		pSSLOptions = nil
 	}
-	c.ConfigParser.Set(parser.Global, parser.GlobalSectionName, "ssl-default-bind-options", pSSLOptions)
+	p.Set(parser.Global, parser.GlobalSectionName, "ssl-default-bind-options", pSSLOptions)
 
 	pDhParams := &types.Int64C{
 		Value: data.TuneSslDefaultDhParam,
@@ -188,9 +188,9 @@ func (c *Client) PushGlobalConfiguration(data *models.Global, transactionID stri
 	if data.TuneSslDefaultDhParam == 0 {
 		pDhParams = nil
 	}
-	c.ConfigParser.Set(parser.Global, parser.GlobalSectionName, "tune.ssl.default-dh-param", pDhParams)
+	p.Set(parser.Global, parser.GlobalSectionName, "tune.ssl.default-dh-param", pDhParams)
 
-	if err := c.saveData(t, transactionID); err != nil {
+	if err := c.saveData(p, t, transactionID == ""); err != nil {
 		return err
 	}
 	return nil

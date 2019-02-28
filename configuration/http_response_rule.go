@@ -1,7 +1,6 @@
 package configuration
 
 import (
-	"fmt"
 	"strconv"
 	"strings"
 
@@ -17,22 +16,14 @@ import (
 // GetHTTPResponseRules returns a struct with configuration version and an array of
 // configured http response rules in the specified parent. Returns error on fail.
 func (c *Client) GetHTTPResponseRules(parentType, parentName string, transactionID string) (*models.GetHTTPResponseRulesOKBody, error) {
-	if c.Cache.Enabled() {
-		httpRules, found := c.Cache.HttpResponseRules.Get(parentName, parentType, transactionID)
-		if found {
-			return &models.GetHTTPResponseRulesOKBody{Version: c.Cache.Version.Get(transactionID), Data: httpRules}, nil
-		}
-	}
-	if err := c.ConfigParser.LoadData(c.getTransactionFile(transactionID)); err != nil {
+	p, err := c.GetParser(transactionID)
+	if err != nil {
 		return nil, err
 	}
 
-	httpRules, err := c.parseHTTPResponseRules(parentType, parentName)
+	httpRules, err := c.parseHTTPResponseRules(parentType, parentName, p)
 	if err != nil {
-		if err == parser_errors.SectionMissingErr {
-			return nil, NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("%s %s does not exist", parentType, parentName))
-		}
-		return nil, err
+		return nil, c.handleError("", parentType, parentName, "", false, err)
 	}
 
 	v, err := c.GetVersion(transactionID)
@@ -40,41 +31,27 @@ func (c *Client) GetHTTPResponseRules(parentType, parentName string, transaction
 		return nil, err
 	}
 
-	if c.Cache.Enabled() {
-		c.Cache.HttpResponseRules.SetAll(parentName, parentType, transactionID, httpRules)
-	}
 	return &models.GetHTTPResponseRulesOKBody{Version: v, Data: httpRules}, nil
 }
 
 // GetHTTPResponseRule returns a struct with configuration version and a responseed http response rule
 // in the specified parent. Returns error on fail or if http response rule does not exist.
 func (c *Client) GetHTTPResponseRule(id int64, parentType, parentName string, transactionID string) (*models.GetHTTPResponseRuleOKBody, error) {
-	if c.Cache.Enabled() {
-		httpRule, found := c.Cache.HttpResponseRules.GetOne(id, parentName, parentType, transactionID)
-		if found {
-			return &models.GetHTTPResponseRuleOKBody{Version: c.Cache.Version.Get(transactionID), Data: httpRule}, nil
-		}
-	}
-	if err := c.ConfigParser.LoadData(c.getTransactionFile(transactionID)); err != nil {
-		return nil, err
-	}
-
-	var p parser.Section
-	if parentType == "backend" {
-		p = parser.Backends
-	} else if parentType == "frontend" {
-		p = parser.Frontends
-	}
-
-	data, err := c.ConfigParser.GetOne(p, parentName, "http-response", int(id))
+	p, err := c.GetParser(transactionID)
 	if err != nil {
-		if err == parser_errors.SectionMissingErr {
-			return nil, NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("%s %s does not exist", parentType, parentName))
-		}
-		if err == parser_errors.FetchError {
-			return nil, NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("HTTP Response Rule %v does not exist in %s %s", id, parentType, parentName))
-		}
 		return nil, err
+	}
+
+	var section parser.Section
+	if parentType == "backend" {
+		section = parser.Backends
+	} else if parentType == "frontend" {
+		section = parser.Frontends
+	}
+
+	data, err := p.GetOne(section, parentName, "http-response", int(id))
+	if err != nil {
+		return nil, c.handleError(strconv.FormatInt(id, 10), parentType, parentName, "", false, err)
 	}
 
 	httpRule := parseHTTPResponseRule(data.(types.HTTPAction))
@@ -85,45 +62,32 @@ func (c *Client) GetHTTPResponseRule(id int64, parentType, parentName string, tr
 		return nil, err
 	}
 
-	if c.Cache.Enabled() {
-		c.Cache.HttpResponseRules.Set(id, parentName, parentType, transactionID, httpRule)
-	}
-
 	return &models.GetHTTPResponseRuleOKBody{Version: v, Data: httpRule}, nil
 }
 
 // DeleteHTTPResponseRule deletes a http response rule in configuration. One of version or transactionID is
 // mandatory. Returns error on fail, nil on success.
 func (c *Client) DeleteHTTPResponseRule(id int64, parentType string, parentName string, transactionID string, version int64) error {
-	t, err := c.loadDataForChange(transactionID, version)
+	p, t, err := c.loadDataForChange(transactionID, version)
 	if err != nil {
 		return err
 	}
 
-	var p parser.Section
+	var section parser.Section
 	if parentType == "backend" {
-		p = parser.Backends
+		section = parser.Backends
 	} else if parentType == "frontend" {
-		p = parser.Frontends
+		section = parser.Frontends
 	}
 
-	if err := c.ConfigParser.Delete(p, parentName, "http-response", int(id)); err != nil {
-		if err == parser_errors.SectionMissingErr {
-			return NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("%s %s does not exist", parentName, parentType))
-		}
-		if err == parser_errors.FetchError {
-			return NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("HTTP Response Rule %v does not exist in %s %s", id, parentName, parentType))
-		}
+	if err := p.Delete(section, parentName, "http-response", int(id)); err != nil {
+		return c.handleError(strconv.FormatInt(id, 10), parentType, parentName, t, transactionID == "", err)
+	}
+
+	if err := c.saveData(p, t, transactionID == ""); err != nil {
 		return err
 	}
 
-	if err := c.saveData(t, transactionID); err != nil {
-		return err
-	}
-
-	if c.Cache.Enabled() {
-		c.Cache.HttpResponseRules.InvalidateParent(transactionID, parentName, parentType)
-	}
 	return nil
 }
 
@@ -136,34 +100,24 @@ func (c *Client) CreateHTTPResponseRule(parentType string, parentName string, da
 			return NewConfError(ErrValidationError, validationErr.Error())
 		}
 	}
-	t, err := c.loadDataForChange(transactionID, version)
+	p, t, err := c.loadDataForChange(transactionID, version)
 	if err != nil {
 		return err
 	}
 
-	var p parser.Section
+	var section parser.Section
 	if parentType == "backend" {
-		p = parser.Backends
+		section = parser.Backends
 	} else if parentType == "frontend" {
-		p = parser.Frontends
+		section = parser.Frontends
 	}
 
-	if err := c.ConfigParser.Insert(p, parentName, "http-response", serializeHTTPResponseRule(*data), int(*data.ID)); err != nil {
-		if err == parser_errors.IndexOutOfRange {
-			return c.errAndDeleteTransaction(NewConfError(ErrObjectIndexOutOfRange,
-				fmt.Sprintf("HTTP Response Rule with id %v in %s %s out of range", int(*data.ID), parentType, parentName)), t, transactionID == "")
-		}
-		if err == parser_errors.SectionMissingErr {
-			return NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("%s %s does not exist", parentType, parentName))
-		}
-		return c.errAndDeleteTransaction(err, t, transactionID == "")
+	if err := p.Insert(section, parentName, "http-response", serializeHTTPResponseRule(*data), int(*data.ID)); err != nil {
+		return c.handleError(strconv.FormatInt(*data.ID, 10), parentType, parentName, t, transactionID == "", err)
 	}
 
-	if err := c.saveData(t, transactionID); err != nil {
+	if err := c.saveData(p, t, transactionID == ""); err != nil {
 		return err
-	}
-	if c.Cache.Enabled() {
-		c.Cache.HttpResponseRules.InvalidateParent(transactionID, parentName, parentType)
 	}
 	return nil
 }
@@ -178,55 +132,42 @@ func (c *Client) EditHTTPResponseRule(id int64, parentType string, parentName st
 		}
 	}
 
-	t, err := c.loadDataForChange(transactionID, version)
+	p, t, err := c.loadDataForChange(transactionID, version)
 	if err != nil {
 		return err
 	}
 
-	var p parser.Section
+	var section parser.Section
 	if parentType == "backend" {
-		p = parser.Backends
+		section = parser.Backends
 	} else if parentType == "frontend" {
-		p = parser.Frontends
+		section = parser.Frontends
 	}
 
-	if _, err := c.ConfigParser.GetOne(p, parentName, "http-response", int(id)); err != nil {
-		if err == parser_errors.SectionMissingErr {
-			return NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("%s %s does not exist", parentType, parentName))
-		}
-		if err == parser_errors.FetchError {
-			return NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("HTTP Response Rule %v does not exist in %s %s", id, parentType, parentName))
-		}
+	if _, err := p.GetOne(section, parentName, "http-response", int(id)); err != nil {
+		return c.handleError(strconv.FormatInt(id, 10), parentType, parentName, t, transactionID == "", err)
+	}
+
+	if err := p.Set(section, parentName, "http-response", serializeHTTPResponseRule(*data), int(id)); err != nil {
+		return c.handleError(strconv.FormatInt(id, 10), parentType, parentName, t, transactionID == "", err)
+	}
+
+	if err := c.saveData(p, t, transactionID == ""); err != nil {
 		return err
-	}
-
-	if err := c.ConfigParser.Set(p, parentName, "http-response", serializeHTTPResponseRule(*data), int(id)); err != nil {
-		if err == parser_errors.IndexOutOfRange {
-			return c.errAndDeleteTransaction(NewConfError(ErrObjectIndexOutOfRange,
-				fmt.Sprintf("HTTP Response Rule with id %v in %s %s out of range", int(*data.ID), parentType, parentName)), t, transactionID == "")
-		}
-		return c.errAndDeleteTransaction(err, t, transactionID == "")
-	}
-
-	if err := c.saveData(t, transactionID); err != nil {
-		return err
-	}
-	if c.Cache.Enabled() {
-		c.Cache.HttpResponseRules.InvalidateParent(transactionID, parentName, parentType)
 	}
 	return nil
 }
 
-func (c *Client) parseHTTPResponseRules(t, pName string) (models.HTTPResponseRules, error) {
-	p := parser.Global
+func (c *Client) parseHTTPResponseRules(t, pName string, p *parser.Parser) (models.HTTPResponseRules, error) {
+	section := parser.Global
 	if t == "frontend" {
-		p = parser.Frontends
+		section = parser.Frontends
 	} else if t == "backend" {
-		p = parser.Backends
+		section = parser.Backends
 	}
 
 	httpResRules := models.HTTPResponseRules{}
-	data, err := c.ConfigParser.Get(p, pName, "http-response", false)
+	data, err := p.Get(section, pName, "http-response", false)
 	if err != nil {
 		if err == parser_errors.FetchError {
 			return httpResRules, nil

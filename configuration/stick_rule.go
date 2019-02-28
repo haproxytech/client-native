@@ -1,7 +1,7 @@
 package configuration
 
 import (
-	"fmt"
+	"strconv"
 
 	strfmt "github.com/go-openapi/strfmt"
 	parser "github.com/haproxytech/config-parser"
@@ -13,22 +13,14 @@ import (
 // GetStickRules returns a struct with configuration version and an array of
 // configured stick rules in the specified backend. Returns error on fail.
 func (c *Client) GetStickRules(backend string, transactionID string) (*models.GetStickRulesOKBody, error) {
-	if c.Cache.Enabled() {
-		stickRules, found := c.Cache.StickRules.Get(backend, transactionID)
-		if found {
-			return &models.GetStickRulesOKBody{Version: c.Cache.Version.Get(transactionID), Data: stickRules}, nil
-		}
-	}
-	if err := c.ConfigParser.LoadData(c.getTransactionFile(transactionID)); err != nil {
+	p, err := c.GetParser(transactionID)
+	if err != nil {
 		return nil, err
 	}
 
-	sRules, err := c.parseStickRules(backend)
+	sRules, err := c.parseStickRules(backend, p)
 	if err != nil {
-		if err == parser_errors.SectionMissingErr {
-			return nil, NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("Backend %s does not exist", backend))
-		}
-		return nil, err
+		return nil, c.handleError("", "backend", backend, "", false, err)
 	}
 
 	v, err := c.GetVersion(transactionID)
@@ -36,34 +28,20 @@ func (c *Client) GetStickRules(backend string, transactionID string) (*models.Ge
 		return nil, err
 	}
 
-	if c.Cache.Enabled() {
-		c.Cache.StickRules.SetAll(backend, transactionID, sRules)
-	}
 	return &models.GetStickRulesOKBody{Version: v, Data: sRules}, nil
 }
 
 // GetStickRule returns a struct with configuration version and a requested stick rule
 // in the specified backend. Returns error on fail or if stick rule does not exist.
 func (c *Client) GetStickRule(id int64, backend string, transactionID string) (*models.GetStickRuleOKBody, error) {
-	if c.Cache.Enabled() {
-		stickRule, found := c.Cache.StickRules.GetOne(id, backend, transactionID)
-		if found {
-			return &models.GetStickRuleOKBody{Version: c.Cache.Version.Get(transactionID), Data: stickRule}, nil
-		}
-	}
-	if err := c.ConfigParser.LoadData(c.getTransactionFile(transactionID)); err != nil {
+	p, err := c.GetParser(transactionID)
+	if err != nil {
 		return nil, err
 	}
 
-	data, err := c.ConfigParser.GetOne(parser.Backends, backend, "stick", int(id))
+	data, err := p.GetOne(parser.Backends, backend, "stick", int(id))
 	if err != nil {
-		if err == parser_errors.SectionMissingErr {
-			return nil, NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("Backend %s does not exist", backend))
-		}
-		if err == parser_errors.FetchError {
-			return nil, NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("Stick Rule %v does not exist in backend %s", id, backend))
-		}
-		return nil, err
+		return nil, c.handleError(strconv.FormatInt(id, 10), "backend", backend, "", false, err)
 	}
 
 	sRule := parseStickRule(data.(types.Stick))
@@ -74,36 +52,23 @@ func (c *Client) GetStickRule(id int64, backend string, transactionID string) (*
 		return nil, err
 	}
 
-	if c.Cache.Enabled() {
-		c.Cache.StickRules.Set(id, backend, transactionID, sRule)
-	}
-
 	return &models.GetStickRuleOKBody{Version: v, Data: sRule}, nil
 }
 
 // DeleteStickRule deletes a stick rule in configuration. One of version or transactionID is
 // mandatory. Returns error on fail, nil on success.
 func (c *Client) DeleteStickRule(id int64, backend string, transactionID string, version int64) error {
-	t, err := c.loadDataForChange(transactionID, version)
+	p, t, err := c.loadDataForChange(transactionID, version)
 	if err != nil {
 		return err
 	}
 
-	if err := c.ConfigParser.Delete(parser.Backends, backend, "stick", int(id)); err != nil {
-		if err == parser_errors.SectionMissingErr {
-			return NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("Backend %s does not exist", backend))
-		}
-		if err == parser_errors.FetchError {
-			return NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("Stick Rule %v does not exist in backend %s", id, backend))
-		}
-		return err
+	if err := p.Delete(parser.Backends, backend, "stick", int(id)); err != nil {
+		return c.handleError(strconv.FormatInt(id, 10), "backend", backend, t, transactionID == "", err)
 	}
 
-	if err := c.saveData(t, transactionID); err != nil {
+	if err := c.saveData(p, t, transactionID == ""); err != nil {
 		return err
-	}
-	if c.Cache.Enabled() {
-		c.Cache.StickRules.InvalidateBackend(transactionID, backend)
 	}
 	return nil
 }
@@ -117,27 +82,17 @@ func (c *Client) CreateStickRule(backend string, data *models.StickRule, transac
 			return NewConfError(ErrValidationError, validationErr.Error())
 		}
 	}
-	t, err := c.loadDataForChange(transactionID, version)
+	p, t, err := c.loadDataForChange(transactionID, version)
 	if err != nil {
 		return err
 	}
 
-	if err := c.ConfigParser.Insert(parser.Backends, backend, "stick", serializeStickRule(*data), int(*data.ID)); err != nil {
-		if err == parser_errors.IndexOutOfRange {
-			return c.errAndDeleteTransaction(NewConfError(ErrObjectIndexOutOfRange,
-				fmt.Sprintf("Stick Rule with id %v in backend %s out of range", int(*data.ID), backend)), t, transactionID == "")
-		}
-		if err == parser_errors.SectionMissingErr {
-			return NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("Backend %s does not exist", backend))
-		}
-		return c.errAndDeleteTransaction(err, t, transactionID == "")
+	if err := p.Insert(parser.Backends, backend, "stick", serializeStickRule(*data), int(*data.ID)); err != nil {
+		return c.handleError(strconv.FormatInt(*data.ID, 10), "backend", backend, t, transactionID == "", err)
 	}
 
-	if err := c.saveData(t, transactionID); err != nil {
+	if err := c.saveData(p, t, transactionID == ""); err != nil {
 		return err
-	}
-	if c.Cache.Enabled() {
-		c.Cache.StickRules.InvalidateBackend(transactionID, backend)
 	}
 	return nil
 }
@@ -151,42 +106,29 @@ func (c *Client) EditStickRule(id int64, backend string, data *models.StickRule,
 			return NewConfError(ErrValidationError, validationErr.Error())
 		}
 	}
-	t, err := c.loadDataForChange(transactionID, version)
+	p, t, err := c.loadDataForChange(transactionID, version)
 	if err != nil {
 		return err
 	}
 
-	if _, err := c.ConfigParser.GetOne(parser.Backends, backend, "stick", int(id)); err != nil {
-		if err == parser_errors.SectionMissingErr {
-			return NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("Backend %s does not exist", backend))
-		}
-		if err == parser_errors.FetchError {
-			return NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("Stick Rule %v does not exist in backend %s", id, backend))
-		}
-		return err
+	if _, err := p.GetOne(parser.Backends, backend, "stick", int(id)); err != nil {
+		return c.handleError(strconv.FormatInt(*data.ID, 10), "backend", backend, t, transactionID == "", err)
 	}
 
-	if err := c.ConfigParser.Set(parser.Backends, backend, "stick", serializeStickRule(*data), int(id)); err != nil {
-		if err == parser_errors.IndexOutOfRange {
-			return c.errAndDeleteTransaction(NewConfError(ErrObjectIndexOutOfRange,
-				fmt.Sprintf("Stick Rule with id %v in backend %s out of range", int(*data.ID), backend)), t, transactionID == "")
-		}
-		return c.errAndDeleteTransaction(err, t, transactionID == "")
+	if err := p.Set(parser.Backends, backend, "stick", serializeStickRule(*data), int(id)); err != nil {
+		return c.handleError(strconv.FormatInt(*data.ID, 10), "backend", backend, t, transactionID == "", err)
 	}
 
-	if err := c.saveData(t, transactionID); err != nil {
+	if err := c.saveData(p, t, transactionID == ""); err != nil {
 		return err
-	}
-	if c.Cache.Enabled() {
-		c.Cache.StickRules.InvalidateBackend(transactionID, backend)
 	}
 	return nil
 }
 
-func (c *Client) parseStickRules(backend string) (models.StickRules, error) {
+func (c *Client) parseStickRules(backend string, p *parser.Parser) (models.StickRules, error) {
 	sr := models.StickRules{}
 
-	data, err := c.ConfigParser.Get(parser.Backends, backend, "stick", false)
+	data, err := p.Get(parser.Backends, backend, "stick", false)
 	if err != nil {
 		if err == parser_errors.FetchError {
 			return sr, nil

@@ -1,7 +1,7 @@
 package configuration
 
 import (
-	"fmt"
+	"strconv"
 
 	strfmt "github.com/go-openapi/strfmt"
 	parser "github.com/haproxytech/config-parser"
@@ -13,22 +13,14 @@ import (
 // GetLogTargets returns a struct with configuration version and an array of
 // configured log targets in the specified parent. Returns error on fail.
 func (c *Client) GetLogTargets(parentType, parentName string, transactionID string) (*models.GetLogTargetsOKBody, error) {
-	if c.Cache.Enabled() {
-		logTargets, found := c.Cache.LogTargets.Get(parentName, parentType, transactionID)
-		if found {
-			return &models.GetLogTargetsOKBody{Version: c.Cache.Version.Get(transactionID), Data: logTargets}, nil
-		}
-	}
-	if err := c.ConfigParser.LoadData(c.getTransactionFile(transactionID)); err != nil {
+	p, err := c.GetParser(transactionID)
+	if err != nil {
 		return nil, err
 	}
 
-	logTargets, err := c.parseLogTargets(parentType, parentName)
+	logTargets, err := c.parseLogTargets(parentType, parentName, p)
 	if err != nil {
-		if err == parser_errors.SectionMissingErr {
-			return nil, NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("%s %s does not exist", parentType, parentName))
-		}
-		return nil, err
+		return nil, c.handleError("", parentType, parentName, "", false, err)
 	}
 
 	v, err := c.GetVersion(transactionID)
@@ -36,41 +28,27 @@ func (c *Client) GetLogTargets(parentType, parentName string, transactionID stri
 		return nil, err
 	}
 
-	if c.Cache.Enabled() {
-		c.Cache.LogTargets.SetAll(parentName, parentType, transactionID, logTargets)
-	}
 	return &models.GetLogTargetsOKBody{Version: v, Data: logTargets}, nil
 }
 
 // GetLogTarget returns a struct with configuration version and a requested log target
 // in the specified parent. Returns error on fail or if log target does not exist.
 func (c *Client) GetLogTarget(id int64, parentType, parentName string, transactionID string) (*models.GetLogTargetOKBody, error) {
-	if c.Cache.Enabled() {
-		logTarget, found := c.Cache.LogTargets.GetOne(id, parentName, parentType, transactionID)
-		if found {
-			return &models.GetLogTargetOKBody{Version: c.Cache.Version.Get(transactionID), Data: logTarget}, nil
-		}
-	}
-	if err := c.ConfigParser.LoadData(c.getTransactionFile(transactionID)); err != nil {
-		return nil, err
-	}
-
-	var p parser.Section
-	if parentType == "backend" {
-		p = parser.Backends
-	} else if parentType == "frontend" {
-		p = parser.Frontends
-	}
-
-	data, err := c.ConfigParser.GetOne(p, parentName, "log", int(id))
+	p, err := c.GetParser(transactionID)
 	if err != nil {
-		if err == parser_errors.SectionMissingErr {
-			return nil, NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("%s %s does not exist", parentType, parentName))
-		}
-		if err == parser_errors.FetchError {
-			return nil, NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("Log Target %v does not exist in %s %s", id, parentType, parentName))
-		}
 		return nil, err
+	}
+
+	var section parser.Section
+	if parentType == "backend" {
+		section = parser.Backends
+	} else if parentType == "frontend" {
+		section = parser.Frontends
+	}
+
+	data, err := p.GetOne(section, parentName, "log", int(id))
+	if err != nil {
+		return nil, c.handleError(strconv.FormatInt(id, 10), parentType, parentName, "", false, err)
 	}
 
 	logTarget := parseLogTarget(data.(types.Log))
@@ -81,45 +59,32 @@ func (c *Client) GetLogTarget(id int64, parentType, parentName string, transacti
 		return nil, err
 	}
 
-	if c.Cache.Enabled() {
-		c.Cache.LogTargets.Set(id, parentName, parentType, transactionID, logTarget)
-	}
-
 	return &models.GetLogTargetOKBody{Version: v, Data: logTarget}, nil
 }
 
 // DeleteLogTarget deletes a log target in configuration. One of version or transactionID is
 // mandatory. Returns error on fail, nil on success.
 func (c *Client) DeleteLogTarget(id int64, parentType string, parentName string, transactionID string, version int64) error {
-	t, err := c.loadDataForChange(transactionID, version)
+	p, t, err := c.loadDataForChange(transactionID, version)
 	if err != nil {
 		return err
 	}
 
-	var p parser.Section
+	var section parser.Section
 	if parentType == "backend" {
-		p = parser.Backends
+		section = parser.Backends
 	} else if parentType == "frontend" {
-		p = parser.Frontends
+		section = parser.Frontends
 	}
 
-	if err := c.ConfigParser.Delete(p, parentName, "log", int(id)); err != nil {
-		if err == parser_errors.SectionMissingErr {
-			return NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("%s %s does not exist", parentName, parentType))
-		}
-		if err == parser_errors.FetchError {
-			return NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("Log Target %v does not exist in %s %s", id, parentName, parentType))
-		}
+	if err := p.Delete(section, parentName, "log", int(id)); err != nil {
+		return c.handleError(strconv.FormatInt(id, 10), parentType, parentName, t, transactionID == "", err)
+	}
+
+	if err := c.saveData(p, t, transactionID == ""); err != nil {
 		return err
 	}
 
-	if err := c.saveData(t, transactionID); err != nil {
-		return err
-	}
-
-	if c.Cache.Enabled() {
-		c.Cache.LogTargets.InvalidateParent(transactionID, parentName, parentType)
-	}
 	return nil
 }
 
@@ -133,34 +98,24 @@ func (c *Client) CreateLogTarget(parentType string, parentName string, data *mod
 		}
 	}
 
-	t, err := c.loadDataForChange(transactionID, version)
+	p, t, err := c.loadDataForChange(transactionID, version)
 	if err != nil {
 		return err
 	}
 
-	var p parser.Section
+	var section parser.Section
 	if parentType == "backend" {
-		p = parser.Backends
+		section = parser.Backends
 	} else if parentType == "frontend" {
-		p = parser.Frontends
+		section = parser.Frontends
 	}
 
-	if err := c.ConfigParser.Insert(p, parentName, "log", serializeLogTarget(*data), int(*data.ID)); err != nil {
-		if err == parser_errors.IndexOutOfRange {
-			return c.errAndDeleteTransaction(NewConfError(ErrObjectIndexOutOfRange,
-				fmt.Sprintf("Log Target with id %v in %s %s out of range", int(*data.ID), parentType, parentName)), t, transactionID == "")
-		}
-		if err == parser_errors.SectionMissingErr {
-			return NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("%s %s does not exist", parentType, parentName))
-		}
-		return c.errAndDeleteTransaction(err, t, transactionID == "")
+	if err := p.Insert(section, parentName, "log", serializeLogTarget(*data), int(*data.ID)); err != nil {
+		return c.handleError(strconv.FormatInt(*data.ID, 10), parentType, parentName, t, transactionID == "", err)
 	}
 
-	if err := c.saveData(t, transactionID); err != nil {
+	if err := c.saveData(p, t, transactionID == ""); err != nil {
 		return err
-	}
-	if c.Cache.Enabled() {
-		c.Cache.LogTargets.InvalidateParent(transactionID, parentName, parentType)
 	}
 	return nil
 }
@@ -174,55 +129,42 @@ func (c *Client) EditLogTarget(id int64, parentType string, parentName string, d
 			return NewConfError(ErrValidationError, validationErr.Error())
 		}
 	}
-	t, err := c.loadDataForChange(transactionID, version)
+	p, t, err := c.loadDataForChange(transactionID, version)
 	if err != nil {
 		return err
 	}
 
-	var p parser.Section
+	var section parser.Section
 	if parentType == "backend" {
-		p = parser.Backends
+		section = parser.Backends
 	} else if parentType == "frontend" {
-		p = parser.Frontends
+		section = parser.Frontends
 	}
 
-	if _, err := c.ConfigParser.GetOne(p, parentName, "log", int(id)); err != nil {
-		if err == parser_errors.SectionMissingErr {
-			return NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("%s %s does not exist", parentType, parentName))
-		}
-		if err == parser_errors.FetchError {
-			return NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("Log Target %v does not exist in %s %s", id, parentType, parentName))
-		}
+	if _, err := p.GetOne(section, parentName, "log", int(id)); err != nil {
+		return c.handleError(strconv.FormatInt(id, 10), parentType, parentName, t, transactionID == "", err)
+	}
+
+	if err := p.Set(section, parentName, "log", serializeLogTarget(*data), int(id)); err != nil {
+		return c.handleError(strconv.FormatInt(id, 10), parentType, parentName, t, transactionID == "", err)
+	}
+
+	if err := c.saveData(p, t, transactionID == ""); err != nil {
 		return err
-	}
-
-	if err := c.ConfigParser.Set(p, parentName, "log", serializeLogTarget(*data), int(id)); err != nil {
-		if err == parser_errors.IndexOutOfRange {
-			return c.errAndDeleteTransaction(NewConfError(ErrObjectIndexOutOfRange,
-				fmt.Sprintf("Log Target with id %v in %s %s out of range", int(*data.ID), parentType, parentName)), t, transactionID == "")
-		}
-		return c.errAndDeleteTransaction(err, t, transactionID == "")
-	}
-
-	if err := c.saveData(t, transactionID); err != nil {
-		return err
-	}
-	if c.Cache.Enabled() {
-		c.Cache.LogTargets.InvalidateParent(transactionID, parentName, parentType)
 	}
 	return nil
 }
 
-func (c *Client) parseLogTargets(t, pName string) (models.LogTargets, error) {
-	p := parser.Global
-	if t == "frontend" {
-		p = parser.Frontends
-	} else if t == "backend" {
-		p = parser.Backends
+func (c *Client) parseLogTargets(t, pName string, p *parser.Parser) (models.LogTargets, error) {
+	var section parser.Section
+	if t == "backend" {
+		section = parser.Backends
+	} else if t == "frontend" {
+		section = parser.Frontends
 	}
 
 	logTargets := models.LogTargets{}
-	data, err := c.ConfigParser.Get(p, pName, "log", false)
+	data, err := p.Get(section, pName, "log", false)
 	if err != nil {
 		if err == parser_errors.FetchError {
 			return logTargets, nil

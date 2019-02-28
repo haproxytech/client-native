@@ -16,22 +16,14 @@ import (
 // GetBinds returns a struct with configuration version and an array of
 // configured binds in the specified frontend. Returns error on fail.
 func (c *Client) GetBinds(frontend string, transactionID string) (*models.GetBindsOKBody, error) {
-	if c.Cache.Enabled() {
-		binds, found := c.Cache.Binds.Get(frontend, transactionID)
-		if found {
-			return &models.GetBindsOKBody{Version: c.Cache.Version.Get(transactionID), Data: binds}, nil
-		}
-	}
-	if err := c.ConfigParser.LoadData(c.getTransactionFile(transactionID)); err != nil {
+	p, err := c.GetParser(transactionID)
+	if err != nil {
 		return nil, err
 	}
 
-	binds, err := c.parseBinds(frontend)
+	binds, err := c.parseBinds(frontend, p)
 	if err != nil {
-		if err == parser_errors.SectionMissingErr {
-			return nil, NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("Frontend %s does not exist", frontend))
-		}
-		return nil, err
+		return nil, c.handleError("", "frontend", frontend, "", false, err)
 	}
 
 	v, err := c.GetVersion(transactionID)
@@ -39,27 +31,18 @@ func (c *Client) GetBinds(frontend string, transactionID string) (*models.GetBin
 		return nil, err
 	}
 
-	if c.Cache.Enabled() {
-		c.Cache.Binds.SetAll(frontend, transactionID, binds)
-	}
 	return &models.GetBindsOKBody{Version: v, Data: binds}, nil
 }
 
 // GetBind returns a struct with configuration version and a requested bind
 // in the specified frontend. Returns error on fail or if bind does not exist.
 func (c *Client) GetBind(name string, frontend string, transactionID string) (*models.GetBindOKBody, error) {
-	if c.Cache.Enabled() {
-		bind, found := c.Cache.Binds.GetOne(name, frontend, transactionID)
-		if found {
-			return &models.GetBindOKBody{Version: c.Cache.Version.Get(transactionID), Data: bind}, nil
-		}
-	}
-
-	if err := c.ConfigParser.LoadData(c.getTransactionFile(transactionID)); err != nil {
+	p, err := c.GetParser(transactionID)
+	if err != nil {
 		return nil, err
 	}
 
-	bind, _ := c.getBindByName(name, frontend)
+	bind, _ := c.getBindByName(name, frontend, p)
 	if bind == nil {
 		return nil, NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("Bind %s does not exist in frontend %s", name, frontend))
 	}
@@ -69,40 +52,29 @@ func (c *Client) GetBind(name string, frontend string, transactionID string) (*m
 		return nil, err
 	}
 
-	if c.Cache.Enabled() {
-		c.Cache.Binds.Set(name, frontend, transactionID, bind)
-	}
 	return &models.GetBindOKBody{Version: v, Data: bind}, nil
 }
 
 // DeleteBind deletes a bind in configuration. One of version or transactionID is
 // mandatory. Returns error on fail, nil on success.
 func (c *Client) DeleteBind(name string, frontend string, transactionID string, version int64) error {
-	t, err := c.loadDataForChange(transactionID, version)
+	p, t, err := c.loadDataForChange(transactionID, version)
 	if err != nil {
 		return err
 	}
 
-	bind, i := c.getBindByName(name, frontend)
+	bind, i := c.getBindByName(name, frontend, p)
 	if bind == nil {
-		return NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("Bind %s does not exist in frontend %s", name, frontend))
+		e := NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("Bind %s does not exist in frontend %s", name, frontend))
+		return c.handleError(name, "frontend", frontend, t, transactionID == "", e)
 	}
 
-	if err := c.ConfigParser.Delete(parser.Frontends, frontend, "bind", i); err != nil {
-		if err == parser_errors.SectionMissingErr {
-			return NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("Frontend %s does not exist", frontend))
-		}
-		if err == parser_errors.FetchError {
-			return NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("Bind %s does not exist in frontend %s", name, frontend))
-		}
-		return err
+	if err := p.Delete(parser.Frontends, frontend, "bind", i); err != nil {
+		return c.handleError(name, "frontend", frontend, t, transactionID == "", err)
 	}
 
-	if err := c.saveData(t, transactionID); err != nil {
+	if err := c.saveData(p, t, transactionID == ""); err != nil {
 		return err
-	}
-	if c.Cache.Enabled() {
-		c.Cache.Binds.Delete(name, frontend, transactionID)
 	}
 	return nil
 }
@@ -116,31 +88,25 @@ func (c *Client) CreateBind(frontend string, data *models.Bind, transactionID st
 			return NewConfError(ErrValidationError, validationErr.Error())
 		}
 	}
-	t, err := c.loadDataForChange(transactionID, version)
+	p, t, err := c.loadDataForChange(transactionID, version)
 	if err != nil {
 		return err
 	}
 
-	bind, _ := c.getBindByName(data.Name, frontend)
+	bind, _ := c.getBindByName(data.Name, frontend, p)
 	if bind != nil {
-		return c.errAndDeleteTransaction(NewConfError(ErrObjectAlreadyExists, fmt.Sprintf("Bind %s already exists in frontend %s", data.Name, frontend)),
-			t, transactionID == "")
+		e := NewConfError(ErrObjectAlreadyExists, fmt.Sprintf("Bind %s already exists in frontend %s", data.Name, frontend))
+		return c.handleError(data.Name, "frontend", frontend, t, transactionID == "", e)
 	}
 
-	if err := c.ConfigParser.Insert(parser.Frontends, frontend, "bind", serializeBind(*data), -1); err != nil {
-		if err == parser_errors.SectionMissingErr {
-			return NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("Frontend %s does not exist", frontend))
-		}
-		return c.errAndDeleteTransaction(err, t, transactionID == "")
+	if err := p.Insert(parser.Frontends, frontend, "bind", serializeBind(*data), -1); err != nil {
+		return c.handleError(data.Name, "frontend", frontend, t, transactionID == "", err)
 	}
 
-	if err := c.saveData(t, transactionID); err != nil {
+	if err := c.saveData(p, t, transactionID == ""); err != nil {
 		return err
 	}
 
-	if c.Cache.Enabled() {
-		c.Cache.Binds.Set(data.Name, frontend, transactionID, data)
-	}
 	return nil
 }
 
@@ -153,34 +119,32 @@ func (c *Client) EditBind(name string, frontend string, data *models.Bind, trans
 			return NewConfError(ErrValidationError, validationErr.Error())
 		}
 	}
-	t, err := c.loadDataForChange(transactionID, version)
+	p, t, err := c.loadDataForChange(transactionID, version)
 	if err != nil {
 		return err
 	}
 
-	bind, i := c.getBindByName(name, frontend)
+	bind, i := c.getBindByName(name, frontend, p)
 	if bind == nil {
-		return NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("Bind %v does not exist in frontend %s", name, frontend))
+		e := NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("Bind %v does not exist in frontend %s", name, frontend))
+		return c.handleError(data.Name, "frontend", frontend, t, transactionID == "", e)
 	}
 
-	if err := c.ConfigParser.Set(parser.Frontends, frontend, "bind", serializeBind(*data), i); err != nil {
-		return c.errAndDeleteTransaction(err, t, transactionID == "")
+	if err := p.Set(parser.Frontends, frontend, "bind", serializeBind(*data), i); err != nil {
+		return c.handleError(data.Name, "frontend", frontend, t, transactionID == "", err)
 	}
 
-	if err := c.saveData(t, transactionID); err != nil {
+	if err := c.saveData(p, t, transactionID == ""); err != nil {
 		return err
 	}
 
-	if c.Cache.Enabled() {
-		c.Cache.Binds.Set(name, frontend, transactionID, data)
-	}
 	return nil
 }
 
-func (c *Client) parseBinds(frontend string) (models.Binds, error) {
+func (c *Client) parseBinds(frontend string, p *parser.Parser) (models.Binds, error) {
 	binds := models.Binds{}
 
-	data, err := c.ConfigParser.Get(parser.Frontends, frontend, "bind", false)
+	data, err := p.Get(parser.Frontends, frontend, "bind", false)
 	if err != nil {
 		if err == parser_errors.FetchError {
 			return binds, nil
@@ -286,8 +250,8 @@ func serializeBind(b models.Bind) types.Bind {
 	return bind
 }
 
-func (c *Client) getBindByName(name string, frontend string) (*models.Bind, int) {
-	binds, err := c.parseBinds(frontend)
+func (c *Client) getBindByName(name string, frontend string, p *parser.Parser) (*models.Bind, int) {
+	binds, err := c.parseBinds(frontend, p)
 	if err != nil {
 		return nil, 0
 	}

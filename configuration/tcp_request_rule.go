@@ -1,7 +1,6 @@
 package configuration
 
 import (
-	"fmt"
 	"strconv"
 	"strings"
 
@@ -17,22 +16,14 @@ import (
 // GetTCPRequestRules returns a struct with configuration version and an array of
 // configured TCP request rules in the specified parent. Returns error on fail.
 func (c *Client) GetTCPRequestRules(parentType, parentName string, transactionID string) (*models.GetTCPRequestRulesOKBody, error) {
-	if c.Cache.Enabled() {
-		tcpRules, found := c.Cache.TcpRequestRules.Get(parentName, parentType, transactionID)
-		if found {
-			return &models.GetTCPRequestRulesOKBody{Version: c.Cache.Version.Get(transactionID), Data: tcpRules}, nil
-		}
-	}
-	if err := c.ConfigParser.LoadData(c.getTransactionFile(transactionID)); err != nil {
+	p, err := c.GetParser(transactionID)
+	if err != nil {
 		return nil, err
 	}
 
-	tcpRules, err := c.parseTCPRequestRules(parentType, parentName)
+	tcpRules, err := c.parseTCPRequestRules(parentType, parentName, p)
 	if err != nil {
-		if err == parser_errors.SectionMissingErr {
-			return nil, NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("%s %s does not exist", parentType, parentName))
-		}
-		return nil, err
+		return nil, c.handleError("", parentType, parentName, "", false, err)
 	}
 
 	v, err := c.GetVersion(transactionID)
@@ -40,41 +31,27 @@ func (c *Client) GetTCPRequestRules(parentType, parentName string, transactionID
 		return nil, err
 	}
 
-	if c.Cache.Enabled() {
-		c.Cache.TcpRequestRules.SetAll(parentName, parentType, transactionID, tcpRules)
-	}
 	return &models.GetTCPRequestRulesOKBody{Version: v, Data: tcpRules}, nil
 }
 
 // GetTCPRequestRule returns a struct with configuration version and a requested tcp request rule
 // in the specified parent. Returns error on fail or if http request rule does not exist.
 func (c *Client) GetTCPRequestRule(id int64, parentType, parentName string, transactionID string) (*models.GetTCPRequestRuleOKBody, error) {
-	if c.Cache.Enabled() {
-		tcpRule, found := c.Cache.TcpRequestRules.GetOne(id, parentName, parentType, transactionID)
-		if found {
-			return &models.GetTCPRequestRuleOKBody{Version: c.Cache.Version.Get(transactionID), Data: tcpRule}, nil
-		}
-	}
-	if err := c.ConfigParser.LoadData(c.getTransactionFile(transactionID)); err != nil {
-		return nil, err
-	}
-
-	var p parser.Section
-	if parentType == "backend" {
-		p = parser.Backends
-	} else if parentType == "frontend" {
-		p = parser.Frontends
-	}
-
-	data, err := c.ConfigParser.GetOne(p, parentName, "tcp-request", int(id))
+	p, err := c.GetParser(transactionID)
 	if err != nil {
-		if err == parser_errors.SectionMissingErr {
-			return nil, NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("%s %s does not exist", parentType, parentName))
-		}
-		if err == parser_errors.FetchError {
-			return nil, NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("TCP Request Rule %v does not exist in %s %s", id, parentType, parentName))
-		}
 		return nil, err
+	}
+
+	var section parser.Section
+	if parentType == "backend" {
+		section = parser.Backends
+	} else if parentType == "frontend" {
+		section = parser.Frontends
+	}
+
+	data, err := p.GetOne(section, parentName, "tcp-request", int(id))
+	if err != nil {
+		return nil, c.handleError(strconv.FormatInt(id, 10), parentType, parentName, "", false, err)
 	}
 
 	tcpRule := parseTCPRequestRule(data.(types.TCPAction))
@@ -85,44 +62,31 @@ func (c *Client) GetTCPRequestRule(id int64, parentType, parentName string, tran
 		return nil, err
 	}
 
-	if c.Cache.Enabled() {
-		c.Cache.TcpRequestRules.Set(id, parentName, parentType, transactionID, tcpRule)
-	}
-
 	return &models.GetTCPRequestRuleOKBody{Version: v, Data: tcpRule}, nil
 }
 
 // DeleteTCPRequestRule deletes a tcp request rule in configuration. One of version or transactionID is
 // mandatory. Returns error on fail, nil on success.
 func (c *Client) DeleteTCPRequestRule(id int64, parentType string, parentName string, transactionID string, version int64) error {
-	t, err := c.loadDataForChange(transactionID, version)
+	p, t, err := c.loadDataForChange(transactionID, version)
 	if err != nil {
 		return err
 	}
-
-	var p parser.Section
+	var section parser.Section
 	if parentType == "backend" {
-		p = parser.Backends
+		section = parser.Backends
 	} else if parentType == "frontend" {
-		p = parser.Frontends
+		section = parser.Frontends
 	}
 
-	if err := c.ConfigParser.Delete(p, parentName, "tcp-request", int(id)); err != nil {
-		if err == parser_errors.SectionMissingErr {
-			return NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("%s %s does not exist", parentName, parentType))
-		}
-		if err == parser_errors.FetchError {
-			return NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("TCP Request Rule %v does not exist in %s %s", id, parentName, parentType))
-		}
+	if err := p.Delete(section, parentName, "tcp-request", int(id)); err != nil {
+		return c.handleError(strconv.FormatInt(id, 10), parentType, parentName, t, transactionID == "", err)
+	}
+
+	if err := c.saveData(p, t, transactionID == ""); err != nil {
 		return err
 	}
 
-	if err := c.saveData(t, transactionID); err != nil {
-		return err
-	}
-	if c.Cache.Enabled() {
-		c.Cache.TcpRequestRules.InvalidateParent(transactionID, parentName, parentType)
-	}
 	return nil
 }
 
@@ -136,34 +100,24 @@ func (c *Client) CreateTCPRequestRule(parentType string, parentName string, data
 		}
 	}
 
-	t, err := c.loadDataForChange(transactionID, version)
+	p, t, err := c.loadDataForChange(transactionID, version)
 	if err != nil {
 		return err
 	}
 
-	var p parser.Section
+	var section parser.Section
 	if parentType == "backend" {
-		p = parser.Backends
+		section = parser.Backends
 	} else if parentType == "frontend" {
-		p = parser.Frontends
+		section = parser.Frontends
 	}
 
-	if err := c.ConfigParser.Insert(p, parentName, "tcp-request", serializeTCPRequestRule(*data), int(*data.ID)); err != nil {
-		if err == parser_errors.IndexOutOfRange {
-			return c.errAndDeleteTransaction(NewConfError(ErrObjectIndexOutOfRange,
-				fmt.Sprintf("TCP Request Rule with id %v in %s %s out of range", int(*data.ID), parentType, parentName)), t, transactionID == "")
-		}
-		if err == parser_errors.SectionMissingErr {
-			return NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("%s %s does not exist", parentType, parentName))
-		}
-		return c.errAndDeleteTransaction(err, t, transactionID == "")
+	if err := p.Insert(section, parentName, "tcp-request", serializeTCPRequestRule(*data), int(*data.ID)); err != nil {
+		return c.handleError(strconv.FormatInt(*data.ID, 10), parentType, parentName, t, transactionID == "", err)
 	}
 
-	if err := c.saveData(t, transactionID); err != nil {
+	if err := c.saveData(p, t, transactionID == ""); err != nil {
 		return err
-	}
-	if c.Cache.Enabled() {
-		c.Cache.TcpRequestRules.InvalidateParent(transactionID, parentName, parentType)
 	}
 	return nil
 }
@@ -177,55 +131,42 @@ func (c *Client) EditTCPRequestRule(id int64, parentType string, parentName stri
 			return NewConfError(ErrValidationError, validationErr.Error())
 		}
 	}
-	t, err := c.loadDataForChange(transactionID, version)
+	p, t, err := c.loadDataForChange(transactionID, version)
 	if err != nil {
 		return err
 	}
 
-	var p parser.Section
+	var section parser.Section
 	if parentType == "backend" {
-		p = parser.Backends
+		section = parser.Backends
 	} else if parentType == "frontend" {
-		p = parser.Frontends
+		section = parser.Frontends
 	}
 
-	if _, err := c.ConfigParser.GetOne(p, parentName, "tcp-request", int(id)); err != nil {
-		if err == parser_errors.SectionMissingErr {
-			return NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("%s %s does not exist", parentType, parentName))
-		}
-		if err == parser_errors.FetchError {
-			return NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("TCP Request Rule %v does not exist in %s %s", id, parentType, parentName))
-		}
+	if _, err := p.GetOne(section, parentName, "tcp-request", int(id)); err != nil {
+		return c.handleError(strconv.FormatInt(id, 10), parentType, parentName, t, transactionID == "", err)
+	}
+
+	if err := p.Set(section, parentName, "tcp-request", serializeTCPRequestRule(*data), int(id)); err != nil {
+		return c.handleError(strconv.FormatInt(id, 10), parentType, parentName, t, transactionID == "", err)
+	}
+
+	if err := c.saveData(p, t, transactionID == ""); err != nil {
 		return err
-	}
-
-	if err := c.ConfigParser.Set(p, parentName, "tcp-request", serializeTCPRequestRule(*data), int(id)); err != nil {
-		if err == parser_errors.IndexOutOfRange {
-			return c.errAndDeleteTransaction(NewConfError(ErrObjectIndexOutOfRange,
-				fmt.Sprintf("HTTP Request Rule with id %v in %s %s out of range", int(*data.ID), parentType, parentName)), t, transactionID == "")
-		}
-		return c.errAndDeleteTransaction(err, t, transactionID == "")
-	}
-
-	if err := c.saveData(t, transactionID); err != nil {
-		return err
-	}
-	if c.Cache.Enabled() {
-		c.Cache.TcpRequestRules.InvalidateParent(transactionID, parentName, parentType)
 	}
 	return nil
 }
 
-func (c *Client) parseTCPRequestRules(t, pName string) (models.TCPRequestRules, error) {
-	p := parser.Global
+func (c *Client) parseTCPRequestRules(t, pName string, p *parser.Parser) (models.TCPRequestRules, error) {
+	section := parser.Global
 	if t == "frontend" {
-		p = parser.Frontends
+		section = parser.Frontends
 	} else if t == "backend" {
-		p = parser.Backends
+		section = parser.Backends
 	}
 
 	tcpReqRules := models.TCPRequestRules{}
-	data, err := c.ConfigParser.Get(p, pName, "tcp-request", false)
+	data, err := p.Get(section, pName, "tcp-request", false)
 	if err != nil {
 		if err == parser_errors.FetchError {
 			return tcpReqRules, nil
