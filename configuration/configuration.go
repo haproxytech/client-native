@@ -37,6 +37,11 @@ type ClientParams struct {
 }
 
 // Client configuration client
+// Parser is the config parser instance that loads "master" configuration file on Init
+// and when transaction is commited it gets replaced with the parser from parsers map.
+// parsers map contains a config parser for each transaction, which loads data from
+// transaction files on StartTransaction, and deletes on CommitTransaction. We save
+// data to file on every change for persistence.
 type Client struct {
 	ClientParams
 	parsers map[string]*parser.Parser
@@ -78,6 +83,10 @@ func (c *Client) Init(options ClientParams) error {
 	c.ClientParams = options
 
 	c.parsers = make(map[string]*parser.Parser)
+	if err := c.InitTransactionParsers(); err != nil {
+		return err
+	}
+
 	c.Parser = &parser.Parser{}
 	if err := c.Parser.LoadData(options.ConfigurationFile); err != nil {
 		return err
@@ -86,6 +95,7 @@ func (c *Client) Init(options ClientParams) error {
 	return nil
 }
 
+// GetParser returns a parser for given transaction, if transaction is "", it returns "master" parser
 func (c *Client) GetParser(transaction string) (*parser.Parser, error) {
 	if transaction == "" {
 		return c.Parser, nil
@@ -97,6 +107,7 @@ func (c *Client) GetParser(transaction string) (*parser.Parser, error) {
 	return p, nil
 }
 
+//AddParser adds parser to parser map
 func (c *Client) AddParser(transaction string) error {
 	if transaction == "" {
 		return errors.Errorf("Not a valid transaction")
@@ -114,6 +125,7 @@ func (c *Client) AddParser(transaction string) error {
 	return nil
 }
 
+//DeleteParser deletes parser from parsers map
 func (c *Client) DeleteParser(transaction string) error {
 	if transaction == "" {
 		return errors.Errorf("Not a valid transaction")
@@ -126,6 +138,7 @@ func (c *Client) DeleteParser(transaction string) error {
 	return nil
 }
 
+//CommitParser commits transaction parser, deletes it from parsers map, and replaces master Parser
 func (c *Client) CommitParser(transaction string) error {
 	if transaction == "" {
 		return errors.Errorf("Not a valid transaction")
@@ -136,6 +149,28 @@ func (c *Client) CommitParser(transaction string) error {
 	}
 	c.Parser = p
 	delete(c.parsers, transaction)
+	return nil
+}
+
+//InitTransactionParsers checks transactions and initializes parsers map with transactions in_progress
+func (c *Client) InitTransactionParsers() error {
+	transactions, err := c.GetTransactions("in_progress")
+	if err != nil {
+		return err
+	}
+
+	for _, t := range *transactions {
+		if err := c.AddParser(t.ID); err != nil {
+			continue
+		}
+		p, err := c.GetParser(t.ID)
+		if err != nil {
+			continue
+		}
+		if err := p.LoadData(c.getTransactionFile(t.ID)); err != nil {
+			return err
+		}
+	}
 	return nil
 }
 
