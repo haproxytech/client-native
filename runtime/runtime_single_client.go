@@ -61,7 +61,7 @@ func (s *SingleRuntime) readFromSocket(command string) (string, error) {
 	if api == nil {
 		return "", fmt.Errorf("no connection")
 	}
-	time.Sleep(1e9)
+	time.Sleep(2 * time.Millisecond)
 	bufferSize := 1024
 	buf := make([]byte, bufferSize)
 	var data strings.Builder
