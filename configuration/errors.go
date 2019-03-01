@@ -11,34 +11,31 @@ const (
 	ErrGeneralError = 0
 
 	// Errors regarding configurations
-	ErrSyntaxWrong             = 1
-	ErrNoParentSpecified       = 10
+	ErrNoParentSpecified      = 10
+	ErrParentDoesNotExist     = 11
+	ErrBothVersionTransaction = 12
+	ErrNoVersionTransaction   = 13
+	ErrValidationError        = 14
+	ErrVersionMismatch        = 15
+
 	ErrTransactionDoesNotExist = 20
-	ErrObjectAlreadyExists     = 23
-	ErrObjectDoesNotExist      = 22
-	ErrObjectIndexOutOfRange   = 26
-	ErrErrorChangingConfig     = 25
-	ErrCannotReadConfFile      = 30
-	ErrCannotReadVersion       = 31
-	ErrCannotSetVersion        = 32
-	ErrVersionMismatch         = 33
-	ErrBothVersionTransaction  = 34
-	ErrNoVersionTransaction    = 35
-	ErrCannotParseTransaction  = 40
-	ErrValidationError         = 50
+	ErrTransactionAlredyExists = 21
+	ErrCannotParseTransaction  = 22
+
+	ErrObjectDoesNotExist    = 30
+	ErrObjectAlreadyExists   = 31
+	ErrObjectIndexOutOfRange = 32
+
+	ErrErrorChangingConfig = 40
+	ErrCannotReadConfFile  = 41
+	ErrCannotReadVersion   = 42
+	ErrCannotSetVersion    = 43
 )
 
 // ConfError general configuration client error
 type ConfError struct {
 	code int
 	msg  string
-}
-
-// LBCTLError error when executing lbctl, embeds ConfError
-type LBCTLError struct {
-	ConfError
-	action string
-	cmd    string
 }
 
 // Error implementation for ConfError
@@ -49,16 +46,6 @@ func (e *ConfError) Error() string {
 // Code returns ConfError code, which is one of constants in this package
 func (e *ConfError) Code() int {
 	return e.code
-}
-
-// Error implementation for LBCTLError
-func (e *LBCTLError) Error() string {
-	return fmt.Sprintf("%v: Error executing LBCTL: %s, %s. Output: %s", e.code, e.cmd, e.action, e.msg)
-}
-
-// NewLBCTLError contstructor for LBCTLError
-func NewLBCTLError(code int, cmd, action, msg string) *LBCTLError {
-	return &LBCTLError{ConfError: ConfError{code: code, msg: msg}, action: action, cmd: cmd}
 }
 
 // NewConfError contstructor for ConfError

@@ -75,26 +75,24 @@ func (c *Client) CommitTransaction(id string) error {
 		return NewConfError(ErrVersionMismatch, fmt.Sprintf("Version mismatch, transaction version: %v, configured version: %v", t.Version, version))
 	}
 
-	if err = c.checkTransactionFile(id); err != nil {
+	if err := c.checkTransactionFile(id); err != nil {
 		c.failTransaction(id)
 		return err
 	}
 
-	if err = copyFile(c.getTransactionFile(id), c.ConfigurationFile); err != nil {
+	if err := copyFile(c.getTransactionFile(id), c.ConfigurationFile); err != nil {
 		c.failTransaction(id)
 		return err
 	}
 
-	if err = c.deleteTransactionFiles(id); err != nil {
-		return nil
-	}
+	c.deleteTransactionFiles(id)
 
 	if err := c.CommitParser(id); err != nil {
 		c.Parser.LoadData(c.ConfigurationFile)
 		return nil
 	}
 
-	if err = c.incrementVersion(); err != nil {
+	if err := c.incrementVersion(); err != nil {
 		return err
 	}
 

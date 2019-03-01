@@ -89,7 +89,7 @@ func (c *Client) PostRawConfiguration(config *string, version int64) error {
 	}
 
 	if err := c.Parser.LoadData(c.ConfigurationFile); err != nil {
-		return err
+		return NewConfError(ErrCannotReadConfFile, fmt.Sprintf("Cannot read %s", c.ConfigurationFile))
 	}
 
 	return nil

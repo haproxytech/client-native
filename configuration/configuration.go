@@ -89,7 +89,7 @@ func (c *Client) Init(options ClientParams) error {
 
 	c.Parser = &parser.Parser{}
 	if err := c.Parser.LoadData(options.ConfigurationFile); err != nil {
-		return err
+		return NewConfError(ErrCannotReadConfFile, fmt.Sprintf("Cannot read %s", c.ConfigurationFile))
 	}
 
 	return nil
@@ -110,16 +110,16 @@ func (c *Client) GetParser(transaction string) (*parser.Parser, error) {
 //AddParser adds parser to parser map
 func (c *Client) AddParser(transaction string) error {
 	if transaction == "" {
-		return errors.Errorf("Not a valid transaction")
+		return NewConfError(ErrValidationError, fmt.Sprintf("Not a valid transaction"))
 	}
 	_, ok := c.parsers[transaction]
 	if ok {
-		return NewConfError(ErrObjectAlreadyExists, fmt.Sprintf("Parser for %s already exists", transaction))
+		return NewConfError(ErrTransactionAlredyExists, fmt.Sprintf("Parser for %s already exists", transaction))
 	}
 
 	p := &parser.Parser{}
 	if err := p.LoadData(c.getTransactionFile(transaction)); err != nil {
-		return err
+		return NewConfError(ErrCannotReadConfFile, fmt.Sprintf("Cannot read %s", c.getTransactionFile(transaction)))
 	}
 	c.parsers[transaction] = p
 	return nil
@@ -128,7 +128,7 @@ func (c *Client) AddParser(transaction string) error {
 //DeleteParser deletes parser from parsers map
 func (c *Client) DeleteParser(transaction string) error {
 	if transaction == "" {
-		return errors.Errorf("Not a valid transaction")
+		return NewConfError(ErrValidationError, fmt.Sprintf("Not a valid transaction"))
 	}
 	_, ok := c.parsers[transaction]
 	if !ok {
@@ -141,7 +141,7 @@ func (c *Client) DeleteParser(transaction string) error {
 //CommitParser commits transaction parser, deletes it from parsers map, and replaces master Parser
 func (c *Client) CommitParser(transaction string) error {
 	if transaction == "" {
-		return errors.Errorf("Not a valid transaction")
+		return NewConfError(ErrValidationError, fmt.Sprintf("Not a valid transaction"))
 	}
 	p, ok := c.parsers[transaction]
 	if !ok {
@@ -168,7 +168,7 @@ func (c *Client) InitTransactionParsers() error {
 			continue
 		}
 		if err := p.LoadData(c.getTransactionFile(t.ID)); err != nil {
-			return err
+			return NewConfError(ErrCannotReadConfFile, fmt.Sprintf("Cannot read %s", c.getTransactionFile(t.ID)))
 		}
 	}
 	return nil
@@ -182,7 +182,7 @@ func (c *Client) GetVersion(transaction string) (int64, error) {
 func (c *Client) getVersion(transaction string) (int64, error) {
 	p, err := c.GetParser(transaction)
 	if err != nil {
-		return 0, err
+		return 0, NewConfError(ErrCannotReadVersion, fmt.Sprintf("Cannot read version: %s", err.Error()))
 	}
 
 	data, _ := p.Get(parser.Comments, parser.CommentsSectionName, "# _version", true)
@@ -195,7 +195,10 @@ func (c *Client) incrementVersion() error {
 	ver, _ := data.(*types.ConfigVersion)
 	ver.Value = ver.Value + 1
 
-	return c.Parser.Save(c.ConfigurationFile)
+	if err := c.Parser.Save(c.ConfigurationFile); err != nil {
+		return NewConfError(ErrCannotSetVersion, fmt.Sprintf("Cannot set version: %s", err.Error()))
+	}
+	return nil
 }
 
 func (c *Client) checkTransactionOrVersion(transactionID string, version int64) (string, error) {
@@ -752,10 +755,12 @@ func (c *Client) handleError(id, parentType, parentName, transaction string, imp
 	var e error
 	if err == parser_errors.SectionMissingErr {
 		if parentName != "" {
-			e = NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("%s %s does not exist", parentType, parentName))
+			e = NewConfError(ErrParentDoesNotExist, fmt.Sprintf("%s %s does not exist", parentType, parentName))
 		} else {
 			e = NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("Object %s does not exist", id))
 		}
+	} else if err == parser_errors.SectionAlreadyExistsErr {
+		e = NewConfError(ErrObjectAlreadyExists, fmt.Sprintf("Object %s already exists", id))
 	} else if err == parser_errors.FetchError {
 		e = NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("Object %v does not exist in %s %s", id, parentType, parentName))
 	} else if err == parser_errors.IndexOutOfRange {
@@ -883,8 +888,9 @@ func (c *Client) loadDataForChange(transactionID string, version int64) (*parser
 
 func (c *Client) saveData(p *parser.Parser, t string, commitImplicit bool) error {
 	if err := p.Save(c.getTransactionFile(t)); err != nil {
+		e := NewConfError(ErrErrorChangingConfig, err.Error())
 		if commitImplicit {
-			return c.errAndDeleteTransaction(err, t)
+			return c.errAndDeleteTransaction(e, t)
 		}
 		return err
 	}
