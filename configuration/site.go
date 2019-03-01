@@ -521,12 +521,14 @@ func (c *Client) parseFarmServers(farm string, p *parser.Parser) []*models.SiteF
 }
 
 func serializeServiceToFrontend(service *models.SiteService, name string) *models.Frontend {
-	return &models.Frontend{
-		Name:               name,
-		Mode:               service.Mode,
-		Maxconn:            service.Maxconn,
-		HTTPConnectionMode: service.HTTPConnectionMode,
+	fr := &models.Frontend{Name: name}
+	if service != nil {
+		fr.Mode = service.Mode
+		fr.Maxconn = service.Maxconn
+		fr.HTTPConnectionMode = service.HTTPConnectionMode
+
 	}
+	return fr
 }
 
 func serializeFarmToBackend(farm *models.SiteFarmsItems) *models.Backend {
