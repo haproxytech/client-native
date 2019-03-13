@@ -21,14 +21,18 @@ func TestGetGlobal(t *testing.T) {
 	if global.Data.Daemon != "enabled" {
 		t.Errorf("Daemon is %v, expected enabled", global.Data.Daemon)
 	}
-	if global.Data.RuntimeAPI != "/var/run/haproxy.sock" {
-		t.Errorf("RuntimeAPI is %v, expected /var/run/haproxy.sock", global.Data.RuntimeAPI)
-	}
-	if global.Data.RuntimeAPILevel != "admin" {
-		t.Errorf("RuntimeAPILevel is %v, expected admin", global.Data.RuntimeAPILevel)
-	}
-	if global.Data.RuntimeAPIMode != "0660" {
-		t.Errorf("RuntimeAPIMode is %v, expected 0660", global.Data.RuntimeAPIMode)
+	if len(global.Data.RuntimeApis) == 1 {
+		if *global.Data.RuntimeApis[0].Address != "/var/run/haproxy.sock" {
+			t.Errorf("RuntimeAPI.Address is %v, expected /var/run/haproxy.sock", *global.Data.RuntimeApis[0].Address)
+		}
+		if global.Data.RuntimeApis[0].Level != "admin" {
+			t.Errorf("RuntimeAPI.Level is %v, expected admin", global.Data.RuntimeApis[0].Level)
+		}
+		if global.Data.RuntimeApis[0].Mode != "0660" {
+			t.Errorf("RuntimeAPI.Mode is %v, expected 0660", global.Data.RuntimeApis[0].Mode)
+		}
+	} else {
+		t.Errorf("RuntimeAPI is not set")
 	}
 	if global.Data.Nbproc != 4 {
 		t.Errorf("Nbproc is %v, expected 4", global.Data.Nbproc)
@@ -39,10 +43,15 @@ func TestGetGlobal(t *testing.T) {
 }
 
 func TestPutGlobal(t *testing.T) {
+	a := "/var/run/haproxy.sock"
 	g := &models.Global{
-		Daemon:                "enabled",
-		RuntimeAPI:            "/var/run/haproxy.sock",
-		RuntimeAPILevel:       "admin",
+		Daemon: "enabled",
+		RuntimeApis: []*models.GlobalRuntimeApisItems{
+			&models.GlobalRuntimeApisItems{
+				Address: &a,
+				Level:   "admin",
+			},
+		},
 		Maxconn:               1000,
 		SslDefaultBindCiphers: "test",
 		SslDefaultBindOptions: "ssl-min-ver TLSv1.0 no-tls-tickets",

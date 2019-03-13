@@ -40,22 +40,27 @@ func (c *Client) GetGlobalConfiguration(transactionID string) (*models.GetGlobal
 	}
 
 	data, err = p.Get(parser.Global, parser.GlobalSectionName, "stats socket")
-	rAPI := ""
-	rLevel := ""
-	rMode := ""
+	rAPIs := []*models.GlobalRuntimeApisItems{}
 	if err == nil {
 		sockets := data.([]types.Socket)
-		if len(sockets) > 0 {
-			s := sockets[0]
-			rAPI = s.Path
+		for _, s := range sockets {
+			p := s.Path
+			rAPI := &models.GlobalRuntimeApisItems{Address: &p}
 			for _, p := range s.Params {
-				d := p.(*params.BindOptionValue)
-				if d.Name == "level" {
-					rLevel = d.Value
-				} else if d.Name == "mode" {
-					rMode = d.Value
+				switch v := p.(type) {
+				case *params.BindOptionDoubleWord:
+					if v.Name == "expose-fd" && v.Value == "listener" {
+						rAPI.ExposeFdListeners = true
+					}
+				case *params.BindOptionValue:
+					if v.Name == "level" {
+						rAPI.Level = v.Value
+					} else if v.Name == "mode" {
+						rAPI.Mode = v.Value
+					}
 				}
 			}
+			rAPIs = append(rAPIs, rAPI)
 		}
 	}
 
@@ -84,9 +89,7 @@ func (c *Client) GetGlobalConfiguration(transactionID string) (*models.GetGlobal
 		Daemon:                d,
 		Maxconn:               mConn,
 		Nbproc:                nbproc,
-		RuntimeAPI:            rAPI,
-		RuntimeAPILevel:       rLevel,
-		RuntimeAPIMode:        rMode,
+		RuntimeApis:           rAPIs,
 		SslDefaultBindCiphers: sslCiphers,
 		SslDefaultBindOptions: sslOptions,
 		TuneSslDefaultDhParam: dhParam,
@@ -137,34 +140,28 @@ func (c *Client) PushGlobalConfiguration(data *models.Global, transactionID stri
 	}
 	p.Set(parser.Global, parser.GlobalSectionName, "nbproc", pNbProc)
 
-	ondisk, err := p.Get(parser.Global, parser.GlobalSectionName, "stats socket")
-	if err != nil {
-		if data.RuntimeAPI != "" {
-			pStatsSocket := types.Socket{
-				Path: data.RuntimeAPI,
-				Params: []params.BindOption{
-					&params.BindOptionValue{Name: "level", Value: data.RuntimeAPILevel},
-					&params.BindOptionValue{Name: "mode", Value: data.RuntimeAPIMode},
-				},
-			}
-			p.Set(parser.Global, parser.GlobalSectionName, "stats socket", pStatsSocket)
-		} else {
-			p.Set(parser.Global, parser.GlobalSectionName, "stats socket", nil)
+	sockets := []types.Socket{}
+	for _, rAPI := range data.RuntimeApis {
+		s := types.Socket{
+			Path:   *rAPI.Address,
+			Params: []params.BindOption{},
 		}
-	} else {
-		sockets := ondisk.([]types.Socket)
-		if data.RuntimeAPI != "" {
-			pStatsSocket := types.Socket{
-				Path: data.RuntimeAPI,
-				Params: []params.BindOption{
-					&params.BindOptionValue{Name: "level", Value: data.RuntimeAPILevel},
-					&params.BindOptionValue{Name: "mode", Value: data.RuntimeAPIMode},
-				},
-			}
-			(sockets)[0] = pStatsSocket
+		if rAPI.ExposeFdListeners {
+			p := &params.BindOptionDoubleWord{Name: "expose-fd", Value: "listeners"}
+			s.Params = append(s.Params, p)
 		}
-		p.Set(parser.Global, parser.GlobalSectionName, "stats socket", sockets)
+		if rAPI.Level != "" {
+			p := &params.BindOptionValue{Name: "level", Value: rAPI.Level}
+			s.Params = append(s.Params, p)
+		}
+		if rAPI.Mode != "" {
+			p := &params.BindOptionValue{Name: "mode", Value: rAPI.Mode}
+			s.Params = append(s.Params, p)
+		}
+		sockets = append(sockets, s)
 	}
+
+	p.Set(parser.Global, parser.GlobalSectionName, "stats socket", sockets)
 
 	pSSLCiphers := &types.StringC{
 		Value: data.SslDefaultBindCiphers,
