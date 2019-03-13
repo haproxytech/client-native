@@ -560,14 +560,15 @@ func (c *Client) setFieldValue(section parser.Section, sectionName string, field
 			return nil
 		}
 		st := field.Elem().Interface().(models.BackendStickTable)
-		d := &types.StickTable{
+		d := types.StickTable{
 			Type:   st.Type,
 			Size:   strconv.FormatInt(*st.Size, 10),
 			Store:  st.Store,
 			Expire: strconv.FormatInt(*st.Expire, 10),
 			Peers:  st.Peers,
 		}
-		if err := p.Set(section, sectionName, "stick-table", d); err != nil {
+		sts := []types.StickTable{d}
+		if err := p.Set(section, sectionName, "stick-table", sts); err != nil {
 			return err
 		}
 		return nil
