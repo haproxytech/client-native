@@ -1,6 +1,7 @@
 package misc
 
 import (
+	"strconv"
 	"strings"
 )
 
@@ -116,4 +117,49 @@ func DashCase(fieldName string) string {
 	// special case
 	n = strings.Replace(n, "httpuri", "http-uri", -1)
 	return n
+}
+
+func ParseTimeout(tOut string) *int64 {
+	var v int64
+	if strings.HasSuffix(tOut, "ms") {
+		v, _ = strconv.ParseInt(strings.TrimSuffix(tOut, "ms"), 10, 64)
+	} else if strings.HasSuffix(tOut, "s") {
+		v, _ = strconv.ParseInt(strings.TrimSuffix(tOut, "s"), 10, 64)
+		v = v * 1000
+	} else if strings.HasSuffix(tOut, "m") {
+		v, _ = strconv.ParseInt(strings.TrimSuffix(tOut, "m"), 10, 64)
+		v = v * 1000 * 60
+	} else if strings.HasSuffix(tOut, "h") {
+		v, _ = strconv.ParseInt(strings.TrimSuffix(tOut, "h"), 10, 64)
+		v = v * 1000 * 60 * 60
+	} else if strings.HasSuffix(tOut, "d") {
+		v, _ = strconv.ParseInt(strings.TrimSuffix(tOut, "d"), 10, 64)
+		v = v * 1000 * 60 * 60 * 24
+	} else {
+		v, _ = strconv.ParseInt(tOut, 10, 64)
+	}
+	if v != 0 {
+		return &v
+	}
+	return nil
+}
+
+func ParseSize(size string) *int64 {
+	var v int64
+	if strings.HasSuffix(size, "k") {
+		v, _ = strconv.ParseInt(strings.TrimSuffix(size, "k"), 10, 64)
+		v = v * 1024
+	} else if strings.HasSuffix(size, "m") {
+		v, _ = strconv.ParseInt(strings.TrimSuffix(size, "m"), 10, 64)
+		v = v * 1024 * 1024
+	} else if strings.HasSuffix(size, "g") {
+		v, _ = strconv.ParseInt(strings.TrimSuffix(size, "g"), 10, 64)
+		v = v * 1024 * 1024 * 1024
+	} else {
+		v, _ = strconv.ParseInt(size, 10, 64)
+	}
+	if v != 0 {
+		return &v
+	}
+	return nil
 }

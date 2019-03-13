@@ -295,11 +295,11 @@ func (c *Client) parseField(section parser.Section, sectionName string, fieldNam
 					if ok {
 						switch v.Name {
 						case "fall":
-							dServer.Fall = parseTimeout(v.Value)
+							dServer.Fall = misc.ParseTimeout(v.Value)
 						case "inter":
-							dServer.Inter = parseTimeout(v.Value)
+							dServer.Inter = misc.ParseTimeout(v.Value)
 						case "rise":
-							dServer.Rise = parseTimeout(v.Value)
+							dServer.Rise = misc.ParseTimeout(v.Value)
 						case "port":
 							port, err := strconv.ParseInt(v.Value, 10, 64)
 							if err == nil {
@@ -322,9 +322,9 @@ func (c *Client) parseField(section parser.Section, sectionName string, fieldNam
 		if section == parser.Backends {
 			st := &models.BackendStickTable{
 				Type:   d.Type,
-				Size:   parseSize(d.Size),
+				Size:   misc.ParseSize(d.Size),
 				Store:  d.Store,
-				Expire: parseTimeout(d.Expire),
+				Expire: misc.ParseTimeout(d.Expire),
 				Peers:  d.Peers,
 			}
 			k, err := strconv.ParseInt(d.Length, 10, 64)
@@ -471,7 +471,7 @@ func (c *Client) parseField(section parser.Section, sectionName string, fieldNam
 				return nil
 			}
 			timeout := data.(*types.SimpleTimeout)
-			return parseTimeout(timeout.Value)
+			return misc.ParseTimeout(timeout.Value)
 		}
 	}
 	//Check single line
@@ -929,51 +929,6 @@ func translateToParserData(field reflect.Value) common.ParserData {
 	default:
 		return nil
 	}
-}
-
-func parseSize(size string) *int64 {
-	var v int64
-	if strings.HasSuffix(size, "k") {
-		v, _ = strconv.ParseInt(strings.TrimSuffix(size, "k"), 10, 64)
-		v = v * 1024
-	} else if strings.HasSuffix(size, "m") {
-		v, _ = strconv.ParseInt(strings.TrimSuffix(size, "m"), 10, 64)
-		v = v * 1024 * 1024
-	} else if strings.HasSuffix(size, "g") {
-		v, _ = strconv.ParseInt(strings.TrimSuffix(size, "g"), 10, 64)
-		v = v * 1024 * 1024 * 1024
-	} else {
-		v, _ = strconv.ParseInt(size, 10, 64)
-	}
-	if v != 0 {
-		return &v
-	}
-	return nil
-}
-
-func parseTimeout(tOut string) *int64 {
-	var v int64
-	if strings.HasSuffix(tOut, "ms") {
-		v, _ = strconv.ParseInt(strings.TrimSuffix(tOut, "ms"), 10, 64)
-	} else if strings.HasSuffix(tOut, "s") {
-		v, _ = strconv.ParseInt(strings.TrimSuffix(tOut, "s"), 10, 64)
-		v = v * 1000
-	} else if strings.HasSuffix(tOut, "m") {
-		v, _ = strconv.ParseInt(strings.TrimSuffix(tOut, "m"), 10, 64)
-		v = v * 1000 * 60
-	} else if strings.HasSuffix(tOut, "h") {
-		v, _ = strconv.ParseInt(strings.TrimSuffix(tOut, "h"), 10, 64)
-		v = v * 1000 * 60 * 60
-	} else if strings.HasSuffix(tOut, "d") {
-		v, _ = strconv.ParseInt(strings.TrimSuffix(tOut, "d"), 10, 64)
-		v = v * 1000 * 60 * 60 * 24
-	} else {
-		v, _ = strconv.ParseInt(tOut, 10, 64)
-	}
-	if v != 0 {
-		return &v
-	}
-	return nil
 }
 
 func parseOption(d interface{}) interface{} {
