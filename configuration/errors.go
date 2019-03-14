@@ -30,6 +30,8 @@ const (
 	ErrCannotReadConfFile  = 41
 	ErrCannotReadVersion   = 42
 	ErrCannotSetVersion    = 43
+
+	ErrCannotFindHAProxy = 50
 )
 
 // ConfError general configuration client error
