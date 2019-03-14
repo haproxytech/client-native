@@ -318,29 +318,29 @@ func (c *Client) parseField(section parser.Section, sectionName string, fieldNam
 		if err != nil {
 			return nil
 		}
-		sts := data.([]types.StickTable)
-		if len(sts) == 0 {
-			return nil
-		}
-		st := &models.BackendStickTable{}
-		for _, d := range sts {
-			if section == parser.Backends {
-				st.Type = d.Type
-				st.Size = misc.ParseSize(d.Size)
-				st.Store = d.Store
-				st.Expire = misc.ParseTimeout(d.Expire)
-				st.Peers = d.Peers
+		d := data.(*types.StickTable)
+		bst := &models.BackendStickTable{}
 
-				k, err := strconv.ParseInt(d.Length, 10, 64)
-				if err == nil {
-					st.Keylen = &k
-				}
-				if d.NoPurge {
-					st.Nopurge = true
-				}
+		if section == parser.Backends {
+			if d == nil {
+				return nil
 			}
+			bst.Type = d.Type
+			bst.Size = misc.ParseSize(d.Size)
+			bst.Store = d.Store
+			bst.Expire = misc.ParseTimeout(d.Expire)
+			bst.Peers = d.Peers
+
+			k, err := strconv.ParseInt(d.Length, 10, 64)
+			if err == nil {
+				bst.Keylen = &k
+			}
+			if d.NoPurge {
+				bst.Nopurge = true
+			}
+			return bst
 		}
-		return st
+		return nil
 	}
 	if fieldName == "AdvCheck" {
 		data, err := p.Get(section, sectionName, "option ssl-hello-check", false)
@@ -561,14 +561,15 @@ func (c *Client) setFieldValue(section parser.Section, sectionName string, field
 		}
 		st := field.Elem().Interface().(models.BackendStickTable)
 		d := types.StickTable{
-			Type:   st.Type,
-			Size:   strconv.FormatInt(*st.Size, 10),
-			Store:  st.Store,
-			Expire: strconv.FormatInt(*st.Expire, 10),
-			Peers:  st.Peers,
+			Type:    st.Type,
+			Size:    strconv.FormatInt(*st.Size, 10),
+			Store:   st.Store,
+			Expire:  strconv.FormatInt(*st.Expire, 10),
+			Peers:   st.Peers,
+			NoPurge: st.Nopurge,
+			Length:  strconv.FormatInt(*st.Keylen, 10),
 		}
-		sts := []types.StickTable{d}
-		if err := p.Set(section, sectionName, "stick-table", sts); err != nil {
+		if err := p.Set(section, sectionName, "stick-table", d); err != nil {
 			return err
 		}
 		return nil

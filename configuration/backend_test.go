@@ -199,12 +199,22 @@ func TestCreateEditDeleteBackend(t *testing.T) {
 
 	// TestEditBackend
 	tOut = int64(3)
+	e := int64(1200000)
+	kl := int64(128)
+	s := int64(25600)
 	b = &models.Backend{
 		Name:               "created",
 		Mode:               "http",
 		Balance:            &models.BackendBalance{Algorithm: "roundrobin"},
 		HTTPConnectionMode: "http-tunnel",
 		ConnectTimeout:     &tOut,
+		StickTable: &models.BackendStickTable{
+			Expire: &e,
+			Keylen: &kl,
+			Size:   &s,
+			Store:  "gpc0,http_req_rate(40s)",
+			Type:   "string",
+		},
 	}
 
 	err = client.EditBackend("created", b, "", version)
