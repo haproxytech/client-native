@@ -50,6 +50,7 @@ func (s *SingleRuntime) GetStats() (models.NativeStats, error) {
 			continue
 		}
 		oneLineData.Stats = &st
+		oneLineData.RuntimeAPI = s.socketPath
 		result = append(result, oneLineData)
 	}
 	return result, nil
