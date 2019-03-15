@@ -2,7 +2,6 @@ package configuration
 
 import (
 	"fmt"
-	"os"
 	"reflect"
 	"strconv"
 	"strings"
@@ -82,10 +81,6 @@ func (c *Client) Init(options ClientParams) error {
 	}
 
 	c.ClientParams = options
-
-	if _, err := os.Stat(c.Haproxy); err != nil {
-		return NewConfError(ErrCannotFindHAProxy, fmt.Sprintf("Error finding haproxy binary %s: %s", c.Haproxy, err))
-	}
 
 	c.parsers = make(map[string]*parser.Parser)
 	if err := c.InitTransactionParsers(); err != nil {
