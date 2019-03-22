@@ -482,8 +482,13 @@ func (c *Client) parseFarm(name string, useAs string, cond string, condTest stri
 			Name:     backend.Name,
 			Servers:  c.parseFarmServers(backend.Name, p),
 		}
-		if backend.Forwardfor == "enabled" {
-			farm.Forwardfor = true
+		if backend.Forwardfor != nil {
+			farm.Forwardfor = &models.SiteFarmsItemsForwardfor{
+				Enabled: backend.Forwardfor.Enabled,
+				Except:  backend.Forwardfor.Except,
+				Header:  backend.Forwardfor.Header,
+				Ifnone:  backend.Forwardfor.Ifnone,
+			}
 		}
 		if backend.Balance != nil {
 			farm.Balance = &models.SiteFarmsItemsBalance{
@@ -536,8 +541,13 @@ func serializeFarmToBackend(farm *models.SiteFarmsItems) *models.Backend {
 		Name: farm.Name,
 		Mode: farm.Mode,
 	}
-	if farm.Forwardfor {
-		backend.Forwardfor = "enabled"
+	if farm.Forwardfor != nil {
+		backend.Forwardfor = &models.BackendForwardfor{
+			Enabled: farm.Forwardfor.Enabled,
+			Except:  farm.Forwardfor.Except,
+			Header:  farm.Forwardfor.Header,
+			Ifnone:  farm.Forwardfor.Ifnone,
+		}
 	}
 	if farm.Balance != nil {
 		backend.Balance = &models.BackendBalance{Algorithm: farm.Balance.Algorithm, Arguments: farm.Balance.Arguments}
@@ -668,10 +678,15 @@ func (c *Client) editFarm(name string, farm *models.SiteFarmsItems, t string, p 
 	}
 
 	backend.Mode = farm.Mode
-	if farm.Forwardfor {
-		backend.Forwardfor = "enabled"
+	if farm.Forwardfor != nil {
+		backend.Forwardfor = &models.BackendForwardfor{
+			Enabled: farm.Forwardfor.Enabled,
+			Except:  farm.Forwardfor.Except,
+			Header:  farm.Forwardfor.Header,
+			Ifnone:  farm.Forwardfor.Ifnone,
+		}
 	} else {
-		backend.Forwardfor = ""
+		backend.Forwardfor = nil
 	}
 	if farm.Balance != nil {
 		backend.Balance = &models.BackendBalance{Algorithm: farm.Balance.Algorithm, Arguments: farm.Balance.Arguments}

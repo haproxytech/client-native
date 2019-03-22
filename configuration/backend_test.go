@@ -42,7 +42,7 @@ func TestGetBackends(t *testing.T) {
 		if b.HTTPConnectionMode != "http-keep-alive" {
 			t.Errorf("%v: HTTPConnectionMode not http-keep-alive: %v", b.Name, b.HTTPConnectionMode)
 		}
-		if b.Forwardfor != "enabled" {
+		if *b.Forwardfor.Enabled != "enabled" {
 			t.Errorf("%v: Forwardfor not enabled: %v", b.Name, b.Forwardfor)
 		}
 		if *b.DefaultServer.Fall != 2000 {
@@ -111,7 +111,7 @@ func TestGetBackend(t *testing.T) {
 	if b.HTTPConnectionMode != "http-keep-alive" {
 		t.Errorf("%v: HTTPConnectionMode not http-keep-alive: %v", b.Name, b.HTTPConnectionMode)
 	}
-	if b.Forwardfor != "enabled" {
+	if *b.Forwardfor.Enabled != "enabled" {
 		t.Errorf("%v: Forwardfor not enabled: %v", b.Name, b.Forwardfor)
 	}
 	if *b.DefaultServer.Fall != 2000 {
@@ -320,6 +320,20 @@ func compareBackends(x, y *models.Backend, t *testing.T) bool {
 
 	x.StickTable = nil
 	y.StickTable = nil
+
+	if !reflect.DeepEqual(x.Redispatch, y.Redispatch) {
+		return false
+	}
+
+	x.Redispatch = nil
+	y.Redispatch = nil
+
+	if !reflect.DeepEqual(x.Forwardfor, y.Forwardfor) {
+		return false
+	}
+
+	x.Forwardfor = nil
+	y.Forwardfor = nil
 
 	if !reflect.DeepEqual(x, y) {
 		return false

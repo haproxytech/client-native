@@ -269,6 +269,47 @@ func (c *Client) parseField(section parser.Section, sectionName string, fieldNam
 			}
 		}
 	}
+	if fieldName == "Forwardfor" {
+		data, err := p.Get(section, sectionName, "option forwardfor", false)
+		if err != nil {
+			return nil
+		}
+		d := data.(*types.OptionForwardFor)
+		if section == parser.Backends {
+			enabled := "enabled"
+			disabled := "disabled"
+			bff := &models.BackendForwardfor{
+				Except:  d.Except,
+				Header:  d.Header,
+				Ifnone:  d.IfNone,
+				Enabled: &enabled,
+			}
+			if d.IfNone {
+				bff.Enabled = &disabled
+			}
+			return bff
+		}
+	}
+	if fieldName == "Redispatch" {
+		data, err := p.Get(section, sectionName, "option redispatch", false)
+		if err != nil {
+			return nil
+		}
+		d := data.(*types.OptionRedispatch)
+		if section == parser.Backends {
+			br := &models.BackendRedispatch{
+				Interval: *d.Interval,
+			}
+			if d.NoOption == true {
+				d := "disabled"
+				br.Enabled = &d
+			} else {
+				e := "enabled"
+				br.Enabled = &e
+			}
+			return br
+		}
+	}
 	if fieldName == "Balance" {
 		data, err := p.Get(section, sectionName, "balance", false)
 		if err != nil {
@@ -353,7 +394,7 @@ func (c *Client) parseField(section parser.Section, sectionName string, fieldNam
 
 		data, err = p.Get(section, sectionName, "option smtpchk", false)
 		if err == nil {
-			d := data.(*types.SimpleOption)
+			d := data.(*types.OptionSmtpchk)
 			if !d.NoOption {
 				return "smtpchk"
 			}
@@ -369,7 +410,7 @@ func (c *Client) parseField(section parser.Section, sectionName string, fieldNam
 
 		data, err = p.Get(section, sectionName, "option mysql-check", false)
 		if err == nil {
-			d := data.(*types.SimpleOption)
+			d := data.(*types.OptionMysqlCheck)
 			if !d.NoOption {
 				return "mysql-check"
 			}
@@ -532,6 +573,48 @@ func (c *Client) setFieldValue(section parser.Section, sectionName string, field
 		}
 		return nil
 	}
+	if fieldName == "Forwardfor" {
+		if valueIsNil(field) {
+			if err := p.Set(section, sectionName, "option forwardfor", nil); err != nil {
+				return err
+			}
+			return nil
+		}
+		ff := field.Elem().Interface().(models.BackendForwardfor)
+		d := &types.OptionForwardFor{
+			Except:   ff.Except,
+			Header:   ff.Header,
+			IfNone:   ff.Ifnone,
+			NoOption: false,
+		}
+		if *ff.Enabled == "disabled" {
+			d.NoOption = true
+		}
+		if err := p.Set(section, sectionName, "option forwardfor", d); err != nil {
+			return err
+		}
+		return nil
+	}
+	if fieldName == "Redispatch" {
+		if valueIsNil(field) {
+			if err := p.Set(section, sectionName, "option redispatch", nil); err != nil {
+				return err
+			}
+			return nil
+		}
+		br := field.Elem().Interface().(models.BackendRedispatch)
+		d := &types.OptionRedispatch{
+			Interval: &br.Interval,
+			NoOption: false,
+		}
+		if *br.Enabled == "disabled" {
+			d.NoOption = true
+		}
+		if err := p.Set(section, sectionName, "option redispatch", d); err != nil {
+			return err
+		}
+		return nil
+	}
 	if fieldName == "Balance" {
 		if valueIsNil(field) {
 			if err := p.Set(section, sectionName, "balance", nil); err != nil {
@@ -605,9 +688,20 @@ func (c *Client) setFieldValue(section parser.Section, sectionName string, field
 		}
 
 		if !valueIsNil(field) {
+			var d common.ParserData
 			pName := fmt.Sprintf("option %v", field.String())
-			d := &types.SimpleOption{
-				NoOption: false,
+			if pName == "option smtpchk" {
+				d = &types.OptionSmtpchk{
+					NoOption: false,
+				}
+			} else if pName == "option mysql-check" {
+				d = &types.OptionMysqlCheck{
+					NoOption: false,
+				}
+			} else {
+				d = &types.SimpleOption{
+					NoOption: false,
+				}
 			}
 			if err := p.Set(section, sectionName, pName, d); err != nil {
 				return err

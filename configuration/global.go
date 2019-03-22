@@ -1,7 +1,10 @@
 package configuration
 
 import (
+	"strconv"
 	"strings"
+
+	"github.com/haproxytech/client-native/misc"
 
 	strfmt "github.com/go-openapi/strfmt"
 	parser "github.com/haproxytech/config-parser"
@@ -20,9 +23,15 @@ func (c *Client) GetGlobalConfiguration(transactionID string) (*models.GetGlobal
 	}
 
 	_, err = p.Get(parser.Global, parser.GlobalSectionName, "daemon")
-	d := "enabled"
+	daemon := "enabled"
 	if err == errors.FetchError {
-		d = "disabled"
+		daemon = "disabled"
+	}
+
+	_, err = p.Get(parser.Global, parser.GlobalSectionName, "master-worker")
+	masterWorker := true
+	if err == errors.FetchError {
+		masterWorker = false
 	}
 
 	data, err := p.Get(parser.Global, parser.GlobalSectionName, "maxconn")
@@ -37,6 +46,20 @@ func (c *Client) GetGlobalConfiguration(transactionID string) (*models.GetGlobal
 	if err == nil {
 		nbProcParser := data.(*types.Int64C)
 		nbproc = nbProcParser.Value
+	}
+
+	data, err = p.Get(parser.Global, parser.GlobalSectionName, "nbthread")
+	nbthread := int64(0)
+	if err == nil {
+		nbthreadParser := data.(*types.Int64C)
+		nbthread = nbthreadParser.Value
+	}
+
+	data, err = p.Get(parser.Global, parser.GlobalSectionName, "pidfile")
+	pidfile := ""
+	if err == nil {
+		pidfileParser := data.(*types.StringC)
+		pidfile = pidfileParser.Value
 	}
 
 	data, err = p.Get(parser.Global, parser.GlobalSectionName, "stats socket")
@@ -64,6 +87,28 @@ func (c *Client) GetGlobalConfiguration(transactionID string) (*models.GetGlobal
 		}
 	}
 
+	data, err = p.Get(parser.Global, parser.GlobalSectionName, "cpu-map")
+	cpuMaps := []*models.GlobalCPUMapsItems{}
+	if err == nil {
+		cMaps := data.([]types.CpuMap)
+		for _, m := range cMaps {
+			cpuMap := &models.GlobalCPUMapsItems{
+				Name:  &m.Name,
+				Value: &m.Value,
+			}
+			cpuMaps = append(cpuMaps, cpuMap)
+		}
+	}
+
+	data, err = p.Get(parser.Global, parser.GlobalSectionName, "stats timeout")
+	var statsTimeout *int64
+	if err == errors.FetchError {
+		statsTimeout = nil
+	} else {
+		statsTimeoutParser := data.(*types.StringC)
+		statsTimeout = misc.ParseTimeout(statsTimeoutParser.Value)
+	}
+
 	data, err = p.Get(parser.Global, parser.GlobalSectionName, "ssl-default-bind-ciphers")
 	sslCiphers := ""
 	if err == nil {
@@ -86,10 +131,15 @@ func (c *Client) GetGlobalConfiguration(transactionID string) (*models.GetGlobal
 	}
 
 	g := &models.Global{
-		Daemon:                d,
+		Daemon:                daemon,
+		MasterWorker:          masterWorker,
 		Maxconn:               mConn,
 		Nbproc:                nbproc,
+		Nbthread:              nbthread,
+		Pidfile:               pidfile,
 		RuntimeApis:           rAPIs,
+		StatsTimeout:          statsTimeout,
+		CPUMaps:               cpuMaps,
 		SslDefaultBindCiphers: sslCiphers,
 		SslDefaultBindOptions: sslOptions,
 		TuneSslDefaultDhParam: dhParam,
@@ -124,6 +174,12 @@ func (c *Client) PushGlobalConfiguration(data *models.Global, transactionID stri
 	}
 	p.Set(parser.Global, parser.GlobalSectionName, "daemon", pDaemon)
 
+	pMasterWorker := &types.Enabled{}
+	if data.MasterWorker == false {
+		pMasterWorker = nil
+	}
+	p.Set(parser.Global, parser.GlobalSectionName, "master-worker", pMasterWorker)
+
 	pMaxConn := &types.Int64C{
 		Value: data.Maxconn,
 	}
@@ -139,6 +195,22 @@ func (c *Client) PushGlobalConfiguration(data *models.Global, transactionID stri
 		pNbProc = nil
 	}
 	p.Set(parser.Global, parser.GlobalSectionName, "nbproc", pNbProc)
+
+	pNbthread := &types.Int64C{
+		Value: data.Nbthread,
+	}
+	if data.Nbthread == 0 {
+		pNbProc = nil
+	}
+	p.Set(parser.Global, parser.GlobalSectionName, "nbthread", pNbthread)
+
+	pPidfile := &types.StringC{
+		Value: data.Pidfile,
+	}
+	if data.Pidfile == "" {
+		pPidfile = nil
+	}
+	p.Set(parser.Global, parser.GlobalSectionName, "pidfile", pPidfile)
 
 	sockets := []types.Socket{}
 	for _, rAPI := range data.RuntimeApis {
@@ -160,8 +232,25 @@ func (c *Client) PushGlobalConfiguration(data *models.Global, transactionID stri
 		}
 		sockets = append(sockets, s)
 	}
-
 	p.Set(parser.Global, parser.GlobalSectionName, "stats socket", sockets)
+
+	var statsTimeout *types.StringC
+	if data.StatsTimeout != nil {
+		statsTimeout = &types.StringC{Value: strconv.FormatInt(*data.StatsTimeout, 10)}
+	} else {
+		statsTimeout = nil
+	}
+	p.Set(parser.Global, parser.GlobalSectionName, "stats timeout", statsTimeout)
+
+	cpuMaps := []types.CpuMap{}
+	for _, cpuMap := range data.CPUMaps {
+		cm := types.CpuMap{
+			Name:  *cpuMap.Name,
+			Value: *cpuMap.Value,
+		}
+		cpuMaps = append(cpuMaps, cm)
+	}
+	p.Set(parser.Global, parser.GlobalSectionName, "cpu-map", cpuMaps)
 
 	pSSLCiphers := &types.StringC{
 		Value: data.SslDefaultBindCiphers,

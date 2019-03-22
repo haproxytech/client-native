@@ -2,6 +2,7 @@ package configuration
 
 import (
 	"fmt"
+	"reflect"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -56,8 +57,8 @@ func TestGetSites(t *testing.T) {
 					if b.Balance.Algorithm != "roundrobin" {
 						t.Errorf("%v: %v: Balance not roundrobin: %v", s.Name, b.Name, b.Balance.Algorithm)
 					}
-					if b.Forwardfor != true {
-						t.Errorf("%v: %v: Forwardfor not true: %v", s.Name, b.Name, b.Forwardfor)
+					if *b.Forwardfor.Enabled != "enabled" {
+						t.Errorf("%v: %v: Forwardfor not enabled: %v", s.Name, b.Name, b.Forwardfor.Enabled)
 					}
 					if b.Mode != "http" {
 						t.Errorf("%v: %v: Protocol not http: %v", s.Name, b.Name, b.Mode)
@@ -95,8 +96,8 @@ func TestGetSites(t *testing.T) {
 					if b.Balance.Algorithm != "roundrobin" {
 						t.Errorf("%v: %v: Balance not roundrobin: %v", s.Name, b.Name, b.Balance.Algorithm)
 					}
-					if b.Forwardfor != true {
-						t.Errorf("%v: %v: Forwardfor not true: %v", s.Name, b.Name, b.Forwardfor)
+					if *b.Forwardfor.Enabled != "enabled" {
+						t.Errorf("%v: %v: Forwardfor not enabled: %v", s.Name, b.Name, b.Forwardfor.Enabled)
 					}
 					if b.Mode != "http" {
 						t.Errorf("%v: %v: Mode not http: %v", s.Name, b.Name, b.Mode)
@@ -129,8 +130,8 @@ func TestGetSites(t *testing.T) {
 					if b.Balance.Algorithm != "roundrobin" {
 						t.Errorf("%v: %v: Balance not roundrobin: %v", s.Name, b.Name, b.Balance.Algorithm)
 					}
-					if b.Forwardfor != true {
-						t.Errorf("%v: %v: Forwardfor not true: %v", s.Name, b.Name, b.Forwardfor)
+					if *b.Forwardfor.Enabled != "enabled" {
+						t.Errorf("%v: %v: Forwardfor not enabled: %v", s.Name, b.Name, *b.Forwardfor.Enabled)
 					}
 					if b.Mode != "http" {
 						t.Errorf("%v: %v: Protocol not http: %v", s.Name, b.Name, b.Mode)
@@ -203,8 +204,8 @@ func TestGetSite(t *testing.T) {
 			if b.Balance.Algorithm != "roundrobin" {
 				t.Errorf("%v: %v: Balance not roundrobin: %v", s.Name, b.Name, b.Balance.Algorithm)
 			}
-			if b.Forwardfor != true {
-				t.Errorf("%v: %v: HTTPXffHeaderInsert not true: %v", s.Name, b.Name, b.Forwardfor)
+			if *b.Forwardfor.Enabled != "enabled" {
+				t.Errorf("%v: %v: HTTPXffHeaderInsert not enabled: %v", s.Name, b.Name, *b.Forwardfor.Enabled)
 			}
 			if b.Mode != "http" {
 				t.Errorf("%v: %v: Protocol not http: %v", s.Name, b.Name, b.Mode)
@@ -242,8 +243,8 @@ func TestGetSite(t *testing.T) {
 			if b.Balance.Algorithm != "roundrobin" {
 				t.Errorf("%v: %v: Balance not roundrobin: %v", s.Name, b.Name, b.Balance.Algorithm)
 			}
-			if b.Forwardfor != true {
-				t.Errorf("%v: %v: Forwardfor not true: %v", s.Name, b.Name, b.Forwardfor)
+			if *b.Forwardfor.Enabled != "enabled" {
+				t.Errorf("%v: %v: Forwardfor not enabled: %v", s.Name, b.Name, *b.Forwardfor.Enabled)
 			}
 			if b.Mode != "http" {
 				t.Errorf("%v: %v: Mode not http: %v", s.Name, b.Name, b.Mode)
@@ -268,6 +269,7 @@ func TestCreateEditDeleteSite(t *testing.T) {
 	// TestCreateSite
 	mConn := int64(2000)
 	port := int64(5000)
+	enabled := "enabled"
 	s := &models.Site{
 		Name: "created",
 		Service: &models.SiteService{
@@ -291,7 +293,7 @@ func TestCreateEditDeleteSite(t *testing.T) {
 				Name:       "createdBck",
 				Balance:    &models.SiteFarmsItemsBalance{Algorithm: "uri"},
 				UseAs:      "default",
-				Forwardfor: true,
+				Forwardfor: &models.SiteFarmsItemsForwardfor{Enabled: &enabled},
 				Servers: []*models.SiteFarmsItemsServersItems{
 					&models.SiteFarmsItemsServersItems{
 						Name:    "created1",
@@ -313,7 +315,7 @@ func TestCreateEditDeleteSite(t *testing.T) {
 				UseAs:      "conditional",
 				Cond:       "if",
 				CondTest:   "TRUE",
-				Forwardfor: true,
+				Forwardfor: &models.SiteFarmsItemsForwardfor{Enabled: &enabled},
 			},
 		},
 	}
@@ -371,7 +373,7 @@ func TestCreateEditDeleteSite(t *testing.T) {
 				UseAs:      "conditional",
 				Cond:       "if",
 				CondTest:   "TRUE",
-				Forwardfor: true,
+				Forwardfor: &models.SiteFarmsItemsForwardfor{Enabled: &enabled},
 				Servers: []*models.SiteFarmsItemsServersItems{
 					&models.SiteFarmsItemsServersItems{
 						Name:    "created3",
@@ -487,6 +489,11 @@ func siteDeepEqual(x, y *models.Site, t *testing.T) bool {
 		}
 		b2 := b2Interface.(*models.SiteFarmsItems)
 		// Compare backends
+		if !reflect.DeepEqual(b.Forwardfor, b2.Forwardfor) {
+			return false
+		}
+		b.Forwardfor = nil
+		b2.Forwardfor = nil
 		if b.Balance.Algorithm != b2.Balance.Algorithm {
 			return false
 		}

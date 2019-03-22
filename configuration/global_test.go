@@ -43,9 +43,18 @@ func TestGetGlobal(t *testing.T) {
 }
 
 func TestPutGlobal(t *testing.T) {
+	tOut := int64(3600)
+	n := "1/1"
+	v := "0"
 	a := "/var/run/haproxy.sock"
 	g := &models.Global{
 		Daemon: "enabled",
+		CPUMaps: []*models.GlobalCPUMapsItems{
+			&models.GlobalCPUMapsItems{
+				Name:  &n,
+				Value: &v,
+			},
+		},
 		RuntimeApis: []*models.GlobalRuntimeApisItems{
 			&models.GlobalRuntimeApisItems{
 				Address: &a,
@@ -55,6 +64,7 @@ func TestPutGlobal(t *testing.T) {
 		Maxconn:               1000,
 		SslDefaultBindCiphers: "test",
 		SslDefaultBindOptions: "ssl-min-ver TLSv1.0 no-tls-tickets",
+		StatsTimeout:          &tOut,
 		TuneSslDefaultDhParam: 1024,
 	}
 

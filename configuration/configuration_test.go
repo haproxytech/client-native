@@ -22,6 +22,9 @@ frontend test
   option dontlognull
   option contstats
   option log-separate-errors
+  acl invalid_src  src          0.0.0.0/7 224.0.0.0/3
+  acl invalid_src  src_port     0:1023
+  acl local_dst    hdr(host) -i localhost
   filter trace name BEFORE-HTTP-COMP random-parsing hexdump
   filter compression
   filter trace name AFTER-HTTP-COMP random-forwarding
