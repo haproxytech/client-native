@@ -637,6 +637,52 @@ func (c *Client) setFieldValue(section parser.Section, sectionName string, field
 		return nil
 	}
 	if fieldName == "DefaultServer" {
+		if valueIsNil(field) {
+			if err := p.Set(section, sectionName, "default-server", nil); err != nil {
+				return err
+			}
+			return nil
+		}
+		ds := field.Elem().Interface().(models.BackendDefaultServer)
+		dServers := []types.DefaultServer{types.DefaultServer{}}
+
+		ps := make([]params.ServerOption, 0, 0)
+		if ds.Fall != nil {
+			param := &params.ServerOptionValue{
+				Name:  "fall",
+				Value: strconv.FormatInt(*ds.Fall, 10),
+			}
+			ps = append(ps, param)
+		}
+
+		if ds.Inter != nil {
+			param := &params.ServerOptionValue{
+				Name:  "inter",
+				Value: strconv.FormatInt(*ds.Fall, 10),
+			}
+			ps = append(ps, param)
+		}
+
+		if ds.Port != nil {
+			param := &params.ServerOptionValue{
+				Name:  "port",
+				Value: strconv.FormatInt(*ds.Fall, 10),
+			}
+			ps = append(ps, param)
+		}
+
+		if ds.Rise != nil {
+			param := &params.ServerOptionValue{
+				Name:  "rise",
+				Value: strconv.FormatInt(*ds.Fall, 10),
+			}
+			ps = append(ps, param)
+		}
+
+		dServers[0].Params = ps
+		if err := p.Set(section, sectionName, "default-server", dServers); err != nil {
+			return err
+		}
 		return nil
 	}
 	if fieldName == "StickTable" {

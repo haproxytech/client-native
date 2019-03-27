@@ -158,9 +158,13 @@ func TestCreateEditDeleteBackend(t *testing.T) {
 	// TestCreateBackend
 	tOut := int64(5)
 	b := &models.Backend{
-		Name:               "created",
-		Mode:               "http",
-		Balance:            &models.BackendBalance{Algorithm: "uri"},
+		Name:    "created",
+		Mode:    "http",
+		Balance: &models.BackendBalance{Algorithm: "uri"},
+		DefaultServer: &models.BackendDefaultServer{
+			Fall:  &tOut,
+			Inter: &tOut,
+		},
 		HTTPConnectionMode: "http-keep-alive",
 		ConnectTimeout:     &tOut,
 	}
