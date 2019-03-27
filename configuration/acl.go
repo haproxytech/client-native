@@ -11,7 +11,7 @@ import (
 )
 
 // GetACLs returns a struct with configuration version and an array of
-// configured ACL rules in the specified parent. Returns error on fail.
+// configured ACL lines in the specified parent. Returns error on fail.
 func (c *Client) GetACLs(parentType, parentName string, transactionID string) (*models.GetAclsOKBody, error) {
 	p, err := c.GetParser(transactionID)
 	if err != nil {
@@ -31,8 +31,8 @@ func (c *Client) GetACLs(parentType, parentName string, transactionID string) (*
 	return &models.GetAclsOKBody{Version: v, Data: acls}, nil
 }
 
-// GetACL returns a struct with configuration version and a requested ACL rule
-// in the specified parent. Returns error on fail or if ACL rule does not exist.
+// GetACL returns a struct with configuration version and a requested ACL line
+// in the specified parent. Returns error on fail or if ACL line does not exist.
 func (c *Client) GetACL(id int64, parentType, parentName string, transactionID string) (*models.GetACLOKBody, error) {
 	p, err := c.GetParser(transactionID)
 	if err != nil {
@@ -62,7 +62,7 @@ func (c *Client) GetACL(id int64, parentType, parentName string, transactionID s
 	return &models.GetACLOKBody{Version: v, Data: acl}, nil
 }
 
-// DeleteACL deletes a ACL rule in configuration. One of version or transactionID is
+// DeleteACL deletes a ACL line in configuration. One of version or transactionID is
 // mandatory. Returns error on fail, nil on success.
 func (c *Client) DeleteACL(id int64, parentType string, parentName string, transactionID string, version int64) error {
 	p, t, err := c.loadDataForChange(transactionID, version)
@@ -87,7 +87,7 @@ func (c *Client) DeleteACL(id int64, parentType string, parentName string, trans
 	return nil
 }
 
-// CreateACL creates a ACL rule in configuration. One of version or transactionID is
+// CreateACL creates a ACL line in configuration. One of version or transactionID is
 // mandatory. Returns error on fail, nil on success.
 func (c *Client) CreateACL(parentType string, parentName string, data *models.ACL, transactionID string, version int64) error {
 	if c.UseValidation {
@@ -119,7 +119,7 @@ func (c *Client) CreateACL(parentType string, parentName string, data *models.AC
 	return nil
 }
 
-// EditACL edits a ACL rule in configuration. One of version or transactionID is
+// EditACL edits a ACL line in configuration. One of version or transactionID is
 // mandatory. Returns error on fail, nil on success.
 func (c *Client) EditACL(id int64, parentType string, parentName string, data *models.ACL, transactionID string, version int64) error {
 	if c.UseValidation {
@@ -171,8 +171,8 @@ func (c *Client) parseACLs(t, pName string, p *parser.Parser) (models.Acls, erro
 		return nil, err
 	}
 
-	rules := data.([]types.Acl)
-	for i, r := range rules {
+	aclLines := data.([]types.Acl)
+	for i, r := range aclLines {
 		id := int64(i)
 		acl := parseACL(r)
 		if acl != nil {

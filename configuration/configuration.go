@@ -238,10 +238,14 @@ func (c *Client) parseSection(object interface{}, section parser.Section, pName 
 			val := c.parseField(section, pName, typeField.Name, p)
 			if val != nil {
 				if field.Kind() == reflect.Bool {
-					if val == "enabled" {
-						field.Set(reflect.ValueOf(true))
-					} else {
-						field.Set(reflect.ValueOf(false))
+					if reflect.ValueOf(val).Kind() == reflect.String {
+						if val == "enabled" {
+							field.Set(reflect.ValueOf(true))
+						} else {
+							field.Set(reflect.ValueOf(false))
+						}
+					} else if reflect.ValueOf(val).Kind() == reflect.Bool {
+						field.Set(reflect.ValueOf(val))
 					}
 				} else {
 					field.Set(reflect.ValueOf(val))
@@ -489,7 +493,7 @@ func (c *Client) parseField(section parser.Section, sectionName string, fieldNam
 		if err == nil {
 			d := data.(*types.SimpleOption)
 			if !d.NoOption {
-				return "force-close"
+				return "forceclose"
 			}
 		}
 
