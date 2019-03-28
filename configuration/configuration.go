@@ -646,7 +646,7 @@ func (c *Client) setFieldValue(section parser.Section, sectionName string, field
 		ds := field.Elem().Interface().(models.BackendDefaultServer)
 		dServers := []types.DefaultServer{types.DefaultServer{}}
 
-		ps := make([]params.ServerOption, 0, 0)
+		ps := make([]params.ServerOption, 0, 4)
 		if ds.Fall != nil {
 			param := &params.ServerOptionValue{
 				Name:  "fall",
@@ -1054,7 +1054,7 @@ func (c *Client) saveData(p *parser.Parser, t string, commitImplicit bool) error
 	}
 
 	if commitImplicit {
-		if err := c.CommitTransaction(t); err != nil {
+		if _, err := c.CommitTransaction(t); err != nil {
 			return err
 		}
 	}

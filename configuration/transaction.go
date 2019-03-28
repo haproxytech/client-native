@@ -58,45 +58,47 @@ func (c *Client) startTransaction(version int64, initCache bool) (*models.Transa
 }
 
 // CommitTransaction commits a transaction by id.
-func (c *Client) CommitTransaction(id string) error {
+func (c *Client) CommitTransaction(id string) (*models.Transaction, error) {
 	// do a version check before commiting
 	version, err := c.GetVersion("")
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	t, err := c.parseTransaction(id)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	if t.Version != version {
 		c.failTransaction(id)
-		return NewConfError(ErrVersionMismatch, fmt.Sprintf("Version mismatch, transaction version: %v, configured version: %v", t.Version, version))
+		return nil, NewConfError(ErrVersionMismatch, fmt.Sprintf("Version mismatch, transaction version: %v, configured version: %v", t.Version, version))
 	}
 
 	if err := c.checkTransactionFile(id); err != nil {
 		c.failTransaction(id)
-		return err
+		return nil, err
 	}
 
 	if err := copyFile(c.getTransactionFile(id), c.ConfigurationFile); err != nil {
 		c.failTransaction(id)
-		return err
+		return nil, err
 	}
 
 	c.deleteTransactionFiles(id)
 
 	if err := c.CommitParser(id); err != nil {
 		c.Parser.LoadData(c.ConfigurationFile)
-		return nil
+		return nil, err
 	}
 
 	if err := c.incrementVersion(); err != nil {
-		return err
+		return nil, err
 	}
 
-	return nil
+	t.Status = "success"
+
+	return t, nil
 }
 
 func (c *Client) checkTransactionFile(id string) error {
