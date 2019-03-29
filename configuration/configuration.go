@@ -388,11 +388,11 @@ func (c *Client) parseField(section parser.Section, sectionName string, fieldNam
 		return nil
 	}
 	if fieldName == "AdvCheck" {
-		data, err := p.Get(section, sectionName, "option ssl-hello-check", false)
+		data, err := p.Get(section, sectionName, "option ssl-hello-chk", false)
 		if err == nil {
 			d := data.(*types.SimpleOption)
 			if !d.NoOption {
-				return "ssl-hello-check"
+				return "ssl-hello-chk"
 			}
 		}
 
@@ -715,7 +715,7 @@ func (c *Client) setFieldValue(section parser.Section, sectionName string, field
 		return nil
 	}
 	if fieldName == "AdvCheck" {
-		if err := p.Set(section, sectionName, "option ssl-hello-check", nil); err != nil {
+		if err := p.Set(section, sectionName, "option ssl-hello-chk", nil); err != nil {
 			return err
 		}
 		if err := p.Set(section, sectionName, "option smtpchk", nil); err != nil {
