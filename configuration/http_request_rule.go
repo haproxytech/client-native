@@ -197,11 +197,16 @@ func parseHTTPRequestRule(f types.HTTPAction) *models.HTTPRequestRule {
 			CondTest: v.CondTest,
 		}
 	case *actions.Deny:
-		return &models.HTTPRequestRule{
+		s, _ := strconv.ParseInt(v.DenyStatus, 10, 64)
+		r := &models.HTTPRequestRule{
 			Type:     "deny",
 			Cond:     v.Cond,
 			CondTest: v.CondTest,
 		}
+		if s != 0 {
+			r.DenyStatus = s
+		}
+		return r
 	case *actions.Auth:
 		return &models.HTTPRequestRule{
 			Type:      "auth",
@@ -328,8 +333,9 @@ func serializeHTTPRequestRule(f models.HTTPRequestRule) types.HTTPAction {
 		}
 	case "deny":
 		return &actions.Deny{
-			Cond:     f.Cond,
-			CondTest: f.CondTest,
+			DenyStatus: strconv.FormatInt(f.DenyStatus, 10),
+			Cond:       f.Cond,
+			CondTest:   f.CondTest,
 		}
 	case "auth":
 		return &actions.Auth{
