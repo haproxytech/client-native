@@ -93,8 +93,8 @@ func (c *Client) GetGlobalConfiguration(transactionID string) (*models.GetGlobal
 		cMaps := data.([]types.CpuMap)
 		for _, m := range cMaps {
 			cpuMap := &models.GlobalCPUMapsItems{
-				Name:  &m.Name,
-				Value: &m.Value,
+				Process: &m.Process,
+				CPUSet:  &m.CpuSet,
 			}
 			cpuMaps = append(cpuMaps, cpuMap)
 		}
@@ -245,8 +245,8 @@ func (c *Client) PushGlobalConfiguration(data *models.Global, transactionID stri
 	cpuMaps := []types.CpuMap{}
 	for _, cpuMap := range data.CPUMaps {
 		cm := types.CpuMap{
-			Name:  *cpuMap.Name,
-			Value: *cpuMap.Value,
+			Process: *cpuMap.Process,
+			CpuSet:  *cpuMap.CPUSet,
 		}
 		cpuMaps = append(cpuMaps, cm)
 	}

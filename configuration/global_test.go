@@ -51,8 +51,8 @@ func TestPutGlobal(t *testing.T) {
 		Daemon: "enabled",
 		CPUMaps: []*models.GlobalCPUMapsItems{
 			&models.GlobalCPUMapsItems{
-				Name:  &n,
-				Value: &v,
+				Process: &n,
+				CPUSet:  &v,
 			},
 		},
 		RuntimeApis: []*models.GlobalRuntimeApisItems{
