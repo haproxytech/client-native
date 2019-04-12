@@ -185,16 +185,22 @@ func (c *Client) parseACLs(t, pName string, p *parser.Parser) (models.Acls, erro
 
 func parseACL(f types.Acl) *models.ACL {
 	return &models.ACL{
-		ACLName:   f.Name,
-		Criterion: f.Criterion,
-		Value:     f.Value,
+		ACLName:   &f.Name,
+		Criterion: &f.Criterion,
+		Value:     &f.Value,
 	}
 }
 
 func serializeACL(f models.ACL) types.Acl {
-	return types.Acl{
-		Name:      f.ACLName,
-		Criterion: f.Criterion,
-		Value:     f.Value,
+	acl := types.Acl{}
+	if f.ACLName != nil {
+		acl.Name = *f.ACLName
 	}
+	if f.Criterion != nil {
+		acl.Criterion = *f.Criterion
+	}
+	if f.Value != nil {
+		acl.Value = *f.Value
+	}
+	return acl
 }

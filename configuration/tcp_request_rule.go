@@ -255,8 +255,10 @@ func serializeTCPRequestRule(f models.TCPRequestRule) types.TCPAction {
 			CondTest: f.CondTest,
 		}
 	case "inspect-delay":
-		return &actions.InspectDelay{
-			Timeout: strconv.FormatInt(*f.Timeout, 10),
+		if f.Timeout != nil {
+			return &actions.InspectDelay{
+				Timeout: strconv.FormatInt(*f.Timeout, 10),
+			}
 		}
 	case "session":
 		return &actions.Session{

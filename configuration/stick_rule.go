@@ -152,18 +152,21 @@ func parseStickRule(s types.Stick) *models.StickRule {
 	return &models.StickRule{
 		Type:     s.Type,
 		Table:    s.Table,
-		Pattern:  s.Pattern,
+		Pattern:  &s.Pattern,
 		Cond:     s.Cond,
 		CondTest: s.CondTest,
 	}
 }
 
 func serializeStickRule(sRule models.StickRule) types.Stick {
-	return types.Stick{
+	sr := types.Stick{
 		Type:     sRule.Type,
 		Table:    sRule.Table,
-		Pattern:  sRule.Pattern,
 		Cond:     sRule.Cond,
 		CondTest: sRule.CondTest,
 	}
+	if sRule.Pattern != nil {
+		sr.Pattern = *sRule.Pattern
+	}
+	return sr
 }

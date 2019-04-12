@@ -24,34 +24,34 @@ func TestGetACLs(t *testing.T) {
 
 	for _, r := range acls.Data {
 		if *r.ID == 0 {
-			if r.ACLName != "invalid_src" {
-				t.Errorf("%v: ACLName not invalid_src: %v", *r.ID, r.ACLName)
+			if *r.ACLName != "invalid_src" {
+				t.Errorf("%v: ACLName not invalid_src: %v", *r.ID, *r.ACLName)
 			}
-			if r.Value != "0.0.0.0/7 224.0.0.0/3" {
-				t.Errorf("%v: Value not 0.0.0.0/7 224.0.0.0/3: %v", *r.ID, r.Value)
+			if *r.Value != "0.0.0.0/7 224.0.0.0/3" {
+				t.Errorf("%v: Value not 0.0.0.0/7 224.0.0.0/3: %v", *r.ID, *r.Value)
 			}
-			if r.Criterion != "src" {
-				t.Errorf("%v: Criterion not src: %v", *r.ID, r.Criterion)
+			if *r.Criterion != "src" {
+				t.Errorf("%v: Criterion not src: %v", *r.ID, *r.Criterion)
 			}
 		} else if *r.ID == 1 {
-			if r.ACLName != "invalid_src" {
-				t.Errorf("%v: ACLName not invalid_src: %v", *r.ID, r.ACLName)
+			if *r.ACLName != "invalid_src" {
+				t.Errorf("%v: ACLName not invalid_src: %v", *r.ID, *r.ACLName)
 			}
-			if r.Value != "0:1023" {
-				t.Errorf("%v: Value not 0:1023: %v", *r.ID, r.Value)
+			if *r.Value != "0:1023" {
+				t.Errorf("%v: Value not 0:1023: %v", *r.ID, *r.Value)
 			}
-			if r.Criterion != "src_port" {
-				t.Errorf("%v: Criterion not src_port: %v", *r.ID, r.Criterion)
+			if *r.Criterion != "src_port" {
+				t.Errorf("%v: Criterion not src_port: %v", *r.ID, *r.Criterion)
 			}
 		} else if *r.ID == 2 {
-			if r.ACLName != "local_dst" {
-				t.Errorf("%v: ACLName not invalid_src: %v", *r.ID, r.ACLName)
+			if *r.ACLName != "local_dst" {
+				t.Errorf("%v: ACLName not invalid_src: %v", *r.ID, *r.ACLName)
 			}
-			if r.Value != "-i localhost" {
-				t.Errorf("%v: Value not -i localhost: %v", *r.ID, r.Value)
+			if *r.Value != "-i localhost" {
+				t.Errorf("%v: Value not -i localhost: %v", *r.ID, *r.Value)
 			}
-			if r.Criterion != "hdr(host)" {
-				t.Errorf("%v: Criterion not hdr(host): %v", *r.ID, r.Criterion)
+			if *r.Criterion != "hdr(host)" {
+				t.Errorf("%v: Criterion not hdr(host): %v", *r.ID, *r.Criterion)
 			}
 		} else {
 			t.Errorf("Expext only acl 1, 2 or 3, %v found", *r.ID)
@@ -87,14 +87,14 @@ func TestGetACL(t *testing.T) {
 	if *r.ID != 0 {
 		t.Errorf("ACL ID not 0, %v found", *r.ID)
 	}
-	if r.ACLName != "invalid_src" {
-		t.Errorf("%v: ACLName not invalid_src: %v", *r.ID, r.ACLName)
+	if *r.ACLName != "invalid_src" {
+		t.Errorf("%v: ACLName not invalid_src: %v", *r.ID, *r.ACLName)
 	}
-	if r.Value != "0.0.0.0/7 224.0.0.0/3" {
-		t.Errorf("%v: Value not 0.0.0.0/7 224.0.0.0/3: %v", *r.ID, r.Value)
+	if *r.Value != "0.0.0.0/7 224.0.0.0/3" {
+		t.Errorf("%v: Value not 0.0.0.0/7 224.0.0.0/3: %v", *r.ID, *r.Value)
 	}
-	if r.Criterion != "src" {
-		t.Errorf("%v: Criterion not src: %v", *r.ID, r.Criterion)
+	if *r.Criterion != "src" {
+		t.Errorf("%v: Criterion not src: %v", *r.ID, *r.Criterion)
 	}
 
 	rJSON, err := r.MarshalBinary()
@@ -114,13 +114,16 @@ func TestGetACL(t *testing.T) {
 
 func TestCreateEditDeleteACL(t *testing.T) {
 	id := int64(1)
+	name := "site_dead"
+	criterion := "nbsrv(dynamic)"
+	value := "lt 2"
 
 	// TestCreateACL
 	r := &models.ACL{
 		ID:        &id,
-		ACLName:   "site_dead",
-		Criterion: "nbsrv(dynamic)",
-		Value:     "lt 2",
+		ACLName:   &name,
+		Criterion: &criterion,
+		Value:     &value,
 	}
 
 	err := client.CreateACL("frontend", "test", r, "", version)
@@ -149,12 +152,14 @@ func TestCreateEditDeleteACL(t *testing.T) {
 		fmt.Println("CreateACL successful")
 	}
 
+	criterion = "nbsrv(static)"
+	value = "lt 4"
 	// TestEditACL
 	r = &models.ACL{
 		ID:        &id,
-		ACLName:   "site_dead",
-		Criterion: "nbsrv(static)",
-		Value:     "lt 4",
+		ACLName:   &name,
+		Criterion: &criterion,
+		Value:     &value,
 	}
 
 	err = client.EditACL(1, "frontend", "test", r, "", version)

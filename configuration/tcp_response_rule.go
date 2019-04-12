@@ -185,8 +185,10 @@ func serializeTCPResponseRule(t models.TCPResponseRule) types.TCPAction {
 			CondTest: t.CondTest,
 		}
 	case "inspect-delay":
-		return &actions.InspectDelay{
-			Timeout: strconv.FormatInt(*t.Timeout, 10),
+		if t.Timeout != nil {
+			return &actions.InspectDelay{
+				Timeout: strconv.FormatInt(*t.Timeout, 10),
+			}
 		}
 	}
 	return nil
