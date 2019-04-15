@@ -27,8 +27,8 @@ func TestGetStickRules(t *testing.T) {
 			if sr.Type != "store-request" {
 				t.Errorf("%v: Type not store-request: %v", *sr.ID, sr.Type)
 			}
-			if *sr.Pattern != "src" {
-				t.Errorf("%v: Pattern not src: %v", *sr.ID, *sr.Pattern)
+			if sr.Pattern != "src" {
+				t.Errorf("%v: Pattern not src: %v", *sr.ID, sr.Pattern)
 			}
 			if sr.Table != "test" {
 				t.Errorf("%v: Table not test: %v", *sr.ID, sr.Table)
@@ -37,8 +37,8 @@ func TestGetStickRules(t *testing.T) {
 			if sr.Type != "match" {
 				t.Errorf("%v: Type not match: %v", *sr.ID, sr.Type)
 			}
-			if *sr.Pattern != "src" {
-				t.Errorf("%v: Pattern not src: %v", *sr.ID, *sr.Pattern)
+			if sr.Pattern != "src" {
+				t.Errorf("%v: Pattern not src: %v", *sr.ID, sr.Pattern)
 			}
 			if sr.Table != "test" {
 				t.Errorf("%v: Table not test: %v", *sr.ID, sr.Table)
@@ -47,8 +47,8 @@ func TestGetStickRules(t *testing.T) {
 			if sr.Type != "on" {
 				t.Errorf("%v: Type not on: %v", *sr.ID, sr.Type)
 			}
-			if *sr.Pattern != "src" {
-				t.Errorf("%v: Pattern not src: %v", *sr.ID, *sr.Pattern)
+			if sr.Pattern != "src" {
+				t.Errorf("%v: Pattern not src: %v", *sr.ID, sr.Pattern)
 			}
 			if sr.Table != "test" {
 				t.Errorf("%v: Table not test: %v", *sr.ID, sr.Table)
@@ -57,15 +57,15 @@ func TestGetStickRules(t *testing.T) {
 			if sr.Type != "store-response" {
 				t.Errorf("%v: Type not matchandstore: %v", *sr.ID, sr.Type)
 			}
-			if *sr.Pattern != "src" {
-				t.Errorf("%v: Pattern not src: %v", *sr.ID, *sr.Pattern)
+			if sr.Pattern != "src" {
+				t.Errorf("%v: Pattern not src: %v", *sr.ID, sr.Pattern)
 			}
 		} else if *sr.ID == 4 {
 			if sr.Type != "store-response" {
 				t.Errorf("%v: Type not matchandstore: %v", *sr.ID, sr.Type)
 			}
-			if *sr.Pattern != "src_port" {
-				t.Errorf("%v: Pattern not src: %v", *sr.ID, *sr.Pattern)
+			if sr.Pattern != "src_port" {
+				t.Errorf("%v: Pattern not src: %v", *sr.ID, sr.Pattern)
 			}
 			if sr.Table != "test_port" {
 				t.Errorf("%v: Table not test: %v", *sr.ID, sr.Table)
@@ -74,8 +74,8 @@ func TestGetStickRules(t *testing.T) {
 			if sr.Type != "store-response" {
 				t.Errorf("%v: Type not matchandstore: %v", *sr.ID, sr.Type)
 			}
-			if *sr.Pattern != "src" {
-				t.Errorf("%v: Pattern not src: %v", *sr.ID, *sr.Pattern)
+			if sr.Pattern != "src" {
+				t.Errorf("%v: Pattern not src: %v", *sr.ID, sr.Pattern)
 			}
 			if sr.Table != "test" {
 				t.Errorf("%v: Table not test: %v", *sr.ID, sr.Table)
@@ -120,8 +120,8 @@ func TestGetStickRule(t *testing.T) {
 	if sr.Type != "store-request" {
 		t.Errorf("%v: Type not store-request: %v", *sr.ID, sr.Type)
 	}
-	if *sr.Pattern != "src" {
-		t.Errorf("%v: Pattern not src: %v", *sr.ID, *sr.Pattern)
+	if sr.Pattern != "src" {
+		t.Errorf("%v: Pattern not src: %v", *sr.ID, sr.Pattern)
 	}
 	if sr.Table != "test" {
 		t.Errorf("%v: Table not test: %v", *sr.ID, sr.Table)
@@ -144,12 +144,11 @@ func TestGetStickRule(t *testing.T) {
 
 func TestCreateEditDeleteStickRule(t *testing.T) {
 	id := int64(1)
-	p := "src"
 	// TestCreateStickRule
 	sr := &models.StickRule{
 		ID:       &id,
 		Type:     "match",
-		Pattern:  &p,
+		Pattern:  "src",
 		Cond:     "if",
 		CondTest: "TRUE",
 	}
@@ -184,7 +183,7 @@ func TestCreateEditDeleteStickRule(t *testing.T) {
 	sr = &models.StickRule{
 		ID:       &id,
 		Type:     "store-request",
-		Pattern:  &p,
+		Pattern:  "src",
 		Table:    "test2",
 		Cond:     "if",
 		CondTest: "FALSE",
