@@ -516,9 +516,7 @@ func (c *Client) parseFarmServers(farm string, p *parser.Parser) []*models.SiteF
 			Port:           s.Port,
 			SslCertificate: s.SslCertificate,
 			Weight:         s.Weight,
-		}
-		if s.Ssl == "enabled" {
-			server.Ssl = true
+			Ssl:            s.Ssl,
 		}
 		servers = append(servers, server)
 	}
@@ -572,9 +570,7 @@ func serializeSiteServer(srv *models.SiteFarmsItemsServersItems) *models.Server 
 		Port:           srv.Port,
 		SslCertificate: srv.SslCertificate,
 		Weight:         srv.Weight,
-	}
-	if srv.Ssl {
-		server.Ssl = "enabled"
+		Ssl:            srv.Ssl,
 	}
 	return server
 }
@@ -724,11 +720,7 @@ func (c *Client) editSiteServer(name string, backend string, server *models.Site
 	srv.Data.Port = server.Port
 	srv.Data.SslCertificate = server.SslCertificate
 	srv.Data.Weight = server.Weight
-	if server.Ssl {
-		srv.Data.Ssl = "enabled"
-	} else {
-		srv.Data.Ssl = ""
-	}
+	srv.Data.Ssl = server.Ssl
 
 	if err := c.EditServer(name, backend, srv.Data, t, 0); err != nil {
 		return err

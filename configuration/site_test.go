@@ -76,8 +76,8 @@ func TestGetSites(t *testing.T) {
 						if *srv.Port != 9300 && *srv.Port != 9200 {
 							t.Errorf("%v: %v: %v: Port not 9300 or 9200: %v", s.Name, b.Name, srv.Name, *srv.Port)
 						}
-						if srv.Ssl != true {
-							t.Errorf("%v: %v: %v: Ssl not true: %v", s.Name, b.Name, srv.Name, srv.Ssl)
+						if srv.Ssl != "enabled" {
+							t.Errorf("%v: %v: %v: Ssl not enabled: %v", s.Name, b.Name, srv.Name, srv.Ssl)
 						}
 						if *srv.Weight != 10 {
 							t.Errorf("%v: %v: %v: Weight not 10: %v", s.Name, b.Name, srv.Name, *srv.Weight)
@@ -223,8 +223,8 @@ func TestGetSite(t *testing.T) {
 				if *srv.Port != 9300 && *srv.Port != 9200 {
 					t.Errorf("%v: %v: %v: Port not 9300 or 9200: %v", s.Name, b.Name, srv.Name, *srv.Port)
 				}
-				if srv.Ssl != true {
-					t.Errorf("%v: %v: %v: Ssl not true: %v", s.Name, b.Name, srv.Name, srv.Ssl)
+				if srv.Ssl != "enabled" {
+					t.Errorf("%v: %v: %v: Ssl not enabled: %v", s.Name, b.Name, srv.Name, srv.Ssl)
 				}
 				if *srv.Weight != 10 {
 					t.Errorf("%v: %v: %v: Weight not 10: %v", s.Name, b.Name, srv.Name, *srv.Weight)
@@ -299,13 +299,13 @@ func TestCreateEditDeleteSite(t *testing.T) {
 						Name:    "created1",
 						Address: "127.0.1.1",
 						Port:    &port,
-						Ssl:     true,
+						Ssl:     "enabled",
 					},
 					&models.SiteFarmsItemsServersItems{
 						Name:    "created2",
 						Address: "127.0.1.2",
 						Port:    &port,
-						Ssl:     true,
+						Ssl:     "enabled",
 					},
 				},
 			},
@@ -379,7 +379,7 @@ func TestCreateEditDeleteSite(t *testing.T) {
 						Name:    "created3",
 						Address: "127.0.1.2",
 						Port:    &port,
-						Ssl:     true,
+						Ssl:     "enabled",
 					},
 				},
 			},
