@@ -8,6 +8,7 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
+	"strconv"
 	"strings"
 
 	"github.com/google/uuid"
@@ -110,9 +111,53 @@ func (c *Client) checkTransactionFile(id string) error {
 
 	err := cmd.Run()
 	if err != nil {
-		return NewConfError(ErrValidationError, string(stderr.Bytes()))
+		return NewConfError(ErrValidationError, c.parseHAProxyCheckError(stderr.Bytes(), id))
 	}
 	return nil
+}
+
+func (c *Client) parseHAProxyCheckError(output []byte, id string) string {
+	oStr := string(output)
+	var b strings.Builder
+	b.WriteString(fmt.Sprintf("ERR transactionId=%s \n", id))
+
+	for _, line := range strings.Split(oStr, "\n") {
+		line := strings.TrimSpace(line)
+		if strings.HasPrefix(line, "[ALERT]") {
+			if strings.HasSuffix(line, "Fatal errors found in configuration.") {
+				continue
+			}
+			if strings.Contains(line, "Error(s) found in configuration file : ") {
+				continue
+			}
+
+			parts := strings.Split(line, " : ")
+			if len(parts) > 2 && strings.HasPrefix(strings.TrimSpace(parts[1]), "parsing [") {
+				fParts := strings.Split(strings.TrimSpace(parts[1]), ":")
+				var msgB strings.Builder
+				for i := 2; i < len(parts); i++ {
+					msgB.WriteString(parts[i])
+					msgB.WriteString(" ")
+				}
+				if len(fParts) > 1 {
+					lNo, err := strconv.ParseInt(strings.TrimSuffix(fParts[1], "]"), 10, 64)
+					if err == nil {
+						b.WriteString(fmt.Sprintf("line=%d msg=\"%s\"\n", lNo, strings.TrimSpace(msgB.String())))
+					} else {
+						b.WriteString(fmt.Sprintf("msg=\"%s\"\n", strings.TrimSpace(msgB.String())))
+					}
+				}
+			} else if len(parts) > 1 {
+				var msgB strings.Builder
+				for i := 1; i < len(parts); i++ {
+					msgB.WriteString(parts[i])
+					msgB.WriteString(" ")
+				}
+				b.WriteString(fmt.Sprintf("msg=\"%s\"\n", strings.TrimSpace(msgB.String())))
+			}
+		}
+	}
+	return strings.TrimSuffix(b.String(), "\n")
 }
 
 // DeleteTransaction deletes a transaction by id.
