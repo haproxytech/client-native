@@ -4,10 +4,8 @@ import (
 	"bufio"
 	"bytes"
 	"fmt"
-	"io/ioutil"
 	"os"
 	"os/exec"
-	"path/filepath"
 	"strconv"
 	"strings"
 
@@ -56,40 +54,40 @@ func (c *Client) GetRawConfiguration() (*models.GetHAProxyConfigurationOKBody, e
 // PostRawConfiguration pushes given string to the config file if the version
 // matches
 func (c *Client) PostRawConfiguration(config *string, version int64) error {
-	ondiskV, _ := c.GetVersion("")
-	if ondiskV != version {
-		return NewConfError(ErrVersionMismatch, fmt.Sprintf("Version in configuration file is %v, given version is %v", ondiskV, version))
-	}
-
-	tmp, e := ioutil.TempFile(filepath.Dir(c.ConfigurationFile), filepath.Base(c.ConfigurationFile))
-	defer tmp.Close()
-
-	if e != nil {
-		return NewConfError(ErrGeneralError, e.Error())
-	}
-
-	w := bufio.NewWriter(tmp)
-	w.WriteString(fmt.Sprintf("# _version=%v\n%v", ondiskV+1, *config))
-	w.Flush()
-
-	tmpPath, err := filepath.Abs(filepath.Dir(tmp.Name()))
+	// Create implicit transaction and check version
+	t, err := c.checkTransactionOrVersion("", version)
 	if err != nil {
-		return NewConfError(ErrGeneralError, e.Error())
-	}
-
-	if err = c.validateConfigFile(tmpPath); err != nil {
-		_ = os.Remove(tmpPath)
+		// if transaction is implicit, return err and delete transaction
+		if t != "" {
+			return c.errAndDeleteTransaction(err, t)
+		}
 		return err
 	}
 
-	err = os.Rename(tmpPath, c.ConfigurationFile)
+	// Write the transaction file directly
+	tmp, err := os.OpenFile(c.getTransactionFile(t), os.O_RDWR|os.O_TRUNC, 0777)
+	defer tmp.Close()
 	if err != nil {
-		os.Remove(tmpPath)
-		return NewConfError(ErrGeneralError, e.Error())
+		return NewConfError(ErrCannotReadConfFile, err.Error())
 	}
 
-	if err := c.Parser.LoadData(c.ConfigurationFile); err != nil {
-		return NewConfError(ErrCannotReadConfFile, fmt.Sprintf("Cannot read %s", c.ConfigurationFile))
+	w := bufio.NewWriter(tmp)
+	w.WriteString(fmt.Sprintf("# _version=%v\n%v", version, *config))
+	w.Flush()
+
+	// Load the data into the transaction parser
+	p, err := c.GetParser(t)
+	if err != nil {
+		return err
+	}
+
+	if err := p.LoadData(c.getTransactionFile(t)); err != nil {
+		return NewConfError(ErrCannotReadConfFile, fmt.Sprintf("Cannot read %s", c.getTransactionFile(t)))
+	}
+
+	// Do a regular commit of the transaction
+	if _, err := c.CommitTransaction(t); err != nil {
+		return err
 	}
 
 	return nil
