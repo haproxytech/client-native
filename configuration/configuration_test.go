@@ -178,7 +178,7 @@ func prepareClient(path string) *Client {
 		ConfigurationFile: path,
 		Haproxy:           "echo",
 		UseValidation:     true,
-		TransactionDir:    "/tmp/haproxy",
+		TransactionDir:    "/tmp/haproxy-test",
 	}
 	c.Init(p)
 	return &c
