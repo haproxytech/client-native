@@ -50,7 +50,11 @@ func (s *SingleRuntime) GetStats() (models.NativeStats, error) {
 			continue
 		}
 		oneLineData.Stats = &st
-		oneLineData.RuntimeAPI = s.socketPath
+		if s.worker != 0 {
+			oneLineData.RuntimeAPI = fmt.Sprintf("%s@%v", s.socketPath, s.worker)
+		} else {
+			oneLineData.RuntimeAPI = s.socketPath
+		}
 		result = append(result, oneLineData)
 	}
 	return result, nil

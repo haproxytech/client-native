@@ -23,12 +23,15 @@ type Task struct {
 type SingleRuntime struct {
 	jobs       chan Task
 	socketPath string
+	worker     int
 }
 
-//Init must be given path to runtime socket
-func (s *SingleRuntime) Init(socketPath string) error {
+//Init must be given path to runtime socket and worker number. If in master-worker mode,
+//give the path to the master socket path, and non 0 number for workers.
+func (s *SingleRuntime) Init(socketPath string, worker int) error {
 	s.socketPath = socketPath
 	s.jobs = make(chan Task)
+	s.worker = worker
 	go s.handleIncommingJobs()
 	return nil
 }
@@ -52,7 +55,11 @@ func (s *SingleRuntime) readFromSocket(command string) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	_, err = api.Write([]byte(fmt.Sprintf("set severity-output number;%s\n", command)))
+	fullCommand := fmt.Sprintf("set severity-output number;%s\n", command)
+	if s.worker > 0 {
+		fullCommand = fmt.Sprintf("@%v set severity-output number;@%v %s\n", s.worker, s.worker, command)
+	}
+	_, err = api.Write([]byte(fullCommand))
 	if err != nil {
 		return "", err
 	}

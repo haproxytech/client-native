@@ -19,23 +19,33 @@ const (
 // DefaultClient return runtime Client with sane defaults
 func DefaultClient() (*Client, error) {
 	c := &Client{}
-	err := c.Init([]string{DefaultSocketPath})
+	err := c.Init([]string{DefaultSocketPath}, "", 0)
 	if err != nil {
 		return nil, err
 	}
 	return c, nil
 }
 
-//Init must be given path to runtime socket
-func (c *Client) Init(socketPath []string) error {
+//Init must be given path to runtime socket and nbproc that is not 0 when in master worker mode
+func (c *Client) Init(socketPath []string, masterSocketPath string, nbproc int) error {
 	c.runtimes = make([]SingleRuntime, len(socketPath))
 	for index, path := range socketPath {
 		runtime := SingleRuntime{}
-		err := runtime.Init(path)
+		err := runtime.Init(path, 0)
 		if err != nil {
 			return err
 		}
 		c.runtimes[index] = runtime
+	}
+	if masterSocketPath != "" && nbproc != 0 {
+		for i := 1; i <= nbproc; i++ {
+			runtime := SingleRuntime{}
+			err := runtime.Init(masterSocketPath, i)
+			if err != nil {
+				return err
+			}
+			c.runtimes = append(c.runtimes, runtime)
+		}
 	}
 	return nil
 }
