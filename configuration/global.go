@@ -2,7 +2,6 @@ package configuration
 
 import (
 	"strconv"
-	"strings"
 
 	"github.com/haproxytech/client-native/misc"
 
@@ -119,8 +118,8 @@ func (c *Client) GetGlobalConfiguration(transactionID string) (*models.GetGlobal
 	data, err = p.Get(parser.Global, parser.GlobalSectionName, "ssl-default-bind-options")
 	sslOptions := ""
 	if err == nil {
-		sslOptionsParser := data.(*types.StringSliceC)
-		sslOptions = strings.Join(sslOptionsParser.Value, " ")
+		sslOptionsParser := data.(*types.StringC)
+		sslOptions = sslOptionsParser.Value
 	}
 
 	data, err = p.Get(parser.Global, parser.GlobalSectionName, "tune.ssl.default-dh-param")
@@ -260,8 +259,8 @@ func (c *Client) PushGlobalConfiguration(data *models.Global, transactionID stri
 	}
 	p.Set(parser.Global, parser.GlobalSectionName, "ssl-default-bind-ciphers", pSSLCiphers)
 
-	pSSLOptions := &types.StringSliceC{
-		Value: strings.Split(data.SslDefaultBindOptions, " "),
+	pSSLOptions := &types.StringC{
+		Value: data.SslDefaultBindOptions,
 	}
 	if data.SslDefaultBindCiphers == "" {
 		pSSLOptions = nil
