@@ -1,4 +1,4 @@
-# ![HAProxy](../assets/images/haproxy-weblogo-210x49.png "HAProxy")
+# ![HAProxy](assets/images/haproxy-weblogo-210x49.png "HAProxy")
 
 ## HAProxy Native Golang Client
 
@@ -38,7 +38,6 @@ confParams := configuration.ClientParams{
     ConfigurationFile: "/etc/haproxy/haproxy.cfg",
     Haproxy:           "/usr/sbin/haproxy",
     UseValidation:     true,
-    UseCache:          true,
     TransactionDir:    "/tmp/haproxy",
 }
 err := confClient.Init(confParams)
@@ -53,33 +52,25 @@ if err != nil {
 
 runtimeClient := &runtime_api.Client{}
 globalConf, err := confClient.GetGlobalConfiguration("")
-
-if err != nil {
-    fmt.Println("Stats socket not configured, no runtime client initiated")
-}
-
-nbproc := globalConf.Data.Nbproc
-if nbproc == 0 {
-    nbproc = 1
-}
-
-runtimeAPI := globalConf.Data.RuntimeAPI
-if runtimeAPI == "" {
-    fmt.Println("Stats socket not configured, no runtime client initiated")
-} else {
+if err == nil {
     socketList := make([]string, 0, 1)
-    if nbproc > 1 {
-        for i := int64(0); i < nbproc; i++ {
-            socketList = append(socketList, fmt.Sprintf("%v.%v", runtimeAPI, i))
+    runtimeAPIs := globalConf.Data.RuntimeApis
+
+    if len(runtimeAPIs) != 0 {
+        for _, r := range runtimeAPIs {
+            socketList = append(socketList, *r.Address)
         }
+        if err := runtimeClient.Init(socketList, "", 0); err != nil {
+            fmt.Println("Error setting up runtime client, not using one")
+            return nil
+		}
     } else {
-        socketList = append(socketList, runtimeAPI)
-    }
-    err := runtimeClient.Init(socketList)
-    if err != nil {
-        fmt.Println("Error setting up runtime client, not using one")
-        runtimeClient = nil
-    }
+		fmt.Println("Runtime API not configured, not using it")
+		runtimeClient = nil
+	}
+} else {
+    fmt.Println("Cannot read runtime API configuration, not using it")
+    runtimeClient = nil
 }
 
 client := &client_native.HAProxyClient{}
