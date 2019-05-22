@@ -8,16 +8,14 @@ import (
 	"os/exec"
 	"strconv"
 	"strings"
-
-	"github.com/haproxytech/models"
 )
 
-// GetRawConfiguration returns a struct with configuration version and a
+// GetRawConfiguration returns configuration version and a
 // string containing raw config file
-func (c *Client) GetRawConfiguration() (*models.GetHAProxyConfigurationOKBody, error) {
+func (c *Client) GetRawConfiguration() (int64, string, error) {
 	file, err := os.Open(c.ConfigurationFile)
 	if err != nil {
-		return nil, NewConfError(ErrCannotReadConfFile, err.Error())
+		return 0, "", NewConfError(ErrCannotReadConfFile, err.Error())
 	}
 	defer file.Close()
 
@@ -40,15 +38,10 @@ func (c *Client) GetRawConfiguration() (*models.GetHAProxyConfigurationOKBody, e
 		}
 	}
 	if err = scanner.Err(); err != nil {
-		return nil, NewConfError(ErrCannotReadConfFile, err.Error())
-
+		return 0, "", NewConfError(ErrCannotReadConfFile, err.Error())
 	}
 
-	data := &models.GetHAProxyConfigurationOKBody{
-		Data:    dataStr,
-		Version: ondiskV,
-	}
-	return data, nil
+	return ondiskV, dataStr, nil
 }
 
 // PostRawConfiguration pushes given string to the config file if the version

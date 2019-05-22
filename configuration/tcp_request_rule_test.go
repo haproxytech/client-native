@@ -9,20 +9,20 @@ import (
 )
 
 func TestGetTCPRequestRules(t *testing.T) {
-	tRules, err := client.GetTCPRequestRules("frontend", "test", "")
+	v, tRules, err := client.GetTCPRequestRules("frontend", "test", "")
 	if err != nil {
 		t.Error(err.Error())
 	}
 
-	if len(tRules.Data) != 4 {
-		t.Errorf("%v tcp request rules returned, expected 4", len(tRules.Data))
+	if len(tRules) != 4 {
+		t.Errorf("%v tcp request rules returned, expected 4", len(tRules))
 	}
 
-	if tRules.Version != version {
-		t.Errorf("Version %v returned, expected %v", tRules.Version, version)
+	if v != version {
+		t.Errorf("Version %v returned, expected %v", v, version)
 	}
 
-	for _, r := range tRules.Data {
+	for _, r := range tRules {
 		if *r.ID == 0 {
 			if r.Type != "connection" {
 				t.Errorf("%v: Type not connection: %v", *r.ID, r.Type)
@@ -80,31 +80,24 @@ func TestGetTCPRequestRules(t *testing.T) {
 		}
 	}
 
-	rJSON, err := tRules.MarshalBinary()
+	_, tRules, err = client.GetTCPRequestRules("backend", "test_2", "")
 	if err != nil {
 		t.Error(err.Error())
 	}
-
-	tRules, err = client.GetTCPRequestRules("backend", "test_2", "")
-	if err != nil {
-		t.Error(err.Error())
-	}
-	if len(tRules.Data) > 0 {
-		t.Errorf("%v TCP Request Ruless returned, expected 0", len(tRules.Data))
-	}
-
-	if !t.Failed() {
-		fmt.Println("GetTCPRequestRules succesful\nResponse: \n" + string(rJSON) + "\n")
+	if len(tRules) > 0 {
+		t.Errorf("%v TCP Request Ruless returned, expected 0", len(tRules))
 	}
 }
 
 func TestGetTCPRequestRule(t *testing.T) {
-	tRule, err := client.GetTCPRequestRule(0, "frontend", "test", "")
+	v, r, err := client.GetTCPRequestRule(0, "frontend", "test", "")
 	if err != nil {
 		t.Error(err.Error())
 	}
 
-	r := tRule.Data
+	if v != version {
+		t.Errorf("Version %v returned, expected %v", v, version)
+	}
 
 	if r.Type != "connection" {
 		t.Errorf("%v: Type not connection: %v", *r.ID, r.Type)
@@ -119,18 +112,14 @@ func TestGetTCPRequestRule(t *testing.T) {
 		t.Errorf("%v: CondTest not src TRUE: %v", *r.ID, r.CondTest)
 	}
 
-	rJSON, err := r.MarshalBinary()
+	_, err = r.MarshalBinary()
 	if err != nil {
 		t.Error(err.Error())
 	}
 
-	_, err = client.GetTCPRequestRule(3, "backend", "test_2", "")
+	_, _, err = client.GetTCPRequestRule(3, "backend", "test_2", "")
 	if err == nil {
 		t.Error("Should throw error, non existant TCP Request Rule")
-	}
-
-	if !t.Failed() {
-		fmt.Println("GetTCPRequestRule succesful\nResponse: \n" + string(rJSON) + "\n")
 	}
 }
 
@@ -151,23 +140,19 @@ func TestCreateEditDeleteTCPRequestRule(t *testing.T) {
 		version++
 	}
 
-	ondiskR, err := client.GetTCPRequestRule(4, "frontend", "test", "")
+	v, ondiskR, err := client.GetTCPRequestRule(4, "frontend", "test", "")
 	if err != nil {
 		t.Error(err.Error())
 	}
 
-	if !reflect.DeepEqual(ondiskR.Data, r) {
-		fmt.Printf("Created TCP request rule: %v\n", ondiskR.Data)
+	if !reflect.DeepEqual(ondiskR, r) {
+		fmt.Printf("Created TCP request rule: %v\n", ondiskR)
 		fmt.Printf("Given TCP request rule: %v\n", r)
 		t.Error("Created TCP request rule not equal to given TCP request rule")
 	}
 
-	if ondiskR.Version != version {
-		t.Errorf("Version %v returned, expected %v", ondiskR.Version, version)
-	}
-
-	if !t.Failed() {
-		fmt.Println("CreateTCPRequestRule successful")
+	if v != version {
+		t.Errorf("Version %v returned, expected %v", v, version)
 	}
 
 	// TestEditTCPRequestRule
@@ -186,23 +171,19 @@ func TestCreateEditDeleteTCPRequestRule(t *testing.T) {
 		version++
 	}
 
-	ondiskR, err = client.GetTCPRequestRule(4, "frontend", "test", "")
+	v, ondiskR, err = client.GetTCPRequestRule(4, "frontend", "test", "")
 	if err != nil {
 		t.Error(err.Error())
 	}
 
-	if !reflect.DeepEqual(ondiskR.Data, r) {
-		fmt.Printf("Edited TCP request rule: %v\n", ondiskR.Data)
+	if !reflect.DeepEqual(ondiskR, r) {
+		fmt.Printf("Edited TCP request rule: %v\n", ondiskR)
 		fmt.Printf("Given TCP request rule: %v\n", r)
 		t.Error("Edited TCP request rule not equal to given TCP request rule")
 	}
 
-	if ondiskR.Version != version {
-		t.Errorf("Version %v returned, expected %v", ondiskR.Version, version)
-	}
-
-	if !t.Failed() {
-		fmt.Println("EditTCPRequestRule successful")
+	if v != version {
+		t.Errorf("Version %v returned, expected %v", v, version)
 	}
 
 	// TestDeleteTCPRequest
@@ -217,7 +198,7 @@ func TestCreateEditDeleteTCPRequestRule(t *testing.T) {
 		t.Error("Version not incremented")
 	}
 
-	_, err = client.GetTCPRequestRule(4, "frontend", "test", "")
+	_, _, err = client.GetTCPRequestRule(4, "frontend", "test", "")
 	if err == nil {
 		t.Error("DeleteTCPRequestRule failed, TCP Request Rule 3 still exists")
 	}
@@ -226,9 +207,5 @@ func TestCreateEditDeleteTCPRequestRule(t *testing.T) {
 	if err == nil {
 		t.Error("Should throw error, non existant TCP Request Rule")
 		version++
-	}
-
-	if !t.Failed() {
-		fmt.Println("DeleteTCPRequestRule successful")
 	}
 }

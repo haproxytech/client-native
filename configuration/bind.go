@@ -13,46 +13,46 @@ import (
 	"github.com/haproxytech/models"
 )
 
-// GetBinds returns a struct with configuration version and an array of
+// GetBinds returns configuration version and an array of
 // configured binds in the specified frontend. Returns error on fail.
-func (c *Client) GetBinds(frontend string, transactionID string) (*models.GetBindsOKBody, error) {
+func (c *Client) GetBinds(frontend string, transactionID string) (int64, models.Binds, error) {
 	p, err := c.GetParser(transactionID)
 	if err != nil {
-		return nil, err
+		return 0, nil, err
 	}
 
 	binds, err := c.parseBinds(frontend, p)
 	if err != nil {
-		return nil, c.handleError("", "frontend", frontend, "", false, err)
+		return 0, nil, c.handleError("", "frontend", frontend, "", false, err)
 	}
 
 	v, err := c.GetVersion(transactionID)
 	if err != nil {
-		return nil, err
+		return 0, nil, err
 	}
 
-	return &models.GetBindsOKBody{Version: v, Data: binds}, nil
+	return v, binds, nil
 }
 
-// GetBind returns a struct with configuration version and a requested bind
+// GetBind returns configuration version and a requested bind
 // in the specified frontend. Returns error on fail or if bind does not exist.
-func (c *Client) GetBind(name string, frontend string, transactionID string) (*models.GetBindOKBody, error) {
+func (c *Client) GetBind(name string, frontend string, transactionID string) (int64, *models.Bind, error) {
 	p, err := c.GetParser(transactionID)
 	if err != nil {
-		return nil, err
+		return 0, nil, err
 	}
 
 	bind, _ := c.getBindByName(name, frontend, p)
 	if bind == nil {
-		return nil, NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("Bind %s does not exist in frontend %s", name, frontend))
+		return 0, nil, NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("Bind %s does not exist in frontend %s", name, frontend))
 	}
 
 	v, err := c.GetVersion(transactionID)
 	if err != nil {
-		return nil, err
+		return 0, nil, err
 	}
 
-	return &models.GetBindOKBody{Version: v, Data: bind}, nil
+	return v, bind, nil
 }
 
 // DeleteBind deletes a bind in configuration. One of version or transactionID is

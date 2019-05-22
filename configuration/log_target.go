@@ -10,33 +10,33 @@ import (
 	"github.com/haproxytech/models"
 )
 
-// GetLogTargets returns a struct with configuration version and an array of
+// GetLogTargets returns configuration version and an array of
 // configured log targets in the specified parent. Returns error on fail.
-func (c *Client) GetLogTargets(parentType, parentName string, transactionID string) (*models.GetLogTargetsOKBody, error) {
+func (c *Client) GetLogTargets(parentType, parentName string, transactionID string) (int64, models.LogTargets, error) {
 	p, err := c.GetParser(transactionID)
 	if err != nil {
-		return nil, err
+		return 0, nil, err
 	}
 
 	logTargets, err := c.parseLogTargets(parentType, parentName, p)
 	if err != nil {
-		return nil, c.handleError("", parentType, parentName, "", false, err)
+		return 0, nil, c.handleError("", parentType, parentName, "", false, err)
 	}
 
 	v, err := c.GetVersion(transactionID)
 	if err != nil {
-		return nil, err
+		return 0, nil, err
 	}
 
-	return &models.GetLogTargetsOKBody{Version: v, Data: logTargets}, nil
+	return v, logTargets, nil
 }
 
-// GetLogTarget returns a struct with configuration version and a requested log target
+// GetLogTarget returns configuration version and a requested log target
 // in the specified parent. Returns error on fail or if log target does not exist.
-func (c *Client) GetLogTarget(id int64, parentType, parentName string, transactionID string) (*models.GetLogTargetOKBody, error) {
+func (c *Client) GetLogTarget(id int64, parentType, parentName string, transactionID string) (int64, *models.LogTarget, error) {
 	p, err := c.GetParser(transactionID)
 	if err != nil {
-		return nil, err
+		return 0, nil, err
 	}
 
 	var section parser.Section
@@ -48,7 +48,7 @@ func (c *Client) GetLogTarget(id int64, parentType, parentName string, transacti
 
 	data, err := p.GetOne(section, parentName, "log", int(id))
 	if err != nil {
-		return nil, c.handleError(strconv.FormatInt(id, 10), parentType, parentName, "", false, err)
+		return 0, nil, c.handleError(strconv.FormatInt(id, 10), parentType, parentName, "", false, err)
 	}
 
 	logTarget := parseLogTarget(data.(types.Log))
@@ -56,10 +56,10 @@ func (c *Client) GetLogTarget(id int64, parentType, parentName string, transacti
 
 	v, err := c.GetVersion(transactionID)
 	if err != nil {
-		return nil, err
+		return 0, nil, err
 	}
 
-	return &models.GetLogTargetOKBody{Version: v, Data: logTarget}, nil
+	return v, logTarget, nil
 }
 
 // DeleteLogTarget deletes a log target in configuration. One of version or transactionID is

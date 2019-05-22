@@ -9,20 +9,20 @@ import (
 )
 
 func TestGetTCPResponseRules(t *testing.T) {
-	tRules, err := client.GetTCPResponseRules("test", "")
+	v, tRules, err := client.GetTCPResponseRules("test", "")
 	if err != nil {
 		t.Error(err.Error())
 	}
 
-	if len(tRules.Data) != 2 {
-		t.Errorf("%v tcp response rules returned, expected 2", len(tRules.Data))
+	if len(tRules) != 2 {
+		t.Errorf("%v tcp response rules returned, expected 2", len(tRules))
 	}
 
-	if tRules.Version != version {
-		t.Errorf("Version %v returned, expected %v", tRules.Version, version)
+	if v != version {
+		t.Errorf("Version %v returned, expected %v", v, version)
 	}
 
-	for _, r := range tRules.Data {
+	for _, r := range tRules {
 		if *r.ID == 0 {
 			if r.Type != "content" {
 				t.Errorf("%v: Type not content: %v", *r.ID, r.Type)
@@ -54,31 +54,24 @@ func TestGetTCPResponseRules(t *testing.T) {
 		}
 	}
 
-	rJSON, err := tRules.MarshalBinary()
+	_, tRules, err = client.GetTCPResponseRules("test_2", "")
 	if err != nil {
 		t.Error(err.Error())
 	}
-
-	tRules, err = client.GetTCPResponseRules("test_2", "")
-	if err != nil {
-		t.Error(err.Error())
-	}
-	if len(tRules.Data) > 0 {
-		t.Errorf("%v TCP Response Rules returned, expected 0", len(tRules.Data))
-	}
-
-	if !t.Failed() {
-		fmt.Println("GetTCPResponseRules succesful\nResponse: \n" + string(rJSON) + "\n")
+	if len(tRules) > 0 {
+		t.Errorf("%v TCP Response Rules returned, expected 0", len(tRules))
 	}
 }
 
 func TestGetTCPResponseRule(t *testing.T) {
-	tRule, err := client.GetTCPResponseRule(0, "test", "")
+	v, r, err := client.GetTCPResponseRule(0, "test", "")
 	if err != nil {
 		t.Error(err.Error())
 	}
 
-	r := tRule.Data
+	if v != version {
+		t.Errorf("Version %v returned, expected %v", v, version)
+	}
 
 	if r.Type != "content" {
 		t.Errorf("%v: Type not content: %v", *r.ID, r.Type)
@@ -93,18 +86,14 @@ func TestGetTCPResponseRule(t *testing.T) {
 		t.Errorf("%v: CondTest not src TRUE: %v", *r.ID, r.CondTest)
 	}
 
-	rJSON, err := r.MarshalBinary()
+	_, err = r.MarshalBinary()
 	if err != nil {
 		t.Error(err.Error())
 	}
 
-	_, err = client.GetTCPResponseRule(3, "test_2", "")
+	_, _, err = client.GetTCPResponseRule(3, "test_2", "")
 	if err == nil {
 		t.Error("Should throw error, non existant TCP Response Rule")
-	}
-
-	if !t.Failed() {
-		fmt.Println("GetTCPResponseRule succesful\nResponse: \n" + string(rJSON) + "\n")
 	}
 }
 
@@ -125,23 +114,19 @@ func TestCreateEditDeleteTCPResponseRule(t *testing.T) {
 		version++
 	}
 
-	ondiskR, err := client.GetTCPResponseRule(2, "test", "")
+	v, ondiskR, err := client.GetTCPResponseRule(2, "test", "")
 	if err != nil {
 		t.Error(err.Error())
 	}
 
-	if !reflect.DeepEqual(ondiskR.Data, r) {
-		fmt.Printf("Created TCP response rule: %v\n", ondiskR.Data)
+	if !reflect.DeepEqual(ondiskR, r) {
+		fmt.Printf("Created TCP response rule: %v\n", ondiskR)
 		fmt.Printf("Given TCP response rule: %v\n", r)
 		t.Error("Created TCP response rule not equal to given TCP response rule")
 	}
 
-	if ondiskR.Version != version {
-		t.Errorf("Version %v returned, expected %v", ondiskR.Version, version)
-	}
-
-	if !t.Failed() {
-		fmt.Println("CreateTCPResponseRule successful")
+	if v != version {
+		t.Errorf("Version %v returned, expected %v", v, version)
 	}
 
 	// TestEditTCPResponseRule
@@ -160,23 +145,19 @@ func TestCreateEditDeleteTCPResponseRule(t *testing.T) {
 		version++
 	}
 
-	ondiskR, err = client.GetTCPResponseRule(2, "test", "")
+	v, ondiskR, err = client.GetTCPResponseRule(2, "test", "")
 	if err != nil {
 		t.Error(err.Error())
 	}
 
-	if !reflect.DeepEqual(ondiskR.Data, r) {
-		fmt.Printf("Edited TCP response rule: %v\n", ondiskR.Data)
+	if !reflect.DeepEqual(ondiskR, r) {
+		fmt.Printf("Edited TCP response rule: %v\n", ondiskR)
 		fmt.Printf("Given TCP response rule: %v\n", r)
 		t.Error("Edited TCP response rule not equal to given TCP response rule")
 	}
 
-	if ondiskR.Version != version {
-		t.Errorf("Version %v returned, expected %v", ondiskR.Version, version)
-	}
-
-	if !t.Failed() {
-		fmt.Println("EditTCPResponseRule successful")
+	if v != version {
+		t.Errorf("Version %v returned, expected %v", v, version)
 	}
 
 	// TestDeleteTCPResponse
@@ -191,7 +172,7 @@ func TestCreateEditDeleteTCPResponseRule(t *testing.T) {
 		t.Error("Version not incremented")
 	}
 
-	_, err = client.GetTCPResponseRule(2, "test", "")
+	_, _, err = client.GetTCPResponseRule(2, "test", "")
 	if err == nil {
 		t.Error("DeleteTCPResponseRule failed, TCP Response Rule 3 still exists")
 	}
@@ -200,9 +181,5 @@ func TestCreateEditDeleteTCPResponseRule(t *testing.T) {
 	if err == nil {
 		t.Error("Should throw error, non existant TCP Response Rule")
 		version++
-	}
-
-	if !t.Failed() {
-		fmt.Println("DeleteTCPResponseRule successful")
 	}
 }

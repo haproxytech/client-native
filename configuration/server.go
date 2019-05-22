@@ -14,46 +14,46 @@ import (
 	"github.com/haproxytech/models"
 )
 
-// GetServers returns a struct with configuration version and an array of
+// GetServers returns configuration version and an array of
 // configured servers in the specified backend. Returns error on fail.
-func (c *Client) GetServers(backend string, transactionID string) (*models.GetServersOKBody, error) {
+func (c *Client) GetServers(backend string, transactionID string) (int64, models.Servers, error) {
 	p, err := c.GetParser(transactionID)
 	if err != nil {
-		return nil, err
+		return 0, nil, err
 	}
 
 	servers, err := c.parseServers(backend, p)
 	if err != nil {
-		return nil, c.handleError("", "backend", backend, "", false, err)
+		return 0, nil, c.handleError("", "backend", backend, "", false, err)
 	}
 
 	v, err := c.GetVersion(transactionID)
 	if err != nil {
-		return nil, err
+		return 0, nil, err
 	}
 
-	return &models.GetServersOKBody{Version: v, Data: servers}, nil
+	return v, servers, nil
 }
 
-// GetServer returns a struct with configuration version and a requested server
+// GetServer returns configuration version and a requested server
 // in the specified backend. Returns error on fail or if server does not exist.
-func (c *Client) GetServer(name string, backend string, transactionID string) (*models.GetServerOKBody, error) {
+func (c *Client) GetServer(name string, backend string, transactionID string) (int64, *models.Server, error) {
 	p, err := c.GetParser(transactionID)
 	if err != nil {
-		return nil, err
+		return 0, nil, err
 	}
 
 	server, _ := c.getServerByName(name, backend, p)
 	if server == nil {
-		return nil, NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("Server %s does not exist in backend %s", name, backend))
+		return 0, nil, NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("Server %s does not exist in backend %s", name, backend))
 	}
 
 	v, err := c.GetVersion(transactionID)
 	if err != nil {
-		return nil, err
+		return 0, nil, err
 	}
 
-	return &models.GetServerOKBody{Version: v, Data: server}, nil
+	return v, server, nil
 }
 
 // DeleteServer deletes a server in configuration. One of version or transactionID is

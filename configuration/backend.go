@@ -8,17 +8,17 @@ import (
 	"github.com/haproxytech/models"
 )
 
-// GetBackends returns a struct with configuration version and an array of
+// GetBackends returns configuration version and an array of
 // configured backends. Returns error on fail.
-func (c *Client) GetBackends(transactionID string) (*models.GetBackendsOKBody, error) {
+func (c *Client) GetBackends(transactionID string) (int64, models.Backends, error) {
 	p, err := c.GetParser(transactionID)
 	if err != nil {
-		return nil, err
+		return 0, nil, err
 	}
 
 	bNames, err := p.SectionsGet(parser.Backends)
 	if err != nil {
-		return nil, err
+		return 0, nil, err
 	}
 
 	backends := []*models.Backend{}
@@ -32,36 +32,36 @@ func (c *Client) GetBackends(transactionID string) (*models.GetBackendsOKBody, e
 
 	v, err := c.GetVersion(transactionID)
 	if err != nil {
-		return nil, err
+		return 0, nil, err
 	}
 
-	return &models.GetBackendsOKBody{Version: v, Data: backends}, nil
+	return v, backends, nil
 }
 
-// GetBackend returns a struct with configuration version and a requested backend.
+// GetBackend returns configuration version and a requested backend.
 // Returns error on fail or if backend does not exist.
-func (c *Client) GetBackend(name string, transactionID string) (*models.GetBackendOKBody, error) {
+func (c *Client) GetBackend(name string, transactionID string) (int64, *models.Backend, error) {
 	p, err := c.GetParser(transactionID)
 	if err != nil {
-		return nil, err
+		return 0, nil, err
 	}
 
 	if !c.checkSectionExists(parser.Backends, name, p) {
-		return nil, NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("Backend %s does not exist", name))
+		return 0, nil, NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("Backend %s does not exist", name))
 	}
 
 	backend := &models.Backend{Name: name}
 	if err := c.parseSection(backend, parser.Backends, name, p); err != nil {
-		return nil, err
+		return 0, nil, err
 
 	}
 
 	v, err := c.GetVersion(transactionID)
 	if err != nil {
-		return nil, err
+		return 0, nil, err
 	}
 
-	return &models.GetBackendOKBody{Version: v, Data: backend}, nil
+	return v, backend, nil
 }
 
 // DeleteBackend deletes a backend in configuration. One of version or transactionID is

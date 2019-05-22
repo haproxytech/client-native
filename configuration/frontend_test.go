@@ -9,20 +9,20 @@ import (
 )
 
 func TestGetFrontends(t *testing.T) {
-	frontends, err := client.GetFrontends("")
+	v, frontends, err := client.GetFrontends("")
 	if err != nil {
 		t.Error(err.Error())
 	}
 
-	if len(frontends.Data) != 2 {
-		t.Errorf("%v frontends returned, expected 2", len(frontends.Data))
+	if len(frontends) != 2 {
+		t.Errorf("%v frontends returned, expected 2", len(frontends))
 	}
 
-	if frontends.Version != version {
-		t.Errorf("Version %v returned, expected %v", frontends.Version, version)
+	if v != version {
+		t.Errorf("Version %v returned, expected %v", v, version)
 	}
 
-	for _, f := range frontends.Data {
+	for _, f := range frontends {
 		if f.Name != "test" && f.Name != "test_2" {
 			t.Errorf("Expected only test or test_2 frontend, %v found", f.Name)
 		}
@@ -54,27 +54,16 @@ func TestGetFrontends(t *testing.T) {
 			t.Errorf("%v: ClientTimeout not 4: %v", f.Name, *f.ClientTimeout)
 		}
 	}
-
-	fJSON, err := frontends.MarshalBinary()
-	if err != nil {
-		t.Error(err.Error())
-	}
-
-	if !t.Failed() {
-		fmt.Println("GetFrontends succesful\nResponse: \n" + string(fJSON) + "\n")
-	}
 }
 
 func TestGetFrontend(t *testing.T) {
-	frontend, err := client.GetFrontend("test", "")
+	v, f, err := client.GetFrontend("test", "")
 	if err != nil {
 		t.Error(err.Error())
 	}
 
-	f := frontend.Data
-
-	if frontend.Version != version {
-		t.Errorf("Version %v returned, expected %v", frontend.Version, version)
+	if v != version {
+		t.Errorf("Version %v returned, expected %v", v, version)
 	}
 
 	if f.Name != "test" {
@@ -111,18 +100,14 @@ func TestGetFrontend(t *testing.T) {
 		t.Errorf("%v: ClientTimeout not 4000: %v", f.Name, *f.ClientTimeout)
 	}
 
-	fJSON, err := f.MarshalBinary()
+	_, err = f.MarshalBinary()
 	if err != nil {
 		t.Error(err.Error())
 	}
 
-	_, err = client.GetFrontend("doesnotexist", "")
+	_, _, err = client.GetFrontend("doesnotexist", "")
 	if err == nil {
 		t.Error("Should throw error, non existant frontend")
-	}
-
-	if !t.Failed() {
-		fmt.Println("GetFrontend succesful\nResponse: \n" + string(fJSON) + "\n")
 	}
 }
 
@@ -146,19 +131,19 @@ func TestCreateEditDeleteFrontend(t *testing.T) {
 		version++
 	}
 
-	frontend, err := client.GetFrontend("created", "")
+	v, frontend, err := client.GetFrontend("created", "")
 	if err != nil {
 		t.Error(err.Error())
 	}
 
-	if !reflect.DeepEqual(frontend.Data, f) {
-		fmt.Printf("Created frontend: %v\n", frontend.Data)
+	if !reflect.DeepEqual(frontend, f) {
+		fmt.Printf("Created frontend: %v\n", frontend)
 		fmt.Printf("Given frontend: %v\n", f)
 		t.Error("Created frontend not equal to given frontend")
 	}
 
-	if frontend.Version != version {
-		t.Errorf("Version %v returned, expected %v", frontend.Version, version)
+	if v != version {
+		t.Errorf("Version %v returned, expected %v", v, version)
 	}
 
 	err = client.CreateFrontend(f, "", version)
@@ -167,11 +152,7 @@ func TestCreateEditDeleteFrontend(t *testing.T) {
 		version++
 	}
 
-	if !t.Failed() {
-		fmt.Println("CreateFrontend successful")
-	}
-
-	// TestEditBackend
+	// TestEditFrontend
 	mConn = int64(4000)
 	f = &models.Frontend{
 		Name:               "created",
@@ -188,26 +169,22 @@ func TestCreateEditDeleteFrontend(t *testing.T) {
 		version++
 	}
 
-	frontend, err = client.GetFrontend("created", "")
+	v, frontend, err = client.GetFrontend("created", "")
 	if err != nil {
 		t.Error(err.Error())
 	}
 
-	if !reflect.DeepEqual(frontend.Data, f) {
-		fmt.Printf("Edited frontend: %v\n", frontend.Data)
+	if !reflect.DeepEqual(frontend, f) {
+		fmt.Printf("Edited frontend: %v\n", frontend)
 		fmt.Printf("Given frontend: %v\n", f)
 		t.Error("Edited frontend not equal to given frontend")
 	}
 
-	if frontend.Version != version {
-		t.Errorf("Version %v returned, expected %v", frontend.Version, version)
+	if v != version {
+		t.Errorf("Version %v returned, expected %v", v, version)
 	}
 
-	if !t.Failed() {
-		fmt.Println("EditFrontend successful")
-	}
-
-	// TestDeleteBackend
+	// TestDeleteFrontend
 	err = client.DeleteFrontend("created", "", version)
 	if err != nil {
 		t.Error(err.Error())
@@ -230,7 +207,7 @@ func TestCreateEditDeleteFrontend(t *testing.T) {
 			t.Error("Should throw ErrVersionMismatch error")
 		}
 	}
-	_, err = client.GetFrontend("created", "")
+	_, _, err = client.GetFrontend("created", "")
 	if err == nil {
 		t.Error("DeleteFrontend failed, frontend test still exists")
 	}
@@ -239,9 +216,5 @@ func TestCreateEditDeleteFrontend(t *testing.T) {
 	if err == nil {
 		t.Error("Should throw error, non existant frontend")
 		version++
-	}
-
-	if !t.Failed() {
-		fmt.Println("DeleteFrontend successful")
 	}
 }

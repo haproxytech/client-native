@@ -11,50 +11,50 @@ import (
 	"github.com/haproxytech/models"
 )
 
-// GetSites returns a struct with configuration version and an array of
+// GetSites returns configuration version and an array of
 // configured sites. Returns error on fail.
-func (c *Client) GetSites(transactionID string) (*models.GetSitesOKBody, error) {
+func (c *Client) GetSites(transactionID string) (int64, models.Sites, error) {
 	p, err := c.GetParser(transactionID)
 	if err != nil {
-		return nil, err
+		return 0, nil, err
 	}
 
 	sites, err := c.parseSites(p)
 	if err != nil {
-		return nil, err
+		return 0, nil, err
 	}
 
 	v, err := c.GetVersion(transactionID)
 	if err != nil {
-		return nil, err
+		return 0, nil, err
 	}
 
-	return &models.GetSitesOKBody{Version: v, Data: sites}, nil
+	return v, sites, nil
 }
 
-// GetSite returns a struct with configuration version and a requested site.
+// GetSite returns configuration version and a requested site.
 // Returns error on fail or if backend does not exist.
-func (c *Client) GetSite(name string, transactionID string) (*models.GetSiteOKBody, error) {
+func (c *Client) GetSite(name string, transactionID string) (int64, *models.Site, error) {
 	p, err := c.GetParser(transactionID)
 	if err != nil {
-		return nil, err
+		return 0, nil, err
 	}
 
 	if !c.checkSectionExists(parser.Frontends, name, p) {
-		return nil, NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("Site %s does not exist", name))
+		return 0, nil, NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("Site %s does not exist", name))
 	}
 
 	site := c.parseSite(name, p)
 	if site == nil {
-		return nil, NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("Site %s does not exist", name))
+		return 0, nil, NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("Site %s does not exist", name))
 	}
 
 	v, err := c.GetVersion(transactionID)
 	if err != nil {
-		return nil, err
+		return 0, nil, err
 	}
 
-	return &models.GetSiteOKBody{Version: v, Data: site}, nil
+	return v, site, nil
 }
 
 // CreateSite creates a site in configuration. One of version or transactionID is
@@ -157,11 +157,11 @@ func (c *Client) EditSite(name string, data *models.Site, transactionID string, 
 		return err
 	}
 
-	site, err := c.GetSite(name, transactionID)
+	_, site, err := c.GetSite(name, transactionID)
 	if err != nil {
 		return err
 	}
-	confS := site.Data
+	confS := site
 
 	//edit frontend
 	if !reflect.DeepEqual(data.Service, confS.Service) {
@@ -189,7 +189,7 @@ func (c *Client) EditSite(name string, data *models.Site, transactionID string, 
 						}
 					}
 				} else {
-					confL := confLIface.(*models.SiteServiceListenersItems)
+					confL := confLIface.(*models.SiteListener)
 					if !reflect.DeepEqual(l, confL) {
 						err := c.editListener(l.Name, data.Name, l, t)
 						if err != nil {
@@ -262,7 +262,7 @@ func (c *Client) EditSite(name string, data *models.Site, transactionID string, 
 				} else if b.UseAs == "default" && defaultBck == "" {
 					defaultBck = b.Name
 				}
-				confB := confBIface.(*models.SiteFarmsItems)
+				confB := confBIface.(*models.SiteFarm)
 				if !reflect.DeepEqual(b, confB) {
 					// check if use as has changed
 					if b.UseAs != confB.UseAs {
@@ -291,7 +291,7 @@ func (c *Client) EditSite(name string, data *models.Site, transactionID string, 
 								}
 							}
 						} else {
-							confSrv := confSrvIFace.(*models.SiteFarmsItemsServersItems)
+							confSrv := confSrvIFace.(*models.SiteServer)
 							if !reflect.DeepEqual(srv, confSrv) {
 								//edit
 								err := c.editSiteServer(srv.Name, b.Name, srv, t)
@@ -373,17 +373,17 @@ func (c *Client) DeleteSite(name string, transactionID string, version int64) er
 		return err
 	}
 
-	site, err := c.GetSite(name, t)
+	_, site, err := c.GetSite(name, t)
 	if err != nil {
 		return err
 	}
 
-	err = c.DeleteFrontend(site.Data.Name, t, 0)
+	err = c.DeleteFrontend(site.Name, t, 0)
 	if err != nil {
 		res = append(res, err)
 	}
 
-	for _, b := range site.Data.Farms {
+	for _, b := range site.Farms {
 		err = c.DeleteBackend(b.Name, t, 0)
 		if err != nil {
 			res = append(res, err)
@@ -430,7 +430,7 @@ func (c *Client) parseSite(s string, p *parser.Parser) *models.Site {
 			Mode:               frontend.Mode,
 			Listeners:          c.parseServiceListeners(s, p),
 		},
-		Farms: []*models.SiteFarmsItems{},
+		Farms: []*models.SiteFarm{},
 	}
 
 	// Find backends using default_backend and use_backends
@@ -453,12 +453,12 @@ func (c *Client) parseSite(s string, p *parser.Parser) *models.Site {
 	return site
 }
 
-func (c *Client) parseServiceListeners(service string, p *parser.Parser) []*models.SiteServiceListenersItems {
-	listeners := []*models.SiteServiceListenersItems{}
+func (c *Client) parseServiceListeners(service string, p *parser.Parser) []*models.SiteListener {
+	listeners := []*models.SiteListener{}
 	binds, err := c.parseBinds(service, p)
 	if err == nil {
 		for _, b := range binds {
-			li := &models.SiteServiceListenersItems{
+			li := &models.SiteListener{
 				Address:        b.Address,
 				Name:           b.Name,
 				Port:           b.Port,
@@ -471,10 +471,10 @@ func (c *Client) parseServiceListeners(service string, p *parser.Parser) []*mode
 	return listeners
 }
 
-func (c *Client) parseFarm(name string, useAs string, cond string, condTest string, p *parser.Parser) *models.SiteFarmsItems {
+func (c *Client) parseFarm(name string, useAs string, cond string, condTest string, p *parser.Parser) *models.SiteFarm {
 	backend := &models.Backend{Name: name}
 	if err := c.parseSection(backend, parser.Backends, name, p); err == nil {
-		farm := &models.SiteFarmsItems{
+		farm := &models.SiteFarm{
 			UseAs:    useAs,
 			Cond:     cond,
 			CondTest: condTest,
@@ -483,7 +483,7 @@ func (c *Client) parseFarm(name string, useAs string, cond string, condTest stri
 			Servers:  c.parseFarmServers(backend.Name, p),
 		}
 		if backend.Forwardfor != nil {
-			farm.Forwardfor = &models.SiteFarmsItemsForwardfor{
+			farm.Forwardfor = &models.SiteFarmForwardFor{
 				Enabled: backend.Forwardfor.Enabled,
 				Except:  backend.Forwardfor.Except,
 				Header:  backend.Forwardfor.Header,
@@ -491,7 +491,7 @@ func (c *Client) parseFarm(name string, useAs string, cond string, condTest stri
 			}
 		}
 		if backend.Balance != nil {
-			farm.Balance = &models.SiteFarmsItemsBalance{
+			farm.Balance = &models.SiteFarmBalance{
 				Algorithm: backend.Balance.Algorithm,
 				Arguments: backend.Balance.Arguments,
 			}
@@ -501,8 +501,8 @@ func (c *Client) parseFarm(name string, useAs string, cond string, condTest stri
 	return nil
 }
 
-func (c *Client) parseFarmServers(farm string, p *parser.Parser) []*models.SiteFarmsItemsServersItems {
-	servers := []*models.SiteFarmsItemsServersItems{}
+func (c *Client) parseFarmServers(farm string, p *parser.Parser) []*models.SiteServer {
+	servers := []*models.SiteServer{}
 
 	srvs, err := c.parseServers(farm, p)
 	if err != nil {
@@ -510,7 +510,7 @@ func (c *Client) parseFarmServers(farm string, p *parser.Parser) []*models.SiteF
 	}
 
 	for _, s := range srvs {
-		server := &models.SiteFarmsItemsServersItems{
+		server := &models.SiteServer{
 			Name:           s.Name,
 			Address:        s.Address,
 			Port:           s.Port,
@@ -534,7 +534,7 @@ func serializeServiceToFrontend(service *models.SiteService, name string) *model
 	return fr
 }
 
-func serializeFarmToBackend(farm *models.SiteFarmsItems) *models.Backend {
+func serializeFarmToBackend(farm *models.SiteFarm) *models.Backend {
 	backend := &models.Backend{
 		Name: farm.Name,
 		Mode: farm.Mode,
@@ -553,7 +553,7 @@ func serializeFarmToBackend(farm *models.SiteFarmsItems) *models.Backend {
 	return backend
 }
 
-func serializeListenerToBind(listener *models.SiteServiceListenersItems) *models.Bind {
+func serializeListenerToBind(listener *models.SiteListener) *models.Bind {
 	return &models.Bind{
 		Name:           listener.Name,
 		Address:        listener.Address,
@@ -563,7 +563,7 @@ func serializeListenerToBind(listener *models.SiteServiceListenersItems) *models
 	}
 }
 
-func serializeSiteServer(srv *models.SiteFarmsItemsServersItems) *models.Server {
+func serializeSiteServer(srv *models.SiteServer) *models.Server {
 	server := &models.Server{
 		Address:        srv.Address,
 		Name:           srv.Name,
@@ -589,7 +589,7 @@ func (c *Client) removeUseFarm(frontend string, backend string, t string, p *par
 	return nil
 }
 
-func (c *Client) createBckFrontendRels(name string, b *models.SiteFarmsItems, edit bool, t string, p *parser.Parser) error {
+func (c *Client) createBckFrontendRels(name string, b *models.SiteFarm, edit bool, t string, p *parser.Parser) error {
 	var res []error
 	var err error
 	if b.UseAs == "default" {
@@ -667,7 +667,7 @@ func (c *Client) editService(name string, service *models.SiteService, t string,
 	return nil
 }
 
-func (c *Client) editFarm(name string, farm *models.SiteFarmsItems, t string, p *parser.Parser) error {
+func (c *Client) editFarm(name string, farm *models.SiteFarm, t string, p *parser.Parser) error {
 	backend := &models.Backend{Name: name}
 	if err := c.parseSection(backend, parser.Backends, name, p); err != nil {
 		return err
@@ -695,34 +695,34 @@ func (c *Client) editFarm(name string, farm *models.SiteFarmsItems, t string, p 
 	return nil
 }
 
-func (c *Client) editListener(name string, frontend string, listener *models.SiteServiceListenersItems, t string) error {
-	bind, err := c.GetBind(name, frontend, t)
+func (c *Client) editListener(name string, frontend string, listener *models.SiteListener, t string) error {
+	_, bind, err := c.GetBind(name, frontend, t)
 	if err != nil {
 		return err
 	}
-	bind.Data.Address = listener.Address
-	bind.Data.Port = listener.Port
-	bind.Data.Ssl = listener.Ssl
-	bind.Data.SslCertificate = listener.SslCertificate
+	bind.Address = listener.Address
+	bind.Port = listener.Port
+	bind.Ssl = listener.Ssl
+	bind.SslCertificate = listener.SslCertificate
 
-	if err := c.EditBind(name, frontend, bind.Data, t, 0); err != nil {
+	if err := c.EditBind(name, frontend, bind, t, 0); err != nil {
 		return err
 	}
 	return nil
 }
 
-func (c *Client) editSiteServer(name string, backend string, server *models.SiteFarmsItemsServersItems, t string) error {
-	srv, err := c.GetServer(name, backend, t)
+func (c *Client) editSiteServer(name string, backend string, server *models.SiteServer, t string) error {
+	_, srv, err := c.GetServer(name, backend, t)
 	if err != nil {
 		return err
 	}
-	srv.Data.Address = server.Address
-	srv.Data.Port = server.Port
-	srv.Data.SslCertificate = server.SslCertificate
-	srv.Data.Weight = server.Weight
-	srv.Data.Ssl = server.Ssl
+	srv.Address = server.Address
+	srv.Port = server.Port
+	srv.SslCertificate = server.SslCertificate
+	srv.Weight = server.Weight
+	srv.Ssl = server.Ssl
 
-	if err := c.EditServer(name, backend, srv.Data, t, 0); err != nil {
+	if err := c.EditServer(name, backend, srv, t, 0); err != nil {
 		return err
 	}
 	return nil

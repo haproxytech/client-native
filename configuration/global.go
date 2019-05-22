@@ -13,12 +13,12 @@ import (
 	"github.com/haproxytech/models"
 )
 
-// GetGlobalConfiguration returns a struct with configuration version and a
+// GetGlobalConfiguration returns configuration version and a
 // struct representing Global configuration
-func (c *Client) GetGlobalConfiguration(transactionID string) (*models.GetGlobalOKBody, error) {
+func (c *Client) GetGlobalConfiguration(transactionID string) (int64, *models.Global, error) {
 	p, err := c.GetParser(transactionID)
 	if err != nil {
-		return nil, err
+		return 0, nil, err
 	}
 
 	_, err = p.Get(parser.Global, parser.GlobalSectionName, "daemon")
@@ -62,12 +62,12 @@ func (c *Client) GetGlobalConfiguration(transactionID string) (*models.GetGlobal
 	}
 
 	data, err = p.Get(parser.Global, parser.GlobalSectionName, "stats socket")
-	rAPIs := []*models.GlobalRuntimeApisItems{}
+	rAPIs := []*models.RuntimeAPI{}
 	if err == nil {
 		sockets := data.([]types.Socket)
 		for _, s := range sockets {
 			p := s.Path
-			rAPI := &models.GlobalRuntimeApisItems{Address: &p}
+			rAPI := &models.RuntimeAPI{Address: &p}
 			for _, p := range s.Params {
 				switch v := p.(type) {
 				case *params.BindOptionDoubleWord:
@@ -87,11 +87,11 @@ func (c *Client) GetGlobalConfiguration(transactionID string) (*models.GetGlobal
 	}
 
 	data, err = p.Get(parser.Global, parser.GlobalSectionName, "cpu-map")
-	cpuMaps := []*models.GlobalCPUMapsItems{}
+	cpuMaps := []*models.CPUMap{}
 	if err == nil {
 		cMaps := data.([]types.CpuMap)
 		for _, m := range cMaps {
-			cpuMap := &models.GlobalCPUMapsItems{
+			cpuMap := &models.CPUMap{
 				Process: &m.Process,
 				CPUSet:  &m.CpuSet,
 			}
@@ -146,10 +146,10 @@ func (c *Client) GetGlobalConfiguration(transactionID string) (*models.GetGlobal
 
 	v, err := c.GetVersion(transactionID)
 	if err != nil {
-		return nil, err
+		return 0, nil, err
 	}
 
-	return &models.GetGlobalOKBody{Version: v, Data: g}, nil
+	return v, g, nil
 }
 
 // PushGlobalConfiguration pushes a Global config struct to global

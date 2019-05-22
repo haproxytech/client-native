@@ -9,20 +9,20 @@ import (
 )
 
 func TestGetACLs(t *testing.T) {
-	acls, err := client.GetACLs("frontend", "test", "")
+	v, acls, err := client.GetACLs("frontend", "test", "")
 	if err != nil {
 		t.Error(err.Error())
 	}
 
-	if len(acls.Data) != 3 {
-		t.Errorf("%v ACL rules returned, expected 3", len(acls.Data))
+	if len(acls) != 3 {
+		t.Errorf("%v ACL rules returned, expected 3", len(acls))
 	}
 
-	if acls.Version != version {
-		t.Errorf("Version %v returned, expected %v", acls.Version, version)
+	if v != version {
+		t.Errorf("Version %v returned, expected %v", v, version)
 	}
 
-	for _, r := range acls.Data {
+	for _, r := range acls {
 		if *r.ID == 0 {
 			if r.ACLName != "invalid_src" {
 				t.Errorf("%v: ACLName not invalid_src: %v", *r.ID, r.ACLName)
@@ -58,57 +58,46 @@ func TestGetACLs(t *testing.T) {
 		}
 	}
 
-	rJSON, err := acls.MarshalBinary()
+	_, acls, err = client.GetACLs("backend", "test_2", "")
 	if err != nil {
 		t.Error(err.Error())
 	}
-
-	acls, err = client.GetACLs("backend", "test_2", "")
-	if err != nil {
-		t.Error(err.Error())
-	}
-	if len(acls.Data) > 0 {
-		t.Errorf("%v ACLs returned, expected 0", len(acls.Data))
-	}
-
-	if !t.Failed() {
-		fmt.Println("GetACLs succesful\nResponse: \n" + string(rJSON) + "\n")
+	if len(acls) > 0 {
+		t.Errorf("%v ACLs returned, expected 0", len(acls))
 	}
 }
 
 func TestGetACL(t *testing.T) {
-	acl, err := client.GetACL(0, "frontend", "test", "")
+	v, acl, err := client.GetACL(0, "frontend", "test", "")
 	if err != nil {
 		t.Error(err.Error())
 	}
 
-	r := acl.Data
-
-	if *r.ID != 0 {
-		t.Errorf("ACL ID not 0, %v found", *r.ID)
-	}
-	if r.ACLName != "invalid_src" {
-		t.Errorf("%v: ACLName not invalid_src: %v", *r.ID, r.ACLName)
-	}
-	if r.Value != "0.0.0.0/7 224.0.0.0/3" {
-		t.Errorf("%v: Value not 0.0.0.0/7 224.0.0.0/3: %v", *r.ID, r.Value)
-	}
-	if r.Criterion != "src" {
-		t.Errorf("%v: Criterion not src: %v", *r.ID, r.Criterion)
+	if v != version {
+		t.Errorf("Version %v returned, expected %v", v, version)
 	}
 
-	rJSON, err := r.MarshalBinary()
+	if *acl.ID != 0 {
+		t.Errorf("ACL ID not 0, %v found", *acl.ID)
+	}
+	if acl.ACLName != "invalid_src" {
+		t.Errorf("%v: ACLName not invalid_src: %v", *acl.ID, acl.ACLName)
+	}
+	if acl.Value != "0.0.0.0/7 224.0.0.0/3" {
+		t.Errorf("%v: Value not 0.0.0.0/7 224.0.0.0/3: %v", *acl.ID, acl.Value)
+	}
+	if acl.Criterion != "src" {
+		t.Errorf("%v: Criterion not src: %v", *acl.ID, acl.Criterion)
+	}
+
+	_, err = acl.MarshalBinary()
 	if err != nil {
 		t.Error(err.Error())
 	}
 
-	_, err = client.GetACL(3, "backend", "test_2", "")
+	_, _, err = client.GetACL(3, "backend", "test_2", "")
 	if err == nil {
 		t.Error("Should throw error, non existant ACL")
-	}
-
-	if !t.Failed() {
-		fmt.Println("GetACL succesful\nResponse: \n" + string(rJSON) + "\n")
 	}
 }
 
@@ -130,23 +119,19 @@ func TestCreateEditDeleteACL(t *testing.T) {
 		version++
 	}
 
-	ondiskR, err := client.GetACL(1, "frontend", "test", "")
+	v, ondiskR, err := client.GetACL(1, "frontend", "test", "")
 	if err != nil {
 		t.Error(err.Error())
 	}
 
-	if !reflect.DeepEqual(ondiskR.Data, r) {
-		fmt.Printf("Created ACL rule: %v\n", ondiskR.Data)
+	if !reflect.DeepEqual(ondiskR, r) {
+		fmt.Printf("Created ACL rule: %v\n", ondiskR)
 		fmt.Printf("Given ACL rule: %v\n", r)
 		t.Error("Created ACL rule not equal to given ACL rule")
 	}
 
-	if ondiskR.Version != version {
-		t.Errorf("Version %v returned, expected %v", ondiskR.Version, version)
-	}
-
-	if !t.Failed() {
-		fmt.Println("CreateACL successful")
+	if v != version {
+		t.Errorf("Version %v returned, expected %v", v, version)
 	}
 
 	// TestEditACL
@@ -164,23 +149,19 @@ func TestCreateEditDeleteACL(t *testing.T) {
 		version++
 	}
 
-	ondiskR, err = client.GetACL(1, "frontend", "test", "")
+	v, ondiskR, err = client.GetACL(1, "frontend", "test", "")
 	if err != nil {
 		t.Error(err.Error())
 	}
 
-	if !reflect.DeepEqual(ondiskR.Data, r) {
-		fmt.Printf("Edited ACL rule: %v\n", ondiskR.Data)
+	if !reflect.DeepEqual(ondiskR, r) {
+		fmt.Printf("Edited ACL rule: %v\n", ondiskR)
 		fmt.Printf("Given ACL rule: %v\n", r)
 		t.Error("Edited ACL rule not equal to given ACL rule")
 	}
 
-	if ondiskR.Version != version {
-		t.Errorf("Version %v returned, expected %v", ondiskR.Version, version)
-	}
-
-	if !t.Failed() {
-		fmt.Println("EditACL successful")
+	if v != version {
+		t.Errorf("Version %v returned, expected %v", v, version)
 	}
 
 	// TestDeleteACL
@@ -195,7 +176,7 @@ func TestCreateEditDeleteACL(t *testing.T) {
 		t.Error("Version not incremented")
 	}
 
-	_, err = client.GetACL(3, "frontend", "test", "")
+	_, _, err = client.GetACL(3, "frontend", "test", "")
 	if err == nil {
 		t.Error("DeleteACL failed, ACL Rule 3 still exists")
 	}
@@ -204,9 +185,5 @@ func TestCreateEditDeleteACL(t *testing.T) {
 	if err == nil {
 		t.Error("Should throw error, non existant ACL Rule")
 		version++
-	}
-
-	if !t.Failed() {
-		fmt.Println("DeleteACL successful")
 	}
 }

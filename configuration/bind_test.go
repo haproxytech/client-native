@@ -9,20 +9,20 @@ import (
 )
 
 func TestGetBinds(t *testing.T) {
-	binds, err := client.GetBinds("test", "")
+	v, binds, err := client.GetBinds("test", "")
 	if err != nil {
 		t.Error(err.Error())
 	}
 
-	if len(binds.Data) != 2 {
-		t.Errorf("%v binds returned, expected 2", len(binds.Data))
+	if len(binds) != 2 {
+		t.Errorf("%v binds returned, expected 2", len(binds))
 	}
 
-	if binds.Version != version {
-		t.Errorf("Version %v returned, expected %v", binds.Version, version)
+	if v != version {
+		t.Errorf("Version %v returned, expected %v", v, version)
 	}
 
-	for _, l := range binds.Data {
+	for _, l := range binds {
 		if l.Name != "webserv" && l.Name != "webserv2" {
 			t.Errorf("Expected only webserv or webserv2 binds, %v found", l.Name)
 		}
@@ -34,34 +34,23 @@ func TestGetBinds(t *testing.T) {
 		}
 	}
 
-	lJSON, err := binds.MarshalBinary()
+	_, binds, err = client.GetBinds("test_2", "")
 	if err != nil {
 		t.Error(err.Error())
 	}
-
-	binds, err = client.GetBinds("test_2", "")
-	if err != nil {
-		t.Error(err.Error())
-	}
-	if len(binds.Data) > 0 {
-		t.Errorf("%v binds returned, expected 0", len(binds.Data))
-	}
-
-	if !t.Failed() {
-		fmt.Println("GetBinds succesful\nResponse: \n" + string(lJSON) + "\n")
+	if len(binds) > 0 {
+		t.Errorf("%v binds returned, expected 0", len(binds))
 	}
 }
 
 func TestGetBind(t *testing.T) {
-	bind, err := client.GetBind("webserv", "test", "")
+	v, l, err := client.GetBind("webserv", "test", "")
 	if err != nil {
 		t.Error(err.Error())
 	}
 
-	l := bind.Data
-
-	if bind.Version != version {
-		t.Errorf("Version %v returned, expected %v", bind.Version, version)
+	if v != version {
+		t.Errorf("Version %v returned, expected %v", v, version)
 	}
 
 	if l.Name != "webserv" {
@@ -74,18 +63,14 @@ func TestGetBind(t *testing.T) {
 		t.Errorf("%v: Port not 80 or 8080: %v", l.Name, *l.Port)
 	}
 
-	lJSON, err := l.MarshalBinary()
+	_, err = l.MarshalBinary()
 	if err != nil {
 		t.Error(err.Error())
 	}
 
-	_, err = client.GetBind("webserv", "test_2", "")
+	_, _, err = client.GetBind("webserv", "test_2", "")
 	if err == nil {
 		t.Error("Should throw error, non existant bind")
-	}
-
-	if !t.Failed() {
-		fmt.Println("GetBind succesful\nResponse: \n" + string(lJSON) + "\n")
 	}
 }
 
@@ -107,29 +92,25 @@ func TestCreateEditDeleteBind(t *testing.T) {
 		version++
 	}
 
-	bind, err := client.GetBind("created", "test", "")
+	v, bind, err := client.GetBind("created", "test", "")
 	if err != nil {
 		t.Error(err.Error())
 	}
 
-	if !reflect.DeepEqual(bind.Data, l) {
-		fmt.Printf("Created bind: %v\n", bind.Data)
+	if !reflect.DeepEqual(bind, l) {
+		fmt.Printf("Created bind: %v\n", bind)
 		fmt.Printf("Given bind: %v\n", l)
 		t.Error("Created bind not equal to given bind")
 	}
 
-	if bind.Version != version {
-		t.Errorf("Version %v returned, expected %v", bind.Version, version)
+	if v != version {
+		t.Errorf("Version %v returned, expected %v", v, version)
 	}
 
 	err = client.CreateBind("test", l, "", version)
 	if err == nil {
 		t.Error("Should throw error bind already exists")
 		version++
-	}
-
-	if !t.Failed() {
-		fmt.Println("CreateBind successful")
 	}
 
 	// TestEditBind
@@ -150,23 +131,19 @@ func TestCreateEditDeleteBind(t *testing.T) {
 		version++
 	}
 
-	bind, err = client.GetBind("created", "test", "")
+	v, bind, err = client.GetBind("created", "test", "")
 	if err != nil {
 		t.Error(err.Error())
 	}
 
-	if !reflect.DeepEqual(bind.Data, l) {
-		fmt.Printf("Edited bind: %v\n", bind.Data)
+	if !reflect.DeepEqual(bind, l) {
+		fmt.Printf("Edited bind: %v\n", bind)
 		fmt.Printf("Given lsitener: %v\n", l)
 		t.Error("Edited bind not equal to given bind")
 	}
 
-	if bind.Version != version {
-		t.Errorf("Version %v returned, expected %v", bind.Version, version)
-	}
-
-	if !t.Failed() {
-		fmt.Println("EditBind successful")
+	if v != version {
+		t.Errorf("Version %v returned, expected %v", v, version)
 	}
 
 	// TestDeleteBind
@@ -181,7 +158,7 @@ func TestCreateEditDeleteBind(t *testing.T) {
 		t.Error("Version not incremented")
 	}
 
-	_, err = client.GetBind("created", "test", "")
+	_, _, err = client.GetBind("created", "test", "")
 	if err == nil {
 		t.Error("DeleteBind failed, bind test still exists")
 	}
@@ -190,9 +167,5 @@ func TestCreateEditDeleteBind(t *testing.T) {
 	if err == nil {
 		t.Error("Should throw error, non existant bind")
 		version++
-	}
-
-	if !t.Failed() {
-		fmt.Println("DeleteBind successful")
 	}
 }

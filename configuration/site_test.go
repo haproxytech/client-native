@@ -5,26 +5,26 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/stretchr/testify/assert"
 	"github.com/haproxytech/client-native/misc"
 	"github.com/haproxytech/models"
+	"github.com/stretchr/testify/assert"
 )
 
 func TestGetSites(t *testing.T) {
-	sites, err := client.GetSites("")
+	v, sites, err := client.GetSites("")
 	if err != nil {
 		t.Error(err.Error())
 	}
 
-	if len(sites.Data) != 2 {
-		t.Errorf("%v sites returned, expected 2", len(sites.Data))
+	if len(sites) != 2 {
+		t.Errorf("%v sites returned, expected 2", len(sites))
 	}
 
-	if sites.Version != version {
-		t.Errorf("Version %v returned, expected %v", sites.Version, version)
+	if v != version {
+		t.Errorf("Version %v returned, expected %v", v, version)
 	}
 
-	for _, s := range sites.Data {
+	for _, s := range sites {
 		if s.Name == "test" {
 			if *s.Service.Maxconn != 2000 {
 				t.Errorf("%v: Maxconn not 2000: %v", s.Name, *s.Service.Maxconn)
@@ -147,28 +147,17 @@ func TestGetSites(t *testing.T) {
 			t.Errorf("Expected only test or test_2 sites, %v found", s.Name)
 		}
 	}
-
-	sJSON, err := sites.MarshalBinary()
-	if err != nil {
-		t.Error(err.Error())
-	}
-
-	if !t.Failed() {
-		fmt.Println("GetSites succesful\nResponse: \n" + string(sJSON) + "\n")
-	}
 }
 
 func TestGetSite(t *testing.T) {
-	site, err := client.GetSite("test", "")
+	v, s, err := client.GetSite("test", "")
 	if err != nil {
 		t.Error(err.Error())
 	}
 
-	if site.Version != version {
-		t.Errorf("Version %v returned, expected %v", site.Version, version)
+	if v != version {
+		t.Errorf("Version %v returned, expected %v", v, version)
 	}
-
-	s := site.Data
 
 	if s.Name != "test" {
 		t.Errorf("Name not test: %v", s.Name)
@@ -255,13 +244,9 @@ func TestGetSite(t *testing.T) {
 		}
 	}
 
-	sJSON, err := site.MarshalBinary()
+	_, err = s.MarshalBinary()
 	if err != nil {
 		t.Error(err.Error())
-	}
-
-	if !t.Failed() {
-		fmt.Println("GetSite succesful\nResponse: \n" + string(sJSON) + "\n")
 	}
 }
 
@@ -275,33 +260,33 @@ func TestCreateEditDeleteSite(t *testing.T) {
 		Service: &models.SiteService{
 			Mode:    "http",
 			Maxconn: &mConn,
-			Listeners: []*models.SiteServiceListenersItems{
-				&models.SiteServiceListenersItems{
+			Listeners: []*models.SiteListener{
+				&models.SiteListener{
 					Name:    "created1",
 					Address: "127.0.0.1",
 					Port:    &port,
 				},
-				&models.SiteServiceListenersItems{
+				&models.SiteListener{
 					Name:    "created2",
 					Address: "127.0.0.2",
 					Port:    &port,
 				},
 			},
 		},
-		Farms: []*models.SiteFarmsItems{
-			&models.SiteFarmsItems{
+		Farms: []*models.SiteFarm{
+			&models.SiteFarm{
 				Name:       "createdBck",
-				Balance:    &models.SiteFarmsItemsBalance{Algorithm: "uri"},
+				Balance:    &models.SiteFarmBalance{Algorithm: "uri"},
 				UseAs:      "default",
-				Forwardfor: &models.SiteFarmsItemsForwardfor{Enabled: &enabled},
-				Servers: []*models.SiteFarmsItemsServersItems{
-					&models.SiteFarmsItemsServersItems{
+				Forwardfor: &models.SiteFarmForwardFor{Enabled: &enabled},
+				Servers: []*models.SiteServer{
+					&models.SiteServer{
 						Name:    "created1",
 						Address: "127.0.1.1",
 						Port:    &port,
 						Ssl:     "enabled",
 					},
-					&models.SiteFarmsItemsServersItems{
+					&models.SiteServer{
 						Name:    "created2",
 						Address: "127.0.1.2",
 						Port:    &port,
@@ -309,13 +294,13 @@ func TestCreateEditDeleteSite(t *testing.T) {
 					},
 				},
 			},
-			&models.SiteFarmsItems{
+			&models.SiteFarm{
 				Name:       "createdBck2",
-				Balance:    &models.SiteFarmsItemsBalance{Algorithm: "uri"},
+				Balance:    &models.SiteFarmBalance{Algorithm: "uri"},
 				UseAs:      "conditional",
 				Cond:       "if",
 				CondTest:   "TRUE",
-				Forwardfor: &models.SiteFarmsItemsForwardfor{Enabled: &enabled},
+				Forwardfor: &models.SiteFarmForwardFor{Enabled: &enabled},
 			},
 		},
 	}
@@ -327,19 +312,19 @@ func TestCreateEditDeleteSite(t *testing.T) {
 		version++
 	}
 
-	site, err := client.GetSite("created", "")
+	v, site, err := client.GetSite("created", "")
 	if err != nil {
 		t.Error(err.Error())
 	}
 
-	if !siteDeepEqual(site.Data, s, t) {
-		fmt.Printf("Created site: %v\n", *site.Data)
+	if !siteDeepEqual(site, s, t) {
+		fmt.Printf("Created site: %v\n", *site)
 		fmt.Printf("Given site: %v\n", *s)
 		t.Error("Created site not equal to given site")
 	}
 
-	if site.Version != version {
-		t.Errorf("Version %v returned, expected %v", site.Version, version)
+	if v != version {
+		t.Errorf("Version %v returned, expected %v", v, version)
 	}
 
 	err = client.CreateSite(s, "", version)
@@ -348,34 +333,30 @@ func TestCreateEditDeleteSite(t *testing.T) {
 		version++
 	}
 
-	if !t.Failed() {
-		fmt.Println("CreateSite successful")
-	}
-
 	// TestEditSite
 	s = &models.Site{
 		Name: "created",
 		Service: &models.SiteService{
 			Mode:    "tcp",
 			Maxconn: &mConn,
-			Listeners: []*models.SiteServiceListenersItems{
-				&models.SiteServiceListenersItems{
+			Listeners: []*models.SiteListener{
+				&models.SiteListener{
 					Name:    "created1",
 					Address: "127.0.0.2",
 					Port:    &port,
 				},
 			},
 		},
-		Farms: []*models.SiteFarmsItems{
-			&models.SiteFarmsItems{
+		Farms: []*models.SiteFarm{
+			&models.SiteFarm{
 				Name:       "createdBck3",
-				Balance:    &models.SiteFarmsItemsBalance{Algorithm: "uri"},
+				Balance:    &models.SiteFarmBalance{Algorithm: "uri"},
 				UseAs:      "conditional",
 				Cond:       "if",
 				CondTest:   "TRUE",
-				Forwardfor: &models.SiteFarmsItemsForwardfor{Enabled: &enabled},
-				Servers: []*models.SiteFarmsItemsServersItems{
-					&models.SiteFarmsItemsServersItems{
+				Forwardfor: &models.SiteFarmForwardFor{Enabled: &enabled},
+				Servers: []*models.SiteServer{
+					&models.SiteServer{
 						Name:    "created3",
 						Address: "127.0.1.2",
 						Port:    &port,
@@ -383,12 +364,12 @@ func TestCreateEditDeleteSite(t *testing.T) {
 					},
 				},
 			},
-			&models.SiteFarmsItems{
+			&models.SiteFarm{
 				Name:    "createdBck2",
-				Balance: &models.SiteFarmsItemsBalance{Algorithm: "roundrobin"},
+				Balance: &models.SiteFarmBalance{Algorithm: "roundrobin"},
 				UseAs:   "default",
-				Servers: []*models.SiteFarmsItemsServersItems{
-					&models.SiteFarmsItemsServersItems{
+				Servers: []*models.SiteServer{
+					&models.SiteServer{
 						Name:    "created2",
 						Address: "127.0.1.2",
 						Port:    &port,
@@ -405,23 +386,19 @@ func TestCreateEditDeleteSite(t *testing.T) {
 		version++
 	}
 
-	site, err = client.GetSite("created", "")
+	v, site, err = client.GetSite("created", "")
 	if err != nil {
 		t.Error(err.Error())
 	}
 
-	if !siteDeepEqual(site.Data, s, t) {
-		fmt.Printf("Edited site: %v\n", *site.Data)
+	if !siteDeepEqual(site, s, t) {
+		fmt.Printf("Edited site: %v\n", *site)
 		fmt.Printf("Given site: %v\n", *s)
 		t.Error("Edited site not equal to given site")
 	}
 
-	if site.Version != version {
-		t.Errorf("Version %v returned, expected %v", site.Version, version)
-	}
-
-	if !t.Failed() {
-		fmt.Println("EditSite successful")
+	if v != version {
+		t.Errorf("Version %v returned, expected %v", v, version)
 	}
 
 	// TestDeleteSite
@@ -436,7 +413,7 @@ func TestCreateEditDeleteSite(t *testing.T) {
 		t.Error("Version not incremented")
 	}
 
-	_, err = client.GetSite("created", "")
+	_, _, err = client.GetSite("created", "")
 	if err == nil {
 		t.Error("DeleteSite failed, site test still exists")
 	}
@@ -444,10 +421,6 @@ func TestCreateEditDeleteSite(t *testing.T) {
 	err = client.DeleteSite("doesnotexist", "", version)
 	if err == nil {
 		t.Error("Should throw error, non existant site")
-	}
-
-	if !t.Failed() {
-		fmt.Println("DeleteSite successful")
 	}
 }
 
@@ -487,7 +460,7 @@ func siteDeepEqual(x, y *models.Site, t *testing.T) bool {
 		if b2Interface == nil {
 			return false
 		}
-		b2 := b2Interface.(*models.SiteFarmsItems)
+		b2 := b2Interface.(*models.SiteFarm)
 		// Compare backends
 		if !reflect.DeepEqual(b.Forwardfor, b2.Forwardfor) {
 			return false
@@ -523,39 +496,3 @@ func siteDeepEqual(x, y *models.Site, t *testing.T) bool {
 	}
 	return true
 }
-
-// func TestEditServer(t *testing.T) {
-// 	port := int64(5300)
-// 	s := &models.Server{
-// 		Name:    "created",
-// 		Address: "192.168.3.1",
-// 		Port:    &port,
-// 	}
-
-// 	err := client.EditServer("created", "test", s, "", version)
-// 	if err != nil {
-// 		t.Error(err.Error())
-// 	} else {
-// 		version = version + 1
-// 	}
-
-// 	server, err := client.GetServer("created", "test")
-// 	if err != nil {
-// 		t.Error(err.Error())
-// 	}
-// 	sEdited := server.Data
-
-// 	if !reflect.DeepEqual(sEdited, s) {
-// 		fmt.Printf("Edited server: %v\n", sEdited)
-// 		fmt.Printf("Given server: %v\n", s)
-// 		t.Error("Edited server not equal to given server")
-// 	}
-
-// 	if server.Version != version {
-// 		t.Errorf("Version %v returned, expected %v", server.Version, version)
-// 	}
-
-// 	if !t.Failed() {
-// 		fmt.Println("EditServer successful")
-// 	}
-// }

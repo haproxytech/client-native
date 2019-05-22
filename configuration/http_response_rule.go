@@ -13,33 +13,33 @@ import (
 	"github.com/haproxytech/models"
 )
 
-// GetHTTPResponseRules returns a struct with configuration version and an array of
+// GetHTTPResponseRules returns configuration version and an array of
 // configured http response rules in the specified parent. Returns error on fail.
-func (c *Client) GetHTTPResponseRules(parentType, parentName string, transactionID string) (*models.GetHTTPResponseRulesOKBody, error) {
+func (c *Client) GetHTTPResponseRules(parentType, parentName string, transactionID string) (int64, models.HTTPResponseRules, error) {
 	p, err := c.GetParser(transactionID)
 	if err != nil {
-		return nil, err
+		return 0, nil, err
 	}
 
 	httpRules, err := c.parseHTTPResponseRules(parentType, parentName, p)
 	if err != nil {
-		return nil, c.handleError("", parentType, parentName, "", false, err)
+		return 0, nil, c.handleError("", parentType, parentName, "", false, err)
 	}
 
 	v, err := c.GetVersion(transactionID)
 	if err != nil {
-		return nil, err
+		return 0, nil, err
 	}
 
-	return &models.GetHTTPResponseRulesOKBody{Version: v, Data: httpRules}, nil
+	return v, httpRules, nil
 }
 
-// GetHTTPResponseRule returns a struct with configuration version and a responseed http response rule
+// GetHTTPResponseRule returns configuration version and a responseed http response rule
 // in the specified parent. Returns error on fail or if http response rule does not exist.
-func (c *Client) GetHTTPResponseRule(id int64, parentType, parentName string, transactionID string) (*models.GetHTTPResponseRuleOKBody, error) {
+func (c *Client) GetHTTPResponseRule(id int64, parentType, parentName string, transactionID string) (int64, *models.HTTPResponseRule, error) {
 	p, err := c.GetParser(transactionID)
 	if err != nil {
-		return nil, err
+		return 0, nil, err
 	}
 
 	var section parser.Section
@@ -51,7 +51,7 @@ func (c *Client) GetHTTPResponseRule(id int64, parentType, parentName string, tr
 
 	data, err := p.GetOne(section, parentName, "http-response", int(id))
 	if err != nil {
-		return nil, c.handleError(strconv.FormatInt(id, 10), parentType, parentName, "", false, err)
+		return 0, nil, c.handleError(strconv.FormatInt(id, 10), parentType, parentName, "", false, err)
 	}
 
 	httpRule := parseHTTPResponseRule(data.(types.HTTPAction))
@@ -59,10 +59,10 @@ func (c *Client) GetHTTPResponseRule(id int64, parentType, parentName string, tr
 
 	v, err := c.GetVersion(transactionID)
 	if err != nil {
-		return nil, err
+		return 0, nil, err
 	}
 
-	return &models.GetHTTPResponseRuleOKBody{Version: v, Data: httpRule}, nil
+	return v, httpRule, nil
 }
 
 // DeleteHTTPResponseRule deletes a http response rule in configuration. One of version or transactionID is

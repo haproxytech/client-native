@@ -11,37 +11,37 @@ import (
 	"github.com/haproxytech/models"
 )
 
-// GetBackendSwitchingRules returns a struct with configuration version and an array of
+// GetBackendSwitchingRules returns configuration version and an array of
 // configured backend switching rules in the specified frontend. Returns error on fail.
-func (c *Client) GetBackendSwitchingRules(frontend string, transactionID string) (*models.GetBackendSwitchingRulesOKBody, error) {
+func (c *Client) GetBackendSwitchingRules(frontend string, transactionID string) (int64, models.BackendSwitchingRules, error) {
 	p, err := c.GetParser(transactionID)
 	if err != nil {
-		return nil, err
+		return 0, nil, err
 	}
 
 	bckRules, err := c.parseBackendSwitchingRules(frontend, p)
 	if err != nil {
-		return nil, c.handleError("", "frontend", frontend, "", false, err)
+		return 0, nil, c.handleError("", "frontend", frontend, "", false, err)
 	}
 
 	v, err := c.GetVersion(transactionID)
 	if err != nil {
-		return nil, err
+		return 0, nil, err
 	}
-	return &models.GetBackendSwitchingRulesOKBody{Version: v, Data: bckRules}, nil
+	return v, bckRules, nil
 }
 
-// GetBackendSwitchingRule returns a struct with configuration version and a requested backend switching rule
+// GetBackendSwitchingRule returns configuration version and a requested backend switching rule
 // in the specified frontend. Returns error on fail or if backend switching rule does not exist.
-func (c *Client) GetBackendSwitchingRule(id int64, frontend string, transactionID string) (*models.GetBackendSwitchingRuleOKBody, error) {
+func (c *Client) GetBackendSwitchingRule(id int64, frontend string, transactionID string) (int64, *models.BackendSwitchingRule, error) {
 	p, err := c.GetParser(transactionID)
 	if err != nil {
-		return nil, err
+		return 0, nil, err
 	}
 
 	data, err := p.GetOne(parser.Frontends, frontend, "use_backend", int(id))
 	if err != nil {
-		return nil, c.handleError(strconv.FormatInt(id, 10), "frontend", frontend, "", false, err)
+		return 0, nil, c.handleError(strconv.FormatInt(id, 10), "frontend", frontend, "", false, err)
 	}
 
 	bckRule := parseBackendSwitchingRule(data.(types.UseBackend))
@@ -49,10 +49,10 @@ func (c *Client) GetBackendSwitchingRule(id int64, frontend string, transactionI
 
 	v, err := c.GetVersion(transactionID)
 	if err != nil {
-		return nil, err
+		return 0, nil, err
 	}
 
-	return &models.GetBackendSwitchingRuleOKBody{Version: v, Data: bckRule}, nil
+	return v, bckRule, nil
 }
 
 // DeleteBackendSwitchingRule deletes a backend switching rule in configuration. One of version or transactionID is

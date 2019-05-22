@@ -10,38 +10,38 @@ import (
 	"github.com/haproxytech/models"
 )
 
-// GetStickRules returns a struct with configuration version and an array of
+// GetStickRules returns configuration version and an array of
 // configured stick rules in the specified backend. Returns error on fail.
-func (c *Client) GetStickRules(backend string, transactionID string) (*models.GetStickRulesOKBody, error) {
+func (c *Client) GetStickRules(backend string, transactionID string) (int64, models.StickRules, error) {
 	p, err := c.GetParser(transactionID)
 	if err != nil {
-		return nil, err
+		return 0, nil, err
 	}
 
 	sRules, err := c.parseStickRules(backend, p)
 	if err != nil {
-		return nil, c.handleError("", "backend", backend, "", false, err)
+		return 0, nil, c.handleError("", "backend", backend, "", false, err)
 	}
 
 	v, err := c.GetVersion(transactionID)
 	if err != nil {
-		return nil, err
+		return 0, nil, err
 	}
 
-	return &models.GetStickRulesOKBody{Version: v, Data: sRules}, nil
+	return v, sRules, nil
 }
 
-// GetStickRule returns a struct with configuration version and a requested stick rule
+// GetStickRule returns configuration version and a requested stick rule
 // in the specified backend. Returns error on fail or if stick rule does not exist.
-func (c *Client) GetStickRule(id int64, backend string, transactionID string) (*models.GetStickRuleOKBody, error) {
+func (c *Client) GetStickRule(id int64, backend string, transactionID string) (int64, *models.StickRule, error) {
 	p, err := c.GetParser(transactionID)
 	if err != nil {
-		return nil, err
+		return 0, nil, err
 	}
 
 	data, err := p.GetOne(parser.Backends, backend, "stick", int(id))
 	if err != nil {
-		return nil, c.handleError(strconv.FormatInt(id, 10), "backend", backend, "", false, err)
+		return 0, nil, c.handleError(strconv.FormatInt(id, 10), "backend", backend, "", false, err)
 	}
 
 	sRule := parseStickRule(data.(types.Stick))
@@ -49,10 +49,10 @@ func (c *Client) GetStickRule(id int64, backend string, transactionID string) (*
 
 	v, err := c.GetVersion(transactionID)
 	if err != nil {
-		return nil, err
+		return 0, nil, err
 	}
 
-	return &models.GetStickRuleOKBody{Version: v, Data: sRule}, nil
+	return v, sRule, nil
 }
 
 // DeleteStickRule deletes a stick rule in configuration. One of version or transactionID is

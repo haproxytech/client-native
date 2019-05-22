@@ -12,33 +12,33 @@ import (
 	"github.com/haproxytech/models"
 )
 
-// GetFilters returns a struct with configuration version and an array of
+// GetFilters returns configuration version and an array of
 // configured filters in the specified parent. Returns error on fail.
-func (c *Client) GetFilters(parentType, parentName string, transactionID string) (*models.GetFiltersOKBody, error) {
+func (c *Client) GetFilters(parentType, parentName string, transactionID string) (int64, models.Filters, error) {
 	p, err := c.GetParser(transactionID)
 	if err != nil {
-		return nil, err
+		return 0, nil, err
 	}
 
 	filters, err := c.parseFilters(parentType, parentName, p)
 	if err != nil {
-		return nil, c.handleError("", parentType, parentName, "", false, err)
+		return 0, nil, c.handleError("", parentType, parentName, "", false, err)
 	}
 
 	v, err := c.GetVersion(transactionID)
 	if err != nil {
-		return nil, err
+		return 0, nil, err
 	}
 
-	return &models.GetFiltersOKBody{Version: v, Data: filters}, nil
+	return v, filters, nil
 }
 
-// GetFilter returns a struct with configuration version and a requested filter
+// GetFilter returns configuration version and a requested filter
 // in the specified parent. Returns error on fail or if filter does not exist.
-func (c *Client) GetFilter(id int64, parentType, parentName string, transactionID string) (*models.GetFilterOKBody, error) {
+func (c *Client) GetFilter(id int64, parentType, parentName string, transactionID string) (int64, *models.Filter, error) {
 	p, err := c.GetParser(transactionID)
 	if err != nil {
-		return nil, err
+		return 0, nil, err
 	}
 
 	var section parser.Section
@@ -50,7 +50,7 @@ func (c *Client) GetFilter(id int64, parentType, parentName string, transactionI
 
 	data, err := p.GetOne(section, parentName, "filter", int(id))
 	if err != nil {
-		return nil, c.handleError(strconv.FormatInt(id, 10), parentType, parentName, "", false, err)
+		return 0, nil, c.handleError(strconv.FormatInt(id, 10), parentType, parentName, "", false, err)
 	}
 
 	filter := parseFilter(data.(types.Filter))
@@ -58,10 +58,10 @@ func (c *Client) GetFilter(id int64, parentType, parentName string, transactionI
 
 	v, err := c.GetVersion(transactionID)
 	if err != nil {
-		return nil, err
+		return 0, nil, err
 	}
 
-	return &models.GetFilterOKBody{Version: v, Data: filter}, nil
+	return v, filter, nil
 }
 
 // DeleteFilter deletes a filter in configuration. One of version or transactionID is

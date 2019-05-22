@@ -10,33 +10,33 @@ import (
 	"github.com/haproxytech/models"
 )
 
-// GetACLs returns a struct with configuration version and an array of
+// GetACLs returns configuration version and an array of
 // configured ACL lines in the specified parent. Returns error on fail.
-func (c *Client) GetACLs(parentType, parentName string, transactionID string) (*models.GetAclsOKBody, error) {
+func (c *Client) GetACLs(parentType, parentName string, transactionID string) (int64, models.Acls, error) {
 	p, err := c.GetParser(transactionID)
 	if err != nil {
-		return nil, err
+		return 0, nil, err
 	}
 
 	acls, err := c.parseACLs(parentType, parentName, p)
 	if err != nil {
-		return nil, c.handleError("", parentType, parentName, "", false, err)
+		return 0, nil, c.handleError("", parentType, parentName, "", false, err)
 	}
 
 	v, err := c.GetVersion(transactionID)
 	if err != nil {
-		return nil, err
+		return 0, nil, err
 	}
 
-	return &models.GetAclsOKBody{Version: v, Data: acls}, nil
+	return v, acls, nil
 }
 
-// GetACL returns a struct with configuration version and a requested ACL line
+// GetACL returns configuration version and a requested ACL line
 // in the specified parent. Returns error on fail or if ACL line does not exist.
-func (c *Client) GetACL(id int64, parentType, parentName string, transactionID string) (*models.GetACLOKBody, error) {
+func (c *Client) GetACL(id int64, parentType, parentName string, transactionID string) (int64, *models.ACL, error) {
 	p, err := c.GetParser(transactionID)
 	if err != nil {
-		return nil, err
+		return 0, nil, err
 	}
 
 	var section parser.Section
@@ -48,7 +48,7 @@ func (c *Client) GetACL(id int64, parentType, parentName string, transactionID s
 
 	data, err := p.GetOne(section, parentName, "acl", int(id))
 	if err != nil {
-		return nil, c.handleError(strconv.FormatInt(id, 10), parentType, parentName, "", false, err)
+		return 0, nil, c.handleError(strconv.FormatInt(id, 10), parentType, parentName, "", false, err)
 	}
 
 	acl := parseACL(data.(types.Acl))
@@ -56,10 +56,10 @@ func (c *Client) GetACL(id int64, parentType, parentName string, transactionID s
 
 	v, err := c.GetVersion(transactionID)
 	if err != nil {
-		return nil, err
+		return 0, nil, err
 	}
 
-	return &models.GetACLOKBody{Version: v, Data: acl}, nil
+	return v, acl, nil
 }
 
 // DeleteACL deletes a ACL line in configuration. One of version or transactionID is

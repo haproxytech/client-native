@@ -9,20 +9,20 @@ import (
 )
 
 func TestGetStickRules(t *testing.T) {
-	sRules, err := client.GetStickRules("test", "")
+	v, sRules, err := client.GetStickRules("test", "")
 	if err != nil {
 		t.Error(err.Error())
 	}
 
-	if len(sRules.Data) != 6 {
-		t.Errorf("%v stick rules returned, expected 6", len(sRules.Data))
+	if len(sRules) != 6 {
+		t.Errorf("%v stick rules returned, expected 6", len(sRules))
 	}
 
-	if sRules.Version != version {
-		t.Errorf("Version %v returned, expected %v", sRules.Version, version)
+	if v != version {
+		t.Errorf("Version %v returned, expected %v", v, version)
 	}
 
-	for _, sr := range sRules.Data {
+	for _, sr := range sRules {
 		if *sr.ID == 0 {
 			if sr.Type != "store-request" {
 				t.Errorf("%v: Type not store-request: %v", *sr.ID, sr.Type)
@@ -91,31 +91,24 @@ func TestGetStickRules(t *testing.T) {
 		}
 	}
 
-	srJSON, err := sRules.MarshalBinary()
+	_, sRules, err = client.GetStickRules("test_2", "")
 	if err != nil {
 		t.Error(err.Error())
 	}
-
-	sRules, err = client.GetStickRules("test_2", "")
-	if err != nil {
-		t.Error(err.Error())
-	}
-	if len(sRules.Data) > 0 {
-		t.Errorf("%v stick rules returned, expected 0", len(sRules.Data))
-	}
-
-	if !t.Failed() {
-		fmt.Println("GetStickRules succesful\nResponse: \n" + string(srJSON) + "\n")
+	if len(sRules) > 0 {
+		t.Errorf("%v stick rules returned, expected 0", len(sRules))
 	}
 }
 
 func TestGetStickRule(t *testing.T) {
-	sRule, err := client.GetStickRule(0, "test", "")
+	v, sr, err := client.GetStickRule(0, "test", "")
 	if err != nil {
 		t.Error(err.Error())
 	}
 
-	sr := sRule.Data
+	if v != version {
+		t.Errorf("Version %v returned, expected %v", v, version)
+	}
 
 	if sr.Type != "store-request" {
 		t.Errorf("%v: Type not store-request: %v", *sr.ID, sr.Type)
@@ -127,18 +120,14 @@ func TestGetStickRule(t *testing.T) {
 		t.Errorf("%v: Table not test: %v", *sr.ID, sr.Table)
 	}
 
-	srJSON, err := sr.MarshalBinary()
+	_, err = sr.MarshalBinary()
 	if err != nil {
 		t.Error(err.Error())
 	}
 
-	_, err = client.GetStickRule(5, "test_2", "")
+	_, _, err = client.GetStickRule(5, "test_2", "")
 	if err == nil {
 		t.Error("Should throw error, non existant stick rule")
-	}
-
-	if !t.Failed() {
-		fmt.Println("GetStickRule succesful\nResponse: \n" + string(srJSON) + "\n")
 	}
 }
 
@@ -160,23 +149,19 @@ func TestCreateEditDeleteStickRule(t *testing.T) {
 		version++
 	}
 
-	sRule, err := client.GetStickRule(1, "test", "")
+	v, sRule, err := client.GetStickRule(1, "test", "")
 	if err != nil {
 		t.Error(err.Error())
 	}
 
-	if !reflect.DeepEqual(sRule.Data, sr) {
-		fmt.Printf("Created stick rule: %v\n", sRule.Data)
+	if !reflect.DeepEqual(sRule, sr) {
+		fmt.Printf("Created stick rule: %v\n", sRule)
 		fmt.Printf("Given stick rule: %v\n", sr)
 		t.Error("Created stick rule not equal to given stick rule")
 	}
 
-	if sRule.Version != version {
-		t.Errorf("Version %v returned, expected %v", sRule.Version, version)
-	}
-
-	if !t.Failed() {
-		fmt.Println("CreateStickRule successful")
+	if v != version {
+		t.Errorf("Version %v returned, expected %v", v, version)
 	}
 
 	// TestEditStickRule
@@ -196,23 +181,19 @@ func TestCreateEditDeleteStickRule(t *testing.T) {
 		version++
 	}
 
-	sRule, err = client.GetStickRule(1, "test", "")
+	v, sRule, err = client.GetStickRule(1, "test", "")
 	if err != nil {
 		t.Error(err.Error())
 	}
 
-	if !reflect.DeepEqual(sRule.Data, sr) {
-		fmt.Printf("Edited stick rule: %v\n", sRule.Data)
+	if !reflect.DeepEqual(sRule, sr) {
+		fmt.Printf("Edited stick rule: %v\n", sRule)
 		fmt.Printf("Given stick rule: %v\n", sr)
 		t.Error("Edited stick rule not equal to given stick rule")
 	}
 
-	if sRule.Version != version {
-		t.Errorf("Version %v returned, expected %v", sRule.Version, version)
-	}
-
-	if !t.Failed() {
-		fmt.Println("EditStickRule successful")
+	if v != version {
+		t.Errorf("Version %v returned, expected %v", v, version)
 	}
 
 	// TestDeleteStickRule
@@ -227,7 +208,7 @@ func TestCreateEditDeleteStickRule(t *testing.T) {
 		t.Error("Version not incremented")
 	}
 
-	_, err = client.GetStickRule(6, "test", "")
+	_, _, err = client.GetStickRule(6, "test", "")
 	if err == nil {
 		t.Error("DeleteStickRule failed, stick rule 3 still exists")
 	}
@@ -236,9 +217,5 @@ func TestCreateEditDeleteStickRule(t *testing.T) {
 	if err == nil {
 		t.Error("Should throw error, non existant stick rule")
 		version++
-	}
-
-	if !t.Failed() {
-		fmt.Println("DeleteStickRule successful")
 	}
 }

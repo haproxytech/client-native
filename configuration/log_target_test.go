@@ -9,20 +9,20 @@ import (
 )
 
 func TestGetLogTargets(t *testing.T) {
-	lTargets, err := client.GetLogTargets("frontend", "test", "")
+	v, lTargets, err := client.GetLogTargets("frontend", "test", "")
 	if err != nil {
 		t.Error(err.Error())
 	}
 
-	if len(lTargets.Data) != 3 {
-		t.Errorf("%v log targets returned, expected 3", len(lTargets.Data))
+	if len(lTargets) != 3 {
+		t.Errorf("%v log targets returned, expected 3", len(lTargets))
 	}
 
-	if lTargets.Version != version {
-		t.Errorf("Version %v returned, expected %v", lTargets.Version, version)
+	if v != version {
+		t.Errorf("Version %v returned, expected %v", v, version)
 	}
 
-	for _, l := range lTargets.Data {
+	for _, l := range lTargets {
 		if *l.ID == 0 {
 			if l.Global != true {
 				t.Errorf("%v: Global not true: %v", *l.ID, l.Global)
@@ -49,31 +49,24 @@ func TestGetLogTargets(t *testing.T) {
 		}
 	}
 
-	rJSON, err := lTargets.MarshalBinary()
+	_, lTargets, err = client.GetLogTargets("backend", "test_2", "")
 	if err != nil {
 		t.Error(err.Error())
 	}
-
-	lTargets, err = client.GetLogTargets("backend", "test_2", "")
-	if err != nil {
-		t.Error(err.Error())
-	}
-	if len(lTargets.Data) > 0 {
-		t.Errorf("%v log targets returned, expected 0", len(lTargets.Data))
-	}
-
-	if !t.Failed() {
-		fmt.Println("GetLogTargets succesful\nResponse: \n" + string(rJSON) + "\n")
+	if len(lTargets) > 0 {
+		t.Errorf("%v log targets returned, expected 0", len(lTargets))
 	}
 }
 
 func TestGetLogTarget(t *testing.T) {
-	lTarget, err := client.GetLogTarget(2, "frontend", "test", "")
+	v, l, err := client.GetLogTarget(2, "frontend", "test", "")
 	if err != nil {
 		t.Error(err.Error())
 	}
 
-	l := lTarget.Data
+	if v != version {
+		t.Errorf("Version %v returned, expected %v", v, version)
+	}
 
 	if *l.ID != 2 {
 		t.Errorf("Log Target ID not 2, %v found", *l.ID)
@@ -91,18 +84,14 @@ func TestGetLogTarget(t *testing.T) {
 		t.Errorf("%v: Minlevel not notice: %v", *l.ID, l.Minlevel)
 	}
 
-	rJSON, err := l.MarshalBinary()
+	_, err = l.MarshalBinary()
 	if err != nil {
 		t.Error(err.Error())
 	}
 
-	_, err = client.GetLogTarget(3, "backend", "test_2", "")
+	_, _, err = client.GetLogTarget(3, "backend", "test_2", "")
 	if err == nil {
 		t.Error("Should throw error, non existant Log Target")
-	}
-
-	if !t.Failed() {
-		fmt.Println("GetLogTarget succesful\nResponse: \n" + string(rJSON) + "\n")
 	}
 }
 
@@ -125,23 +114,19 @@ func TestCreateEditDeleteLogTarget(t *testing.T) {
 		version++
 	}
 
-	ondiskR, err := client.GetLogTarget(3, "frontend", "test", "")
+	v, ondiskR, err := client.GetLogTarget(3, "frontend", "test", "")
 	if err != nil {
 		t.Error(err.Error())
 	}
 
-	if !reflect.DeepEqual(ondiskR.Data, r) {
-		fmt.Printf("Created Log Target: %v\n", ondiskR.Data)
+	if !reflect.DeepEqual(ondiskR, r) {
+		fmt.Printf("Created Log Target: %v\n", ondiskR)
 		fmt.Printf("Given Log Target: %v\n", r)
 		t.Error("Created Log Target not equal to given Log Target")
 	}
 
-	if ondiskR.Version != version {
-		t.Errorf("Version %v returned, expected %v", ondiskR.Version, version)
-	}
-
-	if !t.Failed() {
-		fmt.Println("CreateLogTarget successful")
+	if v != version {
+		t.Errorf("Version %v returned, expected %v", v, version)
 	}
 
 	// TestEditLogTarget
@@ -159,23 +144,19 @@ func TestCreateEditDeleteLogTarget(t *testing.T) {
 		version++
 	}
 
-	ondiskR, err = client.GetLogTarget(3, "frontend", "test", "")
+	v, ondiskR, err = client.GetLogTarget(3, "frontend", "test", "")
 	if err != nil {
 		t.Error(err.Error())
 	}
 
-	if !reflect.DeepEqual(ondiskR.Data, r) {
-		fmt.Printf("Edited Log Target: %v\n", ondiskR.Data)
+	if !reflect.DeepEqual(ondiskR, r) {
+		fmt.Printf("Edited Log Target: %v\n", ondiskR)
 		fmt.Printf("Given Log Target: %v\n", r)
 		t.Error("Edited Log Target not equal to given Log Target")
 	}
 
-	if ondiskR.Version != version {
-		t.Errorf("Version %v returned, expected %v", ondiskR.Version, version)
-	}
-
-	if !t.Failed() {
-		fmt.Println("EditLogTarget successful")
+	if v != version {
+		t.Errorf("Version %v returned, expected %v", v, version)
 	}
 
 	// TestDeleteFilter
@@ -190,7 +171,7 @@ func TestCreateEditDeleteLogTarget(t *testing.T) {
 		t.Error("Version not incremented")
 	}
 
-	_, err = client.GetLogTarget(3, "frontend", "test", "")
+	_, _, err = client.GetLogTarget(3, "frontend", "test", "")
 	if err == nil {
 		t.Error("DeleteLogTarget failed, Log Target 3 still exists")
 	}
@@ -199,9 +180,5 @@ func TestCreateEditDeleteLogTarget(t *testing.T) {
 	if err == nil {
 		t.Error("Should throw error, non existant Log Target")
 		version++
-	}
-
-	if !t.Failed() {
-		fmt.Println("DeleteLogTarget successful")
 	}
 }

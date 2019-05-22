@@ -8,17 +8,17 @@ import (
 	"github.com/haproxytech/models"
 )
 
-// GetFrontends returns a struct with configuration version and an array of
+// GetFrontends returns configuration version and an array of
 // configured frontends. Returns error on fail.
-func (c *Client) GetFrontends(transactionID string) (*models.GetFrontendsOKBody, error) {
+func (c *Client) GetFrontends(transactionID string) (int64, models.Frontends, error) {
 	p, err := c.GetParser(transactionID)
 	if err != nil {
-		return nil, err
+		return 0, nil, err
 	}
 
 	fNames, err := p.SectionsGet(parser.Frontends)
 	if err != nil {
-		return nil, err
+		return 0, nil, err
 	}
 
 	frontends := []*models.Frontend{}
@@ -32,35 +32,35 @@ func (c *Client) GetFrontends(transactionID string) (*models.GetFrontendsOKBody,
 
 	v, err := c.GetVersion(transactionID)
 	if err != nil {
-		return nil, err
+		return 0, nil, err
 	}
 
-	return &models.GetFrontendsOKBody{Version: v, Data: frontends}, nil
+	return v, frontends, nil
 }
 
-// GetFrontend returns a struct with configuration version and a requested frontend.
+// GetFrontend returns configuration version and a requested frontend.
 // Returns error on fail or if frontend does not exist.
-func (c *Client) GetFrontend(name string, transactionID string) (*models.GetFrontendOKBody, error) {
+func (c *Client) GetFrontend(name string, transactionID string) (int64, *models.Frontend, error) {
 	p, err := c.GetParser(transactionID)
 	if err != nil {
-		return nil, err
+		return 0, nil, err
 	}
 
 	if !c.checkSectionExists(parser.Frontends, name, p) {
-		return nil, NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("Frontend %s does not exist", name))
+		return 0, nil, NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("Frontend %s does not exist", name))
 	}
 
 	frontend := &models.Frontend{Name: name}
 	if err := c.parseSection(frontend, parser.Frontends, name, p); err != nil {
-		return nil, err
+		return 0, nil, err
 	}
 
 	v, err := c.GetVersion(transactionID)
 	if err != nil {
-		return nil, err
+		return 0, nil, err
 	}
 
-	return &models.GetFrontendOKBody{Version: v, Data: frontend}, nil
+	return v, frontend, nil
 }
 
 // DeleteFrontend deletes a frontend in configuration. One of version or transactionID is

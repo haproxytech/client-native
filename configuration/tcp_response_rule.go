@@ -12,38 +12,38 @@ import (
 	"github.com/haproxytech/models"
 )
 
-// GetTCPResponseRules returns a struct with configuration version and an array of
+// GetTCPResponseRules returns configuration version and an array of
 // configured tcp response rules in the specified backend. Returns error on fail.
-func (c *Client) GetTCPResponseRules(backend string, transactionID string) (*models.GetTCPResponseRulesOKBody, error) {
+func (c *Client) GetTCPResponseRules(backend string, transactionID string) (int64, models.TCPResponseRules, error) {
 	p, err := c.GetParser(transactionID)
 	if err != nil {
-		return nil, err
+		return 0, nil, err
 	}
 
 	tcpRules, err := c.parseTCPResponseRules(backend, p)
 	if err != nil {
-		return nil, c.handleError("", "backend", backend, "", false, err)
+		return 0, nil, c.handleError("", "backend", backend, "", false, err)
 	}
 
 	v, err := c.GetVersion(transactionID)
 	if err != nil {
-		return nil, err
+		return 0, nil, err
 	}
 
-	return &models.GetTCPResponseRulesOKBody{Version: v, Data: tcpRules}, nil
+	return v, tcpRules, nil
 }
 
-// GetTCPResponseRule returns a struct with configuration version and a requested tcp response rule
+// GetTCPResponseRule returns configuration version and a requested tcp response rule
 // in the specified backend. Returns error on fail or if tcp response rule does not exist.
-func (c *Client) GetTCPResponseRule(id int64, backend string, transactionID string) (*models.GetTCPResponseRuleOKBody, error) {
+func (c *Client) GetTCPResponseRule(id int64, backend string, transactionID string) (int64, *models.TCPResponseRule, error) {
 	p, err := c.GetParser(transactionID)
 	if err != nil {
-		return nil, err
+		return 0, nil, err
 	}
 
 	data, err := p.GetOne(parser.Backends, backend, "tcp-response", int(id))
 	if err != nil {
-		return nil, c.handleError(strconv.FormatInt(id, 10), "backend", backend, "", false, err)
+		return 0, nil, c.handleError(strconv.FormatInt(id, 10), "backend", backend, "", false, err)
 	}
 
 	tcpRule := parseTCPResponseRule(data.(types.TCPAction))
@@ -51,10 +51,10 @@ func (c *Client) GetTCPResponseRule(id int64, backend string, transactionID stri
 
 	v, err := c.GetVersion(transactionID)
 	if err != nil {
-		return nil, err
+		return 0, nil, err
 	}
 
-	return &models.GetTCPResponseRuleOKBody{Version: v, Data: tcpRule}, nil
+	return v, tcpRule, nil
 }
 
 // DeleteTCPResponseRule deletes a tcp response rule in configuration. One of version or transactionID is

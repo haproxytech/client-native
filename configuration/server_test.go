@@ -9,20 +9,20 @@ import (
 )
 
 func TestGetServers(t *testing.T) {
-	servers, err := client.GetServers("test", "")
+	v, servers, err := client.GetServers("test", "")
 	if err != nil {
 		t.Error(err.Error())
 	}
 
-	if len(servers.Data) != 2 {
-		t.Errorf("%v servers returned, expected 2", len(servers.Data))
+	if len(servers) != 2 {
+		t.Errorf("%v servers returned, expected 2", len(servers))
 	}
 
-	if servers.Version != version {
-		t.Errorf("Version %v returned, expected %v", servers.Version, version)
+	if v != version {
+		t.Errorf("Version %v returned, expected %v", v, version)
 	}
 
-	for _, s := range servers.Data {
+	for _, s := range servers {
 		if s.Name != "webserv" && s.Name != "webserv2" {
 			t.Errorf("Expected only webserv or webserv2 servers, %v found", s.Name)
 		}
@@ -46,34 +46,23 @@ func TestGetServers(t *testing.T) {
 		}
 	}
 
-	sJSON, err := servers.MarshalBinary()
+	_, servers, err = client.GetServers("test_2", "")
 	if err != nil {
 		t.Error(err.Error())
 	}
-
-	servers, err = client.GetServers("test_2", "")
-	if err != nil {
-		t.Error(err.Error())
-	}
-	if len(servers.Data) > 0 {
-		t.Errorf("%v servers returned, expected 0", len(servers.Data))
-	}
-
-	if !t.Failed() {
-		fmt.Println("GetServers succesful\nResponse: \n" + string(sJSON) + "\n")
+	if len(servers) > 0 {
+		t.Errorf("%v servers returned, expected 0", len(servers))
 	}
 }
 
 func TestGetServer(t *testing.T) {
-	server, err := client.GetServer("webserv", "test", "")
+	v, s, err := client.GetServer("webserv", "test", "")
 	if err != nil {
 		t.Error(err.Error())
 	}
 
-	s := server.Data
-
-	if server.Version != version {
-		t.Errorf("Version %v returned, expected %v", server.Version, version)
+	if v != version {
+		t.Errorf("Version %v returned, expected %v", v, version)
 	}
 
 	if s.Name != "webserv" {
@@ -98,18 +87,14 @@ func TestGetServer(t *testing.T) {
 		t.Errorf("%v: Weight not 10: %v", s.Name, *s.Weight)
 	}
 
-	sJSON, err := s.MarshalBinary()
+	_, err = s.MarshalBinary()
 	if err != nil {
 		t.Error(err.Error())
 	}
 
-	_, err = client.GetServer("webserv", "test_2", "")
+	_, _, err = client.GetServer("webserv", "test_2", "")
 	if err == nil {
 		t.Error("Should throw error, non existant server")
-	}
-
-	if !t.Failed() {
-		fmt.Println("GetServer succesful\nResponse: \n" + string(sJSON) + "\n")
 	}
 }
 
@@ -135,29 +120,25 @@ func TestCreateEditDeleteServer(t *testing.T) {
 		version++
 	}
 
-	server, err := client.GetServer("created", "test", "")
+	v, server, err := client.GetServer("created", "test", "")
 	if err != nil {
 		t.Error(err.Error())
 	}
 
-	if !reflect.DeepEqual(server.Data, s) {
-		fmt.Printf("Created server: %v\n", server.Data)
+	if !reflect.DeepEqual(server, s) {
+		fmt.Printf("Created server: %v\n", server)
 		fmt.Printf("Given server: %v\n", s)
 		t.Error("Created server not equal to given server")
 	}
 
-	if server.Version != version {
-		t.Errorf("Version %v returned, expected %v", server.Version, version)
+	if v != version {
+		t.Errorf("Version %v returned, expected %v", v, version)
 	}
 
 	err = client.CreateServer("test", s, "", version)
 	if err == nil {
 		t.Error("Should throw error server already exists")
 		version++
-	}
-
-	if !t.Failed() {
-		fmt.Println("CreateServer successful")
 	}
 
 	// TestEditServer
@@ -179,23 +160,19 @@ func TestCreateEditDeleteServer(t *testing.T) {
 		version++
 	}
 
-	server, err = client.GetServer("created", "test", "")
+	v, server, err = client.GetServer("created", "test", "")
 	if err != nil {
 		t.Error(err.Error())
 	}
 
-	if !reflect.DeepEqual(server.Data, s) {
-		fmt.Printf("Edited server: %v\n", server.Data)
+	if !reflect.DeepEqual(server, s) {
+		fmt.Printf("Edited server: %v\n", server)
 		fmt.Printf("Given server: %v\n", s)
 		t.Error("Edited server not equal to given server")
 	}
 
-	if server.Version != version {
-		t.Errorf("Version %v returned, expected %v", server.Version, version)
-	}
-
-	if !t.Failed() {
-		fmt.Println("EditServer successful")
+	if v != version {
+		t.Errorf("Version %v returned, expected %v", v, version)
 	}
 
 	// TestDeleteServer
@@ -210,7 +187,7 @@ func TestCreateEditDeleteServer(t *testing.T) {
 		t.Error("Version not incremented")
 	}
 
-	_, err = client.GetServer("created", "test", "")
+	_, _, err = client.GetServer("created", "test", "")
 	if err == nil {
 		t.Error("DeleteServer failed, server test still exists")
 	}
@@ -219,9 +196,5 @@ func TestCreateEditDeleteServer(t *testing.T) {
 	if err == nil {
 		t.Error("Should throw error, non existant server")
 		version++
-	}
-
-	if !t.Failed() {
-		fmt.Println("DeleteServer successful")
 	}
 }

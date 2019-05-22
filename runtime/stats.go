@@ -8,8 +8,8 @@ import (
 
 	"github.com/go-openapi/strfmt"
 
-	"github.com/mitchellh/mapstructure"
 	"github.com/haproxytech/models"
+	"github.com/mitchellh/mapstructure"
 )
 
 //GetStats fetches HAProxy stats from runtime API
@@ -33,7 +33,7 @@ func (s *SingleRuntime) GetStats() (models.NativeStats, error) {
 				data[key] = line[index]
 			}
 		}
-		oneLineData := &models.NativeStatsItems{}
+		oneLineData := &models.NativeStat{}
 		tString := strings.ToLower(line[1])
 		if tString == "backend" || tString == "frontend" {
 			oneLineData.Name = line[0]
@@ -44,7 +44,7 @@ func (s *SingleRuntime) GetStats() (models.NativeStats, error) {
 			oneLineData.BackendName = line[0]
 		}
 
-		var st models.NativeStatsItemsStats
+		var st models.NativeStatStats
 		err := mapstructure.WeakDecode(data, &st)
 		if err != nil {
 			continue

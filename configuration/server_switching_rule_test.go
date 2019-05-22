@@ -9,20 +9,20 @@ import (
 )
 
 func TestGetServerSwitchingRules(t *testing.T) {
-	srvRules, err := client.GetServerSwitchingRules("test", "")
+	v, srvRules, err := client.GetServerSwitchingRules("test", "")
 	if err != nil {
 		t.Error(err.Error())
 	}
 
-	if len(srvRules.Data) != 2 {
-		t.Errorf("%v server switching rules returned, expected 2", len(srvRules.Data))
+	if len(srvRules) != 2 {
+		t.Errorf("%v server switching rules returned, expected 2", len(srvRules))
 	}
 
-	if srvRules.Version != version {
-		t.Errorf("Version %v returned, expected %v", srvRules.Version, version)
+	if v != version {
+		t.Errorf("Version %v returned, expected %v", v, version)
 	}
 
-	for _, sr := range srvRules.Data {
+	for _, sr := range srvRules {
 		if *sr.ID == 0 {
 			if sr.TargetServer != "webserv" {
 				t.Errorf("%v: TargetServer not webserv: %v", *sr.ID, sr.TargetServer)
@@ -48,31 +48,24 @@ func TestGetServerSwitchingRules(t *testing.T) {
 		}
 	}
 
-	srJSON, err := srvRules.MarshalBinary()
+	_, srvRules, err = client.GetServerSwitchingRules("test_2", "")
 	if err != nil {
 		t.Error(err.Error())
 	}
-
-	srvRules, err = client.GetServerSwitchingRules("test_2", "")
-	if err != nil {
-		t.Error(err.Error())
-	}
-	if len(srvRules.Data) > 0 {
-		t.Errorf("%v server switching rules returned, expected 0", len(srvRules.Data))
-	}
-
-	if !t.Failed() {
-		fmt.Println("GetServerSwitchingRules succesful\nResponse: \n" + string(srJSON) + "\n")
+	if len(srvRules) > 0 {
+		t.Errorf("%v server switching rules returned, expected 0", len(srvRules))
 	}
 }
 
 func TestGetServerSwitchingRule(t *testing.T) {
-	srvRule, err := client.GetServerSwitchingRule(0, "test", "")
+	v, sr, err := client.GetServerSwitchingRule(0, "test", "")
 	if err != nil {
 		t.Error(err.Error())
 	}
 
-	sr := srvRule.Data
+	if v != version {
+		t.Errorf("Version %v returned, expected %v", v, version)
+	}
 
 	if sr.TargetServer != "webserv" {
 		t.Errorf("%v: TargetServer not webserv: %v", sr.ID, sr.TargetServer)
@@ -84,18 +77,14 @@ func TestGetServerSwitchingRule(t *testing.T) {
 		t.Errorf("%v: CondTest not TRUE: %v", sr.ID, sr.CondTest)
 	}
 
-	srJSON, err := sr.MarshalBinary()
+	_, err = sr.MarshalBinary()
 	if err != nil {
 		t.Error(err.Error())
 	}
 
-	_, err = client.GetServerSwitchingRule(3, "test2", "")
+	_, _, err = client.GetServerSwitchingRule(3, "test2", "")
 	if err == nil {
 		t.Error("Should throw error, non existant server switching rule")
-	}
-
-	if !t.Failed() {
-		fmt.Println("GetServerSwitchingRule succesful\nResponse: \n" + string(srJSON) + "\n")
 	}
 }
 
@@ -116,23 +105,19 @@ func TestCreateEditDeleteServerSwitchingRule(t *testing.T) {
 		version++
 	}
 
-	srvRule, err := client.GetServerSwitchingRule(2, "test", "")
+	v, srvRule, err := client.GetServerSwitchingRule(2, "test", "")
 	if err != nil {
 		t.Error(err.Error())
 	}
 
-	if !reflect.DeepEqual(srvRule.Data, sr) {
-		fmt.Printf("Created server switching rule: %v\n", srvRule.Data)
+	if !reflect.DeepEqual(srvRule, sr) {
+		fmt.Printf("Created server switching rule: %v\n", srvRule)
 		fmt.Printf("Given server switching rule: %v\n", sr)
 		t.Error("Created server switching rule not equal to given server switching rule")
 	}
 
-	if srvRule.Version != version {
-		t.Errorf("Version %v returned, expected %v", srvRule.Version, version)
-	}
-
-	if !t.Failed() {
-		fmt.Println("CreateServerSwitchingRule successful")
+	if v != version {
+		t.Errorf("Version %v returned, expected %v", v, version)
 	}
 
 	// TestServerSwitchingRule
@@ -150,23 +135,19 @@ func TestCreateEditDeleteServerSwitchingRule(t *testing.T) {
 		version++
 	}
 
-	srvRule, err = client.GetServerSwitchingRule(2, "test", "")
+	v, srvRule, err = client.GetServerSwitchingRule(2, "test", "")
 	if err != nil {
 		t.Error(err.Error())
 	}
 
-	if !reflect.DeepEqual(srvRule.Data, sr) {
-		fmt.Printf("Edited server switching rule: %v\n", srvRule.Data)
+	if !reflect.DeepEqual(srvRule, sr) {
+		fmt.Printf("Edited server switching rule: %v\n", srvRule)
 		fmt.Printf("Given server switching rule: %v\n", sr)
 		t.Error("Edited server switching rule not equal to given server switching rule")
 	}
 
-	if srvRule.Version != version {
-		t.Errorf("Version %v returned, expected %v", srvRule.Version, version)
-	}
-
-	if !t.Failed() {
-		fmt.Println("EditServerSwitchingRule successful")
+	if v != version {
+		t.Errorf("Version %v returned, expected %v", v, version)
 	}
 
 	// TestDeleteServerSwitchingRule
@@ -181,7 +162,7 @@ func TestCreateEditDeleteServerSwitchingRule(t *testing.T) {
 		t.Error("Version not incremented")
 	}
 
-	_, err = client.GetServerSwitchingRule(2, "test", "")
+	_, _, err = client.GetServerSwitchingRule(2, "test", "")
 	if err == nil {
 		t.Error("DeleteServerSwitchingRule failed, server switching rule 3 still exists")
 	}
@@ -190,9 +171,5 @@ func TestCreateEditDeleteServerSwitchingRule(t *testing.T) {
 	if err == nil {
 		t.Error("Should throw error, non existant server switching rule")
 		version++
-	}
-
-	if !t.Failed() {
-		fmt.Println("DeleteServerSwitchingRule successful")
 	}
 }

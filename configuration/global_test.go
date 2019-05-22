@@ -9,36 +9,36 @@ import (
 )
 
 func TestGetGlobal(t *testing.T) {
-	global, err := client.GetGlobalConfiguration("")
+	v, global, err := client.GetGlobalConfiguration("")
 	if err != nil {
 		t.Error(err.Error())
 	}
 
-	if global.Version != version {
-		t.Errorf("Version %v returned, expected %v", global.Version, version)
+	if v != version {
+		t.Errorf("Version %v returned, expected %v", v, version)
 	}
 
-	if global.Data.Daemon != "enabled" {
-		t.Errorf("Daemon is %v, expected enabled", global.Data.Daemon)
+	if global.Daemon != "enabled" {
+		t.Errorf("Daemon is %v, expected enabled", global.Daemon)
 	}
-	if len(global.Data.RuntimeApis) == 1 {
-		if *global.Data.RuntimeApis[0].Address != "/var/run/haproxy.sock" {
-			t.Errorf("RuntimeAPI.Address is %v, expected /var/run/haproxy.sock", *global.Data.RuntimeApis[0].Address)
+	if len(global.RuntimeApis) == 1 {
+		if *global.RuntimeApis[0].Address != "/var/run/haproxy.sock" {
+			t.Errorf("RuntimeAPI.Address is %v, expected /var/run/haproxy.sock", *global.RuntimeApis[0].Address)
 		}
-		if global.Data.RuntimeApis[0].Level != "admin" {
-			t.Errorf("RuntimeAPI.Level is %v, expected admin", global.Data.RuntimeApis[0].Level)
+		if global.RuntimeApis[0].Level != "admin" {
+			t.Errorf("RuntimeAPI.Level is %v, expected admin", global.RuntimeApis[0].Level)
 		}
-		if global.Data.RuntimeApis[0].Mode != "0660" {
-			t.Errorf("RuntimeAPI.Mode is %v, expected 0660", global.Data.RuntimeApis[0].Mode)
+		if global.RuntimeApis[0].Mode != "0660" {
+			t.Errorf("RuntimeAPI.Mode is %v, expected 0660", global.RuntimeApis[0].Mode)
 		}
 	} else {
 		t.Errorf("RuntimeAPI is not set")
 	}
-	if global.Data.Nbproc != 4 {
-		t.Errorf("Nbproc is %v, expected 4", global.Data.Nbproc)
+	if global.Nbproc != 4 {
+		t.Errorf("Nbproc is %v, expected 4", global.Nbproc)
 	}
-	if global.Data.Maxconn != 2000 {
-		t.Errorf("Maxconn is %v, expected 2000", global.Data.Maxconn)
+	if global.Maxconn != 2000 {
+		t.Errorf("Maxconn is %v, expected 2000", global.Maxconn)
 	}
 }
 
@@ -49,14 +49,14 @@ func TestPutGlobal(t *testing.T) {
 	a := "/var/run/haproxy.sock"
 	g := &models.Global{
 		Daemon: "enabled",
-		CPUMaps: []*models.GlobalCPUMapsItems{
-			&models.GlobalCPUMapsItems{
+		CPUMaps: []*models.CPUMap{
+			&models.CPUMap{
 				Process: &n,
 				CPUSet:  &v,
 			},
 		},
-		RuntimeApis: []*models.GlobalRuntimeApisItems{
-			&models.GlobalRuntimeApisItems{
+		RuntimeApis: []*models.RuntimeAPI{
+			&models.RuntimeAPI{
 				Address: &a,
 				Level:   "admin",
 			},
@@ -76,18 +76,18 @@ func TestPutGlobal(t *testing.T) {
 		version++
 	}
 
-	global, err := client.GetGlobalConfiguration("")
+	ver, global, err := client.GetGlobalConfiguration("")
 	if err != nil {
 		t.Error(err.Error())
 	}
 
-	if !reflect.DeepEqual(global.Data, g) {
-		fmt.Printf("Created global config: %v\n", global.Data)
+	if !reflect.DeepEqual(global, g) {
+		fmt.Printf("Created global config: %v\n", global)
 		fmt.Printf("Given global config: %v\n", g)
 		t.Error("Created global config not equal to given global config")
 	}
 
-	if global.Version != version {
+	if ver != version {
 		t.Error("Version not incremented!")
 	}
 

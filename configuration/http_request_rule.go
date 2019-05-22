@@ -15,33 +15,33 @@ import (
 	"github.com/haproxytech/models"
 )
 
-// GetHTTPRequestRules returns a struct with configuration version and an array of
+// GetHTTPRequestRules returns configuration version and an array of
 // configured http request rules in the specified parent. Returns error on fail.
-func (c *Client) GetHTTPRequestRules(parentType, parentName string, transactionID string) (*models.GetHTTPRequestRulesOKBody, error) {
+func (c *Client) GetHTTPRequestRules(parentType, parentName string, transactionID string) (int64, models.HTTPRequestRules, error) {
 	p, err := c.GetParser(transactionID)
 	if err != nil {
-		return nil, err
+		return 0, nil, err
 	}
 
 	httpRules, err := c.parseHTTPRequestRules(parentType, parentName, p)
 	if err != nil {
-		return nil, c.handleError("", parentType, parentName, "", false, err)
+		return 0, nil, c.handleError("", parentType, parentName, "", false, err)
 	}
 
 	v, err := c.GetVersion(transactionID)
 	if err != nil {
-		return nil, err
+		return 0, nil, err
 	}
 
-	return &models.GetHTTPRequestRulesOKBody{Version: v, Data: httpRules}, nil
+	return v, httpRules, nil
 }
 
-// GetHTTPRequestRule returns a struct with configuration version and a requested http request rule
+// GetHTTPRequestRule returns configuration version and a requested http request rule
 // in the specified parent. Returns error on fail or if http request rule does not exist.
-func (c *Client) GetHTTPRequestRule(id int64, parentType, parentName string, transactionID string) (*models.GetHTTPRequestRuleOKBody, error) {
+func (c *Client) GetHTTPRequestRule(id int64, parentType, parentName string, transactionID string) (int64, *models.HTTPRequestRule, error) {
 	p, err := c.GetParser(transactionID)
 	if err != nil {
-		return nil, err
+		return 0, nil, err
 	}
 
 	var section parser.Section
@@ -53,7 +53,7 @@ func (c *Client) GetHTTPRequestRule(id int64, parentType, parentName string, tra
 
 	data, err := p.GetOne(section, parentName, "http-request", int(id))
 	if err != nil {
-		return nil, c.handleError(strconv.FormatInt(id, 10), parentType, parentName, "", false, err)
+		return 0, nil, c.handleError(strconv.FormatInt(id, 10), parentType, parentName, "", false, err)
 	}
 
 	httpRule := parseHTTPRequestRule(data.(types.HTTPAction))
@@ -61,10 +61,10 @@ func (c *Client) GetHTTPRequestRule(id int64, parentType, parentName string, tra
 
 	v, err := c.GetVersion(transactionID)
 	if err != nil {
-		return nil, err
+		return 0, nil, err
 	}
 
-	return &models.GetHTTPRequestRuleOKBody{Version: v, Data: httpRule}, nil
+	return v, httpRule, nil
 }
 
 // DeleteHTTPRequestRule deletes a http request rule in configuration. One of version or transactionID is

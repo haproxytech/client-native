@@ -9,20 +9,20 @@ import (
 )
 
 func TestGetFilters(t *testing.T) {
-	filters, err := client.GetFilters("frontend", "test", "")
+	v, filters, err := client.GetFilters("frontend", "test", "")
 	if err != nil {
 		t.Error(err.Error())
 	}
 
-	if len(filters.Data) != 3 {
-		t.Errorf("%v filters returned, expected 3", len(filters.Data))
+	if len(filters) != 3 {
+		t.Errorf("%v filters returned, expected 3", len(filters))
 	}
 
-	if filters.Version != version {
-		t.Errorf("Version %v returned, expected %v", filters.Version, version)
+	if v != version {
+		t.Errorf("Version %v returned, expected %v", v, version)
 	}
 
-	for _, f := range filters.Data {
+	for _, f := range filters {
 		if *f.ID == 0 {
 			if f.Type != "trace" {
 				t.Errorf("%v: Type not trace: %v", *f.ID, f.Type)
@@ -55,31 +55,24 @@ func TestGetFilters(t *testing.T) {
 		}
 	}
 
-	fJSON, err := filters.MarshalBinary()
+	_, filters, err = client.GetFilters("backend", "test_2", "")
 	if err != nil {
 		t.Error(err.Error())
 	}
-
-	filters, err = client.GetFilters("backend", "test_2", "")
-	if err != nil {
-		t.Error(err.Error())
-	}
-	if len(filters.Data) > 0 {
-		t.Errorf("%v filters returned, expected 0", len(filters.Data))
-	}
-
-	if !t.Failed() {
-		fmt.Println("GetFilters succesful\nResponse: \n" + string(fJSON) + "\n")
+	if len(filters) > 0 {
+		t.Errorf("%v filters returned, expected 0", len(filters))
 	}
 }
 
 func TestGetFilter(t *testing.T) {
-	filter, err := client.GetFilter(0, "frontend", "test", "")
+	v, f, err := client.GetFilter(0, "frontend", "test", "")
 	if err != nil {
 		t.Error(err.Error())
 	}
 
-	f := filter.Data
+	if v != version {
+		t.Errorf("Version %v returned, expected %v", v, version)
+	}
 
 	if *f.ID != 0 {
 		t.Errorf("Filter ID 0, %v found", *f.ID)
@@ -97,18 +90,14 @@ func TestGetFilter(t *testing.T) {
 		t.Errorf("%v: TraceHexdump not true: %v", *f.ID, f.TraceHexdump)
 	}
 
-	fJSON, err := f.MarshalBinary()
+	_, err = f.MarshalBinary()
 	if err != nil {
 		t.Error(err.Error())
 	}
 
-	_, err = client.GetFilter(3, "backend", "test2", "")
+	_, _, err = client.GetFilter(3, "backend", "test2", "")
 	if err == nil {
 		t.Error("Should throw error, non existant filter")
-	}
-
-	if !t.Failed() {
-		fmt.Println("GetFilter succesful\nResponse: \n" + string(fJSON) + "\n")
 	}
 }
 
@@ -129,23 +118,19 @@ func TestCreateEditDeleteFilter(t *testing.T) {
 		version++
 	}
 
-	ondiskF, err := client.GetFilter(1, "frontend", "test", "")
+	v, ondiskF, err := client.GetFilter(1, "frontend", "test", "")
 	if err != nil {
 		t.Error(err.Error())
 	}
 
-	if !reflect.DeepEqual(ondiskF.Data, f) {
-		fmt.Printf("Created filter: %v\n", ondiskF.Data)
+	if !reflect.DeepEqual(ondiskF, f) {
+		fmt.Printf("Created filter: %v\n", ondiskF)
 		fmt.Printf("Given filter: %v\n", f)
 		t.Error("Created filter not equal to given filter")
 	}
 
-	if ondiskF.Version != version {
-		t.Errorf("Version %v returned, expected %v", ondiskF.Version, version)
-	}
-
-	if !t.Failed() {
-		fmt.Println("CreateFilter successful")
+	if v != version {
+		t.Errorf("Version %v returned, expected %v", v, version)
 	}
 
 	// TestEditFilter
@@ -163,23 +148,19 @@ func TestCreateEditDeleteFilter(t *testing.T) {
 		version++
 	}
 
-	ondiskF, err = client.GetFilter(1, "frontend", "test", "")
+	v, ondiskF, err = client.GetFilter(1, "frontend", "test", "")
 	if err != nil {
 		t.Error(err.Error())
 	}
 
-	if !reflect.DeepEqual(ondiskF.Data, f) {
-		fmt.Printf("Edited filter: %v\n", ondiskF.Data)
+	if !reflect.DeepEqual(ondiskF, f) {
+		fmt.Printf("Edited filter: %v\n", ondiskF)
 		fmt.Printf("Given filter: %v\n", f)
 		t.Error("Edited filter not equal to given filter")
 	}
 
-	if ondiskF.Version != version {
-		t.Errorf("Version %v returned, expected %v", ondiskF.Version, version)
-	}
-
-	if !t.Failed() {
-		fmt.Println("EditFilter successful")
+	if v != version {
+		t.Errorf("Version %v returned, expected %v", v, version)
 	}
 
 	// TestDeleteFilter
@@ -194,7 +175,7 @@ func TestCreateEditDeleteFilter(t *testing.T) {
 		t.Error("Version not incremented")
 	}
 
-	_, err = client.GetFilter(3, "frontend", "test", "")
+	_, _, err = client.GetFilter(3, "frontend", "test", "")
 	if err == nil {
 		t.Error("DeleteFilter failed, filter 3 still exists")
 	}
@@ -203,9 +184,5 @@ func TestCreateEditDeleteFilter(t *testing.T) {
 	if err == nil {
 		t.Error("Should throw error, non existant filter")
 		version++
-	}
-
-	if !t.Failed() {
-		fmt.Println("DeleteFilter successful")
 	}
 }

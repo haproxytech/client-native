@@ -9,20 +9,20 @@ import (
 )
 
 func TestGetHTTPRequestRules(t *testing.T) {
-	hRules, err := client.GetHTTPRequestRules("frontend", "test", "")
+	v, hRules, err := client.GetHTTPRequestRules("frontend", "test", "")
 	if err != nil {
 		t.Error(err.Error())
 	}
 
-	if len(hRules.Data) != 3 {
-		t.Errorf("%v http request rules returned, expected 3", len(hRules.Data))
+	if len(hRules) != 3 {
+		t.Errorf("%v http request rules returned, expected 3", len(hRules))
 	}
 
-	if hRules.Version != version {
-		t.Errorf("Version %v returned, expected %v", hRules.Version, version)
+	if v != version {
+		t.Errorf("Version %v returned, expected %v", v, version)
 	}
 
-	for _, r := range hRules.Data {
+	for _, r := range hRules {
 		if *r.ID == 0 {
 			if r.Type != "allow" {
 				t.Errorf("%v: Type not allow: %v", *r.ID, r.Type)
@@ -61,31 +61,24 @@ func TestGetHTTPRequestRules(t *testing.T) {
 		}
 	}
 
-	rJSON, err := hRules.MarshalBinary()
+	_, hRules, err = client.GetHTTPRequestRules("backend", "test_2", "")
 	if err != nil {
 		t.Error(err.Error())
 	}
-
-	hRules, err = client.GetHTTPRequestRules("backend", "test_2", "")
-	if err != nil {
-		t.Error(err.Error())
-	}
-	if len(hRules.Data) > 0 {
-		t.Errorf("%v HTTP Request Ruless returned, expected 0", len(hRules.Data))
-	}
-
-	if !t.Failed() {
-		fmt.Println("GetHTTPRequestRules succesful\nResponse: \n" + string(rJSON) + "\n")
+	if len(hRules) > 0 {
+		t.Errorf("%v HTTP Request Ruless returned, expected 0", len(hRules))
 	}
 }
 
 func TestGetHTTPRequestRule(t *testing.T) {
-	hRule, err := client.GetHTTPRequestRule(0, "frontend", "test", "")
+	v, r, err := client.GetHTTPRequestRule(0, "frontend", "test", "")
 	if err != nil {
 		t.Error(err.Error())
 	}
 
-	r := hRule.Data
+	if v != version {
+		t.Errorf("Version %v returned, expected %v", v, version)
+	}
 
 	if *r.ID != 0 {
 		t.Errorf("HTTP Request Rule ID not 0, %v found", *r.ID)
@@ -100,18 +93,14 @@ func TestGetHTTPRequestRule(t *testing.T) {
 		t.Errorf("%v: CondTest not src 192.168.0.0/16: %v", *r.ID, r.CondTest)
 	}
 
-	rJSON, err := r.MarshalBinary()
+	_, err = r.MarshalBinary()
 	if err != nil {
 		t.Error(err.Error())
 	}
 
-	_, err = client.GetHTTPRequestRule(3, "backend", "test_2", "")
+	_, _, err = client.GetHTTPRequestRule(3, "backend", "test_2", "")
 	if err == nil {
 		t.Error("Should throw error, non existant HTTP Request Rule")
-	}
-
-	if !t.Failed() {
-		fmt.Println("GetHTTPRequestRule succesful\nResponse: \n" + string(rJSON) + "\n")
 	}
 }
 
@@ -134,23 +123,19 @@ func TestCreateEditDeleteHTTPRequestRule(t *testing.T) {
 		version++
 	}
 
-	ondiskR, err := client.GetHTTPRequestRule(1, "frontend", "test", "")
+	v, ondiskR, err := client.GetHTTPRequestRule(1, "frontend", "test", "")
 	if err != nil {
 		t.Error(err.Error())
 	}
 
-	if !reflect.DeepEqual(ondiskR.Data, r) {
-		fmt.Printf("Created HTTP request rule: %v\n", ondiskR.Data)
+	if !reflect.DeepEqual(ondiskR, r) {
+		fmt.Printf("Created HTTP request rule: %v\n", ondiskR)
 		fmt.Printf("Given HTTP request rule: %v\n", r)
 		t.Error("Created HTTP request rule not equal to given HTTP request rule")
 	}
 
-	if ondiskR.Version != version {
-		t.Errorf("Version %v returned, expected %v", ondiskR.Version, version)
-	}
-
-	if !t.Failed() {
-		fmt.Println("CreateHTTPRequestRule successful")
+	if v != version {
+		t.Errorf("Version %v returned, expected %v", v, version)
 	}
 
 	// TestEditHTTPRequestRule
@@ -169,23 +154,19 @@ func TestCreateEditDeleteHTTPRequestRule(t *testing.T) {
 		version++
 	}
 
-	ondiskR, err = client.GetHTTPRequestRule(1, "frontend", "test", "")
+	v, ondiskR, err = client.GetHTTPRequestRule(1, "frontend", "test", "")
 	if err != nil {
 		t.Error(err.Error())
 	}
 
-	if !reflect.DeepEqual(ondiskR.Data, r) {
-		fmt.Printf("Edited HTTP request rule: %v\n", ondiskR.Data)
+	if !reflect.DeepEqual(ondiskR, r) {
+		fmt.Printf("Edited HTTP request rule: %v\n", ondiskR)
 		fmt.Printf("Given HTTP request rule: %v\n", r)
 		t.Error("Edited HTTP request rule not equal to given HTTP request rule")
 	}
 
-	if ondiskR.Version != version {
-		t.Errorf("Version %v returned, expected %v", ondiskR.Version, version)
-	}
-
-	if !t.Failed() {
-		fmt.Println("EditHTTPRequestRule successful")
+	if v != version {
+		t.Errorf("Version %v returned, expected %v", v, version)
 	}
 
 	// TestDeleteHTTPRequest
@@ -200,7 +181,7 @@ func TestCreateEditDeleteHTTPRequestRule(t *testing.T) {
 		t.Error("Version not incremented")
 	}
 
-	_, err = client.GetHTTPRequestRule(3, "frontend", "test", "")
+	_, _, err = client.GetHTTPRequestRule(3, "frontend", "test", "")
 	if err == nil {
 		t.Error("DeleteHTTPRequestRule failed, HTTP Request Rule 3 still exists")
 	}
@@ -209,9 +190,5 @@ func TestCreateEditDeleteHTTPRequestRule(t *testing.T) {
 	if err == nil {
 		t.Error("Should throw error, non existant HTTP Request Rule")
 		version++
-	}
-
-	if !t.Failed() {
-		fmt.Println("DeleteHTTPRequestRule successful")
 	}
 }

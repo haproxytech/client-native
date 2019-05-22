@@ -5,25 +5,25 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/stretchr/testify/assert"
 	"github.com/haproxytech/models"
+	"github.com/stretchr/testify/assert"
 )
 
 func TestGetBackends(t *testing.T) {
-	backends, err := client.GetBackends("")
+	v, backends, err := client.GetBackends("")
 	if err != nil {
 		t.Error(err.Error())
 	}
 
-	if len(backends.Data) != 2 {
-		t.Errorf("%v backends returned, expected 2", len(backends.Data))
+	if len(backends) != 2 {
+		t.Errorf("%v backends returned, expected 2", len(backends))
 	}
 
-	if backends.Version != version {
-		t.Errorf("Version %v returned, expected %v", backends.Version, version)
+	if v != version {
+		t.Errorf("Version %v returned, expected %v", v, version)
 	}
 
-	for _, b := range backends.Data {
+	for _, b := range backends {
 		if b.Name != "test" && b.Name != "test_2" {
 			t.Errorf("Expected only test or test_2 backend, %v found", b.Name)
 		}
@@ -70,27 +70,16 @@ func TestGetBackends(t *testing.T) {
 			t.Errorf("%v: ServerTimeout not 3000: %v", b.Name, *b.ServerTimeout)
 		}
 	}
-
-	bJSON, err := backends.MarshalBinary()
-	if err != nil {
-		t.Error(err.Error())
-	}
-
-	if !t.Failed() {
-		fmt.Println("GetBackends succesful\nResponse: \n" + string(bJSON) + "\n")
-	}
 }
 
 func TestGetBackend(t *testing.T) {
-	backend, err := client.GetBackend("test", "")
+	v, b, err := client.GetBackend("test", "")
 	if err != nil {
 		t.Error(err.Error())
 	}
 
-	b := backend.Data
-
-	if backend.Version != version {
-		t.Errorf("Version %v returned, expected %v", backend.Version, version)
+	if v != version {
+		t.Errorf("Version %v returned, expected %v", v, version)
 	}
 
 	if b.Name != "test" {
@@ -139,18 +128,14 @@ func TestGetBackend(t *testing.T) {
 		t.Errorf("%v: ServerTimeout not 3000: %v", b.Name, *b.ServerTimeout)
 	}
 
-	bJSON, err := b.MarshalBinary()
+	_, err = b.MarshalBinary()
 	if err != nil {
 		t.Error(err.Error())
 	}
 
-	_, err = client.GetBackend("doesnotexist", "")
+	_, _, err = client.GetBackend("doesnotexist", "")
 	if err == nil {
 		t.Error("Should throw error, non existant bck")
-	}
-
-	if !t.Failed() {
-		fmt.Println("GetBackend succesful\nResponse: \n" + string(bJSON) + "\n")
 	}
 }
 
@@ -176,19 +161,19 @@ func TestCreateEditDeleteBackend(t *testing.T) {
 		version++
 	}
 
-	backend, err := client.GetBackend("created", "")
+	v, backend, err := client.GetBackend("created", "")
 	if err != nil {
 		t.Error(err.Error())
 	}
 
-	if !compareBackends(backend.Data, b, t) {
-		fmt.Printf("Created bck: %v\n", backend.Data)
+	if !compareBackends(backend, b, t) {
+		fmt.Printf("Created bck: %v\n", backend)
 		fmt.Printf("Given bck: %v\n", b)
 		t.Error("Created backend not equal to given backend")
 	}
 
-	if backend.Version != version {
-		t.Errorf("Version %v returned, expected %v", backend.Version, version)
+	if v != version {
+		t.Errorf("Version %v returned, expected %v", v, version)
 	}
 
 	err = client.CreateBackend(b, "", version)
@@ -196,11 +181,6 @@ func TestCreateEditDeleteBackend(t *testing.T) {
 		t.Error("Should throw error bck already exists")
 		version++
 	}
-
-	if !t.Failed() {
-		fmt.Println("CreateBackend successful")
-	}
-
 	// TestEditBackend
 	tOut = int64(3)
 	e := int64(1200000)
@@ -228,23 +208,19 @@ func TestCreateEditDeleteBackend(t *testing.T) {
 		version++
 	}
 
-	backend, err = client.GetBackend("created", "")
+	v, backend, err = client.GetBackend("created", "")
 	if err != nil {
 		t.Error(err.Error())
 	}
 
-	if !compareBackends(backend.Data, b, t) {
-		fmt.Printf("Edited bck: %v\n", backend.Data)
+	if !compareBackends(backend, b, t) {
+		fmt.Printf("Edited bck: %v\n", backend)
 		fmt.Printf("Given bck: %v\n", b)
 		t.Error("Edited backend not equal to given backend")
 	}
 
-	if backend.Version != version {
-		t.Errorf("Version %v returned, expected %v", backend.Version, version)
-	}
-
-	if !t.Failed() {
-		fmt.Println("EditBackend successful")
+	if v != version {
+		t.Errorf("Version %v returned, expected %v", v, version)
 	}
 
 	// TestDeleteBackend
@@ -271,7 +247,7 @@ func TestCreateEditDeleteBackend(t *testing.T) {
 		}
 	}
 
-	_, err = client.GetBackend("created", "")
+	_, _, err = client.GetBackend("created", "")
 	if err == nil {
 		t.Error("DeleteBackend failed, bck test still exists")
 	}
@@ -280,10 +256,6 @@ func TestCreateEditDeleteBackend(t *testing.T) {
 	if err == nil {
 		t.Error("Should throw error, non existant bck")
 		version++
-	}
-
-	if !t.Failed() {
-		fmt.Println("DeleteBackend successful")
 	}
 }
 

@@ -10,37 +10,37 @@ import (
 	"github.com/haproxytech/models"
 )
 
-// GetServerSwitchingRules returns a struct with configuration version and an array of
+// GetServerSwitchingRules returns configuration version and an array of
 // configured server switching rules in the specified backend. Returns error on fail.
-func (c *Client) GetServerSwitchingRules(backend string, transactionID string) (*models.GetServerSwitchingRulesOKBody, error) {
+func (c *Client) GetServerSwitchingRules(backend string, transactionID string) (int64, models.ServerSwitchingRules, error) {
 	p, err := c.GetParser(transactionID)
 	if err != nil {
-		return nil, err
+		return 0, nil, err
 	}
 
 	srvRules, err := c.parseServerSwitchingRules(backend, p)
 	if err != nil {
-		return nil, c.handleError("", "backend", backend, "", false, err)
+		return 0, nil, c.handleError("", "backend", backend, "", false, err)
 	}
 
 	v, err := c.GetVersion(transactionID)
 	if err != nil {
-		return nil, err
+		return 0, nil, err
 	}
-	return &models.GetServerSwitchingRulesOKBody{Version: v, Data: srvRules}, nil
+	return v, srvRules, nil
 }
 
-// GetServerSwitchingRule returns a struct with configuration version and a requested server switching rule
+// GetServerSwitchingRule returns configuration version and a requested server switching rule
 // in the specified backend. Returns error on fail or if server switching rule does not exist.
-func (c *Client) GetServerSwitchingRule(id int64, backend string, transactionID string) (*models.GetServerSwitchingRuleOKBody, error) {
+func (c *Client) GetServerSwitchingRule(id int64, backend string, transactionID string) (int64, *models.ServerSwitchingRule, error) {
 	p, err := c.GetParser(transactionID)
 	if err != nil {
-		return nil, err
+		return 0, nil, err
 	}
 
 	data, err := p.GetOne(parser.Backends, backend, "use-server", int(id))
 	if err != nil {
-		return nil, c.handleError(strconv.FormatInt(id, 10), "backend", backend, "", false, err)
+		return 0, nil, c.handleError(strconv.FormatInt(id, 10), "backend", backend, "", false, err)
 	}
 
 	srvRule := parseServerSwitchingRule(data.(types.UseServer))
@@ -48,10 +48,10 @@ func (c *Client) GetServerSwitchingRule(id int64, backend string, transactionID 
 
 	v, err := c.GetVersion(transactionID)
 	if err != nil {
-		return nil, err
+		return 0, nil, err
 	}
 
-	return &models.GetServerSwitchingRuleOKBody{Version: v, Data: srvRule}, nil
+	return v, srvRule, nil
 }
 
 // DeleteServerSwitchingRule deletes a server switching rule in configuration. One of version or transactionID is
