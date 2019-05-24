@@ -332,8 +332,12 @@ func (c *Client) getTransactionFile(transactionID string) string {
 	if _, err := os.Stat(fPath); err == nil {
 		return fPath
 	}
-	// Return in progress transaction file
-	return filepath.Join(c.TransactionDir, transactionFileName)
+	// Return in progress transaction file if exists, else empty string
+	fPath = filepath.Join(c.TransactionDir, transactionFileName)
+	if _, err := os.Stat(fPath); err == nil {
+		return fPath
+	}
+	return ""
 }
 
 func (c *Client) getTransactionFileFailed(transactionID string) string {

@@ -27,8 +27,15 @@ import (
 
 // GetRawConfiguration returns configuration version and a
 // string containing raw config file
-func (c *Client) GetRawConfiguration() (int64, string, error) {
-	file, err := os.Open(c.ConfigurationFile)
+func (c *Client) GetRawConfiguration(transactionID string) (int64, string, error) {
+	config := c.ConfigurationFile
+	if transactionID != "" {
+		config = c.getTransactionFile(transactionID)
+		if config == "" {
+			return 0, "", NewConfError(ErrTransactionDoesNotExist, fmt.Sprintf("Transaction %s does not exist", transactionID))
+		}
+	}
+	file, err := os.Open(config)
 	if err != nil {
 		return 0, "", NewConfError(ErrCannotReadConfFile, err.Error())
 	}
