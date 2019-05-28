@@ -21,8 +21,8 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/pkg/errors"
 	"github.com/haproxytech/config-parser/common"
+	"github.com/pkg/errors"
 
 	"github.com/haproxytech/client-native/misc"
 	parser "github.com/haproxytech/config-parser"
@@ -117,7 +117,7 @@ func (c *Client) GetParser(transaction string) (*parser.Parser, error) {
 	}
 	p, ok := c.parsers[transaction]
 	if !ok {
-		return nil, NewConfError(ErrTransactionDoesNotExist, fmt.Sprintf("Parser for %s does not exist", transaction))
+		return nil, NewConfError(ErrTransactionDoesNotExist, fmt.Sprintf("Transaction %s does not exist", transaction))
 	}
 	return p, nil
 }
@@ -129,12 +129,16 @@ func (c *Client) AddParser(transaction string) error {
 	}
 	_, ok := c.parsers[transaction]
 	if ok {
-		return NewConfError(ErrTransactionAlredyExists, fmt.Sprintf("Parser for %s already exists", transaction))
+		return NewConfError(ErrTransactionAlredyExists, fmt.Sprintf("Transaction %s already exists", transaction))
 	}
 
 	p := &parser.Parser{}
-	if err := p.LoadData(c.getTransactionFile(transaction)); err != nil {
-		return NewConfError(ErrCannotReadConfFile, fmt.Sprintf("Cannot read %s", c.getTransactionFile(transaction)))
+	tFile, err := c.getTransactionFile(transaction)
+	if err != nil {
+		return err
+	}
+	if err := p.LoadData(tFile); err != nil {
+		return NewConfError(ErrCannotReadConfFile, fmt.Sprintf("Cannot read %s", tFile))
 	}
 	c.parsers[transaction] = p
 	return nil
@@ -147,7 +151,7 @@ func (c *Client) DeleteParser(transaction string) error {
 	}
 	_, ok := c.parsers[transaction]
 	if !ok {
-		return NewConfError(ErrTransactionDoesNotExist, fmt.Sprintf("Parser for %s does not exist", transaction))
+		return NewConfError(ErrTransactionDoesNotExist, fmt.Sprintf("Transaction %s does not exist", transaction))
 	}
 	delete(c.parsers, transaction)
 	return nil
@@ -160,7 +164,7 @@ func (c *Client) CommitParser(transaction string) error {
 	}
 	p, ok := c.parsers[transaction]
 	if !ok {
-		return NewConfError(ErrTransactionDoesNotExist, fmt.Sprintf("Parser for %s does not exist", transaction))
+		return NewConfError(ErrTransactionDoesNotExist, fmt.Sprintf("Transaction %s does not exist", transaction))
 	}
 	c.Parser = p
 	delete(c.parsers, transaction)
@@ -182,8 +186,12 @@ func (c *Client) InitTransactionParsers() error {
 		if err != nil {
 			continue
 		}
-		if err := p.LoadData(c.getTransactionFile(t.ID)); err != nil {
-			return NewConfError(ErrCannotReadConfFile, fmt.Sprintf("Cannot read %s", c.getTransactionFile(t.ID)))
+		tFile, err := c.getTransactionFile(t.ID)
+		if err != nil {
+			return err
+		}
+		if err := p.LoadData(tFile); err != nil {
+			return NewConfError(ErrCannotReadConfFile, fmt.Sprintf("Cannot read %s", tFile))
 		}
 	}
 	return nil
@@ -234,7 +242,7 @@ func (c *Client) checkTransactionOrVersion(transactionID string, version int64) 
 			return "", NewConfError(ErrVersionMismatch, fmt.Sprintf("Version in configuration file is %v, given version is %v", v, version))
 		}
 
-		transaction, err := c.startTransaction(version, false)
+		transaction, err := c.startTransaction(version)
 		if err != nil {
 			return "", err
 		}
@@ -1060,7 +1068,11 @@ func (c *Client) loadDataForChange(transactionID string, version int64) (*parser
 }
 
 func (c *Client) saveData(p *parser.Parser, t string, commitImplicit bool) error {
-	if err := p.Save(c.getTransactionFile(t)); err != nil {
+	tFile, err := c.getTransactionFile(t)
+	if err != nil {
+		return err
+	}
+	if err := p.Save(tFile); err != nil {
 		e := NewConfError(ErrErrorChangingConfig, err.Error())
 		if commitImplicit {
 			return c.errAndDeleteTransaction(e, t)

@@ -29,10 +29,11 @@ import (
 // string containing raw config file
 func (c *Client) GetRawConfiguration(transactionID string) (int64, string, error) {
 	config := c.ConfigurationFile
+	var err error
 	if transactionID != "" {
-		config = c.getTransactionFile(transactionID)
-		if config == "" {
-			return 0, "", NewConfError(ErrTransactionDoesNotExist, fmt.Sprintf("Transaction %s does not exist", transactionID))
+		config, err = c.getTransactionFile(transactionID)
+		if err != nil {
+			return 0, "", err
 		}
 	}
 	file, err := os.Open(config)
@@ -79,8 +80,12 @@ func (c *Client) PostRawConfiguration(config *string, version int64) error {
 		return err
 	}
 
+	tFile, err := c.getTransactionFile(t)
+	if err != nil {
+		return err
+	}
 	// Write the transaction file directly
-	tmp, err := os.OpenFile(c.getTransactionFile(t), os.O_RDWR|os.O_TRUNC, 0777)
+	tmp, err := os.OpenFile(tFile, os.O_RDWR|os.O_TRUNC, 0777)
 	defer tmp.Close()
 	if err != nil {
 		return NewConfError(ErrCannotReadConfFile, err.Error())
@@ -96,8 +101,8 @@ func (c *Client) PostRawConfiguration(config *string, version int64) error {
 		return err
 	}
 
-	if err := p.LoadData(c.getTransactionFile(t)); err != nil {
-		return NewConfError(ErrCannotReadConfFile, fmt.Sprintf("Cannot read %s", c.getTransactionFile(t)))
+	if err := p.LoadData(tFile); err != nil {
+		return NewConfError(ErrCannotReadConfFile, fmt.Sprintf("Cannot read %s", tFile))
 	}
 
 	// Do a regular commit of the transaction

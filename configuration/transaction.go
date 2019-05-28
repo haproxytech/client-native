@@ -27,6 +27,8 @@ import (
 	"strings"
 
 	"github.com/google/uuid"
+	parser "github.com/haproxytech/config-parser"
+	"github.com/haproxytech/config-parser/types"
 	"github.com/haproxytech/models"
 )
 
@@ -37,15 +39,19 @@ func (c *Client) GetTransactions(status string) (*models.Transactions, error) {
 
 // GetTransaction returns transaction information by id
 func (c *Client) GetTransaction(id string) (*models.Transaction, error) {
-	return c.parseTransaction(id)
+	tFile, err := c.getTransactionFile(id)
+	if err != nil {
+		return nil, NewConfError(ErrTransactionDoesNotExist, fmt.Sprintf("Transactionf file %v does not exist", id))
+	}
+	return c.parseTransactionFile(tFile), nil
 }
 
 // StartTransaction starts a new empty lbctl transaction
 func (c *Client) StartTransaction(version int64) (*models.Transaction, error) {
-	return c.startTransaction(version, true)
+	return c.startTransaction(version)
 }
 
-func (c *Client) startTransaction(version int64, initCache bool) (*models.Transaction, error) {
+func (c *Client) startTransaction(version int64) (*models.Transaction, error) {
 	t := &models.Transaction{}
 
 	v, err := c.GetVersion("")
@@ -81,7 +87,11 @@ func (c *Client) CommitTransaction(id string) (*models.Transaction, error) {
 		return nil, err
 	}
 
-	t, err := c.parseTransaction(id)
+	transactionFile, err := c.getTransactionFile(id)
+	if err != nil {
+		return nil, err
+	}
+	t := c.parseTransactionFile(transactionFile)
 	if err != nil {
 		return nil, err
 	}
@@ -96,7 +106,7 @@ func (c *Client) CommitTransaction(id string) (*models.Transaction, error) {
 		return nil, err
 	}
 
-	if err := copyFile(c.getTransactionFile(id), c.ConfigurationFile); err != nil {
+	if err := copyFile(transactionFile, c.ConfigurationFile); err != nil {
 		c.failTransaction(id)
 		return nil, err
 	}
@@ -118,13 +128,18 @@ func (c *Client) CommitTransaction(id string) (*models.Transaction, error) {
 }
 
 func (c *Client) checkTransactionFile(id string) error {
-	cmd := exec.Command(c.Haproxy, "-f", c.getTransactionFile(id), "-c")
+	transactionFile, err := c.getTransactionFile(id)
+	if err != nil {
+		return err
+	}
+
+	cmd := exec.Command(c.Haproxy, "-f", transactionFile, "-c")
 
 	var stdout, stderr bytes.Buffer
 	cmd.Stdout = &stdout
 	cmd.Stderr = &stderr
 
-	err := cmd.Run()
+	err = cmd.Run()
 	if err != nil {
 		return NewConfError(ErrValidationError, c.parseHAProxyCheckError(stderr.Bytes(), id))
 	}
@@ -181,9 +196,7 @@ func (c *Client) DeleteTransaction(id string) error {
 		if err := c.deleteTransactionFiles(id); err != nil {
 			return err
 		}
-		if err := c.DeleteParser(id); err != nil {
-			return err
-		}
+		c.DeleteParser(id)
 	}
 	return nil
 }
@@ -208,7 +221,7 @@ func (c *Client) parseTransactions(status string) (*models.Transactions, error) 
 	for _, f := range files {
 		if !f.IsDir() && status != "failed" {
 			if strings.HasPrefix(f.Name(), confFileName) {
-				transactions = append(transactions, c.parseTransactionFile(f, "in_progress"))
+				transactions = append(transactions, c.parseTransactionFile(filepath.Join(c.TransactionDir, f.Name())))
 			}
 		} else {
 			if f.Name() == "failed" && status != "in_progress" {
@@ -219,7 +232,7 @@ func (c *Client) parseTransactions(status string) (*models.Transactions, error) 
 				for _, ff := range ffiles {
 					if !ff.IsDir() {
 						if strings.HasPrefix(ff.Name(), confFileName) {
-							transactions = append(transactions, c.parseTransactionFile(ff, "failed"))
+							transactions = append(transactions, c.parseTransactionFile(filepath.Join(c.TransactionDir, "failed", ff.Name())))
 						}
 					}
 				}
@@ -230,52 +243,25 @@ func (c *Client) parseTransactions(status string) (*models.Transactions, error) 
 	return &transactions, nil
 }
 
-func (c *Client) parseTransaction(id string) (*models.Transaction, error) {
-	_, err := os.Stat(c.TransactionDir)
-	if err != nil && os.IsNotExist(err) {
-		err := os.MkdirAll(c.TransactionDir, 0755)
-		if err != nil {
-			return nil, err
+func (c *Client) parseTransactionFile(filePath string) *models.Transaction {
+	parts := strings.Split(filePath, string(filepath.Separator))
+	f := parts[len(parts)-1]
+	status := "in_progress"
+
+	if len(parts) > 1 {
+		if parts[len(parts)-2] == "failed" {
+			status = "failed"
 		}
-		return nil, NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("Transaction %v does not exist", id))
 	}
 
-	fName := filepath.Base(c.ConfigurationFile) + "." + id
-
-	//Check if there is a file in transaction directory
-	inProgressFile := filepath.Join(c.TransactionDir, fName)
-	f, err := os.Stat(inProgressFile)
-	if err != nil && !os.IsNotExist(err) {
-		return nil, err
-	}
-	if f != nil {
-		return c.parseTransactionFile(f, "in_progress"), nil
-	}
-
-	//Check if there is a file in failed directory
-	failedFile := filepath.Join(c.TransactionDir, "failed", fName)
-	f, err = os.Stat(failedFile)
-	if err != nil {
-		if os.IsNotExist(err) {
-			return nil, NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("Transaction %v does not exist", id))
-		}
-		return nil, err
-	}
-	if f != nil {
-		return c.parseTransactionFile(f, "failed"), nil
-	}
-	return nil, NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("Transaction %v does not exist", id))
-}
-
-func (c *Client) parseTransactionFile(f os.FileInfo, status string) *models.Transaction {
-	s := strings.Split(f.Name(), ".")
+	s := strings.Split(f, ".")
 	tID := s[len(s)-1]
-	v := int64(0)
-	if status == "in_progress" {
-		v, _ = c.GetVersion(tID)
-	} else {
-		v, _ = c.GetVersion(tID)
+
+	v, err := c.GetVersion(tID)
+	if err != nil {
+		v, _ = c.getFailedTransactionVersion(tID)
 	}
+
 	t := &models.Transaction{
 		ID:      tID,
 		Status:  status,
@@ -298,7 +284,7 @@ func (c *Client) createTransactionFiles(transactionID string) error {
 		}
 	}
 
-	confFilePath := c.getTransactionFile(transactionID)
+	confFilePath := filepath.Join(c.TransactionDir, c.getTransactionFileName(transactionID))
 
 	err = copyFile(c.ConfigurationFile, confFilePath)
 	if err != nil {
@@ -309,9 +295,12 @@ func (c *Client) createTransactionFiles(transactionID string) error {
 }
 
 func (c *Client) deleteTransactionFiles(transactionID string) error {
-	confFilePath := c.getTransactionFile(transactionID)
+	confFilePath, err := c.getTransactionFile(transactionID)
+	if err != nil {
+		return err
+	}
 
-	err := os.Remove(confFilePath)
+	err = os.Remove(confFilePath)
 	if err != nil {
 		if !os.IsNotExist(err) {
 			return err
@@ -320,24 +309,28 @@ func (c *Client) deleteTransactionFiles(transactionID string) error {
 	return nil
 }
 
-func (c *Client) getTransactionFile(transactionID string) string {
+func (c *Client) getTransactionFileName(transactionID string) string {
+	baseFileName := filepath.Base(filepath.Clean(c.ConfigurationFile))
+	return baseFileName + "." + transactionID
+}
+
+func (c *Client) getTransactionFile(transactionID string) (string, error) {
 	if transactionID == "" {
-		return c.ConfigurationFile
+		return c.ConfigurationFile, nil
 	}
 	// First find failed transaction file
-	baseFileName := filepath.Base(filepath.Clean(c.ConfigurationFile))
-	transactionFileName := baseFileName + "." + transactionID
+	transactionFileName := c.getTransactionFileName(transactionID)
 
 	fPath := filepath.Join(c.TransactionDir, "failed", transactionFileName)
 	if _, err := os.Stat(fPath); err == nil {
-		return fPath
+		return fPath, nil
 	}
 	// Return in progress transaction file if exists, else empty string
 	fPath = filepath.Join(c.TransactionDir, transactionFileName)
 	if _, err := os.Stat(fPath); err == nil {
-		return fPath
+		return fPath, nil
 	}
-	return ""
+	return "", NewConfError(ErrTransactionDoesNotExist, fmt.Sprintf("Transaction file %v does not exist", transactionID))
 }
 
 func (c *Client) getTransactionFileFailed(transactionID string) string {
@@ -353,10 +346,39 @@ func (c *Client) failTransaction(id string) {
 		os.Mkdir(failedDir, 0755)
 	}
 
-	configFile := c.getTransactionFile(id)
+	configFile, err := c.getTransactionFile(id)
+	if err != nil {
+		return
+	}
+
 	failedConfigFile := c.getTransactionFileFailed(id)
 	copyFile(configFile, failedConfigFile)
 	os.Remove(configFile)
+	c.DeleteParser(id)
+}
+
+func (c *Client) getFailedTransactionVersion(id string) (int64, error) {
+	fName := c.getTransactionFileName(id)
+	failedDir := filepath.Join(c.TransactionDir, "failed")
+	if _, err := os.Stat(failedDir); os.IsNotExist(err) {
+		return 0, NewConfError(ErrTransactionDoesNotExist, fmt.Sprintf("Transaction %v not failed", id))
+	}
+	fPath := filepath.Join(failedDir, fName)
+	if _, err := os.Stat(fPath); os.IsNotExist(err) {
+		return 0, NewConfError(ErrTransactionDoesNotExist, fmt.Sprintf("Transaction %v not failed", id))
+	}
+
+	p := &parser.Parser{}
+	if err := p.LoadData(fPath); err != nil {
+		return 0, NewConfError(ErrCannotReadConfFile, fmt.Sprintf("Cannot read %s", fPath))
+	}
+
+	data, _ := p.Get(parser.Comments, parser.CommentsSectionName, "# _version", false)
+	ver, ok := data.(*types.ConfigVersion)
+	if !ok {
+		return 0, NewConfError(ErrCannotReadVersion, "Cannot read version")
+	}
+	return ver.Value, nil
 }
 
 func copyFile(src, dest string) error {
