@@ -59,6 +59,9 @@ func TestGetServers(t *testing.T) {
 		if *s.Weight != 10 {
 			t.Errorf("%v: Weight not 10: %v", s.Name, *s.Weight)
 		}
+		if *s.Inter != 2000 {
+			t.Errorf("%v: Inter not 2000: %v", s.Name, *s.Inter)
+		}
 	}
 
 	_, servers, err = client.GetServers("test_2", "")
@@ -101,6 +104,9 @@ func TestGetServer(t *testing.T) {
 	if *s.Weight != 10 {
 		t.Errorf("%v: Weight not 10: %v", s.Name, *s.Weight)
 	}
+	if *s.Inter != 2000 {
+		t.Errorf("%v: Inter not 2000: %v", s.Name, *s.Inter)
+	}
 
 	_, err = s.MarshalBinary()
 	if err != nil {
@@ -116,6 +122,7 @@ func TestGetServer(t *testing.T) {
 func TestCreateEditDeleteServer(t *testing.T) {
 	// TestCreateServer
 	port := int64(4300)
+	inter := int64(5000)
 	s := &models.Server{
 		Name:           "created",
 		Address:        "192.168.2.1",
@@ -126,6 +133,7 @@ func TestCreateEditDeleteServer(t *testing.T) {
 		Ssl:            "enabled",
 		SslCertificate: "dummy.crt",
 		TLSTickets:     "enabled",
+		Inter:          &inter,
 	}
 
 	err := client.CreateServer("test", s, "", version)

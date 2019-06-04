@@ -14,8 +14,8 @@ require (
 	github.com/go-openapi/spec v0.19.0 // indirect
 	github.com/go-openapi/strfmt v0.19.0
 	github.com/google/uuid v1.1.1
-	github.com/haproxytech/config-parser v0.9.0
-	github.com/haproxytech/models v0.9.2
+	github.com/haproxytech/config-parser v0.9.1
+	github.com/haproxytech/models v0.9.3
 	github.com/kr/pty v1.1.4 // indirect
 	github.com/mailru/easyjson v0.0.0-20190403194419-1ea4449da983 // indirect
 	github.com/mitchellh/mapstructure v1.1.2

@@ -20,6 +20,7 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/haproxytech/client-native/misc"
 	"github.com/haproxytech/config-parser/params"
 
 	strfmt "github.com/go-openapi/strfmt"
@@ -238,6 +239,8 @@ func parseServer(ondiskServer types.Server) *models.Server {
 				s.SslCertificate = v.Value
 			case "ca-file":
 				s.SslCafile = v.Value
+			case "inter":
+				s.Inter = misc.ParseTimeout(v.Value)
 			}
 		}
 	}
@@ -289,6 +292,9 @@ func serializeServer(s models.Server) types.Server {
 	}
 	if s.Weight != nil {
 		srv.Params = append(srv.Params, &params.ServerOptionValue{Name: "weight", Value: strconv.FormatInt(*s.Weight, 10)})
+	}
+	if s.Inter != nil {
+		srv.Params = append(srv.Params, &params.ServerOptionValue{Name: "inter", Value: strconv.FormatInt(*s.Inter, 10)})
 	}
 	if s.Cookie != "" {
 		srv.Params = append(srv.Params, &params.ServerOptionValue{Name: "cookie", Value: s.Cookie})

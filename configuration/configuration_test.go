@@ -127,8 +127,8 @@ backend test
   cookie BLA
   use-server webserv if TRUE
   use-server webserv2 unless TRUE
-  server webserv 192.168.1.1:9200 maxconn 1000 ssl weight 10 cookie BLAH
-  server webserv2 192.168.1.1:9300 maxconn 1000 ssl weight 10 cookie BLAH
+  server webserv 192.168.1.1:9200 maxconn 1000 ssl weight 10 inter 2s cookie BLAH
+  server webserv2 192.168.1.1:9300 maxconn 1000 ssl weight 10 inter 2s cookie BLAH
 
 backend test_2
   mode http
