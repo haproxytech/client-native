@@ -174,7 +174,7 @@ func TestCreateEditDeleteFrontend(t *testing.T) {
 		Mode:               "tcp",
 		Maxconn:            &mConn,
 		Clflog:             true,
-		HTTPConnectionMode: "forceclose",
+		HTTPConnectionMode: "httpclose",
 	}
 
 	err = client.EditFrontend("created", f, "", version)

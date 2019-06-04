@@ -29,6 +29,29 @@ global
 	maxconn 2000
 	stats socket /var/run/haproxy.sock level admin mode 0660
 
+defaults
+  maxconn 2000
+  mode http
+  balance roundrobin
+  option clitcpka
+  option dontlognull
+  option forwardfor header X-Forwarded-For
+  option http-use-htx
+  option httpclose
+  option httplog
+  timeout queue 900
+  timeout server 2s
+  timeout check 2s
+  timeout client 4s
+  timeout connect 5s
+  timeout http-request 2s
+  timeout http-keep-alive 3s
+  default-server fall 2s rise 4s inter 5s port 8888
+  default_backend test
+  errorfile 403 /test/403.html
+  errorfile 500 /test/500.html
+  errorfile 429 /test/429.html
+
 frontend test
   mode http
   bind 192.168.1.1:80 name webserv

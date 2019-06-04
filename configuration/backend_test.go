@@ -160,8 +160,8 @@ func TestCreateEditDeleteBackend(t *testing.T) {
 	b := &models.Backend{
 		Name:    "created",
 		Mode:    "http",
-		Balance: &models.BackendBalance{Algorithm: "uri"},
-		DefaultServer: &models.BackendDefaultServer{
+		Balance: &models.Balance{Algorithm: "uri"},
+		DefaultServer: &models.DefaultServer{
 			Fall:  &tOut,
 			Inter: &tOut,
 		},
@@ -204,7 +204,7 @@ func TestCreateEditDeleteBackend(t *testing.T) {
 	b = &models.Backend{
 		Name:               "created",
 		Mode:               "http",
-		Balance:            &models.BackendBalance{Algorithm: "roundrobin"},
+		Balance:            &models.Balance{Algorithm: "roundrobin"},
 		HTTPConnectionMode: "http-tunnel",
 		ConnectTimeout:     &tOut,
 		StickTable: &models.BackendStickTable{

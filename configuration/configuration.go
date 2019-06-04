@@ -305,7 +305,7 @@ func (c *Client) parseField(section parser.Section, sectionName string, fieldNam
 		if section == parser.Backends {
 			enabled := "enabled"
 			disabled := "disabled"
-			bff := &models.BackendForwardfor{
+			bff := &models.Forwardfor{
 				Except:  d.Except,
 				Header:  d.Header,
 				Ifnone:  d.IfNone,
@@ -343,10 +343,32 @@ func (c *Client) parseField(section parser.Section, sectionName string, fieldNam
 			return nil
 		}
 		d := data.(*types.Balance)
-		return &models.BackendBalance{
+		return &models.Balance{
 			Algorithm: d.Algorithm,
 			Arguments: d.Arguments,
 		}
+	}
+	if fieldName == "ErrorFiles" {
+		data, err := p.Get(section, sectionName, "errorfile", false)
+		if err != nil {
+			return nil
+		}
+		d := data.([]types.ErrorFile)
+		if section == parser.Defaults {
+			dEFiles := []*models.Errorfile{}
+			for _, ef := range d {
+				dEFile := &models.Errorfile{}
+				code, err := strconv.ParseInt(ef.Code, 10, 64)
+				if err != nil {
+					continue
+				}
+				dEFile.Code = code
+				dEFile.File = ef.File
+				dEFiles = append(dEFiles, dEFile)
+			}
+			return dEFiles
+		}
+		return nil
 	}
 	if fieldName == "DefaultServer" {
 		data, err := p.Get(section, sectionName, "default-server", false)
@@ -354,8 +376,8 @@ func (c *Client) parseField(section parser.Section, sectionName string, fieldNam
 			return nil
 		}
 		d := data.([]types.DefaultServer)
-		if section == parser.Backends {
-			dServer := &models.BackendDefaultServer{}
+		if section == parser.Backends || section == parser.Defaults {
+			dServer := &models.DefaultServer{}
 			for _, ds := range d {
 				dsParams := ds.Params
 				for _, p := range dsParams {
@@ -511,12 +533,12 @@ func (c *Client) parseField(section parser.Section, sectionName string, fieldNam
 				return "httpclose"
 			}
 		}
-
+		// deprecated option, alias for httpclose
 		data, err = p.Get(section, sectionName, "option forceclose", false)
 		if err == nil {
 			d := data.(*types.SimpleOption)
 			if !d.NoOption {
-				return "forceclose"
+				return "httpclose"
 			}
 		}
 
@@ -607,7 +629,7 @@ func (c *Client) setFieldValue(section parser.Section, sectionName string, field
 			}
 			return nil
 		}
-		ff := field.Elem().Interface().(models.BackendForwardfor)
+		ff := field.Elem().Interface().(models.Forwardfor)
 		d := &types.OptionForwardFor{
 			Except:   ff.Except,
 			Header:   ff.Header,
@@ -649,12 +671,32 @@ func (c *Client) setFieldValue(section parser.Section, sectionName string, field
 			}
 			return nil
 		}
-		b := field.Elem().Interface().(models.BackendBalance)
+		b := field.Elem().Interface().(models.Balance)
 		d := types.Balance{
 			Algorithm: b.Algorithm,
 			Arguments: b.Arguments,
 		}
 		if err := p.Set(section, sectionName, "balance", &d); err != nil {
+			return err
+		}
+		return nil
+	}
+	if fieldName == "ErrorFiles" {
+		if valueIsNil(field) {
+			if err := p.Set(section, sectionName, "errorfile", nil); err != nil {
+				return err
+			}
+			return nil
+		}
+		efs, ok := field.Interface().([]*models.Errorfile)
+		if !ok {
+			return nil
+		}
+		errorFiles := []types.ErrorFile{}
+		for _, ef := range efs {
+			errorFiles = append(errorFiles, types.ErrorFile{Code: strconv.FormatInt(ef.Code, 10), File: ef.File})
+		}
+		if err := p.Set(section, sectionName, "errorfile", errorFiles); err != nil {
 			return err
 		}
 		return nil
@@ -666,7 +708,7 @@ func (c *Client) setFieldValue(section parser.Section, sectionName string, field
 			}
 			return nil
 		}
-		ds := field.Elem().Interface().(models.BackendDefaultServer)
+		ds := field.Elem().Interface().(models.DefaultServer)
 		dServers := []types.DefaultServer{types.DefaultServer{}}
 
 		ps := make([]params.ServerOption, 0, 4)
@@ -805,15 +847,14 @@ func (c *Client) setFieldValue(section parser.Section, sectionName string, field
 		if err := p.Set(section, sectionName, "option httpclose", nil); err != nil {
 			return err
 		}
-		if err := p.Set(section, sectionName, "option forceclose", nil); err != nil {
-			return err
-		}
 		if err := p.Set(section, sectionName, "option http-server-close", nil); err != nil {
 			return err
 		}
 		if err := p.Set(section, sectionName, "option http-keep-alive", nil); err != nil {
 			return err
 		}
+		//Deprecated, delete if exists
+		p.Set(section, sectionName, "option forceclose", nil)
 
 		if !valueIsNil(field) {
 			pName := fmt.Sprintf("option %v", field.String())

@@ -275,13 +275,13 @@ func TestCreateEditDeleteSite(t *testing.T) {
 		Service: &models.SiteService{
 			Mode:    "http",
 			Maxconn: &mConn,
-			Listeners: []*models.SiteListener{
-				&models.SiteListener{
+			Listeners: []*models.Bind{
+				&models.Bind{
 					Name:    "created1",
 					Address: "127.0.0.1",
 					Port:    &port,
 				},
-				&models.SiteListener{
+				&models.Bind{
 					Name:    "created2",
 					Address: "127.0.0.2",
 					Port:    &port,
@@ -291,17 +291,17 @@ func TestCreateEditDeleteSite(t *testing.T) {
 		Farms: []*models.SiteFarm{
 			&models.SiteFarm{
 				Name:       "createdBck",
-				Balance:    &models.SiteFarmBalance{Algorithm: "uri"},
+				Balance:    &models.Balance{Algorithm: "uri"},
 				UseAs:      "default",
-				Forwardfor: &models.SiteFarmForwardFor{Enabled: &enabled},
-				Servers: []*models.SiteServer{
-					&models.SiteServer{
+				Forwardfor: &models.Forwardfor{Enabled: &enabled},
+				Servers: []*models.Server{
+					&models.Server{
 						Name:    "created1",
 						Address: "127.0.1.1",
 						Port:    &port,
 						Ssl:     "enabled",
 					},
-					&models.SiteServer{
+					&models.Server{
 						Name:    "created2",
 						Address: "127.0.1.2",
 						Port:    &port,
@@ -311,11 +311,11 @@ func TestCreateEditDeleteSite(t *testing.T) {
 			},
 			&models.SiteFarm{
 				Name:       "createdBck2",
-				Balance:    &models.SiteFarmBalance{Algorithm: "uri"},
+				Balance:    &models.Balance{Algorithm: "uri"},
 				UseAs:      "conditional",
 				Cond:       "if",
 				CondTest:   "TRUE",
-				Forwardfor: &models.SiteFarmForwardFor{Enabled: &enabled},
+				Forwardfor: &models.Forwardfor{Enabled: &enabled},
 			},
 		},
 	}
@@ -354,8 +354,8 @@ func TestCreateEditDeleteSite(t *testing.T) {
 		Service: &models.SiteService{
 			Mode:    "tcp",
 			Maxconn: &mConn,
-			Listeners: []*models.SiteListener{
-				&models.SiteListener{
+			Listeners: []*models.Bind{
+				&models.Bind{
 					Name:    "created1",
 					Address: "127.0.0.2",
 					Port:    &port,
@@ -365,13 +365,13 @@ func TestCreateEditDeleteSite(t *testing.T) {
 		Farms: []*models.SiteFarm{
 			&models.SiteFarm{
 				Name:       "createdBck3",
-				Balance:    &models.SiteFarmBalance{Algorithm: "uri"},
+				Balance:    &models.Balance{Algorithm: "uri"},
 				UseAs:      "conditional",
 				Cond:       "if",
 				CondTest:   "TRUE",
-				Forwardfor: &models.SiteFarmForwardFor{Enabled: &enabled},
-				Servers: []*models.SiteServer{
-					&models.SiteServer{
+				Forwardfor: &models.Forwardfor{Enabled: &enabled},
+				Servers: []*models.Server{
+					&models.Server{
 						Name:    "created3",
 						Address: "127.0.1.2",
 						Port:    &port,
@@ -381,10 +381,10 @@ func TestCreateEditDeleteSite(t *testing.T) {
 			},
 			&models.SiteFarm{
 				Name:    "createdBck2",
-				Balance: &models.SiteFarmBalance{Algorithm: "roundrobin"},
+				Balance: &models.Balance{Algorithm: "roundrobin"},
 				UseAs:   "default",
-				Servers: []*models.SiteServer{
-					&models.SiteServer{
+				Servers: []*models.Server{
+					&models.Server{
 						Name:    "created2",
 						Address: "127.0.1.2",
 						Port:    &port,

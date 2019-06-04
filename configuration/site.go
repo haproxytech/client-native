@@ -106,12 +106,9 @@ func (c *Client) CreateSite(data *models.Site, transactionID string, version int
 		if l.Name == "" {
 			l.Name = l.Address + ":" + strconv.FormatInt(*l.Port, 10)
 		}
-		bind := serializeListenerToBind(l)
-		if bind != nil {
-			err = c.CreateBind(data.Name, bind, t, 0)
-			if err != nil {
-				res = append(res, err)
-			}
+		err = c.CreateBind(data.Name, l, t, 0)
+		if err != nil {
+			res = append(res, err)
 		}
 	}
 
@@ -131,8 +128,7 @@ func (c *Client) CreateSite(data *models.Site, transactionID string, version int
 			if s.Name == "" {
 				s.Name = s.Address + ":" + strconv.FormatInt(*s.Port, 10)
 			}
-			server := serializeSiteServer(s)
-			err = c.CreateServer(b.Name, server, t, 0)
+			err = c.CreateServer(b.Name, s, t, 0)
 			if err != nil {
 				res = append(res, err)
 			}
@@ -188,41 +184,41 @@ func (c *Client) EditSite(name string, data *models.Site, transactionID string, 
 		if !reflect.DeepEqual(confS.Service.Listeners, data.Service.Listeners) {
 			//add missing listeners by name, edit existing
 			for _, l := range data.Service.Listeners {
-				listeners := make([]interface{}, len(confS.Service.Listeners))
-				for i := range confS.Service.Listeners {
-					listeners[i] = confS.Service.Listeners[i]
-				}
-
-				confLIface := misc.GetObjByField(listeners, "Name", l.Name)
-				if confLIface == nil {
-					// create
-					bind := serializeListenerToBind(l)
-					if bind != nil {
-						err = c.CreateBind(data.Name, bind, t, 0)
-						if err != nil {
-							res = append(res, err)
+				found := false
+				for _, confL := range confS.Service.Listeners {
+					if l.Name == confL.Name {
+						if !reflect.DeepEqual(l, confL) {
+							err := c.EditBind(l.Name, data.Name, l, t, 0)
+							if err != nil {
+								res = append(res, err)
+							}
 						}
+						found = true
+						break
 					}
-				} else {
-					confL := confLIface.(*models.SiteListener)
-					if !reflect.DeepEqual(l, confL) {
-						err := c.editListener(l.Name, data.Name, l, t)
-						if err != nil {
-							res = append(res, err)
-						}
-					} else {
-						continue
+				}
+				if !found {
+					//sanitize name
+					if l.Name == "" {
+						l.Name = l.Address + ":" + strconv.FormatInt(*l.Port, 10)
+					}
+					err = c.CreateBind(data.Name, l, t, 0)
+					if err != nil {
+						res = append(res, err)
 					}
 				}
 			}
 			//delete non existing listeners
-			for _, l := range confS.Service.Listeners {
-				listeners := make([]interface{}, len(data.Service.Listeners))
-				for i := range data.Service.Listeners {
-					listeners[i] = data.Service.Listeners[i]
+			for _, confL := range confS.Service.Listeners {
+				found := false
+				for _, l := range data.Service.Listeners {
+					if l.Name == confL.Name {
+						found = true
+						break
+					}
 				}
-				if misc.GetObjByField(listeners, "Name", l.Name) == nil {
-					err = c.DeleteBind(l.Name, data.Name, t, 0)
+				if !found {
+					err = c.DeleteBind(confL.Name, data.Name, t, 0)
 					if err != nil {
 						res = append(res, err)
 					}
@@ -248,16 +244,9 @@ func (c *Client) EditSite(name string, data *models.Site, transactionID string, 
 						res = append(res, err)
 					}
 					for _, s := range b.Servers {
-						//sanitize name
-						if s.Name == "" {
-							s.Name = s.Address + ":" + strconv.FormatInt(*s.Port, 10)
-						}
-						server := serializeSiteServer(s)
-						if server != nil {
-							err := c.CreateServer(b.Name, server, t, 0)
-							if err != nil {
-								res = append(res, err)
-							}
+						err := c.CreateServer(b.Name, s, t, 0)
+						if err != nil {
+							res = append(res, err)
 						}
 					}
 					if b.UseAs == "default" && defaultBck != "" {
@@ -290,48 +279,43 @@ func (c *Client) EditSite(name string, data *models.Site, transactionID string, 
 					if err != nil {
 						res = append(res, err)
 					}
-					servers := make([]interface{}, len(confB.Servers))
-					for i := range confB.Servers {
-						servers[i] = confB.Servers[i]
-					}
 					for _, srv := range b.Servers {
-						confSrvIFace := misc.GetObjByField(servers, "Name", srv.Name)
-						if confSrvIFace == nil {
-							// create
-							server := serializeSiteServer(srv)
-							if server != nil {
-								err := c.CreateServer(b.Name, server, t, 0)
-								if err != nil {
-									res = append(res, err)
+						found := false
+						for _, confSrv := range confB.Servers {
+							if srv.Name == confSrv.Name {
+								if !reflect.DeepEqual(srv, confSrv) {
+									err := c.EditServer(srv.Name, b.Name, srv, t, 0)
+									if err != nil {
+										res = append(res, err)
+									}
 								}
-							}
-						} else {
-							confSrv := confSrvIFace.(*models.SiteServer)
-							if !reflect.DeepEqual(srv, confSrv) {
-								//edit
-								err := c.editSiteServer(srv.Name, b.Name, srv, t)
-								if err != nil {
-									res = append(res, err)
-								}
-							} else {
-								continue
+								found = true
+								break
 							}
 						}
-					}
-					servers = make([]interface{}, len(b.Servers))
-					for i := range b.Servers {
-						bcks[i] = b.Servers[i]
-					}
-					//delete non existing servers
-					for _, srv := range confB.Servers {
-						if misc.GetObjByField(servers, "Name", srv.Name) == nil {
-							err := c.DeleteServer(srv.Name, b.Name, t, 0)
+						if !found {
+							err = c.CreateServer(b.Name, srv, t, 0)
 							if err != nil {
 								res = append(res, err)
 							}
 						}
 					}
-
+					//delete non existing servers
+					for _, confSrv := range confB.Servers {
+						found := false
+						for _, srv := range b.Servers {
+							if srv.Name == confSrv.Name {
+								found = true
+								break
+							}
+						}
+						if !found {
+							err = c.DeleteServer(confSrv.Name, b.Name, t, 0)
+							if err != nil {
+								res = append(res, err)
+							}
+						}
+					}
 				}
 			}
 		}
@@ -437,13 +421,15 @@ func (c *Client) parseSite(s string, p *parser.Parser) *models.Site {
 	if err := c.parseSection(frontend, parser.Frontends, s, p); err != nil {
 		return nil
 	}
+
+	ls, _ := c.parseBinds(s, p)
 	site := &models.Site{
 		Name: s,
 		Service: &models.SiteService{
 			HTTPConnectionMode: frontend.HTTPConnectionMode,
 			Maxconn:            frontend.Maxconn,
 			Mode:               frontend.Mode,
-			Listeners:          c.parseServiceListeners(s, p),
+			Listeners:          ls,
 		},
 		Farms: []*models.SiteFarm{},
 	}
@@ -468,74 +454,26 @@ func (c *Client) parseSite(s string, p *parser.Parser) *models.Site {
 	return site
 }
 
-func (c *Client) parseServiceListeners(service string, p *parser.Parser) []*models.SiteListener {
-	listeners := []*models.SiteListener{}
-	binds, err := c.parseBinds(service, p)
-	if err == nil {
-		for _, b := range binds {
-			li := &models.SiteListener{
-				Address:        b.Address,
-				Name:           b.Name,
-				Port:           b.Port,
-				Ssl:            b.Ssl,
-				SslCertificate: b.SslCertificate,
-			}
-			listeners = append(listeners, li)
-		}
-	}
-	return listeners
-}
-
 func (c *Client) parseFarm(name string, useAs string, cond string, condTest string, p *parser.Parser) *models.SiteFarm {
 	backend := &models.Backend{Name: name}
 	if err := c.parseSection(backend, parser.Backends, name, p); err == nil {
+		srvs, err := c.parseServers(name, p)
+		if err != nil {
+			srvs = models.Servers{}
+		}
 		farm := &models.SiteFarm{
-			UseAs:    useAs,
-			Cond:     cond,
-			CondTest: condTest,
-			Mode:     backend.Mode,
-			Name:     backend.Name,
-			Servers:  c.parseFarmServers(backend.Name, p),
-		}
-		if backend.Forwardfor != nil {
-			farm.Forwardfor = &models.SiteFarmForwardFor{
-				Enabled: backend.Forwardfor.Enabled,
-				Except:  backend.Forwardfor.Except,
-				Header:  backend.Forwardfor.Header,
-				Ifnone:  backend.Forwardfor.Ifnone,
-			}
-		}
-		if backend.Balance != nil {
-			farm.Balance = &models.SiteFarmBalance{
-				Algorithm: backend.Balance.Algorithm,
-				Arguments: backend.Balance.Arguments,
-			}
+			UseAs:      useAs,
+			Cond:       cond,
+			CondTest:   condTest,
+			Mode:       backend.Mode,
+			Name:       backend.Name,
+			Forwardfor: backend.Forwardfor,
+			Balance:    backend.Balance,
+			Servers:    srvs,
 		}
 		return farm
 	}
 	return nil
-}
-
-func (c *Client) parseFarmServers(farm string, p *parser.Parser) []*models.SiteServer {
-	servers := []*models.SiteServer{}
-
-	srvs, err := c.parseServers(farm, p)
-	if err != nil {
-		return servers
-	}
-
-	for _, s := range srvs {
-		server := &models.SiteServer{
-			Name:           s.Name,
-			Address:        s.Address,
-			Port:           s.Port,
-			SslCertificate: s.SslCertificate,
-			Weight:         s.Weight,
-			Ssl:            s.Ssl,
-		}
-		servers = append(servers, server)
-	}
-	return servers
 }
 
 func serializeServiceToFrontend(service *models.SiteService, name string) *models.Frontend {
@@ -550,44 +488,12 @@ func serializeServiceToFrontend(service *models.SiteService, name string) *model
 }
 
 func serializeFarmToBackend(farm *models.SiteFarm) *models.Backend {
-	backend := &models.Backend{
-		Name: farm.Name,
-		Mode: farm.Mode,
+	return &models.Backend{
+		Name:       farm.Name,
+		Mode:       farm.Mode,
+		Forwardfor: farm.Forwardfor,
+		Balance:    farm.Balance,
 	}
-	if farm.Forwardfor != nil {
-		backend.Forwardfor = &models.BackendForwardfor{
-			Enabled: farm.Forwardfor.Enabled,
-			Except:  farm.Forwardfor.Except,
-			Header:  farm.Forwardfor.Header,
-			Ifnone:  farm.Forwardfor.Ifnone,
-		}
-	}
-	if farm.Balance != nil {
-		backend.Balance = &models.BackendBalance{Algorithm: farm.Balance.Algorithm, Arguments: farm.Balance.Arguments}
-	}
-	return backend
-}
-
-func serializeListenerToBind(listener *models.SiteListener) *models.Bind {
-	return &models.Bind{
-		Name:           listener.Name,
-		Address:        listener.Address,
-		Port:           listener.Port,
-		Ssl:            listener.Ssl,
-		SslCertificate: listener.SslCertificate,
-	}
-}
-
-func serializeSiteServer(srv *models.SiteServer) *models.Server {
-	server := &models.Server{
-		Address:        srv.Address,
-		Name:           srv.Name,
-		Port:           srv.Port,
-		SslCertificate: srv.SslCertificate,
-		Weight:         srv.Weight,
-		Ssl:            srv.Ssl,
-	}
-	return server
 }
 
 // frontend backend relation helper methods
@@ -689,55 +595,10 @@ func (c *Client) editFarm(name string, farm *models.SiteFarm, t string, p *parse
 	}
 
 	backend.Mode = farm.Mode
-	if farm.Forwardfor != nil {
-		backend.Forwardfor = &models.BackendForwardfor{
-			Enabled: farm.Forwardfor.Enabled,
-			Except:  farm.Forwardfor.Except,
-			Header:  farm.Forwardfor.Header,
-			Ifnone:  farm.Forwardfor.Ifnone,
-		}
-	} else {
-		backend.Forwardfor = nil
-	}
-	if farm.Balance != nil {
-		backend.Balance = &models.BackendBalance{Algorithm: farm.Balance.Algorithm, Arguments: farm.Balance.Arguments}
-	} else {
-		backend.Balance = nil
-	}
+	backend.Forwardfor = farm.Forwardfor
+	backend.Balance = farm.Balance
+
 	if err := c.EditBackend(name, backend, t, 0); err != nil {
-		return err
-	}
-	return nil
-}
-
-func (c *Client) editListener(name string, frontend string, listener *models.SiteListener, t string) error {
-	_, bind, err := c.GetBind(name, frontend, t)
-	if err != nil {
-		return err
-	}
-	bind.Address = listener.Address
-	bind.Port = listener.Port
-	bind.Ssl = listener.Ssl
-	bind.SslCertificate = listener.SslCertificate
-
-	if err := c.EditBind(name, frontend, bind, t, 0); err != nil {
-		return err
-	}
-	return nil
-}
-
-func (c *Client) editSiteServer(name string, backend string, server *models.SiteServer, t string) error {
-	_, srv, err := c.GetServer(name, backend, t)
-	if err != nil {
-		return err
-	}
-	srv.Address = server.Address
-	srv.Port = server.Port
-	srv.SslCertificate = server.SslCertificate
-	srv.Weight = server.Weight
-	srv.Ssl = server.Ssl
-
-	if err := c.EditServer(name, backend, srv, t, 0); err != nil {
 		return err
 	}
 	return nil
