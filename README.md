@@ -35,10 +35,11 @@ The native client depends on the [config-parser](http://github.com/haproxytech/c
 // Initialize HAProxy native client
 confClient := &configuration.Client{}
 confParams := configuration.ClientParams{
-    ConfigurationFile: "/etc/haproxy/haproxy.cfg",
-    Haproxy:           "/usr/sbin/haproxy",
-    UseValidation:     true,
-    TransactionDir:    "/tmp/haproxy",
+    ConfigurationFile:      "/etc/haproxy/haproxy.cfg",
+    Haproxy:                "/usr/sbin/haproxy",
+    UseValidation:          true,
+    PersistentTransactions: true,
+    TransactionDir:         "/tmp/haproxy",
 }
 err := confClient.Init(confParams)
 if err != nil {
