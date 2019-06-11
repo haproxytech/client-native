@@ -213,10 +213,11 @@ func deleteTestFile(path string) error {
 func prepareClient(path string) *Client {
 	c := Client{}
 	p := ClientParams{
-		ConfigurationFile: path,
-		Haproxy:           "echo",
-		UseValidation:     true,
-		TransactionDir:    "/tmp/haproxy-test",
+		ConfigurationFile:      path,
+		Haproxy:                "echo",
+		UseValidation:          true,
+		PersistentTransactions: true,
+		TransactionDir:         "/tmp/haproxy-test",
 	}
 	c.Init(p)
 	return &c

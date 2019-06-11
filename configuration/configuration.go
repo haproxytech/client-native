@@ -39,16 +39,19 @@ const (
 	DefaultHaproxy string = "/usr/sbin/haproxy"
 	//DefaultUseValidation sane default using validation in client native
 	DefaultUseValidation bool = true
+	//DefaultPersistentTransactions sane default using persistent transactions in client native
+	DefaultPersistentTransactions bool = true
 	// DefaultTransactionDir sane default for path for transactions
 	DefaultTransactionDir string = "/tmp/haproxy"
 )
 
 // ClientParams is just a placeholder for all client options
 type ClientParams struct {
-	ConfigurationFile string
-	Haproxy           string
-	UseValidation     bool
-	TransactionDir    string
+	ConfigurationFile      string
+	Haproxy                string
+	UseValidation          bool
+	PersistentTransactions bool
+	TransactionDir         string
 }
 
 // Client configuration client
@@ -66,10 +69,11 @@ type Client struct {
 // DefaultClient returns Client with sane defaults
 func DefaultClient() (*Client, error) {
 	p := ClientParams{
-		ConfigurationFile: DefaultConfigurationFile,
-		Haproxy:           DefaultHaproxy,
-		UseValidation:     DefaultUseValidation,
-		TransactionDir:    DefaultTransactionDir,
+		ConfigurationFile:      DefaultConfigurationFile,
+		Haproxy:                DefaultHaproxy,
+		UseValidation:          DefaultUseValidation,
+		PersistentTransactions: DefaultPersistentTransactions,
+		TransactionDir:         DefaultTransactionDir,
 	}
 	c := &Client{}
 	err := c.Init(p)
@@ -133,9 +137,15 @@ func (c *Client) AddParser(transaction string) error {
 	}
 
 	p := &parser.Parser{}
-	tFile, err := c.getTransactionFile(transaction)
-	if err != nil {
-		return err
+	tFile := ""
+	var err error
+	if c.PersistentTransactions {
+		tFile, err = c.getTransactionFile(transaction)
+		if err != nil {
+			return err
+		}
+	} else {
+		tFile = c.ConfigurationFile
 	}
 	if err := p.LoadData(tFile); err != nil {
 		return NewConfError(ErrCannotReadConfFile, fmt.Sprintf("Cannot read %s", tFile))
@@ -1109,16 +1119,19 @@ func (c *Client) loadDataForChange(transactionID string, version int64) (*parser
 }
 
 func (c *Client) saveData(p *parser.Parser, t string, commitImplicit bool) error {
-	tFile, err := c.getTransactionFile(t)
-	if err != nil {
-		return err
-	}
-	if err := p.Save(tFile); err != nil {
-		e := NewConfError(ErrErrorChangingConfig, err.Error())
-		if commitImplicit {
-			return c.errAndDeleteTransaction(e, t)
+	if c.PersistentTransactions {
+		tFile, err := c.getTransactionFile(t)
+		if err != nil {
+			return err
 		}
-		return err
+
+		if err := p.Save(tFile); err != nil {
+			e := NewConfError(ErrErrorChangingConfig, err.Error())
+			if commitImplicit {
+				return c.errAndDeleteTransaction(e, t)
+			}
+			return err
+		}
 	}
 
 	if commitImplicit {

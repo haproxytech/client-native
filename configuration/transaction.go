@@ -39,11 +39,18 @@ func (c *Client) GetTransactions(status string) (*models.Transactions, error) {
 
 // GetTransaction returns transaction information by id
 func (c *Client) GetTransaction(id string) (*models.Transaction, error) {
-	tFile, err := c.getTransactionFile(id)
-	if err != nil {
-		return nil, NewConfError(ErrTransactionDoesNotExist, fmt.Sprintf("Transactionf file %v does not exist", id))
+	// check if parser exists, if not, look for files
+	_, ok := c.parsers[id]
+	if !ok {
+		tFile, err := c.getTransactionFile(id)
+		if err != nil {
+			return nil, NewConfError(ErrTransactionDoesNotExist, fmt.Sprintf("Transaction %v does not exist", id))
+		}
+		return c.parseTransactionFile(tFile), nil
 	}
-	return c.parseTransactionFile(tFile), nil
+	v, _ := c.GetVersion(id)
+
+	return &models.Transaction{ID: id, Status: "in_progress", Version: v}, nil
 }
 
 // StartTransaction starts a new empty lbctl transaction
@@ -64,16 +71,21 @@ func (c *Client) startTransaction(version int64) (*models.Transaction, error) {
 	}
 
 	t.ID = uuid.New().String()
-	err = c.createTransactionFiles(t.ID)
-	if err != nil {
-		return nil, err
+
+	if c.PersistentTransactions {
+		err = c.createTransactionFiles(t.ID)
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	t.Version = version
 	t.Status = "in_progress"
 
 	if err := c.AddParser(t.ID); err != nil {
-		c.deleteTransactionFiles(t.ID)
+		if c.PersistentTransactions {
+			c.deleteTransactionFiles(t.ID)
+		}
 		return nil, err
 	}
 	return t, nil
@@ -81,24 +93,47 @@ func (c *Client) startTransaction(version int64) (*models.Transaction, error) {
 
 // CommitTransaction commits a transaction by id.
 func (c *Client) CommitTransaction(id string) (*models.Transaction, error) {
+	// check if parser exists and if transaction exists
+	p, err := c.GetParser(id)
+	if err != nil {
+		return nil, err
+	}
+
 	// do a version check before commiting
 	version, err := c.GetVersion("")
 	if err != nil {
 		return nil, err
 	}
 
-	transactionFile, err := c.getTransactionFile(id)
-	if err != nil {
-		return nil, err
-	}
-	t := c.parseTransactionFile(transactionFile)
+	tVersion, err := c.GetVersion(id)
 	if err != nil {
 		return nil, err
 	}
 
-	if t.Version != version {
+	if tVersion != version {
 		c.failTransaction(id)
-		return nil, NewConfError(ErrVersionMismatch, fmt.Sprintf("Version mismatch, transaction version: %v, configured version: %v", t.Version, version))
+		return nil, NewConfError(ErrVersionMismatch, fmt.Sprintf("Version mismatch, transaction version: %v, configured version: %v", tVersion, version))
+	}
+
+	// create transaction file now if transactions are not persistent
+	if !c.PersistentTransactions {
+		err = c.createTransactionFiles(id)
+		if err != nil {
+			return nil, err
+		}
+	}
+
+	transactionFile, err := c.getTransactionFile(id)
+	if err != nil {
+		return nil, err
+	}
+
+	// save to transaction file if transactions are not persistent
+	if !c.PersistentTransactions {
+		if err := p.Save(transactionFile); err != nil {
+			c.failTransaction(id)
+			return nil, NewConfError(ErrErrorChangingConfig, err.Error())
+		}
 	}
 
 	if err := c.checkTransactionFile(id); err != nil {
@@ -122,9 +157,7 @@ func (c *Client) CommitTransaction(id string) (*models.Transaction, error) {
 		return nil, err
 	}
 
-	t.Status = "success"
-
-	return t, nil
+	return &models.Transaction{ID: id, Version: tVersion, Status: "success"}, nil
 }
 
 func (c *Client) checkTransactionFile(id string) error {
@@ -193,8 +226,10 @@ func (c *Client) parseHAProxyCheckError(output []byte, id string) string {
 // DeleteTransaction deletes a transaction by id.
 func (c *Client) DeleteTransaction(id string) error {
 	if id != "" {
-		if err := c.deleteTransactionFiles(id); err != nil {
-			return err
+		if c.PersistentTransactions {
+			if err := c.deleteTransactionFiles(id); err != nil {
+				return err
+			}
 		}
 		c.DeleteParser(id)
 	}
@@ -219,7 +254,7 @@ func (c *Client) parseTransactions(status string) (*models.Transactions, error) 
 		return nil, err
 	}
 	for _, f := range files {
-		if !f.IsDir() && status != "failed" {
+		if !f.IsDir() && status != "failed" && c.PersistentTransactions {
 			if strings.HasPrefix(f.Name(), confFileName) {
 				transactions = append(transactions, c.parseTransactionFile(filepath.Join(c.TransactionDir, f.Name())))
 			}
@@ -240,6 +275,19 @@ func (c *Client) parseTransactions(status string) (*models.Transactions, error) 
 		}
 	}
 
+	if !c.PersistentTransactions && status != "failed" {
+		for tID := range c.parsers {
+			v, err := c.GetVersion(tID)
+			if err == nil {
+				t := &models.Transaction{
+					ID:      tID,
+					Status:  "in_progress",
+					Version: v,
+				}
+				transactions = append(transactions, t)
+			}
+		}
+	}
 	return &transactions, nil
 }
 
