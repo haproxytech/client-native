@@ -4,31 +4,6 @@
 
 **HAProxy Native Client** is a client that exposes methods for reading and changing HAProxy configuration files, and executing commands and parsing the output of the HAProxy Runtime API (via unix socket, AKA stats socket in HAProxy). It uses the [models](http://github.com/haproxytech/models) package to shift data around.
 
-## Dependencies
-
-### Internal dependencies
-
-The native client depends on the [config-parser](http://github.com/haproxytech/config-parser).
-
-### External dependencies
-
-- [purell](https://github.com/PuerkitoBio/purell)
-- [urlesc](https://github.com/PuerkitoBio/urlesc)
-- [govalidator](https://github.com/asaskevich/govalidator)
-- [mgo](https://github.com/globalsign/mgo/bson)
-- [go-openapi analysis](https://github.com/go-openapi/analysis)
-- [go-openapi errors](https://github.com/go-openapi/errors)
-- [go-openapi jsonpointer](https://github.com/go-openapi/jsonpointer)
-- [go-openapi jsonreference](https://github.com/go-openapi/jsonreference)
-- [go-openapi loads](https://github.com/go-openapi/loads)
-- [go-openapi runtime](https://github.com/go-openapi/runtime)
-- [go-openapi spec](https://github.com/go-openapi/spec)
-- [go-openapi strfmt](https://github.com/go-openapi/strfmt)
-- [go-openapi swag](https://github.com/go-openapi/swag)
-- [go-openapi validate](https://github.com/go-openapi/validate)
-- [easyjson](https://github.com/mailru/easyjson/buffer)
-- [mapstructure](https://github.com/mitchellh/mapstructure)
-
 ## Usage Example
 
 ```
@@ -93,5 +68,9 @@ fmt.Println(string(backendsJSON))
 //...
 
 ```
+
+## Contributing
+
+For commit messages and general style please follow the haproxy project's [CONTRIBUTING guide](https://github.com/haproxy/haproxy/blob/master/CONTRIBUTING) and use that where applicable.
 
 
