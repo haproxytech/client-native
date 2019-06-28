@@ -499,6 +499,33 @@ func (c *Client) parseField(section parser.Section, sectionName string, fieldNam
 			}
 		}
 	}
+
+	if fieldName == "ExternalCheck" {
+		data, err := p.Get(section, sectionName, "option external-check", false)
+		if err != nil {
+			return nil
+		}
+		if data.(*types.SimpleOption).NoOption {
+			return "disabled"
+		}
+		return "enabled"
+	}
+	if fieldName == "ExternalCheckPath" {
+		data, err := p.Get(section, sectionName, "external-check path", false)
+		if err != nil {
+			return nil
+		}
+		d := data.(*types.ExternalCheckPath)
+		return d.Path
+	}
+	if fieldName == "ExternalCheckCommand" {
+		data, err := p.Get(section, sectionName, "external-check command", false)
+		if err != nil {
+			return nil
+		}
+		d := data.(*types.ExternalCheckCommand)
+		return d.Command
+	}
 	if fieldName == "DefaultBackend" {
 		data, err := p.Get(section, sectionName, "default_backend", false)
 		if err != nil {
@@ -831,6 +858,43 @@ func (c *Client) setFieldValue(section parser.Section, sectionName string, field
 			if err := p.Set(section, sectionName, pName, d); err != nil {
 				return err
 			}
+		}
+		return nil
+	}
+	if fieldName == "ExternalCheck" {
+		pExternalCheck := &types.SimpleOption{}
+		if valueIsNil(field) {
+			pExternalCheck = nil
+		} else if field.String() == "disabled" {
+			pExternalCheck.NoOption = true
+		}
+		if err := p.Set(section, sectionName, "option external-check", pExternalCheck); err != nil {
+			return err
+		}
+		return nil
+	}
+
+	if fieldName == "ExternalCheckPath" {
+		pExtPath := &types.ExternalCheckPath{}
+		if valueIsNil(field) {
+			pExtPath = nil
+		} else {
+			pExtPath.Path = field.Interface().(string)
+		}
+		if err := p.Set(section, sectionName, "external-check path", pExtPath); err != nil {
+			return err
+		}
+		return nil
+	}
+	if fieldName == "ExternalCheckCommand" {
+		pExtCmd := &types.ExternalCheckCommand{}
+		if valueIsNil(field) {
+			pExtCmd = nil
+		} else {
+			pExtCmd.Command = field.Interface().(string)
+		}
+		if err := p.Set(section, sectionName, "external-check command", pExtCmd); err != nil {
+			return err
 		}
 		return nil
 	}

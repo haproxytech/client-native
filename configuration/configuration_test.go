@@ -27,6 +27,7 @@ global
 	daemon
 	nbproc 4
 	maxconn 2000
+	external-check
 	stats socket /var/run/haproxy.sock level admin mode 0660
 
 defaults
@@ -48,6 +49,9 @@ defaults
   timeout http-keep-alive 3s
   default-server fall 2s rise 4s inter 5s port 8888
   default_backend test
+  option external-check
+  external-check path /bin
+  external-check command /bin/true
   errorfile 403 /test/403.html
   errorfile 500 /test/500.html
   errorfile 429 /test/429.html
@@ -125,6 +129,8 @@ backend test
   timeout tunnel 5s
   timeout server 3s
   cookie BLA
+  option external-check
+  external-check command /bin/false
   use-server webserv if TRUE
   use-server webserv2 unless TRUE
   server webserv 192.168.1.1:9200 maxconn 1000 ssl weight 10 inter 2s cookie BLAH

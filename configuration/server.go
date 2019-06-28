@@ -243,6 +243,12 @@ func parseServer(ondiskServer types.Server) *models.Server {
 				s.Inter = misc.ParseTimeout(v.Value)
 			case "verify":
 				s.Verify = v.Value
+			case "on-error":
+				s.OnError = v.Value
+			case "on-marked-down":
+				s.OnMarkedDown = v.Value
+			case "on-marked-up":
+				s.OnMarkedUp = v.Value
 			}
 		}
 	}
@@ -309,6 +315,15 @@ func serializeServer(s models.Server) types.Server {
 	}
 	if s.Verify != "" {
 		srv.Params = append(srv.Params, &params.ServerOptionValue{Name: "verify", Value: s.Verify})
+	}
+	if s.OnError != "" {
+		srv.Params = append(srv.Params, &params.ServerOptionValue{Name: "on-error", Value: s.OnError})
+	}
+	if s.OnMarkedDown != "" {
+		srv.Params = append(srv.Params, &params.ServerOptionValue{Name: "on-marked-down", Value: s.OnMarkedDown})
+	}
+	if s.OnMarkedUp != "" {
+		srv.Params = append(srv.Params, &params.ServerOptionValue{Name: "on-marked-up", Value: s.OnMarkedUp})
 	}
 	return srv
 }

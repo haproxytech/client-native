@@ -55,6 +55,9 @@ func TestGetGlobal(t *testing.T) {
 	if global.Maxconn != 2000 {
 		t.Errorf("Maxconn is %v, expected 2000", global.Maxconn)
 	}
+	if global.ExternalCheck != true {
+		t.Errorf("ExternalCheck is false, expected true")
+	}
 }
 
 func TestPutGlobal(t *testing.T) {
@@ -81,6 +84,7 @@ func TestPutGlobal(t *testing.T) {
 		SslDefaultBindOptions: "ssl-min-ver TLSv1.0 no-tls-tickets",
 		StatsTimeout:          &tOut,
 		TuneSslDefaultDhParam: 1024,
+		ExternalCheck:         false,
 	}
 
 	err := client.PushGlobalConfiguration(g, "", version)

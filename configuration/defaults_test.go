@@ -99,6 +99,13 @@ func TestGetDefaults(t *testing.T) {
 			}
 		}
 	}
+	if d.ExternalCheck != "enabled" {
+		t.Errorf("ExternalCheck not enabled: %v", d.ExternalCheck)
+	} else if d.ExternalCheckPath != "/bin" {
+		t.Errorf("ExternalCheckPath not /bin: %v", d.ExternalCheckPath)
+	} else if d.ExternalCheckCommand != "/bin/true" {
+		t.Errorf("ExternalCheckCommand not /bin/true: %v", d.ExternalCheckCommand)
+	}
 }
 
 func TestPushDefaults(t *testing.T) {
@@ -134,6 +141,9 @@ func TestPushDefaults(t *testing.T) {
 		Balance: &models.Balance{
 			Algorithm: "leastconn",
 		},
+		ExternalCheck:        "",
+		ExternalCheckPath:    "/bin",
+		ExternalCheckCommand: "/bin/flase",
 	}
 
 	err := client.PushDefaultsConfiguration(d, "", version)
