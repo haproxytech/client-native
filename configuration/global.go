@@ -144,6 +144,12 @@ func (c *Client) GetGlobalConfiguration(transactionID string) (int64, *models.Gl
 		dhParam = dhParamsParser.Value
 	}
 
+	_, err = p.Get(parser.Global, parser.GlobalSectionName, "external-check")
+	externalCheck := true
+	if err == errors.FetchError {
+		externalCheck = false
+	}
+
 	g := &models.Global{
 		Daemon:                daemon,
 		MasterWorker:          masterWorker,
@@ -157,6 +163,7 @@ func (c *Client) GetGlobalConfiguration(transactionID string) (int64, *models.Gl
 		SslDefaultBindCiphers: sslCiphers,
 		SslDefaultBindOptions: sslOptions,
 		TuneSslDefaultDhParam: dhParam,
+		ExternalCheck:         externalCheck,
 	}
 
 	v, err := c.GetVersion(transactionID)
@@ -290,6 +297,11 @@ func (c *Client) PushGlobalConfiguration(data *models.Global, transactionID stri
 	}
 	p.Set(parser.Global, parser.GlobalSectionName, "tune.ssl.default-dh-param", pDhParams)
 
+	pExternalCheck := &types.Enabled{}
+	if data.ExternalCheck == false {
+		pExternalCheck = nil
+	}
+	p.Set(parser.Global, parser.GlobalSectionName, "external-check", pExternalCheck)
 	if err := c.saveData(p, t, transactionID == ""); err != nil {
 		return err
 	}
