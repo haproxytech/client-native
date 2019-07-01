@@ -98,6 +98,7 @@ func TestCreateEditDeleteBind(t *testing.T) {
 		Port:           &port,
 		Ssl:            true,
 		SslCertificate: "dummy.crt",
+		Verify:         "optional",
 	}
 
 	err := client.CreateBind("test", l, "", version)

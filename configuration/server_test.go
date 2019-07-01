@@ -133,6 +133,7 @@ func TestCreateEditDeleteServer(t *testing.T) {
 		Ssl:            "enabled",
 		SslCertificate: "dummy.crt",
 		TLSTickets:     "enabled",
+		Verify:         "none",
 		Inter:          &inter,
 	}
 
@@ -174,6 +175,7 @@ func TestCreateEditDeleteServer(t *testing.T) {
 		SslCertificate: "dummy.crt",
 		SslCafile:      "dummy.ca",
 		TLSTickets:     "disabled",
+		Verify:         "required",
 	}
 
 	err = client.EditServer("created", "test", s, "", version)

@@ -223,6 +223,8 @@ func parseBind(ondiskBind types.Bind) *models.Bind {
 				b.SslCertificate = v.Value
 			case "ca-file":
 				b.SslCafile = v.Value
+			case "verify":
+				b.Verify = v.Value
 			}
 		}
 	}
@@ -257,6 +259,9 @@ func serializeBind(b models.Bind) types.Bind {
 	}
 	if b.Ssl {
 		bind.Params = append(bind.Params, &params.BindOptionWord{Name: "ssl"})
+	}
+	if b.Verify != "" {
+		bind.Params = append(bind.Params, &params.BindOptionValue{Name: "verify", Value: b.Verify})
 	}
 	if b.Transparent {
 		bind.Params = append(bind.Params, &params.BindOptionWord{Name: "transparent"})

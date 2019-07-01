@@ -241,6 +241,8 @@ func parseServer(ondiskServer types.Server) *models.Server {
 				s.SslCafile = v.Value
 			case "inter":
 				s.Inter = misc.ParseTimeout(v.Value)
+			case "verify":
+				s.Verify = v.Value
 			}
 		}
 	}
@@ -304,6 +306,9 @@ func serializeServer(s models.Server) types.Server {
 	}
 	if s.SslCafile != "" {
 		srv.Params = append(srv.Params, &params.ServerOptionValue{Name: "ca-file", Value: s.SslCafile})
+	}
+	if s.Verify != "" {
+		srv.Params = append(srv.Params, &params.ServerOptionValue{Name: "verify", Value: s.Verify})
 	}
 	return srv
 }
