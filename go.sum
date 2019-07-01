@@ -70,6 +70,8 @@ github.com/haproxytech/models v1.0.0 h1:ooShgeeRFpCdeMuDR5oZUllfAcKzJSlbv1P0JJ56
 github.com/haproxytech/models v1.0.0/go.mod h1:UXZVErm/XN6z10sM/enmxrdeEnwo7vz1JI+a8ycEvOQ=
 github.com/haproxytech/models v1.0.1-0.20190701133101-ba17373ab594 h1:p4FmjIcHANCrc4rwm92492fQXhP1QJJfyYB03RbDqkk=
 github.com/haproxytech/models v1.0.1-0.20190701133101-ba17373ab594/go.mod h1:UXZVErm/XN6z10sM/enmxrdeEnwo7vz1JI+a8ycEvOQ=
+github.com/haproxytech/models v1.0.1-0.20190701143542-2dd789d222df h1:g9mL83TMsoacLD5d1emNPsD+aC/E+ElSYKA4HUC8cCc=
+github.com/haproxytech/models v1.0.1-0.20190701143542-2dd789d222df/go.mod h1:UXZVErm/XN6z10sM/enmxrdeEnwo7vz1JI+a8ycEvOQ=
 github.com/kr/pretty v0.1.0 h1:L/CwN0zerZDmRFUapSPitk6f+Q3+0za1rQkzVuMiMFI=
 github.com/kr/pretty v0.1.0/go.mod h1:dAy3ld7l9f0ibDNOQOHHMYYIIbhfbHSm3C4ZsoJORNo=
 github.com/kr/pty v1.1.1/go.mod h1:pFQYn66WHrOpPYNljwOMqo10TkYh1fy3cYio2l3bCsQ=
