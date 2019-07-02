@@ -19,6 +19,7 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/haproxytech/client-native/misc"
 	"github.com/haproxytech/config-parser/parsers/tcp/actions"
 
 	strfmt "github.com/go-openapi/strfmt"
@@ -232,10 +233,9 @@ func parseTCPRequestRule(f types.TCPAction) *models.TCPRequestRule {
 		}
 		return r
 	case *actions.InspectDelay:
-		t, _ := strconv.ParseInt(v.Timeout, 10, 64)
 		return &models.TCPRequestRule{
 			Type:    "inspect-delay",
-			Timeout: &t,
+			Timeout: misc.ParseTimeout(v.Timeout),
 		}
 	case *actions.Session:
 		r := &models.TCPRequestRule{

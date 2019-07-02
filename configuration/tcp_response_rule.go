@@ -20,6 +20,7 @@ import (
 	"strings"
 
 	strfmt "github.com/go-openapi/strfmt"
+	"github.com/haproxytech/client-native/misc"
 	parser "github.com/haproxytech/config-parser"
 	parser_errors "github.com/haproxytech/config-parser/errors"
 	"github.com/haproxytech/config-parser/parsers/tcp/actions"
@@ -182,10 +183,9 @@ func parseTCPResponseRule(t types.TCPAction) *models.TCPResponseRule {
 		}
 		return r
 	case *actions.InspectDelay:
-		tOut, _ := strconv.ParseInt(v.Timeout, 10, 64)
 		return &models.TCPResponseRule{
 			Type:    "inspect-delay",
-			Timeout: &tOut,
+			Timeout: misc.ParseTimeout(v.Timeout),
 		}
 	}
 	return nil
