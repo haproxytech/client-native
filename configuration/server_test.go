@@ -135,6 +135,9 @@ func TestCreateEditDeleteServer(t *testing.T) {
 		TLSTickets:     "enabled",
 		Verify:         "none",
 		Inter:          &inter,
+		OnMarkedDown:   "shutdown-sessions",
+		OnError:        "mark-down",
+		OnMarkedUp:     "shutdown-backup-sessions",
 	}
 
 	err := client.CreateServer("test", s, "", version)

@@ -165,8 +165,11 @@ func TestCreateEditDeleteBackend(t *testing.T) {
 			Fall:  &tOut,
 			Inter: &tOut,
 		},
-		HTTPConnectionMode: "http-keep-alive",
-		ConnectTimeout:     &tOut,
+		HTTPConnectionMode:   "http-keep-alive",
+		ConnectTimeout:       &tOut,
+		ExternalCheck:        "enabled",
+		ExternalCheckCommand: "/bin/false",
+		ExternalCheckPath:    "/bin",
 	}
 
 	err := client.CreateBackend(b, "", version)
