@@ -334,8 +334,9 @@ func (c *Client) parseField(section parser.Section, sectionName string, fieldNam
 		}
 		d := data.(*types.OptionRedispatch)
 		if section == parser.Backends {
-			br := &models.BackendRedispatch{
-				Interval: *d.Interval,
+			br := &models.BackendRedispatch{}
+			if d.Interval != nil {
+				br.Interval = *d.Interval
 			}
 			if d.NoOption == true {
 				d := "disabled"
