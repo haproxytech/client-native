@@ -72,9 +72,6 @@ func TestGetBackends(t *testing.T) {
 		if *b.DefaultServer.Port != 8888 {
 			t.Errorf("%v: DefaultServer.Port not 8888: %v", b.Name, *b.DefaultServer.Port)
 		}
-		if b.Contstats != "enabled" {
-			t.Errorf("%v: ContinuousStatistics not enabled: %v", b.Name, b.Contstats)
-		}
 		if b.Cookie != "BLA" {
 			t.Errorf("%v: HTTPCookieName not BLA: %v", b.Name, b.Cookie)
 		}
@@ -129,9 +126,6 @@ func TestGetBackend(t *testing.T) {
 	}
 	if *b.DefaultServer.Port != 8888 {
 		t.Errorf("%v: DefaultServer.Port not 8888: %v", b.Name, *b.DefaultServer.Port)
-	}
-	if b.Contstats != "enabled" {
-		t.Errorf("%v: ContinuousStatistics not enabled: %v", b.Name, b.Contstats)
 	}
 	if b.Cookie != "BLA" {
 		t.Errorf("%v: HTTPCookieName not BLA: %v", b.Name, b.Cookie)
@@ -208,7 +202,7 @@ func TestCreateEditDeleteBackend(t *testing.T) {
 		Name:               "created",
 		Mode:               "http",
 		Balance:            &models.Balance{Algorithm: "roundrobin"},
-		HTTPConnectionMode: "http-tunnel",
+		HTTPConnectionMode: "httpclose",
 		ConnectTimeout:     &tOut,
 		StickTable: &models.BackendStickTable{
 			Expire: &e,

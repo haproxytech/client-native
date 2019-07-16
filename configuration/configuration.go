@@ -298,12 +298,10 @@ func (c *Client) parseField(section parser.Section, sectionName string, fieldNam
 			return nil
 		}
 		d := data.(*types.OptionHttpchk)
-		if section == parser.Backends {
-			return &models.BackendHttpchk{
-				Method:  d.Method,
-				URI:     d.Uri,
-				Version: d.Version,
-			}
+		return &models.Httpchk{
+			Method:  d.Method,
+			URI:     d.Uri,
+			Version: d.Version,
 		}
 	}
 	if fieldName == "Forwardfor" {
@@ -312,20 +310,14 @@ func (c *Client) parseField(section parser.Section, sectionName string, fieldNam
 			return nil
 		}
 		d := data.(*types.OptionForwardFor)
-		if section == parser.Backends {
-			enabled := "enabled"
-			disabled := "disabled"
-			bff := &models.Forwardfor{
-				Except:  d.Except,
-				Header:  d.Header,
-				Ifnone:  d.IfNone,
-				Enabled: &enabled,
-			}
-			if d.NoOption {
-				bff.Enabled = &disabled
-			}
-			return bff
+		enabled := "enabled"
+		bff := &models.Forwardfor{
+			Except:  d.Except,
+			Header:  d.Header,
+			Ifnone:  d.IfNone,
+			Enabled: &enabled,
 		}
+		return bff
 	}
 	if fieldName == "Redispatch" {
 		data, err := p.Get(section, sectionName, "option redispatch", false)
@@ -333,20 +325,18 @@ func (c *Client) parseField(section parser.Section, sectionName string, fieldNam
 			return nil
 		}
 		d := data.(*types.OptionRedispatch)
-		if section == parser.Backends {
-			br := &models.BackendRedispatch{}
-			if d.Interval != nil {
-				br.Interval = *d.Interval
-			}
-			if d.NoOption == true {
-				d := "disabled"
-				br.Enabled = &d
-			} else {
-				e := "enabled"
-				br.Enabled = &e
-			}
-			return br
+		br := &models.Redispatch{}
+		if d.Interval != nil {
+			br.Interval = *d.Interval
 		}
+		if d.NoOption == true {
+			d := "disabled"
+			br.Enabled = &d
+		} else {
+			e := "enabled"
+			br.Enabled = &e
+		}
+		return br
 	}
 	if fieldName == "Balance" {
 		data, err := p.Get(section, sectionName, "balance", false)
@@ -387,25 +377,23 @@ func (c *Client) parseField(section parser.Section, sectionName string, fieldNam
 			return nil
 		}
 		d := data.([]types.DefaultServer)
-		if section == parser.Backends || section == parser.Defaults {
-			dServer := &models.DefaultServer{}
-			for _, ds := range d {
-				dsParams := ds.Params
-				for _, p := range dsParams {
-					v, ok := p.(*params.ServerOptionValue)
-					if ok {
-						switch v.Name {
-						case "fall":
-							dServer.Fall = misc.ParseTimeout(v.Value)
-						case "inter":
-							dServer.Inter = misc.ParseTimeout(v.Value)
-						case "rise":
-							dServer.Rise = misc.ParseTimeout(v.Value)
-						case "port":
-							port, err := strconv.ParseInt(v.Value, 10, 64)
-							if err == nil {
-								dServer.Port = &port
-							}
+		dServer := &models.DefaultServer{}
+		for _, ds := range d {
+			dsParams := ds.Params
+			for _, p := range dsParams {
+				v, ok := p.(*params.ServerOptionValue)
+				if ok {
+					switch v.Name {
+					case "fall":
+						dServer.Fall = misc.ParseTimeout(v.Value)
+					case "inter":
+						dServer.Inter = misc.ParseTimeout(v.Value)
+					case "rise":
+						dServer.Rise = misc.ParseTimeout(v.Value)
+					case "port":
+						port, err := strconv.ParseInt(v.Value, 10, 64)
+						if err == nil {
+							dServer.Port = &port
 						}
 					}
 				}
@@ -422,26 +410,23 @@ func (c *Client) parseField(section parser.Section, sectionName string, fieldNam
 		d := data.(*types.StickTable)
 		bst := &models.BackendStickTable{}
 
-		if section == parser.Backends {
-			if d == nil {
-				return nil
-			}
-			bst.Type = d.Type
-			bst.Size = misc.ParseSize(d.Size)
-			bst.Store = d.Store
-			bst.Expire = misc.ParseTimeout(d.Expire)
-			bst.Peers = d.Peers
-
-			k, err := strconv.ParseInt(d.Length, 10, 64)
-			if err == nil {
-				bst.Keylen = &k
-			}
-			if d.NoPurge {
-				bst.Nopurge = true
-			}
-			return bst
+		if d == nil {
+			return nil
 		}
-		return nil
+		bst.Type = d.Type
+		bst.Size = misc.ParseSize(d.Size)
+		bst.Store = d.Store
+		bst.Expire = misc.ParseTimeout(d.Expire)
+		bst.Peers = d.Peers
+
+		k, err := strconv.ParseInt(d.Length, 10, 64)
+		if err == nil {
+			bst.Keylen = &k
+		}
+		if d.NoPurge {
+			bst.Nopurge = true
+		}
+		return bst
 	}
 	if fieldName == "AdvCheck" {
 		data, err := p.Get(section, sectionName, "option ssl-hello-chk", false)
@@ -643,20 +628,22 @@ func (c *Client) createEditSection(object interface{}, section parser.Section, p
 func (c *Client) setFieldValue(section parser.Section, sectionName string, fieldName string, field reflect.Value, p *parser.Parser) error {
 	//Handle special cases
 	if fieldName == "Httpchk" {
-		if valueIsNil(field) {
-			if err := p.Set(section, sectionName, "option httpchk", nil); err != nil {
+		if section == parser.Backends || section == parser.Defaults {
+			if valueIsNil(field) {
+				if err := p.Set(section, sectionName, "option httpchk", nil); err != nil {
+					return err
+				}
+				return nil
+			}
+			hc := field.Elem().Interface().(models.Httpchk)
+			d := &types.OptionHttpchk{
+				Method:  hc.Method,
+				Version: hc.Version,
+				Uri:     hc.URI,
+			}
+			if err := p.Set(section, sectionName, "option httpchk", d); err != nil {
 				return err
 			}
-			return nil
-		}
-		hc := field.Elem().Interface().(models.BackendHttpchk)
-		d := &types.OptionHttpchk{
-			Method:  hc.Method,
-			Version: hc.Version,
-			Uri:     hc.URI,
-		}
-		if err := p.Set(section, sectionName, "option httpchk", d); err != nil {
-			return err
 		}
 		return nil
 	}
@@ -669,13 +656,9 @@ func (c *Client) setFieldValue(section parser.Section, sectionName string, field
 		}
 		ff := field.Elem().Interface().(models.Forwardfor)
 		d := &types.OptionForwardFor{
-			Except:   ff.Except,
-			Header:   ff.Header,
-			IfNone:   ff.Ifnone,
-			NoOption: false,
-		}
-		if *ff.Enabled == "disabled" {
-			d.NoOption = true
+			Except: ff.Except,
+			Header: ff.Header,
+			IfNone: ff.Ifnone,
 		}
 		if err := p.Set(section, sectionName, "option forwardfor", d); err != nil {
 			return err
@@ -683,242 +666,258 @@ func (c *Client) setFieldValue(section parser.Section, sectionName string, field
 		return nil
 	}
 	if fieldName == "Redispatch" {
-		if valueIsNil(field) {
-			if err := p.Set(section, sectionName, "option redispatch", nil); err != nil {
+		if section == parser.Backends || section == parser.Defaults {
+			if valueIsNil(field) {
+				if err := p.Set(section, sectionName, "option redispatch", nil); err != nil {
+					return err
+				}
+				return nil
+			}
+			br := field.Elem().Interface().(models.Redispatch)
+			d := &types.OptionRedispatch{
+				Interval: &br.Interval,
+				NoOption: false,
+			}
+			if *br.Enabled == "disabled" {
+				d.NoOption = true
+			}
+			if err := p.Set(section, sectionName, "option redispatch", d); err != nil {
 				return err
 			}
-			return nil
-		}
-		br := field.Elem().Interface().(models.BackendRedispatch)
-		d := &types.OptionRedispatch{
-			Interval: &br.Interval,
-			NoOption: false,
-		}
-		if *br.Enabled == "disabled" {
-			d.NoOption = true
-		}
-		if err := p.Set(section, sectionName, "option redispatch", d); err != nil {
-			return err
 		}
 		return nil
 	}
 	if fieldName == "Balance" {
-		if valueIsNil(field) {
-			if err := p.Set(section, sectionName, "balance", nil); err != nil {
+		if section == parser.Backends || section == parser.Defaults {
+			if valueIsNil(field) {
+				if err := p.Set(section, sectionName, "balance", nil); err != nil {
+					return err
+				}
+				return nil
+			}
+			b := field.Elem().Interface().(models.Balance)
+			d := types.Balance{
+				Algorithm: b.Algorithm,
+				Arguments: b.Arguments,
+			}
+			if err := p.Set(section, sectionName, "balance", &d); err != nil {
 				return err
 			}
-			return nil
-		}
-		b := field.Elem().Interface().(models.Balance)
-		d := types.Balance{
-			Algorithm: b.Algorithm,
-			Arguments: b.Arguments,
-		}
-		if err := p.Set(section, sectionName, "balance", &d); err != nil {
-			return err
 		}
 		return nil
 	}
 	if fieldName == "ErrorFiles" {
-		if valueIsNil(field) {
-			if err := p.Set(section, sectionName, "errorfile", nil); err != nil {
+		if section == parser.Defaults {
+			if valueIsNil(field) {
+				if err := p.Set(section, sectionName, "errorfile", nil); err != nil {
+					return err
+				}
+				return nil
+			}
+			efs, ok := field.Interface().([]*models.Errorfile)
+			if !ok {
+				return nil
+			}
+			errorFiles := []types.ErrorFile{}
+			for _, ef := range efs {
+				errorFiles = append(errorFiles, types.ErrorFile{Code: strconv.FormatInt(ef.Code, 10), File: ef.File})
+			}
+			if err := p.Set(section, sectionName, "errorfile", errorFiles); err != nil {
 				return err
 			}
-			return nil
-		}
-		efs, ok := field.Interface().([]*models.Errorfile)
-		if !ok {
-			return nil
-		}
-		errorFiles := []types.ErrorFile{}
-		for _, ef := range efs {
-			errorFiles = append(errorFiles, types.ErrorFile{Code: strconv.FormatInt(ef.Code, 10), File: ef.File})
-		}
-		if err := p.Set(section, sectionName, "errorfile", errorFiles); err != nil {
-			return err
 		}
 		return nil
 	}
 	if fieldName == "DefaultServer" {
-		if valueIsNil(field) {
-			if err := p.Set(section, sectionName, "default-server", nil); err != nil {
+		if section == parser.Backends || section == parser.Defaults {
+			if valueIsNil(field) {
+				if err := p.Set(section, sectionName, "default-server", nil); err != nil {
+					return err
+				}
+				return nil
+			}
+			ds := field.Elem().Interface().(models.DefaultServer)
+			dServers := []types.DefaultServer{types.DefaultServer{}}
+
+			ps := make([]params.ServerOption, 0, 4)
+			if ds.Fall != nil {
+				param := &params.ServerOptionValue{
+					Name:  "fall",
+					Value: strconv.FormatInt(*ds.Fall, 10),
+				}
+				ps = append(ps, param)
+			}
+
+			if ds.Inter != nil {
+				param := &params.ServerOptionValue{
+					Name:  "inter",
+					Value: strconv.FormatInt(*ds.Fall, 10),
+				}
+				ps = append(ps, param)
+			}
+
+			if ds.Port != nil {
+				param := &params.ServerOptionValue{
+					Name:  "port",
+					Value: strconv.FormatInt(*ds.Fall, 10),
+				}
+				ps = append(ps, param)
+			}
+
+			if ds.Rise != nil {
+				param := &params.ServerOptionValue{
+					Name:  "rise",
+					Value: strconv.FormatInt(*ds.Fall, 10),
+				}
+				ps = append(ps, param)
+			}
+
+			dServers[0].Params = ps
+			if err := p.Set(section, sectionName, "default-server", dServers); err != nil {
 				return err
 			}
-			return nil
-		}
-		ds := field.Elem().Interface().(models.DefaultServer)
-		dServers := []types.DefaultServer{types.DefaultServer{}}
-
-		ps := make([]params.ServerOption, 0, 4)
-		if ds.Fall != nil {
-			param := &params.ServerOptionValue{
-				Name:  "fall",
-				Value: strconv.FormatInt(*ds.Fall, 10),
-			}
-			ps = append(ps, param)
-		}
-
-		if ds.Inter != nil {
-			param := &params.ServerOptionValue{
-				Name:  "inter",
-				Value: strconv.FormatInt(*ds.Fall, 10),
-			}
-			ps = append(ps, param)
-		}
-
-		if ds.Port != nil {
-			param := &params.ServerOptionValue{
-				Name:  "port",
-				Value: strconv.FormatInt(*ds.Fall, 10),
-			}
-			ps = append(ps, param)
-		}
-
-		if ds.Rise != nil {
-			param := &params.ServerOptionValue{
-				Name:  "rise",
-				Value: strconv.FormatInt(*ds.Fall, 10),
-			}
-			ps = append(ps, param)
-		}
-
-		dServers[0].Params = ps
-		if err := p.Set(section, sectionName, "default-server", dServers); err != nil {
-			return err
 		}
 		return nil
 	}
 	if fieldName == "StickTable" {
-		if valueIsNil(field) {
-			if err := p.Set(section, sectionName, "stick-table", nil); err != nil {
+		if section == parser.Backends {
+			if valueIsNil(field) {
+				if err := p.Set(section, sectionName, "stick-table", nil); err != nil {
+					return err
+				}
+				return nil
+			}
+			st := field.Elem().Interface().(models.BackendStickTable)
+			d := types.StickTable{
+				Type:    st.Type,
+				Store:   st.Store,
+				Peers:   st.Peers,
+				NoPurge: st.Nopurge,
+			}
+
+			if st.Keylen != nil {
+				d.Length = strconv.FormatInt(*st.Keylen, 10)
+			}
+			if st.Expire != nil {
+				d.Expire = strconv.FormatInt(*st.Expire, 10)
+			}
+			if st.Size != nil {
+				d.Size = strconv.FormatInt(*st.Size, 10)
+			}
+			if err := p.Set(section, sectionName, "stick-table", d); err != nil {
 				return err
 			}
-			return nil
-		}
-		st := field.Elem().Interface().(models.BackendStickTable)
-		d := types.StickTable{
-			Type:    st.Type,
-			Store:   st.Store,
-			Peers:   st.Peers,
-			NoPurge: st.Nopurge,
-		}
-
-		if st.Keylen != nil {
-			d.Length = strconv.FormatInt(*st.Keylen, 10)
-		}
-		if st.Expire != nil {
-			d.Expire = strconv.FormatInt(*st.Expire, 10)
-		}
-		if st.Size != nil {
-			d.Size = strconv.FormatInt(*st.Size, 10)
-		}
-		if err := p.Set(section, sectionName, "stick-table", d); err != nil {
-			return err
 		}
 		return nil
 	}
 	if fieldName == "AdvCheck" {
-		if err := p.Set(section, sectionName, "option ssl-hello-chk", nil); err != nil {
-			return err
-		}
-		if err := p.Set(section, sectionName, "option smtpchk", nil); err != nil {
-			return err
-		}
-		if err := p.Set(section, sectionName, "option ldap-check", nil); err != nil {
-			return err
-		}
-		if err := p.Set(section, sectionName, "option mysql-check", nil); err != nil {
-			return err
-		}
-		if err := p.Set(section, sectionName, "option pgsql-check", nil); err != nil {
-			return err
-		}
-		if err := p.Set(section, sectionName, "option tcp-check", nil); err != nil {
-			return err
-		}
-		if err := p.Set(section, sectionName, "option redis-check", nil); err != nil {
-			return err
-		}
-
-		if !valueIsNil(field) {
-			var d common.ParserData
-			pName := fmt.Sprintf("option %v", field.String())
-			if pName == "option smtpchk" {
-				d = &types.OptionSmtpchk{
-					NoOption: false,
-				}
-			} else if pName == "option mysql-check" {
-				d = &types.OptionMysqlCheck{
-					NoOption: false,
-				}
-			} else {
-				d = &types.SimpleOption{
-					NoOption: false,
-				}
-			}
-			if err := p.Set(section, sectionName, pName, d); err != nil {
+		if section == parser.Backends || section == parser.Defaults {
+			if err := p.Set(section, sectionName, "option ssl-hello-chk", nil); err != nil {
 				return err
+			}
+			if err := p.Set(section, sectionName, "option smtpchk", nil); err != nil {
+				return err
+			}
+			if err := p.Set(section, sectionName, "option ldap-check", nil); err != nil {
+				return err
+			}
+			if err := p.Set(section, sectionName, "option mysql-check", nil); err != nil {
+				return err
+			}
+			if err := p.Set(section, sectionName, "option pgsql-check", nil); err != nil {
+				return err
+			}
+			if err := p.Set(section, sectionName, "option tcp-check", nil); err != nil {
+				return err
+			}
+			if err := p.Set(section, sectionName, "option redis-check", nil); err != nil {
+				return err
+			}
+
+			if !valueIsNil(field) {
+				var d common.ParserData
+				pName := fmt.Sprintf("option %v", field.String())
+				if pName == "option smtpchk" {
+					d = &types.OptionSmtpchk{
+						NoOption: false,
+					}
+				} else if pName == "option mysql-check" {
+					d = &types.OptionMysqlCheck{
+						NoOption: false,
+					}
+				} else {
+					d = &types.SimpleOption{
+						NoOption: false,
+					}
+				}
+				if err := p.Set(section, sectionName, pName, d); err != nil {
+					return err
+				}
 			}
 		}
 		return nil
 	}
 	if fieldName == "ExternalCheck" {
-		pExternalCheck := &types.SimpleOption{}
-		if valueIsNil(field) {
-			pExternalCheck = nil
-		} else if field.String() == "disabled" {
-			pExternalCheck.NoOption = true
-		}
-		if err := p.Set(section, sectionName, "option external-check", pExternalCheck); err != nil {
-			return err
+		if section == parser.Backends || section == parser.Defaults {
+			pExternalCheck := &types.SimpleOption{}
+			if valueIsNil(field) {
+				pExternalCheck = nil
+			} else if field.String() == "disabled" {
+				pExternalCheck.NoOption = true
+			}
+			if err := p.Set(section, sectionName, "option external-check", pExternalCheck); err != nil {
+				return err
+			}
 		}
 		return nil
 	}
-
 	if fieldName == "ExternalCheckPath" {
-		pExtPath := &types.ExternalCheckPath{}
-		if valueIsNil(field) {
-			pExtPath = nil
-		} else {
-			pExtPath.Path = field.Interface().(string)
-		}
-		if err := p.Set(section, sectionName, "external-check path", pExtPath); err != nil {
-			return err
+		if section == parser.Backends || section == parser.Defaults {
+			pExtPath := &types.ExternalCheckPath{}
+			if valueIsNil(field) {
+				pExtPath = nil
+			} else {
+				pExtPath.Path = field.Interface().(string)
+			}
+			if err := p.Set(section, sectionName, "external-check path", pExtPath); err != nil {
+				return err
+			}
 		}
 		return nil
 	}
 	if fieldName == "ExternalCheckCommand" {
-		pExtCmd := &types.ExternalCheckCommand{}
-		if valueIsNil(field) {
-			pExtCmd = nil
-		} else {
-			pExtCmd.Command = field.Interface().(string)
-		}
-		if err := p.Set(section, sectionName, "external-check command", pExtCmd); err != nil {
-			return err
+		if section == parser.Backends || section == parser.Defaults {
+			pExtCmd := &types.ExternalCheckCommand{}
+			if valueIsNil(field) {
+				pExtCmd = nil
+			} else {
+				pExtCmd.Command = field.Interface().(string)
+			}
+			if err := p.Set(section, sectionName, "external-check command", pExtCmd); err != nil {
+				return err
+			}
 		}
 		return nil
 	}
 	if fieldName == "DefaultBackend" {
-		if valueIsNil(field) {
-			if err := p.Set(section, sectionName, "default_backend", nil); err != nil {
+		if section == parser.Frontends || section == parser.Defaults {
+			if valueIsNil(field) {
+				if err := p.Set(section, sectionName, "default_backend", nil); err != nil {
+					return err
+				}
+				return nil
+			}
+			bck := field.String()
+			d := &types.StringC{
+				Value: bck,
+			}
+			if err := p.Set(section, sectionName, "default_backend", d); err != nil {
 				return err
 			}
-			return nil
-		}
-		bck := field.String()
-		d := &types.StringC{
-			Value: bck,
-		}
-		if err := p.Set(section, sectionName, "default_backend", d); err != nil {
-			return err
 		}
 		return nil
 	}
 	if fieldName == "HTTPConnectionMode" {
-		if err := p.Set(section, sectionName, "option http-tunnel", nil); err != nil {
-			return err
-		}
 		if err := p.Set(section, sectionName, "option httpclose", nil); err != nil {
 			return err
 		}
@@ -943,51 +942,55 @@ func (c *Client) setFieldValue(section parser.Section, sectionName string, field
 		return nil
 	}
 	if fieldName == "Clflog" {
-		if valueIsNil(field) {
-			// check if httplog exists, if not do nothing
-			d, err := p.Get(section, sectionName, "option httplog", false)
-			if err != nil {
-				if err != parser_errors.FetchError {
-					return err
+		if section == parser.Frontends || section == parser.Defaults {
+			if valueIsNil(field) {
+				// check if httplog exists, if not do nothing
+				d, err := p.Get(section, sectionName, "option httplog", false)
+				if err != nil {
+					if err != parser_errors.FetchError {
+						return err
+					}
+					return nil
+				}
+				o := d.(*types.OptionHTTPLog)
+				if o.Clf {
+					o.Clf = false
+					if err := p.Set(section, sectionName, "option httplog", o); err != nil {
+						return err
+					}
 				}
 				return nil
 			}
-			o := d.(*types.OptionHTTPLog)
-			if o.Clf {
-				o.Clf = false
-				if err := p.Set(section, sectionName, "option httplog", o); err != nil {
-					return err
-				}
+			o := &types.OptionHTTPLog{Clf: true}
+			if err := p.Set(section, sectionName, "option httplog", o); err != nil {
+				return err
 			}
-			return nil
-		}
-		o := &types.OptionHTTPLog{Clf: true}
-		if err := p.Set(section, sectionName, "option httplog", o); err != nil {
-			return err
 		}
 		return nil
 	}
 	if fieldName == "Httplog" {
-		if valueIsNil(field) {
-			// check if clflog is active, if yes, do nothing
-			d, err := p.Get(section, sectionName, "option httplog", false)
-			if err != nil {
-				if err != parser_errors.FetchError {
-					return err
+		if section == parser.Frontends || section == parser.Defaults {
+			if valueIsNil(field) {
+				// check if clflog is active, if yes, do nothing
+				d, err := p.Get(section, sectionName, "option httplog", false)
+				if err != nil {
+					if err != parser_errors.FetchError {
+						return err
+					}
+					return nil
+				}
+				o := d.(*types.OptionHTTPLog)
+				if !o.Clf {
+					if err := p.Set(section, sectionName, "option httplog", nil); err != nil {
+						return err
+					}
 				}
 				return nil
 			}
-			o := d.(*types.OptionHTTPLog)
-			if !o.Clf {
-				if err := p.Set(section, sectionName, "option httplog", nil); err != nil {
-					return err
-				}
+			o := &types.OptionHTTPLog{}
+			if err := p.Set(section, sectionName, "option httplog", o); err != nil {
+				return err
 			}
-			return nil
-		}
-		o := &types.OptionHTTPLog{}
-		if err := p.Set(section, sectionName, "option httplog", o); err != nil {
-			return err
 		}
 		return nil
 	}
