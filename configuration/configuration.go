@@ -321,7 +321,7 @@ func (c *Client) parseField(section parser.Section, sectionName string, fieldNam
 				Ifnone:  d.IfNone,
 				Enabled: &enabled,
 			}
-			if d.IfNone {
+			if d.NoOption {
 				bff.Enabled = &disabled
 			}
 			return bff
