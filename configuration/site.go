@@ -323,6 +323,7 @@ func (c *Client) EditSite(name string, data *models.Site, transactionID string, 
 		for i := range data.Farms {
 			bcks[i] = data.Farms[i]
 		}
+		danglingBcks := map[string]bool{}
 		// delete non existing backends and remove uses in frontends
 		for _, b := range confS.Farms {
 			if misc.GetObjByField(bcks, "Name", b.Name) == nil {
@@ -334,18 +335,49 @@ func (c *Client) EditSite(name string, data *models.Site, transactionID string, 
 						res = append(res, err)
 					}
 				}
-				err := c.DeleteBackend(b.Name, t, 0)
-				if err != nil {
-					res = append(res, err)
+				danglingBcks[b.Name] = false
+			}
+		}
+		// remove default backend if no default backends specified
+		if defaultBck == "" {
+			err = c.removeDefaultBckToFrontend(name, t, p)
+			if err != nil {
+				res = append(res, err)
+			}
+			frontend := &models.Frontend{Name: name}
+			if err := c.parseSection(frontend, parser.Frontends, name, p); err != nil {
+				res = append(res, err)
+			}
+			if frontend.DefaultBackend != "" {
+				danglingBcks[frontend.DefaultBackend] = true
+			}
+		}
+
+		// check if dangling backends are used in other frontends, if not, delete them
+		_, fs, err := c.GetFrontends(t)
+		if err == nil {
+			for _, f := range fs {
+				if f.Name == name {
+					continue
+				}
+				if _, ok := danglingBcks[f.DefaultBackend]; ok {
+					delete(danglingBcks, f.DefaultBackend)
+				}
+				_, ubs, err := c.GetBackendSwitchingRules(f.Name, t)
+				if err == nil {
+					for _, ub := range ubs {
+						if _, ok := danglingBcks[ub.Name]; ok {
+							delete(danglingBcks, ub.Name)
+						}
+					}
 				}
 			}
 		}
-	}
-	// remove default backend if no default backends specified
-	if defaultBck == "" {
-		err = c.removeDefaultBckToFrontend(name, t, p)
-		if err != nil {
-			res = append(res, err)
+		for b := range danglingBcks {
+			err := c.DeleteBackend(b, t, 0)
+			if err != nil {
+				res = append(res, err)
+			}
 		}
 	}
 
