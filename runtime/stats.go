@@ -60,7 +60,16 @@ func (s *SingleRuntime) GetStats() (models.NativeStats, error) {
 		}
 
 		var st models.NativeStatStats
-		err := mapstructure.WeakDecode(data, &st)
+		decoder, err := mapstructure.NewDecoder(&mapstructure.DecoderConfig{
+			Result:           &st,
+			WeaklyTypedInput: true,
+			TagName:          "json",
+		})
+		if err != nil {
+			continue
+		}
+
+		err = decoder.Decode(data)
 		if err != nil {
 			continue
 		}
