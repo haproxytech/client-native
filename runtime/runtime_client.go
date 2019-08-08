@@ -66,16 +66,12 @@ func (c *Client) Init(socketPath []string, masterSocketPath string, nbproc int) 
 }
 
 //GetStats returns stats from the socket
-func (c *Client) GetStats() ([]models.NativeStats, error) {
-	result := make([]models.NativeStats, len(c.runtimes))
+func (c *Client) GetStats() models.NativeStats {
+	result := make(models.NativeStats, len(c.runtimes))
 	for index, runtime := range c.runtimes {
-		stats, err := runtime.GetStats()
-		if err != nil {
-			return nil, err
-		}
-		result[index] = stats
+		result[index] = runtime.GetStats()
 	}
-	return result, nil
+	return result
 }
 
 //GetInfo returns info from the socket

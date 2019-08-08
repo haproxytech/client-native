@@ -28,13 +28,21 @@ import (
 )
 
 //GetStats fetches HAProxy stats from runtime API
-func (s *SingleRuntime) GetStats() (models.NativeStats, error) {
+func (s *SingleRuntime) GetStats() *models.NativeStatsCollection {
+	rAPI := ""
+	if s.worker != 0 {
+		rAPI = fmt.Sprintf("%s@%v", s.socketPath, s.worker)
+	} else {
+		rAPI = s.socketPath
+	}
+	result := &models.NativeStatsCollection{RuntimeAPI: rAPI}
 	rawdata, err := s.ExecuteRaw("show stat")
 	if err != nil {
-		return nil, err
+		result.Error = err.Error()
+		return result
 	}
 	lines := strings.Split(rawdata[2:], "\n")
-	result := models.NativeStats{}
+	stats := []*models.NativeStat{}
 	keys := strings.Split(lines[0], ",")
 	//data := []map[string]string{}
 	for i := 1; i < len(lines); i++ {
@@ -74,14 +82,11 @@ func (s *SingleRuntime) GetStats() (models.NativeStats, error) {
 			continue
 		}
 		oneLineData.Stats = &st
-		if s.worker != 0 {
-			oneLineData.RuntimeAPI = fmt.Sprintf("%s@%v", s.socketPath, s.worker)
-		} else {
-			oneLineData.RuntimeAPI = s.socketPath
-		}
-		result = append(result, oneLineData)
+
+		stats = append(stats, oneLineData)
 	}
-	return result, nil
+	result.Stats = stats
+	return result
 }
 
 //GetInfo fetches HAProxy info from runtime API
