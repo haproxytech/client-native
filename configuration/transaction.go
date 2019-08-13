@@ -141,6 +141,13 @@ func (c *Client) CommitTransaction(id string) (*models.Transaction, error) {
 		return nil, err
 	}
 
+	// Fail backing up and cleaning backups silently
+	if c.BackupsNumber > 0 {
+		copyFile(c.ConfigurationFile, fmt.Sprintf("%v.%v", c.ConfigurationFile, version))
+		backupToDel := fmt.Sprintf("%v.%v", c.ConfigurationFile, strconv.Itoa(int(version)-c.BackupsNumber))
+		os.Remove(backupToDel)
+	}
+
 	if err := copyFile(transactionFile, c.ConfigurationFile); err != nil {
 		c.failTransaction(id)
 		return nil, err

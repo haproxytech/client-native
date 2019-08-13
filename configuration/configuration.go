@@ -52,6 +52,7 @@ type ClientParams struct {
 	UseValidation          bool
 	PersistentTransactions bool
 	TransactionDir         string
+	BackupsNumber          int
 }
 
 // Client configuration client
