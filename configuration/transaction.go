@@ -395,6 +395,18 @@ func (c *Client) getTransactionFileFailed(transactionID string) string {
 	return filepath.Join(c.TransactionDir, "failed", transactionFileName)
 }
 
+func (c *Client) getBackupFile(version int64) (string, error) {
+	if version == 0 {
+		return c.ConfigurationFile, nil
+	}
+	backupFileName := fmt.Sprintf("%v.%v", c.ConfigurationFile, version)
+
+	if _, err := os.Stat(backupFileName); err == nil {
+		return backupFileName, nil
+	}
+	return "", NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("Backup file for version %v does not exist", version))
+}
+
 func (c *Client) failTransaction(id string) {
 	failedDir := filepath.Join(c.TransactionDir, "failed")
 	if _, err := os.Stat(failedDir); os.IsNotExist(err) {

@@ -27,11 +27,18 @@ import (
 
 // GetRawConfiguration returns configuration version and a
 // string containing raw config file
-func (c *Client) GetRawConfiguration(transactionID string) (int64, string, error) {
+func (c *Client) GetRawConfiguration(transactionID string, version int64) (int64, string, error) {
 	config := c.ConfigurationFile
 	var err error
-	if transactionID != "" {
+	if transactionID != "" && version != 0 {
+		return 0, "", NewConfError(ErrBothVersionTransaction, "Both version and transaction specified, specify only one")
+	} else if transactionID != "" {
 		config, err = c.getTransactionFile(transactionID)
+		if err != nil {
+			return 0, "", err
+		}
+	} else if version != 0 {
+		config, err = c.getBackupFile(version)
 		if err != nil {
 			return 0, "", err
 		}
