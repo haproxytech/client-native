@@ -40,8 +40,12 @@ github.com/haproxytech/config-parser v1.0.3 h1:lRABAQYSE9Pmuw0rzUHzPrzRn2qK5qdVV
 github.com/haproxytech/config-parser v1.0.3/go.mod h1:se7v728KDunj+qz1kXFFFl+nDuoBdUaN5eYSi+gYjNM=
 github.com/haproxytech/config-parser v1.1.1 h1:uicV/ep6qMvGVXr8FOyyZkDA6XTa1EDnw3Glow4qPlM=
 github.com/haproxytech/config-parser v1.1.1/go.mod h1:se7v728KDunj+qz1kXFFFl+nDuoBdUaN5eYSi+gYjNM=
+github.com/haproxytech/config-parser v1.1.2 h1:shr6qDMdSEsQXBZXKuErsVSpaFNTEXGTuRfYDvcWRkI=
+github.com/haproxytech/config-parser v1.1.2/go.mod h1:se7v728KDunj+qz1kXFFFl+nDuoBdUaN5eYSi+gYjNM=
 github.com/haproxytech/models v1.2.0 h1:E9C6LPxYgd9VfeCbV+UkmJUnsgw006PZSFjIpWUgO5A=
 github.com/haproxytech/models v1.2.0/go.mod h1:UXZVErm/XN6z10sM/enmxrdeEnwo7vz1JI+a8ycEvOQ=
+github.com/haproxytech/models v1.2.1 h1:95H5onrUnos75JoA5awNgIRLJo7++4dg4JAXsPmNN2s=
+github.com/haproxytech/models v1.2.1/go.mod h1:UXZVErm/XN6z10sM/enmxrdeEnwo7vz1JI+a8ycEvOQ=
 github.com/kr/pretty v0.1.0/go.mod h1:dAy3ld7l9f0ibDNOQOHHMYYIIbhfbHSm3C4ZsoJORNo=
 github.com/kr/pty v1.1.1/go.mod h1:pFQYn66WHrOpPYNljwOMqo10TkYh1fy3cYio2l3bCsQ=
 github.com/kr/text v0.1.0/go.mod h1:4Jbv+DJW3UT/LiOwJeYQe1efqtUx/iVham/4vfdArNI=

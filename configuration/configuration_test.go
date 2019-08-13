@@ -111,6 +111,7 @@ frontend test_2
 backend test
   mode http
   balance roundrobin
+  hash-type consistent sdbm avalanche
   log-tag bla
   option http-keep-alive
   option forwardfor header X-Forwarded-For
@@ -139,6 +140,7 @@ backend test
 backend test_2
   mode http
   balance roundrobin
+  hash-type consistent sdbm avalanche
   log-tag bla
   option http-keep-alive
   option forwardfor header X-Forwarded-For

@@ -350,6 +350,18 @@ func (c *Client) parseField(section parser.Section, sectionName string, fieldNam
 			Arguments: d.Arguments,
 		}
 	}
+	if fieldName == "HashType" {
+		data, err := p.Get(section, sectionName, "hash-type", false)
+		if err != nil {
+			return nil
+		}
+		d := data.(*types.HashType)
+		return &models.BackendHashType{
+			Method:   d.Method,
+			Function: d.Function,
+			Modifier: d.Modifier,
+		}
+	}
 	if fieldName == "ErrorFiles" {
 		data, err := p.Get(section, sectionName, "errorfile", false)
 		if err != nil {
@@ -702,6 +714,26 @@ func (c *Client) setFieldValue(section parser.Section, sectionName string, field
 				Arguments: b.Arguments,
 			}
 			if err := p.Set(section, sectionName, "balance", &d); err != nil {
+				return err
+			}
+		}
+		return nil
+	}
+	if fieldName == "HashType" {
+		if section == parser.Backends {
+			if valueIsNil(field) {
+				if err := p.Set(section, sectionName, "hash-type", nil); err != nil {
+					return err
+				}
+				return nil
+			}
+			b := field.Elem().Interface().(models.BackendHashType)
+			d := types.HashType{
+				Method:   b.Method,
+				Function: b.Function,
+				Modifier: b.Modifier,
+			}
+			if err := p.Set(section, sectionName, "hash-type", &d); err != nil {
 				return err
 			}
 		}

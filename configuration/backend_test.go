@@ -54,6 +54,15 @@ func TestGetBackends(t *testing.T) {
 		if b.Balance.Algorithm != "roundrobin" {
 			t.Errorf("%v: Balance.Algorithm not roundrobin: %v", b.Name, b.Balance.Algorithm)
 		}
+		if b.HashType.Method != "consistent" {
+			t.Errorf("%v: HashType.Method not consistent: %v", b.Name, b.HashType.Method)
+		}
+		if b.HashType.Function != "sdbm" {
+			t.Errorf("%v: HashType.Function not sdbm: %v", b.Name, b.HashType.Function)
+		}
+		if b.HashType.Modifier != "avalanche" {
+			t.Errorf("%v: HashType.Modifier not avalanche: %v", b.Name, b.HashType.Modifier)
+		}
 		if b.HTTPConnectionMode != "http-keep-alive" {
 			t.Errorf("%v: HTTPConnectionMode not http-keep-alive: %v", b.Name, b.HTTPConnectionMode)
 		}
@@ -109,6 +118,15 @@ func TestGetBackend(t *testing.T) {
 	if b.Balance.Algorithm != "roundrobin" {
 		t.Errorf("%v: Balance.Algorithm not roundrobin: %v", b.Name, b.Balance.Algorithm)
 	}
+	if b.HashType.Method != "consistent" {
+		t.Errorf("%v: HashType.Method not consistent: %v", b.Name, b.HashType.Method)
+	}
+	if b.HashType.Function != "sdbm" {
+		t.Errorf("%v: HashType.Function not sdbm: %v", b.Name, b.HashType.Function)
+	}
+	if b.HashType.Modifier != "avalanche" {
+		t.Errorf("%v: HashType.Modifier not avalanche: %v", b.Name, b.HashType.Modifier)
+	}
 	if b.HTTPConnectionMode != "http-keep-alive" {
 		t.Errorf("%v: HTTPConnectionMode not http-keep-alive: %v", b.Name, b.HTTPConnectionMode)
 	}
@@ -155,6 +173,10 @@ func TestCreateEditDeleteBackend(t *testing.T) {
 		Name:    "created",
 		Mode:    "http",
 		Balance: &models.Balance{Algorithm: "uri"},
+		HashType: &models.BackendHashType{
+			Method:   "map-based",
+			Function: "crc32",
+		},
 		DefaultServer: &models.DefaultServer{
 			Fall:  &tOut,
 			Inter: &tOut,
