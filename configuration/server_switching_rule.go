@@ -144,7 +144,7 @@ func (c *Client) parseServerSwitchingRules(backend string, p *parser.Parser) (mo
 
 	data, err := p.Get(parser.Backends, backend, "use-server", false)
 	if err != nil {
-		if err == parser_errors.FetchError {
+		if err == parser_errors.ErrFetch {
 			return sr, nil
 		}
 		return nil, err

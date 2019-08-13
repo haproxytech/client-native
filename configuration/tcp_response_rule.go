@@ -148,7 +148,7 @@ func (c *Client) parseTCPResponseRules(backend string, p *parser.Parser) (models
 
 	data, err := p.Get(parser.Backends, backend, "tcp-response", false)
 	if err != nil {
-		if err == parser_errors.FetchError {
+		if err == parser_errors.ErrFetch {
 			return tcpResRules, nil
 		}
 		return nil, err

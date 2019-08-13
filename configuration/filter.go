@@ -184,7 +184,7 @@ func (c *Client) parseFilters(t, pName string, p *parser.Parser) (models.Filters
 	f := models.Filters{}
 	data, err := p.Get(section, pName, "filter", false)
 	if err != nil {
-		if err == parser_errors.FetchError {
+		if err == parser_errors.ErrFetch {
 			return f, nil
 		}
 		return nil, err

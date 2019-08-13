@@ -162,7 +162,7 @@ func (c *Client) parseServers(backend string, p *parser.Parser) (models.Servers,
 
 	data, err := p.Get(parser.Backends, backend, "server", false)
 	if err != nil {
-		if err == parser_errors.FetchError {
+		if err == parser_errors.ErrFetch {
 			return servers, nil
 		}
 		return nil, err

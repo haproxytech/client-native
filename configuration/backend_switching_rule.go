@@ -148,7 +148,7 @@ func (c *Client) parseBackendSwitchingRules(frontend string, p *parser.Parser) (
 
 	data, err := p.Get(parser.Frontends, frontend, "use_backend", false)
 	if err != nil {
-		if err == parser_errors.FetchError {
+		if err == parser_errors.ErrFetch {
 			return br, nil
 		}
 		return nil, err

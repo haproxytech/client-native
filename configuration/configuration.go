@@ -301,7 +301,7 @@ func (c *Client) parseField(section parser.Section, sectionName string, fieldNam
 		d := data.(*types.OptionHttpchk)
 		return &models.Httpchk{
 			Method:  d.Method,
-			URI:     d.Uri,
+			URI:     d.URI,
 			Version: d.Version,
 		}
 	}
@@ -640,7 +640,7 @@ func (c *Client) setFieldValue(section parser.Section, sectionName string, field
 			d := &types.OptionHttpchk{
 				Method:  hc.Method,
 				Version: hc.Version,
-				Uri:     hc.URI,
+				URI:     hc.URI,
 			}
 			if err := p.Set(section, sectionName, "option httpchk", d); err != nil {
 				return err
@@ -948,7 +948,7 @@ func (c *Client) setFieldValue(section parser.Section, sectionName string, field
 				// check if httplog exists, if not do nothing
 				d, err := p.Get(section, sectionName, "option httplog", false)
 				if err != nil {
-					if err != parser_errors.FetchError {
+					if err != parser_errors.ErrFetch {
 						return err
 					}
 					return nil
@@ -975,7 +975,7 @@ func (c *Client) setFieldValue(section parser.Section, sectionName string, field
 				// check if clflog is active, if yes, do nothing
 				d, err := p.Get(section, sectionName, "option httplog", false)
 				if err != nil {
-					if err != parser_errors.FetchError {
+					if err != parser_errors.ErrFetch {
 						return err
 					}
 					return nil
@@ -1054,17 +1054,17 @@ func (c *Client) setFieldValue(section parser.Section, sectionName string, field
 
 func (c *Client) handleError(id, parentType, parentName, transaction string, implicit bool, err error) error {
 	var e error
-	if err == parser_errors.SectionMissingErr {
+	if err == parser_errors.ErrSectionMissing {
 		if parentName != "" {
 			e = NewConfError(ErrParentDoesNotExist, fmt.Sprintf("%s %s does not exist", parentType, parentName))
 		} else {
 			e = NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("Object %s does not exist", id))
 		}
-	} else if err == parser_errors.SectionAlreadyExistsErr {
+	} else if err == parser_errors.ErrSectionAlreadyExists {
 		e = NewConfError(ErrObjectAlreadyExists, fmt.Sprintf("Object %s already exists", id))
-	} else if err == parser_errors.FetchError {
+	} else if err == parser_errors.ErrFetch {
 		e = NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("Object %v does not exist in %s %s", id, parentType, parentName))
-	} else if err == parser_errors.IndexOutOfRange {
+	} else if err == parser_errors.ErrIndexOutOfRange {
 		e = NewConfError(ErrObjectIndexOutOfRange, fmt.Sprintf("Object with id %v in %s %s out of range", id, parentType, parentName))
 	} else {
 		e = err

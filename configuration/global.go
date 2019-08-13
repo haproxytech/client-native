@@ -38,13 +38,13 @@ func (c *Client) GetGlobalConfiguration(transactionID string) (int64, *models.Gl
 
 	_, err = p.Get(parser.Global, parser.GlobalSectionName, "daemon")
 	daemon := "enabled"
-	if err == errors.FetchError {
+	if err == errors.ErrFetch {
 		daemon = "disabled"
 	}
 
 	_, err = p.Get(parser.Global, parser.GlobalSectionName, "master-worker")
 	masterWorker := true
-	if err == errors.FetchError {
+	if err == errors.ErrFetch {
 		masterWorker = false
 	}
 
@@ -104,11 +104,11 @@ func (c *Client) GetGlobalConfiguration(transactionID string) (int64, *models.Gl
 	data, err = p.Get(parser.Global, parser.GlobalSectionName, "cpu-map")
 	cpuMaps := []*models.CPUMap{}
 	if err == nil {
-		cMaps := data.([]types.CpuMap)
+		cMaps := data.([]types.CPUMap)
 		for _, m := range cMaps {
 			cpuMap := &models.CPUMap{
 				Process: &m.Process,
-				CPUSet:  &m.CpuSet,
+				CPUSet:  &m.CPUSet,
 			}
 			cpuMaps = append(cpuMaps, cpuMap)
 		}
@@ -116,7 +116,7 @@ func (c *Client) GetGlobalConfiguration(transactionID string) (int64, *models.Gl
 
 	data, err = p.Get(parser.Global, parser.GlobalSectionName, "stats timeout")
 	var statsTimeout *int64
-	if err == errors.FetchError {
+	if err == errors.ErrFetch {
 		statsTimeout = nil
 	} else {
 		statsTimeoutParser := data.(*types.StringC)
@@ -146,7 +146,7 @@ func (c *Client) GetGlobalConfiguration(transactionID string) (int64, *models.Gl
 
 	_, err = p.Get(parser.Global, parser.GlobalSectionName, "external-check")
 	externalCheck := true
-	if err == errors.FetchError {
+	if err == errors.ErrFetch {
 		externalCheck = false
 	}
 
@@ -263,11 +263,11 @@ func (c *Client) PushGlobalConfiguration(data *models.Global, transactionID stri
 	}
 	p.Set(parser.Global, parser.GlobalSectionName, "stats timeout", statsTimeout)
 
-	cpuMaps := []types.CpuMap{}
+	cpuMaps := []types.CPUMap{}
 	for _, cpuMap := range data.CPUMaps {
-		cm := types.CpuMap{
+		cm := types.CPUMap{
 			Process: *cpuMap.Process,
-			CpuSet:  *cpuMap.CPUSet,
+			CPUSet:  *cpuMap.CPUSet,
 		}
 		cpuMaps = append(cpuMaps, cm)
 	}

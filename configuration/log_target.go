@@ -181,7 +181,7 @@ func (c *Client) parseLogTargets(t, pName string, p *parser.Parser) (models.LogT
 	logTargets := models.LogTargets{}
 	data, err := p.Get(section, pName, "log", false)
 	if err != nil {
-		if err == parser_errors.FetchError {
+		if err == parser_errors.ErrFetch {
 			return logTargets, nil
 		}
 		return nil, err

@@ -161,7 +161,7 @@ func (c *Client) parseBinds(frontend string, p *parser.Parser) (models.Binds, er
 
 	data, err := p.Get(parser.Frontends, frontend, "bind", false)
 	if err != nil {
-		if err == parser_errors.FetchError {
+		if err == parser_errors.ErrFetch {
 			return binds, nil
 		}
 		return nil, err

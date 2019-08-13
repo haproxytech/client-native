@@ -184,7 +184,7 @@ func (c *Client) parseTCPRequestRules(t, pName string, p *parser.Parser) (models
 	tcpReqRules := models.TCPRequestRules{}
 	data, err := p.Get(section, pName, "tcp-request", false)
 	if err != nil {
-		if err == parser_errors.FetchError {
+		if err == parser_errors.ErrFetch {
 			return tcpReqRules, nil
 		}
 		return nil, err

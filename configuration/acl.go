@@ -66,7 +66,7 @@ func (c *Client) GetACL(id int64, parentType, parentName string, transactionID s
 		return 0, nil, c.handleError(strconv.FormatInt(id, 10), parentType, parentName, "", false, err)
 	}
 
-	acl := parseACL(data.(types.Acl))
+	acl := parseACL(data.(types.ACL))
 	acl.ID = &id
 
 	v, err := c.GetVersion(transactionID)
@@ -180,13 +180,13 @@ func (c *Client) parseACLs(t, pName string, p *parser.Parser) (models.Acls, erro
 	acls := models.Acls{}
 	data, err := p.Get(section, pName, "acl", false)
 	if err != nil {
-		if err == parser_errors.FetchError {
+		if err == parser_errors.ErrFetch {
 			return acls, nil
 		}
 		return nil, err
 	}
 
-	aclLines := data.([]types.Acl)
+	aclLines := data.([]types.ACL)
 	for i, r := range aclLines {
 		id := int64(i)
 		acl := parseACL(r)
@@ -198,7 +198,7 @@ func (c *Client) parseACLs(t, pName string, p *parser.Parser) (models.Acls, erro
 	return acls, nil
 }
 
-func parseACL(f types.Acl) *models.ACL {
+func parseACL(f types.ACL) *models.ACL {
 	return &models.ACL{
 		ACLName:   f.Name,
 		Criterion: f.Criterion,
@@ -206,8 +206,8 @@ func parseACL(f types.Acl) *models.ACL {
 	}
 }
 
-func serializeACL(f models.ACL) types.Acl {
-	return types.Acl{
+func serializeACL(f models.ACL) types.ACL {
+	return types.ACL{
 		Name:      f.ACLName,
 		Criterion: f.Criterion,
 		Value:     f.Value,

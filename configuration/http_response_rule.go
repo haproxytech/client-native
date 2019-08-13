@@ -184,7 +184,7 @@ func (c *Client) parseHTTPResponseRules(t, pName string, p *parser.Parser) (mode
 	httpResRules := models.HTTPResponseRules{}
 	data, err := p.Get(section, pName, "http-response", false)
 	if err != nil {
-		if err == parser_errors.FetchError {
+		if err == parser_errors.ErrFetch {
 			return httpResRules, nil
 		}
 		return nil, err
@@ -299,7 +299,7 @@ func parseHTTPResponseRule(f types.HTTPAction) *models.HTTPResponseRule {
 			r.Status = status
 		}
 		return r
-	case *actions.AddAcl:
+	case *actions.AddACL:
 		return &models.HTTPResponseRule{
 			Type:      "add-acl",
 			ACLFile:   v.FileName,
@@ -307,7 +307,7 @@ func parseHTTPResponseRule(f types.HTTPAction) *models.HTTPResponseRule {
 			Cond:      v.Cond,
 			CondTest:  v.CondTest,
 		}
-	case *actions.DelAcl:
+	case *actions.DelACL:
 		return &models.HTTPResponseRule{
 			Type:      "del-acl",
 			ACLFile:   v.FileName,
@@ -406,14 +406,14 @@ func serializeHTTPResponseRule(f models.HTTPResponseRule) types.HTTPAction {
 			CondTest: f.CondTest,
 		}
 	case "add-acl":
-		return &actions.AddAcl{
+		return &actions.AddACL{
 			FileName: f.ACLFile,
 			KeyFmt:   f.ACLKeyfmt,
 			Cond:     f.Cond,
 			CondTest: f.CondTest,
 		}
 	case "del-acl":
-		return &actions.DelAcl{
+		return &actions.DelACL{
 			FileName: f.ACLFile,
 			KeyFmt:   f.ACLKeyfmt,
 			Cond:     f.Cond,

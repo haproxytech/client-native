@@ -145,7 +145,7 @@ func (c *Client) parseStickRules(backend string, p *parser.Parser) (models.Stick
 
 	data, err := p.Get(parser.Backends, backend, "stick", false)
 	if err != nil {
-		if err == parser_errors.FetchError {
+		if err == parser_errors.ErrFetch {
 			return sr, nil
 		}
 		return nil, err
