@@ -414,10 +414,30 @@ func (c *Client) DeleteSite(name string, transactionID string, version int64) er
 		res = append(res, err)
 	}
 
+	farmsUsed := make(map[string]bool)
+	_, fs, err := c.GetFrontends(t)
+	if err == nil {
+		for _, f := range fs {
+			if f.Name == name {
+				continue
+			}
+			farmsUsed[f.DefaultBackend] = true
+			_, ubs, err := c.GetBackendSwitchingRules(f.Name, t)
+			if err == nil {
+				for _, ub := range ubs {
+					farmsUsed[ub.Name] = true
+				}
+			}
+		}
+	}
+
 	for _, b := range site.Farms {
-		err = c.DeleteBackend(b.Name, t, 0)
-		if err != nil {
-			res = append(res, err)
+		// check if farms are used in other frontends, if not, delete them
+		if _, ok := farmsUsed[b.Name]; !ok {
+			err = c.DeleteBackend(b.Name, t, 0)
+			if err != nil {
+				res = append(res, err)
+			}
 		}
 	}
 
