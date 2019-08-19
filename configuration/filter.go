@@ -35,14 +35,14 @@ func (c *Client) GetFilters(parentType, parentName string, transactionID string)
 		return 0, nil, err
 	}
 
-	filters, err := c.parseFilters(parentType, parentName, p)
-	if err != nil {
-		return 0, nil, c.handleError("", parentType, parentName, "", false, err)
-	}
-
 	v, err := c.GetVersion(transactionID)
 	if err != nil {
 		return 0, nil, err
+	}
+
+	filters, err := c.parseFilters(parentType, parentName, p)
+	if err != nil {
+		return v, nil, c.handleError("", parentType, parentName, "", false, err)
 	}
 
 	return v, filters, nil
@@ -56,6 +56,11 @@ func (c *Client) GetFilter(id int64, parentType, parentName string, transactionI
 		return 0, nil, err
 	}
 
+	v, err := c.GetVersion(transactionID)
+	if err != nil {
+		return 0, nil, err
+	}
+
 	var section parser.Section
 	if parentType == "backend" {
 		section = parser.Backends
@@ -65,16 +70,11 @@ func (c *Client) GetFilter(id int64, parentType, parentName string, transactionI
 
 	data, err := p.GetOne(section, parentName, "filter", int(id))
 	if err != nil {
-		return 0, nil, c.handleError(strconv.FormatInt(id, 10), parentType, parentName, "", false, err)
+		return v, nil, c.handleError(strconv.FormatInt(id, 10), parentType, parentName, "", false, err)
 	}
 
 	filter := parseFilter(data.(types.Filter))
 	filter.ID = &id
-
-	v, err := c.GetVersion(transactionID)
-	if err != nil {
-		return 0, nil, err
-	}
 
 	return v, filter, nil
 }

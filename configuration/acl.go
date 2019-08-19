@@ -33,14 +33,14 @@ func (c *Client) GetACLs(parentType, parentName string, transactionID string) (i
 		return 0, nil, err
 	}
 
-	acls, err := c.parseACLs(parentType, parentName, p)
-	if err != nil {
-		return 0, nil, c.handleError("", parentType, parentName, "", false, err)
-	}
-
 	v, err := c.GetVersion(transactionID)
 	if err != nil {
 		return 0, nil, err
+	}
+
+	acls, err := c.parseACLs(parentType, parentName, p)
+	if err != nil {
+		return v, nil, c.handleError("", parentType, parentName, "", false, err)
 	}
 
 	return v, acls, nil
@@ -54,6 +54,11 @@ func (c *Client) GetACL(id int64, parentType, parentName string, transactionID s
 		return 0, nil, err
 	}
 
+	v, err := c.GetVersion(transactionID)
+	if err != nil {
+		return 0, nil, err
+	}
+
 	var section parser.Section
 	if parentType == "backend" {
 		section = parser.Backends
@@ -63,16 +68,11 @@ func (c *Client) GetACL(id int64, parentType, parentName string, transactionID s
 
 	data, err := p.GetOne(section, parentName, "acl", int(id))
 	if err != nil {
-		return 0, nil, c.handleError(strconv.FormatInt(id, 10), parentType, parentName, "", false, err)
+		return v, nil, c.handleError(strconv.FormatInt(id, 10), parentType, parentName, "", false, err)
 	}
 
 	acl := parseACL(data.(types.ACL))
 	acl.ID = &id
-
-	v, err := c.GetVersion(transactionID)
-	if err != nil {
-		return 0, nil, err
-	}
 
 	return v, acl, nil
 }

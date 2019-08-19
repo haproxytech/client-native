@@ -68,7 +68,7 @@ func (c *Client) GetRawConfiguration(transactionID string, version int64) (int64
 		}
 	}
 	if err = scanner.Err(); err != nil {
-		return 0, "", NewConfError(ErrCannotReadConfFile, err.Error())
+		return ondiskV, "", NewConfError(ErrCannotReadConfFile, err.Error())
 	}
 
 	return ondiskV, dataStr, nil

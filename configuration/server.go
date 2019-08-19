@@ -38,14 +38,14 @@ func (c *Client) GetServers(backend string, transactionID string) (int64, models
 		return 0, nil, err
 	}
 
-	servers, err := c.parseServers(backend, p)
-	if err != nil {
-		return 0, nil, c.handleError("", "backend", backend, "", false, err)
-	}
-
 	v, err := c.GetVersion(transactionID)
 	if err != nil {
 		return 0, nil, err
+	}
+
+	servers, err := c.parseServers(backend, p)
+	if err != nil {
+		return v, nil, c.handleError("", "backend", backend, "", false, err)
 	}
 
 	return v, servers, nil
@@ -59,14 +59,14 @@ func (c *Client) GetServer(name string, backend string, transactionID string) (i
 		return 0, nil, err
 	}
 
-	server, _ := c.getServerByName(name, backend, p)
-	if server == nil {
-		return 0, nil, NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("Server %s does not exist in backend %s", name, backend))
-	}
-
 	v, err := c.GetVersion(transactionID)
 	if err != nil {
 		return 0, nil, err
+	}
+
+	server, _ := c.getServerByName(name, backend, p)
+	if server == nil {
+		return v, nil, NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("Server %s does not exist in backend %s", name, backend))
 	}
 
 	return v, server, nil

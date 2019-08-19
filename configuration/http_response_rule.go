@@ -36,14 +36,14 @@ func (c *Client) GetHTTPResponseRules(parentType, parentName string, transaction
 		return 0, nil, err
 	}
 
-	httpRules, err := c.parseHTTPResponseRules(parentType, parentName, p)
-	if err != nil {
-		return 0, nil, c.handleError("", parentType, parentName, "", false, err)
-	}
-
 	v, err := c.GetVersion(transactionID)
 	if err != nil {
 		return 0, nil, err
+	}
+
+	httpRules, err := c.parseHTTPResponseRules(parentType, parentName, p)
+	if err != nil {
+		return v, nil, c.handleError("", parentType, parentName, "", false, err)
 	}
 
 	return v, httpRules, nil
@@ -57,6 +57,11 @@ func (c *Client) GetHTTPResponseRule(id int64, parentType, parentName string, tr
 		return 0, nil, err
 	}
 
+	v, err := c.GetVersion(transactionID)
+	if err != nil {
+		return 0, nil, err
+	}
+
 	var section parser.Section
 	if parentType == "backend" {
 		section = parser.Backends
@@ -66,16 +71,11 @@ func (c *Client) GetHTTPResponseRule(id int64, parentType, parentName string, tr
 
 	data, err := p.GetOne(section, parentName, "http-response", int(id))
 	if err != nil {
-		return 0, nil, c.handleError(strconv.FormatInt(id, 10), parentType, parentName, "", false, err)
+		return v, nil, c.handleError(strconv.FormatInt(id, 10), parentType, parentName, "", false, err)
 	}
 
 	httpRule := parseHTTPResponseRule(data.(types.HTTPAction))
 	httpRule.ID = &id
-
-	v, err := c.GetVersion(transactionID)
-	if err != nil {
-		return 0, nil, err
-	}
 
 	return v, httpRule, nil
 }

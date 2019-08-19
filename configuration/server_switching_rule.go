@@ -33,15 +33,16 @@ func (c *Client) GetServerSwitchingRules(backend string, transactionID string) (
 		return 0, nil, err
 	}
 
-	srvRules, err := c.parseServerSwitchingRules(backend, p)
-	if err != nil {
-		return 0, nil, c.handleError("", "backend", backend, "", false, err)
-	}
-
 	v, err := c.GetVersion(transactionID)
 	if err != nil {
 		return 0, nil, err
 	}
+
+	srvRules, err := c.parseServerSwitchingRules(backend, p)
+	if err != nil {
+		return v, nil, c.handleError("", "backend", backend, "", false, err)
+	}
+
 	return v, srvRules, nil
 }
 
@@ -53,18 +54,18 @@ func (c *Client) GetServerSwitchingRule(id int64, backend string, transactionID 
 		return 0, nil, err
 	}
 
-	data, err := p.GetOne(parser.Backends, backend, "use-server", int(id))
-	if err != nil {
-		return 0, nil, c.handleError(strconv.FormatInt(id, 10), "backend", backend, "", false, err)
-	}
-
-	srvRule := parseServerSwitchingRule(data.(types.UseServer))
-	srvRule.ID = &id
-
 	v, err := c.GetVersion(transactionID)
 	if err != nil {
 		return 0, nil, err
 	}
+
+	data, err := p.GetOne(parser.Backends, backend, "use-server", int(id))
+	if err != nil {
+		return v, nil, c.handleError(strconv.FormatInt(id, 10), "backend", backend, "", false, err)
+	}
+
+	srvRule := parseServerSwitchingRule(data.(types.UseServer))
+	srvRule.ID = &id
 
 	return v, srvRule, nil
 }

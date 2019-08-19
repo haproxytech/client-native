@@ -36,14 +36,14 @@ func (c *Client) GetBinds(frontend string, transactionID string) (int64, models.
 		return 0, nil, err
 	}
 
-	binds, err := c.parseBinds(frontend, p)
-	if err != nil {
-		return 0, nil, c.handleError("", "frontend", frontend, "", false, err)
-	}
-
 	v, err := c.GetVersion(transactionID)
 	if err != nil {
 		return 0, nil, err
+	}
+
+	binds, err := c.parseBinds(frontend, p)
+	if err != nil {
+		return v, nil, c.handleError("", "frontend", frontend, "", false, err)
 	}
 
 	return v, binds, nil
@@ -57,14 +57,14 @@ func (c *Client) GetBind(name string, frontend string, transactionID string) (in
 		return 0, nil, err
 	}
 
-	bind, _ := c.getBindByName(name, frontend, p)
-	if bind == nil {
-		return 0, nil, NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("Bind %s does not exist in frontend %s", name, frontend))
-	}
-
 	v, err := c.GetVersion(transactionID)
 	if err != nil {
 		return 0, nil, err
+	}
+
+	bind, _ := c.getBindByName(name, frontend, p)
+	if bind == nil {
+		return v, nil, NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("Bind %s does not exist in frontend %s", name, frontend))
 	}
 
 	return v, bind, nil

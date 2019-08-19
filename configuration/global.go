@@ -36,6 +36,11 @@ func (c *Client) GetGlobalConfiguration(transactionID string) (int64, *models.Gl
 		return 0, nil, err
 	}
 
+	v, err := c.GetVersion(transactionID)
+	if err != nil {
+		return 0, nil, err
+	}
+
 	_, err = p.Get(parser.Global, parser.GlobalSectionName, "daemon")
 	daemon := "enabled"
 	if err == errors.ErrFetch {
@@ -164,11 +169,6 @@ func (c *Client) GetGlobalConfiguration(transactionID string) (int64, *models.Gl
 		SslDefaultBindOptions: sslOptions,
 		TuneSslDefaultDhParam: dhParam,
 		ExternalCheck:         externalCheck,
-	}
-
-	v, err := c.GetVersion(transactionID)
-	if err != nil {
-		return 0, nil, err
 	}
 
 	return v, g, nil

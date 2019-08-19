@@ -33,14 +33,14 @@ func (c *Client) GetStickRules(backend string, transactionID string) (int64, mod
 		return 0, nil, err
 	}
 
-	sRules, err := c.parseStickRules(backend, p)
-	if err != nil {
-		return 0, nil, c.handleError("", "backend", backend, "", false, err)
-	}
-
 	v, err := c.GetVersion(transactionID)
 	if err != nil {
 		return 0, nil, err
+	}
+
+	sRules, err := c.parseStickRules(backend, p)
+	if err != nil {
+		return v, nil, c.handleError("", "backend", backend, "", false, err)
 	}
 
 	return v, sRules, nil
@@ -54,18 +54,18 @@ func (c *Client) GetStickRule(id int64, backend string, transactionID string) (i
 		return 0, nil, err
 	}
 
-	data, err := p.GetOne(parser.Backends, backend, "stick", int(id))
-	if err != nil {
-		return 0, nil, c.handleError(strconv.FormatInt(id, 10), "backend", backend, "", false, err)
-	}
-
-	sRule := parseStickRule(data.(types.Stick))
-	sRule.ID = &id
-
 	v, err := c.GetVersion(transactionID)
 	if err != nil {
 		return 0, nil, err
 	}
+
+	data, err := p.GetOne(parser.Backends, backend, "stick", int(id))
+	if err != nil {
+		return v, nil, c.handleError(strconv.FormatInt(id, 10), "backend", backend, "", false, err)
+	}
+
+	sRule := parseStickRule(data.(types.Stick))
+	sRule.ID = &id
 
 	return v, sRule, nil
 }

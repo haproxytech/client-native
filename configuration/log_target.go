@@ -33,14 +33,14 @@ func (c *Client) GetLogTargets(parentType, parentName string, transactionID stri
 		return 0, nil, err
 	}
 
-	logTargets, err := c.parseLogTargets(parentType, parentName, p)
-	if err != nil {
-		return 0, nil, c.handleError("", parentType, parentName, "", false, err)
-	}
-
 	v, err := c.GetVersion(transactionID)
 	if err != nil {
 		return 0, nil, err
+	}
+
+	logTargets, err := c.parseLogTargets(parentType, parentName, p)
+	if err != nil {
+		return v, nil, c.handleError("", parentType, parentName, "", false, err)
 	}
 
 	return v, logTargets, nil
@@ -54,6 +54,11 @@ func (c *Client) GetLogTarget(id int64, parentType, parentName string, transacti
 		return 0, nil, err
 	}
 
+	v, err := c.GetVersion(transactionID)
+	if err != nil {
+		return 0, nil, err
+	}
+
 	var section parser.Section
 	if parentType == "backend" {
 		section = parser.Backends
@@ -63,16 +68,11 @@ func (c *Client) GetLogTarget(id int64, parentType, parentName string, transacti
 
 	data, err := p.GetOne(section, parentName, "log", int(id))
 	if err != nil {
-		return 0, nil, c.handleError(strconv.FormatInt(id, 10), parentType, parentName, "", false, err)
+		return v, nil, c.handleError(strconv.FormatInt(id, 10), parentType, parentName, "", false, err)
 	}
 
 	logTarget := parseLogTarget(data.(types.Log))
 	logTarget.ID = &id
-
-	v, err := c.GetVersion(transactionID)
-	if err != nil {
-		return 0, nil, err
-	}
 
 	return v, logTarget, nil
 }

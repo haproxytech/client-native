@@ -37,14 +37,14 @@ func (c *Client) GetTCPRequestRules(parentType, parentName string, transactionID
 		return 0, nil, err
 	}
 
-	tcpRules, err := c.parseTCPRequestRules(parentType, parentName, p)
-	if err != nil {
-		return 0, nil, c.handleError("", parentType, parentName, "", false, err)
-	}
-
 	v, err := c.GetVersion(transactionID)
 	if err != nil {
 		return 0, nil, err
+	}
+
+	tcpRules, err := c.parseTCPRequestRules(parentType, parentName, p)
+	if err != nil {
+		return v, nil, c.handleError("", parentType, parentName, "", false, err)
 	}
 
 	return v, tcpRules, nil
@@ -58,6 +58,11 @@ func (c *Client) GetTCPRequestRule(id int64, parentType, parentName string, tran
 		return 0, nil, err
 	}
 
+	v, err := c.GetVersion(transactionID)
+	if err != nil {
+		return 0, nil, err
+	}
+
 	var section parser.Section
 	if parentType == "backend" {
 		section = parser.Backends
@@ -67,16 +72,11 @@ func (c *Client) GetTCPRequestRule(id int64, parentType, parentName string, tran
 
 	data, err := p.GetOne(section, parentName, "tcp-request", int(id))
 	if err != nil {
-		return 0, nil, c.handleError(strconv.FormatInt(id, 10), parentType, parentName, "", false, err)
+		return v, nil, c.handleError(strconv.FormatInt(id, 10), parentType, parentName, "", false, err)
 	}
 
 	tcpRule := parseTCPRequestRule(data.(types.TCPAction))
 	tcpRule.ID = &id
-
-	v, err := c.GetVersion(transactionID)
-	if err != nil {
-		return 0, nil, err
-	}
 
 	return v, tcpRule, nil
 }

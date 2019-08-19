@@ -31,9 +31,14 @@ func (c *Client) GetFrontends(transactionID string) (int64, models.Frontends, er
 		return 0, nil, err
 	}
 
-	fNames, err := p.SectionsGet(parser.Frontends)
+	v, err := c.GetVersion(transactionID)
 	if err != nil {
 		return 0, nil, err
+	}
+
+	fNames, err := p.SectionsGet(parser.Frontends)
+	if err != nil {
+		return v, nil, err
 	}
 
 	frontends := []*models.Frontend{}
@@ -43,11 +48,6 @@ func (c *Client) GetFrontends(transactionID string) (int64, models.Frontends, er
 			continue
 		}
 		frontends = append(frontends, f)
-	}
-
-	v, err := c.GetVersion(transactionID)
-	if err != nil {
-		return 0, nil, err
 	}
 
 	return v, frontends, nil
@@ -61,18 +61,18 @@ func (c *Client) GetFrontend(name string, transactionID string) (int64, *models.
 		return 0, nil, err
 	}
 
+	v, err := c.GetVersion(transactionID)
+	if err != nil {
+		return 0, nil, err
+	}
+
 	if !c.checkSectionExists(parser.Frontends, name, p) {
-		return 0, nil, NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("Frontend %s does not exist", name))
+		return v, nil, NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("Frontend %s does not exist", name))
 	}
 
 	frontend := &models.Frontend{Name: name}
 	if err := c.parseSection(frontend, parser.Frontends, name, p); err != nil {
-		return 0, nil, err
-	}
-
-	v, err := c.GetVersion(transactionID)
-	if err != nil {
-		return 0, nil, err
+		return v, nil, err
 	}
 
 	return v, frontend, nil

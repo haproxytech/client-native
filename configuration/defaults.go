@@ -29,13 +29,13 @@ func (c *Client) GetDefaultsConfiguration(transactionID string) (int64, *models.
 		return 0, nil, err
 	}
 
-	d := &models.Defaults{}
-	c.parseSection(d, parser.Defaults, parser.DefaultSectionName, p)
-
 	v, err := c.GetVersion(transactionID)
 	if err != nil {
 		return 0, nil, err
 	}
+
+	d := &models.Defaults{}
+	c.parseSection(d, parser.Defaults, parser.DefaultSectionName, p)
 
 	return v, d, nil
 }

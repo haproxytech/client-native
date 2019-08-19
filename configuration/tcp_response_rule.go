@@ -36,14 +36,14 @@ func (c *Client) GetTCPResponseRules(backend string, transactionID string) (int6
 		return 0, nil, err
 	}
 
-	tcpRules, err := c.parseTCPResponseRules(backend, p)
-	if err != nil {
-		return 0, nil, c.handleError("", "backend", backend, "", false, err)
-	}
-
 	v, err := c.GetVersion(transactionID)
 	if err != nil {
 		return 0, nil, err
+	}
+
+	tcpRules, err := c.parseTCPResponseRules(backend, p)
+	if err != nil {
+		return v, nil, c.handleError("", "backend", backend, "", false, err)
 	}
 
 	return v, tcpRules, nil
@@ -57,18 +57,18 @@ func (c *Client) GetTCPResponseRule(id int64, backend string, transactionID stri
 		return 0, nil, err
 	}
 
-	data, err := p.GetOne(parser.Backends, backend, "tcp-response", int(id))
-	if err != nil {
-		return 0, nil, c.handleError(strconv.FormatInt(id, 10), "backend", backend, "", false, err)
-	}
-
-	tcpRule := parseTCPResponseRule(data.(types.TCPAction))
-	tcpRule.ID = &id
-
 	v, err := c.GetVersion(transactionID)
 	if err != nil {
 		return 0, nil, err
 	}
+
+	data, err := p.GetOne(parser.Backends, backend, "tcp-response", int(id))
+	if err != nil {
+		return v, nil, c.handleError(strconv.FormatInt(id, 10), "backend", backend, "", false, err)
+	}
+
+	tcpRule := parseTCPResponseRule(data.(types.TCPAction))
+	tcpRule.ID = &id
 
 	return v, tcpRule, nil
 }

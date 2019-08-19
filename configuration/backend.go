@@ -31,9 +31,14 @@ func (c *Client) GetBackends(transactionID string) (int64, models.Backends, erro
 		return 0, nil, err
 	}
 
-	bNames, err := p.SectionsGet(parser.Backends)
+	v, err := c.GetVersion(transactionID)
 	if err != nil {
 		return 0, nil, err
+	}
+
+	bNames, err := p.SectionsGet(parser.Backends)
+	if err != nil {
+		return v, nil, err
 	}
 
 	backends := []*models.Backend{}
@@ -43,11 +48,6 @@ func (c *Client) GetBackends(transactionID string) (int64, models.Backends, erro
 			continue
 		}
 		backends = append(backends, b)
-	}
-
-	v, err := c.GetVersion(transactionID)
-	if err != nil {
-		return 0, nil, err
 	}
 
 	return v, backends, nil
@@ -61,19 +61,19 @@ func (c *Client) GetBackend(name string, transactionID string) (int64, *models.B
 		return 0, nil, err
 	}
 
+	v, err := c.GetVersion(transactionID)
+	if err != nil {
+		return 0, nil, err
+	}
+
 	if !c.checkSectionExists(parser.Backends, name, p) {
-		return 0, nil, NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("Backend %s does not exist", name))
+		return v, nil, NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("Backend %s does not exist", name))
 	}
 
 	backend := &models.Backend{Name: name}
 	if err := c.parseSection(backend, parser.Backends, name, p); err != nil {
-		return 0, nil, err
+		return v, nil, err
 
-	}
-
-	v, err := c.GetVersion(transactionID)
-	if err != nil {
-		return 0, nil, err
 	}
 
 	return v, backend, nil

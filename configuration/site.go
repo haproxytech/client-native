@@ -34,14 +34,14 @@ func (c *Client) GetSites(transactionID string) (int64, models.Sites, error) {
 		return 0, nil, err
 	}
 
-	sites, err := c.parseSites(p)
+	v, err := c.GetVersion(transactionID)
 	if err != nil {
 		return 0, nil, err
 	}
 
-	v, err := c.GetVersion(transactionID)
+	sites, err := c.parseSites(p)
 	if err != nil {
-		return 0, nil, err
+		return v, nil, err
 	}
 
 	return v, sites, nil
@@ -55,18 +55,18 @@ func (c *Client) GetSite(name string, transactionID string) (int64, *models.Site
 		return 0, nil, err
 	}
 
+	v, err := c.GetVersion(transactionID)
+	if err != nil {
+		return 0, nil, err
+	}
+
 	if !c.checkSectionExists(parser.Frontends, name, p) {
-		return 0, nil, NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("Site %s does not exist", name))
+		return v, nil, NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("Site %s does not exist", name))
 	}
 
 	site := c.parseSite(name, p)
 	if site == nil {
-		return 0, nil, NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("Site %s does not exist", name))
-	}
-
-	v, err := c.GetVersion(transactionID)
-	if err != nil {
-		return 0, nil, err
+		return v, nil, NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("Site %s does not exist", name))
 	}
 
 	return v, site, nil

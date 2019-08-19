@@ -34,15 +34,16 @@ func (c *Client) GetBackendSwitchingRules(frontend string, transactionID string)
 		return 0, nil, err
 	}
 
-	bckRules, err := c.parseBackendSwitchingRules(frontend, p)
-	if err != nil {
-		return 0, nil, c.handleError("", "frontend", frontend, "", false, err)
-	}
-
 	v, err := c.GetVersion(transactionID)
 	if err != nil {
 		return 0, nil, err
 	}
+
+	bckRules, err := c.parseBackendSwitchingRules(frontend, p)
+	if err != nil {
+		return v, nil, c.handleError("", "frontend", frontend, "", false, err)
+	}
+
 	return v, bckRules, nil
 }
 
@@ -54,18 +55,18 @@ func (c *Client) GetBackendSwitchingRule(id int64, frontend string, transactionI
 		return 0, nil, err
 	}
 
-	data, err := p.GetOne(parser.Frontends, frontend, "use_backend", int(id))
-	if err != nil {
-		return 0, nil, c.handleError(strconv.FormatInt(id, 10), "frontend", frontend, "", false, err)
-	}
-
-	bckRule := parseBackendSwitchingRule(data.(types.UseBackend))
-	bckRule.ID = &id
-
 	v, err := c.GetVersion(transactionID)
 	if err != nil {
 		return 0, nil, err
 	}
+
+	data, err := p.GetOne(parser.Frontends, frontend, "use_backend", int(id))
+	if err != nil {
+		return v, nil, c.handleError(strconv.FormatInt(id, 10), "frontend", frontend, "", false, err)
+	}
+
+	bckRule := parseBackendSwitchingRule(data.(types.UseBackend))
+	bckRule.ID = &id
 
 	return v, bckRule, nil
 }
