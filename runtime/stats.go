@@ -19,7 +19,6 @@ import (
 	"fmt"
 	"strconv"
 	"strings"
-	"time"
 
 	"github.com/go-openapi/strfmt"
 
@@ -126,7 +125,6 @@ func parseInfo(info string) (models.ProcessInfoHaproxy, error) {
 				data.Uptime = &uptime
 			}
 		}
-		data.Time = strfmt.DateTime(time.Now())
 	}
 
 	return data, nil
