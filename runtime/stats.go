@@ -119,6 +119,11 @@ func parseInfo(info string) (models.ProcessInfoHaproxy, error) {
 			if err == nil {
 				data.Processes = &nbproc
 			}
+		case "6":
+			pid, err := strconv.ParseInt(fields[3], 10, 64)
+			if err == nil {
+				data.Pid = &pid
+			}
 		case "8":
 			uptime, err := strconv.ParseInt(fields[3], 10, 64)
 			if err == nil {
