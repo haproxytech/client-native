@@ -90,6 +90,7 @@ frontend test
   maxconn 2000
   default_backend test
   use_backend test_2 if TRUE
+  use_backend %[req.cookie(foo)]
   timeout client 4s
   option clitcpka
 
@@ -129,7 +130,7 @@ backend test
   timeout check 2s
   timeout tunnel 5s
   timeout server 3s
-  cookie BLA
+  cookie BLA rewrite httponly nocache
   option external-check
   external-check command /bin/false
   use-server webserv if TRUE
@@ -150,7 +151,7 @@ backend test_2
   timeout check 2s
   timeout tunnel 5s
   timeout server 3s
-  cookie BLA
+  cookie BLA rewrite httponly nocache
 `
 const testPath = "/tmp/haproxy-test.cfg"
 const haproxyExec = "/usr/sbin/haproxy"

@@ -29,8 +29,8 @@ func TestGetBackendSwitchingRules(t *testing.T) {
 		t.Error(err.Error())
 	}
 
-	if len(bckRules) != 1 {
-		t.Errorf("%v backend switching rules returned, expected 1", len(bckRules))
+	if len(bckRules) != 2 {
+		t.Errorf("%v backend switching rules returned, expected 2", len(bckRules))
 	}
 
 	if v != version {
@@ -38,18 +38,22 @@ func TestGetBackendSwitchingRules(t *testing.T) {
 	}
 
 	for _, br := range bckRules {
-		if *br.ID != 0 {
-			t.Errorf("ID only backend switching rule 0, %v found", *br.ID)
+		if *br.ID == 0 {
+			if br.Name != "test_2" {
+				t.Errorf("%v: Name not test_2: %v", *br.ID, br.Name)
+			}
+			if br.Cond != "if" {
+				t.Errorf("%v: Cond not if: %v", *br.ID, br.Cond)
+			}
+			if br.CondTest != "TRUE" {
+				t.Errorf("%v: CondTest not TRUE: %v", *br.ID, br.CondTest)
+			}
+		} else if *br.ID == 1 {
+			if br.Name != "%[req.cookie(foo)]" {
+				t.Errorf("%v: Name not %%[req.cookie(foo)]: %v", *br.ID, br.Name)
+			}
 		}
-		if br.Name != "test_2" {
-			t.Errorf("%v: Name not test_2: %v", *br.ID, br.Name)
-		}
-		if br.Cond != "if" {
-			t.Errorf("%v: Cond not if: %v", *br.ID, br.Cond)
-		}
-		if br.CondTest != "TRUE" {
-			t.Errorf("%v: CondTest not TRUE: %v", *br.ID, br.CondTest)
-		}
+
 	}
 
 	_, bckRules, err = client.GetBackendSwitchingRules("test_2", "")
@@ -97,7 +101,7 @@ func TestGetBackendSwitchingRule(t *testing.T) {
 
 func TestCreateEditDeleteBackendSwitchingRule(t *testing.T) {
 	// TestCreateBackendSwitchingRule
-	id := int64(1)
+	id := int64(2)
 	br := &models.BackendSwitchingRule{
 		ID:       &id,
 		Name:     "test",
@@ -112,7 +116,7 @@ func TestCreateEditDeleteBackendSwitchingRule(t *testing.T) {
 		version++
 	}
 
-	v, bckRule, err := client.GetBackendSwitchingRule(1, "test", "")
+	v, bckRule, err := client.GetBackendSwitchingRule(2, "test", "")
 	if err != nil {
 		t.Error(err.Error())
 	}
@@ -129,20 +133,18 @@ func TestCreateEditDeleteBackendSwitchingRule(t *testing.T) {
 
 	// TestBackendSwitchingRule
 	br = &models.BackendSwitchingRule{
-		ID:       &id,
-		Name:     "test",
-		Cond:     "if",
-		CondTest: "TRUE",
+		ID:   &id,
+		Name: "%[req.cookie(foo)]",
 	}
 
-	err = client.EditBackendSwitchingRule(1, "test", br, "", version)
+	err = client.EditBackendSwitchingRule(2, "test", br, "", version)
 	if err != nil {
 		t.Error(err.Error())
 	} else {
 		version++
 	}
 
-	v, bckRule, err = client.GetBackendSwitchingRule(1, "test", "")
+	v, bckRule, err = client.GetBackendSwitchingRule(2, "test", "")
 	if err != nil {
 		t.Error(err.Error())
 	}
@@ -158,7 +160,7 @@ func TestCreateEditDeleteBackendSwitchingRule(t *testing.T) {
 	}
 
 	// TestBackendSwitchingRule
-	err = client.DeleteBackendSwitchingRule(1, "test", "", version)
+	err = client.DeleteBackendSwitchingRule(2, "test", "", version)
 	if err != nil {
 		t.Error(err.Error())
 	} else {
@@ -169,7 +171,7 @@ func TestCreateEditDeleteBackendSwitchingRule(t *testing.T) {
 		t.Error("Version not incremented")
 	}
 
-	_, _, err = client.GetBackendSwitchingRule(1, "test", "")
+	_, _, err = client.GetBackendSwitchingRule(2, "test", "")
 	if err == nil {
 		t.Error("DeleteBackendSwitchingRule failed, backend switching rule 2 still exists")
 	}

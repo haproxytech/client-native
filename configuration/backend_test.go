@@ -81,8 +81,8 @@ func TestGetBackends(t *testing.T) {
 		if *b.DefaultServer.Port != 8888 {
 			t.Errorf("%v: DefaultServer.Port not 8888: %v", b.Name, *b.DefaultServer.Port)
 		}
-		if b.Cookie != "BLA" {
-			t.Errorf("%v: HTTPCookieName not BLA: %v", b.Name, b.Cookie)
+		if b.Cookie != "BLA rewrite httponly nocache" {
+			t.Errorf("%v: HTTPCookieName not BLA rewrite httponly nocache: %v", b.Name, b.Cookie)
 		}
 		if *b.CheckTimeout != 2000 {
 			t.Errorf("%v: CheckTimeout not 2000: %v", b.Name, *b.CheckTimeout)
@@ -145,8 +145,8 @@ func TestGetBackend(t *testing.T) {
 	if *b.DefaultServer.Port != 8888 {
 		t.Errorf("%v: DefaultServer.Port not 8888: %v", b.Name, *b.DefaultServer.Port)
 	}
-	if b.Cookie != "BLA" {
-		t.Errorf("%v: HTTPCookieName not BLA: %v", b.Name, b.Cookie)
+	if b.Cookie != "BLA rewrite httponly nocache" {
+		t.Errorf("%v: HTTPCookieName not BLA rewrite httponly nocache: %v", b.Name, b.Cookie)
 	}
 	if *b.CheckTimeout != 2000 {
 		t.Errorf("%v: CheckTimeout not 2000: %v", b.Name, *b.CheckTimeout)
@@ -224,6 +224,7 @@ func TestCreateEditDeleteBackend(t *testing.T) {
 		Name:               "created",
 		Mode:               "http",
 		Balance:            &models.Balance{Algorithm: "roundrobin"},
+		Cookie:             "BLA rewrite httponly nocache",
 		HTTPConnectionMode: "httpclose",
 		ConnectTimeout:     &tOut,
 		StickTable: &models.BackendStickTable{
