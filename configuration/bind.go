@@ -187,6 +187,14 @@ func parseBind(ondiskBind types.Bind) *models.Bind {
 		addSlice := strings.Split(ondiskBind.Path, ":")
 		if len(addSlice) == 0 {
 			return nil
+		} else if len(addSlice) == 4 { // :::443
+			b.Address = "::"
+			if addSlice[3] != "" {
+				p, err := strconv.ParseInt(addSlice[3], 10, 64)
+				if err == nil {
+					b.Port = &p
+				}
+			}
 		} else if len(addSlice) > 1 {
 			b.Address = addSlice[0]
 			if addSlice[1] != "" {
