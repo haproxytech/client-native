@@ -94,6 +94,9 @@ func (c *Client) startTransaction(version int64) (*models.Transaction, error) {
 // CommitTransaction commits a transaction by id.
 func (c *Client) CommitTransaction(id string) (*models.Transaction, error) {
 	// check if parser exists and if transaction exists
+	c.mu.Lock()
+	defer c.mu.Unlock()
+
 	p, err := c.GetParser(id)
 	if err != nil {
 		return nil, err

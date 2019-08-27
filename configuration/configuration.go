@@ -20,6 +20,7 @@ import (
 	"reflect"
 	"strconv"
 	"strings"
+	"sync"
 
 	"github.com/haproxytech/config-parser/common"
 	"github.com/pkg/errors"
@@ -65,6 +66,7 @@ type Client struct {
 	ClientParams
 	parsers map[string]*parser.Parser
 	Parser  *parser.Parser
+	mu      sync.Mutex
 }
 
 // DefaultClient returns Client with sane defaults
