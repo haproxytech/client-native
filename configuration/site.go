@@ -508,22 +508,24 @@ func (c *Client) parseSite(s string, p *parser.Parser) *models.Site {
 
 func (c *Client) parseFarm(name string, useAs string, cond string, condTest string, p *parser.Parser) *models.SiteFarm {
 	backend := &models.Backend{Name: name}
-	if err := c.parseSection(backend, parser.Backends, name, p); err == nil {
-		srvs, err := c.parseServers(name, p)
-		if err != nil {
-			srvs = models.Servers{}
+	if c.checkSectionExists(parser.Backends, name, p) {
+		if err := c.parseSection(backend, parser.Backends, name, p); err == nil {
+			srvs, err := c.parseServers(name, p)
+			if err != nil {
+				srvs = models.Servers{}
+			}
+			farm := &models.SiteFarm{
+				UseAs:      useAs,
+				Cond:       cond,
+				CondTest:   condTest,
+				Mode:       backend.Mode,
+				Name:       backend.Name,
+				Forwardfor: backend.Forwardfor,
+				Balance:    backend.Balance,
+				Servers:    srvs,
+			}
+			return farm
 		}
-		farm := &models.SiteFarm{
-			UseAs:      useAs,
-			Cond:       cond,
-			CondTest:   condTest,
-			Mode:       backend.Mode,
-			Name:       backend.Name,
-			Forwardfor: backend.Forwardfor,
-			Balance:    backend.Balance,
-			Servers:    srvs,
-		}
-		return farm
 	}
 	return nil
 }
