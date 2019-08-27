@@ -17,6 +17,7 @@ package configuration
 
 import (
 	"fmt"
+	"os"
 	"reflect"
 	"strconv"
 	"strings"
@@ -100,6 +101,10 @@ func (c *Client) Init(options ClientParams) error {
 		options.Haproxy = DefaultHaproxy
 	}
 
+	if err := c.checkPathExists(options.Haproxy); err != nil {
+		return NewConfError(ErrCannotFindHAProxy, fmt.Sprintf("Cannot find HAProxy binary: %s", err.Error()))
+	}
+
 	c.ClientParams = options
 
 	c.parsers = make(map[string]*parser.Parser)
@@ -112,6 +117,14 @@ func (c *Client) Init(options ClientParams) error {
 		return NewConfError(ErrCannotReadConfFile, fmt.Sprintf("Cannot read %s", c.ConfigurationFile))
 	}
 
+	return nil
+}
+
+// checkPathExists checks to see if the path exists on the filesystem.
+func (c *Client) checkPathExists(path string) error {
+	if _, err := os.Stat(path); os.IsNotExist(err) {
+		return fmt.Errorf("path %s does not exist")
+	}
 	return nil
 }
 
