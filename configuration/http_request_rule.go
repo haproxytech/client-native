@@ -270,6 +270,20 @@ func parseHTTPRequestRule(f types.HTTPAction) *models.HTTPRequestRule {
 			Cond:      v.Cond,
 			CondTest:  v.CondTest,
 		}
+	case *actions.SetQuery:
+		return &models.HTTPRequestRule{
+			Type:      "set-query",
+			HdrFormat: v.Fmt,
+			Cond:      v.Cond,
+			CondTest:  v.CondTest,
+		}
+	case *actions.SetURI:
+		return &models.HTTPRequestRule{
+			Type:      "set-uri",
+			HdrFormat: v.Fmt,
+			Cond:      v.Cond,
+			CondTest:  v.CondTest,
+		}
 	case *actions.DelHeader:
 		return &models.HTTPRequestRule{
 			Type:     "del-header",
@@ -383,6 +397,18 @@ func serializeHTTPRequestRule(f models.HTTPRequestRule) types.HTTPAction {
 	case "set-header":
 		return &actions.SetHeader{
 			Name:     f.HdrName,
+			Fmt:      f.HdrFormat,
+			Cond:     f.Cond,
+			CondTest: f.CondTest,
+		}
+	case "set-query":
+		return &actions.SetQuery{
+			Fmt:      f.HdrFormat,
+			Cond:     f.Cond,
+			CondTest: f.CondTest,
+		}
+	case "set-uri":
+		return &actions.SetURI{
 			Fmt:      f.HdrFormat,
 			Cond:     f.Cond,
 			CondTest: f.CondTest,
