@@ -6,7 +6,7 @@ require (
 	github.com/go-openapi/errors v0.19.0
 	github.com/go-openapi/strfmt v0.19.0
 	github.com/google/uuid v1.1.1
-	github.com/haproxytech/config-parser v1.1.5
+	github.com/haproxytech/config-parser v1.1.7
 	github.com/haproxytech/models v1.2.3
 	github.com/mitchellh/mapstructure v1.1.2
 	github.com/pkg/errors v0.8.1
