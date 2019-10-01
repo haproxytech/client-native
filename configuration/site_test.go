@@ -445,7 +445,7 @@ func siteDeepEqual(x, y *models.Site, t *testing.T) bool {
 	}
 
 	// check frontend listeners
-	if len(x.Service.Listeners) != len(x.Service.Listeners) {
+	if len(x.Service.Listeners) != len(y.Service.Listeners) {
 		return false
 	}
 	if !assert.ElementsMatch(t, x.Service.Listeners, y.Service.Listeners) {
