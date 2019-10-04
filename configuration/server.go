@@ -220,6 +220,14 @@ func parseServer(ondiskServer types.Server) *models.Server {
 				s.TLSTickets = "enabled"
 			case "no-tls-tickets":
 				s.TLSTickets = "disabled"
+			case "send-proxy":
+				s.SendProxy = "enabled"
+			case "no-send-proxy":
+				s.SendProxy = "disabled"
+			case "send-proxy-v2":
+				s.SendProxyV2 = "enabled"
+			case "no-send-proxy-v2":
+				s.SendProxyV2 = "disabled"
 			}
 		case *params.ServerOptionValue:
 			switch v.Name {
@@ -324,6 +332,18 @@ func serializeServer(s models.Server) types.Server {
 	}
 	if s.OnMarkedUp != "" {
 		srv.Params = append(srv.Params, &params.ServerOptionValue{Name: "on-marked-up", Value: s.OnMarkedUp})
+	}
+	if s.SendProxy == "enabled" {
+		srv.Params = append(srv.Params, &params.ServerOptionWord{Name: "send-proxy"})
+	}
+	if s.SendProxy == "disabled" {
+		srv.Params = append(srv.Params, &params.ServerOptionWord{Name: "no-send-proxy"})
+	}
+	if s.SendProxyV2 == "enabled" {
+		srv.Params = append(srv.Params, &params.ServerOptionWord{Name: "send-proxy-v2"})
+	}
+	if s.SendProxyV2 == "disabled" {
+		srv.Params = append(srv.Params, &params.ServerOptionWord{Name: "no-send-proxy-v2"})
 	}
 	return srv
 }
