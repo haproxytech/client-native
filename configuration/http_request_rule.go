@@ -307,6 +307,13 @@ func parseHTTPRequestRule(f types.HTTPAction) *models.HTTPRequestRule {
 			Cond:     v.Cond,
 			CondTest: v.CondTest,
 		}
+	case *actions.SetPath:
+		return &models.HTTPRequestRule{
+			Type:     "set-path",
+			PathFmt:  v.Fmt,
+			Cond:     v.Cond,
+			CondTest: v.CondTest,
+		}
 	case *actions.SetVar:
 		return &models.HTTPRequestRule{
 			Type:     "set-var",
@@ -438,6 +445,12 @@ func serializeHTTPRequestRule(f models.HTTPRequestRule) types.HTTPAction {
 	case "set-log-level":
 		return &actions.SetLogLevel{
 			Level:    f.LogLevel,
+			Cond:     f.Cond,
+			CondTest: f.CondTest,
+		}
+	case "set-path":
+		return &actions.SetPath{
+			Fmt:      f.PathFmt,
 			Cond:     f.Cond,
 			CondTest: f.CondTest,
 		}
