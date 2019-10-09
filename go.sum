@@ -45,6 +45,8 @@ github.com/haproxytech/config-parser v1.1.7 h1:Td0xBZSdE0vZIyJ9PyNiGqVIAz7jN+yqV
 github.com/haproxytech/config-parser v1.1.7/go.mod h1:se7v728KDunj+qz1kXFFFl+nDuoBdUaN5eYSi+gYjNM=
 github.com/haproxytech/config-parser v1.1.9 h1:79+CVUkcVbmcWzQZ594O5BI0qYzihoOSfvzJ104OoJg=
 github.com/haproxytech/config-parser v1.1.9/go.mod h1:se7v728KDunj+qz1kXFFFl+nDuoBdUaN5eYSi+gYjNM=
+github.com/haproxytech/config-parser v1.1.10 h1:dcqTi/3W1VDiPHvH5ASL1uV8YWMNaNI7XEmHZNT0kCg=
+github.com/haproxytech/config-parser v1.1.10/go.mod h1:se7v728KDunj+qz1kXFFFl+nDuoBdUaN5eYSi+gYjNM=
 github.com/haproxytech/models v1.2.2 h1:/lXf0e3zCF4jCH+QZ9LfcCS2YXPRXFrQrWWTirL6gOY=
 github.com/haproxytech/models v1.2.2/go.mod h1:UXZVErm/XN6z10sM/enmxrdeEnwo7vz1JI+a8ycEvOQ=
 github.com/haproxytech/models v1.2.3-0.20190823114805-b3bd06b1c569 h1:uSIImvE2nSiEqMvesozR0cF90I0Gys8Rl6uEItGMZbw=
@@ -55,6 +57,8 @@ github.com/haproxytech/models v1.2.4-0.20190924151828-3388735e4d3a h1:1HKlqzi0gH
 github.com/haproxytech/models v1.2.4-0.20190924151828-3388735e4d3a/go.mod h1:UXZVErm/XN6z10sM/enmxrdeEnwo7vz1JI+a8ycEvOQ=
 github.com/haproxytech/models v1.2.4-0.20191004062656-5bd0f64c765b h1:HA9wpdMbDsT/A5z5L6McXLDh8yiSfwxK32PRwx/F1to=
 github.com/haproxytech/models v1.2.4-0.20191004062656-5bd0f64c765b/go.mod h1:UXZVErm/XN6z10sM/enmxrdeEnwo7vz1JI+a8ycEvOQ=
+github.com/haproxytech/models v1.2.4-0.20191009071622-2e6a8ecf1d8e h1:UlPkQ90yhiNgT2adfzgcGytWYAp7+pleCSexRdH48Ow=
+github.com/haproxytech/models v1.2.4-0.20191009071622-2e6a8ecf1d8e/go.mod h1:UXZVErm/XN6z10sM/enmxrdeEnwo7vz1JI+a8ycEvOQ=
 github.com/kr/pretty v0.1.0/go.mod h1:dAy3ld7l9f0ibDNOQOHHMYYIIbhfbHSm3C4ZsoJORNo=
 github.com/kr/pty v1.1.1/go.mod h1:pFQYn66WHrOpPYNljwOMqo10TkYh1fy3cYio2l3bCsQ=
 github.com/kr/text v0.1.0/go.mod h1:4Jbv+DJW3UT/LiOwJeYQe1efqtUx/iVham/4vfdArNI=
