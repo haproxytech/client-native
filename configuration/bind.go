@@ -219,6 +219,8 @@ func parseBind(ondiskBind types.Bind) *models.Bind {
 				b.AcceptProxy = true
 			case "v4v6":
 				b.V4v6 = true
+			case "allow-0rtt":
+				b.Allow0rtt = true
 			}
 		case *params.BindOptionValue:
 			switch v.Name {
@@ -288,6 +290,9 @@ func serializeBind(b models.Bind) types.Bind {
 	}
 	if b.AcceptProxy {
 		bind.Params = append(bind.Params, &params.BindOptionWord{Name: "accept-proxy"})
+	}
+	if b.Allow0rtt {
+		bind.Params = append(bind.Params, &params.BindOptionWord{Name: "allow-0rtt"})
 	}
 
 	return bind

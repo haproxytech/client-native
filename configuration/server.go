@@ -220,6 +220,8 @@ func parseServer(ondiskServer types.Server) *models.Server {
 				s.TLSTickets = "enabled"
 			case "no-tls-tickets":
 				s.TLSTickets = "disabled"
+			case "allow-0rtt":
+				s.Allow0rtt = true
 			case "send-proxy":
 				s.SendProxy = "enabled"
 			case "no-send-proxy":
@@ -302,6 +304,9 @@ func serializeServer(s models.Server) types.Server {
 	}
 	if s.TLSTickets == "disabled" {
 		srv.Params = append(srv.Params, &params.ServerOptionWord{Name: "no-tls-tickets"})
+	}
+	if s.Allow0rtt {
+		srv.Params = append(srv.Params, &params.ServerOptionWord{Name: "allow-0rtt"})
 	}
 	if s.Maxconn != nil {
 		srv.Params = append(srv.Params, &params.ServerOptionValue{Name: "maxconn", Value: strconv.FormatInt(*s.Maxconn, 10)})
