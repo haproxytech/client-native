@@ -164,6 +164,28 @@ func (c *Client) DisableAgentCheck(backend, server string) error {
 	return nil
 }
 
+//SetServerAgentAddr set agent-addr for server
+func (c *Client) SetServerAgentAddr(backend, server string, addr string) error {
+	for _, runtime := range c.runtimes {
+		err := runtime.SetServerAgentAddr(backend, server, addr)
+		if err != nil {
+			return fmt.Errorf("%s %s", runtime.socketPath, err)
+		}
+	}
+	return nil
+}
+
+//SetServerAgentSend set agent-send for server
+func (c *Client) SetServerAgentSend(backend, server string, send string) error {
+	for _, runtime := range c.runtimes {
+		err := runtime.SetServerAgentSend(backend, server, send)
+		if err != nil {
+			return fmt.Errorf("%s %s", runtime.socketPath, err)
+		}
+	}
+	return nil
+}
+
 //ExecuteRaw does not procces response, just returns its values for all processes
 func (c *Client) ExecuteRaw(command string) ([]string, error) {
 	result := make([]string, len(c.runtimes))

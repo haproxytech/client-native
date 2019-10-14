@@ -263,6 +263,17 @@ func parseServer(ondiskServer types.Server) *models.Server {
 				s.OnMarkedDown = v.Value
 			case "on-marked-up":
 				s.OnMarkedUp = v.Value
+			case "agent-addr":
+				s.AgentAddr = v.Value
+			case "agent-inter":
+				s.AgentInter = misc.ParseTimeout(v.Value)
+			case "agent-port":
+				p, err := strconv.ParseInt(v.Value, 10, 64)
+				if err == nil && p != 0 {
+					s.AgentPort = &p
+				}
+			case "agent-send":
+				s.AgentSend = v.Value
 			}
 		}
 	}
@@ -302,6 +313,18 @@ func serializeServer(s models.Server) types.Server {
 	}
 	if s.AgentCheck == "disabled" {
 		srv.Params = append(srv.Params, &params.ServerOptionWord{Name: "no-agent-check"})
+	}
+	if s.AgentAddr != "" {
+		srv.Params = append(srv.Params, &params.ServerOptionValue{Name: "agent-addr", Value: s.AgentAddr})
+	}
+	if s.AgentPort != nil {
+		srv.Params = append(srv.Params, &params.ServerOptionValue{Name: "agent-port", Value: strconv.FormatInt(*s.AgentPort, 10)})
+	}
+	if s.AgentInter != nil {
+		srv.Params = append(srv.Params, &params.ServerOptionValue{Name: "agent-inter", Value: strconv.FormatInt(*s.AgentInter, 10)})
+	}
+	if s.AgentSend != "" {
+		srv.Params = append(srv.Params, &params.ServerOptionValue{Name: "agent-send", Value: s.AgentSend})
 	}
 	if s.Ssl == "enabled" {
 		srv.Params = append(srv.Params, &params.ServerOptionWord{Name: "ssl"})

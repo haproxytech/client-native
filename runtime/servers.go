@@ -68,3 +68,15 @@ func (s *SingleRuntime) DisableAgentCheck(backend, server string) error {
 	cmd := fmt.Sprintf("disable agent %s/%s", backend, server)
 	return s.Execute(cmd)
 }
+
+//SetServerAgentAddr set agent-addr for server
+func (s *SingleRuntime) SetServerAgentAddr(backend, server string, addr string) error {
+	cmd := fmt.Sprintf("set server %s/%s agent-addr %s", backend, server, addr)
+	return s.Execute(cmd)
+}
+
+//SetServerAgentSend set agent-send for server
+func (s *SingleRuntime) SetServerAgentSend(backend, server string, send string) error {
+	cmd := fmt.Sprintf("set server %s/%s agent-send %s", backend, server, send)
+	return s.Execute(cmd)
+}
