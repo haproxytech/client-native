@@ -84,9 +84,6 @@ func TestGetFrontend(t *testing.T) {
 	if f.Name != "test" {
 		t.Errorf("Expected only test, %v found", f.Name)
 	}
-	if f.Name != "test" {
-		t.Errorf("Expected only test, %v found", f.Name)
-	}
 	if f.Mode != "http" {
 		t.Errorf("%v: Mode not http: %v", f.Name, f.Mode)
 	}

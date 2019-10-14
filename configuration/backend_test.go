@@ -81,9 +81,18 @@ func TestGetBackends(t *testing.T) {
 		if *b.DefaultServer.Port != 8888 {
 			t.Errorf("%v: DefaultServer.Port not 8888: %v", b.Name, *b.DefaultServer.Port)
 		}
-		// if b.Cookie != "BLA rewrite httponly nocache" {
-		// 	t.Errorf("%v: HTTPCookieName not BLA rewrite httponly nocache: %v", b.Name, b.Cookie)
-		// }
+		if *b.Cookie.Name != "BLA" {
+			t.Errorf("%v: HTTPCookie Name not BLA: %v", b.Name, b.Cookie)
+		}
+		if b.Cookie.Type != "rewrite" {
+			t.Errorf("%v: HTTPCookie Type not rewrite %v", b.Name, b.Cookie.Type)
+		}
+		if b.Cookie.Httponly {
+			t.Errorf("%v: HTTPCookie Httponly not true %v", b.Name, b.Cookie.Httponly)
+		}
+		if !b.Cookie.Nocache {
+			t.Errorf("%v: HTTPCookie Nocache not false %v", b.Name, b.Cookie.Nocache)
+		}
 		if *b.CheckTimeout != 2000 {
 			t.Errorf("%v: CheckTimeout not 2000: %v", b.Name, *b.CheckTimeout)
 		}
@@ -145,9 +154,18 @@ func TestGetBackend(t *testing.T) {
 	if *b.DefaultServer.Port != 8888 {
 		t.Errorf("%v: DefaultServer.Port not 8888: %v", b.Name, *b.DefaultServer.Port)
 	}
-	// if b.Cookie != "BLA rewrite httponly nocache" {
-	// 	t.Errorf("%v: HTTPCookieName not BLA rewrite httponly nocache: %v", b.Name, b.Cookie)
-	// }
+	if *b.Cookie.Name != "BLA" {
+		t.Errorf("%v: HTTPCookie Name not BLA: %v", b.Name, b.Cookie)
+	}
+	if b.Cookie.Type != "rewrite" {
+		t.Errorf("%v: HTTPCookie Type not rewrite %v", b.Name, b.Cookie.Type)
+	}
+	if b.Cookie.Httponly {
+		t.Errorf("%v: HTTPCookie Httponly not true %v", b.Name, b.Cookie.Httponly)
+	}
+	if !b.Cookie.Nocache {
+		t.Errorf("%v: HTTPCookie Nocache not false %v", b.Name, b.Cookie.Nocache)
+	}
 	if *b.CheckTimeout != 2000 {
 		t.Errorf("%v: CheckTimeout not 2000: %v", b.Name, *b.CheckTimeout)
 	}
@@ -169,10 +187,25 @@ func TestGetBackend(t *testing.T) {
 func TestCreateEditDeleteBackend(t *testing.T) {
 	// TestCreateBackend
 	tOut := int64(5)
+	cookieName := "BLA"
 	b := &models.Backend{
 		Name:    "created",
 		Mode:    "http",
 		Balance: &models.Balance{Algorithm: "uri"},
+		Cookie: &models.Cookie{
+			Domain:   []string{"dom1", "dom2"},
+			Dynamic:  true,
+			Httponly: true,
+			Indirect: true,
+			Maxidle:  5,
+			Maxlife:  20,
+			Name:     &cookieName,
+			Nocache:  true,
+			Postonly: true,
+			Preserve: false,
+			Secure:   false,
+			Type:     "prefix",
+		},
 		HashType: &models.BackendHashType{
 			Method:   "map-based",
 			Function: "crc32",
@@ -224,7 +257,20 @@ func TestCreateEditDeleteBackend(t *testing.T) {
 		Name:    "created",
 		Mode:    "http",
 		Balance: &models.Balance{Algorithm: "roundrobin"},
-		// Cookie:             "BLA rewrite httponly nocache",
+		Cookie: &models.Cookie{
+			Domain:   []string{"dom1", "dom3"},
+			Dynamic:  true,
+			Httponly: true,
+			Indirect: false,
+			Maxidle:  150,
+			Maxlife:  100,
+			Name:     &cookieName,
+			Nocache:  false,
+			Postonly: false,
+			Preserve: true,
+			Secure:   true,
+			Type:     "rewrite",
+		},
 		HTTPConnectionMode: "httpclose",
 		ConnectTimeout:     &tOut,
 		StickTable: &models.BackendStickTable{
@@ -310,6 +356,49 @@ func compareBackends(x, y *models.Backend, t *testing.T) bool {
 
 	x.Balance = nil
 	y.Balance = nil
+
+	if *x.Cookie.Name != *y.Cookie.Name {
+		return false
+	}
+	if len(x.Cookie.Domain) != len(y.Cookie.Domain) {
+		return false
+	}
+	if x.Cookie.Domain[0] != y.Cookie.Domain[0] {
+		return false
+	}
+	if x.Cookie.Dynamic != y.Cookie.Dynamic {
+		return false
+	}
+	if x.Cookie.Httponly != y.Cookie.Httponly {
+		return false
+	}
+	if x.Cookie.Indirect != y.Cookie.Indirect {
+		return false
+	}
+	if x.Cookie.Maxidle != y.Cookie.Maxidle {
+		return false
+	}
+	if x.Cookie.Maxlife != y.Cookie.Maxlife {
+		return false
+	}
+	if x.Cookie.Nocache != y.Cookie.Nocache {
+		return false
+	}
+	if x.Cookie.Postonly != y.Cookie.Postonly {
+		return false
+	}
+	if x.Cookie.Preserve != y.Cookie.Preserve {
+		return false
+	}
+	if x.Cookie.Secure != y.Cookie.Secure {
+		return false
+	}
+	if x.Cookie.Type != y.Cookie.Type {
+		return false
+	}
+
+	x.Cookie = nil
+	y.Cookie = nil
 
 	if !reflect.DeepEqual(x.DefaultServer, y.DefaultServer) {
 		return false

@@ -352,6 +352,27 @@ func (c *Client) parseField(section parser.Section, sectionName string, fieldNam
 			Arguments: d.Arguments,
 		}
 	}
+	if fieldName == "Cookie" {
+		data, err := p.Get(section, sectionName, "cookie", false)
+		if err != nil {
+			return nil
+		}
+		d := data.(*types.Cookie)
+		return &models.Cookie{
+			Domain:   d.Domain,
+			Dynamic:  d.Dynamic,
+			Httponly: d.Dynamic,
+			Indirect: d.Indirect,
+			Maxidle:  d.Maxidle,
+			Maxlife:  d.Maxlife,
+			Name:     &d.Name,
+			Nocache:  d.Nocache,
+			Postonly: d.Postonly,
+			Preserve: d.Preserve,
+			Type:     d.Type,
+			Secure:   d.Secure,
+		}
+	}
 	if fieldName == "HashType" {
 		data, err := p.Get(section, sectionName, "hash-type", false)
 		if err != nil {
@@ -716,6 +737,35 @@ func (c *Client) setFieldValue(section parser.Section, sectionName string, field
 				Arguments: b.Arguments,
 			}
 			if err := p.Set(section, sectionName, "balance", &d); err != nil {
+				return err
+			}
+		}
+		return nil
+	}
+	if fieldName == "Cookie" {
+		if section == parser.Backends || section == parser.Defaults {
+			if valueIsNil(field) {
+				if err := p.Set(section, sectionName, "cookie", nil); err != nil {
+					return err
+				}
+				return nil
+			}
+			d := field.Elem().Interface().(models.Cookie)
+			data := types.Cookie{
+				Domain:   d.Domain,
+				Dynamic:  d.Dynamic,
+				Httponly: d.Dynamic,
+				Indirect: d.Indirect,
+				Maxidle:  d.Maxidle,
+				Maxlife:  d.Maxlife,
+				Name:     *d.Name,
+				Nocache:  d.Nocache,
+				Postonly: d.Postonly,
+				Preserve: d.Preserve,
+				Type:     d.Type,
+				Secure:   d.Secure,
+			}
+			if err := p.Set(section, sectionName, "cookie", &data); err != nil {
 				return err
 			}
 		}
