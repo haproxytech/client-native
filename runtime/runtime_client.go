@@ -142,6 +142,28 @@ func (c *Client) SetServerHealth(backend, server string, health string) error {
 	return nil
 }
 
+//EnableAgentCheck enable agent check for server
+func (c *Client) EnableAgentCheck(backend, server string) error {
+	for _, runtime := range c.runtimes {
+		err := runtime.EnableAgentCheck(backend, server)
+		if err != nil {
+			return fmt.Errorf("%s %s", runtime.socketPath, err)
+		}
+	}
+	return nil
+}
+
+//DisableAgentCheck disable agent check for server
+func (c *Client) DisableAgentCheck(backend, server string) error {
+	for _, runtime := range c.runtimes {
+		err := runtime.DisableAgentCheck(backend, server)
+		if err != nil {
+			return fmt.Errorf("%s %s", runtime.socketPath, err)
+		}
+	}
+	return nil
+}
+
 //ExecuteRaw does not procces response, just returns its values for all processes
 func (c *Client) ExecuteRaw(command string) ([]string, error) {
 	result := make([]string, len(c.runtimes))
