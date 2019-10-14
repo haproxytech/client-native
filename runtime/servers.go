@@ -56,3 +56,15 @@ func (s *SingleRuntime) SetServerHealth(backend, server string, health string) e
 	cmd := fmt.Sprintf("set server %s/%s health %s", backend, server, health)
 	return s.Execute(cmd)
 }
+
+//EnableAgentCheck enable agent check for server
+func (s *SingleRuntime) EnableAgentCheck(backend, server string) error {
+	cmd := fmt.Sprintf("enable agent %s/%s", backend, server)
+	return s.Execute(cmd)
+}
+
+//DisableAgentCheck disable agent check for server
+func (s *SingleRuntime) DisableAgentCheck(backend, server string) error {
+	cmd := fmt.Sprintf("disable agent %s/%s", backend, server)
+	return s.Execute(cmd)
+}

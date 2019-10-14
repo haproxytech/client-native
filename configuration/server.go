@@ -212,6 +212,10 @@ func parseServer(ondiskServer types.Server) *models.Server {
 				s.Check = "enabled"
 			case "no-check":
 				s.Check = "disabled"
+			case "agent-check":
+				s.AgentCheck = "enabled"
+			case "no-agent-check":
+				s.AgentCheck = "disabled"
 			case "ssl":
 				s.Ssl = "enabled"
 			case "no-ssl":
@@ -292,6 +296,12 @@ func serializeServer(s models.Server) types.Server {
 	}
 	if s.Check == "disabled" {
 		srv.Params = append(srv.Params, &params.ServerOptionWord{Name: "no-check"})
+	}
+	if s.AgentCheck == "enabled" {
+		srv.Params = append(srv.Params, &params.ServerOptionWord{Name: "agent-check"})
+	}
+	if s.AgentCheck == "disabled" {
+		srv.Params = append(srv.Params, &params.ServerOptionWord{Name: "no-agent-check"})
 	}
 	if s.Ssl == "enabled" {
 		srv.Params = append(srv.Params, &params.ServerOptionWord{Name: "ssl"})
