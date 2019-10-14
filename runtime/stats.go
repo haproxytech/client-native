@@ -17,10 +17,7 @@ package runtime
 
 import (
 	"fmt"
-	"strconv"
 	"strings"
-
-	"github.com/go-openapi/strfmt"
 
 	"github.com/haproxytech/models"
 	"github.com/mitchellh/mapstructure"
@@ -86,51 +83,4 @@ func (s *SingleRuntime) GetStats() *models.NativeStatsCollection {
 	}
 	result.Stats = stats
 	return result
-}
-
-//GetInfo fetches HAProxy info from runtime API
-func (s *SingleRuntime) GetInfo() (models.ProcessInfoHaproxy, error) {
-	dataStr, err := s.ExecuteRaw("show info typed")
-	data := models.ProcessInfoHaproxy{}
-	if err != nil {
-		fmt.Println(err.Error())
-		return data, err
-	}
-	return parseInfo(dataStr)
-}
-
-func parseInfo(info string) (models.ProcessInfoHaproxy, error) {
-	data := models.ProcessInfoHaproxy{}
-
-	for _, line := range strings.Split(info, "\n") {
-		fields := strings.Split(line, ":")
-		fID := strings.TrimSpace(strings.Split(fields[0], ".")[0])
-		switch fID {
-		case "1":
-			data.Version = fields[3]
-		case "2":
-			d := strfmt.Date{}
-			err := d.Scan(strings.Replace(fields[3], "/", "-", -1))
-			if err == nil {
-				data.ReleaseDate = d
-			}
-		case "4":
-			nbproc, err := strconv.ParseInt(fields[3], 10, 64)
-			if err == nil {
-				data.Processes = &nbproc
-			}
-		case "6":
-			pid, err := strconv.ParseInt(fields[3], 10, 64)
-			if err == nil {
-				data.Pid = &pid
-			}
-		case "8":
-			uptime, err := strconv.ParseInt(fields[3], 10, 64)
-			if err == nil {
-				data.Uptime = &uptime
-			}
-		}
-	}
-
-	return data, nil
 }

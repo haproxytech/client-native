@@ -75,14 +75,11 @@ func (c *Client) GetStats() models.NativeStats {
 }
 
 //GetInfo returns info from the socket
-func (c *Client) GetInfo() ([]models.ProcessInfoHaproxy, error) {
-	result := make([]models.ProcessInfoHaproxy, len(c.runtimes))
-	for index, runtime := range c.runtimes {
-		stats, err := runtime.GetInfo()
-		if err != nil {
-			return nil, err
-		}
-		result[index] = stats
+func (c *Client) GetInfo() (models.ProcessInfos, error) {
+	result := models.ProcessInfos{}
+	for _, runtime := range c.runtimes {
+		i := runtime.GetInfo()
+		result = append(result, &i)
 	}
 	return result, nil
 }
