@@ -22,7 +22,7 @@ import (
 
 	strfmt "github.com/go-openapi/strfmt"
 	"github.com/haproxytech/client-native/misc"
-	parser "github.com/haproxytech/config-parser"
+	parser "github.com/haproxytech/config-parser/v2"
 	"github.com/haproxytech/models"
 )
 

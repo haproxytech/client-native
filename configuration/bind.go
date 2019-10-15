@@ -21,10 +21,10 @@ import (
 	"strings"
 
 	strfmt "github.com/go-openapi/strfmt"
-	parser "github.com/haproxytech/config-parser"
-	parser_errors "github.com/haproxytech/config-parser/errors"
-	"github.com/haproxytech/config-parser/params"
-	"github.com/haproxytech/config-parser/types"
+	parser "github.com/haproxytech/config-parser/v2"
+	parser_errors "github.com/haproxytech/config-parser/v2/errors"
+	"github.com/haproxytech/config-parser/v2/params"
+	"github.com/haproxytech/config-parser/v2/types"
 	"github.com/haproxytech/models"
 )
 
