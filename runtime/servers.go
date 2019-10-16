@@ -17,6 +17,10 @@ package runtime
 
 import (
 	"fmt"
+	"strconv"
+	"strings"
+
+	"github.com/haproxytech/models"
 )
 
 //SetServerAddr set ip [port] for server
@@ -79,4 +83,99 @@ func (s *SingleRuntime) SetServerAgentAddr(backend, server string, addr string) 
 func (s *SingleRuntime) SetServerAgentSend(backend, server string, send string) error {
 	cmd := fmt.Sprintf("set server %s/%s agent-send %s", backend, server, send)
 	return s.Execute(cmd)
+}
+
+//GetServersState returns servers runtime state
+func (s *SingleRuntime) GetServersState(backend string) (models.RuntimeServers, error) {
+	cmd := fmt.Sprintf("show servers state %s", backend)
+	result, err := s.ExecuteWithResponse(cmd)
+	if err != nil {
+		return nil, err
+	}
+	return parseRuntimeServers(result)
+}
+
+//GetServersState returns server runtime state
+func (s *SingleRuntime) GetServerState(backend, server string) (*models.RuntimeServer, error) {
+	cmd := fmt.Sprintf("show servers state %s", backend)
+	result, err := s.ExecuteWithResponse(cmd)
+	if err != nil {
+		return nil, err
+	}
+
+	lines := strings.Split(result, "\n")
+	if strings.TrimSpace(lines[0]) != "1" {
+		return nil, fmt.Errorf("Unsupported output format version, supporting format version 1")
+	}
+
+	for _, line := range lines {
+		if strings.TrimSpace(line) == "" || strings.HasPrefix(line, "#") || strings.TrimSpace(line) == "1" {
+			continue
+		}
+		fields := strings.Split(line, " ")
+		if fields[3] != server {
+			continue
+		}
+		return parseRuntimeServer(line), nil
+	}
+	return nil, nil
+}
+
+func parseRuntimeServers(output string) (models.RuntimeServers, error) {
+	lines := strings.Split(output, "\n")
+	result := models.RuntimeServers{}
+
+	if strings.TrimSpace(lines[0]) != "1" {
+		return nil, fmt.Errorf("Unsupported output format version, supporting format version 1")
+	}
+	for _, line := range lines[1:] {
+		if strings.TrimSpace(line) == "" || strings.HasPrefix(line, "#") || strings.TrimSpace(line) == "1" {
+			continue
+		}
+		result = append(result, parseRuntimeServer(line))
+	}
+	return result, nil
+}
+
+func parseRuntimeServer(line string) *models.RuntimeServer {
+	fields := strings.Split(line, " ")
+
+	if len(fields) < 19 {
+		return nil
+	}
+
+	p, err := strconv.ParseInt(fields[18], 10, 64)
+	var port *int64
+	if err == nil {
+		port = &p
+	}
+
+	var admState string
+	switch fields[6] {
+	case "0":
+		admState = "ready"
+	case "1", "2", "4", "20", "40":
+		admState = "maint"
+	case "8", "10":
+		admState = "drain"
+	}
+
+	var opState string
+	switch fields[5] {
+	case "0":
+		opState = "down"
+	case "3":
+		opState = "stopping"
+	case "1", "2":
+		opState = "up"
+	}
+
+	return &models.RuntimeServer{
+		Name:             fields[3],
+		Address:          fields[4],
+		Port:             port,
+		ID:               fields[2],
+		AdminState:       admState,
+		OperationalState: opState,
+	}
 }

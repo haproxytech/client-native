@@ -18,6 +18,7 @@ package runtime
 import (
 	"fmt"
 
+	"github.com/google/go-cmp/cmp"
 	"github.com/haproxytech/models"
 )
 
@@ -181,6 +182,38 @@ func (c *Client) SetServerAgentSend(backend, server string, send string) error {
 		}
 	}
 	return nil
+}
+
+//GetServerState returns server runtime state
+func (c *Client) GetServersState(backend string) (models.RuntimeServers, error) {
+	var prevRs models.RuntimeServers
+	var rs models.RuntimeServers
+	for _, runtime := range c.runtimes {
+		rs, _ = runtime.GetServersState(backend)
+		if prevRs == nil {
+			continue
+		}
+		if !cmp.Equal(rs, prevRs) {
+			return nil, fmt.Errorf("Servers states differ in multiple runtime APIs")
+		}
+	}
+	return rs, nil
+}
+
+//GetServerState returns server runtime state
+func (c *Client) GetServerState(backend, server string) (*models.RuntimeServer, error) {
+	var prevRs *models.RuntimeServer
+	var rs *models.RuntimeServer
+	for _, runtime := range c.runtimes {
+		rs, _ = runtime.GetServerState(backend, server)
+		if prevRs == nil {
+			continue
+		}
+		if !cmp.Equal(*rs, *prevRs) {
+			return nil, fmt.Errorf("Server states differ in multiple runtime APIs")
+		}
+	}
+	return rs, nil
 }
 
 //ExecuteRaw does not procces response, just returns its values for all processes

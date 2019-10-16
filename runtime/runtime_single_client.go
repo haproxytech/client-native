@@ -142,13 +142,30 @@ func (s *SingleRuntime) Execute(command string) error {
 	if err != nil {
 		return fmt.Errorf("%s [%s]", err.Error(), command)
 	}
-	if len(rawdata) > 1 {
-		switch rawdata[1] {
-		case '3', '2', '1', '0':
+	if len(rawdata) > 3 {
+		switch rawdata[1:3] {
+		case "3:", "2:", "1:", "0:":
 			return fmt.Errorf("[%c] %s [%s]", rawdata[1], rawdata[3:], command)
 		}
 	}
 	return nil
+}
+
+func (s *SingleRuntime) ExecuteWithResponse(command string) (string, error) {
+	rawdata, err := s.ExecuteRaw(command)
+	if err != nil {
+		return "", fmt.Errorf("%s [%s]", err.Error(), command)
+	}
+	if len(rawdata) > 3 {
+		switch rawdata[1:3] {
+		case "3:", "2:", "1:", "0:":
+			return "", fmt.Errorf("[%c] %s [%s]", rawdata[1], rawdata[3:], command)
+		}
+	}
+	if len(rawdata) > 1 {
+		return rawdata[1:], nil
+	}
+	return "", nil
 }
 
 func (s *SingleRuntime) executeRaw(command string, retry int) (string, error) {

@@ -24,6 +24,9 @@ import (
 var possibleStates map[string]struct{}
 var oncePossibleStates sync.Once
 
+var possibleHealths map[string]struct{}
+var oncePossibleHealths sync.Once
+
 //ServerStateValid checks if server state is valid
 func ServerStateValid(state string) bool {
 	oncePossibleStates.Do(func() {
@@ -37,16 +40,16 @@ func ServerStateValid(state string) bool {
 	return ok
 }
 
-//ServerHealthValid checks if server state is valid
-func ServerHealthValid(state string) bool {
-	oncePossibleStates.Do(func() {
-		possibleStates = map[string]struct{}{
-			"on":       {},
+//ServerHealthValid checks if server health is valid
+func ServerHealthValid(health string) bool {
+	oncePossibleHealths.Do(func() {
+		possibleHealths = map[string]struct{}{
+			"up":       {},
 			"stopping": {},
 			"down":     {},
 		}
 	})
-	_, ok := possibleStates[state]
+	_, ok := possibleHealths[health]
 	return ok
 }
 
