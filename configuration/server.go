@@ -247,6 +247,12 @@ func parseServer(ondiskServer types.Server) *models.Server {
 				if err == nil && w != 0 {
 					s.Weight = &w
 				}
+			case "port":
+				p, err := strconv.ParseInt(v.Value, 10, 64)
+				if err == nil {
+					s.HealthCheckPort = &p
+				}
+
 			case "cookie":
 				s.Cookie = v.Value
 			case "crt":
@@ -370,6 +376,9 @@ func serializeServer(s models.Server) types.Server {
 	}
 	if s.OnMarkedUp != "" {
 		srv.Params = append(srv.Params, &params.ServerOptionValue{Name: "on-marked-up", Value: s.OnMarkedUp})
+	}
+	if s.HealthCheckPort != nil {
+		srv.Params = append(srv.Params, &params.ServerOptionValue{Name: "port", Value: strconv.FormatInt(*s.HealthCheckPort, 10)})
 	}
 	if s.SendProxy == "enabled" {
 		srv.Params = append(srv.Params, &params.ServerOptionWord{Name: "send-proxy"})

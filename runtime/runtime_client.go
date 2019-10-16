@@ -216,6 +216,17 @@ func (c *Client) GetServerState(backend, server string) (*models.RuntimeServer, 
 	return rs, nil
 }
 
+//SetServerCheckPort set health heck port for server
+func (c *Client) SetServerCheckPort(backend, server string, port int) error {
+	for _, runtime := range c.runtimes {
+		err := runtime.SetServerCheckPort(backend, server, port)
+		if err != nil {
+			return fmt.Errorf("%s %s", runtime.socketPath, err)
+		}
+	}
+	return nil
+}
+
 //ExecuteRaw does not procces response, just returns its values for all processes
 func (c *Client) ExecuteRaw(command string) ([]string, error) {
 	result := make([]string, len(c.runtimes))
