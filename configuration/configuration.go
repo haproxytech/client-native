@@ -786,7 +786,7 @@ func (c *Client) setFieldValue(section parser.Section, sectionName string, field
 			if ds.Inter != nil {
 				param := &params.ServerOptionValue{
 					Name:  "inter",
-					Value: strconv.FormatInt(*ds.Fall, 10),
+					Value: strconv.FormatInt(*ds.Inter, 10),
 				}
 				ps = append(ps, param)
 			}
@@ -794,7 +794,7 @@ func (c *Client) setFieldValue(section parser.Section, sectionName string, field
 			if ds.Port != nil {
 				param := &params.ServerOptionValue{
 					Name:  "port",
-					Value: strconv.FormatInt(*ds.Fall, 10),
+					Value: strconv.FormatInt(*ds.Port, 10),
 				}
 				ps = append(ps, param)
 			}
@@ -802,7 +802,7 @@ func (c *Client) setFieldValue(section parser.Section, sectionName string, field
 			if ds.Rise != nil {
 				param := &params.ServerOptionValue{
 					Name:  "rise",
-					Value: strconv.FormatInt(*ds.Fall, 10),
+					Value: strconv.FormatInt(*ds.Rise, 10),
 				}
 				ps = append(ps, param)
 			}
