@@ -99,6 +99,8 @@ func (c *Client) GetGlobalConfiguration(transactionID string) (int64, *models.Gl
 						rAPI.Level = v.Value
 					} else if v.Name == "mode" {
 						rAPI.Mode = v.Value
+					} else if v.Name == "process" {
+						rAPI.Process = v.Value
 					}
 				}
 			}
@@ -249,6 +251,10 @@ func (c *Client) PushGlobalConfiguration(data *models.Global, transactionID stri
 		}
 		if rAPI.Mode != "" {
 			p := &params.BindOptionValue{Name: "mode", Value: rAPI.Mode}
+			s.Params = append(s.Params, p)
+		}
+		if rAPI.Process != "" {
+			p := &params.BindOptionValue{Name: "process", Value: rAPI.Process}
 			s.Params = append(s.Params, p)
 		}
 		sockets = append(sockets, s)
