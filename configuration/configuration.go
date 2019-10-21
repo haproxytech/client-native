@@ -1130,7 +1130,7 @@ func (c *Client) deleteSection(section parser.Section, name string, transactionI
 		return c.handleError(name, "", "", t, transactionID == "", e)
 	}
 
-	if p.SectionsDelete(section, name); err != nil {
+	if err := p.SectionsDelete(section, name); err != nil {
 		return c.handleError(name, "", "", t, transactionID == "", err)
 	}
 
