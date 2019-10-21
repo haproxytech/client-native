@@ -39,14 +39,18 @@ type SingleRuntime struct {
 	jobs       chan Task
 	socketPath string
 	worker     int
+	process    int
 }
 
 //Init must be given path to runtime socket and worker number. If in master-worker mode,
-//give the path to the master socket path, and non 0 number for workers.
-func (s *SingleRuntime) Init(socketPath string, worker int) error {
+//give the path to the master socket path, and non 0 number for workers. Process is for
+//nbproc > 1. In master-worker mode it's the same as the worker number, but when having
+//multiple stats socket lines bound to processes then use the correct process number
+func (s *SingleRuntime) Init(socketPath string, worker int, process int) error {
 	s.socketPath = socketPath
 	s.jobs = make(chan Task)
 	s.worker = worker
+	s.process = process
 	go s.handleIncommingJobs()
 	return nil
 }

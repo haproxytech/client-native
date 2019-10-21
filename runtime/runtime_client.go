@@ -43,11 +43,13 @@ func DefaultClient() (*Client, error) {
 }
 
 //Init must be given path to runtime socket and nbproc that is not 0 when in master worker mode
+//
+//Deprecated: use InitWithSockets or InitWithMasterSocket instead
 func (c *Client) Init(socketPath []string, masterSocketPath string, nbproc int) error {
 	c.runtimes = make([]SingleRuntime, len(socketPath))
 	for index, path := range socketPath {
 		runtime := SingleRuntime{}
-		err := runtime.Init(path, 0)
+		err := runtime.Init(path, 0, index)
 		if err != nil {
 			return err
 		}
@@ -56,12 +58,43 @@ func (c *Client) Init(socketPath []string, masterSocketPath string, nbproc int) 
 	if masterSocketPath != "" && nbproc != 0 {
 		for i := 1; i <= nbproc; i++ {
 			runtime := SingleRuntime{}
-			err := runtime.Init(masterSocketPath, i)
+			err := runtime.Init(masterSocketPath, i, i)
 			if err != nil {
 				return err
 			}
 			c.runtimes = append(c.runtimes, runtime)
 		}
+	}
+	return nil
+}
+
+func (c *Client) InitWithSockets(socketPath map[int]string) error {
+	c.runtimes = make([]SingleRuntime, len(socketPath))
+	for process, path := range socketPath {
+		runtime := SingleRuntime{}
+		err := runtime.Init(path, 0, process)
+		if err != nil {
+			return err
+		}
+		c.runtimes = append(c.runtimes, runtime)
+	}
+	return nil
+}
+
+func (c *Client) InitWithMasterSocket(masterSocketPath string, nbproc int) error {
+	if nbproc == 0 {
+		nbproc = 1
+	}
+	if masterSocketPath == "" {
+		return fmt.Errorf("Master socket not configured")
+	}
+	for i := 1; i <= nbproc; i++ {
+		runtime := SingleRuntime{}
+		err := runtime.Init(masterSocketPath, i, i)
+		if err != nil {
+			return err
+		}
+		c.runtimes = append(c.runtimes, runtime)
 	}
 	return nil
 }
