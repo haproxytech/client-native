@@ -260,6 +260,54 @@ func (c *Client) SetServerCheckPort(backend, server string, port int) error {
 	return nil
 }
 
+//Show tables show tables from runtime API and return it structured, if process is 0, return for all processes
+func (c *Client) ShowTables(process int) (models.StickTables, error) {
+	tables := models.StickTables{}
+	for _, runtime := range c.runtimes {
+		if process == 0 || runtime.process == process {
+			t, err := runtime.ShowTables()
+			if err != nil {
+				return nil, fmt.Errorf("%s %s", runtime.socketPath, err)
+			}
+			tables = append(tables, t...)
+		}
+	}
+	return tables, nil
+}
+
+//GetTableEntries returns all entries for specified table in the given process with filters and a key
+func (c *Client) GetTableEntries(name string, process int, filter []string, key string) (models.StickTableEntries, error) {
+	var entries models.StickTableEntries
+	var err error
+	for _, runtime := range c.runtimes {
+		if runtime.process != process {
+			continue
+		}
+		entries, err = runtime.GetTableEntries(name, filter, key)
+		if err != nil {
+			return nil, fmt.Errorf("%s %s", runtime.socketPath, err)
+		}
+		break
+	}
+	return entries, nil
+}
+
+//Show table show tables {name} from runtime API associated with process id and return it structured
+func (c *Client) ShowTable(name string, process int) (*models.StickTable, error) {
+	var table *models.StickTable
+	var err error
+	for _, runtime := range c.runtimes {
+		if runtime.process != process {
+			continue
+		}
+		table, err = runtime.ShowTable(name)
+		if err != nil {
+			return nil, fmt.Errorf("%s %s", runtime.socketPath, err)
+		}
+	}
+	return table, nil
+}
+
 //ExecuteRaw does not procces response, just returns its values for all processes
 func (c *Client) ExecuteRaw(command string) ([]string, error) {
 	result := make([]string, len(c.runtimes))
