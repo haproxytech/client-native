@@ -69,7 +69,7 @@ func (c *Client) Init(socketPath []string, masterSocketPath string, nbproc int) 
 }
 
 func (c *Client) InitWithSockets(socketPath map[int]string) error {
-	c.runtimes = make([]SingleRuntime, len(socketPath))
+	c.runtimes = make([]SingleRuntime, 0)
 	for process, path := range socketPath {
 		runtime := SingleRuntime{}
 		err := runtime.Init(path, 0, process)
@@ -88,13 +88,14 @@ func (c *Client) InitWithMasterSocket(masterSocketPath string, nbproc int) error
 	if masterSocketPath == "" {
 		return fmt.Errorf("Master socket not configured")
 	}
+	c.runtimes = make([]SingleRuntime, nbproc)
 	for i := 1; i <= nbproc; i++ {
 		runtime := SingleRuntime{}
 		err := runtime.Init(masterSocketPath, i, i)
 		if err != nil {
 			return err
 		}
-		c.runtimes = append(c.runtimes, runtime)
+		c.runtimes[i-1] = runtime
 	}
 	return nil
 }
