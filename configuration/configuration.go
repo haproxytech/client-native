@@ -58,7 +58,7 @@ type ClientParams struct {
 
 // Client configuration client
 // Parser is the config parser instance that loads "master" configuration file on Init
-// and when transaction is commited it gets replaced with the parser from parsers map.
+// and when transaction is committed it gets replaced with the parser from parsers map.
 // parsers map contains a config parser for each transaction, which loads data from
 // transaction files on StartTransaction, and deletes on CommitTransaction. We save
 // data to file on every change for persistence.
