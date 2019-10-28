@@ -65,7 +65,7 @@ func (e *ConfError) Code() int {
 	return e.code
 }
 
-// NewConfError contstructor for ConfError
+// NewConfError constructor for ConfError
 func NewConfError(code int, msg string) *ConfError {
 	return &ConfError{code: code, msg: msg}
 }
