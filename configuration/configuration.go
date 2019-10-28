@@ -136,7 +136,7 @@ func (c *Client) AddParser(transaction string) error {
 	}
 	_, ok := c.parsers[transaction]
 	if ok {
-		return NewConfError(ErrTransactionAlredyExists, fmt.Sprintf("Transaction %s already exists", transaction))
+		return NewConfError(ErrTransactionAlreadyExists, fmt.Sprintf("Transaction %s already exists", transaction))
 	}
 
 	p := &parser.Parser{}
