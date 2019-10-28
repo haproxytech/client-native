@@ -424,6 +424,10 @@ func (c *Client) parseField(section parser.Section, sectionName string, fieldNam
 						dServer.Fall = misc.ParseTimeout(v.Value)
 					case "inter":
 						dServer.Inter = misc.ParseTimeout(v.Value)
+					case "fastinter":
+						dServer.Fastinter = misc.ParseTimeout(v.Value)
+					case "downinter":
+						dServer.Downinter = misc.ParseTimeout(v.Value)
 					case "rise":
 						dServer.Rise = misc.ParseTimeout(v.Value)
 					case "port":
@@ -837,6 +841,22 @@ func (c *Client) setFieldValue(section parser.Section, sectionName string, field
 				param := &params.ServerOptionValue{
 					Name:  "inter",
 					Value: strconv.FormatInt(*ds.Inter, 10),
+				}
+				ps = append(ps, param)
+			}
+
+			if ds.Fastinter != nil {
+				param := &params.ServerOptionValue{
+					Name:  "fastinter",
+					Value: strconv.FormatInt(*ds.Fastinter, 10),
+				}
+				ps = append(ps, param)
+			}
+
+			if ds.Downinter != nil {
+				param := &params.ServerOptionValue{
+					Name:  "downinter",
+					Value: strconv.FormatInt(*ds.Downinter, 10),
 				}
 				ps = append(ps, param)
 			}

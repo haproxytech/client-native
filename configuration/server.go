@@ -265,6 +265,10 @@ func parseServer(ondiskServer types.Server) *models.Server {
 				s.SslCafile = v.Value
 			case "inter":
 				s.Inter = misc.ParseTimeout(v.Value)
+			case "fastinter":
+				s.Fastinter = misc.ParseTimeout(v.Value)
+			case "downinter":
+				s.Downinter = misc.ParseTimeout(v.Value)
 			case "verify":
 				s.Verify = v.Value
 			case "on-error":
@@ -365,6 +369,12 @@ func serializeServer(s models.Server) types.Server {
 	}
 	if s.Inter != nil {
 		srv.Params = append(srv.Params, &params.ServerOptionValue{Name: "inter", Value: strconv.FormatInt(*s.Inter, 10)})
+	}
+	if s.Fastinter != nil {
+		srv.Params = append(srv.Params, &params.ServerOptionValue{Name: "fastinter", Value: strconv.FormatInt(*s.Fastinter, 10)})
+	}
+	if s.Downinter != nil {
+		srv.Params = append(srv.Params, &params.ServerOptionValue{Name: "downinter", Value: strconv.FormatInt(*s.Downinter, 10)})
 	}
 	if s.Cookie != "" {
 		srv.Params = append(srv.Params, &params.ServerOptionValue{Name: "cookie", Value: s.Cookie})
