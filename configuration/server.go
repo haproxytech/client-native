@@ -220,6 +220,10 @@ func parseServer(ondiskServer types.Server) *models.Server {
 				s.Ssl = "enabled"
 			case "no-ssl":
 				s.Ssl = "disabled"
+			case "check-ssl":
+				s.CheckSsl = "enabled"
+			case "no-check-ssl":
+				s.CheckSsl = "disabled"
 			case "tls-tickets":
 				s.TLSTickets = "enabled"
 			case "no-tls-tickets":
@@ -343,6 +347,12 @@ func serializeServer(s models.Server) types.Server {
 	}
 	if s.TLSTickets == "disabled" {
 		srv.Params = append(srv.Params, &params.ServerOptionWord{Name: "no-tls-tickets"})
+	}
+	if s.CheckSsl == "enabled" {
+		srv.Params = append(srv.Params, &params.ServerOptionWord{Name: "check-ssl"})
+	}
+	if s.CheckSsl == "disabled" {
+		srv.Params = append(srv.Params, &params.ServerOptionWord{Name: "no-check-ssl"})
 	}
 	if s.Allow0rtt {
 		srv.Params = append(srv.Params, &params.ServerOptionWord{Name: "allow-0rtt"})
