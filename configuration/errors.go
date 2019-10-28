@@ -33,9 +33,9 @@ const (
 	ErrValidationError        = 14
 	ErrVersionMismatch        = 15
 
-	ErrTransactionDoesNotExist = 20
-	ErrTransactionAlredyExists = 21
-	ErrCannotParseTransaction  = 22
+	ErrTransactionDoesNotExist  = 20
+	ErrTransactionAlreadyExists = 21
+	ErrCannotParseTransaction   = 22
 
 	ErrObjectDoesNotExist    = 30
 	ErrObjectAlreadyExists   = 31
