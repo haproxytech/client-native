@@ -347,10 +347,27 @@ func (c *Client) parseField(section parser.Section, sectionName string, fieldNam
 			return nil
 		}
 		d := data.(*types.Balance)
-		return &models.Balance{
-			Algorithm: d.Algorithm,
-			Arguments: d.Arguments,
+		b := &models.Balance{
+			Algorithm: &d.Algorithm,
 		}
+		switch prm := d.Params.(type) {
+		case *params.BalanceHdr:
+			b.HdrName = prm.Name
+			b.HdrUseDomainOnly = prm.UseDomainOnly
+		case *params.BalanceRandom:
+			b.RandomDraws = prm.Draws
+		case *params.BalanceRdpCookie:
+			b.RdpCookieName = prm.Name
+		case *params.BalanceURI:
+			b.URIDepth = prm.Depth
+			b.URILen = prm.Len
+			b.URIWhole = prm.Whole
+		case *params.BalanceURLParam:
+			b.URLParam = prm.Param
+			b.URLParamCheckPost = prm.CheckPost
+			b.URLParamMaxWait = prm.MaxWait
+		}
+		return b
 	}
 	if fieldName == "Cookie" {
 		data, err := p.Get(section, sectionName, "cookie", false)
@@ -737,8 +754,35 @@ func (c *Client) setFieldValue(section parser.Section, sectionName string, field
 			}
 			b := field.Elem().Interface().(models.Balance)
 			d := types.Balance{
-				Algorithm: b.Algorithm,
-				Arguments: b.Arguments,
+				Algorithm: *b.Algorithm,
+			}
+
+			switch *b.Algorithm {
+			case "uri":
+				d.Params = &params.BalanceURI{
+					Depth: b.URIDepth,
+					Len:   b.URILen,
+					Whole: b.URIWhole,
+				}
+			case "url_param":
+				d.Params = &params.BalanceURLParam{
+					Param:     b.URLParam,
+					CheckPost: b.URLParamCheckPost,
+					MaxWait:   b.URLParamMaxWait,
+				}
+			case "hdr":
+				d.Params = &params.BalanceHdr{
+					Name:          b.HdrName,
+					UseDomainOnly: b.HdrUseDomainOnly,
+				}
+			case "random":
+				d.Params = &params.BalanceRandom{
+					Draws: b.RandomDraws,
+				}
+			case "rdp-cookie":
+				d.Params = &params.BalanceRdpCookie{
+					Name: b.RdpCookieName,
+				}
 			}
 			if err := p.Set(section, sectionName, "balance", &d); err != nil {
 				return err

@@ -18,7 +18,7 @@ func TestGetDefaults(t *testing.T) {
 		t.Errorf("Version %v returned, expected %v", v, version)
 	}
 
-	if d.Balance.Algorithm != "roundrobin" {
+	if *d.Balance.Algorithm != "roundrobin" {
 		t.Errorf("Balance.Algorithm not roundrobin: %v", d.Balance.Algorithm)
 	}
 	if d.Mode != "http" {
@@ -111,6 +111,7 @@ func TestGetDefaults(t *testing.T) {
 func TestPushDefaults(t *testing.T) {
 	tOut := int64(6000)
 	tOutS := int64(200)
+	balanceAlgorithm := "leastconn"
 	d := &models.Defaults{
 		Clitcpka:       "disabled",
 		DefaultBackend: "test2",
@@ -139,7 +140,7 @@ func TestPushDefaults(t *testing.T) {
 		Mode:           "tcp",
 		HTTPUseHtx:     "enabled",
 		Balance: &models.Balance{
-			Algorithm: "leastconn",
+			Algorithm: &balanceAlgorithm,
 		},
 		ExternalCheck:        "",
 		ExternalCheckPath:    "/bin",

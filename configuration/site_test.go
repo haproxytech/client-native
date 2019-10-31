@@ -69,7 +69,7 @@ func TestGetSites(t *testing.T) {
 					if b.UseAs != "default" {
 						t.Errorf("%v: %v: UseAs not default: %v", s.Name, b.Name, b.UseAs)
 					}
-					if b.Balance.Algorithm != "roundrobin" {
+					if *b.Balance.Algorithm != "roundrobin" {
 						t.Errorf("%v: %v: Balance not roundrobin: %v", s.Name, b.Name, b.Balance.Algorithm)
 					}
 					if *b.Forwardfor.Enabled != "enabled" {
@@ -108,7 +108,7 @@ func TestGetSites(t *testing.T) {
 					if b.CondTest != "TRUE" {
 						t.Errorf("%v: %v: CondTest not TRUE: %v", s.Name, b.Name, b.CondTest)
 					}
-					if b.Balance.Algorithm != "roundrobin" {
+					if *b.Balance.Algorithm != "roundrobin" {
 						t.Errorf("%v: %v: Balance not roundrobin: %v", s.Name, b.Name, b.Balance.Algorithm)
 					}
 					if *b.Forwardfor.Enabled != "enabled" {
@@ -142,7 +142,7 @@ func TestGetSites(t *testing.T) {
 					if b.UseAs != "default" {
 						t.Errorf("%v: %v: UseAs not default: %v", s.Name, b.Name, b.UseAs)
 					}
-					if b.Balance.Algorithm != "roundrobin" {
+					if *b.Balance.Algorithm != "roundrobin" {
 						t.Errorf("%v: %v: Balance not roundrobin: %v", s.Name, b.Name, b.Balance.Algorithm)
 					}
 					if *b.Forwardfor.Enabled != "enabled" {
@@ -205,7 +205,7 @@ func TestGetSite(t *testing.T) {
 			if b.UseAs != "default" {
 				t.Errorf("%v: %v: UseAs not default: %v", s.Name, b.Name, b.UseAs)
 			}
-			if b.Balance.Algorithm != "roundrobin" {
+			if *b.Balance.Algorithm != "roundrobin" {
 				t.Errorf("%v: %v: Balance not roundrobin: %v", s.Name, b.Name, b.Balance.Algorithm)
 			}
 			if *b.Forwardfor.Enabled != "enabled" {
@@ -244,7 +244,7 @@ func TestGetSite(t *testing.T) {
 			if b.CondTest != "TRUE" {
 				t.Errorf("%v: %v: CondTest not TRUE: %v", s.Name, b.Name, b.CondTest)
 			}
-			if b.Balance.Algorithm != "roundrobin" {
+			if *b.Balance.Algorithm != "roundrobin" {
 				t.Errorf("%v: %v: Balance not roundrobin: %v", s.Name, b.Name, b.Balance.Algorithm)
 			}
 			if *b.Forwardfor.Enabled != "enabled" {
@@ -270,6 +270,7 @@ func TestCreateEditDeleteSite(t *testing.T) {
 	mConn := int64(2000)
 	port := int64(5000)
 	enabled := "enabled"
+	balanceAlgorithm := "uri"
 	s := &models.Site{
 		Name: "created",
 		Service: &models.SiteService{
@@ -291,7 +292,7 @@ func TestCreateEditDeleteSite(t *testing.T) {
 		Farms: []*models.SiteFarm{
 			&models.SiteFarm{
 				Name:       "createdBck",
-				Balance:    &models.Balance{Algorithm: "uri"},
+				Balance:    &models.Balance{Algorithm: &balanceAlgorithm},
 				UseAs:      "default",
 				Forwardfor: &models.Forwardfor{Enabled: &enabled},
 				Servers: []*models.Server{
@@ -311,7 +312,7 @@ func TestCreateEditDeleteSite(t *testing.T) {
 			},
 			&models.SiteFarm{
 				Name:       "createdBck2",
-				Balance:    &models.Balance{Algorithm: "uri"},
+				Balance:    &models.Balance{Algorithm: &balanceAlgorithm},
 				UseAs:      "conditional",
 				Cond:       "if",
 				CondTest:   "TRUE",
@@ -349,6 +350,7 @@ func TestCreateEditDeleteSite(t *testing.T) {
 	}
 
 	// TestEditSite
+	editBalanceAlgorithm := "roundrobin"
 	s = &models.Site{
 		Name: "created",
 		Service: &models.SiteService{
@@ -365,7 +367,7 @@ func TestCreateEditDeleteSite(t *testing.T) {
 		Farms: []*models.SiteFarm{
 			&models.SiteFarm{
 				Name:       "createdBck3",
-				Balance:    &models.Balance{Algorithm: "uri"},
+				Balance:    &models.Balance{Algorithm: &balanceAlgorithm},
 				UseAs:      "conditional",
 				Cond:       "if",
 				CondTest:   "TRUE",
@@ -381,7 +383,7 @@ func TestCreateEditDeleteSite(t *testing.T) {
 			},
 			&models.SiteFarm{
 				Name:    "createdBck2",
-				Balance: &models.Balance{Algorithm: "roundrobin"},
+				Balance: &models.Balance{Algorithm: &editBalanceAlgorithm},
 				UseAs:   "default",
 				Servers: []*models.Server{
 					&models.Server{
@@ -482,10 +484,37 @@ func siteDeepEqual(x, y *models.Site, t *testing.T) bool {
 		}
 		b.Forwardfor = nil
 		b2.Forwardfor = nil
-		if b.Balance.Algorithm != b2.Balance.Algorithm {
+		if *b.Balance.Algorithm != *b2.Balance.Algorithm {
 			return false
 		}
-		if !assert.ElementsMatch(t, b.Balance.Arguments, b2.Balance.Arguments) {
+		if b.Balance.HdrName != b2.Balance.HdrName {
+			return false
+		}
+		if b.Balance.HdrUseDomainOnly != b2.Balance.HdrUseDomainOnly {
+			return false
+		}
+		if b.Balance.RandomDraws != b2.Balance.RandomDraws {
+			return false
+		}
+		if b.Balance.RdpCookieName != b2.Balance.RdpCookieName {
+			return false
+		}
+		if b.Balance.URIDepth != b2.Balance.URIDepth {
+			return false
+		}
+		if b.Balance.URILen != b2.Balance.URILen {
+			return false
+		}
+		if b.Balance.URIWhole != b2.Balance.URIWhole {
+			return false
+		}
+		if b.Balance.URLParam != b2.Balance.URLParam {
+			return false
+		}
+		if b.Balance.URLParamCheckPost != b2.Balance.URLParamCheckPost {
+			return false
+		}
+		if b.Balance.URLParamMaxWait != b2.Balance.URLParamMaxWait {
 			return false
 		}
 		if b.Mode != b2.Mode {

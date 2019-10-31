@@ -21,7 +21,6 @@ import (
 	"testing"
 
 	"github.com/haproxytech/models"
-	"github.com/stretchr/testify/assert"
 )
 
 func TestGetBackends(t *testing.T) {
@@ -51,7 +50,7 @@ func TestGetBackends(t *testing.T) {
 		if b.Mode != "http" {
 			t.Errorf("%v: Mode not http: %v", b.Name, b.Mode)
 		}
-		if b.Balance.Algorithm != "roundrobin" {
+		if *b.Balance.Algorithm != "roundrobin" {
 			t.Errorf("%v: Balance.Algorithm not roundrobin: %v", b.Name, b.Balance.Algorithm)
 		}
 		if b.HashType.Method != "consistent" {
@@ -124,7 +123,7 @@ func TestGetBackend(t *testing.T) {
 	if b.Mode != "http" {
 		t.Errorf("%v: Mode not http: %v", b.Name, b.Mode)
 	}
-	if b.Balance.Algorithm != "roundrobin" {
+	if *b.Balance.Algorithm != "roundrobin" {
 		t.Errorf("%v: Balance.Algorithm not roundrobin: %v", b.Name, b.Balance.Algorithm)
 	}
 	if b.HashType.Method != "consistent" {
@@ -188,10 +187,15 @@ func TestCreateEditDeleteBackend(t *testing.T) {
 	// TestCreateBackend
 	tOut := int64(5)
 	cookieName := "BLA"
+	balanceAlgorithm := "uri"
 	b := &models.Backend{
-		Name:    "created",
-		Mode:    "http",
-		Balance: &models.Balance{Algorithm: "uri"},
+		Name: "created",
+		Mode: "http",
+		Balance: &models.Balance{
+			Algorithm: &balanceAlgorithm,
+			URILen:    100,
+			URIDepth:  250,
+		},
 		Cookie: &models.Cookie{
 			Domain:   []string{"dom1", "dom2"},
 			Dynamic:  true,
@@ -254,9 +258,13 @@ func TestCreateEditDeleteBackend(t *testing.T) {
 	kl := int64(128)
 	s := int64(25600)
 	b = &models.Backend{
-		Name:    "created",
-		Mode:    "http",
-		Balance: &models.Balance{Algorithm: "roundrobin"},
+		Name: "created",
+		Mode: "http",
+		Balance: &models.Balance{
+			Algorithm: &balanceAlgorithm,
+			URILen:    10,
+			URIDepth:  25,
+		},
 		Cookie: &models.Cookie{
 			Domain:   []string{"dom1", "dom3"},
 			Dynamic:  true,
@@ -342,15 +350,37 @@ func TestCreateEditDeleteBackend(t *testing.T) {
 
 func compareBackends(x, y *models.Backend, t *testing.T) bool {
 
-	if x.Balance.Algorithm != y.Balance.Algorithm {
+	if *x.Balance.Algorithm != *y.Balance.Algorithm {
 		return false
 	}
-
-	if len(x.Balance.Arguments) != len(y.Balance.Arguments) {
+	if x.Balance.HdrName != y.Balance.HdrName {
 		return false
 	}
-
-	if !assert.ElementsMatch(t, x.Balance.Arguments, y.Balance.Arguments) {
+	if x.Balance.HdrUseDomainOnly != y.Balance.HdrUseDomainOnly {
+		return false
+	}
+	if x.Balance.RandomDraws != y.Balance.RandomDraws {
+		return false
+	}
+	if x.Balance.RdpCookieName != y.Balance.RdpCookieName {
+		return false
+	}
+	if x.Balance.URIDepth != y.Balance.URIDepth {
+		return false
+	}
+	if x.Balance.URILen != y.Balance.URILen {
+		return false
+	}
+	if x.Balance.URIWhole != y.Balance.URIWhole {
+		return false
+	}
+	if x.Balance.URLParam != y.Balance.URLParam {
+		return false
+	}
+	if x.Balance.URLParamCheckPost != y.Balance.URLParamCheckPost {
+		return false
+	}
+	if x.Balance.URLParamMaxWait != y.Balance.URLParamMaxWait {
 		return false
 	}
 
