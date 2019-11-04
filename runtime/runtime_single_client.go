@@ -142,10 +142,10 @@ func (s *SingleRuntime) Execute(command string) error {
 	if err != nil {
 		return fmt.Errorf("%s [%s]", err.Error(), command)
 	}
-	if len(rawdata) > 3 {
-		switch rawdata[1:3] {
-		case "3:", "2:", "1:", "0:":
-			return fmt.Errorf("[%c] %s [%s]", rawdata[1], rawdata[3:], command)
+	if len(rawdata) > 5 {
+		switch rawdata[1:5] {
+		case "[3]:", "[2]:", "[1]:", "[0]:":
+			return fmt.Errorf("[%c] %s [%s]", rawdata[2], rawdata[5:], command)
 		}
 	}
 	return nil
@@ -156,10 +156,10 @@ func (s *SingleRuntime) ExecuteWithResponse(command string) (string, error) {
 	if err != nil {
 		return "", fmt.Errorf("%s [%s]", err.Error(), command)
 	}
-	if len(rawdata) > 3 {
-		switch rawdata[1:3] {
-		case "3:", "2:", "1:", "0:":
-			return "", fmt.Errorf("[%c] %s [%s]", rawdata[1], rawdata[3:], command)
+	if len(rawdata) > 5 {
+		switch rawdata[1:5] {
+		case "[3]:", "[2]:", "[1]:", "[0]:":
+			return "", fmt.Errorf("[%c] %s [%s]", rawdata[2], rawdata[5:], command)
 		}
 	}
 	if len(rawdata) > 1 {
