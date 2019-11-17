@@ -59,7 +59,20 @@ func (c *HAProxyClient) Init(configurationClient *configuration.Client, runtimeC
 }
 
 // HAProxyClient Native client for managing configuration and spitting out HAProxy stats
+type IHAProxyClient interface {
+	GetConfiguration() IConfigurationClient
+	GetRuntime() IRuntimeClient
+}
+
 type HAProxyClient struct {
 	Configuration *configuration.Client
 	Runtime       *runtime.Client
+}
+
+func (c *HAProxyClient) GetConfiguration() IConfigurationClient {
+	return c.Configuration
+}
+
+func (c *HAProxyClient) GetRuntime() IRuntimeClient {
+	return c.Runtime
 }

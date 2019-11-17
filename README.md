@@ -6,7 +6,7 @@
 
 ## Usage Example
 
-```
+```go
 // Initialize HAProxy native client
 confClient := &configuration.Client{}
 confParams := configuration.ClientParams{
@@ -39,11 +39,11 @@ if err == nil {
         if err := runtimeClient.Init(socketList, "", 0); err != nil {
             fmt.Println("Error setting up runtime client, not using one")
             return nil
-		}
+        }
     } else {
-		fmt.Println("Runtime API not configured, not using it")
-		runtimeClient = nil
-	}
+        fmt.Println("Runtime API not configured, not using it")
+        runtimeClient = nil
+    }
 } else {
     fmt.Println("Cannot read runtime API configuration, not using it")
     runtimeClient = nil
@@ -69,8 +69,17 @@ fmt.Println(string(backendsJSON))
 
 ```
 
+## Generating interfaces
+
+if you change arguments of Client functions, you need to regenerate interface
+
+```bash
+ifacemaker -f './configuration/*.go'  -p client_native -i IConfigurationClient -s Client -c "This file is generated, don't edit manually, see README.md for details." > client_interface.go
+ifacemaker -f 'runtime/*.go' -p client_native -i IRuntimeClient -s Client -c "This file is generated, don't edit manually, see README.md for details." > runtimeclient_interface.go
+```
+
+You will have to make some manual editing of generated files, because this process is not perfect and generated code won't compile.
+
 ## Contributing
 
 For commit messages and general style please follow the haproxy project's [CONTRIBUTING guide](https://github.com/haproxy/haproxy/blob/master/CONTRIBUTING) and use that where applicable.
-
-

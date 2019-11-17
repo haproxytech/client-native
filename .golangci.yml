@@ -14,8 +14,7 @@ linters-settings:
     min-occurrences: 2
 
 linters:
-  enable:
-    - golint
+  enable:    
     - gocritic
     - stylecheck
     - goimports
@@ -25,6 +24,12 @@ linters:
     - maligned
     - prealloc
     - gochecknoglobals
+
+issues:
+  exclude-rules:
+    - linters:
+        - stylecheck
+      text: "ST1003:"
 
 run:
   skip-dirs:
