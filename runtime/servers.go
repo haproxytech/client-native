@@ -81,6 +81,18 @@ func (s *SingleRuntime) DisableAgentCheck(backend, server string) error {
 	return s.Execute(cmd)
 }
 
+//EnableServer marks server as UP
+func (s *SingleRuntime) EnableServer(backend, server string) error {
+	cmd := fmt.Sprintf("enable server %s/%s", backend, server)
+	return s.Execute(cmd)
+}
+
+//DisableServer marks server as DOWN for maintenanc
+func (s *SingleRuntime) DisableServer(backend, server string) error {
+	cmd := fmt.Sprintf("disable server %s/%s", backend, server)
+	return s.Execute(cmd)
+}
+
 //SetServerAgentAddr set agent-addr for server
 func (s *SingleRuntime) SetServerAgentAddr(backend, server string, addr string) error {
 	cmd := fmt.Sprintf("set server %s/%s agent-addr %s", backend, server, addr)

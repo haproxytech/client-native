@@ -196,6 +196,28 @@ func (c *Client) DisableAgentCheck(backend, server string) error {
 	return nil
 }
 
+//EnableServer marks server as UP
+func (c *Client) EnableServer(backend, server string) error {
+	for _, runtime := range c.runtimes {
+		err := runtime.EnableServer(backend, server)
+		if err != nil {
+			return fmt.Errorf("%s %s", runtime.socketPath, err)
+		}
+	}
+	return nil
+}
+
+//DisableServer marks server as DOWN for maintenance
+func (c *Client) DisableServer(backend, server string) error {
+	for _, runtime := range c.runtimes {
+		err := runtime.DisableServer(backend, server)
+		if err != nil {
+			return fmt.Errorf("%s %s", runtime.socketPath, err)
+		}
+	}
+	return nil
+}
+
 //SetServerAgentAddr set agent-addr for server
 func (c *Client) SetServerAgentAddr(backend, server string, addr string) error {
 	for _, runtime := range c.runtimes {
