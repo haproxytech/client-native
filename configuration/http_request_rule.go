@@ -132,7 +132,7 @@ func (c *Client) CreateHTTPRequestRule(parentType string, parentName string, dat
 		section = parser.Frontends
 	}
 
-	s, err = serializeHTTPRequestRule(*data)
+	s, err := serializeHTTPRequestRule(*data)
 	if err != nil {
 		return err
 	}
@@ -172,7 +172,7 @@ func (c *Client) EditHTTPRequestRule(id int64, parentType string, parentName str
 		return c.handleError(strconv.FormatInt(id, 10), parentType, parentName, t, transactionID == "", err)
 	}
 
-	s, err = serializeHTTPRequestRule(*data)
+	s, err := serializeHTTPRequestRule(*data)
 	if err != nil {
 		return err
 	}
@@ -232,7 +232,7 @@ func parseHTTPRequestRule(f types.HTTPAction) (rule *models.HTTPRequestRule, err
 			CondTest: v.CondTest,
 		}
 		if s != 0 {
-			r.DenyStatus = s
+			rule.DenyStatus = s
 		}
 	case *actions.Auth:
 		rule = &models.HTTPRequestRule{
@@ -252,7 +252,7 @@ func parseHTTPRequestRule(f types.HTTPAction) (rule *models.HTTPRequestRule, err
 			CondTest:    v.CondTest,
 		}
 		if code != 0 {
-			r.RedirCode = code
+			rule.RedirCode = code
 		}
 	case *actions.Tarpit:
 		s, _ := strconv.ParseInt(v.DenyStatus, 10, 64)
@@ -262,7 +262,7 @@ func parseHTTPRequestRule(f types.HTTPAction) (rule *models.HTTPRequestRule, err
 			CondTest: v.CondTest,
 		}
 		if s != 0 {
-			r.DenyStatus = s
+			rule.DenyStatus = s
 		}
 	case *actions.AddHeader:
 		rule = &models.HTTPRequestRule{
