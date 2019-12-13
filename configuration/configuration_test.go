@@ -108,6 +108,8 @@ frontend test_2
   default_backend test_2
   timeout client 4s
   option clitcpka
+  http-request capture req.cook_cnt(FirstVisit),bool len 10
+  http-request capture req.cook_cnt(FirstVisit),bool id 0
 
 backend test
   mode http

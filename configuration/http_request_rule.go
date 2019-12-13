@@ -208,7 +208,7 @@ func (c *Client) parseHTTPRequestRules(t, pName string, p *parser.Parser) (model
 	for i, r := range rules {
 		id := int64(i)
 		httpReqRule, err := parseHTTPRequestRule(r)
-		if err != nil {
+		if err == nil {
 			httpReqRule.ID = &id
 			httpReqRules = append(httpReqRules, httpReqRule)
 		}
@@ -366,6 +366,22 @@ func parseHTTPRequestRule(f types.HTTPAction) (rule *models.HTTPRequestRule, err
 			Cond:       v.Cond,
 			CondTest:   v.CondTest,
 		}
+	case *actions.Capture:
+		if (v.SlotID == nil && v.Len == nil) || (v.SlotID != nil && v.Len != nil) {
+			return nil, parser_errors.ErrInvalidData
+		}
+		rule = &models.HTTPRequestRule{
+			Type:          "capture",
+			CaptureSample: v.Sample,
+			Cond:          v.Cond,
+			CondTest:      v.CondTest,
+		}
+		if v.SlotID != nil {
+			rule.CaptureID = *v.SlotID
+		}
+		if v.Len != nil {
+			rule.CaptureLen = *v.Len
+		}
 	}
 	return rule, err
 }
@@ -492,6 +508,20 @@ func serializeHTTPRequestRule(f models.HTTPRequestRule) (rule types.HTTPAction, 
 			Group:    f.SpoeGroup,
 			Cond:     f.Cond,
 			CondTest: f.CondTest,
+		}
+	case "capture":
+		if f.CaptureLen == 0 {
+			return nil, parser_errors.ErrInvalidData
+		}
+		rule := &actions.Capture{
+			Sample:   f.CaptureSample,
+			Cond:     f.Cond,
+			CondTest: f.CondTest,
+		}
+		if f.CaptureLen > 0 {
+			rule.Len = &f.CaptureLen
+		} else {
+			rule.SlotID = &f.CaptureID
 		}
 	}
 	return rule, err

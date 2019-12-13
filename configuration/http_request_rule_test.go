@@ -117,6 +117,25 @@ func TestGetHTTPRequestRule(t *testing.T) {
 	if err == nil {
 		t.Error("Should throw error, non existant HTTP Request Rule")
 	}
+
+	_, r, err = client.GetHTTPRequestRule(0, "frontend", "test_2", "")
+	if err != nil {
+		t.Error("Should throw error, non existant HTTP Request Rule")
+	}
+	if r.Type != "capture" {
+		t.Errorf("%v: Type not allow: %v", *r.ID, r.Type)
+	}
+	if r.CaptureLen != 10 {
+		t.Errorf("%v: Wrong len parameter for capture: %v", *r.ID, r.CaptureLen)
+	}
+
+	_, r, err = client.GetHTTPRequestRule(1, "frontend", "test_2", "")
+	if err != nil {
+		t.Error("Should throw error, non existant HTTP Request Rule")
+	}
+	if r.CaptureID != 0 {
+		t.Errorf("%v: Wrong slotID: %v", *r.ID, r.CaptureID)
+	}
 }
 
 func TestCreateEditDeleteHTTPRequestRule(t *testing.T) {
