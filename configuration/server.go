@@ -265,6 +265,8 @@ func parseServer(ondiskServer types.Server) *models.Server {
 				s.SslCafile = v.Value
 			case "inter":
 				s.Inter = misc.ParseTimeout(v.Value)
+			case "init-addr":
+				s.InitAddr = v.Value
 			case "fastinter":
 				s.Fastinter = misc.ParseTimeout(v.Value)
 			case "downinter":
@@ -366,6 +368,9 @@ func serializeServer(s models.Server) types.Server {
 	}
 	if s.Weight != nil {
 		srv.Params = append(srv.Params, &params.ServerOptionValue{Name: "weight", Value: strconv.FormatInt(*s.Weight, 10)})
+	}
+	if s.InitAddr != "" {
+		srv.Params = append(srv.Params, &params.ServerOptionValue{Name: "init-addr", Value: s.InitAddr})
 	}
 	if s.Inter != nil {
 		srv.Params = append(srv.Params, &params.ServerOptionValue{Name: "inter", Value: strconv.FormatInt(*s.Inter, 10)})
