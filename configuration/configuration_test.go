@@ -110,6 +110,7 @@ frontend test_2
   option clitcpka
   http-request capture req.cook_cnt(FirstVisit),bool len 10
   http-request capture req.cook_cnt(FirstVisit),bool id 0
+  http-response capture res.header id 0
 
 backend test
   mode http

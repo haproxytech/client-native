@@ -113,9 +113,20 @@ func TestGetHTTPResponseRule(t *testing.T) {
 		t.Error(err.Error())
 	}
 
-	_, _, err = client.GetHTTPRequestRule(3, "backend", "test2", "")
+	_, _, err = client.GetHTTPResponseRule(3, "backend", "test2", "")
 	if err == nil {
 		t.Error("Should throw error, non existant HTTPResponse Rule")
+	}
+
+	_, r, err = client.GetHTTPResponseRule(0, "frontend", "test_2", "")
+	if err != nil {
+		t.Error(err.Error())
+	}
+	if r.Type != "capture" {
+		t.Errorf("%v: Type not 'capture': %v", *r.ID, r.Type)
+	}
+	if *r.CaptureID != 0 {
+		t.Errorf("%v: Wrong slotID: %v", *r.ID, r.CaptureID)
 	}
 }
 
