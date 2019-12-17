@@ -323,6 +323,14 @@ func parseHTTPResponseRule(f types.HTTPAction) *models.HTTPResponseRule {
 			Cond:       v.Cond,
 			CondTest:   v.CondTest,
 		}
+	case *actions.Capture:
+		return &models.HTTPResponseRule{
+			Type:          "capture",
+			CaptureSample: v.Sample,
+			Cond:          v.Cond,
+			CondTest:      v.CondTest,
+			CaptureID:     *v.SlotID,
+		}
 	}
 	return nil
 }
@@ -425,6 +433,13 @@ func serializeHTTPResponseRule(f models.HTTPResponseRule) types.HTTPAction {
 			Group:    f.SpoeGroup,
 			Cond:     f.Cond,
 			CondTest: f.CondTest,
+		}
+	case "capture":
+		return &actions.Capture{
+			Sample:   f.CaptureSample,
+			Cond:     f.Cond,
+			CondTest: f.CondTest,
+			SlotID:   &f.CaptureID,
 		}
 	}
 	return nil
