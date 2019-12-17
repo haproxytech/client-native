@@ -368,7 +368,7 @@ func parseHTTPRequestRule(f types.HTTPAction) (rule *models.HTTPRequestRule, err
 		}
 	case *actions.Capture:
 		if (v.SlotID == nil && v.Len == nil) || (v.SlotID != nil && v.Len != nil) {
-			return nil, parser_errors.ErrInvalidData
+			return nil, NewConfError(ErrValidationError, "capture len can't be zero")
 		}
 		rule = &models.HTTPRequestRule{
 			Type:          "capture",
@@ -377,7 +377,7 @@ func parseHTTPRequestRule(f types.HTTPAction) (rule *models.HTTPRequestRule, err
 			CondTest:      v.CondTest,
 		}
 		if v.SlotID != nil {
-			rule.CaptureID = *v.SlotID
+			rule.CaptureID = v.SlotID
 		}
 		if v.Len != nil {
 			rule.CaptureLen = *v.Len
@@ -510,19 +510,23 @@ func serializeHTTPRequestRule(f models.HTTPRequestRule) (rule types.HTTPAction, 
 			CondTest: f.CondTest,
 		}
 	case "capture":
-		if f.CaptureLen == 0 {
-			return nil, parser_errors.ErrInvalidData
+		if f.CaptureLen > 0 && f.CaptureID != nil {
+			return nil, NewConfError(ErrValidationError, "capture len and id are exclusive")
 		}
-		rule := &actions.Capture{
+		if f.CaptureLen == 0 && f.CaptureID == nil {
+			return nil, NewConfError(ErrValidationError, "capture len has to be greater than 0 or capture_id has to be set")
+		}
+		r := &actions.Capture{
 			Sample:   f.CaptureSample,
 			Cond:     f.Cond,
 			CondTest: f.CondTest,
 		}
 		if f.CaptureLen > 0 {
-			rule.Len = &f.CaptureLen
+			r.Len = &f.CaptureLen
 		} else {
-			rule.SlotID = &f.CaptureID
+			r.SlotID = f.CaptureID
 		}
+		rule = r
 	}
 	return rule, err
 }
