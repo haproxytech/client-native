@@ -125,8 +125,8 @@ func TestGetHTTPResponseRule(t *testing.T) {
 	if r.Type != "capture" {
 		t.Errorf("%v: Type not 'capture': %v", *r.ID, r.Type)
 	}
-	if r.CaptureID != 0 {
-		t.Errorf("%v: Wrong slotID: %v", *r.ID, r.CaptureID)
+	if *r.CaptureID != 0 {
+		t.Errorf("%v: Wrong slotID: %v", *r.ID, *r.CaptureID)
 	}
 }
 

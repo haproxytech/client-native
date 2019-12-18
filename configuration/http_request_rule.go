@@ -377,7 +377,7 @@ func parseHTTPRequestRule(f types.HTTPAction) (rule *models.HTTPRequestRule, err
 			CondTest:      v.CondTest,
 		}
 		if v.SlotID != nil {
-			rule.CaptureID = *v.SlotID
+			rule.CaptureID = v.SlotID
 		}
 		if v.Len != nil {
 			rule.CaptureLen = *v.Len
@@ -521,7 +521,7 @@ func serializeHTTPRequestRule(f models.HTTPRequestRule) (rule types.HTTPAction, 
 		if f.CaptureLen > 0 {
 			rule.Len = &f.CaptureLen
 		} else {
-			rule.SlotID = &f.CaptureID
+			rule.SlotID = f.CaptureID
 		}
 	}
 	return rule, err

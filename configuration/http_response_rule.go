@@ -329,7 +329,7 @@ func parseHTTPResponseRule(f types.HTTPAction) *models.HTTPResponseRule {
 			CaptureSample: v.Sample,
 			Cond:          v.Cond,
 			CondTest:      v.CondTest,
-			CaptureID:     *v.SlotID,
+			CaptureID:     v.SlotID,
 		}
 	}
 	return nil
@@ -439,7 +439,7 @@ func serializeHTTPResponseRule(f models.HTTPResponseRule) types.HTTPAction {
 			Sample:   f.CaptureSample,
 			Cond:     f.Cond,
 			CondTest: f.CondTest,
-			SlotID:   &f.CaptureID,
+			SlotID:   f.CaptureID,
 		}
 	}
 	return nil

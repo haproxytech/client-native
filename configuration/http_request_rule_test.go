@@ -133,8 +133,8 @@ func TestGetHTTPRequestRule(t *testing.T) {
 	if err != nil {
 		t.Error("Should throw error, non existant HTTP Request Rule")
 	}
-	if r.CaptureID != 0 {
-		t.Errorf("%v: Wrong slotID: %v", *r.ID, r.CaptureID)
+	if *r.CaptureID != 0 {
+		t.Errorf("%v: Wrong slotID: %v", *r.ID, *r.CaptureID)
 	}
 }
 
