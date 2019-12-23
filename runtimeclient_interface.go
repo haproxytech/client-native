@@ -3,6 +3,8 @@
 package client_native
 
 import (
+	"mime/multipart"
+
 	"github.com/haproxytech/models"
 )
 
@@ -12,6 +14,8 @@ type IRuntimeClient interface {
 	//
 	//Deprecated: use InitWithSockets or InitWithMasterSocket instead
 	Init(socketPath []string, masterSocketPath string, nbproc int) error
+	//GetMapsPath returns runtime map file path
+	GetMapsPath(name string) string
 	InitWithSockets(socketPath map[int]string) error
 	InitWithMasterSocket(masterSocketPath string, nbproc int) error
 	//GetStats returns stats from the socket
@@ -54,4 +58,23 @@ type IRuntimeClient interface {
 	ShowTable(name string, process int) (*models.StickTable, error)
 	//ExecuteRaw does not procces response, just returns its values for all processes
 	ExecuteRaw(command string) ([]string, error)
+	//ShowMaps returns structured unique map files
+	ShowMaps() (models.Maps, error)
+	//CreateMap creates a new map file with its entries
+	CreateMap(file multipart.File, header multipart.FileHeader) (models.MapEntries, error)
+	//GetMap returns one structured runtime map file
+	GetMap(name string) (*models.Map, error)
+	//ClearMap removes all map entries from the map file. If forceDelete is true, deletes file from disk
+	ClearMap(name string, forceDelete bool) error
+	//ShowMapEntries list all map entries by map file name
+	ShowMapEntries(name string) (models.MapEntries, error)
+	//AddMapEntry adds an entry into the map file
+	AddMapEntry(name, key, value string) error
+	//GetMapEntry returns one map runtime setting
+	GetMapEntry(name, id string) (*models.MapEntry, error)
+	//SetMapEntry replace the value corresponding to each id in a map
+	SetMapEntry(name, id, value string) error
+	//DeleteMapEntry deletes all the map entries from the map by its id
+	DeleteMapEntry(name, id string) error
 }
+
