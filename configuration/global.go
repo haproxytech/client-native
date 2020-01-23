@@ -223,7 +223,7 @@ func (c *Client) PushGlobalConfiguration(data *models.Global, transactionID stri
 		Value: data.Nbthread,
 	}
 	if data.Nbthread == 0 {
-		pNbProc = nil
+		pNbthread = nil
 	}
 	p.Set(parser.Global, parser.GlobalSectionName, "nbthread", pNbthread)
 
