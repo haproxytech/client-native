@@ -290,6 +290,10 @@ func parseServer(ondiskServer types.Server) *models.Server {
 				}
 			case "agent-send":
 				s.AgentSend = v.Value
+			case "check-sni":
+				s.CheckSni = v.Value
+			case "sni":
+				s.Sni = v.Value
 			}
 		}
 	}
@@ -359,6 +363,12 @@ func serializeServer(s models.Server) types.Server {
 	}
 	if s.CheckSsl == "disabled" {
 		srv.Params = append(srv.Params, &params.ServerOptionWord{Name: "no-check-ssl"})
+	}
+	if s.CheckSni != "" {
+		srv.Params = append(srv.Params, &params.ServerOptionValue{Name: "check-sni", Value: s.CheckSni})
+	}
+	if s.Sni != "" {
+		srv.Params = append(srv.Params, &params.ServerOptionValue{Name: "sni", Value: s.Sni})
 	}
 	if s.Allow0rtt {
 		srv.Params = append(srv.Params, &params.ServerOptionWord{Name: "allow-0rtt"})
