@@ -23,33 +23,9 @@ import (
 	"reflect"
 	"testing"
 
+	"github.com/haproxytech/client-native/v2/misc"
 	"github.com/stretchr/testify/require"
 )
-
-func createDir(config string, createFile bool, extension ...string) (dirname, file string, err error) {
-	dirname, err = ioutil.TempDir("/tmp", "storage")
-	if err != nil {
-		return "", "", err
-	}
-	if !createFile {
-		return dirname, "", nil
-	}
-	ext := ""
-	if len(extension) > 0 {
-		ext = extension[0]
-	}
-	f, err := ioutil.TempFile(dirname, ext)
-	if err != nil {
-		return "", "", err
-	}
-	if config != "" {
-		_, err = f.WriteString(config)
-		if err != nil {
-			return "", "", err
-		}
-	}
-	return dirname, filepath.Base(f.Name()), nil
-}
 
 func TestNew(t *testing.T) {
 	s, _ := New("/tmp", MapsType)
@@ -93,7 +69,7 @@ func TestNew(t *testing.T) {
 func TestStorage_GetAll(t *testing.T) {
 	conf1 := `key1 val1
 key2 val2`
-	dirWithFile, file, err := createDir(conf1, true)
+	dirWithFile, file, err := misc.CreateTempDir(conf1, true)
 	if err != nil {
 		t.Error(err.Error())
 	}
@@ -102,7 +78,7 @@ key2 val2`
 		_ = remove(dirWithFile)
 	}()
 
-	dirWithoutFile, _, err := createDir("", false)
+	dirWithoutFile, _, err := misc.CreateTempDir("", false)
 	if err != nil {
 		t.Error(err.Error())
 	}
@@ -158,7 +134,7 @@ key2 val2`
 func TestStorage_Get(t *testing.T) {
 	conf1 := `key1 val1
 key2 val2`
-	dirWithFile, file, err := createDir(conf1, true)
+	dirWithFile, file, err := misc.CreateTempDir(conf1, true)
 	if err != nil {
 		t.Error(err.Error())
 	}
@@ -167,7 +143,7 @@ key2 val2`
 		_ = remove(dirWithFile)
 	}()
 
-	dirWithoutFile, noFile, err := createDir("", false)
+	dirWithoutFile, noFile, err := misc.CreateTempDir("", false)
 	if err != nil {
 		t.Error(err.Error())
 	}
@@ -215,7 +191,7 @@ key2 val2`
 }
 
 func TestStorage_Delete(t *testing.T) {
-	dirWithFile, file, err := createDir("", true)
+	dirWithFile, file, err := misc.CreateTempDir("", true)
 	if err != nil {
 		t.Error(err.Error())
 	}
@@ -224,7 +200,7 @@ func TestStorage_Delete(t *testing.T) {
 		_ = remove(dirWithFile)
 	}()
 
-	dirWithoutFile, noFile, err := createDir("", false)
+	dirWithoutFile, noFile, err := misc.CreateTempDir("", false)
 	if err != nil {
 		t.Error(err.Error())
 	}
@@ -266,7 +242,7 @@ func TestStorage_Delete(t *testing.T) {
 func TestStorage_Replace(t *testing.T) {
 	conf1 := `key1 val1
 	key2 val2`
-	dirWithFile, file, err := createDir(conf1, true)
+	dirWithFile, file, err := misc.CreateTempDir(conf1, true)
 	if err != nil {
 		t.Error(err.Error())
 	}
@@ -320,7 +296,7 @@ func TestStorage_Replace(t *testing.T) {
 func Test_storage_Create(t *testing.T) {
 	conf1 := `key1 val1
 	key2 val2`
-	dirWithFile, file, err := createDir(conf1, true, "*.map")
+	dirWithFile, file, err := misc.CreateTempDir(conf1, true, "*.map")
 	if err != nil {
 		t.Error(err.Error())
 	}
@@ -329,7 +305,7 @@ func Test_storage_Create(t *testing.T) {
 		_ = remove(dirWithFile)
 	}()
 
-	dirWithoutFile, _, err := createDir("", false, "*.map")
+	dirWithoutFile, _, err := misc.CreateTempDir("", false, "*.map")
 	if err != nil {
 		t.Error(err.Error())
 	}

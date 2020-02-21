@@ -47,6 +47,8 @@ const (
 	ErrCannotSetVersion    = 43
 
 	ErrCannotFindHAProxy = 50
+
+	ErrClientDoesNotExists = 60
 )
 
 // ConfError general configuration client error

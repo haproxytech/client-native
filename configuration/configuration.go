@@ -21,7 +21,6 @@ import (
 	"reflect"
 	"strconv"
 	"strings"
-	"sync"
 
 	"github.com/haproxytech/config-parser/v3/common"
 	"github.com/haproxytech/config-parser/v3/parsers"
@@ -72,11 +71,10 @@ type ClientParams struct {
 // transaction files on StartTransaction, and deletes on CommitTransaction. We save
 // data to file on every change for persistence.
 type Client struct {
-	ClientParams
+	Transaction
 	parsers  map[string]*parser.Parser
 	services map[string]*Service
 	Parser   *parser.Parser
-	mu       sync.Mutex
 }
 
 // DefaultClient returns Client with sane defaults
@@ -92,6 +90,7 @@ func DefaultClient() (*Client, error) {
 		SkipFailedTransactions:    false,
 	}
 	c := &Client{}
+	c.TransactionClient = c
 	err := c.Init(p)
 
 	if err != nil {
@@ -120,6 +119,7 @@ func (c *Client) Init(options ClientParams) error {
 	}
 
 	c.ClientParams = options
+	c.TransactionClient = c
 
 	c.parsers = make(map[string]*parser.Parser)
 	c.services = make(map[string]*Service)
@@ -137,6 +137,29 @@ func (c *Client) Init(options ClientParams) error {
 	}
 
 	return nil
+}
+
+// HasParser checks whether transaction exists in parser
+func (c *Client) HasParser(transaction string) bool {
+	_, ok := c.parsers[transaction]
+	return ok
+}
+
+// GetParserTransactions returns parser transactions
+func (c *Client) GetParserTransactions() models.Transactions {
+	transactions := models.Transactions{}
+	for tID := range c.parsers {
+		v, err := c.GetVersion(tID)
+		if err == nil {
+			t := &models.Transaction{
+				ID:      tID,
+				Status:  "in_progress",
+				Version: v,
+			}
+			transactions = append(transactions, t)
+		}
+	}
+	return transactions
 }
 
 // GetParser returns a parser for given transaction, if transaction is "", it returns "master" parser
@@ -169,7 +192,7 @@ func (c *Client) AddParser(transaction string) error {
 	tFile := ""
 	var err error
 	if c.PersistentTransactions {
-		tFile, err = c.getTransactionFile(transaction)
+		tFile, err = c.GetTransactionFile(transaction)
 		if err != nil {
 			return err
 		}
@@ -225,7 +248,7 @@ func (c *Client) InitTransactionParsers() error {
 		if err != nil {
 			continue
 		}
-		tFile, err := c.getTransactionFile(t.ID)
+		tFile, err := c.GetTransactionFile(t.ID)
 		if err != nil {
 			return err
 		}
@@ -252,7 +275,7 @@ func (c *Client) getVersion(transaction string) (int64, error) {
 	return ver.Value, nil
 }
 
-func (c *Client) incrementVersion() error {
+func (c *Client) IncrementVersion() error {
 	data, _ := c.Parser.Get(parser.Comments, parser.CommentsSectionName, "# _version", true)
 	ver, _ := data.(*types.ConfigVersion)
 	ver.Value = ver.Value + 1
@@ -263,32 +286,38 @@ func (c *Client) incrementVersion() error {
 	return nil
 }
 
-func (c *Client) checkTransactionOrVersion(transactionID string, version int64) (string, error) {
-	// start an implicit transaction if transaction is not already given
-	t := ""
-	if transactionID != "" && version != 0 {
-		return "", NewConfError(ErrBothVersionTransaction, "Both version and transaction specified, specify only one")
-	} else if transactionID == "" && version == 0 {
-		return "", NewConfError(ErrNoVersionTransaction, "Version or transaction not specified, specify only one")
-	} else if transactionID != "" {
-		t = transactionID
-	} else {
-		v, err := c.GetVersion("")
-		if err != nil {
-			return "", err
-		}
-		if version != v {
-			return "", NewConfError(ErrVersionMismatch, fmt.Sprintf("Version in configuration file is %v, given version is %v", v, version))
-		}
-
-		transaction, err := c.StartTransaction(version)
-		if err != nil {
-			return "", err
-		}
-		t = transaction.ID
-
+func (c *Client) LoadData(filename string) error {
+	err := c.Parser.LoadData(filename)
+	if err != nil {
+		return NewConfError(ErrCannotReadConfFile, fmt.Sprintf("cannot read %s", filename))
 	}
-	return t, nil
+	return nil
+}
+
+func (c *Client) Save(transactionFile, transactionID string) error {
+	if transactionID == "" {
+		return c.Parser.Save(transactionFile)
+	}
+	p, err := c.GetParser(transactionID)
+	if err != nil {
+		return err
+	}
+	return p.Save(transactionFile)
+}
+
+func (c *Client) GetFailedParserTransactionVersion(id string) (int64, error) {
+	p := &parser.Parser{}
+	if err := p.LoadData(id); err != nil {
+		return 0, NewConfError(ErrCannotReadConfFile, fmt.Sprintf("cannot read %s", id))
+	}
+
+	data, _ := p.Get(parser.Comments, parser.CommentsSectionName, "# _version", false)
+
+	ver, ok := data.(*types.ConfigVersion)
+	if !ok {
+		return 0, NewConfError(ErrCannotReadVersion, "cannot read version")
+	}
+	return ver.Value, nil
 }
 
 //ParseSection sets the fields of the section based on the provided parser
@@ -2415,7 +2444,7 @@ func (c *Client) checkSectionExists(section parser.Section, sectionName string, 
 }
 
 func (c *Client) loadDataForChange(transactionID string, version int64) (*parser.Parser, string, error) {
-	t, err := c.checkTransactionOrVersion(transactionID, version)
+	t, err := c.TransactionClient.CheckTransactionOrVersion(transactionID, version)
 	if err != nil {
 		// if transaction is implicit, return err and delete transaction
 		if transactionID == "" && t != "" {
@@ -2436,7 +2465,7 @@ func (c *Client) loadDataForChange(transactionID string, version int64) (*parser
 
 func (c *Client) saveData(p *parser.Parser, t string, commitImplicit bool) error {
 	if c.PersistentTransactions {
-		tFile, err := c.getTransactionFile(t)
+		tFile, err := c.GetTransactionFile(t)
 		if err != nil {
 			return err
 		}

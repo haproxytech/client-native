@@ -34,7 +34,7 @@ func (c *Client) GetRawConfiguration(transactionID string, version int64) (int64
 	if transactionID != "" && version != 0 {
 		return 0, "", NewConfError(ErrBothVersionTransaction, "Both version and transaction specified, specify only one")
 	} else if transactionID != "" {
-		config, err = c.getTransactionFile(transactionID)
+		config, err = c.GetTransactionFile(transactionID)
 		if err != nil {
 			return 0, "", err
 		}
@@ -109,7 +109,7 @@ func (c *Client) PostRawConfiguration(config *string, version int64, skipVersion
 	} else {
 		// Create implicit transaction and check version
 		var err error
-		t, err = c.checkTransactionOrVersion("", version)
+		t, err = c.CheckTransactionOrVersion("", version)
 		if err != nil {
 			// if transaction is implicit, return err and delete transaction
 			if t != "" {
@@ -118,7 +118,8 @@ func (c *Client) PostRawConfiguration(config *string, version int64, skipVersion
 			return err
 		}
 	}
-	tFile, err := c.getTransactionFile(t)
+
+	tFile, err := c.GetTransactionFile(t)
 	if err != nil {
 		return err
 	}

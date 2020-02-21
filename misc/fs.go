@@ -39,3 +39,29 @@ func CheckOrCreateWritableDirectory(dirname string) (string, error) {
 	}
 	return dirname, nil
 }
+
+// CreateTempDir will create a new temporary dir. If config is provided it will create a file with its content
+func CreateTempDir(config string, createFile bool, extension ...string) (dirname, file string, err error) {
+	dirname, err = ioutil.TempDir("/tmp", "storage")
+	if err != nil {
+		return "", "", err
+	}
+	if !createFile {
+		return dirname, "", nil
+	}
+	ext := ""
+	if len(extension) > 0 {
+		ext = extension[0]
+	}
+	f, err := ioutil.TempFile(dirname, ext)
+	if err != nil {
+		return "", "", err
+	}
+	if config != "" {
+		_, err = f.WriteString(config)
+		if err != nil {
+			return "", "", err
+		}
+	}
+	return dirname, filepath.Base(f.Name()), nil
+}

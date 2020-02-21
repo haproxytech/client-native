@@ -20,6 +20,7 @@ import (
 
 	"github.com/haproxytech/client-native/v2/configuration"
 	"github.com/haproxytech/client-native/v2/runtime"
+	"github.com/haproxytech/client-native/v2/spoe"
 	"github.com/haproxytech/client-native/v2/storage"
 )
 
@@ -70,6 +71,7 @@ type HAProxyClient struct {
 	Runtime        *runtime.Client
 	MapStorage     storage.Storage
 	SSLCertStorage storage.Storage
+	Spoe           spoe.Spoe
 }
 
 func (c *HAProxyClient) GetConfiguration() IConfigurationClient {
