@@ -447,6 +447,9 @@ func SerializeServer(s models.Server) types.Server {
 	if s.ResolveNet != "" {
 		srv.Params = append(srv.Params, &params.ServerOptionValue{Name: "resolve-net", Value: s.ResolveNet})
 	}
+	if s.Proto != "" {
+		srv.Params = append(srv.Params, &params.ServerOptionValue{Name: "proto", Value: s.Proto})
+	}
 	return srv
 }
 
