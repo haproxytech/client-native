@@ -427,6 +427,9 @@ func serializeServer(s models.Server) types.Server {
 	if s.SendProxyV2 == "disabled" {
 		srv.Params = append(srv.Params, &params.ServerOptionWord{Name: "no-send-proxy-v2"})
 	}
+	if s.Proto != "" {
+		srv.Params = append(srv.Params, &params.ServerOptionValue{Name: "proto", Value: s.Proto})
+	}
 	return srv
 }
 
