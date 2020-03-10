@@ -382,6 +382,30 @@ func parseHTTPRequestRule(f types.HTTPAction) (rule *models.HTTPRequestRule, err
 		if v.Len != nil {
 			rule.CaptureLen = *v.Len
 		}
+	case *actions.TrackSc0:
+		rule = &models.HTTPRequestRule{
+			Type: "track-sc0",
+			TrackSc0Key: v.Key,
+			TrackSc0Table: v.Table,
+			Cond: v.Cond,
+			CondTest: v.CondTest,
+		}
+	case *actions.TrackSc1:
+		rule = &models.HTTPRequestRule{
+			Type: "track-sc1",
+			TrackSc1Key: v.Key,
+			TrackSc1Table: v.Table,
+			Cond: v.Cond,
+			CondTest: v.CondTest,
+		}
+	case *actions.TrackSc2:
+		rule = &models.HTTPRequestRule{
+			Type: "track-sc2",
+			TrackSc2Key: v.Key,
+			TrackSc2Table: v.Table,
+			Cond: v.Cond,
+			CondTest: v.CondTest,
+		}
 	}
 	return rule, err
 }
@@ -527,6 +551,23 @@ func serializeHTTPRequestRule(f models.HTTPRequestRule) (rule types.HTTPAction, 
 			r.SlotID = f.CaptureID
 		}
 		rule = r
+	case "track-sc0":
+		rule = &actions.TrackSc0{
+			Key: f.TrackSc0Key,
+			Table: f.TrackSc0Table,
+		}
+	case "track-sc1":
+		rule = &actions.TrackSc1{
+			Key: f.TrackSc1Key,
+			Table: f.TrackSc1Table,
+		}
+	case "track-sc2":
+		rule = &actions.TrackSc2{
+			Key: f.TrackSc2Key,
+			Table: f.TrackSc2Table,
+			Cond: f.Cond,
+			CondTest: f.CondTest,
+		}
 	}
 	return rule, err
 }
