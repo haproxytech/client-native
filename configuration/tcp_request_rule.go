@@ -75,9 +75,12 @@ func (c *Client) GetTCPRequestRule(id int64, parentType, parentName string, tran
 		return v, nil, c.handleError(strconv.FormatInt(id, 10), parentType, parentName, "", false, err)
 	}
 
-	tcpRule := parseTCPRequestRule(data.(types.TCPAction))
-	tcpRule.ID = &id
+	tcpRule, err := parseTCPRequestRule(data.(types.TCPAction))
+	if err != nil {
+		return v, nil, err
+	}
 
+	tcpRule.ID = &id
 	return v, tcpRule, nil
 }
 
@@ -128,7 +131,12 @@ func (c *Client) CreateTCPRequestRule(parentType string, parentName string, data
 		section = parser.Frontends
 	}
 
-	if err := p.Insert(section, parentName, "tcp-request", serializeTCPRequestRule(*data), int(*data.ID)); err != nil {
+	s, err := serializeTCPRequestRule(*data)
+	if err != nil {
+		return err
+	}
+
+	if err := p.Insert(section, parentName, "tcp-request", s, int(*data.ID)); err != nil {
 		return c.handleError(strconv.FormatInt(*data.ID, 10), parentType, parentName, t, transactionID == "", err)
 	}
 
@@ -163,7 +171,12 @@ func (c *Client) EditTCPRequestRule(id int64, parentType string, parentName stri
 		return c.handleError(strconv.FormatInt(id, 10), parentType, parentName, t, transactionID == "", err)
 	}
 
-	if err := p.Set(section, parentName, "tcp-request", serializeTCPRequestRule(*data), int(id)); err != nil {
+	s, err := serializeTCPRequestRule(*data)
+	if err != nil {
+		return err
+	}
+
+	if err := p.Set(section, parentName, "tcp-request", s, int(id)); err != nil {
 		return c.handleError(strconv.FormatInt(id, 10), parentType, parentName, t, transactionID == "", err)
 	}
 
@@ -193,8 +206,8 @@ func (c *Client) parseTCPRequestRules(t, pName string, p *parser.Parser) (models
 	rules := data.([]types.TCPAction)
 	for i, r := range rules {
 		id := int64(i)
-		tcpReqRule := parseTCPRequestRule(r)
-		if tcpReqRule != nil {
+		tcpReqRule, err := parseTCPRequestRule(r)
+		if err == nil {
 			tcpReqRule.ID = &id
 			tcpReqRules = append(tcpReqRules, tcpReqRule)
 		}
@@ -202,85 +215,85 @@ func (c *Client) parseTCPRequestRules(t, pName string, p *parser.Parser) (models
 	return tcpReqRules, nil
 }
 
-func parseTCPRequestRule(f types.TCPAction) *models.TCPRequestRule {
+func parseTCPRequestRule(f types.TCPAction) (rule *models.TCPRequestRule, err error) {
 	switch v := f.(type) {
 	case *actions.Connection:
-		r := &models.TCPRequestRule{
+		rule = &models.TCPRequestRule{
 			Type:     "connection",
 			Cond:     v.Cond,
 			CondTest: v.CondTest,
 		}
 		if strings.Join(v.Action, " ") == "accept" {
-			r.Action = "accept"
+			rule.Action = "accept"
 		} else if strings.Join(v.Action, " ") == "reject" {
-			r.Action = "reject"
+			rule.Action = "reject"
 		} else {
-			return nil
+			return nil, NewConfError(ErrValidationError, "unsupported action in connection tcp_request_rule")
 		}
-		return r
+		return rule, nil
 	case *actions.Content:
-		r := &models.TCPRequestRule{
+		rule = &models.TCPRequestRule{
 			Type:     "content",
 			Cond:     v.Cond,
 			CondTest: v.CondTest,
 		}
 		if strings.Join(v.Action, " ") == "accept" {
-			r.Action = "accept"
+			rule.Action = "accept"
 		} else if strings.Join(v.Action, " ") == "reject" {
-			r.Action = "reject"
+			rule.Action = "reject"
 		} else {
-			return nil
+			return nil, NewConfError(ErrValidationError, "unsupported action in content tcp_request_rule")
 		}
-		return r
+		return rule, nil
 	case *actions.InspectDelay:
 		return &models.TCPRequestRule{
 			Type:    "inspect-delay",
 			Timeout: misc.ParseTimeout(v.Timeout),
-		}
+		}, nil
 	case *actions.Session:
-		r := &models.TCPRequestRule{
+		rule = &models.TCPRequestRule{
 			Type:     "session",
 			Cond:     v.Cond,
 			CondTest: v.CondTest,
 		}
 		if strings.Join(v.Action, " ") == "accept" {
-			r.Action = "accept"
+			rule.Action = "accept"
 		} else if strings.Join(v.Action, " ") == "reject" {
-			r.Action = "reject"
+			rule.Action = "reject"
 		} else {
-			return nil
+			return nil, NewConfError(ErrValidationError, "unsupported action in session tcp_request_rule")
 		}
-		return r
+		return rule, nil
 	}
-	return nil
+	return nil, NewConfError(ErrValidationError, "unsupported action in tcp_request_rule")
 }
 
-func serializeTCPRequestRule(f models.TCPRequestRule) types.TCPAction {
+func serializeTCPRequestRule(f models.TCPRequestRule) (rule types.TCPAction, err error) {
 	switch f.Type {
 	case "connection":
 		return &actions.Connection{
 			Action:   []string{f.Action},
 			Cond:     f.Cond,
 			CondTest: f.CondTest,
-		}
+		}, nil
 	case "content":
 		return &actions.Content{
 			Action:   []string{f.Action},
 			Cond:     f.Cond,
 			CondTest: f.CondTest,
-		}
+		}, nil
 	case "inspect-delay":
 		if f.Timeout != nil {
 			return &actions.InspectDelay{
 				Timeout: strconv.FormatInt(*f.Timeout, 10),
-			}
+			}, nil
 		}
 	case "session":
 		return &actions.Session{
 			Action:   []string{f.Action},
 			Cond:     f.Cond,
 			CondTest: f.CondTest,
-		}
+		}, nil
 	}
-	return nil
+	return nil, NewConfError(ErrValidationError, "unsupported action in tcp_request_rule")
 }
