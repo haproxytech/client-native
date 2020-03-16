@@ -17,13 +17,13 @@ package configuration
 
 import (
 	"strconv"
-	"strings"
 
 	strfmt "github.com/go-openapi/strfmt"
 	"github.com/haproxytech/client-native/misc"
 	parser "github.com/haproxytech/config-parser/v2"
 	parser_errors "github.com/haproxytech/config-parser/v2/errors"
-	"github.com/haproxytech/config-parser/v2/parsers/tcp/actions"
+	tcp_actions "github.com/haproxytech/config-parser/v2/parsers/tcp/actions"
+	tcp_types "github.com/haproxytech/config-parser/v2/parsers/tcp/types"
 	"github.com/haproxytech/config-parser/v2/types"
 	"github.com/haproxytech/models"
 )
@@ -67,8 +67,8 @@ func (c *Client) GetTCPResponseRule(id int64, backend string, transactionID stri
 		return v, nil, c.handleError(strconv.FormatInt(id, 10), "backend", backend, "", false, err)
 	}
 
-	tcpRule := ParseTCPResponseRule(data.(types.TCPAction))
-	tcpRule.Index = &id
+	tcpRule := parseTCPResponseRule(data.(types.TCPType))
+	tcpRule.ID = &id
 
 	return v, tcpRule, nil
 }
@@ -154,7 +154,7 @@ func ParseTCPResponseRules(backend string, p *parser.Parser) (models.TCPResponse
 		return nil, err
 	}
 
-	tRules := data.([]types.TCPAction)
+	tRules := data.([]types.TCPType)
 	for i, tRule := range tRules {
 		id := int64(i)
 		tcpResRule := ParseTCPResponseRule(tRule)
@@ -166,45 +166,56 @@ func ParseTCPResponseRules(backend string, p *parser.Parser) (models.TCPResponse
 	return tcpResRules, nil
 }
 
-func ParseTCPResponseRule(t types.TCPAction) *models.TCPResponseRule {
+func parseTCPResponseRule(t types.TCPType) *models.TCPResponseRule {
 	switch v := t.(type) {
-	case *actions.Content:
-		r := &models.TCPResponseRule{
-			Type:     "content",
-			Cond:     v.Cond,
-			CondTest: v.CondTest,
-		}
-		if strings.Join(v.Action, " ") == "accept" {
-			r.Action = "accept"
-		} else if strings.Join(v.Action, " ") == "reject" {
-			r.Action = "reject"
-		} else {
-			return nil
-		}
-		return r
-	case *actions.InspectDelay:
+	case *tcp_types.InspectDelay:
 		return &models.TCPResponseRule{
 			Type:    "inspect-delay",
 			Timeout: misc.ParseTimeout(v.Timeout),
+		}
+	case *tcp_types.Content:
+		switch a := v.Action.(type) {
+		case *tcp_actions.Accept:
+			return &models.TCPResponseRule{
+				Action:   a.String(),
+				Cond:     v.Cond,
+				CondTest: v.CondTest,
+			}
+		case *tcp_actions.Reject:
+			return &models.TCPResponseRule{
+				Action:   a.String(),
+				Cond:     v.Cond,
+				CondTest: v.CondTest,
+			}
 		}
 	}
 	return nil
 }
 
-func SerializeTCPResponseRule(t models.TCPResponseRule) types.TCPAction {
+func serializeTCPResponseRule(t models.TCPResponseRule) types.TCPType {
 	switch t.Type {
 	case "content":
-		return &actions.Content{
-			Action:   []string{t.Action},
-			Cond:     t.Cond,
-			CondTest: t.CondTest,
+		switch t.Action {
+		case "accept":
+			return &tcp_types.Content{
+				Action:   &tcp_actions.Accept{},
+				Cond:     t.Cond,
+				CondTest: t.CondTest,
+			}
+		case "reject":
+			return &tcp_types.Content{
+				Action:   &tcp_actions.Reject{},
+				Cond:     t.Cond,
+				CondTest: t.CondTest,
+			}
 		}
 	case "inspect-delay":
 		if t.Timeout != nil {
-			return &actions.InspectDelay{
+			return &tcp_types.InspectDelay{
 				Timeout: strconv.FormatInt(*t.Timeout, 10),
 			}
 		}
 	}
+
 	return nil
 }
