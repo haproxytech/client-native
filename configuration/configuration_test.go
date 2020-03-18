@@ -141,6 +141,10 @@ backend test
   server webserv 192.168.1.1:9200 maxconn 1000 ssl weight 10 inter 2s cookie BLAH
   server webserv2 192.168.1.1:9300 maxconn 1000 ssl weight 10 inter 2s cookie BLAH
 
+peers mycluster
+  peer hapee 192.168.1.1:1023
+  peer aggregator HARDCODEDCLUSTERIP:10023
+
 backend test_2
   mode http
   balance roundrobin
@@ -155,6 +159,7 @@ backend test_2
   timeout tunnel 5s
   timeout server 3s
   cookie BLA rewrite httponly nocache
+  stick-table type ip size 100k expire 1h peers mycluster store http_req_rate(10s)
 `
 const testPath = "/tmp/haproxy-test.cfg"
 const haproxyExec = "/usr/sbin/haproxy"

@@ -274,22 +274,20 @@ func (c *Client) parseSection(object interface{}, section parser.Section, pName 
 	for i := 0; i < objValue.NumField(); i++ {
 		typeField := objValue.Type().Field(i)
 		field := objValue.FieldByName(typeField.Name)
-		if typeField.Name != "Name" && typeField.Name != "ID" {
-			val := c.parseField(section, pName, typeField.Name, p)
-			if val != nil {
-				if field.Kind() == reflect.Bool {
-					if reflect.ValueOf(val).Kind() == reflect.String {
-						if val == "enabled" {
-							field.Set(reflect.ValueOf(true))
-						} else {
-							field.Set(reflect.ValueOf(false))
-						}
-					} else if reflect.ValueOf(val).Kind() == reflect.Bool {
-						field.Set(reflect.ValueOf(val))
+		val := c.parseField(section, pName, typeField.Name, p)
+		if val != nil {
+			if field.Kind() == reflect.Bool {
+				if reflect.ValueOf(val).Kind() == reflect.String {
+					if val == "enabled" {
+						field.Set(reflect.ValueOf(true))
+					} else {
+						field.Set(reflect.ValueOf(false))
 					}
-				} else {
+				} else if reflect.ValueOf(val).Kind() == reflect.Bool {
 					field.Set(reflect.ValueOf(val))
 				}
+			} else {
+				field.Set(reflect.ValueOf(val))
 			}
 		}
 	}
