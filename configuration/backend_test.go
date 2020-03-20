@@ -197,7 +197,10 @@ func TestCreateEditDeleteBackend(t *testing.T) {
 			URIDepth:  250,
 		},
 		Cookie: &models.Cookie{
-			Domain:   []string{"dom1", "dom2"},
+			Domains: []*models.Domain{
+				&models.Domain{Value: "dom1"},
+				&models.Domain{Value: "dom2"},
+			},
 			Dynamic:  true,
 			Httponly: true,
 			Indirect: true,
@@ -266,7 +269,10 @@ func TestCreateEditDeleteBackend(t *testing.T) {
 			URIDepth:  25,
 		},
 		Cookie: &models.Cookie{
-			Domain:   []string{"dom1", "dom3"},
+			Domains: []*models.Domain{
+				&models.Domain{Value: "dom1"},
+				&models.Domain{Value: "dom3"},
+			},
 			Dynamic:  true,
 			Httponly: true,
 			Indirect: false,
@@ -390,10 +396,10 @@ func compareBackends(x, y *models.Backend, t *testing.T) bool {
 	if *x.Cookie.Name != *y.Cookie.Name {
 		return false
 	}
-	if len(x.Cookie.Domain) != len(y.Cookie.Domain) {
+	if len(x.Cookie.Domains) != len(y.Cookie.Domains) {
 		return false
 	}
-	if x.Cookie.Domain[0] != y.Cookie.Domain[0] {
+	if x.Cookie.Domains[0].Value != y.Cookie.Domains[0].Value {
 		return false
 	}
 	if x.Cookie.Dynamic != y.Cookie.Dynamic {

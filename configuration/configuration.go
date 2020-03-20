@@ -375,8 +375,12 @@ func (c *Client) parseField(section parser.Section, sectionName string, fieldNam
 			return nil
 		}
 		d := data.(*types.Cookie)
+		domains := make([]*models.Domain, len(d.Domain))
+		for i, domain := range d.Domain {
+			domains[i] = &models.Domain{Value: domain}
+		}
 		return &models.Cookie{
-			Domain:   d.Domain,
+			Domains:  domains,
 			Dynamic:  d.Dynamic,
 			Httponly: d.Dynamic,
 			Indirect: d.Indirect,
@@ -799,8 +803,12 @@ func (c *Client) setFieldValue(section parser.Section, sectionName string, field
 				return nil
 			}
 			d := field.Elem().Interface().(models.Cookie)
+			domains := make([]string, len(d.Domains))
+			for i, domain := range d.Domains {
+				domains[i] = domain.Value
+			}
 			data := types.Cookie{
-				Domain:   d.Domain,
+				Domain:   domains,
 				Dynamic:  d.Dynamic,
 				Httponly: d.Dynamic,
 				Indirect: d.Indirect,
