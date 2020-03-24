@@ -44,16 +44,19 @@ const (
 	DefaultPersistentTransactions bool = true
 	// DefaultTransactionDir sane default for path for transactions
 	DefaultTransactionDir string = "/tmp/haproxy"
+	// DefaultValidateConfigurationFile is used to validate HAProxy configuration file
+	DefaultValidateConfigurationFile bool = true
 )
 
 // ClientParams is just a placeholder for all client options
 type ClientParams struct {
-	ConfigurationFile      string
-	Haproxy                string
-	UseValidation          bool
-	PersistentTransactions bool
-	TransactionDir         string
-	BackupsNumber          int
+	ConfigurationFile         string
+	Haproxy                   string
+	UseValidation             bool
+	PersistentTransactions    bool
+	TransactionDir            string
+	BackupsNumber             int
+	ValidateConfigurationFile bool
 }
 
 // Client configuration client
@@ -72,11 +75,12 @@ type Client struct {
 // DefaultClient returns Client with sane defaults
 func DefaultClient() (*Client, error) {
 	p := ClientParams{
-		ConfigurationFile:      DefaultConfigurationFile,
-		Haproxy:                DefaultHaproxy,
-		UseValidation:          DefaultUseValidation,
-		PersistentTransactions: DefaultPersistentTransactions,
-		TransactionDir:         DefaultTransactionDir,
+		ConfigurationFile:         DefaultConfigurationFile,
+		Haproxy:                   DefaultHaproxy,
+		UseValidation:             DefaultUseValidation,
+		PersistentTransactions:    DefaultPersistentTransactions,
+		TransactionDir:            DefaultTransactionDir,
+		ValidateConfigurationFile: DefaultValidateConfigurationFile,
 	}
 	c := &Client{}
 	err := c.Init(p)

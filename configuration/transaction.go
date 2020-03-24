@@ -171,6 +171,14 @@ func (c *Client) CommitTransaction(id string) (*models.Transaction, error) {
 }
 
 func (c *Client) checkTransactionFile(id string) error {
+	// there are some cases when we don't want to validate a config file,
+	// such as if want to use different HAProxy (community, enterprise, aloha)
+	// where different options are supported.
+	// By disabling validation we can still use DPAPI
+	if !c.ClientParams.ValidateConfigurationFile {
+		return nil
+	}
+
 	transactionFile, err := c.getTransactionFile(id)
 	if err != nil {
 		return err
