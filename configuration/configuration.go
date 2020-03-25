@@ -309,6 +309,24 @@ func (c *Client) parseField(section parser.Section, sectionName string, fieldNam
 			Version: d.Version,
 		}
 	}
+	if fieldName == "HTTPCheck" {
+		data, err := p.Get(section, sectionName, "http-check", false)
+		if err != nil {
+			return nil
+		}
+		d := data.([]types.HTTPCheck)
+		if section == parser.Defaults || section == parser.Backends {
+			hc := &models.HTTPCheck{}
+			for _, h := range d {
+				hc.ExclamationMark = h.ExclamationMark
+				hc.Match = h.Match
+				hc.Pattern = h.Pattern
+				hc.Type = &h.Type
+			}
+			return hc
+		}
+		return nil
+	}
 	if fieldName == "Forwardfor" {
 		data, err := p.Get(section, sectionName, "option forwardfor", false)
 		if err != nil {
@@ -718,6 +736,29 @@ func (c *Client) setFieldValue(section parser.Section, sectionName string, field
 		}
 		return nil
 	}
+	if fieldName == "HTTPCheck" {
+		if section == parser.Defaults || section == parser.Backends {
+			if valueIsNil(field) {
+				if err := p.Set(section, sectionName, "http-check", nil); err != nil {
+					return err
+				}
+				return nil
+			}
+			hc := field.Interface().(*models.HTTPCheck)
+			d := &types.HTTPCheck{
+				Match:           hc.Match,
+				ExclamationMark: hc.ExclamationMark,
+				Pattern:         hc.Pattern,
+				Type:            *hc.Type,
+			}
+
+			if err := p.Set(section, sectionName, "http-check", d); err != nil {
+				return err
+			}
+		}
+		return nil
+	}
+
 	if fieldName == "Forwardfor" {
 		if valueIsNil(field) {
 			if err := p.Set(section, sectionName, "option forwardfor", nil); err != nil {
