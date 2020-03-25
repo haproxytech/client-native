@@ -603,6 +603,14 @@ func (c *Client) parseField(section parser.Section, sectionName string, fieldNam
 		}
 		return nil
 	}
+	if fieldName == "HTTPReuse" {
+		data, err := p.Get(section, sectionName, "http-reuse", false)
+		if err == nil {
+			d := data.(*types.HTTPReuse)
+			return 	d.ShareType
+		}
+		return nil
+	}
 	if fieldName == "HTTPConnectionMode" {
 		data, err := p.Get(section, sectionName, "option http-tunnel", false)
 		if err == nil {
@@ -1100,6 +1108,28 @@ func (c *Client) setFieldValue(section parser.Section, sectionName string, field
 		}
 		return nil
 	}
+
+	if fieldName == "HTTPReuse" {
+		if section == parser.Backends || section == parser.Defaults {
+			if valueIsNil(field) {
+				if err := p.Set(section, sectionName, "http-reuse", nil); err != nil {
+					return err
+				}
+				return nil
+			}
+
+			b := field.Elem().String()
+			d := types.HTTPReuse{
+				ShareType: b,
+			}
+
+			if err := p.Set(section, sectionName, "http-reuse", &d); err != nil {
+				return err
+			}
+		}
+		return nil
+	}
+
 	if fieldName == "Clflog" {
 		if section == parser.Frontends || section == parser.Defaults {
 			if valueIsNil(field) {
