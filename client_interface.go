@@ -277,4 +277,34 @@ type IConfigurationClient interface {
 	CommitTransaction(id string) (*models.Transaction, error)
 	// DeleteTransaction deletes a transaction by id.
 	DeleteTransaction(id string) error
+	// GetResolvers returns configuration version and an array of
+	// configured resolvers. Returns error on fail.
+	GetResolvers(transactionID string) (int64, models.Resolvers, error)
+	// GetResolver returns configuration version and a requested resolver.
+	// Returns error on fail or if resolver does not exist.
+	GetResolver(name string, transactionID string) (int64, *models.Resolver, error)
+	// DeleteResolver deletes a resolver in configuration. One of version or transactionID is
+	// mandatory. Returns error on fail, nil on success.
+	DeleteResolver(name string, transactionID string, version int64) error
+	// EditResolver edits a resolver in configuration. One of version or transactionID is
+	// mandatory. Returns error on fail, nil on success.
+	EditResolver(name string, data *models.Resolver, transactionID string, version int64) error
+	// CreateResolver creates a resolver in configuration. One of version or transactionID is
+	// mandatory. Returns error on fail, nil on success.
+	CreateResolver(data *models.Resolver, transactionID string, version int64) error
+	// GetNameservers returns configuration version and an array of
+	// configured namservers in the specified resolvers section. Returns error on fail.
+	GetNameservers(resolverSection string, transactionID string) (int64, models.Nameservers, error)
+	// GetNameserver returns configuration version and a requested nameserver
+	// in the specified resolvers section. Returns error on fail or if nameserver does not exist.
+	GetNameserver(name string, resolverSection string, transactionID string) (int64, *models.Nameserver, error)
+	// DeleteNameserver deletes an nameserver in configuration. One of version or transactionID is
+	// mandatory. Returns error on fail, nil on success.
+	DeleteNameserver(name string, resolverSection string, transactionID string, version int64) error
+	// EditNameserver edits a nameserver in configuration. One of version or transactionID is
+	// mandatory. Returns error on fail, nil on success.
+	EditNameserver(name string, resolverSection string, data *models.Nameserver, transactionID string, version int64) error
+	// CreateNameserver creates a nameserver in configuration. One of version or transactionID is
+	// mandatory. Returns error on fail, nil on success.
+	CreateNameserver(name string, data *models.Nameserver, transactionID string, version int64) error
 }

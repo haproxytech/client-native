@@ -149,6 +149,11 @@ peers mycluster
   peer hapee 192.168.1.1:1023
   peer aggregator HARDCODEDCLUSTERIP:10023
 
+resolvers test
+  nameserver dns1 10.0.0.1:53
+  accepted_payload_size 8192
+  hold valid 5
+
 backend test_2
   mode http
   balance roundrobin
