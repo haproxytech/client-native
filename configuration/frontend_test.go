@@ -41,6 +41,11 @@ func TestGetFrontends(t *testing.T) {
 		if f.Name != "test" && f.Name != "test_2" {
 			t.Errorf("Expected only test or test_2 frontend, %v found", f.Name)
 		}
+		if f.Name == "test" {
+			if f.BindProcess != "odd" {
+				t.Errorf("%v: BindProcess not all: %v", f.Name, f.BindProcess)
+			}
+		}
 		if f.Mode != "http" {
 			t.Errorf("%v: Mode not http: %v", f.Name, f.Mode)
 		}
@@ -83,6 +88,9 @@ func TestGetFrontend(t *testing.T) {
 
 	if f.Name != "test" {
 		t.Errorf("Expected only test, %v found", f.Name)
+	}
+	if f.BindProcess != "odd" {
+		t.Errorf("%v: BindProcess not all: %v", f.Name, f.BindProcess)
 	}
 	if f.Mode != "http" {
 		t.Errorf("%v: Mode not http: %v", f.Name, f.Mode)
@@ -134,6 +142,7 @@ func TestCreateEditDeleteFrontend(t *testing.T) {
 		Httplog:              true,
 		HTTPConnectionMode:   "http-keep-alive",
 		HTTPKeepAliveTimeout: &tOut,
+		BindProcess:          "4",
 	}
 
 	err := client.CreateFrontend(f, "", version)
@@ -172,6 +181,7 @@ func TestCreateEditDeleteFrontend(t *testing.T) {
 		Maxconn:            &mConn,
 		Clflog:             true,
 		HTTPConnectionMode: "httpclose",
+		BindProcess:        "3",
 	}
 
 	err = client.EditFrontend("created", f, "", version)

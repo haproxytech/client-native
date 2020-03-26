@@ -33,6 +33,7 @@ global
 defaults
   maxconn 2000
   mode http
+  bind-process 1-4
   balance roundrobin
   option clitcpka
   option dontlognull
@@ -60,6 +61,7 @@ frontend test
   mode http
   bind 192.168.1.1:80 name webserv
   bind 192.168.1.1:8080 name webserv2
+  bind-process odd
   option httplog
   option dontlognull
   option contstats
@@ -96,6 +98,7 @@ frontend test
 
 frontend test_2
   mode http
+  bind-process even
   option httplog
   option dontlognull
   option contstats
@@ -115,6 +118,7 @@ frontend test_2
 backend test
   mode http
   balance roundrobin
+  bind-process all
   hash-type consistent sdbm avalanche
   log-tag bla
   option http-keep-alive
@@ -148,6 +152,7 @@ peers mycluster
 backend test_2
   mode http
   balance roundrobin
+  bind-process all
   hash-type consistent sdbm avalanche
   log-tag bla
   option http-keep-alive

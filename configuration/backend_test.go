@@ -41,6 +41,9 @@ func TestGetBackends(t *testing.T) {
 		if b.Name != "test" && b.Name != "test_2" {
 			t.Errorf("Expected only test or test_2 backend, %v found", b.Name)
 		}
+		if b.BindProcess != "all" {
+			t.Errorf("%v: BindProcess not all: %v", b.Name, b.BindProcess)
+		}
 		if b.Httpchk.Method != "HEAD" {
 			t.Errorf("%v: Httpchk.Method not HEAD: %v", b.Name, b.Httpchk.Method)
 		}
@@ -113,6 +116,9 @@ func TestGetBackend(t *testing.T) {
 
 	if b.Name != "test" {
 		t.Errorf("Expected only test, %v found", b.Name)
+	}
+	if b.BindProcess != "all" {
+		t.Errorf("%v: BindProcess not all: %v", b.Name, b.BindProcess)
 	}
 	if b.Httpchk.Method != "HEAD" {
 		t.Errorf("%v: Httpchk.Method not HEAD: %v", b.Name, b.Httpchk.Method)
@@ -196,6 +202,7 @@ func TestCreateEditDeleteBackend(t *testing.T) {
 			URILen:    100,
 			URIDepth:  250,
 		},
+		BindProcess: "4",
 		Cookie: &models.Cookie{
 			Domains: []*models.Domain{
 				&models.Domain{Value: "dom1"},
@@ -268,6 +275,7 @@ func TestCreateEditDeleteBackend(t *testing.T) {
 			URILen:    10,
 			URIDepth:  25,
 		},
+		BindProcess: "3",
 		Cookie: &models.Cookie{
 			Domains: []*models.Domain{
 				&models.Domain{Value: "dom1"},
@@ -435,6 +443,10 @@ func compareBackends(x, y *models.Backend, t *testing.T) bool {
 
 	x.Cookie = nil
 	y.Cookie = nil
+
+	if x.BindProcess != y.BindProcess {
+		return false
+	}
 
 	if !reflect.DeepEqual(x.DefaultServer, y.DefaultServer) {
 		return false

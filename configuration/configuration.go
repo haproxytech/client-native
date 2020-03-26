@@ -389,6 +389,14 @@ func (c *Client) parseField(section parser.Section, sectionName string, fieldNam
 		}
 		return b
 	}
+	if fieldName == "BindProcess" {
+		data, err := p.Get(section, sectionName, "bind-process", false)
+		if err != nil {
+			return nil
+		}
+		d := data.(*types.BindProcess)
+		return models.BindProcess(d.Process)
+	}
 	if fieldName == "Cookie" {
 		data, err := p.Get(section, sectionName, "cookie", false)
 		if err != nil {
@@ -625,7 +633,7 @@ func (c *Client) parseField(section parser.Section, sectionName string, fieldNam
 		data, err := p.Get(section, sectionName, "http-reuse", false)
 		if err == nil {
 			d := data.(*types.HTTPReuse)
-			return 	d.ShareType
+			return d.ShareType
 		}
 		return nil
 	}
@@ -844,6 +852,25 @@ func (c *Client) setFieldValue(section parser.Section, sectionName string, field
 			}
 		}
 		return nil
+	}
+	if fieldName == "BindProcess" {
+		if section == parser.Defaults || section == parser.Frontends || section == parser.Backends {
+			if valueIsNil(field) {
+				if err := p.Set(section, sectionName, "bind-process", nil); err != nil {
+					return err
+				}
+				return nil
+			}
+			b := field.String()
+			d := &types.BindProcess{
+				Process: b,
+			}
+			if err := p.Set(section, sectionName, "bind-process", d); err != nil {
+				return err
+			}
+			return nil
+		}
+
 	}
 	if fieldName == "Cookie" {
 		if section == parser.Backends || section == parser.Defaults {

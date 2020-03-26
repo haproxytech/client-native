@@ -49,6 +49,8 @@ github.com/haproxytech/config-parser/v2 v2.0.0-rc1.0.20200325110138-789a07b236cf
 github.com/haproxytech/config-parser/v2 v2.0.0-rc1.0.20200325110138-789a07b236cf/go.mod h1:VjHOetXAJtwrtLAJPoDaD/kEYwCoixVp5SCsBitMcj8=
 github.com/haproxytech/config-parser/v2 v2.0.0-rc1.0.20200325125209-988fea684907 h1:xo6VUyCm2MoVQda0lwcP1zDVPVUqGNM0elJp9bmxOps=
 github.com/haproxytech/config-parser/v2 v2.0.0-rc1.0.20200325125209-988fea684907/go.mod h1:VjHOetXAJtwrtLAJPoDaD/kEYwCoixVp5SCsBitMcj8=
+github.com/haproxytech/config-parser/v2 v2.0.0-rc1.0.20200326104059-65dcfb9d6698 h1:eOi8p5VO5pH8TB4kd0bsQDP7iCKqOjAjFgJVWaAAlJw=
+github.com/haproxytech/config-parser/v2 v2.0.0-rc1.0.20200326104059-65dcfb9d6698/go.mod h1:VjHOetXAJtwrtLAJPoDaD/kEYwCoixVp5SCsBitMcj8=
 github.com/haproxytech/models v1.2.5-0.19700101000000-63e95d6c3624 h1:9TeDi+fn1hw+G72rToAmwbEWcz/uULJZhkVAtw3bR2o=
 github.com/haproxytech/models v1.2.5-0.19700101000000-63e95d6c3624/go.mod h1:UXZVErm/XN6z10sM/enmxrdeEnwo7vz1JI+a8ycEvOQ=
 github.com/haproxytech/models v1.2.5-0.20191119093343-0605e7733eed h1:xyI1hMK4BsEbULJgLH1vSAmgmH3gAU2HkXWBanbp+Mk=
@@ -67,6 +69,8 @@ github.com/haproxytech/models v1.2.5-0.20200320093729-54f50e1ddd7a h1:LwcgB6jr8S
 github.com/haproxytech/models v1.2.5-0.20200320093729-54f50e1ddd7a/go.mod h1:UXZVErm/XN6z10sM/enmxrdeEnwo7vz1JI+a8ycEvOQ=
 github.com/haproxytech/models v1.2.5-0.20200325152328-98d43dbd7b3c h1:ToTEg2FviCyyd7PXek07J6mi7z7SCek7+7DuDpoDG88=
 github.com/haproxytech/models v1.2.5-0.20200325152328-98d43dbd7b3c/go.mod h1:UXZVErm/XN6z10sM/enmxrdeEnwo7vz1JI+a8ycEvOQ=
+github.com/haproxytech/models v1.2.5-0.20200326142607-d05afe05cfe0 h1:s7Yj6XXJkIg3ud38EAP+JsHaKcvSijzlxwYzeixWuoc=
+github.com/haproxytech/models v1.2.5-0.20200326142607-d05afe05cfe0/go.mod h1:UXZVErm/XN6z10sM/enmxrdeEnwo7vz1JI+a8ycEvOQ=
 github.com/kr/pretty v0.1.0 h1:L/CwN0zerZDmRFUapSPitk6f+Q3+0za1rQkzVuMiMFI=
 github.com/kr/pretty v0.1.0/go.mod h1:dAy3ld7l9f0ibDNOQOHHMYYIIbhfbHSm3C4ZsoJORNo=
 github.com/kr/pty v1.1.1/go.mod h1:pFQYn66WHrOpPYNljwOMqo10TkYh1fy3cYio2l3bCsQ=

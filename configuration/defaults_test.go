@@ -24,6 +24,9 @@ func TestGetDefaults(t *testing.T) {
 	if d.Mode != "http" {
 		t.Errorf("Mode not http: %v", d.Mode)
 	}
+	if d.BindProcess != "1-4" {
+		t.Errorf("BindProcess not 1-4: %v", d.BindProcess)
+	}
 	if d.Clitcpka != "enabled" {
 		t.Errorf("Clitcpka not enabled: %v", d.Clitcpka)
 	}
@@ -114,6 +117,7 @@ func TestPushDefaults(t *testing.T) {
 	balanceAlgorithm := "leastconn"
 	d := &models.Defaults{
 		Clitcpka:       "disabled",
+		BindProcess:    "1-4",
 		DefaultBackend: "test2",
 		ErrorFiles: []*models.Errorfile{
 			&models.Errorfile{
