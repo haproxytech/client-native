@@ -74,7 +74,28 @@ func (c *Client) PushGlobalConfiguration(data *models.Global, transactionID stri
 }
 
 func ParseGlobalSection(p *parser.Parser) (*models.Global, error) {
-	_, err := p.Get(parser.Global, parser.GlobalSectionName, "daemon")
+	data, err := p.Get(parser.Global, parser.GlobalSectionName, "chroot")
+	chroot := ""
+	if err == nil {
+		chrootParser := data.(*types.StringC)
+		chroot = chrootParser.Value
+	}
+
+	data, err = p.Get(parser.Global, parser.GlobalSectionName, "user")
+	user := ""
+	if err == nil {
+		userParser := data.(*types.StringC)
+		user = userParser.Value
+	}
+
+	data, err = p.Get(parser.Global, parser.GlobalSectionName, "group")
+	group := ""
+	if err == nil {
+		groupParser := data.(*types.StringC)
+		group = groupParser.Value
+	}
+
+	_, err = p.Get(parser.Global, parser.GlobalSectionName, "daemon")
 	daemon := "enabled"
 	if err == errors.ErrFetch {
 		daemon = "disabled"
@@ -86,7 +107,7 @@ func ParseGlobalSection(p *parser.Parser) (*models.Global, error) {
 		masterWorker = false
 	}
 
-	data, err := p.Get(parser.Global, parser.GlobalSectionName, "maxconn")
+	data, err = p.Get(parser.Global, parser.GlobalSectionName, "maxconn")
 	mConn := int64(0)
 	if err == nil {
 		maxConn := data.(*types.Int64C)
@@ -164,17 +185,31 @@ func ParseGlobalSection(p *parser.Parser) (*models.Global, error) {
 	}
 
 	data, err = p.Get(parser.Global, parser.GlobalSectionName, "ssl-default-bind-ciphers")
-	sslCiphers := ""
+	sslBindCiphers := ""
 	if err == nil {
-		sslCiphersParser := data.(*types.StringC)
-		sslCiphers = sslCiphersParser.Value
+		sslBindCiphersParser := data.(*types.StringC)
+		sslBindCiphers = sslBindCiphersParser.Value
 	}
 
 	data, err = p.Get(parser.Global, parser.GlobalSectionName, "ssl-default-bind-options")
-	sslOptions := ""
+	sslBindOptions := ""
 	if err == nil {
-		sslOptionsParser := data.(*types.StringC)
-		sslOptions = sslOptionsParser.Value
+		sslBindOptionsParser := data.(*types.StringC)
+		sslBindOptions = sslBindOptionsParser.Value
+	}
+
+	data, err = p.Get(parser.Global, parser.GlobalSectionName, "ssl-default-server-ciphers")
+	sslServerCiphers := ""
+	if err == nil {
+		sslServerCiphersParser := data.(*types.StringC)
+		sslServerCiphers = sslServerCiphersParser.Value
+	}
+
+	data, err = p.Get(parser.Global, parser.GlobalSectionName, "ssl-default-server-options")
+	sslServerOptions := ""
+	if err == nil {
+		sslServerOptionsParser := data.(*types.StringC)
+		sslServerOptions = sslServerOptionsParser.Value
 	}
 
 	data, err = p.Get(parser.Global, parser.GlobalSectionName, "tune.ssl.default-dh-param")
@@ -191,25 +226,57 @@ func ParseGlobalSection(p *parser.Parser) (*models.Global, error) {
 	}
 
 	g := &models.Global{
-		Daemon:                daemon,
-		MasterWorker:          masterWorker,
-		Maxconn:               mConn,
-		Nbproc:                nbproc,
-		Nbthread:              nbthread,
-		Pidfile:               pidfile,
-		RuntimeApis:           rAPIs,
-		StatsTimeout:          statsTimeout,
-		CPUMaps:               cpuMaps,
-		SslDefaultBindCiphers: sslCiphers,
-		SslDefaultBindOptions: sslOptions,
-		TuneSslDefaultDhParam: dhParam,
-		ExternalCheck:         externalCheck,
+		User:                    user,
+		Group:                   group,
+		Chroot:                  chroot,
+		Daemon:                  daemon,
+		MasterWorker:            masterWorker,
+		Maxconn:                 mConn,
+		Nbproc:                  nbproc,
+		Nbthread:                nbthread,
+		Pidfile:                 pidfile,
+		RuntimeApis:             rAPIs,
+		StatsTimeout:            statsTimeout,
+		CPUMaps:                 cpuMaps,
+		SslDefaultBindCiphers:   sslBindCiphers,
+		SslDefaultBindOptions:   sslBindOptions,
+		SslDefaultServerCiphers: sslServerCiphers,
+		SslDefaultServerOptions: sslServerOptions,
+		TuneSslDefaultDhParam:   dhParam,
+		ExternalCheck:           externalCheck,
 	}
 
 	return g, nil
 }
 
 func SerializeGlobalSection(p *parser.Parser, data *models.Global) error {
+	pChroot := &types.StringC{
+		Value: data.Chroot,
+	}
+	if data.Chroot == "" {
+		pChroot = nil
+	}
+	if err := p.Set(parser.Global, parser.GlobalSectionName, "chroot", pChroot); err != nil {
+		return err
+	}
+	pUser := &types.StringC{
+		Value: data.User,
+	}
+	if data.User == "" {
+		pUser = nil
+	}
+	if err := p.Set(parser.Global, parser.GlobalSectionName, "user", pUser); err != nil {
+		return err
+	}
+	pGroup := &types.StringC{
+		Value: data.Group,
+	}
+	if data.Group == "" {
+		pGroup = nil
+	}
+	if err := p.Set(parser.Global, parser.GlobalSectionName, "group", pGroup); err != nil {
+		return err
+	}
 	pDaemon := &types.Enabled{}
 	if data.Daemon != "enabled" {
 		pDaemon = nil
@@ -307,22 +374,40 @@ func SerializeGlobalSection(p *parser.Parser, data *models.Global) error {
 	if err := p.Set(parser.Global, parser.GlobalSectionName, "cpu-map", cpuMaps); err != nil {
 		return err
 	}
-	pSSLCiphers := &types.StringC{
+	pSSLBindCiphers := &types.StringC{
 		Value: data.SslDefaultBindCiphers,
 	}
 	if data.SslDefaultBindCiphers == "" {
-		pSSLCiphers = nil
+		pSSLBindCiphers = nil
 	}
-	if err := p.Set(parser.Global, parser.GlobalSectionName, "ssl-default-bind-ciphers", pSSLCiphers); err != nil {
+	if err := p.Set(parser.Global, parser.GlobalSectionName, "ssl-default-bind-ciphers", pSSLBindCiphers); err != nil {
 		return err
 	}
-	pSSLOptions := &types.StringC{
+	pSSLBindOptions := &types.StringC{
 		Value: data.SslDefaultBindOptions,
 	}
 	if data.SslDefaultBindCiphers == "" {
-		pSSLOptions = nil
+		pSSLBindOptions = nil
 	}
-	if err := p.Set(parser.Global, parser.GlobalSectionName, "ssl-default-bind-options", pSSLOptions); err != nil {
+	if err := p.Set(parser.Global, parser.GlobalSectionName, "ssl-default-bind-options", pSSLBindOptions); err != nil {
+		return err
+	}
+	pSSLServerCiphers := &types.StringC{
+		Value: data.SslDefaultServerCiphers,
+	}
+	if data.SslDefaultServerCiphers == "" {
+		pSSLServerCiphers = nil
+	}
+	if err := p.Set(parser.Global, parser.GlobalSectionName, "ssl-default-bind-ciphers", pSSLServerCiphers); err != nil {
+		return err
+	}
+	pSSLServerOptions := &types.StringC{
+		Value: data.SslDefaultServerOptions,
+	}
+	if data.SslDefaultServerCiphers == "" {
+		pSSLServerOptions = nil
+	}
+	if err := p.Set(parser.Global, parser.GlobalSectionName, "ssl-default-bind-options", pSSLServerOptions); err != nil {
 		return err
 	}
 	pDhParams := &types.Int64C{

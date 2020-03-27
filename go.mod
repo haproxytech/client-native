@@ -7,7 +7,7 @@ require (
 	github.com/go-openapi/strfmt v0.19.0
 	github.com/google/go-cmp v0.3.1
 	github.com/google/uuid v1.1.1
-	github.com/haproxytech/config-parser/v2 v2.0.0-rc1.0.20200326104059-65dcfb9d6698
+	github.com/haproxytech/config-parser/v2 v2.0.0-rc2
 	github.com/haproxytech/models v1.2.5-0.20200326142607-d05afe05cfe0
 	github.com/mitchellh/mapstructure v1.1.2
 	github.com/pkg/errors v0.8.1
