@@ -386,7 +386,7 @@ func SerializeGlobalSection(p *parser.Parser, data *models.Global) error {
 	pSSLBindOptions := &types.StringC{
 		Value: data.SslDefaultBindOptions,
 	}
-	if data.SslDefaultBindCiphers == "" {
+	if data.SslDefaultBindOptions == "" {
 		pSSLBindOptions = nil
 	}
 	if err := p.Set(parser.Global, parser.GlobalSectionName, "ssl-default-bind-options", pSSLBindOptions); err != nil {
@@ -398,16 +398,16 @@ func SerializeGlobalSection(p *parser.Parser, data *models.Global) error {
 	if data.SslDefaultServerCiphers == "" {
 		pSSLServerCiphers = nil
 	}
-	if err := p.Set(parser.Global, parser.GlobalSectionName, "ssl-default-bind-ciphers", pSSLServerCiphers); err != nil {
+	if err := p.Set(parser.Global, parser.GlobalSectionName, "ssl-default-server-ciphers", pSSLServerCiphers); err != nil {
 		return err
 	}
 	pSSLServerOptions := &types.StringC{
 		Value: data.SslDefaultServerOptions,
 	}
-	if data.SslDefaultServerCiphers == "" {
+	if data.SslDefaultServerOptions == "" {
 		pSSLServerOptions = nil
 	}
-	if err := p.Set(parser.Global, parser.GlobalSectionName, "ssl-default-bind-options", pSSLServerOptions); err != nil {
+	if err := p.Set(parser.Global, parser.GlobalSectionName, "ssl-default-server-options", pSSLServerOptions); err != nil {
 		return err
 	}
 	pDhParams := &types.Int64C{
