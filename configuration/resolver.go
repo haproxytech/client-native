@@ -241,7 +241,7 @@ func SerializeResolverSection(p *parser.Parser, data *models.Resolver) error {
 	if err = p.Set(parser.Resolvers, data.Name, "accepted_payload_size", n); err != nil {
 		return err
 	}
-	n = types.StringC{value: strconv.FormatInt(data.HoldNx, 10)}
+	n = types.StringC{Value: strconv.FormatInt(data.HoldNx, 10)}
 	if err = p.Set(parser.Resolvers, data.Name, "hold nx", n); err != nil {
 		return err
 	}
