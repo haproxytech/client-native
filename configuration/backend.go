@@ -44,7 +44,7 @@ func (c *Client) GetBackends(transactionID string) (int64, models.Backends, erro
 	backends := []*models.Backend{}
 	for _, name := range bNames {
 		b := &models.Backend{Name: name}
-		if err := c.parseSection(b, parser.Backends, name, p); err != nil {
+		if err := ParseSection(b, parser.Backends, name, p); err != nil {
 			continue
 		}
 		backends = append(backends, b)
@@ -71,7 +71,7 @@ func (c *Client) GetBackend(name string, transactionID string) (int64, *models.B
 	}
 
 	backend := &models.Backend{Name: name}
-	if err := c.parseSection(backend, parser.Backends, name, p); err != nil {
+	if err := ParseSection(backend, parser.Backends, name, p); err != nil {
 		return v, nil, err
 
 	}

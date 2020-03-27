@@ -269,12 +269,12 @@ func (c *Client) checkTransactionOrVersion(transactionID string, version int64) 
 	return t, nil
 }
 
-func (c *Client) parseSection(object interface{}, section parser.Section, pName string, p *parser.Parser) error {
+func ParseSection(object interface{}, section parser.Section, pName string, p *parser.Parser) error {
 	objValue := reflect.ValueOf(object).Elem()
 	for i := 0; i < objValue.NumField(); i++ {
 		typeField := objValue.Type().Field(i)
 		field := objValue.FieldByName(typeField.Name)
-		val := c.parseField(section, pName, typeField.Name, p)
+		val := parseField(section, pName, typeField.Name, p)
 		if val != nil {
 			if field.Kind() == reflect.Bool {
 				if reflect.ValueOf(val).Kind() == reflect.String {
@@ -295,7 +295,7 @@ func (c *Client) parseSection(object interface{}, section parser.Section, pName 
 	return nil
 }
 
-func (c *Client) parseField(section parser.Section, sectionName string, fieldName string, p *parser.Parser) interface{} {
+func parseField(section parser.Section, sectionName string, fieldName string, p *parser.Parser) interface{} {
 	//Handle special cases
 	if fieldName == "Httpchk" {
 		data, err := p.Get(section, sectionName, "option httpchk", false)
@@ -708,13 +708,13 @@ func (c *Client) parseField(section parser.Section, sectionName string, fieldNam
 	return nil
 }
 
-func (c *Client) createEditSection(object interface{}, section parser.Section, pName string, p *parser.Parser) error {
+func CreateEditSection(object interface{}, section parser.Section, pName string, p *parser.Parser) error {
 	objValue := reflect.ValueOf(object).Elem()
 	for i := 0; i < objValue.NumField(); i++ {
 		typeField := objValue.Type().Field(i)
 		field := objValue.FieldByName(typeField.Name)
 		if typeField.Name != "Name" && typeField.Name != "ID" {
-			if err := c.setFieldValue(section, pName, typeField.Name, field, p); err != nil {
+			if err := setFieldValue(section, pName, typeField.Name, field, p); err != nil {
 				return err
 			}
 		}
@@ -722,7 +722,7 @@ func (c *Client) createEditSection(object interface{}, section parser.Section, p
 	return nil
 }
 
-func (c *Client) setFieldValue(section parser.Section, sectionName string, fieldName string, field reflect.Value, p *parser.Parser) error {
+func setFieldValue(section parser.Section, sectionName string, fieldName string, field reflect.Value, p *parser.Parser) error {
 	//Handle special cases
 	if fieldName == "Httpchk" {
 		if section == parser.Backends || section == parser.Defaults {
@@ -1374,7 +1374,7 @@ func (c *Client) editSection(section parser.Section, name string, data interface
 		return c.handleError(name, "", "", t, transactionID == "", e)
 	}
 
-	if err := c.createEditSection(data, section, name, p); err != nil {
+	if err := CreateEditSection(data, section, name, p); err != nil {
 		return c.handleError(name, "", "", t, transactionID == "", err)
 	}
 
@@ -1400,7 +1400,7 @@ func (c *Client) createSection(section parser.Section, name string, data interfa
 		return c.handleError(name, "", "", t, transactionID == "", err)
 	}
 
-	if err := c.createEditSection(data, section, name, p); err != nil {
+	if err := CreateEditSection(data, section, name, p); err != nil {
 		return c.handleError(name, "", "", t, transactionID == "", err)
 	}
 

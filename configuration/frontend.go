@@ -44,7 +44,7 @@ func (c *Client) GetFrontends(transactionID string) (int64, models.Frontends, er
 	frontends := []*models.Frontend{}
 	for _, name := range fNames {
 		f := &models.Frontend{Name: name}
-		if err := c.parseSection(f, parser.Frontends, name, p); err != nil {
+		if err := ParseSection(f, parser.Frontends, name, p); err != nil {
 			continue
 		}
 		frontends = append(frontends, f)
@@ -71,7 +71,7 @@ func (c *Client) GetFrontend(name string, transactionID string) (int64, *models.
 	}
 
 	frontend := &models.Frontend{Name: name}
-	if err := c.parseSection(frontend, parser.Frontends, name, p); err != nil {
+	if err := ParseSection(frontend, parser.Frontends, name, p); err != nil {
 		return v, nil, err
 	}
 
