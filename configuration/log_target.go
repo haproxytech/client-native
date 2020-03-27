@@ -38,7 +38,7 @@ func (c *Client) GetLogTargets(parentType, parentName string, transactionID stri
 		return 0, nil, err
 	}
 
-	logTargets, err := c.parseLogTargets(parentType, parentName, p)
+	logTargets, err := ParseLogTargets(parentType, parentName, p)
 	if err != nil {
 		return v, nil, c.handleError("", parentType, parentName, "", false, err)
 	}
@@ -71,7 +71,7 @@ func (c *Client) GetLogTarget(id int64, parentType, parentName string, transacti
 		return v, nil, c.handleError(strconv.FormatInt(id, 10), parentType, parentName, "", false, err)
 	}
 
-	logTarget := parseLogTarget(data.(types.Log))
+	logTarget := ParseLogTarget(data.(types.Log))
 	logTarget.ID = &id
 
 	return v, logTarget, nil
@@ -125,7 +125,7 @@ func (c *Client) CreateLogTarget(parentType string, parentName string, data *mod
 		section = parser.Frontends
 	}
 
-	if err := p.Insert(section, parentName, "log", serializeLogTarget(*data), int(*data.ID)); err != nil {
+	if err := p.Insert(section, parentName, "log", SerializeLogTarget(*data), int(*data.ID)); err != nil {
 		return c.handleError(strconv.FormatInt(*data.ID, 10), parentType, parentName, t, transactionID == "", err)
 	}
 
@@ -160,7 +160,7 @@ func (c *Client) EditLogTarget(id int64, parentType string, parentName string, d
 		return c.handleError(strconv.FormatInt(id, 10), parentType, parentName, t, transactionID == "", err)
 	}
 
-	if err := p.Set(section, parentName, "log", serializeLogTarget(*data), int(id)); err != nil {
+	if err := p.Set(section, parentName, "log", SerializeLogTarget(*data), int(id)); err != nil {
 		return c.handleError(strconv.FormatInt(id, 10), parentType, parentName, t, transactionID == "", err)
 	}
 
@@ -170,7 +170,7 @@ func (c *Client) EditLogTarget(id int64, parentType string, parentName string, d
 	return nil
 }
 
-func (c *Client) parseLogTargets(t, pName string, p *parser.Parser) (models.LogTargets, error) {
+func ParseLogTargets(t, pName string, p *parser.Parser) (models.LogTargets, error) {
 	var section parser.Section
 	if t == "backend" {
 		section = parser.Backends
@@ -190,7 +190,7 @@ func (c *Client) parseLogTargets(t, pName string, p *parser.Parser) (models.LogT
 	targets := data.([]types.Log)
 	for i, l := range targets {
 		id := int64(i)
-		logTarget := parseLogTarget(l)
+		logTarget := ParseLogTarget(l)
 		if logTarget != nil {
 			logTarget.ID = &id
 			logTargets = append(logTargets, logTarget)
@@ -199,7 +199,7 @@ func (c *Client) parseLogTargets(t, pName string, p *parser.Parser) (models.LogT
 	return logTargets, nil
 }
 
-func parseLogTarget(l types.Log) *models.LogTarget {
+func ParseLogTarget(l types.Log) *models.LogTarget {
 	return &models.LogTarget{
 		Address:  l.Address,
 		Facility: l.Facility,
@@ -212,7 +212,7 @@ func parseLogTarget(l types.Log) *models.LogTarget {
 	}
 }
 
-func serializeLogTarget(l models.LogTarget) types.Log {
+func SerializeLogTarget(l models.LogTarget) types.Log {
 	return types.Log{
 		Address:  l.Address,
 		Facility: l.Facility,

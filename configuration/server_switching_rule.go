@@ -38,7 +38,7 @@ func (c *Client) GetServerSwitchingRules(backend string, transactionID string) (
 		return 0, nil, err
 	}
 
-	srvRules, err := c.parseServerSwitchingRules(backend, p)
+	srvRules, err := ParseServerSwitchingRules(backend, p)
 	if err != nil {
 		return v, nil, c.handleError("", "backend", backend, "", false, err)
 	}
@@ -64,7 +64,7 @@ func (c *Client) GetServerSwitchingRule(id int64, backend string, transactionID 
 		return v, nil, c.handleError(strconv.FormatInt(id, 10), "backend", backend, "", false, err)
 	}
 
-	srvRule := parseServerSwitchingRule(data.(types.UseServer))
+	srvRule := ParseServerSwitchingRule(data.(types.UseServer))
 	srvRule.ID = &id
 
 	return v, srvRule, nil
@@ -102,7 +102,7 @@ func (c *Client) CreateServerSwitchingRule(backend string, data *models.ServerSw
 		return err
 	}
 
-	if err := p.Insert(parser.Backends, backend, "use-server", serializeServerSwitchingRule(*data), int(*data.ID)); err != nil {
+	if err := p.Insert(parser.Backends, backend, "use-server", SerializeServerSwitchingRule(*data), int(*data.ID)); err != nil {
 		return c.handleError(strconv.FormatInt(*data.ID, 10), "backend", backend, t, transactionID == "", err)
 	}
 
@@ -130,7 +130,7 @@ func (c *Client) EditServerSwitchingRule(id int64, backend string, data *models.
 		return c.handleError(strconv.FormatInt(*data.ID, 10), "backend", backend, t, transactionID == "", err)
 	}
 
-	if err := p.Set(parser.Backends, backend, "use-server", serializeServerSwitchingRule(*data), int(id)); err != nil {
+	if err := p.Set(parser.Backends, backend, "use-server", SerializeServerSwitchingRule(*data), int(id)); err != nil {
 		return c.handleError(strconv.FormatInt(*data.ID, 10), "backend", backend, t, transactionID == "", err)
 	}
 
@@ -140,7 +140,7 @@ func (c *Client) EditServerSwitchingRule(id int64, backend string, data *models.
 	return nil
 }
 
-func (c *Client) parseServerSwitchingRules(backend string, p *parser.Parser) (models.ServerSwitchingRules, error) {
+func ParseServerSwitchingRules(backend string, p *parser.Parser) (models.ServerSwitchingRules, error) {
 	sr := models.ServerSwitchingRules{}
 
 	data, err := p.Get(parser.Backends, backend, "use-server", false)
@@ -154,7 +154,7 @@ func (c *Client) parseServerSwitchingRules(backend string, p *parser.Parser) (mo
 	sRules := data.([]types.UseServer)
 	for i, sRule := range sRules {
 		id := int64(i)
-		s := parseServerSwitchingRule(sRule)
+		s := ParseServerSwitchingRule(sRule)
 		if s != nil {
 			s.ID = &id
 			sr = append(sr, s)
@@ -163,7 +163,7 @@ func (c *Client) parseServerSwitchingRules(backend string, p *parser.Parser) (mo
 	return sr, nil
 }
 
-func parseServerSwitchingRule(us types.UseServer) *models.ServerSwitchingRule {
+func ParseServerSwitchingRule(us types.UseServer) *models.ServerSwitchingRule {
 	return &models.ServerSwitchingRule{
 		TargetServer: us.Name,
 		Cond:         us.Cond,
@@ -171,7 +171,7 @@ func parseServerSwitchingRule(us types.UseServer) *models.ServerSwitchingRule {
 	}
 }
 
-func serializeServerSwitchingRule(sRule models.ServerSwitchingRule) types.UseServer {
+func SerializeServerSwitchingRule(sRule models.ServerSwitchingRule) types.UseServer {
 	return types.UseServer{
 		Name:     sRule.TargetServer,
 		Cond:     sRule.Cond,

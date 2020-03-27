@@ -474,7 +474,7 @@ func (c *Client) parseSite(s string, p *parser.Parser) *models.Site {
 		return nil
 	}
 
-	ls, _ := c.parseBinds(s, p)
+	ls, _ := ParseBinds(s, p)
 	site := &models.Site{
 		Name: s,
 		Service: &models.SiteService{
@@ -494,7 +494,7 @@ func (c *Client) parseSite(s string, p *parser.Parser) *models.Site {
 			site.Farms = append(site.Farms, farm)
 		}
 	}
-	ubs, err := c.parseBackendSwitchingRules(s, p)
+	ubs, err := ParseBackendSwitchingRules(s, p)
 	if err == nil {
 		for _, ub := range ubs {
 			farm := c.parseFarm(ub.Name, "conditional", ub.Cond, ub.CondTest, p)
@@ -510,7 +510,7 @@ func (c *Client) parseFarm(name string, useAs string, cond string, condTest stri
 	backend := &models.Backend{Name: name}
 	if c.checkSectionExists(parser.Backends, name, p) {
 		if err := c.parseSection(backend, parser.Backends, name, p); err == nil {
-			srvs, err := c.parseServers(name, p)
+			srvs, err := ParseServers(name, p)
 			if err != nil {
 				srvs = models.Servers{}
 			}
@@ -552,7 +552,7 @@ func serializeFarmToBackend(farm *models.SiteFarm) *models.Backend {
 
 // frontend backend relation helper methods
 func (c *Client) removeUseFarm(frontend string, backend string, t string, p *parser.Parser) error {
-	ufs, err := c.parseBackendSwitchingRules(frontend, p)
+	ufs, err := ParseBackendSwitchingRules(frontend, p)
 	if err != nil {
 		return err
 	}

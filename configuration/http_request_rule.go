@@ -43,7 +43,7 @@ func (c *Client) GetHTTPRequestRules(parentType, parentName string, transactionI
 		return 0, nil, err
 	}
 
-	httpRules, err := c.parseHTTPRequestRules(parentType, parentName, p)
+	httpRules, err := ParseHTTPRequestRules(parentType, parentName, p)
 	if err != nil {
 		return v, nil, c.handleError("", parentType, parentName, "", false, err)
 	}
@@ -76,7 +76,7 @@ func (c *Client) GetHTTPRequestRule(id int64, parentType, parentName string, tra
 		return v, nil, c.handleError(strconv.FormatInt(id, 10), parentType, parentName, "", false, err)
 	}
 
-	httpRule, err := parseHTTPRequestRule(data.(types.HTTPAction))
+	httpRule, err := ParseHTTPRequestRule(data.(types.HTTPAction))
 	if err != nil {
 		return v, nil, err
 	}
@@ -132,7 +132,7 @@ func (c *Client) CreateHTTPRequestRule(parentType string, parentName string, dat
 		section = parser.Frontends
 	}
 
-	s, err := serializeHTTPRequestRule(*data)
+	s, err := SerializeHTTPRequestRule(*data)
 	if err != nil {
 		return err
 	}
@@ -172,7 +172,7 @@ func (c *Client) EditHTTPRequestRule(id int64, parentType string, parentName str
 		return c.handleError(strconv.FormatInt(id, 10), parentType, parentName, t, transactionID == "", err)
 	}
 
-	s, err := serializeHTTPRequestRule(*data)
+	s, err := SerializeHTTPRequestRule(*data)
 	if err != nil {
 		return err
 	}
@@ -187,7 +187,7 @@ func (c *Client) EditHTTPRequestRule(id int64, parentType string, parentName str
 	return nil
 }
 
-func (c *Client) parseHTTPRequestRules(t, pName string, p *parser.Parser) (models.HTTPRequestRules, error) {
+func ParseHTTPRequestRules(t, pName string, p *parser.Parser) (models.HTTPRequestRules, error) {
 	section := parser.Global
 	if t == "frontend" {
 		section = parser.Frontends
@@ -207,7 +207,7 @@ func (c *Client) parseHTTPRequestRules(t, pName string, p *parser.Parser) (model
 	rules := data.([]types.HTTPAction)
 	for i, r := range rules {
 		id := int64(i)
-		httpReqRule, err := parseHTTPRequestRule(r)
+		httpReqRule, err := ParseHTTPRequestRule(r)
 		if err == nil {
 			httpReqRule.ID = &id
 			httpReqRules = append(httpReqRules, httpReqRule)
@@ -216,7 +216,7 @@ func (c *Client) parseHTTPRequestRules(t, pName string, p *parser.Parser) (model
 	return httpReqRules, nil
 }
 
-func parseHTTPRequestRule(f types.HTTPAction) (rule *models.HTTPRequestRule, err error) {
+func ParseHTTPRequestRule(f types.HTTPAction) (rule *models.HTTPRequestRule, err error) {
 	switch v := f.(type) {
 	case *actions.Allow:
 		rule = &models.HTTPRequestRule{
@@ -384,33 +384,33 @@ func parseHTTPRequestRule(f types.HTTPAction) (rule *models.HTTPRequestRule, err
 		}
 	case *actions.TrackSc0:
 		rule = &models.HTTPRequestRule{
-			Type: "track-sc0",
-			TrackSc0Key: v.Key,
+			Type:          "track-sc0",
+			TrackSc0Key:   v.Key,
 			TrackSc0Table: v.Table,
-			Cond: v.Cond,
-			CondTest: v.CondTest,
+			Cond:          v.Cond,
+			CondTest:      v.CondTest,
 		}
 	case *actions.TrackSc1:
 		rule = &models.HTTPRequestRule{
-			Type: "track-sc1",
-			TrackSc1Key: v.Key,
+			Type:          "track-sc1",
+			TrackSc1Key:   v.Key,
 			TrackSc1Table: v.Table,
-			Cond: v.Cond,
-			CondTest: v.CondTest,
+			Cond:          v.Cond,
+			CondTest:      v.CondTest,
 		}
 	case *actions.TrackSc2:
 		rule = &models.HTTPRequestRule{
-			Type: "track-sc2",
-			TrackSc2Key: v.Key,
+			Type:          "track-sc2",
+			TrackSc2Key:   v.Key,
 			TrackSc2Table: v.Table,
-			Cond: v.Cond,
-			CondTest: v.CondTest,
+			Cond:          v.Cond,
+			CondTest:      v.CondTest,
 		}
 	}
 	return rule, err
 }
 
-func serializeHTTPRequestRule(f models.HTTPRequestRule) (rule types.HTTPAction, err error) {
+func SerializeHTTPRequestRule(f models.HTTPRequestRule) (rule types.HTTPAction, err error) {
 	switch f.Type {
 	case "allow":
 		rule = &actions.Allow{
@@ -553,19 +553,19 @@ func serializeHTTPRequestRule(f models.HTTPRequestRule) (rule types.HTTPAction, 
 		rule = r
 	case "track-sc0":
 		rule = &actions.TrackSc0{
-			Key: f.TrackSc0Key,
+			Key:   f.TrackSc0Key,
 			Table: f.TrackSc0Table,
 		}
 	case "track-sc1":
 		rule = &actions.TrackSc1{
-			Key: f.TrackSc1Key,
+			Key:   f.TrackSc1Key,
 			Table: f.TrackSc1Table,
 		}
 	case "track-sc2":
 		rule = &actions.TrackSc2{
-			Key: f.TrackSc2Key,
-			Table: f.TrackSc2Table,
-			Cond: f.Cond,
+			Key:      f.TrackSc2Key,
+			Table:    f.TrackSc2Table,
+			Cond:     f.Cond,
 			CondTest: f.CondTest,
 		}
 	}

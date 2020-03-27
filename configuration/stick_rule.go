@@ -38,7 +38,7 @@ func (c *Client) GetStickRules(backend string, transactionID string) (int64, mod
 		return 0, nil, err
 	}
 
-	sRules, err := c.parseStickRules(backend, p)
+	sRules, err := ParseStickRules(backend, p)
 	if err != nil {
 		return v, nil, c.handleError("", "backend", backend, "", false, err)
 	}
@@ -64,7 +64,7 @@ func (c *Client) GetStickRule(id int64, backend string, transactionID string) (i
 		return v, nil, c.handleError(strconv.FormatInt(id, 10), "backend", backend, "", false, err)
 	}
 
-	sRule := parseStickRule(data.(types.Stick))
+	sRule := ParseStickRule(data.(types.Stick))
 	sRule.ID = &id
 
 	return v, sRule, nil
@@ -102,7 +102,7 @@ func (c *Client) CreateStickRule(backend string, data *models.StickRule, transac
 		return err
 	}
 
-	if err := p.Insert(parser.Backends, backend, "stick", serializeStickRule(*data), int(*data.ID)); err != nil {
+	if err := p.Insert(parser.Backends, backend, "stick", SerializeStickRule(*data), int(*data.ID)); err != nil {
 		return c.handleError(strconv.FormatInt(*data.ID, 10), "backend", backend, t, transactionID == "", err)
 	}
 
@@ -130,7 +130,7 @@ func (c *Client) EditStickRule(id int64, backend string, data *models.StickRule,
 		return c.handleError(strconv.FormatInt(*data.ID, 10), "backend", backend, t, transactionID == "", err)
 	}
 
-	if err := p.Set(parser.Backends, backend, "stick", serializeStickRule(*data), int(id)); err != nil {
+	if err := p.Set(parser.Backends, backend, "stick", SerializeStickRule(*data), int(id)); err != nil {
 		return c.handleError(strconv.FormatInt(*data.ID, 10), "backend", backend, t, transactionID == "", err)
 	}
 
@@ -140,7 +140,7 @@ func (c *Client) EditStickRule(id int64, backend string, data *models.StickRule,
 	return nil
 }
 
-func (c *Client) parseStickRules(backend string, p *parser.Parser) (models.StickRules, error) {
+func ParseStickRules(backend string, p *parser.Parser) (models.StickRules, error) {
 	sr := models.StickRules{}
 
 	data, err := p.Get(parser.Backends, backend, "stick", false)
@@ -154,7 +154,7 @@ func (c *Client) parseStickRules(backend string, p *parser.Parser) (models.Stick
 	sRules := data.([]types.Stick)
 	for i, sRule := range sRules {
 		id := int64(i)
-		s := parseStickRule(sRule)
+		s := ParseStickRule(sRule)
 		if s != nil {
 			s.ID = &id
 			sr = append(sr, s)
@@ -163,7 +163,7 @@ func (c *Client) parseStickRules(backend string, p *parser.Parser) (models.Stick
 	return sr, nil
 }
 
-func parseStickRule(s types.Stick) *models.StickRule {
+func ParseStickRule(s types.Stick) *models.StickRule {
 	return &models.StickRule{
 		Type:     s.Type,
 		Table:    s.Table,
@@ -173,7 +173,7 @@ func parseStickRule(s types.Stick) *models.StickRule {
 	}
 }
 
-func serializeStickRule(sRule models.StickRule) types.Stick {
+func SerializeStickRule(sRule models.StickRule) types.Stick {
 	sr := types.Stick{
 		Type:     sRule.Type,
 		Table:    sRule.Table,

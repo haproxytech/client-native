@@ -41,7 +41,7 @@ func (c *Client) GetBinds(frontend string, transactionID string) (int64, models.
 		return 0, nil, err
 	}
 
-	binds, err := c.parseBinds(frontend, p)
+	binds, err := ParseBinds(frontend, p)
 	if err != nil {
 		return v, nil, c.handleError("", "frontend", frontend, "", false, err)
 	}
@@ -62,7 +62,7 @@ func (c *Client) GetBind(name string, frontend string, transactionID string) (in
 		return 0, nil, err
 	}
 
-	bind, _ := c.getBindByName(name, frontend, p)
+	bind, _ := GetBindByName(name, frontend, p)
 	if bind == nil {
 		return v, nil, NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("Bind %s does not exist in frontend %s", name, frontend))
 	}
@@ -78,7 +78,7 @@ func (c *Client) DeleteBind(name string, frontend string, transactionID string, 
 		return err
 	}
 
-	bind, i := c.getBindByName(name, frontend, p)
+	bind, i := GetBindByName(name, frontend, p)
 	if bind == nil {
 		e := NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("Bind %s does not exist in frontend %s", name, frontend))
 		return c.handleError(name, "frontend", frontend, t, transactionID == "", e)
@@ -108,13 +108,13 @@ func (c *Client) CreateBind(frontend string, data *models.Bind, transactionID st
 		return err
 	}
 
-	bind, _ := c.getBindByName(data.Name, frontend, p)
+	bind, _ := GetBindByName(data.Name, frontend, p)
 	if bind != nil {
 		e := NewConfError(ErrObjectAlreadyExists, fmt.Sprintf("Bind %s already exists in frontend %s", data.Name, frontend))
 		return c.handleError(data.Name, "frontend", frontend, t, transactionID == "", e)
 	}
 
-	if err := p.Insert(parser.Frontends, frontend, "bind", serializeBind(*data), -1); err != nil {
+	if err := p.Insert(parser.Frontends, frontend, "bind", SerializeBind(*data), -1); err != nil {
 		return c.handleError(data.Name, "frontend", frontend, t, transactionID == "", err)
 	}
 
@@ -139,13 +139,13 @@ func (c *Client) EditBind(name string, frontend string, data *models.Bind, trans
 		return err
 	}
 
-	bind, i := c.getBindByName(name, frontend, p)
+	bind, i := GetBindByName(name, frontend, p)
 	if bind == nil {
 		e := NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("Bind %v does not exist in frontend %s", name, frontend))
 		return c.handleError(data.Name, "frontend", frontend, t, transactionID == "", e)
 	}
 
-	if err := p.Set(parser.Frontends, frontend, "bind", serializeBind(*data), i); err != nil {
+	if err := p.Set(parser.Frontends, frontend, "bind", SerializeBind(*data), i); err != nil {
 		return c.handleError(data.Name, "frontend", frontend, t, transactionID == "", err)
 	}
 
@@ -156,7 +156,7 @@ func (c *Client) EditBind(name string, frontend string, data *models.Bind, trans
 	return nil
 }
 
-func (c *Client) parseBinds(frontend string, p *parser.Parser) (models.Binds, error) {
+func ParseBinds(frontend string, p *parser.Parser) (models.Binds, error) {
 	binds := models.Binds{}
 
 	data, err := p.Get(parser.Frontends, frontend, "bind", false)
@@ -169,7 +169,7 @@ func (c *Client) parseBinds(frontend string, p *parser.Parser) (models.Binds, er
 
 	ondiskBinds := data.([]types.Bind)
 	for _, ondiskBind := range ondiskBinds {
-		b := parseBind(ondiskBind)
+		b := ParseBind(ondiskBind)
 		if b != nil {
 			binds = append(binds, b)
 		}
@@ -177,7 +177,7 @@ func (c *Client) parseBinds(frontend string, p *parser.Parser) (models.Binds, er
 	return binds, nil
 }
 
-func parseBind(ondiskBind types.Bind) *models.Bind {
+func ParseBind(ondiskBind types.Bind) *models.Bind {
 	b := &models.Bind{
 		Name: ondiskBind.Path,
 	}
@@ -247,7 +247,7 @@ func parseBind(ondiskBind types.Bind) *models.Bind {
 	return b
 }
 
-func serializeBind(b models.Bind) types.Bind {
+func SerializeBind(b models.Bind) types.Bind {
 	bind := types.Bind{
 		Params: []params.BindOption{},
 	}
@@ -298,8 +298,8 @@ func serializeBind(b models.Bind) types.Bind {
 	return bind
 }
 
-func (c *Client) getBindByName(name string, frontend string, p *parser.Parser) (*models.Bind, int) {
-	binds, err := c.parseBinds(frontend, p)
+func GetBindByName(name string, frontend string, p *parser.Parser) (*models.Bind, int) {
+	binds, err := ParseBinds(frontend, p)
 	if err != nil {
 		return nil, 0
 	}

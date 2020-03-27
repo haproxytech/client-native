@@ -38,7 +38,7 @@ func (c *Client) GetPeerEntries(peerSection string, transactionID string) (int64
 		return 0, nil, err
 	}
 
-	peerEntries, err := c.parsePeerEntries(peerSection, p)
+	peerEntries, err := ParsePeerEntries(peerSection, p)
 	if err != nil {
 		return v, nil, c.handleError("", "peers", peerSection, "", false, err)
 	}
@@ -59,7 +59,7 @@ func (c *Client) GetPeerEntry(name string, peerSection string, transactionID str
 		return 0, nil, err
 	}
 
-	peerEntry, _ := c.getPeerEntryByName(name, peerSection, p)
+	peerEntry, _ := GetPeerEntryByName(name, peerSection, p)
 	if peerEntry == nil {
 		return v, nil, NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("PeerEntry %s does not exist in peer section %s", name, peerSection))
 	}
@@ -75,7 +75,7 @@ func (c *Client) DeletePeerEntry(name string, peerSection string, transactionID 
 		return err
 	}
 
-	peerEntry, i := c.getPeerEntryByName(name, peerSection, p)
+	peerEntry, i := GetPeerEntryByName(name, peerSection, p)
 	if peerEntry == nil {
 		e := NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("PeerEntry %s does not exist in peer section %s", name, peerSection))
 		return c.handleError(name, "peers", peerSection, t, transactionID == "", e)
@@ -105,13 +105,13 @@ func (c *Client) CreatePeerEntry(peerSection string, data *models.PeerEntry, tra
 		return err
 	}
 
-	peerEntry, _ := c.getPeerEntryByName(data.Name, peerSection, p)
+	peerEntry, _ := GetPeerEntryByName(data.Name, peerSection, p)
 	if peerEntry != nil {
 		e := NewConfError(ErrObjectAlreadyExists, fmt.Sprintf("PeerEntry %s already exists in peer section %s", data.Name, peerSection))
 		return c.handleError(data.Name, "peers", peerSection, t, transactionID == "", e)
 	}
 
-	if err := p.Insert(parser.Peers, peerSection, "peer", serializePeerEntry(*data), -1); err != nil {
+	if err := p.Insert(parser.Peers, peerSection, "peer", SerializePeerEntry(*data), -1); err != nil {
 		return c.handleError(data.Name, "peers", peerSection, t, transactionID == "", err)
 	}
 
@@ -136,13 +136,13 @@ func (c *Client) EditPeerEntry(name string, peerSection string, data *models.Pee
 		return err
 	}
 
-	peerEntry, i := c.getPeerEntryByName(name, peerSection, p)
+	peerEntry, i := GetPeerEntryByName(name, peerSection, p)
 	if peerEntry == nil {
 		e := NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("PeerEntry %v does not exist in peer section %s", name, peerSection))
 		return c.handleError(data.Name, "peers", peerSection, t, transactionID == "", e)
 	}
 
-	if err := p.Set(parser.Peers, peerSection, "peer", serializePeerEntry(*data), i); err != nil {
+	if err := p.Set(parser.Peers, peerSection, "peer", SerializePeerEntry(*data), i); err != nil {
 		return c.handleError(data.Name, "peers", peerSection, t, transactionID == "", err)
 	}
 
@@ -153,7 +153,7 @@ func (c *Client) EditPeerEntry(name string, peerSection string, data *models.Pee
 	return nil
 }
 
-func (c *Client) parsePeerEntries(peerSection string, p *parser.Parser) (models.PeerEntries, error) {
+func ParsePeerEntries(peerSection string, p *parser.Parser) (models.PeerEntries, error) {
 	peerEntry := models.PeerEntries{}
 
 	data, err := p.Get(parser.Peers, peerSection, "peer", false)
@@ -166,7 +166,7 @@ func (c *Client) parsePeerEntries(peerSection string, p *parser.Parser) (models.
 
 	peerEntries := data.([]types.Peer)
 	for _, e := range peerEntries {
-		pe := parsePeerEntry(e)
+		pe := ParsePeerEntry(e)
 		if pe != nil {
 			peerEntry = append(peerEntry, pe)
 		}
@@ -174,7 +174,7 @@ func (c *Client) parsePeerEntries(peerSection string, p *parser.Parser) (models.
 	return peerEntry, nil
 }
 
-func parsePeerEntry(p types.Peer) *models.PeerEntry {
+func ParsePeerEntry(p types.Peer) *models.PeerEntry {
 	return &models.PeerEntry{
 		Address: &p.IP,
 		Port:    &p.Port,
@@ -182,7 +182,7 @@ func parsePeerEntry(p types.Peer) *models.PeerEntry {
 	}
 }
 
-func serializePeerEntry(pe models.PeerEntry) types.Peer {
+func SerializePeerEntry(pe models.PeerEntry) types.Peer {
 	return types.Peer{
 		Name: pe.Name,
 		IP:   *pe.Address,
@@ -190,8 +190,8 @@ func serializePeerEntry(pe models.PeerEntry) types.Peer {
 	}
 }
 
-func (c *Client) getPeerEntryByName(name string, peerSection string, p *parser.Parser) (*models.PeerEntry, int) {
-	peerEntries, err := c.parsePeerEntries(peerSection, p)
+func GetPeerEntryByName(name string, peerSection string, p *parser.Parser) (*models.PeerEntry, int) {
+	peerEntries, err := ParsePeerEntries(peerSection, p)
 	if err != nil {
 		return nil, 0
 	}

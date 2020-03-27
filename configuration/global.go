@@ -41,7 +41,40 @@ func (c *Client) GetGlobalConfiguration(transactionID string) (int64, *models.Gl
 		return 0, nil, err
 	}
 
-	_, err = p.Get(parser.Global, parser.GlobalSectionName, "daemon")
+	g, err := ParseGlobalSection(p)
+	if err != nil {
+		return 0, nil, err
+	}
+
+	return v, g, nil
+}
+
+// PushGlobalConfiguration pushes a Global config struct to global
+// config gile
+func (c *Client) PushGlobalConfiguration(data *models.Global, transactionID string, version int64) error {
+	if c.UseValidation {
+		validationErr := data.Validate(strfmt.Default)
+		if validationErr != nil {
+			return NewConfError(ErrValidationError, validationErr.Error())
+		}
+	}
+
+	p, t, err := c.loadDataForChange(transactionID, version)
+	if err != nil {
+		return err
+	}
+
+	if err := SerializeGlobalSection(p, data); err != nil {
+		return err
+	}
+	if err := c.saveData(p, t, transactionID == ""); err != nil {
+		return err
+	}
+	return nil
+}
+
+func ParseGlobalSection(p *parser.Parser) (*models.Global, error) {
+	_, err := p.Get(parser.Global, parser.GlobalSectionName, "daemon")
 	daemon := "enabled"
 	if err == errors.ErrFetch {
 		daemon = "disabled"
@@ -173,68 +206,60 @@ func (c *Client) GetGlobalConfiguration(transactionID string) (int64, *models.Gl
 		ExternalCheck:         externalCheck,
 	}
 
-	return v, g, nil
+	return g, nil
 }
 
-// PushGlobalConfiguration pushes a Global config struct to global
-// config gile
-func (c *Client) PushGlobalConfiguration(data *models.Global, transactionID string, version int64) error {
-	if c.UseValidation {
-		validationErr := data.Validate(strfmt.Default)
-		if validationErr != nil {
-			return NewConfError(ErrValidationError, validationErr.Error())
-		}
-	}
-
-	p, t, err := c.loadDataForChange(transactionID, version)
-	if err != nil {
-		return err
-	}
-
+func SerializeGlobalSection(p *parser.Parser, data *models.Global) error {
 	pDaemon := &types.Enabled{}
 	if data.Daemon != "enabled" {
 		pDaemon = nil
 	}
-	p.Set(parser.Global, parser.GlobalSectionName, "daemon", pDaemon)
-
+	if err := p.Set(parser.Global, parser.GlobalSectionName, "daemon", pDaemon); err != nil {
+		return err
+	}
 	pMasterWorker := &types.Enabled{}
-	if data.MasterWorker == false {
+	if !data.MasterWorker {
 		pMasterWorker = nil
 	}
-	p.Set(parser.Global, parser.GlobalSectionName, "master-worker", pMasterWorker)
-
+	if err := p.Set(parser.Global, parser.GlobalSectionName, "master-worker", pMasterWorker); err != nil {
+		return err
+	}
 	pMaxConn := &types.Int64C{
 		Value: data.Maxconn,
 	}
 	if data.Maxconn == 0 {
 		pMaxConn = nil
 	}
-	p.Set(parser.Global, parser.GlobalSectionName, "maxconn", pMaxConn)
-
+	if err := p.Set(parser.Global, parser.GlobalSectionName, "maxconn", pMaxConn); err != nil {
+		return err
+	}
 	pNbProc := &types.Int64C{
 		Value: data.Nbproc,
 	}
 	if data.Nbproc == 0 {
 		pNbProc = nil
 	}
-	p.Set(parser.Global, parser.GlobalSectionName, "nbproc", pNbProc)
-
+	if err := p.Set(parser.Global, parser.GlobalSectionName, "nbproc", pNbProc); err != nil {
+		return err
+	}
 	pNbthread := &types.Int64C{
 		Value: data.Nbthread,
 	}
 	if data.Nbthread == 0 {
 		pNbthread = nil
 	}
-	p.Set(parser.Global, parser.GlobalSectionName, "nbthread", pNbthread)
-
+	if err := p.Set(parser.Global, parser.GlobalSectionName, "nbthread", pNbthread); err != nil {
+		return err
+	}
 	pPidfile := &types.StringC{
 		Value: data.Pidfile,
 	}
 	if data.Pidfile == "" {
 		pPidfile = nil
 	}
-	p.Set(parser.Global, parser.GlobalSectionName, "pidfile", pPidfile)
-
+	if err := p.Set(parser.Global, parser.GlobalSectionName, "pidfile", pPidfile); err != nil {
+		return err
+	}
 	sockets := []types.Socket{}
 	for _, rAPI := range data.RuntimeApis {
 		s := types.Socket{
@@ -259,16 +284,18 @@ func (c *Client) PushGlobalConfiguration(data *models.Global, transactionID stri
 		}
 		sockets = append(sockets, s)
 	}
-	p.Set(parser.Global, parser.GlobalSectionName, "stats socket", sockets)
-
+	if err := p.Set(parser.Global, parser.GlobalSectionName, "stats socket", sockets); err != nil {
+		return err
+	}
 	var statsTimeout *types.StringC
 	if data.StatsTimeout != nil {
 		statsTimeout = &types.StringC{Value: strconv.FormatInt(*data.StatsTimeout, 10)}
 	} else {
 		statsTimeout = nil
 	}
-	p.Set(parser.Global, parser.GlobalSectionName, "stats timeout", statsTimeout)
-
+	if err := p.Set(parser.Global, parser.GlobalSectionName, "stats timeout", statsTimeout); err != nil {
+		return err
+	}
 	cpuMaps := []types.CPUMap{}
 	for _, cpuMap := range data.CPUMaps {
 		cm := types.CPUMap{
@@ -277,39 +304,40 @@ func (c *Client) PushGlobalConfiguration(data *models.Global, transactionID stri
 		}
 		cpuMaps = append(cpuMaps, cm)
 	}
-	p.Set(parser.Global, parser.GlobalSectionName, "cpu-map", cpuMaps)
-
+	if err := p.Set(parser.Global, parser.GlobalSectionName, "cpu-map", cpuMaps); err != nil {
+		return err
+	}
 	pSSLCiphers := &types.StringC{
 		Value: data.SslDefaultBindCiphers,
 	}
 	if data.SslDefaultBindCiphers == "" {
 		pSSLCiphers = nil
 	}
-	p.Set(parser.Global, parser.GlobalSectionName, "ssl-default-bind-ciphers", pSSLCiphers)
-
+	if err := p.Set(parser.Global, parser.GlobalSectionName, "ssl-default-bind-ciphers", pSSLCiphers); err != nil {
+		return err
+	}
 	pSSLOptions := &types.StringC{
 		Value: data.SslDefaultBindOptions,
 	}
 	if data.SslDefaultBindCiphers == "" {
 		pSSLOptions = nil
 	}
-	p.Set(parser.Global, parser.GlobalSectionName, "ssl-default-bind-options", pSSLOptions)
-
+	if err := p.Set(parser.Global, parser.GlobalSectionName, "ssl-default-bind-options", pSSLOptions); err != nil {
+		return err
+	}
 	pDhParams := &types.Int64C{
 		Value: data.TuneSslDefaultDhParam,
 	}
 	if data.TuneSslDefaultDhParam == 0 {
 		pDhParams = nil
 	}
-	p.Set(parser.Global, parser.GlobalSectionName, "tune.ssl.default-dh-param", pDhParams)
-
-	pExternalCheck := &types.Enabled{}
-	if data.ExternalCheck == false {
-		pExternalCheck = nil
-	}
-	p.Set(parser.Global, parser.GlobalSectionName, "external-check", pExternalCheck)
-	if err := c.saveData(p, t, transactionID == ""); err != nil {
+	if err := p.Set(parser.Global, parser.GlobalSectionName, "tune.ssl.default-dh-param", pDhParams); err != nil {
 		return err
 	}
-	return nil
+
+	pExternalCheck := &types.Enabled{}
+	if !data.ExternalCheck {
+		pExternalCheck = nil
+	}
+	return p.Set(parser.Global, parser.GlobalSectionName, "external-check", pExternalCheck)
 }

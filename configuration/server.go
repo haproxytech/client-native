@@ -43,7 +43,7 @@ func (c *Client) GetServers(backend string, transactionID string) (int64, models
 		return 0, nil, err
 	}
 
-	servers, err := c.parseServers(backend, p)
+	servers, err := ParseServers(backend, p)
 	if err != nil {
 		return v, nil, c.handleError("", "backend", backend, "", false, err)
 	}
@@ -64,7 +64,7 @@ func (c *Client) GetServer(name string, backend string, transactionID string) (i
 		return 0, nil, err
 	}
 
-	server, _ := c.getServerByName(name, backend, p)
+	server, _ := GetServerByName(name, backend, p)
 	if server == nil {
 		return v, nil, NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("Server %s does not exist in backend %s", name, backend))
 	}
@@ -80,7 +80,7 @@ func (c *Client) DeleteServer(name string, backend string, transactionID string,
 		return err
 	}
 
-	server, i := c.getServerByName(name, backend, p)
+	server, i := GetServerByName(name, backend, p)
 	if server == nil {
 		e := NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("Server %s does not exist in backend %s", name, backend))
 		return c.handleError(name, "backend", backend, t, transactionID == "", e)
@@ -111,13 +111,13 @@ func (c *Client) CreateServer(backend string, data *models.Server, transactionID
 		return err
 	}
 
-	server, _ := c.getServerByName(data.Name, backend, p)
+	server, _ := GetServerByName(data.Name, backend, p)
 	if server != nil {
 		e := NewConfError(ErrObjectAlreadyExists, fmt.Sprintf("Server %s already exists in backend %s", data.Name, backend))
 		return c.handleError(data.Name, "backend", backend, t, transactionID == "", e)
 	}
 
-	if err := p.Insert(parser.Backends, backend, "server", serializeServer(*data), -1); err != nil {
+	if err := p.Insert(parser.Backends, backend, "server", SerializeServer(*data), -1); err != nil {
 		return c.handleError(data.Name, "backend", backend, t, transactionID == "", err)
 	}
 
@@ -141,13 +141,13 @@ func (c *Client) EditServer(name string, backend string, data *models.Server, tr
 		return err
 	}
 
-	server, i := c.getServerByName(name, backend, p)
+	server, i := GetServerByName(name, backend, p)
 	if server == nil {
 		e := NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("Server %v does not exist in backend %s", name, backend))
 		return c.handleError(data.Name, "backend", backend, t, transactionID == "", e)
 	}
 
-	if err := p.Set(parser.Backends, backend, "server", serializeServer(*data), i); err != nil {
+	if err := p.Set(parser.Backends, backend, "server", SerializeServer(*data), i); err != nil {
 		return c.handleError(data.Name, "backend", backend, t, transactionID == "", err)
 	}
 
@@ -157,7 +157,7 @@ func (c *Client) EditServer(name string, backend string, data *models.Server, tr
 	return nil
 }
 
-func (c *Client) parseServers(backend string, p *parser.Parser) (models.Servers, error) {
+func ParseServers(backend string, p *parser.Parser) (models.Servers, error) {
 	servers := models.Servers{}
 
 	data, err := p.Get(parser.Backends, backend, "server", false)
@@ -170,7 +170,7 @@ func (c *Client) parseServers(backend string, p *parser.Parser) (models.Servers,
 
 	ondiskServers := data.([]types.Server)
 	for _, ondiskServer := range ondiskServers {
-		s := parseServer(ondiskServer)
+		s := ParseServer(ondiskServer)
 		if s != nil {
 			servers = append(servers, s)
 		}
@@ -178,7 +178,7 @@ func (c *Client) parseServers(backend string, p *parser.Parser) (models.Servers,
 	return servers, nil
 }
 
-func parseServer(ondiskServer types.Server) *models.Server {
+func ParseServer(ondiskServer types.Server) *models.Server {
 	s := &models.Server{
 		Name: ondiskServer.Name,
 	}
@@ -300,7 +300,7 @@ func parseServer(ondiskServer types.Server) *models.Server {
 	return s
 }
 
-func serializeServer(s models.Server) types.Server {
+func SerializeServer(s models.Server) types.Server {
 	srv := types.Server{
 		Name:   s.Name,
 		Params: []params.ServerOption{},
@@ -430,8 +430,8 @@ func serializeServer(s models.Server) types.Server {
 	return srv
 }
 
-func (c *Client) getServerByName(name string, backend string, p *parser.Parser) (*models.Server, int) {
-	servers, err := c.parseServers(backend, p)
+func GetServerByName(name string, backend string, p *parser.Parser) (*models.Server, int) {
+	servers, err := ParseServers(backend, p)
 	if err != nil {
 		return nil, 0
 	}

@@ -38,7 +38,7 @@ func (c *Client) GetACLs(parentType, parentName string, transactionID string) (i
 		return 0, nil, err
 	}
 
-	acls, err := c.parseACLs(parentType, parentName, p)
+	acls, err := ParseACLs(parentType, parentName, p)
 	if err != nil {
 		return v, nil, c.handleError("", parentType, parentName, "", false, err)
 	}
@@ -71,7 +71,7 @@ func (c *Client) GetACL(id int64, parentType, parentName string, transactionID s
 		return v, nil, c.handleError(strconv.FormatInt(id, 10), parentType, parentName, "", false, err)
 	}
 
-	acl := parseACL(data.(types.ACL))
+	acl := ParseACL(data.(types.ACL))
 	acl.ID = &id
 
 	return v, acl, nil
@@ -124,7 +124,7 @@ func (c *Client) CreateACL(parentType string, parentName string, data *models.AC
 		section = parser.Frontends
 	}
 
-	if err := p.Insert(section, parentName, "acl", serializeACL(*data), int(*data.ID)); err != nil {
+	if err := p.Insert(section, parentName, "acl", SerializeACL(*data), int(*data.ID)); err != nil {
 		return c.handleError(strconv.FormatInt(*data.ID, 10), parentType, parentName, t, transactionID == "", err)
 	}
 
@@ -159,7 +159,7 @@ func (c *Client) EditACL(id int64, parentType string, parentName string, data *m
 		return c.handleError(strconv.FormatInt(id, 10), parentType, parentName, t, transactionID == "", err)
 	}
 
-	if err := p.Set(section, parentName, "acl", serializeACL(*data), int(id)); err != nil {
+	if err := p.Set(section, parentName, "acl", SerializeACL(*data), int(id)); err != nil {
 		return c.handleError(strconv.FormatInt(id, 10), parentType, parentName, t, transactionID == "", err)
 	}
 
@@ -169,7 +169,7 @@ func (c *Client) EditACL(id int64, parentType string, parentName string, data *m
 	return nil
 }
 
-func (c *Client) parseACLs(t, pName string, p *parser.Parser) (models.Acls, error) {
+func ParseACLs(t, pName string, p *parser.Parser) (models.Acls, error) {
 	section := parser.Global
 	if t == "frontend" {
 		section = parser.Frontends
@@ -189,7 +189,7 @@ func (c *Client) parseACLs(t, pName string, p *parser.Parser) (models.Acls, erro
 	aclLines := data.([]types.ACL)
 	for i, r := range aclLines {
 		id := int64(i)
-		acl := parseACL(r)
+		acl := ParseACL(r)
 		if acl != nil {
 			acl.ID = &id
 			acls = append(acls, acl)
@@ -198,7 +198,7 @@ func (c *Client) parseACLs(t, pName string, p *parser.Parser) (models.Acls, erro
 	return acls, nil
 }
 
-func parseACL(f types.ACL) *models.ACL {
+func ParseACL(f types.ACL) *models.ACL {
 	return &models.ACL{
 		ACLName:   f.Name,
 		Criterion: f.Criterion,
@@ -206,7 +206,7 @@ func parseACL(f types.ACL) *models.ACL {
 	}
 }
 
-func serializeACL(f models.ACL) types.ACL {
+func SerializeACL(f models.ACL) types.ACL {
 	return types.ACL{
 		Name:      f.ACLName,
 		Criterion: f.Criterion,

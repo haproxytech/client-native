@@ -40,7 +40,7 @@ func (c *Client) GetFilters(parentType, parentName string, transactionID string)
 		return 0, nil, err
 	}
 
-	filters, err := c.parseFilters(parentType, parentName, p)
+	filters, err := ParseFilters(parentType, parentName, p)
 	if err != nil {
 		return v, nil, c.handleError("", parentType, parentName, "", false, err)
 	}
@@ -73,7 +73,7 @@ func (c *Client) GetFilter(id int64, parentType, parentName string, transactionI
 		return v, nil, c.handleError(strconv.FormatInt(id, 10), parentType, parentName, "", false, err)
 	}
 
-	filter := parseFilter(data.(types.Filter))
+	filter := ParseFilter(data.(types.Filter))
 	filter.ID = &id
 
 	return v, filter, nil
@@ -127,7 +127,7 @@ func (c *Client) CreateFilter(parentType string, parentName string, data *models
 		section = parser.Frontends
 	}
 
-	if err := p.Insert(section, parentName, "filter", serializeFilter(*data), int(*data.ID)); err != nil {
+	if err := p.Insert(section, parentName, "filter", SerializeFilter(*data), int(*data.ID)); err != nil {
 		return c.handleError(strconv.FormatInt(*data.ID, 10), parentType, parentName, t, transactionID == "", err)
 	}
 
@@ -162,7 +162,7 @@ func (c *Client) EditFilter(id int64, parentType string, parentName string, data
 		return c.handleError(strconv.FormatInt(id, 10), parentType, parentName, t, transactionID == "", err)
 	}
 
-	if err := p.Set(section, parentName, "filter", serializeFilter(*data), int(id)); err != nil {
+	if err := p.Set(section, parentName, "filter", SerializeFilter(*data), int(id)); err != nil {
 		return c.handleError(strconv.FormatInt(id, 10), parentType, parentName, t, transactionID == "", err)
 	}
 
@@ -173,7 +173,7 @@ func (c *Client) EditFilter(id int64, parentType string, parentName string, data
 	return nil
 }
 
-func (c *Client) parseFilters(t, pName string, p *parser.Parser) (models.Filters, error) {
+func ParseFilters(t, pName string, p *parser.Parser) (models.Filters, error) {
 	section := parser.Global
 	if t == "frontend" {
 		section = parser.Frontends
@@ -193,7 +193,7 @@ func (c *Client) parseFilters(t, pName string, p *parser.Parser) (models.Filters
 	filters := data.([]types.Filter)
 	for i, filter := range filters {
 		id := int64(i)
-		mFilter := parseFilter(filter)
+		mFilter := ParseFilter(filter)
 		if mFilter != nil {
 			mFilter.ID = &id
 			f = append(f, mFilter)
@@ -202,7 +202,7 @@ func (c *Client) parseFilters(t, pName string, p *parser.Parser) (models.Filters
 	return f, nil
 }
 
-func parseFilter(f types.Filter) *models.Filter {
+func ParseFilter(f types.Filter) *models.Filter {
 	switch v := f.(type) {
 	case *filters.Trace:
 		return &models.Filter{
@@ -231,7 +231,7 @@ func parseFilter(f types.Filter) *models.Filter {
 	return nil
 }
 
-func serializeFilter(f models.Filter) types.Filter {
+func SerializeFilter(f models.Filter) types.Filter {
 	switch f.Type {
 	case "trace":
 		return &filters.Trace{

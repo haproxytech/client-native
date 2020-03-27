@@ -85,31 +85,11 @@ func (c *Client) DeletePeerSection(name string, transactionID string, version in
 		return c.handleError(name, "", "", t, transactionID == "", e)
 	}
 
-	if err := p.SectionsDelete(parser.Peers, name); err != nil {
+	if err := DeletePeerSection(p, name); err != nil {
 		return c.handleError(name, "", "", t, transactionID == "", err)
 	}
 
 	if err := c.saveData(p, t, transactionID == ""); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-// EditPeerSection edits a peerSection in configuration. One of version or transactionID is
-// mandatory. Returns error on fail, nil on success.
-func (c *Client) EditPeerSection(name string, data *models.PeerSection, transactionID string, version int64) error {
-	if c.UseValidation {
-		validationErr := data.Validate(strfmt.Default)
-		if validationErr != nil {
-			return NewConfError(ErrValidationError, validationErr.Error())
-		}
-	}
-
-	if err := c.DeletePeerSection(name, transactionID, version); err != nil {
-		return err
-	}
-	if err := c.CreatePeerSection(data, transactionID, version); err != nil {
 		return err
 	}
 
@@ -130,7 +110,7 @@ func (c *Client) CreatePeerSection(data *models.PeerSection, transactionID strin
 	if err != nil {
 		return err
 	}
-	if err := p.SectionsCreate(parser.Peers, data.Name); err != nil {
+	if err := SerializePeerSection(p, data); err != nil {
 		return c.handleError(data.Name, "", "", t, transactionID == "", err)
 	}
 	if err := c.saveData(p, t, transactionID == ""); err != nil {
@@ -138,4 +118,12 @@ func (c *Client) CreatePeerSection(data *models.PeerSection, transactionID strin
 	}
 
 	return nil
+}
+
+func SerializePeerSection(p *parser.Parser, data *models.PeerSection) error {
+	return p.SectionsCreate(parser.Peers, data.Name)
+}
+
+func DeletePeerSection(p *parser.Parser, name string) error {
+	return p.SectionsDelete(parser.Peers, name)
 }

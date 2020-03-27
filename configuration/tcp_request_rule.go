@@ -42,7 +42,7 @@ func (c *Client) GetTCPRequestRules(parentType, parentName string, transactionID
 		return 0, nil, err
 	}
 
-	tcpRules, err := c.parseTCPRequestRules(parentType, parentName, p)
+	tcpRules, err := ParseTCPRequestRules(parentType, parentName, p)
 	if err != nil {
 		return v, nil, c.handleError("", parentType, parentName, "", false, err)
 	}
@@ -75,7 +75,7 @@ func (c *Client) GetTCPRequestRule(id int64, parentType, parentName string, tran
 		return v, nil, c.handleError(strconv.FormatInt(id, 10), parentType, parentName, "", false, err)
 	}
 
-	tcpRule, err := parseTCPRequestRule(data.(types.TCPAction))
+	tcpRule, err := ParseTCPRequestRule(data.(types.TCPAction))
 	if err != nil {
 		return v, nil, err
 	}
@@ -131,7 +131,7 @@ func (c *Client) CreateTCPRequestRule(parentType string, parentName string, data
 		section = parser.Frontends
 	}
 
-	s, err := serializeTCPRequestRule(*data)
+	s, err := SerializeTCPRequestRule(*data)
 	if err != nil {
 		return err
 	}
@@ -171,7 +171,7 @@ func (c *Client) EditTCPRequestRule(id int64, parentType string, parentName stri
 		return c.handleError(strconv.FormatInt(id, 10), parentType, parentName, t, transactionID == "", err)
 	}
 
-	s, err := serializeTCPRequestRule(*data)
+	s, err := SerializeTCPRequestRule(*data)
 	if err != nil {
 		return err
 	}
@@ -186,7 +186,7 @@ func (c *Client) EditTCPRequestRule(id int64, parentType string, parentName stri
 	return nil
 }
 
-func (c *Client) parseTCPRequestRules(t, pName string, p *parser.Parser) (models.TCPRequestRules, error) {
+func ParseTCPRequestRules(t, pName string, p *parser.Parser) (models.TCPRequestRules, error) {
 	section := parser.Global
 	if t == "frontend" {
 		section = parser.Frontends
@@ -206,7 +206,7 @@ func (c *Client) parseTCPRequestRules(t, pName string, p *parser.Parser) (models
 	rules := data.([]types.TCPAction)
 	for i, r := range rules {
 		id := int64(i)
-		tcpReqRule, err := parseTCPRequestRule(r)
+		tcpReqRule, err := ParseTCPRequestRule(r)
 		if err == nil {
 			tcpReqRule.ID = &id
 			tcpReqRules = append(tcpReqRules, tcpReqRule)
@@ -215,7 +215,7 @@ func (c *Client) parseTCPRequestRules(t, pName string, p *parser.Parser) (models
 	return tcpReqRules, nil
 }
 
-func parseTCPRequestRule(f types.TCPAction) (rule *models.TCPRequestRule, err error) {
+func ParseTCPRequestRule(f types.TCPAction) (rule *models.TCPRequestRule, err error) {
 	switch v := f.(type) {
 	case *actions.Connection:
 		rule = &models.TCPRequestRule{
@@ -268,7 +268,7 @@ func parseTCPRequestRule(f types.TCPAction) (rule *models.TCPRequestRule, err er
 	return nil, NewConfError(ErrValidationError, "unsupported action in tcp_request_rule")
 }
 
-func serializeTCPRequestRule(f models.TCPRequestRule) (rule types.TCPAction, err error) {
+func SerializeTCPRequestRule(f models.TCPRequestRule) (rule types.TCPAction, err error) {
 	switch f.Type {
 	case "connection":
 		return &actions.Connection{

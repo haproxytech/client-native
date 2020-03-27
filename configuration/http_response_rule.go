@@ -41,7 +41,7 @@ func (c *Client) GetHTTPResponseRules(parentType, parentName string, transaction
 		return 0, nil, err
 	}
 
-	httpRules, err := c.parseHTTPResponseRules(parentType, parentName, p)
+	httpRules, err := ParseHTTPResponseRules(parentType, parentName, p)
 	if err != nil {
 		return v, nil, c.handleError("", parentType, parentName, "", false, err)
 	}
@@ -74,7 +74,7 @@ func (c *Client) GetHTTPResponseRule(id int64, parentType, parentName string, tr
 		return v, nil, c.handleError(strconv.FormatInt(id, 10), parentType, parentName, "", false, err)
 	}
 
-	httpRule := parseHTTPResponseRule(data.(types.HTTPAction))
+	httpRule := ParseHTTPResponseRule(data.(types.HTTPAction))
 	httpRule.ID = &id
 
 	return v, httpRule, nil
@@ -127,7 +127,7 @@ func (c *Client) CreateHTTPResponseRule(parentType string, parentName string, da
 		section = parser.Frontends
 	}
 
-	if err := p.Insert(section, parentName, "http-response", serializeHTTPResponseRule(*data), int(*data.ID)); err != nil {
+	if err := p.Insert(section, parentName, "http-response", SerializeHTTPResponseRule(*data), int(*data.ID)); err != nil {
 		return c.handleError(strconv.FormatInt(*data.ID, 10), parentType, parentName, t, transactionID == "", err)
 	}
 
@@ -163,7 +163,7 @@ func (c *Client) EditHTTPResponseRule(id int64, parentType string, parentName st
 		return c.handleError(strconv.FormatInt(id, 10), parentType, parentName, t, transactionID == "", err)
 	}
 
-	if err := p.Set(section, parentName, "http-response", serializeHTTPResponseRule(*data), int(id)); err != nil {
+	if err := p.Set(section, parentName, "http-response", SerializeHTTPResponseRule(*data), int(id)); err != nil {
 		return c.handleError(strconv.FormatInt(id, 10), parentType, parentName, t, transactionID == "", err)
 	}
 
@@ -173,7 +173,7 @@ func (c *Client) EditHTTPResponseRule(id int64, parentType string, parentName st
 	return nil
 }
 
-func (c *Client) parseHTTPResponseRules(t, pName string, p *parser.Parser) (models.HTTPResponseRules, error) {
+func ParseHTTPResponseRules(t, pName string, p *parser.Parser) (models.HTTPResponseRules, error) {
 	section := parser.Global
 	if t == "frontend" {
 		section = parser.Frontends
@@ -193,7 +193,7 @@ func (c *Client) parseHTTPResponseRules(t, pName string, p *parser.Parser) (mode
 	rules := data.([]types.HTTPAction)
 	for i, r := range rules {
 		id := int64(i)
-		httpResRule := parseHTTPResponseRule(r)
+		httpResRule := ParseHTTPResponseRule(r)
 		if httpResRule != nil {
 			httpResRule.ID = &id
 			httpResRules = append(httpResRules, httpResRule)
@@ -202,7 +202,7 @@ func (c *Client) parseHTTPResponseRules(t, pName string, p *parser.Parser) (mode
 	return httpResRules, nil
 }
 
-func parseHTTPResponseRule(f types.HTTPAction) *models.HTTPResponseRule {
+func ParseHTTPResponseRule(f types.HTTPAction) *models.HTTPResponseRule {
 	switch v := f.(type) {
 	case *actions.Allow:
 		return &models.HTTPResponseRule{
@@ -335,7 +335,7 @@ func parseHTTPResponseRule(f types.HTTPAction) *models.HTTPResponseRule {
 	return nil
 }
 
-func serializeHTTPResponseRule(f models.HTTPResponseRule) types.HTTPAction {
+func SerializeHTTPResponseRule(f models.HTTPResponseRule) types.HTTPAction {
 	switch f.Type {
 	case "allow":
 		return &actions.Allow{
