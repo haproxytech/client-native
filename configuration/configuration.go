@@ -637,6 +637,29 @@ func parseField(section parser.Section, sectionName string, fieldName string, p 
 		}
 		return nil
 	}
+
+	if fieldName == "UniqueIDFormat" {
+		data, err := p.Get(section, sectionName, "unique-id-format")
+		if err == nil {
+			d := data.(*types.UniqueIDFormat)
+			return d.LogFormat
+		}
+		return nil
+	}
+
+	if fieldName == "UniqueIDHeader" {
+		_, e := p.Get(section, sectionName, "unique-id-format")
+		if e != nil {
+			return nil
+		}
+		data, err := p.Get(section, sectionName, "unique-id-header")
+		if err == nil {
+			d := data.(*types.UniqueIDHeader)
+			return d.Name
+		}
+		return nil
+	}
+
 	if fieldName == "HTTPConnectionMode" {
 		data, err := p.Get(section, sectionName, "option http-tunnel", false)
 		if err == nil {
@@ -1196,6 +1219,42 @@ func setFieldValue(section parser.Section, sectionName string, fieldName string,
 			}
 		}
 		return nil
+	}
+
+	if fieldName == "UniqueIDFormat" {
+		if section != parser.Defaults && section != parser.Frontends {
+			return nil
+		}
+		if valueIsNil(field) {
+			if err := p.Set(section, sectionName, "unique-id-format", nil); err != nil {
+				return err
+			}
+			return nil
+		}
+		d := types.UniqueIDFormat{
+			LogFormat: field.Elem().String(),
+		}
+		if err := p.Set(section, sectionName, "unique-id-format", &d); err != nil {
+			return err
+		}
+	}
+
+	if fieldName == "UniqueIDHeader" {
+		if section != parser.Defaults && section != parser.Frontends {
+			return nil
+		}
+		if valueIsNil(field) {
+			if err := p.Set(section, sectionName, "unique-id-header", nil); err != nil {
+				return err
+			}
+			return nil
+		}
+		d := types.UniqueIDHeader{
+			Name: field.Elem().String(),
+		}
+		if err := p.Set(section, sectionName, "unique-id-header", &d); err != nil {
+			return err
+		}
 	}
 
 	if fieldName == "Clflog" {

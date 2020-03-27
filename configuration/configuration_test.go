@@ -95,6 +95,8 @@ frontend test
   use_backend %[req.cookie(foo)]
   timeout client 4s
   option clitcpka
+  unique-id-format %{+X}o%ci:%cp_%fi:%fp_%Ts_%rt:%pid
+  unique-id-header X-Unique-ID
 
 frontend test_2
   mode http
@@ -114,6 +116,8 @@ frontend test_2
   http-request capture req.cook_cnt(FirstVisit),bool len 10
   http-request capture req.cook_cnt(FirstVisit),bool id 0
   http-response capture res.header id 0
+  unique-id-format %{+X}o%ci:%cp_%fi:%fp_%Ts_%rt
+  unique-id-header X-Unique-ID-test-2
 
 backend test
   mode http
