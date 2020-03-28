@@ -584,7 +584,7 @@ func (c *Client) createBckFrontendRels(name string, b *models.SiteFarm, edit boo
 		} else {
 			i := int64(0)
 			uf := &models.BackendSwitchingRule{
-				ID:       &i,
+				Index:    &i,
 				Name:     b.Name,
 				Cond:     b.Cond,
 				CondTest: b.CondTest,

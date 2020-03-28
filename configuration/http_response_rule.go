@@ -75,7 +75,7 @@ func (c *Client) GetHTTPResponseRule(id int64, parentType, parentName string, tr
 	}
 
 	httpRule := ParseHTTPResponseRule(data.(types.HTTPAction))
-	httpRule.ID = &id
+	httpRule.Index = &id
 
 	return v, httpRule, nil
 }
@@ -127,8 +127,8 @@ func (c *Client) CreateHTTPResponseRule(parentType string, parentName string, da
 		section = parser.Frontends
 	}
 
-	if err := p.Insert(section, parentName, "http-response", SerializeHTTPResponseRule(*data), int(*data.ID)); err != nil {
-		return c.handleError(strconv.FormatInt(*data.ID, 10), parentType, parentName, t, transactionID == "", err)
+	if err := p.Insert(section, parentName, "http-response", SerializeHTTPResponseRule(*data), int(*data.Index)); err != nil {
+		return c.handleError(strconv.FormatInt(*data.Index, 10), parentType, parentName, t, transactionID == "", err)
 	}
 
 	if err := c.saveData(p, t, transactionID == ""); err != nil {
@@ -195,7 +195,7 @@ func ParseHTTPResponseRules(t, pName string, p *parser.Parser) (models.HTTPRespo
 		id := int64(i)
 		httpResRule := ParseHTTPResponseRule(r)
 		if httpResRule != nil {
-			httpResRule.ID = &id
+			httpResRule.Index = &id
 			httpResRules = append(httpResRules, httpResRule)
 		}
 	}

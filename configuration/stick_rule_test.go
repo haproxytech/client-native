@@ -38,71 +38,71 @@ func TestGetStickRules(t *testing.T) {
 	}
 
 	for _, sr := range sRules {
-		if *sr.ID == 0 {
+		if *sr.Index == 0 {
 			if sr.Type != "store-request" {
-				t.Errorf("%v: Type not store-request: %v", *sr.ID, sr.Type)
+				t.Errorf("%v: Type not store-request: %v", *sr.Index, sr.Type)
 			}
 			if sr.Pattern != "src" {
-				t.Errorf("%v: Pattern not src: %v", *sr.ID, sr.Pattern)
+				t.Errorf("%v: Pattern not src: %v", *sr.Index, sr.Pattern)
 			}
 			if sr.Table != "test" {
-				t.Errorf("%v: Table not test: %v", *sr.ID, sr.Table)
+				t.Errorf("%v: Table not test: %v", *sr.Index, sr.Table)
 			}
-		} else if *sr.ID == 1 {
+		} else if *sr.Index == 1 {
 			if sr.Type != "match" {
-				t.Errorf("%v: Type not match: %v", *sr.ID, sr.Type)
+				t.Errorf("%v: Type not match: %v", *sr.Index, sr.Type)
 			}
 			if sr.Pattern != "src" {
-				t.Errorf("%v: Pattern not src: %v", *sr.ID, sr.Pattern)
+				t.Errorf("%v: Pattern not src: %v", *sr.Index, sr.Pattern)
 			}
 			if sr.Table != "test" {
-				t.Errorf("%v: Table not test: %v", *sr.ID, sr.Table)
+				t.Errorf("%v: Table not test: %v", *sr.Index, sr.Table)
 			}
-		} else if *sr.ID == 2 {
+		} else if *sr.Index == 2 {
 			if sr.Type != "on" {
-				t.Errorf("%v: Type not on: %v", *sr.ID, sr.Type)
+				t.Errorf("%v: Type not on: %v", *sr.Index, sr.Type)
 			}
 			if sr.Pattern != "src" {
-				t.Errorf("%v: Pattern not src: %v", *sr.ID, sr.Pattern)
+				t.Errorf("%v: Pattern not src: %v", *sr.Index, sr.Pattern)
 			}
 			if sr.Table != "test" {
-				t.Errorf("%v: Table not test: %v", *sr.ID, sr.Table)
+				t.Errorf("%v: Table not test: %v", *sr.Index, sr.Table)
 			}
-		} else if *sr.ID == 3 {
+		} else if *sr.Index == 3 {
 			if sr.Type != "store-response" {
-				t.Errorf("%v: Type not matchandstore: %v", *sr.ID, sr.Type)
+				t.Errorf("%v: Type not matchandstore: %v", *sr.Index, sr.Type)
 			}
 			if sr.Pattern != "src" {
-				t.Errorf("%v: Pattern not src: %v", *sr.ID, sr.Pattern)
+				t.Errorf("%v: Pattern not src: %v", *sr.Index, sr.Pattern)
 			}
-		} else if *sr.ID == 4 {
+		} else if *sr.Index == 4 {
 			if sr.Type != "store-response" {
-				t.Errorf("%v: Type not matchandstore: %v", *sr.ID, sr.Type)
+				t.Errorf("%v: Type not matchandstore: %v", *sr.Index, sr.Type)
 			}
 			if sr.Pattern != "src_port" {
-				t.Errorf("%v: Pattern not src: %v", *sr.ID, sr.Pattern)
+				t.Errorf("%v: Pattern not src: %v", *sr.Index, sr.Pattern)
 			}
 			if sr.Table != "test_port" {
-				t.Errorf("%v: Table not test: %v", *sr.ID, sr.Table)
+				t.Errorf("%v: Table not test: %v", *sr.Index, sr.Table)
 			}
-		} else if *sr.ID == 5 {
+		} else if *sr.Index == 5 {
 			if sr.Type != "store-response" {
-				t.Errorf("%v: Type not matchandstore: %v", *sr.ID, sr.Type)
+				t.Errorf("%v: Type not matchandstore: %v", *sr.Index, sr.Type)
 			}
 			if sr.Pattern != "src" {
-				t.Errorf("%v: Pattern not src: %v", *sr.ID, sr.Pattern)
+				t.Errorf("%v: Pattern not src: %v", *sr.Index, sr.Pattern)
 			}
 			if sr.Table != "test" {
-				t.Errorf("%v: Table not test: %v", *sr.ID, sr.Table)
+				t.Errorf("%v: Table not test: %v", *sr.Index, sr.Table)
 			}
 			if sr.Cond != "if" {
-				t.Errorf("%v: Cond not if: %v", *sr.ID, sr.Cond)
+				t.Errorf("%v: Cond not if: %v", *sr.Index, sr.Cond)
 			}
 			if sr.CondTest != "TRUE" {
-				t.Errorf("%v: Cond not if: %v", *sr.ID, sr.CondTest)
+				t.Errorf("%v: Cond not if: %v", *sr.Index, sr.CondTest)
 			}
 		} else {
-			t.Errorf("Expext only stick rule < 5, %v found", *sr.ID)
+			t.Errorf("Expext only stick rule < 5, %v found", *sr.Index)
 		}
 	}
 
@@ -126,13 +126,13 @@ func TestGetStickRule(t *testing.T) {
 	}
 
 	if sr.Type != "store-request" {
-		t.Errorf("%v: Type not store-request: %v", *sr.ID, sr.Type)
+		t.Errorf("%v: Type not store-request: %v", *sr.Index, sr.Type)
 	}
 	if sr.Pattern != "src" {
-		t.Errorf("%v: Pattern not src: %v", *sr.ID, sr.Pattern)
+		t.Errorf("%v: Pattern not src: %v", *sr.Index, sr.Pattern)
 	}
 	if sr.Table != "test" {
-		t.Errorf("%v: Table not test: %v", *sr.ID, sr.Table)
+		t.Errorf("%v: Table not test: %v", *sr.Index, sr.Table)
 	}
 
 	_, err = sr.MarshalBinary()
@@ -150,7 +150,7 @@ func TestCreateEditDeleteStickRule(t *testing.T) {
 	id := int64(1)
 	// TestCreateStickRule
 	sr := &models.StickRule{
-		ID:       &id,
+		Index:       &id,
 		Type:     "match",
 		Pattern:  "src",
 		Cond:     "if",
@@ -181,7 +181,7 @@ func TestCreateEditDeleteStickRule(t *testing.T) {
 
 	// TestEditStickRule
 	sr = &models.StickRule{
-		ID:       &id,
+		Index:       &id,
 		Type:     "store-request",
 		Pattern:  "src",
 		Table:    "test2",

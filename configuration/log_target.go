@@ -72,7 +72,7 @@ func (c *Client) GetLogTarget(id int64, parentType, parentName string, transacti
 	}
 
 	logTarget := ParseLogTarget(data.(types.Log))
-	logTarget.ID = &id
+	logTarget.Index = &id
 
 	return v, logTarget, nil
 }
@@ -125,8 +125,8 @@ func (c *Client) CreateLogTarget(parentType string, parentName string, data *mod
 		section = parser.Frontends
 	}
 
-	if err := p.Insert(section, parentName, "log", SerializeLogTarget(*data), int(*data.ID)); err != nil {
-		return c.handleError(strconv.FormatInt(*data.ID, 10), parentType, parentName, t, transactionID == "", err)
+	if err := p.Insert(section, parentName, "log", SerializeLogTarget(*data), int(*data.Index)); err != nil {
+		return c.handleError(strconv.FormatInt(*data.Index, 10), parentType, parentName, t, transactionID == "", err)
 	}
 
 	if err := c.saveData(p, t, transactionID == ""); err != nil {
@@ -192,7 +192,7 @@ func ParseLogTargets(t, pName string, p *parser.Parser) (models.LogTargets, erro
 		id := int64(i)
 		logTarget := ParseLogTarget(l)
 		if logTarget != nil {
-			logTarget.ID = &id
+			logTarget.Index = &id
 			logTargets = append(logTargets, logTarget)
 		}
 	}

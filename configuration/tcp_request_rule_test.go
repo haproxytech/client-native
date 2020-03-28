@@ -38,60 +38,60 @@ func TestGetTCPRequestRules(t *testing.T) {
 	}
 
 	for _, r := range tRules {
-		if *r.ID == 0 {
+		if *r.Index == 0 {
 			if r.Type != "connection" {
-				t.Errorf("%v: Type not connection: %v", *r.ID, r.Type)
+				t.Errorf("%v: Type not connection: %v", *r.Index, r.Type)
 			}
 			if r.Action != "accept" {
-				t.Errorf("%v: Action not accept: %v", *r.ID, r.Action)
+				t.Errorf("%v: Action not accept: %v", *r.Index, r.Action)
 			}
 			if r.Cond != "if" {
-				t.Errorf("%v: Cond not if: %v", *r.ID, r.Cond)
+				t.Errorf("%v: Cond not if: %v", *r.Index, r.Cond)
 			}
 			if r.CondTest != "TRUE" {
-				t.Errorf("%v: CondTest not src TRUE: %v", *r.ID, r.CondTest)
+				t.Errorf("%v: CondTest not src TRUE: %v", *r.Index, r.CondTest)
 			}
-		} else if *r.ID == 1 {
+		} else if *r.Index == 1 {
 			if r.Type != "connection" {
-				t.Errorf("%v: Type not connection: %v", *r.ID, r.Type)
+				t.Errorf("%v: Type not connection: %v", *r.Index, r.Type)
 			}
 			if r.Action != "reject" {
-				t.Errorf("%v: Action not reject: %v", *r.ID, r.Action)
+				t.Errorf("%v: Action not reject: %v", *r.Index, r.Action)
 			}
 			if r.Cond != "if" {
-				t.Errorf("%v: Cond not if: %v", *r.ID, r.Cond)
+				t.Errorf("%v: Cond not if: %v", *r.Index, r.Cond)
 			}
 			if r.CondTest != "FALSE" {
-				t.Errorf("%v: CondTest not src FALSE: %v", *r.ID, r.CondTest)
+				t.Errorf("%v: CondTest not src FALSE: %v", *r.Index, r.CondTest)
 			}
-		} else if *r.ID == 2 {
+		} else if *r.Index == 2 {
 			if r.Type != "content" {
-				t.Errorf("%v: Type not content: %v", *r.ID, r.Type)
+				t.Errorf("%v: Type not content: %v", *r.Index, r.Type)
 			}
 			if r.Action != "accept" {
-				t.Errorf("%v: Action not accept: %v", *r.ID, r.Action)
+				t.Errorf("%v: Action not accept: %v", *r.Index, r.Action)
 			}
 			if r.Cond != "if" {
-				t.Errorf("%v: Cond not if: %v", *r.ID, r.Cond)
+				t.Errorf("%v: Cond not if: %v", *r.Index, r.Cond)
 			}
 			if r.CondTest != "TRUE" {
-				t.Errorf("%v: CondTest not src TRUE: %v", *r.ID, r.CondTest)
+				t.Errorf("%v: CondTest not src TRUE: %v", *r.Index, r.CondTest)
 			}
-		} else if *r.ID == 3 {
+		} else if *r.Index == 3 {
 			if r.Type != "content" {
-				t.Errorf("%v: Type not content: %v", *r.ID, r.Type)
+				t.Errorf("%v: Type not content: %v", *r.Index, r.Type)
 			}
 			if r.Action != "reject" {
-				t.Errorf("%v: Action not reject: %v", *r.ID, r.Action)
+				t.Errorf("%v: Action not reject: %v", *r.Index, r.Action)
 			}
 			if r.Cond != "if" {
-				t.Errorf("%v: Cond not if: %v", *r.ID, r.Cond)
+				t.Errorf("%v: Cond not if: %v", *r.Index, r.Cond)
 			}
 			if r.CondTest != "FALSE" {
-				t.Errorf("%v: CondTest not src FALSE: %v", *r.ID, r.CondTest)
+				t.Errorf("%v: CondTest not src FALSE: %v", *r.Index, r.CondTest)
 			}
 		} else {
-			t.Errorf("Expext only tcp-request 0, 1, 2, or 3, %v found", *r.ID)
+			t.Errorf("Expext only tcp-request 0, 1, 2, or 3, %v found", *r.Index)
 		}
 	}
 
@@ -115,16 +115,16 @@ func TestGetTCPRequestRule(t *testing.T) {
 	}
 
 	if r.Type != "connection" {
-		t.Errorf("%v: Type not connection: %v", *r.ID, r.Type)
+		t.Errorf("%v: Type not connection: %v", *r.Index, r.Type)
 	}
 	if r.Action != "accept" {
-		t.Errorf("%v: Action not accept: %v", *r.ID, r.Action)
+		t.Errorf("%v: Action not accept: %v", *r.Index, r.Action)
 	}
 	if r.Cond != "if" {
-		t.Errorf("%v: Cond not if: %v", *r.ID, r.Cond)
+		t.Errorf("%v: Cond not if: %v", *r.Index, r.Cond)
 	}
 	if r.CondTest != "TRUE" {
-		t.Errorf("%v: CondTest not src TRUE: %v", *r.ID, r.CondTest)
+		t.Errorf("%v: CondTest not src TRUE: %v", *r.Index, r.CondTest)
 	}
 
 	_, err = r.MarshalBinary()
@@ -143,7 +143,7 @@ func TestCreateEditDeleteTCPRequestRule(t *testing.T) {
 	tOut := int64(1000)
 	// TestCreateTCPRequestRule
 	r := &models.TCPRequestRule{
-		ID:      &id,
+		Index:      &id,
 		Type:    "inspect-delay",
 		Timeout: &tOut,
 	}
@@ -172,7 +172,7 @@ func TestCreateEditDeleteTCPRequestRule(t *testing.T) {
 
 	// TestEditTCPRequestRule
 	r = &models.TCPRequestRule{
-		ID:       &id,
+		Index:       &id,
 		Type:     "connection",
 		Action:   "accept",
 		Cond:     "if",

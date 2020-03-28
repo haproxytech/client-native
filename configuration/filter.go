@@ -74,7 +74,7 @@ func (c *Client) GetFilter(id int64, parentType, parentName string, transactionI
 	}
 
 	filter := ParseFilter(data.(types.Filter))
-	filter.ID = &id
+	filter.Index = &id
 
 	return v, filter, nil
 }
@@ -127,8 +127,8 @@ func (c *Client) CreateFilter(parentType string, parentName string, data *models
 		section = parser.Frontends
 	}
 
-	if err := p.Insert(section, parentName, "filter", SerializeFilter(*data), int(*data.ID)); err != nil {
-		return c.handleError(strconv.FormatInt(*data.ID, 10), parentType, parentName, t, transactionID == "", err)
+	if err := p.Insert(section, parentName, "filter", SerializeFilter(*data), int(*data.Index)); err != nil {
+		return c.handleError(strconv.FormatInt(*data.Index, 10), parentType, parentName, t, transactionID == "", err)
 	}
 
 	if err := c.saveData(p, t, transactionID == ""); err != nil {
@@ -195,7 +195,7 @@ func ParseFilters(t, pName string, p *parser.Parser) (models.Filters, error) {
 		id := int64(i)
 		mFilter := ParseFilter(filter)
 		if mFilter != nil {
-			mFilter.ID = &id
+			mFilter.Index = &id
 			f = append(f, mFilter)
 		}
 	}

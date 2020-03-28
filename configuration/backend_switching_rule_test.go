@@ -38,19 +38,19 @@ func TestGetBackendSwitchingRules(t *testing.T) {
 	}
 
 	for _, br := range bckRules {
-		if *br.ID == 0 {
+		if *br.Index == 0 {
 			if br.Name != "test_2" {
-				t.Errorf("%v: Name not test_2: %v", *br.ID, br.Name)
+				t.Errorf("%v: Name not test_2: %v", *br.Index, br.Name)
 			}
 			if br.Cond != "if" {
-				t.Errorf("%v: Cond not if: %v", *br.ID, br.Cond)
+				t.Errorf("%v: Cond not if: %v", *br.Index, br.Cond)
 			}
 			if br.CondTest != "TRUE" {
-				t.Errorf("%v: CondTest not TRUE: %v", *br.ID, br.CondTest)
+				t.Errorf("%v: CondTest not TRUE: %v", *br.Index, br.CondTest)
 			}
-		} else if *br.ID == 1 {
+		} else if *br.Index == 1 {
 			if br.Name != "%[req.cookie(foo)]" {
-				t.Errorf("%v: Name not %%[req.cookie(foo)]: %v", *br.ID, br.Name)
+				t.Errorf("%v: Name not %%[req.cookie(foo)]: %v", *br.Index, br.Name)
 			}
 		}
 
@@ -75,17 +75,17 @@ func TestGetBackendSwitchingRule(t *testing.T) {
 		t.Errorf("Version %v returned, expected %v", v, version)
 	}
 
-	if *br.ID != 0 {
-		t.Errorf("ID only backend switching rule 0, %v found", *br.ID)
+	if *br.Index != 0 {
+		t.Errorf("ID only backend switching rule 0, %v found", *br.Index)
 	}
 	if br.Name != "test_2" {
-		t.Errorf("%v: Name not test_2: %v", *br.ID, br.Name)
+		t.Errorf("%v: Name not test_2: %v", *br.Index, br.Name)
 	}
 	if br.Cond != "if" {
-		t.Errorf("%v: Cond not if: %v", *br.ID, br.Cond)
+		t.Errorf("%v: Cond not if: %v", *br.Index, br.Cond)
 	}
 	if br.CondTest != "TRUE" {
-		t.Errorf("%v: CondTest not TRUE: %v", *br.ID, br.CondTest)
+		t.Errorf("%v: CondTest not TRUE: %v", *br.Index, br.CondTest)
 	}
 
 	_, err = br.MarshalBinary()
@@ -103,7 +103,7 @@ func TestCreateEditDeleteBackendSwitchingRule(t *testing.T) {
 	// TestCreateBackendSwitchingRule
 	id := int64(2)
 	br := &models.BackendSwitchingRule{
-		ID:       &id,
+		Index:    &id,
 		Name:     "test",
 		Cond:     "unless",
 		CondTest: "TRUE",
@@ -133,8 +133,8 @@ func TestCreateEditDeleteBackendSwitchingRule(t *testing.T) {
 
 	// TestBackendSwitchingRule
 	br = &models.BackendSwitchingRule{
-		ID:   &id,
-		Name: "%[req.cookie(foo)]",
+		Index: &id,
+		Name:  "%[req.cookie(foo)]",
 	}
 
 	err = client.EditBackendSwitchingRule(2, "test", br, "", version)

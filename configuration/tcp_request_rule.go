@@ -80,7 +80,7 @@ func (c *Client) GetTCPRequestRule(id int64, parentType, parentName string, tran
 		return v, nil, err
 	}
 
-	tcpRule.ID = &id
+	tcpRule.Index = &id
 	return v, tcpRule, nil
 }
 
@@ -136,8 +136,8 @@ func (c *Client) CreateTCPRequestRule(parentType string, parentName string, data
 		return err
 	}
 
-	if err := p.Insert(section, parentName, "tcp-request", s, int(*data.ID)); err != nil {
-		return c.handleError(strconv.FormatInt(*data.ID, 10), parentType, parentName, t, transactionID == "", err)
+	if err := p.Insert(section, parentName, "tcp-request", s, int(*data.Index)); err != nil {
+		return c.handleError(strconv.FormatInt(*data.Index, 10), parentType, parentName, t, transactionID == "", err)
 	}
 
 	if err := c.saveData(p, t, transactionID == ""); err != nil {
@@ -208,7 +208,7 @@ func ParseTCPRequestRules(t, pName string, p *parser.Parser) (models.TCPRequestR
 		id := int64(i)
 		tcpReqRule, err := ParseTCPRequestRule(r)
 		if err == nil {
-			tcpReqRule.ID = &id
+			tcpReqRule.Index = &id
 			tcpReqRules = append(tcpReqRules, tcpReqRule)
 		}
 	}

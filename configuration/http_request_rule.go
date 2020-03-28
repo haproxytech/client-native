@@ -80,7 +80,7 @@ func (c *Client) GetHTTPRequestRule(id int64, parentType, parentName string, tra
 	if err != nil {
 		return v, nil, err
 	}
-	httpRule.ID = &id
+	httpRule.Index = &id
 
 	return v, httpRule, nil
 }
@@ -137,8 +137,8 @@ func (c *Client) CreateHTTPRequestRule(parentType string, parentName string, dat
 		return err
 	}
 
-	if err := p.Insert(section, parentName, "http-request", s, int(*data.ID)); err != nil {
-		return c.handleError(strconv.FormatInt(*data.ID, 10), parentType, parentName, t, transactionID == "", err)
+	if err := p.Insert(section, parentName, "http-request", s, int(*data.Index)); err != nil {
+		return c.handleError(strconv.FormatInt(*data.Index, 10), parentType, parentName, t, transactionID == "", err)
 	}
 
 	if err := c.saveData(p, t, transactionID == ""); err != nil {
@@ -209,7 +209,7 @@ func ParseHTTPRequestRules(t, pName string, p *parser.Parser) (models.HTTPReques
 		id := int64(i)
 		httpReqRule, err := ParseHTTPRequestRule(r)
 		if err == nil {
-			httpReqRule.ID = &id
+			httpReqRule.Index = &id
 			httpReqRules = append(httpReqRules, httpReqRule)
 		}
 	}

@@ -72,7 +72,7 @@ func (c *Client) GetACL(id int64, parentType, parentName string, transactionID s
 	}
 
 	acl := ParseACL(data.(types.ACL))
-	acl.ID = &id
+	acl.Index = &id
 
 	return v, acl, nil
 }
@@ -124,8 +124,8 @@ func (c *Client) CreateACL(parentType string, parentName string, data *models.AC
 		section = parser.Frontends
 	}
 
-	if err := p.Insert(section, parentName, "acl", SerializeACL(*data), int(*data.ID)); err != nil {
-		return c.handleError(strconv.FormatInt(*data.ID, 10), parentType, parentName, t, transactionID == "", err)
+	if err := p.Insert(section, parentName, "acl", SerializeACL(*data), int(*data.Index)); err != nil {
+		return c.handleError(strconv.FormatInt(*data.Index, 10), parentType, parentName, t, transactionID == "", err)
 	}
 
 	if err := c.saveData(p, t, transactionID == ""); err != nil {
@@ -191,7 +191,7 @@ func ParseACLs(t, pName string, p *parser.Parser) (models.Acls, error) {
 		id := int64(i)
 		acl := ParseACL(r)
 		if acl != nil {
-			acl.ID = &id
+			acl.Index = &id
 			acls = append(acls, acl)
 		}
 	}

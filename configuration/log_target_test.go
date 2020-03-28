@@ -38,29 +38,29 @@ func TestGetLogTargets(t *testing.T) {
 	}
 
 	for _, l := range lTargets {
-		if *l.ID == 0 {
+		if *l.Index == 0 {
 			if l.Global != true {
-				t.Errorf("%v: Global not true: %v", *l.ID, l.Global)
+				t.Errorf("%v: Global not true: %v", *l.Index, l.Global)
 			}
-		} else if *l.ID == 1 {
+		} else if *l.Index == 1 {
 			if l.Nolog != true {
-				t.Errorf("%v: Nolog not true: %v", *l.ID, l.Nolog)
+				t.Errorf("%v: Nolog not true: %v", *l.Index, l.Nolog)
 			}
-		} else if *l.ID == 2 {
+		} else if *l.Index == 2 {
 			if l.Address != "127.0.0.1:514" {
-				t.Errorf("%v: Address not 127.0.0.1:514: %v", *l.ID, l.Address)
+				t.Errorf("%v: Address not 127.0.0.1:514: %v", *l.Index, l.Address)
 			}
 			if l.Facility != "local0" {
-				t.Errorf("%v: Facility not local0: %v", *l.ID, l.Facility)
+				t.Errorf("%v: Facility not local0: %v", *l.Index, l.Facility)
 			}
 			if l.Level != "notice" {
-				t.Errorf("%v: Level not notice: %v", *l.ID, l.Level)
+				t.Errorf("%v: Level not notice: %v", *l.Index, l.Level)
 			}
 			if l.Minlevel != "notice" {
-				t.Errorf("%v: Minlevel not notice: %v", *l.ID, l.Minlevel)
+				t.Errorf("%v: Minlevel not notice: %v", *l.Index, l.Minlevel)
 			}
 		} else {
-			t.Errorf("Expext only log 0, 1, or 2, %v found", *l.ID)
+			t.Errorf("Expext only log 0, 1, or 2, %v found", *l.Index)
 		}
 	}
 
@@ -83,20 +83,20 @@ func TestGetLogTarget(t *testing.T) {
 		t.Errorf("Version %v returned, expected %v", v, version)
 	}
 
-	if *l.ID != 2 {
-		t.Errorf("Log Target ID not 2, %v found", *l.ID)
+	if *l.Index != 2 {
+		t.Errorf("Log Target ID not 2, %v found", *l.Index)
 	}
 	if l.Address != "127.0.0.1:514" {
-		t.Errorf("%v: Address not 127.0.0.1:514: %v", *l.ID, l.Address)
+		t.Errorf("%v: Address not 127.0.0.1:514: %v", *l.Index, l.Address)
 	}
 	if l.Facility != "local0" {
-		t.Errorf("%v: Facility not local0: %v", *l.ID, l.Facility)
+		t.Errorf("%v: Facility not local0: %v", *l.Index, l.Facility)
 	}
 	if l.Level != "notice" {
-		t.Errorf("%v: Level not notice: %v", *l.ID, l.Level)
+		t.Errorf("%v: Level not notice: %v", *l.Index, l.Level)
 	}
 	if l.Minlevel != "notice" {
-		t.Errorf("%v: Minlevel not notice: %v", *l.ID, l.Minlevel)
+		t.Errorf("%v: Minlevel not notice: %v", *l.Index, l.Minlevel)
 	}
 
 	_, err = l.MarshalBinary()
@@ -115,7 +115,7 @@ func TestCreateEditDeleteLogTarget(t *testing.T) {
 
 	// TestCreateLogTarget
 	r := &models.LogTarget{
-		ID:       &id,
+		Index:       &id,
 		Address:  "stdout",
 		Format:   "raw",
 		Facility: "daemon",
@@ -146,7 +146,7 @@ func TestCreateEditDeleteLogTarget(t *testing.T) {
 
 	// TestEditLogTarget
 	r = &models.LogTarget{
-		ID:       &id,
+		Index:       &id,
 		Address:  "stdout",
 		Format:   "rfc3164",
 		Facility: "local1",

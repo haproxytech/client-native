@@ -38,28 +38,28 @@ func TestGetServerSwitchingRules(t *testing.T) {
 	}
 
 	for _, sr := range srvRules {
-		if *sr.ID == 0 {
+		if *sr.Index == 0 {
 			if sr.TargetServer != "webserv" {
-				t.Errorf("%v: TargetServer not webserv: %v", *sr.ID, sr.TargetServer)
+				t.Errorf("%v: TargetServer not webserv: %v", *sr.Index, sr.TargetServer)
 			}
 			if sr.Cond != "if" {
-				t.Errorf("%v: Cond not if: %v", *sr.ID, sr.Cond)
+				t.Errorf("%v: Cond not if: %v", *sr.Index, sr.Cond)
 			}
 			if sr.CondTest != "TRUE" {
-				t.Errorf("%v: CondTest not TRUE: %v", *sr.ID, sr.CondTest)
+				t.Errorf("%v: CondTest not TRUE: %v", *sr.Index, sr.CondTest)
 			}
-		} else if *sr.ID == 1 {
+		} else if *sr.Index == 1 {
 			if sr.TargetServer != "webserv2" {
-				t.Errorf("%v: TargetServer not webserv2: %v", *sr.ID, sr.TargetServer)
+				t.Errorf("%v: TargetServer not webserv2: %v", *sr.Index, sr.TargetServer)
 			}
 			if sr.Cond != "unless" {
-				t.Errorf("%v: Cond not if: %v", *sr.ID, sr.Cond)
+				t.Errorf("%v: Cond not if: %v", *sr.Index, sr.Cond)
 			}
 			if sr.CondTest != "TRUE" {
-				t.Errorf("%v: CondTest not TRUE: %v", *sr.ID, sr.CondTest)
+				t.Errorf("%v: CondTest not TRUE: %v", *sr.Index, sr.CondTest)
 			}
 		} else {
-			t.Errorf("Expext only server switching rule 0 or 1, %v found", *sr.ID)
+			t.Errorf("Expext only server switching rule 0 or 1, %v found", *sr.Index)
 		}
 	}
 
@@ -83,13 +83,13 @@ func TestGetServerSwitchingRule(t *testing.T) {
 	}
 
 	if sr.TargetServer != "webserv" {
-		t.Errorf("%v: TargetServer not webserv: %v", sr.ID, sr.TargetServer)
+		t.Errorf("%v: TargetServer not webserv: %v", sr.Index, sr.TargetServer)
 	}
 	if sr.Cond != "if" {
-		t.Errorf("%v: Cond not if: %v", sr.ID, sr.Cond)
+		t.Errorf("%v: Cond not if: %v", sr.Index, sr.Cond)
 	}
 	if sr.CondTest != "TRUE" {
-		t.Errorf("%v: CondTest not TRUE: %v", sr.ID, sr.CondTest)
+		t.Errorf("%v: CondTest not TRUE: %v", sr.Index, sr.CondTest)
 	}
 
 	_, err = sr.MarshalBinary()
@@ -107,7 +107,7 @@ func TestCreateEditDeleteServerSwitchingRule(t *testing.T) {
 	id := int64(2)
 	// TestCreateServerSwitchingRule
 	sr := &models.ServerSwitchingRule{
-		ID:           &id,
+		Index:           &id,
 		TargetServer: "webserv2",
 		Cond:         "unless",
 		CondTest:     "TRUE",
@@ -137,7 +137,7 @@ func TestCreateEditDeleteServerSwitchingRule(t *testing.T) {
 
 	// TestServerSwitchingRule
 	sr = &models.ServerSwitchingRule{
-		ID:           &id,
+		Index:           &id,
 		TargetServer: "webserv2",
 		Cond:         "if",
 		CondTest:     "TRUE",

@@ -68,7 +68,7 @@ func (c *Client) GetTCPResponseRule(id int64, backend string, transactionID stri
 	}
 
 	tcpRule := ParseTCPResponseRule(data.(types.TCPAction))
-	tcpRule.ID = &id
+	tcpRule.Index = &id
 
 	return v, tcpRule, nil
 }
@@ -105,8 +105,8 @@ func (c *Client) CreateTCPResponseRule(backend string, data *models.TCPResponseR
 		return err
 	}
 
-	if err := p.Insert(parser.Backends, backend, "tcp-response", SerializeTCPResponseRule(*data), int(*data.ID)); err != nil {
-		return c.handleError(strconv.FormatInt(*data.ID, 10), "backend", backend, t, transactionID == "", err)
+	if err := p.Insert(parser.Backends, backend, "tcp-response", SerializeTCPResponseRule(*data), int(*data.Index)); err != nil {
+		return c.handleError(strconv.FormatInt(*data.Index, 10), "backend", backend, t, transactionID == "", err)
 	}
 
 	if err := c.saveData(p, t, transactionID == ""); err != nil {
@@ -130,11 +130,11 @@ func (c *Client) EditTCPResponseRule(id int64, backend string, data *models.TCPR
 	}
 
 	if _, err := p.GetOne(parser.Backends, backend, "tcp-response", int(id)); err != nil {
-		return c.handleError(strconv.FormatInt(*data.ID, 10), "backend", backend, t, transactionID == "", err)
+		return c.handleError(strconv.FormatInt(*data.Index, 10), "backend", backend, t, transactionID == "", err)
 	}
 
 	if err := p.Set(parser.Backends, backend, "tcp-response", SerializeTCPResponseRule(*data), int(id)); err != nil {
-		return c.handleError(strconv.FormatInt(*data.ID, 10), "backend", backend, t, transactionID == "", err)
+		return c.handleError(strconv.FormatInt(*data.Index, 10), "backend", backend, t, transactionID == "", err)
 	}
 
 	if err := c.saveData(p, t, transactionID == ""); err != nil {
@@ -159,7 +159,7 @@ func ParseTCPResponseRules(backend string, p *parser.Parser) (models.TCPResponse
 		id := int64(i)
 		tcpResRule := ParseTCPResponseRule(tRule)
 		if tcpResRule != nil {
-			tcpResRule.ID = &id
+			tcpResRule.Index = &id
 			tcpResRules = append(tcpResRules, tcpResRule)
 		}
 	}

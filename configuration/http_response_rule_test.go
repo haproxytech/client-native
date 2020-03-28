@@ -38,41 +38,41 @@ func TestGetHTTPResponseRules(t *testing.T) {
 	}
 
 	for _, r := range hRules {
-		if *r.ID == 0 {
+		if *r.Index == 0 {
 			if r.Type != "allow" {
-				t.Errorf("%v: Type not allow: %v", *r.ID, r.Type)
+				t.Errorf("%v: Type not allow: %v", *r.Index, r.Type)
 			}
 			if r.Cond != "if" {
-				t.Errorf("%v: Cond not if: %v", *r.ID, r.Cond)
+				t.Errorf("%v: Cond not if: %v", *r.Index, r.Cond)
 			}
 			if r.CondTest != "src 192.168.0.0/16" {
-				t.Errorf("%v: CondTest not src 192.168.0.0/16: %v", *r.ID, r.CondTest)
+				t.Errorf("%v: CondTest not src 192.168.0.0/16: %v", *r.Index, r.CondTest)
 			}
-		} else if *r.ID == 1 {
+		} else if *r.Index == 1 {
 			if r.Type != "set-header" {
-				t.Errorf("%v: Type not set-header: %v", *r.ID, r.Type)
+				t.Errorf("%v: Type not set-header: %v", *r.Index, r.Type)
 			}
 			if r.HdrName != "X-SSL" {
-				t.Errorf("%v: HdrName not X-SSL: %v", *r.ID, r.HdrName)
+				t.Errorf("%v: HdrName not X-SSL: %v", *r.Index, r.HdrName)
 			}
 			if r.HdrFormat != "%[ssl_fc]" {
-				t.Errorf("%v: HdrValue not [ssl_fc]: %v", *r.ID, r.HdrFormat)
+				t.Errorf("%v: HdrValue not [ssl_fc]: %v", *r.Index, r.HdrFormat)
 			}
-		} else if *r.ID == 2 {
+		} else if *r.Index == 2 {
 			if r.Type != "set-var" {
-				t.Errorf("%v: Type not set-var: %v", *r.ID, r.Type)
+				t.Errorf("%v: Type not set-var: %v", *r.Index, r.Type)
 			}
 			if r.VarName != "my_var" {
-				t.Errorf("%v: VarName not my_var: %v", *r.ID, r.VarName)
+				t.Errorf("%v: VarName not my_var: %v", *r.Index, r.VarName)
 			}
 			if r.VarScope != "req" {
-				t.Errorf("%v: VarName not req: %v", *r.ID, r.VarScope)
+				t.Errorf("%v: VarName not req: %v", *r.Index, r.VarScope)
 			}
 			if r.VarExpr != "req.fhdr(user-agent),lower" {
-				t.Errorf("%v: VarExpr not req.fhdr(user-agent),lower: %v", *r.ID, r.VarExpr)
+				t.Errorf("%v: VarExpr not req.fhdr(user-agent),lower: %v", *r.Index, r.VarExpr)
 			}
 		} else {
-			t.Errorf("Expext only http-response 0, 1 or 2, %v found", *r.ID)
+			t.Errorf("Expext only http-response 0, 1 or 2, %v found", *r.Index)
 		}
 	}
 
@@ -95,17 +95,17 @@ func TestGetHTTPResponseRule(t *testing.T) {
 		t.Errorf("Version %v returned, expected %v", v, version)
 	}
 
-	if *r.ID != 0 {
-		t.Errorf("HTTPResponse Rule ID not 0, %v found", *r.ID)
+	if *r.Index != 0 {
+		t.Errorf("HTTPResponse Rule ID not 0, %v found", *r.Index)
 	}
 	if r.Type != "allow" {
-		t.Errorf("%v: Type not allow: %v", *r.ID, r.Type)
+		t.Errorf("%v: Type not allow: %v", *r.Index, r.Type)
 	}
 	if r.Cond != "if" {
-		t.Errorf("%v: Cond not if: %v", *r.ID, r.Cond)
+		t.Errorf("%v: Cond not if: %v", *r.Index, r.Cond)
 	}
 	if r.CondTest != "src 192.168.0.0/16" {
-		t.Errorf("%v: CondTest not src 192.168.0.0/16: %v", *r.ID, r.CondTest)
+		t.Errorf("%v: CondTest not src 192.168.0.0/16: %v", *r.Index, r.CondTest)
 	}
 
 	_, err = r.MarshalBinary()
@@ -123,10 +123,10 @@ func TestGetHTTPResponseRule(t *testing.T) {
 		t.Error(err.Error())
 	}
 	if r.Type != "capture" {
-		t.Errorf("%v: Type not 'capture': %v", *r.ID, r.Type)
+		t.Errorf("%v: Type not 'capture': %v", *r.Index, r.Type)
 	}
 	if *r.CaptureID != 0 {
-		t.Errorf("%v: Wrong slotID: %v", *r.ID, r.CaptureID)
+		t.Errorf("%v: Wrong slotID: %v", *r.Index, r.CaptureID)
 	}
 }
 
@@ -134,7 +134,7 @@ func TestCreateEditDeleteHTTPResponseRule(t *testing.T) {
 	id := int64(1)
 	// TestCreateHTTPResponseRule
 	r := &models.HTTPResponseRule{
-		ID:       &id,
+		Index:       &id,
 		Type:     "set-log-level",
 		LogLevel: "alert",
 	}
@@ -163,7 +163,7 @@ func TestCreateEditDeleteHTTPResponseRule(t *testing.T) {
 
 	// TestEditHTTPResponseRule
 	r = &models.HTTPResponseRule{
-		ID:       &id,
+		Index:       &id,
 		Type:     "set-log-level",
 		LogLevel: "warning",
 	}

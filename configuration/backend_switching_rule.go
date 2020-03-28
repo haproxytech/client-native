@@ -66,7 +66,7 @@ func (c *Client) GetBackendSwitchingRule(id int64, frontend string, transactionI
 	}
 
 	bckRule := ParseBackendSwitchingRule(data.(types.UseBackend))
-	bckRule.ID = &id
+	bckRule.Index = &id
 
 	return v, bckRule, nil
 }
@@ -104,8 +104,8 @@ func (c *Client) CreateBackendSwitchingRule(frontend string, data *models.Backen
 		return err
 	}
 
-	if err := p.Insert(parser.Frontends, frontend, "use_backend", SerializeBackendSwitchingRule(*data), int(*data.ID)); err != nil {
-		return c.handleError(strconv.FormatInt(*data.ID, 10), "frontend", frontend, t, transactionID == "", err)
+	if err := p.Insert(parser.Frontends, frontend, "use_backend", SerializeBackendSwitchingRule(*data), int(*data.Index)); err != nil {
+		return c.handleError(strconv.FormatInt(*data.Index, 10), "frontend", frontend, t, transactionID == "", err)
 	}
 
 	if err := c.saveData(p, t, transactionID == ""); err != nil {
@@ -160,7 +160,7 @@ func ParseBackendSwitchingRules(frontend string, p *parser.Parser) (models.Backe
 		id := int64(i)
 		b := ParseBackendSwitchingRule(bRule)
 		if b != nil {
-			b.ID = &id
+			b.Index = &id
 			br = append(br, b)
 		}
 	}
