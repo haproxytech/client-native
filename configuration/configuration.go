@@ -458,7 +458,7 @@ func parseField(section parser.Section, sectionName string, fieldName string, p 
 		return &models.Cookie{
 			Domains:  domains,
 			Dynamic:  d.Dynamic,
-			Httponly: d.Dynamic,
+			Httponly: d.Httponly,
 			Indirect: d.Indirect,
 			Maxidle:  d.Maxidle,
 			Maxlife:  d.Maxlife,
@@ -1066,7 +1066,7 @@ func setFieldValue(section parser.Section, sectionName string, fieldName string,
 			data := types.Cookie{
 				Domain:   domains,
 				Dynamic:  d.Dynamic,
-				Httponly: d.Dynamic,
+				Httponly: d.Httponly,
 				Indirect: d.Indirect,
 				Maxidle:  d.Maxidle,
 				Maxlife:  d.Maxlife,
