@@ -395,7 +395,7 @@ func parseField(section parser.Section, sectionName string, fieldName string, p 
 			return nil
 		}
 		d := data.(*types.BindProcess)
-		return models.BindProcess(d.Process)
+		return d.Process
 	}
 	if fieldName == "Cookie" {
 		data, err := p.Get(section, sectionName, "cookie", false)

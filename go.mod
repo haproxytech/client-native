@@ -8,7 +8,7 @@ require (
 	github.com/google/go-cmp v0.3.1
 	github.com/google/uuid v1.1.1
 	github.com/haproxytech/config-parser/v2 v2.0.0-rc2.0.20200327120530-f47020fbf2f0
-	github.com/haproxytech/models v1.2.5-0.20200328125203-a8bfb0546be4
+	github.com/haproxytech/models v1.2.5-0.20200328133847-aab4b9d6c003
 	github.com/mitchellh/mapstructure v1.1.2
 	github.com/pkg/errors v0.8.1
 	github.com/stretchr/testify v1.2.2
