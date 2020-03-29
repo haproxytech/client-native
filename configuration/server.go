@@ -294,6 +294,12 @@ func ParseServer(ondiskServer types.Server) *models.Server {
 				s.CheckSni = v.Value
 			case "sni":
 				s.Sni = v.Value
+			case "resolvers":
+				s.Resolvers = v.Value
+			case "resolve-prefer":
+				s.ResolvePrefer = v.Value
+			case "resolve-net":
+				s.ResolveNet = v.Value
 			}
 		}
 	}
@@ -426,6 +432,15 @@ func SerializeServer(s models.Server) types.Server {
 	}
 	if s.SendProxyV2 == "disabled" {
 		srv.Params = append(srv.Params, &params.ServerOptionWord{Name: "no-send-proxy-v2"})
+	}
+	if s.Resolvers != "" {
+		srv.Params = append(srv.Params, &params.ServerOptionValue{Name: "resolvers", Value: s.Resolvers})
+	}
+	if s.ResolvePrefer != "" {
+		srv.Params = append(srv.Params, &params.ServerOptionValue{Name: "resolve-prefer", Value: s.ResolvePrefer})
+	}
+	if s.ResolveNet != "" {
+		srv.Params = append(srv.Params, &params.ServerOptionValue{Name: "resolve-net", Value: s.ResolveNet})
 	}
 	return srv
 }

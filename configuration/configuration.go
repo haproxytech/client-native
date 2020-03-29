@@ -466,9 +466,19 @@ func parseField(section parser.Section, sectionName string, fieldName string, p 
 		for _, ds := range d {
 			dsParams := ds.Params
 			for _, p := range dsParams {
-				v, ok := p.(*params.ServerOptionValue)
-				if ok {
+				switch v := p.(type) {
+				case *params.ServerOptionWord:
+					if v.Name == "check-ssl" {
+						dServer.CheckSsl = "enabled"
+					}
+				case *params.ServerOptionValue:
 					switch v.Name {
+					case "sni":
+						dServer.Sni = v.Value
+					case "check-sni":
+						dServer.CheckSni = v.Value
+					case "init-addr":
+						dServer.InitAddr = v.Value
 					case "fall":
 						dServer.Fall = misc.ParseTimeout(v.Value)
 					case "inter":
@@ -484,6 +494,12 @@ func parseField(section parser.Section, sectionName string, fieldName string, p 
 						if err == nil {
 							dServer.Port = &port
 						}
+					case "resolvers":
+						dServer.Resolvers = v.Value
+					case "resolve-prefer":
+						dServer.ResolvePrefer = v.Value
+					case "resolve-net":
+						dServer.ResolveNet = v.Value
 					}
 				}
 			}
@@ -990,6 +1006,21 @@ func setFieldValue(section parser.Section, sectionName string, fieldName string,
 				ps = append(ps, param)
 			}
 
+			if ds.CheckSsl == "enabled" {
+				param := &params.ServerOptionWord{
+					Name: "check-ssl",
+				}
+				ps = append(ps, param)
+			}
+
+			if ds.InitAddr != "" {
+				param := &params.ServerOptionValue{
+					Name:  "init-addr",
+					Value: ds.InitAddr,
+				}
+				ps = append(ps, param)
+			}
+
 			if ds.Inter != nil {
 				param := &params.ServerOptionValue{
 					Name:  "inter",
@@ -1026,6 +1057,41 @@ func setFieldValue(section parser.Section, sectionName string, fieldName string,
 				param := &params.ServerOptionValue{
 					Name:  "rise",
 					Value: strconv.FormatInt(*ds.Rise, 10),
+				}
+				ps = append(ps, param)
+			}
+			if ds.Sni != "" {
+				param := &params.ServerOptionValue{
+					Name:  "sni",
+					Value: ds.Sni,
+				}
+				ps = append(ps, param)
+			}
+			if ds.CheckSni != "" {
+				param := &params.ServerOptionValue{
+					Name:  "check-sni",
+					Value: ds.CheckSni,
+				}
+				ps = append(ps, param)
+			}
+			if ds.Resolvers != "" {
+				param := &params.ServerOptionValue{
+					Name:  "resolvers",
+					Value: ds.Resolvers,
+				}
+				ps = append(ps, param)
+			}
+			if ds.ResolvePrefer != "" {
+				param := &params.ServerOptionValue{
+					Name:  "resolve-prefer",
+					Value: ds.ResolvePrefer,
+				}
+				ps = append(ps, param)
+			}
+			if ds.ResolveNet != "" {
+				param := &params.ServerOptionValue{
+					Name:  "resolve-net",
+					Value: ds.ResolveNet,
 				}
 				ps = append(ps, param)
 			}
