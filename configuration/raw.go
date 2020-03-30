@@ -86,7 +86,6 @@ func (c *Client) PostRawConfiguration(config *string, version int64) error {
 		}
 		return err
 	}
-
 	tFile, err := c.getTransactionFile(t)
 	if err != nil {
 		return err
