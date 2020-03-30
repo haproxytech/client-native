@@ -553,13 +553,17 @@ func SerializeHTTPRequestRule(f models.HTTPRequestRule) (rule types.HTTPAction, 
 		rule = r
 	case "track-sc0":
 		rule = &actions.TrackSc0{
-			Key:   f.TrackSc0Key,
-			Table: f.TrackSc0Table,
+			Key:      f.TrackSc0Key,
+			Table:    f.TrackSc0Table,
+			Cond:     f.Cond,
+			CondTest: f.CondTest,
 		}
 	case "track-sc1":
 		rule = &actions.TrackSc1{
-			Key:   f.TrackSc1Key,
-			Table: f.TrackSc1Table,
+			Key:      f.TrackSc1Key,
+			Table:    f.TrackSc1Table,
+			Cond:     f.Cond,
+			CondTest: f.CondTest,
 		}
 	case "track-sc2":
 		rule = &actions.TrackSc2{
