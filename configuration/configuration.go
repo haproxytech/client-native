@@ -834,8 +834,11 @@ func CreateEditSection(object interface{}, section parser.Section, pName string,
 func setFieldValue(section parser.Section, sectionName string, fieldName string, field reflect.Value, p *parser.Parser) error {
 	//Handle special cases
 	if fieldName == "StatsOptions" {
-		if err := p.Set(section, sectionName, "stats", nil); err != nil {
-			return err
+		if valueIsNil(field) {
+			if err := p.Set(section, sectionName, "stats", nil); err != nil {
+				return err
+			}
+			return nil
 		}
 		opt := field.Elem().Interface().(models.StatsOptions)
 		ss := []types.StatsSettings{}
