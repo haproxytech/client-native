@@ -20,6 +20,7 @@ import (
 	"strconv"
 
 	strfmt "github.com/go-openapi/strfmt"
+	"github.com/haproxytech/client-native/misc"
 	parser "github.com/haproxytech/config-parser/v2"
 	"github.com/haproxytech/config-parser/v2/types"
 	"github.com/haproxytech/models"
@@ -175,39 +176,25 @@ func ParseResolverSection(p *parser.Parser, resolver *models.Resolver) error {
 	name := resolver.Name
 
 	if data, err := p.Get(parser.Resolvers, name, "accepted_payload_size", false); err == nil {
-		if n, err := strconv.ParseInt(data.(*types.StringC).Value, 10, 64); err == nil {
-			resolver.AcceptedPayloadSize = n
-		}
+		resolver.AcceptedPayloadSize = *misc.ParseTimeout(data.(*types.StringC).Value)
 	}
 	if data, err := p.Get(parser.Resolvers, name, "hold nx", false); err == nil {
-		if n, err := strconv.ParseInt(data.(*types.StringC).Value, 10, 64); err == nil {
-			resolver.HoldNx = n
-		}
+		resolver.HoldNx = *misc.ParseTimeout(data.(*types.StringC).Value)
 	}
 	if data, err := p.Get(parser.Resolvers, name, "hold obsolete", false); err == nil {
-		if n, err := strconv.ParseInt(data.(*types.StringC).Value, 10, 64); err == nil {
-			resolver.HoldObsolete = n
-		}
+		resolver.HoldObsolete = *misc.ParseTimeout(data.(*types.StringC).Value)
 	}
 	if data, err := p.Get(parser.Resolvers, name, "hold other", false); err == nil {
-		if n, err := strconv.ParseInt(data.(*types.StringC).Value, 10, 64); err == nil {
-			resolver.HoldOther = n
-		}
+		resolver.HoldOther = *misc.ParseTimeout(data.(*types.StringC).Value)
 	}
 	if data, err := p.Get(parser.Resolvers, name, "hold refused", false); err == nil {
-		if n, err := strconv.ParseInt(data.(*types.StringC).Value, 10, 64); err == nil {
-			resolver.HoldRefused = n
-		}
+		resolver.HoldRefused = *misc.ParseTimeout(data.(*types.StringC).Value)
 	}
 	if data, err := p.Get(parser.Resolvers, name, "hold timeout", false); err == nil {
-		if n, err := strconv.ParseInt(data.(*types.StringC).Value, 10, 64); err == nil {
-			resolver.HoldTimeout = n
-		}
+		resolver.HoldTimeout = *misc.ParseTimeout(data.(*types.StringC).Value)
 	}
 	if data, err := p.Get(parser.Resolvers, name, "hold valid", false); err == nil {
-		if n, err := strconv.ParseInt(data.(*types.StringC).Value, 10, 64); err == nil {
-			resolver.HoldValid = n
-		}
+		resolver.HoldValid = *misc.ParseTimeout(data.(*types.StringC).Value)
 	}
 	if data, err := p.Get(parser.Resolvers, name, "resolve_retries", false); err == nil {
 		if n, err := strconv.ParseInt(data.(*types.StringC).Value, 10, 64); err == nil {
@@ -220,14 +207,10 @@ func ParseResolverSection(p *parser.Parser, resolver *models.Resolver) error {
 		}
 	}
 	if data, err := p.Get(parser.Resolvers, name, "timeout resolve", false); err == nil {
-		if timeout, err := strconv.ParseInt(data.(*types.SimpleTimeout).Value, 10, 64); err == nil {
-			resolver.TimeoutResolve = timeout
-		}
+		resolver.TimeoutResolve = *misc.ParseTimeout(data.(*types.SimpleTimeout).Value)
 	}
 	if data, err := p.Get(parser.Resolvers, name, "timeout retry", false); err == nil {
-		if timeout, err := strconv.ParseInt(data.(*types.SimpleTimeout).Value, 10, 64); err == nil {
-			resolver.TimeoutRetry = timeout
-		}
+		resolver.TimeoutRetry = *misc.ParseTimeout(data.(*types.SimpleTimeout).Value)
 	}
 
 	return err

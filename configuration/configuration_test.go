@@ -156,6 +156,13 @@ peers mycluster
 resolvers test
   nameserver dns1 10.0.0.1:53
   accepted_payload_size 8192
+  resolve_retries       3
+  timeout resolve       1s
+  timeout retry         1s
+  hold other           30s
+  hold refused         30s
+  hold nx              30s
+  hold timeout         30s
   hold valid 5s
 
 backend test_2

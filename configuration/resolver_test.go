@@ -30,7 +30,7 @@ func TestGetResolvers(t *testing.T) {
 	}
 
 	if len(resolvers) != 1 {
-		t.Errorf("%v resolvers returned, expected 2", len(resolvers))
+		t.Errorf("%v resolvers returned, expected 1", len(resolvers))
 	}
 
 	if v != version {
