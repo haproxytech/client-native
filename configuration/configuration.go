@@ -23,6 +23,8 @@ import (
 	"sync"
 
 	"github.com/haproxytech/config-parser/v2/common"
+	"github.com/haproxytech/config-parser/v2/parsers"
+	stats "github.com/haproxytech/config-parser/v2/parsers/stats/settings"
 	"github.com/pkg/errors"
 
 	"github.com/haproxytech/client-native/misc"
@@ -297,6 +299,52 @@ func ParseSection(object interface{}, section parser.Section, pName string, p *p
 
 func parseField(section parser.Section, sectionName string, fieldName string, p *parser.Parser) interface{} {
 	//Handle special cases
+	if strings.HasPrefix(fieldName, "StatsOptions") {
+		data, err := p.Get(section, sectionName, "stats", false)
+		if err != nil {
+			return nil
+		}
+		ss := data.([]types.StatsSettings)
+		opt := &models.StatsOptions{}
+		for _, s := range ss {
+			switch v := s.(type) {
+			case *stats.OneWord:
+				if v.Name == "enable" {
+					opt.StatsEnable = true
+				}
+				if v.Name == "hide-version" {
+					opt.StatsHideVersion = true
+				}
+				if v.Name == "show-legends" {
+					opt.StatsShowLegends = true
+				}
+			case *stats.ShowDesc:
+				if v.Desc != "" {
+					opt.StatsShowDesc = v.Desc
+				}
+			case *stats.MaxConn:
+				d, err := v.Maxconn.Get(false)
+				if err != nil {
+					return nil
+				}
+				mc := d.(*types.Int64C)
+				opt.StatsMaxconn = mc.Value
+			case *stats.Refresh:
+				if v.Delay != "" {
+					opt.StatsRefreshDelay = misc.ParseTimeout(v.Delay)
+				}
+			case *stats.ShowNode:
+				if v.Name != "" {
+					opt.StatsShowNodeName = v.Name
+				}
+			case *stats.URI:
+				if v.Prefix != "" {
+					opt.StatsURIPrefix = v.Prefix
+				}
+			}
+		}
+		return opt
+	}
 	if fieldName == "Httpchk" {
 		data, err := p.Get(section, sectionName, "option httpchk", false)
 		if err != nil {
@@ -785,6 +833,72 @@ func CreateEditSection(object interface{}, section parser.Section, pName string,
 
 func setFieldValue(section parser.Section, sectionName string, fieldName string, field reflect.Value, p *parser.Parser) error {
 	//Handle special cases
+	if fieldName == "StatsOptions" {
+		if err := p.Set(section, sectionName, "stats", nil); err != nil {
+			return err
+		}
+		opt := field.Elem().Interface().(models.StatsOptions)
+		ss := []types.StatsSettings{}
+
+		if opt.StatsEnable {
+			s := &stats.OneWord{
+				Name: "enabled",
+			}
+			ss = append(ss, s)
+		}
+		if opt.StatsHideVersion {
+			s := &stats.OneWord{
+				Name: "hide-version",
+			}
+			ss = append(ss, s)
+		}
+		if opt.StatsShowLegends {
+			s := &stats.OneWord{
+				Name: "show-legends",
+			}
+			ss = append(ss, s)
+		}
+		if opt.StatsShowDesc != "" {
+			s := &stats.ShowDesc{
+				Desc: opt.StatsShowDesc,
+			}
+			ss = append(ss, s)
+		}
+		if opt.StatsRefreshDelay != nil {
+			s := &stats.Refresh{
+				Delay: strconv.FormatInt(*opt.StatsRefreshDelay, 10),
+			}
+			ss = append(ss, s)
+		}
+		if opt.StatsShowNodeName != "" {
+			s := &stats.ShowNode{
+				Name: opt.StatsShowNodeName,
+			}
+			ss = append(ss, s)
+		}
+		if opt.StatsURIPrefix != "" {
+			s := &stats.URI{
+				Prefix: opt.StatsURIPrefix,
+			}
+			ss = append(ss, s)
+		}
+		if opt.StatsMaxconn > 0 {
+			d := &types.Int64C{
+				Value: opt.StatsMaxconn,
+			}
+			s := &stats.MaxConn{}
+			s.Maxconn = &parsers.MaxConn{}
+			if err := s.Maxconn.Set(d, 0); err != nil {
+				return err
+			}
+			ss = append(ss, s)
+		}
+		if err := p.Set(section, sectionName, "stats", ss); err != nil {
+			return err
+		}
+		return nil
+	}
+
 	if fieldName == "Httpchk" {
 		if section == parser.Backends || section == parser.Defaults {
 			if valueIsNil(field) {
