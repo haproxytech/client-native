@@ -156,7 +156,7 @@ peers mycluster
 resolvers test
   nameserver dns1 10.0.0.1:53
   accepted_payload_size 8192
-  hold valid 5
+  hold valid 5s
 
 backend test_2
   mode http

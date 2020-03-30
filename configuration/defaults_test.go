@@ -149,6 +149,8 @@ func TestPushDefaults(t *testing.T) {
 		ExternalCheck:        "",
 		ExternalCheckPath:    "/bin",
 		ExternalCheckCommand: "/bin/flase",
+		Logasap: "disabled",
+		Allbackups: "enabled",
 	}
 
 	err := client.PushDefaultsConfiguration(d, "", version)

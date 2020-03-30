@@ -233,6 +233,7 @@ func TestCreateEditDeleteBackend(t *testing.T) {
 		ExternalCheck:        "enabled",
 		ExternalCheckCommand: "/bin/false",
 		ExternalCheckPath:    "/bin",
+		Allbackups:           "enabled",
 	}
 
 	err := client.CreateBackend(b, "", version)

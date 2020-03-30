@@ -591,6 +591,28 @@ func parseField(section parser.Section, sectionName string, fieldName string, p 
 		}
 	}
 
+	if fieldName == "Logasap" {
+		data, err := p.Get(section, sectionName, "option logasap", false)
+		if err != nil {
+			return nil
+		}
+		if data.(*types.SimpleOption).NoOption {
+			return "disabled"
+		}
+		return "enabled"
+	}
+
+	if fieldName == "Allbackups" {
+		data, err := p.Get(section, sectionName, "option allbackups", false)
+		if err != nil {
+			return nil
+		}
+		if data.(*types.SimpleOption).NoOption {
+			return "disabled"
+		}
+		return "enabled"
+	}
+
 	if fieldName == "ExternalCheck" {
 		data, err := p.Get(section, sectionName, "option external-check", false)
 		if err != nil {
@@ -1181,6 +1203,37 @@ func setFieldValue(section parser.Section, sectionName string, fieldName string,
 		}
 		return nil
 	}
+
+	if fieldName == "Logasap" {
+		if section == parser.Frontends || section == parser.Defaults {
+			logasap := &types.SimpleOption{}
+			if valueIsNil(field) {
+				logasap = nil
+			} else if field.String() == "disabled" {
+				logasap.NoOption = true
+			}
+			if err := p.Set(section, sectionName, "option logasap", logasap); err != nil {
+				return err
+			}
+		}
+		return nil
+	}
+
+	if fieldName == "Allbackups" {
+		if section == parser.Backends || section == parser.Defaults {
+			allbackups := &types.SimpleOption{}
+			if valueIsNil(field) {
+				allbackups = nil
+			} else if field.String() == "disabled" {
+				allbackups.NoOption = true
+			}
+			if err := p.Set(section, sectionName, "option allbackups", allbackups); err != nil {
+				return err
+			}
+		}
+		return nil
+	}
+
 	if fieldName == "ExternalCheck" {
 		if section == parser.Backends || section == parser.Defaults {
 			pExternalCheck := &types.SimpleOption{}
