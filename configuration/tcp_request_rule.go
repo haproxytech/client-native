@@ -77,7 +77,7 @@ func (c *Client) GetTCPRequestRule(id int64, parentType, parentName string, tran
 		return v, nil, c.handleError(strconv.FormatInt(id, 10), parentType, parentName, "", false, err)
 	}
 
-	tcpRule, err := parseTCPRequestRule(data.(types.TCPType))
+	tcpRule, err := ParseTCPRequestRule(data.(types.TCPType))
 	if err != nil {
 		return v, nil, err
 	}
@@ -218,10 +218,8 @@ func ParseTCPRequestRules(t, pName string, p *parser.Parser) (models.TCPRequestR
 	return tcpReqRules, nil
 }
 
-func parseTCPRequestRule(f types.TCPType) (rule *models.TCPRequestRule, err error) {
-
+func ParseTCPRequestRule(f types.TCPType) (rule *models.TCPRequestRule, err error) {
 	switch v := f.(type) {
-
 	case *tcp_types.InspectDelay:
 		return &models.TCPRequestRule{
 			Type:    "inspect-delay",
@@ -428,8 +426,7 @@ func parseTCPRequestRule(f types.TCPType) (rule *models.TCPRequestRule, err erro
 	return rule, nil
 }
 
-func serializeTCPRequestRule(f models.TCPRequestRule) (rule types.TCPType, err error) {
-
+func SerializeTCPRequestRule(f models.TCPRequestRule) (rule types.TCPType, err error) {
 	switch f.Type {
 	case "connection":
 		switch f.Action {

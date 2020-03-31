@@ -67,8 +67,8 @@ func (c *Client) GetTCPResponseRule(id int64, backend string, transactionID stri
 		return v, nil, c.handleError(strconv.FormatInt(id, 10), "backend", backend, "", false, err)
 	}
 
-	tcpRule := parseTCPResponseRule(data.(types.TCPType))
-	tcpRule.ID = &id
+	tcpRule := ParseTCPResponseRule(data.(types.TCPType))
+	tcpRule.Index = &id
 
 	return v, tcpRule, nil
 }
@@ -166,7 +166,7 @@ func ParseTCPResponseRules(backend string, p *parser.Parser) (models.TCPResponse
 	return tcpResRules, nil
 }
 
-func parseTCPResponseRule(t types.TCPType) *models.TCPResponseRule {
+func ParseTCPResponseRule(t types.TCPType) *models.TCPResponseRule {
 	switch v := t.(type) {
 	case *tcp_types.InspectDelay:
 		return &models.TCPResponseRule{
@@ -177,12 +177,14 @@ func parseTCPResponseRule(t types.TCPType) *models.TCPResponseRule {
 		switch a := v.Action.(type) {
 		case *tcp_actions.Accept:
 			return &models.TCPResponseRule{
+				Type:     "content",
 				Action:   a.String(),
 				Cond:     v.Cond,
 				CondTest: v.CondTest,
 			}
 		case *tcp_actions.Reject:
 			return &models.TCPResponseRule{
+				Type:     "content",
 				Action:   a.String(),
 				Cond:     v.Cond,
 				CondTest: v.CondTest,
@@ -192,7 +194,7 @@ func parseTCPResponseRule(t types.TCPType) *models.TCPResponseRule {
 	return nil
 }
 
-func serializeTCPResponseRule(t models.TCPResponseRule) types.TCPType {
+func SerializeTCPResponseRule(t models.TCPResponseRule) types.TCPType {
 	switch t.Type {
 	case "content":
 		switch t.Action {
