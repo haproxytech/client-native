@@ -320,7 +320,7 @@ func parseField(section parser.Section, sectionName string, fieldName string, p 
 				}
 			case *stats.ShowDesc:
 				if v.Desc != "" {
-					opt.StatsShowDesc = v.Desc
+					opt.StatsShowDesc = misc.StringP(v.Desc)
 				}
 			case *stats.MaxConn:
 				d, err := v.Maxconn.Get(false)
@@ -335,7 +335,7 @@ func parseField(section parser.Section, sectionName string, fieldName string, p 
 				}
 			case *stats.ShowNode:
 				if v.Name != "" {
-					opt.StatsShowNodeName = v.Name
+					opt.StatsShowNodeName = misc.StringP(v.Name)
 				}
 			case *stats.URI:
 				if v.Prefix != "" {
@@ -861,9 +861,9 @@ func setFieldValue(section parser.Section, sectionName string, fieldName string,
 			}
 			ss = append(ss, s)
 		}
-		if opt.StatsShowDesc != "" {
+		if opt.StatsShowDesc != nil {
 			s := &stats.ShowDesc{
-				Desc: opt.StatsShowDesc,
+				Desc: *opt.StatsShowDesc,
 			}
 			ss = append(ss, s)
 		}
@@ -873,9 +873,9 @@ func setFieldValue(section parser.Section, sectionName string, fieldName string,
 			}
 			ss = append(ss, s)
 		}
-		if opt.StatsShowNodeName != "" {
+		if opt.StatsShowNodeName != nil {
 			s := &stats.ShowNode{
-				Name: opt.StatsShowNodeName,
+				Name: *opt.StatsShowNodeName,
 			}
 			ss = append(ss, s)
 		}

@@ -178,3 +178,7 @@ func ParseSize(size string) *int64 {
 	}
 	return nil
 }
+
+func StringP(s string) *string {
+	return &s
+}
