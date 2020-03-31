@@ -89,7 +89,7 @@ func TestGetBackends(t *testing.T) {
 		if b.Cookie.Type != "rewrite" {
 			t.Errorf("%v: HTTPCookie Type not rewrite %v", b.Name, b.Cookie.Type)
 		}
-		if b.Cookie.Httponly {
+		if !b.Cookie.Httponly {
 			t.Errorf("%v: HTTPCookie Httponly not true %v", b.Name, b.Cookie.Httponly)
 		}
 		if !b.Cookie.Nocache {
@@ -165,7 +165,7 @@ func TestGetBackend(t *testing.T) {
 	if b.Cookie.Type != "rewrite" {
 		t.Errorf("%v: HTTPCookie Type not rewrite %v", b.Name, b.Cookie.Type)
 	}
-	if b.Cookie.Httponly {
+	if !b.Cookie.Httponly {
 		t.Errorf("%v: HTTPCookie Httponly not true %v", b.Name, b.Cookie.Httponly)
 	}
 	if !b.Cookie.Nocache {
