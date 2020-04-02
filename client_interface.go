@@ -176,7 +176,7 @@ type IConfigurationClient interface {
 	GetRawConfiguration(transactionID string, version int64) (int64, string, error)
 	// PostRawConfiguration pushes given string to the config file if the version
 	// matches
-	PostRawConfiguration(config *string, version int64) error
+	PostRawConfiguration(config *string, version int64, skipErrorCheck bool) error
 	// GetServers returns configuration version and an array of
 	// configured servers in the specified backend. Returns error on fail.
 	GetServers(backend string, transactionID string) (int64, models.Servers, error)

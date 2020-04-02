@@ -76,15 +76,26 @@ func (c *Client) GetRawConfiguration(transactionID string, version int64) (int64
 
 // PostRawConfiguration pushes given string to the config file if the version
 // matches
-func (c *Client) PostRawConfiguration(config *string, version int64) error {
-	// Create implicit transaction and check version
-	t, err := c.checkTransactionOrVersion("", version)
-	if err != nil {
-		// if transaction is implicit, return err and delete transaction
-		if t != "" {
-			return c.errAndDeleteTransaction(err, t)
+func (c *Client) PostRawConfiguration(config *string, version int64, skipVersionCheck bool) error {
+	t := ""
+	if skipVersionCheck {
+		// Create impicit transaction
+		transaction, err := c.startTransaction(version)
+		if err != nil {
+			return err
 		}
-		return err
+		t = transaction.ID
+	} else {
+		// Create implicit transaction and check version
+		var err error
+		t, err = c.checkTransactionOrVersion("", version)
+		if err != nil {
+			// if transaction is implicit, return err and delete transaction
+			if t != "" {
+				return c.errAndDeleteTransaction(err, t)
+			}
+			return err
+		}
 	}
 	tFile, err := c.getTransactionFile(t)
 	if err != nil {
@@ -97,9 +108,11 @@ func (c *Client) PostRawConfiguration(config *string, version int64) error {
 		return NewConfError(ErrCannotReadConfFile, err.Error())
 	}
 
-	w := bufio.NewWriter(tmp)
-	w.WriteString(fmt.Sprintf("# _version=%v\n%v", version, *config))
-	w.Flush()
+	if !skipVersionCheck {
+		w := bufio.NewWriter(tmp)
+		w.WriteString(fmt.Sprintf("# _version=%v\n%v", version, *config))
+		w.Flush()
+	}
 
 	// Load the data into the transaction parser
 	p, err := c.GetParser(t)
