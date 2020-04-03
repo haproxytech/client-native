@@ -261,7 +261,7 @@ func (c *Client) checkTransactionOrVersion(transactionID string, version int64) 
 			return "", NewConfError(ErrVersionMismatch, fmt.Sprintf("Version in configuration file is %v, given version is %v", v, version))
 		}
 
-		transaction, err := c.startTransaction(version)
+		transaction, err := c.StartTransaction(version)
 		if err != nil {
 			return "", err
 		}

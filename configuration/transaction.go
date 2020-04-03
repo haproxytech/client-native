@@ -55,25 +55,28 @@ func (c *Client) GetTransaction(id string) (*models.Transaction, error) {
 
 // StartTransaction starts a new empty lbctl transaction
 func (c *Client) StartTransaction(version int64) (*models.Transaction, error) {
-	return c.startTransaction(version)
+	return c.startTransaction(version, false)
 }
 
-func (c *Client) startTransaction(version int64) (*models.Transaction, error) {
+func (c *Client) startTransaction(version int64, skipVersion bool) (*models.Transaction, error) {
 	t := &models.Transaction{}
 
-	v, err := c.GetVersion("")
-	if err != nil {
-		return nil, err
-	}
+	if !skipVersion {
+		v, err := c.GetVersion("")
+		if err != nil {
+			return nil, err
+		}
 
-	if version != v {
-		return nil, NewConfError(ErrVersionMismatch, fmt.Sprintf("Version in configuration file is %v, given version is %v", v, version))
+		if version != v {
+			return nil, NewConfError(ErrVersionMismatch, fmt.Sprintf("Version in configuration file is %v, given version is %v", v, version))
+		}
+
 	}
 
 	t.ID = uuid.New().String()
 
 	if c.PersistentTransactions {
-		err = c.createTransactionFiles(t.ID)
+		err := c.createTransactionFiles(t.ID)
 		if err != nil {
 			return nil, err
 		}
@@ -93,6 +96,10 @@ func (c *Client) startTransaction(version int64) (*models.Transaction, error) {
 
 // CommitTransaction commits a transaction by id.
 func (c *Client) CommitTransaction(id string) (*models.Transaction, error) {
+	return c.commitTransaction(id, false)
+}
+
+func (c *Client) commitTransaction(id string, skipVersion bool) (*models.Transaction, error) {
 	// check if parser exists and if transaction exists
 	c.mu.Lock()
 	defer c.mu.Unlock()
@@ -113,9 +120,11 @@ func (c *Client) CommitTransaction(id string) (*models.Transaction, error) {
 		return nil, err
 	}
 
-	if tVersion != version {
-		c.failTransaction(id)
-		return nil, NewConfError(ErrVersionMismatch, fmt.Sprintf("Version mismatch, transaction version: %v, configured version: %v", tVersion, version))
+	if !skipVersion {
+		if tVersion != version {
+			c.failTransaction(id)
+			return nil, NewConfError(ErrVersionMismatch, fmt.Sprintf("Version mismatch, transaction version: %v, configured version: %v", tVersion, version))
+		}
 	}
 
 	// create transaction file now if transactions are not persistent

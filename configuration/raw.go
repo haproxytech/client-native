@@ -80,7 +80,7 @@ func (c *Client) PostRawConfiguration(config *string, version int64, skipVersion
 	t := ""
 	if skipVersionCheck {
 		// Create impicit transaction
-		transaction, err := c.startTransaction(version)
+		transaction, err := c.startTransaction(version, skipVersionCheck)
 		if err != nil {
 			return err
 		}
@@ -125,7 +125,7 @@ func (c *Client) PostRawConfiguration(config *string, version int64, skipVersion
 	}
 
 	// Do a regular commit of the transaction
-	if _, err := c.CommitTransaction(t); err != nil {
+	if _, err := c.commitTransaction(t, skipVersionCheck); err != nil {
 		return err
 	}
 
