@@ -172,8 +172,10 @@ func (c *Client) commitTransaction(id string, skipVersion bool) (*models.Transac
 		return nil, err
 	}
 
-	if err := c.incrementVersion(); err != nil {
-		return nil, err
+	if !skipVersion {
+		if err := c.incrementVersion(); err != nil {
+			return nil, err
+		}
 	}
 
 	return &models.Transaction{ID: id, Version: tVersion, Status: "success"}, nil
