@@ -108,11 +108,13 @@ func (c *Client) PostRawConfiguration(config *string, version int64, skipVersion
 		return NewConfError(ErrCannotReadConfFile, err.Error())
 	}
 
+	w := bufio.NewWriter(tmp)
 	if !skipVersionCheck {
-		w := bufio.NewWriter(tmp)
 		w.WriteString(fmt.Sprintf("# _version=%v\n%v", version, *config))
-		w.Flush()
+	} else {
+		w.WriteString(*config)
 	}
+	w.Flush()
 
 	// Load the data into the transaction parser
 	p, err := c.GetParser(t)
