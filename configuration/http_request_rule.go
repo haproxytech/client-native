@@ -324,6 +324,14 @@ func ParseHTTPRequestRule(f types.HTTPAction) (rule *models.HTTPRequestRule, err
 			Cond:     v.Cond,
 			CondTest: v.CondTest,
 		}
+	case *actions.ReplacePath:
+		rule = &models.HTTPRequestRule{
+			Type:      "replace-path",
+			PathMatch: v.MatchRegex,
+			PathFmt:   v.ReplaceFmt,
+			Cond:      v.Cond,
+			CondTest:  v.CondTest,
+		}
 	case *actions.SetVar:
 		rule = &models.HTTPRequestRule{
 			Type:     "set-var",
@@ -503,6 +511,13 @@ func SerializeHTTPRequestRule(f models.HTTPRequestRule) (rule types.HTTPAction, 
 			Fmt:      f.PathFmt,
 			Cond:     f.Cond,
 			CondTest: f.CondTest,
+		}
+	case "replace-path":
+		rule = &actions.ReplacePath{
+			MatchRegex: f.PathMatch,
+			ReplaceFmt: f.PathFmt,
+			Cond:       f.Cond,
+			CondTest:   f.CondTest,
 		}
 	case "set-var":
 		rule = &actions.SetVar{
