@@ -59,6 +59,7 @@ type ClientParams struct {
 	TransactionDir            string
 	BackupsNumber             int
 	ValidateConfigurationFile bool
+	MasterWorker              bool
 }
 
 // Client configuration client
@@ -83,6 +84,7 @@ func DefaultClient() (*Client, error) {
 		PersistentTransactions:    DefaultPersistentTransactions,
 		TransactionDir:            DefaultTransactionDir,
 		ValidateConfigurationFile: DefaultValidateConfigurationFile,
+		MasterWorker:              false,
 	}
 	c := &Client{}
 	err := c.Init(p)

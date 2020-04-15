@@ -194,8 +194,12 @@ func (c *Client) checkTransactionFile(id string) error {
 	if err != nil {
 		return err
 	}
-
-	cmd := exec.Command(c.Haproxy, "-f", transactionFile, "-c")
+	var cmd *exec.Cmd
+	if c.MasterWorker {
+		cmd = exec.Command(c.Haproxy, "-W", "-f", transactionFile, "-c")
+	} else {
+		cmd = exec.Command(c.Haproxy, "-f", transactionFile, "-c")
+	}
 
 	var stdout, stderr bytes.Buffer
 	cmd.Stdout = &stdout
