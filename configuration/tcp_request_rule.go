@@ -413,7 +413,6 @@ func ParseTCPRequestRule(f types.TCPType) (rule *models.TCPRequestRule, err erro
 			rule.Action = "unset-var"
 			rule.VarScope = a.VarScope
 			rule.VarName = a.VarName
-			rule.Expr = a.Expr.String() // TODO remove this part
 		case *tcp_actions.SilentDrop:
 			rule.Action = "silent-drop"
 		default:
@@ -617,6 +616,25 @@ func SerializeTCPRequestRule(f models.TCPRequestRule) (rule types.TCPType, err e
 				Cond:     f.Cond,
 				CondTest: f.CondTest,
 			}, nil
+		case "set-var":
+			return &tcp_types.Content{
+				Action: &tcp_actions.SetVar{
+					VarName:  f.VarName,
+					VarScope: f.VarScope,
+					Expr:     common.Expression{Expr: strings.Split(f.Expr, " ")},
+				},
+				Cond:     f.Cond,
+				CondTest: f.CondTest,
+			}, nil
+		case "unset-var":
+			return &tcp_types.Content{
+				Action: &tcp_actions.UnsetVar{
+					VarName:  f.VarName,
+					VarScope: f.VarScope,
+				},
+				Cond:     f.Cond,
+				CondTest: f.CondTest,
+			}, nil
 		case "silent-drop":
 			return &tcp_types.Content{
 				Action:   &tcp_actions.SilentDrop{},
@@ -708,12 +726,21 @@ func SerializeTCPRequestRule(f models.TCPRequestRule) (rule types.TCPType, err e
 				Cond:     f.Cond,
 				CondTest: f.CondTest,
 			}, nil
+		case "set-var":
+			return &tcp_types.Session{
+				Action: &tcp_actions.SetVar{
+					VarName:  f.VarName,
+					VarScope: f.VarScope,
+					Expr:     common.Expression{Expr: strings.Split(f.Expr, " ")},
+				},
+				Cond:     f.Cond,
+				CondTest: f.CondTest,
+			}, nil
 		case "unset-var":
 			return &tcp_types.Session{
 				Action: &tcp_actions.UnsetVar{
 					VarName:  f.VarName,
 					VarScope: f.VarScope,
-					Expr:     common.Expression{Expr: strings.Split(f.Expr, " ")},
 				},
 				Cond:     f.Cond,
 				CondTest: f.CondTest,
