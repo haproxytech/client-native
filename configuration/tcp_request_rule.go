@@ -441,13 +441,13 @@ func SerializeTCPRequestRule(f models.TCPRequestRule) (rule types.TCPType, err e
 				Cond:     f.Cond,
 				CondTest: f.CondTest,
 			}, nil
-		case "expect-proxy":
+		case "expect-proxy layer4":
 			return &tcp_types.Connection{
 				Action:   &tcp_actions.ExpectProxy{},
 				Cond:     f.Cond,
 				CondTest: f.CondTest,
 			}, nil
-		case "expect-netscaler-cip":
+		case "expect-netscaler-cip layer4":
 			return &tcp_types.Connection{
 				Action:   &tcp_actions.ExpectNetscalerCip{},
 				Cond:     f.Cond,
