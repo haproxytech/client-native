@@ -76,7 +76,7 @@ func (s *SingleRuntime) readFromSocket(command string) (string, error) {
 	}
 	fullCommand := fmt.Sprintf("set severity-output number;%s\n", command)
 	if s.worker > 0 {
-		fullCommand = fmt.Sprintf("@%v set severity-output number;@%v %s\n", s.worker, s.worker, command)
+		fullCommand = fmt.Sprintf("@%v set severity-output number;@%v %s;quit\n", s.worker, s.worker, command)
 	}
 	_, err = api.Write([]byte(fullCommand))
 	if err != nil {
