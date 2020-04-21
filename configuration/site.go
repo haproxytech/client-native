@@ -91,7 +91,7 @@ func (c *Client) CreateSite(data *models.Site, transactionID string, version int
 	}
 
 	//create frontend
-	frontend := serializeServiceToFrontend(data.Service, data.Name)
+	frontend := SerializeServiceToFrontend(data.Service, data.Name)
 
 	if frontend != nil {
 		err = c.CreateFrontend(frontend, t, 0)
@@ -114,7 +114,7 @@ func (c *Client) CreateSite(data *models.Site, transactionID string, version int
 
 	//create backends
 	for _, b := range data.Farms {
-		backend := serializeFarmToBackend(b)
+		backend := SerializeFarmToBackend(b)
 		if backend == nil {
 			continue
 		}
@@ -237,7 +237,7 @@ func (c *Client) EditSite(name string, data *models.Site, transactionID string, 
 			// add missing backends
 			confBIface := misc.GetObjByField(bcks, "Name", b.Name)
 			if confBIface == nil {
-				backend := serializeFarmToBackend(b)
+				backend := SerializeFarmToBackend(b)
 				if b != nil {
 					err = c.CreateBackend(backend, t, 0)
 					if err != nil {
@@ -530,7 +530,7 @@ func (c *Client) parseFarm(name string, useAs string, cond string, condTest stri
 	return nil
 }
 
-func serializeServiceToFrontend(service *models.SiteService, name string) *models.Frontend {
+func SerializeServiceToFrontend(service *models.SiteService, name string) *models.Frontend {
 	fr := &models.Frontend{Name: name}
 	if service != nil {
 		fr.Mode = service.Mode
@@ -541,7 +541,7 @@ func serializeServiceToFrontend(service *models.SiteService, name string) *model
 	return fr
 }
 
-func serializeFarmToBackend(farm *models.SiteFarm) *models.Backend {
+func SerializeFarmToBackend(farm *models.SiteFarm) *models.Backend {
 	return &models.Backend{
 		Name:       farm.Name,
 		Mode:       farm.Mode,
