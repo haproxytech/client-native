@@ -20,7 +20,7 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/haproxytech/models"
+	"github.com/haproxytech/models/v2"
 )
 
 func TestGetStickRules(t *testing.T) {
@@ -150,7 +150,7 @@ func TestCreateEditDeleteStickRule(t *testing.T) {
 	id := int64(1)
 	// TestCreateStickRule
 	sr := &models.StickRule{
-		Index:       &id,
+		Index:    &id,
 		Type:     "match",
 		Pattern:  "src",
 		Cond:     "if",
@@ -181,7 +181,7 @@ func TestCreateEditDeleteStickRule(t *testing.T) {
 
 	// TestEditStickRule
 	sr = &models.StickRule{
-		Index:       &id,
+		Index:    &id,
 		Type:     "store-request",
 		Pattern:  "src",
 		Table:    "test2",

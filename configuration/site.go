@@ -21,9 +21,9 @@ import (
 	"strconv"
 
 	strfmt "github.com/go-openapi/strfmt"
-	"github.com/haproxytech/client-native/misc"
+	"github.com/haproxytech/client-native/v2/misc"
 	parser "github.com/haproxytech/config-parser/v2"
-	"github.com/haproxytech/models"
+	"github.com/haproxytech/models/v2"
 )
 
 // GetSites returns configuration version and an array of

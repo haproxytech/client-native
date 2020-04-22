@@ -20,7 +20,7 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/haproxytech/models"
+	"github.com/haproxytech/models/v2"
 )
 
 func TestGetPeerSections(t *testing.T) {
@@ -67,7 +67,7 @@ func TestGetPeerSection(t *testing.T) {
 	}
 }
 func TestCreateEditDeletePeerSection(t *testing.T) {
-	f := &models.PeerSection {
+	f := &models.PeerSection{
 		Name: "testcluster",
 	}
 	err := client.CreatePeerSection(f, "", version)

@@ -27,12 +27,12 @@ import (
 	stats "github.com/haproxytech/config-parser/v2/parsers/stats/settings"
 	"github.com/pkg/errors"
 
-	"github.com/haproxytech/client-native/misc"
+	"github.com/haproxytech/client-native/v2/misc"
 	parser "github.com/haproxytech/config-parser/v2"
 	parser_errors "github.com/haproxytech/config-parser/v2/errors"
 	"github.com/haproxytech/config-parser/v2/params"
 	"github.com/haproxytech/config-parser/v2/types"
-	"github.com/haproxytech/models"
+	"github.com/haproxytech/models/v2"
 )
 
 const (

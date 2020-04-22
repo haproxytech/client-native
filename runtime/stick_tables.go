@@ -5,7 +5,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/haproxytech/models"
+	"github.com/haproxytech/models/v2"
 )
 
 //ShowTables returns Stick Tables descriptions from runtime

@@ -20,7 +20,7 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/haproxytech/models"
+	"github.com/haproxytech/models/v2"
 )
 
 func TestGetTCPResponseRules(t *testing.T) {
@@ -117,7 +117,7 @@ func TestCreateEditDeleteTCPResponseRule(t *testing.T) {
 	tOut := int64(1000)
 	// TestCreateTCPResponseRule
 	r := &models.TCPResponseRule{
-		Index:      &id,
+		Index:   &id,
 		Type:    "inspect-delay",
 		Timeout: &tOut,
 	}
@@ -146,7 +146,7 @@ func TestCreateEditDeleteTCPResponseRule(t *testing.T) {
 
 	// TestEditTCPResponseRule
 	r = &models.TCPResponseRule{
-		Index:       &id,
+		Index:    &id,
 		Type:     "content",
 		Action:   "accept",
 		Cond:     "if",

@@ -19,7 +19,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/haproxytech/models"
+	"github.com/haproxytech/models/v2"
 	"github.com/mitchellh/mapstructure"
 )
 

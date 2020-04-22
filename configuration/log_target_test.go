@@ -20,7 +20,7 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/haproxytech/models"
+	"github.com/haproxytech/models/v2"
 )
 
 func TestGetLogTargets(t *testing.T) {
@@ -115,7 +115,7 @@ func TestCreateEditDeleteLogTarget(t *testing.T) {
 
 	// TestCreateLogTarget
 	r := &models.LogTarget{
-		Index:       &id,
+		Index:    &id,
 		Address:  "stdout",
 		Format:   "raw",
 		Facility: "daemon",
@@ -146,7 +146,7 @@ func TestCreateEditDeleteLogTarget(t *testing.T) {
 
 	// TestEditLogTarget
 	r = &models.LogTarget{
-		Index:       &id,
+		Index:    &id,
 		Address:  "stdout",
 		Format:   "rfc3164",
 		Facility: "local1",

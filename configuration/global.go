@@ -18,14 +18,14 @@ package configuration
 import (
 	"strconv"
 
-	"github.com/haproxytech/client-native/misc"
+	"github.com/haproxytech/client-native/v2/misc"
 
 	strfmt "github.com/go-openapi/strfmt"
 	parser "github.com/haproxytech/config-parser/v2"
 	"github.com/haproxytech/config-parser/v2/errors"
 	"github.com/haproxytech/config-parser/v2/params"
 	"github.com/haproxytech/config-parser/v2/types"
-	"github.com/haproxytech/models"
+	"github.com/haproxytech/models/v2"
 )
 
 // GetGlobalConfiguration returns configuration version and a
@@ -235,7 +235,7 @@ func ParseGlobalSection(p *parser.Parser) (*models.Global, error) {
 		Nbproc:                  nbproc,
 		Nbthread:                nbthread,
 		Pidfile:                 pidfile,
-		RuntimeApis:             rAPIs,
+		RuntimeAPIs:             rAPIs,
 		StatsTimeout:            statsTimeout,
 		CPUMaps:                 cpuMaps,
 		SslDefaultBindCiphers:   sslBindCiphers,
@@ -328,7 +328,7 @@ func SerializeGlobalSection(p *parser.Parser, data *models.Global) error {
 		return err
 	}
 	sockets := []types.Socket{}
-	for _, rAPI := range data.RuntimeApis {
+	for _, rAPI := range data.RuntimeAPIs {
 		s := types.Socket{
 			Path:   *rAPI.Address,
 			Params: []params.BindOption{},

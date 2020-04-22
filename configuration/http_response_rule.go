@@ -25,7 +25,7 @@ import (
 	parser_errors "github.com/haproxytech/config-parser/v2/errors"
 	"github.com/haproxytech/config-parser/v2/parsers/http/actions"
 	"github.com/haproxytech/config-parser/v2/types"
-	"github.com/haproxytech/models"
+	"github.com/haproxytech/models/v2"
 )
 
 // GetHTTPResponseRules returns configuration version and an array of

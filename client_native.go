@@ -18,8 +18,8 @@ package client_native
 import (
 	"log"
 
-	"github.com/haproxytech/client-native/configuration"
-	"github.com/haproxytech/client-native/runtime"
+	"github.com/haproxytech/client-native/v2/configuration"
+	"github.com/haproxytech/client-native/v2/runtime"
 )
 
 // LogFunc - default log function is from the stdlib

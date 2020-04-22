@@ -20,7 +20,7 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/haproxytech/models"
+	"github.com/haproxytech/models/v2"
 )
 
 func TestGetFilters(t *testing.T) {
@@ -120,7 +120,7 @@ func TestCreateEditDeleteFilter(t *testing.T) {
 	// TestCreateFilter
 	id := int64(1)
 	f := &models.Filter{
-		Index:         &id,
+		Index:      &id,
 		Type:       "spoe",
 		SpoeEngine: "test",
 		SpoeConfig: "test.cfg",
@@ -150,7 +150,7 @@ func TestCreateEditDeleteFilter(t *testing.T) {
 
 	// TestEditFilter
 	f = &models.Filter{
-		Index:         &id,
+		Index:      &id,
 		Type:       "spoe",
 		SpoeConfig: "bla.cfg",
 		SpoeEngine: "bla",

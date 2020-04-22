@@ -19,13 +19,13 @@ import (
 	"strconv"
 
 	strfmt "github.com/go-openapi/strfmt"
-	"github.com/haproxytech/client-native/misc"
+	"github.com/haproxytech/client-native/v2/misc"
 	parser "github.com/haproxytech/config-parser/v2"
 	parser_errors "github.com/haproxytech/config-parser/v2/errors"
 	tcp_actions "github.com/haproxytech/config-parser/v2/parsers/tcp/actions"
 	tcp_types "github.com/haproxytech/config-parser/v2/parsers/tcp/types"
 	"github.com/haproxytech/config-parser/v2/types"
-	"github.com/haproxytech/models"
+	"github.com/haproxytech/models/v2"
 )
 
 // GetTCPResponseRules returns configuration version and an array of

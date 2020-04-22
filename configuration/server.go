@@ -20,14 +20,14 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/haproxytech/client-native/misc"
+	"github.com/haproxytech/client-native/v2/misc"
 	"github.com/haproxytech/config-parser/v2/params"
 
 	strfmt "github.com/go-openapi/strfmt"
 	parser "github.com/haproxytech/config-parser/v2"
 	parser_errors "github.com/haproxytech/config-parser/v2/errors"
 	"github.com/haproxytech/config-parser/v2/types"
-	"github.com/haproxytech/models"
+	"github.com/haproxytech/models/v2"
 )
 
 // GetServers returns configuration version and an array of

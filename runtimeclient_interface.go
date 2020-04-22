@@ -5,7 +5,7 @@ package client_native
 import (
 	"mime/multipart"
 
-	"github.com/haproxytech/models"
+	"github.com/haproxytech/models/v2"
 )
 
 // IRuntimeClient ...
@@ -78,4 +78,3 @@ type IRuntimeClient interface {
 	DeleteMapEntry(name, id string) error
 	ParseMapEntries(output string) models.MapEntries
 }
-

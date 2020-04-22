@@ -20,7 +20,7 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/haproxytech/models"
+	"github.com/haproxytech/models/v2"
 )
 
 func TestGetServerSwitchingRules(t *testing.T) {
@@ -107,7 +107,7 @@ func TestCreateEditDeleteServerSwitchingRule(t *testing.T) {
 	id := int64(2)
 	// TestCreateServerSwitchingRule
 	sr := &models.ServerSwitchingRule{
-		Index:           &id,
+		Index:        &id,
 		TargetServer: "webserv2",
 		Cond:         "unless",
 		CondTest:     "TRUE",
@@ -137,7 +137,7 @@ func TestCreateEditDeleteServerSwitchingRule(t *testing.T) {
 
 	// TestServerSwitchingRule
 	sr = &models.ServerSwitchingRule{
-		Index:           &id,
+		Index:        &id,
 		TargetServer: "webserv2",
 		Cond:         "if",
 		CondTest:     "TRUE",

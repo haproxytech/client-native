@@ -24,7 +24,7 @@ import (
 	"path/filepath"
 
 	"github.com/google/go-cmp/cmp"
-	"github.com/haproxytech/models"
+	"github.com/haproxytech/models/v2"
 )
 
 //Client handles multiple HAProxy clients

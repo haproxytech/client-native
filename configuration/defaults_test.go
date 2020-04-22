@@ -5,7 +5,7 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/haproxytech/models"
+	"github.com/haproxytech/models/v2"
 )
 
 func TestGetDefaults(t *testing.T) {
@@ -149,8 +149,8 @@ func TestPushDefaults(t *testing.T) {
 		ExternalCheck:        "",
 		ExternalCheckPath:    "/bin",
 		ExternalCheckCommand: "/bin/flase",
-		Logasap: "disabled",
-		Allbackups: "enabled",
+		Logasap:              "disabled",
+		Allbackups:           "enabled",
 	}
 
 	err := client.PushDefaultsConfiguration(d, "", version)

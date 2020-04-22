@@ -20,7 +20,7 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/haproxytech/models"
+	"github.com/haproxytech/models/v2"
 )
 
 func TestGetTCPRequestRules(t *testing.T) {
@@ -143,7 +143,7 @@ func TestCreateEditDeleteTCPRequestRule(t *testing.T) {
 	tOut := int64(1000)
 	// TestCreateTCPRequestRule
 	r := &models.TCPRequestRule{
-		Index:      &id,
+		Index:   &id,
 		Type:    "inspect-delay",
 		Timeout: &tOut,
 	}
@@ -172,7 +172,7 @@ func TestCreateEditDeleteTCPRequestRule(t *testing.T) {
 
 	// TestEditTCPRequestRule
 	r = &models.TCPRequestRule{
-		Index:       &id,
+		Index:    &id,
 		Type:     "connection",
 		Action:   "accept",
 		Cond:     "if",

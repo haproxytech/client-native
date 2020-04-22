@@ -18,7 +18,7 @@ package configuration
 import (
 	strfmt "github.com/go-openapi/strfmt"
 	parser "github.com/haproxytech/config-parser/v2"
-	"github.com/haproxytech/models"
+	"github.com/haproxytech/models/v2"
 )
 
 // GetDefaultsConfiguration returns configuration version and a

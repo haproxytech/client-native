@@ -8,7 +8,7 @@ package main
 import (
 	"log"
 
-	"github.com/haproxytech/client-native/runtime"
+	"github.com/haproxytech/client-native/v2/runtime"
 )
 
 func main() {

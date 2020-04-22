@@ -20,7 +20,7 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/haproxytech/models"
+	"github.com/haproxytech/models/v2"
 )
 
 func TestGetHTTPResponseRules(t *testing.T) {
@@ -134,7 +134,7 @@ func TestCreateEditDeleteHTTPResponseRule(t *testing.T) {
 	id := int64(1)
 	// TestCreateHTTPResponseRule
 	r := &models.HTTPResponseRule{
-		Index:       &id,
+		Index:    &id,
 		Type:     "set-log-level",
 		LogLevel: "alert",
 	}
@@ -163,7 +163,7 @@ func TestCreateEditDeleteHTTPResponseRule(t *testing.T) {
 
 	// TestEditHTTPResponseRule
 	r = &models.HTTPResponseRule{
-		Index:       &id,
+		Index:    &id,
 		Type:     "set-log-level",
 		LogLevel: "warning",
 	}

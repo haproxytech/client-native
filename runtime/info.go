@@ -20,7 +20,7 @@ import (
 	"strings"
 
 	"github.com/go-openapi/strfmt"
-	"github.com/haproxytech/models"
+	"github.com/haproxytech/models/v2"
 )
 
 //GetInfo fetches HAProxy info from runtime API
@@ -99,7 +99,7 @@ func parseInfo(info string, socketPath string) *models.ProcessInfoItem {
 		case "13":
 			uLimitN, err := strconv.ParseInt(fields[3], 10, 64)
 			if err == nil {
-				data.UlimitN = &uLimitN
+				data.Ulimitn = &uLimitN
 			}
 		case "14":
 			maxSock, err := strconv.ParseInt(fields[3], 10, 64)
@@ -279,7 +279,7 @@ func parseInfo(info string, socketPath string) *models.ProcessInfoItem {
 		case "49":
 			idle, err := strconv.ParseInt(fields[3], 10, 64)
 			if err == nil {
-				data.IDLEPct = &idle
+				data.IdlePct = &idle
 			}
 		case "50":
 			data.Node = fields[3]

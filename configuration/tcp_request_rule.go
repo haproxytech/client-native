@@ -19,7 +19,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/haproxytech/client-native/misc"
+	"github.com/haproxytech/client-native/v2/misc"
 	"github.com/haproxytech/config-parser/v2/common"
 	tcp_actions "github.com/haproxytech/config-parser/v2/parsers/tcp/actions"
 	tcp_types "github.com/haproxytech/config-parser/v2/parsers/tcp/types"
@@ -28,7 +28,7 @@ import (
 	parser "github.com/haproxytech/config-parser/v2"
 	parser_errors "github.com/haproxytech/config-parser/v2/errors"
 	"github.com/haproxytech/config-parser/v2/types"
-	"github.com/haproxytech/models"
+	"github.com/haproxytech/models/v2"
 )
 
 // GetTCPRequestRules returns configuration version and an array of

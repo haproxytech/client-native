@@ -29,7 +29,7 @@ import (
 	"github.com/google/uuid"
 	parser "github.com/haproxytech/config-parser/v2"
 	"github.com/haproxytech/config-parser/v2/types"
-	"github.com/haproxytech/models"
+	"github.com/haproxytech/models/v2"
 )
 
 // GetTransactions returns an array of transactions

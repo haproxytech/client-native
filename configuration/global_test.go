@@ -20,7 +20,7 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/haproxytech/models"
+	"github.com/haproxytech/models/v2"
 )
 
 func TestGetGlobal(t *testing.T) {
@@ -36,15 +36,15 @@ func TestGetGlobal(t *testing.T) {
 	if global.Daemon != "enabled" {
 		t.Errorf("Daemon is %v, expected enabled", global.Daemon)
 	}
-	if len(global.RuntimeApis) == 1 {
-		if *global.RuntimeApis[0].Address != "/var/run/haproxy.sock" {
-			t.Errorf("RuntimeAPI.Address is %v, expected /var/run/haproxy.sock", *global.RuntimeApis[0].Address)
+	if len(global.RuntimeAPIs) == 1 {
+		if *global.RuntimeAPIs[0].Address != "/var/run/haproxy.sock" {
+			t.Errorf("RuntimeAPI.Address is %v, expected /var/run/haproxy.sock", *global.RuntimeAPIs[0].Address)
 		}
-		if global.RuntimeApis[0].Level != "admin" {
-			t.Errorf("RuntimeAPI.Level is %v, expected admin", global.RuntimeApis[0].Level)
+		if global.RuntimeAPIs[0].Level != "admin" {
+			t.Errorf("RuntimeAPI.Level is %v, expected admin", global.RuntimeAPIs[0].Level)
 		}
-		if global.RuntimeApis[0].Mode != "0660" {
-			t.Errorf("RuntimeAPI.Mode is %v, expected 0660", global.RuntimeApis[0].Mode)
+		if global.RuntimeAPIs[0].Mode != "0660" {
+			t.Errorf("RuntimeAPI.Mode is %v, expected 0660", global.RuntimeAPIs[0].Mode)
 		}
 	} else {
 		t.Errorf("RuntimeAPI is not set")
@@ -73,7 +73,7 @@ func TestPutGlobal(t *testing.T) {
 				CPUSet:  &v,
 			},
 		},
-		RuntimeApis: []*models.RuntimeAPI{
+		RuntimeAPIs: []*models.RuntimeAPI{
 			&models.RuntimeAPI{
 				Address: &a,
 				Level:   "admin",

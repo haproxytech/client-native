@@ -22,7 +22,7 @@ import (
 	parser "github.com/haproxytech/config-parser/v2"
 	parser_errors "github.com/haproxytech/config-parser/v2/errors"
 	"github.com/haproxytech/config-parser/v2/types"
-	"github.com/haproxytech/models"
+	"github.com/haproxytech/models/v2"
 )
 
 // GetLogTargets returns configuration version and an array of
