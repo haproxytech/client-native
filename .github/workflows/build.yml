@@ -22,10 +22,10 @@ jobs:
     - name: Build
       run: |
         go build -v .
-    - name: Check interfaces
-      run: |
-        go get github.com/vburenin/ifacemaker
-        go get golang.org/x/tools/cmd/goimports
-        $(go env GOPATH)/bin/ifacemaker -f 'runtime/*.go' -p client_native -i IRuntimeClient -s Client -c "This file is generated, don't edit manually, see README.md for details." > runtimeclient_interface_new.go
-        $(go env GOPATH)/bin/goimports runtimeclient_interface_new.go > runtimeclient_interface_new2.go
-        diff -u runtimeclient_interface.go runtimeclient_interface_new2.go
+#     - name: Check interfaces
+#       run: |
+#         go get github.com/vburenin/ifacemaker
+#         go get golang.org/x/tools/cmd/goimports
+#         $(go env GOPATH)/bin/ifacemaker -f 'runtime/*.go' -p client_native -i IRuntimeClient -s Client -c "This file is generated, don't edit manually, see README.md for details." > runtimeclient_interface_new.go
+#         $(go env GOPATH)/bin/goimports runtimeclient_interface_new.go > runtimeclient_interface_new2.go
+#         diff -u runtimeclient_interface.go runtimeclient_interface_new2.go
