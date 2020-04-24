@@ -171,12 +171,69 @@ type IConfigurationClient interface {
 	// EditLogTarget edits a log target in configuration. One of version or transactionID is
 	// mandatory. Returns error on fail, nil on success.
 	EditLogTarget(id int64, parentType string, parentName string, data *models.LogTarget, transactionID string, version int64) error
+	// GetNameservers returns configuration version and an array of
+	// configured namservers in the specified resolvers section. Returns error on fail.
+	GetNameservers(resolverSection string, transactionID string) (int64, models.Nameservers, error)
+	// GetNameserver returns configuration version and a requested nameserver
+	// in the specified resolvers section. Returns error on fail or if nameserver does not exist.
+	GetNameserver(name string, resolverSection string, transactionID string) (int64, *models.Nameserver, error)
+	// DeleteNameserver deletes an nameserver in configuration. One of version or transactionID is
+	// mandatory. Returns error on fail, nil on success.
+	DeleteNameserver(name string, resolverSection string, transactionID string, version int64) error
+	// CreateNameserver creates a nameserver in configuration. One of version or transactionID is
+	// mandatory. Returns error on fail, nil on success.
+	CreateNameserver(resolverSection string, data *models.Nameserver, transactionID string, version int64) error
+	// EditNameserver edits a nameserver in configuration. One of version or transactionID is
+	// mandatory. Returns error on fail, nil on success.
+	EditNameserver(name string, resolverSection string, data *models.Nameserver, transactionID string, version int64) error
+	// GetPeerEntries returns configuration version and an array of
+	// configured binds in the specified peers section. Returns error on fail.
+	GetPeerEntries(peerSection string, transactionID string) (int64, models.PeerEntries, error)
+	// GetPeerEntry returns configuration version and a requested peer entry
+	// in the specified peer section. Returns error on fail or if bind does not exist.
+	GetPeerEntry(name string, peerSection string, transactionID string) (int64, *models.PeerEntry, error)
+	// DeletePeerEntry deletes an peer entry in configuration. One of version or transactionID is
+	// mandatory. Returns error on fail, nil on success.
+	DeletePeerEntry(name string, peerSection string, transactionID string, version int64) error
+	// CreatePeerEntry creates a peer entry in configuration. One of version or transactionID is
+	// mandatory. Returns error on fail, nil on success.
+	CreatePeerEntry(peerSection string, data *models.PeerEntry, transactionID string, version int64) error
+	// EditPeerEntry edits a peer entry in configuration. One of version or transactionID is
+	// mandatory. Returns error on fail, nil on success.
+	EditPeerEntry(name string, peerSection string, data *models.PeerEntry, transactionID string, version int64) error
+	// GetPeerSections returns configuration version and an array of
+	// configured peer sections. Returns error on fail.
+	GetPeerSections(transactionID string) (int64, models.PeerSections, error)
+	// GetPeerSection returns configuration version and a requested peer section.
+	// Returns error on fail or if peer section does not exist.
+	GetPeerSection(name string, transactionID string) (int64, *models.PeerSection, error)
+	// DeletePeerSection deletes a peerSection in configuration. One of version or transactionID is
+	// mandatory. Returns error on fail, nil on success.
+	DeletePeerSection(name string, transactionID string, version int64) error
+	// CreatePeerSection creates a peerSection in configuration. One of version or transactionID is
+	// mandatory. Returns error on fail, nil on success.
+	CreatePeerSection(data *models.PeerSection, transactionID string, version int64) error
 	// GetRawConfiguration returns configuration version and a
 	// string containing raw config file
 	GetRawConfiguration(transactionID string, version int64) (int64, string, error)
 	// PostRawConfiguration pushes given string to the config file if the version
 	// matches
-	PostRawConfiguration(config *string, version int64, skipErrorCheck bool) error
+	PostRawConfiguration(config *string, version int64, skipVersionCheck bool) error
+	// GetResolvers returns configuration version and an array of
+	// configured resolvers. Returns error on fail.
+	GetResolvers(transactionID string) (int64, models.Resolvers, error)
+	// GetResolver returns configuration version and a requested resolver.
+	// Returns error on fail or if resolver does not exist.
+	GetResolver(name string, transactionID string) (int64, *models.Resolver, error)
+	// DeleteResolver deletes a resolver in configuration. One of version or transactionID is
+	// mandatory. Returns error on fail, nil on success.
+	DeleteResolver(name string, transactionID string, version int64) error
+	// EditResolver edits a resolver in configuration. One of version or transactionID is
+	// mandatory. Returns error on fail, nil on success.
+	EditResolver(name string, data *models.Resolver, transactionID string, version int64) error
+	// CreateResolver creates a resolver in configuration. One of version or transactionID is
+	// mandatory. Returns error on fail, nil on success.
+	CreateResolver(data *models.Resolver, transactionID string, version int64) error
 	// GetServers returns configuration version and an array of
 	// configured servers in the specified backend. Returns error on fail.
 	GetServers(backend string, transactionID string) (int64, models.Servers, error)
@@ -277,34 +334,5 @@ type IConfigurationClient interface {
 	CommitTransaction(id string) (*models.Transaction, error)
 	// DeleteTransaction deletes a transaction by id.
 	DeleteTransaction(id string) error
-	// GetResolvers returns configuration version and an array of
-	// configured resolvers. Returns error on fail.
-	GetResolvers(transactionID string) (int64, models.Resolvers, error)
-	// GetResolver returns configuration version and a requested resolver.
-	// Returns error on fail or if resolver does not exist.
-	GetResolver(name string, transactionID string) (int64, *models.Resolver, error)
-	// DeleteResolver deletes a resolver in configuration. One of version or transactionID is
-	// mandatory. Returns error on fail, nil on success.
-	DeleteResolver(name string, transactionID string, version int64) error
-	// EditResolver edits a resolver in configuration. One of version or transactionID is
-	// mandatory. Returns error on fail, nil on success.
-	EditResolver(name string, data *models.Resolver, transactionID string, version int64) error
-	// CreateResolver creates a resolver in configuration. One of version or transactionID is
-	// mandatory. Returns error on fail, nil on success.
-	CreateResolver(data *models.Resolver, transactionID string, version int64) error
-	// GetNameservers returns configuration version and an array of
-	// configured namservers in the specified resolvers section. Returns error on fail.
-	GetNameservers(resolverSection string, transactionID string) (int64, models.Nameservers, error)
-	// GetNameserver returns configuration version and a requested nameserver
-	// in the specified resolvers section. Returns error on fail or if nameserver does not exist.
-	GetNameserver(name string, resolverSection string, transactionID string) (int64, *models.Nameserver, error)
-	// DeleteNameserver deletes an nameserver in configuration. One of version or transactionID is
-	// mandatory. Returns error on fail, nil on success.
-	DeleteNameserver(name string, resolverSection string, transactionID string, version int64) error
-	// EditNameserver edits a nameserver in configuration. One of version or transactionID is
-	// mandatory. Returns error on fail, nil on success.
-	EditNameserver(name string, resolverSection string, data *models.Nameserver, transactionID string, version int64) error
-	// CreateNameserver creates a nameserver in configuration. One of version or transactionID is
-	// mandatory. Returns error on fail, nil on success.
-	CreateNameserver(name string, data *models.Nameserver, transactionID string, version int64) error
 }
+

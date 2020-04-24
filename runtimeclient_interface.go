@@ -14,7 +14,7 @@ type IRuntimeClient interface {
 	//
 	//Deprecated: use InitWithSockets or InitWithMasterSocket instead
 	Init(socketPath []string, masterSocketPath string, nbproc int) error
-	//GetMapsPath returns runtime map file path
+	//GetMapsPath returns runtime map file path or map id
 	GetMapsPath(name string) string
 	InitWithSockets(socketPath map[int]string) error
 	InitWithMasterSocket(masterSocketPath string, nbproc int) error
@@ -76,5 +76,6 @@ type IRuntimeClient interface {
 	SetMapEntry(name, id, value string) error
 	//DeleteMapEntry deletes all the map entries from the map by its id
 	DeleteMapEntry(name, id string) error
+	ParseMapEntries(output string) models.MapEntries
 }
 
