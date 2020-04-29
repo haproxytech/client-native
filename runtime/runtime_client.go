@@ -24,6 +24,7 @@ import (
 	"path/filepath"
 
 	"github.com/google/go-cmp/cmp"
+	native_errors "github.com/haproxytech/client-native/v2/errors"
 	"github.com/haproxytech/models/v2"
 )
 
@@ -376,12 +377,11 @@ func (c *Client) ExecuteRaw(command string) ([]string, error) {
 //ShowMaps returns structured unique map files
 func (c *Client) ShowMaps() (models.Maps, error) {
 	maps := models.Maps{}
-	var errors strings.Builder
+	var lastErr error
 	for _, runtime := range c.runtimes {
 		m, err := runtime.ShowMaps()
 		if err != nil {
-			msg := fmt.Sprintf("Socket: %s, process: %d, error: %s  ", runtime.socketPath, runtime.process, err)
-			errors.WriteString(msg)
+			lastErr = err
 		}
 
 		if len(maps) == 0 {
@@ -405,8 +405,8 @@ func (c *Client) ShowMaps() (models.Maps, error) {
 	if len(maps) > 0 {
 		return maps, nil
 	}
-	if errors.Len() > 0 {
-		return nil, fmt.Errorf(errors.String())
+	if lastErr != nil {
+		return nil, lastErr
 	}
 	return nil, nil
 }
@@ -414,38 +414,27 @@ func (c *Client) ShowMaps() (models.Maps, error) {
 //CreateMap creates a new map file with its entries
 func (c *Client) CreateMap(file multipart.File, header multipart.FileHeader) (models.MapEntries, error) {
 	name := c.GetMapsPath(header.Filename)
-	me := models.MapEntries{}
-	var errors strings.Builder
-	for _, runtime := range c.runtimes {
-		m, err := runtime.CreateMap(name, file)
-		//try to create only one map file
-		if me != nil {
-			me = append(me, m...)
-			return me, nil
-		}
-		if err != nil {
-			msg := fmt.Sprintf("Socket: %s, process: %d, error: %s  ", runtime.socketPath, runtime.process, err)
-			errors.WriteString(msg)
-		}
+	m, err := CreateMap(name, file)
+	if err != nil {
+		return nil, err
 	}
-	return nil, fmt.Errorf(errors.String())
+	return m, nil
 }
 
 //GetMap returns one structured runtime map file
 func (c *Client) GetMap(name string) (*models.Map, error) {
 	name = c.GetMapsPath(name)
-	var errors strings.Builder
+	var lastErr error
 	for _, runtime := range c.runtimes {
 		m, err := runtime.GetMap(name)
 		if m != nil {
 			return m, nil
 		}
 		if err != nil {
-			msg := fmt.Sprintf("Socket: %s, process: %d, error: %s  ", runtime.socketPath, runtime.process, err)
-			errors.WriteString(msg)
+			lastErr = err
 		}
 	}
-	return nil, fmt.Errorf(errors.String())
+	return nil, lastErr
 }
 
 //ClearMap removes all map entries from the map file. If forceDelete is true, deletes file from disk
@@ -454,25 +443,24 @@ func (c *Client) ClearMap(name string, forceDelete bool) error {
 	if forceDelete {
 		if err := os.Remove(name); err != nil {
 			if os.IsNotExist(err) {
-				return nil
+				return native_errors.ErrNotFound
 			}
-			return err
+			return fmt.Errorf("%s %w", err.Error(), native_errors.ErrNotFound)
 		}
 	}
 
-	var errors strings.Builder
+	var lastErr error
 	for _, runtime := range c.runtimes {
 		m, _ := runtime.GetMap(name)
 		if m != nil {
 			err := runtime.ClearMap(name)
 			if err != nil {
-				msg := fmt.Sprintf("Socket: %s, process: %d, error: %s  ", runtime.socketPath, runtime.process, err)
-				errors.WriteString(msg)
+				lastErr = err
 			}
 		}
 	}
-	if errors.Len() > 0 {
-		return fmt.Errorf(errors.String())
+	if lastErr != nil {
+		return lastErr
 	}
 	return nil
 }
@@ -481,12 +469,11 @@ func (c *Client) ClearMap(name string, forceDelete bool) error {
 func (c *Client) ShowMapEntries(name string) (models.MapEntries, error) {
 	name = c.GetMapsPath(name)
 	entries := models.MapEntries{}
-	var errors strings.Builder
+	var lastErr error
 	for _, runtime := range c.runtimes {
 		m, err := runtime.ShowMapEntries(name)
 		if err != nil {
-			msg := fmt.Sprintf("Socket: %s, process: %d, error: %s  ", runtime.socketPath, runtime.process, err)
-			errors.WriteString(msg)
+			lastErr = err
 		}
 
 		if len(entries) == 0 {
@@ -510,25 +497,21 @@ func (c *Client) ShowMapEntries(name string) (models.MapEntries, error) {
 	if len(entries) > 0 {
 		return entries, nil
 	}
-	return nil, fmt.Errorf(errors.String())
+	return nil, lastErr
 }
 
 //AddMapEntry adds an entry into the map file
 func (c *Client) AddMapEntry(name, key, value string) error {
 	name = c.GetMapsPath(name)
-	var errors strings.Builder
+	var lastErr error
 	for _, runtime := range c.runtimes {
-		m, _ := runtime.GetMapEntry(name, key)
-		if m == nil {
-			err := runtime.AddMapEntry(name, key, value)
-			if err != nil {
-				msg := fmt.Sprintf("Socket: %s, process: %d, error: %s  ", runtime.socketPath, runtime.process, err)
-				errors.WriteString(msg)
-			}
+		err := runtime.AddMapEntry(name, key, value)
+		if err != nil {
+			lastErr = err
 		}
 	}
-	if errors.Len() > 0 {
-		return fmt.Errorf(errors.String())
+	if lastErr != nil {
+		return lastErr
 	}
 	return nil
 }
@@ -536,36 +519,34 @@ func (c *Client) AddMapEntry(name, key, value string) error {
 //GetMapEntry returns one map runtime setting
 func (c *Client) GetMapEntry(name, id string) (*models.MapEntry, error) {
 	name = c.GetMapsPath(name)
-	var errors strings.Builder
+	var lastErr error
 	for _, runtime := range c.runtimes {
 		m, err := runtime.GetMapEntry(name, id)
 		if m != nil {
 			return m, nil
 		}
 		if err != nil {
-			msg := fmt.Sprintf("Socket: %s, process: %d, error: %s  ", runtime.socketPath, runtime.process, err)
-			errors.WriteString(msg)
+			lastErr = err
 		}
 	}
-	return nil, fmt.Errorf(errors.String())
+	return nil, lastErr
 }
 
 //SetMapEntry replace the value corresponding to each id in a map
 func (c *Client) SetMapEntry(name, id, value string) error {
 	name = c.GetMapsPath(name)
-	var errors strings.Builder
+	var lastErr error
 	for _, runtime := range c.runtimes {
 		m, _ := runtime.GetMapEntry(name, id)
 		if m != nil {
 			err := runtime.SetMapEntry(name, id, value)
 			if err != nil {
-				msg := fmt.Sprintf("Socket: %s, process: %d, error: %s  ", runtime.socketPath, runtime.process, err)
-				errors.WriteString(msg)
+				lastErr = err
 			}
 		}
 	}
-	if errors.Len() > 0 {
-		return fmt.Errorf(errors.String())
+	if lastErr != nil {
+		return lastErr
 	}
 	return nil
 }
@@ -573,19 +554,21 @@ func (c *Client) SetMapEntry(name, id, value string) error {
 //DeleteMapEntry deletes all the map entries from the map by its id
 func (c *Client) DeleteMapEntry(name, id string) error {
 	name = c.GetMapsPath(name)
-	var errors strings.Builder
+	var lastErr error
 	for _, runtime := range c.runtimes {
-		m, _ := runtime.GetMapEntry(name, id)
+		m, err := runtime.GetMapEntry(name, id)
+		if err != nil {
+			lastErr = err
+		}
 		if m != nil {
 			err := runtime.DeleteMapEntry(name, id)
 			if err != nil {
-				msg := fmt.Sprintf("Socket: %s, process: %d, error: %s  ", runtime.socketPath, runtime.process, err)
-				errors.WriteString(msg)
+				lastErr = err
 			}
 		}
 	}
-	if errors.Len() > 0 {
-		return fmt.Errorf(errors.String())
+	if lastErr != nil {
+		return lastErr
 	}
 	return nil
 }

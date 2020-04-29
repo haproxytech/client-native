@@ -10,6 +10,7 @@ import (
 	"path/filepath"
 	"strings"
 
+	native_errors "github.com/haproxytech/client-native/v2/errors"
 	"github.com/haproxytech/models/v2"
 )
 
@@ -17,25 +18,25 @@ import (
 func (s *SingleRuntime) ShowMaps() (models.Maps, error) {
 	response, err := s.ExecuteWithResponse("show map")
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("%s %w", err.Error(), native_errors.ErrNotFound)
 	}
 	return s.parseMaps(response), nil
 }
 
 // CreateMap creates a new map file with its entries. Returns an error if file already exists
-func (s *SingleRuntime) CreateMap(name string, file multipart.File) (models.MapEntries, error) {
+func CreateMap(name string, file multipart.File) (models.MapEntries, error) {
 	ext := filepath.Ext(name)
 	if ext != ".map" {
-		return nil, fmt.Errorf("provided file with %s extension, but supported .map", ext)
+		return nil, fmt.Errorf("provided file with %s extension, but supported .map %w", ext, native_errors.ErrGeneral)
 	}
 
 	if _, err := os.Stat(name); err == nil {
-		return nil, fmt.Errorf("file %s already exists. You should delete an existing file first", name)
+		return nil, fmt.Errorf("file %s %w. You should delete an existing file first", name, native_errors.ErrAlreadyExists)
 	}
 
 	dst, err := os.Create(name)
 	if err != nil {
-		return nil, fmt.Errorf("file could not be created. %s", err)
+		return nil, fmt.Errorf("file could not be created %s %w", err, native_errors.ErrGeneral)
 	}
 	defer dst.Close()
 
@@ -109,7 +110,7 @@ func (s *SingleRuntime) GetMap(name string) (*models.Map, error) {
 			return m, nil
 		}
 	}
-	return nil, fmt.Errorf("%s doesn't exists", name)
+	return nil, fmt.Errorf("%s %w", name, native_errors.ErrNotFound)
 }
 
 // ClearMap removes all map entries from the map file.
@@ -117,7 +118,7 @@ func (s *SingleRuntime) ClearMap(name string) error {
 	cmd := fmt.Sprintf("clear map %s", name)
 	err := s.Execute(cmd)
 	if err != nil {
-		return err
+		return fmt.Errorf("%s %w", err.Error(), native_errors.ErrNotFound)
 	}
 	return nil
 }
@@ -127,7 +128,7 @@ func (s *SingleRuntime) ShowMapEntries(name string) (models.MapEntries, error) {
 	cmd := fmt.Sprintf("show map %s", name)
 	response, err := s.ExecuteWithResponse(cmd)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("%s %w", err.Error(), native_errors.ErrNotFound)
 	}
 	return ParseMapEntries(response, true), nil
 }
@@ -177,10 +178,14 @@ func parseMapEntry(line string, hasId bool) *models.MapEntry {
 
 // AddMapEntry adds an entry into the map file
 func (s *SingleRuntime) AddMapEntry(name, key, value string) error {
+	m, _ := s.GetMapEntry(name, key)
+	if m != nil {
+		return fmt.Errorf("%w", native_errors.ErrAlreadyExists)
+	}
 	cmd := fmt.Sprintf("add map %s %s %s", name, key, value)
 	err := s.Execute(cmd)
 	if err != nil {
-		return err
+		return fmt.Errorf("%s %w", err.Error(), native_errors.ErrGeneral)
 	}
 	return nil
 }
@@ -190,7 +195,7 @@ func (s *SingleRuntime) GetMapEntry(name, id string) (*models.MapEntry, error) {
 	cmd := fmt.Sprintf("get map %s %s", name, id)
 	response, err := s.ExecuteWithResponse(cmd)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("%s %w", err.Error(), native_errors.ErrNotFound)
 	}
 
 	m := &models.MapEntry{}
@@ -210,7 +215,7 @@ func (s *SingleRuntime) GetMapEntry(name, id string) (*models.MapEntry, error) {
 	//get map command returns wrong result(BUG in HAProxy)
 	//so we need to check it
 	if m.Key == "" || m.Value == "" || m.Key != id {
-		return nil, fmt.Errorf("%s entry not found", id)
+		return nil, fmt.Errorf("%s %w", id, native_errors.ErrNotFound)
 	}
 	return m, nil
 }
@@ -220,7 +225,7 @@ func (s *SingleRuntime) SetMapEntry(name, id, value string) error {
 	cmd := fmt.Sprintf("set map %s %s %s", name, id, value)
 	err := s.Execute(cmd)
 	if err != nil {
-		return err
+		return fmt.Errorf("%s %w", err.Error(), native_errors.ErrNotFound)
 	}
 	return nil
 }
@@ -230,7 +235,7 @@ func (s *SingleRuntime) DeleteMapEntry(name, id string) error {
 	cmd := fmt.Sprintf("del map %s %s", name, id)
 	err := s.Execute(cmd)
 	if err != nil {
-		return err
+		return fmt.Errorf("%s %w", err.Error(), native_errors.ErrNotFound)
 	}
 	return nil
 }
