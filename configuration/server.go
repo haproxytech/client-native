@@ -292,6 +292,11 @@ func ParseServer(ondiskServer types.Server) *models.Server {
 				s.AgentSend = v.Value
 			case "check-sni":
 				s.CheckSni = v.Value
+			case "slowstart":
+				i, err := strconv.ParseInt(v.Value, 10, 64)
+				if err == nil {
+					s.Slowstart = &i
+				}
 			case "sni":
 				s.Sni = v.Value
 			case "resolvers":
@@ -372,6 +377,9 @@ func SerializeServer(s models.Server) types.Server {
 	}
 	if s.CheckSni != "" {
 		srv.Params = append(srv.Params, &params.ServerOptionValue{Name: "check-sni", Value: s.CheckSni})
+	}
+	if s.Slowstart != nil {
+		srv.Params = append(srv.Params, &params.ServerOptionValue{Name: "slowstart", Value: strconv.FormatInt(*s.Slowstart, 10)})
 	}
 	if s.Sni != "" {
 		srv.Params = append(srv.Params, &params.ServerOptionValue{Name: "sni", Value: s.Sni})

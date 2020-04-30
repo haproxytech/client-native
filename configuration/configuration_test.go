@@ -146,8 +146,8 @@ backend test
   external-check command /bin/false
   use-server webserv if TRUE
   use-server webserv2 unless TRUE
-  server webserv 192.168.1.1:9200 maxconn 1000 ssl weight 10 inter 2s cookie BLAH
-  server webserv2 192.168.1.1:9300 maxconn 1000 ssl weight 10 inter 2s cookie BLAH
+  server webserv 192.168.1.1:9200 maxconn 1000 ssl weight 10 inter 2s cookie BLAH slowstart 6000
+  server webserv2 192.168.1.1:9300 maxconn 1000 ssl weight 10 inter 2s cookie BLAH slowstart 6000
 
 peers mycluster
   peer hapee 192.168.1.1:1023
@@ -174,7 +174,7 @@ backend test_2
   option http-keep-alive
   option forwardfor header X-Forwarded-For
   option httpchk HEAD /
-  default-server fall 2s rise 4s inter 5s port 8888
+  default-server fall 2s rise 4s inter 5s port 8888 slowstart 6000
   option contstats
   timeout check 2s
   timeout tunnel 5s

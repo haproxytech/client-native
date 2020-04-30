@@ -527,6 +527,11 @@ func parseField(section parser.Section, sectionName string, fieldName string, p 
 						dServer.Sni = v.Value
 					case "check-sni":
 						dServer.CheckSni = v.Value
+					case "slowstart":
+						i, err := strconv.ParseInt(v.Value, 10, 64)
+						if err == nil {
+							dServer.Slowstart = &i
+						}
 					case "init-addr":
 						dServer.InitAddr = v.Value
 					case "fall":
@@ -1212,6 +1217,13 @@ func setFieldValue(section parser.Section, sectionName string, fieldName string,
 				param := &params.ServerOptionValue{
 					Name:  "check-sni",
 					Value: ds.CheckSni,
+				}
+				ps = append(ps, param)
+			}
+			if ds.Slowstart != nil {
+				param := &params.ServerOptionValue{
+					Name:  "slowstart",
+					Value: strconv.FormatInt(*ds.Slowstart, 10),
 				}
 				ps = append(ps, param)
 			}
