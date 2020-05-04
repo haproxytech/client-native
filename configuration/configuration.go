@@ -1447,7 +1447,7 @@ func setFieldValue(section parser.Section, sectionName string, fieldName string,
 				return nil
 			}
 
-			b := field.Elem().String()
+			b := field.String()
 			d := types.HTTPReuse{
 				ShareType: b,
 			}
