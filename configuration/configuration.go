@@ -847,7 +847,7 @@ func setFieldValue(section parser.Section, sectionName string, fieldName string,
 
 		if opt.StatsEnable {
 			s := &stats.OneWord{
-				Name: "enabled",
+				Name: "enable",
 			}
 			ss = append(ss, s)
 		}
