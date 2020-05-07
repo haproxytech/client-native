@@ -1322,7 +1322,6 @@ func setFieldValue(section parser.Section, sectionName string, fieldName string,
 		}
 		return nil
 	}
-
 	if fieldName == "Logasap" {
 		if section == parser.Frontends || section == parser.Defaults {
 			logasap := &types.SimpleOption{}
@@ -1337,7 +1336,6 @@ func setFieldValue(section parser.Section, sectionName string, fieldName string,
 		}
 		return nil
 	}
-
 	if fieldName == "Allbackups" {
 		if section == parser.Backends || section == parser.Defaults {
 			allbackups := &types.SimpleOption{}
@@ -1437,7 +1435,6 @@ func setFieldValue(section parser.Section, sectionName string, fieldName string,
 		}
 		return nil
 	}
-
 	if fieldName == "HTTPReuse" {
 		if section == parser.Backends || section == parser.Defaults {
 			if valueIsNil(field) {
@@ -1458,7 +1455,6 @@ func setFieldValue(section parser.Section, sectionName string, fieldName string,
 		}
 		return nil
 	}
-
 	if fieldName == "UniqueIDFormat" {
 		if section != parser.Defaults && section != parser.Frontends {
 			return nil
@@ -1470,13 +1466,13 @@ func setFieldValue(section parser.Section, sectionName string, fieldName string,
 			return nil
 		}
 		d := types.UniqueIDFormat{
-			LogFormat: field.Elem().String(),
+			LogFormat: field.String(),
 		}
 		if err := p.Set(section, sectionName, "unique-id-format", &d); err != nil {
 			return err
 		}
+		return nil
 	}
-
 	if fieldName == "UniqueIDHeader" {
 		if section != parser.Defaults && section != parser.Frontends {
 			return nil
@@ -1493,8 +1489,8 @@ func setFieldValue(section parser.Section, sectionName string, fieldName string,
 		if err := p.Set(section, sectionName, "unique-id-header", &d); err != nil {
 			return err
 		}
+		return nil
 	}
-
 	if fieldName == "Clflog" {
 		if section == parser.Frontends || section == parser.Defaults {
 			if valueIsNil(field) {

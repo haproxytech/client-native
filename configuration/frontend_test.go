@@ -144,6 +144,7 @@ func TestCreateEditDeleteFrontend(t *testing.T) {
 		HTTPKeepAliveTimeout: &tOut,
 		BindProcess:          "4",
 		Logasap:              "disabled",
+		UniqueIDFormat:       "%{+X}o_%fi:%fp_%Ts_%rt:%pid",
 	}
 
 	err := client.CreateFrontend(f, "", version)
