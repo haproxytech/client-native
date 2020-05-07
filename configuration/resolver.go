@@ -176,41 +176,80 @@ func ParseResolverSection(p *parser.Parser, resolver *models.Resolver) error {
 	name := resolver.Name
 
 	if data, err := p.Get(parser.Resolvers, name, "accepted_payload_size", false); err == nil {
-		resolver.AcceptedPayloadSize = *misc.ParseTimeout(data.(*types.StringC).Value)
+		d, ok := data.(*types.StringC)
+		if ok && d != nil {
+			if n, err := strconv.ParseInt(d.Value, 10, 64); err == nil {
+				resolver.AcceptedPayloadSize = n
+			}
+		}
 	}
 	if data, err := p.Get(parser.Resolvers, name, "hold nx", false); err == nil {
-		resolver.HoldNx = *misc.ParseTimeout(data.(*types.StringC).Value)
+		d, ok := data.(*types.StringC)
+		if ok && d != nil {
+			resolver.HoldNx = misc.ParseTimeout(d.Value)
+		}
 	}
 	if data, err := p.Get(parser.Resolvers, name, "hold obsolete", false); err == nil {
-		resolver.HoldObsolete = *misc.ParseTimeout(data.(*types.StringC).Value)
+		d, ok := data.(*types.StringC)
+		if ok && d != nil {
+			resolver.HoldObsolete = misc.ParseTimeout(d.Value)
+		}
 	}
 	if data, err := p.Get(parser.Resolvers, name, "hold other", false); err == nil {
-		resolver.HoldOther = *misc.ParseTimeout(data.(*types.StringC).Value)
+		d, ok := data.(*types.StringC)
+		if ok && d != nil {
+			resolver.HoldOther = misc.ParseTimeout(d.Value)
+		}
 	}
 	if data, err := p.Get(parser.Resolvers, name, "hold refused", false); err == nil {
-		resolver.HoldRefused = *misc.ParseTimeout(data.(*types.StringC).Value)
+		d, ok := data.(*types.StringC)
+		if ok && d != nil {
+			resolver.HoldRefused = misc.ParseTimeout(d.Value)
+		}
 	}
 	if data, err := p.Get(parser.Resolvers, name, "hold timeout", false); err == nil {
-		resolver.HoldTimeout = *misc.ParseTimeout(data.(*types.StringC).Value)
+		d, ok := data.(*types.StringC)
+		if ok && d != nil {
+			resolver.HoldTimeout = misc.ParseTimeout(d.Value)
+		}
 	}
 	if data, err := p.Get(parser.Resolvers, name, "hold valid", false); err == nil {
-		resolver.HoldValid = *misc.ParseTimeout(data.(*types.StringC).Value)
+		d, ok := data.(*types.StringC)
+		if ok && d != nil {
+			resolver.HoldValid = misc.ParseTimeout(d.Value)
+		}
 	}
 	if data, err := p.Get(parser.Resolvers, name, "resolve_retries", false); err == nil {
-		if n, err := strconv.ParseInt(data.(*types.StringC).Value, 10, 64); err == nil {
-			resolver.ResolveRetries = n
+		d, ok := data.(*types.StringC)
+		if ok && d != nil {
+			if n, err := strconv.ParseInt(d.Value, 10, 64); err == nil {
+				resolver.ResolveRetries = n
+			}
 		}
 	}
 	if data, err := p.Get(parser.Resolvers, name, "parse-resolv-conf", false); err == nil {
-		if b, err := strconv.ParseBool(data.(*types.StringC).Value); err == nil {
-			resolver.ParseResolvConf = b
+		d, ok := data.(*types.StringC)
+		if ok && d != nil {
+			resolver.ParseResolvConf = true
 		}
 	}
 	if data, err := p.Get(parser.Resolvers, name, "timeout resolve", false); err == nil {
-		resolver.TimeoutResolve = *misc.ParseTimeout(data.(*types.SimpleTimeout).Value)
+		d, ok := data.(*types.SimpleTimeout)
+		if ok && d != nil {
+			tOut := misc.ParseTimeout(d.Value)
+			if tOut != nil {
+				resolver.TimeoutResolve = *tOut
+			}
+		}
 	}
 	if data, err := p.Get(parser.Resolvers, name, "timeout retry", false); err == nil {
-		resolver.TimeoutRetry = *misc.ParseTimeout(data.(*types.SimpleTimeout).Value)
+		d, ok := data.(*types.SimpleTimeout)
+		if ok && d != nil {
+			tOut := misc.ParseTimeout(d.Value)
+			if tOut != nil {
+				resolver.TimeoutRetry = *tOut
+			}
+		}
 	}
 
 	return err
@@ -220,49 +259,115 @@ func SerializeResolverSection(p *parser.Parser, data *models.Resolver) error {
 
 	var err error
 
-	n := types.StringC{Value: strconv.FormatInt(data.AcceptedPayloadSize, 10)}
-	if err = p.Set(parser.Resolvers, data.Name, "accepted_payload_size", n); err != nil {
-		return err
+	if data.AcceptedPayloadSize == 0 {
+		if err = p.Set(parser.Resolvers, data.Name, "accepted_payload_size", nil); err != nil {
+			return err
+		}
+	} else {
+		n := types.StringC{Value: strconv.FormatInt(data.AcceptedPayloadSize, 10)}
+		if err = p.Set(parser.Resolvers, data.Name, "accepted_payload_size", n); err != nil {
+			return err
+		}
 	}
-	n = types.StringC{Value: strconv.FormatInt(data.HoldNx, 10)}
-	if err = p.Set(parser.Resolvers, data.Name, "hold nx", n); err != nil {
-		return err
+	if data.HoldNx == nil {
+		if err = p.Set(parser.Resolvers, data.Name, "hold nx", nil); err != nil {
+			return err
+		}
+	} else {
+		n := types.StringC{Value: strconv.FormatInt(*data.HoldNx, 10)}
+		if err = p.Set(parser.Resolvers, data.Name, "hold nx", n); err != nil {
+			return err
+		}
 	}
-	n = types.StringC{Value: strconv.FormatInt(data.HoldObsolete, 10)}
-	if err = p.Set(parser.Resolvers, data.Name, "hold obsolete", n); err != nil {
-		return err
+	if data.HoldObsolete == nil {
+		if err = p.Set(parser.Resolvers, data.Name, "hold obsolete", nil); err != nil {
+			return err
+		}
+	} else {
+		n := types.StringC{Value: strconv.FormatInt(*data.HoldObsolete, 10)}
+		if err = p.Set(parser.Resolvers, data.Name, "hold obsolete", n); err != nil {
+			return err
+		}
 	}
-	n = types.StringC{Value: strconv.FormatInt(data.HoldOther, 10)}
-	if err = p.Set(parser.Resolvers, data.Name, "hold other", n); err != nil {
-		return err
+	if data.HoldOther == nil {
+		if err = p.Set(parser.Resolvers, data.Name, "hold other", nil); err != nil {
+			return err
+		}
+	} else {
+		n := types.StringC{Value: strconv.FormatInt(*data.HoldOther, 10)}
+		if err = p.Set(parser.Resolvers, data.Name, "hold other", n); err != nil {
+			return err
+		}
 	}
-	n = types.StringC{Value: strconv.FormatInt(data.HoldRefused, 10)}
-	if err = p.Set(parser.Resolvers, data.Name, "hold refused", n); err != nil {
-		return err
+	if data.HoldRefused == nil {
+		if err = p.Set(parser.Resolvers, data.Name, "hold refused", nil); err != nil {
+			return err
+		}
+	} else {
+		n := types.StringC{Value: strconv.FormatInt(*data.HoldRefused, 10)}
+		if err = p.Set(parser.Resolvers, data.Name, "hold refused", n); err != nil {
+			return err
+		}
 	}
-	n = types.StringC{Value: strconv.FormatInt(data.HoldTimeout, 10)}
-	if err = p.Set(parser.Resolvers, data.Name, "hold timeout", n); err != nil {
-		return err
+	if data.HoldTimeout == nil {
+		if err = p.Set(parser.Resolvers, data.Name, "hold timeout", nil); err != nil {
+			return err
+		}
+	} else {
+		n := types.StringC{Value: strconv.FormatInt(*data.HoldTimeout, 10)}
+		if err = p.Set(parser.Resolvers, data.Name, "hold timeout", n); err != nil {
+			return err
+		}
 	}
-	n = types.StringC{Value: strconv.FormatInt(data.HoldValid, 10)}
-	if err = p.Set(parser.Resolvers, data.Name, "hold valid", n); err != nil {
-		return err
+	if data.HoldValid == nil {
+		if err = p.Set(parser.Resolvers, data.Name, "hold valid", nil); err != nil {
+			return err
+		}
+	} else {
+		n := types.StringC{Value: strconv.FormatInt(*data.HoldValid, 10)}
+		if err = p.Set(parser.Resolvers, data.Name, "hold valid", n); err != nil {
+			return err
+		}
 	}
-	b := types.StringC{Value: strconv.FormatBool(data.ParseResolvConf)}
-	if err = p.Set(parser.Resolvers, data.Name, "parse-resolv-conf", b); err != nil {
-		return err
+	if data.ParseResolvConf {
+		b := types.StringC{Value: strconv.FormatBool(data.ParseResolvConf)}
+		if err = p.Set(parser.Resolvers, data.Name, "parse-resolv-conf", b); err != nil {
+			return err
+		}
+	} else {
+		if err = p.Set(parser.Resolvers, data.Name, "parse-resolv-conf", nil); err != nil {
+			return err
+		}
 	}
-	n = types.StringC{Value: strconv.FormatInt(data.ResolveRetries, 10)}
-	if err = p.Set(parser.Resolvers, data.Name, "resolve_retries", n); err != nil {
-		return err
+	if data.ResolveRetries == 0 {
+		if err = p.Set(parser.Resolvers, data.Name, "resolve_retries", nil); err != nil {
+			return err
+		}
+	} else {
+		n := types.StringC{Value: strconv.FormatInt(data.ResolveRetries, 10)}
+		if err = p.Set(parser.Resolvers, data.Name, "resolve_retries", n); err != nil {
+			return err
+		}
 	}
-	timeout := types.SimpleTimeout{Value: strconv.FormatInt(data.TimeoutResolve, 10)}
-	if err = p.Set(parser.Resolvers, data.Name, "timeout resolve", timeout); err != nil {
-		return err
+	if data.TimeoutResolve == 0 {
+		if err = p.Set(parser.Resolvers, data.Name, "timeout resolve", nil); err != nil {
+			return err
+		}
+	} else {
+		timeout := types.SimpleTimeout{Value: strconv.FormatInt(data.TimeoutResolve, 10)}
+		if err = p.Set(parser.Resolvers, data.Name, "timeout resolve", timeout); err != nil {
+			return err
+		}
 	}
-	timeout = types.SimpleTimeout{Value: strconv.FormatInt(data.TimeoutRetry, 10)}
-	if err = p.Set(parser.Resolvers, data.Name, "timeout retry", timeout); err != nil {
-		return err
+	if data.TimeoutRetry == 0 {
+		if err = p.Set(parser.Resolvers, data.Name, "timeout retry", nil); err != nil {
+			return err
+		}
+	} else {
+		timeout := types.SimpleTimeout{Value: strconv.FormatInt(data.TimeoutRetry, 10)}
+		if err := p.Set(parser.Resolvers, data.Name, "timeout retry", timeout); err != nil {
+			return err
+		}
 	}
 
 	return err

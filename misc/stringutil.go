@@ -182,3 +182,8 @@ func ParseSize(size string) *int64 {
 func StringP(s string) *string {
 	return &s
 }
+
+func Int64P(i int) *int64 {
+	ret := int64(i)
+	return &ret
+}

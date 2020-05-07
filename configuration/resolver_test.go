@@ -20,6 +20,7 @@ import (
 	"reflect"
 	"testing"
 
+	"github.com/haproxytech/client-native/v2/misc"
 	"github.com/haproxytech/models/v2"
 )
 
@@ -70,12 +71,12 @@ func TestCreateEditDeleteResolver(t *testing.T) {
 	f := &models.Resolver{
 		Name:                "created_resolver",
 		AcceptedPayloadSize: 4096,
-		HoldNx:              10,
-		HoldObsolete:        10,
-		HoldOther:           10,
-		HoldRefused:         10,
-		HoldTimeout:         10,
-		HoldValid:           100,
+		HoldNx:              misc.Int64P(10),
+		HoldObsolete:        misc.Int64P(10),
+		HoldOther:           misc.Int64P(10),
+		HoldRefused:         misc.Int64P(10),
+		HoldTimeout:         misc.Int64P(10),
+		HoldValid:           misc.Int64P(100),
 		ResolveRetries:      10,
 		ParseResolvConf:     true,
 		TimeoutResolve:      10,
