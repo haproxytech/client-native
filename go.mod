@@ -11,7 +11,7 @@ require (
 	github.com/google/go-cmp v0.4.0
 	github.com/google/uuid v1.1.1
 	github.com/haproxytech/config-parser/v2 v2.0.1
-	github.com/haproxytech/models/v2 v2.0.1-0.20200507113249-2280458b45e8
+	github.com/haproxytech/models/v2 v2.0.1
 	github.com/kr/pretty v0.2.0 // indirect
 	github.com/kr/text v0.2.0 // indirect
 	github.com/mitchellh/mapstructure v1.2.2
