@@ -556,15 +556,9 @@ func (c *Client) DeleteMapEntry(name, id string) error {
 	name = c.GetMapsPath(name)
 	var lastErr error
 	for _, runtime := range c.runtimes {
-		m, err := runtime.GetMapEntry(name, id)
+		err := runtime.DeleteMapEntry(name, id)
 		if err != nil {
 			lastErr = err
-		}
-		if m != nil {
-			err := runtime.DeleteMapEntry(name, id)
-			if err != nil {
-				lastErr = err
-			}
 		}
 	}
 	if lastErr != nil {
