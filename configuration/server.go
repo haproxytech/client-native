@@ -293,10 +293,7 @@ func ParseServer(ondiskServer types.Server) *models.Server {
 			case "check-sni":
 				s.CheckSni = v.Value
 			case "slowstart":
-				i, err := strconv.ParseInt(v.Value, 10, 64)
-				if err == nil {
-					s.Slowstart = &i
-				}
+				s.Slowstart = misc.ParseTimeout(v.Value)
 			case "sni":
 				s.Sni = v.Value
 			case "resolvers":
