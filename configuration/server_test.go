@@ -123,6 +123,7 @@ func TestCreateEditDeleteServer(t *testing.T) {
 	// TestCreateServer
 	port := int64(4300)
 	inter := int64(5000)
+	slowStart := int64(6000)
 	s := &models.Server{
 		Name:           "created",
 		Address:        "192.168.2.1",
@@ -139,6 +140,7 @@ func TestCreateEditDeleteServer(t *testing.T) {
 		OnMarkedDown:   "shutdown-sessions",
 		OnError:        "mark-down",
 		OnMarkedUp:     "shutdown-backup-sessions",
+		Slowstart:      &slowStart,
 	}
 
 	err := client.CreateServer("test", s, "", version)
@@ -171,6 +173,7 @@ func TestCreateEditDeleteServer(t *testing.T) {
 
 	// TestEditServer
 	port = int64(5300)
+	slowStart = int64(3000)
 	s = &models.Server{
 		Name:           "created",
 		Address:        "192.168.3.1",
@@ -181,6 +184,7 @@ func TestCreateEditDeleteServer(t *testing.T) {
 		SslCafile:      "dummy.ca",
 		TLSTickets:     "disabled",
 		Verify:         "required",
+		Slowstart:      &slowStart,
 	}
 
 	err = client.EditServer("created", "test", s, "", version)
