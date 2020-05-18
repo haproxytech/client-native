@@ -302,6 +302,8 @@ func ParseServer(ondiskServer types.Server) *models.Server {
 				s.ResolvePrefer = v.Value
 			case "resolve-net":
 				s.ResolveNet = v.Value
+			case "proto":
+				s.Proto = v.Value
 			}
 		}
 	}
