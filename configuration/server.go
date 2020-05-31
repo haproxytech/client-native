@@ -241,6 +241,8 @@ func ParseServer(ondiskServer types.Server) *models.Server {
 			}
 		case *params.ServerOptionValue:
 			switch v.Name {
+			case "alpn":
+				s.Alpn = v.Value
 			case "maxconn":
 				m, err := strconv.ParseInt(v.Value, 10, 64)
 				if err == nil && m != 0 {
@@ -361,6 +363,9 @@ func SerializeServer(s models.Server) types.Server {
 	}
 	if s.Ssl == "disabled" {
 		srv.Params = append(srv.Params, &params.ServerOptionWord{Name: "no-ssl"})
+	}
+	if s.Alpn != "" {
+		srv.Params = append(srv.Params, &params.ServerOptionValue{Name: "alpn", Value: s.Alpn})
 	}
 	if s.TLSTickets == "enabled" {
 		srv.Params = append(srv.Params, &params.ServerOptionWord{Name: "tls-tickets"})
