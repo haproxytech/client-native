@@ -41,8 +41,6 @@ type ClientParams struct {
 const (
 	// DefaultSocketPath sane default for runtime API socket path
 	DefaultSocketPath string = "/var/run/haproxy.sock"
-	// DefaultMapsDir default runtime maps directory
-	DefaultMapsDir string = "/etc/haproxy/maps"
 )
 
 // DefaultClient return runtime Client with sane defaults
@@ -82,20 +80,29 @@ func (c *Client) Init(socketPath []string, masterSocketPath string, nbproc int) 
 }
 
 //GetMapsPath returns runtime map file path or map id
-func (c *Client) GetMapsPath(name string) string {
+func (c *Client) GetMapsPath(name string) (string, error) {
 	//we can refer to runtime map with either id or path
 	if strings.HasPrefix(name, "#") { //id
-		return name
+		return name, nil
 	}
-	if c.MapsDir == "" {
-		c.MapsDir = DefaultMapsDir
+	//CLI
+	if c.MapsDir != "" {
+		ext := filepath.Ext(name)
+		if ext != ".map" {
+			name = fmt.Sprintf("%s%s", name, ".map")
+		}
+		p := filepath.Join(c.MapsDir, name) //path
+		return p, nil
 	}
-	ext := filepath.Ext(name)
-	if ext != ".map" {
-		name = fmt.Sprintf("%s%s", name, ".map")
+	//config
+	maps, _ := c.ShowMaps()
+	for _, m := range maps {
+		basename := filepath.Base(m.File)
+		if strings.TrimSuffix(basename, filepath.Ext(basename)) == name {
+			return m.File, nil //path from config
+		}
 	}
-	p := filepath.Join(c.MapsDir, name) //path
-	return p
+	return "", fmt.Errorf("maps dir doesn't exists or not specified. Either use `maps-dir` CLI option or reload HAProxy if map section exists in config file.")
 }
 
 func (c *Client) InitWithSockets(socketPath map[int]string) error {
@@ -413,7 +420,10 @@ func (c *Client) ShowMaps() (models.Maps, error) {
 
 //CreateMap creates a new map file with its entries
 func (c *Client) CreateMap(file multipart.File, header multipart.FileHeader) (models.MapEntries, error) {
-	name := c.GetMapsPath(header.Filename)
+	name, err := c.GetMapsPath(header.Filename)
+	if err != nil {
+		return nil, err
+	}
 	m, err := CreateMap(name, file)
 	if err != nil {
 		return nil, err
@@ -423,7 +433,10 @@ func (c *Client) CreateMap(file multipart.File, header multipart.FileHeader) (mo
 
 //GetMap returns one structured runtime map file
 func (c *Client) GetMap(name string) (*models.Map, error) {
-	name = c.GetMapsPath(name)
+	name, err := c.GetMapsPath(name)
+	if err != nil {
+		return nil, err
+	}
 	var lastErr error
 	for _, runtime := range c.runtimes {
 		m, err := runtime.GetMap(name)
@@ -439,7 +452,10 @@ func (c *Client) GetMap(name string) (*models.Map, error) {
 
 //ClearMap removes all map entries from the map file. If forceDelete is true, deletes file from disk
 func (c *Client) ClearMap(name string, forceDelete bool) error {
-	name = c.GetMapsPath(name)
+	name, err := c.GetMapsPath(name)
+	if err != nil {
+		return err
+	}
 	if forceDelete {
 		if err := os.Remove(name); err != nil {
 			if os.IsNotExist(err) {
@@ -467,7 +483,10 @@ func (c *Client) ClearMap(name string, forceDelete bool) error {
 
 //ShowMapEntries list all map entries by map file name
 func (c *Client) ShowMapEntries(name string) (models.MapEntries, error) {
-	name = c.GetMapsPath(name)
+	name, err := c.GetMapsPath(name)
+	if err != nil {
+		return nil, err
+	}
 	entries := models.MapEntries{}
 	var lastErr error
 	for _, runtime := range c.runtimes {
@@ -502,7 +521,10 @@ func (c *Client) ShowMapEntries(name string) (models.MapEntries, error) {
 
 //AddMapEntry adds an entry into the map file
 func (c *Client) AddMapEntry(name, key, value string) error {
-	name = c.GetMapsPath(name)
+	name, err := c.GetMapsPath(name)
+	if err != nil {
+		return err
+	}
 	var lastErr error
 	for _, runtime := range c.runtimes {
 		err := runtime.AddMapEntry(name, key, value)
@@ -518,7 +540,10 @@ func (c *Client) AddMapEntry(name, key, value string) error {
 
 //GetMapEntry returns one map runtime setting
 func (c *Client) GetMapEntry(name, id string) (*models.MapEntry, error) {
-	name = c.GetMapsPath(name)
+	name, err := c.GetMapsPath(name)
+	if err != nil {
+		return nil, err
+	}
 	var lastErr error
 	for _, runtime := range c.runtimes {
 		m, err := runtime.GetMapEntry(name, id)
@@ -534,7 +559,10 @@ func (c *Client) GetMapEntry(name, id string) (*models.MapEntry, error) {
 
 //SetMapEntry replace the value corresponding to each id in a map
 func (c *Client) SetMapEntry(name, id, value string) error {
-	name = c.GetMapsPath(name)
+	name, err := c.GetMapsPath(name)
+	if err != nil {
+		return err
+	}
 	var lastErr error
 	for _, runtime := range c.runtimes {
 		m, _ := runtime.GetMapEntry(name, id)
@@ -553,7 +581,10 @@ func (c *Client) SetMapEntry(name, id, value string) error {
 
 //DeleteMapEntry deletes all the map entries from the map by its id
 func (c *Client) DeleteMapEntry(name, id string) error {
-	name = c.GetMapsPath(name)
+	name, err := c.GetMapsPath(name)
+	if err != nil {
+		return err
+	}
 	var lastErr error
 	for _, runtime := range c.runtimes {
 		err := runtime.DeleteMapEntry(name, id)
