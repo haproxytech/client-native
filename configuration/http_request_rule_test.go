@@ -29,8 +29,8 @@ func TestGetHTTPRequestRules(t *testing.T) {
 		t.Error(err.Error())
 	}
 
-	if len(hRules) != 11 {
-		t.Errorf("%v http request rules returned, expected 11", len(hRules))
+	if len(hRules) != 12 {
+		t.Errorf("%v http request rules returned, expected 12", len(hRules))
 	}
 
 	if v != version {
@@ -181,8 +181,52 @@ func TestGetHTTPRequestRules(t *testing.T) {
 			if r.CondTest != "FALSE" {
 				t.Errorf("%v: CondTest not FALSE: %v", *r.Index, r.CondTest)
 			}
+		} else if *r.Index == 11 {
+			if r.Type != "do-resolve" {
+				t.Errorf("%v: Type not do-resolve: %v", *r.Index, r.Type)
+			}
+			if r.VarName != "txn.myip" {
+				t.Errorf("%v: VarName not txn.myip: %v", *r.Index, r.VarName)
+			}
+			if r.Resolvers != "mydns" {
+				t.Errorf("%v: Resolvers not mydns: %v", *r.Index, r.Resolvers)
+			}
+			if r.Protocol != "ipv4" {
+				t.Errorf("%v: Protocol not ipv4: %v", *r.Index, r.Protocol)
+			}
+			if r.Expr != "hdr(Host),lower" {
+				t.Errorf("%v: Expr not hdr(Host),lower: %v", *r.Index, r.Expr)
+			}
 		} else {
-			t.Errorf("Expext only http-request 0 to 10, %v found", *r.Index)
+			t.Errorf("Expext only http-request 0 to 11, %v found", *r.Index)
+		}
+	}
+
+	_, hRules, err = client.GetHTTPRequestRules("backend", "test", "")
+	if err != nil {
+		t.Error(err.Error())
+	}
+	if len(hRules) > 2 {
+		t.Errorf("%v HTTP Request Ruless returned, expected 2", len(hRules))
+	}
+
+	for _, r := range hRules {
+		if *r.Index == 0 {
+			if r.Type != "set-dst" {
+				t.Errorf("%v: Type not set-dst: %v", *r.Index, r.Type)
+			}
+			if r.Expr != "hdr(x-dst)" {
+				t.Errorf("%v: Expr not hdr(x-dst): %v", *r.Index, r.VarExpr)
+			}
+		} else if *r.Index == 1 {
+			if r.Type != "set-dst-port" {
+				t.Errorf("%v: Type not set-dst-port: %v", *r.Index, r.Type)
+			}
+			if r.Expr != "int(4000)" {
+				t.Errorf("%v: Expr not v: %v", *r.Index, r.Expr)
+			}
+		} else {
+			t.Errorf("Expext only http-request 0 to %v, %v found", *r.Index, len(hRules)-1)
 		}
 	}
 
@@ -314,7 +358,7 @@ func TestCreateEditDeleteHTTPRequestRule(t *testing.T) {
 	}
 
 	// TestDeleteHTTPRequest
-	err = client.DeleteHTTPRequestRule(11, "frontend", "test", "", version)
+	err = client.DeleteHTTPRequestRule(12, "frontend", "test", "", version)
 	if err != nil {
 		t.Error(err.Error())
 	} else {
@@ -325,9 +369,9 @@ func TestCreateEditDeleteHTTPRequestRule(t *testing.T) {
 		t.Error("Version not incremented")
 	}
 
-	_, _, err = client.GetHTTPRequestRule(11, "frontend", "test", "")
+	_, _, err = client.GetHTTPRequestRule(12, "frontend", "test", "")
 	if err == nil {
-		t.Error("DeleteHTTPRequestRule failed, HTTP Request Rule 11 still exists")
+		t.Error("DeleteHTTPRequestRule failed, HTTP Request Rule 12 still exists")
 	}
 
 	err = client.DeleteHTTPRequestRule(2, "backend", "test_2", "", version)

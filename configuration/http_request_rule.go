@@ -476,6 +476,30 @@ func ParseHTTPRequestRule(f types.HTTPAction) (rule *models.HTTPRequestRule, err
 			Cond:     v.Cond,
 			CondTest: v.CondTest,
 		}
+	case *actions.DoResolve:
+		rule = &models.HTTPRequestRule{
+			Type:      "do-resolve",
+			VarName:   v.Var,
+			Resolvers: v.Resolvers,
+			Protocol:  v.Protocol,
+			Expr:      v.Expr.String(),
+			Cond:      v.Cond,
+			CondTest:  v.CondTest,
+		}
+	case *actions.SetDst:
+		rule = &models.HTTPRequestRule{
+			Type:     "set-dst",
+			Expr:     v.Expr.String(),
+			Cond:     v.Cond,
+			CondTest: v.CondTest,
+		}
+	case *actions.SetDstPort:
+		rule = &models.HTTPRequestRule{
+			Type:     "set-dst-port",
+			Expr:     v.Expr.String(),
+			Cond:     v.Cond,
+			CondTest: v.CondTest,
+		}
 	}
 	return rule, err
 }
@@ -701,6 +725,28 @@ func SerializeHTTPRequestRule(f models.HTTPRequestRule) (rule types.HTTPAction, 
 			Cond:     f.Cond,
 			CondTest: f.CondTest,
 		}
+	case "do-resolve":
+		rule = &actions.DoResolve{
+			Var:       f.VarName,
+			Resolvers: f.Resolvers,
+			Protocol:  f.Protocol,
+			Expr:      common.Expression{Expr: strings.Split(f.Expr, " ")},
+			Cond:      f.Cond,
+			CondTest:  f.CondTest,
+		}
+	case "set-dst":
+		rule = &actions.SetDst{
+			Expr:     common.Expression{Expr: strings.Split(f.Expr, " ")},
+			Cond:     f.Cond,
+			CondTest: f.CondTest,
+		}
+	case "set-dst-port":
+		rule = &actions.SetDstPort{
+			Expr:     common.Expression{Expr: strings.Split(f.Expr, " ")},
+			Cond:     f.Cond,
+			CondTest: f.CondTest,
+		}
 	}
+
 	return rule, err
 }
