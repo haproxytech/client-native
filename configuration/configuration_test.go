@@ -75,9 +75,13 @@ frontend test
   http-request allow if src 192.168.0.0/16
   http-request set-header X-SSL %[ssl_fc]
   http-request set-var(req.my_var) req.fhdr(user-agent),lower
+  http-request set-map(map.lst) %[src] %[req.hdr(X-Value)]
+  http-request del-map(map.lst) %[src] if FALSE
   http-response allow if src 192.168.0.0/16
   http-response set-header X-SSL %[ssl_fc]
   http-response set-var(req.my_var) req.fhdr(user-agent),lower
+  http-response set-map(map.lst) %[src] %[res.hdr(X-Value)]
+  http-response del-map(map.lst) %[src] if FALSE
   tcp-request connection accept if TRUE
   tcp-request connection reject if FALSE
   tcp-request content accept if TRUE

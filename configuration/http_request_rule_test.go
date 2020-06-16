@@ -29,8 +29,8 @@ func TestGetHTTPRequestRules(t *testing.T) {
 		t.Error(err.Error())
 	}
 
-	if len(hRules) != 3 {
-		t.Errorf("%v http request rules returned, expected 3", len(hRules))
+	if len(hRules) != 5 {
+		t.Errorf("%v http request rules returned, expected 5", len(hRules))
 	}
 
 	if v != version {
@@ -70,6 +70,35 @@ func TestGetHTTPRequestRules(t *testing.T) {
 			}
 			if r.VarExpr != "req.fhdr(user-agent),lower" {
 				t.Errorf("%v: VarPattern not req.fhdr(user-agent),lower: %v", *r.Index, r.VarExpr)
+			}
+		} else if *r.Index == 3 {
+			if r.Type != "set-map" {
+				t.Errorf("%v: Type not set-map: %v", *r.Index, r.Type)
+			}
+			if r.MapFile != "map.lst" {
+				t.Errorf("%v: MapFile not map.lst: %v", *r.Index, r.MapFile)
+			}
+			if r.MapKeyfmt != "%[src]" {
+				t.Errorf("%v: MapKeyfmt not %%[src]: %v", *r.Index, r.MapKeyfmt)
+			}
+			if r.MapValuefmt != "%[req.hdr(X-Value)]" {
+				t.Errorf("%v: MapValuefmt not %%[req.hdr(X-Value)]: %v", *r.Index, r.MapValuefmt)
+			}
+		} else if *r.Index == 4 {
+			if r.Type != "del-map" {
+				t.Errorf("%v: Type not del-map: %v", *r.Index, r.Type)
+			}
+			if r.MapFile != "map.lst" {
+				t.Errorf("%v: MapFile not map.lst: %v", *r.Index, r.MapFile)
+			}
+			if r.MapKeyfmt != "%[src]" {
+				t.Errorf("%v: MapKeyfmt not %%[src]: %v", *r.Index, r.MapKeyfmt)
+			}
+			if r.Cond != "if" {
+				t.Errorf("%v: Cond not if: %v", *r.Index, r.Cond)
+			}
+			if r.CondTest != "FALSE" {
+				t.Errorf("%v: CondTest not FALSE: %v", *r.Index, r.CondTest)
 			}
 		} else {
 			t.Errorf("Expext only http-request 1, 2 or 3, %v found", *r.Index)
@@ -215,9 +244,9 @@ func TestCreateEditDeleteHTTPRequestRule(t *testing.T) {
 		t.Error("Version not incremented")
 	}
 
-	_, _, err = client.GetHTTPRequestRule(3, "frontend", "test", "")
+	_, _, err = client.GetHTTPRequestRule(5, "frontend", "test", "")
 	if err == nil {
-		t.Error("DeleteHTTPRequestRule failed, HTTP Request Rule 3 still exists")
+		t.Error("DeleteHTTPRequestRule failed, HTTP Request Rule 5 still exists")
 	}
 
 	err = client.DeleteHTTPRequestRule(2, "backend", "test_2", "", version)

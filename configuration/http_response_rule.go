@@ -331,6 +331,23 @@ func ParseHTTPResponseRule(f types.HTTPAction) *models.HTTPResponseRule {
 			CondTest:      v.CondTest,
 			CaptureID:     v.SlotID,
 		}
+	case *actions.SetMap:
+		return &models.HTTPResponseRule{
+			Type:        "set-map",
+			MapFile:     v.FileName,
+			MapKeyfmt:   v.KeyFmt,
+			MapValuefmt: v.ValueFmt,
+			Cond:        v.Cond,
+			CondTest:    v.CondTest,
+		}
+	case *actions.DelMap:
+		return &models.HTTPResponseRule{
+			Type:      "del-map",
+			MapFile:   v.FileName,
+			MapKeyfmt: v.KeyFmt,
+			Cond:      v.Cond,
+			CondTest:  v.CondTest,
+		}
 	}
 	return nil
 }
@@ -440,6 +457,21 @@ func SerializeHTTPResponseRule(f models.HTTPResponseRule) types.HTTPAction {
 			Cond:     f.Cond,
 			CondTest: f.CondTest,
 			SlotID:   f.CaptureID,
+		}
+	case "set-map":
+		return &actions.SetMap{
+			FileName: f.MapFile,
+			KeyFmt:   f.MapKeyfmt,
+			ValueFmt: f.MapValuefmt,
+			Cond:     f.Cond,
+			CondTest: f.CondTest,
+		}
+	case "del-map":
+		return &actions.DelMap{
+			FileName: f.MapFile,
+			KeyFmt:   f.MapKeyfmt,
+			Cond:     f.Cond,
+			CondTest: f.CondTest,
 		}
 	}
 	return nil
