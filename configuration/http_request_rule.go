@@ -431,6 +431,27 @@ func ParseHTTPRequestRule(f types.HTTPAction) (rule *models.HTTPRequestRule, err
 			Cond:      v.Cond,
 			CondTest:  v.CondTest,
 		}
+	case *actions.CacheUse:
+		rule = &models.HTTPRequestRule{
+			Type:      "cache-use",
+			CacheName: v.Name,
+			Cond:      v.Cond,
+			CondTest:  v.CondTest,
+		}
+	case *actions.DisableL7Retry:
+		rule = &models.HTTPRequestRule{
+			Type:     "disable-l7-retry",
+			Cond:     v.Cond,
+			CondTest: v.CondTest,
+		}
+	case *actions.EarlyHint:
+		rule = &models.HTTPRequestRule{
+			Type:       "early-hint",
+			HintName:   v.Name,
+			HintFormat: v.Fmt,
+			Cond:       v.Cond,
+			CondTest:   v.CondTest,
+		}
 	}
 	return rule, err
 }
@@ -616,6 +637,24 @@ func SerializeHTTPRequestRule(f models.HTTPRequestRule) (rule types.HTTPAction, 
 		rule = &actions.DelMap{
 			FileName: f.MapFile,
 			KeyFmt:   f.MapKeyfmt,
+			Cond:     f.Cond,
+			CondTest: f.CondTest,
+		}
+	case "cache-use":
+		rule = &actions.CacheUse{
+			Name:     f.CacheName,
+			Cond:     f.Cond,
+			CondTest: f.CondTest,
+		}
+	case "disable-l7-retry":
+		rule = &actions.DisableL7Retry{
+			Cond:     f.Cond,
+			CondTest: f.CondTest,
+		}
+	case "early-hint":
+		rule = &actions.EarlyHint{
+			Name:     f.HintName,
+			Fmt:      f.HintFormat,
 			Cond:     f.Cond,
 			CondTest: f.CondTest,
 		}

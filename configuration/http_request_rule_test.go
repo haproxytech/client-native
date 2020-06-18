@@ -29,8 +29,8 @@ func TestGetHTTPRequestRules(t *testing.T) {
 		t.Error(err.Error())
 	}
 
-	if len(hRules) != 5 {
-		t.Errorf("%v http request rules returned, expected 5", len(hRules))
+	if len(hRules) != 8 {
+		t.Errorf("%v http request rules returned, expected 8", len(hRules))
 	}
 
 	if v != version {
@@ -100,8 +100,47 @@ func TestGetHTTPRequestRules(t *testing.T) {
 			if r.CondTest != "FALSE" {
 				t.Errorf("%v: CondTest not FALSE: %v", *r.Index, r.CondTest)
 			}
+		} else if *r.Index == 5 {
+			if r.Type != "cache-use" {
+				t.Errorf("%v: Type not cache-use: %v", *r.Index, r.Type)
+			}
+			if r.CacheName != "cache-name" {
+				t.Errorf("%v: CacheName not cache-name: %v", *r.Index, r.MapFile)
+			}
+			if r.Cond != "if" {
+				t.Errorf("%v: Cond not if: %v", *r.Index, r.Cond)
+			}
+			if r.CondTest != "FALSE" {
+				t.Errorf("%v: CondTest not FALSE: %v", *r.Index, r.CondTest)
+			}
+		} else if *r.Index == 6 {
+			if r.Type != "disable-l7-retry" {
+				t.Errorf("%v: Type not disable-l7-retry: %v", *r.Index, r.Type)
+			}
+			if r.Cond != "if" {
+				t.Errorf("%v: Cond not if: %v", *r.Index, r.Cond)
+			}
+			if r.CondTest != "FALSE" {
+				t.Errorf("%v: CondTest not FALSE: %v", *r.Index, r.CondTest)
+			}
+		} else if *r.Index == 7 {
+			if r.Type != "early-hint" {
+				t.Errorf("%v: Type not early-hint: %v", *r.Index, r.Type)
+			}
+			if r.HintName != "hint-name" {
+				t.Errorf("%v: HintName not hint-name: %v", *r.Index, r.MapFile)
+			}
+			if r.HintFormat != "%[src]" {
+				t.Errorf("%v: HintFormat not %%[src]: %v", *r.Index, r.MapFile)
+			}
+			if r.Cond != "if" {
+				t.Errorf("%v: Cond not if: %v", *r.Index, r.Cond)
+			}
+			if r.CondTest != "FALSE" {
+				t.Errorf("%v: CondTest not FALSE: %v", *r.Index, r.CondTest)
+			}
 		} else {
-			t.Errorf("Expext only http-request 1, 2 or 3, %v found", *r.Index)
+			t.Errorf("Expext only http-request 0 to 7, %v found", *r.Index)
 		}
 	}
 
@@ -233,7 +272,7 @@ func TestCreateEditDeleteHTTPRequestRule(t *testing.T) {
 	}
 
 	// TestDeleteHTTPRequest
-	err = client.DeleteHTTPRequestRule(3, "frontend", "test", "", version)
+	err = client.DeleteHTTPRequestRule(8, "frontend", "test", "", version)
 	if err != nil {
 		t.Error(err.Error())
 	} else {
@@ -244,9 +283,9 @@ func TestCreateEditDeleteHTTPRequestRule(t *testing.T) {
 		t.Error("Version not incremented")
 	}
 
-	_, _, err = client.GetHTTPRequestRule(5, "frontend", "test", "")
+	_, _, err = client.GetHTTPRequestRule(8, "frontend", "test", "")
 	if err == nil {
-		t.Error("DeleteHTTPRequestRule failed, HTTP Request Rule 5 still exists")
+		t.Error("DeleteHTTPRequestRule failed, HTTP Request Rule 8 still exists")
 	}
 
 	err = client.DeleteHTTPRequestRule(2, "backend", "test_2", "", version)

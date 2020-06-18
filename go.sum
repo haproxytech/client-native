@@ -127,6 +127,8 @@ github.com/haproxytech/config-parser/v2 v2.0.2 h1:t+CcSdasWKUCJXN9e7cbqZMCOToTgo
 github.com/haproxytech/config-parser/v2 v2.0.2/go.mod h1:VjHOetXAJtwrtLAJPoDaD/kEYwCoixVp5SCsBitMcj8=
 github.com/haproxytech/config-parser/v2 v2.0.3-0.20200616091412-85d5d5e9d3d4 h1:82bf7pTVSDdeU/diVu1NOeubgm4B9GjYa0Dm+dvviP8=
 github.com/haproxytech/config-parser/v2 v2.0.3-0.20200616091412-85d5d5e9d3d4/go.mod h1:VjHOetXAJtwrtLAJPoDaD/kEYwCoixVp5SCsBitMcj8=
+github.com/haproxytech/config-parser/v2 v2.0.3-0.20200619055735-c63eac9b3552 h1:mu2JtgtoopuN4afnGCiHq/RamanMsJRAus/sQFsSLPM=
+github.com/haproxytech/config-parser/v2 v2.0.3-0.20200619055735-c63eac9b3552/go.mod h1:VjHOetXAJtwrtLAJPoDaD/kEYwCoixVp5SCsBitMcj8=
 github.com/haproxytech/models/v2 v2.0.2-0.20200513093356-3f062770f1d6 h1:6ILrYrcbD9bwaPX9aXjXJjKFvYt2SxDLfVhJvf9WA1U=
 github.com/haproxytech/models/v2 v2.0.2-0.20200513093356-3f062770f1d6/go.mod h1:HjM8x+j1/j4nHUA5lqh159OPZ3zQ5iGz13vHo9xeEk0=
 github.com/haproxytech/models/v2 v2.0.2 h1:+GOvVWT1ACjr7RZ+TP5xUOsRwd38rQ4ZP+7xSQUenPY=
@@ -135,6 +137,8 @@ github.com/haproxytech/models/v2 v2.0.3-0.20200529121530-35dd2bba1993 h1:xRi4Azv
 github.com/haproxytech/models/v2 v2.0.3-0.20200529121530-35dd2bba1993/go.mod h1:HjM8x+j1/j4nHUA5lqh159OPZ3zQ5iGz13vHo9xeEk0=
 github.com/haproxytech/models/v2 v2.0.3-0.20200616132612-d0a489bdebce h1:tjGgH90VpMZNA5jv+gQaP7pV8lX7aN+I0a1w7+ZOl8U=
 github.com/haproxytech/models/v2 v2.0.3-0.20200616132612-d0a489bdebce/go.mod h1:HjM8x+j1/j4nHUA5lqh159OPZ3zQ5iGz13vHo9xeEk0=
+github.com/haproxytech/models/v2 v2.0.3-0.20200619075802-7c4ce1d5849f h1:xZ4u5ZixxiLJo5ABA04Jl4NDyOdSYuGLYUyoYe5uJrU=
+github.com/haproxytech/models/v2 v2.0.3-0.20200619075802-7c4ce1d5849f/go.mod h1:HjM8x+j1/j4nHUA5lqh159OPZ3zQ5iGz13vHo9xeEk0=
 github.com/inconshreveable/mousetrap v1.0.0/go.mod h1:PxqpIevigyE2G7u3NXJIT2ANytuPF1OarO4DADm73n8=
 github.com/joho/godotenv v1.3.0/go.mod h1:7hK45KPybAkOC6peb+G5yklZfMxEjkZhHbwpqxOKXbg=
 github.com/karrick/godirwalk v1.8.0/go.mod h1:H5KPZjojv4lE+QYImBI8xVtrBRgYrIVsaRPx4tDPEn4=
