@@ -80,6 +80,7 @@ frontend test
   http-request cache-use cache-name if FALSE
   http-request disable-l7-retry if FALSE
   http-request early-hint hint-name %[src] if FALSE
+  http-request replace-uri ^http://(.*) https://1 if FALSE
   http-response allow if src 192.168.0.0/16
   http-response set-header X-SSL %[ssl_fc]
   http-response set-var(req.my_var) req.fhdr(user-agent),lower

@@ -29,8 +29,8 @@ func TestGetHTTPRequestRules(t *testing.T) {
 		t.Error(err.Error())
 	}
 
-	if len(hRules) != 8 {
-		t.Errorf("%v http request rules returned, expected 8", len(hRules))
+	if len(hRules) != 9 {
+		t.Errorf("%v http request rules returned, expected 9", len(hRules))
 	}
 
 	if v != version {
@@ -139,8 +139,24 @@ func TestGetHTTPRequestRules(t *testing.T) {
 			if r.CondTest != "FALSE" {
 				t.Errorf("%v: CondTest not FALSE: %v", *r.Index, r.CondTest)
 			}
+		} else if *r.Index == 8 {
+			if r.Type != "replace-uri" {
+				t.Errorf("%v: Type not replace-uri: %v", *r.Index, r.Type)
+			}
+			if r.URIMatch != "^http://(.*)" {
+				t.Errorf("%v: URIMatch not ^http://(.*): %v", *r.Index, r.MapFile)
+			}
+			if r.URIFmt != "https://1" {
+				t.Errorf("%v: URIFmt not https://1: %v", *r.Index, r.MapKeyfmt)
+			}
+			if r.Cond != "if" {
+				t.Errorf("%v: Cond not if: %v", *r.Index, r.Cond)
+			}
+			if r.CondTest != "FALSE" {
+				t.Errorf("%v: CondTest not FALSE: %v", *r.Index, r.CondTest)
+			}
 		} else {
-			t.Errorf("Expext only http-request 0 to 7, %v found", *r.Index)
+			t.Errorf("Expext only http-request 0 to 8, %v found", *r.Index)
 		}
 	}
 
@@ -272,7 +288,7 @@ func TestCreateEditDeleteHTTPRequestRule(t *testing.T) {
 	}
 
 	// TestDeleteHTTPRequest
-	err = client.DeleteHTTPRequestRule(8, "frontend", "test", "", version)
+	err = client.DeleteHTTPRequestRule(9, "frontend", "test", "", version)
 	if err != nil {
 		t.Error(err.Error())
 	} else {
@@ -283,9 +299,9 @@ func TestCreateEditDeleteHTTPRequestRule(t *testing.T) {
 		t.Error("Version not incremented")
 	}
 
-	_, _, err = client.GetHTTPRequestRule(8, "frontend", "test", "")
+	_, _, err = client.GetHTTPRequestRule(9, "frontend", "test", "")
 	if err == nil {
-		t.Error("DeleteHTTPRequestRule failed, HTTP Request Rule 8 still exists")
+		t.Error("DeleteHTTPRequestRule failed, HTTP Request Rule 9 still exists")
 	}
 
 	err = client.DeleteHTTPRequestRule(2, "backend", "test_2", "", version)

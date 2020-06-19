@@ -452,6 +452,14 @@ func ParseHTTPRequestRule(f types.HTTPAction) (rule *models.HTTPRequestRule, err
 			Cond:       v.Cond,
 			CondTest:   v.CondTest,
 		}
+	case *actions.ReplaceURI:
+		rule = &models.HTTPRequestRule{
+			Type:     "replace-uri",
+			URIMatch: v.MatchRegex,
+			URIFmt:   v.ReplaceFmt,
+			Cond:     v.Cond,
+			CondTest: v.CondTest,
+		}
 	}
 	return rule, err
 }
@@ -657,6 +665,13 @@ func SerializeHTTPRequestRule(f models.HTTPRequestRule) (rule types.HTTPAction, 
 			Fmt:      f.HintFormat,
 			Cond:     f.Cond,
 			CondTest: f.CondTest,
+		}
+	case "replace-uri":
+		rule = &actions.ReplaceURI{
+			ReplaceFmt: f.URIFmt,
+			MatchRegex: f.URIMatch,
+			Cond:       f.Cond,
+			CondTest:   f.CondTest,
 		}
 	}
 	return rule, err
