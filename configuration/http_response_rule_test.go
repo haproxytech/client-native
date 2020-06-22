@@ -29,8 +29,8 @@ func TestGetHTTPResponseRules(t *testing.T) {
 		t.Error(err.Error())
 	}
 
-	if len(hRules) != 7 {
-		t.Errorf("%v http response rules returned, expected 7", len(hRules))
+	if len(hRules) != 11 {
+		t.Errorf("%v http response rules returned, expected 11", len(hRules))
 	}
 
 	if v != version {
@@ -126,8 +126,76 @@ func TestGetHTTPResponseRules(t *testing.T) {
 			if r.CondTest != "FALSE" {
 				t.Errorf("%v: CondTest not FALSE: %v", *r.Index, r.CondTest)
 			}
+		} else if *r.Index == 7 {
+			if r.Type != "sc-set-gpt0" {
+				t.Errorf("%v: Type not sc-set-gpt0: %v", *r.Index, r.Type)
+			}
+			if r.ScID != 1 {
+				t.Errorf("%v: ScID not 1: %v", *r.Index, r.ScID)
+			}
+			if r.ScInt != nil {
+				t.Errorf("%v: ScInt not nil: %v", *r.Index, *r.ScInt)
+			}
+			if r.ScExpr != "hdr(Host),lower" {
+				t.Errorf("%v: ScExpr not hdr(Host),lower: %v", *r.Index, r.ScExpr)
+			}
+			if r.Cond != "if" {
+				t.Errorf("%v: Cond not if: %v", *r.Index, r.Cond)
+			}
+			if r.CondTest != "FALSE" {
+				t.Errorf("%v: CondTest not FALSE: %v", *r.Index, r.CondTest)
+			}
+		} else if *r.Index == 8 {
+			if r.Type != "sc-set-gpt0" {
+				t.Errorf("%v: Type not sc-set-gpt0: %v", *r.Index, r.Type)
+			}
+			if r.ScID != 1 {
+				t.Errorf("%v: ScID not 1: %v", *r.Index, r.ScID)
+			}
+			if r.ScInt == nil || *r.ScInt != 20 {
+				if r.ScInt == nil {
+					t.Errorf("%v: ScInt is nil", *r.Index)
+				} else {
+					t.Errorf("%v: ScInt not 20: %v", *r.Index, *r.ScInt)
+				}
+			}
+			if r.ScExpr != "" {
+				t.Errorf("%v: ScExpr not empty string: %v", *r.Index, r.ScExpr)
+			}
+			if r.Cond != "if" {
+				t.Errorf("%v: Cond not if: %v", *r.Index, r.Cond)
+			}
+			if r.CondTest != "FALSE" {
+				t.Errorf("%v: CondTest not FALSE: %v", *r.Index, r.CondTest)
+			}
+		} else if *r.Index == 9 {
+			if r.Type != "set-mark" {
+				t.Errorf("%v: Type not set-mark: %v", *r.Index, r.Type)
+			}
+			if r.MarkValue != "20" {
+				t.Errorf("%v: MarkValue not 20: %v", *r.Index, r.MarkValue)
+			}
+			if r.Cond != "if" {
+				t.Errorf("%v: Cond not if: %v", *r.Index, r.Cond)
+			}
+			if r.CondTest != "FALSE" {
+				t.Errorf("%v: CondTest not FALSE: %v", *r.Index, r.CondTest)
+			}
+		} else if *r.Index == 10 {
+			if r.Type != "set-nice" {
+				t.Errorf("%v: Type not set-nice: %v", *r.Index, r.Type)
+			}
+			if r.NiceValue != 20 {
+				t.Errorf("%v: NiceValue not 20: %v", *r.Index, r.NiceValue)
+			}
+			if r.Cond != "if" {
+				t.Errorf("%v: Cond not if: %v", *r.Index, r.Cond)
+			}
+			if r.CondTest != "FALSE" {
+				t.Errorf("%v: CondTest not FALSE: %v", *r.Index, r.CondTest)
+			}
 		} else {
-			t.Errorf("Expext only http-response 0 to 6, %v found", *r.Index)
+			t.Errorf("Expext only http-response 0 to 10, %v found", *r.Index)
 		}
 	}
 
@@ -246,7 +314,7 @@ func TestCreateEditDeleteHTTPResponseRule(t *testing.T) {
 	}
 
 	// TestDeleteHTTPResponse
-	err = client.DeleteHTTPResponseRule(7, "frontend", "test", "", version)
+	err = client.DeleteHTTPResponseRule(11, "frontend", "test", "", version)
 	if err != nil {
 		t.Error(err.Error())
 	} else {
@@ -257,9 +325,9 @@ func TestCreateEditDeleteHTTPResponseRule(t *testing.T) {
 		t.Error("Version not incremented")
 	}
 
-	_, _, err = client.GetHTTPResponseRule(7, "frontend", "test", "")
+	_, _, err = client.GetHTTPResponseRule(11, "frontend", "test", "")
 	if err == nil {
-		t.Error("DeleteHTTPResponseRule failed, HTTPResponse Rule 7 still exists")
+		t.Error("DeleteHTTPResponseRule failed, HTTPResponse Rule 11 still exists")
 	}
 
 	err = client.DeleteHTTPResponseRule(2, "backend", "test_2", "", version)

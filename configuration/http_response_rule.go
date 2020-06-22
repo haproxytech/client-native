@@ -364,6 +364,34 @@ func ParseHTTPResponseRule(f types.HTTPAction) *models.HTTPResponseRule {
 			Cond:     v.Cond,
 			CondTest: v.CondTest,
 		}
+	case *actions.ScSetGpt0:
+		if (v.Int == nil && len(v.Expr.Expr) == 0) || (v.Int != nil && len(v.Expr.Expr) > 0) {
+			return nil
+		}
+		ID, _ := strconv.ParseInt(v.ID, 10, 64)
+		return &models.HTTPResponseRule{
+			Type:     "sc-set-gpt0",
+			ScID:     ID,
+			ScExpr:   strings.Join(v.Expr.Expr, " "),
+			ScInt:    v.Int,
+			Cond:     v.Cond,
+			CondTest: v.CondTest,
+		}
+	case *actions.SetMark:
+		return &models.HTTPResponseRule{
+			Type:      "set-mark",
+			MarkValue: v.Value,
+			Cond:      v.Cond,
+			CondTest:  v.CondTest,
+		}
+	case *actions.SetNice:
+		nice, _ := strconv.ParseInt(v.Value, 10, 64)
+		return &models.HTTPResponseRule{
+			Type:      "set-nice",
+			NiceValue: nice,
+			Cond:      v.Cond,
+			CondTest:  v.CondTest,
+		}
 	}
 	return nil
 }
@@ -498,6 +526,29 @@ func SerializeHTTPResponseRule(f models.HTTPResponseRule) types.HTTPAction {
 	case "sc-inc-gpc1":
 		return &actions.ScIncGpc1{
 			ID:       strconv.FormatInt(f.ScID, 10),
+			Cond:     f.Cond,
+			CondTest: f.CondTest,
+		}
+	case "sc-set-gpt0":
+		if (len(f.ScExpr) > 0 && f.ScInt != nil) || (len(f.ScExpr) == 0 && f.ScInt == nil) {
+			return nil
+		}
+		return &actions.ScSetGpt0{
+			ID:       strconv.FormatInt(f.ScID, 10),
+			Int:      f.ScInt,
+			Expr:     common.Expression{Expr: strings.Split(f.ScExpr, " ")},
+			Cond:     f.Cond,
+			CondTest: f.CondTest,
+		}
+	case "set-mark":
+		return &actions.SetMark{
+			Value:    f.MarkValue,
+			Cond:     f.Cond,
+			CondTest: f.CondTest,
+		}
+	case "set-nice":
+		return &actions.SetNice{
+			Value:    strconv.FormatInt(f.NiceValue, 10),
 			Cond:     f.Cond,
 			CondTest: f.CondTest,
 		}

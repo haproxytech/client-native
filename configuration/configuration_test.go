@@ -84,6 +84,10 @@ frontend test
   http-request sc-inc-gpc0(0) if FALSE
   http-request sc-inc-gpc1(0) if FALSE
   http-request do-resolve(txn.myip,mydns,ipv4) hdr(Host),lower
+  http-request sc-set-gpt0(1) hdr(Host),lower if FALSE
+  http-request sc-set-gpt0(1) 20 if FALSE
+  http-request set-mark 20 if FALSE
+  http-request set-nice 20 if FALSE
   http-response allow if src 192.168.0.0/16
   http-response set-header X-SSL %[ssl_fc]
   http-response set-var(req.my_var) req.fhdr(user-agent),lower
@@ -91,6 +95,10 @@ frontend test
   http-response del-map(map.lst) %[src] if FALSE
   http-response sc-inc-gpc0(0) if FALSE
   http-response sc-inc-gpc1(0) if FALSE
+  http-response sc-set-gpt0(1) hdr(Host),lower if FALSE
+  http-response sc-set-gpt0(1) 20 if FALSE
+  http-response set-mark 20 if FALSE
+  http-response set-nice 20 if FALSE
   tcp-request connection accept if TRUE
   tcp-request connection reject if FALSE
   tcp-request content accept if TRUE

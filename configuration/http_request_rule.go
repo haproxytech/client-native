@@ -500,6 +500,37 @@ func ParseHTTPRequestRule(f types.HTTPAction) (rule *models.HTTPRequestRule, err
 			Cond:     v.Cond,
 			CondTest: v.CondTest,
 		}
+	case *actions.ScSetGpt0:
+		if v.Int == nil && len(v.Expr.Expr) == 0 {
+			return nil, NewConfError(ErrValidationError, "sc-set-gpt0 int or expr has to be set")
+		}
+		if v.Int != nil && len(v.Expr.Expr) > 0 {
+			return nil, NewConfError(ErrValidationError, "sc-set-gpt0 int and expr are exclusive")
+		}
+		ID, _ := strconv.ParseInt(v.ID, 10, 64)
+		rule = &models.HTTPRequestRule{
+			Type:     "sc-set-gpt0",
+			ScID:     ID,
+			ScExpr:   strings.Join(v.Expr.Expr, " "),
+			ScInt:    v.Int,
+			Cond:     v.Cond,
+			CondTest: v.CondTest,
+		}
+	case *actions.SetMark:
+		rule = &models.HTTPRequestRule{
+			Type:      "set-mark",
+			MarkValue: v.Value,
+			Cond:      v.Cond,
+			CondTest:  v.CondTest,
+		}
+	case *actions.SetNice:
+		nice, _ := strconv.ParseInt(v.Value, 10, 64)
+		rule = &models.HTTPRequestRule{
+			Type:      "set-nice",
+			NiceValue: nice,
+			Cond:      v.Cond,
+			CondTest:  v.CondTest,
+		}
 	}
 	return rule, err
 }
@@ -743,6 +774,32 @@ func SerializeHTTPRequestRule(f models.HTTPRequestRule) (rule types.HTTPAction, 
 	case "set-dst-port":
 		rule = &actions.SetDstPort{
 			Expr:     common.Expression{Expr: strings.Split(f.Expr, " ")},
+			Cond:     f.Cond,
+			CondTest: f.CondTest,
+		}
+	case "sc-set-gpt0":
+		if len(f.ScExpr) > 0 && f.ScInt != nil {
+			return nil, NewConfError(ErrValidationError, "sc-set-gpt0 int and expr are exclusive")
+		}
+		if len(f.ScExpr) == 0 && f.ScInt == nil {
+			return nil, NewConfError(ErrValidationError, "sc-set-gpt0 int or expr has to be set")
+		}
+		rule = &actions.ScSetGpt0{
+			ID:       strconv.FormatInt(f.ScID, 10),
+			Int:      f.ScInt,
+			Expr:     common.Expression{Expr: strings.Split(f.ScExpr, " ")},
+			Cond:     f.Cond,
+			CondTest: f.CondTest,
+		}
+	case "set-mark":
+		rule = &actions.SetMark{
+			Value:    f.MarkValue,
+			Cond:     f.Cond,
+			CondTest: f.CondTest,
+		}
+	case "set-nice":
+		rule = &actions.SetNice{
+			Value:    strconv.FormatInt(f.NiceValue, 10),
 			Cond:     f.Cond,
 			CondTest: f.CondTest,
 		}
