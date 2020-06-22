@@ -460,6 +460,22 @@ func ParseHTTPRequestRule(f types.HTTPAction) (rule *models.HTTPRequestRule, err
 			Cond:     v.Cond,
 			CondTest: v.CondTest,
 		}
+	case *actions.ScIncGpc0:
+		ID, _ := strconv.ParseInt(v.ID, 10, 64)
+		rule = &models.HTTPRequestRule{
+			Type:     "sc-inc-gpc0",
+			ScID:     ID,
+			Cond:     v.Cond,
+			CondTest: v.CondTest,
+		}
+	case *actions.ScIncGpc1:
+		ID, _ := strconv.ParseInt(v.ID, 10, 64)
+		rule = &models.HTTPRequestRule{
+			Type:     "sc-inc-gpc1",
+			ScID:     ID,
+			Cond:     v.Cond,
+			CondTest: v.CondTest,
+		}
 	}
 	return rule, err
 }
@@ -672,6 +688,18 @@ func SerializeHTTPRequestRule(f models.HTTPRequestRule) (rule types.HTTPAction, 
 			MatchRegex: f.URIMatch,
 			Cond:       f.Cond,
 			CondTest:   f.CondTest,
+		}
+	case "sc-inc-gpc0":
+		rule = &actions.ScIncGpc0{
+			ID:       strconv.FormatInt(f.ScID, 10),
+			Cond:     f.Cond,
+			CondTest: f.CondTest,
+		}
+	case "sc-inc-gpc1":
+		rule = &actions.ScIncGpc1{
+			ID:       strconv.FormatInt(f.ScID, 10),
+			Cond:     f.Cond,
+			CondTest: f.CondTest,
 		}
 	}
 	return rule, err

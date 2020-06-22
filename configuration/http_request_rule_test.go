@@ -29,8 +29,8 @@ func TestGetHTTPRequestRules(t *testing.T) {
 		t.Error(err.Error())
 	}
 
-	if len(hRules) != 9 {
-		t.Errorf("%v http request rules returned, expected 9", len(hRules))
+	if len(hRules) != 11 {
+		t.Errorf("%v http request rules returned, expected 11", len(hRules))
 	}
 
 	if v != version {
@@ -155,8 +155,34 @@ func TestGetHTTPRequestRules(t *testing.T) {
 			if r.CondTest != "FALSE" {
 				t.Errorf("%v: CondTest not FALSE: %v", *r.Index, r.CondTest)
 			}
+		} else if *r.Index == 9 {
+			if r.Type != "sc-inc-gpc0" {
+				t.Errorf("%v: Type not sc-inc-gpc0: %v", *r.Index, r.Type)
+			}
+			if r.ScID != 0 {
+				t.Errorf("%v: ScID not 0: %v", *r.Index, r.ScID)
+			}
+			if r.Cond != "if" {
+				t.Errorf("%v: Cond not if: %v", *r.Index, r.Cond)
+			}
+			if r.CondTest != "FALSE" {
+				t.Errorf("%v: CondTest not FALSE: %v", *r.Index, r.CondTest)
+			}
+		} else if *r.Index == 10 {
+			if r.Type != "sc-inc-gpc1" {
+				t.Errorf("%v: Type not sc-inc-gpc1: %v", *r.Index, r.Type)
+			}
+			if r.ScID != 0 {
+				t.Errorf("%v: ScID not 0: %v", *r.Index, r.ScID)
+			}
+			if r.Cond != "if" {
+				t.Errorf("%v: Cond not if: %v", *r.Index, r.Cond)
+			}
+			if r.CondTest != "FALSE" {
+				t.Errorf("%v: CondTest not FALSE: %v", *r.Index, r.CondTest)
+			}
 		} else {
-			t.Errorf("Expext only http-request 0 to 8, %v found", *r.Index)
+			t.Errorf("Expext only http-request 0 to 10, %v found", *r.Index)
 		}
 	}
 
@@ -288,7 +314,7 @@ func TestCreateEditDeleteHTTPRequestRule(t *testing.T) {
 	}
 
 	// TestDeleteHTTPRequest
-	err = client.DeleteHTTPRequestRule(9, "frontend", "test", "", version)
+	err = client.DeleteHTTPRequestRule(11, "frontend", "test", "", version)
 	if err != nil {
 		t.Error(err.Error())
 	} else {
@@ -299,9 +325,9 @@ func TestCreateEditDeleteHTTPRequestRule(t *testing.T) {
 		t.Error("Version not incremented")
 	}
 
-	_, _, err = client.GetHTTPRequestRule(9, "frontend", "test", "")
+	_, _, err = client.GetHTTPRequestRule(11, "frontend", "test", "")
 	if err == nil {
-		t.Error("DeleteHTTPRequestRule failed, HTTP Request Rule 9 still exists")
+		t.Error("DeleteHTTPRequestRule failed, HTTP Request Rule 11 still exists")
 	}
 
 	err = client.DeleteHTTPRequestRule(2, "backend", "test_2", "", version)

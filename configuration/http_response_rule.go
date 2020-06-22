@@ -348,6 +348,22 @@ func ParseHTTPResponseRule(f types.HTTPAction) *models.HTTPResponseRule {
 			Cond:      v.Cond,
 			CondTest:  v.CondTest,
 		}
+	case *actions.ScIncGpc0:
+		ID, _ := strconv.ParseInt(v.ID, 10, 64)
+		return &models.HTTPResponseRule{
+			Type:     "sc-inc-gpc0",
+			ScID:     ID,
+			Cond:     v.Cond,
+			CondTest: v.CondTest,
+		}
+	case *actions.ScIncGpc1:
+		ID, _ := strconv.ParseInt(v.ID, 10, 64)
+		return &models.HTTPResponseRule{
+			Type:     "sc-inc-gpc1",
+			ScID:     ID,
+			Cond:     v.Cond,
+			CondTest: v.CondTest,
+		}
 	}
 	return nil
 }
@@ -470,6 +486,18 @@ func SerializeHTTPResponseRule(f models.HTTPResponseRule) types.HTTPAction {
 		return &actions.DelMap{
 			FileName: f.MapFile,
 			KeyFmt:   f.MapKeyfmt,
+			Cond:     f.Cond,
+			CondTest: f.CondTest,
+		}
+	case "sc-inc-gpc0":
+		return &actions.ScIncGpc0{
+			ID:       strconv.FormatInt(f.ScID, 10),
+			Cond:     f.Cond,
+			CondTest: f.CondTest,
+		}
+	case "sc-inc-gpc1":
+		return &actions.ScIncGpc1{
+			ID:       strconv.FormatInt(f.ScID, 10),
 			Cond:     f.Cond,
 			CondTest: f.CondTest,
 		}
