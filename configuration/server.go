@@ -306,6 +306,9 @@ func ParseServer(ondiskServer types.Server) *models.Server {
 				s.ResolveNet = v.Value
 			case "proto":
 				s.Proto = v.Value
+			case "proxy-v2-options":
+				values := strings.Split(v.Value, ",")
+				s.ProxyV2Options = values
 			}
 		}
 	}
@@ -456,6 +459,9 @@ func SerializeServer(s models.Server) types.Server {
 	}
 	if s.Proto != "" {
 		srv.Params = append(srv.Params, &params.ServerOptionValue{Name: "proto", Value: s.Proto})
+	}
+	if len(s.ProxyV2Options) > 0 {
+		srv.Params = append(srv.Params, &params.ServerOptionValue{Name: "proxy-v2-options", Value: strings.Join(s.ProxyV2Options, ",")})
 	}
 	return srv
 }

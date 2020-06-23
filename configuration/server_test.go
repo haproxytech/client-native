@@ -62,6 +62,16 @@ func TestGetServers(t *testing.T) {
 		if *s.Inter != 2000 {
 			t.Errorf("%v: Inter not 2000: %v", s.Name, *s.Inter)
 		}
+		if len(s.ProxyV2Options) != 2 {
+			t.Errorf("%v: ProxyV2Options < 2: %d", s.Name, len(s.ProxyV2Options))
+		} else {
+			if s.ProxyV2Options[0] != "authority" {
+				t.Errorf("%v: ProxyV2Options[0] not authority: %s", s.Name, s.ProxyV2Options[0])
+			}
+			if s.ProxyV2Options[1] != "crc32c" {
+				t.Errorf("%v: ProxyV2Options[0] not crc32c: %s", s.Name, s.ProxyV2Options[1])
+			}
+		}
 	}
 
 	_, servers, err = client.GetServers("test_2", "")
@@ -107,6 +117,16 @@ func TestGetServer(t *testing.T) {
 	if *s.Inter != 2000 {
 		t.Errorf("%v: Inter not 2000: %v", s.Name, *s.Inter)
 	}
+	if len(s.ProxyV2Options) != 2 {
+		t.Errorf("%v: ProxyV2Options < 2: %d", s.Name, len(s.ProxyV2Options))
+	} else {
+		if s.ProxyV2Options[0] != "authority" {
+			t.Errorf("%v: ProxyV2Options[0] not authority: %s", s.Name, s.ProxyV2Options[0])
+		}
+		if s.ProxyV2Options[1] != "crc32c" {
+			t.Errorf("%v: ProxyV2Options[0] not crc32c: %s", s.Name, s.ProxyV2Options[1])
+		}
+	}
 
 	_, err = s.MarshalBinary()
 	if err != nil {
@@ -141,6 +161,7 @@ func TestCreateEditDeleteServer(t *testing.T) {
 		OnError:        "mark-down",
 		OnMarkedUp:     "shutdown-backup-sessions",
 		Slowstart:      &slowStart,
+		ProxyV2Options: []string{"ssl", "unique-id"},
 	}
 
 	err := client.CreateServer("test", s, "", version)
