@@ -133,6 +133,8 @@ github.com/haproxytech/config-parser/v2 v2.0.3-0.20200622070515-322bd9b0ed2d h1:
 github.com/haproxytech/config-parser/v2 v2.0.3-0.20200622070515-322bd9b0ed2d/go.mod h1:VjHOetXAJtwrtLAJPoDaD/kEYwCoixVp5SCsBitMcj8=
 github.com/haproxytech/config-parser/v2 v2.0.3-0.20200624064753-eaef59c3c48d h1:2NaJfgqi0tYyBtqT4ze8UzgRpVYk/V7Y2kipL5PR8ZI=
 github.com/haproxytech/config-parser/v2 v2.0.3-0.20200624064753-eaef59c3c48d/go.mod h1:VjHOetXAJtwrtLAJPoDaD/kEYwCoixVp5SCsBitMcj8=
+github.com/haproxytech/config-parser/v2 v2.0.3-0.20200626051325-3787f44c9faa h1:egZ3OB9UA35wC2WxApch2TvkO7j4ETc1HvVO+cOuY5s=
+github.com/haproxytech/config-parser/v2 v2.0.3-0.20200626051325-3787f44c9faa/go.mod h1:VjHOetXAJtwrtLAJPoDaD/kEYwCoixVp5SCsBitMcj8=
 github.com/haproxytech/models/v2 v2.0.2-0.20200513093356-3f062770f1d6 h1:6ILrYrcbD9bwaPX9aXjXJjKFvYt2SxDLfVhJvf9WA1U=
 github.com/haproxytech/models/v2 v2.0.2-0.20200513093356-3f062770f1d6/go.mod h1:HjM8x+j1/j4nHUA5lqh159OPZ3zQ5iGz13vHo9xeEk0=
 github.com/haproxytech/models/v2 v2.0.2 h1:+GOvVWT1ACjr7RZ+TP5xUOsRwd38rQ4ZP+7xSQUenPY=
@@ -147,6 +149,8 @@ github.com/haproxytech/models/v2 v2.0.3-0.20200622102334-3c1c8f629c79 h1:z1/gakq
 github.com/haproxytech/models/v2 v2.0.3-0.20200622102334-3c1c8f629c79/go.mod h1:HjM8x+j1/j4nHUA5lqh159OPZ3zQ5iGz13vHo9xeEk0=
 github.com/haproxytech/models/v2 v2.0.3-0.20200625125110-fdc2de325ced h1:+kdRb/3J+1zzwyfU5NaQRe8LxaskwvGQfEc48tuQYT8=
 github.com/haproxytech/models/v2 v2.0.3-0.20200625125110-fdc2de325ced/go.mod h1:HjM8x+j1/j4nHUA5lqh159OPZ3zQ5iGz13vHo9xeEk0=
+github.com/haproxytech/models/v2 v2.0.3-0.20200630114056-0245542fa005 h1:pZW7ZoFRRpkbdkYZBgsrQwV1F4l0EiL5Ns1LFeiVTFo=
+github.com/haproxytech/models/v2 v2.0.3-0.20200630114056-0245542fa005/go.mod h1:HjM8x+j1/j4nHUA5lqh159OPZ3zQ5iGz13vHo9xeEk0=
 github.com/inconshreveable/mousetrap v1.0.0/go.mod h1:PxqpIevigyE2G7u3NXJIT2ANytuPF1OarO4DADm73n8=
 github.com/joho/godotenv v1.3.0/go.mod h1:7hK45KPybAkOC6peb+G5yklZfMxEjkZhHbwpqxOKXbg=
 github.com/karrick/godirwalk v1.8.0/go.mod h1:H5KPZjojv4lE+QYImBI8xVtrBRgYrIVsaRPx4tDPEn4=

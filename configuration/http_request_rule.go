@@ -531,6 +531,27 @@ func ParseHTTPRequestRule(f types.HTTPAction) (rule *models.HTTPRequestRule, err
 			Cond:      v.Cond,
 			CondTest:  v.CondTest,
 		}
+	case *actions.SetMethod:
+		rule = &models.HTTPRequestRule{
+			Type:      "set-method",
+			MethodFmt: v.Fmt,
+			Cond:      v.Cond,
+			CondTest:  v.CondTest,
+		}
+	case *actions.SetPriorityClass:
+		rule = &models.HTTPRequestRule{
+			Type:     "set-priority-class",
+			Expr:     strings.Join(v.Expr.Expr, " "),
+			Cond:     v.Cond,
+			CondTest: v.CondTest,
+		}
+	case *actions.SetPriorityOffset:
+		rule = &models.HTTPRequestRule{
+			Type:     "set-priority-offset",
+			Expr:     strings.Join(v.Expr.Expr, " "),
+			Cond:     v.Cond,
+			CondTest: v.CondTest,
+		}
 	}
 	return rule, err
 }
@@ -777,6 +798,18 @@ func SerializeHTTPRequestRule(f models.HTTPRequestRule) (rule types.HTTPAction, 
 			Cond:     f.Cond,
 			CondTest: f.CondTest,
 		}
+	case "set-method":
+		rule = &actions.SetMethod{
+			Fmt:      f.MethodFmt,
+			Cond:     f.Cond,
+			CondTest: f.CondTest,
+		}
+	case "set-priority-class":
+		rule = &actions.SetPriorityClass{
+			Expr:     common.Expression{Expr: strings.Split(f.Expr, " ")},
+			Cond:     f.Cond,
+			CondTest: f.CondTest,
+		}
 	case "sc-set-gpt0":
 		if len(f.ScExpr) > 0 && f.ScInt != nil {
 			return nil, NewConfError(ErrValidationError, "sc-set-gpt0 int and expr are exclusive")
@@ -800,6 +833,12 @@ func SerializeHTTPRequestRule(f models.HTTPRequestRule) (rule types.HTTPAction, 
 	case "set-nice":
 		rule = &actions.SetNice{
 			Value:    strconv.FormatInt(f.NiceValue, 10),
+			Cond:     f.Cond,
+			CondTest: f.CondTest,
+		}
+	case "set-priority-offset":
+		rule = &actions.SetPriorityOffset{
+			Expr:     common.Expression{Expr: strings.Split(f.Expr, " ")},
 			Cond:     f.Cond,
 			CondTest: f.CondTest,
 		}

@@ -88,6 +88,9 @@ frontend test
   http-request sc-set-gpt0(1) 20 if FALSE
   http-request set-mark 20 if FALSE
   http-request set-nice 20 if FALSE
+  http-request set-method POST if FALSE
+  http-request set-priority-class req.hdr(class) if FALSE
+  http-request set-priority-offset req.hdr(offset) if FALSE
   http-response allow if src 192.168.0.0/16
   http-response set-header X-SSL %[ssl_fc]
   http-response set-var(req.my_var) req.fhdr(user-agent),lower
