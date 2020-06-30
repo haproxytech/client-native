@@ -160,7 +160,7 @@ func (c *Client) commitTransaction(id string, skipVersion bool) (*models.Transac
 		os.Remove(backupToDel)
 	}
 
-	if err := copyFile(transactionFile, c.ConfigurationFile); err != nil {
+	if err := moveFile(transactionFile, c.ConfigurationFile); err != nil {
 		c.failTransaction(id)
 		return nil, err
 	}
@@ -445,8 +445,9 @@ func (c *Client) failTransaction(id string) {
 	}
 
 	failedConfigFile := c.getTransactionFileFailed(id)
-	copyFile(configFile, failedConfigFile)
-	os.Remove(configFile)
+	if err = moveFile(configFile, failedConfigFile); err != nil {
+		os.Remove(configFile)
+	}
 	c.DeleteParser(id)
 }
 
@@ -492,4 +493,8 @@ func copyFile(src, dest string) error {
 		return err
 	}
 	return destContent.Sync()
+}
+
+func moveFile(src, dest string) error {
+	return os.Rename(src, dest)
 }
