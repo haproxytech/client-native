@@ -433,21 +433,28 @@ func (c *Client) getBackupFile(version int64) (string, error) {
 }
 
 func (c *Client) failTransaction(id string) {
-	failedDir := filepath.Join(c.TransactionDir, "failed")
-	if _, err := os.Stat(failedDir); os.IsNotExist(err) {
-		os.Mkdir(failedDir, 0755)
-	}
-
 	configFile, err := c.getTransactionFile(id)
 	if err != nil {
 		return
 	}
 
-	failedConfigFile := c.getTransactionFileFailed(id)
-	if err = moveFile(configFile, failedConfigFile); err != nil {
+	if c.SkipFailedTransactions {
 		os.Remove(configFile)
+	} else {
+		c.writeFailedTransaction(id, configFile)
 	}
 	c.DeleteParser(id)
+}
+
+func (c *Client) writeFailedTransaction(id, configFile string) {
+	failedDir := filepath.Join(c.TransactionDir, "failed")
+	if _, err := os.Stat(failedDir); os.IsNotExist(err) {
+		os.Mkdir(failedDir, 0755)
+	}
+	failedConfigFile := c.getTransactionFileFailed(id)
+	if err := moveFile(configFile, failedConfigFile); err != nil {
+		os.Remove(configFile)
+	}
 }
 
 func (c *Client) getFailedTransactionVersion(id string) (int64, error) {
