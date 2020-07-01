@@ -552,6 +552,26 @@ func ParseHTTPRequestRule(f types.HTTPAction) (rule *models.HTTPRequestRule, err
 			Cond:     v.Cond,
 			CondTest: v.CondTest,
 		}
+	case *actions.SetSrc:
+		rule = &models.HTTPRequestRule{
+			Type:     "set-src",
+			Expr:     v.Expr.String(),
+			Cond:     v.Cond,
+			CondTest: v.CondTest,
+		}
+	case *actions.SetSrcPort:
+		rule = &models.HTTPRequestRule{
+			Type:     "set-src-port",
+			Expr:     v.Expr.String(),
+			Cond:     v.Cond,
+			CondTest: v.CondTest,
+		}
+	case *actions.WaitForHandshake:
+		rule = &models.HTTPRequestRule{
+			Type:     "wait-for-handshake",
+			Cond:     v.Cond,
+			CondTest: v.CondTest,
+		}
 	}
 	return rule, err
 }
@@ -839,6 +859,23 @@ func SerializeHTTPRequestRule(f models.HTTPRequestRule) (rule types.HTTPAction, 
 	case "set-priority-offset":
 		rule = &actions.SetPriorityOffset{
 			Expr:     common.Expression{Expr: strings.Split(f.Expr, " ")},
+			Cond:     f.Cond,
+			CondTest: f.CondTest,
+		}
+	case "set-src":
+		rule = &actions.SetSrc{
+			Expr:     common.Expression{Expr: strings.Split(f.Expr, " ")},
+			Cond:     f.Cond,
+			CondTest: f.CondTest,
+		}
+	case "set-src-port":
+		rule = &actions.SetSrcPort{
+			Expr:     common.Expression{Expr: strings.Split(f.Expr, " ")},
+			Cond:     f.Cond,
+			CondTest: f.CondTest,
+		}
+	case "wait-for-handshake":
+		rule = &actions.WaitForHandshake{
 			Cond:     f.Cond,
 			CondTest: f.CondTest,
 		}
