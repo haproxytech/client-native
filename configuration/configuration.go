@@ -45,7 +45,7 @@ const (
 	//DefaultPersistentTransactions sane default using persistent transactions in client native
 	DefaultPersistentTransactions bool = true
 	// DefaultTransactionDir sane default for path for transactions
-	DefaultTransactionDir string = "/tmp/haproxy"
+	DefaultTransactionDir string = "/etc/haproxy/transactions"
 	// DefaultValidateConfigurationFile is used to validate HAProxy configuration file
 	DefaultValidateConfigurationFile bool = true
 )
