@@ -154,12 +154,12 @@ func (c *Client) commitTransaction(id string, skipVersion bool) (*models.Transac
 
 	// Fail backing up and cleaning backups silently
 	if c.BackupsNumber > 0 {
-		c.writeConfigurationFile(fmt.Sprintf("%v.%v", c.ConfigurationFile, version))
+		c.writeFile("", fmt.Sprintf("%v.%v", c.ConfigurationFile, version))
 		backupToDel := fmt.Sprintf("%v.%v", c.ConfigurationFile, strconv.Itoa(int(version)-c.BackupsNumber))
 		os.Remove(backupToDel)
 	}
 
-	if err := moveFile(transactionFile, c.ConfigurationFile); err != nil {
+	if err := c.writeFile(id, c.ConfigurationFile); err != nil {
 		c.failTransaction(id)
 		return nil, err
 	}
@@ -366,7 +366,7 @@ func (c *Client) createTransactionFiles(transactionID string) error {
 
 	confFilePath := filepath.Join(c.TransactionDir, c.getTransactionFileName(transactionID))
 
-	err = c.writeConfigurationFile(confFilePath)
+	err = c.writeFile("", confFilePath)
 	if err != nil {
 		return err
 	}
@@ -481,8 +481,15 @@ func (c *Client) getFailedTransactionVersion(id string) (int64, error) {
 	return ver.Value, nil
 }
 
-func (c *Client) writeConfigurationFile(dest string) error {
-	return c.Parser.Save(dest)
+func (c *Client) writeFile(id, dest string) error {
+	if id == "" {
+		return c.Parser.Save(dest)
+	}
+	p, err := c.GetParser(id)
+	if err != nil {
+		return err
+	}
+	return p.Save(dest)
 }
 
 func moveFile(src, dest string) error {
