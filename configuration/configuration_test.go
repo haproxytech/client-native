@@ -111,6 +111,9 @@ frontend test
   http-response set-tos 0 if FALSE
   http-response silent-drop if FALSE
   http-response unset-var(req.my_var) if FALSE
+  http-response track-sc0 src table tr0 if FALSE
+  http-response track-sc1 src table tr1 if FALSE
+  http-response track-sc2 src table tr2 if FALSE
   tcp-request connection accept if TRUE
   tcp-request connection reject if FALSE
   tcp-request content accept if TRUE

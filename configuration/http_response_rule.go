@@ -413,6 +413,30 @@ func ParseHTTPResponseRule(f types.HTTPAction) *models.HTTPResponseRule {
 			Cond:     v.Cond,
 			CondTest: v.CondTest,
 		}
+	case *actions.TrackSc0:
+		return &models.HTTPResponseRule{
+			Type:          "track-sc0",
+			TrackSc0Key:   v.Key,
+			TrackSc0Table: v.Table,
+			Cond:          v.Cond,
+			CondTest:      v.CondTest,
+		}
+	case *actions.TrackSc1:
+		return &models.HTTPResponseRule{
+			Type:          "track-sc1",
+			TrackSc1Key:   v.Key,
+			TrackSc1Table: v.Table,
+			Cond:          v.Cond,
+			CondTest:      v.CondTest,
+		}
+	case *actions.TrackSc2:
+		return &models.HTTPResponseRule{
+			Type:          "track-sc2",
+			TrackSc2Key:   v.Key,
+			TrackSc2Table: v.Table,
+			Cond:          v.Cond,
+			CondTest:      v.CondTest,
+		}
 	}
 	return nil
 }
@@ -588,6 +612,27 @@ func SerializeHTTPResponseRule(f models.HTTPResponseRule) types.HTTPAction {
 		return &actions.UnsetVar{
 			Name:     f.VarName,
 			Scope:    f.VarScope,
+			Cond:     f.Cond,
+			CondTest: f.CondTest,
+		}
+	case "track-sc0":
+		return &actions.TrackSc0{
+			Key:      f.TrackSc0Key,
+			Table:    f.TrackSc0Table,
+			Cond:     f.Cond,
+			CondTest: f.CondTest,
+		}
+	case "track-sc1":
+		return &actions.TrackSc1{
+			Key:      f.TrackSc1Key,
+			Table:    f.TrackSc1Table,
+			Cond:     f.Cond,
+			CondTest: f.CondTest,
+		}
+	case "track-sc2":
+		return &actions.TrackSc2{
+			Key:      f.TrackSc2Key,
+			Table:    f.TrackSc2Table,
 			Cond:     f.Cond,
 			CondTest: f.CondTest,
 		}
