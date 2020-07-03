@@ -572,6 +572,27 @@ func ParseHTTPRequestRule(f types.HTTPAction) (rule *models.HTTPRequestRule, err
 			Cond:     v.Cond,
 			CondTest: v.CondTest,
 		}
+	case *actions.SetTos:
+		rule = &models.HTTPRequestRule{
+			Type:     "set-tos",
+			TosValue: v.Value,
+			Cond:     v.Cond,
+			CondTest: v.CondTest,
+		}
+	case *actions.SilentDrop:
+		rule = &models.HTTPRequestRule{
+			Type:     "silent-drop",
+			Cond:     v.Cond,
+			CondTest: v.CondTest,
+		}
+	case *actions.UnsetVar:
+		rule = &models.HTTPRequestRule{
+			Type:     "unset-var",
+			VarName:  v.Name,
+			VarScope: v.Scope,
+			Cond:     v.Cond,
+			CondTest: v.CondTest,
+		}
 	}
 	return rule, err
 }
@@ -876,6 +897,24 @@ func SerializeHTTPRequestRule(f models.HTTPRequestRule) (rule types.HTTPAction, 
 		}
 	case "wait-for-handshake":
 		rule = &actions.WaitForHandshake{
+			Cond:     f.Cond,
+			CondTest: f.CondTest,
+		}
+	case "set-tos":
+		rule = &actions.SetTos{
+			Value:    f.TosValue,
+			Cond:     f.Cond,
+			CondTest: f.CondTest,
+		}
+	case "silent-drop":
+		rule = &actions.SilentDrop{
+			Cond:     f.Cond,
+			CondTest: f.CondTest,
+		}
+	case "unset-var":
+		rule = &actions.UnsetVar{
+			Name:     f.VarName,
+			Scope:    f.VarScope,
 			Cond:     f.Cond,
 			CondTest: f.CondTest,
 		}

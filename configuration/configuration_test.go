@@ -94,6 +94,9 @@ frontend test
   http-request set-src req.hdr(src) if FALSE
   http-request set-src-port req.hdr(port) if FALSE
   http-request wait-for-handshake if FALSE
+  http-request set-tos 0 if FALSE
+  http-request silent-drop if FALSE
+  http-request unset-var(req.my_var) if FALSE
   http-response allow if src 192.168.0.0/16
   http-response set-header X-SSL %[ssl_fc]
   http-response set-var(req.my_var) req.fhdr(user-agent),lower
@@ -105,6 +108,9 @@ frontend test
   http-response sc-set-gpt0(1) 20 if FALSE
   http-response set-mark 20 if FALSE
   http-response set-nice 20 if FALSE
+  http-response set-tos 0 if FALSE
+  http-response silent-drop if FALSE
+  http-response unset-var(req.my_var) if FALSE
   tcp-request connection accept if TRUE
   tcp-request connection reject if FALSE
   tcp-request content accept if TRUE

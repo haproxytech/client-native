@@ -392,6 +392,27 @@ func ParseHTTPResponseRule(f types.HTTPAction) *models.HTTPResponseRule {
 			Cond:      v.Cond,
 			CondTest:  v.CondTest,
 		}
+	case *actions.SetTos:
+		return &models.HTTPResponseRule{
+			Type:     "set-tos",
+			TosValue: v.Value,
+			Cond:     v.Cond,
+			CondTest: v.CondTest,
+		}
+	case *actions.SilentDrop:
+		return &models.HTTPResponseRule{
+			Type:     "silent-drop",
+			Cond:     v.Cond,
+			CondTest: v.CondTest,
+		}
+	case *actions.UnsetVar:
+		return &models.HTTPResponseRule{
+			Type:     "unset-var",
+			VarName:  v.Name,
+			VarScope: v.Scope,
+			Cond:     v.Cond,
+			CondTest: v.CondTest,
+		}
 	}
 	return nil
 }
@@ -549,6 +570,24 @@ func SerializeHTTPResponseRule(f models.HTTPResponseRule) types.HTTPAction {
 	case "set-nice":
 		return &actions.SetNice{
 			Value:    strconv.FormatInt(f.NiceValue, 10),
+			Cond:     f.Cond,
+			CondTest: f.CondTest,
+		}
+	case "set-tos":
+		return &actions.SetTos{
+			Value:    f.TosValue,
+			Cond:     f.Cond,
+			CondTest: f.CondTest,
+		}
+	case "silent-drop":
+		return &actions.SilentDrop{
+			Cond:     f.Cond,
+			CondTest: f.CondTest,
+		}
+	case "unset-var":
+		return &actions.UnsetVar{
+			Name:     f.VarName,
+			Scope:    f.VarScope,
 			Cond:     f.Cond,
 			CondTest: f.CondTest,
 		}

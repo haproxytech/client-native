@@ -29,8 +29,8 @@ func TestGetHTTPResponseRules(t *testing.T) {
 		t.Error(err.Error())
 	}
 
-	if len(hRules) != 11 {
-		t.Errorf("%v http response rules returned, expected 11", len(hRules))
+	if len(hRules) != 14 {
+		t.Errorf("%v http response rules returned, expected 14", len(hRules))
 	}
 
 	if v != version {
@@ -194,8 +194,47 @@ func TestGetHTTPResponseRules(t *testing.T) {
 			if r.CondTest != "FALSE" {
 				t.Errorf("%v: CondTest not FALSE: %v", *r.Index, r.CondTest)
 			}
+		} else if *r.Index == 11 {
+			if r.Type != "set-tos" {
+				t.Errorf("%v: Type not set-tos: %v", *r.Index, r.Type)
+			}
+			if r.TosValue != "0" {
+				t.Errorf("%v: TosValue not 0: %v", *r.Index, r.TosValue)
+			}
+			if r.Cond != "if" {
+				t.Errorf("%v: Cond not if: %v", *r.Index, r.Cond)
+			}
+			if r.CondTest != "FALSE" {
+				t.Errorf("%v: CondTest not FALSE: %v", *r.Index, r.CondTest)
+			}
+		} else if *r.Index == 12 {
+			if r.Type != "silent-drop" {
+				t.Errorf("%v: Type not silent-drop: %v", *r.Index, r.Type)
+			}
+			if r.Cond != "if" {
+				t.Errorf("%v: Cond not if: %v", *r.Index, r.Cond)
+			}
+			if r.CondTest != "FALSE" {
+				t.Errorf("%v: CondTest not FALSE: %v", *r.Index, r.CondTest)
+			}
+		} else if *r.Index == 13 {
+			if r.Type != "unset-var" {
+				t.Errorf("%v: Type not unset-var: %v", *r.Index, r.Type)
+			}
+			if r.VarName != "my_var" {
+				t.Errorf("%v: VarName not my_var: %v", *r.Index, r.VarName)
+			}
+			if r.VarScope != "req" {
+				t.Errorf("%v: VarScope not req: %v", *r.Index, r.VarScope)
+			}
+			if r.Cond != "if" {
+				t.Errorf("%v: Cond not if: %v", *r.Index, r.Cond)
+			}
+			if r.CondTest != "FALSE" {
+				t.Errorf("%v: CondTest not FALSE: %v", *r.Index, r.CondTest)
+			}
 		} else {
-			t.Errorf("Expext only http-response 0 to 10, %v found", *r.Index)
+			t.Errorf("Expext only http-response 0 to 13, %v found", *r.Index)
 		}
 	}
 
@@ -314,7 +353,7 @@ func TestCreateEditDeleteHTTPResponseRule(t *testing.T) {
 	}
 
 	// TestDeleteHTTPResponse
-	err = client.DeleteHTTPResponseRule(11, "frontend", "test", "", version)
+	err = client.DeleteHTTPResponseRule(14, "frontend", "test", "", version)
 	if err != nil {
 		t.Error(err.Error())
 	} else {
@@ -325,9 +364,9 @@ func TestCreateEditDeleteHTTPResponseRule(t *testing.T) {
 		t.Error("Version not incremented")
 	}
 
-	_, _, err = client.GetHTTPResponseRule(11, "frontend", "test", "")
+	_, _, err = client.GetHTTPResponseRule(14, "frontend", "test", "")
 	if err == nil {
-		t.Error("DeleteHTTPResponseRule failed, HTTPResponse Rule 11 still exists")
+		t.Error("DeleteHTTPResponseRule failed, HTTPResponse Rule 14 still exists")
 	}
 
 	err = client.DeleteHTTPResponseRule(2, "backend", "test_2", "", version)
