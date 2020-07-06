@@ -593,6 +593,13 @@ func ParseHTTPRequestRule(f types.HTTPAction) (rule *models.HTTPRequestRule, err
 			Cond:     v.Cond,
 			CondTest: v.CondTest,
 		}
+	case *actions.StrictMode:
+		rule = &models.HTTPRequestRule{
+			Type:       "strict-mode",
+			StrictMode: v.Mode,
+			Cond:       v.Cond,
+			CondTest:   v.CondTest,
+		}
 	}
 	return rule, err
 }
@@ -915,6 +922,12 @@ func SerializeHTTPRequestRule(f models.HTTPRequestRule) (rule types.HTTPAction, 
 		rule = &actions.UnsetVar{
 			Name:     f.VarName,
 			Scope:    f.VarScope,
+			Cond:     f.Cond,
+			CondTest: f.CondTest,
+		}
+	case "strict-mode":
+		rule = &actions.StrictMode{
+			Mode:     f.StrictMode,
 			Cond:     f.Cond,
 			CondTest: f.CondTest,
 		}

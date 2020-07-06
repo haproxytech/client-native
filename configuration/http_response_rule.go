@@ -437,6 +437,13 @@ func ParseHTTPResponseRule(f types.HTTPAction) *models.HTTPResponseRule {
 			Cond:          v.Cond,
 			CondTest:      v.CondTest,
 		}
+	case *actions.StrictMode:
+		return &models.HTTPResponseRule{
+			Type:       "strict-mode",
+			StrictMode: v.Mode,
+			Cond:       v.Cond,
+			CondTest:   v.CondTest,
+		}
 	}
 	return nil
 }
@@ -633,6 +640,12 @@ func SerializeHTTPResponseRule(f models.HTTPResponseRule) types.HTTPAction {
 		return &actions.TrackSc2{
 			Key:      f.TrackSc2Key,
 			Table:    f.TrackSc2Table,
+			Cond:     f.Cond,
+			CondTest: f.CondTest,
+		}
+	case "strict-mode":
+		return &actions.StrictMode{
+			Mode:     f.StrictMode,
 			Cond:     f.Cond,
 			CondTest: f.CondTest,
 		}
