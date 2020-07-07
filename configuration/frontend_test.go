@@ -145,6 +145,7 @@ func TestCreateEditDeleteFrontend(t *testing.T) {
 		BindProcess:          "4",
 		Logasap:              "disabled",
 		UniqueIDFormat:       "%{+X}o_%fi:%fp_%Ts_%rt:%pid",
+		UniqueIDHeader:       "X-Unique-Id",
 	}
 
 	err := client.CreateFrontend(f, "", version)

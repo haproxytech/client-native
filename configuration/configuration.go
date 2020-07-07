@@ -1495,7 +1495,7 @@ func setFieldValue(section parser.Section, sectionName string, fieldName string,
 			return nil
 		}
 		d := types.UniqueIDHeader{
-			Name: field.Elem().String(),
+			Name: field.String(),
 		}
 		if err := p.Set(section, sectionName, "unique-id-header", &d); err != nil {
 			return err
