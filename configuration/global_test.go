@@ -58,6 +58,16 @@ func TestGetGlobal(t *testing.T) {
 	if global.ExternalCheck != true {
 		t.Errorf("ExternalCheck is false, expected true")
 	}
+	if len(global.LuaLoads) == 2 {
+		if *global.LuaLoads[0].File != "/etc/foo.lua" {
+			t.Errorf("LuaLoad.File is %v, expected /etc/foo.lua", *global.LuaLoads[0].File)
+		}
+		if *global.LuaLoads[1].File != "/etc/bar.lua" {
+			t.Errorf("LuaLoad.File is %v, expected /etc/bar.lua", global.LuaLoads[1].File)
+		}
+	} else {
+		t.Errorf("%v LuaLoads returned, expected 2", len(global.LuaLoads))
+	}
 }
 
 func TestPutGlobal(t *testing.T) {
@@ -65,6 +75,7 @@ func TestPutGlobal(t *testing.T) {
 	n := "1/1"
 	v := "0"
 	a := "/var/run/haproxy.sock"
+	f := "/etc/foo.lua"
 	g := &models.Global{
 		Daemon: "enabled",
 		CPUMaps: []*models.CPUMap{
@@ -85,6 +96,11 @@ func TestPutGlobal(t *testing.T) {
 		StatsTimeout:          &tOut,
 		TuneSslDefaultDhParam: 1024,
 		ExternalCheck:         false,
+		LuaLoads: []*models.LuaLoad{
+			&models.LuaLoad{
+				File: &f,
+			},
+		},
 	}
 
 	err := client.PushGlobalConfiguration(g, "", version)

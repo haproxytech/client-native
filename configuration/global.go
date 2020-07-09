@@ -225,6 +225,16 @@ func ParseGlobalSection(p *parser.Parser) (*models.Global, error) {
 		externalCheck = false
 	}
 
+	data, err = p.Get(parser.Global, parser.GlobalSectionName, "lua-load")
+	luaLoads := []*models.LuaLoad{}
+	if err == nil {
+		luas := data.([]types.LuaLoad)
+		for _, l := range luas {
+			file := l.File
+			luaLoads = append(luaLoads, &models.LuaLoad{File: &file})
+		}
+	}
+
 	g := &models.Global{
 		User:                    user,
 		Group:                   group,
@@ -244,6 +254,7 @@ func ParseGlobalSection(p *parser.Parser) (*models.Global, error) {
 		SslDefaultServerOptions: sslServerOptions,
 		TuneSslDefaultDhParam:   dhParam,
 		ExternalCheck:           externalCheck,
+		LuaLoads:                luaLoads,
 	}
 
 	return g, nil
@@ -420,9 +431,22 @@ func SerializeGlobalSection(p *parser.Parser, data *models.Global) error {
 		return err
 	}
 
+	luaLoads := []types.LuaLoad{}
+	for _, lua := range data.LuaLoads {
+		ll := types.LuaLoad{
+			File: *lua.File,
+		}
+		luaLoads = append(luaLoads, ll)
+	}
+
+	if err := p.Set(parser.Global, parser.GlobalSectionName, "lua-load", luaLoads); err != nil {
+		return err
+	}
+
 	pExternalCheck := &types.Enabled{}
 	if !data.ExternalCheck {
 		pExternalCheck = nil
 	}
+
 	return p.Set(parser.Global, parser.GlobalSectionName, "external-check", pExternalCheck)
 }
