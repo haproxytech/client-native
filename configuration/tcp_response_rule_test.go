@@ -29,8 +29,8 @@ func TestGetTCPResponseRules(t *testing.T) {
 		t.Error(err.Error())
 	}
 
-	if len(tRules) != 2 {
-		t.Errorf("%v tcp response rules returned, expected 2", len(tRules))
+	if len(tRules) != 3 {
+		t.Errorf("%v tcp response rules returned, expected 3", len(tRules))
 	}
 
 	if v != version {
@@ -64,8 +64,27 @@ func TestGetTCPResponseRules(t *testing.T) {
 			if r.CondTest != "FALSE" {
 				t.Errorf("%v: CondTest not src FALSE: %v", *r.Index, r.CondTest)
 			}
+		} else if *r.Index == 2 {
+			if r.Type != "content" {
+				t.Errorf("%v: Type not content: %v", *r.Index, r.Type)
+			}
+			if r.Action != "lua" {
+				t.Errorf("%v: Action not lua: %v", *r.Index, r.Action)
+			}
+			if r.LuaAction != "foo" {
+				t.Errorf("%v: LuaAction not foo: %v", *r.Index, r.LuaAction)
+			}
+			if r.LuaParams != "param1 param2" {
+				t.Errorf("%v: LuaParams not param1 param2: %v", *r.Index, r.LuaParams)
+			}
+			if r.Cond != "if" {
+				t.Errorf("%v: Cond not if: %v", *r.Index, r.Cond)
+			}
+			if r.CondTest != "FALSE" {
+				t.Errorf("%v: CondTest not src FALSE: %v", *r.Index, r.CondTest)
+			}
 		} else {
-			t.Errorf("Expext only tcp-response 0 or 1, %v found", *r.Index)
+			t.Errorf("Expext only tcp-response 0, 1 or 2, %v found", *r.Index)
 		}
 	}
 
@@ -187,12 +206,12 @@ func TestCreateEditDeleteTCPResponseRule(t *testing.T) {
 		t.Error("Version not incremented")
 	}
 
-	_, _, err = client.GetTCPResponseRule(2, "test", "")
+	_, _, err = client.GetTCPResponseRule(3, "test", "")
 	if err == nil {
 		t.Error("DeleteTCPResponseRule failed, TCP Response Rule 3 still exists")
 	}
 
-	err = client.DeleteTCPResponseRule(2, "test_2", "", version)
+	err = client.DeleteTCPResponseRule(3, "test_2", "", version)
 	if err == nil {
 		t.Error("Should throw error, non existant TCP Response Rule")
 		version++

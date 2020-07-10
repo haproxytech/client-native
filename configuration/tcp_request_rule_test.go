@@ -29,8 +29,8 @@ func TestGetTCPRequestRules(t *testing.T) {
 		t.Error(err.Error())
 	}
 
-	if len(tRules) != 4 {
-		t.Errorf("%v tcp request rules returned, expected 4", len(tRules))
+	if len(tRules) != 6 {
+		t.Errorf("%v tcp request rules returned, expected 6", len(tRules))
 	}
 
 	if v != version {
@@ -90,8 +90,46 @@ func TestGetTCPRequestRules(t *testing.T) {
 			if r.CondTest != "FALSE" {
 				t.Errorf("%v: CondTest not src FALSE: %v", *r.Index, r.CondTest)
 			}
+		} else if *r.Index == 4 {
+			if r.Type != "connection" {
+				t.Errorf("%v: Type not connection: %v", *r.Index, r.Type)
+			}
+			if r.Action != "lua" {
+				t.Errorf("%v: Action not lua: %v", *r.Index, r.Action)
+			}
+			if r.LuaAction != "foo" {
+				t.Errorf("%v: LuaAction not foo: %v", *r.Index, r.LuaAction)
+			}
+			if r.LuaParams != "param1 param2" {
+				t.Errorf("%v: LuaParams not param1 param2: %v", *r.Index, r.LuaParams)
+			}
+			if r.Cond != "if" {
+				t.Errorf("%v: Cond not if: %v", *r.Index, r.Cond)
+			}
+			if r.CondTest != "FALSE" {
+				t.Errorf("%v: CondTest not src FALSE: %v", *r.Index, r.CondTest)
+			}
+		} else if *r.Index == 5 {
+			if r.Type != "content" {
+				t.Errorf("%v: Type not content: %v", *r.Index, r.Type)
+			}
+			if r.Action != "lua" {
+				t.Errorf("%v: Action not lua: %v", *r.Index, r.Action)
+			}
+			if r.LuaAction != "foo" {
+				t.Errorf("%v: LuaAction not foo: %v", *r.Index, r.LuaAction)
+			}
+			if r.LuaParams != "param1 param2" {
+				t.Errorf("%v: LuaParams not param1 param2: %v", *r.Index, r.LuaParams)
+			}
+			if r.Cond != "if" {
+				t.Errorf("%v: Cond not if: %v", *r.Index, r.Cond)
+			}
+			if r.CondTest != "FALSE" {
+				t.Errorf("%v: CondTest not src FALSE: %v", *r.Index, r.CondTest)
+			}
 		} else {
-			t.Errorf("Expext only tcp-request 0, 1, 2, or 3, %v found", *r.Index)
+			t.Errorf("Expext tcp-request 0-5, %v found", *r.Index)
 		}
 	}
 
@@ -202,7 +240,7 @@ func TestCreateEditDeleteTCPRequestRule(t *testing.T) {
 	}
 
 	// TestDeleteTCPRequest
-	err = client.DeleteTCPRequestRule(4, "frontend", "test", "", version)
+	err = client.DeleteTCPRequestRule(6, "frontend", "test", "", version)
 	if err != nil {
 		t.Error(err.Error())
 	} else {
@@ -213,9 +251,9 @@ func TestCreateEditDeleteTCPRequestRule(t *testing.T) {
 		t.Error("Version not incremented")
 	}
 
-	_, _, err = client.GetTCPRequestRule(4, "frontend", "test", "")
+	_, _, err = client.GetTCPRequestRule(6, "frontend", "test", "")
 	if err == nil {
-		t.Error("DeleteTCPRequestRule failed, TCP Request Rule 3 still exists")
+		t.Error("DeleteTCPRequestRule failed, TCP Request Rule 6 still exists")
 	}
 
 	err = client.DeleteTCPRequestRule(2, "backend", "test_2", "", version)

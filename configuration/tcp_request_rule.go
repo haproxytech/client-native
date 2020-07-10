@@ -277,6 +277,10 @@ func ParseTCPRequestRule(f types.TCPType) (rule *models.TCPRequestRule, err erro
 		case *tcp_actions.SetSrc:
 			rule.Action = "set-src"
 			rule.Expr = a.Expr.String()
+		case *tcp_actions.Lua:
+			rule.Action = "lua"
+			rule.LuaAction = a.Action
+			rule.LuaParams = a.Params
 		default:
 			return nil, NewConfError(ErrValidationError, "unsupported action in tcp_request_rule")
 		}
@@ -362,6 +366,10 @@ func ParseTCPRequestRule(f types.TCPType) (rule *models.TCPRequestRule, err erro
 		case *tcp_actions.UseService:
 			rule.Action = "use-service"
 			rule.ServiceName = a.ServiceName
+		case *tcp_actions.Lua:
+			rule.Action = "lua"
+			rule.LuaAction = a.Action
+			rule.LuaParams = a.Params
 		default:
 			return nil, NewConfError(ErrValidationError, "unsupported action in tcp_request_rule")
 		}
@@ -501,6 +509,15 @@ func SerializeTCPRequestRule(f models.TCPRequestRule) (rule types.TCPType, err e
 			return &tcp_types.Connection{
 				Action: &tcp_actions.ScIncGpc1{
 					ScID: f.ScIncID,
+				},
+				Cond:     f.Cond,
+				CondTest: f.CondTest,
+			}, nil
+		case "lua":
+			return &tcp_types.Connection{
+				Action: &tcp_actions.Lua{
+					Action: f.LuaAction,
+					Params: f.LuaParams,
 				},
 				Cond:     f.Cond,
 				CondTest: f.CondTest,
@@ -654,6 +671,15 @@ func SerializeTCPRequestRule(f models.TCPRequestRule) (rule types.TCPType, err e
 			return &tcp_types.Content{
 				Action: &tcp_actions.UseService{
 					ServiceName: f.ServiceName,
+				},
+				Cond:     f.Cond,
+				CondTest: f.CondTest,
+			}, nil
+		case "lua":
+			return &tcp_types.Content{
+				Action: &tcp_actions.Lua{
+					Action: f.LuaAction,
+					Params: f.LuaParams,
 				},
 				Cond:     f.Cond,
 				CondTest: f.CondTest,

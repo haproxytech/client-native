@@ -189,6 +189,15 @@ func ParseTCPResponseRule(t types.TCPType) *models.TCPResponseRule {
 				Cond:     v.Cond,
 				CondTest: v.CondTest,
 			}
+		case *tcp_actions.Lua:
+			return &models.TCPResponseRule{
+				Type:      "content",
+				Action:    "lua",
+				LuaAction: a.Action,
+				LuaParams: a.Params,
+				Cond:      v.Cond,
+				CondTest:  v.CondTest,
+			}
 		}
 	}
 	return nil
@@ -207,6 +216,15 @@ func SerializeTCPResponseRule(t models.TCPResponseRule) types.TCPType {
 		case "reject":
 			return &tcp_types.Content{
 				Action:   &tcp_actions.Reject{},
+				Cond:     t.Cond,
+				CondTest: t.CondTest,
+			}
+		case "lua":
+			return &tcp_types.Content{
+				Action: &tcp_actions.Lua{
+					Action: t.LuaAction,
+					Params: t.LuaParams,
+				},
 				Cond:     t.Cond,
 				CondTest: t.CondTest,
 			}

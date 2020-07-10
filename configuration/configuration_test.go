@@ -124,6 +124,8 @@ frontend test
   tcp-request connection reject if FALSE
   tcp-request content accept if TRUE
   tcp-request content reject if FALSE
+  tcp-request connection lua.foo param1 param2 if FALSE
+  tcp-request content lua.foo param1 param2 if FALSE
   log global
   no log
   log 127.0.0.1:514 local0 notice notice
@@ -179,6 +181,7 @@ backend test
   stick store-response src table test if TRUE
   tcp-response content accept if TRUE
   tcp-response content reject if FALSE
+  tcp-response content lua.foo param1 param2 if FALSE
   option contstats
   timeout check 2s
   timeout tunnel 5s
