@@ -600,7 +600,16 @@ func ParseHTTPRequestRule(f types.HTTPAction) (rule *models.HTTPRequestRule, err
 			Cond:       v.Cond,
 			CondTest:   v.CondTest,
 		}
+	case *actions.Lua:
+		rule = &models.HTTPRequestRule{
+			Type:      "lua",
+			LuaAction: v.Action,
+			LuaParams: v.Params,
+			Cond:      v.Cond,
+			CondTest:  v.CondTest,
+		}
 	}
+
 	return rule, err
 }
 
@@ -928,6 +937,13 @@ func SerializeHTTPRequestRule(f models.HTTPRequestRule) (rule types.HTTPAction, 
 	case "strict-mode":
 		rule = &actions.StrictMode{
 			Mode:     f.StrictMode,
+			Cond:     f.Cond,
+			CondTest: f.CondTest,
+		}
+	case "lua":
+		rule = &actions.Lua{
+			Action:   f.LuaAction,
+			Params:   f.LuaParams,
 			Cond:     f.Cond,
 			CondTest: f.CondTest,
 		}

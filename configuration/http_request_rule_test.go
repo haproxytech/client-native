@@ -29,7 +29,7 @@ func TestGetHTTPRequestRules(t *testing.T) {
 		t.Error(err.Error())
 	}
 
-	if len(hRules) != 26 {
+	if len(hRules) != 27 {
 		t.Errorf("%v http request rules returned, expected 26", len(hRules))
 	}
 
@@ -392,8 +392,24 @@ func TestGetHTTPRequestRules(t *testing.T) {
 			if r.CondTest != "FALSE" {
 				t.Errorf("%v: CondTest not FALSE: %v", *r.Index, r.CondTest)
 			}
+		} else if *r.Index == 26 {
+			if r.Type != "lua" {
+				t.Errorf("%v: Type not lua: %v", *r.Index, r.Type)
+			}
+			if r.LuaAction != "foo" {
+				t.Errorf("%v: LuaAction not foo: %v", *r.Index, r.LuaAction)
+			}
+			if r.LuaParams != "param1 param2" {
+				t.Errorf("%v: LuaParams not 'param1 param2': %v", *r.Index, r.LuaParams)
+			}
+			if r.Cond != "if" {
+				t.Errorf("%v: Cond not if: %v", *r.Index, r.Cond)
+			}
+			if r.CondTest != "FALSE" {
+				t.Errorf("%v: CondTest not FALSE: %v", *r.Index, r.CondTest)
+			}
 		} else {
-			t.Errorf("Expext only http-request 0 to 25, %v found", *r.Index)
+			t.Errorf("Expext only http-request 0 to 26, %v found", *r.Index)
 		}
 	}
 
@@ -553,7 +569,7 @@ func TestCreateEditDeleteHTTPRequestRule(t *testing.T) {
 	}
 
 	// TestDeleteHTTPRequest
-	err = client.DeleteHTTPRequestRule(26, "frontend", "test", "", version)
+	err = client.DeleteHTTPRequestRule(27, "frontend", "test", "", version)
 	if err != nil {
 		t.Error(err.Error())
 	} else {
@@ -564,9 +580,9 @@ func TestCreateEditDeleteHTTPRequestRule(t *testing.T) {
 		t.Error("Version not incremented")
 	}
 
-	_, _, err = client.GetHTTPRequestRule(26, "frontend", "test", "")
+	_, _, err = client.GetHTTPRequestRule(27, "frontend", "test", "")
 	if err == nil {
-		t.Error("DeleteHTTPRequestRule failed, HTTP Request Rule 26 still exists")
+		t.Error("DeleteHTTPRequestRule failed, HTTP Request Rule 27 still exists")
 	}
 
 	err = client.DeleteHTTPRequestRule(2, "backend", "test_2", "", version)

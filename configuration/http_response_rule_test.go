@@ -29,7 +29,7 @@ func TestGetHTTPResponseRules(t *testing.T) {
 		t.Error(err.Error())
 	}
 
-	if len(hRules) != 18 {
+	if len(hRules) != 19 {
 		t.Errorf("%v http response rules returned, expected 18", len(hRules))
 	}
 
@@ -294,8 +294,24 @@ func TestGetHTTPResponseRules(t *testing.T) {
 			if r.CondTest != "FALSE" {
 				t.Errorf("%v: CondTest not FALSE: %v", *r.Index, r.CondTest)
 			}
+		} else if *r.Index == 18 {
+			if r.Type != "lua" {
+				t.Errorf("%v: Type not lua: %v", *r.Index, r.Type)
+			}
+			if r.LuaAction != "foo" {
+				t.Errorf("%v: LuaAction not foo: %v", *r.Index, r.LuaAction)
+			}
+			if r.LuaParams != "param1 param2" {
+				t.Errorf("%v: LuaParams not 'param1 param2': %v", *r.Index, r.LuaParams)
+			}
+			if r.Cond != "if" {
+				t.Errorf("%v: Cond not if: %v", *r.Index, r.Cond)
+			}
+			if r.CondTest != "FALSE" {
+				t.Errorf("%v: CondTest not FALSE: %v", *r.Index, r.CondTest)
+			}
 		} else {
-			t.Errorf("Expext only http-response 0 to 17, %v found", *r.Index)
+			t.Errorf("Expext only http-response 0 to 18, %v found", *r.Index)
 		}
 	}
 
@@ -414,7 +430,7 @@ func TestCreateEditDeleteHTTPResponseRule(t *testing.T) {
 	}
 
 	// TestDeleteHTTPResponse
-	err = client.DeleteHTTPResponseRule(18, "frontend", "test", "", version)
+	err = client.DeleteHTTPResponseRule(19, "frontend", "test", "", version)
 	if err != nil {
 		t.Error(err.Error())
 	} else {
@@ -425,9 +441,9 @@ func TestCreateEditDeleteHTTPResponseRule(t *testing.T) {
 		t.Error("Version not incremented")
 	}
 
-	_, _, err = client.GetHTTPResponseRule(18, "frontend", "test", "")
+	_, _, err = client.GetHTTPResponseRule(19, "frontend", "test", "")
 	if err == nil {
-		t.Error("DeleteHTTPResponseRule failed, HTTPResponse Rule 18 still exists")
+		t.Error("DeleteHTTPResponseRule failed, HTTPResponse Rule 19 still exists")
 	}
 
 	err = client.DeleteHTTPResponseRule(2, "backend", "test_2", "", version)

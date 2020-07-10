@@ -444,6 +444,14 @@ func ParseHTTPResponseRule(f types.HTTPAction) *models.HTTPResponseRule {
 			Cond:       v.Cond,
 			CondTest:   v.CondTest,
 		}
+	case *actions.Lua:
+		return &models.HTTPResponseRule{
+			Type:      "lua",
+			LuaAction: v.Action,
+			LuaParams: v.Params,
+			Cond:      v.Cond,
+			CondTest:  v.CondTest,
+		}
 	}
 	return nil
 }
@@ -646,6 +654,13 @@ func SerializeHTTPResponseRule(f models.HTTPResponseRule) types.HTTPAction {
 	case "strict-mode":
 		return &actions.StrictMode{
 			Mode:     f.StrictMode,
+			Cond:     f.Cond,
+			CondTest: f.CondTest,
+		}
+	case "lua":
+		return &actions.Lua{
+			Action:   f.LuaAction,
+			Params:   f.LuaParams,
 			Cond:     f.Cond,
 			CondTest: f.CondTest,
 		}

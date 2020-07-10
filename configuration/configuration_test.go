@@ -100,6 +100,7 @@ frontend test
   http-request silent-drop if FALSE
   http-request unset-var(req.my_var) if FALSE
   http-request strict-mode on if FALSE
+  http-request lua.foo param1 param2 if FALSE
   http-response allow if src 192.168.0.0/16
   http-response set-header X-SSL %[ssl_fc]
   http-response set-var(req.my_var) req.fhdr(user-agent),lower
@@ -118,6 +119,7 @@ frontend test
   http-response track-sc1 src table tr1 if FALSE
   http-response track-sc2 src table tr2 if FALSE
   http-response strict-mode on if FALSE
+  http-response lua.foo param1 param2 if FALSE
   tcp-request connection accept if TRUE
   tcp-request connection reject if FALSE
   tcp-request content accept if TRUE
