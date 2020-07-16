@@ -191,6 +191,13 @@ func ParseGlobalSection(p *parser.Parser) (*models.Global, error) {
 		sslBindCiphers = sslBindCiphersParser.Value
 	}
 
+	data, err = p.Get(parser.Global, parser.GlobalSectionName, "ssl-default-bind-ciphersuites")
+	sslBindCiphersuites := ""
+	if err == nil {
+		sslBindCiphersuitesParser := data.(*types.StringC)
+		sslBindCiphersuites = sslBindCiphersuitesParser.Value
+	}
+
 	data, err = p.Get(parser.Global, parser.GlobalSectionName, "ssl-default-bind-options")
 	sslBindOptions := ""
 	if err == nil {
@@ -203,6 +210,13 @@ func ParseGlobalSection(p *parser.Parser) (*models.Global, error) {
 	if err == nil {
 		sslServerCiphersParser := data.(*types.StringC)
 		sslServerCiphers = sslServerCiphersParser.Value
+	}
+
+	data, err = p.Get(parser.Global, parser.GlobalSectionName, "ssl-default-server-ciphersuites")
+	sslServerCiphersuites := ""
+	if err == nil {
+		sslServerCiphersuitesParser := data.(*types.StringC)
+		sslServerCiphersuites = sslServerCiphersuitesParser.Value
 	}
 
 	data, err = p.Get(parser.Global, parser.GlobalSectionName, "ssl-default-server-options")
@@ -236,25 +250,27 @@ func ParseGlobalSection(p *parser.Parser) (*models.Global, error) {
 	}
 
 	g := &models.Global{
-		User:                    user,
-		Group:                   group,
-		Chroot:                  chroot,
-		Daemon:                  daemon,
-		MasterWorker:            masterWorker,
-		Maxconn:                 mConn,
-		Nbproc:                  nbproc,
-		Nbthread:                nbthread,
-		Pidfile:                 pidfile,
-		RuntimeAPIs:             rAPIs,
-		StatsTimeout:            statsTimeout,
-		CPUMaps:                 cpuMaps,
-		SslDefaultBindCiphers:   sslBindCiphers,
-		SslDefaultBindOptions:   sslBindOptions,
-		SslDefaultServerCiphers: sslServerCiphers,
-		SslDefaultServerOptions: sslServerOptions,
-		TuneSslDefaultDhParam:   dhParam,
-		ExternalCheck:           externalCheck,
-		LuaLoads:                luaLoads,
+		User:                         user,
+		Group:                        group,
+		Chroot:                       chroot,
+		Daemon:                       daemon,
+		MasterWorker:                 masterWorker,
+		Maxconn:                      mConn,
+		Nbproc:                       nbproc,
+		Nbthread:                     nbthread,
+		Pidfile:                      pidfile,
+		RuntimeAPIs:                  rAPIs,
+		StatsTimeout:                 statsTimeout,
+		CPUMaps:                      cpuMaps,
+		SslDefaultBindCiphers:        sslBindCiphers,
+		SslDefaultBindCiphersuites:   sslBindCiphersuites,
+		SslDefaultBindOptions:        sslBindOptions,
+		SslDefaultServerCiphers:      sslServerCiphers,
+		SslDefaultServerCiphersuites: sslServerCiphersuites,
+		SslDefaultServerOptions:      sslServerOptions,
+		TuneSslDefaultDhParam:        dhParam,
+		ExternalCheck:                externalCheck,
+		LuaLoads:                     luaLoads,
 	}
 
 	return g, nil
@@ -394,6 +410,15 @@ func SerializeGlobalSection(p *parser.Parser, data *models.Global) error {
 	if err := p.Set(parser.Global, parser.GlobalSectionName, "ssl-default-bind-ciphers", pSSLBindCiphers); err != nil {
 		return err
 	}
+	pSSLBindCiphersuites := &types.StringC{
+		Value: data.SslDefaultBindCiphersuites,
+	}
+	if data.SslDefaultBindCiphersuites == "" {
+		pSSLBindCiphersuites = nil
+	}
+	if err := p.Set(parser.Global, parser.GlobalSectionName, "ssl-default-bind-ciphersuites", pSSLBindCiphersuites); err != nil {
+		return err
+	}
 	pSSLBindOptions := &types.StringC{
 		Value: data.SslDefaultBindOptions,
 	}
@@ -410,6 +435,15 @@ func SerializeGlobalSection(p *parser.Parser, data *models.Global) error {
 		pSSLServerCiphers = nil
 	}
 	if err := p.Set(parser.Global, parser.GlobalSectionName, "ssl-default-server-ciphers", pSSLServerCiphers); err != nil {
+		return err
+	}
+	pSSLServerCiphersuites := &types.StringC{
+		Value: data.SslDefaultServerCiphersuites,
+	}
+	if data.SslDefaultServerCiphersuites == "" {
+		pSSLServerCiphersuites = nil
+	}
+	if err := p.Set(parser.Global, parser.GlobalSectionName, "ssl-default-server-ciphersuites", pSSLServerCiphersuites); err != nil {
 		return err
 	}
 	pSSLServerOptions := &types.StringC{
