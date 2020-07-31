@@ -151,7 +151,7 @@ func (c *Client) CreateResolver(data *models.Resolver, transactionID string, ver
 	}
 
 	if c.checkSectionExists(parser.Resolvers, data.Name, p) {
-		e := NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("%s %s already exists", parser.Resolvers, data.Name))
+		e := NewConfError(ErrObjectAlreadyExists, fmt.Sprintf("%s %s already exists", parser.Resolvers, data.Name))
 		return c.handleError(data.Name, "", "", t, transactionID == "", e)
 	}
 
