@@ -16,9 +16,12 @@
 package misc
 
 import (
+	"math/rand"
 	"strconv"
 	"strings"
 )
+
+var chars = []rune("0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ")
 
 // StringInSlice checks if a string is in a list of strings
 func StringInSlice(a string, list []string) bool {
@@ -186,4 +189,13 @@ func StringP(s string) *string {
 func Int64P(i int) *int64 {
 	ret := int64(i)
 	return &ret
+}
+
+func RandomString(n int) string {
+	b := make([]rune, n)
+	size := len(chars)
+	for i := range b {
+		b[i] = chars[rand.Intn(size)]
+	}
+	return string(b)
 }

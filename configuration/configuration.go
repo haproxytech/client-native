@@ -71,9 +71,10 @@ type ClientParams struct {
 // data to file on every change for persistence.
 type Client struct {
 	ClientParams
-	parsers map[string]*parser.Parser
-	Parser  *parser.Parser
-	mu      sync.Mutex
+	parsers  map[string]*parser.Parser
+	services map[string]*Service
+	Parser   *parser.Parser
+	mu       sync.Mutex
 }
 
 // DefaultClient returns Client with sane defaults
@@ -115,6 +116,7 @@ func (c *Client) Init(options ClientParams) error {
 	c.ClientParams = options
 
 	c.parsers = make(map[string]*parser.Parser)
+	c.services = make(map[string]*Service)
 	if err := c.InitTransactionParsers(); err != nil {
 		return err
 	}
