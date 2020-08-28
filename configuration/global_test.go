@@ -76,6 +76,7 @@ func TestPutGlobal(t *testing.T) {
 	v := "0"
 	a := "/var/run/haproxy.sock"
 	f := "/etc/foo.lua"
+	enabled := "enabled"
 	g := &models.Global{
 		Daemon: "enabled",
 		CPUMaps: []*models.CPUMap{
@@ -100,6 +101,10 @@ func TestPutGlobal(t *testing.T) {
 			&models.LuaLoad{
 				File: &f,
 			},
+		},
+		LogSendHostname: &models.GlobalLogSendHostname{
+			Enabled: &enabled,
+			Param:   "something",
 		},
 	}
 

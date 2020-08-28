@@ -249,6 +249,16 @@ func ParseGlobalSection(p *parser.Parser) (*models.Global, error) {
 		}
 	}
 
+	data, err = p.Get(parser.Global, parser.GlobalSectionName, "log-send-hostname")
+	logSendHostName := "disabled"
+	globalLogSendHostName := &models.GlobalLogSendHostname{Enabled: &logSendHostName}
+	if err == nil {
+		logSendHostNameParser := data.(*types.StringC)
+		globalLogSendHostName.Param = logSendHostNameParser.Value
+		logSendHostName = "enabled"
+		globalLogSendHostName.Enabled = &logSendHostName
+	}
+
 	g := &models.Global{
 		User:                         user,
 		Group:                        group,
@@ -271,6 +281,7 @@ func ParseGlobalSection(p *parser.Parser) (*models.Global, error) {
 		TuneSslDefaultDhParam:        dhParam,
 		ExternalCheck:                externalCheck,
 		LuaLoads:                     luaLoads,
+		LogSendHostname:              globalLogSendHostName,
 	}
 
 	return g, nil
@@ -474,6 +485,17 @@ func SerializeGlobalSection(p *parser.Parser, data *models.Global) error {
 	}
 
 	if err := p.Set(parser.Global, parser.GlobalSectionName, "lua-load", luaLoads); err != nil {
+		return err
+	}
+
+	logSendHostName := &types.StringC{}
+	if data.LogSendHostname == nil || *data.LogSendHostname.Enabled == "disabled" {
+		logSendHostName = nil
+	} else {
+		logSendHostName.Value = data.LogSendHostname.Param
+	}
+
+	if err := p.Set(parser.Global, parser.GlobalSectionName, "log-send-hostname", logSendHostName); err != nil {
 		return err
 	}
 
