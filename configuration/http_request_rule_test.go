@@ -507,10 +507,11 @@ func TestCreateEditDeleteHTTPRequestRule(t *testing.T) {
 	id := int64(1)
 
 	// TestCreateHTTPRequestRule
+	var redirCode int64 = 301
 	r := &models.HTTPRequestRule{
 		Index:      &id,
 		Type:       "redirect",
-		RedirCode:  301,
+		RedirCode:  &redirCode,
 		RedirValue: "http://www.%[hdr(host)]%[capture.req.uri]",
 		RedirType:  "location",
 	}
@@ -541,7 +542,7 @@ func TestCreateEditDeleteHTTPRequestRule(t *testing.T) {
 	r = &models.HTTPRequestRule{
 		Index:      &id,
 		Type:       "redirect",
-		RedirCode:  302,
+		RedirCode:  &redirCode,
 		RedirValue: "http://www1.%[hdr(host)]%[capture.req.uri]",
 		RedirType:  "scheme",
 	}

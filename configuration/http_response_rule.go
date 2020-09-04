@@ -217,7 +217,10 @@ func ParseHTTPResponseRule(f types.HTTPAction) *models.HTTPResponseRule {
 			CondTest: v.CondTest,
 		}
 	case *actions.Redirect:
-		code, _ := strconv.ParseInt(v.Code, 10, 64)
+		var codePtr *int64
+		if code, err := strconv.ParseInt(v.Code, 10, 64); err == nil {
+			codePtr = &code
+		}
 		r := &models.HTTPResponseRule{
 			Type:        "redirect",
 			RedirType:   v.Type,
@@ -225,9 +228,7 @@ func ParseHTTPResponseRule(f types.HTTPAction) *models.HTTPResponseRule {
 			RedirOption: v.Option,
 			Cond:        v.Cond,
 			CondTest:    v.CondTest,
-		}
-		if code != 0 {
-			r.RedirCode = code
+			RedirCode:   codePtr,
 		}
 		return r
 	case *actions.AddHeader:
@@ -469,10 +470,14 @@ func SerializeHTTPResponseRule(f models.HTTPResponseRule) types.HTTPAction {
 			CondTest: f.CondTest,
 		}
 	case "redirect":
+		code := ""
+		if f.RedirCode != nil {
+			code = strconv.FormatInt(*f.RedirCode, 10)
+		}
 		return &actions.Redirect{
 			Type:     f.RedirType,
 			Value:    f.RedirValue,
-			Code:     strconv.FormatInt(f.RedirCode, 10),
+			Code:     code,
 			Option:   f.RedirOption,
 			Cond:     f.Cond,
 			CondTest: f.CondTest,

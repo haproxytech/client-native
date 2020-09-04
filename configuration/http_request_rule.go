@@ -225,14 +225,15 @@ func ParseHTTPRequestRule(f types.HTTPAction) (rule *models.HTTPRequestRule, err
 			CondTest: v.CondTest,
 		}
 	case *actions.Deny:
-		s, _ := strconv.ParseInt(v.DenyStatus, 10, 64)
-		rule = &models.HTTPRequestRule{
-			Type:     "deny",
-			Cond:     v.Cond,
-			CondTest: v.CondTest,
+		var denyPtr *int64
+		if ds, err := strconv.ParseInt(v.DenyStatus, 10, 64); err == nil {
+			denyPtr = &ds
 		}
-		if s != 0 {
-			rule.DenyStatus = s
+		rule = &models.HTTPRequestRule{
+			Type:       "deny",
+			Cond:       v.Cond,
+			CondTest:   v.CondTest,
+			DenyStatus: denyPtr,
 		}
 	case *actions.Auth:
 		rule = &models.HTTPRequestRule{
@@ -242,7 +243,10 @@ func ParseHTTPRequestRule(f types.HTTPAction) (rule *models.HTTPRequestRule, err
 			CondTest:  v.CondTest,
 		}
 	case *actions.Redirect:
-		code, _ := strconv.ParseInt(v.Code, 10, 64)
+		var codePtr *int64
+		if code, err := strconv.ParseInt(v.Code, 10, 64); err == nil {
+			codePtr = &code
+		}
 		rule = &models.HTTPRequestRule{
 			Type:        "redirect",
 			RedirType:   v.Type,
@@ -250,19 +254,19 @@ func ParseHTTPRequestRule(f types.HTTPAction) (rule *models.HTTPRequestRule, err
 			RedirOption: v.Option,
 			Cond:        v.Cond,
 			CondTest:    v.CondTest,
+			RedirCode:   codePtr,
 		}
-		if code != 0 {
-			rule.RedirCode = code
-		}
+
 	case *actions.Tarpit:
-		s, _ := strconv.ParseInt(v.DenyStatus, 10, 64)
-		rule = &models.HTTPRequestRule{
-			Type:     "tarpit",
-			Cond:     v.Cond,
-			CondTest: v.CondTest,
+		var dsPtr *int64
+		if ds, err := strconv.ParseInt(v.DenyStatus, 10, 64); err == nil {
+			dsPtr = &ds
 		}
-		if s != 0 {
-			rule.DenyStatus = s
+		rule = &models.HTTPRequestRule{
+			Type:       "tarpit",
+			Cond:       v.Cond,
+			CondTest:   v.CondTest,
+			DenyStatus: dsPtr,
 		}
 	case *actions.AddHeader:
 		rule = &models.HTTPRequestRule{
@@ -621,8 +625,12 @@ func SerializeHTTPRequestRule(f models.HTTPRequestRule) (rule types.HTTPAction, 
 			CondTest: f.CondTest,
 		}
 	case "deny":
+		ds := ""
+		if f.DenyStatus != nil {
+			ds = strconv.FormatInt(*f.DenyStatus, 10)
+		}
 		rule = &actions.Deny{
-			DenyStatus: strconv.FormatInt(f.DenyStatus, 10),
+			DenyStatus: ds,
 			Cond:       f.Cond,
 			CondTest:   f.CondTest,
 		}
@@ -633,17 +641,25 @@ func SerializeHTTPRequestRule(f models.HTTPRequestRule) (rule types.HTTPAction, 
 			CondTest: f.CondTest,
 		}
 	case "redirect":
+		code := ""
+		if f.RedirCode != nil {
+			code = strconv.FormatInt(*f.RedirCode, 10)
+		}
 		rule = &actions.Redirect{
 			Type:     f.RedirType,
 			Value:    f.RedirValue,
-			Code:     strconv.FormatInt(f.RedirCode, 10),
+			Code:     code,
 			Option:   f.RedirOption,
 			Cond:     f.Cond,
 			CondTest: f.CondTest,
 		}
 	case "tarpit":
+		ds := ""
+		if f.DenyStatus != nil {
+			ds = strconv.FormatInt(*f.DenyStatus, 10)
+		}
 		rule = &actions.Tarpit{
-			DenyStatus: strconv.FormatInt(f.DenyStatus, 10),
+			DenyStatus: ds,
 			Cond:       f.Cond,
 			CondTest:   f.CondTest,
 		}
