@@ -97,21 +97,16 @@ func (s *Service) Delete() error {
 }
 
 //Init initiates the client by reading the configuration associated with it or created the initial configuration if it does not exist.
-func (s *Service) Init(transactionID string) error {
+func (s *Service) Init(transactionID string) (bool, error) {
 	s.SetTransactionID(transactionID)
-	new, err := s.createBackend()
+	newBackend, err := s.createBackend()
 	if err != nil {
-		return err
+		return false, err
 	}
-	if new {
-		err = s.createNewNodes(s.scaling.BaseSlots)
-	} else {
-		err = s.loadNodes()
+	if newBackend {
+		return true, s.createNewNodes(s.scaling.BaseSlots)
 	}
-	if err != nil {
-		return err
-	}
-	return nil
+	return s.loadNodes()
 }
 
 //SetTransactionID updates the transaction ID to be used for modifications on the configuration associated with the service.
@@ -129,24 +124,32 @@ func (s *Service) UpdateScalingParams(scaling ScalingParams) error {
 }
 
 //Update updates the backend associated with the server based on the list of servers provided
-func (s *Service) Update(servers []ServiceServer) error {
-	if err := s.expandNodes(len(servers)); err != nil {
-		return err
+func (s *Service) Update(servers []ServiceServer) (bool, error) {
+	reload := false
+	r, err := s.expandNodes(len(servers))
+	if err != nil {
+		return false, err
 	}
+	reload = reload || r
 	s.markRemovedNodes(servers)
 	for _, server := range servers {
 		if err := s.handleNode(server); err != nil {
-			return err
+			return false, err
 		}
 	}
 	s.reorderNodes(len(servers))
-	if err := s.updateConfig(); err != nil {
-		return err
+	r, err = s.updateConfig()
+	if err != nil {
+		return false, err
 	}
-	if err := s.removeExcessNodes(len(servers)); err != nil {
-		return err
+	reload = reload || r
+	r, err = s.removeExcessNodes(len(servers))
+
+	if err != nil {
+		return false, err
 	}
-	return nil
+	reload = reload || r
+	return reload, nil
 }
 
 //GetServers returns the list of servers as they are currently configured in the services backend
@@ -155,16 +158,16 @@ func (s *Service) GetServers() (models.Servers, error) {
 	return servers, err
 }
 
-func (s *Service) expandNodes(nodeCount int) error {
+func (s *Service) expandNodes(nodeCount int) (bool, error) {
 	currentNodeCount := s.serverCount()
 	if nodeCount < currentNodeCount {
-		return nil
+		return false, nil
 	}
 	newNodeCount := s.calculateNodeCount(nodeCount)
 	if err := s.createNewNodes(newNodeCount - currentNodeCount); err != nil {
-		return err
+		return false, err
 	}
-	return nil
+	return true, nil
 }
 
 func (s *Service) serverCount() int {
@@ -216,12 +219,12 @@ func (s *Service) createNewNodes(nodeCount int) error {
 	return nil
 }
 
-func (s *Service) removeExcessNodes(newNodes int) error {
+func (s *Service) removeExcessNodes(newNodes int) (bool, error) {
 	lastIndex, reduce := s.getLastNodeIndex(newNodes)
 	if !reduce {
-		return nil
+		return false, nil
 	}
-	return s.removeNodesAfterIndex(lastIndex)
+	return true, s.removeNodesAfterIndex(lastIndex)
 }
 
 func (s *Service) getLastNodeIndex(nodeCount int) (int, bool) {
@@ -270,10 +273,10 @@ func (s *Service) createBackend() (bool, error) {
 	return false, nil
 }
 
-func (s *Service) loadNodes() error {
+func (s *Service) loadNodes() (bool, error) {
 	_, servers, err := s.client.GetServers(s.name, s.transactionID)
 	if err != nil {
-		return err
+		return false, err
 	}
 	for _, server := range servers {
 		sNode := &serviceNode{
@@ -288,12 +291,13 @@ func (s *Service) loadNodes() error {
 		s.nodes = append(s.nodes, sNode)
 	}
 	if s.serverCount() < s.scaling.BaseSlots {
-		return s.createNewNodes(s.scaling.BaseSlots - s.serverCount())
+		return true, s.createNewNodes(s.scaling.BaseSlots - s.serverCount())
 	}
-	return nil
+	return false, nil
 }
 
-func (s *Service) updateConfig() error {
+func (s *Service) updateConfig() (bool, error) {
+	reload := false
 	for _, node := range s.nodes {
 		if node.modified {
 			server := &models.Server{
@@ -307,11 +311,13 @@ func (s *Service) updateConfig() error {
 			}
 			err := s.client.EditServer(node.name, s.name, server, s.transactionID, 0)
 			if err != nil {
-				return err
+				return false, err
 			}
+			node.modified = false
+			reload = true
 		}
 	}
-	return nil
+	return reload, nil
 }
 
 func (s *Service) nodeRemoved(node *serviceNode, servers []ServiceServer) bool {

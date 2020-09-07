@@ -97,12 +97,17 @@ func (s *ServiceInitiationSuite) BeforeTest(suiteName, testName string) {
 }
 
 func (s *ServiceInitiationSuite) AfterTest(suiteName, testName string) {
-	s.client.DeleteService(s.serviceName)
+	//run Init to set transactionID if test did not run it
+	_, err := s.service.Init(s.transactionID)
+	s.Nil(err)
+	err = s.service.Delete()
+	s.Nil(err)
 	s.service = nil
 }
 
 func (s *ServiceInitiationSuite) TestInitAndDelete() {
-	err := s.service.Init(s.transactionID)
+	r, err := s.service.Init(s.transactionID)
+	s.True(r)
 	s.Nil(err)
 	err = s.service.Delete()
 	s.Nil(err)
@@ -121,7 +126,8 @@ func (s *ServiceInitiationSuite) TestRecreatingAfterDeletion() {
 }
 
 func (s *ServiceInitiationSuite) TestCreateNewBackendAndServers() {
-	err := s.service.Init(s.transactionID)
+	r, err := s.service.Init(s.transactionID)
+	s.True(r)
 	s.Nil(err)
 	_, backned, err := s.client.GetBackend(s.serviceName, s.transactionID)
 	s.Nil(err)
@@ -130,30 +136,22 @@ func (s *ServiceInitiationSuite) TestCreateNewBackendAndServers() {
 	s.Nil(err)
 	s.NotNil(servers)
 	s.Equal(baseSlots, len(servers))
-	err = s.service.Delete()
-	s.Nil(err)
 }
 
 func (s *ServiceInitiationSuite) TestLoadExistingBackend() {
-	err := s.client.CreateBackend(&models.Backend{
-		Name: s.serviceName,
-	}, s.transactionID, 0)
-	s.Nil(err)
-	defaultPort := int64(81)
+	serverPort := int64(81)
 	servers := models.Servers{
-		{Name: "s1", Address: "127.1.1.1", Port: &defaultPort},
-		{Name: "s2", Address: "127.1.1.2", Port: &defaultPort},
-		{Name: "s3", Address: "127.1.1.3", Port: &defaultPort},
-		{Name: "s4", Address: "127.1.1.4", Port: &defaultPort},
-		{Name: "s5", Address: "127.0.0.1", Port: &defaultPort, Maintenance: "enabled"},
+		{Name: "s1", Address: "127.1.1.1", Port: &serverPort},
+		{Name: "s2", Address: "127.1.1.2", Port: &serverPort},
+		{Name: "s3", Address: "127.1.1.3", Port: &serverPort},
+		{Name: "s4", Address: "127.1.1.4", Port: &serverPort},
 	}
+	s.Nil(s.createExistingService(servers))
 
-	for _, server := range servers {
-		err = s.client.CreateServer(s.serviceName, server, s.transactionID, 0)
-		s.Nil(err)
-	}
-
-	err = s.service.Init(s.transactionID)
+	r, err := s.service.Init(s.transactionID)
+	//Only existing data for was loaded
+	//No modifications on the config have been done as the server count matches base slots value so reload should be false
+	s.False(r)
 	s.Nil(err)
 	cServers, err := s.service.GetServers()
 	s.Nil(err)
@@ -169,6 +167,37 @@ func (s *ServiceInitiationSuite) TestLoadExistingBackend() {
 			s.Equal(*server.Port, int64(80))
 		}
 	}
+}
+
+func (s *ServiceInitiationSuite) createExistingService(servers models.Servers) error {
+	err := client.CreateBackend(&models.Backend{
+		Name: s.serviceName,
+	}, s.transactionID, 0)
+	if err != nil {
+		return err
+	}
+	for _, server := range servers {
+		err := s.client.CreateServer(s.serviceName, server, s.transactionID, 0)
+		if err != nil {
+			return err
+		}
+	}
+
+	defaultPort := int64(80)
+	maintServer := &models.Server{
+		Address:     "127.0.0.1",
+		Port:        &defaultPort,
+		Maintenance: "enabled",
+	}
+
+	for i := len(servers); i < baseSlots; i++ {
+		maintServer.Name = fmt.Sprintf("s%d", i+1)
+		err := s.client.CreateServer(s.serviceName, maintServer, s.transactionID, 0)
+		if err != nil {
+			return err
+		}
+	}
+	return nil
 }
 
 type ServiceUpdateSuit struct {
@@ -191,7 +220,8 @@ func (s *ServiceUpdateSuit) BeforeTest(suiteName, testName string) {
 	})
 	s.NotNil(service)
 	s.Nil(err)
-	err = service.Init(s.transactionID)
+	r, err := service.Init(s.transactionID)
+	s.True(r)
 	s.Nil(err)
 	s.service = service
 }
@@ -209,7 +239,8 @@ func (s *ServiceUpdateSuit) TestFirstUpdate() {
 		{Address: "127.1.1.3", Port: 83},
 		{Address: "127.1.1.4", Port: 84},
 	}
-	err := s.service.Update(servers)
+	r, err := s.service.Update(servers)
+	s.True(r)
 	s.Nil(err)
 	s.validateUpdateResult(servers)
 }
@@ -237,14 +268,16 @@ func (s *ServiceUpdateSuit) TestSecondUpdateWithDeletedServer() {
 		{Address: "127.1.1.3", Port: 83},
 		{Address: "127.1.1.4", Port: 84},
 	}
-	err := s.service.Update(servers)
+	r, err := s.service.Update(servers)
+	s.True(r)
 	s.Nil(err)
 	servers = []ServiceServer{
 		{Address: "127.1.1.1", Port: 81},
 		{Address: "127.1.1.3", Port: 83},
 		{Address: "127.1.1.4", Port: 84},
 	}
-	err = s.service.Update(servers)
+	r, err = s.service.Update(servers)
+	s.True(r)
 	s.Nil(err)
 	//When the new server list has less servers than the previous one "holes" can be left
 	//in the middle of enabled servers.
@@ -265,7 +298,8 @@ func (s *ServiceUpdateSuit) TestSecondUpdateWithNewAndRemovedServers() {
 		{Address: "127.1.1.3", Port: 83},
 		{Address: "127.1.1.4", Port: 84},
 	}
-	err := s.service.Update(servers)
+	r, err := s.service.Update(servers)
+	s.True(r)
 	s.Nil(err)
 	servers = []ServiceServer{
 		{Address: "127.1.1.1", Port: 81},
@@ -275,7 +309,8 @@ func (s *ServiceUpdateSuit) TestSecondUpdateWithNewAndRemovedServers() {
 		{Address: "127.1.1.7", Port: 87},
 		{Address: "127.1.1.2", Port: 82},
 	}
-	err = s.service.Update(servers)
+	r, err = s.service.Update(servers)
+	s.True(r)
 	s.Nil(err)
 	//Server 127.1.1.3 is the only that will be marked as deleted
 	//as server 127.1.1.2 reapears at the end of the server list with the same port.
@@ -290,6 +325,21 @@ func (s *ServiceUpdateSuit) TestSecondUpdateWithNewAndRemovedServers() {
 		{Address: "127.1.1.7", Port: 87},
 	}
 	s.validateUpdateResult(expected)
+}
+
+func (s *ServiceUpdateSuit) TestSecondUpdateWithNoChanges() {
+	servers := []ServiceServer{
+		{Address: "127.1.1.1", Port: 81},
+		{Address: "127.1.1.2", Port: 82},
+		{Address: "127.1.1.3", Port: 83},
+		{Address: "127.1.1.4", Port: 84},
+	}
+	r, err := s.service.Update(servers)
+	s.True(r)
+	s.Nil(err)
+	r, err = s.service.Update(servers)
+	s.False(r)
+	s.Nil(err)
 }
 
 func (s *ServiceUpdateSuit) TestUpdateScalingParams() {
@@ -308,7 +358,8 @@ func (s *ServiceUpdateSuit) TestUpdateScalingParams() {
 func (s *ServiceUpdateSuit) TestLinearUpscaling() {
 	expectedSlotsCount := baseSlots + slotsIncrement
 	expected := s.generateServers(baseSlots + 2)
-	err := s.service.Update(expected)
+	r, err := s.service.Update(expected)
+	s.True(r)
 	s.Nil(err)
 	servers, err := s.service.GetServers()
 	s.Nil(err)
@@ -337,7 +388,8 @@ func (s *ServiceUpdateSuit) TestExponentialUpscaling() {
 	})
 	s.Nil(err)
 	expected := s.generateServers(baseSlots + 2)
-	err = s.service.Update(expected)
+	r, err := s.service.Update(expected)
+	s.True(r)
 	s.Nil(err)
 	servers, err := s.service.GetServers()
 	s.Nil(err)
@@ -358,7 +410,8 @@ func (s *ServiceUpdateSuit) TestLinearDownscaling() {
 
 func (s *ServiceUpdateSuit) scaleServiceAndValidate(expectedSlots, serverCount int) {
 	upscaleServers := s.generateServers(serverCount)
-	err := s.service.Update(upscaleServers)
+	r, err := s.service.Update(upscaleServers)
+	s.True(r)
 	s.Nil(err)
 	servers, err := s.service.GetServers()
 	s.Nil(err)
