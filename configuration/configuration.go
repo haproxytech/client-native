@@ -550,8 +550,41 @@ func parseField(section parser.Section, sectionName string, fieldName string, p 
 			for _, p := range dsParams {
 				switch v := p.(type) {
 				case *params.ServerOptionWord:
-					if v.Name == "check-ssl" {
+					switch v.Name {
+					case "backup":
+						dServer.Backup = "enabled"
+					case "no-backup":
+						dServer.Backup = "disabled"
+					case "check":
+						dServer.Check = "enabled"
+					case "no-check":
+						dServer.Check = "disabled"
+					case "agent-check":
+						dServer.AgentCheck = "enabled"
+					case "no-agent-check":
+						dServer.AgentCheck = "disabled"
+					case "ssl":
+						dServer.Ssl = "enabled"
+					case "no-ssl":
+						dServer.Ssl = "disabled"
+					case "check-ssl":
 						dServer.CheckSsl = "enabled"
+					case "no-check-ssl":
+						dServer.CheckSsl = "disabled"
+					case "tls-tickets":
+						dServer.TLSTickets = "enabled"
+					case "no-tls-tickets":
+						dServer.TLSTickets = "disabled"
+					case "allow-0rtt":
+						dServer.Allow0rtt = true
+					case "send-proxy":
+						dServer.SendProxy = "enabled"
+					case "no-send-proxy":
+						dServer.SendProxy = "disabled"
+					case "send-proxy-v2":
+						dServer.SendProxyV2 = "enabled"
+					case "no-send-proxy-v2":
+						dServer.SendProxyV2 = "disabled"
 					}
 				case *params.ServerOptionValue:
 					switch v.Name {
@@ -578,12 +611,52 @@ func parseField(section parser.Section, sectionName string, fieldName string, p 
 						if err == nil {
 							dServer.Port = &port
 						}
+					case "alpn":
+						dServer.Alpn = v.Value
+					case "maxconn":
+						m, err := strconv.ParseInt(v.Value, 10, 64)
+						if err == nil && m != 0 {
+							dServer.Maxconn = &m
+						}
+					case "weight":
+						w, err := strconv.ParseInt(v.Value, 10, 64)
+						if err == nil && w != 0 {
+							dServer.Weight = &w
+						}
 					case "resolvers":
 						dServer.Resolvers = v.Value
 					case "resolve-prefer":
 						dServer.ResolvePrefer = v.Value
 					case "resolve-net":
 						dServer.ResolveNet = v.Value
+					case "cookie":
+						dServer.Cookie = v.Value
+					case "crt":
+						dServer.SslCertificate = v.Value
+					case "verify":
+						dServer.Verify = v.Value
+					case "on-error":
+						dServer.OnError = v.Value
+					case "on-marked-down":
+						dServer.OnMarkedDown = v.Value
+					case "on-marked-up":
+						dServer.OnMarkedUp = v.Value
+					case "agent-addr":
+						dServer.AgentAddr = v.Value
+					case "agent-inter":
+						dServer.AgentInter = misc.ParseTimeout(v.Value)
+					case "agent-port":
+						p, err := strconv.ParseInt(v.Value, 10, 64)
+						if err == nil && p != 0 {
+							dServer.AgentPort = &p
+						}
+					case "agent-send":
+						dServer.AgentSend = v.Value
+					case "proto":
+						dServer.Proto = v.Value
+					case "proxy-v2-options":
+						values := strings.Split(v.Value, ",")
+						dServer.ProxyV2Options = values
 					}
 				}
 			}
@@ -1190,6 +1263,7 @@ func setFieldValue(section parser.Section, sectionName string, fieldName string,
 			dServers := []types.DefaultServer{types.DefaultServer{}}
 
 			ps := make([]params.ServerOption, 0, 4)
+
 			if ds.Fall != nil {
 				param := &params.ServerOptionValue{
 					Name:  "fall",
@@ -1291,6 +1365,152 @@ func setFieldValue(section parser.Section, sectionName string, fieldName string,
 				param := &params.ServerOptionValue{
 					Name:  "resolve-net",
 					Value: ds.ResolveNet,
+				}
+				ps = append(ps, param)
+			}
+			if ds.Backup == "enabled" {
+				param := &params.ServerOptionWord{
+					Name: "backup",
+				}
+				ps = append(ps, param)
+			}
+			if ds.Check == "enabled" {
+				param := &params.ServerOptionWord{
+					Name: "check",
+				}
+				ps = append(ps, param)
+			}
+			if ds.AgentCheck == "enabled" {
+				param := &params.ServerOptionWord{
+					Name: "agent-check",
+				}
+				ps = append(ps, param)
+			}
+			if ds.Ssl == "enabled" {
+				param := &params.ServerOptionWord{
+					Name: "ssl",
+				}
+				ps = append(ps, param)
+			}
+			if ds.TLSTickets == "enabled" {
+				param := &params.ServerOptionWord{
+					Name: "tls-tickets",
+				}
+				ps = append(ps, param)
+			}
+			if ds.Allow0rtt {
+				param := &params.ServerOptionWord{
+					Name: "allow-0rtt",
+				}
+				ps = append(ps, param)
+			}
+			if ds.SendProxy == "enabled" {
+				param := &params.ServerOptionWord{
+					Name: "send-proxy",
+				}
+				ps = append(ps, param)
+			}
+			if ds.SendProxyV2 == "enabled" {
+				param := &params.ServerOptionWord{
+					Name: "send-proxy-v2",
+				}
+				ps = append(ps, param)
+			}
+			if ds.Alpn != "" {
+				param := &params.ServerOptionValue{
+					Name:  "alpn",
+					Value: ds.Alpn,
+				}
+				ps = append(ps, param)
+			}
+			if ds.Maxconn != nil {
+				param := &params.ServerOptionValue{
+					Name:  "maxconn",
+					Value: strconv.FormatInt(*ds.Maxconn, 10),
+				}
+				ps = append(ps, param)
+			}
+			if ds.Weight != nil {
+				param := &params.ServerOptionValue{
+					Name:  "weight",
+					Value: strconv.FormatInt(*ds.Weight, 10),
+				}
+				ps = append(ps, param)
+			}
+			if ds.Cookie != "" {
+				param := &params.ServerOptionValue{
+					Name:  "cookie",
+					Value: ds.Cookie,
+				}
+				ps = append(ps, param)
+			}
+			if ds.Verify != "" {
+				param := &params.ServerOptionValue{
+					Name:  "verify",
+					Value: ds.Verify,
+				}
+				ps = append(ps, param)
+			}
+			if ds.OnError != "" {
+				param := &params.ServerOptionValue{
+					Name:  "on-error",
+					Value: ds.OnError,
+				}
+				ps = append(ps, param)
+			}
+			if ds.OnMarkedDown != "" {
+				param := &params.ServerOptionValue{
+					Name:  "on-marked-down",
+					Value: ds.OnMarkedDown,
+				}
+				ps = append(ps, param)
+			}
+			if ds.OnMarkedUp != "" {
+				param := &params.ServerOptionValue{
+					Name:  "on-marked-up",
+					Value: ds.OnMarkedUp,
+				}
+				ps = append(ps, param)
+			}
+			if ds.AgentAddr != "" {
+				param := &params.ServerOptionValue{
+					Name:  "agent-addr",
+					Value: ds.AgentAddr,
+				}
+				ps = append(ps, param)
+			}
+			if ds.AgentInter != nil {
+				param := &params.ServerOptionValue{
+					Name:  "agent-inter",
+					Value: strconv.FormatInt(*ds.AgentInter, 10),
+				}
+				ps = append(ps, param)
+			}
+			if ds.AgentPort != nil {
+				param := &params.ServerOptionValue{
+					Name:  "agent-port",
+					Value: strconv.FormatInt(*ds.AgentPort, 10),
+				}
+				ps = append(ps, param)
+			}
+			if ds.AgentSend != "" {
+				param := &params.ServerOptionValue{
+					Name:  "agent-send",
+					Value: ds.AgentSend,
+				}
+				ps = append(ps, param)
+			}
+			if ds.Proto != "" {
+				param := &params.ServerOptionValue{
+					Name:  "proto",
+					Value: ds.Proto,
+				}
+				ps = append(ps, param)
+			}
+			if len(ds.ProxyV2Options) > 0 {
+				param := &params.ServerOptionValue{
+					Name:  "proxy-v2-options",
+					Value: strings.Join(ds.ProxyV2Options, ","),
 				}
 				ps = append(ps, param)
 			}
