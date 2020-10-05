@@ -308,7 +308,7 @@ func ParseServer(ondiskServer types.Server) *models.Server {
 			case "inter":
 				s.Inter = misc.ParseTimeout(v.Value)
 			case "init-addr":
-				s.InitAddr = *v.Value
+				s.InitAddr = &v.Value
 			case "fastinter":
 				s.Fastinter = misc.ParseTimeout(v.Value)
 			case "downinter":
