@@ -268,7 +268,7 @@ func ParseServer(ondiskServer types.Server) *models.Server {
 			case "inter":
 				s.Inter = misc.ParseTimeout(v.Value)
 			case "init-addr":
-				s.InitAddr = v.Value
+				s.InitAddr = *v.Value
 			case "fastinter":
 				s.Fastinter = misc.ParseTimeout(v.Value)
 			case "downinter":
@@ -400,8 +400,8 @@ func SerializeServer(s models.Server) types.Server {
 	if s.Weight != nil {
 		srv.Params = append(srv.Params, &params.ServerOptionValue{Name: "weight", Value: strconv.FormatInt(*s.Weight, 10)})
 	}
-	if s.InitAddr != "" {
-		srv.Params = append(srv.Params, &params.ServerOptionValue{Name: "init-addr", Value: s.InitAddr})
+	if s.InitAddr != nil {
+		srv.Params = append(srv.Params, &params.ServerOptionValue{Name: "init-addr", Value: *s.InitAddr})
 	}
 	if s.Inter != nil {
 		srv.Params = append(srv.Params, &params.ServerOptionValue{Name: "inter", Value: strconv.FormatInt(*s.Inter, 10)})
