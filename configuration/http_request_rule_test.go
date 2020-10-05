@@ -29,7 +29,7 @@ func TestGetHTTPRequestRules(t *testing.T) {
 		t.Error(err.Error())
 	}
 
-	if len(hRules) != 27 {
+	if len(hRules) != 28 {
 		t.Errorf("%v http request rules returned, expected 26", len(hRules))
 	}
 
@@ -408,8 +408,21 @@ func TestGetHTTPRequestRules(t *testing.T) {
 			if r.CondTest != "FALSE" {
 				t.Errorf("%v: CondTest not FALSE: %v", *r.Index, r.CondTest)
 			}
+		} else if *r.Index == 27 {
+			if r.Type != "use-service" {
+				t.Errorf("%v: Type not use-service: %v", *r.Index, r.Type)
+			}
+			if r.ServiceName != "svrs" {
+				t.Errorf("%v: ServiceName not svrs: %v", *r.Index, r.ServiceName)
+			}
+			if r.Cond != "if" {
+				t.Errorf("%v: Cond not if: %v", *r.Index, r.Cond)
+			}
+			if r.CondTest != "FALSE" {
+				t.Errorf("%v: CondTest not FALSE: %v", *r.Index, r.CondTest)
+			}
 		} else {
-			t.Errorf("Expext only http-request 0 to 26, %v found", *r.Index)
+			t.Errorf("Expext only http-request 0 to 27, %v found", *r.Index)
 		}
 	}
 
@@ -570,7 +583,7 @@ func TestCreateEditDeleteHTTPRequestRule(t *testing.T) {
 	}
 
 	// TestDeleteHTTPRequest
-	err = client.DeleteHTTPRequestRule(27, "frontend", "test", "", version)
+	err = client.DeleteHTTPRequestRule(28, "frontend", "test", "", version)
 	if err != nil {
 		t.Error(err.Error())
 	} else {
@@ -581,9 +594,9 @@ func TestCreateEditDeleteHTTPRequestRule(t *testing.T) {
 		t.Error("Version not incremented")
 	}
 
-	_, _, err = client.GetHTTPRequestRule(27, "frontend", "test", "")
+	_, _, err = client.GetHTTPRequestRule(28, "frontend", "test", "")
 	if err == nil {
-		t.Error("DeleteHTTPRequestRule failed, HTTP Request Rule 27 still exists")
+		t.Error("DeleteHTTPRequestRule failed, HTTP Request Rule 28 still exists")
 	}
 
 	err = client.DeleteHTTPRequestRule(2, "backend", "test_2", "", version)

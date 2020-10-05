@@ -101,6 +101,7 @@ frontend test
   http-request unset-var(req.my_var) if FALSE
   http-request strict-mode on if FALSE
   http-request lua.foo param1 param2 if FALSE
+  http-request use-service svrs if FALSE
   http-response allow if src 192.168.0.0/16
   http-response set-header X-SSL %[ssl_fc]
   http-response set-var(req.my_var) req.fhdr(user-agent),lower

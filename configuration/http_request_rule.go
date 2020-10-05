@@ -612,6 +612,13 @@ func ParseHTTPRequestRule(f types.HTTPAction) (rule *models.HTTPRequestRule, err
 			Cond:      v.Cond,
 			CondTest:  v.CondTest,
 		}
+	case *actions.UseService:
+		rule = &models.HTTPRequestRule{
+			Type:        "use-service",
+			ServiceName: v.Name,
+			Cond:        v.Cond,
+			CondTest:    v.CondTest,
+		}
 	}
 
 	return rule, err
@@ -960,6 +967,12 @@ func SerializeHTTPRequestRule(f models.HTTPRequestRule) (rule types.HTTPAction, 
 		rule = &actions.Lua{
 			Action:   f.LuaAction,
 			Params:   f.LuaParams,
+			Cond:     f.Cond,
+			CondTest: f.CondTest,
+		}
+	case "use-service":
+		rule = &actions.UseService{
+			Name:     f.ServiceName,
 			Cond:     f.Cond,
 			CondTest: f.CondTest,
 		}
