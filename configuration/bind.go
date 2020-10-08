@@ -103,9 +103,15 @@ func (c *Client) CreateBind(frontend string, data *models.Bind, transactionID st
 			return NewConfError(ErrValidationError, validationErr.Error())
 		}
 	}
+
 	p, t, err := c.loadDataForChange(transactionID, version)
 	if err != nil {
 		return err
+	}
+
+	if data.PortRangeEnd != nil && *data.Port >= *data.PortRangeEnd {
+		e := NewConfError(ErrGeneralError, fmt.Sprintf("Bind port range end %d has to be greater start %d", *data.PortRangeEnd, *data.Port))
+		return c.handleError(data.Name, "frontend", frontend, t, transactionID == "", e)
 	}
 
 	bind, _ := GetBindByName(data.Name, frontend, p)
@@ -185,9 +191,10 @@ func ParseBind(ondiskBind types.Bind) *models.Bind {
 		b.Address = ondiskBind.Path
 	} else {
 		addSlice := strings.Split(ondiskBind.Path, ":")
-		if len(addSlice) == 0 {
+		switch n := len(addSlice); {
+		case n == 0:
 			return nil
-		} else if len(addSlice) == 4 { // :::443
+		case n == 4: // :::443
 			b.Address = "::"
 			if addSlice[3] != "" {
 				p, err := strconv.ParseInt(addSlice[3], 10, 64)
@@ -195,16 +202,28 @@ func ParseBind(ondiskBind types.Bind) *models.Bind {
 					b.Port = &p
 				}
 			}
-		} else if len(addSlice) > 1 {
+		case n > 1:
 			b.Address = addSlice[0]
-			if addSlice[1] != "" {
-				p, err := strconv.ParseInt(addSlice[1], 10, 64)
+			ports := strings.Split(addSlice[1], "-")
+
+			// *:<port>
+			if ports[0] != "" {
+				port, err := strconv.ParseInt(ports[0], 10, 64)
 				if err == nil {
-					b.Port = &p
+					b.Port = &port
 				}
 			}
-		} else if len(addSlice) > 0 {
+			// *:<port-first>-<port-last>
+			if b.Port != nil && len(ports) == 2 {
+				portRangeEnd, err := strconv.ParseInt(ports[1], 10, 64)
+				// Deny inverted interval.
+				if err == nil && (*b.Port < portRangeEnd) {
+					b.PortRangeEnd = &portRangeEnd
+				}
+			}
+		case n > 0:
 			b.Address = addSlice[0]
+
 		}
 	}
 	for _, p := range ondiskBind.Params {
@@ -365,6 +384,9 @@ func SerializeBind(b models.Bind) types.Bind {
 	}
 	if b.Port != nil {
 		bind.Path = b.Address + ":" + strconv.FormatInt(*b.Port, 10)
+		if b.PortRangeEnd != nil {
+			bind.Path = bind.Path + "-" + strconv.FormatInt(*b.PortRangeEnd, 10)
+		}
 	} else {
 		bind.Path = b.Address
 	}
