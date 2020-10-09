@@ -21,6 +21,8 @@ import (
 	"testing"
 
 	"github.com/haproxytech/models/v2"
+
+	"github.com/haproxytech/client-native/v2/misc"
 )
 
 func TestGetFrontends(t *testing.T) {
@@ -94,6 +96,18 @@ func TestGetFrontend(t *testing.T) {
 	}
 	if f.Mode != "http" {
 		t.Errorf("%v: Mode not http: %v", f.Name, f.Mode)
+	}
+	if f.MonitorURI != "/healthz" {
+		t.Errorf("%v: MonitorURI not /healthz: %v", f.Name, f.MonitorURI)
+	}
+	if f.MonitorFail == nil {
+		t.Errorf("%v: MonitorFail is nil", f.Name)
+	}
+	if *f.MonitorFail.Cond != "if" {
+		t.Errorf("%v: MonitorFail condition not if: %v", f.Name, *f.MonitorFail.Cond)
+	}
+	if *f.MonitorFail.CondTest != "site_dead" {
+		t.Errorf("%v: MonitorFail condition test not site_dead: %v", f.Name, *f.MonitorFail.CondTest)
 	}
 	if f.Dontlognull != "enabled" {
 		t.Errorf("%v: Dontlognull not enabled: %v", f.Name, f.Dontlognull)
@@ -185,6 +199,11 @@ func TestCreateEditDeleteFrontend(t *testing.T) {
 		Clflog:             true,
 		HTTPConnectionMode: "httpclose",
 		BindProcess:        "3",
+		MonitorURI:         "/healthz",
+		MonitorFail: &models.MonitorFail{
+			Cond:     misc.StringP("if"),
+			CondTest: misc.StringP("site_is_dead"),
+		},
 	}
 
 	err = client.EditFrontend("created", f, "", version)

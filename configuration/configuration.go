@@ -27,12 +27,13 @@ import (
 	stats "github.com/haproxytech/config-parser/v2/parsers/stats/settings"
 	"github.com/pkg/errors"
 
-	"github.com/haproxytech/client-native/v2/misc"
 	parser "github.com/haproxytech/config-parser/v2"
 	parser_errors "github.com/haproxytech/config-parser/v2/errors"
 	"github.com/haproxytech/config-parser/v2/params"
 	"github.com/haproxytech/config-parser/v2/types"
 	"github.com/haproxytech/models/v2"
+
+	"github.com/haproxytech/client-native/v2/misc"
 )
 
 const (
@@ -305,6 +306,25 @@ func ParseSection(object interface{}, section parser.Section, pName string, p *p
 
 func parseField(section parser.Section, sectionName string, fieldName string, p *parser.Parser) interface{} {
 	//Handle special cases
+	if fieldName == "MonitorFail" && section == parser.Frontends {
+		data, err := p.Get(section, sectionName, "monitor fail", false)
+		if err != nil {
+			return nil
+		}
+		d := data.(*types.MonitorFail)
+		return &models.MonitorFail{
+			Cond:     &d.Condition,
+			CondTest: misc.StringP(strings.Join(d.ACLList, " ")),
+		}
+	}
+	if fieldName == "MonitorURI" {
+		data, err := p.Get(section, sectionName, "monitor-uri", false)
+		if err != nil {
+			return nil
+		}
+		d := data.(*types.MonitorURI)
+		return models.MonitorURI(d.URI)
+	}
 	if strings.HasPrefix(fieldName, "StatsOptions") {
 		data, err := p.Get(section, sectionName, "stats", false)
 		if err != nil {
@@ -841,6 +861,23 @@ func CreateEditSection(object interface{}, section parser.Section, pName string,
 
 func setFieldValue(section parser.Section, sectionName string, fieldName string, field reflect.Value, p *parser.Parser) error {
 	//Handle special cases
+	if fieldName == "MonitorURI" {
+		if valueIsNil(field) {
+			return p.Set(section, sectionName, "monitor-uri", nil)
+		}
+		v := field.String()
+		return p.Set(section, sectionName, "monitor-uri", types.MonitorURI{URI: v})
+	}
+	if fieldName == "MonitorFail" {
+		if valueIsNil(field) {
+			return p.Set(section, sectionName, "monitor fail", nil)
+		}
+		opt := field.Elem().Interface().(models.MonitorFail)
+		return p.Set(section, sectionName, "monitor fail", types.MonitorFail{
+			Condition: *opt.Cond,
+			ACLList:   strings.Split(*opt.CondTest, " "),
+		})
+	}
 	if fieldName == "StatsOptions" {
 		if valueIsNil(field) {
 			if err := p.Set(section, sectionName, "stats", nil); err != nil {

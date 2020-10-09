@@ -24,6 +24,9 @@ func TestGetDefaults(t *testing.T) {
 	if d.Mode != "http" {
 		t.Errorf("Mode not http: %v", d.Mode)
 	}
+	if d.MonitorURI != "/monitor" {
+		t.Errorf("MonitorURI not /monitor: %v", d.MonitorURI)
+	}
 	if d.BindProcess != "1-4" {
 		t.Errorf("BindProcess not 1-4: %v", d.BindProcess)
 	}
@@ -142,6 +145,7 @@ func TestPushDefaults(t *testing.T) {
 		ServerTimeout:  &tOutS,
 		QueueTimeout:   &tOutS,
 		Mode:           "tcp",
+		MonitorURI:     "/healthz",
 		HTTPUseHtx:     "enabled",
 		Balance: &models.Balance{
 			Algorithm: &balanceAlgorithm,
