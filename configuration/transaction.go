@@ -26,8 +26,8 @@ import (
 	"strings"
 
 	"github.com/google/uuid"
-	parser "github.com/haproxytech/config-parser/v2"
-	"github.com/haproxytech/config-parser/v2/types"
+	parser "github.com/haproxytech/config-parser/v3"
+	"github.com/haproxytech/config-parser/v3/types"
 	"github.com/haproxytech/models/v2"
 )
 
@@ -468,7 +468,11 @@ func (c *Client) getFailedTransactionVersion(id string) (int64, error) {
 		return 0, NewConfError(ErrTransactionDoesNotExist, fmt.Sprintf("Transaction %v not failed", id))
 	}
 
-	p := &parser.Parser{}
+	p := &parser.Parser{
+		Options: parser.Options{
+			UseV2HTTPCheck: true,
+		},
+	}
 	if err := p.LoadData(fPath); err != nil {
 		return 0, NewConfError(ErrCannotReadConfFile, fmt.Sprintf("Cannot read %s", fPath))
 	}

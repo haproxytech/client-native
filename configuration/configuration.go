@@ -22,15 +22,15 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/haproxytech/config-parser/v2/common"
-	"github.com/haproxytech/config-parser/v2/parsers"
-	stats "github.com/haproxytech/config-parser/v2/parsers/stats/settings"
+	"github.com/haproxytech/config-parser/v3/common"
+	"github.com/haproxytech/config-parser/v3/parsers"
+	stats "github.com/haproxytech/config-parser/v3/parsers/stats/settings"
 	"github.com/pkg/errors"
 
-	parser "github.com/haproxytech/config-parser/v2"
-	parser_errors "github.com/haproxytech/config-parser/v2/errors"
-	"github.com/haproxytech/config-parser/v2/params"
-	"github.com/haproxytech/config-parser/v2/types"
+	parser "github.com/haproxytech/config-parser/v3"
+	parser_errors "github.com/haproxytech/config-parser/v3/errors"
+	"github.com/haproxytech/config-parser/v3/params"
+	"github.com/haproxytech/config-parser/v3/types"
 	"github.com/haproxytech/models/v2"
 
 	"github.com/haproxytech/client-native/v2/misc"
@@ -122,7 +122,11 @@ func (c *Client) Init(options ClientParams) error {
 		return err
 	}
 
-	c.Parser = &parser.Parser{}
+	c.Parser = &parser.Parser{
+		Options: parser.Options{
+			UseV2HTTPCheck: true,
+		},
+	}
 	if err := c.Parser.LoadData(options.ConfigurationFile); err != nil {
 		return NewConfError(ErrCannotReadConfFile, fmt.Sprintf("Cannot read %s", c.ConfigurationFile))
 	}
@@ -152,7 +156,11 @@ func (c *Client) AddParser(transaction string) error {
 		return NewConfError(ErrTransactionAlreadyExists, fmt.Sprintf("Transaction %s already exists", transaction))
 	}
 
-	p := &parser.Parser{}
+	p := &parser.Parser{
+		Options: parser.Options{
+			UseV2HTTPCheck: true,
+		},
+	}
 	tFile := ""
 	var err error
 	if c.PersistentTransactions {
@@ -388,7 +396,7 @@ func parseField(section parser.Section, sectionName string, fieldName string, p 
 		if err != nil {
 			return nil
 		}
-		d := data.([]types.HTTPCheck)
+		d := data.([]types.HTTPCheckV2)
 		if section == parser.Defaults || section == parser.Backends {
 			hc := &models.HTTPCheck{}
 			for _, h := range d {
@@ -976,7 +984,7 @@ func setFieldValue(section parser.Section, sectionName string, fieldName string,
 				return nil
 			}
 			hc := field.Interface().(*models.HTTPCheck)
-			d := &types.HTTPCheck{
+			d := &types.HTTPCheckV2{
 				Match:           hc.Match,
 				ExclamationMark: hc.ExclamationMark,
 				Pattern:         hc.Pattern,

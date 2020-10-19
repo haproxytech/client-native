@@ -20,14 +20,14 @@ import (
 	"strings"
 
 	"github.com/haproxytech/client-native/v2/misc"
-	"github.com/haproxytech/config-parser/v2/common"
-	tcp_actions "github.com/haproxytech/config-parser/v2/parsers/tcp/actions"
-	tcp_types "github.com/haproxytech/config-parser/v2/parsers/tcp/types"
+	"github.com/haproxytech/config-parser/v3/common"
+	tcp_actions "github.com/haproxytech/config-parser/v3/parsers/tcp/actions"
+	tcp_types "github.com/haproxytech/config-parser/v3/parsers/tcp/types"
 
 	strfmt "github.com/go-openapi/strfmt"
-	parser "github.com/haproxytech/config-parser/v2"
-	parser_errors "github.com/haproxytech/config-parser/v2/errors"
-	"github.com/haproxytech/config-parser/v2/types"
+	parser "github.com/haproxytech/config-parser/v3"
+	parser_errors "github.com/haproxytech/config-parser/v3/errors"
+	"github.com/haproxytech/config-parser/v3/types"
 	"github.com/haproxytech/models/v2"
 )
 

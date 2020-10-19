@@ -17,7 +17,7 @@ package configuration
 
 import (
 	strfmt "github.com/go-openapi/strfmt"
-	parser "github.com/haproxytech/config-parser/v2"
+	parser "github.com/haproxytech/config-parser/v3"
 	"github.com/haproxytech/models/v2"
 )
 
