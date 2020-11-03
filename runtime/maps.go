@@ -1,6 +1,7 @@
 package runtime
 
 import (
+	"bufio"
 	"bytes"
 	"fmt"
 	"io"
@@ -174,6 +175,19 @@ func parseMapEntry(line string, hasId bool) *models.MapEntry {
 		m.Value = parts[1]
 	}
 	return m
+}
+
+func parseMapEntriesFromFile(inputFile io.Reader, hasId bool) models.MapEntries {
+	me := models.MapEntries{}
+
+	scanner := bufio.NewScanner(inputFile)
+	for scanner.Scan() {
+		e := parseMapEntry(scanner.Text(), hasId)
+		if e != nil {
+			me = append(me, e)
+		}
+	}
+	return me
 }
 
 // AddMapEntry adds an entry into the map file

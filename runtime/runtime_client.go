@@ -17,6 +17,7 @@ package runtime
 
 import (
 	"fmt"
+	"io"
 	"mime/multipart"
 	"os"
 	"strings"
@@ -603,4 +604,9 @@ func (c *Client) DeleteMapEntry(name, id string) error {
 func (c *Client) ParseMapEntries(output string) models.MapEntries {
 	e := ParseMapEntries(output, false)
 	return e
+}
+
+// ParseMapEntriesFromFile reads entries from file
+func (c *Client) ParseMapEntriesFromFile(inputFile io.Reader, hasId bool) models.MapEntries {
+	return parseMapEntriesFromFile(inputFile, hasId)
 }

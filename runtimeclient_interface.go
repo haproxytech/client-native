@@ -3,6 +3,7 @@
 package client_native
 
 import (
+	"io"
 	"mime/multipart"
 
 	"github.com/haproxytech/models/v2"
@@ -77,5 +78,7 @@ type IRuntimeClient interface {
 	//DeleteMapEntry deletes all the map entries from the map by its id
 	DeleteMapEntry(name, id string) error
 	ParseMapEntries(output string) models.MapEntries
+	// ParseMapEntriesFromFile reads entries from file
+	ParseMapEntriesFromFile(inputFile io.Reader, hasId bool) models.MapEntries
 }
 
