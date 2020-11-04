@@ -284,10 +284,11 @@ func (c *Client) GetServersState(backend string) (models.RuntimeServers, error) 
 	for _, runtime := range c.runtimes {
 		rs, _ = runtime.GetServersState(backend)
 		if prevRs == nil {
+			prevRs = rs
 			continue
 		}
 		if !cmp.Equal(rs, prevRs) {
-			return nil, fmt.Errorf("Servers states differ in multiple runtime APIs")
+			return nil, fmt.Errorf("servers states differ in multiple runtime APIs")
 		}
 	}
 	return rs, nil
@@ -300,10 +301,11 @@ func (c *Client) GetServerState(backend, server string) (*models.RuntimeServer, 
 	for _, runtime := range c.runtimes {
 		rs, _ = runtime.GetServerState(backend, server)
 		if prevRs == nil {
+			prevRs = rs
 			continue
 		}
 		if !cmp.Equal(*rs, *prevRs) {
-			return nil, fmt.Errorf("Server states differ in multiple runtime APIs")
+			return nil, fmt.Errorf("server states differ in multiple runtime APIs")
 		}
 	}
 	return rs, nil
