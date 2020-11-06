@@ -19,6 +19,7 @@ import (
 	"bufio"
 	"bytes"
 	"fmt"
+	"io/ioutil"
 	"os"
 	"os/exec"
 	"strconv"
@@ -76,7 +77,27 @@ func (c *Client) GetRawConfiguration(transactionID string, version int64) (int64
 
 // PostRawConfiguration pushes given string to the config file if the version
 // matches
-func (c *Client) PostRawConfiguration(config *string, version int64, skipVersionCheck bool) error {
+func (c *Client) PostRawConfiguration(config *string, version int64, skipVersionCheck bool, onlyValidate ...bool) error {
+	if len(onlyValidate) > 0 && onlyValidate[0] {
+		f, err := ioutil.TempFile("/tmp", "onlyvalidate")
+		if err != nil {
+			return NewConfError(ErrGeneralError, err.Error())
+		}
+		defer os.Remove(f.Name())
+		_, err = f.WriteString(*config)
+		if err != nil {
+			return NewConfError(ErrGeneralError, err.Error())
+		}
+		err = f.Sync()
+		if err != nil {
+			return NewConfError(ErrGeneralError, err.Error())
+		}
+		err = c.validateConfigFile(f.Name())
+		if err != nil {
+			return err
+		}
+		return nil
+	}
 	t := ""
 	if skipVersionCheck {
 		// Create impicit transaction

@@ -218,7 +218,7 @@ type IConfigurationClient interface {
 	GetRawConfiguration(transactionID string, version int64) (int64, string, error)
 	// PostRawConfiguration pushes given string to the config file if the version
 	// matches
-	PostRawConfiguration(config *string, version int64, skipVersionCheck bool) error
+	PostRawConfiguration(config *string, version int64, skipVersionCheck bool, onlyValidate ...bool) error
 	// GetResolvers returns configuration version and an array of
 	// configured resolvers. Returns error on fail.
 	GetResolvers(transactionID string) (int64, models.Resolvers, error)
@@ -234,6 +234,11 @@ type IConfigurationClient interface {
 	// CreateResolver creates a resolver in configuration. One of version or transactionID is
 	// mandatory. Returns error on fail, nil on success.
 	CreateResolver(data *models.Resolver, transactionID string, version int64) error
+	//NewService creates and returns a new Service instance.
+	//name indicates the name of the service and only one Service instance with the given name can be created.
+	NewService(name string, scaling configuration.ScalingParams) (*configuration.Service, error)
+	//DeleteService removes the Service instance specified by name from the client.
+	DeleteService(name string)
 	// GetServers returns configuration version and an array of
 	// configured servers in the specified backend. Returns error on fail.
 	GetServers(backend string, transactionID string) (int64, models.Servers, error)
@@ -334,4 +339,6 @@ type IConfigurationClient interface {
 	CommitTransaction(id string) (*models.Transaction, error)
 	// DeleteTransaction deletes a transaction by id.
 	DeleteTransaction(id string) error
+	// GetConfigurationVersion returns configuration version
+	GetConfigurationVersion(transactionID string) (int64, error)
 }
