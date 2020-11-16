@@ -422,7 +422,7 @@ func (c *Client) ShowMaps() (models.Maps, error) {
 }
 
 //CreateMap creates a new map file with its entries
-func (c *Client) CreateMap(file multipart.File, header multipart.FileHeader) (models.MapEntries, error) {
+func (c *Client) CreateMap(file multipart.File, header multipart.FileHeader) (*models.Map, error) {
 	name, err := c.GetMapsPath(header.Filename)
 	if err != nil {
 		return nil, err

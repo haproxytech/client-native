@@ -25,7 +25,7 @@ func (s *SingleRuntime) ShowMaps() (models.Maps, error) {
 }
 
 // CreateMap creates a new map file with its entries. Returns an error if file already exists
-func CreateMap(name string, file multipart.File) (models.MapEntries, error) {
+func CreateMap(name string, file multipart.File) (*models.Map, error) {
 	ext := filepath.Ext(name)
 	if ext != ".map" {
 		return nil, fmt.Errorf("provided file with %s extension, but supported .map %w", ext, native_errors.ErrGeneral)
@@ -53,9 +53,8 @@ func CreateMap(name string, file multipart.File) (models.MapEntries, error) {
 		return nil, err
 	}
 
-	me := ParseMapEntries(entries, false)
 	buf.Reset()
-	return me, nil
+	return &models.Map{File: name}, nil
 }
 
 // parseMaps parses output from `show map` command and return array of map files
