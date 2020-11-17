@@ -16,13 +16,17 @@
 package storage
 
 import (
+	"bytes"
+	"io"
 	"io/ioutil"
 	"path/filepath"
 	"reflect"
 	"testing"
+
+	"github.com/stretchr/testify/require"
 )
 
-func createDir(config string, createFile bool) (dirname, file string, err error) {
+func createDir(config string, createFile bool, extension ...string) (dirname, file string, err error) {
 	dirname, err = ioutil.TempDir("/tmp", "storage")
 	if err != nil {
 		return "", "", err
@@ -30,7 +34,11 @@ func createDir(config string, createFile bool) (dirname, file string, err error)
 	if !createFile {
 		return dirname, "", nil
 	}
-	f, err := ioutil.TempFile(dirname, "")
+	ext := ""
+	if len(extension) > 0 {
+		ext = extension[0]
+	}
+	f, err := ioutil.TempFile(dirname, ext)
 	if err != nil {
 		return "", "", err
 	}
@@ -41,14 +49,6 @@ func createDir(config string, createFile bool) (dirname, file string, err error)
 		}
 	}
 	return dirname, filepath.Base(f.Name()), nil
-}
-
-func readFile(name string) (string, error) {
-	b, err := ioutil.ReadFile(name)
-	if err != nil {
-		return "", err
-	}
-	return string(b), nil
 }
 
 func TestNew(t *testing.T) {
@@ -111,16 +111,18 @@ key2 val2`
 	}()
 
 	tests := []struct {
-		name    string
-		dirname string
-		want    []string
-		wantErr bool
+		name     string
+		dirname  string
+		fileType StorageFileType
+		want     []string
+		wantErr  bool
 	}{
 		{
-			name:    "Should return created file names",
-			dirname: dirWithFile,
-			want:    []string{filepath.Join(dirWithFile, file)},
-			wantErr: false,
+			name:     "Should return created file names",
+			dirname:  dirWithFile,
+			fileType: MapsType,
+			want:     []string{filepath.Join(dirWithFile, file)},
+			wantErr:  false,
 		},
 		{
 			name:    "Should return an error if no files in directory",
@@ -138,7 +140,8 @@ key2 val2`
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			s := storage{
-				dirname: tt.dirname,
+				dirname:  tt.dirname,
+				fileType: tt.fileType,
 			}
 			got, err := s.GetAll()
 			if (err != nil) != tt.wantErr {
@@ -308,6 +311,142 @@ func TestStorage_Replace(t *testing.T) {
 			}
 			if newcontent != tt.newcontent {
 				t.Errorf("Storage.Replace() = newcontent %v, want %v", newcontent, tt.newcontent)
+				return
+			}
+		})
+	}
+}
+
+func Test_storage_Create(t *testing.T) {
+	conf1 := `key1 val1
+	key2 val2`
+	dirWithFile, file, err := createDir(conf1, true, "*.map")
+	if err != nil {
+		t.Error(err.Error())
+	}
+	defer func() {
+		_ = remove(file)
+		_ = remove(dirWithFile)
+	}()
+
+	dirWithoutFile, _, err := createDir("", false, "*.map")
+	if err != nil {
+		t.Error(err.Error())
+	}
+	defer func() {
+		_ = remove(dirWithoutFile)
+	}()
+
+	tests := []struct {
+		name       string
+		dirname    string
+		fileType   StorageFileType
+		file       string
+		readCloser io.ReadCloser
+		want       string
+		wantErr    bool
+	}{
+		{
+			name:       "Should return an error if file exists",
+			dirname:    dirWithFile,
+			fileType:   MapsType,
+			readCloser: nil,
+			file:       file,
+			want:       "",
+			wantErr:    true,
+		},
+		{
+			name:       "Should create file if not exists",
+			dirname:    dirWithoutFile,
+			fileType:   MapsType,
+			readCloser: ioutil.NopCloser(bytes.NewReader([]byte("hello world"))),
+			file:       "newfile.map",
+			want:       filepath.Join(dirWithoutFile, "newfile.map"),
+			wantErr:    false,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			s := storage{
+				dirname:  tt.dirname,
+				fileType: tt.fileType,
+			}
+			got, err := s.Create(tt.file, tt.readCloser)
+			if (err != nil) != tt.wantErr {
+				t.Errorf("storage.Create() error = %v, wantErr %v", err, tt.wantErr)
+				return
+			}
+			if got != tt.want {
+				t.Errorf("storage.Create() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func readPem(path string) ([]byte, error) {
+	p, err := filepath.Abs("../storage/test-certs/" + path)
+	if err != nil {
+		return nil, err
+	}
+	f, err := readFile(p)
+	if err != nil {
+		return nil, err
+	}
+	return []byte(f), nil
+}
+
+func Test_storage_validatePEM(t *testing.T) {
+	invalidOnlyPublic, err := readPem("invalid/only-public.pem")
+	require.NoError(t, err)
+
+	invalidOnlyPrivate, err := readPem("invalid/only-private.pem")
+	require.NoError(t, err)
+
+	validChain, err := readPem("valid/OK-key_crt_int1_int2.pem")
+	require.NoError(t, err)
+
+	validSelfSignedWithoutRSA, err := readPem("valid/self-signed-without-rsa.pem")
+	require.NoError(t, err)
+
+	tests := []struct {
+		name    string
+		dirname string
+		content []byte
+		wantErr bool
+	}{
+		{
+			name:    "Should fail with only public pem",
+			content: invalidOnlyPublic,
+			dirname: "/tmp",
+			wantErr: true,
+		},
+		{
+			name:    "Should fail with only private pem",
+			content: invalidOnlyPrivate,
+			dirname: "/tmp",
+			wantErr: true,
+		},
+		{
+			name:    "Should pass with public, private and intermediate pems with correct order",
+			content: validChain,
+			dirname: "/tmp",
+			wantErr: false,
+		},
+		{
+			name:    "Should pass with self-signed cert without RSA",
+			content: validSelfSignedWithoutRSA,
+			dirname: "/tmp",
+			wantErr: false,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			s := storage{
+				dirname: tt.dirname,
+			}
+
+			if err := s.validatePEM(tt.content); (err != nil) != tt.wantErr {
+				t.Errorf("storage.validatePEM() error = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
 		})

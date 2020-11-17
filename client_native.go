@@ -66,9 +66,10 @@ type IHAProxyClient interface {
 }
 
 type HAProxyClient struct {
-	Configuration *configuration.Client
-	Runtime       *runtime.Client
-	MapStorage    storage.Storage
+	Configuration  *configuration.Client
+	Runtime        *runtime.Client
+	MapStorage     storage.Storage
+	SSLCertStorage storage.Storage
 }
 
 func (c *HAProxyClient) GetConfiguration() IConfigurationClient {

@@ -16,6 +16,11 @@
 package storage
 
 import (
+	"crypto"
+	"crypto/ecdsa"
+	"crypto/rsa"
+	"crypto/x509"
+	"encoding/pem"
 	"fmt"
 	"io"
 	"io/ioutil"
@@ -32,6 +37,7 @@ type StorageFileType string
 
 const (
 	MapsType StorageFileType = "maps"
+	SSLType  StorageFileType = "certificate"
 )
 
 type Storage interface {
@@ -53,7 +59,7 @@ func New(dirname string, fileType StorageFileType) (Storage, error) {
 		return nil, fmt.Errorf("no storage dir specified")
 	}
 	switch fileType {
-	case MapsType:
+	case MapsType, SSLType:
 		return &storage{
 			dirname:  dirname,
 			fileType: fileType,
@@ -74,7 +80,20 @@ func (s *storage) GetAll() ([]string, error) {
 	files := []string{}
 	for _, fi := range fis {
 		file := filepath.Join(s.dirname, fi.Name())
-		files = append(files, file)
+		switch s.fileType {
+		case SSLType:
+			raw, err := readFile(file)
+			if err != nil {
+				return nil, err
+			}
+			err = s.validatePEM([]byte(raw))
+			if err != nil {
+				return nil, err
+			}
+			files = append(files, file)
+		case MapsType:
+			files = append(files, file)
+		}
 	}
 	return files, nil
 }
@@ -98,11 +117,20 @@ func (s *storage) Delete(name string) error {
 	return remove(f)
 }
 
-func (s *storage) Replace(name string, config string) (string, error) {
-	f, err := s.Get(name)
+func (s storage) Replace(name string, config string) (string, error) {
+	f, err := getFile(s.dirname, name)
 	if err != nil {
 		return "", err
 	}
+	switch s.fileType {
+	case SSLType:
+		err = s.validatePEM([]byte(config))
+		if err != nil {
+			return "", err
+		}
+	case MapsType:
+	}
+
 	err = renameio.WriteFile(f, []byte(config), 0644)
 	if err != nil {
 		return "", err
@@ -112,8 +140,10 @@ func (s *storage) Replace(name string, config string) (string, error) {
 
 func (s *storage) Create(name string, readCloser io.ReadCloser) (string, error) {
 	name = misc.SanitizeFilename(name)
-	if !strings.HasSuffix(name, ".map") {
-		name = fmt.Sprintf("%s.map", name)
+	if s.fileType == MapsType {
+		if !strings.HasSuffix(name, ".map") {
+			name = fmt.Sprintf("%s.map", name)
+		}
 	}
 	f := filepath.Join(s.dirname, name)
 	if _, err := os.Stat(f); err == nil {
@@ -124,11 +154,27 @@ func (s *storage) Create(name string, readCloser io.ReadCloser) (string, error) 
 		return "", err
 	}
 
+	switch s.fileType {
+	case SSLType:
+		err = s.validatePEM(b)
+		if err != nil {
+			return "", err
+		}
+	case MapsType:
+	}
 	err = renameio.WriteFile(f, b, 0644)
 	if err != nil {
 		return "", err
 	}
 	return f, nil
+}
+
+func readFile(name string) (string, error) {
+	b, err := ioutil.ReadFile(name)
+	if err != nil {
+		return "", err
+	}
+	return string(b), nil
 }
 
 func getFile(dirname, name string) (string, error) {
@@ -162,4 +208,51 @@ func readDir(dirname string) ([]os.FileInfo, error) {
 		return nil, err
 	}
 	return files, nil
+}
+
+func (s storage) validatePEM(raw []byte) error {
+	crtPool := x509.NewCertPool()
+	ok := crtPool.AppendCertsFromPEM(raw)
+	if !ok {
+		return fmt.Errorf("failed to parse certificate")
+	}
+	// HAProxy requires private and public key in same pem file
+	hasPrivateKey := false
+	for {
+		block, rest := pem.Decode(raw)
+		if block == nil {
+			break
+		}
+		raw = rest
+
+		if block.Type != "CERTIFICATE" {
+			_, err := parsePrivateKey(block.Bytes)
+			if err != nil {
+				return fmt.Errorf("reading private key error: %s", err)
+			}
+			hasPrivateKey = true
+		}
+	}
+	if !hasPrivateKey {
+		return fmt.Errorf("missing private key")
+	}
+	return nil
+}
+
+func parsePrivateKey(der []byte) (crypto.PrivateKey, error) {
+	if key, err := x509.ParsePKCS1PrivateKey(der); err == nil {
+		return key, nil
+	}
+	if key, err := x509.ParsePKCS8PrivateKey(der); err == nil {
+		switch key := key.(type) {
+		case *rsa.PrivateKey, *ecdsa.PrivateKey:
+			return key, nil
+		default:
+			return nil, fmt.Errorf("found unknown private key type in PKCS#8 wrapping")
+		}
+	}
+	if key, err := x509.ParseECPrivateKey(der); err == nil {
+		return key, nil
+	}
+	return nil, fmt.Errorf("failed to parse private key")
 }
