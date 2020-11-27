@@ -82,32 +82,6 @@ func (c *Client) Init(socketPath []string, masterSocketPath string, nbproc int) 
 	return nil
 }
 
-//GetMapsPath returns runtime map file path or map id
-func (c *Client) GetMapsPath(name string) (string, error) {
-	//we can refer to runtime map with either id or path
-	if strings.HasPrefix(name, "#") { //id
-		return name, nil
-	}
-	//CLI
-	if c.MapsDir != "" {
-		ext := filepath.Ext(name)
-		if ext != ".map" {
-			name = fmt.Sprintf("%s%s", name, ".map")
-		}
-		p := filepath.Join(c.MapsDir, name) //path
-		return p, nil
-	}
-	//config
-	maps, _ := c.ShowMaps()
-	for _, m := range maps {
-		basename := filepath.Base(m.File)
-		if strings.TrimSuffix(basename, filepath.Ext(basename)) == name {
-			return m.File, nil //path from config
-		}
-	}
-	return "", fmt.Errorf("maps dir doesn't exists or not specified. Either use `maps-dir` CLI option or reload HAProxy if map section exists in config file.")
-}
-
 func (c *Client) InitWithSockets(socketPath map[int]string) error {
 	c.runtimes = make([]SingleRuntime, 0)
 	for process, path := range socketPath {
@@ -184,6 +158,32 @@ func (c *Client) GetVersion() (*HAProxyVersion, error) {
 		}
 	}
 	return nil, fmt.Errorf("version data not found")
+}
+
+//GetMapsPath returns runtime map file path or map id
+func (c *Client) GetMapsPath(name string) (string, error) {
+	//we can refer to runtime map with either id or path
+	if strings.HasPrefix(name, "#") { //id
+		return name, nil
+	}
+	//CLI
+	if c.MapsDir != "" {
+		ext := filepath.Ext(name)
+		if ext != ".map" {
+			name = fmt.Sprintf("%s%s", name, ".map")
+		}
+		p := filepath.Join(c.MapsDir, name) //path
+		return p, nil
+	}
+	//config
+	maps, _ := c.ShowMaps()
+	for _, m := range maps {
+		basename := filepath.Base(m.File)
+		if strings.TrimSuffix(basename, filepath.Ext(basename)) == name {
+			return m.File, nil //path from config
+		}
+	}
+	return "", fmt.Errorf("maps dir doesn't exists or not specified. Either use `maps-dir` CLI option or reload HAProxy if map section exists in config file")
 }
 
 //SetFrontendMaxConn set maxconn for frontend
