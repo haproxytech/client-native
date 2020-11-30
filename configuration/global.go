@@ -50,7 +50,7 @@ func (c *Client) GetGlobalConfiguration(transactionID string) (int64, *models.Gl
 }
 
 // PushGlobalConfiguration pushes a Global config struct to global
-// config gile
+// config file
 func (c *Client) PushGlobalConfiguration(data *models.Global, transactionID string, version int64) error {
 	if c.UseValidation {
 		validationErr := data.Validate(strfmt.Default)

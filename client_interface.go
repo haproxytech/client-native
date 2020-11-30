@@ -88,7 +88,7 @@ type IConfigurationClient interface {
 	// struct representing Defaults configuration
 	GetDefaultsConfiguration(transactionID string) (int64, *models.Defaults, error)
 	// PushDefaultsConfiguration pushes a Defaults config struct to global
-	// config gile
+	// config file
 	PushDefaultsConfiguration(data *models.Defaults, transactionID string, version int64) error
 	// GetFilters returns configuration version and an array of
 	// configured filters in the specified parent. Returns error on fail.
@@ -124,7 +124,7 @@ type IConfigurationClient interface {
 	// struct representing Global configuration
 	GetGlobalConfiguration(transactionID string) (int64, *models.Global, error)
 	// PushGlobalConfiguration pushes a Global config struct to global
-	// config gile
+	// config file
 	PushGlobalConfiguration(data *models.Global, transactionID string, version int64) error
 	// GetHTTPRequestRules returns configuration version and an array of
 	// configured http request rules in the specified parent. Returns error on fail.

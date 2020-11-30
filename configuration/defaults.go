@@ -41,7 +41,7 @@ func (c *Client) GetDefaultsConfiguration(transactionID string) (int64, *models.
 }
 
 // PushDefaultsConfiguration pushes a Defaults config struct to global
-// config gile
+// config file
 func (c *Client) PushDefaultsConfiguration(data *models.Defaults, transactionID string, version int64) error {
 	if c.UseValidation {
 		validationErr := data.Validate(strfmt.Default)
