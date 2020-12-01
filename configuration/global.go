@@ -20,7 +20,7 @@ import (
 
 	"github.com/haproxytech/client-native/v2/misc"
 
-	strfmt "github.com/go-openapi/strfmt"
+	"github.com/go-openapi/strfmt"
 	parser "github.com/haproxytech/config-parser/v3"
 	"github.com/haproxytech/config-parser/v3/errors"
 	"github.com/haproxytech/config-parser/v3/params"
@@ -233,6 +233,12 @@ func ParseGlobalSection(p *parser.Parser) (*models.Global, error) {
 		dhParam = dhParamsParser.Value
 	}
 
+	data, err = p.Get(parser.Global, parser.GlobalSectionName, "ssl-mode-async")
+	sslModeAsync := "disabled"
+	if _, ok := data.(*types.SslModeAsync); ok {
+		sslModeAsync = "enabled"
+	}
+
 	_, err = p.Get(parser.Global, parser.GlobalSectionName, "external-check")
 	externalCheck := true
 	if err == errors.ErrFetch {
@@ -278,6 +284,7 @@ func ParseGlobalSection(p *parser.Parser) (*models.Global, error) {
 		SslDefaultServerCiphers:      sslServerCiphers,
 		SslDefaultServerCiphersuites: sslServerCiphersuites,
 		SslDefaultServerOptions:      sslServerOptions,
+		SslModeAsync:                 sslModeAsync,
 		TuneSslDefaultDhParam:        dhParam,
 		ExternalCheck:                externalCheck,
 		LuaLoads:                     luaLoads,
@@ -473,6 +480,13 @@ func SerializeGlobalSection(p *parser.Parser, data *models.Global) error {
 		pDhParams = nil
 	}
 	if err := p.Set(parser.Global, parser.GlobalSectionName, "tune.ssl.default-dh-param", pDhParams); err != nil {
+		return err
+	}
+	sslModeAsync := &types.SslModeAsync{}
+	if data.SslModeAsync != "enabled" {
+		sslModeAsync = nil
+	}
+	if err := p.Set(parser.Global, parser.GlobalSectionName, "ssl-mode-async", sslModeAsync); err != nil {
 		return err
 	}
 
