@@ -35,6 +35,13 @@ func TestHAProxyVersion(t *testing.T) {
 			Commit:  "a42e6c",
 			Version: "2.0.18-a42e6c-11",
 		},
+		"2.2.5-34b2b10": {
+			Major:   2,
+			Minor:   2,
+			Patch:   5,
+			Commit:  "34b2b10",
+			Version: "2.2.5-34b2b10",
+		},
 	}
 	for version, result := range tests {
 		t.Run(version, func(t *testing.T) {

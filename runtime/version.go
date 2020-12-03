@@ -54,7 +54,7 @@ func (v *HAProxyVersion) ParseHAProxyVersion(version string) error {
 		return fmt.Errorf("version is not in correct format [%s]", version)
 	}
 	data = strings.Split(parts[1], "-")
-	if len(parts) < 2 {
+	if len(data) < 2 {
 		v.Commit = data[0]
 	} else {
 		v.Commit = data[len(data)-2]
