@@ -286,12 +286,32 @@ func (c *Client) checkTransactionOrVersion(transactionID string, version int64) 
 	return t, nil
 }
 
+//ParseSection sets the fields of the section based on the provided parser
 func ParseSection(object interface{}, section parser.Section, pName string, p *parser.Parser) error {
-	objValue := reflect.ValueOf(object).Elem()
+	sp := &SectionParser{
+		Object:  object,
+		Section: section,
+		Name:    pName,
+		Parser:  p,
+	}
+	return sp.Parse()
+}
+
+//SectionParser is used set fields of a section based on the provided parser
+type SectionParser struct {
+	Object  interface{}
+	Section parser.Section
+	Name    string
+	Parser  *parser.Parser
+}
+
+//Parse parses the sections fields and sets their values with the data from the parser
+func (s *SectionParser) Parse() error {
+	objValue := reflect.ValueOf(s.Object).Elem()
 	for i := 0; i < objValue.NumField(); i++ {
 		typeField := objValue.Type().Field(i)
 		field := objValue.FieldByName(typeField.Name)
-		val := parseField(section, pName, typeField.Name, p)
+		val := s.parseField(typeField.Name)
 		if val != nil {
 			if field.Kind() == reflect.Bool {
 				if reflect.ValueOf(val).Kind() == reflect.String {
@@ -312,10 +332,723 @@ func ParseSection(object interface{}, section parser.Section, pName string, p *p
 	return nil
 }
 
-func parseField(section parser.Section, sectionName string, fieldName string, p *parser.Parser) interface{} {
-	//Handle special cases
-	if fieldName == "MonitorFail" && section == parser.Frontends {
-		data, err := p.Get(section, sectionName, "monitor fail", false)
+func (s *SectionParser) parseField(fieldName string) interface{} {
+	if match, data := s.checkSpecialFields(fieldName); match {
+		return data
+	}
+
+	if match, data := s.checkTimeouts(fieldName); match {
+		return data
+	}
+
+	if match, data := s.checkSingleLine(fieldName); match {
+		return data
+	}
+
+	if match, data := s.checkOptions(fieldName); match {
+		return data
+	}
+
+	return nil
+}
+
+func (s *SectionParser) checkSpecialFields(fieldName string) (match bool, data interface{}) {
+	switch fieldName {
+	case "MonitorFail":
+		return true, s.monitorFail()
+	case "MonitorURI":
+		return true, s.monitorURI()
+	case "StatsOptions":
+		return true, s.statsOptions()
+	case "Httpchk":
+		return true, s.httpchk()
+	case "HTTPCheck":
+		return true, s.httpCheck()
+	case "Forwardfor":
+		return true, s.forwardfor()
+	case "Redispatch":
+		return true, s.redispatch()
+	case "Balance":
+		return true, s.balance()
+	case "BindProcess":
+		return true, s.bindProcess()
+	case "Cookie":
+		return true, s.cookie()
+	case "HashType":
+		return true, s.hashType()
+	case "ErrorFiles":
+		return true, s.errorFiles()
+	case "DefaultServer":
+		return true, s.defaultServer()
+	case "StickTable":
+		return true, s.stickTable()
+	case "AdvCheck":
+		return true, s.advCheck()
+	case "Logasap":
+		return true, s.logasap()
+	case "Allbackups":
+		return true, s.allbackups()
+	case "ExternalCheck":
+		return true, s.externalCheck()
+	case "ExternalCheckPath":
+		return true, s.externalCheckPath()
+	case "ExternalCheckCommand":
+		return true, s.externalCheckCommand()
+	case "DefaultBackend":
+		return true, s.defaultBackend()
+	case "Clflog":
+		return true, s.clflog()
+	case "Httplog":
+		return true, s.httplog()
+	case "HTTPReuse":
+		return true, s.httpReuse()
+	case "UniqueIDFormat":
+		return true, s.uniqueIDFormat()
+	case "UniqueIDHeader":
+		return true, s.uniqueIDHeader()
+	case "HTTPConnectionMode":
+		return true, s.httpConnectionMode()
+	default:
+		return false, nil
+	}
+}
+
+func (s *SectionParser) checkTimeouts(fieldName string) (match bool, data interface{}) {
+	if strings.HasSuffix(fieldName, "Timeout") {
+		if pName := translateTimeout(fieldName); s.Parser.HasParser(s.Section, pName) {
+			data, err := s.get(pName, false)
+			if err != nil {
+				return true, nil
+			}
+			timeout := data.(*types.SimpleTimeout)
+			return true, misc.ParseTimeout(timeout.Value)
+		}
+	}
+	return false, nil
+}
+
+func (s *SectionParser) checkSingleLine(fieldName string) (match bool, data interface{}) {
+	if pName := misc.DashCase(fieldName); s.Parser.HasParser(s.Section, pName) {
+		data, err := s.get(pName, false)
+		if err != nil {
+			return true, nil
+		}
+		return true, parseOption(data)
+	}
+	return false, nil
+}
+
+func (s *SectionParser) checkOptions(fieldName string) (match bool, data interface{}) {
+	if pName := fmt.Sprintf("option %s", misc.DashCase(fieldName)); s.Parser.HasParser(s.Section, pName) {
+		data, err := s.get(pName, false)
+		if err != nil {
+			return true, nil
+		}
+		return true, parseOption(data)
+	}
+	return false, nil
+}
+
+func (s *SectionParser) get(attribute string, createIfNotExists ...bool) (data common.ParserData, err error) {
+	return s.Parser.Get(s.Section, s.Name, attribute, createIfNotExists...)
+}
+
+func (s *SectionParser) httpConnectionMode() interface{} {
+	data, err := s.get("option http-tunnel", false)
+	if err == nil {
+		d := data.(*types.SimpleOption)
+		if !d.NoOption {
+			return "http-tunnel"
+		}
+	}
+
+	data, err = s.get("option httpclose", false)
+	if err == nil {
+		d := data.(*types.SimpleOption)
+		if !d.NoOption {
+			return "httpclose"
+		}
+	}
+	// deprecated option, alias for httpclose
+	data, err = s.get("option forceclose", false)
+	if err == nil {
+		d := data.(*types.SimpleOption)
+		if !d.NoOption {
+			return "httpclose"
+		}
+	}
+
+	data, err = s.get("option http-server-close", false)
+	if err == nil {
+		d := data.(*types.SimpleOption)
+		if !d.NoOption {
+			return "http-server-close"
+		}
+	}
+
+	data, err = s.get("option http-keep-alive", false)
+	if err == nil {
+		d := data.(*types.SimpleOption)
+		if !d.NoOption {
+			return "http-keep-alive"
+		}
+	}
+	return nil
+}
+
+func (s *SectionParser) uniqueIDHeader() interface{} {
+	_, e := s.get("unique-id-format")
+	if e != nil {
+		return nil
+	}
+	data, err := s.get("unique-id-header")
+	if err == nil {
+		d := data.(*types.UniqueIDHeader)
+		return d.Name
+	}
+	return nil
+}
+
+func (s *SectionParser) uniqueIDFormat() interface{} {
+	data, err := s.get("unique-id-format")
+	if err == nil {
+		d := data.(*types.UniqueIDFormat)
+		return d.LogFormat
+	}
+	return nil
+}
+
+func (s *SectionParser) httpReuse() interface{} {
+	data, err := s.get("http-reuse", false)
+	if err == nil {
+		d := data.(*types.HTTPReuse)
+		return d.ShareType
+	}
+	return nil
+}
+
+func (s *SectionParser) httplog() interface{} {
+	data, err := s.get("option httplog", false)
+	if err == nil {
+		d := data.(*types.OptionHTTPLog)
+		if !d.NoOption {
+			return !d.Clf
+		}
+	}
+	return nil
+}
+
+func (s *SectionParser) clflog() interface{} {
+	data, err := s.get("option httplog", false)
+	if err == nil {
+		d := data.(*types.OptionHTTPLog)
+		if !d.NoOption {
+			return d.Clf
+		}
+	}
+	return nil
+}
+
+func (s *SectionParser) defaultBackend() interface{} {
+	data, err := s.get("default_backend", false)
+	if err != nil {
+		return nil
+	}
+	bck := data.(*types.StringC)
+	return bck.Value
+}
+
+func (s *SectionParser) externalCheckCommand() interface{} {
+	data, err := s.get("external-check command", false)
+	if err != nil {
+		return nil
+	}
+	d := data.(*types.ExternalCheckCommand)
+	return d.Command
+}
+
+func (s *SectionParser) externalCheckPath() interface{} {
+	data, err := s.get("external-check path", false)
+	if err != nil {
+		return nil
+	}
+	d := data.(*types.ExternalCheckPath)
+	return d.Path
+}
+
+func (s *SectionParser) externalCheck() interface{} {
+	data, err := s.get("option external-check", false)
+	if err != nil {
+		return nil
+	}
+	if data.(*types.SimpleOption).NoOption {
+		return "disabled"
+	}
+	return "enabled"
+}
+
+func (s *SectionParser) allbackups() interface{} {
+	data, err := s.get("option allbackups", false)
+	if err != nil {
+		return nil
+	}
+	if data.(*types.SimpleOption).NoOption {
+		return "disabled"
+	}
+	return "enabled"
+}
+
+func (s *SectionParser) logasap() interface{} {
+	data, err := s.get("option logasap", false)
+	if err != nil {
+		return nil
+	}
+	if data.(*types.SimpleOption).NoOption {
+		return "disabled"
+	}
+	return "enabled"
+}
+
+func (s *SectionParser) advCheck() interface{} {
+	data, err := s.get("option ssl-hello-chk", false)
+	if err == nil {
+		d := data.(*types.SimpleOption)
+		if !d.NoOption {
+			return "ssl-hello-chk"
+		}
+	}
+
+	data, err = s.get("option smtpchk", false)
+	if err == nil {
+		d := data.(*types.OptionSmtpchk)
+		if !d.NoOption {
+			return "smtpchk"
+		}
+	}
+
+	data, err = s.get("option ldap-check", false)
+	if err == nil {
+		d := data.(*types.SimpleOption)
+		if !d.NoOption {
+			return "ldap-check"
+		}
+	}
+
+	data, err = s.get("option mysql-check", false)
+	if err == nil {
+		d := data.(*types.OptionMysqlCheck)
+		if !d.NoOption {
+			return "mysql-check"
+		}
+	}
+
+	data, err = s.get("option pgsql-check", false)
+	if err == nil {
+		d := data.(*types.SimpleOption)
+		if !d.NoOption {
+			return "pgsql-check"
+		}
+	}
+
+	data, err = s.get("option tcp-check", false)
+	if err == nil {
+		d := data.(*types.SimpleOption)
+		if !d.NoOption {
+			return "tcp-check"
+		}
+	}
+
+	data, err = s.get("option redis-check", false)
+	if err == nil {
+		d := data.(*types.SimpleOption)
+		if !d.NoOption {
+			return "redis-check"
+		}
+	}
+	return nil
+}
+
+func (s *SectionParser) stickTable() interface{} {
+	data, err := s.get("stick-table", false)
+	if err != nil {
+		return nil
+	}
+	d := data.(*types.StickTable)
+	bst := &models.BackendStickTable{}
+
+	if d == nil {
+		return nil
+	}
+	bst.Type = d.Type
+	bst.Size = misc.ParseSize(d.Size)
+	bst.Store = d.Store
+	bst.Expire = misc.ParseTimeout(d.Expire)
+	bst.Peers = d.Peers
+
+	k, err := strconv.ParseInt(d.Length, 10, 64)
+	if err == nil {
+		bst.Keylen = &k
+	}
+	if d.NoPurge {
+		bst.Nopurge = true
+	}
+	return bst
+}
+
+func (s *SectionParser) defaultServer() interface{} {
+	data, err := s.get("default-server", false)
+	if err != nil {
+		return nil
+	}
+	d := data.([]types.DefaultServer)
+	dServer := &models.DefaultServer{}
+	for _, ds := range d {
+		dsParams := ds.Params
+		for _, p := range dsParams {
+			switch v := p.(type) {
+			case *params.ServerOptionWord:
+				switch v.Name {
+				case "backup":
+					dServer.Backup = "enabled"
+				case "no-backup":
+					dServer.Backup = "disabled"
+				case "check":
+					dServer.Check = "enabled"
+				case "no-check":
+					dServer.Check = "disabled"
+				case "agent-check":
+					dServer.AgentCheck = "enabled"
+				case "no-agent-check":
+					dServer.AgentCheck = "disabled"
+				case "ssl":
+					dServer.Ssl = "enabled"
+				case "no-ssl":
+					dServer.Ssl = "disabled"
+				case "check-ssl":
+					dServer.CheckSsl = "enabled"
+				case "no-check-ssl":
+					dServer.CheckSsl = "disabled"
+				case "tls-tickets":
+					dServer.TLSTickets = "enabled"
+				case "no-tls-tickets":
+					dServer.TLSTickets = "disabled"
+				case "allow-0rtt":
+					dServer.Allow0rtt = true
+				case "send-proxy":
+					dServer.SendProxy = "enabled"
+				case "no-send-proxy":
+					dServer.SendProxy = "disabled"
+				case "send-proxy-v2":
+					dServer.SendProxyV2 = "enabled"
+				case "no-send-proxy-v2":
+					dServer.SendProxyV2 = "disabled"
+				}
+			case *params.ServerOptionValue:
+				switch v.Name {
+				case "sni":
+					dServer.Sni = v.Value
+				case "check-sni":
+					dServer.CheckSni = v.Value
+				case "slowstart":
+					dServer.Slowstart = misc.ParseTimeout(v.Value)
+				case "init-addr":
+					dServer.InitAddr = v.Value
+				case "fall":
+					dServer.Fall = misc.ParseTimeout(v.Value)
+				case "inter":
+					dServer.Inter = misc.ParseTimeout(v.Value)
+				case "fastinter":
+					dServer.Fastinter = misc.ParseTimeout(v.Value)
+				case "downinter":
+					dServer.Downinter = misc.ParseTimeout(v.Value)
+				case "rise":
+					dServer.Rise = misc.ParseTimeout(v.Value)
+				case "port":
+					port, err := strconv.ParseInt(v.Value, 10, 64)
+					if err == nil {
+						dServer.Port = &port
+					}
+				case "alpn":
+					dServer.Alpn = v.Value
+				case "maxconn":
+					m, err := strconv.ParseInt(v.Value, 10, 64)
+					if err == nil && m != 0 {
+						dServer.Maxconn = &m
+					}
+				case "weight":
+					w, err := strconv.ParseInt(v.Value, 10, 64)
+					if err == nil && w != 0 {
+						dServer.Weight = &w
+					}
+				case "resolvers":
+					dServer.Resolvers = v.Value
+				case "resolve-prefer":
+					dServer.ResolvePrefer = v.Value
+				case "resolve-net":
+					dServer.ResolveNet = v.Value
+				case "cookie":
+					dServer.Cookie = v.Value
+				case "crt":
+					dServer.SslCertificate = v.Value
+				case "verify":
+					dServer.Verify = v.Value
+				case "on-error":
+					dServer.OnError = v.Value
+				case "on-marked-down":
+					dServer.OnMarkedDown = v.Value
+				case "on-marked-up":
+					dServer.OnMarkedUp = v.Value
+				case "agent-addr":
+					dServer.AgentAddr = v.Value
+				case "agent-inter":
+					dServer.AgentInter = misc.ParseTimeout(v.Value)
+				case "agent-port":
+					p, err := strconv.ParseInt(v.Value, 10, 64)
+					if err == nil && p != 0 {
+						dServer.AgentPort = &p
+					}
+				case "agent-send":
+					dServer.AgentSend = v.Value
+				case "proto":
+					dServer.Proto = v.Value
+				case "proxy-v2-options":
+					values := strings.Split(v.Value, ",")
+					dServer.ProxyV2Options = values
+				}
+			}
+		}
+		return dServer
+	}
+	return nil
+}
+
+func (s *SectionParser) errorFiles() interface{} {
+	data, err := s.get("errorfile", false)
+	if err != nil {
+		return nil
+	}
+	d := data.([]types.ErrorFile)
+	if s.Section == parser.Defaults {
+		dEFiles := []*models.Errorfile{}
+		for _, ef := range d {
+			dEFile := &models.Errorfile{}
+			code, err := strconv.ParseInt(ef.Code, 10, 64)
+			if err != nil {
+				continue
+			}
+			dEFile.Code = code
+			dEFile.File = ef.File
+			dEFiles = append(dEFiles, dEFile)
+		}
+		return dEFiles
+	}
+	return nil
+}
+
+func (s *SectionParser) hashType() interface{} {
+	data, err := s.get("hash-type", false)
+	if err != nil {
+		return nil
+	}
+	d := data.(*types.HashType)
+	return &models.BackendHashType{
+		Method:   d.Method,
+		Function: d.Function,
+		Modifier: d.Modifier,
+	}
+}
+
+func (s *SectionParser) cookie() interface{} {
+	data, err := s.get("cookie", false)
+	if err != nil {
+		return nil
+	}
+	d := data.(*types.Cookie)
+	domains := make([]*models.Domain, len(d.Domain))
+	for i, domain := range d.Domain {
+		domains[i] = &models.Domain{Value: domain}
+	}
+	return &models.Cookie{
+		Domains:  domains,
+		Dynamic:  d.Dynamic,
+		Httponly: d.Httponly,
+		Indirect: d.Indirect,
+		Maxidle:  d.Maxidle,
+		Maxlife:  d.Maxlife,
+		Name:     &d.Name,
+		Nocache:  d.Nocache,
+		Postonly: d.Postonly,
+		Preserve: d.Preserve,
+		Type:     d.Type,
+		Secure:   d.Secure,
+	}
+}
+
+func (s *SectionParser) bindProcess() interface{} {
+	data, err := s.get("bind-process", false)
+	if err != nil {
+		return nil
+	}
+	d := data.(*types.BindProcess)
+	return d.Process
+}
+
+func (s *SectionParser) balance() interface{} {
+	data, err := s.get("balance", false)
+	if err != nil {
+		return nil
+	}
+	d := data.(*types.Balance)
+	b := &models.Balance{
+		Algorithm: &d.Algorithm,
+	}
+	switch prm := d.Params.(type) {
+	case *params.BalanceHdr:
+		b.HdrName = prm.Name
+		b.HdrUseDomainOnly = prm.UseDomainOnly
+	case *params.BalanceRandom:
+		b.RandomDraws = prm.Draws
+	case *params.BalanceRdpCookie:
+		b.RdpCookieName = prm.Name
+	case *params.BalanceURI:
+		b.URIDepth = prm.Depth
+		b.URILen = prm.Len
+		b.URIWhole = prm.Whole
+	case *params.BalanceURLParam:
+		b.URLParam = prm.Param
+		b.URLParamCheckPost = prm.CheckPost
+		b.URLParamMaxWait = prm.MaxWait
+	}
+	return b
+}
+
+func (s *SectionParser) redispatch() interface{} {
+	data, err := s.get("option redispatch", false)
+	if err != nil {
+		return nil
+	}
+	d := data.(*types.OptionRedispatch)
+	br := &models.Redispatch{}
+	if d.Interval != nil {
+		br.Interval = *d.Interval
+	}
+	if d.NoOption == true {
+		d := "disabled"
+		br.Enabled = &d
+	} else {
+		e := "enabled"
+		br.Enabled = &e
+	}
+	return br
+}
+
+func (s *SectionParser) forwardfor() interface{} {
+	data, err := s.get("option forwardfor", false)
+	if err != nil {
+		return nil
+	}
+	d := data.(*types.OptionForwardFor)
+	enabled := "enabled"
+	bff := &models.Forwardfor{
+		Except:  d.Except,
+		Header:  d.Header,
+		Ifnone:  d.IfNone,
+		Enabled: &enabled,
+	}
+	return bff
+}
+
+func (s *SectionParser) httpCheck() interface{} {
+	data, err := s.get("http-check", false)
+	if err != nil {
+		return nil
+	}
+	d := data.([]types.HTTPCheckV2)
+	if s.Section == parser.Defaults || s.Section == parser.Backends {
+		hc := &models.HTTPCheck{}
+		for _, h := range d {
+			hc.ExclamationMark = h.ExclamationMark
+			hc.Match = h.Match
+			hc.Pattern = h.Pattern
+			hc.Type = &h.Type
+		}
+		return hc
+	}
+	return nil
+}
+
+func (s *SectionParser) httpchk() interface{} {
+	data, err := s.get("option httpchk", false)
+	if err != nil {
+		return nil
+	}
+	d := data.(*types.OptionHttpchk)
+	return &models.Httpchk{
+		Method:  d.Method,
+		URI:     d.URI,
+		Version: d.Version,
+	}
+}
+
+func (s *SectionParser) statsOptions() interface{} {
+	data, err := s.get("stats", false)
+	if err != nil {
+		return nil
+	}
+	ss := data.([]types.StatsSettings)
+	opt := &models.StatsOptions{}
+	for _, s := range ss {
+		switch v := s.(type) {
+		case *stats.OneWord:
+			if v.Name == "enable" {
+				opt.StatsEnable = true
+			}
+			if v.Name == "hide-version" {
+				opt.StatsHideVersion = true
+			}
+			if v.Name == "show-legends" {
+				opt.StatsShowLegends = true
+			}
+		case *stats.ShowDesc:
+			if v.Desc != "" {
+				opt.StatsShowDesc = misc.StringP(v.Desc)
+			}
+		case *stats.MaxConn:
+			d, err := v.Maxconn.Get(false)
+			if err != nil {
+				return nil
+			}
+			mc := d.(*types.Int64C)
+			opt.StatsMaxconn = mc.Value
+		case *stats.Refresh:
+			if v.Delay != "" {
+				opt.StatsRefreshDelay = misc.ParseTimeout(v.Delay)
+			}
+		case *stats.ShowNode:
+			if v.Name != "" {
+				opt.StatsShowNodeName = misc.StringP(v.Name)
+			}
+		case *stats.URI:
+			if v.Prefix != "" {
+				opt.StatsURIPrefix = v.Prefix
+			}
+		}
+	}
+	return opt
+}
+
+func (s *SectionParser) monitorURI() interface{} {
+	data, err := s.get("monitor-uri", false)
+	if err != nil {
+		return nil
+	}
+	d := data.(*types.MonitorURI)
+	return models.MonitorURI(d.URI)
+}
+
+func (s *SectionParser) monitorFail() interface{} {
+	if s.Section == parser.Frontends {
+		data, err := s.get("monitor fail", false)
 		if err != nil {
 			return nil
 		}
@@ -324,604 +1057,6 @@ func parseField(section parser.Section, sectionName string, fieldName string, p 
 			Cond:     &d.Condition,
 			CondTest: misc.StringP(strings.Join(d.ACLList, " ")),
 		}
-	}
-	if fieldName == "MonitorURI" {
-		data, err := p.Get(section, sectionName, "monitor-uri", false)
-		if err != nil {
-			return nil
-		}
-		d := data.(*types.MonitorURI)
-		return models.MonitorURI(d.URI)
-	}
-	if strings.HasPrefix(fieldName, "StatsOptions") {
-		data, err := p.Get(section, sectionName, "stats", false)
-		if err != nil {
-			return nil
-		}
-		ss := data.([]types.StatsSettings)
-		opt := &models.StatsOptions{}
-		for _, s := range ss {
-			switch v := s.(type) {
-			case *stats.OneWord:
-				if v.Name == "enable" {
-					opt.StatsEnable = true
-				}
-				if v.Name == "hide-version" {
-					opt.StatsHideVersion = true
-				}
-				if v.Name == "show-legends" {
-					opt.StatsShowLegends = true
-				}
-			case *stats.ShowDesc:
-				if v.Desc != "" {
-					opt.StatsShowDesc = misc.StringP(v.Desc)
-				}
-			case *stats.MaxConn:
-				d, err := v.Maxconn.Get(false)
-				if err != nil {
-					return nil
-				}
-				mc := d.(*types.Int64C)
-				opt.StatsMaxconn = mc.Value
-			case *stats.Refresh:
-				if v.Delay != "" {
-					opt.StatsRefreshDelay = misc.ParseTimeout(v.Delay)
-				}
-			case *stats.ShowNode:
-				if v.Name != "" {
-					opt.StatsShowNodeName = misc.StringP(v.Name)
-				}
-			case *stats.URI:
-				if v.Prefix != "" {
-					opt.StatsURIPrefix = v.Prefix
-				}
-			}
-		}
-		return opt
-	}
-	if fieldName == "Httpchk" {
-		data, err := p.Get(section, sectionName, "option httpchk", false)
-		if err != nil {
-			return nil
-		}
-		d := data.(*types.OptionHttpchk)
-		return &models.Httpchk{
-			Method:  d.Method,
-			URI:     d.URI,
-			Version: d.Version,
-		}
-	}
-	if fieldName == "HTTPCheck" {
-		data, err := p.Get(section, sectionName, "http-check", false)
-		if err != nil {
-			return nil
-		}
-		d := data.([]types.HTTPCheckV2)
-		if section == parser.Defaults || section == parser.Backends {
-			hc := &models.HTTPCheck{}
-			for _, h := range d {
-				hc.ExclamationMark = h.ExclamationMark
-				hc.Match = h.Match
-				hc.Pattern = h.Pattern
-				hc.Type = &h.Type
-			}
-			return hc
-		}
-		return nil
-	}
-	if fieldName == "Forwardfor" {
-		data, err := p.Get(section, sectionName, "option forwardfor", false)
-		if err != nil {
-			return nil
-		}
-		d := data.(*types.OptionForwardFor)
-		enabled := "enabled"
-		bff := &models.Forwardfor{
-			Except:  d.Except,
-			Header:  d.Header,
-			Ifnone:  d.IfNone,
-			Enabled: &enabled,
-		}
-		return bff
-	}
-	if fieldName == "Redispatch" {
-		data, err := p.Get(section, sectionName, "option redispatch", false)
-		if err != nil {
-			return nil
-		}
-		d := data.(*types.OptionRedispatch)
-		br := &models.Redispatch{}
-		if d.Interval != nil {
-			br.Interval = *d.Interval
-		}
-		if d.NoOption == true {
-			d := "disabled"
-			br.Enabled = &d
-		} else {
-			e := "enabled"
-			br.Enabled = &e
-		}
-		return br
-	}
-	if fieldName == "Balance" {
-		data, err := p.Get(section, sectionName, "balance", false)
-		if err != nil {
-			return nil
-		}
-		d := data.(*types.Balance)
-		b := &models.Balance{
-			Algorithm: &d.Algorithm,
-		}
-		switch prm := d.Params.(type) {
-		case *params.BalanceHdr:
-			b.HdrName = prm.Name
-			b.HdrUseDomainOnly = prm.UseDomainOnly
-		case *params.BalanceRandom:
-			b.RandomDraws = prm.Draws
-		case *params.BalanceRdpCookie:
-			b.RdpCookieName = prm.Name
-		case *params.BalanceURI:
-			b.URIDepth = prm.Depth
-			b.URILen = prm.Len
-			b.URIWhole = prm.Whole
-		case *params.BalanceURLParam:
-			b.URLParam = prm.Param
-			b.URLParamCheckPost = prm.CheckPost
-			b.URLParamMaxWait = prm.MaxWait
-		}
-		return b
-	}
-	if fieldName == "BindProcess" {
-		data, err := p.Get(section, sectionName, "bind-process", false)
-		if err != nil {
-			return nil
-		}
-		d := data.(*types.BindProcess)
-		return d.Process
-	}
-	if fieldName == "Cookie" {
-		data, err := p.Get(section, sectionName, "cookie", false)
-		if err != nil {
-			return nil
-		}
-		d := data.(*types.Cookie)
-		domains := make([]*models.Domain, len(d.Domain))
-		for i, domain := range d.Domain {
-			domains[i] = &models.Domain{Value: domain}
-		}
-		return &models.Cookie{
-			Domains:  domains,
-			Dynamic:  d.Dynamic,
-			Httponly: d.Httponly,
-			Indirect: d.Indirect,
-			Maxidle:  d.Maxidle,
-			Maxlife:  d.Maxlife,
-			Name:     &d.Name,
-			Nocache:  d.Nocache,
-			Postonly: d.Postonly,
-			Preserve: d.Preserve,
-			Type:     d.Type,
-			Secure:   d.Secure,
-		}
-	}
-	if fieldName == "HashType" {
-		data, err := p.Get(section, sectionName, "hash-type", false)
-		if err != nil {
-			return nil
-		}
-		d := data.(*types.HashType)
-		return &models.BackendHashType{
-			Method:   d.Method,
-			Function: d.Function,
-			Modifier: d.Modifier,
-		}
-	}
-	if fieldName == "ErrorFiles" {
-		data, err := p.Get(section, sectionName, "errorfile", false)
-		if err != nil {
-			return nil
-		}
-		d := data.([]types.ErrorFile)
-		if section == parser.Defaults {
-			dEFiles := []*models.Errorfile{}
-			for _, ef := range d {
-				dEFile := &models.Errorfile{}
-				code, err := strconv.ParseInt(ef.Code, 10, 64)
-				if err != nil {
-					continue
-				}
-				dEFile.Code = code
-				dEFile.File = ef.File
-				dEFiles = append(dEFiles, dEFile)
-			}
-			return dEFiles
-		}
-		return nil
-	}
-	if fieldName == "DefaultServer" {
-		data, err := p.Get(section, sectionName, "default-server", false)
-		if err != nil {
-			return nil
-		}
-		d := data.([]types.DefaultServer)
-		dServer := &models.DefaultServer{}
-		for _, ds := range d {
-			dsParams := ds.Params
-			for _, p := range dsParams {
-				switch v := p.(type) {
-				case *params.ServerOptionWord:
-					switch v.Name {
-					case "backup":
-						dServer.Backup = "enabled"
-					case "no-backup":
-						dServer.Backup = "disabled"
-					case "check":
-						dServer.Check = "enabled"
-					case "no-check":
-						dServer.Check = "disabled"
-					case "agent-check":
-						dServer.AgentCheck = "enabled"
-					case "no-agent-check":
-						dServer.AgentCheck = "disabled"
-					case "ssl":
-						dServer.Ssl = "enabled"
-					case "no-ssl":
-						dServer.Ssl = "disabled"
-					case "check-ssl":
-						dServer.CheckSsl = "enabled"
-					case "no-check-ssl":
-						dServer.CheckSsl = "disabled"
-					case "tls-tickets":
-						dServer.TLSTickets = "enabled"
-					case "no-tls-tickets":
-						dServer.TLSTickets = "disabled"
-					case "allow-0rtt":
-						dServer.Allow0rtt = true
-					case "send-proxy":
-						dServer.SendProxy = "enabled"
-					case "no-send-proxy":
-						dServer.SendProxy = "disabled"
-					case "send-proxy-v2":
-						dServer.SendProxyV2 = "enabled"
-					case "no-send-proxy-v2":
-						dServer.SendProxyV2 = "disabled"
-					}
-				case *params.ServerOptionValue:
-					switch v.Name {
-					case "sni":
-						dServer.Sni = v.Value
-					case "check-sni":
-						dServer.CheckSni = v.Value
-					case "slowstart":
-						dServer.Slowstart = misc.ParseTimeout(v.Value)
-					case "init-addr":
-						dServer.InitAddr = v.Value
-					case "fall":
-						dServer.Fall = misc.ParseTimeout(v.Value)
-					case "inter":
-						dServer.Inter = misc.ParseTimeout(v.Value)
-					case "fastinter":
-						dServer.Fastinter = misc.ParseTimeout(v.Value)
-					case "downinter":
-						dServer.Downinter = misc.ParseTimeout(v.Value)
-					case "rise":
-						dServer.Rise = misc.ParseTimeout(v.Value)
-					case "port":
-						port, err := strconv.ParseInt(v.Value, 10, 64)
-						if err == nil {
-							dServer.Port = &port
-						}
-					case "alpn":
-						dServer.Alpn = v.Value
-					case "maxconn":
-						m, err := strconv.ParseInt(v.Value, 10, 64)
-						if err == nil && m != 0 {
-							dServer.Maxconn = &m
-						}
-					case "weight":
-						w, err := strconv.ParseInt(v.Value, 10, 64)
-						if err == nil && w != 0 {
-							dServer.Weight = &w
-						}
-					case "resolvers":
-						dServer.Resolvers = v.Value
-					case "resolve-prefer":
-						dServer.ResolvePrefer = v.Value
-					case "resolve-net":
-						dServer.ResolveNet = v.Value
-					case "cookie":
-						dServer.Cookie = v.Value
-					case "crt":
-						dServer.SslCertificate = v.Value
-					case "verify":
-						dServer.Verify = v.Value
-					case "on-error":
-						dServer.OnError = v.Value
-					case "on-marked-down":
-						dServer.OnMarkedDown = v.Value
-					case "on-marked-up":
-						dServer.OnMarkedUp = v.Value
-					case "agent-addr":
-						dServer.AgentAddr = v.Value
-					case "agent-inter":
-						dServer.AgentInter = misc.ParseTimeout(v.Value)
-					case "agent-port":
-						p, err := strconv.ParseInt(v.Value, 10, 64)
-						if err == nil && p != 0 {
-							dServer.AgentPort = &p
-						}
-					case "agent-send":
-						dServer.AgentSend = v.Value
-					case "proto":
-						dServer.Proto = v.Value
-					case "proxy-v2-options":
-						values := strings.Split(v.Value, ",")
-						dServer.ProxyV2Options = values
-					}
-				}
-			}
-			return dServer
-		}
-		return nil
-	}
-	if fieldName == "StickTable" {
-		data, err := p.Get(section, sectionName, "stick-table", false)
-		if err != nil {
-			return nil
-		}
-		d := data.(*types.StickTable)
-		bst := &models.BackendStickTable{}
-
-		if d == nil {
-			return nil
-		}
-		bst.Type = d.Type
-		bst.Size = misc.ParseSize(d.Size)
-		bst.Store = d.Store
-		bst.Expire = misc.ParseTimeout(d.Expire)
-		bst.Peers = d.Peers
-
-		k, err := strconv.ParseInt(d.Length, 10, 64)
-		if err == nil {
-			bst.Keylen = &k
-		}
-		if d.NoPurge {
-			bst.Nopurge = true
-		}
-		return bst
-	}
-	if fieldName == "AdvCheck" {
-		data, err := p.Get(section, sectionName, "option ssl-hello-chk", false)
-		if err == nil {
-			d := data.(*types.SimpleOption)
-			if !d.NoOption {
-				return "ssl-hello-chk"
-			}
-		}
-
-		data, err = p.Get(section, sectionName, "option smtpchk", false)
-		if err == nil {
-			d := data.(*types.OptionSmtpchk)
-			if !d.NoOption {
-				return "smtpchk"
-			}
-		}
-
-		data, err = p.Get(section, sectionName, "option ldap-check", false)
-		if err == nil {
-			d := data.(*types.SimpleOption)
-			if !d.NoOption {
-				return "ldap-check"
-			}
-		}
-
-		data, err = p.Get(section, sectionName, "option mysql-check", false)
-		if err == nil {
-			d := data.(*types.OptionMysqlCheck)
-			if !d.NoOption {
-				return "mysql-check"
-			}
-		}
-
-		data, err = p.Get(section, sectionName, "option pgsql-check", false)
-		if err == nil {
-			d := data.(*types.SimpleOption)
-			if !d.NoOption {
-				return "pgsql-check"
-			}
-		}
-
-		data, err = p.Get(section, sectionName, "option tcp-check", false)
-		if err == nil {
-			d := data.(*types.SimpleOption)
-			if !d.NoOption {
-				return "tcp-check"
-			}
-		}
-
-		data, err = p.Get(section, sectionName, "option redis-check", false)
-		if err == nil {
-			d := data.(*types.SimpleOption)
-			if !d.NoOption {
-				return "redis-check"
-			}
-		}
-	}
-
-	if fieldName == "Logasap" {
-		data, err := p.Get(section, sectionName, "option logasap", false)
-		if err != nil {
-			return nil
-		}
-		if data.(*types.SimpleOption).NoOption {
-			return "disabled"
-		}
-		return "enabled"
-	}
-
-	if fieldName == "Allbackups" {
-		data, err := p.Get(section, sectionName, "option allbackups", false)
-		if err != nil {
-			return nil
-		}
-		if data.(*types.SimpleOption).NoOption {
-			return "disabled"
-		}
-		return "enabled"
-	}
-
-	if fieldName == "ExternalCheck" {
-		data, err := p.Get(section, sectionName, "option external-check", false)
-		if err != nil {
-			return nil
-		}
-		if data.(*types.SimpleOption).NoOption {
-			return "disabled"
-		}
-		return "enabled"
-	}
-	if fieldName == "ExternalCheckPath" {
-		data, err := p.Get(section, sectionName, "external-check path", false)
-		if err != nil {
-			return nil
-		}
-		d := data.(*types.ExternalCheckPath)
-		return d.Path
-	}
-	if fieldName == "ExternalCheckCommand" {
-		data, err := p.Get(section, sectionName, "external-check command", false)
-		if err != nil {
-			return nil
-		}
-		d := data.(*types.ExternalCheckCommand)
-		return d.Command
-	}
-	if fieldName == "DefaultBackend" {
-		data, err := p.Get(section, sectionName, "default_backend", false)
-		if err != nil {
-			return nil
-		}
-		bck := data.(*types.StringC)
-		return bck.Value
-	}
-	if fieldName == "Clflog" {
-		data, err := p.Get(section, sectionName, "option httplog", false)
-		if err == nil {
-			d := data.(*types.OptionHTTPLog)
-			if !d.NoOption {
-				return d.Clf
-			}
-		}
-		return nil
-	}
-	if fieldName == "Httplog" {
-		data, err := p.Get(section, sectionName, "option httplog", false)
-		if err == nil {
-			d := data.(*types.OptionHTTPLog)
-			if !d.NoOption {
-				return !d.Clf
-			}
-		}
-		return nil
-	}
-	if fieldName == "HTTPReuse" {
-		data, err := p.Get(section, sectionName, "http-reuse", false)
-		if err == nil {
-			d := data.(*types.HTTPReuse)
-			return d.ShareType
-		}
-		return nil
-	}
-
-	if fieldName == "UniqueIDFormat" {
-		data, err := p.Get(section, sectionName, "unique-id-format")
-		if err == nil {
-			d := data.(*types.UniqueIDFormat)
-			return d.LogFormat
-		}
-		return nil
-	}
-
-	if fieldName == "UniqueIDHeader" {
-		_, e := p.Get(section, sectionName, "unique-id-format")
-		if e != nil {
-			return nil
-		}
-		data, err := p.Get(section, sectionName, "unique-id-header")
-		if err == nil {
-			d := data.(*types.UniqueIDHeader)
-			return d.Name
-		}
-		return nil
-	}
-
-	if fieldName == "HTTPConnectionMode" {
-		data, err := p.Get(section, sectionName, "option http-tunnel", false)
-		if err == nil {
-			d := data.(*types.SimpleOption)
-			if !d.NoOption {
-				return "http-tunnel"
-			}
-		}
-
-		data, err = p.Get(section, sectionName, "option httpclose", false)
-		if err == nil {
-			d := data.(*types.SimpleOption)
-			if !d.NoOption {
-				return "httpclose"
-			}
-		}
-		// deprecated option, alias for httpclose
-		data, err = p.Get(section, sectionName, "option forceclose", false)
-		if err == nil {
-			d := data.(*types.SimpleOption)
-			if !d.NoOption {
-				return "httpclose"
-			}
-		}
-
-		data, err = p.Get(section, sectionName, "option http-server-close", false)
-		if err == nil {
-			d := data.(*types.SimpleOption)
-			if !d.NoOption {
-				return "http-server-close"
-			}
-		}
-
-		data, err = p.Get(section, sectionName, "option http-keep-alive", false)
-		if err == nil {
-			d := data.(*types.SimpleOption)
-			if !d.NoOption {
-				return "http-keep-alive"
-			}
-		}
-	}
-	//Check Timeouts
-	if strings.HasSuffix(fieldName, "Timeout") {
-		if pName := translateTimeout(fieldName); p.HasParser(section, pName) {
-			data, err := p.Get(section, sectionName, pName, false)
-			if err != nil {
-				return nil
-			}
-			timeout := data.(*types.SimpleTimeout)
-			return misc.ParseTimeout(timeout.Value)
-		}
-	}
-	//Check single line
-	if pName := misc.DashCase(fieldName); p.HasParser(section, pName) {
-		data, err := p.Get(section, sectionName, pName, false)
-		if err != nil {
-			return nil
-		}
-		return parseOption(data)
-	}
-	//Check options
-	if pName := fmt.Sprintf("option %s", misc.DashCase(fieldName)); p.HasParser(section, pName) {
-		data, err := p.Get(section, sectionName, pName, false)
-		if err != nil {
-			return nil
-		}
-		return parseOption(data)
 	}
 	return nil
 }
