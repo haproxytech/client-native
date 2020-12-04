@@ -106,6 +106,7 @@ func TestPutGlobal(t *testing.T) {
 			Enabled: &enabled,
 			Param:   "something",
 		},
+		SslModeAsync: "disabled",
 	}
 
 	err := client.PushGlobalConfiguration(g, "", version)
