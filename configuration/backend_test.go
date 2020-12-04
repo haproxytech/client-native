@@ -234,6 +234,11 @@ func TestCreateEditDeleteBackend(t *testing.T) {
 		ExternalCheckCommand: "/bin/false",
 		ExternalCheckPath:    "/bin",
 		Allbackups:           "enabled",
+		AdvCheck:             "smtpchk",
+		SmtpchkParams: &models.SmtpchkParams{
+			Hello:  "HELO",
+			Domain: "example.com",
+		},
 	}
 
 	err := client.CreateBackend(b, "", version)
@@ -302,6 +307,56 @@ func TestCreateEditDeleteBackend(t *testing.T) {
 			Size:   &s,
 			Store:  "gpc0,http_req_rate(40s)",
 			Type:   "string",
+		},
+		AdvCheck: "mysql-check",
+		MysqlCheckParams: &models.MysqlCheckParams{
+			Username:      "user",
+			ClientVersion: "pre-41",
+		},
+	}
+
+	err = client.EditBackend("created", b, "", version)
+	if err != nil {
+		t.Error(err.Error())
+	} else {
+		version++
+	}
+
+	v, backend, err = client.GetBackend("created", "")
+	if err != nil {
+		t.Error(err.Error())
+	}
+
+	if !compareBackends(backend, b, t) {
+		fmt.Printf("Edited bck: %v\n", backend)
+		fmt.Printf("Given bck: %v\n", b)
+		t.Error("Edited backend not equal to given backend")
+	}
+
+	if v != version {
+		t.Errorf("Version %v returned, expected %v", v, version)
+	}
+
+	// TestSecondEdit
+	tOut = int64(15)
+	b = &models.Backend{
+		Name: "created",
+		Mode: "http",
+		Balance: &models.Balance{
+			Algorithm: &balanceAlgorithm,
+		},
+		Cookie: &models.Cookie{
+			Domains: []*models.Domain{
+				&models.Domain{Value: "dom1"},
+				&models.Domain{Value: "dom2"},
+			},
+			Name: &cookieName,
+		},
+		ConnectTimeout: &tOut,
+		StickTable:     &models.BackendStickTable{},
+		AdvCheck:       "pgsql-check",
+		PgsqlCheckParams: &models.PgsqlCheckParams{
+			Username: "user",
 		},
 	}
 
@@ -483,6 +538,27 @@ func compareBackends(x, y *models.Backend, t *testing.T) bool {
 
 	x.Forwardfor = nil
 	y.Forwardfor = nil
+
+	if !reflect.DeepEqual(x.SmtpchkParams, y.SmtpchkParams) {
+		return false
+	}
+
+	x.SmtpchkParams = nil
+	y.SmtpchkParams = nil
+
+	if !reflect.DeepEqual(x.MysqlCheckParams, y.MysqlCheckParams) {
+		return false
+	}
+
+	x.MysqlCheckParams = nil
+	y.MysqlCheckParams = nil
+
+	if !reflect.DeepEqual(x.PgsqlCheckParams, y.PgsqlCheckParams) {
+		return false
+	}
+
+	x.PgsqlCheckParams = nil
+	y.PgsqlCheckParams = nil
 
 	if !reflect.DeepEqual(x, y) {
 		return false

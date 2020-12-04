@@ -610,62 +610,129 @@ func (s *SectionParser) logasap() interface{} {
 }
 
 func (s *SectionParser) advCheck() interface{} {
+	if found, data := s.getSslChkData(); found {
+		return data
+	}
+
+	if found, data := s.getSMTPChkData(); found {
+		return data
+	}
+
+	if found, data := s.getLdapCheckData(); found {
+		return data
+	}
+
+	if found, data := s.getMysqlCheckData(); found {
+		return data
+	}
+
+	if found, data := s.getPgsqlCheckData(); found {
+		return data
+	}
+
+	if found, data := s.getTCPCheckData(); found {
+		return data
+	}
+
+	if found, data := s.getRedisCheckData(); found {
+		return data
+	}
+
+	return nil
+}
+
+func (s *SectionParser) getSslChkData() (found bool, data interface{}) {
 	data, err := s.get("option ssl-hello-chk", false)
 	if err == nil {
 		d := data.(*types.SimpleOption)
 		if !d.NoOption {
-			return "ssl-hello-chk"
+			return true, "ssl-hello-chk"
 		}
 	}
+	return false, nil
+}
 
-	data, err = s.get("option smtpchk", false)
+func (s *SectionParser) getSMTPChkData() (found bool, data interface{}) {
+	data, err := s.get("option smtpchk", false)
 	if err == nil {
 		d := data.(*types.OptionSmtpchk)
 		if !d.NoOption {
-			return "smtpchk"
+			s.setField("SmtpchkParams", &models.SmtpchkParams{
+				Hello:  d.Hello,
+				Domain: d.Domain,
+			})
+			return true, "smtpchk"
 		}
 	}
+	return false, nil
+}
 
-	data, err = s.get("option ldap-check", false)
+func (s *SectionParser) getLdapCheckData() (found bool, data interface{}) {
+	data, err := s.get("option ldap-check", false)
 	if err == nil {
 		d := data.(*types.SimpleOption)
 		if !d.NoOption {
-			return "ldap-check"
+			return true, "ldap-check"
 		}
 	}
+	return false, nil
+}
 
-	data, err = s.get("option mysql-check", false)
+func (s *SectionParser) getMysqlCheckData() (found bool, data interface{}) {
+	data, err := s.get("option mysql-check", false)
 	if err == nil {
 		d := data.(*types.OptionMysqlCheck)
 		if !d.NoOption {
-			return "mysql-check"
+			s.setField("MysqlCheckParams", &models.MysqlCheckParams{
+				ClientVersion: d.ClientVersion,
+				Username:      d.User,
+			})
+			return true, "mysql-check"
 		}
 	}
+	return false, nil
+}
 
-	data, err = s.get("option pgsql-check", false)
+func (s *SectionParser) getPgsqlCheckData() (found bool, data interface{}) {
+	data, err := s.get("option pgsql-check", false)
+	if err == nil {
+		d := data.(*types.OptionPgsqlCheck)
+		if !d.NoOption {
+			s.setField("PgsqlCheckParams", &models.PgsqlCheckParams{
+				Username: d.User,
+			})
+			return true, "pgsql-check"
+		}
+	}
+	return false, nil
+}
+
+func (s *SectionParser) getTCPCheckData() (found bool, data interface{}) {
+	data, err := s.get("option tcp-check", false)
 	if err == nil {
 		d := data.(*types.SimpleOption)
 		if !d.NoOption {
-			return "pgsql-check"
+			return true, "tcp-check"
 		}
 	}
+	return false, nil
+}
 
-	data, err = s.get("option tcp-check", false)
+func (s *SectionParser) getRedisCheckData() (found bool, data interface{}) {
+	data, err := s.get("option redis-check", false)
 	if err == nil {
 		d := data.(*types.SimpleOption)
 		if !d.NoOption {
-			return "tcp-check"
+			return true, "redis-check"
 		}
 	}
+	return false, nil
+}
 
-	data, err = s.get("option redis-check", false)
-	if err == nil {
-		d := data.(*types.SimpleOption)
-		if !d.NoOption {
-			return "redis-check"
-		}
-	}
-	return nil
+func (s *SectionParser) setField(fieldName string, data interface{}) {
+	objValue := reflect.ValueOf(s.Object).Elem()
+	field := objValue.FieldByName(fieldName)
+	field.Set(reflect.ValueOf(data))
 }
 
 func (s *SectionParser) stickTable() interface{} {
@@ -1096,6 +1163,10 @@ func (s *SectionObject) CreateEditSection() error {
 }
 
 func (s *SectionObject) setFieldValue(fieldName string, field reflect.Value) error {
+	if match, err := s.checkParams(fieldName, field); match {
+		return err
+	}
+
 	if match, err := s.checkSpecialFields(fieldName, field); match {
 		return err
 	}
@@ -1113,6 +1184,13 @@ func (s *SectionObject) setFieldValue(fieldName string, field reflect.Value) err
 	}
 
 	return errors.Errorf("Cannot parse option for %s %s: %s", s.Section, s.Name, fieldName)
+}
+
+func (s *SectionObject) checkParams(fieldName string, field reflect.Value) (match bool, err error) {
+	if strings.HasSuffix(fieldName, "Params") {
+		return true, nil
+	}
+	return false, nil
 }
 
 func (s *SectionObject) checkSpecialFields(fieldName string, field reflect.Value) (match bool, err error) {
@@ -1477,43 +1555,15 @@ func (s *SectionObject) logasap(field reflect.Value) error {
 
 func (s *SectionObject) advCheck(field reflect.Value) error {
 	if s.Section == parser.Backends || s.Section == parser.Defaults {
-		if err := s.set("option ssl-hello-chk", nil); err != nil {
-			return err
-		}
-		if err := s.set("option smtpchk", nil); err != nil {
-			return err
-		}
-		if err := s.set("option ldap-check", nil); err != nil {
-			return err
-		}
-		if err := s.set("option mysql-check", nil); err != nil {
-			return err
-		}
-		if err := s.set("option pgsql-check", nil); err != nil {
-			return err
-		}
-		if err := s.set("option tcp-check", nil); err != nil {
-			return err
-		}
-		if err := s.set("option redis-check", nil); err != nil {
+		if err := s.resetCheckOptions(); err != nil {
 			return err
 		}
 
 		if !valueIsNil(field) {
-			var d common.ParserData
 			pName := fmt.Sprintf("option %v", field.String())
-			if pName == "option smtpchk" {
-				d = &types.OptionSmtpchk{
-					NoOption: false,
-				}
-			} else if pName == "option mysql-check" {
-				d = &types.OptionMysqlCheck{
-					NoOption: false,
-				}
-			} else {
-				d = &types.SimpleOption{
-					NoOption: false,
-				}
+			d, err := s.getCheckData(pName)
+			if err != nil {
+				return err
 			}
 			if err := s.set(pName, d); err != nil {
 				return err
@@ -1521,6 +1571,100 @@ func (s *SectionObject) advCheck(field reflect.Value) error {
 		}
 	}
 	return nil
+}
+
+func (s *SectionObject) resetCheckOptions() error {
+	if err := s.set("option ssl-hello-chk", nil); err != nil {
+		return err
+	}
+	if err := s.set("option smtpchk", nil); err != nil {
+		return err
+	}
+	if err := s.set("option ldap-check", nil); err != nil {
+		return err
+	}
+	if err := s.set("option mysql-check", nil); err != nil {
+		return err
+	}
+	if err := s.set("option pgsql-check", nil); err != nil {
+		return err
+	}
+	if err := s.set("option tcp-check", nil); err != nil {
+		return err
+	}
+	if err := s.set("option redis-check", nil); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (s *SectionObject) getCheckData(pName string) (common.ParserData, error) {
+	switch pName {
+	case "option smtpchk":
+		return s.getSmtpchkData()
+	case "option mysql-check":
+		return s.getMysqlCheckData()
+	case "option pgsql-check":
+		return s.getPgsqlCheckData()
+	default:
+		return &types.SimpleOption{
+			NoOption: false,
+		}, nil
+	}
+}
+
+func (s *SectionObject) getSmtpchkData() (common.ParserData, error) {
+	data := s.getFieldByName("SmtpchkParams")
+	if data == nil {
+		return &types.OptionSmtpchk{
+			NoOption: false,
+		}, nil
+	}
+	params := data.(models.SmtpchkParams)
+	return &types.OptionSmtpchk{
+		NoOption: false,
+		Hello:    params.Hello,
+		Domain:   params.Domain,
+	}, nil
+}
+
+func (s *SectionObject) getMysqlCheckData() (common.ParserData, error) {
+	data := s.getFieldByName("MysqlCheckParams")
+	if data == nil {
+		return &types.OptionMysqlCheck{
+			NoOption: false,
+		}, nil
+	}
+	params := data.(models.MysqlCheckParams)
+	return &types.OptionMysqlCheck{
+		NoOption:      false,
+		ClientVersion: params.ClientVersion,
+		User:          params.Username,
+	}, nil
+}
+
+func (s *SectionObject) getPgsqlCheckData() (common.ParserData, error) {
+	data := s.getFieldByName("PgsqlCheckParams")
+	if data == nil {
+		return errors.New("adv_check value pgsql-check requires pgsql_check_params"), nil
+	}
+	params := data.(models.PgsqlCheckParams)
+	if params.Username == "" {
+		return errors.New("adv_check value pgsql-check requires username in pgsql_check_params"), nil
+	}
+	return &types.OptionPgsqlCheck{
+		NoOption: false,
+		User:     params.Username,
+	}, nil
+}
+
+func (s *SectionObject) getFieldByName(fieldName string) interface{} {
+	objValue := reflect.ValueOf(s.Object).Elem()
+	elem := objValue.FieldByName(fieldName)
+	if elem.IsNil() {
+		return nil
+	}
+	return elem.Elem().Interface()
 }
 
 func (s *SectionObject) stickTable(field reflect.Value) error {
