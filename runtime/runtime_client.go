@@ -551,6 +551,25 @@ func (c *Client) ShowMapEntries(name string) (models.MapEntries, error) {
 	return nil, lastErr
 }
 
+//AddMapPayload adds multiple entries to the map file
+func (c *Client) AddMapPayload(name, payload string) error {
+	name, err := c.GetMapsPath(name)
+	if err != nil {
+		return err
+	}
+	var lastErr error
+	for _, runtime := range c.runtimes {
+		err := runtime.AddMapPayload(name, payload)
+		if err != nil {
+			lastErr = err
+		}
+	}
+	if lastErr != nil {
+		return lastErr
+	}
+	return nil
+}
+
 //AddMapEntry adds an entry into the map file
 func (c *Client) AddMapEntry(name, key, value string) error {
 	name, err := c.GetMapsPath(name)

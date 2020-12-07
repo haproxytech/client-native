@@ -69,6 +69,8 @@ type IRuntimeClient interface {
 	ClearMap(name string, forceDelete bool) error
 	//ShowMapEntries list all map entries by map file name
 	ShowMapEntries(name string) (models.MapEntries, error)
+	// AddMapPayload adds multiple entries to the map file
+	AddMapPayload(name, payload string) error
 	//AddMapEntry adds an entry into the map file
 	AddMapEntry(name, key, value string) error
 	//GetMapEntry returns one map runtime setting
@@ -81,4 +83,3 @@ type IRuntimeClient interface {
 	// ParseMapEntriesFromFile reads entries from file
 	ParseMapEntriesFromFile(inputFile io.Reader, hasId bool) models.MapEntries
 }
-

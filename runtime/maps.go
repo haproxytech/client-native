@@ -203,6 +203,17 @@ func (s *SingleRuntime) AddMapEntry(name, key, value string) error {
 	return nil
 }
 
+// AddMapPayload adds multiple entries to the map file
+// payload param is a multi-line string where each line is a key/value pair
+func (s *SingleRuntime) AddMapPayload(name, payload string) error {
+	cmd := fmt.Sprintf("add map %s %s", name, payload)
+	err := s.Execute(cmd)
+	if err != nil {
+		return fmt.Errorf("%s %w", err.Error(), native_errors.ErrGeneral)
+	}
+	return nil
+}
+
 // GetMapEntry returns one map runtime setting
 func (s *SingleRuntime) GetMapEntry(name, id string) (*models.MapEntry, error) {
 	cmd := fmt.Sprintf("get map %s %s", name, id)
