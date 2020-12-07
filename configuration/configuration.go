@@ -360,8 +360,6 @@ func (s *SectionParser) checkSpecialFields(fieldName string) (match bool, data i
 		return true, s.monitorURI()
 	case "StatsOptions":
 		return true, s.statsOptions()
-	case "Httpchk":
-		return true, s.httpchk()
 	case "HTTPCheck":
 		return true, s.httpCheck()
 	case "Forwardfor":
@@ -638,6 +636,10 @@ func (s *SectionParser) advCheck() interface{} {
 		return data
 	}
 
+	if found, data := s.getHttpchkData(); found {
+		return data
+	}
+
 	return nil
 }
 
@@ -727,6 +729,23 @@ func (s *SectionParser) getRedisCheckData() (found bool, data interface{}) {
 		}
 	}
 	return false, nil
+}
+
+func (s *SectionParser) getHttpchkData() (found bool, data interface{}) {
+	data, err := s.get("option httpchk", false)
+	if err == nil {
+		d := data.(*types.OptionHttpchk)
+		if !d.NoOption {
+			s.setField("HttpchkParams", &models.HttpchkParams{
+				Method:  d.Method,
+				URI:     d.URI,
+				Version: d.Version,
+			})
+			return true, "httpchk"
+		}
+	}
+	return false, nil
+
 }
 
 func (s *SectionParser) setField(fieldName string, data interface{}) {
@@ -1044,19 +1063,6 @@ func (s *SectionParser) httpCheck() interface{} {
 	return nil
 }
 
-func (s *SectionParser) httpchk() interface{} {
-	data, err := s.get("option httpchk", false)
-	if err != nil {
-		return nil
-	}
-	d := data.(*types.OptionHttpchk)
-	return &models.Httpchk{
-		Method:  d.Method,
-		URI:     d.URI,
-		Version: d.Version,
-	}
-}
-
 func (s *SectionParser) statsOptions() interface{} {
 	data, err := s.get("stats", false)
 	if err != nil {
@@ -1201,8 +1207,6 @@ func (s *SectionObject) checkSpecialFields(fieldName string, field reflect.Value
 		return true, s.monitorFail(field)
 	case "StatsOptions":
 		return true, s.statsOptions(field)
-	case "Httpchk":
-		return true, s.httpchk(field)
 	case "HTTPCheck":
 		return true, s.httpCheck(field)
 	case "Forwardfor":
@@ -1595,6 +1599,9 @@ func (s *SectionObject) resetCheckOptions() error {
 	if err := s.set("option redis-check", nil); err != nil {
 		return err
 	}
+	if err := s.set("option httpchk", nil); err != nil {
+		return err
+	}
 	return nil
 }
 
@@ -1606,6 +1613,8 @@ func (s *SectionObject) getCheckData(pName string) (common.ParserData, error) {
 		return s.getMysqlCheckData()
 	case "option pgsql-check":
 		return s.getPgsqlCheckData()
+	case "option httpchk":
+		return s.getHTTPChkData()
 	default:
 		return &types.SimpleOption{
 			NoOption: false,
@@ -1655,6 +1664,22 @@ func (s *SectionObject) getPgsqlCheckData() (common.ParserData, error) {
 	return &types.OptionPgsqlCheck{
 		NoOption: false,
 		User:     params.Username,
+	}, nil
+}
+
+func (s *SectionObject) getHTTPChkData() (common.ParserData, error) {
+	data := s.getFieldByName("HttpchkParams")
+	if data == nil {
+		return &types.OptionHttpchk{
+			NoOption: false,
+		}, nil
+	}
+	params := data.(models.HttpchkParams)
+	return &types.OptionHttpchk{
+		NoOption: false,
+		Method:   params.Method,
+		Version:  params.Version,
+		URI:      params.URI,
 	}, nil
 }
 
@@ -2175,27 +2200,6 @@ func (s *SectionObject) httpCheck(field reflect.Value) error {
 		}
 
 		if err := s.set("http-check", d); err != nil {
-			return err
-		}
-	}
-	return nil
-}
-
-func (s *SectionObject) httpchk(field reflect.Value) error {
-	if s.Section == parser.Backends || s.Section == parser.Defaults {
-		if valueIsNil(field) {
-			if err := s.set("option httpchk", nil); err != nil {
-				return err
-			}
-			return nil
-		}
-		hc := field.Elem().Interface().(models.Httpchk)
-		d := &types.OptionHttpchk{
-			Method:  hc.Method,
-			Version: hc.Version,
-			URI:     hc.URI,
-		}
-		if err := s.set("option httpchk", d); err != nil {
 			return err
 		}
 	}

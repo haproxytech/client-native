@@ -44,11 +44,14 @@ func TestGetBackends(t *testing.T) {
 		if b.BindProcess != "all" {
 			t.Errorf("%v: BindProcess not all: %v", b.Name, b.BindProcess)
 		}
-		if b.Httpchk.Method != "HEAD" {
-			t.Errorf("%v: Httpchk.Method not HEAD: %v", b.Name, b.Httpchk.Method)
+		if b.AdvCheck != "httpchk" {
+			t.Errorf("%v: AdvCheck.Method not HEAD: %v", b.Name, b.AdvCheck)
 		}
-		if b.Httpchk.URI != "/" {
-			t.Errorf("%v: Httpchk.URI not HEAD: %v", b.Name, b.Httpchk.URI)
+		if b.HttpchkParams.Method != "HEAD" {
+			t.Errorf("%v: HttpchkParams.Method not HEAD: %v", b.Name, b.HttpchkParams.Method)
+		}
+		if b.HttpchkParams.URI != "/" {
+			t.Errorf("%v: HttpchkParams.URI not HEAD: %v", b.Name, b.HttpchkParams.URI)
 		}
 		if b.Mode != "http" {
 			t.Errorf("%v: Mode not http: %v", b.Name, b.Mode)
@@ -120,11 +123,14 @@ func TestGetBackend(t *testing.T) {
 	if b.BindProcess != "all" {
 		t.Errorf("%v: BindProcess not all: %v", b.Name, b.BindProcess)
 	}
-	if b.Httpchk.Method != "HEAD" {
-		t.Errorf("%v: Httpchk.Method not HEAD: %v", b.Name, b.Httpchk.Method)
+	if b.AdvCheck != "httpchk" {
+		t.Errorf("%v: AdvCheck.Method not HEAD: %v", b.Name, b.AdvCheck)
 	}
-	if b.Httpchk.URI != "/" {
-		t.Errorf("%v: Httpchk.URI not HEAD: %v", b.Name, b.Httpchk.URI)
+	if b.HttpchkParams.Method != "HEAD" {
+		t.Errorf("%v: HttpchkParams.Method not HEAD: %v", b.Name, b.HttpchkParams.Method)
+	}
+	if b.HttpchkParams.URI != "/" {
+		t.Errorf("%v: HttpchkParams.URI not HEAD: %v", b.Name, b.HttpchkParams.URI)
 	}
 	if b.Mode != "http" {
 		t.Errorf("%v: Mode not http: %v", b.Name, b.Mode)
@@ -273,113 +279,95 @@ func TestCreateEditDeleteBackend(t *testing.T) {
 	e := int64(1200000)
 	kl := int64(128)
 	s := int64(25600)
-	b = &models.Backend{
-		Name: "created",
-		Mode: "http",
-		Balance: &models.Balance{
-			Algorithm: &balanceAlgorithm,
-			URILen:    10,
-			URIDepth:  25,
-		},
-		BindProcess: "3",
-		Cookie: &models.Cookie{
-			Domains: []*models.Domain{
-				&models.Domain{Value: "dom1"},
-				&models.Domain{Value: "dom3"},
+	backends := []*models.Backend{
+		{
+			Name: "created",
+			Mode: "http",
+			Balance: &models.Balance{
+				Algorithm: &balanceAlgorithm,
+				URILen:    10,
+				URIDepth:  25,
 			},
-			Dynamic:  true,
-			Httponly: true,
-			Indirect: false,
-			Maxidle:  150,
-			Maxlife:  100,
-			Name:     &cookieName,
-			Nocache:  false,
-			Postonly: false,
-			Preserve: true,
-			Secure:   true,
-			Type:     "rewrite",
-		},
-		HTTPConnectionMode: "httpclose",
-		ConnectTimeout:     &tOut,
-		StickTable: &models.BackendStickTable{
-			Expire: &e,
-			Keylen: &kl,
-			Size:   &s,
-			Store:  "gpc0,http_req_rate(40s)",
-			Type:   "string",
-		},
-		AdvCheck: "mysql-check",
-		MysqlCheckParams: &models.MysqlCheckParams{
-			Username:      "user",
-			ClientVersion: "pre-41",
-		},
-	}
-
-	err = client.EditBackend("created", b, "", version)
-	if err != nil {
-		t.Error(err.Error())
-	} else {
-		version++
-	}
-
-	v, backend, err = client.GetBackend("created", "")
-	if err != nil {
-		t.Error(err.Error())
-	}
-
-	if !compareBackends(backend, b, t) {
-		fmt.Printf("Edited bck: %v\n", backend)
-		fmt.Printf("Given bck: %v\n", b)
-		t.Error("Edited backend not equal to given backend")
-	}
-
-	if v != version {
-		t.Errorf("Version %v returned, expected %v", v, version)
-	}
-
-	// TestSecondEdit
-	tOut = int64(15)
-	b = &models.Backend{
-		Name: "created",
-		Mode: "http",
-		Balance: &models.Balance{
-			Algorithm: &balanceAlgorithm,
-		},
-		Cookie: &models.Cookie{
-			Domains: []*models.Domain{
-				&models.Domain{Value: "dom1"},
-				&models.Domain{Value: "dom2"},
+			BindProcess: "3",
+			Cookie: &models.Cookie{
+				Domains: []*models.Domain{
+					{Value: "dom1"},
+					{Value: "dom3"},
+				},
+				Dynamic:  true,
+				Httponly: true,
+				Indirect: false,
+				Maxidle:  150,
+				Maxlife:  100,
+				Name:     &cookieName,
+				Nocache:  false,
+				Postonly: false,
+				Preserve: true,
+				Secure:   true,
+				Type:     "rewrite",
 			},
-			Name: &cookieName,
+			HTTPConnectionMode: "httpclose",
+			ConnectTimeout:     &tOut,
+			StickTable: &models.BackendStickTable{
+				Expire: &e,
+				Keylen: &kl,
+				Size:   &s,
+				Store:  "gpc0,http_req_rate(40s)",
+				Type:   "string",
+			},
+			AdvCheck: "mysql-check",
+			MysqlCheckParams: &models.MysqlCheckParams{
+				Username:      "user",
+				ClientVersion: "pre-41",
+			},
 		},
-		ConnectTimeout: &tOut,
-		StickTable:     &models.BackendStickTable{},
-		AdvCheck:       "pgsql-check",
-		PgsqlCheckParams: &models.PgsqlCheckParams{
-			Username: "user",
+		{
+			Name: "created",
+			Mode: "http",
+			Balance: &models.Balance{
+				Algorithm: &balanceAlgorithm,
+			},
+			Cookie: &models.Cookie{
+				Domains: []*models.Domain{
+					{Value: "dom1"},
+					{Value: "dom2"},
+				},
+				Name: &cookieName,
+			},
+			ConnectTimeout: &tOut,
+			StickTable:     &models.BackendStickTable{},
+			AdvCheck:       "pgsql-check",
+			PgsqlCheckParams: &models.PgsqlCheckParams{
+				Username: "user",
+			},
+		},
+		{
+			Name: "created",
+			Mode: "http",
+			Balance: &models.Balance{
+				Algorithm: &balanceAlgorithm,
+			},
+			Cookie: &models.Cookie{
+				Domains: []*models.Domain{
+					{Value: "dom4"},
+					{Value: "dom5"},
+				},
+				Name: &cookieName,
+			},
+			ConnectTimeout: &tOut,
+			StickTable:     &models.BackendStickTable{},
+			AdvCheck:       "httpchk",
+			HttpchkParams: &models.HttpchkParams{
+				Method: "HEAD",
+				URI:    "/",
+			},
 		},
 	}
 
-	err = client.EditBackend("created", b, "", version)
-	if err != nil {
-		t.Error(err.Error())
-	} else {
-		version++
-	}
-
-	v, backend, err = client.GetBackend("created", "")
-	if err != nil {
-		t.Error(err.Error())
-	}
-
-	if !compareBackends(backend, b, t) {
-		fmt.Printf("Edited bck: %v\n", backend)
-		fmt.Printf("Given bck: %v\n", b)
-		t.Error("Edited backend not equal to given backend")
-	}
-
-	if v != version {
-		t.Errorf("Version %v returned, expected %v", v, version)
+	for i, backend := range backends {
+		if err := testBackendUpdate(backend, t); err != nil {
+			t.Errorf("failed update for backend %d: %v", i, err)
+		}
 	}
 
 	// TestDeleteBackend
@@ -416,6 +404,31 @@ func TestCreateEditDeleteBackend(t *testing.T) {
 		t.Error("Should throw error, non existant bck")
 		version++
 	}
+}
+
+func testBackendUpdate(b *models.Backend, t *testing.T) error {
+	err := client.EditBackend("created", b, "", version)
+	if err != nil {
+		t.Error(err.Error())
+	} else {
+		version++
+	}
+
+	v, backend, err := client.GetBackend("created", "")
+	if err != nil {
+		return err
+	}
+
+	if !compareBackends(backend, b, t) {
+		fmt.Printf("Edited bck: %v\n", backend)
+		fmt.Printf("Given bck: %v\n", b)
+		return fmt.Errorf("Edited backend not equal to given backend")
+	}
+
+	if v != version {
+		return fmt.Errorf("Version %v returned, expected %v", v, version)
+	}
+	return nil
 }
 
 func compareBackends(x, y *models.Backend, t *testing.T) bool {
@@ -511,12 +524,12 @@ func compareBackends(x, y *models.Backend, t *testing.T) bool {
 	x.DefaultServer = nil
 	y.DefaultServer = nil
 
-	if !reflect.DeepEqual(x.Httpchk, y.Httpchk) {
+	if !reflect.DeepEqual(x.HttpchkParams, y.HttpchkParams) {
 		return false
 	}
 
-	x.Httpchk = nil
-	y.Httpchk = nil
+	x.HttpchkParams = nil
+	y.HttpchkParams = nil
 
 	if !reflect.DeepEqual(x.StickTable, y.StickTable) {
 		return false
