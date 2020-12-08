@@ -499,12 +499,9 @@ func (c *Client) ClearMap(name string, forceDelete bool) error {
 
 	var lastErr error
 	for _, runtime := range c.runtimes {
-		m, _ := runtime.GetMap(name)
-		if m != nil {
-			err := runtime.ClearMap(name)
-			if err != nil {
-				lastErr = err
-			}
+		err := runtime.ClearMap(name)
+		if err != nil {
+			lastErr = err
 		}
 	}
 	if lastErr != nil {
@@ -616,12 +613,9 @@ func (c *Client) SetMapEntry(name, id, value string) error {
 	}
 	var lastErr error
 	for _, runtime := range c.runtimes {
-		m, _ := runtime.GetMapEntry(name, id)
-		if m != nil {
-			err := runtime.SetMapEntry(name, id, value)
-			if err != nil {
-				lastErr = err
-			}
+		err := runtime.SetMapEntry(name, id, value)
+		if err != nil {
+			lastErr = err
 		}
 	}
 	if lastErr != nil {
