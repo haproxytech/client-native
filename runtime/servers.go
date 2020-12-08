@@ -20,6 +20,7 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/haproxytech/client-native/v2/misc"
 	"github.com/haproxytech/models/v2"
 )
 
@@ -170,15 +171,7 @@ func parseRuntimeServer(line string) *models.RuntimeServer {
 		port = &p
 	}
 
-	var admState string
-	switch fields[6] {
-	case "0":
-		admState = "ready"
-	case "1", "2", "4", "20", "40":
-		admState = "maint"
-	case "8", "10":
-		admState = "drain"
-	}
+	admState, _ := misc.GetServerAdminState(fields[6])
 
 	var opState string
 	switch fields[5] {
