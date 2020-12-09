@@ -149,7 +149,7 @@ func (c *Client) GetParser(transaction string) (*parser.Parser, error) {
 //AddParser adds parser to parser map
 func (c *Client) AddParser(transaction string) error {
 	if transaction == "" {
-		return NewConfError(ErrValidationError, fmt.Sprintf("Not a valid transaction"))
+		return NewConfError(ErrValidationError, "Not a valid transaction")
 	}
 	_, ok := c.parsers[transaction]
 	if ok {
@@ -181,7 +181,7 @@ func (c *Client) AddParser(transaction string) error {
 //DeleteParser deletes parser from parsers map
 func (c *Client) DeleteParser(transaction string) error {
 	if transaction == "" {
-		return NewConfError(ErrValidationError, fmt.Sprintf("Not a valid transaction"))
+		return NewConfError(ErrValidationError, "Not a valid transaction")
 	}
 	_, ok := c.parsers[transaction]
 	if !ok {
@@ -194,7 +194,7 @@ func (c *Client) DeleteParser(transaction string) error {
 //CommitParser commits transaction parser, deletes it from parsers map, and replaces master Parser
 func (c *Client) CommitParser(transaction string) error {
 	if transaction == "" {
-		return NewConfError(ErrValidationError, fmt.Sprintf("Not a valid transaction"))
+		return NewConfError(ErrValidationError, "Not a valid transaction")
 	}
 	p, ok := c.parsers[transaction]
 	if !ok {
@@ -1018,7 +1018,7 @@ func (s *SectionParser) redispatch() interface{} {
 	if d.Interval != nil {
 		br.Interval = *d.Interval
 	}
-	if d.NoOption == true {
+	if d.NoOption {
 		d := "disabled"
 		br.Enabled = &d
 	} else {

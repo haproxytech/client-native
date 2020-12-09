@@ -47,7 +47,7 @@ func parseInfo(info string, socketPath string) *models.ProcessInfoItem {
 			data.Version = fields[3]
 		case "2":
 			d := strfmt.Date{}
-			err := d.Scan(strings.Replace(fields[3], "/", "-", -1))
+			err := d.Scan(strings.ReplaceAll(fields[3], "/", "-"))
 			if err == nil {
 				data.ReleaseDate = d
 			}

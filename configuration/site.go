@@ -360,15 +360,11 @@ func (c *Client) EditSite(name string, data *models.Site, transactionID string, 
 				if f.Name == name {
 					continue
 				}
-				if _, ok := danglingBcks[f.DefaultBackend]; ok {
-					delete(danglingBcks, f.DefaultBackend)
-				}
+				delete(danglingBcks, f.DefaultBackend)
 				_, ubs, err := c.GetBackendSwitchingRules(f.Name, t)
 				if err == nil {
 					for _, ub := range ubs {
-						if _, ok := danglingBcks[ub.Name]; ok {
-							delete(danglingBcks, ub.Name)
-						}
+						delete(danglingBcks, ub.Name)
 					}
 				}
 			}

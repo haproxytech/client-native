@@ -101,7 +101,7 @@ func (c *Client) InitWithMasterSocket(masterSocketPath string, nbproc int) error
 		nbproc = 1
 	}
 	if masterSocketPath == "" {
-		return fmt.Errorf("Master socket not configured")
+		return fmt.Errorf("master socket not configured")
 	}
 	c.runtimes = make([]SingleRuntime, nbproc)
 	for i := 1; i <= nbproc; i++ {

@@ -91,7 +91,7 @@ func (s *SingleRuntime) readFromSocket(command string) (string, error) {
 	buf := make([]byte, bufferSize)
 	var data strings.Builder
 	for {
-		n, err := api.Read(buf[:])
+		n, err := api.Read(buf)
 		if err != nil {
 			break
 		}
@@ -121,7 +121,7 @@ func (s *SingleRuntime) readFromSocketClean(command string) (string, error) {
 	buf := make([]byte, 1024)
 	var data strings.Builder
 	for {
-		n, err := api.Read(buf[:])
+		n, err := api.Read(buf)
 		if err != nil {
 			break
 		}
@@ -170,11 +170,11 @@ func (s *SingleRuntime) ExecuteWithResponse(command string) (string, error) {
 
 func (s *SingleRuntime) executeRaw(command string, retry int) (string, error) {
 	response := make(chan TaskResponse)
-	Task := Task{
+	task := Task{
 		command:  command,
 		response: response,
 	}
-	s.jobs <- Task
+	s.jobs <- task
 	select {
 	case rsp := <-response:
 		if rsp.err != nil && retry > 0 {

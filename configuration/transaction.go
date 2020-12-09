@@ -360,7 +360,7 @@ func (c *Client) createTransactionFiles(transactionID string) error {
 		}
 	} else {
 		if !transDir.Mode().IsDir() {
-			return fmt.Errorf("Transaction dir %s is a file", c.TransactionDir)
+			return fmt.Errorf("transaction dir %s is a file", c.TransactionDir)
 		}
 	}
 

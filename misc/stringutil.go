@@ -59,13 +59,13 @@ func CamelCase(fieldName string, initCase bool) string {
 		}
 	}
 	// special cases
-	n = strings.Replace(n, "Http", "HTTP", -1)
-	n = strings.Replace(n, "Uri", "URI", -1)
-	n = strings.Replace(n, "http", "HTTP", -1)
-	n = strings.Replace(n, "tcp", "TCP", -1)
-	n = strings.Replace(n, "Tcp", "TCP", -1)
-	n = strings.Replace(n, "Id", "ID", -1)
-	n = strings.Replace(n, "Tls", "TLS", -1)
+	n = strings.ReplaceAll(n, "Http", "HTTP")
+	n = strings.ReplaceAll(n, "Uri", "URI")
+	n = strings.ReplaceAll(n, "http", "HTTP")
+	n = strings.ReplaceAll(n, "tcp", "TCP")
+	n = strings.ReplaceAll(n, "Tcp", "TCP")
+	n = strings.ReplaceAll(n, "Id", "ID")
+	n = strings.ReplaceAll(n, "Tls", "TLS")
 	return n
 }
 
@@ -133,7 +133,7 @@ func DashCase(fieldName string) string {
 	}
 	n = strings.ToLower(n)
 	// special case
-	n = strings.Replace(n, "httpuri", "http-uri", -1)
+	n = strings.ReplaceAll(n, "httpuri", "http-uri")
 	return n
 }
 
@@ -143,7 +143,7 @@ func ParseTimeout(tOut string) *int64 {
 		v, _ = strconv.ParseInt(strings.TrimSuffix(tOut, "ms"), 10, 64)
 	} else if strings.HasSuffix(tOut, "s") {
 		v, _ = strconv.ParseInt(strings.TrimSuffix(tOut, "s"), 10, 64)
-		v = v * 1000
+		v *= 1000
 	} else if strings.HasSuffix(tOut, "m") {
 		v, _ = strconv.ParseInt(strings.TrimSuffix(tOut, "m"), 10, 64)
 		v = v * 1000 * 60
@@ -166,7 +166,7 @@ func ParseSize(size string) *int64 {
 	var v int64
 	if strings.HasSuffix(size, "k") {
 		v, _ = strconv.ParseInt(strings.TrimSuffix(size, "k"), 10, 64)
-		v = v * 1024
+		v *= 1024
 	} else if strings.HasSuffix(size, "m") {
 		v, _ = strconv.ParseInt(strings.TrimSuffix(size, "m"), 10, 64)
 		v = v * 1024 * 1024
@@ -195,7 +195,7 @@ func RandomString(n int) string {
 	b := make([]rune, n)
 	size := len(chars)
 	for i := range b {
-		b[i] = chars[rand.Intn(size)]
+		b[i] = chars[rand.Intn(size)] //nolint:gosec
 	}
 	return string(b)
 }

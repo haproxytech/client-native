@@ -344,7 +344,7 @@ func (s *Service) serverExists(server ServiceServer) bool {
 
 func (s *Service) setServer(server ServiceServer) error {
 	for _, sNode := range s.nodes {
-		if sNode.disabled == true {
+		if sNode.disabled {
 			sNode.modified = true
 			sNode.disabled = false
 			sNode.address = server.Address
