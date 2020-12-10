@@ -233,7 +233,7 @@ func ParseGlobalSection(p *parser.Parser) (*models.Global, error) {
 		dhParam = dhParamsParser.Value
 	}
 
-	data, err = p.Get(parser.Global, parser.GlobalSectionName, "ssl-mode-async")
+	data, _ = p.Get(parser.Global, parser.GlobalSectionName, "ssl-mode-async")
 	sslModeAsync := "disabled"
 	if _, ok := data.(*types.SslModeAsync); ok {
 		sslModeAsync = "enabled"
