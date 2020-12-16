@@ -5,12 +5,12 @@ import (
 	"bytes"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"mime/multipart"
 	"os"
 	"path/filepath"
 	"strings"
 
+	"github.com/google/renameio"
 	native_errors "github.com/haproxytech/client-native/v2/errors"
 	"github.com/haproxytech/models/v2"
 )
@@ -35,25 +35,16 @@ func CreateMap(name string, file multipart.File) (*models.Map, error) {
 		return nil, fmt.Errorf("file %s %w. You should delete an existing file first", name, native_errors.ErrAlreadyExists)
 	}
 
-	dst, err := os.Create(name)
-	if err != nil {
-		return nil, fmt.Errorf("file could not be created %s %w", err, native_errors.ErrGeneral)
-	}
-	defer dst.Close()
-
 	var buf bytes.Buffer
-	_, err = io.Copy(&buf, file)
+	_, err := io.Copy(&buf, file)
+	if err != nil {
+		return nil, err
+	}
+	err = renameio.WriteFile(name, buf.Bytes(), 0644)
 	if err != nil {
 		return nil, err
 	}
 
-	entries := buf.String()
-	err = ioutil.WriteFile(name, []byte(entries), 0644)
-	if err != nil {
-		return nil, err
-	}
-
-	buf.Reset()
 	return &models.Map{File: name}, nil
 }
 
