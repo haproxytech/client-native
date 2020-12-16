@@ -16,7 +16,10 @@
 package misc
 
 import (
+	"fmt"
 	"math/rand"
+	"path/filepath"
+	"regexp"
 	"strconv"
 	"strings"
 )
@@ -198,4 +201,34 @@ func RandomString(n int) string {
 		b[i] = chars[rand.Intn(size)] //nolint:gosec
 	}
 	return string(b)
+}
+
+//SanitizeFilename collapses paths and replaces most non-alphanumeric characters with underscores
+func SanitizeFilename(name string) string {
+	var ext string
+
+	// save the extension if possible
+	ext = filepath.Ext(name)
+	name = name[:len(name)-len(ext)]
+
+	if name != "" {
+		// collapse paths
+		name = filepath.Clean(name)
+
+	}
+	// leave all alphanumeric and 3 additional ones
+	// # _ -
+	reg := regexp.MustCompile("[^a-zA-Z0-9#_\\-]+")
+	name = reg.ReplaceAllString(name, "_")
+
+	if ext != "" {
+		ext = reg.ReplaceAllString(ext[1:], "_")
+		if name != "" {
+			return fmt.Sprintf("%s.%s", name, ext)
+		} else {
+			return fmt.Sprintf("_%s", ext)
+		}
+	}
+
+	return name
 }

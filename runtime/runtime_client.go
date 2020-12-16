@@ -26,6 +26,7 @@ import (
 
 	"github.com/google/go-cmp/cmp"
 	native_errors "github.com/haproxytech/client-native/v2/errors"
+	"github.com/haproxytech/client-native/v2/misc"
 	"github.com/haproxytech/models/v2"
 )
 
@@ -162,6 +163,9 @@ func (c *Client) GetVersion() (*HAProxyVersion, error) {
 
 //GetMapsPath returns runtime map file path or map id
 func (c *Client) GetMapsPath(name string) (string, error) {
+
+	name = misc.SanitizeFilename(name)
+
 	//we can refer to runtime map with either id or path
 	if strings.HasPrefix(name, "#") { //id
 		return name, nil

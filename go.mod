@@ -9,6 +9,7 @@ require (
 	github.com/go-openapi/spec v0.19.7 // indirect
 	github.com/go-openapi/strfmt v0.19.5
 	github.com/google/go-cmp v0.4.0
+	github.com/google/renameio v0.1.1-0.20200217212219-353f81969824
 	github.com/google/uuid v1.1.1
 	github.com/haproxytech/config-parser/v3 v3.0.0-rc1.0.20201208104025-93bb7f1e7ff4
 	github.com/haproxytech/models/v2 v2.1.1-0.20201208104308-ea0dd4a520f9
