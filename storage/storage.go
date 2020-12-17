@@ -17,9 +17,11 @@ package storage
 
 import (
 	"fmt"
+	"io"
 	"io/ioutil"
 	"os"
 	"path/filepath"
+	"strings"
 
 	"github.com/google/renameio"
 	conf "github.com/haproxytech/client-native/v2/configuration"
@@ -37,6 +39,7 @@ type Storage interface {
 	Get(name string) (string, error)
 	Delete(name string) error
 	Replace(name string, config string) (string, error)
+	Create(name string, contents io.ReadCloser) (string, error)
 }
 
 type storage struct {
@@ -101,6 +104,27 @@ func (s *storage) Replace(name string, config string) (string, error) {
 		return "", err
 	}
 	err = renameio.WriteFile(f, []byte(config), 0644)
+	if err != nil {
+		return "", err
+	}
+	return f, nil
+}
+
+func (s *storage) Create(name string, readCloser io.ReadCloser) (string, error) {
+	name = misc.SanitizeFilename(name)
+	if !strings.HasSuffix(".map", name) {
+		name = fmt.Sprintf("%s.map", name)
+	}
+	f := filepath.Join(s.dirname, name)
+	if _, err := os.Stat(f); err == nil {
+		return "", conf.NewConfError(conf.ErrObjectAlreadyExists, fmt.Sprintf("file %s already exists", f))
+	}
+	b, err := ioutil.ReadAll(readCloser)
+	if err != nil {
+		return "", err
+	}
+
+	err = renameio.WriteFile(f, b, 0644)
 	if err != nil {
 		return "", err
 	}
