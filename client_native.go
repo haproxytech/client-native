@@ -20,6 +20,7 @@ import (
 
 	"github.com/haproxytech/client-native/v2/configuration"
 	"github.com/haproxytech/client-native/v2/runtime"
+	"github.com/haproxytech/client-native/v2/storage"
 )
 
 // LogFunc - default log function is from the stdlib
@@ -67,6 +68,7 @@ type IHAProxyClient interface {
 type HAProxyClient struct {
 	Configuration *configuration.Client
 	Runtime       *runtime.Client
+	MapStorage    storage.Storage
 }
 
 func (c *HAProxyClient) GetConfiguration() IConfigurationClient {
