@@ -112,7 +112,7 @@ func (s *storage) Replace(name string, config string) (string, error) {
 
 func (s *storage) Create(name string, readCloser io.ReadCloser) (string, error) {
 	name = misc.SanitizeFilename(name)
-	if !strings.HasSuffix(".map", name) {
+	if !strings.HasSuffix(name, ".map") {
 		name = fmt.Sprintf("%s.map", name)
 	}
 	f := filepath.Join(s.dirname, name)
