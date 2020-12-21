@@ -247,7 +247,11 @@ func TestMain(m *testing.M) {
 	}
 
 	defer deleteTestFile(testPath)
-	client = prepareClient(testPath)
+	client, err = prepareClient(testPath)
+	if err != nil {
+		fmt.Println("Could not prepare client:", err.Error())
+		os.Exit(1)
+	}
 
 	os.Exit(m.Run())
 }
@@ -299,8 +303,8 @@ func deleteTestFile(path string) error {
 	return nil
 }
 
-func prepareClient(path string) *Client {
-	c := Client{}
+func prepareClient(path string) (c *Client, err error) {
+	c = &Client{}
 	p := ClientParams{
 		ConfigurationFile:      path,
 		Haproxy:                "echo",
@@ -308,6 +312,6 @@ func prepareClient(path string) *Client {
 		PersistentTransactions: true,
 		TransactionDir:         "/tmp/haproxy-test",
 	}
-	c.Init(p)
-	return &c
+	err = c.Init(p)
+	return
 }

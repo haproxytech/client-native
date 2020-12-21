@@ -78,7 +78,11 @@ global
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			c := prepareClient(tt.configurationFile)
+			c, err := prepareClient(tt.configurationFile)
+			if (err != nil) != tt.wantErr {
+				t.Errorf("prepareClient error = %v, wantErr %v", err, tt.wantErr)
+				return
+			}
 			got, err := c.GetConfigurationVersion("")
 			if (err != nil) != tt.wantErr {
 				t.Errorf("Client.GetConfigurationVersion() error = %v, wantErr %v", err, tt.wantErr)
