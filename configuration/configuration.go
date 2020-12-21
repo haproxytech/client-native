@@ -17,7 +17,7 @@ package configuration
 
 import (
 	"fmt"
-	"os"
+	"os/exec"
 	"reflect"
 	"strconv"
 	"strings"
@@ -115,8 +115,8 @@ func (c *Client) Init(options ClientParams) error {
 		options.Haproxy = DefaultHaproxy
 	}
 
-	if _, err := os.Stat(options.Haproxy); err != nil {
-		return NewConfError(ErrCannotFindHAProxy, fmt.Sprintf("cannot find HAProxy at %s", c.Haproxy))
+	if err := exec.Command(options.Haproxy, "-v").Run(); err != nil {
+		return NewConfError(ErrCannotFindHAProxy, fmt.Sprintf("path to HAProxy binary not valid: %s", c.Haproxy))
 	}
 
 	c.ClientParams = options
