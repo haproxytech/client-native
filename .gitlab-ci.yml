@@ -1,0 +1,23 @@
+stages:
+  - lint
+  - test
+
+lint-commit-msg:
+  stage: lint
+  image:
+    name: haproxytech/check-commit:latest
+    entrypoint: [""]
+  tags:
+    - go
+  script:
+      - go run /check.go
+test:
+  stage: test
+  image:
+    name: golang:1.15
+    entrypoint: [""]
+  tags:
+    - go
+  script:
+    - go build -v .
+    - go test -v ./...
