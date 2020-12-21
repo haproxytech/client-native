@@ -9,11 +9,11 @@ import (
 
 func CheckOrCreateWritableDirectory(dirname string) (string, error) {
 
-	dirname = filepath.Clean(dirname)
-
 	if dirname == "" {
 		return dirname, fmt.Errorf("no storage dir or empty dirname specified")
 	}
+
+	dirname = filepath.Clean(dirname)
 
 	info, err := os.Stat(dirname)
 	if err != nil {
