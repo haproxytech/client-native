@@ -130,22 +130,22 @@ func parseStickTableEntry(output string) *models.StickTableEntry {
 			if err == nil {
 				entry.ServerID = &sID
 			}
-		case key == "gpc_0":
+		case key == "gpc0":
 			gpc0, err := strconv.ParseInt(strings.TrimSpace(kv[1]), 10, 64)
 			if err == nil {
 				entry.Gpc0 = &gpc0
 			}
-		case strings.HasPrefix(key, "gpc_0_rate("):
+		case strings.HasPrefix(key, "gpc0_rate("):
 			gpc0Rate, err := strconv.ParseInt(strings.TrimSpace(kv[1]), 10, 64)
 			if err == nil {
 				entry.Gpc0Rate = &gpc0Rate
 			}
-		case key == "gpc_1":
+		case key == "gpc1":
 			gpc1, err := strconv.ParseInt(strings.TrimSpace(kv[1]), 10, 64)
 			if err == nil {
 				entry.Gpc1 = &gpc1
 			}
-		case strings.HasPrefix(key, "gpc_1_rate("):
+		case strings.HasPrefix(key, "gpc1_rate("):
 			gpc1Rate, err := strconv.ParseInt(strings.TrimSpace(kv[1]), 10, 64)
 			if err == nil {
 				entry.Gpc1Rate = &gpc1Rate
