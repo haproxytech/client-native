@@ -305,6 +305,7 @@ func (s *Service) updateConfig() (bool, error) {
 				Address: node.address,
 				Port:    &node.port,
 				Weight:  misc.Int64P(128),
+				Check:   "enabled",
 			}
 			if node.disabled {
 				server.Maintenance = "enabled"
