@@ -144,7 +144,6 @@ func getFile(dirname, name string) (string, error) {
 }
 
 func remove(name string) error {
-	name = misc.SanitizeFilename(name)
 	if name == "" {
 		return conf.NewConfError(conf.ErrObjectDoesNotExist, fmt.Sprintf("file %s doesn't exist", name))
 	}
