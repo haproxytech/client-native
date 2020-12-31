@@ -21,18 +21,20 @@ func CheckOrCreateWritableDirectory(dirname string) (string, error) {
 			// try to create the directory
 			err = os.MkdirAll(dirname, 0750)
 			if err != nil {
-				return "", fmt.Errorf("missing directory, unable to create")
+				return "", fmt.Errorf("missing directory, unable to create: %w", err)
 			}
-		} else { // file or directory exists, make sure it's a directory we have access to
-			if !info.IsDir() {
-				return "", fmt.Errorf("specified storage directory %s already exists and is a file, refusing to overwrite", dirname)
-			} else {
-				f, err := ioutil.TempFile(dirname, ".dataplaneapi")
-				if err != nil {
-					return "", fmt.Errorf("error using storage directory %s", dirname)
-				}
-				os.Remove(f.Name())
+		} else {
+			return "", fmt.Errorf("accessing directory: %w", err)
+		}
+	} else { // file or directory exists, make sure it's a directory we have access to
+		if !info.IsDir() {
+			return "", fmt.Errorf("specified storage directory %s already exists and is a file, refusing to overwrite", dirname)
+		} else {
+			f, err := ioutil.TempFile(dirname, ".dataplaneapi")
+			if err != nil {
+				return "", fmt.Errorf("error using storage directory: %w", err)
 			}
+			os.Remove(f.Name())
 		}
 	}
 	return dirname, nil

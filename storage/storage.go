@@ -56,7 +56,7 @@ type storage struct {
 func New(dirname string, fileType StorageFileType) (Storage, error) {
 	dirname, err := misc.CheckOrCreateWritableDirectory(dirname)
 	if err != nil {
-		return nil, fmt.Errorf("no storage dir specified")
+		return nil, err
 	}
 	switch fileType {
 	case MapsType, SSLType:
