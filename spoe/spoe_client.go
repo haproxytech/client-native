@@ -53,10 +53,9 @@ func NewSpoe(params Params) (Spoe, error) {
 		return nil, err
 	}
 	c := spoeclient{}
-	files, err := c.getSpoeFiles(params.SpoeDir)
-	if err != nil {
-		return nil, err
-	}
+
+	files, _ := c.getSpoeFiles(params.SpoeDir)
+
 	prm := Params{
 		TransactionDir:         params.TransactionDir,
 		BackupsNumber:          params.BackupsNumber,
@@ -171,7 +170,7 @@ func (c *spoeclient) getSpoeFiles(dir string) ([]string, error) {
 		}
 	}
 	if len(files) == 0 {
-		return nil, fmt.Errorf("no SPOE files in dir: %s", dir)
+		return files, fmt.Errorf("no SPOE files in dir: %s", dir)
 	}
 	return files, nil
 }
