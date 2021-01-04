@@ -174,7 +174,7 @@ func (t *Transaction) commitTransaction(id string, skipVersion bool) (*models.Tr
 		os.Remove(backupToDel)
 	}
 
-	if err := t.TransactionClient.Save(transactionFile, id); err != nil {
+	if err := t.TransactionClient.Save(t.ConfigurationFile, id); err != nil {
 		t.failTransaction(id)
 		return nil, err
 	}
@@ -196,7 +196,7 @@ func (t *Transaction) commitTransaction(id string, skipVersion bool) (*models.Tr
 }
 
 func (t *Transaction) checkTransactionFile(id string) error {
-	//check only against HAProxy file
+	// check only against HAProxy file
 	_, ok := t.TransactionClient.(*Client)
 	if !ok {
 		return nil
@@ -407,7 +407,6 @@ func (t *Transaction) createTransactionFiles(transactionID string) error {
 		}
 	} else if !transDir.Mode().IsDir() {
 		return fmt.Errorf("transaction dir %s is a file", t.TransactionDir)
-
 	}
 
 	confFilePath := filepath.Join(t.TransactionDir, t.getTransactionFileName(transactionID))
