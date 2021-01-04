@@ -1,13 +1,11 @@
-package runtime
+package test
 
 import (
 	"bufio"
-	"errors"
 	"io"
 	"io/ioutil"
 	"net"
 	"os"
-	"strings"
 	"testing"
 )
 
@@ -41,7 +39,7 @@ func (haproxy *HAProxyMock) Start() {
 	haproxy.running = true
 	go func() {
 		for {
-			if !haproxy.running {
+			if haproxy.running == false {
 				return
 			}
 			conn, err := haproxy.Accept()
@@ -68,20 +66,11 @@ func (haproxy *HAProxyMock) handleConnection(conn net.Conn) {
 		r := bufio.NewReader(conn)
 		w := bufio.NewWriter(conn)
 		s, err := r.ReadString('\n')
-		if err != nil && errors.Is(err, io.EOF) {
+		if err != nil && err != io.EOF {
 			haproxy.t.Log(err)
 			return
 		}
 
-		if strings.Contains(s, "<<") {
-			r, _ := r.ReadString('\n')
-			s += r
-		}
-
-		split := strings.Split(s, ";")
-		if len(split) > 0 {
-			s = split[len(split)-1]
-		}
 		response := haproxy.responses[s]
 		_, err = w.WriteString(response)
 		if err != nil {
