@@ -218,7 +218,6 @@ func SanitizeFilename(name string) string {
 	if name != "" {
 		// collapse paths
 		name = filepath.Clean(name)
-
 	}
 	// leave all alphanumeric and 3 additional ones
 	// # _ -
