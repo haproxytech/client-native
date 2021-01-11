@@ -97,8 +97,8 @@ func (c *SingleSpoe) CheckTransactionOrVersion(transactionID string, version int
 }
 
 // HasParser checks whether transaction exists in parser
-func (c *SingleSpoe) HasParser(transaction string) bool {
-	_, ok := c.parsers[transaction]
+func (c *SingleSpoe) HasParser(transactionID string) bool {
+	_, ok := c.parsers[transactionID]
 	return ok
 }
 
@@ -119,33 +119,33 @@ func (c *SingleSpoe) GetParserTransactions() models.Transactions {
 	return transactions
 }
 
-// GetParser returns a parser for given transaction, if transaction is "", it returns "master" parser
-func (c *SingleSpoe) GetParser(transaction string) (*spoe.Parser, error) {
-	if transaction == "" {
+// GetParser returns a parser for given transactionID, if transactionID is "", it returns "master" parser
+func (c *SingleSpoe) GetParser(transactionID string) (*spoe.Parser, error) {
+	if transactionID == "" {
 		return c.Parser, nil
 	}
-	p, ok := c.parsers[transaction]
+	p, ok := c.parsers[transactionID]
 	if !ok {
-		return nil, conf.NewConfError(conf.ErrTransactionDoesNotExist, fmt.Sprintf("transaction %s does not exist", transaction))
+		return nil, conf.NewConfError(conf.ErrTransactionDoesNotExist, fmt.Sprintf("transaction %s does not exist", transactionID))
 	}
 	return p, nil
 }
 
 // AddParser adds parser to parser map
-func (c *SingleSpoe) AddParser(transaction string) error {
-	if transaction == "" {
+func (c *SingleSpoe) AddParser(transactionID string) error {
+	if transactionID == "" {
 		return conf.NewConfError(conf.ErrValidationError, "not a valid transaction")
 	}
-	_, ok := c.parsers[transaction]
+	_, ok := c.parsers[transactionID]
 	if ok {
-		return conf.NewConfError(conf.ErrTransactionAlreadyExists, fmt.Sprintf("transaction %s already exists", transaction))
+		return conf.NewConfError(conf.ErrTransactionAlreadyExists, fmt.Sprintf("transaction %s already exists", transactionID))
 	}
 
 	p := &spoe.Parser{}
 	tFile := ""
 	var err error
 	if c.Transaction.PersistentTransactions {
-		tFile, err = c.Transaction.GetTransactionFile(transaction)
+		tFile, err = c.Transaction.GetTransactionFile(transactionID)
 		if err != nil {
 			return err
 		}
@@ -155,34 +155,34 @@ func (c *SingleSpoe) AddParser(transaction string) error {
 	if err := p.LoadData(tFile); err != nil {
 		return conf.NewConfError(conf.ErrCannotReadConfFile, fmt.Sprintf("cannot read %s", tFile))
 	}
-	c.parsers[transaction] = p
+	c.parsers[transactionID] = p
 	return nil
 }
 
 // DeleteParser deletes parser from parsers map
-func (c *SingleSpoe) DeleteParser(transaction string) error {
-	if transaction == "" {
+func (c *SingleSpoe) DeleteParser(transactionID string) error {
+	if transactionID == "" {
 		return conf.NewConfError(conf.ErrValidationError, "not a valid transaction")
 	}
-	_, ok := c.parsers[transaction]
+	_, ok := c.parsers[transactionID]
 	if !ok {
-		return conf.NewConfError(conf.ErrTransactionDoesNotExist, fmt.Sprintf("transaction %s does not exist", transaction))
+		return conf.NewConfError(conf.ErrTransactionDoesNotExist, fmt.Sprintf("transaction %s does not exist", transactionID))
 	}
-	delete(c.parsers, transaction)
+	delete(c.parsers, transactionID)
 	return nil
 }
 
 // CommitParser commits transaction parser, deletes it from parsers map, and replaces master Parser
-func (c *SingleSpoe) CommitParser(transaction string) error {
-	if transaction == "" {
+func (c *SingleSpoe) CommitParser(transactionID string) error {
+	if transactionID == "" {
 		return conf.NewConfError(conf.ErrValidationError, "not a valid transaction")
 	}
-	p, ok := c.parsers[transaction]
+	p, ok := c.parsers[transactionID]
 	if !ok {
-		return conf.NewConfError(conf.ErrTransactionDoesNotExist, fmt.Sprintf("transaction %s does not exist", transaction))
+		return conf.NewConfError(conf.ErrTransactionDoesNotExist, fmt.Sprintf("transaction %s does not exist", transactionID))
 	}
 	c.Parser = p
-	delete(c.parsers, transaction)
+	delete(c.parsers, transactionID)
 	return nil
 }
 
@@ -242,10 +242,10 @@ func (c *SingleSpoe) Save(transactionFile, transactionID string) error {
 	return p.Save(transactionFile)
 }
 
-func (c *SingleSpoe) GetFailedParserTransactionVersion(id string) (int64, error) {
+func (c *SingleSpoe) GetFailedParserTransactionVersion(transactionID string) (int64, error) {
 	p := &spoe.Parser{}
-	if err := p.LoadData(id); err != nil {
-		return 0, conf.NewConfError(conf.ErrCannotReadConfFile, fmt.Sprintf("cannot read %s", id))
+	if err := p.LoadData(transactionID); err != nil {
+		return 0, conf.NewConfError(conf.ErrCannotReadConfFile, fmt.Sprintf("cannot read %s", transactionID))
 	}
 
 	data, _ := p.Get("", parser.Comments, parser.CommentsSectionName, "# _version", false)
@@ -258,12 +258,12 @@ func (c *SingleSpoe) GetFailedParserTransactionVersion(id string) (int64, error)
 }
 
 // GetVersion returns configuration file version
-func (c *SingleSpoe) GetVersion(transaction string) (int64, error) {
-	return c.getVersion(transaction)
+func (c *SingleSpoe) GetVersion(transactionID string) (int64, error) {
+	return c.getVersion(transactionID)
 }
 
-func (c *SingleSpoe) getVersion(transaction string) (int64, error) {
-	p, err := c.GetParser(transaction)
+func (c *SingleSpoe) getVersion(transactionID string) (int64, error) {
+	p, err := c.GetParser(transactionID)
 	if err != nil {
 		return 0, conf.NewConfError(conf.ErrCannotReadVersion, fmt.Sprintf("cannot read version: %s", err.Error()))
 	}
@@ -278,7 +278,7 @@ func (c *SingleSpoe) getVersion(transaction string) (int64, error) {
 	return ver.Value, nil
 }
 
-func (c *SingleSpoe) handleError(id, parentType, parentName, transaction string, implicit bool, err error) error {
+func (c *SingleSpoe) handleError(id, parentType, parentName, transactionID string, implicit bool, err error) error {
 	var e error
 	switch err {
 	case parser_errors.ErrSectionMissing:
@@ -298,7 +298,7 @@ func (c *SingleSpoe) handleError(id, parentType, parentName, transaction string,
 	}
 
 	if implicit {
-		return c.errAndDeleteTransaction(e, transaction)
+		return c.errAndDeleteTransaction(e, transactionID)
 	}
 	return e
 }

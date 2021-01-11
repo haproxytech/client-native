@@ -72,18 +72,26 @@ type IConfigurationClient interface {
 	EditBind(name string, frontend string, data *models.Bind, transactionID string, version int64) error
 	// Init initializes a Client
 	Init(options configuration.ClientParams) error
-	// GetParser returns a parser for given transaction, if transaction is "", it returns "master" parser
-	GetParser(transaction string) (*parser.Parser, error)
+	// HasParser checks whether transaction exists in parser
+	HasParser(transactionID string) bool
+	// GetParserTransactions returns parser transactions
+	GetParserTransactions() models.Transactions
+	// GetParser returns a parser for given transactionID, if transactionID is "", it returns "master" parser
+	GetParser(transactionID string) (*parser.Parser, error)
 	//AddParser adds parser to parser map
-	AddParser(transaction string) error
+	AddParser(transactionID string) error
 	//DeleteParser deletes parser from parsers map
-	DeleteParser(transaction string) error
+	DeleteParser(transactionID string) error
 	//CommitParser commits transaction parser, deletes it from parsers map, and replaces master Parser
-	CommitParser(transaction string) error
+	CommitParser(transactionID string) error
 	//InitTransactionParsers checks transactions and initializes parsers map with transactions in_progress
 	InitTransactionParsers() error
 	// GetVersion returns configuration file version
-	GetVersion(transaction string) (int64, error)
+	GetVersion(transactionID string) (int64, error)
+	IncrementVersion() error
+	LoadData(filename string) error
+	Save(transactionFile, transactionID string) error
+	GetFailedParserTransactionVersion(transactionID string) (int64, error)
 	// GetDefaultsConfiguration returns configuration version and a
 	// struct representing Defaults configuration
 	GetDefaultsConfiguration(transactionID string) (int64, *models.Defaults, error)
@@ -234,11 +242,6 @@ type IConfigurationClient interface {
 	// CreateResolver creates a resolver in configuration. One of version or transactionID is
 	// mandatory. Returns error on fail, nil on success.
 	CreateResolver(data *models.Resolver, transactionID string, version int64) error
-	//NewService creates and returns a new Service instance.
-	//name indicates the name of the service and only one Service instance with the given name can be created.
-	NewService(name string, scaling configuration.ScalingParams) (*configuration.Service, error)
-	//DeleteService removes the Service instance specified by name from the client.
-	DeleteService(name string)
 	// GetServers returns configuration version and an array of
 	// configured servers in the specified backend. Returns error on fail.
 	GetServers(backend string, transactionID string) (int64, models.Servers, error)
@@ -269,6 +272,11 @@ type IConfigurationClient interface {
 	// EditServerSwitchingRule edits a server switching rule in configuration. One of version or transactionID is
 	// mandatory. Returns error on fail, nil on success.
 	EditServerSwitchingRule(id int64, backend string, data *models.ServerSwitchingRule, transactionID string, version int64) error
+	//NewService creates and returns a new Service instance.
+	//name indicates the name of the service and only one Service instance with the given name can be created.
+	NewService(name string, scaling configuration.ScalingParams) (*configuration.Service, error)
+	//DeleteService removes the Service instance specified by name from the client.
+	DeleteService(name string)
 	// GetSites returns configuration version and an array of
 	// configured sites. Returns error on fail.
 	GetSites(transactionID string) (int64, models.Sites, error)
@@ -329,16 +337,6 @@ type IConfigurationClient interface {
 	// EditTCPResponseRule edits a tcp response rule in configuration. One of version or transactionID is
 	// mandatory. Returns error on fail, nil on success.
 	EditTCPResponseRule(id int64, backend string, data *models.TCPResponseRule, transactionID string, version int64) error
-	// GetTransactions returns an array of transactions
-	GetTransactions(status string) (*models.Transactions, error)
-	// GetTransaction returns transaction information by id
-	GetTransaction(id string) (*models.Transaction, error)
-	// StartTransaction starts a new empty lbctl transaction
-	StartTransaction(version int64) (*models.Transaction, error)
-	// CommitTransaction commits a transaction by id.
-	CommitTransaction(id string) (*models.Transaction, error)
-	// DeleteTransaction deletes a transaction by id.
-	DeleteTransaction(id string) error
 	// GetConfigurationVersion returns configuration version
 	GetConfigurationVersion(transactionID string) (int64, error)
 }

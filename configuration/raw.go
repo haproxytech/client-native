@@ -32,7 +32,7 @@ func (c *Client) GetRawConfiguration(transactionID string, version int64) (int64
 	config := c.ConfigurationFile
 	var err error
 	if transactionID != "" && version != 0 {
-		return 0, "", NewConfError(ErrBothVersionTransaction, "Both version and transaction specified, specify only one")
+		return 0, "", NewConfError(ErrBothVersionTransaction, "Both version and transactionID specified, specify only one")
 	} else if transactionID != "" {
 		config, err = c.GetTransactionFile(transactionID)
 		if err != nil {

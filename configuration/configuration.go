@@ -140,8 +140,8 @@ func (c *Client) Init(options ClientParams) error {
 }
 
 // HasParser checks whether transaction exists in parser
-func (c *Client) HasParser(transaction string) bool {
-	_, ok := c.parsers[transaction]
+func (c *Client) HasParser(transactionID string) bool {
+	_, ok := c.parsers[transactionID]
 	return ok
 }
 
@@ -162,26 +162,26 @@ func (c *Client) GetParserTransactions() models.Transactions {
 	return transactions
 }
 
-// GetParser returns a parser for given transaction, if transaction is "", it returns "master" parser
-func (c *Client) GetParser(transaction string) (*parser.Parser, error) {
-	if transaction == "" {
+// GetParser returns a parser for given transactionID, if transactionID is "", it returns "master" parser
+func (c *Client) GetParser(transactionID string) (*parser.Parser, error) {
+	if transactionID == "" {
 		return c.Parser, nil
 	}
-	p, ok := c.parsers[transaction]
+	p, ok := c.parsers[transactionID]
 	if !ok {
-		return nil, NewConfError(ErrTransactionDoesNotExist, fmt.Sprintf("Transaction %s does not exist", transaction))
+		return nil, NewConfError(ErrTransactionDoesNotExist, fmt.Sprintf("Transaction %s does not exist", transactionID))
 	}
 	return p, nil
 }
 
 //AddParser adds parser to parser map
-func (c *Client) AddParser(transaction string) error {
-	if transaction == "" {
+func (c *Client) AddParser(transactionID string) error {
+	if transactionID == "" {
 		return NewConfError(ErrValidationError, "Not a valid transaction")
 	}
-	_, ok := c.parsers[transaction]
+	_, ok := c.parsers[transactionID]
 	if ok {
-		return NewConfError(ErrTransactionAlreadyExists, fmt.Sprintf("Transaction %s already exists", transaction))
+		return NewConfError(ErrTransactionAlreadyExists, fmt.Sprintf("Transaction %s already exists", transactionID))
 	}
 
 	p := &parser.Parser{
@@ -192,7 +192,7 @@ func (c *Client) AddParser(transaction string) error {
 	tFile := ""
 	var err error
 	if c.PersistentTransactions {
-		tFile, err = c.GetTransactionFile(transaction)
+		tFile, err = c.GetTransactionFile(transactionID)
 		if err != nil {
 			return err
 		}
@@ -202,34 +202,34 @@ func (c *Client) AddParser(transaction string) error {
 	if err := p.LoadData(tFile); err != nil {
 		return NewConfError(ErrCannotReadConfFile, fmt.Sprintf("Cannot read %s", tFile))
 	}
-	c.parsers[transaction] = p
+	c.parsers[transactionID] = p
 	return nil
 }
 
 //DeleteParser deletes parser from parsers map
-func (c *Client) DeleteParser(transaction string) error {
-	if transaction == "" {
+func (c *Client) DeleteParser(transactionID string) error {
+	if transactionID == "" {
 		return NewConfError(ErrValidationError, "Not a valid transaction")
 	}
-	_, ok := c.parsers[transaction]
+	_, ok := c.parsers[transactionID]
 	if !ok {
-		return NewConfError(ErrTransactionDoesNotExist, fmt.Sprintf("Transaction %s does not exist", transaction))
+		return NewConfError(ErrTransactionDoesNotExist, fmt.Sprintf("Transaction %s does not exist", transactionID))
 	}
-	delete(c.parsers, transaction)
+	delete(c.parsers, transactionID)
 	return nil
 }
 
 //CommitParser commits transaction parser, deletes it from parsers map, and replaces master Parser
-func (c *Client) CommitParser(transaction string) error {
-	if transaction == "" {
+func (c *Client) CommitParser(transactionID string) error {
+	if transactionID == "" {
 		return NewConfError(ErrValidationError, "Not a valid transaction")
 	}
-	p, ok := c.parsers[transaction]
+	p, ok := c.parsers[transactionID]
 	if !ok {
-		return NewConfError(ErrTransactionDoesNotExist, fmt.Sprintf("Transaction %s does not exist", transaction))
+		return NewConfError(ErrTransactionDoesNotExist, fmt.Sprintf("Transaction %s does not exist", transactionID))
 	}
 	c.Parser = p
-	delete(c.parsers, transaction)
+	delete(c.parsers, transactionID)
 	return nil
 }
 
@@ -260,12 +260,12 @@ func (c *Client) InitTransactionParsers() error {
 }
 
 // GetVersion returns configuration file version
-func (c *Client) GetVersion(transaction string) (int64, error) {
-	return c.getVersion(transaction)
+func (c *Client) GetVersion(transactionID string) (int64, error) {
+	return c.getVersion(transactionID)
 }
 
-func (c *Client) getVersion(transaction string) (int64, error) {
-	p, err := c.GetParser(transaction)
+func (c *Client) getVersion(transactionID string) (int64, error) {
+	p, err := c.GetParser(transactionID)
 	if err != nil {
 		return 0, NewConfError(ErrCannotReadVersion, fmt.Sprintf("Cannot read version: %s", err.Error()))
 	}
@@ -305,10 +305,10 @@ func (c *Client) Save(transactionFile, transactionID string) error {
 	return p.Save(transactionFile)
 }
 
-func (c *Client) GetFailedParserTransactionVersion(id string) (int64, error) {
+func (c *Client) GetFailedParserTransactionVersion(transactionID string) (int64, error) {
 	p := &parser.Parser{}
-	if err := p.LoadData(id); err != nil {
-		return 0, NewConfError(ErrCannotReadConfFile, fmt.Sprintf("cannot read %s", id))
+	if err := p.LoadData(transactionID); err != nil {
+		return 0, NewConfError(ErrCannotReadConfFile, fmt.Sprintf("cannot read %s", transactionID))
 	}
 
 	data, _ := p.Get(parser.Comments, parser.CommentsSectionName, "# _version", false)
@@ -2328,7 +2328,7 @@ func (s *SectionObject) statsOptions(field reflect.Value) error {
 	return nil
 }
 
-func (c *Client) handleError(id, parentType, parentName, transaction string, implicit bool, err error) error {
+func (c *Client) handleError(id, parentType, parentName, transactionID string, implicit bool, err error) error {
 	var e error
 	if err == parser_errors.ErrSectionMissing {
 		if parentName != "" {
@@ -2347,7 +2347,7 @@ func (c *Client) handleError(id, parentType, parentName, transaction string, imp
 	}
 
 	if implicit {
-		return c.errAndDeleteTransaction(e, transaction)
+		return c.errAndDeleteTransaction(e, transactionID)
 	}
 	return e
 }
@@ -2446,7 +2446,7 @@ func (c *Client) checkSectionExists(section parser.Section, sectionName string, 
 func (c *Client) loadDataForChange(transactionID string, version int64) (*parser.Parser, string, error) {
 	t, err := c.TransactionClient.CheckTransactionOrVersion(transactionID, version)
 	if err != nil {
-		// if transaction is implicit, return err and delete transaction
+		// if transactionID is implicit, return err and delete transaction
 		if transactionID == "" && t != "" {
 			return nil, "", c.errAndDeleteTransaction(err, t)
 		}

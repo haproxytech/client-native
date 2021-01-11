@@ -32,16 +32,16 @@ import (
 )
 
 type TransactionClient interface {
-	GetVersion(id string) (int64, error)
-	AddParser(transaction string) error
-	CommitParser(transaction string) error
-	DeleteParser(transaction string) error
+	GetVersion(transactionID string) (int64, error)
+	AddParser(transactionID string) error
+	CommitParser(transactionID string) error
+	DeleteParser(transactionID string) error
 	IncrementVersion() error
 	LoadData(filename string) error
 	Save(transactionFile, transactionID string) error
-	HasParser(transaction string) bool
+	HasParser(transactionID string) bool
 	GetParserTransactions() models.Transactions
-	GetFailedParserTransactionVersion(id string) (int64, error)
+	GetFailedParserTransactionVersion(transactionID string) (int64, error)
 	CheckTransactionOrVersion(transactionID string, version int64) (string, error)
 }
 
@@ -57,19 +57,19 @@ func (t *Transaction) GetTransactions(status string) (*models.Transactions, erro
 }
 
 // GetTransaction returns transaction information by id
-func (t *Transaction) GetTransaction(id string) (*models.Transaction, error) {
+func (t *Transaction) GetTransaction(transactionID string) (*models.Transaction, error) {
 	// check if parser exists, if not, look for files
-	ok := t.TransactionClient.HasParser(id)
+	ok := t.TransactionClient.HasParser(transactionID)
 	if !ok {
-		tFile, err := t.GetTransactionFile(id)
+		tFile, err := t.GetTransactionFile(transactionID)
 		if err != nil {
-			return nil, NewConfError(ErrTransactionDoesNotExist, fmt.Sprintf("transaction %v does not exist", id))
+			return nil, NewConfError(ErrTransactionDoesNotExist, fmt.Sprintf("transaction %v does not exist", transactionID))
 		}
 		return t.parseTransactionFile(tFile), nil
 	}
-	v, _ := t.TransactionClient.GetVersion(id)
+	v, _ := t.TransactionClient.GetVersion(transactionID)
 
-	return &models.Transaction{ID: id, Status: "in_progress", Version: v}, nil
+	return &models.Transaction{ID: transactionID, Status: "in_progress", Version: v}, nil
 }
 
 // StartTransaction starts a new empty lbctl transaction
@@ -113,12 +113,12 @@ func (t *Transaction) startTransaction(version int64, skipVersion bool) (*models
 }
 
 // CommitTransaction commits a transaction by id.
-func (t *Transaction) CommitTransaction(id string) (*models.Transaction, error) {
-	return t.commitTransaction(id, false)
+func (t *Transaction) CommitTransaction(transactionID string) (*models.Transaction, error) {
+	return t.commitTransaction(transactionID, false)
 }
 
 // CommitTransaction commits a transaction by id.
-func (t *Transaction) commitTransaction(id string, skipVersion bool) (*models.Transaction, error) {
+func (t *Transaction) commitTransaction(transactionID string, skipVersion bool) (*models.Transaction, error) {
 	// check if parser exists and if transaction exists
 	t.mu.Lock()
 	defer t.mu.Unlock()
@@ -129,41 +129,41 @@ func (t *Transaction) commitTransaction(id string, skipVersion bool) (*models.Tr
 		return nil, err
 	}
 
-	tVersion, err := t.TransactionClient.GetVersion(id)
+	tVersion, err := t.TransactionClient.GetVersion(transactionID)
 	if err != nil {
 		return nil, err
 	}
 
 	if !skipVersion {
 		if tVersion != version {
-			t.failTransaction(id)
+			t.failTransaction(transactionID)
 			return nil, NewConfError(ErrVersionMismatch, fmt.Sprintf("version mismatch, transaction version: %v, configured version: %v", tVersion, version))
 		}
 	}
 
 	// create transaction file now if transactions are not persistent
 	if !t.PersistentTransactions {
-		err = t.createTransactionFiles(id)
+		err = t.createTransactionFiles(transactionID)
 		if err != nil {
 			return nil, err
 		}
 	}
 
-	transactionFile, err := t.GetTransactionFile(id)
+	transactionFile, err := t.GetTransactionFile(transactionID)
 	if err != nil {
 		return nil, err
 	}
 
 	// save to transaction file if transactions are not persistent
 	if !t.PersistentTransactions {
-		if err := t.TransactionClient.Save(transactionFile, id); err != nil {
-			t.failTransaction(id)
+		if err := t.TransactionClient.Save(transactionFile, transactionID); err != nil {
+			t.failTransaction(transactionID)
 			return nil, NewConfError(ErrErrorChangingConfig, err.Error())
 		}
 	}
 
-	if err := t.checkTransactionFile(id); err != nil {
-		t.failTransaction(id)
+	if err := t.checkTransactionFile(transactionID); err != nil {
+		t.failTransaction(transactionID)
 		return nil, err
 	}
 
@@ -174,14 +174,14 @@ func (t *Transaction) commitTransaction(id string, skipVersion bool) (*models.Tr
 		os.Remove(backupToDel)
 	}
 
-	if err := t.TransactionClient.Save(t.ConfigurationFile, id); err != nil {
-		t.failTransaction(id)
+	if err := t.TransactionClient.Save(t.ConfigurationFile, transactionID); err != nil {
+		t.failTransaction(transactionID)
 		return nil, err
 	}
 
-	_ = t.deleteTransactionFiles(id)
+	_ = t.deleteTransactionFiles(transactionID)
 
-	if err := t.TransactionClient.CommitParser(id); err != nil {
+	if err := t.TransactionClient.CommitParser(transactionID); err != nil {
 		_ = t.TransactionClient.LoadData(t.ConfigurationFile)
 		return nil, err
 	}
@@ -192,10 +192,10 @@ func (t *Transaction) commitTransaction(id string, skipVersion bool) (*models.Tr
 		}
 	}
 
-	return &models.Transaction{ID: id, Version: tVersion, Status: "success"}, nil
+	return &models.Transaction{ID: transactionID, Version: tVersion, Status: "success"}, nil
 }
 
-func (t *Transaction) checkTransactionFile(id string) error {
+func (t *Transaction) checkTransactionFile(transactionID string) error {
 	// check only against HAProxy file
 	_, ok := t.TransactionClient.(*Client)
 	if !ok {
@@ -209,7 +209,7 @@ func (t *Transaction) checkTransactionFile(id string) error {
 		return nil
 	}
 
-	transactionFile, err := t.GetTransactionFile(id)
+	transactionFile, err := t.GetTransactionFile(transactionID)
 	if err != nil {
 		return err
 	}
@@ -226,7 +226,7 @@ func (t *Transaction) checkTransactionFile(id string) error {
 
 	err = cmd.Run()
 	if err != nil {
-		return NewConfError(ErrValidationError, t.parseHAProxyCheckError(stderr.Bytes(), id))
+		return NewConfError(ErrValidationError, t.parseHAProxyCheckError(stderr.Bytes(), transactionID))
 	}
 	return nil
 }
@@ -304,18 +304,18 @@ func (t *Transaction) parseHAProxyCheckError(output []byte, id string) string {
 }
 
 // DeleteTransaction deletes a transaction by id.
-func (t *Transaction) DeleteTransaction(id string) error {
-	if id == "" {
+func (t *Transaction) DeleteTransaction(transactionID string) error {
+	if transactionID == "" {
 		return nil
 	}
 
 	if t.PersistentTransactions {
-		if err := t.deleteTransactionFiles(id); err != nil {
+		if err := t.deleteTransactionFiles(transactionID); err != nil {
 			return err
 		}
 	}
 
-	err := t.TransactionClient.DeleteParser(id)
+	err := t.TransactionClient.DeleteParser(transactionID)
 	if err != nil {
 		return err
 	}
@@ -477,8 +477,8 @@ func (t *Transaction) getBackupFile(version int64) (string, error) {
 	return "", NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("backup file for version %v does not exist", version))
 }
 
-func (t *Transaction) failTransaction(id string) {
-	configFile, err := t.GetTransactionFile(id)
+func (t *Transaction) failTransaction(transactionID string) {
+	configFile, err := t.GetTransactionFile(transactionID)
 	if err != nil {
 		return
 	}
@@ -486,31 +486,31 @@ func (t *Transaction) failTransaction(id string) {
 	if t.SkipFailedTransactions {
 		os.Remove(configFile)
 	} else {
-		t.writeFailedTransaction(id, configFile)
+		t.writeFailedTransaction(transactionID, configFile)
 	}
-	_ = t.TransactionClient.DeleteParser(id)
+	_ = t.TransactionClient.DeleteParser(transactionID)
 }
 
-func (t *Transaction) writeFailedTransaction(id, configFile string) {
+func (t *Transaction) writeFailedTransaction(transactionID, configFile string) {
 	failedDir := filepath.Join(t.TransactionDir, "failed")
 	if _, err := os.Stat(failedDir); os.IsNotExist(err) {
 		os.Mkdir(failedDir, 0755)
 	}
-	failedConfigFile := t.getTransactionFileFailed(id)
+	failedConfigFile := t.getTransactionFileFailed(transactionID)
 	if err := moveFile(configFile, failedConfigFile); err != nil {
 		os.Remove(configFile)
 	}
 }
 
-func (t *Transaction) getFailedTransactionVersion(id string) (int64, error) {
-	fName := t.getTransactionFileName(id)
+func (t *Transaction) getFailedTransactionVersion(transactionID string) (int64, error) {
+	fName := t.getTransactionFileName(transactionID)
 	failedDir := filepath.Join(t.TransactionDir, "failed")
 	if _, err := os.Stat(failedDir); os.IsNotExist(err) {
-		return 0, NewConfError(ErrTransactionDoesNotExist, fmt.Sprintf("transaction %v not failed", id))
+		return 0, NewConfError(ErrTransactionDoesNotExist, fmt.Sprintf("transaction %v not failed", transactionID))
 	}
 	fPath := filepath.Join(failedDir, fName)
 	if _, err := os.Stat(fPath); os.IsNotExist(err) {
-		return 0, NewConfError(ErrTransactionDoesNotExist, fmt.Sprintf("transaction %v not failed", id))
+		return 0, NewConfError(ErrTransactionDoesNotExist, fmt.Sprintf("transaction %v not failed", transactionID))
 	}
 
 	p := &parser.Parser{
@@ -522,7 +522,7 @@ func (t *Transaction) getFailedTransactionVersion(id string) (int64, error) {
 		return 0, NewConfError(ErrCannotReadConfFile, fmt.Sprintf("cannot read %s", fPath))
 	}
 
-	ver, err := t.TransactionClient.GetFailedParserTransactionVersion(id)
+	ver, err := t.TransactionClient.GetFailedParserTransactionVersion(transactionID)
 	if err != nil {
 		return 0, NewConfError(ErrCannotReadVersion, "cannot read version")
 	}
