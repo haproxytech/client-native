@@ -31,7 +31,7 @@ import (
 	"github.com/haproxytech/models/v2"
 )
 
-type ITransactionClient interface {
+type TransactionClient interface {
 	GetVersion(id string) (int64, error)
 	AddParser(transaction string) error
 	CommitParser(transaction string) error
@@ -48,7 +48,7 @@ type ITransactionClient interface {
 type Transaction struct {
 	mu sync.Mutex
 	ClientParams
-	TransactionClient ITransactionClient
+	TransactionClient TransactionClient
 }
 
 // GetTransactions returns an array of transactions
