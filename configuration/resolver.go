@@ -22,6 +22,7 @@ import (
 	strfmt "github.com/go-openapi/strfmt"
 	"github.com/haproxytech/client-native/v2/misc"
 	parser "github.com/haproxytech/config-parser/v3"
+	"github.com/haproxytech/config-parser/v3/common"
 	"github.com/haproxytech/config-parser/v3/types"
 	"github.com/haproxytech/models/v2"
 )
@@ -171,69 +172,69 @@ func (c *Client) CreateResolver(data *models.Resolver, transactionID string, ver
 }
 
 func ParseResolverSection(p *parser.Parser, resolver *models.Resolver) error {
-
 	var err error
+	var data common.ParserData
 	name := resolver.Name
 
-	if data, err := p.Get(parser.Resolvers, name, "accepted_payload_size", false); err == nil {
+	if data, err = p.Get(parser.Resolvers, name, "accepted_payload_size", false); err == nil {
 		d, ok := data.(*types.StringC)
 		if ok && d != nil {
-			if n, err := strconv.ParseInt(d.Value, 10, 64); err == nil {
+			if n, errInt := strconv.ParseInt(d.Value, 10, 64); errInt == nil {
 				resolver.AcceptedPayloadSize = n
 			}
 		}
 	}
-	if data, err := p.Get(parser.Resolvers, name, "hold nx", false); err == nil {
+	if data, err = p.Get(parser.Resolvers, name, "hold nx", false); err == nil {
 		d, ok := data.(*types.StringC)
 		if ok && d != nil {
 			resolver.HoldNx = misc.ParseTimeout(d.Value)
 		}
 	}
-	if data, err := p.Get(parser.Resolvers, name, "hold obsolete", false); err == nil {
+	if data, err = p.Get(parser.Resolvers, name, "hold obsolete", false); err == nil {
 		d, ok := data.(*types.StringC)
 		if ok && d != nil {
 			resolver.HoldObsolete = misc.ParseTimeout(d.Value)
 		}
 	}
-	if data, err := p.Get(parser.Resolvers, name, "hold other", false); err == nil {
+	if data, err = p.Get(parser.Resolvers, name, "hold other", false); err == nil {
 		d, ok := data.(*types.StringC)
 		if ok && d != nil {
 			resolver.HoldOther = misc.ParseTimeout(d.Value)
 		}
 	}
-	if data, err := p.Get(parser.Resolvers, name, "hold refused", false); err == nil {
+	if data, err = p.Get(parser.Resolvers, name, "hold refused", false); err == nil {
 		d, ok := data.(*types.StringC)
 		if ok && d != nil {
 			resolver.HoldRefused = misc.ParseTimeout(d.Value)
 		}
 	}
-	if data, err := p.Get(parser.Resolvers, name, "hold timeout", false); err == nil {
+	if data, err = p.Get(parser.Resolvers, name, "hold timeout", false); err == nil {
 		d, ok := data.(*types.StringC)
 		if ok && d != nil {
 			resolver.HoldTimeout = misc.ParseTimeout(d.Value)
 		}
 	}
-	if data, err := p.Get(parser.Resolvers, name, "hold valid", false); err == nil {
+	if data, err = p.Get(parser.Resolvers, name, "hold valid", false); err == nil {
 		d, ok := data.(*types.StringC)
 		if ok && d != nil {
 			resolver.HoldValid = misc.ParseTimeout(d.Value)
 		}
 	}
-	if data, err := p.Get(parser.Resolvers, name, "resolve_retries", false); err == nil {
+	if data, err = p.Get(parser.Resolvers, name, "resolve_retries", false); err == nil {
 		d, ok := data.(*types.StringC)
 		if ok && d != nil {
-			if n, err := strconv.ParseInt(d.Value, 10, 64); err == nil {
+			if n, errInt := strconv.ParseInt(d.Value, 10, 64); errInt == nil {
 				resolver.ResolveRetries = n
 			}
 		}
 	}
-	if data, err := p.Get(parser.Resolvers, name, "parse-resolv-conf", false); err == nil {
+	if data, err = p.Get(parser.Resolvers, name, "parse-resolv-conf", false); err == nil {
 		d, ok := data.(*types.StringC)
 		if ok && d != nil {
 			resolver.ParseResolvConf = true
 		}
 	}
-	if data, err := p.Get(parser.Resolvers, name, "timeout resolve", false); err == nil {
+	if data, err = p.Get(parser.Resolvers, name, "timeout resolve", false); err == nil {
 		d, ok := data.(*types.SimpleTimeout)
 		if ok && d != nil {
 			tOut := misc.ParseTimeout(d.Value)
@@ -242,7 +243,7 @@ func ParseResolverSection(p *parser.Parser, resolver *models.Resolver) error {
 			}
 		}
 	}
-	if data, err := p.Get(parser.Resolvers, name, "timeout retry", false); err == nil {
+	if data, err = p.Get(parser.Resolvers, name, "timeout retry", false); err == nil {
 		d, ok := data.(*types.SimpleTimeout)
 		if ok && d != nil {
 			tOut := misc.ParseTimeout(d.Value)
@@ -256,7 +257,6 @@ func ParseResolverSection(p *parser.Parser, resolver *models.Resolver) error {
 }
 
 func SerializeResolverSection(p *parser.Parser, data *models.Resolver) error {
-
 	var err error
 
 	if data.AcceptedPayloadSize == 0 {
