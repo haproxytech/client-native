@@ -40,7 +40,7 @@ func (c *Client) GetACLs(parentType, parentName string, transactionID string) (i
 
 	acls, err := ParseACLs(parentType, parentName, p)
 	if err != nil {
-		return v, nil, c.handleError("", parentType, parentName, "", false, err)
+		return v, nil, c.HandleError("", parentType, parentName, "", false, err)
 	}
 
 	return v, acls, nil
@@ -68,7 +68,7 @@ func (c *Client) GetACL(id int64, parentType, parentName string, transactionID s
 
 	data, err := p.GetOne(section, parentName, "acl", int(id))
 	if err != nil {
-		return v, nil, c.handleError(strconv.FormatInt(id, 10), parentType, parentName, "", false, err)
+		return v, nil, c.HandleError(strconv.FormatInt(id, 10), parentType, parentName, "", false, err)
 	}
 
 	acl := ParseACL(data.(types.ACL))
@@ -93,10 +93,10 @@ func (c *Client) DeleteACL(id int64, parentType string, parentName string, trans
 	}
 
 	if err := p.Delete(section, parentName, "acl", int(id)); err != nil {
-		return c.handleError(strconv.FormatInt(id, 10), parentType, parentName, t, transactionID == "", err)
+		return c.HandleError(strconv.FormatInt(id, 10), parentType, parentName, t, transactionID == "", err)
 	}
 
-	if err := c.saveData(p, t, transactionID == ""); err != nil {
+	if err := c.SaveData(p, t, transactionID == ""); err != nil {
 		return err
 	}
 	return nil
@@ -125,10 +125,10 @@ func (c *Client) CreateACL(parentType string, parentName string, data *models.AC
 	}
 
 	if err := p.Insert(section, parentName, "acl", SerializeACL(*data), int(*data.Index)); err != nil {
-		return c.handleError(strconv.FormatInt(*data.Index, 10), parentType, parentName, t, transactionID == "", err)
+		return c.HandleError(strconv.FormatInt(*data.Index, 10), parentType, parentName, t, transactionID == "", err)
 	}
 
-	if err := c.saveData(p, t, transactionID == ""); err != nil {
+	if err := c.SaveData(p, t, transactionID == ""); err != nil {
 		return err
 	}
 	return nil
@@ -156,14 +156,14 @@ func (c *Client) EditACL(id int64, parentType string, parentName string, data *m
 	}
 
 	if _, err := p.GetOne(section, parentName, "acl", int(id)); err != nil {
-		return c.handleError(strconv.FormatInt(id, 10), parentType, parentName, t, transactionID == "", err)
+		return c.HandleError(strconv.FormatInt(id, 10), parentType, parentName, t, transactionID == "", err)
 	}
 
 	if err := p.Set(section, parentName, "acl", SerializeACL(*data), int(id)); err != nil {
-		return c.handleError(strconv.FormatInt(id, 10), parentType, parentName, t, transactionID == "", err)
+		return c.HandleError(strconv.FormatInt(id, 10), parentType, parentName, t, transactionID == "", err)
 	}
 
-	if err := c.saveData(p, t, transactionID == ""); err != nil {
+	if err := c.SaveData(p, t, transactionID == ""); err != nil {
 		return err
 	}
 	return nil

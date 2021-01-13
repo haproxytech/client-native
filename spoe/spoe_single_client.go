@@ -23,7 +23,6 @@ import (
 	conf "github.com/haproxytech/client-native/v2/configuration"
 	"github.com/haproxytech/client-native/v2/misc"
 	parser "github.com/haproxytech/config-parser/v3"
-	parser_errors "github.com/haproxytech/config-parser/v3/errors"
 	"github.com/haproxytech/config-parser/v3/types"
 	"github.com/haproxytech/models/v2"
 )
@@ -278,40 +277,6 @@ func (c *SingleSpoe) getVersion(transactionID string) (int64, error) {
 	return ver.Value, nil
 }
 
-func (c *SingleSpoe) handleError(id, parentType, parentName, transactionID string, implicit bool, err error) error {
-	var e error
-	switch err {
-	case parser_errors.ErrSectionMissing:
-		if parentName != "" {
-			e = conf.NewConfError(conf.ErrParentDoesNotExist, fmt.Sprintf("%s %s does not exist", parentType, parentName))
-		} else {
-			e = conf.NewConfError(conf.ErrObjectDoesNotExist, fmt.Sprintf("object %s does not exist", id))
-		}
-	case parser_errors.ErrSectionAlreadyExists:
-		e = conf.NewConfError(conf.ErrObjectAlreadyExists, fmt.Sprintf("object %s already exists", id))
-	case parser_errors.ErrFetch:
-		e = conf.NewConfError(conf.ErrObjectDoesNotExist, fmt.Sprintf("object %v does not exist in %s %s", id, parentType, parentName))
-	case parser_errors.ErrIndexOutOfRange:
-		e = conf.NewConfError(conf.ErrObjectIndexOutOfRange, fmt.Sprintf("object with id %v in %s %s out of range", id, parentType, parentName))
-	default:
-		e = err
-	}
-
-	if implicit {
-		return c.errAndDeleteTransaction(e, transactionID)
-	}
-	return e
-}
-
-func (c *SingleSpoe) errAndDeleteTransaction(err error, tID string) error {
-	// Just a safety to not delete the master files by mistake
-	if tID != "" {
-		_ = c.Transaction.DeleteTransaction(tID)
-		return err
-	}
-	return err
-}
-
 func (c *SingleSpoe) deleteSection(scope string, section parser.Section, name string, transactionID string, version int64) error {
 	p, t, err := c.loadDataForChange(transactionID, version)
 	if err != nil {
@@ -320,14 +285,14 @@ func (c *SingleSpoe) deleteSection(scope string, section parser.Section, name st
 
 	if !c.checkSectionExists(scope, section, name, p) {
 		e := conf.NewConfError(conf.ErrObjectDoesNotExist, fmt.Sprintf("%s %s does not exist", section, name))
-		return c.handleError(name, "", "", t, transactionID == "", e)
+		return c.Transaction.HandleError(name, "", "", t, transactionID == "", e)
 	}
 
 	if err := p.SectionsDelete(scope, section, name); err != nil {
-		return c.handleError(name, "", "", t, transactionID == "", err)
+		return c.Transaction.HandleError(name, "", "", t, transactionID == "", err)
 	}
 
-	if err := c.saveData(p, t, transactionID == ""); err != nil {
+	if err := c.Transaction.SaveData(p, t, transactionID == ""); err != nil {
 		return err
 	}
 
@@ -351,7 +316,7 @@ func (c *SingleSpoe) loadDataForChange(transactionID string, version int64) (*sp
 	if err != nil {
 		// if transaction is implicit, return err and delete transaction
 		if transactionID == "" && t != "" {
-			return nil, "", c.errAndDeleteTransaction(err, t)
+			return nil, "", c.Transaction.ErrAndDeleteTransaction(err, t)
 		}
 		return nil, "", err
 	}
@@ -359,33 +324,9 @@ func (c *SingleSpoe) loadDataForChange(transactionID string, version int64) (*sp
 	p, err := c.GetParser(t)
 	if err != nil {
 		if transactionID == "" && t != "" {
-			return nil, "", c.errAndDeleteTransaction(err, t)
+			return nil, "", c.Transaction.ErrAndDeleteTransaction(err, t)
 		}
 		return nil, "", err
 	}
 	return p, t, nil
-}
-
-func (c *SingleSpoe) saveData(p *spoe.Parser, t string, commitImplicit bool) error {
-	if c.Transaction.PersistentTransactions {
-		tFile, err := c.Transaction.GetTransactionFile(t)
-		if err != nil {
-			return err
-		}
-
-		if err := p.Save(tFile); err != nil {
-			e := conf.NewConfError(conf.ErrErrorChangingConfig, err.Error())
-			if commitImplicit {
-				return c.errAndDeleteTransaction(e, t)
-			}
-			return err
-		}
-	}
-
-	if commitImplicit {
-		if _, err := c.Transaction.CommitTransaction(t); err != nil {
-			return err
-		}
-	}
-	return nil
 }

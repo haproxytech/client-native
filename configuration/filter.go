@@ -42,7 +42,7 @@ func (c *Client) GetFilters(parentType, parentName string, transactionID string)
 
 	filters, err := ParseFilters(parentType, parentName, p)
 	if err != nil {
-		return v, nil, c.handleError("", parentType, parentName, "", false, err)
+		return v, nil, c.HandleError("", parentType, parentName, "", false, err)
 	}
 
 	return v, filters, nil
@@ -70,7 +70,7 @@ func (c *Client) GetFilter(id int64, parentType, parentName string, transactionI
 
 	data, err := p.GetOne(section, parentName, "filter", int(id))
 	if err != nil {
-		return v, nil, c.handleError(strconv.FormatInt(id, 10), parentType, parentName, "", false, err)
+		return v, nil, c.HandleError(strconv.FormatInt(id, 10), parentType, parentName, "", false, err)
 	}
 
 	filter := ParseFilter(data.(types.Filter))
@@ -95,10 +95,10 @@ func (c *Client) DeleteFilter(id int64, parentType string, parentName string, tr
 	}
 
 	if err := p.Delete(section, parentName, "filter", int(id)); err != nil {
-		return c.handleError(strconv.FormatInt(id, 10), parentType, parentName, t, transactionID == "", err)
+		return c.HandleError(strconv.FormatInt(id, 10), parentType, parentName, t, transactionID == "", err)
 	}
 
-	if err := c.saveData(p, t, transactionID == ""); err != nil {
+	if err := c.SaveData(p, t, transactionID == ""); err != nil {
 		return err
 	}
 
@@ -128,10 +128,10 @@ func (c *Client) CreateFilter(parentType string, parentName string, data *models
 	}
 
 	if err := p.Insert(section, parentName, "filter", SerializeFilter(*data), int(*data.Index)); err != nil {
-		return c.handleError(strconv.FormatInt(*data.Index, 10), parentType, parentName, t, transactionID == "", err)
+		return c.HandleError(strconv.FormatInt(*data.Index, 10), parentType, parentName, t, transactionID == "", err)
 	}
 
-	if err := c.saveData(p, t, transactionID == ""); err != nil {
+	if err := c.SaveData(p, t, transactionID == ""); err != nil {
 		return err
 	}
 	return nil
@@ -159,14 +159,14 @@ func (c *Client) EditFilter(id int64, parentType string, parentName string, data
 	}
 
 	if _, err := p.GetOne(section, parentName, "filter", int(id)); err != nil {
-		return c.handleError(strconv.FormatInt(id, 10), parentType, parentName, t, transactionID == "", err)
+		return c.HandleError(strconv.FormatInt(id, 10), parentType, parentName, t, transactionID == "", err)
 	}
 
 	if err := p.Set(section, parentName, "filter", SerializeFilter(*data), int(id)); err != nil {
-		return c.handleError(strconv.FormatInt(id, 10), parentType, parentName, t, transactionID == "", err)
+		return c.HandleError(strconv.FormatInt(id, 10), parentType, parentName, t, transactionID == "", err)
 	}
 
-	if err := c.saveData(p, t, transactionID == ""); err != nil {
+	if err := c.SaveData(p, t, transactionID == ""); err != nil {
 		return err
 	}
 

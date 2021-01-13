@@ -113,7 +113,7 @@ func (c *Client) PostRawConfiguration(config *string, version int64, skipVersion
 		if err != nil {
 			// if transaction is implicit, return err and delete transaction
 			if t != "" {
-				return c.errAndDeleteTransaction(err, t)
+				return c.ErrAndDeleteTransaction(err, t)
 			}
 			return err
 		}

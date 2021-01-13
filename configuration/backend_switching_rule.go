@@ -41,7 +41,7 @@ func (c *Client) GetBackendSwitchingRules(frontend string, transactionID string)
 
 	bckRules, err := ParseBackendSwitchingRules(frontend, p)
 	if err != nil {
-		return v, nil, c.handleError("", "frontend", frontend, "", false, err)
+		return v, nil, c.HandleError("", "frontend", frontend, "", false, err)
 	}
 
 	return v, bckRules, nil
@@ -62,7 +62,7 @@ func (c *Client) GetBackendSwitchingRule(id int64, frontend string, transactionI
 
 	data, err := p.GetOne(parser.Frontends, frontend, "use_backend", int(id))
 	if err != nil {
-		return v, nil, c.handleError(strconv.FormatInt(id, 10), "frontend", frontend, "", false, err)
+		return v, nil, c.HandleError(strconv.FormatInt(id, 10), "frontend", frontend, "", false, err)
 	}
 
 	bckRule := ParseBackendSwitchingRule(data.(types.UseBackend))
@@ -80,10 +80,10 @@ func (c *Client) DeleteBackendSwitchingRule(id int64, frontend string, transacti
 	}
 
 	if err := p.Delete(parser.Frontends, frontend, "use_backend", int(id)); err != nil {
-		return c.handleError(strconv.FormatInt(id, 10), "frontend", frontend, t, transactionID == "", err)
+		return c.HandleError(strconv.FormatInt(id, 10), "frontend", frontend, t, transactionID == "", err)
 	}
 
-	if err := c.saveData(p, t, transactionID == ""); err != nil {
+	if err := c.SaveData(p, t, transactionID == ""); err != nil {
 		return err
 	}
 	return nil
@@ -105,10 +105,10 @@ func (c *Client) CreateBackendSwitchingRule(frontend string, data *models.Backen
 	}
 
 	if err := p.Insert(parser.Frontends, frontend, "use_backend", SerializeBackendSwitchingRule(*data), int(*data.Index)); err != nil {
-		return c.handleError(strconv.FormatInt(*data.Index, 10), "frontend", frontend, t, transactionID == "", err)
+		return c.HandleError(strconv.FormatInt(*data.Index, 10), "frontend", frontend, t, transactionID == "", err)
 	}
 
-	if err := c.saveData(p, t, transactionID == ""); err != nil {
+	if err := c.SaveData(p, t, transactionID == ""); err != nil {
 		return err
 	}
 
@@ -130,14 +130,14 @@ func (c *Client) EditBackendSwitchingRule(id int64, frontend string, data *model
 	}
 
 	if _, err := p.GetOne(parser.Frontends, frontend, "use_backend", int(id)); err != nil {
-		return c.handleError(strconv.FormatInt(id, 10), "frontend", frontend, t, transactionID == "", err)
+		return c.HandleError(strconv.FormatInt(id, 10), "frontend", frontend, t, transactionID == "", err)
 	}
 
 	if err := p.Set(parser.Frontends, frontend, "use_backend", SerializeBackendSwitchingRule(*data), int(id)); err != nil {
-		return c.handleError(strconv.FormatInt(id, 10), "frontend", frontend, t, transactionID == "", err)
+		return c.HandleError(strconv.FormatInt(id, 10), "frontend", frontend, t, transactionID == "", err)
 	}
 
-	if err := c.saveData(p, t, transactionID == ""); err != nil {
+	if err := c.SaveData(p, t, transactionID == ""); err != nil {
 		return err
 	}
 

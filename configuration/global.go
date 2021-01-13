@@ -67,7 +67,7 @@ func (c *Client) PushGlobalConfiguration(data *models.Global, transactionID stri
 	if err := SerializeGlobalSection(p, data); err != nil {
 		return err
 	}
-	if err := c.saveData(p, t, transactionID == ""); err != nil {
+	if err := c.SaveData(p, t, transactionID == ""); err != nil {
 		return err
 	}
 	return nil

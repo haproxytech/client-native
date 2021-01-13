@@ -45,7 +45,7 @@ func (c *Client) GetServers(backend string, transactionID string) (int64, models
 
 	servers, err := ParseServers(backend, p)
 	if err != nil {
-		return v, nil, c.handleError("", "backend", backend, "", false, err)
+		return v, nil, c.HandleError("", "backend", backend, "", false, err)
 	}
 
 	return v, servers, nil
@@ -83,14 +83,14 @@ func (c *Client) DeleteServer(name string, backend string, transactionID string,
 	server, i := GetServerByName(name, backend, p)
 	if server == nil {
 		e := NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("Server %s does not exist in backend %s", name, backend))
-		return c.handleError(name, "backend", backend, t, transactionID == "", e)
+		return c.HandleError(name, "backend", backend, t, transactionID == "", e)
 	}
 
 	if err := p.Delete(parser.Backends, backend, "server", i); err != nil {
-		return c.handleError(name, "backend", backend, t, transactionID == "", err)
+		return c.HandleError(name, "backend", backend, t, transactionID == "", err)
 	}
 
-	if err := c.saveData(p, t, transactionID == ""); err != nil {
+	if err := c.SaveData(p, t, transactionID == ""); err != nil {
 		return err
 	}
 
@@ -114,14 +114,14 @@ func (c *Client) CreateServer(backend string, data *models.Server, transactionID
 	server, _ := GetServerByName(data.Name, backend, p)
 	if server != nil {
 		e := NewConfError(ErrObjectAlreadyExists, fmt.Sprintf("Server %s already exists in backend %s", data.Name, backend))
-		return c.handleError(data.Name, "backend", backend, t, transactionID == "", e)
+		return c.HandleError(data.Name, "backend", backend, t, transactionID == "", e)
 	}
 
 	if err := p.Insert(parser.Backends, backend, "server", SerializeServer(*data), -1); err != nil {
-		return c.handleError(data.Name, "backend", backend, t, transactionID == "", err)
+		return c.HandleError(data.Name, "backend", backend, t, transactionID == "", err)
 	}
 
-	if err := c.saveData(p, t, transactionID == ""); err != nil {
+	if err := c.SaveData(p, t, transactionID == ""); err != nil {
 		return err
 	}
 	return nil
@@ -144,14 +144,14 @@ func (c *Client) EditServer(name string, backend string, data *models.Server, tr
 	server, i := GetServerByName(name, backend, p)
 	if server == nil {
 		e := NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("Server %v does not exist in backend %s", name, backend))
-		return c.handleError(data.Name, "backend", backend, t, transactionID == "", e)
+		return c.HandleError(data.Name, "backend", backend, t, transactionID == "", e)
 	}
 
 	if err := p.Set(parser.Backends, backend, "server", SerializeServer(*data), i); err != nil {
-		return c.handleError(data.Name, "backend", backend, t, transactionID == "", err)
+		return c.HandleError(data.Name, "backend", backend, t, transactionID == "", err)
 	}
 
-	if err := c.saveData(p, t, transactionID == ""); err != nil {
+	if err := c.SaveData(p, t, transactionID == ""); err != nil {
 		return err
 	}
 	return nil

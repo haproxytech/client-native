@@ -28,6 +28,8 @@ import (
 
 	"github.com/google/uuid"
 	parser "github.com/haproxytech/config-parser/v3"
+	parser_errors "github.com/haproxytech/config-parser/v3/errors"
+	spoe "github.com/haproxytech/config-parser/v3/spoe"
 	"github.com/haproxytech/models/v2"
 )
 
@@ -531,4 +533,67 @@ func (t *Transaction) getFailedTransactionVersion(transactionID string) (int64, 
 
 func moveFile(src, dest string) error {
 	return os.Rename(src, dest)
+}
+
+func (t *Transaction) SaveData(prsr interface{}, tID string, commitImplicit bool) error {
+	if t.PersistentTransactions {
+		tFile, err := t.GetTransactionFile(tID)
+		if err != nil {
+			return err
+		}
+		switch p := prsr.(type) {
+		case *spoe.Parser:
+			err = p.Save(tFile)
+		case *parser.Parser:
+			err = p.Save(tFile)
+		default:
+			return fmt.Errorf("provided parser %s not supported", p)
+		}
+		if err != nil {
+			e := NewConfError(ErrErrorChangingConfig, err.Error())
+			if commitImplicit {
+				return t.ErrAndDeleteTransaction(e, tID)
+			}
+			return err
+		}
+	}
+	if commitImplicit {
+		if _, err := t.CommitTransaction(tID); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func (t *Transaction) ErrAndDeleteTransaction(err error, tID string) error {
+	// Just a safety to not delete the master files by mistake
+	if tID != "" {
+		t.DeleteTransaction(tID)
+		return err
+	}
+	return err
+}
+
+func (t *Transaction) HandleError(id, parentType, parentName, transactionID string, implicit bool, err error) error {
+	var e error
+	if err == parser_errors.ErrSectionMissing {
+		if parentName != "" {
+			e = NewConfError(ErrParentDoesNotExist, fmt.Sprintf("%s %s does not exist", parentType, parentName))
+		} else {
+			e = NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("Object %s does not exist", id))
+		}
+	} else if err == parser_errors.ErrSectionAlreadyExists {
+		e = NewConfError(ErrObjectAlreadyExists, fmt.Sprintf("Object %s already exists", id))
+	} else if err == parser_errors.ErrFetch {
+		e = NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("Object %v does not exist in %s %s", id, parentType, parentName))
+	} else if err == parser_errors.ErrIndexOutOfRange {
+		e = NewConfError(ErrObjectIndexOutOfRange, fmt.Sprintf("Object with id %v in %s %s out of range", id, parentType, parentName))
+	} else {
+		e = err
+	}
+
+	if implicit {
+		return t.ErrAndDeleteTransaction(e, transactionID)
+	}
+	return e
 }

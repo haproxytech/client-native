@@ -40,7 +40,7 @@ func (c *Client) GetStickRules(backend string, transactionID string) (int64, mod
 
 	sRules, err := ParseStickRules(backend, p)
 	if err != nil {
-		return v, nil, c.handleError("", "backend", backend, "", false, err)
+		return v, nil, c.HandleError("", "backend", backend, "", false, err)
 	}
 
 	return v, sRules, nil
@@ -61,7 +61,7 @@ func (c *Client) GetStickRule(id int64, backend string, transactionID string) (i
 
 	data, err := p.GetOne(parser.Backends, backend, "stick", int(id))
 	if err != nil {
-		return v, nil, c.handleError(strconv.FormatInt(id, 10), "backend", backend, "", false, err)
+		return v, nil, c.HandleError(strconv.FormatInt(id, 10), "backend", backend, "", false, err)
 	}
 
 	sRule := ParseStickRule(data.(types.Stick))
@@ -79,10 +79,10 @@ func (c *Client) DeleteStickRule(id int64, backend string, transactionID string,
 	}
 
 	if err := p.Delete(parser.Backends, backend, "stick", int(id)); err != nil {
-		return c.handleError(strconv.FormatInt(id, 10), "backend", backend, t, transactionID == "", err)
+		return c.HandleError(strconv.FormatInt(id, 10), "backend", backend, t, transactionID == "", err)
 	}
 
-	if err := c.saveData(p, t, transactionID == ""); err != nil {
+	if err := c.SaveData(p, t, transactionID == ""); err != nil {
 		return err
 	}
 	return nil
@@ -103,10 +103,10 @@ func (c *Client) CreateStickRule(backend string, data *models.StickRule, transac
 	}
 
 	if err := p.Insert(parser.Backends, backend, "stick", SerializeStickRule(*data), int(*data.Index)); err != nil {
-		return c.handleError(strconv.FormatInt(*data.Index, 10), "backend", backend, t, transactionID == "", err)
+		return c.HandleError(strconv.FormatInt(*data.Index, 10), "backend", backend, t, transactionID == "", err)
 	}
 
-	if err := c.saveData(p, t, transactionID == ""); err != nil {
+	if err := c.SaveData(p, t, transactionID == ""); err != nil {
 		return err
 	}
 	return nil
@@ -127,14 +127,14 @@ func (c *Client) EditStickRule(id int64, backend string, data *models.StickRule,
 	}
 
 	if _, err := p.GetOne(parser.Backends, backend, "stick", int(id)); err != nil {
-		return c.handleError(strconv.FormatInt(*data.Index, 10), "backend", backend, t, transactionID == "", err)
+		return c.HandleError(strconv.FormatInt(*data.Index, 10), "backend", backend, t, transactionID == "", err)
 	}
 
 	if err := p.Set(parser.Backends, backend, "stick", SerializeStickRule(*data), int(id)); err != nil {
-		return c.handleError(strconv.FormatInt(*data.Index, 10), "backend", backend, t, transactionID == "", err)
+		return c.HandleError(strconv.FormatInt(*data.Index, 10), "backend", backend, t, transactionID == "", err)
 	}
 
-	if err := c.saveData(p, t, transactionID == ""); err != nil {
+	if err := c.SaveData(p, t, transactionID == ""); err != nil {
 		return err
 	}
 	return nil

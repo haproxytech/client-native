@@ -141,7 +141,7 @@ func (c *SingleSpoe) CreateMessage(scope string, data *models.SpoeMessage, trans
 
 	if c.checkSectionExists(scope, parser.SPOEMessage, *data.Name, p) {
 		e := conf.NewConfError(conf.ErrObjectAlreadyExists, fmt.Sprintf("%s %s already exists", parser.SPOEMessage, *data.Name))
-		return c.handleError(*data.Name, "", "", t, transactionID == "", e)
+		return c.Transaction.HandleError(*data.Name, "", "", t, transactionID == "", e)
 	}
 
 	if err = p.SectionsCreate(scope, parser.SPOEMessage, *data.Name); err != nil {
@@ -153,7 +153,7 @@ func (c *SingleSpoe) CreateMessage(scope string, data *models.SpoeMessage, trans
 		return err
 	}
 
-	if err := c.saveData(p, t, transactionID == ""); err != nil {
+	if err := c.Transaction.SaveData(p, t, transactionID == ""); err != nil {
 		return err
 	}
 
@@ -177,7 +177,7 @@ func (c *SingleSpoe) EditMessage(scope string, data *models.SpoeMessage, name, t
 
 	if !c.checkSectionExists(scope, parser.SPOEMessage, *data.Name, p) {
 		e := conf.NewConfError(conf.ErrObjectAlreadyExists, fmt.Sprintf("%s %s does not exists", parser.SPOEMessage, *data.Name))
-		return c.handleError(*data.Name, "", "", t, transactionID == "", e)
+		return c.Transaction.HandleError(*data.Name, "", "", t, transactionID == "", e)
 	}
 
 	err = c.createEditMessage(scope, data, t, transactionID, p)
@@ -185,7 +185,7 @@ func (c *SingleSpoe) EditMessage(scope string, data *models.SpoeMessage, name, t
 		return err
 	}
 
-	if err := c.saveData(p, t, transactionID == ""); err != nil {
+	if err := c.Transaction.SaveData(p, t, transactionID == ""); err != nil {
 		return err
 	}
 
@@ -209,7 +209,7 @@ func (c *SingleSpoe) createEditMessage(scope string, data *models.SpoeMessage, t
 			acls = append(acls, acl)
 		}
 		if err := p.Set(scope, parser.SPOEMessage, name, "acl", acls); err != nil {
-			return c.handleError("acl", "", "", t, transactionID == "", err)
+			return c.Transaction.HandleError("acl", "", "", t, transactionID == "", err)
 		}
 	} else if err := p.Set(scope, parser.SPOEMessage, name, "acl", nil); err != nil {
 		return err
@@ -218,7 +218,7 @@ func (c *SingleSpoe) createEditMessage(scope string, data *models.SpoeMessage, t
 	if data.Args != "" {
 		d := &types.StringC{Value: data.Args}
 		if err := p.Set(scope, parser.SPOEMessage, name, "args", d); err != nil {
-			return c.handleError("args", "", "", t, transactionID == "", err)
+			return c.Transaction.HandleError("args", "", "", t, transactionID == "", err)
 		}
 	} else if err := p.Set(scope, parser.SPOEMessage, name, "args", nil); err != nil {
 		return err
@@ -231,7 +231,7 @@ func (c *SingleSpoe) createEditMessage(scope string, data *models.SpoeMessage, t
 			Name:     *data.Event.Name,
 		}
 		if err := p.Set(scope, parser.SPOEMessage, name, "event", d); err != nil {
-			return c.handleError("event", "", "", t, transactionID == "", err)
+			return c.Transaction.HandleError("event", "", "", t, transactionID == "", err)
 		}
 	} else if err := p.Set(scope, parser.SPOEMessage, name, "event", nil); err != nil {
 		return err

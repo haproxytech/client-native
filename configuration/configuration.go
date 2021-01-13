@@ -2328,39 +2328,6 @@ func (s *SectionObject) statsOptions(field reflect.Value) error {
 	return nil
 }
 
-func (c *Client) handleError(id, parentType, parentName, transactionID string, implicit bool, err error) error {
-	var e error
-	if err == parser_errors.ErrSectionMissing {
-		if parentName != "" {
-			e = NewConfError(ErrParentDoesNotExist, fmt.Sprintf("%s %s does not exist", parentType, parentName))
-		} else {
-			e = NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("Object %s does not exist", id))
-		}
-	} else if err == parser_errors.ErrSectionAlreadyExists {
-		e = NewConfError(ErrObjectAlreadyExists, fmt.Sprintf("Object %s already exists", id))
-	} else if err == parser_errors.ErrFetch {
-		e = NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("Object %v does not exist in %s %s", id, parentType, parentName))
-	} else if err == parser_errors.ErrIndexOutOfRange {
-		e = NewConfError(ErrObjectIndexOutOfRange, fmt.Sprintf("Object with id %v in %s %s out of range", id, parentType, parentName))
-	} else {
-		e = err
-	}
-
-	if implicit {
-		return c.errAndDeleteTransaction(e, transactionID)
-	}
-	return e
-}
-
-func (c *Client) errAndDeleteTransaction(err error, tID string) error {
-	// Just a safety to not delete the master files by mistake
-	if tID != "" {
-		c.DeleteTransaction(tID)
-		return err
-	}
-	return err
-}
-
 func (c *Client) deleteSection(section parser.Section, name string, transactionID string, version int64) error {
 	p, t, err := c.loadDataForChange(transactionID, version)
 	if err != nil {
@@ -2369,14 +2336,14 @@ func (c *Client) deleteSection(section parser.Section, name string, transactionI
 
 	if !c.checkSectionExists(section, name, p) {
 		e := NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("%s %s does not exist", section, name))
-		return c.handleError(name, "", "", t, transactionID == "", e)
+		return c.HandleError(name, "", "", t, transactionID == "", e)
 	}
 
 	if err := p.SectionsDelete(section, name); err != nil {
-		return c.handleError(name, "", "", t, transactionID == "", err)
+		return c.HandleError(name, "", "", t, transactionID == "", err)
 	}
 
-	if err := c.saveData(p, t, transactionID == ""); err != nil {
+	if err := c.SaveData(p, t, transactionID == ""); err != nil {
 		return err
 	}
 
@@ -2391,14 +2358,14 @@ func (c *Client) editSection(section parser.Section, name string, data interface
 
 	if !c.checkSectionExists(section, name, p) {
 		e := NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("%s %s does not exist", section, name))
-		return c.handleError(name, "", "", t, transactionID == "", e)
+		return c.HandleError(name, "", "", t, transactionID == "", e)
 	}
 
 	if err := CreateEditSection(data, section, name, p); err != nil {
-		return c.handleError(name, "", "", t, transactionID == "", err)
+		return c.HandleError(name, "", "", t, transactionID == "", err)
 	}
 
-	if err := c.saveData(p, t, transactionID == ""); err != nil {
+	if err := c.SaveData(p, t, transactionID == ""); err != nil {
 		return err
 	}
 
@@ -2413,18 +2380,18 @@ func (c *Client) createSection(section parser.Section, name string, data interfa
 
 	if c.checkSectionExists(section, name, p) {
 		e := NewConfError(ErrObjectAlreadyExists, fmt.Sprintf("%s %s already exists", section, name))
-		return c.handleError(name, "", "", t, transactionID == "", e)
+		return c.HandleError(name, "", "", t, transactionID == "", e)
 	}
 
 	if err := p.SectionsCreate(section, name); err != nil {
-		return c.handleError(name, "", "", t, transactionID == "", err)
+		return c.HandleError(name, "", "", t, transactionID == "", err)
 	}
 
 	if err := CreateEditSection(data, section, name, p); err != nil {
-		return c.handleError(name, "", "", t, transactionID == "", err)
+		return c.HandleError(name, "", "", t, transactionID == "", err)
 	}
 
-	if err := c.saveData(p, t, transactionID == ""); err != nil {
+	if err := c.SaveData(p, t, transactionID == ""); err != nil {
 		return err
 	}
 
@@ -2448,7 +2415,7 @@ func (c *Client) loadDataForChange(transactionID string, version int64) (*parser
 	if err != nil {
 		// if transactionID is implicit, return err and delete transaction
 		if transactionID == "" && t != "" {
-			return nil, "", c.errAndDeleteTransaction(err, t)
+			return nil, "", c.ErrAndDeleteTransaction(err, t)
 		}
 		return nil, "", err
 	}
@@ -2456,35 +2423,11 @@ func (c *Client) loadDataForChange(transactionID string, version int64) (*parser
 	p, err := c.GetParser(t)
 	if err != nil {
 		if transactionID == "" && t != "" {
-			return nil, "", c.errAndDeleteTransaction(err, t)
+			return nil, "", c.ErrAndDeleteTransaction(err, t)
 		}
 		return nil, "", err
 	}
 	return p, t, nil
-}
-
-func (c *Client) saveData(p *parser.Parser, t string, commitImplicit bool) error {
-	if c.PersistentTransactions {
-		tFile, err := c.GetTransactionFile(t)
-		if err != nil {
-			return err
-		}
-
-		if err := p.Save(tFile); err != nil {
-			e := NewConfError(ErrErrorChangingConfig, err.Error())
-			if commitImplicit {
-				return c.errAndDeleteTransaction(e, t)
-			}
-			return err
-		}
-	}
-
-	if commitImplicit {
-		if _, err := c.CommitTransaction(t); err != nil {
-			return err
-		}
-	}
-	return nil
 }
 
 func valueIsNil(v reflect.Value) bool {

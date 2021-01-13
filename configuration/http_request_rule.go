@@ -45,7 +45,7 @@ func (c *Client) GetHTTPRequestRules(parentType, parentName string, transactionI
 
 	httpRules, err := ParseHTTPRequestRules(parentType, parentName, p)
 	if err != nil {
-		return v, nil, c.handleError("", parentType, parentName, "", false, err)
+		return v, nil, c.HandleError("", parentType, parentName, "", false, err)
 	}
 
 	return v, httpRules, nil
@@ -73,7 +73,7 @@ func (c *Client) GetHTTPRequestRule(id int64, parentType, parentName string, tra
 
 	data, err := p.GetOne(section, parentName, "http-request", int(id))
 	if err != nil {
-		return v, nil, c.handleError(strconv.FormatInt(id, 10), parentType, parentName, "", false, err)
+		return v, nil, c.HandleError(strconv.FormatInt(id, 10), parentType, parentName, "", false, err)
 	}
 
 	httpRule, err := ParseHTTPRequestRule(data.(types.HTTPAction))
@@ -101,10 +101,10 @@ func (c *Client) DeleteHTTPRequestRule(id int64, parentType string, parentName s
 	}
 
 	if err := p.Delete(section, parentName, "http-request", int(id)); err != nil {
-		return c.handleError(strconv.FormatInt(id, 10), parentType, parentName, t, transactionID == "", err)
+		return c.HandleError(strconv.FormatInt(id, 10), parentType, parentName, t, transactionID == "", err)
 	}
 
-	if err := c.saveData(p, t, transactionID == ""); err != nil {
+	if err := c.SaveData(p, t, transactionID == ""); err != nil {
 		return err
 	}
 	return nil
@@ -138,10 +138,10 @@ func (c *Client) CreateHTTPRequestRule(parentType string, parentName string, dat
 	}
 
 	if err := p.Insert(section, parentName, "http-request", s, int(*data.Index)); err != nil {
-		return c.handleError(strconv.FormatInt(*data.Index, 10), parentType, parentName, t, transactionID == "", err)
+		return c.HandleError(strconv.FormatInt(*data.Index, 10), parentType, parentName, t, transactionID == "", err)
 	}
 
-	if err := c.saveData(p, t, transactionID == ""); err != nil {
+	if err := c.SaveData(p, t, transactionID == ""); err != nil {
 		return err
 	}
 	return nil
@@ -169,7 +169,7 @@ func (c *Client) EditHTTPRequestRule(id int64, parentType string, parentName str
 	}
 
 	if _, err := p.GetOne(section, parentName, "http-request", int(id)); err != nil {
-		return c.handleError(strconv.FormatInt(id, 10), parentType, parentName, t, transactionID == "", err)
+		return c.HandleError(strconv.FormatInt(id, 10), parentType, parentName, t, transactionID == "", err)
 	}
 
 	s, err := SerializeHTTPRequestRule(*data)
@@ -178,10 +178,10 @@ func (c *Client) EditHTTPRequestRule(id int64, parentType string, parentName str
 	}
 
 	if err := p.Set(section, parentName, "http-request", s, int(id)); err != nil {
-		return c.handleError(strconv.FormatInt(id, 10), parentType, parentName, t, transactionID == "", err)
+		return c.HandleError(strconv.FormatInt(id, 10), parentType, parentName, t, transactionID == "", err)
 	}
 
-	if err := c.saveData(p, t, transactionID == ""); err != nil {
+	if err := c.SaveData(p, t, transactionID == ""); err != nil {
 		return err
 	}
 	return nil

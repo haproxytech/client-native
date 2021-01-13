@@ -110,7 +110,7 @@ func (c *SingleSpoe) CreateGroup(scope string, data *models.SpoeGroup, transacti
 	name := *data.Name
 	if c.checkSectionExists(scope, parser.SPOEGroup, name, p) {
 		e := conf.NewConfError(conf.ErrObjectAlreadyExists, fmt.Sprintf("%s %s already exists", parser.SPOEGroup, name))
-		return c.handleError(name, "", "", t, transactionID == "", e)
+		return c.Transaction.HandleError(name, "", "", t, transactionID == "", e)
 	}
 
 	if err = p.SectionsCreate(scope, parser.SPOEGroup, name); err != nil {
@@ -122,7 +122,7 @@ func (c *SingleSpoe) CreateGroup(scope string, data *models.SpoeGroup, transacti
 		return err
 	}
 
-	if err := c.saveData(p, t, transactionID == ""); err != nil {
+	if err := c.Transaction.SaveData(p, t, transactionID == ""); err != nil {
 		return err
 	}
 
@@ -146,7 +146,7 @@ func (c *SingleSpoe) EditGroup(scope string, data *models.SpoeGroup, name, trans
 
 	if !c.checkSectionExists(scope, parser.SPOEGroup, *data.Name, p) {
 		e := conf.NewConfError(conf.ErrObjectAlreadyExists, fmt.Sprintf("%s %s does not exists", parser.SPOEGroup, *data.Name))
-		return c.handleError(*data.Name, "", "", t, transactionID == "", e)
+		return c.Transaction.HandleError(*data.Name, "", "", t, transactionID == "", e)
 	}
 
 	err = c.createEditGroup(scope, data, t, transactionID, p)
@@ -154,7 +154,7 @@ func (c *SingleSpoe) EditGroup(scope string, data *models.SpoeGroup, name, trans
 		return err
 	}
 
-	if err := c.saveData(p, t, transactionID == ""); err != nil {
+	if err := c.Transaction.SaveData(p, t, transactionID == ""); err != nil {
 		return err
 	}
 
@@ -170,7 +170,7 @@ func (c *SingleSpoe) createEditGroup(scope string, data *models.SpoeGroup, t str
 	if data.Messages != "" {
 		d := &types.StringC{Value: data.Messages}
 		if err := p.Set(scope, parser.SPOEGroup, name, "messages", d); err != nil {
-			return c.handleError("messages", "", "", t, transactionID == "", err)
+			return c.Transaction.HandleError("messages", "", "", t, transactionID == "", err)
 		}
 	} else if err := p.Set(scope, parser.SPOEGroup, name, "messages", nil); err != nil {
 		return err

@@ -140,10 +140,10 @@ func (c *Client) CreateSite(data *models.Site, transactionID string, version int
 		}
 	}
 	if len(res) > 0 {
-		return c.handleError(data.Name, "", "", t, transactionID == "", CompositeTransactionError(res...))
+		return c.HandleError(data.Name, "", "", t, transactionID == "", CompositeTransactionError(res...))
 	}
 
-	if err := c.saveData(p, t, transactionID == ""); err != nil {
+	if err := c.SaveData(p, t, transactionID == ""); err != nil {
 		return err
 	}
 
@@ -378,10 +378,10 @@ func (c *Client) EditSite(name string, data *models.Site, transactionID string, 
 	}
 
 	if len(res) > 0 {
-		return c.handleError(data.Name, "", "", t, transactionID == "", CompositeTransactionError(res...))
+		return c.HandleError(data.Name, "", "", t, transactionID == "", CompositeTransactionError(res...))
 	}
 
-	if err := c.saveData(p, t, transactionID == ""); err != nil {
+	if err := c.SaveData(p, t, transactionID == ""); err != nil {
 		return err
 	}
 
@@ -438,10 +438,10 @@ func (c *Client) DeleteSite(name string, transactionID string, version int64) er
 	}
 
 	if len(res) > 0 {
-		return c.handleError(name, "", "", t, transactionID == "", CompositeTransactionError(res...))
+		return c.HandleError(name, "", "", t, transactionID == "", CompositeTransactionError(res...))
 	}
 
-	if err := c.saveData(p, t, transactionID == ""); err != nil {
+	if err := c.SaveData(p, t, transactionID == ""); err != nil {
 		return err
 	}
 

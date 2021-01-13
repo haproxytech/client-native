@@ -90,14 +90,14 @@ func (c *Client) DeleteResolver(name string, transactionID string, version int64
 
 	if !c.checkSectionExists(parser.Resolvers, name, p) {
 		e := NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("%s %s does not exist", parser.Resolvers, name))
-		return c.handleError(name, "", "", t, transactionID == "", e)
+		return c.HandleError(name, "", "", t, transactionID == "", e)
 	}
 
 	if err := p.SectionsDelete(parser.Resolvers, name); err != nil {
-		return c.handleError(name, "", "", t, transactionID == "", err)
+		return c.HandleError(name, "", "", t, transactionID == "", err)
 	}
 
-	if err := c.saveData(p, t, transactionID == ""); err != nil {
+	if err := c.SaveData(p, t, transactionID == ""); err != nil {
 		return err
 	}
 
@@ -121,14 +121,14 @@ func (c *Client) EditResolver(name string, data *models.Resolver, transactionID 
 
 	if !c.checkSectionExists(parser.Resolvers, name, p) {
 		e := NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("%s %s does not exist", parser.Resolvers, name))
-		return c.handleError(name, "", "", t, transactionID == "", e)
+		return c.HandleError(name, "", "", t, transactionID == "", e)
 	}
 
 	if err = SerializeResolverSection(p, data); err != nil {
 		return err
 	}
 
-	if err := c.saveData(p, t, transactionID == ""); err != nil {
+	if err := c.SaveData(p, t, transactionID == ""); err != nil {
 		return err
 	}
 
@@ -152,18 +152,18 @@ func (c *Client) CreateResolver(data *models.Resolver, transactionID string, ver
 
 	if c.checkSectionExists(parser.Resolvers, data.Name, p) {
 		e := NewConfError(ErrObjectAlreadyExists, fmt.Sprintf("%s %s already exists", parser.Resolvers, data.Name))
-		return c.handleError(data.Name, "", "", t, transactionID == "", e)
+		return c.HandleError(data.Name, "", "", t, transactionID == "", e)
 	}
 
 	if err = p.SectionsCreate(parser.Resolvers, data.Name); err != nil {
-		return c.handleError(data.Name, "", "", t, transactionID == "", err)
+		return c.HandleError(data.Name, "", "", t, transactionID == "", err)
 	}
 
 	if err = SerializeResolverSection(p, data); err != nil {
 		return err
 	}
 
-	if err := c.saveData(p, t, transactionID == ""); err != nil {
+	if err := c.SaveData(p, t, transactionID == ""); err != nil {
 		return err
 	}
 

@@ -310,7 +310,7 @@ func (c *SingleSpoe) CreateAgent(scope string, data *models.SpoeAgent, transacti
 
 	if c.checkSectionExists(scope, parser.SPOEAgent, *data.Name, p) {
 		e := conf.NewConfError(conf.ErrObjectAlreadyExists, fmt.Sprintf("%s %s already exists", parser.SPOEAgent, *data.Name))
-		return c.handleError(*data.Name, "", "", t, transactionID == "", e)
+		return c.Transaction.HandleError(*data.Name, "", "", t, transactionID == "", e)
 	}
 
 	if err = p.SectionsCreate(scope, parser.SPOEAgent, *data.Name); err != nil {
@@ -322,7 +322,7 @@ func (c *SingleSpoe) CreateAgent(scope string, data *models.SpoeAgent, transacti
 		return err
 	}
 
-	if err := c.saveData(p, t, transactionID == ""); err != nil {
+	if err := c.Transaction.SaveData(p, t, transactionID == ""); err != nil {
 		return err
 	}
 
@@ -346,7 +346,7 @@ func (c *SingleSpoe) EditAgent(scope string, data *models.SpoeAgent, transaction
 
 	if !c.checkSectionExists(scope, parser.SPOEAgent, *data.Name, p) {
 		e := conf.NewConfError(conf.ErrObjectAlreadyExists, fmt.Sprintf("%s %s does not exists", parser.SPOEAgent, *data.Name))
-		return c.handleError(*data.Name, "", "", t, transactionID == "", e)
+		return c.Transaction.HandleError(*data.Name, "", "", t, transactionID == "", e)
 	}
 
 	err = c.createEditAgent(scope, data, t, transactionID, p)
@@ -354,7 +354,7 @@ func (c *SingleSpoe) EditAgent(scope string, data *models.SpoeAgent, transaction
 		return err
 	}
 
-	if err := c.saveData(p, t, transactionID == ""); err != nil {
+	if err := c.Transaction.SaveData(p, t, transactionID == ""); err != nil {
 		return err
 	}
 
@@ -370,12 +370,12 @@ func (c *SingleSpoe) createEditAgent(scope string, data *models.SpoeAgent, t str
 	if data.DontlogNormal == "enabled" {
 		d := &types.SimpleOption{}
 		if err := p.Set(scope, parser.SPOEAgent, name, "option dontlog-normal", d); err != nil {
-			return c.handleError("option dontlog-normal", "", "", t, transactionID == "", err)
+			return c.Transaction.HandleError("option dontlog-normal", "", "", t, transactionID == "", err)
 		}
 	} else if data.DontlogNormal == "disabled" {
 		d := &types.SimpleOption{NoOption: true}
 		if err := p.Set(scope, parser.SPOEAgent, name, "option dontlog-normal", d); err != nil {
-			return c.handleError("option dontlog-normal", "", "", t, transactionID == "", err)
+			return c.Transaction.HandleError("option dontlog-normal", "", "", t, transactionID == "", err)
 		}
 	} else if err := p.Set(scope, parser.SPOEAgent, name, "option dontlog-normal", nil); err != nil {
 		return err
@@ -384,12 +384,12 @@ func (c *SingleSpoe) createEditAgent(scope string, data *models.SpoeAgent, t str
 	if data.Async == "enabled" {
 		d := &types.SimpleOption{}
 		if err := p.Set(scope, parser.SPOEAgent, name, "option async", d); err != nil {
-			return c.handleError("option async", "", "", t, transactionID == "", err)
+			return c.Transaction.HandleError("option async", "", "", t, transactionID == "", err)
 		}
 	} else if data.Async == "disabled" {
 		d := &types.SimpleOption{NoOption: true}
 		if err := p.Set(scope, parser.SPOEAgent, name, "option async", d); err != nil {
-			return c.handleError("option async", "", "", t, transactionID == "", err)
+			return c.Transaction.HandleError("option async", "", "", t, transactionID == "", err)
 		}
 	} else if err := p.Set(scope, parser.SPOEAgent, name, "option async", nil); err != nil {
 		return err
@@ -398,7 +398,7 @@ func (c *SingleSpoe) createEditAgent(scope string, data *models.SpoeAgent, t str
 	if data.ContinueOnError == "enabled" {
 		d := &types.SimpleOption{}
 		if err := p.Set(scope, parser.SPOEAgent, name, "option continue-on-error", d); err != nil {
-			return c.handleError("option continue-on-error", "", "", t, transactionID == "", err)
+			return c.Transaction.HandleError("option continue-on-error", "", "", t, transactionID == "", err)
 		}
 	} else if err := p.Set(scope, parser.SPOEAgent, name, "option continue-on-error", nil); err != nil {
 		return err
@@ -407,12 +407,12 @@ func (c *SingleSpoe) createEditAgent(scope string, data *models.SpoeAgent, t str
 	if data.Pipelining == "enabled" {
 		d := &types.SimpleOption{}
 		if err := p.Set(scope, parser.SPOEAgent, name, "option pipelining", d); err != nil {
-			return c.handleError("option pipelining", "", "", t, transactionID == "", err)
+			return c.Transaction.HandleError("option pipelining", "", "", t, transactionID == "", err)
 		}
 	} else if data.Pipelining == "disabled" {
 		d := &types.SimpleOption{NoOption: true}
 		if err := p.Set(scope, parser.SPOEAgent, name, "option pipelining", d); err != nil {
-			return c.handleError("option pipelining", "", "", t, transactionID == "", err)
+			return c.Transaction.HandleError("option pipelining", "", "", t, transactionID == "", err)
 		}
 	} else if err := p.Set(scope, parser.SPOEAgent, name, "option pipelining", nil); err != nil {
 		return err
@@ -421,12 +421,12 @@ func (c *SingleSpoe) createEditAgent(scope string, data *models.SpoeAgent, t str
 	if data.SendFragPayload == "enabled" {
 		d := &types.SimpleOption{}
 		if err := p.Set(scope, parser.SPOEAgent, name, "option send-frag-payload", d); err != nil {
-			return c.handleError("option send-frag-payload", "", "", t, transactionID == "", err)
+			return c.Transaction.HandleError("option send-frag-payload", "", "", t, transactionID == "", err)
 		}
 	} else if data.SendFragPayload == "disabled" {
 		d := &types.SimpleOption{NoOption: true}
 		if err := p.Set(scope, parser.SPOEAgent, name, "option send-frag-payload", d); err != nil {
-			return c.handleError("option send-frag-payload", "", "", t, transactionID == "", err)
+			return c.Transaction.HandleError("option send-frag-payload", "", "", t, transactionID == "", err)
 		}
 	} else if err := p.Set(scope, parser.SPOEAgent, name, "option send-frag-payload", nil); err != nil {
 		return err
@@ -435,7 +435,7 @@ func (c *SingleSpoe) createEditAgent(scope string, data *models.SpoeAgent, t str
 	if data.Maxconnrate > 0 {
 		d := &types.Int64C{Value: data.Maxconnrate}
 		if err := p.Set(scope, parser.SPOEAgent, name, "maxconnrate", d); err != nil {
-			return c.handleError("maxconnrate", "", "", t, transactionID == "", err)
+			return c.Transaction.HandleError("maxconnrate", "", "", t, transactionID == "", err)
 		}
 	} else if err := p.Set(scope, parser.SPOEAgent, name, "maxconnrate", nil); err != nil {
 		return err
@@ -444,7 +444,7 @@ func (c *SingleSpoe) createEditAgent(scope string, data *models.SpoeAgent, t str
 	if data.Maxerrrate > 0 {
 		d := &types.Int64C{Value: data.Maxerrrate}
 		if err := p.Set(scope, parser.SPOEAgent, name, "maxerrrate", d); err != nil {
-			return c.handleError("maxerrrate", "", "", t, transactionID == "", err)
+			return c.Transaction.HandleError("maxerrrate", "", "", t, transactionID == "", err)
 		}
 	} else if err := p.Set(scope, parser.SPOEAgent, name, "maxerrrate", nil); err != nil {
 		return err
@@ -453,7 +453,7 @@ func (c *SingleSpoe) createEditAgent(scope string, data *models.SpoeAgent, t str
 	if data.MaxFrameSize > 0 {
 		d := &types.Int64C{Value: data.MaxFrameSize}
 		if err := p.Set(scope, parser.SPOEAgent, name, "max-frame-size", d); err != nil {
-			return c.handleError("max-frame-size", "", "", t, transactionID == "", err)
+			return c.Transaction.HandleError("max-frame-size", "", "", t, transactionID == "", err)
 		}
 	} else if err := p.Set(scope, parser.SPOEAgent, name, "max-frame-size", nil); err != nil {
 		return err
@@ -462,7 +462,7 @@ func (c *SingleSpoe) createEditAgent(scope string, data *models.SpoeAgent, t str
 	if data.MaxWaitingFrames > 0 {
 		d := &types.Int64C{Value: data.MaxWaitingFrames}
 		if err := p.Set(scope, parser.SPOEAgent, name, "max-waiting-frames", d); err != nil {
-			return c.handleError("max-waiting-frames", "", "", t, transactionID == "", err)
+			return c.Transaction.HandleError("max-waiting-frames", "", "", t, transactionID == "", err)
 		}
 	} else if err := p.Set(scope, parser.SPOEAgent, name, "max-waiting-frames", nil); err != nil {
 		return err
@@ -471,7 +471,7 @@ func (c *SingleSpoe) createEditAgent(scope string, data *models.SpoeAgent, t str
 	if data.Messages != "" {
 		d := &types.StringC{Value: data.Messages}
 		if err := p.Set(scope, parser.SPOEAgent, name, "messages", d); err != nil {
-			return c.handleError("messages", "", "", t, transactionID == "", err)
+			return c.Transaction.HandleError("messages", "", "", t, transactionID == "", err)
 		}
 	} else if err := p.Set(scope, parser.SPOEAgent, name, "messages", nil); err != nil {
 		return err
@@ -480,7 +480,7 @@ func (c *SingleSpoe) createEditAgent(scope string, data *models.SpoeAgent, t str
 	if data.ForceSetVar == "enabled" {
 		d := &types.SimpleOption{}
 		if err := p.Set(scope, parser.SPOEAgent, name, "option force-set-var", d); err != nil {
-			return c.handleError("option force-set-var", "", "", t, transactionID == "", err)
+			return c.Transaction.HandleError("option force-set-var", "", "", t, transactionID == "", err)
 		}
 	} else if err := p.Set(scope, parser.SPOEAgent, name, "option force-set-var", nil); err != nil {
 		return err
@@ -489,7 +489,7 @@ func (c *SingleSpoe) createEditAgent(scope string, data *models.SpoeAgent, t str
 	if data.OptionSetOnError != "" {
 		d := &types.StringC{Value: data.OptionSetOnError}
 		if err := p.Set(scope, parser.SPOEAgent, name, "option set-on-error", d); err != nil {
-			return c.handleError("option set-on-error", "", "", t, transactionID == "", err)
+			return c.Transaction.HandleError("option set-on-error", "", "", t, transactionID == "", err)
 		}
 	} else if err := p.Set(scope, parser.SPOEAgent, name, "option set-on-error", nil); err != nil {
 		return err
@@ -498,7 +498,7 @@ func (c *SingleSpoe) createEditAgent(scope string, data *models.SpoeAgent, t str
 	if data.OptionSetProcessTime != "" {
 		d := &types.StringC{Value: data.OptionSetProcessTime}
 		if err := p.Set(scope, parser.SPOEAgent, name, "option set-process-time", d); err != nil {
-			return c.handleError("option set-process-time", "", "", t, transactionID == "", err)
+			return c.Transaction.HandleError("option set-process-time", "", "", t, transactionID == "", err)
 		}
 	} else if err := p.Set(scope, parser.SPOEAgent, name, "option set-process-time", nil); err != nil {
 		return err
@@ -507,7 +507,7 @@ func (c *SingleSpoe) createEditAgent(scope string, data *models.SpoeAgent, t str
 	if data.OptionSetTotalTime != "" {
 		d := &types.StringC{Value: data.OptionSetTotalTime}
 		if err := p.Set(scope, parser.SPOEAgent, name, "option set-total-time", d); err != nil {
-			return c.handleError("option set-total-time", "", "", t, transactionID == "", err)
+			return c.Transaction.HandleError("option set-total-time", "", "", t, transactionID == "", err)
 		}
 	} else if err := p.Set(scope, parser.SPOEAgent, name, "option set-total-time", nil); err != nil {
 		return err
@@ -516,7 +516,7 @@ func (c *SingleSpoe) createEditAgent(scope string, data *models.SpoeAgent, t str
 	if data.OptionVarPrefix != "" {
 		d := &types.StringC{Value: data.OptionVarPrefix}
 		if err := p.Set(scope, parser.SPOEAgent, name, "option var-prefix", d); err != nil {
-			return c.handleError("option var-prefix", "", "", t, transactionID == "", err)
+			return c.Transaction.HandleError("option var-prefix", "", "", t, transactionID == "", err)
 		}
 	} else if err := p.Set(scope, parser.SPOEAgent, name, "option var-prefix", nil); err != nil {
 		return err
@@ -525,7 +525,7 @@ func (c *SingleSpoe) createEditAgent(scope string, data *models.SpoeAgent, t str
 	if data.RegisterVarNames != "" {
 		d := &types.StringC{Value: data.RegisterVarNames}
 		if err := p.Set(scope, parser.SPOEAgent, name, "register-var-names", d); err != nil {
-			return c.handleError("register-var-names", "", "", t, transactionID == "", err)
+			return c.Transaction.HandleError("register-var-names", "", "", t, transactionID == "", err)
 		}
 	} else if err := p.Set(scope, parser.SPOEAgent, name, "register-var-names", nil); err != nil {
 		return err
@@ -534,7 +534,7 @@ func (c *SingleSpoe) createEditAgent(scope string, data *models.SpoeAgent, t str
 	if data.HelloTimeout > 0 {
 		d := &types.StringC{Value: strconv.FormatInt(data.HelloTimeout, 10)}
 		if err := p.Set(scope, parser.SPOEAgent, name, "timeout hello", d); err != nil {
-			return c.handleError(d.Value, "", "", t, transactionID == "", err)
+			return c.Transaction.HandleError(d.Value, "", "", t, transactionID == "", err)
 		}
 	} else if err := p.Set(scope, parser.SPOEAgent, name, "timeout hello", nil); err != nil {
 		return err
@@ -543,7 +543,7 @@ func (c *SingleSpoe) createEditAgent(scope string, data *models.SpoeAgent, t str
 	if data.IdleTimeout > 0 {
 		d := &types.StringC{Value: strconv.FormatInt(data.IdleTimeout, 10)}
 		if err := p.Set(scope, parser.SPOEAgent, name, "timeout idle", d); err != nil {
-			return c.handleError(d.Value, "", "", t, transactionID == "", err)
+			return c.Transaction.HandleError(d.Value, "", "", t, transactionID == "", err)
 		}
 	} else if err := p.Set(scope, parser.SPOEAgent, name, "timeout idle", nil); err != nil {
 		return err
@@ -552,7 +552,7 @@ func (c *SingleSpoe) createEditAgent(scope string, data *models.SpoeAgent, t str
 	if data.ProcessingTimeout > 0 {
 		d := &types.StringC{Value: strconv.FormatInt(data.ProcessingTimeout, 10)}
 		if err := p.Set(scope, parser.SPOEAgent, name, "timeout processing", d); err != nil {
-			return c.handleError(d.Value, "", "", t, transactionID == "", err)
+			return c.Transaction.HandleError(d.Value, "", "", t, transactionID == "", err)
 		}
 	} else if err := p.Set(scope, parser.SPOEAgent, name, "timeout processing", nil); err != nil {
 		return err
@@ -561,7 +561,7 @@ func (c *SingleSpoe) createEditAgent(scope string, data *models.SpoeAgent, t str
 	if data.UseBackend != "" {
 		d := &types.StringC{Value: data.UseBackend}
 		if err := p.Set(scope, parser.SPOEAgent, name, "use-backend", d); err != nil {
-			return c.handleError("use-backend", "", "", t, transactionID == "", err)
+			return c.Transaction.HandleError("use-backend", "", "", t, transactionID == "", err)
 		}
 	} else if err := p.Set(scope, parser.SPOEAgent, name, "use-backend", nil); err != nil {
 		return err
@@ -570,7 +570,7 @@ func (c *SingleSpoe) createEditAgent(scope string, data *models.SpoeAgent, t str
 	if data.Groups != "" {
 		d := &types.StringC{Value: data.Groups}
 		if err := p.Set(scope, parser.SPOEAgent, name, "groups", d); err != nil {
-			return c.handleError("groups", "", "", t, transactionID == "", err)
+			return c.Transaction.HandleError("groups", "", "", t, transactionID == "", err)
 		}
 	} else if err := p.Set(scope, parser.SPOEAgent, name, "groups", nil); err != nil {
 		return err
@@ -592,7 +592,7 @@ func (c *SingleSpoe) createEditAgent(scope string, data *models.SpoeAgent, t str
 			logs = append(logs, log)
 		}
 		if err := p.Set(scope, parser.SPOEAgent, name, "log", logs); err != nil {
-			return c.handleError("log", "", "", t, transactionID == "", err)
+			return c.Transaction.HandleError("log", "", "", t, transactionID == "", err)
 		}
 	} else if err := p.Set(scope, parser.SPOEAgent, name, "log", nil); err != nil {
 		return err

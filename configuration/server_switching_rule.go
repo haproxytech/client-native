@@ -40,7 +40,7 @@ func (c *Client) GetServerSwitchingRules(backend string, transactionID string) (
 
 	srvRules, err := ParseServerSwitchingRules(backend, p)
 	if err != nil {
-		return v, nil, c.handleError("", "backend", backend, "", false, err)
+		return v, nil, c.HandleError("", "backend", backend, "", false, err)
 	}
 
 	return v, srvRules, nil
@@ -61,7 +61,7 @@ func (c *Client) GetServerSwitchingRule(id int64, backend string, transactionID 
 
 	data, err := p.GetOne(parser.Backends, backend, "use-server", int(id))
 	if err != nil {
-		return v, nil, c.handleError(strconv.FormatInt(id, 10), "backend", backend, "", false, err)
+		return v, nil, c.HandleError(strconv.FormatInt(id, 10), "backend", backend, "", false, err)
 	}
 
 	srvRule := ParseServerSwitchingRule(data.(types.UseServer))
@@ -79,10 +79,10 @@ func (c *Client) DeleteServerSwitchingRule(id int64, backend string, transaction
 	}
 
 	if err := p.Delete(parser.Backends, backend, "use-server", int(id)); err != nil {
-		return c.handleError(strconv.FormatInt(id, 10), "backend", backend, t, transactionID == "", err)
+		return c.HandleError(strconv.FormatInt(id, 10), "backend", backend, t, transactionID == "", err)
 	}
 
-	if err := c.saveData(p, t, transactionID == ""); err != nil {
+	if err := c.SaveData(p, t, transactionID == ""); err != nil {
 		return err
 	}
 	return nil
@@ -103,10 +103,10 @@ func (c *Client) CreateServerSwitchingRule(backend string, data *models.ServerSw
 	}
 
 	if err := p.Insert(parser.Backends, backend, "use-server", SerializeServerSwitchingRule(*data), int(*data.Index)); err != nil {
-		return c.handleError(strconv.FormatInt(*data.Index, 10), "backend", backend, t, transactionID == "", err)
+		return c.HandleError(strconv.FormatInt(*data.Index, 10), "backend", backend, t, transactionID == "", err)
 	}
 
-	if err := c.saveData(p, t, transactionID == ""); err != nil {
+	if err := c.SaveData(p, t, transactionID == ""); err != nil {
 		return err
 	}
 	return nil
@@ -127,14 +127,14 @@ func (c *Client) EditServerSwitchingRule(id int64, backend string, data *models.
 	}
 
 	if _, err := p.GetOne(parser.Backends, backend, "use-server", int(id)); err != nil {
-		return c.handleError(strconv.FormatInt(*data.Index, 10), "backend", backend, t, transactionID == "", err)
+		return c.HandleError(strconv.FormatInt(*data.Index, 10), "backend", backend, t, transactionID == "", err)
 	}
 
 	if err := p.Set(parser.Backends, backend, "use-server", SerializeServerSwitchingRule(*data), int(id)); err != nil {
-		return c.handleError(strconv.FormatInt(*data.Index, 10), "backend", backend, t, transactionID == "", err)
+		return c.HandleError(strconv.FormatInt(*data.Index, 10), "backend", backend, t, transactionID == "", err)
 	}
 
-	if err := c.saveData(p, t, transactionID == ""); err != nil {
+	if err := c.SaveData(p, t, transactionID == ""); err != nil {
 		return err
 	}
 	return nil

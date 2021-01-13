@@ -74,14 +74,14 @@ func (c *SingleSpoe) DeleteScope(name, transactionID string, version int64) erro
 	_, _, err = c.GetScope(name, transactionID)
 	if err != nil {
 		e := conf.NewConfError(conf.ErrObjectDoesNotExist, fmt.Sprintf("scope %s does not exist", name))
-		return c.handleError(name, "", "", t, transactionID == "", e)
+		return c.Transaction.HandleError(name, "", "", t, transactionID == "", e)
 	}
 
 	if err := p.ScopeDelete(name); err != nil {
-		return c.handleError(name, "", "", t, transactionID == "", err)
+		return c.Transaction.HandleError(name, "", "", t, transactionID == "", err)
 	}
 
-	if err := c.saveData(p, t, transactionID == ""); err != nil {
+	if err := c.Transaction.SaveData(p, t, transactionID == ""); err != nil {
 		return err
 	}
 
@@ -108,14 +108,14 @@ func (c *SingleSpoe) CreateScope(data *models.SpoeScope, transactionID string, v
 	_, s, _ := c.GetScope(scope, transactionID)
 	if s != nil {
 		e := conf.NewConfError(conf.ErrObjectAlreadyExists, fmt.Sprintf("scope %s already exists", scope))
-		return c.handleError(scope, "", "", t, transactionID == "", e)
+		return c.Transaction.HandleError(scope, "", "", t, transactionID == "", e)
 	}
 
 	if err := p.ScopeCreate(scope); err != nil {
 		return err
 	}
 
-	if err := c.saveData(p, t, transactionID == ""); err != nil {
+	if err := c.Transaction.SaveData(p, t, transactionID == ""); err != nil {
 		return err
 	}
 

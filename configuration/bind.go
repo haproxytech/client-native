@@ -43,7 +43,7 @@ func (c *Client) GetBinds(frontend string, transactionID string) (int64, models.
 
 	binds, err := ParseBinds(frontend, p)
 	if err != nil {
-		return v, nil, c.handleError("", "frontend", frontend, "", false, err)
+		return v, nil, c.HandleError("", "frontend", frontend, "", false, err)
 	}
 
 	return v, binds, nil
@@ -81,14 +81,14 @@ func (c *Client) DeleteBind(name string, frontend string, transactionID string, 
 	bind, i := GetBindByName(name, frontend, p)
 	if bind == nil {
 		e := NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("Bind %s does not exist in frontend %s", name, frontend))
-		return c.handleError(name, "frontend", frontend, t, transactionID == "", e)
+		return c.HandleError(name, "frontend", frontend, t, transactionID == "", e)
 	}
 
 	if err := p.Delete(parser.Frontends, frontend, "bind", i); err != nil {
-		return c.handleError(name, "frontend", frontend, t, transactionID == "", err)
+		return c.HandleError(name, "frontend", frontend, t, transactionID == "", err)
 	}
 
-	if err := c.saveData(p, t, transactionID == ""); err != nil {
+	if err := c.SaveData(p, t, transactionID == ""); err != nil {
 		return err
 	}
 	return nil
@@ -111,20 +111,20 @@ func (c *Client) CreateBind(frontend string, data *models.Bind, transactionID st
 
 	if data.PortRangeEnd != nil && *data.Port >= *data.PortRangeEnd {
 		e := NewConfError(ErrGeneralError, fmt.Sprintf("Bind port range end %d has to be greater start %d", *data.PortRangeEnd, *data.Port))
-		return c.handleError(data.Name, "frontend", frontend, t, transactionID == "", e)
+		return c.HandleError(data.Name, "frontend", frontend, t, transactionID == "", e)
 	}
 
 	bind, _ := GetBindByName(data.Name, frontend, p)
 	if bind != nil {
 		e := NewConfError(ErrObjectAlreadyExists, fmt.Sprintf("Bind %s already exists in frontend %s", data.Name, frontend))
-		return c.handleError(data.Name, "frontend", frontend, t, transactionID == "", e)
+		return c.HandleError(data.Name, "frontend", frontend, t, transactionID == "", e)
 	}
 
 	if err := p.Insert(parser.Frontends, frontend, "bind", SerializeBind(*data), -1); err != nil {
-		return c.handleError(data.Name, "frontend", frontend, t, transactionID == "", err)
+		return c.HandleError(data.Name, "frontend", frontend, t, transactionID == "", err)
 	}
 
-	if err := c.saveData(p, t, transactionID == ""); err != nil {
+	if err := c.SaveData(p, t, transactionID == ""); err != nil {
 		return err
 	}
 
@@ -148,14 +148,14 @@ func (c *Client) EditBind(name string, frontend string, data *models.Bind, trans
 	bind, i := GetBindByName(name, frontend, p)
 	if bind == nil {
 		e := NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("Bind %v does not exist in frontend %s", name, frontend))
-		return c.handleError(data.Name, "frontend", frontend, t, transactionID == "", e)
+		return c.HandleError(data.Name, "frontend", frontend, t, transactionID == "", e)
 	}
 
 	if err := p.Set(parser.Frontends, frontend, "bind", SerializeBind(*data), i); err != nil {
-		return c.handleError(data.Name, "frontend", frontend, t, transactionID == "", err)
+		return c.HandleError(data.Name, "frontend", frontend, t, transactionID == "", err)
 	}
 
-	if err := c.saveData(p, t, transactionID == ""); err != nil {
+	if err := c.SaveData(p, t, transactionID == ""); err != nil {
 		return err
 	}
 

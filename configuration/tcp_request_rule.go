@@ -46,7 +46,7 @@ func (c *Client) GetTCPRequestRules(parentType, parentName string, transactionID
 
 	tcpRules, err := ParseTCPRequestRules(parentType, parentName, p)
 	if err != nil {
-		return v, nil, c.handleError("", parentType, parentName, "", false, err)
+		return v, nil, c.HandleError("", parentType, parentName, "", false, err)
 	}
 
 	return v, tcpRules, nil
@@ -74,7 +74,7 @@ func (c *Client) GetTCPRequestRule(id int64, parentType, parentName string, tran
 
 	data, err := p.GetOne(section, parentName, "tcp-request", int(id))
 	if err != nil {
-		return v, nil, c.handleError(strconv.FormatInt(id, 10), parentType, parentName, "", false, err)
+		return v, nil, c.HandleError(strconv.FormatInt(id, 10), parentType, parentName, "", false, err)
 	}
 
 	tcpRule, err := ParseTCPRequestRule(data.(types.TCPType))
@@ -101,10 +101,10 @@ func (c *Client) DeleteTCPRequestRule(id int64, parentType string, parentName st
 	}
 
 	if err := p.Delete(section, parentName, "tcp-request", int(id)); err != nil {
-		return c.handleError(strconv.FormatInt(id, 10), parentType, parentName, t, transactionID == "", err)
+		return c.HandleError(strconv.FormatInt(id, 10), parentType, parentName, t, transactionID == "", err)
 	}
 
-	if err := c.saveData(p, t, transactionID == ""); err != nil {
+	if err := c.SaveData(p, t, transactionID == ""); err != nil {
 		return err
 	}
 
@@ -139,10 +139,10 @@ func (c *Client) CreateTCPRequestRule(parentType string, parentName string, data
 	}
 
 	if err := p.Insert(section, parentName, "tcp-request", s, int(*data.Index)); err != nil {
-		return c.handleError(strconv.FormatInt(*data.Index, 10), parentType, parentName, t, transactionID == "", err)
+		return c.HandleError(strconv.FormatInt(*data.Index, 10), parentType, parentName, t, transactionID == "", err)
 	}
 
-	if err := c.saveData(p, t, transactionID == ""); err != nil {
+	if err := c.SaveData(p, t, transactionID == ""); err != nil {
 		return err
 	}
 	return nil
@@ -170,7 +170,7 @@ func (c *Client) EditTCPRequestRule(id int64, parentType string, parentName stri
 	}
 
 	if _, err := p.GetOne(section, parentName, "tcp-request", int(id)); err != nil {
-		return c.handleError(strconv.FormatInt(id, 10), parentType, parentName, t, transactionID == "", err)
+		return c.HandleError(strconv.FormatInt(id, 10), parentType, parentName, t, transactionID == "", err)
 	}
 
 	s, err := SerializeTCPRequestRule(*data)
@@ -179,10 +179,10 @@ func (c *Client) EditTCPRequestRule(id int64, parentType string, parentName stri
 	}
 
 	if err := p.Set(section, parentName, "tcp-request", s, int(id)); err != nil {
-		return c.handleError(strconv.FormatInt(id, 10), parentType, parentName, t, transactionID == "", err)
+		return c.HandleError(strconv.FormatInt(id, 10), parentType, parentName, t, transactionID == "", err)
 	}
 
-	if err := c.saveData(p, t, transactionID == ""); err != nil {
+	if err := c.SaveData(p, t, transactionID == ""); err != nil {
 		return err
 	}
 	return nil

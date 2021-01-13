@@ -82,14 +82,14 @@ func (c *Client) DeletePeerSection(name string, transactionID string, version in
 
 	if !c.checkSectionExists(parser.Peers, name, p) {
 		e := NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("%s %s does not exist", parser.Peers, name))
-		return c.handleError(name, "", "", t, transactionID == "", e)
+		return c.HandleError(name, "", "", t, transactionID == "", e)
 	}
 
 	if err := DeletePeerSection(p, name); err != nil {
-		return c.handleError(name, "", "", t, transactionID == "", err)
+		return c.HandleError(name, "", "", t, transactionID == "", err)
 	}
 
-	if err := c.saveData(p, t, transactionID == ""); err != nil {
+	if err := c.SaveData(p, t, transactionID == ""); err != nil {
 		return err
 	}
 
@@ -111,9 +111,9 @@ func (c *Client) CreatePeerSection(data *models.PeerSection, transactionID strin
 		return err
 	}
 	if err := SerializePeerSection(p, data); err != nil {
-		return c.handleError(data.Name, "", "", t, transactionID == "", err)
+		return c.HandleError(data.Name, "", "", t, transactionID == "", err)
 	}
-	if err := c.saveData(p, t, transactionID == ""); err != nil {
+	if err := c.SaveData(p, t, transactionID == ""); err != nil {
 		return err
 	}
 

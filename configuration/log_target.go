@@ -40,7 +40,7 @@ func (c *Client) GetLogTargets(parentType, parentName string, transactionID stri
 
 	logTargets, err := ParseLogTargets(parentType, parentName, p)
 	if err != nil {
-		return v, nil, c.handleError("", parentType, parentName, "", false, err)
+		return v, nil, c.HandleError("", parentType, parentName, "", false, err)
 	}
 
 	return v, logTargets, nil
@@ -68,7 +68,7 @@ func (c *Client) GetLogTarget(id int64, parentType, parentName string, transacti
 
 	data, err := p.GetOne(section, parentName, "log", int(id))
 	if err != nil {
-		return v, nil, c.handleError(strconv.FormatInt(id, 10), parentType, parentName, "", false, err)
+		return v, nil, c.HandleError(strconv.FormatInt(id, 10), parentType, parentName, "", false, err)
 	}
 
 	logTarget := ParseLogTarget(data.(types.Log))
@@ -93,10 +93,10 @@ func (c *Client) DeleteLogTarget(id int64, parentType string, parentName string,
 	}
 
 	if err := p.Delete(section, parentName, "log", int(id)); err != nil {
-		return c.handleError(strconv.FormatInt(id, 10), parentType, parentName, t, transactionID == "", err)
+		return c.HandleError(strconv.FormatInt(id, 10), parentType, parentName, t, transactionID == "", err)
 	}
 
-	if err := c.saveData(p, t, transactionID == ""); err != nil {
+	if err := c.SaveData(p, t, transactionID == ""); err != nil {
 		return err
 	}
 
@@ -126,10 +126,10 @@ func (c *Client) CreateLogTarget(parentType string, parentName string, data *mod
 	}
 
 	if err := p.Insert(section, parentName, "log", SerializeLogTarget(*data), int(*data.Index)); err != nil {
-		return c.handleError(strconv.FormatInt(*data.Index, 10), parentType, parentName, t, transactionID == "", err)
+		return c.HandleError(strconv.FormatInt(*data.Index, 10), parentType, parentName, t, transactionID == "", err)
 	}
 
-	if err := c.saveData(p, t, transactionID == ""); err != nil {
+	if err := c.SaveData(p, t, transactionID == ""); err != nil {
 		return err
 	}
 	return nil
@@ -157,14 +157,14 @@ func (c *Client) EditLogTarget(id int64, parentType string, parentName string, d
 	}
 
 	if _, err := p.GetOne(section, parentName, "log", int(id)); err != nil {
-		return c.handleError(strconv.FormatInt(id, 10), parentType, parentName, t, transactionID == "", err)
+		return c.HandleError(strconv.FormatInt(id, 10), parentType, parentName, t, transactionID == "", err)
 	}
 
 	if err := p.Set(section, parentName, "log", SerializeLogTarget(*data), int(id)); err != nil {
-		return c.handleError(strconv.FormatInt(id, 10), parentType, parentName, t, transactionID == "", err)
+		return c.HandleError(strconv.FormatInt(id, 10), parentType, parentName, t, transactionID == "", err)
 	}
 
-	if err := c.saveData(p, t, transactionID == ""); err != nil {
+	if err := c.SaveData(p, t, transactionID == ""); err != nil {
 		return err
 	}
 	return nil
