@@ -90,7 +90,7 @@ func (c *Client) CreateSite(data *models.Site, transactionID string, version int
 		return err
 	}
 
-	//create frontend
+	// create frontend
 	frontend := SerializeServiceToFrontend(data.Service, data.Name)
 
 	if frontend != nil {
@@ -100,9 +100,9 @@ func (c *Client) CreateSite(data *models.Site, transactionID string, version int
 		}
 	}
 
-	//create listeners
+	// create listeners
 	for _, l := range data.Service.Listeners {
-		//sanitize name
+		// sanitize name
 		if l.Name == "" {
 			l.Name = l.Address + ":" + strconv.FormatInt(*l.Port, 10)
 		}
@@ -112,7 +112,7 @@ func (c *Client) CreateSite(data *models.Site, transactionID string, version int
 		}
 	}
 
-	//create backends
+	// create backends
 	for _, b := range data.Farms {
 		backend := SerializeFarmToBackend(b)
 		if backend == nil {
@@ -122,9 +122,9 @@ func (c *Client) CreateSite(data *models.Site, transactionID string, version int
 		if err != nil {
 			res = append(res, err)
 		}
-		//create servers
+		// create servers
 		for _, s := range b.Servers {
-			//sanitize name
+			// sanitize name
 			if s.Name == "" {
 				s.Name = s.Address + ":" + strconv.FormatInt(*s.Port, 10)
 			}
@@ -133,7 +133,7 @@ func (c *Client) CreateSite(data *models.Site, transactionID string, version int
 				res = append(res, err)
 			}
 		}
-		//create bck-frontend relations
+		// create bck-frontend relations
 		err = c.createBckFrontendRels(data.Name, b, false, t, p)
 		if err != nil {
 			res = append(res, err)
@@ -174,23 +174,23 @@ func (c *Client) EditSite(name string, data *models.Site, transactionID string, 
 	}
 	confS := site
 
-	//edit frontend
+	// edit frontend
 	if !reflect.DeepEqual(data.Service, confS.Service) {
 		err := c.editService(data.Name, data.Service, t, p)
 		if err != nil {
 			res = append(res, err)
 		}
-		//compare listeners
+		// compare listeners
 		if !reflect.DeepEqual(confS.Service.Listeners, data.Service.Listeners) {
-			//add missing listeners by name, edit existing
+			// add missing listeners by name, edit existing
 			for _, l := range data.Service.Listeners {
 				found := false
 				for _, confL := range confS.Service.Listeners {
 					if l.Name == confL.Name {
 						if !reflect.DeepEqual(l, confL) {
-							err := c.EditBind(l.Name, data.Name, l, t, 0)
-							if err != nil {
-								res = append(res, err)
+							errB := c.EditBind(l.Name, data.Name, l, t, 0)
+							if errB != nil {
+								res = append(res, errB)
 							}
 						}
 						found = true
@@ -198,7 +198,7 @@ func (c *Client) EditSite(name string, data *models.Site, transactionID string, 
 					}
 				}
 				if !found {
-					//sanitize name
+					// sanitize name
 					if l.Name == "" {
 						l.Name = l.Address + ":" + strconv.FormatInt(*l.Port, 10)
 					}
@@ -208,7 +208,7 @@ func (c *Client) EditSite(name string, data *models.Site, transactionID string, 
 					}
 				}
 			}
-			//delete non existing listeners
+			// delete non existing listeners
 			for _, confL := range confS.Service.Listeners {
 				found := false
 				for _, l := range data.Service.Listeners {
@@ -244,9 +244,9 @@ func (c *Client) EditSite(name string, data *models.Site, transactionID string, 
 						res = append(res, err)
 					}
 					for _, s := range b.Servers {
-						err := c.CreateServer(b.Name, s, t, 0)
-						if err != nil {
-							res = append(res, err)
+						errC := c.CreateServer(b.Name, s, t, 0)
+						if errC != nil {
+							res = append(res, errC)
 						}
 					}
 					if b.UseAs == "default" && defaultBck != "" {
@@ -254,7 +254,7 @@ func (c *Client) EditSite(name string, data *models.Site, transactionID string, 
 					} else if b.UseAs == "default" && defaultBck == "" {
 						defaultBck = b.Name
 					}
-					//create bck-frontend relations
+					// create bck-frontend relations
 					err = c.createBckFrontendRels(name, b, false, t, p)
 					if err != nil {
 						res = append(res, err)
@@ -270,23 +270,23 @@ func (c *Client) EditSite(name string, data *models.Site, transactionID string, 
 				if !reflect.DeepEqual(b, confB) {
 					// check if use as has changed
 					if b.UseAs != confB.UseAs {
-						err := c.createBckFrontendRels(name, b, true, t, p)
-						if err != nil {
-							res = append(res, err)
+						errB := c.createBckFrontendRels(name, b, true, t, p)
+						if errB != nil {
+							res = append(res, errB)
 						}
 					}
-					err := c.editFarm(b.Name, b, t, p)
-					if err != nil {
-						res = append(res, err)
+					errF := c.editFarm(b.Name, b, t, p)
+					if errF != nil {
+						res = append(res, errF)
 					}
 					for _, srv := range b.Servers {
 						found := false
 						for _, confSrv := range confB.Servers {
 							if srv.Name == confSrv.Name {
 								if !reflect.DeepEqual(srv, confSrv) {
-									err := c.EditServer(srv.Name, b.Name, srv, t, 0)
-									if err != nil {
-										res = append(res, err)
+									errS := c.EditServer(srv.Name, b.Name, srv, t, 0)
+									if errS != nil {
+										res = append(res, errS)
 									}
 								}
 								found = true
@@ -300,7 +300,7 @@ func (c *Client) EditSite(name string, data *models.Site, transactionID string, 
 							}
 						}
 					}
-					//delete non existing servers
+					// delete non existing servers
 					for _, confSrv := range confB.Servers {
 						found := false
 						for _, srv := range b.Servers {
@@ -576,7 +576,7 @@ func (c *Client) createBckFrontendRels(name string, b *models.SiteFarm, edit boo
 		}
 	} else {
 		if b.Cond == "" || b.CondTest == "" {
-			res = append(res, fmt.Errorf("Backend %s set as conditional but no conditions provided", b.Name))
+			res = append(res, fmt.Errorf("backend %s set as conditional but no conditions provided", b.Name))
 		} else {
 			i := int64(0)
 			uf := &models.BackendSwitchingRule{

@@ -23,7 +23,7 @@ import (
 
 const testConf = `
 # _version=1
-global 
+global
 	daemon
 	nbproc 4
 	maxconn 2000
@@ -234,10 +234,11 @@ backend test_2
   stick-table type ip size 100k expire 1h peers mycluster store http_req_rate(10s)
 `
 const testPath = "/tmp/haproxy-test.cfg"
-const haproxyExec = "/usr/sbin/haproxy"
 
-var client *Client
-var version int64 = 1
+var (
+	client  *Client
+	version int64 = 1
+)
 
 func TestMain(m *testing.M) {
 	err := prepareTestFile(testConf, testPath)
@@ -258,7 +259,7 @@ func TestMain(m *testing.M) {
 
 func prepareTestFile(conf string, path string) error {
 	// detect if file exists
-	var _, err = os.Stat(path)
+	_, err := os.Stat(path)
 	var file *os.File
 	// create file if not exists
 	if os.IsNotExist(err) {

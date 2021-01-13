@@ -365,7 +365,7 @@ func TestCreateEditDeleteBackend(t *testing.T) {
 	}
 
 	for i, backend := range backends {
-		if err := testBackendUpdate(backend, t); err != nil {
+		if errB := testBackendUpdate(backend, t); errB != nil {
 			t.Errorf("failed update for backend %d: %v", i, err)
 		}
 	}
@@ -432,7 +432,6 @@ func testBackendUpdate(b *models.Backend, t *testing.T) error {
 }
 
 func compareBackends(x, y *models.Backend, t *testing.T) bool {
-
 	if *x.Balance.Algorithm != *y.Balance.Algorithm {
 		return false
 	}

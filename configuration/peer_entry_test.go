@@ -87,7 +87,7 @@ func TestGetPeerEntry(t *testing.T) {
 }
 
 func TestCreateEditDeletePeerEntry(t *testing.T) {
-	v, _, err := client.GetPeerEntry("hapee", "mycluster", "")
+	_, _, err := client.GetPeerEntry("hapee", "mycluster", "")
 	if err != nil {
 		t.Error(err.Error())
 	}

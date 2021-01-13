@@ -266,8 +266,8 @@ func (t *Transaction) parseHAProxyCheckError(output []byte, id string) string {
 	var b strings.Builder
 	b.WriteString(fmt.Sprintf("err transactionId=%s \n", id))
 
-	for _, line := range strings.Split(oStr, "\n") {
-		line := strings.TrimSpace(line)
+	for _, lineWhole := range strings.Split(oStr, "\n") {
+		line := strings.TrimSpace(lineWhole)
 		if strings.HasPrefix(line, "[ALERT]") {
 			if strings.HasSuffix(line, "fatal errors found in configuration.") {
 				continue
@@ -329,9 +329,9 @@ func (t *Transaction) parseTransactions(status string) (*models.Transactions, er
 
 	_, err := os.Stat(t.TransactionDir)
 	if err != nil && os.IsNotExist(err) {
-		err := os.MkdirAll(t.TransactionDir, 0755)
-		if err != nil {
-			return nil, err
+		errMkdir := os.MkdirAll(t.TransactionDir, 0755)
+		if errMkdir != nil {
+			return nil, errMkdir
 		}
 		return &models.Transactions{}, nil
 	}
@@ -403,9 +403,9 @@ func (t *Transaction) createTransactionFiles(transactionID string) error {
 	transDir, err := os.Stat(t.TransactionDir)
 
 	if err != nil && os.IsNotExist(err) {
-		err := os.MkdirAll(t.TransactionDir, 0755)
-		if err != nil {
-			return err
+		errMkdir := os.MkdirAll(t.TransactionDir, 0755)
+		if errMkdir != nil {
+			return errMkdir
 		}
 	} else if !transDir.Mode().IsDir() {
 		return fmt.Errorf("transaction dir %s is a file", t.TransactionDir)

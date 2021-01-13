@@ -82,7 +82,7 @@ func TestGetNameserver(t *testing.T) {
 }
 
 func TestCreateEditDeleteNameserver(t *testing.T) {
-	v, _, err := client.GetNameserver("dns1", "test", "")
+	_, _, err := client.GetNameserver("dns1", "test", "")
 	if err != nil {
 		t.Error(err.Error())
 	}
