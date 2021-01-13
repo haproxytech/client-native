@@ -549,7 +549,7 @@ func SerializeBind(b models.Bind) types.Bind {
 		bind.Params = append(bind.Params, &params.BindOptionValue{Name: "ssl-max-ver", Value: b.SslMaxVer})
 	}
 	if b.SslMinVer != "" {
-		bind.Params = append(bind.Params, &params.BindOptionValue{Name: "ssl-min-ver", Value: b.SslMaxVer})
+		bind.Params = append(bind.Params, &params.BindOptionValue{Name: "ssl-min-ver", Value: b.SslMinVer})
 	}
 	if b.StrictSni {
 		bind.Params = append(bind.Params, &params.ServerOptionWord{Name: "strict-sni"})
