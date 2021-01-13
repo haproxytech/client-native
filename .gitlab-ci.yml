@@ -5,16 +5,17 @@ stages:
 lint-commit-msg:
   stage: lint
   image:
-    name: haproxytech/check-commit:latest
+    name: $CI_REGISTRY_GO/check-commit:latest
     entrypoint: [""]
   tags:
     - go
   script:
-      - go run /check.go
+    - go run /check.go
+
 test:
   stage: test
   image:
-    name: golang:1.15
+    name: $CI_REGISTRY_GO/golang:1.15
     entrypoint: [""]
   tags:
     - go
