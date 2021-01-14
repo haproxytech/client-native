@@ -54,20 +54,16 @@ func (s *SingleRuntime) parseACL(line string) *models.ACLFile {
 
 	m := &models.ACLFile{
 		ID:          parts[0],
-		StorageName: findStorageName(line),
+		StorageName: findStorageName(parts[1], line),
 		Description: strings.Join(parts[2:], " "),
 	}
 
 	return m
 }
 
-// findStorageName checks if acl name is existent and exctracts it
-func findStorageName(line string) string {
-	name := ""
-
-	parts := strings.Fields(line)
-	name = strings.TrimSuffix(strings.TrimPrefix(parts[1], "("), ")")
-
+// findStorageName checks if acl name exists and extracts it
+func findStorageName(name, line string) string {
+	name = strings.TrimSuffix(strings.TrimPrefix(name, "("), ")")
 	if name == "" {
 		re := regexp.MustCompile(`acl\s'(.*)'\sfile`)
 		matches := re.FindStringSubmatch(line)
@@ -75,7 +71,6 @@ func findStorageName(line string) string {
 			name = matches[1]
 		}
 	}
-
 	return name
 }
 
