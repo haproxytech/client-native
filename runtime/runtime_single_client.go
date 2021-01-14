@@ -16,6 +16,7 @@
 package runtime
 
 import (
+	"errors"
 	"fmt"
 	"net"
 	"strings"
@@ -101,7 +102,17 @@ func (s *SingleRuntime) readFromSocket(command string) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	result := strings.TrimSuffix(data.String(), "\n> ")
+
+	// Check that last 2 bytes are a LF, otherwise we received an incomplete response
+	result := data.String()
+	if len(result) > 2 {
+		if result[len(result)-2:] != "\n\n" {
+			err := errors.New("Incomplete read from socket")
+			return result, err
+		}
+	}
+
+	result = strings.TrimSuffix(result, "\n> ")
 	result = strings.TrimSuffix(result, "\n")
 	return result, nil
 }
