@@ -38,7 +38,8 @@ func TestGetFilters(t *testing.T) {
 	}
 
 	for _, f := range filters {
-		if *f.Index == 0 {
+		switch *f.Index {
+		case 0:
 			if f.Type != "trace" {
 				t.Errorf("%v: Type not trace: %v", *f.Index, f.Type)
 			}
@@ -51,11 +52,11 @@ func TestGetFilters(t *testing.T) {
 			if f.TraceHexdump != true {
 				t.Errorf("%v: TraceHexdump not true: %v", *f.Index, f.TraceHexdump)
 			}
-		} else if *f.Index == 1 {
+		case 1:
 			if f.Type != "compression" {
 				t.Errorf("%v: Type not compression: %v", *f.Index, f.Type)
 			}
-		} else if *f.Index == 2 {
+		case 2:
 			if f.Type != "trace" {
 				t.Errorf("%v: Type not trace: %v", *f.Index, f.Type)
 			}
@@ -65,7 +66,7 @@ func TestGetFilters(t *testing.T) {
 			if f.TraceRndForwarding != true {
 				t.Errorf("%v: TraceRndForwarding not true: %v", *f.Index, f.TraceRndForwarding)
 			}
-		} else {
+		default:
 			t.Errorf("Expext only filter 1, 2 or 3, %v found", *f.Index)
 		}
 	}

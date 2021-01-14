@@ -33,7 +33,8 @@ func (c *Client) GetRawConfiguration(transactionID string, version int64) (int64
 	var err error
 	if transactionID != "" && version != 0 {
 		return 0, "", NewConfError(ErrBothVersionTransaction, "Both version and transactionID specified, specify only one")
-	} else if transactionID != "" {
+	}
+	if transactionID != "" {
 		config, err = c.GetTransactionFile(transactionID)
 		if err != nil {
 			return 0, "", err
@@ -125,18 +126,18 @@ func (c *Client) PostRawConfiguration(config *string, version int64, skipVersion
 	}
 	// Write the transaction file directly
 	tmp, err := os.OpenFile(tFile, os.O_RDWR|os.O_TRUNC, 0777)
-	defer tmp.Close()
+	defer func() { _ = tmp.Close() }()
 	if err != nil {
 		return NewConfError(ErrCannotReadConfFile, err.Error())
 	}
 
 	w := bufio.NewWriter(tmp)
 	if !skipVersionCheck {
-		w.WriteString(fmt.Sprintf("# _version=%v\n%v", version, *config))
+		_, _ = w.WriteString(fmt.Sprintf("# _version=%v\n%v", version, *config))
 	} else {
-		w.WriteString(*config)
+		_, _ = w.WriteString(*config)
 	}
-	w.Flush()
+	_ = w.Flush()
 
 	// Load the data into the transaction parser
 	p, err := c.GetParser(t)
@@ -157,6 +158,7 @@ func (c *Client) PostRawConfiguration(config *string, version int64, skipVersion
 }
 
 func (c *Client) validateConfigFile(confFile string) error {
+	// #nosec G204
 	cmd := exec.Command(c.Haproxy)
 	cmd.Args = append(cmd.Args, "-c")
 

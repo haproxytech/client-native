@@ -217,8 +217,10 @@ func (t *Transaction) checkTransactionFile(transactionID string) error {
 	}
 	var cmd *exec.Cmd
 	if t.MasterWorker {
+		// #nosec G204
 		cmd = exec.Command(t.Haproxy, "-W", "-f", transactionFile, "-c")
 	} else {
+		// #nosec G204
 		cmd = exec.Command(t.Haproxy, "-f", transactionFile, "-c")
 	}
 
@@ -238,9 +240,11 @@ func (t *Transaction) CheckTransactionOrVersion(transactionID string, version in
 	tID := ""
 	if transactionID != "" && version != 0 {
 		return "", NewConfError(ErrBothVersionTransaction, "both version and transaction specified, specify only one")
-	} else if transactionID == "" && version == 0 {
+	}
+	if transactionID == "" && version == 0 {
 		return "", NewConfError(ErrNoVersionTransaction, "version or transaction not specified, specify only one")
-	} else if transactionID != "" {
+	}
+	if transactionID != "" {
 		tID = transactionID
 	} else {
 		v, err := t.TransactionClient.GetVersion("")
@@ -496,11 +500,11 @@ func (t *Transaction) failTransaction(transactionID string) {
 func (t *Transaction) writeFailedTransaction(transactionID, configFile string) {
 	failedDir := filepath.Join(t.TransactionDir, "failed")
 	if _, err := os.Stat(failedDir); os.IsNotExist(err) {
-		os.Mkdir(failedDir, 0755)
+		_ = os.Mkdir(failedDir, 0755)
 	}
 	failedConfigFile := t.getTransactionFileFailed(transactionID)
 	if err := moveFile(configFile, failedConfigFile); err != nil {
-		os.Remove(configFile)
+		_ = os.Remove(configFile)
 	}
 }
 
@@ -568,7 +572,7 @@ func (t *Transaction) SaveData(prsr interface{}, tID string, commitImplicit bool
 func (t *Transaction) ErrAndDeleteTransaction(err error, tID string) error {
 	// Just a safety to not delete the master files by mistake
 	if tID != "" {
-		t.DeleteTransaction(tID)
+		_ = t.DeleteTransaction(tID)
 		return err
 	}
 	return err
@@ -576,19 +580,20 @@ func (t *Transaction) ErrAndDeleteTransaction(err error, tID string) error {
 
 func (t *Transaction) HandleError(id, parentType, parentName, transactionID string, implicit bool, err error) error {
 	var e error
-	if err == parser_errors.ErrSectionMissing {
+	switch err {
+	case parser_errors.ErrSectionMissing:
 		if parentName != "" {
 			e = NewConfError(ErrParentDoesNotExist, fmt.Sprintf("%s %s does not exist", parentType, parentName))
 		} else {
 			e = NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("Object %s does not exist", id))
 		}
-	} else if err == parser_errors.ErrSectionAlreadyExists {
+	case parser_errors.ErrSectionAlreadyExists:
 		e = NewConfError(ErrObjectAlreadyExists, fmt.Sprintf("Object %s already exists", id))
-	} else if err == parser_errors.ErrFetch {
+	case parser_errors.ErrFetch:
 		e = NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("Object %v does not exist in %s %s", id, parentType, parentName))
-	} else if err == parser_errors.ErrIndexOutOfRange {
+	case parser_errors.ErrIndexOutOfRange:
 		e = NewConfError(ErrObjectIndexOutOfRange, fmt.Sprintf("Object with id %v in %s %s out of range", id, parentType, parentName))
-	} else {
+	default:
 		e = err
 	}
 

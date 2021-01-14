@@ -38,7 +38,8 @@ func TestGetServerSwitchingRules(t *testing.T) {
 	}
 
 	for _, sr := range srvRules {
-		if *sr.Index == 0 {
+		switch *sr.Index {
+		case 0:
 			if sr.TargetServer != "webserv" {
 				t.Errorf("%v: TargetServer not webserv: %v", *sr.Index, sr.TargetServer)
 			}
@@ -48,7 +49,7 @@ func TestGetServerSwitchingRules(t *testing.T) {
 			if sr.CondTest != "TRUE" {
 				t.Errorf("%v: CondTest not TRUE: %v", *sr.Index, sr.CondTest)
 			}
-		} else if *sr.Index == 1 {
+		case 1:
 			if sr.TargetServer != "webserv2" {
 				t.Errorf("%v: TargetServer not webserv2: %v", *sr.Index, sr.TargetServer)
 			}
@@ -58,7 +59,7 @@ func TestGetServerSwitchingRules(t *testing.T) {
 			if sr.CondTest != "TRUE" {
 				t.Errorf("%v: CondTest not TRUE: %v", *sr.Index, sr.CondTest)
 			}
-		} else {
+		default:
 			t.Errorf("Expext only server switching rule 0 or 1, %v found", *sr.Index)
 		}
 	}

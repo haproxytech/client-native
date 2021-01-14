@@ -30,7 +30,7 @@ import (
 	"github.com/haproxytech/models/v2"
 )
 
-//Client handles multiple HAProxy clients
+// Client handles multiple HAProxy clients
 type Client struct {
 	ClientParams
 	haproxyVersion *HAProxyVersion
@@ -56,9 +56,9 @@ func DefaultClient() (*Client, error) {
 	return c, nil
 }
 
-//Init must be given path to runtime socket and nbproc that is not 0 when in master worker mode
+// Init must be given path to runtime socket and nbproc that is not 0 when in master worker mode
 //
-//Deprecated: use InitWithSockets or InitWithMasterSocket instead
+// Deprecated: use InitWithSockets or InitWithMasterSocket instead
 func (c *Client) Init(socketPath []string, masterSocketPath string, nbproc int) error {
 	c.runtimes = make([]SingleRuntime, len(socketPath))
 	for index, path := range socketPath {
@@ -117,7 +117,7 @@ func (c *Client) InitWithMasterSocket(masterSocketPath string, nbproc int) error
 	return nil
 }
 
-//GetStats returns stats from the socket
+// GetStats returns stats from the socket
 func (c *Client) GetStats() models.NativeStats {
 	result := make(models.NativeStats, len(c.runtimes))
 	for index, runtime := range c.runtimes {
@@ -126,7 +126,7 @@ func (c *Client) GetStats() models.NativeStats {
 	return result
 }
 
-//GetInfo returns info from the socket
+// GetInfo returns info from the socket
 func (c *Client) GetInfo() (models.ProcessInfos, error) {
 	result := models.ProcessInfos{}
 	for _, runtime := range c.runtimes {
@@ -136,7 +136,7 @@ func (c *Client) GetInfo() (models.ProcessInfos, error) {
 	return result, nil
 }
 
-//GetVersion returns info from the socket
+// GetVersion returns info from the socket
 func (c *Client) GetVersion() (*HAProxyVersion, error) {
 	if c.haproxyVersion != nil {
 		return c.haproxyVersion, nil
@@ -161,36 +161,36 @@ func (c *Client) GetVersion() (*HAProxyVersion, error) {
 	return nil, fmt.Errorf("version data not found")
 }
 
-//GetMapsPath returns runtime map file path or map id
+// GetMapsPath returns runtime map file path or map id
 func (c *Client) GetMapsPath(name string) (string, error) {
 
 	name = misc.SanitizeFilename(name)
 
-	//we can refer to runtime map with either id or path
-	if strings.HasPrefix(name, "#") { //id
+	// we can refer to runtime map with either id or path
+	if strings.HasPrefix(name, "#") { // id
 		return name, nil
 	}
-	//CLI
+	// CLI
 	if c.MapsDir != "" {
 		ext := filepath.Ext(name)
 		if ext != ".map" {
 			name = fmt.Sprintf("%s%s", name, ".map")
 		}
-		p := filepath.Join(c.MapsDir, name) //path
+		p := filepath.Join(c.MapsDir, name) // path
 		return p, nil
 	}
-	//config
+	// config
 	maps, _ := c.ShowMaps()
 	for _, m := range maps {
 		basename := filepath.Base(m.File)
 		if strings.TrimSuffix(basename, filepath.Ext(basename)) == name {
-			return m.File, nil //path from config
+			return m.File, nil // path from config
 		}
 	}
 	return "", fmt.Errorf("maps dir doesn't exists or not specified. Either use `maps-dir` CLI option or reload HAProxy if map section exists in config file")
 }
 
-//SetFrontendMaxConn set maxconn for frontend
+// SetFrontendMaxConn set maxconn for frontend
 func (c *Client) SetFrontendMaxConn(frontend string, maxconn int) error {
 	for _, runtime := range c.runtimes {
 		err := runtime.SetFrontendMaxConn(frontend, maxconn)
@@ -201,7 +201,7 @@ func (c *Client) SetFrontendMaxConn(frontend string, maxconn int) error {
 	return nil
 }
 
-//SetServerAddr set ip [port] for server
+// SetServerAddr set ip [port] for server
 func (c *Client) SetServerAddr(backend, server string, ip string, port int) error {
 	for _, runtime := range c.runtimes {
 		err := runtime.SetServerAddr(backend, server, ip, port)
@@ -212,7 +212,7 @@ func (c *Client) SetServerAddr(backend, server string, ip string, port int) erro
 	return nil
 }
 
-//SetServerState set state for server
+// SetServerState set state for server
 func (c *Client) SetServerState(backend, server string, state string) error {
 	for _, runtime := range c.runtimes {
 		err := runtime.SetServerState(backend, server, state)
@@ -223,7 +223,7 @@ func (c *Client) SetServerState(backend, server string, state string) error {
 	return nil
 }
 
-//SetServerWeight set weight for server
+// SetServerWeight set weight for server
 func (c *Client) SetServerWeight(backend, server string, weight string) error {
 	for _, runtime := range c.runtimes {
 		err := runtime.SetServerWeight(backend, server, weight)
@@ -234,7 +234,7 @@ func (c *Client) SetServerWeight(backend, server string, weight string) error {
 	return nil
 }
 
-//SetServerHealth set health for server
+// SetServerHealth set health for server
 func (c *Client) SetServerHealth(backend, server string, health string) error {
 	for _, runtime := range c.runtimes {
 		err := runtime.SetServerHealth(backend, server, health)
@@ -245,7 +245,7 @@ func (c *Client) SetServerHealth(backend, server string, health string) error {
 	return nil
 }
 
-//EnableAgentCheck enable agent check for server
+// EnableAgentCheck enable agent check for server
 func (c *Client) EnableAgentCheck(backend, server string) error {
 	for _, runtime := range c.runtimes {
 		err := runtime.EnableAgentCheck(backend, server)
@@ -256,7 +256,7 @@ func (c *Client) EnableAgentCheck(backend, server string) error {
 	return nil
 }
 
-//DisableAgentCheck disable agent check for server
+// DisableAgentCheck disable agent check for server
 func (c *Client) DisableAgentCheck(backend, server string) error {
 	for _, runtime := range c.runtimes {
 		err := runtime.DisableAgentCheck(backend, server)
@@ -267,7 +267,7 @@ func (c *Client) DisableAgentCheck(backend, server string) error {
 	return nil
 }
 
-//EnableServer marks server as UP
+// EnableServer marks server as UP
 func (c *Client) EnableServer(backend, server string) error {
 	for _, runtime := range c.runtimes {
 		err := runtime.EnableServer(backend, server)
@@ -278,7 +278,7 @@ func (c *Client) EnableServer(backend, server string) error {
 	return nil
 }
 
-//DisableServer marks server as DOWN for maintenance
+// DisableServer marks server as DOWN for maintenance
 func (c *Client) DisableServer(backend, server string) error {
 	for _, runtime := range c.runtimes {
 		err := runtime.DisableServer(backend, server)
@@ -289,7 +289,7 @@ func (c *Client) DisableServer(backend, server string) error {
 	return nil
 }
 
-//SetServerAgentAddr set agent-addr for server
+// SetServerAgentAddr set agent-addr for server
 func (c *Client) SetServerAgentAddr(backend, server string, addr string) error {
 	for _, runtime := range c.runtimes {
 		err := runtime.SetServerAgentAddr(backend, server, addr)
@@ -300,7 +300,7 @@ func (c *Client) SetServerAgentAddr(backend, server string, addr string) error {
 	return nil
 }
 
-//SetServerAgentSend set agent-send for server
+// SetServerAgentSend set agent-send for server
 func (c *Client) SetServerAgentSend(backend, server string, send string) error {
 	for _, runtime := range c.runtimes {
 		err := runtime.SetServerAgentSend(backend, server, send)
@@ -311,7 +311,7 @@ func (c *Client) SetServerAgentSend(backend, server string, send string) error {
 	return nil
 }
 
-//GetServerState returns server runtime state
+// GetServerState returns server runtime state
 func (c *Client) GetServersState(backend string) (models.RuntimeServers, error) {
 	var prevRs models.RuntimeServers
 	var rs models.RuntimeServers
@@ -328,7 +328,7 @@ func (c *Client) GetServersState(backend string) (models.RuntimeServers, error) 
 	return rs, nil
 }
 
-//GetServerState returns server runtime state
+// GetServerState returns server runtime state
 func (c *Client) GetServerState(backend, server string) (*models.RuntimeServer, error) {
 	var prevRs *models.RuntimeServer
 	var rs *models.RuntimeServer
@@ -345,7 +345,7 @@ func (c *Client) GetServerState(backend, server string) (*models.RuntimeServer, 
 	return rs, nil
 }
 
-//SetServerCheckPort set health heck port for server
+// SetServerCheckPort set health heck port for server
 func (c *Client) SetServerCheckPort(backend, server string, port int) error {
 	for _, runtime := range c.runtimes {
 		err := runtime.SetServerCheckPort(backend, server, port)
@@ -356,7 +356,7 @@ func (c *Client) SetServerCheckPort(backend, server string, port int) error {
 	return nil
 }
 
-//Show tables show tables from runtime API and return it structured, if process is 0, return for all processes
+// Show tables show tables from runtime API and return it structured, if process is 0, return for all processes
 func (c *Client) ShowTables(process int) (models.StickTables, error) {
 	tables := models.StickTables{}
 	for _, runtime := range c.runtimes {
@@ -371,7 +371,7 @@ func (c *Client) ShowTables(process int) (models.StickTables, error) {
 	return tables, nil
 }
 
-//GetTableEntries returns all entries for specified table in the given process with filters and a key
+// GetTableEntries returns all entries for specified table in the given process with filters and a key
 func (c *Client) GetTableEntries(name string, process int, filter []string, key string) (models.StickTableEntries, error) {
 	var entries models.StickTableEntries
 	var err error
@@ -388,7 +388,7 @@ func (c *Client) GetTableEntries(name string, process int, filter []string, key 
 	return entries, nil
 }
 
-//Show table show tables {name} from runtime API associated with process id and return it structured
+// Show table show tables {name} from runtime API associated with process id and return it structured
 func (c *Client) ShowTable(name string, process int) (*models.StickTable, error) {
 	var table *models.StickTable
 	var err error
@@ -404,7 +404,7 @@ func (c *Client) ShowTable(name string, process int) (*models.StickTable, error)
 	return table, nil
 }
 
-//ExecuteRaw does not procces response, just returns its values for all processes
+// ExecuteRaw does not procces response, just returns its values for all processes
 func (c *Client) ExecuteRaw(command string) ([]string, error) {
 	result := make([]string, len(c.runtimes))
 	for index, runtime := range c.runtimes {
@@ -417,7 +417,7 @@ func (c *Client) ExecuteRaw(command string) ([]string, error) {
 	return result, nil
 }
 
-//ShowMaps returns structured unique map files
+// ShowMaps returns structured unique map files
 func (c *Client) ShowMaps() (models.Maps, error) {
 	maps := models.Maps{}
 	var lastErr error
@@ -430,7 +430,7 @@ func (c *Client) ShowMaps() (models.Maps, error) {
 		if len(maps) == 0 {
 			maps = append(maps, m...)
 		} else {
-			//merge unique files from all processes
+			// merge unique files from all processes
 			for i := 0; i < len(m); i++ {
 				exists := false
 				for j := 0; j < len(maps); j++ {
@@ -454,7 +454,7 @@ func (c *Client) ShowMaps() (models.Maps, error) {
 	return nil, nil
 }
 
-//CreateMap creates a new map file with its entries
+// CreateMap creates a new map file with its entries
 func (c *Client) CreateMap(file multipart.File, header multipart.FileHeader) (*models.Map, error) {
 	name, err := c.GetMapsPath(header.Filename)
 	if err != nil {
@@ -467,7 +467,7 @@ func (c *Client) CreateMap(file multipart.File, header multipart.FileHeader) (*m
 	return m, nil
 }
 
-//GetMap returns one structured runtime map file
+// GetMap returns one structured runtime map file
 func (c *Client) GetMap(name string) (*models.Map, error) {
 	name, err := c.GetMapsPath(name)
 	if err != nil {
@@ -486,7 +486,7 @@ func (c *Client) GetMap(name string) (*models.Map, error) {
 	return nil, lastErr
 }
 
-//ClearMap removes all map entries from the map file. If forceDelete is true, deletes file from disk
+// ClearMap removes all map entries from the map file. If forceDelete is true, deletes file from disk
 func (c *Client) ClearMap(name string, forceDelete bool) error {
 	name, err := c.GetMapsPath(name)
 	if err != nil {
@@ -514,7 +514,7 @@ func (c *Client) ClearMap(name string, forceDelete bool) error {
 	return nil
 }
 
-//ShowMapEntries list all map entries by map file name
+// ShowMapEntries list all map entries by map file name
 func (c *Client) ShowMapEntries(name string) (models.MapEntries, error) {
 	name, err := c.GetMapsPath(name)
 	if err != nil {
@@ -531,7 +531,7 @@ func (c *Client) ShowMapEntries(name string) (models.MapEntries, error) {
 		if len(entries) == 0 {
 			entries = append(entries, m...)
 		} else {
-			//merge unique map entries from all processes
+			// merge unique map entries from all processes
 			for i := 0; i < len(m); i++ {
 				exists := false
 				for j := 0; j < len(entries); j++ {
@@ -552,7 +552,7 @@ func (c *Client) ShowMapEntries(name string) (models.MapEntries, error) {
 	return nil, lastErr
 }
 
-//AddMapPayload adds multiple entries to the map file
+// AddMapPayload adds multiple entries to the map file
 func (c *Client) AddMapPayload(name, payload string) error {
 	name, err := c.GetMapsPath(name)
 	if err != nil {
@@ -571,7 +571,7 @@ func (c *Client) AddMapPayload(name, payload string) error {
 	return nil
 }
 
-//AddMapEntry adds an entry into the map file
+// AddMapEntry adds an entry into the map file
 func (c *Client) AddMapEntry(name, key, value string) error {
 	name, err := c.GetMapsPath(name)
 	if err != nil {
@@ -590,7 +590,7 @@ func (c *Client) AddMapEntry(name, key, value string) error {
 	return nil
 }
 
-//GetMapEntry returns one map runtime setting
+// GetMapEntry returns one map runtime setting
 func (c *Client) GetMapEntry(name, id string) (*models.MapEntry, error) {
 	name, err := c.GetMapsPath(name)
 	if err != nil {
@@ -609,7 +609,7 @@ func (c *Client) GetMapEntry(name, id string) (*models.MapEntry, error) {
 	return nil, lastErr
 }
 
-//SetMapEntry replace the value corresponding to each id in a map
+// SetMapEntry replace the value corresponding to each id in a map
 func (c *Client) SetMapEntry(name, id, value string) error {
 	name, err := c.GetMapsPath(name)
 	if err != nil {
@@ -628,7 +628,7 @@ func (c *Client) SetMapEntry(name, id, value string) error {
 	return nil
 }
 
-//DeleteMapEntry deletes all the map entries from the map by its id
+// DeleteMapEntry deletes all the map entries from the map by its id
 func (c *Client) DeleteMapEntry(name, id string) error {
 	name, err := c.GetMapsPath(name)
 	if err != nil {

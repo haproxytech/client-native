@@ -22,13 +22,13 @@ import (
 	"github.com/haproxytech/models/v2"
 )
 
-//ServiceGrowthTypeLinear indicates linear growth type in ScalingParams.
+// ServiceGrowthTypeLinear indicates linear growth type in ScalingParams.
 const ServiceGrowthTypeLinear = "linear"
 
-//ServiceGrowthTypeExponential indicates exponential growth type in ScalingParams.
+// ServiceGrowthTypeExponential indicates exponential growth type in ScalingParams.
 const ServiceGrowthTypeExponential = "exponential"
 
-//ServiceServer contains information for one server in the service.
+// ServiceServer contains information for one server in the service.
 type ServiceServer struct {
 	Address string
 	Port    int
@@ -42,26 +42,25 @@ type serviceNode struct {
 	modified bool
 }
 
-//Service represents the maping from a discovery service into a configuration backend.
+// Service represents the maping from a discovery service into a configuration backend.
 type Service struct {
 	client        *Client
 	name          string
 	nodes         []*serviceNode
 	usedNames     map[string]struct{}
 	transactionID string
-	backendName   string
 	scaling       ScalingParams
 }
 
-//ScalingParams defines parameter for dynamic server scaling of the Service backend.
+// ScalingParams defines parameter for dynamic server scaling of the Service backend.
 type ScalingParams struct {
 	BaseSlots       int
 	SlotsGrowthType string
 	SlotsIncrement  int
 }
 
-//NewService creates and returns a new Service instance.
-//name indicates the name of the service and only one Service instance with the given name can be created.
+// NewService creates and returns a new Service instance.
+// name indicates the name of the service and only one Service instance with the given name can be created.
 func (c *Client) NewService(name string, scaling ScalingParams) (*Service, error) {
 	c.mu.Lock()
 	defer c.mu.Unlock()
@@ -79,14 +78,14 @@ func (c *Client) NewService(name string, scaling ScalingParams) (*Service, error
 	return service, nil
 }
 
-//DeleteService removes the Service instance specified by name from the client.
+// DeleteService removes the Service instance specified by name from the client.
 func (c *Client) DeleteService(name string) {
 	c.mu.Lock()
 	defer c.mu.Unlock()
 	delete(c.services, name)
 }
 
-//Delete removes the service from the client with all the associated configuration resources.
+// Delete removes the service from the client with all the associated configuration resources.
 func (s *Service) Delete() error {
 	err := s.client.DeleteBackend(s.name, s.transactionID, 0)
 	if err != nil {
@@ -96,7 +95,7 @@ func (s *Service) Delete() error {
 	return nil
 }
 
-//Init initiates the client by reading the configuration associated with it or created the initial configuration if it does not exist.
+// Init initiates the client by reading the configuration associated with it or created the initial configuration if it does not exist.
 func (s *Service) Init(transactionID string) (bool, error) {
 	s.SetTransactionID(transactionID)
 	newBackend, err := s.createBackend()
@@ -109,12 +108,12 @@ func (s *Service) Init(transactionID string) (bool, error) {
 	return s.loadNodes()
 }
 
-//SetTransactionID updates the transaction ID to be used for modifications on the configuration associated with the service.
+// SetTransactionID updates the transaction ID to be used for modifications on the configuration associated with the service.
 func (s *Service) SetTransactionID(transactionID string) {
 	s.transactionID = transactionID
 }
 
-//UpdateScalingParams updates parameters used for dynamic server scaling of the Service backend
+// UpdateScalingParams updates parameters used for dynamic server scaling of the Service backend
 func (s *Service) UpdateScalingParams(scaling ScalingParams) error {
 	s.scaling = scaling
 	if s.serverCount() < s.scaling.BaseSlots {
@@ -123,7 +122,7 @@ func (s *Service) UpdateScalingParams(scaling ScalingParams) error {
 	return nil
 }
 
-//Update updates the backend associated with the server based on the list of servers provided
+// Update updates the backend associated with the server based on the list of servers provided
 func (s *Service) Update(servers []ServiceServer) (bool, error) {
 	reload := false
 	r, err := s.expandNodes(len(servers))
@@ -133,7 +132,7 @@ func (s *Service) Update(servers []ServiceServer) (bool, error) {
 	reload = reload || r
 	s.markRemovedNodes(servers)
 	for _, server := range servers {
-		if err := s.handleNode(server); err != nil {
+		if err = s.handleNode(server); err != nil {
 			return false, err
 		}
 	}
@@ -152,7 +151,7 @@ func (s *Service) Update(servers []ServiceServer) (bool, error) {
 	return reload, nil
 }
 
-//GetServers returns the list of servers as they are currently configured in the services backend
+// GetServers returns the list of servers as they are currently configured in the services backend
 func (s *Service) GetServers() (models.Servers, error) {
 	_, servers, err := s.client.GetServers(s.name, s.transactionID)
 	return servers, err

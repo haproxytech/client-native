@@ -176,8 +176,7 @@ func (c *Client) EditSite(name string, data *models.Site, transactionID string, 
 
 	// edit frontend
 	if !reflect.DeepEqual(data.Service, confS.Service) {
-		err := c.editService(data.Name, data.Service, t, p)
-		if err != nil {
+		if err = c.editService(data.Name, data.Service, t, p); err != nil {
 			res = append(res, err)
 		}
 		// compare listeners
@@ -330,8 +329,7 @@ func (c *Client) EditSite(name string, data *models.Site, transactionID string, 
 				// default_bck
 				if b.UseAs == "conditional" {
 					// find the correct usefarm and remove it
-					err := c.removeUseFarm(name, b.Name, t, p)
-					if err != nil {
+					if err = c.removeUseFarm(name, b.Name, t, p); err != nil {
 						res = append(res, err)
 					}
 				}
@@ -418,7 +416,8 @@ func (c *Client) DeleteSite(name string, transactionID string, version int64) er
 				continue
 			}
 			farmsUsed[f.DefaultBackend] = true
-			_, ubs, err := c.GetBackendSwitchingRules(f.Name, t)
+			var ubs models.BackendSwitchingRules
+			_, ubs, err = c.GetBackendSwitchingRules(f.Name, t)
 			if err == nil {
 				for _, ub := range ubs {
 					farmsUsed[ub.Name] = true

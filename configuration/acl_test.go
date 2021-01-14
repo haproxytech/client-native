@@ -38,7 +38,8 @@ func TestGetACLs(t *testing.T) {
 	}
 
 	for _, r := range acls {
-		if *r.Index == 0 {
+		switch *r.Index {
+		case 0:
 			if r.ACLName != "invalid_src" {
 				t.Errorf("%v: ACLName not invalid_src: %v", *r.Index, r.ACLName)
 			}
@@ -48,7 +49,7 @@ func TestGetACLs(t *testing.T) {
 			if r.Criterion != "src" {
 				t.Errorf("%v: Criterion not src: %v", *r.Index, r.Criterion)
 			}
-		} else if *r.Index == 1 {
+		case 1:
 			if r.ACLName != "invalid_src" {
 				t.Errorf("%v: ACLName not invalid_src: %v", *r.Index, r.ACLName)
 			}
@@ -58,7 +59,7 @@ func TestGetACLs(t *testing.T) {
 			if r.Criterion != "src_port" {
 				t.Errorf("%v: Criterion not src_port: %v", *r.Index, r.Criterion)
 			}
-		} else if *r.Index == 2 {
+		case 2:
 			if r.ACLName != "local_dst" {
 				t.Errorf("%v: ACLName not invalid_src: %v", *r.Index, r.ACLName)
 			}
@@ -68,7 +69,7 @@ func TestGetACLs(t *testing.T) {
 			if r.Criterion != "hdr(host)" {
 				t.Errorf("%v: Criterion not hdr(host): %v", *r.Index, r.Criterion)
 			}
-		} else {
+		default:
 			t.Errorf("Expext only acl 1, 2 or 3, %v found", *r.Index)
 		}
 	}

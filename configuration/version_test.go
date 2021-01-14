@@ -72,7 +72,7 @@ global
 		{
 			name:              "Pass without version",
 			configurationFile: fNoVersion,
-			want:              1, //config without version should add `# _version=1`
+			want:              1, // config without version should add `# _version=1`
 			wantErr:           false,
 		},
 	}

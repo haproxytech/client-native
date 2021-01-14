@@ -19,9 +19,10 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/haproxytech/client-native/v2/misc"
 	"github.com/haproxytech/models/v2"
 	"github.com/stretchr/testify/suite"
+
+	"github.com/haproxytech/client-native/v2/misc"
 )
 
 const baseSlots = 20
@@ -97,7 +98,7 @@ func (s *ServiceInitiationSuite) BeforeTest(suiteName, testName string) {
 }
 
 func (s *ServiceInitiationSuite) AfterTest(suiteName, testName string) {
-	//run Init to set transactionID if test did not run it
+	// run Init to set transactionID if test did not run it
 	_, err := s.service.Init(s.transactionID)
 	s.Nil(err)
 	err = s.service.Delete()
@@ -149,8 +150,8 @@ func (s *ServiceInitiationSuite) TestLoadExistingBackend() {
 	s.Nil(s.createExistingService(servers))
 
 	r, err := s.service.Init(s.transactionID)
-	//Only existing data for was loaded
-	//No modifications on the config have been done as the server count matches base slots value so reload should be false
+	// Only existing data for was loaded
+	// No modifications on the config have been done as the server count matches base slots value so reload should be false
 	s.False(r)
 	s.Nil(err)
 	cServers, err := s.service.GetServers()
@@ -279,10 +280,10 @@ func (s *ServiceUpdateSuit) TestSecondUpdateWithDeletedServer() {
 	r, err = s.service.Update(servers)
 	s.True(r)
 	s.Nil(err)
-	//When the new server list has less servers than the previous one "holes" can be left
-	//in the middle of enabled servers.
-	//In this case server 127.1.1.2 got removed and the last enabled server from the remaining ones
-	//gets moved into its slot, in this case 127.1.1.4
+	// When the new server list has less servers than the previous one "holes" can be left
+	// in the middle of enabled servers.
+	// In this case server 127.1.1.2 got removed and the last enabled server from the remaining ones
+	// gets moved into its slot, in this case 127.1.1.4
 	expected := []ServiceServer{
 		{Address: "127.1.1.1", Port: 81},
 		{Address: "127.1.1.4", Port: 84},
@@ -312,10 +313,10 @@ func (s *ServiceUpdateSuit) TestSecondUpdateWithNewAndRemovedServers() {
 	r, err = s.service.Update(servers)
 	s.True(r)
 	s.Nil(err)
-	//Server 127.1.1.3 is the only that will be marked as deleted
-	//as server 127.1.1.2 reapears at the end of the server list with the same port.
-	//The first new server will be placed in place of server 127.1.1.3 which is 127.1.1.5.
-	//The remaining new servers will be added to the end.
+	// Server 127.1.1.3 is the only that will be marked as deleted
+	// as server 127.1.1.2 reapears at the end of the server list with the same port.
+	// The first new server will be placed in place of server 127.1.1.3 which is 127.1.1.5.
+	// The remaining new servers will be added to the end.
 	expected := []ServiceServer{
 		{Address: "127.1.1.1", Port: 81},
 		{Address: "127.1.1.2", Port: 82},
@@ -380,7 +381,7 @@ func (s *ServiceUpdateSuit) generateServers(count int) []ServiceServer {
 
 func (s *ServiceUpdateSuit) TestExponentialUpscaling() {
 	expectedSlotsCount := baseSlots * 2
-	//Switch from linear to exponential scaling
+	// Switch from linear to exponential scaling
 	err := s.service.UpdateScalingParams(ScalingParams{
 		BaseSlots:       baseSlots,
 		SlotsGrowthType: ServiceGrowthTypeExponential,
@@ -398,11 +399,11 @@ func (s *ServiceUpdateSuit) TestExponentialUpscaling() {
 }
 
 func (s *ServiceUpdateSuit) TestLinearDownscaling() {
-	//First we need to increase the server count to be one at least one threshold above our final expected value
+	// First we need to increase the server count to be one at least one threshold above our final expected value
 	upscaleExpectedSlots := baseSlots + 2*slotsIncrement
 	upscaleServerCount := baseSlots + slotsIncrement + 2
 	s.scaleServiceAndValidate(upscaleExpectedSlots, upscaleServerCount)
-	//Now we can update with the expected servers and validate if the service downscaled
+	// Now we can update with the expected servers and validate if the service downscaled
 	expectedSlotsCount := baseSlots + slotsIncrement
 	serverCount := baseSlots + 2
 	s.scaleServiceAndValidate(expectedSlotsCount, serverCount)
@@ -420,18 +421,18 @@ func (s *ServiceUpdateSuit) scaleServiceAndValidate(expectedSlots, serverCount i
 }
 
 func (s *ServiceUpdateSuit) TestExponentialDownscaling() {
-	//Switch from linear to exponential scaling
+	// Switch from linear to exponential scaling
 	err := s.service.UpdateScalingParams(ScalingParams{
 		BaseSlots:       baseSlots,
 		SlotsGrowthType: ServiceGrowthTypeExponential,
 		SlotsIncrement:  slotsIncrement,
 	})
 	s.Nil(err)
-	//First we need to increase the server count to be one at least one threshold above our final expected value
+	// First we need to increase the server count to be one at least one threshold above our final expected value
 	upscaleExpectedSlots := baseSlots * 2 * 2
 	upscaleServerCount := baseSlots*2 + 2
 	s.scaleServiceAndValidate(upscaleExpectedSlots, upscaleServerCount)
-	//Now we can update with the expected servers and validate if the service downscaled
+	// Now we can update with the expected servers and validate if the service downscaled
 	expectedSlotsCount := baseSlots * 2
 	serverCount := baseSlots + 2
 	s.scaleServiceAndValidate(expectedSlotsCount, serverCount)

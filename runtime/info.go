@@ -23,7 +23,7 @@ import (
 	"github.com/haproxytech/models/v2"
 )
 
-//GetInfo fetches HAProxy info from runtime API
+// GetInfo fetches HAProxy info from runtime API
 func (s *SingleRuntime) GetInfo() models.ProcessInfo {
 	dataStr, err := s.ExecuteRaw("show info typed")
 	data := models.ProcessInfo{RuntimeAPI: s.socketPath}

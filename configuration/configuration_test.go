@@ -241,20 +241,24 @@ var (
 )
 
 func TestMain(m *testing.M) {
-	err := prepareTestFile(testConf, testPath)
-	if err != nil {
-		fmt.Println("Could not prepare tests")
-		os.Exit(1)
-	}
 
-	defer deleteTestFile(testPath)
-	client, err = prepareClient(testPath)
-	if err != nil {
-		fmt.Println("Could not prepare client:", err.Error())
-		os.Exit(1)
-	}
+	os.Exit(func() int {
+		var err error
 
-	os.Exit(m.Run())
+		if err = prepareTestFile(testConf, testPath); err != nil {
+			fmt.Println("Could not prepare tests")
+			return 1
+		}
+
+		defer func() { _ = deleteTestFile(testPath) }()
+		client, err = prepareClient(testPath)
+		if err != nil {
+			fmt.Println("Could not prepare client:", err.Error())
+			return 1
+		}
+
+		return m.Run()
+	}())
 }
 
 func prepareTestFile(conf string, path string) error {

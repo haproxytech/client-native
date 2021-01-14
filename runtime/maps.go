@@ -157,11 +157,11 @@ func parseMapEntry(line string, hasId bool) *models.MapEntry {
 
 	m := &models.MapEntry{}
 	if hasId {
-		m.ID = parts[0] //map entries from runtime have ID
+		m.ID = parts[0] // map entries from runtime have ID
 		m.Key = parts[1]
 		m.Value = parts[2]
 	} else {
-		m.Key = parts[0] //map entries from file
+		m.Key = parts[0] // map entries from file
 		m.Value = parts[1]
 	}
 	return m
@@ -224,11 +224,11 @@ func (s *SingleRuntime) GetMapEntry(name, id string) (*models.MapEntry, error) {
 			m.Value = strings.TrimPrefix(strings.TrimSuffix(kv[1], "\""), "\"")
 		}
 	}
-	//safe guard m.Key != id:
-	//when id doesn't exists in runtime maps,
-	//but any existing key is substring of id
-	//get map command returns wrong result(BUG in HAProxy)
-	//so we need to check it
+	// safe guard m.Key != id:
+	// when id doesn't exists in runtime maps,
+	// but any existing key is substring of id
+	// get map command returns wrong result(BUG in HAProxy)
+	// so we need to check it
 	if m.Key == "" || m.Value == "" || m.Key != id {
 		return nil, fmt.Errorf("%s %w", id, native_errors.ErrNotFound)
 	}

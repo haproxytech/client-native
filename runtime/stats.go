@@ -23,7 +23,7 @@ import (
 	"github.com/mitchellh/mapstructure"
 )
 
-//GetStats fetches HAProxy stats from runtime API
+// GetStats fetches HAProxy stats from runtime API
 func (s *SingleRuntime) GetStats() *models.NativeStatsCollection {
 	rAPI := ""
 	if s.worker != 0 {
@@ -40,7 +40,6 @@ func (s *SingleRuntime) GetStats() *models.NativeStatsCollection {
 	lines := strings.Split(rawdata[2:], "\n")
 	stats := []*models.NativeStat{}
 	keys := strings.Split(lines[0], ",")
-	//data := []map[string]string{}
 	for i := 1; i < len(lines); i++ {
 		data := map[string]string{}
 		line := strings.Split(lines[i], ",")

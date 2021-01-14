@@ -168,7 +168,7 @@ func (c *Client) EditHTTPRequestRule(id int64, parentType string, parentName str
 		section = parser.Frontends
 	}
 
-	if _, err := p.GetOne(section, parentName, "http-request", int(id)); err != nil {
+	if _, err = p.GetOne(section, parentName, "http-request", int(id)); err != nil {
 		return c.HandleError(strconv.FormatInt(id, 10), parentType, parentName, t, transactionID == "", err)
 	}
 
@@ -226,7 +226,8 @@ func ParseHTTPRequestRule(f types.HTTPAction) (rule *models.HTTPRequestRule, err
 		}
 	case *actions.Deny:
 		var denyPtr *int64
-		if ds, err := strconv.ParseInt(v.DenyStatus, 10, 64); err == nil {
+		var ds int64
+		if ds, err = strconv.ParseInt(v.DenyStatus, 10, 64); err == nil {
 			denyPtr = &ds
 		}
 		rule = &models.HTTPRequestRule{

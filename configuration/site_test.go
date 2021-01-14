@@ -40,7 +40,8 @@ func TestGetSites(t *testing.T) {
 	}
 
 	for _, s := range sites {
-		if s.Name == "test" {
+		switch s.Name {
+		case "test":
 			if *s.Service.Maxconn != 2000 {
 				t.Errorf("%v: Maxconn not 2000: %v", s.Name, *s.Service.Maxconn)
 			}
@@ -65,7 +66,8 @@ func TestGetSites(t *testing.T) {
 				}
 			}
 			for _, b := range s.Farms {
-				if b.Name == "test" {
+				switch b.Name {
+				case "test":
 					if b.UseAs != "default" {
 						t.Errorf("%v: %v: UseAs not default: %v", s.Name, b.Name, b.UseAs)
 					}
@@ -98,7 +100,7 @@ func TestGetSites(t *testing.T) {
 							t.Errorf("%v: %v: %v: Weight not 10: %v", s.Name, b.Name, srv.Name, *srv.Weight)
 						}
 					}
-				} else if b.Name == "test_2" {
+				case "test_2":
 					if b.UseAs != "conditional" {
 						t.Errorf("%v: %v: UseAs not conditional: %v", s.Name, b.Name, b.UseAs)
 					}
@@ -120,11 +122,11 @@ func TestGetSites(t *testing.T) {
 					if len(b.Servers) != 0 {
 						t.Errorf("%v: %v: Got %v servers, expected 0", s.Name, b.Name, len(b.Servers))
 					}
-				} else {
+				default:
 					t.Errorf("%v: Expected only test or test_2 backends, %v found", s.Name, b.Name)
 				}
 			}
-		} else if s.Name == "test_2" {
+		case "test_2":
 			if *s.Service.Maxconn != 2000 {
 				t.Errorf("%v: MaxConnections not 2000: %v", s.Name, *s.Service.Maxconn)
 			}
@@ -158,7 +160,7 @@ func TestGetSites(t *testing.T) {
 					t.Errorf("%v: Expected only test_2 backend, %v found", s.Name, b.Name)
 				}
 			}
-		} else {
+		default:
 			t.Errorf("Expected only test or test_2 sites, %v found", s.Name)
 		}
 	}

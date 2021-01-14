@@ -38,7 +38,8 @@ func TestGetTCPResponseRules(t *testing.T) {
 	}
 
 	for _, r := range tRules {
-		if *r.Index == 0 {
+		switch *r.Index {
+		case 0:
 			if r.Type != "content" {
 				t.Errorf("%v: Type not content: %v", *r.Index, r.Type)
 			}
@@ -51,7 +52,7 @@ func TestGetTCPResponseRules(t *testing.T) {
 			if r.CondTest != "TRUE" {
 				t.Errorf("%v: CondTest not src TRUE: %v", *r.Index, r.CondTest)
 			}
-		} else if *r.Index == 1 {
+		case 1:
 			if r.Type != "content" {
 				t.Errorf("%v: Type not content: %v", *r.Index, r.Type)
 			}
@@ -64,7 +65,7 @@ func TestGetTCPResponseRules(t *testing.T) {
 			if r.CondTest != "FALSE" {
 				t.Errorf("%v: CondTest not src FALSE: %v", *r.Index, r.CondTest)
 			}
-		} else if *r.Index == 2 {
+		case 2:
 			if r.Type != "content" {
 				t.Errorf("%v: Type not content: %v", *r.Index, r.Type)
 			}
@@ -83,7 +84,7 @@ func TestGetTCPResponseRules(t *testing.T) {
 			if r.CondTest != "FALSE" {
 				t.Errorf("%v: CondTest not src FALSE: %v", *r.Index, r.CondTest)
 			}
-		} else {
+		default:
 			t.Errorf("Expext only tcp-response 0, 1 or 2, %v found", *r.Index)
 		}
 	}

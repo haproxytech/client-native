@@ -38,7 +38,8 @@ func TestGetStickRules(t *testing.T) {
 	}
 
 	for _, sr := range sRules {
-		if *sr.Index == 0 {
+		switch *sr.Index {
+		case 0:
 			if sr.Type != "store-request" {
 				t.Errorf("%v: Type not store-request: %v", *sr.Index, sr.Type)
 			}
@@ -48,7 +49,7 @@ func TestGetStickRules(t *testing.T) {
 			if sr.Table != "test" {
 				t.Errorf("%v: Table not test: %v", *sr.Index, sr.Table)
 			}
-		} else if *sr.Index == 1 {
+		case 1:
 			if sr.Type != "match" {
 				t.Errorf("%v: Type not match: %v", *sr.Index, sr.Type)
 			}
@@ -58,7 +59,7 @@ func TestGetStickRules(t *testing.T) {
 			if sr.Table != "test" {
 				t.Errorf("%v: Table not test: %v", *sr.Index, sr.Table)
 			}
-		} else if *sr.Index == 2 {
+		case 2:
 			if sr.Type != "on" {
 				t.Errorf("%v: Type not on: %v", *sr.Index, sr.Type)
 			}
@@ -68,14 +69,14 @@ func TestGetStickRules(t *testing.T) {
 			if sr.Table != "test" {
 				t.Errorf("%v: Table not test: %v", *sr.Index, sr.Table)
 			}
-		} else if *sr.Index == 3 {
+		case 3:
 			if sr.Type != "store-response" {
 				t.Errorf("%v: Type not matchandstore: %v", *sr.Index, sr.Type)
 			}
 			if sr.Pattern != "src" {
 				t.Errorf("%v: Pattern not src: %v", *sr.Index, sr.Pattern)
 			}
-		} else if *sr.Index == 4 {
+		case 4:
 			if sr.Type != "store-response" {
 				t.Errorf("%v: Type not matchandstore: %v", *sr.Index, sr.Type)
 			}
@@ -85,7 +86,7 @@ func TestGetStickRules(t *testing.T) {
 			if sr.Table != "test_port" {
 				t.Errorf("%v: Table not test: %v", *sr.Index, sr.Table)
 			}
-		} else if *sr.Index == 5 {
+		case 5:
 			if sr.Type != "store-response" {
 				t.Errorf("%v: Type not matchandstore: %v", *sr.Index, sr.Type)
 			}
@@ -101,7 +102,7 @@ func TestGetStickRules(t *testing.T) {
 			if sr.CondTest != "TRUE" {
 				t.Errorf("%v: Cond not if: %v", *sr.Index, sr.CondTest)
 			}
-		} else {
+		default:
 			t.Errorf("Expext only stick rule < 5, %v found", *sr.Index)
 		}
 	}

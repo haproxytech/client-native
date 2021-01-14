@@ -149,11 +149,12 @@ func ParseGlobalSection(p *parser.Parser) (*models.Global, error) {
 						rAPI.ExposeFdListeners = true
 					}
 				case *params.BindOptionValue:
-					if v.Name == "level" {
+					switch v.Name {
+					case "level":
 						rAPI.Level = v.Value
-					} else if v.Name == "mode" {
+					case "mode":
 						rAPI.Mode = v.Value
-					} else if v.Name == "process" {
+					case "process":
 						rAPI.Process = v.Value
 					}
 				}

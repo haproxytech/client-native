@@ -5,8 +5,9 @@ import (
 	"regexp"
 	"strings"
 
-	native_errors "github.com/haproxytech/client-native/v2/errors"
 	"github.com/haproxytech/models/v2"
+
+	native_errors "github.com/haproxytech/client-native/v2/errors"
 )
 
 // ShowACLS returns Acl files description from runtime

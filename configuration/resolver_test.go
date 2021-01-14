@@ -123,12 +123,11 @@ func TestCreateEditDeleteResolver(t *testing.T) {
 
 	err = client.DeleteResolver("created_resolver", "", 999999)
 	if err != nil {
-		switch err.(type) {
-		case *ConfError:
-			if err.(*ConfError).Code() != ErrVersionMismatch {
+		if confErr, ok := err.(*ConfError); ok {
+			if confErr.Code() != ErrVersionMismatch {
 				t.Error("Should throw ErrVersionMismatch error")
 			}
-		default:
+		} else {
 			t.Error("Should throw ErrVersionMismatch error")
 		}
 	}

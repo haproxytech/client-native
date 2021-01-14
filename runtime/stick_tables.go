@@ -8,7 +8,7 @@ import (
 	"github.com/haproxytech/models/v2"
 )
 
-//ShowTables returns Stick Tables descriptions from runtime
+// ShowTables returns Stick Tables descriptions from runtime
 func (s *SingleRuntime) ShowTables() (models.StickTables, error) {
 	response, err := s.ExecuteWithResponse("show table")
 	if err != nil {
@@ -17,7 +17,7 @@ func (s *SingleRuntime) ShowTables() (models.StickTables, error) {
 	return s.parseStickTables(response), nil
 }
 
-//ShowTables returns one Stick Table descriptions from runtime
+// ShowTables returns one Stick Table descriptions from runtime
 func (s *SingleRuntime) ShowTable(name string) (*models.StickTable, error) {
 	response, err := s.ExecuteWithResponse("show table")
 	if err != nil {
@@ -36,7 +36,7 @@ func (s *SingleRuntime) ShowTable(name string) (*models.StickTable, error) {
 	return nil, nil
 }
 
-//GetTableEntries returns Stick Tables entries
+// GetTableEntries returns Stick Tables entries
 func (s *SingleRuntime) GetTableEntries(name string, filter []string, key string) (models.StickTableEntries, error) {
 	cmd := fmt.Sprintf("show table %s", name)
 

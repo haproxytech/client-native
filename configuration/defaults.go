@@ -35,7 +35,7 @@ func (c *Client) GetDefaultsConfiguration(transactionID string) (int64, *models.
 	}
 
 	d := &models.Defaults{}
-	ParseSection(d, parser.Defaults, parser.DefaultSectionName, p)
+	_ = ParseSection(d, parser.Defaults, parser.DefaultSectionName, p)
 
 	return v, d, nil
 }

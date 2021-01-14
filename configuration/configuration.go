@@ -37,13 +37,13 @@ import (
 )
 
 const (
-	//DefaultConfigurationFile sane default for path to haproxy configuration file
+	// DefaultConfigurationFile sane default for path to haproxy configuration file
 	DefaultConfigurationFile string = "/etc/haproxy/haproxy.cfg"
-	//DefaultHaproxy sane default for path to haproxy executable
+	// DefaultHaproxy sane default for path to haproxy executable
 	DefaultHaproxy string = "/usr/sbin/haproxy"
-	//DefaultUseValidation sane default using validation in client native
+	// DefaultUseValidation sane default using validation in client native
 	DefaultUseValidation bool = true
-	//DefaultPersistentTransactions sane default using persistent transactions in client native
+	// DefaultPersistentTransactions sane default using persistent transactions in client native
 	DefaultPersistentTransactions bool = true
 	// DefaultTransactionDir sane default for path for transactions
 	DefaultTransactionDir string = "/etc/haproxy/transactions"
@@ -114,6 +114,7 @@ func (c *Client) Init(options ClientParams) error {
 		options.Haproxy = DefaultHaproxy
 	}
 
+	// #nosec G204
 	if err := exec.Command(options.Haproxy, "-v").Run(); err != nil {
 		return NewConfError(ErrCannotFindHAProxy, fmt.Sprintf("path to HAProxy binary not valid: %s", c.Haproxy))
 	}
@@ -174,7 +175,7 @@ func (c *Client) GetParser(transactionID string) (*parser.Parser, error) {
 	return p, nil
 }
 
-//AddParser adds parser to parser map
+// AddParser adds parser to parser map
 func (c *Client) AddParser(transactionID string) error {
 	if transactionID == "" {
 		return NewConfError(ErrValidationError, "Not a valid transaction")
@@ -206,7 +207,7 @@ func (c *Client) AddParser(transactionID string) error {
 	return nil
 }
 
-//DeleteParser deletes parser from parsers map
+// DeleteParser deletes parser from parsers map
 func (c *Client) DeleteParser(transactionID string) error {
 	if transactionID == "" {
 		return NewConfError(ErrValidationError, "Not a valid transaction")
@@ -219,7 +220,7 @@ func (c *Client) DeleteParser(transactionID string) error {
 	return nil
 }
 
-//CommitParser commits transaction parser, deletes it from parsers map, and replaces master Parser
+// CommitParser commits transaction parser, deletes it from parsers map, and replaces master Parser
 func (c *Client) CommitParser(transactionID string) error {
 	if transactionID == "" {
 		return NewConfError(ErrValidationError, "Not a valid transaction")
@@ -233,7 +234,7 @@ func (c *Client) CommitParser(transactionID string) error {
 	return nil
 }
 
-//InitTransactionParsers checks transactions and initializes parsers map with transactions in_progress
+// InitTransactionParsers checks transactions and initializes parsers map with transactions in_progress
 func (c *Client) InitTransactionParsers() error {
 	transactions, err := c.GetTransactions("in_progress")
 	if err != nil {
@@ -278,7 +279,7 @@ func (c *Client) getVersion(transactionID string) (int64, error) {
 func (c *Client) IncrementVersion() error {
 	data, _ := c.Parser.Get(parser.Comments, parser.CommentsSectionName, "# _version", true)
 	ver, _ := data.(*types.ConfigVersion)
-	ver.Value = ver.Value + 1
+	ver.Value++
 
 	if err := c.Parser.Save(c.ConfigurationFile); err != nil {
 		return NewConfError(ErrCannotSetVersion, fmt.Sprintf("Cannot set version: %s", err.Error()))
@@ -320,7 +321,7 @@ func (c *Client) GetFailedParserTransactionVersion(transactionID string) (int64,
 	return ver.Value, nil
 }
 
-//ParseSection sets the fields of the section based on the provided parser
+// ParseSection sets the fields of the section based on the provided parser
 func ParseSection(object interface{}, section parser.Section, pName string, p *parser.Parser) error {
 	sp := &SectionParser{
 		Object:  object,
@@ -331,7 +332,7 @@ func ParseSection(object interface{}, section parser.Section, pName string, p *p
 	return sp.Parse()
 }
 
-//SectionParser is used set fields of a section based on the provided parser
+// SectionParser is used set fields of a section based on the provided parser
 type SectionParser struct {
 	Object  interface{}
 	Section parser.Section
@@ -339,7 +340,7 @@ type SectionParser struct {
 	Parser  *parser.Parser
 }
 
-//Parse parses the sections fields and sets their values with the data from the parser
+// Parse parses the sections fields and sets their values with the data from the parser
 func (s *SectionParser) Parse() error {
 	objValue := reflect.ValueOf(s.Object).Elem()
 	for i := 0; i < objValue.NumField(); i++ {
@@ -937,9 +938,8 @@ func (s *SectionParser) defaultServer() interface{} {
 				}
 			}
 		}
-		return dServer
 	}
-	return nil
+	return dServer
 }
 
 func (s *SectionParser) errorFiles() interface{} {
@@ -1168,7 +1168,7 @@ func (s *SectionParser) monitorFail() interface{} {
 	return nil
 }
 
-//SectionObject represents a configuration section
+// SectionObject represents a configuration section
 type SectionObject struct {
 	Object  interface{}
 	Section parser.Section
@@ -1176,7 +1176,7 @@ type SectionObject struct {
 	Parser  *parser.Parser
 }
 
-//CreateEditSection creates or updates a section in the parser based on the provided object
+// CreateEditSection creates or updates a section in the parser based on the provided object
 func CreateEditSection(object interface{}, section parser.Section, pName string, p *parser.Parser) error {
 	so := SectionObject{
 		Object:  object,
@@ -1187,7 +1187,7 @@ func CreateEditSection(object interface{}, section parser.Section, pName string,
 	return so.CreateEditSection()
 }
 
-//CreateEditSection creates or updates a section in the parser based on the provided object
+// CreateEditSection creates or updates a section in the parser based on the provided object
 func (s *SectionObject) CreateEditSection() error {
 	objValue := reflect.ValueOf(s.Object).Elem()
 	for i := 0; i < objValue.NumField(); i++ {
@@ -1482,8 +1482,8 @@ func (s *SectionObject) httpConnectionMode(field reflect.Value) error {
 	if err := s.set("option http-keep-alive", nil); err != nil {
 		return err
 	}
-	//Deprecated, delete if exists
-	s.set("option forceclose", nil)
+	// Deprecated, delete if exists
+	_ = s.set("option forceclose", nil)
 
 	if !valueIsNil(field) {
 		pName := fmt.Sprintf("option %v", field.String())

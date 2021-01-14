@@ -169,7 +169,7 @@ func (c *Client) EditTCPRequestRule(id int64, parentType string, parentName stri
 		section = parser.Frontends
 	}
 
-	if _, err := p.GetOne(section, parentName, "tcp-request", int(id)); err != nil {
+	if _, err = p.GetOne(section, parentName, "tcp-request", int(id)); err != nil {
 		return c.HandleError(strconv.FormatInt(id, 10), parentType, parentName, t, transactionID == "", err)
 	}
 

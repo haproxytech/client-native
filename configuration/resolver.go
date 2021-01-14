@@ -19,12 +19,13 @@ import (
 	"fmt"
 	"strconv"
 
-	strfmt "github.com/go-openapi/strfmt"
-	"github.com/haproxytech/client-native/v2/misc"
+	"github.com/go-openapi/strfmt"
 	parser "github.com/haproxytech/config-parser/v3"
 	"github.com/haproxytech/config-parser/v3/common"
 	"github.com/haproxytech/config-parser/v3/types"
 	"github.com/haproxytech/models/v2"
+
+	"github.com/haproxytech/client-native/v2/misc"
 )
 
 // GetResolvers returns configuration version and an array of
@@ -334,10 +335,8 @@ func SerializeResolverSection(p *parser.Parser, data *models.Resolver) error {
 		if err = p.Set(parser.Resolvers, data.Name, "parse-resolv-conf", b); err != nil {
 			return err
 		}
-	} else {
-		if err = p.Set(parser.Resolvers, data.Name, "parse-resolv-conf", nil); err != nil {
-			return err
-		}
+	} else if err = p.Set(parser.Resolvers, data.Name, "parse-resolv-conf", nil); err != nil {
+		return err
 	}
 	if data.ResolveRetries == 0 {
 		if err = p.Set(parser.Resolvers, data.Name, "resolve_retries", nil); err != nil {
@@ -365,7 +364,7 @@ func SerializeResolverSection(p *parser.Parser, data *models.Resolver) error {
 		}
 	} else {
 		timeout := types.SimpleTimeout{Value: strconv.FormatInt(data.TimeoutRetry, 10)}
-		if err := p.Set(parser.Resolvers, data.Name, "timeout retry", timeout); err != nil {
+		if err = p.Set(parser.Resolvers, data.Name, "timeout retry", timeout); err != nil {
 			return err
 		}
 	}

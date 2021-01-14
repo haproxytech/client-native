@@ -183,9 +183,12 @@ func ParseServer(ondiskServer types.Server) *models.Server {
 		Name: ondiskServer.Name,
 	}
 	addSlice := strings.Split(ondiskServer.Address, ":")
-	if len(addSlice) == 0 {
+	switch len(addSlice) {
+	case 0:
 		return nil
-	} else if len(addSlice) > 1 {
+	case 1:
+		s.Address = addSlice[0]
+	default:
 		s.Address = addSlice[0]
 		if addSlice[1] != "" {
 			p, err := strconv.ParseInt(addSlice[1], 10, 64)
@@ -193,8 +196,6 @@ func ParseServer(ondiskServer types.Server) *models.Server {
 				s.Port = &p
 			}
 		}
-	} else if len(addSlice) > 0 {
-		s.Address = addSlice[0]
 	}
 	for _, p := range ondiskServer.Params {
 		switch v := p.(type) {

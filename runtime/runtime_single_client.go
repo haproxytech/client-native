@@ -22,19 +22,19 @@ import (
 	"time"
 )
 
-//TaskResponse ...
+// TaskResponse ...
 type TaskResponse struct {
 	result string
 	err    error
 }
 
-//Task has command to execute on runtime api, and response channel for result
+// Task has command to execute on runtime api, and response channel for result
 type Task struct {
 	command  string
 	response chan TaskResponse
 }
 
-//SingleRuntime handles one runtime API
+// SingleRuntime handles one runtime API
 type SingleRuntime struct {
 	jobs       chan Task
 	socketPath string
@@ -42,10 +42,10 @@ type SingleRuntime struct {
 	process    int
 }
 
-//Init must be given path to runtime socket and worker number. If in master-worker mode,
-//give the path to the master socket path, and non 0 number for workers. Process is for
-//nbproc > 1. In master-worker mode it's the same as the worker number, but when having
-//multiple stats socket lines bound to processes then use the correct process number
+// Init must be given path to runtime socket and worker number. If in master-worker mode,
+// give the path to the master socket path, and non 0 number for workers. Process is for
+// nbproc > 1. In master-worker mode it's the same as the worker number, but when having
+// multiple stats socket lines bound to processes then use the correct process number
 func (s *SingleRuntime) Init(socketPath string, worker int, process int) error {
 	s.socketPath = socketPath
 	s.jobs = make(chan Task)
@@ -56,22 +56,21 @@ func (s *SingleRuntime) Init(socketPath string, worker int, process int) error {
 }
 
 func (s *SingleRuntime) handleIncommingJobs() {
-	for {
-		select {
-		case job := <-s.jobs:
-			result, err := s.readFromSocket(job.command)
-			if err != nil {
-				job.response <- TaskResponse{err: err}
-			} else {
-				job.response <- TaskResponse{result: result}
-			}
+	for job := range s.jobs {
+		result, err := s.readFromSocket(job.command)
+		if err != nil {
+			job.response <- TaskResponse{err: err}
+		} else {
+			job.response <- TaskResponse{result: result}
 		}
 	}
 }
 
 func (s *SingleRuntime) readFromSocket(command string) (string, error) {
-	api, err := net.Dial("unix", s.socketPath)
-	if err != nil {
+	var api net.Conn
+	var err error
+
+	if api, err = net.Dial("unix", s.socketPath); err != nil {
 		return "", err
 	}
 	fullCommand := fmt.Sprintf("set severity-output number;%s\n", command)
@@ -91,52 +90,26 @@ func (s *SingleRuntime) readFromSocket(command string) (string, error) {
 	buf := make([]byte, bufferSize)
 	var data strings.Builder
 	for {
-		n, err := api.Read(buf)
-		if err != nil {
+		if n, readErr := api.Read(buf); readErr != nil {
 			break
+		} else {
+			data.Write(buf[0:n])
 		}
-		data.Write(buf[0:n])
 	}
-	api.Close()
-	if err != nil {
-		return "", err
-	}
+	_ = api.Close()
+
 	result := strings.TrimSuffix(data.String(), "\n> ")
 	result = strings.TrimSuffix(result, "\n")
 	return result, nil
 }
 
-func (s *SingleRuntime) readFromSocketClean(command string) (string, error) {
-	api, err := net.Dial("unix", s.socketPath)
-	if err != nil {
-		return "", err
-	}
-	defer api.Close()
-
-	_, err = api.Write([]byte(fmt.Sprintf("%s\n", command)))
-	if err != nil {
-		return "", nil
-	}
-	time.Sleep(1e9)
-	buf := make([]byte, 1024)
-	var data strings.Builder
-	for {
-		n, err := api.Read(buf)
-		if err != nil {
-			break
-		}
-		data.Write(buf[0:n])
-	}
-	return data.String(), nil
-}
-
-//ExecuteRaw executes command on runtime API and returns raw result
+// ExecuteRaw executes command on runtime API and returns raw result
 func (s *SingleRuntime) ExecuteRaw(command string) (string, error) {
-	//allow one retry if connection breaks temporarily
+	// allow one retry if connection breaks temporarily
 	return s.executeRaw(command, 1)
 }
 
-//Execute executes command on runtime API
+// Execute executes command on runtime API
 func (s *SingleRuntime) Execute(command string) error {
 	rawdata, err := s.ExecuteRaw(command)
 	if err != nil {

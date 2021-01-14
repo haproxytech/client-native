@@ -38,15 +38,16 @@ func TestGetLogTargets(t *testing.T) {
 	}
 
 	for _, l := range lTargets {
-		if *l.Index == 0 {
+		switch *l.Index {
+		case 0:
 			if l.Global != true {
 				t.Errorf("%v: Global not true: %v", *l.Index, l.Global)
 			}
-		} else if *l.Index == 1 {
+		case 1:
 			if l.Nolog != true {
 				t.Errorf("%v: Nolog not true: %v", *l.Index, l.Nolog)
 			}
-		} else if *l.Index == 2 {
+		case 2:
 			if l.Address != "127.0.0.1:514" {
 				t.Errorf("%v: Address not 127.0.0.1:514: %v", *l.Index, l.Address)
 			}
@@ -59,7 +60,7 @@ func TestGetLogTargets(t *testing.T) {
 			if l.Minlevel != "notice" {
 				t.Errorf("%v: Minlevel not notice: %v", *l.Index, l.Minlevel)
 			}
-		} else {
+		default:
 			t.Errorf("Expext only log 0, 1, or 2, %v found", *l.Index)
 		}
 	}

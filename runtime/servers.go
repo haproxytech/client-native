@@ -24,7 +24,7 @@ import (
 	"github.com/haproxytech/models/v2"
 )
 
-//SetServerAddr set ip [port] for server
+// SetServerAddr set ip [port] for server
 func (s *SingleRuntime) SetServerAddr(backend, server string, ip string, port int) error {
 	var cmd string
 	if port > 0 {
@@ -35,7 +35,7 @@ func (s *SingleRuntime) SetServerAddr(backend, server string, ip string, port in
 	return s.Execute(cmd)
 }
 
-//SetServerState set state for server
+// SetServerState set state for server
 func (s *SingleRuntime) SetServerState(backend, server string, state string) error {
 	if !ServerStateValid(state) {
 		return fmt.Errorf("bad request")
@@ -44,7 +44,7 @@ func (s *SingleRuntime) SetServerState(backend, server string, state string) err
 	return s.Execute(cmd)
 }
 
-//SetServerWeight set weight for server
+// SetServerWeight set weight for server
 func (s *SingleRuntime) SetServerWeight(backend, server string, weight string) error {
 	if !ServerWeightValid(weight) {
 		return fmt.Errorf("bad request")
@@ -53,7 +53,7 @@ func (s *SingleRuntime) SetServerWeight(backend, server string, weight string) e
 	return s.Execute(cmd)
 }
 
-//SetServerHealth set health for server
+// SetServerHealth set health for server
 func (s *SingleRuntime) SetServerHealth(backend, server string, health string) error {
 	if !ServerHealthValid(health) {
 		return fmt.Errorf("bad request")
@@ -62,7 +62,7 @@ func (s *SingleRuntime) SetServerHealth(backend, server string, health string) e
 	return s.Execute(cmd)
 }
 
-//SetServerCheckPort set health heck port for server
+// SetServerCheckPort set health heck port for server
 func (s *SingleRuntime) SetServerCheckPort(backend, server string, port int) error {
 	if !(port > 0 && port <= 65535) {
 		return fmt.Errorf("bad request")
@@ -70,43 +70,43 @@ func (s *SingleRuntime) SetServerCheckPort(backend, server string, port int) err
 	return s.Execute(fmt.Sprintf("set server %s/%s check-port %d", backend, server, port))
 }
 
-//EnableAgentCheck enable agent check for server
+// EnableAgentCheck enable agent check for server
 func (s *SingleRuntime) EnableAgentCheck(backend, server string) error {
 	cmd := fmt.Sprintf("enable agent %s/%s", backend, server)
 	return s.Execute(cmd)
 }
 
-//DisableAgentCheck disable agent check for server
+// DisableAgentCheck disable agent check for server
 func (s *SingleRuntime) DisableAgentCheck(backend, server string) error {
 	cmd := fmt.Sprintf("disable agent %s/%s", backend, server)
 	return s.Execute(cmd)
 }
 
-//EnableServer marks server as UP
+// EnableServer marks server as UP
 func (s *SingleRuntime) EnableServer(backend, server string) error {
 	cmd := fmt.Sprintf("enable server %s/%s", backend, server)
 	return s.Execute(cmd)
 }
 
-//DisableServer marks server as DOWN for maintenanc
+// DisableServer marks server as DOWN for maintenanc
 func (s *SingleRuntime) DisableServer(backend, server string) error {
 	cmd := fmt.Sprintf("disable server %s/%s", backend, server)
 	return s.Execute(cmd)
 }
 
-//SetServerAgentAddr set agent-addr for server
+// SetServerAgentAddr set agent-addr for server
 func (s *SingleRuntime) SetServerAgentAddr(backend, server string, addr string) error {
 	cmd := fmt.Sprintf("set server %s/%s agent-addr %s", backend, server, addr)
 	return s.Execute(cmd)
 }
 
-//SetServerAgentSend set agent-send for server
+// SetServerAgentSend set agent-send for server
 func (s *SingleRuntime) SetServerAgentSend(backend, server string, send string) error {
 	cmd := fmt.Sprintf("set server %s/%s agent-send %s", backend, server, send)
 	return s.Execute(cmd)
 }
 
-//GetServersState returns servers runtime state
+// GetServersState returns servers runtime state
 func (s *SingleRuntime) GetServersState(backend string) (models.RuntimeServers, error) {
 	cmd := fmt.Sprintf("show servers state %s", backend)
 	result, err := s.ExecuteWithResponse(cmd)
@@ -116,7 +116,7 @@ func (s *SingleRuntime) GetServersState(backend string) (models.RuntimeServers, 
 	return parseRuntimeServers(result)
 }
 
-//GetServersState returns server runtime state
+// GetServersState returns server runtime state
 func (s *SingleRuntime) GetServerState(backend, server string) (*models.RuntimeServer, error) {
 	cmd := fmt.Sprintf("show servers state %s", backend)
 	result, err := s.ExecuteWithResponse(cmd)
@@ -126,7 +126,7 @@ func (s *SingleRuntime) GetServerState(backend, server string) (*models.RuntimeS
 
 	lines := strings.Split(result, "\n")
 	if strings.TrimSpace(lines[0]) != "1" {
-		return nil, fmt.Errorf("Unsupported output format version, supporting format version 1")
+		return nil, fmt.Errorf("unsupported output format version, supporting format version 1")
 	}
 
 	for _, line := range lines {
@@ -147,7 +147,7 @@ func parseRuntimeServers(output string) (models.RuntimeServers, error) {
 	result := models.RuntimeServers{}
 
 	if strings.TrimSpace(lines[0]) != "1" {
-		return nil, fmt.Errorf("Unsupported output format version, supporting format version 1")
+		return nil, fmt.Errorf("unsupported output format version, supporting format version 1")
 	}
 	for _, line := range lines[1:] {
 		if strings.TrimSpace(line) == "" || strings.HasPrefix(line, "#") || strings.TrimSpace(line) == "1" {

@@ -384,12 +384,11 @@ func TestCreateEditDeleteBackend(t *testing.T) {
 
 	err = client.DeleteBackend("created", "", 999999999)
 	if err != nil {
-		switch err.(type) {
-		case *ConfError:
-			if err.(*ConfError).Code() != ErrVersionMismatch {
+		if confErr, ok := err.(*ConfError); ok {
+			if confErr.Code() != ErrVersionMismatch {
 				t.Error("Should throw ErrVersionMismatch error")
 			}
-		default:
+		} else {
 			t.Error("Should throw ErrVersionMismatch error")
 		}
 	}
@@ -572,8 +571,5 @@ func compareBackends(x, y *models.Backend, t *testing.T) bool {
 	x.PgsqlCheckParams = nil
 	y.PgsqlCheckParams = nil
 
-	if !reflect.DeepEqual(x, y) {
-		return false
-	}
-	return true
+	return reflect.DeepEqual(x, y)
 }

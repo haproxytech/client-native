@@ -27,7 +27,7 @@ var oncePossibleStates sync.Once
 var possibleHealths map[string]struct{}
 var oncePossibleHealths sync.Once
 
-//ServerStateValid checks if server state is valid
+// ServerStateValid checks if server state is valid
 func ServerStateValid(state string) bool {
 	oncePossibleStates.Do(func() {
 		possibleStates = map[string]struct{}{
@@ -40,7 +40,7 @@ func ServerStateValid(state string) bool {
 	return ok
 }
 
-//ServerHealthValid checks if server health is valid
+// ServerHealthValid checks if server health is valid
 func ServerHealthValid(health string) bool {
 	oncePossibleHealths.Do(func() {
 		possibleHealths = map[string]struct{}{
@@ -53,7 +53,7 @@ func ServerHealthValid(health string) bool {
 	return ok
 }
 
-//ServerWeightValid checks if server state is valid
+// ServerWeightValid checks if server state is valid
 func ServerWeightValid(weight string) bool {
 	var n int64
 	var err error
