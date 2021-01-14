@@ -86,23 +86,24 @@ func SnakeCase(fieldName string) string {
 			}
 		}
 
-		if i > 0 && n[len(n)-1] != '_' && nextCaseIsChanged {
+		switch {
+		case i > 0 && n[len(n)-1] != '_' && nextCaseIsChanged:
 			// add underscore if next letter case type is changed
 			if v >= 'A' && v <= 'Z' {
 				n += "_" + string(v)
 			} else if v >= 'a' && v <= 'z' {
 				n += string(v) + "_"
 			}
-		} else if v == ' ' {
+		case v == ' ':
 			// replace spaces with underscores
 			n += "_"
-		} else {
-			n = n + string(v)
+		default:
+			n += string(v)
 		}
 	}
 	n = strings.ToLower(n)
 	// special case
-	n = strings.Replace(n, "httpuri", "http_uri", -1)
+	n = strings.ReplaceAll(n, "httpuri", "http_uri")
 	return n
 }
 
@@ -120,18 +121,19 @@ func DashCase(fieldName string) string {
 			}
 		}
 
-		if i > 0 && n[len(n)-1] != '-' && nextCaseIsChanged {
+		switch {
+		case i > 0 && n[len(n)-1] != '-' && nextCaseIsChanged:
 			// add underscore if next letter case type is changed
 			if v >= 'A' && v <= 'Z' {
 				n += "-" + string(v)
 			} else if v >= 'a' && v <= 'z' {
 				n += string(v) + "-"
 			}
-		} else if v == ' ' {
+		case v == ' ':
 			// replace spaces with underscores
 			n += "-"
-		} else {
-			n = n + string(v)
+		default:
+			n += string(v)
 		}
 	}
 	n = strings.ToLower(n)
@@ -142,21 +144,22 @@ func DashCase(fieldName string) string {
 
 func ParseTimeout(tOut string) *int64 {
 	var v int64
-	if strings.HasSuffix(tOut, "ms") {
+	switch {
+	case strings.HasSuffix(tOut, "ms"):
 		v, _ = strconv.ParseInt(strings.TrimSuffix(tOut, "ms"), 10, 64)
-	} else if strings.HasSuffix(tOut, "s") {
+	case strings.HasSuffix(tOut, "s"):
 		v, _ = strconv.ParseInt(strings.TrimSuffix(tOut, "s"), 10, 64)
 		v *= 1000
-	} else if strings.HasSuffix(tOut, "m") {
+	case strings.HasSuffix(tOut, "m"):
 		v, _ = strconv.ParseInt(strings.TrimSuffix(tOut, "m"), 10, 64)
 		v = v * 1000 * 60
-	} else if strings.HasSuffix(tOut, "h") {
+	case strings.HasSuffix(tOut, "h"):
 		v, _ = strconv.ParseInt(strings.TrimSuffix(tOut, "h"), 10, 64)
 		v = v * 1000 * 60 * 60
-	} else if strings.HasSuffix(tOut, "d") {
+	case strings.HasSuffix(tOut, "d"):
 		v, _ = strconv.ParseInt(strings.TrimSuffix(tOut, "d"), 10, 64)
 		v = v * 1000 * 60 * 60 * 24
-	} else {
+	default:
 		v, _ = strconv.ParseInt(tOut, 10, 64)
 	}
 	if v != 0 {
@@ -167,16 +170,17 @@ func ParseTimeout(tOut string) *int64 {
 
 func ParseSize(size string) *int64 {
 	var v int64
-	if strings.HasSuffix(size, "k") {
+	switch {
+	case strings.HasSuffix(size, "k"):
 		v, _ = strconv.ParseInt(strings.TrimSuffix(size, "k"), 10, 64)
 		v *= 1024
-	} else if strings.HasSuffix(size, "m") {
+	case strings.HasSuffix(size, "m"):
 		v, _ = strconv.ParseInt(strings.TrimSuffix(size, "m"), 10, 64)
 		v = v * 1024 * 1024
-	} else if strings.HasSuffix(size, "g") {
+	case strings.HasSuffix(size, "g"):
 		v, _ = strconv.ParseInt(strings.TrimSuffix(size, "g"), 10, 64)
 		v = v * 1024 * 1024 * 1024
-	} else {
+	default:
 		v, _ = strconv.ParseInt(size, 10, 64)
 	}
 	if v != 0 {
@@ -203,7 +207,7 @@ func RandomString(n int) string {
 	return string(b)
 }
 
-//SanitizeFilename collapses paths and replaces most non-alphanumeric characters with underscores
+// SanitizeFilename collapses paths and replaces most non-alphanumeric characters with underscores
 func SanitizeFilename(name string) string {
 	var ext string
 
@@ -218,7 +222,7 @@ func SanitizeFilename(name string) string {
 	}
 	// leave all alphanumeric and 3 additional ones
 	// # _ -
-	reg := regexp.MustCompile("[^a-zA-Z0-9#_\\-]+")
+	reg := regexp.MustCompile(`[^a-zA-Z0-9#_\\-]+`)
 	name = reg.ReplaceAllString(name, "_")
 
 	if ext != "" {
