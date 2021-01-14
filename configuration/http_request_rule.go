@@ -244,7 +244,8 @@ func ParseHTTPRequestRule(f types.HTTPAction) (rule *models.HTTPRequestRule, err
 		}
 	case *actions.Redirect:
 		var codePtr *int64
-		if code, err := strconv.ParseInt(v.Code, 10, 64); err == nil {
+		var code int64
+		if code, err = strconv.ParseInt(v.Code, 10, 64); err == nil {
 			codePtr = &code
 		}
 		rule = &models.HTTPRequestRule{
@@ -259,7 +260,8 @@ func ParseHTTPRequestRule(f types.HTTPAction) (rule *models.HTTPRequestRule, err
 
 	case *actions.Tarpit:
 		var dsPtr *int64
-		if ds, err := strconv.ParseInt(v.DenyStatus, 10, 64); err == nil {
+		var ds int64
+		if ds, err = strconv.ParseInt(v.DenyStatus, 10, 64); err == nil {
 			dsPtr = &ds
 		}
 		rule = &models.HTTPRequestRule{
