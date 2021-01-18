@@ -66,6 +66,7 @@ func TestGetPeerSection(t *testing.T) {
 		t.Error("Should throw error, non existant peer section")
 	}
 }
+
 func TestCreateEditDeletePeerSection(t *testing.T) {
 	f := &models.PeerSection{
 		Name: "testcluster",
@@ -129,5 +130,4 @@ func TestCreateEditDeletePeerSection(t *testing.T) {
 		t.Error("Should throw error, non existant peerSection")
 		version++
 	}
-
 }

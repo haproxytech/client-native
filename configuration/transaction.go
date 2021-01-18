@@ -125,7 +125,7 @@ func (t *Transaction) commitTransaction(transactionID string, skipVersion bool) 
 	t.mu.Lock()
 	defer t.mu.Unlock()
 
-	// do a version check before commiting
+	// do a version check before committing
 	version, err := t.TransactionClient.GetVersion("")
 	if err != nil {
 		return nil, err
@@ -265,7 +265,7 @@ func (t *Transaction) CheckTransactionOrVersion(transactionID string, version in
 	return tID, nil
 }
 
-func (t *Transaction) parseHAProxyCheckError(output []byte, id string) string {
+func (t *Transaction) parseHAProxyCheckError(output []byte, id string) string { //nolint:gocognit
 	oStr := string(output)
 	var b strings.Builder
 	b.WriteString(fmt.Sprintf("err transactionId=%s \n", id))
@@ -328,7 +328,7 @@ func (t *Transaction) DeleteTransaction(transactionID string) error {
 	return nil
 }
 
-func (t *Transaction) parseTransactions(status string) (*models.Transactions, error) {
+func (t *Transaction) parseTransactions(status string) (*models.Transactions, error) { //nolint:gocognit
 	confFileName := filepath.Base(t.ConfigurationFile)
 
 	_, err := os.Stat(t.TransactionDir)

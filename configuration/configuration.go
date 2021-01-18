@@ -55,10 +55,10 @@ const (
 type ClientParams struct {
 	ConfigurationFile         string
 	Haproxy                   string
-	UseValidation             bool
-	PersistentTransactions    bool
 	TransactionDir            string
 	BackupsNumber             int
+	UseValidation             bool
+	PersistentTransactions    bool
 	ValidateConfigurationFile bool
 	MasterWorker              bool
 	SkipFailedTransactions    bool
@@ -92,7 +92,6 @@ func DefaultClient() (*Client, error) {
 	c := &Client{}
 	c.TransactionClient = c
 	err := c.Init(p)
-
 	if err != nil {
 		return nil, err
 	}
@@ -780,7 +779,6 @@ func (s *SectionParser) getHttpchkData() (found bool, data interface{}) {
 		}
 	}
 	return false, nil
-
 }
 
 func (s *SectionParser) setField(fieldName string, data interface{}) {
@@ -816,7 +814,7 @@ func (s *SectionParser) stickTable() interface{} {
 	return bst
 }
 
-func (s *SectionParser) defaultServer() interface{} {
+func (s *SectionParser) defaultServer() interface{} { //nolint:gocognit,gocyclo
 	data, err := s.get("default-server", false)
 	if err != nil {
 		return nil
@@ -1758,7 +1756,7 @@ func (s *SectionObject) stickTable(field reflect.Value) error {
 	return nil
 }
 
-func (s *SectionObject) defaultServer(field reflect.Value) error {
+func (s *SectionObject) defaultServer(field reflect.Value) error { //nolint,gocognit,gocyclo
 	if s.Section == parser.Backends || s.Section == parser.Defaults {
 		if valueIsNil(field) {
 			if err := s.set("default-server", nil); err != nil {
@@ -2172,7 +2170,6 @@ func (s *SectionObject) balance(field reflect.Value) error {
 		}
 	}
 	return nil
-
 }
 
 func (s *SectionObject) redispatch(field reflect.Value) error {
@@ -2431,7 +2428,7 @@ func (c *Client) loadDataForChange(transactionID string, version int64) (*parser
 }
 
 func valueIsNil(v reflect.Value) bool {
-	switch v.Kind() {
+	switch v.Kind() { //nolint:exhaustive
 	case reflect.Int64:
 		return v.Int() == 0
 	case reflect.String:
@@ -2446,7 +2443,7 @@ func valueIsNil(v reflect.Value) bool {
 }
 
 func translateToParserData(field reflect.Value) common.ParserData {
-	switch field.Kind() {
+	switch field.Kind() { //nolint:exhaustive
 	case reflect.Int64:
 		return types.Int64C{Value: field.Int()}
 	case reflect.String:

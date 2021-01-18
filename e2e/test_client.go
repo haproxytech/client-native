@@ -55,8 +55,8 @@ func GetClient(t *testing.T) (*clientnative.HAProxyClient, *exec.Cmd, string, er
 	}
 	version = fmt.Sprintf("%s.%s", parts[0], parts[1])
 
-	_, file, _, _ := goruntime.Caller(1)
-	_, filename, _, _ := goruntime.Caller(0)
+	_, file, _, _ := goruntime.Caller(1)     //nolint:dogsled
+	_, filename, _, _ := goruntime.Caller(0) //nolint:dogsled
 	testName := strings.ReplaceAll(path.Dir(file), path.Dir(filename), "")
 
 	tmpPath := path.Join(os.TempDir(), "client-native/", testName)

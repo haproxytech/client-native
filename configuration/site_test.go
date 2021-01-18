@@ -25,7 +25,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestGetSites(t *testing.T) {
+func TestGetSites(t *testing.T) { //nolint:gocognit,gocyclo
 	v, sites, err := client.GetSites("")
 	if err != nil {
 		t.Error(err.Error())
@@ -166,7 +166,7 @@ func TestGetSites(t *testing.T) {
 	}
 }
 
-func TestGetSite(t *testing.T) {
+func TestGetSite(t *testing.T) { //nolint:gocognit,gocyclo
 	v, s, err := client.GetSite("test", "")
 	if err != nil {
 		t.Error(err.Error())
@@ -443,7 +443,7 @@ func TestCreateEditDeleteSite(t *testing.T) {
 	}
 }
 
-func siteDeepEqual(x, y *models.Site, t *testing.T) bool {
+func siteDeepEqual(x, y *models.Site, t *testing.T) bool { //nolint:gocognit
 	if x.Name != y.Name {
 		return false
 	}

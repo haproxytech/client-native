@@ -53,7 +53,6 @@ func TestGetBackendSwitchingRules(t *testing.T) {
 				t.Errorf("%v: Name not %%[req.cookie(foo)]: %v", *br.Index, br.Name)
 			}
 		}
-
 	}
 
 	_, bckRules, err = client.GetBackendSwitchingRules("test_2", "")
@@ -95,7 +94,7 @@ func TestGetBackendSwitchingRule(t *testing.T) {
 
 	_, _, err = client.GetBackendSwitchingRule(3, "test2", "")
 	if err == nil {
-		t.Error("Should throw error, non existant backend switching rule")
+		t.Error("Should throw error, non existent backend switching rule")
 	}
 }
 
@@ -178,7 +177,7 @@ func TestCreateEditDeleteBackendSwitchingRule(t *testing.T) {
 
 	err = client.DeleteBackendSwitchingRule(1, "test2", "", version)
 	if err == nil {
-		t.Error("Should throw error, non existant backend switching rule")
+		t.Error("Should throw error, non existent backend switching rule")
 		version++
 	}
 }

@@ -32,11 +32,11 @@ func (s *SingleRuntime) GetInfo() models.ProcessInfo {
 		return data
 	}
 
-	data.Info = parseInfo(dataStr, s.socketPath)
+	data.Info = parseInfo(dataStr)
 	return data
 }
 
-func parseInfo(info string, socketPath string) *models.ProcessInfoItem {
+func parseInfo(info string) *models.ProcessInfoItem { //nolint:gocognit,gocyclo
 	data := &models.ProcessInfoItem{}
 
 	for _, line := range strings.Split(info, "\n") {

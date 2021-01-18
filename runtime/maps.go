@@ -5,7 +5,6 @@ import (
 	"bytes"
 	"fmt"
 	"io"
-	"mime/multipart"
 	"os"
 	"path/filepath"
 	"strings"
@@ -19,13 +18,13 @@ import (
 func (s *SingleRuntime) ShowMaps() (models.Maps, error) {
 	response, err := s.ExecuteWithResponse("show map")
 	if err != nil {
-		return nil, fmt.Errorf("%s %w", err.Error(), native_errors.ErrNotFound)
+		return nil, fmt.Errorf("%s %w", err.Error(), native_errors.ErrNotFound) //nolint:errorlint
 	}
 	return s.parseMaps(response), nil
 }
 
 // CreateMap creates a new map file with its entries. Returns an error if file already exists
-func CreateMap(name string, file multipart.File) (*models.Map, error) {
+func CreateMap(name string, file io.Reader) (*models.Map, error) {
 	ext := filepath.Ext(name)
 	if ext != ".map" {
 		return nil, fmt.Errorf("provided file with %s extension, but supported .map %w", ext, native_errors.ErrGeneral)
@@ -109,7 +108,7 @@ func (s *SingleRuntime) ClearMap(name string) error {
 	cmd := fmt.Sprintf("clear map %s", name)
 	err := s.Execute(cmd)
 	if err != nil {
-		return fmt.Errorf("%s %w", err.Error(), native_errors.ErrNotFound)
+		return fmt.Errorf("%s %w", err.Error(), native_errors.ErrNotFound) //nolint:errorlint
 	}
 	return nil
 }
@@ -119,7 +118,7 @@ func (s *SingleRuntime) ShowMapEntries(name string) (models.MapEntries, error) {
 	cmd := fmt.Sprintf("show map %s", name)
 	response, err := s.ExecuteWithResponse(cmd)
 	if err != nil {
-		return nil, fmt.Errorf("%s %w", err.Error(), native_errors.ErrNotFound)
+		return nil, fmt.Errorf("%s %w", err.Error(), native_errors.ErrNotFound) //nolint:errorlint
 	}
 	return ParseMapEntries(response, true), nil
 }
@@ -128,7 +127,7 @@ func (s *SingleRuntime) ShowMapEntries(name string) (models.MapEntries, error) {
 // One line sample entry:
 // ID			  Key                Value
 // 0x55d155c6fbf0 static.example.com be_static
-func ParseMapEntries(output string, hasId bool) models.MapEntries {
+func ParseMapEntries(output string, hasID bool) models.MapEntries {
 	if output == "" {
 		return nil
 	}
@@ -136,7 +135,7 @@ func ParseMapEntries(output string, hasId bool) models.MapEntries {
 
 	lines := strings.Split(strings.TrimSpace(output), "\n")
 	for _, line := range lines {
-		e := parseMapEntry(line, hasId)
+		e := parseMapEntry(line, hasID)
 		if e != nil {
 			me = append(me, e)
 		}
@@ -145,7 +144,7 @@ func ParseMapEntries(output string, hasId bool) models.MapEntries {
 }
 
 // parseMapEntry parses one entry in one map file/runtime and returns it structured
-func parseMapEntry(line string, hasId bool) *models.MapEntry {
+func parseMapEntry(line string, hasID bool) *models.MapEntry {
 	if line == "" || strings.HasPrefix(strings.TrimSpace(line), "#") {
 		return nil
 	}
@@ -156,7 +155,7 @@ func parseMapEntry(line string, hasId bool) *models.MapEntry {
 	}
 
 	m := &models.MapEntry{}
-	if hasId {
+	if hasID {
 		m.ID = parts[0] // map entries from runtime have ID
 		m.Key = parts[1]
 		m.Value = parts[2]
@@ -167,12 +166,12 @@ func parseMapEntry(line string, hasId bool) *models.MapEntry {
 	return m
 }
 
-func parseMapEntriesFromFile(inputFile io.Reader, hasId bool) models.MapEntries {
+func parseMapEntriesFromFile(inputFile io.Reader, hasID bool) models.MapEntries {
 	me := models.MapEntries{}
 
 	scanner := bufio.NewScanner(inputFile)
 	for scanner.Scan() {
-		e := parseMapEntry(scanner.Text(), hasId)
+		e := parseMapEntry(scanner.Text(), hasID)
 		if e != nil {
 			me = append(me, e)
 		}
@@ -189,7 +188,7 @@ func (s *SingleRuntime) AddMapEntry(name, key, value string) error {
 	cmd := fmt.Sprintf("add map %s %s %s", name, key, value)
 	err := s.Execute(cmd)
 	if err != nil {
-		return fmt.Errorf("%s %w", err.Error(), native_errors.ErrGeneral)
+		return fmt.Errorf("%s %w", err.Error(), native_errors.ErrGeneral) //nolint:errorlint
 	}
 	return nil
 }
@@ -200,7 +199,7 @@ func (s *SingleRuntime) AddMapPayload(name, payload string) error {
 	cmd := fmt.Sprintf("add map %s %s", name, payload)
 	err := s.Execute(cmd)
 	if err != nil {
-		return fmt.Errorf("%s %w", err.Error(), native_errors.ErrGeneral)
+		return fmt.Errorf("%s %w", err.Error(), native_errors.ErrGeneral) //nolint:errorlint
 	}
 	return nil
 }
@@ -210,7 +209,7 @@ func (s *SingleRuntime) GetMapEntry(name, id string) (*models.MapEntry, error) {
 	cmd := fmt.Sprintf("get map %s %s", name, id)
 	response, err := s.ExecuteWithResponse(cmd)
 	if err != nil {
-		return nil, fmt.Errorf("%s %w", err.Error(), native_errors.ErrNotFound)
+		return nil, fmt.Errorf("%s %w", err.Error(), native_errors.ErrNotFound) //nolint:errorlint
 	}
 
 	m := &models.MapEntry{}
@@ -230,7 +229,7 @@ func (s *SingleRuntime) GetMapEntry(name, id string) (*models.MapEntry, error) {
 	// get map command returns wrong result(BUG in HAProxy)
 	// so we need to check it
 	if m.Key == "" || m.Value == "" || m.Key != id {
-		return nil, fmt.Errorf("%s %w", id, native_errors.ErrNotFound)
+		return nil, fmt.Errorf("%s %w", id, native_errors.ErrNotFound) //nolint:errorlint
 	}
 	return m, nil
 }
@@ -240,7 +239,7 @@ func (s *SingleRuntime) SetMapEntry(name, id, value string) error {
 	cmd := fmt.Sprintf("set map %s %s %s", name, id, value)
 	err := s.Execute(cmd)
 	if err != nil {
-		return fmt.Errorf("%s %w", err.Error(), native_errors.ErrNotFound)
+		return fmt.Errorf("%s %w", err.Error(), native_errors.ErrNotFound) //nolint:errorlint
 	}
 	return nil
 }
@@ -250,7 +249,7 @@ func (s *SingleRuntime) DeleteMapEntry(name, id string) error {
 	cmd := fmt.Sprintf("del map %s %s", name, id)
 	err := s.Execute(cmd)
 	if err != nil {
-		return fmt.Errorf("%s %w", err.Error(), native_errors.ErrNotFound)
+		return fmt.Errorf("%s %w", err.Error(), native_errors.ErrNotFound) //nolint:errorlint
 	}
 	return nil
 }

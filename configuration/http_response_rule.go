@@ -202,7 +202,7 @@ func ParseHTTPResponseRules(t, pName string, p *parser.Parser) (models.HTTPRespo
 	return httpResRules, nil
 }
 
-func ParseHTTPResponseRule(f types.HTTPAction) *models.HTTPResponseRule {
+func ParseHTTPResponseRule(f types.HTTPAction) *models.HTTPResponseRule { //nolint:gocyclo
 	switch v := f.(type) {
 	case *actions.Allow:
 		return &models.HTTPResponseRule{
@@ -457,7 +457,7 @@ func ParseHTTPResponseRule(f types.HTTPAction) *models.HTTPResponseRule {
 	return nil
 }
 
-func SerializeHTTPResponseRule(f models.HTTPResponseRule) types.HTTPAction {
+func SerializeHTTPResponseRule(f models.HTTPResponseRule) types.HTTPAction { //nolint:gocyclo
 	switch f.Type {
 	case "allow":
 		return &actions.Allow{

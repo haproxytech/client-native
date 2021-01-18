@@ -23,7 +23,7 @@ import (
 	"github.com/haproxytech/models/v2"
 )
 
-func TestGetHTTPRequestRules(t *testing.T) {
+func TestGetHTTPRequestRules(t *testing.T) { //nolint:gocognit,gocyclo
 	v, hRules, err := client.GetHTTPRequestRules("frontend", "test", "")
 	if err != nil {
 		t.Error(err.Error())

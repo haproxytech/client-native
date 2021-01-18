@@ -73,7 +73,6 @@ func (c *Client) GetBackend(name string, transactionID string) (int64, *models.B
 	backend := &models.Backend{Name: name}
 	if err := ParseSection(backend, parser.Backends, name, p); err != nil {
 		return v, nil, err
-
 	}
 
 	return v, backend, nil

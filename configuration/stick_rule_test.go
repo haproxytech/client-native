@@ -23,7 +23,7 @@ import (
 	"github.com/haproxytech/models/v2"
 )
 
-func TestGetStickRules(t *testing.T) {
+func TestGetStickRules(t *testing.T) { //nolint:gocognit,gocyclo
 	v, sRules, err := client.GetStickRules("test", "")
 	if err != nil {
 		t.Error(err.Error())

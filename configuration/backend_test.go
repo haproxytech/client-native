@@ -23,7 +23,7 @@ import (
 	"github.com/haproxytech/models/v2"
 )
 
-func TestGetBackends(t *testing.T) {
+func TestGetBackends(t *testing.T) { //nolint,gocognit,gocyclo
 	v, backends, err := client.GetBackends("")
 	if err != nil {
 		t.Error(err.Error())
@@ -191,7 +191,7 @@ func TestGetBackend(t *testing.T) {
 
 	_, _, err = client.GetBackend("doesnotexist", "")
 	if err == nil {
-		t.Error("Should throw error, non existant bck")
+		t.Error("Should throw error, non existent bck")
 	}
 }
 
@@ -421,16 +421,16 @@ func testBackendUpdate(b *models.Backend, t *testing.T) error {
 	if !compareBackends(backend, b, t) {
 		fmt.Printf("Edited bck: %v\n", backend)
 		fmt.Printf("Given bck: %v\n", b)
-		return fmt.Errorf("Edited backend not equal to given backend")
+		return fmt.Errorf("edited backend not equal to given backend")
 	}
 
 	if v != version {
-		return fmt.Errorf("Version %v returned, expected %v", v, version)
+		return fmt.Errorf("version %v returned, expected %v", v, version)
 	}
 	return nil
 }
 
-func compareBackends(x, y *models.Backend, t *testing.T) bool {
+func compareBackends(x, y *models.Backend, t *testing.T) bool { //nolint:gocognit,gocyclo
 	if *x.Balance.Algorithm != *y.Balance.Algorithm {
 		return false
 	}

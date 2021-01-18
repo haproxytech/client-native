@@ -21,11 +21,17 @@ import (
 	"sync"
 )
 
-var possibleStates map[string]struct{}
-var oncePossibleStates sync.Once
+//nolint:gochecknoglobals
+var (
+	possibleStates     map[string]struct{}
+	oncePossibleStates sync.Once
+)
 
-var possibleHealths map[string]struct{}
-var oncePossibleHealths sync.Once
+//nolint:gochecknoglobals
+var (
+	possibleHealths     map[string]struct{}
+	oncePossibleHealths sync.Once
+)
 
 // ServerStateValid checks if server state is valid
 func ServerStateValid(state string) bool {

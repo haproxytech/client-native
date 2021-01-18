@@ -14,7 +14,7 @@ import (
 func (s *SingleRuntime) ShowACLS() (models.ACLFiles, error) {
 	response, err := s.ExecuteWithResponse("show acl")
 	if err != nil {
-		return nil, fmt.Errorf("%s %w", err.Error(), native_errors.ErrNotFound)
+		return nil, fmt.Errorf("%s %w", err.Error(), native_errors.ErrNotFound) //nolint:errorlint
 	}
 	return s.parseACLS(response), nil
 }
@@ -100,7 +100,7 @@ func (s *SingleRuntime) ShowACLFileEntries(storageName string) (models.ACLFilesE
 	cmd := fmt.Sprintf("show acl %s", storageName)
 	response, err := s.ExecuteWithResponse(cmd)
 	if err != nil {
-		return nil, fmt.Errorf("%s %w", err.Error(), native_errors.ErrNotFound)
+		return nil, fmt.Errorf("%s %w", err.Error(), native_errors.ErrNotFound) //nolint:errorlint
 	}
 	return ParseACLFileEntries(response, true)
 }
@@ -158,7 +158,7 @@ func (s *SingleRuntime) AddACLFileEntry(aclID, value string) error {
 	cmd := fmt.Sprintf("add acl #%s %s", aclID, value)
 	response, err := s.ExecuteWithResponse(cmd)
 	if err != nil {
-		return fmt.Errorf("%s %w", err.Error(), native_errors.ErrGeneral)
+		return fmt.Errorf("%s %w", err.Error(), native_errors.ErrGeneral) //nolint:errorlint
 	}
 	if strings.Contains(response, "not") && strings.Contains(response, "valid") {
 		return fmt.Errorf("%s %w", strings.TrimSpace(response), native_errors.ErrGeneral)
@@ -171,7 +171,7 @@ func (s *SingleRuntime) GetACLFileEntry(aclID, value string) (*models.ACLFileEnt
 	cmd := fmt.Sprintf("get acl #%s %s", aclID, value)
 	response, err := s.ExecuteWithResponse(cmd)
 	if err != nil {
-		return nil, fmt.Errorf("%s %w", err.Error(), native_errors.ErrNotFound)
+		return nil, fmt.Errorf("%s %w", err.Error(), native_errors.ErrNotFound) //nolint:errorlint
 	}
 
 	matched := false
@@ -201,7 +201,7 @@ func (s *SingleRuntime) DeleteACLFileEntry(aclID, value string) error {
 	cmd := fmt.Sprintf("del acl #%s %s", aclID, value)
 	response, err := s.ExecuteWithResponse(cmd)
 	if err != nil {
-		return fmt.Errorf("%s %w", err.Error(), native_errors.ErrNotFound)
+		return fmt.Errorf("%s %w", err.Error(), native_errors.ErrNotFound) //nolint:errorlint
 	}
 	if strings.Contains(response, "not") && strings.Contains(response, "found") {
 		return fmt.Errorf("%s %w", strings.TrimSpace(response), native_errors.ErrGeneral)

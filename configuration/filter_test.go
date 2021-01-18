@@ -23,7 +23,7 @@ import (
 	"github.com/haproxytech/models/v2"
 )
 
-func TestGetFilters(t *testing.T) {
+func TestGetFilters(t *testing.T) { //nolint:gocognit
 	v, filters, err := client.GetFilters("frontend", "test", "")
 	if err != nil {
 		t.Error(err.Error())

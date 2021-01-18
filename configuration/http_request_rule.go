@@ -216,7 +216,7 @@ func ParseHTTPRequestRules(t, pName string, p *parser.Parser) (models.HTTPReques
 	return httpReqRules, nil
 }
 
-func ParseHTTPRequestRule(f types.HTTPAction) (rule *models.HTTPRequestRule, err error) {
+func ParseHTTPRequestRule(f types.HTTPAction) (rule *models.HTTPRequestRule, err error) { //nolint:gocyclo
 	switch v := f.(type) {
 	case *actions.Allow:
 		rule = &models.HTTPRequestRule{
@@ -627,7 +627,7 @@ func ParseHTTPRequestRule(f types.HTTPAction) (rule *models.HTTPRequestRule, err
 	return rule, err
 }
 
-func SerializeHTTPRequestRule(f models.HTTPRequestRule) (rule types.HTTPAction, err error) {
+func SerializeHTTPRequestRule(f models.HTTPRequestRule) (rule types.HTTPAction, err error) { //nolint:gocyclo
 	switch f.Type {
 	case "allow":
 		rule = &actions.Allow{

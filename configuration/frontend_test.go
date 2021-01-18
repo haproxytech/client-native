@@ -25,7 +25,7 @@ import (
 	"github.com/haproxytech/client-native/v2/misc"
 )
 
-func TestGetFrontends(t *testing.T) {
+func TestGetFrontends(t *testing.T) { //nolint:gocognit
 	v, frontends, err := client.GetFrontends("")
 	if err != nil {
 		t.Error(err.Error())

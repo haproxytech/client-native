@@ -235,13 +235,13 @@ backend test_2
 `
 const testPath = "/tmp/haproxy-test.cfg"
 
+//nolint:gochecknoglobals
 var (
 	client  *Client
 	version int64 = 1
 )
 
 func TestMain(m *testing.M) {
-
 	os.Exit(func() int {
 		var err error
 

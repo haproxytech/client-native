@@ -8,7 +8,7 @@ import (
 	"github.com/haproxytech/models/v2"
 )
 
-func TestGetDefaults(t *testing.T) {
+func TestGetDefaults(t *testing.T) { //nolint:gocognit,gocyclo
 	v, d, err := client.GetDefaultsConfiguration("")
 	if err != nil {
 		t.Error(err.Error())

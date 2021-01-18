@@ -23,7 +23,7 @@ import (
 	"github.com/haproxytech/models/v2"
 )
 
-func TestGetACLs(t *testing.T) {
+func TestGetACLs(t *testing.T) { //nolint:gocognit
 	v, acls, err := client.GetACLs("frontend", "test", "")
 	if err != nil {
 		t.Error(err.Error())
@@ -113,7 +113,7 @@ func TestGetACL(t *testing.T) {
 
 	_, _, err = client.GetACL(3, "backend", "test_2", "")
 	if err == nil {
-		t.Error("Should throw error, non existant ACL")
+		t.Error("Should throw error, non existent ACL")
 	}
 }
 
@@ -199,7 +199,7 @@ func TestCreateEditDeleteACL(t *testing.T) {
 
 	err = client.DeleteACL(2, "backend", "test_2", "", version)
 	if err == nil {
-		t.Error("Should throw error, non existant ACL Rule")
+		t.Error("Should throw error, non existent ACL Rule")
 		version++
 	}
 }

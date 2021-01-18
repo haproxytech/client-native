@@ -8,7 +8,6 @@ import (
 )
 
 func CheckOrCreateWritableDirectory(dirname string) (string, error) {
-
 	if dirname == "" {
 		return dirname, fmt.Errorf("no storage dir or empty dirname specified")
 	}
@@ -29,13 +28,12 @@ func CheckOrCreateWritableDirectory(dirname string) (string, error) {
 	} else { // file or directory exists, make sure it's a directory we have access to
 		if !info.IsDir() {
 			return "", fmt.Errorf("specified storage directory %s already exists and is a file, refusing to overwrite", dirname)
-		} else {
-			f, err := ioutil.TempFile(dirname, ".dataplaneapi")
-			if err != nil {
-				return "", fmt.Errorf("error using storage directory: %w", err)
-			}
-			os.Remove(f.Name())
 		}
+		f, err := ioutil.TempFile(dirname, ".dataplaneapi")
+		if err != nil {
+			return "", fmt.Errorf("error using storage directory: %w", err)
+		}
+		os.Remove(f.Name())
 	}
 	return dirname, nil
 }

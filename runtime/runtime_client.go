@@ -20,9 +20,8 @@ import (
 	"io"
 	"mime/multipart"
 	"os"
-	"strings"
-
 	"path/filepath"
+	"strings"
 
 	"github.com/google/go-cmp/cmp"
 	native_errors "github.com/haproxytech/client-native/v2/errors"
@@ -163,7 +162,6 @@ func (c *Client) GetVersion() (*HAProxyVersion, error) {
 
 // GetMapsPath returns runtime map file path or map id
 func (c *Client) GetMapsPath(name string) (string, error) {
-
 	name = misc.SanitizeFilename(name)
 
 	// we can refer to runtime map with either id or path
@@ -195,7 +193,7 @@ func (c *Client) SetFrontendMaxConn(frontend string, maxconn int) error {
 	for _, runtime := range c.runtimes {
 		err := runtime.SetFrontendMaxConn(frontend, maxconn)
 		if err != nil {
-			return fmt.Errorf("%s %s", runtime.socketPath, err)
+			return fmt.Errorf("%s %w", runtime.socketPath, err)
 		}
 	}
 	return nil
@@ -455,7 +453,7 @@ func (c *Client) ShowMaps() (models.Maps, error) {
 }
 
 // CreateMap creates a new map file with its entries
-func (c *Client) CreateMap(file multipart.File, header multipart.FileHeader) (*models.Map, error) {
+func (c *Client) CreateMap(file io.Reader, header multipart.FileHeader) (*models.Map, error) {
 	name, err := c.GetMapsPath(header.Filename)
 	if err != nil {
 		return nil, err
@@ -653,6 +651,6 @@ func (c *Client) ParseMapEntries(output string) models.MapEntries {
 }
 
 // ParseMapEntriesFromFile reads entries from file
-func (c *Client) ParseMapEntriesFromFile(inputFile io.Reader, hasId bool) models.MapEntries {
-	return parseMapEntriesFromFile(inputFile, hasId)
+func (c *Client) ParseMapEntriesFromFile(inputFile io.Reader, hasID bool) models.MapEntries {
+	return parseMapEntriesFromFile(inputFile, hasID)
 }

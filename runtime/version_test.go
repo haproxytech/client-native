@@ -13,14 +13,16 @@
 // limitations under the License.
 //
 
-package runtime
+package runtime_test
 
 import (
 	"testing"
+
+	"github.com/haproxytech/client-native/v2/runtime"
 )
 
 func TestHAProxyVersion(t *testing.T) {
-	tests := map[string]HAProxyVersion{
+	tests := map[string]runtime.HAProxyVersion{
 		"2.3-dev6-2f6f36-13": {
 			Major:   2,
 			Minor:   3,
@@ -45,7 +47,7 @@ func TestHAProxyVersion(t *testing.T) {
 	}
 	for version, result := range tests {
 		t.Run(version, func(t *testing.T) {
-			v := &HAProxyVersion{}
+			v := &runtime.HAProxyVersion{}
 			err := v.ParseHAProxyVersion(version)
 			if err != nil {
 				t.Error(err)

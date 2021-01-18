@@ -178,7 +178,7 @@ func ParseServers(backend string, p *parser.Parser) (models.Servers, error) {
 	return servers, nil
 }
 
-func ParseServer(ondiskServer types.Server) *models.Server {
+func ParseServer(ondiskServer types.Server) *models.Server { //nolint:gocognit,gocyclo
 	s := &models.Server{
 		Name: ondiskServer.Name,
 	}

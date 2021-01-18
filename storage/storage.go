@@ -228,7 +228,7 @@ func (s storage) validatePEM(raw []byte) error {
 		if block.Type != "CERTIFICATE" {
 			_, err := parsePrivateKey(block.Bytes)
 			if err != nil {
-				return fmt.Errorf("reading private key error: %s", err)
+				return fmt.Errorf("reading private key error: %w", err)
 			}
 			hasPrivateKey = true
 		}

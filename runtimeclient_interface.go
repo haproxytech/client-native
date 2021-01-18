@@ -62,7 +62,7 @@ type IRuntimeClient interface {
 	// ShowMaps returns structured unique map files
 	ShowMaps() (models.Maps, error)
 	// CreateMap creates a new map file with its entries
-	CreateMap(file multipart.File, header multipart.FileHeader) (*models.Map, error)
+	CreateMap(file io.Reader, header multipart.FileHeader) (*models.Map, error)
 	// GetMap returns one structured runtime map file
 	GetMap(name string) (*models.Map, error)
 	// ClearMap removes all map entries from the map file. If forceDelete is true, deletes file from disk
@@ -81,5 +81,5 @@ type IRuntimeClient interface {
 	DeleteMapEntry(name, id string) error
 	ParseMapEntries(output string) models.MapEntries
 	// ParseMapEntriesFromFile reads entries from file
-	ParseMapEntriesFromFile(inputFile io.Reader, hasId bool) models.MapEntries
+	ParseMapEntriesFromFile(inputFile io.Reader, hasID bool) models.MapEntries
 }

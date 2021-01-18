@@ -2,6 +2,7 @@ package runtime
 
 import (
 	"bufio"
+	"errors"
 	"io"
 	"io/ioutil"
 	"net"
@@ -67,7 +68,7 @@ func (haproxy *HAProxyMock) handleConnection(conn net.Conn) {
 		r := bufio.NewReader(conn)
 		w := bufio.NewWriter(conn)
 		s, err := r.ReadString('\n')
-		if err != nil && err != io.EOF {
+		if err != nil && errors.Is(err, io.EOF) {
 			haproxy.t.Log(err)
 			return
 		}

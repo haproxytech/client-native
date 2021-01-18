@@ -23,7 +23,7 @@ import (
 	"github.com/haproxytech/models/v2"
 )
 
-func TestGetTCPRequestRules(t *testing.T) {
+func TestGetTCPRequestRules(t *testing.T) { //nolint:gocognit,gocyclo
 	v, tRules, err := client.GetTCPRequestRules("frontend", "test", "")
 	if err != nil {
 		t.Error(err.Error())

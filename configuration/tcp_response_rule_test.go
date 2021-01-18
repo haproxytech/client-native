@@ -23,7 +23,7 @@ import (
 	"github.com/haproxytech/models/v2"
 )
 
-func TestGetTCPResponseRules(t *testing.T) {
+func TestGetTCPResponseRules(t *testing.T) { //nolint:gocognit
 	v, tRules, err := client.GetTCPResponseRules("test", "")
 	if err != nil {
 		t.Error(err.Error())

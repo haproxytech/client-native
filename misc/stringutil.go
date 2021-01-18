@@ -24,7 +24,7 @@ import (
 	"strings"
 )
 
-var chars = []rune("0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ")
+var chars = []rune("0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ") //nolint:gochecknoglobals
 
 // StringInSlice checks if a string is in a list of strings
 func StringInSlice(a string, list []string) bool {
@@ -73,7 +73,7 @@ func CamelCase(fieldName string, initCase bool) string {
 }
 
 // SnakeCase turns camel case to snake case string
-func SnakeCase(fieldName string) string {
+func SnakeCase(fieldName string) string { //nolint:gocognit
 	fieldName = strings.Trim(fieldName, " ")
 	n := ""
 	for i, v := range fieldName {
@@ -108,7 +108,7 @@ func SnakeCase(fieldName string) string {
 }
 
 // DashCase turns camel case to snake case string
-func DashCase(fieldName string) string {
+func DashCase(fieldName string) string { //nolint:gocognit
 	fieldName = strings.Trim(fieldName, " ")
 	n := ""
 	for i, v := range fieldName {
@@ -228,9 +228,8 @@ func SanitizeFilename(name string) string {
 		ext = reg.ReplaceAllString(ext[1:], "_")
 		if name != "" {
 			return fmt.Sprintf("%s.%s", name, ext)
-		} else {
-			return fmt.Sprintf("_%s", ext)
 		}
+		return fmt.Sprintf("_%s", ext)
 	}
 
 	return name

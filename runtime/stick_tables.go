@@ -50,7 +50,6 @@ func (s *SingleRuntime) GetTableEntries(name string, filter []string, key string
 	}
 
 	response, err := s.ExecuteWithResponse(cmd)
-
 	if err != nil {
 		return nil, err
 	}
@@ -115,7 +114,7 @@ func (s *SingleRuntime) parseStickTable(output string) *models.StickTable {
 	return stkTable
 }
 
-func parseStickTableEntry(output string) *models.StickTableEntry {
+func parseStickTableEntry(output string) *models.StickTableEntry { //nolint:gocognit,gocyclo
 	idData := strings.SplitN(output, ":", 2)
 	if len(idData) != 2 {
 		return nil

@@ -19,7 +19,7 @@ import "reflect"
 
 // IsZeroValue is a helper method for reflect, checks if reflect.Value has zero value
 func IsZeroValue(v reflect.Value) bool {
-	switch v.Kind() {
+	switch v.Kind() { //nolint:exhaustive
 	case reflect.Array, reflect.String:
 		return v.Len() == 0
 	case reflect.Bool:
