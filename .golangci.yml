@@ -4,40 +4,38 @@ linters-settings:
   golint:
     min-confidence: 0
   gocyclo:
-    min-complexity: 25
+    min-complexity: 30
   maligned:
     suggest-new: true
   dupl:
     threshold: 200
   goconst:
     min-len: 2
-    min-occurrences: 2
+    min-occurrences: 3
+  gci:
+    local-prefixes: github.com/haproxytech/client-native/v2
 
 linters:
-  enable:    
-    - gocritic
-    - stylecheck
-    - goimports
-    - gosec
-    - unconvert
+  enable-all: true
   disable:
-    - maligned
-    - prealloc
-    - gochecknoglobals
+    - wrapcheck
+    - nlreturn
+    - gomnd
+    - goerr113
+    - exhaustivestruct
+    - wsl
+    - whitespace
+    - lll
+    - scopelint
+    - nestif
+    - funlen
+    - paralleltest
+    - godot
 
-issues:
-  exclude-rules:
-    - linters:
-        - stylecheck
-      text: "ST1003:"
+    - goconst
 
 run:
   skip-dirs:
     - test
-
-# golangci.com configuration
-# https://github.com/golangci/golangci/wiki/Configuration
-service:
-  golangci-lint-version: 1.17.x # use the fixed version to not introduce new linters unexpectedly
-  prepare:
-    - echo "here I can run custom commands, but no preparation needed for this repo"
+  skip-files:
+    - ".*_test\\.go$"
