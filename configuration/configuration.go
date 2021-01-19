@@ -1756,7 +1756,7 @@ func (s *SectionObject) stickTable(field reflect.Value) error {
 	return nil
 }
 
-func (s *SectionObject) defaultServer(field reflect.Value) error { //nolint,gocognit,gocyclo
+func (s *SectionObject) defaultServer(field reflect.Value) error { //nolint:gocognit,gocyclo
 	if s.Section == parser.Backends || s.Section == parser.Defaults {
 		if valueIsNil(field) {
 			if err := s.set("default-server", nil); err != nil {

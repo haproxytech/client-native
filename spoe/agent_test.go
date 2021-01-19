@@ -97,7 +97,7 @@ func TestSingleSpoe_GetAgents(t *testing.T) {
 	}
 }
 
-func TestSingleSpoe_DeleteAgent(t *testing.T) {
+func TestSingleSpoe_DeleteAgent(t *testing.T) { //nolint:dupl
 	dir, configFile, err := misc.CreateTempDir(basicConfig, true)
 	if err != nil {
 		t.Error(err.Error())

@@ -23,7 +23,7 @@ import (
 	"github.com/haproxytech/models/v2"
 )
 
-func TestGetServers(t *testing.T) { //nolint,gocognit,gocyclo
+func TestGetServers(t *testing.T) { //nolint:gocognit,gocyclo
 	v, servers, err := client.GetServers("test", "")
 	if err != nil {
 		t.Error(err.Error())

@@ -58,7 +58,7 @@ func (c *SingleSpoe) GetAgents(scope, transactionID string) (int64, models.SpoeA
 
 // GetAgent returns configuration version and a requested agent.
 // Returns error on fail or if agent does not exist.
-func (c *SingleSpoe) GetAgent(scope, name, transactionID string) (int64, *models.SpoeAgent, error) { //nolint:gocognit
+func (c *SingleSpoe) GetAgent(scope, name, transactionID string) (int64, *models.SpoeAgent, error) { //nolint:gocognit,gocyclo
 	p, err := c.GetParser(transactionID)
 	if err != nil {
 		return 0, nil, err
@@ -361,7 +361,7 @@ func (c *SingleSpoe) EditAgent(scope string, data *models.SpoeAgent, transaction
 	return nil
 }
 
-func (c *SingleSpoe) createEditAgent(scope string, data *models.SpoeAgent, t string, transactionID string, p *spoe.Parser) error { //nolint:gocognit
+func (c *SingleSpoe) createEditAgent(scope string, data *models.SpoeAgent, t string, transactionID string, p *spoe.Parser) error { //nolint:gocognit,gocyclo
 	if data == nil {
 		return fmt.Errorf("spoe agent not initialized")
 	}

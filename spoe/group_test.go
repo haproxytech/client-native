@@ -85,7 +85,7 @@ func TestSingleSpoe_GetGroups(t *testing.T) {
 	}
 }
 
-func TestSingleSpoe_DeleteGroup(t *testing.T) {
+func TestSingleSpoe_DeleteGroup(t *testing.T) { //nolint:dupl
 	dir, configFile, err := misc.CreateTempDir(basicConfig, true)
 	if err != nil {
 		t.Error(err.Error())

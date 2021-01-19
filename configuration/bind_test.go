@@ -85,7 +85,7 @@ func TestGetBind(t *testing.T) {
 
 	_, _, err = client.GetBind("webserv", "test_2", "")
 	if err == nil {
-		t.Error("Should throw error, non existant bind")
+		t.Error("Should throw error, non existent bind")
 	}
 }
 
@@ -185,7 +185,7 @@ func TestCreateEditDeleteBind(t *testing.T) {
 
 	err = client.DeleteBind("created", "test2", "", version)
 	if err == nil {
-		t.Error("Should throw error, non existant bind")
+		t.Error("Should throw error, non existent bind")
 		version++
 	}
 }

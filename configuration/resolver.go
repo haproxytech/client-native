@@ -257,7 +257,7 @@ func ParseResolverSection(p *parser.Parser, resolver *models.Resolver) error { /
 	return err
 }
 
-func SerializeResolverSection(p *parser.Parser, data *models.Resolver) error { //nolint,gocognit,gocyclo
+func SerializeResolverSection(p *parser.Parser, data *models.Resolver) error { //nolint:gocognit,gocyclo
 	var err error
 
 	if data.AcceptedPayloadSize == 0 {

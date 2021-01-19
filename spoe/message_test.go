@@ -94,7 +94,7 @@ func TestSingleSpoe_GetMessages(t *testing.T) {
 	}
 }
 
-func TestSingleSpoe_DeleteMessage(t *testing.T) {
+func TestSingleSpoe_DeleteMessage(t *testing.T) { //nolint:dupl
 	dir, configFile, err := misc.CreateTempDir(basicConfig, true)
 	if err != nil {
 		t.Error(err.Error())

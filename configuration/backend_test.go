@@ -23,7 +23,7 @@ import (
 	"github.com/haproxytech/models/v2"
 )
 
-func TestGetBackends(t *testing.T) { //nolint,gocognit,gocyclo
+func TestGetBackends(t *testing.T) { //nolint:gocognit,gocyclo
 	v, backends, err := client.GetBackends("")
 	if err != nil {
 		t.Error(err.Error())
@@ -400,7 +400,7 @@ func TestCreateEditDeleteBackend(t *testing.T) {
 
 	err = client.DeleteBackend("doesnotexist", "", version)
 	if err == nil {
-		t.Error("Should throw error, non existant bck")
+		t.Error("Should throw error, non existent bck")
 		version++
 	}
 }
