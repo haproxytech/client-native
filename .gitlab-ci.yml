@@ -5,11 +5,11 @@ stages:
 variables:
   DOCKER_HOST: tcp://docker:2375
 
-golangci-lint:
+golangci_lint:
   stage: lint
   image:
-    name: $CI_REGISTRY_GO/golangci/golangci-lint:v1.21.0
-    entrypoint: [ "" ]
+    name: $CI_REGISTRY_GO/lint:latest
+    entrypoint: [""]
   tags:
     - go
   script:
