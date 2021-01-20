@@ -266,13 +266,13 @@ func ParseTCPRequestRule(f types.TCPType) (rule *models.TCPRequestRule, err erro
 				rule.TrackTable = a.Table
 			}
 		case *tcp_actions.ScIncGpc0:
-			rule.Action = "sc-set-gpt-0"
+			rule.Action = models.TCPRequestRuleActionScSetGpt0
 			rule.ScIncID = a.ScID
 		case *tcp_actions.ScIncGpc1:
 			rule.Action = models.TCPRequestRuleActionScIncGpc1
 			rule.ScIncID = a.ScID
 		case *tcp_actions.ScSetGpt0:
-			rule.Action = "sc-set-gpt-0"
+			rule.Action = models.TCPRequestRuleActionScSetGpt0
 			rule.ScIncID = a.ScID
 			rule.Expr = a.Value
 		case *tcp_actions.SetSrc:
@@ -340,7 +340,7 @@ func ParseTCPRequestRule(f types.TCPType) (rule *models.TCPRequestRule, err erro
 			rule.Action = models.TCPRequestRuleActionScIncGpc1
 			rule.ScIncID = a.ScID
 		case *tcp_actions.ScSetGpt0:
-			rule.Action = "sc-set-gpt-0"
+			rule.Action = models.TCPRequestRuleActionScSetGpt0
 			rule.ScIncID = a.ScID
 			rule.GptValue = a.Value
 		case *tcp_actions.SetDst:
