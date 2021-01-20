@@ -172,29 +172,29 @@ func ParseTCPResponseRule(t types.TCPType) *models.TCPResponseRule {
 	switch v := t.(type) {
 	case *tcp_types.InspectDelay:
 		return &models.TCPResponseRule{
-			Type:    "inspect-delay",
+			Type:    models.TCPResponseRuleTypeInspectDelay,
 			Timeout: misc.ParseTimeout(v.Timeout),
 		}
 	case *tcp_types.Content:
 		switch a := v.Action.(type) {
 		case *tcp_actions.Accept:
 			return &models.TCPResponseRule{
-				Type:     "content",
+				Type:     models.TCPResponseRuleTypeContent,
 				Action:   a.String(),
 				Cond:     v.Cond,
 				CondTest: v.CondTest,
 			}
 		case *tcp_actions.Reject:
 			return &models.TCPResponseRule{
-				Type:     "content",
+				Type:     models.TCPResponseRuleTypeContent,
 				Action:   a.String(),
 				Cond:     v.Cond,
 				CondTest: v.CondTest,
 			}
 		case *tcp_actions.Lua:
 			return &models.TCPResponseRule{
-				Type:      "content",
-				Action:    "lua",
+				Type:      models.TCPResponseRuleTypeContent,
+				Action:    models.TCPResponseRuleActionLua,
 				LuaAction: a.Action,
 				LuaParams: a.Params,
 				Cond:      v.Cond,
@@ -207,21 +207,21 @@ func ParseTCPResponseRule(t types.TCPType) *models.TCPResponseRule {
 
 func SerializeTCPResponseRule(t models.TCPResponseRule) types.TCPType {
 	switch t.Type {
-	case "content":
+	case models.TCPResponseRuleTypeContent:
 		switch t.Action {
-		case "accept":
+		case models.TCPResponseRuleActionAccept:
 			return &tcp_types.Content{
 				Action:   &tcp_actions.Accept{},
 				Cond:     t.Cond,
 				CondTest: t.CondTest,
 			}
-		case "reject":
+		case models.TCPResponseRuleActionReject:
 			return &tcp_types.Content{
 				Action:   &tcp_actions.Reject{},
 				Cond:     t.Cond,
 				CondTest: t.CondTest,
 			}
-		case "lua":
+		case models.TCPResponseRuleActionLua:
 			return &tcp_types.Content{
 				Action: &tcp_actions.Lua{
 					Action: t.LuaAction,
@@ -231,7 +231,7 @@ func SerializeTCPResponseRule(t models.TCPResponseRule) types.TCPType {
 				CondTest: t.CondTest,
 			}
 		}
-	case "inspect-delay":
+	case models.TCPResponseRuleTypeInspectDelay:
 		if t.Timeout != nil {
 			return &tcp_types.InspectDelay{
 				Timeout: strconv.FormatInt(*t.Timeout, 10),
