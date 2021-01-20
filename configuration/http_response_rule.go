@@ -16,6 +16,7 @@
 package configuration
 
 import (
+	goerrors "errors"
 	"strconv"
 	"strings"
 
@@ -139,6 +140,7 @@ func (c *Client) CreateHTTPResponseRule(parentType string, parentName string, da
 
 // EditHTTPResponseRule edits a http response rule in configuration. One of version or transactionID is
 // mandatory. Returns error on fail, nil on success.
+// nolint:dupl
 func (c *Client) EditHTTPResponseRule(id int64, parentType string, parentName string, data *models.HTTPResponseRule, transactionID string, version int64) error {
 	if c.UseValidation {
 		validationErr := data.Validate(strfmt.Default)
@@ -184,7 +186,7 @@ func ParseHTTPResponseRules(t, pName string, p *parser.Parser) (models.HTTPRespo
 	httpResRules := models.HTTPResponseRules{}
 	data, err := p.Get(section, pName, "http-response", false)
 	if err != nil {
-		if err == parser_errors.ErrFetch {
+		if goerrors.Is(err, parser_errors.ErrFetch) {
 			return httpResRules, nil
 		}
 		return nil, err

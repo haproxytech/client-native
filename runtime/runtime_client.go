@@ -24,9 +24,10 @@ import (
 	"strings"
 
 	"github.com/google/go-cmp/cmp"
+	"github.com/haproxytech/models/v2"
+
 	native_errors "github.com/haproxytech/client-native/v2/errors"
 	"github.com/haproxytech/client-native/v2/misc"
-	"github.com/haproxytech/models/v2"
 )
 
 // Client handles multiple HAProxy clients
@@ -204,7 +205,7 @@ func (c *Client) SetServerAddr(backend, server string, ip string, port int) erro
 	for _, runtime := range c.runtimes {
 		err := runtime.SetServerAddr(backend, server, ip, port)
 		if err != nil {
-			return fmt.Errorf("%s %s", runtime.socketPath, err)
+			return fmt.Errorf("%s %w", runtime.socketPath, err)
 		}
 	}
 	return nil
@@ -215,7 +216,7 @@ func (c *Client) SetServerState(backend, server string, state string) error {
 	for _, runtime := range c.runtimes {
 		err := runtime.SetServerState(backend, server, state)
 		if err != nil {
-			return fmt.Errorf("%s %s", runtime.socketPath, err)
+			return fmt.Errorf("%s %w", runtime.socketPath, err)
 		}
 	}
 	return nil
@@ -226,7 +227,7 @@ func (c *Client) SetServerWeight(backend, server string, weight string) error {
 	for _, runtime := range c.runtimes {
 		err := runtime.SetServerWeight(backend, server, weight)
 		if err != nil {
-			return fmt.Errorf("%s %s", runtime.socketPath, err)
+			return fmt.Errorf("%s %w", runtime.socketPath, err)
 		}
 	}
 	return nil
@@ -237,7 +238,7 @@ func (c *Client) SetServerHealth(backend, server string, health string) error {
 	for _, runtime := range c.runtimes {
 		err := runtime.SetServerHealth(backend, server, health)
 		if err != nil {
-			return fmt.Errorf("%s %s", runtime.socketPath, err)
+			return fmt.Errorf("%s %w", runtime.socketPath, err)
 		}
 	}
 	return nil
@@ -248,7 +249,7 @@ func (c *Client) EnableAgentCheck(backend, server string) error {
 	for _, runtime := range c.runtimes {
 		err := runtime.EnableAgentCheck(backend, server)
 		if err != nil {
-			return fmt.Errorf("%s %s", runtime.socketPath, err)
+			return fmt.Errorf("%s %w", runtime.socketPath, err)
 		}
 	}
 	return nil
@@ -259,7 +260,7 @@ func (c *Client) DisableAgentCheck(backend, server string) error {
 	for _, runtime := range c.runtimes {
 		err := runtime.DisableAgentCheck(backend, server)
 		if err != nil {
-			return fmt.Errorf("%s %s", runtime.socketPath, err)
+			return fmt.Errorf("%s %w", runtime.socketPath, err)
 		}
 	}
 	return nil
@@ -270,7 +271,7 @@ func (c *Client) EnableServer(backend, server string) error {
 	for _, runtime := range c.runtimes {
 		err := runtime.EnableServer(backend, server)
 		if err != nil {
-			return fmt.Errorf("%s %s", runtime.socketPath, err)
+			return fmt.Errorf("%s %w", runtime.socketPath, err)
 		}
 	}
 	return nil
@@ -281,7 +282,7 @@ func (c *Client) DisableServer(backend, server string) error {
 	for _, runtime := range c.runtimes {
 		err := runtime.DisableServer(backend, server)
 		if err != nil {
-			return fmt.Errorf("%s %s", runtime.socketPath, err)
+			return fmt.Errorf("%s %w", runtime.socketPath, err)
 		}
 	}
 	return nil
@@ -292,7 +293,7 @@ func (c *Client) SetServerAgentAddr(backend, server string, addr string) error {
 	for _, runtime := range c.runtimes {
 		err := runtime.SetServerAgentAddr(backend, server, addr)
 		if err != nil {
-			return fmt.Errorf("%s %s", runtime.socketPath, err)
+			return fmt.Errorf("%s %w", runtime.socketPath, err)
 		}
 	}
 	return nil
@@ -303,7 +304,7 @@ func (c *Client) SetServerAgentSend(backend, server string, send string) error {
 	for _, runtime := range c.runtimes {
 		err := runtime.SetServerAgentSend(backend, server, send)
 		if err != nil {
-			return fmt.Errorf("%s %s", runtime.socketPath, err)
+			return fmt.Errorf("%s %w", runtime.socketPath, err)
 		}
 	}
 	return nil
@@ -348,7 +349,7 @@ func (c *Client) SetServerCheckPort(backend, server string, port int) error {
 	for _, runtime := range c.runtimes {
 		err := runtime.SetServerCheckPort(backend, server, port)
 		if err != nil {
-			return fmt.Errorf("%s %s", runtime.socketPath, err)
+			return fmt.Errorf("%s %w", runtime.socketPath, err)
 		}
 	}
 	return nil
@@ -361,7 +362,7 @@ func (c *Client) ShowTables(process int) (models.StickTables, error) {
 		if process == 0 || runtime.process == process {
 			t, err := runtime.ShowTables()
 			if err != nil {
-				return nil, fmt.Errorf("%s %s", runtime.socketPath, err)
+				return nil, fmt.Errorf("%s %w", runtime.socketPath, err)
 			}
 			tables = append(tables, t...)
 		}
@@ -379,7 +380,7 @@ func (c *Client) GetTableEntries(name string, process int, filter []string, key 
 		}
 		entries, err = runtime.GetTableEntries(name, filter, key)
 		if err != nil {
-			return nil, fmt.Errorf("%s %s", runtime.socketPath, err)
+			return nil, fmt.Errorf("%s %w", runtime.socketPath, err)
 		}
 		break
 	}
@@ -396,7 +397,7 @@ func (c *Client) ShowTable(name string, process int) (*models.StickTable, error)
 		}
 		table, err = runtime.ShowTable(name)
 		if err != nil {
-			return nil, fmt.Errorf("%s %s", runtime.socketPath, err)
+			return nil, fmt.Errorf("%s %w", runtime.socketPath, err)
 		}
 	}
 	return table, nil
@@ -408,7 +409,7 @@ func (c *Client) ExecuteRaw(command string) ([]string, error) {
 	for index, runtime := range c.runtimes {
 		r, err := runtime.ExecuteRaw(command)
 		if err != nil {
-			return nil, fmt.Errorf("%s %s", runtime.socketPath, err)
+			return nil, fmt.Errorf("%s %w", runtime.socketPath, err)
 		}
 		result[index] = r
 	}
@@ -495,7 +496,7 @@ func (c *Client) ClearMap(name string, forceDelete bool) error {
 			if os.IsNotExist(err) {
 				return native_errors.ErrNotFound
 			}
-			return fmt.Errorf("%s %w", err.Error(), native_errors.ErrNotFound)
+			return fmt.Errorf(strings.Join([]string{err.Error(), native_errors.ErrNotFound.Error()}, " "))
 		}
 	}
 

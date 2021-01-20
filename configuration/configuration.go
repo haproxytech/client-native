@@ -22,16 +22,15 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/haproxytech/config-parser/v3/common"
-	"github.com/haproxytech/config-parser/v3/parsers"
-	stats "github.com/haproxytech/config-parser/v3/parsers/stats/settings"
-	"github.com/pkg/errors"
-
 	parser "github.com/haproxytech/config-parser/v3"
+	"github.com/haproxytech/config-parser/v3/common"
 	parser_errors "github.com/haproxytech/config-parser/v3/errors"
 	"github.com/haproxytech/config-parser/v3/params"
+	"github.com/haproxytech/config-parser/v3/parsers"
+	stats "github.com/haproxytech/config-parser/v3/parsers/stats/settings"
 	"github.com/haproxytech/config-parser/v3/types"
 	"github.com/haproxytech/models/v2"
+	"github.com/pkg/errors"
 
 	"github.com/haproxytech/client-native/v2/misc"
 )
@@ -1088,7 +1087,7 @@ func (s *SectionParser) httpCheck() interface{} {
 			hc.ExclamationMark = h.ExclamationMark
 			hc.Match = h.Match
 			hc.Pattern = h.Pattern
-			hc.Type = &h.Type
+			*hc.Type = h.Type
 		}
 		return hc
 	}
@@ -1201,8 +1200,8 @@ func (s *SectionObject) CreateEditSection() error {
 }
 
 func (s *SectionObject) setFieldValue(fieldName string, field reflect.Value) error {
-	if match, err := s.checkParams(fieldName, field); match {
-		return err
+	if match := s.checkParams(fieldName); match {
+		return nil
 	}
 
 	if match, err := s.checkSpecialFields(fieldName, field); match {
@@ -1224,11 +1223,8 @@ func (s *SectionObject) setFieldValue(fieldName string, field reflect.Value) err
 	return errors.Errorf("Cannot parse option for %s %s: %s", s.Section, s.Name, fieldName)
 }
 
-func (s *SectionObject) checkParams(fieldName string, field reflect.Value) (match bool, err error) {
-	if strings.HasSuffix(fieldName, "Params") {
-		return true, nil
-	}
-	return false, nil
+func (s *SectionObject) checkParams(fieldName string) (match bool) {
+	return strings.HasSuffix(fieldName, "Params")
 }
 
 func (s *SectionObject) checkSpecialFields(fieldName string, field reflect.Value) (match bool, err error) {
@@ -1362,7 +1358,7 @@ func (s *SectionObject) httplog(field reflect.Value) error {
 			// check if clflog is active, if yes, do nothing
 			d, err := s.Parser.Get(s.Section, s.Name, "option httplog", false)
 			if err != nil {
-				if err != parser_errors.ErrFetch {
+				if !errors.Is(err, parser_errors.ErrFetch) {
 					return err
 				}
 				return nil
@@ -1389,7 +1385,7 @@ func (s *SectionObject) clflog(field reflect.Value) error {
 			// check if httplog exists, if not do nothing
 			d, err := s.Parser.Get(s.Section, s.Name, "option httplog", false)
 			if err != nil {
-				if err != parser_errors.ErrFetch {
+				if !errors.Is(err, parser_errors.ErrFetch) {
 					return err
 				}
 				return nil

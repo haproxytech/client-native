@@ -16,13 +16,13 @@
 package configuration
 
 import (
+	"errors"
 	"strconv"
 
-	"github.com/haproxytech/config-parser/v3/parsers/filters"
-
-	strfmt "github.com/go-openapi/strfmt"
+	"github.com/go-openapi/strfmt"
 	parser "github.com/haproxytech/config-parser/v3"
 	parser_errors "github.com/haproxytech/config-parser/v3/errors"
+	"github.com/haproxytech/config-parser/v3/parsers/filters"
 	"github.com/haproxytech/config-parser/v3/types"
 	"github.com/haproxytech/models/v2"
 )
@@ -139,6 +139,7 @@ func (c *Client) CreateFilter(parentType string, parentName string, data *models
 
 // EditFilter edits a filter in configuration. One of version or transactionID is
 // mandatory. Returns error on fail, nil on success.
+// nolint:dupl
 func (c *Client) EditFilter(id int64, parentType string, parentName string, data *models.Filter, transactionID string, version int64) error {
 	if c.UseValidation {
 		validationErr := data.Validate(strfmt.Default)
@@ -184,7 +185,7 @@ func ParseFilters(t, pName string, p *parser.Parser) (models.Filters, error) {
 	f := models.Filters{}
 	data, err := p.Get(section, pName, "filter", false)
 	if err != nil {
-		if err == parser_errors.ErrFetch {
+		if errors.Is(err, parser_errors.ErrFetch) {
 			return f, nil
 		}
 		return nil, err

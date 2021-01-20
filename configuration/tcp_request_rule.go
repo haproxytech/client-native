@@ -16,19 +16,20 @@
 package configuration
 
 import (
+	"errors"
 	"strconv"
 	"strings"
 
-	"github.com/haproxytech/client-native/v2/misc"
+	"github.com/go-openapi/strfmt"
+	parser "github.com/haproxytech/config-parser/v3"
 	"github.com/haproxytech/config-parser/v3/common"
+	parser_errors "github.com/haproxytech/config-parser/v3/errors"
 	tcp_actions "github.com/haproxytech/config-parser/v3/parsers/tcp/actions"
 	tcp_types "github.com/haproxytech/config-parser/v3/parsers/tcp/types"
-
-	strfmt "github.com/go-openapi/strfmt"
-	parser "github.com/haproxytech/config-parser/v3"
-	parser_errors "github.com/haproxytech/config-parser/v3/errors"
 	"github.com/haproxytech/config-parser/v3/types"
 	"github.com/haproxytech/models/v2"
+
+	"github.com/haproxytech/client-native/v2/misc"
 )
 
 // GetTCPRequestRules returns configuration version and an array of
@@ -150,7 +151,7 @@ func (c *Client) CreateTCPRequestRule(parentType string, parentName string, data
 
 // EditTCPRequestRule edits a tcp request rule in configuration. One of version or transactionID is
 // mandatory. Returns error on fail, nil on success.
-func (c *Client) EditTCPRequestRule(id int64, parentType string, parentName string, data *models.TCPRequestRule, transactionID string, version int64) error {
+func (c *Client) EditTCPRequestRule(id int64, parentType string, parentName string, data *models.TCPRequestRule, transactionID string, version int64) error { //nolint:dupl
 	if c.UseValidation {
 		validationErr := data.Validate(strfmt.Default)
 		if validationErr != nil {
@@ -199,7 +200,7 @@ func ParseTCPRequestRules(t, pName string, p *parser.Parser) (models.TCPRequestR
 	tcpReqRules := models.TCPRequestRules{}
 	data, err := p.Get(section, pName, "tcp-request", false)
 	if err != nil {
-		if err == parser_errors.ErrFetch {
+		if errors.Is(err, parser_errors.ErrFetch) {
 			return tcpReqRules, nil
 		}
 		return nil, err
@@ -380,7 +381,7 @@ func ParseTCPRequestRule(f types.TCPType) (rule *models.TCPRequestRule, err erro
 		}
 		switch a := v.Action.(type) {
 		case *tcp_actions.Accept:
-			rule.Action = models.TCPRequestRuleActionAccept // TODO use constants for everything maybe?
+			rule.Action = models.TCPRequestRuleActionAccept
 		case *tcp_actions.Reject:
 			rule.Action = "reject"
 		case *tcp_actions.TrackSc0:

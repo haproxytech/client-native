@@ -16,6 +16,7 @@
 package configuration
 
 import (
+	"errors"
 	"fmt"
 	"strconv"
 	"strings"
@@ -160,7 +161,7 @@ func ParseNameservers(resolverSection string, p *parser.Parser) (models.Nameserv
 
 	data, err := p.Get(parser.Resolvers, resolverSection, "nameserver", false)
 	if err != nil {
-		if err == parser_errors.ErrFetch {
+		if errors.Is(err, parser_errors.ErrFetch) {
 			return nameserver, nil
 		}
 		return nil, err

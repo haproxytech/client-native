@@ -29,15 +29,16 @@ import (
 	"strings"
 
 	"github.com/google/renameio"
+
 	conf "github.com/haproxytech/client-native/v2/configuration"
 	"github.com/haproxytech/client-native/v2/misc"
 )
 
-type StorageFileType string
+type FileType string
 
 const (
-	MapsType StorageFileType = "maps"
-	SSLType  StorageFileType = "certificate"
+	MapsType FileType = "maps"
+	SSLType  FileType = "certificate"
 )
 
 type Storage interface {
@@ -50,10 +51,10 @@ type Storage interface {
 
 type storage struct {
 	dirname  string
-	fileType StorageFileType
+	fileType FileType
 }
 
-func New(dirname string, fileType StorageFileType) (Storage, error) {
+func New(dirname string, fileType FileType) (Storage, error) {
 	dirname, err := misc.CheckOrCreateWritableDirectory(dirname)
 	if err != nil {
 		return nil, err

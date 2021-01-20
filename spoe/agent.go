@@ -19,13 +19,14 @@ import (
 	"fmt"
 	"strconv"
 
-	strfmt "github.com/go-openapi/strfmt"
-	conf "github.com/haproxytech/client-native/v2/configuration"
-	"github.com/haproxytech/client-native/v2/misc"
+	"github.com/go-openapi/strfmt"
 	parser "github.com/haproxytech/config-parser/v3"
 	"github.com/haproxytech/config-parser/v3/spoe"
 	"github.com/haproxytech/config-parser/v3/types"
 	"github.com/haproxytech/models/v2"
+
+	conf "github.com/haproxytech/client-native/v2/configuration"
+	"github.com/haproxytech/client-native/v2/misc"
 )
 
 // GetAgents returns configuration version and an array of

@@ -16,6 +16,7 @@
 package configuration
 
 import (
+	"errors"
 	"strconv"
 
 	strfmt "github.com/go-openapi/strfmt"
@@ -145,7 +146,7 @@ func ParseStickRules(backend string, p *parser.Parser) (models.StickRules, error
 
 	data, err := p.Get(parser.Backends, backend, "stick", false)
 	if err != nil {
-		if err == parser_errors.ErrFetch {
+		if errors.Is(err, parser_errors.ErrFetch) {
 			return sr, nil
 		}
 		return nil, err

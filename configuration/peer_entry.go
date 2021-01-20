@@ -16,6 +16,7 @@
 package configuration
 
 import (
+	"errors"
 	"fmt"
 
 	strfmt "github.com/go-openapi/strfmt"
@@ -158,7 +159,7 @@ func ParsePeerEntries(peerSection string, p *parser.Parser) (models.PeerEntries,
 
 	data, err := p.Get(parser.Peers, peerSection, "peer", false)
 	if err != nil {
-		if err == parser_errors.ErrFetch {
+		if errors.Is(err, parser_errors.ErrFetch) {
 			return peerEntry, nil
 		}
 		return nil, err

@@ -16,9 +16,8 @@
 package configuration
 
 import (
+	goerrors "errors"
 	"strconv"
-
-	"github.com/haproxytech/client-native/v2/misc"
 
 	"github.com/go-openapi/strfmt"
 	parser "github.com/haproxytech/config-parser/v3"
@@ -26,6 +25,8 @@ import (
 	"github.com/haproxytech/config-parser/v3/params"
 	"github.com/haproxytech/config-parser/v3/types"
 	"github.com/haproxytech/models/v2"
+
+	"github.com/haproxytech/client-native/v2/misc"
 )
 
 // GetGlobalConfiguration returns configuration version and a
@@ -97,13 +98,13 @@ func ParseGlobalSection(p *parser.Parser) (*models.Global, error) { //nolint:goc
 
 	_, err = p.Get(parser.Global, parser.GlobalSectionName, "daemon")
 	daemon := "enabled"
-	if err == errors.ErrFetch {
+	if goerrors.Is(err, errors.ErrFetch) {
 		daemon = "disabled"
 	}
 
 	_, err = p.Get(parser.Global, parser.GlobalSectionName, "master-worker")
 	masterWorker := true
-	if err == errors.ErrFetch {
+	if goerrors.Is(err, errors.ErrFetch) {
 		masterWorker = false
 	}
 
@@ -178,7 +179,7 @@ func ParseGlobalSection(p *parser.Parser) (*models.Global, error) { //nolint:goc
 
 	data, err = p.Get(parser.Global, parser.GlobalSectionName, "stats timeout")
 	var statsTimeout *int64
-	if err == errors.ErrFetch {
+	if goerrors.Is(err, errors.ErrFetch) {
 		statsTimeout = nil
 	} else {
 		statsTimeoutParser := data.(*types.StringC)
@@ -242,7 +243,7 @@ func ParseGlobalSection(p *parser.Parser) (*models.Global, error) { //nolint:goc
 
 	_, err = p.Get(parser.Global, parser.GlobalSectionName, "external-check")
 	externalCheck := true
-	if err == errors.ErrFetch {
+	if goerrors.Is(err, errors.ErrFetch) {
 		externalCheck = false
 	}
 

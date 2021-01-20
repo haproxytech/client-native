@@ -25,6 +25,7 @@ import (
 	"path/filepath"
 
 	"github.com/google/renameio"
+
 	conf "github.com/haproxytech/client-native/v2/configuration"
 	"github.com/haproxytech/client-native/v2/misc"
 )

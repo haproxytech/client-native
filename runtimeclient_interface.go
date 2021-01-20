@@ -1,6 +1,6 @@
 // This file is generated, don't edit manually, see README.md for details.
 
-package client_native
+package clientnative
 
 import (
 	"io"

@@ -113,7 +113,7 @@ func (s *SingleRuntime) ExecuteRaw(command string) (string, error) {
 func (s *SingleRuntime) Execute(command string) error {
 	rawdata, err := s.ExecuteRaw(command)
 	if err != nil {
-		return fmt.Errorf("%s [%s]", err.Error(), command)
+		return fmt.Errorf("%w [%s]", err, command)
 	}
 	if len(rawdata) > 5 {
 		switch rawdata[1:5] {
@@ -127,7 +127,7 @@ func (s *SingleRuntime) Execute(command string) error {
 func (s *SingleRuntime) ExecuteWithResponse(command string) (string, error) {
 	rawdata, err := s.ExecuteRaw(command)
 	if err != nil {
-		return "", fmt.Errorf("%s [%s]", err.Error(), command)
+		return "", fmt.Errorf("%w [%s]", err, command)
 	}
 	if len(rawdata) > 5 {
 		switch rawdata[1:5] {

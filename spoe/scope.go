@@ -18,9 +18,10 @@ package spoe
 import (
 	"fmt"
 
-	strfmt "github.com/go-openapi/strfmt"
-	conf "github.com/haproxytech/client-native/v2/configuration"
+	"github.com/go-openapi/strfmt"
 	"github.com/haproxytech/models/v2"
+
+	conf "github.com/haproxytech/client-native/v2/configuration"
 )
 
 // GetScopes returns configuration version and an array of

@@ -33,7 +33,7 @@ func TestNew(t *testing.T) {
 	tests := []struct {
 		name     string
 		dirname  string
-		fileType StorageFileType
+		fileType FileType
 		want     Storage
 		wantErr  bool
 	}{
@@ -89,7 +89,7 @@ key2 val2`
 	tests := []struct {
 		name     string
 		dirname  string
-		fileType StorageFileType
+		fileType FileType
 		want     []string
 		wantErr  bool
 	}{
@@ -316,7 +316,7 @@ func Test_storage_Create(t *testing.T) {
 	tests := []struct {
 		name       string
 		dirname    string
-		fileType   StorageFileType
+		fileType   FileType
 		file       string
 		readCloser io.ReadCloser
 		want       string

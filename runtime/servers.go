@@ -20,8 +20,9 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/haproxytech/client-native/v2/misc"
 	"github.com/haproxytech/models/v2"
+
+	"github.com/haproxytech/client-native/v2/misc"
 )
 
 // SetServerAddr set ip [port] for server

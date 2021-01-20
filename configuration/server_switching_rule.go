@@ -16,6 +16,7 @@
 package configuration
 
 import (
+	"errors"
 	"strconv"
 
 	strfmt "github.com/go-openapi/strfmt"
@@ -145,7 +146,7 @@ func ParseServerSwitchingRules(backend string, p *parser.Parser) (models.ServerS
 
 	data, err := p.Get(parser.Backends, backend, "use-server", false)
 	if err != nil {
-		if err == parser_errors.ErrFetch {
+		if errors.Is(err, parser_errors.ErrFetch) {
 			return sr, nil
 		}
 		return nil, err

@@ -17,6 +17,7 @@ package configuration
 
 import (
 	"bytes"
+	"errors"
 	"fmt"
 	"io/ioutil"
 	"os"
@@ -580,18 +581,18 @@ func (t *Transaction) ErrAndDeleteTransaction(err error, tID string) error {
 
 func (t *Transaction) HandleError(id, parentType, parentName, transactionID string, implicit bool, err error) error {
 	var e error
-	switch err {
-	case parser_errors.ErrSectionMissing:
+	switch {
+	case errors.Is(err, parser_errors.ErrSectionMissing):
 		if parentName != "" {
 			e = NewConfError(ErrParentDoesNotExist, fmt.Sprintf("%s %s does not exist", parentType, parentName))
 		} else {
 			e = NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("Object %s does not exist", id))
 		}
-	case parser_errors.ErrSectionAlreadyExists:
+	case errors.Is(err, parser_errors.ErrSectionAlreadyExists):
 		e = NewConfError(ErrObjectAlreadyExists, fmt.Sprintf("Object %s already exists", id))
-	case parser_errors.ErrFetch:
+	case errors.Is(err, parser_errors.ErrFetch):
 		e = NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("Object %v does not exist in %s %s", id, parentType, parentName))
-	case parser_errors.ErrIndexOutOfRange:
+	case errors.Is(err, parser_errors.ErrIndexOutOfRange):
 		e = NewConfError(ErrObjectIndexOutOfRange, fmt.Sprintf("Object with id %v in %s %s out of range", id, parentType, parentName))
 	default:
 		e = err

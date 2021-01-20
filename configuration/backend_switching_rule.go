@@ -16,10 +16,10 @@
 package configuration
 
 import (
+	goerrors "errors"
 	"strconv"
 
-	strfmt "github.com/go-openapi/strfmt"
-
+	"github.com/go-openapi/strfmt"
 	parser "github.com/haproxytech/config-parser/v3"
 	parser_errors "github.com/haproxytech/config-parser/v3/errors"
 	"github.com/haproxytech/config-parser/v3/types"
@@ -149,7 +149,7 @@ func ParseBackendSwitchingRules(frontend string, p *parser.Parser) (models.Backe
 
 	data, err := p.Get(parser.Frontends, frontend, "use_backend", false)
 	if err != nil {
-		if err == parser_errors.ErrFetch {
+		if goerrors.Is(err, parser_errors.ErrFetch) {
 			return br, nil
 		}
 		return nil, err

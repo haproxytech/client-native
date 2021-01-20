@@ -16,16 +16,15 @@
 package configuration
 
 import (
+	"errors"
 	"strconv"
 	"strings"
 
-	"github.com/haproxytech/config-parser/v3/common"
-
-	"github.com/haproxytech/config-parser/v3/parsers/http/actions"
-
-	strfmt "github.com/go-openapi/strfmt"
+	"github.com/go-openapi/strfmt"
 	parser "github.com/haproxytech/config-parser/v3"
+	"github.com/haproxytech/config-parser/v3/common"
 	parser_errors "github.com/haproxytech/config-parser/v3/errors"
+	"github.com/haproxytech/config-parser/v3/parsers/http/actions"
 	"github.com/haproxytech/config-parser/v3/types"
 	"github.com/haproxytech/models/v2"
 )
@@ -149,6 +148,7 @@ func (c *Client) CreateHTTPRequestRule(parentType string, parentName string, dat
 
 // EditHTTPRequestRule edits a http request rule in configuration. One of version or transactionID is
 // mandatory. Returns error on fail, nil on success.
+// nolint:dupl
 func (c *Client) EditHTTPRequestRule(id int64, parentType string, parentName string, data *models.HTTPRequestRule, transactionID string, version int64) error {
 	if c.UseValidation {
 		validationErr := data.Validate(strfmt.Default)
@@ -198,7 +198,7 @@ func ParseHTTPRequestRules(t, pName string, p *parser.Parser) (models.HTTPReques
 	httpReqRules := models.HTTPRequestRules{}
 	data, err := p.Get(section, pName, "http-request", false)
 	if err != nil {
-		if err == parser_errors.ErrFetch {
+		if errors.Is(err, parser_errors.ErrFetch) {
 			return httpReqRules, nil
 		}
 		return nil, err

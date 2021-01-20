@@ -16,6 +16,7 @@
 package configuration
 
 import (
+	"errors"
 	"strconv"
 
 	strfmt "github.com/go-openapi/strfmt"
@@ -137,6 +138,7 @@ func (c *Client) CreateLogTarget(parentType string, parentName string, data *mod
 
 // EditLogTarget edits a log target in configuration. One of version or transactionID is
 // mandatory. Returns error on fail, nil on success.
+// nolint:dupl
 func (c *Client) EditLogTarget(id int64, parentType string, parentName string, data *models.LogTarget, transactionID string, version int64) error {
 	if c.UseValidation {
 		validationErr := data.Validate(strfmt.Default)
@@ -181,7 +183,7 @@ func ParseLogTargets(t, pName string, p *parser.Parser) (models.LogTargets, erro
 	logTargets := models.LogTargets{}
 	data, err := p.Get(section, pName, "log", false)
 	if err != nil {
-		if err == parser_errors.ErrFetch {
+		if errors.Is(err, parser_errors.ErrFetch) {
 			return logTargets, nil
 		}
 		return nil, err

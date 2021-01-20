@@ -13,7 +13,7 @@
 // limitations under the License.
 //
 
-package client_native
+package clientnative
 
 import (
 	"log"

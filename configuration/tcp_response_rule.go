@@ -16,16 +16,18 @@
 package configuration
 
 import (
+	"errors"
 	"strconv"
 
-	strfmt "github.com/go-openapi/strfmt"
-	"github.com/haproxytech/client-native/v2/misc"
+	"github.com/go-openapi/strfmt"
 	parser "github.com/haproxytech/config-parser/v3"
 	parser_errors "github.com/haproxytech/config-parser/v3/errors"
 	tcp_actions "github.com/haproxytech/config-parser/v3/parsers/tcp/actions"
 	tcp_types "github.com/haproxytech/config-parser/v3/parsers/tcp/types"
 	"github.com/haproxytech/config-parser/v3/types"
 	"github.com/haproxytech/models/v2"
+
+	"github.com/haproxytech/client-native/v2/misc"
 )
 
 // GetTCPResponseRules returns configuration version and an array of
@@ -148,7 +150,7 @@ func ParseTCPResponseRules(backend string, p *parser.Parser) (models.TCPResponse
 
 	data, err := p.Get(parser.Backends, backend, "tcp-response", false)
 	if err != nil {
-		if err == parser_errors.ErrFetch {
+		if errors.Is(err, parser_errors.ErrFetch) {
 			return tcpResRules, nil
 		}
 		return nil, err

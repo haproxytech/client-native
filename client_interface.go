@@ -1,11 +1,12 @@
 // This file is generated, don't edit manually, see README.md for details.
 
-package client_native
+package clientnative
 
 import (
-	"github.com/haproxytech/client-native/v2/configuration"
 	parser "github.com/haproxytech/config-parser/v3"
 	"github.com/haproxytech/models/v2"
+
+	"github.com/haproxytech/client-native/v2/configuration"
 )
 
 // IConfigurationClient ...

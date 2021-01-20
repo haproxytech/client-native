@@ -16,18 +16,19 @@
 package configuration
 
 import (
+	"errors"
 	"fmt"
 	"strconv"
 	"strings"
 
-	"github.com/haproxytech/client-native/v2/misc"
-	"github.com/haproxytech/config-parser/v3/params"
-
-	strfmt "github.com/go-openapi/strfmt"
+	"github.com/go-openapi/strfmt"
 	parser "github.com/haproxytech/config-parser/v3"
 	parser_errors "github.com/haproxytech/config-parser/v3/errors"
+	"github.com/haproxytech/config-parser/v3/params"
 	"github.com/haproxytech/config-parser/v3/types"
 	"github.com/haproxytech/models/v2"
+
+	"github.com/haproxytech/client-native/v2/misc"
 )
 
 // GetServers returns configuration version and an array of
@@ -162,7 +163,7 @@ func ParseServers(backend string, p *parser.Parser) (models.Servers, error) {
 
 	data, err := p.Get(parser.Backends, backend, "server", false)
 	if err != nil {
-		if err == parser_errors.ErrFetch {
+		if errors.Is(err, parser_errors.ErrFetch) {
 			return servers, nil
 		}
 		return nil, err
@@ -438,7 +439,7 @@ func ParseServer(ondiskServer types.Server) *models.Server { //nolint:gocognit,g
 	return s
 }
 
-func SerializeServer(s models.Server) types.Server {
+func SerializeServer(s models.Server) types.Server { //nolint:gocognit,gocyclo
 	srv := types.Server{
 		Name:   s.Name,
 		Params: []params.ServerOption{},

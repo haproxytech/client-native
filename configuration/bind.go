@@ -16,6 +16,7 @@
 package configuration
 
 import (
+	"errors"
 	"fmt"
 	"strconv"
 	"strings"
@@ -167,7 +168,7 @@ func ParseBinds(frontend string, p *parser.Parser) (models.Binds, error) {
 
 	data, err := p.Get(parser.Frontends, frontend, "bind", false)
 	if err != nil {
-		if err == parser_errors.ErrFetch {
+		if errors.Is(err, parser_errors.ErrFetch) {
 			return binds, nil
 		}
 		return nil, err

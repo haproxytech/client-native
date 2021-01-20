@@ -16,6 +16,7 @@
 package configuration
 
 import (
+	"errors"
 	"strconv"
 
 	strfmt "github.com/go-openapi/strfmt"
@@ -136,6 +137,7 @@ func (c *Client) CreateACL(parentType string, parentName string, data *models.AC
 
 // EditACL edits a ACL line in configuration. One of version or transactionID is
 // mandatory. Returns error on fail, nil on success.
+// nolint:dupl
 func (c *Client) EditACL(id int64, parentType string, parentName string, data *models.ACL, transactionID string, version int64) error {
 	if c.UseValidation {
 		validationErr := data.Validate(strfmt.Default)
@@ -180,7 +182,7 @@ func ParseACLs(t, pName string, p *parser.Parser) (models.Acls, error) {
 	acls := models.Acls{}
 	data, err := p.Get(section, pName, "acl", false)
 	if err != nil {
-		if err == parser_errors.ErrFetch {
+		if errors.Is(err, parser_errors.ErrFetch) {
 			return acls, nil
 		}
 		return nil, err

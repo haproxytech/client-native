@@ -10,8 +10,9 @@ import (
 	"strings"
 
 	"github.com/google/renameio"
-	native_errors "github.com/haproxytech/client-native/v2/errors"
 	"github.com/haproxytech/models/v2"
+
+	native_errors "github.com/haproxytech/client-native/v2/errors"
 )
 
 // ShowMaps returns map files description from runtime
