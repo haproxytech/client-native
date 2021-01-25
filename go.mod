@@ -13,6 +13,7 @@ require (
 	github.com/google/uuid v1.1.1
 	github.com/haproxytech/config-parser/v3 v3.0.0-rc1.0.20201218192213-cf1331eaac44
 	github.com/haproxytech/models/v2 v2.2.0-rc1.0.20210112080933-32de531b38f2
+	github.com/kballard/go-shellquote v0.0.0-20180428030007-95032a82bc51
 	github.com/kr/text v0.2.0 // indirect
 	github.com/mitchellh/mapstructure v1.2.2
 	github.com/niemeyer/pretty v0.0.0-20200227124842-a10e7caefd8e // indirect

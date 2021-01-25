@@ -32,6 +32,7 @@ import (
 	parser_errors "github.com/haproxytech/config-parser/v3/errors"
 	spoe "github.com/haproxytech/config-parser/v3/spoe"
 	"github.com/haproxytech/models/v2"
+	shellquote "github.com/kballard/go-shellquote"
 )
 
 type TransactionClient interface {
@@ -216,15 +217,28 @@ func (t *Transaction) checkTransactionFile(transactionID string) error {
 	if err != nil {
 		return err
 	}
-	var cmd *exec.Cmd
-	if t.MasterWorker {
-		// #nosec G204
-		cmd = exec.Command(t.Haproxy, "-W", "-f", transactionFile, "-c")
-	} else {
-		// #nosec G204
-		cmd = exec.Command(t.Haproxy, "-f", transactionFile, "-c")
+
+	var name string
+	var args []string
+	var envs []string
+
+	switch {
+	case len(t.ValidateCmd) > 0:
+		w, _ := shellquote.Split(t.ValidateCmd)
+		name = w[0]
+		args = w[1:]
+		envs = append(envs, fmt.Sprintf("DATAPLANEAPI_TRANSACTION_FILE=%s", transactionFile))
+	case t.MasterWorker:
+		name = t.Haproxy
+		args = []string{"-W", "-f", transactionFile, "-c"}
+	default:
+		name = t.Haproxy
+		args = []string{"-f", transactionFile, "-c"}
 	}
 
+	// #nosec G204
+	cmd := exec.Command(name, args...)
+	cmd.Env = envs
 	var stdout, stderr bytes.Buffer
 	cmd.Stdout = &stdout
 	cmd.Stderr = &stderr

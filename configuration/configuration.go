@@ -30,6 +30,7 @@ import (
 	stats "github.com/haproxytech/config-parser/v3/parsers/stats/settings"
 	"github.com/haproxytech/config-parser/v3/types"
 	"github.com/haproxytech/models/v2"
+	"github.com/kballard/go-shellquote"
 	"github.com/pkg/errors"
 
 	"github.com/haproxytech/client-native/v2/misc"
@@ -61,6 +62,10 @@ type ClientParams struct {
 	ValidateConfigurationFile bool
 	MasterWorker              bool
 	SkipFailedTransactions    bool
+
+	// ValidateCmd allows specifying a custom script to validate the transaction file.
+	// The injected environment variable DATAPLANEAPI_TRANSACTION_FILE must be used to get the location of the file.
+	ValidateCmd string
 }
 
 // Client configuration client
@@ -100,6 +105,12 @@ func DefaultClient() (*Client, error) {
 
 // Init initializes a Client
 func (c *Client) Init(options ClientParams) error {
+	if len(options.ValidateCmd) > 0 {
+		if _, err := shellquote.Split(options.ValidateCmd); err != nil {
+			return fmt.Errorf("the validate command is non well-formed (%w)", err)
+		}
+	}
+
 	if options.TransactionDir == "" {
 		options.TransactionDir = DefaultTransactionDir
 	}
