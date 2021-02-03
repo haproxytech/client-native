@@ -11,8 +11,8 @@ require (
 	github.com/google/go-cmp v0.4.0
 	github.com/google/renameio v0.1.1-0.20200217212219-353f81969824
 	github.com/google/uuid v1.1.1
-	github.com/haproxytech/config-parser/v3 v3.0.0-rc1.0.20201218192213-cf1331eaac44
-	github.com/haproxytech/models/v2 v2.2.0-rc1.0.20210112080933-32de531b38f2
+	github.com/haproxytech/config-parser/v3 v3.0.1-0.20210127160816-f49a3c187262
+	github.com/haproxytech/models/v2 v2.2.1-0.20210202072505-661110a4df53
 	github.com/kr/text v0.2.0 // indirect
 	github.com/mitchellh/mapstructure v1.2.2
 	github.com/niemeyer/pretty v0.0.0-20200227124842-a10e7caefd8e // indirect

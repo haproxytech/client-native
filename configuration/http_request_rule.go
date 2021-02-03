@@ -622,12 +622,53 @@ func ParseHTTPRequestRule(f types.HTTPAction) (rule *models.HTTPRequestRule, err
 			Cond:        v.Cond,
 			CondTest:    v.CondTest,
 		}
+	case *actions.Return:
+		rule = &models.HTTPRequestRule{
+			Cond:                v.Cond,
+			CondTest:            v.CondTest,
+			ReturnHeaders:       actionHdr2ModelHdr(v.Hdrs),
+			ReturnContent:       v.Content,
+			ReturnContentFormat: v.ContentFormat,
+			ReturnContentType:   &v.ContentType,
+			ReturnStatusCode:    v.Status,
+			Type:                "return",
+		}
 	}
 
 	return rule, err
 }
 
-func SerializeHTTPRequestRule(f models.HTTPRequestRule) (rule types.HTTPAction, err error) { //nolint:gocyclo
+func actionHdr2ModelHdr(hdrs []*actions.Hdr) []*models.HTTPRequestRuleReturnHdrsItems0 {
+	if len(hdrs) == 0 {
+		return nil
+	}
+	headers := []*models.HTTPRequestRuleReturnHdrsItems0{}
+	for _, h := range hdrs {
+		hdr := models.HTTPRequestRuleReturnHdrsItems0{
+			Fmt:  &h.Fmt,
+			Name: &h.Name,
+		}
+		headers = append(headers, &hdr)
+	}
+	return headers
+}
+
+func modelHdr2ActionHdr(hdrs []*models.HTTPRequestRuleReturnHdrsItems0) []*actions.Hdr {
+	if len(hdrs) == 0 {
+		return nil
+	}
+	headers := []*actions.Hdr{}
+	for _, h := range hdrs {
+		hdr := actions.Hdr{
+			Name: *h.Name,
+			Fmt:  *h.Fmt,
+		}
+		headers = append(headers, &hdr)
+	}
+	return headers
+}
+
+func SerializeHTTPRequestRule(f models.HTTPRequestRule) (rule types.HTTPAction, err error) { //nolint:gocyclo,gocognit
 	switch f.Type {
 	case "allow":
 		rule = &actions.Allow{
@@ -978,6 +1019,21 @@ func SerializeHTTPRequestRule(f models.HTTPRequestRule) (rule types.HTTPAction, 
 			Name:     f.ServiceName,
 			Cond:     f.Cond,
 			CondTest: f.CondTest,
+		}
+	case "return":
+		rule = &actions.Return{
+			Status:        f.ReturnStatusCode,
+			ContentType:   *f.ReturnContentType,
+			ContentFormat: f.ReturnContentFormat,
+			Content:       f.ReturnContent,
+			Hdrs:          modelHdr2ActionHdr(f.ReturnHeaders),
+			Cond:          f.Cond,
+			CondTest:      f.CondTest,
+		}
+		if !actions.IsPayload(f.ReturnContentFormat) {
+			if ok := actions.AllowedErrorCode(*f.ReturnStatusCode); !ok {
+				return rule, NewConfError(ErrValidationError, "invalid Status Code for error type response")
+			}
 		}
 	}
 
