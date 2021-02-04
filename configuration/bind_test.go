@@ -98,6 +98,7 @@ func TestCreateEditDeleteBind(t *testing.T) {
 		Port:           &port,
 		Ssl:            true,
 		SslCertificate: "dummy.crt",
+		Interface:      "eth0",
 		Verify:         "optional",
 		SslMinVer:      "TLSv1.3",
 		SslMaxVer:      "TLSv1.3",
@@ -142,6 +143,7 @@ func TestCreateEditDeleteBind(t *testing.T) {
 		TCPUserTimeout: &tOut,
 		SslMinVer:      "TLSv1.2",
 		SslMaxVer:      "TLSv1.3",
+		Interface:      "eth1",
 	}
 
 	err = client.EditBind("created", "test", l, "", version)
