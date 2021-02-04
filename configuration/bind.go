@@ -498,6 +498,9 @@ func SerializeBind(b models.Bind) types.Bind { //nolint:gocognit,gocyclo
 	if b.ID != "" {
 		bind.Params = append(bind.Params, &params.BindOptionValue{Name: "id", Value: b.ID})
 	}
+	if b.Interface != "" {
+		bind.Params = append(bind.Params, &params.BindOptionValue{Name: "interface", Value: b.Interface})
+	}
 	if b.Level != "" {
 		bind.Params = append(bind.Params, &params.BindOptionValue{Name: "level", Value: b.Level})
 	}
