@@ -40,7 +40,7 @@ type TransactionClient interface {
 	AddParser(transactionID string) error
 	CommitParser(transactionID string) error
 	DeleteParser(transactionID string) error
-	IncrementVersion() error
+	IncrementTransactionVersion(transactionID string) error
 	LoadData(filename string) error
 	Save(transactionFile, transactionID string) error
 	HasParser(transactionID string) bool
@@ -166,6 +166,12 @@ func (t *Transaction) commitTransaction(transactionID string, skipVersion bool) 
 		}
 	}
 
+	if !skipVersion {
+		if err := t.TransactionClient.IncrementTransactionVersion(transactionID); err != nil {
+			return nil, err
+		}
+	}
+
 	if err := t.checkTransactionFile(transactionID); err != nil {
 		t.failTransaction(transactionID)
 		return nil, err
@@ -188,12 +194,6 @@ func (t *Transaction) commitTransaction(transactionID string, skipVersion bool) 
 	if err := t.TransactionClient.CommitParser(transactionID); err != nil {
 		_ = t.TransactionClient.LoadData(t.ConfigurationFile)
 		return nil, err
-	}
-
-	if !skipVersion {
-		if err := t.TransactionClient.IncrementVersion(); err != nil {
-			return nil, err
-		}
 	}
 
 	return &models.Transaction{ID: transactionID, Version: tVersion, Status: "success"}, nil

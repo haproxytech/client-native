@@ -90,6 +90,7 @@ type IConfigurationClient interface {
 	// GetVersion returns configuration file version
 	GetVersion(transactionID string) (int64, error)
 	IncrementVersion() error
+	IncrementTransactionVersion(transactionID string) error
 	LoadData(filename string) error
 	Save(transactionFile, transactionID string) error
 	GetFailedParserTransactionVersion(transactionID string) (int64, error)

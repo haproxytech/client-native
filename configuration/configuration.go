@@ -296,6 +296,27 @@ func (c *Client) IncrementVersion() error {
 	return nil
 }
 
+func (c *Client) IncrementTransactionVersion(transactionID string) error {
+	if transactionID == "" {
+		return c.incrementTransactionVersion(c.Parser)
+	}
+	p, err := c.GetParser(transactionID)
+	if err != nil {
+		return err
+	}
+	return c.incrementTransactionVersion(p)
+}
+
+func (c *Client) incrementTransactionVersion(p *parser.Parser) error {
+	data, err := p.Get(parser.Comments, parser.CommentsSectionName, "# _version", true)
+	if err != nil {
+		return err
+	}
+	ver, _ := data.(*types.ConfigVersion)
+	ver.Value++
+	return nil
+}
+
 func (c *Client) LoadData(filename string) error {
 	err := c.Parser.LoadData(filename)
 	if err != nil {
