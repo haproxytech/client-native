@@ -11,7 +11,7 @@ require (
 	github.com/google/go-cmp v0.4.0
 	github.com/google/renameio v0.1.1-0.20200217212219-353f81969824
 	github.com/google/uuid v1.1.1
-	github.com/haproxytech/config-parser/v3 v3.0.1-0.20210211082917-673a2faa353b
+	github.com/haproxytech/config-parser/v3 v3.0.1-0.20210212144342-183eb1988d86
 	github.com/haproxytech/models/v2 v2.2.1-0.20210202072505-661110a4df53
 	github.com/kballard/go-shellquote v0.0.0-20180428030007-95032a82bc51
 	github.com/kr/text v0.2.0 // indirect
