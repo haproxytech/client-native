@@ -62,6 +62,7 @@ type ClientParams struct {
 	ValidateConfigurationFile bool
 	MasterWorker              bool
 	SkipFailedTransactions    bool
+	UseMd5Hash                bool
 
 	// ValidateCmd allows specifying a custom script to validate the transaction file.
 	// The injected environment variable DATAPLANEAPI_TRANSACTION_FILE must be used to get the location of the file.
@@ -92,6 +93,7 @@ func DefaultClient() (*Client, error) {
 		ValidateConfigurationFile: DefaultValidateConfigurationFile,
 		MasterWorker:              false,
 		SkipFailedTransactions:    false,
+		UseMd5Hash:                false,
 	}
 	c := &Client{}
 	c.TransactionClient = c
@@ -140,6 +142,7 @@ func (c *Client) Init(options ClientParams) error {
 	c.Parser = &parser.Parser{
 		Options: parser.Options{
 			UseV2HTTPCheck: true,
+			UseMd5Hash:     c.ClientParams.UseMd5Hash,
 		},
 	}
 	if err := c.Parser.LoadData(options.ConfigurationFile); err != nil {
@@ -197,6 +200,7 @@ func (c *Client) AddParser(transactionID string) error {
 	p := &parser.Parser{
 		Options: parser.Options{
 			UseV2HTTPCheck: true,
+			UseMd5Hash:     c.ClientParams.UseMd5Hash,
 		},
 	}
 	tFile := ""
