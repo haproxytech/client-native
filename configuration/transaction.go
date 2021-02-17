@@ -179,7 +179,8 @@ func (t *Transaction) commitTransaction(transactionID string, skipVersion bool) 
 
 	// Fail backing up and cleaning backups silently
 	if t.BackupsNumber > 0 {
-		_ = t.TransactionClient.Save(t.ConfigurationFile, "")
+		backupConfFile := fmt.Sprintf("%v.%v", t.ConfigurationFile, strconv.Itoa(int(version)))
+		_ = t.TransactionClient.Save(backupConfFile, "")
 		backupToDel := fmt.Sprintf("%v.%v", t.ConfigurationFile, strconv.Itoa(int(version)-t.BackupsNumber))
 		os.Remove(backupToDel)
 	}
