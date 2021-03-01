@@ -31,8 +31,9 @@ import (
 	parser "github.com/haproxytech/config-parser/v3"
 	parser_errors "github.com/haproxytech/config-parser/v3/errors"
 	spoe "github.com/haproxytech/config-parser/v3/spoe"
-	"github.com/haproxytech/models/v2"
 	shellquote "github.com/kballard/go-shellquote"
+
+	"github.com/haproxytech/client-native/v2/models"
 )
 
 type TransactionClient interface {

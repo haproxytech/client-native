@@ -24,9 +24,9 @@ import (
 	"github.com/haproxytech/config-parser/v3/errors"
 	"github.com/haproxytech/config-parser/v3/params"
 	"github.com/haproxytech/config-parser/v3/types"
-	"github.com/haproxytech/models/v2"
 
 	"github.com/haproxytech/client-native/v2/misc"
+	"github.com/haproxytech/client-native/v2/models"
 )
 
 // GetGlobalConfiguration returns configuration version and a

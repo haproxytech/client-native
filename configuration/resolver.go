@@ -23,9 +23,9 @@ import (
 	parser "github.com/haproxytech/config-parser/v3"
 	"github.com/haproxytech/config-parser/v3/common"
 	"github.com/haproxytech/config-parser/v3/types"
-	"github.com/haproxytech/models/v2"
 
 	"github.com/haproxytech/client-native/v2/misc"
+	"github.com/haproxytech/client-native/v2/models"
 )
 
 // GetResolvers returns configuration version and an array of

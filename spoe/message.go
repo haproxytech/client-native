@@ -23,9 +23,9 @@ import (
 	"github.com/haproxytech/config-parser/v3/spoe"
 	spoe_types "github.com/haproxytech/config-parser/v3/spoe/types"
 	"github.com/haproxytech/config-parser/v3/types"
-	"github.com/haproxytech/models/v2"
 
 	conf "github.com/haproxytech/client-native/v2/configuration"
+	"github.com/haproxytech/client-native/v2/models"
 )
 
 // GetMessages returns configuration version and an array of

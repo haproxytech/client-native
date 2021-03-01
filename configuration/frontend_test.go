@@ -20,9 +20,8 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/haproxytech/models/v2"
-
 	"github.com/haproxytech/client-native/v2/misc"
+	"github.com/haproxytech/client-native/v2/models"
 )
 
 func TestGetFrontends(t *testing.T) { //nolint:gocognit

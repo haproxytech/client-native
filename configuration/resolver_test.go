@@ -21,7 +21,7 @@ import (
 	"testing"
 
 	"github.com/haproxytech/client-native/v2/misc"
-	"github.com/haproxytech/models/v2"
+	"github.com/haproxytech/client-native/v2/models"
 )
 
 func TestGetResolvers(t *testing.T) {
@@ -67,6 +67,7 @@ func TestGetResolver(t *testing.T) {
 		t.Error("Should throw error, non existant resolvers section")
 	}
 }
+
 func TestCreateEditDeleteResolver(t *testing.T) {
 	f := &models.Resolver{
 		Name:                "created_resolver",

@@ -19,14 +19,16 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/haproxytech/models/v2"
 	"github.com/stretchr/testify/suite"
 
 	"github.com/haproxytech/client-native/v2/misc"
+	"github.com/haproxytech/client-native/v2/models"
 )
 
-const baseSlots = 20
-const slotsIncrement = 10
+const (
+	baseSlots      = 20
+	slotsIncrement = 10
+)
 
 func TestService(t *testing.T) {
 	serviceSuit := ServiceTestSuit{

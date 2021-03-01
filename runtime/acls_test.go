@@ -4,7 +4,7 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/haproxytech/models/v2"
+	"github.com/haproxytech/client-native/v2/models"
 )
 
 func TestSingleRuntime_ShowACLS(t *testing.T) {

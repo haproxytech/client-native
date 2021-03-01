@@ -25,9 +25,9 @@ import (
 	tcp_actions "github.com/haproxytech/config-parser/v3/parsers/tcp/actions"
 	tcp_types "github.com/haproxytech/config-parser/v3/parsers/tcp/types"
 	"github.com/haproxytech/config-parser/v3/types"
-	"github.com/haproxytech/models/v2"
 
 	"github.com/haproxytech/client-native/v2/misc"
+	"github.com/haproxytech/client-native/v2/models"
 )
 
 // GetTCPResponseRules returns configuration version and an array of

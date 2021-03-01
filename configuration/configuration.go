@@ -29,11 +29,11 @@ import (
 	"github.com/haproxytech/config-parser/v3/parsers"
 	stats "github.com/haproxytech/config-parser/v3/parsers/stats/settings"
 	"github.com/haproxytech/config-parser/v3/types"
-	"github.com/haproxytech/models/v2"
 	"github.com/kballard/go-shellquote"
 	"github.com/pkg/errors"
 
 	"github.com/haproxytech/client-native/v2/misc"
+	"github.com/haproxytech/client-native/v2/models"
 )
 
 const (

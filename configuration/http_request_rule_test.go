@@ -20,7 +20,7 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/haproxytech/models/v2"
+	"github.com/haproxytech/client-native/v2/models"
 )
 
 func TestGetHTTPRequestRules(t *testing.T) { //nolint:gocognit,gocyclo
@@ -428,7 +428,6 @@ func TestGetHTTPRequestRules(t *testing.T) { //nolint:gocognit,gocyclo
 			}
 			if *r.ReturnStatusCode != 200 {
 				t.Errorf("%v: ReturnStatusCode not 200: %v", *r.Index, *r.ReturnStatusCode)
-
 			}
 			if *r.ReturnContentType != `"text/plain"` {
 				t.Errorf("%v: ReturnContentType not text/plain: %v", *r.Index, *r.ReturnContentType)

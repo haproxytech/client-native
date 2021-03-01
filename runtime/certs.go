@@ -5,9 +5,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/haproxytech/models/v2"
-
 	native_errors "github.com/haproxytech/client-native/v2/errors"
+	"github.com/haproxytech/client-native/v2/models"
 )
 
 type (

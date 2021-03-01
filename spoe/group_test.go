@@ -19,9 +19,10 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/haproxytech/client-native/v2/misc"
-	"github.com/haproxytech/models/v2"
 	"github.com/stretchr/testify/assert"
+
+	"github.com/haproxytech/client-native/v2/misc"
+	"github.com/haproxytech/client-native/v2/models"
 )
 
 func TestSingleSpoe_GetGroups(t *testing.T) {

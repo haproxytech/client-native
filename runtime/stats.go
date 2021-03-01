@@ -19,8 +19,9 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/haproxytech/models/v2"
 	"github.com/mitchellh/mapstructure"
+
+	"github.com/haproxytech/client-native/v2/models"
 )
 
 // GetStats fetches HAProxy stats from runtime API

@@ -20,7 +20,8 @@ import (
 
 	strfmt "github.com/go-openapi/strfmt"
 	parser "github.com/haproxytech/config-parser/v3"
-	"github.com/haproxytech/models/v2"
+
+	"github.com/haproxytech/client-native/v2/models"
 )
 
 // GetPeerSections returns configuration version and an array of

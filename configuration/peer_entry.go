@@ -23,7 +23,8 @@ import (
 	parser "github.com/haproxytech/config-parser/v3"
 	parser_errors "github.com/haproxytech/config-parser/v3/errors"
 	"github.com/haproxytech/config-parser/v3/types"
-	"github.com/haproxytech/models/v2"
+
+	"github.com/haproxytech/client-native/v2/models"
 )
 
 // GetPeerEntries returns configuration version and an array of

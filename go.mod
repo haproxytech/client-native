@@ -8,11 +8,12 @@ require (
 	github.com/go-openapi/runtime v0.19.15 // indirect
 	github.com/go-openapi/spec v0.19.7 // indirect
 	github.com/go-openapi/strfmt v0.19.5
+	github.com/go-openapi/swag v0.19.7
+	github.com/go-openapi/validate v0.19.3
 	github.com/google/go-cmp v0.4.0
 	github.com/google/renameio v0.1.1-0.20200217212219-353f81969824
 	github.com/google/uuid v1.1.1
 	github.com/haproxytech/config-parser/v3 v3.0.1-0.20210212144342-183eb1988d86
-	github.com/haproxytech/models/v2 v2.2.1-0.20210202072505-661110a4df53
 	github.com/kballard/go-shellquote v0.0.0-20180428030007-95032a82bc51
 	github.com/kr/text v0.2.0 // indirect
 	github.com/mitchellh/mapstructure v1.2.2

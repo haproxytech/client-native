@@ -18,9 +18,8 @@ package configuration
 import (
 	"fmt"
 
-	"github.com/haproxytech/models/v2"
-
 	"github.com/haproxytech/client-native/v2/misc"
+	"github.com/haproxytech/client-native/v2/models"
 )
 
 // ServiceGrowthTypeLinear indicates linear growth type in ScalingParams.

@@ -5,7 +5,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/haproxytech/models/v2"
+	"github.com/haproxytech/client-native/v2/models"
 )
 
 func TestSingleRuntime_ShowCerts(t *testing.T) {
@@ -46,7 +46,7 @@ func TestSingleRuntime_ShowCerts(t *testing.T) {
 				"show ssl cert\n": ` # filename
 					/etc/ssl/cert-0.pem
 					/etc/ssl/cert-1.pem
-					/etc/ssl/cert-2.pem				
+					/etc/ssl/cert-2.pem
 				`,
 			},
 		},
@@ -109,7 +109,7 @@ func TestSingleRuntime_GetCert(t *testing.T) {
 				"show ssl cert\n": ` # filename
 					/etc/ssl/cert-0.pem
 					/etc/ssl/cert-1.pem
-					/etc/ssl/cert-2.pem				
+					/etc/ssl/cert-2.pem
 				`,
 			},
 		},
@@ -125,7 +125,7 @@ func TestSingleRuntime_GetCert(t *testing.T) {
 				"show ssl cert\n": ` # filename
 					/etc/ssl/cert-0.pem
 					/etc/ssl/cert-1.pem
-					/etc/ssl/cert-2.pem				
+					/etc/ssl/cert-2.pem
 				`,
 			},
 		},
@@ -219,7 +219,7 @@ func TestSingleRuntime_ShowCertEntry(t *testing.T) {
 					Subject: /C=DE/ST=Baden-Württemberg/L=Walldorf/O=ORG SE/CN=*.platform.domain.com
 					Issuer: /C=US/O=DigiCert Inc/CN=DigiCert SHA2 Secure Server CA
 					Chain Subject: /C=US/O=DigiCert Inc/CN=DigiCert SHA2 Secure Server CA
-					Chain Issuer: /C=US/O=DigiCert Inc/OU=www.digicert.com/CN=DigiCert Global Root CA							
+					Chain Issuer: /C=US/O=DigiCert Inc/OU=www.digicert.com/CN=DigiCert Global Root CA
 				`,
 			},
 		},
@@ -274,7 +274,7 @@ func TestSingleRuntime_NewCertEntry(t *testing.T) {
 			},
 			wantErr: false,
 			socketResponse: map[string]string{
-				"new ssl cert /etc/ssl/new_cert.pem\n": ` New empty certificate store '/etc/ssl/new_cert.pem'!				
+				"new ssl cert /etc/ssl/new_cert.pem\n": ` New empty certificate store '/etc/ssl/new_cert.pem'!
 				`,
 			},
 		},
@@ -295,7 +295,7 @@ func TestSingleRuntime_NewCertEntry(t *testing.T) {
 			},
 			wantErr: true,
 			socketResponse: map[string]string{
-				"new ssl cert /etc/ssl/existing_cert.pem\n": ` Certificate '/etc/ssl/existing_cert.pem' already exists!				
+				"new ssl cert /etc/ssl/existing_cert.pem\n": ` Certificate '/etc/ssl/existing_cert.pem' already exists!
 				`,
 			},
 		},
@@ -347,7 +347,7 @@ func TestSingleRuntime_SetCertEntry(t *testing.T) {
 			},
 			wantErr: false,
 			socketResponse: map[string]string{
-				"set ssl cert /etc/ssl/new_cert.pem <<\n-----BEGIN CERTIFICATE-----<redacted>...\n": ` Transaction created for certificate /etc/ssl/new_cert.pem!				
+				"set ssl cert /etc/ssl/new_cert.pem <<\n-----BEGIN CERTIFICATE-----<redacted>...\n": ` Transaction created for certificate /etc/ssl/new_cert.pem!
 				`,
 			},
 		},
@@ -362,7 +362,7 @@ func TestSingleRuntime_SetCertEntry(t *testing.T) {
 			socketResponse: map[string]string{
 				"set ssl cert /etc/ssl/wrong_cert.pem <<\n-----BEGIN CERTIFICATE-----<redacted_wrong_cert>...\n": ` unable to load certificate from file 'wrong_cert.pem'.
 					Can't load the payload
-					Can't update wrong_cert.pem!									
+					Can't update wrong_cert.pem!
 					`,
 			},
 		},
@@ -433,7 +433,7 @@ func TestSingleRuntime_CommitCertEntry(t *testing.T) {
 			wantErr: false,
 			socketResponse: map[string]string{
 				"commit ssl cert /etc/ssl/updated_cert.pem\n": ` Committing /etc/ssl/updated_cert.pem"
-				Success!								
+				Success!
 				`,
 			},
 		},
@@ -576,7 +576,7 @@ func TestSingleRuntime_DeleteCertEntry(t *testing.T) {
 			},
 			wantErr: false,
 			socketResponse: map[string]string{
-				"del ssl cert /etc/ssl/delete_cert.pem\n": ` Certificate '/etc/ssl/delete_cert.pem' deleted!				
+				"del ssl cert /etc/ssl/delete_cert.pem\n": ` Certificate '/etc/ssl/delete_cert.pem' deleted!
 				`,
 			},
 		},
@@ -597,7 +597,7 @@ func TestSingleRuntime_DeleteCertEntry(t *testing.T) {
 			},
 			wantErr: true,
 			socketResponse: map[string]string{
-				"del ssl cert /etc/ssl/not_existing_cert.pem\n": ` Can't remove the certificate: certificate '/etc/ssl/not_existing_cert.pem' doesn't exist!				
+				"del ssl cert /etc/ssl/not_existing_cert.pem\n": ` Can't remove the certificate: certificate '/etc/ssl/not_existing_cert.pem' doesn't exist!
 				`,
 			},
 		},

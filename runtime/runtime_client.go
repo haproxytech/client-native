@@ -24,10 +24,10 @@ import (
 	"strings"
 
 	"github.com/google/go-cmp/cmp"
-	"github.com/haproxytech/models/v2"
 
 	native_errors "github.com/haproxytech/client-native/v2/errors"
 	"github.com/haproxytech/client-native/v2/misc"
+	"github.com/haproxytech/client-native/v2/models"
 )
 
 // Client handles multiple HAProxy clients
