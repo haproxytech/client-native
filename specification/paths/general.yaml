@@ -1,0 +1,313 @@
+---
+root:
+  get:
+    tags:
+      - Discovery
+    summary: Return list of root endpoints
+    description: Returns a list of root endpoints.
+    operationId: getAPIEndpoints
+    produces:
+      - application/json
+    responses:
+      '200':
+        description: Success
+        schema:
+          $ref: '#/definitions/endpoints'
+      'default':
+        $ref: '#/responses/DefaultError'
+services:
+  get:
+    tags:
+      - Discovery
+    summary: Return list of service endpoints
+    description: Returns a list of API managed services endpoints.
+    operationId: getServicesEndpoints
+    produces:
+      - application/json
+    responses:
+      '200':
+        description: Success
+        schema:
+          $ref: '#/definitions/endpoints'
+      'default':
+        $ref: '#/responses/DefaultError'
+haproxy:
+  get:
+    tags:
+      - Discovery
+    summary: Return list of HAProxy related endpoints
+    description: Returns a list of HAProxy related endpoints.
+    operationId: getHaproxyEndpoints
+    produces:
+      - application/json
+    responses:
+      '200':
+        description: Success
+        schema:
+          $ref: '#/definitions/endpoints'
+      'default':
+        $ref: '#/responses/DefaultError'
+stats:
+  get:
+    tags:
+      - Discovery
+    summary: Return list of HAProxy stats endpoints
+    description: Returns a list of HAProxy stats endpoints.
+    operationId: getStatsEndpoints
+    produces:
+      - application/json
+    responses:
+      '200':
+        description: Success
+        schema:
+          $ref: '#/definitions/endpoints'
+      'default':
+        $ref: '#/responses/DefaultError'
+configuration:
+  get:
+    tags:
+      - Discovery
+    summary: Return list of HAProxy advanced configuration endpoints
+    description: Returns a list of endpoints to be used for advanced configuration of HAProxy objects.
+    operationId: getConfigurationEndpoints
+    produces:
+      - application/json
+    responses:
+      '200':
+        description: Success
+        schema:
+          $ref: '#/definitions/endpoints'
+      'default':
+        $ref: '#/responses/DefaultError'
+runtime:
+  get:
+    tags:
+      - Discovery
+    summary: Return list of HAProxy advanced runtime endpoints
+    description: Returns a list of endpoints to be used for advanced runtime settings of HAProxy objects.
+    operationId: getRuntimeEndpoints
+    produces:
+      - application/json
+    responses:
+      '200':
+        description: Success
+        schema:
+          $ref: '#/definitions/endpoints'
+      'default':
+        $ref: '#/responses/DefaultError'
+info:
+  get:
+    tags:
+      - Information
+    summary: Return API, hardware and OS information
+    description: Return API, hardware and OS information
+    operationId: getInfo
+    produces:
+      - application/json
+    responses:
+      '200':
+        description: Success
+        schema:
+          $ref: '#/definitions/info'
+      'default':
+        $ref: '#/responses/DefaultError'
+transactions:
+  get:
+    tags:
+      - Transactions
+    summary: Return list of HAProxy configuration transactions.
+    description: Returns a list of HAProxy configuration transactions. Transactions can be filtered by their status.
+    operationId: getTransactions
+    parameters:
+      - name: status
+        in: query
+        description: Filter by transaction status
+        required: false
+        type: string
+        enum: [failed, in_progress]
+    produces:
+      - application/json
+    responses:
+      '200':
+        description: Success
+        schema:
+          $ref: '#/definitions/transactions'
+      'default':
+        $ref: '#/responses/DefaultError'
+  post:
+    tags:
+      - Transactions
+    summary: Start a new transaction
+    description: Starts a new transaction and returns it's id
+    operationId: startTransaction
+    parameters:
+      - name: version
+        in: query
+        description: Configuration version on which to work on
+        required: true
+        type: integer
+    produces:
+      - application/json
+    responses:
+      '201':
+        description: Transaction started
+        schema:
+          $ref: "#/definitions/transaction"
+      '429':
+        description: Too many open transactions
+        schema:
+          type: object
+          properties:
+            code:
+              type: integer
+            message:
+              type: string
+          example:
+            code: 429
+            message: cannot start a new transaction, reached the maximum amount of 20 active transactions available
+      'default':
+        $ref: '#/responses/DefaultError'
+transactions_one:
+  get:
+    tags:
+      - Transactions
+    summary: Return one HAProxy configuration transactions
+    description: Returns one HAProxy configuration transactions.
+    operationId: getTransaction
+    parameters:
+      - name: id
+        in: path
+        description: Transaction id
+        required: true
+        type: string
+    responses:
+      '200':
+        description: Successful operation
+        schema:
+          $ref: "#/definitions/transaction"
+      '404':
+        $ref: '#/responses/NotFound'
+      'default':
+        $ref: '#/responses/DefaultError'
+  put:
+    tags:
+      - Transactions
+    summary: Commit transaction
+    description: Commit transaction, execute all operations in transaction and return msg
+    operationId: commitTransaction
+    parameters:
+      - name: id
+        in: path
+        description: Transaction id
+        required: true
+        type: string
+      - $ref: "#/parameters/force_reload"
+    responses:
+      '202':
+        description: Configuration change accepted and reload requested
+        headers:
+          Reload-ID:
+            description: ID of the requested reload
+            type: string
+        schema:
+          $ref: "#/definitions/transaction"
+      '200':
+        description: Transaction succesfully commited
+        schema:
+          $ref: "#/definitions/transaction"
+      '400':
+        $ref: '#/responses/BadRequest'
+      '404':
+        $ref: '#/responses/NotFound'
+      'default':
+        $ref: '#/responses/DefaultError'
+  delete:
+    summary: Delete a transaction
+    description: Deletes a transaction.
+    operationId: deleteTransaction
+    tags:
+      - Transactions
+    parameters:
+      - name: id
+        in: path
+        description: Transaction id
+        required: true
+        type: string
+    responses:
+      '204':
+        description: Transaction deleted
+      '404':
+        $ref: '#/responses/NotFound'
+      'default':
+        $ref: '#/responses/DefaultError'
+specification:
+  get:
+    tags:
+      - Specification
+    summary: Data Plane API Specification
+    description: Return Data Plane API OpenAPI specification
+    operationId: getSpecification
+    produces:
+      - application/json
+    responses:
+      '200':
+        description: Success
+        schema:
+          type: object
+      'default':
+        $ref: '#/responses/DefaultError'
+specification_openapiv3:
+  get:
+    tags:
+      - SpecificationOpenapiv3
+    summary: Data Plane API v3 Specification
+    description: Return Data Plane API OpenAPI v3 specification
+    operationId: getOpenapiv3Specification
+    produces:
+      - application/json
+    responses:
+      '200':
+        description: Success
+        schema:
+          type: object
+      'default':
+        $ref: '#/responses/DefaultError'
+reloads:
+  get:
+    tags:
+      - Reloads
+    summary: Return list of HAProxy Reloads.
+    description: Returns a list of HAProxy reloads.
+    operationId: getReloads
+    produces:
+      - application/json
+    responses:
+      '200':
+        description: Success
+        schema:
+          $ref: '#/definitions/reloads'
+      'default':
+        $ref: '#/responses/DefaultError'
+reloads_one:
+  get:
+    tags:
+      - Reloads
+    summary: Return one HAProxy reload status
+    description: Returns one HAProxy reload status.
+    operationId: getReload
+    parameters:
+      - name: id
+        in: path
+        description: Reload id
+        required: true
+        type: string
+        pattern: '^\d{4}-\d{2}-\d{2}-\d+$'
+    responses:
+      '200':
+        description: Successful operation
+        schema:
+          $ref: "#/definitions/reload"
+      '404':
+        $ref: '#/responses/NotFound'
+      'default':
+        $ref: '#/responses/DefaultError'

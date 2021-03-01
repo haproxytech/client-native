@@ -1,0 +1,3179 @@
+---
+global:
+  title: Global
+  description: HAProxy global configuration
+  type: object
+  properties:
+    chroot:
+      type: string
+      pattern: '^[^\s]+$'
+      x-display-name: Chroot
+    group:
+      type: string
+      pattern: '^[^\s]+$'
+      x-display-name: Group
+    user:
+      type: string
+      pattern: '^[^\s]+$'
+      x-display-name: User
+    daemon:
+      type: string
+      enum: [enabled, disabled]
+    nbproc:
+      type: integer
+      x-display-name: Number of Processes
+    nbthread:
+      type: integer
+      x-display-name: Number of Threads
+    master-worker:
+      type: boolean
+      x-display-name: Master Worker Mode
+    external_check:
+      type: boolean
+      x-display-name: External Check
+    pidfile:
+      type: string
+      x-display-name: PID File
+    maxconn:
+      type: integer
+      x-display-name: Max Connections
+    tune_ssl_default_dh_param:
+      type: integer
+      x-display-name: SSL Default DH Parameter Size
+    ssl_default_bind_options:
+      type: string
+      x-display-name: SSL Default Bind Options
+    ssl_default_bind_ciphers:
+      type: string
+      x-display-name: SSL Default Bind Ciphers
+    ssl_default_bind_ciphersuites:
+      type: string
+      x-display-name: SSL Default Bind Ciphersuites
+    ssl_default_server_options:
+      type: string
+      x-display-name: SSL Default Server Options
+    ssl_default_server_ciphers:
+      type: string
+      x-display-name: SSL Default Server Ciphers
+    ssl_default_server_ciphersuites:
+      type: string
+      x-display-name: SSL Default Server Ciphersuites
+    ssl_mode_async:
+      type: string
+      enum: [enabled, disabled]
+      x-display-name: Asynchronous TLS I/O operations
+    cpu_maps:
+      x-go-name: CPUMaps
+      type: array
+      x-display-name: CPU Maps
+      items:
+        type: object
+        x-go-name: CPUMap
+        required:
+          - process
+          - cpu_set
+        properties:
+          process:
+            type: string
+            x-display-name: Process/Thread Set
+          cpu_set:
+            type: string
+            x-display-name: CPU Set
+    runtime_apis:
+      type: array
+      x-display-name: Runtime APIs
+      x-go-name: RuntimeAPIs
+      items:
+        type: object
+        x-go-name: RuntimeAPI
+        required:
+          - address
+        properties:
+          address:
+            type: string
+            pattern: '^[^\s]+$'
+          mode:
+            type: string
+            pattern: '^[^\s]+$'
+          level:
+            type: string
+            enum: [user, operator, admin]
+          process:
+            type: string
+            pattern: '^[^\s]+$'
+          exposeFdListeners:
+            type: boolean
+            x-display-name: Expose FD Listeners
+    stats_timeout:
+      type: integer
+      x-nullable: true
+    lua_loads:
+      type: array
+      items:
+        type: object
+        x-go-name: LuaLoad
+        required:
+          - file
+        properties:
+          file:
+            type: string
+            pattern: '^[^\s]+$'
+    log_send_hostname:
+      type: object
+      x-display-name: Log Send Hostname
+      required:
+        - enabled
+      properties:
+        enabled:
+          type: string
+          enum: [enabled, disabled]
+        param:
+          type: string
+          pattern: '^[^\s]+$'
+  additionalProperties: false
+defaults:
+  title: Defaults
+  description: HAProxy defaults configuration
+  type: object
+  properties:
+    mode:
+      type: string
+      enum: [tcp, http]
+    balance:
+      $ref: "#/definitions/balance"
+    maxconn:
+      type: integer
+      x-nullable: true
+      x-display-name: Max Connections
+    adv_check:
+      type: string
+      x-display-name: Advanced Check
+      enum: [ssl-hello-chk, smtpchk, ldap-check, mysql-check, pgsql-check, tcp-check, redis-check, httpchk]
+    smtpchk_params:
+      $ref: "#/definitions/smtpchk_params"
+    mysql_check_params:
+      $ref: "#/definitions/mysql_check_params"
+    pgsql_check_params:
+      $ref: "#/definitions/pgsql_check_params"
+    httpchk_params:
+      $ref: "#/definitions/httpchk_params"
+    http-check:
+      $ref: "#/definitions/http-check"
+    bind_process:
+      type: string
+      pattern: '^[^\s]+$'
+    http_connection_mode:
+      type: string
+      enum: [httpclose, http-server-close, http-keep-alive]
+    http_pretend_keepalive:
+      type: string
+      enum: [enabled, disabled]
+    abortonclose:
+      type: string
+      enum: [enabled, disabled]
+    http-use-htx:
+      type: string
+      enum: [enabled, disabled]
+      x-display-name: HTTP Use HTX
+    dontlognull:
+      type: string
+      enum: [enabled, disabled]
+      x-display-name: Don't Log Null
+    http-buffer-request:
+      type: string
+      enum: [enabled, disabled]
+      x-display-name: HTTP bufferrequest
+    httplog:
+      type: boolean
+      x-display-name: HTTP Log
+    clflog:
+      type: boolean
+      x-display-name: CLF Log
+    tcplog:
+      type: boolean
+      x-display-name: TCP Log
+    log_format:
+      type: string
+    log_format_sd:
+      type: string
+      x-display-name: Log Format SD
+    log_tag:
+      type: string
+      pattern: '^[^\s]+$'
+    log_separate_errors:
+      type: string
+      enum: [enabled, disabled]
+    clitcpka:
+      type: string
+      enum: [enabled, disabled]
+      x-display-name: Client TCP Keep Alive
+    forwardfor:
+      $ref: "#/definitions/forwardfor"
+    check_timeout:
+      type: integer
+      x-nullable: true
+    monitor_uri:
+      $ref: '#/definitions/monitor_uri'
+    connect_timeout:
+      type: integer
+      x-nullable: true
+    contstats:
+      type: string
+      enum: [enabled]
+      x-display-name: Continuous Statistics
+    cookie:
+      $ref: '#/definitions/cookie'
+    client_timeout:
+      type: integer
+      x-nullable: true
+    http_request_timeout:
+      type: integer
+      x-nullable: true
+    http_keep_alive_timeout:
+      type: integer
+      x-nullable: true
+    http_reuse:
+      type: string
+      enum: [aggressive, always, never, safe]
+    server_timeout:
+      type: integer
+      x-nullable: true
+    queue_timeout:
+      type: integer
+      x-nullable: true
+    tunnel_timeout:
+      type: integer
+      x-nullable: true
+    external_check:
+      type: string
+      enum: [enabled, disabled]
+      x-display-name: External Check
+    external_check_path:
+      type: string
+      pattern: '^[^\s]+$'
+      x-display-name: External Check Path
+    external_check_command:
+      type: string
+      pattern: '^[^\s]+$'
+      x-display-name: External Check Command
+    redispatch:
+      $ref: "#/definitions/redispatch"
+    retries:
+      type: integer
+      x-nullable: true
+    default_backend:
+      type: string
+      pattern: '^[A-Za-z0-9-_.:]+$'
+      x-dynamic-enum:
+        operation: getBackends
+        property: name
+    default_server:
+      $ref: "#/definitions/default_server"
+    error_files:
+      type: array
+      x-go-name: ErrorFiles
+      items:
+        $ref: "#/definitions/errorfile"
+    unique_id_format:
+      type: string
+      x-display-name: Unique ID format
+    unique_id_header:
+      type: string
+      x-display-name: Unique ID header
+      x-dependency:
+        unique_id_format:
+          required: true
+    logasap:
+      type: string
+      enum: [enabled, disabled]
+      x-display-name: Log ASAP
+    allbackups:
+      type: string
+      enum: [enabled, disabled]
+      x-display-name: All Backups
+    stats_options:
+      $ref: "#/definitions/stats_options"
+  additionalProperties: false
+resolver:
+  title: Resolver
+  description: Runtime DNS configuration
+  type: object
+  required:
+    - name
+  properties:
+    name:
+      type: string
+      pattern: '^[A-Za-z0-9-_.:]+$'
+      x-nullable: false
+    accepted_payload_size:
+      type: integer
+      minimum: 512
+      maximum: 8192
+    hold_nx:
+      type: integer
+      x-nullable: true
+    hold_obsolete:
+      type: integer
+      x-nullable: true
+    hold_other:
+      type: integer
+      x-nullable: true
+    hold_refused:
+      type: integer
+      x-nullable: true
+    hold_timeout:
+      type: integer
+      x-nullable: true
+    hold_valid:
+      type: integer
+      x-nullable: true
+    parse-resolv-conf:
+      type: boolean
+    resolve_retries:
+      type: integer
+      minimum: 1
+    timeout_resolve:
+      type: integer
+      x-nullable: false
+    timeout_retry:
+      type: integer
+      x-nullable: false
+nameserver:
+  title: Nameserver
+  description: Nameserver used in Runtime DNS configuration
+  type: object
+  required:
+    - name
+    - address
+  properties:
+    name:
+      type: string
+      pattern: '^[A-Za-z0-9-_.:]+$'
+      x-nullable: false
+    address:
+      type: string
+      pattern: '^[^\s]+$'
+    port:
+      type: integer
+      x-nullable: true
+      minimum: 1
+      maximum: 65535
+  example:
+    name: ns1
+    address: 10.0.0.1
+    port: 53
+frontend:
+  title: Frontend
+  description: HAProxy frontend configuration
+  type: object
+  required:
+    - name
+  properties:
+    name:
+      type: string
+      pattern: '^[A-Za-z0-9-_.:]+$'
+      x-nullable: false
+    mode:
+      type: string
+      enum: [http, tcp]
+    httplog:
+      type: boolean
+      x-display-name: HTTP Log
+      x-dependency:
+        mode:
+          value: http
+    logasap:
+      type: string
+      enum: [enabled, disabled]
+      x-display-name: Log ASAP
+    bind_process:
+      type: string
+      pattern: '^[^\s]+$'
+    clflog:
+      type: boolean
+      x-display-name: CLF Log
+      x-dependency:
+        mode:
+          value: http
+    tcplog:
+      type: boolean
+      x-display-name: TCP Log
+      x-dependency:
+        mode:
+          value: tcp
+    log_format:
+      type: string
+    log_format_sd:
+      type: string
+      x-display-name: Log Format SD
+    log_tag:
+      type: string
+      pattern: '^[A-Za-z0-9-_.:]+$'
+    log_separate_errors:
+      type: string
+      enum: [enabled, disabled]
+    dontlognull:
+      type: string
+      enum: [enabled, disabled]
+      x-display-name: Don't Log Null
+    http-buffer-request:
+      type: string
+      enum: [enabled, disabled]
+      x-display-name: HTTP bufferrequest
+    http_connection_mode:
+      type: string
+      enum: [httpclose, http-server-close, http-keep-alive]
+      x-dependency:
+        mode:
+          value: http
+    client_timeout:
+      type: integer
+      x-nullable: true
+    http_request_timeout:
+      type: integer
+      x-nullable: true
+      x-dependency:
+        mode:
+          value: http
+    http_keep_alive_timeout:
+      type: integer
+      x-nullable: true
+      x-dependency:
+        mode:
+          value: http
+    maxconn:
+      type: integer
+      x-nullable: true
+      x-display-name: Max Connections
+    forwardfor:
+      $ref: "#/definitions/forwardfor"
+      x-dependency:
+        mode:
+          value: http
+    default_backend:
+      type: string
+      pattern: '^[A-Za-z0-9-_.:]+$'
+      x-dynamic-enum:
+        operation: getBackends
+        property: name
+    contstats:
+      type: string
+      enum: [enabled]
+      x-display-name: Continous Statistics
+    clitcpka:
+      type: string
+      enum: [enabled, disabled]
+      x-display-name: Client TCP Keep Alive
+      x-dependency:
+        mode:
+          value: tcp
+    http-use-htx:
+      type: string
+      enum: [enabled, disabled]
+      x-display-name: HTTP Use HTX
+      x-dependency:
+        mode:
+          value: http
+    unique_id_format:
+      type: string
+      x-display-name: Unique ID format
+    unique_id_header:
+      type: string
+      x-display-name: Unique ID header
+      x-dependency:
+        unique_id_format:
+          required: true
+    stats_options:
+      $ref: "#/definitions/stats_options"
+    monitor_uri:
+      $ref: '#/definitions/monitor_uri'
+    monitor_fail:
+      $ref: '#/definitions/monitor_fail'
+  additionalProperties: false
+  example:
+    name: test_frontend
+    mode: http
+    http_connection_mode: http-keep-alive
+    maxconn: 2000
+    default_backend: test_backend
+backend:
+  title: Backend
+  description: HAProxy backend configuration
+  type: object
+  required:
+    - name
+  properties:
+    name:
+      type: string
+      pattern: '^[A-Za-z0-9-_.:]+$'
+      x-nullable: false
+    balance:
+      $ref: "#/definitions/balance"
+    hash_type:
+      type: object
+      properties:
+        method:
+          type: string
+          enum: [map-based, consistent]
+        function:
+          type: string
+          enum: [sdbm, djb2, wt6, crc32]
+        modifier:
+          type: string
+          enum: [avalanche]
+    http-check:
+      $ref: "#/definitions/http-check"
+    bind_process:
+      type: string
+      pattern: '^[^\s]+$'
+    mode:
+      type: string
+      enum: [http, tcp]
+    allbackups:
+      type: string
+      enum: [enabled, disabled]
+      x-display-name: All Backups
+    http-buffer-request:
+      type: string
+      enum: [enabled, disabled]
+      x-display-name: HTTP bufferrequest
+    log_tag:
+      type: string
+      pattern: '^[^\s]+$'
+    http_connection_mode:
+      type: string
+      enum: [httpclose, http-server-close, http-keep-alive]
+      x-dependency:
+        mode:
+          value: http
+    http_pretend_keepalive:
+      type: string
+      enum: [enabled, disabled]
+      x-dependency:
+        mode:
+          value: http
+    abortonclose:
+      type: string
+      enum: [enabled, disabled]
+    forwardfor:
+      $ref: "#/definitions/forwardfor"
+      x-dependency:
+        mode:
+          value: http
+    cookie:
+      $ref: '#/definitions/cookie'
+      x-dependency:
+        mode:
+          value: http
+    default_server:
+      $ref: "#/definitions/default_server"
+    check_timeout:
+      type: integer
+      x-nullable: true
+    adv_check:
+      type: string
+      x-display-name: Advanced Check
+      enum: [ssl-hello-chk, smtpchk, ldap-check, mysql-check, pgsql-check, tcp-check, redis-check, httpchk]
+    smtpchk_params:
+      $ref: "#/definitions/smtpchk_params"
+    mysql_check_params:
+      $ref: "#/definitions/mysql_check_params"
+    pgsql_check_params:
+      $ref: "#/definitions/pgsql_check_params"
+    external_check:
+      type: string
+      enum: [enabled, disabled]
+      x-display-name: External Check
+    external_check_path:
+      type: string
+      pattern: '^[^\s]+$'
+      x-display-name: External Check Path
+    external_check_command:
+      type: string
+      pattern: '^[^\s]+$'
+      x-display-name: External Check Command
+    queue_timeout:
+      type: integer
+      x-nullable: true
+    connect_timeout:
+      type: integer
+      x-nullable: true
+    http_request_timeout:
+      type: integer
+      x-nullable: true
+      x-dependency:
+        mode:
+          value: http
+    http_keep_alive_timeout:
+      type: integer
+      x-nullable: true
+      x-dependency:
+        mode:
+          value: http
+    retries:
+      type: integer
+      x-nullable: true
+    redispatch:
+      $ref: "#/definitions/redispatch"
+    server_timeout:
+      type: integer
+      x-nullable: true
+    tunnel_timeout:
+      type: integer
+      x-nullable: true
+    httpchk_params:
+      $ref: "#/definitions/httpchk_params"
+      x-dependency:
+        mode:
+          value: http
+    http_reuse:
+      type: string
+      enum: [aggressive, always, never, safe]
+      x-dependency:
+        mode:
+          value: http
+    stick_table:
+      type: object
+      properties:
+        type:
+          type: string
+          enum: [ip, ipv6, integer, string, binary]
+        keylen:
+          type: integer
+          x-display-name: Key Length
+          x-nullable: true
+        size:
+          type: integer
+          x-nullable: true
+        expire:
+          type: integer
+          x-nullable: true
+        nopurge:
+          type: boolean
+          x-display-name: No Purge
+        peers:
+          type: string
+          pattern: '^[^\s]+$'
+        store:
+          type: string
+          pattern: '^[^\s]+$'
+    http-use-htx:
+      type: string
+      enum: [enabled, disabled]
+      x-dependency:
+        mode:
+          value: http
+      pattern: '^[^\s]+$'
+    stats_options:
+      $ref: "#/definitions/stats_options"
+  additionalProperties: false
+  example:
+    name: test_backend
+    mode: http
+    balance:
+      algorithm: roundrobin
+    forwardfor:
+      enabled: enabled
+    adv_check: httpchk
+    httpchk_params:
+      uri: "/check"
+      method: GET
+      version: HTTP/1.1
+peer_section:
+  title: Peer Section
+  description: HAProxy peer_section configuration
+  type: object
+  required:
+    - name
+  properties:
+    name:
+      type: string
+      pattern: '^[A-Za-z0-9-_.:]+$'
+      x-nullable: false
+  additionalProperties: false
+peer_entry:
+  title: Peer Entry
+  description: Peer Entry from peers table
+  type: object
+  required:
+    - name
+    - address
+    - port
+  properties:
+    name:
+      type: string
+      pattern: '^[A-Za-z0-9-_.:]+$'
+      x-nullable: false
+    address:
+      type: string
+      pattern: '^[^\s]+$'
+    port:
+      type: integer
+      x-nullable: true
+      minimum: 1
+      maximum: 65535
+bind:
+  title: Bind
+  description: HAProxy frontend bind configuration
+  type: object
+  required:
+    - name
+  properties:
+    accept_netscaler_cip:
+      type: integer
+    accept_proxy:
+      type: boolean
+    allow_0rtt:
+      type: boolean
+    alpn:
+      type: string
+      x-display-name: ALPN Protocols
+      pattern: '^[^\s]+$'
+    backlog:
+      type: string
+    curves:
+      type: string
+      x-dependency:
+        ssl:
+          value: true
+    ecdhe:
+      type: string
+      x-dependency:
+        ssl:
+          value: true
+    # ca_file:
+    #  type: string
+    #  x-dependency:
+    #    ssl:
+    #      value: true
+    ca_ignore_err:
+      type: string
+      x-dependency:
+        ssl:
+          value: true
+    ca_sign_file:
+      type: string
+      x-dependency:
+        ssl:
+          value: true
+    ca_sign_pass:
+      type: string
+      x-display-name: Passphrase
+      x-dependency:
+        ssl:
+          value: true
+    ca_verify_file:
+      type: string
+      x-dependency:
+        ca_file:
+          value: true
+    ciphers:
+      type: string
+      x-dependency:
+        ssl:
+          value: true
+    ciphersuites:
+      type: string
+      x-dependency:
+        ssl:
+          value: true
+    crl_file:
+      type: string
+      x-dependency:
+        ssl:
+          value: true
+    # crt:
+    #  type: string
+    #  x-dependency:
+    #    ssl:
+    #      value: true
+    crt_ignore_err:
+      type: string
+      x-dependency:
+        ssl:
+          value: true
+    crt_list:
+      type: string
+      x-dependency:
+        ssl:
+          value: true
+    defer_accept:
+      type: boolean
+    expose_fd_listeners:
+      type: boolean
+    force_sslv3:
+      type: boolean
+    force_tlsv10:
+      type: boolean
+    force_tlsv11:
+      type: boolean
+    force_tlsv12:
+      type: boolean
+    force_tlsv13:
+      type: boolean
+    generate_certificates:
+      type: boolean
+      x-dependency:
+        ssl:
+          value: true
+    gid:
+      type: integer
+      x-display-name: Group ID
+    group:
+      type: string
+      x-display-name: Group name
+    id:
+      type: string
+      x-display-name: Socket ID
+    interface:
+      type: string
+    level:
+      type: string
+      enum: [user, operator, admin]
+    severity_output:
+      type: string
+      x-display-name: Format
+      enum: [none, number, string]
+    maxconn:
+      type: integer
+    mode:
+      type: string
+    mss:
+      type: string
+    name:
+      type: string
+      pattern: '^[^\s]+$'
+      x-nullable: false
+    namespace:
+      type: string
+    nice:
+      type: integer
+    no_ca_names:
+      type: boolean
+      x-dependency:
+        ssl:
+          value: true
+    no_sslv3:
+      type: boolean
+      x-dependency:
+        ssl:
+          value: true
+    no_tls_tickets:
+      type: boolean
+      x-dependency:
+        ssl:
+          value: true
+    no_tlsv10:
+      type: boolean
+      x-dependency:
+        ssl:
+          value: true
+    no_tlsv11:
+      type: boolean
+      x-dependency:
+        ssl:
+          value: true
+    no_tlsv12:
+      type: boolean
+      x-dependency:
+        ssl:
+          value: true
+    no_tlsv13:
+      type: boolean
+      x-dependency:
+        ssl:
+          value: true
+    npn:
+      type: string
+    prefer_client_ciphers:
+      type: boolean
+    process:
+      type: string
+      pattern: '^[^\s]+$'
+    address:
+      type: string
+      pattern: '^[^\s]+$'
+    port:
+      maximum: 65535
+      minimum: 1
+      type: integer
+      x-nullable: true
+    port-range-end:
+      maximum: 65535
+      minimum: 1
+      type: integer
+      x-nullable: true
+    proto:
+      type: string
+      x-display-name: Protocol name
+    ssl:
+      type: boolean
+    ssl_certificate:
+      type: string
+      pattern: '^[^\s]+$'
+      x-dependency:
+        ssl:
+          value: true
+    ssl_cafile:
+      type: string
+      x-display-name: SSL CA File
+      pattern: '^[^\s]+$'
+      x-dependency:
+        ssl:
+          value: true
+    ssl_max_ver:
+      type: string
+      enum: [SSLv3, TLSv1.0, TLSv1.1, TLSv1.2, TLSv1.3]
+    ssl_min_ver:
+      type: string
+      enum: [SSLv3, TLSv1.0, TLSv1.1, TLSv1.2, TLSv1.3]
+    strict_sni:
+      type: boolean
+      x-dependency:
+        ssl:
+          value: true
+    tcp_user_timeout:
+      type: integer
+      x-nullable: true
+    tfo:
+      type: boolean
+    tls_ticket_keys:
+      type: string
+    transparent:
+      type: boolean
+    v4v6:
+      type: boolean
+    v6only:
+      type: boolean
+    uid:
+      type: string
+    user:
+      type: string
+    verify:
+      type: string
+      enum: [none, optional, required]
+      x-dependency:
+        ssl:
+          value: enabled
+  additionalProperties: false
+  example:
+    name: http
+    address: 127.0.0.1
+    port: 80
+server:
+  title: Server
+  description: HAProxy backend server configuration
+  type: object
+  required:
+    - name
+  properties:
+    name:
+      type: string
+      pattern: '^[^\s]+$'
+      x-nullable: false
+    address:
+      type: string
+      pattern: '^[^\s]+$'
+      x-nullable: false
+    health_check_port:
+      type: integer
+      x-nullable: true
+      minimum: 1
+      maximum: 65535
+    ssl_certificate:
+      type: string
+      pattern: '^[^\s]+$'
+      x-dependency:
+        ssl:
+          value: enabled
+    maintenance:
+      type: string
+      enum: [enabled, disabled]
+    agent-check:
+      type: string
+      enum: [enabled, disabled]
+      x-dependency:
+        agent-port:
+          required: true
+    agent-send:
+      type: string
+    agent-inter:
+      type: integer
+      x-nullable: true
+    agent-addr:
+      type: string
+      pattern: '^[^\s]+$'
+    agent-port:
+      type: integer
+      x-nullable: true
+      minimum: 1
+      maximum: 65535
+    allow_0rtt:
+      type: boolean
+    alpn:
+      type: string
+      x-display-name: ALPN Protocols
+      pattern: '^[^\s]+$'
+    backup:
+      type: string
+      enum: [enabled, disabled]
+    ssl_cafile: # ca-file?
+      type: string
+      x-display-name: SSL CA File
+      pattern: '^[^\s]+$'
+      x-dependency:
+        ssl:
+          value: enabled
+    check:
+      type: string
+      enum: [enabled, disabled]
+    check_alpn:
+      type: string
+      x-display-name: Protocols
+      pattern: '^[^\s]+$'
+    check_proto:
+      type: string
+      x-display-name: Name
+      pattern: '^[^\s]+$'
+    check-sni:
+      type: string
+      pattern: '^[^\s]+$'
+    check-ssl:
+      type: string
+      enum: [enabled, disabled]
+    check_via_socks4:
+      type: string
+      enum: [enabled, disabled]
+    ciphers:
+      type: string
+      x-dependency:
+        ssl:
+          value: enabled
+    ciphersuites:
+      type: string
+      x-dependency:
+        ssl:
+          value: enabled
+    cookie:
+      type: string
+      pattern: '^[^\s]+$'
+    crl_file:
+      type: string
+      x-dependency:
+        ssl:
+          value: enabled
+    error_limit:
+      type: integer
+      x-display-name: Error count
+    fall:
+      type: integer
+      x-display-name: Nr. of consecutive failed checks
+      x-nullable: true
+    force_sslv3:
+      type: string
+      enum: [enabled, disabled]
+    force_tlsv10:
+      type: string
+      enum: [enabled, disabled]
+    force_tlsv11:
+      type: string
+      enum: [enabled, disabled]
+    force_tlsv12:
+      type: string
+      enum: [enabled, disabled]
+    force_tlsv13:
+      type: string
+      enum: [enabled, disabled]
+    id:
+      type: integer
+      x-nullable: true
+    init-addr:
+      pattern: ^[^\s]+$
+      type: string
+      x-nullable: true
+    inter:
+      type: integer
+      x-nullable: true
+    fastinter:
+      type: integer
+      x-nullable: true
+    downinter:
+      type: integer
+      x-nullable: true
+    log_proto:
+      type: string
+      enum: [legacy, octet-count]
+    maxconn:
+      type: integer
+      x-display-name: Max Concurrent Connections
+      x-nullable: true
+    maxqueue:
+      type: integer
+      x-display-name: Max Number of Connections
+      x-nullable: true
+    max_reuse:
+      type: integer
+      x-nullable: true
+    minconn:
+      type: integer
+      x-nullable: true
+    namespace:
+      type: string
+    no_sslv3:
+      type: string
+      enum: [enabled, disabled]
+    no_tlsv10:
+      type: string
+      enum: [enabled, disabled]
+    no_tlsv11:
+      type: string
+      enum: [enabled, disabled]
+    no_tlsv12:
+      type: string
+      enum: [enabled, disabled]
+    no_tlsv13:
+      type: string
+      enum: [enabled, disabled]
+    no_verifyhost:
+      type: string
+      enum: [enabled, disabled]
+    npn:
+      type: string
+      x-dependency:
+        ssl:
+          value: enabled
+    observe:
+      type: string
+      enum: [layer4, layer7]
+      x-dependency:
+        ssl:
+          value: enabled
+    on-error:
+      type: string
+      enum: [fastinter, fail-check, sudden-death, mark-down]
+    on-marked-down:
+      type: string
+      enum: [shutdown-sessions]
+    on-marked-up:
+      type: string
+      enum: [shutdown-backup-sessions]
+    pool_low_conn:
+      type: integer
+      x-nullable: true
+    pool_max_conn:
+      type: integer
+      x-nullable: true
+    pool_purge_delay:
+      type: integer
+      x-nullable: true
+    port:
+      type: integer
+      x-nullable: true
+      minimum: 1
+      maximum: 65535
+    proto:
+      type: string
+      pattern: '^[^\s]+$'
+    redir:
+      type: string
+      x-display-name: Prefix
+    rise:
+      type: integer
+      x-nullable: true
+    resolve_opts:
+      type: string
+      pattern: '^[^,\s][^\,]*[^,\s]*$'
+    resolve-prefer:
+      type: string
+      enum: [ipv4, ipv6]
+      x-dependency:
+        resolvers:
+          required: true
+    resolve-net:
+      type: string
+      pattern: '^[^,\s][^\,]*[^,\s]*$'
+      x-dependency:
+        resolvers:
+          required: true
+    resolvers:
+      type: string
+      pattern: '^[^\s]+$'
+      x-dynamic-enum:
+        operation: getResolvers
+        property: name
+    send-proxy:
+      type: string
+      enum: [enabled, disabled]
+    send-proxy-v2:
+      type: string
+      enum: [enabled, disabled]
+    proxy-v2-options:
+      type: array
+      items:
+        type: string
+        enum: [ssl, cert-cn, ssl-cipher, cert-sig, cert-key, authority, crc32c, unique-id]
+    send_proxy_v2_ssl:
+      type: string
+      enum: [enabled, disabled]
+    send_proxy_v2_ssl_cn:
+      type: string
+      enum: [enabled, disabled]
+    slowstart:
+      type: integer
+      x-nullable: true
+    sni:
+      type: string
+      pattern: '^[^\s]+$'
+    source:
+      type: string
+    ssl:
+      type: string
+      enum: [enabled, disabled]
+    ssl_max_ver:
+      type: string
+      enum: [SSLv3, TLSv1.0, TLSv1.1, TLSv1.2, TLSv1.3]
+    ssl_min_ver:
+      type: string
+      enum: [SSLv3, TLSv1.0, TLSv1.1, TLSv1.2, TLSv1.3]
+    ssl_reuse:
+      type: string
+      enum: [enabled, disabled]
+    stick:
+      type: string
+      enum: [enabled, disabled]
+    socks4:
+      type: string
+      pattern: '^[^\s]+$'
+      x-dependency:
+        check-via-socks4:
+          required: true
+    tcp_ut:
+      type: integer
+    tfo:
+      type: string
+      enum: [enabled, disabled]
+    track:
+      type: string
+    tls_tickets:
+      type: string
+      enum: [enabled, disabled]
+      x-dependency:
+        ssl:
+          value: enabled
+    verify:
+      type: string
+      enum: [none, required]
+      x-dependency:
+        ssl:
+          value: enabled
+    verifyhost:
+      type: string
+      x-dependency:
+        ssl:
+          value: enabled
+        verify:
+          value: required
+    weight:
+      type: integer
+      x-nullable: true
+  additionalProperties: false
+  example:
+    name: www
+    address: 10.1.1.1
+    port: 8080
+    check: enabled
+    weight: 80
+http_request_rule:
+  title: HTTP Request Rule
+  description: HAProxy HTTP request rule configuration (corresponds to http-request directives)
+  type: object
+  required:
+    - index
+    - type
+  properties:
+    index:
+      type: integer
+      x-nullable: true
+    type:
+      type: string
+      enum: [allow, deny, auth, redirect, tarpit, add-header, replace-header, replace-value, del-header, set-header, set-log-level, set-path, replace-path, set-query, set-uri, set-var, send-spoe-group, add-acl, del-acl, capture, track-sc0, track-sc1, track-sc2, set-map, del-map, cache-use, disable-l7-retry, early-hint, replace-uri, sc-inc-gpc0, sc-inc-gpc1, do-resolve, set-dst, set-dst-port, sc-set-gpt0, set-mark, set-nice, set-method, set-priority-class, set-priority-offset, set-src, set-src-por, wait-for-handshake, set-tos, silent-drop, unset-var, strict-mode, lua, use-service, return]
+      x-nullable: false
+    capture_sample:
+      pattern: '^[^\s]+$'
+      x-display-name: Capture Sample
+      type: string
+      x-dependency:
+        type:
+          value: capture
+          required: true
+    capture_len:
+      type: integer
+      x-display-name: Capture Len
+      x-dependency:
+        type:
+          value: capture
+          required: true
+    capture_id:
+      type: integer
+      x-nullable: true
+      x-display-name: Capture SlotID
+      x-dependency:
+        type:
+          value: capture
+          required: true
+    track-sc0-key:
+      type: string
+      pattern: '^[^\s]+$'
+      x-display-name: track-sc0 Key
+      x-dependency:
+        type:
+          value: track-sc0
+          required: true
+    track-sc0-table:
+      type: string
+      pattern: '^[^\s]+$'
+      x-display-name: track-sc0 Table
+      x-dependency:
+        type:
+          value: track-sc0
+    track-sc1-key:
+      type: string
+      pattern: '^[^\s]+$'
+      x-display-name: track-sc1 Key
+      x-dependency:
+        type:
+          value: track-sc1
+          required: true
+    track-sc1-table:
+      type: string
+      pattern: '^[^\s]+$'
+      x-display-name: track-sc1 Table
+      x-dependency:
+        type:
+          value: track-sc1
+    track-sc2-key:
+      type: string
+      pattern: '^[^\s]+$'
+      x-display-name: track-sc2 Key
+      x-dependency:
+        type:
+          value: track-sc2
+          required: true
+    track-sc2-table:
+      type: string
+      pattern: '^[^\s]+$'
+      x-display-name: track-sc2 Table
+      x-dependency:
+        type:
+          value: track-sc2
+    auth_realm:
+      type: string
+      x-display-name: Authentication Realm
+      pattern: '^[^\s]+$'
+      x-dependency:
+        type:
+          value: auth
+    redir_type:
+      type: string
+      x-display-name: Redirect Type
+      enum: [location, prefix, scheme]
+      x-dependency:
+        type:
+          value: redirect
+          required: true
+    redir_value:
+      type: string
+      x-display-name: Redirect Value
+      pattern: '^[^\s]+$'
+      x-dependency:
+        type:
+          value: redirect
+          required: true
+    redir_code:
+      type: integer
+      x-nullable: true
+      x-display-name: Redirect Code
+      enum: [301, 302, 303, 307, 308]
+      x-dependency:
+        type:
+          value: redirect
+    redir_option:
+      type: string
+      x-display-name: Redirect Option
+      x-dependency:
+        type:
+          value: redirect
+          required: true
+    deny_status:
+      type: integer
+      enum: [200, 400, 403, 405, 408, 425, 429, 500, 502, 503, 504]
+      x-nullable: true
+      x-dependency:
+        type:
+          value: [deny, tarpit]
+    hdr_name:
+      type: string
+      x-display-name: Header Name
+      x-dependency:
+        type:
+          value: [add-header, replace-header, del-header, set-header, replace-value]
+          required: true
+    hdr_match:
+      type: string
+      x-display-name: Header Match
+      x-dependency:
+        type:
+          value: [replace-header, replace-value]
+          required: true
+    hdr_format:
+      type: string
+      x-display-name: Header Format
+      x-dependency:
+        type:
+          value: [replace-header, replace-value, set-header, add-header]
+          required: true
+    log_level:
+      type: string
+      enum: [emerg, alert, crit, err, warning, notice, info, debug, silent]
+      x-dependency:
+        type:
+          value: set-log-level
+          required: true
+    path_match:
+      type: string
+      pattern: '^[^\s]+$'
+      x-dependency:
+        type:
+          value: [set-path, replace-path]
+          required: true
+    path_fmt:
+      type: string
+      pattern: '^[^\s]+$'
+      x-dependency:
+        type:
+          value: [set-path, replace-path]
+          required: true
+    var_name:
+      type: string
+      pattern: '^[^\s]+$'
+      x-dependency:
+        type:
+          value: [set-var, do-resolve, unset-var]
+          required: true
+    var_scope:
+      type: string
+      pattern: '^[^\s]+$'
+      x-dependency:
+        type:
+          value: [set-var, unset-var]
+          required: true
+    var_expr:
+      type: string
+      x-display-name: Var Expression
+      x-dependency:
+        type:
+          value: set-var
+          required: true
+    query-fmt:
+      type: string
+      x-dependency:
+        type:
+          required: true
+          value: set-query
+    uri-match:
+      type: string
+      x-dependency:
+        type:
+          required: true
+          value: replace-uri
+    uri-fmt:
+      type: string
+      x-dependency:
+        type:
+          required: true
+          value: [set-uri, replace-uri]
+    spoe_engine:
+      type: string
+      x-display-name: SPOE Engine
+      pattern: '^[^\s]+$'
+      x-dependency:
+        type:
+          value: send-spoe-group
+          required: true
+    spoe_group:
+      type: string
+      x-display-name: SPOE Group
+      pattern: '^[^\s]+$'
+      x-dependency:
+        type:
+          value: send-spoe-group
+          required: true
+    acl_file:
+      type: string
+      x-display-name: ACL File
+      pattern: '^[^\s]+$'
+      x-dependency:
+        type:
+          value: [add-acl, del-acl]
+          required: true
+    acl_keyfmt:
+      type: string
+      x-display-name: ACL Key Format
+      pattern: '^[^\s]+$'
+      x-dependency:
+        type:
+          value: [add-acl, del-acl]
+          required: true
+    map_file:
+      type: string
+      pattern: '^[^\s]+$'
+      x-dependency:
+        type:
+          value: [set-map, del-map]
+          required: true
+    map_keyfmt:
+      type: string
+      x-display-name: Map Key Format
+      pattern: '^[^\s]+$'
+      x-dependency:
+        type:
+          value: [set-map, del-map]
+          required: true
+    map_valuefmt:
+      type: string
+      x-display-name: Map Value Format
+      pattern: '^[^\s]+$'
+      x-dependency:
+        type:
+          value: set-map
+          required: true
+    cache_name:
+      type: string
+      x-display-name: Cache Name
+      pattern: '^[^\s]+$'
+      x-dependency:
+        type:
+          value: cache-use
+          required: true
+    hint_name:
+      type: string
+      x-display-name: Hint Name
+      pattern: '^[^\s]+$'
+      x-dependency:
+        type:
+          value: early-hint
+          required: true
+    hint_format:
+      type: string
+      x-display-name: Hint Format
+      pattern: '^[^\s]+$'
+      x-dependency:
+        type:
+          value: early-hint
+          required: true
+    sc_id:
+      type: integer
+      x-dependency:
+        type:
+          value: [sc-inc-gpc0, sc-inc-gpc1, sc-set-gpt0]
+          required: true
+    resolvers:
+      type: string
+      x-display-name: Resolvers
+      x-dependency:
+        type:
+          value: do-resolve
+          required: true
+    protocol:
+      type: string
+      enum: [ipv4, ipv6]
+      x-display-name: Protocol
+      x-dependency:
+        type:
+          value: do-resolve
+          required: false
+    expr:
+      type: string
+      x-display-name: Standard HAProxy expression
+      x-dependency:
+        type:
+          value: [do-resolve, set-dst, set-dst-port, set-priority-class, set-priority-offset, set-src, set-src-port]
+          required: true
+    sc_expr:
+      type: string
+      x-display-name: ScSet Expression Value
+      x-dependency:
+        type:
+          value: sc-set-gpt0
+          required: true
+    sc_int:
+      type: integer
+      x-nullable: true
+      x-display-name: ScSet Integer Value
+      x-dependency:
+        type:
+          value: sc-set-gpt0
+          required: true
+    mark_value:
+      type: string
+      pattern: '^(0x[0-9A-Fa-f]+|[0-9]+)$'
+      x-display-name: Mark Value
+      x-dependency:
+        type:
+          value: set-mark
+          required: true
+    nice_value:
+      type: integer
+      minimum: -1024
+      maximum: 1024
+      x-nullable: false
+      x-display-name: Nice Value
+      x-dependency:
+        type:
+          value: set-nice
+          required: true
+    method_fmt:
+      type: string
+      pattern: '^[^\s]+$'
+      x-dependency:
+        type:
+          value: set-method
+          required: true
+    tos_value:
+      type: string
+      pattern: '^(0x[0-9A-Fa-f]+|[0-9]+)$'
+      x-display-name: Tos Value
+      x-dependency:
+        type:
+          value: set-tos
+          required: true
+    strict_mode:
+      type: string
+      enum: ['on', 'off']
+      x-dependency:
+        type:
+          value: strict-mode
+          required: true
+    lua_action:
+      type: string
+      pattern: '^[^\s]+$'
+      x-dependency:
+        type:
+          value: lua
+          required: true
+    lua_params:
+      type: string
+      x-dependency:
+        type:
+          value: lua
+    service_name:
+      type: string
+      x-dependency:
+        type:
+          value: use-service
+          required: true
+    cond:
+      type: string
+      x-display-name: Condition
+      enum: [if, unless]
+    cond_test:
+      type: string
+      x-display-name: Condition Test
+      x-dynamic-enum:
+        operation: getACLs
+        property: acl_name
+        freeFormat: true
+      x-dependency:
+        cond:
+          required: true
+    return_status_code:
+      type: integer
+      minimum: 200
+      maximum: 599
+      x-dependency:
+        type:
+          value: return
+      x-display-name: Return Error Code
+      x-nullable: true
+    return_content_type:
+      type: string
+      x-dependency:
+        type:
+          value: return
+      x-display-name: Return content type
+      x-nullable: true
+    return_content_format:
+      type: string
+      enum: [default-errorfile, errorfile, errorfiles, file, lf-file, string, lf-string]
+      x-dependency:
+        type:
+          value: return
+    return_content:
+      type: string
+      x-dependency:
+        return_content_format:
+          value: [errofile, errorfiles, file, lf-file, string, lf-string]
+          required: true
+    return_hdrs:
+      type: array
+      x-go-name: ReturnHeaders
+      x-dependency:
+        return_content_format:
+          value: [file, lf-file, string, lf-string]
+      items:
+        type: object
+        required:
+          - name
+          - fmt
+        properties:
+          name:
+            type: string
+          fmt:
+            type: string
+  additionalProperties: false
+  example:
+    index: 0
+    type: add-header
+    hdr_name: X-Haproxy-Current-Date
+    hdr_format: "%T"
+    cond: unless
+    cond_test: "{ src 192.168.0.0/16 }"
+http_response_rule:
+  title: HTTP Response Rule
+  description: HAProxy HTTP response rule configuration (corresponds to http-response directives)
+  type: object
+  required:
+    - index
+    - type
+  properties:
+    index:
+      type: integer
+      x-nullable: true
+    type:
+      type: string
+      enum: [allow, deny, redirect, add-header, set-header, del-header, set-log-level, set-var, set-status, send-spoe-group, replace-header, replace-value, add-acl, del-acl, capture, set-map, del-map, sc-inc-gpc0, sc-inc-gpc1, sc-set-gpt0, set-mark, set-nice, set-tos, silent-drop, unset-var, track-sc0, track-sc1, track-sc2, strict-mode, lua]
+      x-nullable: false
+    capture_sample:
+      type: string
+      x-display-name: Capture Sample
+      pattern: '^[^\s]+$'
+      x-dependency:
+        type:
+          value: capture
+          required: true
+    capture_id:
+      type: integer
+      x-nullable: true
+      x-display-name: Capture SlotID
+      x-dependency:
+        type:
+          value: capture
+          required: true
+    redir_type:
+      type: string
+      x-display-name: Redirect Type
+      enum: [location, prefix, scheme]
+      x-dependency:
+        type:
+          value: redirect
+          required: true
+    redir_value:
+      type: string
+      x-display-name: Redirect Value
+      pattern: '^[^\s]+$'
+      x-dependency:
+        type:
+          value: redirect
+          required: true
+    redir_code:
+      type: integer
+      x-nullable: true
+      x-display-name: Redirect Code
+      enum: [301, 302, 303, 307, 308]
+      x-dependency:
+        type:
+          value: redirect
+    redir_option:
+      type: string
+      x-display-name: Redirect Option
+      x-dependency:
+        type:
+          value: redirect
+          required: true
+    hdr_name:
+      type: string
+      x-display-name: Header Name
+      x-dependency:
+        type:
+          value: [add-header, replace-header, del-header, set-header, replace-value]
+          required: true
+    hdr_match:
+      type: string
+      x-display-name: Header Match
+      x-dependency:
+        type:
+          value: [replace-header, replace-value]
+          required: true
+    hdr_format:
+      type: string
+      x-display-name: Header Format
+      x-dependency:
+        type:
+          value: [replace-header, replace-value, set-header, add-header]
+          required: true
+    log_level:
+      type: string
+      enum: [emerg, alert, crit, err, warning, notice, info, debug, silent]
+      x-dependency:
+        type:
+          value: set-log-level
+          required: true
+    var_name:
+      type: string
+      pattern: '^[^\s]+$'
+      x-dependency:
+        type:
+          value: [set-var, unset-var]
+          required: true
+    var_scope:
+      type: string
+      pattern: '^[^\s]+$'
+      x-dependency:
+        type:
+          value: [set-var, unset-var]
+          required: true
+    var_expr:
+      type: string
+      x-display-name: Var Expression
+      x-dependency:
+        type:
+          value: set-var
+          required: true
+    status:
+      type: integer
+      minimum: 100
+      maximum: 999
+      x-nullable: false
+      x-dependency:
+        type:
+          value: set-status
+          required: true
+    status_reason:
+      type: string
+      x-dependency:
+        type:
+          value: set-status
+    spoe_engine:
+      type: string
+      pattern: '^[^\s]+$'
+      x-dependency:
+        type:
+          value: send-spoe-group
+          required: true
+    spoe_group:
+      type: string
+      pattern: '^[^\s]+$'
+      x-dependency:
+        type:
+          value: send-spoe-group
+          required: true
+    acl_file:
+      type: string
+      pattern: '^[^\s]+$'
+      x-dependency:
+        type:
+          value: [add-acl, del-acl]
+          required: true
+    acl_keyfmt:
+      type: string
+      x-display-name: ACK Key Format
+      pattern: '^[^\s]+$'
+      x-dependency:
+        type:
+          value: [add-acl, del-acl]
+          required: true
+    map_file:
+      type: string
+      pattern: '^[^\s]+$'
+      x-dependency:
+        type:
+          value: [set-map, del-map]
+          required: true
+    map_keyfmt:
+      type: string
+      x-display-name: Map Key Format
+      pattern: '^[^\s]+$'
+      x-dependency:
+        type:
+          value: [set-map, del-map]
+          required: true
+    map_valuefmt:
+      type: string
+      x-display-name: Map Value Format
+      pattern: '^[^\s]+$'
+      x-dependency:
+        type:
+          value: set-map
+          required: true
+    sc_id:
+      type: integer
+      x-dependency:
+        type:
+          value: [sc-inc-gpc0, sc-inc-gpc1, sc-set-gpt0]
+          required: true
+    sc_expr:
+      type: string
+      x-display-name: ScSet Expression Value
+      x-dependency:
+        type:
+          value: sc-set-gpt0
+          required: true
+    sc_int:
+      type: integer
+      x-nullable: true
+      x-display-name: ScSet Integer Value
+      x-dependency:
+        type:
+          value: sc-set-gpt0
+          required: true
+    mark_value:
+      type: string
+      pattern: '^(0x[0-9A-Fa-f]+|[0-9]+)$'
+      x-display-name: Mark Value
+      x-dependency:
+        type:
+          value: set-mark
+          required: true
+    nice_value:
+      type: integer
+      minimum: -1024
+      maximum: 1024
+      x-nullable: false
+      x-display-name: Nice Value
+      x-dependency:
+        type:
+          value: set-nice
+          required: true
+    tos_value:
+      type: string
+      pattern: '^(0x[0-9A-Fa-f]+|[0-9]+)$'
+      x-display-name: Tos Value
+      x-dependency:
+        type:
+          value: set-tos
+          required: true
+    track-sc0-key:
+      type: string
+      pattern: '^[^\s]+$'
+      x-display-name: track-sc0 Key
+      x-dependency:
+        type:
+          value: track-sc0
+          required: true
+    track-sc0-table:
+      type: string
+      pattern: '^[^\s]+$'
+      x-display-name: track-sc0 Table
+      x-dependency:
+        type:
+          value: track-sc0
+    track-sc1-key:
+      type: string
+      pattern: '^[^\s]+$'
+      x-display-name: track-sc1 Key
+      x-dependency:
+        type:
+          value: track-sc1
+          required: true
+    track-sc1-table:
+      type: string
+      pattern: '^[^\s]+$'
+      x-display-name: track-sc1 Table
+      x-dependency:
+        type:
+          value: track-sc1
+    track-sc2-key:
+      type: string
+      pattern: '^[^\s]+$'
+      x-display-name: track-sc2 Key
+      x-dependency:
+        type:
+          value: track-sc2
+          required: true
+    track-sc2-table:
+      type: string
+      pattern: '^[^\s]+$'
+      x-display-name: track-sc2 Table
+      x-dependency:
+        type:
+          value: track-sc2
+    strict_mode:
+      type: string
+      enum: ['on', 'off']
+      x-dependency:
+        type:
+          value: strict-mode
+          required: true
+    lua_action:
+      type: string
+      pattern: '^[^\s]+$'
+      x-dependency:
+        type:
+          value: lua
+          required: true
+    lua_params:
+      type: string
+      x-dependency:
+        type:
+          value: lua
+    cond:
+      type: string
+      x-display-name: Condition
+      enum: [if, unless]
+    cond_test:
+      type: string
+      x-display-name: Condition Test
+      x-dynamic-enum:
+        operation: getACLs
+        property: acl_name
+        freeFormat: true
+      x-dependency:
+        cond:
+          required: true
+  additionalProperties: false
+  example:
+    index: 0
+    type: add-header
+    hdr_name: X-Haproxy-Current-Date
+    hdr_format: "%T"
+    cond: unless
+    cond_test: "{ src 192.168.0.0/16 }"
+tcp_request_rule:
+  title: TCP Request Rule
+  description: HAProxy TCP Request Rule configuration (corresponds to tcp-request)
+  type: object
+  required:
+    - index
+    - type
+  properties:
+    index:
+      type: integer
+      x-nullable: true
+    type:
+      type: string
+      enum: [connection, content, inspect-delay, session]
+      x-nullable: false
+    action:
+      type: string
+      enum: [accept, capture, do-resolve, expect-netscaler-cip, expect-proxy, reject, sc-inc-gpc0, sc-inc-gpc1, sc-set-gpt0, send-spoe-group, set-dst-port, set-dst, set-priority, set-src, set-var, silent-drop, track-sc0, track-sc1, track-sc2, unset-var, use-service, lua]
+      x-nullable: false
+      x-dependency:
+        type:
+          value: [connection, content, session]
+          required: true
+    capture_sample:
+      pattern: '^[^\s]+$'
+      x-display-name: Capture Sample
+      type: string
+      x-dependency:
+        action:
+          value: capture
+          required: true
+        type:
+          value: [connection, content]
+          required: true
+    capture_len:
+      type: integer
+      x-display-name: Capture Length
+      x-dependency:
+        action:
+          value: capture
+          required: true
+        type:
+          value: [connection, content]
+          required: true
+    resolve_var:
+      type: string
+      x-display-name: Variable name
+      x-dependency:
+        action:
+          value: do-resolve
+          required: true
+        type:
+          value: [content]
+          required: true
+    resolve_resolvers:
+      type: string
+      x-display-name: Resolvers
+      x-dependency:
+        action:
+          value: do-resolve
+          required: true
+        type:
+          value: [content]
+          required: true
+    resolve_protocol:
+      type: string
+      enum: [ipv4, ipv6]
+      x-display-name: Protocol
+      x-dependency:
+        action:
+          value: do-resolve
+          required: false
+        type:
+          value: [content]
+          required: true
+    sc_inc_id:
+      type: string
+      x-display-name: Sticky counter ID
+      x-dependency:
+        action:
+          value: [sc-inc-gpc0, sc-inc-gpc1, sc-set-gpt0]
+          required: true
+        type:
+          value: [connection, content, session]
+          required: true
+    gpt_value:
+      type: string
+      x-display-name: Sticky counter value
+      x-dependency:
+        action:
+          value: sc-set-gpt0
+          required: true
+        type:
+          value: [connection, content, session]
+          required: true
+    spoe_engine_name:
+      type: string
+      x-display-name: Engine name
+      x-dependency:
+        action:
+          value: send-spoe-group
+          required: true
+        type:
+          value: [content]
+          required: true
+    spoe_group_name:
+      type: string
+      x-display-name: Group name
+      x-dependency:
+        action:
+          value: send-spoe-group
+          required: true
+        type:
+          value: [content]
+          required: true
+    priority_type:
+      type: string
+      enum: [class, offset]
+      x-dependency:
+        action:
+          value: set-priority
+          required: true
+        type:
+          value: [content]
+    var_name:
+      type: string
+      pattern: '^[^\s]+$'
+      x-display-name: Variable name
+      x-dependency:
+        action:
+          value: [set-var, unset-var]
+          required: true
+        type:
+          value: [session, content]
+    var_scope:
+      type: string
+      pattern: '^[^\s]+$'
+      x-display-name: Variable scope
+      x-dependency:
+        action:
+          value: [set-var, unset-var]
+          required: true
+        type:
+          value: [session, content]
+    track_key:
+      type: string
+      x-display-name: Sample expression rule
+      x-dependency:
+        action:
+          value: [track-sc0, track-sc1, track-sc2]
+          required: true
+        type:
+          value: [session, connection, content]
+    track_table:
+      type: string
+      x-display-name: Optional table name
+      x-dependency:
+        action:
+          value: [track-sc0, track-sc1, track-sc2]
+          required: false
+        type:
+          value: [session, connection, content]
+    service_name:
+      type: string
+      x-display-name: Service name
+      x-dependency:
+        action:
+          value: use-service
+          required: true
+        type:
+          value: content
+    timeout:
+      type: integer
+      x-nullable: true
+      x-dependency:
+        type:
+          value: inspect-delay
+          required: true
+    expr:
+      type: string
+      x-display-name: Standard HAProxy expression
+      x-dependency:
+        action:
+          value: [do-resolve, set-var, set-src, set-priority, set-dst, set-dst-port]
+          required: true
+        type:
+          value: [session, connection, content]
+    lua_action:
+      type: string
+      pattern: '^[^\s]+$'
+      x-display-name: Lua action name
+      x-dependency:
+        action:
+          value: lua
+          required: true
+        type:
+          value: [connection, content]
+    lua_params:
+      type: string
+      x-display-name: Lua action params
+      x-dependency:
+        action:
+          value: lua
+        type:
+          value: [connection, content]
+    cond:
+      type: string
+      x-display-name: Condition
+      enum: [if, unless]
+      x-dependency:
+        type:
+          value: [connection, content, session]
+    cond_test:
+      type: string
+      x-display-name: Condition Test
+      x-dynamic-enum:
+        operation: getACLs
+        property: acl_name
+        freeFormat: true
+      x-dependency:
+        cond:
+          required: true
+        type:
+          value: [connection, content, session]
+          required: true
+  additionalProperties: false
+  example:
+    index: 0
+    type: connection
+    cond: if
+    cond_test: "{ src 192.168.0.0/16 }"
+tcp_response_rule:
+  title: TCP Response Rule
+  description: HAProxy TCP Response Rule configuration (corresponds to tcp-response)
+  type: object
+  required:
+    - index
+    - type
+  properties:
+    index:
+      type: integer
+      x-nullable: true
+    type:
+      type: string
+      enum: [content, inspect-delay]
+      x-nullable: false
+    action:
+      type: string
+      enum: [accept, reject, lua]
+      x-nullable: false
+      x-dependency:
+        type:
+          value: content
+          required: true
+    timeout:
+      type: integer
+      x-nullable: true
+      x-dependency:
+        type:
+          value: inspect-delay
+          required: true
+    lua_action:
+      type: string
+      pattern: '^[^\s]+$'
+      x-display-name: Lua action name
+      x-dependency:
+        action:
+          value: lua
+          required: true
+        type:
+          value: content
+    lua_params:
+      type: string
+      x-display-name: Lua action params
+      x-dependency:
+        action:
+          value: lua
+        type:
+          value: content
+    cond:
+      type: string
+      x-display-name: Condition
+      enum: [if, unless]
+      x-dependency:
+        type:
+          value: content
+    cond_test:
+      type: string
+      x-display-name: Condition Test
+      x-dynamic-enum:
+        operation: getACLs
+        property: acl_name
+        freeFormat: true
+      x-dependency:
+        cond:
+          required: true
+        type:
+          value: content
+  additionalProperties: false
+  example:
+    index: 0
+    type: content
+    cond: if
+    cond_test: "{ src 192.168.0.0/16 }"
+backend_switching_rule:
+  title: Backend Switching Rule
+  description: HAProxy backend switching rule configuration (corresponds to use_backend directive)
+  type: object
+  required:
+    - index
+    - name
+  properties:
+    index:
+      type: integer
+      x-nullable: true
+    name:
+      type: string
+      pattern: '^[^\s]+$'
+      x-nullable: false
+      x-dynamic-enum:
+        operation: getBackends
+        property: name
+      x-display-name: Backend Name
+    cond:
+      type: string
+      x-display-name: Condition
+      enum: [if, unless]
+    cond_test:
+      type: string
+      x-display-name: Condition Test
+      x-dynamic-enum:
+        operation: getACLs
+        property: acl_name
+        freeFormat: true
+      x-dependency:
+        cond:
+          required: true
+  additionalProperties: false
+  example:
+    index: 0
+    name: test_backend
+    cond: if
+    cond_test: "{ req_ssl_sni -i www.example.com }"
+server_switching_rule:
+  title: Server Switching Rule
+  description: HAProxy server switching rule configuration (corresponds to use-server directive)
+  type: object
+  required:
+    - index
+    - target_server
+  properties:
+    index:
+      type: integer
+      x-nullable: true
+    target_server:
+      type: string
+      pattern: '^[^\s]+$'
+      x-nullable: false
+      x-dynamic-enum:
+        operation: getServers
+        property: name
+    cond:
+      type: string
+      x-display-name: Condition
+      enum: [if, unless]
+    cond_test:
+      type: string
+      x-display-name: Condition Test
+      x-dynamic-enum:
+        operation: getACLs
+        property: acl_name
+        freeFormat: true
+      x-dependency:
+        cond:
+          required: true
+  additionalProperties: false
+  example:
+    index: 0
+    target_server: www
+    cond: if
+    cond_test: "{ req_ssl_sni -i www.example.com }"
+filter:
+  title: Filter
+  description: HAProxy filters
+  type: object
+  required:
+    - index
+    - type
+  properties:
+    index:
+      type: integer
+      x-nullable: true
+    type:
+      type: string
+      enum: [trace, compression, spoe, cache]
+      x-nullable: false
+    trace_name:
+      type: string
+      pattern: '^[^\s]+$'
+      x-dependency:
+        type:
+          value: trace
+    trace_rnd_parsing:
+      type: boolean
+      x-display-name: Trace Random Parsing
+      x-dependency:
+        type:
+          value: trace
+    trace_rnd_forwarding:
+      type: boolean
+      x-display-name: Trace Random Forwarding
+      x-dependency:
+        type:
+          value: trace
+    trace_hexdump:
+      type: boolean
+      x-dependency:
+        type:
+          value: trace
+    spoe_engine:
+      type: string
+      pattern: '^[^\s]+$'
+      x-dependency:
+        type:
+          value: spoe
+    spoe_config:
+      type: string
+      pattern: '^[^\s]+$'
+      x-dependency:
+        type:
+          value: spoe
+          required: true
+    cache_name:
+      type: string
+      pattern: '^[^\s]+$'
+      x-dependency:
+        type:
+          value: cache
+          required: true
+  additionalProperties: false
+  example:
+    index: 0
+    type: trace
+    trace_name: name
+    trace_rnd_parsing: true
+stick_rule:
+  title: Stick Rule
+  description: Define a pattern used to create an entry in a stickiness table or matching condition or associate a user to a server.
+  type: object
+  required:
+    - index
+    - type
+    - pattern
+  properties:
+    index:
+      type: integer
+      x-nullable: true
+    type:
+      type: string
+      enum: [match, "on", store-request, store-response]
+      x-nullable: false
+    pattern:
+      type: string
+      pattern: '^[^\s]+$'
+      x-nullable: false
+    table:
+      type: string
+      pattern: '^[^\s]+$'
+    cond:
+      type: string
+      x-display-name: Condition
+      enum: [if, unless]
+    cond_test:
+      type: string
+      x-display-name: Condition Test
+      x-dynamic-enum:
+        operation: getACLs
+        property: acl_name
+        freeFormat: true
+      x-dependency:
+        cond:
+          required: true
+  additionalProperties: false
+  example:
+    index: 0
+    type: match
+    pattern: src
+log_target:
+  title: Log Target
+  description: Per-instance logging of events and traffic.
+  type: object
+  required:
+    - index
+  properties:
+    index:
+      type: integer
+      x-nullable: true
+    global:
+      type: boolean
+    nolog:
+      type: boolean
+    address:
+      type: string
+      pattern: '^[^\s]+$'
+      x-dependency:
+        global:
+          value: false
+          required: true
+        nolog:
+          value: false
+          required: true
+    length:
+      type: integer
+      x-dependency:
+        global:
+          value: false
+        nolog:
+          value: false
+    format:
+      type: string
+      enum: [rfc3164, rfc5424, short, raw]
+      x-dependency:
+        global:
+          value: false
+        nolog:
+          value: false
+    facility:
+      type: string
+      enum: [kern, user, mail, daemon, auth, syslog, lpr, news, uucp, cron, auth2, ftp, ntp, audit, alert, cron2, local0, local1, local2, local3, local4, local5, local6, local7]
+      x-dependency:
+        global:
+          value: false
+          required: true
+        nolog:
+          value: false
+          required: true
+    level:
+      type: string
+      enum: [emerg, alert, crit, err, warning, notice, info, debug]
+      x-dependency:
+        global:
+          value: false
+        nolog:
+          value: false
+    minlevel:
+      type: string
+      enum: [emerg, alert, crit, err, warning, notice, info, debug]
+      x-dependency:
+        global:
+          value: false
+        nolog:
+          value: false
+        level:
+          required: false
+  additionalProperties: false
+acl:
+  title: ACL Lines
+  description: |
+    The use of Access Control Lists (ACL) provides a flexible solution to perform
+    content switching and generally to take decisions based on content extracted
+    from the request, the response or any environmental status.
+  type: object
+  required:
+    - index
+    - acl_name
+    - criterion
+    - value
+  properties:
+    index:
+      type: integer
+      x-nullable: true
+    acl_name:
+      type: string
+      pattern: '^[^\s]+$'
+      x-nullable: false
+    criterion:
+      type: string
+      pattern: '^[^\s]+$'
+      x-nullable: false
+    value:
+      type: string
+      x-nullable: false
+  additionalProperties: false
+default_server:
+  title: Default Server
+  type: object
+  properties:
+    init-addr:
+      pattern: ^[^\s]+$
+      type: string
+    inter:
+      type: integer
+      x-nullable: true
+    fastinter:
+      type: integer
+      x-nullable: true
+    downinter:
+      type: integer
+      x-nullable: true
+    rise:
+      type: integer
+      x-nullable: true
+    fall:
+      type: integer
+      x-display-name: Nr. of consecutive failed checks
+      x-nullable: true
+    check-sni:
+      type: string
+      pattern: '^[^\s]+$'
+    slowstart:
+      type: integer
+      x-nullable: true
+    sni:
+      type: string
+      pattern: '^[^\s]+$'
+    check-ssl:
+      type: string
+      enum: [enabled, disabled]
+    port:
+      type: integer
+      minimum: 1
+      maximum: 65535
+      x-nullable: true
+    resolvers:
+      type: string
+      pattern: '^[^\s]+$'
+      x-dynamic-enum:
+        operation: getResolvers
+        property: name
+    resolve-prefer:
+      type: string
+      enum: [ipv4, ipv6]
+      pattern: '^[^\s]+$'
+      x-dependency:
+        resolvers:
+          required: true
+    resolve-net:
+      type: string
+      pattern: '^[^\s]+$'
+      x-dependency:
+        resolvers:
+          required: true
+    name:
+      type: string
+      pattern: '^[^\s]+$'
+      x-nullable: false
+    address:
+      type: string
+      pattern: '^[^\s]+$'
+      x-nullable: false
+    health_check_port:
+      type: integer
+      x-nullable: true
+      minimum: 1
+      maximum: 65535
+    ssl_certificate:
+      type: string
+      pattern: '^[^\s]+$'
+      x-dependency:
+        ssl:
+          value: enabled
+    agent-check:
+      type: string
+      enum: [enabled, disabled]
+      x-dependency:
+        agent-port:
+          required: true
+    agent-send:
+      type: string
+    agent-inter:
+      type: integer
+      x-nullable: true
+    agent-addr:
+      type: string
+      pattern: '^[^\s]+$'
+    agent-port:
+      type: integer
+      x-nullable: true
+      minimum: 1
+      maximum: 65535
+    allow_0rtt:
+      type: boolean
+    alpn:
+      type: string
+      x-display-name: ALPN Protocols
+      pattern: '^[^\s]+$'
+    backup:
+      type: string
+      enum: [enabled, disabled]
+    check:
+      type: string
+      enum: [enabled, disabled]
+    check_alpn:
+      type: string
+      x-display-name: Protocols
+      pattern: '^[^\s]+$'
+    check_proto:
+      type: string
+      x-display-name: Name
+      pattern: '^[^\s]+$'
+    check_via_socks4:
+      type: string
+      enum: [enabled, disabled]
+    ciphers:
+      type: string
+      x-dependency:
+        ssl:
+          value: enabled
+    ciphersuites:
+      type: string
+      x-dependency:
+        ssl:
+          value: enabled
+    cookie:
+      type: string
+      pattern: '^[^\s]+$'
+    crl_file:
+      type: string
+      x-dependency:
+        ssl:
+          value: enabled
+    error_limit:
+      type: integer
+      x-display-name: Error count
+    force_sslv3:
+      type: string
+      enum: [enabled, disabled]
+    force_tlsv10:
+      type: string
+      enum: [enabled, disabled]
+    force_tlsv11:
+      type: string
+      enum: [enabled, disabled]
+    force_tlsv12:
+      type: string
+      enum: [enabled, disabled]
+    force_tlsv13:
+      type: string
+      enum: [enabled, disabled]
+    log_proto:
+      type: string
+      enum: [legacy, octet-count]
+    maxconn:
+      type: integer
+      x-display-name: Max Concurrent Connections
+      x-nullable: true
+    maxqueue:
+      type: integer
+      x-display-name: Max Number of Connections
+      x-nullable: true
+    max_reuse:
+      type: integer
+      x-nullable: true
+    minconn:
+      type: integer
+      x-nullable: true
+    namespace:
+      type: string
+    no_sslv3:
+      type: string
+      enum: [enabled, disabled]
+    no_tlsv10:
+      type: string
+      enum: [enabled, disabled]
+    no_tlsv11:
+      type: string
+      enum: [enabled, disabled]
+    no_tlsv12:
+      type: string
+      enum: [enabled, disabled]
+    no_tlsv13:
+      type: string
+      enum: [enabled, disabled]
+    no_verifyhost:
+      type: string
+      enum: [enabled, disabled]
+    npn:
+      type: string
+      x-dependency:
+        ssl:
+          value: enabled
+    observe:
+      type: string
+      enum: [layer4, layer7]
+      x-dependency:
+        ssl:
+          value: enabled
+    on-error:
+      type: string
+      enum: [fastinter, fail-check, sudden-death, mark-down]
+    on-marked-down:
+      type: string
+      enum: [shutdown-sessions]
+    on-marked-up:
+      type: string
+      enum: [shutdown-backup-sessions]
+    pool_low_conn:
+      type: integer
+      x-nullable: true
+    pool_max_conn:
+      type: integer
+      x-nullable: true
+    pool_purge_delay:
+      type: integer
+      x-nullable: true
+    proto:
+      type: string
+      pattern: '^[^\s]+$'
+    redir:
+      type: string
+      x-display-name: Prefix
+    resolve_opts:
+      type: string
+      pattern: '^[^,\s][^\,]*[^,\s]*$'
+    send-proxy:
+      type: string
+      enum: [enabled, disabled]
+    send-proxy-v2:
+      type: string
+      enum: [enabled, disabled]
+    proxy-v2-options:
+      type: array
+      items:
+        type: string
+        enum: [ssl, cert-cn, ssl-cipher, cert-sig, cert-key, authority, crc32c, unique-id]
+    send_proxy_v2_ssl:
+      type: string
+      enum: [enabled, disabled]
+    send_proxy_v2_ssl_cn:
+      type: string
+      enum: [enabled, disabled]
+    source:
+      type: string
+    ssl:
+      type: string
+      enum: [enabled, disabled]
+    ssl_max_ver:
+      type: string
+      enum: [SSLv3, TLSv1.0, TLSv1.1, TLSv1.2, TLSv1.3]
+    ssl_min_ver:
+      type: string
+      enum: [SSLv3, TLSv1.0, TLSv1.1, TLSv1.2, TLSv1.3]
+    ssl_reuse:
+      type: string
+      enum: [enabled, disabled]
+    stick:
+      type: string
+      enum: [enabled, disabled]
+    socks4:
+      type: string
+      pattern: '^[^\s]+$'
+      x-dependency:
+        check-via-socks4:
+          required: true
+    tcp_ut:
+      type: integer
+    tfo:
+      type: string
+      enum: [enabled, disabled]
+    track:
+      type: string
+    tls_tickets:
+      type: string
+      enum: [enabled, disabled]
+      x-dependency:
+        ssl:
+          value: enabled
+    verify:
+      type: string
+      enum: [none, required]
+      x-dependency:
+        ssl:
+          value: enabled
+    verifyhost:
+      type: string
+      x-dependency:
+        ssl:
+          value: enabled
+        verify:
+          value: required
+    weight:
+      type: integer
+      x-nullable: true
+forwardfor:
+  type: object
+  x-display-name: ForwardFor
+  required:
+    - enabled
+  properties:
+    enabled:
+      type: string
+      enum: [enabled]
+    except:
+      type: string
+      pattern: '^[^\s]+$'
+    header:
+      type: string
+      pattern: '^[^\s]+$'
+    ifnone:
+      type: boolean
+balance:
+  type: object
+  required:
+    - algorithm
+  properties:
+    algorithm:
+      type: string
+      enum: [roundrobin, static-rr, leastconn, first, source, uri, url_param, hdr, random, rdp-cookie]
+    uri_whole:
+      type: boolean
+      x-display-name: Uri Whole
+      x-dependency:
+        algorithm:
+          value: uri
+    uri_len:
+      type: integer
+      x-display-name: Uri Len
+      pattern: '^[^\d+$]'
+      x-dependency:
+        algorithm:
+          value: uri
+    uri_depth:
+      type: integer
+      x-display-name: Uri Depth
+      pattern: '^[^\d+$]'
+      x-dependency:
+        algorithm:
+          value: uri
+    url_param:
+      type: string
+      x-display-name: Url Param
+      pattern: '^[^\s]+$'
+      x-dependency:
+        algorithm:
+          value: url_param
+          required: true
+    url_param_check_post:
+      type: integer
+      x-display-name: Url Param Check Post
+      x-dependency:
+        algorithm:
+          value: url_param
+    url_param_max_wait:
+      type: integer
+      x-display-name: Url Param Max Weight
+      pattern: '^[^\d+$]'
+      x-dependency:
+        algorithm:
+          value: url_param
+    hdr_name:
+      type: string
+      x-display-name: Header Name
+      x-dependency:
+        algorithm:
+          value: hdr
+          required: true
+    hdr_use_domain_only:
+      type: boolean
+      x-display-name: Header Use Domain Only
+      x-dependency:
+        algorithm:
+          value: hdr
+    random_draws:
+      type: integer
+      x-display-name: Random Draws
+      x-nullable: false
+      x-dependency:
+        algorithm:
+          value: random
+    rdp_cookie_name:
+      type: string
+      x-display-name: Rdp Cookie Name
+      pattern: '^[^\s]+$'
+      x-dependency:
+        algorithm:
+          value: rdp-cookie
+httpchk_params:
+  type: object
+  x-display-name: HTTP Check
+  properties:
+    method:
+      type: string
+      enum: [HEAD, PUT, POST, GET, TRACE, PATCH]
+    uri:
+      type: string
+      pattern: '^[^\s]+$'
+    version:
+      type: string
+      pattern: '^[^\s]+$'
+redispatch:
+  type: object
+  required:
+    - enabled
+  properties:
+    enabled:
+      type: string
+      enum: [enabled, disabled]
+    interval:
+      type: integer
+      x-nullable: false
+errorfile:
+  type: object
+  x-display-name: Error File
+  properties:
+    code:
+      type: integer
+      enum: [200, 400, 403, 405, 408, 425, 429, 500, 502, 503, 504]
+    file:
+      type: string
+cookie:
+  type: object
+  required:
+    - name
+  properties:
+    name:
+      type: string
+      pattern: '^[^\s]+$'
+    type:
+      type: string
+      enum: [rewrite, insert, prefix]
+    indirect:
+      type: boolean
+    nocache:
+      type: boolean
+    postonly:
+      type: boolean
+    preserve:
+      type: boolean
+    httponly:
+      type: boolean
+    secure:
+      type: boolean
+    domain:
+      type: array
+      x-go-name: Domains
+      items:
+        type: object
+        x-go-name: Domain
+        properties:
+          value:
+            type: string
+            pattern: '^[^\s]+$'
+    maxidle:
+      type: integer
+      pattern: '^[^\d+$]'
+    maxlife:
+      type: integer
+      pattern: '^[^\d+$]'
+    dynamic:
+      type: boolean
+http-check:
+  type: object
+  required:
+    - type
+  properties:
+    type:
+      type: string
+      enum: [disable-on-404, expect, send-state]
+    exclamation_mark:
+      type: boolean
+      x-display-name: Expect Exclamation Mark
+      x-dependency:
+        type:
+          value: expect
+    match:
+      type: string
+      enum: [status, rstatus, string, rstring]
+      x-display-name: Expect Match
+      pattern: '^[^\s]+$'
+      x-dependency:
+        type:
+          value: expect
+          required: true
+    pattern:
+      type: string
+      x-display-name: Expect Pattern
+      pattern: '^[^\s]+$'
+      x-dependency:
+        type:
+          value: expect
+          required: true
+stats_options:
+  type: object
+  properties:
+    stats_enable:
+      type: boolean
+      x-display-name: Stats Enable
+    stats_hide_version:
+      type: boolean
+      x-display-name: Stats Hide Version
+    stats_maxconn:
+      type: integer
+      minimum: 1
+    stats_refresh_delay:
+      type: integer
+      x-nullable: true
+    stats_show_desc:
+      type: string
+      x-nullable: true
+    stats_show_legends:
+      type: boolean
+      x-display-name: Stats Show Legends
+    stats_show_node_name:
+      type: string
+      pattern: '^[^\s]+$'
+      x-nullable: true
+    stats_uri_prefix:
+      type: string
+      pattern: '^[^\s]+$'
+smtpchk_params:
+  type: object
+  properties:
+    hello:
+      type: string
+    domain:
+      type: string
+mysql_check_params:
+  type: object
+  properties:
+    username:
+      type: string
+    client_version:
+      type: string
+      enum: [pre-41, post-41]
+pgsql_check_params:
+  type: object
+  properties:
+    username:
+      type: string

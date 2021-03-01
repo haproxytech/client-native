@@ -1,0 +1,37 @@
+---
+stages:
+  - lint
+compare build:
+  stage: lint
+  image:
+    # I just like pinning things, this version is latest, not special in any way
+    name: alpine:3.10.3
+    entrypoint: [""]
+  tags:
+    - go
+  script:
+    # try building it and compare if resulting file is equal to what is commited.
+    - cd build
+    - ./build -file ../haproxy-spec.yaml > haproxy_spec_to_compare.yaml
+    - diff -u haproxy_spec_to_compare.yaml haproxy_spec.yaml
+yamllint:
+  stage: lint
+  image:
+    name: cytopia/yamllint:latest
+    entrypoint: [""]
+  tags:
+    - go
+  script:
+    # to test locally, run:  docker run --rm -v $(pwd):/data cytopia/yamllint .
+    - /bin/sh -c "yamllint -f colored ."
+    - chmod +x ./scripts/lint-yaml.sh
+    - /bin/sh -c ./scripts/lint-yaml.sh
+lint-commit-msg:
+  stage: lint
+  image:
+    name: haproxytech/check-commit:latest
+    entrypoint: [""]
+  tags:
+    - go
+  script:
+    - go run /check.go

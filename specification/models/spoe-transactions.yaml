@@ -1,0 +1,18 @@
+---
+spoe_transaction:
+  title: SPOE configuration transaction
+  description: SPOE configuration transaction
+  type: object
+  properties:
+    id:
+      type: string
+      pattern: '^[^\s]+$'
+    status:
+      type: string
+      enum: [failed, in_progress, success]
+    _version:
+      type: integer
+  example:
+    id: 273e3385-2d0c-4fb1-aa27-93cbb31ff203
+    status: in_progress
+    _version: 2

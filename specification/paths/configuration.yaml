@@ -1,0 +1,3631 @@
+---
+global:
+  get:
+    summary: Return a global part of configuration
+    description: Returns global part of configuration.
+    operationId: getGlobal
+    parameters:
+      - $ref: "#/parameters/transaction_id"
+    tags:
+      - Global
+    responses:
+      '200':
+        description: Successful operation
+        headers:
+          Configuration-Version:
+            description: Configuration file version
+            type: integer
+            x-nullable: false
+        schema:
+          type: object
+          properties:
+            data:
+              $ref: "#/definitions/global"
+            _version:
+              type: integer
+      'default':
+        $ref: '#/responses/DefaultError'
+  put:
+    summary: Replace global
+    description: Replace global part of config
+    operationId: replaceGlobal
+    parameters:
+      - name: data
+        required: true
+        in: body
+        schema:
+          $ref: "#/definitions/global"
+      - $ref: "#/parameters/transaction_id"
+      - $ref: "#/parameters/version"
+      - $ref: "#/parameters/force_reload"
+    tags:
+      - Global
+    responses:
+      '202':
+        description: Configuration change accepted and reload requested
+        headers:
+          Reload-ID:
+            description: ID of the requested reload
+            type: string
+        schema:
+          $ref: "#/definitions/global"
+      '200':
+        description: Global replaced
+        schema:
+          $ref: "#/definitions/global"
+      '400':
+        $ref: '#/responses/BadRequest'
+      'default':
+        $ref: '#/responses/DefaultError'
+defaults:
+  get:
+    summary: Return defaults part of configuration
+    description: Returns defaults part of configuration.
+    operationId: getDefaults
+    parameters:
+      - $ref: "#/parameters/transaction_id"
+    tags:
+      - Defaults
+    responses:
+      '200':
+        description: Successful operation
+        headers:
+          Configuration-Version:
+            description: Configuration file version
+            type: integer
+            x-nullable: false
+        schema:
+          type: object
+          properties:
+            data:
+              $ref: "#/definitions/defaults"
+            _version:
+              type: integer
+      'default':
+        $ref: '#/responses/DefaultError'
+  put:
+    summary: Replace defaults
+    description: Replace defaults part of config
+    operationId: replaceDefaults
+    parameters:
+      - name: data
+        required: true
+        in: body
+        schema:
+          $ref: "#/definitions/defaults"
+      - $ref: "#/parameters/transaction_id"
+      - $ref: "#/parameters/version"
+      - $ref: "#/parameters/force_reload"
+    tags:
+      - Defaults
+    responses:
+      '202':
+        description: Configuration change accepted and reload requested
+        headers:
+          Reload-ID:
+            description: ID of the requested reload
+            type: string
+        schema:
+          $ref: "#/definitions/defaults"
+      '200':
+        description: Defaults replaced
+        schema:
+          $ref: "#/definitions/defaults"
+      '400':
+        $ref: '#/responses/BadRequest'
+      'default':
+        $ref: '#/responses/DefaultError'
+frontends:
+  get:
+    summary: Return an array of frontends
+    description: Returns an array of all configured frontends.
+    operationId: getFrontends
+    parameters:
+      - $ref: "#/parameters/transaction_id"
+    tags:
+      - Frontend
+    responses:
+      '200':
+        description: Successful operation
+        headers:
+          Configuration-Version:
+            description: Configuration file version
+            type: integer
+            x-nullable: false
+        schema:
+          type: object
+          required:
+            - data
+          properties:
+            data:
+              $ref: "#/definitions/frontends"
+            _version:
+              type: integer
+      'default':
+        $ref: '#/responses/DefaultError'
+  post:
+    summary: Add a frontend
+    description: Adds a new frontend to the configuration file.
+    operationId: createFrontend
+    parameters:
+      - name: data
+        required: true
+        in: body
+        schema:
+          $ref: "#/definitions/frontend"
+      - $ref: "#/parameters/transaction_id"
+      - $ref: "#/parameters/version"
+      - $ref: "#/parameters/force_reload"
+    tags:
+      - Frontend
+    responses:
+      '202':
+        description: Configuration change accepted and reload requested
+        headers:
+          Reload-ID:
+            description: ID of the requested reload
+            type: string
+        schema:
+          $ref: "#/definitions/frontend"
+      '201':
+        description: Frontend created
+        schema:
+          $ref: "#/definitions/frontend"
+      '409':
+        $ref: '#/responses/AlreadyExists'
+      '400':
+        $ref: '#/responses/BadRequest'
+      'default':
+        $ref: '#/responses/DefaultError'
+frontends_one:
+  get:
+    summary: Return a frontend
+    description: Returns one frontend configuration by it's name.
+    operationId: getFrontend
+    tags:
+      - Frontend
+    parameters:
+      - name: name
+        in: path
+        description: Frontend name
+        required: true
+        type: string
+      - $ref: "#/parameters/transaction_id"
+    responses:
+      '200':
+        description: Successful operation
+        headers:
+          Configuration-Version:
+            description: Configuration file version
+            type: integer
+            x-nullable: false
+        schema:
+          type: object
+          properties:
+            data:
+              $ref: "#/definitions/frontend"
+            _version:
+              type: integer
+      '404':
+        $ref: '#/responses/NotFound'
+      'default':
+        $ref: '#/responses/DefaultError'
+  put:
+    summary: Replace a frontend
+    description: Replaces a frontend configuration by it's name.
+    operationId: replaceFrontend
+    tags:
+      - Frontend
+    parameters:
+      - name: name
+        in: path
+        description: Frontend name
+        required: true
+        type: string
+      - name: data
+        required: true
+        in: body
+        schema:
+          $ref: "#/definitions/frontend"
+      - $ref: "#/parameters/transaction_id"
+      - $ref: "#/parameters/version"
+      - $ref: "#/parameters/force_reload"
+    responses:
+      '202':
+        description: Configuration change accepted and reload requested
+        headers:
+          Reload-ID:
+            description: ID of the requested reload
+            type: string
+        schema:
+          $ref: "#/definitions/frontend"
+      '200':
+        description: Frontend replaced
+        schema:
+          $ref: "#/definitions/frontend"
+      '400':
+        $ref: '#/responses/BadRequest'
+      '404':
+        $ref: '#/responses/NotFound'
+      'default':
+        $ref: '#/responses/DefaultError'
+  delete:
+    summary: Delete a frontend
+    description: Deletes a frontend from the configuration by it's name.
+    operationId: deleteFrontend
+    tags:
+      - Frontend
+    parameters:
+      - name: name
+        in: path
+        description: Frontend name
+        required: true
+        type: string
+      - $ref: "#/parameters/transaction_id"
+      - $ref: "#/parameters/version"
+      - $ref: "#/parameters/force_reload"
+    responses:
+      '202':
+        description: Configuration change accepted and reload requested
+        headers:
+          Reload-ID:
+            description: ID of the requested reload
+            type: string
+      '204':
+        description: Frontend deleted
+      '404':
+        $ref: '#/responses/NotFound'
+      'default':
+        $ref: '#/responses/DefaultError'
+backends:
+  get:
+    summary: Return an array of backends
+    description: Returns an array of all configured backends.
+    operationId: getBackends
+    parameters:
+      - $ref: "#/parameters/transaction_id"
+    tags:
+      - Backend
+    responses:
+      '200':
+        description: Successful operation
+        headers:
+          Configuration-Version:
+            description: Configuration file version
+            type: integer
+            x-nullable: false
+        schema:
+          type: object
+          required:
+            - data
+          properties:
+            data:
+              $ref: "#/definitions/backends"
+            _version:
+              type: integer
+      'default':
+        $ref: '#/responses/DefaultError'
+  post:
+    summary: Add a backend
+    description: Adds a new backend to the configuration file.
+    operationId: createBackend
+    parameters:
+      - name: data
+        required: true
+        in: body
+        schema:
+          $ref: "#/definitions/backend"
+      - $ref: "#/parameters/transaction_id"
+      - $ref: "#/parameters/version"
+      - $ref: "#/parameters/force_reload"
+    tags:
+      - Backend
+    responses:
+      '202':
+        description: Configuration change accepted and reload requested
+        headers:
+          Reload-ID:
+            description: ID of the requested reload
+            type: string
+        schema:
+          $ref: "#/definitions/backend"
+      '201':
+        description: Backend created
+        schema:
+          $ref: "#/definitions/backend"
+      '409':
+        $ref: '#/responses/AlreadyExists'
+      '400':
+        $ref: '#/responses/BadRequest'
+      'default':
+        $ref: '#/responses/DefaultError'
+backends_one:
+  get:
+    summary: Return a backend
+    description: Returns one backend configuration by it's name.
+    operationId: getBackend
+    tags:
+      - Backend
+    parameters:
+      - name: name
+        in: path
+        description: Backend name
+        required: true
+        type: string
+      - $ref: "#/parameters/transaction_id"
+    responses:
+      '200':
+        description: Successful operation
+        headers:
+          Configuration-Version:
+            description: Configuration file version
+            type: integer
+            x-nullable: false
+        schema:
+          type: object
+          properties:
+            data:
+              $ref: "#/definitions/backend"
+            _version:
+              type: integer
+      '404':
+        $ref: '#/responses/NotFound'
+      'default':
+        $ref: '#/responses/DefaultError'
+  put:
+    summary: Replace a backend
+    description: Replaces a backend configuration by it's name.
+    operationId: replaceBackend
+    tags:
+      - Backend
+    parameters:
+      - name: name
+        in: path
+        description: Backend name
+        required: true
+        type: string
+      - name: data
+        required: true
+        in: body
+        schema:
+          $ref: "#/definitions/backend"
+      - $ref: "#/parameters/transaction_id"
+      - $ref: "#/parameters/version"
+      - $ref: "#/parameters/force_reload"
+    responses:
+      '202':
+        description: Configuration change accepted and reload requested
+        headers:
+          Reload-ID:
+            description: ID of the requested reload
+            type: string
+        schema:
+          $ref: "#/definitions/backend"
+      '200':
+        description: Backend replaced
+        schema:
+          $ref: "#/definitions/backend"
+      '400':
+        $ref: '#/responses/BadRequest'
+      '404':
+        $ref: '#/responses/NotFound'
+      'default':
+        $ref: '#/responses/DefaultError'
+  delete:
+    summary: Delete a backend
+    description: Deletes a backend from the configuration by it's name.
+    operationId: deleteBackend
+    tags:
+      - Backend
+    parameters:
+      - name: name
+        in: path
+        description: Backend name
+        required: true
+        type: string
+      - $ref: "#/parameters/transaction_id"
+      - $ref: "#/parameters/version"
+      - $ref: "#/parameters/force_reload"
+    responses:
+      '202':
+        description: Configuration change accepted and reload requested
+        headers:
+          Reload-ID:
+            description: ID of the requested reload
+            type: string
+      '204':
+        description: Backend deleted
+      '404':
+        $ref: '#/responses/NotFound'
+      'default':
+        $ref: '#/responses/DefaultError'
+peer_section:
+  get:
+    summary: Return an array of peer_section
+    description: Returns an array of all configured peer_section.
+    operationId: getPeerSections
+    parameters:
+      - $ref: "#/parameters/transaction_id"
+    tags:
+      - Peer
+    responses:
+      '200':
+        description: Successful operation
+        headers:
+          Configuration-Version:
+            description: Configuration file version
+            type: integer
+            x-nullable: false
+        schema:
+          type: object
+          required:
+            - data
+          properties:
+            data:
+              $ref: "#/definitions/peer_sections"
+            _version:
+              type: integer
+      'default':
+        $ref: '#/responses/DefaultError'
+  post:
+    summary: Add a peer
+    description: Adds a new peer to the configuration file.
+    operationId: createPeer
+    parameters:
+      - name: data
+        required: true
+        in: body
+        schema:
+          $ref: "#/definitions/peer_section"
+      - $ref: "#/parameters/transaction_id"
+      - $ref: "#/parameters/version"
+      - $ref: "#/parameters/force_reload"
+    tags:
+      - Peer
+    responses:
+      '202':
+        description: Configuration change accepted and reload requested
+        headers:
+          Reload-ID:
+            description: ID of the requested reload
+            type: string
+        schema:
+          $ref: "#/definitions/peer_section"
+      '201':
+        description: Peer created
+        schema:
+          $ref: "#/definitions/peer_section"
+      '409':
+        $ref: '#/responses/AlreadyExists'
+      '400':
+        $ref: '#/responses/BadRequest'
+      'default':
+        $ref: '#/responses/DefaultError'
+peer_section_one:
+  get:
+    summary: Return a peer
+    description: Returns one peer configuration by it's name.
+    operationId: getPeerSection
+    tags:
+      - Peer
+    parameters:
+      - name: name
+        in: path
+        description: Peer name
+        required: true
+        type: string
+      - $ref: "#/parameters/transaction_id"
+    responses:
+      '200':
+        description: Successful operation
+        headers:
+          Configuration-Version:
+            description: Configuration file version
+            type: integer
+            x-nullable: false
+        schema:
+          type: object
+          properties:
+            data:
+              $ref: "#/definitions/peer_section"
+            _version:
+              type: integer
+      '404':
+        $ref: '#/responses/NotFound'
+      'default':
+        $ref: '#/responses/DefaultError'
+  delete:
+    summary: Delete a peer
+    description: Deletes a peer from the configuration by it's name.
+    operationId: deletePeer
+    tags:
+      - Peer
+    parameters:
+      - name: name
+        in: path
+        description: Peer name
+        required: true
+        type: string
+      - $ref: "#/parameters/transaction_id"
+      - $ref: "#/parameters/version"
+      - $ref: "#/parameters/force_reload"
+    responses:
+      '202':
+        description: Configuration change accepted and reload requested
+        headers:
+          Reload-ID:
+            description: ID of the requested reload
+            type: string
+      '204':
+        description: Peer deleted
+      '404':
+        $ref: '#/responses/NotFound'
+      'default':
+        $ref: '#/responses/DefaultError'
+peer_entries:
+  get:
+    summary: Return an array of peer_entries
+    description: Returns an array of all peer_entries that are configured in specified peer section.
+    operationId: getPeerEntries
+    tags:
+      - PeerEntry
+    parameters:
+      - name: peer_section
+        in: query
+        description: Parent peer section name
+        required: true
+        type: string
+      - $ref: "#/parameters/transaction_id"
+    responses:
+      '200':
+        description: Successful operation
+        headers:
+          Configuration-Version:
+            description: Configuration file version
+            type: integer
+            x-nullable: false
+        schema:
+          type: object
+          required:
+            - data
+          properties:
+            data:
+              $ref: "#/definitions/peer_entries"
+            _version:
+              type: integer
+      'default':
+        $ref: '#/responses/DefaultError'
+  post:
+    summary: Add a new peer_entry
+    description: Adds a new peer entry in the specified peer section in the configuration file.
+    operationId: createPeerEntry
+    tags:
+      - PeerEntry
+    parameters:
+      - name: peer_section
+        in: query
+        description: Parent peer section name
+        required: true
+        type: string
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/peer_entry'
+      - $ref: "#/parameters/transaction_id"
+      - $ref: "#/parameters/version"
+      - $ref: "#/parameters/force_reload"
+    responses:
+      '202':
+        description: Configuration change accepted and reload requested
+        headers:
+          Reload-ID:
+            description: ID of the requested reload
+            type: string
+        schema:
+          $ref: "#/definitions/peer_entry"
+      '201':
+        description: PeerEntry created
+        schema:
+          $ref: "#/definitions/peer_entry"
+      '409':
+        $ref: '#/responses/AlreadyExists'
+      '400':
+        $ref: '#/responses/BadRequest'
+      'default':
+        $ref: '#/responses/DefaultError'
+peer_entries_one:
+  get:
+    summary: Return one peer_entry
+    description: Returns one peer_entry configuration by it's name in the specified peer section.
+    operationId: getPeerEntry
+    tags:
+      - PeerEntry
+    parameters:
+      - name: name
+        in: path
+        description: PeerEntry name
+        required: true
+        type: string
+      - name: peer_section
+        in: query
+        description: Parent peers name
+        required: true
+        type: string
+      - $ref: "#/parameters/transaction_id"
+    responses:
+      '200':
+        description: Successful operation
+        headers:
+          Configuration-Version:
+            description: Configuration file version
+            type: integer
+            x-nullable: false
+        schema:
+          type: object
+          properties:
+            data:
+              $ref: "#/definitions/peer_entry"
+            _version:
+              type: integer
+      '404':
+        $ref: '#/responses/AlreadyExists'
+      'default':
+        $ref: '#/responses/DefaultError'
+  put:
+    summary: Replace a peer_entry
+    description: Replaces a peer entry configuration by it's name in the specified peer section.
+    operationId: replacePeerEntry
+    tags:
+      - PeerEntry
+    parameters:
+      - name: name
+        in: path
+        description: PeerEntry name
+        required: true
+        type: string
+      - name: peer_section
+        in: query
+        description: Parent peers name
+        required: true
+        type: string
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/peer_entry'
+      - $ref: "#/parameters/transaction_id"
+      - $ref: "#/parameters/version"
+      - $ref: "#/parameters/force_reload"
+    responses:
+      '202':
+        description: Configuration change accepted and reload requested
+        headers:
+          Reload-ID:
+            description: ID of the requested reload
+            type: string
+        schema:
+          $ref: "#/definitions/peer_entry"
+      '200':
+        description: PeerEntry replaced
+        schema:
+          $ref: "#/definitions/peer_entry"
+      '400':
+        $ref: '#/responses/BadRequest'
+      '404':
+        $ref: '#/responses/NotFound'
+      'default':
+        $ref: '#/responses/DefaultError'
+  delete:
+    summary: Delete a peer_entry
+    description: Deletes a peer entry configuration by it's name in the specified peer section.
+    operationId: deletePeerEntry
+    tags:
+      - PeerEntry
+    parameters:
+      - name: name
+        in: path
+        description: PeerEntry name
+        required: true
+        type: string
+      - name: peer_section
+        in: query
+        description: Parent peers name
+        required: true
+        type: string
+      - $ref: "#/parameters/transaction_id"
+      - $ref: "#/parameters/version"
+      - $ref: "#/parameters/force_reload"
+    responses:
+      '202':
+        description: Configuration change accepted and reload requested
+        headers:
+          Reload-ID:
+            description: ID of the requested reload
+            type: string
+      '204':
+        description: PeerEntry deleted
+      '404':
+        $ref: '#/responses/NotFound'
+      'default':
+        $ref: '#/responses/DefaultError'
+binds:
+  get:
+    summary: Return an array of binds
+    description: Returns an array of all binds that are configured in specified frontend.
+    operationId: getBinds
+    tags:
+      - Bind
+    parameters:
+      - name: frontend
+        in: query
+        description: Parent frontend name
+        required: true
+        type: string
+      - $ref: "#/parameters/transaction_id"
+    responses:
+      '200':
+        description: Successful operation
+        headers:
+          Configuration-Version:
+            description: Configuration file version
+            type: integer
+            x-nullable: false
+        schema:
+          type: object
+          required:
+            - data
+          properties:
+            data:
+              $ref: "#/definitions/binds"
+            _version:
+              type: integer
+      'default':
+        $ref: '#/responses/DefaultError'
+  post:
+    summary: Add a new bind
+    description: Adds a new bind in the specified frontend in the configuration file.
+    operationId: createBind
+    tags:
+      - Bind
+    parameters:
+      - name: frontend
+        in: query
+        description: Parent frontend name
+        required: true
+        type: string
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/bind'
+      - $ref: "#/parameters/transaction_id"
+      - $ref: "#/parameters/version"
+      - $ref: "#/parameters/force_reload"
+    responses:
+      '202':
+        description: Configuration change accepted and reload requested
+        headers:
+          Reload-ID:
+            description: ID of the requested reload
+            type: string
+        schema:
+          $ref: "#/definitions/bind"
+      '201':
+        description: Bind created
+        schema:
+          $ref: "#/definitions/bind"
+      '409':
+        $ref: '#/responses/AlreadyExists'
+      '400':
+        $ref: '#/responses/BadRequest'
+      'default':
+        $ref: '#/responses/DefaultError'
+binds_one:
+  get:
+    summary: Return one bind
+    description: Returns one bind configuration by it's name in the specified frontend.
+    operationId: getBind
+    tags:
+      - Bind
+    parameters:
+      - name: name
+        in: path
+        description: Bind name
+        required: true
+        type: string
+      - name: frontend
+        in: query
+        description: Parent frontend name
+        required: true
+        type: string
+      - $ref: "#/parameters/transaction_id"
+    responses:
+      '200':
+        description: Successful operation
+        headers:
+          Configuration-Version:
+            description: Configuration file version
+            type: integer
+            x-nullable: false
+        schema:
+          type: object
+          properties:
+            data:
+              $ref: "#/definitions/bind"
+            _version:
+              type: integer
+      '404':
+        $ref: '#/responses/AlreadyExists'
+      'default':
+        $ref: '#/responses/DefaultError'
+  put:
+    summary: Replace a bind
+    description: Replaces a bind configuration by it's name in the specified frontend.
+    operationId: replaceBind
+    tags:
+      - Bind
+    parameters:
+      - name: name
+        in: path
+        description: Bind name
+        required: true
+        type: string
+      - name: frontend
+        in: query
+        description: Parent frontend name
+        required: true
+        type: string
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/bind'
+      - $ref: "#/parameters/transaction_id"
+      - $ref: "#/parameters/version"
+      - $ref: "#/parameters/force_reload"
+    responses:
+      '202':
+        description: Configuration change accepted and reload requested
+        headers:
+          Reload-ID:
+            description: ID of the requested reload
+            type: string
+        schema:
+          $ref: "#/definitions/bind"
+      '200':
+        description: Bind replaced
+        schema:
+          $ref: "#/definitions/bind"
+      '400':
+        $ref: '#/responses/BadRequest'
+      '404':
+        $ref: '#/responses/NotFound'
+      'default':
+        $ref: '#/responses/DefaultError'
+  delete:
+    summary: Delete a bind
+    description: Deletes a bind configuration by it's name in the specified frontend.
+    operationId: deleteBind
+    tags:
+      - Bind
+    parameters:
+      - name: name
+        in: path
+        description: Bind name
+        required: true
+        type: string
+      - name: frontend
+        in: query
+        description: Parent frontend name
+        required: true
+        type: string
+      - $ref: "#/parameters/transaction_id"
+      - $ref: "#/parameters/version"
+      - $ref: "#/parameters/force_reload"
+    responses:
+      '202':
+        description: Configuration change accepted and reload requested
+        headers:
+          Reload-ID:
+            description: ID of the requested reload
+            type: string
+      '204':
+        description: Bind deleted
+      '404':
+        $ref: '#/responses/NotFound'
+      'default':
+        $ref: '#/responses/DefaultError'
+resolvers:
+  get:
+    summary: Return an array of resolvers
+    description: Returns an array of all configured resolvers.
+    operationId: getResolvers
+    parameters:
+      - $ref: "#/parameters/transaction_id"
+    tags:
+      - Resolver
+    responses:
+      '200':
+        description: Successful operation
+        headers:
+          Configuration-Version:
+            description: Configuration file version
+            type: integer
+            x-nullable: false
+        schema:
+          type: object
+          required:
+            - data
+          properties:
+            data:
+              $ref: "#/definitions/resolvers"
+            _version:
+              type: integer
+      'default':
+        $ref: '#/responses/DefaultError'
+  post:
+    summary: Add a resolver
+    description: Adds a new resolver section to the configuration file.
+    operationId: createResolver
+    parameters:
+      - name: data
+        required: true
+        in: body
+        schema:
+          $ref: "#/definitions/resolver"
+      - $ref: "#/parameters/transaction_id"
+      - $ref: "#/parameters/version"
+      - $ref: "#/parameters/force_reload"
+    tags:
+      - Resolver
+    responses:
+      '202':
+        description: Configuration change accepted and reload requested
+        headers:
+          Reload-ID:
+            description: ID of the requested reload
+            type: string
+        schema:
+          $ref: "#/definitions/resolver"
+      '201':
+        description: Resolver created
+        schema:
+          $ref: "#/definitions/resolver"
+      '409':
+        $ref: '#/responses/AlreadyExists'
+      '400':
+        $ref: '#/responses/BadRequest'
+      'default':
+        $ref: '#/responses/DefaultError'
+resolvers_one:
+  get:
+    summary: Return a resolver
+    description: Returns one resolver section configuration by it's name.
+    operationId: getResolver
+    tags:
+      - Resolver
+    parameters:
+      - name: name
+        in: path
+        description: Resolver name
+        required: true
+        type: string
+      - $ref: "#/parameters/transaction_id"
+    responses:
+      '200':
+        description: Successful operation
+        headers:
+          Configuration-Version:
+            description: Configuration file version
+            type: integer
+            x-nullable: false
+        schema:
+          type: object
+          properties:
+            data:
+              $ref: "#/definitions/resolver"
+            _version:
+              type: integer
+      '404':
+        $ref: '#/responses/NotFound'
+      'default':
+        $ref: '#/responses/DefaultError'
+  put:
+    summary: Replace a resolver
+    description: Replaces a resolver configuration by it's name.
+    operationId: replaceResolver
+    tags:
+      - Resolver
+    parameters:
+      - name: name
+        in: path
+        description: Resolver name
+        required: true
+        type: string
+      - name: data
+        required: true
+        in: body
+        schema:
+          $ref: "#/definitions/resolver"
+      - $ref: "#/parameters/transaction_id"
+      - $ref: "#/parameters/version"
+      - $ref: "#/parameters/force_reload"
+    responses:
+      '202':
+        description: Configuration change accepted and reload requested
+        headers:
+          Reload-ID:
+            description: ID of the requested reload
+            type: string
+        schema:
+          $ref: "#/definitions/resolver"
+      '200':
+        description: Resolver replaced
+        schema:
+          $ref: "#/definitions/resolver"
+      '400':
+        $ref: '#/responses/BadRequest'
+      '404':
+        $ref: '#/responses/NotFound'
+      'default':
+        $ref: '#/responses/DefaultError'
+  delete:
+    summary: Delete a resolver
+    description: Deletes a resolver from the configuration by it's name.
+    operationId: deleteResolver
+    tags:
+      - Resolver
+    parameters:
+      - name: name
+        in: path
+        description: Resolver name
+        required: true
+        type: string
+      - $ref: "#/parameters/transaction_id"
+      - $ref: "#/parameters/version"
+      - $ref: "#/parameters/force_reload"
+    responses:
+      '202':
+        description: Configuration change accepted and reload requested
+        headers:
+          Reload-ID:
+            description: ID of the requested reload
+            type: string
+      '204':
+        description: Resolver deleted
+      '404':
+        $ref: '#/responses/NotFound'
+      'default':
+        $ref: '#/responses/DefaultError'
+nameservers:
+  get:
+    summary: Return an array of nameservers
+    description: Returns an array of all configured nameservers.
+    operationId: getNameservers
+    parameters:
+      - name: resolver
+        in: query
+        description: Parent resolver name
+        required: true
+        type: string
+      - $ref: "#/parameters/transaction_id"
+    tags:
+      - Nameserver
+    responses:
+      '200':
+        description: Successful operation
+        headers:
+          Configuration-Version:
+            description: Configuration file version
+            type: integer
+            x-nullable: false
+        schema:
+          type: object
+          required:
+            - data
+          properties:
+            data:
+              $ref: "#/definitions/nameservers"
+            _version:
+              type: integer
+      'default':
+        $ref: '#/responses/DefaultError'
+  post:
+    summary: Add a nameserver
+    description: Adds a new nameserver to the resolvers section.
+    operationId: createNameserver
+    parameters:
+      - name: resolver
+        in: query
+        description: Parent resolver name
+        required: true
+        type: string
+      - name: data
+        required: true
+        in: body
+        schema:
+          $ref: "#/definitions/nameserver"
+      - $ref: "#/parameters/transaction_id"
+      - $ref: "#/parameters/version"
+      - $ref: "#/parameters/force_reload"
+    tags:
+      - Nameserver
+    responses:
+      '202':
+        description: Configuration change accepted and reload requested
+        headers:
+          Reload-ID:
+            description: ID of the requested reload
+            type: string
+        schema:
+          $ref: "#/definitions/nameserver"
+      '201':
+        description: Nameserver created
+        schema:
+          $ref: "#/definitions/nameserver"
+      '409':
+        $ref: '#/responses/AlreadyExists'
+      '400':
+        $ref: '#/responses/BadRequest'
+      'default':
+        $ref: '#/responses/DefaultError'
+nameservers_one:
+  get:
+    summary: Return a nameserver
+    description: Returns one nameserver configuration by it's name.
+    operationId: getNameserver
+    tags:
+      - Nameserver
+    parameters:
+      - name: name
+        in: path
+        description: Nameserver name
+        required: true
+        type: string
+      - name: resolver
+        in: query
+        description: Parent resolver name
+        required: true
+        type: string
+      - $ref: "#/parameters/transaction_id"
+    responses:
+      '200':
+        description: Successful operation
+        headers:
+          Configuration-Version:
+            description: Configuration file version
+            type: integer
+            x-nullable: false
+        schema:
+          type: object
+          properties:
+            data:
+              $ref: "#/definitions/nameserver"
+            _version:
+              type: integer
+      '404':
+        $ref: '#/responses/NotFound'
+      'default':
+        $ref: '#/responses/DefaultError'
+  put:
+    summary: Replace a nameserver
+    description: Replaces a nameserver configuration by it's name.
+    operationId: replaceNameserver
+    tags:
+      - Nameserver
+    parameters:
+      - name: name
+        in: path
+        description: Nameserver name
+        required: true
+        type: string
+      - name: resolver
+        in: query
+        description: Parent resolver name
+        required: true
+        type: string
+      - name: data
+        required: true
+        in: body
+        schema:
+          $ref: "#/definitions/nameserver"
+      - $ref: "#/parameters/transaction_id"
+      - $ref: "#/parameters/version"
+      - $ref: "#/parameters/force_reload"
+    responses:
+      '202':
+        description: Configuration change accepted and reload requested
+        headers:
+          Reload-ID:
+            description: ID of the requested reload
+            type: string
+        schema:
+          $ref: "#/definitions/nameserver"
+      '200':
+        description: Nameserver replaced
+        schema:
+          $ref: "#/definitions/nameserver"
+      '400':
+        $ref: '#/responses/BadRequest'
+      '404':
+        $ref: '#/responses/NotFound'
+      'default':
+        $ref: '#/responses/DefaultError'
+  delete:
+    summary: Delete a nameserver
+    description: Deletes a nameserver from the resolvers section by it's name.
+    operationId: deleteNameserver
+    tags:
+      - Nameserver
+    parameters:
+      - name: name
+        in: path
+        description: Nameserver name
+        required: true
+        type: string
+      - name: resolver
+        in: query
+        description: Parent resolver name
+        required: true
+        type: string
+      - $ref: "#/parameters/transaction_id"
+      - $ref: "#/parameters/version"
+      - $ref: "#/parameters/force_reload"
+    responses:
+      '202':
+        description: Configuration change accepted and reload requested
+        headers:
+          Reload-ID:
+            description: ID of the requested reload
+            type: string
+      '204':
+        description: Nameserver deleted
+      '404':
+        $ref: '#/responses/NotFound'
+      'default':
+        $ref: '#/responses/DefaultError'
+servers:
+  get:
+    summary: Return an array of servers
+    description: Returns an array of all servers that are configured in specified backend.
+    operationId: getServers
+    tags:
+      - Server
+    parameters:
+      - name: backend
+        in: query
+        description: Parent backend name
+        required: true
+        type: string
+      - $ref: "#/parameters/transaction_id"
+    responses:
+      '200':
+        description: Successful operation
+        headers:
+          Configuration-Version:
+            description: Configuration file version
+            type: integer
+            x-nullable: false
+        schema:
+          type: object
+          required:
+            - data
+          properties:
+            data:
+              $ref: "#/definitions/servers"
+            _version:
+              type: integer
+      'default':
+        $ref: '#/responses/DefaultError'
+  post:
+    summary: Add a new server
+    description: Adds a new server in the specified backend in the configuration file.
+    operationId: createServer
+    tags:
+      - Server
+    parameters:
+      - name: backend
+        in: query
+        description: Parent backend name
+        required: true
+        type: string
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/server'
+      - $ref: "#/parameters/transaction_id"
+      - $ref: "#/parameters/version"
+      - $ref: "#/parameters/force_reload"
+    responses:
+      '202':
+        description: Configuration change accepted and reload requested
+        headers:
+          Reload-ID:
+            description: ID of the requested reload
+            type: string
+        schema:
+          $ref: "#/definitions/server"
+      '201':
+        description: Server created
+        schema:
+          $ref: "#/definitions/server"
+      '409':
+        $ref: '#/responses/AlreadyExists'
+      '400':
+        $ref: '#/responses/BadRequest'
+      'default':
+        $ref: '#/responses/DefaultError'
+servers_one:
+  get:
+    summary: Return one server
+    description: Returns one server configuration by it's name in the specified backend.
+    operationId: getServer
+    tags:
+      - Server
+    parameters:
+      - name: name
+        in: path
+        description: Server name
+        required: true
+        type: string
+      - name: backend
+        in: query
+        description: Parent backend name
+        required: true
+        type: string
+      - $ref: "#/parameters/transaction_id"
+    responses:
+      '200':
+        description: Successful operation
+        headers:
+          Configuration-Version:
+            description: Configuration file version
+            type: integer
+            x-nullable: false
+        schema:
+          type: object
+          properties:
+            data:
+              $ref: "#/definitions/server"
+            _version:
+              type: integer
+      '404':
+        $ref: '#/responses/NotFound'
+      'default':
+        $ref: '#/responses/DefaultError'
+  put:
+    summary: Replace a server
+    description: Replaces a server configuration by it's name in the specified backend.
+    operationId: replaceServer
+    tags:
+      - Server
+    parameters:
+      - name: name
+        in: path
+        description: Server name
+        required: true
+        type: string
+      - name: backend
+        in: query
+        description: Parent backend name
+        required: true
+        type: string
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/server'
+      - $ref: "#/parameters/transaction_id"
+      - $ref: "#/parameters/version"
+      - $ref: "#/parameters/force_reload"
+    responses:
+      '202':
+        description: Configuration change accepted and reload requested
+        headers:
+          Reload-ID:
+            description: ID of the requested reload
+            type: string
+        schema:
+          $ref: "#/definitions/server"
+      '200':
+        description: Server replaced
+        schema:
+          $ref: "#/definitions/server"
+      '400':
+        $ref: '#/responses/BadRequest'
+      '404':
+        $ref: '#/responses/NotFound'
+      'default':
+        $ref: '#/responses/DefaultError'
+  delete:
+    summary: Delete a server
+    description: Deletes a server configuration by it's name in the specified backend.
+    operationId: deleteServer
+    tags:
+      - Server
+    parameters:
+      - name: name
+        in: path
+        description: Server name
+        required: true
+        type: string
+      - name: backend
+        in: query
+        description: Parent backend name
+        required: true
+        type: string
+      - $ref: "#/parameters/transaction_id"
+      - $ref: "#/parameters/version"
+      - $ref: "#/parameters/force_reload"
+    responses:
+      '202':
+        description: Configuration change accepted and reload requested
+        headers:
+          Reload-ID:
+            description: ID of the requested reload
+            type: string
+      '204':
+        description: Server deleted
+      '404':
+        $ref: '#/responses/NotFound'
+      'default':
+        $ref: '#/responses/DefaultError'
+tcp_response_rules:
+  get:
+    summary: Return an array of all TCP Response Rules
+    description: Returns all TCP Response Rules that are configured in specified backend.
+    operationId: getTCPResponseRules
+    tags:
+      - TCPResponseRule
+    parameters:
+      - name: backend
+        in: query
+        description: Parent backend name
+        required: true
+        type: string
+      - $ref: "#/parameters/transaction_id"
+    responses:
+      '200':
+        description: Successful operation
+        headers:
+          Configuration-Version:
+            description: Configuration file version
+            type: integer
+            x-nullable: false
+        schema:
+          type: object
+          required:
+            - data
+          properties:
+            data:
+              $ref: "#/definitions/tcp_response_rules"
+            _version:
+              type: integer
+      'default':
+        $ref: '#/responses/DefaultError'
+  post:
+    summary: Add a new TCP Response Rule
+    description: Adds a new TCP Response Rule of the specified type in the specified backend.
+    operationId: createTCPResponseRule
+    tags:
+      - TCPResponseRule
+    parameters:
+      - name: backend
+        in: query
+        description: Parent backend name
+        required: true
+        type: string
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/tcp_response_rule'
+      - $ref: "#/parameters/transaction_id"
+      - $ref: "#/parameters/version"
+      - $ref: "#/parameters/force_reload"
+    responses:
+      '202':
+        description: Configuration change accepted and reload requested
+        headers:
+          Reload-ID:
+            description: ID of the requested reload
+            type: string
+        schema:
+          $ref: "#/definitions/tcp_response_rule"
+      '201':
+        description: TCP Response Rule created
+        schema:
+          $ref: '#/definitions/tcp_response_rule'
+      '409':
+        $ref: '#/responses/AlreadyExists'
+      '400':
+        $ref: '#/responses/BadRequest'
+      'default':
+        $ref: '#/responses/DefaultError'
+tcp_response_rules_one:
+  get:
+    summary: Return one TCP Response Rule
+    description: Returns one TCP Response Rule configuration by it's index in the specified backend.
+    operationId: getTCPResponseRule
+    tags:
+      - TCPResponseRule
+    parameters:
+      - name: index
+        in: path
+        description: TCP Response Rule Index
+        required: true
+        type: integer
+      - name: backend
+        in: query
+        description: Parent backend name
+        required: true
+        type: string
+      - $ref: "#/parameters/transaction_id"
+    responses:
+      '200':
+        description: Successful operation
+        headers:
+          Configuration-Version:
+            description: Configuration file version
+            type: integer
+            x-nullable: false
+        schema:
+          type: object
+          properties:
+            data:
+              $ref: "#/definitions/tcp_response_rule"
+            _version:
+              type: integer
+      '404':
+        $ref: '#/responses/NotFound'
+      'default':
+        $ref: '#/responses/DefaultError'
+  put:
+    summary: Replace a TCP Response Rule
+    description: Replaces a TCP Response Rule configuration by it's Index in the specified backend.
+    operationId: replaceTCPResponseRule
+    tags:
+      - TCPResponseRule
+    parameters:
+      - name: index
+        in: path
+        description: TCP Response Rule Index
+        required: true
+        type: integer
+      - name: backend
+        in: query
+        description: Parent backend name
+        required: true
+        type: string
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/tcp_response_rule'
+      - $ref: "#/parameters/transaction_id"
+      - $ref: "#/parameters/version"
+      - $ref: "#/parameters/force_reload"
+    responses:
+      '202':
+        description: Configuration change accepted and reload requested
+        headers:
+          Reload-ID:
+            description: ID of the requested reload
+            type: string
+        schema:
+          $ref: "#/definitions/tcp_response_rule"
+      '200':
+        description: TCP Response Rule replaced
+        schema:
+          $ref: '#/definitions/tcp_response_rule'
+      '400':
+        $ref: '#/responses/BadRequest'
+      '404':
+        $ref: '#/responses/NotFound'
+      'default':
+        $ref: '#/responses/DefaultError'
+  delete:
+    summary: Delete a TCP Response Rule
+    description: Deletes a TCP Response Rule configuration by it's index from the specified backend.
+    operationId: deleteTCPResponseRule
+    tags:
+      - TCPResponseRule
+    parameters:
+      - name: index
+        in: path
+        description: TCP Response Rule Index
+        required: true
+        type: integer
+      - name: backend
+        in: query
+        description: Parent backend name
+        required: true
+        type: string
+      - $ref: "#/parameters/transaction_id"
+      - $ref: "#/parameters/version"
+      - $ref: "#/parameters/force_reload"
+    responses:
+      '202':
+        description: Configuration change accepted and reload requested
+        headers:
+          Reload-ID:
+            description: ID of the requested reload
+            type: string
+      '204':
+        description: TCP Response Rule deleted
+      '404':
+        $ref: '#/responses/NotFound'
+      'default':
+        $ref: '#/responses/DefaultError'
+tcp_request_rules:
+  get:
+    summary: Return an array of all TCP Request Rules
+    description: Returns all TCP Request Rules that are configured in specified parent and parent type.
+    operationId: getTCPRequestRules
+    tags:
+      - TCPRequestRule
+    parameters:
+      - name: parent_name
+        in: query
+        description: Parent name
+        required: true
+        type: string
+      - name: parent_type
+        in: query
+        description: Parent type
+        required: true
+        type: string
+        enum: [frontend, backend]
+      - $ref: "#/parameters/transaction_id"
+    responses:
+      '200':
+        description: Successful operation
+        headers:
+          Configuration-Version:
+            description: Configuration file version
+            type: integer
+            x-nullable: false
+        schema:
+          type: object
+          required:
+            - data
+          properties:
+            data:
+              $ref: "#/definitions/tcp_request_rules"
+            _version:
+              type: integer
+      'default':
+        $ref: '#/responses/DefaultError'
+  post:
+    summary: Add a new TCP Request Rule
+    description: Adds a new TCP Request Rule of the specified type in the specified parent.
+    operationId: createTCPRequestRule
+    tags:
+      - TCPRequestRule
+    parameters:
+      - name: parent_name
+        in: query
+        description: Parent name
+        required: true
+        type: string
+      - name: parent_type
+        in: query
+        description: Parent type
+        required: true
+        type: string
+        enum: [frontend, backend]
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/tcp_request_rule'
+      - $ref: "#/parameters/transaction_id"
+      - $ref: "#/parameters/version"
+      - $ref: "#/parameters/force_reload"
+    responses:
+      '202':
+        description: Configuration change accepted and reload requested
+        headers:
+          Reload-ID:
+            description: ID of the requested reload
+            type: string
+        schema:
+          $ref: "#/definitions/tcp_request_rule"
+      '201':
+        description: TCP Request Rule created
+        schema:
+          $ref: '#/definitions/tcp_request_rule'
+      '409':
+        $ref: '#/responses/AlreadyExists'
+      '400':
+        $ref: '#/responses/BadRequest'
+      'default':
+        $ref: '#/responses/DefaultError'
+tcp_request_rules_one:
+  get:
+    summary: Return one TCP Request Rule
+    description: Returns one TCP Request Rule configuration by it's index in the specified parent.
+    operationId: getTCPRequestRule
+    tags:
+      - TCPRequestRule
+    parameters:
+      - name: index
+        in: path
+        description: TCP Request Rule Index
+        required: true
+        type: integer
+      - name: parent_name
+        in: query
+        description: Parent name
+        required: true
+        type: string
+      - name: parent_type
+        in: query
+        description: Parent type
+        required: true
+        type: string
+        enum: [frontend, backend]
+      - $ref: "#/parameters/transaction_id"
+    responses:
+      '200':
+        description: Successful operation
+        headers:
+          Configuration-Version:
+            description: Configuration file version
+            type: integer
+            x-nullable: false
+        schema:
+          type: object
+          properties:
+            data:
+              $ref: "#/definitions/tcp_request_rule"
+            _version:
+              type: integer
+      '404':
+        $ref: '#/responses/NotFound'
+      'default':
+        $ref: '#/responses/DefaultError'
+  put:
+    summary: Replace a TCP Request Rule
+    description: Replaces a TCP Request Rule configuration by it's index in the specified parent.
+    operationId: replaceTCPRequestRule
+    tags:
+      - TCPRequestRule
+    parameters:
+      - name: index
+        in: path
+        description: TCP Request Rule Index
+        required: true
+        type: integer
+      - name: parent_name
+        in: query
+        description: Parent name
+        required: true
+        type: string
+      - name: parent_type
+        in: query
+        description: Parent type
+        required: true
+        type: string
+        enum: [frontend, backend]
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/tcp_request_rule'
+      - $ref: "#/parameters/transaction_id"
+      - $ref: "#/parameters/version"
+      - $ref: "#/parameters/force_reload"
+    responses:
+      '202':
+        description: Configuration change accepted and reload requested
+        headers:
+          Reload-ID:
+            description: ID of the requested reload
+            type: string
+        schema:
+          $ref: "#/definitions/tcp_request_rule"
+      '200':
+        description: TCP Request Rule replaced
+        schema:
+          $ref: '#/definitions/tcp_request_rule'
+      '400':
+        $ref: '#/responses/BadRequest'
+      '404':
+        $ref: '#/responses/NotFound'
+      'default':
+        $ref: '#/responses/DefaultError'
+  delete:
+    summary: Delete a TCP Request Rule
+    description: Deletes a TCP Request Rule configuration by it's index from the specified parent.
+    operationId: deleteTCPRequestRule
+    tags:
+      - TCPRequestRule
+    parameters:
+      - name: index
+        in: path
+        description: TCP Request Rule Index
+        required: true
+        type: integer
+      - name: parent_name
+        in: query
+        description: Parent name
+        required: true
+        type: string
+      - name: parent_type
+        in: query
+        description: Parent type
+        required: true
+        type: string
+        enum: [frontend, backend]
+      - $ref: "#/parameters/transaction_id"
+      - $ref: "#/parameters/version"
+      - $ref: "#/parameters/force_reload"
+    responses:
+      '202':
+        description: Configuration change accepted and reload requested
+        headers:
+          Reload-ID:
+            description: ID of the requested reload
+            type: string
+      '204':
+        description: TCP Request Rule deleted
+      '404':
+        $ref: '#/responses/NotFound'
+      'default':
+        $ref: '#/responses/DefaultError'
+http_request_rules:
+  get:
+    summary: Return an array of all HTTP Request Rules
+    description: Returns all HTTP Request Rules that are configured in specified parent.
+    operationId: getHTTPRequestRules
+    tags:
+      - HTTPRequestRule
+    parameters:
+      - name: parent_name
+        in: query
+        description: Parent name
+        required: true
+        type: string
+      - name: parent_type
+        in: query
+        description: Parent type
+        required: true
+        type: string
+        enum: [frontend, backend]
+      - $ref: "#/parameters/transaction_id"
+    responses:
+      '200':
+        description: Successful operation
+        headers:
+          Configuration-Version:
+            description: Configuration file version
+            type: integer
+            x-nullable: false
+        schema:
+          type: object
+          required:
+            - data
+          properties:
+            data:
+              $ref: "#/definitions/http_request_rules"
+            _version:
+              type: integer
+      'default':
+        $ref: '#/responses/DefaultError'
+  post:
+    summary: Add a new HTTP Request Rule
+    description: Adds a new HTTP Request Rule of the specified type in the specified parent.
+    operationId: createHTTPRequestRule
+    tags:
+      - HTTPRequestRule
+    parameters:
+      - name: parent_name
+        in: query
+        description: Parent name
+        required: true
+        type: string
+      - name: parent_type
+        in: query
+        description: Parent type
+        required: true
+        type: string
+        enum: [frontend, backend]
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/http_request_rule'
+      - $ref: "#/parameters/transaction_id"
+      - $ref: "#/parameters/version"
+      - $ref: "#/parameters/force_reload"
+    responses:
+      '202':
+        description: Configuration change accepted and reload requested
+        headers:
+          Reload-ID:
+            description: ID of the requested reload
+            type: string
+        schema:
+          $ref: "#/definitions/http_request_rule"
+      '201':
+        description: HTTP Request Rule created
+        schema:
+          $ref: '#/definitions/http_request_rule'
+      '409':
+        $ref: '#/responses/AlreadyExists'
+      '400':
+        $ref: '#/responses/BadRequest'
+      'default':
+        $ref: '#/responses/DefaultError'
+http_request_rules_one:
+  get:
+    summary: Return one HTTP Request Rule
+    description: Returns one HTTP Request Rule configuration by it's index in the specified parent.
+    operationId: getHTTPRequestRule
+    tags:
+      - HTTPRequestRule
+    parameters:
+      - name: index
+        in: path
+        description: HTTP Request Rule Index
+        required: true
+        type: integer
+      - name: parent_name
+        in: query
+        description: Parent name
+        required: true
+        type: string
+      - name: parent_type
+        in: query
+        description: Parent type
+        required: true
+        type: string
+        enum: [frontend, backend]
+      - $ref: "#/parameters/transaction_id"
+    responses:
+      '200':
+        description: Successful operation
+        headers:
+          Configuration-Version:
+            description: Configuration file version
+            type: integer
+            x-nullable: false
+        schema:
+          type: object
+          properties:
+            data:
+              $ref: "#/definitions/http_request_rule"
+            _version:
+              type: integer
+      '404':
+        $ref: '#/responses/NotFound'
+      'default':
+        $ref: '#/responses/DefaultError'
+  put:
+    summary: Replace a HTTP Request Rule
+    description: Replaces a HTTP Request Rule configuration by it's index in the specified parent.
+    operationId: replaceHTTPRequestRule
+    tags:
+      - HTTPRequestRule
+    parameters:
+      - name: index
+        in: path
+        description: HTTP Request Rule Index
+        required: true
+        type: integer
+      - name: parent_name
+        in: query
+        description: Parent name
+        required: true
+        type: string
+      - name: parent_type
+        in: query
+        description: Parent type
+        required: true
+        type: string
+        enum: [frontend, backend]
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/http_request_rule'
+      - $ref: "#/parameters/transaction_id"
+      - $ref: "#/parameters/version"
+      - $ref: "#/parameters/force_reload"
+    responses:
+      '202':
+        description: Configuration change accepted and reload requested
+        headers:
+          Reload-ID:
+            description: ID of the requested reload
+            type: string
+        schema:
+          $ref: "#/definitions/http_request_rule"
+      '200':
+        description: HTTP Request Rule replaced
+        schema:
+          $ref: '#/definitions/http_request_rule'
+      '400':
+        $ref: '#/responses/BadRequest'
+      '404':
+        $ref: '#/responses/NotFound'
+      'default':
+        $ref: '#/responses/DefaultError'
+  delete:
+    summary: Delete a HTTP Request Rule
+    description: Deletes a HTTP Request Rule configuration by it's index from the specified parent.
+    operationId: deleteHTTPRequestRule
+    tags:
+      - HTTPRequestRule
+    parameters:
+      - name: index
+        in: path
+        description: HTTP Request Rule Index
+        required: true
+        type: integer
+      - name: parent_name
+        in: query
+        description: Parent name
+        required: true
+        type: string
+      - name: parent_type
+        in: query
+        description: Parent type
+        required: true
+        type: string
+        enum: [frontend, backend]
+      - $ref: "#/parameters/transaction_id"
+      - $ref: "#/parameters/version"
+      - $ref: "#/parameters/force_reload"
+    responses:
+      '202':
+        description: Configuration change accepted and reload requested
+        headers:
+          Reload-ID:
+            description: ID of the requested reload
+            type: string
+      '204':
+        description: HTTP Request Rule deleted
+      '404':
+        $ref: '#/responses/NotFound'
+      'default':
+        $ref: '#/responses/DefaultError'
+http_response_rules:
+  get:
+    summary: Return an array of all HTTP Response Rules
+    description: Returns all HTTP Response Rules that are configured in specified parent.
+    operationId: getHTTPResponseRules
+    tags:
+      - HTTPResponseRule
+    parameters:
+      - name: parent_name
+        in: query
+        description: Parent name
+        required: true
+        type: string
+      - name: parent_type
+        in: query
+        description: Parent type
+        required: true
+        type: string
+        enum: [frontend, backend]
+      - $ref: "#/parameters/transaction_id"
+    responses:
+      '200':
+        description: Successful operation
+        headers:
+          Configuration-Version:
+            description: Configuration file version
+            type: integer
+            x-nullable: false
+        schema:
+          type: object
+          required:
+            - data
+          properties:
+            data:
+              $ref: "#/definitions/http_response_rules"
+            _version:
+              type: integer
+      'default':
+        $ref: '#/responses/DefaultError'
+  post:
+    summary: Add a new HTTP Response Rule
+    description: Adds a new HTTP Response Rule of the specified type in the specified parent.
+    operationId: createHTTPResponseRule
+    tags:
+      - HTTPResponseRule
+    parameters:
+      - name: parent_name
+        in: query
+        description: Parent name
+        required: true
+        type: string
+      - name: parent_type
+        in: query
+        description: Parent type
+        required: true
+        type: string
+        enum: [frontend, backend]
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/http_response_rule'
+      - $ref: "#/parameters/transaction_id"
+      - $ref: "#/parameters/version"
+      - $ref: "#/parameters/force_reload"
+    responses:
+      '202':
+        description: Configuration change accepted and reload requested
+        headers:
+          Reload-ID:
+            description: ID of the requested reload
+            type: string
+        schema:
+          $ref: "#/definitions/http_response_rule"
+      '201':
+        description: HTTP Response Rule created
+        schema:
+          $ref: '#/definitions/http_response_rule'
+      '409':
+        $ref: '#/responses/AlreadyExists'
+      '400':
+        $ref: '#/responses/BadRequest'
+      'default':
+        $ref: '#/responses/DefaultError'
+http_response_rules_one:
+  get:
+    summary: Return one HTTP Response Rule
+    description: Returns one HTTP Response Rule configuration by it's index in the specified parent.
+    operationId: getHTTPResponseRule
+    tags:
+      - HTTPResponseRule
+    parameters:
+      - name: index
+        in: path
+        description: HTTP Response Rule Index
+        required: true
+        type: integer
+      - name: parent_name
+        in: query
+        description: Parent name
+        required: true
+        type: string
+      - name: parent_type
+        in: query
+        description: Parent type
+        required: true
+        type: string
+        enum: [frontend, backend]
+      - $ref: "#/parameters/transaction_id"
+    responses:
+      '200':
+        description: Successful operation
+        headers:
+          Configuration-Version:
+            description: Configuration file version
+            type: integer
+            x-nullable: false
+        schema:
+          type: object
+          properties:
+            data:
+              $ref: "#/definitions/http_response_rule"
+            _version:
+              type: integer
+      '404':
+        $ref: '#/responses/NotFound'
+      'default':
+        $ref: '#/responses/DefaultError'
+  put:
+    summary: Replace a HTTP Response Rule
+    description: Replaces a HTTP Response Rule configuration by it's index in the specified parent.
+    operationId: replaceHTTPResponseRule
+    tags:
+      - HTTPResponseRule
+    parameters:
+      - name: index
+        in: path
+        description: HTTP Response Rule Index
+        required: true
+        type: integer
+      - name: parent_name
+        in: query
+        description: Parent name
+        required: true
+        type: string
+      - name: parent_type
+        in: query
+        description: Parent type
+        required: true
+        type: string
+        enum: [frontend, backend]
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/http_response_rule'
+      - $ref: "#/parameters/transaction_id"
+      - $ref: "#/parameters/version"
+      - $ref: "#/parameters/force_reload"
+    responses:
+      '202':
+        description: Configuration change accepted and reload requested
+        headers:
+          Reload-ID:
+            description: ID of the requested reload
+            type: string
+        schema:
+          $ref: "#/definitions/http_response_rule"
+      '200':
+        description: HTTP Response Rule replaced
+        schema:
+          $ref: '#/definitions/http_response_rule'
+      '400':
+        $ref: '#/responses/BadRequest'
+      '404':
+        $ref: '#/responses/NotFound'
+      'default':
+        $ref: '#/responses/DefaultError'
+  delete:
+    summary: Delete a HTTP Response Rule
+    description: Deletes a HTTP Response Rule configuration by it's index from the specified parent.
+    operationId: deleteHTTPResponseRule
+    tags:
+      - HTTPResponseRule
+    parameters:
+      - name: index
+        in: path
+        description: HTTP Response Rule Index
+        required: true
+        type: integer
+      - name: parent_name
+        in: query
+        description: Parent name
+        required: true
+        type: string
+      - name: parent_type
+        in: query
+        description: Parent type
+        required: true
+        type: string
+        enum: [frontend, backend]
+      - $ref: "#/parameters/transaction_id"
+      - $ref: "#/parameters/version"
+      - $ref: "#/parameters/force_reload"
+    responses:
+      '202':
+        description: Configuration change accepted and reload requested
+        headers:
+          Reload-ID:
+            description: ID of the requested reload
+            type: string
+      '204':
+        description: HTTP Response Rule deleted
+      '404':
+        $ref: '#/responses/NotFound'
+      'default':
+        $ref: '#/responses/DefaultError'
+backend_switching_rules:
+  get:
+    summary: Return an array of all Backend Switching Rules
+    description: Returns all Backend Switching Rules that are configured in specified frontend.
+    operationId: getBackendSwitchingRules
+    tags:
+      - BackendSwitchingRule
+    parameters:
+      - name: frontend
+        in: query
+        description: Frontend name
+        required: true
+        type: string
+      - $ref: "#/parameters/transaction_id"
+    responses:
+      '200':
+        description: Successful operation
+        headers:
+          Configuration-Version:
+            description: Configuration file version
+            type: integer
+            x-nullable: false
+        schema:
+          type: object
+          required:
+            - data
+          properties:
+            data:
+              $ref: "#/definitions/backend_switching_rules"
+            _version:
+              type: integer
+      'default':
+        $ref: '#/responses/DefaultError'
+  post:
+    summary: Add a new Backend Switching Rule
+    description: Adds a new Backend Switching Rule of the specified type in the specified frontend.
+    operationId: createBackendSwitchingRule
+    tags:
+      - BackendSwitchingRule
+    parameters:
+      - name: frontend
+        in: query
+        description: Frontend name
+        required: true
+        type: string
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/backend_switching_rule'
+      - $ref: "#/parameters/transaction_id"
+      - $ref: "#/parameters/version"
+      - $ref: "#/parameters/force_reload"
+    responses:
+      '202':
+        description: Configuration change accepted and reload requested
+        headers:
+          Reload-ID:
+            description: ID of the requested reload
+            type: string
+        schema:
+          $ref: "#/definitions/backend_switching_rule"
+      '201':
+        description: Backend Switching Rule created
+        schema:
+          $ref: '#/definitions/backend_switching_rule'
+      '409':
+        $ref: '#/responses/AlreadyExists'
+      '400':
+        $ref: '#/responses/BadRequest'
+      'default':
+        $ref: '#/responses/DefaultError'
+backend_switching_rules_one:
+  get:
+    summary: Return one Backend Switching Rule
+    description: Returns one Backend Switching Rule configuration by it's index in the specified frontend.
+    operationId: getBackendSwitchingRule
+    tags:
+      - BackendSwitchingRule
+    parameters:
+      - name: index
+        in: path
+        description: Switching Rule Index
+        required: true
+        type: integer
+      - name: frontend
+        in: query
+        description: Frontend name
+        required: true
+        type: string
+      - $ref: "#/parameters/transaction_id"
+    responses:
+      '200':
+        description: Successful operation
+        headers:
+          Configuration-Version:
+            description: Configuration file version
+            type: integer
+            x-nullable: false
+        schema:
+          type: object
+          properties:
+            data:
+              $ref: "#/definitions/backend_switching_rule"
+            _version:
+              type: integer
+      '404':
+        $ref: '#/responses/NotFound'
+      'default':
+        $ref: '#/responses/DefaultError'
+  put:
+    summary: Replace a Backend Switching Rule
+    description: Replaces a Backend Switching Rule configuration by it's index in the specified frontend.
+    operationId: replaceBackendSwitchingRule
+    tags:
+      - BackendSwitchingRule
+    parameters:
+      - name: index
+        in: path
+        description: Switching Rule Index
+        required: true
+        type: integer
+      - name: frontend
+        in: query
+        description: Frontend name
+        required: true
+        type: string
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/backend_switching_rule'
+      - $ref: "#/parameters/transaction_id"
+      - $ref: "#/parameters/version"
+      - $ref: "#/parameters/force_reload"
+    responses:
+      '202':
+        description: Configuration change accepted and reload requested
+        headers:
+          Reload-ID:
+            description: ID of the requested reload
+            type: string
+        schema:
+          $ref: "#/definitions/backend_switching_rule"
+      '200':
+        description: Backend Switching Rule replaced
+        schema:
+          $ref: '#/definitions/backend_switching_rule'
+      '400':
+        $ref: '#/responses/BadRequest'
+      '404':
+        $ref: '#/responses/NotFound'
+      'default':
+        $ref: '#/responses/DefaultError'
+  delete:
+    summary: Delete a Backend Switching Rule
+    description: Deletes a Backend Switching Rule configuration by it's index from the specified frontend.
+    operationId: deleteBackendSwitchingRule
+    tags:
+      - BackendSwitchingRule
+    parameters:
+      - name: index
+        in: path
+        description: Switching Rule Index
+        required: true
+        type: integer
+      - name: frontend
+        in: query
+        description: Frontend name
+        required: true
+        type: string
+      - $ref: "#/parameters/transaction_id"
+      - $ref: "#/parameters/version"
+      - $ref: "#/parameters/force_reload"
+    responses:
+      '202':
+        description: Configuration change accepted and reload requested
+        headers:
+          Reload-ID:
+            description: ID of the requested reload
+            type: string
+      '204':
+        description: Backend Switching Rule deleted
+      '404':
+        $ref: '#/responses/NotFound'
+      'default':
+        $ref: '#/responses/DefaultError'
+server_switching_rules:
+  get:
+    summary: Return an array of all Server Switching Rules
+    description: Returns all Backend Switching Rules that are configured in specified backend.
+    operationId: getServerSwitchingRules
+    tags:
+      - ServerSwitchingRule
+    parameters:
+      - name: backend
+        in: query
+        description: Backend name
+        required: true
+        type: string
+      - $ref: "#/parameters/transaction_id"
+    responses:
+      '200':
+        description: Successful operation
+        headers:
+          Configuration-Version:
+            description: Configuration file version
+            type: integer
+            x-nullable: false
+        schema:
+          type: object
+          required:
+            - data
+          properties:
+            data:
+              $ref: "#/definitions/server_switching_rules"
+            _version:
+              type: integer
+      'default':
+        $ref: '#/responses/DefaultError'
+  post:
+    summary: Add a new Server Switching Rule
+    description: Adds a new Server Switching Rule of the specified type in the specified backend.
+    operationId: createServerSwitchingRule
+    tags:
+      - ServerSwitchingRule
+    parameters:
+      - name: backend
+        in: query
+        description: Backend name
+        required: true
+        type: string
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/server_switching_rule'
+      - $ref: "#/parameters/transaction_id"
+      - $ref: "#/parameters/version"
+      - $ref: "#/parameters/force_reload"
+    responses:
+      '202':
+        description: Configuration change accepted and reload requested
+        headers:
+          Reload-ID:
+            description: ID of the requested reload
+            type: string
+        schema:
+          $ref: "#/definitions/server_switching_rule"
+      '201':
+        description: Server Switching Rule created
+        schema:
+          $ref: '#/definitions/server_switching_rule'
+      '409':
+        $ref: '#/responses/AlreadyExists'
+      '400':
+        $ref: '#/responses/BadRequest'
+      'default':
+        $ref: '#/responses/DefaultError'
+server_switching_rules_one:
+  get:
+    summary: Return one Server Switching Rule
+    description: Returns one Server Switching Rule configuration by it's index in the specified backend.
+    operationId: getServerSwitchingRule
+    tags:
+      - ServerSwitchingRule
+    parameters:
+      - name: index
+        in: path
+        description: Switching Rule Index
+        required: true
+        type: integer
+      - name: backend
+        in: query
+        description: Backend name
+        required: true
+        type: string
+      - $ref: "#/parameters/transaction_id"
+    responses:
+      '200':
+        description: Successful operation
+        headers:
+          Configuration-Version:
+            description: Configuration file version
+            type: integer
+            x-nullable: false
+        schema:
+          type: object
+          properties:
+            data:
+              $ref: "#/definitions/server_switching_rule"
+            _version:
+              type: integer
+      '404':
+        $ref: '#/responses/NotFound'
+      'default':
+        $ref: '#/responses/DefaultError'
+  put:
+    summary: Replace a Server Switching Rule
+    description: Replaces a Server Switching Rule configuration by it's index in the specified backend.
+    operationId: replaceServerSwitchingRule
+    tags:
+      - ServerSwitchingRule
+    parameters:
+      - name: index
+        in: path
+        description: Switching Rule Index
+        required: true
+        type: integer
+      - name: backend
+        in: query
+        description: Backend name
+        required: true
+        type: string
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/server_switching_rule'
+      - $ref: "#/parameters/transaction_id"
+      - $ref: "#/parameters/version"
+      - $ref: "#/parameters/force_reload"
+    responses:
+      '202':
+        description: Configuration change accepted and reload requested
+        headers:
+          Reload-ID:
+            description: ID of the requested reload
+            type: string
+        schema:
+          $ref: "#/definitions/server_switching_rule"
+      '200':
+        description: Server Switching Rule replaced
+        schema:
+          $ref: '#/definitions/server_switching_rule'
+      '400':
+        $ref: '#/responses/BadRequest'
+      '404':
+        $ref: '#/responses/NotFound'
+      'default':
+        $ref: '#/responses/DefaultError'
+  delete:
+    summary: Delete a Server Switching Rule
+    description: Deletes a Server Switching Rule configuration by it's index from the specified backend.
+    operationId: deleteServerSwitchingRule
+    tags:
+      - ServerSwitchingRule
+    parameters:
+      - name: index
+        in: path
+        description: Switching Rule Index
+        required: true
+        type: integer
+      - name: backend
+        in: query
+        description: Backend name
+        required: true
+        type: string
+      - $ref: "#/parameters/transaction_id"
+      - $ref: "#/parameters/version"
+      - $ref: "#/parameters/force_reload"
+    responses:
+      '202':
+        description: Configuration change accepted and reload requested
+        headers:
+          Reload-ID:
+            description: ID of the requested reload
+            type: string
+      '204':
+        description: Server Switching Rule deleted
+      '404':
+        $ref: '#/responses/NotFound'
+      'default':
+        $ref: '#/responses/DefaultError'
+configuration:
+  get:
+    summary: Return HAProxy configuration
+    description: Returns HAProxy configuration file in plain text
+    operationId: getHAProxyConfiguration
+    parameters:
+      - $ref: "#/parameters/transaction_id"
+      - $ref: "#/parameters/version"
+    produces:
+      - application/json
+    tags:
+      - Configuration
+    responses:
+      '200':
+        description: Operation successful
+        headers:
+          Configuration-Version:
+            description: Configuration file version
+            type: integer
+            x-nullable: false
+        schema:
+          type: object
+          required:
+            - data
+          properties:
+            data:
+              type: string
+            _version:
+              type: integer
+      'default':
+        $ref: '#/responses/DefaultError'
+  post:
+    summary: Push new haproxy configuration
+    description: Push a new haproxy configuration file in plain text
+    operationId: postHAProxyConfiguration
+    produces:
+      - application/json
+    consumes:
+      - text/plain
+    parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          type: string
+      - name: skip_version
+        in: query
+        description: If set, no version check will be done and the pushed config will be enforced
+        type: boolean
+        required: false
+        default: false
+      - name: skip_reload
+        in: query
+        description: If set, no reload will be initiated and runtime actions from X-Runtime-Actions will be applied
+        type: boolean
+        required: false
+        default: false
+      - name: only_validate
+        in: query
+        description: If set, only validates configuration, without applying it
+        type: boolean
+        required: false
+        default: false
+      - name: X-Runtime-Actions
+        in: header
+        description: List of Runtime API commands with parameters separated by ';'
+        type: string
+        required: false
+      - $ref: "#/parameters/version"
+      - $ref: "#/parameters/force_reload"
+    tags:
+      - Configuration
+    responses:
+      '202':
+        description: Configuration change accepted and reload requested
+        headers:
+          Reload-ID:
+            description: ID of the requested reload
+            type: string
+        schema:
+          type: string
+      '201':
+        description: New HAProxy configuration pushed
+        schema:
+          type: string
+      '400':
+        $ref: '#/responses/BadRequest'
+      'default':
+        $ref: '#/responses/DefaultError'
+filters:
+  get:
+    summary: Return an array of all Filters
+    description: Returns all Filters that are configured in specified parent.
+    operationId: getFilters
+    tags:
+      - Filter
+    parameters:
+      - name: parent_name
+        in: query
+        description: Parent name
+        required: true
+        type: string
+      - name: parent_type
+        in: query
+        description: Parent type
+        required: true
+        type: string
+        enum: [frontend, backend]
+      - $ref: "#/parameters/transaction_id"
+    responses:
+      '200':
+        description: Successful operation
+        headers:
+          Configuration-Version:
+            description: Configuration file version
+            type: integer
+            x-nullable: false
+        schema:
+          type: object
+          required:
+            - data
+          properties:
+            data:
+              $ref: "#/definitions/filters"
+            _version:
+              type: integer
+      'default':
+        $ref: '#/responses/DefaultError'
+  post:
+    summary: Add a new Filter
+    description: Adds a new Filter of the specified type in the specified parent.
+    operationId: createFilter
+    tags:
+      - Filter
+    parameters:
+      - name: parent_name
+        in: query
+        description: Parent name
+        required: true
+        type: string
+      - name: parent_type
+        in: query
+        description: Parent type
+        required: true
+        type: string
+        enum: [frontend, backend]
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/filter'
+      - $ref: "#/parameters/transaction_id"
+      - $ref: "#/parameters/version"
+      - $ref: "#/parameters/force_reload"
+    responses:
+      '202':
+        description: Configuration change accepted and reload requested
+        headers:
+          Reload-ID:
+            description: ID of the requested reload
+            type: string
+        schema:
+          $ref: "#/definitions/filter"
+      '201':
+        description: Filter created
+        schema:
+          $ref: '#/definitions/filter'
+      '409':
+        $ref: '#/responses/AlreadyExists'
+      '400':
+        $ref: '#/responses/BadRequest'
+      'default':
+        $ref: '#/responses/DefaultError'
+filters_one:
+  get:
+    summary: Return one Filter
+    description: Returns one Filter configuration by it's index in the specified parent.
+    operationId: getFilter
+    tags:
+      - Filter
+    parameters:
+      - name: index
+        in: path
+        description: Filter Index
+        required: true
+        type: integer
+      - name: parent_name
+        in: query
+        description: Parent name
+        required: true
+        type: string
+      - name: parent_type
+        in: query
+        description: Parent type
+        required: true
+        type: string
+        enum: [frontend, backend]
+      - $ref: "#/parameters/transaction_id"
+    responses:
+      '200':
+        description: Successful operation
+        headers:
+          Configuration-Version:
+            description: Configuration file version
+            type: integer
+            x-nullable: false
+        schema:
+          type: object
+          properties:
+            data:
+              $ref: "#/definitions/filter"
+            _version:
+              type: integer
+      '404':
+        $ref: '#/responses/NotFound'
+      'default':
+        $ref: '#/responses/DefaultError'
+  put:
+    summary: Replace a Filter
+    description: Replaces a Filter configuration by it's index in the specified parent.
+    operationId: replaceFilter
+    tags:
+      - Filter
+    parameters:
+      - name: index
+        in: path
+        description: Filter Index
+        required: true
+        type: integer
+      - name: parent_name
+        in: query
+        description: Parent name
+        required: true
+        type: string
+      - name: parent_type
+        in: query
+        description: Parent type
+        required: true
+        type: string
+        enum: [frontend, backend]
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/filter'
+      - $ref: "#/parameters/transaction_id"
+      - $ref: "#/parameters/version"
+      - $ref: "#/parameters/force_reload"
+    responses:
+      '202':
+        description: Configuration change accepted and reload requested
+        headers:
+          Reload-ID:
+            description: ID of the requested reload
+            type: string
+        schema:
+          $ref: "#/definitions/filter"
+      '200':
+        description: Filter replaced
+        schema:
+          $ref: '#/definitions/filter'
+      '400':
+        $ref: '#/responses/BadRequest'
+      '404':
+        $ref: '#/responses/NotFound'
+      'default':
+        $ref: '#/responses/DefaultError'
+  delete:
+    summary: Delete a Filter
+    description: Deletes a Filter configuration by it's index from the specified parent.
+    operationId: deleteFilter
+    tags:
+      - Filter
+    parameters:
+      - name: index
+        in: path
+        description: Filter Index
+        required: true
+        type: integer
+      - name: parent_name
+        in: query
+        description: Parent name
+        required: true
+        type: string
+      - name: parent_type
+        in: query
+        description: Parent type
+        required: true
+        type: string
+        enum: [frontend, backend]
+      - $ref: "#/parameters/transaction_id"
+      - $ref: "#/parameters/version"
+      - $ref: "#/parameters/force_reload"
+    responses:
+      '202':
+        description: Configuration change accepted and reload requested
+        headers:
+          Reload-ID:
+            description: ID of the requested reload
+            type: string
+      '204':
+        description: Filter deleted
+      '404':
+        $ref: '#/responses/NotFound'
+      'default':
+        $ref: '#/responses/DefaultError'
+stick_rules:
+  get:
+    summary: Return an array of all Stick Rules
+    description: Returns all Stick Rules that are configured in specified backend.
+    operationId: getStickRules
+    tags:
+      - StickRule
+    parameters:
+      - name: backend
+        in: query
+        description: Backend name
+        required: true
+        type: string
+      - $ref: "#/parameters/transaction_id"
+    responses:
+      '200':
+        description: Successful operation
+        headers:
+          Configuration-Version:
+            description: Configuration file version
+            type: integer
+            x-nullable: false
+        schema:
+          type: object
+          required:
+            - data
+          properties:
+            data:
+              $ref: "#/definitions/stick_rules"
+            _version:
+              type: integer
+      'default':
+        $ref: '#/responses/DefaultError'
+  post:
+    summary: Add a new Stick Rule
+    description: Adds a new Stick Rule of the specified type in the specified backend.
+    operationId: createStickRule
+    tags:
+      - StickRule
+    parameters:
+      - name: backend
+        in: query
+        description: Backend name
+        required: true
+        type: string
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/stick_rule'
+      - $ref: "#/parameters/transaction_id"
+      - $ref: "#/parameters/version"
+      - $ref: "#/parameters/force_reload"
+    responses:
+      '202':
+        description: Configuration change accepted and reload requested
+        headers:
+          Reload-ID:
+            description: ID of the requested reload
+            type: string
+        schema:
+          $ref: "#/definitions/stick_rule"
+      '201':
+        description: Stick Rule created
+        schema:
+          $ref: '#/definitions/stick_rule'
+      '409':
+        $ref: '#/responses/AlreadyExists'
+      '400':
+        $ref: '#/responses/BadRequest'
+      'default':
+        $ref: '#/responses/DefaultError'
+stick_rules_one:
+  get:
+    summary: Return one Stick Rule
+    description: Returns one Stick Rule configuration by it's index in the specified backend.
+    operationId: getStickRule
+    tags:
+      - StickRule
+    parameters:
+      - name: index
+        in: path
+        description: Stick Rule Index
+        required: true
+        type: integer
+      - name: backend
+        in: query
+        description: Backend name
+        required: true
+        type: string
+      - $ref: "#/parameters/transaction_id"
+    responses:
+      '200':
+        description: Successful operation
+        headers:
+          Configuration-Version:
+            description: Configuration file version
+            type: integer
+            x-nullable: false
+        schema:
+          type: object
+          properties:
+            data:
+              $ref: "#/definitions/stick_rule"
+            _version:
+              type: integer
+      '404':
+        $ref: '#/responses/NotFound'
+      'default':
+        $ref: '#/responses/DefaultError'
+  put:
+    summary: Replace a Stick Rule
+    description: Replaces a Stick Rule configuration by it's index in the specified backend.
+    operationId: replaceStickRule
+    tags:
+      - StickRule
+    parameters:
+      - name: index
+        in: path
+        description: Stick Rule Index
+        required: true
+        type: integer
+      - name: backend
+        in: query
+        description: Backend name
+        required: true
+        type: string
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/stick_rule'
+      - $ref: "#/parameters/transaction_id"
+      - $ref: "#/parameters/version"
+      - $ref: "#/parameters/force_reload"
+    responses:
+      '202':
+        description: Configuration change accepted and reload requested
+        headers:
+          Reload-ID:
+            description: ID of the requested reload
+            type: string
+        schema:
+          $ref: "#/definitions/stick_rule"
+      '200':
+        description: Stick Rule replaced
+        schema:
+          $ref: '#/definitions/stick_rule'
+      '400':
+        $ref: '#/responses/BadRequest'
+      '404':
+        $ref: '#/responses/NotFound'
+      'default':
+        $ref: '#/responses/DefaultError'
+  delete:
+    summary: Delete a Stick Rule
+    description: Deletes a Stick Rule configuration by it's index from the specified backend.
+    operationId: deleteStickRule
+    tags:
+      - StickRule
+    parameters:
+      - name: index
+        in: path
+        description: Stick Rule Index
+        required: true
+        type: integer
+      - name: backend
+        in: query
+        description: Backend name
+        required: true
+        type: string
+      - $ref: "#/parameters/transaction_id"
+      - $ref: "#/parameters/version"
+      - $ref: "#/parameters/force_reload"
+    responses:
+      '202':
+        description: Configuration change accepted and reload requested
+        headers:
+          Reload-ID:
+            description: ID of the requested reload
+            type: string
+      '204':
+        description: Stick Rule deleted
+      '404':
+        $ref: '#/responses/NotFound'
+      'default':
+        $ref: '#/responses/DefaultError'
+log_targets:
+  get:
+    summary: Return an array of all Log Targets
+    description: Returns all Log Targets that are configured in specified parent.
+    operationId: getLogTargets
+    tags:
+      - LogTarget
+    parameters:
+      - name: parent_name
+        in: query
+        description: Parent name
+        required: true
+        type: string
+      - name: parent_type
+        in: query
+        description: Parent type
+        required: true
+        type: string
+        enum: [frontend, backend]
+      - $ref: "#/parameters/transaction_id"
+    responses:
+      '200':
+        description: Successful operation
+        headers:
+          Configuration-Version:
+            description: Configuration file version
+            type: integer
+            x-nullable: false
+        schema:
+          type: object
+          required:
+            - data
+          properties:
+            data:
+              $ref: "#/definitions/log_targets"
+            _version:
+              type: integer
+      'default':
+        $ref: '#/responses/DefaultError'
+  post:
+    summary: Add a new Log Target
+    description: Adds a new Log Target of the specified type in the specified parent.
+    operationId: createLogTarget
+    tags:
+      - LogTarget
+    parameters:
+      - name: parent_name
+        in: query
+        description: Parent name
+        required: true
+        type: string
+      - name: parent_type
+        in: query
+        description: Parent type
+        required: true
+        type: string
+        enum: [frontend, backend]
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/log_target'
+      - $ref: "#/parameters/transaction_id"
+      - $ref: "#/parameters/version"
+      - $ref: "#/parameters/force_reload"
+    responses:
+      '202':
+        description: Configuration change accepted and reload requested
+        headers:
+          Reload-ID:
+            description: ID of the requested reload
+            type: string
+        schema:
+          $ref: "#/definitions/log_target"
+      '201':
+        description: Log Target created
+        schema:
+          $ref: '#/definitions/log_target'
+      '409':
+        $ref: '#/responses/AlreadyExists'
+      '400':
+        $ref: '#/responses/BadRequest'
+      'default':
+        $ref: '#/responses/DefaultError'
+log_targets_one:
+  get:
+    summary: Return one Log Target
+    description: Returns one Log Target configuration by it's index in the specified parent.
+    operationId: getLogTarget
+    tags:
+      - LogTarget
+    parameters:
+      - name: index
+        in: path
+        description: Log Target Index
+        required: true
+        type: integer
+      - name: parent_name
+        in: query
+        description: Parent name
+        required: true
+        type: string
+      - name: parent_type
+        in: query
+        description: Parent type
+        required: true
+        type: string
+        enum: [frontend, backend]
+      - $ref: "#/parameters/transaction_id"
+    responses:
+      '200':
+        description: Successful operation
+        headers:
+          Configuration-Version:
+            description: Configuration file version
+            type: integer
+            x-nullable: false
+        schema:
+          type: object
+          properties:
+            data:
+              $ref: "#/definitions/log_target"
+            _version:
+              type: integer
+      '404':
+        $ref: '#/responses/NotFound'
+      'default':
+        $ref: '#/responses/DefaultError'
+  put:
+    summary: Replace a Log Target
+    description: Replaces a Log Target configuration by it's index in the specified parent.
+    operationId: replaceLogTarget
+    tags:
+      - LogTarget
+    parameters:
+      - name: index
+        in: path
+        description: Log Target Index
+        required: true
+        type: integer
+      - name: parent_name
+        in: query
+        description: Parent name
+        required: true
+        type: string
+      - name: parent_type
+        in: query
+        description: Parent type
+        required: true
+        type: string
+        enum: [frontend, backend]
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/log_target'
+      - $ref: "#/parameters/transaction_id"
+      - $ref: "#/parameters/version"
+      - $ref: "#/parameters/force_reload"
+    responses:
+      '202':
+        description: Configuration change accepted and reload requested
+        headers:
+          Reload-ID:
+            description: ID of the requested reload
+            type: string
+        schema:
+          $ref: "#/definitions/log_target"
+      '200':
+        description: Log Target replaced
+        schema:
+          $ref: '#/definitions/log_target'
+      '400':
+        $ref: '#/responses/BadRequest'
+      '404':
+        $ref: '#/responses/NotFound'
+      'default':
+        $ref: '#/responses/DefaultError'
+  delete:
+    summary: Delete a Log Target
+    description: Deletes a Log Target configuration by it's index from the specified parent.
+    operationId: deleteLogTarget
+    tags:
+      - LogTarget
+    parameters:
+      - name: index
+        in: path
+        description: Log Target Index
+        required: true
+        type: integer
+      - name: parent_name
+        in: query
+        description: Parent name
+        required: true
+        type: string
+      - name: parent_type
+        in: query
+        description: Parent type
+        required: true
+        type: string
+        enum: [frontend, backend]
+      - $ref: "#/parameters/transaction_id"
+      - $ref: "#/parameters/version"
+      - $ref: "#/parameters/force_reload"
+    responses:
+      '202':
+        description: Configuration change accepted and reload requested
+        headers:
+          Reload-ID:
+            description: ID of the requested reload
+            type: string
+      '204':
+        description: Log Target deleted
+      '404':
+        $ref: '#/responses/NotFound'
+      'default':
+        $ref: '#/responses/DefaultError'
+acls:
+  get:
+    summary: Return an array of all ACL lines
+    description: Returns all ACL lines that are configured in specified parent.
+    operationId: getAcls
+    tags:
+      - ACL
+    parameters:
+      - name: parent_name
+        in: query
+        description: Parent name
+        required: true
+        type: string
+      - name: parent_type
+        in: query
+        description: Parent type
+        required: true
+        type: string
+        enum: [frontend, backend]
+      - $ref: "#/parameters/transaction_id"
+    responses:
+      '200':
+        description: Successful operation
+        headers:
+          Configuration-Version:
+            description: Configuration file version
+            type: integer
+            x-nullable: false
+        schema:
+          type: object
+          required:
+            - data
+          properties:
+            data:
+              $ref: "#/definitions/acls"
+            _version:
+              type: integer
+      'default':
+        $ref: '#/responses/DefaultError'
+  post:
+    summary: Add a new ACL line
+    description: Adds a new ACL line of the specified type in the specified parent.
+    operationId: createAcl
+    tags:
+      - ACL
+    parameters:
+      - name: parent_name
+        in: query
+        description: Parent name
+        required: true
+        type: string
+      - name: parent_type
+        in: query
+        description: Parent type
+        required: true
+        type: string
+        enum: [frontend, backend]
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/acl'
+      - $ref: "#/parameters/transaction_id"
+      - $ref: "#/parameters/version"
+      - $ref: "#/parameters/force_reload"
+    responses:
+      '202':
+        description: Configuration change accepted and reload requested
+        headers:
+          Reload-ID:
+            description: ID of the requested reload
+            type: string
+        schema:
+          $ref: "#/definitions/acl"
+      '201':
+        description: ACL line created
+        schema:
+          $ref: '#/definitions/acl'
+      '409':
+        $ref: '#/responses/AlreadyExists'
+      '400':
+        $ref: '#/responses/BadRequest'
+      'default':
+        $ref: '#/responses/DefaultError'
+acls_one:
+  get:
+    summary: Return one ACL line
+    description: Returns one ACL line configuration by it's index in the specified parent.
+    operationId: getAcl
+    tags:
+      - ACL
+    parameters:
+      - name: index
+        in: path
+        description: ACL line Index
+        required: true
+        type: integer
+      - name: parent_name
+        in: query
+        description: Parent name
+        required: true
+        type: string
+      - name: parent_type
+        in: query
+        description: Parent type
+        required: true
+        type: string
+        enum: [frontend, backend]
+      - $ref: "#/parameters/transaction_id"
+    responses:
+      '200':
+        description: Successful operation
+        headers:
+          Configuration-Version:
+            description: Configuration file version
+            type: integer
+            x-nullable: false
+        schema:
+          type: object
+          properties:
+            data:
+              $ref: "#/definitions/acl"
+            _version:
+              type: integer
+      '404':
+        $ref: '#/responses/NotFound'
+      'default':
+        $ref: '#/responses/DefaultError'
+  put:
+    summary: Replace a ACL line
+    description: Replaces a ACL line configuration by it's index in the specified parent.
+    operationId: replaceAcl
+    tags:
+      - ACL
+    parameters:
+      - name: index
+        in: path
+        description: ACL line Index
+        required: true
+        type: integer
+      - name: parent_name
+        in: query
+        description: Parent name
+        required: true
+        type: string
+      - name: parent_type
+        in: query
+        description: Parent type
+        required: true
+        type: string
+        enum: [frontend, backend]
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/acl'
+      - $ref: "#/parameters/transaction_id"
+      - $ref: "#/parameters/version"
+      - $ref: "#/parameters/force_reload"
+    responses:
+      '202':
+        description: Configuration change accepted and reload requested
+        headers:
+          Reload-ID:
+            description: ID of the requested reload
+            type: string
+        schema:
+          $ref: "#/definitions/acl"
+      '200':
+        description: ACL line replaced
+        schema:
+          $ref: '#/definitions/acl'
+      '400':
+        $ref: '#/responses/BadRequest'
+      '404':
+        $ref: '#/responses/NotFound'
+      'default':
+        $ref: '#/responses/DefaultError'
+  delete:
+    summary: Delete a ACL line
+    description: Deletes a ACL line configuration by it's index from the specified parent.
+    operationId: deleteAcl
+    tags:
+      - ACL
+    parameters:
+      - name: index
+        in: path
+        description: ACL line Index
+        required: true
+        type: integer
+      - name: parent_name
+        in: query
+        description: Parent name
+        required: true
+        type: string
+      - name: parent_type
+        in: query
+        description: Parent type
+        required: true
+        type: string
+        enum: [frontend, backend]
+      - $ref: "#/parameters/transaction_id"
+      - $ref: "#/parameters/version"
+      - $ref: "#/parameters/force_reload"
+    responses:
+      '202':
+        description: Configuration change accepted and reload requested
+        headers:
+          Reload-ID:
+            description: ID of the requested reload
+            type: string
+      '204':
+        description: ACL line deleted
+      '404':
+        $ref: '#/responses/NotFound'
+      'default':
+        $ref: '#/responses/DefaultError'
+version:
+  get:
+    summary: Return a configuration version
+    description: Returns configuration version.
+    operationId: getConfigurationVersion
+    tags:
+      - Configuration
+    parameters:
+      - $ref: "#/parameters/transaction_id"
+    responses:
+      '200':
+        description: Configuration version
+        schema:
+          type: integer
+      '404':
+        $ref: '#/responses/NotFound'
+      'default':
+        $ref: '#/responses/DefaultError'

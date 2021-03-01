@@ -1,0 +1,696 @@
+---
+swagger: "2.0"
+info:
+  title: HAProxy Data Plane API
+  description: |
+    API for editing and managing haproxy instances. Provides process information, configuration management,
+    haproxy stats and logs.
+  version: '2.0'
+  contact:
+    name: HAProxy Support
+    url: https://my.haproxy.com/portal/cust/login
+    email: support@haproxy.com
+externalDocs:
+  url: https://cbonte.github.io/haproxy-dconv/
+  description: HAProxy Documentation
+definitions:
+  site:
+    $ref: "models/simple.yaml#/site"
+  sites:
+    title: Sites
+    description: |
+      Sites array. Sites are considered as one service and all farms connected to that service.
+      Farms are connected to service using use-backend and default_backend directives. Sites let you
+      configure simple HAProxy configurations, for more advanced options use /haproxy/configuration
+      endpoints.
+    type: array
+    items:
+      $ref: "#/definitions/site"
+  global:
+    $ref: "models/configuration.yaml#/global"
+  defaults:
+    $ref: "models/configuration.yaml#/defaults"
+  frontend:
+    $ref: "models/configuration.yaml#/frontend"
+  frontends:
+    title: Frontends
+    description: HAProxy frontends array
+    type: array
+    items:
+      $ref: '#/definitions/frontend'
+  backend:
+    $ref: "models/configuration.yaml#/backend"
+  backends:
+    title: Backends
+    description: HAProxy backends array
+    type: array
+    items:
+      $ref: '#/definitions/backend'
+  peer_section:
+    $ref: "models/configuration.yaml#/peer_section"
+  peer_sections:
+    title: Peer_Section
+    description: HAProxy peer_section array
+    type: array
+    items:
+      $ref: '#/definitions/peer_section'
+  peer_entry:
+    $ref: "models/configuration.yaml#/peer_entry"
+  peer_entries:
+    title: Peer entries
+    description: HAProxy peer entries array
+    type: array
+    items:
+      $ref: '#/definitions/peer_entry'
+  bind:
+    $ref: "models/configuration.yaml#/bind"
+  binds:
+    title: Binds
+    description: HAProxy frontend binds array (corresponds to bind directives)
+    type: array
+    items:
+      $ref: '#/definitions/bind'
+  server:
+    $ref: "models/configuration.yaml#/server"
+  servers:
+    title: Servers
+    description: HAProxy backend servers array
+    type: array
+    items:
+      $ref: '#/definitions/server'
+  http_request_rule:
+    $ref: "models/configuration.yaml#/http_request_rule"
+  http_request_rules:
+    title: HTTP Request Rules Array
+    description: HAProxy HTTP request rules array (corresponds to http-request directives)
+    type: array
+    items:
+      $ref: '#/definitions/http_request_rule'
+  http_response_rule:
+    $ref: "models/configuration.yaml#/http_response_rule"
+  http_response_rules:
+    title: HTTP Response Rules Array
+    description: HAProxy HTTP response rules array (corresponds to http-response directives)
+    type: array
+    items:
+      $ref: '#/definitions/http_response_rule'
+  tcp_request_rule:
+    $ref: "models/configuration.yaml#/tcp_request_rule"
+  tcp_request_rules:
+    title: TCP Request Rules Array
+    description: HAProxy TCP request rules array (corresponds to tcp-request directive)
+    type: array
+    items:
+      $ref: '#/definitions/tcp_request_rule'
+  tcp_response_rule:
+    $ref: "models/configuration.yaml#/tcp_response_rule"
+  tcp_response_rules:
+    title: TCP Response Rules Array
+    description: HAProxy TCP response rules array (corresponds to tcp-response directive)
+    type: array
+    items:
+      $ref: '#/definitions/tcp_response_rule'
+  backend_switching_rule:
+    $ref: "models/configuration.yaml#/backend_switching_rule"
+  backend_switching_rules:
+    title: Backend Switching Rules Array
+    description: HAProxy backend switching rules array (corresponds to use_backend directives)
+    type: array
+    items:
+      $ref: '#/definitions/backend_switching_rule'
+  server_switching_rule:
+    $ref: "models/configuration.yaml#/server_switching_rule"
+  server_switching_rules:
+    title: Server Switching Rules Array
+    description: HAProxy backend server switching rules array (corresponds to use-server directives)
+    type: array
+    items:
+      $ref: '#/definitions/server_switching_rule'
+  filter:
+    $ref: "models/configuration.yaml#/filter"
+  filters:
+    title: Filters Array
+    description: HAProxy filters array (corresponds to filter directive)
+    type: array
+    items:
+      $ref: '#/definitions/filter'
+  stick_rule:
+    $ref: "models/configuration.yaml#/stick_rule"
+  stick_rules:
+    title: Stick Rules Array
+    description: HAProxy backend stick rules array (corresponds to stick store-request, stick match, stick on, stick store-response)
+    type: array
+    items:
+      $ref: '#/definitions/stick_rule'
+  log_target:
+    $ref: "models/configuration.yaml#/log_target"
+  log_targets:
+    title: Log Target Array
+    description: HAProxy log target array (corresponds to log directives)
+    type: array
+    items:
+      $ref: '#/definitions/log_target'
+  acl:
+    $ref: "models/configuration.yaml#/acl"
+  acls:
+    title: ACL Lines Array
+    description: HAProxy ACL lines array (corresponds to acl directives)
+    type: array
+    items:
+      $ref: '#/definitions/acl'
+  native_stats:
+    $ref: "models/stats.yaml#/native_stats"
+  native_stat:
+    $ref: "models/stats.yaml#/native"
+  native_stat_stats:
+    $ref: "models/stats.yaml#/native_stat_stats"
+  native_stats_collection:
+    $ref: "models/stats.yaml#/native_stats_collection"
+  stats_options:
+    $ref: "models/configuration.yaml#/stats_options"
+  error:
+    $ref: "models/errors.yaml#/error"
+  endpoint:
+    $ref: "models/general.yaml#/endpoint"
+  endpoints:
+    title: Endpoints Array
+    description: Collection of endpoints
+    type: array
+    items:
+      $ref: '#/definitions/endpoint'
+  process_infos:
+    $ref: "models/runtime.yaml#/process_infos"
+  process_info:
+    $ref: "models/runtime.yaml#/process_info"
+  process_info_item:
+    $ref: "models/runtime.yaml#/process_info_item"
+  transaction:
+    $ref: "models/general.yaml#/transaction"
+  transactions:
+    title: Transactions array
+    description: Configuration transactions array
+    type: array
+    items:
+      $ref: "#/definitions/transaction"
+  spoe_transaction:
+    $ref: "models/spoe-transactions.yaml#/spoe_transaction"
+  spoe_transactions:
+    title: SPOE Transactions array
+    description: SPOE Configuration transactions array
+    type: array
+    items:
+      $ref: "#/definitions/spoe_transaction"
+  info:
+    $ref: "models/general.yaml#/info"
+  reload:
+    $ref: "models/general.yaml#/reload"
+  reloads:
+    title: HAProxy Reloads Array
+    description: HAProxy reloads array
+    type: array
+    items:
+      $ref: "#/definitions/reload"
+  runtime_server:
+    $ref: "models/runtime.yaml#/server"
+  runtime_servers:
+    title: HAProxy Runtime Servers Array
+    description: HAProxy runtime servers array
+    type: array
+    items:
+      $ref: "#/definitions/runtime_server"
+  stick_table:
+    $ref: "models/runtime.yaml#/table"
+  stick_tables:
+    title: Stick Tables Array
+    description: Array of runtime stick tables
+    type: array
+    items:
+      $ref: "#/definitions/stick_table"
+  stick_table_entry:
+    $ref: "models/runtime.yaml#/table_entry"
+  stick_table_entries:
+    title: Stick Tables Entries
+    description: Entries of one runtime stick table
+    type: array
+    items:
+      $ref: "#/definitions/stick_table_entry"
+  cluster_settings:
+    $ref: "models/cluster.yaml#/settings"
+  map:
+    $ref: "models/runtime.yaml#/map"
+  maps:
+    title: Map Files Array
+    description: Array of runtime map files
+    type: array
+    items:
+      $ref: "#/definitions/map"
+  map_entry:
+    $ref: "models/runtime.yaml#/map_entry"
+  map_entries:
+    title: Maps Entries
+    description: Entries of one runtime map
+    type: array
+    items:
+      $ref: "#/definitions/map_entry"
+  ssl_certificate:
+    $ref: "models/runtime.yaml#/ssl_certificate"
+  ssl_certificates:
+    title: SSL Files Array
+    description: Array of ssl certificate files
+    type: array
+    items:
+      $ref: "#/definitions/ssl_certificate"
+  ssl_cert_entry:
+    $ref: "models/runtime.yaml#/ssl_cert_entry"
+  ssl_cert_entries:
+    title: SSL Certificate Entries
+    description: Array of entries of runtime SSL Certificate Entry
+    type: array
+    items:
+      $ref: "#/definitions/ssl_cert_entry"
+  ssl_crt_list:
+    $ref: "models/runtime.yaml#/ssl_crt_list"
+  ssl_crt_lists:
+    title: SSL crt-list
+    description: Array of entries of runtime crt-list
+    type: array
+    items:
+      $ref: "#/definitions/ssl_crt_list"
+  ssl_crt_list_entry:
+    $ref: "models/runtime.yaml#/ssl_crt_list_entry"
+  ssl_crt_list_entries:
+    title: SSL Certificate Entries
+    description: Array of entries of runtime SSL Certificate Entry
+    type: array
+    items:
+      $ref: "#/definitions/ssl_crt_list_entry"
+  acl_file:
+    $ref: "models/runtime.yaml#/acl_file"
+  acl_files:
+    title: ACL Files Array
+    description: Array of runtime acl files
+    type: array
+    items:
+      $ref: "#/definitions/acl_file"
+  acl_file_entry:
+    $ref: "models/runtime.yaml#/acl_file_entry"
+  acl_files_entries:
+    title: ACL Files Entries
+    description: Array of entries of one runtime acl file
+    type: array
+    items:
+      $ref: "#/definitions/acl_file_entry"
+  balance:
+    $ref: "models/configuration.yaml#/balance"
+  forwardfor:
+    $ref: "models/configuration.yaml#/forwardfor"
+  default_server:
+    $ref: "models/configuration.yaml#/default_server"
+  httpchk_params:
+    $ref: "models/configuration.yaml#/httpchk_params"
+  http-check:
+    $ref: "models/configuration.yaml#/http-check"
+  redispatch:
+    $ref: "models/configuration.yaml#/redispatch"
+  errorfile:
+    $ref: "models/configuration.yaml#/errorfile"
+  cookie:
+    $ref: "models/configuration.yaml#/cookie"
+  resolver:
+    $ref: "models/configuration.yaml#/resolver"
+  resolvers:
+    title: Resolvers
+    description: HAProxy resolvers array
+    type: array
+    items:
+      $ref: '#/definitions/resolver'
+  nameserver:
+    $ref: "models/configuration.yaml#/nameserver"
+  nameservers:
+    title: Nameservers
+    description: Nameservers array
+    type: array
+    items:
+      $ref: '#/definitions/nameserver'
+  consul:
+    $ref: "models/service-discovery.yaml#/consul"
+  consuls:
+    title: Consuls
+    description: Consuls array
+    type: array
+    items:
+      $ref: '#/definitions/consul'
+  monitor_uri:
+    $ref: "models/monitor.yaml#/monitor_uri"
+  monitor_fail:
+    $ref: "models/monitor.yaml#/monitor_fail"
+  smtpchk_params:
+    $ref: "models/configuration.yaml#/smtpchk_params"
+  mysql_check_params:
+    $ref: "models/configuration.yaml#/mysql_check_params"
+  pgsql_check_params:
+    $ref: "models/configuration.yaml#/pgsql_check_params"
+  spoe_files:
+    $ref: "models/spoe.yaml#/spoe_files"
+  spoe_scope:
+    $ref: "models/spoe.yaml#/spoe_scope"
+  spoe_scopes:
+    title: SPOE Scopes
+    description: All SPOE Scopes
+    type: array
+    items:
+      $ref: "#/definitions/spoe_scope"
+  spoe_agent:
+    $ref: "models/spoe.yaml#/spoe_agent"
+  spoe_agents:
+    title: SPOE Agents
+    description: SPOE Agents of one scope in SPOE file
+    type: array
+    items:
+      $ref: "#/definitions/spoe_agent"
+  spoe_message:
+    $ref: "models/spoe.yaml#/spoe_message"
+  spoe_messages:
+    title: SPOE Messages
+    description: SPOE Messages of one scope in SPOE file
+    type: array
+    items:
+      $ref: "#/definitions/spoe_message"
+  spoe_group:
+    $ref: "models/spoe.yaml#/spoe_group"
+  spoe_groups:
+    title: SPOE Groups
+    description: SPOE Groups of one scope in SPOE file
+    type: array
+    items:
+      $ref: "#/definitions/spoe_group"
+responses:
+  BadRequest:
+    description: Bad request
+    headers:
+      Configuration-Version:
+        description: Configuration file version
+        type: integer
+        x-nullable: true
+        default: 0
+    schema:
+      $ref: '#/definitions/error'
+  NotFound:
+    description: The specified resource was not found
+    headers:
+      Configuration-Version:
+        description: Configuration file version
+        type: integer
+        x-nullable: true
+        default: 0
+    schema:
+      $ref: '#/definitions/error'
+  AlreadyExists:
+    description: The specified resource already exists
+    headers:
+      Configuration-Version:
+        description: Configuration file version
+        type: integer
+        x-nullable: true
+        default: 0
+    schema:
+      $ref: '#/definitions/error'
+  DefaultError:
+    description: General Error
+    headers:
+      Configuration-Version:
+        description: Configuration file version
+        type: integer
+        x-nullable: true
+        default: 0
+    schema:
+      $ref: '#/definitions/error'
+parameters:
+  transaction_id:
+    name: transaction_id
+    in: query
+    description: ID of the transaction where we want to add the operation. Cannot be used when version is specified.
+    type: string
+    required: false
+    x-nullable: false
+  version:
+    name: version
+    in: query
+    description: Version used for checking configuration version. Cannot be used when transaction is specified, transaction has it's own version.
+    type: integer
+    required: false
+    x-nullable: false
+  force_reload:
+    name: force_reload
+    in: query
+    description: If set, do a force reload, do not wait for the configured reload-delay. Cannot be used when transaction is specified, as changes in transaction are not applied directly to configuration.
+    type: boolean
+    required: false
+    default: false
+securityDefinitions:
+  basic_auth:
+    type: basic
+basePath: /v2
+schemes:
+  - http
+consumes:
+  - application/json
+produces:
+  - application/json
+tags:
+  - name: Discovery
+    description: API autodiscover endpoints
+  - name: Information
+  - name: Specification
+  - name: Transactions
+    description: |
+      Managing transactions. Configuration changes can be grouped in the transaction. You start the
+      transaction with trasactions POST, and call the configuration changes you need with parameter
+      transaction_id. When you want to commit the transaction, you call the transactions PUT and all changes
+      in that transaction is commited. If you call a configuration change without the transaction_id,
+      transaction mechanism is implicitly called with one operation in transaction.
+  - name: Reloads
+    description: |
+      Checking reload success. To avoid constant reloading we reload in intervals that are configurable when
+      with reload-delay option. When a change to configuration is made and force_reload url query string
+      parameter is false we issue a request for reload, and return the reload ID in response header. You can
+      then use reloads endpoints to check the status of that reload ID. If force_reload is true, we override all
+      of this and reload immediately.
+  - name: Sites
+    description: |
+      Managing sites (simple configuration mode). Sites are considered as one frontend with multiple backends
+      connected to it via default_backend or use-backend directives.
+  - name: Stats
+    description: Stats container
+  - name: Global
+    description: Managing global configuration (advanced mode)
+  - name: Defaults
+    description: Managing defaults configuration (advanced mode)
+  - name: Frontend
+    description: Managing frontend configuration (advanced mode)
+  - name: Backend
+    description: Managing backend configurations (advanced mode)
+  - name: Bind
+    description: Managing frontend bind configurations (advanced mode)
+  - name: Server
+    description: Managing backend server configurations (advanced mode)
+  - name: Configuration
+    description: Raw HAProxy configuration management (advanced mode)
+  - name: TCPRequestRule
+  - name: HTTPRequestRule
+  - name: HTTPResponseRule
+  - name: BackendSwitchingRule
+  - name: ServerSwitchingRule
+  - name: TCPResponseRule
+  - name: Filter
+  - name: StickRule
+  - name: StickTable
+  - name: LogTarget
+  - name: ACL
+  - name: Resolver
+  - name: Nameserver
+  - name: Peer
+  - name: PeerEntry
+  - name: Cluster
+  - name: Maps
+  - name: SpecificationOpenapiv3
+  - name: ServiceDiscovery
+  - name: Spoe
+  - name: SpoeTransactions
+security:
+  - basic_auth: []
+paths:
+  /:
+    $ref: "paths/general.yaml#/root"
+  /specification:
+    $ref: "paths/general.yaml#/specification"
+  /specification_openapiv3:
+    $ref: "paths/general.yaml#/specification_openapiv3"
+  /info:
+    $ref: "paths/general.yaml#/info"
+  /cluster:
+    $ref: "paths/cluster.yaml#/cluster"
+  /cluster/certificate:
+    $ref: "paths/cluster.yaml#/certificate"
+  /service_discovery/consul:
+    $ref: "paths/service-discovery.yaml#/consul"
+  /service_discovery/consul/{id}:
+    $ref: "paths/service-discovery.yaml#/consul_one"
+  /services:
+    $ref: "paths/general.yaml#/services"
+  /services/haproxy:
+    $ref: "paths/general.yaml#/haproxy"
+  /services/haproxy/sites:
+    $ref: "paths/simple.yaml#/sites"
+  /services/haproxy/sites/{name}:
+    $ref: "paths/simple.yaml#/sites_one"
+  /services/haproxy/stats:
+    $ref: "paths/general.yaml#/stats"
+  /services/haproxy/stats/native:
+    $ref: "paths/stats.yaml#/native"
+  /services/haproxy/transactions:
+    $ref: "paths/general.yaml#/transactions"
+  /services/haproxy/transactions/{id}:
+    $ref: "paths/general.yaml#/transactions_one"
+  /services/haproxy/spoe_transactions:
+    $ref: "paths/spoe-transactions.yaml#/transactions"
+  /services/haproxy/spoe_transactions/{id}:
+    $ref: "paths/spoe-transactions.yaml#/transactions_one"
+  /services/haproxy/reloads:
+    $ref: "paths/general.yaml#/reloads"
+  /services/haproxy/reloads/{id}:
+    $ref: "paths/general.yaml#/reloads_one"
+  /services/haproxy/configuration:
+    $ref: "paths/general.yaml#/configuration"
+  /services/haproxy/configuration/global:
+    $ref: "paths/configuration.yaml#/global"
+  /services/haproxy/configuration/defaults:
+    $ref: "paths/configuration.yaml#/defaults"
+  /services/haproxy/configuration/frontends:
+    $ref: "paths/configuration.yaml#/frontends"
+  /services/haproxy/configuration/frontends/{name}:
+    $ref: "paths/configuration.yaml#/frontends_one"
+  /services/haproxy/configuration/peer_section:
+    $ref: "paths/configuration.yaml#/peer_section"
+  /services/haproxy/configuration/peer_section/{name}:
+    $ref: "paths/configuration.yaml#/peer_section_one"
+  /services/haproxy/configuration/peer_entries:
+    $ref: "paths/configuration.yaml#/peer_entries"
+  /services/haproxy/configuration/peer_entries/{name}:
+    $ref: "paths/configuration.yaml#/peer_entries_one"
+  /services/haproxy/configuration/backends:
+    $ref: "paths/configuration.yaml#/backends"
+  /services/haproxy/configuration/backends/{name}:
+    $ref: "paths/configuration.yaml#/backends_one"
+  /services/haproxy/configuration/binds:
+    $ref: "paths/configuration.yaml#/binds"
+  /services/haproxy/configuration/binds/{name}:
+    $ref: "paths/configuration.yaml#/binds_one"
+  /services/haproxy/configuration/servers:
+    $ref: "paths/configuration.yaml#/servers"
+  /services/haproxy/configuration/servers/{name}:
+    $ref: "paths/configuration.yaml#/servers_one"
+  /services/haproxy/configuration/http_request_rules:
+    $ref: "paths/configuration.yaml#/http_request_rules"
+  /services/haproxy/configuration/http_request_rules/{index}:
+    $ref: "paths/configuration.yaml#/http_request_rules_one"
+  /services/haproxy/configuration/http_response_rules:
+    $ref: "paths/configuration.yaml#/http_response_rules"
+  /services/haproxy/configuration/http_response_rules/{index}:
+    $ref: "paths/configuration.yaml#/http_response_rules_one"
+  /services/haproxy/configuration/tcp_request_rules:
+    $ref: "paths/configuration.yaml#/tcp_request_rules"
+  /services/haproxy/configuration/tcp_request_rules/{index}:
+    $ref: "paths/configuration.yaml#/tcp_request_rules_one"
+  /services/haproxy/configuration/tcp_response_rules:
+    $ref: "paths/configuration.yaml#/tcp_response_rules"
+  /services/haproxy/configuration/tcp_response_rules/{index}:
+    $ref: "paths/configuration.yaml#/tcp_response_rules_one"
+  /services/haproxy/configuration/backend_switching_rules:
+    $ref: "paths/configuration.yaml#/backend_switching_rules"
+  /services/haproxy/configuration/backend_switching_rules/{index}:
+    $ref: "paths/configuration.yaml#/backend_switching_rules_one"
+  /services/haproxy/configuration/server_switching_rules:
+    $ref: "paths/configuration.yaml#/server_switching_rules"
+  /services/haproxy/configuration/server_switching_rules/{index}:
+    $ref: "paths/configuration.yaml#/server_switching_rules_one"
+  /services/haproxy/configuration/filters:
+    $ref: "paths/configuration.yaml#/filters"
+  /services/haproxy/configuration/filters/{index}:
+    $ref: "paths/configuration.yaml#/filters_one"
+  /services/haproxy/configuration/stick_rules:
+    $ref: "paths/configuration.yaml#/stick_rules"
+  /services/haproxy/configuration/stick_rules/{index}:
+    $ref: "paths/configuration.yaml#/stick_rules_one"
+  /services/haproxy/configuration/log_targets:
+    $ref: "paths/configuration.yaml#/log_targets"
+  /services/haproxy/configuration/log_targets/{index}:
+    $ref: "paths/configuration.yaml#/log_targets_one"
+  /services/haproxy/configuration/acls:
+    $ref: "paths/configuration.yaml#/acls"
+  /services/haproxy/configuration/acls/{index}:
+    $ref: "paths/configuration.yaml#/acls_one"
+  /services/haproxy/configuration/resolvers:
+    $ref: "paths/configuration.yaml#/resolvers"
+  /services/haproxy/configuration/resolvers/{name}:
+    $ref: "paths/configuration.yaml#/resolvers_one"
+  /services/haproxy/configuration/nameservers:
+    $ref: "paths/configuration.yaml#/nameservers"
+  /services/haproxy/configuration/nameservers/{name}:
+    $ref: "paths/configuration.yaml#/nameservers_one"
+  /services/haproxy/configuration/raw:
+    $ref: "paths/configuration.yaml#/configuration"
+  /services/haproxy/runtime:
+    $ref: "paths/general.yaml#/runtime"
+  /services/haproxy/runtime/info:
+    $ref: "paths/runtime.yaml#/process_info"
+  /services/haproxy/runtime/servers:
+    $ref: "paths/runtime.yaml#/servers"
+  /services/haproxy/runtime/servers/{name}:
+    $ref: "paths/runtime.yaml#/servers_one"
+  /services/haproxy/runtime/stick_tables:
+    $ref: "paths/runtime.yaml#/stick_tables"
+  /services/haproxy/runtime/stick_tables/{name}:
+    $ref: "paths/runtime.yaml#/stick_tables_one"
+  /services/haproxy/runtime/stick_table_entries:
+    $ref: "paths/runtime.yaml#/stick_table_entries"
+  /services/haproxy/runtime/maps:
+    $ref: "paths/runtime.yaml#/maps"
+  /services/haproxy/runtime/maps/{name}:
+    $ref: "paths/runtime.yaml#/maps_one"
+  /services/haproxy/runtime/maps_entries:
+    $ref: "paths/runtime.yaml#/maps_entries"
+  /services/haproxy/runtime/maps_entries/{id}:
+    $ref: "paths/runtime.yaml#/maps_entries_one"
+  /services/haproxy/configuration/version:
+    $ref: "paths/configuration.yaml#/version"
+  /services/haproxy/storage/maps:
+    $ref: "paths/storage.yaml#/maps"
+  /services/haproxy/storage/maps/{name}:
+    $ref: "paths/storage.yaml#/maps_one"
+  /services/haproxy/storage/ssl_certificates:
+    $ref: "paths/storage.yaml#/ssl_certificates"
+  /services/haproxy/storage/ssl_certificates/{name}:
+    $ref: "paths/storage.yaml#/ssl_certificates_one"
+  /services/haproxy/spoe/spoe_files:
+    $ref: "paths/spoe.yaml#/spoe_files"
+  /services/haproxy/spoe/spoe_files/{name}:
+    $ref: "paths/spoe.yaml#/spoes_one"
+  /services/haproxy/spoe/spoe_scopes:
+    $ref: "paths/spoe.yaml#/spoe_scopes"
+  /services/haproxy/spoe/spoe_scopes/{name}:
+    $ref: "paths/spoe.yaml#/spoe_scopes_one"
+  /services/haproxy/spoe/spoe_agents:
+    $ref: "paths/spoe.yaml#/spoe_agents"
+  /services/haproxy/spoe/spoe_agents/{name}:
+    $ref: "paths/spoe.yaml#/spoe_agents_one"
+  /services/haproxy/spoe/spoe_messages:
+    $ref: "paths/spoe.yaml#/spoe_messages"
+  /services/haproxy/spoe/spoe_messages/{name}:
+    $ref: "paths/spoe.yaml#/spoe_messages_one"
+  /services/haproxy/spoe/spoe_groups:
+    $ref: "paths/spoe.yaml#/spoe_groups"
+  /services/haproxy/spoe/spoe_groups/{name}:
+    $ref: "paths/spoe.yaml#/spoe_groups_one"
+  /services/haproxy/spoe/version:
+    $ref: "paths/spoe.yaml#/version"

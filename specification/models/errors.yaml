@@ -1,0 +1,17 @@
+---
+error:
+  title: Error
+  description: API Error
+  type: object
+  properties:
+    code:
+      type: integer
+      x-nullable: true
+    message:
+      type: string
+      x-nullable: true
+  required:
+    - code
+    - message
+  additionalProperties:
+    type: string

@@ -1,0 +1,40 @@
+---
+native:
+  get:
+    summary: Gets stats
+    description: Getting stats from the HAProxy.
+    operationId: getStats
+    produces:
+      - application/json
+    tags:
+      - Stats
+    parameters:
+      - name: type
+        in: query
+        description: Object type to get stats for (one of frontend, backend, server)
+        required: false
+        type: string
+        enum: [frontend, backend, server]
+      - name: name
+        in: query
+        description: Object name to get stats for
+        required: false
+        type: string
+      - name: parent
+        in: query
+        description: Object parent name to get stats for, in case the object is a server
+        required: false
+        x-dependency:
+          query.type: server
+        type: string
+    responses:
+      '200':
+        description: Success
+        schema:
+          $ref: '#/definitions/native_stats'
+      '500':
+        description: Internal Server Error
+        schema:
+          $ref: '#/definitions/native_stats'
+      'default':
+        $ref: '#/responses/DefaultError'

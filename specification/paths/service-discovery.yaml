@@ -1,0 +1,115 @@
+---
+consul:
+  get:
+    summary: Return an array of all configured Consul servers
+    description: Returns all configured Consul servers.
+    operationId: getConsuls
+    tags:
+      - ServiceDiscovery
+    responses:
+      '200':
+        description: Successful operation
+        schema:
+          type: object
+          required:
+            - data
+          properties:
+            data:
+              $ref: "#/definitions/consuls"
+      'default':
+        $ref: '#/responses/DefaultError'
+  post:
+    summary: Add a new Consul server
+    description: Adds a new Consul server.
+    operationId: createConsul
+    tags:
+      - ServiceDiscovery
+    parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/consul'
+    responses:
+      '201':
+        description: Consul created
+        schema:
+          $ref: '#/definitions/consul'
+      '409':
+        $ref: '#/responses/AlreadyExists'
+      '400':
+        $ref: '#/responses/BadRequest'
+      'default':
+        $ref: '#/responses/DefaultError'
+consul_one:
+  get:
+    summary: Return one Consul server
+    description: Returns one Consul server configuration by it's id.
+    operationId: getConsul
+    tags:
+      - ServiceDiscovery
+    parameters:
+      - name: id
+        in: path
+        description: Consul server id
+        required: true
+        type: string
+    responses:
+      '200':
+        description: Successful operation
+        schema:
+          type: object
+          properties:
+            data:
+              $ref: "#/definitions/consul"
+      '404':
+        $ref: '#/responses/NotFound'
+      'default':
+        $ref: '#/responses/DefaultError'
+  put:
+    summary: Replace a Consul server
+    description: Replaces a Consul server configuration by it's id.
+    operationId: replaceConsul
+    tags:
+      - ServiceDiscovery
+    parameters:
+      - name: id
+        in: path
+        description: Consul Index
+        required: true
+        type: string
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/consul'
+    responses:
+      '200':
+        description: Consul server replaced
+        schema:
+          $ref: '#/definitions/consul'
+      '400':
+        $ref: '#/responses/BadRequest'
+      '404':
+        $ref: '#/responses/NotFound'
+      'default':
+        $ref: '#/responses/DefaultError'
+  delete:
+    summary: Delete a Consul server
+    description: Deletes a Consul server configuration by it's id.
+    operationId: deleteConsul
+    tags:
+      - ServiceDiscovery
+    parameters:
+      - name: id
+        in: path
+        description: Consul server Index
+        required: true
+        type: string
+    responses:
+      '204':
+        description: Consul server deleted
+      '404':
+        $ref: '#/responses/NotFound'
+      'default':
+        $ref: '#/responses/DefaultError'

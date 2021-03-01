@@ -1,0 +1,60 @@
+---
+cluster:
+  get:
+    tags:
+      - Discovery
+    summary: Return cluster data
+    description: Returns cluster data
+    operationId: getCluster
+    produces:
+      - application/json
+    responses:
+      '200':
+        description: Success
+        schema:
+          $ref: '#/definitions/cluster_settings'
+      'default':
+        $ref: '#/responses/DefaultError'
+  post:
+    summary: Post cluster settings
+    description: Post cluster settings
+    operationId: postCluster
+    parameters:
+      - name: data
+        required: true
+        in: body
+        schema:
+          $ref: "#/definitions/cluster_settings"
+      - name: configuration
+        description: In case of moving to single mode do we keep or clean configuration
+        enum:
+          - keep
+        in: query
+        required: false
+        type: string
+      - $ref: "#/parameters/version"
+    tags:
+      - Cluster
+    responses:
+      '200':
+        description: Cluster settings changed
+        schema:
+          $ref: "#/definitions/cluster_settings"
+      '400':
+        $ref: '#/responses/BadRequest'
+      'default':
+        $ref: '#/responses/DefaultError'
+certificate:
+  post:
+    tags:
+      - Cluster
+    summary: Initiates a certificate refresh
+    description: Initiates a certificate refresh
+    operationId: initiateCertificateRefresh
+    responses:
+      '200':
+        description: refresh activated
+      '403':
+        description: refresh not possible
+      'default':
+        $ref: '#/responses/DefaultError'

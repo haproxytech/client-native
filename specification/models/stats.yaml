@@ -1,0 +1,420 @@
+---
+native_stats:
+  title: Stats Array
+  description: HAProxy stats array
+  type: array
+  items:
+    $ref: "#/definitions/native_stats_collection"
+native_stats_collection:
+  type: object
+  title: Stats collection
+  description: Stats from one runtime API
+  properties:
+    runtimeAPI:
+      type: string
+    stats:
+      type: array
+      items:
+        $ref: "#/definitions/native_stat"
+    error:
+      type: string
+native:
+  title: Stats
+  description: Current stats for one object.
+  type: object
+  properties:
+    type:
+      type: string
+      enum: [backend, server, frontend]
+    name:
+      type: string
+    backend_name:
+      type: string
+      x-dependency:
+        type: server
+    stats:
+      $ref: "#/definitions/native_stat_stats"
+native_stat_stats:
+  type: object
+  properties:
+    qcur:
+      type: integer
+      x-nullable: true
+      x-dependency:
+        type: [server, backend]
+    qmax:
+      type: integer
+      x-nullable: true
+      x-dependency:
+        type: [server, backend]
+    scur:
+      type: integer
+      x-nullable: true
+    smax:
+      type: integer
+      x-nullable: true
+    slim:
+      type: integer
+      x-nullable: true
+    stot:
+      type: integer
+      x-nullable: true
+    bin:
+      type: integer
+      x-nullable: true
+    bout:
+      type: integer
+      x-nullable: true
+    dreq:
+      type: integer
+      x-nullable: true
+      x-dependency:
+        type: [frontend, backend]
+    dresp:
+      type: integer
+      x-nullable: true
+    ereq:
+      type: integer
+      x-nullable: true
+      x-dependency:
+        type: frontend
+    econ:
+      type: integer
+      x-nullable: true
+      x-dependency:
+        type: [server, backend]
+    eresp:
+      type: integer
+      x-nullable: true
+      x-dependency:
+        type: [server, backend]
+    wretr:
+      type: integer
+      x-nullable: true
+      x-dependency:
+        type: [server, backend]
+    wredis:
+      type: integer
+      x-nullable: true
+      x-dependency:
+        type: [server, backend]
+    status:
+      type: string
+      enum: [UP, DOWN, NOLB, MAINT, no check]
+    weight:
+      type: integer
+      x-nullable: true
+      x-dependency:
+        type: [server, backend]
+    act:
+      type: integer
+      x-nullable: true
+      x-dependency:
+        type: [server, backend]
+    bck:
+      type: integer
+      x-nullable: true
+      x-dependency:
+        type: [server, backend]
+    chkfail:
+      type: integer
+      x-nullable: true
+      x-dependency:
+        type: server
+    chkdown:
+      type: integer
+      x-nullable: true
+      x-dependency:
+        type: [server, backend]
+    lastchg:
+      type: integer
+      x-nullable: true
+      x-dependency:
+        type: [server, backend]
+    downtime:
+      type: integer
+      x-nullable: true
+      x-dependency:
+        type: server
+    qlimit:
+      type: integer
+      x-nullable: true
+      x-dependency:
+        type: [server, backend]
+    pid:
+      type: integer
+      x-nullable: true
+    iid:
+      type: integer
+      x-nullable: true
+    sid:
+      type: integer
+      x-nullable: true
+      x-dependency:
+        type: server
+    throttle:
+      type: integer
+      x-nullable: true
+      x-dependency:
+        type: server
+    lbtot:
+      type: integer
+      x-nullable: true
+      x-dependency:
+        type: [server, backend]
+    tracked:
+      type: string
+      x-dependency:
+        type: server
+    rate:
+      type: integer
+      x-nullable: true
+    rate_lim:
+      type: integer
+      x-nullable: true
+      x-dependency:
+        type: frontend
+    rate_max:
+      type: integer
+      x-nullable: true
+    check_status:
+      type: string
+      enum: [UNK, INI, SOCKERR, L40K, L4TOUT, L4CON, L6OK, L6TOUT, L6RSP, L7OK, L7OKC, L7TOUT, L7RSP, L7STS]
+      x-dependency:
+        type: server
+    check_code:
+      type: integer
+      x-nullable: true
+      x-dependency:
+        type: server
+    check_duration:
+      type: integer
+      x-nullable: true
+      x-dependency:
+        type: server
+    hrsp_1xx:
+      type: integer
+      x-nullable: true
+    hrsp_2xx:
+      type: integer
+      x-nullable: true
+    hrsp_3xx:
+      type: integer
+      x-nullable: true
+    hrsp_4xx:
+      type: integer
+      x-nullable: true
+    hrsp_5xx:
+      type: integer
+      x-nullable: true
+    hrsp_other:
+      type: integer
+      x-nullable: true
+    hanafail:
+      type: string
+      x-dependency:
+        type: server
+    req_rate:
+      type: integer
+      x-nullable: true
+      x-dependency:
+        type: frontend
+    req_rate_max:
+      type: integer
+      x-nullable: true
+      x-dependency:
+        type: frontend
+    req_tot:
+      type: integer
+      x-nullable: true
+      x-dependency:
+        type: [frontend, backend]
+    cli_abrt:
+      type: integer
+      x-nullable: true
+      x-dependency:
+        type: [server, backend]
+    srv_abrt:
+      type: integer
+      x-nullable: true
+      x-dependency:
+        type: [server, backend]
+    comp_in:
+      type: integer
+      x-nullable: true
+      x-dependency:
+        type: [frontend, backend]
+    comp_out:
+      type: integer
+      x-nullable: true
+      x-dependency:
+        type: [frontend, backend]
+    comp_byp:
+      type: integer
+      x-nullable: true
+      x-dependency:
+        type: [frontend, backend]
+    comp_rsp:
+      type: integer
+      x-nullable: true
+      x-dependency:
+        type: [frontend, backend]
+    lastsess:
+      type: integer
+      x-nullable: true
+      x-dependency:
+        type: [server, backend]
+    qtime:
+      type: integer
+      x-nullable: true
+      x-dependency:
+        type: [server, backend]
+    ctime:
+      type: integer
+      x-nullable: true
+      x-dependency:
+        type: [server, backend]
+    rtime:
+      type: integer
+      x-nullable: true
+      x-dependency:
+        type: [server, backend]
+    ttime:
+      type: integer
+      x-nullable: true
+      x-dependency:
+        type: [server, backend]
+    agent_status:
+      type: string
+      enum: [UNK, INI, SOCKERR, L40K, L4TOUT, L4CON, L7OK, L7STS]
+      x-dependency:
+        type: server
+    agent_code:
+      type: integer
+      x-nullable: true
+      x-dependency:
+        type: server
+    agent_duration:
+      type: integer
+      x-nullable: true
+      x-dependency:
+        type: server
+    check_desc:
+      type: string
+      x-dependency:
+        type: server
+    agent_desc:
+      type: string
+      x-dependency:
+        type: server
+    check_rise:
+      type: integer
+      x-nullable: true
+      x-dependency:
+        type: server
+    check_fall:
+      type: integer
+      x-nullable: true
+      x-dependency:
+        type: server
+    check_health:
+      type: integer
+      x-nullable: true
+      x-dependency:
+        type: server
+    agent_rise:
+      type: integer
+      x-nullable: true
+      x-dependency:
+        type: server
+    agent_fall:
+      type: integer
+      x-nullable: true
+      x-dependency:
+        type: server
+    agent_health:
+      type: integer
+      x-nullable: true
+      x-dependency:
+        type: server
+    addr:
+      type: string
+      x-dependency:
+        type: server
+    cookie:
+      type: string
+      x-dependency:
+        type: [server, backend]
+    mode:
+      type: string
+      enum: [tcp, http, health, unknown]
+    algo:
+      type: string
+      x-dependency:
+        type: backend
+    conn_rate:
+      type: integer
+      x-nullable: true
+      x-dependency:
+        type: frontend
+    conn_rate_max:
+      type: integer
+      x-nullable: true
+      x-dependency:
+        type: frontend
+    conn_tot:
+      type: integer
+      x-nullable: true
+      x-dependency:
+        type: frontend
+    intercepted:
+      type: integer
+      x-nullable: true
+      x-dependency:
+        type: [frontend, backend]
+    dcon:
+      type: integer
+      x-nullable: true
+      x-dependency:
+        type: frontend
+    dses:
+      type: integer
+      x-nullable: true
+      x-dependency:
+        type: frontend
+  example:
+    scur: 129
+    smax: 2000
+    slim: 2000
+    stot: 12902
+    bin: 4326578
+    bout: 889901290
+    dreq: 4
+    dresp: 1
+    ereq: 54
+    status: UP
+    pid: 3204
+    iid: 0
+    rate: 64
+    rate_lim: 20000
+    rate_max: 4000
+    hrsp_1xx: 0
+    hrsp_2xx: 165
+    hrsp_3xx: 12
+    hrsp_4xx: 50
+    hrsp_5xx: 4
+    hrsp_other: 0
+    req_rate: 49
+    req_rate_max: 3965
+    req_total: 1254786
+    comp_in: 0
+    comp_out: 0
+    comp_byp: 0
+    comp_rsp: 0
+    mode: http
+    conn_rate: 12
+    conn_rate_max: 456
+    conn_tot: 45682
+    intercepted: 346
+    dcon: 0
+    dses: 0

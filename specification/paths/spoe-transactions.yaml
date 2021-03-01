@@ -1,0 +1,155 @@
+---
+transactions:
+  get:
+    tags:
+      - SpoeTransactions
+    summary: Return list of SPOE configuration transactions.
+    description: Returns a list of SPOE configuration transactions. Transactions can be filtered by their status.
+    operationId: getSpoeTransactions
+    parameters:
+      - name: spoe
+        in: query
+        description: Spoe file name
+        required: true
+        type: string
+      - name: status
+        in: query
+        description: Filter by transaction status
+        required: false
+        type: string
+        enum: [failed, in_progress]
+    produces:
+      - application/json
+    responses:
+      '200':
+        description: Success
+        schema:
+          $ref: '#/definitions/spoe_transactions'
+      'default':
+        $ref: '#/responses/DefaultError'
+  post:
+    tags:
+      - SpoeTransactions
+    summary: Start a new transaction
+    description: Starts a new transaction and returns it's id
+    operationId: startSpoeTransaction
+    parameters:
+      - name: spoe
+        in: query
+        description: Spoe file name
+        required: true
+        type: string
+      - name: version
+        in: query
+        description: Configuration version on which to work on
+        required: true
+        type: integer
+    produces:
+      - application/json
+    responses:
+      '201':
+        description: Transaction started
+        schema:
+          $ref: "#/definitions/spoe_transaction"
+      '429':
+        description: Too many open transactions
+        schema:
+          type: object
+          properties:
+            code:
+              type: integer
+            message:
+              type: string
+          example:
+            code: 429
+            message: cannot start a new transaction, reached the maximum amount of 20 active transactions available
+      'default':
+        $ref: '#/responses/DefaultError'
+transactions_one:
+  get:
+    tags:
+      - SpoeTransactions
+    summary: Return one SPOE configuration transactions
+    description: Returns one SPOE configuration transactions.
+    operationId: getSpoeTransaction
+    parameters:
+      - name: spoe
+        in: query
+        description: Spoe file name
+        required: true
+        type: string
+      - name: id
+        in: path
+        description: Transaction id
+        required: true
+        type: string
+    responses:
+      '200':
+        description: Successful operation
+        schema:
+          $ref: "#/definitions/spoe_transaction"
+      '404':
+        $ref: '#/responses/NotFound'
+      'default':
+        $ref: '#/responses/DefaultError'
+  put:
+    tags:
+      - SpoeTransactions
+    summary: Commit transaction
+    description: Commit transaction, execute all operations in transaction and return msg
+    operationId: commitSpoeTransaction
+    parameters:
+      - name: spoe
+        in: query
+        description: Spoe file name
+        required: true
+        type: string
+      - name: id
+        in: path
+        description: Transaction id
+        required: true
+        type: string
+      - $ref: "#/parameters/force_reload"
+    responses:
+      '202':
+        description: Configuration change accepted and reload requested
+        headers:
+          Reload-ID:
+            description: ID of the requested reload
+            type: string
+        schema:
+          $ref: "#/definitions/spoe_transaction"
+      '200':
+        description: Transaction succesfully commited
+        schema:
+          $ref: "#/definitions/spoe_transaction"
+      '400':
+        $ref: '#/responses/BadRequest'
+      '404':
+        $ref: '#/responses/NotFound'
+      'default':
+        $ref: '#/responses/DefaultError'
+  delete:
+    summary: Delete a transaction
+    description: Deletes a transaction.
+    operationId: deleteSpoeTransaction
+    tags:
+      - SpoeTransactions
+    parameters:
+      - name: spoe
+        in: query
+        description: Spoe file name
+        required: true
+        type: string
+      - name: id
+        in: path
+        description: Transaction id
+        required: true
+        type: string
+    responses:
+      '204':
+        description: Transaction deleted
+      '404':
+        $ref: '#/responses/NotFound'
+      'default':
+        $ref: '#/responses/DefaultError'

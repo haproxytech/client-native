@@ -1,0 +1,118 @@
+---
+spoe_files:
+  title: SPOE files
+  description: SPOE files
+  type: array
+  items:
+    type: string
+spoe_scope:
+  title: SPOE scope
+  description: SPOE scope name
+  type: string
+spoe_agent:
+  title: SPOE agent
+  description: SPOE agent configuration
+  type: object
+  required:
+    - name
+  properties:
+    engine-name:
+      type: string
+    name:
+      type: string
+    groups:
+      type: string
+    log:
+      $ref: "#/definitions/log_targets"
+    maxconnrate:
+      type: integer
+    maxerrrate:
+      type: integer
+    max-frame-size:
+      type: integer
+    max-waiting-frames:
+      type: integer
+    messages:
+      type: string
+    async:
+      type: string
+      enum: [enabled, disabled]
+    continue-on-error:
+      type: string
+      enum: [enabled]
+    dontlog-normal:
+      type: string
+      enum: [enabled, disabled]
+    force-set-var:
+      type: string
+      enum: [enabled]
+    pipelining:
+      type: string
+      enum: [enabled, disabled]
+    send-frag-payload:
+      type: string
+      enum: [enabled, disabled]
+    option_set-on-error:
+      type: string
+      pattern: '^[A-Za-z0-9-_.]+$'
+    option_set-process-time:
+      type: string
+      pattern: '^[A-Za-z0-9-_.]+$'
+    option_set-total-time:
+      type: string
+      pattern: '^[A-Za-z0-9-_.]+$'
+    option_var-prefix:
+      type: string
+      pattern: '^[A-Za-z0-9-_.]+$'
+    register-var-names:
+      type: string
+    hello_timeout:
+      type: integer
+    idle_timeout:
+      type: integer
+    processing_timeout:
+      type: integer
+    use-backend:
+      type: string
+spoe_message:
+  title: SPOE message
+  description: SPOE message section configuration
+  type: object
+  required:
+    - name
+  properties:
+    name:
+      type: string
+    acl:
+      $ref: "#/definitions/acls"
+    args:
+      type: string
+    event:
+      type: object
+      required:
+        - name
+      properties:
+        name:
+          type: string
+          enum: [on-client-session, on-server-session, on-frontend-tcp-request, on-backend-tcp-request, on-tcp-response, on-frontend-http-request, on-backend-http-request, on-http-response]
+        cond:
+          type: string
+          x-display-name: Condition
+          enum: [if, unless]
+        cond_test:
+          type: string
+          x-display-name: Condition Test
+          x-dependency:
+            cond:
+              required: true
+spoe_group:
+  title: SPOE group
+  description: SPOE group section configuration
+  type: object
+  required:
+    - name
+  properties:
+    name:
+      type: string
+    messages:
+      type: string

@@ -1,0 +1,811 @@
+spoe_files:
+  get:
+    summary: Return all available SPOE files
+    description: Returns all available SPOE files.
+    operationId: getAllSpoeFiles
+    tags:
+      - Spoe
+    responses:
+      '200':
+        description: Successful operation
+        schema:
+          $ref: "#/definitions/spoe_files"
+      '404':
+        $ref: '#/responses/NotFound'
+      'default':
+        $ref: '#/responses/DefaultError'
+  post:
+    summary: Creates SPOE file with its entries
+    description: Creates SPOE file with its entries.
+    operationId: createSpoe
+    consumes:
+      - multipart/form-data
+    parameters:
+      - in: formData
+        name: file_upload
+        type: file
+        description: The spoe file to upload
+        x-mimetype: text/plain
+    tags:
+      - Spoe
+    responses:
+      '201':
+        description: SPOE file created with its entries
+        schema:
+          type: string
+      '409':
+        $ref: '#/responses/AlreadyExists'
+      '400':
+        $ref: '#/responses/BadRequest'
+      'default':
+        $ref: '#/responses/DefaultError'
+spoes_one:
+  get:
+    summary: Return one SPOE file
+    description: Returns one SPOE file.
+    operationId: getOneSpoeFile
+    tags:
+      - Spoe
+    parameters:
+      - name: name
+        in: path
+        description: SPOE file name
+        required: true
+        type: string
+    responses:
+      '200':
+        description: Successful operation
+        headers:
+          Configuration-Version:
+            description: Spoe configuration file version
+            type: integer
+            x-nullable: false
+        schema:
+          type: object
+          properties:
+            data:
+              type: string
+            _version:
+              type: integer
+      '404':
+        $ref: '#/responses/NotFound'
+      'default':
+        $ref: '#/responses/DefaultError'
+  delete:
+    summary: Delete SPOE file
+    description: Deletes SPOE file.
+    operationId: deleteSpoeFile
+    parameters:
+      - name: name
+        in: path
+        description: SPOE file name
+        required: true
+        type: string
+    tags:
+      - Spoe
+    responses:
+      '204':
+        description: SPOE file deleted
+      '404':
+        $ref: '#/responses/NotFound'
+      'default':
+        $ref: '#/responses/DefaultError'
+spoe_scopes:
+  get:
+    summary: Return an array of spoe scopes
+    description: Returns an array of all configured spoe scopes.
+    operationId: getSpoeScopes
+    parameters:
+      - name: spoe
+        in: query
+        description: Spoe file name
+        required: true
+        type: string
+      - $ref: "#/parameters/transaction_id"
+    tags:
+      - Spoe
+    responses:
+      '200':
+        description: Successful operation
+        headers:
+          Configuration-Version:
+            description: Spoe configuration file version
+            type: integer
+            x-nullable: false
+        schema:
+          type: object
+          properties:
+            data:
+              $ref: "#/definitions/spoe_scopes"
+            _version:
+              type: integer
+          required:
+            - data
+      'default':
+        $ref: '#/responses/DefaultError'
+  post:
+    summary: Add a new spoe scope
+    description: Adds a new spoe scope.
+    operationId: createSpoeScope
+    parameters:
+      - name: spoe
+        in: query
+        description: Spoe file name
+        required: true
+        type: string
+      - name: data
+        required: true
+        in: body
+        schema:
+          $ref: "#/definitions/spoe_scope"
+      - $ref: "#/parameters/transaction_id"
+      - $ref: "#/parameters/version"
+    tags:
+      - Spoe
+    responses:
+      '201':
+        description: Spoe scope created
+        schema:
+          $ref: "#/definitions/spoe_scope"
+      '409':
+        $ref: '#/responses/AlreadyExists'
+      '400':
+        $ref: '#/responses/BadRequest'
+      'default':
+        $ref: '#/responses/DefaultError'
+spoe_scopes_one:
+  get:
+    summary: Return one SPOE scope
+    description: Returns one SPOE scope in one SPOE file.
+    operationId: getSpoeScope
+    tags:
+      - Spoe
+    parameters:
+      - name: spoe
+        in: query
+        description: Spoe file name
+        required: true
+        type: string
+      - name: name
+        in: path
+        description: Spoe scope
+        required: true
+        type: string
+      - $ref: "#/parameters/transaction_id"
+    responses:
+      '200':
+        description: Successful operation
+        headers:
+          Configuration-Version:
+            description: Spoe configuration file version
+            type: integer
+            x-nullable: false
+        schema:
+          type: object
+          properties:
+            data:
+              $ref: "#/definitions/spoe_scope"
+            _version:
+              type: integer
+          required:
+            - data
+      '404':
+        $ref: '#/responses/NotFound'
+      'default':
+        $ref: '#/responses/DefaultError'
+  delete:
+    summary: Delete a SPOE scope
+    description: Deletes a SPOE scope from the configuration file.
+    operationId: deleteSpoeScope
+    tags:
+      - Spoe
+    parameters:
+      - name: spoe
+        in: query
+        description: Spoe file name
+        required: true
+        type: string
+      - name: name
+        in: path
+        description: Spoe scope name
+        required: true
+        type: string
+      - $ref: "#/parameters/transaction_id"
+      - $ref: "#/parameters/version"
+    responses:
+      '204':
+        description: Spoe scope deleted
+      '404':
+        $ref: '#/responses/NotFound'
+      'default':
+        $ref: '#/responses/DefaultError'
+spoe_agents:
+  get:
+    summary: Return an array of spoe agents in one scope
+    description: Returns an array of all configured spoe agents in one scope.
+    operationId: getSpoeAgents
+    parameters:
+      - name: spoe
+        in: query
+        description: Spoe file name
+        required: true
+        type: string
+      - name: scope
+        in: query
+        description: Spoe scope
+        required: true
+        type: string
+      - $ref: "#/parameters/transaction_id"
+    tags:
+      - Spoe
+    responses:
+      '200':
+        description: Successful operation
+        headers:
+          Configuration-Version:
+            description: Spoe configuration file version
+            type: integer
+            x-nullable: false
+        schema:
+          type: object
+          properties:
+            data:
+              $ref: "#/definitions/spoe_agents"
+            _version:
+              type: integer
+          required:
+            - data
+      'default':
+        $ref: '#/responses/DefaultError'
+  post:
+    summary: Add a new spoe agent to scope
+    description: Adds a new spoe agent to the spoe scope.
+    operationId: createSpoeAgent
+    parameters:
+      - name: spoe
+        in: query
+        description: Spoe file name
+        required: true
+        type: string
+      - name: scope
+        in: query
+        description: Spoe scope
+        required: true
+        type: string
+      - name: data
+        required: true
+        in: body
+        schema:
+          $ref: "#/definitions/spoe_agent"
+      - $ref: "#/parameters/transaction_id"
+      - $ref: "#/parameters/version"
+    tags:
+      - Spoe
+    responses:
+      '201':
+        description: Spoe agent created
+        schema:
+          $ref: "#/definitions/spoe_agent"
+      '409':
+        $ref: '#/responses/AlreadyExists'
+      '400':
+        $ref: '#/responses/BadRequest'
+      'default':
+        $ref: '#/responses/DefaultError'
+spoe_agents_one:
+  get:
+    summary: Return a spoe agent
+    description: Returns one spoe agent configuration in one SPOE scope.
+    operationId: getSpoeAgent
+    tags:
+      - Spoe
+    parameters:
+      - name: spoe
+        in: query
+        description: Spoe file name
+        required: true
+        type: string
+      - name: scope
+        in: query
+        description: Spoe scope
+        required: true
+        type: string
+      - name: name
+        in: path
+        description: Spoe agent name
+        required: true
+        type: string
+      - $ref: "#/parameters/transaction_id"
+    responses:
+      '200':
+        description: Successful operation
+        headers:
+          Configuration-Version:
+            description: Spoe configuration file version
+            type: integer
+            x-nullable: false
+        schema:
+          type: object
+          properties:
+            data:
+              $ref: "#/definitions/spoe_agent"
+            _version:
+              type: integer
+          required:
+            - data
+      '404':
+        $ref: '#/responses/NotFound'
+      'default':
+        $ref: '#/responses/DefaultError'
+  put:
+    summary: Replace a SPOE agent
+    description: Replaces a SPOE agent configuration in one SPOE scope.
+    operationId: replaceSpoeAgent
+    tags:
+      - Spoe
+    parameters:
+      - name: spoe
+        in: query
+        description: Spoe file name
+        required: true
+        type: string
+      - name: scope
+        in: query
+        description: Spoe scope
+        required: true
+        type: string
+      - name: name
+        in: path
+        description: Spoe agent name
+        required: true
+        type: string
+      - name: data
+        required: true
+        in: body
+        schema:
+          $ref: "#/definitions/spoe_agent"
+      - $ref: "#/parameters/transaction_id"
+      - $ref: "#/parameters/version"
+    responses:
+      '200':
+        description: Spoe agent replaced
+        schema:
+          $ref: "#/definitions/spoe_agent"
+      '400':
+        $ref: '#/responses/BadRequest'
+      '404':
+        $ref: '#/responses/NotFound'
+      'default':
+        $ref: '#/responses/DefaultError'
+  delete:
+    summary: Delete a SPOE agent
+    description: Deletes a SPOE agent from the configuration in one SPOE scope.
+    operationId: deleteSpoeAgent
+    tags:
+      - Spoe
+    parameters:
+      - name: spoe
+        in: query
+        description: Spoe file name
+        required: true
+        type: string
+      - name: scope
+        in: query
+        description: Spoe scope
+        required: true
+        type: string
+      - name: name
+        in: path
+        description: Spoe agent name
+        required: true
+        type: string
+      - $ref: "#/parameters/transaction_id"
+      - $ref: "#/parameters/version"
+    responses:
+      '204':
+        description: Spoe agent deleted
+      '404':
+        $ref: '#/responses/NotFound'
+      'default':
+        $ref: '#/responses/DefaultError'
+spoe_messages:
+  get:
+    summary: Return an array of spoe messages in one scope
+    description: Returns an array of all configured spoe messages in one scope.
+    operationId: getSpoeMessages
+    parameters:
+      - name: spoe
+        in: query
+        description: Spoe file name
+        required: true
+        type: string
+      - name: scope
+        in: query
+        description: Spoe scope
+        required: true
+        type: string
+      - $ref: "#/parameters/transaction_id"
+    tags:
+      - Spoe
+    responses:
+      '200':
+        description: Successful operation
+        headers:
+          Configuration-Version:
+            description: Spoe configuration file version
+            type: integer
+            x-nullable: false
+        schema:
+          type: object
+          properties:
+            data:
+              $ref: "#/definitions/spoe_messages"
+            _version:
+              type: integer
+          required:
+            - data
+      'default':
+        $ref: '#/responses/DefaultError'
+  post:
+    summary: Add a new spoe message to scope
+    description: Adds a new spoe message to the spoe scope.
+    operationId: createSpoeMessage
+    parameters:
+      - name: spoe
+        in: query
+        description: Spoe file name
+        required: true
+        type: string
+      - name: scope
+        in: query
+        description: Spoe scope
+        required: true
+        type: string
+      - name: data
+        required: true
+        in: body
+        schema:
+          $ref: "#/definitions/spoe_message"
+      - $ref: "#/parameters/transaction_id"
+      - $ref: "#/parameters/version"
+    tags:
+      - Spoe
+    responses:
+      '201':
+        description: Spoe message created
+        schema:
+          $ref: "#/definitions/spoe_message"
+      '409':
+        $ref: '#/responses/AlreadyExists'
+      '400':
+        $ref: '#/responses/BadRequest'
+      'default':
+        $ref: '#/responses/DefaultError'
+spoe_messages_one:
+  get:
+    summary: Return a spoe message
+    description: Returns one spoe message configuration in SPOE scope.
+    operationId: getSpoeMessage
+    tags:
+      - Spoe
+    parameters:
+      - name: spoe
+        in: query
+        description: Spoe file name
+        required: true
+        type: string
+      - name: scope
+        in: query
+        description: Spoe scope
+        required: true
+        type: string
+      - name: name
+        in: path
+        description: Spoe message name
+        required: true
+        type: string
+      - $ref: "#/parameters/transaction_id"
+    responses:
+      '200':
+        description: Successful operation
+        headers:
+          Configuration-Version:
+            description: Spoe configuration file version
+            type: integer
+            x-nullable: false
+        schema:
+          type: object
+          properties:
+            data:
+              $ref: "#/definitions/spoe_message"
+            _version:
+              type: integer
+          required:
+            - data
+      '404':
+        $ref: '#/responses/NotFound'
+      'default':
+        $ref: '#/responses/DefaultError'
+  put:
+    summary: Replace a spoe message
+    description: Replaces a spoe message configuration in one SPOE scope.
+    operationId: replaceSpoeMessage
+    tags:
+      - Spoe
+    parameters:
+      - name: spoe
+        in: query
+        description: Spoe file name
+        required: true
+        type: string
+      - name: scope
+        in: query
+        description: Spoe scope
+        required: true
+        type: string
+      - name: name
+        in: path
+        description: Spoe message name
+        required: true
+        type: string
+      - name: data
+        required: true
+        in: body
+        schema:
+          $ref: "#/definitions/spoe_message"
+      - $ref: "#/parameters/transaction_id"
+      - $ref: "#/parameters/version"
+    responses:
+      '200':
+        description: Spoe message replaced
+        schema:
+          $ref: "#/definitions/spoe_message"
+      '400':
+        $ref: '#/responses/BadRequest'
+      '404':
+        $ref: '#/responses/NotFound'
+      'default':
+        $ref: '#/responses/DefaultError'
+  delete:
+    summary: Delete a spoe message
+    description: Deletes a spoe message from the SPOE scope.
+    operationId: deleteSpoeMessage
+    tags:
+      - Spoe
+    parameters:
+      - name: spoe
+        in: query
+        description: Spoe file name
+        required: true
+        type: string
+      - name: scope
+        in: query
+        description: Spoe scope
+        required: true
+        type: string
+      - name: name
+        in: path
+        description: Spoe message name
+        required: true
+        type: string
+      - $ref: "#/parameters/transaction_id"
+      - $ref: "#/parameters/version"
+    responses:
+      '204':
+        description: Spoe message deleted
+      '404':
+        $ref: '#/responses/NotFound'
+      'default':
+        $ref: '#/responses/DefaultError'
+spoe_groups:
+  get:
+    summary: Return an array of SPOE groups
+    description: Returns an array of all configured SPOE groups in one SPOE scope.
+    operationId: getSpoeGroups
+    parameters:
+      - name: spoe
+        in: query
+        description: Spoe file name
+        required: true
+        type: string
+      - name: scope
+        in: query
+        description: Spoe scope
+        required: true
+        type: string
+      - $ref: "#/parameters/transaction_id"
+    tags:
+      - Spoe
+    responses:
+      '200':
+        description: Successful operation
+        headers:
+          Configuration-Version:
+            description: Spoe configuration file version
+            type: integer
+            x-nullable: false
+        schema:
+          type: object
+          properties:
+            data:
+              $ref: "#/definitions/spoe_groups"
+            _version:
+              type: integer
+          required:
+            - data
+      'default':
+        $ref: '#/responses/DefaultError'
+  post:
+    summary: Add a new SPOE groups
+    description: Adds a new SPOE groups to the SPOE scope.
+    operationId: createSpoeGroup
+    parameters:
+      - name: spoe
+        in: query
+        description: Spoe file name
+        required: true
+        type: string
+      - name: scope
+        in: query
+        description: Spoe scope
+        required: true
+        type: string
+      - name: data
+        required: true
+        in: body
+        schema:
+          $ref: "#/definitions/spoe_group"
+      - $ref: "#/parameters/transaction_id"
+      - $ref: "#/parameters/version"
+    tags:
+      - Spoe
+    responses:
+      '201':
+        description: Spoe groups created
+        schema:
+          $ref: "#/definitions/spoe_group"
+      '409':
+        $ref: '#/responses/AlreadyExists'
+      '400':
+        $ref: '#/responses/BadRequest'
+      'default':
+        $ref: '#/responses/DefaultError'
+spoe_groups_one:
+  get:
+    summary: Return a SPOE groups
+    description: Returns one SPOE groups configuration in one SPOE scope.
+    operationId: getSpoeGroup
+    tags:
+      - Spoe
+    parameters:
+      - name: spoe
+        in: query
+        description: Spoe file name
+        required: true
+        type: string
+      - name: scope
+        in: query
+        description: Spoe scope
+        required: true
+        type: string
+      - name: name
+        in: path
+        description: Spoe group name
+        required: true
+        type: string
+      - $ref: "#/parameters/transaction_id"
+    responses:
+      '200':
+        description: Successful operation
+        headers:
+          Configuration-Version:
+            description: Spoe configuration file version
+            type: integer
+            x-nullable: false
+        schema:
+          type: object
+          properties:
+            data:
+              $ref: "#/definitions/spoe_group"
+            _version:
+              type: integer
+          required:
+            - data
+      '404':
+        $ref: '#/responses/NotFound'
+      'default':
+        $ref: '#/responses/DefaultError'
+  put:
+    summary: Replace a SPOE groups
+    description: Replaces a SPOE groups configuration in one SPOE scope.
+    operationId: replaceSpoeGroup
+    tags:
+      - Spoe
+    parameters:
+      - name: spoe
+        in: query
+        description: Spoe file name
+        required: true
+        type: string
+      - name: scope
+        in: query
+        description: Spoe scope
+        required: true
+        type: string
+      - name: name
+        in: path
+        description: Spoe group name
+        required: true
+        type: string
+      - name: data
+        required: true
+        in: body
+        schema:
+          $ref: "#/definitions/spoe_group"
+      - $ref: "#/parameters/transaction_id"
+      - $ref: "#/parameters/version"
+    responses:
+      '200':
+        description: Spoe groups replaced
+        schema:
+          $ref: "#/definitions/spoe_group"
+      '400':
+        $ref: '#/responses/BadRequest'
+      '404':
+        $ref: '#/responses/NotFound'
+      'default':
+        $ref: '#/responses/DefaultError'
+  delete:
+    summary: Delete a SPOE groups
+    description: Deletes a SPOE groups from the one SPOE scope.
+    operationId: deleteSpoeGroup
+    tags:
+      - Spoe
+    parameters:
+      - name: spoe
+        in: query
+        description: Spoe file name
+        required: true
+        type: string
+      - name: scope
+        in: query
+        description: Spoe scope
+        required: true
+        type: string
+      - name: name
+        in: path
+        description: Spoe group name
+        required: true
+        type: string
+      - $ref: "#/parameters/transaction_id"
+      - $ref: "#/parameters/version"
+    responses:
+      '204':
+        description: Spoe group deleted
+      '404':
+        $ref: '#/responses/NotFound'
+      'default':
+        $ref: '#/responses/DefaultError'
+version:
+  get:
+    summary: Return a SPOE configuration version
+    description: Returns SPOE configuration version.
+    operationId: getSpoeConfigurationVersion
+    tags:
+      - Spoe
+    parameters:
+      - $ref: "#/parameters/transaction_id"
+      - name: spoe
+        in: query
+        description: Spoe file name
+        required: true
+        type: string
+    responses:
+      '200':
+        description: SPOE configuration version
+        schema:
+          type: integer
+      '404':
+        $ref: '#/responses/NotFound'
+      'default':
+        $ref: '#/responses/DefaultError'

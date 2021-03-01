@@ -1,0 +1,109 @@
+---
+site:
+  title: Site
+  description: |
+    Site configuration. Sites are considered as one service and all farms connected to that service.
+    Farms are connected to service using use-backend and default_backend directives. Sites let you
+    configure simple HAProxy configurations, for more advanced options use /haproxy/configuration
+    endpoints.
+  type: object
+  required:
+    - name
+  properties:
+    name:
+      type: string
+      pattern: '^[A-Za-z0-9-_.:]+$'
+      x-nullable: false
+    service:
+      type: object
+      properties:
+        mode:
+          type: string
+          enum: [http, tcp]
+        http_connection_mode:
+          type: string
+          x-display-name: HTTP Connection Mode
+          enum: [http-tunnel, httpclose, forced-close, http-server-close, http-keep-alive]
+          x-dependency:
+            mode:
+              value: http
+        maxconn:
+          type: integer
+          x-display-name: Max Connections
+          x-nullable: true
+        listeners:
+          type: array
+          items:
+            $ref: "#/definitions/bind"
+    farms:
+      type: array
+      items:
+        type: object
+        x-go-name: SiteFarm
+        required:
+          - name
+          - use_as
+        properties:
+          name:
+            type: string
+            pattern: '^[A-Za-z0-9-_.:]+$'
+            x-nullable: false
+          use_as:
+            type: string
+            enum: [default, conditional]
+            x-nullable: false
+          cond:
+            type: string
+            x-display-name: Condition
+            enum: [if, unless]
+            x-dependency:
+              use_as:
+                value: conditional
+                required: true
+          cond_test:
+            type: string
+            x-display-name: Condition Test
+            x-dependency:
+              use_as:
+                value: conditional
+                required: true
+          balance:
+            $ref: "#/definitions/balance"
+          mode:
+            type: string
+            enum: [http, tcp]
+          forwardfor:
+            $ref: "#/definitions/forwardfor"
+          servers:
+            type: array
+            items:
+              $ref: "#/definitions/server"
+  additionalProperties: false
+  example:
+    name: test_site
+    service:
+      mode: http
+      http_connection_mode: httpclose
+      maxconn: 2000
+      listeners:
+        - name: test_listener
+          address: 127.0.0.1
+          port: 80
+        - name: test_listener_2
+          address: 127.0.0.1
+          port: 8080
+    farms:
+      - name: www_backend
+        use_as: default
+        balance:
+          algorithm: roundrobin
+        mode: http
+        servers:
+          - name: www_server
+            address: 127.0.1.1
+            port: 4567
+            weight: 30
+          - name: www_server_new
+            address: 127.0.1.2
+            port: 4567
+            weight: 70

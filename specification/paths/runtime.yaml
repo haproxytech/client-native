@@ -1,0 +1,412 @@
+---
+process_info:
+  get:
+    tags:
+      - Information
+    summary: Return HAProxy process information
+    description: Return HAProxy process information
+    operationId: getHaproxyProcessInfo
+    produces:
+      - application/json
+    responses:
+      '200':
+        description: Success
+        schema:
+          $ref: '#/definitions/process_infos'
+      'default':
+        $ref: '#/responses/DefaultError'
+servers:
+  get:
+    summary: Return an array of runtime servers' settings
+    description: Returns an array of all servers' runtime settings.
+    operationId: getRuntimeServers
+    tags:
+      - Server
+    parameters:
+      - name: backend
+        in: query
+        description: Parent backend name
+        required: true
+        type: string
+    responses:
+      '200':
+        description: Successful operation
+        schema:
+          $ref: "#/definitions/runtime_servers"
+      'default':
+        $ref: '#/responses/DefaultError'
+servers_one:
+  get:
+    summary: Return one server runtime settings
+    description: Returns one server runtime settings by it's name in the specified backend.
+    operationId: getRuntimeServer
+    tags:
+      - Server
+    parameters:
+      - name: name
+        in: path
+        description: Server name
+        required: true
+        type: string
+      - name: backend
+        in: query
+        description: Parent backend name
+        required: true
+        type: string
+    responses:
+      '200':
+        description: Successful operation
+        schema:
+          $ref: "#/definitions/runtime_server"
+      '404':
+        $ref: '#/responses/NotFound'
+      'default':
+        $ref: '#/responses/DefaultError'
+  put:
+    summary: Replace server transient settings
+    description: Replaces a server transient settings by it's name in the specified backend.
+    operationId: replaceRuntimeServer
+    tags:
+      - Server
+    parameters:
+      - name: name
+        in: path
+        description: Server name
+        required: true
+        type: string
+      - name: backend
+        in: query
+        description: Parent backend name
+        required: true
+        type: string
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/runtime_server'
+    responses:
+      '200':
+        description: Server transient settings replaced
+        schema:
+          $ref: "#/definitions/runtime_server"
+      '400':
+        $ref: '#/responses/BadRequest'
+      '404':
+        $ref: '#/responses/NotFound'
+      'default':
+        $ref: '#/responses/DefaultError'
+stick_tables:
+  get:
+    summary: Return Stick Tables
+    description: Returns an array of all stick tables.
+    operationId: getStickTables
+    tags:
+      - StickTable
+    parameters:
+      - name: process
+        in: query
+        description: Process number if master-worker mode, if not all processes are returned
+        type: integer
+    responses:
+      '200':
+        description: Successful operation
+        schema:
+          $ref: "#/definitions/stick_tables"
+      'default':
+        $ref: '#/responses/DefaultError'
+stick_tables_one:
+  get:
+    summary: Return Stick Table
+    description: Returns one stick table from runtime.
+    operationId: getStickTable
+    tags:
+      - StickTable
+    parameters:
+      - name: name
+        in: path
+        description: Stick table name
+        required: true
+        type: string
+      - name: process
+        in: query
+        description: Process number if master-worker mode, if not only first process is returned
+        required: true
+        type: integer
+    responses:
+      '200':
+        description: Successful operation
+        schema:
+          $ref: "#/definitions/stick_table"
+      '404':
+        $ref: '#/responses/NotFound'
+      'default':
+        $ref: '#/responses/DefaultError'
+stick_table_entries:
+  get:
+    summary: Return Stick Table Entries
+    description: Returns an array of all entries in a given stick tables.
+    operationId: getStickTableEntries
+    tags:
+      - StickTable
+    parameters:
+      - name: stick_table
+        in: query
+        description: Stick table name
+        required: true
+        type: string
+      - name: process
+        in: query
+        description: Process number if master-worker mode, if not only first process is returned
+        required: true
+        type: integer
+      - name: filter
+        in: query
+        description: A list of filters in format data.<type> <operator> <value> separated by comma
+        type: string
+      - name: key
+        in: query
+        description: Key which we want the entries for
+        type: string
+      - name: count
+        in: query
+        description: Max number of entries to be returned for pagination
+        type: integer
+      - name: offset
+        in: query
+        description: Offset which indicates how many items we skip in pagination
+        type: integer
+    responses:
+      '200':
+        description: Successful operation
+        schema:
+          $ref: "#/definitions/stick_table_entries"
+      'default':
+        $ref: '#/responses/DefaultError'
+maps:
+  get:  # show map
+    summary: Return runtime map files
+    description: Returns runtime map files.
+    operationId: getAllRuntimeMapFiles
+    tags:
+      - Maps
+    parameters:
+      - name: include_unmanaged
+        in: query
+        description: If true, also show unmanaged map files loaded in haproxy
+        required: false
+        type: boolean
+        default: false
+    responses:
+      '200':
+        description: Successful operation
+        schema:
+          $ref: "#/definitions/maps"
+      '404':
+        $ref: '#/responses/NotFound'
+      'default':
+        $ref: '#/responses/DefaultError'
+maps_one:
+  get:  # one map file
+    summary: Return one runtime map file
+    description: Returns one runtime map file.
+    operationId: getOneRuntimeMap
+    tags:
+      - Maps
+    parameters:
+      - name: name
+        in: path
+        description: Map file name
+        required: true
+        type: string
+    responses:
+      '200':
+        description: Successful operation
+        schema:
+          $ref: "#/definitions/map"
+      '404':
+        $ref: '#/responses/NotFound'
+      'default':
+        $ref: '#/responses/DefaultError'
+  delete:  # clear map [map]
+    summary: Remove all map entries from the map file
+    description: Remove all map entries from the map file.
+    operationId: clearRuntimeMap
+    parameters:
+      - name: name
+        in: path
+        description: Map file name
+        required: true
+        type: string
+      - name: forceDelete
+        in: query
+        description: If true, deletes file from disk
+        type: boolean
+      - name: force_sync
+        in: query
+        description: If true, immediately syncs changes to disk
+        type: boolean
+        default: false
+    tags:
+      - Maps
+    responses:
+      '204':
+        description: All map entries deleted
+      '404':
+        $ref: '#/responses/NotFound'
+      'default':
+        $ref: '#/responses/DefaultError'
+maps_entries:
+  get:  # show map [map]
+    summary: Return one map runtime entries
+    description: Returns an array of all entries in a given runtime map file.
+    operationId: showRuntimeMap
+    tags:
+      - Maps
+    parameters:
+      - name: map
+        in: query
+        description: Mapfile attribute storage_name
+        required: true
+        type: string
+    responses:
+      '200':
+        description: Successful operation
+        schema:
+          $ref: "#/definitions/map_entries"
+      '404':
+        $ref: '#/responses/NotFound'
+      'default':
+        $ref: '#/responses/DefaultError'
+  post:  # add map [map] key value
+    summary: Adds an entry into the map file
+    description: Adds an entry into the map file.
+    operationId: addMapEntry
+    parameters:
+      - name: map
+        in: query
+        description: Mapfile attribute storage_name
+        required: true
+        type: string
+      - name: force_sync
+        in: query
+        description: If true, immediately syncs changes to disk
+        type: boolean
+        default: false
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/map_entry'
+    tags:
+      - Maps
+    responses:
+      '201':
+        description: Map entry created
+        schema:
+          $ref: "#/definitions/map_entry"
+      '409':
+        $ref: '#/responses/AlreadyExists'
+      '400':
+        $ref: '#/responses/BadRequest'
+      'default':
+        $ref: '#/responses/DefaultError'
+maps_entries_one:
+  get:  # get map <map> <value>
+    summary: Return one map runtime setting
+    description: Returns one map runtime setting by it's id.
+    operationId: getRuntimeMapEntry
+    tags:
+      - Maps
+    parameters:
+      - name: id
+        in: path
+        description: Map id
+        required: true
+        type: string
+      - name: map
+        in: query
+        description: Mapfile attribute storage_name
+        required: true
+        type: string
+    responses:
+      '200':
+        description: Successful operation
+        schema:
+          $ref: "#/definitions/map_entry"
+      '404':
+        $ref: '#/responses/NotFound'
+      'default':
+        $ref: '#/responses/DefaultError'
+  put:  # set map <map> [<key>|#<ref>] <value>
+    summary: Replace the value corresponding to each id in a map
+    description: Replaces the value corresponding to each id in a map.
+    operationId: replaceRuntimeMapEntry
+    tags:
+      - Maps
+    parameters:
+      - name: id
+        in: path
+        description: Map id
+        required: true
+        type: string
+      - name: map
+        in: query
+        description: Mapfile attribute storage_name
+        required: true
+        type: string
+      - name: force_sync
+        in: query
+        description: If true, immediately syncs changes to disk
+        type: boolean
+        default: false
+      - name: data
+        in: body
+        required: true
+        schema:
+          type: object
+          required:
+            - value
+          properties:
+            value:
+              description: Map value
+              type: string
+    responses:
+      '200':
+        description: Map value replaced
+        schema:
+          $ref: "#/definitions/map_entry"
+      '400':
+        $ref: '#/responses/BadRequest'
+      '404':
+        $ref: '#/responses/NotFound'
+      'default':
+        $ref: '#/responses/DefaultError'
+  delete:  # del map <map> [<key>|#<ref>]
+    summary: Deletes all the map entries from the map by its id
+    description: Delete all the map entries from the map by its id.
+    operationId: deleteRuntimeMapEntry
+    tags:
+      - Maps
+    parameters:
+      - name: id
+        in: path
+        description: Map id
+        required: true
+        type: string
+      - name: map
+        in: query
+        description: Mapfile attribute storage_name
+        required: true
+        type: string
+      - name: force_sync
+        in: query
+        description: If true, immediately syncs changes to disk
+        type: boolean
+        default: false
+    responses:
+      '204':
+        description: Map key/value deleted
+      '404':
+        $ref: '#/responses/NotFound'
+      'default':
+        $ref: '#/responses/DefaultError'

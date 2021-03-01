@@ -1,0 +1,163 @@
+---
+sites:
+  get:
+    summary: Return an array of sites
+    description: Returns an array of all configured sites.
+    operationId: getSites
+    parameters:
+      - $ref: "#/parameters/transaction_id"
+    tags:
+      - Sites
+    responses:
+      '200':
+        description: Successful operation
+        headers:
+          Configuration-Version:
+            description: Configuration file version
+            type: integer
+            x-nullable: false
+        schema:
+          type: object
+          required:
+            - data
+          properties:
+            data:
+              $ref: "#/definitions/sites"
+            _version:
+              type: integer
+      'default':
+        $ref: '#/responses/DefaultError'
+  post:
+    summary: Add a site
+    description: Adds a new site to the configuration file.
+    operationId: createSite
+    parameters:
+      - name: data
+        required: true
+        in: body
+        schema:
+          $ref: "#/definitions/site"
+      - $ref: "#/parameters/transaction_id"
+      - $ref: "#/parameters/version"
+      - $ref: "#/parameters/force_reload"
+    tags:
+      - Sites
+    responses:
+      '202':
+        description: Configuration change accepted and reload requested
+        headers:
+          Reload-ID:
+            description: ID of the requested reload
+            type: string
+        schema:
+          $ref: "#/definitions/site"
+      '201':
+        description: Site created
+        schema:
+          $ref: "#/definitions/site"
+      '409':
+        $ref: '#/responses/AlreadyExists'
+      '400':
+        $ref: '#/responses/BadRequest'
+      'default':
+        $ref: '#/responses/DefaultError'
+sites_one:
+  get:
+    summary: Return a site
+    description: Returns one site configuration by it's name.
+    operationId: getSite
+    tags:
+      - Sites
+    parameters:
+      - name: name
+        in: path
+        description: Site frontend name
+        required: true
+        type: string
+      - $ref: "#/parameters/transaction_id"
+    responses:
+      '200':
+        description: Successful operation
+        headers:
+          Configuration-Version:
+            description: Configuration file version
+            type: integer
+            x-nullable: false
+        schema:
+          type: object
+          properties:
+            data:
+              $ref: "#/definitions/site"
+            _version:
+              type: integer
+      '404':
+        $ref: '#/responses/NotFound'
+      'default':
+        $ref: '#/responses/DefaultError'
+  put:
+    summary: Replace a site
+    description: Replaces a site configuration by it's name.
+    operationId: replaceSite
+    tags:
+      - Sites
+    parameters:
+      - name: name
+        in: path
+        description: Site frontend name
+        required: true
+        type: string
+      - name: data
+        required: true
+        in: body
+        schema:
+          $ref: "#/definitions/site"
+      - $ref: "#/parameters/transaction_id"
+      - $ref: "#/parameters/version"
+      - $ref: "#/parameters/force_reload"
+    responses:
+      '202':
+        description: Configuration change accepted and reload requested
+        headers:
+          Reload-ID:
+            description: ID of the requested reload
+            type: string
+        schema:
+          $ref: "#/definitions/site"
+      '200':
+        description: Site replaced
+        schema:
+          $ref: "#/definitions/site"
+      '400':
+        $ref: '#/responses/BadRequest'
+      '404':
+        $ref: '#/responses/NotFound'
+      'default':
+        $ref: '#/responses/DefaultError'
+  delete:
+    summary: Delete a site
+    description: Deletes a site from the configuration by it's name.
+    operationId: deleteSite
+    tags:
+      - Sites
+    parameters:
+      - name: name
+        in: path
+        description: Site frontend name
+        required: true
+        type: string
+      - $ref: "#/parameters/transaction_id"
+      - $ref: "#/parameters/version"
+      - $ref: "#/parameters/force_reload"
+    responses:
+      '202':
+        description: Configuration change accepted and reload requested
+        headers:
+          Reload-ID:
+            description: ID of the requested reload
+            type: string
+      '204':
+        description: Site deleted
+      '404':
+        $ref: '#/responses/NotFound'
+      'default':
+        $ref: '#/responses/DefaultError'

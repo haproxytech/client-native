@@ -1,0 +1,19 @@
+---
+monitor_uri:
+  type: string
+monitor_fail:
+  required:
+    - cond
+    - cond_test
+  type: object
+  properties:
+    cond:
+      type: string
+      x-display-name: Condition
+      enum: [if, unless]
+    cond_test:
+      type: string
+      x-display-name: Condition Test
+      x-dependency:
+        cond:
+          required: true

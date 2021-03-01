@@ -1,0 +1,463 @@
+---
+process_infos:
+  title: HAProxy Information
+  description: General HAProxy process information
+  type: array
+  items:
+    $ref: '#/definitions/process_info'
+process_info:
+  type: object
+  properties:
+    runtimeAPI:
+      type: string
+    error:
+      type: string
+    info:
+      $ref: '#/definitions/process_info_item'
+process_info_item:
+  type: object
+  properties:
+    version:
+      type: string
+      description: HAProxy version string
+    release_date:
+      type: string
+      format: date
+      description: HAProxy version release date
+    nbthread:
+      type: integer
+      description: Number of threads
+      x-display-name: Number of Threads
+      x-nullable: true
+    processes:
+      type: integer
+      description: Number of spawned processes
+      x-nullable: true
+      x-display-name: Number of processes
+    process_num:
+      type: integer
+      description: Process number
+      x-display-name: Process Number
+      x-nullable: true
+    pid:
+      type: integer
+      description: Process id of the replying worker process
+      x-nullable: true
+      x-display-name: PID
+    uptime:
+      type: integer
+      description: HAProxy uptime in s
+      x-nullable: true
+    mem_max_mb:
+      type: integer
+      x-nullable: true
+    pool_alloc_mb:
+      type: integer
+      x-nullable: true
+    pool_used_mb:
+      type: integer
+      x-nullable: true
+    pool_failed:
+      type: integer
+      x-nullable: true
+    ulimit_n:
+      type: integer
+      x-nullable: true
+    max_sock:
+      type: integer
+      x-nullable: true
+    max_conn:
+      type: integer
+      x-nullable: true
+    hard_max_conn:
+      type: integer
+      x-nullable: true
+    curr_conns:
+      type: integer
+      x-nullable: true
+    cum_conns:
+      type: integer
+      x-nullable: true
+    cum_req:
+      type: integer
+      x-nullable: true
+    max_ssl_conns:
+      type: integer
+      x-nullable: true
+    curr_ssl_conns:
+      type: integer
+      x-nullable: true
+    cum_ssl_conns:
+      type: integer
+      x-nullable: true
+    max_pipes:
+      type: integer
+      x-nullable: true
+    pipes_used:
+      type: integer
+      x-nullable: true
+    pipes_free:
+      type: integer
+      x-nullable: true
+    conn_rate:
+      type: integer
+      x-nullable: true
+    conn_rate_limit:
+      type: integer
+      x-nullable: true
+    max_conn_rate:
+      type: integer
+      x-nullable: true
+    sess_rate:
+      type: integer
+      x-nullable: true
+    sess_rate_limit:
+      type: integer
+      x-nullable: true
+    max_sess_rate:
+      type: integer
+      x-nullable: true
+    ssl_rate:
+      type: integer
+      x-nullable: true
+    ssl_rate_limit:
+      type: integer
+      x-nullable: true
+    max_ssl_rate:
+      type: integer
+      x-nullable: true
+    ssl_frontend_key_rate:
+      type: integer
+      x-nullable: true
+    ssl_frontend_max_key_rate:
+      type: integer
+      x-nullable: true
+    ssl_frontend_session_reuse:
+      type: integer
+      x-nullable: true
+    ssl_backend_key_rate:
+      type: integer
+      x-nullable: true
+    ssl_backend_max_key_rate:
+      type: integer
+      x-nullable: true
+    ssl_cache_lookups:
+      type: integer
+      x-nullable: true
+    ssl_cache_misses:
+      type: integer
+      x-nullable: true
+    compress_bps_in:
+      type: integer
+      x-nullable: true
+    compress_bps_out:
+      type: integer
+      x-nullable: true
+    compress_bps_rate_lim:
+      type: integer
+      x-nullable: true
+    zlib_mem_usage:
+      type: integer
+      x-nullable: true
+    max_zlib_mem_usage:
+      type: integer
+      x-nullable: true
+    tasks:
+      type: integer
+      x-nullable: true
+    run_queue:
+      type: integer
+      x-nullable: true
+    idle_pct:
+      type: integer
+      x-nullable: true
+    node:
+      type: string
+    stopping:
+      type: integer
+      x-nullable: true
+    jobs:
+      type: integer
+      x-nullable: true
+    unstoppable:
+      type: integer
+      x-nullable: true
+    listeners:
+      type: integer
+      x-nullable: true
+    active_peers:
+      type: integer
+      x-nullable: true
+    connected_peers:
+      type: integer
+      x-nullable: true
+    dropped_logs:
+      type: integer
+      x-nullable: true
+    busy_polling:
+      type: integer
+      x-nullable: true
+    failed_resolutions:
+      type: integer
+      x-nullable: true
+    total_bytes_out:
+      type: integer
+      x-nullable: true
+    bytes_out_rate:
+      type: integer
+      x-nullable: true
+server:
+  title: Runtime Server
+  description: Runtime transient server properties
+  type: object
+  properties:
+    id:
+      type: string
+      readOnly: true
+    name:
+      type: string
+      readOnly: true
+    address:
+      type: string
+      pattern: '^[^\s]+$'
+      x-nullable: false
+      readOnly: true
+    port:
+      type: integer
+      x-nullable: true
+      minimum: 1
+      maximum: 65535
+      readOnly: true
+    operational_state:
+      type: string
+      enum: [up, down, stopping]
+    admin_state:
+      type: string
+      enum: [ready, maint, drain]
+  example:
+    server_id: 1
+    server_name: web_server
+    address: 127.0.0.5
+    port: 80
+    operational_state: up
+    admin_state: ready
+table:
+  title: Stick Table
+  description: Stick Table Information
+  type: object
+  properties:
+    process:
+      type: integer
+      x-nullable: true
+      description: Process number if master-worker mode
+    name:
+      type: string
+    type:
+      type: string
+      enum: [ip, ipv6, integer, string, binary]
+    size:
+      type: integer
+      x-nullable: true
+    used:
+      type: integer
+      x-nullable: true
+    fields:
+      type: array
+      items:
+        x-go-name: StickTableField
+        type: object
+        properties:
+          field:
+            type: string
+            enum: [server_id, gpc0, gpc0_rate, gpc1, gpc1_rate, gpt0, conn_cnt, conn_cur, conn_rate, sess_cnt, sess_rate, http_req_cnt, http_req_rate, http_err_cnt, http_err_rate, bytes_in_cnt, bytes_in_rate, bytes_out_cnt, bytes_out_rate]
+          type:
+            type: string
+            enum: [rate, counter]
+          period:
+            type: integer
+            x-dependency:
+              type:
+                value: rate
+table_entry:
+  title: Stick Table Entry
+  description: One entry in stick table
+  type: object
+  properties:
+    id:
+      type: string
+    key:
+      type: string
+    server_id:
+      type: integer
+      x-nullable: true
+    gpc0:
+      type: integer
+      x-nullable: true
+    gpc0_rate:
+      type: integer
+      x-nullable: true
+    gpc1:
+      type: integer
+      x-nullable: true
+    gpc1_rate:
+      type: integer
+      x-nullable: true
+    gpt0:
+      type: integer
+      x-nullable: true
+    conn_cnt:
+      type: integer
+      x-nullable: true
+    conn_cur:
+      type: integer
+      x-nullable: true
+    conn_rate:
+      type: integer
+      x-nullable: true
+    sess_cnt:
+      type: integer
+      x-nullable: true
+    sess_rate:
+      type: integer
+      x-nullable: true
+    http_req_cnt:
+      type: integer
+      x-nullable: true
+    http_req_rate:
+      type: integer
+      x-nullable: true
+    http_err_cnt:
+      type: integer
+      x-nullable: true
+    http_err_rate:
+      type: integer
+      x-nullable: true
+    bytes_in_cnt:
+      type: integer
+      x-nullable: true
+    bytes_in_rate:
+      type: integer
+      x-nullable: true
+    bytes_out_cnt:
+      type: integer
+      x-nullable: true
+    bytes_out_rate:
+      type: integer
+      x-nullable: true
+    exp:
+      type: integer
+      x-nullable: true
+    use:
+      type: boolean
+map:
+  title: Map File
+  description: Map File
+  type: object
+  properties:
+    id:
+      type: string
+    file:
+      type: string
+    storage_name:
+      type: string
+    description:
+      type: string
+map_entry:
+  title: One Map Entry
+  description: One Map Entry
+  type: object
+  properties:
+    id:
+      type: string
+      readOnly: true
+    key:
+      type: string
+    value:
+      type: string
+ssl_certificate:
+  title: SSL File
+  description: A file containing one or more SSL/TLS certificates and keys
+  type: object
+  properties:
+    file:
+      type: string
+    storage_name:
+      type: string
+    description:
+      type: string
+ssl_cert_entry:
+  title: One SSL Certificate Entry
+  description: One SSL/TLS certificate
+  type: object
+  properties:
+    storage_name:
+      type: string
+    status:
+      type: string
+    serial:
+      type: string
+    not_before:
+      type: string
+      format: date
+    not_after:
+      type: string
+      format: date
+    subject_alternative_names:
+      type: array
+      items:
+        type: string
+    algorithm:
+      type: string
+    sha1_finger_print:
+      type: string
+    subject:
+      type: string
+    issuer:
+      type: string
+    chain_subject:
+      type: string
+    chain_issuer:
+      type: string
+ssl_crt_list:
+  title: crt-list
+  description: One SSL/TLS certificate
+  type: object
+  properties:
+    file:
+      type: string
+ssl_crt_list_entry:
+  title: One crt-list Entry
+  description: One SSL/TLS certificate
+  type: object
+  properties:
+    line_number:
+      type: string
+    file:
+      type: string
+    ssl_bind_config:
+      type: string
+    sni_filters:
+      type: array
+      items:
+        type: string
+acl_file:
+  title: ACL File
+  description: ACL File
+  type: object
+  properties:
+    id:
+      type: string
+    storage_name:
+      type: string
+    description:
+      type: string
+acl_file_entry:
+  title: One ACL File Entry
+  description: One ACL File Entry
+  type: object
+  properties:
+    id:
+      type: string
+      readOnly: true
+    value:
+      type: string

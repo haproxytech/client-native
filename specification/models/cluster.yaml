@@ -1,0 +1,38 @@
+---
+settings:
+  title: Cluster Settings
+  description: Settings related to a cluster.
+  type: object
+  properties:
+    bootstrap_key:
+      type: string
+    mode:
+      type: string
+      enum: [single, cluster]
+    status:
+      type: string
+      enum: [active, unreachable, waiting_approval]
+      readOnly: true
+    cluster:
+      properties:
+        name:
+          type: string
+          readOnly: true
+        description:
+          type: string
+          readOnly: true
+        address:
+          pattern: ^[^\s]+$
+          type: string
+          readOnly: true
+        port:
+          maximum: 65535
+          minimum: 1
+          type: integer
+          x-nullable: true
+          readOnly: true
+        api_base_path:
+          type: string
+          readOnly: true
+      title: Cluster controller information
+      type: object
