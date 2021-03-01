@@ -233,6 +233,7 @@ backend test_2
   timeout server 3s
   cookie BLA rewrite httponly nocache
   stick-table type ip size 100k expire 1h peers mycluster store http_req_rate(10s)
+  http-check expect rstatus some-pattern
 `
 const testPath = "/tmp/haproxy-test.cfg"
 
