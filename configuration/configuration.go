@@ -1123,7 +1123,7 @@ func (s *SectionParser) httpCheck() interface{} {
 			hc.ExclamationMark = h.ExclamationMark
 			hc.Match = h.Match
 			hc.Pattern = h.Pattern
-			*hc.Type = h.Type
+			hc.Type = misc.StringP(h.Type)
 		}
 		return hc
 	}
