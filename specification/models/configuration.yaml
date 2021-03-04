@@ -1017,7 +1017,7 @@ server:
     backup:
       type: string
       enum: [enabled, disabled]
-    ssl_cafile: # ca-file?
+    ssl_cafile:  # ca-file?
       type: string
       x-display-name: SSL CA File
       pattern: '^[^\s]+$'

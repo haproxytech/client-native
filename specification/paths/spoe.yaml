@@ -1,3 +1,4 @@
+---
 spoe_files:
   get:
     summary: Return all available SPOE files
