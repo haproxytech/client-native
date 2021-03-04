@@ -1,13 +1,64 @@
+---
 stages:
+  - build
   - lint
   - test
   - e2e
 variables:
   DOCKER_HOST: tcp://docker:2375
 
-golangci_lint:
-  stage: lint
+build-specification:
+  stage: build
   needs: []
+  image:
+    name: $CI_REGISTRY_GO/golang:1.16
+    entrypoint: [""]
+  tags:
+    - go
+  script:
+    - go run specification/build/build.go -file specification/haproxy-spec.yaml > specification/build/haproxy_spec_to_compare.yaml
+    - diff -u specification/build/haproxy_spec_to_compare.yaml specification/build/haproxy_spec.yaml
+
+yaml-lint:
+  stage: lint
+  needs: ["build-specification"]
+  image:
+    name: $CI_REGISTRY_GO/cytopia/yamllint:latest
+    entrypoint: [""]
+  tags:
+    - go
+  script:
+    # to test locally, run:  docker run --rm -v $(pwd):/data cytopia/yamllint .
+    - /bin/sh -c "yamllint -f colored ."
+    - chmod +x ./specification/scripts/lint-yaml.sh
+    - /bin/sh -c ./specification/scripts/lint-yaml.sh
+
+.go-cache:
+  variables:
+    GOPATH: $CI_PROJECT_DIR/.go
+  image:
+    name: $CI_REGISTRY_GO/golang:1.16
+    entrypoint: [""]
+  before_script:
+    - mkdir -p .go
+  cache:
+    paths:
+      - .go/pkg/mod/
+
+build:
+  extends: .go-cache
+  stage: build
+  needs: []
+  tags:
+    - go
+  before_script:
+    - mkdir -p .go
+  script:
+    - go build
+
+golangci-lint:
+  stage: lint
+  needs: ["build"]
   image:
     name: $CI_REGISTRY_GO/lint:latest
     entrypoint: [""]
@@ -18,7 +69,7 @@ golangci_lint:
 
 lint-commit-msg:
   stage: lint
-  needs: []
+  needs: ["build"]
   image:
     name: $CI_REGISTRY_GO/check-commit:latest
     entrypoint: [""]
@@ -27,35 +78,12 @@ lint-commit-msg:
   script:
     - go run /check.go
 
-.go-cache:
-  variables:
-    GOPATH: $CI_PROJECT_DIR/.go
-  image:
-    name: $CI_REGISTRY_GO/golang:1.15
-    entrypoint: [ "" ]
-  before_script:
-    - mkdir -p .go
-  cache:
-    paths:
-      - .go/pkg/mod/
-
-build:
-  extends: .go-cache
-  stage: lint
-  needs: []
-  tags:
-    - go
-  before_script:
-    - mkdir -p .go
-  script:
-    - go build
-
 test:
   extends: .go-cache
   stage: test
   needs: ["build"]
   image:
-    name: $CI_REGISTRY_GO/golang:1.15
+    name: $CI_REGISTRY_GO/golang:1.16
     entrypoint: [""]
   tags:
     - go
@@ -64,11 +92,11 @@ test:
 
 .e2e:
   stage: e2e
-  needs: ["build"]
+  needs: ["test"]
   extends: .go-cache
   image:
     name: $CI_REGISTRY_GO/docker:stable
-    entrypoint: [ "" ]
+    entrypoint: [""]
   services:
     - name: $CI_REGISTRY_GO/docker:18.09.7-dind
       alias: docker
@@ -82,15 +110,15 @@ test:
   script:
     - docker run --entrypoint "go" client-native-test test -tags integration ./...
 
-HAProxy_2_1:
+HAProxy-2.1:
   extends: .e2e
   variables:
     HAPROXY_VERSION: "2.1"
-HAProxy_2_2:
+HAProxy-2.2:
   extends: .e2e
   variables:
     HAPROXY_VERSION: "2.2"
-HAProxy_2_3:
+HAProxy-2.3:
   extends: .e2e
   variables:
     HAPROXY_VERSION: "2.3"

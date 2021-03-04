@@ -5,7 +5,7 @@
 
 set -e pipefail
 
-haproxy_spec="./build/haproxy_spec.yaml"
+haproxy_spec="./specification/build/haproxy_spec.yaml"
 found="false"
 countTags=0
 lineNo=0

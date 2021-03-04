@@ -3,6 +3,7 @@ extends: default
 
 ignore: |
   build/
+  .github/
 
 rules:
   line-length: disable
