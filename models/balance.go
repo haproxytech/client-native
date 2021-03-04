@@ -53,11 +53,9 @@ type Balance struct {
 	RdpCookieName string `json:"rdp_cookie_name,omitempty"`
 
 	// uri depth
-	// Pattern: ^[^\d+$]
 	URIDepth int64 `json:"uri_depth,omitempty"`
 
 	// uri len
-	// Pattern: ^[^\d+$]
 	URILen int64 `json:"uri_len,omitempty"`
 
 	// uri whole
@@ -71,7 +69,6 @@ type Balance struct {
 	URLParamCheckPost int64 `json:"url_param_check_post,omitempty"`
 
 	// url param max wait
-	// Pattern: ^[^\d+$]
 	URLParamMaxWait int64 `json:"url_param_max_wait,omitempty"`
 }
 
@@ -87,19 +84,7 @@ func (m *Balance) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
-	if err := m.validateURIDepth(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateURILen(formats); err != nil {
-		res = append(res, err)
-	}
-
 	if err := m.validateURLParam(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateURLParamMaxWait(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -189,32 +174,6 @@ func (m *Balance) validateRdpCookieName(formats strfmt.Registry) error {
 	return nil
 }
 
-func (m *Balance) validateURIDepth(formats strfmt.Registry) error {
-
-	if swag.IsZero(m.URIDepth) { // not required
-		return nil
-	}
-
-	if err := validate.Pattern("uri_depth", "body", string(m.URIDepth), `^[^\d+$]`); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func (m *Balance) validateURILen(formats strfmt.Registry) error {
-
-	if swag.IsZero(m.URILen) { // not required
-		return nil
-	}
-
-	if err := validate.Pattern("uri_len", "body", string(m.URILen), `^[^\d+$]`); err != nil {
-		return err
-	}
-
-	return nil
-}
-
 func (m *Balance) validateURLParam(formats strfmt.Registry) error {
 
 	if swag.IsZero(m.URLParam) { // not required
@@ -222,19 +181,6 @@ func (m *Balance) validateURLParam(formats strfmt.Registry) error {
 	}
 
 	if err := validate.Pattern("url_param", "body", string(m.URLParam), `^[^\s]+$`); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func (m *Balance) validateURLParamMaxWait(formats strfmt.Registry) error {
-
-	if swag.IsZero(m.URLParamMaxWait) { // not required
-		return nil
-	}
-
-	if err := validate.Pattern("url_param_max_wait", "body", string(m.URLParamMaxWait), `^[^\d+$]`); err != nil {
 		return err
 	}
 

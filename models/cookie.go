@@ -48,11 +48,9 @@ type Cookie struct {
 	Indirect bool `json:"indirect,omitempty"`
 
 	// maxidle
-	// Pattern: ^[^\d+$]
 	Maxidle int64 `json:"maxidle,omitempty"`
 
 	// maxlife
-	// Pattern: ^[^\d+$]
 	Maxlife int64 `json:"maxlife,omitempty"`
 
 	// name
@@ -82,14 +80,6 @@ func (m *Cookie) Validate(formats strfmt.Registry) error {
 	var res []error
 
 	if err := m.validateDomains(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateMaxidle(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateMaxlife(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -127,32 +117,6 @@ func (m *Cookie) validateDomains(formats strfmt.Registry) error {
 			}
 		}
 
-	}
-
-	return nil
-}
-
-func (m *Cookie) validateMaxidle(formats strfmt.Registry) error {
-
-	if swag.IsZero(m.Maxidle) { // not required
-		return nil
-	}
-
-	if err := validate.Pattern("maxidle", "body", string(m.Maxidle), `^[^\d+$]`); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func (m *Cookie) validateMaxlife(formats strfmt.Registry) error {
-
-	if swag.IsZero(m.Maxlife) { // not required
-		return nil
-	}
-
-	if err := validate.Pattern("maxlife", "body", string(m.Maxlife), `^[^\d+$]`); err != nil {
-		return err
 	}
 
 	return nil

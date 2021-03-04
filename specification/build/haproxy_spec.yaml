@@ -4748,14 +4748,12 @@ definitions:
               value: rdp-cookie
           x-display-name: Rdp Cookie Name
         uri_depth:
-          pattern: ^[^\d+$]
           type: integer
           x-dependency:
             algorithm:
               value: uri
           x-display-name: Uri Depth
         uri_len:
-          pattern: ^[^\d+$]
           type: integer
           x-dependency:
             algorithm:
@@ -4782,7 +4780,6 @@ definitions:
               value: url_param
           x-display-name: Url Param Check Post
         url_param_max_wait:
-          pattern: ^[^\d+$]
           type: integer
           x-dependency:
             algorithm:
@@ -5300,10 +5297,8 @@ definitions:
         indirect:
           type: boolean
         maxidle:
-          pattern: ^[^\d+$]
           type: integer
         maxlife:
-          pattern: ^[^\d+$]
           type: integer
         name:
           pattern: ^[^\s]+$

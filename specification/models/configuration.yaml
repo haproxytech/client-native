@@ -2965,14 +2965,12 @@ balance:
     uri_len:
       type: integer
       x-display-name: Uri Len
-      pattern: '^[^\d+$]'
       x-dependency:
         algorithm:
           value: uri
     uri_depth:
       type: integer
       x-display-name: Uri Depth
-      pattern: '^[^\d+$]'
       x-dependency:
         algorithm:
           value: uri
@@ -2993,7 +2991,6 @@ balance:
     url_param_max_wait:
       type: integer
       x-display-name: Url Param Max Weight
-      pattern: '^[^\d+$]'
       x-dependency:
         algorithm:
           value: url_param
@@ -3092,10 +3089,8 @@ cookie:
             pattern: '^[^\s]+$'
     maxidle:
       type: integer
-      pattern: '^[^\d+$]'
     maxlife:
       type: integer
-      pattern: '^[^\d+$]'
     dynamic:
       type: boolean
 http-check:
