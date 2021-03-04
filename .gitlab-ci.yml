@@ -7,6 +7,7 @@ variables:
 
 golangci_lint:
   stage: lint
+  needs: []
   image:
     name: $CI_REGISTRY_GO/lint:latest
     entrypoint: [""]
@@ -17,6 +18,7 @@ golangci_lint:
 
 lint-commit-msg:
   stage: lint
+  needs: []
   image:
     name: $CI_REGISTRY_GO/check-commit:latest
     entrypoint: [""]
@@ -40,6 +42,7 @@ lint-commit-msg:
 build:
   extends: .go-cache
   stage: lint
+  needs: []
   tags:
     - go
   before_script:
@@ -50,6 +53,7 @@ build:
 test:
   extends: .go-cache
   stage: test
+  needs: ["build"]
   image:
     name: $CI_REGISTRY_GO/golang:1.15
     entrypoint: [""]
@@ -60,6 +64,7 @@ test:
 
 .e2e:
   stage: e2e
+  needs: ["build"]
   extends: .go-cache
   image:
     name: $CI_REGISTRY_GO/docker:stable
