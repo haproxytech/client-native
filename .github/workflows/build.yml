@@ -7,25 +7,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
 
-    - name: Set up Go 1.15
-      uses: actions/setup-go@v1
+    - name: Set up Go 1.16
+      uses: actions/setup-go@v2
       with:
-        go-version: 1.15
+        go-version: 1.16
       id: go
 
     - name: Check out code into the Go module directory
-      uses: actions/checkout@v1
+      uses: actions/checkout@v2
 
-    - name: Get dependencies
-      run: |
-        go get -v -t -d ./...
     - name: Build
       run: |
         go build -v .
-#     - name: Check interfaces
-#       run: |
-#         go get github.com/vburenin/ifacemaker
-#         go get golang.org/x/tools/cmd/goimports
-#         $(go env GOPATH)/bin/ifacemaker -f 'runtime/*.go' -p client_native -i IRuntimeClient -s Client -c "This file is generated, don't edit manually, see README.md for details." > runtimeclient_interface_new.go
-#         $(go env GOPATH)/bin/goimports runtimeclient_interface_new.go > runtimeclient_interface_new2.go
-#         diff -u runtimeclient_interface.go runtimeclient_interface_new2.go
