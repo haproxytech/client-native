@@ -33,25 +33,32 @@ import (
 	"github.com/haproxytech/client-native/v2/runtime"
 )
 
-func GetClient(t *testing.T) (*clientnative.HAProxyClient, *exec.Cmd, string, error) {
+type ClientResponse struct {
+	Client         *clientnative.HAProxyClient
+	Cmd            *exec.Cmd
+	TmpDir         string
+	HAProxyVersion string
+}
+
+func GetClient(t *testing.T) (*ClientResponse, error) {
 	cmd := exec.Command("haproxy", "-v")
 
 	var out bytes.Buffer
 	cmd.Stdout = &out
 	err := cmd.Run()
 	if err != nil {
-		return nil, nil, "", err
+		return nil, err
 	}
 
 	output := strings.Split(out.String(), "/n")[0]
 	parts := strings.Split(output, " ")
 	if len(parts) < 3 {
-		return nil, nil, "", errors.New("incorrect haproxy -v output")
+		return nil, errors.New("incorrect haproxy -v output")
 	}
 	version := strings.Split(parts[2], "-")[0]
 	parts = strings.Split(version, ".")
 	if len(parts) < 2 {
-		return nil, nil, "", errors.New("incorrect haproxy -v output")
+		return nil, errors.New("incorrect haproxy -v output")
 	}
 	version = fmt.Sprintf("%s.%s", parts[0], parts[1])
 
@@ -61,9 +68,9 @@ func GetClient(t *testing.T) (*clientnative.HAProxyClient, *exec.Cmd, string, er
 
 	tmpPath := path.Join(os.TempDir(), "client-native/", testName)
 	socketPath := path.Join(tmpPath, "runtime.sock")
-	err = os.MkdirAll(tmpPath, 0644)
+	err = os.MkdirAll(tmpPath, 0777)
 	if err != nil {
-		return nil, nil, "", err
+		return nil, err
 	}
 
 	cmd = exec.Command("haproxy", "-f", "haproxy.cfg")
@@ -71,7 +78,7 @@ func GetClient(t *testing.T) (*clientnative.HAProxyClient, *exec.Cmd, string, er
 	cmd.Env = append(cmd.Env, fmt.Sprintf("SOCK_PATH=%s", socketPath))
 
 	if err = cmd.Start(); err != nil {
-		return nil, nil, "", err
+		return nil, err
 	}
 
 	HAProxyCFG := "haproxy.cfg"
@@ -83,7 +90,7 @@ func GetClient(t *testing.T) (*clientnative.HAProxyClient, *exec.Cmd, string, er
 		Haproxy:                "haproxy",
 	})
 	if err != nil {
-		return nil, nil, "", err
+		return nil, err
 	}
 
 	var errSock error
@@ -101,7 +108,7 @@ func GetClient(t *testing.T) (*clientnative.HAProxyClient, *exec.Cmd, string, er
 		time.Sleep(10 * time.Millisecond)
 	}
 	if _, errSock = os.Stat(socketPath); os.IsNotExist(err) {
-		return nil, nil, "", errSock
+		return nil, errSock
 	}
 	end := time.Now()
 	t.Logf("%s done", end.Format("15:04:05.000"))
@@ -111,11 +118,16 @@ func GetClient(t *testing.T) (*clientnative.HAProxyClient, *exec.Cmd, string, er
 		0: socketPath,
 	})
 	if err != nil {
-		return nil, nil, "", err
+		return nil, err
 	}
 	nativeAPI := &clientnative.HAProxyClient{
 		Configuration: &confClient,
 		Runtime:       &runtimeClient,
 	}
-	return nativeAPI, cmd, version, nil
+	return &ClientResponse{
+		Client:         nativeAPI,
+		Cmd:            cmd,
+		TmpDir:         tmpPath,
+		HAProxyVersion: version,
+	}, nil
 }

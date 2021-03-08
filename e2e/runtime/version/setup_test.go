@@ -17,6 +17,7 @@
 package version_test
 
 import (
+	"os"
 	"os/exec"
 	"testing"
 
@@ -28,23 +29,31 @@ import (
 type MajorVersionInRuntime struct {
 	suite.Suite
 	client          *client_native.HAProxyClient
+	tmpDir          string
 	haproxy_version string
 	cmd             *exec.Cmd
 }
 
 func (s *MajorVersionInRuntime) SetupTest() {
-	client, cmd, version, err := e2e.GetClient(s.T())
+	result, err := e2e.GetClient(s.T())
 	if err != nil {
 		s.FailNow(err.Error())
 	}
-	s.haproxy_version = version
-	s.cmd = cmd
-	s.client = client
+	s.haproxy_version = result.HAProxyVersion
+	s.cmd = result.Cmd
+	s.client = result.Client
+	s.tmpDir = result.TmpDir
 }
 
 func (s *MajorVersionInRuntime) TearDownSuite() {
 	if err := s.cmd.Process.Kill(); err != nil {
 		s.FailNow(err.Error())
+	}
+	if s.tmpDir != "" {
+		err := os.RemoveAll(s.tmpDir)
+		if err != nil {
+			s.FailNow(err.Error())
+		}
 	}
 }
 
