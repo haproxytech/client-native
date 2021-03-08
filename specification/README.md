@@ -12,6 +12,6 @@ When contributing, change files located in paths/ and models/ directories and th
 go run specification/build/build.go -file specification/haproxy-spec.yaml > specification/build/haproxy_spec.yaml
 ```
 
-this is already integrated into [generate_models.sh](../generate_models.sh) script
+this is already integrated into [make models](../Makefile) command
 
 For commit messages and general style please follow the haproxy project's [CONTRIBUTING guide](https://github.com/haproxy/haproxy/blob/master/CONTRIBUTING) and use that where applicable.
