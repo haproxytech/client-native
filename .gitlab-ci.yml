@@ -105,10 +105,10 @@ test:
   before_script:
     - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN $CI_REGISTRY_GO
     - docker pull $CI_REGISTRY_GO/client-native:$HAPROXY_VERSION
-    - docker image tag $CI_REGISTRY_GO/client-native:$HAPROXY_VERSION test_env
-    - docker build -f e2e/Dockerfile -t client-native-test .
+    - docker image tag $CI_REGISTRY_GO/client-native:$HAPROXY_VERSION test_env:$HAPROXY_VERSION
+    - docker build --file ./e2e/Dockerfile --build-arg HAPROXY_VERSION=$HAPROXY_VERSION --tag client-native-test:$HAPROXY_VERSION .
   script:
-    - docker run --entrypoint "go" client-native-test test -tags integration ./...
+    - docker run client-native-test:$HAPROXY_VERSION
 
 HAProxy-2.1:
   extends: .e2e
