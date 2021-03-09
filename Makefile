@@ -11,9 +11,8 @@ e2e:
 
 .PHONY: e2e-docker
 e2e-docker:
-	sed -e "s/alpine:2.3/alpine:${DOCKER_HAPROXY_VERSION}/g" e2e/Dockerfile-TestEnv | docker build -t test_env -f - .
-	docker build -f e2e/Dockerfile -t client-native-test .
-	docker run --entrypoint "go" client-native-test test -tags integration ./...
+	docker build -f e2e/Dockerfile --build-arg HAPROXY_VERSION=${DOCKER_HAPROXY_VERSION} -t client-native-test:${DOCKER_HAPROXY_VERSION} .
+	docker run --rm -it client-native-test:${DOCKER_HAPROXY_VERSION}
 
 .PHONY: spec
 spec:

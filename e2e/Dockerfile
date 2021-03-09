@@ -12,9 +12,27 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM test_env
+ARG HAPROXY_VERSION=2.3
+
+FROM haproxytech/haproxy-alpine:${HAPROXY_VERSION}
+
+RUN apk add socat openssl util-linux htop tzdata bash gcc openssl wget go && \
+    rm -f /usr/local/bin/dataplaneapi /usr/bin/dataplaneapi && \
+    rm -f /usr/local/etc/haproxy/haproxy.cfg && \
+    chgrp -R haproxy /etc/haproxy /run /var &&\
+    chmod -R g+w /etc/haproxy /run /var
+
+ENV GODEBUG="madvdontneed=1" \
+	PATH=$PATH:/usr/local/go/bin \
+	HAPROXY_VERSION=$HAPROXY_VERSION
+
 WORKDIR /src
+
+COPY /go.mod /src/go.mod
+COPY /go.sum /src/go.sum
+RUN go mod download
+
 COPY / /src
 
-#docker build -f e2e/Dockerfile -t client-native-test .
-#docker run --entrypoint "go" client-native-test test -tags integration ./...
+ENTRYPOINT ["go"]
+CMD ["test", "-tags", "integration", "./..."]
