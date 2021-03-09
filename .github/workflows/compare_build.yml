@@ -1,0 +1,26 @@
+---
+name: Specification update
+on: [push, pull_request]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+
+    - name: Set up Go 1.16
+      uses: actions/setup-go@v2
+      with:
+        go-version: 1.16
+      id: go
+
+    - name: Check out code
+      uses: actions/checkout@v2
+
+    - name: Compare
+      run: |
+        go run specification/build/build.go -file specification/haproxy-spec.yaml > specification/build/haproxy_spec_to_compare.yaml
+        diff -u specification/build/haproxy_spec_to_compare.yaml specification/build/haproxy_spec.yaml
+
+    - name: YAML script validation
+      run: |
+        chmod +x ./specification/scripts/lint-yaml.sh
+        ./specification/scripts/lint-yaml.sh
