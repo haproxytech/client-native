@@ -57,7 +57,7 @@ generate:
   tags:
     - go
   before_script:
-    - apk add make go
+    - apk add make go git
     - wget -O /usr/local/bin/swagger https://github.com/go-swagger/go-swagger/releases/download/v0.26.1/swagger_linux_amd64
     - chmod +x /usr/local/bin/swagger
     - make models
