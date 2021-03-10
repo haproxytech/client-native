@@ -1,0 +1,28 @@
+name: Generated code
+on: [push, pull_request]
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v2
+      - name: Set the expected Go version
+        run: |
+          GOMOD_VERSION=$(cat go.mod | grep -i "go " | sed -e "s/go //g")
+          echo "GOMOD_VERSION=${GOMOD_VERSION}" >> $GITHUB_ENV
+      - name: Set up Go
+        uses: actions/setup-go@v2
+        with:
+          go-version: "${{ env.GOMOD_VERSION }}"
+      - name: downloading Swagger
+        run: |
+          sudo wget -O /usr/local/bin/swagger https://github.com/go-swagger/go-swagger/releases/download/v0.23.0/swagger_linux_amd64
+          sudo chmod +x /usr/local/bin/swagger
+          swagger version
+      - name: generating models
+        run: make models
+      - name: changes
+        run: test -z "$(git diff 2> /dev/null)" || exit "Models are not generated, issue \`make models\` and commit the result"
+      - name: untracked files
+        run: test -z "$(git ls-files --others --exclude-standard 2> /dev/null)" || exit "Models generation created untracked files, cannot proceed"
