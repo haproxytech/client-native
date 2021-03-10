@@ -1,5 +1,6 @@
 ---
 stages:
+  - generate
   - build
   - lint
   - test
@@ -45,6 +46,25 @@ yaml-lint:
     paths:
       - .go/pkg/mod/
 
+generate:
+  stage: generate
+  image:
+    name: $CI_REGISTRY_GO/docker:stable
+    entrypoint: [""]
+  services:
+    - name: $CI_REGISTRY_GO/docker:18.09.7-dind
+      alias: docker
+  tags:
+    - go
+  before_script:
+    - apk add make go
+    - wget -O /usr/local/bin/swagger https://github.com/go-swagger/go-swagger/releases/download/v0.26.1/swagger_linux_amd64
+    - chmod +x /usr/local/bin/swagger
+    - make models
+  script:
+    - test -z "$(git diff 2> /dev/null)" || exit "Models are not generated, issue \`make models\` and commit the result"
+    - test -z "$(git ls-files --others --exclude-standard 2> /dev/null)" || exit "Models generation created untracked files, cannot proceed"
+
 build:
   extends: .go-cache
   stage: build
@@ -58,7 +78,7 @@ build:
 
 golangci-lint:
   stage: lint
-  needs: ["build"]
+  needs: ["generate", "build"]
   image:
     name: $CI_REGISTRY_GO/lint:latest
     entrypoint: [""]
@@ -81,7 +101,7 @@ lint-commit-msg:
 test:
   extends: .go-cache
   stage: test
-  needs: ["build"]
+  needs: ["generate", "build"]
   image:
     name: $CI_REGISTRY_GO/golang:1.16
     entrypoint: [""]
