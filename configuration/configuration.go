@@ -166,7 +166,7 @@ func (c *Client) GetParserTransactions() models.Transactions {
 		if err == nil {
 			t := &models.Transaction{
 				ID:      tID,
-				Status:  "in_progress",
+				Status:  models.TransactionStatusInProgress,
 				Version: v,
 			}
 			transactions = append(transactions, t)
@@ -249,7 +249,7 @@ func (c *Client) CommitParser(transactionID string) error {
 
 // InitTransactionParsers checks transactions and initializes parsers map with transactions in_progress
 func (c *Client) InitTransactionParsers() error {
-	transactions, err := c.GetTransactions("in_progress")
+	transactions, err := c.GetTransactions(models.TransactionStatusInProgress)
 	if err != nil {
 		return err
 	}

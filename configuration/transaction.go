@@ -74,7 +74,7 @@ func (t *Transaction) GetTransaction(transactionID string) (*models.Transaction,
 	}
 	v, _ := t.TransactionClient.GetVersion(transactionID)
 
-	return &models.Transaction{ID: transactionID, Status: "in_progress", Version: v}, nil
+	return &models.Transaction{ID: transactionID, Status: models.TransactionStatusInProgress, Version: v}, nil
 }
 
 // StartTransaction starts a new empty lbctl transaction
@@ -106,7 +106,7 @@ func (t *Transaction) startTransaction(version int64, skipVersion bool) (*models
 	}
 
 	m.Version = version
-	m.Status = "in_progress"
+	m.Status = models.TransactionStatusInProgress
 
 	if err := t.TransactionClient.AddParser(m.ID); err != nil {
 		if t.PersistentTransactions {
@@ -363,20 +363,20 @@ func (t *Transaction) parseTransactions(status string) (*models.Transactions, er
 		return nil, err
 	}
 	for _, f := range files {
-		if !f.IsDir() && status != "failed" && t.PersistentTransactions {
+		if !f.IsDir() && status != models.TransactionStatusFailed && t.PersistentTransactions {
 			if strings.HasPrefix(f.Name(), confFileName) {
 				transactions = append(transactions, t.parseTransactionFile(filepath.Join(t.TransactionDir, f.Name())))
 			}
 		} else {
-			if f.Name() == "failed" && status != "in_progress" {
-				ffiles, err := ioutil.ReadDir(filepath.Join(t.TransactionDir, "failed"))
+			if f.Name() == models.TransactionStatusFailed && status != models.TransactionStatusInProgress {
+				ffiles, err := ioutil.ReadDir(filepath.Join(t.TransactionDir, models.TransactionStatusFailed))
 				if err != nil {
 					return nil, err
 				}
 				for _, ff := range ffiles {
 					if !ff.IsDir() {
 						if strings.HasPrefix(ff.Name(), confFileName) {
-							transactions = append(transactions, t.parseTransactionFile(filepath.Join(t.TransactionDir, "failed", ff.Name())))
+							transactions = append(transactions, t.parseTransactionFile(filepath.Join(t.TransactionDir, models.TransactionStatusFailed, ff.Name())))
 						}
 					}
 				}
@@ -384,7 +384,7 @@ func (t *Transaction) parseTransactions(status string) (*models.Transactions, er
 		}
 	}
 
-	if !t.PersistentTransactions && status != "failed" {
+	if !t.PersistentTransactions && status != models.TransactionStatusFailed {
 		pt := t.TransactionClient.GetParserTransactions()
 		if len(pt) > 0 {
 			transactions = append(transactions, pt...)
@@ -396,11 +396,11 @@ func (t *Transaction) parseTransactions(status string) (*models.Transactions, er
 func (t *Transaction) parseTransactionFile(filePath string) *models.Transaction {
 	parts := strings.Split(filePath, string(filepath.Separator))
 	f := parts[len(parts)-1]
-	status := "in_progress"
+	status := models.TransactionStatusInProgress
 
 	if len(parts) > 1 {
-		if parts[len(parts)-2] == "failed" {
-			status = "failed"
+		if parts[len(parts)-2] == models.TransactionStatusFailed {
+			status = models.TransactionStatusFailed
 		}
 	}
 
@@ -469,7 +469,7 @@ func (t *Transaction) GetTransactionFile(transactionID string) (string, error) {
 	// First find failed transaction file
 	transactionFileName := t.getTransactionFileName(transactionID)
 
-	fPath := filepath.Join(t.TransactionDir, "failed", transactionFileName)
+	fPath := filepath.Join(t.TransactionDir, models.TransactionStatusFailed, transactionFileName)
 	if _, err := os.Stat(fPath); err == nil {
 		return fPath, nil
 	}
@@ -485,7 +485,7 @@ func (t *Transaction) getTransactionFileFailed(transactionID string) string {
 	baseFileName := filepath.Base(filepath.Clean(t.ConfigurationFile))
 	transactionFileName := baseFileName + "." + transactionID
 
-	return filepath.Join(t.TransactionDir, "failed", transactionFileName)
+	return filepath.Join(t.TransactionDir, models.TransactionStatusFailed, transactionFileName)
 }
 
 func (t *Transaction) getBackupFile(version int64) (string, error) {
@@ -515,7 +515,7 @@ func (t *Transaction) failTransaction(transactionID string) {
 }
 
 func (t *Transaction) writeFailedTransaction(transactionID, configFile string) {
-	failedDir := filepath.Join(t.TransactionDir, "failed")
+	failedDir := filepath.Join(t.TransactionDir, models.TransactionStatusFailed)
 	if _, err := os.Stat(failedDir); os.IsNotExist(err) {
 		_ = os.Mkdir(failedDir, 0755)
 	}
@@ -527,7 +527,7 @@ func (t *Transaction) writeFailedTransaction(transactionID, configFile string) {
 
 func (t *Transaction) getFailedTransactionVersion(transactionID string) (int64, error) {
 	fName := t.getTransactionFileName(transactionID)
-	failedDir := filepath.Join(t.TransactionDir, "failed")
+	failedDir := filepath.Join(t.TransactionDir, models.TransactionStatusFailed)
 	if _, err := os.Stat(failedDir); os.IsNotExist(err) {
 		return 0, NewConfError(ErrTransactionDoesNotExist, fmt.Sprintf("transaction %v not failed", transactionID))
 	}
