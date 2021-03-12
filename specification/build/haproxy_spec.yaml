@@ -4182,6 +4182,7 @@ definitions:
         status:
           enum:
           - failed
+          - outdated
           - in_progress
           - success
           type: string

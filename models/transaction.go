@@ -44,7 +44,7 @@ type Transaction struct {
 	ID string `json:"id,omitempty"`
 
 	// status
-	// Enum: [failed in_progress success]
+	// Enum: [failed outdated in_progress success]
 	Status string `json:"status,omitempty"`
 }
 
@@ -83,7 +83,7 @@ var transactionTypeStatusPropEnum []interface{}
 
 func init() {
 	var res []string
-	if err := json.Unmarshal([]byte(`["failed","in_progress","success"]`), &res); err != nil {
+	if err := json.Unmarshal([]byte(`["failed","outdated","in_progress","success"]`), &res); err != nil {
 		panic(err)
 	}
 	for _, v := range res {
@@ -95,6 +95,9 @@ const (
 
 	// TransactionStatusFailed captures enum value "failed"
 	TransactionStatusFailed string = "failed"
+
+	// TransactionStatusOutdated captures enum value "outdated"
+	TransactionStatusOutdated string = "outdated"
 
 	// TransactionStatusInProgress captures enum value "in_progress"
 	TransactionStatusInProgress string = "in_progress"

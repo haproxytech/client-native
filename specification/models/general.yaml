@@ -87,7 +87,7 @@ transaction:
       pattern: '^[^\s]+$'
     status:
       type: string
-      enum: [failed, in_progress, success]
+      enum: [failed, outdated, in_progress, success]
     _version:
       type: integer
   example:
