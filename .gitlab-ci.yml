@@ -76,6 +76,18 @@ build:
   script:
     - go build
 
+tidy:
+  stage: lint
+  needs: ["build"]
+  image:
+    name: $CI_REGISTRY_GO/golang:1.16
+    entrypoint: [""]
+  tags:
+    - go
+  script:
+    - go mod tidy
+    - test -z "$(git diff 2> /dev/null)" || exit 'Go modules not tidied, issue \`go mod tidy\` and commit the result'
+
 golangci-lint:
   stage: lint
   needs: ["generate", "build"]
