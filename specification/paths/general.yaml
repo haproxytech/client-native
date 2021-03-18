@@ -95,6 +95,38 @@ runtime:
           $ref: '#/definitions/endpoints'
       'default':
         $ref: '#/responses/DefaultError'
+storage:
+  get:
+    tags:
+      - Discovery
+    summary: Return list of HAProxy storage endpoints
+    description: Returns a list of endpoints that use HAProxy storage for persistency, e.g. maps, ssl certificates...
+    operationId: getStorageEndpoints
+    produces:
+      - application/json
+    responses:
+      '200':
+        description: Success
+        schema:
+          $ref: '#/definitions/endpoints'
+      'default':
+        $ref: '#/responses/DefaultError'
+spoe:
+  get:
+    tags:
+      - Discovery
+    summary: Return list of HAProxy SPOE endpoints
+    description: Returns a list of endpoints to be used for SPOE settings of HAProxy.
+    operationId: getSpoeEndpoints
+    produces:
+      - application/json
+    responses:
+      '200':
+        description: Success
+        schema:
+          $ref: '#/definitions/endpoints'
+      'default':
+        $ref: '#/responses/DefaultError'
 info:
   get:
     tags:

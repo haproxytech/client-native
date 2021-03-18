@@ -10809,6 +10809,23 @@ paths:
         summary: Return a configuration version
         tags:
         - Configuration
+  /services/haproxy/storage:
+      get:
+        description: Returns a list of endpoints that use HAProxy storage for persistency,
+          e.g. maps, ssl certificates...
+        operationId: getStorageEndpoints
+        produces:
+        - application/json
+        responses:
+          "200":
+            description: Success
+            schema:
+              $ref: '#/definitions/endpoints'
+          default:
+            $ref: '#/responses/DefaultError'
+        summary: Return list of HAProxy storage endpoints
+        tags:
+        - Discovery
   /services/haproxy/storage/maps:
       get:
         description: Returns a list of all managed map files
@@ -11046,6 +11063,22 @@ paths:
         summary: Replace SSL certificates on disk
         tags:
         - Storage
+  /services/haproxy/spoe:
+      get:
+        description: Returns a list of endpoints to be used for SPOE settings of HAProxy.
+        operationId: getSpoeEndpoints
+        produces:
+        - application/json
+        responses:
+          "200":
+            description: Success
+            schema:
+              $ref: '#/definitions/endpoints'
+          default:
+            $ref: '#/responses/DefaultError'
+        summary: Return list of HAProxy SPOE endpoints
+        tags:
+        - Discovery
   /services/haproxy/spoe/spoe_files:
       get:
         description: Returns all available SPOE files.

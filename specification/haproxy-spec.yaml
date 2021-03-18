@@ -664,6 +664,8 @@ paths:
     $ref: "paths/runtime.yaml#/maps_entries_one"
   /services/haproxy/configuration/version:
     $ref: "paths/configuration.yaml#/version"
+  /services/haproxy/storage:
+    $ref: "paths/general.yaml#/storage"
   /services/haproxy/storage/maps:
     $ref: "paths/storage.yaml#/maps"
   /services/haproxy/storage/maps/{name}:
@@ -672,6 +674,8 @@ paths:
     $ref: "paths/storage.yaml#/ssl_certificates"
   /services/haproxy/storage/ssl_certificates/{name}:
     $ref: "paths/storage.yaml#/ssl_certificates_one"
+  /services/haproxy/spoe:
+    $ref: "paths/general.yaml#/spoe"
   /services/haproxy/spoe/spoe_files:
     $ref: "paths/spoe.yaml#/spoe_files"
   /services/haproxy/spoe/spoe_files/{name}:
