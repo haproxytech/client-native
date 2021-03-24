@@ -94,6 +94,20 @@ func (c *Client) startTransaction(version int64, skipVersion bool) (*models.Tran
 }
 
 // CommitTransaction commits a transaction by id.
+func (c *Client) RevertTransaction(transaction *models.Transaction)  error {
+	return c.revertTransaction(transaction)
+}
+
+// CommitTransaction commits a transaction by id.
+func (c *Client) revertTransaction(t *models.Transaction)  error {
+	fileName := fmt.Sprintf("%v.%v", c.ConfigurationFile, t.Version)
+	if err := c.Parser.LoadData(fileName);err != nil{
+		return err
+	}
+	return c.writeFile("",  c.ConfigurationFile)
+}
+
+// CommitTransaction commits a transaction by id.
 func (c *Client) CommitTransaction(id string) (*models.Transaction, error) {
 	return c.commitTransaction(id, false)
 }
