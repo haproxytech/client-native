@@ -251,6 +251,8 @@ transactions_one:
         $ref: '#/responses/BadRequest'
       '404':
         $ref: '#/responses/NotFound'
+      '406':
+        $ref: '#/responses/NotAcceptable'
       'default':
         $ref: '#/responses/DefaultError'
   delete:

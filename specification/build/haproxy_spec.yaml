@@ -5685,6 +5685,16 @@ responses:
         default: 0
     schema:
       $ref: '#/definitions/error'
+  NotAcceptable:
+    description: The specified resource cannot be handled
+    headers:
+      Configuration-Version:
+        description: Configuration file version
+        type: integer
+        x-nullable: true
+        default: 0
+    schema:
+      $ref: '#/definitions/error'
   NotFound:
     description: The specified resource was not found
     headers:
@@ -6428,6 +6438,8 @@ paths:
             $ref: '#/responses/BadRequest'
           "404":
             $ref: '#/responses/NotFound'
+          "406":
+            $ref: '#/responses/NotAcceptable'
           default:
             $ref: '#/responses/DefaultError'
         summary: Commit transaction

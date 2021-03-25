@@ -395,6 +395,16 @@ responses:
         default: 0
     schema:
       $ref: '#/definitions/error'
+  NotAcceptable:
+    description: The specified resource cannot be handled
+    headers:
+      Configuration-Version:
+        description: Configuration file version
+        type: integer
+        x-nullable: true
+        default: 0
+    schema:
+      $ref: '#/definitions/error'
   NotFound:
     description: The specified resource was not found
     headers:
