@@ -73,6 +73,10 @@ func (s *SingleRuntime) readFromSocket(command string) (string, error) {
 	if api, err = net.Dial("unix", s.socketPath); err != nil {
 		return "", err
 	}
+	defer func() {
+		_ = api.Close()
+	}()
+
 	fullCommand := fmt.Sprintf("set severity-output number;%s\n", command)
 	if s.worker > 0 {
 		fullCommand = fmt.Sprintf("@%v set severity-output number;@%v %s;quit\n", s.worker, s.worker, command)
@@ -96,7 +100,6 @@ func (s *SingleRuntime) readFromSocket(command string) (string, error) {
 			data.Write(buf[0:n])
 		}
 	}
-	_ = api.Close()
 
 	result := strings.TrimSuffix(data.String(), "\n> ")
 	result = strings.TrimSuffix(result, "\n")
