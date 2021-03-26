@@ -22,6 +22,10 @@ import (
 	"time"
 )
 
+const (
+	taskTimeout = 30 * time.Second
+)
+
 // TaskResponse ...
 type TaskResponse struct {
 	result string
@@ -70,12 +74,15 @@ func (s *SingleRuntime) readFromSocket(command string) (string, error) {
 	var api net.Conn
 	var err error
 
-	if api, err = net.Dial("unix", s.socketPath); err != nil {
+	if api, err = net.DialTimeout("unix", s.socketPath, taskTimeout); err != nil {
 		return "", err
 	}
 	defer func() {
 		_ = api.Close()
 	}()
+	if err = api.SetDeadline(time.Now().Add(taskTimeout)); err != nil {
+		return "", err
+	}
 
 	fullCommand := fmt.Sprintf("set severity-output number;%s\n", command)
 	if s.worker > 0 {
@@ -158,7 +165,7 @@ func (s *SingleRuntime) executeRaw(command string, retry int) (string, error) {
 			return s.executeRaw(command, retry)
 		}
 		return rsp.result, rsp.err
-	case <-time.After(time.Duration(30) * time.Second):
+	case <-time.After(taskTimeout):
 		return "", fmt.Errorf("timeout reached")
 	}
 }
