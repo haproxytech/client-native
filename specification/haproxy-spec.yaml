@@ -527,6 +527,7 @@ tags:
   - name: ServiceDiscovery
   - name: Spoe
   - name: SpoeTransactions
+  - name: Storage
 security:
   - basic_auth: []
 paths:
