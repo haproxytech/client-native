@@ -69,9 +69,16 @@ type DefaultServer struct {
 	// Enum: [enabled disabled]
 	Backup string `json:"backup,omitempty"`
 
+	// ca file
+	CaFile string `json:"ca_file,omitempty"`
+
 	// check
 	// Enum: [enabled disabled]
 	Check string `json:"check,omitempty"`
+
+	// check send proxy
+	// Enum: [enabled disabled]
+	CheckSendProxy string `json:"check-send-proxy,omitempty"`
 
 	// check sni
 	// Pattern: ^[^\s]+$
@@ -106,8 +113,16 @@ type DefaultServer struct {
 	// crl file
 	CrlFile string `json:"crl_file,omitempty"`
 
+	// disabled
+	// Enum: [enabled disabled]
+	Disabled string `json:"disabled,omitempty"`
+
 	// downinter
 	Downinter *int64 `json:"downinter,omitempty"`
+
+	// enabled
+	// Enum: [enabled disabled]
+	Enabled string `json:"enabled,omitempty"`
 
 	// error limit
 	ErrorLimit int64 `json:"error_limit,omitempty"`
@@ -371,6 +386,10 @@ func (m *DefaultServer) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
+	if err := m.validateCheckSendProxy(formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.validateCheckSni(formats); err != nil {
 		res = append(res, err)
 	}
@@ -392,6 +411,14 @@ func (m *DefaultServer) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateCookie(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateDisabled(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateEnabled(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -750,6 +777,49 @@ func (m *DefaultServer) validateCheck(formats strfmt.Registry) error {
 	return nil
 }
 
+var defaultServerTypeCheckSendProxyPropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		defaultServerTypeCheckSendProxyPropEnum = append(defaultServerTypeCheckSendProxyPropEnum, v)
+	}
+}
+
+const (
+
+	// DefaultServerCheckSendProxyEnabled captures enum value "enabled"
+	DefaultServerCheckSendProxyEnabled string = "enabled"
+
+	// DefaultServerCheckSendProxyDisabled captures enum value "disabled"
+	DefaultServerCheckSendProxyDisabled string = "disabled"
+)
+
+// prop value enum
+func (m *DefaultServer) validateCheckSendProxyEnum(path, location string, value string) error {
+	if err := validate.Enum(path, location, value, defaultServerTypeCheckSendProxyPropEnum); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *DefaultServer) validateCheckSendProxy(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.CheckSendProxy) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateCheckSendProxyEnum("check-send-proxy", "body", m.CheckSendProxy); err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func (m *DefaultServer) validateCheckSni(formats strfmt.Registry) error {
 
 	if swag.IsZero(m.CheckSni) { // not required
@@ -882,6 +952,92 @@ func (m *DefaultServer) validateCookie(formats strfmt.Registry) error {
 	}
 
 	if err := validate.Pattern("cookie", "body", string(m.Cookie), `^[^\s]+$`); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+var defaultServerTypeDisabledPropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		defaultServerTypeDisabledPropEnum = append(defaultServerTypeDisabledPropEnum, v)
+	}
+}
+
+const (
+
+	// DefaultServerDisabledEnabled captures enum value "enabled"
+	DefaultServerDisabledEnabled string = "enabled"
+
+	// DefaultServerDisabledDisabled captures enum value "disabled"
+	DefaultServerDisabledDisabled string = "disabled"
+)
+
+// prop value enum
+func (m *DefaultServer) validateDisabledEnum(path, location string, value string) error {
+	if err := validate.Enum(path, location, value, defaultServerTypeDisabledPropEnum); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *DefaultServer) validateDisabled(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.Disabled) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateDisabledEnum("disabled", "body", m.Disabled); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+var defaultServerTypeEnabledPropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		defaultServerTypeEnabledPropEnum = append(defaultServerTypeEnabledPropEnum, v)
+	}
+}
+
+const (
+
+	// DefaultServerEnabledEnabled captures enum value "enabled"
+	DefaultServerEnabledEnabled string = "enabled"
+
+	// DefaultServerEnabledDisabled captures enum value "disabled"
+	DefaultServerEnabledDisabled string = "disabled"
+)
+
+// prop value enum
+func (m *DefaultServer) validateEnabledEnum(path, location string, value string) error {
+	if err := validate.Enum(path, location, value, defaultServerTypeEnabledPropEnum); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *DefaultServer) validateEnabled(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.Enabled) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateEnabledEnum("enabled", "body", m.Enabled); err != nil {
 		return err
 	}
 

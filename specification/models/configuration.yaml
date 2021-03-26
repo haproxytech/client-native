@@ -782,11 +782,6 @@ bind:
       x-dependency:
         ssl:
           value: true
-    # crt:
-    #  type: string
-    #  x-dependency:
-    #    ssl:
-    #      value: true
     crt_ignore_err:
       type: string
       x-dependency:
@@ -908,7 +903,7 @@ bind:
       x-display-name: Protocol name
     ssl:
       type: boolean
-    ssl_certificate:
+    ssl_certificate: # crt command
       type: string
       pattern: '^[^\s]+$'
       x-dependency:
@@ -1017,7 +1012,7 @@ server:
     backup:
       type: string
       enum: [enabled, disabled]
-    ssl_cafile:  # ca-file?
+    ssl_cafile:
       type: string
       x-display-name: SSL CA File
       pattern: '^[^\s]+$'
@@ -2664,6 +2659,20 @@ default_server:
       type: string
       pattern: '^[^\s]+$'
     check-ssl:
+      type: string
+      enum: [enabled, disabled]
+    check-send-proxy:
+      type: string
+      enum: [enabled, disabled]
+    ca_file:
+      type: string
+      x-dependency:
+        ssl:
+          value: true
+    enabled:
+      type: string
+      enum: [enabled, disabled]
+    disabled:
       type: string
       enum: [enabled, disabled]
     port:

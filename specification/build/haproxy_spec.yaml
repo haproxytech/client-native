@@ -4845,7 +4845,17 @@ definitions:
           - enabled
           - disabled
           type: string
+        ca_file:
+          type: string
+          x-dependency:
+            ssl:
+              value: true
         check:
+          enum:
+          - enabled
+          - disabled
+          type: string
+        check-send-proxy:
           enum:
           - enabled
           - disabled
@@ -4889,9 +4899,19 @@ definitions:
           x-dependency:
             ssl:
               value: enabled
+        disabled:
+          enum:
+          - enabled
+          - disabled
+          type: string
         downinter:
           type: integer
           x-nullable: true
+        enabled:
+          enum:
+          - enabled
+          - disabled
+          type: string
         error_limit:
           type: integer
           x-display-name: Error count
