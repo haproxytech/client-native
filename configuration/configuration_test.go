@@ -105,7 +105,7 @@ frontend test
   http-request strict-mode on if FALSE
   http-request lua.foo param1 param2 if FALSE
   http-request use-service svrs if FALSE
-  http-request return status 200 content-type "text/plain" string "My content" hdr Some-Header value if FALSE 
+  http-request return status 200 content-type "text/plain" string "My content" hdr Some-Header value if FALSE
   http-response allow if src 192.168.0.0/16
   http-response set-header X-SSL %[ssl_fc]
   http-response set-var(req.my_var) req.fhdr(user-agent),lower
@@ -200,6 +200,9 @@ backend test
   server webserv2 192.168.1.1:9300 maxconn 1000 ssl weight 10 inter 2s cookie BLAH slowstart 6000 proxy-v2-options authority,crc32c
   http-request set-dst hdr(x-dst)
   http-request set-dst-port int(4000)
+  server-template srv 1-3 google.com:80 check
+  server-template site 1-10 google.com:8080 check backup
+  server-template website 10-100 google.com:443 check no-backup
 
 peers mycluster
   peer hapee 192.168.1.1:1023

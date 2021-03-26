@@ -31,9 +31,9 @@ import (
 	"github.com/haproxytech/client-native/v2/models"
 )
 
-// GetServers returns configuration version and an array of
-// configured servers in the specified backend. Returns error on fail.
-func (c *Client) GetServers(backend string, transactionID string) (int64, models.Servers, error) {
+// GetServerTemplatess returns configuration version and an array of
+// configured server templates in the specified backend. Returns error on fail.
+func (c *Client) GetServerTemplates(backend string, transactionID string) (int64, models.ServerTemplates, error) {
 	p, err := c.GetParser(transactionID)
 	if err != nil {
 		return 0, nil, err
@@ -44,17 +44,17 @@ func (c *Client) GetServers(backend string, transactionID string) (int64, models
 		return 0, nil, err
 	}
 
-	servers, err := ParseServers(backend, p)
+	templates, err := ParseServerTemplates(backend, p)
 	if err != nil {
 		return v, nil, c.HandleError("", "backend", backend, "", false, err)
 	}
 
-	return v, servers, nil
+	return v, templates, nil
 }
 
-// GetServer returns configuration version and a requested server
-// in the specified backend. Returns error on fail or if server does not exist.
-func (c *Client) GetServer(name string, backend string, transactionID string) (int64, *models.Server, error) {
+// GetServerTemplate returns configuration version and a requested server template
+// in the specified backend. Returns error on fail or if server template does not exist.
+func (c *Client) GetServerTemplate(prefix string, backend string, transactionID string) (int64, *models.ServerTemplate, error) {
 	p, err := c.GetParser(transactionID)
 	if err != nil {
 		return 0, nil, err
@@ -65,30 +65,30 @@ func (c *Client) GetServer(name string, backend string, transactionID string) (i
 		return 0, nil, err
 	}
 
-	server, _ := GetServerByName(name, backend, p)
-	if server == nil {
-		return v, nil, NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("Server %s does not exist in backend %s", name, backend))
+	template, _ := GetServerTemplateByPrefix(prefix, backend, p)
+	if template == nil {
+		return v, nil, NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("Server template %s does not exist in backend %s", prefix, backend))
 	}
 
-	return v, server, nil
+	return v, template, nil
 }
 
-// DeleteServer deletes a server in configuration. One of version or transactionID is
+// DeleteServerTemplate deletes a server template in configuration. One of version or transactionID is
 // mandatory. Returns error on fail, nil on success.
-func (c *Client) DeleteServer(name string, backend string, transactionID string, version int64) error {
+func (c *Client) DeleteServerTemplate(prefix string, backend string, transactionID string, version int64) error {
 	p, t, err := c.loadDataForChange(transactionID, version)
 	if err != nil {
 		return err
 	}
 
-	server, i := GetServerByName(name, backend, p)
-	if server == nil {
-		e := NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("Server %s does not exist in backend %s", name, backend))
-		return c.HandleError(name, "backend", backend, t, transactionID == "", e)
+	template, i := GetServerTemplateByPrefix(prefix, backend, p)
+	if template == nil {
+		e := NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("Server template %s does not exist in backend %s", prefix, backend))
+		return c.HandleError(prefix, "backend", backend, t, transactionID == "", e)
 	}
 
-	if err := p.Delete(parser.Backends, backend, "server", i); err != nil {
-		return c.HandleError(name, "backend", backend, t, transactionID == "", err)
+	if err := p.Delete(parser.Backends, backend, "server-template", i); err != nil {
+		return c.HandleError(prefix, "backend", backend, t, transactionID == "", err)
 	}
 
 	if err := c.SaveData(p, t, transactionID == ""); err != nil {
@@ -98,9 +98,9 @@ func (c *Client) DeleteServer(name string, backend string, transactionID string,
 	return nil
 }
 
-// CreateServer creates a server in configuration. One of version or transactionID is
+// CreateServerTemplate creates a server template in configuration. One of version or transactionID is
 // mandatory. Returns error on fail, nil on success.
-func (c *Client) CreateServer(backend string, data *models.Server, transactionID string, version int64) error {
+func (c *Client) CreateServerTemplate(backend string, data *models.ServerTemplate, transactionID string, version int64) error {
 	if c.UseValidation {
 		validationErr := data.Validate(strfmt.Default)
 		if validationErr != nil {
@@ -112,14 +112,14 @@ func (c *Client) CreateServer(backend string, data *models.Server, transactionID
 		return err
 	}
 
-	server, _ := GetServerByName(data.Name, backend, p)
-	if server != nil {
-		e := NewConfError(ErrObjectAlreadyExists, fmt.Sprintf("Server %s already exists in backend %s", data.Name, backend))
-		return c.HandleError(data.Name, "backend", backend, t, transactionID == "", e)
+	template, _ := GetServerTemplateByPrefix(data.Prefix, backend, p)
+	if template != nil {
+		e := NewConfError(ErrObjectAlreadyExists, fmt.Sprintf("Server template %s already exists in backend %s", data.Prefix, backend))
+		return c.HandleError(data.Prefix, "backend", backend, t, transactionID == "", e)
 	}
 
-	if err := p.Insert(parser.Backends, backend, "server", SerializeServer(*data), -1); err != nil {
-		return c.HandleError(data.Name, "backend", backend, t, transactionID == "", err)
+	if err := p.Insert(parser.Backends, backend, "server-template", SerializeServerTemplate(*data), -1); err != nil {
+		return c.HandleError(data.Prefix, "backend", backend, t, transactionID == "", err)
 	}
 
 	if err := c.SaveData(p, t, transactionID == ""); err != nil {
@@ -128,9 +128,9 @@ func (c *Client) CreateServer(backend string, data *models.Server, transactionID
 	return nil
 }
 
-// EditServer edits a server in configuration. One of version or transactionID is
+// EditServerTemplate edits a server template in configuration. One of version or transactionID is
 // mandatory. Returns error on fail, nil on success.
-func (c *Client) EditServer(name string, backend string, data *models.Server, transactionID string, version int64) error {
+func (c *Client) EditServerTemplate(prefix string, backend string, data *models.ServerTemplate, transactionID string, version int64) error {
 	if c.UseValidation {
 		validationErr := data.Validate(strfmt.Default)
 		if validationErr != nil {
@@ -142,14 +142,14 @@ func (c *Client) EditServer(name string, backend string, data *models.Server, tr
 		return err
 	}
 
-	server, i := GetServerByName(name, backend, p)
-	if server == nil {
-		e := NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("Server %v does not exist in backend %s", name, backend))
-		return c.HandleError(data.Name, "backend", backend, t, transactionID == "", e)
+	template, i := GetServerTemplateByPrefix(prefix, backend, p)
+	if template == nil {
+		e := NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("Server template %v does not exist in backend %s", prefix, backend))
+		return c.HandleError(data.Prefix, "backend", backend, t, transactionID == "", e)
 	}
 
-	if err := p.Set(parser.Backends, backend, "server", SerializeServer(*data), i); err != nil {
-		return c.HandleError(data.Name, "backend", backend, t, transactionID == "", err)
+	if err := p.Set(parser.Backends, backend, "server-template", SerializeServerTemplate(*data), i); err != nil {
+		return c.HandleError(data.Prefix, "backend", backend, t, transactionID == "", err)
 	}
 
 	if err := c.SaveData(p, t, transactionID == ""); err != nil {
@@ -158,287 +158,276 @@ func (c *Client) EditServer(name string, backend string, data *models.Server, tr
 	return nil
 }
 
-func ParseServers(backend string, p parser.Parser) (models.Servers, error) {
-	servers := models.Servers{}
+func ParseServerTemplates(backend string, p parser.Parser) (models.ServerTemplates, error) {
+	templates := models.ServerTemplates{}
 
-	data, err := p.Get(parser.Backends, backend, "server", false)
+	data, err := p.Get(parser.Backends, backend, "server-template", false)
 	if err != nil {
 		if errors.Is(err, parser_errors.ErrFetch) {
-			return servers, nil
+			return templates, nil
 		}
 		return nil, err
 	}
 
-	ondiskServers := data.([]types.Server)
-	for _, ondiskServer := range ondiskServers {
-		s := ParseServer(ondiskServer)
-		if s != nil {
-			servers = append(servers, s)
+	ondiskServerTemplates := data.([]types.ServerTemplate)
+	for _, ondiskServerTemplate := range ondiskServerTemplates {
+		template := ParseServerTemplate(ondiskServerTemplate)
+		if template != nil {
+			templates = append(templates, template)
 		}
 	}
-	return servers, nil
+	return templates, nil
 }
 
-func ParseServer(ondiskServer types.Server) *models.Server { //nolint:gocognit,gocyclo,dupl,cyclop
-	s := &models.Server{
-		Name: ondiskServer.Name,
+func ParseServerTemplate(ondiskServerTemplate types.ServerTemplate) *models.ServerTemplate { //nolint:gocognit,gocyclo,dupl,cyclop
+	st := &models.ServerTemplate{
+		Prefix:     ondiskServerTemplate.Prefix,
+		NumOrRange: ondiskServerTemplate.NumOrRange,
+		Fqdn:       ondiskServerTemplate.Fqdn,
 	}
-	addSlice := strings.Split(ondiskServer.Address, ":")
-	switch len(addSlice) {
-	case 0:
-		return nil
-	case 1:
-		s.Address = addSlice[0]
-	default:
-		s.Address = addSlice[0]
-		if addSlice[1] != "" {
-			p, err := strconv.ParseInt(addSlice[1], 10, 64)
-			if err == nil {
-				s.Port = &p
-			}
-		}
-	}
-	for _, p := range ondiskServer.Params { //nolint:gocognit,gocyclo,dupl,cyclop
+	for _, p := range ondiskServerTemplate.Params { //nolint:gocognit,gocyclo,dupl,cyclop
 		switch v := p.(type) {
 		case *params.ServerOptionWord:
 			switch v.Name {
 			case "agent-check":
-				s.AgentCheck = "enabled"
+				st.AgentCheck = "enabled"
 			case "no-agent-check":
-				s.AgentCheck = "disabled"
+				st.AgentCheck = "disabled"
 			case "allow-0rtt":
-				s.Allow0rtt = true
+				st.Allow0rtt = true
 			case "backup":
-				s.Backup = "enabled"
+				st.Backup = "enabled"
 			case "no-backup":
-				s.Backup = "disabled"
+				st.Backup = "disabled"
 			case "check":
-				s.Check = "enabled"
+				st.Check = "enabled"
 			case "no-check":
-				s.Check = "disabled"
+				st.Check = "disabled"
 			case "check-send-proxy":
-				s.CheckSendProxy = "enabled"
+				st.CheckSendProxy = "enabled"
 			case "check-ssl":
-				s.CheckSsl = "enabled"
+				st.CheckSsl = "enabled"
 			case "no-check-ssl":
-				s.CheckSsl = "disabled"
+				st.CheckSsl = "disabled"
 			case "check-via-socks4":
-				s.CheckViaSocks4 = "enabled"
+				st.CheckViaSocks4 = "enabled"
 			case "disabled":
-				s.Maintenance = "enabled"
+				st.Maintenance = "enabled"
 			case "enabled":
-				s.Maintenance = "disabled"
+				st.Maintenance = "disabled"
 			case "force-sslv3":
-				s.ForceSslv3 = "enabled"
+				st.ForceSslv3 = "enabled"
 			case "force-tlsv10":
-				s.ForceTlsv10 = "enabled"
+				st.ForceTlsv10 = "enabled"
 			case "no-tlsv10":
-				s.ForceTlsv10 = "disabled"
+				st.ForceTlsv10 = "disabled"
 			case "force-tlsv11":
-				s.ForceTlsv11 = "enabled"
+				st.ForceTlsv11 = "enabled"
 			case "no-tlsv11":
-				s.ForceTlsv11 = "disabled"
+				st.ForceTlsv11 = "disabled"
 			case "force-tlsv12":
-				s.ForceTlsv12 = "enabled"
+				st.ForceTlsv12 = "enabled"
 			case "no-tlsv12":
-				s.ForceTlsv12 = "disabled"
+				st.ForceTlsv12 = "disabled"
 			case "force-tlsv13":
-				s.ForceTlsv13 = "enabled"
+				st.ForceTlsv13 = "enabled"
 			case "no-tlsv13":
-				s.ForceTlsv13 = "disabled"
+				st.ForceTlsv13 = "disabled"
 			case "send-proxy":
-				s.SendProxy = "enabled"
+				st.SendProxy = "enabled"
 			case "no-send-proxy":
-				s.SendProxy = "disabled"
+				st.SendProxy = "disabled"
 			case "send-proxy-v2":
-				s.SendProxyV2 = "enabled"
+				st.SendProxyV2 = "enabled"
 			case "no-send-proxy-v2":
-				s.SendProxyV2 = "disabled"
+				st.SendProxyV2 = "disabled"
 			case "send-proxy-v2-ssl":
-				s.SendProxyV2Ssl = "enabled"
+				st.SendProxyV2Ssl = "enabled"
 			case "send-proxy-v2-ssl-cn":
-				s.SendProxyV2SslCn = "enabled"
+				st.SendProxyV2SslCn = "enabled"
 			case "ssl":
-				s.Ssl = "enabled"
+				st.Ssl = "enabled"
 			case "no-ssl":
-				s.Ssl = "disabled"
+				st.Ssl = "disabled"
 			case "ssl-reuse":
-				s.SslReuse = "enabled"
+				st.SslReuse = "enabled"
 			case "no-ssl-reuse":
-				s.SslReuse = "disabled"
+				st.SslReuse = "disabled"
 			case "tls-tickets":
-				s.TLSTickets = "enabled"
+				st.TLSTickets = "enabled"
 			case "no-tls-tickets":
-				s.TLSTickets = "disabled"
+				st.TLSTickets = "disabled"
 			case "tfo":
-				s.Tfo = "enabled"
+				st.Tfo = "enabled"
 			case "no-tfo":
-				s.Tfo = "disabled"
+				st.Tfo = "disabled"
 			case "stick":
-				s.Stick = "enabled"
+				st.Stick = "enabled"
 			case "no-stick":
-				s.Stick = "disabled"
+				st.Stick = "disabled"
 
 			}
 		case *params.ServerOptionValue: //nolint:gocognit,gocyclo,dupl,cyclop
 			switch v.Name {
 			case "agent-send":
-				s.AgentSend = v.Value
+				st.AgentSend = v.Value
 			case "agent-inter":
-				s.AgentInter = misc.ParseTimeout(v.Value)
+				st.AgentInter = misc.ParseTimeout(v.Value)
 			case "agent-addr":
-				s.AgentAddr = v.Value
+				st.AgentAddr = v.Value
 			case "agent-port":
 				p, err := strconv.ParseInt(v.Value, 10, 64)
 				if err == nil && p != 0 {
-					s.AgentPort = &p
+					st.AgentPort = &p
 				}
 			case "alpn":
-				s.Alpn = v.Value
+				st.Alpn = v.Value
 			case "ca-file":
-				s.SslCafile = v.Value
+				st.SslCafile = v.Value
 			case "check-alpn":
-				s.CheckAlpn = v.Value
+				st.CheckAlpn = v.Value
 			case "check-proto":
-				s.CheckProto = v.Value
+				st.CheckProto = v.Value
 			case "check-sni":
-				s.CheckSni = v.Value
+				st.CheckSni = v.Value
 			case "ciphers":
-				s.Ciphers = v.Value
+				st.Ciphers = v.Value
 			case "ciphersuites":
-				s.Ciphersuites = v.Value
+				st.Ciphersuites = v.Value
 			case "cookie":
-				s.Cookie = v.Value
+				st.Cookie = v.Value
 			case "crl-file":
-				s.CrlFile = v.Value
+				st.CrlFile = v.Value
 			case "crt":
-				s.SslCertificate = v.Value
+				st.SslCertificate = v.Value
 			case "error-limit":
 				c, err := strconv.ParseInt(v.Value, 10, 64)
 				if err == nil && c != 0 {
-					s.ErrorLimit = c
+					st.ErrorLimit = c
 				}
 			case "fall":
 				c, err := strconv.ParseInt(v.Value, 10, 64)
 				if err == nil && c != 0 {
-					s.Fall = &c
+					st.Fall = &c
 				}
 			case "init-addr":
-				s.InitAddr = &v.Value
+				st.InitAddr = &v.Value
 			case "inter":
-				s.Inter = misc.ParseTimeout(v.Value)
+				st.Inter = misc.ParseTimeout(v.Value)
 			case "fastinter":
-				s.Fastinter = misc.ParseTimeout(v.Value)
+				st.Fastinter = misc.ParseTimeout(v.Value)
 			case "downinter":
-				s.Downinter = misc.ParseTimeout(v.Value)
+				st.Downinter = misc.ParseTimeout(v.Value)
 			case "log-proto":
-				s.LogProto = v.Value
+				st.LogProto = v.Value
 			case "maxconn":
 				m, err := strconv.ParseInt(v.Value, 10, 64)
 				if err == nil && m != 0 {
-					s.Maxconn = &m
+					st.Maxconn = &m
 				}
 			case "maxqueue":
 				m, err := strconv.ParseInt(v.Value, 10, 64)
 				if err == nil && m != 0 {
-					s.Maxqueue = &m
+					st.Maxqueue = &m
 				}
 			case "max-reuse":
 				c, err := strconv.ParseInt(v.Value, 10, 64)
 				if err == nil && c != 0 {
-					s.MaxReuse = &c
+					st.MaxReuse = &c
 				}
 			case "minconn":
 				m, err := strconv.ParseInt(v.Value, 10, 64)
 				if err == nil && m != 0 {
-					s.Minconn = &m
+					st.Minconn = &m
 				}
 			case "namespace":
-				s.Namespace = v.Value
+				st.Namespace = v.Value
 			case "npn":
-				s.Npn = v.Value
+				st.Npn = v.Value
 			case "observe":
-				s.Observe = v.Value
+				st.Observe = v.Value
 			case "on-error":
-				s.OnError = v.Value
+				st.OnError = v.Value
 			case "on-marked-down":
-				s.OnMarkedDown = v.Value
+				st.OnMarkedDown = v.Value
 			case "on-marked-up":
-				s.OnMarkedUp = v.Value
+				st.OnMarkedUp = v.Value
 			case "pool-low-conn":
 				m, err := strconv.ParseInt(v.Value, 10, 64)
 				if err == nil && m != 0 {
-					s.PoolLowConn = &m
+					st.PoolLowConn = &m
 				}
 			case "pool-max-conn":
 				m, err := strconv.ParseInt(v.Value, 10, 64)
 				if err == nil && m != 0 {
-					s.PoolMaxConn = &m
+					st.PoolMaxConn = &m
 				}
 			case "pool-purge-delay":
 				d, err := strconv.ParseInt(v.Value, 10, 64)
 				if err == nil && d != 0 {
-					s.PoolPurgeDelay = &d
+					st.PoolPurgeDelay = &d
 				}
 			case "port":
 				p, err := strconv.ParseInt(v.Value, 10, 64)
 				if err == nil {
-					s.HealthCheckPort = &p
+					st.HealthCheckPort = &p
 				}
 			case "proto":
-				s.Proto = v.Value
+				st.Proto = v.Value
 			case "redir":
-				s.Redir = v.Value
+				st.Redir = v.Value
 			case "rise":
-				s.Rise = misc.ParseTimeout(v.Value)
+				st.Rise = misc.ParseTimeout(v.Value)
 			case "resolve-opts":
-				s.ResolveOpts = v.Value
+				st.ResolveOpts = v.Value
 			case "resolve-prefer":
-				s.ResolvePrefer = v.Value
+				st.ResolvePrefer = v.Value
 			case "resolve-net":
-				s.ResolveNet = v.Value
+				st.ResolveNet = v.Value
 			case "resolvers":
-				s.Resolvers = v.Value
+				st.Resolvers = v.Value
 			case "proxy-v2-options":
-				s.ProxyV2Options = strings.Split(v.Value, ",")
+				st.ProxyV2Options = strings.Split(v.Value, ",")
 			case "slowstart":
-				s.Slowstart = misc.ParseTimeout(v.Value)
+				st.Slowstart = misc.ParseTimeout(v.Value)
 			case "sni":
-				s.Sni = v.Value
+				st.Sni = v.Value
 			case "source":
-				s.Source = v.Value
+				st.Source = v.Value
 			case "ssl-max-ver":
-				s.SslMaxVer = v.Value
+				st.SslMaxVer = v.Value
 			case "ssl-min-ver":
-				s.SslMinVer = v.Value
+				st.SslMinVer = v.Value
 			case "socks4":
-				s.Socks4 = v.Value
+				st.Socks4 = v.Value
 			case "tcp-ut":
 				d, err := strconv.ParseInt(v.Value, 10, 64)
 				if err == nil && d != 0 {
-					s.TCPUt = d
+					st.TCPUt = d
 				}
 			case "track":
-				s.Track = v.Value
+				st.Track = v.Value
 			case "verify":
-				s.Verify = v.Value
+				st.Verify = v.Value
 			case "verifyhost":
-				s.Verifyhost = v.Value
+				st.Verifyhost = v.Value
 			case "weight":
 				w, err := strconv.ParseInt(v.Value, 10, 64)
 				if err == nil && w != 0 {
-					s.Weight = &w
+					st.Weight = &w
 				}
 			}
 		}
 	}
-	return s
+	return st
 }
 
-func SerializeServer(s models.Server) types.Server { //nolint:gocognit,gocyclo
-	srv := types.Server{
-		Name:   s.Name,
-		Params: []params.ServerOption{},
+func SerializeServerTemplate(s models.ServerTemplate) types.ServerTemplate { //nolint:gocognit,gocyclo,dupl,cyclop
+	srv := types.ServerTemplate{
+		Prefix:     s.Prefix,
+		NumOrRange: s.NumOrRange,
+		Fqdn:       s.Fqdn,
+		Params:     []params.ServerOption{},
 	}
 	// ServerOptionWord
 	if s.AgentCheck == "enabled" {
@@ -670,11 +659,6 @@ func SerializeServer(s models.Server) types.Server { //nolint:gocognit,gocyclo
 	if s.PoolPurgeDelay != nil {
 		srv.Params = append(srv.Params, &params.ServerOptionValue{Name: "pool-purge-delay", Value: strconv.FormatInt(*s.PoolPurgeDelay, 10)})
 	}
-	if s.Port != nil {
-		srv.Address = s.Address + ":" + strconv.FormatInt(*s.Port, 10)
-	} else {
-		srv.Address = s.Address
-	}
 	if s.HealthCheckPort != nil {
 		srv.Params = append(srv.Params, &params.ServerOptionValue{Name: "port", Value: strconv.FormatInt(*s.HealthCheckPort, 10)})
 	}
@@ -738,15 +722,14 @@ func SerializeServer(s models.Server) types.Server { //nolint:gocognit,gocyclo
 	return srv
 }
 
-func GetServerByName(name string, backend string, p parser.Parser) (*models.Server, int) {
-	servers, err := ParseServers(backend, p)
+func GetServerTemplateByPrefix(prefix string, backend string, p parser.Parser) (*models.ServerTemplate, int) {
+	templates, err := ParseServerTemplates(backend, p)
 	if err != nil {
 		return nil, 0
 	}
-
-	for i, s := range servers {
-		if s.Name == name {
-			return s, i
+	for i, template := range templates {
+		if template.Prefix == prefix {
+			return template, i
 		}
 	}
 	return nil, 0

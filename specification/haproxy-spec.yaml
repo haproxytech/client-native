@@ -78,6 +78,14 @@ definitions:
     type: array
     items:
       $ref: '#/definitions/server'
+  server_template:
+    $ref: "models/configuration.yaml#/server_template"
+  server_templates:
+    title: Server templates
+    description: HAProxy backend server templates array
+    type: array
+    items:
+      $ref: '#/definitions/server_template'
   http_request_rule:
     $ref: "models/configuration.yaml#/http_request_rule"
   http_request_rules:
@@ -535,6 +543,7 @@ tags:
   - name: Spoe
   - name: SpoeTransactions
   - name: Storage
+  - name: ServerTemplate
 security:
   - basic_auth: []
 paths:
@@ -612,6 +621,10 @@ paths:
     $ref: "paths/configuration.yaml#/servers"
   /services/haproxy/configuration/servers/{name}:
     $ref: "paths/configuration.yaml#/servers_one"
+  /services/haproxy/configuration/server_templates:
+    $ref: "paths/configuration.yaml#/server_templates"
+  /services/haproxy/configuration/server_templates/{prefix}:
+    $ref: "paths/configuration.yaml#/server_templates_one"
   /services/haproxy/configuration/http_request_rules:
     $ref: "paths/configuration.yaml#/http_request_rules"
   /services/haproxy/configuration/http_request_rules/{index}:

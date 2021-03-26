@@ -1615,6 +1615,427 @@ definitions:
     type: array
     items:
       $ref: '#/definitions/server'
+  server_template:
+      additionalProperties: false
+      description: Set a template to initialize servers with shared parameters.
+      example:
+        fqdn: google.com
+        num_or_range: 1-3
+        port: 80
+        prefix: srv
+      properties:
+        agent-addr:
+          pattern: ^[^\s]+$
+          type: string
+        agent-check:
+          enum:
+          - enabled
+          - disabled
+          type: string
+          x-dependency:
+            agent-port:
+              required: true
+        agent-inter:
+          type: integer
+          x-nullable: true
+        agent-port:
+          maximum: 65535
+          minimum: 1
+          type: integer
+          x-nullable: true
+        agent-send:
+          type: string
+        allow_0rtt:
+          type: boolean
+        alpn:
+          pattern: ^[^\s]+$
+          type: string
+          x-display-name: ALPN Protocols
+        backup:
+          enum:
+          - enabled
+          - disabled
+          type: string
+        check:
+          enum:
+          - enabled
+          - disabled
+          type: string
+        check-send-proxy:
+          enum:
+          - enabled
+          - disabled
+          type: string
+        check-sni:
+          pattern: ^[^\s]+$
+          type: string
+        check-ssl:
+          enum:
+          - enabled
+          - disabled
+          type: string
+        check_alpn:
+          pattern: ^[^\s]+$
+          type: string
+          x-display-name: Protocols
+        check_proto:
+          pattern: ^[^\s]+$
+          type: string
+          x-display-name: Name
+        check_via_socks4:
+          enum:
+          - enabled
+          - disabled
+          type: string
+        ciphers:
+          type: string
+          x-dependency:
+            ssl:
+              value: enabled
+        ciphersuites:
+          type: string
+          x-dependency:
+            ssl:
+              value: enabled
+        cookie:
+          pattern: ^[^\s]+$
+          type: string
+        crl_file:
+          type: string
+          x-dependency:
+            ssl:
+              value: enabled
+        downinter:
+          type: integer
+          x-nullable: true
+        error_limit:
+          type: integer
+          x-display-name: Error count
+        fall:
+          type: integer
+          x-display-name: Nr. of consecutive failed checks
+          x-nullable: true
+        fastinter:
+          type: integer
+          x-nullable: true
+        force_sslv3:
+          enum:
+          - enabled
+          - disabled
+          type: string
+        force_tlsv10:
+          enum:
+          - enabled
+          - disabled
+          type: string
+        force_tlsv11:
+          enum:
+          - enabled
+          - disabled
+          type: string
+        force_tlsv12:
+          enum:
+          - enabled
+          - disabled
+          type: string
+        force_tlsv13:
+          enum:
+          - enabled
+          - disabled
+          type: string
+        fqdn:
+          type: string
+          x-nullable: false
+        health_check_port:
+          maximum: 65535
+          minimum: 1
+          type: integer
+          x-nullable: true
+        id:
+          type: integer
+          x-nullable: true
+        init-addr:
+          pattern: ^[^\s]+$
+          type: string
+          x-nullable: true
+        inter:
+          type: integer
+          x-nullable: true
+        log_proto:
+          enum:
+          - legacy
+          - octet-count
+          type: string
+        maintenance:
+          enum:
+          - enabled
+          - disabled
+          type: string
+        max_reuse:
+          type: integer
+          x-nullable: true
+        maxconn:
+          type: integer
+          x-display-name: Max Concurrent Connections
+          x-nullable: true
+        maxqueue:
+          type: integer
+          x-display-name: Max Number of Connections
+          x-nullable: true
+        minconn:
+          type: integer
+          x-nullable: true
+        namespace:
+          type: string
+        no_sslv3:
+          enum:
+          - enabled
+          - disabled
+          type: string
+        no_tlsv10:
+          enum:
+          - enabled
+          - disabled
+          type: string
+        no_tlsv11:
+          enum:
+          - enabled
+          - disabled
+          type: string
+        no_tlsv12:
+          enum:
+          - enabled
+          - disabled
+          type: string
+        no_tlsv13:
+          enum:
+          - enabled
+          - disabled
+          type: string
+        no_verifyhost:
+          enum:
+          - enabled
+          - disabled
+          type: string
+        npn:
+          type: string
+          x-dependency:
+            ssl:
+              value: enabled
+        num_or_range:
+          type: string
+          x-nullable: false
+        observe:
+          enum:
+          - layer4
+          - layer7
+          type: string
+          x-dependency:
+            ssl:
+              value: enabled
+        on-error:
+          enum:
+          - fastinter
+          - fail-check
+          - sudden-death
+          - mark-down
+          type: string
+        on-marked-down:
+          enum:
+          - shutdown-sessions
+          type: string
+        on-marked-up:
+          enum:
+          - shutdown-backup-sessions
+          type: string
+        pool_low_conn:
+          type: integer
+          x-nullable: true
+        pool_max_conn:
+          type: integer
+          x-nullable: true
+        pool_purge_delay:
+          type: integer
+          x-nullable: true
+        port:
+          maximum: 65535
+          minimum: 1
+          type: integer
+          x-nullable: true
+        prefix:
+          pattern: ^[^\s]+$
+          type: string
+          x-nullable: false
+        proto:
+          pattern: ^[^\s]+$
+          type: string
+        proxy-v2-options:
+          items:
+            enum:
+            - ssl
+            - cert-cn
+            - ssl-cipher
+            - cert-sig
+            - cert-key
+            - authority
+            - crc32c
+            - unique-id
+            type: string
+          type: array
+        redir:
+          type: string
+          x-display-name: Prefix
+        resolve-net:
+          pattern: ^[^,\s][^\,]*[^,\s]*$
+          type: string
+          x-dependency:
+            resolvers:
+              required: true
+        resolve-prefer:
+          enum:
+          - ipv4
+          - ipv6
+          type: string
+          x-dependency:
+            resolvers:
+              required: true
+        resolve_opts:
+          pattern: ^[^,\s][^\,]*[^,\s]*$
+          type: string
+        resolvers:
+          pattern: ^[^\s]+$
+          type: string
+          x-dynamic-enum:
+            operation: getResolvers
+            property: name
+        rise:
+          type: integer
+          x-nullable: true
+        send-proxy:
+          enum:
+          - enabled
+          - disabled
+          type: string
+        send-proxy-v2:
+          enum:
+          - enabled
+          - disabled
+          type: string
+        send_proxy_v2_ssl:
+          enum:
+          - enabled
+          - disabled
+          type: string
+        send_proxy_v2_ssl_cn:
+          enum:
+          - enabled
+          - disabled
+          type: string
+        slowstart:
+          type: integer
+          x-nullable: true
+        sni:
+          pattern: ^[^\s]+$
+          type: string
+        socks4:
+          pattern: ^[^\s]+$
+          type: string
+          x-dependency:
+            check-via-socks4:
+              required: true
+        source:
+          type: string
+        ssl:
+          enum:
+          - enabled
+          - disabled
+          type: string
+        ssl_cafile:
+          pattern: ^[^\s]+$
+          type: string
+          x-dependency:
+            ssl:
+              value: enabled
+          x-display-name: SSL CA File
+        ssl_certificate:
+          pattern: ^[^\s]+$
+          type: string
+          x-dependency:
+            ssl:
+              value: enabled
+        ssl_max_ver:
+          enum:
+          - SSLv3
+          - TLSv1.0
+          - TLSv1.1
+          - TLSv1.2
+          - TLSv1.3
+          type: string
+        ssl_min_ver:
+          enum:
+          - SSLv3
+          - TLSv1.0
+          - TLSv1.1
+          - TLSv1.2
+          - TLSv1.3
+          type: string
+        ssl_reuse:
+          enum:
+          - enabled
+          - disabled
+          type: string
+        stick:
+          enum:
+          - enabled
+          - disabled
+          type: string
+        tcp_ut:
+          type: integer
+        tfo:
+          enum:
+          - enabled
+          - disabled
+          type: string
+        tls_tickets:
+          enum:
+          - enabled
+          - disabled
+          type: string
+          x-dependency:
+            ssl:
+              value: enabled
+        track:
+          type: string
+        verify:
+          enum:
+          - none
+          - required
+          type: string
+          x-dependency:
+            ssl:
+              value: enabled
+        verifyhost:
+          type: string
+          x-dependency:
+            ssl:
+              value: enabled
+            verify:
+              value: required
+        weight:
+          type: integer
+          x-nullable: true
+      required:
+      - prefix
+      - num_or_range
+      - fqdn
+      title: Server template
+      type: object
+  server_templates:
+    title: Server templates
+    description: HAProxy backend server templates array
+    type: array
+    items:
+      $ref: '#/definitions/server_template'
   http_request_rule:
       additionalProperties: false
       description: HAProxy HTTP request rule configuration (corresponds to http-request
@@ -5938,6 +6359,7 @@ tags:
 - name: Server
   description: Managing backend server configurations (advanced mode)
 - name: ServerSwitchingRule
+- name: ServerTemplate
 - name: ServiceDiscovery
 - name: Sites
   description: |
@@ -8045,6 +8467,198 @@ paths:
         summary: Replace a server
         tags:
         - Server
+  /services/haproxy/configuration/server_templates:
+      get:
+        description: Returns an array of all server templates that are configured in specified
+          backend.
+        operationId: getServerTemplates
+        parameters:
+        - description: Parent backend name
+          in: query
+          name: backend
+          required: true
+          type: string
+        - $ref: '#/parameters/transaction_id'
+        responses:
+          "200":
+            description: Successful operation
+            headers:
+              Configuration-Version:
+                description: Configuration file version
+                type: integer
+                x-nullable: false
+            schema:
+              properties:
+                _version:
+                  type: integer
+                data:
+                  $ref: '#/definitions/server_templates'
+              required:
+              - data
+              type: object
+          default:
+            $ref: '#/responses/DefaultError'
+        summary: Return an array of server templates
+        tags:
+        - ServerTemplate
+      post:
+        description: Adds a new server template in the specified backend in the configuration
+          file.
+        operationId: createServerTemplate
+        parameters:
+        - description: Parent backend name
+          in: query
+          name: backend
+          required: true
+          type: string
+        - in: body
+          name: data
+          required: true
+          schema:
+            $ref: '#/definitions/server_template'
+        - $ref: '#/parameters/transaction_id'
+        - $ref: '#/parameters/version'
+        - $ref: '#/parameters/force_reload'
+        responses:
+          "201":
+            description: Server template created
+            schema:
+              $ref: '#/definitions/server_template'
+          "202":
+            description: Configuration change accepted and reload requested
+            headers:
+              Reload-ID:
+                description: ID of the requested reload
+                type: string
+            schema:
+              $ref: '#/definitions/server_template'
+          "400":
+            $ref: '#/responses/BadRequest'
+          "409":
+            $ref: '#/responses/AlreadyExists'
+          default:
+            $ref: '#/responses/DefaultError'
+        summary: Add a new server template
+        tags:
+        - ServerTemplate
+  /services/haproxy/configuration/server_templates/{prefix}:
+      delete:
+        description: Deletes a server template configuration by it's prefix in the specified
+          backend.
+        operationId: deleteServerTemplate
+        parameters:
+        - description: Server template prefix
+          in: path
+          name: prefix
+          required: true
+          type: string
+        - description: Parent backend name
+          in: query
+          name: backend
+          required: true
+          type: string
+        - $ref: '#/parameters/transaction_id'
+        - $ref: '#/parameters/version'
+        - $ref: '#/parameters/force_reload'
+        responses:
+          "202":
+            description: Configuration change accepted and reload requested
+            headers:
+              Reload-ID:
+                description: ID of the requested reload
+                type: string
+          "204":
+            description: Server template deleted
+          "404":
+            $ref: '#/responses/NotFound'
+          default:
+            $ref: '#/responses/DefaultError'
+        summary: Delete a server template
+        tags:
+        - ServerTemplate
+      get:
+        description: Returns one server template configuration by it's prefix in the specified
+          backend.
+        operationId: getServerTemplate
+        parameters:
+        - description: Server template prefix
+          in: path
+          name: prefix
+          required: true
+          type: string
+        - description: Parent backend name
+          in: query
+          name: backend
+          required: true
+          type: string
+        - $ref: '#/parameters/transaction_id'
+        responses:
+          "200":
+            description: Successful operation
+            headers:
+              Configuration-Version:
+                description: Configuration file version
+                type: integer
+                x-nullable: false
+            schema:
+              properties:
+                _version:
+                  type: integer
+                data:
+                  $ref: '#/definitions/server_template'
+              type: object
+          "404":
+            $ref: '#/responses/NotFound'
+          default:
+            $ref: '#/responses/DefaultError'
+        summary: Return one server template
+        tags:
+        - ServerTemplate
+      put:
+        description: Replaces a server template configuration by it's prefix in the specified
+          backend.
+        operationId: replaceServerTemplate
+        parameters:
+        - description: Server template prefix
+          in: path
+          name: prefix
+          required: true
+          type: string
+        - description: Parent backend name
+          in: query
+          name: backend
+          required: true
+          type: string
+        - in: body
+          name: data
+          required: true
+          schema:
+            $ref: '#/definitions/server_template'
+        - $ref: '#/parameters/transaction_id'
+        - $ref: '#/parameters/version'
+        - $ref: '#/parameters/force_reload'
+        responses:
+          "200":
+            description: Server template replaced
+            schema:
+              $ref: '#/definitions/server_template'
+          "202":
+            description: Configuration change accepted and reload requested
+            headers:
+              Reload-ID:
+                description: ID of the requested reload
+                type: string
+            schema:
+              $ref: '#/definitions/server_template'
+          "400":
+            $ref: '#/responses/BadRequest'
+          "404":
+            $ref: '#/responses/NotFound'
+          default:
+            $ref: '#/responses/DefaultError'
+        summary: Replace a server template
+        tags:
+        - ServerTemplate
   /services/haproxy/configuration/http_request_rules:
       get:
         description: Returns all HTTP Request Rules that are configured in specified parent.
