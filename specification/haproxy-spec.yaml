@@ -332,6 +332,16 @@ definitions:
     type: array
     items:
       $ref: '#/definitions/nameserver'
+  awsFilters:
+    $ref: "models/service-discovery.yaml#/awsFilters"
+  awsRegion:
+    $ref: "models/service-discovery.yaml#/awsRegion"
+  awsRegions:
+    title: AWS
+    description: AWS regions array
+    type: array
+    items:
+      $ref: '#/definitions/awsRegion'
   consul:
     $ref: "models/service-discovery.yaml#/consul"
   consuls:
@@ -543,6 +553,10 @@ paths:
     $ref: "paths/cluster.yaml#/cluster"
   /cluster/certificate:
     $ref: "paths/cluster.yaml#/certificate"
+  /service_discovery/aws:
+    $ref: "paths/service-discovery.yaml#/aws"
+  /service_discovery/aws/{id}:
+    $ref: "paths/service-discovery.yaml#/aws_one"
   /service_discovery/consul:
     $ref: "paths/service-discovery.yaml#/consul"
   /service_discovery/consul/{id}:

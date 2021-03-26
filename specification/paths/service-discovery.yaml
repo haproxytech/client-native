@@ -1,4 +1,120 @@
 ---
+aws:
+  get:
+    summary: Return an array of all configured AWS regions
+    description: Return all configured AWS regions.
+    operationId: getAWSRegions
+    tags:
+      - ServiceDiscovery
+    responses:
+      200:
+        description: Successful operation
+        schema:
+          type: object
+          required:
+            - data
+          properties:
+            data:
+              $ref: "#/definitions/awsRegions"
+      'default':
+        $ref: '#/responses/DefaultError'
+  post:
+    summary: Add a new AWS region
+    description: |-
+      Add a new AWS region.
+      Credentials are not required in case Dataplane API is running in an EC2 instance with proper IAM role attached.
+    operationId: createAWSRegion
+    tags:
+      - ServiceDiscovery
+    parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/awsRegion'
+    responses:
+      201:
+        description: Resource created
+        schema:
+          $ref: '#/definitions/awsRegion'
+      409:
+        $ref: '#/responses/AlreadyExists'
+      400:
+        $ref: '#/responses/BadRequest'
+      default:
+        $ref: '#/responses/DefaultError'
+aws_one:
+  get:
+    summary: Return an AWS region
+    description: Return one AWS Region configuration by it's id.
+    operationId: getAWSRegion
+    tags:
+      - ServiceDiscovery
+    parameters:
+      - name: id
+        in: path
+        description: AWS region id
+        required: true
+        type: string
+    responses:
+      '200':
+        description: Successful operation
+        schema:
+          type: object
+          properties:
+            data:
+              $ref: "#/definitions/awsRegion"
+      '404':
+        $ref: '#/responses/NotFound'
+      'default':
+        $ref: '#/responses/DefaultError'
+  put:
+    summary: Replace an AWS region
+    description: Replace an AWS region configuration by its id.
+    operationId: replaceAWSRegion
+    tags:
+      - ServiceDiscovery
+    parameters:
+      - name: id
+        in: path
+        description: AWS Region ID
+        required: true
+        type: string
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/awsRegion'
+    responses:
+      '200':
+        description: Resource updated
+        schema:
+          $ref: '#/definitions/awsRegion'
+      '400':
+        $ref: '#/responses/BadRequest'
+      '404':
+        $ref: '#/responses/NotFound'
+      'default':
+        $ref: '#/responses/DefaultError'
+  delete:
+    summary: Delete an AWS region
+    description: Delete an AWS region configuration by it's id.
+    operationId: deleteAWSRegion
+    tags:
+      - ServiceDiscovery
+    parameters:
+      - name: id
+        in: path
+        description: AWS region ID
+        required: true
+        type: string
+    responses:
+      '204':
+        description: Resource deleted
+      '404':
+        $ref: '#/responses/NotFound'
+      'default':
+        $ref: '#/responses/DefaultError'
 consul:
   get:
     summary: Return an array of all configured Consul servers

@@ -1,4 +1,90 @@
 ---
+awsFilters:
+  type: object
+  required:
+    - key
+    - value
+  properties:
+    key:
+      type: string
+      description: Key to use as filter, using the format specified at https://docs.aws.amazon.com/cli/latest/reference/ec2/describe-instances.html#options
+    value:
+      type: string
+      description: Value of the filter to use
+
+awsRegion:
+  title: AWS region
+  description: AWS region configuration
+  type: object
+  required:
+    - name
+    - region
+    - enabled
+    - retry_timeout
+    - ipv4_address
+  properties:
+    id:
+      type: string
+      x-nullable: true
+      pattern: '^[^\s]+$'
+      description: Auto generated ID.
+      readOnly: true
+    region:
+      type: string
+    description:
+      type: string
+    name:
+      type: string
+    access_key_id:
+      type: string
+      description: AWS Access Key ID.
+    secret_access_key:
+      type: string
+      description: AWS Secret Access Key.
+    enabled:
+      type: boolean
+    retry_timeout:
+      type: integer
+      minimum: 1
+      description: Duration in seconds in-between data pulling requests to the AWS region
+    ipv4_address:
+      type: string
+      description: Select which IPv4 address the Service Discovery has to use for the backend server entry
+      enum: [private, public]
+    allowlist:
+      type: array
+      description: Specify the AWS filters used to filter the EC2 instances to add
+      items:
+        $ref: "#/definitions/awsFilters"
+    denylist:
+      type: array
+      description: Specify the AWS filters used to filter the EC2 instances to ignore
+      items:
+        $ref: "#/definitions/awsFilters"
+    server_slots_base:
+      type: integer
+      default: 10
+    server_slots_growth_type:
+      type: string
+      enum: [linear, exponential]
+      default: exponential
+    server_slots_growth_increment:
+      type: integer
+  example:
+    id: 0
+    access_key_id: "****************L7GT"
+    secret_access_key: "****************soLl"
+    name: frontend-service
+    region: us-east-1
+    ipv4_address: private
+    enabled: true
+    allowlist:
+      - key: tag-key
+        value: "Instance:Having:This:Tag"
+    denylist:
+      - key: tag:Environment
+        value: development
+
 consul:
   title: Consul server
   description: Consul server configuration

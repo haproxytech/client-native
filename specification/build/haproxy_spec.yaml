@@ -5401,6 +5401,101 @@ definitions:
     type: array
     items:
       $ref: '#/definitions/nameserver'
+  awsFilters:
+      properties:
+        key:
+          description: Key to use as filter, using the format specified at https://docs.aws.amazon.com/cli/latest/reference/ec2/describe-instances.html#options
+          type: string
+        value:
+          description: Value of the filter to use
+          type: string
+      required:
+      - key
+      - value
+      type: object
+  awsRegion:
+      description: AWS region configuration
+      example:
+        access_key_id: '****************L7GT'
+        allowlist:
+        - key: tag-key
+          value: Instance:Having:This:Tag
+        denylist:
+        - key: tag:Environment
+          value: development
+        enabled: true
+        id: 0
+        ipv4_address: private
+        name: frontend-service
+        region: us-east-1
+        secret_access_key: '****************soLl'
+      properties:
+        access_key_id:
+          description: AWS Access Key ID.
+          type: string
+        allowlist:
+          description: Specify the AWS filters used to filter the EC2 instances to add
+          items:
+            $ref: '#/definitions/awsFilters'
+          type: array
+        denylist:
+          description: Specify the AWS filters used to filter the EC2 instances to ignore
+          items:
+            $ref: '#/definitions/awsFilters'
+          type: array
+        description:
+          type: string
+        enabled:
+          type: boolean
+        id:
+          description: Auto generated ID.
+          pattern: ^[^\s]+$
+          readOnly: true
+          type: string
+          x-nullable: true
+        ipv4_address:
+          description: Select which IPv4 address the Service Discovery has to use for the
+            backend server entry
+          enum:
+          - private
+          - public
+          type: string
+        name:
+          type: string
+        region:
+          type: string
+        retry_timeout:
+          description: Duration in seconds in-between data pulling requests to the AWS region
+          minimum: 1
+          type: integer
+        secret_access_key:
+          description: AWS Secret Access Key.
+          type: string
+        server_slots_base:
+          default: 10
+          type: integer
+        server_slots_growth_increment:
+          type: integer
+        server_slots_growth_type:
+          default: exponential
+          enum:
+          - linear
+          - exponential
+          type: string
+      required:
+      - name
+      - region
+      - enabled
+      - retry_timeout
+      - ipv4_address
+      title: AWS region
+      type: object
+  awsRegions:
+    title: AWS
+    description: AWS regions array
+    type: array
+    items:
+      $ref: '#/definitions/awsRegion'
   consul:
       additionalProperties: false
       description: Consul server configuration
@@ -5944,6 +6039,122 @@ paths:
         summary: Initiates a certificate refresh
         tags:
         - Cluster
+  /service_discovery/aws:
+      get:
+        description: Return all configured AWS regions.
+        operationId: getAWSRegions
+        responses:
+          200:
+            description: Successful operation
+            schema:
+              properties:
+                data:
+                  $ref: '#/definitions/awsRegions'
+              required:
+              - data
+              type: object
+          default:
+            $ref: '#/responses/DefaultError'
+        summary: Return an array of all configured AWS regions
+        tags:
+        - ServiceDiscovery
+      post:
+        description: |-
+          Add a new AWS region.
+          Credentials are not required in case Dataplane API is running in an EC2 instance with proper IAM role attached.
+        operationId: createAWSRegion
+        parameters:
+        - in: body
+          name: data
+          required: true
+          schema:
+            $ref: '#/definitions/awsRegion'
+        responses:
+          201:
+            description: Resource created
+            schema:
+              $ref: '#/definitions/awsRegion'
+          400:
+            $ref: '#/responses/BadRequest'
+          409:
+            $ref: '#/responses/AlreadyExists'
+          default:
+            $ref: '#/responses/DefaultError'
+        summary: Add a new AWS region
+        tags:
+        - ServiceDiscovery
+  /service_discovery/aws/{id}:
+      delete:
+        description: Delete an AWS region configuration by it's id.
+        operationId: deleteAWSRegion
+        parameters:
+        - description: AWS region ID
+          in: path
+          name: id
+          required: true
+          type: string
+        responses:
+          "204":
+            description: Resource deleted
+          "404":
+            $ref: '#/responses/NotFound'
+          default:
+            $ref: '#/responses/DefaultError'
+        summary: Delete an AWS region
+        tags:
+        - ServiceDiscovery
+      get:
+        description: Return one AWS Region configuration by it's id.
+        operationId: getAWSRegion
+        parameters:
+        - description: AWS region id
+          in: path
+          name: id
+          required: true
+          type: string
+        responses:
+          "200":
+            description: Successful operation
+            schema:
+              properties:
+                data:
+                  $ref: '#/definitions/awsRegion'
+              type: object
+          "404":
+            $ref: '#/responses/NotFound'
+          default:
+            $ref: '#/responses/DefaultError'
+        summary: Return an AWS region
+        tags:
+        - ServiceDiscovery
+      put:
+        description: Replace an AWS region configuration by its id.
+        operationId: replaceAWSRegion
+        parameters:
+        - description: AWS Region ID
+          in: path
+          name: id
+          required: true
+          type: string
+        - in: body
+          name: data
+          required: true
+          schema:
+            $ref: '#/definitions/awsRegion'
+        responses:
+          "200":
+            description: Resource updated
+            schema:
+              $ref: '#/definitions/awsRegion'
+          "400":
+            $ref: '#/responses/BadRequest'
+          "404":
+            $ref: '#/responses/NotFound'
+          default:
+            $ref: '#/responses/DefaultError'
+        summary: Replace an AWS region
+        tags:
+        - ServiceDiscovery
   /service_discovery/consul:
       get:
         description: Returns all configured Consul servers.
