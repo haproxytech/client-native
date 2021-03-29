@@ -37,8 +37,12 @@ import (
 type FileType string
 
 const (
-	MapsType FileType = "maps"
-	SSLType  FileType = "certificate"
+	MapsType             FileType = "maps"
+	SSLType              FileType = "certs"
+	SpoeType             FileType = "spoe"
+	SpoeTransactionsType FileType = "spoe-transactions"
+	BackupsType          FileType = "backups"
+	TransactionsType     FileType = "transactions"
 )
 
 type Storage interface {
@@ -59,7 +63,7 @@ func New(dirname string, fileType FileType) (Storage, error) {
 	if err != nil {
 		return nil, err
 	}
-	switch fileType {
+	switch fileType { //nolint:exhaustive
 	case MapsType, SSLType:
 		return &storage{
 			dirname:  dirname,
@@ -81,7 +85,7 @@ func (s *storage) GetAll() ([]string, error) {
 	files := []string{}
 	for _, fi := range fis {
 		file := filepath.Join(s.dirname, fi.Name())
-		switch s.fileType {
+		switch s.fileType { //nolint:exhaustive
 		case SSLType:
 			raw, err := readFile(file)
 			if err != nil {
@@ -123,7 +127,7 @@ func (s storage) Replace(name string, config string) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	switch s.fileType {
+	switch s.fileType { //nolint:exhaustive
 	case SSLType:
 		err = s.validatePEM([]byte(config))
 		if err != nil {
@@ -155,7 +159,7 @@ func (s *storage) Create(name string, readCloser io.ReadCloser) (string, error) 
 		return "", err
 	}
 
-	switch s.fileType {
+	switch s.fileType { //nolint:exhaustive
 	case SSLType:
 		err = s.validatePEM(b)
 		if err != nil {
