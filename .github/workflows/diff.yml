@@ -17,7 +17,7 @@ jobs:
           sudo chmod +x /usr/local/bin/swagger
           swagger version
       - name: generating models
-        run: make models
+        run: make models-native
       - name: changes
         run: test -z "$(git diff 2> /dev/null)" || exit "Models are not generated, issue \`make models\` and commit the result"
       - name: untracked files
