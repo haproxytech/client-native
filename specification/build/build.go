@@ -118,7 +118,7 @@ func main() {
 				result.WriteString("\n")
 			} else {
 				prefix := ""
-				for _, char := range []rune(line) {
+				for _, char := range line {
 					if string(char) == " " {
 						prefix += " "
 					} else {
