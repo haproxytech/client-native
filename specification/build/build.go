@@ -7,6 +7,7 @@ import (
 	"os"
 	"path"
 	"path/filepath"
+	"sort"
 	"strings"
 
 	"gopkg.in/yaml.v2"
@@ -108,9 +109,17 @@ func main() {
 	fileScanner := bufio.NewScanner(fileHandle)
 	var result strings.Builder
 
+	type tag struct {
+		Name        string `yaml:"name,omitempty"`
+		Description string `yaml:"description,omitempty"`
+	}
+	type tags []tag
+	var ts tags = tags{}
+	var tagResult strings.Builder
 	for fileScanner.Scan() {
 		line := fileScanner.Text()
-		if strings.HasPrefix(strings.TrimSpace(line), "$ref:") {
+		switch {
+		case strings.HasPrefix(strings.TrimSpace(line), "$ref:"):
 			refValue := strings.TrimSpace(strings.TrimSpace(line)[5:])
 			refValue = refValue[1 : len(refValue)-1]
 			if strings.HasPrefix(refValue, "#") {
@@ -128,7 +137,32 @@ func main() {
 				result.WriteString(expandRef(refValue, absPath, prefix))
 				result.WriteString("\n")
 			}
-		} else {
+		case strings.HasPrefix(strings.TrimSpace(line), "tags:"):
+			for fileScanner.Scan() {
+				tagLine := fileScanner.Text()
+				if !strings.HasPrefix(strings.TrimSpace(tagLine), "security:") {
+					tagResult.WriteString(tagLine)
+					tagResult.WriteString("\n")
+				} else {
+					str := tagResult.String()
+					err = yaml.Unmarshal([]byte(str), &ts)
+					if err != nil {
+						error(err.Error())
+					}
+					sort.Slice(ts, func(i, j int) bool {
+						return ts[i].Name < ts[j].Name
+					})
+					result.WriteString("tags:")
+					result.WriteString("\n")
+
+					b, _ := yaml.Marshal(&ts)
+					result.WriteString(string(b))
+					result.WriteString("security:")
+					result.WriteString("\n")
+					break
+				}
+			}
+		default:
 			result.WriteString(line)
 			result.WriteString("\n")
 		}

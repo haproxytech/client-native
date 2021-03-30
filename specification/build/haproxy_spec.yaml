@@ -5758,66 +5758,66 @@ consumes:
 produces:
   - application/json
 tags:
-  - name: Discovery
-    description: API autodiscover endpoints
-  - name: Information
-  - name: Specification
-  - name: Transactions
-    description: |
-      Managing transactions. Configuration changes can be grouped in the transaction. You start the
-      transaction with trasactions POST, and call the configuration changes you need with parameter
-      transaction_id. When you want to commit the transaction, you call the transactions PUT and all changes
-      in that transaction is commited. If you call a configuration change without the transaction_id,
-      transaction mechanism is implicitly called with one operation in transaction.
-  - name: Reloads
-    description: |
-      Checking reload success. To avoid constant reloading we reload in intervals that are configurable when
-      with reload-delay option. When a change to configuration is made and force_reload url query string
-      parameter is false we issue a request for reload, and return the reload ID in response header. You can
-      then use reloads endpoints to check the status of that reload ID. If force_reload is true, we override all
-      of this and reload immediately.
-  - name: Sites
-    description: |
-      Managing sites (simple configuration mode). Sites are considered as one frontend with multiple backends
-      connected to it via default_backend or use-backend directives.
-  - name: Stats
-    description: Stats container
-  - name: Global
-    description: Managing global configuration (advanced mode)
-  - name: Defaults
-    description: Managing defaults configuration (advanced mode)
-  - name: Frontend
-    description: Managing frontend configuration (advanced mode)
-  - name: Backend
-    description: Managing backend configurations (advanced mode)
-  - name: Bind
-    description: Managing frontend bind configurations (advanced mode)
-  - name: Server
-    description: Managing backend server configurations (advanced mode)
-  - name: Configuration
-    description: Raw HAProxy configuration management (advanced mode)
-  - name: TCPRequestRule
-  - name: HTTPRequestRule
-  - name: HTTPResponseRule
-  - name: BackendSwitchingRule
-  - name: ServerSwitchingRule
-  - name: TCPResponseRule
-  - name: Filter
-  - name: StickRule
-  - name: StickTable
-  - name: LogTarget
-  - name: ACL
-  - name: Resolver
-  - name: Nameserver
-  - name: Peer
-  - name: PeerEntry
-  - name: Cluster
-  - name: Maps
-  - name: SpecificationOpenapiv3
-  - name: ServiceDiscovery
-  - name: Spoe
-  - name: SpoeTransactions
-  - name: Storage
+- name: ACL
+- name: Backend
+  description: Managing backend configurations (advanced mode)
+- name: BackendSwitchingRule
+- name: Bind
+  description: Managing frontend bind configurations (advanced mode)
+- name: Cluster
+- name: Configuration
+  description: Raw HAProxy configuration management (advanced mode)
+- name: Defaults
+  description: Managing defaults configuration (advanced mode)
+- name: Discovery
+  description: API autodiscover endpoints
+- name: Filter
+- name: Frontend
+  description: Managing frontend configuration (advanced mode)
+- name: Global
+  description: Managing global configuration (advanced mode)
+- name: HTTPRequestRule
+- name: HTTPResponseRule
+- name: Information
+- name: LogTarget
+- name: Maps
+- name: Nameserver
+- name: Peer
+- name: PeerEntry
+- name: Reloads
+  description: |
+    Checking reload success. To avoid constant reloading we reload in intervals that are configurable when
+    with reload-delay option. When a change to configuration is made and force_reload url query string
+    parameter is false we issue a request for reload, and return the reload ID in response header. You can
+    then use reloads endpoints to check the status of that reload ID. If force_reload is true, we override all
+    of this and reload immediately.
+- name: Resolver
+- name: Server
+  description: Managing backend server configurations (advanced mode)
+- name: ServerSwitchingRule
+- name: ServiceDiscovery
+- name: Sites
+  description: |
+    Managing sites (simple configuration mode). Sites are considered as one frontend with multiple backends
+    connected to it via default_backend or use-backend directives.
+- name: Specification
+- name: SpecificationOpenapiv3
+- name: Spoe
+- name: SpoeTransactions
+- name: Stats
+  description: Stats container
+- name: StickRule
+- name: StickTable
+- name: Storage
+- name: TCPRequestRule
+- name: TCPResponseRule
+- name: Transactions
+  description: |
+    Managing transactions. Configuration changes can be grouped in the transaction. You start the
+    transaction with trasactions POST, and call the configuration changes you need with parameter
+    transaction_id. When you want to commit the transaction, you call the transactions PUT and all changes
+    in that transaction is commited. If you call a configuration change without the transaction_id,
+    transaction mechanism is implicitly called with one operation in transaction.
 security:
   - basic_auth: []
 paths:
