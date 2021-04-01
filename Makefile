@@ -30,8 +30,16 @@ models: spec
 		--build-arg UID=$(shell id -u) \
 		--build-arg GID=$(shell id -g) \
 		-t client-native-models .
-	docker run --rm -it -v "$(PWD)":/data client-native-models
+	docker run --rm -it -v ${PROJECT_PATH}:/data client-native-models
 	ls -lah models
+
+.PHONY: client-native-swagger-server
+client-native-swagger-server: spec
+	cd build/server;docker build \
+		--build-arg SWAGGER_VERSION=${SWAGGER_VERSION} \
+		--build-arg UID=$(shell id -u) \
+		--build-arg GID=$(shell id -g) \
+		-t client-native-swagger-server .
 
 .PHONY: lint
 lint:
