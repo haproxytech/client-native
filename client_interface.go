@@ -13,7 +13,7 @@ import (
 type IConfigurationClient interface {
 	// GetACLs returns configuration version and an array of
 	// configured ACL lines in the specified parent. Returns error on fail.
-	GetACLs(parentType, parentName string, transactionID string) (int64, models.Acls, error)
+	GetACLs(parentType, parentName string, transactionID string, aclName ...string) (int64, models.Acls, error)
 	// GetACL returns configuration version and a requested ACL line
 	// in the specified parent. Returns error on fail or if ACL line does not exist.
 	GetACL(id int64, parentType, parentName string, transactionID string) (int64, *models.ACL, error)

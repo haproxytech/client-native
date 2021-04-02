@@ -20,66 +20,85 @@ import (
 	"reflect"
 	"testing"
 
+	"github.com/haproxytech/client-native/v2/misc"
 	"github.com/haproxytech/client-native/v2/models"
+	parser "github.com/haproxytech/config-parser/v3"
+	"github.com/stretchr/testify/assert"
 )
 
-func TestGetACLs(t *testing.T) { //nolint:gocognit
-	v, acls, err := client.GetACLs("frontend", "test", "")
-	if err != nil {
-		t.Error(err.Error())
+func TestClient_GetACLs(t *testing.T) {
+	type args struct {
+		parentType    string
+		parentName    string
+		transactionID string
+		aclName       []string
 	}
-
-	if len(acls) != 3 {
-		t.Errorf("%v ACL rules returned, expected 3", len(acls))
+	tests := []struct {
+		name    string
+		args    args
+		want    int64
+		want1   models.Acls
+		wantErr bool
+	}{
+		{
+			name: "Should return acl list in one frontend",
+			args: args{parentType: string(parser.Frontends), parentName: "test", transactionID: ""},
+			want: 1,
+			want1: models.Acls{
+				&models.ACL{ACLName: "invalid_src", Criterion: "src", Index: misc.Int64P(0), Value: "0.0.0.0/7 224.0.0.0/3"},
+				&models.ACL{ACLName: "invalid_src", Criterion: "src_port", Index: misc.Int64P(1), Value: "0:1023"},
+				&models.ACL{ACLName: "local_dst", Criterion: "hdr(host)", Index: misc.Int64P(2), Value: "-i localhost"},
+			},
+			wantErr: false,
+		},
+		{
+			name: "Should return acl list in one frontend by acl name",
+			args: args{parentType: string(parser.Frontends), parentName: "test", transactionID: "", aclName: []string{"invalid_src"}},
+			want: 1,
+			want1: models.Acls{
+				&models.ACL{ACLName: "invalid_src", Criterion: "src", Index: misc.Int64P(0), Value: "0.0.0.0/7 224.0.0.0/3"},
+				&models.ACL{ACLName: "invalid_src", Criterion: "src_port", Index: misc.Int64P(1), Value: "0:1023"},
+			},
+			wantErr: false,
+		},
+		{
+			name: "Should return acl list in one frontend by acl name 2",
+			args: args{parentType: string(parser.Frontends), parentName: "test", transactionID: "", aclName: []string{"local_dst"}},
+			want: 1,
+			want1: models.Acls{
+				&models.ACL{ACLName: "local_dst", Criterion: "hdr(host)", Index: misc.Int64P(2), Value: "-i localhost"},
+			},
+			wantErr: false,
+		},
+		{
+			name:    "Should return empty slice when no acl in given section",
+			args:    args{parentType: string(parser.Backends), parentName: "test_2", transactionID: ""},
+			want:    1,
+			want1:   models.Acls{},
+			wantErr: false,
+		},
+		{
+			name:    "Should return an error when parentName doesn't exists",
+			args:    args{parentType: string(parser.Backends), parentName: "not_exists", transactionID: ""},
+			want:    1,
+			want1:   nil,
+			wantErr: true,
+		},
 	}
-
-	if v != version {
-		t.Errorf("Version %v returned, expected %v", v, version)
-	}
-
-	for _, r := range acls {
-		switch *r.Index {
-		case 0:
-			if r.ACLName != "invalid_src" {
-				t.Errorf("%v: ACLName not invalid_src: %v", *r.Index, r.ACLName)
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got, got1, err := client.GetACLs(tt.args.parentType, tt.args.parentName, tt.args.transactionID, tt.args.aclName...)
+			if (err != nil) != tt.wantErr {
+				t.Errorf("Client.GetACLs() error = %v, wantErr %v", err, tt.wantErr)
+				return
 			}
-			if r.Value != "0.0.0.0/7 224.0.0.0/3" {
-				t.Errorf("%v: Value not 0.0.0.0/7 224.0.0.0/3: %v", *r.Index, r.Value)
+			if got != tt.want {
+				t.Errorf("Client.GetACLs() got = %v, want %v", got, tt.want)
 			}
-			if r.Criterion != "src" {
-				t.Errorf("%v: Criterion not src: %v", *r.Index, r.Criterion)
+			if !assert.EqualValues(t, got1, tt.want1) {
+				t.Errorf("Client.GetACLs() got1 = %v, want %v", got1, tt.want1)
 			}
-		case 1:
-			if r.ACLName != "invalid_src" {
-				t.Errorf("%v: ACLName not invalid_src: %v", *r.Index, r.ACLName)
-			}
-			if r.Value != "0:1023" {
-				t.Errorf("%v: Value not 0:1023: %v", *r.Index, r.Value)
-			}
-			if r.Criterion != "src_port" {
-				t.Errorf("%v: Criterion not src_port: %v", *r.Index, r.Criterion)
-			}
-		case 2:
-			if r.ACLName != "local_dst" {
-				t.Errorf("%v: ACLName not invalid_src: %v", *r.Index, r.ACLName)
-			}
-			if r.Value != "-i localhost" {
-				t.Errorf("%v: Value not -i localhost: %v", *r.Index, r.Value)
-			}
-			if r.Criterion != "hdr(host)" {
-				t.Errorf("%v: Criterion not hdr(host): %v", *r.Index, r.Criterion)
-			}
-		default:
-			t.Errorf("Expext only acl 1, 2 or 3, %v found", *r.Index)
-		}
-	}
-
-	_, acls, err = client.GetACLs("backend", "test_2", "")
-	if err != nil {
-		t.Error(err.Error())
-	}
-	if len(acls) > 0 {
-		t.Errorf("%v ACLs returned, expected 0", len(acls))
+		})
 	}
 }
 

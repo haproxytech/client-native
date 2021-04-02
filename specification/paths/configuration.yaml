@@ -3413,6 +3413,10 @@ acls:
         required: true
         type: string
         enum: [frontend, backend]
+      - name: acl_name
+        in: query
+        description: ACL name
+        type: string
       - $ref: "#/parameters/transaction_id"
     responses:
       '200':

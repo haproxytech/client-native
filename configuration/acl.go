@@ -29,7 +29,7 @@ import (
 
 // GetACLs returns configuration version and an array of
 // configured ACL lines in the specified parent. Returns error on fail.
-func (c *Client) GetACLs(parentType, parentName string, transactionID string) (int64, models.Acls, error) {
+func (c *Client) GetACLs(parentType, parentName string, transactionID string, aclName ...string) (int64, models.Acls, error) {
 	p, err := c.GetParser(transactionID)
 	if err != nil {
 		return 0, nil, err
@@ -40,7 +40,7 @@ func (c *Client) GetACLs(parentType, parentName string, transactionID string) (i
 		return 0, nil, err
 	}
 
-	acls, err := ParseACLs(parentType, parentName, p)
+	acls, err := ParseACLs(parentType, parentName, p, aclName...)
 	if err != nil {
 		return v, nil, c.HandleError("", parentType, parentName, "", false, err)
 	}
@@ -172,7 +172,7 @@ func (c *Client) EditACL(id int64, parentType string, parentName string, data *m
 	return nil
 }
 
-func ParseACLs(t, pName string, p *parser.Parser) (models.Acls, error) {
+func ParseACLs(t, pName string, p *parser.Parser, aclName ...string) (models.Acls, error) {
 	section := parser.Global
 	if t == "frontend" {
 		section = parser.Frontends
@@ -190,12 +190,17 @@ func ParseACLs(t, pName string, p *parser.Parser) (models.Acls, error) {
 	}
 
 	aclLines := data.([]types.ACL)
+	lACL := len(aclName)
 	for i, r := range aclLines {
 		id := int64(i)
 		acl := ParseACL(r)
 		if acl != nil {
 			acl.Index = &id
-			acls = append(acls, acl)
+			if lACL > 0 && aclName[0] == acl.ACLName {
+				acls = append(acls, acl)
+			} else if lACL == 0 {
+				acls = append(acls, acl)
+			}
 		}
 	}
 	return acls, nil

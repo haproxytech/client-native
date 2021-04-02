@@ -9935,6 +9935,10 @@ paths:
           name: parent_type
           required: true
           type: string
+        - description: ACL name
+          in: query
+          name: acl_name
+          type: string
         - $ref: '#/parameters/transaction_id'
         responses:
           "200":
