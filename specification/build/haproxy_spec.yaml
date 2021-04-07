@@ -11070,8 +11070,8 @@ paths:
       post:
         consumes:
         - multipart/form-data
-        description: Creates a managed runtime map file with its entries.
-        operationId: createRuntimeMap
+        description: Creates a managed storage map file with its entries.
+        operationId: createStorageMapFile
         parameters:
         - description: The map file contents
           in: formData
@@ -11089,7 +11089,7 @@ paths:
             $ref: '#/responses/AlreadyExists'
           default:
             $ref: '#/responses/DefaultError'
-        summary: Creates a managed runtime map file with its entries
+        summary: Creates a managed storage map file with its entries
         tags:
         - Storage
   /services/haproxy/storage/maps/{name}:

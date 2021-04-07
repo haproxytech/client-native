@@ -16,9 +16,9 @@ maps:
       'default':
         $ref: '#/responses/DefaultError'
   post:  # (raw)
-    summary: Creates a managed runtime map file with its entries
-    description: Creates a managed runtime map file with its entries.
-    operationId: createRuntimeMap
+    summary: Creates a managed storage map file with its entries
+    description: Creates a managed storage map file with its entries.
+    operationId: createStorageMapFile
     consumes:
       - multipart/form-data
     parameters:
