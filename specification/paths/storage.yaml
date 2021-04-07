@@ -104,6 +104,12 @@ maps_one:
         required: true
         schema:
           type: string
+      - name: skip_reload
+        in: query
+        description: If set, no reload will be initiated after update
+        type: boolean
+        required: false
+        default: false
       - $ref: "#/parameters/force_reload"
     responses:
       "202":

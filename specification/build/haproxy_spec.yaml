@@ -11151,6 +11151,12 @@ paths:
           required: true
           schema:
             type: string
+        - default: false
+          description: If set, no reload will be initiated after update
+          in: query
+          name: skip_reload
+          required: false
+          type: boolean
         - $ref: '#/parameters/force_reload'
         produces:
         - application/json
