@@ -6032,6 +6032,18 @@ paths:
           name: configuration
           required: false
           type: string
+        - description: Force the advertised address when joining a cluster
+          in: query
+          name: advertised_address
+          required: false
+          type: string
+        - description: Force the advertised port when joining a cluster
+          in: query
+          maximum: 65535
+          minimum: 1
+          name: advertised_port
+          required: false
+          type: integer
         - $ref: '#/parameters/version'
         responses:
           "200":

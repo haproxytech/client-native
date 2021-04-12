@@ -32,6 +32,18 @@ cluster:
         in: query
         required: false
         type: string
+      - name: advertised_address
+        description: Force the advertised address when joining a cluster
+        in: query
+        required: false
+        type: string
+      - name: advertised_port
+        description: Force the advertised port when joining a cluster
+        in: query
+        required: false
+        maximum: 65535
+        minimum: 1
+        type: integer
       - $ref: "#/parameters/version"
     tags:
       - Cluster
