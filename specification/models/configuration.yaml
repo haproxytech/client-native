@@ -1022,6 +1022,9 @@ server:
     check:
       type: string
       enum: [enabled, disabled]
+    check-send-proxy:
+      type: string
+      enum: [enabled, disabled]
     check_alpn:
       type: string
       x-display-name: Protocols

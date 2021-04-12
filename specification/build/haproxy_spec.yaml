@@ -1234,6 +1234,11 @@ definitions:
           - enabled
           - disabled
           type: string
+        check-send-proxy:
+          enum:
+          - enabled
+          - disabled
+          type: string
         check-sni:
           pattern: ^[^\s]+$
           type: string

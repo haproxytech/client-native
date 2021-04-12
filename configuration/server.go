@@ -202,54 +202,34 @@ func ParseServer(ondiskServer types.Server) *models.Server { //nolint:gocognit,g
 		switch v := p.(type) {
 		case *params.ServerOptionWord:
 			switch v.Name {
-			case "backup":
-				s.Backup = "enabled"
-			case "no-backup":
-				s.Backup = "disabled"
-			case "disabled":
-				s.Maintenance = "enabled"
-			case "enabled":
-				s.Maintenance = "disabled"
-			case "check":
-				s.Check = "enabled"
-			case "no-check":
-				s.Check = "disabled"
 			case "agent-check":
 				s.AgentCheck = "enabled"
 			case "no-agent-check":
 				s.AgentCheck = "disabled"
-			case "ssl":
-				s.Ssl = "enabled"
-			case "no-ssl":
-				s.Ssl = "disabled"
-			case "check-ssl":
-				s.CheckSsl = "enabled"
-			case "check-via-socks4":
-				s.CheckViaSocks4 = "enabled"
-			case "no-check-ssl":
-				s.CheckSsl = "disabled"
-			case "tls-tickets":
-				s.TLSTickets = "enabled"
-			case "no-tls-tickets":
-				s.TLSTickets = "disabled"
 			case "allow-0rtt":
 				s.Allow0rtt = true
-			case "send-proxy":
-				s.SendProxy = "enabled"
-			case "no-send-proxy":
-				s.SendProxy = "disabled"
-			case "send-proxy-v2":
-				s.SendProxyV2 = "enabled"
-			case "no-send-proxy-v2":
-				s.SendProxyV2 = "disabled"
-			case "tfo":
-				s.Tfo = "enabled"
-			case "no-tfo":
-				s.Tfo = "disabled"
+			case "backup":
+				s.Backup = "enabled"
+			case "no-backup":
+				s.Backup = "disabled"
+			case "check":
+				s.Check = "enabled"
+			case "no-check":
+				s.Check = "disabled"
+			case "check-send-proxy":
+				s.CheckSendProxy = "enabled"
+			case "check-ssl":
+				s.CheckSsl = "enabled"
+			case "no-check-ssl":
+				s.CheckSsl = "disabled"
+			case "check-via-socks4":
+				s.CheckViaSocks4 = "enabled"
+			case "disabled":
+				s.Maintenance = "enabled"
+			case "enabled":
+				s.Maintenance = "disabled"
 			case "force-sslv3":
 				s.ForceSslv3 = "enabled"
-			case "no-sslv3":
-				s.ForceSslv3 = "disabled"
 			case "force-tlsv10":
 				s.ForceTlsv10 = "enabled"
 			case "no-tlsv10":
@@ -266,14 +246,34 @@ func ParseServer(ondiskServer types.Server) *models.Server { //nolint:gocognit,g
 				s.ForceTlsv13 = "enabled"
 			case "no-tlsv13":
 				s.ForceTlsv13 = "disabled"
+			case "send-proxy":
+				s.SendProxy = "enabled"
+			case "no-send-proxy":
+				s.SendProxy = "disabled"
+			case "send-proxy-v2":
+				s.SendProxyV2 = "enabled"
+			case "no-send-proxy-v2":
+				s.SendProxyV2 = "disabled"
 			case "send-proxy-v2-ssl":
 				s.SendProxyV2Ssl = "enabled"
 			case "send-proxy-v2-ssl-cn":
 				s.SendProxyV2SslCn = "enabled"
+			case "ssl":
+				s.Ssl = "enabled"
+			case "no-ssl":
+				s.Ssl = "disabled"
 			case "ssl-reuse":
 				s.SslReuse = "enabled"
 			case "no-ssl-reuse":
 				s.SslReuse = "disabled"
+			case "tls-tickets":
+				s.TLSTickets = "enabled"
+			case "no-tls-tickets":
+				s.TLSTickets = "disabled"
+			case "tfo":
+				s.Tfo = "enabled"
+			case "no-tfo":
+				s.Tfo = "disabled"
 			case "stick":
 				s.Stick = "enabled"
 			case "no-stick":
@@ -282,85 +282,37 @@ func ParseServer(ondiskServer types.Server) *models.Server { //nolint:gocognit,g
 			}
 		case *params.ServerOptionValue:
 			switch v.Name {
-			case "alpn":
-				s.Alpn = v.Value
-			case "maxconn":
-				m, err := strconv.ParseInt(v.Value, 10, 64)
-				if err == nil && m != 0 {
-					s.Maxconn = &m
-				}
-			case "weight":
-				w, err := strconv.ParseInt(v.Value, 10, 64)
-				if err == nil && w != 0 {
-					s.Weight = &w
-				}
-			case "port":
-				p, err := strconv.ParseInt(v.Value, 10, 64)
-				if err == nil {
-					s.HealthCheckPort = &p
-				}
-			case "check-proto":
-				s.CheckProto = v.Value
-			case "cookie":
-				s.Cookie = v.Value
-			case "crt":
-				s.SslCertificate = v.Value
-			case "ca-file":
-				s.SslCafile = v.Value
-			case "inter":
-				s.Inter = misc.ParseTimeout(v.Value)
-			case "init-addr":
-				s.InitAddr = &v.Value
-			case "fastinter":
-				s.Fastinter = misc.ParseTimeout(v.Value)
-			case "downinter":
-				s.Downinter = misc.ParseTimeout(v.Value)
-			case "log-proto":
-				s.LogProto = v.Value
-			case "verify":
-				s.Verify = v.Value
-			case "on-error":
-				s.OnError = v.Value
-			case "on-marked-down":
-				s.OnMarkedDown = v.Value
-			case "on-marked-up":
-				s.OnMarkedUp = v.Value
-			case "agent-addr":
-				s.AgentAddr = v.Value
+			case "agent-send":
+				s.AgentSend = v.Value
 			case "agent-inter":
 				s.AgentInter = misc.ParseTimeout(v.Value)
+			case "agent-addr":
+				s.AgentAddr = v.Value
 			case "agent-port":
 				p, err := strconv.ParseInt(v.Value, 10, 64)
 				if err == nil && p != 0 {
 					s.AgentPort = &p
 				}
-			case "agent-send":
-				s.AgentSend = v.Value
-			case "check-sni":
-				s.CheckSni = v.Value
-			case "slowstart":
-				s.Slowstart = misc.ParseTimeout(v.Value)
-			case "sni":
-				s.Sni = v.Value
-			case "resolvers":
-				s.Resolvers = v.Value
-			case "resolve-prefer":
-				s.ResolvePrefer = v.Value
-			case "resolve-net":
-				s.ResolveNet = v.Value
-			case "proto":
-				s.Proto = v.Value
-			case "proxy-v2-options":
-				values := strings.Split(v.Value, ",")
-				s.ProxyV2Options = values
+			case "alpn":
+				s.Alpn = v.Value
+			case "ca-file":
+				s.SslCafile = v.Value
 			case "check-alpn":
 				s.CheckAlpn = v.Value
+			case "check-proto":
+				s.CheckProto = v.Value
+			case "check-sni":
+				s.CheckSni = v.Value
 			case "ciphers":
 				s.Ciphers = v.Value
 			case "ciphersuites":
 				s.Ciphersuites = v.Value
+			case "cookie":
+				s.Cookie = v.Value
 			case "crl-file":
 				s.CrlFile = v.Value
+			case "crt":
+				s.SslCertificate = v.Value
 			case "error-limit":
 				c, err := strconv.ParseInt(v.Value, 10, 64)
 				if err == nil && c != 0 {
@@ -371,15 +323,30 @@ func ParseServer(ondiskServer types.Server) *models.Server { //nolint:gocognit,g
 				if err == nil && c != 0 {
 					s.Fall = &c
 				}
-			case "max-reuse":
-				c, err := strconv.ParseInt(v.Value, 10, 64)
-				if err == nil && c != 0 {
-					s.MaxReuse = &c
+			case "init-addr":
+				s.InitAddr = &v.Value
+			case "inter":
+				s.Inter = misc.ParseTimeout(v.Value)
+			case "fastinter":
+				s.Fastinter = misc.ParseTimeout(v.Value)
+			case "downinter":
+				s.Downinter = misc.ParseTimeout(v.Value)
+			case "log-proto":
+				s.LogProto = v.Value
+			case "maxconn":
+				m, err := strconv.ParseInt(v.Value, 10, 64)
+				if err == nil && m != 0 {
+					s.Maxconn = &m
 				}
 			case "maxqueue":
 				m, err := strconv.ParseInt(v.Value, 10, 64)
 				if err == nil && m != 0 {
 					s.Maxqueue = &m
+				}
+			case "max-reuse":
+				c, err := strconv.ParseInt(v.Value, 10, 64)
+				if err == nil && c != 0 {
+					s.MaxReuse = &c
 				}
 			case "minconn":
 				m, err := strconv.ParseInt(v.Value, 10, 64)
@@ -392,6 +359,12 @@ func ParseServer(ondiskServer types.Server) *models.Server { //nolint:gocognit,g
 				s.Npn = v.Value
 			case "observe":
 				s.Observe = v.Value
+			case "on-error":
+				s.OnError = v.Value
+			case "on-marked-down":
+				s.OnMarkedDown = v.Value
+			case "on-marked-up":
+				s.OnMarkedUp = v.Value
 			case "pool-low-conn":
 				m, err := strconv.ParseInt(v.Value, 10, 64)
 				if err == nil && m != 0 {
@@ -407,15 +380,31 @@ func ParseServer(ondiskServer types.Server) *models.Server { //nolint:gocognit,g
 				if err == nil && d != 0 {
 					s.PoolPurgeDelay = &d
 				}
+			case "port":
+				p, err := strconv.ParseInt(v.Value, 10, 64)
+				if err == nil {
+					s.HealthCheckPort = &p
+				}
+			case "proto":
+				s.Proto = v.Value
 			case "redir":
 				s.Redir = v.Value
 			case "rise":
-				c, err := strconv.ParseInt(v.Value, 10, 64)
-				if err == nil && c != 0 {
-					s.Rise = &c
-				}
+				s.Rise = misc.ParseTimeout(v.Value)
 			case "resolve-opts":
 				s.ResolveOpts = v.Value
+			case "resolve-prefer":
+				s.ResolvePrefer = v.Value
+			case "resolve-net":
+				s.ResolveNet = v.Value
+			case "resolvers":
+				s.Resolvers = v.Value
+			case "proxy-v2-options":
+				s.ProxyV2Options = strings.Split(v.Value, ",")
+			case "slowstart":
+				s.Slowstart = misc.ParseTimeout(v.Value)
+			case "sni":
+				s.Sni = v.Value
 			case "source":
 				s.Source = v.Value
 			case "ssl-max-ver":
@@ -431,8 +420,15 @@ func ParseServer(ondiskServer types.Server) *models.Server { //nolint:gocognit,g
 				}
 			case "track":
 				s.Track = v.Value
+			case "verify":
+				s.Verify = v.Value
 			case "verifyhost":
 				s.Verifyhost = v.Value
+			case "weight":
+				w, err := strconv.ParseInt(v.Value, 10, 64)
+				if err == nil && w != 0 {
+					s.Weight = &w
+				}
 			}
 		}
 	}
@@ -444,10 +440,15 @@ func SerializeServer(s models.Server) types.Server { //nolint:gocognit,gocyclo
 		Name:   s.Name,
 		Params: []params.ServerOption{},
 	}
-	if s.Port != nil {
-		srv.Address = s.Address + ":" + strconv.FormatInt(*s.Port, 10)
-	} else {
-		srv.Address = s.Address
+	// ServerOptionWord
+	if s.AgentCheck == "enabled" {
+		srv.Params = append(srv.Params, &params.ServerOptionWord{Name: "agent-check"})
+	}
+	if s.AgentCheck == "disabled" {
+		srv.Params = append(srv.Params, &params.ServerOptionWord{Name: "no-agent-check"})
+	}
+	if s.Allow0rtt {
+		srv.Params = append(srv.Params, &params.ServerOptionWord{Name: "allow-0rtt"})
 	}
 	if s.Backup == "enabled" {
 		srv.Params = append(srv.Params, &params.ServerOptionWord{Name: "backup"})
@@ -455,53 +456,17 @@ func SerializeServer(s models.Server) types.Server { //nolint:gocognit,gocyclo
 	if s.Backup == "disabled" {
 		srv.Params = append(srv.Params, &params.ServerOptionWord{Name: "no-backup"})
 	}
-	if s.Maintenance == "enabled" {
-		srv.Params = append(srv.Params, &params.ServerOptionWord{Name: "disabled"})
-	}
-	if s.Maintenance == "disabled" {
-		srv.Params = append(srv.Params, &params.ServerOptionWord{Name: "enabled"})
-	}
 	if s.Check == "enabled" {
 		srv.Params = append(srv.Params, &params.ServerOptionWord{Name: "check"})
 	}
 	if s.Check == "disabled" {
 		srv.Params = append(srv.Params, &params.ServerOptionWord{Name: "no-check"})
 	}
-	if s.CheckViaSocks4 == "enabled" {
-		srv.Params = append(srv.Params, &params.ServerOptionWord{Name: "check-via-socks4"})
+	if s.CheckSendProxy == "enabled" {
+		srv.Params = append(srv.Params, &params.ServerOptionWord{Name: "check-send-proxy"})
 	}
-	if s.AgentCheck == "enabled" {
-		srv.Params = append(srv.Params, &params.ServerOptionWord{Name: "agent-check"})
-	}
-	if s.AgentCheck == "disabled" {
-		srv.Params = append(srv.Params, &params.ServerOptionWord{Name: "no-agent-check"})
-	}
-	if s.AgentAddr != "" {
-		srv.Params = append(srv.Params, &params.ServerOptionValue{Name: "agent-addr", Value: s.AgentAddr})
-	}
-	if s.AgentPort != nil {
-		srv.Params = append(srv.Params, &params.ServerOptionValue{Name: "agent-port", Value: strconv.FormatInt(*s.AgentPort, 10)})
-	}
-	if s.AgentInter != nil {
-		srv.Params = append(srv.Params, &params.ServerOptionValue{Name: "agent-inter", Value: strconv.FormatInt(*s.AgentInter, 10)})
-	}
-	if s.AgentSend != "" {
-		srv.Params = append(srv.Params, &params.ServerOptionValue{Name: "agent-send", Value: s.AgentSend})
-	}
-	if s.Ssl == "enabled" {
-		srv.Params = append(srv.Params, &params.ServerOptionWord{Name: "ssl"})
-	}
-	if s.Ssl == "disabled" {
-		srv.Params = append(srv.Params, &params.ServerOptionWord{Name: "no-ssl"})
-	}
-	if s.Alpn != "" {
-		srv.Params = append(srv.Params, &params.ServerOptionValue{Name: "alpn", Value: s.Alpn})
-	}
-	if s.TLSTickets == "enabled" {
-		srv.Params = append(srv.Params, &params.ServerOptionWord{Name: "tls-tickets"})
-	}
-	if s.TLSTickets == "disabled" {
-		srv.Params = append(srv.Params, &params.ServerOptionWord{Name: "no-tls-tickets"})
+	if s.CheckSendProxy == "enabled" {
+		srv.Params = append(srv.Params, &params.ServerOptionWord{Name: "check-send-proxy"})
 	}
 	if s.CheckSsl == "enabled" {
 		srv.Params = append(srv.Params, &params.ServerOptionWord{Name: "check-ssl"})
@@ -509,116 +474,8 @@ func SerializeServer(s models.Server) types.Server { //nolint:gocognit,gocyclo
 	if s.CheckSsl == "disabled" {
 		srv.Params = append(srv.Params, &params.ServerOptionWord{Name: "no-check-ssl"})
 	}
-	if s.CheckSni != "" {
-		srv.Params = append(srv.Params, &params.ServerOptionValue{Name: "check-sni", Value: s.CheckSni})
-	}
-	if s.Slowstart != nil {
-		srv.Params = append(srv.Params, &params.ServerOptionValue{Name: "slowstart", Value: strconv.FormatInt(*s.Slowstart, 10)})
-	}
-	if s.Sni != "" {
-		srv.Params = append(srv.Params, &params.ServerOptionValue{Name: "sni", Value: s.Sni})
-	}
-	if s.Allow0rtt {
-		srv.Params = append(srv.Params, &params.ServerOptionWord{Name: "allow-0rtt"})
-	}
-	if s.Maxconn != nil {
-		srv.Params = append(srv.Params, &params.ServerOptionValue{Name: "maxconn", Value: strconv.FormatInt(*s.Maxconn, 10)})
-	}
-	if s.Weight != nil {
-		srv.Params = append(srv.Params, &params.ServerOptionValue{Name: "weight", Value: strconv.FormatInt(*s.Weight, 10)})
-	}
-	if s.InitAddr != nil {
-		srv.Params = append(srv.Params, &params.ServerOptionValue{Name: "init-addr", Value: *s.InitAddr})
-	}
-	if s.Inter != nil {
-		srv.Params = append(srv.Params, &params.ServerOptionValue{Name: "inter", Value: strconv.FormatInt(*s.Inter, 10)})
-	}
-	if s.Fastinter != nil {
-		srv.Params = append(srv.Params, &params.ServerOptionValue{Name: "fastinter", Value: strconv.FormatInt(*s.Fastinter, 10)})
-	}
-	if s.Downinter != nil {
-		srv.Params = append(srv.Params, &params.ServerOptionValue{Name: "downinter", Value: strconv.FormatInt(*s.Downinter, 10)})
-	}
-	if s.LogProto != "" {
-		srv.Params = append(srv.Params, &params.ServerOptionValue{Name: "log-proto", Value: s.LogProto})
-	}
-	if s.CheckProto != "" {
-		srv.Params = append(srv.Params, &params.ServerOptionValue{Name: "check-proto", Value: s.CheckProto})
-	}
-	if s.Cookie != "" {
-		srv.Params = append(srv.Params, &params.ServerOptionValue{Name: "cookie", Value: s.Cookie})
-	}
-	if s.SslCertificate != "" {
-		srv.Params = append(srv.Params, &params.ServerOptionValue{Name: "crt", Value: s.SslCertificate})
-	}
-	if s.SslCafile != "" {
-		srv.Params = append(srv.Params, &params.ServerOptionValue{Name: "ca-file", Value: s.SslCafile})
-	}
-	if s.Verify != "" {
-		srv.Params = append(srv.Params, &params.ServerOptionValue{Name: "verify", Value: s.Verify})
-	}
-	if s.OnError != "" {
-		srv.Params = append(srv.Params, &params.ServerOptionValue{Name: "on-error", Value: s.OnError})
-	}
-	if s.OnMarkedDown != "" {
-		srv.Params = append(srv.Params, &params.ServerOptionValue{Name: "on-marked-down", Value: s.OnMarkedDown})
-	}
-	if s.OnMarkedUp != "" {
-		srv.Params = append(srv.Params, &params.ServerOptionValue{Name: "on-marked-up", Value: s.OnMarkedUp})
-	}
-	if s.HealthCheckPort != nil {
-		srv.Params = append(srv.Params, &params.ServerOptionValue{Name: "port", Value: strconv.FormatInt(*s.HealthCheckPort, 10)})
-	}
-	if s.SendProxy == "enabled" {
-		srv.Params = append(srv.Params, &params.ServerOptionWord{Name: "send-proxy"})
-	}
-	if s.SendProxy == "disabled" {
-		srv.Params = append(srv.Params, &params.ServerOptionWord{Name: "no-send-proxy"})
-	}
-	if s.SendProxyV2 == "enabled" {
-		srv.Params = append(srv.Params, &params.ServerOptionWord{Name: "send-proxy-v2"})
-	}
-	if s.SendProxyV2 == "disabled" {
-		srv.Params = append(srv.Params, &params.ServerOptionWord{Name: "no-send-proxy-v2"})
-	}
-	if s.Resolvers != "" {
-		srv.Params = append(srv.Params, &params.ServerOptionValue{Name: "resolvers", Value: s.Resolvers})
-	}
-	if s.ResolvePrefer != "" {
-		srv.Params = append(srv.Params, &params.ServerOptionValue{Name: "resolve-prefer", Value: s.ResolvePrefer})
-	}
-	if s.ResolveNet != "" {
-		srv.Params = append(srv.Params, &params.ServerOptionValue{Name: "resolve-net", Value: s.ResolveNet})
-	}
-	if s.Proto != "" {
-		srv.Params = append(srv.Params, &params.ServerOptionValue{Name: "proto", Value: s.Proto})
-	}
-	if len(s.ProxyV2Options) > 0 {
-		srv.Params = append(srv.Params, &params.ServerOptionValue{Name: "proxy-v2-options", Value: strings.Join(s.ProxyV2Options, ",")})
-	}
-	if s.Tfo == "enabled" {
-		srv.Params = append(srv.Params, &params.ServerOptionWord{Name: "tfo"})
-	}
-	if s.Tfo == "disabled" {
-		srv.Params = append(srv.Params, &params.ServerOptionWord{Name: "no-tfo"})
-	}
-	if s.CheckAlpn != "" {
-		srv.Params = append(srv.Params, &params.ServerOptionValue{Name: "check-alpn", Value: s.CheckAlpn})
-	}
-	if s.Ciphers != "" {
-		srv.Params = append(srv.Params, &params.ServerOptionValue{Name: "ciphers", Value: s.Ciphers})
-	}
-	if s.Ciphersuites != "" {
-		srv.Params = append(srv.Params, &params.ServerOptionValue{Name: "ciphersuites", Value: s.Ciphersuites})
-	}
-	if s.CrlFile != "" {
-		srv.Params = append(srv.Params, &params.ServerOptionValue{Name: "crl-file", Value: s.CrlFile})
-	}
-	if s.ErrorLimit != 0 {
-		srv.Params = append(srv.Params, &params.ServerOptionValue{Name: "error-limit", Value: strconv.FormatInt(s.ErrorLimit, 10)})
-	}
-	if s.Fall != nil {
-		srv.Params = append(srv.Params, &params.ServerOptionValue{Name: "fall", Value: strconv.FormatInt(*s.Fall, 10)})
+	if s.CheckViaSocks4 == "enabled" {
+		srv.Params = append(srv.Params, &params.ServerOptionWord{Name: "check-via-socks4"})
 	}
 	if s.ForceSslv3 == "enabled" {
 		srv.Params = append(srv.Params, &params.ServerOptionWord{Name: "force-sslv3"})
@@ -650,41 +507,23 @@ func SerializeServer(s models.Server) types.Server { //nolint:gocognit,gocyclo
 	if s.ForceTlsv13 == "disabled" {
 		srv.Params = append(srv.Params, &params.ServerOptionWord{Name: "no-tlsv13"})
 	}
-	if s.MaxReuse != nil {
-		srv.Params = append(srv.Params, &params.ServerOptionValue{Name: "max-reuse", Value: strconv.FormatInt(*s.MaxReuse, 10)})
+	if s.Maintenance == "enabled" {
+		srv.Params = append(srv.Params, &params.ServerOptionWord{Name: "disabled"})
 	}
-	if s.Maxqueue != nil {
-		srv.Params = append(srv.Params, &params.ServerOptionValue{Name: "maxqueue", Value: strconv.FormatInt(*s.Maxqueue, 10)})
+	if s.Maintenance == "disabled" {
+		srv.Params = append(srv.Params, &params.ServerOptionWord{Name: "enabled"})
 	}
-	if s.Minconn != nil {
-		srv.Params = append(srv.Params, &params.ServerOptionValue{Name: "minconn", Value: strconv.FormatInt(*s.Minconn, 10)})
+	if s.SendProxy == "enabled" {
+		srv.Params = append(srv.Params, &params.ServerOptionWord{Name: "send-proxy"})
 	}
-	if s.Namespace != "" {
-		srv.Params = append(srv.Params, &params.ServerOptionValue{Name: "namespace", Value: s.Namespace})
+	if s.SendProxy == "disabled" {
+		srv.Params = append(srv.Params, &params.ServerOptionWord{Name: "no-send-proxy"})
 	}
-	if s.Npn != "" {
-		srv.Params = append(srv.Params, &params.ServerOptionValue{Name: "non", Value: s.Npn})
+	if s.SendProxyV2 == "enabled" {
+		srv.Params = append(srv.Params, &params.ServerOptionWord{Name: "send-proxy-v2"})
 	}
-	if s.Observe != "" {
-		srv.Params = append(srv.Params, &params.ServerOptionValue{Name: "observe", Value: s.Observe})
-	}
-	if s.PoolLowConn != nil {
-		srv.Params = append(srv.Params, &params.ServerOptionValue{Name: "pool-low-conn", Value: strconv.FormatInt(*s.PoolLowConn, 10)})
-	}
-	if s.PoolMaxConn != nil {
-		srv.Params = append(srv.Params, &params.ServerOptionValue{Name: "pool-max-conn", Value: strconv.FormatInt(*s.PoolMaxConn, 10)})
-	}
-	if s.PoolPurgeDelay != nil {
-		srv.Params = append(srv.Params, &params.ServerOptionValue{Name: "pool-purge-delay", Value: strconv.FormatInt(*s.PoolPurgeDelay, 10)})
-	}
-	if s.Redir != "" {
-		srv.Params = append(srv.Params, &params.ServerOptionValue{Name: "redir", Value: s.Redir})
-	}
-	if s.Rise != nil {
-		srv.Params = append(srv.Params, &params.ServerOptionValue{Name: "rise", Value: strconv.FormatInt(*s.Rise, 10)})
-	}
-	if s.ResolveOpts != "" {
-		srv.Params = append(srv.Params, &params.ServerOptionValue{Name: "resolve-opts", Value: s.ResolveOpts})
+	if s.SendProxyV2 == "disabled" {
+		srv.Params = append(srv.Params, &params.ServerOptionWord{Name: "no-send-proxy-v2"})
 	}
 	if s.SendProxyV2Ssl == "enabled" {
 		srv.Params = append(srv.Params, &params.ServerOptionWord{Name: "send-proxy-v2-ssl"})
@@ -698,6 +537,177 @@ func SerializeServer(s models.Server) types.Server { //nolint:gocognit,gocyclo
 	if s.SendProxyV2SslCn == "disabled" {
 		srv.Params = append(srv.Params, &params.ServerOptionWord{Name: "no-send-proxy-v2-ssl-cn"})
 	}
+	if s.Ssl == "enabled" {
+		srv.Params = append(srv.Params, &params.ServerOptionWord{Name: "ssl"})
+	}
+	if s.Ssl == "disabled" {
+		srv.Params = append(srv.Params, &params.ServerOptionWord{Name: "no-ssl"})
+	}
+	if s.SslReuse == "enabled" {
+		srv.Params = append(srv.Params, &params.ServerOptionWord{Name: "ssl-reuse"})
+	}
+	if s.SslReuse == "disabled" {
+		srv.Params = append(srv.Params, &params.ServerOptionWord{Name: "no-ssl-reuse"})
+	}
+	if s.TLSTickets == "enabled" {
+		srv.Params = append(srv.Params, &params.ServerOptionWord{Name: "tls-tickets"})
+	}
+	if s.TLSTickets == "disabled" {
+		srv.Params = append(srv.Params, &params.ServerOptionWord{Name: "no-tls-tickets"})
+	}
+	if s.Stick == "enabled" {
+		srv.Params = append(srv.Params, &params.ServerOptionWord{Name: "stick"})
+	}
+	if s.Stick == "disabled" {
+		srv.Params = append(srv.Params, &params.ServerOptionWord{Name: "no-stick"})
+	}
+	if s.Tfo == "enabled" {
+		srv.Params = append(srv.Params, &params.ServerOptionWord{Name: "tfo"})
+	}
+	if s.Tfo == "disabled" {
+		srv.Params = append(srv.Params, &params.ServerOptionWord{Name: "no-tfo"})
+	}
+	// ServerOptionValue
+	if s.AgentSend != "" {
+		srv.Params = append(srv.Params, &params.ServerOptionValue{Name: "agent-send", Value: s.AgentSend})
+	}
+	if s.AgentInter != nil {
+		srv.Params = append(srv.Params, &params.ServerOptionValue{Name: "agent-inter", Value: strconv.FormatInt(*s.AgentInter, 10)})
+	}
+	if s.AgentAddr != "" {
+		srv.Params = append(srv.Params, &params.ServerOptionValue{Name: "agent-addr", Value: s.AgentAddr})
+	}
+	if s.AgentPort != nil {
+		srv.Params = append(srv.Params, &params.ServerOptionValue{Name: "agent-port", Value: strconv.FormatInt(*s.AgentPort, 10)})
+	}
+	if s.Alpn != "" {
+		srv.Params = append(srv.Params, &params.ServerOptionValue{Name: "alpn", Value: s.Alpn})
+	}
+	if s.SslCafile != "" { // ca-file
+		srv.Params = append(srv.Params, &params.ServerOptionValue{Name: "ca-file", Value: s.SslCafile})
+	}
+	if s.CheckAlpn != "" {
+		srv.Params = append(srv.Params, &params.ServerOptionValue{Name: "check-alpn", Value: s.CheckAlpn})
+	}
+	if s.CheckProto != "" {
+		srv.Params = append(srv.Params, &params.ServerOptionValue{Name: "check-proto", Value: s.CheckProto})
+	}
+	if s.CheckSni != "" {
+		srv.Params = append(srv.Params, &params.ServerOptionValue{Name: "check-sni", Value: s.CheckSni})
+	}
+	if s.Ciphers != "" {
+		srv.Params = append(srv.Params, &params.ServerOptionValue{Name: "ciphers", Value: s.Ciphers})
+	}
+	if s.Ciphersuites != "" {
+		srv.Params = append(srv.Params, &params.ServerOptionValue{Name: "ciphersuites", Value: s.Ciphersuites})
+	}
+	if s.Cookie != "" {
+		srv.Params = append(srv.Params, &params.ServerOptionValue{Name: "cookie", Value: s.Cookie})
+	}
+	if s.CrlFile != "" {
+		srv.Params = append(srv.Params, &params.ServerOptionValue{Name: "crl-file", Value: s.CrlFile})
+	}
+	if s.SslCertificate != "" {
+		srv.Params = append(srv.Params, &params.ServerOptionValue{Name: "crt", Value: s.SslCertificate})
+	}
+	if s.ErrorLimit != 0 {
+		srv.Params = append(srv.Params, &params.ServerOptionValue{Name: "error-limit", Value: strconv.FormatInt(s.ErrorLimit, 10)})
+	}
+	if s.Fall != nil {
+		srv.Params = append(srv.Params, &params.ServerOptionValue{Name: "fall", Value: strconv.FormatInt(*s.Fall, 10)})
+	}
+	if s.InitAddr != nil {
+		srv.Params = append(srv.Params, &params.ServerOptionValue{Name: "init-addr", Value: *s.InitAddr})
+	}
+	if s.Inter != nil {
+		srv.Params = append(srv.Params, &params.ServerOptionValue{Name: "inter", Value: strconv.FormatInt(*s.Inter, 10)})
+	}
+	if s.Fastinter != nil {
+		srv.Params = append(srv.Params, &params.ServerOptionValue{Name: "fastinter", Value: strconv.FormatInt(*s.Fastinter, 10)})
+	}
+	if s.Downinter != nil {
+		srv.Params = append(srv.Params, &params.ServerOptionValue{Name: "downinter", Value: strconv.FormatInt(*s.Downinter, 10)})
+	}
+	if s.LogProto != "" {
+		srv.Params = append(srv.Params, &params.ServerOptionValue{Name: "log-proto", Value: s.LogProto})
+	}
+	if s.Maxconn != nil {
+		srv.Params = append(srv.Params, &params.ServerOptionValue{Name: "maxconn", Value: strconv.FormatInt(*s.Maxconn, 10)})
+	}
+	if s.Maxqueue != nil {
+		srv.Params = append(srv.Params, &params.ServerOptionValue{Name: "maxqueue", Value: strconv.FormatInt(*s.Maxqueue, 10)})
+	}
+	if s.MaxReuse != nil {
+		srv.Params = append(srv.Params, &params.ServerOptionValue{Name: "max-reuse", Value: strconv.FormatInt(*s.MaxReuse, 10)})
+	}
+	if s.Minconn != nil {
+		srv.Params = append(srv.Params, &params.ServerOptionValue{Name: "minconn", Value: strconv.FormatInt(*s.Minconn, 10)})
+	}
+	if s.Namespace != "" {
+		srv.Params = append(srv.Params, &params.ServerOptionValue{Name: "namespace", Value: s.Namespace})
+	}
+	if s.Npn != "" {
+		srv.Params = append(srv.Params, &params.ServerOptionValue{Name: "non", Value: s.Npn})
+	}
+	if s.Observe != "" {
+		srv.Params = append(srv.Params, &params.ServerOptionValue{Name: "observe", Value: s.Observe})
+	}
+	if s.OnError != "" {
+		srv.Params = append(srv.Params, &params.ServerOptionValue{Name: "on-error", Value: s.OnError})
+	}
+	if s.OnMarkedDown != "" {
+		srv.Params = append(srv.Params, &params.ServerOptionValue{Name: "on-marked-down", Value: s.OnMarkedDown})
+	}
+	if s.OnMarkedUp != "" {
+		srv.Params = append(srv.Params, &params.ServerOptionValue{Name: "on-marked-up", Value: s.OnMarkedUp})
+	}
+	if s.PoolLowConn != nil {
+		srv.Params = append(srv.Params, &params.ServerOptionValue{Name: "pool-low-conn", Value: strconv.FormatInt(*s.PoolLowConn, 10)})
+	}
+	if s.PoolMaxConn != nil {
+		srv.Params = append(srv.Params, &params.ServerOptionValue{Name: "pool-max-conn", Value: strconv.FormatInt(*s.PoolMaxConn, 10)})
+	}
+	if s.PoolPurgeDelay != nil {
+		srv.Params = append(srv.Params, &params.ServerOptionValue{Name: "pool-purge-delay", Value: strconv.FormatInt(*s.PoolPurgeDelay, 10)})
+	}
+	if s.Port != nil {
+		srv.Address = s.Address + ":" + strconv.FormatInt(*s.Port, 10)
+	} else {
+		srv.Address = s.Address
+	}
+	if s.HealthCheckPort != nil {
+		srv.Params = append(srv.Params, &params.ServerOptionValue{Name: "port", Value: strconv.FormatInt(*s.HealthCheckPort, 10)})
+	}
+	if s.Proto != "" {
+		srv.Params = append(srv.Params, &params.ServerOptionValue{Name: "proto", Value: s.Proto})
+	}
+	if s.Redir != "" {
+		srv.Params = append(srv.Params, &params.ServerOptionValue{Name: "redir", Value: s.Redir})
+	}
+	if s.Rise != nil {
+		srv.Params = append(srv.Params, &params.ServerOptionValue{Name: "rise", Value: strconv.FormatInt(*s.Rise, 10)})
+	}
+	if s.ResolveOpts != "" {
+		srv.Params = append(srv.Params, &params.ServerOptionValue{Name: "resolve-opts", Value: s.ResolveOpts})
+	}
+	if s.ResolvePrefer != "" {
+		srv.Params = append(srv.Params, &params.ServerOptionValue{Name: "resolve-prefer", Value: s.ResolvePrefer})
+	}
+	if s.ResolveNet != "" {
+		srv.Params = append(srv.Params, &params.ServerOptionValue{Name: "resolve-net", Value: s.ResolveNet})
+	}
+	if s.Resolvers != "" {
+		srv.Params = append(srv.Params, &params.ServerOptionValue{Name: "resolvers", Value: s.Resolvers})
+	}
+	if len(s.ProxyV2Options) > 0 {
+		srv.Params = append(srv.Params, &params.ServerOptionValue{Name: "proxy-v2-options", Value: strings.Join(s.ProxyV2Options, ",")})
+	}
+	if s.Slowstart != nil {
+		srv.Params = append(srv.Params, &params.ServerOptionValue{Name: "slowstart", Value: strconv.FormatInt(*s.Slowstart, 10)})
+	}
+	if s.Sni != "" {
+		srv.Params = append(srv.Params, &params.ServerOptionValue{Name: "sni", Value: s.Sni})
+	}
 	if s.Source != "" {
 		srv.Params = append(srv.Params, &params.ServerOptionValue{Name: "source", Value: s.Source})
 	}
@@ -706,18 +716,6 @@ func SerializeServer(s models.Server) types.Server { //nolint:gocognit,gocyclo
 	}
 	if s.SslMinVer != "" {
 		srv.Params = append(srv.Params, &params.ServerOptionValue{Name: "ssl-min-ver", Value: s.SslMinVer})
-	}
-	if s.SslReuse == "enabled" {
-		srv.Params = append(srv.Params, &params.ServerOptionWord{Name: "ssl-reuse"})
-	}
-	if s.SslReuse == "disabled" {
-		srv.Params = append(srv.Params, &params.ServerOptionWord{Name: "no-ssl-reuse"})
-	}
-	if s.Stick == "enabled" {
-		srv.Params = append(srv.Params, &params.ServerOptionWord{Name: "stick"})
-	}
-	if s.Stick == "disabled" {
-		srv.Params = append(srv.Params, &params.ServerOptionWord{Name: "no-stick"})
 	}
 	if s.Socks4 != "" {
 		srv.Params = append(srv.Params, &params.ServerOptionValue{Name: "socks4", Value: s.Socks4})
@@ -728,8 +726,14 @@ func SerializeServer(s models.Server) types.Server { //nolint:gocognit,gocyclo
 	if s.Track != "" {
 		srv.Params = append(srv.Params, &params.ServerOptionValue{Name: "track", Value: s.Track})
 	}
+	if s.Verify != "" {
+		srv.Params = append(srv.Params, &params.ServerOptionValue{Name: "verify", Value: s.Verify})
+	}
 	if s.Verifyhost != "" {
 		srv.Params = append(srv.Params, &params.ServerOptionValue{Name: "verifyhost", Value: s.Verifyhost})
+	}
+	if s.Weight != nil {
+		srv.Params = append(srv.Params, &params.ServerOptionValue{Name: "weight", Value: strconv.FormatInt(*s.Weight, 10)})
 	}
 	return srv
 }
