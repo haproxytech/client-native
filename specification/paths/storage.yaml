@@ -104,12 +104,7 @@ maps_one:
         required: true
         schema:
           type: string
-      - name: skip_reload
-        in: query
-        description: If set, no reload will be initiated after update
-        type: boolean
-        required: false
-        default: false
+      - $ref: "#/parameters/skip_reload"
       - $ref: "#/parameters/force_reload"
     responses:
       "202":
@@ -202,7 +197,15 @@ ssl_certificates_one:
         description: SSL certificate name
         required: true
         type: string
+      - $ref: "#/parameters/skip_reload"
+      - $ref: "#/parameters/force_reload"
     responses:
+      '202':
+        description: SSL certificate deleted and reload requested
+        headers:
+          Reload-ID:
+            description: ID of the requested reload
+            type: string
       '204':
         description: SSL certificate deleted
       '404':
@@ -230,10 +233,19 @@ ssl_certificates_one:
         required: true
         schema:
           type: string
+      - $ref: "#/parameters/skip_reload"
       - $ref: "#/parameters/force_reload"
     responses:
-      '202':
+      '200':
         description: SSL certificate replaced
+        schema:
+          $ref: "#/definitions/ssl_certificate"
+      '202':
+        description: SSL certificate replaced and reload requested
+        headers:
+          Reload-ID:
+            description: ID of the requested reload
+            type: string
         schema:
           $ref: "#/definitions/ssl_certificate"
       '400':

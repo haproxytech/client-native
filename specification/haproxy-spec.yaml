@@ -467,6 +467,13 @@ parameters:
     type: boolean
     required: false
     default: false
+  skip_reload:
+    name: skip_reload
+    in: query
+    description: If set, no reload will be initiated after update
+    type: boolean
+    required: false
+    default: false
 securityDefinitions:
   basic_auth:
     type: basic
