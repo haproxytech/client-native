@@ -903,7 +903,7 @@ bind:
       x-display-name: Protocol name
     ssl:
       type: boolean
-    ssl_certificate: # crt command
+    ssl_certificate:  # crt command
       type: string
       pattern: '^[^\s]+$'
       x-dependency:
