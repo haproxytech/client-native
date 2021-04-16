@@ -10661,6 +10661,155 @@ paths:
         summary: Return list of HAProxy advanced runtime endpoints
         tags:
         - Discovery
+  /services/haproxy/runtime/acls:
+      get:
+        description: Returns all ACL files using the runtime socket.
+        produces:
+        - application/json
+        responses:
+          "200":
+            description: Successful operation
+            schema:
+              $ref: '#/definitions/acl_files'
+          default:
+            $ref: '#/responses/DefaultError'
+        summary: Return an array of all ACL files
+        tags:
+        - ACL Runtime
+  /services/haproxy/runtime/acls/{id}:
+      get:
+        description: Returns an ACL file by id using the runtime socket.
+        parameters:
+        - description: ACL file entry ID
+          in: path
+          name: id
+          required: true
+          type: string
+        produces:
+        - application/json
+        responses:
+          "200":
+            description: Successful operation
+            schema:
+              $ref: '#/definitions/acl_file'
+          "404":
+            $ref: '#/responses/NotFound'
+          default:
+            $ref: '#/responses/DefaultError'
+        summary: Return an ACL file
+        tags:
+        - ACL Runtime
+  /services/haproxy/runtime/acl_file_entries:
+      get:
+        description: Returns an ACL runtime setting using the runtime socket.
+        parameters:
+        - description: ACL ID
+          in: query
+          name: acl_id
+          required: true
+          type: string
+        produces:
+        - application/json
+        responses:
+          "200":
+            description: Successful operation
+            schema:
+              $ref: '#/definitions/acl_files_entries'
+          "400":
+            $ref: '#/responses/BadRequest'
+          "404":
+            $ref: '#/responses/NotFound'
+          default:
+            $ref: '#/responses/DefaultError'
+        summary: Return an ACL entries
+        tags:
+        - ACL Runtime
+      post:
+        description: Adds an entry into the ACL file using the runtime socket.
+        parameters:
+        - description: ACL ID
+          in: query
+          name: acl_id
+          required: true
+          type: string
+        - in: body
+          name: data
+          required: true
+          schema:
+            $ref: '#/definitions/acl_file_entry'
+        produces:
+        - application/json
+        responses:
+          "201":
+            description: ACL entry created
+            schema:
+              $ref: '#/definitions/acl_file_entry'
+          "400":
+            $ref: '#/responses/BadRequest'
+          "409":
+            $ref: '#/responses/AlreadyExists'
+          default:
+            $ref: '#/responses/DefaultError'
+        summary: Add entry to an ACL file
+        tags:
+        - ACL Runtime
+  /services/haproxy/runtime/acl_file_entries/{id}:
+      delete:
+        description: Deletes the entry from the ACL by its value using the runtime socket.
+        parameters:
+        - description: ACL ID
+          in: query
+          name: acl_id
+          required: true
+          type: string
+        - description: File entry ID
+          in: path
+          name: id
+          required: true
+          type: string
+        produces:
+        - application/json
+        responses:
+          "204":
+            description: Successful operation
+          "400":
+            $ref: '#/responses/BadRequest'
+          "404":
+            $ref: '#/responses/NotFound'
+          default:
+            $ref: '#/responses/DefaultError'
+        summary: Delete an ACL entry
+        tags:
+        - ACL Runtime
+      get:
+        description: Returns the ACL entry by its ID using the runtime socket.
+        parameters:
+        - description: ACL ID
+          in: query
+          name: acl_id
+          required: true
+          type: string
+        - description: File entry ID
+          in: path
+          name: id
+          required: true
+          type: string
+        produces:
+        - application/json
+        responses:
+          "200":
+            description: Successful operation
+            schema:
+              $ref: '#/definitions/acl_file_entry'
+          "400":
+            $ref: '#/responses/BadRequest'
+          "404":
+            $ref: '#/responses/NotFound'
+          default:
+            $ref: '#/responses/DefaultError'
+        summary: Return an ACL entry
+        tags:
+        - ACL Runtime
   /services/haproxy/runtime/info:
       get:
         description: Return HAProxy process information

@@ -674,6 +674,14 @@ paths:
     $ref: "paths/configuration.yaml#/configuration"
   /services/haproxy/runtime:
     $ref: "paths/general.yaml#/runtime"
+  /services/haproxy/runtime/acls:
+    $ref: "paths/runtime.yaml#/acls"
+  /services/haproxy/runtime/acls/{id}:
+    $ref: "paths/runtime.yaml#/acls_one"
+  /services/haproxy/runtime/acl_file_entries:
+    $ref: "paths/runtime.yaml#/acls_entries"
+  /services/haproxy/runtime/acl_file_entries/{id}:
+    $ref: "paths/runtime.yaml#/acls_entries_one"
   /services/haproxy/runtime/info:
     $ref: "paths/runtime.yaml#/process_info"
   /services/haproxy/runtime/servers:
