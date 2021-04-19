@@ -5566,11 +5566,23 @@ definitions:
           - exponential
           type: string
         service-blacklist:
+          description: deprecated, use service_denylist
           items:
             pattern: ^[^\s]+$
             type: string
           type: array
         service-whitelist:
+          description: deprecated, use service_allowlist
+          items:
+            pattern: ^[^\s]+$
+            type: string
+          type: array
+        service_allowlist:
+          items:
+            pattern: ^[^\s]+$
+            type: string
+          type: array
+        service_denylist:
           items:
             pattern: ^[^\s]+$
             type: string

@@ -117,7 +117,19 @@ consul:
       items:
         type: string
         pattern: '^[^\s]+$'
+      description: "deprecated, use service_allowlist"
     service-blacklist:
+      type: array
+      items:
+        type: string
+        pattern: '^[^\s]+$'
+      description: "deprecated, use service_denylist"
+    service_allowlist:
+      type: array
+      items:
+        type: string
+        pattern: '^[^\s]+$'
+    service_denylist:
       type: array
       items:
         type: string

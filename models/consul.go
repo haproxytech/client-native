@@ -77,11 +77,17 @@ type Consul struct {
 	// Enum: [linear exponential]
 	ServerSlotsGrowthType *string `json:"server_slots_growth_type,omitempty"`
 
-	// service blacklist
+	// deprecated, use service_denylist
 	ServiceBlacklist []string `json:"service-blacklist"`
 
-	// service whitelist
+	// deprecated, use service_allowlist
 	ServiceWhitelist []string `json:"service-whitelist"`
+
+	// service allowlist
+	ServiceAllowlist []string `json:"service_allowlist"`
+
+	// service denylist
+	ServiceDenylist []string `json:"service_denylist"`
 
 	// token
 	// Pattern: ^[^\s]+$
@@ -121,6 +127,14 @@ func (m *Consul) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateServiceWhitelist(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateServiceAllowlist(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateServiceDenylist(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -268,6 +282,40 @@ func (m *Consul) validateServiceWhitelist(formats strfmt.Registry) error {
 	for i := 0; i < len(m.ServiceWhitelist); i++ {
 
 		if err := validate.Pattern("service-whitelist"+"."+strconv.Itoa(i), "body", string(m.ServiceWhitelist[i]), `^[^\s]+$`); err != nil {
+			return err
+		}
+
+	}
+
+	return nil
+}
+
+func (m *Consul) validateServiceAllowlist(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.ServiceAllowlist) { // not required
+		return nil
+	}
+
+	for i := 0; i < len(m.ServiceAllowlist); i++ {
+
+		if err := validate.Pattern("service_allowlist"+"."+strconv.Itoa(i), "body", string(m.ServiceAllowlist[i]), `^[^\s]+$`); err != nil {
+			return err
+		}
+
+	}
+
+	return nil
+}
+
+func (m *Consul) validateServiceDenylist(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.ServiceDenylist) { // not required
+		return nil
+	}
+
+	for i := 0; i < len(m.ServiceDenylist); i++ {
+
+		if err := validate.Pattern("service_denylist"+"."+strconv.Itoa(i), "body", string(m.ServiceDenylist[i]), `^[^\s]+$`); err != nil {
 			return err
 		}
 
