@@ -24,6 +24,7 @@ import (
 	"strings"
 
 	"github.com/google/go-cmp/cmp"
+	"github.com/pkg/errors"
 
 	native_errors "github.com/haproxytech/client-native/v2/errors"
 	"github.com/haproxytech/client-native/v2/misc"
@@ -654,4 +655,99 @@ func (c *Client) ParseMapEntries(output string) models.MapEntries {
 // ParseMapEntriesFromFile reads entries from file
 func (c *Client) ParseMapEntriesFromFile(inputFile io.Reader, hasID bool) models.MapEntries {
 	return parseMapEntriesFromFile(inputFile, hasID)
+}
+
+// GetACLFile returns a the ACL file by its ID
+func (c *Client) GetACLFile(id string) (files *models.ACLFile, err error) {
+	if len(c.runtimes) == 0 {
+		return nil, fmt.Errorf("missing runtimes, cannot retrieve ACL files")
+	}
+
+	files, err = c.runtimes[0].GetACL("#" + id)
+	if err != nil {
+		err = errors.Wrap(err, "cannot retrieve ACL file for "+id)
+	}
+
+	return
+}
+
+// GetACLFiles returns all the ACL files
+func (c *Client) GetACLFiles() (files models.ACLFiles, err error) {
+	if len(c.runtimes) == 0 {
+		return nil, fmt.Errorf("missing runtimes, cannot retrieve ACL files")
+	}
+
+	files, err = c.runtimes[0].ShowACLS()
+	if err != nil {
+		err = errors.Wrap(err, "cannot retrieve ACL files")
+	}
+
+	return
+}
+
+// GetACLFilesEntries returns all the files entries for the ACL file ID
+func (c *Client) GetACLFilesEntries(id string) (files models.ACLFilesEntries, err error) {
+	if len(c.runtimes) == 0 {
+		return nil, fmt.Errorf("missing runtimes, cannot retrieve ACL files")
+	}
+
+	files, err = c.runtimes[0].ShowACLFileEntries("#" + id)
+	if err != nil {
+		err = errors.Wrap(err, "cannot retrieve ACL files entries for "+id)
+	}
+
+	return
+}
+
+// AddACLFileEntry adds the value for the specified ACL file entry based on its ID
+func (c *Client) AddACLFileEntry(id, value string) error {
+	if len(c.runtimes) == 0 {
+		return fmt.Errorf("missing runtimes, cannot add ACL file entry")
+	}
+	for _, runtime := range c.runtimes {
+		if err := runtime.AddACLFileEntry(id, value); err != nil {
+			return errors.Wrap(err, "cannot add ACL files entry for "+id)
+		}
+	}
+
+	return nil
+}
+
+// GetACLFileEntry returns the specified file entry based on value and ACL file ID
+func (c *Client) GetACLFileEntry(id, value string) (fileEntry *models.ACLFileEntry, err error) {
+	if len(c.runtimes) == 0 {
+		return nil, fmt.Errorf("missing runtimes, cannot get ACL file entry")
+	}
+
+	var fe models.ACLFilesEntries
+	if fe, err = c.runtimes[0].ShowACLFileEntries("#" + id); err != nil {
+		return nil, errors.Wrap(err, "cannot retrieve ACL file entries, cannot list available ACL files")
+	}
+
+	for _, e := range fe {
+		if e.ID == value {
+			value = e.Value
+			break
+		}
+	}
+
+	if fileEntry, err = c.runtimes[0].GetACLFileEntry(id, value); err != nil {
+		err = errors.Wrap(err, "cannot retrieve ACL file entry for "+id)
+	}
+
+	return
+}
+
+// DeleteACLFileEntry deletes the value for the specified ACL file entry based on its ID
+func (c *Client) DeleteACLFileEntry(id, value string) error {
+	if len(c.runtimes) == 0 {
+		return fmt.Errorf("missing runtimes, cannot add ACL file entry")
+	}
+	for _, runtime := range c.runtimes {
+		if err := runtime.DeleteACLFileEntry(id, value); err != nil {
+			return errors.Wrap(err, "cannot add ACL files entry for "+id)
+		}
+	}
+
+	return nil
 }

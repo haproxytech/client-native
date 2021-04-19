@@ -84,7 +84,7 @@ func (s *SingleRuntime) GetACL(storageName string) (*models.ACLFile, error) {
 	}
 
 	for _, m := range acls {
-		if m.StorageName == storageName {
+		if m.StorageName == storageName || storageName == "#"+m.ID {
 			return m, nil
 		}
 	}
