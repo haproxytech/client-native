@@ -1,5 +1,6 @@
 ---
 stages:
+  - check-commit
   - generate
   - build
   - lint
@@ -19,6 +20,9 @@ build-specification:
   script:
     - go run specification/build/build.go -file specification/haproxy-spec.yaml > specification/build/haproxy_spec_to_compare.yaml
     - diff -u specification/build/haproxy_spec_to_compare.yaml specification/build/haproxy_spec.yaml
+  only:
+    - merge_requests
+    - branches
 
 yaml-lint:
   stage: lint
@@ -33,6 +37,9 @@ yaml-lint:
     - /bin/sh -c "yamllint -f colored ."
     - chmod +x ./specification/scripts/lint-yaml.sh
     - /bin/sh -c ./specification/scripts/lint-yaml.sh
+  only:
+    - merge_requests
+    - branches
 
 .go-cache:
   variables:
@@ -64,6 +71,9 @@ generate:
   script:
     - test -z "$(git diff 2> /dev/null)" || exit "Models are not generated, issue \`make models\` and commit the result"
     - test -z "$(git ls-files --others --exclude-standard 2> /dev/null)" || exit "Models generation created untracked files, cannot proceed"
+  only:
+    - merge_requests
+    - branches
 
 build:
   extends: .go-cache
@@ -75,6 +85,9 @@ build:
     - mkdir -p .go
   script:
     - go build
+  only:
+    - merge_requests
+    - branches
 
 tidy:
   stage: lint
@@ -87,6 +100,9 @@ tidy:
   script:
     - go mod tidy
     - test -z "$(git diff 2> /dev/null)" || exit 'Go modules not tidied, issue \`go mod tidy\` and commit the result'
+  only:
+    - merge_requests
+    - branches
 
 golangci-lint:
   stage: lint
@@ -98,6 +114,9 @@ golangci-lint:
     - go
   script:
     - golangci-lint run --color always --timeout 120s
+  only:
+    - merge_requests
+    - branches
 
 lint-commit-msg:
   stage: lint
@@ -109,6 +128,8 @@ lint-commit-msg:
     - go
   script:
     - /check
+  only:
+    - merge_requests
 
 test:
   extends: .go-cache
@@ -121,6 +142,9 @@ test:
     - go
   script:
     - go test ./...
+  only:
+    - merge_requests
+    - branches
 
 .e2e:
   stage: e2e
@@ -141,6 +165,9 @@ test:
     - docker build --file ./e2e/Dockerfile --build-arg HAPROXY_VERSION=$HAPROXY_VERSION --tag client-native-test:$HAPROXY_VERSION .
   script:
     - docker run client-native-test:$HAPROXY_VERSION
+  only:
+    - merge_requests
+    - branches
 
 HAProxy-2.1:
   extends: .e2e
