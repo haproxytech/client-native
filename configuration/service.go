@@ -219,6 +219,14 @@ func (s *Service) createNewNodes(nodeCount int) error {
 }
 
 func (s *Service) removeExcessNodes(newNodes int) (bool, error) {
+	if newNodes < s.serverCount() {
+		if s.serverCount() == s.scaling.BaseSlots {
+			return false, nil
+		}
+		if newNodes < s.scaling.BaseSlots {
+			return true, s.removeNodesAfterIndex(s.scaling.BaseSlots)
+		}
+	}
 	lastIndex, reduce := s.getLastNodeIndex(newNodes)
 	if !reduce {
 		return false, nil
