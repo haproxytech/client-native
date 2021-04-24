@@ -39,11 +39,10 @@ type HttpchkParams struct {
 	Method string `json:"method,omitempty"`
 
 	// uri
-	// Pattern: ^[^\s]+$
+	// Pattern: ^[^ ]*$
 	URI string `json:"uri,omitempty"`
 
 	// version
-	// Pattern: ^[^\s]+$
 	Version string `json:"version,omitempty"`
 }
 
@@ -56,10 +55,6 @@ func (m *HttpchkParams) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateURI(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateVersion(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -130,20 +125,7 @@ func (m *HttpchkParams) validateURI(formats strfmt.Registry) error {
 		return nil
 	}
 
-	if err := validate.Pattern("uri", "body", string(m.URI), `^[^\s]+$`); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func (m *HttpchkParams) validateVersion(formats strfmt.Registry) error {
-
-	if swag.IsZero(m.Version) { // not required
-		return nil
-	}
-
-	if err := validate.Pattern("version", "body", string(m.Version), `^[^\s]+$`); err != nil {
+	if err := validate.Pattern("uri", "body", string(m.URI), `^[^ ]*$`); err != nil {
 		return err
 	}
 

@@ -5226,10 +5226,9 @@ definitions:
           - PATCH
           type: string
         uri:
-          pattern: ^[^\s]+$
+          pattern: ^[^ ]*$
           type: string
         version:
-          pattern: ^[^\s]+$
           type: string
       type: object
       x-display-name: HTTP Check

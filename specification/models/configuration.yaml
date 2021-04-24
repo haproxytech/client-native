@@ -3042,10 +3042,9 @@ httpchk_params:
       enum: [HEAD, PUT, POST, GET, TRACE, PATCH]
     uri:
       type: string
-      pattern: '^[^\s]+$'
+      pattern: '^[^ ]*$'
     version:
       type: string
-      pattern: '^[^\s]+$'
 redispatch:
   type: object
   required:
