@@ -374,9 +374,17 @@ func (t *Transaction) DeleteTransaction(transactionID string) error {
 		}
 	}
 
-	err := t.TransactionClient.DeleteParser(transactionID)
-	if err != nil {
-		return err
+	// Parsers from transactions with `failed` status are deleted when CommitParser implementation is invoked.
+	// Because of that, we should not try to delete already deleted parser.
+	// Parser with `in_progress` status transaction should be deleted.
+	ts := t.TransactionClient.GetParserTransactions()
+	for _, tr := range ts {
+		if tr.ID == transactionID && tr.Status == models.TransactionStatusInProgress {
+			err := t.TransactionClient.DeleteParser(transactionID)
+			if err != nil {
+				return err
+			}
+		}
 	}
 	return nil
 }
