@@ -22,6 +22,7 @@ import (
 	"regexp"
 	"strconv"
 	"strings"
+	"time"
 )
 
 var chars = []rune("0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ") //nolint:gochecknoglobals
@@ -199,6 +200,7 @@ func Int64P(i int) *int64 {
 }
 
 func RandomString(n int) string {
+	rand.Seed(time.Now().UnixNano())
 	b := make([]rune, n)
 	size := len(chars)
 	for i := range b {
