@@ -5255,7 +5255,6 @@ definitions:
               value: expect
           x-display-name: Expect Match
         pattern:
-          pattern: ^[^\s]+$
           type: string
           x-dependency:
             type:
