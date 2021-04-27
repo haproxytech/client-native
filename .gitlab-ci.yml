@@ -162,7 +162,7 @@ test:
     - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN $CI_REGISTRY_GO
     - docker pull $CI_REGISTRY_GO/client-native:$HAPROXY_VERSION
     - docker image tag $CI_REGISTRY_GO/client-native:$HAPROXY_VERSION test_env:$HAPROXY_VERSION
-    - docker build --file ./e2e/Dockerfile --build-arg HAPROXY_VERSION=$HAPROXY_VERSION --tag client-native-test:$HAPROXY_VERSION .
+    - docker build --file ./e2e/Dockerfile --build-arg HAPROXY_VERSION=$HAPROXY_VERSION --build-arg DOCKER_URL=$CI_REGISTRY_GO --tag client-native-test:$HAPROXY_VERSION .
   script:
     - docker run client-native-test:$HAPROXY_VERSION
   only:

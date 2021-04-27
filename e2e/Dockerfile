@@ -13,8 +13,9 @@
 # limitations under the License.
 
 ARG HAPROXY_VERSION=2.3
+ARG DOCKER_URL=haproxytech
 
-FROM haproxytech/haproxy-alpine:${HAPROXY_VERSION}
+FROM ${DOCKER_URL}/haproxy-alpine:${HAPROXY_VERSION}
 
 RUN apk add socat openssl util-linux htop tzdata bash gcc openssl wget go && \
     rm -f /usr/local/bin/dataplaneapi /usr/bin/dataplaneapi && \
