@@ -16,6 +16,7 @@
 package runtime
 
 import (
+	"context"
 	"fmt"
 	"net"
 	"strings"
@@ -55,17 +56,34 @@ func (s *SingleRuntime) Init(socketPath string, worker int, process int) error {
 	s.jobs = make(chan Task)
 	s.worker = worker
 	s.process = process
-	go s.handleIncommingJobs()
+	go s.handleIncommingJobs(context.Background())
 	return nil
 }
 
-func (s *SingleRuntime) handleIncommingJobs() {
-	for job := range s.jobs {
-		result, err := s.readFromSocket(job.command)
-		if err != nil {
-			job.response <- TaskResponse{err: err}
-		} else {
-			job.response <- TaskResponse{result: result}
+func (s *SingleRuntime) InitWithContext(ctx context.Context, socketPath string, worker int, process int) error {
+	s.socketPath = socketPath
+	s.jobs = make(chan Task)
+	s.worker = worker
+	s.process = process
+	go s.handleIncommingJobs(ctx)
+	return nil
+}
+
+func (s *SingleRuntime) handleIncommingJobs(ctx context.Context) {
+	for {
+		select {
+		case job, ok := <-s.jobs:
+			if !ok {
+				return
+			}
+			result, err := s.readFromSocket(job.command)
+			if err != nil {
+				job.response <- TaskResponse{err: err}
+			} else {
+				job.response <- TaskResponse{result: result}
+			}
+		case <-ctx.Done():
+			return
 		}
 	}
 }

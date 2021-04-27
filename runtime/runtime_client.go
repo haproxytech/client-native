@@ -16,6 +16,7 @@
 package runtime
 
 import (
+	"context"
 	"fmt"
 	"io"
 	"mime/multipart"
@@ -85,10 +86,18 @@ func (c *Client) Init(socketPath []string, masterSocketPath string, nbproc int) 
 }
 
 func (c *Client) InitWithSockets(socketPath map[int]string) error {
+	return c.initWithSockets(context.Background(), socketPath)
+}
+
+func (c *Client) InitWithSocketsAndContext(ctx context.Context, socketPath map[int]string) error {
+	return c.initWithSockets(ctx, socketPath)
+}
+
+func (c *Client) initWithSockets(ctx context.Context, socketPath map[int]string) error {
 	c.runtimes = make([]SingleRuntime, 0)
 	for process, path := range socketPath {
 		runtime := SingleRuntime{}
-		err := runtime.Init(path, 0, process)
+		err := runtime.InitWithContext(ctx, path, 0, process)
 		if err != nil {
 			return err
 		}
@@ -99,6 +108,14 @@ func (c *Client) InitWithSockets(socketPath map[int]string) error {
 }
 
 func (c *Client) InitWithMasterSocket(masterSocketPath string, nbproc int) error {
+	return c.initWithMasterSocket(context.Background(), masterSocketPath, nbproc)
+}
+
+func (c *Client) InitWithMasterSocketAndContext(ctx context.Context, masterSocketPath string, nbproc int) error {
+	return c.initWithMasterSocket(ctx, masterSocketPath, nbproc)
+}
+
+func (c *Client) initWithMasterSocket(ctx context.Context, masterSocketPath string, nbproc int) error {
 	if nbproc == 0 {
 		nbproc = 1
 	}
@@ -108,7 +125,7 @@ func (c *Client) InitWithMasterSocket(masterSocketPath string, nbproc int) error
 	c.runtimes = make([]SingleRuntime, nbproc)
 	for i := 1; i <= nbproc; i++ {
 		runtime := SingleRuntime{}
-		err := runtime.Init(masterSocketPath, i, i)
+		err := runtime.InitWithContext(ctx, masterSocketPath, i, i)
 		if err != nil {
 			return err
 		}
