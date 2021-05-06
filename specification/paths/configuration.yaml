@@ -14,8 +14,7 @@ global:
         headers:
           Configuration-Version:
             description: Configuration file version
-            type: integer
-            x-nullable: false
+            type: string
         schema:
           type: object
           properties:
@@ -72,8 +71,7 @@ defaults:
         headers:
           Configuration-Version:
             description: Configuration file version
-            type: integer
-            x-nullable: false
+            type: string
         schema:
           type: object
           properties:
@@ -130,8 +128,7 @@ frontends:
         headers:
           Configuration-Version:
             description: Configuration file version
-            type: integer
-            x-nullable: false
+            type: string
         schema:
           type: object
           required:
@@ -197,8 +194,7 @@ frontends_one:
         headers:
           Configuration-Version:
             description: Configuration file version
-            type: integer
-            x-nullable: false
+            type: string
         schema:
           type: object
           properties:
@@ -292,8 +288,7 @@ backends:
         headers:
           Configuration-Version:
             description: Configuration file version
-            type: integer
-            x-nullable: false
+            type: string
         schema:
           type: object
           required:
@@ -359,8 +354,7 @@ backends_one:
         headers:
           Configuration-Version:
             description: Configuration file version
-            type: integer
-            x-nullable: false
+            type: string
         schema:
           type: object
           properties:
@@ -454,8 +448,7 @@ peer_section:
         headers:
           Configuration-Version:
             description: Configuration file version
-            type: integer
-            x-nullable: false
+            type: string
         schema:
           type: object
           required:
@@ -521,8 +514,7 @@ peer_section_one:
         headers:
           Configuration-Version:
             description: Configuration file version
-            type: integer
-            x-nullable: false
+            type: string
         schema:
           type: object
           properties:
@@ -582,8 +574,7 @@ peer_entries:
         headers:
           Configuration-Version:
             description: Configuration file version
-            type: integer
-            x-nullable: false
+            type: string
         schema:
           type: object
           required:
@@ -659,8 +650,7 @@ peer_entries_one:
         headers:
           Configuration-Version:
             description: Configuration file version
-            type: integer
-            x-nullable: false
+            type: string
         schema:
           type: object
           properties:
@@ -769,8 +759,7 @@ binds:
         headers:
           Configuration-Version:
             description: Configuration file version
-            type: integer
-            x-nullable: false
+            type: string
         schema:
           type: object
           required:
@@ -846,8 +835,7 @@ binds_one:
         headers:
           Configuration-Version:
             description: Configuration file version
-            type: integer
-            x-nullable: false
+            type: string
         schema:
           type: object
           properties:
@@ -951,8 +939,7 @@ resolvers:
         headers:
           Configuration-Version:
             description: Configuration file version
-            type: integer
-            x-nullable: false
+            type: string
         schema:
           type: object
           required:
@@ -1018,8 +1005,7 @@ resolvers_one:
         headers:
           Configuration-Version:
             description: Configuration file version
-            type: integer
-            x-nullable: false
+            type: string
         schema:
           type: object
           properties:
@@ -1118,8 +1104,7 @@ nameservers:
         headers:
           Configuration-Version:
             description: Configuration file version
-            type: integer
-            x-nullable: false
+            type: string
         schema:
           type: object
           required:
@@ -1195,8 +1180,7 @@ nameservers_one:
         headers:
           Configuration-Version:
             description: Configuration file version
-            type: integer
-            x-nullable: false
+            type: string
         schema:
           type: object
           properties:
@@ -1305,8 +1289,7 @@ servers:
         headers:
           Configuration-Version:
             description: Configuration file version
-            type: integer
-            x-nullable: false
+            type: string
         schema:
           type: object
           required:
@@ -1382,8 +1365,7 @@ servers_one:
         headers:
           Configuration-Version:
             description: Configuration file version
-            type: integer
-            x-nullable: false
+            type: string
         schema:
           type: object
           properties:
@@ -1492,8 +1474,7 @@ tcp_response_rules:
         headers:
           Configuration-Version:
             description: Configuration file version
-            type: integer
-            x-nullable: false
+            type: string
         schema:
           type: object
           required:
@@ -1569,8 +1550,7 @@ tcp_response_rules_one:
         headers:
           Configuration-Version:
             description: Configuration file version
-            type: integer
-            x-nullable: false
+            type: string
         schema:
           type: object
           properties:
@@ -1685,8 +1665,7 @@ tcp_request_rules:
         headers:
           Configuration-Version:
             description: Configuration file version
-            type: integer
-            x-nullable: false
+            type: string
         schema:
           type: object
           required:
@@ -1774,8 +1753,7 @@ tcp_request_rules_one:
         headers:
           Configuration-Version:
             description: Configuration file version
-            type: integer
-            x-nullable: false
+            type: string
         schema:
           type: object
           properties:
@@ -1902,8 +1880,7 @@ http_request_rules:
         headers:
           Configuration-Version:
             description: Configuration file version
-            type: integer
-            x-nullable: false
+            type: string
         schema:
           type: object
           required:
@@ -1991,8 +1968,7 @@ http_request_rules_one:
         headers:
           Configuration-Version:
             description: Configuration file version
-            type: integer
-            x-nullable: false
+            type: string
         schema:
           type: object
           properties:
@@ -2119,8 +2095,7 @@ http_response_rules:
         headers:
           Configuration-Version:
             description: Configuration file version
-            type: integer
-            x-nullable: false
+            type: string
         schema:
           type: object
           required:
@@ -2208,8 +2183,7 @@ http_response_rules_one:
         headers:
           Configuration-Version:
             description: Configuration file version
-            type: integer
-            x-nullable: false
+            type: string
         schema:
           type: object
           properties:
@@ -2330,8 +2304,7 @@ backend_switching_rules:
         headers:
           Configuration-Version:
             description: Configuration file version
-            type: integer
-            x-nullable: false
+            type: string
         schema:
           type: object
           required:
@@ -2407,8 +2380,7 @@ backend_switching_rules_one:
         headers:
           Configuration-Version:
             description: Configuration file version
-            type: integer
-            x-nullable: false
+            type: string
         schema:
           type: object
           properties:
@@ -2517,8 +2489,7 @@ server_switching_rules:
         headers:
           Configuration-Version:
             description: Configuration file version
-            type: integer
-            x-nullable: false
+            type: string
         schema:
           type: object
           required:
@@ -2594,8 +2565,7 @@ server_switching_rules_one:
         headers:
           Configuration-Version:
             description: Configuration file version
-            type: integer
-            x-nullable: false
+            type: string
         schema:
           type: object
           properties:
@@ -2702,8 +2672,7 @@ configuration:
         headers:
           Configuration-Version:
             description: Configuration file version
-            type: integer
-            x-nullable: false
+            type: string
         schema:
           type: object
           required:
@@ -2799,8 +2768,7 @@ filters:
         headers:
           Configuration-Version:
             description: Configuration file version
-            type: integer
-            x-nullable: false
+            type: string
         schema:
           type: object
           required:
@@ -2888,8 +2856,7 @@ filters_one:
         headers:
           Configuration-Version:
             description: Configuration file version
-            type: integer
-            x-nullable: false
+            type: string
         schema:
           type: object
           properties:
@@ -3010,8 +2977,7 @@ stick_rules:
         headers:
           Configuration-Version:
             description: Configuration file version
-            type: integer
-            x-nullable: false
+            type: string
         schema:
           type: object
           required:
@@ -3087,8 +3053,7 @@ stick_rules_one:
         headers:
           Configuration-Version:
             description: Configuration file version
-            type: integer
-            x-nullable: false
+            type: string
         schema:
           type: object
           properties:
@@ -3203,8 +3168,7 @@ log_targets:
         headers:
           Configuration-Version:
             description: Configuration file version
-            type: integer
-            x-nullable: false
+            type: string
         schema:
           type: object
           required:
@@ -3292,8 +3256,7 @@ log_targets_one:
         headers:
           Configuration-Version:
             description: Configuration file version
-            type: integer
-            x-nullable: false
+            type: string
         schema:
           type: object
           properties:
@@ -3424,8 +3387,7 @@ acls:
         headers:
           Configuration-Version:
             description: Configuration file version
-            type: integer
-            x-nullable: false
+            type: string
         schema:
           type: object
           required:
@@ -3513,8 +3475,7 @@ acls_one:
         headers:
           Configuration-Version:
             description: Configuration file version
-            type: integer
-            x-nullable: false
+            type: string
         schema:
           type: object
           properties:

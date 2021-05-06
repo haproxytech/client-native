@@ -5820,9 +5820,7 @@ responses:
     headers:
       Configuration-Version:
         description: Configuration file version
-        type: integer
-        x-nullable: true
-        default: 0
+        type: string
     schema:
       $ref: '#/definitions/error'
   NotAcceptable:
@@ -5830,9 +5828,7 @@ responses:
     headers:
       Configuration-Version:
         description: Configuration file version
-        type: integer
-        x-nullable: true
-        default: 0
+        type: string
     schema:
       $ref: '#/definitions/error'
   NotFound:
@@ -5840,9 +5836,7 @@ responses:
     headers:
       Configuration-Version:
         description: Configuration file version
-        type: integer
-        x-nullable: true
-        default: 0
+        type: string
     schema:
       $ref: '#/definitions/error'
   AlreadyExists:
@@ -5850,9 +5844,7 @@ responses:
     headers:
       Configuration-Version:
         description: Configuration file version
-        type: integer
-        x-nullable: true
-        default: 0
+        type: string
     schema:
       $ref: '#/definitions/error'
   DefaultError:
@@ -5860,9 +5852,7 @@ responses:
     headers:
       Configuration-Version:
         description: Configuration file version
-        type: integer
-        x-nullable: true
-        default: 0
+        type: string
     schema:
       $ref: '#/definitions/error'
 parameters:
@@ -6377,8 +6367,7 @@ paths:
             headers:
               Configuration-Version:
                 description: Configuration file version
-                type: integer
-                x-nullable: false
+                type: string
             schema:
               properties:
                 _version:
@@ -6472,8 +6461,7 @@ paths:
             headers:
               Configuration-Version:
                 description: Configuration file version
-                type: integer
-                x-nullable: false
+                type: string
             schema:
               properties:
                 _version:
@@ -6948,8 +6936,7 @@ paths:
             headers:
               Configuration-Version:
                 description: Configuration file version
-                type: integer
-                x-nullable: false
+                type: string
             schema:
               properties:
                 _version:
@@ -7006,8 +6993,7 @@ paths:
             headers:
               Configuration-Version:
                 description: Configuration file version
-                type: integer
-                x-nullable: false
+                type: string
             schema:
               properties:
                 _version:
@@ -7064,8 +7050,7 @@ paths:
             headers:
               Configuration-Version:
                 description: Configuration file version
-                type: integer
-                x-nullable: false
+                type: string
             schema:
               properties:
                 _version:
@@ -7159,8 +7144,7 @@ paths:
             headers:
               Configuration-Version:
                 description: Configuration file version
-                type: integer
-                x-nullable: false
+                type: string
             schema:
               properties:
                 _version:
@@ -7226,8 +7210,7 @@ paths:
             headers:
               Configuration-Version:
                 description: Configuration file version
-                type: integer
-                x-nullable: false
+                type: string
             schema:
               properties:
                 _version:
@@ -7321,8 +7304,7 @@ paths:
             headers:
               Configuration-Version:
                 description: Configuration file version
-                type: integer
-                x-nullable: false
+                type: string
             schema:
               properties:
                 _version:
@@ -7355,8 +7337,7 @@ paths:
             headers:
               Configuration-Version:
                 description: Configuration file version
-                type: integer
-                x-nullable: false
+                type: string
             schema:
               properties:
                 _version:
@@ -7468,8 +7449,7 @@ paths:
             headers:
               Configuration-Version:
                 description: Configuration file version
-                type: integer
-                x-nullable: false
+                type: string
             schema:
               properties:
                 _version:
@@ -7541,8 +7521,7 @@ paths:
             headers:
               Configuration-Version:
                 description: Configuration file version
-                type: integer
-                x-nullable: false
+                type: string
             schema:
               properties:
                 _version:
@@ -7636,8 +7615,7 @@ paths:
             headers:
               Configuration-Version:
                 description: Configuration file version
-                type: integer
-                x-nullable: false
+                type: string
             schema:
               properties:
                 _version:
@@ -7708,8 +7686,7 @@ paths:
             headers:
               Configuration-Version:
                 description: Configuration file version
-                type: integer
-                x-nullable: false
+                type: string
             schema:
               properties:
                 _version:
@@ -7818,8 +7795,7 @@ paths:
             headers:
               Configuration-Version:
                 description: Configuration file version
-                type: integer
-                x-nullable: false
+                type: string
             schema:
               properties:
                 _version:
@@ -7895,8 +7871,7 @@ paths:
             headers:
               Configuration-Version:
                 description: Configuration file version
-                type: integer
-                x-nullable: false
+                type: string
             schema:
               properties:
                 _version:
@@ -8005,8 +7980,7 @@ paths:
             headers:
               Configuration-Version:
                 description: Configuration file version
-                type: integer
-                x-nullable: false
+                type: string
             schema:
               properties:
                 _version:
@@ -8090,8 +8064,7 @@ paths:
             headers:
               Configuration-Version:
                 description: Configuration file version
-                type: integer
-                x-nullable: false
+                type: string
             schema:
               properties:
                 _version:
@@ -8227,8 +8200,7 @@ paths:
             headers:
               Configuration-Version:
                 description: Configuration file version
-                type: integer
-                x-nullable: false
+                type: string
             schema:
               properties:
                 _version:
@@ -8321,8 +8293,7 @@ paths:
             headers:
               Configuration-Version:
                 description: Configuration file version
-                type: integer
-                x-nullable: false
+                type: string
             schema:
               properties:
                 _version:
@@ -8458,8 +8429,7 @@ paths:
             headers:
               Configuration-Version:
                 description: Configuration file version
-                type: integer
-                x-nullable: false
+                type: string
             schema:
               properties:
                 _version:
@@ -8553,8 +8523,7 @@ paths:
             headers:
               Configuration-Version:
                 description: Configuration file version
-                type: integer
-                x-nullable: false
+                type: string
             schema:
               properties:
                 _version:
@@ -8690,8 +8659,7 @@ paths:
             headers:
               Configuration-Version:
                 description: Configuration file version
-                type: integer
-                x-nullable: false
+                type: string
             schema:
               properties:
                 _version:
@@ -8776,8 +8744,7 @@ paths:
             headers:
               Configuration-Version:
                 description: Configuration file version
-                type: integer
-                x-nullable: false
+                type: string
             schema:
               properties:
                 _version:
@@ -8889,8 +8856,7 @@ paths:
             headers:
               Configuration-Version:
                 description: Configuration file version
-                type: integer
-                x-nullable: false
+                type: string
             schema:
               properties:
                 _version:
@@ -8968,8 +8934,7 @@ paths:
             headers:
               Configuration-Version:
                 description: Configuration file version
-                type: integer
-                x-nullable: false
+                type: string
             schema:
               properties:
                 _version:
@@ -9081,8 +9046,7 @@ paths:
             headers:
               Configuration-Version:
                 description: Configuration file version
-                type: integer
-                x-nullable: false
+                type: string
             schema:
               properties:
                 _version:
@@ -9160,8 +9124,7 @@ paths:
             headers:
               Configuration-Version:
                 description: Configuration file version
-                type: integer
-                x-nullable: false
+                type: string
             schema:
               properties:
                 _version:
@@ -9273,8 +9236,7 @@ paths:
             headers:
               Configuration-Version:
                 description: Configuration file version
-                type: integer
-                x-nullable: false
+                type: string
             schema:
               properties:
                 _version:
@@ -9359,8 +9321,7 @@ paths:
             headers:
               Configuration-Version:
                 description: Configuration file version
-                type: integer
-                x-nullable: false
+                type: string
             schema:
               properties:
                 _version:
@@ -9493,8 +9454,7 @@ paths:
             headers:
               Configuration-Version:
                 description: Configuration file version
-                type: integer
-                x-nullable: false
+                type: string
             schema:
               properties:
                 _version:
@@ -9578,8 +9538,7 @@ paths:
             headers:
               Configuration-Version:
                 description: Configuration file version
-                type: integer
-                x-nullable: false
+                type: string
             schema:
               properties:
                 _version:
@@ -9690,8 +9649,7 @@ paths:
             headers:
               Configuration-Version:
                 description: Configuration file version
-                type: integer
-                x-nullable: false
+                type: string
             schema:
               properties:
                 _version:
@@ -9776,8 +9734,7 @@ paths:
             headers:
               Configuration-Version:
                 description: Configuration file version
-                type: integer
-                x-nullable: false
+                type: string
             schema:
               properties:
                 _version:
@@ -9912,8 +9869,7 @@ paths:
             headers:
               Configuration-Version:
                 description: Configuration file version
-                type: integer
-                x-nullable: false
+                type: string
             schema:
               properties:
                 _version:
@@ -10010,8 +9966,7 @@ paths:
             headers:
               Configuration-Version:
                 description: Configuration file version
-                type: integer
-                x-nullable: false
+                type: string
             schema:
               properties:
                 _version:
@@ -10144,8 +10099,7 @@ paths:
             headers:
               Configuration-Version:
                 description: Configuration file version
-                type: integer
-                x-nullable: false
+                type: string
             schema:
               properties:
                 _version:
@@ -10224,8 +10178,7 @@ paths:
             headers:
               Configuration-Version:
                 description: Configuration file version
-                type: integer
-                x-nullable: false
+                type: string
             schema:
               properties:
                 _version:
@@ -10319,8 +10272,7 @@ paths:
             headers:
               Configuration-Version:
                 description: Configuration file version
-                type: integer
-                x-nullable: false
+                type: string
             schema:
               properties:
                 _version:
@@ -10391,8 +10343,7 @@ paths:
             headers:
               Configuration-Version:
                 description: Configuration file version
-                type: integer
-                x-nullable: false
+                type: string
             schema:
               properties:
                 _version:
@@ -10501,8 +10452,7 @@ paths:
             headers:
               Configuration-Version:
                 description: Configuration file version
-                type: integer
-                x-nullable: false
+                type: string
             schema:
               properties:
                 _version:
@@ -10576,8 +10526,7 @@ paths:
             headers:
               Configuration-Version:
                 description: Configuration file version
-                type: integer
-                x-nullable: false
+                type: string
             schema:
               properties:
                 _version:
@@ -11615,8 +11564,7 @@ paths:
             headers:
               Configuration-Version:
                 description: Spoe configuration file version
-                type: integer
-                x-nullable: false
+                type: string
             schema:
               properties:
                 _version:
@@ -11648,8 +11596,7 @@ paths:
             headers:
               Configuration-Version:
                 description: Spoe configuration file version
-                type: integer
-                x-nullable: false
+                type: string
             schema:
               properties:
                 _version:
@@ -11742,8 +11689,7 @@ paths:
             headers:
               Configuration-Version:
                 description: Spoe configuration file version
-                type: integer
-                x-nullable: false
+                type: string
             schema:
               properties:
                 _version:
@@ -11782,8 +11728,7 @@ paths:
             headers:
               Configuration-Version:
                 description: Spoe configuration file version
-                type: integer
-                x-nullable: false
+                type: string
             schema:
               properties:
                 _version:
@@ -11891,8 +11836,7 @@ paths:
             headers:
               Configuration-Version:
                 description: Spoe configuration file version
-                type: integer
-                x-nullable: false
+                type: string
             schema:
               properties:
                 _version:
@@ -11971,8 +11915,7 @@ paths:
             headers:
               Configuration-Version:
                 description: Spoe configuration file version
-                type: integer
-                x-nullable: false
+                type: string
             schema:
               properties:
                 _version:
@@ -12080,8 +12023,7 @@ paths:
             headers:
               Configuration-Version:
                 description: Spoe configuration file version
-                type: integer
-                x-nullable: false
+                type: string
             schema:
               properties:
                 _version:
@@ -12160,8 +12102,7 @@ paths:
             headers:
               Configuration-Version:
                 description: Spoe configuration file version
-                type: integer
-                x-nullable: false
+                type: string
             schema:
               properties:
                 _version:
@@ -12269,8 +12210,7 @@ paths:
             headers:
               Configuration-Version:
                 description: Spoe configuration file version
-                type: integer
-                x-nullable: false
+                type: string
             schema:
               properties:
                 _version:

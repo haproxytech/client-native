@@ -59,8 +59,7 @@ spoes_one:
         headers:
           Configuration-Version:
             description: Spoe configuration file version
-            type: integer
-            x-nullable: false
+            type: string
         schema:
           type: object
           properties:
@@ -111,8 +110,7 @@ spoe_scopes:
         headers:
           Configuration-Version:
             description: Spoe configuration file version
-            type: integer
-            x-nullable: false
+            type: string
         schema:
           type: object
           properties:
@@ -179,8 +177,7 @@ spoe_scopes_one:
         headers:
           Configuration-Version:
             description: Spoe configuration file version
-            type: integer
-            x-nullable: false
+            type: string
         schema:
           type: object
           properties:
@@ -245,8 +242,7 @@ spoe_agents:
         headers:
           Configuration-Version:
             description: Spoe configuration file version
-            type: integer
-            x-nullable: false
+            type: string
         schema:
           type: object
           properties:
@@ -323,8 +319,7 @@ spoe_agents_one:
         headers:
           Configuration-Version:
             description: Spoe configuration file version
-            type: integer
-            x-nullable: false
+            type: string
         schema:
           type: object
           properties:
@@ -434,8 +429,7 @@ spoe_messages:
         headers:
           Configuration-Version:
             description: Spoe configuration file version
-            type: integer
-            x-nullable: false
+            type: string
         schema:
           type: object
           properties:
@@ -512,8 +506,7 @@ spoe_messages_one:
         headers:
           Configuration-Version:
             description: Spoe configuration file version
-            type: integer
-            x-nullable: false
+            type: string
         schema:
           type: object
           properties:
@@ -623,8 +616,7 @@ spoe_groups:
         headers:
           Configuration-Version:
             description: Spoe configuration file version
-            type: integer
-            x-nullable: false
+            type: string
         schema:
           type: object
           properties:
@@ -701,8 +693,7 @@ spoe_groups_one:
         headers:
           Configuration-Version:
             description: Spoe configuration file version
-            type: integer
-            x-nullable: false
+            type: string
         schema:
           type: object
           properties:

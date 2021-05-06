@@ -14,8 +14,7 @@ sites:
         headers:
           Configuration-Version:
             description: Configuration file version
-            type: integer
-            x-nullable: false
+            type: string
         schema:
           type: object
           required:
@@ -81,8 +80,7 @@ sites_one:
         headers:
           Configuration-Version:
             description: Configuration file version
-            type: integer
-            x-nullable: false
+            type: string
         schema:
           type: object
           properties:
