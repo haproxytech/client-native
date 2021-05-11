@@ -459,7 +459,7 @@ frontend:
     contstats:
       type: string
       enum: [enabled]
-      x-display-name: Continous Statistics
+      x-display-name: Continuous Statistics
     clitcpka:
       type: string
       enum: [enabled, disabled]

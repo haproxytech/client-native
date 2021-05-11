@@ -120,7 +120,7 @@ transactions_one:
         schema:
           $ref: "#/definitions/spoe_transaction"
       '200':
-        description: Transaction succesfully commited
+        description: Transaction successfully committed
         schema:
           $ref: "#/definitions/spoe_transaction"
       '400':

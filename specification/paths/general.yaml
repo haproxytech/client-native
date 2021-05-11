@@ -244,7 +244,7 @@ transactions_one:
         schema:
           $ref: "#/definitions/transaction"
       '200':
-        description: Transaction succesfully commited
+        description: Transaction successfully committed
         schema:
           $ref: "#/definitions/transaction"
       '400':

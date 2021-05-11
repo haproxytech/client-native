@@ -144,7 +144,7 @@ func TestCreateEditDeleteNameserver(t *testing.T) {
 
 	if !reflect.DeepEqual(e, l) {
 		fmt.Printf("Edited nameserver: %v\n", e)
-		fmt.Printf("Given lsitener: %v\n", l)
+		fmt.Printf("Given nameserver: %v\n", l)
 		t.Error("Edited nameserver not equal to given nameserver")
 	}
 

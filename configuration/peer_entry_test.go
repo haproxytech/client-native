@@ -149,7 +149,7 @@ func TestCreateEditDeletePeerEntry(t *testing.T) {
 
 	if !reflect.DeepEqual(e, l) {
 		fmt.Printf("Edited peerEntry: %v\n", e)
-		fmt.Printf("Given lsitener: %v\n", l)
+		fmt.Printf("Given peerEntry: %v\n", l)
 		t.Error("Edited peerEntry not equal to given peerEntry")
 	}
 

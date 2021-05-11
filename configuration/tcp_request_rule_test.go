@@ -139,7 +139,7 @@ func TestGetTCPRequestRules(t *testing.T) { //nolint:gocognit,gocyclo
 		t.Error(err.Error())
 	}
 	if len(tRules) > 0 {
-		t.Errorf("%v TCP Request Ruless returned, expected 0", len(tRules))
+		t.Errorf("%v TCP Request Rules returned, expected 0", len(tRules))
 	}
 }
 

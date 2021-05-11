@@ -154,7 +154,7 @@ func TestPushDefaults(t *testing.T) {
 		},
 		ExternalCheck:        "",
 		ExternalCheckPath:    "/bin",
-		ExternalCheckCommand: "/bin/flase",
+		ExternalCheckCommand: "/bin/false",
 		Logasap:              "disabled",
 		Allbackups:           "enabled",
 	}

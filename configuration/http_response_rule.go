@@ -51,7 +51,7 @@ func (c *Client) GetHTTPResponseRules(parentType, parentName string, transaction
 	return v, httpRules, nil
 }
 
-// GetHTTPResponseRule returns configuration version and a responseed http response rule
+// GetHTTPResponseRule returns configuration version and a response http response rule
 // in the specified parent. Returns error on fail or if http response rule does not exist.
 func (c *Client) GetHTTPResponseRule(id int64, parentType, parentName string, transactionID string) (int64, *models.HTTPResponseRule, error) {
 	p, err := c.GetParser(transactionID)

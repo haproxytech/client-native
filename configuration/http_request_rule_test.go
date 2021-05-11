@@ -463,7 +463,7 @@ func TestGetHTTPRequestRules(t *testing.T) { //nolint:gocognit,gocyclo
 		t.Error(err.Error())
 	}
 	if len(hRules) > 2 {
-		t.Errorf("%v HTTP Request Ruless returned, expected 2", len(hRules))
+		t.Errorf("%v HTTP Request Rules returned, expected 2", len(hRules))
 	}
 
 	for _, r := range hRules {
@@ -492,7 +492,7 @@ func TestGetHTTPRequestRules(t *testing.T) { //nolint:gocognit,gocyclo
 		t.Error(err.Error())
 	}
 	if len(hRules) > 0 {
-		t.Errorf("%v HTTP Request Ruless returned, expected 0", len(hRules))
+		t.Errorf("%v HTTP Request Rules returned, expected 0", len(hRules))
 	}
 }
 

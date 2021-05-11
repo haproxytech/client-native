@@ -160,7 +160,7 @@ func TestCreateEditDeleteBind(t *testing.T) {
 
 	if !reflect.DeepEqual(bind, l) {
 		fmt.Printf("Edited bind: %v\n", bind)
-		fmt.Printf("Given lsitener: %v\n", l)
+		fmt.Printf("Given bind: %v\n", l)
 		t.Error("Edited bind not equal to given bind")
 	}
 

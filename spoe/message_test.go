@@ -169,7 +169,7 @@ func TestSingleSpoe_CreateMessage(t *testing.T) {
 		wantErr bool
 	}{
 		{
-			name: "Shoud create a new message section",
+			name: "Should create a new message section",
 			params: Params{
 				SpoeDir:           dir,
 				TransactionDir:    transactionDir,

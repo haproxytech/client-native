@@ -134,7 +134,7 @@ func TestCreateEditDeleteResolver(t *testing.T) {
 	}
 	_, _, err = client.GetResolver("created_resolver", "")
 	if err == nil {
-		t.Error("DeleteResolver failed, resolver creatd_resolver still exists")
+		t.Error("DeleteResolver failed, resolver created_resolver still exists")
 	}
 
 	err = client.DeleteResolver("doesnotexist", "", version)

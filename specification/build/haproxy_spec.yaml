@@ -522,7 +522,7 @@ definitions:
           enum:
           - enabled
           type: string
-          x-display-name: Continous Statistics
+          x-display-name: Continuous Statistics
         default_backend:
           pattern: ^[A-Za-z0-9-_.:]+$
           type: string
@@ -6689,7 +6689,7 @@ paths:
         - $ref: '#/parameters/force_reload'
         responses:
           "200":
-            description: Transaction succesfully commited
+            description: Transaction successfully committed
             schema:
               $ref: '#/definitions/transaction'
           "202":
@@ -6850,7 +6850,7 @@ paths:
         - $ref: '#/parameters/force_reload'
         responses:
           "200":
-            description: Transaction succesfully commited
+            description: Transaction successfully committed
             schema:
               $ref: '#/definitions/spoe_transaction'
           "202":
