@@ -12,6 +12,10 @@ global:
       type: string
       pattern: '^[^\s]+$'
       x-display-name: Group
+    hard_stop_after:
+      type: integer
+      x-nullable: true
+      x-display-name: Hard Stop After
     user:
       type: string
       pattern: '^[^\s]+$'

@@ -82,6 +82,13 @@ func ParseGlobalSection(p *parser.Parser) (*models.Global, error) { //nolint:goc
 		chroot = chrootParser.Value
 	}
 
+	data, err = p.Get(parser.Global, parser.GlobalSectionName, "hard-stop-after")
+	var hardStop *int64
+	if err == nil {
+		hardStopParser := data.(*types.StringC)
+		hardStop = misc.ParseTimeout(hardStopParser.Value)
+	}
+
 	data, err = p.Get(parser.Global, parser.GlobalSectionName, "user")
 	user := ""
 	if err == nil {
@@ -271,6 +278,7 @@ func ParseGlobalSection(p *parser.Parser) (*models.Global, error) { //nolint:goc
 		User:                         user,
 		Group:                        group,
 		Chroot:                       chroot,
+		HardStopAfter:                hardStop,
 		Daemon:                       daemon,
 		MasterWorker:                 masterWorker,
 		Maxconn:                      mConn,
@@ -304,6 +312,15 @@ func SerializeGlobalSection(p *parser.Parser, data *models.Global) error { //nol
 		pChroot = nil
 	}
 	if err := p.Set(parser.Global, parser.GlobalSectionName, "chroot", pChroot); err != nil {
+		return err
+	}
+	var pHardStop *types.StringC
+	if data.HardStopAfter != nil {
+		pHardStop = &types.StringC{
+			Value: strconv.FormatInt(*data.HardStopAfter, 10),
+		}
+	}
+	if err := p.Set(parser.Global, parser.GlobalSectionName, "hard-stop-after", pHardStop); err != nil {
 		return err
 	}
 	pUser := &types.StringC{

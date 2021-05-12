@@ -58,6 +58,9 @@ type Global struct {
 	// Pattern: ^[^\s]+$
 	Group string `json:"group,omitempty"`
 
+	// hard stop after
+	HardStopAfter *int64 `json:"hard_stop_after,omitempty"`
+
 	// log send hostname
 	LogSendHostname *GlobalLogSendHostname `json:"log_send_hostname,omitempty"`
 

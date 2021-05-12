@@ -182,6 +182,10 @@ definitions:
           pattern: ^[^\s]+$
           type: string
           x-display-name: Group
+        hard_stop_after:
+          type: integer
+          x-display-name: Hard Stop After
+          x-nullable: true
         log_send_hostname:
           properties:
             enabled:
