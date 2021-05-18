@@ -82,6 +82,10 @@ type Global struct {
 	// pidfile
 	Pidfile string `json:"pidfile,omitempty"`
 
+	// server state base
+	// Pattern: ^[^\s]+$
+	ServerStateBase string `json:"server_state_base,omitempty"`
+
 	// ssl default bind ciphers
 	SslDefaultBindCiphers string `json:"ssl_default_bind_ciphers,omitempty"`
 
@@ -144,6 +148,10 @@ func (m *Global) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateLuaLoads(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateServerStateBase(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -318,6 +326,19 @@ func (m *Global) validateLuaLoads(formats strfmt.Registry) error {
 			}
 		}
 
+	}
+
+	return nil
+}
+
+func (m *Global) validateServerStateBase(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.ServerStateBase) { // not required
+		return nil
+	}
+
+	if err := validate.Pattern("server_state_base", "body", string(m.ServerStateBase), `^[^\s]+$`); err != nil {
+		return err
 	}
 
 	return nil

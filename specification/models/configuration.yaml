@@ -41,6 +41,10 @@ global:
     maxconn:
       type: integer
       x-display-name: Max Connections
+    server_state_base:
+      type: string
+      pattern: '^[^\s]+$'
+      x-display-name: Server State Base
     tune_ssl_default_dh_param:
       type: integer
       x-display-name: SSL Default DH Parameter Size

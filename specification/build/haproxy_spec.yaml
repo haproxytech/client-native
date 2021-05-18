@@ -254,6 +254,10 @@ definitions:
           type: array
           x-display-name: Runtime APIs
           x-go-name: RuntimeAPIs
+        server_state_base:
+          pattern: ^[^\s]+$
+          type: string
+          x-display-name: Server State Base
         ssl_default_bind_ciphers:
           type: string
           x-display-name: SSL Default Bind Ciphers
