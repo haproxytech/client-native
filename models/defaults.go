@@ -65,6 +65,9 @@ type Defaults struct {
 	// clflog
 	Clflog bool `json:"clflog,omitempty"`
 
+	// client fin timeout
+	ClientFinTimeout *int64 `json:"client_fin_timeout,omitempty"`
+
 	// client timeout
 	ClientTimeout *int64 `json:"client_timeout,omitempty"`
 
@@ -185,6 +188,9 @@ type Defaults struct {
 
 	// retries
 	Retries *int64 `json:"retries,omitempty"`
+
+	// server fin timeout
+	ServerFinTimeout *int64 `json:"server_fin_timeout,omitempty"`
 
 	// server timeout
 	ServerTimeout *int64 `json:"server_timeout,omitempty"`

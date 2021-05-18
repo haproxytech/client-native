@@ -230,6 +230,9 @@ defaults:
     client_timeout:
       type: integer
       x-nullable: true
+    client_fin_timeout:
+      type: integer
+      x-nullable: true
     http_request_timeout:
       type: integer
       x-nullable: true
@@ -240,6 +243,9 @@ defaults:
       type: string
       enum: [aggressive, always, never, safe]
     server_timeout:
+      type: integer
+      x-nullable: true
+    server_fin_timeout:
       type: integer
       x-nullable: true
     queue_timeout:
