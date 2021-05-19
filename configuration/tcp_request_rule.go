@@ -240,9 +240,9 @@ func ParseTCPRequestRule(f types.TCPType) (rule *models.TCPRequestRule, err erro
 		case *tcp_actions.Reject:
 			rule.Action = models.TCPRequestRuleActionReject
 		case *tcp_actions.ExpectProxy:
-			rule.Action = "expect-proxy layer4"
+			rule.Action = models.TCPRequestRuleActionExpectProxy
 		case *tcp_actions.ExpectNetscalerCip:
-			rule.Action = "expect-netscaler-cip layer4"
+			rule.Action = models.TCPRequestRuleActionExpectNetscalerCip
 		case *tcp_actions.Capture:
 			rule.Action = models.TCPRequestRuleActionCapture
 			rule.Expr = a.Expr.String()
@@ -450,13 +450,13 @@ func SerializeTCPRequestRule(f models.TCPRequestRule) (rule types.TCPType, err e
 				Cond:     f.Cond,
 				CondTest: f.CondTest,
 			}, nil
-		case "expect-proxy layer4":
+		case models.TCPRequestRuleActionExpectProxy:
 			return &tcp_types.Connection{
 				Action:   &tcp_actions.ExpectProxy{},
 				Cond:     f.Cond,
 				CondTest: f.CondTest,
 			}, nil
-		case "expect-netscaler-cip layer4":
+		case models.TCPRequestRuleActionExpectNetscalerCip:
 			return &tcp_types.Connection{
 				Action:   &tcp_actions.ExpectNetscalerCip{},
 				Cond:     f.Cond,
