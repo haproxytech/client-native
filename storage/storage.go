@@ -114,6 +114,14 @@ func (s *storage) Get(name string) (string, error) {
 	return f, nil
 }
 
+func (s *storage) GetContents(name string) (string, error) {
+	f, err := getFile(s.dirname, name)
+	if err != nil {
+		return "", err
+	}
+	return readFile(f)
+}
+
 func (s *storage) Delete(name string) error {
 	f, err := s.Get(name)
 	if err != nil {
