@@ -127,7 +127,7 @@ func (c *Client) Init(options ClientParams) error {
 
 	// #nosec G204
 	if err := exec.Command(options.Haproxy, "-v").Run(); err != nil {
-		return NewConfError(ErrCannotFindHAProxy, fmt.Sprintf("path to HAProxy binary not valid: %s", c.Haproxy))
+		return NewConfError(ErrCannotFindHAProxy, fmt.Sprintf("path to HAProxy binary not valid: %s", options.Haproxy))
 	}
 
 	c.ClientParams = options
