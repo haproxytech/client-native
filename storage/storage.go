@@ -80,23 +80,23 @@ func (s *storage) GetAll() ([]string, error) {
 	if err != nil {
 		return nil, err
 	}
-	if len(fis) == 0 {
-		return nil, conf.NewConfError(conf.ErrObjectDoesNotExist, fmt.Sprintf("no files in dir: %s", s.dirname))
-	}
 	files := []string{}
 	for _, fi := range fis {
 		file := filepath.Join(s.dirname, fi.Name())
 		switch s.fileType { //nolint:exhaustive
 		case SSLType:
+			noErrors := true
 			raw, err := readFile(file)
 			if err != nil {
-				return nil, err
+				noErrors = noErrors && false
 			}
 			err = s.validatePEM([]byte(raw))
 			if err != nil {
-				return nil, err
+				noErrors = noErrors && false
 			}
-			files = append(files, file)
+			if noErrors {
+				files = append(files, file)
+			}
 		case MapsType:
 			files = append(files, file)
 		}
