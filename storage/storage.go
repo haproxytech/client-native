@@ -48,7 +48,6 @@ const (
 type Storage interface {
 	GetAll() ([]string, error)
 	Get(name string) (string, error)
-	GetContents(name string) (string, error)
 	Delete(name string) error
 	Replace(name string, config string) (string, error)
 	Create(name string, contents io.ReadCloser) (string, error)
