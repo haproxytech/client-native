@@ -103,8 +103,8 @@ key2 val2`
 		{
 			name:    "Should return an error if no files in directory",
 			dirname: dirWithoutFile,
-			want:    nil,
-			wantErr: true,
+			want:    []string{},
+			wantErr: false,
 		},
 		{
 			name:    "Should return an error when directory not specified",
