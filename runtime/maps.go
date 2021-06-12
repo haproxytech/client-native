@@ -115,9 +115,29 @@ func (s *SingleRuntime) ClearMap(name string) error {
 	return nil
 }
 
+// ClearMapVersioned removes all map entries from the map file.
+func (s *SingleRuntime) ClearMapVersioned(name, version string) error {
+	cmd := fmt.Sprintf("clear map @%s %s", version, name)
+	err := s.Execute(cmd)
+	if err != nil {
+		return fmt.Errorf("%s %w", err.Error(), native_errors.ErrNotFound) //nolint:errorlint
+	}
+	return nil
+}
+
 // ShowMapEntries returns one map runtime entries
 func (s *SingleRuntime) ShowMapEntries(name string) (models.MapEntries, error) {
 	cmd := fmt.Sprintf("show map %s", name)
+	response, err := s.ExecuteWithResponse(cmd)
+	if err != nil {
+		return nil, fmt.Errorf("%s %w", err.Error(), native_errors.ErrNotFound) //nolint:errorlint
+	}
+	return ParseMapEntries(response, true), nil
+}
+
+// ShowMapEntriesVersioned returns one map runtime entries
+func (s *SingleRuntime) ShowMapEntriesVersioned(name, version string) (models.MapEntries, error) {
+	cmd := fmt.Sprintf("show map @%s %s", version, name)
 	response, err := s.ExecuteWithResponse(cmd)
 	if err != nil {
 		return nil, fmt.Errorf("%s %w", err.Error(), native_errors.ErrNotFound) //nolint:errorlint
@@ -188,6 +208,20 @@ func (s *SingleRuntime) AddMapEntry(name, key, value string) error {
 		return fmt.Errorf("%w", native_errors.ErrAlreadyExists)
 	}
 	cmd := fmt.Sprintf("add map %s %s %s", name, key, value)
+	err := s.Execute(cmd)
+	if err != nil {
+		return fmt.Errorf("%s %w", err.Error(), native_errors.ErrGeneral) //nolint:errorlint
+	}
+	return nil
+}
+
+// AddMapEntryVersioned adds an entry into the map file
+func (s *SingleRuntime) AddMapEntryVersioned(version, name, key, value string) error {
+	m, _ := s.GetMapEntry(name, key)
+	if m != nil {
+		return fmt.Errorf("%w", native_errors.ErrAlreadyExists)
+	}
+	cmd := fmt.Sprintf("add map @%s %s %s %s", version, name, key, value)
 	err := s.Execute(cmd)
 	if err != nil {
 		return fmt.Errorf("%s %w", err.Error(), native_errors.ErrGeneral) //nolint:errorlint

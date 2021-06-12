@@ -540,6 +540,34 @@ func (c *Client) ClearMap(name string, forceDelete bool) error {
 	return nil
 }
 
+// ClearMapVersioned removes all map entries from the map file. If forceDelete is true, deletes file from disk
+func (c *Client) ClearMapVersioned(name, version string, forceDelete bool) error {
+	name, err := c.GetMapsPath(name)
+	if err != nil {
+		return err
+	}
+	if forceDelete {
+		if err := os.Remove(name); err != nil {
+			if os.IsNotExist(err) {
+				return native_errors.ErrNotFound
+			}
+			return fmt.Errorf(strings.Join([]string{err.Error(), native_errors.ErrNotFound.Error()}, " "))
+		}
+	}
+
+	var lastErr error
+	for _, runtime := range c.runtimes {
+		err := runtime.ClearMapVersioned(name, version)
+		if err != nil {
+			lastErr = err
+		}
+	}
+	if lastErr != nil {
+		return lastErr
+	}
+	return nil
+}
+
 // ShowMapEntries list all map entries by map file name
 func (c *Client) ShowMapEntries(name string) (models.MapEntries, error) {
 	name, err := c.GetMapsPath(name)
@@ -550,6 +578,44 @@ func (c *Client) ShowMapEntries(name string) (models.MapEntries, error) {
 	var lastErr error
 	for _, runtime := range c.runtimes {
 		m, err := runtime.ShowMapEntries(name)
+		if err != nil {
+			lastErr = err
+		}
+
+		if len(entries) == 0 {
+			entries = append(entries, m...)
+		} else {
+			// merge unique map entries from all processes
+			for i := 0; i < len(m); i++ {
+				exists := false
+				for j := 0; j < len(entries); j++ {
+					if m[i].Key == entries[j].Key {
+						exists = true
+						break
+					}
+				}
+				if !exists {
+					entries = append(entries, m[i])
+				}
+			}
+		}
+	}
+	if len(entries) > 0 {
+		return entries, nil
+	}
+	return nil, lastErr
+}
+
+// ShowMapEntriesVersioned list all map entries by map file name
+func (c *Client) ShowMapEntriesVersioned(name, version string) (models.MapEntries, error) {
+	name, err := c.GetMapsPath(name)
+	if err != nil {
+		return nil, err
+	}
+	entries := models.MapEntries{}
+	var lastErr error
+	for _, runtime := range c.runtimes {
+		m, err := runtime.ShowMapEntriesVersioned(name, version)
 		if err != nil {
 			lastErr = err
 		}
@@ -691,6 +757,25 @@ func (c *Client) AddMapEntry(name, key, value string) error {
 	var lastErr error
 	for _, runtime := range c.runtimes {
 		err := runtime.AddMapEntry(name, key, value)
+		if err != nil {
+			lastErr = err
+		}
+	}
+	if lastErr != nil {
+		return lastErr
+	}
+	return nil
+}
+
+// AddMapEntry adds an entry into the map file
+func (c *Client) AddMapEntryVersioned(version, name, key, value string) error {
+	name, err := c.GetMapsPath(name)
+	if err != nil {
+		return err
+	}
+	var lastErr error
+	for _, runtime := range c.runtimes {
+		err := runtime.AddMapEntryVersioned(version, name, key, value)
 		if err != nil {
 			lastErr = err
 		}
