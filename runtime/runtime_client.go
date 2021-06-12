@@ -179,6 +179,10 @@ func (c *Client) GetVersion() (*HAProxyVersion, error) {
 	return nil, fmt.Errorf("version data not found")
 }
 
+func (c *Client) IsVersionBiggerOrEqual(minimumVersion HAProxyVersion) bool {
+	return c.haproxyVersion.IsBiggerOrEqual(minimumVersion)
+}
+
 // GetMapsPath returns runtime map file path or map id
 func (c *Client) GetMapsPath(name string) (string, error) {
 	name = misc.SanitizeFilename(name)
