@@ -46,6 +46,11 @@ type ClientParams struct {
 const (
 	// DefaultSocketPath sane default for runtime API socket path
 	DefaultSocketPath string = "/var/run/haproxy.sock"
+	// Event though tune.buffsize default value is 16384,
+	// it can be changed at build time. Because of that, it is more sensible
+	// to have a smaller value, since it is not possible
+	// to check this value at runtime.
+	maxBufSize = 8192
 )
 
 // DefaultClient return runtime Client with sane defaults
@@ -575,6 +580,9 @@ func (c *Client) ShowMapEntries(name string) (models.MapEntries, error) {
 
 // AddMapPayload adds multiple entries to the map file
 func (c *Client) AddMapPayload(name, payload string) error {
+	if len(payload) > maxBufSize {
+		return fmt.Errorf("payload exceeds max buffer size of %dB", maxBufSize)
+	}
 	name, err := c.GetMapsPath(name)
 	if err != nil {
 		return err
@@ -592,6 +600,88 @@ func (c *Client) AddMapPayload(name, payload string) error {
 	return nil
 }
 
+func parseMapPayload(entries models.MapEntries, maxBufSize int) (exceededSize bool, payload []string) {
+	prevKV := ""
+	currKV := ""
+	data := ""
+	for _, d := range entries {
+		if prevKV != "" {
+			data += prevKV
+			prevKV = ""
+		}
+		kv := d.Key + " " + d.Value + "\n"
+		data += kv
+		switch {
+		case len(data) < maxBufSize:
+			currKV = data
+		case len(data) == maxBufSize:
+			payload = append(payload, data)
+			data = ""
+		case len(data) > maxBufSize:
+			exceededSize = true
+			if currKV == "" {
+				currKV = kv
+			}
+			payload = append(payload, currKV)
+			prevKV = d.Key + " " + d.Value + "\n"
+			data = ""
+			currKV = ""
+		}
+	}
+	if len(currKV) > 0 {
+		payload = append(payload, currKV)
+	}
+	return exceededSize, payload
+}
+
+// AddMapPayloadVersioned adds multiple entries to the map file atomically (using `prepare`, `add` and `commit` commands)
+// if HAProxy version is 2.4 or higher. Otherwise performs `add map payload` command
+func (c *Client) AddMapPayloadVersioned(name string, entries models.MapEntries) error {
+	name, err := c.GetMapsPath(name)
+	if err != nil {
+		return err
+	}
+	canAtomicUpdate := false
+	v := HAProxyVersion{Major: 2, Minor: 4}
+	if c.IsVersionBiggerOrEqual(v) {
+		canAtomicUpdate = true
+	}
+	exceededSize, payload := parseMapPayload(entries, maxBufSize)
+	var lastErr error
+	for _, runtime := range c.runtimes {
+		if canAtomicUpdate && exceededSize {
+			var version string
+			version, err = runtime.PrepareMap(name)
+			if err != nil {
+				lastErr = err
+				continue
+			}
+			for i := 0; i < len(payload); i++ {
+				err = runtime.AddMapPayloadVersioned(version, name, payload[i])
+				if err != nil {
+					lastErr = err
+					continue
+				}
+			}
+			err = runtime.CommitMap(version, name)
+			if err != nil {
+				lastErr = err
+				continue
+			}
+		} else {
+			err = runtime.AddMapPayload(name, payload[0])
+			if err != nil {
+				lastErr = err
+				continue
+			}
+		}
+	}
+	if lastErr != nil {
+		return lastErr
+	}
+	return nil
+}
+
 // AddMapEntry adds an entry into the map file
 func (c *Client) AddMapEntry(name, key, value string) error {
 	name, err := c.GetMapsPath(name)
@@ -601,6 +691,42 @@ func (c *Client) AddMapEntry(name, key, value string) error {
 	var lastErr error
 	for _, runtime := range c.runtimes {
 		err := runtime.AddMapEntry(name, key, value)
+		if err != nil {
+			lastErr = err
+		}
+	}
+	if lastErr != nil {
+		return lastErr
+	}
+	return nil
+}
+
+func (c *Client) PrepareMap(name string) (version string, err error) {
+	name, err = c.GetMapsPath(name)
+	if err != nil {
+		return "", err
+	}
+	var lastErr error
+	for _, runtime := range c.runtimes {
+		version, err = runtime.PrepareMap(name)
+		if err != nil {
+			lastErr = err
+		}
+	}
+	if lastErr != nil {
+		return "", lastErr
+	}
+	return version, nil
+}
+
+func (c *Client) CommitMap(version, name string) error {
+	name, err := c.GetMapsPath(name)
+	if err != nil {
+		return err
+	}
+	var lastErr error
+	for _, runtime := range c.runtimes {
+		err = runtime.CommitMap(version, name)
 		if err != nil {
 			lastErr = err
 		}

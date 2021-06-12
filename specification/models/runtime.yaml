@@ -374,6 +374,9 @@ map_entry:
       type: string
     value:
       type: string
+map_entries:
+  type: array
+  items: '#/definitions/map_entry'
 ssl_certificate:
   title: SSL File
   description: A file containing one or more SSL/TLS certificates and keys

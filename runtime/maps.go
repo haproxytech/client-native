@@ -7,6 +7,7 @@ import (
 	"io"
 	"os"
 	"path/filepath"
+	"strconv"
 	"strings"
 
 	"github.com/google/renameio"
@@ -202,6 +203,45 @@ func (s *SingleRuntime) AddMapPayload(name, payload string) error {
 		payload = "<<\n" + payload + "\n"
 	}
 	cmd := fmt.Sprintf("add map %s %s", name, payload)
+	err := s.Execute(cmd)
+	if err != nil {
+		return fmt.Errorf("%s %w", err.Error(), native_errors.ErrGeneral) //nolint:errorlint
+	}
+	return nil
+}
+
+func (s *SingleRuntime) PrepareMap(name string) (version string, err error) {
+	cmd := fmt.Sprintf("prepare map %s", name)
+	response, err := s.ExecuteWithResponse(cmd)
+	if err != nil {
+		return "", fmt.Errorf("%s %w", err.Error(), native_errors.ErrGeneral) //nolint:errorlint
+	}
+	parts := strings.Split(response, ":")
+	if len(parts) < 3 {
+		return "", fmt.Errorf("%s %w", err.Error(), native_errors.ErrGeneral) //nolint:errorlint
+	}
+	version = strings.TrimSpace(parts[2])
+	if _, err = strconv.ParseInt(version, 10, 64); err == nil {
+		return version, nil
+	}
+	return "", fmt.Errorf("%s %w", err.Error(), native_errors.ErrGeneral) //nolint:errorlint
+}
+
+func (s *SingleRuntime) AddMapPayloadVersioned(version, name, payload string) error {
+	prefix := "<<\n"
+	if len(payload) < len(prefix) || payload[0:len(prefix)] != prefix {
+		payload = "<<\n" + payload + "\n"
+	}
+	cmd := fmt.Sprintf("add map @%s %s %s", version, name, payload)
+	err := s.Execute(cmd)
+	if err != nil {
+		return fmt.Errorf("%s %w", err.Error(), native_errors.ErrGeneral) //nolint:errorlint
+	}
+	return nil
+}
+
+func (s *SingleRuntime) CommitMap(version, name string) error {
+	cmd := fmt.Sprintf("commit map @%s %s", version, name)
 	err := s.Execute(cmd)
 	if err != nil {
 		return fmt.Errorf("%s %w", err.Error(), native_errors.ErrGeneral) //nolint:errorlint

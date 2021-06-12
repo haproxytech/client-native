@@ -404,6 +404,37 @@ maps_one:
         $ref: '#/responses/NotFound'
       'default':
         $ref: '#/responses/DefaultError'
+  put: # add map <map> <payload>
+    summary: Add a new map payload
+    description: Adds a new map payload.
+    operationId: addPayloadRuntimeMap
+    parameters:
+      - name: name
+        in: path
+        description: Map file name
+        required: true
+        type: string
+      - name: force_sync
+        in: query
+        description: If true, immediately syncs changes to disk
+        type: boolean
+        default: false
+      - name: data
+        required: true
+        in: body
+        schema:
+          $ref: "#/definitions/map_entries"
+    tags:
+      - Maps
+    responses:
+      '201':
+        description: Map payload added
+        schema:
+          $ref: "#/definitions/map_entries"
+      '400':
+        $ref: '#/responses/BadRequest'
+      'default':
+        $ref: '#/responses/DefaultError'
 maps_entries:
   get:  # show map [map]
     summary: Return one map runtime entries

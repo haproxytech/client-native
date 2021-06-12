@@ -11031,6 +11031,37 @@ paths:
         summary: Return one runtime map file
         tags:
         - Maps
+      put:
+        description: Adds a new map payload.
+        operationId: addPayloadRuntimeMap
+        parameters:
+        - description: Map file name
+          in: path
+          name: name
+          required: true
+          type: string
+        - default: false
+          description: If true, immediately syncs changes to disk
+          in: query
+          name: force_sync
+          type: boolean
+        - in: body
+          name: data
+          required: true
+          schema:
+            $ref: '#/definitions/map_entries'
+        responses:
+          "201":
+            description: Map payload added
+            schema:
+              $ref: '#/definitions/map_entries'
+          "400":
+            $ref: '#/responses/BadRequest'
+          default:
+            $ref: '#/responses/DefaultError'
+        summary: Add a new map payload
+        tags:
+        - Maps
   /services/haproxy/runtime/maps_entries:
       get:
         description: Returns an array of all entries in a given runtime map file.
