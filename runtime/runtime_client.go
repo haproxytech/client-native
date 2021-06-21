@@ -983,3 +983,77 @@ func (c *Client) DeleteACLFileEntry(id, value string) error {
 
 	return nil
 }
+
+// AddACLAtomic adds multiple entries to the ACL file atomically (using `prepare`, `add` and `commit` commands)
+// if HAProxy version is 2.4 or higher.
+func (c *Client) AddACLAtomic(aclID string, entries models.ACLFilesEntries) error {
+	v := HAProxyVersion{Major: 2, Minor: 4}
+	if !c.IsVersionBiggerOrEqual(v) {
+		return fmt.Errorf("not supported for HAProxy versions lower than 2.4 %w", native_errors.ErrGeneral)
+	}
+	var lastErr error
+	for _, runtime := range c.runtimes {
+		version, err := runtime.PrepareACL(aclID)
+		if err != nil {
+			lastErr = err
+			continue
+		}
+		for _, e := range entries {
+			err = runtime.AddACLVersioned(version, aclID, e.Value)
+			if err != nil {
+				lastErr = err
+				continue
+			}
+		}
+		err = runtime.CommitACL(version, aclID)
+		if err != nil {
+			lastErr = err
+			continue
+		}
+	}
+	if lastErr != nil {
+		return lastErr
+	}
+	return nil
+}
+
+func (c *Client) PrepareACL(name string) (version string, err error) {
+	var lastErr error
+	for _, runtime := range c.runtimes {
+		version, err = runtime.PrepareACL(name)
+		if err != nil {
+			lastErr = err
+		}
+	}
+	if lastErr != nil {
+		return "", lastErr
+	}
+	return version, nil
+}
+
+func (c *Client) AddACLVersioned(version, aclID, value string) error {
+	var lastErr error
+	for _, runtime := range c.runtimes {
+		err := runtime.AddACLVersioned(version, aclID, value)
+		if err != nil {
+			lastErr = err
+		}
+	}
+	if lastErr != nil {
+		return lastErr
+	}
+	return nil
+}
+
+func (c *Client) CommitACL(version, name string) error {
+	var lastErr error
+	for _, runtime := range c.runtimes {
+		if err := runtime.CommitACL(version, name); err != nil {
+			lastErr = err
+		}
+	}
+	if lastErr != nil {
+		return lastErr
+	}
+	return nil
+}

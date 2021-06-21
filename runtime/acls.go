@@ -3,6 +3,7 @@ package runtime
 import (
 	"fmt"
 	"regexp"
+	"strconv"
 	"strings"
 
 	native_errors "github.com/haproxytech/client-native/v2/errors"
@@ -161,6 +162,39 @@ func (s *SingleRuntime) AddACLFileEntry(aclID, value string) error {
 	}
 	if strings.Contains(response, "not") && strings.Contains(response, "valid") {
 		return fmt.Errorf("%s %w", strings.TrimSpace(response), native_errors.ErrGeneral)
+	}
+	return nil
+}
+
+func (s *SingleRuntime) PrepareACL(aclID string) (version string, err error) {
+	cmd := fmt.Sprintf("prepare acl %s", aclID)
+	response, err := s.ExecuteWithResponse(cmd)
+	if err != nil {
+		return "", fmt.Errorf("%s %w", err.Error(), native_errors.ErrGeneral) //nolint:errorlint
+	}
+	parts := strings.Split(response, ":")
+	if len(parts) < 3 {
+		return "", fmt.Errorf("%s %w", err.Error(), native_errors.ErrGeneral) //nolint:errorlint
+	}
+	version = strings.TrimSpace(parts[2])
+	if _, err = strconv.ParseInt(version, 10, 64); err == nil {
+		return version, nil
+	}
+	return "", fmt.Errorf("%s %w", err.Error(), native_errors.ErrGeneral) //nolint:errorlint
+}
+
+func (s *SingleRuntime) AddACLVersioned(version, aclID, value string) error {
+	cmd := fmt.Sprintf("add acl @%s %s %s", version, aclID, value)
+	if err := s.Execute(cmd); err != nil {
+		return fmt.Errorf("%s %w", err.Error(), native_errors.ErrGeneral) //nolint:errorlint
+	}
+	return nil
+}
+
+func (s *SingleRuntime) CommitACL(version, aclID string) error {
+	cmd := fmt.Sprintf("commit acl @%s %s", version, aclID)
+	if err := s.Execute(cmd); err != nil {
+		return fmt.Errorf("%s %w", err.Error(), native_errors.ErrGeneral) //nolint:errorlint
 	}
 	return nil
 }

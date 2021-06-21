@@ -110,6 +110,32 @@ acls_entries:
         $ref: '#/responses/NotFound'
       'default':
         $ref: '#/responses/DefaultError'
+  put:
+    summary: Add a new ACL payload
+    description: Adds a new ACL payload.
+    operationId: addPayloadRuntimeACL
+    parameters:
+      - name: acl_id
+        in: query
+        description: ACL ID
+        required: true
+        type: string
+      - name: data
+        required: true
+        in: body
+        schema:
+          $ref: "#/definitions/acl_files_entries"
+    tags:
+      - ACL Runtime
+    responses:
+      '201':
+        description: ACL payload added
+        schema:
+          $ref: "#/definitions/acl_files_entries"
+      '400':
+        $ref: '#/responses/BadRequest'
+      'default':
+        $ref: '#/responses/DefaultError'
 acls:
   get:
     tags:
