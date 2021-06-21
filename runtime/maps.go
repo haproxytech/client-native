@@ -27,7 +27,7 @@ func (s *SingleRuntime) ShowMaps() (models.Maps, error) {
 
 // CreateMap creates a new map file with its entries. Returns an error if file already exists
 func CreateMap(name string, file io.Reader) (*models.Map, error) {
-	ext := filepath.Ext(name)
+	ext := filepath.Ext(name) //nolint:ifshort
 	if ext != ".map" {
 		return nil, fmt.Errorf("provided file with %s extension, but supported .map %w", ext, native_errors.ErrGeneral)
 	}
@@ -108,8 +108,7 @@ func (s *SingleRuntime) GetMap(name string) (*models.Map, error) {
 // ClearMap removes all map entries from the map file.
 func (s *SingleRuntime) ClearMap(name string) error {
 	cmd := fmt.Sprintf("clear map %s", name)
-	err := s.Execute(cmd)
-	if err != nil {
+	if err := s.Execute(cmd); err != nil {
 		return fmt.Errorf("%s %w", err.Error(), native_errors.ErrNotFound) //nolint:errorlint
 	}
 	return nil
@@ -118,8 +117,7 @@ func (s *SingleRuntime) ClearMap(name string) error {
 // ClearMapVersioned removes all map entries from the map file.
 func (s *SingleRuntime) ClearMapVersioned(name, version string) error {
 	cmd := fmt.Sprintf("clear map @%s %s", version, name)
-	err := s.Execute(cmd)
-	if err != nil {
+	if err := s.Execute(cmd); err != nil {
 		return fmt.Errorf("%s %w", err.Error(), native_errors.ErrNotFound) //nolint:errorlint
 	}
 	return nil
@@ -208,8 +206,7 @@ func (s *SingleRuntime) AddMapEntry(name, key, value string) error {
 		return fmt.Errorf("%w", native_errors.ErrAlreadyExists)
 	}
 	cmd := fmt.Sprintf("add map %s %s %s", name, key, value)
-	err := s.Execute(cmd)
-	if err != nil {
+	if err := s.Execute(cmd); err != nil {
 		return fmt.Errorf("%s %w", err.Error(), native_errors.ErrGeneral) //nolint:errorlint
 	}
 	return nil
@@ -222,8 +219,7 @@ func (s *SingleRuntime) AddMapEntryVersioned(version, name, key, value string) e
 		return fmt.Errorf("%w", native_errors.ErrAlreadyExists)
 	}
 	cmd := fmt.Sprintf("add map @%s %s %s %s", version, name, key, value)
-	err := s.Execute(cmd)
-	if err != nil {
+	if err := s.Execute(cmd); err != nil {
 		return fmt.Errorf("%s %w", err.Error(), native_errors.ErrGeneral) //nolint:errorlint
 	}
 	return nil
@@ -237,8 +233,7 @@ func (s *SingleRuntime) AddMapPayload(name, payload string) error {
 		payload = "<<\n" + payload + "\n"
 	}
 	cmd := fmt.Sprintf("add map %s %s", name, payload)
-	err := s.Execute(cmd)
-	if err != nil {
+	if err := s.Execute(cmd); err != nil {
 		return fmt.Errorf("%s %w", err.Error(), native_errors.ErrGeneral) //nolint:errorlint
 	}
 	return nil
@@ -267,8 +262,7 @@ func (s *SingleRuntime) AddMapPayloadVersioned(version, name, payload string) er
 		payload = "<<\n" + payload + "\n"
 	}
 	cmd := fmt.Sprintf("add map @%s %s %s", version, name, payload)
-	err := s.Execute(cmd)
-	if err != nil {
+	if err := s.Execute(cmd); err != nil {
 		return fmt.Errorf("%s %w", err.Error(), native_errors.ErrGeneral) //nolint:errorlint
 	}
 	return nil
@@ -276,8 +270,7 @@ func (s *SingleRuntime) AddMapPayloadVersioned(version, name, payload string) er
 
 func (s *SingleRuntime) CommitMap(version, name string) error {
 	cmd := fmt.Sprintf("commit map @%s %s", version, name)
-	err := s.Execute(cmd)
-	if err != nil {
+	if err := s.Execute(cmd); err != nil {
 		return fmt.Errorf("%s %w", err.Error(), native_errors.ErrGeneral) //nolint:errorlint
 	}
 	return nil
@@ -316,8 +309,7 @@ func (s *SingleRuntime) GetMapEntry(name, id string) (*models.MapEntry, error) {
 // SetMapEntry replaces the value corresponding to each id in a map
 func (s *SingleRuntime) SetMapEntry(name, id, value string) error {
 	cmd := fmt.Sprintf("set map %s %s %s", name, id, value)
-	err := s.Execute(cmd)
-	if err != nil {
+	if err := s.Execute(cmd); err != nil {
 		return fmt.Errorf("%s %w", err.Error(), native_errors.ErrNotFound) //nolint:errorlint
 	}
 	return nil
@@ -326,8 +318,7 @@ func (s *SingleRuntime) SetMapEntry(name, id, value string) error {
 // DeleteMapEntry deletes all the map entries from the map by its id
 func (s *SingleRuntime) DeleteMapEntry(name, id string) error {
 	cmd := fmt.Sprintf("del map %s %s", name, id)
-	err := s.Execute(cmd)
-	if err != nil {
+	if err := s.Execute(cmd); err != nil {
 		return fmt.Errorf("%s %w", err.Error(), native_errors.ErrNotFound) //nolint:errorlint
 	}
 	return nil
