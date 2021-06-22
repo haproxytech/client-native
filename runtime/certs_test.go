@@ -5,6 +5,7 @@ import (
 	"testing"
 	"time"
 
+	"github.com/go-openapi/strfmt"
 	"github.com/haproxytech/client-native/v2/models"
 )
 
@@ -180,7 +181,7 @@ func TestSingleRuntime_ShowCertEntry(t *testing.T) {
 		name           string
 		fields         fields
 		args           args
-		want           *SslCertEntry
+		want           *models.SslCertEntry
 		wantErr        bool
 		socketResponse map[string]string
 	}{
@@ -190,18 +191,18 @@ func TestSingleRuntime_ShowCertEntry(t *testing.T) {
 			args: args{
 				storageName: "/etc/ssl/cert-0.pem",
 			},
-			want: &SslCertEntry{
+			want: &models.SslCertEntry{
 				StorageName: "/etc/ssl/cert-0.pem",
 				Status:      "Used",
 				Serial:      "0D933C1B1089BF660AE5253A245BB388",
-				NotBefore:   notBefore,
-				NotAfter:    notAfter,
+				NotBefore:   strfmt.Date(notBefore),
+				NotAfter:    strfmt.Date(notAfter),
 				SubjectAlternativeNames: []string{
 					"DNS:*.platform.domain.com",
 					"DNS:uaa.platform.domain.com",
 				},
 				Algorithm:       "RSA4096",
-				SHA1FingerPrint: "59242F1838BDEF3E7DAFC83FFE4DD6C03B88805C",
+				Sha1FingerPrint: "59242F1838BDEF3E7DAFC83FFE4DD6C03B88805C",
 				Subject:         "/C=DE/ST=Baden-Württemberg/L=Walldorf/O=ORG SE/CN=*.platform.domain.com",
 				Issuer:          "/C=US/O=DigiCert Inc/CN=DigiCert SHA2 Secure Server CA",
 				ChainSubject:    "/C=US/O=DigiCert Inc/CN=DigiCert SHA2 Secure Server CA",

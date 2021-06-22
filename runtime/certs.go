@@ -5,26 +5,10 @@ import (
 	"strings"
 	"time"
 
+	"github.com/go-openapi/strfmt"
+
 	native_errors "github.com/haproxytech/client-native/v2/errors"
 	"github.com/haproxytech/client-native/v2/models"
-)
-
-type (
-	SslCertEntries []*SslCertEntry
-	SslCertEntry   struct {
-		StorageName             string
-		Status                  string
-		Serial                  string
-		NotBefore               time.Time
-		NotAfter                time.Time
-		SubjectAlternativeNames []string
-		Algorithm               string
-		SHA1FingerPrint         string
-		Subject                 string
-		Issuer                  string
-		ChainSubject            string
-		ChainIssuer             string
-	}
 )
 
 // ShowCerts returns Certs files description from runtime
@@ -92,7 +76,7 @@ func (s *SingleRuntime) GetCert(storageName string) (*models.SslCertificate, err
 }
 
 // ShowCertEntry returns one CrtList runtime entries
-func (s *SingleRuntime) ShowCertEntry(storageName string) (*SslCertEntry, error) {
+func (s *SingleRuntime) ShowCertEntry(storageName string) (*models.SslCertEntry, error) {
 	if storageName == "" {
 		return nil, fmt.Errorf("%s %w", "Argument storageName empty", native_errors.ErrGeneral)
 	}
@@ -118,12 +102,12 @@ func (s *SingleRuntime) ShowCertEntry(storageName string) (*SslCertEntry, error)
 // Issuer: /C=US/O=DigiCert Inc/CN=DigiCert SHA2 Secure Server CA
 // Chain Subject: /C=US/O=DigiCert Inc/CN=DigiCert SHA2 Secure Server CA
 // Chain Issuer: /C=US/O=DigiCert Inc/OU=www.digicert.com/CN=DigiCert Global Root CA
-func parseCertEntry(response string) (*SslCertEntry, error) {
+func parseCertEntry(response string) (*models.SslCertEntry, error) {
 	if response == "" || strings.HasPrefix(strings.TrimSpace(response), "#") {
 		return nil, native_errors.ErrNotFound
 	}
 
-	c := &SslCertEntry{}
+	c := &models.SslCertEntry{}
 	parts := strings.Split(response, "\n")
 	for _, p := range parts {
 		index := strings.Index(p, ":")
@@ -141,15 +125,17 @@ func parseCertEntry(response string) (*SslCertEntry, error) {
 		case key == "Serial":
 			c.Serial = valueString
 		case key == "notBefore":
-			c.NotBefore, _ = time.Parse("Jan 2 15:04:05 2006 MST", valueString)
+			notBefore, _ := time.Parse("Jan 2 15:04:05 2006 MST", valueString)
+			c.NotBefore = strfmt.Date(notBefore)
 		case key == "notAfter":
-			c.NotAfter, _ = time.Parse("Jan 2 15:04:05 2006 MST", valueString)
+			notAfter, _ := time.Parse("Jan 2 15:04:05 2006 MST", valueString)
+			c.NotAfter = strfmt.Date(notAfter)
 		case key == "Subject Alternative Name":
 			c.SubjectAlternativeNames = strings.Split(valueString, ", ")
 		case key == "Algorithm":
 			c.Algorithm = valueString
 		case key == "SHA1 FingerPrint":
-			c.SHA1FingerPrint = valueString
+			c.Sha1FingerPrint = valueString
 		case key == "Subject":
 			c.Subject = valueString
 		case key == "Issuer":
