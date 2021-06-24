@@ -176,14 +176,10 @@ func (s *SingleRuntime) executeRaw(command string, retry int) (string, error) {
 		response: response,
 	}
 	s.jobs <- task
-	select {
-	case rsp := <-response:
-		if rsp.err != nil && retry > 0 {
-			retry--
-			return s.executeRaw(command, retry)
-		}
-		return rsp.result, rsp.err
-	case <-time.After(taskTimeout):
-		return "", fmt.Errorf("timeout reached")
+	rsp := <-response
+	if rsp.err != nil && retry > 0 {
+		retry--
+		return s.executeRaw(command, retry)
 	}
+	return rsp.result, rsp.err
 }
