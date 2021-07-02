@@ -29,6 +29,8 @@ global
 	maxconn 2000
 	external-check
 	stats socket /var/run/haproxy.sock level admin mode 0660
+  lua-prepend-path /usr/share/haproxy-lua/?/init.lua
+  lua-prepend-path /usr/share/haproxy-lua/?.lua cpath
 	lua-load /etc/foo.lua
 	lua-load /etc/bar.lua
 

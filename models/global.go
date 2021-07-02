@@ -64,6 +64,9 @@ type Global struct {
 	// lua loads
 	LuaLoads []*LuaLoad `json:"lua_loads"`
 
+	// lua prepend path
+	LuaPrependPath []*LuaPrependPath `json:"lua_prepend_path"`
+
 	// master worker
 	MasterWorker bool `json:"master-worker,omitempty"`
 
@@ -141,6 +144,10 @@ func (m *Global) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateLuaLoads(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateLuaPrependPath(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -310,6 +317,31 @@ func (m *Global) validateLuaLoads(formats strfmt.Registry) error {
 			if err := m.LuaLoads[i].Validate(formats); err != nil {
 				if ve, ok := err.(*errors.Validation); ok {
 					return ve.ValidateName("lua_loads" + "." + strconv.Itoa(i))
+				}
+				return err
+			}
+		}
+
+	}
+
+	return nil
+}
+
+func (m *Global) validateLuaPrependPath(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.LuaPrependPath) { // not required
+		return nil
+	}
+
+	for i := 0; i < len(m.LuaPrependPath); i++ {
+		if swag.IsZero(m.LuaPrependPath[i]) { // not required
+			continue
+		}
+
+		if m.LuaPrependPath[i] != nil {
+			if err := m.LuaPrependPath[i].Validate(formats); err != nil {
+				if ve, ok := err.(*errors.Validation); ok {
+					return ve.ValidateName("lua_prepend_path" + "." + strconv.Itoa(i))
 				}
 				return err
 			}
@@ -618,6 +650,113 @@ func (m *LuaLoad) MarshalBinary() ([]byte, error) {
 // UnmarshalBinary interface implementation
 func (m *LuaLoad) UnmarshalBinary(b []byte) error {
 	var res LuaLoad
+	if err := swag.ReadJSON(b, &res); err != nil {
+		return err
+	}
+	*m = res
+	return nil
+}
+
+// LuaPrependPath lua prepend path
+//
+// swagger:model LuaPrependPath
+type LuaPrependPath struct {
+
+	// path
+	// Required: true
+	// Pattern: ^[^\s]+$
+	Path *string `json:"path"`
+
+	// type
+	// Enum: [path cpath]
+	Type string `json:"type,omitempty"`
+}
+
+// Validate validates this lua prepend path
+func (m *LuaPrependPath) Validate(formats strfmt.Registry) error {
+	var res []error
+
+	if err := m.validatePath(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateType(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if len(res) > 0 {
+		return errors.CompositeValidationError(res...)
+	}
+	return nil
+}
+
+func (m *LuaPrependPath) validatePath(formats strfmt.Registry) error {
+
+	if err := validate.Required("path", "body", m.Path); err != nil {
+		return err
+	}
+
+	if err := validate.Pattern("path", "body", string(*m.Path), `^[^\s]+$`); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+var luaPrependPathTypeTypePropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["path","cpath"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		luaPrependPathTypeTypePropEnum = append(luaPrependPathTypeTypePropEnum, v)
+	}
+}
+
+const (
+
+	// LuaPrependPathTypePath captures enum value "path"
+	LuaPrependPathTypePath string = "path"
+
+	// LuaPrependPathTypeCpath captures enum value "cpath"
+	LuaPrependPathTypeCpath string = "cpath"
+)
+
+// prop value enum
+func (m *LuaPrependPath) validateTypeEnum(path, location string, value string) error {
+	if err := validate.Enum(path, location, value, luaPrependPathTypeTypePropEnum); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *LuaPrependPath) validateType(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.Type) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateTypeEnum("type", "body", m.Type); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+// MarshalBinary interface implementation
+func (m *LuaPrependPath) MarshalBinary() ([]byte, error) {
+	if m == nil {
+		return nil, nil
+	}
+	return swag.WriteJSON(m)
+}
+
+// UnmarshalBinary interface implementation
+func (m *LuaPrependPath) UnmarshalBinary(b []byte) error {
+	var res LuaPrependPath
 	if err := swag.ReadJSON(b, &res); err != nil {
 		return err
 	}

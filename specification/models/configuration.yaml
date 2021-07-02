@@ -118,6 +118,20 @@ global:
           file:
             type: string
             pattern: '^[^\s]+$'
+    lua_prepend_path:
+      type: array
+      items:
+        type: object
+        x-go-name: LuaPrependPath
+        required:
+          - path
+        properties:
+          path:
+            type: string
+            pattern: '^[^\s]+$'
+          type:
+            type: string
+            enum: [path, cpath]
     log_send_hostname:
       type: object
       x-display-name: Log Send Hostname
