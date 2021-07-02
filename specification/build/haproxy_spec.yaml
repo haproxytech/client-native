@@ -211,6 +211,22 @@ definitions:
             type: object
             x-go-name: LuaLoad
           type: array
+        lua_prepend_path:
+          items:
+            properties:
+              path:
+                pattern: ^[^\s]+$
+                type: string
+              type:
+                enum:
+                - path
+                - cpath
+                type: string
+            required:
+            - path
+            type: object
+            x-go-name: LuaPrependPath
+          type: array
         master-worker:
           type: boolean
           x-display-name: Master Worker Mode

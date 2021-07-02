@@ -260,6 +260,16 @@ func ParseGlobalSection(p parser.Parser) (*models.Global, error) { //nolint:goco
 		externalCheck = false
 	}
 
+	data, err = p.Get(parser.Global, parser.GlobalSectionName, "lua-prepend-path")
+	luaPrependPath := []*models.LuaPrependPath{}
+	if err == nil {
+		lpp := data.([]types.LuaPrependPath)
+		for _, l := range lpp {
+			path := l.Path
+			luaPrependPath = append(luaPrependPath, &models.LuaPrependPath{Path: &path, Type: l.Type})
+		}
+	}
+
 	data, err = p.Get(parser.Global, parser.GlobalSectionName, "lua-load")
 	luaLoads := []*models.LuaLoad{}
 	if err == nil {
@@ -305,6 +315,7 @@ func ParseGlobalSection(p parser.Parser) (*models.Global, error) { //nolint:goco
 		TuneSslDefaultDhParam:        dhParam,
 		ExternalCheck:                externalCheck,
 		LuaLoads:                     luaLoads,
+		LuaPrependPath:               luaPrependPath,
 		LogSendHostname:              globalLogSendHostName,
 	}
 
@@ -522,6 +533,19 @@ func SerializeGlobalSection(p parser.Parser, data *models.Global) error { //noli
 		sslModeAsync = nil
 	}
 	if err := p.Set(parser.Global, parser.GlobalSectionName, "ssl-mode-async", sslModeAsync); err != nil {
+		return err
+	}
+
+	luaPrependPath := []types.LuaPrependPath{}
+	for _, l := range data.LuaPrependPath {
+		lpp := types.LuaPrependPath{
+			Path: *l.Path,
+			Type: l.Type,
+		}
+		luaPrependPath = append(luaPrependPath, lpp)
+	}
+
+	if err := p.Set(parser.Global, parser.GlobalSectionName, "lua-prepend-path", luaPrependPath); err != nil {
 		return err
 	}
 

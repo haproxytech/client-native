@@ -58,6 +58,20 @@ func TestGetGlobal(t *testing.T) {
 	if global.ExternalCheck != true {
 		t.Errorf("ExternalCheck is false, expected true")
 	}
+	if len(global.LuaPrependPath) == 2 {
+		if *global.LuaPrependPath[0].Path != "/usr/share/haproxy-lua/?/init.lua" {
+			t.Errorf("LuaPrependPath.Path is %v, expected /usr/share/haproxy-lua/?/init.lua", *global.LuaPrependPath[0].Path)
+		}
+		if *global.LuaPrependPath[1].Path != "/usr/share/haproxy-lua/?.lua" {
+			t.Errorf("LuaPrependPath.Path is %v, expected /usr/share/haproxy-lua/?.lua", global.LuaPrependPath[1].Path)
+		}
+		typ := "cpath"
+		if global.LuaPrependPath[1].Type != typ {
+			t.Errorf("LuaPrependPath.Type is %v, expected cpath", global.LuaPrependPath[1].Type)
+		}
+	} else {
+		t.Errorf("%v LuaPrependPath returned, expected 2", len(global.LuaPrependPath))
+	}
 	if len(global.LuaLoads) == 2 {
 		if *global.LuaLoads[0].File != "/etc/foo.lua" {
 			t.Errorf("LuaLoad.File is %v, expected /etc/foo.lua", *global.LuaLoads[0].File)
@@ -76,6 +90,7 @@ func TestPutGlobal(t *testing.T) {
 	v := "0"
 	a := "/var/run/haproxy.sock"
 	f := "/etc/foo.lua"
+	luaPrependPath := "/usr/share/haproxy-lua/?/init.lua"
 	enabled := "enabled"
 	g := &models.Global{
 		Daemon: "enabled",
@@ -97,6 +112,12 @@ func TestPutGlobal(t *testing.T) {
 		StatsTimeout:          &tOut,
 		TuneSslDefaultDhParam: 1024,
 		ExternalCheck:         false,
+		LuaPrependPath: []*models.LuaPrependPath{
+			&models.LuaPrependPath{
+				Path: &luaPrependPath,
+				Type: "cpath",
+			},
+		},
 		LuaLoads: []*models.LuaLoad{
 			&models.LuaLoad{
 				File: &f,
