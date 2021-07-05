@@ -28,9 +28,10 @@ import (
 	"sync"
 
 	"github.com/google/uuid"
-	parser "github.com/haproxytech/config-parser/v3"
-	parser_errors "github.com/haproxytech/config-parser/v3/errors"
-	spoe "github.com/haproxytech/config-parser/v3/spoe"
+	parser "github.com/haproxytech/config-parser/v4"
+	parser_errors "github.com/haproxytech/config-parser/v4/errors"
+	parser_options "github.com/haproxytech/config-parser/v4/options"
+	spoe "github.com/haproxytech/config-parser/v4/spoe"
 	shellquote "github.com/kballard/go-shellquote"
 
 	"github.com/haproxytech/client-native/v2/models"
@@ -620,12 +621,11 @@ func (t *Transaction) getFailedTransactionVersion(transactionID string) (int64, 
 		return 0, NewConfError(ErrTransactionDoesNotExist, fmt.Sprintf("transaction %v not failed", transactionID))
 	}
 
-	p := &parser.Parser{
-		Options: parser.Options{
-			UseV2HTTPCheck: true,
-		},
-	}
-	if err := p.LoadData(fPath); err != nil {
+	_, err := parser.New(
+		parser_options.UseV2HTTPCheck,
+		parser_options.Path(fPath),
+	)
+	if err != nil {
 		return 0, NewConfError(ErrCannotReadConfFile, fmt.Sprintf("cannot read %s", fPath))
 	}
 
@@ -649,7 +649,7 @@ func (t *Transaction) SaveData(prsr interface{}, tID string, commitImplicit bool
 		switch p := prsr.(type) {
 		case *spoe.Parser:
 			err = p.Save(tFile)
-		case *parser.Parser:
+		case parser.Parser:
 			err = p.Save(tFile)
 		default:
 			return fmt.Errorf("provided parser %s not supported", p)

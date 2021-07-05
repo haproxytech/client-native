@@ -22,7 +22,7 @@ import (
 
 	"github.com/haproxytech/client-native/v2/misc"
 	"github.com/haproxytech/client-native/v2/models"
-	parser "github.com/haproxytech/config-parser/v3"
+	parser "github.com/haproxytech/config-parser/v4"
 	"github.com/stretchr/testify/assert"
 )
 

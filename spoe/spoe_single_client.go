@@ -18,9 +18,9 @@ package spoe
 import (
 	"fmt"
 
-	parser "github.com/haproxytech/config-parser/v3"
-	"github.com/haproxytech/config-parser/v3/spoe"
-	"github.com/haproxytech/config-parser/v3/types"
+	parser "github.com/haproxytech/config-parser/v4"
+	"github.com/haproxytech/config-parser/v4/spoe"
+	"github.com/haproxytech/config-parser/v4/types"
 
 	conf "github.com/haproxytech/client-native/v2/configuration"
 	"github.com/haproxytech/client-native/v2/misc"

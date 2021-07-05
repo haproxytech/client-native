@@ -22,13 +22,14 @@ import (
 	"strconv"
 	"strings"
 
-	parser "github.com/haproxytech/config-parser/v3"
-	"github.com/haproxytech/config-parser/v3/common"
-	parser_errors "github.com/haproxytech/config-parser/v3/errors"
-	"github.com/haproxytech/config-parser/v3/params"
-	"github.com/haproxytech/config-parser/v3/parsers"
-	stats "github.com/haproxytech/config-parser/v3/parsers/stats/settings"
-	"github.com/haproxytech/config-parser/v3/types"
+	parser "github.com/haproxytech/config-parser/v4"
+	"github.com/haproxytech/config-parser/v4/common"
+	parser_errors "github.com/haproxytech/config-parser/v4/errors"
+	parser_options "github.com/haproxytech/config-parser/v4/options"
+	"github.com/haproxytech/config-parser/v4/params"
+	"github.com/haproxytech/config-parser/v4/parsers"
+	stats "github.com/haproxytech/config-parser/v4/parsers/stats/settings"
+	"github.com/haproxytech/config-parser/v4/types"
 	"github.com/kballard/go-shellquote"
 	"github.com/pkg/errors"
 
@@ -77,9 +78,9 @@ type ClientParams struct {
 // data to file on every change for persistence.
 type Client struct {
 	Transaction
-	parsers  map[string]*parser.Parser
+	parsers  map[string]parser.Parser
 	services map[string]*Service
-	Parser   *parser.Parser
+	Parser   parser.Parser
 }
 
 // DefaultClient returns Client with sane defaults
@@ -133,21 +134,25 @@ func (c *Client) Init(options ClientParams) error {
 	c.ClientParams = options
 	c.TransactionClient = c
 
-	c.parsers = make(map[string]*parser.Parser)
+	c.parsers = make(map[string]parser.Parser)
 	c.services = make(map[string]*Service)
 	if err := c.InitTransactionParsers(); err != nil {
 		return err
 	}
 
-	c.Parser = &parser.Parser{
-		Options: parser.Options{
-			UseV2HTTPCheck: true,
-			UseMd5Hash:     c.ClientParams.UseMd5Hash,
-		},
+	parserOptions := []parser_options.ParserOption{
+		parser_options.UseV2HTTPCheck,
 	}
-	if err := c.Parser.LoadData(options.ConfigurationFile); err != nil {
+	if c.ClientParams.UseMd5Hash {
+		parserOptions = append(parserOptions, parser_options.UseMd5Hash)
+	}
+	parserOptions = append(parserOptions, parser_options.Path(options.ConfigurationFile))
+	p, err := parser.New(parserOptions...)
+	if err != nil {
 		return NewConfError(ErrCannotReadConfFile, fmt.Sprintf("Cannot read %s", c.ConfigurationFile))
 	}
+
+	c.Parser = p
 
 	return nil
 }
@@ -176,7 +181,7 @@ func (c *Client) GetParserTransactions() models.Transactions {
 }
 
 // GetParser returns a parser for given transactionID, if transactionID is "", it returns "master" parser
-func (c *Client) GetParser(transactionID string) (*parser.Parser, error) {
+func (c *Client) GetParser(transactionID string) (parser.Parser, error) {
 	if transactionID == "" {
 		return c.Parser, nil
 	}
@@ -197,12 +202,13 @@ func (c *Client) AddParser(transactionID string) error {
 		return NewConfError(ErrTransactionAlreadyExists, fmt.Sprintf("Transaction %s already exists", transactionID))
 	}
 
-	p := &parser.Parser{
-		Options: parser.Options{
-			UseV2HTTPCheck: true,
-			UseMd5Hash:     c.ClientParams.UseMd5Hash,
-		},
+	parserOptions := []parser_options.ParserOption{
+		parser_options.UseV2HTTPCheck,
 	}
+	if c.ClientParams.UseMd5Hash {
+		parserOptions = append(parserOptions, parser_options.UseMd5Hash)
+	}
+
 	tFile := ""
 	var err error
 	if c.PersistentTransactions {
@@ -213,7 +219,9 @@ func (c *Client) AddParser(transactionID string) error {
 	} else {
 		tFile = c.ConfigurationFile
 	}
-	if err := p.LoadData(tFile); err != nil {
+	parserOptions = append(parserOptions, parser_options.Path(tFile))
+	p, err := parser.New(parserOptions...)
+	if err != nil {
 		return NewConfError(ErrCannotReadConfFile, fmt.Sprintf("Cannot read %s", tFile))
 	}
 	c.parsers[transactionID] = p
@@ -311,7 +319,7 @@ func (c *Client) IncrementTransactionVersion(transactionID string) error {
 	return c.incrementTransactionVersion(p)
 }
 
-func (c *Client) incrementTransactionVersion(p *parser.Parser) error {
+func (c *Client) incrementTransactionVersion(p parser.Parser) error {
 	data, err := p.Get(parser.Comments, parser.CommentsSectionName, "# _version", true)
 	if err != nil {
 		return err
@@ -341,8 +349,8 @@ func (c *Client) Save(transactionFile, transactionID string) error {
 }
 
 func (c *Client) GetFailedParserTransactionVersion(transactionID string) (int64, error) {
-	p := &parser.Parser{}
-	if err := p.LoadData(transactionID); err != nil {
+	p, err := parser.New(parser_options.Path(transactionID))
+	if err != nil {
 		return 0, NewConfError(ErrCannotReadConfFile, fmt.Sprintf("cannot read %s", transactionID))
 	}
 
@@ -356,7 +364,7 @@ func (c *Client) GetFailedParserTransactionVersion(transactionID string) (int64,
 }
 
 // ParseSection sets the fields of the section based on the provided parser
-func ParseSection(object interface{}, section parser.Section, pName string, p *parser.Parser) error {
+func ParseSection(object interface{}, section parser.Section, pName string, p parser.Parser) error {
 	sp := &SectionParser{
 		Object:  object,
 		Section: section,
@@ -371,7 +379,7 @@ type SectionParser struct {
 	Object  interface{}
 	Section parser.Section
 	Name    string
-	Parser  *parser.Parser
+	Parser  parser.Parser
 }
 
 // Parse parses the sections fields and sets their values with the data from the parser
@@ -1344,11 +1352,11 @@ type SectionObject struct {
 	Object  interface{}
 	Section parser.Section
 	Name    string
-	Parser  *parser.Parser
+	Parser  parser.Parser
 }
 
 // CreateEditSection creates or updates a section in the parser based on the provided object
-func CreateEditSection(object interface{}, section parser.Section, pName string, p *parser.Parser) error {
+func CreateEditSection(object interface{}, section parser.Section, pName string, p parser.Parser) error {
 	so := SectionObject{
 		Object:  object,
 		Section: section,
@@ -2814,7 +2822,7 @@ func (c *Client) createSection(section parser.Section, name string, data interfa
 	return nil
 }
 
-func (c *Client) checkSectionExists(section parser.Section, sectionName string, p *parser.Parser) bool {
+func (c *Client) checkSectionExists(section parser.Section, sectionName string, p parser.Parser) bool {
 	sections, err := p.SectionsGet(section)
 	if err != nil {
 		return false
@@ -2826,7 +2834,7 @@ func (c *Client) checkSectionExists(section parser.Section, sectionName string, 
 	return false
 }
 
-func (c *Client) loadDataForChange(transactionID string, version int64) (*parser.Parser, string, error) {
+func (c *Client) loadDataForChange(transactionID string, version int64) (parser.Parser, string, error) {
 	t, err := c.TransactionClient.CheckTransactionOrVersion(transactionID, version)
 	if err != nil {
 		// if transactionID is implicit, return err and delete transaction

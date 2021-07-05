@@ -3,7 +3,7 @@
 package clientnative
 
 import (
-	parser "github.com/haproxytech/config-parser/v3"
+	parser "github.com/haproxytech/config-parser/v4"
 
 	"github.com/haproxytech/client-native/v2/configuration"
 	"github.com/haproxytech/client-native/v2/models"
@@ -78,7 +78,7 @@ type IConfigurationClient interface {
 	// GetParserTransactions returns parser transactions
 	GetParserTransactions() models.Transactions
 	// GetParser returns a parser for given transactionID, if transactionID is "", it returns "master" parser
-	GetParser(transactionID string) (*parser.Parser, error)
+	GetParser(transactionID string) (parser.Parser, error)
 	// AddParser adds parser to parser map
 	AddParser(transactionID string) error
 	// DeleteParser deletes parser from parsers map

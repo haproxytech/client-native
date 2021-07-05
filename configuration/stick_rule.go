@@ -20,9 +20,9 @@ import (
 	"strconv"
 
 	strfmt "github.com/go-openapi/strfmt"
-	parser "github.com/haproxytech/config-parser/v3"
-	parser_errors "github.com/haproxytech/config-parser/v3/errors"
-	"github.com/haproxytech/config-parser/v3/types"
+	parser "github.com/haproxytech/config-parser/v4"
+	parser_errors "github.com/haproxytech/config-parser/v4/errors"
+	"github.com/haproxytech/config-parser/v4/types"
 
 	"github.com/haproxytech/client-native/v2/models"
 )
@@ -142,7 +142,7 @@ func (c *Client) EditStickRule(id int64, backend string, data *models.StickRule,
 	return nil
 }
 
-func ParseStickRules(backend string, p *parser.Parser) (models.StickRules, error) {
+func ParseStickRules(backend string, p parser.Parser) (models.StickRules, error) {
 	sr := models.StickRules{}
 
 	data, err := p.Get(parser.Backends, backend, "stick", false)

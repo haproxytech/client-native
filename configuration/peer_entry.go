@@ -20,9 +20,9 @@ import (
 	"fmt"
 
 	strfmt "github.com/go-openapi/strfmt"
-	parser "github.com/haproxytech/config-parser/v3"
-	parser_errors "github.com/haproxytech/config-parser/v3/errors"
-	"github.com/haproxytech/config-parser/v3/types"
+	parser "github.com/haproxytech/config-parser/v4"
+	parser_errors "github.com/haproxytech/config-parser/v4/errors"
+	"github.com/haproxytech/config-parser/v4/types"
 
 	"github.com/haproxytech/client-native/v2/models"
 )
@@ -155,7 +155,7 @@ func (c *Client) EditPeerEntry(name string, peerSection string, data *models.Pee
 	return nil
 }
 
-func ParsePeerEntries(peerSection string, p *parser.Parser) (models.PeerEntries, error) {
+func ParsePeerEntries(peerSection string, p parser.Parser) (models.PeerEntries, error) {
 	peerEntry := models.PeerEntries{}
 
 	data, err := p.Get(parser.Peers, peerSection, "peer", false)
@@ -192,7 +192,7 @@ func SerializePeerEntry(pe models.PeerEntry) types.Peer {
 	}
 }
 
-func GetPeerEntryByName(name string, peerSection string, p *parser.Parser) (*models.PeerEntry, int) {
+func GetPeerEntryByName(name string, peerSection string, p parser.Parser) (*models.PeerEntry, int) {
 	peerEntries, err := ParsePeerEntries(peerSection, p)
 	if err != nil {
 		return nil, 0

@@ -21,7 +21,7 @@ import (
 	"strconv"
 
 	"github.com/go-openapi/strfmt"
-	parser "github.com/haproxytech/config-parser/v3"
+	parser "github.com/haproxytech/config-parser/v4"
 
 	"github.com/haproxytech/client-native/v2/misc"
 	"github.com/haproxytech/client-native/v2/models"
@@ -448,7 +448,7 @@ func (c *Client) DeleteSite(name string, transactionID string, version int64) er
 	return nil
 }
 
-func (c *Client) parseSites(p *parser.Parser) (models.Sites, error) {
+func (c *Client) parseSites(p parser.Parser) (models.Sites, error) {
 	sites := models.Sites{}
 	fNames, err := p.SectionsGet(parser.Frontends)
 	if err != nil {
@@ -464,7 +464,7 @@ func (c *Client) parseSites(p *parser.Parser) (models.Sites, error) {
 	return sites, nil
 }
 
-func (c *Client) parseSite(s string, p *parser.Parser) *models.Site {
+func (c *Client) parseSite(s string, p parser.Parser) *models.Site {
 	frontend := &models.Frontend{Name: s}
 	if err := ParseSection(frontend, parser.Frontends, s, p); err != nil {
 		return nil
@@ -502,7 +502,7 @@ func (c *Client) parseSite(s string, p *parser.Parser) *models.Site {
 	return site
 }
 
-func (c *Client) parseFarm(name string, useAs string, cond string, condTest string, p *parser.Parser) *models.SiteFarm {
+func (c *Client) parseFarm(name string, useAs string, cond string, condTest string, p parser.Parser) *models.SiteFarm {
 	backend := &models.Backend{Name: name}
 	if c.checkSectionExists(parser.Backends, name, p) {
 		if err := ParseSection(backend, parser.Backends, name, p); err == nil {
@@ -547,7 +547,7 @@ func SerializeFarmToBackend(farm *models.SiteFarm) *models.Backend {
 }
 
 // frontend backend relation helper methods
-func (c *Client) removeUseFarm(frontend string, backend string, t string, p *parser.Parser) error {
+func (c *Client) removeUseFarm(frontend string, backend string, t string, p parser.Parser) error {
 	ufs, err := ParseBackendSwitchingRules(frontend, p)
 	if err != nil {
 		return err
@@ -560,7 +560,7 @@ func (c *Client) removeUseFarm(frontend string, backend string, t string, p *par
 	return nil
 }
 
-func (c *Client) createBckFrontendRels(name string, b *models.SiteFarm, edit bool, t string, p *parser.Parser) error {
+func (c *Client) createBckFrontendRels(name string, b *models.SiteFarm, edit bool, t string, p parser.Parser) error {
 	var res []error
 	var err error
 	if b.UseAs == "default" {
@@ -597,7 +597,7 @@ func (c *Client) createBckFrontendRels(name string, b *models.SiteFarm, edit boo
 	return nil
 }
 
-func (c *Client) addDefaultBckToFrontend(fName string, bName string, t string, p *parser.Parser) error {
+func (c *Client) addDefaultBckToFrontend(fName string, bName string, t string, p parser.Parser) error {
 	frontend := &models.Frontend{Name: fName}
 
 	if err := ParseSection(frontend, parser.Frontends, fName, p); err != nil {
@@ -610,7 +610,7 @@ func (c *Client) addDefaultBckToFrontend(fName string, bName string, t string, p
 	return nil
 }
 
-func (c *Client) removeDefaultBckToFrontend(fName string, t string, p *parser.Parser) error {
+func (c *Client) removeDefaultBckToFrontend(fName string, t string, p parser.Parser) error {
 	frontend := &models.Frontend{Name: fName}
 	if err := ParseSection(frontend, parser.Frontends, fName, p); err != nil {
 		return err
@@ -622,7 +622,7 @@ func (c *Client) removeDefaultBckToFrontend(fName string, t string, p *parser.Pa
 	return nil
 }
 
-func (c *Client) editService(name string, service *models.SiteService, t string, p *parser.Parser) error {
+func (c *Client) editService(name string, service *models.SiteService, t string, p parser.Parser) error {
 	frontend := &models.Frontend{Name: name}
 	if err := ParseSection(frontend, parser.Frontends, name, p); err != nil {
 		return err
@@ -638,7 +638,7 @@ func (c *Client) editService(name string, service *models.SiteService, t string,
 	return nil
 }
 
-func (c *Client) editFarm(name string, farm *models.SiteFarm, t string, p *parser.Parser) error {
+func (c *Client) editFarm(name string, farm *models.SiteFarm, t string, p parser.Parser) error {
 	backend := &models.Backend{Name: name}
 	if err := ParseSection(backend, parser.Backends, name, p); err != nil {
 		return err

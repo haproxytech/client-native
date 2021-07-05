@@ -20,9 +20,9 @@ import (
 	"strconv"
 
 	"github.com/go-openapi/strfmt"
-	parser "github.com/haproxytech/config-parser/v3"
-	parser_errors "github.com/haproxytech/config-parser/v3/errors"
-	"github.com/haproxytech/config-parser/v3/types"
+	parser "github.com/haproxytech/config-parser/v4"
+	parser_errors "github.com/haproxytech/config-parser/v4/errors"
+	"github.com/haproxytech/config-parser/v4/types"
 
 	"github.com/haproxytech/client-native/v2/models"
 )
@@ -145,7 +145,7 @@ func (c *Client) EditBackendSwitchingRule(id int64, frontend string, data *model
 	return nil
 }
 
-func ParseBackendSwitchingRules(frontend string, p *parser.Parser) (models.BackendSwitchingRules, error) {
+func ParseBackendSwitchingRules(frontend string, p parser.Parser) (models.BackendSwitchingRules, error) {
 	br := models.BackendSwitchingRules{}
 
 	data, err := p.Get(parser.Frontends, frontend, "use_backend", false)

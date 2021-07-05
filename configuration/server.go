@@ -22,10 +22,10 @@ import (
 	"strings"
 
 	"github.com/go-openapi/strfmt"
-	parser "github.com/haproxytech/config-parser/v3"
-	parser_errors "github.com/haproxytech/config-parser/v3/errors"
-	"github.com/haproxytech/config-parser/v3/params"
-	"github.com/haproxytech/config-parser/v3/types"
+	parser "github.com/haproxytech/config-parser/v4"
+	parser_errors "github.com/haproxytech/config-parser/v4/errors"
+	"github.com/haproxytech/config-parser/v4/params"
+	"github.com/haproxytech/config-parser/v4/types"
 
 	"github.com/haproxytech/client-native/v2/misc"
 	"github.com/haproxytech/client-native/v2/models"
@@ -158,7 +158,7 @@ func (c *Client) EditServer(name string, backend string, data *models.Server, tr
 	return nil
 }
 
-func ParseServers(backend string, p *parser.Parser) (models.Servers, error) {
+func ParseServers(backend string, p parser.Parser) (models.Servers, error) {
 	servers := models.Servers{}
 
 	data, err := p.Get(parser.Backends, backend, "server", false)
@@ -738,7 +738,7 @@ func SerializeServer(s models.Server) types.Server { //nolint:gocognit,gocyclo
 	return srv
 }
 
-func GetServerByName(name string, backend string, p *parser.Parser) (*models.Server, int) {
+func GetServerByName(name string, backend string, p parser.Parser) (*models.Server, int) {
 	servers, err := ParseServers(backend, p)
 	if err != nil {
 		return nil, 0

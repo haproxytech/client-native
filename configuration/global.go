@@ -20,10 +20,10 @@ import (
 	"strconv"
 
 	"github.com/go-openapi/strfmt"
-	parser "github.com/haproxytech/config-parser/v3"
-	"github.com/haproxytech/config-parser/v3/errors"
-	"github.com/haproxytech/config-parser/v3/params"
-	"github.com/haproxytech/config-parser/v3/types"
+	parser "github.com/haproxytech/config-parser/v4"
+	"github.com/haproxytech/config-parser/v4/errors"
+	"github.com/haproxytech/config-parser/v4/params"
+	"github.com/haproxytech/config-parser/v4/types"
 
 	"github.com/haproxytech/client-native/v2/misc"
 	"github.com/haproxytech/client-native/v2/models"
@@ -74,7 +74,7 @@ func (c *Client) PushGlobalConfiguration(data *models.Global, transactionID stri
 	return nil
 }
 
-func ParseGlobalSection(p *parser.Parser) (*models.Global, error) { //nolint:gocognit,gocyclo
+func ParseGlobalSection(p parser.Parser) (*models.Global, error) { //nolint:gocognit,gocyclo
 	data, err := p.Get(parser.Global, parser.GlobalSectionName, "chroot")
 	chroot := ""
 	if err == nil {
@@ -311,7 +311,7 @@ func ParseGlobalSection(p *parser.Parser) (*models.Global, error) { //nolint:goc
 	return g, nil
 }
 
-func SerializeGlobalSection(p *parser.Parser, data *models.Global) error { //nolint:gocognit,gocyclo
+func SerializeGlobalSection(p parser.Parser, data *models.Global) error { //nolint:gocognit,gocyclo
 	pChroot := &types.StringC{
 		Value: data.Chroot,
 	}
