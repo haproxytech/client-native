@@ -22,9 +22,9 @@ import (
 	"strings"
 
 	strfmt "github.com/go-openapi/strfmt"
-	parser "github.com/haproxytech/config-parser/v3"
-	parser_errors "github.com/haproxytech/config-parser/v3/errors"
-	"github.com/haproxytech/config-parser/v3/types"
+	parser "github.com/haproxytech/config-parser/v4"
+	parser_errors "github.com/haproxytech/config-parser/v4/errors"
+	"github.com/haproxytech/config-parser/v4/types"
 
 	"github.com/haproxytech/client-native/v2/models"
 )
@@ -157,7 +157,7 @@ func (c *Client) EditNameserver(name string, resolverSection string, data *model
 	return nil
 }
 
-func ParseNameservers(resolverSection string, p *parser.Parser) (models.Nameservers, error) {
+func ParseNameservers(resolverSection string, p parser.Parser) (models.Nameservers, error) {
 	nameserver := models.Nameservers{}
 
 	data, err := p.Get(parser.Resolvers, resolverSection, "nameserver", false)
@@ -202,7 +202,7 @@ func SerializeNameserver(pe models.Nameserver) types.Nameserver {
 	}
 }
 
-func GetNameserverByName(name string, resolverSection string, p *parser.Parser) (*models.Nameserver, int) {
+func GetNameserverByName(name string, resolverSection string, p parser.Parser) (*models.Nameserver, int) {
 	nameservers, err := ParseNameservers(resolverSection, p)
 	if err != nil {
 		return nil, 0

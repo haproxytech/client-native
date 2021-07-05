@@ -20,9 +20,9 @@ import (
 	"strconv"
 
 	strfmt "github.com/go-openapi/strfmt"
-	parser "github.com/haproxytech/config-parser/v3"
-	parser_errors "github.com/haproxytech/config-parser/v3/errors"
-	"github.com/haproxytech/config-parser/v3/types"
+	parser "github.com/haproxytech/config-parser/v4"
+	parser_errors "github.com/haproxytech/config-parser/v4/errors"
+	"github.com/haproxytech/config-parser/v4/types"
 
 	"github.com/haproxytech/client-native/v2/models"
 )
@@ -201,7 +201,7 @@ func (c *Client) EditLogTarget(id int64, parentType string, parentName string, d
 	return nil
 }
 
-func ParseLogTargets(t, pName string, p *parser.Parser) (models.LogTargets, error) {
+func ParseLogTargets(t, pName string, p parser.Parser) (models.LogTargets, error) {
 	var section parser.Section
 
 	switch t {

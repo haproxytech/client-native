@@ -21,12 +21,12 @@ import (
 	"strings"
 
 	"github.com/go-openapi/strfmt"
-	parser "github.com/haproxytech/config-parser/v3"
-	"github.com/haproxytech/config-parser/v3/common"
-	parser_errors "github.com/haproxytech/config-parser/v3/errors"
-	tcp_actions "github.com/haproxytech/config-parser/v3/parsers/tcp/actions"
-	tcp_types "github.com/haproxytech/config-parser/v3/parsers/tcp/types"
-	"github.com/haproxytech/config-parser/v3/types"
+	parser "github.com/haproxytech/config-parser/v4"
+	"github.com/haproxytech/config-parser/v4/common"
+	parser_errors "github.com/haproxytech/config-parser/v4/errors"
+	tcp_actions "github.com/haproxytech/config-parser/v4/parsers/tcp/actions"
+	tcp_types "github.com/haproxytech/config-parser/v4/parsers/tcp/types"
+	"github.com/haproxytech/config-parser/v4/types"
 
 	"github.com/haproxytech/client-native/v2/misc"
 	"github.com/haproxytech/client-native/v2/models"
@@ -190,7 +190,7 @@ func (c *Client) EditTCPRequestRule(id int64, parentType string, parentName stri
 	return nil
 }
 
-func ParseTCPRequestRules(t, pName string, p *parser.Parser) (models.TCPRequestRules, error) {
+func ParseTCPRequestRules(t, pName string, p parser.Parser) (models.TCPRequestRules, error) {
 	section := parser.Global
 	if t == "frontend" {
 		section = parser.Frontends

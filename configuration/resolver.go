@@ -20,9 +20,9 @@ import (
 	"strconv"
 
 	"github.com/go-openapi/strfmt"
-	parser "github.com/haproxytech/config-parser/v3"
-	"github.com/haproxytech/config-parser/v3/common"
-	"github.com/haproxytech/config-parser/v3/types"
+	parser "github.com/haproxytech/config-parser/v4"
+	"github.com/haproxytech/config-parser/v4/common"
+	"github.com/haproxytech/config-parser/v4/types"
 
 	"github.com/haproxytech/client-native/v2/misc"
 	"github.com/haproxytech/client-native/v2/models"
@@ -172,7 +172,7 @@ func (c *Client) CreateResolver(data *models.Resolver, transactionID string, ver
 	return nil
 }
 
-func ParseResolverSection(p *parser.Parser, resolver *models.Resolver) error { //nolint:gocognit,gocyclo
+func ParseResolverSection(p parser.Parser, resolver *models.Resolver) error { //nolint:gocognit,gocyclo
 	var err error
 	var data common.ParserData
 	name := resolver.Name
@@ -257,7 +257,7 @@ func ParseResolverSection(p *parser.Parser, resolver *models.Resolver) error { /
 	return err
 }
 
-func SerializeResolverSection(p *parser.Parser, data *models.Resolver) error { //nolint:gocognit,gocyclo
+func SerializeResolverSection(p parser.Parser, data *models.Resolver) error { //nolint:gocognit,gocyclo
 	var err error
 
 	if data.AcceptedPayloadSize == 0 {

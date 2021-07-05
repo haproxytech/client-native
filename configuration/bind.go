@@ -22,10 +22,10 @@ import (
 	"strings"
 
 	strfmt "github.com/go-openapi/strfmt"
-	parser "github.com/haproxytech/config-parser/v3"
-	parser_errors "github.com/haproxytech/config-parser/v3/errors"
-	"github.com/haproxytech/config-parser/v3/params"
-	"github.com/haproxytech/config-parser/v3/types"
+	parser "github.com/haproxytech/config-parser/v4"
+	parser_errors "github.com/haproxytech/config-parser/v4/errors"
+	"github.com/haproxytech/config-parser/v4/params"
+	"github.com/haproxytech/config-parser/v4/types"
 
 	"github.com/haproxytech/client-native/v2/models"
 )
@@ -164,7 +164,7 @@ func (c *Client) EditBind(name string, frontend string, data *models.Bind, trans
 	return nil
 }
 
-func ParseBinds(frontend string, p *parser.Parser) (models.Binds, error) {
+func ParseBinds(frontend string, p parser.Parser) (models.Binds, error) {
 	binds := models.Binds{}
 
 	data, err := p.Get(parser.Frontends, frontend, "bind", false)
@@ -578,7 +578,7 @@ func SerializeBind(b models.Bind) types.Bind { //nolint:gocognit,gocyclo
 	return bind
 }
 
-func GetBindByName(name string, frontend string, p *parser.Parser) (*models.Bind, int) {
+func GetBindByName(name string, frontend string, p parser.Parser) (*models.Bind, int) {
 	binds, err := ParseBinds(frontend, p)
 	if err != nil {
 		return nil, 0

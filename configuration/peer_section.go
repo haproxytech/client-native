@@ -19,7 +19,7 @@ import (
 	"fmt"
 
 	strfmt "github.com/go-openapi/strfmt"
-	parser "github.com/haproxytech/config-parser/v3"
+	parser "github.com/haproxytech/config-parser/v4"
 
 	"github.com/haproxytech/client-native/v2/models"
 )
@@ -121,10 +121,10 @@ func (c *Client) CreatePeerSection(data *models.PeerSection, transactionID strin
 	return nil
 }
 
-func SerializePeerSection(p *parser.Parser, data *models.PeerSection) error {
+func SerializePeerSection(p parser.Parser, data *models.PeerSection) error {
 	return p.SectionsCreate(parser.Peers, data.Name)
 }
 
-func DeletePeerSection(p *parser.Parser, name string) error {
+func DeletePeerSection(p parser.Parser, name string) error {
 	return p.SectionsDelete(parser.Peers, name)
 }

@@ -20,11 +20,11 @@ import (
 	"strconv"
 
 	"github.com/go-openapi/strfmt"
-	parser "github.com/haproxytech/config-parser/v3"
-	parser_errors "github.com/haproxytech/config-parser/v3/errors"
-	tcp_actions "github.com/haproxytech/config-parser/v3/parsers/tcp/actions"
-	tcp_types "github.com/haproxytech/config-parser/v3/parsers/tcp/types"
-	"github.com/haproxytech/config-parser/v3/types"
+	parser "github.com/haproxytech/config-parser/v4"
+	parser_errors "github.com/haproxytech/config-parser/v4/errors"
+	tcp_actions "github.com/haproxytech/config-parser/v4/parsers/tcp/actions"
+	tcp_types "github.com/haproxytech/config-parser/v4/parsers/tcp/types"
+	"github.com/haproxytech/config-parser/v4/types"
 
 	"github.com/haproxytech/client-native/v2/misc"
 	"github.com/haproxytech/client-native/v2/models"
@@ -145,7 +145,7 @@ func (c *Client) EditTCPResponseRule(id int64, backend string, data *models.TCPR
 	return nil
 }
 
-func ParseTCPResponseRules(backend string, p *parser.Parser) (models.TCPResponseRules, error) {
+func ParseTCPResponseRules(backend string, p parser.Parser) (models.TCPResponseRules, error) {
 	tcpResRules := models.TCPResponseRules{}
 
 	data, err := p.Get(parser.Backends, backend, "tcp-response", false)

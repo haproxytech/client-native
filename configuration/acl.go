@@ -20,9 +20,9 @@ import (
 	"strconv"
 
 	strfmt "github.com/go-openapi/strfmt"
-	parser "github.com/haproxytech/config-parser/v3"
-	parser_errors "github.com/haproxytech/config-parser/v3/errors"
-	"github.com/haproxytech/config-parser/v3/types"
+	parser "github.com/haproxytech/config-parser/v4"
+	parser_errors "github.com/haproxytech/config-parser/v4/errors"
+	"github.com/haproxytech/config-parser/v4/types"
 
 	"github.com/haproxytech/client-native/v2/models"
 )
@@ -172,7 +172,7 @@ func (c *Client) EditACL(id int64, parentType string, parentName string, data *m
 	return nil
 }
 
-func ParseACLs(t, pName string, p *parser.Parser, aclName ...string) (models.Acls, error) {
+func ParseACLs(t, pName string, p parser.Parser, aclName ...string) (models.Acls, error) {
 	section := parser.Global
 	if t == "frontend" {
 		section = parser.Frontends

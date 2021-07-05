@@ -21,11 +21,11 @@ import (
 	"strings"
 
 	strfmt "github.com/go-openapi/strfmt"
-	parser "github.com/haproxytech/config-parser/v3"
-	"github.com/haproxytech/config-parser/v3/common"
-	parser_errors "github.com/haproxytech/config-parser/v3/errors"
-	"github.com/haproxytech/config-parser/v3/parsers/http/actions"
-	"github.com/haproxytech/config-parser/v3/types"
+	parser "github.com/haproxytech/config-parser/v4"
+	"github.com/haproxytech/config-parser/v4/common"
+	parser_errors "github.com/haproxytech/config-parser/v4/errors"
+	"github.com/haproxytech/config-parser/v4/parsers/http/actions"
+	"github.com/haproxytech/config-parser/v4/types"
 
 	"github.com/haproxytech/client-native/v2/models"
 )
@@ -176,7 +176,7 @@ func (c *Client) EditHTTPResponseRule(id int64, parentType string, parentName st
 	return nil
 }
 
-func ParseHTTPResponseRules(t, pName string, p *parser.Parser) (models.HTTPResponseRules, error) {
+func ParseHTTPResponseRules(t, pName string, p parser.Parser) (models.HTTPResponseRules, error) {
 	section := parser.Global
 	if t == "frontend" {
 		section = parser.Frontends

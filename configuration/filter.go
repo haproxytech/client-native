@@ -20,10 +20,10 @@ import (
 	"strconv"
 
 	"github.com/go-openapi/strfmt"
-	parser "github.com/haproxytech/config-parser/v3"
-	parser_errors "github.com/haproxytech/config-parser/v3/errors"
-	"github.com/haproxytech/config-parser/v3/parsers/filters"
-	"github.com/haproxytech/config-parser/v3/types"
+	parser "github.com/haproxytech/config-parser/v4"
+	parser_errors "github.com/haproxytech/config-parser/v4/errors"
+	"github.com/haproxytech/config-parser/v4/parsers/filters"
+	"github.com/haproxytech/config-parser/v4/types"
 
 	"github.com/haproxytech/client-native/v2/models"
 )
@@ -175,7 +175,7 @@ func (c *Client) EditFilter(id int64, parentType string, parentName string, data
 	return nil
 }
 
-func ParseFilters(t, pName string, p *parser.Parser) (models.Filters, error) {
+func ParseFilters(t, pName string, p parser.Parser) (models.Filters, error) {
 	section := parser.Global
 	if t == "frontend" {
 		section = parser.Frontends
