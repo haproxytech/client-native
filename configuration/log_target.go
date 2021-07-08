@@ -62,9 +62,16 @@ func (c *Client) GetLogTarget(id int64, parentType, parentName string, transacti
 	}
 
 	var section parser.Section
-	if parentType == "backend" {
+	switch parentType {
+	case "global":
+		section = parser.Global
+		parentName = parser.GlobalSectionName
+	case "defaults":
+		section = parser.Defaults
+		parentName = parser.DefaultSectionName
+	case "backend":
 		section = parser.Backends
-	} else if parentType == "frontend" {
+	case "frontend":
 		section = parser.Frontends
 	}
 
@@ -88,9 +95,16 @@ func (c *Client) DeleteLogTarget(id int64, parentType string, parentName string,
 	}
 
 	var section parser.Section
-	if parentType == "backend" {
+	switch parentType {
+	case "global":
+		section = parser.Global
+		parentName = parser.GlobalSectionName
+	case "defaults":
+		section = parser.Defaults
+		parentName = parser.DefaultSectionName
+	case "backend":
 		section = parser.Backends
-	} else if parentType == "frontend" {
+	case "frontend":
 		section = parser.Frontends
 	}
 
@@ -121,9 +135,16 @@ func (c *Client) CreateLogTarget(parentType string, parentName string, data *mod
 	}
 
 	var section parser.Section
-	if parentType == "backend" {
+	switch parentType {
+	case "global":
+		section = parser.Global
+		parentName = parser.GlobalSectionName
+	case "defaults":
+		section = parser.Defaults
+		parentName = parser.DefaultSectionName
+	case "backend":
 		section = parser.Backends
-	} else if parentType == "frontend" {
+	case "frontend":
 		section = parser.Frontends
 	}
 
@@ -153,9 +174,16 @@ func (c *Client) EditLogTarget(id int64, parentType string, parentName string, d
 	}
 
 	var section parser.Section
-	if parentType == "backend" {
+	switch parentType {
+	case "global":
+		section = parser.Global
+		parentName = parser.GlobalSectionName
+	case "defaults":
+		section = parser.Defaults
+		parentName = parser.DefaultSectionName
+	case "backend":
 		section = parser.Backends
-	} else if parentType == "frontend" {
+	case "frontend":
 		section = parser.Frontends
 	}
 
@@ -175,9 +203,17 @@ func (c *Client) EditLogTarget(id int64, parentType string, parentName string, d
 
 func ParseLogTargets(t, pName string, p *parser.Parser) (models.LogTargets, error) {
 	var section parser.Section
-	if t == "backend" {
+
+	switch t {
+	case "global":
+		section = parser.Global
+		pName = parser.GlobalSectionName
+	case "defaults":
+		section = parser.Defaults
+		pName = parser.DefaultSectionName
+	case "backend":
 		section = parser.Backends
-	} else if t == "frontend" {
+	case "frontend":
 		section = parser.Frontends
 	}
 
