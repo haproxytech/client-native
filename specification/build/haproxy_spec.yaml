@@ -9721,12 +9721,13 @@ paths:
         - description: Parent name
           in: query
           name: parent_name
-          required: true
           type: string
         - description: Parent type
           enum:
           - frontend
           - backend
+          - defaults
+          - global
           in: query
           name: parent_type
           required: true
@@ -9760,12 +9761,13 @@ paths:
         - description: Parent name
           in: query
           name: parent_name
-          required: true
           type: string
         - description: Parent type
           enum:
           - frontend
           - backend
+          - defaults
+          - global
           in: query
           name: parent_type
           required: true
@@ -9814,12 +9816,13 @@ paths:
         - description: Parent name
           in: query
           name: parent_name
-          required: true
           type: string
         - description: Parent type
           enum:
           - frontend
           - backend
+          - defaults
+          - global
           in: query
           name: parent_type
           required: true
@@ -9856,12 +9859,13 @@ paths:
         - description: Parent name
           in: query
           name: parent_name
-          required: true
           type: string
         - description: Parent type
           enum:
           - frontend
           - backend
+          - defaults
+          - global
           in: query
           name: parent_type
           required: true
@@ -9901,12 +9905,13 @@ paths:
         - description: Parent name
           in: query
           name: parent_name
-          required: true
           type: string
         - description: Parent type
           enum:
           - frontend
           - backend
+          - defaults
+          - global
           in: query
           name: parent_type
           required: true

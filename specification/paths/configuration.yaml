@@ -3153,14 +3153,13 @@ log_targets:
       - name: parent_name
         in: query
         description: Parent name
-        required: true
         type: string
       - name: parent_type
         in: query
         description: Parent type
         required: true
         type: string
-        enum: [frontend, backend]
+        enum: [frontend, backend, defaults, global]
       - $ref: "#/parameters/transaction_id"
     responses:
       '200':
@@ -3190,14 +3189,13 @@ log_targets:
       - name: parent_name
         in: query
         description: Parent name
-        required: true
         type: string
       - name: parent_type
         in: query
         description: Parent type
         required: true
         type: string
-        enum: [frontend, backend]
+        enum: [frontend, backend, defaults, global]
       - name: data
         in: body
         required: true
@@ -3241,14 +3239,13 @@ log_targets_one:
       - name: parent_name
         in: query
         description: Parent name
-        required: true
         type: string
       - name: parent_type
         in: query
         description: Parent type
         required: true
         type: string
-        enum: [frontend, backend]
+        enum: [frontend, backend, defaults, global]
       - $ref: "#/parameters/transaction_id"
     responses:
       '200':
@@ -3283,14 +3280,13 @@ log_targets_one:
       - name: parent_name
         in: query
         description: Parent name
-        required: true
         type: string
       - name: parent_type
         in: query
         description: Parent type
         required: true
         type: string
-        enum: [frontend, backend]
+        enum: [frontend, backend, defaults, global]
       - name: data
         in: body
         required: true
@@ -3333,14 +3329,13 @@ log_targets_one:
       - name: parent_name
         in: query
         description: Parent name
-        required: true
         type: string
       - name: parent_type
         in: query
         description: Parent type
         required: true
         type: string
-        enum: [frontend, backend]
+        enum: [frontend, backend, defaults, global]
       - $ref: "#/parameters/transaction_id"
       - $ref: "#/parameters/version"
       - $ref: "#/parameters/force_reload"
