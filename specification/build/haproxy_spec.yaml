@@ -5557,6 +5557,8 @@ definitions:
           x-nullable: true
         name:
           type: string
+        namespace:
+          type: string
         port:
           maximum: 65535
           minimum: 1

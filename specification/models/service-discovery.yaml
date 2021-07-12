@@ -147,6 +147,8 @@ consul:
       type: string
     name:
       type: string
+    namespace:
+      type: string
   additionalProperties: false
   example:
     id: "0"

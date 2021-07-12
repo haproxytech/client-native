@@ -56,6 +56,9 @@ type Consul struct {
 	// name
 	Name string `json:"name,omitempty"`
 
+	// namespace
+	Namespace string `json:"namespace,omitempty"`
+
 	// port
 	// Required: true
 	// Maximum: 65535
