@@ -21,6 +21,7 @@ import (
 	"reflect"
 	"strconv"
 	"strings"
+	"sync"
 
 	parser "github.com/haproxytech/config-parser/v4"
 	"github.com/haproxytech/config-parser/v4/common"
@@ -81,6 +82,7 @@ type Client struct {
 	parsers  map[string]parser.Parser
 	services map[string]*Service
 	Parser   parser.Parser
+	clientMu sync.Mutex
 }
 
 // DefaultClient returns Client with sane defaults
@@ -159,6 +161,8 @@ func (c *Client) Init(options ClientParams) error {
 
 // HasParser checks whether transaction exists in parser
 func (c *Client) HasParser(transactionID string) bool {
+	c.clientMu.Lock()
+	defer c.clientMu.Unlock()
 	_, ok := c.parsers[transactionID]
 	return ok
 }
@@ -185,7 +189,9 @@ func (c *Client) GetParser(transactionID string) (parser.Parser, error) {
 	if transactionID == "" {
 		return c.Parser, nil
 	}
+	c.clientMu.Lock()
 	p, ok := c.parsers[transactionID]
+	c.clientMu.Unlock()
 	if !ok {
 		return nil, NewConfError(ErrTransactionDoesNotExist, fmt.Sprintf("Transaction %s does not exist", transactionID))
 	}
@@ -197,7 +203,9 @@ func (c *Client) AddParser(transactionID string) error {
 	if transactionID == "" {
 		return NewConfError(ErrValidationError, "Not a valid transaction")
 	}
+	c.clientMu.Lock()
 	_, ok := c.parsers[transactionID]
+	c.clientMu.Unlock()
 	if ok {
 		return NewConfError(ErrTransactionAlreadyExists, fmt.Sprintf("Transaction %s already exists", transactionID))
 	}
@@ -224,7 +232,9 @@ func (c *Client) AddParser(transactionID string) error {
 	if err != nil {
 		return NewConfError(ErrCannotReadConfFile, fmt.Sprintf("Cannot read %s", tFile))
 	}
+	c.clientMu.Lock()
 	c.parsers[transactionID] = p
+	c.clientMu.Unlock()
 	return nil
 }
 
@@ -233,7 +243,9 @@ func (c *Client) DeleteParser(transactionID string) error {
 	if transactionID == "" {
 		return NewConfError(ErrValidationError, "Not a valid transaction")
 	}
+	c.clientMu.Lock()
 	_, ok := c.parsers[transactionID]
+	c.clientMu.Unlock()
 	if !ok {
 		return NewConfError(ErrTransactionDoesNotExist, fmt.Sprintf("Transaction %s does not exist", transactionID))
 	}
@@ -246,7 +258,9 @@ func (c *Client) CommitParser(transactionID string) error {
 	if transactionID == "" {
 		return NewConfError(ErrValidationError, "Not a valid transaction")
 	}
+	c.clientMu.Lock()
 	p, ok := c.parsers[transactionID]
+	c.clientMu.Unlock()
 	if !ok {
 		return NewConfError(ErrTransactionDoesNotExist, fmt.Sprintf("Transaction %s does not exist", transactionID))
 	}
