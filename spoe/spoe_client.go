@@ -23,6 +23,7 @@ import (
 	"os"
 	"path"
 	"path/filepath"
+	"sync"
 
 	"github.com/google/renameio"
 
@@ -41,6 +42,7 @@ type Spoe interface {
 type spoeclient struct {
 	clients    map[string]*SingleSpoe
 	initParams Params
+	mu         sync.Mutex
 }
 
 func NewSpoe(params Params) (Spoe, error) {
@@ -78,7 +80,9 @@ func NewSpoe(params Params) (Spoe, error) {
 
 // GetSingleSpoe returns single SPOE client by its file name if found, otherwise returns an error
 func (c *spoeclient) GetSingleSpoe(name string) (*SingleSpoe, error) {
+	c.mu.Lock()
 	client, ok := c.clients[name]
+	c.mu.Unlock()
 	if ok {
 		return client, nil
 	}
@@ -192,7 +196,9 @@ func (c *spoeclient) addClient(file string, params Params) error {
 		return err
 	}
 	name := c.getFileName(file)
+	c.mu.Lock()
 	c.clients[name] = client
+	c.mu.Unlock()
 	return nil
 }
 

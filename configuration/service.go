@@ -62,8 +62,8 @@ type ScalingParams struct {
 // NewService creates and returns a new Service instance.
 // name indicates the name of the service and only one Service instance with the given name can be created.
 func (c *Client) NewService(name string, scaling ScalingParams) (*Service, error) {
-	c.mu.Lock()
-	defer c.mu.Unlock()
+	c.clientMu.Lock()
+	defer c.clientMu.Unlock()
 	if _, ok := c.services[name]; ok {
 		return nil, fmt.Errorf("service with name %s already exists", name)
 	}
@@ -80,8 +80,8 @@ func (c *Client) NewService(name string, scaling ScalingParams) (*Service, error
 
 // DeleteService removes the Service instance specified by name from the client.
 func (c *Client) DeleteService(name string) {
-	c.mu.Lock()
-	defer c.mu.Unlock()
+	c.clientMu.Lock()
+	defer c.clientMu.Unlock()
 	delete(c.services, name)
 }
 

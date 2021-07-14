@@ -56,9 +56,9 @@ type TransactionClient interface {
 type transactionCleanerHandler func(transactionId, configurationFile string)
 
 type Transaction struct {
-	mu sync.Mutex
 	ClientParams
 	TransactionClient TransactionClient
+	mu                sync.Mutex
 }
 
 // GetTransactions returns an array of transactions
@@ -129,10 +129,8 @@ func (t *Transaction) CommitTransaction(transactionID string) (*models.Transacti
 
 // CommitTransaction commits a transaction by id.
 func (t *Transaction) commitTransaction(transactionID string, skipVersion bool) (*models.Transaction, error) {
-	// check if parser exists and if transaction exists
 	t.mu.Lock()
 	defer t.mu.Unlock()
-
 	// do a version check before committing
 	version, err := t.TransactionClient.GetVersion("")
 	if err != nil {
@@ -334,7 +332,6 @@ func (t *Transaction) parseHAProxyCheckError(output []byte, id string) string { 
 // MarkTransactionOutdated is marking the transaction by ID as outdated due to a newer commit,
 // moving it to the `outdated` folder, as well cleaning from the current parsers.
 func (t *Transaction) MarkTransactionOutdated(transactionID string) (err error) {
-	// check if parser exists and if transaction exists
 	t.mu.Lock()
 	defer t.mu.Unlock()
 

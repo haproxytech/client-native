@@ -17,6 +17,7 @@ package spoe
 
 import (
 	"fmt"
+	"sync"
 
 	parser "github.com/haproxytech/config-parser/v4"
 	"github.com/haproxytech/config-parser/v4/spoe"
@@ -37,6 +38,7 @@ type SingleSpoe struct {
 	parsers     map[string]*spoe.Parser
 	Parser      *spoe.Parser
 	Transaction *conf.Transaction
+	mu          sync.Mutex
 }
 
 type Params struct {
@@ -97,6 +99,8 @@ func (c *SingleSpoe) CheckTransactionOrVersion(transactionID string, version int
 
 // HasParser checks whether transaction exists in parser
 func (c *SingleSpoe) HasParser(transactionID string) bool {
+	c.mu.Lock()
+	defer c.mu.Unlock()
 	_, ok := c.parsers[transactionID]
 	return ok
 }
@@ -123,7 +127,9 @@ func (c *SingleSpoe) GetParser(transactionID string) (*spoe.Parser, error) {
 	if transactionID == "" {
 		return c.Parser, nil
 	}
+	c.mu.Lock()
 	p, ok := c.parsers[transactionID]
+	c.mu.Unlock()
 	if !ok {
 		return nil, conf.NewConfError(conf.ErrTransactionDoesNotExist, fmt.Sprintf("transaction %s does not exist", transactionID))
 	}
@@ -135,7 +141,9 @@ func (c *SingleSpoe) AddParser(transactionID string) error {
 	if transactionID == "" {
 		return conf.NewConfError(conf.ErrValidationError, "not a valid transaction")
 	}
+	c.mu.Lock()
 	_, ok := c.parsers[transactionID]
+	c.mu.Unlock()
 	if ok {
 		return conf.NewConfError(conf.ErrTransactionAlreadyExists, fmt.Sprintf("transaction %s already exists", transactionID))
 	}
@@ -154,7 +162,9 @@ func (c *SingleSpoe) AddParser(transactionID string) error {
 	if err := p.LoadData(tFile); err != nil {
 		return conf.NewConfError(conf.ErrCannotReadConfFile, fmt.Sprintf("cannot read %s", tFile))
 	}
+	c.mu.Lock()
 	c.parsers[transactionID] = p
+	c.mu.Unlock()
 	return nil
 }
 
@@ -163,7 +173,9 @@ func (c *SingleSpoe) DeleteParser(transactionID string) error {
 	if transactionID == "" {
 		return conf.NewConfError(conf.ErrValidationError, "not a valid transaction")
 	}
+	c.mu.Lock()
 	_, ok := c.parsers[transactionID]
+	c.mu.Unlock()
 	if !ok {
 		return conf.NewConfError(conf.ErrTransactionDoesNotExist, fmt.Sprintf("transaction %s does not exist", transactionID))
 	}
@@ -176,7 +188,9 @@ func (c *SingleSpoe) CommitParser(transactionID string) error {
 	if transactionID == "" {
 		return conf.NewConfError(conf.ErrValidationError, "not a valid transaction")
 	}
+	c.mu.Lock()
 	p, ok := c.parsers[transactionID]
+	c.mu.Unlock()
 	if !ok {
 		return conf.NewConfError(conf.ErrTransactionDoesNotExist, fmt.Sprintf("transaction %s does not exist", transactionID))
 	}
