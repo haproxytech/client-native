@@ -3390,6 +3390,12 @@ balance:
       x-dependency:
         algorithm:
           value: rdp-cookie
+    uri_path_only:
+      type: boolean
+      x-display-name: Uri Path Only
+      x-dependency:
+        algorithm:
+          value: uri 
 httpchk_params:
   type: object
   x-display-name: HTTP Check

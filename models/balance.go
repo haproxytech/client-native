@@ -58,6 +58,9 @@ type Balance struct {
 	// uri len
 	URILen int64 `json:"uri_len,omitempty"`
 
+	// uri path only
+	URIPathOnly bool `json:"uri_path_only,omitempty"`
+
 	// uri whole
 	URIWhole bool `json:"uri_whole,omitempty"`
 

@@ -2582,9 +2582,10 @@ func (s *SectionObject) balance(field reflect.Value) error {
 		switch *b.Algorithm {
 		case "uri":
 			d.Params = &params.BalanceURI{
-				Depth: b.URIDepth,
-				Len:   b.URILen,
-				Whole: b.URIWhole,
+				Depth:    b.URIDepth,
+				Len:      b.URILen,
+				Whole:    b.URIWhole,
+				PathOnly: b.URIPathOnly,
 			}
 		case "url_param":
 			d.Params = &params.BalanceURLParam{

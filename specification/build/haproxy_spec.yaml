@@ -5216,6 +5216,12 @@ definitions:
             algorithm:
               value: uri
           x-display-name: Uri Len
+        uri_path_only:
+          type: boolean
+          x-dependency:
+            algorithm:
+              value: uri
+          x-display-name: Uri Path Only
         uri_whole:
           type: boolean
           x-dependency:
