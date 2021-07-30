@@ -61,6 +61,8 @@ type ClientParams struct {
 	ValidateConfigurationFile bool
 	MasterWorker              bool
 	SkipFailedTransactions    bool
+	ValidateConfigFilesBefore []string
+	ValidateConfigFilesAfter  []string
 }
 
 // Client configuration client

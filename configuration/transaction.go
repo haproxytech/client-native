@@ -198,6 +198,19 @@ func (t *Transaction) commitTransaction(transactionID string, skipVersion bool) 
 	return &models.Transaction{ID: transactionID, Version: tVersion, Status: "success"}, nil
 }
 
+func addConfigFilesToArgs(args []string, clientParams ClientParams) []string {
+	result := []string{}
+	for _, file := range clientParams.ValidateConfigFilesBefore {
+		result = append(result, "-f", file)
+	}
+	result = append(result, args...)
+
+	for _, file := range clientParams.ValidateConfigFilesAfter {
+		result = append(result, "-f", file)
+	}
+	return result
+}
+
 func (t *Transaction) checkTransactionFile(transactionID string) error {
 	// check only against HAProxy file
 	_, ok := t.TransactionClient.(*Client)
@@ -216,15 +229,22 @@ func (t *Transaction) checkTransactionFile(transactionID string) error {
 	if err != nil {
 		return err
 	}
-	var cmd *exec.Cmd
-	if t.MasterWorker {
-		// #nosec G204
-		cmd = exec.Command(t.Haproxy, "-W", "-f", transactionFile, "-c")
-	} else {
-		// #nosec G204
-		cmd = exec.Command(t.Haproxy, "-f", transactionFile, "-c")
+
+	var name string
+	var args []string
+
+	switch {
+	case t.MasterWorker:
+		name = t.Haproxy
+		args = []string{"-W", "-f", transactionFile, "-c"}
+		args = addConfigFilesToArgs(args, t.ClientParams)
+	default:
+		name = t.Haproxy
+		args = []string{"-f", transactionFile, "-c"}
+		args = addConfigFilesToArgs(args, t.ClientParams)
 	}
 
+	cmd := exec.Command(name, args...)
 	var stdout, stderr bytes.Buffer
 	cmd.Stdout = &stdout
 	cmd.Stderr = &stderr
