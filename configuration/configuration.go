@@ -68,7 +68,9 @@ type ClientParams struct {
 
 	// ValidateCmd allows specifying a custom script to validate the transaction file.
 	// The injected environment variable DATAPLANEAPI_TRANSACTION_FILE must be used to get the location of the file.
-	ValidateCmd string
+	ValidateCmd               string
+	ValidateConfigFilesBefore []string
+	ValidateConfigFilesAfter  []string
 }
 
 // Client configuration client

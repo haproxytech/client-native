@@ -204,6 +204,19 @@ func (t *Transaction) commitTransaction(transactionID string, skipVersion bool) 
 	return &models.Transaction{ID: transactionID, Version: tVersion, Status: "success"}, nil
 }
 
+func addConfigFilesToArgs(args []string, clientParams ClientParams) []string {
+	result := []string{}
+	for _, file := range clientParams.ValidateConfigFilesBefore {
+		result = append(result, "-f", file)
+	}
+	result = append(result, args...)
+
+	for _, file := range clientParams.ValidateConfigFilesAfter {
+		result = append(result, "-f", file)
+	}
+	return result
+}
+
 func (t *Transaction) checkTransactionFile(transactionID string) error {
 	// check only against HAProxy file
 	_, ok := t.TransactionClient.(*Client)
@@ -236,9 +249,11 @@ func (t *Transaction) checkTransactionFile(transactionID string) error {
 	case t.MasterWorker:
 		name = t.Haproxy
 		args = []string{"-W", "-f", transactionFile, "-c"}
+		args = addConfigFilesToArgs(args, t.ClientParams)
 	default:
 		name = t.Haproxy
 		args = []string{"-f", transactionFile, "-c"}
+		args = addConfigFilesToArgs(args, t.ClientParams)
 	}
 
 	// #nosec G204
