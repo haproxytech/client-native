@@ -16,8 +16,8 @@ func TestGetServerTemplates(t *testing.T) { //nolint:gocognit,gocyclo
 		t.Error(err.Error())
 	}
 
-	if len(templates) != 3 {
-		t.Errorf("%v server templates returned, expected 3", len(templates))
+	if len(templates) != 4 {
+		t.Errorf("%v server templates returned, expected 4", len(templates))
 	}
 
 	if v != version {
@@ -48,8 +48,11 @@ func TestGetServerTemplate(t *testing.T) {
 	if template.NumOrRange != "1-3" {
 		t.Errorf("Expected 1-3, %v found", template.NumOrRange)
 	}
-	if template.Fqdn != "google.com:80" {
-		t.Errorf("Expected google.com:80, %v found", template.Fqdn)
+	if template.Fqdn != "google.com" {
+		t.Errorf("Expected google.com, %v found", template.Fqdn)
+	}
+	if *template.Port != 80 {
+		t.Errorf(" Expected 80, %v found", template.Port)
 	}
 	if template.Check != "enabled" {
 		t.Errorf("Expected check to be enabled")
@@ -80,8 +83,11 @@ func TestGetServerTemplateSecond(t *testing.T) {
 	if template.NumOrRange != "1-10" {
 		t.Errorf("Expected 1-10, %v found", template.NumOrRange)
 	}
-	if template.Fqdn != "google.com:8080" {
-		t.Errorf("Expected google.com:8080, %v found", template.Fqdn)
+	if template.Fqdn != "google.com" {
+		t.Errorf("Expected google.com, %v found", template.Fqdn)
+	}
+	if *template.Port != 8080 {
+		t.Errorf("Expected 8080, %v found", *template.Port)
 	}
 	if template.Check != "enabled" {
 		t.Errorf("Expected check to be enabled")
@@ -111,8 +117,11 @@ func TestGetServerTemplateThird(t *testing.T) {
 	if template.NumOrRange != "10-100" {
 		t.Errorf("Expected 10-100, %v found", template.NumOrRange)
 	}
-	if template.Fqdn != "google.com:443" {
-		t.Errorf("Expected google.com:443, %v found", template.Fqdn)
+	if template.Fqdn != "google.com" {
+		t.Errorf("Expected google.com, %v found", template.Fqdn)
+	}
+	if *template.Port != 443 {
+		t.Errorf("Expected 443, %v found", *template.Port)
 	}
 	if template.Check != "enabled" {
 		t.Errorf("Expected check to be enabled")
@@ -126,13 +135,50 @@ func TestGetServerTemplateThird(t *testing.T) {
 	}
 }
 
+func TestGetServerTemplateFourth(t *testing.T) {
+
+	v, template, err := client.GetServerTemplate("test", "test", "")
+
+	if err != nil {
+		t.Error(err.Error())
+	}
+	if v != version {
+		t.Errorf("Version %v returned, expected %v", v, version)
+	}
+	if template.Prefix != "test" {
+		t.Errorf("Expected only website, %v found", template.Prefix)
+	}
+	if template.NumOrRange != "5" {
+		t.Errorf("Expected 5, %v found", template.NumOrRange)
+	}
+	if template.Fqdn != "test.com" {
+		t.Errorf("Expected test.com, %v found", template.Fqdn)
+	}
+	if *template.Port != 0 {
+		t.Errorf("Expected 0, %v found", *template.Port)
+	}
+	if template.Check != "enabled" {
+		t.Errorf("Expected check to be enabled")
+	}
+	if template.Backup != "enabled" {
+		t.Errorf("Expected backup to be enabled")
+	}
+	_, err = template.MarshalBinary()
+	if err != nil {
+		t.Error(err.Error())
+	}
+}
+
 func TestCreateEditDeleteServerTemplate(t *testing.T) {
+
+	port := int64(80)
 
 	// TestCreateServerTemplate
 	template := &models.ServerTemplate{
 		Prefix:     "dev",
 		NumOrRange: "1-10",
-		Fqdn:       "site.com:80",
+		Fqdn:       "site.com",
+		Port:       &port,
 		Check:      "enabled",
 	}
 
@@ -164,11 +210,14 @@ func TestCreateEditDeleteServerTemplate(t *testing.T) {
 		version++
 	}
 
+	port = 8080
+
 	// EditServerTemplate
 	template = &models.ServerTemplate{
 		Prefix:     "dev",
 		NumOrRange: "11-20",
-		Fqdn:       "site.com:8080",
+		Fqdn:       "site.com",
+		Port:       &port,
 		Check:      "disabled",
 	}
 

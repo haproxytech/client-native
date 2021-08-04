@@ -184,6 +184,7 @@ func ParseServerTemplate(ondiskServerTemplate types.ServerTemplate) *models.Serv
 		Prefix:     ondiskServerTemplate.Prefix,
 		NumOrRange: ondiskServerTemplate.NumOrRange,
 		Fqdn:       ondiskServerTemplate.Fqdn,
+		Port:       &ondiskServerTemplate.Port,
 	}
 	for _, p := range ondiskServerTemplate.Params { //nolint:gocognit,gocyclo,dupl,cyclop
 		switch v := p.(type) {
@@ -427,6 +428,7 @@ func SerializeServerTemplate(s models.ServerTemplate) types.ServerTemplate { //n
 		Prefix:     s.Prefix,
 		NumOrRange: s.NumOrRange,
 		Fqdn:       s.Fqdn,
+		Port:       *s.Port,
 		Params:     []params.ServerOption{},
 	}
 	// ServerOptionWord

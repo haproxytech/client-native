@@ -1328,7 +1328,7 @@ server_template:
     fqdn:
       type: string
       x-nullable: false
-    health_check_port:
+    port:
       type: integer
       x-nullable: true
       minimum: 1
@@ -1522,7 +1522,7 @@ server_template:
     pool_purge_delay:
       type: integer
       x-nullable: true
-    port:
+    health_check_port:
       type: integer
       x-nullable: true
       minimum: 1
@@ -3395,7 +3395,7 @@ balance:
       x-display-name: Uri Path Only
       x-dependency:
         algorithm:
-          value: uri 
+          value: uri
 httpchk_params:
   type: object
   x-display-name: HTTP Check

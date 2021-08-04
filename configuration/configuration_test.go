@@ -205,6 +205,7 @@ backend test
   server-template srv 1-3 google.com:80 check
   server-template site 1-10 google.com:8080 check backup
   server-template website 10-100 google.com:443 check no-backup
+  server-template test 5 test.com check backup
 
 peers mycluster
   peer hapee 192.168.1.1:1023

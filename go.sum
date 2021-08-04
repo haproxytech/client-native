@@ -115,8 +115,8 @@ github.com/google/renameio v0.1.1-0.20200217212219-353f81969824/go.mod h1:t/HQoY
 github.com/google/uuid v1.0.0/go.mod h1:TIyPZe4MgqvfeYDBFedMoGGpEw/LqOeaOT+nhxU+yHo=
 github.com/google/uuid v1.1.1 h1:Gkbcsh/GbpXz7lPftLA3P6TYMwjCLYm83jiFQZF/3gY=
 github.com/google/uuid v1.1.1/go.mod h1:TIyPZe4MgqvfeYDBFedMoGGpEw/LqOeaOT+nhxU+yHo=
-github.com/haproxytech/config-parser/v4 v4.0.0-rc1.0.20210719074749-d9f3915990e4 h1:JOeBczd0RHhhF81/Sc1ygkZ6TjhSz051VKIgU+amz/Y=
-github.com/haproxytech/config-parser/v4 v4.0.0-rc1.0.20210719074749-d9f3915990e4/go.mod h1:R2KvNW3R5pf+ucN4K0Wtdhib08U8L10rRAwP2lEDuWQ=
+github.com/haproxytech/config-parser/v4 v4.0.0-rc1.0.20210803072826-9c57675784b1 h1:e45+fkCXUdU/OOTQaL9okrtgGWiQ+NWLpYkZlxghvXI=
+github.com/haproxytech/config-parser/v4 v4.0.0-rc1.0.20210803072826-9c57675784b1/go.mod h1:R2KvNW3R5pf+ucN4K0Wtdhib08U8L10rRAwP2lEDuWQ=
 github.com/inconshreveable/mousetrap v1.0.0/go.mod h1:PxqpIevigyE2G7u3NXJIT2ANytuPF1OarO4DADm73n8=
 github.com/joho/godotenv v1.3.0/go.mod h1:7hK45KPybAkOC6peb+G5yklZfMxEjkZhHbwpqxOKXbg=
 github.com/karrick/godirwalk v1.8.0/go.mod h1:H5KPZjojv4lE+QYImBI8xVtrBRgYrIVsaRPx4tDPEn4=
