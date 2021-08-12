@@ -29,8 +29,8 @@ func TestGetTCPRequestRules(t *testing.T) { //nolint:gocognit,gocyclo
 		t.Error(err.Error())
 	}
 
-	if len(tRules) != 6 {
-		t.Errorf("%v tcp request rules returned, expected 6", len(tRules))
+	if len(tRules) != 8 {
+		t.Errorf("%v tcp request rules returned, expected 8", len(tRules))
 	}
 
 	if v != version {
@@ -95,6 +95,32 @@ func TestGetTCPRequestRules(t *testing.T) { //nolint:gocognit,gocyclo
 			if r.Type != "connection" {
 				t.Errorf("%v: Type not connection: %v", *r.Index, r.Type)
 			}
+			if r.Action != "silent-drop" {
+				t.Errorf("%v: Action not silent-drop: %v", *r.Index, r.Action)
+			}
+			if r.Cond != "" {
+				t.Errorf("%v: Cond not blank: %v", *r.Index, r.Cond)
+			}
+			if r.CondTest != "" {
+				t.Errorf("%v: CondTest not blank: %v", *r.Index, r.CondTest)
+			}
+		case 5:
+			if r.Type != "connection" {
+				t.Errorf("%v: Type not connection: %v", *r.Index, r.Type)
+			}
+			if r.Action != "silent-drop" {
+				t.Errorf("%v: Action not silent-drop: %v", *r.Index, r.Action)
+			}
+			if r.Cond != "if" {
+				t.Errorf("%v: Cond not if: %v", *r.Index, r.Cond)
+			}
+			if r.CondTest != "TRUE" {
+				t.Errorf("%v: CondTest not src TRUE: %v", *r.Index, r.CondTest)
+			}
+		case 6:
+			if r.Type != "connection" {
+				t.Errorf("%v: Type not connection: %v", *r.Index, r.Type)
+			}
 			if r.Action != "lua" {
 				t.Errorf("%v: Action not lua: %v", *r.Index, r.Action)
 			}
@@ -110,7 +136,7 @@ func TestGetTCPRequestRules(t *testing.T) { //nolint:gocognit,gocyclo
 			if r.CondTest != "FALSE" {
 				t.Errorf("%v: CondTest not src FALSE: %v", *r.Index, r.CondTest)
 			}
-		case 5:
+		case 7:
 			if r.Type != "content" {
 				t.Errorf("%v: Type not content: %v", *r.Index, r.Type)
 			}
@@ -130,7 +156,7 @@ func TestGetTCPRequestRules(t *testing.T) { //nolint:gocognit,gocyclo
 				t.Errorf("%v: CondTest not src FALSE: %v", *r.Index, r.CondTest)
 			}
 		default:
-			t.Errorf("Expext tcp-request 0-5, %v found", *r.Index)
+			t.Errorf("Expext tcp-request 0-7, %v found", *r.Index)
 		}
 	}
 
@@ -241,7 +267,7 @@ func TestCreateEditDeleteTCPRequestRule(t *testing.T) {
 	}
 
 	// TestDeleteTCPRequest
-	err = client.DeleteTCPRequestRule(6, "frontend", "test", "", version)
+	err = client.DeleteTCPRequestRule(8, "frontend", "test", "", version)
 	if err != nil {
 		t.Error(err.Error())
 	} else {
@@ -252,7 +278,7 @@ func TestCreateEditDeleteTCPRequestRule(t *testing.T) {
 		t.Error("Version not incremented")
 	}
 
-	_, _, err = client.GetTCPRequestRule(6, "frontend", "test", "")
+	_, _, err = client.GetTCPRequestRule(8, "frontend", "test", "")
 	if err == nil {
 		t.Error("DeleteTCPRequestRule failed, TCP Request Rule 6 still exists")
 	}

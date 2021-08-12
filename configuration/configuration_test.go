@@ -131,6 +131,8 @@ frontend test
   tcp-request connection reject if FALSE
   tcp-request content accept if TRUE
   tcp-request content reject if FALSE
+  tcp-request connection silent-drop
+  tcp-request connection silent-drop if TRUE
   tcp-request connection lua.foo param1 param2 if FALSE
   tcp-request content lua.foo param1 param2 if FALSE
   log global
