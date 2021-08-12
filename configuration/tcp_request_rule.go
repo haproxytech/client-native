@@ -278,6 +278,8 @@ func ParseTCPRequestRule(f types.TCPType) (rule *models.TCPRequestRule, err erro
 		case *tcp_actions.SetSrc:
 			rule.Action = models.TCPRequestRuleActionSetSrc
 			rule.Expr = a.Expr.String()
+		case *tcp_actions.SilentDrop:
+			rule.Action = models.TCPRequestRuleActionSilentDrop
 		case *tcp_actions.Lua:
 			rule.Action = models.TCPRequestRuleActionLua
 			rule.LuaAction = a.Action
