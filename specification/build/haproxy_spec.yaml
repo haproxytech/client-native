@@ -5463,10 +5463,11 @@ definitions:
         - key: tag:Environment
           value: development
         enabled: true
-        id: 0
+        id: "0"
         ipv4_address: private
         name: frontend-service
         region: us-east-1
+        retry_timeout: 1
         secret_access_key: '****************soLl'
       properties:
         access_key_id:
