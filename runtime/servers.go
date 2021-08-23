@@ -88,7 +88,7 @@ func (s *SingleRuntime) EnableServer(backend, server string) error {
 	return s.Execute(cmd)
 }
 
-// DisableServer marks server as DOWN for maintenanc
+// DisableServer marks server as DOWN for maintenance
 func (s *SingleRuntime) DisableServer(backend, server string) error {
 	cmd := fmt.Sprintf("disable server %s/%s", backend, server)
 	return s.Execute(cmd)

@@ -430,7 +430,7 @@ func (c *Client) ShowTable(name string, process int) (*models.StickTable, error)
 	return table, nil
 }
 
-// ExecuteRaw does not procces response, just returns its values for all processes
+// ExecuteRaw does not process response, just returns its values for all processes
 func (c *Client) ExecuteRaw(command string) ([]string, error) {
 	result := make([]string, len(c.runtimes))
 	for index, runtime := range c.runtimes {

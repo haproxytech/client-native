@@ -40,7 +40,7 @@ func TestSanitizeFilename(t *testing.T) {
 			want:  "_hidden",
 		},
 		{
-			name:  "Should acept unusual filenames",
+			name:  "Should accept unusual filenames",
 			input: ".unusual.",
 			want:  "_unusual.",
 		},

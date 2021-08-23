@@ -56,7 +56,7 @@ func (s *SingleRuntime) Init(socketPath string, worker int, process int) error {
 	s.jobs = make(chan Task)
 	s.worker = worker
 	s.process = process
-	go s.handleIncommingJobs(context.Background())
+	go s.handleIncomingJobs(context.Background())
 	return nil
 }
 
@@ -65,11 +65,11 @@ func (s *SingleRuntime) InitWithContext(ctx context.Context, socketPath string, 
 	s.jobs = make(chan Task)
 	s.worker = worker
 	s.process = process
-	go s.handleIncommingJobs(ctx)
+	go s.handleIncomingJobs(ctx)
 	return nil
 }
 
-func (s *SingleRuntime) handleIncommingJobs(ctx context.Context) {
+func (s *SingleRuntime) handleIncomingJobs(ctx context.Context) {
 	for {
 		select {
 		case job, ok := <-s.jobs:
