@@ -54,7 +54,7 @@ func (haproxy *HAProxyMock) Start() {
 	}()
 }
 
-// SetResponses - setting the expected repsonses
+// SetResponses - setting the expected responses
 func (haproxy *HAProxyMock) SetResponses(responses *map[string]string) {
 	haproxy.responses = *responses
 }
