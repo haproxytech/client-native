@@ -71,10 +71,11 @@ awsRegion:
     server_slots_growth_increment:
       type: integer
   example:
-    id: 0
+    id: "0"
     access_key_id: "****************L7GT"
     secret_access_key: "****************soLl"
     name: frontend-service
+    retry_timeout: 1
     region: us-east-1
     ipv4_address: private
     enabled: true
