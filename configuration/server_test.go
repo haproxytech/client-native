@@ -20,6 +20,7 @@ import (
 	"reflect"
 	"testing"
 
+	"github.com/haproxytech/client-native/v2/misc"
 	"github.com/haproxytech/client-native/v2/models"
 )
 
@@ -251,5 +252,59 @@ func TestCreateEditDeleteServer(t *testing.T) {
 	if err == nil {
 		t.Error("Should throw error, non existant server")
 		version++
+	}
+}
+
+func Test_parseAddress(t *testing.T) {
+	type args struct {
+		address string
+	}
+	tests := []struct {
+		name            string
+		args            args
+		wantIpOrAddress string
+		wantPort        *int64
+	}{
+		{
+			name:            "IPv6 with port",
+			args:            args{address: "[fd00:6:48:c85:deb:f:62:4]:80"},
+			wantIpOrAddress: "fd00:6:48:c85:deb:f:62:4",
+			wantPort:        misc.Int64P(80),
+		},
+		{
+			name:            "IPv6 without port",
+			args:            args{address: "fd00:6:48:c85:deb:f:62:4"},
+			wantIpOrAddress: "fd00:6:48:c85:deb:f:62:4",
+			wantPort:        nil,
+		},
+		{
+			name:            "IPv4 with port",
+			args:            args{address: "10.1.1.2:8080"},
+			wantIpOrAddress: "10.1.1.2",
+			wantPort:        misc.Int64P(8080),
+		},
+		{
+			name:            "IPv4 without port",
+			args:            args{address: "10.1.1.2"},
+			wantIpOrAddress: "10.1.1.2",
+			wantPort:        nil,
+		},
+		{
+			name:            "Socket address",
+			args:            args{address: "/var/run/test_socket"},
+			wantIpOrAddress: "/var/run/test_socket",
+			wantPort:        nil,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			gotIpOrAddress, gotPort := parseAddress(tt.args.address)
+			if gotIpOrAddress != tt.wantIpOrAddress {
+				t.Errorf("parseAddress() gotIpOrAddress = %v, want %v", gotIpOrAddress, tt.wantIpOrAddress)
+			}
+			if gotPort != nil && tt.wantPort != nil && *gotPort != *tt.wantPort {
+				t.Errorf("parseAddress() gotPort = %v, want %v", gotPort, tt.wantPort)
+			}
+		})
 	}
 }
