@@ -179,25 +179,47 @@ func ParseServers(backend string, p parser.Parser) (models.Servers, error) {
 	return servers, nil
 }
 
+func parseAddress(address string) (ipOrAddress string, port *int64) {
+	if strings.HasPrefix(address, "[") && strings.ContainsRune(address, ']') { // IPv6 with port [2001:0DB8:0000:0000:0000:0000:1428:57ab]:80
+		split := strings.Split(address, "]")
+		split[0] = strings.TrimPrefix(split[0], "[")
+		if len(split) == 2 { // has port
+			split[1] = strings.ReplaceAll(split[1], ":", "")
+			p, err := strconv.ParseInt(split[1], 10, 64)
+			if err == nil {
+				port = &p
+			}
+		}
+		return split[0], port
+	}
+
+	switch c := strings.Count(address, ":"); {
+	case c == 1: // IPv4 with port 127.0.0.1:80
+		split := strings.Split(address, ":")
+		p, err := strconv.ParseInt(split[1], 10, 64)
+		if err == nil {
+			port = &p
+		}
+		return split[0], port
+	case c > 1: // IPv6 2001:0DB8:0000:0000:0000:0000:1428:57ab
+		return address, nil
+	case c == 0:
+		return address, nil // IPv4 or socket address
+	default:
+		return "", nil
+	}
+}
+
 func ParseServer(ondiskServer types.Server) *models.Server { //nolint:gocognit,gocyclo,dupl,cyclop
 	s := &models.Server{
 		Name: ondiskServer.Name,
 	}
-	addSlice := strings.Split(ondiskServer.Address, ":")
-	switch len(addSlice) {
-	case 0:
+	address, port := parseAddress(ondiskServer.Address)
+	if address == "" {
 		return nil
-	case 1:
-		s.Address = addSlice[0]
-	default:
-		s.Address = addSlice[0]
-		if addSlice[1] != "" {
-			p, err := strconv.ParseInt(addSlice[1], 10, 64)
-			if err == nil {
-				s.Port = &p
-			}
-		}
 	}
+	s.Address = address
+	s.Port = port
 	for _, p := range ondiskServer.Params { //nolint:gocognit,gocyclo,dupl,cyclop
 		switch v := p.(type) {
 		case *params.ServerOptionWord:
