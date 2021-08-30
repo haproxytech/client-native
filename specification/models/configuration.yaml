@@ -23,6 +23,10 @@ global:
     daemon:
       type: string
       enum: [enabled, disabled]
+    localpeer:
+      type: string
+      pattern: '^[^\s]+$'
+      x-display-name: Local instance's peer name.
     nbproc:
       type: integer
       x-display-name: Number of Processes
@@ -45,6 +49,10 @@ global:
       type: string
       pattern: '^[^\s]+$'
       x-display-name: Server State Base
+    server_state_file:
+      type: string
+      pattern: '^[^\s]+$'
+      x-display-name: Server State File
     tune_ssl_default_dh_param:
       type: integer
       x-display-name: SSL Default DH Parameter Size

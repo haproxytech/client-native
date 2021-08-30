@@ -186,6 +186,10 @@ definitions:
           type: integer
           x-display-name: Hard Stop After
           x-nullable: true
+        localpeer:
+          pattern: ^[^\s]+$
+          type: string
+          x-display-name: Local instance's peer name.
         log_send_hostname:
           properties:
             enabled:
@@ -274,6 +278,10 @@ definitions:
           pattern: ^[^\s]+$
           type: string
           x-display-name: Server State Base
+        server_state_file:
+          pattern: ^[^\s]+$
+          type: string
+          x-display-name: Server State File
         ssl_default_bind_ciphers:
           type: string
           x-display-name: SSL Default Bind Ciphers

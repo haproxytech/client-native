@@ -61,6 +61,10 @@ type Global struct {
 	// hard stop after
 	HardStopAfter *int64 `json:"hard_stop_after,omitempty"`
 
+	// localpeer
+	// Pattern: ^[^\s]+$
+	Localpeer string `json:"localpeer,omitempty"`
+
 	// log send hostname
 	LogSendHostname *GlobalLogSendHostname `json:"log_send_hostname,omitempty"`
 
@@ -88,6 +92,10 @@ type Global struct {
 	// server state base
 	// Pattern: ^[^\s]+$
 	ServerStateBase string `json:"server_state_base,omitempty"`
+
+	// server state file
+	// Pattern: ^[^\s]+$
+	ServerStateFile string `json:"server_state_file,omitempty"`
 
 	// ssl default bind ciphers
 	SslDefaultBindCiphers string `json:"ssl_default_bind_ciphers,omitempty"`
@@ -146,6 +154,10 @@ func (m *Global) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
+	if err := m.validateLocalpeer(formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.validateLogSendHostname(formats); err != nil {
 		res = append(res, err)
 	}
@@ -159,6 +171,10 @@ func (m *Global) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateServerStateBase(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateServerStateFile(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -295,6 +311,19 @@ func (m *Global) validateGroup(formats strfmt.Registry) error {
 	return nil
 }
 
+func (m *Global) validateLocalpeer(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.Localpeer) { // not required
+		return nil
+	}
+
+	if err := validate.Pattern("localpeer", "body", string(m.Localpeer), `^[^\s]+$`); err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func (m *Global) validateLogSendHostname(formats strfmt.Registry) error {
 
 	if swag.IsZero(m.LogSendHostname) { // not required
@@ -370,6 +399,19 @@ func (m *Global) validateServerStateBase(formats strfmt.Registry) error {
 	}
 
 	if err := validate.Pattern("server_state_base", "body", string(m.ServerStateBase), `^[^\s]+$`); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *Global) validateServerStateFile(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.ServerStateFile) { // not required
+		return nil
+	}
+
+	if err := validate.Pattern("server_state_file", "body", string(m.ServerStateFile), `^[^\s]+$`); err != nil {
 		return err
 	}
 

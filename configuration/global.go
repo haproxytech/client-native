@@ -88,11 +88,24 @@ func ParseGlobalSection(p parser.Parser) (*models.Global, error) { //nolint:goco
 		srvStateBase = data.(*types.StringC).Value
 	}
 
+	data, err = p.Get(parser.Global, parser.GlobalSectionName, "server-state-file")
+	srvStateFile := ""
+	if err == nil {
+		srvStateFile = data.(*types.StringC).Value
+	}
+
 	data, err = p.Get(parser.Global, parser.GlobalSectionName, "hard-stop-after")
 	var hardStop *int64
 	if err == nil {
 		hardStopParser := data.(*types.StringC)
 		hardStop = misc.ParseTimeout(hardStopParser.Value)
+	}
+
+	data, err = p.Get(parser.Global, parser.GlobalSectionName, "localpeer")
+	localPeer := ""
+	if err == nil {
+		userParser := data.(*types.StringC)
+		localPeer = userParser.Value
 	}
 
 	data, err = p.Get(parser.Global, parser.GlobalSectionName, "user")
@@ -294,7 +307,9 @@ func ParseGlobalSection(p parser.Parser) (*models.Global, error) { //nolint:goco
 		User:                         user,
 		Group:                        group,
 		Chroot:                       chroot,
+		Localpeer:                    localPeer,
 		ServerStateBase:              srvStateBase,
+		ServerStateFile:              srvStateFile,
 		HardStopAfter:                hardStop,
 		Daemon:                       daemon,
 		MasterWorker:                 masterWorker,
@@ -332,6 +347,15 @@ func SerializeGlobalSection(p parser.Parser, data *models.Global) error { //noli
 	if err := p.Set(parser.Global, parser.GlobalSectionName, "chroot", pChroot); err != nil {
 		return err
 	}
+	pLocalPeer := &types.StringC{
+		Value: data.Localpeer,
+	}
+	if data.Localpeer == "" {
+		pLocalPeer = nil
+	}
+	if err := p.Set(parser.Global, parser.GlobalSectionName, "localpeer", pLocalPeer); err != nil {
+		return err
+	}
 	pSrvStateBase := &types.StringC{
 		Value: data.ServerStateBase,
 	}
@@ -339,6 +363,15 @@ func SerializeGlobalSection(p parser.Parser, data *models.Global) error { //noli
 		pSrvStateBase = nil
 	}
 	if err := p.Set(parser.Global, parser.GlobalSectionName, "server-state-base", pSrvStateBase); err != nil {
+		return err
+	}
+	pSrvStateFile := &types.StringC{
+		Value: data.ServerStateFile,
+	}
+	if data.ServerStateFile == "" {
+		pSrvStateFile = nil
+	}
+	if err := p.Set(parser.Global, parser.GlobalSectionName, "server-state-file", pSrvStateFile); err != nil {
 		return err
 	}
 	var pHardStop *types.StringC
