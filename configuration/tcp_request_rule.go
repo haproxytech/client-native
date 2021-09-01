@@ -516,6 +516,12 @@ func SerializeTCPRequestRule(f models.TCPRequestRule) (rule types.TCPType, err e
 				Cond:     f.Cond,
 				CondTest: f.CondTest,
 			}, nil
+		case models.TCPRequestRuleActionSilentDrop:
+			return &tcp_types.Connection{
+				Action:   &tcp_actions.SilentDrop{},
+				Cond:     f.Cond,
+				CondTest: f.CondTest,
+			}, nil
 		case models.TCPRequestRuleActionLua:
 			return &tcp_types.Connection{
 				Action: &tcp_actions.Lua{

@@ -289,3 +289,52 @@ func TestCreateEditDeleteTCPRequestRule(t *testing.T) {
 		version++
 	}
 }
+
+func TestSerializeTCPRequestRule(t *testing.T) {
+	testCases := []struct {
+		input          models.TCPRequestRule
+		expectedResult string
+	}{
+		{
+			input: models.TCPRequestRule{
+				Type:     models.TCPRequestRuleTypeConnection,
+				Action:   models.TCPRequestRuleActionSilentDrop,
+				Cond:     "if",
+				CondTest: "FALSE",
+			},
+			expectedResult: "connection silent-drop if FALSE",
+		},
+		{
+			input: models.TCPRequestRule{
+				Type:     models.TCPRequestRuleTypeContent,
+				Action:   models.TCPRequestRuleActionSilentDrop,
+				Cond:     "if",
+				CondTest: "FALSE",
+			},
+			expectedResult: "content silent-drop if FALSE",
+		},
+		{
+			input: models.TCPRequestRule{
+				Type:     models.TCPRequestRuleTypeSession,
+				Action:   models.TCPRequestRuleActionSilentDrop,
+				Cond:     "if",
+				CondTest: "FALSE",
+			},
+			expectedResult: "session silent-drop if FALSE",
+		},
+	}
+
+	for _, testCase := range testCases {
+		t.Run(testCase.expectedResult, func(t *testing.T) {
+			tcpType, err := SerializeTCPRequestRule(testCase.input)
+			if err != nil {
+				t.Error(err.Error())
+			}
+
+			actual := tcpType.String()
+			if actual != testCase.expectedResult {
+				t.Errorf("Expected %q, got: %q", testCase.expectedResult, actual)
+			}
+		})
+	}
+}
