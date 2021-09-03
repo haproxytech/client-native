@@ -16,6 +16,7 @@
 package spoe
 
 import (
+	"path"
 	"path/filepath"
 	"testing"
 
@@ -35,7 +36,7 @@ func TestSingleSpoe_GetGroups(t *testing.T) {
 		t.Error(err.Error())
 	}
 	defer func() {
-		_ = remove(configFile)
+		_ = remove(path.Join(dir, configFile))
 		_ = remove(dir)
 		_ = remove(transactionDir)
 	}()
@@ -96,7 +97,7 @@ func TestSingleSpoe_DeleteGroup(t *testing.T) { //nolint:dupl
 		t.Error(err.Error())
 	}
 	defer func() {
-		_ = remove(configFile)
+		_ = remove(path.Join(dir, configFile))
 		_ = remove(dir)
 		_ = remove(transactionDir)
 	}()
@@ -145,7 +146,7 @@ func TestSingleSpoe_CreateGroup(t *testing.T) {
 		t.Error(err.Error())
 	}
 	defer func() {
-		_ = remove(configFile)
+		_ = remove(path.Join(dir, configFile))
 		_ = remove(dir)
 		_ = remove(transactionDir)
 	}()
@@ -198,7 +199,7 @@ func TestSingleSpoe_EditGroup(t *testing.T) {
 		t.Error(err.Error())
 	}
 	defer func() {
-		_ = remove(configFile)
+		_ = remove(path.Join(dir, configFile))
 		_ = remove(dir)
 		_ = remove(transactionDir)
 	}()

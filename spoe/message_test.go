@@ -16,6 +16,7 @@
 package spoe
 
 import (
+	"path"
 	"path/filepath"
 	"testing"
 
@@ -35,7 +36,7 @@ func TestSingleSpoe_GetMessages(t *testing.T) {
 		t.Error(err.Error())
 	}
 	defer func() {
-		_ = remove(configFile)
+		_ = remove(path.Join(dir, configFile))
 		_ = remove(dir)
 		_ = remove(transactionDir)
 	}()
@@ -105,7 +106,7 @@ func TestSingleSpoe_DeleteMessage(t *testing.T) { //nolint:dupl
 		t.Error(err.Error())
 	}
 	defer func() {
-		_ = remove(configFile)
+		_ = remove(path.Join(dir, configFile))
 		_ = remove(dir)
 		_ = remove(transactionDir)
 	}()
@@ -154,7 +155,7 @@ func TestSingleSpoe_CreateMessage(t *testing.T) {
 		t.Error(err.Error())
 	}
 	defer func() {
-		_ = remove(configFile)
+		_ = remove(path.Join(dir, configFile))
 		_ = remove(dir)
 		_ = remove(transactionDir)
 	}()
@@ -213,7 +214,7 @@ func TestSingleSpoe_EditMessage(t *testing.T) {
 		t.Error(err.Error())
 	}
 	defer func() {
-		_ = remove(configFile)
+		_ = remove(path.Join(dir, configFile))
 		_ = remove(dir)
 		_ = remove(transactionDir)
 	}()
