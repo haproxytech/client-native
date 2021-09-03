@@ -16,6 +16,7 @@
 package spoe
 
 import (
+	"path"
 	"path/filepath"
 	"testing"
 
@@ -32,7 +33,7 @@ func TestSingleSpoe_GetConfigurationVersion(t *testing.T) {
 		t.Error(err.Error())
 	}
 	defer func() {
-		_ = remove(configFile)
+		_ = remove(path.Join(dir, configFile))
 		_ = remove(dir)
 		_ = remove(transactionDir)
 	}()

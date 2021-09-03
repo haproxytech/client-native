@@ -16,6 +16,7 @@
 package spoe
 
 import (
+	"path"
 	"path/filepath"
 	"reflect"
 	"testing"
@@ -34,7 +35,7 @@ func TestSingleSpoe_GetScopes(t *testing.T) {
 		t.Error(err.Error())
 	}
 	defer func() {
-		_ = remove(configFile)
+		_ = remove(path.Join(dir, configFile))
 		_ = remove(dir)
 		_ = remove(transactionDir)
 	}()
@@ -91,7 +92,7 @@ func TestSingleSpoe_DeleteScope(t *testing.T) {
 		t.Error(err.Error())
 	}
 	defer func() {
-		_ = remove(configFile)
+		_ = remove(path.Join(dir, configFile))
 		_ = remove(dir)
 		_ = remove(transactionDir)
 	}()
@@ -139,7 +140,7 @@ func TestSingleSpoe_CreateScope(t *testing.T) {
 	}
 
 	defer func() {
-		_ = remove(configFile)
+		_ = remove(path.Join(dir, configFile))
 		_ = remove(dir)
 		_ = remove(transactionDir)
 	}()
@@ -186,7 +187,7 @@ func TestSingleSpoe_GetScope(t *testing.T) {
 		t.Error(err.Error())
 	}
 	defer func() {
-		_ = remove(configFile)
+		_ = remove(path.Join(dir, configFile))
 		_ = remove(dir)
 		_ = remove(transactionDir)
 	}()

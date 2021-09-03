@@ -16,6 +16,7 @@
 package spoe
 
 import (
+	"path"
 	"path/filepath"
 	"testing"
 
@@ -35,7 +36,7 @@ func TestSingleSpoe_GetAgents(t *testing.T) {
 		t.Error(err.Error())
 	}
 	defer func() {
-		_ = remove(configFile)
+		_ = remove(path.Join(dir, configFile))
 		_ = remove(dir)
 		_ = remove(transactionDir)
 	}()
@@ -108,7 +109,7 @@ func TestSingleSpoe_DeleteAgent(t *testing.T) { //nolint:dupl
 		t.Error(err.Error())
 	}
 	defer func() {
-		_ = remove(configFile)
+		_ = remove(path.Join(dir, configFile))
 		_ = remove(dir)
 		_ = remove(transactionDir)
 	}()
@@ -157,7 +158,7 @@ func TestSingleSpoe_CreateAgent(t *testing.T) {
 		t.Error(err.Error())
 	}
 	defer func() {
-		_ = remove(configFile)
+		_ = remove(path.Join(dir, configFile))
 		_ = remove(dir)
 		_ = remove(transactionDir)
 	}()
@@ -226,7 +227,7 @@ func TestSingleSpoe_EditAgent(t *testing.T) {
 		t.Error(err.Error())
 	}
 	defer func() {
-		_ = remove(configFile)
+		_ = remove(path.Join(dir, configFile))
 		_ = remove(dir)
 		_ = remove(transactionDir)
 	}()
