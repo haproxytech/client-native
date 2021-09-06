@@ -14,6 +14,8 @@ externalDocs:
   url: https://cbonte.github.io/haproxy-dconv/
   description: HAProxy Documentation
 definitions:
+  bind_params:
+    $ref: "models/configuration/bind_params.yaml#/bind_params"
   site:
     $ref: "models/simple.yaml#/site"
   sites:

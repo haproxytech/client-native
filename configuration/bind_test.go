@@ -93,15 +93,17 @@ func TestCreateEditDeleteBind(t *testing.T) {
 	// TestCreateBind
 	port := int64(4300)
 	l := &models.Bind{
-		Name:           "created",
-		Address:        "192.168.2.1",
-		Port:           &port,
-		Ssl:            true,
-		SslCertificate: "dummy.crt",
-		Interface:      "eth0",
-		Verify:         "optional",
-		SslMinVer:      "TLSv1.3",
-		SslMaxVer:      "TLSv1.3",
+		Name:    "created",
+		Address: "192.168.2.1",
+		Port:    &port,
+		BindParams: models.BindParams{
+			Ssl:            true,
+			SslCertificate: "dummy.crt",
+			Interface:      "eth0",
+			Verify:         "optional",
+			SslMinVer:      "TLSv1.3",
+			SslMaxVer:      "TLSv1.3",
+		},
 	}
 
 	err := client.CreateBind("test", l, "", version)
@@ -136,14 +138,16 @@ func TestCreateEditDeleteBind(t *testing.T) {
 	port = int64(5300)
 	tOut := int64(5)
 	l = &models.Bind{
-		Name:           "created",
-		Address:        "192.168.3.1",
-		Port:           &port,
-		Transparent:    true,
-		TCPUserTimeout: &tOut,
-		SslMinVer:      "TLSv1.2",
-		SslMaxVer:      "TLSv1.3",
-		Interface:      "eth1",
+		Name:    "created",
+		Address: "192.168.3.1",
+		Port:    &port,
+		BindParams: models.BindParams{
+			Transparent:    true,
+			TCPUserTimeout: &tOut,
+			SslMinVer:      "TLSv1.2",
+			SslMaxVer:      "TLSv1.3",
+			Interface:      "eth1",
+		},
 	}
 
 	err = client.EditBind("created", "test", l, "", version)
