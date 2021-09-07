@@ -280,13 +280,17 @@ func TestCreateEditDeleteSite(t *testing.T) {
 			Mode:    "http",
 			Maxconn: &mConn,
 			Listeners: []*models.Bind{
-				{
-					Name:    "created1",
+				&models.Bind{
+					BindParams: models.BindParams{
+						Name: "created1",
+					},
 					Address: "127.0.0.1",
 					Port:    &port,
 				},
-				{
-					Name:    "created2",
+				&models.Bind{
+					BindParams: models.BindParams{
+						Name: "created2",
+					},
 					Address: "127.0.0.2",
 					Port:    &port,
 				},
@@ -360,8 +364,10 @@ func TestCreateEditDeleteSite(t *testing.T) {
 			Mode:    "tcp",
 			Maxconn: &mConn,
 			Listeners: []*models.Bind{
-				{
-					Name:    "created1",
+				&models.Bind{
+					BindParams: models.BindParams{
+						Name: "created1",
+					},
 					Address: "127.0.0.2",
 					Port:    &port,
 				},

@@ -39,11 +39,6 @@ type Bind struct {
 	// Pattern: ^[^\s]+$
 	Address string `json:"address,omitempty"`
 
-	// name
-	// Required: true
-	// Pattern: ^[^\s]+$
-	Name string `json:"name"`
-
 	// port
 	// Maximum: 65535
 	// Minimum: 1
@@ -68,8 +63,6 @@ func (m *Bind) UnmarshalJSON(raw []byte) error {
 	var propsBind struct {
 		Address string `json:"address,omitempty"`
 
-		Name string `json:"name"`
-
 		Port *int64 `json:"port,omitempty"`
 
 		PortRangeEnd *int64 `json:"port-range-end,omitempty"`
@@ -78,8 +71,6 @@ func (m *Bind) UnmarshalJSON(raw []byte) error {
 		return err
 	}
 	m.Address = propsBind.Address
-
-	m.Name = propsBind.Name
 
 	m.Port = propsBind.Port
 
@@ -102,15 +93,11 @@ func (m Bind) MarshalJSON() ([]byte, error) {
 	var propsBind struct {
 		Address string `json:"address,omitempty"`
 
-		Name string `json:"name"`
-
 		Port *int64 `json:"port,omitempty"`
 
 		PortRangeEnd *int64 `json:"port-range-end,omitempty"`
 	}
 	propsBind.Address = m.Address
-
-	propsBind.Name = m.Name
 
 	propsBind.Port = m.Port
 
@@ -137,10 +124,6 @@ func (m *Bind) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
-	if err := m.validateName(formats); err != nil {
-		res = append(res, err)
-	}
-
 	if err := m.validatePort(formats); err != nil {
 		res = append(res, err)
 	}
@@ -162,19 +145,6 @@ func (m *Bind) validateAddress(formats strfmt.Registry) error {
 	}
 
 	if err := validate.Pattern("address", "body", string(m.Address), `^[^\s]+$`); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func (m *Bind) validateName(formats strfmt.Registry) error {
-
-	if err := validate.RequiredString("name", "body", string(m.Name)); err != nil {
-		return err
-	}
-
-	if err := validate.Pattern("name", "body", string(m.Name), `^[^\s]+$`); err != nil {
 		return err
 	}
 

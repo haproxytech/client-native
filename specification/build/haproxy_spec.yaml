@@ -126,6 +126,10 @@ definitions:
           type: string
         mss:
           type: string
+        name:
+          pattern: ^[^\s]+$
+          type: string
+          x-nullable: false
         namespace:
           type: string
         nice:
@@ -1455,10 +1459,6 @@ definitions:
         address:
           pattern: ^[^\s]+$
           type: string
-        name:
-          pattern: ^[^\s]+$
-          type: string
-          x-nullable: false
         port:
           maximum: 65535
           minimum: 1
@@ -1469,8 +1469,6 @@ definitions:
           minimum: 1
           type: integer
           x-nullable: true
-      required:
-      - name
       title: Bind
       type: object
   binds:
