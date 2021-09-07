@@ -229,7 +229,12 @@ func ParseBind(ondiskBind types.Bind) *models.Bind { //nolint:gocognit,gocyclo
 
 		}
 	}
-	for _, p := range ondiskBind.Params {
+	b.BindParams = parseBindParams(ondiskBind.Params)
+	return b
+}
+
+func parseBindParams(bindOptions []params.BindOption) (b models.BindParams) { // nolint:gocognit,gocyclo
+	for _, p := range bindOptions {
 		switch v := p.(type) {
 		case *params.BindOptionDoubleWord:
 			if v.Name == "expose-fd" && v.Value == "listeners" {
@@ -381,7 +386,7 @@ func ParseBind(ondiskBind types.Bind) *models.Bind { //nolint:gocognit,gocyclo
 	return b
 }
 
-func SerializeBind(b models.Bind) types.Bind { //nolint:gocognit,gocyclo,cyclop
+func SerializeBind(b models.Bind) types.Bind {
 	bind := types.Bind{
 		Params: []params.BindOption{},
 	}
@@ -393,190 +398,193 @@ func SerializeBind(b models.Bind) types.Bind { //nolint:gocognit,gocyclo,cyclop
 	} else {
 		bind.Path = b.Address
 	}
-	if b.Name != "" {
-		bind.Params = append(bind.Params, &params.BindOptionValue{Name: "name", Value: b.Name})
-	} else {
-		bind.Params = append(bind.Params, &params.BindOptionValue{Name: "name", Value: bind.Path})
-	}
-	if b.Process != "" {
-		bind.Params = append(bind.Params, &params.BindOptionValue{Name: "process", Value: b.Process})
-	}
-	if b.SslCertificate != "" {
-		bind.Params = append(bind.Params, &params.BindOptionValue{Name: "crt", Value: b.SslCertificate})
-	}
-	if b.SslCafile != "" {
-		bind.Params = append(bind.Params, &params.BindOptionValue{Name: "ca-file", Value: b.SslCafile})
-	}
-	if b.TCPUserTimeout != nil {
-		bind.Params = append(bind.Params, &params.BindOptionValue{Name: "tcp-ut", Value: strconv.FormatInt(*b.TCPUserTimeout, 10)})
-	}
-	if b.Ssl {
-		bind.Params = append(bind.Params, &params.BindOptionWord{Name: "ssl"})
-	}
-	if b.V4v6 {
-		bind.Params = append(bind.Params, &params.BindOptionWord{Name: "v4v6"})
-	}
-	if b.Verify != "" {
-		bind.Params = append(bind.Params, &params.BindOptionValue{Name: "verify", Value: b.Verify})
-	}
-	if b.Alpn != "" {
-		bind.Params = append(bind.Params, &params.BindOptionValue{Name: "alpn", Value: b.Alpn})
-	}
-	if b.Transparent {
-		bind.Params = append(bind.Params, &params.BindOptionWord{Name: "transparent"})
-	}
-	if b.AcceptProxy {
-		bind.Params = append(bind.Params, &params.BindOptionWord{Name: "accept-proxy"})
-	}
-	if b.Allow0rtt {
-		bind.Params = append(bind.Params, &params.BindOptionWord{Name: "allow-0rtt"})
-	}
-	if b.AcceptNetscalerCip != 0 {
-		bind.Params = append(bind.Params, &params.BindOptionValue{Name: "accept-netscaler-cip", Value: strconv.FormatInt(b.AcceptNetscalerCip, 10)})
-	}
-	if b.Backlog != "" {
-		bind.Params = append(bind.Params, &params.BindOptionValue{Name: "backlog", Value: b.Backlog})
-	}
-	if b.Curves != "" {
-		bind.Params = append(bind.Params, &params.BindOptionValue{Name: "curves", Value: b.Curves})
-	}
-	if b.Ecdhe != "" {
-		bind.Params = append(bind.Params, &params.BindOptionValue{Name: "ecdhe", Value: b.Ecdhe})
-	}
-	if b.CaIgnoreErr != "" {
-		bind.Params = append(bind.Params, &params.BindOptionValue{Name: "ca-ignore-err", Value: b.CaIgnoreErr})
-	}
-	if b.CaSignFile != "" {
-		bind.Params = append(bind.Params, &params.BindOptionValue{Name: "ca-sign-file", Value: b.CaSignFile})
-	}
-	if b.CaSignPass != "" {
-		bind.Params = append(bind.Params, &params.BindOptionValue{Name: "ca-sign-pass", Value: b.CaSignPass})
-	}
-	if b.Ciphers != "" {
-		bind.Params = append(bind.Params, &params.BindOptionValue{Name: "ciphers ", Value: b.Ciphers})
-	}
-	if b.Ciphersuites != "" {
-		bind.Params = append(bind.Params, &params.BindOptionValue{Name: "ciphersuites ", Value: b.Ciphersuites})
-	}
-	if b.CrlFile != "" {
-		bind.Params = append(bind.Params, &params.BindOptionValue{Name: "crl-file ", Value: b.CrlFile})
-	}
-	if b.CrtIgnoreErr != "" {
-		bind.Params = append(bind.Params, &params.BindOptionValue{Name: "crt-ignore-err", Value: b.CrtIgnoreErr})
-	}
-	if b.CrtList != "" {
-		bind.Params = append(bind.Params, &params.BindOptionValue{Name: "crt-list", Value: b.CrtList})
-	}
-	if b.DeferAccept {
-		bind.Params = append(bind.Params, &params.BindOptionWord{Name: "defer-accept"})
-	}
-	if b.ExposeFdListeners {
-		bind.Params = append(bind.Params, &params.ServerOptionDoubleWord{Name: "expose-fd", Value: "listeners"})
-	}
-	if b.ForceSslv3 {
-		bind.Params = append(bind.Params, &params.ServerOptionWord{Name: "force-sslv3"})
-	}
-	if b.ForceTlsv10 {
-		bind.Params = append(bind.Params, &params.ServerOptionWord{Name: "force-tlsv10"})
-	}
-	if b.ForceTlsv11 {
-		bind.Params = append(bind.Params, &params.ServerOptionWord{Name: "force-tlsv11"})
-	}
-	if b.ForceTlsv12 {
-		bind.Params = append(bind.Params, &params.ServerOptionWord{Name: "force-tlsv12"})
-	}
-	if b.ForceTlsv13 {
-		bind.Params = append(bind.Params, &params.ServerOptionWord{Name: "force-tlsv13"})
-	}
-	if b.GenerateCertificates {
-		bind.Params = append(bind.Params, &params.ServerOptionWord{Name: "generate-certificates"})
-	}
-	if b.Gid != 0 {
-		bind.Params = append(bind.Params, &params.BindOptionValue{Name: "gid", Value: strconv.FormatInt(b.Gid, 10)})
-	}
-	if b.Group != "" {
-		bind.Params = append(bind.Params, &params.BindOptionValue{Name: "group", Value: b.Group})
-	}
-	if b.ID != "" {
-		bind.Params = append(bind.Params, &params.BindOptionValue{Name: "id", Value: b.ID})
-	}
-	if b.Interface != "" {
-		bind.Params = append(bind.Params, &params.BindOptionValue{Name: "interface", Value: b.Interface})
-	}
-	if b.Level != "" {
-		bind.Params = append(bind.Params, &params.BindOptionValue{Name: "level", Value: b.Level})
-	}
-	if b.SeverityOutput != "" {
-		bind.Params = append(bind.Params, &params.BindOptionValue{Name: "severity-output", Value: b.SeverityOutput})
-	}
-	if b.Maxconn != 0 {
-		bind.Params = append(bind.Params, &params.BindOptionValue{Name: "maxconn", Value: strconv.FormatInt(b.Maxconn, 10)})
-	}
-	if b.Mode != "" {
-		bind.Params = append(bind.Params, &params.BindOptionValue{Name: "mode", Value: b.Mode})
-	}
-	if b.Mss != "" {
-		bind.Params = append(bind.Params, &params.BindOptionValue{Name: "mss", Value: b.Mss})
-	}
-	if b.Namespace != "" {
-		bind.Params = append(bind.Params, &params.BindOptionValue{Name: "namespace", Value: b.Namespace})
-	}
-	if b.NoCaNames {
-		bind.Params = append(bind.Params, &params.ServerOptionWord{Name: "no-ca-names"})
-	}
-	if b.NoSslv3 {
-		bind.Params = append(bind.Params, &params.ServerOptionWord{Name: "no-sslv3"})
-	}
-	if b.NoTLSTickets {
-		bind.Params = append(bind.Params, &params.ServerOptionWord{Name: "no-tls-tickets"})
-	}
-	if b.NoTlsv10 {
-		bind.Params = append(bind.Params, &params.ServerOptionWord{Name: "no-tlsv10"})
-	}
-	if b.NoTlsv11 {
-		bind.Params = append(bind.Params, &params.ServerOptionWord{Name: "no-tlsv11"})
-	}
-	if b.NoTlsv12 {
-		bind.Params = append(bind.Params, &params.ServerOptionWord{Name: "no-tlsv12"})
-	}
-	if b.NoTlsv13 {
-		bind.Params = append(bind.Params, &params.ServerOptionWord{Name: "no-tlsv13"})
-	}
-	if b.Npn != "" {
-		bind.Params = append(bind.Params, &params.BindOptionValue{Name: "npn", Value: b.Npn})
-	}
-	if b.PreferClientCiphers {
-		bind.Params = append(bind.Params, &params.ServerOptionWord{Name: "prefer-client-ciphers"})
-	}
-	if b.Proto != "" {
-		bind.Params = append(bind.Params, &params.BindOptionValue{Name: "proto", Value: b.Proto})
-	}
-	if b.SslMaxVer != "" {
-		bind.Params = append(bind.Params, &params.BindOptionValue{Name: "ssl-max-ver", Value: b.SslMaxVer})
-	}
-	if b.SslMinVer != "" {
-		bind.Params = append(bind.Params, &params.BindOptionValue{Name: "ssl-min-ver", Value: b.SslMinVer})
-	}
-	if b.StrictSni {
-		bind.Params = append(bind.Params, &params.ServerOptionWord{Name: "strict-sni"})
-	}
-	if b.Tfo {
-		bind.Params = append(bind.Params, &params.ServerOptionWord{Name: "tfo"})
-	}
-	if b.TLSTicketKeys != "" {
-		bind.Params = append(bind.Params, &params.BindOptionValue{Name: "tls-ticket-keys", Value: b.TLSTicketKeys})
-	}
-	if b.V6only {
-		bind.Params = append(bind.Params, &params.BindOptionWord{Name: "v6only"})
-	}
-	if b.UID != "" {
-		bind.Params = append(bind.Params, &params.BindOptionValue{Name: "uid", Value: b.UID})
-	}
-	if b.User != "" {
-		bind.Params = append(bind.Params, &params.BindOptionValue{Name: "user", Value: b.User})
-	}
+	bind.Params = serializeBindParams(b.BindParams)
 
 	return bind
+}
+
+func serializeBindParams(b models.BindParams) (options []params.BindOption) { // nolint:gocognit,gocyclo
+	if b.Name != "" {
+		options = append(options, &params.BindOptionValue{Name: "name", Value: b.Name})
+	}
+	if b.Process != "" {
+		options = append(options, &params.BindOptionValue{Name: "process", Value: b.Process})
+	}
+	if b.SslCertificate != "" {
+		options = append(options, &params.BindOptionValue{Name: "crt", Value: b.SslCertificate})
+	}
+	if b.SslCafile != "" {
+		options = append(options, &params.BindOptionValue{Name: "ca-file", Value: b.SslCafile})
+	}
+	if b.TCPUserTimeout != nil {
+		options = append(options, &params.BindOptionValue{Name: "tcp-ut", Value: strconv.FormatInt(*b.TCPUserTimeout, 10)})
+	}
+	if b.Ssl {
+		options = append(options, &params.BindOptionWord{Name: "ssl"})
+	}
+	if b.V4v6 {
+		options = append(options, &params.BindOptionWord{Name: "v4v6"})
+	}
+	if b.Verify != "" {
+		options = append(options, &params.BindOptionValue{Name: "verify", Value: b.Verify})
+	}
+	if b.Alpn != "" {
+		options = append(options, &params.BindOptionValue{Name: "alpn", Value: b.Alpn})
+	}
+	if b.Transparent {
+		options = append(options, &params.BindOptionWord{Name: "transparent"})
+	}
+	if b.AcceptProxy {
+		options = append(options, &params.BindOptionWord{Name: "accept-proxy"})
+	}
+	if b.Allow0rtt {
+		options = append(options, &params.BindOptionWord{Name: "allow-0rtt"})
+	}
+	if b.AcceptNetscalerCip != 0 {
+		options = append(options, &params.BindOptionValue{Name: "accept-netscaler-cip", Value: strconv.FormatInt(b.AcceptNetscalerCip, 10)})
+	}
+	if b.Backlog != "" {
+		options = append(options, &params.BindOptionValue{Name: "backlog", Value: b.Backlog})
+	}
+	if b.Curves != "" {
+		options = append(options, &params.BindOptionValue{Name: "curves", Value: b.Curves})
+	}
+	if b.Ecdhe != "" {
+		options = append(options, &params.BindOptionValue{Name: "ecdhe", Value: b.Ecdhe})
+	}
+	if b.CaIgnoreErr != "" {
+		options = append(options, &params.BindOptionValue{Name: "ca-ignore-err", Value: b.CaIgnoreErr})
+	}
+	if b.CaSignFile != "" {
+		options = append(options, &params.BindOptionValue{Name: "ca-sign-file", Value: b.CaSignFile})
+	}
+	if b.CaSignPass != "" {
+		options = append(options, &params.BindOptionValue{Name: "ca-sign-pass", Value: b.CaSignPass})
+	}
+	if b.Ciphers != "" {
+		options = append(options, &params.BindOptionValue{Name: "ciphers ", Value: b.Ciphers})
+	}
+	if b.Ciphersuites != "" {
+		options = append(options, &params.BindOptionValue{Name: "ciphersuites ", Value: b.Ciphersuites})
+	}
+	if b.CrlFile != "" {
+		options = append(options, &params.BindOptionValue{Name: "crl-file ", Value: b.CrlFile})
+	}
+	if b.CrtIgnoreErr != "" {
+		options = append(options, &params.BindOptionValue{Name: "crt-ignore-err", Value: b.CrtIgnoreErr})
+	}
+	if b.CrtList != "" {
+		options = append(options, &params.BindOptionValue{Name: "crt-list", Value: b.CrtList})
+	}
+	if b.DeferAccept {
+		options = append(options, &params.BindOptionWord{Name: "defer-accept"})
+	}
+	if b.ExposeFdListeners {
+		options = append(options, &params.ServerOptionDoubleWord{Name: "expose-fd", Value: "listeners"})
+	}
+	if b.ForceSslv3 {
+		options = append(options, &params.ServerOptionWord{Name: "force-sslv3"})
+	}
+	if b.ForceTlsv10 {
+		options = append(options, &params.ServerOptionWord{Name: "force-tlsv10"})
+	}
+	if b.ForceTlsv11 {
+		options = append(options, &params.ServerOptionWord{Name: "force-tlsv11"})
+	}
+	if b.ForceTlsv12 {
+		options = append(options, &params.ServerOptionWord{Name: "force-tlsv12"})
+	}
+	if b.ForceTlsv13 {
+		options = append(options, &params.ServerOptionWord{Name: "force-tlsv13"})
+	}
+	if b.GenerateCertificates {
+		options = append(options, &params.ServerOptionWord{Name: "generate-certificates"})
+	}
+	if b.Gid != 0 {
+		options = append(options, &params.BindOptionValue{Name: "gid", Value: strconv.FormatInt(b.Gid, 10)})
+	}
+	if b.Group != "" {
+		options = append(options, &params.BindOptionValue{Name: "group", Value: b.Group})
+	}
+	if b.ID != "" {
+		options = append(options, &params.BindOptionValue{Name: "id", Value: b.ID})
+	}
+	if b.Interface != "" {
+		options = append(options, &params.BindOptionValue{Name: "interface", Value: b.Interface})
+	}
+	if b.Level != "" {
+		options = append(options, &params.BindOptionValue{Name: "level", Value: b.Level})
+	}
+	if b.SeverityOutput != "" {
+		options = append(options, &params.BindOptionValue{Name: "severity-output", Value: b.SeverityOutput})
+	}
+	if b.Maxconn != 0 {
+		options = append(options, &params.BindOptionValue{Name: "maxconn", Value: strconv.FormatInt(b.Maxconn, 10)})
+	}
+	if b.Mode != "" {
+		options = append(options, &params.BindOptionValue{Name: "mode", Value: b.Mode})
+	}
+	if b.Mss != "" {
+		options = append(options, &params.BindOptionValue{Name: "mss", Value: b.Mss})
+	}
+	if b.Namespace != "" {
+		options = append(options, &params.BindOptionValue{Name: "namespace", Value: b.Namespace})
+	}
+	if b.NoCaNames {
+		options = append(options, &params.ServerOptionWord{Name: "no-ca-names"})
+	}
+	if b.NoSslv3 {
+		options = append(options, &params.ServerOptionWord{Name: "no-sslv3"})
+	}
+	if b.NoTLSTickets {
+		options = append(options, &params.ServerOptionWord{Name: "no-tls-tickets"})
+	}
+	if b.NoTlsv10 {
+		options = append(options, &params.ServerOptionWord{Name: "no-tlsv10"})
+	}
+	if b.NoTlsv11 {
+		options = append(options, &params.ServerOptionWord{Name: "no-tlsv11"})
+	}
+	if b.NoTlsv12 {
+		options = append(options, &params.ServerOptionWord{Name: "no-tlsv12"})
+	}
+	if b.NoTlsv13 {
+		options = append(options, &params.ServerOptionWord{Name: "no-tlsv13"})
+	}
+	if b.Npn != "" {
+		options = append(options, &params.BindOptionValue{Name: "npn", Value: b.Npn})
+	}
+	if b.PreferClientCiphers {
+		options = append(options, &params.ServerOptionWord{Name: "prefer-client-ciphers"})
+	}
+	if b.Proto != "" {
+		options = append(options, &params.BindOptionValue{Name: "proto", Value: b.Proto})
+	}
+	if b.SslMaxVer != "" {
+		options = append(options, &params.BindOptionValue{Name: "ssl-max-ver", Value: b.SslMaxVer})
+	}
+	if b.SslMinVer != "" {
+		options = append(options, &params.BindOptionValue{Name: "ssl-min-ver", Value: b.SslMinVer})
+	}
+	if b.StrictSni {
+		options = append(options, &params.ServerOptionWord{Name: "strict-sni"})
+	}
+	if b.Tfo {
+		options = append(options, &params.ServerOptionWord{Name: "tfo"})
+	}
+	if b.TLSTicketKeys != "" {
+		options = append(options, &params.BindOptionValue{Name: "tls-ticket-keys", Value: b.TLSTicketKeys})
+	}
+	if b.V6only {
+		options = append(options, &params.BindOptionWord{Name: "v6only"})
+	}
+	if b.UID != "" {
+		options = append(options, &params.BindOptionValue{Name: "uid", Value: b.UID})
+	}
+	if b.User != "" {
+		options = append(options, &params.BindOptionValue{Name: "user", Value: b.User})
+	}
+	return options
 }
 
 func GetBindByName(name string, frontend string, p parser.Parser) (*models.Bind, int) {
