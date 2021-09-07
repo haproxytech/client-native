@@ -120,7 +120,9 @@ func TestPutGlobal(t *testing.T) {
 		RuntimeAPIs: []*models.RuntimeAPI{
 			{
 				Address: &a,
-				Level:   "admin",
+				BindParams: models.BindParams{
+					Level: "admin",
+				},
 			},
 		},
 		Maxconn:               1000,

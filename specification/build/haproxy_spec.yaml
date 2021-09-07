@@ -15,6 +15,11 @@ externalDocs:
   description: HAProxy Documentation
 definitions:
   bind_params:
+      additionalProperties: false
+      example:
+        address: 127.0.0.1
+        name: http
+        port: 80
       properties:
         accept_netscaler_cip:
           type: integer
@@ -499,23 +504,10 @@ definitions:
           x-display-name: PID File
         runtime_apis:
           items:
+            allOf:
+            - $ref: '#/definitions/bind_params'
             properties:
               address:
-                pattern: ^[^\s]+$
-                type: string
-              exposeFdListeners:
-                type: boolean
-                x-display-name: Expose FD Listeners
-              level:
-                enum:
-                - user
-                - operator
-                - admin
-                type: string
-              mode:
-                pattern: ^[^\s]+$
-                type: string
-              process:
                 pattern: ^[^\s]+$
                 type: string
             required:
@@ -1447,14 +1439,9 @@ definitions:
     items:
       $ref: '#/definitions/peer_entry'
   bind:
-      additionalProperties: false
       allOf:
       - $ref: '#/definitions/bind_params'
       description: HAProxy frontend bind configuration
-      example:
-        address: 127.0.0.1
-        name: http
-        port: 80
       properties:
         address:
           pattern: ^[^\s]+$

@@ -188,7 +188,7 @@ func ParseBinds(frontend string, p parser.Parser) (models.Binds, error) {
 	return binds, nil
 }
 
-func ParseBind(ondiskBind types.Bind) *models.Bind { //nolint:gocognit,gocyclo
+func ParseBind(ondiskBind types.Bind) *models.Bind {
 	b := &models.Bind{}
 	if strings.HasPrefix(ondiskBind.Path, "/") {
 		b.Address = ondiskBind.Path
@@ -233,7 +233,7 @@ func ParseBind(ondiskBind types.Bind) *models.Bind { //nolint:gocognit,gocyclo
 	return b
 }
 
-func parseBindParams(bindOptions []params.BindOption) (b models.BindParams) { // nolint:gocognit,gocyclo
+func parseBindParams(bindOptions []params.BindOption) (b models.BindParams) { // nolint:gocognit,gocyclo,cyclop
 	for _, p := range bindOptions {
 		switch v := p.(type) {
 		case *params.BindOptionDoubleWord:
@@ -403,7 +403,7 @@ func SerializeBind(b models.Bind) types.Bind {
 	return bind
 }
 
-func serializeBindParams(b models.BindParams) (options []params.BindOption) { // nolint:gocognit,gocyclo
+func serializeBindParams(b models.BindParams) (options []params.BindOption) { // nolint:gocognit,gocyclo,cyclop
 	if b.Name != "" {
 		options = append(options, &params.BindOptionValue{Name: "name", Value: b.Name})
 	}

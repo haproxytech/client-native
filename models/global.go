@@ -962,45 +962,69 @@ func (m *LuaPrependPath) UnmarshalBinary(b []byte) error {
 //
 // swagger:model RuntimeAPI
 type RuntimeAPI struct {
+	BindParams
 
 	// address
 	// Required: true
 	// Pattern: ^[^\s]+$
 	Address *string `json:"address"`
+}
 
-	// expose fd listeners
-	ExposeFdListeners bool `json:"exposeFdListeners,omitempty"`
+// UnmarshalJSON unmarshals this object from a JSON structure
+func (m *RuntimeAPI) UnmarshalJSON(raw []byte) error {
+	// AO0
+	var aO0 BindParams
+	if err := swag.ReadJSON(raw, &aO0); err != nil {
+		return err
+	}
+	m.BindParams = aO0
 
-	// level
-	// Enum: [user operator admin]
-	Level string `json:"level,omitempty"`
+	// now for regular properties
+	var propsRuntimeAPI struct {
+		Address *string `json:"address"`
+	}
+	if err := swag.ReadJSON(raw, &propsRuntimeAPI); err != nil {
+		return err
+	}
+	m.Address = propsRuntimeAPI.Address
 
-	// mode
-	// Pattern: ^[^\s]+$
-	Mode string `json:"mode,omitempty"`
+	return nil
+}
 
-	// process
-	// Pattern: ^[^\s]+$
-	Process string `json:"process,omitempty"`
+// MarshalJSON marshals this object to a JSON structure
+func (m RuntimeAPI) MarshalJSON() ([]byte, error) {
+	_parts := make([][]byte, 0, 1)
+
+	aO0, err := swag.WriteJSON(m.BindParams)
+	if err != nil {
+		return nil, err
+	}
+	_parts = append(_parts, aO0)
+
+	// now for regular properties
+	var propsRuntimeAPI struct {
+		Address *string `json:"address"`
+	}
+	propsRuntimeAPI.Address = m.Address
+
+	jsonDataPropsRuntimeAPI, errRuntimeAPI := swag.WriteJSON(propsRuntimeAPI)
+	if errRuntimeAPI != nil {
+		return nil, errRuntimeAPI
+	}
+	_parts = append(_parts, jsonDataPropsRuntimeAPI)
+	return swag.ConcatJSON(_parts...), nil
 }
 
 // Validate validates this runtime API
 func (m *RuntimeAPI) Validate(formats strfmt.Registry) error {
 	var res []error
 
+	// validation for a type composition with BindParams
+	if err := m.BindParams.Validate(formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.validateAddress(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateLevel(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateMode(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateProcess(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -1017,78 +1041,6 @@ func (m *RuntimeAPI) validateAddress(formats strfmt.Registry) error {
 	}
 
 	if err := validate.Pattern("address", "body", string(*m.Address), `^[^\s]+$`); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-var runtimeApiTypeLevelPropEnum []interface{}
-
-func init() {
-	var res []string
-	if err := json.Unmarshal([]byte(`["user","operator","admin"]`), &res); err != nil {
-		panic(err)
-	}
-	for _, v := range res {
-		runtimeApiTypeLevelPropEnum = append(runtimeApiTypeLevelPropEnum, v)
-	}
-}
-
-const (
-
-	// RuntimeAPILevelUser captures enum value "user"
-	RuntimeAPILevelUser string = "user"
-
-	// RuntimeAPILevelOperator captures enum value "operator"
-	RuntimeAPILevelOperator string = "operator"
-
-	// RuntimeAPILevelAdmin captures enum value "admin"
-	RuntimeAPILevelAdmin string = "admin"
-)
-
-// prop value enum
-func (m *RuntimeAPI) validateLevelEnum(path, location string, value string) error {
-	if err := validate.Enum(path, location, value, runtimeApiTypeLevelPropEnum); err != nil {
-		return err
-	}
-	return nil
-}
-
-func (m *RuntimeAPI) validateLevel(formats strfmt.Registry) error {
-
-	if swag.IsZero(m.Level) { // not required
-		return nil
-	}
-
-	// value enum
-	if err := m.validateLevelEnum("level", "body", m.Level); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func (m *RuntimeAPI) validateMode(formats strfmt.Registry) error {
-
-	if swag.IsZero(m.Mode) { // not required
-		return nil
-	}
-
-	if err := validate.Pattern("mode", "body", string(m.Mode), `^[^\s]+$`); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func (m *RuntimeAPI) validateProcess(formats strfmt.Registry) error {
-
-	if swag.IsZero(m.Process) { // not required
-		return nil
-	}
-
-	if err := validate.Pattern("process", "body", string(m.Process), `^[^\s]+$`); err != nil {
 		return err
 	}
 

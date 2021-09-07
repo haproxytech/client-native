@@ -200,23 +200,7 @@ func ParseGlobalSection(p parser.Parser) (*models.Global, error) { //nolint:goco
 		for _, s := range sockets {
 			p := s.Path
 			rAPI := &models.RuntimeAPI{Address: &p}
-			for _, p := range s.Params {
-				switch v := p.(type) {
-				case *params.BindOptionDoubleWord:
-					if v.Name == "expose-fd" && v.Value == "listeners" {
-						rAPI.ExposeFdListeners = true
-					}
-				case *params.BindOptionValue:
-					switch v.Name {
-					case "level":
-						rAPI.Level = v.Value
-					case "mode":
-						rAPI.Mode = v.Value
-					case "process":
-						rAPI.Process = v.Value
-					}
-				}
-			}
+			rAPI.BindParams = parseBindParams(s.Params)
 			rAPIs = append(rAPIs, rAPI)
 		}
 	}
@@ -552,22 +536,7 @@ func SerializeGlobalSection(p parser.Parser, data *models.Global) error { //noli
 			Path:   *rAPI.Address,
 			Params: []params.BindOption{},
 		}
-		if rAPI.ExposeFdListeners {
-			param := &params.BindOptionDoubleWord{Name: "expose-fd", Value: "listeners"}
-			socket.Params = append(socket.Params, param)
-		}
-		if rAPI.Level != "" {
-			param := &params.BindOptionValue{Name: "level", Value: rAPI.Level}
-			socket.Params = append(socket.Params, param)
-		}
-		if rAPI.Mode != "" {
-			param := &params.BindOptionValue{Name: "mode", Value: rAPI.Mode}
-			socket.Params = append(socket.Params, param)
-		}
-		if rAPI.Process != "" {
-			param := &params.BindOptionValue{Name: "process", Value: rAPI.Process}
-			socket.Params = append(socket.Params, param)
-		}
+		socket.Params = serializeBindParams(rAPI.BindParams)
 		sockets = append(sockets, socket)
 	}
 	if err := p.Set(parser.Global, parser.GlobalSectionName, "stats socket", sockets); err != nil {

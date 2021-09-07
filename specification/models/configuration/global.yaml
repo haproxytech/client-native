@@ -293,18 +293,8 @@ global:
           address:
             type: string
             pattern: '^[^\s]+$'
-          mode:
-            type: string
-            pattern: '^[^\s]+$'
-          level:
-            type: string
-            enum: [user, operator, admin]
-          process:
-            type: string
-            pattern: '^[^\s]+$'
-          exposeFdListeners:
-            type: boolean
-            x-display-name: Expose FD Listeners
+        allOf:
+          - $ref: '#/definitions/bind_params'
     stats_timeout:
       type: integer
       x-nullable: true
