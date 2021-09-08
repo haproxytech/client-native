@@ -10,7 +10,7 @@ require (
 	github.com/go-openapi/strfmt v0.19.5
 	github.com/go-openapi/swag v0.19.7
 	github.com/go-openapi/validate v0.19.3
-	github.com/google/go-cmp v0.4.0
+	github.com/google/go-cmp v0.5.2
 	github.com/google/renameio v1.0.1
 	github.com/google/uuid v1.1.1
 	github.com/haproxytech/config-parser/v4 v4.0.0-rc1.0.20210902180329-0171d9c29239
@@ -20,6 +20,6 @@ require (
 	github.com/pkg/errors v0.9.1
 	github.com/stretchr/testify v1.6.1
 	github.com/tidwall/pretty v1.0.1 // indirect
-	go.mongodb.org/mongo-driver v1.3.2 // indirect
+	go.mongodb.org/mongo-driver v1.5.1 // indirect
 	golang.org/x/net v0.0.0-20200425230154-ff2c4b7c35a0 // indirect
 )
