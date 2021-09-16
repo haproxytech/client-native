@@ -108,6 +108,7 @@ frontend test
   http-request lua.foo param1 param2 if FALSE
   http-request use-service svrs if FALSE
   http-request return status 200 content-type "text/plain" string "My content" hdr Some-Header value if FALSE
+  http-request redirect scheme https if !{ ssl_fc }
   http-response allow if src 192.168.0.0/16
   http-response set-header X-SSL %[ssl_fc]
   http-response set-var(req.my_var) req.fhdr(user-agent),lower
