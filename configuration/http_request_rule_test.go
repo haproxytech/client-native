@@ -29,8 +29,8 @@ func TestGetHTTPRequestRules(t *testing.T) { //nolint:gocognit,gocyclo
 		t.Error(err.Error())
 	}
 
-	if len(hRules) != 30 {
-		t.Errorf("%v http request rules returned, expected 30", len(hRules))
+	if len(hRules) != 31 {
+		t.Errorf("%v http request rules returned, expected 31", len(hRules))
 	}
 
 	if v != version {
@@ -475,8 +475,32 @@ func TestGetHTTPRequestRules(t *testing.T) { //nolint:gocognit,gocyclo
 			if r.CondTest != "!{ ssl_fc }" {
 				t.Errorf("%v: CondTest not !{ ssl_fc }: %v", *r.Index, r.CondTest)
 			}
+		case 30:
+			if r.Type != "redirect" {
+				t.Errorf("%v: Type not redirect: %v", *r.Index, r.Type)
+			}
+			if r.RedirType != "location" {
+				t.Errorf("%v: RedirType not location: %v", *r.Index, r.RedirType)
+			}
+			if r.RedirValue != "https://%[hdr(host),field(1,:)]:443%[capture.req.uri]" {
+				t.Errorf("%v: RedirValue not match: %v", *r.Index, r.RedirValue)
+			}
+			if r.RedirCode == nil {
+				t.Errorf("%v: RedirCode not 302: %v", *r.Index, r.RedirCode)
+			} else if *r.RedirCode != 302 {
+				t.Errorf("%v: RedirCode not 302: %v", *r.Index, *r.RedirCode)
+			}
+			if r.RedirOption != "" {
+				t.Errorf("%v: RedirOption not empty: %v", *r.Index, r.RedirOption)
+			}
+			if r.Cond != "" {
+				t.Errorf("%v: Cond not empty: %v", *r.Index, r.Cond)
+			}
+			if r.CondTest != "" {
+				t.Errorf("%v: CondTest not empty: %v", *r.Index, r.CondTest)
+			}
 		default:
-			t.Errorf("Expext only http-request 0 to 29, %v found", *r.Index)
+			t.Errorf("Expext only http-request 0 to 30, %v found", *r.Index)
 		}
 	}
 
@@ -638,7 +662,7 @@ func TestCreateEditDeleteHTTPRequestRule(t *testing.T) {
 	}
 
 	// TestDeleteHTTPRequest
-	err = client.DeleteHTTPRequestRule(30, "frontend", "test", "", version)
+	err = client.DeleteHTTPRequestRule(31, "frontend", "test", "", version)
 	if err != nil {
 		t.Error(err.Error())
 	} else {
@@ -649,9 +673,9 @@ func TestCreateEditDeleteHTTPRequestRule(t *testing.T) {
 		t.Error("Version not incremented")
 	}
 
-	_, _, err = client.GetHTTPRequestRule(30, "frontend", "test", "")
+	_, _, err = client.GetHTTPRequestRule(31, "frontend", "test", "")
 	if err == nil {
-		t.Error("DeleteHTTPRequestRule failed, HTTP Request Rule 30 still exists")
+		t.Error("DeleteHTTPRequestRule failed, HTTP Request Rule 31 still exists")
 	}
 
 	err = client.DeleteHTTPRequestRule(2, "backend", "test_2", "", version)
