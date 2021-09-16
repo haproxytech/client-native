@@ -247,8 +247,10 @@ func ParseHTTPRequestRule(f types.HTTPAction) (rule *models.HTTPRequestRule, err
 	case *actions.Redirect:
 		var codePtr *int64
 		var code int64
-		if code, err = strconv.ParseInt(v.Code, 10, 64); err == nil {
-			codePtr = &code
+		if v.Code != "" {
+			if code, err = strconv.ParseInt(v.Code, 10, 64); err == nil {
+				codePtr = &code
+			}
 		}
 		rule = &models.HTTPRequestRule{
 			Type:        "redirect",
@@ -259,7 +261,6 @@ func ParseHTTPRequestRule(f types.HTTPAction) (rule *models.HTTPRequestRule, err
 			CondTest:    v.CondTest,
 			RedirCode:   codePtr,
 		}
-
 	case *actions.Tarpit:
 		var dsPtr *int64
 		var ds int64
