@@ -75,69 +75,69 @@ func (c *Client) PushGlobalConfiguration(data *models.Global, transactionID stri
 }
 
 func ParseGlobalSection(p parser.Parser) (*models.Global, error) { //nolint:gocognit,gocyclo
+	var chroot string
 	data, err := p.Get(parser.Global, parser.GlobalSectionName, "chroot")
-	chroot := ""
 	if err == nil {
 		chrootParser := data.(*types.StringC)
 		chroot = chrootParser.Value
 	}
 
+	var user string
 	data, err = p.Get(parser.Global, parser.GlobalSectionName, "user")
-	user := ""
 	if err == nil {
 		userParser := data.(*types.StringC)
 		user = userParser.Value
 	}
 
+	var group string
 	data, err = p.Get(parser.Global, parser.GlobalSectionName, "group")
-	group := ""
 	if err == nil {
 		groupParser := data.(*types.StringC)
 		group = groupParser.Value
 	}
 
+	var daemon string
 	_, err = p.Get(parser.Global, parser.GlobalSectionName, "daemon")
-	daemon := "enabled"
-	if goerrors.Is(err, errors.ErrFetch) {
-		daemon = "disabled"
+	if !goerrors.Is(err, errors.ErrFetch) {
+		daemon = "enabled"
 	}
 
+	var masterWorker bool
 	_, err = p.Get(parser.Global, parser.GlobalSectionName, "master-worker")
-	masterWorker := true
-	if goerrors.Is(err, errors.ErrFetch) {
-		masterWorker = false
+	if !goerrors.Is(err, errors.ErrFetch) {
+		masterWorker = true
 	}
 
+	var mConn int64
 	data, err = p.Get(parser.Global, parser.GlobalSectionName, "maxconn")
-	mConn := int64(0)
 	if err == nil {
 		maxConn := data.(*types.Int64C)
 		mConn = maxConn.Value
 	}
 
+	var nbproc int64
 	data, err = p.Get(parser.Global, parser.GlobalSectionName, "nbproc")
-	nbproc := int64(0)
 	if err == nil {
 		nbProcParser := data.(*types.Int64C)
 		nbproc = nbProcParser.Value
 	}
 
+	var nbthread int64
 	data, err = p.Get(parser.Global, parser.GlobalSectionName, "nbthread")
-	nbthread := int64(0)
 	if err == nil {
 		nbthreadParser := data.(*types.Int64C)
 		nbthread = nbthreadParser.Value
 	}
 
+	var pidfile string
 	data, err = p.Get(parser.Global, parser.GlobalSectionName, "pidfile")
-	pidfile := ""
 	if err == nil {
 		pidfileParser := data.(*types.StringC)
 		pidfile = pidfileParser.Value
 	}
 
+	var rAPIs []*models.RuntimeAPI
 	data, err = p.Get(parser.Global, parser.GlobalSectionName, "stats socket")
-	rAPIs := []*models.RuntimeAPI{}
 	if err == nil {
 		sockets := data.([]types.Socket)
 		for _, s := range sockets {
@@ -164,8 +164,8 @@ func ParseGlobalSection(p parser.Parser) (*models.Global, error) { //nolint:goco
 		}
 	}
 
+	var cpuMaps []*models.CPUMap
 	data, err = p.Get(parser.Global, parser.GlobalSectionName, "cpu-map")
-	cpuMaps := []*models.CPUMap{}
 	if err == nil {
 		cMaps := data.([]types.CPUMap)
 		for _, m := range cMaps {
@@ -177,8 +177,8 @@ func ParseGlobalSection(p parser.Parser) (*models.Global, error) { //nolint:goco
 		}
 	}
 
-	data, err = p.Get(parser.Global, parser.GlobalSectionName, "stats timeout")
 	var statsTimeout *int64
+	data, err = p.Get(parser.Global, parser.GlobalSectionName, "stats timeout")
 	if goerrors.Is(err, errors.ErrFetch) {
 		statsTimeout = nil
 	} else {
@@ -186,57 +186,57 @@ func ParseGlobalSection(p parser.Parser) (*models.Global, error) { //nolint:goco
 		statsTimeout = misc.ParseTimeout(statsTimeoutParser.Value)
 	}
 
+	var sslBindCiphers string
 	data, err = p.Get(parser.Global, parser.GlobalSectionName, "ssl-default-bind-ciphers")
-	sslBindCiphers := ""
 	if err == nil {
 		sslBindCiphersParser := data.(*types.StringC)
 		sslBindCiphers = sslBindCiphersParser.Value
 	}
 
+	var sslBindCiphersuites string
 	data, err = p.Get(parser.Global, parser.GlobalSectionName, "ssl-default-bind-ciphersuites")
-	sslBindCiphersuites := ""
 	if err == nil {
 		sslBindCiphersuitesParser := data.(*types.StringC)
 		sslBindCiphersuites = sslBindCiphersuitesParser.Value
 	}
 
+	var sslBindOptions string
 	data, err = p.Get(parser.Global, parser.GlobalSectionName, "ssl-default-bind-options")
-	sslBindOptions := ""
 	if err == nil {
 		sslBindOptionsParser := data.(*types.StringC)
 		sslBindOptions = sslBindOptionsParser.Value
 	}
 
+	var sslServerCiphers string
 	data, err = p.Get(parser.Global, parser.GlobalSectionName, "ssl-default-server-ciphers")
-	sslServerCiphers := ""
 	if err == nil {
 		sslServerCiphersParser := data.(*types.StringC)
 		sslServerCiphers = sslServerCiphersParser.Value
 	}
 
+	var sslServerCiphersuites string
 	data, err = p.Get(parser.Global, parser.GlobalSectionName, "ssl-default-server-ciphersuites")
-	sslServerCiphersuites := ""
 	if err == nil {
 		sslServerCiphersuitesParser := data.(*types.StringC)
 		sslServerCiphersuites = sslServerCiphersuitesParser.Value
 	}
 
+	var sslServerOptions string
 	data, err = p.Get(parser.Global, parser.GlobalSectionName, "ssl-default-server-options")
-	sslServerOptions := ""
 	if err == nil {
 		sslServerOptionsParser := data.(*types.StringC)
 		sslServerOptions = sslServerOptionsParser.Value
 	}
 
+	var dhParam int64
 	data, err = p.Get(parser.Global, parser.GlobalSectionName, "tune.ssl.default-dh-param")
-	dhParam := int64(0)
 	if err == nil {
 		dhParamsParser := data.(*types.Int64C)
 		dhParam = dhParamsParser.Value
 	}
 
+	var sslModeAsync string
 	data, _ = p.Get(parser.Global, parser.GlobalSectionName, "ssl-mode-async")
-	sslModeAsync := "disabled"
 	if _, ok := data.(*types.SslModeAsync); ok {
 		sslModeAsync = "enabled"
 	}
@@ -247,8 +247,8 @@ func ParseGlobalSection(p parser.Parser) (*models.Global, error) { //nolint:goco
 		externalCheck = false
 	}
 
+	var luaPrependPath []*models.LuaPrependPath
 	data, err = p.Get(parser.Global, parser.GlobalSectionName, "lua-prepend-path")
-	luaPrependPath := []*models.LuaPrependPath{}
 	if err == nil {
 		lpp := data.([]types.LuaPrependPath)
 		for _, l := range lpp {
@@ -257,8 +257,8 @@ func ParseGlobalSection(p parser.Parser) (*models.Global, error) { //nolint:goco
 		}
 	}
 
+	var luaLoads []*models.LuaLoad
 	data, err = p.Get(parser.Global, parser.GlobalSectionName, "lua-load")
-	luaLoads := []*models.LuaLoad{}
 	if err == nil {
 		luas := data.([]types.LuaLoad)
 		for _, l := range luas {
@@ -267,14 +267,15 @@ func ParseGlobalSection(p parser.Parser) (*models.Global, error) { //nolint:goco
 		}
 	}
 
+	var globalLogSendHostName *models.GlobalLogSendHostname
 	data, err = p.Get(parser.Global, parser.GlobalSectionName, "log-send-hostname")
-	logSendHostName := "disabled"
-	globalLogSendHostName := &models.GlobalLogSendHostname{Enabled: &logSendHostName}
 	if err == nil {
+		logSendHostName := "enabled"
 		logSendHostNameParser := data.(*types.StringC)
-		globalLogSendHostName.Param = logSendHostNameParser.Value
-		logSendHostName = "enabled"
-		globalLogSendHostName.Enabled = &logSendHostName
+		globalLogSendHostName = &models.GlobalLogSendHostname{
+			Enabled: &logSendHostName,
+			Param:   logSendHostNameParser.Value,
+		}
 	}
 
 	g := &models.Global{
