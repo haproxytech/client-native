@@ -231,7 +231,7 @@ func ParseBind(ondiskBind types.Bind) *models.Bind { //nolint:gocognit,gocyclo
 	for _, p := range ondiskBind.Params {
 		switch v := p.(type) {
 		case *params.BindOptionDoubleWord:
-			if v.Name == "expose-fd" && v.Value == "listener" {
+			if v.Name == "expose-fd" && v.Value == "listeners" {
 				b.ExposeFdListeners = true
 			}
 		case *params.BindOptionWord:
