@@ -146,7 +146,7 @@ func ParseGlobalSection(p parser.Parser) (*models.Global, error) { //nolint:goco
 			for _, p := range s.Params {
 				switch v := p.(type) {
 				case *params.BindOptionDoubleWord:
-					if v.Name == "expose-fd" && v.Value == "listener" {
+					if v.Name == "expose-fd" && v.Value == "listeners" {
 						rAPI.ExposeFdListeners = true
 					}
 				case *params.BindOptionValue:
