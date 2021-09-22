@@ -24,7 +24,8 @@ import (
 	parser "github.com/haproxytech/config-parser/v4"
 	"github.com/haproxytech/config-parser/v4/common"
 	parser_errors "github.com/haproxytech/config-parser/v4/errors"
-	"github.com/haproxytech/config-parser/v4/parsers/http/actions"
+	"github.com/haproxytech/config-parser/v4/parsers/actions"
+	http_actions "github.com/haproxytech/config-parser/v4/parsers/http/actions"
 	"github.com/haproxytech/config-parser/v4/types"
 
 	"github.com/haproxytech/client-native/v2/models"
@@ -76,7 +77,7 @@ func (c *Client) GetHTTPResponseRule(id int64, parentType, parentName string, tr
 		return v, nil, c.HandleError(strconv.FormatInt(id, 10), parentType, parentName, "", false, err)
 	}
 
-	httpRule := ParseHTTPResponseRule(data.(types.HTTPAction))
+	httpRule := ParseHTTPResponseRule(data.(types.Action))
 	httpRule.Index = &id
 
 	return v, httpRule, nil
@@ -193,7 +194,7 @@ func ParseHTTPResponseRules(t, pName string, p parser.Parser) (models.HTTPRespon
 		return nil, err
 	}
 
-	rules := data.([]types.HTTPAction)
+	rules := data.([]types.Action)
 	for i, r := range rules {
 		id := int64(i)
 		httpResRule := ParseHTTPResponseRule(r)
@@ -205,21 +206,21 @@ func ParseHTTPResponseRules(t, pName string, p parser.Parser) (models.HTTPRespon
 	return httpResRules, nil
 }
 
-func ParseHTTPResponseRule(f types.HTTPAction) *models.HTTPResponseRule { //nolint:gocyclo
+func ParseHTTPResponseRule(f types.Action) *models.HTTPResponseRule { //nolint:gocyclo
 	switch v := f.(type) {
-	case *actions.Allow:
+	case *http_actions.Allow:
 		return &models.HTTPResponseRule{
 			Type:     "allow",
 			Cond:     v.Cond,
 			CondTest: v.CondTest,
 		}
-	case *actions.Deny:
+	case *http_actions.Deny:
 		return &models.HTTPResponseRule{
 			Type:     "deny",
 			Cond:     v.Cond,
 			CondTest: v.CondTest,
 		}
-	case *actions.Redirect:
+	case *http_actions.Redirect:
 		var codePtr *int64
 		if code, err := strconv.ParseInt(v.Code, 10, 64); err == nil {
 			codePtr = &code
@@ -234,7 +235,7 @@ func ParseHTTPResponseRule(f types.HTTPAction) *models.HTTPResponseRule { //noli
 			RedirCode:   codePtr,
 		}
 		return r
-	case *actions.AddHeader:
+	case *http_actions.AddHeader:
 		return &models.HTTPResponseRule{
 			Type:      "add-header",
 			HdrName:   v.Name,
@@ -242,7 +243,7 @@ func ParseHTTPResponseRule(f types.HTTPAction) *models.HTTPResponseRule { //noli
 			Cond:      v.Cond,
 			CondTest:  v.CondTest,
 		}
-	case *actions.SetHeader:
+	case *http_actions.SetHeader:
 		return &models.HTTPResponseRule{
 			Type:      "set-header",
 			HdrName:   v.Name,
@@ -250,14 +251,14 @@ func ParseHTTPResponseRule(f types.HTTPAction) *models.HTTPResponseRule { //noli
 			Cond:      v.Cond,
 			CondTest:  v.CondTest,
 		}
-	case *actions.DelHeader:
+	case *http_actions.DelHeader:
 		return &models.HTTPResponseRule{
 			Type:     "del-header",
 			HdrName:  v.Name,
 			Cond:     v.Cond,
 			CondTest: v.CondTest,
 		}
-	case *actions.ReplaceHeader:
+	case *http_actions.ReplaceHeader:
 		return &models.HTTPResponseRule{
 			Type:      "replace-header",
 			HdrName:   v.Name,
@@ -266,7 +267,7 @@ func ParseHTTPResponseRule(f types.HTTPAction) *models.HTTPResponseRule { //noli
 			Cond:      v.Cond,
 			CondTest:  v.CondTest,
 		}
-	case *actions.ReplaceValue:
+	case *http_actions.ReplaceValue:
 		return &models.HTTPResponseRule{
 			Type:      "replace-value",
 			HdrName:   v.Name,
@@ -275,7 +276,7 @@ func ParseHTTPResponseRule(f types.HTTPAction) *models.HTTPResponseRule { //noli
 			Cond:      v.Cond,
 			CondTest:  v.CondTest,
 		}
-	case *actions.SetLogLevel:
+	case *http_actions.SetLogLevel:
 		return &models.HTTPResponseRule{
 			Type:     "set-log-level",
 			LogLevel: v.Level,
@@ -291,7 +292,7 @@ func ParseHTTPResponseRule(f types.HTTPAction) *models.HTTPResponseRule { //noli
 			Cond:     v.Cond,
 			CondTest: v.CondTest,
 		}
-	case *actions.SetStatus:
+	case *http_actions.SetStatus:
 		status, _ := strconv.ParseInt(v.Status, 10, 64)
 		r := &models.HTTPResponseRule{
 			Type:         "set-status",
@@ -303,7 +304,7 @@ func ParseHTTPResponseRule(f types.HTTPAction) *models.HTTPResponseRule { //noli
 			r.Status = status
 		}
 		return r
-	case *actions.AddACL:
+	case *http_actions.AddACL:
 		return &models.HTTPResponseRule{
 			Type:      "add-acl",
 			ACLFile:   v.FileName,
@@ -311,7 +312,7 @@ func ParseHTTPResponseRule(f types.HTTPAction) *models.HTTPResponseRule { //noli
 			Cond:      v.Cond,
 			CondTest:  v.CondTest,
 		}
-	case *actions.DelACL:
+	case *http_actions.DelACL:
 		return &models.HTTPResponseRule{
 			Type:      "del-acl",
 			ACLFile:   v.FileName,
@@ -327,7 +328,7 @@ func ParseHTTPResponseRule(f types.HTTPAction) *models.HTTPResponseRule { //noli
 			Cond:       v.Cond,
 			CondTest:   v.CondTest,
 		}
-	case *actions.Capture:
+	case *http_actions.Capture:
 		return &models.HTTPResponseRule{
 			Type:          "capture",
 			CaptureSample: v.Sample,
@@ -335,7 +336,7 @@ func ParseHTTPResponseRule(f types.HTTPAction) *models.HTTPResponseRule { //noli
 			CondTest:      v.CondTest,
 			CaptureID:     v.SlotID,
 		}
-	case *actions.SetMap:
+	case *http_actions.SetMap:
 		return &models.HTTPResponseRule{
 			Type:        "set-map",
 			MapFile:     v.FileName,
@@ -344,7 +345,7 @@ func ParseHTTPResponseRule(f types.HTTPAction) *models.HTTPResponseRule { //noli
 			Cond:        v.Cond,
 			CondTest:    v.CondTest,
 		}
-	case *actions.DelMap:
+	case *http_actions.DelMap:
 		return &models.HTTPResponseRule{
 			Type:      "del-map",
 			MapFile:   v.FileName,
@@ -381,14 +382,14 @@ func ParseHTTPResponseRule(f types.HTTPAction) *models.HTTPResponseRule { //noli
 			Cond:     v.Cond,
 			CondTest: v.CondTest,
 		}
-	case *actions.SetMark:
+	case *http_actions.SetMark:
 		return &models.HTTPResponseRule{
 			Type:      "set-mark",
 			MarkValue: v.Value,
 			Cond:      v.Cond,
 			CondTest:  v.CondTest,
 		}
-	case *actions.SetNice:
+	case *http_actions.SetNice:
 		nice, _ := strconv.ParseInt(v.Value, 10, 64)
 		return &models.HTTPResponseRule{
 			Type:      "set-nice",
@@ -396,7 +397,7 @@ func ParseHTTPResponseRule(f types.HTTPAction) *models.HTTPResponseRule { //noli
 			Cond:      v.Cond,
 			CondTest:  v.CondTest,
 		}
-	case *actions.SetTos:
+	case *http_actions.SetTos:
 		return &models.HTTPResponseRule{
 			Type:     "set-tos",
 			TosValue: v.Value,
@@ -417,31 +418,28 @@ func ParseHTTPResponseRule(f types.HTTPAction) *models.HTTPResponseRule { //noli
 			Cond:     v.Cond,
 			CondTest: v.CondTest,
 		}
-	case *actions.TrackSc0:
+	case *actions.TrackSc:
+		var typ actions.TrackScT
+		switch v.Type {
+		case actions.TrackSc0:
+			typ = actions.TrackSc0
+		case actions.TrackSc1:
+			typ = actions.TrackSc1
+		case actions.TrackSc2:
+			typ = actions.TrackSc2
+		}
 		return &models.HTTPResponseRule{
-			Type:          "track-sc0",
+			Type:          string(typ),
 			TrackSc0Key:   v.Key,
 			TrackSc0Table: v.Table,
-			Cond:          v.Cond,
-			CondTest:      v.CondTest,
-		}
-	case *actions.TrackSc1:
-		return &models.HTTPResponseRule{
-			Type:          "track-sc1",
 			TrackSc1Key:   v.Key,
 			TrackSc1Table: v.Table,
-			Cond:          v.Cond,
-			CondTest:      v.CondTest,
-		}
-	case *actions.TrackSc2:
-		return &models.HTTPResponseRule{
-			Type:          "track-sc2",
 			TrackSc2Key:   v.Key,
 			TrackSc2Table: v.Table,
 			Cond:          v.Cond,
 			CondTest:      v.CondTest,
 		}
-	case *actions.StrictMode:
+	case *http_actions.StrictMode:
 		return &models.HTTPResponseRule{
 			Type:       "strict-mode",
 			StrictMode: v.Mode,
@@ -460,15 +458,15 @@ func ParseHTTPResponseRule(f types.HTTPAction) *models.HTTPResponseRule { //noli
 	return nil
 }
 
-func SerializeHTTPResponseRule(f models.HTTPResponseRule) types.HTTPAction { //nolint:gocyclo
+func SerializeHTTPResponseRule(f models.HTTPResponseRule) types.Action { //nolint:gocyclo
 	switch f.Type {
 	case "allow":
-		return &actions.Allow{
+		return &http_actions.Allow{
 			Cond:     f.Cond,
 			CondTest: f.CondTest,
 		}
 	case "deny":
-		return &actions.Deny{
+		return &http_actions.Deny{
 			Cond:     f.Cond,
 			CondTest: f.CondTest,
 		}
@@ -477,7 +475,7 @@ func SerializeHTTPResponseRule(f models.HTTPResponseRule) types.HTTPAction { //n
 		if f.RedirCode != nil {
 			code = strconv.FormatInt(*f.RedirCode, 10)
 		}
-		return &actions.Redirect{
+		return &http_actions.Redirect{
 			Type:     f.RedirType,
 			Value:    f.RedirValue,
 			Code:     code,
@@ -486,27 +484,27 @@ func SerializeHTTPResponseRule(f models.HTTPResponseRule) types.HTTPAction { //n
 			CondTest: f.CondTest,
 		}
 	case "add-header":
-		return &actions.AddHeader{
+		return &http_actions.AddHeader{
 			Name:     f.HdrName,
 			Fmt:      f.HdrFormat,
 			Cond:     f.Cond,
 			CondTest: f.CondTest,
 		}
 	case "set-header":
-		return &actions.SetHeader{
+		return &http_actions.SetHeader{
 			Name:     f.HdrName,
 			Fmt:      f.HdrFormat,
 			Cond:     f.Cond,
 			CondTest: f.CondTest,
 		}
 	case "del-header":
-		return &actions.DelHeader{
+		return &http_actions.DelHeader{
 			Name:     f.HdrName,
 			Cond:     f.Cond,
 			CondTest: f.CondTest,
 		}
 	case "replace-header":
-		return &actions.ReplaceHeader{
+		return &http_actions.ReplaceHeader{
 			Name:       f.HdrName,
 			ReplaceFmt: f.HdrFormat,
 			MatchRegex: f.HdrMatch,
@@ -514,7 +512,7 @@ func SerializeHTTPResponseRule(f models.HTTPResponseRule) types.HTTPAction { //n
 			CondTest:   f.CondTest,
 		}
 	case "replace-value":
-		return &actions.ReplaceValue{
+		return &http_actions.ReplaceValue{
 			Name:       f.HdrName,
 			ReplaceFmt: f.HdrFormat,
 			MatchRegex: f.HdrMatch,
@@ -522,13 +520,13 @@ func SerializeHTTPResponseRule(f models.HTTPResponseRule) types.HTTPAction { //n
 			CondTest:   f.CondTest,
 		}
 	case "set-log-level":
-		return &actions.SetLogLevel{
+		return &http_actions.SetLogLevel{
 			Level:    f.LogLevel,
 			Cond:     f.Cond,
 			CondTest: f.CondTest,
 		}
 	case "set-status":
-		return &actions.SetStatus{
+		return &http_actions.SetStatus{
 			Status:   strconv.FormatInt(f.Status, 10),
 			Reason:   f.StatusReason,
 			Cond:     f.Cond,
@@ -543,14 +541,14 @@ func SerializeHTTPResponseRule(f models.HTTPResponseRule) types.HTTPAction { //n
 			CondTest: f.CondTest,
 		}
 	case "add-acl":
-		return &actions.AddACL{
+		return &http_actions.AddACL{
 			FileName: f.ACLFile,
 			KeyFmt:   f.ACLKeyfmt,
 			Cond:     f.Cond,
 			CondTest: f.CondTest,
 		}
 	case "del-acl":
-		return &actions.DelACL{
+		return &http_actions.DelACL{
 			FileName: f.ACLFile,
 			KeyFmt:   f.ACLKeyfmt,
 			Cond:     f.Cond,
@@ -564,14 +562,14 @@ func SerializeHTTPResponseRule(f models.HTTPResponseRule) types.HTTPAction { //n
 			CondTest: f.CondTest,
 		}
 	case "capture":
-		return &actions.Capture{
+		return &http_actions.Capture{
 			Sample:   f.CaptureSample,
 			Cond:     f.Cond,
 			CondTest: f.CondTest,
 			SlotID:   f.CaptureID,
 		}
 	case "set-map":
-		return &actions.SetMap{
+		return &http_actions.SetMap{
 			FileName: f.MapFile,
 			KeyFmt:   f.MapKeyfmt,
 			ValueFmt: f.MapValuefmt,
@@ -579,7 +577,7 @@ func SerializeHTTPResponseRule(f models.HTTPResponseRule) types.HTTPAction { //n
 			CondTest: f.CondTest,
 		}
 	case "del-map":
-		return &actions.DelMap{
+		return &http_actions.DelMap{
 			FileName: f.MapFile,
 			KeyFmt:   f.MapKeyfmt,
 			Cond:     f.Cond,
@@ -609,19 +607,19 @@ func SerializeHTTPResponseRule(f models.HTTPResponseRule) types.HTTPAction { //n
 			CondTest: f.CondTest,
 		}
 	case "set-mark":
-		return &actions.SetMark{
+		return &http_actions.SetMark{
 			Value:    f.MarkValue,
 			Cond:     f.Cond,
 			CondTest: f.CondTest,
 		}
 	case "set-nice":
-		return &actions.SetNice{
+		return &http_actions.SetNice{
 			Value:    strconv.FormatInt(f.NiceValue, 10),
 			Cond:     f.Cond,
 			CondTest: f.CondTest,
 		}
 	case "set-tos":
-		return &actions.SetTos{
+		return &http_actions.SetTos{
 			Value:    f.TosValue,
 			Cond:     f.Cond,
 			CondTest: f.CondTest,
@@ -639,28 +637,31 @@ func SerializeHTTPResponseRule(f models.HTTPResponseRule) types.HTTPAction { //n
 			CondTest: f.CondTest,
 		}
 	case "track-sc0":
-		return &actions.TrackSc0{
+		return &actions.TrackSc{
+			Type:     actions.TrackSc0,
 			Key:      f.TrackSc0Key,
 			Table:    f.TrackSc0Table,
 			Cond:     f.Cond,
 			CondTest: f.CondTest,
 		}
 	case "track-sc1":
-		return &actions.TrackSc1{
+		return &actions.TrackSc{
+			Type:     actions.TrackSc1,
 			Key:      f.TrackSc1Key,
 			Table:    f.TrackSc1Table,
 			Cond:     f.Cond,
 			CondTest: f.CondTest,
 		}
 	case "track-sc2":
-		return &actions.TrackSc2{
+		return &actions.TrackSc{
+			Type:     actions.TrackSc2,
 			Key:      f.TrackSc2Key,
 			Table:    f.TrackSc2Table,
 			Cond:     f.Cond,
 			CondTest: f.CondTest,
 		}
 	case "strict-mode":
-		return &actions.StrictMode{
+		return &http_actions.StrictMode{
 			Mode:     f.StrictMode,
 			Cond:     f.Cond,
 			CondTest: f.CondTest,

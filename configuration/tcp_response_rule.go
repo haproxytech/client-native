@@ -22,6 +22,7 @@ import (
 	"github.com/go-openapi/strfmt"
 	parser "github.com/haproxytech/config-parser/v4"
 	parser_errors "github.com/haproxytech/config-parser/v4/errors"
+	"github.com/haproxytech/config-parser/v4/parsers/actions"
 	tcp_actions "github.com/haproxytech/config-parser/v4/parsers/tcp/actions"
 	tcp_types "github.com/haproxytech/config-parser/v4/parsers/tcp/types"
 	"github.com/haproxytech/config-parser/v4/types"
@@ -180,25 +181,25 @@ func ParseTCPResponseRule(t types.TCPType) *models.TCPResponseRule {
 		case *tcp_actions.Accept:
 			return &models.TCPResponseRule{
 				Type:     models.TCPResponseRuleTypeContent,
-				Action:   a.String(),
-				Cond:     v.Cond,
-				CondTest: v.CondTest,
+				Action:   models.TCPRequestRuleActionAccept,
+				Cond:     a.Cond,
+				CondTest: a.CondTest,
 			}
-		case *tcp_actions.Reject:
+		case *actions.Reject:
 			return &models.TCPResponseRule{
 				Type:     models.TCPResponseRuleTypeContent,
-				Action:   a.String(),
-				Cond:     v.Cond,
-				CondTest: v.CondTest,
+				Action:   models.TCPRequestRuleActionReject,
+				Cond:     a.Cond,
+				CondTest: a.CondTest,
 			}
-		case *tcp_actions.Lua:
+		case *actions.Lua:
 			return &models.TCPResponseRule{
 				Type:      models.TCPResponseRuleTypeContent,
 				Action:    models.TCPResponseRuleActionLua,
 				LuaAction: a.Action,
 				LuaParams: a.Params,
-				Cond:      v.Cond,
-				CondTest:  v.CondTest,
+				Cond:      a.Cond,
+				CondTest:  a.CondTest,
 			}
 		}
 	}
@@ -211,24 +212,26 @@ func SerializeTCPResponseRule(t models.TCPResponseRule) types.TCPType {
 		switch t.Action {
 		case models.TCPResponseRuleActionAccept:
 			return &tcp_types.Content{
-				Action:   &tcp_actions.Accept{},
-				Cond:     t.Cond,
-				CondTest: t.CondTest,
+				Action: &tcp_actions.Accept{
+					Cond:     t.Cond,
+					CondTest: t.CondTest,
+				},
 			}
 		case models.TCPResponseRuleActionReject:
 			return &tcp_types.Content{
-				Action:   &tcp_actions.Reject{},
-				Cond:     t.Cond,
-				CondTest: t.CondTest,
+				Action: &actions.Reject{
+					Cond:     t.Cond,
+					CondTest: t.CondTest,
+				},
 			}
 		case models.TCPResponseRuleActionLua:
 			return &tcp_types.Content{
-				Action: &tcp_actions.Lua{
-					Action: t.LuaAction,
-					Params: t.LuaParams,
+				Action: &actions.Lua{
+					Action:   t.LuaAction,
+					Params:   t.LuaParams,
+					Cond:     t.Cond,
+					CondTest: t.CondTest,
 				},
-				Cond:     t.Cond,
-				CondTest: t.CondTest,
 			}
 		}
 	case models.TCPResponseRuleTypeInspectDelay:

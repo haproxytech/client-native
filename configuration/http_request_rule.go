@@ -24,7 +24,8 @@ import (
 	parser "github.com/haproxytech/config-parser/v4"
 	"github.com/haproxytech/config-parser/v4/common"
 	parser_errors "github.com/haproxytech/config-parser/v4/errors"
-	"github.com/haproxytech/config-parser/v4/parsers/http/actions"
+	"github.com/haproxytech/config-parser/v4/parsers/actions"
+	http_actions "github.com/haproxytech/config-parser/v4/parsers/http/actions"
 	"github.com/haproxytech/config-parser/v4/types"
 
 	"github.com/haproxytech/client-native/v2/models"
@@ -76,7 +77,7 @@ func (c *Client) GetHTTPRequestRule(id int64, parentType, parentName string, tra
 		return v, nil, c.HandleError(strconv.FormatInt(id, 10), parentType, parentName, "", false, err)
 	}
 
-	httpRule, err := ParseHTTPRequestRule(data.(types.HTTPAction))
+	httpRule, err := ParseHTTPRequestRule(data.(types.Action))
 	if err != nil {
 		return v, nil, err
 	}
@@ -205,7 +206,7 @@ func ParseHTTPRequestRules(t, pName string, p parser.Parser) (models.HTTPRequest
 		return nil, err
 	}
 
-	rules := data.([]types.HTTPAction)
+	rules := data.([]types.Action)
 	for i, r := range rules {
 		id := int64(i)
 		httpReqRule, err := ParseHTTPRequestRule(r)
@@ -217,15 +218,15 @@ func ParseHTTPRequestRules(t, pName string, p parser.Parser) (models.HTTPRequest
 	return httpReqRules, nil
 }
 
-func ParseHTTPRequestRule(f types.HTTPAction) (rule *models.HTTPRequestRule, err error) { //nolint:gocyclo
+func ParseHTTPRequestRule(f types.Action) (rule *models.HTTPRequestRule, err error) { //nolint:gocyclo
 	switch v := f.(type) {
-	case *actions.Allow:
+	case *http_actions.Allow:
 		rule = &models.HTTPRequestRule{
 			Type:     "allow",
 			Cond:     v.Cond,
 			CondTest: v.CondTest,
 		}
-	case *actions.Deny:
+	case *http_actions.Deny:
 		var denyPtr *int64
 		var ds int64
 		if ds, err = strconv.ParseInt(v.DenyStatus, 10, 64); err == nil {
@@ -237,14 +238,14 @@ func ParseHTTPRequestRule(f types.HTTPAction) (rule *models.HTTPRequestRule, err
 			CondTest:   v.CondTest,
 			DenyStatus: denyPtr,
 		}
-	case *actions.Auth:
+	case *http_actions.Auth:
 		rule = &models.HTTPRequestRule{
 			Type:      "auth",
 			AuthRealm: v.Realm,
 			Cond:      v.Cond,
 			CondTest:  v.CondTest,
 		}
-	case *actions.Redirect:
+	case *http_actions.Redirect:
 		var codePtr *int64
 		var code int64
 		if v.Code != "" {
@@ -261,7 +262,7 @@ func ParseHTTPRequestRule(f types.HTTPAction) (rule *models.HTTPRequestRule, err
 			CondTest:    v.CondTest,
 			RedirCode:   codePtr,
 		}
-	case *actions.Tarpit:
+	case *http_actions.Tarpit:
 		var dsPtr *int64
 		var ds int64
 		if ds, err = strconv.ParseInt(v.DenyStatus, 10, 64); err == nil {
@@ -273,7 +274,7 @@ func ParseHTTPRequestRule(f types.HTTPAction) (rule *models.HTTPRequestRule, err
 			CondTest:   v.CondTest,
 			DenyStatus: dsPtr,
 		}
-	case *actions.AddHeader:
+	case *http_actions.AddHeader:
 		rule = &models.HTTPRequestRule{
 			Type:      "add-header",
 			HdrName:   v.Name,
@@ -281,7 +282,7 @@ func ParseHTTPRequestRule(f types.HTTPAction) (rule *models.HTTPRequestRule, err
 			Cond:      v.Cond,
 			CondTest:  v.CondTest,
 		}
-	case *actions.SetHeader:
+	case *http_actions.SetHeader:
 		rule = &models.HTTPRequestRule{
 			Type:      "set-header",
 			HdrName:   v.Name,
@@ -289,28 +290,28 @@ func ParseHTTPRequestRule(f types.HTTPAction) (rule *models.HTTPRequestRule, err
 			Cond:      v.Cond,
 			CondTest:  v.CondTest,
 		}
-	case *actions.SetQuery:
+	case *http_actions.SetQuery:
 		rule = &models.HTTPRequestRule{
 			Type:      "set-query",
 			HdrFormat: v.Fmt,
 			Cond:      v.Cond,
 			CondTest:  v.CondTest,
 		}
-	case *actions.SetURI:
+	case *http_actions.SetURI:
 		rule = &models.HTTPRequestRule{
 			Type:      "set-uri",
 			HdrFormat: v.Fmt,
 			Cond:      v.Cond,
 			CondTest:  v.CondTest,
 		}
-	case *actions.DelHeader:
+	case *http_actions.DelHeader:
 		rule = &models.HTTPRequestRule{
 			Type:     "del-header",
 			HdrName:  v.Name,
 			Cond:     v.Cond,
 			CondTest: v.CondTest,
 		}
-	case *actions.ReplaceHeader:
+	case *http_actions.ReplaceHeader:
 		rule = &models.HTTPRequestRule{
 			Type:      "replace-header",
 			HdrName:   v.Name,
@@ -319,21 +320,21 @@ func ParseHTTPRequestRule(f types.HTTPAction) (rule *models.HTTPRequestRule, err
 			Cond:      v.Cond,
 			CondTest:  v.CondTest,
 		}
-	case *actions.SetLogLevel:
+	case *http_actions.SetLogLevel:
 		rule = &models.HTTPRequestRule{
 			Type:     "set-log-level",
 			LogLevel: v.Level,
 			Cond:     v.Cond,
 			CondTest: v.CondTest,
 		}
-	case *actions.SetPath:
+	case *http_actions.SetPath:
 		rule = &models.HTTPRequestRule{
 			Type:     "set-path",
 			PathFmt:  v.Fmt,
 			Cond:     v.Cond,
 			CondTest: v.CondTest,
 		}
-	case *actions.ReplacePath:
+	case *http_actions.ReplacePath:
 		rule = &models.HTTPRequestRule{
 			Type:      "replace-path",
 			PathMatch: v.MatchRegex,
@@ -350,7 +351,7 @@ func ParseHTTPRequestRule(f types.HTTPAction) (rule *models.HTTPRequestRule, err
 			Cond:     v.Cond,
 			CondTest: v.CondTest,
 		}
-	case *actions.ReplaceValue:
+	case *http_actions.ReplaceValue:
 		rule = &models.HTTPRequestRule{
 			Type:      "replace-value",
 			HdrName:   v.Name,
@@ -359,7 +360,7 @@ func ParseHTTPRequestRule(f types.HTTPAction) (rule *models.HTTPRequestRule, err
 			Cond:      v.Cond,
 			CondTest:  v.CondTest,
 		}
-	case *actions.AddACL:
+	case *http_actions.AddACL:
 		rule = &models.HTTPRequestRule{
 			Type:      "add-acl",
 			ACLFile:   v.FileName,
@@ -367,7 +368,7 @@ func ParseHTTPRequestRule(f types.HTTPAction) (rule *models.HTTPRequestRule, err
 			Cond:      v.Cond,
 			CondTest:  v.CondTest,
 		}
-	case *actions.DelACL:
+	case *http_actions.DelACL:
 		rule = &models.HTTPRequestRule{
 			Type:      "del-acl",
 			ACLFile:   v.FileName,
@@ -383,7 +384,7 @@ func ParseHTTPRequestRule(f types.HTTPAction) (rule *models.HTTPRequestRule, err
 			Cond:       v.Cond,
 			CondTest:   v.CondTest,
 		}
-	case *actions.Capture:
+	case *http_actions.Capture:
 		if (v.SlotID == nil && v.Len == nil) || (v.SlotID != nil && v.Len != nil) {
 			return nil, NewConfError(ErrValidationError, "capture len can't be zero")
 		}
@@ -399,31 +400,28 @@ func ParseHTTPRequestRule(f types.HTTPAction) (rule *models.HTTPRequestRule, err
 		if v.Len != nil {
 			rule.CaptureLen = *v.Len
 		}
-	case *actions.TrackSc0:
+	case *actions.TrackSc:
+		var typ actions.TrackScT
+		switch v.Type {
+		case actions.TrackSc0:
+			typ = actions.TrackSc0
+		case actions.TrackSc1:
+			typ = actions.TrackSc1
+		case actions.TrackSc2:
+			typ = actions.TrackSc2
+		}
 		rule = &models.HTTPRequestRule{
-			Type:          "track-sc0",
+			Type:          string(typ),
 			TrackSc0Key:   v.Key,
 			TrackSc0Table: v.Table,
-			Cond:          v.Cond,
-			CondTest:      v.CondTest,
-		}
-	case *actions.TrackSc1:
-		rule = &models.HTTPRequestRule{
-			Type:          "track-sc1",
 			TrackSc1Key:   v.Key,
 			TrackSc1Table: v.Table,
-			Cond:          v.Cond,
-			CondTest:      v.CondTest,
-		}
-	case *actions.TrackSc2:
-		rule = &models.HTTPRequestRule{
-			Type:          "track-sc2",
 			TrackSc2Key:   v.Key,
 			TrackSc2Table: v.Table,
 			Cond:          v.Cond,
 			CondTest:      v.CondTest,
 		}
-	case *actions.SetMap:
+	case *http_actions.SetMap:
 		rule = &models.HTTPRequestRule{
 			Type:        "set-map",
 			MapFile:     v.FileName,
@@ -432,7 +430,7 @@ func ParseHTTPRequestRule(f types.HTTPAction) (rule *models.HTTPRequestRule, err
 			Cond:        v.Cond,
 			CondTest:    v.CondTest,
 		}
-	case *actions.DelMap:
+	case *http_actions.DelMap:
 		rule = &models.HTTPRequestRule{
 			Type:      "del-map",
 			MapFile:   v.FileName,
@@ -440,20 +438,20 @@ func ParseHTTPRequestRule(f types.HTTPAction) (rule *models.HTTPRequestRule, err
 			Cond:      v.Cond,
 			CondTest:  v.CondTest,
 		}
-	case *actions.CacheUse:
+	case *http_actions.CacheUse:
 		rule = &models.HTTPRequestRule{
 			Type:      "cache-use",
 			CacheName: v.Name,
 			Cond:      v.Cond,
 			CondTest:  v.CondTest,
 		}
-	case *actions.DisableL7Retry:
+	case *http_actions.DisableL7Retry:
 		rule = &models.HTTPRequestRule{
 			Type:     "disable-l7-retry",
 			Cond:     v.Cond,
 			CondTest: v.CondTest,
 		}
-	case *actions.EarlyHint:
+	case *http_actions.EarlyHint:
 		rule = &models.HTTPRequestRule{
 			Type:       "early-hint",
 			HintName:   v.Name,
@@ -461,7 +459,7 @@ func ParseHTTPRequestRule(f types.HTTPAction) (rule *models.HTTPRequestRule, err
 			Cond:       v.Cond,
 			CondTest:   v.CondTest,
 		}
-	case *actions.ReplaceURI:
+	case *http_actions.ReplaceURI:
 		rule = &models.HTTPRequestRule{
 			Type:     "replace-uri",
 			URIMatch: v.MatchRegex,
@@ -525,14 +523,14 @@ func ParseHTTPRequestRule(f types.HTTPAction) (rule *models.HTTPRequestRule, err
 			Cond:     v.Cond,
 			CondTest: v.CondTest,
 		}
-	case *actions.SetMark:
+	case *http_actions.SetMark:
 		rule = &models.HTTPRequestRule{
 			Type:      "set-mark",
 			MarkValue: v.Value,
 			Cond:      v.Cond,
 			CondTest:  v.CondTest,
 		}
-	case *actions.SetNice:
+	case *http_actions.SetNice:
 		nice, _ := strconv.ParseInt(v.Value, 10, 64)
 		rule = &models.HTTPRequestRule{
 			Type:      "set-nice",
@@ -540,7 +538,7 @@ func ParseHTTPRequestRule(f types.HTTPAction) (rule *models.HTTPRequestRule, err
 			Cond:      v.Cond,
 			CondTest:  v.CondTest,
 		}
-	case *actions.SetMethod:
+	case *http_actions.SetMethod:
 		rule = &models.HTTPRequestRule{
 			Type:      "set-method",
 			MethodFmt: v.Fmt,
@@ -561,27 +559,27 @@ func ParseHTTPRequestRule(f types.HTTPAction) (rule *models.HTTPRequestRule, err
 			Cond:     v.Cond,
 			CondTest: v.CondTest,
 		}
-	case *actions.SetSrc:
+	case *http_actions.SetSrc:
 		rule = &models.HTTPRequestRule{
 			Type:     "set-src",
 			Expr:     v.Expr.String(),
 			Cond:     v.Cond,
 			CondTest: v.CondTest,
 		}
-	case *actions.SetSrcPort:
+	case *http_actions.SetSrcPort:
 		rule = &models.HTTPRequestRule{
 			Type:     "set-src-port",
 			Expr:     v.Expr.String(),
 			Cond:     v.Cond,
 			CondTest: v.CondTest,
 		}
-	case *actions.WaitForHandshake:
+	case *http_actions.WaitForHandshake:
 		rule = &models.HTTPRequestRule{
 			Type:     "wait-for-handshake",
 			Cond:     v.Cond,
 			CondTest: v.CondTest,
 		}
-	case *actions.SetTos:
+	case *http_actions.SetTos:
 		rule = &models.HTTPRequestRule{
 			Type:     "set-tos",
 			TosValue: v.Value,
@@ -602,7 +600,7 @@ func ParseHTTPRequestRule(f types.HTTPAction) (rule *models.HTTPRequestRule, err
 			Cond:     v.Cond,
 			CondTest: v.CondTest,
 		}
-	case *actions.StrictMode:
+	case *http_actions.StrictMode:
 		rule = &models.HTTPRequestRule{
 			Type:       "strict-mode",
 			StrictMode: v.Mode,
@@ -624,7 +622,7 @@ func ParseHTTPRequestRule(f types.HTTPAction) (rule *models.HTTPRequestRule, err
 			Cond:        v.Cond,
 			CondTest:    v.CondTest,
 		}
-	case *actions.Return:
+	case *http_actions.Return:
 		rule = &models.HTTPRequestRule{
 			Cond:                v.Cond,
 			CondTest:            v.CondTest,
@@ -640,7 +638,7 @@ func ParseHTTPRequestRule(f types.HTTPAction) (rule *models.HTTPRequestRule, err
 	return rule, err
 }
 
-func actionHdr2ModelHdr(hdrs []*actions.Hdr) []*models.HTTPRequestRuleReturnHdrsItems0 {
+func actionHdr2ModelHdr(hdrs []*http_actions.Hdr) []*models.HTTPRequestRuleReturnHdrsItems0 {
 	if len(hdrs) == 0 {
 		return nil
 	}
@@ -655,13 +653,13 @@ func actionHdr2ModelHdr(hdrs []*actions.Hdr) []*models.HTTPRequestRuleReturnHdrs
 	return headers
 }
 
-func modelHdr2ActionHdr(hdrs []*models.HTTPRequestRuleReturnHdrsItems0) []*actions.Hdr {
+func modelHdr2ActionHdr(hdrs []*models.HTTPRequestRuleReturnHdrsItems0) []*http_actions.Hdr {
 	if len(hdrs) == 0 {
 		return nil
 	}
-	headers := []*actions.Hdr{}
+	headers := []*http_actions.Hdr{}
 	for _, h := range hdrs {
-		hdr := actions.Hdr{
+		hdr := http_actions.Hdr{
 			Name: *h.Name,
 			Fmt:  *h.Fmt,
 		}
@@ -670,10 +668,10 @@ func modelHdr2ActionHdr(hdrs []*models.HTTPRequestRuleReturnHdrsItems0) []*actio
 	return headers
 }
 
-func SerializeHTTPRequestRule(f models.HTTPRequestRule) (rule types.HTTPAction, err error) { //nolint:gocyclo,gocognit
+func SerializeHTTPRequestRule(f models.HTTPRequestRule) (rule types.Action, err error) { //nolint:gocyclo,gocognit
 	switch f.Type {
 	case "allow":
-		rule = &actions.Allow{
+		rule = &http_actions.Allow{
 			Cond:     f.Cond,
 			CondTest: f.CondTest,
 		}
@@ -682,13 +680,13 @@ func SerializeHTTPRequestRule(f models.HTTPRequestRule) (rule types.HTTPAction, 
 		if f.DenyStatus != nil {
 			ds = strconv.FormatInt(*f.DenyStatus, 10)
 		}
-		rule = &actions.Deny{
+		rule = &http_actions.Deny{
 			DenyStatus: ds,
 			Cond:       f.Cond,
 			CondTest:   f.CondTest,
 		}
 	case "auth":
-		rule = &actions.Auth{
+		rule = &http_actions.Auth{
 			Realm:    f.AuthRealm,
 			Cond:     f.Cond,
 			CondTest: f.CondTest,
@@ -698,7 +696,7 @@ func SerializeHTTPRequestRule(f models.HTTPRequestRule) (rule types.HTTPAction, 
 		if f.RedirCode != nil {
 			code = strconv.FormatInt(*f.RedirCode, 10)
 		}
-		rule = &actions.Redirect{
+		rule = &http_actions.Redirect{
 			Type:     f.RedirType,
 			Value:    f.RedirValue,
 			Code:     code,
@@ -711,45 +709,45 @@ func SerializeHTTPRequestRule(f models.HTTPRequestRule) (rule types.HTTPAction, 
 		if f.DenyStatus != nil {
 			ds = strconv.FormatInt(*f.DenyStatus, 10)
 		}
-		rule = &actions.Tarpit{
+		rule = &http_actions.Tarpit{
 			DenyStatus: ds,
 			Cond:       f.Cond,
 			CondTest:   f.CondTest,
 		}
 	case "add-header":
-		rule = &actions.AddHeader{
+		rule = &http_actions.AddHeader{
 			Name:     f.HdrName,
 			Fmt:      f.HdrFormat,
 			Cond:     f.Cond,
 			CondTest: f.CondTest,
 		}
 	case "set-header":
-		rule = &actions.SetHeader{
+		rule = &http_actions.SetHeader{
 			Name:     f.HdrName,
 			Fmt:      f.HdrFormat,
 			Cond:     f.Cond,
 			CondTest: f.CondTest,
 		}
 	case "set-query":
-		rule = &actions.SetQuery{
+		rule = &http_actions.SetQuery{
 			Fmt:      f.HdrFormat,
 			Cond:     f.Cond,
 			CondTest: f.CondTest,
 		}
 	case "set-uri":
-		rule = &actions.SetURI{
+		rule = &http_actions.SetURI{
 			Fmt:      f.HdrFormat,
 			Cond:     f.Cond,
 			CondTest: f.CondTest,
 		}
 	case "del-header":
-		rule = &actions.DelHeader{
+		rule = &http_actions.DelHeader{
 			Name:     f.HdrName,
 			Cond:     f.Cond,
 			CondTest: f.CondTest,
 		}
 	case "replace-header":
-		rule = &actions.ReplaceHeader{
+		rule = &http_actions.ReplaceHeader{
 			Name:       f.HdrName,
 			ReplaceFmt: f.HdrFormat,
 			MatchRegex: f.HdrMatch,
@@ -757,7 +755,7 @@ func SerializeHTTPRequestRule(f models.HTTPRequestRule) (rule types.HTTPAction, 
 			CondTest:   f.CondTest,
 		}
 	case "replace-value":
-		rule = &actions.ReplaceValue{
+		rule = &http_actions.ReplaceValue{
 			Name:       f.HdrName,
 			ReplaceFmt: f.HdrFormat,
 			MatchRegex: f.HdrMatch,
@@ -765,19 +763,19 @@ func SerializeHTTPRequestRule(f models.HTTPRequestRule) (rule types.HTTPAction, 
 			CondTest:   f.CondTest,
 		}
 	case "set-log-level":
-		rule = &actions.SetLogLevel{
+		rule = &http_actions.SetLogLevel{
 			Level:    f.LogLevel,
 			Cond:     f.Cond,
 			CondTest: f.CondTest,
 		}
 	case "set-path":
-		rule = &actions.SetPath{
+		rule = &http_actions.SetPath{
 			Fmt:      f.PathFmt,
 			Cond:     f.Cond,
 			CondTest: f.CondTest,
 		}
 	case "replace-path":
-		rule = &actions.ReplacePath{
+		rule = &http_actions.ReplacePath{
 			MatchRegex: f.PathMatch,
 			ReplaceFmt: f.PathFmt,
 			Cond:       f.Cond,
@@ -792,14 +790,14 @@ func SerializeHTTPRequestRule(f models.HTTPRequestRule) (rule types.HTTPAction, 
 			CondTest: f.CondTest,
 		}
 	case "add-acl":
-		rule = &actions.AddACL{
+		rule = &http_actions.AddACL{
 			FileName: f.ACLFile,
 			KeyFmt:   f.ACLKeyfmt,
 			Cond:     f.Cond,
 			CondTest: f.CondTest,
 		}
 	case "del-acl":
-		rule = &actions.DelACL{
+		rule = &http_actions.DelACL{
 			FileName: f.ACLFile,
 			KeyFmt:   f.ACLKeyfmt,
 			Cond:     f.Cond,
@@ -819,7 +817,7 @@ func SerializeHTTPRequestRule(f models.HTTPRequestRule) (rule types.HTTPAction, 
 		if f.CaptureLen == 0 && f.CaptureID == nil {
 			return nil, NewConfError(ErrValidationError, "capture len has to be greater than 0 or capture_id has to be set")
 		}
-		r := &actions.Capture{
+		r := &http_actions.Capture{
 			Sample:   f.CaptureSample,
 			Cond:     f.Cond,
 			CondTest: f.CondTest,
@@ -831,28 +829,31 @@ func SerializeHTTPRequestRule(f models.HTTPRequestRule) (rule types.HTTPAction, 
 		}
 		rule = r
 	case "track-sc0":
-		rule = &actions.TrackSc0{
+		rule = &actions.TrackSc{
+			Type:     actions.TrackSc0,
 			Key:      f.TrackSc0Key,
 			Table:    f.TrackSc0Table,
 			Cond:     f.Cond,
 			CondTest: f.CondTest,
 		}
 	case "track-sc1":
-		rule = &actions.TrackSc1{
+		rule = &actions.TrackSc{
+			Type:     actions.TrackSc1,
 			Key:      f.TrackSc1Key,
 			Table:    f.TrackSc1Table,
 			Cond:     f.Cond,
 			CondTest: f.CondTest,
 		}
 	case "track-sc2":
-		rule = &actions.TrackSc2{
+		rule = &actions.TrackSc{
+			Type:     actions.TrackSc2,
 			Key:      f.TrackSc2Key,
 			Table:    f.TrackSc2Table,
 			Cond:     f.Cond,
 			CondTest: f.CondTest,
 		}
 	case "set-map":
-		rule = &actions.SetMap{
+		rule = &http_actions.SetMap{
 			FileName: f.MapFile,
 			KeyFmt:   f.MapKeyfmt,
 			ValueFmt: f.MapValuefmt,
@@ -860,32 +861,32 @@ func SerializeHTTPRequestRule(f models.HTTPRequestRule) (rule types.HTTPAction, 
 			CondTest: f.CondTest,
 		}
 	case "del-map":
-		rule = &actions.DelMap{
+		rule = &http_actions.DelMap{
 			FileName: f.MapFile,
 			KeyFmt:   f.MapKeyfmt,
 			Cond:     f.Cond,
 			CondTest: f.CondTest,
 		}
 	case "cache-use":
-		rule = &actions.CacheUse{
+		rule = &http_actions.CacheUse{
 			Name:     f.CacheName,
 			Cond:     f.Cond,
 			CondTest: f.CondTest,
 		}
 	case "disable-l7-retry":
-		rule = &actions.DisableL7Retry{
+		rule = &http_actions.DisableL7Retry{
 			Cond:     f.Cond,
 			CondTest: f.CondTest,
 		}
 	case "early-hint":
-		rule = &actions.EarlyHint{
+		rule = &http_actions.EarlyHint{
 			Name:     f.HintName,
 			Fmt:      f.HintFormat,
 			Cond:     f.Cond,
 			CondTest: f.CondTest,
 		}
 	case "replace-uri":
-		rule = &actions.ReplaceURI{
+		rule = &http_actions.ReplaceURI{
 			ReplaceFmt: f.URIFmt,
 			MatchRegex: f.URIMatch,
 			Cond:       f.Cond,
@@ -925,7 +926,7 @@ func SerializeHTTPRequestRule(f models.HTTPRequestRule) (rule types.HTTPAction, 
 			CondTest: f.CondTest,
 		}
 	case "set-method":
-		rule = &actions.SetMethod{
+		rule = &http_actions.SetMethod{
 			Fmt:      f.MethodFmt,
 			Cond:     f.Cond,
 			CondTest: f.CondTest,
@@ -951,13 +952,13 @@ func SerializeHTTPRequestRule(f models.HTTPRequestRule) (rule types.HTTPAction, 
 			CondTest: f.CondTest,
 		}
 	case "set-mark":
-		rule = &actions.SetMark{
+		rule = &http_actions.SetMark{
 			Value:    f.MarkValue,
 			Cond:     f.Cond,
 			CondTest: f.CondTest,
 		}
 	case "set-nice":
-		rule = &actions.SetNice{
+		rule = &http_actions.SetNice{
 			Value:    strconv.FormatInt(f.NiceValue, 10),
 			Cond:     f.Cond,
 			CondTest: f.CondTest,
@@ -969,24 +970,24 @@ func SerializeHTTPRequestRule(f models.HTTPRequestRule) (rule types.HTTPAction, 
 			CondTest: f.CondTest,
 		}
 	case "set-src":
-		rule = &actions.SetSrc{
+		rule = &http_actions.SetSrc{
 			Expr:     common.Expression{Expr: strings.Split(f.Expr, " ")},
 			Cond:     f.Cond,
 			CondTest: f.CondTest,
 		}
 	case "set-src-port":
-		rule = &actions.SetSrcPort{
+		rule = &http_actions.SetSrcPort{
 			Expr:     common.Expression{Expr: strings.Split(f.Expr, " ")},
 			Cond:     f.Cond,
 			CondTest: f.CondTest,
 		}
 	case "wait-for-handshake":
-		rule = &actions.WaitForHandshake{
+		rule = &http_actions.WaitForHandshake{
 			Cond:     f.Cond,
 			CondTest: f.CondTest,
 		}
 	case "set-tos":
-		rule = &actions.SetTos{
+		rule = &http_actions.SetTos{
 			Value:    f.TosValue,
 			Cond:     f.Cond,
 			CondTest: f.CondTest,
@@ -1004,7 +1005,7 @@ func SerializeHTTPRequestRule(f models.HTTPRequestRule) (rule types.HTTPAction, 
 			CondTest: f.CondTest,
 		}
 	case "strict-mode":
-		rule = &actions.StrictMode{
+		rule = &http_actions.StrictMode{
 			Mode:     f.StrictMode,
 			Cond:     f.Cond,
 			CondTest: f.CondTest,
@@ -1023,7 +1024,7 @@ func SerializeHTTPRequestRule(f models.HTTPRequestRule) (rule types.HTTPAction, 
 			CondTest: f.CondTest,
 		}
 	case "return":
-		rule = &actions.Return{
+		rule = &http_actions.Return{
 			Status:        f.ReturnStatusCode,
 			ContentType:   *f.ReturnContentType,
 			ContentFormat: f.ReturnContentFormat,
@@ -1032,8 +1033,8 @@ func SerializeHTTPRequestRule(f models.HTTPRequestRule) (rule types.HTTPAction, 
 			Cond:          f.Cond,
 			CondTest:      f.CondTest,
 		}
-		if !actions.IsPayload(f.ReturnContentFormat) {
-			if ok := actions.AllowedErrorCode(*f.ReturnStatusCode); !ok {
+		if !http_actions.IsPayload(f.ReturnContentFormat) {
+			if ok := http_actions.AllowedErrorCode(*f.ReturnStatusCode); !ok {
 				return rule, NewConfError(ErrValidationError, "invalid Status Code for error type response")
 			}
 		}
