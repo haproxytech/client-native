@@ -37,6 +37,7 @@ import (
 type FileType string
 
 const (
+	GeneralType          FileType = "general"
 	MapsType             FileType = "maps"
 	SSLType              FileType = "certs"
 	SpoeType             FileType = "spoe"
@@ -65,7 +66,7 @@ func New(dirname string, fileType FileType) (Storage, error) {
 		return nil, err
 	}
 	switch fileType { //nolint:exhaustive
-	case MapsType, SSLType:
+	case MapsType, SSLType, GeneralType:
 		return &storage{
 			dirname:  dirname,
 			fileType: fileType,
@@ -97,7 +98,7 @@ func (s *storage) GetAll() ([]string, error) {
 			if noErrors {
 				files = append(files, file)
 			}
-		case MapsType:
+		case MapsType, GeneralType:
 			files = append(files, file)
 		}
 	}
