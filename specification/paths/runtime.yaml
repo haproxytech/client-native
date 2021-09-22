@@ -430,7 +430,7 @@ maps_one:
         $ref: '#/responses/NotFound'
       'default':
         $ref: '#/responses/DefaultError'
-  put: # add map <map> <payload>
+  put:  # add map <map> <payload>
     summary: Add a new map payload
     description: Adds a new map payload.
     operationId: addPayloadRuntimeMap

@@ -517,6 +517,8 @@ definitions:
           $ref: '#/definitions/smtpchk_params'
         stats_options:
           $ref: '#/definitions/stats_options'
+        tcp_check:
+          $ref: '#/definitions/tcp_check'
         tcplog:
           type: boolean
           x-display-name: TCP Log
@@ -916,6 +918,8 @@ definitions:
               - binary
               type: string
           type: object
+        tcp_check:
+          $ref: '#/definitions/tcp_check'
         tunnel_timeout:
           type: integer
           x-nullable: true
@@ -3491,6 +3495,267 @@ definitions:
     type: array
     items:
       $ref: '#/definitions/tcp_response_rule'
+  tcp_check:
+      properties:
+        action:
+          enum:
+          - comment
+          - connect
+          - expect
+          - send
+          - send-lf
+          - send-binary
+          - send-binary-lf
+          - set-var
+          - set-var-fmt
+          - unset-var
+          type: string
+          x-nullable: false
+        addr:
+          pattern: ^[^\s]+$
+          type: string
+          x-dependency:
+            action:
+              value: connect
+          x-nullable: false
+        alpn:
+          pattern: ^[^\s]+$
+          type: string
+          x-dependency:
+            action:
+              value: connect
+          x-display-name: ALPN Protocols
+          x-nullable: false
+        check_comment:
+          type: string
+          x-dependency:
+            action:
+              value:
+              - connect
+              - expect
+              - send
+              - send-lf
+              - send-binary
+              - send-binary-lf
+          x-nullable: false
+        cond:
+          enum:
+          - if
+          - unless
+          type: string
+          x-display-name: Condition
+        cond_test:
+          type: string
+          x-dependency:
+            cond:
+              required: true
+          x-display-name: Condition Test
+        data:
+          type: string
+          x-dependency:
+            action:
+              required: true
+              value: send
+        default:
+          type: boolean
+          x-dependency:
+            action:
+              value: connect
+        error_status:
+          enum:
+          - L7OKC
+          - L7RSP
+          - L7STS
+          - L6RSP
+          - L4CON
+          type: string
+          x-dependency:
+            action:
+              value: expect
+        exclamation_mark:
+          type: boolean
+          x-dependency:
+            action:
+              value: expect
+          x-display-name: Expect Exclamation Mark
+        fmt:
+          type: string
+          x-dependency:
+            action:
+              required: true
+              value: send-lf
+        hex_fmt:
+          type: string
+          x-dependency:
+            action:
+              required: true
+              value: send-binary-lf
+        hex_string:
+          type: string
+          x-dependency:
+            action:
+              required: true
+              value: send-binary
+        index:
+          type: integer
+          x-nullable: true
+        linger:
+          type: boolean
+          x-dependency:
+            action:
+              value: connect
+        log_message:
+          type: string
+          x-dependency:
+            action:
+              required: true
+              value: comment
+        match:
+          enum:
+          - string
+          - rstring
+          - string-lf
+          - binary
+          - rbinary
+          - binary-lf
+          pattern: ^[^\s]+$
+          type: string
+          x-dependency:
+            action:
+              required: true
+              value: expect
+          x-display-name: Expect Match
+        min_recv:
+          type: integer
+          x-dependency:
+            action:
+              value: expect
+        ok_status:
+          enum:
+          - L7OK
+          - L7OKC
+          - L6OK
+          - L4OK
+          type: string
+          x-dependency:
+            action:
+              value: expect
+        on_error:
+          type: string
+          x-dependency:
+            action:
+              value: expect
+        on_success:
+          type: string
+          x-dependency:
+            action:
+              value: expect
+        pattern:
+          type: string
+          x-dependency:
+            action:
+              required: true
+              value: expect
+        port:
+          maximum: 65535
+          minimum: 1
+          type: integer
+          x-dependency:
+            action:
+              value: connect
+          x-nullable: true
+        port_string:
+          type: string
+          x-dependency:
+            action:
+              value: connect
+        proto:
+          type: string
+          x-dependency:
+            action:
+              value: connect
+          x-nullable: false
+        send_proxy:
+          type: boolean
+          x-dependency:
+            action:
+              value: connect
+        sni:
+          type: string
+          x-dependency:
+            action:
+              value: connect
+          x-nullable: false
+        ssl:
+          type: boolean
+          x-dependency:
+            action:
+              value: connect
+        status-code:
+          type: string
+          x-dependency:
+            action:
+              value: expect
+        tout_status:
+          enum:
+          - L7TOUT
+          - L6TOUT
+          - L4TOUT
+          type: string
+          x-dependency:
+            action:
+              value: expect
+        var_expr:
+          type: string
+          x-dependency:
+            action:
+              required: true
+              value:
+              - set-var
+          x-display-name: Var Expression
+        var_fmt:
+          type: string
+          x-dependency:
+            action:
+              required: true
+              value:
+              - set-var-fmt
+          x-display-name: Var Format
+        var_name:
+          pattern: ^[^\s]+$
+          type: string
+          x-dependency:
+            action:
+              required: true
+              value:
+              - set-var
+              - set-var-fmt
+              - unset-var
+        var_scope:
+          pattern: ^[^\s]+$
+          type: string
+          x-dependency:
+            action:
+              required: true
+              value:
+              - set-var
+              - set-var-fmt
+              - unset-var
+        via_socks4:
+          type: boolean
+          x-dependency:
+            action:
+              value: connect
+      required:
+      - index
+      - action
+      title: TCP Check
+      type: object
+  tcp_checks:
+    title: TCP Checks Array
+    type: array
+    items:
+      $ref: '#/definitions/tcp_check'
   backend_switching_rule:
       additionalProperties: false
       description: HAProxy backend switching rule configuration (corresponds to use_backend
@@ -6447,6 +6712,7 @@ tags:
 - name: StickRule
 - name: StickTable
 - name: Storage
+- name: TCPCheck
 - name: TCPRequestRule
 - name: TCPResponseRule
 - name: Transactions
@@ -9232,6 +9498,228 @@ paths:
         summary: Replace a HTTP Response Rule
         tags:
         - HTTPResponseRule
+  /services/haproxy/configuration/tcp_checks:
+      get:
+        description: Returns all TCP checks that are configured in specified parent.
+        operationId: getTCPChecks
+        parameters:
+        - description: Parent name
+          in: query
+          name: parent_name
+          type: string
+        - description: Parent type
+          enum:
+          - backend
+          - defaults
+          in: query
+          name: parent_type
+          required: true
+          type: string
+        - $ref: '#/parameters/transaction_id'
+        responses:
+          "200":
+            description: Successful operation
+            headers:
+              Configuration-Version:
+                description: Configuration file version
+                type: string
+            schema:
+              properties:
+                _version:
+                  type: integer
+                data:
+                  $ref: '#/definitions/tcp_checks'
+              required:
+              - data
+              type: object
+          default:
+            $ref: '#/responses/DefaultError'
+        summary: Return an array of TCP checks
+        tags:
+        - TCPCheck
+      post:
+        description: Adds a new TCP check of the specified type in the specified parent.
+        operationId: createTCPCheck
+        parameters:
+        - description: Parent name
+          in: query
+          name: parent_name
+          type: string
+        - description: Parent type
+          enum:
+          - backend
+          - defaults
+          in: query
+          name: parent_type
+          required: true
+          type: string
+        - in: body
+          name: data
+          required: true
+          schema:
+            $ref: '#/definitions/tcp_check'
+        - $ref: '#/parameters/transaction_id'
+        - $ref: '#/parameters/version'
+        - $ref: '#/parameters/force_reload'
+        responses:
+          "201":
+            description: TCP check created
+            schema:
+              $ref: '#/definitions/tcp_check'
+          "202":
+            description: Configuration change accepted and reload requested
+            headers:
+              Reload-ID:
+                description: ID of the requested reload
+                type: string
+            schema:
+              $ref: '#/definitions/tcp_check'
+          "400":
+            $ref: '#/responses/BadRequest'
+          "409":
+            $ref: '#/responses/AlreadyExists'
+          default:
+            $ref: '#/responses/DefaultError'
+        summary: Add a new TCP check
+        tags:
+        - TCPCheck
+  /services/haproxy/configuration/tcp_checks/{index}:
+      delete:
+        description: Deletes a TCP check configuration by it's index from the specified
+          parent.
+        operationId: deleteTCPCheck
+        parameters:
+        - description: TCP check Index
+          in: path
+          name: index
+          required: true
+          type: integer
+        - description: Parent name
+          in: query
+          name: parent_name
+          type: string
+        - description: Parent type
+          enum:
+          - backend
+          - defaults
+          in: query
+          name: parent_type
+          required: true
+          type: string
+        - $ref: '#/parameters/transaction_id'
+        - $ref: '#/parameters/version'
+        - $ref: '#/parameters/force_reload'
+        responses:
+          "202":
+            description: Configuration change accepted and reload requested
+            headers:
+              Reload-ID:
+                description: ID of the requested reload
+                type: string
+          "204":
+            description: TCP check deleted
+          "404":
+            $ref: '#/responses/NotFound'
+          default:
+            $ref: '#/responses/DefaultError'
+        summary: Delete a TCP check
+        tags:
+        - TCPCheck
+      get:
+        description: Returns one TCP check configuration by it's index in the specified
+          parent.
+        operationId: getTCPCheck
+        parameters:
+        - description: TCP Check Index
+          in: path
+          name: index
+          required: true
+          type: integer
+        - description: Parent name
+          in: query
+          name: parent_name
+          type: string
+        - description: Parent type
+          enum:
+          - backend
+          - defaults
+          in: query
+          name: parent_type
+          required: true
+          type: string
+        - $ref: '#/parameters/transaction_id'
+        responses:
+          "200":
+            description: Successful operation
+            headers:
+              Configuration-Version:
+                description: Configuration file version
+                type: string
+            schema:
+              properties:
+                _version:
+                  type: integer
+                data:
+                  $ref: '#/definitions/tcp_check'
+              type: object
+          "404":
+            $ref: '#/responses/NotFound'
+          default:
+            $ref: '#/responses/DefaultError'
+        summary: Return one TCP check
+        tags:
+        - TCPCheck
+      put:
+        description: Replaces a TCP Check configuration by it's index in the specified parent.
+        operationId: replaceTCPCheck
+        parameters:
+        - description: TCP Check Index
+          in: path
+          name: index
+          required: true
+          type: integer
+        - description: Parent name
+          in: query
+          name: parent_name
+          type: string
+        - description: Parent type
+          enum:
+          - backend
+          - defaults
+          in: query
+          name: parent_type
+          required: true
+          type: string
+        - in: body
+          name: data
+          required: true
+          schema:
+            $ref: '#/definitions/tcp_check'
+        - $ref: '#/parameters/transaction_id'
+        - $ref: '#/parameters/version'
+        - $ref: '#/parameters/force_reload'
+        responses:
+          "200":
+            description: TCP check replaced
+            schema:
+              $ref: '#/definitions/tcp_check'
+          "202":
+            description: Configuration change accepted and reload requested
+            headers:
+              Reload-ID:
+                description: ID of the requested reload
+                type: string
+            schema:
+              $ref: '#/definitions/tcp_check'
+          "400":
+            $ref: '#/responses/BadRequest'
+          "404":
+            $ref: '#/responses/NotFound'
+          default:
+            $ref: '#/responses/DefaultError'
+        summary: Replace a TCP check
+        tags:
+        - TCPCheck
   /services/haproxy/configuration/tcp_request_rules:
       get:
         description: Returns all TCP Request Rules that are configured in specified parent

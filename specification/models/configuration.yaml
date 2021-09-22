@@ -189,6 +189,8 @@ defaults:
       $ref: "#/definitions/httpchk_params"
     http-check:
       $ref: "#/definitions/http-check"
+    tcp_check:
+      $ref: "#/definitions/tcp_check"
     bind_process:
       type: string
       pattern: '^[^\s]+$'
@@ -565,6 +567,8 @@ backend:
           enum: [avalanche]
     http-check:
       $ref: "#/definitions/http-check"
+    tcp_check:
+      $ref: "#/definitions/tcp_check"
     bind_process:
       type: string
       pattern: '^[^\s]+$'
@@ -3566,3 +3570,215 @@ pgsql_check_params:
   properties:
     username:
       type: string
+tcp_check:
+  title: TCP Check
+  type: object
+  required:
+    - index
+    - action
+  properties:
+    index:
+      type: integer
+      x-nullable: true
+    action:
+      type: string
+      enum: [comment, connect, expect, send, send-lf, send-binary, send-binary-lf, set-var, set-var-fmt, unset-var]
+      x-nullable: false
+    log_message:
+      type: string
+      x-dependency:
+        action:
+          value: comment
+          required: true
+    check_comment:
+      type: string
+      x-nullable: false
+      x-dependency:
+        action:
+          value: [connect, expect, send, send-lf, send-binary, send-binary-lf]
+    data:
+      type: string
+      x-dependency:
+        action:
+          value: send
+          required: true
+    fmt:
+      type: string
+      x-dependency:
+        action:
+          value: send-lf
+          required: true
+    default:
+      type: boolean
+      x-dependency:
+        action:
+          value: connect
+    port:
+      type: integer
+      minimum: 1
+      maximum: 65535
+      x-nullable: true
+      x-dependency:
+        action:
+          value: connect
+    port_string:
+      type: string
+      x-dependency:
+        action:
+          value: connect
+    addr:
+      type: string
+      pattern: '^[^\s]+$'
+      x-nullable: false
+      x-dependency:
+        action:
+          value: connect
+    send_proxy:
+      type: boolean
+      x-dependency:
+        action:
+          value: connect
+    via_socks4:
+      type: boolean
+      x-dependency:
+        action:
+          value: connect
+    ssl:
+      type: boolean
+      x-dependency:
+        action:
+          value: connect
+    sni:
+      type: string
+      x-nullable: false
+      x-dependency:
+        action:
+          value: connect
+    alpn:
+      type: string
+      pattern: '^[^\s]+$'
+      x-display-name: ALPN Protocols
+      x-nullable: false
+      x-dependency:
+        action:
+          value: connect
+    linger:
+      type: boolean
+      x-dependency:
+        action:
+          value: connect
+    proto:
+      type: string
+      x-nullable: false
+      x-dependency:
+        action:
+          value: connect
+    min_recv:
+      type: integer
+      x-dependency:
+        action:
+          value: expect
+    ok_status:
+      type: string
+      enum: [L7OK, L7OKC, L6OK, L4OK]
+      x-dependency:
+        action:
+          value: expect
+    error_status:
+      type: string
+      enum: [L7OKC, L7RSP, L7STS, L6RSP, L4CON]
+      x-dependency:
+        action:
+          value: expect
+    tout_status:
+      type: string
+      enum: [L7TOUT, L6TOUT, L4TOUT]
+      x-dependency:
+        action:
+          value: expect
+    on_success:
+      type: string
+      x-dependency:
+        action:
+          value: expect
+    on_error:
+      type: string
+      x-dependency:
+        action:
+          value: expect
+    status-code:
+      type: string
+      x-dependency:
+        action:
+          value: expect
+    exclamation_mark:
+      type: boolean
+      x-display-name: Expect Exclamation Mark
+      x-dependency:
+        action:
+          value: expect
+    hex_string:
+      type: string
+      x-dependency:
+        action:
+          value: send-binary
+          required: true
+    hex_fmt:
+      type: string
+      x-dependency:
+        action:
+          value: send-binary-lf
+          required: true
+    var_name:
+      type: string
+      pattern: '^[^\s]+$'
+      x-dependency:
+        action:
+          value: [set-var, set-var-fmt, unset-var]
+          required: true
+    var_scope:
+      type: string
+      pattern: '^[^\s]+$'
+      x-dependency:
+        action:
+          value: [set-var, set-var-fmt, unset-var]
+          required: true
+    var_expr:
+      type: string
+      x-display-name: Var Expression
+      x-dependency:
+        action:
+          value: [set-var]
+          required: true
+    var_fmt:
+      type: string
+      x-display-name: Var Format
+      x-dependency:
+        action:
+          value: [set-var-fmt]
+          required: true
+    match:
+      type: string
+      enum: [string, rstring, string-lf, binary, rbinary, binary-lf]
+      x-display-name: Expect Match
+      pattern: '^[^\s]+$'
+      x-dependency:
+        action:
+          value: expect
+          required: true
+    pattern:
+      type: string
+      x-dependency:
+        action:
+          value: expect
+          required: true
+    cond:
+      type: string
+      x-display-name: Condition
+      enum: [if, unless]
+    cond_test:
+      type: string
+      x-display-name: Condition Test
+      x-dependency:
+        cond:
+          required: true

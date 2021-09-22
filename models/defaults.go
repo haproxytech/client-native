@@ -209,6 +209,9 @@ type Defaults struct {
 	// stats options
 	StatsOptions *StatsOptions `json:"stats_options,omitempty"`
 
+	// tcp check
+	TCPCheck *TCPCheck `json:"tcp_check,omitempty"`
+
 	// tcplog
 	Tcplog bool `json:"tcplog,omitempty"`
 
@@ -363,6 +366,10 @@ func (m *Defaults) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateStatsOptions(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateTCPCheck(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -1396,6 +1403,24 @@ func (m *Defaults) validateStatsOptions(formats strfmt.Registry) error {
 		if err := m.StatsOptions.Validate(formats); err != nil {
 			if ve, ok := err.(*errors.Validation); ok {
 				return ve.ValidateName("stats_options")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (m *Defaults) validateTCPCheck(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.TCPCheck) { // not required
+		return nil
+	}
+
+	if m.TCPCheck != nil {
+		if err := m.TCPCheck.Validate(formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("tcp_check")
 			}
 			return err
 		}

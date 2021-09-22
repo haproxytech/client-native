@@ -118,6 +118,13 @@ definitions:
     type: array
     items:
       $ref: '#/definitions/tcp_response_rule'
+  tcp_check:
+    $ref: "models/configuration.yaml#/tcp_check"
+  tcp_checks:
+    title: TCP Checks Array
+    type: array
+    items:
+      $ref: '#/definitions/tcp_check'
   backend_switching_rule:
     $ref: "models/configuration.yaml#/backend_switching_rule"
   backend_switching_rules:
@@ -544,6 +551,7 @@ tags:
   - name: SpoeTransactions
   - name: Storage
   - name: ServerTemplate
+  - name: TCPCheck
 security:
   - basic_auth: []
 paths:
@@ -633,6 +641,10 @@ paths:
     $ref: "paths/configuration.yaml#/http_response_rules"
   /services/haproxy/configuration/http_response_rules/{index}:
     $ref: "paths/configuration.yaml#/http_response_rules_one"
+  /services/haproxy/configuration/tcp_checks:
+    $ref: "paths/configuration.yaml#/tcp_checks"
+  /services/haproxy/configuration/tcp_checks/{index}:
+    $ref: "paths/configuration.yaml#/tcp_checks_one"
   /services/haproxy/configuration/tcp_request_rules:
     $ref: "paths/configuration.yaml#/tcp_request_rules"
   /services/haproxy/configuration/tcp_request_rules/{index}:
