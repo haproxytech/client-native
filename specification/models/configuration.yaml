@@ -305,6 +305,9 @@ defaults:
         property: name
     default_server:
       $ref: "#/definitions/default_server"
+    load_server_state_from_file:
+      type: string
+      enum: [global, local, none]
     error_files:
       type: array
       x-go-name: ErrorFiles

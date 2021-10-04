@@ -456,6 +456,12 @@ definitions:
         httplog:
           type: boolean
           x-display-name: HTTP Log
+        load_server_state_from_file:
+          enum:
+          - global
+          - local
+          - none
+          type: string
         log_format:
           type: string
         log_format_sd:

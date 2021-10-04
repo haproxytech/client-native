@@ -146,6 +146,10 @@ type Defaults struct {
 	// httplog
 	Httplog bool `json:"httplog,omitempty"`
 
+	// load server state from file
+	// Enum: [global local none]
+	LoadServerStateFromFile string `json:"load_server_state_from_file,omitempty"`
+
 	// log format
 	LogFormat string `json:"log_format,omitempty"`
 
@@ -307,6 +311,10 @@ func (m *Defaults) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateHttpchkParams(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateLoadServerStateFromFile(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -1076,6 +1084,52 @@ func (m *Defaults) validateHttpchkParams(formats strfmt.Registry) error {
 			}
 			return err
 		}
+	}
+
+	return nil
+}
+
+var defaultsTypeLoadServerStateFromFilePropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["global","local","none"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		defaultsTypeLoadServerStateFromFilePropEnum = append(defaultsTypeLoadServerStateFromFilePropEnum, v)
+	}
+}
+
+const (
+
+	// DefaultsLoadServerStateFromFileGlobal captures enum value "global"
+	DefaultsLoadServerStateFromFileGlobal string = "global"
+
+	// DefaultsLoadServerStateFromFileLocal captures enum value "local"
+	DefaultsLoadServerStateFromFileLocal string = "local"
+
+	// DefaultsLoadServerStateFromFileNone captures enum value "none"
+	DefaultsLoadServerStateFromFileNone string = "none"
+)
+
+// prop value enum
+func (m *Defaults) validateLoadServerStateFromFileEnum(path, location string, value string) error {
+	if err := validate.Enum(path, location, value, defaultsTypeLoadServerStateFromFilePropEnum); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *Defaults) validateLoadServerStateFromFile(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.LoadServerStateFromFile) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateLoadServerStateFromFileEnum("load_server_state_from_file", "body", m.LoadServerStateFromFile); err != nil {
+		return err
 	}
 
 	return nil

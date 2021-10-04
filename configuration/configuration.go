@@ -471,6 +471,8 @@ func (s *SectionParser) checkSpecialFields(fieldName string) (match bool, data i
 		return true, s.errorFiles()
 	case "DefaultServer":
 		return true, s.defaultServer()
+	case "LoadServerStateFromFile":
+		return true, s.loadServerStateFromFile()
 	case "StickTable":
 		return true, s.stickTable()
 	case "AdvCheck":
@@ -1137,6 +1139,15 @@ func (s *SectionParser) defaultServer() interface{} { //nolint:gocognit,gocyclo
 	return dServer
 }
 
+func (s *SectionParser) loadServerStateFromFile() interface{} {
+	data, err := s.get("load-server-state-from-file", false)
+	if err == nil {
+		d := data.(*types.LoadServerStateFromFile)
+		return d.Argument
+	}
+	return nil
+}
+
 func (s *SectionParser) errorFiles() interface{} {
 	data, err := s.get("errorfile", false)
 	if err != nil {
@@ -1451,6 +1462,8 @@ func (s *SectionObject) checkSpecialFields(fieldName string, field reflect.Value
 		return true, s.errorFiles(field)
 	case "DefaultServer":
 		return true, s.defaultServer(field)
+	case "LoadServerStateFromFile":
+		return true, s.loadServerStateFromFile(field)
 	case "StickTable":
 		return true, s.stickTable(field)
 	case "AdvCheck":
@@ -2465,6 +2478,27 @@ func (s *SectionObject) defaultServer(field reflect.Value) error { //nolint:goco
 
 		dServers[0].Params = ps
 		if err := s.set("default-server", dServers); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func (s *SectionObject) loadServerStateFromFile(field reflect.Value) error {
+	if s.Section == parser.Backends || s.Section == parser.Defaults {
+		if valueIsNil(field) {
+			if err := s.set("load-server-state-from-file", nil); err != nil {
+				return err
+			}
+			return nil
+		}
+
+		b := field.String()
+		d := types.LoadServerStateFromFile{
+			Argument: b,
+		}
+
+		if err := s.set("load-server-state-from-file", &d); err != nil {
 			return err
 		}
 	}
