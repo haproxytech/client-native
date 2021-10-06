@@ -392,6 +392,9 @@ definitions:
           - disabled
           type: string
           x-display-name: Don't Log Null
+        dynamic_cookie_key:
+          pattern: ^[^\s]+$
+          type: string
         error_files:
           items:
             $ref: '#/definitions/errorfile'
@@ -746,6 +749,13 @@ definitions:
               value: http
         default_server:
           $ref: '#/definitions/default_server'
+        dynamic_cookie_key:
+          pattern: ^[^\s]+$
+          type: string
+          x-dependency:
+            cookie:
+              dynamic:
+                value: true
         external_check:
           enum:
           - enabled

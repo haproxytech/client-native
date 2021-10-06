@@ -253,6 +253,9 @@ defaults:
       x-display-name: Continuous Statistics
     cookie:
       $ref: '#/definitions/cookie'
+    dynamic_cookie_key:
+      type: string
+      pattern: '^[^\s]+$'
     client_timeout:
       type: integer
       x-nullable: true
@@ -604,6 +607,13 @@ backend:
       x-dependency:
         mode:
           value: http
+    dynamic_cookie_key:
+      type: string
+      pattern: '^[^\s]+$'
+      x-dependency:
+        cookie:
+          dynamic:
+            value: true
     default_server:
       $ref: "#/definitions/default_server"
     check_timeout:

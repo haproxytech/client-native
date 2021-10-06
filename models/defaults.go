@@ -96,6 +96,10 @@ type Defaults struct {
 	// Enum: [enabled disabled]
 	Dontlognull string `json:"dontlognull,omitempty"`
 
+	// dynamic cookie key
+	// Pattern: ^[^\s]+$
+	DynamicCookieKey string `json:"dynamic_cookie_key,omitempty"`
+
 	// external check
 	// Enum: [enabled disabled]
 	ExternalCheck string `json:"external_check,omitempty"`
@@ -267,6 +271,10 @@ func (m *Defaults) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateDontlognull(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateDynamicCookieKey(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -736,6 +744,19 @@ func (m *Defaults) validateDontlognull(formats strfmt.Registry) error {
 
 	// value enum
 	if err := m.validateDontlognullEnum("dontlognull", "body", m.Dontlognull); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *Defaults) validateDynamicCookieKey(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.DynamicCookieKey) { // not required
+		return nil
+	}
+
+	if err := validate.Pattern("dynamic_cookie_key", "body", string(m.DynamicCookieKey), `^[^\s]+$`); err != nil {
 		return err
 	}
 

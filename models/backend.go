@@ -67,6 +67,10 @@ type Backend struct {
 	// default server
 	DefaultServer *DefaultServer `json:"default_server,omitempty"`
 
+	// dynamic cookie key
+	// Pattern: ^[^\s]+$
+	DynamicCookieKey string `json:"dynamic_cookie_key,omitempty"`
+
 	// external check
 	// Enum: [enabled disabled]
 	ExternalCheck string `json:"external_check,omitempty"`
@@ -191,6 +195,10 @@ func (m *Backend) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateDefaultServer(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateDynamicCookieKey(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -493,6 +501,19 @@ func (m *Backend) validateDefaultServer(formats strfmt.Registry) error {
 			}
 			return err
 		}
+	}
+
+	return nil
+}
+
+func (m *Backend) validateDynamicCookieKey(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.DynamicCookieKey) { // not required
+		return nil
+	}
+
+	if err := validate.Pattern("dynamic_cookie_key", "body", string(m.DynamicCookieKey), `^[^\s]+$`); err != nil {
+		return err
 	}
 
 	return nil
