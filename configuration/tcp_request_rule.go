@@ -248,6 +248,8 @@ func ParseTCPRequestRule(f types.TCPType) (rule *models.TCPRequestRule, err erro
 			rule.CondTest = a.CondTest
 		case *tcp_actions.ExpectNetscalerCip:
 			rule.Action = models.TCPRequestRuleActionExpectNetscalerCip
+			rule.Cond = a.Cond
+			rule.CondTest = a.CondTest
 		case *tcp_actions.Capture:
 			rule.Action = models.TCPRequestRuleActionCapture
 			rule.Expr = a.Expr.String()
@@ -521,11 +523,17 @@ func SerializeTCPRequestRule(f models.TCPRequestRule) (rule types.TCPType, err e
 			}, nil
 		case models.TCPRequestRuleActionExpectProxy:
 			return &tcp_types.Connection{
-				Action: &tcp_actions.ExpectProxy{},
+				Action: &tcp_actions.ExpectProxy{
+					Cond:     f.Cond,
+					CondTest: f.CondTest,
+				},
 			}, nil
 		case models.TCPRequestRuleActionExpectNetscalerCip:
 			return &tcp_types.Connection{
-				Action: &tcp_actions.ExpectNetscalerCip{},
+				Action: &tcp_actions.ExpectNetscalerCip{
+					Cond:     f.Cond,
+					CondTest: f.CondTest,
+				},
 			}, nil
 		case models.TCPRequestRuleActionCapture:
 			return &tcp_types.Connection{
