@@ -322,6 +322,15 @@ func TestSerializeTCPRequestRule(t *testing.T) {
 			},
 			expectedResult: "session silent-drop if FALSE",
 		},
+		{
+			input: models.TCPRequestRule{
+				Type:     models.TCPRequestRuleTypeConnection,
+				Action:   models.TCPRequestRuleActionExpectProxy,
+				Cond:     "if",
+				CondTest: "{ src 1.2.3.4 5.6.7.8 }",
+			},
+			expectedResult: "connection expect-proxy layer4 if { src 1.2.3.4 5.6.7.8 }",
+		},
 	}
 
 	for _, testCase := range testCases {
