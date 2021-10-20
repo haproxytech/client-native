@@ -2,6 +2,9 @@
 
 ## HAProxy Native Golang Client
 
+[![Contributors](https://img.shields.io/github/contributors/haproxytech/client-native?color=purple)](https://github.com/haproxy/haproxy/blob/master/CONTRIBUTING)
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
+
 **HAProxy Native Client** is a client that exposes methods for reading and changing HAProxy configuration files, and executing commands and parsing the output of the HAProxy Runtime API (via unix socket, AKA stats socket in HAProxy).
 
 ## HAProxy Models
