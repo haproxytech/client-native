@@ -43,7 +43,7 @@ runtimeClient := &runtime_api.Client{}
 globalConf, err := confClient.GetGlobalConfiguration("")
 if err == nil {
     socketList := make([]string, 0, 1)
-    runtimeAPIs := globalConf.Data.RuntimeApis
+    runtimeAPIs := globalConf.RuntimeApis
 
     if len(runtimeAPIs) != 0 {
         for _, r := range runtimeAPIs {
