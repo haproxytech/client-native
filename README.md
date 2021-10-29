@@ -40,7 +40,7 @@ if err != nil {
 }
 
 runtimeClient := &runtime_api.Client{}
-globalConf, err := confClient.GetGlobalConfiguration("")
+_, globalConf, err := confClient.GetGlobalConfiguration("")
 if err == nil {
     socketList := make([]string, 0, 1)
     runtimeAPIs := globalConf.RuntimeApis
