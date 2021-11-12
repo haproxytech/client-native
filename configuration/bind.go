@@ -104,16 +104,15 @@ func (c *Client) CreateBind(frontend string, data *models.Bind, transactionID st
 		if validationErr != nil {
 			return NewConfError(ErrValidationError, validationErr.Error())
 		}
+		validationErr = validateParams(data)
+		if validationErr != nil {
+			return NewConfError(ErrValidationError, validationErr.Error())
+		}
 	}
 
 	p, t, err := c.loadDataForChange(transactionID, version)
 	if err != nil {
 		return err
-	}
-
-	if data.PortRangeEnd != nil && *data.Port >= *data.PortRangeEnd {
-		e := NewConfError(ErrGeneralError, fmt.Sprintf("Bind port range end %d has to be greater start %d", *data.PortRangeEnd, *data.Port))
-		return c.HandleError(data.Name, "frontend", frontend, t, transactionID == "", e)
 	}
 
 	bind, _ := GetBindByName(data.Name, frontend, p)
@@ -138,6 +137,10 @@ func (c *Client) CreateBind(frontend string, data *models.Bind, transactionID st
 func (c *Client) EditBind(name string, frontend string, data *models.Bind, transactionID string, version int64) error {
 	if c.UseValidation {
 		validationErr := data.Validate(strfmt.Default)
+		if validationErr != nil {
+			return NewConfError(ErrValidationError, validationErr.Error())
+		}
+		validationErr = validateParams(data)
 		if validationErr != nil {
 			return NewConfError(ErrValidationError, validationErr.Error())
 		}
@@ -590,4 +593,17 @@ func GetBindByName(name string, frontend string, p parser.Parser) (*models.Bind,
 		}
 	}
 	return nil, 0
+}
+
+func validateParams(data *models.Bind) error {
+	if data.Port != nil {
+		if data.PortRangeEnd != nil && *data.PortRangeEnd <= *data.Port {
+			return fmt.Errorf("port upper bound %d less or equal than lower bound %d in bind %s", *data.PortRangeEnd, *data.Port, data.Name)
+		}
+		return nil
+	}
+	if data.Address != "" {
+		return nil
+	}
+	return fmt.Errorf("missing port or address in bind %s", data.Name)
 }
