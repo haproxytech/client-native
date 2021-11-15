@@ -229,8 +229,10 @@ func ParseHTTPRequestRule(f types.Action) (rule *models.HTTPRequestRule, err err
 	case *http_actions.Deny:
 		var denyPtr *int64
 		var ds int64
-		if ds, err = strconv.ParseInt(v.DenyStatus, 10, 64); err == nil {
-			denyPtr = &ds
+		if v.DenyStatus != "" {
+			if ds, err = strconv.ParseInt(v.DenyStatus, 10, 64); err == nil {
+				denyPtr = &ds
+			}
 		}
 		rule = &models.HTTPRequestRule{
 			Type:       "deny",
@@ -265,8 +267,10 @@ func ParseHTTPRequestRule(f types.Action) (rule *models.HTTPRequestRule, err err
 	case *http_actions.Tarpit:
 		var dsPtr *int64
 		var ds int64
-		if ds, err = strconv.ParseInt(v.DenyStatus, 10, 64); err == nil {
-			dsPtr = &ds
+		if v.DenyStatus != "" {
+			if ds, err = strconv.ParseInt(v.DenyStatus, 10, 64); err == nil {
+				dsPtr = &ds
+			}
 		}
 		rule = &models.HTTPRequestRule{
 			Type:       "tarpit",
