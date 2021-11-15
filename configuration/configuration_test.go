@@ -109,6 +109,8 @@ frontend test
   http-request use-service svrs if FALSE
   http-request return status 200 content-type "text/plain" string "My content" hdr Some-Header value if FALSE
   http-request redirect scheme https if !{ ssl_fc }
+  http-request redirect location https://%[hdr(host),field(1,:)]:443%[capture.req.uri] code 302
+  http-request deny unless src 192.168.0.0/16
   http-response allow if src 192.168.0.0/16
   http-response set-header X-SSL %[ssl_fc]
   http-response set-var(req.my_var) req.fhdr(user-agent),lower
