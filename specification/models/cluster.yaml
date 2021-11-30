@@ -18,21 +18,20 @@ settings:
         name:
           type: string
           readOnly: true
+        cluster_id:
+          type: string
         description:
           type: string
           readOnly: true
         address:
           pattern: ^[^\s]+$
           type: string
-          readOnly: true
         port:
           maximum: 65535
           minimum: 1
           type: integer
           x-nullable: true
-          readOnly: true
         api_base_path:
           type: string
-          readOnly: true
       title: Cluster controller information
       type: object

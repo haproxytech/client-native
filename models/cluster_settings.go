@@ -205,13 +205,14 @@ func (m *ClusterSettings) UnmarshalBinary(b []byte) error {
 type ClusterSettingsCluster struct {
 
 	// address
-	// Read Only: true
 	// Pattern: ^[^\s]+$
 	Address string `json:"address,omitempty"`
 
 	// api base path
-	// Read Only: true
 	APIBasePath string `json:"api_base_path,omitempty"`
+
+	// cluster id
+	ClusterID string `json:"cluster_id,omitempty"`
 
 	// description
 	// Read Only: true
@@ -222,7 +223,6 @@ type ClusterSettingsCluster struct {
 	Name string `json:"name,omitempty"`
 
 	// port
-	// Read Only: true
 	// Maximum: 65535
 	// Minimum: 1
 	Port *int64 `json:"port,omitempty"`
