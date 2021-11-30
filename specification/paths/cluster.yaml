@@ -2,7 +2,7 @@
 cluster:
   get:
     tags:
-      - Discovery
+      - Cluster
     summary: Return cluster data
     description: Returns cluster data
     operationId: getCluster
@@ -16,6 +16,8 @@ cluster:
       'default':
         $ref: '#/responses/DefaultError'
   post:
+    tags:
+      - Cluster
     summary: Post cluster settings
     description: Post cluster settings
     operationId: postCluster
@@ -45,8 +47,6 @@ cluster:
         minimum: 1
         type: integer
       - $ref: "#/parameters/version"
-    tags:
-      - Cluster
     responses:
       '200':
         description: Cluster settings changed
@@ -54,6 +54,48 @@ cluster:
           $ref: "#/definitions/cluster_settings"
       '400':
         $ref: '#/responses/BadRequest'
+      'default':
+        $ref: '#/responses/DefaultError'
+  put:
+    tags:
+      - Cluster
+    summary: Edit cluster settings
+    description: Edit cluster settings
+    operationId: editCluster
+    parameters:
+      - name: data
+        required: true
+        in: body
+        schema:
+          $ref: "#/definitions/cluster_settings"
+      - $ref: "#/parameters/version"
+    responses:
+      '200':
+        description: Cluster settings changed
+        schema:
+          $ref: "#/definitions/cluster_settings"
+      '400':
+        $ref: '#/responses/BadRequest'
+      'default':
+        $ref: '#/responses/DefaultError'
+  delete:
+    summary: Delete cluster settings
+    description: Delete cluster settings and move the node back to single mode
+    operationId: deleteCluster
+    parameters:
+      - name: configuration
+        description: In case of moving to single mode do we keep or clean configuration
+        enum:
+          - keep
+        in: query
+        required: false
+        type: string
+      - $ref: "#/parameters/version"
+    tags:
+      - Cluster
+    responses:
+      '201':
+        description: Cluster settings deleted and node moved to single mode
       'default':
         $ref: '#/responses/DefaultError'
 certificate:

@@ -4993,10 +4993,10 @@ definitions:
           properties:
             address:
               pattern: ^[^\s]+$
-              readOnly: true
               type: string
             api_base_path:
-              readOnly: true
+              type: string
+            cluster_id:
               type: string
             description:
               readOnly: true
@@ -5007,7 +5007,6 @@ definitions:
             port:
               maximum: 65535
               minimum: 1
-              readOnly: true
               type: integer
               x-nullable: true
           title: Cluster controller information
@@ -6498,6 +6497,26 @@ paths:
         tags:
         - Information
   /cluster:
+      delete:
+        description: Delete cluster settings and move the node back to single mode
+        operationId: deleteCluster
+        parameters:
+        - description: In case of moving to single mode do we keep or clean configuration
+          enum:
+          - keep
+          in: query
+          name: configuration
+          required: false
+          type: string
+        - $ref: '#/parameters/version'
+        responses:
+          "201":
+            description: Cluster settings deleted and node moved to single mode
+          default:
+            $ref: '#/responses/DefaultError'
+        summary: Delete cluster settings
+        tags:
+        - Cluster
       get:
         description: Returns cluster data
         operationId: getCluster
@@ -6512,7 +6531,7 @@ paths:
             $ref: '#/responses/DefaultError'
         summary: Return cluster data
         tags:
-        - Discovery
+        - Cluster
       post:
         description: Post cluster settings
         operationId: postCluster
@@ -6552,6 +6571,28 @@ paths:
           default:
             $ref: '#/responses/DefaultError'
         summary: Post cluster settings
+        tags:
+        - Cluster
+      put:
+        description: Edit cluster settings
+        operationId: editCluster
+        parameters:
+        - in: body
+          name: data
+          required: true
+          schema:
+            $ref: '#/definitions/cluster_settings'
+        - $ref: '#/parameters/version'
+        responses:
+          "200":
+            description: Cluster settings changed
+            schema:
+              $ref: '#/definitions/cluster_settings'
+          "400":
+            $ref: '#/responses/BadRequest'
+          default:
+            $ref: '#/responses/DefaultError'
+        summary: Edit cluster settings
         tags:
         - Cluster
   /cluster/certificate:
