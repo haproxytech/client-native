@@ -94,7 +94,7 @@ cluster:
     tags:
       - Cluster
     responses:
-      '201':
+      '204':
         description: Cluster settings deleted and node moved to single mode
       'default':
         $ref: '#/responses/DefaultError'

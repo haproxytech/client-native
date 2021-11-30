@@ -26,12 +26,39 @@ settings:
         address:
           pattern: ^[^\s]+$
           type: string
+          readOnly: true
         port:
           maximum: 65535
           minimum: 1
           type: integer
+          readOnly: true
           x-nullable: true
         api_base_path:
           type: string
+          readOnly: true
+        log_targets:
+          type: array
+          x-go-name: ClusterLogTargets
+          items:
+            type: object
+            x-go-name: ClusterLogTarget
+            required:
+              - address
+              - port
+              - protocol
+            properties:
+              protocol:
+                type: string
+                enum:
+                  - tcp
+                  - udp
+              address:
+                type: string
+              port:
+                type: integer
+                maximum: 65535
+                minimum: 1
+              log_format:
+                type: string
       title: Cluster controller information
       type: object

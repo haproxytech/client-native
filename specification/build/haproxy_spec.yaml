@@ -4993,20 +4993,47 @@ definitions:
           properties:
             address:
               pattern: ^[^\s]+$
+              readOnly: true
               type: string
             api_base_path:
+              readOnly: true
               type: string
             cluster_id:
               type: string
             description:
               readOnly: true
               type: string
+            log_targets:
+              items:
+                properties:
+                  address:
+                    type: string
+                  log_format:
+                    type: string
+                  port:
+                    maximum: 65535
+                    minimum: 1
+                    type: integer
+                  protocol:
+                    enum:
+                    - tcp
+                    - udp
+                    type: string
+                required:
+                - address
+                - port
+                - protocol
+                type: object
+                x-go-name: ClusterLogTarget
+              type: array
+              x-go-name: ClusterLogTargets
             name:
               readOnly: true
               type: string
             port:
               maximum: 65535
               minimum: 1
+              readOnly: true
               type: integer
               x-nullable: true
           title: Cluster controller information
@@ -6510,7 +6537,7 @@ paths:
           type: string
         - $ref: '#/parameters/version'
         responses:
-          "201":
+          "204":
             description: Cluster settings deleted and node moved to single mode
           default:
             $ref: '#/responses/DefaultError'
