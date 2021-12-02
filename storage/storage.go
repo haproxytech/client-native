@@ -50,6 +50,7 @@ type Storage interface {
 	GetAll() ([]string, error)
 	Get(name string) (string, error)
 	GetContents(name string) (string, error)
+	GetRawContents(name string) (io.ReadCloser, error)
 	Delete(name string) error
 	Replace(name string, config string) (string, error)
 	Create(name string, contents io.ReadCloser) (string, error)
@@ -122,6 +123,14 @@ func (s *storage) GetContents(name string) (string, error) {
 		return "", err
 	}
 	return readFile(f)
+}
+
+func (s *storage) GetRawContents(name string) (io.ReadCloser, error) {
+	fname, err := getFile(s.dirname, name)
+	if err != nil {
+		return nil, err
+	}
+	return os.Open(fname)
 }
 
 func (s *storage) Delete(name string) error {
