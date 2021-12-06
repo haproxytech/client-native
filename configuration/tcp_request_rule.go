@@ -24,6 +24,7 @@ import (
 	parser "github.com/haproxytech/config-parser/v4"
 	"github.com/haproxytech/config-parser/v4/common"
 	parser_errors "github.com/haproxytech/config-parser/v4/errors"
+	"github.com/haproxytech/config-parser/v4/parsers/actions"
 	tcp_actions "github.com/haproxytech/config-parser/v4/parsers/tcp/actions"
 	tcp_types "github.com/haproxytech/config-parser/v4/parsers/tcp/types"
 	"github.com/haproxytech/config-parser/v4/types"
@@ -229,61 +230,81 @@ func ParseTCPRequestRule(f types.TCPType) (rule *models.TCPRequestRule, err erro
 
 	case *tcp_types.Connection:
 		rule = &models.TCPRequestRule{
-			Type:     models.TCPRequestRuleTypeConnection,
-			Cond:     v.Cond,
-			CondTest: v.CondTest,
+			Type: models.TCPRequestRuleTypeConnection,
 		}
 
 		switch a := v.Action.(type) {
 		case *tcp_actions.Accept:
 			rule.Action = models.TCPRequestRuleActionAccept
-		case *tcp_actions.Reject:
+			rule.Cond = a.Cond
+			rule.CondTest = a.CondTest
+		case *actions.Reject:
 			rule.Action = models.TCPRequestRuleActionReject
+			rule.Cond = a.Cond
+			rule.CondTest = a.CondTest
 		case *tcp_actions.ExpectProxy:
 			rule.Action = models.TCPRequestRuleActionExpectProxy
+			rule.Cond = a.Cond
+			rule.CondTest = a.CondTest
 		case *tcp_actions.ExpectNetscalerCip:
 			rule.Action = models.TCPRequestRuleActionExpectNetscalerCip
+			rule.Cond = a.Cond
+			rule.CondTest = a.CondTest
 		case *tcp_actions.Capture:
 			rule.Action = models.TCPRequestRuleActionCapture
 			rule.Expr = a.Expr.String()
 			rule.CaptureLen = a.Len
-		case *tcp_actions.TrackSc0:
+			rule.Cond = a.Cond
+			rule.CondTest = a.CondTest
+		case *actions.TrackSc:
 			rule.Action = models.TCPRequestRuleActionTrackSc0
 			rule.TrackKey = a.Key
+			var typ actions.TrackScT
+			switch a.Type {
+			case actions.TrackSc0:
+				typ = actions.TrackSc0
+			case actions.TrackSc1:
+				typ = actions.TrackSc1
+			case actions.TrackSc2:
+				typ = actions.TrackSc2
+			}
+			rule.Type = string(typ)
 			if a.Table != "" {
 				rule.TrackTable = a.Table
 			}
-		case *tcp_actions.TrackSc1:
-			rule.Action = models.TCPRequestRuleActionTrackSc1
-			rule.TrackKey = a.Key
-			if a.Table != "" {
-				rule.TrackTable = a.Table
-			}
-		case *tcp_actions.TrackSc2:
-			rule.Action = models.TCPRequestRuleActionTrackSc2
-			rule.TrackKey = a.Key
-			if a.Table != "" {
-				rule.TrackTable = a.Table
-			}
-		case *tcp_actions.ScIncGpc0:
+			rule.Cond = a.Cond
+			rule.CondTest = a.CondTest
+		case *actions.ScIncGpc0:
 			rule.Action = models.TCPRequestRuleActionScSetGpt0
-			rule.ScIncID = a.ScID
-		case *tcp_actions.ScIncGpc1:
+			rule.ScIncID = a.ID
+			rule.Cond = a.Cond
+			rule.CondTest = a.CondTest
+		case *actions.ScIncGpc1:
 			rule.Action = models.TCPRequestRuleActionScIncGpc1
-			rule.ScIncID = a.ScID
-		case *tcp_actions.ScSetGpt0:
+			rule.ScIncID = a.ID
+			rule.Cond = a.Cond
+			rule.CondTest = a.CondTest
+		case *actions.ScSetGpt0:
 			rule.Action = models.TCPRequestRuleActionScSetGpt0
-			rule.ScIncID = a.ScID
-			rule.Expr = a.Value
+			rule.ScIncID = a.ID
+			rule.Expr = a.Expr.String()
+			rule.Cond = a.Cond
+			rule.CondTest = a.CondTest
 		case *tcp_actions.SetSrc:
 			rule.Action = models.TCPRequestRuleActionSetSrc
 			rule.Expr = a.Expr.String()
-		case *tcp_actions.SilentDrop:
+			rule.Cond = a.Cond
+			rule.CondTest = a.CondTest
+		case *actions.SilentDrop:
 			rule.Action = models.TCPRequestRuleActionSilentDrop
-		case *tcp_actions.Lua:
+			rule.Cond = a.Cond
+			rule.CondTest = a.CondTest
+		case *actions.Lua:
 			rule.Action = models.TCPRequestRuleActionLua
 			rule.LuaAction = a.Action
 			rule.LuaParams = a.Params
+			rule.Cond = a.Cond
+			rule.CondTest = a.CondTest
 		default:
 			return nil, NewConfError(ErrValidationError, "unsupported action in tcp_request_rule")
 		}
@@ -291,141 +312,187 @@ func ParseTCPRequestRule(f types.TCPType) (rule *models.TCPRequestRule, err erro
 		return rule, nil
 	case *tcp_types.Content:
 		rule = &models.TCPRequestRule{
-			Type:     models.TCPRequestRuleTypeContent,
-			Cond:     v.Cond,
-			CondTest: v.CondTest,
+			Type: models.TCPRequestRuleTypeContent,
 		}
 
 		switch a := v.Action.(type) {
 		case *tcp_actions.Accept:
 			rule.Action = models.TCPRequestRuleActionAccept
-		case *tcp_actions.DoResolve:
+			rule.Cond = a.Cond
+			rule.CondTest = a.CondTest
+		case *actions.DoResolve:
 			rule.Action = models.TCPRequestRuleActionDoResolve
 			rule.VarName = a.Var
 			rule.ResolveResolvers = a.Resolvers
 			rule.ResolveProtocol = a.Protocol
 			rule.Expr = a.Expr.String()
-		case *tcp_actions.Reject:
+			rule.Cond = a.Cond
+			rule.CondTest = a.CondTest
+		case *actions.Reject:
 			rule.Action = models.TCPRequestRuleActionReject
+			rule.Cond = a.Cond
+			rule.CondTest = a.CondTest
 		case *tcp_actions.Capture:
 			rule.Action = models.TCPRequestRuleActionCapture
 			rule.Expr = a.Expr.String()
 			rule.CaptureLen = a.Len
-		case *tcp_actions.SetPriorityClass:
+			rule.Cond = a.Cond
+			rule.CondTest = a.CondTest
+		case *actions.SetPriorityClass:
 			rule.Action = "set-priority-class"
 			rule.Expr = a.Expr.String()
-		case *tcp_actions.SetPriorityOffset:
+			rule.Cond = a.Cond
+			rule.CondTest = a.CondTest
+		case *actions.SetPriorityOffset:
 			rule.Action = "set-priority-offset"
 			rule.Expr = a.Expr.String()
-		case *tcp_actions.TrackSc0:
+			rule.Cond = a.Cond
+			rule.CondTest = a.CondTest
+		case *actions.TrackSc:
+			var typ actions.TrackScT
+			switch a.Type {
+			case actions.TrackSc0:
+				typ = actions.TrackSc0
+			case actions.TrackSc1:
+				typ = actions.TrackSc1
+			case actions.TrackSc2:
+				typ = actions.TrackSc2
+			}
+			rule.Type = string(typ)
 			rule.Action = models.TCPRequestRuleActionTrackSc0
 			rule.TrackKey = a.Key
 			if a.Table != "" {
 				rule.TrackTable = a.Table
 			}
-		case *tcp_actions.TrackSc1:
-			rule.Action = models.TCPRequestRuleActionTrackSc1
-			rule.TrackKey = a.Key
-			if a.Table != "" {
-				rule.TrackTable = a.Table
-			}
-		case *tcp_actions.TrackSc2:
-			rule.Action = models.TCPRequestRuleActionTrackSc2
-			rule.TrackKey = a.Key
-			if a.Table != "" {
-				rule.TrackTable = a.Table
-			}
-		case *tcp_actions.ScIncGpc0:
+			rule.Cond = a.Cond
+			rule.CondTest = a.CondTest
+		case *actions.ScIncGpc0:
 			rule.Action = models.TCPRequestRuleActionScIncGpc0
-			rule.ScIncID = a.ScID
-		case *tcp_actions.ScIncGpc1:
+			rule.ScIncID = a.ID
+			rule.Cond = a.Cond
+			rule.CondTest = a.CondTest
+		case *actions.ScIncGpc1:
 			rule.Action = models.TCPRequestRuleActionScIncGpc1
-			rule.ScIncID = a.ScID
-		case *tcp_actions.ScSetGpt0:
+			rule.ScIncID = a.ID
+			rule.Cond = a.Cond
+			rule.CondTest = a.CondTest
+		case *actions.ScSetGpt0:
 			rule.Action = models.TCPRequestRuleActionScSetGpt0
-			rule.ScIncID = a.ScID
-			rule.GptValue = a.Value
-		case *tcp_actions.SetDst:
+			rule.ScIncID = a.ID
+			rule.GptValue = a.Expr.String()
+			rule.Cond = a.Cond
+			rule.CondTest = a.CondTest
+		case *actions.SetDst:
 			rule.Action = models.TCPRequestRuleActionSetDst
 			rule.Expr = a.Expr.String()
-		case *tcp_actions.SetDstPort:
+			rule.Cond = a.Cond
+			rule.CondTest = a.CondTest
+		case *actions.SetDstPort:
 			rule.Action = models.TCPRequestRuleActionSetDstPort
 			rule.Expr = a.Expr.String()
-		case *tcp_actions.SetVar:
+			rule.Cond = a.Cond
+			rule.CondTest = a.CondTest
+		case *actions.SetVar:
 			rule.Action = models.TCPRequestRuleActionSetVar
 			rule.VarScope = a.VarScope
 			rule.VarName = a.VarName
 			rule.Expr = a.Expr.String()
-		case *tcp_actions.UnsetVar:
+			rule.Cond = a.Cond
+			rule.CondTest = a.CondTest
+		case *actions.UnsetVar:
 			rule.Action = models.TCPRequestRuleActionUnsetVar
-			rule.VarScope = a.VarScope
-			rule.VarName = a.VarName
-		case *tcp_actions.SilentDrop:
+			rule.VarScope = a.Scope
+			rule.VarName = a.Name
+			rule.Cond = a.Cond
+			rule.CondTest = a.CondTest
+		case *actions.SilentDrop:
 			rule.Action = models.TCPRequestRuleActionSilentDrop
-		case *tcp_actions.SendSpoeGroup:
+			rule.Cond = a.Cond
+			rule.CondTest = a.CondTest
+		case *actions.SendSpoeGroup:
 			rule.Action = models.TCPRequestRuleActionSendSpoeGroup
 			rule.SpoeEngineName = a.Engine
 			rule.SpoeGroupName = a.Group
-		case *tcp_actions.UseService:
+			rule.Cond = a.Cond
+			rule.CondTest = a.CondTest
+		case *actions.UseService:
 			rule.Action = models.TCPRequestRuleActionUseService
-			rule.ServiceName = a.ServiceName
-		case *tcp_actions.Lua:
+			rule.ServiceName = a.Name
+			rule.Cond = a.Cond
+			rule.CondTest = a.CondTest
+		case *actions.Lua:
 			rule.Action = models.TCPRequestRuleActionLua
 			rule.LuaAction = a.Action
 			rule.LuaParams = a.Params
+			rule.Cond = a.Cond
+			rule.CondTest = a.CondTest
 		default:
 			return nil, NewConfError(ErrValidationError, "unsupported action in tcp_request_rule")
 		}
 	case *tcp_types.Session:
 		rule = &models.TCPRequestRule{
-			Type:     models.TCPRequestRuleTypeSession,
-			Cond:     v.Cond,
-			CondTest: v.CondTest,
+			Type: models.TCPRequestRuleTypeSession,
 		}
 		switch a := v.Action.(type) {
 		case *tcp_actions.Accept:
 			rule.Action = models.TCPRequestRuleActionAccept
-		case *tcp_actions.Reject:
+			rule.Cond = a.Cond
+			rule.CondTest = a.CondTest
+		case *actions.Reject:
 			rule.Action = models.TCPRequestRuleActionAccept
-		case *tcp_actions.TrackSc0:
+			rule.Cond = a.Cond
+			rule.CondTest = a.CondTest
+		case *actions.TrackSc:
+			var typ actions.TrackScT
+			switch a.Type {
+			case actions.TrackSc0:
+				typ = actions.TrackSc0
+			case actions.TrackSc1:
+				typ = actions.TrackSc1
+			case actions.TrackSc2:
+				typ = actions.TrackSc2
+			}
+			rule.Type = string(typ)
 			rule.Action = models.TCPRequestRuleActionTrackSc0
 			rule.TrackKey = a.Key
 			if a.Table != "" {
 				rule.TrackTable = a.Table
 			}
-		case *tcp_actions.TrackSc1:
-			rule.Action = models.TCPRequestRuleActionTrackSc1
-			rule.TrackKey = a.Key
-			if a.Table != "" {
-				rule.TrackTable = a.Table
-			}
-		case *tcp_actions.TrackSc2:
-			rule.Action = models.TCPRequestRuleActionTrackSc2
-			rule.TrackKey = a.Key
-			if a.Table != "" {
-				rule.TrackTable = a.Table
-			}
-		case *tcp_actions.ScIncGpc0:
+			rule.Cond = a.Cond
+			rule.CondTest = a.CondTest
+		case *actions.ScIncGpc0:
 			rule.Action = models.TCPRequestRuleActionScIncGpc0
-			rule.ScIncID = a.ScID
-		case *tcp_actions.ScIncGpc1:
+			rule.ScIncID = a.ID
+			rule.Cond = a.Cond
+			rule.CondTest = a.CondTest
+		case *actions.ScIncGpc1:
 			rule.Action = models.TCPRequestRuleActionScIncGpc1
-			rule.ScIncID = a.ScID
-		case *tcp_actions.ScSetGpt0:
+			rule.ScIncID = a.ID
+			rule.Cond = a.Cond
+			rule.CondTest = a.CondTest
+		case *actions.ScSetGpt0:
 			rule.Action = models.TCPRequestRuleActionScSetGpt0
-			rule.ScIncID = a.ScID
-			rule.GptValue = a.Value
-		case *tcp_actions.SetVar:
+			rule.ScIncID = a.ID
+			rule.GptValue = a.Expr.String()
+			rule.Cond = a.Cond
+			rule.CondTest = a.CondTest
+		case *actions.SetVar:
 			rule.Action = models.TCPRequestRuleActionSetVar
 			rule.VarScope = a.VarScope
 			rule.VarName = a.VarName
 			rule.Expr = a.Expr.String()
-		case *tcp_actions.UnsetVar:
+			rule.Cond = a.Cond
+			rule.CondTest = a.CondTest
+		case *actions.UnsetVar:
 			rule.Action = models.TCPRequestRuleActionUnsetVar
-			rule.VarScope = a.VarScope
-			rule.VarName = a.VarName
-		case *tcp_actions.SilentDrop:
+			rule.VarScope = a.Scope
+			rule.VarName = a.Name
+			rule.Cond = a.Cond
+			rule.CondTest = a.CondTest
+		case *actions.SilentDrop:
 			rule.Action = models.TCPRequestRuleActionSilentDrop
+			rule.Cond = a.Cond
+			rule.CondTest = a.CondTest
 		default:
 			return nil, NewConfError(ErrValidationError, "unsupported action in tcp_request_rule")
 		}
@@ -442,94 +509,102 @@ func SerializeTCPRequestRule(f models.TCPRequestRule) (rule types.TCPType, err e
 		switch f.Action {
 		case models.TCPRequestRuleActionAccept:
 			return &tcp_types.Connection{
-				Action:   &tcp_actions.Accept{},
-				Cond:     f.Cond,
-				CondTest: f.CondTest,
+				Action: &tcp_actions.Accept{
+					Cond:     f.Cond,
+					CondTest: f.CondTest,
+				},
 			}, nil
 		case models.TCPRequestRuleActionReject:
 			return &tcp_types.Connection{
-				Action:   &tcp_actions.Reject{},
-				Cond:     f.Cond,
-				CondTest: f.CondTest,
+				Action: &actions.Reject{
+					Cond:     f.Cond,
+					CondTest: f.CondTest,
+				},
 			}, nil
 		case models.TCPRequestRuleActionExpectProxy:
 			return &tcp_types.Connection{
-				Action:   &tcp_actions.ExpectProxy{},
-				Cond:     f.Cond,
-				CondTest: f.CondTest,
+				Action: &tcp_actions.ExpectProxy{
+					Cond:     f.Cond,
+					CondTest: f.CondTest,
+				},
 			}, nil
 		case models.TCPRequestRuleActionExpectNetscalerCip:
 			return &tcp_types.Connection{
-				Action:   &tcp_actions.ExpectNetscalerCip{},
-				Cond:     f.Cond,
-				CondTest: f.CondTest,
+				Action: &tcp_actions.ExpectNetscalerCip{
+					Cond:     f.Cond,
+					CondTest: f.CondTest,
+				},
 			}, nil
 		case models.TCPRequestRuleActionCapture:
 			return &tcp_types.Connection{
 				Action: &tcp_actions.Capture{
-					Expr: common.Expression{Expr: strings.Split(f.Expr, " ")},
-					Len:  f.CaptureLen,
+					Expr:     common.Expression{Expr: strings.Split(f.Expr, " ")},
+					Len:      f.CaptureLen,
+					Cond:     f.Cond,
+					CondTest: f.CondTest,
 				},
-				Cond:     f.Cond,
-				CondTest: f.CondTest,
 			}, nil
 		case models.TCPRequestRuleActionTrackSc0:
 			return &tcp_types.Connection{
-				Action: &tcp_actions.TrackSc0{
-					Key:   f.TrackKey,
-					Table: f.TrackTable,
+				Action: &actions.TrackSc{
+					Type:     actions.TrackSc0,
+					Key:      f.TrackKey,
+					Table:    f.TrackTable,
+					Cond:     f.Cond,
+					CondTest: f.CondTest,
 				},
-				Cond:     f.Cond,
-				CondTest: f.CondTest,
 			}, nil
 		case models.TCPRequestRuleActionTrackSc1:
 			return &tcp_types.Connection{
-				Action: &tcp_actions.TrackSc1{
-					Key:   f.TrackKey,
-					Table: f.TrackTable,
+				Action: &actions.TrackSc{
+					Type:     actions.TrackSc1,
+					Key:      f.TrackKey,
+					Table:    f.TrackTable,
+					Cond:     f.Cond,
+					CondTest: f.CondTest,
 				},
-				Cond:     f.Cond,
-				CondTest: f.CondTest,
 			}, nil
 		case models.TCPRequestRuleActionTrackSc2:
 			return &tcp_types.Connection{
-				Action: &tcp_actions.TrackSc2{
-					Key:   f.TrackKey,
-					Table: f.TrackTable,
+				Action: &actions.TrackSc{
+					Type:     actions.TrackSc2,
+					Key:      f.TrackKey,
+					Table:    f.TrackTable,
+					Cond:     f.Cond,
+					CondTest: f.CondTest,
 				},
-				Cond:     f.Cond,
-				CondTest: f.CondTest,
 			}, nil
 		case models.TCPRequestRuleActionScIncGpc0:
 			return &tcp_types.Connection{
-				Action: &tcp_actions.ScIncGpc0{
-					ScID: f.ScIncID,
+				Action: &actions.ScIncGpc0{
+					ID:       f.ScIncID,
+					Cond:     f.Cond,
+					CondTest: f.CondTest,
 				},
-				Cond:     f.Cond,
-				CondTest: f.CondTest,
 			}, nil
 		case models.TCPRequestRuleActionScIncGpc1:
 			return &tcp_types.Connection{
-				Action: &tcp_actions.ScIncGpc1{
-					ScID: f.ScIncID,
+				Action: &actions.ScIncGpc1{
+					ID:       f.ScIncID,
+					Cond:     f.Cond,
+					CondTest: f.CondTest,
 				},
-				Cond:     f.Cond,
-				CondTest: f.CondTest,
 			}, nil
 		case models.TCPRequestRuleActionSilentDrop:
 			return &tcp_types.Connection{
-				Action:   &tcp_actions.SilentDrop{},
-				Cond:     f.Cond,
-				CondTest: f.CondTest,
+				Action: &actions.SilentDrop{
+					Cond:     f.Cond,
+					CondTest: f.CondTest,
+				},
 			}, nil
 		case models.TCPRequestRuleActionLua:
 			return &tcp_types.Connection{
-				Action: &tcp_actions.Lua{
-					Action: f.LuaAction,
-					Params: f.LuaParams,
+				Action: &actions.Lua{
+					Action:   f.LuaAction,
+					Params:   f.LuaParams,
+					Cond:     f.Cond,
+					CondTest: f.CondTest,
 				},
-				Cond:     f.Cond,
-				CondTest: f.CondTest,
 			}, nil
 		}
 		return nil, NewConfError(ErrValidationError, "unsupported action in tcp_request_rule")
@@ -537,161 +612,167 @@ func SerializeTCPRequestRule(f models.TCPRequestRule) (rule types.TCPType, err e
 		switch f.Action {
 		case models.TCPRequestRuleActionAccept:
 			return &tcp_types.Content{
-				Action:   &tcp_actions.Accept{},
-				Cond:     f.Cond,
-				CondTest: f.CondTest,
+				Action: &tcp_actions.Accept{
+					Cond:     f.Cond,
+					CondTest: f.CondTest,
+				},
 			}, nil
 		case models.TCPRequestRuleActionDoResolve:
 			return &tcp_types.Content{
-				Action: &tcp_actions.DoResolve{
+				Action: &actions.DoResolve{
 					Var:       f.VarName,
 					Resolvers: f.ResolveResolvers,
 					Protocol:  f.ResolveProtocol,
 					Expr:      common.Expression{Expr: strings.Split(f.Expr, " ")},
+					Cond:      f.Cond,
+					CondTest:  f.CondTest,
 				},
-				Cond:     f.Cond,
-				CondTest: f.CondTest,
 			}, nil
 		case models.TCPRequestRuleActionReject:
 			return &tcp_types.Content{
-				Action:   &tcp_actions.Reject{},
-				Cond:     f.Cond,
-				CondTest: f.CondTest,
+				Action: &actions.Reject{
+					Cond:     f.Cond,
+					CondTest: f.CondTest,
+				},
 			}, nil
 		case models.TCPRequestRuleActionCapture:
 			return &tcp_types.Content{
 				Action: &tcp_actions.Capture{
-					Expr: common.Expression{Expr: strings.Split(f.Expr, " ")},
-					Len:  f.CaptureLen,
+					Expr:     common.Expression{Expr: strings.Split(f.Expr, " ")},
+					Len:      f.CaptureLen,
+					Cond:     f.Cond,
+					CondTest: f.CondTest,
 				},
-				Cond:     f.Cond,
-				CondTest: f.CondTest,
 			}, nil
 		case "set-priority-class":
 			return &tcp_types.Content{
-				Action: &tcp_actions.SetPriorityClass{
-					Expr: common.Expression{Expr: strings.Split(f.Expr, " ")},
+				Action: &actions.SetPriorityClass{
+					Expr:     common.Expression{Expr: strings.Split(f.Expr, " ")},
+					Cond:     f.Cond,
+					CondTest: f.CondTest,
 				},
-				Cond:     f.Cond,
-				CondTest: f.CondTest,
 			}, nil
 		case "set-priority-offset":
 			return &tcp_types.Content{
-				Action: &tcp_actions.SetPriorityOffset{
-					Expr: common.Expression{Expr: strings.Split(f.Expr, " ")},
+				Action: &actions.SetPriorityOffset{
+					Expr:     common.Expression{Expr: strings.Split(f.Expr, " ")},
+					Cond:     f.Cond,
+					CondTest: f.CondTest,
 				},
-				Cond:     f.Cond,
-				CondTest: f.CondTest,
 			}, nil
 		case models.TCPRequestRuleActionTrackSc0:
 			return &tcp_types.Content{
-				Action: &tcp_actions.TrackSc0{
-					Key:   f.TrackKey,
-					Table: f.TrackTable,
+				Action: &actions.TrackSc{
+					Type:     actions.TrackSc0,
+					Key:      f.TrackKey,
+					Table:    f.TrackTable,
+					Cond:     f.Cond,
+					CondTest: f.CondTest,
 				},
-				Cond:     f.Cond,
-				CondTest: f.CondTest,
 			}, nil
 		case models.TCPRequestRuleActionTrackSc1:
 			return &tcp_types.Content{
-				Action: &tcp_actions.TrackSc1{
-					Key:   f.TrackKey,
-					Table: f.TrackTable,
+				Action: &actions.TrackSc{
+					Type:     actions.TrackSc1,
+					Key:      f.TrackKey,
+					Table:    f.TrackTable,
+					Cond:     f.Cond,
+					CondTest: f.CondTest,
 				},
-				Cond:     f.Cond,
-				CondTest: f.CondTest,
 			}, nil
 		case models.TCPRequestRuleActionTrackSc2:
 			return &tcp_types.Content{
-				Action: &tcp_actions.TrackSc2{
-					Key:   f.TrackKey,
-					Table: f.TrackTable,
+				Action: &actions.TrackSc{
+					Type:     actions.TrackSc2,
+					Key:      f.TrackKey,
+					Table:    f.TrackTable,
+					Cond:     f.Cond,
+					CondTest: f.CondTest,
 				},
-				Cond:     f.Cond,
-				CondTest: f.CondTest,
 			}, nil
 		case models.TCPRequestRuleActionScIncGpc0:
 			return &tcp_types.Content{
-				Action: &tcp_actions.ScIncGpc0{
-					ScID: f.ScIncID,
+				Action: &actions.ScIncGpc0{
+					ID:       f.ScIncID,
+					Cond:     f.Cond,
+					CondTest: f.CondTest,
 				},
-				Cond:     f.Cond,
-				CondTest: f.CondTest,
 			}, nil
 		case models.TCPRequestRuleActionScIncGpc1:
 			return &tcp_types.Content{
-				Action: &tcp_actions.ScIncGpc1{
-					ScID: f.ScIncID,
+				Action: &actions.ScIncGpc1{
+					ID:       f.ScIncID,
+					Cond:     f.Cond,
+					CondTest: f.CondTest,
 				},
-				Cond:     f.Cond,
-				CondTest: f.CondTest,
 			}, nil
 		case models.TCPRequestRuleActionSetDst:
 			return &tcp_types.Content{
-				Action: &tcp_actions.SetDst{
-					Expr: common.Expression{Expr: strings.Split(f.Expr, " ")},
+				Action: &actions.SetDst{
+					Expr:     common.Expression{Expr: strings.Split(f.Expr, " ")},
+					Cond:     f.Cond,
+					CondTest: f.CondTest,
 				},
-				Cond:     f.Cond,
-				CondTest: f.CondTest,
 			}, nil
 		case models.TCPRequestRuleActionSetDstPort:
 			return &tcp_types.Content{
-				Action: &tcp_actions.SetDstPort{
-					Expr: common.Expression{Expr: strings.Split(f.Expr, " ")},
+				Action: &actions.SetDstPort{
+					Expr:     common.Expression{Expr: strings.Split(f.Expr, " ")},
+					Cond:     f.Cond,
+					CondTest: f.CondTest,
 				},
-				Cond:     f.Cond,
-				CondTest: f.CondTest,
 			}, nil
 		case models.TCPRequestRuleActionSetVar:
 			return &tcp_types.Content{
-				Action: &tcp_actions.SetVar{
+				Action: &actions.SetVar{
 					VarName:  f.VarName,
 					VarScope: f.VarScope,
 					Expr:     common.Expression{Expr: strings.Split(f.Expr, " ")},
+					Cond:     f.Cond,
+					CondTest: f.CondTest,
 				},
-				Cond:     f.Cond,
-				CondTest: f.CondTest,
 			}, nil
 		case models.TCPRequestRuleActionUnsetVar:
 			return &tcp_types.Content{
-				Action: &tcp_actions.UnsetVar{
-					VarName:  f.VarName,
-					VarScope: f.VarScope,
+				Action: &actions.UnsetVar{
+					Name:     f.VarName,
+					Scope:    f.VarScope,
+					Cond:     f.Cond,
+					CondTest: f.CondTest,
 				},
-				Cond:     f.Cond,
-				CondTest: f.CondTest,
 			}, nil
 		case models.TCPRequestRuleActionSilentDrop:
 			return &tcp_types.Content{
-				Action:   &tcp_actions.SilentDrop{},
-				Cond:     f.Cond,
-				CondTest: f.CondTest,
+				Action: &actions.SilentDrop{
+					Cond:     f.Cond,
+					CondTest: f.CondTest,
+				},
 			}, nil
 		case models.TCPRequestRuleActionSendSpoeGroup:
 			return &tcp_types.Content{
-				Action: &tcp_actions.SendSpoeGroup{
-					Engine: f.SpoeEngineName,
-					Group:  f.SpoeGroupName,
+				Action: &actions.SendSpoeGroup{
+					Engine:   f.SpoeEngineName,
+					Group:    f.SpoeGroupName,
+					Cond:     f.Cond,
+					CondTest: f.CondTest,
 				},
-				Cond:     f.Cond,
-				CondTest: f.CondTest,
 			}, nil
 		case models.TCPRequestRuleActionUseService:
 			return &tcp_types.Content{
-				Action: &tcp_actions.UseService{
-					ServiceName: f.ServiceName,
+				Action: &actions.UseService{
+					Name:     f.ServiceName,
+					Cond:     f.Cond,
+					CondTest: f.CondTest,
 				},
-				Cond:     f.Cond,
-				CondTest: f.CondTest,
 			}, nil
 		case models.TCPRequestRuleActionLua:
 			return &tcp_types.Content{
-				Action: &tcp_actions.Lua{
-					Action: f.LuaAction,
-					Params: f.LuaParams,
+				Action: &actions.Lua{
+					Action:   f.LuaAction,
+					Params:   f.LuaParams,
+					Cond:     f.Cond,
+					CondTest: f.CondTest,
 				},
-				Cond:     f.Cond,
-				CondTest: f.CondTest,
 			}, nil
 		}
 		return nil, NewConfError(ErrValidationError, "unsupported action in tcp_request_rule")
@@ -699,92 +780,98 @@ func SerializeTCPRequestRule(f models.TCPRequestRule) (rule types.TCPType, err e
 		switch f.Action {
 		case models.TCPRequestRuleActionAccept:
 			return &tcp_types.Session{
-				Action:   &tcp_actions.Accept{},
-				Cond:     f.Cond,
-				CondTest: f.CondTest,
+				Action: &tcp_actions.Accept{
+					Cond:     f.Cond,
+					CondTest: f.CondTest,
+				},
 			}, nil
 		case models.TCPRequestRuleActionReject:
 			return &tcp_types.Session{
-				Action:   &tcp_actions.Reject{},
-				Cond:     f.Cond,
-				CondTest: f.CondTest,
+				Action: &actions.Reject{
+					Cond:     f.Cond,
+					CondTest: f.CondTest,
+				},
 			}, nil
 		case models.TCPRequestRuleActionTrackSc0:
 			return &tcp_types.Session{
-				Action: &tcp_actions.TrackSc0{
-					Key:   f.TrackKey,
-					Table: f.TrackTable,
+				Action: &actions.TrackSc{
+					Type:     actions.TrackSc0,
+					Key:      f.TrackKey,
+					Table:    f.TrackTable,
+					Cond:     f.Cond,
+					CondTest: f.CondTest,
 				},
-				Cond:     f.Cond,
-				CondTest: f.CondTest,
 			}, nil
 		case models.TCPRequestRuleActionTrackSc1:
 			return &tcp_types.Session{
-				Action: &tcp_actions.TrackSc1{
-					Key:   f.TrackKey,
-					Table: f.TrackTable,
+				Action: &actions.TrackSc{
+					Type:     actions.TrackSc1,
+					Key:      f.TrackKey,
+					Table:    f.TrackTable,
+					Cond:     f.Cond,
+					CondTest: f.CondTest,
 				},
-				Cond:     f.Cond,
-				CondTest: f.CondTest,
 			}, nil
 		case models.TCPRequestRuleActionTrackSc2:
 			return &tcp_types.Session{
-				Action: &tcp_actions.TrackSc2{
-					Key:   f.TrackKey,
-					Table: f.TrackTable,
+				Action: &actions.TrackSc{
+					Type:     actions.TrackSc2,
+					Key:      f.TrackKey,
+					Table:    f.TrackTable,
+					Cond:     f.Cond,
+					CondTest: f.CondTest,
 				},
-				Cond:     f.Cond,
-				CondTest: f.CondTest,
 			}, nil
 		case models.TCPRequestRuleActionScIncGpc0:
 			return &tcp_types.Session{
-				Action: &tcp_actions.ScIncGpc0{
-					ScID: f.ScIncID,
+				Action: &actions.ScIncGpc0{
+					ID:       f.ScIncID,
+					Cond:     f.Cond,
+					CondTest: f.CondTest,
 				},
-				Cond:     f.Cond,
-				CondTest: f.CondTest,
 			}, nil
 		case models.TCPRequestRuleActionScIncGpc1:
 			return &tcp_types.Session{
-				Action: &tcp_actions.ScIncGpc1{
-					ScID: f.ScIncID,
+				Action: &actions.ScIncGpc1{
+					ID:       f.ScIncID,
+					Cond:     f.Cond,
+					CondTest: f.CondTest,
 				},
-				Cond:     f.Cond,
-				CondTest: f.CondTest,
 			}, nil
 		case "sc-inc-gpt0":
 			return &tcp_types.Session{
-				Action: &tcp_actions.ScSetGpt0{
-					ScID:  f.ScIncID,
-					Value: f.GptValue,
+				Action: &actions.ScSetGpt0{
+					ID:       f.ScIncID,
+					Expr:     common.Expression{Expr: []string{f.GptValue}},
+					Cond:     f.Cond,
+					CondTest: f.CondTest,
 				},
-				Cond:     f.Cond,
-				CondTest: f.CondTest,
 			}, nil
 		case models.TCPRequestRuleActionSetVar:
 			return &tcp_types.Session{
-				Action: &tcp_actions.SetVar{
+				Action: &actions.SetVar{
 					VarName:  f.VarName,
 					VarScope: f.VarScope,
 					Expr:     common.Expression{Expr: strings.Split(f.Expr, " ")},
+					Cond:     f.Cond,
+					CondTest: f.CondTest,
 				},
-				Cond:     f.Cond,
-				CondTest: f.CondTest,
 			}, nil
 		case models.TCPRequestRuleActionUnsetVar:
 			return &tcp_types.Session{
-				Action: &tcp_actions.UnsetVar{
-					VarName:  f.VarName,
-					VarScope: f.VarScope,
+				Action: &actions.UnsetVar{
+					Name:     f.VarName,
+					Scope:    f.VarScope,
+					Cond:     f.Cond,
+					CondTest: f.CondTest,
 				},
-				Cond:     f.Cond,
-				CondTest: f.CondTest,
 			}, nil
 		case models.TCPRequestRuleActionSilentDrop:
 			return &tcp_types.Session{
-				Action:   &tcp_actions.SilentDrop{},
-				Cond:     f.Cond,
-				CondTest: f.CondTest,
+				Action: &actions.SilentDrop{
+					Cond:     f.Cond,
+					CondTest: f.CondTest,
+				},
 			}, nil
 		}
 		return nil, NewConfError(ErrValidationError, "unsupported action in tcp_request_rule")
