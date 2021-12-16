@@ -67,7 +67,7 @@ func New(dirname string, fileType FileType) (Storage, error) {
 		return nil, err
 	}
 	switch fileType { //nolint:exhaustive
-	case MapsType, SSLType, GeneralType:
+	case MapsType, SSLType, GeneralType, BackupsType:
 		return &storage{
 			dirname:  dirname,
 			fileType: fileType,
