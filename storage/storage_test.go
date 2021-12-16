@@ -66,6 +66,45 @@ func TestNew(t *testing.T) {
 	}
 }
 
+func TestNewBackupStorage(t *testing.T) {
+	s, _ := New("/tmp", BackupsType)
+	sNoDir, _ := New("", BackupsType)
+	tests := []struct {
+		name     string
+		dirname  string
+		fileType FileType
+		want     Storage
+		wantErr  bool
+	}{
+		{
+			name:     "Should return object when dir specified",
+			dirname:  "/tmp",
+			fileType: BackupsType,
+			want:     s,
+			wantErr:  false,
+		},
+		{
+			name:     "Should return an error when dirname not specified",
+			dirname:  "",
+			fileType: BackupsType,
+			want:     sNoDir,
+			wantErr:  true,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got, err := New(tt.dirname, tt.fileType)
+			if (err != nil) != tt.wantErr {
+				t.Errorf("New() error = %v, wantErr %v", err, tt.wantErr)
+				return
+			}
+			if !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("New() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
 func TestStorage_GetAll(t *testing.T) {
 	conf1 := `key1 val1
 key2 val2`
