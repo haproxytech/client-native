@@ -36,7 +36,7 @@ type TCPCheck struct {
 
 	// action
 	// Required: true
-	// Enum: [comment connect expect send send-lf send-binary send-binary-lf set-var set-var-fmt unset-var]
+	// Enum: [comment connect expect send send-lf send-binary send-binary-lf set-var unset-var]
 	Action string `json:"action"`
 
 	// addr
@@ -133,9 +133,6 @@ type TCPCheck struct {
 	// var expr
 	VarExpr string `json:"var_expr,omitempty"`
 
-	// var fmt
-	VarFmt string `json:"var_fmt,omitempty"`
-
 	// var name
 	// Pattern: ^[^\s]+$
 	VarName string `json:"var_name,omitempty"`
@@ -206,7 +203,7 @@ var tcpCheckTypeActionPropEnum []interface{}
 
 func init() {
 	var res []string
-	if err := json.Unmarshal([]byte(`["comment","connect","expect","send","send-lf","send-binary","send-binary-lf","set-var","set-var-fmt","unset-var"]`), &res); err != nil {
+	if err := json.Unmarshal([]byte(`["comment","connect","expect","send","send-lf","send-binary","send-binary-lf","set-var","unset-var"]`), &res); err != nil {
 		panic(err)
 	}
 	for _, v := range res {
@@ -239,9 +236,6 @@ const (
 
 	// TCPCheckActionSetVar captures enum value "set-var"
 	TCPCheckActionSetVar string = "set-var"
-
-	// TCPCheckActionSetVarFmt captures enum value "set-var-fmt"
-	TCPCheckActionSetVarFmt string = "set-var-fmt"
 
 	// TCPCheckActionUnsetVar captures enum value "unset-var"
 	TCPCheckActionUnsetVar string = "unset-var"
