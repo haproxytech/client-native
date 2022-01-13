@@ -517,8 +517,6 @@ definitions:
           $ref: '#/definitions/smtpchk_params'
         stats_options:
           $ref: '#/definitions/stats_options'
-        tcp_check:
-          $ref: '#/definitions/tcp_check'
         tcplog:
           type: boolean
           x-display-name: TCP Log
@@ -918,8 +916,6 @@ definitions:
               - binary
               type: string
           type: object
-        tcp_check:
-          $ref: '#/definitions/tcp_check'
         tunnel_timeout:
           type: integer
           x-nullable: true

@@ -189,8 +189,6 @@ defaults:
       $ref: "#/definitions/httpchk_params"
     http-check:
       $ref: "#/definitions/http-check"
-    tcp_check:
-      $ref: "#/definitions/tcp_check"
     bind_process:
       type: string
       pattern: '^[^\s]+$'
@@ -567,8 +565,6 @@ backend:
           enum: [avalanche]
     http-check:
       $ref: "#/definitions/http-check"
-    tcp_check:
-      $ref: "#/definitions/tcp_check"
     bind_process:
       type: string
       pattern: '^[^\s]+$'

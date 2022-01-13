@@ -162,9 +162,6 @@ type Backend struct {
 	// stick table
 	StickTable *BackendStickTable `json:"stick_table,omitempty"`
 
-	// tcp check
-	TCPCheck *TCPCheck `json:"tcp_check,omitempty"`
-
 	// tunnel timeout
 	TunnelTimeout *int64 `json:"tunnel_timeout,omitempty"`
 }
@@ -286,10 +283,6 @@ func (m *Backend) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateStickTable(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateTCPCheck(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -1064,24 +1057,6 @@ func (m *Backend) validateStickTable(formats strfmt.Registry) error {
 		if err := m.StickTable.Validate(formats); err != nil {
 			if ve, ok := err.(*errors.Validation); ok {
 				return ve.ValidateName("stick_table")
-			}
-			return err
-		}
-	}
-
-	return nil
-}
-
-func (m *Backend) validateTCPCheck(formats strfmt.Registry) error {
-
-	if swag.IsZero(m.TCPCheck) { // not required
-		return nil
-	}
-
-	if m.TCPCheck != nil {
-		if err := m.TCPCheck.Validate(formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
-				return ve.ValidateName("tcp_check")
 			}
 			return err
 		}
