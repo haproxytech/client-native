@@ -3534,18 +3534,6 @@ definitions:
               - send-binary
               - send-binary-lf
           x-nullable: false
-        cond:
-          enum:
-          - if
-          - unless
-          type: string
-          x-display-name: Condition
-        cond_test:
-          type: string
-          x-dependency:
-            cond:
-              required: true
-          x-display-name: Condition Test
         data:
           type: string
           x-dependency:

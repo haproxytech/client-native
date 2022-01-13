@@ -289,8 +289,6 @@ func ParseTCPCheck(f types.Action) (check *models.TCPCheck, err error) { //nolin
 			VarScope: v.VarScope,
 			VarName:  v.VarName,
 			VarFmt:   v.Format,
-			Cond:     v.Cond,
-			CondTest: v.CondTest,
 		}
 	case *actions.UnsetVarCheck:
 		check = &models.TCPCheck{
@@ -369,8 +367,6 @@ func SerializeTCPCheck(f models.TCPCheck) (action types.Action, err error) { //n
 			VarScope: f.VarScope,
 			VarName:  f.VarName,
 			Format:   f.VarFmt,
-			Cond:     f.Cond,
-			CondTest: f.CondTest,
 		}, nil
 	case models.TCPCheckActionUnsetVar:
 		return &actions.UnsetVarCheck{

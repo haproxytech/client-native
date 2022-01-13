@@ -50,13 +50,6 @@ type TCPCheck struct {
 	// check comment
 	CheckComment string `json:"check_comment,omitempty"`
 
-	// cond
-	// Enum: [if unless]
-	Cond string `json:"cond,omitempty"`
-
-	// cond test
-	CondTest string `json:"cond_test,omitempty"`
-
 	// data
 	Data string `json:"data,omitempty"`
 
@@ -168,10 +161,6 @@ func (m *TCPCheck) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateAlpn(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateCond(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -300,49 +289,6 @@ func (m *TCPCheck) validateAlpn(formats strfmt.Registry) error {
 	}
 
 	if err := validate.Pattern("alpn", "body", string(m.Alpn), `^[^\s]+$`); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-var tcpCheckTypeCondPropEnum []interface{}
-
-func init() {
-	var res []string
-	if err := json.Unmarshal([]byte(`["if","unless"]`), &res); err != nil {
-		panic(err)
-	}
-	for _, v := range res {
-		tcpCheckTypeCondPropEnum = append(tcpCheckTypeCondPropEnum, v)
-	}
-}
-
-const (
-
-	// TCPCheckCondIf captures enum value "if"
-	TCPCheckCondIf string = "if"
-
-	// TCPCheckCondUnless captures enum value "unless"
-	TCPCheckCondUnless string = "unless"
-)
-
-// prop value enum
-func (m *TCPCheck) validateCondEnum(path, location string, value string) error {
-	if err := validate.Enum(path, location, value, tcpCheckTypeCondPropEnum); err != nil {
-		return err
-	}
-	return nil
-}
-
-func (m *TCPCheck) validateCond(formats strfmt.Registry) error {
-
-	if swag.IsZero(m.Cond) { // not required
-		return nil
-	}
-
-	// value enum
-	if err := m.validateCondEnum("cond", "body", m.Cond); err != nil {
 		return err
 	}
 
