@@ -102,6 +102,13 @@ definitions:
     type: array
     items:
       $ref: '#/definitions/http_response_rule'
+  http_check_rule:
+    $ref: "models/configuration.yaml#/http_check_rule"
+  http_check_rules:
+    title: HTTP Checks Array
+    type: array
+    items:
+      $ref: '#/definitions/http_check_rule'
   tcp_request_rule:
     $ref: "models/configuration.yaml#/tcp_request_rule"
   tcp_request_rules:
@@ -529,6 +536,7 @@ tags:
   - name: Configuration
     description: Raw HAProxy configuration management (advanced mode)
   - name: TCPRequestRule
+  - name: HTTPCheck
   - name: HTTPRequestRule
   - name: HTTPResponseRule
   - name: BackendSwitchingRule
@@ -633,6 +641,10 @@ paths:
     $ref: "paths/configuration.yaml#/server_templates"
   /services/haproxy/configuration/server_templates/{prefix}:
     $ref: "paths/configuration.yaml#/server_templates_one"
+  /services/haproxy/configuration/http_checks:
+    $ref: "paths/configuration.yaml#/http_checks"
+  /services/haproxy/configuration/http_checks/{index}:
+    $ref: "paths/configuration.yaml#/http_checks_one"
   /services/haproxy/configuration/http_request_rules:
     $ref: "paths/configuration.yaml#/http_request_rules"
   /services/haproxy/configuration/http_request_rules/{index}:
