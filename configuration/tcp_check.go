@@ -17,6 +17,7 @@ package configuration
 
 import (
 	"errors"
+	"fmt"
 	"strconv"
 	"strings"
 
@@ -67,8 +68,9 @@ func (c *Client) GetTCPCheck(id int64, parentType string, parentName string, tra
 	var section parser.Section
 	if parentType == "backend" {
 		section = parser.Backends
-	} else if parentType == "frontend" {
-		section = parser.Frontends
+	} else if parentType == "defaults" {
+		section = parser.Defaults
+		parentName = parser.DefaultSectionName
 	}
 
 	data, err := p.GetOne(section, parentName, "tcp-check", int(id))
@@ -95,8 +97,9 @@ func (c *Client) DeleteTCPCheck(id int64, parentType string, parentName string, 
 	var section parser.Section
 	if parentType == "backend" {
 		section = parser.Backends
-	} else if parentType == "frontend" {
-		section = parser.Frontends
+	} else if parentType == "defaults" {
+		section = parser.Defaults
+		parentName = parser.DefaultSectionName
 	}
 
 	if err := p.Delete(section, parentName, "tcp-check", int(id)); err != nil {
@@ -127,8 +130,9 @@ func (c *Client) CreateTCPCheck(parentType string, parentName string, data *mode
 	var section parser.Section
 	if parentType == "backend" {
 		section = parser.Backends
-	} else if parentType == "frontend" {
-		section = parser.Frontends
+	} else if parentType == "defaults" {
+		section = parser.Defaults
+		parentName = parser.DefaultSectionName
 	}
 
 	s, err := SerializeTCPCheck(*data)
@@ -147,7 +151,6 @@ func (c *Client) CreateTCPCheck(parentType string, parentName string, data *mode
 
 // EditTCPCheck edits a tcp check in the configuration. One of version or transactionID is mandatory.
 // Returns error on fail, nil on success.
-// nolint:dupl
 func (c *Client) EditTCPCheck(id int64, parentType string, parentName string, data *models.TCPCheck, transactionID string, version int64) error {
 	if c.UseValidation {
 		validationErr := data.Validate(strfmt.Default)
@@ -162,8 +165,9 @@ func (c *Client) EditTCPCheck(id int64, parentType string, parentName string, da
 	var section parser.Section
 	if parentType == "backend" {
 		section = parser.Backends
-	} else if parentType == "frontend" {
-		section = parser.Frontends
+	} else if parentType == "defaults" {
+		section = parser.Defaults
+		parentName = parser.DefaultSectionName
 	}
 
 	if _, err = p.GetOne(section, parentName, "tcp-check", int(id)); err != nil {
@@ -185,11 +189,15 @@ func (c *Client) EditTCPCheck(id int64, parentType string, parentName string, da
 }
 
 func ParseTCPChecks(t, pName string, p parser.Parser) (models.TCPChecks, error) {
-	section := parser.Global
-	if t == "frontend" {
-		section = parser.Frontends
-	} else if t == "backend" {
+	var section parser.Section
+	switch t {
+	case "defaults":
+		section = parser.Defaults
+		pName = parser.DefaultSectionName
+	case "backend":
 		section = parser.Backends
+	default:
+		return nil, NewConfError(ErrValidationError, fmt.Sprintf("unsupported section in tcp_check: %s", t))
 	}
 
 	checks := models.TCPChecks{}
@@ -212,8 +220,7 @@ func ParseTCPChecks(t, pName string, p parser.Parser) (models.TCPChecks, error) 
 	return checks, nil
 }
 
-func ParseTCPCheck(f types.Action) (check *models.TCPCheck, err error) { //nolint:gocyclo
-
+func ParseTCPCheck(f types.Action) (check *models.TCPCheck, err error) {
 	switch v := f.(type) {
 	case *tcp_actions.CheckComment:
 		check = &models.TCPCheck{
@@ -294,8 +301,7 @@ func ParseTCPCheck(f types.Action) (check *models.TCPCheck, err error) { //nolin
 	return check, nil
 }
 
-func SerializeTCPCheck(f models.TCPCheck) (action types.Action, err error) { //nolint:gocyclo
-
+func SerializeTCPCheck(f models.TCPCheck) (action types.Action, err error) { //nolint:ireturn
 	switch f.Action {
 	case models.TCPCheckActionComment:
 		return &tcp_actions.CheckComment{
