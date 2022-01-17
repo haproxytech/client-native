@@ -290,6 +290,13 @@ func ParseTCPCheck(f types.Action) (check *models.TCPCheck, err error) {
 			VarName:  v.VarName,
 			VarExpr:  strings.Join(v.Expr.Expr, " "),
 		}
+	case *tcp_actions.SetVarFmtCheck:
+		check = &models.TCPCheck{
+			Action:   models.TCPCheckActionSetVarFmt,
+			VarScope: v.VarScope,
+			VarName:  v.VarName,
+			VarFmt:   strings.Join(v.Format.Expr, " "),
+		}
 	case *actions.UnsetVarCheck:
 		check = &models.TCPCheck{
 			Action:   models.TCPCheckActionUnsetVar,
@@ -360,6 +367,12 @@ func SerializeTCPCheck(f models.TCPCheck) (action types.Action, err error) { //n
 			VarScope: f.VarScope,
 			VarName:  f.VarName,
 			Expr:     common.Expression{Expr: strings.Split(f.VarExpr, " ")},
+		}, nil
+	case models.TCPCheckActionSetVarFmt:
+		return &tcp_actions.SetVarFmtCheck{
+			VarScope: f.VarScope,
+			VarName:  f.VarName,
+			Format:   common.Expression{Expr: strings.Split(f.VarFmt, " ")},
 		}, nil
 	case models.TCPCheckActionUnsetVar:
 		return &actions.UnsetVarCheck{

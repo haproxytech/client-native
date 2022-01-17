@@ -89,6 +89,9 @@ backend test
 	tcp-check send-lf fmt
 	tcp-check send-lf fmt comment this-is-the-comment
 
+	tcp-check set-var-fmt(check.name) "%H"
+	tcp-check set-var-fmt(txn.from) "addr=%[src]:%[src_port]"
+
 	tcp-check connect port 443 addr 192.168.0.1 send-proxy via-socks4 ssl sni sni-value alpn http/1.1,http/1.0 proto HTTP linger
 	tcp-check expect min-recv 1 comment my-comment ok-status L60K error-status L6RSP tout-status L6TOUT on-success on-success-fmt on-error on-error-fmt status-code status-code-expr rstring (2..|3..)
 `
@@ -276,6 +279,33 @@ backend test
 			}
 			if check.CheckComment != "this-is-the-comment" {
 				t.Errorf("tcp-check action comment data is invalid")
+			}
+
+			_, check, err = c.GetTCPCheck(counter.increment(), "backend", "test", "")
+			if check.Action != models.TCPCheckActionSetVarFmt {
+				t.Errorf("tcp-check action %v returned, expected %v", check.Action, models.TCPCheckActionSetVarFmt)
+			}
+			if check.VarScope != "check" {
+				t.Errorf("tcp-check set-var-fmt scope returned %v, expected %v", check.VarScope, "check")
+			}
+			if check.VarName != "name" {
+				t.Errorf("tcp-check set-var-fmt name returned %v, expected %v", check.VarName, "name")
+			}
+			if check.VarFmt != `"%H"` {
+				t.Errorf("tcp-check set-var-fmt format returned %v, expected %v", check.VarFmt, `"%H"`)
+			}
+			_, check, err = c.GetTCPCheck(counter.increment(), "backend", "test", "")
+			if check.Action != models.TCPCheckActionSetVarFmt {
+				t.Errorf("tcp-check action %v returned, expected %v", check.Action, models.TCPCheckActionSetVarFmt)
+			}
+			if check.VarScope != "txn" {
+				t.Errorf("tcp-check set-var-fmt scope returned %v, expected %v", check.VarScope, "txn")
+			}
+			if check.VarName != "from" {
+				t.Errorf("tcp-check set-var-fmt name returned %v, expected %v", check.VarName, "from")
+			}
+			if check.VarFmt != `"addr=%[src]:%[src_port]"` {
+				t.Errorf("tcp-check set-var-fmt fmt returned %v, expected %v", check.VarFmt, `"addr=%[src]:%[src_port]"`)
 			}
 
 			_, check, err = c.GetTCPCheck(counter.increment(), "backend", "test", "")

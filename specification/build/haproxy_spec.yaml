@@ -3503,6 +3503,7 @@ definitions:
           - send-binary
           - send-binary-lf
           - set-var
+          - set-var-fmt
           - unset-var
           type: string
           x-nullable: false
@@ -3696,6 +3697,14 @@ definitions:
               value:
               - set-var
           x-display-name: Var Expression
+        var_fmt:
+          type: string
+          x-dependency:
+            action:
+              required: true
+              value:
+              - set-var-fmt
+          x-display-name: Var Log format
         var_name:
           pattern: ^[^\s]+$
           type: string
@@ -3704,6 +3713,7 @@ definitions:
               required: true
               value:
               - set-var
+              - set-var-fmt
               - unset-var
         var_scope:
           pattern: ^[^\s]+$
@@ -3713,6 +3723,7 @@ definitions:
               required: true
               value:
               - set-var
+              - set-var-fmt
               - unset-var
         via_socks4:
           type: boolean

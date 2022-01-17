@@ -3578,7 +3578,7 @@ tcp_check:
       x-nullable: true
     action:
       type: string
-      enum: [comment, connect, expect, send, send-lf, send-binary, send-binary-lf, set-var, unset-var]
+      enum: [comment, connect, expect, send, send-lf, send-binary, send-binary-lf, set-var, set-var-fmt, unset-var]
       x-nullable: false
     log_message:
       type: string
@@ -3730,14 +3730,14 @@ tcp_check:
       pattern: '^[^\s]+$'
       x-dependency:
         action:
-          value: [set-var, unset-var]
+          value: [set-var, set-var-fmt, unset-var]
           required: true
     var_scope:
       type: string
       pattern: '^[^\s]+$'
       x-dependency:
         action:
-          value: [set-var, unset-var]
+          value: [set-var, set-var-fmt, unset-var]
           required: true
     var_expr:
       type: string
@@ -3745,6 +3745,13 @@ tcp_check:
       x-dependency:
         action:
           value: [set-var]
+          required: true
+    var_fmt:
+      type: string
+      x-display-name: Var Log format
+      x-dependency:
+        action:
+          value: [set-var-fmt]
           required: true
     match:
       type: string
