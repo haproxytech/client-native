@@ -181,3 +181,11 @@ HAProxy-2.3:
   extends: .e2e
   variables:
     HAPROXY_VERSION: "2.3"
+HAProxy-2.4:
+  extends: .e2e
+  variables:
+    HAPROXY_VERSION: "2.4"
+HAProxy-2.5:
+  extends: .e2e
+  variables:
+    HAPROXY_VERSION: "2.5"
