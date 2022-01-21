@@ -5,6 +5,7 @@ import (
 	"reflect"
 	"testing"
 
+	"github.com/haproxytech/client-native/v2/misc"
 	"github.com/haproxytech/client-native/v2/models"
 )
 
@@ -157,6 +158,9 @@ func TestPushDefaults(t *testing.T) {
 		ExternalCheckCommand: "/bin/false",
 		Logasap:              "disabled",
 		Allbackups:           "enabled",
+		HTTPCheck: &models.HTTPCheck{
+			Type: misc.StringP("send-state"),
+		},
 	}
 
 	err := client.PushDefaultsConfiguration(d, "", version)

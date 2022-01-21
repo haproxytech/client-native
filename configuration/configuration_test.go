@@ -61,6 +61,8 @@ defaults
   errorfile 500 /test/500.html
   errorfile 429 /test/429.html
   monitor-uri /monitor
+  http-check send-state
+  http-check disable-on-404
 
 frontend test
   mode http
@@ -207,6 +209,19 @@ backend test
   server webserv2 192.168.1.1:9300 maxconn 1000 ssl weight 10 inter 2s cookie BLAH slowstart 6000 proxy-v2-options authority,crc32c
   http-request set-dst hdr(x-dst)
   http-request set-dst-port int(4000)
+  http-check connect
+  http-check send meth GET uri / ver HTTP/1.1 hdr host haproxy.1wt.eu
+  http-check expect status 200-399
+  http-check connect port 443 ssl sni haproxy.1wt.eu
+  http-check expect status 200,201,300-310
+  http-check expect header name "set-cookie" value -m beg "sessid="
+  http-check expect ! string SQL\ Error
+  http-check expect ! rstatus ^5
+  http-check expect rstring <!--tag:[0-9a-f]*--></html>
+  http-check unset-var(check.port)
+  http-check set-var(check.port) int(1234)
+  http-check send-state
+  http-check disable-on-404
   server-template srv 1-3 google.com:80 check
   server-template site 1-10 google.com:8080 check backup
   server-template website 10-100 google.com:443 check no-backup
