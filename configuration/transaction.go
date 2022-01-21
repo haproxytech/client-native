@@ -634,7 +634,6 @@ func (t *Transaction) getFailedTransactionVersion(transactionID string) (int64, 
 	}
 
 	_, err := parser.New(
-		parser_options.UseV2HTTPCheck,
 		parser_options.Path(fPath),
 	)
 	if err != nil {
