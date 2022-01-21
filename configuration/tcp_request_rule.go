@@ -17,6 +17,7 @@ package configuration
 
 import (
 	"errors"
+	"fmt"
 	"strconv"
 	"strings"
 
@@ -306,7 +307,7 @@ func ParseTCPRequestRule(f types.TCPType) (rule *models.TCPRequestRule, err erro
 			rule.Cond = a.Cond
 			rule.CondTest = a.CondTest
 		default:
-			return nil, NewConfError(ErrValidationError, "unsupported action in tcp_request_rule")
+			return nil, NewConfError(ErrValidationError, fmt.Sprintf("unsupported action '%T' in tcp_request_rule", a))
 		}
 
 		return rule, nil
@@ -427,7 +428,7 @@ func ParseTCPRequestRule(f types.TCPType) (rule *models.TCPRequestRule, err erro
 			rule.Cond = a.Cond
 			rule.CondTest = a.CondTest
 		default:
-			return nil, NewConfError(ErrValidationError, "unsupported action in tcp_request_rule")
+			return nil, NewConfError(ErrValidationError, fmt.Sprintf("unsupported action '%T' in tcp_request_rule", a))
 		}
 	case *tcp_types.Session:
 		rule = &models.TCPRequestRule{
@@ -494,12 +495,11 @@ func ParseTCPRequestRule(f types.TCPType) (rule *models.TCPRequestRule, err erro
 			rule.Cond = a.Cond
 			rule.CondTest = a.CondTest
 		default:
-			return nil, NewConfError(ErrValidationError, "unsupported action in tcp_request_rule")
+			return nil, NewConfError(ErrValidationError, fmt.Sprintf("unsupported action '%T' in tcp_request_rule", a))
 		}
 	default:
-		return nil, NewConfError(ErrValidationError, "unsupported action in tcp_request_rule")
+		return nil, NewConfError(ErrValidationError, fmt.Sprintf("unsupported action '%T' in tcp_request_rule", v))
 	}
-
 	return rule, nil
 }
 
@@ -607,7 +607,7 @@ func SerializeTCPRequestRule(f models.TCPRequestRule) (rule types.TCPType, err e
 				},
 			}, nil
 		}
-		return nil, NewConfError(ErrValidationError, "unsupported action in tcp_request_rule")
+		return nil, NewConfError(ErrValidationError, fmt.Sprintf("unsupported action '%T' in tcp_request_rule", f.Action))
 	case models.TCPRequestRuleTypeContent:
 		switch f.Action {
 		case models.TCPRequestRuleActionAccept:
@@ -775,7 +775,7 @@ func SerializeTCPRequestRule(f models.TCPRequestRule) (rule types.TCPType, err e
 				},
 			}, nil
 		}
-		return nil, NewConfError(ErrValidationError, "unsupported action in tcp_request_rule")
+		return nil, NewConfError(ErrValidationError, fmt.Sprintf("unsupported action '%T' in tcp_request_rule", f.Action))
 	case models.TCPRequestRuleTypeSession:
 		switch f.Action {
 		case models.TCPRequestRuleActionAccept:
@@ -874,15 +874,14 @@ func SerializeTCPRequestRule(f models.TCPRequestRule) (rule types.TCPType, err e
 				},
 			}, nil
 		}
-		return nil, NewConfError(ErrValidationError, "unsupported action in tcp_request_rule")
+		return nil, NewConfError(ErrValidationError, fmt.Sprintf("unsupported action '%T' in tcp_request_rule", f.Action))
 	case models.TCPRequestRuleTypeInspectDelay:
 		if f.Timeout == nil {
-			return nil, NewConfError(ErrValidationError, "unsupported action in tcp_request_rule")
+			return nil, NewConfError(ErrValidationError, fmt.Sprintf("unsupported action '%T' in tcp_request_rule", f.Type))
 		}
 		return &tcp_types.InspectDelay{
 			Timeout: strconv.FormatInt(*f.Timeout, 10),
 		}, nil
 	}
-
-	return nil, NewConfError(ErrValidationError, "unsupported action in tcp_request_rule")
+	return nil, NewConfError(ErrValidationError, fmt.Sprintf("unsupported action '%T' in tcp_request_rule", f.Type))
 }
