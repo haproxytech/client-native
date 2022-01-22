@@ -104,6 +104,8 @@ frontend:
       x-dependency:
         mode:
           value: tcp
+    stick_table:
+      $ref: "#/definitions/config_stick_table"
     http-use-htx:
       type: string
       enum: [enabled, disabled]

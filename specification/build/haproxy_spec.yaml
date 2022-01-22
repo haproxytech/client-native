@@ -719,6 +719,8 @@ definitions:
           x-nullable: false
         stats_options:
           $ref: '#/definitions/stats_options'
+        stick_table:
+          $ref: '#/definitions/config_stick_table'
         tcplog:
           type: boolean
           x-dependency:
@@ -951,35 +953,7 @@ definitions:
         stats_options:
           $ref: '#/definitions/stats_options'
         stick_table:
-          properties:
-            expire:
-              type: integer
-              x-nullable: true
-            keylen:
-              type: integer
-              x-display-name: Key Length
-              x-nullable: true
-            nopurge:
-              type: boolean
-              x-display-name: No Purge
-            peers:
-              pattern: ^[^\s]+$
-              type: string
-            size:
-              type: integer
-              x-nullable: true
-            store:
-              pattern: ^[^\s]+$
-              type: string
-            type:
-              enum:
-              - ip
-              - ipv6
-              - integer
-              - string
-              - binary
-              type: string
-          type: object
+          $ref: '#/definitions/config_stick_table'
         tunnel_timeout:
           type: integer
           x-nullable: true
@@ -2141,6 +2115,36 @@ definitions:
     type: array
     items:
       $ref: '#/definitions/server_template'
+  config_stick_table:
+      properties:
+        expire:
+          type: integer
+          x-nullable: true
+        keylen:
+          type: integer
+          x-display-name: Key Length
+          x-nullable: true
+        nopurge:
+          type: boolean
+          x-display-name: No Purge
+        peers:
+          pattern: ^[^\s]+$
+          type: string
+        size:
+          type: integer
+          x-nullable: true
+        store:
+          pattern: ^[^\s]+$
+          type: string
+        type:
+          enum:
+          - ip
+          - ipv6
+          - integer
+          - string
+          - binary
+          type: string
+      type: object
   http_request_rule:
       additionalProperties: false
       description: HAProxy HTTP request rule configuration (corresponds to http-request

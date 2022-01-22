@@ -315,7 +315,7 @@ func TestCreateEditDeleteBackend(t *testing.T) {
 			},
 			HTTPConnectionMode: "httpclose",
 			ConnectTimeout:     &tOut,
-			StickTable: &models.BackendStickTable{
+			StickTable: &models.ConfigStickTable{
 				Expire: &e,
 				Keylen: &kl,
 				Size:   &s,
@@ -342,7 +342,7 @@ func TestCreateEditDeleteBackend(t *testing.T) {
 				Name: &cookieName,
 			},
 			ConnectTimeout: &tOut,
-			StickTable:     &models.BackendStickTable{},
+			StickTable:     &models.ConfigStickTable{},
 			AdvCheck:       "pgsql-check",
 			PgsqlCheckParams: &models.PgsqlCheckParams{
 				Username: "user",
@@ -362,7 +362,7 @@ func TestCreateEditDeleteBackend(t *testing.T) {
 				Name: &cookieName,
 			},
 			ConnectTimeout: &tOut,
-			StickTable:     &models.BackendStickTable{},
+			StickTable:     &models.ConfigStickTable{},
 			AdvCheck:       "httpchk",
 			HttpchkParams: &models.HttpchkParams{
 				Method: "HEAD",

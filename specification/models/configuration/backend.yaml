@@ -143,30 +143,7 @@ backend:
         mode:
           value: http
     stick_table:
-      type: object
-      properties:
-        type:
-          type: string
-          enum: [ip, ipv6, integer, string, binary]
-        keylen:
-          type: integer
-          x-display-name: Key Length
-          x-nullable: true
-        size:
-          type: integer
-          x-nullable: true
-        expire:
-          type: integer
-          x-nullable: true
-        nopurge:
-          type: boolean
-          x-display-name: No Purge
-        peers:
-          type: string
-          pattern: '^[^\s]+$'
-        store:
-          type: string
-          pattern: '^[^\s]+$'
+      $ref: "#/definitions/config_stick_table"
     http-use-htx:
       type: string
       enum: [enabled, disabled]

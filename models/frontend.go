@@ -133,6 +133,9 @@ type Frontend struct {
 	// stats options
 	StatsOptions *StatsOptions `json:"stats_options,omitempty"`
 
+	// stick table
+	StickTable *ConfigStickTable `json:"stick_table,omitempty"`
+
 	// tcplog
 	Tcplog bool `json:"tcplog,omitempty"`
 
@@ -220,6 +223,10 @@ func (m *Frontend) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateStatsOptions(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateStickTable(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -816,6 +823,24 @@ func (m *Frontend) validateStatsOptions(formats strfmt.Registry) error {
 		if err := m.StatsOptions.Validate(formats); err != nil {
 			if ve, ok := err.(*errors.Validation); ok {
 				return ve.ValidateName("stats_options")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (m *Frontend) validateStickTable(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.StickTable) { // not required
+		return nil
+	}
+
+	if m.StickTable != nil {
+		if err := m.StickTable.Validate(formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("stick_table")
 			}
 			return err
 		}

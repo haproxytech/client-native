@@ -852,7 +852,7 @@ func (s *SectionParser) stickTable() interface{} {
 		return nil
 	}
 	d := data.(*types.StickTable)
-	bst := &models.BackendStickTable{}
+	bst := &models.ConfigStickTable{}
 
 	if d == nil {
 		return nil
@@ -1937,14 +1937,14 @@ func (s *SectionObject) getFieldByName(fieldName string) interface{} {
 }
 
 func (s *SectionObject) stickTable(field reflect.Value) error {
-	if s.Section == parser.Backends {
+	if s.Section == parser.Backends || s.Section == parser.Frontends {
 		if valueIsNil(field) {
 			if err := s.set("stick-table", nil); err != nil {
 				return err
 			}
 			return nil
 		}
-		st := field.Elem().Interface().(models.BackendStickTable)
+		st := field.Elem().Interface().(models.ConfigStickTable)
 		d := types.StickTable{
 			Type:    st.Type,
 			Store:   st.Store,
