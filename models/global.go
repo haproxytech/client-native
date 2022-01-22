@@ -40,6 +40,9 @@ type Global struct {
 	// CPU maps
 	CPUMaps []*CPUMap `json:"cpu_maps"`
 
+	// h1 case adjusts
+	H1CaseAdjusts []*H1CaseAdjust `json:"h1_case_adjust"`
+
 	// runtime a p is
 	RuntimeAPIs []*RuntimeAPI `json:"runtime_apis"`
 
@@ -57,6 +60,9 @@ type Global struct {
 	// group
 	// Pattern: ^[^\s]+$
 	Group string `json:"group,omitempty"`
+
+	// h1 case adjust file
+	H1CaseAdjustFile string `json:"h1_case_adjust_file,omitempty"`
 
 	// hard stop after
 	HardStopAfter *int64 `json:"hard_stop_after,omitempty"`
@@ -138,6 +144,10 @@ func (m *Global) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
+	if err := m.validateH1CaseAdjusts(formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.validateRuntimeAPIs(formats); err != nil {
 		res = append(res, err)
 	}
@@ -207,6 +217,31 @@ func (m *Global) validateCPUMaps(formats strfmt.Registry) error {
 			if err := m.CPUMaps[i].Validate(formats); err != nil {
 				if ve, ok := err.(*errors.Validation); ok {
 					return ve.ValidateName("cpu_maps" + "." + strconv.Itoa(i))
+				}
+				return err
+			}
+		}
+
+	}
+
+	return nil
+}
+
+func (m *Global) validateH1CaseAdjusts(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.H1CaseAdjusts) { // not required
+		return nil
+	}
+
+	for i := 0; i < len(m.H1CaseAdjusts); i++ {
+		if swag.IsZero(m.H1CaseAdjusts[i]) { // not required
+			continue
+		}
+
+		if m.H1CaseAdjusts[i] != nil {
+			if err := m.H1CaseAdjusts[i].Validate(formats); err != nil {
+				if ve, ok := err.(*errors.Validation); ok {
+					return ve.ValidateName("h1_case_adjust" + "." + strconv.Itoa(i))
 				}
 				return err
 			}
@@ -553,6 +588,74 @@ func (m *CPUMap) MarshalBinary() ([]byte, error) {
 // UnmarshalBinary interface implementation
 func (m *CPUMap) UnmarshalBinary(b []byte) error {
 	var res CPUMap
+	if err := swag.ReadJSON(b, &res); err != nil {
+		return err
+	}
+	*m = res
+	return nil
+}
+
+// H1CaseAdjust h1 case adjust
+//
+// swagger:model H1CaseAdjust
+type H1CaseAdjust struct {
+
+	// from
+	// Required: true
+	From *string `json:"from"`
+
+	// to
+	// Required: true
+	To *string `json:"to"`
+}
+
+// Validate validates this h1 case adjust
+func (m *H1CaseAdjust) Validate(formats strfmt.Registry) error {
+	var res []error
+
+	if err := m.validateFrom(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateTo(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if len(res) > 0 {
+		return errors.CompositeValidationError(res...)
+	}
+	return nil
+}
+
+func (m *H1CaseAdjust) validateFrom(formats strfmt.Registry) error {
+
+	if err := validate.Required("from", "body", m.From); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *H1CaseAdjust) validateTo(formats strfmt.Registry) error {
+
+	if err := validate.Required("to", "body", m.To); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+// MarshalBinary interface implementation
+func (m *H1CaseAdjust) MarshalBinary() ([]byte, error) {
+	if m == nil {
+		return nil, nil
+	}
+	return swag.WriteJSON(m)
+}
+
+// UnmarshalBinary interface implementation
+func (m *H1CaseAdjust) UnmarshalBinary(b []byte) error {
+	var res H1CaseAdjust
 	if err := swag.ReadJSON(b, &res); err != nil {
 		return err
 	}

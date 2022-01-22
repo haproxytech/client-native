@@ -160,6 +160,22 @@ global:
         param:
           type: string
           pattern: '^[^\s]+$'
+    h1_case_adjust:
+      type: array
+      x-go-name: H1CaseAdjusts
+      items:
+        type: object
+        x-go-name: H1CaseAdjust
+        required:
+          - from
+          - to
+        properties:
+          from:
+            type: string
+          to:
+            type: string
+    h1_case_adjust_file:
+      type: string
   additionalProperties: false
 defaults:
   title: Defaults
@@ -341,6 +357,14 @@ defaults:
       type: string
       enum: [enabled, disabled]
       x-display-name: Accept Invalid HTTP Response
+    h1_case_adjust_bogus_client:
+      type: string
+      enum: [enabled, disabled]
+      x-display-name: H1 Adjust Bogus Client
+    h1_case_adjust_bogus_server:
+      type: string
+      enum: [enabled, disabled]
+      x-display-name: H1 Adjust Bogus Server
     stats_options:
       $ref: "#/definitions/stats_options"
   additionalProperties: false
@@ -537,6 +561,10 @@ frontend:
       type: string
       enum: [enabled, disabled]
       x-display-name: Accept Invalid HTTP Request
+    h1_case_adjust_bogus_client:
+      type: string
+      enum: [enabled, disabled]
+      x-display-name: H1 Adjust Bogus Client
     stats_options:
       $ref: "#/definitions/stats_options"
     monitor_uri:
@@ -729,6 +757,10 @@ backend:
       type: string
       enum: [enabled, disabled]
       x-display-name: Accept Invalid HTTP Response
+    h1_case_adjust_bogus_server:
+      type: string
+      enum: [enabled, disabled]
+      x-display-name: H1 Adjust Bogus Server
     stats_options:
       $ref: "#/definitions/stats_options"
   additionalProperties: false

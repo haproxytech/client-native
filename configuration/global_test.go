@@ -82,6 +82,23 @@ func TestGetGlobal(t *testing.T) {
 	} else {
 		t.Errorf("%v LuaLoads returned, expected 2", len(global.LuaLoads))
 	}
+	if len(global.H1CaseAdjusts) == 2 {
+		if *global.H1CaseAdjusts[0].From != "host" {
+			t.Errorf("H1CaseAdjusts[0].From is %v, expected host", *global.H1CaseAdjusts[0].From)
+		}
+		if *global.H1CaseAdjusts[0].To != "Host" {
+			t.Errorf("H1CaseAdjusts[0].To is %v, expected Host", *global.H1CaseAdjusts[0].To)
+		}
+		if *global.H1CaseAdjusts[1].From != "content-type" {
+			t.Errorf("H1CaseAdjusts[1].From is %v, expected content-type", *global.H1CaseAdjusts[1].From)
+		}
+		if *global.H1CaseAdjusts[1].To != "Content-Type" {
+			t.Errorf("H1CaseAdjusts[1].To is %v, expected Content-Type", *global.H1CaseAdjusts[1].To)
+		}
+	}
+	if global.H1CaseAdjustFile != "/etc/headers.adjust" {
+		t.Errorf("H1CaseAdjustFile is %v, expected /etc/headers.adjust", global.H1CaseAdjustFile)
+	}
 }
 
 func TestPutGlobal(t *testing.T) {

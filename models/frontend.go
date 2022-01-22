@@ -69,6 +69,10 @@ type Frontend struct {
 	// forwardfor
 	Forwardfor *Forwardfor `json:"forwardfor,omitempty"`
 
+	// h1 case adjust bogus client
+	// Enum: [enabled disabled]
+	H1CaseAdjustBogusClient string `json:"h1_case_adjust_bogus_client,omitempty"`
+
 	// http buffer request
 	// Enum: [enabled disabled]
 	HTTPBufferRequest string `json:"http-buffer-request,omitempty"`
@@ -168,6 +172,10 @@ func (m *Frontend) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateForwardfor(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateH1CaseAdjustBogusClient(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -429,6 +437,49 @@ func (m *Frontend) validateForwardfor(formats strfmt.Registry) error {
 			}
 			return err
 		}
+	}
+
+	return nil
+}
+
+var frontendTypeH1CaseAdjustBogusClientPropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		frontendTypeH1CaseAdjustBogusClientPropEnum = append(frontendTypeH1CaseAdjustBogusClientPropEnum, v)
+	}
+}
+
+const (
+
+	// FrontendH1CaseAdjustBogusClientEnabled captures enum value "enabled"
+	FrontendH1CaseAdjustBogusClientEnabled string = "enabled"
+
+	// FrontendH1CaseAdjustBogusClientDisabled captures enum value "disabled"
+	FrontendH1CaseAdjustBogusClientDisabled string = "disabled"
+)
+
+// prop value enum
+func (m *Frontend) validateH1CaseAdjustBogusClientEnum(path, location string, value string) error {
+	if err := validate.Enum(path, location, value, frontendTypeH1CaseAdjustBogusClientPropEnum); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *Frontend) validateH1CaseAdjustBogusClient(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.H1CaseAdjustBogusClient) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateH1CaseAdjustBogusClientEnum("h1_case_adjust_bogus_client", "body", m.H1CaseAdjustBogusClient); err != nil {
+		return err
 	}
 
 	return nil

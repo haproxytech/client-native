@@ -33,6 +33,9 @@ global
   lua-prepend-path /usr/share/haproxy-lua/?.lua cpath
 	lua-load /etc/foo.lua
 	lua-load /etc/bar.lua
+  h1-case-adjust-file /etc/headers.adjust
+  h1-case-adjust host Host
+  h1-case-adjust content-type Content-Type
 
 defaults
   maxconn 2000
@@ -65,6 +68,8 @@ defaults
   http-check disable-on-404
   option accept-invalid-http-request
   option accept-invalid-http-response
+  option h1-case-adjust-bogus-client
+  option h1-case-adjust-bogus-server
 
 frontend test
   mode http
@@ -158,6 +163,7 @@ frontend test
   unique-id-format %{+X}o%ci:%cp_%fi:%fp_%Ts_%rt:%pid
   unique-id-header X-Unique-ID
   no option accept-invalid-http-request
+  no option h1-case-adjust-bogus-client
 
 frontend test_2
   mode http
@@ -230,6 +236,7 @@ backend test
   server-template website 10-100 google.com:443 check no-backup
   server-template test 5 test.com check backup
   no option accept-invalid-http-response
+  no option h1-case-adjust-bogus-server
 
 peers mycluster
   peer hapee 192.168.1.1:1023

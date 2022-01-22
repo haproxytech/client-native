@@ -186,6 +186,9 @@ func TestGetBackend(t *testing.T) {
 	if b.AcceptInvalidHTTPResponse != "disabled" {
 		t.Errorf("%v: AcceptInvalidHTTPResponse not disabled: %v", b.Name, b.AcceptInvalidHTTPResponse)
 	}
+	if b.H1CaseAdjustBogusServer != "disabled" {
+		t.Errorf("%v: H1CaseAdjustBogusServer not disabled: %v", b.Name, b.H1CaseAdjustBogusServer)
+	}
 
 	_, err = b.MarshalBinary()
 	if err != nil {

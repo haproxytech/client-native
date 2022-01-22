@@ -135,6 +135,9 @@ func TestGetFrontend(t *testing.T) {
 	if f.AcceptInvalidHTTPRequest != "disabled" {
 		t.Errorf("%v: AcceptInvalidHTTPRequest not disabled: %v", f.Name, f.AcceptInvalidHTTPRequest)
 	}
+	if f.H1CaseAdjustBogusClient != "disabled" {
+		t.Errorf("%v: H1CaseAdjustBogusClient not disabled: %v", f.Name, f.H1CaseAdjustBogusClient)
+	}
 
 	_, err = f.MarshalBinary()
 	if err != nil {

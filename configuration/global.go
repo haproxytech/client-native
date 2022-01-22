@@ -304,6 +304,24 @@ func ParseGlobalSection(p parser.Parser) (*models.Global, error) { //nolint:goco
 		}
 	}
 
+	var h1CaseAdjusts []*models.H1CaseAdjust
+	data, err = p.Get(parser.Global, parser.GlobalSectionName, "h1-case-adjust")
+	if err == nil {
+		cases := data.([]types.H1CaseAdjust)
+		for _, c := range cases {
+			from := c.From
+			to := c.To
+			h1CaseAdjusts = append(h1CaseAdjusts, &models.H1CaseAdjust{From: &from, To: &to})
+		}
+	}
+
+	var h1CaseAdjustFile string
+	data, err = p.Get(parser.Global, parser.GlobalSectionName, "h1-case-adjust-file")
+	if err == nil {
+		caseFileParser := data.(*types.StringC)
+		h1CaseAdjustFile = caseFileParser.Value
+	}
+
 	g := &models.Global{
 		User:                         user,
 		Group:                        group,
@@ -333,6 +351,8 @@ func ParseGlobalSection(p parser.Parser) (*models.Global, error) { //nolint:goco
 		LuaLoads:                     luaLoads,
 		LuaPrependPath:               luaPrependPath,
 		LogSendHostname:              globalLogSendHostName,
+		H1CaseAdjusts:                h1CaseAdjusts,
+		H1CaseAdjustFile:             h1CaseAdjustFile,
 	}
 
 	return g, nil
@@ -610,6 +630,27 @@ func SerializeGlobalSection(p parser.Parser, data *models.Global) error { //noli
 	if !data.ExternalCheck {
 		pExternalCheck = nil
 	}
+	if err := p.Set(parser.Global, parser.GlobalSectionName, "external-check", pExternalCheck); err != nil {
+		return err
+	}
 
-	return p.Set(parser.Global, parser.GlobalSectionName, "external-check", pExternalCheck)
+	pH1CaseAdjusts := []types.H1CaseAdjust{}
+	if data.H1CaseAdjusts != nil && len(data.H1CaseAdjusts) > 0 {
+		for _, caseAdjust := range data.H1CaseAdjusts {
+			if caseAdjust != nil && caseAdjust.From != nil && caseAdjust.To != nil {
+				ca := types.H1CaseAdjust{From: *caseAdjust.From, To: *caseAdjust.To}
+				pH1CaseAdjusts = append(pH1CaseAdjusts, ca)
+			}
+		}
+	}
+	if err := p.Set(parser.Global, parser.GlobalSectionName, "h1-case-adjust", pH1CaseAdjusts); err != nil {
+		return err
+	}
+
+	pH1CaseAdjustFile := types.StringC{}
+	if data.H1CaseAdjustFile != "" {
+		pH1CaseAdjustFile.Value = data.H1CaseAdjustFile
+	}
+
+	return p.Set(parser.Global, parser.GlobalSectionName, "h1-case-adjust-file", pH1CaseAdjustFile)
 }

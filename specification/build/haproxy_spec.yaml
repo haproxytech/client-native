@@ -182,6 +182,22 @@ definitions:
           pattern: ^[^\s]+$
           type: string
           x-display-name: Group
+        h1_case_adjust:
+          items:
+            properties:
+              from:
+                type: string
+              to:
+                type: string
+            required:
+            - from
+            - to
+            type: object
+            x-go-name: H1CaseAdjust
+          type: array
+          x-go-name: H1CaseAdjusts
+        h1_case_adjust_file:
+          type: string
         hard_stop_after:
           type: integer
           x-display-name: Hard Stop After
@@ -428,6 +444,18 @@ definitions:
           x-display-name: External Check Path
         forwardfor:
           $ref: '#/definitions/forwardfor'
+        h1_case_adjust_bogus_client:
+          enum:
+          - enabled
+          - disabled
+          type: string
+          x-display-name: H1 Adjust Bogus Client
+        h1_case_adjust_bogus_server:
+          enum:
+          - enabled
+          - disabled
+          type: string
+          x-display-name: H1 Adjust Bogus Server
         http-buffer-request:
           enum:
           - enabled
@@ -605,6 +633,12 @@ definitions:
           x-dependency:
             mode:
               value: http
+        h1_case_adjust_bogus_client:
+          enum:
+          - enabled
+          - disabled
+          type: string
+          x-display-name: H1 Adjust Bogus Client
         http-buffer-request:
           enum:
           - enabled
@@ -799,6 +833,12 @@ definitions:
           x-dependency:
             mode:
               value: http
+        h1_case_adjust_bogus_server:
+          enum:
+          - enabled
+          - disabled
+          type: string
+          x-display-name: H1 Adjust Bogus Server
         hash_type:
           properties:
             function:

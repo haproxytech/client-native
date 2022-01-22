@@ -121,6 +121,12 @@ func TestGetDefaults(t *testing.T) { //nolint:gocognit,gocyclo
 	if d.AcceptInvalidHTTPResponse != "enabled" {
 		t.Errorf("AcceptInvalidHTTPResponse not enabled: %v", d.AcceptInvalidHTTPResponse)
 	}
+	if d.H1CaseAdjustBogusClient != "enabled" {
+		t.Errorf("H1CaseAdjustBogusClient not enabled: %v", d.H1CaseAdjustBogusClient)
+	}
+	if d.H1CaseAdjustBogusServer != "enabled" {
+		t.Errorf("H1CaseAdjustBogusServer not enabled: %v", d.H1CaseAdjustBogusServer)
+	}
 }
 
 func TestPushDefaults(t *testing.T) {

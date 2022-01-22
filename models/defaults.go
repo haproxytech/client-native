@@ -123,6 +123,14 @@ type Defaults struct {
 	// forwardfor
 	Forwardfor *Forwardfor `json:"forwardfor,omitempty"`
 
+	// h1 case adjust bogus client
+	// Enum: [enabled disabled]
+	H1CaseAdjustBogusClient string `json:"h1_case_adjust_bogus_client,omitempty"`
+
+	// h1 case adjust bogus server
+	// Enum: [enabled disabled]
+	H1CaseAdjustBogusServer string `json:"h1_case_adjust_bogus_server,omitempty"`
+
 	// http buffer request
 	// Enum: [enabled disabled]
 	HTTPBufferRequest string `json:"http-buffer-request,omitempty"`
@@ -307,6 +315,14 @@ func (m *Defaults) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateForwardfor(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateH1CaseAdjustBogusClient(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateH1CaseAdjustBogusServer(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -947,6 +963,92 @@ func (m *Defaults) validateForwardfor(formats strfmt.Registry) error {
 			}
 			return err
 		}
+	}
+
+	return nil
+}
+
+var defaultsTypeH1CaseAdjustBogusClientPropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		defaultsTypeH1CaseAdjustBogusClientPropEnum = append(defaultsTypeH1CaseAdjustBogusClientPropEnum, v)
+	}
+}
+
+const (
+
+	// DefaultsH1CaseAdjustBogusClientEnabled captures enum value "enabled"
+	DefaultsH1CaseAdjustBogusClientEnabled string = "enabled"
+
+	// DefaultsH1CaseAdjustBogusClientDisabled captures enum value "disabled"
+	DefaultsH1CaseAdjustBogusClientDisabled string = "disabled"
+)
+
+// prop value enum
+func (m *Defaults) validateH1CaseAdjustBogusClientEnum(path, location string, value string) error {
+	if err := validate.Enum(path, location, value, defaultsTypeH1CaseAdjustBogusClientPropEnum); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *Defaults) validateH1CaseAdjustBogusClient(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.H1CaseAdjustBogusClient) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateH1CaseAdjustBogusClientEnum("h1_case_adjust_bogus_client", "body", m.H1CaseAdjustBogusClient); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+var defaultsTypeH1CaseAdjustBogusServerPropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		defaultsTypeH1CaseAdjustBogusServerPropEnum = append(defaultsTypeH1CaseAdjustBogusServerPropEnum, v)
+	}
+}
+
+const (
+
+	// DefaultsH1CaseAdjustBogusServerEnabled captures enum value "enabled"
+	DefaultsH1CaseAdjustBogusServerEnabled string = "enabled"
+
+	// DefaultsH1CaseAdjustBogusServerDisabled captures enum value "disabled"
+	DefaultsH1CaseAdjustBogusServerDisabled string = "disabled"
+)
+
+// prop value enum
+func (m *Defaults) validateH1CaseAdjustBogusServerEnum(path, location string, value string) error {
+	if err := validate.Enum(path, location, value, defaultsTypeH1CaseAdjustBogusServerPropEnum); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *Defaults) validateH1CaseAdjustBogusServer(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.H1CaseAdjustBogusServer) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateH1CaseAdjustBogusServerEnum("h1_case_adjust_bogus_server", "body", m.H1CaseAdjustBogusServer); err != nil {
+		return err
 	}
 
 	return nil
