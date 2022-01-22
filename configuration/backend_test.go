@@ -183,6 +183,9 @@ func TestGetBackend(t *testing.T) {
 	if *b.ServerTimeout != 3000 {
 		t.Errorf("%v: ServerTimeout not 3000: %v", b.Name, *b.ServerTimeout)
 	}
+	if b.AcceptInvalidHTTPResponse != "disabled" {
+		t.Errorf("%v: AcceptInvalidHTTPResponse not disabled: %v", b.Name, b.AcceptInvalidHTTPResponse)
+	}
 
 	_, err = b.MarshalBinary()
 	if err != nil {
@@ -245,6 +248,7 @@ func TestCreateEditDeleteBackend(t *testing.T) {
 			Hello:  "HELO",
 			Domain: "example.com",
 		},
+		AcceptInvalidHTTPResponse: "enabled",
 	}
 
 	err := client.CreateBackend(b, "", version)

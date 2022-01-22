@@ -63,6 +63,8 @@ defaults
   monitor-uri /monitor
   http-check send-state
   http-check disable-on-404
+  option accept-invalid-http-request
+  option accept-invalid-http-response
 
 frontend test
   mode http
@@ -155,6 +157,7 @@ frontend test
   option clitcpka
   unique-id-format %{+X}o%ci:%cp_%fi:%fp_%Ts_%rt:%pid
   unique-id-header X-Unique-ID
+  no option accept-invalid-http-request
 
 frontend test_2
   mode http
@@ -226,6 +229,7 @@ backend test
   server-template site 1-10 google.com:8080 check backup
   server-template website 10-100 google.com:443 check no-backup
   server-template test 5 test.com check backup
+  no option accept-invalid-http-response
 
 peers mycluster
   peer hapee 192.168.1.1:1023

@@ -40,6 +40,10 @@ type Backend struct {
 	// Enum: [enabled disabled]
 	Abortonclose string `json:"abortonclose,omitempty"`
 
+	// accept invalid http response
+	// Enum: [enabled disabled]
+	AcceptInvalidHTTPResponse string `json:"accept-invalid-http-response,omitempty"`
+
 	// adv check
 	// Enum: [ssl-hello-chk smtpchk ldap-check mysql-check pgsql-check tcp-check redis-check httpchk]
 	AdvCheck string `json:"adv_check,omitempty"`
@@ -171,6 +175,10 @@ func (m *Backend) Validate(formats strfmt.Registry) error {
 	var res []error
 
 	if err := m.validateAbortonclose(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateAcceptInvalidHTTPResponse(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -329,6 +337,49 @@ func (m *Backend) validateAbortonclose(formats strfmt.Registry) error {
 
 	// value enum
 	if err := m.validateAbortoncloseEnum("abortonclose", "body", m.Abortonclose); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+var backendTypeAcceptInvalidHTTPResponsePropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		backendTypeAcceptInvalidHTTPResponsePropEnum = append(backendTypeAcceptInvalidHTTPResponsePropEnum, v)
+	}
+}
+
+const (
+
+	// BackendAcceptInvalidHTTPResponseEnabled captures enum value "enabled"
+	BackendAcceptInvalidHTTPResponseEnabled string = "enabled"
+
+	// BackendAcceptInvalidHTTPResponseDisabled captures enum value "disabled"
+	BackendAcceptInvalidHTTPResponseDisabled string = "disabled"
+)
+
+// prop value enum
+func (m *Backend) validateAcceptInvalidHTTPResponseEnum(path, location string, value string) error {
+	if err := validate.Enum(path, location, value, backendTypeAcceptInvalidHTTPResponsePropEnum); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *Backend) validateAcceptInvalidHTTPResponse(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.AcceptInvalidHTTPResponse) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateAcceptInvalidHTTPResponseEnum("accept-invalid-http-response", "body", m.AcceptInvalidHTTPResponse); err != nil {
 		return err
 	}
 

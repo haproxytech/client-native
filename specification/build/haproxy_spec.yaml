@@ -327,6 +327,18 @@ definitions:
           - enabled
           - disabled
           type: string
+        accept-invalid-http-request:
+          enum:
+          - enabled
+          - disabled
+          type: string
+          x-display-name: Accept Invalid HTTP Request
+        accept-invalid-http-response:
+          enum:
+          - enabled
+          - disabled
+          type: string
+          x-display-name: Accept Invalid HTTP Response
         adv_check:
           enum:
           - ssl-hello-chk
@@ -544,6 +556,12 @@ definitions:
         mode: http
         name: test_frontend
       properties:
+        accept-invalid-http-request:
+          enum:
+          - enabled
+          - disabled
+          type: string
+          x-display-name: Accept Invalid HTTP Request
         bind_process:
           pattern: ^[^\s]+$
           type: string
@@ -713,6 +731,12 @@ definitions:
           - enabled
           - disabled
           type: string
+        accept-invalid-http-response:
+          enum:
+          - enabled
+          - disabled
+          type: string
+          x-display-name: Accept Invalid HTTP Response
         adv_check:
           enum:
           - ssl-hello-chk

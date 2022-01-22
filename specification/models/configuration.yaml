@@ -333,6 +333,14 @@ defaults:
       type: string
       enum: [enabled, disabled]
       x-display-name: All Backups
+    accept-invalid-http-request:
+      type: string
+      enum: [enabled, disabled]
+      x-display-name: Accept Invalid HTTP Request
+    accept-invalid-http-response:
+      type: string
+      enum: [enabled, disabled]
+      x-display-name: Accept Invalid HTTP Response
     stats_options:
       $ref: "#/definitions/stats_options"
   additionalProperties: false
@@ -525,6 +533,10 @@ frontend:
       x-dependency:
         unique_id_format:
           required: true
+    accept-invalid-http-request:
+      type: string
+      enum: [enabled, disabled]
+      x-display-name: Accept Invalid HTTP Request
     stats_options:
       $ref: "#/definitions/stats_options"
     monitor_uri:
@@ -713,6 +725,10 @@ backend:
         mode:
           value: http
       pattern: '^[^\s]+$'
+    accept-invalid-http-response:
+      type: string
+      enum: [enabled, disabled]
+      x-display-name: Accept Invalid HTTP Response
     stats_options:
       $ref: "#/definitions/stats_options"
   additionalProperties: false

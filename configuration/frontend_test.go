@@ -132,6 +132,9 @@ func TestGetFrontend(t *testing.T) {
 	if *f.ClientTimeout != 4000 {
 		t.Errorf("%v: ClientTimeout not 4000: %v", f.Name, *f.ClientTimeout)
 	}
+	if f.AcceptInvalidHTTPRequest != "disabled" {
+		t.Errorf("%v: AcceptInvalidHTTPRequest not disabled: %v", f.Name, f.AcceptInvalidHTTPRequest)
+	}
 
 	_, err = f.MarshalBinary()
 	if err != nil {
@@ -149,16 +152,17 @@ func TestCreateEditDeleteFrontend(t *testing.T) {
 	mConn := int64(3000)
 	tOut := int64(2)
 	f := &models.Frontend{
-		Name:                 "created",
-		Mode:                 "tcp",
-		Maxconn:              &mConn,
-		Httplog:              true,
-		HTTPConnectionMode:   "http-keep-alive",
-		HTTPKeepAliveTimeout: &tOut,
-		BindProcess:          "4",
-		Logasap:              "disabled",
-		UniqueIDFormat:       "%{+X}o_%fi:%fp_%Ts_%rt:%pid",
-		UniqueIDHeader:       "X-Unique-Id",
+		Name:                     "created",
+		Mode:                     "tcp",
+		Maxconn:                  &mConn,
+		Httplog:                  true,
+		HTTPConnectionMode:       "http-keep-alive",
+		HTTPKeepAliveTimeout:     &tOut,
+		BindProcess:              "4",
+		Logasap:                  "disabled",
+		UniqueIDFormat:           "%{+X}o_%fi:%fp_%Ts_%rt:%pid",
+		UniqueIDHeader:           "X-Unique-Id",
+		AcceptInvalidHTTPRequest: "enabled",
 	}
 
 	err := client.CreateFrontend(f, "", version)

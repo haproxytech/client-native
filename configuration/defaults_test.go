@@ -115,6 +115,12 @@ func TestGetDefaults(t *testing.T) { //nolint:gocognit,gocyclo
 	if d.ExternalCheckCommand != "/bin/true" {
 		t.Errorf("ExternalCheckCommand not /bin/true: %v", d.ExternalCheckCommand)
 	}
+	if d.AcceptInvalidHTTPRequest != "enabled" {
+		t.Errorf("AcceptInvalidHTTPRequest not enabled: %v", d.AcceptInvalidHTTPRequest)
+	}
+	if d.AcceptInvalidHTTPResponse != "enabled" {
+		t.Errorf("AcceptInvalidHTTPResponse not enabled: %v", d.AcceptInvalidHTTPResponse)
+	}
 }
 
 func TestPushDefaults(t *testing.T) {
@@ -161,6 +167,8 @@ func TestPushDefaults(t *testing.T) {
 		HTTPCheck: &models.HTTPCheck{
 			Type: misc.StringP("send-state"),
 		},
+		AcceptInvalidHTTPRequest:  "disabled",
+		AcceptInvalidHTTPResponse: "disabled",
 	}
 
 	err := client.PushDefaultsConfiguration(d, "", version)

@@ -44,6 +44,14 @@ type Defaults struct {
 	// Enum: [enabled disabled]
 	Abortonclose string `json:"abortonclose,omitempty"`
 
+	// accept invalid http request
+	// Enum: [enabled disabled]
+	AcceptInvalidHTTPRequest string `json:"accept-invalid-http-request,omitempty"`
+
+	// accept invalid http response
+	// Enum: [enabled disabled]
+	AcceptInvalidHTTPResponse string `json:"accept-invalid-http-response,omitempty"`
+
 	// adv check
 	// Enum: [ssl-hello-chk smtpchk ldap-check mysql-check pgsql-check tcp-check redis-check httpchk]
 	AdvCheck string `json:"adv_check,omitempty"`
@@ -231,6 +239,14 @@ func (m *Defaults) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateAbortonclose(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateAcceptInvalidHTTPRequest(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateAcceptInvalidHTTPResponse(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -434,6 +450,92 @@ func (m *Defaults) validateAbortonclose(formats strfmt.Registry) error {
 
 	// value enum
 	if err := m.validateAbortoncloseEnum("abortonclose", "body", m.Abortonclose); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+var defaultsTypeAcceptInvalidHTTPRequestPropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		defaultsTypeAcceptInvalidHTTPRequestPropEnum = append(defaultsTypeAcceptInvalidHTTPRequestPropEnum, v)
+	}
+}
+
+const (
+
+	// DefaultsAcceptInvalidHTTPRequestEnabled captures enum value "enabled"
+	DefaultsAcceptInvalidHTTPRequestEnabled string = "enabled"
+
+	// DefaultsAcceptInvalidHTTPRequestDisabled captures enum value "disabled"
+	DefaultsAcceptInvalidHTTPRequestDisabled string = "disabled"
+)
+
+// prop value enum
+func (m *Defaults) validateAcceptInvalidHTTPRequestEnum(path, location string, value string) error {
+	if err := validate.Enum(path, location, value, defaultsTypeAcceptInvalidHTTPRequestPropEnum); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *Defaults) validateAcceptInvalidHTTPRequest(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.AcceptInvalidHTTPRequest) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateAcceptInvalidHTTPRequestEnum("accept-invalid-http-request", "body", m.AcceptInvalidHTTPRequest); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+var defaultsTypeAcceptInvalidHTTPResponsePropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		defaultsTypeAcceptInvalidHTTPResponsePropEnum = append(defaultsTypeAcceptInvalidHTTPResponsePropEnum, v)
+	}
+}
+
+const (
+
+	// DefaultsAcceptInvalidHTTPResponseEnabled captures enum value "enabled"
+	DefaultsAcceptInvalidHTTPResponseEnabled string = "enabled"
+
+	// DefaultsAcceptInvalidHTTPResponseDisabled captures enum value "disabled"
+	DefaultsAcceptInvalidHTTPResponseDisabled string = "disabled"
+)
+
+// prop value enum
+func (m *Defaults) validateAcceptInvalidHTTPResponseEnum(path, location string, value string) error {
+	if err := validate.Enum(path, location, value, defaultsTypeAcceptInvalidHTTPResponsePropEnum); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *Defaults) validateAcceptInvalidHTTPResponse(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.AcceptInvalidHTTPResponse) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateAcceptInvalidHTTPResponseEnum("accept-invalid-http-response", "body", m.AcceptInvalidHTTPResponse); err != nil {
 		return err
 	}
 

@@ -36,6 +36,10 @@ import (
 // swagger:model frontend
 type Frontend struct {
 
+	// accept invalid http request
+	// Enum: [enabled disabled]
+	AcceptInvalidHTTPRequest string `json:"accept-invalid-http-request,omitempty"`
+
 	// bind process
 	// Pattern: ^[^\s]+$
 	BindProcess string `json:"bind_process,omitempty"`
@@ -139,6 +143,10 @@ type Frontend struct {
 func (m *Frontend) Validate(formats strfmt.Registry) error {
 	var res []error
 
+	if err := m.validateAcceptInvalidHTTPRequest(formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.validateBindProcess(formats); err != nil {
 		res = append(res, err)
 	}
@@ -210,6 +218,49 @@ func (m *Frontend) Validate(formats strfmt.Registry) error {
 	if len(res) > 0 {
 		return errors.CompositeValidationError(res...)
 	}
+	return nil
+}
+
+var frontendTypeAcceptInvalidHTTPRequestPropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		frontendTypeAcceptInvalidHTTPRequestPropEnum = append(frontendTypeAcceptInvalidHTTPRequestPropEnum, v)
+	}
+}
+
+const (
+
+	// FrontendAcceptInvalidHTTPRequestEnabled captures enum value "enabled"
+	FrontendAcceptInvalidHTTPRequestEnabled string = "enabled"
+
+	// FrontendAcceptInvalidHTTPRequestDisabled captures enum value "disabled"
+	FrontendAcceptInvalidHTTPRequestDisabled string = "disabled"
+)
+
+// prop value enum
+func (m *Frontend) validateAcceptInvalidHTTPRequestEnum(path, location string, value string) error {
+	if err := validate.Enum(path, location, value, frontendTypeAcceptInvalidHTTPRequestPropEnum); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *Frontend) validateAcceptInvalidHTTPRequest(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.AcceptInvalidHTTPRequest) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateAcceptInvalidHTTPRequestEnum("accept-invalid-http-request", "body", m.AcceptInvalidHTTPRequest); err != nil {
+		return err
+	}
+
 	return nil
 }
 
