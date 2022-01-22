@@ -285,9 +285,11 @@ func ParseHTTPCheck(f types.Action) (check *models.HTTPCheckRule, err error) {
 		}
 		headers := []*models.CheckHeader{}
 		for _, h := range v.Header {
+			name := h.Name
+			value := h.Format
 			header := &models.CheckHeader{
-				Name:  &h.Name,
-				Value: &h.Format,
+				Name:  &name,
+				Value: &value,
 			}
 			headers = append(headers, header)
 		}
