@@ -44,6 +44,10 @@ type HTTPResponseRule struct {
 	// Pattern: ^[^\s]+$
 	ACLKeyfmt string `json:"acl_keyfmt,omitempty"`
 
+	// cache name
+	// Pattern: ^[^\s]+$
+	CacheName string `json:"cache_name,omitempty"`
+
 	// capture id
 	CaptureID *int64 `json:"capture_id,omitempty"`
 
@@ -177,7 +181,7 @@ type HTTPResponseRule struct {
 
 	// type
 	// Required: true
-	// Enum: [allow deny redirect add-header set-header del-header set-log-level set-var set-status send-spoe-group replace-header replace-value add-acl del-acl capture set-map del-map sc-inc-gpc0 sc-inc-gpc1 sc-set-gpt0 set-mark set-nice set-tos silent-drop unset-var track-sc0 track-sc1 track-sc2 strict-mode lua]
+	// Enum: [allow deny redirect add-header set-header del-header set-log-level set-var set-status send-spoe-group replace-header replace-value add-acl del-acl capture set-map del-map sc-inc-gpc0 sc-inc-gpc1 sc-set-gpt0 set-mark set-nice set-tos silent-drop unset-var track-sc0 track-sc1 track-sc2 strict-mode lua cache-store]
 	Type string `json:"type"`
 
 	// var expr
@@ -201,6 +205,10 @@ func (m *HTTPResponseRule) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateACLKeyfmt(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateCacheName(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -338,6 +346,19 @@ func (m *HTTPResponseRule) validateACLKeyfmt(formats strfmt.Registry) error {
 	}
 
 	if err := validate.Pattern("acl_keyfmt", "body", string(m.ACLKeyfmt), `^[^\s]+$`); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *HTTPResponseRule) validateCacheName(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.CacheName) { // not required
+		return nil
+	}
+
+	if err := validate.Pattern("cache_name", "body", string(m.CacheName), `^[^\s]+$`); err != nil {
 		return err
 	}
 
@@ -829,7 +850,7 @@ var httpResponseRuleTypeTypePropEnum []interface{}
 
 func init() {
 	var res []string
-	if err := json.Unmarshal([]byte(`["allow","deny","redirect","add-header","set-header","del-header","set-log-level","set-var","set-status","send-spoe-group","replace-header","replace-value","add-acl","del-acl","capture","set-map","del-map","sc-inc-gpc0","sc-inc-gpc1","sc-set-gpt0","set-mark","set-nice","set-tos","silent-drop","unset-var","track-sc0","track-sc1","track-sc2","strict-mode","lua"]`), &res); err != nil {
+	if err := json.Unmarshal([]byte(`["allow","deny","redirect","add-header","set-header","del-header","set-log-level","set-var","set-status","send-spoe-group","replace-header","replace-value","add-acl","del-acl","capture","set-map","del-map","sc-inc-gpc0","sc-inc-gpc1","sc-set-gpt0","set-mark","set-nice","set-tos","silent-drop","unset-var","track-sc0","track-sc1","track-sc2","strict-mode","lua","cache-store"]`), &res); err != nil {
 		panic(err)
 	}
 	for _, v := range res {
@@ -928,6 +949,9 @@ const (
 
 	// HTTPResponseRuleTypeLua captures enum value "lua"
 	HTTPResponseRuleTypeLua string = "lua"
+
+	// HTTPResponseRuleTypeCacheStore captures enum value "cache-store"
+	HTTPResponseRuleTypeCacheStore string = "cache-store"
 )
 
 // prop value enum

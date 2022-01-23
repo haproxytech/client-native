@@ -353,6 +353,13 @@ func ParseHTTPResponseRule(f types.Action) *models.HTTPResponseRule { //nolint:g
 			Cond:      v.Cond,
 			CondTest:  v.CondTest,
 		}
+	case *http_actions.CacheStore:
+		return &models.HTTPResponseRule{
+			Type:      "cache-store",
+			CacheName: v.Name,
+			Cond:      v.Cond,
+			CondTest:  v.CondTest,
+		}
 	case *actions.ScIncGpc0:
 		ID, _ := strconv.ParseInt(v.ID, 10, 64)
 		return &models.HTTPResponseRule{
@@ -580,6 +587,12 @@ func SerializeHTTPResponseRule(f models.HTTPResponseRule) types.Action { //nolin
 		return &http_actions.DelMap{
 			FileName: f.MapFile,
 			KeyFmt:   f.MapKeyfmt,
+			Cond:     f.Cond,
+			CondTest: f.CondTest,
+		}
+	case "cache-use":
+		return &http_actions.CacheStore{
+			Name:     f.CacheName,
 			Cond:     f.Cond,
 			CondTest: f.CondTest,
 		}

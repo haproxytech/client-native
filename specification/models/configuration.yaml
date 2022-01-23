@@ -2175,7 +2175,7 @@ http_response_rule:
       x-nullable: true
     type:
       type: string
-      enum: [allow, deny, redirect, add-header, set-header, del-header, set-log-level, set-var, set-status, send-spoe-group, replace-header, replace-value, add-acl, del-acl, capture, set-map, del-map, sc-inc-gpc0, sc-inc-gpc1, sc-set-gpt0, set-mark, set-nice, set-tos, silent-drop, unset-var, track-sc0, track-sc1, track-sc2, strict-mode, lua]
+      enum: [allow, deny, redirect, add-header, set-header, del-header, set-log-level, set-var, set-status, send-spoe-group, replace-header, replace-value, add-acl, del-acl, capture, set-map, del-map, sc-inc-gpc0, sc-inc-gpc1, sc-set-gpt0, set-mark, set-nice, set-tos, silent-drop, unset-var, track-sc0, track-sc1, track-sc2, strict-mode, lua, cache-store]
       x-nullable: false
     capture_sample:
       type: string
@@ -2450,6 +2450,14 @@ http_response_rule:
       x-dependency:
         type:
           value: lua
+    cache_name:
+      type: string
+      x-display-name: Cache Name
+      pattern: '^[^\s]+$'
+      x-dependency:
+        type:
+          value: cache-store
+          required: true
     cond:
       type: string
       x-display-name: Condition

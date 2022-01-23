@@ -125,6 +125,7 @@ frontend test
   http-response set-var(req.my_var) req.fhdr(user-agent),lower
   http-response set-map(map.lst) %[src] %[res.hdr(X-Value)]
   http-response del-map(map.lst) %[src] if FALSE
+  http-response cache-store cache-name if FALSE
   http-response sc-inc-gpc0(0) if FALSE
   http-response sc-inc-gpc1(0) if FALSE
   http-response sc-set-gpt0(1) hdr(Host),lower if FALSE

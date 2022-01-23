@@ -29,8 +29,8 @@ func TestGetHTTPResponseRules(t *testing.T) { //nolint:gocognit,gocyclo
 		t.Error(err.Error())
 	}
 
-	if len(hRules) != 19 {
-		t.Errorf("%v http response rules returned, expected 18", len(hRules))
+	if len(hRules) != 20 {
+		t.Errorf("%v http response rules returned, expected 20", len(hRules))
 	}
 
 	if v != version {
@@ -102,6 +102,19 @@ func TestGetHTTPResponseRules(t *testing.T) { //nolint:gocognit,gocyclo
 				t.Errorf("%v: CondTest not FALSE: %v", *r.Index, r.CondTest)
 			}
 		case 5:
+			if r.Type != "cache-store" {
+				t.Errorf("%v: Type not cache-store: %v", *r.Index, r.Type)
+			}
+			if r.CacheName != "cache-name" {
+				t.Errorf("%v: CacheName not cache-name: %v", *r.Index, r.MapFile)
+			}
+			if r.Cond != "if" {
+				t.Errorf("%v: Cond not if: %v", *r.Index, r.Cond)
+			}
+			if r.CondTest != "FALSE" {
+				t.Errorf("%v: CondTest not FALSE: %v", *r.Index, r.CondTest)
+			}
+		case 6:
 			if r.Type != "sc-inc-gpc0" {
 				t.Errorf("%v: Type not sc-inc-gpc0: %v", *r.Index, r.Type)
 			}
@@ -114,7 +127,7 @@ func TestGetHTTPResponseRules(t *testing.T) { //nolint:gocognit,gocyclo
 			if r.CondTest != "FALSE" {
 				t.Errorf("%v: CondTest not FALSE: %v", *r.Index, r.CondTest)
 			}
-		case 6:
+		case 7:
 			if r.Type != "sc-inc-gpc1" {
 				t.Errorf("%v: Type not sc-inc-gpc1: %v", *r.Index, r.Type)
 			}
@@ -127,7 +140,7 @@ func TestGetHTTPResponseRules(t *testing.T) { //nolint:gocognit,gocyclo
 			if r.CondTest != "FALSE" {
 				t.Errorf("%v: CondTest not FALSE: %v", *r.Index, r.CondTest)
 			}
-		case 7:
+		case 8:
 			if r.Type != "sc-set-gpt0" {
 				t.Errorf("%v: Type not sc-set-gpt0: %v", *r.Index, r.Type)
 			}
@@ -146,7 +159,7 @@ func TestGetHTTPResponseRules(t *testing.T) { //nolint:gocognit,gocyclo
 			if r.CondTest != "FALSE" {
 				t.Errorf("%v: CondTest not FALSE: %v", *r.Index, r.CondTest)
 			}
-		case 8:
+		case 9:
 			if r.Type != "sc-set-gpt0" {
 				t.Errorf("%v: Type not sc-set-gpt0: %v", *r.Index, r.Type)
 			}
@@ -169,7 +182,7 @@ func TestGetHTTPResponseRules(t *testing.T) { //nolint:gocognit,gocyclo
 			if r.CondTest != "FALSE" {
 				t.Errorf("%v: CondTest not FALSE: %v", *r.Index, r.CondTest)
 			}
-		case 9:
+		case 10:
 			if r.Type != "set-mark" {
 				t.Errorf("%v: Type not set-mark: %v", *r.Index, r.Type)
 			}
@@ -182,7 +195,7 @@ func TestGetHTTPResponseRules(t *testing.T) { //nolint:gocognit,gocyclo
 			if r.CondTest != "FALSE" {
 				t.Errorf("%v: CondTest not FALSE: %v", *r.Index, r.CondTest)
 			}
-		case 10:
+		case 11:
 			if r.Type != "set-nice" {
 				t.Errorf("%v: Type not set-nice: %v", *r.Index, r.Type)
 			}
@@ -195,7 +208,7 @@ func TestGetHTTPResponseRules(t *testing.T) { //nolint:gocognit,gocyclo
 			if r.CondTest != "FALSE" {
 				t.Errorf("%v: CondTest not FALSE: %v", *r.Index, r.CondTest)
 			}
-		case 11:
+		case 12:
 			if r.Type != "set-tos" {
 				t.Errorf("%v: Type not set-tos: %v", *r.Index, r.Type)
 			}
@@ -208,7 +221,7 @@ func TestGetHTTPResponseRules(t *testing.T) { //nolint:gocognit,gocyclo
 			if r.CondTest != "FALSE" {
 				t.Errorf("%v: CondTest not FALSE: %v", *r.Index, r.CondTest)
 			}
-		case 12:
+		case 13:
 			if r.Type != "silent-drop" {
 				t.Errorf("%v: Type not silent-drop: %v", *r.Index, r.Type)
 			}
@@ -218,7 +231,7 @@ func TestGetHTTPResponseRules(t *testing.T) { //nolint:gocognit,gocyclo
 			if r.CondTest != "FALSE" {
 				t.Errorf("%v: CondTest not FALSE: %v", *r.Index, r.CondTest)
 			}
-		case 13:
+		case 14:
 			if r.Type != "unset-var" {
 				t.Errorf("%v: Type not unset-var: %v", *r.Index, r.Type)
 			}
@@ -234,7 +247,7 @@ func TestGetHTTPResponseRules(t *testing.T) { //nolint:gocognit,gocyclo
 			if r.CondTest != "FALSE" {
 				t.Errorf("%v: CondTest not FALSE: %v", *r.Index, r.CondTest)
 			}
-		case 14:
+		case 15:
 			if r.Type != "track-sc0" {
 				t.Errorf("%v: Type not track-sc0: %v", *r.Index, r.Type)
 			}
@@ -250,7 +263,7 @@ func TestGetHTTPResponseRules(t *testing.T) { //nolint:gocognit,gocyclo
 			if r.CondTest != "FALSE" {
 				t.Errorf("%v: CondTest not FALSE: %v", *r.Index, r.CondTest)
 			}
-		case 15:
+		case 16:
 			if r.Type != "track-sc1" {
 				t.Errorf("%v: Type not track-sc1: %v", *r.Index, r.Type)
 			}
@@ -266,7 +279,7 @@ func TestGetHTTPResponseRules(t *testing.T) { //nolint:gocognit,gocyclo
 			if r.CondTest != "FALSE" {
 				t.Errorf("%v: CondTest not FALSE: %v", *r.Index, r.CondTest)
 			}
-		case 16:
+		case 17:
 			if r.Type != "track-sc2" {
 				t.Errorf("%v: Type not track-sc2: %v", *r.Index, r.Type)
 			}
@@ -282,7 +295,7 @@ func TestGetHTTPResponseRules(t *testing.T) { //nolint:gocognit,gocyclo
 			if r.CondTest != "FALSE" {
 				t.Errorf("%v: CondTest not FALSE: %v", *r.Index, r.CondTest)
 			}
-		case 17:
+		case 18:
 			if r.Type != "strict-mode" {
 				t.Errorf("%v: Type not strict-mode: %v", *r.Index, r.Type)
 			}
@@ -295,7 +308,7 @@ func TestGetHTTPResponseRules(t *testing.T) { //nolint:gocognit,gocyclo
 			if r.CondTest != "FALSE" {
 				t.Errorf("%v: CondTest not FALSE: %v", *r.Index, r.CondTest)
 			}
-		case 18:
+		case 19:
 			if r.Type != "lua" {
 				t.Errorf("%v: Type not lua: %v", *r.Index, r.Type)
 			}
@@ -431,7 +444,7 @@ func TestCreateEditDeleteHTTPResponseRule(t *testing.T) {
 	}
 
 	// TestDeleteHTTPResponse
-	err = client.DeleteHTTPResponseRule(19, "frontend", "test", "", version)
+	err = client.DeleteHTTPResponseRule(20, "frontend", "test", "", version)
 	if err != nil {
 		t.Error(err.Error())
 	} else {
@@ -442,7 +455,7 @@ func TestCreateEditDeleteHTTPResponseRule(t *testing.T) {
 		t.Error("Version not incremented")
 	}
 
-	_, _, err = client.GetHTTPResponseRule(19, "frontend", "test", "")
+	_, _, err = client.GetHTTPResponseRule(20, "frontend", "test", "")
 	if err == nil {
 		t.Error("DeleteHTTPResponseRule failed, HTTPResponse Rule 19 still exists")
 	}
