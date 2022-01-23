@@ -349,11 +349,11 @@ defaults:
       type: string
       enum: [enabled, disabled]
       x-display-name: All Backups
-    accept-invalid-http-request:
+    accept_invalid_http_request:
       type: string
       enum: [enabled, disabled]
       x-display-name: Accept Invalid HTTP Request
-    accept-invalid-http-response:
+    accept_invalid_http_response:
       type: string
       enum: [enabled, disabled]
       x-display-name: Accept Invalid HTTP Response
@@ -557,7 +557,7 @@ frontend:
       x-dependency:
         unique_id_format:
           required: true
-    accept-invalid-http-request:
+    accept_invalid_http_request:
       type: string
       enum: [enabled, disabled]
       x-display-name: Accept Invalid HTTP Request
@@ -753,7 +753,7 @@ backend:
         mode:
           value: http
       pattern: '^[^\s]+$'
-    accept-invalid-http-response:
+    accept_invalid_http_response:
       type: string
       enum: [enabled, disabled]
       x-display-name: Accept Invalid HTTP Response

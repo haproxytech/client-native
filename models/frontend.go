@@ -38,7 +38,7 @@ type Frontend struct {
 
 	// accept invalid http request
 	// Enum: [enabled disabled]
-	AcceptInvalidHTTPRequest string `json:"accept-invalid-http-request,omitempty"`
+	AcceptInvalidHTTPRequest string `json:"accept_invalid_http_request,omitempty"`
 
 	// bind process
 	// Pattern: ^[^\s]+$
@@ -265,7 +265,7 @@ func (m *Frontend) validateAcceptInvalidHTTPRequest(formats strfmt.Registry) err
 	}
 
 	// value enum
-	if err := m.validateAcceptInvalidHTTPRequestEnum("accept-invalid-http-request", "body", m.AcceptInvalidHTTPRequest); err != nil {
+	if err := m.validateAcceptInvalidHTTPRequestEnum("accept_invalid_http_request", "body", m.AcceptInvalidHTTPRequest); err != nil {
 		return err
 	}
 

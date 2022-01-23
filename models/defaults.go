@@ -46,11 +46,11 @@ type Defaults struct {
 
 	// accept invalid http request
 	// Enum: [enabled disabled]
-	AcceptInvalidHTTPRequest string `json:"accept-invalid-http-request,omitempty"`
+	AcceptInvalidHTTPRequest string `json:"accept_invalid_http_request,omitempty"`
 
 	// accept invalid http response
 	// Enum: [enabled disabled]
-	AcceptInvalidHTTPResponse string `json:"accept-invalid-http-response,omitempty"`
+	AcceptInvalidHTTPResponse string `json:"accept_invalid_http_response,omitempty"`
 
 	// adv check
 	// Enum: [ssl-hello-chk smtpchk ldap-check mysql-check pgsql-check tcp-check redis-check httpchk]
@@ -508,7 +508,7 @@ func (m *Defaults) validateAcceptInvalidHTTPRequest(formats strfmt.Registry) err
 	}
 
 	// value enum
-	if err := m.validateAcceptInvalidHTTPRequestEnum("accept-invalid-http-request", "body", m.AcceptInvalidHTTPRequest); err != nil {
+	if err := m.validateAcceptInvalidHTTPRequestEnum("accept_invalid_http_request", "body", m.AcceptInvalidHTTPRequest); err != nil {
 		return err
 	}
 
@@ -551,7 +551,7 @@ func (m *Defaults) validateAcceptInvalidHTTPResponse(formats strfmt.Registry) er
 	}
 
 	// value enum
-	if err := m.validateAcceptInvalidHTTPResponseEnum("accept-invalid-http-response", "body", m.AcceptInvalidHTTPResponse); err != nil {
+	if err := m.validateAcceptInvalidHTTPResponseEnum("accept_invalid_http_response", "body", m.AcceptInvalidHTTPResponse); err != nil {
 		return err
 	}
 

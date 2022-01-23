@@ -343,13 +343,13 @@ definitions:
           - enabled
           - disabled
           type: string
-        accept-invalid-http-request:
+        accept_invalid_http_request:
           enum:
           - enabled
           - disabled
           type: string
           x-display-name: Accept Invalid HTTP Request
-        accept-invalid-http-response:
+        accept_invalid_http_response:
           enum:
           - enabled
           - disabled
@@ -584,7 +584,7 @@ definitions:
         mode: http
         name: test_frontend
       properties:
-        accept-invalid-http-request:
+        accept_invalid_http_request:
           enum:
           - enabled
           - disabled
@@ -765,7 +765,7 @@ definitions:
           - enabled
           - disabled
           type: string
-        accept-invalid-http-response:
+        accept_invalid_http_response:
           enum:
           - enabled
           - disabled
