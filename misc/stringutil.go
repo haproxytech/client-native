@@ -199,6 +199,10 @@ func Int64P(i int) *int64 {
 	return &ret
 }
 
+func BoolP(b bool) *bool {
+	return &b
+}
+
 func RandomString(n int) string {
 	rand.Seed(time.Now().UnixNano())
 	b := make([]rune, n)
