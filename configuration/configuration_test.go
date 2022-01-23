@@ -255,6 +255,13 @@ resolvers test
   hold timeout         30s
   hold valid 5s
 
+cache test
+  total-max-size 1024
+  max-object-size 8
+  max-age 60
+  process-vary on
+  max-secondary-entries 10
+
 backend test_2
   mode http
   balance roundrobin

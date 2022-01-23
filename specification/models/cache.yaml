@@ -1,0 +1,24 @@
+---
+cache:
+  title: Cache
+  description: HAPRoxy Cache section
+  type: object
+  required:
+    - name
+  properties:
+    name:
+      type: string
+      pattern: '^[A-Za-z0-9-_.:]+$'
+    total_max_size:
+      type: integer
+      maximum: 4095
+      minimum: 1
+    max_object_size:
+      type: integer
+    max_age:
+      type: integer
+    process_vary:
+      type: boolean
+      x-nullable: true
+    max_secondary_entries:
+      type: integer

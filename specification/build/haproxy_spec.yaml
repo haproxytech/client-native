@@ -2776,6 +2776,14 @@ definitions:
               - add-acl
               - del-acl
           x-display-name: ACK Key Format
+        cache_name:
+          pattern: ^[^\s]+$
+          type: string
+          x-dependency:
+            type:
+              required: true
+              value: cache-store
+          x-display-name: Cache Name
         capture_id:
           type: integer
           x-dependency:
@@ -3101,6 +3109,7 @@ definitions:
           - track-sc2
           - strict-mode
           - lua
+          - cache-store
           type: string
           x-nullable: false
         var_expr:
@@ -6494,6 +6503,35 @@ definitions:
     type: array
     items:
       $ref: '#/definitions/nameserver'
+  cache:
+      description: HAPRoxy Cache section
+      properties:
+        max_age:
+          type: integer
+        max_object_size:
+          type: integer
+        max_secondary_entries:
+          type: integer
+        name:
+          pattern: ^[A-Za-z0-9-_.:]+$
+          type: string
+        process_vary:
+          type: boolean
+          x-nullable: true
+        total_max_size:
+          maximum: 4095
+          minimum: 1
+          type: integer
+      required:
+      - name
+      title: Cache
+      type: object
+  caches:
+    title: Cache Sections
+    description: HAProxy caches array
+    type: array
+    items:
+      $ref: '#/definitions/cache'
   awsFilters:
       properties:
         key:
@@ -6964,6 +7002,7 @@ tags:
 - name: BackendSwitchingRule
 - name: Bind
   description: Managing frontend bind configurations (advanced mode)
+- name: Cache
 - name: Cluster
 - name: Configuration
   description: Raw HAProxy configuration management (advanced mode)
@@ -11916,6 +11955,166 @@ paths:
         summary: Replace a ACL line
         tags:
         - ACL
+  /services/haproxy/configuration/caches:
+      get:
+        description: Returns an array of all configured caches.
+        operationId: getCaches
+        parameters:
+        - $ref: '#/parameters/transaction_id'
+        responses:
+          "200":
+            description: Successful operation
+            headers:
+              Configuration-Version:
+                description: Configuration file version
+                type: string
+            schema:
+              properties:
+                _version:
+                  type: integer
+                data:
+                  $ref: '#/definitions/caches'
+              required:
+              - data
+              type: object
+          default:
+            $ref: '#/responses/DefaultError'
+        summary: Return an array of caches
+        tags:
+        - Cache
+      post:
+        description: Adds a new cache section to the configuration file.
+        operationId: createCache
+        parameters:
+        - in: body
+          name: data
+          required: true
+          schema:
+            $ref: '#/definitions/cache'
+        - $ref: '#/parameters/transaction_id'
+        - $ref: '#/parameters/version'
+        - $ref: '#/parameters/force_reload'
+        responses:
+          "201":
+            description: Cache created
+            schema:
+              $ref: '#/definitions/cache'
+          "202":
+            description: Configuration change accepted and reload requested
+            headers:
+              Reload-ID:
+                description: ID of the requested reload
+                type: string
+            schema:
+              $ref: '#/definitions/cache'
+          "400":
+            $ref: '#/responses/BadRequest'
+          "409":
+            $ref: '#/responses/AlreadyExists'
+          default:
+            $ref: '#/responses/DefaultError'
+        summary: Add a cache
+        tags:
+        - Cache
+  /services/haproxy/configuration/caches/{name}:
+      delete:
+        description: Deletes a cache from the configuration by it's name.
+        operationId: deleteCache
+        parameters:
+        - description: Cache name
+          in: path
+          name: name
+          required: true
+          type: string
+        - $ref: '#/parameters/transaction_id'
+        - $ref: '#/parameters/version'
+        - $ref: '#/parameters/force_reload'
+        responses:
+          "202":
+            description: Configuration change accepted and reload requested
+            headers:
+              Reload-ID:
+                description: ID of the requested reload
+                type: string
+          "204":
+            description: Cache deleted
+          "404":
+            $ref: '#/responses/NotFound'
+          default:
+            $ref: '#/responses/DefaultError'
+        summary: Delete a cache
+        tags:
+        - Cache
+      get:
+        description: Returns one cache section configuration by it's name.
+        operationId: getCache
+        parameters:
+        - description: Cache name
+          in: path
+          name: name
+          required: true
+          type: string
+        - $ref: '#/parameters/transaction_id'
+        responses:
+          "200":
+            description: Successful operation
+            headers:
+              Configuration-Version:
+                description: Configuration file version
+                type: string
+            schema:
+              properties:
+                _version:
+                  type: integer
+                data:
+                  $ref: '#/definitions/cache'
+              type: object
+          "404":
+            $ref: '#/responses/NotFound'
+          default:
+            $ref: '#/responses/DefaultError'
+        summary: Return a cache
+        tags:
+        - Cache
+      put:
+        description: Replaces a cache configuration by it's name.
+        operationId: replaceCache
+        parameters:
+        - description: Cache name
+          in: path
+          name: name
+          required: true
+          type: string
+        - in: body
+          name: data
+          required: true
+          schema:
+            $ref: '#/definitions/cache'
+        - $ref: '#/parameters/transaction_id'
+        - $ref: '#/parameters/version'
+        - $ref: '#/parameters/force_reload'
+        responses:
+          "200":
+            description: Cache replaced
+            schema:
+              $ref: '#/definitions/cache'
+          "202":
+            description: Configuration change accepted and reload requested
+            headers:
+              Reload-ID:
+                description: ID of the requested reload
+                type: string
+            schema:
+              $ref: '#/definitions/cache'
+          "400":
+            $ref: '#/responses/BadRequest'
+          "404":
+            $ref: '#/responses/NotFound'
+          default:
+            $ref: '#/responses/DefaultError'
+        summary: Replace a cache
+        tags:
+        - Cache
   /services/haproxy/configuration/resolvers:
       get:
         description: Returns an array of all configured resolvers.

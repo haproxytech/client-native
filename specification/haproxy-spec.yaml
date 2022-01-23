@@ -354,6 +354,14 @@ definitions:
     type: array
     items:
       $ref: '#/definitions/nameserver'
+  cache:
+    $ref: "models/cache.yaml#/cache"
+  caches:
+    title: Cache Sections
+    description: HAProxy caches array
+    type: array
+    items:
+      $ref: '#/definitions/cache'
   awsFilters:
     $ref: "models/service-discovery.yaml#/awsFilters"
   awsRegion:
@@ -560,6 +568,7 @@ tags:
   - name: Storage
   - name: ServerTemplate
   - name: TCPCheck
+  - name: Cache
 security:
   - basic_auth: []
 paths:
@@ -689,6 +698,10 @@ paths:
     $ref: "paths/configuration.yaml#/acls"
   /services/haproxy/configuration/acls/{index}:
     $ref: "paths/configuration.yaml#/acls_one"
+  /services/haproxy/configuration/caches:
+    $ref: "paths/cache.yaml#/caches"
+  /services/haproxy/configuration/caches/{name}:
+    $ref: "paths/cache.yaml#/caches_one"
   /services/haproxy/configuration/resolvers:
     $ref: "paths/configuration.yaml#/resolvers"
   /services/haproxy/configuration/resolvers/{name}:
