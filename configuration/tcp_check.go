@@ -330,8 +330,7 @@ func SerializeTCPCheck(f models.TCPCheck) (action types.Action, err error) { //n
 			Linger:       f.Linger,
 		}, nil
 	case models.TCPCheckActionExpect:
-		return &actions.CheckExpect{
-			MinRecv:         &f.MinRecv,
+		action := &actions.CheckExpect{
 			Match:           f.Match,
 			OKStatus:        f.OkStatus,
 			ErrorStatus:     f.ErrorStatus,
@@ -342,7 +341,11 @@ func SerializeTCPCheck(f models.TCPCheck) (action types.Action, err error) { //n
 			StatusCode:      f.StatusCode,
 			ExclamationMark: f.ExclamationMark,
 			Pattern:         f.Pattern,
-		}, nil
+		}
+		if f.MinRecv > 0 {
+			action.MinRecv = &f.MinRecv
+		}
+		return action, nil
 	case models.TCPCheckActionSend:
 		return &tcp_actions.CheckSend{
 			Data:         f.Data,
