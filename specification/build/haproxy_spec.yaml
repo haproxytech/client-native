@@ -2228,18 +2228,8 @@ definitions:
             operation: getACLs
             property: acl_name
         deny_status:
-          enum:
-          - 200
-          - 400
-          - 403
-          - 405
-          - 408
-          - 425
-          - 429
-          - 500
-          - 502
-          - 503
-          - 504
+          maximum: 599
+          minimum: 200
           type: integer
           x-dependency:
             type:
@@ -2281,6 +2271,13 @@ definitions:
               - replace-header
               - replace-value
           x-display-name: Header Match
+        hdr_method:
+          type: string
+          x-dependency:
+            type:
+              value:
+              - del-header
+          x-display-name: Header Match Method
         hdr_name:
           type: string
           x-dependency:
@@ -2392,6 +2389,37 @@ definitions:
               value: set-nice
           x-display-name: Nice Value
           x-nullable: false
+        normalizer:
+          enum:
+          - fragment-encode
+          - fragment-strip
+          - path-merge-slashes
+          - path-strip-dot
+          - path-strip-dotdot
+          - percent-decode-unreserved
+          - percent-to-upercase
+          - query-sort-by-name
+          type: string
+          x-dependency:
+            type:
+              required: true
+              value: normalize-uri
+        normalizer_full:
+          type: boolean
+          x-dependency:
+            normalizer:
+              value: path-strip-dotdot
+            type:
+              value: normalize-uri
+        normalizer_strict:
+          type: boolean
+          x-dependency:
+            normalizer:
+              value:
+              - percent-decode-unreserved
+              - percent-to-upercase
+            type:
+              value: normalize-uri
         path_fmt:
           pattern: ^[^\s]+$
           type: string
@@ -2400,7 +2428,9 @@ definitions:
               required: true
               value:
               - set-path
+              - set-pathq
               - replace-path
+              - replace-pathq
         path_match:
           pattern: ^[^\s]+$
           type: string
@@ -2409,7 +2439,9 @@ definitions:
               required: true
               value:
               - set-path
+              - set-pathq
               - replace-path
+              - replace-pathq
         protocol:
           enum:
           - ipv4
@@ -2496,12 +2528,18 @@ definitions:
           type: string
           x-dependency:
             type:
-              value: return
+              value:
+              - deny
+              - tarpit
+              - return
         return_content_type:
           type: string
           x-dependency:
             type:
-              value: return
+              value:
+              - deny
+              - tarpit
+              - return
           x-display-name: Return content type
           x-nullable: true
         return_hdrs:
@@ -2588,6 +2626,21 @@ definitions:
             type:
               required: true
               value: strict-mode
+        timeout:
+          type: string
+          x-dependency:
+            type:
+              required: true
+              value: set-timeout
+        timeout_type:
+          enum:
+          - server
+          - tunnel
+          type: string
+          x-dependency:
+            type:
+              required: true
+              value: set-timeout
         tos_value:
           pattern: ^(0x[0-9A-Fa-f]+|[0-9]+)$
           type: string
@@ -2643,56 +2696,61 @@ definitions:
           x-display-name: track-sc2 Table
         type:
           enum:
-          - allow
-          - deny
-          - auth
-          - redirect
-          - tarpit
+          - add-acl
           - add-header
-          - replace-header
-          - replace-value
+          - allow
+          - auth
+          - cache-use
+          - capture
+          - del-acl
           - del-header
+          - del-map
+          - deny
+          - disable-l7-retry
+          - do-resolve
+          - early-hint
+          - normalize-uri
+          - redirect
+          - reject
+          - replace-header
+          - replace-path
+          - replace-pathq
+          - replace-uri
+          - replace-value
+          - return
+          - sc-inc-gpc0
+          - sc-inc-gpc1
+          - sc-set-gpt0
+          - send-spoe-group
+          - set-dst
+          - set-dst-port
           - set-header
           - set-log-level
+          - set-map
+          - set-mark
+          - set-method
+          - set-nice
           - set-path
-          - replace-path
+          - set-pathq
+          - set-priority-class
+          - set-priority-offset
           - set-query
+          - set-src
+          - set-src-port
+          - set-timeout
+          - set-tos
           - set-uri
           - set-var
-          - send-spoe-group
-          - add-acl
-          - del-acl
-          - capture
+          - silent-drop
+          - strict-mode
+          - tarpit
           - track-sc0
           - track-sc1
           - track-sc2
-          - set-map
-          - del-map
-          - cache-use
-          - disable-l7-retry
-          - early-hint
-          - replace-uri
-          - sc-inc-gpc0
-          - sc-inc-gpc1
-          - do-resolve
-          - set-dst
-          - set-dst-port
-          - sc-set-gpt0
-          - set-mark
-          - set-nice
-          - set-method
-          - set-priority-class
-          - set-priority-offset
-          - set-src
-          - set-src-por
-          - wait-for-handshake
-          - set-tos
-          - silent-drop
           - unset-var
-          - strict-mode
-          - lua
           - use-service
-          - return
+          - wait-for-body time
+          - wait-for-handshake
           type: string
           x-nullable: false
         uri-fmt:
@@ -2716,6 +2774,13 @@ definitions:
               required: true
               value: set-var
           x-display-name: Var Expression
+        var_format:
+          type: string
+          x-dependency:
+            type:
+              required: true
+              value: set-var-fmt
+          x-display-name: Var Format
         var_name:
           pattern: ^[^\s]+$
           type: string
@@ -2724,6 +2789,7 @@ definitions:
               required: true
               value:
               - set-var
+              - set-var-fmt
               - do-resolve
               - unset-var
         var_scope:
@@ -2734,7 +2800,21 @@ definitions:
               required: true
               value:
               - set-var
+              - set-var-fmt
               - unset-var
+        wait_at_least:
+          type: integer
+          x-dependency:
+            type:
+              value: wait-for-body
+          x-nullable: true
+        wait_time:
+          type: integer
+          x-dependency:
+            type:
+              required: true
+              value: wait-for-body
+          x-nullable: true
       required:
       - index
       - type

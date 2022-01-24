@@ -74,7 +74,8 @@ type HTTPRequestRule struct {
 	CondTest string `json:"cond_test,omitempty"`
 
 	// deny status
-	// Enum: [200 400 403 405 408 425 429 500 502 503 504]
+	// Maximum: 599
+	// Minimum: 200
 	DenyStatus *int64 `json:"deny_status,omitempty"`
 
 	// expr
@@ -85,6 +86,9 @@ type HTTPRequestRule struct {
 
 	// hdr match
 	HdrMatch string `json:"hdr_match,omitempty"`
+
+	// hdr method
+	HdrMethod string `json:"hdr_method,omitempty"`
 
 	// hdr name
 	HdrName string `json:"hdr_name,omitempty"`
@@ -136,6 +140,16 @@ type HTTPRequestRule struct {
 	// Maximum: 1024
 	// Minimum: -1024
 	NiceValue int64 `json:"nice_value,omitempty"`
+
+	// normalizer
+	// Enum: [fragment-encode fragment-strip path-merge-slashes path-strip-dot path-strip-dotdot percent-decode-unreserved percent-to-upercase query-sort-by-name]
+	Normalizer string `json:"normalizer,omitempty"`
+
+	// normalizer full
+	NormalizerFull bool `json:"normalizer_full,omitempty"`
+
+	// normalizer strict
+	NormalizerStrict bool `json:"normalizer_strict,omitempty"`
 
 	// path fmt
 	// Pattern: ^[^\s]+$
@@ -209,6 +223,13 @@ type HTTPRequestRule struct {
 	// Enum: [on off]
 	StrictMode string `json:"strict_mode,omitempty"`
 
+	// timeout
+	Timeout string `json:"timeout,omitempty"`
+
+	// timeout type
+	// Enum: [server tunnel]
+	TimeoutType string `json:"timeout_type,omitempty"`
+
 	// tos value
 	// Pattern: ^(0x[0-9A-Fa-f]+|[0-9]+)$
 	TosValue string `json:"tos_value,omitempty"`
@@ -239,7 +260,7 @@ type HTTPRequestRule struct {
 
 	// type
 	// Required: true
-	// Enum: [allow deny auth redirect tarpit add-header replace-header replace-value del-header set-header set-log-level set-path replace-path set-query set-uri set-var send-spoe-group add-acl del-acl capture track-sc0 track-sc1 track-sc2 set-map del-map cache-use disable-l7-retry early-hint replace-uri sc-inc-gpc0 sc-inc-gpc1 do-resolve set-dst set-dst-port sc-set-gpt0 set-mark set-nice set-method set-priority-class set-priority-offset set-src set-src-por wait-for-handshake set-tos silent-drop unset-var strict-mode lua use-service return]
+	// Enum: [add-acl add-header allow auth cache-use capture del-acl del-header del-map deny disable-l7-retry do-resolve early-hint normalize-uri redirect reject replace-header replace-path replace-pathq replace-uri replace-value return sc-inc-gpc0 sc-inc-gpc1 sc-set-gpt0 send-spoe-group set-dst set-dst-port set-header set-log-level set-map set-mark set-method set-nice set-path set-pathq set-priority-class set-priority-offset set-query set-src set-src-port set-timeout set-tos set-uri set-var silent-drop strict-mode tarpit track-sc0 track-sc1 track-sc2 unset-var use-service wait-for-body time wait-for-handshake]
 	Type string `json:"type"`
 
 	// uri fmt
@@ -251,6 +272,9 @@ type HTTPRequestRule struct {
 	// var expr
 	VarExpr string `json:"var_expr,omitempty"`
 
+	// var format
+	VarFormat string `json:"var_format,omitempty"`
+
 	// var name
 	// Pattern: ^[^\s]+$
 	VarName string `json:"var_name,omitempty"`
@@ -258,6 +282,12 @@ type HTTPRequestRule struct {
 	// var scope
 	// Pattern: ^[^\s]+$
 	VarScope string `json:"var_scope,omitempty"`
+
+	// wait at least
+	WaitAtLeast *int64 `json:"wait_at_least,omitempty"`
+
+	// wait time
+	WaitTime *int64 `json:"wait_time,omitempty"`
 }
 
 // Validate validates this http request rule
@@ -340,6 +370,10 @@ func (m *HTTPRequestRule) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
+	if err := m.validateNormalizer(formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.validatePathFmt(formats); err != nil {
 		res = append(res, err)
 	}
@@ -381,6 +415,10 @@ func (m *HTTPRequestRule) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateStrictMode(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateTimeoutType(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -563,34 +601,17 @@ func (m *HTTPRequestRule) validateCond(formats strfmt.Registry) error {
 	return nil
 }
 
-var httpRequestRuleTypeDenyStatusPropEnum []interface{}
-
-func init() {
-	var res []int64
-	if err := json.Unmarshal([]byte(`[200,400,403,405,408,425,429,500,502,503,504]`), &res); err != nil {
-		panic(err)
-	}
-	for _, v := range res {
-		httpRequestRuleTypeDenyStatusPropEnum = append(httpRequestRuleTypeDenyStatusPropEnum, v)
-	}
-}
-
-// prop value enum
-func (m *HTTPRequestRule) validateDenyStatusEnum(path, location string, value int64) error {
-	if err := validate.Enum(path, location, value, httpRequestRuleTypeDenyStatusPropEnum); err != nil {
-		return err
-	}
-	return nil
-}
-
 func (m *HTTPRequestRule) validateDenyStatus(formats strfmt.Registry) error {
 
 	if swag.IsZero(m.DenyStatus) { // not required
 		return nil
 	}
 
-	// value enum
-	if err := m.validateDenyStatusEnum("deny_status", "body", *m.DenyStatus); err != nil {
+	if err := validate.MinimumInt("deny_status", "body", int64(*m.DenyStatus), 200, false); err != nil {
+		return err
+	}
+
+	if err := validate.MaximumInt("deny_status", "body", int64(*m.DenyStatus), 599, false); err != nil {
 		return err
 	}
 
@@ -785,6 +806,67 @@ func (m *HTTPRequestRule) validateNiceValue(formats strfmt.Registry) error {
 	}
 
 	if err := validate.MaximumInt("nice_value", "body", int64(m.NiceValue), 1024, false); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+var httpRequestRuleTypeNormalizerPropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["fragment-encode","fragment-strip","path-merge-slashes","path-strip-dot","path-strip-dotdot","percent-decode-unreserved","percent-to-upercase","query-sort-by-name"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		httpRequestRuleTypeNormalizerPropEnum = append(httpRequestRuleTypeNormalizerPropEnum, v)
+	}
+}
+
+const (
+
+	// HTTPRequestRuleNormalizerFragmentEncode captures enum value "fragment-encode"
+	HTTPRequestRuleNormalizerFragmentEncode string = "fragment-encode"
+
+	// HTTPRequestRuleNormalizerFragmentStrip captures enum value "fragment-strip"
+	HTTPRequestRuleNormalizerFragmentStrip string = "fragment-strip"
+
+	// HTTPRequestRuleNormalizerPathMergeSlashes captures enum value "path-merge-slashes"
+	HTTPRequestRuleNormalizerPathMergeSlashes string = "path-merge-slashes"
+
+	// HTTPRequestRuleNormalizerPathStripDot captures enum value "path-strip-dot"
+	HTTPRequestRuleNormalizerPathStripDot string = "path-strip-dot"
+
+	// HTTPRequestRuleNormalizerPathStripDotdot captures enum value "path-strip-dotdot"
+	HTTPRequestRuleNormalizerPathStripDotdot string = "path-strip-dotdot"
+
+	// HTTPRequestRuleNormalizerPercentDecodeUnreserved captures enum value "percent-decode-unreserved"
+	HTTPRequestRuleNormalizerPercentDecodeUnreserved string = "percent-decode-unreserved"
+
+	// HTTPRequestRuleNormalizerPercentToUpercase captures enum value "percent-to-upercase"
+	HTTPRequestRuleNormalizerPercentToUpercase string = "percent-to-upercase"
+
+	// HTTPRequestRuleNormalizerQuerySortByName captures enum value "query-sort-by-name"
+	HTTPRequestRuleNormalizerQuerySortByName string = "query-sort-by-name"
+)
+
+// prop value enum
+func (m *HTTPRequestRule) validateNormalizerEnum(path, location string, value string) error {
+	if err := validate.Enum(path, location, value, httpRequestRuleTypeNormalizerPropEnum); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *HTTPRequestRule) validateNormalizer(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.Normalizer) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateNormalizerEnum("normalizer", "body", m.Normalizer); err != nil {
 		return err
 	}
 
@@ -1097,6 +1179,49 @@ func (m *HTTPRequestRule) validateStrictMode(formats strfmt.Registry) error {
 	return nil
 }
 
+var httpRequestRuleTypeTimeoutTypePropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["server","tunnel"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		httpRequestRuleTypeTimeoutTypePropEnum = append(httpRequestRuleTypeTimeoutTypePropEnum, v)
+	}
+}
+
+const (
+
+	// HTTPRequestRuleTimeoutTypeServer captures enum value "server"
+	HTTPRequestRuleTimeoutTypeServer string = "server"
+
+	// HTTPRequestRuleTimeoutTypeTunnel captures enum value "tunnel"
+	HTTPRequestRuleTimeoutTypeTunnel string = "tunnel"
+)
+
+// prop value enum
+func (m *HTTPRequestRule) validateTimeoutTypeEnum(path, location string, value string) error {
+	if err := validate.Enum(path, location, value, httpRequestRuleTypeTimeoutTypePropEnum); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *HTTPRequestRule) validateTimeoutType(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.TimeoutType) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateTimeoutTypeEnum("timeout_type", "body", m.TimeoutType); err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func (m *HTTPRequestRule) validateTosValue(formats strfmt.Registry) error {
 
 	if swag.IsZero(m.TosValue) { // not required
@@ -1192,7 +1317,7 @@ var httpRequestRuleTypeTypePropEnum []interface{}
 
 func init() {
 	var res []string
-	if err := json.Unmarshal([]byte(`["allow","deny","auth","redirect","tarpit","add-header","replace-header","replace-value","del-header","set-header","set-log-level","set-path","replace-path","set-query","set-uri","set-var","send-spoe-group","add-acl","del-acl","capture","track-sc0","track-sc1","track-sc2","set-map","del-map","cache-use","disable-l7-retry","early-hint","replace-uri","sc-inc-gpc0","sc-inc-gpc1","do-resolve","set-dst","set-dst-port","sc-set-gpt0","set-mark","set-nice","set-method","set-priority-class","set-priority-offset","set-src","set-src-por","wait-for-handshake","set-tos","silent-drop","unset-var","strict-mode","lua","use-service","return"]`), &res); err != nil {
+	if err := json.Unmarshal([]byte(`["add-acl","add-header","allow","auth","cache-use","capture","del-acl","del-header","del-map","deny","disable-l7-retry","do-resolve","early-hint","normalize-uri","redirect","reject","replace-header","replace-path","replace-pathq","replace-uri","replace-value","return","sc-inc-gpc0","sc-inc-gpc1","sc-set-gpt0","send-spoe-group","set-dst","set-dst-port","set-header","set-log-level","set-map","set-mark","set-method","set-nice","set-path","set-pathq","set-priority-class","set-priority-offset","set-query","set-src","set-src-port","set-timeout","set-tos","set-uri","set-var","silent-drop","strict-mode","tarpit","track-sc0","track-sc1","track-sc2","unset-var","use-service","wait-for-body time","wait-for-handshake"]`), &res); err != nil {
 		panic(err)
 	}
 	for _, v := range res {
@@ -1202,32 +1327,89 @@ func init() {
 
 const (
 
-	// HTTPRequestRuleTypeAllow captures enum value "allow"
-	HTTPRequestRuleTypeAllow string = "allow"
-
-	// HTTPRequestRuleTypeDeny captures enum value "deny"
-	HTTPRequestRuleTypeDeny string = "deny"
-
-	// HTTPRequestRuleTypeAuth captures enum value "auth"
-	HTTPRequestRuleTypeAuth string = "auth"
-
-	// HTTPRequestRuleTypeRedirect captures enum value "redirect"
-	HTTPRequestRuleTypeRedirect string = "redirect"
-
-	// HTTPRequestRuleTypeTarpit captures enum value "tarpit"
-	HTTPRequestRuleTypeTarpit string = "tarpit"
+	// HTTPRequestRuleTypeAddACL captures enum value "add-acl"
+	HTTPRequestRuleTypeAddACL string = "add-acl"
 
 	// HTTPRequestRuleTypeAddHeader captures enum value "add-header"
 	HTTPRequestRuleTypeAddHeader string = "add-header"
 
+	// HTTPRequestRuleTypeAllow captures enum value "allow"
+	HTTPRequestRuleTypeAllow string = "allow"
+
+	// HTTPRequestRuleTypeAuth captures enum value "auth"
+	HTTPRequestRuleTypeAuth string = "auth"
+
+	// HTTPRequestRuleTypeCacheUse captures enum value "cache-use"
+	HTTPRequestRuleTypeCacheUse string = "cache-use"
+
+	// HTTPRequestRuleTypeCapture captures enum value "capture"
+	HTTPRequestRuleTypeCapture string = "capture"
+
+	// HTTPRequestRuleTypeDelACL captures enum value "del-acl"
+	HTTPRequestRuleTypeDelACL string = "del-acl"
+
+	// HTTPRequestRuleTypeDelHeader captures enum value "del-header"
+	HTTPRequestRuleTypeDelHeader string = "del-header"
+
+	// HTTPRequestRuleTypeDelMap captures enum value "del-map"
+	HTTPRequestRuleTypeDelMap string = "del-map"
+
+	// HTTPRequestRuleTypeDeny captures enum value "deny"
+	HTTPRequestRuleTypeDeny string = "deny"
+
+	// HTTPRequestRuleTypeDisableL7Retry captures enum value "disable-l7-retry"
+	HTTPRequestRuleTypeDisableL7Retry string = "disable-l7-retry"
+
+	// HTTPRequestRuleTypeDoResolve captures enum value "do-resolve"
+	HTTPRequestRuleTypeDoResolve string = "do-resolve"
+
+	// HTTPRequestRuleTypeEarlyHint captures enum value "early-hint"
+	HTTPRequestRuleTypeEarlyHint string = "early-hint"
+
+	// HTTPRequestRuleTypeNormalizeURI captures enum value "normalize-uri"
+	HTTPRequestRuleTypeNormalizeURI string = "normalize-uri"
+
+	// HTTPRequestRuleTypeRedirect captures enum value "redirect"
+	HTTPRequestRuleTypeRedirect string = "redirect"
+
+	// HTTPRequestRuleTypeReject captures enum value "reject"
+	HTTPRequestRuleTypeReject string = "reject"
+
 	// HTTPRequestRuleTypeReplaceHeader captures enum value "replace-header"
 	HTTPRequestRuleTypeReplaceHeader string = "replace-header"
+
+	// HTTPRequestRuleTypeReplacePath captures enum value "replace-path"
+	HTTPRequestRuleTypeReplacePath string = "replace-path"
+
+	// HTTPRequestRuleTypeReplacePathq captures enum value "replace-pathq"
+	HTTPRequestRuleTypeReplacePathq string = "replace-pathq"
+
+	// HTTPRequestRuleTypeReplaceURI captures enum value "replace-uri"
+	HTTPRequestRuleTypeReplaceURI string = "replace-uri"
 
 	// HTTPRequestRuleTypeReplaceValue captures enum value "replace-value"
 	HTTPRequestRuleTypeReplaceValue string = "replace-value"
 
-	// HTTPRequestRuleTypeDelHeader captures enum value "del-header"
-	HTTPRequestRuleTypeDelHeader string = "del-header"
+	// HTTPRequestRuleTypeReturn captures enum value "return"
+	HTTPRequestRuleTypeReturn string = "return"
+
+	// HTTPRequestRuleTypeScIncGpc0 captures enum value "sc-inc-gpc0"
+	HTTPRequestRuleTypeScIncGpc0 string = "sc-inc-gpc0"
+
+	// HTTPRequestRuleTypeScIncGpc1 captures enum value "sc-inc-gpc1"
+	HTTPRequestRuleTypeScIncGpc1 string = "sc-inc-gpc1"
+
+	// HTTPRequestRuleTypeScSetGpt0 captures enum value "sc-set-gpt0"
+	HTTPRequestRuleTypeScSetGpt0 string = "sc-set-gpt0"
+
+	// HTTPRequestRuleTypeSendSpoeGroup captures enum value "send-spoe-group"
+	HTTPRequestRuleTypeSendSpoeGroup string = "send-spoe-group"
+
+	// HTTPRequestRuleTypeSetDst captures enum value "set-dst"
+	HTTPRequestRuleTypeSetDst string = "set-dst"
+
+	// HTTPRequestRuleTypeSetDstPort captures enum value "set-dst-port"
+	HTTPRequestRuleTypeSetDstPort string = "set-dst-port"
 
 	// HTTPRequestRuleTypeSetHeader captures enum value "set-header"
 	HTTPRequestRuleTypeSetHeader string = "set-header"
@@ -1235,14 +1417,44 @@ const (
 	// HTTPRequestRuleTypeSetLogLevel captures enum value "set-log-level"
 	HTTPRequestRuleTypeSetLogLevel string = "set-log-level"
 
+	// HTTPRequestRuleTypeSetMap captures enum value "set-map"
+	HTTPRequestRuleTypeSetMap string = "set-map"
+
+	// HTTPRequestRuleTypeSetMark captures enum value "set-mark"
+	HTTPRequestRuleTypeSetMark string = "set-mark"
+
+	// HTTPRequestRuleTypeSetMethod captures enum value "set-method"
+	HTTPRequestRuleTypeSetMethod string = "set-method"
+
+	// HTTPRequestRuleTypeSetNice captures enum value "set-nice"
+	HTTPRequestRuleTypeSetNice string = "set-nice"
+
 	// HTTPRequestRuleTypeSetPath captures enum value "set-path"
 	HTTPRequestRuleTypeSetPath string = "set-path"
 
-	// HTTPRequestRuleTypeReplacePath captures enum value "replace-path"
-	HTTPRequestRuleTypeReplacePath string = "replace-path"
+	// HTTPRequestRuleTypeSetPathq captures enum value "set-pathq"
+	HTTPRequestRuleTypeSetPathq string = "set-pathq"
+
+	// HTTPRequestRuleTypeSetPriorityClass captures enum value "set-priority-class"
+	HTTPRequestRuleTypeSetPriorityClass string = "set-priority-class"
+
+	// HTTPRequestRuleTypeSetPriorityOffset captures enum value "set-priority-offset"
+	HTTPRequestRuleTypeSetPriorityOffset string = "set-priority-offset"
 
 	// HTTPRequestRuleTypeSetQuery captures enum value "set-query"
 	HTTPRequestRuleTypeSetQuery string = "set-query"
+
+	// HTTPRequestRuleTypeSetSrc captures enum value "set-src"
+	HTTPRequestRuleTypeSetSrc string = "set-src"
+
+	// HTTPRequestRuleTypeSetSrcPort captures enum value "set-src-port"
+	HTTPRequestRuleTypeSetSrcPort string = "set-src-port"
+
+	// HTTPRequestRuleTypeSetTimeout captures enum value "set-timeout"
+	HTTPRequestRuleTypeSetTimeout string = "set-timeout"
+
+	// HTTPRequestRuleTypeSetTos captures enum value "set-tos"
+	HTTPRequestRuleTypeSetTos string = "set-tos"
 
 	// HTTPRequestRuleTypeSetURI captures enum value "set-uri"
 	HTTPRequestRuleTypeSetURI string = "set-uri"
@@ -1250,17 +1462,14 @@ const (
 	// HTTPRequestRuleTypeSetVar captures enum value "set-var"
 	HTTPRequestRuleTypeSetVar string = "set-var"
 
-	// HTTPRequestRuleTypeSendSpoeGroup captures enum value "send-spoe-group"
-	HTTPRequestRuleTypeSendSpoeGroup string = "send-spoe-group"
+	// HTTPRequestRuleTypeSilentDrop captures enum value "silent-drop"
+	HTTPRequestRuleTypeSilentDrop string = "silent-drop"
 
-	// HTTPRequestRuleTypeAddACL captures enum value "add-acl"
-	HTTPRequestRuleTypeAddACL string = "add-acl"
+	// HTTPRequestRuleTypeStrictMode captures enum value "strict-mode"
+	HTTPRequestRuleTypeStrictMode string = "strict-mode"
 
-	// HTTPRequestRuleTypeDelACL captures enum value "del-acl"
-	HTTPRequestRuleTypeDelACL string = "del-acl"
-
-	// HTTPRequestRuleTypeCapture captures enum value "capture"
-	HTTPRequestRuleTypeCapture string = "capture"
+	// HTTPRequestRuleTypeTarpit captures enum value "tarpit"
+	HTTPRequestRuleTypeTarpit string = "tarpit"
 
 	// HTTPRequestRuleTypeTrackSc0 captures enum value "track-sc0"
 	HTTPRequestRuleTypeTrackSc0 string = "track-sc0"
@@ -1271,86 +1480,17 @@ const (
 	// HTTPRequestRuleTypeTrackSc2 captures enum value "track-sc2"
 	HTTPRequestRuleTypeTrackSc2 string = "track-sc2"
 
-	// HTTPRequestRuleTypeSetMap captures enum value "set-map"
-	HTTPRequestRuleTypeSetMap string = "set-map"
-
-	// HTTPRequestRuleTypeDelMap captures enum value "del-map"
-	HTTPRequestRuleTypeDelMap string = "del-map"
-
-	// HTTPRequestRuleTypeCacheUse captures enum value "cache-use"
-	HTTPRequestRuleTypeCacheUse string = "cache-use"
-
-	// HTTPRequestRuleTypeDisableL7Retry captures enum value "disable-l7-retry"
-	HTTPRequestRuleTypeDisableL7Retry string = "disable-l7-retry"
-
-	// HTTPRequestRuleTypeEarlyHint captures enum value "early-hint"
-	HTTPRequestRuleTypeEarlyHint string = "early-hint"
-
-	// HTTPRequestRuleTypeReplaceURI captures enum value "replace-uri"
-	HTTPRequestRuleTypeReplaceURI string = "replace-uri"
-
-	// HTTPRequestRuleTypeScIncGpc0 captures enum value "sc-inc-gpc0"
-	HTTPRequestRuleTypeScIncGpc0 string = "sc-inc-gpc0"
-
-	// HTTPRequestRuleTypeScIncGpc1 captures enum value "sc-inc-gpc1"
-	HTTPRequestRuleTypeScIncGpc1 string = "sc-inc-gpc1"
-
-	// HTTPRequestRuleTypeDoResolve captures enum value "do-resolve"
-	HTTPRequestRuleTypeDoResolve string = "do-resolve"
-
-	// HTTPRequestRuleTypeSetDst captures enum value "set-dst"
-	HTTPRequestRuleTypeSetDst string = "set-dst"
-
-	// HTTPRequestRuleTypeSetDstPort captures enum value "set-dst-port"
-	HTTPRequestRuleTypeSetDstPort string = "set-dst-port"
-
-	// HTTPRequestRuleTypeScSetGpt0 captures enum value "sc-set-gpt0"
-	HTTPRequestRuleTypeScSetGpt0 string = "sc-set-gpt0"
-
-	// HTTPRequestRuleTypeSetMark captures enum value "set-mark"
-	HTTPRequestRuleTypeSetMark string = "set-mark"
-
-	// HTTPRequestRuleTypeSetNice captures enum value "set-nice"
-	HTTPRequestRuleTypeSetNice string = "set-nice"
-
-	// HTTPRequestRuleTypeSetMethod captures enum value "set-method"
-	HTTPRequestRuleTypeSetMethod string = "set-method"
-
-	// HTTPRequestRuleTypeSetPriorityClass captures enum value "set-priority-class"
-	HTTPRequestRuleTypeSetPriorityClass string = "set-priority-class"
-
-	// HTTPRequestRuleTypeSetPriorityOffset captures enum value "set-priority-offset"
-	HTTPRequestRuleTypeSetPriorityOffset string = "set-priority-offset"
-
-	// HTTPRequestRuleTypeSetSrc captures enum value "set-src"
-	HTTPRequestRuleTypeSetSrc string = "set-src"
-
-	// HTTPRequestRuleTypeSetSrcPor captures enum value "set-src-por"
-	HTTPRequestRuleTypeSetSrcPor string = "set-src-por"
-
-	// HTTPRequestRuleTypeWaitForHandshake captures enum value "wait-for-handshake"
-	HTTPRequestRuleTypeWaitForHandshake string = "wait-for-handshake"
-
-	// HTTPRequestRuleTypeSetTos captures enum value "set-tos"
-	HTTPRequestRuleTypeSetTos string = "set-tos"
-
-	// HTTPRequestRuleTypeSilentDrop captures enum value "silent-drop"
-	HTTPRequestRuleTypeSilentDrop string = "silent-drop"
-
 	// HTTPRequestRuleTypeUnsetVar captures enum value "unset-var"
 	HTTPRequestRuleTypeUnsetVar string = "unset-var"
-
-	// HTTPRequestRuleTypeStrictMode captures enum value "strict-mode"
-	HTTPRequestRuleTypeStrictMode string = "strict-mode"
-
-	// HTTPRequestRuleTypeLua captures enum value "lua"
-	HTTPRequestRuleTypeLua string = "lua"
 
 	// HTTPRequestRuleTypeUseService captures enum value "use-service"
 	HTTPRequestRuleTypeUseService string = "use-service"
 
-	// HTTPRequestRuleTypeReturn captures enum value "return"
-	HTTPRequestRuleTypeReturn string = "return"
+	// HTTPRequestRuleTypeWaitForBodyTime captures enum value "wait-for-body time"
+	HTTPRequestRuleTypeWaitForBodyTime string = "wait-for-body time"
+
+	// HTTPRequestRuleTypeWaitForHandshake captures enum value "wait-for-handshake"
+	HTTPRequestRuleTypeWaitForHandshake string = "wait-for-handshake"
 )
 
 // prop value enum

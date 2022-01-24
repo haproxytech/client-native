@@ -12,7 +12,62 @@ http_request_rule:
       x-nullable: true
     type:
       type: string
-      enum: [allow, deny, auth, redirect, tarpit, add-header, replace-header, replace-value, del-header, set-header, set-log-level, set-path, replace-path, set-query, set-uri, set-var, send-spoe-group, add-acl, del-acl, capture, track-sc0, track-sc1, track-sc2, set-map, del-map, cache-use, disable-l7-retry, early-hint, replace-uri, sc-inc-gpc0, sc-inc-gpc1, do-resolve, set-dst, set-dst-port, sc-set-gpt0, set-mark, set-nice, set-method, set-priority-class, set-priority-offset, set-src, set-src-por, wait-for-handshake, set-tos, silent-drop, unset-var, strict-mode, lua, use-service, return]
+      enum:
+      - add-acl
+      - add-header
+      - allow
+      - auth
+      - cache-use
+      - capture
+      - del-acl
+      - del-header
+      - del-map
+      - deny
+      - disable-l7-retry
+      - do-resolve
+      - early-hint
+      - normalize-uri
+      - redirect
+      - reject
+      - replace-header
+      - replace-path
+      - replace-pathq
+      - replace-uri
+      - replace-value
+      - return
+      - sc-inc-gpc0
+      - sc-inc-gpc1
+      - sc-set-gpt0
+      - send-spoe-group
+      - set-dst
+      - set-dst-port
+      - set-header
+      - set-log-level
+      - set-map
+      - set-mark
+      - set-method
+      - set-nice
+      - set-path
+      - set-pathq
+      - set-priority-class
+      - set-priority-offset
+      - set-query
+      - set-src
+      - set-src-port
+      - set-timeout
+      - set-tos
+      - set-uri
+      - set-var
+      - silent-drop
+      - strict-mode
+      - tarpit
+      - track-sc0
+      - track-sc1
+      - track-sc2
+      - unset-var
+      - use-service
+      - wait-for-body time
+      - wait-for-handshake
       x-nullable: false
     capture_sample:
       pattern: '^[^\s]+$'
@@ -122,11 +177,46 @@ http_request_rule:
           required: true
     deny_status:
       type: integer
-      enum: [200, 400, 403, 405, 408, 425, 429, 500, 502, 503, 504]
+      minimum: 200
+      maximum: 599
       x-nullable: true
       x-dependency:
         type:
           value: [deny, tarpit]
+    normalizer:
+      type: string
+      enum: [fragment-encode, fragment-strip, path-merge-slashes, path-strip-dot, path-strip-dotdot, percent-decode-unreserved, percent-to-upercase, query-sort-by-name]
+      x-dependency:
+        type:
+          value: normalize-uri
+          required: true
+    normalizer_strict:
+      type: boolean
+      x-dependency:
+        type:
+          value: normalize-uri
+        normalizer:
+          value: [percent-decode-unreserved, percent-to-upercase]
+    normalizer_full:
+      type: boolean
+      x-dependency:
+        type:
+          value: normalize-uri
+        normalizer:
+          value: path-strip-dotdot
+    timeout_type:
+      type: string
+      enum: [server, tunnel]
+      x-dependency:
+        type:
+          value: set-timeout
+          required: true
+    timeout:
+      type: string
+      x-dependency:
+        type:
+          value: set-timeout
+          required: true
     hdr_name:
       type: string
       x-display-name: Header Name
@@ -148,6 +238,12 @@ http_request_rule:
         type:
           value: [replace-header, replace-value, set-header, add-header]
           required: true
+    hdr_method:
+      type: string
+      x-display-name: Header Match Method
+      x-dependency:
+        type:
+          value: [del-header]
     log_level:
       type: string
       enum: [emerg, alert, crit, err, warning, notice, info, debug, silent]
@@ -160,28 +256,28 @@ http_request_rule:
       pattern: '^[^\s]+$'
       x-dependency:
         type:
-          value: [set-path, replace-path]
+          value: [set-path, set-pathq, replace-path, replace-pathq]
           required: true
     path_fmt:
       type: string
       pattern: '^[^\s]+$'
       x-dependency:
         type:
-          value: [set-path, replace-path]
+          value: [set-path, set-pathq, replace-path, replace-pathq]
           required: true
     var_name:
       type: string
       pattern: '^[^\s]+$'
       x-dependency:
         type:
-          value: [set-var, do-resolve, unset-var]
+          value: [set-var, set-var-fmt, do-resolve, unset-var]
           required: true
     var_scope:
       type: string
       pattern: '^[^\s]+$'
       x-dependency:
         type:
-          value: [set-var, unset-var]
+          value: [set-var, set-var-fmt, unset-var]
           required: true
     var_expr:
       type: string
@@ -189,6 +285,13 @@ http_request_rule:
       x-dependency:
         type:
           value: set-var
+          required: true
+    var_format:
+      type: string
+      x-display-name: Var Format
+      x-dependency:
+        type:
+          value: set-var-fmt
           required: true
     query-fmt:
       type: string
@@ -415,7 +518,7 @@ http_request_rule:
       type: string
       x-dependency:
         type:
-          value: return
+          value: [deny, tarpit, return]
       x-display-name: Return content type
       x-nullable: true
     return_content_format:
@@ -423,7 +526,7 @@ http_request_rule:
       enum: [default-errorfile, errorfile, errorfiles, file, lf-file, string, lf-string]
       x-dependency:
         type:
-          value: return
+          value: [deny, tarpit, return]
     return_content:
       type: string
       x-dependency:
@@ -446,6 +549,19 @@ http_request_rule:
             type: string
           fmt:
             type: string
+    wait_time:
+      type: integer
+      x-nullable: true
+      x-dependency:
+        type:
+          value: wait-for-body
+          required: true
+    wait_at_least:
+      type: integer
+      x-nullable: true
+      x-dependency:
+        type:
+          value: wait-for-body
   additionalProperties: false
   example:
     index: 0
