@@ -1,0 +1,34 @@
+---
+peer_section:
+  title: Peer Section
+  description: HAProxy peer_section configuration
+  type: object
+  required:
+    - name
+  properties:
+    name:
+      type: string
+      pattern: '^[A-Za-z0-9-_.:]+$'
+      x-nullable: false
+  additionalProperties: false
+peer_entry:
+  title: Peer Entry
+  description: Peer Entry from peers table
+  type: object
+  required:
+    - name
+    - address
+    - port
+  properties:
+    name:
+      type: string
+      pattern: '^[A-Za-z0-9-_.:]+$'
+      x-nullable: false
+    address:
+      type: string
+      pattern: '^[^\s]+$'
+    port:
+      type: integer
+      x-nullable: true
+      minimum: 1
+      maximum: 65535

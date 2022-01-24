@@ -1,0 +1,74 @@
+---
+tcp_response_rule:
+  title: TCP Response Rule
+  description: HAProxy TCP Response Rule configuration (corresponds to tcp-response)
+  type: object
+  required:
+    - index
+    - type
+  properties:
+    index:
+      type: integer
+      x-nullable: true
+    type:
+      type: string
+      enum: [content, inspect-delay]
+      x-nullable: false
+    action:
+      type: string
+      enum: [accept, reject, lua]
+      x-nullable: false
+      x-dependency:
+        type:
+          value: content
+          required: true
+    timeout:
+      type: integer
+      x-nullable: true
+      x-dependency:
+        type:
+          value: inspect-delay
+          required: true
+    lua_action:
+      type: string
+      pattern: '^[^\s]+$'
+      x-display-name: Lua action name
+      x-dependency:
+        action:
+          value: lua
+          required: true
+        type:
+          value: content
+    lua_params:
+      type: string
+      x-display-name: Lua action params
+      x-dependency:
+        action:
+          value: lua
+        type:
+          value: content
+    cond:
+      type: string
+      x-display-name: Condition
+      enum: [if, unless]
+      x-dependency:
+        type:
+          value: content
+    cond_test:
+      type: string
+      x-display-name: Condition Test
+      x-dynamic-enum:
+        operation: getACLs
+        property: acl_name
+        freeFormat: true
+      x-dependency:
+        cond:
+          required: true
+        type:
+          value: content
+  additionalProperties: false
+  example:
+    index: 0
+    type: content
+    cond: if
+    cond_test: "{ src 192.168.0.0/16 }"

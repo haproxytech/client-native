@@ -1,0 +1,89 @@
+---
+configuration:
+  get:
+    summary: Return HAProxy configuration
+    description: Returns HAProxy configuration file in plain text
+    operationId: getHAProxyConfiguration
+    parameters:
+      - $ref: "#/parameters/transaction_id"
+      - $ref: "#/parameters/version"
+    produces:
+      - application/json
+    tags:
+      - Configuration
+    responses:
+      '200':
+        description: Operation successful
+        headers:
+          Configuration-Version:
+            description: Configuration file version
+            type: string
+        schema:
+          type: object
+          required:
+            - data
+          properties:
+            data:
+              type: string
+            _version:
+              type: integer
+      'default':
+        $ref: '#/responses/DefaultError'
+  post:
+    summary: Push new haproxy configuration
+    description: Push a new haproxy configuration file in plain text
+    operationId: postHAProxyConfiguration
+    produces:
+      - application/json
+    consumes:
+      - text/plain
+    parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          type: string
+      - name: skip_version
+        in: query
+        description: If set, no version check will be done and the pushed config will be enforced
+        type: boolean
+        required: false
+        default: false
+      - name: skip_reload
+        in: query
+        description: If set, no reload will be initiated and runtime actions from X-Runtime-Actions will be applied
+        type: boolean
+        required: false
+        default: false
+      - name: only_validate
+        in: query
+        description: If set, only validates configuration, without applying it
+        type: boolean
+        required: false
+        default: false
+      - name: X-Runtime-Actions
+        in: header
+        description: List of Runtime API commands with parameters separated by ';'
+        type: string
+        required: false
+      - $ref: "#/parameters/version"
+      - $ref: "#/parameters/force_reload"
+    tags:
+      - Configuration
+    responses:
+      '202':
+        description: Configuration change accepted and reload requested
+        headers:
+          Reload-ID:
+            description: ID of the requested reload
+            type: string
+        schema:
+          type: string
+      '201':
+        description: New HAProxy configuration pushed
+        schema:
+          type: string
+      '400':
+        $ref: '#/responses/BadRequest'
+      'default':
+        $ref: '#/responses/DefaultError'

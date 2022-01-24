@@ -1,0 +1,143 @@
+---
+frontend:
+  title: Frontend
+  description: HAProxy frontend configuration
+  type: object
+  required:
+    - name
+  properties:
+    name:
+      type: string
+      pattern: '^[A-Za-z0-9-_.:]+$'
+      x-nullable: false
+    mode:
+      type: string
+      enum: [http, tcp]
+    httplog:
+      type: boolean
+      x-display-name: HTTP Log
+      x-dependency:
+        mode:
+          value: http
+    logasap:
+      type: string
+      enum: [enabled, disabled]
+      x-display-name: Log ASAP
+    bind_process:
+      type: string
+      pattern: '^[^\s]+$'
+    clflog:
+      type: boolean
+      x-display-name: CLF Log
+      x-dependency:
+        mode:
+          value: http
+    tcplog:
+      type: boolean
+      x-display-name: TCP Log
+      x-dependency:
+        mode:
+          value: tcp
+    log_format:
+      type: string
+    log_format_sd:
+      type: string
+      x-display-name: Log Format SD
+    log_tag:
+      type: string
+      pattern: '^[A-Za-z0-9-_.:]+$'
+    log_separate_errors:
+      type: string
+      enum: [enabled, disabled]
+    dontlognull:
+      type: string
+      enum: [enabled, disabled]
+      x-display-name: Don't Log Null
+    http-buffer-request:
+      type: string
+      enum: [enabled, disabled]
+      x-display-name: HTTP bufferrequest
+    http_connection_mode:
+      type: string
+      enum: [httpclose, http-server-close, http-keep-alive]
+      x-dependency:
+        mode:
+          value: http
+    client_timeout:
+      type: integer
+      x-nullable: true
+    http_request_timeout:
+      type: integer
+      x-nullable: true
+      x-dependency:
+        mode:
+          value: http
+    http_keep_alive_timeout:
+      type: integer
+      x-nullable: true
+      x-dependency:
+        mode:
+          value: http
+    maxconn:
+      type: integer
+      x-nullable: true
+      x-display-name: Max Connections
+    forwardfor:
+      $ref: "#/definitions/forwardfor"
+      x-dependency:
+        mode:
+          value: http
+    default_backend:
+      type: string
+      pattern: '^[A-Za-z0-9-_.:]+$'
+      x-dynamic-enum:
+        operation: getBackends
+        property: name
+    contstats:
+      type: string
+      enum: [enabled]
+      x-display-name: Continuous Statistics
+    clitcpka:
+      type: string
+      enum: [enabled, disabled]
+      x-display-name: Client TCP Keep Alive
+      x-dependency:
+        mode:
+          value: tcp
+    http-use-htx:
+      type: string
+      enum: [enabled, disabled]
+      x-display-name: HTTP Use HTX
+      x-dependency:
+        mode:
+          value: http
+    unique_id_format:
+      type: string
+      x-display-name: Unique ID format
+    unique_id_header:
+      type: string
+      x-display-name: Unique ID header
+      x-dependency:
+        unique_id_format:
+          required: true
+    accept_invalid_http_request:
+      type: string
+      enum: [enabled, disabled]
+      x-display-name: Accept Invalid HTTP Request
+    h1_case_adjust_bogus_client:
+      type: string
+      enum: [enabled, disabled]
+      x-display-name: H1 Adjust Bogus Client
+    stats_options:
+      $ref: "#/definitions/stats_options"
+    monitor_uri:
+      $ref: '#/definitions/monitor_uri'
+    monitor_fail:
+      $ref: '#/definitions/monitor_fail'
+  additionalProperties: false
+  example:
+    name: test_frontend
+    mode: http
+    http_connection_mode: http-keep-alive
+    maxconn: 2000
+    default_backend: test_backend

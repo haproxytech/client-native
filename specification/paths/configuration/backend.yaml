@@ -1,0 +1,161 @@
+---
+backends:
+  get:
+    summary: Return an array of backends
+    description: Returns an array of all configured backends.
+    operationId: getBackends
+    parameters:
+      - $ref: "#/parameters/transaction_id"
+    tags:
+      - Backend
+    responses:
+      '200':
+        description: Successful operation
+        headers:
+          Configuration-Version:
+            description: Configuration file version
+            type: string
+        schema:
+          type: object
+          required:
+            - data
+          properties:
+            data:
+              $ref: "#/definitions/backends"
+            _version:
+              type: integer
+      'default':
+        $ref: '#/responses/DefaultError'
+  post:
+    summary: Add a backend
+    description: Adds a new backend to the configuration file.
+    operationId: createBackend
+    parameters:
+      - name: data
+        required: true
+        in: body
+        schema:
+          $ref: "#/definitions/backend"
+      - $ref: "#/parameters/transaction_id"
+      - $ref: "#/parameters/version"
+      - $ref: "#/parameters/force_reload"
+    tags:
+      - Backend
+    responses:
+      '202':
+        description: Configuration change accepted and reload requested
+        headers:
+          Reload-ID:
+            description: ID of the requested reload
+            type: string
+        schema:
+          $ref: "#/definitions/backend"
+      '201':
+        description: Backend created
+        schema:
+          $ref: "#/definitions/backend"
+      '409':
+        $ref: '#/responses/AlreadyExists'
+      '400':
+        $ref: '#/responses/BadRequest'
+      'default':
+        $ref: '#/responses/DefaultError'
+backends_one:
+  get:
+    summary: Return a backend
+    description: Returns one backend configuration by it's name.
+    operationId: getBackend
+    tags:
+      - Backend
+    parameters:
+      - name: name
+        in: path
+        description: Backend name
+        required: true
+        type: string
+      - $ref: "#/parameters/transaction_id"
+    responses:
+      '200':
+        description: Successful operation
+        headers:
+          Configuration-Version:
+            description: Configuration file version
+            type: string
+        schema:
+          type: object
+          properties:
+            data:
+              $ref: "#/definitions/backend"
+            _version:
+              type: integer
+      '404':
+        $ref: '#/responses/NotFound'
+      'default':
+        $ref: '#/responses/DefaultError'
+  put:
+    summary: Replace a backend
+    description: Replaces a backend configuration by it's name.
+    operationId: replaceBackend
+    tags:
+      - Backend
+    parameters:
+      - name: name
+        in: path
+        description: Backend name
+        required: true
+        type: string
+      - name: data
+        required: true
+        in: body
+        schema:
+          $ref: "#/definitions/backend"
+      - $ref: "#/parameters/transaction_id"
+      - $ref: "#/parameters/version"
+      - $ref: "#/parameters/force_reload"
+    responses:
+      '202':
+        description: Configuration change accepted and reload requested
+        headers:
+          Reload-ID:
+            description: ID of the requested reload
+            type: string
+        schema:
+          $ref: "#/definitions/backend"
+      '200':
+        description: Backend replaced
+        schema:
+          $ref: "#/definitions/backend"
+      '400':
+        $ref: '#/responses/BadRequest'
+      '404':
+        $ref: '#/responses/NotFound'
+      'default':
+        $ref: '#/responses/DefaultError'
+  delete:
+    summary: Delete a backend
+    description: Deletes a backend from the configuration by it's name.
+    operationId: deleteBackend
+    tags:
+      - Backend
+    parameters:
+      - name: name
+        in: path
+        description: Backend name
+        required: true
+        type: string
+      - $ref: "#/parameters/transaction_id"
+      - $ref: "#/parameters/version"
+      - $ref: "#/parameters/force_reload"
+    responses:
+      '202':
+        description: Configuration change accepted and reload requested
+        headers:
+          Reload-ID:
+            description: ID of the requested reload
+            type: string
+      '204':
+        description: Backend deleted
+      '404':
+        $ref: '#/responses/NotFound'
+      'default':
+        $ref: '#/responses/DefaultError'

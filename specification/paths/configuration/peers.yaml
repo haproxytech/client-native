@@ -1,0 +1,307 @@
+---
+peer_section:
+  get:
+    summary: Return an array of peer_section
+    description: Returns an array of all configured peer_section.
+    operationId: getPeerSections
+    parameters:
+      - $ref: "#/parameters/transaction_id"
+    tags:
+      - Peer
+    responses:
+      '200':
+        description: Successful operation
+        headers:
+          Configuration-Version:
+            description: Configuration file version
+            type: string
+        schema:
+          type: object
+          required:
+            - data
+          properties:
+            data:
+              $ref: "#/definitions/peer_sections"
+            _version:
+              type: integer
+      'default':
+        $ref: '#/responses/DefaultError'
+  post:
+    summary: Add a peer
+    description: Adds a new peer to the configuration file.
+    operationId: createPeer
+    parameters:
+      - name: data
+        required: true
+        in: body
+        schema:
+          $ref: "#/definitions/peer_section"
+      - $ref: "#/parameters/transaction_id"
+      - $ref: "#/parameters/version"
+      - $ref: "#/parameters/force_reload"
+    tags:
+      - Peer
+    responses:
+      '202':
+        description: Configuration change accepted and reload requested
+        headers:
+          Reload-ID:
+            description: ID of the requested reload
+            type: string
+        schema:
+          $ref: "#/definitions/peer_section"
+      '201':
+        description: Peer created
+        schema:
+          $ref: "#/definitions/peer_section"
+      '409':
+        $ref: '#/responses/AlreadyExists'
+      '400':
+        $ref: '#/responses/BadRequest'
+      'default':
+        $ref: '#/responses/DefaultError'
+peer_section_one:
+  get:
+    summary: Return a peer
+    description: Returns one peer configuration by it's name.
+    operationId: getPeerSection
+    tags:
+      - Peer
+    parameters:
+      - name: name
+        in: path
+        description: Peer name
+        required: true
+        type: string
+      - $ref: "#/parameters/transaction_id"
+    responses:
+      '200':
+        description: Successful operation
+        headers:
+          Configuration-Version:
+            description: Configuration file version
+            type: string
+        schema:
+          type: object
+          properties:
+            data:
+              $ref: "#/definitions/peer_section"
+            _version:
+              type: integer
+      '404':
+        $ref: '#/responses/NotFound'
+      'default':
+        $ref: '#/responses/DefaultError'
+  delete:
+    summary: Delete a peer
+    description: Deletes a peer from the configuration by it's name.
+    operationId: deletePeer
+    tags:
+      - Peer
+    parameters:
+      - name: name
+        in: path
+        description: Peer name
+        required: true
+        type: string
+      - $ref: "#/parameters/transaction_id"
+      - $ref: "#/parameters/version"
+      - $ref: "#/parameters/force_reload"
+    responses:
+      '202':
+        description: Configuration change accepted and reload requested
+        headers:
+          Reload-ID:
+            description: ID of the requested reload
+            type: string
+      '204':
+        description: Peer deleted
+      '404':
+        $ref: '#/responses/NotFound'
+      'default':
+        $ref: '#/responses/DefaultError'
+peer_entries:
+  get:
+    summary: Return an array of peer_entries
+    description: Returns an array of all peer_entries that are configured in specified peer section.
+    operationId: getPeerEntries
+    tags:
+      - PeerEntry
+    parameters:
+      - name: peer_section
+        in: query
+        description: Parent peer section name
+        required: true
+        type: string
+      - $ref: "#/parameters/transaction_id"
+    responses:
+      '200':
+        description: Successful operation
+        headers:
+          Configuration-Version:
+            description: Configuration file version
+            type: string
+        schema:
+          type: object
+          required:
+            - data
+          properties:
+            data:
+              $ref: "#/definitions/peer_entries"
+            _version:
+              type: integer
+      'default':
+        $ref: '#/responses/DefaultError'
+  post:
+    summary: Add a new peer_entry
+    description: Adds a new peer entry in the specified peer section in the configuration file.
+    operationId: createPeerEntry
+    tags:
+      - PeerEntry
+    parameters:
+      - name: peer_section
+        in: query
+        description: Parent peer section name
+        required: true
+        type: string
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/peer_entry'
+      - $ref: "#/parameters/transaction_id"
+      - $ref: "#/parameters/version"
+      - $ref: "#/parameters/force_reload"
+    responses:
+      '202':
+        description: Configuration change accepted and reload requested
+        headers:
+          Reload-ID:
+            description: ID of the requested reload
+            type: string
+        schema:
+          $ref: "#/definitions/peer_entry"
+      '201':
+        description: PeerEntry created
+        schema:
+          $ref: "#/definitions/peer_entry"
+      '409':
+        $ref: '#/responses/AlreadyExists'
+      '400':
+        $ref: '#/responses/BadRequest'
+      'default':
+        $ref: '#/responses/DefaultError'
+peer_entries_one:
+  get:
+    summary: Return one peer_entry
+    description: Returns one peer_entry configuration by it's name in the specified peer section.
+    operationId: getPeerEntry
+    tags:
+      - PeerEntry
+    parameters:
+      - name: name
+        in: path
+        description: PeerEntry name
+        required: true
+        type: string
+      - name: peer_section
+        in: query
+        description: Parent peers name
+        required: true
+        type: string
+      - $ref: "#/parameters/transaction_id"
+    responses:
+      '200':
+        description: Successful operation
+        headers:
+          Configuration-Version:
+            description: Configuration file version
+            type: string
+        schema:
+          type: object
+          properties:
+            data:
+              $ref: "#/definitions/peer_entry"
+            _version:
+              type: integer
+      '404':
+        $ref: '#/responses/AlreadyExists'
+      'default':
+        $ref: '#/responses/DefaultError'
+  put:
+    summary: Replace a peer_entry
+    description: Replaces a peer entry configuration by it's name in the specified peer section.
+    operationId: replacePeerEntry
+    tags:
+      - PeerEntry
+    parameters:
+      - name: name
+        in: path
+        description: PeerEntry name
+        required: true
+        type: string
+      - name: peer_section
+        in: query
+        description: Parent peers name
+        required: true
+        type: string
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/peer_entry'
+      - $ref: "#/parameters/transaction_id"
+      - $ref: "#/parameters/version"
+      - $ref: "#/parameters/force_reload"
+    responses:
+      '202':
+        description: Configuration change accepted and reload requested
+        headers:
+          Reload-ID:
+            description: ID of the requested reload
+            type: string
+        schema:
+          $ref: "#/definitions/peer_entry"
+      '200':
+        description: PeerEntry replaced
+        schema:
+          $ref: "#/definitions/peer_entry"
+      '400':
+        $ref: '#/responses/BadRequest'
+      '404':
+        $ref: '#/responses/NotFound'
+      'default':
+        $ref: '#/responses/DefaultError'
+  delete:
+    summary: Delete a peer_entry
+    description: Deletes a peer entry configuration by it's name in the specified peer section.
+    operationId: deletePeerEntry
+    tags:
+      - PeerEntry
+    parameters:
+      - name: name
+        in: path
+        description: PeerEntry name
+        required: true
+        type: string
+      - name: peer_section
+        in: query
+        description: Parent peers name
+        required: true
+        type: string
+      - $ref: "#/parameters/transaction_id"
+      - $ref: "#/parameters/version"
+      - $ref: "#/parameters/force_reload"
+    responses:
+      '202':
+        description: Configuration change accepted and reload requested
+        headers:
+          Reload-ID:
+            description: ID of the requested reload
+            type: string
+      '204':
+        description: PeerEntry deleted
+      '404':
+        $ref: '#/responses/NotFound'
+      'default':
+        $ref: '#/responses/DefaultError'

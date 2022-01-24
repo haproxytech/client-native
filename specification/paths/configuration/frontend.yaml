@@ -1,0 +1,161 @@
+---
+frontends:
+  get:
+    summary: Return an array of frontends
+    description: Returns an array of all configured frontends.
+    operationId: getFrontends
+    parameters:
+      - $ref: "#/parameters/transaction_id"
+    tags:
+      - Frontend
+    responses:
+      '200':
+        description: Successful operation
+        headers:
+          Configuration-Version:
+            description: Configuration file version
+            type: string
+        schema:
+          type: object
+          required:
+            - data
+          properties:
+            data:
+              $ref: "#/definitions/frontends"
+            _version:
+              type: integer
+      'default':
+        $ref: '#/responses/DefaultError'
+  post:
+    summary: Add a frontend
+    description: Adds a new frontend to the configuration file.
+    operationId: createFrontend
+    parameters:
+      - name: data
+        required: true
+        in: body
+        schema:
+          $ref: "#/definitions/frontend"
+      - $ref: "#/parameters/transaction_id"
+      - $ref: "#/parameters/version"
+      - $ref: "#/parameters/force_reload"
+    tags:
+      - Frontend
+    responses:
+      '202':
+        description: Configuration change accepted and reload requested
+        headers:
+          Reload-ID:
+            description: ID of the requested reload
+            type: string
+        schema:
+          $ref: "#/definitions/frontend"
+      '201':
+        description: Frontend created
+        schema:
+          $ref: "#/definitions/frontend"
+      '409':
+        $ref: '#/responses/AlreadyExists'
+      '400':
+        $ref: '#/responses/BadRequest'
+      'default':
+        $ref: '#/responses/DefaultError'
+frontends_one:
+  get:
+    summary: Return a frontend
+    description: Returns one frontend configuration by it's name.
+    operationId: getFrontend
+    tags:
+      - Frontend
+    parameters:
+      - name: name
+        in: path
+        description: Frontend name
+        required: true
+        type: string
+      - $ref: "#/parameters/transaction_id"
+    responses:
+      '200':
+        description: Successful operation
+        headers:
+          Configuration-Version:
+            description: Configuration file version
+            type: string
+        schema:
+          type: object
+          properties:
+            data:
+              $ref: "#/definitions/frontend"
+            _version:
+              type: integer
+      '404':
+        $ref: '#/responses/NotFound'
+      'default':
+        $ref: '#/responses/DefaultError'
+  put:
+    summary: Replace a frontend
+    description: Replaces a frontend configuration by it's name.
+    operationId: replaceFrontend
+    tags:
+      - Frontend
+    parameters:
+      - name: name
+        in: path
+        description: Frontend name
+        required: true
+        type: string
+      - name: data
+        required: true
+        in: body
+        schema:
+          $ref: "#/definitions/frontend"
+      - $ref: "#/parameters/transaction_id"
+      - $ref: "#/parameters/version"
+      - $ref: "#/parameters/force_reload"
+    responses:
+      '202':
+        description: Configuration change accepted and reload requested
+        headers:
+          Reload-ID:
+            description: ID of the requested reload
+            type: string
+        schema:
+          $ref: "#/definitions/frontend"
+      '200':
+        description: Frontend replaced
+        schema:
+          $ref: "#/definitions/frontend"
+      '400':
+        $ref: '#/responses/BadRequest'
+      '404':
+        $ref: '#/responses/NotFound'
+      'default':
+        $ref: '#/responses/DefaultError'
+  delete:
+    summary: Delete a frontend
+    description: Deletes a frontend from the configuration by it's name.
+    operationId: deleteFrontend
+    tags:
+      - Frontend
+    parameters:
+      - name: name
+        in: path
+        description: Frontend name
+        required: true
+        type: string
+      - $ref: "#/parameters/transaction_id"
+      - $ref: "#/parameters/version"
+      - $ref: "#/parameters/force_reload"
+    responses:
+      '202':
+        description: Configuration change accepted and reload requested
+        headers:
+          Reload-ID:
+            description: ID of the requested reload
+            type: string
+      '204':
+        description: Frontend deleted
+      '404':
+        $ref: '#/responses/NotFound'
+      'default':
+        $ref: '#/responses/DefaultError'

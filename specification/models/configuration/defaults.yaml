@@ -1,0 +1,192 @@
+---
+defaults:
+  title: Defaults
+  description: HAProxy defaults configuration
+  type: object
+  properties:
+    mode:
+      type: string
+      enum: [tcp, http]
+    balance:
+      $ref: "#/definitions/balance"
+    maxconn:
+      type: integer
+      x-nullable: true
+      x-display-name: Max Connections
+    adv_check:
+      type: string
+      x-display-name: Advanced Check
+      enum: [ssl-hello-chk, smtpchk, ldap-check, mysql-check, pgsql-check, tcp-check, redis-check, httpchk]
+    smtpchk_params:
+      $ref: "#/definitions/smtpchk_params"
+    mysql_check_params:
+      $ref: "#/definitions/mysql_check_params"
+    pgsql_check_params:
+      $ref: "#/definitions/pgsql_check_params"
+    httpchk_params:
+      $ref: "#/definitions/httpchk_params"
+    http-check:
+      $ref: "#/definitions/http-check"
+    bind_process:
+      type: string
+      pattern: '^[^\s]+$'
+    http_connection_mode:
+      type: string
+      enum: [httpclose, http-server-close, http-keep-alive]
+    http_pretend_keepalive:
+      type: string
+      enum: [enabled, disabled]
+    abortonclose:
+      type: string
+      enum: [enabled, disabled]
+    http-use-htx:
+      type: string
+      enum: [enabled, disabled]
+      x-display-name: HTTP Use HTX
+    dontlognull:
+      type: string
+      enum: [enabled, disabled]
+      x-display-name: Don't Log Null
+    http-buffer-request:
+      type: string
+      enum: [enabled, disabled]
+      x-display-name: HTTP bufferrequest
+    httplog:
+      type: boolean
+      x-display-name: HTTP Log
+    clflog:
+      type: boolean
+      x-display-name: CLF Log
+    tcplog:
+      type: boolean
+      x-display-name: TCP Log
+    log_format:
+      type: string
+    log_format_sd:
+      type: string
+      x-display-name: Log Format SD
+    log_tag:
+      type: string
+      pattern: '^[^\s]+$'
+    log_separate_errors:
+      type: string
+      enum: [enabled, disabled]
+    clitcpka:
+      type: string
+      enum: [enabled, disabled]
+      x-display-name: Client TCP Keep Alive
+    forwardfor:
+      $ref: "#/definitions/forwardfor"
+    check_timeout:
+      type: integer
+      x-nullable: true
+    monitor_uri:
+      $ref: '#/definitions/monitor_uri'
+    connect_timeout:
+      type: integer
+      x-nullable: true
+    contstats:
+      type: string
+      enum: [enabled]
+      x-display-name: Continuous Statistics
+    cookie:
+      $ref: '#/definitions/cookie'
+    dynamic_cookie_key:
+      type: string
+      pattern: '^[^\s]+$'
+    client_timeout:
+      type: integer
+      x-nullable: true
+    client_fin_timeout:
+      type: integer
+      x-nullable: true
+    http_request_timeout:
+      type: integer
+      x-nullable: true
+    http_keep_alive_timeout:
+      type: integer
+      x-nullable: true
+    http_reuse:
+      type: string
+      enum: [aggressive, always, never, safe]
+    server_timeout:
+      type: integer
+      x-nullable: true
+    server_fin_timeout:
+      type: integer
+      x-nullable: true
+    queue_timeout:
+      type: integer
+      x-nullable: true
+    tunnel_timeout:
+      type: integer
+      x-nullable: true
+    external_check:
+      type: string
+      enum: [enabled, disabled]
+      x-display-name: External Check
+    external_check_path:
+      type: string
+      pattern: '^[^\s]+$'
+      x-display-name: External Check Path
+    external_check_command:
+      type: string
+      pattern: '^[^\s]+$'
+      x-display-name: External Check Command
+    redispatch:
+      $ref: "#/definitions/redispatch"
+    retries:
+      type: integer
+      x-nullable: true
+    default_backend:
+      type: string
+      pattern: '^[A-Za-z0-9-_.:]+$'
+      x-dynamic-enum:
+        operation: getBackends
+        property: name
+    default_server:
+      $ref: "#/definitions/default_server"
+    load_server_state_from_file:
+      type: string
+      enum: [global, local, none]
+    error_files:
+      type: array
+      x-go-name: ErrorFiles
+      items:
+        $ref: "#/definitions/errorfile"
+    unique_id_format:
+      type: string
+      x-display-name: Unique ID format
+    unique_id_header:
+      type: string
+      x-display-name: Unique ID header
+      x-dependency:
+        unique_id_format:
+          required: true
+    logasap:
+      type: string
+      enum: [enabled, disabled]
+      x-display-name: Log ASAP
+    allbackups:
+      type: string
+      enum: [enabled, disabled]
+      x-display-name: All Backups
+    accept_invalid_http_request:
+      type: string
+      enum: [enabled, disabled]
+      x-display-name: Accept Invalid HTTP Request
+    accept_invalid_http_response:
+      type: string
+      enum: [enabled, disabled]
+      x-display-name: Accept Invalid HTTP Response
+    h1_case_adjust_bogus_client:
+      type: string
+      enum: [enabled, disabled]
+      x-display-name: H1 Adjust Bogus Client
+    h1_case_adjust_bogus_server:
+      type: string
+      enum: [enabled, disabled]
+      x-display-name: H1 Adjust Bogus Server
+    stats_options:
+      $ref: "#/definitions/stats_options"
+  additionalProperties: false

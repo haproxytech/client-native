@@ -1,0 +1,211 @@
+---
+http_checks:
+  get:
+    summary: Return an array of HTTP checks
+    description: Returns all HTTP checks that are configured in specified parent.
+    operationId: getHTTPChecks
+    tags:
+      - HTTPCheck
+    parameters:
+      - name: parent_name
+        in: query
+        description: Parent name
+        type: string
+      - name: parent_type
+        in: query
+        description: Parent type
+        required: true
+        type: string
+        enum: [backend, defaults]
+      - $ref: "#/parameters/transaction_id"
+    responses:
+      '200':
+        description: Successful operation
+        headers:
+          Configuration-Version:
+            description: Configuration file version
+            type: string
+        schema:
+          type: object
+          required:
+            - data
+          properties:
+            data:
+              $ref: "#/definitions/http_check_rules"
+            _version:
+              type: integer
+      'default':
+        $ref: '#/responses/DefaultError'
+  post:
+    summary: Add a new HTTP check
+    description: Adds a new HTTP check of the specified type in the specified parent.
+    operationId: createHTTPCheck
+    tags:
+      - HTTPCheck
+    parameters:
+      - name: parent_name
+        in: query
+        description: Parent name
+        type: string
+      - name: parent_type
+        in: query
+        description: Parent type
+        required: true
+        type: string
+        enum: [backend, defaults]
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/http_check_rule'
+      - $ref: "#/parameters/transaction_id"
+      - $ref: "#/parameters/version"
+      - $ref: "#/parameters/force_reload"
+    responses:
+      '202':
+        description: Configuration change accepted and reload requested
+        headers:
+          Reload-ID:
+            description: ID of the requested reload
+            type: string
+        schema:
+          $ref: "#/definitions/http_check_rule"
+      '201':
+        description: HTTP check created
+        schema:
+          $ref: '#/definitions/http_check_rule'
+      '409':
+        $ref: '#/responses/AlreadyExists'
+      '400':
+        $ref: '#/responses/BadRequest'
+      'default':
+        $ref: '#/responses/DefaultError'
+http_checks_one:
+  get:
+    summary: Return one HTTP check
+    description: Returns one HTTP check configuration by it's index in the specified parent.
+    operationId: getHTTPCheck
+    tags:
+      - HTTPCheck
+    parameters:
+      - name: index
+        in: path
+        description: HTTP Check Index
+        required: true
+        type: integer
+      - name: parent_name
+        in: query
+        description: Parent name
+        type: string
+      - name: parent_type
+        in: query
+        description: Parent type
+        required: true
+        type: string
+        enum: [backend, defaults]
+      - $ref: "#/parameters/transaction_id"
+    responses:
+      '200':
+        description: Successful operation
+        headers:
+          Configuration-Version:
+            description: Configuration file version
+            type: string
+        schema:
+          type: object
+          properties:
+            data:
+              $ref: "#/definitions/http_check_rule"
+            _version:
+              type: integer
+      '404':
+        $ref: '#/responses/NotFound'
+      'default':
+        $ref: '#/responses/DefaultError'
+  put:
+    summary: Replace a HTTP check
+    description: Replaces a HTTP Check configuration by it's index in the specified parent.
+    operationId: replaceHTTPCheck
+    tags:
+      - HTTPCheck
+    parameters:
+      - name: index
+        in: path
+        description: HTTP Check Index
+        required: true
+        type: integer
+      - name: parent_name
+        in: query
+        description: Parent name
+        type: string
+      - name: parent_type
+        in: query
+        description: Parent type
+        required: true
+        type: string
+        enum: [backend, defaults]
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/http_check_rule'
+      - $ref: "#/parameters/transaction_id"
+      - $ref: "#/parameters/version"
+      - $ref: "#/parameters/force_reload"
+    responses:
+      '202':
+        description: Configuration change accepted and reload requested
+        headers:
+          Reload-ID:
+            description: ID of the requested reload
+            type: string
+        schema:
+          $ref: "#/definitions/http_check_rule"
+      '200':
+        description: HTTP check replaced
+        schema:
+          $ref: '#/definitions/http_check_rule'
+      '400':
+        $ref: '#/responses/BadRequest'
+      '404':
+        $ref: '#/responses/NotFound'
+      'default':
+        $ref: '#/responses/DefaultError'
+  delete:
+    summary: Delete a HTTP check
+    description: Deletes a HTTP check configuration by it's index from the specified parent.
+    operationId: deleteHTTPCheck
+    tags:
+      - HTTPCheck
+    parameters:
+      - name: index
+        in: path
+        description: HTTP check Index
+        required: true
+        type: integer
+      - name: parent_name
+        in: query
+        description: Parent name
+        type: string
+      - name: parent_type
+        in: query
+        description: Parent type
+        required: true
+        type: string
+        enum: [backend, defaults]
+      - $ref: "#/parameters/transaction_id"
+      - $ref: "#/parameters/version"
+      - $ref: "#/parameters/force_reload"
+    responses:
+      '202':
+        description: Configuration change accepted and reload requested
+        headers:
+          Reload-ID:
+            description: ID of the requested reload
+            type: string
+      '204':
+        description: HTTP check deleted
+      '404':
+        $ref: '#/responses/NotFound'
+      'default':
+        $ref: '#/responses/DefaultError'

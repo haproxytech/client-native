@@ -1,0 +1,216 @@
+---
+tcp_request_rules:
+  get:
+    summary: Return an array of all TCP Request Rules
+    description: Returns all TCP Request Rules that are configured in specified parent and parent type.
+    operationId: getTCPRequestRules
+    tags:
+      - TCPRequestRule
+    parameters:
+      - name: parent_name
+        in: query
+        description: Parent name
+        required: true
+        type: string
+      - name: parent_type
+        in: query
+        description: Parent type
+        required: true
+        type: string
+        enum: [frontend, backend]
+      - $ref: "#/parameters/transaction_id"
+    responses:
+      '200':
+        description: Successful operation
+        headers:
+          Configuration-Version:
+            description: Configuration file version
+            type: string
+        schema:
+          type: object
+          required:
+            - data
+          properties:
+            data:
+              $ref: "#/definitions/tcp_request_rules"
+            _version:
+              type: integer
+      'default':
+        $ref: '#/responses/DefaultError'
+  post:
+    summary: Add a new TCP Request Rule
+    description: Adds a new TCP Request Rule of the specified type in the specified parent.
+    operationId: createTCPRequestRule
+    tags:
+      - TCPRequestRule
+    parameters:
+      - name: parent_name
+        in: query
+        description: Parent name
+        required: true
+        type: string
+      - name: parent_type
+        in: query
+        description: Parent type
+        required: true
+        type: string
+        enum: [frontend, backend]
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/tcp_request_rule'
+      - $ref: "#/parameters/transaction_id"
+      - $ref: "#/parameters/version"
+      - $ref: "#/parameters/force_reload"
+    responses:
+      '202':
+        description: Configuration change accepted and reload requested
+        headers:
+          Reload-ID:
+            description: ID of the requested reload
+            type: string
+        schema:
+          $ref: "#/definitions/tcp_request_rule"
+      '201':
+        description: TCP Request Rule created
+        schema:
+          $ref: '#/definitions/tcp_request_rule'
+      '409':
+        $ref: '#/responses/AlreadyExists'
+      '400':
+        $ref: '#/responses/BadRequest'
+      'default':
+        $ref: '#/responses/DefaultError'
+tcp_request_rules_one:
+  get:
+    summary: Return one TCP Request Rule
+    description: Returns one TCP Request Rule configuration by it's index in the specified parent.
+    operationId: getTCPRequestRule
+    tags:
+      - TCPRequestRule
+    parameters:
+      - name: index
+        in: path
+        description: TCP Request Rule Index
+        required: true
+        type: integer
+      - name: parent_name
+        in: query
+        description: Parent name
+        required: true
+        type: string
+      - name: parent_type
+        in: query
+        description: Parent type
+        required: true
+        type: string
+        enum: [frontend, backend]
+      - $ref: "#/parameters/transaction_id"
+    responses:
+      '200':
+        description: Successful operation
+        headers:
+          Configuration-Version:
+            description: Configuration file version
+            type: string
+        schema:
+          type: object
+          properties:
+            data:
+              $ref: "#/definitions/tcp_request_rule"
+            _version:
+              type: integer
+      '404':
+        $ref: '#/responses/NotFound'
+      'default':
+        $ref: '#/responses/DefaultError'
+  put:
+    summary: Replace a TCP Request Rule
+    description: Replaces a TCP Request Rule configuration by it's index in the specified parent.
+    operationId: replaceTCPRequestRule
+    tags:
+      - TCPRequestRule
+    parameters:
+      - name: index
+        in: path
+        description: TCP Request Rule Index
+        required: true
+        type: integer
+      - name: parent_name
+        in: query
+        description: Parent name
+        required: true
+        type: string
+      - name: parent_type
+        in: query
+        description: Parent type
+        required: true
+        type: string
+        enum: [frontend, backend]
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/tcp_request_rule'
+      - $ref: "#/parameters/transaction_id"
+      - $ref: "#/parameters/version"
+      - $ref: "#/parameters/force_reload"
+    responses:
+      '202':
+        description: Configuration change accepted and reload requested
+        headers:
+          Reload-ID:
+            description: ID of the requested reload
+            type: string
+        schema:
+          $ref: "#/definitions/tcp_request_rule"
+      '200':
+        description: TCP Request Rule replaced
+        schema:
+          $ref: '#/definitions/tcp_request_rule'
+      '400':
+        $ref: '#/responses/BadRequest'
+      '404':
+        $ref: '#/responses/NotFound'
+      'default':
+        $ref: '#/responses/DefaultError'
+  delete:
+    summary: Delete a TCP Request Rule
+    description: Deletes a TCP Request Rule configuration by it's index from the specified parent.
+    operationId: deleteTCPRequestRule
+    tags:
+      - TCPRequestRule
+    parameters:
+      - name: index
+        in: path
+        description: TCP Request Rule Index
+        required: true
+        type: integer
+      - name: parent_name
+        in: query
+        description: Parent name
+        required: true
+        type: string
+      - name: parent_type
+        in: query
+        description: Parent type
+        required: true
+        type: string
+        enum: [frontend, backend]
+      - $ref: "#/parameters/transaction_id"
+      - $ref: "#/parameters/version"
+      - $ref: "#/parameters/force_reload"
+    responses:
+      '202':
+        description: Configuration change accepted and reload requested
+        headers:
+          Reload-ID:
+            description: ID of the requested reload
+            type: string
+      '204':
+        description: TCP Request Rule deleted
+      '404':
+        $ref: '#/responses/NotFound'
+      'default':
+        $ref: '#/responses/DefaultError'

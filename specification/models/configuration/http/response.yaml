@@ -1,0 +1,318 @@
+http_response_rule:
+  title: HTTP Response Rule
+  description: HAProxy HTTP response rule configuration (corresponds to http-response directives)
+  type: object
+  required:
+    - index
+    - type
+  properties:
+    index:
+      type: integer
+      x-nullable: true
+    type:
+      type: string
+      enum: [allow, deny, redirect, add-header, set-header, del-header, set-log-level, set-var, set-status, send-spoe-group, replace-header, replace-value, add-acl, del-acl, capture, set-map, del-map, sc-inc-gpc0, sc-inc-gpc1, sc-set-gpt0, set-mark, set-nice, set-tos, silent-drop, unset-var, track-sc0, track-sc1, track-sc2, strict-mode, lua, cache-store]
+      x-nullable: false
+    capture_sample:
+      type: string
+      x-display-name: Capture Sample
+      pattern: '^[^\s]+$'
+      x-dependency:
+        type:
+          value: capture
+          required: true
+    capture_id:
+      type: integer
+      x-nullable: true
+      x-display-name: Capture SlotID
+      x-dependency:
+        type:
+          value: capture
+          required: true
+    redir_type:
+      type: string
+      x-display-name: Redirect Type
+      enum: [location, prefix, scheme]
+      x-dependency:
+        type:
+          value: redirect
+          required: true
+    redir_value:
+      type: string
+      x-display-name: Redirect Value
+      pattern: '^[^\s]+$'
+      x-dependency:
+        type:
+          value: redirect
+          required: true
+    redir_code:
+      type: integer
+      x-nullable: true
+      x-display-name: Redirect Code
+      enum: [301, 302, 303, 307, 308]
+      x-dependency:
+        type:
+          value: redirect
+    redir_option:
+      type: string
+      x-display-name: Redirect Option
+      x-dependency:
+        type:
+          value: redirect
+          required: true
+    hdr_name:
+      type: string
+      x-display-name: Header Name
+      x-dependency:
+        type:
+          value: [add-header, replace-header, del-header, set-header, replace-value]
+          required: true
+    hdr_match:
+      type: string
+      x-display-name: Header Match
+      x-dependency:
+        type:
+          value: [replace-header, replace-value]
+          required: true
+    hdr_format:
+      type: string
+      x-display-name: Header Format
+      x-dependency:
+        type:
+          value: [replace-header, replace-value, set-header, add-header]
+          required: true
+    log_level:
+      type: string
+      enum: [emerg, alert, crit, err, warning, notice, info, debug, silent]
+      x-dependency:
+        type:
+          value: set-log-level
+          required: true
+    var_name:
+      type: string
+      pattern: '^[^\s]+$'
+      x-dependency:
+        type:
+          value: [set-var, unset-var]
+          required: true
+    var_scope:
+      type: string
+      pattern: '^[^\s]+$'
+      x-dependency:
+        type:
+          value: [set-var, unset-var]
+          required: true
+    var_expr:
+      type: string
+      x-display-name: Var Expression
+      x-dependency:
+        type:
+          value: set-var
+          required: true
+    status:
+      type: integer
+      minimum: 100
+      maximum: 999
+      x-nullable: false
+      x-dependency:
+        type:
+          value: set-status
+          required: true
+    status_reason:
+      type: string
+      x-dependency:
+        type:
+          value: set-status
+    spoe_engine:
+      type: string
+      pattern: '^[^\s]+$'
+      x-dependency:
+        type:
+          value: send-spoe-group
+          required: true
+    spoe_group:
+      type: string
+      pattern: '^[^\s]+$'
+      x-dependency:
+        type:
+          value: send-spoe-group
+          required: true
+    acl_file:
+      type: string
+      pattern: '^[^\s]+$'
+      x-dependency:
+        type:
+          value: [add-acl, del-acl]
+          required: true
+    acl_keyfmt:
+      type: string
+      x-display-name: ACK Key Format
+      pattern: '^[^\s]+$'
+      x-dependency:
+        type:
+          value: [add-acl, del-acl]
+          required: true
+    map_file:
+      type: string
+      pattern: '^[^\s]+$'
+      x-dependency:
+        type:
+          value: [set-map, del-map]
+          required: true
+    map_keyfmt:
+      type: string
+      x-display-name: Map Key Format
+      pattern: '^[^\s]+$'
+      x-dependency:
+        type:
+          value: [set-map, del-map]
+          required: true
+    map_valuefmt:
+      type: string
+      x-display-name: Map Value Format
+      pattern: '^[^\s]+$'
+      x-dependency:
+        type:
+          value: set-map
+          required: true
+    sc_id:
+      type: integer
+      x-dependency:
+        type:
+          value: [sc-inc-gpc0, sc-inc-gpc1, sc-set-gpt0]
+          required: true
+    sc_expr:
+      type: string
+      x-display-name: ScSet Expression Value
+      x-dependency:
+        type:
+          value: sc-set-gpt0
+          required: true
+    sc_int:
+      type: integer
+      x-nullable: true
+      x-display-name: ScSet Integer Value
+      x-dependency:
+        type:
+          value: sc-set-gpt0
+          required: true
+    mark_value:
+      type: string
+      pattern: '^(0x[0-9A-Fa-f]+|[0-9]+)$'
+      x-display-name: Mark Value
+      x-dependency:
+        type:
+          value: set-mark
+          required: true
+    nice_value:
+      type: integer
+      minimum: -1024
+      maximum: 1024
+      x-nullable: false
+      x-display-name: Nice Value
+      x-dependency:
+        type:
+          value: set-nice
+          required: true
+    tos_value:
+      type: string
+      pattern: '^(0x[0-9A-Fa-f]+|[0-9]+)$'
+      x-display-name: Tos Value
+      x-dependency:
+        type:
+          value: set-tos
+          required: true
+    track-sc0-key:
+      type: string
+      pattern: '^[^\s]+$'
+      x-display-name: track-sc0 Key
+      x-dependency:
+        type:
+          value: track-sc0
+          required: true
+    track-sc0-table:
+      type: string
+      pattern: '^[^\s]+$'
+      x-display-name: track-sc0 Table
+      x-dependency:
+        type:
+          value: track-sc0
+    track-sc1-key:
+      type: string
+      pattern: '^[^\s]+$'
+      x-display-name: track-sc1 Key
+      x-dependency:
+        type:
+          value: track-sc1
+          required: true
+    track-sc1-table:
+      type: string
+      pattern: '^[^\s]+$'
+      x-display-name: track-sc1 Table
+      x-dependency:
+        type:
+          value: track-sc1
+    track-sc2-key:
+      type: string
+      pattern: '^[^\s]+$'
+      x-display-name: track-sc2 Key
+      x-dependency:
+        type:
+          value: track-sc2
+          required: true
+    track-sc2-table:
+      type: string
+      pattern: '^[^\s]+$'
+      x-display-name: track-sc2 Table
+      x-dependency:
+        type:
+          value: track-sc2
+    strict_mode:
+      type: string
+      enum: ['on', 'off']
+      x-dependency:
+        type:
+          value: strict-mode
+          required: true
+    lua_action:
+      type: string
+      pattern: '^[^\s]+$'
+      x-dependency:
+        type:
+          value: lua
+          required: true
+    lua_params:
+      type: string
+      x-dependency:
+        type:
+          value: lua
+    cache_name:
+      type: string
+      x-display-name: Cache Name
+      pattern: '^[^\s]+$'
+      x-dependency:
+        type:
+          value: cache-store
+          required: true
+    cond:
+      type: string
+      x-display-name: Condition
+      enum: [if, unless]
+    cond_test:
+      type: string
+      x-display-name: Condition Test
+      x-dynamic-enum:
+        operation: getACLs
+        property: acl_name
+        freeFormat: true
+      x-dependency:
+        cond:
+          required: true
+  additionalProperties: false
+  example:
+    index: 0
+    type: add-header
+    hdr_name: X-Haproxy-Current-Date
+    hdr_format: "%T"
+    cond: unless
+    cond_test: "{ src 192.168.0.0/16 }"

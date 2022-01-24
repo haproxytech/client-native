@@ -27,11 +27,11 @@ definitions:
     items:
       $ref: "#/definitions/site"
   global:
-    $ref: "models/configuration.yaml#/global"
+    $ref: "models/configuration/global.yaml#/global"
   defaults:
-    $ref: "models/configuration.yaml#/defaults"
+    $ref: "models/configuration/defaults.yaml#/defaults"
   frontend:
-    $ref: "models/configuration.yaml#/frontend"
+    $ref: "models/configuration/frontend.yaml#/frontend"
   frontends:
     title: Frontends
     description: HAProxy frontends array
@@ -39,7 +39,7 @@ definitions:
     items:
       $ref: '#/definitions/frontend'
   backend:
-    $ref: "models/configuration.yaml#/backend"
+    $ref: "models/configuration/backend.yaml#/backend"
   backends:
     title: Backends
     description: HAProxy backends array
@@ -47,7 +47,7 @@ definitions:
     items:
       $ref: '#/definitions/backend'
   peer_section:
-    $ref: "models/configuration.yaml#/peer_section"
+    $ref: "models/configuration/peers.yaml#/peer_section"
   peer_sections:
     title: Peer_Section
     description: HAProxy peer_section array
@@ -55,7 +55,7 @@ definitions:
     items:
       $ref: '#/definitions/peer_section'
   peer_entry:
-    $ref: "models/configuration.yaml#/peer_entry"
+    $ref: "models/configuration/peers.yaml#/peer_entry"
   peer_entries:
     title: Peer entries
     description: HAProxy peer entries array
@@ -63,7 +63,7 @@ definitions:
     items:
       $ref: '#/definitions/peer_entry'
   bind:
-    $ref: "models/configuration.yaml#/bind"
+    $ref: "models/configuration/bind.yaml#/bind"
   binds:
     title: Binds
     description: HAProxy frontend binds array (corresponds to bind directives)
@@ -71,7 +71,7 @@ definitions:
     items:
       $ref: '#/definitions/bind'
   server:
-    $ref: "models/configuration.yaml#/server"
+    $ref: "models/configuration/server.yaml#/server"
   servers:
     title: Servers
     description: HAProxy backend servers array
@@ -79,7 +79,7 @@ definitions:
     items:
       $ref: '#/definitions/server'
   server_template:
-    $ref: "models/configuration.yaml#/server_template"
+    $ref: "models/configuration/server.yaml#/server_template"
   server_templates:
     title: Server templates
     description: HAProxy backend server templates array
@@ -87,7 +87,7 @@ definitions:
     items:
       $ref: '#/definitions/server_template'
   http_request_rule:
-    $ref: "models/configuration.yaml#/http_request_rule"
+    $ref: "models/configuration/http/request.yaml#/http_request_rule"
   http_request_rules:
     title: HTTP Request Rules Array
     description: HAProxy HTTP request rules array (corresponds to http-request directives)
@@ -95,7 +95,7 @@ definitions:
     items:
       $ref: '#/definitions/http_request_rule'
   http_response_rule:
-    $ref: "models/configuration.yaml#/http_response_rule"
+    $ref: "models/configuration/http/response.yaml#/http_response_rule"
   http_response_rules:
     title: HTTP Response Rules Array
     description: HAProxy HTTP response rules array (corresponds to http-response directives)
@@ -103,14 +103,14 @@ definitions:
     items:
       $ref: '#/definitions/http_response_rule'
   http_check_rule:
-    $ref: "models/configuration.yaml#/http_check_rule"
+    $ref: "models/configuration/http/check.yaml#/http_check_rule"
   http_check_rules:
     title: HTTP Checks Array
     type: array
     items:
       $ref: '#/definitions/http_check_rule'
   tcp_request_rule:
-    $ref: "models/configuration.yaml#/tcp_request_rule"
+    $ref: "models/configuration/tcp/request.yaml#/tcp_request_rule"
   tcp_request_rules:
     title: TCP Request Rules Array
     description: HAProxy TCP request rules array (corresponds to tcp-request directive)
@@ -118,7 +118,7 @@ definitions:
     items:
       $ref: '#/definitions/tcp_request_rule'
   tcp_response_rule:
-    $ref: "models/configuration.yaml#/tcp_response_rule"
+    $ref: "models/configuration/tcp/response.yaml#/tcp_response_rule"
   tcp_response_rules:
     title: TCP Response Rules Array
     description: HAProxy TCP response rules array (corresponds to tcp-response directive)
@@ -126,14 +126,14 @@ definitions:
     items:
       $ref: '#/definitions/tcp_response_rule'
   tcp_check:
-    $ref: "models/configuration.yaml#/tcp_check"
+    $ref: "models/configuration/tcp/check.yaml#/tcp_check"
   tcp_checks:
     title: TCP Checks Array
     type: array
     items:
       $ref: '#/definitions/tcp_check'
   backend_switching_rule:
-    $ref: "models/configuration.yaml#/backend_switching_rule"
+    $ref: "models/configuration/switching.yaml#/backend_switching_rule"
   backend_switching_rules:
     title: Backend Switching Rules Array
     description: HAProxy backend switching rules array (corresponds to use_backend directives)
@@ -141,7 +141,7 @@ definitions:
     items:
       $ref: '#/definitions/backend_switching_rule'
   server_switching_rule:
-    $ref: "models/configuration.yaml#/server_switching_rule"
+    $ref: "models/configuration/switching.yaml#/server_switching_rule"
   server_switching_rules:
     title: Server Switching Rules Array
     description: HAProxy backend server switching rules array (corresponds to use-server directives)
@@ -149,7 +149,7 @@ definitions:
     items:
       $ref: '#/definitions/server_switching_rule'
   filter:
-    $ref: "models/configuration.yaml#/filter"
+    $ref: "models/configuration/filter.yaml#/filter"
   filters:
     title: Filters Array
     description: HAProxy filters array (corresponds to filter directive)
@@ -157,7 +157,7 @@ definitions:
     items:
       $ref: '#/definitions/filter'
   stick_rule:
-    $ref: "models/configuration.yaml#/stick_rule"
+    $ref: "models/configuration/stick.yaml#/stick_rule"
   stick_rules:
     title: Stick Rules Array
     description: HAProxy backend stick rules array (corresponds to stick store-request, stick match, stick on, stick store-response)
@@ -165,7 +165,7 @@ definitions:
     items:
       $ref: '#/definitions/stick_rule'
   log_target:
-    $ref: "models/configuration.yaml#/log_target"
+    $ref: "models/configuration/log_target.yaml#/log_target"
   log_targets:
     title: Log Target Array
     description: HAProxy log target array (corresponds to log directives)
@@ -173,7 +173,7 @@ definitions:
     items:
       $ref: '#/definitions/log_target'
   acl:
-    $ref: "models/configuration.yaml#/acl"
+    $ref: "models/configuration/acl.yaml#/acl"
   acls:
     title: ACL Lines Array
     description: HAProxy ACL lines array (corresponds to acl directives)
@@ -189,7 +189,7 @@ definitions:
   native_stats_collection:
     $ref: "models/stats.yaml#/native_stats_collection"
   stats_options:
-    $ref: "models/configuration.yaml#/stats_options"
+    $ref: "models/configuration/misc.yaml#/stats_options"
   error:
     $ref: "models/errors.yaml#/error"
   endpoint:
@@ -323,23 +323,23 @@ definitions:
     items:
       $ref: "#/definitions/acl_file_entry"
   balance:
-    $ref: "models/configuration.yaml#/balance"
+    $ref: "models/configuration/misc.yaml#/balance"
   forwardfor:
-    $ref: "models/configuration.yaml#/forwardfor"
+    $ref: "models/configuration/misc.yaml#/forwardfor"
   default_server:
-    $ref: "models/configuration.yaml#/default_server"
+    $ref: "models/configuration/server.yaml#/default_server"
   httpchk_params:
-    $ref: "models/configuration.yaml#/httpchk_params"
+    $ref: "models/configuration/misc.yaml#/httpchk_params"
   http-check:
-    $ref: "models/configuration.yaml#/http-check"
+    $ref: "models/configuration/misc.yaml#/http-check"
   redispatch:
-    $ref: "models/configuration.yaml#/redispatch"
+    $ref: "models/configuration/misc.yaml#/redispatch"
   errorfile:
-    $ref: "models/configuration.yaml#/errorfile"
+    $ref: "models/configuration/misc.yaml#/errorfile"
   cookie:
-    $ref: "models/configuration.yaml#/cookie"
+    $ref: "models/configuration/misc.yaml#/cookie"
   resolver:
-    $ref: "models/configuration.yaml#/resolver"
+    $ref: "models/configuration/resolver.yaml#/resolver"
   resolvers:
     title: Resolvers
     description: HAProxy resolvers array
@@ -347,7 +347,7 @@ definitions:
     items:
       $ref: '#/definitions/resolver'
   nameserver:
-    $ref: "models/configuration.yaml#/nameserver"
+    $ref: "models/configuration/resolver.yaml#/nameserver"
   nameservers:
     title: Nameservers
     description: Nameservers array
@@ -355,7 +355,7 @@ definitions:
     items:
       $ref: '#/definitions/nameserver'
   cache:
-    $ref: "models/cache.yaml#/cache"
+    $ref: "models/configuration/cache.yaml#/cache"
   caches:
     title: Cache Sections
     description: HAProxy caches array
@@ -385,11 +385,11 @@ definitions:
   monitor_fail:
     $ref: "models/monitor.yaml#/monitor_fail"
   smtpchk_params:
-    $ref: "models/configuration.yaml#/smtpchk_params"
+    $ref: "models/configuration/misc.yaml#/smtpchk_params"
   mysql_check_params:
-    $ref: "models/configuration.yaml#/mysql_check_params"
+    $ref: "models/configuration/misc.yaml#/mysql_check_params"
   pgsql_check_params:
-    $ref: "models/configuration.yaml#/pgsql_check_params"
+    $ref: "models/configuration/misc.yaml#/pgsql_check_params"
   spoe_files:
     $ref: "models/spoe.yaml#/spoe_files"
   spoe_scope:
@@ -619,99 +619,99 @@ paths:
   /services/haproxy/configuration:
     $ref: "paths/general.yaml#/configuration"
   /services/haproxy/configuration/global:
-    $ref: "paths/configuration.yaml#/global"
+    $ref: "paths/configuration/global.yaml#/global"
   /services/haproxy/configuration/defaults:
-    $ref: "paths/configuration.yaml#/defaults"
+    $ref: "paths/configuration/defaults.yaml#/defaults"
   /services/haproxy/configuration/frontends:
-    $ref: "paths/configuration.yaml#/frontends"
+    $ref: "paths/configuration/frontend.yaml#/frontends"
   /services/haproxy/configuration/frontends/{name}:
-    $ref: "paths/configuration.yaml#/frontends_one"
+    $ref: "paths/configuration/frontend.yaml#/frontends_one"
   /services/haproxy/configuration/peer_section:
-    $ref: "paths/configuration.yaml#/peer_section"
+    $ref: "paths/configuration/peers.yaml#/peer_section"
   /services/haproxy/configuration/peer_section/{name}:
-    $ref: "paths/configuration.yaml#/peer_section_one"
+    $ref: "paths/configuration/peers.yaml#/peer_section_one"
   /services/haproxy/configuration/peer_entries:
-    $ref: "paths/configuration.yaml#/peer_entries"
+    $ref: "paths/configuration/peers.yaml#/peer_entries"
   /services/haproxy/configuration/peer_entries/{name}:
-    $ref: "paths/configuration.yaml#/peer_entries_one"
+    $ref: "paths/configuration/peers.yaml#/peer_entries_one"
   /services/haproxy/configuration/backends:
-    $ref: "paths/configuration.yaml#/backends"
+    $ref: "paths/configuration/backend.yaml#/backends"
   /services/haproxy/configuration/backends/{name}:
-    $ref: "paths/configuration.yaml#/backends_one"
+    $ref: "paths/configuration/backend.yaml#/backends_one"
   /services/haproxy/configuration/binds:
-    $ref: "paths/configuration.yaml#/binds"
+    $ref: "paths/configuration/bind.yaml#/binds"
   /services/haproxy/configuration/binds/{name}:
-    $ref: "paths/configuration.yaml#/binds_one"
+    $ref: "paths/configuration/bind.yaml#/binds_one"
   /services/haproxy/configuration/servers:
-    $ref: "paths/configuration.yaml#/servers"
+    $ref: "paths/configuration/server.yaml#/servers"
   /services/haproxy/configuration/servers/{name}:
-    $ref: "paths/configuration.yaml#/servers_one"
+    $ref: "paths/configuration/server.yaml#/servers_one"
   /services/haproxy/configuration/server_templates:
-    $ref: "paths/configuration.yaml#/server_templates"
+    $ref: "paths/configuration/server.yaml#/server_templates"
   /services/haproxy/configuration/server_templates/{prefix}:
-    $ref: "paths/configuration.yaml#/server_templates_one"
+    $ref: "paths/configuration/server.yaml#/server_templates_one"
   /services/haproxy/configuration/http_checks:
-    $ref: "paths/configuration.yaml#/http_checks"
+    $ref: "paths/configuration/http/check.yaml#/http_checks"
   /services/haproxy/configuration/http_checks/{index}:
-    $ref: "paths/configuration.yaml#/http_checks_one"
+    $ref: "paths/configuration/http/check.yaml#/http_checks_one"
   /services/haproxy/configuration/http_request_rules:
-    $ref: "paths/configuration.yaml#/http_request_rules"
+    $ref: "paths/configuration/http/request.yaml#/http_request_rules"
   /services/haproxy/configuration/http_request_rules/{index}:
-    $ref: "paths/configuration.yaml#/http_request_rules_one"
+    $ref: "paths/configuration/http/request.yaml#/http_request_rules_one"
   /services/haproxy/configuration/http_response_rules:
-    $ref: "paths/configuration.yaml#/http_response_rules"
+    $ref: "paths/configuration/http/response.yaml#/http_response_rules"
   /services/haproxy/configuration/http_response_rules/{index}:
-    $ref: "paths/configuration.yaml#/http_response_rules_one"
+    $ref: "paths/configuration/http/response.yaml#/http_response_rules_one"
   /services/haproxy/configuration/tcp_checks:
-    $ref: "paths/configuration.yaml#/tcp_checks"
+    $ref: "paths/configuration/tcp/check.yaml#/tcp_checks"
   /services/haproxy/configuration/tcp_checks/{index}:
-    $ref: "paths/configuration.yaml#/tcp_checks_one"
+    $ref: "paths/configuration/tcp/check.yaml#/tcp_checks_one"
   /services/haproxy/configuration/tcp_request_rules:
-    $ref: "paths/configuration.yaml#/tcp_request_rules"
+    $ref: "paths/configuration/tcp/request.yaml#/tcp_request_rules"
   /services/haproxy/configuration/tcp_request_rules/{index}:
-    $ref: "paths/configuration.yaml#/tcp_request_rules_one"
+    $ref: "paths/configuration/tcp/request.yaml#/tcp_request_rules_one"
   /services/haproxy/configuration/tcp_response_rules:
-    $ref: "paths/configuration.yaml#/tcp_response_rules"
+    $ref: "paths/configuration/tcp/response.yaml#/tcp_response_rules"
   /services/haproxy/configuration/tcp_response_rules/{index}:
-    $ref: "paths/configuration.yaml#/tcp_response_rules_one"
+    $ref: "paths/configuration/tcp/response.yaml#/tcp_response_rules_one"
   /services/haproxy/configuration/backend_switching_rules:
-    $ref: "paths/configuration.yaml#/backend_switching_rules"
+    $ref: "paths/configuration/switching.yaml#/backend_switching_rules"
   /services/haproxy/configuration/backend_switching_rules/{index}:
-    $ref: "paths/configuration.yaml#/backend_switching_rules_one"
+    $ref: "paths/configuration/switching.yaml#/backend_switching_rules_one"
   /services/haproxy/configuration/server_switching_rules:
-    $ref: "paths/configuration.yaml#/server_switching_rules"
+    $ref: "paths/configuration/switching.yaml#/server_switching_rules"
   /services/haproxy/configuration/server_switching_rules/{index}:
-    $ref: "paths/configuration.yaml#/server_switching_rules_one"
+    $ref: "paths/configuration/switching.yaml#/server_switching_rules_one"
   /services/haproxy/configuration/filters:
-    $ref: "paths/configuration.yaml#/filters"
+    $ref: "paths/configuration/filter.yaml#/filters"
   /services/haproxy/configuration/filters/{index}:
-    $ref: "paths/configuration.yaml#/filters_one"
+    $ref: "paths/configuration/filter.yaml#/filters_one"
   /services/haproxy/configuration/stick_rules:
-    $ref: "paths/configuration.yaml#/stick_rules"
+    $ref: "paths/configuration/stick.yaml#/stick_rules"
   /services/haproxy/configuration/stick_rules/{index}:
-    $ref: "paths/configuration.yaml#/stick_rules_one"
+    $ref: "paths/configuration/stick.yaml#/stick_rules_one"
   /services/haproxy/configuration/log_targets:
-    $ref: "paths/configuration.yaml#/log_targets"
+    $ref: "paths/configuration/log_targets.yaml#/log_targets"
   /services/haproxy/configuration/log_targets/{index}:
-    $ref: "paths/configuration.yaml#/log_targets_one"
+    $ref: "paths/configuration/log_targets.yaml#/log_targets_one"
   /services/haproxy/configuration/acls:
-    $ref: "paths/configuration.yaml#/acls"
+    $ref: "paths/configuration/acl.yaml#/acls"
   /services/haproxy/configuration/acls/{index}:
-    $ref: "paths/configuration.yaml#/acls_one"
+    $ref: "paths/configuration/acl.yaml#/acls_one"
   /services/haproxy/configuration/caches:
-    $ref: "paths/cache.yaml#/caches"
+    $ref: "paths/configuration/cache.yaml#/caches"
   /services/haproxy/configuration/caches/{name}:
-    $ref: "paths/cache.yaml#/caches_one"
+    $ref: "paths/configuration/cache.yaml#/caches_one"
   /services/haproxy/configuration/resolvers:
-    $ref: "paths/configuration.yaml#/resolvers"
+    $ref: "paths/configuration/resolver.yaml#/resolvers"
   /services/haproxy/configuration/resolvers/{name}:
-    $ref: "paths/configuration.yaml#/resolvers_one"
+    $ref: "paths/configuration/resolver.yaml#/resolvers_one"
   /services/haproxy/configuration/nameservers:
-    $ref: "paths/configuration.yaml#/nameservers"
+    $ref: "paths/configuration/resolver.yaml#/nameservers"
   /services/haproxy/configuration/nameservers/{name}:
-    $ref: "paths/configuration.yaml#/nameservers_one"
+    $ref: "paths/configuration/resolver.yaml#/nameservers_one"
   /services/haproxy/configuration/raw:
-    $ref: "paths/configuration.yaml#/configuration"
+    $ref: "paths/configuration/raw.yaml#/configuration"
   /services/haproxy/runtime:
     $ref: "paths/general.yaml#/runtime"
   /services/haproxy/runtime/acls:
@@ -743,7 +743,7 @@ paths:
   /services/haproxy/runtime/maps_entries/{id}:
     $ref: "paths/runtime.yaml#/maps_entries_one"
   /services/haproxy/configuration/version:
-    $ref: "paths/configuration.yaml#/version"
+    $ref: "paths/configuration/version.yaml#/version"
   /services/haproxy/storage:
     $ref: "paths/general.yaml#/storage"
   /services/haproxy/storage/maps:

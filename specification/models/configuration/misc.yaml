@@ -1,0 +1,245 @@
+forwardfor:
+  type: object
+  x-display-name: ForwardFor
+  required:
+    - enabled
+  properties:
+    enabled:
+      type: string
+      enum: [enabled]
+    except:
+      type: string
+      pattern: '^[^\s]+$'
+    header:
+      type: string
+      pattern: '^[^\s]+$'
+    ifnone:
+      type: boolean
+balance:
+  type: object
+  required:
+    - algorithm
+  properties:
+    algorithm:
+      type: string
+      enum: [roundrobin, static-rr, leastconn, first, source, uri, url_param, hdr, random, rdp-cookie]
+    uri_whole:
+      type: boolean
+      x-display-name: Uri Whole
+      x-dependency:
+        algorithm:
+          value: uri
+    uri_len:
+      type: integer
+      x-display-name: Uri Len
+      x-dependency:
+        algorithm:
+          value: uri
+    uri_depth:
+      type: integer
+      x-display-name: Uri Depth
+      x-dependency:
+        algorithm:
+          value: uri
+    url_param:
+      type: string
+      x-display-name: Url Param
+      pattern: '^[^\s]+$'
+      x-dependency:
+        algorithm:
+          value: url_param
+          required: true
+    url_param_check_post:
+      type: integer
+      x-display-name: Url Param Check Post
+      x-dependency:
+        algorithm:
+          value: url_param
+    url_param_max_wait:
+      type: integer
+      x-display-name: Url Param Max Weight
+      x-dependency:
+        algorithm:
+          value: url_param
+    hdr_name:
+      type: string
+      x-display-name: Header Name
+      x-dependency:
+        algorithm:
+          value: hdr
+          required: true
+    hdr_use_domain_only:
+      type: boolean
+      x-display-name: Header Use Domain Only
+      x-dependency:
+        algorithm:
+          value: hdr
+    random_draws:
+      type: integer
+      x-display-name: Random Draws
+      x-nullable: false
+      x-dependency:
+        algorithm:
+          value: random
+    rdp_cookie_name:
+      type: string
+      x-display-name: Rdp Cookie Name
+      pattern: '^[^\s]+$'
+      x-dependency:
+        algorithm:
+          value: rdp-cookie
+    uri_path_only:
+      type: boolean
+      x-display-name: Uri Path Only
+      x-dependency:
+        algorithm:
+          value: uri
+httpchk_params:
+  type: object
+  x-display-name: HTTP Check
+  properties:
+    method:
+      type: string
+      enum: [HEAD, PUT, POST, GET, TRACE, PATCH]
+    uri:
+      type: string
+      pattern: '^[^ ]*$'
+    version:
+      type: string
+redispatch:
+  type: object
+  required:
+    - enabled
+  properties:
+    enabled:
+      type: string
+      enum: [enabled, disabled]
+    interval:
+      type: integer
+      x-nullable: false
+errorfile:
+  type: object
+  x-display-name: Error File
+  properties:
+    code:
+      type: integer
+      enum: [200, 400, 403, 405, 408, 425, 429, 500, 502, 503, 504]
+    file:
+      type: string
+cookie:
+  type: object
+  required:
+    - name
+  properties:
+    name:
+      type: string
+      pattern: '^[^\s]+$'
+    type:
+      type: string
+      enum: [rewrite, insert, prefix]
+    indirect:
+      type: boolean
+    nocache:
+      type: boolean
+    postonly:
+      type: boolean
+    preserve:
+      type: boolean
+    httponly:
+      type: boolean
+    secure:
+      type: boolean
+    domain:
+      type: array
+      x-go-name: Domains
+      items:
+        type: object
+        x-go-name: Domain
+        properties:
+          value:
+            type: string
+            pattern: '^[^\s]+$'
+    maxidle:
+      type: integer
+    maxlife:
+      type: integer
+    dynamic:
+      type: boolean
+http-check:
+  type: object
+  required:
+    - type
+  properties:
+    type:
+      type: string
+      enum: [disable-on-404, expect, send-state]
+    exclamation_mark:
+      type: boolean
+      x-display-name: Expect Exclamation Mark
+      x-dependency:
+        type:
+          value: expect
+    match:
+      type: string
+      enum: [status, rstatus, string, rstring]
+      x-display-name: Expect Match
+      pattern: '^[^\s]+$'
+      x-dependency:
+        type:
+          value: expect
+          required: true
+    pattern:
+      type: string
+      x-display-name: Expect Pattern
+      x-dependency:
+        type:
+          value: expect
+          required: true
+stats_options:
+  type: object
+  properties:
+    stats_enable:
+      type: boolean
+      x-display-name: Stats Enable
+    stats_hide_version:
+      type: boolean
+      x-display-name: Stats Hide Version
+    stats_maxconn:
+      type: integer
+      minimum: 1
+    stats_refresh_delay:
+      type: integer
+      x-nullable: true
+    stats_show_desc:
+      type: string
+      x-nullable: true
+    stats_show_legends:
+      type: boolean
+      x-display-name: Stats Show Legends
+    stats_show_node_name:
+      type: string
+      pattern: '^[^\s]+$'
+      x-nullable: true
+    stats_uri_prefix:
+      type: string
+      pattern: '^[^\s]+$'
+smtpchk_params:
+  type: object
+  properties:
+    hello:
+      type: string
+    domain:
+      type: string
+mysql_check_params:
+  type: object
+  properties:
+    username:
+      type: string
+    client_version:
+      type: string
+      enum: [pre-41, post-41]
+pgsql_check_params:
+  type: object
+  properties:
+    username:
+      type: string

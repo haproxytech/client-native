@@ -1,0 +1,199 @@
+---
+backend:
+  title: Backend
+  description: HAProxy backend configuration
+  type: object
+  required:
+    - name
+  properties:
+    name:
+      type: string
+      pattern: '^[A-Za-z0-9-_.:]+$'
+      x-nullable: false
+    balance:
+      $ref: "#/definitions/balance"
+    hash_type:
+      type: object
+      properties:
+        method:
+          type: string
+          enum: [map-based, consistent]
+        function:
+          type: string
+          enum: [sdbm, djb2, wt6, crc32]
+        modifier:
+          type: string
+          enum: [avalanche]
+    http-check:
+      $ref: "#/definitions/http-check"
+    bind_process:
+      type: string
+      pattern: '^[^\s]+$'
+    mode:
+      type: string
+      enum: [http, tcp]
+    allbackups:
+      type: string
+      enum: [enabled, disabled]
+      x-display-name: All Backups
+    http-buffer-request:
+      type: string
+      enum: [enabled, disabled]
+      x-display-name: HTTP bufferrequest
+    log_tag:
+      type: string
+      pattern: '^[^\s]+$'
+    http_connection_mode:
+      type: string
+      enum: [httpclose, http-server-close, http-keep-alive]
+      x-dependency:
+        mode:
+          value: http
+    http_pretend_keepalive:
+      type: string
+      enum: [enabled, disabled]
+      x-dependency:
+        mode:
+          value: http
+    abortonclose:
+      type: string
+      enum: [enabled, disabled]
+    forwardfor:
+      $ref: "#/definitions/forwardfor"
+      x-dependency:
+        mode:
+          value: http
+    cookie:
+      $ref: '#/definitions/cookie'
+      x-dependency:
+        mode:
+          value: http
+    dynamic_cookie_key:
+      type: string
+      pattern: '^[^\s]+$'
+      x-dependency:
+        cookie:
+          dynamic:
+            value: true
+    default_server:
+      $ref: "#/definitions/default_server"
+    check_timeout:
+      type: integer
+      x-nullable: true
+    adv_check:
+      type: string
+      x-display-name: Advanced Check
+      enum: [ssl-hello-chk, smtpchk, ldap-check, mysql-check, pgsql-check, tcp-check, redis-check, httpchk]
+    smtpchk_params:
+      $ref: "#/definitions/smtpchk_params"
+    mysql_check_params:
+      $ref: "#/definitions/mysql_check_params"
+    pgsql_check_params:
+      $ref: "#/definitions/pgsql_check_params"
+    external_check:
+      type: string
+      enum: [enabled, disabled]
+      x-display-name: External Check
+    external_check_path:
+      type: string
+      pattern: '^[^\s]+$'
+      x-display-name: External Check Path
+    external_check_command:
+      type: string
+      pattern: '^[^\s]+$'
+      x-display-name: External Check Command
+    queue_timeout:
+      type: integer
+      x-nullable: true
+    connect_timeout:
+      type: integer
+      x-nullable: true
+    http_request_timeout:
+      type: integer
+      x-nullable: true
+      x-dependency:
+        mode:
+          value: http
+    http_keep_alive_timeout:
+      type: integer
+      x-nullable: true
+      x-dependency:
+        mode:
+          value: http
+    retries:
+      type: integer
+      x-nullable: true
+    redispatch:
+      $ref: "#/definitions/redispatch"
+    server_timeout:
+      type: integer
+      x-nullable: true
+    tunnel_timeout:
+      type: integer
+      x-nullable: true
+    httpchk_params:
+      $ref: "#/definitions/httpchk_params"
+      x-dependency:
+        mode:
+          value: http
+    http_reuse:
+      type: string
+      enum: [aggressive, always, never, safe]
+      x-dependency:
+        mode:
+          value: http
+    stick_table:
+      type: object
+      properties:
+        type:
+          type: string
+          enum: [ip, ipv6, integer, string, binary]
+        keylen:
+          type: integer
+          x-display-name: Key Length
+          x-nullable: true
+        size:
+          type: integer
+          x-nullable: true
+        expire:
+          type: integer
+          x-nullable: true
+        nopurge:
+          type: boolean
+          x-display-name: No Purge
+        peers:
+          type: string
+          pattern: '^[^\s]+$'
+        store:
+          type: string
+          pattern: '^[^\s]+$'
+    http-use-htx:
+      type: string
+      enum: [enabled, disabled]
+      x-dependency:
+        mode:
+          value: http
+      pattern: '^[^\s]+$'
+    accept_invalid_http_response:
+      type: string
+      enum: [enabled, disabled]
+      x-display-name: Accept Invalid HTTP Response
+    h1_case_adjust_bogus_server:
+      type: string
+      enum: [enabled, disabled]
+      x-display-name: H1 Adjust Bogus Server
+    stats_options:
+      $ref: "#/definitions/stats_options"
+  additionalProperties: false
+  example:
+    name: test_backend
+    mode: http
+    balance:
+      algorithm: roundrobin
+    forwardfor:
+      enabled: enabled
+    adv_check: httpchk
+    httpchk_params:
+      uri: "/check"
+      method: GET
+      version: HTTP/1.1

@@ -1,0 +1,78 @@
+---
+backend_switching_rule:
+  title: Backend Switching Rule
+  description: HAProxy backend switching rule configuration (corresponds to use_backend directive)
+  type: object
+  required:
+    - index
+    - name
+  properties:
+    index:
+      type: integer
+      x-nullable: true
+    name:
+      type: string
+      pattern: '^[^\s]+$'
+      x-nullable: false
+      x-dynamic-enum:
+        operation: getBackends
+        property: name
+      x-display-name: Backend Name
+    cond:
+      type: string
+      x-display-name: Condition
+      enum: [if, unless]
+    cond_test:
+      type: string
+      x-display-name: Condition Test
+      x-dynamic-enum:
+        operation: getACLs
+        property: acl_name
+        freeFormat: true
+      x-dependency:
+        cond:
+          required: true
+  additionalProperties: false
+  example:
+    index: 0
+    name: test_backend
+    cond: if
+    cond_test: "{ req_ssl_sni -i www.example.com }"
+server_switching_rule:
+  title: Server Switching Rule
+  description: HAProxy server switching rule configuration (corresponds to use-server directive)
+  type: object
+  required:
+    - index
+    - target_server
+  properties:
+    index:
+      type: integer
+      x-nullable: true
+    target_server:
+      type: string
+      pattern: '^[^\s]+$'
+      x-nullable: false
+      x-dynamic-enum:
+        operation: getServers
+        property: name
+    cond:
+      type: string
+      x-display-name: Condition
+      enum: [if, unless]
+    cond_test:
+      type: string
+      x-display-name: Condition Test
+      x-dynamic-enum:
+        operation: getACLs
+        property: acl_name
+        freeFormat: true
+      x-dependency:
+        cond:
+          required: true
+  additionalProperties: false
+  example:
+    index: 0
+    target_server: www
+    cond: if
+    cond_test: "{ req_ssl_sni -i www.example.com }"

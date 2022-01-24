@@ -1,0 +1,43 @@
+---
+stick_rule:
+  title: Stick Rule
+  description: Define a pattern used to create an entry in a stickiness table or matching condition or associate a user to a server.
+  type: object
+  required:
+    - index
+    - type
+    - pattern
+  properties:
+    index:
+      type: integer
+      x-nullable: true
+    type:
+      type: string
+      enum: [match, "on", store-request, store-response]
+      x-nullable: false
+    pattern:
+      type: string
+      pattern: '^[^\s]+$'
+      x-nullable: false
+    table:
+      type: string
+      pattern: '^[^\s]+$'
+    cond:
+      type: string
+      x-display-name: Condition
+      enum: [if, unless]
+    cond_test:
+      type: string
+      x-display-name: Condition Test
+      x-dynamic-enum:
+        operation: getACLs
+        property: acl_name
+        freeFormat: true
+      x-dependency:
+        cond:
+          required: true
+  additionalProperties: false
+  example:
+    index: 0
+    type: match
+    pattern: src

@@ -1,0 +1,186 @@
+---
+tcp_response_rules:
+  get:
+    summary: Return an array of all TCP Response Rules
+    description: Returns all TCP Response Rules that are configured in specified backend.
+    operationId: getTCPResponseRules
+    tags:
+      - TCPResponseRule
+    parameters:
+      - name: backend
+        in: query
+        description: Parent backend name
+        required: true
+        type: string
+      - $ref: "#/parameters/transaction_id"
+    responses:
+      '200':
+        description: Successful operation
+        headers:
+          Configuration-Version:
+            description: Configuration file version
+            type: string
+        schema:
+          type: object
+          required:
+            - data
+          properties:
+            data:
+              $ref: "#/definitions/tcp_response_rules"
+            _version:
+              type: integer
+      'default':
+        $ref: '#/responses/DefaultError'
+  post:
+    summary: Add a new TCP Response Rule
+    description: Adds a new TCP Response Rule of the specified type in the specified backend.
+    operationId: createTCPResponseRule
+    tags:
+      - TCPResponseRule
+    parameters:
+      - name: backend
+        in: query
+        description: Parent backend name
+        required: true
+        type: string
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/tcp_response_rule'
+      - $ref: "#/parameters/transaction_id"
+      - $ref: "#/parameters/version"
+      - $ref: "#/parameters/force_reload"
+    responses:
+      '202':
+        description: Configuration change accepted and reload requested
+        headers:
+          Reload-ID:
+            description: ID of the requested reload
+            type: string
+        schema:
+          $ref: "#/definitions/tcp_response_rule"
+      '201':
+        description: TCP Response Rule created
+        schema:
+          $ref: '#/definitions/tcp_response_rule'
+      '409':
+        $ref: '#/responses/AlreadyExists'
+      '400':
+        $ref: '#/responses/BadRequest'
+      'default':
+        $ref: '#/responses/DefaultError'
+tcp_response_rules_one:
+  get:
+    summary: Return one TCP Response Rule
+    description: Returns one TCP Response Rule configuration by it's index in the specified backend.
+    operationId: getTCPResponseRule
+    tags:
+      - TCPResponseRule
+    parameters:
+      - name: index
+        in: path
+        description: TCP Response Rule Index
+        required: true
+        type: integer
+      - name: backend
+        in: query
+        description: Parent backend name
+        required: true
+        type: string
+      - $ref: "#/parameters/transaction_id"
+    responses:
+      '200':
+        description: Successful operation
+        headers:
+          Configuration-Version:
+            description: Configuration file version
+            type: string
+        schema:
+          type: object
+          properties:
+            data:
+              $ref: "#/definitions/tcp_response_rule"
+            _version:
+              type: integer
+      '404':
+        $ref: '#/responses/NotFound'
+      'default':
+        $ref: '#/responses/DefaultError'
+  put:
+    summary: Replace a TCP Response Rule
+    description: Replaces a TCP Response Rule configuration by it's Index in the specified backend.
+    operationId: replaceTCPResponseRule
+    tags:
+      - TCPResponseRule
+    parameters:
+      - name: index
+        in: path
+        description: TCP Response Rule Index
+        required: true
+        type: integer
+      - name: backend
+        in: query
+        description: Parent backend name
+        required: true
+        type: string
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/tcp_response_rule'
+      - $ref: "#/parameters/transaction_id"
+      - $ref: "#/parameters/version"
+      - $ref: "#/parameters/force_reload"
+    responses:
+      '202':
+        description: Configuration change accepted and reload requested
+        headers:
+          Reload-ID:
+            description: ID of the requested reload
+            type: string
+        schema:
+          $ref: "#/definitions/tcp_response_rule"
+      '200':
+        description: TCP Response Rule replaced
+        schema:
+          $ref: '#/definitions/tcp_response_rule'
+      '400':
+        $ref: '#/responses/BadRequest'
+      '404':
+        $ref: '#/responses/NotFound'
+      'default':
+        $ref: '#/responses/DefaultError'
+  delete:
+    summary: Delete a TCP Response Rule
+    description: Deletes a TCP Response Rule configuration by it's index from the specified backend.
+    operationId: deleteTCPResponseRule
+    tags:
+      - TCPResponseRule
+    parameters:
+      - name: index
+        in: path
+        description: TCP Response Rule Index
+        required: true
+        type: integer
+      - name: backend
+        in: query
+        description: Parent backend name
+        required: true
+        type: string
+      - $ref: "#/parameters/transaction_id"
+      - $ref: "#/parameters/version"
+      - $ref: "#/parameters/force_reload"
+    responses:
+      '202':
+        description: Configuration change accepted and reload requested
+        headers:
+          Reload-ID:
+            description: ID of the requested reload
+            type: string
+      '204':
+        description: TCP Response Rule deleted
+      '404':
+        $ref: '#/responses/NotFound'
+      'default':
+        $ref: '#/responses/DefaultError'

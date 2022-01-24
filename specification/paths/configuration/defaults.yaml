@@ -1,0 +1,58 @@
+---
+defaults:
+  get:
+    summary: Return defaults part of configuration
+    description: Returns defaults part of configuration.
+    operationId: getDefaults
+    parameters:
+      - $ref: "#/parameters/transaction_id"
+    tags:
+      - Defaults
+    responses:
+      '200':
+        description: Successful operation
+        headers:
+          Configuration-Version:
+            description: Configuration file version
+            type: string
+        schema:
+          type: object
+          properties:
+            data:
+              $ref: "#/definitions/defaults"
+            _version:
+              type: integer
+      'default':
+        $ref: '#/responses/DefaultError'
+  put:
+    summary: Replace defaults
+    description: Replace defaults part of config
+    operationId: replaceDefaults
+    parameters:
+      - name: data
+        required: true
+        in: body
+        schema:
+          $ref: "#/definitions/defaults"
+      - $ref: "#/parameters/transaction_id"
+      - $ref: "#/parameters/version"
+      - $ref: "#/parameters/force_reload"
+    tags:
+      - Defaults
+    responses:
+      '202':
+        description: Configuration change accepted and reload requested
+        headers:
+          Reload-ID:
+            description: ID of the requested reload
+            type: string
+        schema:
+          $ref: "#/definitions/defaults"
+      '200':
+        description: Defaults replaced
+        schema:
+          $ref: "#/definitions/defaults"
+      '400':
+        $ref: '#/responses/BadRequest'
+      'default':
+        $ref: '#/responses/DefaultError'

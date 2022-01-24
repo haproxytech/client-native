@@ -1,0 +1,346 @@
+---
+resolvers:
+  get:
+    summary: Return an array of resolvers
+    description: Returns an array of all configured resolvers.
+    operationId: getResolvers
+    parameters:
+      - $ref: "#/parameters/transaction_id"
+    tags:
+      - Resolver
+    responses:
+      '200':
+        description: Successful operation
+        headers:
+          Configuration-Version:
+            description: Configuration file version
+            type: string
+        schema:
+          type: object
+          required:
+            - data
+          properties:
+            data:
+              $ref: "#/definitions/resolvers"
+            _version:
+              type: integer
+      'default':
+        $ref: '#/responses/DefaultError'
+  post:
+    summary: Add a resolver
+    description: Adds a new resolver section to the configuration file.
+    operationId: createResolver
+    parameters:
+      - name: data
+        required: true
+        in: body
+        schema:
+          $ref: "#/definitions/resolver"
+      - $ref: "#/parameters/transaction_id"
+      - $ref: "#/parameters/version"
+      - $ref: "#/parameters/force_reload"
+    tags:
+      - Resolver
+    responses:
+      '202':
+        description: Configuration change accepted and reload requested
+        headers:
+          Reload-ID:
+            description: ID of the requested reload
+            type: string
+        schema:
+          $ref: "#/definitions/resolver"
+      '201':
+        description: Resolver created
+        schema:
+          $ref: "#/definitions/resolver"
+      '409':
+        $ref: '#/responses/AlreadyExists'
+      '400':
+        $ref: '#/responses/BadRequest'
+      'default':
+        $ref: '#/responses/DefaultError'
+resolvers_one:
+  get:
+    summary: Return a resolver
+    description: Returns one resolver section configuration by it's name.
+    operationId: getResolver
+    tags:
+      - Resolver
+    parameters:
+      - name: name
+        in: path
+        description: Resolver name
+        required: true
+        type: string
+      - $ref: "#/parameters/transaction_id"
+    responses:
+      '200':
+        description: Successful operation
+        headers:
+          Configuration-Version:
+            description: Configuration file version
+            type: string
+        schema:
+          type: object
+          properties:
+            data:
+              $ref: "#/definitions/resolver"
+            _version:
+              type: integer
+      '404':
+        $ref: '#/responses/NotFound'
+      'default':
+        $ref: '#/responses/DefaultError'
+  put:
+    summary: Replace a resolver
+    description: Replaces a resolver configuration by it's name.
+    operationId: replaceResolver
+    tags:
+      - Resolver
+    parameters:
+      - name: name
+        in: path
+        description: Resolver name
+        required: true
+        type: string
+      - name: data
+        required: true
+        in: body
+        schema:
+          $ref: "#/definitions/resolver"
+      - $ref: "#/parameters/transaction_id"
+      - $ref: "#/parameters/version"
+      - $ref: "#/parameters/force_reload"
+    responses:
+      '202':
+        description: Configuration change accepted and reload requested
+        headers:
+          Reload-ID:
+            description: ID of the requested reload
+            type: string
+        schema:
+          $ref: "#/definitions/resolver"
+      '200':
+        description: Resolver replaced
+        schema:
+          $ref: "#/definitions/resolver"
+      '400':
+        $ref: '#/responses/BadRequest'
+      '404':
+        $ref: '#/responses/NotFound'
+      'default':
+        $ref: '#/responses/DefaultError'
+  delete:
+    summary: Delete a resolver
+    description: Deletes a resolver from the configuration by it's name.
+    operationId: deleteResolver
+    tags:
+      - Resolver
+    parameters:
+      - name: name
+        in: path
+        description: Resolver name
+        required: true
+        type: string
+      - $ref: "#/parameters/transaction_id"
+      - $ref: "#/parameters/version"
+      - $ref: "#/parameters/force_reload"
+    responses:
+      '202':
+        description: Configuration change accepted and reload requested
+        headers:
+          Reload-ID:
+            description: ID of the requested reload
+            type: string
+      '204':
+        description: Resolver deleted
+      '404':
+        $ref: '#/responses/NotFound'
+      'default':
+        $ref: '#/responses/DefaultError'
+nameservers:
+  get:
+    summary: Return an array of nameservers
+    description: Returns an array of all configured nameservers.
+    operationId: getNameservers
+    parameters:
+      - name: resolver
+        in: query
+        description: Parent resolver name
+        required: true
+        type: string
+      - $ref: "#/parameters/transaction_id"
+    tags:
+      - Nameserver
+    responses:
+      '200':
+        description: Successful operation
+        headers:
+          Configuration-Version:
+            description: Configuration file version
+            type: string
+        schema:
+          type: object
+          required:
+            - data
+          properties:
+            data:
+              $ref: "#/definitions/nameservers"
+            _version:
+              type: integer
+      'default':
+        $ref: '#/responses/DefaultError'
+  post:
+    summary: Add a nameserver
+    description: Adds a new nameserver to the resolvers section.
+    operationId: createNameserver
+    parameters:
+      - name: resolver
+        in: query
+        description: Parent resolver name
+        required: true
+        type: string
+      - name: data
+        required: true
+        in: body
+        schema:
+          $ref: "#/definitions/nameserver"
+      - $ref: "#/parameters/transaction_id"
+      - $ref: "#/parameters/version"
+      - $ref: "#/parameters/force_reload"
+    tags:
+      - Nameserver
+    responses:
+      '202':
+        description: Configuration change accepted and reload requested
+        headers:
+          Reload-ID:
+            description: ID of the requested reload
+            type: string
+        schema:
+          $ref: "#/definitions/nameserver"
+      '201':
+        description: Nameserver created
+        schema:
+          $ref: "#/definitions/nameserver"
+      '409':
+        $ref: '#/responses/AlreadyExists'
+      '400':
+        $ref: '#/responses/BadRequest'
+      'default':
+        $ref: '#/responses/DefaultError'
+nameservers_one:
+  get:
+    summary: Return a nameserver
+    description: Returns one nameserver configuration by it's name.
+    operationId: getNameserver
+    tags:
+      - Nameserver
+    parameters:
+      - name: name
+        in: path
+        description: Nameserver name
+        required: true
+        type: string
+      - name: resolver
+        in: query
+        description: Parent resolver name
+        required: true
+        type: string
+      - $ref: "#/parameters/transaction_id"
+    responses:
+      '200':
+        description: Successful operation
+        headers:
+          Configuration-Version:
+            description: Configuration file version
+            type: string
+        schema:
+          type: object
+          properties:
+            data:
+              $ref: "#/definitions/nameserver"
+            _version:
+              type: integer
+      '404':
+        $ref: '#/responses/NotFound'
+      'default':
+        $ref: '#/responses/DefaultError'
+  put:
+    summary: Replace a nameserver
+    description: Replaces a nameserver configuration by it's name.
+    operationId: replaceNameserver
+    tags:
+      - Nameserver
+    parameters:
+      - name: name
+        in: path
+        description: Nameserver name
+        required: true
+        type: string
+      - name: resolver
+        in: query
+        description: Parent resolver name
+        required: true
+        type: string
+      - name: data
+        required: true
+        in: body
+        schema:
+          $ref: "#/definitions/nameserver"
+      - $ref: "#/parameters/transaction_id"
+      - $ref: "#/parameters/version"
+      - $ref: "#/parameters/force_reload"
+    responses:
+      '202':
+        description: Configuration change accepted and reload requested
+        headers:
+          Reload-ID:
+            description: ID of the requested reload
+            type: string
+        schema:
+          $ref: "#/definitions/nameserver"
+      '200':
+        description: Nameserver replaced
+        schema:
+          $ref: "#/definitions/nameserver"
+      '400':
+        $ref: '#/responses/BadRequest'
+      '404':
+        $ref: '#/responses/NotFound'
+      'default':
+        $ref: '#/responses/DefaultError'
+  delete:
+    summary: Delete a nameserver
+    description: Deletes a nameserver from the resolvers section by it's name.
+    operationId: deleteNameserver
+    tags:
+      - Nameserver
+    parameters:
+      - name: name
+        in: path
+        description: Nameserver name
+        required: true
+        type: string
+      - name: resolver
+        in: query
+        description: Parent resolver name
+        required: true
+        type: string
+      - $ref: "#/parameters/transaction_id"
+      - $ref: "#/parameters/version"
+      - $ref: "#/parameters/force_reload"
+    responses:
+      '202':
+        description: Configuration change accepted and reload requested
+        headers:
+          Reload-ID:
+            description: ID of the requested reload
+            type: string
+      '204':
+        description: Nameserver deleted
+      '404':
+        $ref: '#/responses/NotFound'
+      'default':
+        $ref: '#/responses/DefaultError'

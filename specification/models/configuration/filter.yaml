@@ -1,0 +1,65 @@
+---
+filter:
+  title: Filter
+  description: HAProxy filters
+  type: object
+  required:
+    - index
+    - type
+  properties:
+    index:
+      type: integer
+      x-nullable: true
+    type:
+      type: string
+      enum: [trace, compression, spoe, cache]
+      x-nullable: false
+    trace_name:
+      type: string
+      pattern: '^[^\s]+$'
+      x-dependency:
+        type:
+          value: trace
+    trace_rnd_parsing:
+      type: boolean
+      x-display-name: Trace Random Parsing
+      x-dependency:
+        type:
+          value: trace
+    trace_rnd_forwarding:
+      type: boolean
+      x-display-name: Trace Random Forwarding
+      x-dependency:
+        type:
+          value: trace
+    trace_hexdump:
+      type: boolean
+      x-dependency:
+        type:
+          value: trace
+    spoe_engine:
+      type: string
+      pattern: '^[^\s]+$'
+      x-dependency:
+        type:
+          value: spoe
+    spoe_config:
+      type: string
+      pattern: '^[^\s]+$'
+      x-dependency:
+        type:
+          value: spoe
+          required: true
+    cache_name:
+      type: string
+      pattern: '^[^\s]+$'
+      x-dependency:
+        type:
+          value: cache
+          required: true
+  additionalProperties: false
+  example:
+    index: 0
+    type: trace
+    trace_name: name
+    trace_rnd_parsing: true

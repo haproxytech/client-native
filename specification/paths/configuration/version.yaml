@@ -1,0 +1,19 @@
+---
+version:
+  get:
+    summary: Return a configuration version
+    description: Returns configuration version.
+    operationId: getConfigurationVersion
+    tags:
+      - Configuration
+    parameters:
+      - $ref: "#/parameters/transaction_id"
+    responses:
+      '200':
+        description: Configuration version
+        schema:
+          type: integer
+      '404':
+        $ref: '#/responses/NotFound'
+      'default':
+        $ref: '#/responses/DefaultError'

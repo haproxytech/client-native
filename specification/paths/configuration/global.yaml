@@ -1,0 +1,58 @@
+---
+global:
+  get:
+    summary: Return a global part of configuration
+    description: Returns global part of configuration.
+    operationId: getGlobal
+    parameters:
+      - $ref: "#/parameters/transaction_id"
+    tags:
+      - Global
+    responses:
+      '200':
+        description: Successful operation
+        headers:
+          Configuration-Version:
+            description: Configuration file version
+            type: string
+        schema:
+          type: object
+          properties:
+            data:
+              $ref: "#/definitions/global"
+            _version:
+              type: integer
+      'default':
+        $ref: '#/responses/DefaultError'
+  put:
+    summary: Replace global
+    description: Replace global part of config
+    operationId: replaceGlobal
+    parameters:
+      - name: data
+        required: true
+        in: body
+        schema:
+          $ref: "#/definitions/global"
+      - $ref: "#/parameters/transaction_id"
+      - $ref: "#/parameters/version"
+      - $ref: "#/parameters/force_reload"
+    tags:
+      - Global
+    responses:
+      '202':
+        description: Configuration change accepted and reload requested
+        headers:
+          Reload-ID:
+            description: ID of the requested reload
+            type: string
+        schema:
+          $ref: "#/definitions/global"
+      '200':
+        description: Global replaced
+        schema:
+          $ref: "#/definitions/global"
+      '400':
+        $ref: '#/responses/BadRequest'
+      'default':
+        $ref: '#/responses/DefaultError'

@@ -1,0 +1,69 @@
+---
+log_target:
+  title: Log Target
+  description: Per-instance logging of events and traffic.
+  type: object
+  required:
+    - index
+  properties:
+    index:
+      type: integer
+      x-nullable: true
+    global:
+      type: boolean
+    nolog:
+      type: boolean
+    address:
+      type: string
+      pattern: '^[^\s]+$'
+      x-dependency:
+        global:
+          value: false
+          required: true
+        nolog:
+          value: false
+          required: true
+    length:
+      type: integer
+      x-dependency:
+        global:
+          value: false
+        nolog:
+          value: false
+    format:
+      type: string
+      enum: [rfc3164, rfc5424, short, raw]
+      x-dependency:
+        global:
+          value: false
+        nolog:
+          value: false
+    facility:
+      type: string
+      enum: [kern, user, mail, daemon, auth, syslog, lpr, news, uucp, cron, auth2, ftp, ntp, audit, alert, cron2, local0, local1, local2, local3, local4, local5, local6, local7]
+      x-dependency:
+        global:
+          value: false
+          required: true
+        nolog:
+          value: false
+          required: true
+    level:
+      type: string
+      enum: [emerg, alert, crit, err, warning, notice, info, debug]
+      x-dependency:
+        global:
+          value: false
+        nolog:
+          value: false
+    minlevel:
+      type: string
+      enum: [emerg, alert, crit, err, warning, notice, info, debug]
+      x-dependency:
+        global:
+          value: false
+        nolog:
+          value: false
+        level:
+          required: false
+  additionalProperties: false
