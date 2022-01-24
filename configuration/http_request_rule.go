@@ -227,18 +227,11 @@ func ParseHTTPRequestRule(f types.Action) (rule *models.HTTPRequestRule, err err
 			CondTest: v.CondTest,
 		}
 	case *http_actions.Deny:
-		var denyPtr *int64
-		var ds int64
-		if v.DenyStatus != "" {
-			if ds, err = strconv.ParseInt(v.DenyStatus, 10, 64); err == nil {
-				denyPtr = &ds
-			}
-		}
 		rule = &models.HTTPRequestRule{
 			Type:       "deny",
 			Cond:       v.Cond,
 			CondTest:   v.CondTest,
-			DenyStatus: denyPtr,
+			DenyStatus: v.Status,
 		}
 	case *http_actions.Auth:
 		rule = &models.HTTPRequestRule{
@@ -265,18 +258,11 @@ func ParseHTTPRequestRule(f types.Action) (rule *models.HTTPRequestRule, err err
 			RedirCode:   codePtr,
 		}
 	case *http_actions.Tarpit:
-		var dsPtr *int64
-		var ds int64
-		if v.DenyStatus != "" {
-			if ds, err = strconv.ParseInt(v.DenyStatus, 10, 64); err == nil {
-				dsPtr = &ds
-			}
-		}
 		rule = &models.HTTPRequestRule{
 			Type:       "tarpit",
 			Cond:       v.Cond,
 			CondTest:   v.CondTest,
-			DenyStatus: dsPtr,
+			DenyStatus: v.Status,
 		}
 	case *http_actions.AddHeader:
 		rule = &models.HTTPRequestRule{
@@ -680,14 +666,10 @@ func SerializeHTTPRequestRule(f models.HTTPRequestRule) (rule types.Action, err 
 			CondTest: f.CondTest,
 		}
 	case "deny":
-		ds := ""
-		if f.DenyStatus != nil {
-			ds = strconv.FormatInt(*f.DenyStatus, 10)
-		}
 		rule = &http_actions.Deny{
-			DenyStatus: ds,
-			Cond:       f.Cond,
-			CondTest:   f.CondTest,
+			Status:   f.DenyStatus,
+			Cond:     f.Cond,
+			CondTest: f.CondTest,
 		}
 	case "auth":
 		rule = &http_actions.Auth{
@@ -709,14 +691,10 @@ func SerializeHTTPRequestRule(f models.HTTPRequestRule) (rule types.Action, err 
 			CondTest: f.CondTest,
 		}
 	case "tarpit":
-		ds := ""
-		if f.DenyStatus != nil {
-			ds = strconv.FormatInt(*f.DenyStatus, 10)
-		}
 		rule = &http_actions.Tarpit{
-			DenyStatus: ds,
-			Cond:       f.Cond,
-			CondTest:   f.CondTest,
+			Status:   f.DenyStatus,
+			Cond:     f.Cond,
+			CondTest: f.CondTest,
 		}
 	case "add-header":
 		rule = &http_actions.AddHeader{
