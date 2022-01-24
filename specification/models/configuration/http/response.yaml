@@ -1,3 +1,4 @@
+---
 http_response_rule:
   title: HTTP Response Rule
   description: HAProxy HTTP response rule configuration (corresponds to http-response directives)
