@@ -305,6 +305,13 @@ func ParseHTTPCheck(f types.Action) (check *models.HTTPCheckRule, err error) {
 			VarName:  v.VarName,
 			VarExpr:  strings.Join(v.Expr.Expr, " "),
 		}
+	case *actions.SetVarFmtCheck:
+		check = &models.HTTPCheckRule{
+			Action:   models.HTTPCheckRuleActionSetVarFmt,
+			VarScope: v.VarScope,
+			VarName:  v.VarName,
+			VarExpr:  strings.Join(v.Format.Expr, " "),
+		}
 	case *actions.UnsetVarCheck:
 		check = &models.HTTPCheckRule{
 			Action:   models.HTTPCheckRuleActionUnsetVar,
@@ -382,6 +389,12 @@ func SerializeHTTPCheck(f models.HTTPCheckRule) (action types.Action, err error)
 			VarScope: f.VarScope,
 			VarName:  f.VarName,
 			Expr:     common.Expression{Expr: strings.Split(f.VarExpr, " ")},
+		}, nil
+	case models.HTTPCheckRuleActionSetVarFmt:
+		return &actions.SetVarFmtCheck{
+			VarScope: f.VarScope,
+			VarName:  f.VarName,
+			Format:   common.Expression{Expr: strings.Split(f.VarFormat, " ")},
 		}, nil
 	case models.HTTPCheckRuleActionUnsetVar:
 		return &actions.UnsetVarCheck{

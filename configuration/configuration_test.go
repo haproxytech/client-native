@@ -230,6 +230,7 @@ backend test
   http-check expect rstring <!--tag:[0-9a-f]*--></html>
   http-check unset-var(check.port)
   http-check set-var(check.port) int(1234)
+  http-check set-var-fmt(check.port) int(1234)
   http-check send-state
   http-check disable-on-404
   server-template srv 1-3 google.com:80 check

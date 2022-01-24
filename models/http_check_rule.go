@@ -40,7 +40,7 @@ type HTTPCheckRule struct {
 
 	// action
 	// Required: true
-	// Enum: [comment connect disable-on-404 expect send send-state set-var unset-var]
+	// Enum: [comment connect disable-on-404 expect send send-state set-var set-var-fmt unset-var]
 	Action string `json:"action"`
 
 	// addr
@@ -136,6 +136,9 @@ type HTTPCheckRule struct {
 
 	// var expr
 	VarExpr string `json:"var_expr,omitempty"`
+
+	// var format
+	VarFormat string `json:"var_format,omitempty"`
 
 	// var name
 	// Pattern: ^[^\s]+$
@@ -239,7 +242,7 @@ var httpCheckRuleTypeActionPropEnum []interface{}
 
 func init() {
 	var res []string
-	if err := json.Unmarshal([]byte(`["comment","connect","disable-on-404","expect","send","send-state","set-var","unset-var"]`), &res); err != nil {
+	if err := json.Unmarshal([]byte(`["comment","connect","disable-on-404","expect","send","send-state","set-var","set-var-fmt","unset-var"]`), &res); err != nil {
 		panic(err)
 	}
 	for _, v := range res {
@@ -269,6 +272,9 @@ const (
 
 	// HTTPCheckRuleActionSetVar captures enum value "set-var"
 	HTTPCheckRuleActionSetVar string = "set-var"
+
+	// HTTPCheckRuleActionSetVarFmt captures enum value "set-var-fmt"
+	HTTPCheckRuleActionSetVarFmt string = "set-var-fmt"
 
 	// HTTPCheckRuleActionUnsetVar captures enum value "unset-var"
 	HTTPCheckRuleActionUnsetVar string = "unset-var"

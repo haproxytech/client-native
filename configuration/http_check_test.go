@@ -29,8 +29,8 @@ func TestGetHTTPChecks(t *testing.T) { //nolint:gocognit,gocyclo
 		t.Error(err.Error())
 	}
 
-	if len(checks) != 13 {
-		t.Errorf("%v http checks returned, expected 13", len(checks))
+	if len(checks) != 14 {
+		t.Errorf("%v http checks returned, expected 14", len(checks))
 	}
 
 	if v != version {
@@ -169,10 +169,23 @@ func TestGetHTTPChecks(t *testing.T) { //nolint:gocognit,gocyclo
 				t.Errorf("%v: VarExpr not int(1234): %v", *r.Index, r.VarExpr)
 			}
 		case 11:
+			if r.Action != "set-var-fmt" {
+				t.Errorf("%v: Type not set-var-fmt: %v", *r.Index, r.Action)
+			}
+			if r.VarScope != "check" {
+				t.Errorf("%v: VarScope not check: %v", *r.Index, r.VarScope)
+			}
+			if r.VarName != "port" {
+				t.Errorf("%v: VarName not port: %v", *r.Index, r.VarName)
+			}
+			if r.VarExpr != "int(1234)" {
+				t.Errorf("%v: VarExpr not int(1234): %v", *r.Index, r.VarExpr)
+			}
+		case 12:
 			if r.Action != "send-state" {
 				t.Errorf("%v: Action not send-state: %v", *r.Index, r.Action)
 			}
-		case 12:
+		case 13:
 			if r.Action != "disable-on-404" {
 				t.Errorf("%v: Action not disable-on-404: %v", *r.Index, r.Action)
 			}
@@ -344,7 +357,7 @@ func TestCreateEditDeleteHTTPCheck(t *testing.T) {
 	}
 
 	// TestDeleteHTTPRequest
-	err = client.DeleteHTTPCheck(13, "backend", "test", "", version)
+	err = client.DeleteHTTPCheck(14, "backend", "test", "", version)
 	if err != nil {
 		t.Error(err.Error())
 	} else {
@@ -355,7 +368,7 @@ func TestCreateEditDeleteHTTPCheck(t *testing.T) {
 		t.Error("Version not incremented")
 	}
 
-	_, _, err = client.GetHTTPCheck(13, "backend", "test", "")
+	_, _, err = client.GetHTTPCheck(14, "backend", "test", "")
 	if err == nil {
 		t.Error("DeleteHTTPCheck failed, HTTP check 13 still exists")
 	}

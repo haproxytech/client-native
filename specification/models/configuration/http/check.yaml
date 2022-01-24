@@ -11,7 +11,7 @@ http_check_rule:
       x-nullable: true
     action:
       type: string
-      enum: [comment, connect, disable-on-404, expect, send, send-state, set-var, unset-var]
+      enum: [comment, connect, disable-on-404, expect, send, send-state, set-var, set-var-fmt, unset-var]
       x-nullable: false
     check_comment:
       type: string
@@ -193,14 +193,21 @@ http_check_rule:
       pattern: '^[^\s]+$'
       x-dependency:
         action:
-          value: [set-var, unset-var]
+          value: [set-var, set-var-fmt, unset-var]
           required: true
     var_scope:
       type: string
       pattern: '^[^\s]+$'
       x-dependency:
         action:
-          value: [set-var, unset-var]
+          value: [set-var, set-var-fmt, unset-var]
+          required: true
+    var_format:
+      type: string
+      x-display-name: Var Format
+      x-dependency:
+        action:
+          value: [set-var-fmt]
           required: true
     var_expr:
       type: string

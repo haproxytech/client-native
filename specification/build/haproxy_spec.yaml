@@ -3160,6 +3160,7 @@ definitions:
           - send
           - send-state
           - set-var
+          - set-var-fmt
           - unset-var
           type: string
           x-nullable: false
@@ -3361,6 +3362,14 @@ definitions:
               value:
               - set-var
           x-display-name: Var Expression
+        var_format:
+          type: string
+          x-dependency:
+            action:
+              required: true
+              value:
+              - set-var-fmt
+          x-display-name: Var Format
         var_name:
           pattern: ^[^\s]+$
           type: string
@@ -3369,6 +3378,7 @@ definitions:
               required: true
               value:
               - set-var
+              - set-var-fmt
               - unset-var
         var_scope:
           pattern: ^[^\s]+$
@@ -3378,6 +3388,7 @@ definitions:
               required: true
               value:
               - set-var
+              - set-var-fmt
               - unset-var
         version:
           type: string
