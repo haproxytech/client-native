@@ -1,0 +1,19 @@
+---
+capture:
+  title: Declare Capture
+  type: object
+  required:
+    - index
+    - type
+    - length
+  properties:
+    index:
+      type: integer
+      x-nullable: true
+    type:
+      type: string
+      enum: [request, response]
+      x-nullable: false
+    length:
+      type: integer
+      x-nullable: false

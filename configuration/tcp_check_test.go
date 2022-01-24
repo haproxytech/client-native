@@ -34,10 +34,6 @@ func generateTCPCheckConfig(config string) (string, error) {
 	return f.Name(), nil
 }
 
-type Counter struct {
-	count int64
-}
-
 func (self Counter) current() int64 {
 	return self.count
 }

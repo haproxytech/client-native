@@ -338,6 +338,13 @@ definitions:
     $ref: "models/configuration/misc.yaml#/errorfile"
   cookie:
     $ref: "models/configuration/misc.yaml#/cookie"
+  capture:
+    $ref: "models/configuration/capture.yaml#/capture"
+  captures:
+    title: Declare capture array
+    type: array
+    items:
+      $ref: "#/definitions/capture"
   resolver:
     $ref: "models/configuration/resolver.yaml#/resolver"
   resolvers:
@@ -571,6 +578,7 @@ tags:
   - name: ServerTemplate
   - name: TCPCheck
   - name: Cache
+  - name: DeclareCapture
 security:
   - basic_auth: []
 paths:
@@ -780,3 +788,7 @@ paths:
     $ref: "paths/spoe.yaml#/spoe_groups_one"
   /services/haproxy/spoe/version:
     $ref: "paths/spoe.yaml#/version"
+  /services/haproxy/configuration/captures:
+    $ref: "paths/configuration/capture.yaml#/captures"
+  /services/haproxy/configuration/captures/{index}:
+    $ref: "paths/configuration/capture.yaml#/captures_one"

@@ -6594,6 +6594,31 @@ definitions:
       required:
       - name
       type: object
+  capture:
+      properties:
+        index:
+          type: integer
+          x-nullable: true
+        length:
+          type: integer
+          x-nullable: false
+        type:
+          enum:
+          - request
+          - response
+          type: string
+          x-nullable: false
+      required:
+      - index
+      - type
+      - length
+      title: Declare Capture
+      type: object
+  captures:
+    title: Declare capture array
+    type: array
+    items:
+      $ref: "#/definitions/capture"
   resolver:
       description: Runtime DNS configuration
       properties:
@@ -7188,6 +7213,7 @@ tags:
 - name: Cluster
 - name: Configuration
   description: Raw HAProxy configuration management (advanced mode)
+- name: DeclareCapture
 - name: Defaults
   description: Managing defaults configuration (advanced mode)
 - name: Discovery
@@ -14478,4 +14504,194 @@ paths:
         summary: Return a SPOE configuration version
         tags:
         - Spoe
+  /services/haproxy/configuration/captures:
+      get:
+        description: Returns an array of all declare capture records that are configured
+          in specified frontend.
+        operationId: getDeclareCaptures
+        parameters:
+        - description: Parent frontend name
+          in: query
+          name: frontend
+          required: true
+          type: string
+        - $ref: '#/parameters/transaction_id'
+        responses:
+          "200":
+            description: Successful operation
+            headers:
+              Configuration-Version:
+                description: Configuration file version
+                type: string
+            schema:
+              properties:
+                _version:
+                  type: integer
+                data:
+                  $ref: '#/definitions/captures'
+              required:
+              - data
+              type: object
+          default:
+            $ref: '#/responses/DefaultError'
+        summary: Return an array of declare captures
+        tags:
+        - DeclareCapture
+      post:
+        description: Adds a new declare capture in the specified frontend in the configuration
+          file.
+        operationId: createDeclareCapture
+        parameters:
+        - description: Parent frontend name
+          in: query
+          name: frontend
+          required: true
+          type: string
+        - in: body
+          name: data
+          required: true
+          schema:
+            $ref: '#/definitions/capture'
+        - $ref: '#/parameters/transaction_id'
+        - $ref: '#/parameters/version'
+        - $ref: '#/parameters/force_reload'
+        responses:
+          "201":
+            description: Declare capture created
+            schema:
+              $ref: '#/definitions/capture'
+          "202":
+            description: Configuration change accepted and reload requested
+            headers:
+              Reload-ID:
+                description: ID of the requested reload
+                type: string
+            schema:
+              $ref: '#/definitions/capture'
+          "400":
+            $ref: '#/responses/BadRequest'
+          "409":
+            $ref: '#/responses/AlreadyExists'
+          default:
+            $ref: '#/responses/DefaultError'
+        summary: Add a new declare capture
+        tags:
+        - DeclareCapture
+  /services/haproxy/configuration/captures/{index}:
+      delete:
+        description: Deletes a declare capture configuration by it's index in the specified
+          frontend.
+        operationId: deleteDeclareCapture
+        parameters:
+        - description: Declare Capture Index
+          in: path
+          name: index
+          required: true
+          type: integer
+        - description: Parent frontend name
+          in: query
+          name: frontend
+          required: true
+          type: string
+        - $ref: '#/parameters/transaction_id'
+        - $ref: '#/parameters/version'
+        - $ref: '#/parameters/force_reload'
+        responses:
+          "202":
+            description: Configuration change accepted and reload requested
+            headers:
+              Reload-ID:
+                description: ID of the requested reload
+                type: string
+          "204":
+            description: Declare Capture deleted
+          "404":
+            $ref: '#/responses/NotFound'
+          default:
+            $ref: '#/responses/DefaultError'
+        summary: Delete a declare capture
+        tags:
+        - DeclareCapture
+      get:
+        description: Returns one declare capture configuration by it's index in the specified
+          frontend.
+        operationId: getDeclareCapture
+        parameters:
+        - description: Declare Capture Index
+          in: path
+          name: index
+          required: true
+          type: integer
+        - description: Parent frontend name
+          in: query
+          name: frontend
+          required: true
+          type: string
+        - $ref: '#/parameters/transaction_id'
+        responses:
+          "200":
+            description: Successful operation
+            headers:
+              Configuration-Version:
+                description: Configuration file version
+                type: string
+            schema:
+              properties:
+                _version:
+                  type: integer
+                data:
+                  $ref: '#/definitions/capture'
+              type: object
+          "404":
+            $ref: '#/responses/AlreadyExists'
+          default:
+            $ref: '#/responses/DefaultError'
+        summary: Return one declare capture
+        tags:
+        - DeclareCapture
+      put:
+        description: Replaces a declare capture configuration by it's index in the specified
+          frontend.
+        operationId: replaceDeclareCapture
+        parameters:
+        - description: Declare Capture Index
+          in: path
+          name: index
+          required: true
+          type: integer
+        - description: Parent frontend name
+          in: query
+          name: frontend
+          required: true
+          type: string
+        - in: body
+          name: data
+          required: true
+          schema:
+            $ref: '#/definitions/capture'
+        - $ref: '#/parameters/transaction_id'
+        - $ref: '#/parameters/version'
+        - $ref: '#/parameters/force_reload'
+        responses:
+          "200":
+            description: Declare Capture replaced
+            schema:
+              $ref: '#/definitions/capture'
+          "202":
+            description: Configuration change accepted and reload requested
+            headers:
+              Reload-ID:
+                description: ID of the requested reload
+                type: string
+            schema:
+              $ref: '#/definitions/capture'
+          "400":
+            $ref: '#/responses/BadRequest'
+          "404":
+            $ref: '#/responses/NotFound'
+          default:
+            $ref: '#/responses/DefaultError'
+        summary: Replace a declare capture
+        tags:
+        - DeclareCapture
 
