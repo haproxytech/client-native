@@ -45,7 +45,7 @@ http_response_rule:
         - track-sc1
         - track-sc2
         - unset-var
-        - wait-for-body time
+        - wait-for-body
       x-nullable: false
     capture_sample:
       type: string

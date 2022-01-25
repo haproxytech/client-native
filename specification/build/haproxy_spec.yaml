@@ -2741,7 +2741,7 @@ definitions:
           - track-sc2
           - unset-var
           - use-service
-          - wait-for-body time
+          - wait-for-body
           - wait-for-handshake
           type: string
           x-nullable: false
@@ -3256,7 +3256,7 @@ definitions:
           - track-sc1
           - track-sc2
           - unset-var
-          - wait-for-body time
+          - wait-for-body
           type: string
           x-nullable: false
         var_expr:

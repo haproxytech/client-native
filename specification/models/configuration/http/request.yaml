@@ -66,7 +66,7 @@ http_request_rule:
         - track-sc2
         - unset-var
         - use-service
-        - wait-for-body time
+        - wait-for-body
         - wait-for-handshake
       x-nullable: false
     capture_sample:

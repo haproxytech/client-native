@@ -673,7 +673,7 @@ func ParseHTTPRequestRule(f types.Action) (rule *models.HTTPRequestRule, err err
 		}
 	case *http_actions.WaitForBody:
 		rule = &models.HTTPRequestRule{
-			Type:        models.HTTPRequestRuleTypeWaitForBodyTime,
+			Type:        "wait-for-body",
 			WaitTime:    misc.ParseTimeout(v.Time),
 			WaitAtLeast: misc.ParseSize(v.AtLeast),
 			Cond:        v.Cond,
@@ -1090,7 +1090,7 @@ func SerializeHTTPRequestRule(f models.HTTPRequestRule) (rule types.Action, err 
 			Cond:     f.Cond,
 			CondTest: f.CondTest,
 		}
-	case "wait-for-body time":
+	case "wait-for-body":
 		rule = &http_actions.WaitForBody{
 			Time:     fmt.Sprintf("%v", f.WaitTime),
 			AtLeast:  fmt.Sprintf("%v", f.WaitAtLeast),

@@ -260,7 +260,7 @@ type HTTPRequestRule struct {
 
 	// type
 	// Required: true
-	// Enum: [add-acl add-header allow auth cache-use capture del-acl del-header del-map deny disable-l7-retry do-resolve early-hint normalize-uri redirect reject replace-header replace-path replace-pathq replace-uri replace-value return sc-inc-gpc0 sc-inc-gpc1 sc-set-gpt0 send-spoe-group set-dst set-dst-port set-header set-log-level set-map set-mark set-method set-nice set-path set-pathq set-priority-class set-priority-offset set-query set-src set-src-port set-timeout set-tos set-uri set-var silent-drop strict-mode tarpit track-sc0 track-sc1 track-sc2 unset-var use-service wait-for-body time wait-for-handshake]
+	// Enum: [add-acl add-header allow auth cache-use capture del-acl del-header del-map deny disable-l7-retry do-resolve early-hint normalize-uri redirect reject replace-header replace-path replace-pathq replace-uri replace-value return sc-inc-gpc0 sc-inc-gpc1 sc-set-gpt0 send-spoe-group set-dst set-dst-port set-header set-log-level set-map set-mark set-method set-nice set-path set-pathq set-priority-class set-priority-offset set-query set-src set-src-port set-timeout set-tos set-uri set-var silent-drop strict-mode tarpit track-sc0 track-sc1 track-sc2 unset-var use-service wait-for-body wait-for-handshake]
 	Type string `json:"type"`
 
 	// uri fmt
@@ -1317,7 +1317,7 @@ var httpRequestRuleTypeTypePropEnum []interface{}
 
 func init() {
 	var res []string
-	if err := json.Unmarshal([]byte(`["add-acl","add-header","allow","auth","cache-use","capture","del-acl","del-header","del-map","deny","disable-l7-retry","do-resolve","early-hint","normalize-uri","redirect","reject","replace-header","replace-path","replace-pathq","replace-uri","replace-value","return","sc-inc-gpc0","sc-inc-gpc1","sc-set-gpt0","send-spoe-group","set-dst","set-dst-port","set-header","set-log-level","set-map","set-mark","set-method","set-nice","set-path","set-pathq","set-priority-class","set-priority-offset","set-query","set-src","set-src-port","set-timeout","set-tos","set-uri","set-var","silent-drop","strict-mode","tarpit","track-sc0","track-sc1","track-sc2","unset-var","use-service","wait-for-body time","wait-for-handshake"]`), &res); err != nil {
+	if err := json.Unmarshal([]byte(`["add-acl","add-header","allow","auth","cache-use","capture","del-acl","del-header","del-map","deny","disable-l7-retry","do-resolve","early-hint","normalize-uri","redirect","reject","replace-header","replace-path","replace-pathq","replace-uri","replace-value","return","sc-inc-gpc0","sc-inc-gpc1","sc-set-gpt0","send-spoe-group","set-dst","set-dst-port","set-header","set-log-level","set-map","set-mark","set-method","set-nice","set-path","set-pathq","set-priority-class","set-priority-offset","set-query","set-src","set-src-port","set-timeout","set-tos","set-uri","set-var","silent-drop","strict-mode","tarpit","track-sc0","track-sc1","track-sc2","unset-var","use-service","wait-for-body","wait-for-handshake"]`), &res); err != nil {
 		panic(err)
 	}
 	for _, v := range res {
@@ -1486,8 +1486,8 @@ const (
 	// HTTPRequestRuleTypeUseService captures enum value "use-service"
 	HTTPRequestRuleTypeUseService string = "use-service"
 
-	// HTTPRequestRuleTypeWaitForBodyTime captures enum value "wait-for-body time"
-	HTTPRequestRuleTypeWaitForBodyTime string = "wait-for-body time"
+	// HTTPRequestRuleTypeWaitForBody captures enum value "wait-for-body"
+	HTTPRequestRuleTypeWaitForBody string = "wait-for-body"
 
 	// HTTPRequestRuleTypeWaitForHandshake captures enum value "wait-for-handshake"
 	HTTPRequestRuleTypeWaitForHandshake string = "wait-for-handshake"
