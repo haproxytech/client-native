@@ -144,6 +144,8 @@ frontend test
   http-response track-sc2 src table tr2 if FALSE
   http-response strict-mode on if FALSE
   http-response lua.foo param1 param2 if FALSE
+  http-response deny deny_status 400 content-type application/json lf-file /var/errors.file
+  http-response wait-for-body time 20s at-least 100k
   tcp-request connection accept if TRUE
   tcp-request connection reject if FALSE
   tcp-request content accept if TRUE

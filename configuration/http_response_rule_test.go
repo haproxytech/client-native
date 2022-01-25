@@ -29,8 +29,8 @@ func TestGetHTTPResponseRules(t *testing.T) { //nolint:gocognit,gocyclo
 		t.Error(err.Error())
 	}
 
-	if len(hRules) != 20 {
-		t.Errorf("%v http response rules returned, expected 20", len(hRules))
+	if len(hRules) != 22 {
+		t.Errorf("%v http response rules returned, expected 22", len(hRules))
 	}
 
 	if v != version {
@@ -324,6 +324,32 @@ func TestGetHTTPResponseRules(t *testing.T) { //nolint:gocognit,gocyclo
 			if r.CondTest != "FALSE" {
 				t.Errorf("%v: CondTest not FALSE: %v", *r.Index, r.CondTest)
 			}
+		case 20:
+			if r.Type != "deny" {
+				t.Errorf("%v: Type not deny: %v", *r.Index, r.Type)
+			}
+			if *r.DenyStatus != 400 {
+				t.Errorf("%v: DenyStatus not 400: %v", *r.Index, *r.DenyStatus)
+			}
+			if *r.ReturnContentType != "application/json" {
+				t.Errorf("%v: ReturnContentType not application/json: %v", *r.Index, *r.ReturnContentType)
+			}
+			if r.ReturnContentFormat != "lf-file" {
+				t.Errorf("%v: ReturnContentFormat not lf-file: %v", *r.Index, r.ReturnContentFormat)
+			}
+			if r.ReturnContent != "/var/errors.file" {
+				t.Errorf(`%v: ReturnContent not "/var/errors.file": %v`, *r.Index, r.ReturnContent)
+			}
+		case 21:
+			if r.Type != "wait-for-body" {
+				t.Errorf("%v: Type not wait-for-body: %v", *r.Index, r.Type)
+			}
+			if *r.WaitTime != 20000 {
+				t.Errorf("%v: WaitTime not 20000: %v", *r.Index, *r.WaitTime)
+			}
+			if *r.WaitAtLeast != 102400 {
+				t.Errorf("%v: AtLeast not 102400: %v", *r.Index, *r.WaitAtLeast)
+			}
 		default:
 			t.Errorf("Expext only http-response 0 to 18, %v found", *r.Index)
 		}
@@ -444,7 +470,7 @@ func TestCreateEditDeleteHTTPResponseRule(t *testing.T) {
 	}
 
 	// TestDeleteHTTPResponse
-	err = client.DeleteHTTPResponseRule(20, "frontend", "test", "", version)
+	err = client.DeleteHTTPResponseRule(22, "frontend", "test", "", version)
 	if err != nil {
 		t.Error(err.Error())
 	} else {
@@ -455,7 +481,7 @@ func TestCreateEditDeleteHTTPResponseRule(t *testing.T) {
 		t.Error("Version not incremented")
 	}
 
-	_, _, err = client.GetHTTPResponseRule(20, "frontend", "test", "")
+	_, _, err = client.GetHTTPResponseRule(22, "frontend", "test", "")
 	if err == nil {
 		t.Error("DeleteHTTPResponseRule failed, HTTPResponse Rule 19 still exists")
 	}
