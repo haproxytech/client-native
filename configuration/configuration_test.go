@@ -120,6 +120,10 @@ frontend test
   http-request redirect scheme https if !{ ssl_fc }
   http-request redirect location https://%[hdr(host),field(1,:)]:443%[capture.req.uri] code 302
   http-request deny unless src 192.168.0.0/16
+  http-request deny deny_status 400 content-type application/json lf-file /var/errors.file
+  http-request wait-for-body time 20s at-least 100k
+  http-request set-timeout server 20
+  http-request set-timeout tunnel 20
   http-response allow if src 192.168.0.0/16
   http-response set-header X-SSL %[ssl_fc]
   http-response set-var(req.my_var) req.fhdr(user-agent),lower

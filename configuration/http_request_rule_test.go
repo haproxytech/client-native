@@ -29,8 +29,8 @@ func TestGetHTTPRequestRules(t *testing.T) { //nolint:gocognit,gocyclo
 		t.Error(err.Error())
 	}
 
-	if len(hRules) != 32 {
-		t.Errorf("%v http request rules returned, expected 31", len(hRules))
+	if len(hRules) != 36 {
+		t.Errorf("%v http request rules returned, expected 36", len(hRules))
 	}
 
 	if v != version {
@@ -509,6 +509,52 @@ func TestGetHTTPRequestRules(t *testing.T) { //nolint:gocognit,gocyclo
 			if r.CondTest != "src 192.168.0.0/16" {
 				t.Errorf("%v: CondTest not src 192.168.0.0/16: %v", *r.Index, r.CondTest)
 			}
+		case 32:
+			if r.Type != "deny" {
+				t.Errorf("%v: Type not deny: %v", *r.Index, r.Type)
+			}
+			if *r.DenyStatus != 400 {
+				t.Errorf("%v: DenyStatus not 400: %v", *r.Index, *r.DenyStatus)
+			}
+			if *r.ReturnContentType != "application/json" {
+				t.Errorf("%v: ReturnContentType not application/json: %v", *r.Index, *r.ReturnContentType)
+			}
+			if r.ReturnContentFormat != "lf-file" {
+				t.Errorf("%v: ReturnContentFormat not lf-file: %v", *r.Index, r.ReturnContentFormat)
+			}
+			if r.ReturnContent != "/var/errors.file" {
+				t.Errorf(`%v: ReturnContent not "/var/errors.file": %v`, *r.Index, r.ReturnContent)
+			}
+		case 33:
+			if r.Type != "wait-for-body" {
+				t.Errorf("%v: Type not wait-for-body: %v", *r.Index, r.Type)
+			}
+			if *r.WaitTime != 20000 {
+				t.Errorf("%v: WaitTime not 20000: %v", *r.Index, *r.WaitTime)
+			}
+			if *r.WaitAtLeast != 102400 {
+				t.Errorf("%v: AtLeast not 102400: %v", *r.Index, *r.WaitAtLeast)
+			}
+		case 34:
+			if r.Type != "set-timeout" {
+				t.Errorf("%v: Type not set-timeout: %v", *r.Index, r.Type)
+			}
+			if r.TimeoutType != "server" {
+				t.Errorf("%v: TimeoutType not server: %v", *r.Index, r.TimeoutType)
+			}
+			if r.Timeout != "20" {
+				t.Errorf("%v: Timeout not 20: %v", *r.Index, r.Timeout)
+			}
+		case 35:
+			if r.Type != "set-timeout" {
+				t.Errorf("%v: Type not set-timeout: %v", *r.Index, r.Type)
+			}
+			if r.TimeoutType != "tunnel" {
+				t.Errorf("%v: TimeoutType not tunnel: %v", *r.Index, r.TimeoutType)
+			}
+			if r.Timeout != "20" {
+				t.Errorf("%v: Timeout not 20: %v", *r.Index, r.Timeout)
+			}
 		default:
 			t.Errorf("Expext only http-request 0 to 31, %v found", *r.Index)
 		}
@@ -672,7 +718,7 @@ func TestCreateEditDeleteHTTPRequestRule(t *testing.T) {
 	}
 
 	// TestDeleteHTTPRequest
-	err = client.DeleteHTTPRequestRule(31, "frontend", "test", "", version)
+	err = client.DeleteHTTPRequestRule(36, "frontend", "test", "", version)
 	if err != nil {
 		t.Error(err.Error())
 	} else {
@@ -683,7 +729,7 @@ func TestCreateEditDeleteHTTPRequestRule(t *testing.T) {
 		t.Error("Version not incremented")
 	}
 
-	_, _, err = client.GetHTTPRequestRule(32, "frontend", "test", "")
+	_, _, err = client.GetHTTPRequestRule(36, "frontend", "test", "")
 	if err == nil {
 		t.Error("DeleteHTTPRequestRule failed, HTTP Request Rule 31 still exists")
 	}
