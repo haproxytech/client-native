@@ -12,7 +12,40 @@ http_response_rule:
       x-nullable: true
     type:
       type: string
-      enum: [allow, deny, redirect, add-header, set-header, del-header, set-log-level, set-var, set-status, send-spoe-group, replace-header, replace-value, add-acl, del-acl, capture, set-map, del-map, sc-inc-gpc0, sc-inc-gpc1, sc-set-gpt0, set-mark, set-nice, set-tos, silent-drop, unset-var, track-sc0, track-sc1, track-sc2, strict-mode, lua, cache-store]
+      enum:
+        - add-acl
+        - add-header
+        - allow
+        - cache-store
+        - capture
+        - del-acl
+        - del-header
+        - del-map
+        - deny
+        - redirect
+        - replace-header
+        - replace-value
+        - return
+        - sc-inc-gpc0
+        - sc-inc-gpc1
+        - sc-set-gpt0
+        - send-spoe-group
+        - set-header
+        - set-log-level
+        - set-map
+        - set-mark
+        - set-nice
+        - set-status
+        - set-tos
+        - set-var
+        - set-var-fmt
+        - silent-drop
+        - strict-mode
+        - track-sc0
+        - track-sc1
+        - track-sc2
+        - unset-var
+        - wait-for-body time
       x-nullable: false
     capture_sample:
       type: string
@@ -82,6 +115,12 @@ http_response_rule:
         type:
           value: [replace-header, replace-value, set-header, add-header]
           required: true
+    hdr_method:
+      type: string
+      x-display-name: Header Match Method
+      x-dependency:
+        type:
+          value: [del-header]
     log_level:
       type: string
       enum: [emerg, alert, crit, err, warning, notice, info, debug, silent]
@@ -94,14 +133,14 @@ http_response_rule:
       pattern: '^[^\s]+$'
       x-dependency:
         type:
-          value: [set-var, unset-var]
+          value: [set-var, set-var-fmt, unset-var]
           required: true
     var_scope:
       type: string
       pattern: '^[^\s]+$'
       x-dependency:
         type:
-          value: [set-var, unset-var]
+          value: [set-var, set-var-fmt, unset-var]
           required: true
     var_expr:
       type: string
@@ -109,6 +148,13 @@ http_response_rule:
       x-dependency:
         type:
           value: set-var
+          required: true
+    var_format:
+      type: string
+      x-display-name: Var Format
+      x-dependency:
+        type:
+          value: set-var-fmt
           required: true
     status:
       type: integer
@@ -295,6 +341,71 @@ http_response_rule:
         type:
           value: cache-store
           required: true
+    deny_status:
+      type: integer
+      minimum: 200
+      maximum: 599
+      x-nullable: true
+      x-dependency:
+        type:
+          value: [deny, tarpit]
+    return_status_code:
+      type: integer
+      minimum: 200
+      maximum: 599
+      x-dependency:
+        type:
+          value: return
+      x-display-name: Return Error Code
+      x-nullable: true
+    return_content_type:
+      type: string
+      x-dependency:
+        type:
+          value: [deny, tarpit, return]
+      x-display-name: Return content type
+      x-nullable: true
+    return_content_format:
+      type: string
+      enum: [default-errorfile, errorfile, errorfiles, file, lf-file, string, lf-string]
+      x-dependency:
+        type:
+          value: [deny, tarpit, return]
+    return_content:
+      type: string
+      x-dependency:
+        return_content_format:
+          value: [errofile, errorfiles, file, lf-file, string, lf-string]
+          required: true
+    return_hdrs:
+      type: array
+      x-go-name: ReturnHeaders
+      x-dependency:
+        return_content_format:
+          value: [file, lf-file, string, lf-string]
+      items:
+        type: object
+        required:
+          - name
+          - fmt
+        properties:
+          name:
+            type: string
+          fmt:
+            type: string
+    wait_time:
+      type: integer
+      x-nullable: true
+      x-dependency:
+        type:
+          value: wait-for-body
+          required: true
+    wait_at_least:
+      type: integer
+      x-nullable: true
+      x-dependency:
+        type:
+          value: wait-for-body
     cond:
       type: string
       x-display-name: Condition

@@ -2897,6 +2897,16 @@ definitions:
             freeFormat: true
             operation: getACLs
             property: acl_name
+        deny_status:
+          maximum: 599
+          minimum: 200
+          type: integer
+          x-dependency:
+            type:
+              value:
+              - deny
+              - tarpit
+          x-nullable: true
         hdr_format:
           type: string
           x-dependency:
@@ -2917,6 +2927,13 @@ definitions:
               - replace-header
               - replace-value
           x-display-name: Header Match
+        hdr_method:
+          type: string
+          x-dependency:
+            type:
+              value:
+              - del-header
+          x-display-name: Header Match Method
         hdr_name:
           type: string
           x-dependency:
@@ -3044,6 +3061,73 @@ definitions:
               required: true
               value: redirect
           x-display-name: Redirect Value
+        return_content:
+          type: string
+          x-dependency:
+            return_content_format:
+              required: true
+              value:
+              - errofile
+              - errorfiles
+              - file
+              - lf-file
+              - string
+              - lf-string
+        return_content_format:
+          enum:
+          - default-errorfile
+          - errorfile
+          - errorfiles
+          - file
+          - lf-file
+          - string
+          - lf-string
+          type: string
+          x-dependency:
+            type:
+              value:
+              - deny
+              - tarpit
+              - return
+        return_content_type:
+          type: string
+          x-dependency:
+            type:
+              value:
+              - deny
+              - tarpit
+              - return
+          x-display-name: Return content type
+          x-nullable: true
+        return_hdrs:
+          items:
+            properties:
+              fmt:
+                type: string
+              name:
+                type: string
+            required:
+            - name
+            - fmt
+            type: object
+          type: array
+          x-dependency:
+            return_content_format:
+              value:
+              - file
+              - lf-file
+              - string
+              - lf-string
+          x-go-name: ReturnHeaders
+        return_status_code:
+          maximum: 599
+          minimum: 200
+          type: integer
+          x-dependency:
+            type:
+              value: return
+          x-display-name: Return Error Code
+          x-nullable: true
         sc_expr:
           type: string
           x-dependency:
@@ -3160,37 +3244,39 @@ definitions:
           x-display-name: track-sc2 Table
         type:
           enum:
+          - add-acl
+          - add-header
           - allow
+          - cache-store
+          - capture
+          - del-acl
+          - del-header
+          - del-map
           - deny
           - redirect
-          - add-header
-          - set-header
-          - del-header
-          - set-log-level
-          - set-var
-          - set-status
-          - send-spoe-group
           - replace-header
           - replace-value
-          - add-acl
-          - del-acl
-          - capture
-          - set-map
-          - del-map
+          - return
           - sc-inc-gpc0
           - sc-inc-gpc1
           - sc-set-gpt0
+          - send-spoe-group
+          - set-header
+          - set-log-level
+          - set-map
           - set-mark
           - set-nice
+          - set-status
           - set-tos
+          - set-var
+          - set-var-fmt
           - silent-drop
-          - unset-var
+          - strict-mode
           - track-sc0
           - track-sc1
           - track-sc2
-          - strict-mode
-          - lua
-          - cache-store
+          - unset-var
+          - wait-for-body time
           type: string
           x-nullable: false
         var_expr:
@@ -3200,6 +3286,13 @@ definitions:
               required: true
               value: set-var
           x-display-name: Var Expression
+        var_format:
+          type: string
+          x-dependency:
+            type:
+              required: true
+              value: set-var-fmt
+          x-display-name: Var Format
         var_name:
           pattern: ^[^\s]+$
           type: string
@@ -3208,6 +3301,7 @@ definitions:
               required: true
               value:
               - set-var
+              - set-var-fmt
               - unset-var
         var_scope:
           pattern: ^[^\s]+$
@@ -3217,7 +3311,21 @@ definitions:
               required: true
               value:
               - set-var
+              - set-var-fmt
               - unset-var
+        wait_at_least:
+          type: integer
+          x-dependency:
+            type:
+              value: wait-for-body
+          x-nullable: true
+        wait_time:
+          type: integer
+          x-dependency:
+            type:
+              required: true
+              value: wait-for-body
+          x-nullable: true
       required:
       - index
       - type

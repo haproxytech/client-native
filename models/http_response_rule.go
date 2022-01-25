@@ -22,6 +22,7 @@ package models
 
 import (
 	"encoding/json"
+	"strconv"
 
 	"github.com/go-openapi/errors"
 	"github.com/go-openapi/strfmt"
@@ -35,6 +36,9 @@ import (
 //
 // swagger:model http_response_rule
 type HTTPResponseRule struct {
+
+	// return headers
+	ReturnHeaders []*HTTPResponseRuleReturnHdrsItems0 `json:"return_hdrs"`
 
 	// acl file
 	// Pattern: ^[^\s]+$
@@ -62,11 +66,19 @@ type HTTPResponseRule struct {
 	// cond test
 	CondTest string `json:"cond_test,omitempty"`
 
+	// deny status
+	// Maximum: 599
+	// Minimum: 200
+	DenyStatus *int64 `json:"deny_status,omitempty"`
+
 	// hdr format
 	HdrFormat string `json:"hdr_format,omitempty"`
 
 	// hdr match
 	HdrMatch string `json:"hdr_match,omitempty"`
+
+	// hdr method
+	HdrMethod string `json:"hdr_method,omitempty"`
 
 	// hdr name
 	HdrName string `json:"hdr_name,omitempty"`
@@ -121,6 +133,21 @@ type HTTPResponseRule struct {
 	// redir value
 	// Pattern: ^[^\s]+$
 	RedirValue string `json:"redir_value,omitempty"`
+
+	// return content
+	ReturnContent string `json:"return_content,omitempty"`
+
+	// return content format
+	// Enum: [default-errorfile errorfile errorfiles file lf-file string lf-string]
+	ReturnContentFormat string `json:"return_content_format,omitempty"`
+
+	// return content type
+	ReturnContentType *string `json:"return_content_type,omitempty"`
+
+	// return status code
+	// Maximum: 599
+	// Minimum: 200
+	ReturnStatusCode *int64 `json:"return_status_code,omitempty"`
 
 	// sc expr
 	ScExpr string `json:"sc_expr,omitempty"`
@@ -181,11 +208,14 @@ type HTTPResponseRule struct {
 
 	// type
 	// Required: true
-	// Enum: [allow deny redirect add-header set-header del-header set-log-level set-var set-status send-spoe-group replace-header replace-value add-acl del-acl capture set-map del-map sc-inc-gpc0 sc-inc-gpc1 sc-set-gpt0 set-mark set-nice set-tos silent-drop unset-var track-sc0 track-sc1 track-sc2 strict-mode lua cache-store]
+	// Enum: [add-acl add-header allow cache-store capture del-acl del-header del-map deny redirect replace-header replace-value return sc-inc-gpc0 sc-inc-gpc1 sc-set-gpt0 send-spoe-group set-header set-log-level set-map set-mark set-nice set-status set-tos set-var set-var-fmt silent-drop strict-mode track-sc0 track-sc1 track-sc2 unset-var wait-for-body time]
 	Type string `json:"type"`
 
 	// var expr
 	VarExpr string `json:"var_expr,omitempty"`
+
+	// var format
+	VarFormat string `json:"var_format,omitempty"`
 
 	// var name
 	// Pattern: ^[^\s]+$
@@ -194,11 +224,21 @@ type HTTPResponseRule struct {
 	// var scope
 	// Pattern: ^[^\s]+$
 	VarScope string `json:"var_scope,omitempty"`
+
+	// wait at least
+	WaitAtLeast *int64 `json:"wait_at_least,omitempty"`
+
+	// wait time
+	WaitTime *int64 `json:"wait_time,omitempty"`
 }
 
 // Validate validates this http response rule
 func (m *HTTPResponseRule) Validate(formats strfmt.Registry) error {
 	var res []error
+
+	if err := m.validateReturnHeaders(formats); err != nil {
+		res = append(res, err)
+	}
 
 	if err := m.validateACLFile(formats); err != nil {
 		res = append(res, err)
@@ -217,6 +257,10 @@ func (m *HTTPResponseRule) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateCond(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateDenyStatus(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -261,6 +305,14 @@ func (m *HTTPResponseRule) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateRedirValue(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateReturnContentFormat(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateReturnStatusCode(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -323,6 +375,31 @@ func (m *HTTPResponseRule) Validate(formats strfmt.Registry) error {
 	if len(res) > 0 {
 		return errors.CompositeValidationError(res...)
 	}
+	return nil
+}
+
+func (m *HTTPResponseRule) validateReturnHeaders(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.ReturnHeaders) { // not required
+		return nil
+	}
+
+	for i := 0; i < len(m.ReturnHeaders); i++ {
+		if swag.IsZero(m.ReturnHeaders[i]) { // not required
+			continue
+		}
+
+		if m.ReturnHeaders[i] != nil {
+			if err := m.ReturnHeaders[i].Validate(formats); err != nil {
+				if ve, ok := err.(*errors.Validation); ok {
+					return ve.ValidateName("return_hdrs" + "." + strconv.Itoa(i))
+				}
+				return err
+			}
+		}
+
+	}
+
 	return nil
 }
 
@@ -415,6 +492,23 @@ func (m *HTTPResponseRule) validateCond(formats strfmt.Registry) error {
 
 	// value enum
 	if err := m.validateCondEnum("cond", "body", m.Cond); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *HTTPResponseRule) validateDenyStatus(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.DenyStatus) { // not required
+		return nil
+	}
+
+	if err := validate.MinimumInt("deny_status", "body", int64(*m.DenyStatus), 200, false); err != nil {
+		return err
+	}
+
+	if err := validate.MaximumInt("deny_status", "body", int64(*m.DenyStatus), 599, false); err != nil {
 		return err
 	}
 
@@ -669,6 +763,81 @@ func (m *HTTPResponseRule) validateRedirValue(formats strfmt.Registry) error {
 	return nil
 }
 
+var httpResponseRuleTypeReturnContentFormatPropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["default-errorfile","errorfile","errorfiles","file","lf-file","string","lf-string"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		httpResponseRuleTypeReturnContentFormatPropEnum = append(httpResponseRuleTypeReturnContentFormatPropEnum, v)
+	}
+}
+
+const (
+
+	// HTTPResponseRuleReturnContentFormatDefaultErrorfile captures enum value "default-errorfile"
+	HTTPResponseRuleReturnContentFormatDefaultErrorfile string = "default-errorfile"
+
+	// HTTPResponseRuleReturnContentFormatErrorfile captures enum value "errorfile"
+	HTTPResponseRuleReturnContentFormatErrorfile string = "errorfile"
+
+	// HTTPResponseRuleReturnContentFormatErrorfiles captures enum value "errorfiles"
+	HTTPResponseRuleReturnContentFormatErrorfiles string = "errorfiles"
+
+	// HTTPResponseRuleReturnContentFormatFile captures enum value "file"
+	HTTPResponseRuleReturnContentFormatFile string = "file"
+
+	// HTTPResponseRuleReturnContentFormatLfFile captures enum value "lf-file"
+	HTTPResponseRuleReturnContentFormatLfFile string = "lf-file"
+
+	// HTTPResponseRuleReturnContentFormatString captures enum value "string"
+	HTTPResponseRuleReturnContentFormatString string = "string"
+
+	// HTTPResponseRuleReturnContentFormatLfString captures enum value "lf-string"
+	HTTPResponseRuleReturnContentFormatLfString string = "lf-string"
+)
+
+// prop value enum
+func (m *HTTPResponseRule) validateReturnContentFormatEnum(path, location string, value string) error {
+	if err := validate.Enum(path, location, value, httpResponseRuleTypeReturnContentFormatPropEnum); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *HTTPResponseRule) validateReturnContentFormat(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.ReturnContentFormat) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateReturnContentFormatEnum("return_content_format", "body", m.ReturnContentFormat); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *HTTPResponseRule) validateReturnStatusCode(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.ReturnStatusCode) { // not required
+		return nil
+	}
+
+	if err := validate.MinimumInt("return_status_code", "body", int64(*m.ReturnStatusCode), 200, false); err != nil {
+		return err
+	}
+
+	if err := validate.MaximumInt("return_status_code", "body", int64(*m.ReturnStatusCode), 599, false); err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func (m *HTTPResponseRule) validateSpoeEngine(formats strfmt.Registry) error {
 
 	if swag.IsZero(m.SpoeEngine) { // not required
@@ -850,7 +1019,7 @@ var httpResponseRuleTypeTypePropEnum []interface{}
 
 func init() {
 	var res []string
-	if err := json.Unmarshal([]byte(`["allow","deny","redirect","add-header","set-header","del-header","set-log-level","set-var","set-status","send-spoe-group","replace-header","replace-value","add-acl","del-acl","capture","set-map","del-map","sc-inc-gpc0","sc-inc-gpc1","sc-set-gpt0","set-mark","set-nice","set-tos","silent-drop","unset-var","track-sc0","track-sc1","track-sc2","strict-mode","lua","cache-store"]`), &res); err != nil {
+	if err := json.Unmarshal([]byte(`["add-acl","add-header","allow","cache-store","capture","del-acl","del-header","del-map","deny","redirect","replace-header","replace-value","return","sc-inc-gpc0","sc-inc-gpc1","sc-set-gpt0","send-spoe-group","set-header","set-log-level","set-map","set-mark","set-nice","set-status","set-tos","set-var","set-var-fmt","silent-drop","strict-mode","track-sc0","track-sc1","track-sc2","unset-var","wait-for-body time"]`), &res); err != nil {
 		panic(err)
 	}
 	for _, v := range res {
@@ -860,8 +1029,29 @@ func init() {
 
 const (
 
+	// HTTPResponseRuleTypeAddACL captures enum value "add-acl"
+	HTTPResponseRuleTypeAddACL string = "add-acl"
+
+	// HTTPResponseRuleTypeAddHeader captures enum value "add-header"
+	HTTPResponseRuleTypeAddHeader string = "add-header"
+
 	// HTTPResponseRuleTypeAllow captures enum value "allow"
 	HTTPResponseRuleTypeAllow string = "allow"
+
+	// HTTPResponseRuleTypeCacheStore captures enum value "cache-store"
+	HTTPResponseRuleTypeCacheStore string = "cache-store"
+
+	// HTTPResponseRuleTypeCapture captures enum value "capture"
+	HTTPResponseRuleTypeCapture string = "capture"
+
+	// HTTPResponseRuleTypeDelACL captures enum value "del-acl"
+	HTTPResponseRuleTypeDelACL string = "del-acl"
+
+	// HTTPResponseRuleTypeDelHeader captures enum value "del-header"
+	HTTPResponseRuleTypeDelHeader string = "del-header"
+
+	// HTTPResponseRuleTypeDelMap captures enum value "del-map"
+	HTTPResponseRuleTypeDelMap string = "del-map"
 
 	// HTTPResponseRuleTypeDeny captures enum value "deny"
 	HTTPResponseRuleTypeDeny string = "deny"
@@ -869,47 +1059,14 @@ const (
 	// HTTPResponseRuleTypeRedirect captures enum value "redirect"
 	HTTPResponseRuleTypeRedirect string = "redirect"
 
-	// HTTPResponseRuleTypeAddHeader captures enum value "add-header"
-	HTTPResponseRuleTypeAddHeader string = "add-header"
-
-	// HTTPResponseRuleTypeSetHeader captures enum value "set-header"
-	HTTPResponseRuleTypeSetHeader string = "set-header"
-
-	// HTTPResponseRuleTypeDelHeader captures enum value "del-header"
-	HTTPResponseRuleTypeDelHeader string = "del-header"
-
-	// HTTPResponseRuleTypeSetLogLevel captures enum value "set-log-level"
-	HTTPResponseRuleTypeSetLogLevel string = "set-log-level"
-
-	// HTTPResponseRuleTypeSetVar captures enum value "set-var"
-	HTTPResponseRuleTypeSetVar string = "set-var"
-
-	// HTTPResponseRuleTypeSetStatus captures enum value "set-status"
-	HTTPResponseRuleTypeSetStatus string = "set-status"
-
-	// HTTPResponseRuleTypeSendSpoeGroup captures enum value "send-spoe-group"
-	HTTPResponseRuleTypeSendSpoeGroup string = "send-spoe-group"
-
 	// HTTPResponseRuleTypeReplaceHeader captures enum value "replace-header"
 	HTTPResponseRuleTypeReplaceHeader string = "replace-header"
 
 	// HTTPResponseRuleTypeReplaceValue captures enum value "replace-value"
 	HTTPResponseRuleTypeReplaceValue string = "replace-value"
 
-	// HTTPResponseRuleTypeAddACL captures enum value "add-acl"
-	HTTPResponseRuleTypeAddACL string = "add-acl"
-
-	// HTTPResponseRuleTypeDelACL captures enum value "del-acl"
-	HTTPResponseRuleTypeDelACL string = "del-acl"
-
-	// HTTPResponseRuleTypeCapture captures enum value "capture"
-	HTTPResponseRuleTypeCapture string = "capture"
-
-	// HTTPResponseRuleTypeSetMap captures enum value "set-map"
-	HTTPResponseRuleTypeSetMap string = "set-map"
-
-	// HTTPResponseRuleTypeDelMap captures enum value "del-map"
-	HTTPResponseRuleTypeDelMap string = "del-map"
+	// HTTPResponseRuleTypeReturn captures enum value "return"
+	HTTPResponseRuleTypeReturn string = "return"
 
 	// HTTPResponseRuleTypeScIncGpc0 captures enum value "sc-inc-gpc0"
 	HTTPResponseRuleTypeScIncGpc0 string = "sc-inc-gpc0"
@@ -920,20 +1077,41 @@ const (
 	// HTTPResponseRuleTypeScSetGpt0 captures enum value "sc-set-gpt0"
 	HTTPResponseRuleTypeScSetGpt0 string = "sc-set-gpt0"
 
+	// HTTPResponseRuleTypeSendSpoeGroup captures enum value "send-spoe-group"
+	HTTPResponseRuleTypeSendSpoeGroup string = "send-spoe-group"
+
+	// HTTPResponseRuleTypeSetHeader captures enum value "set-header"
+	HTTPResponseRuleTypeSetHeader string = "set-header"
+
+	// HTTPResponseRuleTypeSetLogLevel captures enum value "set-log-level"
+	HTTPResponseRuleTypeSetLogLevel string = "set-log-level"
+
+	// HTTPResponseRuleTypeSetMap captures enum value "set-map"
+	HTTPResponseRuleTypeSetMap string = "set-map"
+
 	// HTTPResponseRuleTypeSetMark captures enum value "set-mark"
 	HTTPResponseRuleTypeSetMark string = "set-mark"
 
 	// HTTPResponseRuleTypeSetNice captures enum value "set-nice"
 	HTTPResponseRuleTypeSetNice string = "set-nice"
 
+	// HTTPResponseRuleTypeSetStatus captures enum value "set-status"
+	HTTPResponseRuleTypeSetStatus string = "set-status"
+
 	// HTTPResponseRuleTypeSetTos captures enum value "set-tos"
 	HTTPResponseRuleTypeSetTos string = "set-tos"
+
+	// HTTPResponseRuleTypeSetVar captures enum value "set-var"
+	HTTPResponseRuleTypeSetVar string = "set-var"
+
+	// HTTPResponseRuleTypeSetVarFmt captures enum value "set-var-fmt"
+	HTTPResponseRuleTypeSetVarFmt string = "set-var-fmt"
 
 	// HTTPResponseRuleTypeSilentDrop captures enum value "silent-drop"
 	HTTPResponseRuleTypeSilentDrop string = "silent-drop"
 
-	// HTTPResponseRuleTypeUnsetVar captures enum value "unset-var"
-	HTTPResponseRuleTypeUnsetVar string = "unset-var"
+	// HTTPResponseRuleTypeStrictMode captures enum value "strict-mode"
+	HTTPResponseRuleTypeStrictMode string = "strict-mode"
 
 	// HTTPResponseRuleTypeTrackSc0 captures enum value "track-sc0"
 	HTTPResponseRuleTypeTrackSc0 string = "track-sc0"
@@ -944,14 +1122,11 @@ const (
 	// HTTPResponseRuleTypeTrackSc2 captures enum value "track-sc2"
 	HTTPResponseRuleTypeTrackSc2 string = "track-sc2"
 
-	// HTTPResponseRuleTypeStrictMode captures enum value "strict-mode"
-	HTTPResponseRuleTypeStrictMode string = "strict-mode"
+	// HTTPResponseRuleTypeUnsetVar captures enum value "unset-var"
+	HTTPResponseRuleTypeUnsetVar string = "unset-var"
 
-	// HTTPResponseRuleTypeLua captures enum value "lua"
-	HTTPResponseRuleTypeLua string = "lua"
-
-	// HTTPResponseRuleTypeCacheStore captures enum value "cache-store"
-	HTTPResponseRuleTypeCacheStore string = "cache-store"
+	// HTTPResponseRuleTypeWaitForBodyTime captures enum value "wait-for-body time"
+	HTTPResponseRuleTypeWaitForBodyTime string = "wait-for-body time"
 )
 
 // prop value enum
@@ -1013,6 +1188,74 @@ func (m *HTTPResponseRule) MarshalBinary() ([]byte, error) {
 // UnmarshalBinary interface implementation
 func (m *HTTPResponseRule) UnmarshalBinary(b []byte) error {
 	var res HTTPResponseRule
+	if err := swag.ReadJSON(b, &res); err != nil {
+		return err
+	}
+	*m = res
+	return nil
+}
+
+// HTTPResponseRuleReturnHdrsItems0 HTTP response rule return hdrs items0
+//
+// swagger:model HTTPResponseRuleReturnHdrsItems0
+type HTTPResponseRuleReturnHdrsItems0 struct {
+
+	// fmt
+	// Required: true
+	Fmt *string `json:"fmt"`
+
+	// name
+	// Required: true
+	Name *string `json:"name"`
+}
+
+// Validate validates this HTTP response rule return hdrs items0
+func (m *HTTPResponseRuleReturnHdrsItems0) Validate(formats strfmt.Registry) error {
+	var res []error
+
+	if err := m.validateFmt(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateName(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if len(res) > 0 {
+		return errors.CompositeValidationError(res...)
+	}
+	return nil
+}
+
+func (m *HTTPResponseRuleReturnHdrsItems0) validateFmt(formats strfmt.Registry) error {
+
+	if err := validate.Required("fmt", "body", m.Fmt); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *HTTPResponseRuleReturnHdrsItems0) validateName(formats strfmt.Registry) error {
+
+	if err := validate.Required("name", "body", m.Name); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+// MarshalBinary interface implementation
+func (m *HTTPResponseRuleReturnHdrsItems0) MarshalBinary() ([]byte, error) {
+	if m == nil {
+		return nil, nil
+	}
+	return swag.WriteJSON(m)
+}
+
+// UnmarshalBinary interface implementation
+func (m *HTTPResponseRuleReturnHdrsItems0) UnmarshalBinary(b []byte) error {
+	var res HTTPResponseRuleReturnHdrsItems0
 	if err := swag.ReadJSON(b, &res); err != nil {
 		return err
 	}
