@@ -134,6 +134,16 @@ func TestGetACL(t *testing.T) {
 	if err == nil {
 		t.Error("Should throw error, non existent ACL")
 	}
+
+	_, _, err = client.GetACL(100, "frontend", "fake", "")
+	if err == nil {
+		t.Error("Should throw error, non existent frontend and ACL")
+	}
+
+	_, _, err = client.GetACL(100, "backend", "fake", "")
+	if err == nil {
+		t.Error("Should throw error, non existent backend and ACL")
+	}
 }
 
 func TestCreateEditDeleteACL(t *testing.T) {
