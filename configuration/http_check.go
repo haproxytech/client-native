@@ -283,13 +283,13 @@ func ParseHTTPCheck(f types.Action) (check *models.HTTPCheckRule, err error) {
 			BodyLogFormat: v.BodyLogFormat,
 			CheckComment:  v.CheckComment,
 		}
-		headers := []*models.CheckHeader{}
+		headers := []*models.ReturnHeader{}
 		for _, h := range v.Header {
 			name := h.Name
 			value := h.Format
-			header := &models.CheckHeader{
-				Name:  &name,
-				Value: &value,
+			header := &models.ReturnHeader{
+				Name: &name,
+				Fmt:  &value,
 			}
 			headers = append(headers, header)
 		}
@@ -371,12 +371,12 @@ func SerializeHTTPCheck(f models.HTTPCheckRule) (action types.Action, err error)
 		}
 		headers := []http_actions.CheckSendHeader{}
 		for _, h := range f.CheckHeaders {
-			if h == nil || h.Name == nil || h.Value == nil {
+			if h == nil || h.Name == nil || h.Fmt == nil {
 				continue
 			}
 			header := http_actions.CheckSendHeader{
 				Name:   *h.Name,
-				Format: *h.Value,
+				Format: *h.Fmt,
 			}
 			headers = append(headers, header)
 		}

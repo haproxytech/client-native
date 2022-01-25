@@ -540,15 +540,7 @@ http_request_rule:
         return_content_format:
           value: [file, lf-file, string, lf-string]
       items:
-        type: object
-        required:
-          - name
-          - fmt
-        properties:
-          name:
-            type: string
-          fmt:
-            type: string
+        $ref: "#/definitions/return_header"
     wait_time:
       type: integer
       x-nullable: true

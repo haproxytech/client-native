@@ -62,8 +62,8 @@ func TestGetHTTPChecks(t *testing.T) { //nolint:gocognit,gocyclo
 				if *r.CheckHeaders[0].Name != "host" {
 					t.Errorf("%v: Header Name not host: %v", *r.Index, r.CheckHeaders[0].Name)
 				}
-				if *r.CheckHeaders[0].Value != "haproxy.1wt.eu" {
-					t.Errorf("%v: Header Value not haproxy.1wt.eu: %v", *r.Index, r.CheckHeaders[0].Value)
+				if *r.CheckHeaders[0].Fmt != "haproxy.1wt.eu" {
+					t.Errorf("%v: Header Fmt not haproxy.1wt.eu: %v", *r.Index, r.CheckHeaders[0].Fmt)
 				}
 			}
 		case 2:
@@ -272,7 +272,7 @@ func TestCreateEditDeleteHTTPCheck(t *testing.T) {
 		Method:       "GET",
 		Version:      "HTTP/1.1",
 		URI:          "/",
-		CheckHeaders: []*models.CheckHeader{},
+		CheckHeaders: []*models.ReturnHeader{},
 	}
 
 	err := client.CreateHTTPCheck("backend", "test", r, "", version)
@@ -316,10 +316,10 @@ func TestCreateEditDeleteHTTPCheck(t *testing.T) {
 		Method:  "GET",
 		Version: "HTTP/1.1",
 		URI:     "/",
-		CheckHeaders: []*models.CheckHeader{
+		CheckHeaders: []*models.ReturnHeader{
 			{
-				Name:  misc.StringP("Host"),
-				Value: misc.StringP("google.com"),
+				Name: misc.StringP("Host"),
+				Fmt:  misc.StringP("google.com"),
 			},
 		},
 	}

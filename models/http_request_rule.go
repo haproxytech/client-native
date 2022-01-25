@@ -38,7 +38,7 @@ import (
 type HTTPRequestRule struct {
 
 	// return headers
-	ReturnHeaders []*HTTPRequestRuleReturnHdrsItems0 `json:"return_hdrs"`
+	ReturnHeaders []*ReturnHeader `json:"return_hdrs"`
 
 	// acl file
 	// Pattern: ^[^\s]+$
@@ -1552,74 +1552,6 @@ func (m *HTTPRequestRule) MarshalBinary() ([]byte, error) {
 // UnmarshalBinary interface implementation
 func (m *HTTPRequestRule) UnmarshalBinary(b []byte) error {
 	var res HTTPRequestRule
-	if err := swag.ReadJSON(b, &res); err != nil {
-		return err
-	}
-	*m = res
-	return nil
-}
-
-// HTTPRequestRuleReturnHdrsItems0 HTTP request rule return hdrs items0
-//
-// swagger:model HTTPRequestRuleReturnHdrsItems0
-type HTTPRequestRuleReturnHdrsItems0 struct {
-
-	// fmt
-	// Required: true
-	Fmt *string `json:"fmt"`
-
-	// name
-	// Required: true
-	Name *string `json:"name"`
-}
-
-// Validate validates this HTTP request rule return hdrs items0
-func (m *HTTPRequestRuleReturnHdrsItems0) Validate(formats strfmt.Registry) error {
-	var res []error
-
-	if err := m.validateFmt(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateName(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if len(res) > 0 {
-		return errors.CompositeValidationError(res...)
-	}
-	return nil
-}
-
-func (m *HTTPRequestRuleReturnHdrsItems0) validateFmt(formats strfmt.Registry) error {
-
-	if err := validate.Required("fmt", "body", m.Fmt); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func (m *HTTPRequestRuleReturnHdrsItems0) validateName(formats strfmt.Registry) error {
-
-	if err := validate.Required("name", "body", m.Name); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-// MarshalBinary interface implementation
-func (m *HTTPRequestRuleReturnHdrsItems0) MarshalBinary() ([]byte, error) {
-	if m == nil {
-		return nil, nil
-	}
-	return swag.WriteJSON(m)
-}
-
-// UnmarshalBinary interface implementation
-func (m *HTTPRequestRuleReturnHdrsItems0) UnmarshalBinary(b []byte) error {
-	var res HTTPRequestRuleReturnHdrsItems0
 	if err := swag.ReadJSON(b, &res); err != nil {
 		return err
 	}

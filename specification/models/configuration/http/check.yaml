@@ -168,16 +168,7 @@ http_check_rule:
         action:
           value: send
       items:
-        type: object
-        x-go-name: CheckHeader
-        required:
-          - name
-          - value
-        properties:
-          name:
-            type: string
-          value:
-            type: string
+        $ref: "#/definitions/return_header"
     body:
       type: string
       x-dependency:

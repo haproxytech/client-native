@@ -2544,15 +2544,7 @@ definitions:
           x-nullable: true
         return_hdrs:
           items:
-            properties:
-              fmt:
-                type: string
-              name:
-                type: string
-            required:
-            - name
-            - fmt
-            type: object
+            $ref: '#/definitions/return_header'
           type: array
           x-dependency:
             return_content_format:
@@ -2903,9 +2895,7 @@ definitions:
           type: integer
           x-dependency:
             type:
-              value:
-              - deny
-              - tarpit
+              value: deny
           x-nullable: true
         hdr_format:
           type: string
@@ -3087,7 +3077,6 @@ definitions:
             type:
               value:
               - deny
-              - tarpit
               - return
         return_content_type:
           type: string
@@ -3095,21 +3084,12 @@ definitions:
             type:
               value:
               - deny
-              - tarpit
               - return
           x-display-name: Return content type
           x-nullable: true
         return_hdrs:
           items:
-            properties:
-              fmt:
-                type: string
-              name:
-                type: string
-            required:
-            - name
-            - fmt
-            type: object
+            $ref: '#/definitions/return_header'
           type: array
           x-dependency:
             return_content_format:
@@ -3410,16 +3390,7 @@ definitions:
           x-display-name: Expect Exclamation Mark
         headers:
           items:
-            properties:
-              name:
-                type: string
-              value:
-                type: string
-            required:
-            - name
-            - value
-            type: object
-            x-go-name: CheckHeader
+            $ref: '#/definitions/return_header'
           type: array
           x-dependency:
             action:
@@ -7115,6 +7086,17 @@ definitions:
     type: array
     items:
       $ref: "#/definitions/spoe_group"
+  return_header:
+      properties:
+        fmt:
+          type: string
+        name:
+          type: string
+      required:
+      - name
+      - fmt
+      type: object
+      x-go-name: ReturnHeader
 responses:
   BadRequest:
     description: Bad request

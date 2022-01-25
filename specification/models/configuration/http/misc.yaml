@@ -1,0 +1,12 @@
+---
+return_header:
+  type: object
+  x-go-name: ReturnHeader
+  required:
+    - name
+    - fmt
+  properties:
+    name:
+      type: string
+    fmt:
+      type: string

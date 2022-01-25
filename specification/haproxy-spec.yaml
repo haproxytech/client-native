@@ -424,6 +424,8 @@ definitions:
     type: array
     items:
       $ref: "#/definitions/spoe_group"
+  return_header:
+    $ref: "models/configuration/http/misc.yaml#/return_header"
 responses:
   BadRequest:
     description: Bad request

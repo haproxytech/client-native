@@ -690,36 +690,6 @@ func ParseHTTPRequestRule(f types.Action) (rule *models.HTTPRequestRule, err err
 	return rule, err
 }
 
-func actionHdr2ModelHdr(hdrs []*http_actions.Hdr) []*models.HTTPRequestRuleReturnHdrsItems0 {
-	if len(hdrs) == 0 {
-		return nil
-	}
-	headers := []*models.HTTPRequestRuleReturnHdrsItems0{}
-	for _, h := range hdrs {
-		hdr := models.HTTPRequestRuleReturnHdrsItems0{
-			Fmt:  &h.Fmt,
-			Name: &h.Name,
-		}
-		headers = append(headers, &hdr)
-	}
-	return headers
-}
-
-func modelHdr2ActionHdr(hdrs []*models.HTTPRequestRuleReturnHdrsItems0) []*http_actions.Hdr {
-	if len(hdrs) == 0 {
-		return nil
-	}
-	headers := []*http_actions.Hdr{}
-	for _, h := range hdrs {
-		hdr := http_actions.Hdr{
-			Name: *h.Name,
-			Fmt:  *h.Fmt,
-		}
-		headers = append(headers, &hdr)
-	}
-	return headers
-}
-
 func SerializeHTTPRequestRule(f models.HTTPRequestRule) (rule types.Action, err error) { //nolint:gocyclo,gocognit,ireturn,cyclop
 	switch f.Type {
 	case "add-acl":
