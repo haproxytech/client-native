@@ -38,8 +38,9 @@ import (
 type Server struct {
 
 	// address
+	// Required: true
 	// Pattern: ^[^\s]+$
-	Address string `json:"address,omitempty"`
+	Address string `json:"address"`
 
 	// agent addr
 	// Pattern: ^[^\s]+$
@@ -596,8 +597,8 @@ func (m *Server) Validate(formats strfmt.Registry) error {
 
 func (m *Server) validateAddress(formats strfmt.Registry) error {
 
-	if swag.IsZero(m.Address) { // not required
-		return nil
+	if err := validate.RequiredString("address", "body", string(m.Address)); err != nil {
+		return err
 	}
 
 	if err := validate.Pattern("address", "body", string(m.Address), `^[^\s]+$`); err != nil {
