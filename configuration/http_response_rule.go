@@ -169,7 +169,7 @@ func (c *Client) EditHTTPResponseRule(id int64, parentType string, parentName st
 		section = parser.Frontends
 	}
 
-	if _, err := p.GetOne(section, parentName, "http-response", int(id)); err != nil {
+	if _, err = p.GetOne(section, parentName, "http-response", int(id)); err != nil {
 		return c.HandleError(strconv.FormatInt(id, 10), parentType, parentName, t, transactionID == "", err)
 	}
 
@@ -216,7 +216,7 @@ func ParseHTTPResponseRules(t, pName string, p parser.Parser) (models.HTTPRespon
 	return httpResRules, nil
 }
 
-func ParseHTTPResponseRule(f types.Action) *models.HTTPResponseRule { //nolint:gocyclo
+func ParseHTTPResponseRule(f types.Action) *models.HTTPResponseRule {
 	switch v := f.(type) {
 	case *http_actions.AddACL:
 		return &models.HTTPResponseRule{
@@ -303,7 +303,7 @@ func ParseHTTPResponseRule(f types.Action) *models.HTTPResponseRule { //nolint:g
 		if code, err := strconv.ParseInt(v.Code, 10, 64); err == nil {
 			codePtr = &code
 		}
-		r := &models.HTTPResponseRule{
+		return &models.HTTPResponseRule{
 			Type:        "redirect",
 			RedirType:   v.Type,
 			RedirValue:  v.Value,
@@ -312,7 +312,6 @@ func ParseHTTPResponseRule(f types.Action) *models.HTTPResponseRule { //nolint:g
 			CondTest:    v.CondTest,
 			RedirCode:   codePtr,
 		}
-		return r
 	case *http_actions.ReplaceHeader:
 		return &models.HTTPResponseRule{
 			Type:      "replace-header",
