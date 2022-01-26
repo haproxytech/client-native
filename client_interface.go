@@ -5,8 +5,8 @@ package clientnative
 import (
 	parser "github.com/haproxytech/config-parser/v4"
 
-	"github.com/haproxytech/client-native/v2/configuration"
-	"github.com/haproxytech/client-native/v2/models"
+	"github.com/haproxytech/client-native/v3/configuration"
+	"github.com/haproxytech/client-native/v3/models"
 )
 
 // IConfigurationClient ...

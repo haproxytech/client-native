@@ -18,7 +18,7 @@ package runtime
 import (
 	"testing"
 
-	"github.com/haproxytech/client-native/v2/models"
+	"github.com/haproxytech/client-native/v3/models"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -50,7 +50,8 @@ func Test_parseMapPayload(t *testing.T) {
 			wantExceededSize: false,
 			wantPayload: []string{
 				"key1 val1\n",
-				"key2 val2\n"},
+				"key2 val2\n",
+			},
 		},
 		{
 			name: "Return true and non empty slice when size > maxBufSize",
@@ -61,7 +62,8 @@ func Test_parseMapPayload(t *testing.T) {
 			wantExceededSize: true,
 			wantPayload: []string{
 				"key1 val1\n",
-				"key2 val2\n"},
+				"key2 val2\n",
+			},
 		},
 	}
 	for _, tt := range tests {

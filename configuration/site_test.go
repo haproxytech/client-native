@@ -22,8 +22,8 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"github.com/haproxytech/client-native/v2/misc"
-	"github.com/haproxytech/client-native/v2/models"
+	"github.com/haproxytech/client-native/v3/misc"
+	"github.com/haproxytech/client-native/v3/models"
 )
 
 func TestGetSites(t *testing.T) { //nolint:gocognit,gocyclo

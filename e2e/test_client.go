@@ -28,9 +28,9 @@ import (
 	"testing"
 	"time"
 
-	clientnative "github.com/haproxytech/client-native/v2"
-	"github.com/haproxytech/client-native/v2/configuration"
-	"github.com/haproxytech/client-native/v2/runtime"
+	clientnative "github.com/haproxytech/client-native/v3"
+	"github.com/haproxytech/client-native/v3/configuration"
+	"github.com/haproxytech/client-native/v3/runtime"
 )
 
 type ClientResponse struct {

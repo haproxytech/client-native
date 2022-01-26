@@ -29,7 +29,7 @@ import (
 	tcp_actions "github.com/haproxytech/config-parser/v4/parsers/tcp/actions"
 	"github.com/haproxytech/config-parser/v4/types"
 
-	"github.com/haproxytech/client-native/v2/models"
+	"github.com/haproxytech/client-native/v3/models"
 )
 
 // GetTCPChecks returns configuration version and an array of configured tcp-checks in the specified parent.

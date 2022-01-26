@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
+//go:build integration
 // +build integration
 
 package version_test
@@ -21,8 +22,8 @@ import (
 	"os/exec"
 	"testing"
 
-	client_native "github.com/haproxytech/client-native/v2"
-	"github.com/haproxytech/client-native/v2/e2e"
+	client_native "github.com/haproxytech/client-native/v3"
+	"github.com/haproxytech/client-native/v3/e2e"
 	"github.com/stretchr/testify/suite"
 )
 

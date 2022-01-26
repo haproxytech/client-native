@@ -23,8 +23,8 @@ import (
 	"github.com/go-openapi/strfmt"
 	parser "github.com/haproxytech/config-parser/v4"
 
-	"github.com/haproxytech/client-native/v2/misc"
-	"github.com/haproxytech/client-native/v2/models"
+	"github.com/haproxytech/client-native/v3/misc"
+	"github.com/haproxytech/client-native/v3/models"
 )
 
 // GetSites returns configuration version and an array of

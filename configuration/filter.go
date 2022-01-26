@@ -25,7 +25,7 @@ import (
 	"github.com/haproxytech/config-parser/v4/parsers/filters"
 	"github.com/haproxytech/config-parser/v4/types"
 
-	"github.com/haproxytech/client-native/v2/models"
+	"github.com/haproxytech/client-native/v3/models"
 )
 
 // GetFilters returns configuration version and an array of

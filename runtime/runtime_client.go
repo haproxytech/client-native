@@ -27,9 +27,9 @@ import (
 	"github.com/google/go-cmp/cmp"
 	"github.com/pkg/errors"
 
-	native_errors "github.com/haproxytech/client-native/v2/errors"
-	"github.com/haproxytech/client-native/v2/misc"
-	"github.com/haproxytech/client-native/v2/models"
+	native_errors "github.com/haproxytech/client-native/v3/errors"
+	"github.com/haproxytech/client-native/v3/misc"
+	"github.com/haproxytech/client-native/v3/models"
 )
 
 // Client handles multiple HAProxy clients

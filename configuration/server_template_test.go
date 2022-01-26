@@ -5,13 +5,12 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/haproxytech/client-native/v2/models"
+	"github.com/haproxytech/client-native/v3/models"
 )
 
 func TestGetServerTemplates(t *testing.T) { //nolint:gocognit,gocyclo
 
 	v, templates, err := client.GetServerTemplates("test", "")
-
 	if err != nil {
 		t.Error(err.Error())
 	}
@@ -29,13 +28,10 @@ func TestGetServerTemplates(t *testing.T) { //nolint:gocognit,gocyclo
 			t.Errorf("%v: Check not enabled: %v", template.Prefix, template.Check)
 		}
 	}
-
 }
 
 func TestGetServerTemplate(t *testing.T) {
-
 	v, template, err := client.GetServerTemplate("srv", "test", "")
-
 	if err != nil {
 		t.Error(err.Error())
 	}
@@ -68,9 +64,7 @@ func TestGetServerTemplate(t *testing.T) {
 }
 
 func TestGetServerTemplateSecond(t *testing.T) {
-
 	v, template, err := client.GetServerTemplate("site", "test", "")
-
 	if err != nil {
 		t.Error(err.Error())
 	}
@@ -102,9 +96,7 @@ func TestGetServerTemplateSecond(t *testing.T) {
 }
 
 func TestGetServerTemplateThird(t *testing.T) {
-
 	v, template, err := client.GetServerTemplate("website", "test", "")
-
 	if err != nil {
 		t.Error(err.Error())
 	}
@@ -136,9 +128,7 @@ func TestGetServerTemplateThird(t *testing.T) {
 }
 
 func TestGetServerTemplateFourth(t *testing.T) {
-
 	v, template, err := client.GetServerTemplate("test", "test", "")
-
 	if err != nil {
 		t.Error(err.Error())
 	}
@@ -170,7 +160,6 @@ func TestGetServerTemplateFourth(t *testing.T) {
 }
 
 func TestCreateEditDeleteServerTemplate(t *testing.T) {
-
 	port := int64(80)
 
 	// TestCreateServerTemplate

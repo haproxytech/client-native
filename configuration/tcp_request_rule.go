@@ -30,8 +30,8 @@ import (
 	tcp_types "github.com/haproxytech/config-parser/v4/parsers/tcp/types"
 	"github.com/haproxytech/config-parser/v4/types"
 
-	"github.com/haproxytech/client-native/v2/misc"
-	"github.com/haproxytech/client-native/v2/models"
+	"github.com/haproxytech/client-native/v3/misc"
+	"github.com/haproxytech/client-native/v3/models"
 )
 
 // GetTCPRequestRules returns configuration version and an array of
