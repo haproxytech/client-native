@@ -499,6 +499,8 @@ func (s *SectionParser) checkSpecialFields(fieldName string) (match bool, data i
 		return true, s.uniqueIDHeader()
 	case "HTTPConnectionMode":
 		return true, s.httpConnectionMode()
+	case "Compression":
+		return true, s.compression()
 	default:
 		return false, nil
 	}
@@ -1379,6 +1381,44 @@ func (s *SectionParser) monitorFail() interface{} {
 	return nil
 }
 
+func (s *SectionParser) compression() interface{} {
+	compressionFound := false
+	compression := &models.Compression{}
+
+	data, err := s.get("compression algo", false)
+
+	if err == nil {
+		d, ok := data.(*types.StringSliceC)
+		if ok && d != nil && len(d.Value) > 0 {
+			compressionFound = true
+			compression.Algorithms = d.Value
+		}
+	}
+
+	data, err = s.get("compression type", false)
+	if err == nil {
+		d, ok := data.(*types.StringSliceC)
+		if ok && d != nil && len(d.Value) > 0 {
+			compressionFound = true
+			compression.Types = d.Value
+		}
+	}
+
+	data, err = s.get("compression offload", false)
+	if err == nil {
+		d, ok := data.(*types.Enabled)
+		if ok && d != nil {
+			compressionFound = true
+			compression.Offload = true
+		}
+	}
+
+	if compressionFound {
+		return compression
+	}
+	return nil
+}
+
 // SectionObject represents a configuration section
 type SectionObject struct {
 	Object  interface{}
@@ -1497,6 +1537,8 @@ func (s *SectionObject) checkSpecialFields(fieldName string, field reflect.Value
 		return true, s.clflog(field)
 	case "Httplog":
 		return true, s.httplog(field)
+	case "Compression":
+		return true, s.compression(field)
 	default:
 		return false, nil
 	}
@@ -2826,6 +2868,49 @@ func (s *SectionObject) statsOptions(field reflect.Value) error {
 	}
 	if err := s.set("stats", ss); err != nil {
 		return err
+	}
+	return nil
+}
+
+func (s *SectionObject) compression(field reflect.Value) error {
+	var err error
+	if valueIsNil(field) {
+		err = s.set("compression algo", nil)
+		if err != nil {
+			return err
+		}
+		err = s.set("compression type", nil)
+		if err != nil {
+			return err
+		}
+		err = s.set("compression offload", nil)
+		if err != nil {
+			return err
+		}
+		return nil
+	}
+	compression, ok := field.Elem().Interface().(models.Compression)
+	if !ok {
+		return fmt.Errorf("error casting compression model")
+	}
+
+	if len(compression.Algorithms) > 0 {
+		err = s.set("compression algo", &types.StringSliceC{Value: compression.Algorithms})
+		if err != nil {
+			return err
+		}
+	}
+	if len(compression.Types) > 0 {
+		err = s.set("compression type", &types.StringSliceC{Value: compression.Types})
+		if err != nil {
+			return err
+		}
+	}
+	if compression.Offload {
+		err = s.set("compression offload", &types.Enabled{})
+		if err != nil {
+			return err
+		}
 	}
 	return nil
 }

@@ -62,6 +62,9 @@ type Backend struct {
 	// check timeout
 	CheckTimeout *int64 `json:"check_timeout,omitempty"`
 
+	// compression
+	Compression *Compression `json:"compression,omitempty"`
+
 	// connect timeout
 	ConnectTimeout *int64 `json:"connect_timeout,omitempty"`
 
@@ -199,6 +202,10 @@ func (m *Backend) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateBindProcess(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateCompression(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -524,6 +531,24 @@ func (m *Backend) validateBindProcess(formats strfmt.Registry) error {
 
 	if err := validate.Pattern("bind_process", "body", string(m.BindProcess), `^[^\s]+$`); err != nil {
 		return err
+	}
+
+	return nil
+}
+
+func (m *Backend) validateCompression(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.Compression) { // not required
+		return nil
+	}
+
+	if m.Compression != nil {
+		if err := m.Compression.Validate(formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("compression")
+			}
+			return err
+		}
 	}
 
 	return nil

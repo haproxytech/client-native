@@ -396,6 +396,8 @@ definitions:
           - disabled
           type: string
           x-display-name: Client TCP Keep Alive
+        compression:
+          $ref: '#/definitions/compression'
         connect_timeout:
           type: integer
           x-nullable: true
@@ -611,6 +613,8 @@ definitions:
             mode:
               value: tcp
           x-display-name: Client TCP Keep Alive
+        compression:
+          $ref: '#/definitions/compression'
         contstats:
           enum:
           - enabled
@@ -799,6 +803,8 @@ definitions:
         check_timeout:
           type: integer
           x-nullable: true
+        compression:
+          $ref: '#/definitions/compression'
         connect_timeout:
           type: integer
           x-nullable: true
@@ -7126,6 +7132,24 @@ definitions:
       - fmt
       type: object
       x-go-name: ReturnHeader
+  compression:
+      properties:
+        algorithms:
+          items:
+            enum:
+            - identity
+            - gzip
+            - deflate
+            - raw-deflate
+            type: string
+          type: array
+        offload:
+          type: boolean
+        types:
+          items:
+            type: string
+          type: array
+      type: object
 responses:
   BadRequest:
     description: Bad request

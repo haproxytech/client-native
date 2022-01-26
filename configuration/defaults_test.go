@@ -127,6 +127,13 @@ func TestGetDefaults(t *testing.T) { //nolint:gocognit,gocyclo
 	if d.H1CaseAdjustBogusServer != "enabled" {
 		t.Errorf("H1CaseAdjustBogusServer not enabled: %v", d.H1CaseAdjustBogusServer)
 	}
+	if d.Compression == nil {
+		t.Errorf("Compression is nil")
+	} else {
+		if !d.Compression.Offload {
+			t.Errorf("Compression.Offload wrong: %v", d.Compression.Offload)
+		}
+	}
 }
 
 func TestPushDefaults(t *testing.T) {

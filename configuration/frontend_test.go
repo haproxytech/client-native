@@ -138,6 +138,30 @@ func TestGetFrontend(t *testing.T) {
 	if f.H1CaseAdjustBogusClient != "disabled" {
 		t.Errorf("%v: H1CaseAdjustBogusClient not disabled: %v", f.Name, f.H1CaseAdjustBogusClient)
 	}
+	if f.Compression == nil {
+		t.Errorf("%v: Compression is nil", f.Name)
+	} else {
+		if len(f.Compression.Algorithms) != 2 {
+			t.Errorf("%v: len Compression.Algorithms not 2: %v", f.Name, len(f.Compression.Algorithms))
+		} else {
+			if !(f.Compression.Algorithms[0] == "identity" || f.Compression.Algorithms[0] != "gzip") {
+				t.Errorf("%v: Compression.Algorithms[0] wrong: %v", f.Name, f.Compression.Algorithms[0])
+			}
+			if !(f.Compression.Algorithms[1] != "identity" || f.Compression.Algorithms[0] != "gzip") {
+				t.Errorf("%v: Compression.Algorithms[1] wrong: %v", f.Name, f.Compression.Algorithms[1])
+			}
+		}
+		if len(f.Compression.Types) != 1 {
+			t.Errorf("%v: len Compression.Types not 1: %v", f.Name, len(f.Compression.Types))
+		} else {
+			if f.Compression.Types[0] != "text/plain" {
+				t.Errorf("%v: Compression.Types[0] wrong: %v", f.Name, f.Compression.Types[0])
+			}
+		}
+		if !f.Compression.Offload {
+			t.Errorf("%v: Compression.Offload wrong: %v", f.Name, f.Compression.Offload)
+		}
+	}
 
 	_, err = f.MarshalBinary()
 	if err != nil {
@@ -209,6 +233,9 @@ func TestCreateEditDeleteFrontend(t *testing.T) {
 		MonitorFail: &models.MonitorFail{
 			Cond:     misc.StringP("if"),
 			CondTest: misc.StringP("site_is_dead"),
+		},
+		Compression: &models.Compression{
+			Offload: true,
 		},
 	}
 

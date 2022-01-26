@@ -70,6 +70,7 @@ defaults
   option accept-invalid-http-response
   option h1-case-adjust-bogus-client
   option h1-case-adjust-bogus-server
+  compression offload
 
 frontend test
   mode http
@@ -171,6 +172,9 @@ frontend test
   unique-id-header X-Unique-ID
   no option accept-invalid-http-request
   no option h1-case-adjust-bogus-client
+  compression algo identity gzip
+  compression type text/plain
+  compression offload
 
 frontend test_2
   mode http
@@ -245,6 +249,7 @@ backend test
   server-template test 5 test.com check backup
   no option accept-invalid-http-response
   no option h1-case-adjust-bogus-server
+  compression type application/json text/plain
 
 peers mycluster
   peer hapee 192.168.1.1:1023

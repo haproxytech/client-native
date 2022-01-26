@@ -244,3 +244,17 @@ pgsql_check_params:
   properties:
     username:
       type: string
+compression:
+  type: object
+  properties:
+    algorithms:
+      type: array
+      items:
+        type: string
+        enum: [identity, gzip, deflate, raw-deflate]
+    types:
+      type: array
+      items:
+        type: string
+    offload:
+      type: boolean

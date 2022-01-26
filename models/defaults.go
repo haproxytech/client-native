@@ -83,6 +83,9 @@ type Defaults struct {
 	// Enum: [enabled disabled]
 	Clitcpka string `json:"clitcpka,omitempty"`
 
+	// compression
+	Compression *Compression `json:"compression,omitempty"`
+
 	// connect timeout
 	ConnectTimeout *int64 `json:"connect_timeout,omitempty"`
 
@@ -275,6 +278,10 @@ func (m *Defaults) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateClitcpka(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateCompression(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -731,6 +738,24 @@ func (m *Defaults) validateClitcpka(formats strfmt.Registry) error {
 	// value enum
 	if err := m.validateClitcpkaEnum("clitcpka", "body", m.Clitcpka); err != nil {
 		return err
+	}
+
+	return nil
+}
+
+func (m *Defaults) validateCompression(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.Compression) { // not required
+		return nil
+	}
+
+	if m.Compression != nil {
+		if err := m.Compression.Validate(formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("compression")
+			}
+			return err
+		}
 	}
 
 	return nil

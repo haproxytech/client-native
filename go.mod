@@ -13,7 +13,7 @@ require (
 	github.com/google/go-cmp v0.5.2
 	github.com/google/renameio v1.0.1
 	github.com/google/uuid v1.1.1
-	github.com/haproxytech/config-parser/v4 v4.0.0-rc2.0.20220124125518-41bbc648464c
+	github.com/haproxytech/config-parser/v4 v4.0.0-rc2.0.20220126135717-1dd35f8b7a52
 	github.com/kballard/go-shellquote v0.0.0-20180428030007-95032a82bc51
 	github.com/kr/text v0.2.0 // indirect
 	github.com/mitchellh/mapstructure v1.2.2

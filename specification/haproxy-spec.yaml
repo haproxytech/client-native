@@ -435,6 +435,8 @@ definitions:
       $ref: "#/definitions/spoe_group"
   return_header:
     $ref: "models/configuration/http/misc.yaml#/return_header"
+  compression:
+    $ref: "models/configuration/misc.yaml#/compression"
 responses:
   BadRequest:
     description: Bad request

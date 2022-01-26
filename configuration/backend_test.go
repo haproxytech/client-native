@@ -189,6 +189,20 @@ func TestGetBackend(t *testing.T) {
 	if b.H1CaseAdjustBogusServer != "disabled" {
 		t.Errorf("%v: H1CaseAdjustBogusServer not disabled: %v", b.Name, b.H1CaseAdjustBogusServer)
 	}
+	if b.Compression == nil {
+		t.Errorf("%v: Compression is nil", b.Name)
+	} else {
+		if len(b.Compression.Types) != 2 {
+			t.Errorf("%v: len Compression.Types not 2: %v", b.Name, len(b.Compression.Types))
+		} else {
+			if !(b.Compression.Types[0] == "application/json" || b.Compression.Types[0] != "text/plain") {
+				t.Errorf("%v: Compression.Types[0] wrong: %v", b.Name, b.Compression.Types[0])
+			}
+			if !(b.Compression.Types[1] != "application/json" || b.Compression.Types[0] != "text/plain") {
+				t.Errorf("%v: Compression.Types[1] wrong: %v", b.Name, b.Compression.Types[1])
+			}
+		}
+	}
 
 	_, err = b.MarshalBinary()
 	if err != nil {
@@ -252,6 +266,9 @@ func TestCreateEditDeleteBackend(t *testing.T) {
 			Domain: "example.com",
 		},
 		AcceptInvalidHTTPResponse: "enabled",
+		Compression: &models.Compression{
+			Offload: true,
+		},
 	}
 
 	err := client.CreateBackend(b, "", version)
@@ -266,9 +283,21 @@ func TestCreateEditDeleteBackend(t *testing.T) {
 		t.Error(err.Error())
 	}
 
-	if !compareBackends(backend, b, t) {
-		fmt.Printf("Created bck: %v\n", backend)
-		fmt.Printf("Given bck: %v\n", b)
+	var givenJSONB []byte
+	givenJSONB, err = b.MarshalBinary()
+	if err != nil {
+		t.Error(err.Error())
+	}
+
+	var ondiskJSONB []byte
+	ondiskJSONB, err = backend.MarshalBinary()
+	if err != nil {
+		t.Error(err.Error())
+	}
+
+	if string(givenJSONB) != string(ondiskJSONB) {
+		fmt.Printf("Created backend: %v\n", string(ondiskJSONB))
+		fmt.Printf("Given backend: %v\n", string(givenJSONB))
 		t.Error("Created backend not equal to given backend")
 	}
 

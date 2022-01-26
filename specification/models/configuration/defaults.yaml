@@ -187,6 +187,8 @@ defaults:
       type: string
       enum: [enabled, disabled]
       x-display-name: H1 Adjust Bogus Server
+    compression:
+      $ref: "#/definitions/compression"
     stats_options:
       $ref: "#/definitions/stats_options"
   additionalProperties: false

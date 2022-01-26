@@ -130,6 +130,8 @@ frontend:
       type: string
       enum: [enabled, disabled]
       x-display-name: H1 Adjust Bogus Client
+    compression:
+      $ref: "#/definitions/compression"
     stats_options:
       $ref: "#/definitions/stats_options"
     monitor_uri:
