@@ -1395,7 +1395,10 @@ func CreateEditSection(object interface{}, section parser.Section, pName string,
 
 // CreateEditSection creates or updates a section in the parser based on the provided object
 func (s *SectionObject) CreateEditSection() error {
-	objValue := reflect.ValueOf(s.Object).Elem()
+	objValue := reflect.ValueOf(s.Object)
+	if objValue.Kind() == reflect.Ptr {
+		objValue = reflect.ValueOf(s.Object).Elem()
+	}
 	for i := 0; i < objValue.NumField(); i++ {
 		typeField := objValue.Type().Field(i)
 		field := objValue.FieldByName(typeField.Name)
