@@ -647,9 +647,9 @@ func SerializeGlobalSection(p parser.Parser, data *models.Global) error { //noli
 		return err
 	}
 
-	pH1CaseAdjustFile := types.StringC{}
-	if data.H1CaseAdjustFile != "" {
-		pH1CaseAdjustFile.Value = data.H1CaseAdjustFile
+	pH1CaseAdjustFile := &types.StringC{Value: data.H1CaseAdjustFile}
+	if data.H1CaseAdjustFile == "" {
+		pH1CaseAdjustFile = nil
 	}
 
 	return p.Set(parser.Global, parser.GlobalSectionName, "h1-case-adjust-file", pH1CaseAdjustFile)
