@@ -1,0 +1,482 @@
+---
+userlists:
+  get:
+    summary: Return an array of userlists
+    description: Returns an array of all configured userlists.
+    operationId: getUserlists
+    parameters:
+      - $ref: "#/parameters/transaction_id"
+    tags:
+      - Userlist
+    responses:
+      '200':
+        description: Successful operation
+        headers:
+          Configuration-Version:
+            description: Configuration file version
+            type: string
+        schema:
+          type: object
+          required:
+            - data
+          properties:
+            data:
+              $ref: "#/definitions/userlists"
+            _version:
+              type: integer
+      'default':
+        $ref: '#/responses/DefaultError'
+  post:
+    summary: Add a new userlist
+    description: Adds a new userlist to the configuration file.
+    operationId: createUserlist
+    tags:
+      - Userlist
+    parameters:
+      - name: data
+        required: true
+        in: body
+        schema:
+          $ref: '#/definitions/userlist'
+      - $ref: "#/parameters/transaction_id"
+      - $ref: "#/parameters/version"
+      - $ref: "#/parameters/force_reload"
+    responses:
+      '202':
+        description: Configuration change accepted and reload requested
+        headers:
+          Reload-ID:
+            description: ID of the requested reload
+            type: string
+        schema:
+          $ref: "#/definitions/userlist"
+      '201':
+        description: Userlist created
+        schema:
+          $ref: "#/definitions/userlist"
+      '409':
+        $ref: '#/responses/AlreadyExists'
+      '400':
+        $ref: '#/responses/BadRequest'
+      'default':
+        $ref: '#/responses/DefaultError'
+userlists_one:
+  get:
+    summary: Return one userlist
+    description: Returns one userlist configuration by it's name.
+    operationId: getUserlist
+    tags:
+      - Userlist
+    parameters:
+      - name: name
+        in: path
+        description: Userlist name
+        required: true
+        type: string
+      - $ref: "#/parameters/transaction_id"
+    responses:
+      '200':
+        description: Successful operation
+        headers:
+          Configuration-Version:
+            description: Configuration file version
+            type: string
+        schema:
+          type: object
+          properties:
+            data:
+              $ref: "#/definitions/userlist"
+            _version:
+              type: integer
+      '404':
+        $ref: '#/responses/AlreadyExists'
+      'default':
+        $ref: '#/responses/DefaultError'
+  delete:
+    summary: Delete a userlist
+    description: Deletes a userlist configuration by it's name.
+    operationId: deleteUserlist
+    tags:
+      - Userlist
+    parameters:
+      - name: name
+        in: path
+        description: Userlist name
+        required: true
+        type: string
+      - $ref: "#/parameters/transaction_id"
+      - $ref: "#/parameters/version"
+      - $ref: "#/parameters/force_reload"
+    responses:
+      '202':
+        description: Configuration change accepted and reload requested
+        headers:
+          Reload-ID:
+            description: ID of the requested reload
+            type: string
+      '204':
+        description: Userlist deleted
+      '404':
+        $ref: '#/responses/NotFound'
+      'default':
+        $ref: '#/responses/DefaultError'
+users:
+  get:
+    summary: Return an array of userlist users
+    operationId: getUsers
+    tags:
+      - User
+    parameters:
+      - name: userlist
+        in: query
+        description: Parent userlist name
+        required: true
+        type: string
+      - $ref: "#/parameters/transaction_id"
+    responses:
+      '200':
+        description: Successful operation
+        headers:
+          Configuration-Version:
+            description: Configuration file version
+            type: string
+        schema:
+          type: object
+          required:
+            - data
+          properties:
+            data:
+              $ref: "#/definitions/users"
+            _version:
+              type: integer
+      'default':
+        $ref: '#/responses/DefaultError'
+  post:
+    summary: Add a new userlist user
+    operationId: createUser
+    tags:
+      - User
+    parameters:
+      - name: userlist
+        in: query
+        description: Parent userlist name
+        required: true
+        type: string
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/user'
+      - $ref: "#/parameters/transaction_id"
+      - $ref: "#/parameters/version"
+      - $ref: "#/parameters/force_reload"
+    responses:
+      '202':
+        description: Configuration change accepted and reload requested
+        headers:
+          Reload-ID:
+            description: ID of the requested reload
+            type: string
+        schema:
+          $ref: "#/definitions/user"
+      '201':
+        description: User created
+        schema:
+          $ref: "#/definitions/user"
+      '409':
+        $ref: '#/responses/AlreadyExists'
+      '400':
+        $ref: '#/responses/BadRequest'
+      'default':
+        $ref: '#/responses/DefaultError'
+users_one:
+  get:
+    summary: Return one userlist user
+    operationId: getUser
+    tags:
+      - User
+    parameters:
+      - name: username
+        in: path
+        description: User username
+        required: true
+        type: string
+      - name: userlist
+        in: query
+        description: Parent userlist name
+        required: true
+        type: string
+      - $ref: "#/parameters/transaction_id"
+    responses:
+      '200':
+        description: Successful operation
+        headers:
+          Configuration-Version:
+            description: Configuration file version
+            type: string
+        schema:
+          type: object
+          properties:
+            data:
+              $ref: "#/definitions/user"
+            _version:
+              type: integer
+      '404':
+        $ref: '#/responses/AlreadyExists'
+      'default':
+        $ref: '#/responses/DefaultError'
+  put:
+    summary: Replace a user
+    operationId: replaceUser
+    tags:
+      - User
+    parameters:
+      - name: username
+        in: path
+        description: User username
+        required: true
+        type: string
+      - name: userlist
+        in: query
+        description: Parent userlist name
+        required: true
+        type: string
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/user'
+      - $ref: "#/parameters/transaction_id"
+      - $ref: "#/parameters/version"
+      - $ref: "#/parameters/force_reload"
+    responses:
+      '202':
+        description: Configuration change accepted and reload requested
+        headers:
+          Reload-ID:
+            description: ID of the requested reload
+            type: string
+        schema:
+          $ref: "#/definitions/user"
+      '200':
+        description: User replaced
+        schema:
+          $ref: "#/definitions/user"
+      '400':
+        $ref: '#/responses/BadRequest'
+      '404':
+        $ref: '#/responses/NotFound'
+      'default':
+        $ref: '#/responses/DefaultError'
+  delete:
+    summary: Delete a user
+    operationId: deleteUser
+    tags:
+      - User
+    parameters:
+      - name: username
+        in: path
+        description: User username
+        required: true
+        type: string
+      - name: userlist
+        in: query
+        description: Parent userlist name
+        required: true
+        type: string
+      - $ref: "#/parameters/transaction_id"
+      - $ref: "#/parameters/version"
+      - $ref: "#/parameters/force_reload"
+    responses:
+      '202':
+        description: Configuration change accepted and reload requested
+        headers:
+          Reload-ID:
+            description: ID of the requested reload
+            type: string
+      '204':
+        description: User deleted
+      '404':
+        $ref: '#/responses/NotFound'
+      'default':
+        $ref: '#/responses/DefaultError'
+groups:
+  get:
+    summary: Return an array of userlist groups
+    operationId: getGroups
+    tags:
+      - Group
+    parameters:
+      - name: userlist
+        in: query
+        description: Parent userlist name
+        required: true
+        type: string
+      - $ref: "#/parameters/transaction_id"
+    responses:
+      '200':
+        description: Successful operation
+        headers:
+          Configuration-Version:
+            description: Configuration file version
+            type: string
+        schema:
+          type: object
+          required:
+            - data
+          properties:
+            data:
+              $ref: "#/definitions/groups"
+            _version:
+              type: integer
+      'default':
+        $ref: '#/responses/DefaultError'
+  post:
+    summary: Add a new userlist group
+    operationId: createGroup
+    tags:
+      - Group
+    parameters:
+      - name: userlist
+        in: query
+        description: Parent userlist name
+        required: true
+        type: string
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/group'
+      - $ref: "#/parameters/transaction_id"
+      - $ref: "#/parameters/version"
+      - $ref: "#/parameters/force_reload"
+    responses:
+      '202':
+        description: Configuration change accepted and reload requested
+        headers:
+          Reload-ID:
+            description: ID of the requested reload
+            type: string
+        schema:
+          $ref: "#/definitions/group"
+      '201':
+        description: Group created
+        schema:
+          $ref: "#/definitions/group"
+      '409':
+        $ref: '#/responses/AlreadyExists'
+      '400':
+        $ref: '#/responses/BadRequest'
+      'default':
+        $ref: '#/responses/DefaultError'
+groups_one:
+  get:
+    summary: Return one userlist group
+    operationId: getGroup
+    tags:
+      - Group
+    parameters:
+      - name: name
+        in: path
+        description: Group name
+        required: true
+        type: integer
+      - name: userlist
+        in: query
+        description: Parent userlist name
+        required: true
+        type: string
+      - $ref: "#/parameters/transaction_id"
+    responses:
+      '200':
+        description: Successful operation
+        headers:
+          Configuration-Version:
+            description: Configuration file version
+            type: string
+        schema:
+          type: object
+          properties:
+            data:
+              $ref: "#/definitions/group"
+            _version:
+              type: integer
+      '404':
+        $ref: '#/responses/AlreadyExists'
+      'default':
+        $ref: '#/responses/DefaultError'
+  put:
+    summary: Replace a group
+    operationId: replaceGroup
+    tags:
+      - Group
+    parameters:
+      - name: name
+        in: path
+        description: group name
+        required: true
+        type: string
+      - name: userlist
+        in: query
+        description: Parent userlist name
+        required: true
+        type: string
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/group'
+      - $ref: "#/parameters/transaction_id"
+      - $ref: "#/parameters/version"
+      - $ref: "#/parameters/force_reload"
+    responses:
+      '202':
+        description: Configuration change accepted and reload requested
+        headers:
+          Reload-ID:
+            description: ID of the requested reload
+            type: string
+        schema:
+          $ref: "#/definitions/group"
+      '200':
+        description: Group replaced
+        schema:
+          $ref: "#/definitions/group"
+      '400':
+        $ref: '#/responses/BadRequest'
+      '404':
+        $ref: '#/responses/NotFound'
+      'default':
+        $ref: '#/responses/DefaultError'
+  delete:
+    summary: Delete a group
+    operationId: deleteGroup
+    tags:
+      - Group
+    parameters:
+      - name: name
+        in: path
+        description: group name
+        required: true
+        type: string
+      - name: userlist
+        in: query
+        description: Parent userlist name
+        required: true
+        type: string
+      - $ref: "#/parameters/transaction_id"
+      - $ref: "#/parameters/version"
+      - $ref: "#/parameters/force_reload"
+    responses:
+      '202':
+        description: Configuration change accepted and reload requested
+        headers:
+          Reload-ID:
+            description: ID of the requested reload
+            type: string
+      '204':
+        description: Group deleted
+      '404':
+        $ref: '#/responses/NotFound'
+      'default':
+        $ref: '#/responses/DefaultError'

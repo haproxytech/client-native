@@ -1,0 +1,46 @@
+---
+userlist:
+  title: Userlist
+  description: HAProxy configuration of access control
+  type: object
+  required:
+    - name
+  properties:
+    name:
+      type: string
+      pattern: '^[A-Za-z0-9-_.:]+$'
+      x-nullable: false
+group:
+  title: Group
+  description: HAProxy userlist group
+  type: object
+  required:
+    - name
+  properties:
+    name:
+      type: string
+      pattern: '^[A-Za-z0-9-_.:]+$'
+      x-nullable: false
+    users:
+      type: string
+      x-nullable: false
+user:
+  title: User
+  description: HAProxy userlist user
+  required:
+    - username
+    - secure_password
+    - password
+  properties:
+    username:
+      type: string
+      pattern: '^[A-Za-z0-9-_.:]+$'
+      x-nullable: false
+    secure_password:
+      type: boolean
+    password:
+      type: string
+      x-nullable: false
+    groups:
+      type: string
+      x-nullable: false

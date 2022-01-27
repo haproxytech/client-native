@@ -1423,6 +1423,69 @@ definitions:
     type: array
     items:
       $ref: '#/definitions/backend'
+  userlist:
+      description: HAProxy configuration of access control
+      properties:
+        name:
+          pattern: ^[A-Za-z0-9-_.:]+$
+          type: string
+          x-nullable: false
+      required:
+      - name
+      title: Userlist
+      type: object
+  userlists:
+    title: Userlists
+    description: HAProxy userlists array
+    type: array
+    items:
+      $ref: '#/definitions/userlist'
+  user:
+      description: HAProxy userlist user
+      properties:
+        groups:
+          type: string
+          x-nullable: false
+        password:
+          type: string
+          x-nullable: false
+        secure_password:
+          type: boolean
+        username:
+          pattern: ^[A-Za-z0-9-_.:]+$
+          type: string
+          x-nullable: false
+      required:
+      - username
+      - secure_password
+      - password
+      title: User
+  users:
+    title: Users
+    description: HAProxy userlist users array
+    type: array
+    items:
+      $ref: '#/definitions/user'
+  group:
+      description: HAProxy userlist group
+      properties:
+        name:
+          pattern: ^[A-Za-z0-9-_.:]+$
+          type: string
+          x-nullable: false
+        users:
+          type: string
+          x-nullable: false
+      required:
+      - name
+      title: Group
+      type: object
+  groups:
+    title: Groups
+    description: HAProxy userlist groups array
+    type: array
+    items:
+      $ref: '#/definitions/group'
   peer_section:
       additionalProperties: false
       description: HAProxy peer_section configuration
@@ -7451,6 +7514,7 @@ tags:
     transaction_id. When you want to commit the transaction, you call the transactions PUT and all changes
     in that transaction is commited. If you call a configuration change without the transaction_id,
     transaction mechanism is implicitly called with one operation in transaction.
+- name: Userlist
 security:
   - basic_auth: []
 paths:
@@ -8736,6 +8800,487 @@ paths:
         summary: Replace a frontend
         tags:
         - Frontend
+  /services/haproxy/configuration/userlists:
+      get:
+        description: Returns an array of all configured userlists.
+        operationId: getUserlists
+        parameters:
+        - $ref: '#/parameters/transaction_id'
+        responses:
+          "200":
+            description: Successful operation
+            headers:
+              Configuration-Version:
+                description: Configuration file version
+                type: string
+            schema:
+              properties:
+                _version:
+                  type: integer
+                data:
+                  $ref: '#/definitions/userlists'
+              required:
+              - data
+              type: object
+          default:
+            $ref: '#/responses/DefaultError'
+        summary: Return an array of userlists
+        tags:
+        - Userlist
+      post:
+        description: Adds a new userlist to the configuration file.
+        operationId: createUserlist
+        parameters:
+        - in: body
+          name: data
+          required: true
+          schema:
+            $ref: '#/definitions/userlist'
+        - $ref: '#/parameters/transaction_id'
+        - $ref: '#/parameters/version'
+        - $ref: '#/parameters/force_reload'
+        responses:
+          "201":
+            description: Userlist created
+            schema:
+              $ref: '#/definitions/userlist'
+          "202":
+            description: Configuration change accepted and reload requested
+            headers:
+              Reload-ID:
+                description: ID of the requested reload
+                type: string
+            schema:
+              $ref: '#/definitions/userlist'
+          "400":
+            $ref: '#/responses/BadRequest'
+          "409":
+            $ref: '#/responses/AlreadyExists'
+          default:
+            $ref: '#/responses/DefaultError'
+        summary: Add a new userlist
+        tags:
+        - Userlist
+  /services/haproxy/configuration/userlists/{name}:
+      delete:
+        description: Deletes a userlist configuration by it's name.
+        operationId: deleteUserlist
+        parameters:
+        - description: Userlist name
+          in: path
+          name: name
+          required: true
+          type: string
+        - $ref: '#/parameters/transaction_id'
+        - $ref: '#/parameters/version'
+        - $ref: '#/parameters/force_reload'
+        responses:
+          "202":
+            description: Configuration change accepted and reload requested
+            headers:
+              Reload-ID:
+                description: ID of the requested reload
+                type: string
+          "204":
+            description: Userlist deleted
+          "404":
+            $ref: '#/responses/NotFound'
+          default:
+            $ref: '#/responses/DefaultError'
+        summary: Delete a userlist
+        tags:
+        - Userlist
+      get:
+        description: Returns one userlist configuration by it's name.
+        operationId: getUserlist
+        parameters:
+        - description: Userlist name
+          in: path
+          name: name
+          required: true
+          type: string
+        - $ref: '#/parameters/transaction_id'
+        responses:
+          "200":
+            description: Successful operation
+            headers:
+              Configuration-Version:
+                description: Configuration file version
+                type: string
+            schema:
+              properties:
+                _version:
+                  type: integer
+                data:
+                  $ref: '#/definitions/userlist'
+              type: object
+          "404":
+            $ref: '#/responses/AlreadyExists'
+          default:
+            $ref: '#/responses/DefaultError'
+        summary: Return one userlist
+        tags:
+        - Userlist
+  /services/haproxy/configuration/users:
+      get:
+        operationId: getUsers
+        parameters:
+        - description: Parent userlist name
+          in: query
+          name: userlist
+          required: true
+          type: string
+        - $ref: '#/parameters/transaction_id'
+        responses:
+          "200":
+            description: Successful operation
+            headers:
+              Configuration-Version:
+                description: Configuration file version
+                type: string
+            schema:
+              properties:
+                _version:
+                  type: integer
+                data:
+                  $ref: '#/definitions/users'
+              required:
+              - data
+              type: object
+          default:
+            $ref: '#/responses/DefaultError'
+        summary: Return an array of userlist users
+        tags:
+        - User
+      post:
+        operationId: createUser
+        parameters:
+        - description: Parent userlist name
+          in: query
+          name: userlist
+          required: true
+          type: string
+        - in: body
+          name: data
+          required: true
+          schema:
+            $ref: '#/definitions/user'
+        - $ref: '#/parameters/transaction_id'
+        - $ref: '#/parameters/version'
+        - $ref: '#/parameters/force_reload'
+        responses:
+          "201":
+            description: User created
+            schema:
+              $ref: '#/definitions/user'
+          "202":
+            description: Configuration change accepted and reload requested
+            headers:
+              Reload-ID:
+                description: ID of the requested reload
+                type: string
+            schema:
+              $ref: '#/definitions/user'
+          "400":
+            $ref: '#/responses/BadRequest'
+          "409":
+            $ref: '#/responses/AlreadyExists'
+          default:
+            $ref: '#/responses/DefaultError'
+        summary: Add a new userlist user
+        tags:
+        - User
+  /services/haproxy/configuration/users/{username}:
+      delete:
+        operationId: deleteUser
+        parameters:
+        - description: User username
+          in: path
+          name: username
+          required: true
+          type: string
+        - description: Parent userlist name
+          in: query
+          name: userlist
+          required: true
+          type: string
+        - $ref: '#/parameters/transaction_id'
+        - $ref: '#/parameters/version'
+        - $ref: '#/parameters/force_reload'
+        responses:
+          "202":
+            description: Configuration change accepted and reload requested
+            headers:
+              Reload-ID:
+                description: ID of the requested reload
+                type: string
+          "204":
+            description: User deleted
+          "404":
+            $ref: '#/responses/NotFound'
+          default:
+            $ref: '#/responses/DefaultError'
+        summary: Delete a user
+        tags:
+        - User
+      get:
+        operationId: getUser
+        parameters:
+        - description: User username
+          in: path
+          name: username
+          required: true
+          type: string
+        - description: Parent userlist name
+          in: query
+          name: userlist
+          required: true
+          type: string
+        - $ref: '#/parameters/transaction_id'
+        responses:
+          "200":
+            description: Successful operation
+            headers:
+              Configuration-Version:
+                description: Configuration file version
+                type: string
+            schema:
+              properties:
+                _version:
+                  type: integer
+                data:
+                  $ref: '#/definitions/user'
+              type: object
+          "404":
+            $ref: '#/responses/AlreadyExists'
+          default:
+            $ref: '#/responses/DefaultError'
+        summary: Return one userlist user
+        tags:
+        - User
+      put:
+        operationId: replaceUser
+        parameters:
+        - description: User username
+          in: path
+          name: username
+          required: true
+          type: string
+        - description: Parent userlist name
+          in: query
+          name: userlist
+          required: true
+          type: string
+        - in: body
+          name: data
+          required: true
+          schema:
+            $ref: '#/definitions/user'
+        - $ref: '#/parameters/transaction_id'
+        - $ref: '#/parameters/version'
+        - $ref: '#/parameters/force_reload'
+        responses:
+          "200":
+            description: User replaced
+            schema:
+              $ref: '#/definitions/user'
+          "202":
+            description: Configuration change accepted and reload requested
+            headers:
+              Reload-ID:
+                description: ID of the requested reload
+                type: string
+            schema:
+              $ref: '#/definitions/user'
+          "400":
+            $ref: '#/responses/BadRequest'
+          "404":
+            $ref: '#/responses/NotFound'
+          default:
+            $ref: '#/responses/DefaultError'
+        summary: Replace a user
+        tags:
+        - User
+  /services/haproxy/configuration/groups:
+      get:
+        operationId: getGroups
+        parameters:
+        - description: Parent userlist name
+          in: query
+          name: userlist
+          required: true
+          type: string
+        - $ref: '#/parameters/transaction_id'
+        responses:
+          "200":
+            description: Successful operation
+            headers:
+              Configuration-Version:
+                description: Configuration file version
+                type: string
+            schema:
+              properties:
+                _version:
+                  type: integer
+                data:
+                  $ref: '#/definitions/groups'
+              required:
+              - data
+              type: object
+          default:
+            $ref: '#/responses/DefaultError'
+        summary: Return an array of userlist groups
+        tags:
+        - Group
+      post:
+        operationId: createGroup
+        parameters:
+        - description: Parent userlist name
+          in: query
+          name: userlist
+          required: true
+          type: string
+        - in: body
+          name: data
+          required: true
+          schema:
+            $ref: '#/definitions/group'
+        - $ref: '#/parameters/transaction_id'
+        - $ref: '#/parameters/version'
+        - $ref: '#/parameters/force_reload'
+        responses:
+          "201":
+            description: Group created
+            schema:
+              $ref: '#/definitions/group'
+          "202":
+            description: Configuration change accepted and reload requested
+            headers:
+              Reload-ID:
+                description: ID of the requested reload
+                type: string
+            schema:
+              $ref: '#/definitions/group'
+          "400":
+            $ref: '#/responses/BadRequest'
+          "409":
+            $ref: '#/responses/AlreadyExists'
+          default:
+            $ref: '#/responses/DefaultError'
+        summary: Add a new userlist group
+        tags:
+        - Group
+  /services/haproxy/configuration/groups/{name}:
+      delete:
+        operationId: deleteGroup
+        parameters:
+        - description: group name
+          in: path
+          name: name
+          required: true
+          type: string
+        - description: Parent userlist name
+          in: query
+          name: userlist
+          required: true
+          type: string
+        - $ref: '#/parameters/transaction_id'
+        - $ref: '#/parameters/version'
+        - $ref: '#/parameters/force_reload'
+        responses:
+          "202":
+            description: Configuration change accepted and reload requested
+            headers:
+              Reload-ID:
+                description: ID of the requested reload
+                type: string
+          "204":
+            description: Group deleted
+          "404":
+            $ref: '#/responses/NotFound'
+          default:
+            $ref: '#/responses/DefaultError'
+        summary: Delete a group
+        tags:
+        - Group
+      get:
+        operationId: getGroup
+        parameters:
+        - description: Group name
+          in: path
+          name: name
+          required: true
+          type: integer
+        - description: Parent userlist name
+          in: query
+          name: userlist
+          required: true
+          type: string
+        - $ref: '#/parameters/transaction_id'
+        responses:
+          "200":
+            description: Successful operation
+            headers:
+              Configuration-Version:
+                description: Configuration file version
+                type: string
+            schema:
+              properties:
+                _version:
+                  type: integer
+                data:
+                  $ref: '#/definitions/group'
+              type: object
+          "404":
+            $ref: '#/responses/AlreadyExists'
+          default:
+            $ref: '#/responses/DefaultError'
+        summary: Return one userlist group
+        tags:
+        - Group
+      put:
+        operationId: replaceGroup
+        parameters:
+        - description: group name
+          in: path
+          name: name
+          required: true
+          type: string
+        - description: Parent userlist name
+          in: query
+          name: userlist
+          required: true
+          type: string
+        - in: body
+          name: data
+          required: true
+          schema:
+            $ref: '#/definitions/group'
+        - $ref: '#/parameters/transaction_id'
+        - $ref: '#/parameters/version'
+        - $ref: '#/parameters/force_reload'
+        responses:
+          "200":
+            description: Group replaced
+            schema:
+              $ref: '#/definitions/group'
+          "202":
+            description: Configuration change accepted and reload requested
+            headers:
+              Reload-ID:
+                description: ID of the requested reload
+                type: string
+            schema:
+              $ref: '#/definitions/group'
+          "400":
+            $ref: '#/responses/BadRequest'
+          "404":
+            $ref: '#/responses/NotFound'
+          default:
+            $ref: '#/responses/DefaultError'
+        summary: Replace a group
+        tags:
+        - Group
   /services/haproxy/configuration/peer_section:
       get:
         description: Returns an array of all configured peer_section.

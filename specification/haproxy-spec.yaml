@@ -48,6 +48,30 @@ definitions:
     type: array
     items:
       $ref: '#/definitions/backend'
+  userlist:
+    $ref: "models/configuration/userlist.yaml#/userlist"
+  userlists:
+    title: Userlists
+    description: HAProxy userlists array
+    type: array
+    items:
+      $ref: '#/definitions/userlist'
+  user:
+    $ref: "models/configuration/userlist.yaml#/user"
+  users:
+    title: Users
+    description: HAProxy userlist users array
+    type: array
+    items:
+      $ref: '#/definitions/user'
+  group:
+    $ref: "models/configuration/userlist.yaml#/group"
+  groups:
+    title: Groups
+    description: HAProxy userlist groups array
+    type: array
+    items:
+      $ref: '#/definitions/group'
   peer_section:
     $ref: "models/configuration/peers.yaml#/peer_section"
   peer_sections:
@@ -569,6 +593,7 @@ tags:
   - name: TCPCheck
   - name: Cache
   - name: DeclareCapture
+  - name: Userlist
 security:
   - basic_auth: []
 paths:
@@ -626,6 +651,18 @@ paths:
     $ref: "paths/configuration/frontend.yaml#/frontends"
   /services/haproxy/configuration/frontends/{name}:
     $ref: "paths/configuration/frontend.yaml#/frontends_one"
+  /services/haproxy/configuration/userlists:
+    $ref: "paths/configuration/userlist.yaml#/userlists"
+  /services/haproxy/configuration/userlists/{name}:
+    $ref: "paths/configuration/userlist.yaml#/userlists_one"
+  /services/haproxy/configuration/users:
+    $ref: "paths/configuration/userlist.yaml#/users"
+  /services/haproxy/configuration/users/{username}:
+    $ref: "paths/configuration/userlist.yaml#/users_one"
+  /services/haproxy/configuration/groups:
+    $ref: "paths/configuration/userlist.yaml#/groups"
+  /services/haproxy/configuration/groups/{name}:
+    $ref: "paths/configuration/userlist.yaml#/groups_one"
   /services/haproxy/configuration/peer_section:
     $ref: "paths/configuration/peers.yaml#/peer_section"
   /services/haproxy/configuration/peer_section/{name}:

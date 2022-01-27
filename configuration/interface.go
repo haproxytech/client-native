@@ -57,6 +57,9 @@ type Configuration interface {
 	Transactions
 	TransactionHandling
 	Version
+	Userlist
+	User
+	Group
 }
 
 func New(ctx context.Context, opt ...options.ConfigurationOption) (Configuration, error) {
