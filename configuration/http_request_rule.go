@@ -1021,6 +1021,14 @@ func SerializeHTTPRequestRule(f models.HTTPRequestRule) (rule types.Action, err 
 			Cond:     f.Cond,
 			CondTest: f.CondTest,
 		}
+	case "set-var":
+		rule = &actions.SetVar{
+			Expr:     common.Expression{Expr: strings.Split(f.VarExpr, " ")},
+			VarName:  f.VarName,
+			VarScope: f.VarScope,
+			Cond:     f.Cond,
+			CondTest: f.CondTest,
+		}
 	case "set-var-fmt":
 		rule = &actions.SetVarFmt{
 			Fmt:      common.Expression{Expr: strings.Split(f.VarFormat, " ")},
