@@ -9607,7 +9607,7 @@ paths:
                 _version:
                   type: integer
                 data:
-                  $ref: '#/definitions/http_check'
+                  $ref: '#/definitions/http_checks'
               required:
               - data
               type: object

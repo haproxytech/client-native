@@ -31,7 +31,7 @@ http_checks:
             - data
           properties:
             data:
-              $ref: "#/definitions/http_check"
+              $ref: "#/definitions/http_checks"
             _version:
               type: integer
       'default':
