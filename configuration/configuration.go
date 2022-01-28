@@ -29,8 +29,6 @@ import (
 	parser_options "github.com/haproxytech/config-parser/v4/options"
 	"github.com/haproxytech/config-parser/v4/params"
 	"github.com/haproxytech/config-parser/v4/parsers"
-	actions "github.com/haproxytech/config-parser/v4/parsers/actions"
-	http_actions "github.com/haproxytech/config-parser/v4/parsers/http/actions"
 	stats "github.com/haproxytech/config-parser/v4/parsers/stats/settings"
 	"github.com/haproxytech/config-parser/v4/types"
 	"github.com/kballard/go-shellquote"
@@ -1291,21 +1289,14 @@ func (s *SectionParser) httpCheck() interface{} {
 	}
 	d := data.([]types.Action)
 	if s.Section == parser.Defaults || s.Section == parser.Backends {
-		hc := &models.HTTPCheck{}
 		for _, h := range d {
 			httpCheck, err := ParseHTTPCheck(h)
 			if err != nil {
 				continue
 			}
-			if httpCheck.Action == "expect" || httpCheck.Action == "send-state" || httpCheck.Action == "disable-on-404" {
-				hc.ExclamationMark = httpCheck.ExclamationMark
-				hc.Match = httpCheck.Match
-				hc.Pattern = httpCheck.Pattern
-				hc.Type = misc.StringP(httpCheck.Action)
-				break
-			}
+			httpCheck.Index = misc.Int64P(0)
+			return httpCheck
 		}
-		return hc
 	}
 	return nil
 }
@@ -2752,36 +2743,15 @@ func (s *SectionObject) httpCheck(field reflect.Value) error {
 		if err != nil {
 			return err
 		}
-		for _, httpCheck := range httpChecks {
-			if httpCheck.Action == *hc.Type &&
-				httpCheck.Match == hc.Match &&
-				httpCheck.ExclamationMark == hc.ExclamationMark &&
-				httpCheck.Pattern == hc.Pattern {
-				return nil
+		if hc != nil {
+			for _, httpCheck := range httpChecks {
+				if reflect.DeepEqual(httpCheck, hc) {
+					return nil
+				}
 			}
-		}
-
-		check := parseDeprecatedHTTPCheck(hc)
-		if check != nil {
-			if err := s.Parser.Insert(s.Section, s.Name, "http-check", check, 0); err != nil {
+			if err := s.Parser.Insert(s.Section, s.Name, "http-check", hc, 0); err != nil {
 				return err
 			}
-		}
-	}
-	return nil
-}
-
-func parseDeprecatedHTTPCheck(hc *models.HTTPCheck) types.Action {
-	switch *hc.Type {
-	case "send-state":
-		return &http_actions.CheckSendState{}
-	case "disable-on-404":
-		return &http_actions.CheckDisableOn404{}
-	case "expect":
-		return &actions.CheckExpect{
-			Match:           hc.Match,
-			ExclamationMark: hc.ExclamationMark,
-			Pattern:         hc.Pattern,
 		}
 	}
 	return nil

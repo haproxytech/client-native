@@ -1,15 +1,15 @@
 ---
-http_check_rule:
-  title: HTTP Check Rule
+http_check:
+  title: HTTP Check
   type: object
   required:
     - index
-    - action
+    - type
   properties:
     index:
       type: integer
       x-nullable: true
-    action:
+    type:
       type: string
       enum: [comment, connect, disable-on-404, expect, send, send-state, set-var, set-var-fmt, unset-var]
       x-nullable: false
@@ -17,12 +17,12 @@ http_check_rule:
       type: string
       x-nullable: false
       x-dependency:
-        action:
+        type:
           value: [comment, connect, expect, send]
     default:
       type: boolean
       x-dependency:
-        action:
+        type:
           value: connect
     port:
       type: integer
@@ -30,101 +30,101 @@ http_check_rule:
       maximum: 65535
       x-nullable: true
       x-dependency:
-        action:
+        type:
           value: connect
     port_string:
       type: string
       x-dependency:
-        action:
+        type:
           value: connect
     addr:
       type: string
       pattern: '^[^\s]+$'
       x-nullable: false
       x-dependency:
-        action:
+        type:
           value: connect
     send_proxy:
       type: boolean
       x-dependency:
-        action:
+        type:
           value: connect
     via_socks4:
       type: boolean
       x-dependency:
-        action:
+        type:
           value: connect
     ssl:
       type: boolean
       x-dependency:
-        action:
+        type:
           value: connect
     sni:
       type: string
       x-dependency:
-        action:
+        type:
           value: connect
     alpn:
       type: string
       pattern: '^[^\s]+$'
       x-display-name: ALPN Protocols
       x-dependency:
-        action:
+        type:
           value: connect
     linger:
       type: boolean
       x-dependency:
-        action:
+        type:
           value: connect
     proto:
       type: string
       x-nullable: false
       x-dependency:
-        action:
+        type:
           value: connect
     min_recv:
       type: integer
       x-dependency:
-        action:
+        type:
           value: expect
     ok_status:
       type: string
       enum: [L7OK, L7OKC, L6OK, L4OK]
       x-dependency:
-        action:
+        type:
           value: expect
     error_status:
       type: string
       enum: [L7OKC, L7RSP, L7STS, L6RSP, L4CON]
       x-dependency:
-        action:
+        type:
           value: expect
     tout_status:
       type: string
       enum: [L7TOUT, L6TOUT, L4TOUT]
       x-dependency:
-        action:
+        type:
           value: expect
     on_success:
       type: string
       x-dependency:
-        action:
+        type:
           value: expect
     on_error:
       type: string
       x-dependency:
-        action:
+        type:
           value: expect
     status-code:
       type: string
       x-dependency:
-        action:
+        type:
           value: expect
     exclamation_mark:
       type: boolean
       x-display-name: Expect Exclamation Mark
       x-dependency:
-        action:
+        type:
           value: expect
     match:
       type: string
@@ -132,78 +132,78 @@ http_check_rule:
       x-display-name: Expect Match
       pattern: '^[^\s]+$'
       x-dependency:
-        action:
+        type:
           value: expect
           required: true
     pattern:
       type: string
       x-dependency:
-        action:
+        type:
           value: expect
           required: true
     method:
       type: string
       x-dependency:
-        action:
+        type:
           value: send
     uri:
       type: string
       x-dependency:
-        action:
+        type:
           value: send
     uri_log_format:
       type: string
       x-dependency:
-        action:
+        type:
           value: send
     version:
       type: string
       x-dependency:
-        action:
+        type:
           value: send
     headers:
       type: array
       x-go-name: CheckHeaders
       x-dependency:
-        action:
+        type:
           value: send
       items:
         $ref: "#/definitions/return_header"
     body:
       type: string
       x-dependency:
-        action:
+        type:
           value: send
     body_log_format:
       type: string
       x-dependency:
-        action:
+        type:
           value: send
     var_name:
       type: string
       pattern: '^[^\s]+$'
       x-dependency:
-        action:
+        type:
           value: [set-var, set-var-fmt, unset-var]
           required: true
     var_scope:
       type: string
       pattern: '^[^\s]+$'
       x-dependency:
-        action:
+        type:
           value: [set-var, set-var-fmt, unset-var]
           required: true
     var_format:
       type: string
       x-display-name: Var Format
       x-dependency:
-        action:
+        type:
           value: [set-var-fmt]
           required: true
     var_expr:
       type: string
       x-display-name: Var Expression
       x-dependency:
-        action:
+        type:
           value: [set-var]
           required: true

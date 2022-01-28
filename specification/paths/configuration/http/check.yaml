@@ -31,7 +31,7 @@ http_checks:
             - data
           properties:
             data:
-              $ref: "#/definitions/http_check_rules"
+              $ref: "#/definitions/http_check"
             _version:
               type: integer
       'default':
@@ -57,7 +57,7 @@ http_checks:
         in: body
         required: true
         schema:
-          $ref: '#/definitions/http_check_rule'
+          $ref: '#/definitions/http_check'
       - $ref: "#/parameters/transaction_id"
       - $ref: "#/parameters/version"
       - $ref: "#/parameters/force_reload"
@@ -69,11 +69,11 @@ http_checks:
             description: ID of the requested reload
             type: string
         schema:
-          $ref: "#/definitions/http_check_rule"
+          $ref: "#/definitions/http_check"
       '201':
         description: HTTP check created
         schema:
-          $ref: '#/definitions/http_check_rule'
+          $ref: '#/definitions/http_check'
       '409':
         $ref: '#/responses/AlreadyExists'
       '400':
@@ -115,7 +115,7 @@ http_checks_one:
           type: object
           properties:
             data:
-              $ref: "#/definitions/http_check_rule"
+              $ref: "#/definitions/http_check"
             _version:
               type: integer
       '404':
@@ -148,7 +148,7 @@ http_checks_one:
         in: body
         required: true
         schema:
-          $ref: '#/definitions/http_check_rule'
+          $ref: '#/definitions/http_check'
       - $ref: "#/parameters/transaction_id"
       - $ref: "#/parameters/version"
       - $ref: "#/parameters/force_reload"
@@ -160,11 +160,11 @@ http_checks_one:
             description: ID of the requested reload
             type: string
         schema:
-          $ref: "#/definitions/http_check_rule"
+          $ref: "#/definitions/http_check"
       '200':
         description: HTTP check replaced
         schema:
-          $ref: '#/definitions/http_check_rule'
+          $ref: '#/definitions/http_check'
       '400':
         $ref: '#/responses/BadRequest'
       '404':

@@ -104,13 +104,13 @@ definitions:
     type: array
     items:
       $ref: '#/definitions/http_response_rule'
-  http_check_rule:
-    $ref: "models/configuration/http/check.yaml#/http_check_rule"
-  http_check_rules:
+  http_check:
+    $ref: "models/configuration/http/check.yaml#/http_check"
+  http_checks:
     title: HTTP Checks Array
     type: array
     items:
-      $ref: '#/definitions/http_check_rule'
+      $ref: '#/definitions/http_check'
   tcp_request_rule:
     $ref: "models/configuration/tcp/request.yaml#/tcp_request_rule"
   tcp_request_rules:
@@ -332,8 +332,6 @@ definitions:
     $ref: "models/configuration/server.yaml#/default_server"
   httpchk_params:
     $ref: "models/configuration/misc.yaml#/httpchk_params"
-  http-check:
-    $ref: "models/configuration/misc.yaml#/http-check"
   redispatch:
     $ref: "models/configuration/misc.yaml#/redispatch"
   errorfile:

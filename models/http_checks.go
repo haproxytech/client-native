@@ -28,13 +28,13 @@ import (
 	"github.com/go-openapi/swag"
 )
 
-// HTTPCheckRules HTTP Checks Array
+// HTTPChecks HTTP Checks Array
 //
-// swagger:model http_check_rules
-type HTTPCheckRules []*HTTPCheckRule
+// swagger:model http_checks
+type HTTPChecks []*HTTPCheck
 
-// Validate validates this http check rules
-func (m HTTPCheckRules) Validate(formats strfmt.Registry) error {
+// Validate validates this http checks
+func (m HTTPChecks) Validate(formats strfmt.Registry) error {
 	var res []error
 
 	for i := 0; i < len(m); i++ {

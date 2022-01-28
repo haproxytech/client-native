@@ -40,12 +40,12 @@ func TestGetHTTPChecks(t *testing.T) { //nolint:gocognit,gocyclo
 	for _, r := range checks {
 		switch *r.Index {
 		case 0:
-			if r.Action != "connect" {
-				t.Errorf("%v: Action not allow: %v", *r.Index, r.Action)
+			if r.Type != "connect" {
+				t.Errorf("%v: Action not allow: %v", *r.Index, r.Type)
 			}
 		case 1:
-			if r.Action != "send" {
-				t.Errorf("%v: Action not send: %v", *r.Index, r.Action)
+			if r.Type != "send" {
+				t.Errorf("%v: Action not send: %v", *r.Index, r.Type)
 			}
 			if r.Method != "GET" {
 				t.Errorf("%v: Method not GET: %v", *r.Index, r.Method)
@@ -67,8 +67,8 @@ func TestGetHTTPChecks(t *testing.T) { //nolint:gocognit,gocyclo
 				}
 			}
 		case 2:
-			if r.Action != "expect" {
-				t.Errorf("%v: Action not expect: %v", *r.Index, r.Action)
+			if r.Type != "expect" {
+				t.Errorf("%v: Action not expect: %v", *r.Index, r.Type)
 			}
 			if r.Match != "status" {
 				t.Errorf("%v: Match not status: %v", *r.Index, r.Match)
@@ -77,8 +77,8 @@ func TestGetHTTPChecks(t *testing.T) { //nolint:gocognit,gocyclo
 				t.Errorf("%v: Pattern not 200-399: %v", *r.Index, r.Pattern)
 			}
 		case 3:
-			if r.Action != "connect" {
-				t.Errorf("%v: Action not connect: %v", *r.Index, r.Action)
+			if r.Type != "connect" {
+				t.Errorf("%v: Action not connect: %v", *r.Index, r.Type)
 			}
 			if *r.Port != 443 {
 				t.Errorf("%v: Port not 443: %v", *r.Index, *r.Port)
@@ -90,8 +90,8 @@ func TestGetHTTPChecks(t *testing.T) { //nolint:gocognit,gocyclo
 				t.Errorf("%v: Sni not haproxy.1wt.eu: %v", *r.Index, r.Sni)
 			}
 		case 4:
-			if r.Action != "expect" {
-				t.Errorf("%v: Action not expect: %v", *r.Index, r.Action)
+			if r.Type != "expect" {
+				t.Errorf("%v: Action not expect: %v", *r.Index, r.Type)
 			}
 			if r.Match != "status" {
 				t.Errorf("%v: Match not status: %v", *r.Index, r.Match)
@@ -100,8 +100,8 @@ func TestGetHTTPChecks(t *testing.T) { //nolint:gocognit,gocyclo
 				t.Errorf("%v: Pattern not 200,201,300-310: %v", *r.Index, r.Pattern)
 			}
 		case 5:
-			if r.Action != "expect" {
-				t.Errorf("%v: Action not expect: %v", *r.Index, r.Action)
+			if r.Type != "expect" {
+				t.Errorf("%v: Action not expect: %v", *r.Index, r.Type)
 			}
 			if r.Match != "header" {
 				t.Errorf("%v: Match not header: %v", *r.Index, r.Match)
@@ -110,8 +110,8 @@ func TestGetHTTPChecks(t *testing.T) { //nolint:gocognit,gocyclo
 				t.Errorf("%v: Pattern not name \"set-cookie\" value -m beg \"sessid=\": %v", *r.Index, r.Pattern)
 			}
 		case 6:
-			if r.Action != "expect" {
-				t.Errorf("%v: Action not expect: %v", *r.Index, r.Action)
+			if r.Type != "expect" {
+				t.Errorf("%v: Action not expect: %v", *r.Index, r.Type)
 			}
 			if !r.ExclamationMark {
 				t.Errorf("%v: ExclamationMark not set", *r.Index)
@@ -123,8 +123,8 @@ func TestGetHTTPChecks(t *testing.T) { //nolint:gocognit,gocyclo
 				t.Errorf("%v: Pattern not SQL\\ Error: %v", *r.Index, r.Pattern)
 			}
 		case 7:
-			if r.Action != "expect" {
-				t.Errorf("%v: Action not expect: %v", *r.Index, r.Action)
+			if r.Type != "expect" {
+				t.Errorf("%v: Action not expect: %v", *r.Index, r.Type)
 			}
 			if !r.ExclamationMark {
 				t.Errorf("%v: ExclamationMark not set", *r.Index)
@@ -136,8 +136,8 @@ func TestGetHTTPChecks(t *testing.T) { //nolint:gocognit,gocyclo
 				t.Errorf("%v: Pattern not ^5: %v", *r.Index, r.Pattern)
 			}
 		case 8:
-			if r.Action != "expect" {
-				t.Errorf("%v: Action not expect: %v", *r.Index, r.Action)
+			if r.Type != "expect" {
+				t.Errorf("%v: Action not expect: %v", *r.Index, r.Type)
 			}
 			if r.Match != "rstring" {
 				t.Errorf("%v: Match not rstring: %v", *r.Index, r.Match)
@@ -146,8 +146,8 @@ func TestGetHTTPChecks(t *testing.T) { //nolint:gocognit,gocyclo
 				t.Errorf("%v: Pattern not <!--tag:[0-9a-f]*--></html>: %v", *r.Index, r.Pattern)
 			}
 		case 9:
-			if r.Action != "unset-var" {
-				t.Errorf("%v: Type not unset-var: %v", *r.Index, r.Action)
+			if r.Type != "unset-var" {
+				t.Errorf("%v: Type not unset-var: %v", *r.Index, r.Type)
 			}
 			if r.VarScope != "check" {
 				t.Errorf("%v: VarScope not check: %v", *r.Index, r.VarScope)
@@ -156,8 +156,8 @@ func TestGetHTTPChecks(t *testing.T) { //nolint:gocognit,gocyclo
 				t.Errorf("%v: VarName not port: %v", *r.Index, r.VarName)
 			}
 		case 10:
-			if r.Action != "set-var" {
-				t.Errorf("%v: Type not set-var: %v", *r.Index, r.Action)
+			if r.Type != "set-var" {
+				t.Errorf("%v: Type not set-var: %v", *r.Index, r.Type)
 			}
 			if r.VarScope != "check" {
 				t.Errorf("%v: VarScope not check: %v", *r.Index, r.VarScope)
@@ -169,8 +169,8 @@ func TestGetHTTPChecks(t *testing.T) { //nolint:gocognit,gocyclo
 				t.Errorf("%v: VarExpr not int(1234): %v", *r.Index, r.VarExpr)
 			}
 		case 11:
-			if r.Action != "set-var-fmt" {
-				t.Errorf("%v: Type not set-var-fmt: %v", *r.Index, r.Action)
+			if r.Type != "set-var-fmt" {
+				t.Errorf("%v: Type not set-var-fmt: %v", *r.Index, r.Type)
 			}
 			if r.VarScope != "check" {
 				t.Errorf("%v: VarScope not check: %v", *r.Index, r.VarScope)
@@ -182,12 +182,12 @@ func TestGetHTTPChecks(t *testing.T) { //nolint:gocognit,gocyclo
 				t.Errorf("%v: VarExpr not int(1234): %v", *r.Index, r.VarExpr)
 			}
 		case 12:
-			if r.Action != "send-state" {
-				t.Errorf("%v: Action not send-state: %v", *r.Index, r.Action)
+			if r.Type != "send-state" {
+				t.Errorf("%v: Action not send-state: %v", *r.Index, r.Type)
 			}
 		case 13:
-			if r.Action != "disable-on-404" {
-				t.Errorf("%v: Action not disable-on-404: %v", *r.Index, r.Action)
+			if r.Type != "disable-on-404" {
+				t.Errorf("%v: Action not disable-on-404: %v", *r.Index, r.Type)
 			}
 		default:
 			t.Errorf("Expext only http checks 0 to 31, %v found", *r.Index)
@@ -205,12 +205,12 @@ func TestGetHTTPChecks(t *testing.T) { //nolint:gocognit,gocyclo
 	for _, r := range checks {
 		switch *r.Index {
 		case 0:
-			if r.Action != "send-state" {
-				t.Errorf("%v: Action not send-state: %v", *r.Index, r.Action)
+			if r.Type != "send-state" {
+				t.Errorf("%v: Action not send-state: %v", *r.Index, r.Type)
 			}
 		case 1:
-			if r.Action != "disable-on-404" {
-				t.Errorf("%v: Action not disable-on-404: %v", *r.Index, r.Action)
+			if r.Type != "disable-on-404" {
+				t.Errorf("%v: Action not disable-on-404: %v", *r.Index, r.Type)
 			}
 		default:
 			t.Errorf("Expext only http-check 0 to %v, %v found", *r.Index, len(checks)-1)
@@ -239,8 +239,8 @@ func TestGetHTTPCheck(t *testing.T) {
 	if *check.Index != 0 {
 		t.Errorf("HTTP Request Rule Index not 0, %v found", *check.Index)
 	}
-	if check.Action != "connect" {
-		t.Errorf("%v: Action not allow: %v", *check.Index, check.Action)
+	if check.Type != "connect" {
+		t.Errorf("%v: Action not allow: %v", *check.Index, check.Type)
 	}
 
 	_, err = check.MarshalBinary()
@@ -257,18 +257,18 @@ func TestGetHTTPCheck(t *testing.T) {
 	if err != nil {
 		t.Error(err.Error())
 	}
-	if check.Action != "send-state" {
-		t.Errorf("%v: Action not send-state: %v", *check.Index, check.Action)
+	if check.Type != "send-state" {
+		t.Errorf("%v: Action not send-state: %v", *check.Index, check.Type)
 	}
 }
 
 func TestCreateEditDeleteHTTPCheck(t *testing.T) {
 	id := int64(1)
 
-	// TestCreateHTTPCheckRule
-	r := &models.HTTPCheckRule{
+	// TestCreateHTTPCheck
+	r := &models.HTTPCheck{
 		Index:        &id,
-		Action:       "send",
+		Type:         "send",
 		Method:       "GET",
 		Version:      "HTTP/1.1",
 		URI:          "/",
@@ -310,9 +310,9 @@ func TestCreateEditDeleteHTTPCheck(t *testing.T) {
 	}
 
 	// TestEditHTTPRequestRule
-	r = &models.HTTPCheckRule{
+	r = &models.HTTPCheck{
 		Index:   &id,
-		Action:  "send",
+		Type:    "send",
 		Method:  "GET",
 		Version: "HTTP/1.1",
 		URI:     "/",

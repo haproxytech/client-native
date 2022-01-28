@@ -26,7 +26,7 @@ defaults:
     httpchk_params:
       $ref: "#/definitions/httpchk_params"
     http-check:
-      $ref: "#/definitions/http-check"
+      $ref: "#/definitions/http_check"
     bind_process:
       type: string
       pattern: '^[^\s]+$'

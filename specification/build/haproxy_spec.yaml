@@ -465,7 +465,7 @@ definitions:
           type: string
           x-display-name: HTTP bufferrequest
         http-check:
-          $ref: '#/definitions/http-check'
+          $ref: '#/definitions/http_check'
         http-use-htx:
           enum:
           - enabled
@@ -873,7 +873,7 @@ definitions:
           type: string
           x-display-name: HTTP bufferrequest
         http-check:
-          $ref: '#/definitions/http-check'
+          $ref: '#/definitions/http_check'
         http-use-htx:
           enum:
           - enabled
@@ -3327,49 +3327,36 @@ definitions:
     type: array
     items:
       $ref: '#/definitions/http_response_rule'
-  http_check_rule:
+  http_check:
       properties:
-        action:
-          enum:
-          - comment
-          - connect
-          - disable-on-404
-          - expect
-          - send
-          - send-state
-          - set-var
-          - set-var-fmt
-          - unset-var
-          type: string
-          x-nullable: false
         addr:
           pattern: ^[^\s]+$
           type: string
           x-dependency:
-            action:
+            type:
               value: connect
           x-nullable: false
         alpn:
           pattern: ^[^\s]+$
           type: string
           x-dependency:
-            action:
+            type:
               value: connect
           x-display-name: ALPN Protocols
         body:
           type: string
           x-dependency:
-            action:
+            type:
               value: send
         body_log_format:
           type: string
           x-dependency:
-            action:
+            type:
               value: send
         check_comment:
           type: string
           x-dependency:
-            action:
+            type:
               value:
               - comment
               - connect
@@ -3379,7 +3366,7 @@ definitions:
         default:
           type: boolean
           x-dependency:
-            action:
+            type:
               value: connect
         error_status:
           enum:
@@ -3390,12 +3377,12 @@ definitions:
           - L4CON
           type: string
           x-dependency:
-            action:
+            type:
               value: expect
         exclamation_mark:
           type: boolean
           x-dependency:
-            action:
+            type:
               value: expect
           x-display-name: Expect Exclamation Mark
         headers:
@@ -3403,7 +3390,7 @@ definitions:
             $ref: '#/definitions/return_header'
           type: array
           x-dependency:
-            action:
+            type:
               value: send
           x-go-name: CheckHeaders
         index:
@@ -3412,7 +3399,7 @@ definitions:
         linger:
           type: boolean
           x-dependency:
-            action:
+            type:
               value: connect
         match:
           enum:
@@ -3425,19 +3412,19 @@ definitions:
           pattern: ^[^\s]+$
           type: string
           x-dependency:
-            action:
+            type:
               required: true
               value: expect
           x-display-name: Expect Match
         method:
           type: string
           x-dependency:
-            action:
+            type:
               value: send
         min_recv:
           type: integer
           x-dependency:
-            action:
+            type:
               value: expect
         ok_status:
           enum:
@@ -3447,22 +3434,22 @@ definitions:
           - L4OK
           type: string
           x-dependency:
-            action:
+            type:
               value: expect
         on_error:
           type: string
           x-dependency:
-            action:
+            type:
               value: expect
         on_success:
           type: string
           x-dependency:
-            action:
+            type:
               value: expect
         pattern:
           type: string
           x-dependency:
-            action:
+            type:
               required: true
               value: expect
         port:
@@ -3470,39 +3457,39 @@ definitions:
           minimum: 1
           type: integer
           x-dependency:
-            action:
+            type:
               value: connect
           x-nullable: true
         port_string:
           type: string
           x-dependency:
-            action:
+            type:
               value: connect
         proto:
           type: string
           x-dependency:
-            action:
+            type:
               value: connect
           x-nullable: false
         send_proxy:
           type: boolean
           x-dependency:
-            action:
+            type:
               value: connect
         sni:
           type: string
           x-dependency:
-            action:
+            type:
               value: connect
         ssl:
           type: boolean
           x-dependency:
-            action:
+            type:
               value: connect
         status-code:
           type: string
           x-dependency:
-            action:
+            type:
               value: expect
         tout_status:
           enum:
@@ -3511,22 +3498,35 @@ definitions:
           - L4TOUT
           type: string
           x-dependency:
-            action:
+            type:
               value: expect
+        type:
+          enum:
+          - comment
+          - connect
+          - disable-on-404
+          - expect
+          - send
+          - send-state
+          - set-var
+          - set-var-fmt
+          - unset-var
+          type: string
+          x-nullable: false
         uri:
           type: string
           x-dependency:
-            action:
+            type:
               value: send
         uri_log_format:
           type: string
           x-dependency:
-            action:
+            type:
               value: send
         var_expr:
           type: string
           x-dependency:
-            action:
+            type:
               required: true
               value:
               - set-var
@@ -3534,7 +3534,7 @@ definitions:
         var_format:
           type: string
           x-dependency:
-            action:
+            type:
               required: true
               value:
               - set-var-fmt
@@ -3543,7 +3543,7 @@ definitions:
           pattern: ^[^\s]+$
           type: string
           x-dependency:
-            action:
+            type:
               required: true
               value:
               - set-var
@@ -3553,7 +3553,7 @@ definitions:
           pattern: ^[^\s]+$
           type: string
           x-dependency:
-            action:
+            type:
               required: true
               value:
               - set-var
@@ -3562,23 +3562,23 @@ definitions:
         version:
           type: string
           x-dependency:
-            action:
+            type:
               value: send
         via_socks4:
           type: boolean
           x-dependency:
-            action:
+            type:
               value: connect
       required:
       - index
-      - action
-      title: HTTP Check Rule
+      - type
+      title: HTTP Check
       type: object
-  http_check_rules:
+  http_checks:
     title: HTTP Checks Array
     type: array
     items:
-      $ref: '#/definitions/http_check_rule'
+      $ref: '#/definitions/http_check'
   tcp_request_rule:
       additionalProperties: false
       description: HAProxy TCP Request Rule configuration (corresponds to tcp-request)
@@ -6492,43 +6492,6 @@ definitions:
           type: string
       type: object
       x-display-name: HTTP Check
-  http-check:
-      properties:
-        exclamation_mark:
-          type: boolean
-          x-dependency:
-            type:
-              value: expect
-          x-display-name: Expect Exclamation Mark
-        match:
-          enum:
-          - status
-          - rstatus
-          - string
-          - rstring
-          pattern: ^[^\s]+$
-          type: string
-          x-dependency:
-            type:
-              required: true
-              value: expect
-          x-display-name: Expect Match
-        pattern:
-          type: string
-          x-dependency:
-            type:
-              required: true
-              value: expect
-          x-display-name: Expect Pattern
-        type:
-          enum:
-          - disable-on-404
-          - expect
-          - send-state
-          type: string
-      required:
-      - type
-      type: object
   redispatch:
       properties:
         enabled:
@@ -9644,7 +9607,7 @@ paths:
                 _version:
                   type: integer
                 data:
-                  $ref: '#/definitions/http_check_rules'
+                  $ref: '#/definitions/http_check'
               required:
               - data
               type: object
@@ -9673,7 +9636,7 @@ paths:
           name: data
           required: true
           schema:
-            $ref: '#/definitions/http_check_rule'
+            $ref: '#/definitions/http_check'
         - $ref: '#/parameters/transaction_id'
         - $ref: '#/parameters/version'
         - $ref: '#/parameters/force_reload'
@@ -9681,7 +9644,7 @@ paths:
           "201":
             description: HTTP check created
             schema:
-              $ref: '#/definitions/http_check_rule'
+              $ref: '#/definitions/http_check'
           "202":
             description: Configuration change accepted and reload requested
             headers:
@@ -9689,7 +9652,7 @@ paths:
                 description: ID of the requested reload
                 type: string
             schema:
-              $ref: '#/definitions/http_check_rule'
+              $ref: '#/definitions/http_check'
           "400":
             $ref: '#/responses/BadRequest'
           "409":
@@ -9776,7 +9739,7 @@ paths:
                 _version:
                   type: integer
                 data:
-                  $ref: '#/definitions/http_check_rule'
+                  $ref: '#/definitions/http_check'
               type: object
           "404":
             $ref: '#/responses/NotFound'
@@ -9811,7 +9774,7 @@ paths:
           name: data
           required: true
           schema:
-            $ref: '#/definitions/http_check_rule'
+            $ref: '#/definitions/http_check'
         - $ref: '#/parameters/transaction_id'
         - $ref: '#/parameters/version'
         - $ref: '#/parameters/force_reload'
@@ -9819,7 +9782,7 @@ paths:
           "200":
             description: HTTP check replaced
             schema:
-              $ref: '#/definitions/http_check_rule'
+              $ref: '#/definitions/http_check'
           "202":
             description: Configuration change accepted and reload requested
             headers:
@@ -9827,7 +9790,7 @@ paths:
                 description: ID of the requested reload
                 type: string
             schema:
-              $ref: '#/definitions/http_check_rule'
+              $ref: '#/definitions/http_check'
           "400":
             $ref: '#/responses/BadRequest'
           "404":

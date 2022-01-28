@@ -35,7 +35,7 @@ import (
 
 // GetHTTPChecks returns configuration version and an array of configured http-checks in the specified parent.
 // Returns error on fail.
-func (c *Client) GetHTTPChecks(parentType, parentName string, transactionID string) (int64, models.HTTPCheckRules, error) {
+func (c *Client) GetHTTPChecks(parentType, parentName string, transactionID string) (int64, models.HTTPChecks, error) {
 	p, err := c.GetParser(transactionID)
 	if err != nil {
 		return 0, nil, err
@@ -56,7 +56,7 @@ func (c *Client) GetHTTPChecks(parentType, parentName string, transactionID stri
 
 // GetHTTPCheck returns configuration version and the requested http check in the specified parent.
 // Returns error on fail or if http check does not exist
-func (c *Client) GetHTTPCheck(id int64, parentType string, parentName string, transactionID string) (int64, *models.HTTPCheckRule, error) {
+func (c *Client) GetHTTPCheck(id int64, parentType string, parentName string, transactionID string) (int64, *models.HTTPCheck, error) {
 	p, err := c.GetParser(transactionID)
 	if err != nil {
 		return 0, nil, err
@@ -115,7 +115,7 @@ func (c *Client) DeleteHTTPCheck(id int64, parentType string, parentName string,
 
 // CreateHTTPCheck creates a http check in the configuration. One of version or transationID is mandatory.
 // Returns error on fail, nil on success.
-func (c *Client) CreateHTTPCheck(parentType string, parentName string, data *models.HTTPCheckRule, transactionID string, version int64) error {
+func (c *Client) CreateHTTPCheck(parentType string, parentName string, data *models.HTTPCheck, transactionID string, version int64) error {
 	if c.UseValidation {
 		validationErr := data.Validate(strfmt.Default)
 		if validationErr != nil {
@@ -153,7 +153,7 @@ func (c *Client) CreateHTTPCheck(parentType string, parentName string, data *mod
 // EditHTTPCheck edits a http check in the configuration. One of version or transactionID is mandatory.
 // Returns error on fail, nil on success.
 // nolint:dupl
-func (c *Client) EditHTTPCheck(id int64, parentType string, parentName string, data *models.HTTPCheckRule, transactionID string, version int64) error {
+func (c *Client) EditHTTPCheck(id int64, parentType string, parentName string, data *models.HTTPCheck, transactionID string, version int64) error {
 	if c.UseValidation {
 		validationErr := data.Validate(strfmt.Default)
 		if validationErr != nil {
@@ -190,7 +190,7 @@ func (c *Client) EditHTTPCheck(id int64, parentType string, parentName string, d
 	return nil
 }
 
-func ParseHTTPChecks(t, pName string, p parser.Parser) (models.HTTPCheckRules, error) {
+func ParseHTTPChecks(t, pName string, p parser.Parser) (models.HTTPChecks, error) {
 	var section parser.Section
 	switch t {
 	case "defaults":
@@ -202,7 +202,7 @@ func ParseHTTPChecks(t, pName string, p parser.Parser) (models.HTTPCheckRules, e
 		return nil, NewConfError(ErrValidationError, fmt.Sprintf("unsupported section in http_check: %s", t))
 	}
 
-	checks := models.HTTPCheckRules{}
+	checks := models.HTTPChecks{}
 	data, err := p.Get(section, pName, "http-check", false)
 	if err != nil {
 		if errors.Is(err, parser_errors.ErrFetch) {
@@ -222,16 +222,16 @@ func ParseHTTPChecks(t, pName string, p parser.Parser) (models.HTTPCheckRules, e
 	return checks, nil
 }
 
-func ParseHTTPCheck(f types.Action) (check *models.HTTPCheckRule, err error) {
+func ParseHTTPCheck(f types.Action) (check *models.HTTPCheck, err error) {
 	switch v := f.(type) {
 	case *http_actions.CheckComment:
-		check = &models.HTTPCheckRule{
-			Action:       models.HTTPCheckRuleActionComment,
+		check = &models.HTTPCheck{
+			Type:         models.HTTPCheckTypeComment,
 			CheckComment: v.LogMessage,
 		}
 	case *actions.CheckConnect:
-		check = &models.HTTPCheckRule{
-			Action:       models.HTTPCheckRuleActionConnect,
+		check = &models.HTTPCheck{
+			Type:         models.HTTPCheckTypeConnect,
 			Addr:         v.Addr,
 			Sni:          v.SNI,
 			Alpn:         v.ALPN,
@@ -252,8 +252,8 @@ func ParseHTTPCheck(f types.Action) (check *models.HTTPCheckRule, err error) {
 			}
 		}
 	case *actions.CheckExpect:
-		check = &models.HTTPCheckRule{
-			Action:          models.HTTPCheckRuleActionExpect,
+		check = &models.HTTPCheck{
+			Type:            models.HTTPCheckTypeExpect,
 			CheckComment:    v.CheckComment,
 			OkStatus:        v.OKStatus,
 			ErrorStatus:     v.ErrorStatus,
@@ -269,12 +269,12 @@ func ParseHTTPCheck(f types.Action) (check *models.HTTPCheckRule, err error) {
 			check.MinRecv = *v.MinRecv
 		}
 	case *http_actions.CheckDisableOn404:
-		check = &models.HTTPCheckRule{
-			Action: models.HTTPCheckRuleActionDisableOn404,
+		check = &models.HTTPCheck{
+			Type: models.HTTPCheckTypeDisableOn404,
 		}
 	case *http_actions.CheckSend:
-		check = &models.HTTPCheckRule{
-			Action:        models.HTTPCheckRuleActionSend,
+		check = &models.HTTPCheck{
+			Type:          models.HTTPCheckTypeSend,
 			Method:        v.Method,
 			URI:           v.URI,
 			URILogFormat:  v.URILogFormat,
@@ -295,26 +295,26 @@ func ParseHTTPCheck(f types.Action) (check *models.HTTPCheckRule, err error) {
 		}
 		check.CheckHeaders = headers
 	case *http_actions.CheckSendState:
-		check = &models.HTTPCheckRule{
-			Action: models.HTTPCheckRuleActionSendState,
+		check = &models.HTTPCheck{
+			Type: models.HTTPCheckTypeSendState,
 		}
 	case *actions.SetVarCheck:
-		check = &models.HTTPCheckRule{
-			Action:   models.HTTPCheckRuleActionSetVar,
+		check = &models.HTTPCheck{
+			Type:     models.HTTPCheckTypeSetVar,
 			VarScope: v.VarScope,
 			VarName:  v.VarName,
 			VarExpr:  strings.Join(v.Expr.Expr, " "),
 		}
 	case *actions.SetVarFmtCheck:
-		check = &models.HTTPCheckRule{
-			Action:   models.HTTPCheckRuleActionSetVarFmt,
+		check = &models.HTTPCheck{
+			Type:     models.HTTPCheckTypeSetVarFmt,
 			VarScope: v.VarScope,
 			VarName:  v.VarName,
 			VarExpr:  strings.Join(v.Format.Expr, " "),
 		}
 	case *actions.UnsetVarCheck:
-		check = &models.HTTPCheckRule{
-			Action:   models.HTTPCheckRuleActionUnsetVar,
+		check = &models.HTTPCheck{
+			Type:     models.HTTPCheckTypeUnsetVar,
 			VarScope: v.Scope,
 			VarName:  v.Name,
 		}
@@ -323,9 +323,9 @@ func ParseHTTPCheck(f types.Action) (check *models.HTTPCheckRule, err error) {
 	return check, nil
 }
 
-func SerializeHTTPCheck(f models.HTTPCheckRule) (action types.Action, err error) { //nolint:ireturn
-	switch f.Action {
-	case models.HTTPCheckRuleActionComment:
+func SerializeHTTPCheck(f models.HTTPCheck) (action types.Action, err error) { //nolint:ireturn
+	switch f.Type {
+	case models.HTTPCheckTypeComment:
 		return &http_actions.CheckComment{
 			LogMessage: f.CheckComment,
 		}, nil
@@ -343,7 +343,7 @@ func SerializeHTTPCheck(f models.HTTPCheckRule) (action types.Action, err error)
 			SSL:          f.Ssl,
 			Linger:       f.Linger,
 		}, nil
-	case models.HTTPCheckRuleActionExpect:
+	case models.HTTPCheckTypeExpect:
 		return &actions.CheckExpect{
 			MinRecv:         &f.MinRecv,
 			Match:           f.Match,
@@ -357,9 +357,9 @@ func SerializeHTTPCheck(f models.HTTPCheckRule) (action types.Action, err error)
 			ExclamationMark: f.ExclamationMark,
 			Pattern:         f.Pattern,
 		}, nil
-	case models.HTTPCheckRuleActionDisableOn404:
+	case models.HTTPCheckTypeDisableOn404:
 		return &http_actions.CheckDisableOn404{}, nil
-	case models.HTTPCheckRuleActionSend:
+	case models.HTTPCheckTypeSend:
 		action := &http_actions.CheckSend{
 			Method:        f.Method,
 			URI:           f.URI,
@@ -382,21 +382,21 @@ func SerializeHTTPCheck(f models.HTTPCheckRule) (action types.Action, err error)
 		}
 		action.Header = headers
 		return action, nil
-	case models.HTTPCheckRuleActionSendState:
+	case models.HTTPCheckTypeSendState:
 		return &http_actions.CheckSendState{}, nil
-	case models.HTTPCheckRuleActionSetVar:
+	case models.HTTPCheckTypeSetVar:
 		return &actions.SetVarCheck{
 			VarScope: f.VarScope,
 			VarName:  f.VarName,
 			Expr:     common.Expression{Expr: strings.Split(f.VarExpr, " ")},
 		}, nil
-	case models.HTTPCheckRuleActionSetVarFmt:
+	case models.HTTPCheckTypeSetVarFmt:
 		return &actions.SetVarFmtCheck{
 			VarScope: f.VarScope,
 			VarName:  f.VarName,
 			Format:   common.Expression{Expr: strings.Split(f.VarFormat, " ")},
 		}, nil
-	case models.HTTPCheckRuleActionUnsetVar:
+	case models.HTTPCheckTypeUnsetVar:
 		return &actions.UnsetVarCheck{
 			Scope: f.VarScope,
 			Name:  f.VarName,

@@ -2,7 +2,6 @@ package configuration
 
 import (
 	"fmt"
-	"reflect"
 	"testing"
 
 	"github.com/haproxytech/client-native/v3/misc"
@@ -178,7 +177,8 @@ func TestPushDefaults(t *testing.T) {
 		Logasap:              "disabled",
 		Allbackups:           "enabled",
 		HTTPCheck: &models.HTTPCheck{
-			Type: misc.StringP("send-state"),
+			Index: misc.Int64P(0),
+			Type:  "send-state",
 		},
 		AcceptInvalidHTTPRequest:  "disabled",
 		AcceptInvalidHTTPResponse: "disabled",
@@ -197,10 +197,22 @@ func TestPushDefaults(t *testing.T) {
 		t.Error(err.Error())
 	}
 
-	if !reflect.DeepEqual(defaults, d) {
-		fmt.Printf("Created defaults config: %v\n", defaults)
-		fmt.Printf("Given defaults config: %v\n", d)
-		t.Error("Created defaults config not equal to given defaults config")
+	var givenJSON []byte
+	givenJSON, err = d.MarshalBinary()
+	if err != nil {
+		t.Error(err.Error())
+	}
+
+	var ondiskJSON []byte
+	ondiskJSON, err = defaults.MarshalBinary()
+	if err != nil {
+		t.Error(err.Error())
+	}
+
+	if string(givenJSON) != string(ondiskJSON) {
+		fmt.Printf("Created defaults: %v\n", string(ondiskJSON))
+		fmt.Printf("Given defaults: %v\n", string(givenJSON))
+		t.Error("Created defaults not equal to given defaults")
 	}
 
 	if ver != version {

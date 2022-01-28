@@ -166,36 +166,6 @@ cookie:
       type: integer
     dynamic:
       type: boolean
-http-check:
-  type: object
-  required:
-    - type
-  properties:
-    type:
-      type: string
-      enum: [disable-on-404, expect, send-state]
-    exclamation_mark:
-      type: boolean
-      x-display-name: Expect Exclamation Mark
-      x-dependency:
-        type:
-          value: expect
-    match:
-      type: string
-      enum: [status, rstatus, string, rstring]
-      x-display-name: Expect Match
-      pattern: '^[^\s]+$'
-      x-dependency:
-        type:
-          value: expect
-          required: true
-    pattern:
-      type: string
-      x-display-name: Expect Pattern
-      x-dependency:
-        type:
-          value: expect
-          required: true
 stats_options:
   type: object
   properties:
