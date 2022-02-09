@@ -24,6 +24,7 @@ import (
 	parser_errors "github.com/haproxytech/config-parser/v4/errors"
 	"github.com/haproxytech/config-parser/v4/types"
 
+	"github.com/haproxytech/client-native/v2/misc"
 	"github.com/haproxytech/client-native/v2/models"
 )
 
@@ -153,7 +154,10 @@ func ParseServerSwitchingRules(backend string, p parser.Parser) (models.ServerSw
 		return nil, err
 	}
 
-	sRules := data.([]types.UseServer)
+	sRules, ok := data.([]types.UseServer)
+	if !ok {
+		return nil, misc.CreateTypeAssertError("use-server")
+	}
 	for i, sRule := range sRules {
 		id := int64(i)
 		s := ParseServerSwitchingRule(sRule)

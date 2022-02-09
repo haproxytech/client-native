@@ -24,6 +24,7 @@ import (
 	parser_errors "github.com/haproxytech/config-parser/v4/errors"
 	"github.com/haproxytech/config-parser/v4/types"
 
+	"github.com/haproxytech/client-native/v2/misc"
 	"github.com/haproxytech/client-native/v2/models"
 )
 
@@ -156,7 +157,10 @@ func ParseBackendSwitchingRules(frontend string, p parser.Parser) (models.Backen
 		return nil, err
 	}
 
-	bRules := data.([]types.UseBackend)
+	bRules, ok := data.([]types.UseBackend)
+	if !ok {
+		return nil, misc.CreateTypeAssertError("[]types.DeclareCapture")
+	}
 	for i, bRule := range bRules {
 		id := int64(i)
 		b := ParseBackendSwitchingRule(bRule)

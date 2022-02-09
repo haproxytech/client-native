@@ -266,7 +266,10 @@ func (c *Client) EditSite(name string, data *models.Site, transactionID string, 
 				} else if b.UseAs == "default" && defaultBck == "" {
 					defaultBck = b.Name
 				}
-				confB := confBIface.(*models.SiteFarm)
+				confB, ok := confBIface.(*models.SiteFarm)
+				if !ok {
+					return misc.CreateTypeAssertError("site farm")
+				}
 				if !reflect.DeepEqual(b, confB) {
 					// check if use as has changed
 					if b.UseAs != confB.UseAs {
