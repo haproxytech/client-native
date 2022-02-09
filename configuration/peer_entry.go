@@ -24,6 +24,7 @@ import (
 	parser_errors "github.com/haproxytech/config-parser/v4/errors"
 	"github.com/haproxytech/config-parser/v4/types"
 
+	"github.com/haproxytech/client-native/v3/misc"
 	"github.com/haproxytech/client-native/v3/models"
 )
 
@@ -166,7 +167,10 @@ func ParsePeerEntries(peerSection string, p parser.Parser) (models.PeerEntries, 
 		return nil, err
 	}
 
-	peerEntries := data.([]types.Peer)
+	peerEntries, ok := data.([]types.Peer)
+	if !ok {
+		return nil, misc.CreateTypeAssertError("peer")
+	}
 	for _, e := range peerEntries {
 		pe := ParsePeerEntry(e)
 		if pe != nil {

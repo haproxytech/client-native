@@ -24,6 +24,7 @@ import (
 	parser_errors "github.com/haproxytech/config-parser/v4/errors"
 	"github.com/haproxytech/config-parser/v4/types"
 
+	"github.com/haproxytech/client-native/v3/misc"
 	"github.com/haproxytech/client-native/v3/models"
 )
 
@@ -225,7 +226,10 @@ func ParseLogTargets(t, pName string, p parser.Parser) (models.LogTargets, error
 		return nil, err
 	}
 
-	targets := data.([]types.Log)
+	targets, ok := data.([]types.Log)
+	if !ok {
+		return nil, misc.CreateTypeAssertError("log targets")
+	}
 	for i, l := range targets {
 		id := int64(i)
 		logTarget := ParseLogTarget(l)

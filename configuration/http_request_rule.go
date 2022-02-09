@@ -208,7 +208,10 @@ func ParseHTTPRequestRules(t, pName string, p parser.Parser) (models.HTTPRequest
 		return nil, err
 	}
 
-	rules := data.([]types.Action)
+	rules, ok := data.([]types.Action)
+	if !ok {
+		return nil, misc.CreateTypeAssertError("http request")
+	}
 	for i, r := range rules {
 		id := int64(i)
 		httpReqRule, err := ParseHTTPRequestRule(r)

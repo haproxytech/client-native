@@ -24,6 +24,7 @@ import (
 	parser_errors "github.com/haproxytech/config-parser/v4/errors"
 	"github.com/haproxytech/config-parser/v4/types"
 
+	"github.com/haproxytech/client-native/v3/misc"
 	"github.com/haproxytech/client-native/v3/models"
 )
 
@@ -153,7 +154,10 @@ func ParseStickRules(backend string, p parser.Parser) (models.StickRules, error)
 		return nil, err
 	}
 
-	sRules := data.([]types.Stick)
+	sRules, ok := data.([]types.Stick)
+	if !ok {
+		return nil, misc.CreateTypeAssertError("stick rules")
+	}
 	for i, sRule := range sRules {
 		id := int64(i)
 		s := ParseStickRule(sRule)

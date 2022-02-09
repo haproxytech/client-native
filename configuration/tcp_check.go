@@ -29,6 +29,7 @@ import (
 	tcp_actions "github.com/haproxytech/config-parser/v4/parsers/tcp/actions"
 	"github.com/haproxytech/config-parser/v4/types"
 
+	"github.com/haproxytech/client-native/v3/misc"
 	"github.com/haproxytech/client-native/v3/models"
 )
 
@@ -209,7 +210,10 @@ func ParseTCPChecks(t, pName string, p parser.Parser) (models.TCPChecks, error) 
 		}
 		return nil, err
 	}
-	items := data.([]types.Action)
+	items, ok := data.([]types.Action)
+	if !ok {
+		return nil, misc.CreateTypeAssertError("tcp-check")
+	}
 	for i, c := range items {
 		id := int64(i)
 		check, err := ParseTCPCheck(c)

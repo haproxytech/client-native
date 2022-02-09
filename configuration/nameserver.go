@@ -26,6 +26,7 @@ import (
 	parser_errors "github.com/haproxytech/config-parser/v4/errors"
 	"github.com/haproxytech/config-parser/v4/types"
 
+	"github.com/haproxytech/client-native/v3/misc"
 	"github.com/haproxytech/client-native/v3/models"
 )
 
@@ -168,7 +169,10 @@ func ParseNameservers(resolverSection string, p parser.Parser) (models.Nameserve
 		return nil, err
 	}
 
-	nameservers := data.([]types.Nameserver)
+	nameservers, ok := data.([]types.Nameserver)
+	if !ok {
+		return nil, misc.CreateTypeAssertError("nameserver")
+	}
 	for _, e := range nameservers {
 		pe := ParseNameserver(e)
 		if pe != nil {

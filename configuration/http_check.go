@@ -210,7 +210,10 @@ func ParseHTTPChecks(t, pName string, p parser.Parser) (models.HTTPChecks, error
 		}
 		return nil, err
 	}
-	items := data.([]types.Action)
+	items, ok := data.([]types.Action)
+	if !ok {
+		return nil, misc.CreateTypeAssertError("http-check")
+	}
 	for i, c := range items {
 		id := int64(i)
 		check, err := ParseHTTPCheck(c)

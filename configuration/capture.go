@@ -17,6 +17,7 @@ package configuration
 
 import (
 	"errors"
+	"fmt"
 	"strconv"
 
 	strfmt "github.com/go-openapi/strfmt"
@@ -137,7 +138,10 @@ func ParseDeclareCaptures(frontend string, p parser.Parser) (models.Captures, er
 		}
 		return nil, err
 	}
-	items := data.([]types.DeclareCapture)
+	items, ok := data.([]types.DeclareCapture)
+	if !ok {
+		return captures, fmt.Errorf("type assert error []types.DeclareCapture")
+	}
 	for i, c := range items {
 		index := int64(i)
 		capture := ParseDeclareCapture(c)

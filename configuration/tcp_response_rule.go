@@ -157,7 +157,10 @@ func ParseTCPResponseRules(backend string, p parser.Parser) (models.TCPResponseR
 		return nil, err
 	}
 
-	tRules := data.([]types.TCPType)
+	tRules, ok := data.([]types.TCPType)
+	if !ok {
+		return nil, misc.CreateTypeAssertError("tcp response")
+	}
 	for i, tRule := range tRules {
 		id := int64(i)
 		tcpResRule := ParseTCPResponseRule(tRule)

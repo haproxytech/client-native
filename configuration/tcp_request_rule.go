@@ -209,7 +209,10 @@ func ParseTCPRequestRules(t, pName string, p parser.Parser) (models.TCPRequestRu
 		return nil, err
 	}
 
-	rules := data.([]types.TCPType)
+	rules, ok := data.([]types.TCPType)
+	if !ok {
+		return nil, misc.CreateTypeAssertError("tcp request")
+	}
 	for i, r := range rules {
 		id := int64(i)
 		tcpReqRule, err := ParseTCPRequestRule(r)

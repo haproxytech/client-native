@@ -169,7 +169,10 @@ func ParseServers(backend string, p parser.Parser) (models.Servers, error) {
 		return nil, err
 	}
 
-	ondiskServers := data.([]types.Server)
+	ondiskServers, ok := data.([]types.Server)
+	if !ok {
+		return nil, misc.CreateTypeAssertError("server")
+	}
 	for _, ondiskServer := range ondiskServers {
 		s := ParseServer(ondiskServer)
 		if s != nil {
