@@ -127,6 +127,7 @@ func (c *Client) PostRawConfiguration(config *string, version int64, skipVersion
 	// Write the transaction file directly
 	tmp, err := os.OpenFile(tFile, os.O_RDWR|os.O_TRUNC, 0777)
 	defer func() { _ = tmp.Close() }()
+
 	if err != nil {
 		return NewConfError(ErrCannotReadConfFile, err.Error())
 	}

@@ -74,7 +74,7 @@ func (c *Client) PushGlobalConfiguration(data *models.Global, transactionID stri
 	return nil
 }
 
-func ParseGlobalSection(p parser.Parser) (*models.Global, error) { //nolint:gocognit,gocyclo
+func ParseGlobalSection(p parser.Parser) (*models.Global, error) { //nolint:gocognit,gocyclo,cyclop
 	var chroot string
 	data, err := p.Get(parser.Global, parser.GlobalSectionName, "chroot")
 	if err == nil {
@@ -358,7 +358,7 @@ func ParseGlobalSection(p parser.Parser) (*models.Global, error) { //nolint:goco
 	return g, nil
 }
 
-func SerializeGlobalSection(p parser.Parser, data *models.Global) error { //nolint:gocognit,gocyclo
+func SerializeGlobalSection(p parser.Parser, data *models.Global) error { //nolint:gocognit,gocyclo,cyclop
 	pChroot := &types.StringC{
 		Value: data.Chroot,
 	}

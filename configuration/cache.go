@@ -173,7 +173,7 @@ func (c *Client) CreateCache(data *models.Cache, transactionID string, version i
 	return nil
 }
 
-func ParseCacheSection(p parser.Parser, cache *models.Cache) error { //nolint:gocognit,gocyclo
+func ParseCacheSection(p parser.Parser, cache *models.Cache) error {
 	var err error
 	var data common.ParserData
 	name := *cache.Name
@@ -215,7 +215,7 @@ func ParseCacheSection(p parser.Parser, cache *models.Cache) error { //nolint:go
 	return err
 }
 
-func SerializeCacheSection(p parser.Parser, data *models.Cache) error { //nolint:gocognit,gocyclo
+func SerializeCacheSection(p parser.Parser, data *models.Cache) error {
 	var err error
 
 	if data.TotalMaxSize == 0 {

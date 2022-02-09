@@ -153,7 +153,7 @@ func (c *Client) CreateSite(data *models.Site, transactionID string, version int
 
 // EditSite edits a site in configuration. One of version or transactionID is
 // mandatory. Returns error on fail, nil on success.
-func (c *Client) EditSite(name string, data *models.Site, transactionID string, version int64) error { //nolint:gocognit,gocyclo
+func (c *Client) EditSite(name string, data *models.Site, transactionID string, version int64) error { //nolint:gocognit,gocyclo,cyclop
 	var res []error
 	var err error
 

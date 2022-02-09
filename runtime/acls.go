@@ -161,7 +161,7 @@ func (s *SingleRuntime) AddACLFileEntry(aclID, value string) error {
 		return fmt.Errorf("%s %w", err.Error(), native_errors.ErrGeneral) //nolint:errorlint
 	}
 	if strings.Contains(response, "not") && strings.Contains(response, "valid") {
-		return fmt.Errorf("%s %w", strings.TrimSpace(response), native_errors.ErrGeneral)
+		return fmt.Errorf("%s %w", strings.TrimSpace(response), native_errors.ErrGeneral) //nolint:errorlint
 	}
 	return nil
 }

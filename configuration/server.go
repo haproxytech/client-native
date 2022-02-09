@@ -210,7 +210,7 @@ func parseAddress(address string) (ipOrAddress string, port *int64) {
 	}
 }
 
-func ParseServer(ondiskServer types.Server) *models.Server { //nolint:gocognit,gocyclo,dupl,cyclop
+func ParseServer(ondiskServer types.Server) *models.Server { //nolint:gocyclo,cyclop,gocognit,maintidx
 	s := &models.Server{
 		Name: ondiskServer.Name,
 	}
@@ -220,7 +220,7 @@ func ParseServer(ondiskServer types.Server) *models.Server { //nolint:gocognit,g
 	}
 	s.Address = address
 	s.Port = port
-	for _, p := range ondiskServer.Params { //nolint:gocognit,gocyclo,dupl,cyclop
+	for _, p := range ondiskServer.Params { //nolint:dupl
 		switch v := p.(type) {
 		case *params.ServerOptionWord:
 			switch v.Name {
@@ -302,7 +302,7 @@ func ParseServer(ondiskServer types.Server) *models.Server { //nolint:gocognit,g
 				s.Stick = "disabled"
 
 			}
-		case *params.ServerOptionValue: //nolint:gocognit,gocyclo,dupl,cyclop
+		case *params.ServerOptionValue:
 			switch v.Name {
 			case "agent-send":
 				s.AgentSend = v.Value
@@ -457,7 +457,7 @@ func ParseServer(ondiskServer types.Server) *models.Server { //nolint:gocognit,g
 	return s
 }
 
-func SerializeServer(s models.Server) types.Server { //nolint:gocognit,gocyclo
+func SerializeServer(s models.Server) types.Server { //nolint:gocognit,gocyclo,cyclop,cyclop
 	srv := types.Server{
 		Name:   s.Name,
 		Params: []params.ServerOption{},

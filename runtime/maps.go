@@ -102,7 +102,7 @@ func (s *SingleRuntime) GetMap(name string) (*models.Map, error) {
 			return m, nil
 		}
 	}
-	return nil, fmt.Errorf("%s %w", name, native_errors.ErrNotFound)
+	return nil, fmt.Errorf("%s %w", name, native_errors.ErrNotFound) //nolint:errorlint
 }
 
 // ClearMap removes all map entries from the map file.
@@ -301,7 +301,7 @@ func (s *SingleRuntime) GetMapEntry(name, id string) (*models.MapEntry, error) {
 	// get map command returns wrong result(BUG in HAProxy)
 	// so we need to check it
 	if m.Key == "" || m.Value == "" || m.Key != id {
-		return nil, fmt.Errorf("%s %w", id, native_errors.ErrNotFound) //nolint:errorlint
+		return nil, fmt.Errorf("%s %w", id, native_errors.ErrNotFound)
 	}
 	return m, nil
 }

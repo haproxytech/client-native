@@ -179,14 +179,14 @@ func ParseServerTemplates(backend string, p parser.Parser) (models.ServerTemplat
 	return templates, nil
 }
 
-func ParseServerTemplate(ondiskServerTemplate types.ServerTemplate) *models.ServerTemplate { //nolint:gocognit,gocyclo,dupl,cyclop
+func ParseServerTemplate(ondiskServerTemplate types.ServerTemplate) *models.ServerTemplate { //nolint:cyclop,gocognit,gocyclo
 	st := &models.ServerTemplate{
 		Prefix:     ondiskServerTemplate.Prefix,
 		NumOrRange: ondiskServerTemplate.NumOrRange,
 		Fqdn:       ondiskServerTemplate.Fqdn,
 		Port:       &ondiskServerTemplate.Port,
 	}
-	for _, p := range ondiskServerTemplate.Params { //nolint:gocognit,gocyclo,dupl,cyclop
+	for _, p := range ondiskServerTemplate.Params { //nolint:dupl
 		switch v := p.(type) {
 		case *params.ServerOptionWord:
 			switch v.Name {
@@ -268,7 +268,7 @@ func ParseServerTemplate(ondiskServerTemplate types.ServerTemplate) *models.Serv
 				st.Stick = "disabled"
 
 			}
-		case *params.ServerOptionValue: //nolint:gocognit,gocyclo,dupl,cyclop
+		case *params.ServerOptionValue:
 			switch v.Name {
 			case "agent-send":
 				st.AgentSend = v.Value
@@ -423,7 +423,7 @@ func ParseServerTemplate(ondiskServerTemplate types.ServerTemplate) *models.Serv
 	return st
 }
 
-func SerializeServerTemplate(s models.ServerTemplate) types.ServerTemplate { //nolint:gocognit,gocyclo,dupl,cyclop
+func SerializeServerTemplate(s models.ServerTemplate) types.ServerTemplate { //nolint:gocognit,gocyclo,cyclop
 	srv := types.ServerTemplate{
 		Prefix:     s.Prefix,
 		NumOrRange: s.NumOrRange,

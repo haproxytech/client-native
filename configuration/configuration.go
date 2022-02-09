@@ -2577,7 +2577,10 @@ func (s *SectionObject) hashType(field reflect.Value) error {
 			}
 			return nil
 		}
-		b := field.Elem().Interface().(models.BackendHashType)
+		b, ok := field.Elem().Interface().(models.BackendHashType)
+		if !ok {
+			return misc.CreateTypeAssertError("hash-type")
+		}
 		d := types.HashType{
 			Method:   b.Method,
 			Function: b.Function,

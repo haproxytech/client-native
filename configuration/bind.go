@@ -178,7 +178,7 @@ func ParseBinds(frontend string, p parser.Parser) (models.Binds, error) {
 		return nil, err
 	}
 
-	ondiskBinds := data.([]types.Bind)
+	ondiskBinds := data.([]types.Bind) //nolint:forcetypeassert
 	for _, ondiskBind := range ondiskBinds {
 		b := ParseBind(ondiskBind)
 		if b != nil {
@@ -188,7 +188,7 @@ func ParseBinds(frontend string, p parser.Parser) (models.Binds, error) {
 	return binds, nil
 }
 
-func ParseBind(ondiskBind types.Bind) *models.Bind { //nolint:gocognit,gocyclo
+func ParseBind(ondiskBind types.Bind) *models.Bind { //nolint:gocognit,gocyclo,cyclop
 	b := &models.Bind{
 		Name: ondiskBind.Path,
 	}
@@ -383,7 +383,7 @@ func ParseBind(ondiskBind types.Bind) *models.Bind { //nolint:gocognit,gocyclo
 	return b
 }
 
-func SerializeBind(b models.Bind) types.Bind { //nolint:gocognit,gocyclo
+func SerializeBind(b models.Bind) types.Bind { //nolint:gocognit,gocyclo,cyclop
 	bind := types.Bind{
 		Params: []params.BindOption{},
 	}

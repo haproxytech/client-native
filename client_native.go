@@ -25,7 +25,7 @@ import (
 )
 
 // LogFunc - default log function is from the stdlib
-var LogFunc func(string, ...interface{}) = log.Printf //nolint:gochecknoglobals
+var LogFunc = log.Printf //nolint:gochecknoglobals
 
 // DefaultClient with sane defaults
 func DefaultClient() (*HAProxyClient, error) {

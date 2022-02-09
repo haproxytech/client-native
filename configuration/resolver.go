@@ -172,7 +172,7 @@ func (c *Client) CreateResolver(data *models.Resolver, transactionID string, ver
 	return nil
 }
 
-func ParseResolverSection(p parser.Parser, resolver *models.Resolver) error { //nolint:gocognit,gocyclo
+func ParseResolverSection(p parser.Parser, resolver *models.Resolver) error { //nolint:gocognit
 	var err error
 	var data common.ParserData
 	name := resolver.Name
@@ -257,7 +257,7 @@ func ParseResolverSection(p parser.Parser, resolver *models.Resolver) error { //
 	return err
 }
 
-func SerializeResolverSection(p parser.Parser, data *models.Resolver) error { //nolint:gocognit,gocyclo
+func SerializeResolverSection(p parser.Parser, data *models.Resolver) error { //nolint:gocognit
 	var err error
 
 	if data.AcceptedPayloadSize == 0 {

@@ -160,7 +160,6 @@ func (c *Client) CreateLogTarget(parentType string, parentName string, data *mod
 
 // EditLogTarget edits a log target in configuration. One of version or transactionID is
 // mandatory. Returns error on fail, nil on success.
-// nolint:dupl
 func (c *Client) EditLogTarget(id int64, parentType string, parentName string, data *models.LogTarget, transactionID string, version int64) error {
 	if c.UseValidation {
 		validationErr := data.Validate(strfmt.Default)

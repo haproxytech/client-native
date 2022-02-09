@@ -114,7 +114,7 @@ func (s *SingleRuntime) parseStickTable(output string) *models.StickTable {
 	return stkTable
 }
 
-func parseStickTableEntry(output string) *models.StickTableEntry { //nolint:gocognit,gocyclo
+func parseStickTableEntry(output string) *models.StickTableEntry { //nolint:gocognit,gocyclo,cyclop
 	idData := strings.SplitN(output, ":", 2)
 	if len(idData) != 2 {
 		return nil
