@@ -169,7 +169,10 @@ func ParseServerTemplates(backend string, p parser.Parser) (models.ServerTemplat
 		return nil, err
 	}
 
-	ondiskServerTemplates := data.([]types.ServerTemplate)
+	ondiskServerTemplates, ok := data.([]types.ServerTemplate)
+	if !ok {
+		return nil, misc.CreateTypeAssertError("server-template")
+	}
 	for _, ondiskServerTemplate := range ondiskServerTemplates {
 		template := ParseServerTemplate(ondiskServerTemplate)
 		if template != nil {

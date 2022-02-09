@@ -17,6 +17,7 @@ package configuration
 
 import (
 	"errors"
+	"fmt"
 	"strconv"
 
 	strfmt "github.com/go-openapi/strfmt"
@@ -189,7 +190,10 @@ func ParseACLs(t, pName string, p parser.Parser, aclName ...string) (models.Acls
 		return nil, err
 	}
 
-	aclLines := data.([]types.ACL)
+	aclLines, ok := data.([]types.ACL)
+	if !ok {
+		return nil, fmt.Errorf("type assert error []types.DeclareCapture")
+	}
 	lACL := len(aclName)
 	for i, r := range aclLines {
 		id := int64(i)

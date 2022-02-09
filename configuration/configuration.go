@@ -513,7 +513,7 @@ func (s *SectionParser) checkTimeouts(fieldName string) (match bool, data interf
 			if err != nil {
 				return true, nil
 			}
-			timeout := data.(*types.SimpleTimeout)
+			timeout := data.(*types.SimpleTimeout) //nolint:forcetypeassert
 			return true, misc.ParseTimeout(timeout.Value)
 		}
 	}
@@ -549,7 +549,7 @@ func (s *SectionParser) get(attribute string, createIfNotExists ...bool) (data c
 func (s *SectionParser) httpConnectionMode() interface{} {
 	data, err := s.get("option http-tunnel", false)
 	if err == nil {
-		d := data.(*types.SimpleOption)
+		d := data.(*types.SimpleOption) //nolint:forcetypeassert
 		if !d.NoOption {
 			return "http-tunnel"
 		}
@@ -557,7 +557,10 @@ func (s *SectionParser) httpConnectionMode() interface{} {
 
 	data, err = s.get("option httpclose", false)
 	if err == nil {
-		d := data.(*types.SimpleOption)
+		d, ok := data.(*types.SimpleOption)
+		if !ok {
+			return misc.CreateTypeAssertError("option httpclose")
+		}
 		if !d.NoOption {
 			return "httpclose"
 		}
@@ -565,7 +568,7 @@ func (s *SectionParser) httpConnectionMode() interface{} {
 	// deprecated option, alias for httpclose
 	data, err = s.get("option forceclose", false)
 	if err == nil {
-		d := data.(*types.SimpleOption)
+		d := data.(*types.SimpleOption) //nolint:forcetypeassert
 		if !d.NoOption {
 			return "httpclose"
 		}
@@ -573,7 +576,7 @@ func (s *SectionParser) httpConnectionMode() interface{} {
 
 	data, err = s.get("option http-server-close", false)
 	if err == nil {
-		d := data.(*types.SimpleOption)
+		d := data.(*types.SimpleOption) //nolint:forcetypeassert
 		if !d.NoOption {
 			return "http-server-close"
 		}
@@ -581,7 +584,7 @@ func (s *SectionParser) httpConnectionMode() interface{} {
 
 	data, err = s.get("option http-keep-alive", false)
 	if err == nil {
-		d := data.(*types.SimpleOption)
+		d := data.(*types.SimpleOption) //nolint:forcetypeassert
 		if !d.NoOption {
 			return "http-keep-alive"
 		}
@@ -596,7 +599,7 @@ func (s *SectionParser) uniqueIDHeader() interface{} {
 	}
 	data, err := s.get("unique-id-header")
 	if err == nil {
-		d := data.(*types.UniqueIDHeader)
+		d := data.(*types.UniqueIDHeader) //nolint:forcetypeassert
 		return d.Name
 	}
 	return nil
@@ -875,7 +878,7 @@ func (s *SectionParser) stickTable() interface{} {
 	return bst
 }
 
-func (s *SectionParser) defaultServer() interface{} { //nolint:gocognit,gocyclo
+func (s *SectionParser) defaultServer() interface{} { //nolint:gocognit,gocyclo,cyclop
 	data, err := s.get("default-server", false)
 	if err != nil {
 		return nil
@@ -1871,7 +1874,10 @@ func (s *SectionObject) getSmtpchkData() (common.ParserData, error) {
 			NoOption: false,
 		}, nil
 	}
-	params := data.(models.SmtpchkParams)
+	params, ok := data.(models.SmtpchkParams)
+	if !ok {
+		return nil, misc.CreateTypeAssertError("SmtpchkParams")
+	}
 	return &types.OptionSmtpchk{
 		NoOption: false,
 		Hello:    params.Hello,
@@ -1899,7 +1905,10 @@ func (s *SectionObject) getPgsqlCheckData() (common.ParserData, error) {
 	if data == nil {
 		return errors.New("adv_check value pgsql-check requires pgsql_check_params"), nil
 	}
-	params := data.(models.PgsqlCheckParams)
+	params, ok := data.(models.PgsqlCheckParams)
+	if !ok {
+		return nil, misc.CreateTypeAssertError("adv_check value pgsql-check requires pgsql_check_params")
+	}
 	if params.Username == "" {
 		return errors.New("adv_check value pgsql-check requires username in pgsql_check_params"), nil
 	}
@@ -1916,7 +1925,10 @@ func (s *SectionObject) getHTTPChkData() (common.ParserData, error) {
 			NoOption: false,
 		}, nil
 	}
-	params := data.(models.HttpchkParams)
+	params, ok := data.(models.HttpchkParams)
+	if !ok {
+		return nil, misc.CreateTypeAssertError("HttpchkParams")
+	}
 	return &types.OptionHttpchk{
 		NoOption: false,
 		Method:   params.Method,
@@ -1942,7 +1954,10 @@ func (s *SectionObject) stickTable(field reflect.Value) error {
 			}
 			return nil
 		}
-		st := field.Elem().Interface().(models.BackendStickTable)
+		st, ok := field.Elem().Interface().(models.BackendStickTable)
+		if !ok {
+			return misc.CreateTypeAssertError("stick-table")
+		}
 		d := types.StickTable{
 			Type:    st.Type,
 			Store:   st.Store,
@@ -1966,7 +1981,7 @@ func (s *SectionObject) stickTable(field reflect.Value) error {
 	return nil
 }
 
-func (s *SectionObject) defaultServer(field reflect.Value) error { //nolint:gocognit,gocyclo
+func (s *SectionObject) defaultServer(field reflect.Value) error { //nolint:gocognit,gocyclo,cyclop
 	if s.Section == parser.Backends || s.Section == parser.Defaults {
 		if valueIsNil(field) {
 			if err := s.set("default-server", nil); err != nil {
@@ -1974,7 +1989,10 @@ func (s *SectionObject) defaultServer(field reflect.Value) error { //nolint:goco
 			}
 			return nil
 		}
-		ds := field.Elem().Interface().(models.DefaultServer)
+		ds, ok := field.Elem().Interface().(models.DefaultServer)
+		if !ok {
+			return misc.CreateTypeAssertError("default-server")
+		}
 		dServers := []types.DefaultServer{{}}
 
 		ps := make([]params.ServerOption, 0, 4)
@@ -2560,7 +2578,10 @@ func (s *SectionObject) cookie(field reflect.Value) error {
 			}
 			return nil
 		}
-		d := field.Elem().Interface().(models.Cookie)
+		d, ok := field.Elem().Interface().(models.Cookie)
+		if !ok {
+			return misc.CreateTypeAssertError("cookie")
+		}
 		domains := make([]string, len(d.Domains))
 		for i, domain := range d.Domains {
 			domains[i] = domain.Value
@@ -2613,7 +2634,10 @@ func (s *SectionObject) balance(field reflect.Value) error {
 			}
 			return nil
 		}
-		b := field.Elem().Interface().(models.Balance)
+		b, ok := field.Elem().Interface().(models.Balance)
+		if !ok {
+			return misc.CreateTypeAssertError("balance")
+		}
 		d := types.Balance{
 			Algorithm: *b.Algorithm,
 		}
@@ -2661,7 +2685,10 @@ func (s *SectionObject) redispatch(field reflect.Value) error {
 			}
 			return nil
 		}
-		br := field.Elem().Interface().(models.Redispatch)
+		br, ok := field.Elem().Interface().(models.Redispatch)
+		if !ok {
+			return misc.CreateTypeAssertError("option redispatch")
+		}
 		d := &types.OptionRedispatch{
 			Interval: &br.Interval,
 			NoOption: false,
@@ -2683,7 +2710,10 @@ func (s *SectionObject) forwardfor(field reflect.Value) error {
 		}
 		return nil
 	}
-	ff := field.Elem().Interface().(models.Forwardfor)
+	ff, ok := field.Elem().Interface().(models.Forwardfor)
+	if !ok {
+		return misc.CreateTypeAssertError("option forwardfor")
+	}
 	d := &types.OptionForwardFor{
 		Except: ff.Except,
 		Header: ff.Header,
@@ -2730,7 +2760,10 @@ func (s *SectionObject) monitorFail(field reflect.Value) error {
 	if valueIsNil(field) {
 		return s.set("monitor fail", nil)
 	}
-	opt := field.Elem().Interface().(models.MonitorFail)
+	opt, ok := field.Elem().Interface().(models.MonitorFail)
+	if !ok {
+		return misc.CreateTypeAssertError("monitor fail")
+	}
 	return s.set("monitor fail", types.MonitorFail{
 		Condition: *opt.Cond,
 		ACLList:   strings.Split(*opt.CondTest, " "),
@@ -2744,7 +2777,10 @@ func (s *SectionObject) statsOptions(field reflect.Value) error {
 		}
 		return nil
 	}
-	opt := field.Elem().Interface().(models.StatsOptions)
+	opt, ok := field.Elem().Interface().(models.StatsOptions)
+	if !ok {
+		return misc.CreateTypeAssertError("stats options")
+	}
 	ss := []types.StatsSettings{}
 
 	if opt.StatsEnable {

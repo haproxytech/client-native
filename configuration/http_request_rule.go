@@ -28,6 +28,7 @@ import (
 	http_actions "github.com/haproxytech/config-parser/v4/parsers/http/actions"
 	"github.com/haproxytech/config-parser/v4/types"
 
+	"github.com/haproxytech/client-native/v2/misc"
 	"github.com/haproxytech/client-native/v2/models"
 )
 
@@ -206,7 +207,10 @@ func ParseHTTPRequestRules(t, pName string, p parser.Parser) (models.HTTPRequest
 		return nil, err
 	}
 
-	rules := data.([]types.Action)
+	rules, ok := data.([]types.Action)
+	if !ok {
+		return nil, misc.CreateTypeAssertError("http request")
+	}
 	for i, r := range rules {
 		id := int64(i)
 		httpReqRule, err := ParseHTTPRequestRule(r)

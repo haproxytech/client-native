@@ -78,7 +78,10 @@ func ParseGlobalSection(p parser.Parser) (*models.Global, error) { //nolint:goco
 	var chroot string
 	data, err := p.Get(parser.Global, parser.GlobalSectionName, "chroot")
 	if err == nil {
-		chrootParser := data.(*types.StringC)
+		chrootParser, ok := data.(*types.StringC)
+		if !ok {
+			return nil, misc.CreateTypeAssertError("chroot")
+		}
 		chroot = chrootParser.Value
 	}
 
@@ -97,28 +100,40 @@ func ParseGlobalSection(p parser.Parser) (*models.Global, error) { //nolint:goco
 	var hardStop *int64
 	data, err = p.Get(parser.Global, parser.GlobalSectionName, "hard-stop-after")
 	if err == nil {
-		hardStopParser := data.(*types.StringC)
+		hardStopParser, ok := data.(*types.StringC)
+		if !ok {
+			return nil, misc.CreateTypeAssertError("hard-stop-after")
+		}
 		hardStop = misc.ParseTimeout(hardStopParser.Value)
 	}
 
 	var localPeer string
 	data, err = p.Get(parser.Global, parser.GlobalSectionName, "localpeer")
 	if err == nil {
-		userParser := data.(*types.StringC)
+		userParser, ok := data.(*types.StringC)
+		if !ok {
+			return nil, misc.CreateTypeAssertError("localpeer")
+		}
 		localPeer = userParser.Value
 	}
 
 	var user string
 	data, err = p.Get(parser.Global, parser.GlobalSectionName, "user")
 	if err == nil {
-		userParser := data.(*types.StringC)
+		userParser, ok := data.(*types.StringC)
+		if !ok {
+			return nil, misc.CreateTypeAssertError("user")
+		}
 		user = userParser.Value
 	}
 
 	var group string
 	data, err = p.Get(parser.Global, parser.GlobalSectionName, "group")
 	if err == nil {
-		groupParser := data.(*types.StringC)
+		groupParser, ok := data.(*types.StringC)
+		if !ok {
+			return nil, misc.CreateTypeAssertError("group")
+		}
 		group = groupParser.Value
 	}
 
@@ -137,35 +152,50 @@ func ParseGlobalSection(p parser.Parser) (*models.Global, error) { //nolint:goco
 	var mConn int64
 	data, err = p.Get(parser.Global, parser.GlobalSectionName, "maxconn")
 	if err == nil {
-		maxConn := data.(*types.Int64C)
+		maxConn, ok := data.(*types.Int64C)
+		if !ok {
+			return nil, misc.CreateTypeAssertError("maxconn")
+		}
 		mConn = maxConn.Value
 	}
 
 	var nbproc int64
 	data, err = p.Get(parser.Global, parser.GlobalSectionName, "nbproc")
 	if err == nil {
-		nbProcParser := data.(*types.Int64C)
+		nbProcParser, ok := data.(*types.Int64C)
+		if !ok {
+			return nil, misc.CreateTypeAssertError("nbproc")
+		}
 		nbproc = nbProcParser.Value
 	}
 
 	var nbthread int64
 	data, err = p.Get(parser.Global, parser.GlobalSectionName, "nbthread")
 	if err == nil {
-		nbthreadParser := data.(*types.Int64C)
+		nbthreadParser, ok := data.(*types.Int64C)
+		if !ok {
+			return nil, misc.CreateTypeAssertError("nbthread")
+		}
 		nbthread = nbthreadParser.Value
 	}
 
 	var pidfile string
 	data, err = p.Get(parser.Global, parser.GlobalSectionName, "pidfile")
 	if err == nil {
-		pidfileParser := data.(*types.StringC)
+		pidfileParser, ok := data.(*types.StringC)
+		if !ok {
+			return nil, misc.CreateTypeAssertError("pidfile")
+		}
 		pidfile = pidfileParser.Value
 	}
 
 	var rAPIs []*models.RuntimeAPI
 	data, err = p.Get(parser.Global, parser.GlobalSectionName, "stats socket")
 	if err == nil {
-		sockets := data.([]types.Socket)
+		sockets, ok := data.([]types.Socket)
+		if !ok {
+			return nil, misc.CreateTypeAssertError("stats socket")
+		}
 		for _, s := range sockets {
 			p := s.Path
 			rAPI := &models.RuntimeAPI{Address: &p}
@@ -193,7 +223,10 @@ func ParseGlobalSection(p parser.Parser) (*models.Global, error) { //nolint:goco
 	var cpuMaps []*models.CPUMap
 	data, err = p.Get(parser.Global, parser.GlobalSectionName, "cpu-map")
 	if err == nil {
-		cMaps := data.([]types.CPUMap)
+		cMaps, ok := data.([]types.CPUMap)
+		if !ok {
+			return nil, misc.CreateTypeAssertError("cpu-map")
+		}
 		for _, m := range cMaps {
 			cpuMap := &models.CPUMap{
 				Process: &m.Process,
@@ -208,56 +241,80 @@ func ParseGlobalSection(p parser.Parser) (*models.Global, error) { //nolint:goco
 	if goerrors.Is(err, errors.ErrFetch) {
 		statsTimeout = nil
 	} else {
-		statsTimeoutParser := data.(*types.StringC)
+		statsTimeoutParser, ok := data.(*types.StringC)
+		if !ok {
+			return nil, misc.CreateTypeAssertError("stats timeout")
+		}
 		statsTimeout = misc.ParseTimeout(statsTimeoutParser.Value)
 	}
 
 	var sslBindCiphers string
 	data, err = p.Get(parser.Global, parser.GlobalSectionName, "ssl-default-bind-ciphers")
 	if err == nil {
-		sslBindCiphersParser := data.(*types.StringC)
+		sslBindCiphersParser, ok := data.(*types.StringC)
+		if !ok {
+			return nil, misc.CreateTypeAssertError("ssl-default-bind-ciphers")
+		}
 		sslBindCiphers = sslBindCiphersParser.Value
 	}
 
 	var sslBindCiphersuites string
 	data, err = p.Get(parser.Global, parser.GlobalSectionName, "ssl-default-bind-ciphersuites")
 	if err == nil {
-		sslBindCiphersuitesParser := data.(*types.StringC)
+		sslBindCiphersuitesParser, ok := data.(*types.StringC)
+		if !ok {
+			return nil, misc.CreateTypeAssertError("ssl-default-bind-ciphersuites")
+		}
 		sslBindCiphersuites = sslBindCiphersuitesParser.Value
 	}
 
 	var sslBindOptions string
 	data, err = p.Get(parser.Global, parser.GlobalSectionName, "ssl-default-bind-options")
 	if err == nil {
-		sslBindOptionsParser := data.(*types.StringC)
+		sslBindOptionsParser, ok := data.(*types.StringC)
+		if !ok {
+			return nil, misc.CreateTypeAssertError("ssl-default-bind-options")
+		}
 		sslBindOptions = sslBindOptionsParser.Value
 	}
 
 	var sslServerCiphers string
 	data, err = p.Get(parser.Global, parser.GlobalSectionName, "ssl-default-server-ciphers")
 	if err == nil {
-		sslServerCiphersParser := data.(*types.StringC)
+		sslServerCiphersParser, ok := data.(*types.StringC)
+		if !ok {
+			return nil, misc.CreateTypeAssertError("ssl-default-server-ciphers")
+		}
 		sslServerCiphers = sslServerCiphersParser.Value
 	}
 
 	var sslServerCiphersuites string
 	data, err = p.Get(parser.Global, parser.GlobalSectionName, "ssl-default-server-ciphersuites")
 	if err == nil {
-		sslServerCiphersuitesParser := data.(*types.StringC)
+		sslServerCiphersuitesParser, ok := data.(*types.StringC)
+		if !ok {
+			return nil, misc.CreateTypeAssertError("ssl-default-server-ciphersuites")
+		}
 		sslServerCiphersuites = sslServerCiphersuitesParser.Value
 	}
 
 	var sslServerOptions string
 	data, err = p.Get(parser.Global, parser.GlobalSectionName, "ssl-default-server-options")
 	if err == nil {
-		sslServerOptionsParser := data.(*types.StringC)
+		sslServerOptionsParser, ok := data.(*types.StringC)
+		if !ok {
+			return nil, misc.CreateTypeAssertError("ssl-default-server-options")
+		}
 		sslServerOptions = sslServerOptionsParser.Value
 	}
 
 	var dhParam int64
 	data, err = p.Get(parser.Global, parser.GlobalSectionName, "tune.ssl.default-dh-param")
 	if err == nil {
-		dhParamsParser := data.(*types.Int64C)
+		dhParamsParser, ok := data.(*types.Int64C)
+		if !ok {
+			return nil, misc.CreateTypeAssertError("tune.ssl.default-dh-param")
+		}
 		dhParam = dhParamsParser.Value
 	}
 
@@ -276,7 +333,10 @@ func ParseGlobalSection(p parser.Parser) (*models.Global, error) { //nolint:goco
 	var luaPrependPath []*models.LuaPrependPath
 	data, err = p.Get(parser.Global, parser.GlobalSectionName, "lua-prepend-path")
 	if err == nil {
-		lpp := data.([]types.LuaPrependPath)
+		lpp, ok := data.([]types.LuaPrependPath)
+		if !ok {
+			return nil, misc.CreateTypeAssertError("lua-prepend-path")
+		}
 		for _, l := range lpp {
 			path := l.Path
 			luaPrependPath = append(luaPrependPath, &models.LuaPrependPath{Path: &path, Type: l.Type})
@@ -286,7 +346,10 @@ func ParseGlobalSection(p parser.Parser) (*models.Global, error) { //nolint:goco
 	var luaLoads []*models.LuaLoad
 	data, err = p.Get(parser.Global, parser.GlobalSectionName, "lua-load")
 	if err == nil {
-		luas := data.([]types.LuaLoad)
+		luas, ok := data.([]types.LuaLoad)
+		if !ok {
+			return nil, misc.CreateTypeAssertError("lua-load")
+		}
 		for _, l := range luas {
 			file := l.File
 			luaLoads = append(luaLoads, &models.LuaLoad{File: &file})
@@ -297,7 +360,10 @@ func ParseGlobalSection(p parser.Parser) (*models.Global, error) { //nolint:goco
 	data, err = p.Get(parser.Global, parser.GlobalSectionName, "log-send-hostname")
 	if err == nil {
 		logSendHostName := "enabled"
-		logSendHostNameParser := data.(*types.StringC)
+		logSendHostNameParser, ok := data.(*types.StringC)
+		if !ok {
+			return nil, misc.CreateTypeAssertError("log-send-hostname")
+		}
 		globalLogSendHostName = &models.GlobalLogSendHostname{
 			Enabled: &logSendHostName,
 			Param:   logSendHostNameParser.Value,
