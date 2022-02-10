@@ -99,6 +99,24 @@ func TestGetGlobal(t *testing.T) {
 	if global.H1CaseAdjustFile != "/etc/headers.adjust" {
 		t.Errorf("H1CaseAdjustFile is %v, expected /etc/headers.adjust", global.H1CaseAdjustFile)
 	}
+	if global.TuneBuffersLimit != 64 {
+		t.Errorf("TuneBuffersLimit is %v, expected 64", global.TuneBuffersLimit)
+	}
+	if global.TuneBuffersReserve != 25 {
+		t.Errorf("TuneBuffersReserve is %v, expected 25", global.TuneBuffersReserve)
+	}
+	if global.TuneBufsize != 32768 {
+		t.Errorf("TuneBufsize is %v, expected 32768", global.TuneBufsize)
+	}
+	if global.TuneHTTPCookielen != 1024 {
+		t.Errorf("TuneHTTPCookielen is %v, expected 1024", global.TuneHTTPCookielen)
+	}
+	if global.TuneHTTPLogurilen != 2048 {
+		t.Errorf("TuneHTTPLogurilen is %v, expected 2048", global.TuneHTTPLogurilen)
+	}
+	if global.TuneHTTPMaxhdr != 128 {
+		t.Errorf("TuneHTTPMaxhdr is %v, expected 128", global.TuneHTTPMaxhdr)
+	}
 }
 
 func TestPutGlobal(t *testing.T) {
@@ -144,6 +162,9 @@ func TestPutGlobal(t *testing.T) {
 			Enabled: &enabled,
 			Param:   "something",
 		},
+		TuneBuffersLimit:   20,
+		TuneBuffersReserve: 5,
+		TuneBufsize:        23456,
 	}
 
 	err := client.PushGlobalConfiguration(g, "", version)

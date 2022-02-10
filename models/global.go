@@ -128,6 +128,24 @@ type Global struct {
 	// stats timeout
 	StatsTimeout *int64 `json:"stats_timeout,omitempty"`
 
+	// tune buffers limit
+	TuneBuffersLimit int64 `json:"tune_buffers_limit,omitempty"`
+
+	// tune buffers reserve
+	TuneBuffersReserve int64 `json:"tune_buffers_reserve,omitempty"`
+
+	// tune bufsize
+	TuneBufsize int64 `json:"tune_bufsize,omitempty"`
+
+	// tune http cookielen
+	TuneHTTPCookielen int64 `json:"tune_http_cookielen,omitempty"`
+
+	// tune http logurilen
+	TuneHTTPLogurilen int64 `json:"tune_http_logurilen,omitempty"`
+
+	// tune http maxhdr
+	TuneHTTPMaxhdr int64 `json:"tune_http_maxhdr,omitempty"`
+
 	// tune ssl default dh param
 	TuneSslDefaultDhParam int64 `json:"tune_ssl_default_dh_param,omitempty"`
 

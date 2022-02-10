@@ -308,6 +308,66 @@ func ParseGlobalSection(p parser.Parser) (*models.Global, error) { //nolint:goco
 		sslServerOptions = sslServerOptionsParser.Value
 	}
 
+	var buffLimit int64
+	data, err = p.Get(parser.Global, parser.GlobalSectionName, "tune.buffers.limit")
+	if err == nil {
+		parser, ok := data.(*types.Int64C)
+		if !ok {
+			return nil, misc.CreateTypeAssertError("tune.buffers.limit")
+		}
+		buffLimit = parser.Value
+	}
+
+	var buffReserve int64
+	data, err = p.Get(parser.Global, parser.GlobalSectionName, "tune.buffers.reserve")
+	if err == nil {
+		parser, ok := data.(*types.Int64C)
+		if !ok {
+			return nil, misc.CreateTypeAssertError("tune.buffers.reserve")
+		}
+		buffReserve = parser.Value
+	}
+
+	var buffSize int64
+	data, err = p.Get(parser.Global, parser.GlobalSectionName, "tune.bufsize")
+	if err == nil {
+		parser, ok := data.(*types.Int64C)
+		if !ok {
+			return nil, misc.CreateTypeAssertError("tune.bufsize")
+		}
+		buffSize = parser.Value
+	}
+
+	var cookieLen int64
+	data, err = p.Get(parser.Global, parser.GlobalSectionName, "tune.http.cookielen")
+	if err == nil {
+		parser, ok := data.(*types.Int64C)
+		if !ok {
+			return nil, misc.CreateTypeAssertError("tune.http.cookielen")
+		}
+		cookieLen = parser.Value
+	}
+
+	var logURILen int64
+	data, err = p.Get(parser.Global, parser.GlobalSectionName, "tune.http.logurilen")
+	if err == nil {
+		parser, ok := data.(*types.Int64C)
+		if !ok {
+			return nil, misc.CreateTypeAssertError("tune.http.logurilen")
+		}
+		logURILen = parser.Value
+	}
+
+	var maxHdr int64
+	data, err = p.Get(parser.Global, parser.GlobalSectionName, "tune.http.maxhdr")
+	if err == nil {
+		parser, ok := data.(*types.Int64C)
+		if !ok {
+			return nil, misc.CreateTypeAssertError("tune.http.maxhdr")
+		}
+		maxHdr = parser.Value
+	}
+
 	var dhParam int64
 	data, err = p.Get(parser.Global, parser.GlobalSectionName, "tune.ssl.default-dh-param")
 	if err == nil {
@@ -394,7 +454,7 @@ func ParseGlobalSection(p parser.Parser) (*models.Global, error) { //nolint:goco
 		h1CaseAdjustFile = caseFileParser.Value
 	}
 
-	g := &models.Global{
+	global := &models.Global{
 		User:                         user,
 		Group:                        group,
 		Chroot:                       chroot,
@@ -418,6 +478,12 @@ func ParseGlobalSection(p parser.Parser) (*models.Global, error) { //nolint:goco
 		SslDefaultServerCiphersuites: sslServerCiphersuites,
 		SslDefaultServerOptions:      sslServerOptions,
 		SslModeAsync:                 sslModeAsync,
+		TuneBuffersLimit:             buffLimit,
+		TuneBuffersReserve:           buffReserve,
+		TuneBufsize:                  buffSize,
+		TuneHTTPCookielen:            cookieLen,
+		TuneHTTPLogurilen:            logURILen,
+		TuneHTTPMaxhdr:               maxHdr,
 		TuneSslDefaultDhParam:        dhParam,
 		ExternalCheck:                externalCheck,
 		LuaLoads:                     luaLoads,
@@ -427,7 +493,7 @@ func ParseGlobalSection(p parser.Parser) (*models.Global, error) { //nolint:goco
 		H1CaseAdjustFile:             h1CaseAdjustFile,
 	}
 
-	return g, nil
+	return global, nil
 }
 
 func SerializeGlobalSection(p parser.Parser, data *models.Global) error { //nolint:gocognit,gocyclo,cyclop
@@ -643,6 +709,60 @@ func SerializeGlobalSection(p parser.Parser, data *models.Global) error { //noli
 		pSSLServerOptions = nil
 	}
 	if err := p.Set(parser.Global, parser.GlobalSectionName, "ssl-default-server-options", pSSLServerOptions); err != nil {
+		return err
+	}
+	pBuffLimit := &types.Int64C{
+		Value: data.TuneBuffersLimit,
+	}
+	if data.TuneBuffersLimit == 0 {
+		pBuffLimit = nil
+	}
+	if err := p.Set(parser.Global, parser.GlobalSectionName, "tune.buffers.limit", pBuffLimit); err != nil {
+		return err
+	}
+	pBuffReserve := &types.Int64C{
+		Value: data.TuneBuffersReserve,
+	}
+	if data.TuneBuffersReserve == 0 {
+		pBuffReserve = nil
+	}
+	if err := p.Set(parser.Global, parser.GlobalSectionName, "tune.buffers.reserve", pBuffReserve); err != nil {
+		return err
+	}
+	pBufSize := &types.Int64C{
+		Value: data.TuneBufsize,
+	}
+	if data.TuneBufsize == 0 {
+		pBufSize = nil
+	}
+	if err := p.Set(parser.Global, parser.GlobalSectionName, "tune.bufsize", pBufSize); err != nil {
+		return err
+	}
+	pCookieLen := &types.Int64C{
+		Value: data.TuneHTTPCookielen,
+	}
+	if data.TuneHTTPCookielen == 0 {
+		pCookieLen = nil
+	}
+	if err := p.Set(parser.Global, parser.GlobalSectionName, "tune.http.cookielen", pCookieLen); err != nil {
+		return err
+	}
+	pLogURILen := &types.Int64C{
+		Value: data.TuneHTTPLogurilen,
+	}
+	if data.TuneHTTPLogurilen == 0 {
+		pLogURILen = nil
+	}
+	if err := p.Set(parser.Global, parser.GlobalSectionName, "tune.http.logurilen", pLogURILen); err != nil {
+		return err
+	}
+	pMaxHdr := &types.Int64C{
+		Value: data.TuneHTTPMaxhdr,
+	}
+	if data.TuneHTTPMaxhdr == 0 {
+		pMaxHdr = nil
+	}
+	if err := p.Set(parser.Global, parser.GlobalSectionName, "tune.http.maxhdr", pMaxHdr); err != nil {
 		return err
 	}
 	pDhParams := &types.Int64C{

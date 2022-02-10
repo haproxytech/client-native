@@ -36,6 +36,12 @@ global
   h1-case-adjust-file /etc/headers.adjust
   h1-case-adjust host Host
   h1-case-adjust content-type Content-Type
+  tune.buffers.limit 64
+  tune.buffers.reserve 25
+  tune.bufsize 32768
+  tune.http.cookielen 1024
+  tune.http.logurilen 2048
+  tune.http.maxhdr 128
 
 defaults
   maxconn 2000
