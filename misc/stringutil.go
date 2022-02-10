@@ -145,49 +145,51 @@ func DashCase(fieldName string) string { //nolint:gocognit
 
 func ParseTimeout(tOut string) *int64 {
 	var v int64
+	var err error
 	switch {
 	case strings.HasSuffix(tOut, "ms"):
-		v, _ = strconv.ParseInt(strings.TrimSuffix(tOut, "ms"), 10, 64)
+		v, err = strconv.ParseInt(strings.TrimSuffix(tOut, "ms"), 10, 64)
 	case strings.HasSuffix(tOut, "s"):
-		v, _ = strconv.ParseInt(strings.TrimSuffix(tOut, "s"), 10, 64)
+		v, err = strconv.ParseInt(strings.TrimSuffix(tOut, "s"), 10, 64)
 		v *= 1000
 	case strings.HasSuffix(tOut, "m"):
-		v, _ = strconv.ParseInt(strings.TrimSuffix(tOut, "m"), 10, 64)
+		v, err = strconv.ParseInt(strings.TrimSuffix(tOut, "m"), 10, 64)
 		v = v * 1000 * 60
 	case strings.HasSuffix(tOut, "h"):
-		v, _ = strconv.ParseInt(strings.TrimSuffix(tOut, "h"), 10, 64)
+		v, err = strconv.ParseInt(strings.TrimSuffix(tOut, "h"), 10, 64)
 		v = v * 1000 * 60 * 60
 	case strings.HasSuffix(tOut, "d"):
-		v, _ = strconv.ParseInt(strings.TrimSuffix(tOut, "d"), 10, 64)
+		v, err = strconv.ParseInt(strings.TrimSuffix(tOut, "d"), 10, 64)
 		v = v * 1000 * 60 * 60 * 24
 	default:
-		v, _ = strconv.ParseInt(tOut, 10, 64)
+		v, err = strconv.ParseInt(tOut, 10, 64)
 	}
-	if v != 0 {
-		return &v
+	if err != nil {
+		return nil
 	}
-	return nil
+	return &v
 }
 
 func ParseSize(size string) *int64 {
 	var v int64
+	var err error
 	switch {
 	case strings.HasSuffix(size, "k"):
-		v, _ = strconv.ParseInt(strings.TrimSuffix(size, "k"), 10, 64)
+		v, err = strconv.ParseInt(strings.TrimSuffix(size, "k"), 10, 64)
 		v *= 1024
 	case strings.HasSuffix(size, "m"):
-		v, _ = strconv.ParseInt(strings.TrimSuffix(size, "m"), 10, 64)
+		v, err = strconv.ParseInt(strings.TrimSuffix(size, "m"), 10, 64)
 		v = v * 1024 * 1024
 	case strings.HasSuffix(size, "g"):
-		v, _ = strconv.ParseInt(strings.TrimSuffix(size, "g"), 10, 64)
+		v, err = strconv.ParseInt(strings.TrimSuffix(size, "g"), 10, 64)
 		v = v * 1024 * 1024 * 1024
 	default:
-		v, _ = strconv.ParseInt(size, 10, 64)
+		v, err = strconv.ParseInt(size, 10, 64)
 	}
-	if v != 0 {
-		return &v
+	if err != nil {
+		return nil
 	}
-	return nil
+	return &v
 }
 
 func StringP(s string) *string {

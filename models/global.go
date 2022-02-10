@@ -128,23 +128,8 @@ type Global struct {
 	// stats timeout
 	StatsTimeout *int64 `json:"stats_timeout,omitempty"`
 
-	// tune buffers limit
-	TuneBuffersLimit int64 `json:"tune_buffers_limit,omitempty"`
-
-	// tune buffers reserve
-	TuneBuffersReserve int64 `json:"tune_buffers_reserve,omitempty"`
-
-	// tune bufsize
-	TuneBufsize int64 `json:"tune_bufsize,omitempty"`
-
-	// tune http cookielen
-	TuneHTTPCookielen int64 `json:"tune_http_cookielen,omitempty"`
-
-	// tune http logurilen
-	TuneHTTPLogurilen int64 `json:"tune_http_logurilen,omitempty"`
-
-	// tune http maxhdr
-	TuneHTTPMaxhdr int64 `json:"tune_http_maxhdr,omitempty"`
+	// tune options
+	TuneOptions *GlobalTuneOptions `json:"tune_options,omitempty"`
 
 	// tune ssl default dh param
 	TuneSslDefaultDhParam int64 `json:"tune_ssl_default_dh_param,omitempty"`
@@ -207,6 +192,10 @@ func (m *Global) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateSslModeAsync(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateTuneOptions(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -509,6 +498,24 @@ func (m *Global) validateSslModeAsync(formats strfmt.Registry) error {
 	// value enum
 	if err := m.validateSslModeAsyncEnum("ssl_mode_async", "body", m.SslModeAsync); err != nil {
 		return err
+	}
+
+	return nil
+}
+
+func (m *Global) validateTuneOptions(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.TuneOptions) { // not required
+		return nil
+	}
+
+	if m.TuneOptions != nil {
+		if err := m.TuneOptions.Validate(formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("tune_options")
+			}
+			return err
+		}
 	}
 
 	return nil
@@ -1099,6 +1106,507 @@ func (m *RuntimeAPI) MarshalBinary() ([]byte, error) {
 // UnmarshalBinary interface implementation
 func (m *RuntimeAPI) UnmarshalBinary(b []byte) error {
 	var res RuntimeAPI
+	if err := swag.ReadJSON(b, &res); err != nil {
+		return err
+	}
+	*m = res
+	return nil
+}
+
+// GlobalTuneOptions global tune options
+//
+// swagger:model GlobalTuneOptions
+type GlobalTuneOptions struct {
+
+	// buffers limit
+	BuffersLimit *int64 `json:"buffers_limit,omitempty"`
+
+	// buffers reserve
+	// Minimum: 2
+	BuffersReserve int64 `json:"buffers_reserve,omitempty"`
+
+	// bufsize
+	Bufsize int64 `json:"bufsize,omitempty"`
+
+	// comp maxlevel
+	CompMaxlevel int64 `json:"comp_maxlevel,omitempty"`
+
+	// fail alloc
+	FailAlloc bool `json:"fail_alloc,omitempty"`
+
+	// h2 header table size
+	// Maximum: 65535
+	H2HeaderTableSize int64 `json:"h2_header_table_size,omitempty"`
+
+	// h2 initial window size
+	H2InitialWindowSize *int64 `json:"h2_initial_window_size,omitempty"`
+
+	// h2 max concurrent streams
+	H2MaxConcurrentStreams int64 `json:"h2_max_concurrent_streams,omitempty"`
+
+	// h2 max frame size
+	H2MaxFrameSize int64 `json:"h2_max_frame_size,omitempty"`
+
+	// http cookielen
+	HTTPCookielen int64 `json:"http_cookielen,omitempty"`
+
+	// http logurilen
+	HTTPLogurilen int64 `json:"http_logurilen,omitempty"`
+
+	// http maxhdr
+	// Maximum: 32767
+	// Minimum: 1
+	HTTPMaxhdr int64 `json:"http_maxhdr,omitempty"`
+
+	// idle pool shared
+	// Enum: [enabled disabled]
+	IdlePoolShared string `json:"idle_pool_shared,omitempty"`
+
+	// idletimer
+	// Maximum: 65535
+	// Minimum: 0
+	Idletimer *int64 `json:"idletimer,omitempty"`
+
+	// listener multi queue
+	// Enum: [enabled disabled]
+	ListenerMultiQueue string `json:"listener_multi_queue,omitempty"`
+
+	// lua forced yield
+	LuaForcedYield int64 `json:"lua_forced_yield,omitempty"`
+
+	// lua maxmem
+	LuaMaxmem bool `json:"lua_maxmem,omitempty"`
+
+	// lua service timeout
+	LuaServiceTimeout *int64 `json:"lua_service_timeout,omitempty"`
+
+	// lua session timeout
+	LuaSessionTimeout *int64 `json:"lua_session_timeout,omitempty"`
+
+	// lua task timeout
+	LuaTaskTimeout *int64 `json:"lua_task_timeout,omitempty"`
+
+	// maxaccept
+	Maxaccept int64 `json:"maxaccept,omitempty"`
+
+	// maxpollevents
+	Maxpollevents int64 `json:"maxpollevents,omitempty"`
+
+	// maxrewrite
+	Maxrewrite int64 `json:"maxrewrite,omitempty"`
+
+	// pattern cache size
+	PatternCacheSize *int64 `json:"pattern_cache_size,omitempty"`
+
+	// pipesize
+	Pipesize int64 `json:"pipesize,omitempty"`
+
+	// pool high fd ratio
+	PoolHighFdRatio int64 `json:"pool_high_fd_ratio,omitempty"`
+
+	// pool low fd ratio
+	PoolLowFdRatio int64 `json:"pool_low_fd_ratio,omitempty"`
+
+	// rcvbuf client
+	RcvbufClient *int64 `json:"rcvbuf_client,omitempty"`
+
+	// rcvbuf server
+	RcvbufServer *int64 `json:"rcvbuf_server,omitempty"`
+
+	// recv enough
+	RecvEnough int64 `json:"recv_enough,omitempty"`
+
+	// runqueue depth
+	RunqueueDepth int64 `json:"runqueue_depth,omitempty"`
+
+	// sched low latency
+	// Enum: [enabled disabled]
+	SchedLowLatency string `json:"sched_low_latency,omitempty"`
+
+	// sndbuf client
+	SndbufClient *int64 `json:"sndbuf_client,omitempty"`
+
+	// sndbuf server
+	SndbufServer *int64 `json:"sndbuf_server,omitempty"`
+
+	// ssl cachesize
+	SslCachesize *int64 `json:"ssl_cachesize,omitempty"`
+
+	// ssl capture buffer size
+	SslCaptureBufferSize *int64 `json:"ssl_capture_buffer_size,omitempty"`
+
+	// ssl ctx cache size
+	SslCtxCacheSize int64 `json:"ssl_ctx_cache_size,omitempty"`
+
+	// ssl default dh param
+	SslDefaultDhParam int64 `json:"ssl_default_dh_param,omitempty"`
+
+	// ssl force private cache
+	SslForcePrivateCache bool `json:"ssl_force_private_cache,omitempty"`
+
+	// ssl keylog
+	// Enum: [enabled disabled]
+	SslKeylog string `json:"ssl_keylog,omitempty"`
+
+	// ssl lifetime
+	SslLifetime *int64 `json:"ssl_lifetime,omitempty"`
+
+	// ssl maxrecord
+	SslMaxrecord *int64 `json:"ssl_maxrecord,omitempty"`
+
+	// vars global max size
+	VarsGlobalMaxSize *int64 `json:"vars_global_max_size,omitempty"`
+
+	// vars proc max size
+	VarsProcMaxSize *int64 `json:"vars_proc_max_size,omitempty"`
+
+	// vars reqres max size
+	VarsReqresMaxSize *int64 `json:"vars_reqres_max_size,omitempty"`
+
+	// vars sess max size
+	VarsSessMaxSize *int64 `json:"vars_sess_max_size,omitempty"`
+
+	// vars txn max size
+	VarsTxnMaxSize *int64 `json:"vars_txn_max_size,omitempty"`
+
+	// zlib memlevel
+	// Maximum: 9
+	// Minimum: 1
+	ZlibMemlevel int64 `json:"zlib_memlevel,omitempty"`
+
+	// zlib windowsize
+	// Maximum: 15
+	// Minimum: 8
+	ZlibWindowsize int64 `json:"zlib_windowsize,omitempty"`
+}
+
+// Validate validates this global tune options
+func (m *GlobalTuneOptions) Validate(formats strfmt.Registry) error {
+	var res []error
+
+	if err := m.validateBuffersReserve(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateH2HeaderTableSize(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateHTTPMaxhdr(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateIdlePoolShared(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateIdletimer(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateListenerMultiQueue(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateSchedLowLatency(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateSslKeylog(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateZlibMemlevel(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateZlibWindowsize(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if len(res) > 0 {
+		return errors.CompositeValidationError(res...)
+	}
+	return nil
+}
+
+func (m *GlobalTuneOptions) validateBuffersReserve(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.BuffersReserve) { // not required
+		return nil
+	}
+
+	if err := validate.MinimumInt("tune_options"+"."+"buffers_reserve", "body", int64(m.BuffersReserve), 2, false); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *GlobalTuneOptions) validateH2HeaderTableSize(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.H2HeaderTableSize) { // not required
+		return nil
+	}
+
+	if err := validate.MaximumInt("tune_options"+"."+"h2_header_table_size", "body", int64(m.H2HeaderTableSize), 65535, false); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *GlobalTuneOptions) validateHTTPMaxhdr(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.HTTPMaxhdr) { // not required
+		return nil
+	}
+
+	if err := validate.MinimumInt("tune_options"+"."+"http_maxhdr", "body", int64(m.HTTPMaxhdr), 1, false); err != nil {
+		return err
+	}
+
+	if err := validate.MaximumInt("tune_options"+"."+"http_maxhdr", "body", int64(m.HTTPMaxhdr), 32767, false); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+var globalTuneOptionsTypeIdlePoolSharedPropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		globalTuneOptionsTypeIdlePoolSharedPropEnum = append(globalTuneOptionsTypeIdlePoolSharedPropEnum, v)
+	}
+}
+
+const (
+
+	// GlobalTuneOptionsIdlePoolSharedEnabled captures enum value "enabled"
+	GlobalTuneOptionsIdlePoolSharedEnabled string = "enabled"
+
+	// GlobalTuneOptionsIdlePoolSharedDisabled captures enum value "disabled"
+	GlobalTuneOptionsIdlePoolSharedDisabled string = "disabled"
+)
+
+// prop value enum
+func (m *GlobalTuneOptions) validateIdlePoolSharedEnum(path, location string, value string) error {
+	if err := validate.Enum(path, location, value, globalTuneOptionsTypeIdlePoolSharedPropEnum); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *GlobalTuneOptions) validateIdlePoolShared(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.IdlePoolShared) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateIdlePoolSharedEnum("tune_options"+"."+"idle_pool_shared", "body", m.IdlePoolShared); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *GlobalTuneOptions) validateIdletimer(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.Idletimer) { // not required
+		return nil
+	}
+
+	if err := validate.MinimumInt("tune_options"+"."+"idletimer", "body", int64(*m.Idletimer), 0, false); err != nil {
+		return err
+	}
+
+	if err := validate.MaximumInt("tune_options"+"."+"idletimer", "body", int64(*m.Idletimer), 65535, false); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+var globalTuneOptionsTypeListenerMultiQueuePropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		globalTuneOptionsTypeListenerMultiQueuePropEnum = append(globalTuneOptionsTypeListenerMultiQueuePropEnum, v)
+	}
+}
+
+const (
+
+	// GlobalTuneOptionsListenerMultiQueueEnabled captures enum value "enabled"
+	GlobalTuneOptionsListenerMultiQueueEnabled string = "enabled"
+
+	// GlobalTuneOptionsListenerMultiQueueDisabled captures enum value "disabled"
+	GlobalTuneOptionsListenerMultiQueueDisabled string = "disabled"
+)
+
+// prop value enum
+func (m *GlobalTuneOptions) validateListenerMultiQueueEnum(path, location string, value string) error {
+	if err := validate.Enum(path, location, value, globalTuneOptionsTypeListenerMultiQueuePropEnum); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *GlobalTuneOptions) validateListenerMultiQueue(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.ListenerMultiQueue) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateListenerMultiQueueEnum("tune_options"+"."+"listener_multi_queue", "body", m.ListenerMultiQueue); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+var globalTuneOptionsTypeSchedLowLatencyPropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		globalTuneOptionsTypeSchedLowLatencyPropEnum = append(globalTuneOptionsTypeSchedLowLatencyPropEnum, v)
+	}
+}
+
+const (
+
+	// GlobalTuneOptionsSchedLowLatencyEnabled captures enum value "enabled"
+	GlobalTuneOptionsSchedLowLatencyEnabled string = "enabled"
+
+	// GlobalTuneOptionsSchedLowLatencyDisabled captures enum value "disabled"
+	GlobalTuneOptionsSchedLowLatencyDisabled string = "disabled"
+)
+
+// prop value enum
+func (m *GlobalTuneOptions) validateSchedLowLatencyEnum(path, location string, value string) error {
+	if err := validate.Enum(path, location, value, globalTuneOptionsTypeSchedLowLatencyPropEnum); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *GlobalTuneOptions) validateSchedLowLatency(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.SchedLowLatency) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateSchedLowLatencyEnum("tune_options"+"."+"sched_low_latency", "body", m.SchedLowLatency); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+var globalTuneOptionsTypeSslKeylogPropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		globalTuneOptionsTypeSslKeylogPropEnum = append(globalTuneOptionsTypeSslKeylogPropEnum, v)
+	}
+}
+
+const (
+
+	// GlobalTuneOptionsSslKeylogEnabled captures enum value "enabled"
+	GlobalTuneOptionsSslKeylogEnabled string = "enabled"
+
+	// GlobalTuneOptionsSslKeylogDisabled captures enum value "disabled"
+	GlobalTuneOptionsSslKeylogDisabled string = "disabled"
+)
+
+// prop value enum
+func (m *GlobalTuneOptions) validateSslKeylogEnum(path, location string, value string) error {
+	if err := validate.Enum(path, location, value, globalTuneOptionsTypeSslKeylogPropEnum); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *GlobalTuneOptions) validateSslKeylog(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.SslKeylog) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateSslKeylogEnum("tune_options"+"."+"ssl_keylog", "body", m.SslKeylog); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *GlobalTuneOptions) validateZlibMemlevel(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.ZlibMemlevel) { // not required
+		return nil
+	}
+
+	if err := validate.MinimumInt("tune_options"+"."+"zlib_memlevel", "body", int64(m.ZlibMemlevel), 1, false); err != nil {
+		return err
+	}
+
+	if err := validate.MaximumInt("tune_options"+"."+"zlib_memlevel", "body", int64(m.ZlibMemlevel), 9, false); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *GlobalTuneOptions) validateZlibWindowsize(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.ZlibWindowsize) { // not required
+		return nil
+	}
+
+	if err := validate.MinimumInt("tune_options"+"."+"zlib_windowsize", "body", int64(m.ZlibWindowsize), 8, false); err != nil {
+		return err
+	}
+
+	if err := validate.MaximumInt("tune_options"+"."+"zlib_windowsize", "body", int64(m.ZlibWindowsize), 15, false); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+// MarshalBinary interface implementation
+func (m *GlobalTuneOptions) MarshalBinary() ([]byte, error) {
+	if m == nil {
+		return nil, nil
+	}
+	return swag.WriteJSON(m)
+}
+
+// UnmarshalBinary interface implementation
+func (m *GlobalTuneOptions) UnmarshalBinary(b []byte) error {
+	var res GlobalTuneOptions
 	if err := swag.ReadJSON(b, &res); err != nil {
 		return err
 	}
