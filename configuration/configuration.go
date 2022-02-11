@@ -1718,7 +1718,11 @@ func (s *SectionObject) externalCheckCommand(field reflect.Value) error {
 		if valueIsNil(field) {
 			pExtCmd = nil
 		} else {
-			pExtCmd.Command = field.Interface().(string)
+			str, ok := field.Interface().(string)
+			if !ok {
+				return misc.CreateTypeAssertError("external-check command")
+			}
+			pExtCmd.Command = str
 		}
 		if err := s.set("external-check command", pExtCmd); err != nil {
 			return err
@@ -1733,7 +1737,11 @@ func (s *SectionObject) externalCheckPath(field reflect.Value) error {
 		if valueIsNil(field) {
 			pExtPath = nil
 		} else {
-			pExtPath.Path = field.Interface().(string)
+			str, ok := field.Interface().(string)
+			if !ok {
+				return misc.CreateTypeAssertError("external-check path")
+			}
+			pExtPath.Path = str
 		}
 		if err := s.set("external-check path", pExtPath); err != nil {
 			return err
