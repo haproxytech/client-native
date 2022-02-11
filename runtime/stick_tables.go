@@ -5,6 +5,7 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/haproxytech/client-native/v3/errors"
 	"github.com/haproxytech/client-native/v3/models"
 )
 
@@ -33,7 +34,7 @@ func (s *SingleRuntime) ShowTable(name string) (*models.StickTable, error) {
 			return stkT, nil
 		}
 	}
-	return nil, nil
+	return nil, fmt.Errorf("no data for table %s: %w", name, errors.ErrNotFound)
 }
 
 // GetTableEntries returns Stick Tables entries
