@@ -20,6 +20,7 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/haproxytech/client-native/v3/errors"
 	"github.com/haproxytech/client-native/v3/misc"
 	"github.com/haproxytech/client-native/v3/models"
 )
@@ -139,7 +140,7 @@ func (s *SingleRuntime) GetServerState(backend, server string) (*models.RuntimeS
 		}
 		return parseRuntimeServer(line), nil
 	}
-	return nil, nil
+	return nil, fmt.Errorf("server state for %s/%s: %w", backend, server, errors.ErrNotFound)
 }
 
 func parseRuntimeServers(output string) (models.RuntimeServers, error) {
