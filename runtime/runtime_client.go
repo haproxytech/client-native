@@ -382,18 +382,21 @@ func (c *Client) GetServerState(backend, server string) (*models.RuntimeServer, 
 		return nil, fmt.Errorf("no valid runtimes found")
 	}
 	var prevRs *models.RuntimeServer
-	var rs *models.RuntimeServer
+	var result *models.RuntimeServer
 	for _, runtime := range c.runtimes {
-		rs, _ = runtime.GetServerState(backend, server)
+		result, _ = runtime.GetServerState(backend, server)
 		if prevRs == nil {
-			prevRs = rs
+			prevRs = result
 			continue
 		}
-		if !cmp.Equal(*rs, *prevRs) {
+		if !cmp.Equal(*result, *prevRs) {
 			return nil, fmt.Errorf("server states differ in multiple runtime APIs")
 		}
 	}
-	return rs, nil
+	if result == nil {
+		return nil, fmt.Errorf("no data for %s/%s: %w", backend, server, native_errors.ErrNotFound)
+	}
+	return result, nil
 }
 
 // SetServerCheckPort set health check port for server
