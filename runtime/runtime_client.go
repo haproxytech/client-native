@@ -461,6 +461,9 @@ func (c *Client) ShowTable(name string, process int) (*models.StickTable, error)
 			return nil, fmt.Errorf("%s %w", runtime.socketPath, err)
 		}
 	}
+	if table == nil {
+		return nil, fmt.Errorf("no data for table %s in process %d: %w", name, process, native_errors.ErrNotFound)
+	}
 	return table, nil
 }
 
