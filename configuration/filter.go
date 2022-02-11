@@ -25,6 +25,7 @@ import (
 	"github.com/haproxytech/config-parser/v4/parsers/filters"
 	"github.com/haproxytech/config-parser/v4/types"
 
+	"github.com/haproxytech/client-native/v3/misc"
 	"github.com/haproxytech/client-native/v3/models"
 )
 
@@ -192,7 +193,10 @@ func ParseFilters(t, pName string, p parser.Parser) (models.Filters, error) {
 		return nil, err
 	}
 
-	filters := data.([]types.Filter)
+	filters, ok := data.([]types.Filter)
+	if !ok {
+		return nil, misc.CreateTypeAssertError("filter")
+	}
 	for i, filter := range filters {
 		id := int64(i)
 		mFilter := ParseFilter(filter)
