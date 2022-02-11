@@ -16,7 +16,7 @@ func (s *SingleRuntime) ShowCerts() (models.SslCertificates, error) {
 	cmd := "show ssl cert"
 	response, err := s.ExecuteWithResponse(cmd)
 	if err != nil {
-		return nil, fmt.Errorf("%s %w", err.Error(), native_errors.ErrNotFound) //nolint:errorlint
+		return nil, fmt.Errorf("%s %w", err.Error(), native_errors.ErrNotFound)
 	}
 	return s.parseCerts(response), nil
 }
@@ -83,7 +83,7 @@ func (s *SingleRuntime) ShowCertEntry(storageName string) (*models.SslCertEntry,
 	cmd := fmt.Sprintf("show ssl cert %s", storageName)
 	response, err := s.ExecuteWithResponse(cmd)
 	if err != nil {
-		return nil, fmt.Errorf("%s %w", err.Error(), native_errors.ErrNotFound) //nolint:errorlint
+		return nil, fmt.Errorf("%s %w", err.Error(), native_errors.ErrNotFound)
 	}
 	return parseCertEntry(response)
 }
@@ -158,7 +158,7 @@ func (s *SingleRuntime) NewCertEntry(storageName string) error {
 	cmd := fmt.Sprintf("new ssl cert %s", storageName)
 	response, err := s.ExecuteWithResponse(cmd)
 	if err != nil {
-		return fmt.Errorf("%s %w", err.Error(), native_errors.ErrGeneral) //nolint:errorlint
+		return fmt.Errorf("%s %w", err.Error(), native_errors.ErrGeneral)
 	}
 	if !strings.Contains(response, "New empty certificate store") {
 		return fmt.Errorf("%s %w", response, native_errors.ErrGeneral)
@@ -174,7 +174,7 @@ func (s *SingleRuntime) SetCertEntry(storageName string, payload string) error {
 	cmd := fmt.Sprintf("set ssl cert %s <<\n%s\n", storageName, payload)
 	response, err := s.ExecuteWithResponse(cmd)
 	if err != nil {
-		return fmt.Errorf("%s %w", err.Error(), native_errors.ErrGeneral) //nolint:errorlint
+		return fmt.Errorf("%s %w", err.Error(), native_errors.ErrGeneral)
 	}
 	if !strings.Contains(response, "Transaction created for certificate") {
 		return fmt.Errorf("%s %w", response, native_errors.ErrGeneral)
@@ -190,7 +190,7 @@ func (s *SingleRuntime) CommitCertEntry(storageName string) error {
 	cmd := fmt.Sprintf("commit ssl cert %s", storageName)
 	response, err := s.ExecuteWithResponse(cmd)
 	if err != nil {
-		return fmt.Errorf("%s %w", err.Error(), native_errors.ErrGeneral) //nolint:errorlint
+		return fmt.Errorf("%s %w", err.Error(), native_errors.ErrGeneral)
 	}
 	if !(strings.Contains(response, "Committing") && strings.Contains(response, "Success!")) {
 		return fmt.Errorf("%s %w", response, native_errors.ErrGeneral)
@@ -206,7 +206,7 @@ func (s *SingleRuntime) AbortCertEntry(storageName string) error {
 	cmd := fmt.Sprintf("abort ssl cert %s", storageName)
 	response, err := s.ExecuteWithResponse(cmd)
 	if err != nil {
-		return fmt.Errorf("%s %w", err.Error(), native_errors.ErrGeneral) //nolint:errorlint
+		return fmt.Errorf("%s %w", err.Error(), native_errors.ErrGeneral)
 	}
 	if !strings.Contains(response, "Transaction aborted for certificate") {
 		return fmt.Errorf("%s %w", response, native_errors.ErrGeneral)
@@ -222,7 +222,7 @@ func (s *SingleRuntime) DeleteCertEntry(storageName string) error {
 	cmd := fmt.Sprintf("del ssl cert %s", storageName)
 	response, err := s.ExecuteWithResponse(cmd)
 	if err != nil {
-		return fmt.Errorf("%s %w", err.Error(), native_errors.ErrGeneral) //nolint:errorlint
+		return fmt.Errorf("%s %w", err.Error(), native_errors.ErrGeneral)
 	}
 	if !(strings.Contains(response, "Certificate") && strings.Contains(response, "deleted!")) {
 		return fmt.Errorf("%s %w", response, native_errors.ErrGeneral)

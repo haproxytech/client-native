@@ -28,7 +28,7 @@ type CrtListEntry struct {
 func (s *SingleRuntime) ShowCrtLists() (CrtLists, error) {
 	response, err := s.ExecuteWithResponse("show ssl crt-list")
 	if err != nil {
-		return nil, fmt.Errorf("%s %w", err.Error(), native_errors.ErrNotFound) //nolint:errorlint
+		return nil, fmt.Errorf("%s %w", err.Error(), native_errors.ErrNotFound)
 	}
 	return s.parseCrtLists(response), nil
 }
@@ -87,7 +87,7 @@ func (s *SingleRuntime) ShowCrtListEntries(file string) (CrtListEntries, error) 
 	cmd := fmt.Sprintf("show ssl crt-list -n %s", file)
 	response, err := s.ExecuteWithResponse(cmd)
 	if err != nil {
-		return nil, fmt.Errorf("%s %w", err.Error(), native_errors.ErrNotFound) //nolint:errorlint
+		return nil, fmt.Errorf("%s %w", err.Error(), native_errors.ErrNotFound)
 	}
 	return ParseCrtListEntries(response)
 }
@@ -152,7 +152,7 @@ func (s *SingleRuntime) AddCrtListEntry(crtList string, entry CrtListEntry) erro
 	cmd += "\n"
 	response, err := s.ExecuteWithResponse(cmd)
 	if err != nil {
-		return fmt.Errorf("%s %w", err.Error(), native_errors.ErrGeneral) //nolint:errorlint
+		return fmt.Errorf("%s %w", err.Error(), native_errors.ErrGeneral)
 	}
 	if !strings.Contains(response, "Success") {
 		return fmt.Errorf("%s %w", response, native_errors.ErrGeneral)
@@ -165,7 +165,7 @@ func (s *SingleRuntime) DeleteCrtListEntry(crtList, certFile string, lineNumber 
 	cmd := fmt.Sprintf("del ssl crt-list %s %s:%v", crtList, certFile, lineNumber)
 	response, err := s.ExecuteWithResponse(cmd)
 	if err != nil {
-		return fmt.Errorf("%s %w", err.Error(), native_errors.ErrNotFound) //nolint:errorlint
+		return fmt.Errorf("%s %w", err.Error(), native_errors.ErrNotFound)
 	}
 	if !strings.Contains(response, "deleted in crtlist") {
 		return fmt.Errorf("%s %w", response, native_errors.ErrGeneral)

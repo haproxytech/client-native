@@ -35,8 +35,7 @@ func generateDeclareCaptureConfig(config string) (string, error) {
 }
 
 func TestDeclareCapture(t *testing.T) {
-	config :=
-		`# _version=1
+	config := `# _version=1
 global
 	daemon
 

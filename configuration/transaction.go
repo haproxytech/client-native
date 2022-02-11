@@ -407,7 +407,7 @@ func (t *Transaction) parseTransactions(status string) (*models.Transactions, er
 
 	_, err := os.Stat(t.TransactionDir)
 	if err != nil && os.IsNotExist(err) {
-		errMkdir := os.MkdirAll(t.TransactionDir, 0755)
+		errMkdir := os.MkdirAll(t.TransactionDir, 0o755)
 		if errMkdir != nil {
 			return nil, errMkdir
 		}
@@ -505,7 +505,7 @@ func (t *Transaction) createTransactionFiles(transactionID string) error {
 	transDir, err := os.Stat(t.TransactionDir)
 
 	if err != nil && os.IsNotExist(err) {
-		errMkdir := os.MkdirAll(t.TransactionDir, 0755)
+		errMkdir := os.MkdirAll(t.TransactionDir, 0o755)
 		if errMkdir != nil {
 			return errMkdir
 		}
@@ -603,7 +603,7 @@ func (t *Transaction) failTransaction(transactionID string, txHandler transactio
 func (t *Transaction) writeOutdatedTransaction(transactionID, configFile string) {
 	outdatedDir := filepath.Join(t.TransactionDir, models.TransactionStatusOutdated)
 	if _, err := os.Stat(outdatedDir); os.IsNotExist(err) {
-		_ = os.Mkdir(outdatedDir, 0755)
+		_ = os.Mkdir(outdatedDir, 0o755)
 	}
 	outdatedConfigFile := t.getTransactionFile(transactionID, models.TransactionStatusOutdated)
 	if err := moveFile(configFile, outdatedConfigFile); err != nil {
@@ -614,7 +614,7 @@ func (t *Transaction) writeOutdatedTransaction(transactionID, configFile string)
 func (t *Transaction) writeFailedTransaction(transactionID, configFile string) {
 	failedDir := filepath.Join(t.TransactionDir, models.TransactionStatusFailed)
 	if _, err := os.Stat(failedDir); os.IsNotExist(err) {
-		_ = os.Mkdir(failedDir, 0755)
+		_ = os.Mkdir(failedDir, 0o755)
 	}
 	failedConfigFile := t.getTransactionFile(transactionID, models.TransactionStatusFailed)
 	if err := moveFile(configFile, failedConfigFile); err != nil {

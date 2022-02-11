@@ -14,7 +14,7 @@ import (
 func (s *SingleRuntime) ShowACLS() (models.ACLFiles, error) {
 	response, err := s.ExecuteWithResponse("show acl")
 	if err != nil {
-		return nil, fmt.Errorf("%s %w", err.Error(), native_errors.ErrNotFound) //nolint:errorlint
+		return nil, fmt.Errorf("%s %w", err.Error(), native_errors.ErrNotFound)
 	}
 	return s.parseACLS(response), nil
 }
@@ -100,7 +100,7 @@ func (s *SingleRuntime) ShowACLFileEntries(storageName string) (models.ACLFilesE
 	cmd := fmt.Sprintf("show acl %s", storageName)
 	response, err := s.ExecuteWithResponse(cmd)
 	if err != nil {
-		return nil, fmt.Errorf("%s %w", err.Error(), native_errors.ErrNotFound) //nolint:errorlint
+		return nil, fmt.Errorf("%s %w", err.Error(), native_errors.ErrNotFound)
 	}
 	return ParseACLFileEntries(response, true)
 }
@@ -158,10 +158,10 @@ func (s *SingleRuntime) AddACLFileEntry(aclID, value string) error {
 	cmd := fmt.Sprintf("add acl #%s %s", aclID, value)
 	response, err := s.ExecuteWithResponse(cmd)
 	if err != nil {
-		return fmt.Errorf("%s %w", err.Error(), native_errors.ErrGeneral) //nolint:errorlint
+		return fmt.Errorf("%s %w", err.Error(), native_errors.ErrGeneral)
 	}
 	if strings.Contains(response, "not") && strings.Contains(response, "valid") {
-		return fmt.Errorf("%s %w", strings.TrimSpace(response), native_errors.ErrGeneral) //nolint:errorlint
+		return fmt.Errorf("%s %w", strings.TrimSpace(response), native_errors.ErrGeneral)
 	}
 	return nil
 }
@@ -170,23 +170,23 @@ func (s *SingleRuntime) PrepareACL(aclID string) (version string, err error) {
 	cmd := fmt.Sprintf("prepare acl %s", aclID)
 	response, err := s.ExecuteWithResponse(cmd)
 	if err != nil {
-		return "", fmt.Errorf("%s %w", err.Error(), native_errors.ErrGeneral) //nolint:errorlint
+		return "", fmt.Errorf("%s %w", err.Error(), native_errors.ErrGeneral)
 	}
 	parts := strings.Split(response, ":")
 	if len(parts) < 3 {
-		return "", fmt.Errorf("%s %w", err.Error(), native_errors.ErrGeneral) //nolint:errorlint
+		return "", fmt.Errorf("%s %w", err.Error(), native_errors.ErrGeneral)
 	}
 	version = strings.TrimSpace(parts[2])
 	if _, err = strconv.ParseInt(version, 10, 64); err == nil {
 		return version, nil
 	}
-	return "", fmt.Errorf("%s %w", err.Error(), native_errors.ErrGeneral) //nolint:errorlint
+	return "", fmt.Errorf("%s %w", err.Error(), native_errors.ErrGeneral)
 }
 
 func (s *SingleRuntime) AddACLVersioned(version, aclID, value string) error {
 	cmd := fmt.Sprintf("add acl @%s %s %s", version, aclID, value)
 	if err := s.Execute(cmd); err != nil {
-		return fmt.Errorf("%s %w", err.Error(), native_errors.ErrGeneral) //nolint:errorlint
+		return fmt.Errorf("%s %w", err.Error(), native_errors.ErrGeneral)
 	}
 	return nil
 }
@@ -194,7 +194,7 @@ func (s *SingleRuntime) AddACLVersioned(version, aclID, value string) error {
 func (s *SingleRuntime) CommitACL(version, aclID string) error {
 	cmd := fmt.Sprintf("commit acl @%s %s", version, aclID)
 	if err := s.Execute(cmd); err != nil {
-		return fmt.Errorf("%s %w", err.Error(), native_errors.ErrGeneral) //nolint:errorlint
+		return fmt.Errorf("%s %w", err.Error(), native_errors.ErrGeneral)
 	}
 	return nil
 }
@@ -204,7 +204,7 @@ func (s *SingleRuntime) GetACLFileEntry(aclID, value string) (*models.ACLFileEnt
 	cmd := fmt.Sprintf("get acl #%s %s", aclID, value)
 	response, err := s.ExecuteWithResponse(cmd)
 	if err != nil {
-		return nil, fmt.Errorf("%s %w", err.Error(), native_errors.ErrNotFound) //nolint:errorlint
+		return nil, fmt.Errorf("%s %w", err.Error(), native_errors.ErrNotFound)
 	}
 
 	matched := false
@@ -234,7 +234,7 @@ func (s *SingleRuntime) DeleteACLFileEntry(aclID, value string) error {
 	cmd := fmt.Sprintf("del acl #%s %s", aclID, value)
 	response, err := s.ExecuteWithResponse(cmd)
 	if err != nil {
-		return fmt.Errorf("%s %w", err.Error(), native_errors.ErrNotFound) //nolint:errorlint
+		return fmt.Errorf("%s %w", err.Error(), native_errors.ErrNotFound)
 	}
 	if strings.Contains(response, "not") && strings.Contains(response, "found") {
 		return fmt.Errorf("%s %w", strings.TrimSpace(response), native_errors.ErrGeneral)

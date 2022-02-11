@@ -130,13 +130,13 @@ func TestPutGlobal(t *testing.T) {
 	g := &models.Global{
 		Daemon: "enabled",
 		CPUMaps: []*models.CPUMap{
-			&models.CPUMap{
+			{
 				Process: &n,
 				CPUSet:  &v,
 			},
 		},
 		RuntimeAPIs: []*models.RuntimeAPI{
-			&models.RuntimeAPI{
+			{
 				Address: &a,
 				Level:   "admin",
 			},
@@ -148,13 +148,13 @@ func TestPutGlobal(t *testing.T) {
 		TuneSslDefaultDhParam: 1024,
 		ExternalCheck:         false,
 		LuaPrependPath: []*models.LuaPrependPath{
-			&models.LuaPrependPath{
+			{
 				Path: &luaPrependPath,
 				Type: "cpath",
 			},
 		},
 		LuaLoads: []*models.LuaLoad{
-			&models.LuaLoad{
+			{
 				File: &f,
 			},
 		},

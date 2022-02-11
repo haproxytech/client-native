@@ -349,7 +349,7 @@ func prepareTestFile(conf string, path string) error {
 	}
 	defer file.Close()
 
-	file, err = os.OpenFile(path, os.O_RDWR, 0644)
+	file, err = os.OpenFile(path, os.O_RDWR, 0o644)
 	if err != nil {
 		return err
 	}

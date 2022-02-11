@@ -155,7 +155,7 @@ func (s storage) Replace(name string, config string) (string, error) {
 	case MapsType:
 	}
 
-	err = renameio.WriteFile(f, []byte(config), 0644)
+	err = renameio.WriteFile(f, []byte(config), 0o644)
 	if err != nil {
 		return "", err
 	}
@@ -186,7 +186,7 @@ func (s *storage) Create(name string, readCloser io.ReadCloser) (string, error) 
 		}
 	case MapsType:
 	}
-	err = renameio.WriteFile(f, b, 0644)
+	err = renameio.WriteFile(f, b, 0o644)
 	if err != nil {
 		return "", err
 	}

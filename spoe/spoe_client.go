@@ -126,7 +126,7 @@ func (c *spoeclient) Create(name string, readCloser io.ReadCloser) (string, erro
 		version = fmt.Sprintf("%s%s", version, "1\n")
 		b = append([]byte(version), b...)
 	}
-	err = renameio.WriteFile(name, b, 0644)
+	err = renameio.WriteFile(name, b, 0o644)
 	if err != nil {
 		return "", err
 	}

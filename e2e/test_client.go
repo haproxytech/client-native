@@ -68,7 +68,7 @@ func GetClient(t *testing.T) (*ClientResponse, error) {
 
 	tmpPath := path.Join(os.TempDir(), "client-native/", testName)
 	socketPath := path.Join(tmpPath, "runtime.sock")
-	err = os.MkdirAll(tmpPath, 0777)
+	err = os.MkdirAll(tmpPath, 0o777)
 	if err != nil {
 		return nil, err
 	}

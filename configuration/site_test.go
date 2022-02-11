@@ -280,12 +280,12 @@ func TestCreateEditDeleteSite(t *testing.T) {
 			Mode:    "http",
 			Maxconn: &mConn,
 			Listeners: []*models.Bind{
-				&models.Bind{
+				{
 					Name:    "created1",
 					Address: "127.0.0.1",
 					Port:    &port,
 				},
-				&models.Bind{
+				{
 					Name:    "created2",
 					Address: "127.0.0.2",
 					Port:    &port,
@@ -293,19 +293,19 @@ func TestCreateEditDeleteSite(t *testing.T) {
 			},
 		},
 		Farms: []*models.SiteFarm{
-			&models.SiteFarm{
+			{
 				Name:       "createdBck",
 				Balance:    &models.Balance{Algorithm: &balanceAlgorithm},
 				UseAs:      "default",
 				Forwardfor: &models.Forwardfor{Enabled: &enabled},
 				Servers: []*models.Server{
-					&models.Server{
+					{
 						Name:    "created1",
 						Address: "127.0.1.1",
 						Port:    &port,
 						Ssl:     "enabled",
 					},
-					&models.Server{
+					{
 						Name:    "created2",
 						Address: "127.0.1.2",
 						Port:    &port,
@@ -313,7 +313,7 @@ func TestCreateEditDeleteSite(t *testing.T) {
 					},
 				},
 			},
-			&models.SiteFarm{
+			{
 				Name:       "createdBck2",
 				Balance:    &models.Balance{Algorithm: &balanceAlgorithm},
 				UseAs:      "conditional",
@@ -360,7 +360,7 @@ func TestCreateEditDeleteSite(t *testing.T) {
 			Mode:    "tcp",
 			Maxconn: &mConn,
 			Listeners: []*models.Bind{
-				&models.Bind{
+				{
 					Name:    "created1",
 					Address: "127.0.0.2",
 					Port:    &port,
@@ -368,7 +368,7 @@ func TestCreateEditDeleteSite(t *testing.T) {
 			},
 		},
 		Farms: []*models.SiteFarm{
-			&models.SiteFarm{
+			{
 				Name:       "createdBck3",
 				Balance:    &models.Balance{Algorithm: &balanceAlgorithm},
 				UseAs:      "conditional",
@@ -376,7 +376,7 @@ func TestCreateEditDeleteSite(t *testing.T) {
 				CondTest:   "TRUE",
 				Forwardfor: &models.Forwardfor{Enabled: &enabled},
 				Servers: []*models.Server{
-					&models.Server{
+					{
 						Name:    "created3",
 						Address: "127.0.1.2",
 						Port:    &port,
@@ -384,12 +384,12 @@ func TestCreateEditDeleteSite(t *testing.T) {
 					},
 				},
 			},
-			&models.SiteFarm{
+			{
 				Name:    "createdBck2",
 				Balance: &models.Balance{Algorithm: &editBalanceAlgorithm},
 				UseAs:   "default",
 				Servers: []*models.Server{
-					&models.Server{
+					{
 						Name:    "created2",
 						Address: "127.0.1.2",
 						Port:    &port,

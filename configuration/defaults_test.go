@@ -144,19 +144,19 @@ func TestPushDefaults(t *testing.T) {
 		BindProcess:    "1-4",
 		DefaultBackend: "test2",
 		ErrorFiles: []*models.Errorfile{
-			&models.Errorfile{
+			{
 				Code: 400,
 				File: "/test/400.html",
 			},
-			&models.Errorfile{
+			{
 				Code: 403,
 				File: "/test/403.html",
 			},
-			&models.Errorfile{
+			{
 				Code: 429,
 				File: "/test/429.html",
 			},
-			&models.Errorfile{
+			{
 				Code: 500,
 				File: "/test/500.html",
 			},

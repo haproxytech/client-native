@@ -231,8 +231,8 @@ func TestCreateEditDeleteBackend(t *testing.T) {
 		BindProcess: "4",
 		Cookie: &models.Cookie{
 			Domains: []*models.Domain{
-				&models.Domain{Value: "dom1"},
-				&models.Domain{Value: "dom2"},
+				{Value: "dom1"},
+				{Value: "dom2"},
 			},
 			Dynamic:  true,
 			Httponly: true,

@@ -18,7 +18,7 @@ func CheckOrCreateWritableDirectory(dirname string) (string, error) {
 	if err != nil {
 		if os.IsNotExist(err) {
 			// try to create the directory
-			err = os.MkdirAll(dirname, 0750)
+			err = os.MkdirAll(dirname, 0o750)
 			if err != nil {
 				return "", fmt.Errorf("missing directory, unable to create: %w", err)
 			}

@@ -44,8 +44,7 @@ func (self *Counter) increment() int64 {
 }
 
 func TestGetTCPCheck(t *testing.T) {
-	config :=
-		`# _version=1
+	config := `# _version=1
 global
 	daemon
 
