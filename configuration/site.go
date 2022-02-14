@@ -75,7 +75,7 @@ func (c *Client) GetSite(name string, transactionID string) (int64, *models.Site
 
 // CreateSite creates a site in configuration. One of version or transactionID is
 // mandatory. Returns error on fail, nil on success.
-func (c *Client) CreateSite(data *models.Site, transactionID string, version int64) error {
+func (c *Client) CreateSite(data *models.Site, transactionID string, version int64) error { //nolint:gocognit
 	var res []error
 	var err error
 
@@ -102,14 +102,16 @@ func (c *Client) CreateSite(data *models.Site, transactionID string, version int
 	}
 
 	// create listeners
-	for _, l := range data.Service.Listeners {
-		// sanitize name
-		if l.Name == "" {
-			l.Name = l.Address + ":" + strconv.FormatInt(*l.Port, 10)
-		}
-		err = c.CreateBind(data.Name, l, t, 0)
-		if err != nil {
-			res = append(res, err)
+	if data.Service != nil {
+		for _, l := range data.Service.Listeners {
+			// sanitize name
+			if l.Name == "" {
+				l.Name = l.Address + ":" + strconv.FormatInt(*l.Port, 10)
+			}
+			err = c.CreateBind(data.Name, l, t, 0)
+			if err != nil {
+				res = append(res, err)
+			}
 		}
 	}
 
