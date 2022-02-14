@@ -108,12 +108,12 @@ golangci-lint:
   stage: lint
   needs: ["generate", "build"]
   image:
-    name: $CI_REGISTRY_GO/lint:latest
+    name: $CI_REGISTRY_GO/lint:1.43.0
     entrypoint: [""]
   tags:
     - go
   script:
-    - golangci-lint run --color always --timeout 120s
+    - golangci-lint run --timeout 5m --color always --max-issues-per-linter 0 --max-same-issues 0
   only:
     - merge_requests
     - branches

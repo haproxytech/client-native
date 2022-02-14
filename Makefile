@@ -36,4 +36,8 @@ models: spec
 .PHONY: lint
 lint:
 	docker run --rm -v $(pwd):/data cytopia/yamllint .
-	golangci-lint run --color always --timeout 120s
+	docker run --rm -v ${PROJECT_PATH}:/app -w /app ghcr.io/haproxytech/go-linter:1.43.0 --timeout 5m --color always --max-issues-per-linter 0 --max-same-issues 0
+
+.PHONY: gofumpt
+gofumpt:
+	gofumpt -l -w .

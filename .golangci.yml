@@ -21,6 +21,9 @@ linters-settings:
 linters:
   enable-all: true
   disable:
+    - golint # deprecated, replaced with revive
+    - interfacer # deprecated
+    - maligned # deprecated
     - wrapcheck
     - nlreturn
     - gomnd
@@ -34,8 +37,22 @@ linters:
     - funlen
     - paralleltest
     - godot
+    - varnamelen
+    - ireturn
+    - ifshort
 
+    - thelper
+    - wastedassign
     - goconst
+
+    - forcetypeassert #tmp needs to be on
+
+issues:
+  exclude:
+    # bugs of typecheck linter
+    - "undeclared name: `shellquote`"
+    - "github.com/kballard/go-shellquote\" imported but not used"
+    - "github.com/haproxytech/config-parser/v4/types\" imported but not used"
 
 run:
   skip-dirs:
