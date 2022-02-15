@@ -115,7 +115,9 @@ func GetClient(t *testing.T) (*ClientResponse, error) {
 	end := time.Now()
 	t.Logf("%s done", end.Format("15:04:05.000"))
 
-	runtimeClient, err := runtime.New(context.Background(), options.Socket(socketPath))
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+	defer cancel()
+	runtimeClient, err := runtime.New(ctx, options.Socket(socketPath))
 	if err != nil {
 		return nil, err
 	}

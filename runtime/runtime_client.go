@@ -53,7 +53,7 @@ func (c *client) initWithSockets(ctx context.Context, socketPath map[int]string)
 	c.runtimes = make([]SingleRuntime, 0)
 	for process, path := range socketPath {
 		runtime := SingleRuntime{}
-		err := runtime.InitWithContext(ctx, path, 0, process)
+		err := runtime.Init(ctx, path, 0, process)
 		if err != nil {
 			return err
 		}
@@ -73,7 +73,7 @@ func (c *client) initWithMasterSocket(ctx context.Context, masterSocketPath stri
 	c.runtimes = make([]SingleRuntime, nbproc)
 	for i := 1; i <= nbproc; i++ {
 		runtime := SingleRuntime{}
-		err := runtime.InitWithContext(ctx, masterSocketPath, i, i)
+		err := runtime.Init(ctx, masterSocketPath, i, i)
 		if err != nil {
 			return err
 		}
@@ -1110,16 +1110,4 @@ func (c *client) CommitACL(version, name string) error {
 		return lastErr
 	}
 	return nil
-}
-
-func isValidHaproxySocket(path string) bool {
-	runtime := SingleRuntime{}
-	err := runtime.Init(path, 0, 0)
-	if err != nil {
-		return false
-	}
-	if _, err := runtime.ExecuteRaw("help"); err != nil {
-		return false
-	}
-	return true
 }

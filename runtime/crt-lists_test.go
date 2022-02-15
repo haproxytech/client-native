@@ -1,8 +1,10 @@
 package runtime
 
 import (
+	"context"
 	"reflect"
 	"testing"
+	"time"
 )
 
 func TestSingleRuntime_ShowCrtLists(t *testing.T) {
@@ -49,7 +51,9 @@ func TestSingleRuntime_ShowCrtLists(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			haProxy.SetResponses(&tt.socketResponse)
 			s := &SingleRuntime{}
-			err := s.Init(tt.fields.socketPath, tt.fields.process, tt.fields.worker)
+			ctx, cancel := context.WithTimeout(context.Background(), time.Duration(time.Second))
+			defer cancel()
+			err := s.Init(ctx, tt.fields.socketPath, tt.fields.process, tt.fields.worker)
 			if err != nil {
 				t.Errorf("SingleRuntime.Init() error = %v", err)
 				return
@@ -134,7 +138,9 @@ func TestSingleRuntime_GetCrtList(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			haProxy.SetResponses(&tt.socketResponse)
 			s := &SingleRuntime{}
-			err := s.Init(tt.fields.socketPath, tt.fields.process, tt.fields.worker)
+			ctx, cancel := context.WithTimeout(context.Background(), time.Duration(time.Second))
+			defer cancel()
+			err := s.Init(ctx, tt.fields.socketPath, tt.fields.process, tt.fields.worker)
 			if err != nil {
 				t.Errorf("SingleRuntime.Init() error = %v", err)
 				return
@@ -210,7 +216,7 @@ func TestSingleRuntime_ShowCrtListEntries(t *testing.T) {
 			socketResponse: map[string]string{
 				"show ssl crt-list -n /etc/haproxy/crt-list\n": ` # /etc/ssl/crt-list
 					/etc/ssl/cert-0.pem:1 !*.crt-test.platform.domain.com !connectivitynotification.platform.domain.com !connectivitytunnel.platform.domain.com !authentication.cert.another.domain.com !*.authentication.cert.another.domain.com
-					/etc/ssl/cert-1.pem:2 [verify optional ca-file /etc/ssl/ca-file-1.pem] *.crt-test.platform.domain.com !connectivitynotification.platform.domain.com 
+					/etc/ssl/cert-1.pem:2 [verify optional ca-file /etc/ssl/ca-file-1.pem] *.crt-test.platform.domain.com !connectivitynotification.platform.domain.com
 					/etc/ssl/cert-2.pem:4 [verify required ca-file /etc/ssl/ca-file-2.pem]
 				`,
 			},
@@ -233,7 +239,9 @@ func TestSingleRuntime_ShowCrtListEntries(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			haProxy.SetResponses(&tt.socketResponse)
 			s := &SingleRuntime{}
-			err := s.Init(tt.fields.socketPath, tt.fields.process, tt.fields.worker)
+			ctx, cancel := context.WithTimeout(context.Background(), time.Duration(time.Second))
+			defer cancel()
+			err := s.Init(ctx, tt.fields.socketPath, tt.fields.process, tt.fields.worker)
 			if err != nil {
 				t.Errorf("SingleRuntime.Init() error = %v", err)
 				return
@@ -334,7 +342,9 @@ func TestSingleRuntime_AddCrtListEntry(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			haProxy.SetResponses(&tt.socketResponse)
 			s := &SingleRuntime{}
-			err := s.Init(tt.fields.socketPath, tt.fields.process, tt.fields.worker)
+			ctx, cancel := context.WithTimeout(context.Background(), time.Duration(time.Second))
+			defer cancel()
+			err := s.Init(ctx, tt.fields.socketPath, tt.fields.process, tt.fields.worker)
 			if err != nil {
 				t.Errorf("SingleRuntime.Init() error = %v", err)
 				return
@@ -402,7 +412,9 @@ func TestSingleRuntime_DeleteCrtListEntry(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			haProxy.SetResponses(&tt.socketResponse)
 			s := &SingleRuntime{}
-			err := s.Init(tt.fields.socketPath, tt.fields.process, tt.fields.worker)
+			ctx, cancel := context.WithTimeout(context.Background(), time.Duration(time.Second))
+			defer cancel()
+			err := s.Init(ctx, tt.fields.socketPath, tt.fields.process, tt.fields.worker)
 			if err != nil {
 				t.Errorf("SingleRuntime.Init() error = %v", err)
 				return

@@ -1,8 +1,10 @@
 package runtime
 
 import (
+	"context"
 	"reflect"
 	"testing"
+	"time"
 
 	"github.com/haproxytech/client-native/v3/models"
 )
@@ -51,7 +53,9 @@ func TestSingleRuntime_ShowACLS(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			haProxy.SetResponses(&tt.socketResponse)
 			s := &SingleRuntime{}
-			err := s.Init(tt.fields.socketPath, tt.fields.process, tt.fields.worker)
+			ctx, cancel := context.WithTimeout(context.Background(), time.Duration(time.Second))
+			defer cancel()
+			err := s.Init(ctx, tt.fields.socketPath, tt.fields.process, tt.fields.worker)
 			if err != nil {
 				t.Errorf("SingleRuntime.Init() error = %v", err)
 				return
@@ -157,7 +161,9 @@ func TestSingleRuntime_GetACL(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			haProxy.SetResponses(&tt.socketResponse)
 			s := &SingleRuntime{}
-			err := s.Init(tt.fields.socketPath, tt.fields.process, tt.fields.worker)
+			ctx, cancel := context.WithTimeout(context.Background(), time.Duration(time.Second))
+			defer cancel()
+			err := s.Init(ctx, tt.fields.socketPath, tt.fields.process, tt.fields.worker)
 			if err != nil {
 				t.Errorf("SingleRuntime.Init() error = %v", err)
 				return
@@ -250,7 +256,9 @@ func TestSingleRuntime_ShowACLFileEntries(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			haProxy.SetResponses(&tt.socketResponse)
 			s := &SingleRuntime{}
-			err := s.Init(tt.fields.socketPath, tt.fields.process, tt.fields.worker)
+			ctx, cancel := context.WithTimeout(context.Background(), time.Duration(time.Second))
+			defer cancel()
+			err := s.Init(ctx, tt.fields.socketPath, tt.fields.process, tt.fields.worker)
 			if err != nil {
 				t.Errorf("SingleRuntime.Init() error = %v", err)
 				return
@@ -325,7 +333,9 @@ func TestSingleRuntime_GetACLFileEntry(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			haProxy.SetResponses(&tt.socketResponse)
 			s := &SingleRuntime{}
-			err := s.Init(tt.fields.socketPath, tt.fields.process, tt.fields.worker)
+			ctx, cancel := context.WithTimeout(context.Background(), time.Duration(time.Second))
+			defer cancel()
+			err := s.Init(ctx, tt.fields.socketPath, tt.fields.process, tt.fields.worker)
 			if err != nil {
 				t.Errorf("SingleRuntime.Init() error = %v", err)
 				return
@@ -431,7 +441,9 @@ func TestSingleRuntime_AddACLFileEntry(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			haProxy.SetResponses(&tt.socketResponse)
 			s := &SingleRuntime{}
-			err := s.Init(tt.fields.socketPath, tt.fields.process, tt.fields.worker)
+			ctx, cancel := context.WithTimeout(context.Background(), time.Duration(time.Second))
+			defer cancel()
+			err := s.Init(ctx, tt.fields.socketPath, tt.fields.process, tt.fields.worker)
 			if err != nil {
 				t.Errorf("SingleRuntime.Init() error = %v", err)
 				return
@@ -515,7 +527,9 @@ func TestSingleRuntime_DeleteACLFileEntry(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			haProxy.SetResponses(&tt.socketResponse)
 			s := &SingleRuntime{}
-			err := s.Init(tt.fields.socketPath, tt.fields.process, tt.fields.worker)
+			ctx, cancel := context.WithTimeout(context.Background(), time.Duration(time.Second))
+			defer cancel()
+			err := s.Init(ctx, tt.fields.socketPath, tt.fields.process, tt.fields.worker)
 			if err != nil {
 				t.Errorf("SingleRuntime.Init() error = %v", err)
 				return
