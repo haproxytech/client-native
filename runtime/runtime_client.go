@@ -23,6 +23,7 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+	"sync"
 
 	"github.com/google/go-cmp/cmp"
 	"github.com/pkg/errors"
@@ -163,29 +164,40 @@ func (c *Client) GetInfo() (models.ProcessInfos, error) {
 	return result, nil
 }
 
+var versionSync sync.Once //nolint:gochecknoglobals
+
 // GetVersion returns info from the socket
 func (c *Client) GetVersion() (*HAProxyVersion, error) {
-	if c.haproxyVersion != nil {
-		return c.haproxyVersion, nil
-	}
-	version := &HAProxyVersion{}
-	for _, runtime := range c.runtimes {
-		response, err := runtime.ExecuteRaw("show info")
-		if err != nil {
-			return nil, err
-		}
-		for _, line := range strings.Split(response, "\n") {
-			if strings.HasPrefix(line, "Version: ") {
-				err := version.ParseHAProxyVersion(strings.TrimPrefix(line, "Version: "))
-				if err != nil {
-					return nil, err
+	var err error
+	versionSync.Do(func() {
+		version := &HAProxyVersion{}
+		for _, runtime := range c.runtimes {
+			var response string
+			response, err = runtime.ExecuteRaw("show info")
+			if err != nil {
+				return
+			}
+			for _, line := range strings.Split(response, "\n") {
+				if strings.HasPrefix(line, "Version: ") {
+					err = version.ParseHAProxyVersion(strings.TrimPrefix(line, "Version: "))
+					if err != nil {
+						return
+					}
+					c.haproxyVersion = version
+					return
 				}
-				c.haproxyVersion = version
-				return version, nil
 			}
 		}
+		err = fmt.Errorf("version data not found")
+	})
+	if err != nil {
+		return &HAProxyVersion{}, err
 	}
-	return nil, fmt.Errorf("version data not found")
+
+	if c.haproxyVersion == nil {
+		return &HAProxyVersion{}, fmt.Errorf("version data not found")
+	}
+	return c.haproxyVersion, err
 }
 
 func (c *Client) IsVersionBiggerOrEqual(minimumVersion HAProxyVersion) bool {
