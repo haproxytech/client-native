@@ -16,10 +16,12 @@
 package clientnative
 
 import (
+	"context"
 	"log"
 
 	"github.com/haproxytech/client-native/v3/configuration"
 	"github.com/haproxytech/client-native/v3/runtime"
+	runtime_opt "github.com/haproxytech/client-native/v3/runtime/options"
 	"github.com/haproxytech/client-native/v3/spoe"
 	"github.com/haproxytech/client-native/v3/storage"
 )
@@ -39,7 +41,7 @@ func DefaultClient() (*HAProxyClient, error) {
 }
 
 // Init HAProxyClient
-func (c *HAProxyClient) Init(configurationClient *configuration.Client, runtimeClient *runtime.Client) error {
+func (c *HAProxyClient) Init(configurationClient *configuration.Client, runtimeClient runtime.Runtime) error {
 	var err error
 	if configurationClient == nil {
 		configurationClient, err = configuration.DefaultClient()
@@ -49,7 +51,7 @@ func (c *HAProxyClient) Init(configurationClient *configuration.Client, runtimeC
 	}
 
 	if runtimeClient == nil {
-		runtimeClient, err = runtime.DefaultClient()
+		runtimeClient, err = runtime.New(context.Background(), runtime_opt.SocketDefault())
 		if err != nil {
 			return err
 		}
@@ -61,23 +63,10 @@ func (c *HAProxyClient) Init(configurationClient *configuration.Client, runtimeC
 }
 
 // HAProxyClient Native client for managing configuration and spitting out HAProxy stats
-type IHAProxyClient interface {
-	GetConfiguration() IConfigurationClient
-	GetRuntime() IRuntimeClient
-}
-
 type HAProxyClient struct {
 	Configuration  *configuration.Client
-	Runtime        *runtime.Client
+	Runtime        runtime.Runtime
 	MapStorage     storage.Storage
 	SSLCertStorage storage.Storage
 	Spoe           spoe.Spoe
-}
-
-func (c *HAProxyClient) GetConfiguration() IConfigurationClient {
-	return c.Configuration
-}
-
-func (c *HAProxyClient) GetRuntime() IRuntimeClient {
-	return c.Runtime
 }

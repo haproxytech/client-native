@@ -17,6 +17,7 @@ package e2e
 
 import (
 	"bytes"
+	"context"
 	"errors"
 	"fmt"
 	"net"
@@ -31,6 +32,7 @@ import (
 	clientnative "github.com/haproxytech/client-native/v3"
 	"github.com/haproxytech/client-native/v3/configuration"
 	"github.com/haproxytech/client-native/v3/runtime"
+	"github.com/haproxytech/client-native/v3/runtime/options"
 )
 
 type ClientResponse struct {
@@ -113,16 +115,13 @@ func GetClient(t *testing.T) (*ClientResponse, error) {
 	end := time.Now()
 	t.Logf("%s done", end.Format("15:04:05.000"))
 
-	runtimeClient := runtime.Client{}
-	err = runtimeClient.InitWithSockets(map[int]string{
-		0: socketPath,
-	})
+	runtimeClient, err := runtime.New(context.Background(), options.Socket(socketPath))
 	if err != nil {
 		return nil, err
 	}
 	nativeAPI := &clientnative.HAProxyClient{
 		Configuration: &confClient,
-		Runtime:       &runtimeClient,
+		Runtime:       runtimeClient,
 	}
 	return &ClientResponse{
 		Client:         nativeAPI,

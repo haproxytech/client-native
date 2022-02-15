@@ -11,14 +11,8 @@ import (
 
 // IRuntimeClient ...
 type IRuntimeClient interface {
-	// Init must be given path to runtime socket and nbproc that is not 0 when in master worker mode
-	//
-	// Deprecated: use InitWithSockets or InitWithMasterSocket instead
-	Init(socketPath []string, masterSocketPath string, nbproc int) error
 	// GetMapsPath returns runtime map file path or map id
 	GetMapsPath(name string) (string, error)
-	InitWithSockets(socketPath map[int]string) error
-	InitWithMasterSocket(masterSocketPath string, nbproc int) error
 	// GetStats returns stats from the socket
 	GetStats() models.NativeStats
 	// GetInfo returns info from the socket

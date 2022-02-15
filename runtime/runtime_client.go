@@ -30,22 +30,17 @@ import (
 	native_errors "github.com/haproxytech/client-native/v3/errors"
 	"github.com/haproxytech/client-native/v3/misc"
 	"github.com/haproxytech/client-native/v3/models"
+	"github.com/haproxytech/client-native/v3/runtime/options"
 )
 
 // Client handles multiple HAProxy clients
-type Client struct {
-	ClientParams
+type client struct {
 	haproxyVersion *HAProxyVersion
+	options        options.RuntimeOptions
 	runtimes       []SingleRuntime
 }
 
-type ClientParams struct {
-	MapsDir string
-}
-
 const (
-	// DefaultSocketPath sane default for runtime API socket path
-	DefaultSocketPath string = "/var/run/haproxy.sock"
 	// Event though tune.buffsize default value is 16384,
 	// it can be changed at build time. Because of that, it is more sensible
 	// to have a smaller value, since it is not possible
@@ -53,56 +48,7 @@ const (
 	maxBufSize = 8192
 )
 
-// DefaultClient return runtime Client with sane defaults
-func DefaultClient() (*Client, error) {
-	paths := make(map[int]string)
-	if isValidHaproxySocket(DefaultSocketPath) {
-		paths[0] = DefaultSocketPath
-	}
-	c := &Client{}
-	err := c.InitWithSockets(paths)
-	if err != nil {
-		return nil, err
-	}
-	return c, nil
-}
-
-// Init must be given path to runtime socket and nbproc that is not 0 when in master worker mode
-//
-// Deprecated: use InitWithSockets or InitWithMasterSocket instead
-func (c *Client) Init(socketPath []string, masterSocketPath string, nbproc int) error {
-	c.runtimes = make([]SingleRuntime, len(socketPath))
-	for index, path := range socketPath {
-		runtime := SingleRuntime{}
-		err := runtime.Init(path, 0, index)
-		if err != nil {
-			return err
-		}
-		c.runtimes[index] = runtime
-	}
-	if masterSocketPath != "" && nbproc != 0 {
-		for i := 1; i <= nbproc; i++ {
-			runtime := SingleRuntime{}
-			err := runtime.Init(masterSocketPath, i, i)
-			if err != nil {
-				return err
-			}
-			c.runtimes = append(c.runtimes, runtime)
-		}
-	}
-	_, _ = c.GetVersion()
-	return nil
-}
-
-func (c *Client) InitWithSockets(socketPath map[int]string) error {
-	return c.initWithSockets(context.Background(), socketPath)
-}
-
-func (c *Client) InitWithSocketsAndContext(ctx context.Context, socketPath map[int]string) error {
-	return c.initWithSockets(ctx, socketPath)
-}
-
-func (c *Client) initWithSockets(ctx context.Context, socketPath map[int]string) error {
+func (c *client) initWithSockets(ctx context.Context, socketPath map[int]string) error {
 	c.runtimes = make([]SingleRuntime, 0)
 	for process, path := range socketPath {
 		runtime := SingleRuntime{}
@@ -116,15 +62,7 @@ func (c *Client) initWithSockets(ctx context.Context, socketPath map[int]string)
 	return nil
 }
 
-func (c *Client) InitWithMasterSocket(masterSocketPath string, nbproc int) error {
-	return c.initWithMasterSocket(context.Background(), masterSocketPath, nbproc)
-}
-
-func (c *Client) InitWithMasterSocketAndContext(ctx context.Context, masterSocketPath string, nbproc int) error {
-	return c.initWithMasterSocket(ctx, masterSocketPath, nbproc)
-}
-
-func (c *Client) initWithMasterSocket(ctx context.Context, masterSocketPath string, nbproc int) error {
+func (c *client) initWithMasterSocket(ctx context.Context, masterSocketPath string, nbproc int) error {
 	if nbproc == 0 {
 		nbproc = 1
 	}
@@ -145,7 +83,7 @@ func (c *Client) initWithMasterSocket(ctx context.Context, masterSocketPath stri
 }
 
 // GetStats returns stats from the socket
-func (c *Client) GetStats() models.NativeStats {
+func (c *client) GetStats() models.NativeStats {
 	result := make(models.NativeStats, len(c.runtimes))
 	for index, runtime := range c.runtimes {
 		result[index] = runtime.GetStats()
@@ -154,7 +92,7 @@ func (c *Client) GetStats() models.NativeStats {
 }
 
 // GetInfo returns info from the socket
-func (c *Client) GetInfo() (models.ProcessInfos, error) {
+func (c *client) GetInfo() (models.ProcessInfos, error) {
 	result := models.ProcessInfos{}
 	for _, runtime := range c.runtimes {
 		i := runtime.GetInfo()
@@ -164,7 +102,7 @@ func (c *Client) GetInfo() (models.ProcessInfos, error) {
 }
 
 // GetVersion returns info from the socket
-func (c *Client) GetVersion() (*HAProxyVersion, error) {
+func (c *client) GetVersion() (*HAProxyVersion, error) {
 	if c.haproxyVersion != nil {
 		return c.haproxyVersion, nil
 	}
@@ -188,12 +126,12 @@ func (c *Client) GetVersion() (*HAProxyVersion, error) {
 	return nil, fmt.Errorf("version data not found")
 }
 
-func (c *Client) IsVersionBiggerOrEqual(minimumVersion HAProxyVersion) bool {
+func (c *client) IsVersionBiggerOrEqual(minimumVersion HAProxyVersion) bool {
 	return c.haproxyVersion.IsBiggerOrEqual(minimumVersion)
 }
 
 // GetMapsPath returns runtime map file path or map id
-func (c *Client) GetMapsPath(name string) (string, error) {
+func (c *client) GetMapsPath(name string) (string, error) {
 	name = misc.SanitizeFilename(name)
 
 	// we can refer to runtime map with either id or path
@@ -201,12 +139,12 @@ func (c *Client) GetMapsPath(name string) (string, error) {
 		return name, nil
 	}
 	// CLI
-	if c.MapsDir != "" {
+	if c.options.MapsDir != nil && *c.options.MapsDir != "" {
 		ext := filepath.Ext(name)
 		if ext != ".map" {
 			name = fmt.Sprintf("%s%s", name, ".map")
 		}
-		p := filepath.Join(c.MapsDir, name) // path
+		p := filepath.Join(*c.options.MapsDir, name) // path
 		return p, nil
 	}
 	// config
@@ -221,7 +159,7 @@ func (c *Client) GetMapsPath(name string) (string, error) {
 }
 
 // SetFrontendMaxConn set maxconn for frontend
-func (c *Client) SetFrontendMaxConn(frontend string, maxconn int) error {
+func (c *client) SetFrontendMaxConn(frontend string, maxconn int) error {
 	if len(c.runtimes) == 0 {
 		return fmt.Errorf("no valid runtimes found")
 	}
@@ -235,7 +173,7 @@ func (c *Client) SetFrontendMaxConn(frontend string, maxconn int) error {
 }
 
 // SetServerAddr set ip [port] for server
-func (c *Client) SetServerAddr(backend, server string, ip string, port int) error {
+func (c *client) SetServerAddr(backend, server string, ip string, port int) error {
 	if len(c.runtimes) == 0 {
 		return fmt.Errorf("no valid runtimes found")
 	}
@@ -249,7 +187,7 @@ func (c *Client) SetServerAddr(backend, server string, ip string, port int) erro
 }
 
 // SetServerState set state for server
-func (c *Client) SetServerState(backend, server string, state string) error {
+func (c *client) SetServerState(backend, server string, state string) error {
 	if len(c.runtimes) == 0 {
 		return fmt.Errorf("no valid runtimes found")
 	}
@@ -263,7 +201,7 @@ func (c *Client) SetServerState(backend, server string, state string) error {
 }
 
 // SetServerWeight set weight for server
-func (c *Client) SetServerWeight(backend, server string, weight string) error {
+func (c *client) SetServerWeight(backend, server string, weight string) error {
 	if len(c.runtimes) == 0 {
 		return fmt.Errorf("no valid runtimes found")
 	}
@@ -277,7 +215,7 @@ func (c *Client) SetServerWeight(backend, server string, weight string) error {
 }
 
 // SetServerHealth set health for server
-func (c *Client) SetServerHealth(backend, server string, health string) error {
+func (c *client) SetServerHealth(backend, server string, health string) error {
 	if len(c.runtimes) == 0 {
 		return fmt.Errorf("no valid runtimes found")
 	}
@@ -291,7 +229,7 @@ func (c *Client) SetServerHealth(backend, server string, health string) error {
 }
 
 // EnableAgentCheck enable agent check for server
-func (c *Client) EnableAgentCheck(backend, server string) error {
+func (c *client) EnableAgentCheck(backend, server string) error {
 	for _, runtime := range c.runtimes {
 		err := runtime.EnableAgentCheck(backend, server)
 		if err != nil {
@@ -302,7 +240,7 @@ func (c *Client) EnableAgentCheck(backend, server string) error {
 }
 
 // DisableAgentCheck disable agent check for server
-func (c *Client) DisableAgentCheck(backend, server string) error {
+func (c *client) DisableAgentCheck(backend, server string) error {
 	if len(c.runtimes) == 0 {
 		return fmt.Errorf("no valid runtimes found")
 	}
@@ -316,7 +254,7 @@ func (c *Client) DisableAgentCheck(backend, server string) error {
 }
 
 // EnableServer marks server as UP
-func (c *Client) EnableServer(backend, server string) error {
+func (c *client) EnableServer(backend, server string) error {
 	for _, runtime := range c.runtimes {
 		err := runtime.EnableServer(backend, server)
 		if err != nil {
@@ -327,7 +265,7 @@ func (c *Client) EnableServer(backend, server string) error {
 }
 
 // DisableServer marks server as DOWN for maintenance
-func (c *Client) DisableServer(backend, server string) error {
+func (c *client) DisableServer(backend, server string) error {
 	if len(c.runtimes) == 0 {
 		return fmt.Errorf("no valid runtimes found")
 	}
@@ -341,7 +279,7 @@ func (c *Client) DisableServer(backend, server string) error {
 }
 
 // SetServerAgentAddr set agent-addr for server
-func (c *Client) SetServerAgentAddr(backend, server string, addr string) error {
+func (c *client) SetServerAgentAddr(backend, server string, addr string) error {
 	if len(c.runtimes) == 0 {
 		return fmt.Errorf("no valid runtimes found")
 	}
@@ -355,7 +293,7 @@ func (c *Client) SetServerAgentAddr(backend, server string, addr string) error {
 }
 
 // SetServerAgentSend set agent-send for server
-func (c *Client) SetServerAgentSend(backend, server string, send string) error {
+func (c *client) SetServerAgentSend(backend, server string, send string) error {
 	if len(c.runtimes) == 0 {
 		return fmt.Errorf("no valid runtimes found")
 	}
@@ -369,7 +307,7 @@ func (c *Client) SetServerAgentSend(backend, server string, send string) error {
 }
 
 // GetServerState returns server runtime state
-func (c *Client) GetServersState(backend string) (models.RuntimeServers, error) {
+func (c *client) GetServersState(backend string) (models.RuntimeServers, error) {
 	var prevRs models.RuntimeServers
 	var rs models.RuntimeServers
 	for _, runtime := range c.runtimes {
@@ -386,7 +324,7 @@ func (c *Client) GetServersState(backend string) (models.RuntimeServers, error) 
 }
 
 // GetServerState returns server runtime state
-func (c *Client) GetServerState(backend, server string) (*models.RuntimeServer, error) {
+func (c *client) GetServerState(backend, server string) (*models.RuntimeServer, error) {
 	if len(c.runtimes) == 0 {
 		return nil, fmt.Errorf("no valid runtimes found")
 	}
@@ -409,7 +347,7 @@ func (c *Client) GetServerState(backend, server string) (*models.RuntimeServer, 
 }
 
 // SetServerCheckPort set health check port for server
-func (c *Client) SetServerCheckPort(backend, server string, port int) error {
+func (c *client) SetServerCheckPort(backend, server string, port int) error {
 	if len(c.runtimes) == 0 {
 		return fmt.Errorf("no valid runtimes found")
 	}
@@ -423,7 +361,7 @@ func (c *Client) SetServerCheckPort(backend, server string, port int) error {
 }
 
 // Show tables show tables from runtime API and return it structured, if process is 0, return for all processes
-func (c *Client) ShowTables(process int) (models.StickTables, error) {
+func (c *client) ShowTables(process int) (models.StickTables, error) {
 	tables := models.StickTables{}
 	for _, runtime := range c.runtimes {
 		if process == 0 || runtime.process == process {
@@ -438,7 +376,7 @@ func (c *Client) ShowTables(process int) (models.StickTables, error) {
 }
 
 // GetTableEntries returns all entries for specified table in the given process with filters and a key
-func (c *Client) GetTableEntries(name string, process int, filter []string, key string) (models.StickTableEntries, error) {
+func (c *client) GetTableEntries(name string, process int, filter []string, key string) (models.StickTableEntries, error) {
 	entries := models.StickTableEntries{}
 	var err error
 	for _, runtime := range c.runtimes {
@@ -455,7 +393,7 @@ func (c *Client) GetTableEntries(name string, process int, filter []string, key 
 }
 
 // Show table show tables {name} from runtime API associated with process id and return it structured
-func (c *Client) ShowTable(name string, process int) (*models.StickTable, error) {
+func (c *client) ShowTable(name string, process int) (*models.StickTable, error) {
 	if len(c.runtimes) == 0 {
 		return nil, fmt.Errorf("no valid runtimes found")
 	}
@@ -477,7 +415,7 @@ func (c *Client) ShowTable(name string, process int) (*models.StickTable, error)
 }
 
 // ExecuteRaw does not process response, just returns its values for all processes
-func (c *Client) ExecuteRaw(command string) ([]string, error) {
+func (c *client) ExecuteRaw(command string) ([]string, error) {
 	if len(c.runtimes) == 0 {
 		return nil, fmt.Errorf("no valid runtimes found")
 	}
@@ -493,7 +431,7 @@ func (c *Client) ExecuteRaw(command string) ([]string, error) {
 }
 
 // ShowMaps returns structured unique map files
-func (c *Client) ShowMaps() (models.Maps, error) {
+func (c *client) ShowMaps() (models.Maps, error) {
 	maps := models.Maps{}
 	var lastErr error
 	for _, runtime := range c.runtimes {
@@ -530,7 +468,7 @@ func (c *Client) ShowMaps() (models.Maps, error) {
 }
 
 // CreateMap creates a new map file with its entries
-func (c *Client) CreateMap(file io.Reader, header multipart.FileHeader) (*models.Map, error) {
+func (c *client) CreateMap(file io.Reader, header multipart.FileHeader) (*models.Map, error) {
 	name, err := c.GetMapsPath(header.Filename)
 	if err != nil {
 		return nil, err
@@ -542,8 +480,15 @@ func (c *Client) CreateMap(file io.Reader, header multipart.FileHeader) (*models
 	return m, nil
 }
 
+func (c *client) GetMapsDir() (string, error) {
+	if c.options.MapsDir == nil {
+		return "", fmt.Errorf("maps dir not set")
+	}
+	return *c.options.MapsDir, nil
+}
+
 // GetMap returns one structured runtime map file
-func (c *Client) GetMap(name string) (*models.Map, error) {
+func (c *client) GetMap(name string) (*models.Map, error) {
 	if len(c.runtimes) == 0 {
 		return nil, fmt.Errorf("no valid runtimes found")
 	}
@@ -565,7 +510,7 @@ func (c *Client) GetMap(name string) (*models.Map, error) {
 }
 
 // ClearMap removes all map entries from the map file. If forceDelete is true, deletes file from disk
-func (c *Client) ClearMap(name string, forceDelete bool) error {
+func (c *client) ClearMap(name string, forceDelete bool) error {
 	if len(c.runtimes) == 0 {
 		return fmt.Errorf("no valid runtimes found")
 	}
@@ -596,7 +541,7 @@ func (c *Client) ClearMap(name string, forceDelete bool) error {
 }
 
 // ClearMapVersioned removes all map entries from the map file. If forceDelete is true, deletes file from disk
-func (c *Client) ClearMapVersioned(name, version string, forceDelete bool) error {
+func (c *client) ClearMapVersioned(name, version string, forceDelete bool) error {
 	if len(c.runtimes) == 0 {
 		return fmt.Errorf("no valid runtimes found")
 	}
@@ -627,7 +572,7 @@ func (c *Client) ClearMapVersioned(name, version string, forceDelete bool) error
 }
 
 // ShowMapEntries list all map entries by map file name
-func (c *Client) ShowMapEntries(name string) (models.MapEntries, error) {
+func (c *client) ShowMapEntries(name string) (models.MapEntries, error) {
 	name, err := c.GetMapsPath(name)
 	if err != nil {
 		return nil, err
@@ -665,7 +610,7 @@ func (c *Client) ShowMapEntries(name string) (models.MapEntries, error) {
 }
 
 // ShowMapEntriesVersioned list all map entries by map file name
-func (c *Client) ShowMapEntriesVersioned(name, version string) (models.MapEntries, error) {
+func (c *client) ShowMapEntriesVersioned(name, version string) (models.MapEntries, error) {
 	name, err := c.GetMapsPath(name)
 	if err != nil {
 		return nil, err
@@ -703,7 +648,7 @@ func (c *Client) ShowMapEntriesVersioned(name, version string) (models.MapEntrie
 }
 
 // AddMapPayload adds multiple entries to the map file
-func (c *Client) AddMapPayload(name, payload string) error {
+func (c *client) AddMapPayload(name, payload string) error {
 	if len(c.runtimes) == 0 {
 		return fmt.Errorf("no valid runtimes found")
 	}
@@ -763,7 +708,7 @@ func parseMapPayload(entries models.MapEntries, maxBufSize int) (exceededSize bo
 
 // AddMapPayloadVersioned adds multiple entries to the map file atomically (using `prepare`, `add` and `commit` commands)
 // if HAProxy version is 2.4 or higher. Otherwise performs `add map payload` command
-func (c *Client) AddMapPayloadVersioned(name string, entries models.MapEntries) error {
+func (c *client) AddMapPayloadVersioned(name string, entries models.MapEntries) error {
 	if len(c.runtimes) == 0 {
 		return fmt.Errorf("no valid runtimes found")
 	}
@@ -813,7 +758,7 @@ func (c *Client) AddMapPayloadVersioned(name string, entries models.MapEntries) 
 }
 
 // AddMapEntry adds an entry into the map file
-func (c *Client) AddMapEntry(name, key, value string) error {
+func (c *client) AddMapEntry(name, key, value string) error {
 	if len(c.runtimes) == 0 {
 		return fmt.Errorf("no valid runtimes found")
 	}
@@ -835,7 +780,7 @@ func (c *Client) AddMapEntry(name, key, value string) error {
 }
 
 // AddMapEntry adds an entry into the map file
-func (c *Client) AddMapEntryVersioned(version, name, key, value string) error {
+func (c *client) AddMapEntryVersioned(version, name, key, value string) error {
 	if len(c.runtimes) == 0 {
 		return fmt.Errorf("no valid runtimes found")
 	}
@@ -856,7 +801,7 @@ func (c *Client) AddMapEntryVersioned(version, name, key, value string) error {
 	return nil
 }
 
-func (c *Client) PrepareMap(name string) (version string, err error) {
+func (c *client) PrepareMap(name string) (version string, err error) {
 	if len(c.runtimes) == 0 {
 		return "", fmt.Errorf("no valid runtimes found")
 	}
@@ -877,7 +822,7 @@ func (c *Client) PrepareMap(name string) (version string, err error) {
 	return version, nil
 }
 
-func (c *Client) CommitMap(version, name string) error {
+func (c *client) CommitMap(version, name string) error {
 	if len(c.runtimes) == 0 {
 		return fmt.Errorf("no valid runtimes found")
 	}
@@ -899,7 +844,7 @@ func (c *Client) CommitMap(version, name string) error {
 }
 
 // GetMapEntry returns one map runtime setting
-func (c *Client) GetMapEntry(name, id string) (*models.MapEntry, error) {
+func (c *client) GetMapEntry(name, id string) (*models.MapEntry, error) {
 	if len(c.runtimes) == 0 {
 		return nil, fmt.Errorf("no valid runtimes found")
 	}
@@ -921,7 +866,7 @@ func (c *Client) GetMapEntry(name, id string) (*models.MapEntry, error) {
 }
 
 // SetMapEntry replace the value corresponding to each id in a map
-func (c *Client) SetMapEntry(name, id, value string) error {
+func (c *client) SetMapEntry(name, id, value string) error {
 	if len(c.runtimes) == 0 {
 		return fmt.Errorf("no valid runtimes found")
 	}
@@ -943,7 +888,7 @@ func (c *Client) SetMapEntry(name, id, value string) error {
 }
 
 // DeleteMapEntry deletes all the map entries from the map by its id
-func (c *Client) DeleteMapEntry(name, id string) error {
+func (c *client) DeleteMapEntry(name, id string) error {
 	if len(c.runtimes) == 0 {
 		return fmt.Errorf("no valid runtimes found")
 	}
@@ -964,18 +909,18 @@ func (c *Client) DeleteMapEntry(name, id string) error {
 	return nil
 }
 
-func (c *Client) ParseMapEntries(output string) models.MapEntries {
+func (c *client) ParseMapEntries(output string) models.MapEntries {
 	e := ParseMapEntries(output, false)
 	return e
 }
 
 // ParseMapEntriesFromFile reads entries from file
-func (c *Client) ParseMapEntriesFromFile(inputFile io.Reader, hasID bool) models.MapEntries {
+func (c *client) ParseMapEntriesFromFile(inputFile io.Reader, hasID bool) models.MapEntries {
 	return parseMapEntriesFromFile(inputFile, hasID)
 }
 
 // GetACLFile returns a the ACL file by its ID
-func (c *Client) GetACLFile(id string) (files *models.ACLFile, err error) {
+func (c *client) GetACLFile(id string) (files *models.ACLFile, err error) {
 	if len(c.runtimes) == 0 {
 		return nil, fmt.Errorf("missing runtimes, cannot retrieve ACL files")
 	}
@@ -989,7 +934,7 @@ func (c *Client) GetACLFile(id string) (files *models.ACLFile, err error) {
 }
 
 // GetACLFiles returns all the ACL files
-func (c *Client) GetACLFiles() (files models.ACLFiles, err error) {
+func (c *client) GetACLFiles() (files models.ACLFiles, err error) {
 	if len(c.runtimes) == 0 {
 		return nil, fmt.Errorf("missing runtimes, cannot retrieve ACL files")
 	}
@@ -1003,7 +948,7 @@ func (c *Client) GetACLFiles() (files models.ACLFiles, err error) {
 }
 
 // GetACLFilesEntries returns all the files entries for the ACL file ID
-func (c *Client) GetACLFilesEntries(id string) (files models.ACLFilesEntries, err error) {
+func (c *client) GetACLFilesEntries(id string) (files models.ACLFilesEntries, err error) {
 	if len(c.runtimes) == 0 {
 		return nil, fmt.Errorf("missing runtimes, cannot retrieve ACL files")
 	}
@@ -1017,7 +962,7 @@ func (c *Client) GetACLFilesEntries(id string) (files models.ACLFilesEntries, er
 }
 
 // AddACLFileEntry adds the value for the specified ACL file entry based on its ID
-func (c *Client) AddACLFileEntry(id, value string) error {
+func (c *client) AddACLFileEntry(id, value string) error {
 	if len(c.runtimes) == 0 {
 		return fmt.Errorf("missing runtimes, cannot add ACL file entry")
 	}
@@ -1031,7 +976,7 @@ func (c *Client) AddACLFileEntry(id, value string) error {
 }
 
 // GetACLFileEntry returns the specified file entry based on value and ACL file ID
-func (c *Client) GetACLFileEntry(id, value string) (fileEntry *models.ACLFileEntry, err error) {
+func (c *client) GetACLFileEntry(id, value string) (fileEntry *models.ACLFileEntry, err error) {
 	if len(c.runtimes) == 0 {
 		return nil, fmt.Errorf("missing runtimes, cannot get ACL file entry")
 	}
@@ -1056,7 +1001,7 @@ func (c *Client) GetACLFileEntry(id, value string) (fileEntry *models.ACLFileEnt
 }
 
 // DeleteACLFileEntry deletes the value for the specified ACL file entry based on its ID
-func (c *Client) DeleteACLFileEntry(id, value string) error {
+func (c *client) DeleteACLFileEntry(id, value string) error {
 	if len(c.runtimes) == 0 {
 		return fmt.Errorf("missing runtimes, cannot add ACL file entry")
 	}
@@ -1071,7 +1016,7 @@ func (c *Client) DeleteACLFileEntry(id, value string) error {
 
 // AddACLAtomic adds multiple entries to the ACL file atomically (using `prepare`, `add` and `commit` commands)
 // if HAProxy version is 2.4 or higher.
-func (c *Client) AddACLAtomic(aclID string, entries models.ACLFilesEntries) error {
+func (c *client) AddACLAtomic(aclID string, entries models.ACLFilesEntries) error {
 	if len(c.runtimes) == 0 {
 		return fmt.Errorf("no valid runtimes found")
 	}
@@ -1105,7 +1050,7 @@ func (c *Client) AddACLAtomic(aclID string, entries models.ACLFilesEntries) erro
 	return nil
 }
 
-func (c *Client) PrepareACL(name string) (version string, err error) {
+func (c *client) PrepareACL(name string) (version string, err error) {
 	if len(c.runtimes) == 0 {
 		return "", fmt.Errorf("no valid runtimes found")
 	}
@@ -1122,7 +1067,7 @@ func (c *Client) PrepareACL(name string) (version string, err error) {
 	return version, nil
 }
 
-func (c *Client) AddACLVersioned(version, aclID, value string) error {
+func (c *client) AddACLVersioned(version, aclID, value string) error {
 	if len(c.runtimes) == 0 {
 		return fmt.Errorf("no valid runtimes found")
 	}
@@ -1139,7 +1084,7 @@ func (c *Client) AddACLVersioned(version, aclID, value string) error {
 	return nil
 }
 
-func (c *Client) CommitACL(version, name string) error {
+func (c *client) CommitACL(version, name string) error {
 	if len(c.runtimes) == 0 {
 		return fmt.Errorf("no valid runtimes found")
 	}
