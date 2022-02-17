@@ -16,12 +16,10 @@
 package clientnative
 
 import (
-	"context"
 	"log"
 
 	"github.com/haproxytech/client-native/v3/configuration"
 	"github.com/haproxytech/client-native/v3/runtime"
-	runtime_opt "github.com/haproxytech/client-native/v3/runtime/options"
 	"github.com/haproxytech/client-native/v3/spoe"
 	"github.com/haproxytech/client-native/v3/storage"
 )
@@ -29,44 +27,39 @@ import (
 // LogFunc - default log function is from the stdlib
 var LogFunc = log.Printf //nolint:gochecknoglobals
 
-// DefaultClient with sane defaults
-func DefaultClient() (*HAProxyClient, error) {
-	c := &HAProxyClient{}
-
-	err := c.Init(nil, nil)
-	if err != nil {
-		return nil, err
-	}
-	return c, nil
-}
-
-// Init HAProxyClient
-func (c *HAProxyClient) Init(configurationClient *configuration.Client, runtimeClient runtime.Runtime) error {
-	var err error
-	if configurationClient == nil {
-		configurationClient, err = configuration.DefaultClient()
-		if err != nil {
-			return err
-		}
-	}
-
-	if runtimeClient == nil {
-		runtimeClient, err = runtime.New(context.Background(), runtime_opt.SocketDefault())
-		if err != nil {
-			return err
-		}
-	}
-
-	c.Configuration = configurationClient
-	c.Runtime = runtimeClient
-	return nil
-}
-
 // HAProxyClient Native client for managing configuration and spitting out HAProxy stats
-type HAProxyClient struct {
-	Configuration  *configuration.Client
-	Runtime        runtime.Runtime
-	MapStorage     storage.Storage
-	SSLCertStorage storage.Storage
-	Spoe           spoe.Spoe
+type haProxyClient struct {
+	configuration  configuration.Configuration
+	runtime        runtime.Runtime
+	mapStorage     storage.Storage
+	sslCertStorage storage.Storage
+	spoe           spoe.Spoe
+}
+
+func (c *haProxyClient) Configuration() configuration.Configuration {
+	return c.configuration
+}
+
+func (c *haProxyClient) ReplaceConfiguration(configurationClient configuration.Configuration) {
+	c.configuration = configurationClient
+}
+
+func (c *haProxyClient) ReplaceRuntime(runtime runtime.Runtime) {
+	c.runtime = runtime
+}
+
+func (c *haProxyClient) Runtime() runtime.Runtime {
+	return c.runtime
+}
+
+func (c *haProxyClient) MapStorage() storage.Storage {
+	return c.mapStorage
+}
+
+func (c *haProxyClient) SSLCertStorage() storage.Storage {
+	return c.sslCertStorage
+}
+
+func (c *haProxyClient) Spoe() spoe.Spoe {
+	return c.spoe
 }
