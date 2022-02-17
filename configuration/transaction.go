@@ -34,6 +34,7 @@ import (
 	spoe "github.com/haproxytech/config-parser/v4/spoe"
 	shellquote "github.com/kballard/go-shellquote"
 
+	"github.com/haproxytech/client-native/v3/configuration/options"
 	"github.com/haproxytech/client-native/v3/models"
 )
 
@@ -56,9 +57,18 @@ type TransactionClient interface {
 type transactionCleanerHandler func(transactionId, configurationFile string)
 
 type Transaction struct {
-	ClientParams
+	options.ConfigurationOptions
 	TransactionClient TransactionClient
 	mu                sync.Mutex
+}
+
+type Transactions interface {
+	GetTransactions(status string) (*models.Transactions, error)
+	GetTransaction(transactionID string) (*models.Transaction, error)
+	StartTransaction(version int64) (*models.Transaction, error)
+	DeleteTransaction(transactionID string) error
+	CommitTransaction(transactionID string) (*models.Transaction, error)
+	MarkTransactionOutdated(transactionID string) (err error)
 }
 
 // GetTransactions returns an array of transactions
@@ -204,7 +214,7 @@ func (t *Transaction) commitTransaction(transactionID string, skipVersion bool) 
 	return &models.Transaction{ID: transactionID, Version: tVersion, Status: "success"}, nil
 }
 
-func addConfigFilesToArgs(args []string, clientParams ClientParams) []string {
+func addConfigFilesToArgs(args []string, clientParams options.ConfigurationOptions) []string {
 	result := []string{}
 	for _, file := range clientParams.ValidateConfigFilesBefore {
 		result = append(result, "-f", file)
@@ -219,7 +229,7 @@ func addConfigFilesToArgs(args []string, clientParams ClientParams) []string {
 
 func (t *Transaction) checkTransactionFile(transactionID string) error {
 	// check only against HAProxy file
-	_, ok := t.TransactionClient.(*Client)
+	_, ok := t.TransactionClient.(*client)
 	if !ok {
 		return nil
 	}
@@ -227,7 +237,7 @@ func (t *Transaction) checkTransactionFile(transactionID string) error {
 	// such as if want to use different HAProxy (community, enterprise, aloha)
 	// where different options are supported.
 	// By disabling validation we can still use DPAPI
-	if !t.ClientParams.ValidateConfigurationFile {
+	if t.ConfigurationOptions.SkipConfigurationFileValidation {
 		return nil
 	}
 
@@ -249,11 +259,11 @@ func (t *Transaction) checkTransactionFile(transactionID string) error {
 	case t.MasterWorker:
 		name = t.Haproxy
 		args = []string{"-W", "-f", transactionFile, "-c"}
-		args = addConfigFilesToArgs(args, t.ClientParams)
+		args = addConfigFilesToArgs(args, t.ConfigurationOptions)
 	default:
 		name = t.Haproxy
 		args = []string{"-f", transactionFile, "-c"}
-		args = addConfigFilesToArgs(args, t.ClientParams)
+		args = addConfigFilesToArgs(args, t.ConfigurationOptions)
 	}
 
 	// #nosec G204

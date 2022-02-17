@@ -24,9 +24,16 @@ import (
 	"github.com/haproxytech/client-native/v3/models"
 )
 
+type PeerSection interface {
+	GetPeerSections(transactionID string) (int64, models.PeerSections, error)
+	GetPeerSection(name string, transactionID string) (int64, *models.PeerSection, error)
+	DeletePeerSection(name string, transactionID string, version int64) error
+	CreatePeerSection(data *models.PeerSection, transactionID string, version int64) error
+}
+
 // GetPeerSections returns configuration version and an array of
 // configured peer sections. Returns error on fail.
-func (c *Client) GetPeerSections(transactionID string) (int64, models.PeerSections, error) {
+func (c *client) GetPeerSections(transactionID string) (int64, models.PeerSections, error) {
 	p, err := c.GetParser(transactionID)
 	if err != nil {
 		return 0, nil, err
@@ -53,7 +60,7 @@ func (c *Client) GetPeerSections(transactionID string) (int64, models.PeerSectio
 
 // GetPeerSection returns configuration version and a requested peer section.
 // Returns error on fail or if peer section does not exist.
-func (c *Client) GetPeerSection(name string, transactionID string) (int64, *models.PeerSection, error) {
+func (c *client) GetPeerSection(name string, transactionID string) (int64, *models.PeerSection, error) {
 	p, err := c.GetParser(transactionID)
 	if err != nil {
 		return 0, nil, err
@@ -75,7 +82,7 @@ func (c *Client) GetPeerSection(name string, transactionID string) (int64, *mode
 
 // DeletePeerSection deletes a peerSection in configuration. One of version or transactionID is
 // mandatory. Returns error on fail, nil on success.
-func (c *Client) DeletePeerSection(name string, transactionID string, version int64) error {
+func (c *client) DeletePeerSection(name string, transactionID string, version int64) error {
 	p, t, err := c.loadDataForChange(transactionID, version)
 	if err != nil {
 		return err
@@ -99,8 +106,8 @@ func (c *Client) DeletePeerSection(name string, transactionID string, version in
 
 // CreatePeerSection creates a peerSection in configuration. One of version or transactionID is
 // mandatory. Returns error on fail, nil on success.
-func (c *Client) CreatePeerSection(data *models.PeerSection, transactionID string, version int64) error {
-	if c.UseValidation {
+func (c *client) CreatePeerSection(data *models.PeerSection, transactionID string, version int64) error {
+	if c.UseModelsValidation {
 		validationErr := data.Validate(strfmt.Default)
 		if validationErr != nil {
 			return NewConfError(ErrValidationError, validationErr.Error())

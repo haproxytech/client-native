@@ -24,7 +24,7 @@ import (
 )
 
 func TestGetHTTPResponseRules(t *testing.T) { //nolint:gocognit,gocyclo
-	v, hRules, err := client.GetHTTPResponseRules("frontend", "test", "")
+	v, hRules, err := clientTest.GetHTTPResponseRules("frontend", "test", "")
 	if err != nil {
 		t.Error(err.Error())
 	}
@@ -355,7 +355,7 @@ func TestGetHTTPResponseRules(t *testing.T) { //nolint:gocognit,gocyclo
 		}
 	}
 
-	_, hRules, err = client.GetHTTPResponseRules("backend", "test_2", "")
+	_, hRules, err = clientTest.GetHTTPResponseRules("backend", "test_2", "")
 	if err != nil {
 		t.Error(err.Error())
 	}
@@ -365,7 +365,7 @@ func TestGetHTTPResponseRules(t *testing.T) { //nolint:gocognit,gocyclo
 }
 
 func TestGetHTTPResponseRule(t *testing.T) {
-	v, r, err := client.GetHTTPResponseRule(0, "frontend", "test", "")
+	v, r, err := clientTest.GetHTTPResponseRule(0, "frontend", "test", "")
 	if err != nil {
 		t.Error(err.Error())
 	}
@@ -392,12 +392,12 @@ func TestGetHTTPResponseRule(t *testing.T) {
 		t.Error(err.Error())
 	}
 
-	_, _, err = client.GetHTTPResponseRule(3, "backend", "test2", "")
+	_, _, err = clientTest.GetHTTPResponseRule(3, "backend", "test2", "")
 	if err == nil {
 		t.Error("Should throw error, non existant HTTPResponse Rule")
 	}
 
-	_, r, err = client.GetHTTPResponseRule(0, "frontend", "test_2", "")
+	_, r, err = clientTest.GetHTTPResponseRule(0, "frontend", "test_2", "")
 	if err != nil {
 		t.Error(err.Error())
 	}
@@ -418,14 +418,14 @@ func TestCreateEditDeleteHTTPResponseRule(t *testing.T) {
 		LogLevel: "alert",
 	}
 
-	err := client.CreateHTTPResponseRule("frontend", "test", r, "", version)
+	err := clientTest.CreateHTTPResponseRule("frontend", "test", r, "", version)
 	if err != nil {
 		t.Error(err.Error())
 	} else {
 		version++
 	}
 
-	v, ondiskR, err := client.GetHTTPResponseRule(1, "frontend", "test", "")
+	v, ondiskR, err := clientTest.GetHTTPResponseRule(1, "frontend", "test", "")
 	if err != nil {
 		t.Error(err.Error())
 	}
@@ -447,14 +447,14 @@ func TestCreateEditDeleteHTTPResponseRule(t *testing.T) {
 		LogLevel: "warning",
 	}
 
-	err = client.EditHTTPResponseRule(1, "frontend", "test", r, "", version)
+	err = clientTest.EditHTTPResponseRule(1, "frontend", "test", r, "", version)
 	if err != nil {
 		t.Error(err.Error())
 	} else {
 		version++
 	}
 
-	v, ondiskR, err = client.GetHTTPResponseRule(1, "frontend", "test", "")
+	v, ondiskR, err = clientTest.GetHTTPResponseRule(1, "frontend", "test", "")
 	if err != nil {
 		t.Error(err.Error())
 	}
@@ -470,23 +470,23 @@ func TestCreateEditDeleteHTTPResponseRule(t *testing.T) {
 	}
 
 	// TestDeleteHTTPResponse
-	err = client.DeleteHTTPResponseRule(22, "frontend", "test", "", version)
+	err = clientTest.DeleteHTTPResponseRule(22, "frontend", "test", "", version)
 	if err != nil {
 		t.Error(err.Error())
 	} else {
 		version++
 	}
 
-	if v, _ := client.GetVersion(""); v != version {
+	if v, _ := clientTest.GetVersion(""); v != version {
 		t.Error("Version not incremented")
 	}
 
-	_, _, err = client.GetHTTPResponseRule(22, "frontend", "test", "")
+	_, _, err = clientTest.GetHTTPResponseRule(22, "frontend", "test", "")
 	if err == nil {
 		t.Error("DeleteHTTPResponseRule failed, HTTPResponse Rule 19 still exists")
 	}
 
-	err = client.DeleteHTTPResponseRule(2, "backend", "test_2", "", version)
+	err = clientTest.DeleteHTTPResponseRule(2, "backend", "test_2", "", version)
 	if err == nil {
 		t.Error("Should throw error, non existant HTTPResponse Rule")
 		version++

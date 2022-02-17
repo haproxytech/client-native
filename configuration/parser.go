@@ -1,4 +1,4 @@
-// Copyright 2021 HAProxy Technologies
+// Copyright 2019 HAProxy Technologies
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,20 +12,20 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-//go:build integration
-// +build integration
 
-package version_test
+package configuration
 
-import (
-	"fmt"
-)
+import parser "github.com/haproxytech/config-parser/v4"
 
-func (s *MajorVersionInRuntime) TestExample() {
-	version, err := s.client.Runtime().GetVersion()
-	if err != nil {
-		s.FailNow(err.Error())
-	}
-	versionStr := fmt.Sprintf("%d.%d", version.Major, version.Minor)
-	s.Equal(versionStr, s.haproxy_version)
+type Parser interface {
+	Parser() parser.Parser
+	HasParser(transactionID string) bool
+	GetParser(transactionID string) (parser.Parser, error)
+	AddParser(transactionID string) error
+	DeleteParser(transactionID string) error
+	CommitParser(transactionID string) error
+	GetVersion(transactionID string) (int64, error)
+	IncrementVersion() error
+	LoadData(filename string) error
+	Save(transactionFile, transactionID string) error
 }

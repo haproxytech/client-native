@@ -24,6 +24,7 @@ import (
 	"github.com/haproxytech/config-parser/v4/types"
 
 	conf "github.com/haproxytech/client-native/v3/configuration"
+	"github.com/haproxytech/client-native/v3/configuration/options"
 	"github.com/haproxytech/client-native/v3/misc"
 	"github.com/haproxytech/client-native/v3/models"
 )
@@ -71,11 +72,11 @@ func newSingleSpoe(params Params) (*SingleSpoe, error) {
 	if params.SkipFailedTransactions != nil {
 		skipFailedTransactions = *params.SkipFailedTransactions
 	}
-	ss.Transaction.ClientParams = conf.ClientParams{
+	ss.Transaction.ConfigurationOptions = options.ConfigurationOptions{
 		ConfigurationFile:      params.ConfigurationFile,
 		TransactionDir:         params.TransactionDir,
 		BackupsNumber:          params.BackupsNumber,
-		UseValidation:          useValidation,
+		UseModelsValidation:    useValidation,
 		PersistentTransactions: persistentTransactions,
 		SkipFailedTransactions: skipFailedTransactions,
 	}

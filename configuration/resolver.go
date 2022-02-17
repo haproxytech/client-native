@@ -28,9 +28,17 @@ import (
 	"github.com/haproxytech/client-native/v3/models"
 )
 
+type Resolver interface {
+	GetResolvers(transactionID string) (int64, models.Resolvers, error)
+	GetResolver(name string, transactionID string) (int64, *models.Resolver, error)
+	DeleteResolver(name string, transactionID string, version int64) error
+	EditResolver(name string, data *models.Resolver, transactionID string, version int64) error
+	CreateResolver(data *models.Resolver, transactionID string, version int64) error
+}
+
 // GetResolvers returns configuration version and an array of
 // configured resolvers. Returns error on fail.
-func (c *Client) GetResolvers(transactionID string) (int64, models.Resolvers, error) {
+func (c *client) GetResolvers(transactionID string) (int64, models.Resolvers, error) {
 	p, err := c.GetParser(transactionID)
 	if err != nil {
 		return 0, nil, err
@@ -59,7 +67,7 @@ func (c *Client) GetResolvers(transactionID string) (int64, models.Resolvers, er
 
 // GetResolver returns configuration version and a requested resolver.
 // Returns error on fail or if resolver does not exist.
-func (c *Client) GetResolver(name string, transactionID string) (int64, *models.Resolver, error) {
+func (c *client) GetResolver(name string, transactionID string) (int64, *models.Resolver, error) {
 	p, err := c.GetParser(transactionID)
 	if err != nil {
 		return 0, nil, err
@@ -84,7 +92,7 @@ func (c *Client) GetResolver(name string, transactionID string) (int64, *models.
 
 // DeleteResolver deletes a resolver in configuration. One of version or transactionID is
 // mandatory. Returns error on fail, nil on success.
-func (c *Client) DeleteResolver(name string, transactionID string, version int64) error {
+func (c *client) DeleteResolver(name string, transactionID string, version int64) error {
 	p, t, err := c.loadDataForChange(transactionID, version)
 	if err != nil {
 		return err
@@ -108,8 +116,8 @@ func (c *Client) DeleteResolver(name string, transactionID string, version int64
 
 // EditResolver edits a resolver in configuration. One of version or transactionID is
 // mandatory. Returns error on fail, nil on success.
-func (c *Client) EditResolver(name string, data *models.Resolver, transactionID string, version int64) error {
-	if c.UseValidation {
+func (c *client) EditResolver(name string, data *models.Resolver, transactionID string, version int64) error {
+	if c.UseModelsValidation {
 		validationErr := data.Validate(strfmt.Default)
 		if validationErr != nil {
 			return NewConfError(ErrValidationError, validationErr.Error())
@@ -139,8 +147,8 @@ func (c *Client) EditResolver(name string, data *models.Resolver, transactionID 
 
 // CreateResolver creates a resolver in configuration. One of version or transactionID is
 // mandatory. Returns error on fail, nil on success.
-func (c *Client) CreateResolver(data *models.Resolver, transactionID string, version int64) error {
-	if c.UseValidation {
+func (c *client) CreateResolver(data *models.Resolver, transactionID string, version int64) error {
+	if c.UseModelsValidation {
 		validationErr := data.Validate(strfmt.Default)
 		if validationErr != nil {
 			return NewConfError(ErrValidationError, validationErr.Error())

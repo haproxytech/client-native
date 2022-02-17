@@ -24,7 +24,7 @@ import (
 )
 
 func TestGetNameservers(t *testing.T) {
-	v, nameservers, err := client.GetNameservers("test", "")
+	v, nameservers, err := clientTest.GetNameservers("test", "")
 	if err != nil {
 		t.Error(err.Error())
 	}
@@ -51,7 +51,7 @@ func TestGetNameservers(t *testing.T) {
 }
 
 func TestGetNameserver(t *testing.T) {
-	v, l, err := client.GetNameserver("dns1", "test", "")
+	v, l, err := clientTest.GetNameserver("dns1", "test", "")
 	if err != nil {
 		t.Error(err.Error())
 	}
@@ -75,14 +75,14 @@ func TestGetNameserver(t *testing.T) {
 		t.Error(err.Error())
 	}
 
-	_, _, err = client.GetNameserver("community", "test", "")
+	_, _, err = clientTest.GetNameserver("community", "test", "")
 	if err == nil {
 		t.Error("Should throw error, non existant nameserver")
 	}
 }
 
 func TestCreateEditDeleteNameserver(t *testing.T) {
-	_, _, err := client.GetNameserver("dns1", "test", "")
+	_, _, err := clientTest.GetNameserver("dns1", "test", "")
 	if err != nil {
 		t.Error(err.Error())
 	}
@@ -95,14 +95,14 @@ func TestCreateEditDeleteNameserver(t *testing.T) {
 		Name:    "hapcommunity",
 	}
 
-	err = client.CreateNameserver("test", e, "", version)
+	err = clientTest.CreateNameserver("test", e, "", version)
 	if err != nil {
 		t.Error(err.Error())
 	} else {
 		version++
 	}
 
-	v, l, err := client.GetNameserver("hapcommunity", "test", "")
+	v, l, err := clientTest.GetNameserver("hapcommunity", "test", "")
 	if err != nil {
 		t.Error(err.Error())
 	}
@@ -117,7 +117,7 @@ func TestCreateEditDeleteNameserver(t *testing.T) {
 		t.Errorf("Version %v returned, expected %v", v, version)
 	}
 
-	err = client.CreateNameserver("test", e, "", version)
+	err = clientTest.CreateNameserver("test", e, "", version)
 	if err == nil {
 		t.Error("Should throw error nameserver already exists")
 		version++
@@ -130,14 +130,14 @@ func TestCreateEditDeleteNameserver(t *testing.T) {
 		Name:    "hapcommunity",
 	}
 
-	err = client.EditNameserver("hapcommunity", "test", e, "", version)
+	err = clientTest.EditNameserver("hapcommunity", "test", e, "", version)
 	if err != nil {
 		t.Error(err.Error())
 	} else {
 		version++
 	}
 
-	v, l, err = client.GetNameserver("hapcommunity", "test", "")
+	v, l, err = clientTest.GetNameserver("hapcommunity", "test", "")
 	if err != nil {
 		t.Error(err.Error())
 	}
@@ -153,23 +153,23 @@ func TestCreateEditDeleteNameserver(t *testing.T) {
 		t.Errorf("Version %v returned, expected %v", v, version)
 	}
 
-	err = client.DeleteNameserver("hapcommunity", "test", "", version)
+	err = clientTest.DeleteNameserver("hapcommunity", "test", "", version)
 	if err != nil {
 		t.Error(err.Error())
 	} else {
 		version++
 	}
 
-	if v, _ = client.GetVersion(""); v != version {
+	if v, _ = clientTest.GetVersion(""); v != version {
 		t.Error("Version not incremented")
 	}
 
-	_, _, err = client.GetNameserver("hapcommunity", "test", "")
+	_, _, err = clientTest.GetNameserver("hapcommunity", "test", "")
 	if err == nil {
 		t.Error("DeleteNameserver failed, nameserver still exists")
 	}
 
-	err = client.DeleteNameserver("hapcommunity", "test", "", version)
+	err = clientTest.DeleteNameserver("hapcommunity", "test", "", version)
 	if err == nil {
 		t.Error("Should throw error, non existant nameserver")
 		version++

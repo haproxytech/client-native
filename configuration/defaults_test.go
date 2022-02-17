@@ -9,7 +9,7 @@ import (
 )
 
 func TestGetDefaults(t *testing.T) { //nolint:gocognit,gocyclo
-	v, d, err := client.GetDefaultsConfiguration("")
+	v, d, err := clientTest.GetDefaultsConfiguration("")
 	if err != nil {
 		t.Error(err.Error())
 	}
@@ -184,7 +184,7 @@ func TestPushDefaults(t *testing.T) {
 		AcceptInvalidHTTPResponse: "disabled",
 	}
 
-	err := client.PushDefaultsConfiguration(d, "", version)
+	err := clientTest.PushDefaultsConfiguration(d, "", version)
 
 	if err != nil {
 		t.Error(err.Error())
@@ -192,7 +192,7 @@ func TestPushDefaults(t *testing.T) {
 		version++
 	}
 
-	ver, defaults, err := client.GetDefaultsConfiguration("")
+	ver, defaults, err := clientTest.GetDefaultsConfiguration("")
 	if err != nil {
 		t.Error(err.Error())
 	}
@@ -219,7 +219,7 @@ func TestPushDefaults(t *testing.T) {
 		t.Error("Version not incremented!")
 	}
 
-	err = client.PushDefaultsConfiguration(d, "", 1055)
+	err = clientTest.PushDefaultsConfiguration(d, "", 1055)
 
 	if err == nil {
 		t.Error("Should have returned version conflict.")

@@ -29,7 +29,7 @@ const (
 )
 
 func TestGetPeerEntries(t *testing.T) {
-	v, peerEntries, err := client.GetPeerEntries("mycluster", "")
+	v, peerEntries, err := clientTest.GetPeerEntries("mycluster", "")
 	if err != nil {
 		t.Error(err.Error())
 	}
@@ -56,7 +56,7 @@ func TestGetPeerEntries(t *testing.T) {
 }
 
 func TestGetPeerEntry(t *testing.T) {
-	v, l, err := client.GetPeerEntry("hapee", "mycluster", "")
+	v, l, err := clientTest.GetPeerEntry("hapee", "mycluster", "")
 	if err != nil {
 		t.Error(err.Error())
 	}
@@ -80,14 +80,14 @@ func TestGetPeerEntry(t *testing.T) {
 		t.Error(err.Error())
 	}
 
-	_, _, err = client.GetPeerEntry("community", "mycluster", "")
+	_, _, err = clientTest.GetPeerEntry("community", "mycluster", "")
 	if err == nil {
 		t.Error("Should throw error, non existant peer entry")
 	}
 }
 
 func TestCreateEditDeletePeerEntry(t *testing.T) {
-	_, _, err := client.GetPeerEntry("hapee", "mycluster", "")
+	_, _, err := clientTest.GetPeerEntry("hapee", "mycluster", "")
 	if err != nil {
 		t.Error(err.Error())
 	}
@@ -100,14 +100,14 @@ func TestCreateEditDeletePeerEntry(t *testing.T) {
 		Name:    "hapcommunity",
 	}
 
-	err = client.CreatePeerEntry("mycluster", e, "", version)
+	err = clientTest.CreatePeerEntry("mycluster", e, "", version)
 	if err != nil {
 		t.Error(err.Error())
 	} else {
 		version++
 	}
 
-	v, l, err := client.GetPeerEntry("hapcommunity", "mycluster", "")
+	v, l, err := clientTest.GetPeerEntry("hapcommunity", "mycluster", "")
 	if err != nil {
 		t.Error(err.Error())
 	}
@@ -122,7 +122,7 @@ func TestCreateEditDeletePeerEntry(t *testing.T) {
 		t.Errorf("Version %v returned, expected %v", v, version)
 	}
 
-	err = client.CreatePeerEntry("mycluster", e, "", version)
+	err = clientTest.CreatePeerEntry("mycluster", e, "", version)
 	if err == nil {
 		t.Error("Should throw error peerEntry already exists")
 		version++
@@ -135,14 +135,14 @@ func TestCreateEditDeletePeerEntry(t *testing.T) {
 		Name:    "hapcommunity",
 	}
 
-	err = client.EditPeerEntry("hapcommunity", "mycluster", e, "", version)
+	err = clientTest.EditPeerEntry("hapcommunity", "mycluster", e, "", version)
 	if err != nil {
 		t.Error(err.Error())
 	} else {
 		version++
 	}
 
-	v, l, err = client.GetPeerEntry("hapcommunity", "mycluster", "")
+	v, l, err = clientTest.GetPeerEntry("hapcommunity", "mycluster", "")
 	if err != nil {
 		t.Error(err.Error())
 	}
@@ -158,23 +158,23 @@ func TestCreateEditDeletePeerEntry(t *testing.T) {
 		t.Errorf("Version %v returned, expected %v", v, version)
 	}
 
-	err = client.DeletePeerEntry("hapcommunity", "mycluster", "", version)
+	err = clientTest.DeletePeerEntry("hapcommunity", "mycluster", "", version)
 	if err != nil {
 		t.Error(err.Error())
 	} else {
 		version++
 	}
 
-	if v, _ = client.GetVersion(""); v != version {
+	if v, _ = clientTest.GetVersion(""); v != version {
 		t.Error("Version not incremented")
 	}
 
-	_, _, err = client.GetPeerEntry("hapcommunity", "mycluster", "")
+	_, _, err = clientTest.GetPeerEntry("hapcommunity", "mycluster", "")
 	if err == nil {
 		t.Error("DeletePeerEntry failed, peer entry still exists")
 	}
 
-	err = client.DeletePeerEntry("hapcommunity", "mycluster", "", version)
+	err = clientTest.DeletePeerEntry("hapcommunity", "mycluster", "", version)
 	if err == nil {
 		t.Error("Should throw error, non existant peer entry")
 		version++

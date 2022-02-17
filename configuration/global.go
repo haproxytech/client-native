@@ -30,9 +30,14 @@ import (
 	"github.com/haproxytech/client-native/v3/models"
 )
 
+type Global interface {
+	GetGlobalConfiguration(transactionID string) (int64, *models.Global, error)
+	PushGlobalConfiguration(data *models.Global, transactionID string, version int64) error
+}
+
 // GetGlobalConfiguration returns configuration version and a
 // struct representing Global configuration
-func (c *Client) GetGlobalConfiguration(transactionID string) (int64, *models.Global, error) {
+func (c *client) GetGlobalConfiguration(transactionID string) (int64, *models.Global, error) {
 	p, err := c.GetParser(transactionID)
 	if err != nil {
 		return 0, nil, err
@@ -53,8 +58,8 @@ func (c *Client) GetGlobalConfiguration(transactionID string) (int64, *models.Gl
 
 // PushGlobalConfiguration pushes a Global config struct to global
 // config file
-func (c *Client) PushGlobalConfiguration(data *models.Global, transactionID string, version int64) error {
-	if c.UseValidation {
+func (c *client) PushGlobalConfiguration(data *models.Global, transactionID string, version int64) error {
+	if c.UseModelsValidation {
 		validationErr := data.Validate(strfmt.Default)
 		if validationErr != nil {
 			return NewConfError(ErrValidationError, validationErr.Error())

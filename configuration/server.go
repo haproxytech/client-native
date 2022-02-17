@@ -31,9 +31,22 @@ import (
 	"github.com/haproxytech/client-native/v3/models"
 )
 
+type Server interface {
+	GetServers(backend string, transactionID string) (int64, models.Servers, error)
+	GetServer(name string, backend string, transactionID string) (int64, *models.Server, error)
+	DeleteServer(name string, backend string, transactionID string, version int64) error
+	CreateServer(backend string, data *models.Server, transactionID string, version int64) error
+	EditServer(name string, backend string, data *models.Server, transactionID string, version int64) error
+	GetServerSwitchingRules(backend string, transactionID string) (int64, models.ServerSwitchingRules, error)
+	GetServerSwitchingRule(id int64, backend string, transactionID string) (int64, *models.ServerSwitchingRule, error)
+	DeleteServerSwitchingRule(id int64, backend string, transactionID string, version int64) error
+	CreateServerSwitchingRule(backend string, data *models.ServerSwitchingRule, transactionID string, version int64) error
+	EditServerSwitchingRule(id int64, backend string, data *models.ServerSwitchingRule, transactionID string, version int64) error
+}
+
 // GetServers returns configuration version and an array of
 // configured servers in the specified backend. Returns error on fail.
-func (c *Client) GetServers(backend string, transactionID string) (int64, models.Servers, error) {
+func (c *client) GetServers(backend string, transactionID string) (int64, models.Servers, error) {
 	p, err := c.GetParser(transactionID)
 	if err != nil {
 		return 0, nil, err
@@ -54,7 +67,7 @@ func (c *Client) GetServers(backend string, transactionID string) (int64, models
 
 // GetServer returns configuration version and a requested server
 // in the specified backend. Returns error on fail or if server does not exist.
-func (c *Client) GetServer(name string, backend string, transactionID string) (int64, *models.Server, error) {
+func (c *client) GetServer(name string, backend string, transactionID string) (int64, *models.Server, error) {
 	p, err := c.GetParser(transactionID)
 	if err != nil {
 		return 0, nil, err
@@ -75,7 +88,7 @@ func (c *Client) GetServer(name string, backend string, transactionID string) (i
 
 // DeleteServer deletes a server in configuration. One of version or transactionID is
 // mandatory. Returns error on fail, nil on success.
-func (c *Client) DeleteServer(name string, backend string, transactionID string, version int64) error {
+func (c *client) DeleteServer(name string, backend string, transactionID string, version int64) error {
 	p, t, err := c.loadDataForChange(transactionID, version)
 	if err != nil {
 		return err
@@ -100,8 +113,8 @@ func (c *Client) DeleteServer(name string, backend string, transactionID string,
 
 // CreateServer creates a server in configuration. One of version or transactionID is
 // mandatory. Returns error on fail, nil on success.
-func (c *Client) CreateServer(backend string, data *models.Server, transactionID string, version int64) error {
-	if c.UseValidation {
+func (c *client) CreateServer(backend string, data *models.Server, transactionID string, version int64) error {
+	if c.UseModelsValidation {
 		validationErr := data.Validate(strfmt.Default)
 		if validationErr != nil {
 			return NewConfError(ErrValidationError, validationErr.Error())
@@ -130,8 +143,8 @@ func (c *Client) CreateServer(backend string, data *models.Server, transactionID
 
 // EditServer edits a server in configuration. One of version or transactionID is
 // mandatory. Returns error on fail, nil on success.
-func (c *Client) EditServer(name string, backend string, data *models.Server, transactionID string, version int64) error {
-	if c.UseValidation {
+func (c *client) EditServer(name string, backend string, data *models.Server, transactionID string, version int64) error {
+	if c.UseModelsValidation {
 		validationErr := data.Validate(strfmt.Default)
 		if validationErr != nil {
 			return NewConfError(ErrValidationError, validationErr.Error())
@@ -213,7 +226,7 @@ func parseAddress(address string) (ipOrAddress string, port *int64) {
 	}
 }
 
-func ParseServer(ondiskServer types.Server) *models.Server { //nolint:gocyclo,cyclop,gocognit,maintidx
+func ParseServer(ondiskServer types.Server) *models.Server { //nolint:gocyclo,cyclop,gocognit
 	s := &models.Server{
 		Name: ondiskServer.Name,
 	}

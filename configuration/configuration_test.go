@@ -16,9 +16,12 @@
 package configuration
 
 import (
+	"context"
 	"fmt"
 	"os"
 	"testing"
+
+	"github.com/haproxytech/client-native/v3/configuration/options"
 )
 
 const testConf = `
@@ -296,8 +299,8 @@ const testPath = "/tmp/haproxy-test.cfg"
 
 //nolint:gochecknoglobals
 var (
-	client  *Client
-	version int64 = 1
+	clientTest Configuration
+	version    int64 = 1
 )
 
 func TestMain(m *testing.M) {
@@ -310,7 +313,7 @@ func TestMain(m *testing.M) {
 		}
 
 		defer func() { _ = deleteTestFile(testPath) }()
-		client, err = prepareClient(testPath)
+		clientTest, err = prepareClient(testPath)
 		if err != nil {
 			fmt.Println("Could not prepare client:", err.Error())
 			return 1
@@ -367,15 +370,16 @@ func deleteTestFile(path string) error {
 	return nil
 }
 
-func prepareClient(path string) (c *Client, err error) {
-	c = &Client{}
-	p := ClientParams{
-		ConfigurationFile:      path,
-		Haproxy:                "echo",
-		UseValidation:          true,
-		PersistentTransactions: true,
-		TransactionDir:         "/tmp/haproxy-test",
+func prepareClient(path string) (c Configuration, err error) {
+	c, err = New(context.Background(),
+		options.ConfigurationFile(path),
+		options.HAProxyBin("echo"),
+		options.UseModelsValidation,
+		options.UsePersistentTransactions,
+		options.TransactionsDir("/tmp/haproxy-test"),
+	)
+	if err != nil {
+		return nil, err
 	}
-	err = c.Init(p)
-	return
+	return c, nil
 }

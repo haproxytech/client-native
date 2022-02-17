@@ -128,7 +128,7 @@ func (c *SingleSpoe) DeleteMessage(scope, name, transactionID string, version in
 // CreateMessage creates a message in configuration. One of version or transactionID is
 // mandatory. Returns error on fail, nil on success.
 func (c *SingleSpoe) CreateMessage(scope string, data *models.SpoeMessage, transactionID string, version int64) error {
-	if c.Transaction.UseValidation {
+	if c.Transaction.UseModelsValidation {
 		validationErr := data.Validate(strfmt.Default)
 		if validationErr != nil {
 			return conf.NewConfError(conf.ErrValidationError, validationErr.Error())
@@ -164,7 +164,7 @@ func (c *SingleSpoe) CreateMessage(scope string, data *models.SpoeMessage, trans
 // EditMessage edits a message in configuration. One of version or transactionID is
 // mandatory. Returns error on fail, nil on success.
 func (c *SingleSpoe) EditMessage(scope string, data *models.SpoeMessage, name, transactionID string, version int64) error {
-	if c.Transaction.UseValidation {
+	if c.Transaction.UseModelsValidation {
 		validationErr := data.Validate(strfmt.Default)
 		if validationErr != nil {
 			return conf.NewConfError(conf.ErrValidationError, validationErr.Error())

@@ -28,9 +28,17 @@ import (
 	"github.com/haproxytech/client-native/v3/models"
 )
 
+type LogTarget interface {
+	GetLogTargets(parentType, parentName string, transactionID string) (int64, models.LogTargets, error)
+	GetLogTarget(id int64, parentType, parentName string, transactionID string) (int64, *models.LogTarget, error)
+	DeleteLogTarget(id int64, parentType string, parentName string, transactionID string, version int64) error
+	CreateLogTarget(parentType string, parentName string, data *models.LogTarget, transactionID string, version int64) error
+	EditLogTarget(id int64, parentType string, parentName string, data *models.LogTarget, transactionID string, version int64) error
+}
+
 // GetLogTargets returns configuration version and an array of
 // configured log targets in the specified parent. Returns error on fail.
-func (c *Client) GetLogTargets(parentType, parentName string, transactionID string) (int64, models.LogTargets, error) {
+func (c *client) GetLogTargets(parentType, parentName string, transactionID string) (int64, models.LogTargets, error) {
 	p, err := c.GetParser(transactionID)
 	if err != nil {
 		return 0, nil, err
@@ -51,7 +59,7 @@ func (c *Client) GetLogTargets(parentType, parentName string, transactionID stri
 
 // GetLogTarget returns configuration version and a requested log target
 // in the specified parent. Returns error on fail or if log target does not exist.
-func (c *Client) GetLogTarget(id int64, parentType, parentName string, transactionID string) (int64, *models.LogTarget, error) {
+func (c *client) GetLogTarget(id int64, parentType, parentName string, transactionID string) (int64, *models.LogTarget, error) {
 	p, err := c.GetParser(transactionID)
 	if err != nil {
 		return 0, nil, err
@@ -89,7 +97,7 @@ func (c *Client) GetLogTarget(id int64, parentType, parentName string, transacti
 
 // DeleteLogTarget deletes a log target in configuration. One of version or transactionID is
 // mandatory. Returns error on fail, nil on success.
-func (c *Client) DeleteLogTarget(id int64, parentType string, parentName string, transactionID string, version int64) error {
+func (c *client) DeleteLogTarget(id int64, parentType string, parentName string, transactionID string, version int64) error {
 	p, t, err := c.loadDataForChange(transactionID, version)
 	if err != nil {
 		return err
@@ -122,8 +130,8 @@ func (c *Client) DeleteLogTarget(id int64, parentType string, parentName string,
 
 // CreateLogTarget creates a log target in configuration. One of version or transactionID is
 // mandatory. Returns error on fail, nil on success.
-func (c *Client) CreateLogTarget(parentType string, parentName string, data *models.LogTarget, transactionID string, version int64) error {
-	if c.UseValidation {
+func (c *client) CreateLogTarget(parentType string, parentName string, data *models.LogTarget, transactionID string, version int64) error {
+	if c.UseModelsValidation {
 		validationErr := data.Validate(strfmt.Default)
 		if validationErr != nil {
 			return NewConfError(ErrValidationError, validationErr.Error())
@@ -161,8 +169,8 @@ func (c *Client) CreateLogTarget(parentType string, parentName string, data *mod
 
 // EditLogTarget edits a log target in configuration. One of version or transactionID is
 // mandatory. Returns error on fail, nil on success.
-func (c *Client) EditLogTarget(id int64, parentType string, parentName string, data *models.LogTarget, transactionID string, version int64) error {
-	if c.UseValidation {
+func (c *client) EditLogTarget(id int64, parentType string, parentName string, data *models.LogTarget, transactionID string, version int64) error {
+	if c.UseModelsValidation {
 		validationErr := data.Validate(strfmt.Default)
 		if validationErr != nil {
 			return NewConfError(ErrValidationError, validationErr.Error())

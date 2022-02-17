@@ -59,7 +59,7 @@ func (c *SingleSpoe) GetAgents(scope, transactionID string) (int64, models.SpoeA
 
 // GetAgent returns configuration version and a requested agent.
 // Returns error on fail or if agent does not exist.
-func (c *SingleSpoe) GetAgent(scope, name, transactionID string) (int64, *models.SpoeAgent, error) { //nolint:gocognit,gocyclo,cyclop,maintidx
+func (c *SingleSpoe) GetAgent(scope, name, transactionID string) (int64, *models.SpoeAgent, error) { //nolint:gocognit,gocyclo,cyclop
 	p, err := c.GetParser(transactionID)
 	if err != nil {
 		return 0, nil, err
@@ -297,7 +297,7 @@ func (c *SingleSpoe) DeleteAgent(scope, name, transactionID string, version int6
 // CreateAgent creates a agent in configuration. One of version or transactionID is
 // mandatory. Returns error on fail, nil on success.
 func (c *SingleSpoe) CreateAgent(scope string, data *models.SpoeAgent, transactionID string, version int64) error {
-	if c.Transaction.UseValidation {
+	if c.Transaction.UseModelsValidation {
 		validationErr := data.Validate(strfmt.Default)
 		if validationErr != nil {
 			return conf.NewConfError(conf.ErrValidationError, validationErr.Error())
@@ -333,7 +333,7 @@ func (c *SingleSpoe) CreateAgent(scope string, data *models.SpoeAgent, transacti
 // EditAgent edits a agent in configuration. One of version or transactionID is
 // mandatory. Returns error on fail, nil on success.
 func (c *SingleSpoe) EditAgent(scope string, data *models.SpoeAgent, transactionID string, version int64) error {
-	if c.Transaction.UseValidation {
+	if c.Transaction.UseModelsValidation {
 		validationErr := data.Validate(strfmt.Default)
 		if validationErr != nil {
 			return conf.NewConfError(conf.ErrValidationError, validationErr.Error())

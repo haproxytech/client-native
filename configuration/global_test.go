@@ -24,7 +24,7 @@ import (
 )
 
 func TestGetGlobal(t *testing.T) {
-	v, global, err := client.GetGlobalConfiguration("")
+	v, global, err := clientTest.GetGlobalConfiguration("")
 	if err != nil {
 		t.Error(err.Error())
 	}
@@ -149,7 +149,7 @@ func TestPutGlobal(t *testing.T) {
 		TuneOptions: &models.GlobalTuneOptions{},
 	}
 
-	err := client.PushGlobalConfiguration(g, "", version)
+	err := clientTest.PushGlobalConfiguration(g, "", version)
 
 	if err != nil {
 		t.Error(err.Error())
@@ -157,7 +157,7 @@ func TestPutGlobal(t *testing.T) {
 		version++
 	}
 
-	ver, global, err := client.GetGlobalConfiguration("")
+	ver, global, err := clientTest.GetGlobalConfiguration("")
 	if err != nil {
 		t.Error(err.Error())
 	}
@@ -172,7 +172,7 @@ func TestPutGlobal(t *testing.T) {
 		t.Error("Version not incremented!")
 	}
 
-	err = client.PushGlobalConfiguration(g, "", 55)
+	err = clientTest.PushGlobalConfiguration(g, "", 55)
 
 	if err == nil {
 		t.Error("Should have returned version conflict.")

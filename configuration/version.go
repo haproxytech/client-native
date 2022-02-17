@@ -15,8 +15,12 @@
 
 package configuration
 
+type Version interface {
+	GetConfigurationVersion(transactionID string) (int64, error)
+}
+
 // GetConfigurationVersion returns configuration version
-func (c *Client) GetConfigurationVersion(transactionID string) (int64, error) {
+func (c *client) GetConfigurationVersion(transactionID string) (int64, error) {
 	_, err := c.GetParser(transactionID)
 	if err != nil {
 		return 0, err

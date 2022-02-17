@@ -30,7 +30,7 @@ import (
 
 // GetBackendSwitchingRules returns configuration version and an array of
 // configured backend switching rules in the specified frontend. Returns error on fail.
-func (c *Client) GetBackendSwitchingRules(frontend string, transactionID string) (int64, models.BackendSwitchingRules, error) {
+func (c *client) GetBackendSwitchingRules(frontend string, transactionID string) (int64, models.BackendSwitchingRules, error) {
 	p, err := c.GetParser(transactionID)
 	if err != nil {
 		return 0, nil, err
@@ -51,7 +51,7 @@ func (c *Client) GetBackendSwitchingRules(frontend string, transactionID string)
 
 // GetBackendSwitchingRule returns configuration version and a requested backend switching rule
 // in the specified frontend. Returns error on fail or if backend switching rule does not exist.
-func (c *Client) GetBackendSwitchingRule(id int64, frontend string, transactionID string) (int64, *models.BackendSwitchingRule, error) {
+func (c *client) GetBackendSwitchingRule(id int64, frontend string, transactionID string) (int64, *models.BackendSwitchingRule, error) {
 	p, err := c.GetParser(transactionID)
 	if err != nil {
 		return 0, nil, err
@@ -75,7 +75,7 @@ func (c *Client) GetBackendSwitchingRule(id int64, frontend string, transactionI
 
 // DeleteBackendSwitchingRule deletes a backend switching rule in configuration. One of version or transactionID is
 // mandatory. Returns error on fail, nil on success.
-func (c *Client) DeleteBackendSwitchingRule(id int64, frontend string, transactionID string, version int64) error {
+func (c *client) DeleteBackendSwitchingRule(id int64, frontend string, transactionID string, version int64) error {
 	p, t, err := c.loadDataForChange(transactionID, version)
 	if err != nil {
 		return err
@@ -93,8 +93,8 @@ func (c *Client) DeleteBackendSwitchingRule(id int64, frontend string, transacti
 
 // CreateBackendSwitchingRule creates a backend switching rule in configuration. One of version or transactionID is
 // mandatory. Returns error on fail, nil on success.
-func (c *Client) CreateBackendSwitchingRule(frontend string, data *models.BackendSwitchingRule, transactionID string, version int64) error {
-	if c.UseValidation {
+func (c *client) CreateBackendSwitchingRule(frontend string, data *models.BackendSwitchingRule, transactionID string, version int64) error {
+	if c.UseModelsValidation {
 		validationErr := data.Validate(strfmt.Default)
 		if validationErr != nil {
 			return NewConfError(ErrValidationError, validationErr.Error())
@@ -119,8 +119,8 @@ func (c *Client) CreateBackendSwitchingRule(frontend string, data *models.Backen
 
 // EditBackendSwitchingRule edits a backend switching rule in configuration. One of version or transactionID is
 // mandatory. Returns error on fail, nil on success.
-func (c *Client) EditBackendSwitchingRule(id int64, frontend string, data *models.BackendSwitchingRule, transactionID string, version int64) error {
-	if c.UseValidation {
+func (c *client) EditBackendSwitchingRule(id int64, frontend string, data *models.BackendSwitchingRule, transactionID string, version int64) error {
+	if c.UseModelsValidation {
 		validationErr := data.Validate(strfmt.Default)
 		if validationErr != nil {
 			return NewConfError(ErrValidationError, validationErr.Error())

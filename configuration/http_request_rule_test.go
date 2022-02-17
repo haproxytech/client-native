@@ -24,7 +24,7 @@ import (
 )
 
 func TestGetHTTPRequestRules(t *testing.T) { //nolint:gocognit,gocyclo
-	v, hRules, err := client.GetHTTPRequestRules("frontend", "test", "")
+	v, hRules, err := clientTest.GetHTTPRequestRules("frontend", "test", "")
 	if err != nil {
 		t.Error(err.Error())
 	}
@@ -560,7 +560,7 @@ func TestGetHTTPRequestRules(t *testing.T) { //nolint:gocognit,gocyclo
 		}
 	}
 
-	_, hRules, err = client.GetHTTPRequestRules("backend", "test", "")
+	_, hRules, err = clientTest.GetHTTPRequestRules("backend", "test", "")
 	if err != nil {
 		t.Error(err.Error())
 	}
@@ -589,7 +589,7 @@ func TestGetHTTPRequestRules(t *testing.T) { //nolint:gocognit,gocyclo
 		}
 	}
 
-	_, hRules, err = client.GetHTTPRequestRules("backend", "test_2", "")
+	_, hRules, err = clientTest.GetHTTPRequestRules("backend", "test_2", "")
 	if err != nil {
 		t.Error(err.Error())
 	}
@@ -599,7 +599,7 @@ func TestGetHTTPRequestRules(t *testing.T) { //nolint:gocognit,gocyclo
 }
 
 func TestGetHTTPRequestRule(t *testing.T) {
-	v, r, err := client.GetHTTPRequestRule(0, "frontend", "test", "")
+	v, r, err := clientTest.GetHTTPRequestRule(0, "frontend", "test", "")
 	if err != nil {
 		t.Error(err.Error())
 	}
@@ -626,12 +626,12 @@ func TestGetHTTPRequestRule(t *testing.T) {
 		t.Error(err.Error())
 	}
 
-	_, _, err = client.GetHTTPRequestRule(3, "backend", "test_2", "")
+	_, _, err = clientTest.GetHTTPRequestRule(3, "backend", "test_2", "")
 	if err == nil {
 		t.Error("Should throw error, non existant HTTP Request Rule")
 	}
 
-	_, r, err = client.GetHTTPRequestRule(0, "frontend", "test_2", "")
+	_, r, err = clientTest.GetHTTPRequestRule(0, "frontend", "test_2", "")
 	if err != nil {
 		t.Error("Should throw error, non existant HTTP Request Rule")
 	}
@@ -642,7 +642,7 @@ func TestGetHTTPRequestRule(t *testing.T) {
 		t.Errorf("%v: Wrong len parameter for capture: %v", *r.Index, r.CaptureLen)
 	}
 
-	_, r, err = client.GetHTTPRequestRule(1, "frontend", "test_2", "")
+	_, r, err = clientTest.GetHTTPRequestRule(1, "frontend", "test_2", "")
 	if err != nil {
 		t.Error("Should throw error, non existant HTTP Request Rule")
 	}
@@ -664,14 +664,14 @@ func TestCreateEditDeleteHTTPRequestRule(t *testing.T) {
 		RedirType:  "location",
 	}
 
-	err := client.CreateHTTPRequestRule("frontend", "test", r, "", version)
+	err := clientTest.CreateHTTPRequestRule("frontend", "test", r, "", version)
 	if err != nil {
 		t.Error(err.Error())
 	} else {
 		version++
 	}
 
-	v, ondiskR, err := client.GetHTTPRequestRule(1, "frontend", "test", "")
+	v, ondiskR, err := clientTest.GetHTTPRequestRule(1, "frontend", "test", "")
 	if err != nil {
 		t.Error(err.Error())
 	}
@@ -695,14 +695,14 @@ func TestCreateEditDeleteHTTPRequestRule(t *testing.T) {
 		RedirType:  "scheme",
 	}
 
-	err = client.EditHTTPRequestRule(1, "frontend", "test", r, "", version)
+	err = clientTest.EditHTTPRequestRule(1, "frontend", "test", r, "", version)
 	if err != nil {
 		t.Error(err.Error())
 	} else {
 		version++
 	}
 
-	v, ondiskR, err = client.GetHTTPRequestRule(1, "frontend", "test", "")
+	v, ondiskR, err = clientTest.GetHTTPRequestRule(1, "frontend", "test", "")
 	if err != nil {
 		t.Error(err.Error())
 	}
@@ -718,23 +718,23 @@ func TestCreateEditDeleteHTTPRequestRule(t *testing.T) {
 	}
 
 	// TestDeleteHTTPRequest
-	err = client.DeleteHTTPRequestRule(36, "frontend", "test", "", version)
+	err = clientTest.DeleteHTTPRequestRule(36, "frontend", "test", "", version)
 	if err != nil {
 		t.Error(err.Error())
 	} else {
 		version++
 	}
 
-	if v, _ := client.GetVersion(""); v != version {
+	if v, _ := clientTest.GetVersion(""); v != version {
 		t.Error("Version not incremented")
 	}
 
-	_, _, err = client.GetHTTPRequestRule(36, "frontend", "test", "")
+	_, _, err = clientTest.GetHTTPRequestRule(36, "frontend", "test", "")
 	if err == nil {
 		t.Error("DeleteHTTPRequestRule failed, HTTP Request Rule 31 still exists")
 	}
 
-	err = client.DeleteHTTPRequestRule(2, "backend", "test_2", "", version)
+	err = clientTest.DeleteHTTPRequestRule(2, "backend", "test_2", "", version)
 	if err == nil {
 		t.Error("Should throw error, non existant HTTP Request Rule")
 		version++

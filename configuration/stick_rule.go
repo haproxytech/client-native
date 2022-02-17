@@ -28,9 +28,17 @@ import (
 	"github.com/haproxytech/client-native/v3/models"
 )
 
+type StickRule interface {
+	GetStickRules(backend string, transactionID string) (int64, models.StickRules, error)
+	GetStickRule(id int64, backend string, transactionID string) (int64, *models.StickRule, error)
+	DeleteStickRule(id int64, backend string, transactionID string, version int64) error
+	CreateStickRule(backend string, data *models.StickRule, transactionID string, version int64) error
+	EditStickRule(id int64, backend string, data *models.StickRule, transactionID string, version int64) error
+}
+
 // GetStickRules returns configuration version and an array of
 // configured stick rules in the specified backend. Returns error on fail.
-func (c *Client) GetStickRules(backend string, transactionID string) (int64, models.StickRules, error) {
+func (c *client) GetStickRules(backend string, transactionID string) (int64, models.StickRules, error) {
 	p, err := c.GetParser(transactionID)
 	if err != nil {
 		return 0, nil, err
@@ -51,7 +59,7 @@ func (c *Client) GetStickRules(backend string, transactionID string) (int64, mod
 
 // GetStickRule returns configuration version and a requested stick rule
 // in the specified backend. Returns error on fail or if stick rule does not exist.
-func (c *Client) GetStickRule(id int64, backend string, transactionID string) (int64, *models.StickRule, error) {
+func (c *client) GetStickRule(id int64, backend string, transactionID string) (int64, *models.StickRule, error) {
 	p, err := c.GetParser(transactionID)
 	if err != nil {
 		return 0, nil, err
@@ -75,7 +83,7 @@ func (c *Client) GetStickRule(id int64, backend string, transactionID string) (i
 
 // DeleteStickRule deletes a stick rule in configuration. One of version or transactionID is
 // mandatory. Returns error on fail, nil on success.
-func (c *Client) DeleteStickRule(id int64, backend string, transactionID string, version int64) error {
+func (c *client) DeleteStickRule(id int64, backend string, transactionID string, version int64) error {
 	p, t, err := c.loadDataForChange(transactionID, version)
 	if err != nil {
 		return err
@@ -93,8 +101,8 @@ func (c *Client) DeleteStickRule(id int64, backend string, transactionID string,
 
 // CreateStickRule creates a stick rule in configuration. One of version or transactionID is
 // mandatory. Returns error on fail, nil on success.
-func (c *Client) CreateStickRule(backend string, data *models.StickRule, transactionID string, version int64) error {
-	if c.UseValidation {
+func (c *client) CreateStickRule(backend string, data *models.StickRule, transactionID string, version int64) error {
+	if c.UseModelsValidation {
 		validationErr := data.Validate(strfmt.Default)
 		if validationErr != nil {
 			return NewConfError(ErrValidationError, validationErr.Error())
@@ -117,8 +125,8 @@ func (c *Client) CreateStickRule(backend string, data *models.StickRule, transac
 
 // EditStickRule edits a stick rule in configuration. One of version or transactionID is
 // mandatory. Returns error on fail, nil on success.
-func (c *Client) EditStickRule(id int64, backend string, data *models.StickRule, transactionID string, version int64) error {
-	if c.UseValidation {
+func (c *client) EditStickRule(id int64, backend string, data *models.StickRule, transactionID string, version int64) error {
+	if c.UseModelsValidation {
 		validationErr := data.Validate(strfmt.Default)
 		if validationErr != nil {
 			return NewConfError(ErrValidationError, validationErr.Error())

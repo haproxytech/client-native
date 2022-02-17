@@ -24,7 +24,7 @@ import (
 )
 
 func TestGetFilters(t *testing.T) { //nolint:gocognit
-	v, filters, err := client.GetFilters("frontend", "test", "")
+	v, filters, err := clientTest.GetFilters("frontend", "test", "")
 	if err != nil {
 		t.Error(err.Error())
 	}
@@ -71,7 +71,7 @@ func TestGetFilters(t *testing.T) { //nolint:gocognit
 		}
 	}
 
-	_, filters, err = client.GetFilters("backend", "test_2", "")
+	_, filters, err = clientTest.GetFilters("backend", "test_2", "")
 	if err != nil {
 		t.Error(err.Error())
 	}
@@ -81,7 +81,7 @@ func TestGetFilters(t *testing.T) { //nolint:gocognit
 }
 
 func TestGetFilter(t *testing.T) {
-	v, f, err := client.GetFilter(0, "frontend", "test", "")
+	v, f, err := clientTest.GetFilter(0, "frontend", "test", "")
 	if err != nil {
 		t.Error(err.Error())
 	}
@@ -111,7 +111,7 @@ func TestGetFilter(t *testing.T) {
 		t.Error(err.Error())
 	}
 
-	_, _, err = client.GetFilter(3, "backend", "test2", "")
+	_, _, err = clientTest.GetFilter(3, "backend", "test2", "")
 	if err == nil {
 		t.Error("Should throw error, non existant filter")
 	}
@@ -127,14 +127,14 @@ func TestCreateEditDeleteFilter(t *testing.T) {
 		SpoeConfig: "test.cfg",
 	}
 
-	err := client.CreateFilter("frontend", "test", f, "", version)
+	err := clientTest.CreateFilter("frontend", "test", f, "", version)
 	if err != nil {
 		t.Error(err.Error())
 	} else {
 		version++
 	}
 
-	v, ondiskF, err := client.GetFilter(1, "frontend", "test", "")
+	v, ondiskF, err := clientTest.GetFilter(1, "frontend", "test", "")
 	if err != nil {
 		t.Error(err.Error())
 	}
@@ -157,14 +157,14 @@ func TestCreateEditDeleteFilter(t *testing.T) {
 		SpoeEngine: "bla",
 	}
 
-	err = client.EditFilter(1, "frontend", "test", f, "", version)
+	err = clientTest.EditFilter(1, "frontend", "test", f, "", version)
 	if err != nil {
 		t.Error(err.Error())
 	} else {
 		version++
 	}
 
-	v, ondiskF, err = client.GetFilter(1, "frontend", "test", "")
+	v, ondiskF, err = clientTest.GetFilter(1, "frontend", "test", "")
 	if err != nil {
 		t.Error(err.Error())
 	}
@@ -180,23 +180,23 @@ func TestCreateEditDeleteFilter(t *testing.T) {
 	}
 
 	// TestDeleteFilter
-	err = client.DeleteFilter(3, "frontend", "test", "", version)
+	err = clientTest.DeleteFilter(3, "frontend", "test", "", version)
 	if err != nil {
 		t.Error(err.Error())
 	} else {
 		version++
 	}
 
-	if v, _ := client.GetVersion(""); v != version {
+	if v, _ := clientTest.GetVersion(""); v != version {
 		t.Error("Version not incremented")
 	}
 
-	_, _, err = client.GetFilter(3, "frontend", "test", "")
+	_, _, err = clientTest.GetFilter(3, "frontend", "test", "")
 	if err == nil {
 		t.Error("DeleteFilter failed, filter 3 still exists")
 	}
 
-	err = client.DeleteFilter(1, "backend", "test_2", "", version)
+	err = clientTest.DeleteFilter(1, "backend", "test_2", "", version)
 	if err == nil {
 		t.Error("Should throw error, non existant filter")
 		version++

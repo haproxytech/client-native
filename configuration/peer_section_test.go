@@ -24,7 +24,7 @@ import (
 )
 
 func TestGetPeerSections(t *testing.T) {
-	v, peerSections, err := client.GetPeerSections("")
+	v, peerSections, err := clientTest.GetPeerSections("")
 	if err != nil {
 		t.Error(err.Error())
 	}
@@ -43,7 +43,7 @@ func TestGetPeerSections(t *testing.T) {
 }
 
 func TestGetPeerSection(t *testing.T) {
-	v, l, err := client.GetPeerSection("mycluster", "")
+	v, l, err := clientTest.GetPeerSection("mycluster", "")
 	if err != nil {
 		t.Error(err.Error())
 	}
@@ -61,7 +61,7 @@ func TestGetPeerSection(t *testing.T) {
 		t.Error(err.Error())
 	}
 
-	_, _, err = client.GetPeerSection("doesnotexist", "")
+	_, _, err = clientTest.GetPeerSection("doesnotexist", "")
 	if err == nil {
 		t.Error("Should throw error, non existant peer section")
 	}
@@ -71,14 +71,14 @@ func TestCreateEditDeletePeerSection(t *testing.T) {
 	f := &models.PeerSection{
 		Name: "testcluster",
 	}
-	err := client.CreatePeerSection(f, "", version)
+	err := clientTest.CreatePeerSection(f, "", version)
 	if err != nil {
 		t.Error(err.Error())
 	} else {
 		version++
 	}
 
-	v, peerSection, err := client.GetPeerSection("testcluster", "")
+	v, peerSection, err := clientTest.GetPeerSection("testcluster", "")
 	if err != nil {
 		t.Error(err.Error())
 	}
@@ -93,24 +93,24 @@ func TestCreateEditDeletePeerSection(t *testing.T) {
 		t.Errorf("Version %v returned, expected %v", v, version)
 	}
 
-	err = client.CreatePeerSection(f, "", version)
+	err = clientTest.CreatePeerSection(f, "", version)
 	if err == nil {
 		t.Error("Should throw error peerSection already exists")
 		version++
 	}
 
-	err = client.DeletePeerSection("testcluster", "", version)
+	err = clientTest.DeletePeerSection("testcluster", "", version)
 	if err != nil {
 		t.Error(err.Error())
 	} else {
 		version++
 	}
 
-	if v, _ := client.GetVersion(""); v != version {
+	if v, _ := clientTest.GetVersion(""); v != version {
 		t.Error("Version not incremented")
 	}
 
-	err = client.DeletePeerSection("testcluster", "", 999999)
+	err = clientTest.DeletePeerSection("testcluster", "", 999999)
 	if err != nil {
 		if confErr, ok := err.(*ConfError); ok {
 			if confErr.Code() != ErrVersionMismatch {
@@ -120,12 +120,12 @@ func TestCreateEditDeletePeerSection(t *testing.T) {
 			t.Error("Should throw ErrVersionMismatch error")
 		}
 	}
-	_, _, err = client.GetPeerSection("testcluster", "")
+	_, _, err = clientTest.GetPeerSection("testcluster", "")
 	if err == nil {
 		t.Error("DeletePeerSection failed, peerSection testcluster still exists")
 	}
 
-	err = client.DeletePeerSection("doesnotexist", "", version)
+	err = clientTest.DeletePeerSection("doesnotexist", "", version)
 	if err == nil {
 		t.Error("Should throw error, non existant peerSection")
 		version++

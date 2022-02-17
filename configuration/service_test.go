@@ -32,14 +32,14 @@ const (
 
 func TestService(t *testing.T) {
 	serviceSuit := ServiceTestSuit{
-		client: client,
+		client: clientTest,
 	}
 	suite.Run(t, &serviceSuit)
 }
 
 type ServiceTestSuit struct {
 	suite.Suite
-	client        *Client
+	client        Configuration
 	transactionID string
 }
 
@@ -78,7 +78,7 @@ func (s *ServiceTestSuit) TestService() {
 
 type ServiceInitiationSuite struct {
 	suite.Suite
-	client        *Client
+	client        Configuration
 	service       *Service
 	serviceName   string
 	transactionID string
@@ -122,7 +122,7 @@ func (s *ServiceInitiationSuite) TestFailCreatingIfExists() {
 }
 
 func (s *ServiceInitiationSuite) TestRecreatingAfterDeletion() {
-	client.DeleteService(s.serviceName)
+	clientTest.DeleteService(s.serviceName)
 	service, err := s.client.NewService(s.serviceName, ScalingParams{})
 	s.NotNil(service)
 	s.Nil(err)
@@ -173,7 +173,7 @@ func (s *ServiceInitiationSuite) TestLoadExistingBackend() {
 }
 
 func (s *ServiceInitiationSuite) createExistingService(servers models.Servers) error {
-	err := client.CreateBackend(&models.Backend{
+	err := clientTest.CreateBackend(&models.Backend{
 		Name: s.serviceName,
 	}, s.transactionID, 0)
 	if err != nil {
@@ -205,7 +205,7 @@ func (s *ServiceInitiationSuite) createExistingService(servers models.Servers) e
 
 type ServiceUpdateSuit struct {
 	suite.Suite
-	client        *Client
+	client        Configuration
 	serviceName   string
 	transactionID string
 	service       *Service

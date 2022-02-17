@@ -29,7 +29,7 @@ import (
 
 type MajorVersionInRuntime struct {
 	suite.Suite
-	client          *client_native.HAProxyClient
+	client          client_native.HAProxyClient
 	tmpDir          string
 	haproxy_version string
 	cmd             *exec.Cmd

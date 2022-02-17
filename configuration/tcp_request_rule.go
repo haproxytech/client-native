@@ -34,9 +34,17 @@ import (
 	"github.com/haproxytech/client-native/v3/models"
 )
 
+type TCPRequestRule interface {
+	GetTCPRequestRules(parentType, parentName string, transactionID string) (int64, models.TCPRequestRules, error)
+	GetTCPRequestRule(id int64, parentType, parentName string, transactionID string) (int64, *models.TCPRequestRule, error)
+	DeleteTCPRequestRule(id int64, parentType string, parentName string, transactionID string, version int64) error
+	CreateTCPRequestRule(parentType string, parentName string, data *models.TCPRequestRule, transactionID string, version int64) error
+	EditTCPRequestRule(id int64, parentType string, parentName string, data *models.TCPRequestRule, transactionID string, version int64) error
+}
+
 // GetTCPRequestRules returns configuration version and an array of
 // configured TCP request rules in the specified parent. Returns error on fail.
-func (c *Client) GetTCPRequestRules(parentType, parentName string, transactionID string) (int64, models.TCPRequestRules, error) {
+func (c *client) GetTCPRequestRules(parentType, parentName string, transactionID string) (int64, models.TCPRequestRules, error) {
 	p, err := c.GetParser(transactionID)
 	if err != nil {
 		return 0, nil, err
@@ -57,7 +65,7 @@ func (c *Client) GetTCPRequestRules(parentType, parentName string, transactionID
 
 // GetTCPRequestRule returns configuration version and a requested tcp request rule
 // in the specified parent. Returns error on fail or if http request rule does not exist.
-func (c *Client) GetTCPRequestRule(id int64, parentType, parentName string, transactionID string) (int64, *models.TCPRequestRule, error) {
+func (c *client) GetTCPRequestRule(id int64, parentType, parentName string, transactionID string) (int64, *models.TCPRequestRule, error) {
 	p, err := c.GetParser(transactionID)
 	if err != nil {
 		return 0, nil, err
@@ -91,7 +99,7 @@ func (c *Client) GetTCPRequestRule(id int64, parentType, parentName string, tran
 
 // DeleteTCPRequestRule deletes a tcp request rule in configuration. One of version or transactionID is
 // mandatory. Returns error on fail, nil on success.
-func (c *Client) DeleteTCPRequestRule(id int64, parentType string, parentName string, transactionID string, version int64) error {
+func (c *client) DeleteTCPRequestRule(id int64, parentType string, parentName string, transactionID string, version int64) error {
 	p, t, err := c.loadDataForChange(transactionID, version)
 	if err != nil {
 		return err
@@ -116,8 +124,8 @@ func (c *Client) DeleteTCPRequestRule(id int64, parentType string, parentName st
 
 // CreateTCPRequestRule creates a tcp request rule in configuration. One of version or transactionID is
 // mandatory. Returns error on fail, nil on success.
-func (c *Client) CreateTCPRequestRule(parentType string, parentName string, data *models.TCPRequestRule, transactionID string, version int64) error {
-	if c.UseValidation {
+func (c *client) CreateTCPRequestRule(parentType string, parentName string, data *models.TCPRequestRule, transactionID string, version int64) error {
+	if c.UseModelsValidation {
 		validationErr := data.Validate(strfmt.Default)
 		if validationErr != nil {
 			return NewConfError(ErrValidationError, validationErr.Error())
@@ -154,8 +162,8 @@ func (c *Client) CreateTCPRequestRule(parentType string, parentName string, data
 // EditTCPRequestRule edits a tcp request rule in configuration. One of version or transactionID is
 // mandatory. Returns error on fail, nil on success.
 // nolint:dupl
-func (c *Client) EditTCPRequestRule(id int64, parentType string, parentName string, data *models.TCPRequestRule, transactionID string, version int64) error {
-	if c.UseValidation {
+func (c *client) EditTCPRequestRule(id int64, parentType string, parentName string, data *models.TCPRequestRule, transactionID string, version int64) error {
+	if c.UseModelsValidation {
 		validationErr := data.Validate(strfmt.Default)
 		if validationErr != nil {
 			return NewConfError(ErrValidationError, validationErr.Error())

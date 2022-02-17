@@ -28,9 +28,17 @@ import (
 	"github.com/haproxytech/client-native/v3/models"
 )
 
+type ACL interface {
+	GetACLs(parentType, parentName string, transactionID string, aclName ...string) (int64, models.Acls, error)
+	GetACL(id int64, parentType, parentName string, transactionID string) (int64, *models.ACL, error)
+	DeleteACL(id int64, parentType string, parentName string, transactionID string, version int64) error
+	CreateACL(parentType string, parentName string, data *models.ACL, transactionID string, version int64) error
+	EditACL(id int64, parentType string, parentName string, data *models.ACL, transactionID string, version int64) error
+}
+
 // GetACLs returns configuration version and an array of
 // configured ACL lines in the specified parent. Returns error on fail.
-func (c *Client) GetACLs(parentType, parentName string, transactionID string, aclName ...string) (int64, models.Acls, error) {
+func (c *client) GetACLs(parentType, parentName string, transactionID string, aclName ...string) (int64, models.Acls, error) {
 	p, err := c.GetParser(transactionID)
 	if err != nil {
 		return 0, nil, err
@@ -51,7 +59,7 @@ func (c *Client) GetACLs(parentType, parentName string, transactionID string, ac
 
 // GetACL returns configuration version and a requested ACL line
 // in the specified parent. Returns error on fail or if ACL line does not exist.
-func (c *Client) GetACL(id int64, parentType, parentName string, transactionID string) (int64, *models.ACL, error) {
+func (c *client) GetACL(id int64, parentType, parentName string, transactionID string) (int64, *models.ACL, error) {
 	p, err := c.GetParser(transactionID)
 	if err != nil {
 		return 0, nil, err
@@ -82,7 +90,7 @@ func (c *Client) GetACL(id int64, parentType, parentName string, transactionID s
 
 // DeleteACL deletes a ACL line in configuration. One of version or transactionID is
 // mandatory. Returns error on fail, nil on success.
-func (c *Client) DeleteACL(id int64, parentType string, parentName string, transactionID string, version int64) error {
+func (c *client) DeleteACL(id int64, parentType string, parentName string, transactionID string, version int64) error {
 	p, t, err := c.loadDataForChange(transactionID, version)
 	if err != nil {
 		return err
@@ -107,8 +115,8 @@ func (c *Client) DeleteACL(id int64, parentType string, parentName string, trans
 
 // CreateACL creates a ACL line in configuration. One of version or transactionID is
 // mandatory. Returns error on fail, nil on success.
-func (c *Client) CreateACL(parentType string, parentName string, data *models.ACL, transactionID string, version int64) error {
-	if c.UseValidation {
+func (c *client) CreateACL(parentType string, parentName string, data *models.ACL, transactionID string, version int64) error {
+	if c.UseModelsValidation {
 		validationErr := data.Validate(strfmt.Default)
 		if validationErr != nil {
 			return NewConfError(ErrValidationError, validationErr.Error())
@@ -140,8 +148,8 @@ func (c *Client) CreateACL(parentType string, parentName string, data *models.AC
 // EditACL edits a ACL line in configuration. One of version or transactionID is
 // mandatory. Returns error on fail, nil on success.
 // nolint:dupl
-func (c *Client) EditACL(id int64, parentType string, parentName string, data *models.ACL, transactionID string, version int64) error {
-	if c.UseValidation {
+func (c *client) EditACL(id int64, parentType string, parentName string, data *models.ACL, transactionID string, version int64) error {
+	if c.UseModelsValidation {
 		validationErr := data.Validate(strfmt.Default)
 		if validationErr != nil {
 			return NewConfError(ErrValidationError, validationErr.Error())

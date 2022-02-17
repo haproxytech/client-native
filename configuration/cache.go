@@ -29,9 +29,17 @@ import (
 	"github.com/haproxytech/client-native/v3/models"
 )
 
+type Cache interface {
+	GetCaches(transactionID string) (int64, models.Caches, error)
+	GetCache(name string, transactionID string) (int64, *models.Cache, error)
+	DeleteCache(name string, transactionID string, version int64) error
+	EditCache(name string, data *models.Cache, transactionID string, version int64) error
+	CreateCache(data *models.Cache, transactionID string, version int64) error
+}
+
 // GetCaches returns configuration version and an array of
 // configured caches. Returns error on fail.
-func (c *Client) GetCaches(transactionID string) (int64, models.Caches, error) {
+func (c *client) GetCaches(transactionID string) (int64, models.Caches, error) {
 	p, err := c.GetParser(transactionID)
 	if err != nil {
 		return 0, nil, err
@@ -60,7 +68,7 @@ func (c *Client) GetCaches(transactionID string) (int64, models.Caches, error) {
 
 // GetCache returns configuration version and a requested cache.
 // Returns error on fail or if cache does not exist.
-func (c *Client) GetCache(name string, transactionID string) (int64, *models.Cache, error) {
+func (c *client) GetCache(name string, transactionID string) (int64, *models.Cache, error) {
 	p, err := c.GetParser(transactionID)
 	if err != nil {
 		return 0, nil, err
@@ -85,7 +93,7 @@ func (c *Client) GetCache(name string, transactionID string) (int64, *models.Cac
 
 // DeleteCache deletes a cache in configuration. One of version or transactionID is
 // mandatory. Returns error on fail, nil on success.
-func (c *Client) DeleteCache(name string, transactionID string, version int64) error {
+func (c *client) DeleteCache(name string, transactionID string, version int64) error {
 	p, t, err := c.loadDataForChange(transactionID, version)
 	if err != nil {
 		return err
@@ -109,8 +117,8 @@ func (c *Client) DeleteCache(name string, transactionID string, version int64) e
 
 // EditCache edits a cache in configuration. One of version or transactionID is
 // mandatory. Returns error on fail, nil on success.
-func (c *Client) EditCache(name string, data *models.Cache, transactionID string, version int64) error {
-	if c.UseValidation {
+func (c *client) EditCache(name string, data *models.Cache, transactionID string, version int64) error {
+	if c.UseModelsValidation {
 		validationErr := data.Validate(strfmt.Default)
 		if validationErr != nil {
 			return NewConfError(ErrValidationError, validationErr.Error())
@@ -140,8 +148,8 @@ func (c *Client) EditCache(name string, data *models.Cache, transactionID string
 
 // CreateCache creates a cache in configuration. One of version or transactionID is
 // mandatory. Returns error on fail, nil on success.
-func (c *Client) CreateCache(data *models.Cache, transactionID string, version int64) error {
-	if c.UseValidation {
+func (c *client) CreateCache(data *models.Cache, transactionID string, version int64) error {
+	if c.UseModelsValidation {
 		validationErr := data.Validate(strfmt.Default)
 		if validationErr != nil {
 			return NewConfError(ErrValidationError, validationErr.Error())

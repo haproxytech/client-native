@@ -26,9 +26,14 @@ import (
 	"strings"
 )
 
+type Raw interface {
+	GetRawConfiguration(transactionID string, version int64) (int64, string, error)
+	PostRawConfiguration(config *string, version int64, skipVersionCheck bool, onlyValidate ...bool) error
+}
+
 // GetRawConfiguration returns configuration version and a
 // string containing raw config file
-func (c *Client) GetRawConfiguration(transactionID string, version int64) (int64, string, error) {
+func (c *client) GetRawConfiguration(transactionID string, version int64) (int64, string, error) {
 	config := c.ConfigurationFile
 	var err error
 	if transactionID != "" && version != 0 {
@@ -78,7 +83,7 @@ func (c *Client) GetRawConfiguration(transactionID string, version int64) (int64
 
 // PostRawConfiguration pushes given string to the config file if the version
 // matches
-func (c *Client) PostRawConfiguration(config *string, version int64, skipVersionCheck bool, onlyValidate ...bool) error {
+func (c *client) PostRawConfiguration(config *string, version int64, skipVersionCheck bool, onlyValidate ...bool) error {
 	if len(onlyValidate) > 0 && onlyValidate[0] {
 		f, err := ioutil.TempFile("/tmp", "onlyvalidate")
 		if err != nil {
@@ -158,7 +163,7 @@ func (c *Client) PostRawConfiguration(config *string, version int64, skipVersion
 	return nil
 }
 
-func (c *Client) validateConfigFile(confFile string) error {
+func (c *client) validateConfigFile(confFile string) error {
 	// #nosec G204
 	cmd := exec.Command(c.Haproxy)
 	cmd.Args = append(cmd.Args, "-c")

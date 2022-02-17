@@ -22,9 +22,14 @@ import (
 	"github.com/haproxytech/client-native/v3/models"
 )
 
+type Defaults interface {
+	GetDefaultsConfiguration(transactionID string) (int64, *models.Defaults, error)
+	PushDefaultsConfiguration(data *models.Defaults, transactionID string, version int64) error
+}
+
 // GetDefaultsConfiguration returns configuration version and a
 // struct representing Defaults configuration
-func (c *Client) GetDefaultsConfiguration(transactionID string) (int64, *models.Defaults, error) {
+func (c *client) GetDefaultsConfiguration(transactionID string) (int64, *models.Defaults, error) {
 	p, err := c.GetParser(transactionID)
 	if err != nil {
 		return 0, nil, err
@@ -43,8 +48,8 @@ func (c *Client) GetDefaultsConfiguration(transactionID string) (int64, *models.
 
 // PushDefaultsConfiguration pushes a Defaults config struct to global
 // config file
-func (c *Client) PushDefaultsConfiguration(data *models.Defaults, transactionID string, version int64) error {
-	if c.UseValidation {
+func (c *client) PushDefaultsConfiguration(data *models.Defaults, transactionID string, version int64) error {
+	if c.UseModelsValidation {
 		validationErr := data.Validate(strfmt.Default)
 		if validationErr != nil {
 			return NewConfError(ErrValidationError, validationErr.Error())

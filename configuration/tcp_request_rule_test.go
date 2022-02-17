@@ -24,7 +24,7 @@ import (
 )
 
 func TestGetTCPRequestRules(t *testing.T) { //nolint:gocognit,gocyclo
-	v, tRules, err := client.GetTCPRequestRules("frontend", "test", "")
+	v, tRules, err := clientTest.GetTCPRequestRules("frontend", "test", "")
 	if err != nil {
 		t.Error(err.Error())
 	}
@@ -160,7 +160,7 @@ func TestGetTCPRequestRules(t *testing.T) { //nolint:gocognit,gocyclo
 		}
 	}
 
-	_, tRules, err = client.GetTCPRequestRules("backend", "test_2", "")
+	_, tRules, err = clientTest.GetTCPRequestRules("backend", "test_2", "")
 	if err != nil {
 		t.Error(err.Error())
 	}
@@ -170,7 +170,7 @@ func TestGetTCPRequestRules(t *testing.T) { //nolint:gocognit,gocyclo
 }
 
 func TestGetTCPRequestRule(t *testing.T) {
-	v, r, err := client.GetTCPRequestRule(0, "frontend", "test", "")
+	v, r, err := clientTest.GetTCPRequestRule(0, "frontend", "test", "")
 	if err != nil {
 		t.Error(err.Error())
 	}
@@ -197,7 +197,7 @@ func TestGetTCPRequestRule(t *testing.T) {
 		t.Error(err.Error())
 	}
 
-	_, _, err = client.GetTCPRequestRule(3, "backend", "test_2", "")
+	_, _, err = clientTest.GetTCPRequestRule(3, "backend", "test_2", "")
 	if err == nil {
 		t.Error("Should throw error, non existant TCP Request Rule")
 	}
@@ -213,14 +213,14 @@ func TestCreateEditDeleteTCPRequestRule(t *testing.T) {
 		Timeout: &tOut,
 	}
 
-	err := client.CreateTCPRequestRule("frontend", "test", r, "", version)
+	err := clientTest.CreateTCPRequestRule("frontend", "test", r, "", version)
 	if err != nil {
 		t.Error(err.Error())
 	} else {
 		version++
 	}
 
-	v, ondiskR, err := client.GetTCPRequestRule(4, "frontend", "test", "")
+	v, ondiskR, err := clientTest.GetTCPRequestRule(4, "frontend", "test", "")
 	if err != nil {
 		t.Error(err.Error())
 	}
@@ -244,14 +244,14 @@ func TestCreateEditDeleteTCPRequestRule(t *testing.T) {
 		CondTest: "FALSE",
 	}
 
-	err = client.EditTCPRequestRule(4, "frontend", "test", r, "", version)
+	err = clientTest.EditTCPRequestRule(4, "frontend", "test", r, "", version)
 	if err != nil {
 		t.Error(err.Error())
 	} else {
 		version++
 	}
 
-	v, ondiskR, err = client.GetTCPRequestRule(4, "frontend", "test", "")
+	v, ondiskR, err = clientTest.GetTCPRequestRule(4, "frontend", "test", "")
 	if err != nil {
 		t.Error(err.Error())
 	}
@@ -267,23 +267,23 @@ func TestCreateEditDeleteTCPRequestRule(t *testing.T) {
 	}
 
 	// TestDeleteTCPRequest
-	err = client.DeleteTCPRequestRule(8, "frontend", "test", "", version)
+	err = clientTest.DeleteTCPRequestRule(8, "frontend", "test", "", version)
 	if err != nil {
 		t.Error(err.Error())
 	} else {
 		version++
 	}
 
-	if v, _ := client.GetVersion(""); v != version {
+	if v, _ := clientTest.GetVersion(""); v != version {
 		t.Error("Version not incremented")
 	}
 
-	_, _, err = client.GetTCPRequestRule(8, "frontend", "test", "")
+	_, _, err = clientTest.GetTCPRequestRule(8, "frontend", "test", "")
 	if err == nil {
 		t.Error("DeleteTCPRequestRule failed, TCP Request Rule 6 still exists")
 	}
 
-	err = client.DeleteTCPRequestRule(2, "backend", "test_2", "", version)
+	err = clientTest.DeleteTCPRequestRule(2, "backend", "test_2", "", version)
 	if err == nil {
 		t.Error("Should throw error, non existant TCP Request Rule")
 		version++

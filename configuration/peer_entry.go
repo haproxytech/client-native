@@ -28,9 +28,17 @@ import (
 	"github.com/haproxytech/client-native/v3/models"
 )
 
+type PeerEntry interface {
+	GetPeerEntries(peerSection string, transactionID string) (int64, models.PeerEntries, error)
+	GetPeerEntry(name string, peerSection string, transactionID string) (int64, *models.PeerEntry, error)
+	DeletePeerEntry(name string, peerSection string, transactionID string, version int64) error
+	CreatePeerEntry(peerSection string, data *models.PeerEntry, transactionID string, version int64) error
+	EditPeerEntry(name string, peerSection string, data *models.PeerEntry, transactionID string, version int64) error
+}
+
 // GetPeerEntries returns configuration version and an array of
 // configured binds in the specified peers section. Returns error on fail.
-func (c *Client) GetPeerEntries(peerSection string, transactionID string) (int64, models.PeerEntries, error) {
+func (c *client) GetPeerEntries(peerSection string, transactionID string) (int64, models.PeerEntries, error) {
 	p, err := c.GetParser(transactionID)
 	if err != nil {
 		return 0, nil, err
@@ -51,7 +59,7 @@ func (c *Client) GetPeerEntries(peerSection string, transactionID string) (int64
 
 // GetPeerEntry returns configuration version and a requested peer entry
 // in the specified peer section. Returns error on fail or if bind does not exist.
-func (c *Client) GetPeerEntry(name string, peerSection string, transactionID string) (int64, *models.PeerEntry, error) {
+func (c *client) GetPeerEntry(name string, peerSection string, transactionID string) (int64, *models.PeerEntry, error) {
 	p, err := c.GetParser(transactionID)
 	if err != nil {
 		return 0, nil, err
@@ -72,7 +80,7 @@ func (c *Client) GetPeerEntry(name string, peerSection string, transactionID str
 
 // DeletePeerEntry deletes an peer entry in configuration. One of version or transactionID is
 // mandatory. Returns error on fail, nil on success.
-func (c *Client) DeletePeerEntry(name string, peerSection string, transactionID string, version int64) error {
+func (c *client) DeletePeerEntry(name string, peerSection string, transactionID string, version int64) error {
 	p, t, err := c.loadDataForChange(transactionID, version)
 	if err != nil {
 		return err
@@ -96,8 +104,8 @@ func (c *Client) DeletePeerEntry(name string, peerSection string, transactionID 
 
 // CreatePeerEntry creates a peer entry in configuration. One of version or transactionID is
 // mandatory. Returns error on fail, nil on success.
-func (c *Client) CreatePeerEntry(peerSection string, data *models.PeerEntry, transactionID string, version int64) error {
-	if c.UseValidation {
+func (c *client) CreatePeerEntry(peerSection string, data *models.PeerEntry, transactionID string, version int64) error {
+	if c.UseModelsValidation {
 		validationErr := data.Validate(strfmt.Default)
 		if validationErr != nil {
 			return NewConfError(ErrValidationError, validationErr.Error())
@@ -127,8 +135,8 @@ func (c *Client) CreatePeerEntry(peerSection string, data *models.PeerEntry, tra
 
 // EditPeerEntry edits a peer entry in configuration. One of version or transactionID is
 // mandatory. Returns error on fail, nil on success.
-func (c *Client) EditPeerEntry(name string, peerSection string, data *models.PeerEntry, transactionID string, version int64) error {
-	if c.UseValidation {
+func (c *client) EditPeerEntry(name string, peerSection string, data *models.PeerEntry, transactionID string, version int64) error {
+	if c.UseModelsValidation {
 		validationErr := data.Validate(strfmt.Default)
 		if validationErr != nil {
 			return NewConfError(ErrValidationError, validationErr.Error())

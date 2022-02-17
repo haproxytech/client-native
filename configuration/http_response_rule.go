@@ -33,9 +33,17 @@ import (
 	"github.com/haproxytech/client-native/v3/models"
 )
 
+type HTTPResponseRule interface {
+	GetHTTPResponseRules(parentType, parentName string, transactionID string) (int64, models.HTTPResponseRules, error)
+	GetHTTPResponseRule(id int64, parentType, parentName string, transactionID string) (int64, *models.HTTPResponseRule, error)
+	DeleteHTTPResponseRule(id int64, parentType string, parentName string, transactionID string, version int64) error
+	CreateHTTPResponseRule(parentType string, parentName string, data *models.HTTPResponseRule, transactionID string, version int64) error
+	EditHTTPResponseRule(id int64, parentType string, parentName string, data *models.HTTPResponseRule, transactionID string, version int64) error
+}
+
 // GetHTTPResponseRules returns configuration version and an array of
 // configured http response rules in the specified parent. Returns error on fail.
-func (c *Client) GetHTTPResponseRules(parentType, parentName string, transactionID string) (int64, models.HTTPResponseRules, error) {
+func (c *client) GetHTTPResponseRules(parentType, parentName string, transactionID string) (int64, models.HTTPResponseRules, error) {
 	p, err := c.GetParser(transactionID)
 	if err != nil {
 		return 0, nil, err
@@ -56,7 +64,7 @@ func (c *Client) GetHTTPResponseRules(parentType, parentName string, transaction
 
 // GetHTTPResponseRule returns configuration version and a response http response rule
 // in the specified parent. Returns error on fail or if http response rule does not exist.
-func (c *Client) GetHTTPResponseRule(id int64, parentType, parentName string, transactionID string) (int64, *models.HTTPResponseRule, error) {
+func (c *client) GetHTTPResponseRule(id int64, parentType, parentName string, transactionID string) (int64, *models.HTTPResponseRule, error) {
 	p, err := c.GetParser(transactionID)
 	if err != nil {
 		return 0, nil, err
@@ -87,7 +95,7 @@ func (c *Client) GetHTTPResponseRule(id int64, parentType, parentName string, tr
 
 // DeleteHTTPResponseRule deletes a http response rule in configuration. One of version or transactionID is
 // mandatory. Returns error on fail, nil on success.
-func (c *Client) DeleteHTTPResponseRule(id int64, parentType string, parentName string, transactionID string, version int64) error {
+func (c *client) DeleteHTTPResponseRule(id int64, parentType string, parentName string, transactionID string, version int64) error {
 	p, t, err := c.loadDataForChange(transactionID, version)
 	if err != nil {
 		return err
@@ -113,8 +121,8 @@ func (c *Client) DeleteHTTPResponseRule(id int64, parentType string, parentName 
 
 // CreateHTTPResponseRule creates a http response rule in configuration. One of version or transactionID is
 // mandatory. Returns error on fail, nil on success.
-func (c *Client) CreateHTTPResponseRule(parentType string, parentName string, data *models.HTTPResponseRule, transactionID string, version int64) error {
-	if c.UseValidation {
+func (c *client) CreateHTTPResponseRule(parentType string, parentName string, data *models.HTTPResponseRule, transactionID string, version int64) error {
+	if c.UseModelsValidation {
 		validationErr := data.Validate(strfmt.Default)
 		if validationErr != nil {
 			return NewConfError(ErrValidationError, validationErr.Error())
@@ -149,8 +157,8 @@ func (c *Client) CreateHTTPResponseRule(parentType string, parentName string, da
 // EditHTTPResponseRule edits a http response rule in configuration. One of version or transactionID is
 // mandatory. Returns error on fail, nil on success.
 // nolint:dupl
-func (c *Client) EditHTTPResponseRule(id int64, parentType string, parentName string, data *models.HTTPResponseRule, transactionID string, version int64) error {
-	if c.UseValidation {
+func (c *client) EditHTTPResponseRule(id int64, parentType string, parentName string, data *models.HTTPResponseRule, transactionID string, version int64) error {
+	if c.UseModelsValidation {
 		validationErr := data.Validate(strfmt.Default)
 		if validationErr != nil {
 			return NewConfError(ErrValidationError, validationErr.Error())

@@ -87,23 +87,23 @@ func TestClient_GetACLs(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, got1, err := client.GetACLs(tt.args.parentType, tt.args.parentName, tt.args.transactionID, tt.args.aclName...)
+			got, got1, err := clientTest.GetACLs(tt.args.parentType, tt.args.parentName, tt.args.transactionID, tt.args.aclName...)
 			if (err != nil) != tt.wantErr {
-				t.Errorf("Client.GetACLs() error = %v, wantErr %v", err, tt.wantErr)
+				t.Errorf("clientTest.GetACLs() error = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
 			if got != tt.want {
-				t.Errorf("Client.GetACLs() got = %v, want %v", got, tt.want)
+				t.Errorf("clientTest.GetACLs() got = %v, want %v", got, tt.want)
 			}
 			if !assert.EqualValues(t, got1, tt.want1) {
-				t.Errorf("Client.GetACLs() got1 = %v, want %v", got1, tt.want1)
+				t.Errorf("clientTest.GetACLs() got1 = %v, want %v", got1, tt.want1)
 			}
 		})
 	}
 }
 
 func TestGetACL(t *testing.T) {
-	v, acl, err := client.GetACL(0, "frontend", "test", "")
+	v, acl, err := clientTest.GetACL(0, "frontend", "test", "")
 	if err != nil {
 		t.Error(err.Error())
 	}
@@ -130,17 +130,17 @@ func TestGetACL(t *testing.T) {
 		t.Error(err.Error())
 	}
 
-	_, _, err = client.GetACL(3, "backend", "test_2", "")
+	_, _, err = clientTest.GetACL(3, "backend", "test_2", "")
 	if err == nil {
 		t.Error("Should throw error, non existent ACL")
 	}
 
-	_, _, err = client.GetACL(100, "frontend", "fake", "")
+	_, _, err = clientTest.GetACL(100, "frontend", "fake", "")
 	if err == nil {
 		t.Error("Should throw error, non existent frontend and ACL")
 	}
 
-	_, _, err = client.GetACL(100, "backend", "fake", "")
+	_, _, err = clientTest.GetACL(100, "backend", "fake", "")
 	if err == nil {
 		t.Error("Should throw error, non existent backend and ACL")
 	}
@@ -157,14 +157,14 @@ func TestCreateEditDeleteACL(t *testing.T) {
 		Value:     "lt 2",
 	}
 
-	err := client.CreateACL("frontend", "test", r, "", version)
+	err := clientTest.CreateACL("frontend", "test", r, "", version)
 	if err != nil {
 		t.Error(err.Error())
 	} else {
 		version++
 	}
 
-	v, ondiskR, err := client.GetACL(1, "frontend", "test", "")
+	v, ondiskR, err := clientTest.GetACL(1, "frontend", "test", "")
 	if err != nil {
 		t.Error(err.Error())
 	}
@@ -187,14 +187,14 @@ func TestCreateEditDeleteACL(t *testing.T) {
 		Value:     "lt 4",
 	}
 
-	err = client.EditACL(1, "frontend", "test", r, "", version)
+	err = clientTest.EditACL(1, "frontend", "test", r, "", version)
 	if err != nil {
 		t.Error(err.Error())
 	} else {
 		version++
 	}
 
-	v, ondiskR, err = client.GetACL(1, "frontend", "test", "")
+	v, ondiskR, err = clientTest.GetACL(1, "frontend", "test", "")
 	if err != nil {
 		t.Error(err.Error())
 	}
@@ -210,23 +210,23 @@ func TestCreateEditDeleteACL(t *testing.T) {
 	}
 
 	// TestDeleteACL
-	err = client.DeleteACL(3, "frontend", "test", "", version)
+	err = clientTest.DeleteACL(3, "frontend", "test", "", version)
 	if err != nil {
 		t.Error(err.Error())
 	} else {
 		version++
 	}
 
-	if v, _ := client.GetVersion(""); v != version {
+	if v, _ := clientTest.GetVersion(""); v != version {
 		t.Error("Version not incremented")
 	}
 
-	_, _, err = client.GetACL(3, "frontend", "test", "")
+	_, _, err = clientTest.GetACL(3, "frontend", "test", "")
 	if err == nil {
 		t.Error("DeleteACL failed, ACL Rule 3 still exists")
 	}
 
-	err = client.DeleteACL(2, "backend", "test_2", "", version)
+	err = clientTest.DeleteACL(2, "backend", "test_2", "", version)
 	if err == nil {
 		t.Error("Should throw error, non existent ACL Rule")
 		version++

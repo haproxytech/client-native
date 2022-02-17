@@ -44,12 +44,17 @@ type serviceNode struct {
 
 // Service represents the maping from a discovery service into a configuration backend.
 type Service struct {
-	client        *Client
+	client        Configuration
 	name          string
 	nodes         []*serviceNode
 	usedNames     map[string]struct{}
 	transactionID string
 	scaling       ScalingParams
+}
+
+type ServiceI interface {
+	NewService(name string, scaling ScalingParams) (*Service, error)
+	DeleteService(name string)
 }
 
 // ScalingParams defines parameter for dynamic server scaling of the Service backend.
@@ -61,7 +66,7 @@ type ScalingParams struct {
 
 // NewService creates and returns a new Service instance.
 // name indicates the name of the service and only one Service instance with the given name can be created.
-func (c *Client) NewService(name string, scaling ScalingParams) (*Service, error) {
+func (c *client) NewService(name string, scaling ScalingParams) (*Service, error) {
 	c.clientMu.Lock()
 	defer c.clientMu.Unlock()
 	if _, ok := c.services[name]; ok {
@@ -79,7 +84,7 @@ func (c *Client) NewService(name string, scaling ScalingParams) (*Service, error
 }
 
 // DeleteService removes the Service instance specified by name from the client.
-func (c *Client) DeleteService(name string) {
+func (c *client) DeleteService(name string) {
 	c.clientMu.Lock()
 	defer c.clientMu.Unlock()
 	delete(c.services, name)

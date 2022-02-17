@@ -24,7 +24,7 @@ import (
 )
 
 func TestGetLogTargets(t *testing.T) {
-	v, lTargets, err := client.GetLogTargets("frontend", "test", "")
+	v, lTargets, err := clientTest.GetLogTargets("frontend", "test", "")
 	if err != nil {
 		t.Error(err.Error())
 	}
@@ -65,7 +65,7 @@ func TestGetLogTargets(t *testing.T) {
 		}
 	}
 
-	_, lTargets, err = client.GetLogTargets("backend", "test_2", "")
+	_, lTargets, err = clientTest.GetLogTargets("backend", "test_2", "")
 	if err != nil {
 		t.Error(err.Error())
 	}
@@ -75,7 +75,7 @@ func TestGetLogTargets(t *testing.T) {
 }
 
 func TestGetLogTarget(t *testing.T) {
-	v, l, err := client.GetLogTarget(2, "frontend", "test", "")
+	v, l, err := clientTest.GetLogTarget(2, "frontend", "test", "")
 	if err != nil {
 		t.Error(err.Error())
 	}
@@ -105,7 +105,7 @@ func TestGetLogTarget(t *testing.T) {
 		t.Error(err.Error())
 	}
 
-	_, _, err = client.GetLogTarget(3, "backend", "test_2", "")
+	_, _, err = clientTest.GetLogTarget(3, "backend", "test_2", "")
 	if err == nil {
 		t.Error("Should throw error, non existant Log Target")
 	}
@@ -123,14 +123,14 @@ func TestCreateEditDeleteLogTarget(t *testing.T) {
 		Level:    "notice",
 	}
 
-	err := client.CreateLogTarget("frontend", "test", r, "", version)
+	err := clientTest.CreateLogTarget("frontend", "test", r, "", version)
 	if err != nil {
 		t.Error(err.Error())
 	} else {
 		version++
 	}
 
-	v, ondiskR, err := client.GetLogTarget(3, "frontend", "test", "")
+	v, ondiskR, err := clientTest.GetLogTarget(3, "frontend", "test", "")
 	if err != nil {
 		t.Error(err.Error())
 	}
@@ -153,14 +153,14 @@ func TestCreateEditDeleteLogTarget(t *testing.T) {
 		Facility: "local1",
 	}
 
-	err = client.EditLogTarget(3, "frontend", "test", r, "", version)
+	err = clientTest.EditLogTarget(3, "frontend", "test", r, "", version)
 	if err != nil {
 		t.Error(err.Error())
 	} else {
 		version++
 	}
 
-	v, ondiskR, err = client.GetLogTarget(3, "frontend", "test", "")
+	v, ondiskR, err = clientTest.GetLogTarget(3, "frontend", "test", "")
 	if err != nil {
 		t.Error(err.Error())
 	}
@@ -176,23 +176,23 @@ func TestCreateEditDeleteLogTarget(t *testing.T) {
 	}
 
 	// TestDeleteFilter
-	err = client.DeleteLogTarget(3, "frontend", "test", "", version)
+	err = clientTest.DeleteLogTarget(3, "frontend", "test", "", version)
 	if err != nil {
 		t.Error(err.Error())
 	} else {
 		version++
 	}
 
-	if v, _ := client.GetVersion(""); v != version {
+	if v, _ := clientTest.GetVersion(""); v != version {
 		t.Error("Version not incremented")
 	}
 
-	_, _, err = client.GetLogTarget(3, "frontend", "test", "")
+	_, _, err = clientTest.GetLogTarget(3, "frontend", "test", "")
 	if err == nil {
 		t.Error("DeleteLogTarget failed, Log Target 3 still exists")
 	}
 
-	err = client.DeleteLogTarget(2, "backend", "test_2", "", version)
+	err = clientTest.DeleteLogTarget(2, "backend", "test_2", "", version)
 	if err == nil {
 		t.Error("Should throw error, non existant Log Target")
 		version++

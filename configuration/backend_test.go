@@ -24,7 +24,7 @@ import (
 )
 
 func TestGetBackends(t *testing.T) { //nolint:gocognit,gocyclo
-	v, backends, err := client.GetBackends("")
+	v, backends, err := clientTest.GetBackends("")
 	if err != nil {
 		t.Error(err.Error())
 	}
@@ -108,7 +108,7 @@ func TestGetBackends(t *testing.T) { //nolint:gocognit,gocyclo
 }
 
 func TestGetBackend(t *testing.T) {
-	v, b, err := client.GetBackend("test", "")
+	v, b, err := clientTest.GetBackend("test", "")
 	if err != nil {
 		t.Error(err.Error())
 	}
@@ -209,7 +209,7 @@ func TestGetBackend(t *testing.T) {
 		t.Error(err.Error())
 	}
 
-	_, _, err = client.GetBackend("doesnotexist", "")
+	_, _, err = clientTest.GetBackend("doesnotexist", "")
 	if err == nil {
 		t.Error("Should throw error, non existent bck")
 	}
@@ -271,14 +271,14 @@ func TestCreateEditDeleteBackend(t *testing.T) {
 		},
 	}
 
-	err := client.CreateBackend(b, "", version)
+	err := clientTest.CreateBackend(b, "", version)
 	if err != nil {
 		t.Error(err.Error())
 	} else {
 		version++
 	}
 
-	v, backend, err := client.GetBackend("created", "")
+	v, backend, err := clientTest.GetBackend("created", "")
 	if err != nil {
 		t.Error(err.Error())
 	}
@@ -305,7 +305,7 @@ func TestCreateEditDeleteBackend(t *testing.T) {
 		t.Errorf("Version %v returned, expected %v", v, version)
 	}
 
-	err = client.CreateBackend(b, "", version)
+	err = clientTest.CreateBackend(b, "", version)
 	if err == nil {
 		t.Error("Should throw error bck already exists")
 		version++
@@ -407,18 +407,18 @@ func TestCreateEditDeleteBackend(t *testing.T) {
 	}
 
 	// TestDeleteBackend
-	err = client.DeleteBackend("created", "", version)
+	err = clientTest.DeleteBackend("created", "", version)
 	if err != nil {
 		t.Error(err.Error())
 	} else {
 		version++
 	}
 
-	if v, _ := client.GetVersion(""); v != version {
+	if v, _ := clientTest.GetVersion(""); v != version {
 		t.Error("Version not incremented")
 	}
 
-	err = client.DeleteBackend("created", "", 999999999)
+	err = clientTest.DeleteBackend("created", "", 999999999)
 	if err != nil {
 		if confErr, ok := err.(*ConfError); ok {
 			if confErr.Code() != ErrVersionMismatch {
@@ -429,12 +429,12 @@ func TestCreateEditDeleteBackend(t *testing.T) {
 		}
 	}
 
-	_, _, err = client.GetBackend("created", "")
+	_, _, err = clientTest.GetBackend("created", "")
 	if err == nil {
 		t.Error("DeleteBackend failed, bck test still exists")
 	}
 
-	err = client.DeleteBackend("doesnotexist", "", version)
+	err = clientTest.DeleteBackend("doesnotexist", "", version)
 	if err == nil {
 		t.Error("Should throw error, non existent bck")
 		version++
@@ -442,14 +442,14 @@ func TestCreateEditDeleteBackend(t *testing.T) {
 }
 
 func testBackendUpdate(b *models.Backend, t *testing.T) error {
-	err := client.EditBackend("created", b, "", version)
+	err := clientTest.EditBackend("created", b, "", version)
 	if err != nil {
 		t.Error(err.Error())
 	} else {
 		version++
 	}
 
-	v, backend, err := client.GetBackend("created", "")
+	v, backend, err := clientTest.GetBackend("created", "")
 	if err != nil {
 		return err
 	}

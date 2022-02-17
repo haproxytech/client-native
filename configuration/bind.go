@@ -30,9 +30,17 @@ import (
 	"github.com/haproxytech/client-native/v3/models"
 )
 
+type Bind interface {
+	GetBinds(frontend string, transactionID string) (int64, models.Binds, error)
+	GetBind(name string, frontend string, transactionID string) (int64, *models.Bind, error)
+	DeleteBind(name string, frontend string, transactionID string, version int64) error
+	CreateBind(frontend string, data *models.Bind, transactionID string, version int64) error
+	EditBind(name string, frontend string, data *models.Bind, transactionID string, version int64) error
+}
+
 // GetBinds returns configuration version and an array of
 // configured binds in the specified frontend. Returns error on fail.
-func (c *Client) GetBinds(frontend string, transactionID string) (int64, models.Binds, error) {
+func (c *client) GetBinds(frontend string, transactionID string) (int64, models.Binds, error) {
 	p, err := c.GetParser(transactionID)
 	if err != nil {
 		return 0, nil, err
@@ -53,7 +61,7 @@ func (c *Client) GetBinds(frontend string, transactionID string) (int64, models.
 
 // GetBind returns configuration version and a requested bind
 // in the specified frontend. Returns error on fail or if bind does not exist.
-func (c *Client) GetBind(name string, frontend string, transactionID string) (int64, *models.Bind, error) {
+func (c *client) GetBind(name string, frontend string, transactionID string) (int64, *models.Bind, error) {
 	p, err := c.GetParser(transactionID)
 	if err != nil {
 		return 0, nil, err
@@ -74,7 +82,7 @@ func (c *Client) GetBind(name string, frontend string, transactionID string) (in
 
 // DeleteBind deletes a bind in configuration. One of version or transactionID is
 // mandatory. Returns error on fail, nil on success.
-func (c *Client) DeleteBind(name string, frontend string, transactionID string, version int64) error {
+func (c *client) DeleteBind(name string, frontend string, transactionID string, version int64) error {
 	p, t, err := c.loadDataForChange(transactionID, version)
 	if err != nil {
 		return err
@@ -98,8 +106,8 @@ func (c *Client) DeleteBind(name string, frontend string, transactionID string, 
 
 // CreateBind creates a bind in configuration. One of version or transactionID is
 // mandatory. Returns error on fail, nil on success.
-func (c *Client) CreateBind(frontend string, data *models.Bind, transactionID string, version int64) error {
-	if c.UseValidation {
+func (c *client) CreateBind(frontend string, data *models.Bind, transactionID string, version int64) error {
+	if c.UseModelsValidation {
 		validationErr := data.Validate(strfmt.Default)
 		if validationErr != nil {
 			return NewConfError(ErrValidationError, validationErr.Error())
@@ -134,8 +142,8 @@ func (c *Client) CreateBind(frontend string, data *models.Bind, transactionID st
 
 // EditBind edits a bind in configuration. One of version or transactionID is
 // mandatory. Returns error on fail, nil on success.
-func (c *Client) EditBind(name string, frontend string, data *models.Bind, transactionID string, version int64) error {
-	if c.UseValidation {
+func (c *client) EditBind(name string, frontend string, data *models.Bind, transactionID string, version int64) error {
+	if c.UseModelsValidation {
 		validationErr := data.Validate(strfmt.Default)
 		if validationErr != nil {
 			return NewConfError(ErrValidationError, validationErr.Error())

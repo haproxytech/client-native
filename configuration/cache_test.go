@@ -25,7 +25,7 @@ import (
 )
 
 func TestGetCaches(t *testing.T) {
-	v, caches, err := client.GetCaches("")
+	v, caches, err := clientTest.GetCaches("")
 	if err != nil {
 		t.Error(err.Error())
 	}
@@ -59,7 +59,7 @@ func TestGetCaches(t *testing.T) {
 }
 
 func TestGetCache(t *testing.T) {
-	v, c, err := client.GetCache("test", "")
+	v, c, err := clientTest.GetCache("test", "")
 	if err != nil {
 		t.Error(err.Error())
 	}
@@ -92,7 +92,7 @@ func TestGetCache(t *testing.T) {
 		t.Error(err.Error())
 	}
 
-	_, _, err = client.GetCache("doesnotexist", "")
+	_, _, err = clientTest.GetCache("doesnotexist", "")
 	if err == nil {
 		t.Error("Should throw error, non existant caches section")
 	}
@@ -108,14 +108,14 @@ func TestCreateEditDeleteCache(t *testing.T) {
 		ProcessVary:         misc.BoolP(false),
 		TotalMaxSize:        2048,
 	}
-	err := client.CreateCache(f, "", version)
+	err := clientTest.CreateCache(f, "", version)
 	if err != nil {
 		t.Error(err.Error())
 	} else {
 		version++
 	}
 
-	v, cache, err := client.GetCache("created_cache", "")
+	v, cache, err := clientTest.GetCache("created_cache", "")
 	if err != nil {
 		t.Error(err.Error())
 	}
@@ -130,7 +130,7 @@ func TestCreateEditDeleteCache(t *testing.T) {
 		t.Errorf("Version %v returned, expected %v", v, version)
 	}
 
-	err = client.CreateCache(f, "", version)
+	err = clientTest.CreateCache(f, "", version)
 	if err == nil {
 		t.Error("Should throw error cache already exists")
 		version++
@@ -141,14 +141,14 @@ func TestCreateEditDeleteCache(t *testing.T) {
 		Name:         misc.StringP("created_cache"),
 		TotalMaxSize: 1024,
 	}
-	err = client.EditCache("created_cache", f, "", version)
+	err = clientTest.EditCache("created_cache", f, "", version)
 	if err != nil {
 		t.Error(err.Error())
 	} else {
 		version++
 	}
 
-	v, cache, err = client.GetCache("created_cache", "")
+	v, cache, err = clientTest.GetCache("created_cache", "")
 	if err != nil {
 		t.Error(err.Error())
 	}
@@ -164,18 +164,18 @@ func TestCreateEditDeleteCache(t *testing.T) {
 	}
 
 	// delete cache
-	err = client.DeleteCache("created_cache", "", version)
+	err = clientTest.DeleteCache("created_cache", "", version)
 	if err != nil {
 		t.Error(err.Error())
 	} else {
 		version++
 	}
 
-	if v, _ := client.GetVersion(""); v != version {
+	if v, _ := clientTest.GetVersion(""); v != version {
 		t.Error("Version not incremented")
 	}
 
-	err = client.DeleteCache("created_cache", "", 999999)
+	err = clientTest.DeleteCache("created_cache", "", 999999)
 	if err != nil {
 		if confErr, ok := err.(*ConfError); ok {
 			if confErr.Code() != ErrVersionMismatch {
@@ -185,12 +185,12 @@ func TestCreateEditDeleteCache(t *testing.T) {
 			t.Error("Should throw ErrVersionMismatch error")
 		}
 	}
-	_, _, err = client.GetCache("created_cache", "")
+	_, _, err = clientTest.GetCache("created_cache", "")
 	if err == nil {
 		t.Error("DeleteCache failed, cache created_cache still exists")
 	}
 
-	err = client.DeleteCache("doesnotexist", "", version)
+	err = clientTest.DeleteCache("doesnotexist", "", version)
 	if err == nil {
 		t.Error("Should throw error, non existant cache")
 		version++

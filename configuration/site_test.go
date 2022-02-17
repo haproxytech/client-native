@@ -27,7 +27,7 @@ import (
 )
 
 func TestGetSites(t *testing.T) { //nolint:gocognit,gocyclo
-	v, sites, err := client.GetSites("")
+	v, sites, err := clientTest.GetSites("")
 	if err != nil {
 		t.Error(err.Error())
 	}
@@ -168,7 +168,7 @@ func TestGetSites(t *testing.T) { //nolint:gocognit,gocyclo
 }
 
 func TestGetSite(t *testing.T) { //nolint:gocognit,gocyclo
-	v, s, err := client.GetSite("test", "")
+	v, s, err := clientTest.GetSite("test", "")
 	if err != nil {
 		t.Error(err.Error())
 	}
@@ -328,14 +328,14 @@ func TestCreateEditDeleteSite(t *testing.T) {
 		},
 	}
 
-	err := client.CreateSite(s, "", version)
+	err := clientTest.CreateSite(s, "", version)
 	if err != nil {
 		t.Error(err.Error())
 	} else {
 		version++
 	}
 
-	v, site, err := client.GetSite("created", "")
+	v, site, err := clientTest.GetSite("created", "")
 	if err != nil {
 		t.Error(err.Error())
 	}
@@ -350,7 +350,7 @@ func TestCreateEditDeleteSite(t *testing.T) {
 		t.Errorf("Version %v returned, expected %v", v, version)
 	}
 
-	err = client.CreateSite(s, "", version)
+	err = clientTest.CreateSite(s, "", version)
 	if err == nil {
 		t.Error("Should throw error site already exists")
 		version++
@@ -405,14 +405,14 @@ func TestCreateEditDeleteSite(t *testing.T) {
 		},
 	}
 
-	err = client.EditSite("created", s, "", version)
+	err = clientTest.EditSite("created", s, "", version)
 	if err != nil {
 		t.Error(err.Error())
 	} else {
 		version++
 	}
 
-	v, site, err = client.GetSite("created", "")
+	v, site, err = clientTest.GetSite("created", "")
 	if err != nil {
 		t.Error(err.Error())
 	}
@@ -428,23 +428,23 @@ func TestCreateEditDeleteSite(t *testing.T) {
 	}
 
 	// TestDeleteSite
-	err = client.DeleteSite("created", "", version)
+	err = clientTest.DeleteSite("created", "", version)
 	if err != nil {
 		t.Error(err.Error())
 	} else {
 		version++
 	}
 
-	if v, _ := client.GetVersion(""); v != version {
+	if v, _ := clientTest.GetVersion(""); v != version {
 		t.Error("Version not incremented")
 	}
 
-	_, _, err = client.GetSite("created", "")
+	_, _, err = clientTest.GetSite("created", "")
 	if err == nil {
 		t.Error("DeleteSite failed, site test still exists")
 	}
 
-	err = client.DeleteSite("doesnotexist", "", version)
+	err = clientTest.DeleteSite("doesnotexist", "", version)
 	if err == nil {
 		t.Error("Should throw error, non existant site")
 	}

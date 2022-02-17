@@ -33,9 +33,17 @@ import (
 	"github.com/haproxytech/client-native/v3/models"
 )
 
+type TCPCheck interface {
+	GetTCPChecks(parentType, parentName string, transactionID string) (int64, models.TCPChecks, error)
+	GetTCPCheck(id int64, parentType string, parentName string, transactionID string) (int64, *models.TCPCheck, error)
+	DeleteTCPCheck(id int64, parentType string, parentName string, transactionID string, version int64) error
+	CreateTCPCheck(parentType string, parentName string, data *models.TCPCheck, transactionID string, version int64) error
+	EditTCPCheck(id int64, parentType string, parentName string, data *models.TCPCheck, transactionID string, version int64) error
+}
+
 // GetTCPChecks returns configuration version and an array of configured tcp-checks in the specified parent.
 // Returns error on fail.
-func (c *Client) GetTCPChecks(parentType, parentName string, transactionID string) (int64, models.TCPChecks, error) {
+func (c *client) GetTCPChecks(parentType, parentName string, transactionID string) (int64, models.TCPChecks, error) {
 	p, err := c.GetParser(transactionID)
 	if err != nil {
 		return 0, nil, err
@@ -56,7 +64,7 @@ func (c *Client) GetTCPChecks(parentType, parentName string, transactionID strin
 
 // GetTCPCheck returns configuration version and the requested tcp check in the specified parent.
 // Returns error on fail or if tcp check does not exist
-func (c *Client) GetTCPCheck(id int64, parentType string, parentName string, transactionID string) (int64, *models.TCPCheck, error) {
+func (c *client) GetTCPCheck(id int64, parentType string, parentName string, transactionID string) (int64, *models.TCPCheck, error) {
 	p, err := c.GetParser(transactionID)
 	if err != nil {
 		return 0, nil, err
@@ -89,7 +97,7 @@ func (c *Client) GetTCPCheck(id int64, parentType string, parentName string, tra
 
 // DeleteTCPCheck deletes a tcp check in the configuration. One of version or transactionID is mandatory.
 // Returns error on fail, nil on success.
-func (c *Client) DeleteTCPCheck(id int64, parentType string, parentName string, transactionID string, version int64) error {
+func (c *client) DeleteTCPCheck(id int64, parentType string, parentName string, transactionID string, version int64) error {
 	p, t, err := c.loadDataForChange(transactionID, version)
 	if err != nil {
 		return err
@@ -115,8 +123,8 @@ func (c *Client) DeleteTCPCheck(id int64, parentType string, parentName string, 
 
 // CreateTCPCheck creates a tcp check in the configuration. One of version or transationID is mandatory.
 // Returns error on fail, nil on success.
-func (c *Client) CreateTCPCheck(parentType string, parentName string, data *models.TCPCheck, transactionID string, version int64) error {
-	if c.UseValidation {
+func (c *client) CreateTCPCheck(parentType string, parentName string, data *models.TCPCheck, transactionID string, version int64) error {
+	if c.UseModelsValidation {
 		validationErr := data.Validate(strfmt.Default)
 		if validationErr != nil {
 			return NewConfError(ErrValidationError, validationErr.Error())
@@ -153,8 +161,8 @@ func (c *Client) CreateTCPCheck(parentType string, parentName string, data *mode
 // EditTCPCheck edits a tcp check in the configuration. One of version or transactionID is mandatory.
 // Returns error on fail, nil on success.
 // nolint:dupl
-func (c *Client) EditTCPCheck(id int64, parentType string, parentName string, data *models.TCPCheck, transactionID string, version int64) error {
-	if c.UseValidation {
+func (c *client) EditTCPCheck(id int64, parentType string, parentName string, data *models.TCPCheck, transactionID string, version int64) error {
+	if c.UseModelsValidation {
 		validationErr := data.Validate(strfmt.Default)
 		if validationErr != nil {
 			return NewConfError(ErrValidationError, validationErr.Error())

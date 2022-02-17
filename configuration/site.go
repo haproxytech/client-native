@@ -27,9 +27,17 @@ import (
 	"github.com/haproxytech/client-native/v3/models"
 )
 
+type Site interface {
+	GetSites(transactionID string) (int64, models.Sites, error)
+	GetSite(name string, transactionID string) (int64, *models.Site, error)
+	CreateSite(data *models.Site, transactionID string, version int64) error
+	EditSite(name string, data *models.Site, transactionID string, version int64) error
+	DeleteSite(name string, transactionID string, version int64) error
+}
+
 // GetSites returns configuration version and an array of
 // configured sites. Returns error on fail.
-func (c *Client) GetSites(transactionID string) (int64, models.Sites, error) {
+func (c *client) GetSites(transactionID string) (int64, models.Sites, error) {
 	p, err := c.GetParser(transactionID)
 	if err != nil {
 		return 0, nil, err
@@ -50,7 +58,7 @@ func (c *Client) GetSites(transactionID string) (int64, models.Sites, error) {
 
 // GetSite returns configuration version and a requested site.
 // Returns error on fail or if backend does not exist.
-func (c *Client) GetSite(name string, transactionID string) (int64, *models.Site, error) {
+func (c *client) GetSite(name string, transactionID string) (int64, *models.Site, error) {
 	p, err := c.GetParser(transactionID)
 	if err != nil {
 		return 0, nil, err
@@ -75,11 +83,11 @@ func (c *Client) GetSite(name string, transactionID string) (int64, *models.Site
 
 // CreateSite creates a site in configuration. One of version or transactionID is
 // mandatory. Returns error on fail, nil on success.
-func (c *Client) CreateSite(data *models.Site, transactionID string, version int64) error { //nolint:gocognit
+func (c *client) CreateSite(data *models.Site, transactionID string, version int64) error { //nolint:gocognit
 	var res []error
 	var err error
 
-	if c.UseValidation {
+	if c.UseModelsValidation {
 		validationErr := data.Validate(strfmt.Default)
 		if validationErr != nil {
 			return NewConfError(ErrValidationError, validationErr.Error())
@@ -155,11 +163,11 @@ func (c *Client) CreateSite(data *models.Site, transactionID string, version int
 
 // EditSite edits a site in configuration. One of version or transactionID is
 // mandatory. Returns error on fail, nil on success.
-func (c *Client) EditSite(name string, data *models.Site, transactionID string, version int64) error { //nolint:gocognit,gocyclo,cyclop
+func (c *client) EditSite(name string, data *models.Site, transactionID string, version int64) error { //nolint:gocognit,gocyclo,cyclop
 	var res []error
 	var err error
 
-	if c.UseValidation {
+	if c.UseModelsValidation {
 		validationErr := data.Validate(strfmt.Default)
 		if validationErr != nil {
 			return NewConfError(ErrValidationError, validationErr.Error())
@@ -394,7 +402,7 @@ func (c *Client) EditSite(name string, data *models.Site, transactionID string, 
 
 // DeleteSite deletes a site in configuration. One of version or transactionID is
 // mandatory. Returns error on fail, nil on success.
-func (c *Client) DeleteSite(name string, transactionID string, version int64) error {
+func (c *client) DeleteSite(name string, transactionID string, version int64) error {
 	var res []error
 	var err error
 
@@ -453,7 +461,7 @@ func (c *Client) DeleteSite(name string, transactionID string, version int64) er
 	return nil
 }
 
-func (c *Client) parseSites(p parser.Parser) (models.Sites, error) {
+func (c *client) parseSites(p parser.Parser) (models.Sites, error) {
 	sites := models.Sites{}
 	fNames, err := p.SectionsGet(parser.Frontends)
 	if err != nil {
@@ -469,7 +477,7 @@ func (c *Client) parseSites(p parser.Parser) (models.Sites, error) {
 	return sites, nil
 }
 
-func (c *Client) parseSite(s string, p parser.Parser) *models.Site {
+func (c *client) parseSite(s string, p parser.Parser) *models.Site {
 	frontend := &models.Frontend{Name: s}
 	if err := ParseSection(frontend, parser.Frontends, s, p); err != nil {
 		return nil
@@ -507,7 +515,7 @@ func (c *Client) parseSite(s string, p parser.Parser) *models.Site {
 	return site
 }
 
-func (c *Client) parseFarm(name string, useAs string, cond string, condTest string, p parser.Parser) *models.SiteFarm {
+func (c *client) parseFarm(name string, useAs string, cond string, condTest string, p parser.Parser) *models.SiteFarm {
 	backend := &models.Backend{Name: name}
 	if c.checkSectionExists(parser.Backends, name, p) {
 		if err := ParseSection(backend, parser.Backends, name, p); err == nil {
@@ -552,7 +560,7 @@ func SerializeFarmToBackend(farm *models.SiteFarm) *models.Backend {
 }
 
 // frontend backend relation helper methods
-func (c *Client) removeUseFarm(frontend string, backend string, t string, p parser.Parser) error {
+func (c *client) removeUseFarm(frontend string, backend string, t string, p parser.Parser) error {
 	ufs, err := ParseBackendSwitchingRules(frontend, p)
 	if err != nil {
 		return err
@@ -565,7 +573,7 @@ func (c *Client) removeUseFarm(frontend string, backend string, t string, p pars
 	return nil
 }
 
-func (c *Client) createBckFrontendRels(name string, b *models.SiteFarm, edit bool, t string, p parser.Parser) error {
+func (c *client) createBckFrontendRels(name string, b *models.SiteFarm, edit bool, t string, p parser.Parser) error {
 	var res []error
 	var err error
 	if b.UseAs == "default" {
@@ -602,7 +610,7 @@ func (c *Client) createBckFrontendRels(name string, b *models.SiteFarm, edit boo
 	return nil
 }
 
-func (c *Client) addDefaultBckToFrontend(fName string, bName string, t string, p parser.Parser) error {
+func (c *client) addDefaultBckToFrontend(fName string, bName string, t string, p parser.Parser) error {
 	frontend := &models.Frontend{Name: fName}
 
 	if err := ParseSection(frontend, parser.Frontends, fName, p); err != nil {
@@ -615,7 +623,7 @@ func (c *Client) addDefaultBckToFrontend(fName string, bName string, t string, p
 	return nil
 }
 
-func (c *Client) removeDefaultBckToFrontend(fName string, t string, p parser.Parser) error {
+func (c *client) removeDefaultBckToFrontend(fName string, t string, p parser.Parser) error {
 	frontend := &models.Frontend{Name: fName}
 	if err := ParseSection(frontend, parser.Frontends, fName, p); err != nil {
 		return err
@@ -627,7 +635,7 @@ func (c *Client) removeDefaultBckToFrontend(fName string, t string, p parser.Par
 	return nil
 }
 
-func (c *Client) editService(name string, service *models.SiteService, t string, p parser.Parser) error {
+func (c *client) editService(name string, service *models.SiteService, t string, p parser.Parser) error {
 	frontend := &models.Frontend{Name: name}
 	if err := ParseSection(frontend, parser.Frontends, name, p); err != nil {
 		return err
@@ -643,7 +651,7 @@ func (c *Client) editService(name string, service *models.SiteService, t string,
 	return nil
 }
 
-func (c *Client) editFarm(name string, farm *models.SiteFarm, t string, p parser.Parser) error {
+func (c *client) editFarm(name string, farm *models.SiteFarm, t string, p parser.Parser) error {
 	backend := &models.Backend{Name: name}
 	if err := ParseSection(backend, parser.Backends, name, p); err != nil {
 		return err

@@ -25,7 +25,7 @@ import (
 )
 
 func TestGetResolvers(t *testing.T) {
-	v, resolvers, err := client.GetResolvers("")
+	v, resolvers, err := clientTest.GetResolvers("")
 	if err != nil {
 		t.Error(err.Error())
 	}
@@ -44,7 +44,7 @@ func TestGetResolvers(t *testing.T) {
 }
 
 func TestGetResolver(t *testing.T) {
-	v, l, err := client.GetResolver("test", "")
+	v, l, err := clientTest.GetResolver("test", "")
 	if err != nil {
 		t.Error(err.Error())
 	}
@@ -62,7 +62,7 @@ func TestGetResolver(t *testing.T) {
 		t.Error(err.Error())
 	}
 
-	_, _, err = client.GetResolver("doesnotexist", "")
+	_, _, err = clientTest.GetResolver("doesnotexist", "")
 	if err == nil {
 		t.Error("Should throw error, non existant resolvers section")
 	}
@@ -83,14 +83,14 @@ func TestCreateEditDeleteResolver(t *testing.T) {
 		TimeoutResolve:      10,
 		TimeoutRetry:        10,
 	}
-	err := client.CreateResolver(f, "", version)
+	err := clientTest.CreateResolver(f, "", version)
 	if err != nil {
 		t.Error(err.Error())
 	} else {
 		version++
 	}
 
-	v, resolver, err := client.GetResolver("created_resolver", "")
+	v, resolver, err := clientTest.GetResolver("created_resolver", "")
 	if err != nil {
 		t.Error(err.Error())
 	}
@@ -105,24 +105,24 @@ func TestCreateEditDeleteResolver(t *testing.T) {
 		t.Errorf("Version %v returned, expected %v", v, version)
 	}
 
-	err = client.CreateResolver(f, "", version)
+	err = clientTest.CreateResolver(f, "", version)
 	if err == nil {
 		t.Error("Should throw error resolver already exists")
 		version++
 	}
 
-	err = client.DeleteResolver("created_resolver", "", version)
+	err = clientTest.DeleteResolver("created_resolver", "", version)
 	if err != nil {
 		t.Error(err.Error())
 	} else {
 		version++
 	}
 
-	if v, _ := client.GetVersion(""); v != version {
+	if v, _ := clientTest.GetVersion(""); v != version {
 		t.Error("Version not incremented")
 	}
 
-	err = client.DeleteResolver("created_resolver", "", 999999)
+	err = clientTest.DeleteResolver("created_resolver", "", 999999)
 	if err != nil {
 		if confErr, ok := err.(*ConfError); ok {
 			if confErr.Code() != ErrVersionMismatch {
@@ -132,12 +132,12 @@ func TestCreateEditDeleteResolver(t *testing.T) {
 			t.Error("Should throw ErrVersionMismatch error")
 		}
 	}
-	_, _, err = client.GetResolver("created_resolver", "")
+	_, _, err = clientTest.GetResolver("created_resolver", "")
 	if err == nil {
 		t.Error("DeleteResolver failed, resolver created_resolver still exists")
 	}
 
-	err = client.DeleteResolver("doesnotexist", "", version)
+	err = clientTest.DeleteResolver("doesnotexist", "", version)
 	if err == nil {
 		t.Error("Should throw error, non existant resolver")
 		version++

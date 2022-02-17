@@ -93,7 +93,7 @@ func (c *SingleSpoe) DeleteScope(name, transactionID string, version int64) erro
 // One of version or transactionID is mandatory
 // Returns error on fail, nil on success.
 func (c *SingleSpoe) CreateScope(data *models.SpoeScope, transactionID string, version int64) error {
-	if c.Transaction.UseValidation {
+	if c.Transaction.UseModelsValidation {
 		validationErr := data.Validate(strfmt.Default)
 		if validationErr != nil {
 			return conf.NewConfError(conf.ErrValidationError, validationErr.Error())

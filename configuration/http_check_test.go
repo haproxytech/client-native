@@ -24,7 +24,7 @@ import (
 )
 
 func TestGetHTTPChecks(t *testing.T) { //nolint:gocognit,gocyclo
-	v, checks, err := client.GetHTTPChecks("backend", "test", "")
+	v, checks, err := clientTest.GetHTTPChecks("backend", "test", "")
 	if err != nil {
 		t.Error(err.Error())
 	}
@@ -194,7 +194,7 @@ func TestGetHTTPChecks(t *testing.T) { //nolint:gocognit,gocyclo
 		}
 	}
 
-	_, checks, err = client.GetHTTPChecks("defaults", "", "")
+	_, checks, err = clientTest.GetHTTPChecks("defaults", "", "")
 	if err != nil {
 		t.Error(err.Error())
 	}
@@ -217,7 +217,7 @@ func TestGetHTTPChecks(t *testing.T) { //nolint:gocognit,gocyclo
 		}
 	}
 
-	_, checks, err = client.GetHTTPChecks("backend", "test_2", "")
+	_, checks, err = clientTest.GetHTTPChecks("backend", "test_2", "")
 	if err != nil {
 		t.Error(err.Error())
 	}
@@ -227,7 +227,7 @@ func TestGetHTTPChecks(t *testing.T) { //nolint:gocognit,gocyclo
 }
 
 func TestGetHTTPCheck(t *testing.T) {
-	v, check, err := client.GetHTTPCheck(0, "backend", "test", "")
+	v, check, err := clientTest.GetHTTPCheck(0, "backend", "test", "")
 	if err != nil {
 		t.Error(err.Error())
 	}
@@ -248,12 +248,12 @@ func TestGetHTTPCheck(t *testing.T) {
 		t.Error(err.Error())
 	}
 
-	_, _, err = client.GetHTTPCheck(3, "backend", "test_2", "")
+	_, _, err = clientTest.GetHTTPCheck(3, "backend", "test_2", "")
 	if err == nil {
 		t.Error("Should throw error, non existant HTTP Request Rule")
 	}
 
-	_, check, err = client.GetHTTPCheck(0, "defaults", "", "")
+	_, check, err = clientTest.GetHTTPCheck(0, "defaults", "", "")
 	if err != nil {
 		t.Error(err.Error())
 	}
@@ -275,14 +275,14 @@ func TestCreateEditDeleteHTTPCheck(t *testing.T) {
 		CheckHeaders: []*models.ReturnHeader{},
 	}
 
-	err := client.CreateHTTPCheck("backend", "test", r, "", version)
+	err := clientTest.CreateHTTPCheck("backend", "test", r, "", version)
 	if err != nil {
 		t.Error(err.Error())
 	} else {
 		version++
 	}
 
-	v, ondiskR, err := client.GetHTTPCheck(1, "backend", "test", "")
+	v, ondiskR, err := clientTest.GetHTTPCheck(1, "backend", "test", "")
 	if err != nil {
 		t.Error(err.Error())
 	}
@@ -324,14 +324,14 @@ func TestCreateEditDeleteHTTPCheck(t *testing.T) {
 		},
 	}
 
-	err = client.EditHTTPCheck(1, "backend", "test", r, "", version)
+	err = clientTest.EditHTTPCheck(1, "backend", "test", r, "", version)
 	if err != nil {
 		t.Error(err.Error())
 	} else {
 		version++
 	}
 
-	v, ondiskR, err = client.GetHTTPCheck(1, "backend", "test", "")
+	v, ondiskR, err = clientTest.GetHTTPCheck(1, "backend", "test", "")
 	if err != nil {
 		t.Error(err.Error())
 	}
@@ -357,23 +357,23 @@ func TestCreateEditDeleteHTTPCheck(t *testing.T) {
 	}
 
 	// TestDeleteHTTPRequest
-	err = client.DeleteHTTPCheck(14, "backend", "test", "", version)
+	err = clientTest.DeleteHTTPCheck(14, "backend", "test", "", version)
 	if err != nil {
 		t.Error(err.Error())
 	} else {
 		version++
 	}
 
-	if v, _ := client.GetVersion(""); v != version {
+	if v, _ := clientTest.GetVersion(""); v != version {
 		t.Error("Version not incremented")
 	}
 
-	_, _, err = client.GetHTTPCheck(14, "backend", "test", "")
+	_, _, err = clientTest.GetHTTPCheck(14, "backend", "test", "")
 	if err == nil {
 		t.Error("DeleteHTTPCheck failed, HTTP check 13 still exists")
 	}
 
-	err = client.DeleteHTTPCheck(5, "backend", "test_2", "", version)
+	err = clientTest.DeleteHTTPCheck(5, "backend", "test_2", "", version)
 	if err == nil {
 		t.Error("Should throw error, non existant HTTP Check")
 		version++

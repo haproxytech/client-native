@@ -24,7 +24,7 @@ import (
 )
 
 func TestGetBinds(t *testing.T) {
-	v, binds, err := client.GetBinds("test", "")
+	v, binds, err := clientTest.GetBinds("test", "")
 	if err != nil {
 		t.Error(err.Error())
 	}
@@ -49,7 +49,7 @@ func TestGetBinds(t *testing.T) {
 		}
 	}
 
-	_, binds, err = client.GetBinds("test_2", "")
+	_, binds, err = clientTest.GetBinds("test_2", "")
 	if err != nil {
 		t.Error(err.Error())
 	}
@@ -59,7 +59,7 @@ func TestGetBinds(t *testing.T) {
 }
 
 func TestGetBind(t *testing.T) {
-	v, l, err := client.GetBind("webserv", "test", "")
+	v, l, err := clientTest.GetBind("webserv", "test", "")
 	if err != nil {
 		t.Error(err.Error())
 	}
@@ -83,7 +83,7 @@ func TestGetBind(t *testing.T) {
 		t.Error(err.Error())
 	}
 
-	_, _, err = client.GetBind("webserv", "test_2", "")
+	_, _, err = clientTest.GetBind("webserv", "test_2", "")
 	if err == nil {
 		t.Error("Should throw error, non existent bind")
 	}
@@ -106,14 +106,14 @@ func TestCreateEditDeleteBind(t *testing.T) {
 		},
 	}
 
-	err := client.CreateBind("test", l, "", version)
+	err := clientTest.CreateBind("test", l, "", version)
 	if err != nil {
 		t.Error(err.Error())
 	} else {
 		version++
 	}
 
-	v, bind, err := client.GetBind("created", "test", "")
+	v, bind, err := clientTest.GetBind("created", "test", "")
 	if err != nil {
 		t.Error(err.Error())
 	}
@@ -128,7 +128,7 @@ func TestCreateEditDeleteBind(t *testing.T) {
 		t.Errorf("Version %v returned, expected %v", v, version)
 	}
 
-	err = client.CreateBind("test", l, "", version)
+	err = clientTest.CreateBind("test", l, "", version)
 	if err == nil {
 		t.Error("Should throw error bind already exists")
 		version++
@@ -150,14 +150,14 @@ func TestCreateEditDeleteBind(t *testing.T) {
 		},
 	}
 
-	err = client.EditBind("created", "test", l, "", version)
+	err = clientTest.EditBind("created", "test", l, "", version)
 	if err != nil {
 		t.Error(err.Error())
 	} else {
 		version++
 	}
 
-	v, bind, err = client.GetBind("created", "test", "")
+	v, bind, err = clientTest.GetBind("created", "test", "")
 	if err != nil {
 		t.Error(err.Error())
 	}
@@ -173,23 +173,23 @@ func TestCreateEditDeleteBind(t *testing.T) {
 	}
 
 	// TestDeleteBind
-	err = client.DeleteBind("created", "test", "", version)
+	err = clientTest.DeleteBind("created", "test", "", version)
 	if err != nil {
 		t.Error(err.Error())
 	} else {
 		version++
 	}
 
-	if v, _ := client.GetVersion(""); v != version {
+	if v, _ := clientTest.GetVersion(""); v != version {
 		t.Error("Version not incremented")
 	}
 
-	_, _, err = client.GetBind("created", "test", "")
+	_, _, err = clientTest.GetBind("created", "test", "")
 	if err == nil {
 		t.Error("DeleteBind failed, bind test still exists")
 	}
 
-	err = client.DeleteBind("created", "test2", "", version)
+	err = clientTest.DeleteBind("created", "test2", "", version)
 	if err == nil {
 		t.Error("Should throw error, non existent bind")
 		version++

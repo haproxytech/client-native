@@ -30,7 +30,7 @@ import (
 
 // GetServerSwitchingRules returns configuration version and an array of
 // configured server switching rules in the specified backend. Returns error on fail.
-func (c *Client) GetServerSwitchingRules(backend string, transactionID string) (int64, models.ServerSwitchingRules, error) {
+func (c *client) GetServerSwitchingRules(backend string, transactionID string) (int64, models.ServerSwitchingRules, error) {
 	p, err := c.GetParser(transactionID)
 	if err != nil {
 		return 0, nil, err
@@ -51,7 +51,7 @@ func (c *Client) GetServerSwitchingRules(backend string, transactionID string) (
 
 // GetServerSwitchingRule returns configuration version and a requested server switching rule
 // in the specified backend. Returns error on fail or if server switching rule does not exist.
-func (c *Client) GetServerSwitchingRule(id int64, backend string, transactionID string) (int64, *models.ServerSwitchingRule, error) {
+func (c *client) GetServerSwitchingRule(id int64, backend string, transactionID string) (int64, *models.ServerSwitchingRule, error) {
 	p, err := c.GetParser(transactionID)
 	if err != nil {
 		return 0, nil, err
@@ -75,7 +75,7 @@ func (c *Client) GetServerSwitchingRule(id int64, backend string, transactionID 
 
 // DeleteServerSwitchingRule deletes a server switching rule in configuration. One of version or transactionID is
 // mandatory. Returns error on fail, nil on success.
-func (c *Client) DeleteServerSwitchingRule(id int64, backend string, transactionID string, version int64) error {
+func (c *client) DeleteServerSwitchingRule(id int64, backend string, transactionID string, version int64) error {
 	p, t, err := c.loadDataForChange(transactionID, version)
 	if err != nil {
 		return err
@@ -93,8 +93,8 @@ func (c *Client) DeleteServerSwitchingRule(id int64, backend string, transaction
 
 // CreateServerSwitchingRule creates a server switching rule in configuration. One of version or transactionID is
 // mandatory. Returns error on fail, nil on success.
-func (c *Client) CreateServerSwitchingRule(backend string, data *models.ServerSwitchingRule, transactionID string, version int64) error {
-	if c.UseValidation {
+func (c *client) CreateServerSwitchingRule(backend string, data *models.ServerSwitchingRule, transactionID string, version int64) error {
+	if c.UseModelsValidation {
 		validationErr := data.Validate(strfmt.Default)
 		if validationErr != nil {
 			return NewConfError(ErrValidationError, validationErr.Error())
@@ -117,8 +117,8 @@ func (c *Client) CreateServerSwitchingRule(backend string, data *models.ServerSw
 
 // EditServerSwitchingRule edits a server switching rule in configuration. One of version or transactionID is
 // mandatory. Returns error on fail, nil on success.
-func (c *Client) EditServerSwitchingRule(id int64, backend string, data *models.ServerSwitchingRule, transactionID string, version int64) error {
-	if c.UseValidation {
+func (c *client) EditServerSwitchingRule(id int64, backend string, data *models.ServerSwitchingRule, transactionID string, version int64) error {
+	if c.UseModelsValidation {
 		validationErr := data.Validate(strfmt.Default)
 		if validationErr != nil {
 			return NewConfError(ErrValidationError, validationErr.Error())

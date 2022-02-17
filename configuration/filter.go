@@ -29,9 +29,17 @@ import (
 	"github.com/haproxytech/client-native/v3/models"
 )
 
+type Filter interface {
+	GetFilters(parentType, parentName string, transactionID string) (int64, models.Filters, error)
+	GetFilter(id int64, parentType, parentName string, transactionID string) (int64, *models.Filter, error)
+	DeleteFilter(id int64, parentType string, parentName string, transactionID string, version int64) error
+	CreateFilter(parentType string, parentName string, data *models.Filter, transactionID string, version int64) error
+	EditFilter(id int64, parentType string, parentName string, data *models.Filter, transactionID string, version int64) error
+}
+
 // GetFilters returns configuration version and an array of
 // configured filters in the specified parent. Returns error on fail.
-func (c *Client) GetFilters(parentType, parentName string, transactionID string) (int64, models.Filters, error) {
+func (c *client) GetFilters(parentType, parentName string, transactionID string) (int64, models.Filters, error) {
 	p, err := c.GetParser(transactionID)
 	if err != nil {
 		return 0, nil, err
@@ -52,7 +60,7 @@ func (c *Client) GetFilters(parentType, parentName string, transactionID string)
 
 // GetFilter returns configuration version and a requested filter
 // in the specified parent. Returns error on fail or if filter does not exist.
-func (c *Client) GetFilter(id int64, parentType, parentName string, transactionID string) (int64, *models.Filter, error) {
+func (c *client) GetFilter(id int64, parentType, parentName string, transactionID string) (int64, *models.Filter, error) {
 	p, err := c.GetParser(transactionID)
 	if err != nil {
 		return 0, nil, err
@@ -83,7 +91,7 @@ func (c *Client) GetFilter(id int64, parentType, parentName string, transactionI
 
 // DeleteFilter deletes a filter in configuration. One of version or transactionID is
 // mandatory. Returns error on fail, nil on success.
-func (c *Client) DeleteFilter(id int64, parentType string, parentName string, transactionID string, version int64) error {
+func (c *client) DeleteFilter(id int64, parentType string, parentName string, transactionID string, version int64) error {
 	p, t, err := c.loadDataForChange(transactionID, version)
 	if err != nil {
 		return err
@@ -109,8 +117,8 @@ func (c *Client) DeleteFilter(id int64, parentType string, parentName string, tr
 
 // CreateFilter creates a filter in configuration. One of version or transactionID is
 // mandatory. Returns error on fail, nil on success.
-func (c *Client) CreateFilter(parentType string, parentName string, data *models.Filter, transactionID string, version int64) error {
-	if c.UseValidation {
+func (c *client) CreateFilter(parentType string, parentName string, data *models.Filter, transactionID string, version int64) error {
+	if c.UseModelsValidation {
 		validationErr := data.Validate(strfmt.Default)
 		if validationErr != nil {
 			return NewConfError(ErrValidationError, validationErr.Error())
@@ -142,8 +150,8 @@ func (c *Client) CreateFilter(parentType string, parentName string, data *models
 // EditFilter edits a filter in configuration. One of version or transactionID is
 // mandatory. Returns error on fail, nil on success.
 // nolint:dupl
-func (c *Client) EditFilter(id int64, parentType string, parentName string, data *models.Filter, transactionID string, version int64) error {
-	if c.UseValidation {
+func (c *client) EditFilter(id int64, parentType string, parentName string, data *models.Filter, transactionID string, version int64) error {
+	if c.UseModelsValidation {
 		validationErr := data.Validate(strfmt.Default)
 		if validationErr != nil {
 			return NewConfError(ErrValidationError, validationErr.Error())

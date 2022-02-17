@@ -96,7 +96,7 @@ func (c *SingleSpoe) DeleteGroup(scope, name, transactionID string, version int6
 // CreateGroup creates a group in configuration. One of version or transactionID is
 // mandatory. Returns error on fail, nil on success.
 func (c *SingleSpoe) CreateGroup(scope string, data *models.SpoeGroup, transactionID string, version int64) error {
-	if c.Transaction.UseValidation {
+	if c.Transaction.UseModelsValidation {
 		validationErr := data.Validate(strfmt.Default)
 		if validationErr != nil {
 			return conf.NewConfError(conf.ErrValidationError, validationErr.Error())
@@ -133,7 +133,7 @@ func (c *SingleSpoe) CreateGroup(scope string, data *models.SpoeGroup, transacti
 // EditMessage edits a group in configuration. One of version or transactionID is
 // mandatory. Returns error on fail, nil on success.
 func (c *SingleSpoe) EditGroup(scope string, data *models.SpoeGroup, name, transactionID string, version int64) error {
-	if c.Transaction.UseValidation {
+	if c.Transaction.UseModelsValidation {
 		validationErr := data.Validate(strfmt.Default)
 		if validationErr != nil {
 			return conf.NewConfError(conf.ErrValidationError, validationErr.Error())

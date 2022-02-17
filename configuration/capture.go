@@ -28,9 +28,17 @@ import (
 	"github.com/haproxytech/client-native/v3/models"
 )
 
+type Capture interface {
+	GetDeclareCaptures(frontend string, transactionID string) (int64, models.Captures, error)
+	GetDeclareCapture(index int64, frontend string, transactionID string) (int64, *models.Capture, error)
+	DeleteDeclareCapture(index int64, frontend string, transactionID string, version int64) error
+	CreateDeclareCapture(frontend string, data *models.Capture, transactionID string, version int64) error
+	EditDeclareCapture(index int64, frontend string, data *models.Capture, transactionID string, version int64) error
+}
+
 // GetDeclareCaptures returns configuration version and an array of configured DeclareCapture lines in the specified frontend.
 // Returns error on fail.
-func (c *Client) GetDeclareCaptures(frontend string, transactionID string) (int64, models.Captures, error) {
+func (c *client) GetDeclareCaptures(frontend string, transactionID string) (int64, models.Captures, error) {
 	p, err := c.GetParser(transactionID)
 	if err != nil {
 		return 0, nil, err
@@ -48,7 +56,7 @@ func (c *Client) GetDeclareCaptures(frontend string, transactionID string) (int6
 
 // GetDeclareCapture returns configuration version and a requested DeclareCapture line in the specified frontend.
 // Returns error on fail or if DeclareCapture does not exist
-func (c *Client) GetDeclareCapture(index int64, frontend string, transactionID string) (int64, *models.Capture, error) {
+func (c *client) GetDeclareCapture(index int64, frontend string, transactionID string) (int64, *models.Capture, error) {
 	p, err := c.GetParser(transactionID)
 	if err != nil {
 		return 0, nil, err
@@ -71,7 +79,7 @@ func (c *Client) GetDeclareCapture(index int64, frontend string, transactionID s
 
 // DeleteDeclareCapture deletes a DeclareCapture line in the configuration. One of version or transactionID is mandatory.
 // Returns error on fail, nil on success
-func (c *Client) DeleteDeclareCapture(index int64, frontend string, transactionID string, version int64) error {
+func (c *client) DeleteDeclareCapture(index int64, frontend string, transactionID string, version int64) error {
 	p, t, err := c.loadDataForChange(transactionID, version)
 	if err != nil {
 		return err
@@ -87,8 +95,8 @@ func (c *Client) DeleteDeclareCapture(index int64, frontend string, transactionI
 
 // CreateDeclareCapture creates a DeclareCapture line in the configuration. One of version or transactionID is mandatory.
 // Returns error on fail, nil on success
-func (c *Client) CreateDeclareCapture(frontend string, data *models.Capture, transactionID string, version int64) error {
-	if c.UseValidation {
+func (c *client) CreateDeclareCapture(frontend string, data *models.Capture, transactionID string, version int64) error {
+	if c.UseModelsValidation {
 		validationErr := data.Validate(strfmt.Default)
 		if validationErr != nil {
 			return NewConfError(ErrValidationError, validationErr.Error())
@@ -109,8 +117,8 @@ func (c *Client) CreateDeclareCapture(frontend string, data *models.Capture, tra
 
 // EditDeclareCapture edits a DeclareCapture line in the configuration. One of version or transactionID is mandatory.
 // Returns error on fail, nil on success.
-func (c *Client) EditDeclareCapture(index int64, frontend string, data *models.Capture, transactionID string, version int64) error {
-	if c.UseValidation {
+func (c *client) EditDeclareCapture(index int64, frontend string, data *models.Capture, transactionID string, version int64) error {
+	if c.UseModelsValidation {
 		validationErr := data.Validate(strfmt.Default)
 		if validationErr != nil {
 			return NewConfError(ErrValidationError, validationErr.Error())

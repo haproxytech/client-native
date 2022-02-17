@@ -24,9 +24,17 @@ import (
 	"github.com/haproxytech/client-native/v3/models"
 )
 
+type Frontend interface {
+	GetFrontends(transactionID string) (int64, models.Frontends, error)
+	GetFrontend(name string, transactionID string) (int64, *models.Frontend, error)
+	DeleteFrontend(name string, transactionID string, version int64) error
+	EditFrontend(name string, data *models.Frontend, transactionID string, version int64) error
+	CreateFrontend(data *models.Frontend, transactionID string, version int64) error
+}
+
 // GetFrontends returns configuration version and an array of
 // configured frontends. Returns error on fail.
-func (c *Client) GetFrontends(transactionID string) (int64, models.Frontends, error) {
+func (c *client) GetFrontends(transactionID string) (int64, models.Frontends, error) {
 	p, err := c.GetParser(transactionID)
 	if err != nil {
 		return 0, nil, err
@@ -56,7 +64,7 @@ func (c *Client) GetFrontends(transactionID string) (int64, models.Frontends, er
 
 // GetFrontend returns configuration version and a requested frontend.
 // Returns error on fail or if frontend does not exist.
-func (c *Client) GetFrontend(name string, transactionID string) (int64, *models.Frontend, error) {
+func (c *client) GetFrontend(name string, transactionID string) (int64, *models.Frontend, error) {
 	p, err := c.GetParser(transactionID)
 	if err != nil {
 		return 0, nil, err
@@ -81,7 +89,7 @@ func (c *Client) GetFrontend(name string, transactionID string) (int64, *models.
 
 // DeleteFrontend deletes a frontend in configuration. One of version or transactionID is
 // mandatory. Returns error on fail, nil on success.
-func (c *Client) DeleteFrontend(name string, transactionID string, version int64) error {
+func (c *client) DeleteFrontend(name string, transactionID string, version int64) error {
 	if err := c.deleteSection(parser.Frontends, name, transactionID, version); err != nil {
 		return err
 	}
@@ -90,8 +98,8 @@ func (c *Client) DeleteFrontend(name string, transactionID string, version int64
 
 // EditFrontend edits a frontend in configuration. One of version or transactionID is
 // mandatory. Returns error on fail, nil on success.
-func (c *Client) EditFrontend(name string, data *models.Frontend, transactionID string, version int64) error {
-	if c.UseValidation {
+func (c *client) EditFrontend(name string, data *models.Frontend, transactionID string, version int64) error {
+	if c.UseModelsValidation {
 		validationErr := data.Validate(strfmt.Default)
 		if validationErr != nil {
 			return NewConfError(ErrValidationError, validationErr.Error())
@@ -107,8 +115,8 @@ func (c *Client) EditFrontend(name string, data *models.Frontend, transactionID 
 
 // CreateFrontend creates a frontend in configuration. One of version or transactionID is
 // mandatory. Returns error on fail, nil on success.
-func (c *Client) CreateFrontend(data *models.Frontend, transactionID string, version int64) error {
-	if c.UseValidation {
+func (c *client) CreateFrontend(data *models.Frontend, transactionID string, version int64) error {
+	if c.UseModelsValidation {
 		validationErr := data.Validate(strfmt.Default)
 		if validationErr != nil {
 			return NewConfError(ErrValidationError, validationErr.Error())

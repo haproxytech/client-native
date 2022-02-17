@@ -24,9 +24,22 @@ import (
 	"github.com/haproxytech/client-native/v3/models"
 )
 
+type Backend interface {
+	GetBackends(transactionID string) (int64, models.Backends, error)
+	GetBackend(name string, transactionID string) (int64, *models.Backend, error)
+	DeleteBackend(name string, transactionID string, version int64) error
+	CreateBackend(data *models.Backend, transactionID string, version int64) error
+	EditBackend(name string, data *models.Backend, transactionID string, version int64) error
+	GetBackendSwitchingRules(frontend string, transactionID string) (int64, models.BackendSwitchingRules, error)
+	GetBackendSwitchingRule(id int64, frontend string, transactionID string) (int64, *models.BackendSwitchingRule, error)
+	DeleteBackendSwitchingRule(id int64, frontend string, transactionID string, version int64) error
+	CreateBackendSwitchingRule(frontend string, data *models.BackendSwitchingRule, transactionID string, version int64) error
+	EditBackendSwitchingRule(id int64, frontend string, data *models.BackendSwitchingRule, transactionID string, version int64) error
+}
+
 // GetBackends returns configuration version and an array of
 // configured backends. Returns error on fail.
-func (c *Client) GetBackends(transactionID string) (int64, models.Backends, error) {
+func (c *client) GetBackends(transactionID string) (int64, models.Backends, error) {
 	p, err := c.GetParser(transactionID)
 	if err != nil {
 		return 0, nil, err
@@ -56,7 +69,7 @@ func (c *Client) GetBackends(transactionID string) (int64, models.Backends, erro
 
 // GetBackend returns configuration version and a requested backend.
 // Returns error on fail or if backend does not exist.
-func (c *Client) GetBackend(name string, transactionID string) (int64, *models.Backend, error) {
+func (c *client) GetBackend(name string, transactionID string) (int64, *models.Backend, error) {
 	p, err := c.GetParser(transactionID)
 	if err != nil {
 		return 0, nil, err
@@ -81,7 +94,7 @@ func (c *Client) GetBackend(name string, transactionID string) (int64, *models.B
 
 // DeleteBackend deletes a backend in configuration. One of version or transactionID is
 // mandatory. Returns error on fail, nil on success.
-func (c *Client) DeleteBackend(name string, transactionID string, version int64) error {
+func (c *client) DeleteBackend(name string, transactionID string, version int64) error {
 	if err := c.deleteSection(parser.Backends, name, transactionID, version); err != nil {
 		return err
 	}
@@ -90,8 +103,8 @@ func (c *Client) DeleteBackend(name string, transactionID string, version int64)
 
 // CreateBackend creates a backend in configuration. One of version or transactionID is
 // mandatory. Returns error on fail, nil on success.
-func (c *Client) CreateBackend(data *models.Backend, transactionID string, version int64) error {
-	if c.UseValidation {
+func (c *client) CreateBackend(data *models.Backend, transactionID string, version int64) error {
+	if c.UseModelsValidation {
 		validationErr := data.Validate(strfmt.Default)
 		if validationErr != nil {
 			return NewConfError(ErrValidationError, validationErr.Error())
@@ -105,8 +118,8 @@ func (c *Client) CreateBackend(data *models.Backend, transactionID string, versi
 
 // EditBackend edits a backend in configuration. One of version or transactionID is
 // mandatory. Returns error on fail, nil on success.
-func (c *Client) EditBackend(name string, data *models.Backend, transactionID string, version int64) error {
-	if c.UseValidation {
+func (c *client) EditBackend(name string, data *models.Backend, transactionID string, version int64) error {
+	if c.UseModelsValidation {
 		validationErr := data.Validate(strfmt.Default)
 		if validationErr != nil {
 			return NewConfError(ErrValidationError, validationErr.Error())

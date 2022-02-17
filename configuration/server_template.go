@@ -31,9 +31,17 @@ import (
 	"github.com/haproxytech/client-native/v3/models"
 )
 
+type ServerTemplate interface {
+	GetServerTemplates(backend string, transactionID string) (int64, models.ServerTemplates, error)
+	GetServerTemplate(prefix string, backend string, transactionID string) (int64, *models.ServerTemplate, error)
+	DeleteServerTemplate(prefix string, backend string, transactionID string, version int64) error
+	CreateServerTemplate(backend string, data *models.ServerTemplate, transactionID string, version int64) error
+	EditServerTemplate(prefix string, backend string, data *models.ServerTemplate, transactionID string, version int64) error
+}
+
 // GetServerTemplatess returns configuration version and an array of
 // configured server templates in the specified backend. Returns error on fail.
-func (c *Client) GetServerTemplates(backend string, transactionID string) (int64, models.ServerTemplates, error) {
+func (c *client) GetServerTemplates(backend string, transactionID string) (int64, models.ServerTemplates, error) {
 	p, err := c.GetParser(transactionID)
 	if err != nil {
 		return 0, nil, err
@@ -54,7 +62,7 @@ func (c *Client) GetServerTemplates(backend string, transactionID string) (int64
 
 // GetServerTemplate returns configuration version and a requested server template
 // in the specified backend. Returns error on fail or if server template does not exist.
-func (c *Client) GetServerTemplate(prefix string, backend string, transactionID string) (int64, *models.ServerTemplate, error) {
+func (c *client) GetServerTemplate(prefix string, backend string, transactionID string) (int64, *models.ServerTemplate, error) {
 	p, err := c.GetParser(transactionID)
 	if err != nil {
 		return 0, nil, err
@@ -75,7 +83,7 @@ func (c *Client) GetServerTemplate(prefix string, backend string, transactionID 
 
 // DeleteServerTemplate deletes a server template in configuration. One of version or transactionID is
 // mandatory. Returns error on fail, nil on success.
-func (c *Client) DeleteServerTemplate(prefix string, backend string, transactionID string, version int64) error {
+func (c *client) DeleteServerTemplate(prefix string, backend string, transactionID string, version int64) error {
 	p, t, err := c.loadDataForChange(transactionID, version)
 	if err != nil {
 		return err
@@ -100,8 +108,8 @@ func (c *Client) DeleteServerTemplate(prefix string, backend string, transaction
 
 // CreateServerTemplate creates a server template in configuration. One of version or transactionID is
 // mandatory. Returns error on fail, nil on success.
-func (c *Client) CreateServerTemplate(backend string, data *models.ServerTemplate, transactionID string, version int64) error {
-	if c.UseValidation {
+func (c *client) CreateServerTemplate(backend string, data *models.ServerTemplate, transactionID string, version int64) error {
+	if c.UseModelsValidation {
 		validationErr := data.Validate(strfmt.Default)
 		if validationErr != nil {
 			return NewConfError(ErrValidationError, validationErr.Error())
@@ -130,8 +138,8 @@ func (c *Client) CreateServerTemplate(backend string, data *models.ServerTemplat
 
 // EditServerTemplate edits a server template in configuration. One of version or transactionID is
 // mandatory. Returns error on fail, nil on success.
-func (c *Client) EditServerTemplate(prefix string, backend string, data *models.ServerTemplate, transactionID string, version int64) error {
-	if c.UseValidation {
+func (c *client) EditServerTemplate(prefix string, backend string, data *models.ServerTemplate, transactionID string, version int64) error {
+	if c.UseModelsValidation {
 		validationErr := data.Validate(strfmt.Default)
 		if validationErr != nil {
 			return NewConfError(ErrValidationError, validationErr.Error())

@@ -31,9 +31,17 @@ import (
 	"github.com/haproxytech/client-native/v3/models"
 )
 
+type TCPResponseRule interface {
+	GetTCPResponseRules(backend string, transactionID string) (int64, models.TCPResponseRules, error)
+	GetTCPResponseRule(id int64, backend string, transactionID string) (int64, *models.TCPResponseRule, error)
+	DeleteTCPResponseRule(id int64, backend string, transactionID string, version int64) error
+	CreateTCPResponseRule(backend string, data *models.TCPResponseRule, transactionID string, version int64) error
+	EditTCPResponseRule(id int64, backend string, data *models.TCPResponseRule, transactionID string, version int64) error
+}
+
 // GetTCPResponseRules returns configuration version and an array of
 // configured tcp response rules in the specified backend. Returns error on fail.
-func (c *Client) GetTCPResponseRules(backend string, transactionID string) (int64, models.TCPResponseRules, error) {
+func (c *client) GetTCPResponseRules(backend string, transactionID string) (int64, models.TCPResponseRules, error) {
 	p, err := c.GetParser(transactionID)
 	if err != nil {
 		return 0, nil, err
@@ -54,7 +62,7 @@ func (c *Client) GetTCPResponseRules(backend string, transactionID string) (int6
 
 // GetTCPResponseRule returns configuration version and a requested tcp response rule
 // in the specified backend. Returns error on fail or if tcp response rule does not exist.
-func (c *Client) GetTCPResponseRule(id int64, backend string, transactionID string) (int64, *models.TCPResponseRule, error) {
+func (c *client) GetTCPResponseRule(id int64, backend string, transactionID string) (int64, *models.TCPResponseRule, error) {
 	p, err := c.GetParser(transactionID)
 	if err != nil {
 		return 0, nil, err
@@ -78,7 +86,7 @@ func (c *Client) GetTCPResponseRule(id int64, backend string, transactionID stri
 
 // DeleteTCPResponseRule deletes a tcp response rule in configuration. One of version or transactionID is
 // mandatory. Returns error on fail, nil on success.
-func (c *Client) DeleteTCPResponseRule(id int64, backend string, transactionID string, version int64) error {
+func (c *client) DeleteTCPResponseRule(id int64, backend string, transactionID string, version int64) error {
 	p, t, err := c.loadDataForChange(transactionID, version)
 	if err != nil {
 		return err
@@ -96,8 +104,8 @@ func (c *Client) DeleteTCPResponseRule(id int64, backend string, transactionID s
 
 // CreateTCPResponseRule creates a tcp response rule in configuration. One of version or transactionID is
 // mandatory. Returns error on fail, nil on success.
-func (c *Client) CreateTCPResponseRule(backend string, data *models.TCPResponseRule, transactionID string, version int64) error {
-	if c.UseValidation {
+func (c *client) CreateTCPResponseRule(backend string, data *models.TCPResponseRule, transactionID string, version int64) error {
+	if c.UseModelsValidation {
 		validationErr := data.Validate(strfmt.Default)
 		if validationErr != nil {
 			return NewConfError(ErrValidationError, validationErr.Error())
@@ -120,8 +128,8 @@ func (c *Client) CreateTCPResponseRule(backend string, data *models.TCPResponseR
 
 // EditTCPResponseRule edits a tcp response rule in configuration. One of version or transactionID is
 // mandatory. Returns error on fail, nil on success.
-func (c *Client) EditTCPResponseRule(id int64, backend string, data *models.TCPResponseRule, transactionID string, version int64) error {
-	if c.UseValidation {
+func (c *client) EditTCPResponseRule(id int64, backend string, data *models.TCPResponseRule, transactionID string, version int64) error {
+	if c.UseModelsValidation {
 		validationErr := data.Validate(strfmt.Default)
 		if validationErr != nil {
 			return NewConfError(ErrValidationError, validationErr.Error())

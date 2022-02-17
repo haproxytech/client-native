@@ -31,12 +31,14 @@ import (
 
 	clientnative "github.com/haproxytech/client-native/v3"
 	"github.com/haproxytech/client-native/v3/configuration"
+	configuration_options "github.com/haproxytech/client-native/v3/configuration/options"
+	"github.com/haproxytech/client-native/v3/options"
 	"github.com/haproxytech/client-native/v3/runtime"
-	"github.com/haproxytech/client-native/v3/runtime/options"
+	runtime_options "github.com/haproxytech/client-native/v3/runtime/options"
 )
 
 type ClientResponse struct {
-	Client         *clientnative.HAProxyClient
+	Client         clientnative.HAProxyClient
 	Cmd            *exec.Cmd
 	TmpDir         string
 	HAProxyVersion string
@@ -84,13 +86,12 @@ func GetClient(t *testing.T) (*ClientResponse, error) {
 	}
 
 	HAProxyCFG := "haproxy.cfg"
-	confClient := configuration.Client{}
-	err = confClient.Init(configuration.ClientParams{
-		ConfigurationFile:      HAProxyCFG,
-		PersistentTransactions: false,
-		TransactionDir:         os.TempDir(),
-		Haproxy:                "haproxy",
-	})
+	confClient, err := configuration.New(context.Background(),
+		configuration_options.ConfigurationFile(HAProxyCFG),
+		// options.UsePersistentTransactions,
+		configuration_options.TransactionsDir(os.TempDir()),
+		configuration_options.HAProxyBin("haproxy"),
+	)
 	if err != nil {
 		return nil, err
 	}
@@ -117,18 +118,18 @@ func GetClient(t *testing.T) (*ClientResponse, error) {
 
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
 	defer cancel()
-	runtimeClient, err := runtime.New(ctx, options.Socket(socketPath))
+	runtimeClient, err := runtime.New(ctx, runtime_options.Socket(socketPath))
 	if err != nil {
 		return nil, err
 	}
-	nativeAPI := &clientnative.HAProxyClient{
-		Configuration: &confClient,
-		Runtime:       runtimeClient,
-	}
+	nativeAPI, err := clientnative.New(context.Background(),
+		options.Configuration(confClient),
+		options.Runtime(runtimeClient),
+	)
 	return &ClientResponse{
 		Client:         nativeAPI,
 		Cmd:            cmd,
 		TmpDir:         tmpPath,
 		HAProxyVersion: version,
-	}, nil
+	}, err
 }

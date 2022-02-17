@@ -24,7 +24,7 @@ import (
 )
 
 func TestGetTCPResponseRules(t *testing.T) { //nolint:gocognit
-	v, tRules, err := client.GetTCPResponseRules("test", "")
+	v, tRules, err := clientTest.GetTCPResponseRules("test", "")
 	if err != nil {
 		t.Error(err.Error())
 	}
@@ -89,7 +89,7 @@ func TestGetTCPResponseRules(t *testing.T) { //nolint:gocognit
 		}
 	}
 
-	_, tRules, err = client.GetTCPResponseRules("test_2", "")
+	_, tRules, err = clientTest.GetTCPResponseRules("test_2", "")
 	if err != nil {
 		t.Error(err.Error())
 	}
@@ -99,7 +99,7 @@ func TestGetTCPResponseRules(t *testing.T) { //nolint:gocognit
 }
 
 func TestGetTCPResponseRule(t *testing.T) {
-	v, r, err := client.GetTCPResponseRule(0, "test", "")
+	v, r, err := clientTest.GetTCPResponseRule(0, "test", "")
 	if err != nil {
 		t.Error(err.Error())
 	}
@@ -126,7 +126,7 @@ func TestGetTCPResponseRule(t *testing.T) {
 		t.Error(err.Error())
 	}
 
-	_, _, err = client.GetTCPResponseRule(3, "test_2", "")
+	_, _, err = clientTest.GetTCPResponseRule(3, "test_2", "")
 	if err == nil {
 		t.Error("Should throw error, non existant TCP Response Rule")
 	}
@@ -142,14 +142,14 @@ func TestCreateEditDeleteTCPResponseRule(t *testing.T) {
 		Timeout: &tOut,
 	}
 
-	err := client.CreateTCPResponseRule("test", r, "", version)
+	err := clientTest.CreateTCPResponseRule("test", r, "", version)
 	if err != nil {
 		t.Error(err.Error())
 	} else {
 		version++
 	}
 
-	v, ondiskR, err := client.GetTCPResponseRule(2, "test", "")
+	v, ondiskR, err := clientTest.GetTCPResponseRule(2, "test", "")
 	if err != nil {
 		t.Error(err.Error())
 	}
@@ -173,14 +173,14 @@ func TestCreateEditDeleteTCPResponseRule(t *testing.T) {
 		CondTest: "FALSE",
 	}
 
-	err = client.EditTCPResponseRule(2, "test", r, "", version)
+	err = clientTest.EditTCPResponseRule(2, "test", r, "", version)
 	if err != nil {
 		t.Error(err.Error())
 	} else {
 		version++
 	}
 
-	v, ondiskR, err = client.GetTCPResponseRule(2, "test", "")
+	v, ondiskR, err = clientTest.GetTCPResponseRule(2, "test", "")
 	if err != nil {
 		t.Error(err.Error())
 	}
@@ -196,23 +196,23 @@ func TestCreateEditDeleteTCPResponseRule(t *testing.T) {
 	}
 
 	// TestDeleteTCPResponse
-	err = client.DeleteTCPResponseRule(2, "test", "", version)
+	err = clientTest.DeleteTCPResponseRule(2, "test", "", version)
 	if err != nil {
 		t.Error(err.Error())
 	} else {
 		version++
 	}
 
-	if v, _ := client.GetVersion(""); v != version {
+	if v, _ := clientTest.GetVersion(""); v != version {
 		t.Error("Version not incremented")
 	}
 
-	_, _, err = client.GetTCPResponseRule(3, "test", "")
+	_, _, err = clientTest.GetTCPResponseRule(3, "test", "")
 	if err == nil {
 		t.Error("DeleteTCPResponseRule failed, TCP Response Rule 3 still exists")
 	}
 
-	err = client.DeleteTCPResponseRule(3, "test_2", "", version)
+	err = clientTest.DeleteTCPResponseRule(3, "test_2", "", version)
 	if err == nil {
 		t.Error("Should throw error, non existant TCP Response Rule")
 		version++

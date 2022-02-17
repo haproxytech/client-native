@@ -17,7 +17,6 @@ package configuration
 
 import (
 	"fmt"
-	"os/exec"
 	"reflect"
 	"strconv"
 	"strings"
@@ -31,26 +30,10 @@ import (
 	"github.com/haproxytech/config-parser/v4/parsers"
 	stats "github.com/haproxytech/config-parser/v4/parsers/stats/settings"
 	"github.com/haproxytech/config-parser/v4/types"
-	"github.com/kballard/go-shellquote"
 	"github.com/pkg/errors"
 
 	"github.com/haproxytech/client-native/v3/misc"
 	"github.com/haproxytech/client-native/v3/models"
-)
-
-const (
-	// DefaultConfigurationFile sane default for path to haproxy configuration file
-	DefaultConfigurationFile string = "/etc/haproxy/haproxy.cfg"
-	// DefaultHaproxy sane default for path to haproxy executable
-	DefaultHaproxy string = "/usr/sbin/haproxy"
-	// DefaultUseValidation sane default using validation in client native
-	DefaultUseValidation bool = true
-	// DefaultPersistentTransactions sane default using persistent transactions in client native
-	DefaultPersistentTransactions bool = true
-	// DefaultTransactionDir sane default for path for transactions
-	DefaultTransactionDir string = "/etc/haproxy/transactions"
-	// DefaultValidateConfigurationFile is used to validate HAProxy configuration file
-	DefaultValidateConfigurationFile bool = true
 )
 
 // ClientParams is just a placeholder for all client options
@@ -79,115 +62,26 @@ type ClientParams struct {
 // parsers map contains a config parser for each transaction, which loads data from
 // transaction files on StartTransaction, and deletes on CommitTransaction. We save
 // data to file on every change for persistence.
-type Client struct {
+type client struct {
 	Transaction
 	parsers  map[string]parser.Parser
 	services map[string]*Service
-	Parser   parser.Parser
+	parser   parser.Parser
 	clientMu sync.Mutex
 }
 
-// DefaultClient returns Client with sane defaults
-func DefaultClient() (*Client, error) {
-	p := ClientParams{
-		ConfigurationFile:         DefaultConfigurationFile,
-		Haproxy:                   DefaultHaproxy,
-		UseValidation:             DefaultUseValidation,
-		PersistentTransactions:    DefaultPersistentTransactions,
-		TransactionDir:            DefaultTransactionDir,
-		ValidateConfigurationFile: DefaultValidateConfigurationFile,
-		MasterWorker:              false,
-		SkipFailedTransactions:    false,
-		UseMd5Hash:                false,
-	}
-	c := &Client{}
-	c.TransactionClient = c
-	err := c.Init(p)
-	if err != nil {
-		return nil, err
-	}
-
-	return c, err
-}
-
-// Init initializes a Client
-func (c *Client) Init(options ClientParams) error {
-	if len(options.ValidateCmd) > 0 {
-		if _, err := shellquote.Split(options.ValidateCmd); err != nil {
-			return fmt.Errorf("the validate command is non well-formed (%w)", err)
-		}
-	}
-
-	if options.TransactionDir == "" {
-		options.TransactionDir = DefaultTransactionDir
-	}
-
-	if options.ConfigurationFile == "" {
-		options.ConfigurationFile = DefaultConfigurationFile
-	}
-
-	if options.Haproxy == "" {
-		options.Haproxy = DefaultHaproxy
-	}
-
-	// #nosec G204
-	if err := exec.Command(options.Haproxy, "-v").Run(); err != nil {
-		return NewConfError(ErrCannotFindHAProxy, fmt.Sprintf("path to HAProxy binary not valid: %s", options.Haproxy))
-	}
-
-	c.ClientParams = options
-	c.TransactionClient = c
-
-	c.parsers = make(map[string]parser.Parser)
-	c.services = make(map[string]*Service)
-	if err := c.InitTransactionParsers(); err != nil {
-		return err
-	}
-
-	parserOptions := []parser_options.ParserOption{}
-	if c.ClientParams.UseMd5Hash {
-		parserOptions = append(parserOptions, parser_options.UseMd5Hash)
-	}
-	parserOptions = append(parserOptions, parser_options.Path(options.ConfigurationFile))
-	p, err := parser.New(parserOptions...)
-	if err != nil {
-		return NewConfError(ErrCannotReadConfFile, fmt.Sprintf("Cannot read %s", c.ConfigurationFile))
-	}
-
-	c.Parser = p
-
-	return nil
-}
-
 // HasParser checks whether transaction exists in parser
-func (c *Client) HasParser(transactionID string) bool {
+func (c *client) HasParser(transactionID string) bool {
 	c.clientMu.Lock()
 	defer c.clientMu.Unlock()
 	_, ok := c.parsers[transactionID]
 	return ok
 }
 
-// GetParserTransactions returns parser transactions
-func (c *Client) GetParserTransactions() models.Transactions {
-	transactions := models.Transactions{}
-	for tID := range c.parsers {
-		v, err := c.GetVersion(tID)
-		if err == nil {
-			t := &models.Transaction{
-				ID:      tID,
-				Status:  models.TransactionStatusInProgress,
-				Version: v,
-			}
-			transactions = append(transactions, t)
-		}
-	}
-	return transactions
-}
-
 // GetParser returns a parser for given transactionID, if transactionID is "", it returns "master" parser
-func (c *Client) GetParser(transactionID string) (parser.Parser, error) {
+func (c *client) GetParser(transactionID string) (parser.Parser, error) {
 	if transactionID == "" {
-		return c.Parser, nil
+		return c.parser, nil
 	}
 	c.clientMu.Lock()
 	p, ok := c.parsers[transactionID]
@@ -199,7 +93,7 @@ func (c *Client) GetParser(transactionID string) (parser.Parser, error) {
 }
 
 // AddParser adds parser to parser map
-func (c *Client) AddParser(transactionID string) error {
+func (c *client) AddParser(transactionID string) error {
 	if transactionID == "" {
 		return NewConfError(ErrValidationError, "Not a valid transaction")
 	}
@@ -211,7 +105,7 @@ func (c *Client) AddParser(transactionID string) error {
 	}
 
 	parserOptions := []parser_options.ParserOption{}
-	if c.ClientParams.UseMd5Hash {
+	if c.ConfigurationOptions.UseMd5Hash {
 		parserOptions = append(parserOptions, parser_options.UseMd5Hash)
 	}
 
@@ -237,7 +131,7 @@ func (c *Client) AddParser(transactionID string) error {
 }
 
 // DeleteParser deletes parser from parsers map
-func (c *Client) DeleteParser(transactionID string) error {
+func (c *client) DeleteParser(transactionID string) error {
 	if transactionID == "" {
 		return NewConfError(ErrValidationError, "Not a valid transaction")
 	}
@@ -252,7 +146,7 @@ func (c *Client) DeleteParser(transactionID string) error {
 }
 
 // CommitParser commits transaction parser, deletes it from parsers map, and replaces master Parser
-func (c *Client) CommitParser(transactionID string) error {
+func (c *client) CommitParser(transactionID string) error {
 	if transactionID == "" {
 		return NewConfError(ErrValidationError, "Not a valid transaction")
 	}
@@ -262,43 +156,17 @@ func (c *Client) CommitParser(transactionID string) error {
 	if !ok {
 		return NewConfError(ErrTransactionDoesNotExist, fmt.Sprintf("Transaction %s does not exist", transactionID))
 	}
-	c.Parser = p
+	c.parser = p
 	delete(c.parsers, transactionID)
 	return nil
 }
 
-// InitTransactionParsers checks transactions and initializes parsers map with transactions in_progress
-func (c *Client) InitTransactionParsers() error {
-	transactions, err := c.GetTransactions(models.TransactionStatusInProgress)
-	if err != nil {
-		return err
-	}
-
-	for _, t := range *transactions {
-		if err := c.AddParser(t.ID); err != nil {
-			continue
-		}
-		p, err := c.GetParser(t.ID)
-		if err != nil {
-			continue
-		}
-		tFile, err := c.GetTransactionFile(t.ID)
-		if err != nil {
-			return err
-		}
-		if err := p.LoadData(tFile); err != nil {
-			return NewConfError(ErrCannotReadConfFile, fmt.Sprintf("Cannot read %s", tFile))
-		}
-	}
-	return nil
-}
-
 // GetVersion returns configuration file version
-func (c *Client) GetVersion(transactionID string) (int64, error) {
+func (c *client) GetVersion(transactionID string) (int64, error) {
 	return c.getVersion(transactionID)
 }
 
-func (c *Client) getVersion(transactionID string) (int64, error) {
+func (c *client) getVersion(transactionID string) (int64, error) {
 	p, err := c.GetParser(transactionID)
 	if err != nil {
 		return 0, NewConfError(ErrCannotReadVersion, fmt.Sprintf("Cannot read version: %s", err.Error()))
@@ -309,70 +177,34 @@ func (c *Client) getVersion(transactionID string) (int64, error) {
 	return ver.Value, nil
 }
 
-func (c *Client) IncrementVersion() error {
-	data, _ := c.Parser.Get(parser.Comments, parser.CommentsSectionName, "# _version", true)
+func (c *client) IncrementVersion() error {
+	data, _ := c.parser.Get(parser.Comments, parser.CommentsSectionName, "# _version", true)
 	ver, _ := data.(*types.ConfigVersion)
 	ver.Value++
 
-	if err := c.Parser.Save(c.ConfigurationFile); err != nil {
+	if err := c.parser.Save(c.ConfigurationFile); err != nil {
 		return NewConfError(ErrCannotSetVersion, fmt.Sprintf("Cannot set version: %s", err.Error()))
 	}
 	return nil
 }
 
-func (c *Client) IncrementTransactionVersion(transactionID string) error {
-	if transactionID == "" {
-		return c.incrementTransactionVersion(c.Parser)
-	}
-	p, err := c.GetParser(transactionID)
-	if err != nil {
-		return err
-	}
-	return c.incrementTransactionVersion(p)
-}
-
-func (c *Client) incrementTransactionVersion(p parser.Parser) error {
-	data, err := p.Get(parser.Comments, parser.CommentsSectionName, "# _version", true)
-	if err != nil {
-		return err
-	}
-	ver, _ := data.(*types.ConfigVersion)
-	ver.Value++
-	return nil
-}
-
-func (c *Client) LoadData(filename string) error {
-	err := c.Parser.LoadData(filename)
+func (c *client) LoadData(filename string) error {
+	err := c.parser.LoadData(filename)
 	if err != nil {
 		return NewConfError(ErrCannotReadConfFile, fmt.Sprintf("cannot read %s", filename))
 	}
 	return nil
 }
 
-func (c *Client) Save(transactionFile, transactionID string) error {
+func (c *client) Save(transactionFile, transactionID string) error {
 	if transactionID == "" {
-		return c.Parser.Save(transactionFile)
+		return c.parser.Save(transactionFile)
 	}
 	p, err := c.GetParser(transactionID)
 	if err != nil {
 		return err
 	}
 	return p.Save(transactionFile)
-}
-
-func (c *Client) GetFailedParserTransactionVersion(transactionID string) (int64, error) {
-	p, err := parser.New(parser_options.Path(transactionID))
-	if err != nil {
-		return 0, NewConfError(ErrCannotReadConfFile, fmt.Sprintf("cannot read %s", transactionID))
-	}
-
-	data, _ := p.Get(parser.Comments, parser.CommentsSectionName, "# _version", false)
-
-	ver, ok := data.(*types.ConfigVersion)
-	if !ok {
-		return 0, NewConfError(ErrCannotReadVersion, "cannot read version")
-	}
-	return ver.Value, nil
 }
 
 // ParseSection sets the fields of the section based on the provided parser
@@ -2939,7 +2771,7 @@ func (s *SectionObject) compression(field reflect.Value) error {
 	return nil
 }
 
-func (c *Client) deleteSection(section parser.Section, name string, transactionID string, version int64) error {
+func (c *client) deleteSection(section parser.Section, name string, transactionID string, version int64) error {
 	p, t, err := c.loadDataForChange(transactionID, version)
 	if err != nil {
 		return err
@@ -2961,7 +2793,7 @@ func (c *Client) deleteSection(section parser.Section, name string, transactionI
 	return nil
 }
 
-func (c *Client) editSection(section parser.Section, name string, data interface{}, transactionID string, version int64) error {
+func (c *client) editSection(section parser.Section, name string, data interface{}, transactionID string, version int64) error {
 	p, t, err := c.loadDataForChange(transactionID, version)
 	if err != nil {
 		return err
@@ -2983,7 +2815,7 @@ func (c *Client) editSection(section parser.Section, name string, data interface
 	return nil
 }
 
-func (c *Client) createSection(section parser.Section, name string, data interface{}, transactionID string, version int64) error {
+func (c *client) createSection(section parser.Section, name string, data interface{}, transactionID string, version int64) error {
 	p, t, err := c.loadDataForChange(transactionID, version)
 	if err != nil {
 		return err
@@ -3009,7 +2841,7 @@ func (c *Client) createSection(section parser.Section, name string, data interfa
 	return nil
 }
 
-func (c *Client) checkSectionExists(section parser.Section, sectionName string, p parser.Parser) bool {
+func (c *client) checkSectionExists(section parser.Section, sectionName string, p parser.Parser) bool {
 	sections, err := p.SectionsGet(section)
 	if err != nil {
 		return false
@@ -3021,7 +2853,7 @@ func (c *Client) checkSectionExists(section parser.Section, sectionName string, 
 	return false
 }
 
-func (c *Client) loadDataForChange(transactionID string, version int64) (parser.Parser, string, error) {
+func (c *client) loadDataForChange(transactionID string, version int64) (parser.Parser, string, error) {
 	t, err := c.TransactionClient.CheckTransactionOrVersion(transactionID, version)
 	if err != nil {
 		// if transactionID is implicit, return err and delete transaction
