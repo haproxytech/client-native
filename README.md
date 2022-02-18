@@ -20,52 +20,90 @@ models can be generated with [make models](Makefile). It automatically combines 
 ## Usage Example
 
 ```go
-// Initialize HAProxy native client
-confClient := &configuration.Client{}
-confParams := configuration.ClientParams{
-    ConfigurationFile:      "/etc/haproxy/haproxy.cfg",
-    Haproxy:                "/usr/sbin/haproxy",
-    UseValidation:          true,
-    PersistentTransactions: true,
-    TransactionDir:         "/tmp/haproxy",
-}
-err := confClient.Init(confParams)
+//import cfg_opt "github.com/haproxytech/client-native/v3/configuration/options"
+confClient, err := configuration.New(context.Background(),
+    cfg_opt.ConfigurationFile(haproxyOptions.ConfigFile),
+    cfg_opt.HAProxyBin(haproxyOptions.HAProxy),
+    cfg_opt.Backups(haproxyOptions.BackupsNumber),
+    cfg_opt.UsePersistentTransactions,
+    cfg_opt.TransactionsDir(haproxyOptions.TransactionDir),
+    cfg_opt.ValidateCmd(haproxyOptions.ValidateCmd),
+    cfg_opt.MasterWorker,
+    cfg_opt.UseMd5Hash,
+)
 if err != nil {
-    fmt.Println("Error setting up configuration client, using default one")
-    confClient, err = configuration.DefaultClient()
+    return nil, fmt.Errorf("error setting up configuration client: %s", err.Error())
+}
+
+// runtime
+// import runtime_options "github.com/haproxytech/client-native/v3/runtime/options"
+nbproc := 8
+ms := runtime_options.MasterSocket(masterSocket, nbproc)
+runtimeClient, err = runtime_api.New(ctx, ms)
+if err != nil {
+    return nil, fmt.Errorf("error setting up runtime client: %s", err.Error())
+}
+// or if not using master-worker
+socketList := map[int]string{
+    1: "/var/vur/haproxy.sock"
+}
+sockets := runtime_options.Sockets(socketList)
+runtimeClient, err = runtime_api.New(ctx, mapsDir, sockets)
+if err != nil {
+    return nil, fmt.Errorf("error setting up runtime client: %s", err.Error())
+}
+// end runtime
+
+// import "github.com/haproxytech/client-native/v3/options"
+opt := []options.Option{
+    options.Configuration(confClient),
+    options.Runtime(runtimeClient),
+}
+if haproxyOptions.MapsDir != "" {
+    mapStorage, err := storage.New(haproxyOptions.MapsDir, storage.MapsType)
     if err != nil {
-        fmt.Println("Error setting up default configuration client, exiting...")
-        api.ServerShutdown()
+        log.Fatalf("error initializing map storage: %v", err)
     }
-}
-
-runtimeClient := &runtime_api.Client{}
-_, globalConf, err := confClient.GetGlobalConfiguration("")
-if err == nil {
-    socketList := make([]string, 0, 1)
-    runtimeAPIs := globalConf.RuntimeApis
-
-    if len(runtimeAPIs) != 0 {
-        for _, r := range runtimeAPIs {
-            socketList = append(socketList, *r.Address)
-        }
-        if err := runtimeClient.Init(socketList, "", 0); err != nil {
-            fmt.Println("Error setting up runtime client, not using one")
-            return nil
-        }
-    } else {
-        fmt.Println("Runtime API not configured, not using it")
-        runtimeClient = nil
-    }
+    opt = append(opt, options.MapStorage(mapStorage))
 } else {
-    fmt.Println("Cannot read runtime API configuration, not using it")
-    runtimeClient = nil
+    log.Fatalf("error trying to use empty string for managed map directory")
 }
 
-client := &client_native.HAProxyClient{}
-client.Init(confClient, runtimeClient)
+if haproxyOptions.SSLCertsDir != "" {
+    sslCertStorage, err := storage.New(haproxyOptions.SSLCertsDir, storage.SSLType)
+    if err != nil {
+        log.Fatalf("error initializing SSL certs storage: %v", err)
+    }
+    opt = append(opt, options.SSLCertStorage(sslCertStorage))
+} else {
+    log.Fatalf("error trying to use empty string for managed map directory")
+}
 
-bcks, err := h.Client.Configuration.GetBackends(t)
+if haproxyOptions.SpoeDir != "" {
+    prms := spoe.Params{
+        SpoeDir:        haproxyOptions.SpoeDir,
+        TransactionDir: haproxyOptions.SpoeTransactionDir,
+    }
+    spoe, err := spoe.NewSpoe(prms)
+    if err != nil {
+        log.Fatalf("error setting up spoe: %v", err)
+    }
+    opt = append(opt, options.Spoe(spoe))
+} else {
+    log.Fatalf("error trying to use empty string for SPOE configuration directory")
+}
+
+client, err := client_native.New(cyx, opt...)
+if err != nil {
+    log.Fatalf("Error initializing configuration client: %v", err)
+}
+
+configuration, err := h.Client.Configuration()
+if err != nil {
+    fmt.Println(err.Error())
+}
+
+bcks, err := configuration.GetBackends(t)
 if err != nil {
     fmt.Println(err.Error())
 }
