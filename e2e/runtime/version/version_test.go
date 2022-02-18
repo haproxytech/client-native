@@ -22,7 +22,11 @@ import (
 )
 
 func (s *MajorVersionInRuntime) TestExample() {
-	version, err := s.client.Runtime().GetVersion()
+	runtime, err := s.client.Runtime()
+	if err != nil {
+		s.FailNow(err.Error())
+	}
+	version, err := runtime.GetVersion()
 	if err != nil {
 		s.FailNow(err.Error())
 	}

@@ -16,6 +16,8 @@
 package clientnative
 
 import (
+	"errors"
+	"fmt"
 	"log"
 
 	"github.com/haproxytech/client-native/v3/configuration"
@@ -25,7 +27,10 @@ import (
 )
 
 // LogFunc - default log function is from the stdlib
-var LogFunc = log.Printf //nolint:gochecknoglobals
+var (
+	LogFunc               = log.Printf //nolint:gochecknoglobals
+	ErrOptionNotAvailable = errors.New("option is not available")
+)
 
 // HAProxyClient Native client for managing configuration and spitting out HAProxy stats
 type haProxyClient struct {
@@ -36,8 +41,11 @@ type haProxyClient struct {
 	spoe           spoe.Spoe
 }
 
-func (c *haProxyClient) Configuration() configuration.Configuration {
-	return c.configuration
+func (c *haProxyClient) Configuration() (configuration.Configuration, error) {
+	if c.configuration == nil {
+		return nil, fmt.Errorf("configuration: %w", ErrOptionNotAvailable)
+	}
+	return c.configuration, nil
 }
 
 func (c *haProxyClient) ReplaceConfiguration(configurationClient configuration.Configuration) {
@@ -48,18 +56,30 @@ func (c *haProxyClient) ReplaceRuntime(runtime runtime.Runtime) {
 	c.runtime = runtime
 }
 
-func (c *haProxyClient) Runtime() runtime.Runtime {
-	return c.runtime
+func (c *haProxyClient) Runtime() (runtime.Runtime, error) {
+	if c.runtime == nil {
+		return nil, fmt.Errorf("runtime: %w", ErrOptionNotAvailable)
+	}
+	return c.runtime, nil
 }
 
-func (c *haProxyClient) MapStorage() storage.Storage {
-	return c.mapStorage
+func (c *haProxyClient) MapStorage() (storage.Storage, error) {
+	if c.mapStorage == nil {
+		return nil, fmt.Errorf("map storage: %w", ErrOptionNotAvailable)
+	}
+	return c.mapStorage, nil
 }
 
-func (c *haProxyClient) SSLCertStorage() storage.Storage {
-	return c.sslCertStorage
+func (c *haProxyClient) SSLCertStorage() (storage.Storage, error) {
+	if c.sslCertStorage == nil {
+		return nil, fmt.Errorf("ssl cert storage: %w", ErrOptionNotAvailable)
+	}
+	return c.sslCertStorage, nil
 }
 
-func (c *haProxyClient) Spoe() spoe.Spoe {
-	return c.spoe
+func (c *haProxyClient) Spoe() (spoe.Spoe, error) {
+	if c.spoe == nil {
+		return nil, fmt.Errorf("spoe: %w", ErrOptionNotAvailable)
+	}
+	return c.spoe, nil
 }

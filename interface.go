@@ -11,13 +11,13 @@ import (
 )
 
 type HAProxyClient interface {
-	Configuration() configuration.Configuration
-	Runtime() runtime.Runtime
+	Configuration() (configuration.Configuration, error)
+	Runtime() (runtime.Runtime, error)
 	ReplaceConfiguration(configurationClient configuration.Configuration)
 	ReplaceRuntime(runtimeClient runtime.Runtime)
-	MapStorage() storage.Storage
-	SSLCertStorage() storage.Storage
-	Spoe() spoe.Spoe
+	MapStorage() (storage.Storage, error)
+	SSLCertStorage() (storage.Storage, error)
+	Spoe() (spoe.Spoe, error)
 }
 
 func New(ctx context.Context, opt ...options.Option) (HAProxyClient, error) {
