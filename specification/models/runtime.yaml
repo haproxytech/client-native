@@ -464,3 +464,16 @@ acl_file_entry:
       readOnly: true
     value:
       type: string
+general_file:
+  title: General use file
+  description: General use file
+  type: object
+  properties:
+    id:
+      type: string
+    file:
+      type: string
+    storage_name:
+      type: string
+    description:
+      type: string

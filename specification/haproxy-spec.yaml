@@ -326,6 +326,14 @@ definitions:
     type: array
     items:
       $ref: "#/definitions/acl_file_entry"
+  general_file:
+    $ref: "models/runtime.yaml#/general_file"
+  general_files:
+    title: General Files Array
+    description: Array of general use files
+    type: array
+    items:
+      $ref: "#/definitions/general_file"
   balance:
     $ref: "models/configuration/misc.yaml#/balance"
   forwardfor:
@@ -768,6 +776,10 @@ paths:
     $ref: "paths/storage.yaml#/ssl_certificates"
   /services/haproxy/storage/ssl_certificates/{name}:
     $ref: "paths/storage.yaml#/ssl_certificates_one"
+  /services/haproxy/storage/general:
+    $ref: "paths/storage.yaml#/general_files"
+  /services/haproxy/storage/general/{name}:
+    $ref: "paths/storage.yaml#/general_files_one"
   /services/haproxy/spoe:
     $ref: "paths/general.yaml#/spoe"
   /services/haproxy/spoe/spoe_files:
