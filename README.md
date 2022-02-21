@@ -27,7 +27,6 @@ confClient, err := configuration.New(context.Background(),
     cfg_opt.Backups(haproxyOptions.BackupsNumber),
     cfg_opt.UsePersistentTransactions,
     cfg_opt.TransactionsDir(haproxyOptions.TransactionDir),
-    cfg_opt.ValidateCmd(haproxyOptions.ValidateCmd),
     cfg_opt.MasterWorker,
     cfg_opt.UseMd5Hash,
 )
@@ -45,7 +44,7 @@ if err != nil {
 }
 // or if not using master-worker
 socketList := map[int]string{
-    1: "/var/vur/haproxy.sock"
+    1: "/var/run/haproxy.sock"
 }
 sockets := runtime_options.Sockets(socketList)
 runtimeClient, err = runtime_api.New(ctx, mapsDir, sockets)
@@ -59,60 +58,54 @@ opt := []options.Option{
     options.Configuration(confClient),
     options.Runtime(runtimeClient),
 }
-if haproxyOptions.MapsDir != "" {
-    mapStorage, err := storage.New(haproxyOptions.MapsDir, storage.MapsType)
-    if err != nil {
-        log.Fatalf("error initializing map storage: %v", err)
-    }
-    opt = append(opt, options.MapStorage(mapStorage))
-} else {
-    log.Fatalf("error trying to use empty string for managed map directory")
-}
 
-if haproxyOptions.SSLCertsDir != "" {
-    sslCertStorage, err := storage.New(haproxyOptions.SSLCertsDir, storage.SSLType)
-    if err != nil {
-        log.Fatalf("error initializing SSL certs storage: %v", err)
-    }
-    opt = append(opt, options.SSLCertStorage(sslCertStorage))
-} else {
-    log.Fatalf("error trying to use empty string for managed map directory")
-}
+// aditional options - not mandatory
 
-if haproxyOptions.GeneralStorage != "" {
-    generalStorage, err := storage.New(haproxyOptions.GeneralStorage, storage.GeneralType)
-    if err != nil {
-        log.Fatalf("error initializing General storage: %v", err)
-    }
-    opt = append(opt, options.GeneralStorage(generalStorage))
-} else {
-    log.Fatalf("error trying to use empty string for managed general files directory")
+//maps storage
+mapStorage, err := storage.New(MapsDir, storage.MapsType)
+if err != nil {
+    log.Fatalf("error initializing map storage: %v", err)
 }
+opt = append(opt, options.MapStorage(mapStorage))
 
-if haproxyOptions.SpoeDir != "" {
-    prms := spoe.Params{
-        SpoeDir:        haproxyOptions.SpoeDir,
-        TransactionDir: haproxyOptions.SpoeTransactionDir,
-    }
-    spoe, err := spoe.NewSpoe(prms)
-    if err != nil {
-        log.Fatalf("error setting up spoe: %v", err)
-    }
-    opt = append(opt, options.Spoe(spoe))
-} else {
-    log.Fatalf("error trying to use empty string for SPOE configuration directory")
+//ssl cert storage
+sslCertStorage, err := storage.New(SSLCertsDir, storage.SSLType)
+if err != nil {
+    log.Fatalf("error initializing SSL certs storage: %v", err)
 }
+opt = append(opt, options.SSLCertStorage(sslCertStorage))
 
+// general storage
+generalStorage, err := storage.New(GeneralStorage, storage.GeneralType)
+if err != nil {
+    log.Fatalf("error initializing General storage: %v", err)
+}
+opt = append(opt, options.GeneralStorage(generalStorage))
+
+//spoe
+prms := spoe.Params{
+    SpoeDir:        SpoeDir,
+    TransactionDir: SpoeTransactionDir,
+}
+spoe, err := spoe.NewSpoe(prms)
+if err != nil {
+    log.Fatalf("error setting up spoe: %v", err)
+}
+opt = append(opt, options.Spoe(spoe))
+
+// combine all together and create a client
 client, err := client_native.New(cyx, opt...)
 if err != nil {
     log.Fatalf("Error initializing configuration client: %v", err)
 }
 
-configuration, err := h.Client.Configuration()
+// fetch configuration handler
+configuration, err := client.Configuration()
 if err != nil {
     fmt.Println(err.Error())
 }
 
+//fetch all backends
 bcks, err := configuration.GetBackends(t)
 if err != nil {
     fmt.Println(err.Error())
