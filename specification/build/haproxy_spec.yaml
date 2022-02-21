@@ -6178,6 +6178,25 @@ definitions:
     type: array
     items:
       $ref: "#/definitions/acl_file_entry"
+  general_file:
+      description: General use file
+      properties:
+        description:
+          type: string
+        file:
+          type: string
+        id:
+          type: string
+        storage_name:
+          type: string
+      title: General use file
+      type: object
+  general_files:
+    title: General Files Array
+    description: Array of general use files
+    type: array
+    items:
+      $ref: "#/definitions/general_file"
   balance:
       properties:
         algorithm:
@@ -13888,6 +13907,128 @@ paths:
           default:
             $ref: '#/responses/DefaultError'
         summary: Replace SSL certificates on disk
+        tags:
+        - Storage
+  /services/haproxy/storage/general:
+      get:
+        description: Returns a list of all managed general use files
+        operationId: getAllStorageGeneralFiles
+        responses:
+          "200":
+            description: Successful operation
+            schema:
+              $ref: '#/definitions/general_files'
+          "404":
+            $ref: '#/responses/NotFound'
+          default:
+            $ref: '#/responses/DefaultError'
+        summary: Return a list of all managed general use files
+        tags:
+        - Storage
+      post:
+        consumes:
+        - multipart/form-data
+        description: Creates a managed storage general use file with contents.
+        operationId: createStorageGeneralFile
+        parameters:
+        - description: General use file content
+          in: formData
+          name: file_upload
+          type: file
+          x-mimetype: text/plain
+        responses:
+          "201":
+            description: General use file created with its contents
+            schema:
+              $ref: '#/definitions/general_file'
+          "400":
+            $ref: '#/responses/BadRequest'
+          "409":
+            $ref: '#/responses/AlreadyExists'
+          default:
+            $ref: '#/responses/DefaultError'
+        summary: Creates a managed storage general use file with contents
+        tags:
+        - Storage
+  /services/haproxy/storage/general/{name}:
+      delete:
+        description: Deletes a managed general use file from disk.
+        operationId: deleteStorageGeneralFile
+        parameters:
+        - description: General use file storage_name
+          in: path
+          name: name
+          required: true
+          type: string
+        responses:
+          "204":
+            description: General use file deleted
+          "404":
+            $ref: '#/responses/NotFound'
+          default:
+            $ref: '#/responses/DefaultError'
+        summary: Deletes a managed general use file from disk
+        tags:
+        - Storage
+      get:
+        description: Returns the contents of one managed general use file from disk
+        operationId: getOneStorageGeneralFile
+        parameters:
+        - description: General use file storage_name
+          in: path
+          name: name
+          required: true
+          type: string
+        produces:
+        - application/octet-stream
+        responses:
+          "200":
+            description: Successful operation
+            schema:
+              type: file
+          "404":
+            $ref: '#/responses/NotFound'
+          default:
+            $ref: '#/responses/DefaultError'
+        summary: Return the contents of one managed general use file from disk
+        tags:
+        - Storage
+      put:
+        consumes:
+        - text/plain
+        description: Replaces the contents of a managed general use file on disk
+        operationId: replaceStorageGeneralFile
+        parameters:
+        - description: General use file storage_name
+          in: path
+          name: name
+          required: true
+          type: string
+        - in: body
+          name: data
+          required: true
+          schema:
+            type: string
+        - $ref: '#/parameters/skip_reload'
+        - $ref: '#/parameters/force_reload'
+        produces:
+        - application/json
+        responses:
+          "202":
+            description: Configuration change accepted and reload requested
+            headers:
+              Reload-ID:
+                description: ID of the requested reload
+                type: string
+          "204":
+            description: General use file replaced
+          "400":
+            $ref: '#/responses/BadRequest'
+          "404":
+            $ref: '#/responses/NotFound'
+          default:
+            $ref: '#/responses/DefaultError'
+        summary: Replace contents of a managed general use file on disk
         tags:
         - Storage
   /services/haproxy/spoe:

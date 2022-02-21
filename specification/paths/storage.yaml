@@ -254,3 +254,125 @@ ssl_certificates_one:
         $ref: '#/responses/NotFound'
       'default':
         $ref: '#/responses/DefaultError'
+general_files:
+  get:
+    summary: Return a list of all managed general use files
+    description: Returns a list of all managed general use files
+    operationId: getAllStorageGeneralFiles
+    tags:
+      - Storage
+    responses:
+      '200':
+        description: Successful operation
+        schema:
+          $ref: "#/definitions/general_files"
+      '404':
+        $ref: '#/responses/NotFound'
+      'default':
+        $ref: '#/responses/DefaultError'
+  post:  # (raw)
+    summary: Creates a managed storage general use file with contents
+    description: Creates a managed storage general use file with contents.
+    operationId: createStorageGeneralFile
+    consumes:
+      - multipart/form-data
+    parameters:
+      - in: formData
+        name: file_upload
+        type: file
+        description: General use file content
+        x-mimetype: text/plain
+    tags:
+      - Storage
+    responses:
+      '201':
+        description: General use file created with its contents
+        schema:
+          $ref: "#/definitions/general_file"
+      '409':
+        $ref: '#/responses/AlreadyExists'
+      '400':
+        $ref: '#/responses/BadRequest'
+      'default':
+        $ref: '#/responses/DefaultError'
+general_files_one:
+  get:
+    summary: Return the contents of one managed general use file from disk
+    description: Returns the contents of one managed general use file from disk
+    operationId: getOneStorageGeneralFile
+    tags:
+      - Storage
+    parameters:
+      - name: name
+        in: path
+        description: General use file storage_name
+        required: true
+        type: string
+    produces:
+      - application/octet-stream
+    responses:
+      '200':
+        description: Successful operation
+        schema:
+          type: file
+      '404':
+        $ref: '#/responses/NotFound'
+      'default':
+        $ref: '#/responses/DefaultError'
+  delete:
+    summary: Deletes a managed general use file from disk
+    description: Deletes a managed general use file from disk.
+    operationId: deleteStorageGeneralFile
+    tags:
+      - Storage
+    parameters:
+      - name: name
+        in: path
+        description: General use file storage_name
+        required: true
+        type: string
+    responses:
+      '204':
+        description: General use file deleted
+      '404':
+        $ref: '#/responses/NotFound'
+      'default':
+        $ref: '#/responses/DefaultError'
+  put:
+    summary: Replace contents of a managed general use file on disk
+    description: Replaces the contents of a managed general use file on disk
+    operationId: replaceStorageGeneralFile
+    produces:
+      - application/json
+    consumes:
+      - text/plain
+    tags:
+      - Storage
+    parameters:
+      - name: name
+        in: path
+        description: General use file storage_name
+        required: true
+        type: string
+      - name: data
+        in: body
+        required: true
+        schema:
+          type: string
+      - $ref: "#/parameters/skip_reload"
+      - $ref: "#/parameters/force_reload"
+    responses:
+      "202":
+        description: Configuration change accepted and reload requested
+        headers:
+          Reload-ID:
+            description: ID of the requested reload
+            type: string
+      '204':
+        description: General use file replaced
+      '400':
+        $ref: '#/responses/BadRequest'
+      '404':
+        $ref: '#/responses/NotFound'
+      'default':
+        $ref: '#/responses/DefaultError'
