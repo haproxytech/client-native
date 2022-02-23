@@ -138,7 +138,7 @@ func (s *storage) Delete(name string) error {
 	if err != nil {
 		return err
 	}
-	return remove(f)
+	return s.remove(f)
 }
 
 func (s storage) Replace(name string, config string) (string, error) {
@@ -173,24 +173,51 @@ func (s *storage) Create(name string, readCloser io.ReadCloser) (string, error) 
 	if _, err := os.Stat(f); err == nil {
 		return "", conf.NewConfError(conf.ErrObjectAlreadyExists, fmt.Sprintf("file %s already exists", f))
 	}
+
+	switch s.fileType { //nolint:exhaustive
+	case SSLType:
+		return s.createSSL(f, readCloser)
+	case MapsType:
+		return s.createFile(f, readCloser)
+	}
+	return f, nil
+}
+
+func (s *storage) createSSL(name string, readCloser io.ReadCloser) (string, error) {
 	b, err := ioutil.ReadAll(readCloser)
 	if err != nil {
 		return "", err
 	}
-
-	switch s.fileType { //nolint:exhaustive
-	case SSLType:
-		err = s.validatePEM(b)
-		if err != nil {
-			return "", err
-		}
-	case MapsType:
-	}
-	err = renameio.WriteFile(f, b, 0o644)
+	err = s.validatePEM(b)
 	if err != nil {
 		return "", err
 	}
-	return f, nil
+	err = renameio.WriteFile(name, b, 0o644)
+	if err != nil {
+		return "", err
+	}
+	return name, nil
+}
+
+func (s *storage) createFile(name string, readCloser io.ReadCloser) (string, error) {
+	b, err := ioutil.ReadAll(readCloser)
+	if err != nil {
+		return "", err
+	}
+	err = renameio.WriteFile(name, b, 0o644)
+	if err != nil {
+		return "", err
+	}
+	return name, nil
+}
+
+func (s *storage) remove(name string) error {
+	switch s.fileType { //nolint:exhaustive
+	case SSLType, MapsType:
+		return remove(name)
+	}
+
+	return nil
 }
 
 func readFile(name string) (string, error) {
