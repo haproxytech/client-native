@@ -17,6 +17,7 @@ type HAProxyClient interface {
 	ReplaceRuntime(runtimeClient runtime.Runtime)
 	MapStorage() (storage.Storage, error)
 	SSLCertStorage() (storage.Storage, error)
+	GeneralStorage() (storage.Storage, error)
 	Spoe() (spoe.Spoe, error)
 }
 
@@ -36,6 +37,7 @@ func New(ctx context.Context, opt ...options.Option) (HAProxyClient, error) {
 		runtime:        o.Runtime,
 		mapStorage:     o.MapStorage,
 		sslCertStorage: o.SSLCertStorage,
+		generalStorage: o.GeneralStorage,
 		spoe:           o.Spoe,
 	}
 
