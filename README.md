@@ -79,6 +79,16 @@ if haproxyOptions.SSLCertsDir != "" {
     log.Fatalf("error trying to use empty string for managed map directory")
 }
 
+if haproxyOptions.GeneralStorage != "" {
+    generalStorage, err := storage.New(haproxyOptions.GeneralStorage, storage.GeneralType)
+    if err != nil {
+        log.Fatalf("error initializing General storage: %v", err)
+    }
+    opt = append(opt, options.GeneralStorage(generalStorage))
+} else {
+    log.Fatalf("error trying to use empty string for managed general files directory")
+}
+
 if haproxyOptions.SpoeDir != "" {
     prms := spoe.Params{
         SpoeDir:        haproxyOptions.SpoeDir,

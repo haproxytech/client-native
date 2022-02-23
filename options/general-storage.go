@@ -16,22 +16,19 @@ limitations under the License.
 
 package options
 
-import (
-	"github.com/haproxytech/client-native/v3/configuration"
-	"github.com/haproxytech/client-native/v3/runtime"
-	"github.com/haproxytech/client-native/v3/spoe"
-	"github.com/haproxytech/client-native/v3/storage"
-)
+import "github.com/haproxytech/client-native/v3/storage"
 
-type Options struct {
-	Configuration  configuration.Configuration
-	Runtime        runtime.Runtime
-	MapStorage     storage.Storage
-	SSLCertStorage storage.Storage
-	GeneralStorage storage.Storage
-	Spoe           spoe.Spoe
+type generalStore struct {
+	storage storage.Storage
 }
 
-type Option interface {
-	Set(p *Options) error
+func (o generalStore) Set(p *Options) error {
+	p.MapStorage = o.storage
+	return nil
+}
+
+func GeneralStorage(generalStorage storage.Storage) Option {
+	return generalStore{
+		storage: generalStorage,
+	}
 }

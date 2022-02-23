@@ -38,6 +38,7 @@ type haProxyClient struct {
 	runtime        runtime.Runtime
 	mapStorage     storage.Storage
 	sslCertStorage storage.Storage
+	generalStorage storage.Storage
 	spoe           spoe.Spoe
 }
 
@@ -75,6 +76,13 @@ func (c *haProxyClient) SSLCertStorage() (storage.Storage, error) {
 		return nil, fmt.Errorf("ssl cert storage: %w", ErrOptionNotAvailable)
 	}
 	return c.sslCertStorage, nil
+}
+
+func (c *haProxyClient) GeneralStorage() (storage.Storage, error) {
+	if c.generalStorage == nil {
+		return nil, fmt.Errorf("general files storage: %w", ErrOptionNotAvailable)
+	}
+	return c.generalStorage, nil
 }
 
 func (c *haProxyClient) Spoe() (spoe.Spoe, error) {
