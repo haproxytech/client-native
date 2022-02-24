@@ -615,10 +615,10 @@ func (c *client) ShowMapEntries(name string) (models.MapEntries, error) {
 			}
 		}
 	}
-	if len(entries) > 0 {
-		return entries, nil
+	if lastErr != nil {
+		return nil, lastErr
 	}
-	return nil, lastErr
+	return entries, nil
 }
 
 // ShowMapEntriesVersioned list all map entries by map file name
@@ -653,10 +653,10 @@ func (c *client) ShowMapEntriesVersioned(name, version string) (models.MapEntrie
 			}
 		}
 	}
-	if len(entries) > 0 {
-		return entries, nil
+	if lastErr != nil {
+		return nil, lastErr
 	}
-	return nil, lastErr
+	return entries, nil
 }
 
 // AddMapPayload adds multiple entries to the map file
