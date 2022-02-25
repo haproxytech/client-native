@@ -288,28 +288,6 @@ definitions:
       $ref: "#/definitions/ssl_certificate"
   ssl_cert_entry:
     $ref: "models/runtime.yaml#/ssl_cert_entry"
-  ssl_cert_entries:
-    title: SSL Certificate Entries
-    description: Array of entries of runtime SSL Certificate Entry
-    type: array
-    items:
-      $ref: "#/definitions/ssl_cert_entry"
-  ssl_crt_list:
-    $ref: "models/runtime.yaml#/ssl_crt_list"
-  ssl_crt_lists:
-    title: SSL crt-list
-    description: Array of entries of runtime crt-list
-    type: array
-    items:
-      $ref: "#/definitions/ssl_crt_list"
-  ssl_crt_list_entry:
-    $ref: "models/runtime.yaml#/ssl_crt_list_entry"
-  ssl_crt_list_entries:
-    title: SSL Certificate Entries
-    description: Array of entries of runtime SSL Certificate Entry
-    type: array
-    items:
-      $ref: "#/definitions/ssl_crt_list_entry"
   acl_file:
     $ref: "models/runtime.yaml#/acl_file"
   acl_files:

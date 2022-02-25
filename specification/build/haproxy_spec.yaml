@@ -6075,46 +6075,6 @@ definitions:
           type: array
       title: One SSL Certificate Entry
       type: object
-  ssl_cert_entries:
-    title: SSL Certificate Entries
-    description: Array of entries of runtime SSL Certificate Entry
-    type: array
-    items:
-      $ref: "#/definitions/ssl_cert_entry"
-  ssl_crt_list:
-      description: One SSL/TLS certificate
-      properties:
-        file:
-          type: string
-      title: crt-list
-      type: object
-  ssl_crt_lists:
-    title: SSL crt-list
-    description: Array of entries of runtime crt-list
-    type: array
-    items:
-      $ref: "#/definitions/ssl_crt_list"
-  ssl_crt_list_entry:
-      description: One SSL/TLS certificate
-      properties:
-        file:
-          type: string
-        line_number:
-          type: string
-        sni_filters:
-          items:
-            type: string
-          type: array
-        ssl_bind_config:
-          type: string
-      title: One crt-list Entry
-      type: object
-  ssl_crt_list_entries:
-    title: SSL Certificate Entries
-    description: Array of entries of runtime SSL Certificate Entry
-    type: array
-    items:
-      $ref: "#/definitions/ssl_crt_list_entry"
   acl_file:
       description: ACL File
       properties:
