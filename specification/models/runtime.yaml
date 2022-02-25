@@ -421,28 +421,6 @@ ssl_cert_entry:
       type: string
     chain_issuer:
       type: string
-ssl_crt_list:
-  title: crt-list
-  description: One SSL/TLS certificate
-  type: object
-  properties:
-    file:
-      type: string
-ssl_crt_list_entry:
-  title: One crt-list Entry
-  description: One SSL/TLS certificate
-  type: object
-  properties:
-    line_number:
-      type: string
-    file:
-      type: string
-    ssl_bind_config:
-      type: string
-    sni_filters:
-      type: array
-      items:
-        type: string
 acl_file:
   title: ACL File
   description: ACL File
