@@ -1,0 +1,16 @@
+process_info:
+  get:
+    tags:
+      - Information
+    summary: Return HAProxy process information
+    description: Return HAProxy process information
+    operationId: getHaproxyProcessInfo
+    produces:
+      - application/json
+    responses:
+      '200':
+        description: Success
+        schema:
+          $ref: '#/definitions/process_infos'
+      'default':
+        $ref: '#/responses/DefaultError'

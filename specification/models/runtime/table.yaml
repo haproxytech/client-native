@@ -1,0 +1,37 @@
+table:
+  title: Stick Table
+  description: Stick Table Information
+  type: object
+  properties:
+    process:
+      type: integer
+      x-nullable: true
+      description: Process number if master-worker mode
+    name:
+      type: string
+    type:
+      type: string
+      enum: [ip, ipv6, integer, string, binary]
+    size:
+      type: integer
+      x-nullable: true
+    used:
+      type: integer
+      x-nullable: true
+    fields:
+      type: array
+      items:
+        x-go-name: StickTableField
+        type: object
+        properties:
+          field:
+            type: string
+            enum: [server_id, gpc0, gpc0_rate, gpc1, gpc1_rate, gpt0, conn_cnt, conn_cur, conn_rate, sess_cnt, sess_rate, http_req_cnt, http_req_rate, http_err_cnt, http_err_rate, bytes_in_cnt, bytes_in_rate, bytes_out_cnt, bytes_out_rate]
+          type:
+            type: string
+            enum: [rate, counter]
+          period:
+            type: integer
+            x-dependency:
+              type:
+                value: rate

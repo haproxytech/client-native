@@ -1,0 +1,35 @@
+server:
+  title: Runtime Server
+  description: Runtime transient server properties
+  type: object
+  properties:
+    id:
+      type: string
+      readOnly: true
+    name:
+      type: string
+      readOnly: true
+    address:
+      type: string
+      pattern: '^[^\s]+$'
+      x-nullable: false
+      readOnly: true
+    port:
+      type: integer
+      x-nullable: true
+      minimum: 1
+      maximum: 65535
+      readOnly: true
+    operational_state:
+      type: string
+      enum: [up, down, stopping]
+    admin_state:
+      type: string
+      enum: [ready, maint, drain]
+  example:
+    server_id: 1
+    server_name: web_server
+    address: 127.0.0.5
+    port: 80
+    operational_state: up
+    admin_state: ready

@@ -1,0 +1,137 @@
+acls_entries_one:
+  get:
+    tags:
+      - ACL Runtime
+    summary: Return an ACL entry
+    description: Returns the ACL entry by its ID using the runtime socket.
+    produces:
+      - application/json
+    parameters:
+      - name: acl_id
+        in: query
+        description: ACL ID
+        required: true
+        type: string
+      - name: id
+        in: path
+        description: File entry ID
+        required: true
+        type: string
+    responses:
+      '200':
+        description: Successful operation
+        schema:
+          $ref: "#/definitions/acl_file_entry"
+      '400':
+        $ref: '#/responses/BadRequest'
+      '404':
+        $ref: '#/responses/NotFound'
+      'default':
+        $ref: '#/responses/DefaultError'
+  delete:
+    tags:
+      - ACL Runtime
+    summary: Delete an ACL entry
+    description: Deletes the entry from the ACL by its value using the runtime socket.
+    produces:
+      - application/json
+    parameters:
+      - name: acl_id
+        in: query
+        description: ACL ID
+        required: true
+        type: string
+      - name: id
+        in: path
+        description: File entry ID
+        required: true
+        type: string
+    responses:
+      '204':
+        description: Successful operation
+      '400':
+        $ref: '#/responses/BadRequest'
+      '404':
+        $ref: '#/responses/NotFound'
+      'default':
+        $ref: '#/responses/DefaultError'
+acls_entries:
+  post:
+    tags:
+      - ACL Runtime
+    summary: Add entry to an ACL file
+    description: Adds an entry into the ACL file using the runtime socket.
+    produces:
+      - application/json
+    parameters:
+      - name: acl_id
+        in: query
+        description: ACL ID
+        required: true
+        type: string
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/acl_file_entry'
+    responses:
+      '201':
+        description: ACL entry created
+        schema:
+          $ref: "#/definitions/acl_file_entry"
+      '400':
+        $ref: '#/responses/BadRequest'
+      '409':
+        $ref: '#/responses/AlreadyExists'
+      'default':
+        $ref: '#/responses/DefaultError'
+  get:
+    tags:
+      - ACL Runtime
+    summary: Return an ACL entries
+    description: Returns an ACL runtime setting using the runtime socket.
+    produces:
+      - application/json
+    parameters:
+      - name: acl_id
+        in: query
+        description: ACL ID
+        required: true
+        type: string
+    responses:
+      '200':
+        description: Successful operation
+        schema:
+          $ref: '#/definitions/acl_files_entries'
+      '400':
+        $ref: '#/responses/BadRequest'
+      '404':
+        $ref: '#/responses/NotFound'
+      'default':
+        $ref: '#/responses/DefaultError'
+  put:
+    summary: Add a new ACL payload
+    description: Adds a new ACL payload.
+    operationId: addPayloadRuntimeACL
+    parameters:
+      - name: acl_id
+        in: query
+        description: ACL ID
+        required: true
+        type: string
+      - name: data
+        required: true
+        in: body
+        schema:
+          $ref: "#/definitions/acl_files_entries"
+    tags:
+      - ACL Runtime
+    responses:
+      '201':
+        description: ACL payload added
+        schema:
+          $ref: "#/definitions/acl_files_entries"
+      '400':
+        $ref: '#/responses/BadRequest'
+      'default':
+        $ref: '#/responses/DefaultError'

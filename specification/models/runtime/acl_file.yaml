@@ -1,0 +1,11 @@
+acl_file:
+  title: ACL File
+  description: ACL File
+  type: object
+  properties:
+    id:
+      type: string
+    storage_name:
+      type: string
+    description:
+      type: string

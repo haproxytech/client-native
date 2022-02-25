@@ -1,0 +1,38 @@
+acls:
+  get:
+    tags:
+      - ACL Runtime
+    summary: Return an array of all ACL files
+    description: Returns all ACL files using the runtime socket.
+    produces:
+      - application/json
+    responses:
+      '200':
+        description: Successful operation
+        schema:
+          $ref: '#/definitions/acl_files'
+      'default':
+        $ref: '#/responses/DefaultError'
+acls_one:
+  get:
+    tags:
+      - ACL Runtime
+    summary: Return an ACL file
+    description: Returns an ACL file by id using the runtime socket.
+    produces:
+      - application/json
+    parameters:
+      - name: id
+        in: path
+        description: ACL file entry ID
+        required: true
+        type: string
+    responses:
+      '200':
+        description: Successful operation
+        schema:
+          $ref: '#/definitions/acl_file'
+      '404':
+        $ref: '#/responses/NotFound'
+      'default':
+        $ref: '#/responses/DefaultError'

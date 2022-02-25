@@ -1,0 +1,155 @@
+maps_entries:
+  get:  # show map [map]
+    summary: Return one map runtime entries
+    description: Returns an array of all entries in a given runtime map file.
+    operationId: showRuntimeMap
+    tags:
+      - Maps
+    parameters:
+      - name: map
+        in: query
+        description: Mapfile attribute storage_name
+        required: true
+        type: string
+    responses:
+      '200':
+        description: Successful operation
+        schema:
+          $ref: "#/definitions/map_entries"
+      '404':
+        $ref: '#/responses/NotFound'
+      'default':
+        $ref: '#/responses/DefaultError'
+  post:  # add map [map] key value
+    summary: Adds an entry into the map file
+    description: Adds an entry into the map file.
+    operationId: addMapEntry
+    parameters:
+      - name: map
+        in: query
+        description: Mapfile attribute storage_name
+        required: true
+        type: string
+      - name: force_sync
+        in: query
+        description: If true, immediately syncs changes to disk
+        type: boolean
+        default: false
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/map_entry'
+    tags:
+      - Maps
+    responses:
+      '201':
+        description: Map entry created
+        schema:
+          $ref: "#/definitions/map_entry"
+      '409':
+        $ref: '#/responses/AlreadyExists'
+      '400':
+        $ref: '#/responses/BadRequest'
+      'default':
+        $ref: '#/responses/DefaultError'
+maps_entries_one:
+  get:  # get map <map> <value>
+    summary: Return one map runtime setting
+    description: Returns one map runtime setting by it's id.
+    operationId: getRuntimeMapEntry
+    tags:
+      - Maps
+    parameters:
+      - name: id
+        in: path
+        description: Map id
+        required: true
+        type: string
+      - name: map
+        in: query
+        description: Mapfile attribute storage_name
+        required: true
+        type: string
+    responses:
+      '200':
+        description: Successful operation
+        schema:
+          $ref: "#/definitions/map_entry"
+      '404':
+        $ref: '#/responses/NotFound'
+      'default':
+        $ref: '#/responses/DefaultError'
+  put:  # set map <map> [<key>|#<ref>] <value>
+    summary: Replace the value corresponding to each id in a map
+    description: Replaces the value corresponding to each id in a map.
+    operationId: replaceRuntimeMapEntry
+    tags:
+      - Maps
+    parameters:
+      - name: id
+        in: path
+        description: Map id
+        required: true
+        type: string
+      - name: map
+        in: query
+        description: Mapfile attribute storage_name
+        required: true
+        type: string
+      - name: force_sync
+        in: query
+        description: If true, immediately syncs changes to disk
+        type: boolean
+        default: false
+      - name: data
+        in: body
+        required: true
+        schema:
+          type: object
+          required:
+            - value
+          properties:
+            value:
+              description: Map value
+              type: string
+    responses:
+      '200':
+        description: Map value replaced
+        schema:
+          $ref: "#/definitions/map_entry"
+      '400':
+        $ref: '#/responses/BadRequest'
+      '404':
+        $ref: '#/responses/NotFound'
+      'default':
+        $ref: '#/responses/DefaultError'
+  delete:  # del map <map> [<key>|#<ref>]
+    summary: Deletes all the map entries from the map by its id
+    description: Delete all the map entries from the map by its id.
+    operationId: deleteRuntimeMapEntry
+    tags:
+      - Maps
+    parameters:
+      - name: id
+        in: path
+        description: Map id
+        required: true
+        type: string
+      - name: map
+        in: query
+        description: Mapfile attribute storage_name
+        required: true
+        type: string
+      - name: force_sync
+        in: query
+        description: If true, immediately syncs changes to disk
+        type: boolean
+        default: false
+    responses:
+      '204':
+        description: Map key/value deleted
+      '404':
+        $ref: '#/responses/NotFound'
+      'default':
+        $ref: '#/responses/DefaultError'

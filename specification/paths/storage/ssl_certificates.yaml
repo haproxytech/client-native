@@ -1,0 +1,133 @@
+ssl_certificates:
+  get:
+    summary: Return all available SSL certificates on disk
+    description: Returns all available SSL certificates on disk.
+    operationId: getAllStorageSSLCertificates
+    tags:
+      - Storage
+    responses:
+      '200':
+        description: Successful operation
+        schema:
+          $ref: "#/definitions/ssl_certificates"
+      '404':
+        $ref: '#/responses/NotFound'
+      'default':
+        $ref: '#/responses/DefaultError'
+  post:
+    summary: Create SSL certificate
+    description: Creates SSL certificate.
+    operationId: createStorageSSLCertificate
+    consumes:
+      - multipart/form-data
+    parameters:
+      - in: formData
+        name: file_upload
+        type: file
+        description: The SSL certificate to upload
+        x-mimetype: text/plain
+      - $ref: "#/parameters/force_reload"
+    tags:
+      - Storage
+    responses:
+      '201':
+        description: SSL certificate created
+        schema:
+          $ref: "#/definitions/ssl_certificate"
+      '409':
+        $ref: '#/responses/AlreadyExists'
+      '400':
+        $ref: '#/responses/BadRequest'
+      'default':
+        $ref: '#/responses/DefaultError'
+ssl_certificates_one:
+  get:
+    summary: Return one SSL certificate from disk
+    description: Returns one SSL certificate from disk.
+    operationId: getOneStorageSSLCertificate
+    tags:
+      - Storage
+    parameters:
+      - name: name
+        in: path
+        description: SSL certificate name
+        required: true
+        type: string
+    responses:
+      '200':
+        description: Successful operation
+        schema:
+          $ref: "#/definitions/ssl_certificate"
+      '404':
+        $ref: '#/responses/NotFound'
+      'default':
+        $ref: '#/responses/DefaultError'
+  delete:
+    summary: Delete SSL certificate from disk
+    description: Deletes SSL certificate from disk.
+    operationId: deleteStorageSSLCertificate
+    tags:
+      - Storage
+    parameters:
+      - name: name
+        in: path
+        description: SSL certificate name
+        required: true
+        type: string
+      - $ref: "#/parameters/skip_reload"
+      - $ref: "#/parameters/force_reload"
+    responses:
+      '202':
+        description: SSL certificate deleted and reload requested
+        headers:
+          Reload-ID:
+            description: ID of the requested reload
+            type: string
+      '204':
+        description: SSL certificate deleted
+      '404':
+        $ref: '#/responses/NotFound'
+      'default':
+        $ref: '#/responses/DefaultError'
+  put:
+    summary: Replace SSL certificates on disk
+    description: Replaces SSL certificate on disk.
+    operationId: replaceStorageSSLCertificate
+    produces:
+      - application/json
+    consumes:
+      - text/plain
+    tags:
+      - Storage
+    parameters:
+      - name: name
+        in: path
+        description: SSL certificate name
+        required: true
+        type: string
+      - name: data
+        in: body
+        required: true
+        schema:
+          type: string
+      - $ref: "#/parameters/skip_reload"
+      - $ref: "#/parameters/force_reload"
+    responses:
+      '200':
+        description: SSL certificate replaced
+        schema:
+          $ref: "#/definitions/ssl_certificate"
+      '202':
+        description: SSL certificate replaced and reload requested
+        headers:
+          Reload-ID:
+            description: ID of the requested reload
+            type: string
+        schema:
+          $ref: "#/definitions/ssl_certificate"
+      '400':
+        $ref: '#/responses/BadRequest'
+      '404':
+        $ref: '#/responses/NotFound'
+      'default':
+        $ref: '#/responses/DefaultError'
