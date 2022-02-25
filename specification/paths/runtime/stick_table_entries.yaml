@@ -1,0 +1,41 @@
+stick_table_entries:
+  get:
+    summary: Return Stick Table Entries
+    description: Returns an array of all entries in a given stick tables.
+    operationId: getStickTableEntries
+    tags:
+      - StickTable
+    parameters:
+      - name: stick_table
+        in: query
+        description: Stick table name
+        required: true
+        type: string
+      - name: process
+        in: query
+        description: Process number if master-worker mode, if not only first process is returned
+        required: true
+        type: integer
+      - name: filter
+        in: query
+        description: A list of filters in format data.<type> <operator> <value> separated by comma
+        type: string
+      - name: key
+        in: query
+        description: Key which we want the entries for
+        type: string
+      - name: count
+        in: query
+        description: Max number of entries to be returned for pagination
+        type: integer
+      - name: offset
+        in: query
+        description: Offset which indicates how many items we skip in pagination
+        type: integer
+    responses:
+      '200':
+        description: Successful operation
+        schema:
+          $ref: "#/definitions/stick_table_entries"
+      'default':
+        $ref: '#/responses/DefaultError'

@@ -1,0 +1,104 @@
+maps:
+  get:  # show map
+    summary: Return runtime map files
+    description: Returns runtime map files.
+    operationId: getAllRuntimeMapFiles
+    tags:
+      - Maps
+    parameters:
+      - name: include_unmanaged
+        in: query
+        description: If true, also show unmanaged map files loaded in haproxy
+        required: false
+        type: boolean
+        default: false
+    responses:
+      '200':
+        description: Successful operation
+        schema:
+          $ref: "#/definitions/maps"
+      '404':
+        $ref: '#/responses/NotFound'
+      'default':
+        $ref: '#/responses/DefaultError'
+maps_one:
+  get:  # one map file
+    summary: Return one runtime map file
+    description: Returns one runtime map file.
+    operationId: getOneRuntimeMap
+    tags:
+      - Maps
+    parameters:
+      - name: name
+        in: path
+        description: Map file name
+        required: true
+        type: string
+    responses:
+      '200':
+        description: Successful operation
+        schema:
+          $ref: "#/definitions/map"
+      '404':
+        $ref: '#/responses/NotFound'
+      'default':
+        $ref: '#/responses/DefaultError'
+  delete:  # clear map [map]
+    summary: Remove all map entries from the map file
+    description: Remove all map entries from the map file.
+    operationId: clearRuntimeMap
+    parameters:
+      - name: name
+        in: path
+        description: Map file name
+        required: true
+        type: string
+      - name: forceDelete
+        in: query
+        description: If true, deletes file from disk
+        type: boolean
+      - name: force_sync
+        in: query
+        description: If true, immediately syncs changes to disk
+        type: boolean
+        default: false
+    tags:
+      - Maps
+    responses:
+      '204':
+        description: All map entries deleted
+      '404':
+        $ref: '#/responses/NotFound'
+      'default':
+        $ref: '#/responses/DefaultError'
+  put:  # add map <map> <payload>
+    summary: Add a new map payload
+    description: Adds a new map payload.
+    operationId: addPayloadRuntimeMap
+    parameters:
+      - name: name
+        in: path
+        description: Map file name
+        required: true
+        type: string
+      - name: force_sync
+        in: query
+        description: If true, immediately syncs changes to disk
+        type: boolean
+        default: false
+      - name: data
+        required: true
+        in: body
+        schema:
+          $ref: "#/definitions/map_entries"
+    tags:
+      - Maps
+    responses:
+      '201':
+        description: Map payload added
+        schema:
+          $ref: "#/definitions/map_entries"
+      '400':
+        $ref: '#/responses/BadRequest'
+      'default':
+        $ref: '#/responses/DefaultError'

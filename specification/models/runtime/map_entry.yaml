@@ -1,0 +1,12 @@
+map_entry:
+  title: One Map Entry
+  description: One Map Entry
+  type: object
+  properties:
+    id:
+      type: string
+      readOnly: true
+    key:
+      type: string
+    value:
+      type: string

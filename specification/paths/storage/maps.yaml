@@ -1,0 +1,122 @@
+maps:
+  get:
+    summary: Return a list of all managed map files
+    description: Returns a list of all managed map files
+    operationId: getAllStorageMapFiles
+    tags:
+      - Storage
+    responses:
+      '200':
+        description: Successful operation
+        schema:
+          $ref: "#/definitions/maps"
+      '404':
+        $ref: '#/responses/NotFound'
+      'default':
+        $ref: '#/responses/DefaultError'
+  post:  # (raw)
+    summary: Creates a managed storage map file with its entries
+    description: Creates a managed storage map file with its entries.
+    operationId: createStorageMapFile
+    consumes:
+      - multipart/form-data
+    parameters:
+      - in: formData
+        name: file_upload
+        type: file
+        description: The map file contents
+        x-mimetype: text/plain
+    tags:
+      - Storage
+    responses:
+      '201':
+        description: Map file created with its entries
+        schema:
+          $ref: "#/definitions/map"
+      '409':
+        $ref: '#/responses/AlreadyExists'
+      '400':
+        $ref: '#/responses/BadRequest'
+      'default':
+        $ref: '#/responses/DefaultError'
+maps_one:
+  get:
+    summary: Return the contents of one managed map file from disk
+    description: Returns the contents of one managed map file from disk
+    operationId: getOneStorageMap
+    tags:
+      - Storage
+    parameters:
+      - name: name
+        in: path
+        description: Map file storage_name
+        required: true
+        type: string
+    produces:
+      - application/octet-stream
+    responses:
+      '200':
+        description: Successful operation
+        schema:
+          type: file
+      '404':
+        $ref: '#/responses/NotFound'
+      'default':
+        $ref: '#/responses/DefaultError'
+  delete:
+    summary: Deletes a managed map file from disk
+    description: Deletes a managed map file from disk.
+    operationId: deleteStorageMap
+    tags:
+      - Storage
+    parameters:
+      - name: name
+        in: path
+        description: Map file storage_name
+        required: true
+        type: string
+    responses:
+      '204':
+        description: Map file deleted
+      '404':
+        $ref: '#/responses/NotFound'
+      'default':
+        $ref: '#/responses/DefaultError'
+  put:
+    summary: Replace contents of a managed map file on disk
+    description: Replaces the contents of a managed map file on disk
+    operationId: replaceStorageMapFile
+    produces:
+      - application/json
+    consumes:
+      - text/plain
+    tags:
+      - Storage
+    parameters:
+      - name: name
+        in: path
+        description: Map file storage_name
+        required: true
+        type: string
+      - name: data
+        in: body
+        required: true
+        schema:
+          type: string
+      - $ref: "#/parameters/skip_reload"
+      - $ref: "#/parameters/force_reload"
+    responses:
+      "202":
+        description: Configuration change accepted and reload requested
+        headers:
+          Reload-ID:
+            description: ID of the requested reload
+            type: string
+      '204':
+        description: Map file replaced
+      '400':
+        $ref: '#/responses/BadRequest'
+      '404':
+        $ref: '#/responses/NotFound'
+      'default':
+        $ref: '#/responses/DefaultError'

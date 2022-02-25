@@ -205,11 +205,11 @@ definitions:
     items:
       $ref: '#/definitions/endpoint'
   process_infos:
-    $ref: "models/runtime.yaml#/process_infos"
+    $ref: "models/runtime/process_info.yaml#/process_infos"
   process_info:
-    $ref: "models/runtime.yaml#/process_info"
+    $ref: "models/runtime/process_info.yaml#/process_info"
   process_info_item:
-    $ref: "models/runtime.yaml#/process_info_item"
+    $ref: "models/runtime/process_info_item.yaml#/process_info_item"
   transaction:
     $ref: "models/general.yaml#/transaction"
   transactions:
@@ -237,7 +237,7 @@ definitions:
     items:
       $ref: "#/definitions/reload"
   runtime_server:
-    $ref: "models/runtime.yaml#/server"
+    $ref: "models/runtime/server.yaml#/server"
   runtime_servers:
     title: HAProxy Runtime Servers Array
     description: HAProxy runtime servers array
@@ -245,7 +245,7 @@ definitions:
     items:
       $ref: "#/definitions/runtime_server"
   stick_table:
-    $ref: "models/runtime.yaml#/table"
+    $ref: "models/runtime/table.yaml#/table"
   stick_tables:
     title: Stick Tables Array
     description: Array of runtime stick tables
@@ -253,7 +253,7 @@ definitions:
     items:
       $ref: "#/definitions/stick_table"
   stick_table_entry:
-    $ref: "models/runtime.yaml#/table_entry"
+    $ref: "models/runtime/table_entry.yaml#/table_entry"
   stick_table_entries:
     title: Stick Tables Entries
     description: Entries of one runtime stick table
@@ -263,7 +263,7 @@ definitions:
   cluster_settings:
     $ref: "models/cluster.yaml#/settings"
   map:
-    $ref: "models/runtime.yaml#/map"
+    $ref: "models/storage/map.yaml#/map"
   maps:
     title: Map Files Array
     description: Array of runtime map files
@@ -271,7 +271,7 @@ definitions:
     items:
       $ref: "#/definitions/map"
   map_entry:
-    $ref: "models/runtime.yaml#/map_entry"
+    $ref: "models/runtime/map_entry.yaml#/map_entry"
   map_entries:
     title: Maps Entries
     description: Entries of one runtime map
@@ -279,7 +279,7 @@ definitions:
     items:
       $ref: "#/definitions/map_entry"
   ssl_certificate:
-    $ref: "models/runtime.yaml#/ssl_certificate"
+    $ref: "models/storage/ssl_certificate.yaml#/ssl_certificate"
   ssl_certificates:
     title: SSL Files Array
     description: Array of ssl certificate files
@@ -287,9 +287,9 @@ definitions:
     items:
       $ref: "#/definitions/ssl_certificate"
   ssl_cert_entry:
-    $ref: "models/runtime.yaml#/ssl_cert_entry"
+    $ref: "models/runtime/ssl_cert_entry.yaml#/ssl_cert_entry"
   acl_file:
-    $ref: "models/runtime.yaml#/acl_file"
+    $ref: "models/runtime/acl_file.yaml#/acl_file"
   acl_files:
     title: ACL Files Array
     description: Array of runtime acl files
@@ -297,7 +297,7 @@ definitions:
     items:
       $ref: "#/definitions/acl_file"
   acl_file_entry:
-    $ref: "models/runtime.yaml#/acl_file_entry"
+    $ref: "models/runtime/acl_file_entry.yaml#/acl_file_entry"
   acl_files_entries:
     title: ACL Files Entries
     description: Array of entries of one runtime acl file
@@ -305,7 +305,7 @@ definitions:
     items:
       $ref: "#/definitions/acl_file_entry"
   general_file:
-    $ref: "models/runtime.yaml#/general_file"
+    $ref: "models/storage/general_file.yaml#/general_file"
   general_files:
     title: General Files Array
     description: Array of general use files
@@ -715,49 +715,49 @@ paths:
   /services/haproxy/runtime:
     $ref: "paths/general.yaml#/runtime"
   /services/haproxy/runtime/acls:
-    $ref: "paths/runtime.yaml#/acls"
+    $ref: "paths/runtime/acls.yaml#/acls"
   /services/haproxy/runtime/acls/{id}:
-    $ref: "paths/runtime.yaml#/acls_one"
+    $ref: "paths/runtime/acls.yaml#/acls_one"
   /services/haproxy/runtime/acl_file_entries:
-    $ref: "paths/runtime.yaml#/acls_entries"
+    $ref: "paths/runtime/acls_entries.yaml#/acls_entries"
   /services/haproxy/runtime/acl_file_entries/{id}:
-    $ref: "paths/runtime.yaml#/acls_entries_one"
+    $ref: "paths/runtime/acls_entries.yaml#/acls_entries_one"
   /services/haproxy/runtime/info:
-    $ref: "paths/runtime.yaml#/process_info"
+    $ref: "paths/runtime/process_info.yaml#/process_info"
   /services/haproxy/runtime/servers:
-    $ref: "paths/runtime.yaml#/servers"
+    $ref: "paths/runtime/servers.yaml#/servers"
   /services/haproxy/runtime/servers/{name}:
-    $ref: "paths/runtime.yaml#/servers_one"
+    $ref: "paths/runtime/servers.yaml#/servers_one"
   /services/haproxy/runtime/stick_tables:
-    $ref: "paths/runtime.yaml#/stick_tables"
+    $ref: "paths/runtime/stick_tables.yaml#/stick_tables"
   /services/haproxy/runtime/stick_tables/{name}:
-    $ref: "paths/runtime.yaml#/stick_tables_one"
+    $ref: "paths/runtime/stick_tables.yaml#/stick_tables_one"
   /services/haproxy/runtime/stick_table_entries:
-    $ref: "paths/runtime.yaml#/stick_table_entries"
+    $ref: "paths/runtime/stick_table_entries.yaml#/stick_table_entries"
   /services/haproxy/runtime/maps:
-    $ref: "paths/runtime.yaml#/maps"
+    $ref: "paths/runtime/maps.yaml#/maps"
   /services/haproxy/runtime/maps/{name}:
-    $ref: "paths/runtime.yaml#/maps_one"
+    $ref: "paths/runtime/maps.yaml#/maps_one"
   /services/haproxy/runtime/maps_entries:
-    $ref: "paths/runtime.yaml#/maps_entries"
+    $ref: "paths/runtime/maps_entries.yaml#/maps_entries"
   /services/haproxy/runtime/maps_entries/{id}:
-    $ref: "paths/runtime.yaml#/maps_entries_one"
+    $ref: "paths/runtime/maps_entries.yaml#/maps_entries_one"
   /services/haproxy/configuration/version:
     $ref: "paths/configuration/version.yaml#/version"
   /services/haproxy/storage:
     $ref: "paths/general.yaml#/storage"
   /services/haproxy/storage/maps:
-    $ref: "paths/storage.yaml#/maps"
+    $ref: "paths/storage/maps.yaml#/maps"
   /services/haproxy/storage/maps/{name}:
-    $ref: "paths/storage.yaml#/maps_one"
+    $ref: "paths/storage/maps.yaml#/maps_one"
   /services/haproxy/storage/ssl_certificates:
-    $ref: "paths/storage.yaml#/ssl_certificates"
+    $ref: "paths/storage/ssl_certificates.yaml#/ssl_certificates"
   /services/haproxy/storage/ssl_certificates/{name}:
-    $ref: "paths/storage.yaml#/ssl_certificates_one"
+    $ref: "paths/storage/ssl_certificates.yaml#/ssl_certificates_one"
   /services/haproxy/storage/general:
-    $ref: "paths/storage.yaml#/general_files"
+    $ref: "paths/storage/general_files.yaml#/general_files"
   /services/haproxy/storage/general/{name}:
-    $ref: "paths/storage.yaml#/general_files_one"
+    $ref: "paths/storage/general_files.yaml#/general_files_one"
   /services/haproxy/spoe:
     $ref: "paths/general.yaml#/spoe"
   /services/haproxy/spoe/spoe_files:

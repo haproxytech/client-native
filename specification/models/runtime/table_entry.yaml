@@ -1,0 +1,71 @@
+table_entry:
+  title: Stick Table Entry
+  description: One entry in stick table
+  type: object
+  properties:
+    id:
+      type: string
+    key:
+      type: string
+    server_id:
+      type: integer
+      x-nullable: true
+    gpc0:
+      type: integer
+      x-nullable: true
+    gpc0_rate:
+      type: integer
+      x-nullable: true
+    gpc1:
+      type: integer
+      x-nullable: true
+    gpc1_rate:
+      type: integer
+      x-nullable: true
+    gpt0:
+      type: integer
+      x-nullable: true
+    conn_cnt:
+      type: integer
+      x-nullable: true
+    conn_cur:
+      type: integer
+      x-nullable: true
+    conn_rate:
+      type: integer
+      x-nullable: true
+    sess_cnt:
+      type: integer
+      x-nullable: true
+    sess_rate:
+      type: integer
+      x-nullable: true
+    http_req_cnt:
+      type: integer
+      x-nullable: true
+    http_req_rate:
+      type: integer
+      x-nullable: true
+    http_err_cnt:
+      type: integer
+      x-nullable: true
+    http_err_rate:
+      type: integer
+      x-nullable: true
+    bytes_in_cnt:
+      type: integer
+      x-nullable: true
+    bytes_in_rate:
+      type: integer
+      x-nullable: true
+    bytes_out_cnt:
+      type: integer
+      x-nullable: true
+    bytes_out_rate:
+      type: integer
+      x-nullable: true
+    exp:
+      type: integer
+      x-nullable: true
+    use:
+      type: boolean
