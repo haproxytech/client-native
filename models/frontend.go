@@ -65,6 +65,10 @@ type Frontend struct {
 	// Pattern: ^[A-Za-z0-9-_.:]+$
 	DefaultBackend string `json:"default_backend,omitempty"`
 
+	// disable h2 upgrade
+	// Enum: [enabled disabled]
+	DisableH2Upgrade string `json:"disable_h2_upgrade,omitempty"`
+
 	// dontlognull
 	// Enum: [enabled disabled]
 	Dontlognull string `json:"dontlognull,omitempty"`
@@ -174,6 +178,10 @@ func (m *Frontend) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateDefaultBackend(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateDisableH2Upgrade(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -407,6 +415,49 @@ func (m *Frontend) validateDefaultBackend(formats strfmt.Registry) error {
 	}
 
 	if err := validate.Pattern("default_backend", "body", string(m.DefaultBackend), `^[A-Za-z0-9-_.:]+$`); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+var frontendTypeDisableH2UpgradePropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		frontendTypeDisableH2UpgradePropEnum = append(frontendTypeDisableH2UpgradePropEnum, v)
+	}
+}
+
+const (
+
+	// FrontendDisableH2UpgradeEnabled captures enum value "enabled"
+	FrontendDisableH2UpgradeEnabled string = "enabled"
+
+	// FrontendDisableH2UpgradeDisabled captures enum value "disabled"
+	FrontendDisableH2UpgradeDisabled string = "disabled"
+)
+
+// prop value enum
+func (m *Frontend) validateDisableH2UpgradeEnum(path, location string, value string) error {
+	if err := validate.Enum(path, location, value, frontendTypeDisableH2UpgradePropEnum); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *Frontend) validateDisableH2Upgrade(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.DisableH2Upgrade) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateDisableH2UpgradeEnum("disable_h2_upgrade", "body", m.DisableH2Upgrade); err != nil {
 		return err
 	}
 

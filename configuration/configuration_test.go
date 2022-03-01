@@ -53,6 +53,7 @@ defaults
   option http-use-htx
   option httpclose
   option httplog
+  option disable-h2-upgrade
   timeout queue 900
   timeout server 2s
   timeout check 2s

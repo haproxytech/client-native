@@ -842,6 +842,12 @@ definitions:
             property: name
         default_server:
           $ref: '#/definitions/default_server'
+        disable_h2_upgrade:
+          enum:
+          - enabled
+          - disabled
+          type: string
+          x-display-name: Disable HTTP/2 Upgrade
         dontlognull:
           enum:
           - enabled
@@ -1052,6 +1058,12 @@ definitions:
           x-dynamic-enum:
             operation: getBackends
             property: name
+        disable_h2_upgrade:
+          enum:
+          - enabled
+          - disabled
+          type: string
+          x-display-name: Disable HTTP/2 Upgrade
         dontlognull:
           enum:
           - enabled

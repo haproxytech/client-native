@@ -103,6 +103,10 @@ type Defaults struct {
 	// default server
 	DefaultServer *DefaultServer `json:"default_server,omitempty"`
 
+	// disable h2 upgrade
+	// Enum: [enabled disabled]
+	DisableH2Upgrade string `json:"disable_h2_upgrade,omitempty"`
+
 	// dontlognull
 	// Enum: [enabled disabled]
 	Dontlognull string `json:"dontlognull,omitempty"`
@@ -298,6 +302,10 @@ func (m *Defaults) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateDefaultServer(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateDisableH2Upgrade(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -845,6 +853,49 @@ func (m *Defaults) validateDefaultServer(formats strfmt.Registry) error {
 			}
 			return err
 		}
+	}
+
+	return nil
+}
+
+var defaultsTypeDisableH2UpgradePropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		defaultsTypeDisableH2UpgradePropEnum = append(defaultsTypeDisableH2UpgradePropEnum, v)
+	}
+}
+
+const (
+
+	// DefaultsDisableH2UpgradeEnabled captures enum value "enabled"
+	DefaultsDisableH2UpgradeEnabled string = "enabled"
+
+	// DefaultsDisableH2UpgradeDisabled captures enum value "disabled"
+	DefaultsDisableH2UpgradeDisabled string = "disabled"
+)
+
+// prop value enum
+func (m *Defaults) validateDisableH2UpgradeEnum(path, location string, value string) error {
+	if err := validate.Enum(path, location, value, defaultsTypeDisableH2UpgradePropEnum); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *Defaults) validateDisableH2Upgrade(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.DisableH2Upgrade) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateDisableH2UpgradeEnum("disable_h2_upgrade", "body", m.DisableH2Upgrade); err != nil {
+		return err
 	}
 
 	return nil

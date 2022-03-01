@@ -190,6 +190,7 @@ func TestCreateEditDeleteFrontend(t *testing.T) {
 		UniqueIDFormat:           "%{+X}o_%fi:%fp_%Ts_%rt:%pid",
 		UniqueIDHeader:           "X-Unique-Id",
 		AcceptInvalidHTTPRequest: "enabled",
+		DisableH2Upgrade:         "enabled",
 	}
 
 	err := clientTest.CreateFrontend(f, "", version)

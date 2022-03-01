@@ -36,6 +36,9 @@ func TestGetDefaults(t *testing.T) { //nolint:gocognit,gocyclo
 	if d.Dontlognull != "enabled" {
 		t.Errorf("Dontlognull not enabled: %v", d.Dontlognull)
 	}
+	if d.DisableH2Upgrade != "enabled" {
+		t.Errorf("DisableH2Upgrade not enabled: %v", d.DisableH2Upgrade)
+	}
 	if d.HTTPUseHtx != "enabled" {
 		t.Errorf("HTTPUseHtx not enabled: %v", d.HTTPUseHtx)
 	}
@@ -182,6 +185,7 @@ func TestPushDefaults(t *testing.T) {
 		},
 		AcceptInvalidHTTPRequest:  "disabled",
 		AcceptInvalidHTTPResponse: "disabled",
+		DisableH2Upgrade:          "disabled",
 	}
 
 	err := clientTest.PushDefaultsConfiguration(d, "", version)

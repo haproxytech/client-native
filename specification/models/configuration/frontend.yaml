@@ -53,6 +53,10 @@ frontend:
       type: string
       enum: [enabled, disabled]
       x-display-name: Don't Log Null
+    disable_h2_upgrade:
+      type: string
+      enum: [enabled, disabled]
+      x-display-name: Disable HTTP/2 Upgrade
     http-buffer-request:
       type: string
       enum: [enabled, disabled]
