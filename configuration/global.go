@@ -91,6 +91,26 @@ func ParseGlobalSection(p parser.Parser) (*models.Global, error) { //nolint:goco
 		chroot = chrootParser.Value
 	}
 
+	var caBase string
+	data, err = p.Get(parser.Global, parser.GlobalSectionName, "ca-base")
+	if err == nil {
+		caBaseParser, ok := data.(*types.StringC)
+		if !ok {
+			return nil, misc.CreateTypeAssertError("ca-base")
+		}
+		caBase = caBaseParser.Value
+	}
+
+	var crtBase string
+	data, err = p.Get(parser.Global, parser.GlobalSectionName, "crt-base")
+	if err == nil {
+		crtBaseParser, ok := data.(*types.StringC)
+		if !ok {
+			return nil, misc.CreateTypeAssertError("crt-base")
+		}
+		crtBase = crtBaseParser.Value
+	}
+
 	var srvStateBase string
 	data, err = p.Get(parser.Global, parser.GlobalSectionName, "server-state-base")
 	if err == nil {
@@ -389,6 +409,8 @@ func ParseGlobalSection(p parser.Parser) (*models.Global, error) { //nolint:goco
 		Group:                        group,
 		Chroot:                       chroot,
 		Localpeer:                    localPeer,
+		CaBase:                       caBase,
+		CrtBase:                      crtBase,
 		ServerStateBase:              srvStateBase,
 		ServerStateFile:              srvStateFile,
 		HardStopAfter:                hardStop,
@@ -429,6 +451,24 @@ func SerializeGlobalSection(p parser.Parser, data *models.Global) error { //noli
 		pChroot = nil
 	}
 	if err := p.Set(parser.Global, parser.GlobalSectionName, "chroot", pChroot); err != nil {
+		return err
+	}
+	pCaBase := &types.StringC{
+		Value: data.CaBase,
+	}
+	if data.CaBase == "" {
+		pCaBase = nil
+	}
+	if err := p.Set(parser.Global, parser.GlobalSectionName, "ca-base", pCaBase); err != nil {
+		return err
+	}
+	pCrtBase := &types.StringC{
+		Value: data.CrtBase,
+	}
+	if data.CrtBase == "" {
+		pCrtBase = nil
+	}
+	if err := p.Set(parser.Global, parser.GlobalSectionName, "crt-base", pCrtBase); err != nil {
 		return err
 	}
 	pLocalPeer := &types.StringC{

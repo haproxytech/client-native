@@ -46,9 +46,15 @@ type Global struct {
 	// runtime a p is
 	RuntimeAPIs []*RuntimeAPI `json:"runtime_apis"`
 
+	// ca base
+	CaBase string `json:"ca_base,omitempty"`
+
 	// chroot
 	// Pattern: ^[^\s]+$
 	Chroot string `json:"chroot,omitempty"`
+
+	// crt base
+	CrtBase string `json:"crt_base,omitempty"`
 
 	// daemon
 	// Enum: [enabled disabled]

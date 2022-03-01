@@ -23,6 +23,12 @@ global:
     daemon:
       type: string
       enum: [enabled, disabled]
+    ca_base:
+      type: string
+      x-display-name: SSL CA Certificates Base Directory
+    crt_base:
+      type: string
+      x-display-name: SSL Certificates Base Directory
     localpeer:
       type: string
       pattern: '^[^\s]+$'

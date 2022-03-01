@@ -49,6 +49,12 @@ func TestGetGlobal(t *testing.T) {
 	} else {
 		t.Errorf("RuntimeAPI is not set")
 	}
+	if global.CaBase != "/etc/ssl/certs" {
+		t.Errorf("CaBase is %v, expected /etc/ssl/certs", global.CaBase)
+	}
+	if global.CrtBase != "/etc/ssl/private" {
+		t.Errorf("CrtBase is %v, expected /etc/ssl/private", global.CrtBase)
+	}
 	if global.Nbproc != 4 {
 		t.Errorf("Nbproc is %v, expected 4", global.Nbproc)
 	}

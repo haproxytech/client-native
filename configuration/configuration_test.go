@@ -31,6 +31,8 @@ global
 	nbproc 4
 	maxconn 2000
 	external-check
+  ca-base /etc/ssl/certs
+  crt-base /etc/ssl/private
 	stats socket /var/run/haproxy.sock level admin mode 0660
   lua-prepend-path /usr/share/haproxy-lua/?/init.lua
   lua-prepend-path /usr/share/haproxy-lua/?.lua cpath

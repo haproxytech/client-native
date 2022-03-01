@@ -389,6 +389,9 @@ definitions:
       additionalProperties: false
       description: HAProxy global configuration
       properties:
+        ca_base:
+          type: string
+          x-display-name: SSL CA Certificates Base Directory
         chroot:
           pattern: ^[^\s]+$
           type: string
@@ -410,6 +413,9 @@ definitions:
           type: array
           x-display-name: CPU Maps
           x-go-name: CPUMaps
+        crt_base:
+          type: string
+          x-display-name: SSL Certificates Base Directory
         daemon:
           enum:
           - enabled
