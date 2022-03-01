@@ -944,6 +944,12 @@ definitions:
         log_format_sd:
           type: string
           x-display-name: Log Format SD
+        log_health_checks:
+          enum:
+          - enabled
+          - disabled
+          type: string
+          x-display-name: Log Health Checks
         log_separate_errors:
           enum:
           - enabled
@@ -1365,6 +1371,12 @@ definitions:
           x-dependency:
             mode:
               value: http
+        log_health_checks:
+          enum:
+          - enabled
+          - disabled
+          type: string
+          x-display-name: Log Health Checks
         log_tag:
           pattern: ^[^\s]+$
           type: string

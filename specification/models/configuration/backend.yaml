@@ -43,6 +43,10 @@ backend:
     log_tag:
       type: string
       pattern: '^[^\s]+$'
+    log_health_checks:
+      type: string
+      enum: [enabled, disabled]
+      x-display-name: Log Health Checks
     http_connection_mode:
       type: string
       enum: [httpclose, http-server-close, http-keep-alive]

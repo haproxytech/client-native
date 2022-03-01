@@ -133,6 +133,10 @@ type Backend struct {
 	// httpchk params
 	HttpchkParams *HttpchkParams `json:"httpchk_params,omitempty"`
 
+	// log health checks
+	// Enum: [enabled disabled]
+	LogHealthChecks string `json:"log_health_checks,omitempty"`
+
 	// log tag
 	// Pattern: ^[^\s]+$
 	LogTag string `json:"log_tag,omitempty"`
@@ -270,6 +274,10 @@ func (m *Backend) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateHttpchkParams(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateLogHealthChecks(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -1010,6 +1018,49 @@ func (m *Backend) validateHttpchkParams(formats strfmt.Registry) error {
 			}
 			return err
 		}
+	}
+
+	return nil
+}
+
+var backendTypeLogHealthChecksPropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		backendTypeLogHealthChecksPropEnum = append(backendTypeLogHealthChecksPropEnum, v)
+	}
+}
+
+const (
+
+	// BackendLogHealthChecksEnabled captures enum value "enabled"
+	BackendLogHealthChecksEnabled string = "enabled"
+
+	// BackendLogHealthChecksDisabled captures enum value "disabled"
+	BackendLogHealthChecksDisabled string = "disabled"
+)
+
+// prop value enum
+func (m *Backend) validateLogHealthChecksEnum(path, location string, value string) error {
+	if err := validate.Enum(path, location, value, backendTypeLogHealthChecksPropEnum); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *Backend) validateLogHealthChecks(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.LogHealthChecks) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateLogHealthChecksEnum("log_health_checks", "body", m.LogHealthChecks); err != nil {
+		return err
 	}
 
 	return nil

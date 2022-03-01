@@ -75,6 +75,10 @@ defaults:
     log_separate_errors:
       type: string
       enum: [enabled, disabled]
+    log_health_checks:
+      type: string
+      enum: [enabled, disabled]
+      x-display-name: Log Health Checks
     clitcpka:
       type: string
       enum: [enabled, disabled]

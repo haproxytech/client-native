@@ -269,6 +269,7 @@ func TestCreateEditDeleteBackend(t *testing.T) {
 		Compression: &models.Compression{
 			Offload: true,
 		},
+		LogHealthChecks: "enabled",
 	}
 
 	err := clientTest.CreateBackend(b, "", version)

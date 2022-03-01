@@ -54,6 +54,7 @@ defaults
   option httpclose
   option httplog
   option disable-h2-upgrade
+  option log-health-checks
   timeout queue 900
   timeout server 2s
   timeout check 2s

@@ -45,6 +45,9 @@ func TestGetDefaults(t *testing.T) { //nolint:gocognit,gocyclo
 	if !d.Httplog {
 		t.Errorf("Httplog not enabled: %v", d.Httplog)
 	}
+	if d.LogHealthChecks != "enabled" {
+		t.Errorf("LogHealthChecks not enabled: %v", d.LogHealthChecks)
+	}
 	if d.HTTPConnectionMode != "httpclose" {
 		t.Errorf("HTTPConnectionMode not httpclose: %v", d.HTTPConnectionMode)
 	}
@@ -186,6 +189,7 @@ func TestPushDefaults(t *testing.T) {
 		AcceptInvalidHTTPRequest:  "disabled",
 		AcceptInvalidHTTPResponse: "disabled",
 		DisableH2Upgrade:          "disabled",
+		LogHealthChecks:           "disabled",
 	}
 
 	err := clientTest.PushDefaultsConfiguration(d, "", version)
