@@ -23,7 +23,7 @@ type generalStore struct {
 }
 
 func (o generalStore) Set(p *Options) error {
-	p.MapStorage = o.storage
+	p.GeneralStorage = o.storage
 	return nil
 }
 
