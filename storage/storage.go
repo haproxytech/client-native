@@ -177,7 +177,7 @@ func (s *storage) Create(name string, readCloser io.ReadCloser) (string, error) 
 	switch s.fileType { //nolint:exhaustive
 	case SSLType:
 		return s.createSSL(f, readCloser)
-	case MapsType:
+	case MapsType, GeneralType:
 		return s.createFile(f, readCloser)
 	}
 	return f, nil
@@ -213,7 +213,7 @@ func (s *storage) createFile(name string, readCloser io.ReadCloser) (string, err
 
 func (s *storage) remove(name string) error {
 	switch s.fileType { //nolint:exhaustive
-	case SSLType, MapsType:
+	case SSLType, MapsType, GeneralType:
 		return remove(name)
 	}
 
