@@ -238,6 +238,9 @@ func ParseBind(ondiskBind types.Bind) *models.Bind {
 		}
 	}
 	b.BindParams = parseBindParams(ondiskBind.Params)
+	if b.Name == "" {
+		b.Name = ondiskBind.Path
+	}
 	return b
 }
 
