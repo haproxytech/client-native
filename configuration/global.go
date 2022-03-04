@@ -541,7 +541,7 @@ func SerializeGlobalSection(p parser.Parser, data *models.Global) error { //noli
 			Path:   *rAPI.Address,
 			Params: []params.BindOption{},
 		}
-		socket.Params = serializeBindParams(rAPI.BindParams)
+		socket.Params = serializeBindParams(rAPI.BindParams, "")
 		sockets = append(sockets, socket)
 	}
 	if err := p.Set(parser.Global, parser.GlobalSectionName, "stats socket", sockets); err != nil {
