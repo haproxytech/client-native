@@ -406,14 +406,16 @@ func SerializeBind(b models.Bind) types.Bind {
 	} else {
 		bind.Path = b.Address
 	}
-	bind.Params = serializeBindParams(b.BindParams)
+	bind.Params = serializeBindParams(b.BindParams, bind.Path)
 
 	return bind
 }
 
-func serializeBindParams(b models.BindParams) (options []params.BindOption) { // nolint:gocognit,gocyclo,cyclop
+func serializeBindParams(b models.BindParams, path string) (options []params.BindOption) { // nolint:gocognit,gocyclo,cyclop
 	if b.Name != "" {
 		options = append(options, &params.BindOptionValue{Name: "name", Value: b.Name})
+	} else if path != "" {
+		options = append(options, &params.BindOptionValue{Name: "name", Value: path})
 	}
 	if b.Process != "" {
 		options = append(options, &params.BindOptionValue{Name: "process", Value: b.Process})
