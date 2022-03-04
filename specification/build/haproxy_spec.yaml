@@ -9210,7 +9210,7 @@ paths:
           in: path
           name: name
           required: true
-          type: integer
+          type: string
         - description: Parent userlist name
           in: query
           name: userlist

@@ -380,7 +380,7 @@ groups_one:
         in: path
         description: Group name
         required: true
-        type: integer
+        type: string
       - name: userlist
         in: query
         description: Parent userlist name
