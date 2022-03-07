@@ -300,11 +300,11 @@ userlist delete_test
 			}
 
 			// test delete
-			if c.DeleteUser("", "delete_test", "", 2) != nil {
-				t.Errorf("Deleting an existing user failed")
+			if c.DeleteUser("", "delete_test", "", 2) == nil {
+				t.Errorf("Attempt to delete an empty user didn't throw an error")
 			}
 			if c.DeleteUser("fake", "delete_test", "", 3) == nil {
-				t.Errorf("Deleting an non existing user didn't throw an error")
+				t.Errorf("Attempt to delete an non existing user didn't throw an error")
 			}
 		})
 	}

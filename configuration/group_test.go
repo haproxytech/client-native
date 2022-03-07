@@ -264,11 +264,11 @@ userlist delete_test
 			}
 
 			// test delete
-			if c.DeleteGroup("G0", "delete_test", "", 3) != nil {
-				t.Errorf("Deleting an existing group failed")
+			if c.DeleteGroup("G0", "delete_test", "", 3) == nil {
+				t.Errorf("Attempt to delete a non existing group didn't throw and error")
 			}
 			if c.DeleteGroup("G1000", "delete_test", "", 4) == nil {
-				t.Errorf("Deleting an non existing group didn't throw an error")
+				t.Errorf("Attempt to delete a non existing group didn't throw an error")
 			}
 		})
 	}

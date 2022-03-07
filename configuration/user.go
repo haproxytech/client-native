@@ -17,6 +17,7 @@ package configuration
 
 import (
 	"errors"
+	"fmt"
 	"strings"
 
 	strfmt "github.com/go-openapi/strfmt"
@@ -80,7 +81,8 @@ func (c *client) DeleteUser(username string, userlist string, transactionID stri
 	}
 	user, i := GetUserByUsername(username, userlist, p)
 	if user == nil {
-		return c.HandleError(username, "userlist", userlist, "", false, err)
+		e := NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("User %s does not exist in userlist %s", username, userlist))
+		return c.HandleError(username, "userlist", userlist, "", false, e)
 	}
 	if err := p.Delete("userlist", userlist, "user", i); err != nil {
 		return c.HandleError(username, "userlist", userlist, t, transactionID == "", err)

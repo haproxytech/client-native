@@ -17,6 +17,7 @@ package configuration
 
 import (
 	"errors"
+	"fmt"
 	"strings"
 
 	strfmt "github.com/go-openapi/strfmt"
@@ -79,8 +80,9 @@ func (c *client) DeleteGroup(name string, userlist string, transactionID string,
 		return err
 	}
 	group, i := GetGroupByName(name, userlist, p)
-	if group != nil {
-		return c.HandleError(name, "userlist", userlist, "", false, err)
+	if group == nil {
+		e := NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("Group %s does not exist in userlist %s", name, userlist))
+		return c.HandleError(name, "userlist", userlist, "", false, e)
 	}
 	if err := p.Delete("userlist", userlist, "group", i); err != nil {
 		return c.HandleError(name, "userlist", userlist, t, transactionID == "", err)
