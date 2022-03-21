@@ -19,6 +19,7 @@ import (
 	"errors"
 	"fmt"
 	"log"
+	"sync"
 
 	"github.com/haproxytech/client-native/v3/configuration"
 	"github.com/haproxytech/client-native/v3/runtime"
@@ -34,15 +35,19 @@ var (
 
 // HAProxyClient Native client for managing configuration and spitting out HAProxy stats
 type haProxyClient struct {
-	configuration  configuration.Configuration
-	runtime        runtime.Runtime
-	mapStorage     storage.Storage
-	sslCertStorage storage.Storage
-	generalStorage storage.Storage
-	spoe           spoe.Spoe
+	configuration   configuration.Configuration
+	runtime         runtime.Runtime
+	mapStorage      storage.Storage
+	sslCertStorage  storage.Storage
+	generalStorage  storage.Storage
+	spoe            spoe.Spoe
+	configurationMu sync.RWMutex
+	runtimeMu       sync.RWMutex
 }
 
 func (c *haProxyClient) Configuration() (configuration.Configuration, error) {
+	c.configurationMu.RLock()
+	defer c.configurationMu.RUnlock()
 	if c.configuration == nil {
 		return nil, fmt.Errorf("configuration: %w", ErrOptionNotAvailable)
 	}
@@ -50,14 +55,20 @@ func (c *haProxyClient) Configuration() (configuration.Configuration, error) {
 }
 
 func (c *haProxyClient) ReplaceConfiguration(configurationClient configuration.Configuration) {
+	c.configurationMu.Lock()
+	defer c.configurationMu.Unlock()
 	c.configuration = configurationClient
 }
 
 func (c *haProxyClient) ReplaceRuntime(runtime runtime.Runtime) {
+	c.runtimeMu.Lock()
+	defer c.runtimeMu.Unlock()
 	c.runtime = runtime
 }
 
 func (c *haProxyClient) Runtime() (runtime.Runtime, error) {
+	c.runtimeMu.RLock()
+	defer c.runtimeMu.RUnlock()
 	if c.runtime == nil {
 		return nil, fmt.Errorf("runtime: %w", ErrOptionNotAvailable)
 	}
