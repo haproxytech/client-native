@@ -294,7 +294,7 @@ func ParseBind(ondiskBind types.Bind) *models.Bind { //nolint:gocognit,gocyclo
 				b.Process = v.Value
 			case "tcp-ut":
 				t, err := strconv.ParseInt(v.Value, 10, 64)
-				if err == nil && t != 0 {
+				if err == nil {
 					b.TCPUserTimeout = &t
 				}
 			case "crt":
@@ -307,7 +307,7 @@ func ParseBind(ondiskBind types.Bind) *models.Bind { //nolint:gocognit,gocyclo
 				b.Alpn = v.Value
 			case "accept-netscaler-cip":
 				mn, err := strconv.ParseInt(v.Value, 10, 64)
-				if err == nil && mn != 0 {
+				if err == nil {
 					b.AcceptNetscalerCip = mn
 				}
 			case "backlog":
@@ -334,7 +334,7 @@ func ParseBind(ondiskBind types.Bind) *models.Bind { //nolint:gocognit,gocyclo
 				b.CrtList = v.Value
 			case "gid":
 				gid, err := strconv.ParseInt(v.Value, 10, 64)
-				if err == nil && gid != 0 {
+				if err == nil {
 					b.Gid = gid
 				}
 			case "group":
@@ -349,7 +349,7 @@ func ParseBind(ondiskBind types.Bind) *models.Bind { //nolint:gocognit,gocyclo
 				b.SeverityOutput = v.Value
 			case "maxconn":
 				m, err := strconv.ParseInt(v.Value, 10, 64)
-				if err == nil && m != 0 {
+				if err == nil {
 					b.Maxconn = m
 				}
 			case "mode":
@@ -360,7 +360,7 @@ func ParseBind(ondiskBind types.Bind) *models.Bind { //nolint:gocognit,gocyclo
 				b.Namespace = v.Value
 			case "nice":
 				n, err := strconv.ParseInt(v.Value, 10, 64)
-				if err == nil && n != 0 {
+				if err == nil {
 					b.Nice = n
 				}
 			case "npn":

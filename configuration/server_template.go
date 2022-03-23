@@ -306,12 +306,12 @@ func ParseServerTemplate(ondiskServerTemplate types.ServerTemplate) *models.Serv
 				st.SslCertificate = v.Value
 			case "error-limit":
 				c, err := strconv.ParseInt(v.Value, 10, 64)
-				if err == nil && c != 0 {
+				if err == nil {
 					st.ErrorLimit = c
 				}
 			case "fall":
 				c, err := strconv.ParseInt(v.Value, 10, 64)
-				if err == nil && c != 0 {
+				if err == nil {
 					st.Fall = &c
 				}
 			case "init-addr":
@@ -326,22 +326,22 @@ func ParseServerTemplate(ondiskServerTemplate types.ServerTemplate) *models.Serv
 				st.LogProto = v.Value
 			case "maxconn":
 				m, err := strconv.ParseInt(v.Value, 10, 64)
-				if err == nil && m != 0 {
+				if err == nil {
 					st.Maxconn = &m
 				}
 			case "maxqueue":
 				m, err := strconv.ParseInt(v.Value, 10, 64)
-				if err == nil && m != 0 {
+				if err == nil {
 					st.Maxqueue = &m
 				}
 			case "max-reuse":
 				c, err := strconv.ParseInt(v.Value, 10, 64)
-				if err == nil && c != 0 {
+				if err == nil {
 					st.MaxReuse = &c
 				}
 			case "minconn":
 				m, err := strconv.ParseInt(v.Value, 10, 64)
-				if err == nil && m != 0 {
+				if err == nil {
 					st.Minconn = &m
 				}
 			case "namespace":
@@ -358,17 +358,17 @@ func ParseServerTemplate(ondiskServerTemplate types.ServerTemplate) *models.Serv
 				st.OnMarkedUp = v.Value
 			case "pool-low-conn":
 				m, err := strconv.ParseInt(v.Value, 10, 64)
-				if err == nil && m != 0 {
+				if err == nil {
 					st.PoolLowConn = &m
 				}
 			case "pool-max-conn":
 				m, err := strconv.ParseInt(v.Value, 10, 64)
-				if err == nil && m != 0 {
+				if err == nil {
 					st.PoolMaxConn = &m
 				}
 			case "pool-purge-delay":
 				d, err := strconv.ParseInt(v.Value, 10, 64)
-				if err == nil && d != 0 {
+				if err == nil {
 					st.PoolPurgeDelay = &d
 				}
 			case "port":
@@ -406,7 +406,7 @@ func ParseServerTemplate(ondiskServerTemplate types.ServerTemplate) *models.Serv
 				st.Socks4 = v.Value
 			case "tcp-ut":
 				d, err := strconv.ParseInt(v.Value, 10, 64)
-				if err == nil && d != 0 {
+				if err == nil {
 					st.TCPUt = d
 				}
 			case "track":
@@ -417,7 +417,7 @@ func ParseServerTemplate(ondiskServerTemplate types.ServerTemplate) *models.Serv
 				st.Verifyhost = v.Value
 			case "weight":
 				w, err := strconv.ParseInt(v.Value, 10, 64)
-				if err == nil && w != 0 {
+				if err == nil {
 					st.Weight = &w
 				}
 			}
