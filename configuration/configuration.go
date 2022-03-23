@@ -870,22 +870,22 @@ func (s *SectionParser) defaultServer() interface{} { //nolint:gocognit,gocyclo,
 					dServer.LogProto = v.Value
 				case "maxconn":
 					maxconn, err := strconv.ParseInt(v.Value, 10, 64)
-					if err == nil && maxconn != 0 {
+					if err == nil {
 						dServer.Maxconn = &maxconn
 					}
 				case "maxqueue":
 					maxqueue, err := strconv.ParseInt(v.Value, 10, 64)
-					if err == nil && maxqueue != 0 {
+					if err == nil {
 						dServer.Maxqueue = &maxqueue
 					}
 				case "max-reuse":
 					count, err := strconv.ParseInt(v.Value, 10, 64)
-					if err == nil && count != 0 {
+					if err == nil {
 						dServer.MaxReuse = &count
 					}
 				case "minconn":
 					minconn, err := strconv.ParseInt(v.Value, 10, 64)
-					if err == nil && minconn != 0 {
+					if err == nil {
 						dServer.Minconn = &minconn
 					}
 				case "namespace":
@@ -902,17 +902,17 @@ func (s *SectionParser) defaultServer() interface{} { //nolint:gocognit,gocyclo,
 					dServer.OnMarkedUp = v.Value
 				case "pool-low-conn":
 					max, err := strconv.ParseInt(v.Value, 10, 64)
-					if err == nil && max != 0 {
+					if err == nil {
 						dServer.PoolLowConn = &max
 					}
 				case "pool-max-conn":
 					max, err := strconv.ParseInt(v.Value, 10, 64)
-					if err == nil && max != 0 {
+					if err == nil {
 						dServer.PoolMaxConn = &max
 					}
 				case "pool-purge-delay":
 					delay, err := strconv.ParseInt(v.Value, 10, 64)
-					if err == nil && delay != 0 {
+					if err == nil {
 						dServer.PoolPurgeDelay = &delay
 					}
 				case "port":
@@ -950,7 +950,7 @@ func (s *SectionParser) defaultServer() interface{} { //nolint:gocognit,gocyclo,
 					dServer.Socks4 = v.Value
 				case "tcp-ut":
 					delay, err := strconv.ParseInt(v.Value, 10, 64)
-					if err == nil && delay != 0 {
+					if err == nil {
 						dServer.TCPUt = delay
 					}
 				case "track":
@@ -961,7 +961,7 @@ func (s *SectionParser) defaultServer() interface{} { //nolint:gocognit,gocyclo,
 					dServer.Verifyhost = v.Value
 				case "weight":
 					weight, err := strconv.ParseInt(v.Value, 10, 64)
-					if err == nil && weight != 0 {
+					if err == nil {
 						dServer.Weight = &weight
 					}
 
