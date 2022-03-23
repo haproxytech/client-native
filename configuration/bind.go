@@ -308,7 +308,7 @@ func parseBindParams(bindOptions []params.BindOption) (b models.BindParams) { //
 				b.Process = v.Value
 			case "tcp-ut":
 				t, err := strconv.ParseInt(v.Value, 10, 64)
-				if err == nil && t != 0 {
+				if err == nil {
 					b.TCPUserTimeout = &t
 				}
 			case "crt":
@@ -321,7 +321,7 @@ func parseBindParams(bindOptions []params.BindOption) (b models.BindParams) { //
 				b.Alpn = v.Value
 			case "accept-netscaler-cip":
 				mn, err := strconv.ParseInt(v.Value, 10, 64)
-				if err == nil && mn != 0 {
+				if err == nil {
 					b.AcceptNetscalerCip = mn
 				}
 			case "backlog":
@@ -348,7 +348,7 @@ func parseBindParams(bindOptions []params.BindOption) (b models.BindParams) { //
 				b.CrtList = v.Value
 			case "gid":
 				gid, err := strconv.ParseInt(v.Value, 10, 64)
-				if err == nil && gid != 0 {
+				if err == nil {
 					b.Gid = gid
 				}
 			case "group":
@@ -363,7 +363,7 @@ func parseBindParams(bindOptions []params.BindOption) (b models.BindParams) { //
 				b.SeverityOutput = v.Value
 			case "maxconn":
 				m, err := strconv.ParseInt(v.Value, 10, 64)
-				if err == nil && m != 0 {
+				if err == nil {
 					b.Maxconn = m
 				}
 			case "mode":
@@ -374,7 +374,7 @@ func parseBindParams(bindOptions []params.BindOption) (b models.BindParams) { //
 				b.Namespace = v.Value
 			case "nice":
 				n, err := strconv.ParseInt(v.Value, 10, 64)
-				if err == nil && n != 0 {
+				if err == nil {
 					b.Nice = n
 				}
 			case "npn":

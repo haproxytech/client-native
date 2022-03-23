@@ -353,12 +353,12 @@ func ParseServer(ondiskServer types.Server) *models.Server { //nolint:gocyclo,cy
 				s.SslCertificate = v.Value
 			case "error-limit":
 				c, err := strconv.ParseInt(v.Value, 10, 64)
-				if err == nil && c != 0 {
+				if err == nil {
 					s.ErrorLimit = c
 				}
 			case "fall":
 				c, err := strconv.ParseInt(v.Value, 10, 64)
-				if err == nil && c != 0 {
+				if err == nil {
 					s.Fall = &c
 				}
 			case "init-addr":
@@ -373,22 +373,22 @@ func ParseServer(ondiskServer types.Server) *models.Server { //nolint:gocyclo,cy
 				s.LogProto = v.Value
 			case "maxconn":
 				m, err := strconv.ParseInt(v.Value, 10, 64)
-				if err == nil && m != 0 {
+				if err == nil {
 					s.Maxconn = &m
 				}
 			case "maxqueue":
 				m, err := strconv.ParseInt(v.Value, 10, 64)
-				if err == nil && m != 0 {
+				if err == nil {
 					s.Maxqueue = &m
 				}
 			case "max-reuse":
 				c, err := strconv.ParseInt(v.Value, 10, 64)
-				if err == nil && c != 0 {
+				if err == nil {
 					s.MaxReuse = &c
 				}
 			case "minconn":
 				m, err := strconv.ParseInt(v.Value, 10, 64)
-				if err == nil && m != 0 {
+				if err == nil {
 					s.Minconn = &m
 				}
 			case "namespace":
@@ -405,17 +405,17 @@ func ParseServer(ondiskServer types.Server) *models.Server { //nolint:gocyclo,cy
 				s.OnMarkedUp = v.Value
 			case "pool-low-conn":
 				m, err := strconv.ParseInt(v.Value, 10, 64)
-				if err == nil && m != 0 {
+				if err == nil {
 					s.PoolLowConn = &m
 				}
 			case "pool-max-conn":
 				m, err := strconv.ParseInt(v.Value, 10, 64)
-				if err == nil && m != 0 {
+				if err == nil {
 					s.PoolMaxConn = &m
 				}
 			case "pool-purge-delay":
 				d, err := strconv.ParseInt(v.Value, 10, 64)
-				if err == nil && d != 0 {
+				if err == nil {
 					s.PoolPurgeDelay = &d
 				}
 			case "port":
@@ -453,7 +453,7 @@ func ParseServer(ondiskServer types.Server) *models.Server { //nolint:gocyclo,cy
 				s.Socks4 = v.Value
 			case "tcp-ut":
 				d, err := strconv.ParseInt(v.Value, 10, 64)
-				if err == nil && d != 0 {
+				if err == nil {
 					s.TCPUt = d
 				}
 			case "track":
@@ -464,7 +464,7 @@ func ParseServer(ondiskServer types.Server) *models.Server { //nolint:gocyclo,cy
 				s.Verifyhost = v.Value
 			case "weight":
 				w, err := strconv.ParseInt(v.Value, 10, 64)
-				if err == nil && w != 0 {
+				if err == nil {
 					s.Weight = &w
 				}
 			}
