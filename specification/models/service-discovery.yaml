@@ -150,6 +150,9 @@ consul:
       type: string
     namespace:
       type: string
+    regexp:
+      type: string
+      description: "Filters consul services by regexp"
   additionalProperties: false
   example:
     id: "0"
