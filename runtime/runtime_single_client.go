@@ -97,7 +97,7 @@ func (s *SingleRuntime) readFromSocket(command string) (string, error) {
 		return "", err
 	}
 
-	fullCommand := fmt.Sprintf("set severity-output number;%s\n", command)
+	fullCommand := fmt.Sprintf("%s\n", command)
 	if s.worker > 0 {
 		fullCommand = fmt.Sprintf("@%v set severity-output number;@%v %s;quit\n", s.worker, s.worker, command)
 	}
