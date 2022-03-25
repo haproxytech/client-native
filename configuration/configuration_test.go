@@ -95,7 +95,25 @@ global
   tune.vars.txn-max-size 53
   tune.zlib.memlevel 54
   tune.zlib.windowsize 55
-
+  busy-polling
+  max-spread-checks 1
+  maxconnrate 2
+  maxcomprate 3
+  maxcompcpuusage 4
+  maxpipes 5
+  maxsessrate 6
+  maxsslconn 7
+  maxsslrate 8
+  maxzlibmem 9
+  noepoll
+  nokqueue
+  noevports
+  nopoll
+  nosplice
+  nogetaddrinfo
+  noreuseport
+  profiling.tasks on
+  spread-checks 10
 
 defaults
   maxconn 2000
