@@ -31,6 +31,7 @@ require (
 	github.com/go-stack/stack v1.8.0 // indirect
 	github.com/gofrs/flock v0.8.1 // indirect
 	github.com/haproxytech/go-logger v1.0.1-0.20211022075555-178f1cdf4d84 // indirect
+	github.com/kr/pretty v0.2.1 // indirect
 	github.com/mailru/easyjson v0.0.0-20190626092158-b2ccc519800e // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 	go.mongodb.org/mongo-driver v1.1.1 // indirect
