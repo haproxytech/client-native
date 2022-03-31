@@ -1443,6 +1443,20 @@ func (s *SectionObject) checkSingleLine(fieldName string, field reflect.Value) (
 	return false, nil
 }
 
+func (s *SectionObject) isNoOption(attribute string) bool {
+	data, err := s.Parser.Get(s.Section, s.Name, attribute)
+	if err != nil {
+		return false
+	}
+
+	simpleOpt, ok := data.(*types.SimpleOption)
+	if !ok {
+		return false
+	}
+
+	return simpleOpt.NoOption
+}
+
 func (s *SectionObject) set(attribute string, data interface{}) error {
 	return s.Parser.Set(s.Section, s.Name, attribute, data)
 }
@@ -1562,14 +1576,16 @@ func (s *SectionObject) httpReuse(field reflect.Value) error {
 }
 
 func (s *SectionObject) httpConnectionMode(field reflect.Value) error {
-	if err := s.set("option httpclose", nil); err != nil {
-		return err
-	}
-	if err := s.set("option http-server-close", nil); err != nil {
-		return err
-	}
-	if err := s.set("option http-keep-alive", nil); err != nil {
-		return err
+	for _, opt := range []string{"httpclose", "http-server-close", "http-keep-alive"} {
+		attribute := fmt.Sprintf("option %s", opt)
+
+		if s.isNoOption(attribute) {
+			continue
+		}
+
+		if err := s.set(attribute, nil); err != nil {
+			return err
+		}
 	}
 	// Deprecated, delete if exists
 	_ = s.set("option forceclose", nil)
