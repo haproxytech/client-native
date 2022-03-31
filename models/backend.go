@@ -107,6 +107,18 @@ type Backend struct {
 	// http check
 	HTTPCheck *HTTPCheck `json:"http-check,omitempty"`
 
+	// http keep alive
+	// Enum: [enabled disabled]
+	HTTPKeepAlive string `json:"http-keep-alive,omitempty"`
+
+	// http no delay
+	// Enum: [enabled disabled]
+	HTTPNoDelay string `json:"http-no-delay,omitempty"`
+
+	// http server close
+	// Enum: [enabled disabled]
+	HTTPServerClose string `json:"http-server-close,omitempty"`
+
 	// http use htx
 	// Pattern: ^[^\s]+$
 	// Enum: [enabled disabled]
@@ -123,6 +135,10 @@ type Backend struct {
 	// Enum: [enabled disabled]
 	HTTPPretendKeepalive string `json:"http_pretend_keepalive,omitempty"`
 
+	// http proxy
+	// Enum: [enabled disabled]
+	HTTPProxy string `json:"http_proxy,omitempty"`
+
 	// http request timeout
 	HTTPRequestTimeout *int64 `json:"http_request_timeout,omitempty"`
 
@@ -132,6 +148,10 @@ type Backend struct {
 
 	// httpchk params
 	HttpchkParams *HttpchkParams `json:"httpchk_params,omitempty"`
+
+	// httpclose
+	// Enum: [enabled disabled]
+	Httpclose string `json:"httpclose,omitempty"`
 
 	// log health checks
 	// Enum: [enabled disabled]
@@ -265,6 +285,18 @@ func (m *Backend) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
+	if err := m.validateHTTPKeepAlive(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateHTTPNoDelay(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateHTTPServerClose(formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.validateHTTPUseHtx(formats); err != nil {
 		res = append(res, err)
 	}
@@ -277,11 +309,19 @@ func (m *Backend) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
+	if err := m.validateHTTPProxy(formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.validateHTTPReuse(formats); err != nil {
 		res = append(res, err)
 	}
 
 	if err := m.validateHttpchkParams(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateHttpclose(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -836,6 +876,135 @@ func (m *Backend) validateHTTPCheck(formats strfmt.Registry) error {
 	return nil
 }
 
+var backendTypeHTTPKeepAlivePropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		backendTypeHTTPKeepAlivePropEnum = append(backendTypeHTTPKeepAlivePropEnum, v)
+	}
+}
+
+const (
+
+	// BackendHTTPKeepAliveEnabled captures enum value "enabled"
+	BackendHTTPKeepAliveEnabled string = "enabled"
+
+	// BackendHTTPKeepAliveDisabled captures enum value "disabled"
+	BackendHTTPKeepAliveDisabled string = "disabled"
+)
+
+// prop value enum
+func (m *Backend) validateHTTPKeepAliveEnum(path, location string, value string) error {
+	if err := validate.Enum(path, location, value, backendTypeHTTPKeepAlivePropEnum); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *Backend) validateHTTPKeepAlive(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.HTTPKeepAlive) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateHTTPKeepAliveEnum("http-keep-alive", "body", m.HTTPKeepAlive); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+var backendTypeHTTPNoDelayPropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		backendTypeHTTPNoDelayPropEnum = append(backendTypeHTTPNoDelayPropEnum, v)
+	}
+}
+
+const (
+
+	// BackendHTTPNoDelayEnabled captures enum value "enabled"
+	BackendHTTPNoDelayEnabled string = "enabled"
+
+	// BackendHTTPNoDelayDisabled captures enum value "disabled"
+	BackendHTTPNoDelayDisabled string = "disabled"
+)
+
+// prop value enum
+func (m *Backend) validateHTTPNoDelayEnum(path, location string, value string) error {
+	if err := validate.Enum(path, location, value, backendTypeHTTPNoDelayPropEnum); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *Backend) validateHTTPNoDelay(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.HTTPNoDelay) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateHTTPNoDelayEnum("http-no-delay", "body", m.HTTPNoDelay); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+var backendTypeHTTPServerClosePropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		backendTypeHTTPServerClosePropEnum = append(backendTypeHTTPServerClosePropEnum, v)
+	}
+}
+
+const (
+
+	// BackendHTTPServerCloseEnabled captures enum value "enabled"
+	BackendHTTPServerCloseEnabled string = "enabled"
+
+	// BackendHTTPServerCloseDisabled captures enum value "disabled"
+	BackendHTTPServerCloseDisabled string = "disabled"
+)
+
+// prop value enum
+func (m *Backend) validateHTTPServerCloseEnum(path, location string, value string) error {
+	if err := validate.Enum(path, location, value, backendTypeHTTPServerClosePropEnum); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *Backend) validateHTTPServerClose(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.HTTPServerClose) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateHTTPServerCloseEnum("http-server-close", "body", m.HTTPServerClose); err != nil {
+		return err
+	}
+
+	return nil
+}
+
 var backendTypeHTTPUseHtxPropEnum []interface{}
 
 func init() {
@@ -972,6 +1141,49 @@ func (m *Backend) validateHTTPPretendKeepalive(formats strfmt.Registry) error {
 	return nil
 }
 
+var backendTypeHTTPProxyPropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		backendTypeHTTPProxyPropEnum = append(backendTypeHTTPProxyPropEnum, v)
+	}
+}
+
+const (
+
+	// BackendHTTPProxyEnabled captures enum value "enabled"
+	BackendHTTPProxyEnabled string = "enabled"
+
+	// BackendHTTPProxyDisabled captures enum value "disabled"
+	BackendHTTPProxyDisabled string = "disabled"
+)
+
+// prop value enum
+func (m *Backend) validateHTTPProxyEnum(path, location string, value string) error {
+	if err := validate.Enum(path, location, value, backendTypeHTTPProxyPropEnum); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *Backend) validateHTTPProxy(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.HTTPProxy) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateHTTPProxyEnum("http_proxy", "body", m.HTTPProxy); err != nil {
+		return err
+	}
+
+	return nil
+}
+
 var backendTypeHTTPReusePropEnum []interface{}
 
 func init() {
@@ -1034,6 +1246,49 @@ func (m *Backend) validateHttpchkParams(formats strfmt.Registry) error {
 			}
 			return err
 		}
+	}
+
+	return nil
+}
+
+var backendTypeHttpclosePropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		backendTypeHttpclosePropEnum = append(backendTypeHttpclosePropEnum, v)
+	}
+}
+
+const (
+
+	// BackendHttpcloseEnabled captures enum value "enabled"
+	BackendHttpcloseEnabled string = "enabled"
+
+	// BackendHttpcloseDisabled captures enum value "disabled"
+	BackendHttpcloseDisabled string = "disabled"
+)
+
+// prop value enum
+func (m *Backend) validateHttpcloseEnum(path, location string, value string) error {
+	if err := validate.Enum(path, location, value, backendTypeHttpclosePropEnum); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *Backend) validateHttpclose(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.Httpclose) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateHttpcloseEnum("httpclose", "body", m.Httpclose); err != nil {
+		return err
 	}
 
 	return nil

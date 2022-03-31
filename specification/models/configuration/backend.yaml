@@ -36,10 +36,48 @@ backend:
       type: string
       enum: [enabled, disabled]
       x-display-name: All Backups
+    http-keep-alive:
+      type: string
+      enum: [enabled, disabled]
+      x-display-name: HTTP keep-alive
+      x-dependency:
+        mode:
+          value: http
     http-buffer-request:
       type: string
       enum: [enabled, disabled]
       x-display-name: HTTP bufferrequest
+      x-dependency:
+        mode:
+          value: http
+    http-no-delay:
+      type: string
+      enum: [enabled, disabled]
+      x-display-name: HTTP low interactive delays
+      x-dependency:
+        mode:
+          value: http
+    http-server-close:
+      type: string
+      enum: [enabled, disabled]
+      x-display-name: HTTP server close
+      x-dependency:
+        mode:
+          value: http
+    httpclose:
+      type: string
+      enum: [enabled, disabled]
+      x-display-name: HTTP connection closing
+      x-dependency:
+        mode:
+          value: http
+    http_proxy:
+      type: string
+      enum: [enabled, disabled]
+      x-display-name: HTTP proxy mode
+      x-dependency:
+        mode:
+          value: http
     log_tag:
       type: string
       pattern: '^[^\s]+$'
@@ -177,6 +215,9 @@ backend:
       type: string
       enum: [enabled, disabled]
       x-display-name: H1 Adjust Bogus Server
+      x-dependency:
+        mode:
+          value: http
     compression:
       $ref: "#/definitions/compression"
     stats_options:

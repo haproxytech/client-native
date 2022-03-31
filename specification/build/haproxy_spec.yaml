@@ -1325,6 +1325,9 @@ definitions:
           - enabled
           - disabled
           type: string
+          x-dependency:
+            mode:
+              value: http
           x-display-name: H1 Adjust Bogus Server
         hash_type:
           properties:
@@ -1350,9 +1353,39 @@ definitions:
           - enabled
           - disabled
           type: string
+          x-dependency:
+            mode:
+              value: http
           x-display-name: HTTP bufferrequest
         http-check:
           $ref: '#/definitions/http_check'
+        http-keep-alive:
+          enum:
+          - enabled
+          - disabled
+          type: string
+          x-dependency:
+            mode:
+              value: http
+          x-display-name: HTTP keep-alive
+        http-no-delay:
+          enum:
+          - enabled
+          - disabled
+          type: string
+          x-dependency:
+            mode:
+              value: http
+          x-display-name: HTTP low interactive delays
+        http-server-close:
+          enum:
+          - enabled
+          - disabled
+          type: string
+          x-dependency:
+            mode:
+              value: http
+          x-display-name: HTTP server close
         http-use-htx:
           enum:
           - enabled
@@ -1385,6 +1418,15 @@ definitions:
           x-dependency:
             mode:
               value: http
+        http_proxy:
+          enum:
+          - enabled
+          - disabled
+          type: string
+          x-dependency:
+            mode:
+              value: http
+          x-display-name: HTTP proxy mode
         http_request_timeout:
           type: integer
           x-dependency:
@@ -1406,6 +1448,15 @@ definitions:
           x-dependency:
             mode:
               value: http
+        httpclose:
+          enum:
+          - enabled
+          - disabled
+          type: string
+          x-dependency:
+            mode:
+              value: http
+          x-display-name: HTTP connection closing
         log_health_checks:
           enum:
           - enabled
