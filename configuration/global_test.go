@@ -111,6 +111,138 @@ func TestGetGlobal(t *testing.T) {
 	if global.Gid != 1 {
 		t.Errorf("Gid is %v, expected 1", global.Gid)
 	}
+	if *global.TuneOptions.BuffersLimit != 11 {
+		t.Errorf("BuffersLimit is %v, expected 11", global.TuneOptions.BuffersLimit)
+	}
+	if global.TuneOptions.BuffersReserve != 12 {
+		t.Errorf("BuffersReserve is %v, expected 12", global.TuneOptions.BuffersReserve)
+	}
+	if global.TuneOptions.Bufsize != 13 {
+		t.Errorf("Bufsize is %v, expected 13", global.TuneOptions.Bufsize)
+	}
+	if global.TuneOptions.CompMaxlevel != 14 {
+		t.Errorf("CompMaxlevel is %v, expected 14", global.TuneOptions.CompMaxlevel)
+	}
+	if global.TuneOptions.H2HeaderTableSize != 15 {
+		t.Errorf("H2HeaderTableSize is %v, expected 15", global.TuneOptions.H2HeaderTableSize)
+	}
+	if *global.TuneOptions.H2InitialWindowSize != 16 {
+		t.Errorf("H2InitialWindowSize is %v, expected 16", global.TuneOptions.H2InitialWindowSize)
+	}
+	if global.TuneOptions.H2MaxConcurrentStreams != 17 {
+		t.Errorf("H2MaxConcurrentStreams is %v, expected 17", global.TuneOptions.H2MaxConcurrentStreams)
+	}
+	if global.TuneOptions.H2MaxFrameSize != 18 {
+		t.Errorf("H2MaxFrameSize is %v, expected 18", global.TuneOptions.H2MaxFrameSize)
+	}
+	if global.TuneOptions.HTTPCookielen != 19 {
+		t.Errorf("HTTPCookielen is %v, expected 19", global.TuneOptions.HTTPCookielen)
+	}
+	if global.TuneOptions.HTTPLogurilen != 20 {
+		t.Errorf("HTTPLogurilen is %v, expected 20", global.TuneOptions.HTTPLogurilen)
+	}
+	if global.TuneOptions.HTTPMaxhdr != 21 {
+		t.Errorf("HTTPMaxhdr is %v, expected 21", global.TuneOptions.HTTPMaxhdr)
+	}
+	if *global.TuneOptions.Idletimer != 22 {
+		t.Errorf("Idletimer is %v, expected 22", global.TuneOptions.Idletimer)
+	}
+	if global.TuneOptions.LuaForcedYield != 23 {
+		t.Errorf("LuaForcedYield is %v, expected 23", global.TuneOptions.LuaForcedYield)
+	}
+	if global.TuneOptions.LuaMaxmem != true {
+		t.Errorf("Maxzlibmem is false, expected true")
+	}
+	if *global.TuneOptions.LuaSessionTimeout != 25 {
+		t.Errorf("LuaSessionTimeout is %v, expected 25", global.TuneOptions.LuaSessionTimeout)
+	}
+	if *global.TuneOptions.LuaTaskTimeout != 26 {
+		t.Errorf("LuaTaskTimeout is %v, expected 26", global.TuneOptions.LuaTaskTimeout)
+	}
+	if *global.TuneOptions.LuaServiceTimeout != 27 {
+		t.Errorf("LuaServiceTimeout is %v, expected 27", global.TuneOptions.LuaServiceTimeout)
+	}
+	if global.TuneOptions.Maxaccept != 28 {
+		t.Errorf("Maxaccept is %v, expected 28", global.TuneOptions.Maxaccept)
+	}
+	if global.TuneOptions.Maxpollevents != 29 {
+		t.Errorf("Maxpollevents is %v, expected 29", global.TuneOptions.Maxpollevents)
+	}
+	if global.TuneOptions.Maxrewrite != 30 {
+		t.Errorf("Maxrewrite is %v, expected 30", global.TuneOptions.Maxrewrite)
+	}
+	if *global.TuneOptions.PatternCacheSize != 31 {
+		t.Errorf("PatternCacheSize is %v, expected 31", global.TuneOptions.PatternCacheSize)
+	}
+	if global.TuneOptions.Pipesize != 32 {
+		t.Errorf("Pipesize is %v, expected 32", global.TuneOptions.Pipesize)
+	}
+	if global.TuneOptions.PoolHighFdRatio != 33 {
+		t.Errorf("PoolHighFdRatio is %v, expected 33", global.TuneOptions.PoolHighFdRatio)
+	}
+	if global.TuneOptions.PoolLowFdRatio != 34 {
+		t.Errorf("PoolLowFdRatio is %v, expected 34", global.TuneOptions.PoolLowFdRatio)
+	}
+	if *global.TuneOptions.RcvbufClient != 35 {
+		t.Errorf("RcvbufClient is %v, expected 35", global.TuneOptions.RcvbufClient)
+	}
+	if *global.TuneOptions.RcvbufServer != 36 {
+		t.Errorf("RcvbufServer is %v, expected 36", global.TuneOptions.RcvbufServer)
+	}
+	if global.TuneOptions.RecvEnough != 37 {
+		t.Errorf("RecvEnough is %v, expected 37", global.TuneOptions.RecvEnough)
+	}
+	if global.TuneOptions.RunqueueDepth != 38 {
+		t.Errorf("RunqueueDepth is %v, expected 38", global.TuneOptions.RunqueueDepth)
+	}
+	if *global.TuneOptions.SndbufClient != 39 {
+		t.Errorf("SndbufClient is %v, expected 39", global.TuneOptions.SndbufClient)
+	}
+	if *global.TuneOptions.SndbufServer != 40 {
+		t.Errorf("SndbufServer is %v, expected 40", global.TuneOptions.SndbufServer)
+	}
+	if *global.TuneOptions.SslCachesize != 41 {
+		t.Errorf("SslCachesize is %v, expected 41", global.TuneOptions.SslCachesize)
+	}
+	if global.TuneOptions.SslKeylog != "enabled" {
+		t.Errorf("SslKeylog is %v, expected enabled", global.TuneOptions.SslKeylog)
+	}
+	if *global.TuneOptions.SslLifetime != 43 {
+		t.Errorf("SslLifetime is %v, expected 43", global.TuneOptions.SslLifetime)
+	}
+	if *global.TuneOptions.SslMaxrecord != 44 {
+		t.Errorf("SslMaxrecord is %v, expected 44", global.TuneOptions.SslMaxrecord)
+	}
+	if global.TuneOptions.SslDefaultDhParam != 45 {
+		t.Errorf("SslDefaultDhParam is %v, expected 45", global.TuneOptions.SslDefaultDhParam)
+	}
+	if global.TuneOptions.SslCtxCacheSize != 46 {
+		t.Errorf("SslCtxCacheSize is %v, expected 46", global.TuneOptions.SslCtxCacheSize)
+	}
+	if *global.TuneOptions.SslCaptureBufferSize != 47 {
+		t.Errorf("SslCaptureBufferSize is %v, expected 47", global.TuneOptions.SslCaptureBufferSize)
+	}
+	if *global.TuneOptions.VarsGlobalMaxSize != 49 {
+		t.Errorf("VarsGlobalMaxSize is %v, expected 49", global.TuneOptions.VarsGlobalMaxSize)
+	}
+	if *global.TuneOptions.VarsProcMaxSize != 50 {
+		t.Errorf("VarsProcMaxSize is %v, expected 50", global.TuneOptions.VarsProcMaxSize)
+	}
+	if *global.TuneOptions.VarsReqresMaxSize != 51 {
+		t.Errorf("VarsReqresMaxSize is %v, expected 51", global.TuneOptions.VarsReqresMaxSize)
+	}
+	if *global.TuneOptions.VarsSessMaxSize != 52 {
+		t.Errorf("VarsSessMaxSize is %v, expected 52", global.TuneOptions.VarsSessMaxSize)
+	}
+	if *global.TuneOptions.VarsTxnMaxSize != 53 {
+		t.Errorf("VarsTxnMaxSize is %v, expected 53", global.TuneOptions.VarsTxnMaxSize)
+	}
+	if *&global.TuneOptions.ZlibMemlevel != 54 {
+		t.Errorf("ZlibMemlevel is %v, expected 54", global.TuneOptions.ZlibMemlevel)
+	}
+	if *&global.TuneOptions.ZlibWindowsize != 55 {
+		t.Errorf("ZlibWindowsize is %v, expected 55", global.TuneOptions.ZlibWindowsize)
+	}
 }
 
 func TestPutGlobal(t *testing.T) {

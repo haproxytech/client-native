@@ -43,6 +43,59 @@ global
   h1-case-adjust content-type Content-Type
   uid 1
   gid 1
+  profiling.memory on
+  ssl-mode-async
+  tune.buffers.limit 11
+  tune.buffers.reserve 12
+  tune.bufsize 13
+  tune.comp.maxlevel 14
+  tune.fail-alloc
+  tune.fd.edge-triggered on
+  tune.h2.header-table-size 15
+  tune.h2.initial-window-size 16
+  tune.h2.max-concurrent-streams 17
+  tune.h2.max-frame-size 18
+  tune.http.cookielen 19
+  tune.http.logurilen 20
+  tune.http.maxhdr 21
+  tune.idle-pool.shared on
+  tune.idletimer 22
+  tune.listener.multi-queue on
+  tune.lua.forced-yield 23
+  tune.lua.maxmem
+  tune.lua.session-timeout 25
+  tune.lua.task-timeout 26
+  tune.lua.service-timeout 27
+  tune.maxaccept 28
+  tune.maxpollevents 29
+  tune.maxrewrite 30
+  tune.pattern.cache-size 31
+  tune.pipesize 32
+  tune.pool-high-fd-ratio 33
+  tune.pool-low-fd-ratio 34
+  tune.rcvbuf.client 35
+  tune.rcvbuf.server 36
+  tune.recv_enough 37
+  tune.runqueue-depth 38
+  tune.sched.low-latency on
+  tune.sndbuf.client 39
+  tune.sndbuf.server 40
+  tune.ssl.cachesize 41
+  tune.ssl.force-private-cache
+  tune.ssl.keylog on
+  tune.ssl.lifetime 43
+  tune.ssl.maxrecord 44
+  tune.ssl.default-dh-param 45
+  tune.ssl.ssl-ctx-cache-size 46
+  tune.ssl.capture-buffer-size 47
+  tune.vars.global-max-size 49
+  tune.vars.proc-max-size 50
+  tune.vars.reqres-max-size 51
+  tune.vars.sess-max-size 52
+  tune.vars.txn-max-size 53
+  tune.zlib.memlevel 54
+  tune.zlib.windowsize 55
+
 
 defaults
   maxconn 2000
