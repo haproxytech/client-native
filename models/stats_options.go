@@ -21,6 +21,8 @@ package models
 // Editing this file might prove futile when you re-run the swagger generate command
 
 import (
+	"encoding/json"
+
 	"github.com/go-openapi/errors"
 	"github.com/go-openapi/strfmt"
 	"github.com/go-openapi/swag"
@@ -31,6 +33,16 @@ import (
 //
 // swagger:model stats_options
 type StatsOptions struct {
+
+	// stats admin
+	StatsAdmin bool `json:"stats_admin,omitempty"`
+
+	// stats admin cond
+	// Enum: [if unless]
+	StatsAdminCond string `json:"stats_admin_cond,omitempty"`
+
+	// stats admin cond test
+	StatsAdminCondTest string `json:"stats_admin_cond_test,omitempty"`
 
 	// stats enable
 	StatsEnable bool `json:"stats_enable,omitempty"`
@@ -64,6 +76,10 @@ type StatsOptions struct {
 func (m *StatsOptions) Validate(formats strfmt.Registry) error {
 	var res []error
 
+	if err := m.validateStatsAdminCond(formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.validateStatsMaxconn(formats); err != nil {
 		res = append(res, err)
 	}
@@ -79,6 +95,49 @@ func (m *StatsOptions) Validate(formats strfmt.Registry) error {
 	if len(res) > 0 {
 		return errors.CompositeValidationError(res...)
 	}
+	return nil
+}
+
+var statsOptionsTypeStatsAdminCondPropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["if","unless"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		statsOptionsTypeStatsAdminCondPropEnum = append(statsOptionsTypeStatsAdminCondPropEnum, v)
+	}
+}
+
+const (
+
+	// StatsOptionsStatsAdminCondIf captures enum value "if"
+	StatsOptionsStatsAdminCondIf string = "if"
+
+	// StatsOptionsStatsAdminCondUnless captures enum value "unless"
+	StatsOptionsStatsAdminCondUnless string = "unless"
+)
+
+// prop value enum
+func (m *StatsOptions) validateStatsAdminCondEnum(path, location string, value string) error {
+	if err := validate.Enum(path, location, value, statsOptionsTypeStatsAdminCondPropEnum); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *StatsOptions) validateStatsAdminCond(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.StatsAdminCond) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateStatsAdminCondEnum("stats_admin_cond", "body", m.StatsAdminCond); err != nil {
+		return err
+	}
+
 	return nil
 }
 

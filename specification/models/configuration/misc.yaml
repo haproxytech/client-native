@@ -169,6 +169,27 @@ cookie:
 stats_options:
   type: object
   properties:
+    stats_admin:
+      type: boolean
+      x-display-name: Stats Admin
+    stats_admin_cond:
+      type: string
+      x-display-name: Stats Admin Condition
+      enum: [if, unless]
+      x-dependency:
+        stats_admin:
+          value: true
+          required: true
+    stats_admin_cond_test:
+      type: string
+      x-display-name: Stats Admin Condition Test
+      x-dynamic-enum:
+        operation: getACLs
+        property: acl_name
+        freeFormat: true
+      x-dependency:
+        stats_admin_cond:
+          required: true
     stats_enable:
       type: boolean
       x-display-name: Stats Enable

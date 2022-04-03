@@ -5407,6 +5407,29 @@ definitions:
       type: object
   stats_options:
       properties:
+        stats_admin:
+          type: boolean
+          x-display-name: Stats Admin
+        stats_admin_cond:
+          enum:
+          - if
+          - unless
+          type: string
+          x-dependency:
+            stats_admin:
+              required: true
+              value: true
+          x-display-name: Stats Admin Condition
+        stats_admin_cond_test:
+          type: string
+          x-dependency:
+            stats_admin_cond:
+              required: true
+          x-display-name: Stats Admin Condition Test
+          x-dynamic-enum:
+            freeFormat: true
+            operation: getACLs
+            property: acl_name
         stats_enable:
           type: boolean
           x-display-name: Stats Enable

@@ -1136,7 +1136,7 @@ func (s *SectionParser) httpCheck() interface{} {
 	return nil
 }
 
-func (s *SectionParser) statsOptions() interface{} {
+func (s *SectionParser) statsOptions() interface{} { //nolint:gocognit
 	data, err := s.get("stats", false)
 	if err != nil {
 		return nil
@@ -1177,6 +1177,14 @@ func (s *SectionParser) statsOptions() interface{} {
 		case *stats.URI:
 			if v.Prefix != "" {
 				opt.StatsURIPrefix = v.Prefix
+			}
+		case *stats.Admin:
+			if v != nil {
+				opt.StatsAdmin = true
+				if v.Cond != "" {
+					opt.StatsAdminCond = v.Cond
+					opt.StatsAdminCondTest = v.CondTest
+				}
 			}
 		}
 	}
@@ -2719,6 +2727,13 @@ func (s *SectionObject) statsOptions(field reflect.Value) error {
 		s.Maxconn = &parsers.MaxConn{}
 		if err := s.Maxconn.Set(d, 0); err != nil {
 			return err
+		}
+		ss = append(ss, s)
+	}
+	if opt.StatsAdmin {
+		s := &stats.Admin{
+			Cond:     opt.StatsAdminCond,
+			CondTest: opt.StatsAdminCondTest,
 		}
 		ss = append(ss, s)
 	}
