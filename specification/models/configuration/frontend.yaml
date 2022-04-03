@@ -105,6 +105,13 @@ frontend:
       type: string
       enum: [enabled]
       x-display-name: Continuous Statistics
+    tcpka:
+      type: string
+      enum: [enabled, disabled]
+      x-display-name: TCP Keep Alive
+      x-dependency:
+        mode:
+          value: tcp
     clitcpka:
       type: string
       enum: [enabled, disabled]

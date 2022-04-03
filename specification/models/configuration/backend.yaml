@@ -47,6 +47,20 @@ backend:
       type: string
       enum: [enabled, disabled]
       x-display-name: Log Health Checks
+    tcpka:
+      type: string
+      enum: [enabled, disabled]
+      x-display-name: TCP Keep Alive
+      x-dependency:
+        mode:
+          value: tcp
+    srvtcpka:
+      type: string
+      enum: [enabled, disabled]
+      x-display-name: Server TCP Keep Alive
+      x-dependency:
+        mode:
+          value: tcp
     http_connection_mode:
       type: string
       enum: [httpclose, http-server-close, http-keep-alive]

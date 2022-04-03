@@ -171,11 +171,19 @@ type Backend struct {
 	// smtpchk params
 	SmtpchkParams *SmtpchkParams `json:"smtpchk_params,omitempty"`
 
+	// srvtcpka
+	// Enum: [enabled disabled]
+	Srvtcpka string `json:"srvtcpka,omitempty"`
+
 	// stats options
 	StatsOptions *StatsOptions `json:"stats_options,omitempty"`
 
 	// stick table
 	StickTable *ConfigStickTable `json:"stick_table,omitempty"`
+
+	// tcpka
+	// Enum: [enabled disabled]
+	Tcpka string `json:"tcpka,omitempty"`
 
 	// tunnel timeout
 	TunnelTimeout *int64 `json:"tunnel_timeout,omitempty"`
@@ -309,11 +317,19 @@ func (m *Backend) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
+	if err := m.validateSrvtcpka(formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.validateStatsOptions(formats); err != nil {
 		res = append(res, err)
 	}
 
 	if err := m.validateStickTable(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateTcpka(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -1207,6 +1223,49 @@ func (m *Backend) validateSmtpchkParams(formats strfmt.Registry) error {
 	return nil
 }
 
+var backendTypeSrvtcpkaPropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		backendTypeSrvtcpkaPropEnum = append(backendTypeSrvtcpkaPropEnum, v)
+	}
+}
+
+const (
+
+	// BackendSrvtcpkaEnabled captures enum value "enabled"
+	BackendSrvtcpkaEnabled string = "enabled"
+
+	// BackendSrvtcpkaDisabled captures enum value "disabled"
+	BackendSrvtcpkaDisabled string = "disabled"
+)
+
+// prop value enum
+func (m *Backend) validateSrvtcpkaEnum(path, location string, value string) error {
+	if err := validate.Enum(path, location, value, backendTypeSrvtcpkaPropEnum); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *Backend) validateSrvtcpka(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.Srvtcpka) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateSrvtcpkaEnum("srvtcpka", "body", m.Srvtcpka); err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func (m *Backend) validateStatsOptions(formats strfmt.Registry) error {
 
 	if swag.IsZero(m.StatsOptions) { // not required
@@ -1238,6 +1297,49 @@ func (m *Backend) validateStickTable(formats strfmt.Registry) error {
 			}
 			return err
 		}
+	}
+
+	return nil
+}
+
+var backendTypeTcpkaPropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		backendTypeTcpkaPropEnum = append(backendTypeTcpkaPropEnum, v)
+	}
+}
+
+const (
+
+	// BackendTcpkaEnabled captures enum value "enabled"
+	BackendTcpkaEnabled string = "enabled"
+
+	// BackendTcpkaDisabled captures enum value "disabled"
+	BackendTcpkaDisabled string = "disabled"
+)
+
+// prop value enum
+func (m *Backend) validateTcpkaEnum(path, location string, value string) error {
+	if err := validate.Enum(path, location, value, backendTypeTcpkaPropEnum); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *Backend) validateTcpka(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.Tcpka) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateTcpkaEnum("tcpka", "body", m.Tcpka); err != nil {
+		return err
 	}
 
 	return nil

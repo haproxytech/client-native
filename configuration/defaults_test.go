@@ -36,6 +36,12 @@ func TestGetDefaults(t *testing.T) { //nolint:gocognit,gocyclo
 	if d.Clitcpka != "enabled" {
 		t.Errorf("Clitcpka not enabled: %v", d.Clitcpka)
 	}
+	if d.Srvtcpka != "enabled" {
+		t.Errorf("Srvtcpka not enabled: %v", d.Srvtcpka)
+	}
+	if d.Tcpka != "enabled" {
+		t.Errorf("Tcpka not enabled: %v", d.Tcpka)
+	}
 	if d.Dontlognull != "enabled" {
 		t.Errorf("Dontlognull not enabled: %v", d.Dontlognull)
 	}

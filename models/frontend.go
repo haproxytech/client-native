@@ -146,6 +146,10 @@ type Frontend struct {
 	// stick table
 	StickTable *ConfigStickTable `json:"stick_table,omitempty"`
 
+	// tcpka
+	// Enum: [enabled disabled]
+	Tcpka string `json:"tcpka,omitempty"`
+
 	// tcplog
 	Tcplog bool `json:"tcplog,omitempty"`
 
@@ -245,6 +249,10 @@ func (m *Frontend) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateStickTable(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateTcpka(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -923,6 +931,49 @@ func (m *Frontend) validateStickTable(formats strfmt.Registry) error {
 			}
 			return err
 		}
+	}
+
+	return nil
+}
+
+var frontendTypeTcpkaPropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		frontendTypeTcpkaPropEnum = append(frontendTypeTcpkaPropEnum, v)
+	}
+}
+
+const (
+
+	// FrontendTcpkaEnabled captures enum value "enabled"
+	FrontendTcpkaEnabled string = "enabled"
+
+	// FrontendTcpkaDisabled captures enum value "disabled"
+	FrontendTcpkaDisabled string = "disabled"
+)
+
+// prop value enum
+func (m *Frontend) validateTcpkaEnum(path, location string, value string) error {
+	if err := validate.Enum(path, location, value, frontendTypeTcpkaPropEnum); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *Frontend) validateTcpka(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.Tcpka) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateTcpkaEnum("tcpka", "body", m.Tcpka); err != nil {
+		return err
 	}
 
 	return nil

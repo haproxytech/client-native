@@ -104,6 +104,12 @@ func TestGetBackends(t *testing.T) { //nolint:gocognit,gocyclo
 		if *b.ServerTimeout != 3000 {
 			t.Errorf("%v: ServerTimeout not 3000: %v", b.Name, *b.ServerTimeout)
 		}
+		if b.Tcpka != "enabled" {
+			t.Errorf("%v: Tcpka not enabled: %v", b.Name, b.Tcpka)
+		}
+		if b.Srvtcpka != "enabled" {
+			t.Errorf("%v: Srvtcpka not enabled: %v", b.Name, b.Srvtcpka)
+		}
 	}
 }
 
@@ -188,6 +194,12 @@ func TestGetBackend(t *testing.T) {
 	}
 	if b.H1CaseAdjustBogusServer != "disabled" {
 		t.Errorf("%v: H1CaseAdjustBogusServer not disabled: %v", b.Name, b.H1CaseAdjustBogusServer)
+	}
+	if b.Tcpka != "enabled" {
+		t.Errorf("%v: Tcpka not enabled: %v", b.Name, b.Tcpka)
+	}
+	if b.Srvtcpka != "enabled" {
+		t.Errorf("%v: Srvtcpka not enabled: %v", b.Name, b.Srvtcpka)
 	}
 	if b.Compression == nil {
 		t.Errorf("%v: Compression is nil", b.Name)

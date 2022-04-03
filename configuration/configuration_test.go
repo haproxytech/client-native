@@ -50,6 +50,8 @@ defaults
   mode http
   bind-process 1-4
   balance roundrobin
+  option tcpka
+  option srvtcpka
   option clitcpka
   option dontlognull
   option forwardfor header X-Forwarded-For
@@ -178,6 +180,7 @@ frontend test
   use_backend test_2 if TRUE
   use_backend %[req.cookie(foo)]
   timeout client 4s
+  option tcpka
   option clitcpka
   unique-id-format %{+X}o%ci:%cp_%fi:%fp_%Ts_%rt:%pid
   unique-id-header X-Unique-ID
@@ -202,6 +205,7 @@ frontend test_2
   backlog 2048
   default_backend test_2
   timeout client 4s
+  option tcpka
   option clitcpka
   http-request capture req.cook_cnt(FirstVisit),bool len 10
   http-request capture req.cook_cnt(FirstVisit),bool id 0
@@ -218,6 +222,8 @@ backend test
   option http-keep-alive
   option forwardfor header X-Forwarded-For
   option httpchk HEAD /
+  option tcpka
+  option srvtcpka
   default-server fall 2s rise 4s inter 5s port 8888
   stick store-request src table test
   stick match src table test
@@ -295,6 +301,8 @@ backend test_2
   option http-keep-alive
   option forwardfor header X-Forwarded-For
   option httpchk HEAD /
+  option tcpka
+  option srvtcpka
   default-server fall 2s rise 4s inter 5s port 8888 slowstart 6000
   option contstats
   timeout check 2s

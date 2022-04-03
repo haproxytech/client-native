@@ -83,10 +83,18 @@ defaults:
       type: string
       enum: [enabled, disabled]
       x-display-name: Log Health Checks
+    tcpka:
+      type: string
+      enum: [enabled, disabled]
+      x-display-name: TCP Keep Alive
     clitcpka:
       type: string
       enum: [enabled, disabled]
       x-display-name: Client TCP Keep Alive
+    srvtcpka:
+      type: string
+      enum: [enabled, disabled]
+      x-display-name: Server TCP Keep Alive
     forwardfor:
       $ref: "#/definitions/forwardfor"
     check_timeout:

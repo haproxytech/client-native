@@ -1005,8 +1005,20 @@ definitions:
           x-nullable: true
         smtpchk_params:
           $ref: '#/definitions/smtpchk_params'
+        srvtcpka:
+          enum:
+          - enabled
+          - disabled
+          type: string
+          x-display-name: Server TCP Keep Alive
         stats_options:
           $ref: '#/definitions/stats_options'
+        tcpka:
+          enum:
+          - enabled
+          - disabled
+          type: string
+          x-display-name: TCP Keep Alive
         tcplog:
           type: boolean
           x-display-name: TCP Log
@@ -1183,6 +1195,15 @@ definitions:
           $ref: '#/definitions/stats_options'
         stick_table:
           $ref: '#/definitions/config_stick_table'
+        tcpka:
+          enum:
+          - enabled
+          - disabled
+          type: string
+          x-dependency:
+            mode:
+              value: tcp
+          x-display-name: TCP Keep Alive
         tcplog:
           type: boolean
           x-dependency:
@@ -1420,10 +1441,28 @@ definitions:
           x-nullable: true
         smtpchk_params:
           $ref: '#/definitions/smtpchk_params'
+        srvtcpka:
+          enum:
+          - enabled
+          - disabled
+          type: string
+          x-dependency:
+            mode:
+              value: tcp
+          x-display-name: Server TCP Keep Alive
         stats_options:
           $ref: '#/definitions/stats_options'
         stick_table:
           $ref: '#/definitions/config_stick_table'
+        tcpka:
+          enum:
+          - enabled
+          - disabled
+          type: string
+          x-dependency:
+            mode:
+              value: tcp
+          x-display-name: TCP Keep Alive
         tunnel_timeout:
           type: integer
           x-nullable: true

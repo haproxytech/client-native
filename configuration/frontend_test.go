@@ -77,6 +77,12 @@ func TestGetFrontends(t *testing.T) { //nolint:gocognit
 		if *f.ClientTimeout != 4000 {
 			t.Errorf("%v: ClientTimeout not 4: %v", f.Name, *f.ClientTimeout)
 		}
+		if f.Tcpka != "enabled" {
+			t.Errorf("%v: Tcpka not enabled: %v", f.Name, f.Tcpka)
+		}
+		if f.Clitcpka != "enabled" {
+			t.Errorf("%v: Clitcpka not enabled: %v", f.Name, f.Clitcpka)
+		}
 	}
 }
 
@@ -143,6 +149,12 @@ func TestGetFrontend(t *testing.T) {
 	}
 	if f.H1CaseAdjustBogusClient != "disabled" {
 		t.Errorf("%v: H1CaseAdjustBogusClient not disabled: %v", f.Name, f.H1CaseAdjustBogusClient)
+	}
+	if f.Tcpka != "enabled" {
+		t.Errorf("%v: Tcpka not enabled: %v", f.Name, f.Tcpka)
+	}
+	if f.Clitcpka != "enabled" {
+		t.Errorf("%v: Clitcpka not enabled: %v", f.Name, f.Clitcpka)
 	}
 	if f.Compression == nil {
 		t.Errorf("%v: Compression is nil", f.Name)
