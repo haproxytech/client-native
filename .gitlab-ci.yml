@@ -98,7 +98,7 @@ tidy:
   tags:
     - go
   script:
-    - go mod tidy
+    - go mod tidy -compat=1.17
     - test -z "$(git diff 2> /dev/null)" || exit 'Go modules not tidied, issue \`go mod tidy\` and commit the result'
   only:
     - merge_requests
