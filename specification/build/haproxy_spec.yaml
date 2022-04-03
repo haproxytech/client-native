@@ -424,6 +424,9 @@ definitions:
         external_check:
           type: boolean
           x-display-name: External Check
+        gid:
+          type: integer
+          x-display-name: GID
         group:
           pattern: ^[^\s]+$
           type: string
@@ -754,6 +757,9 @@ definitions:
           type: integer
           x-deprecated: true
           x-display-name: SSL Default DH Parameter Size
+        uid:
+          type: integer
+          x-display-name: UID
         user:
           pattern: ^[^\s]+$
           type: string

@@ -63,6 +63,9 @@ type Global struct {
 	// external check
 	ExternalCheck bool `json:"external_check,omitempty"`
 
+	// gid
+	Gid int64 `json:"gid,omitempty"`
+
 	// group
 	// Pattern: ^[^\s]+$
 	Group string `json:"group,omitempty"`
@@ -139,6 +142,9 @@ type Global struct {
 
 	// tune ssl default dh param
 	TuneSslDefaultDhParam int64 `json:"tune_ssl_default_dh_param,omitempty"`
+
+	// uid
+	UID int64 `json:"uid,omitempty"`
 
 	// user
 	// Pattern: ^[^\s]+$

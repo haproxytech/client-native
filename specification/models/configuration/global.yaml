@@ -8,6 +8,9 @@ global:
       type: string
       pattern: '^[^\s]+$'
       x-display-name: Chroot
+    gid:
+      type: integer
+      x-display-name: GID
     group:
       type: string
       pattern: '^[^\s]+$'
@@ -16,6 +19,9 @@ global:
       type: integer
       x-nullable: true
       x-display-name: Hard Stop After
+    uid:
+      type: integer
+      x-display-name: UID
     user:
       type: string
       pattern: '^[^\s]+$'

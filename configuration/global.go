@@ -143,6 +143,16 @@ func ParseGlobalSection(p parser.Parser) (*models.Global, error) { //nolint:goco
 		localPeer = userParser.Value
 	}
 
+	var uid int64
+	data, err = p.Get(parser.Global, parser.GlobalSectionName, "uid")
+	if err == nil {
+		uidParser, ok := data.(*types.Int64C)
+		if !ok {
+			return nil, misc.CreateTypeAssertError("uid")
+		}
+		uid = uidParser.Value
+	}
+
 	var user string
 	data, err = p.Get(parser.Global, parser.GlobalSectionName, "user")
 	if err == nil {
@@ -151,6 +161,16 @@ func ParseGlobalSection(p parser.Parser) (*models.Global, error) { //nolint:goco
 			return nil, misc.CreateTypeAssertError("user")
 		}
 		user = userParser.Value
+	}
+
+	var gid int64
+	data, err = p.Get(parser.Global, parser.GlobalSectionName, "gid")
+	if err == nil {
+		gidParser, ok := data.(*types.Int64C)
+		if !ok {
+			return nil, misc.CreateTypeAssertError("gid")
+		}
+		gid = gidParser.Value
 	}
 
 	var group string
@@ -405,7 +425,9 @@ func ParseGlobalSection(p parser.Parser) (*models.Global, error) { //nolint:goco
 	}
 
 	global := &models.Global{
+		UID:                          uid,
 		User:                         user,
+		Gid:                          gid,
 		Group:                        group,
 		Chroot:                       chroot,
 		Localpeer:                    localPeer,
@@ -507,6 +529,15 @@ func SerializeGlobalSection(p parser.Parser, data *models.Global) error { //noli
 	if err := p.Set(parser.Global, parser.GlobalSectionName, "hard-stop-after", pHardStop); err != nil {
 		return err
 	}
+	pUID := &types.Int64C{
+		Value: data.UID,
+	}
+	if data.UID == 0 {
+		pUID = nil
+	}
+	if err := p.Set(parser.Global, parser.GlobalSectionName, "uid", pUID); err != nil {
+		return err
+	}
 	pUser := &types.StringC{
 		Value: data.User,
 	}
@@ -514,6 +545,15 @@ func SerializeGlobalSection(p parser.Parser, data *models.Global) error { //noli
 		pUser = nil
 	}
 	if err := p.Set(parser.Global, parser.GlobalSectionName, "user", pUser); err != nil {
+		return err
+	}
+	pGID := &types.Int64C{
+		Value: data.Gid,
+	}
+	if data.Gid == 0 {
+		pGID = nil
+	}
+	if err := p.Set(parser.Global, parser.GlobalSectionName, "gid", pGID); err != nil {
 		return err
 	}
 	pGroup := &types.StringC{

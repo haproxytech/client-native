@@ -105,6 +105,12 @@ func TestGetGlobal(t *testing.T) {
 	if global.H1CaseAdjustFile != "/etc/headers.adjust" {
 		t.Errorf("H1CaseAdjustFile is %v, expected /etc/headers.adjust", global.H1CaseAdjustFile)
 	}
+	if global.UID != 1 {
+		t.Errorf("UID is %v, expected 1", global.UID)
+	}
+	if global.Gid != 1 {
+		t.Errorf("Gid is %v, expected 1", global.Gid)
+	}
 }
 
 func TestPutGlobal(t *testing.T) {
@@ -153,6 +159,7 @@ func TestPutGlobal(t *testing.T) {
 			Param:   "something",
 		},
 		TuneOptions: &models.GlobalTuneOptions{},
+		UID:         1234,
 	}
 
 	err := clientTest.PushGlobalConfiguration(g, "", version)
