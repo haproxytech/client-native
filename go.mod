@@ -10,7 +10,7 @@ require (
 	github.com/google/go-cmp v0.5.2
 	github.com/google/renameio v1.0.1
 	github.com/google/uuid v1.1.1
-	github.com/haproxytech/config-parser/v4 v4.0.0-rc2.0.20220403182130-911b1ad4e292
+	github.com/haproxytech/config-parser/v4 v4.0.0-rc2.0.20220403183018-9f2fa5da63f5
 	github.com/kballard/go-shellquote v0.0.0-20180428030007-95032a82bc51
 	github.com/mitchellh/mapstructure v1.2.2
 	github.com/pkg/errors v0.9.1
@@ -31,7 +31,6 @@ require (
 	github.com/go-stack/stack v1.8.0 // indirect
 	github.com/gofrs/flock v0.8.1 // indirect
 	github.com/haproxytech/go-logger v1.0.1-0.20211022075555-178f1cdf4d84 // indirect
-	github.com/kr/pretty v0.2.1 // indirect
 	github.com/mailru/easyjson v0.0.0-20190626092158-b2ccc519800e // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 	go.mongodb.org/mongo-driver v1.1.1 // indirect

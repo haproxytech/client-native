@@ -46,6 +46,7 @@ global
 
 defaults
   maxconn 2000
+  backlog 1024
   mode http
   bind-process 1-4
   balance roundrobin
@@ -83,6 +84,7 @@ defaults
 
 frontend test
   mode http
+  backlog 2048
   bind 192.168.1.1:80 name webserv
   bind 192.168.1.1:8080 name webserv2
   bind-process odd
@@ -197,6 +199,7 @@ frontend test_2
   timeout http-request 2s
   timeout http-keep-alive 3s
   maxconn 2000
+  backlog 2048
   default_backend test_2
   timeout client 4s
   option clitcpka

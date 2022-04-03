@@ -40,6 +40,9 @@ type Frontend struct {
 	// Enum: [enabled disabled]
 	AcceptInvalidHTTPRequest string `json:"accept_invalid_http_request,omitempty"`
 
+	// backlog
+	Backlog *int64 `json:"backlog,omitempty"`
+
 	// bind process
 	// Pattern: ^[^\s]+$
 	BindProcess string `json:"bind_process,omitempty"`

@@ -24,6 +24,9 @@ func TestGetDefaults(t *testing.T) { //nolint:gocognit,gocyclo
 	if d.Mode != "http" {
 		t.Errorf("Mode not http: %v", d.Mode)
 	}
+	if *d.Backlog != 1024 {
+		t.Errorf("Backlog not 2048: %v", *d.Backlog)
+	}
 	if d.MonitorURI != "/monitor" {
 		t.Errorf("MonitorURI not /monitor: %v", d.MonitorURI)
 	}

@@ -13,6 +13,10 @@ defaults:
       type: integer
       x-nullable: true
       x-display-name: Max Connections
+    backlog:
+      type: integer
+      x-nullable: true
+      x-display-name: Backlog
     adv_check:
       type: string
       x-display-name: Advanced Check

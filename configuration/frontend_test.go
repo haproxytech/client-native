@@ -71,6 +71,9 @@ func TestGetFrontends(t *testing.T) { //nolint:gocognit
 		if *f.Maxconn != 2000 {
 			t.Errorf("%v: Maxconn not 2000: %v", f.Name, *f.Maxconn)
 		}
+		if *f.Backlog != 2048 {
+			t.Errorf("%v: Backlog not 2048: %v", f.Name, *f.Backlog)
+		}
 		if *f.ClientTimeout != 4000 {
 			t.Errorf("%v: ClientTimeout not 4: %v", f.Name, *f.ClientTimeout)
 		}
@@ -128,6 +131,9 @@ func TestGetFrontend(t *testing.T) {
 	}
 	if *f.Maxconn != 2000 {
 		t.Errorf("%v: Maxconn not 2000: %v", f.Name, *f.Maxconn)
+	}
+	if *f.Backlog != 2048 {
+		t.Errorf("%v: Backlog not 2048: %v", f.Name, *f.Backlog)
 	}
 	if *f.ClientTimeout != 4000 {
 		t.Errorf("%v: ClientTimeout not 4000: %v", f.Name, *f.ClientTimeout)
@@ -227,6 +233,7 @@ func TestCreateEditDeleteFrontend(t *testing.T) {
 		Name:               "created",
 		Mode:               "tcp",
 		Maxconn:            &mConn,
+		Backlog:            misc.Int64P(1024),
 		Clflog:             true,
 		HTTPConnectionMode: "httpclose",
 		BindProcess:        "3",

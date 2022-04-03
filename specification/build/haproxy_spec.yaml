@@ -805,6 +805,10 @@ definitions:
           - disabled
           type: string
           x-display-name: All Backups
+        backlog:
+          type: integer
+          x-display-name: Backlog
+          x-nullable: true
         balance:
           $ref: '#/definitions/balance'
         bind_process:
@@ -1036,6 +1040,10 @@ definitions:
           - disabled
           type: string
           x-display-name: Accept Invalid HTTP Request
+        backlog:
+          type: integer
+          x-display-name: Backlog
+          x-nullable: true
         bind_process:
           pattern: ^[^\s]+$
           type: string

@@ -86,6 +86,10 @@ frontend:
       type: integer
       x-nullable: true
       x-display-name: Max Connections
+    backlog:
+      type: integer
+      x-nullable: true
+      x-display-name: Backlog
     forwardfor:
       $ref: "#/definitions/forwardfor"
       x-dependency:

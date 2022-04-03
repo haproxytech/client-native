@@ -60,6 +60,9 @@ type Defaults struct {
 	// Enum: [enabled disabled]
 	Allbackups string `json:"allbackups,omitempty"`
 
+	// backlog
+	Backlog *int64 `json:"backlog,omitempty"`
+
 	// balance
 	Balance *Balance `json:"balance,omitempty"`
 
