@@ -184,24 +184,38 @@ func ParseNameservers(resolverSection string, p parser.Parser) (models.Nameserve
 
 func ParseNameserver(p types.Nameserver) *models.Nameserver {
 	parts := strings.Split(p.Address, ":")
-	if len(parts) != 2 {
+	if len(parts) < 1 {
 		return nil
 	}
 	ip := parts[0]
-	port, err := strconv.ParseInt(parts[1], 10, 64)
-	if err != nil {
-		return nil
+	if len(parts) > 1 {
+		port, err := strconv.ParseInt(parts[1], 10, 64)
+		if err != nil {
+			return nil
+		}
+		return &models.Nameserver{
+			Address: &ip,
+			Port:    &port,
+			Name:    p.Name,
+		}
 	}
 	return &models.Nameserver{
 		Address: &ip,
-		Port:    &port,
+		Port:    nil,
 		Name:    p.Name,
 	}
 }
 
 func SerializeNameserver(pe models.Nameserver) types.Nameserver {
+	addr := ""
+	if pe.Address != nil {
+		addr = *pe.Address
+	}
+	if pe.Port != nil {
+		addr = fmt.Sprintf("%s:%d", addr, *pe.Port)
+	}
 	return types.Nameserver{
-		Address: fmt.Sprintf("%s:%d", *pe.Address, *pe.Port),
+		Address: addr,
 		Name:    pe.Name,
 	}
 }
