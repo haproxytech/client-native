@@ -177,11 +177,20 @@ func ParseSize(size string) *int64 {
 	case strings.HasSuffix(size, "k"):
 		v, err = strconv.ParseInt(strings.TrimSuffix(size, "k"), 10, 64)
 		v *= 1024
+	case strings.HasSuffix(size, "K"):
+		v, err = strconv.ParseInt(strings.TrimSuffix(size, "K"), 10, 64)
+		v *= 1024
 	case strings.HasSuffix(size, "m"):
 		v, err = strconv.ParseInt(strings.TrimSuffix(size, "m"), 10, 64)
 		v = v * 1024 * 1024
+	case strings.HasSuffix(size, "M"):
+		v, err = strconv.ParseInt(strings.TrimSuffix(size, "M"), 10, 64)
+		v = v * 1024 * 1024
 	case strings.HasSuffix(size, "g"):
 		v, err = strconv.ParseInt(strings.TrimSuffix(size, "g"), 10, 64)
+		v = v * 1024 * 1024 * 1024
+	case strings.HasSuffix(size, "G"):
+		v, err = strconv.ParseInt(strings.TrimSuffix(size, "G"), 10, 64)
 		v = v * 1024 * 1024 * 1024
 	default:
 		v, err = strconv.ParseInt(size, 10, 64)
