@@ -44,6 +44,7 @@ global
   uid 1
   gid 1
   profiling.memory on
+  ssl-load-extra-del-ext
   ssl-mode-async
   tune.buffers.limit 11
   tune.buffers.reserve 12

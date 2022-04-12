@@ -338,6 +338,12 @@ func ParseGlobalSection(p parser.Parser) (*models.Global, error) { //nolint:goco
 		sslServerOptions = sslServerOptionsParser.Value
 	}
 
+	var sslLoadExtraDelExt bool
+	sslLoadExtraDelExt, err = parseBoolOption(p, "ssl-load-extra-del-ext")
+	if err != nil {
+		return nil, err
+	}
+
 	var sslModeAsync string
 	data, _ = p.Get(parser.Global, parser.GlobalSectionName, "ssl-mode-async")
 	if _, ok := data.(*types.SslModeAsync); ok {
@@ -451,6 +457,7 @@ func ParseGlobalSection(p parser.Parser) (*models.Global, error) { //nolint:goco
 		SslDefaultServerCiphers:      sslServerCiphers,
 		SslDefaultServerCiphersuites: sslServerCiphersuites,
 		SslDefaultServerOptions:      sslServerOptions,
+		SslLoadExtraDelExt:           sslLoadExtraDelExt,
 		SslModeAsync:                 sslModeAsync,
 		TuneOptions:                  tuneOptions,
 		TuneSslDefaultDhParam:        dhParam,
@@ -701,6 +708,11 @@ func SerializeGlobalSection(p parser.Parser, data *models.Global) error { //noli
 	if err := p.Set(parser.Global, parser.GlobalSectionName, "ssl-default-server-options", pSSLServerOptions); err != nil {
 		return err
 	}
+
+	if err := serializeBoolOption(p, "ssl-load-extra-del-ext", data.SslLoadExtraDelExt); err != nil {
+		return err
+	}
+
 	sslModeAsync := &types.SslModeAsync{}
 	if data.SslModeAsync != "enabled" {
 		sslModeAsync = nil

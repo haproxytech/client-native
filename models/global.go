@@ -130,6 +130,9 @@ type Global struct {
 	// ssl default server options
 	SslDefaultServerOptions string `json:"ssl_default_server_options,omitempty"`
 
+	// ssl load extra del ext
+	SslLoadExtraDelExt bool `json:"ssl_load_extra_del_ext,omitempty"`
+
 	// ssl mode async
 	// Enum: [enabled disabled]
 	SslModeAsync string `json:"ssl_mode_async,omitempty"`

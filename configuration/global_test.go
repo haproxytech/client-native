@@ -64,6 +64,9 @@ func TestGetGlobal(t *testing.T) {
 	if global.ExternalCheck != true {
 		t.Errorf("ExternalCheck is false, expected true")
 	}
+	if global.SslLoadExtraDelExt != true {
+		t.Errorf("SslLoadExtraDelExt is false, expected true")
+	}
 	if len(global.LuaPrependPath) == 2 {
 		if *global.LuaPrependPath[0].Path != "/usr/share/haproxy-lua/?/init.lua" {
 			t.Errorf("LuaPrependPath.Path is %v, expected /usr/share/haproxy-lua/?/init.lua", *global.LuaPrependPath[0].Path)
