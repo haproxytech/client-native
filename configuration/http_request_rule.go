@@ -819,9 +819,6 @@ func SerializeHTTPRequestRule(f models.HTTPRequestRule) (rule types.Action, err 
 			CondTest: f.CondTest,
 		}
 	case "capture":
-		if f.CaptureLen > 0 && f.CaptureID != nil {
-			return nil, NewConfError(ErrValidationError, "capture len and id are exclusive")
-		}
 		if f.CaptureLen == 0 && f.CaptureID == nil {
 			return nil, NewConfError(ErrValidationError, "capture len has to be greater than 0 or capture_id has to be set")
 		}
@@ -1032,9 +1029,13 @@ func SerializeHTTPRequestRule(f models.HTTPRequestRule) (rule types.Action, err 
 			CondTest: f.CondTest,
 		}
 	case "return":
+		contentType := ""
+		if f.ReturnContentType != nil {
+			contentType = *f.ReturnContentType
+		}
 		rule = &http_actions.Return{
 			Status:        f.ReturnStatusCode,
-			ContentType:   *f.ReturnContentType,
+			ContentType:   contentType,
 			ContentFormat: f.ReturnContentFormat,
 			Content:       f.ReturnContent,
 			Hdrs:          modelHdr2ActionHdr(f.ReturnHeaders),
