@@ -774,9 +774,13 @@ func SerializeHTTPRequestRule(f models.HTTPRequestRule) (rule types.Action, err 
 			CondTest: f.CondTest,
 		}
 	case "deny":
+		contentType := ""
+		if f.ReturnContentType != nil {
+			contentType = *f.ReturnContentType
+		}
 		rule = &http_actions.Deny{
 			Status:        f.DenyStatus,
-			ContentType:   *f.ReturnContentType,
+			ContentType:   contentType,
 			ContentFormat: f.ReturnContentFormat,
 			Content:       f.ReturnContent,
 			Hdrs:          modelHdr2ActionHdr(f.ReturnHeaders),
@@ -880,9 +884,13 @@ func SerializeHTTPRequestRule(f models.HTTPRequestRule) (rule types.Action, err 
 			CondTest:   f.CondTest,
 		}
 	case "return":
+		contentType := ""
+		if f.ReturnContentType != nil {
+			contentType = *f.ReturnContentType
+		}
 		rule = &http_actions.Return{
 			Status:        f.ReturnStatusCode,
-			ContentType:   *f.ReturnContentType,
+			ContentType:   contentType,
 			ContentFormat: f.ReturnContentFormat,
 			Content:       f.ReturnContent,
 			Hdrs:          modelHdr2ActionHdr(f.ReturnHeaders),
