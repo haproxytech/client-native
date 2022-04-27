@@ -241,24 +241,25 @@ func (s storage) validatePEM(raw []byte) error {
 		return fmt.Errorf("failed to parse certificate")
 	}
 	// HAProxy requires private and public key in same pem file
+	hasCertificate := false
 	hasPrivateKey := false
 	for {
 		block, rest := pem.Decode(raw)
 		if block == nil {
 			break
 		}
-		raw = rest
-
-		if block.Type != "CERTIFICATE" {
+		if block.Type == "CERTIFICATE" {
+			hasCertificate = true
+		} else { // check all other block types for the key, ignoring non-key blocks
 			_, err := parsePrivateKey(block.Bytes)
-			if err != nil {
-				return fmt.Errorf("reading private key error: %w", err)
+			if err == nil {
+				hasPrivateKey = true
 			}
-			hasPrivateKey = true
 		}
+		raw = rest
 	}
-	if !hasPrivateKey {
-		return fmt.Errorf("missing private key")
+	if !(hasCertificate && hasPrivateKey) {
+		return fmt.Errorf("file should contain both certificate and private key")
 	}
 	return nil
 }
