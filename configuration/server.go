@@ -503,8 +503,8 @@ func SerializeServer(s models.Server) types.Server { //nolint:gocognit,gocyclo,c
 	if s.CheckSendProxy == "enabled" {
 		srv.Params = append(srv.Params, &params.ServerOptionWord{Name: "check-send-proxy"})
 	}
-	if s.CheckSendProxy == "enabled" {
-		srv.Params = append(srv.Params, &params.ServerOptionWord{Name: "check-send-proxy"})
+	if s.CheckSendProxy == "disabled" {
+		srv.Params = append(srv.Params, &params.ServerOptionWord{Name: "no-check-send-proxy"})
 	}
 	if s.CheckSsl == "enabled" {
 		srv.Params = append(srv.Params, &params.ServerOptionWord{Name: "check-ssl"})
