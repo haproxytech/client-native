@@ -84,6 +84,7 @@ http_check:
           value: connect
     min_recv:
       type: integer
+      x-nullable: true
       x-dependency:
         type:
           value: expect
