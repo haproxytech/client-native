@@ -121,110 +121,133 @@ func parseStickTableEntry(output string) *models.StickTableEntry { //nolint:goco
 		return nil
 	}
 	entry := &models.StickTableEntry{ID: idData[0]}
-	data := strings.Split(strings.TrimSpace(idData[1]), " ")
-	for _, d := range data {
-		kv := strings.Split(d, "=")
-		switch key := kv[0]; {
+	data := parseStickTableEntryLine(strings.TrimSpace(idData[1]))
+	for k, v := range data {
+		switch key := k; {
 		case key == "server_id":
-			sID, err := strconv.ParseInt(strings.TrimSpace(kv[1]), 10, 64)
+			sID, err := strconv.ParseInt(strings.TrimSpace(v), 10, 64)
 			if err == nil {
 				entry.ServerID = &sID
 			}
 		case key == "gpc0":
-			gpc0, err := strconv.ParseInt(strings.TrimSpace(kv[1]), 10, 64)
+			gpc0, err := strconv.ParseInt(strings.TrimSpace(v), 10, 64)
 			if err == nil {
 				entry.Gpc0 = &gpc0
 			}
 		case strings.HasPrefix(key, "gpc0_rate("):
-			gpc0Rate, err := strconv.ParseInt(strings.TrimSpace(kv[1]), 10, 64)
+			gpc0Rate, err := strconv.ParseInt(strings.TrimSpace(v), 10, 64)
 			if err == nil {
 				entry.Gpc0Rate = &gpc0Rate
 			}
 		case key == "gpc1":
-			gpc1, err := strconv.ParseInt(strings.TrimSpace(kv[1]), 10, 64)
+			gpc1, err := strconv.ParseInt(strings.TrimSpace(v), 10, 64)
 			if err == nil {
 				entry.Gpc1 = &gpc1
 			}
 		case strings.HasPrefix(key, "gpc1_rate("):
-			gpc1Rate, err := strconv.ParseInt(strings.TrimSpace(kv[1]), 10, 64)
+			gpc1Rate, err := strconv.ParseInt(strings.TrimSpace(v), 10, 64)
 			if err == nil {
 				entry.Gpc1Rate = &gpc1Rate
 			}
 		case key == "conn_cnt":
-			connCnt, err := strconv.ParseInt(strings.TrimSpace(kv[1]), 10, 64)
+			connCnt, err := strconv.ParseInt(strings.TrimSpace(v), 10, 64)
 			if err == nil {
 				entry.ConnCnt = &connCnt
 			}
 		case key == "conn_cur":
-			connCur, err := strconv.ParseInt(strings.TrimSpace(kv[1]), 10, 64)
+			connCur, err := strconv.ParseInt(strings.TrimSpace(v), 10, 64)
 			if err == nil {
 				entry.ConnCur = &connCur
 			}
 		case strings.HasPrefix(key, "conn_rate("):
-			connRate, err := strconv.ParseInt(strings.TrimSpace(kv[1]), 10, 64)
+			connRate, err := strconv.ParseInt(strings.TrimSpace(v), 10, 64)
 			if err == nil {
 				entry.ConnRate = &connRate
 			}
 		case key == "sess_cnt":
-			sessCnt, err := strconv.ParseInt(strings.TrimSpace(kv[1]), 10, 64)
+			sessCnt, err := strconv.ParseInt(strings.TrimSpace(v), 10, 64)
 			if err == nil {
 				entry.SessCnt = &sessCnt
 			}
 		case strings.HasPrefix(key, "sess_rate("):
-			sessRate, err := strconv.ParseInt(strings.TrimSpace(kv[1]), 10, 64)
+			sessRate, err := strconv.ParseInt(strings.TrimSpace(v), 10, 64)
 			if err == nil {
 				entry.SessRate = &sessRate
 			}
 		case key == "http_req_cnt":
-			httpReqCnt, err := strconv.ParseInt(strings.TrimSpace(kv[1]), 10, 64)
+			httpReqCnt, err := strconv.ParseInt(strings.TrimSpace(v), 10, 64)
 			if err == nil {
 				entry.HTTPReqCnt = &httpReqCnt
 			}
 		case strings.HasPrefix(key, "http_req_rate("):
-			httpReqRate, err := strconv.ParseInt(strings.TrimSpace(kv[1]), 10, 64)
+			httpReqRate, err := strconv.ParseInt(strings.TrimSpace(v), 10, 64)
 			if err == nil {
 				entry.HTTPReqRate = &httpReqRate
 			}
 		case key == "http_err_cnt":
-			httpErrCnt, err := strconv.ParseInt(strings.TrimSpace(kv[1]), 10, 64)
+			httpErrCnt, err := strconv.ParseInt(strings.TrimSpace(v), 10, 64)
 			if err == nil {
 				entry.HTTPErrCnt = &httpErrCnt
 			}
 		case strings.HasPrefix(key, "http_err_rate("):
-			httpErrRate, err := strconv.ParseInt(strings.TrimSpace(kv[1]), 10, 64)
+			httpErrRate, err := strconv.ParseInt(strings.TrimSpace(v), 10, 64)
 			if err == nil {
 				entry.HTTPErrRate = &httpErrRate
 			}
 		case key == "bytes_in_cnt":
-			bytesInCnt, err := strconv.ParseInt(strings.TrimSpace(kv[1]), 10, 64)
+			bytesInCnt, err := strconv.ParseInt(strings.TrimSpace(v), 10, 64)
 			if err == nil {
 				entry.BytesInCnt = &bytesInCnt
 			}
 		case strings.HasPrefix(key, "bytes_in_rate("):
-			bytesInRate, err := strconv.ParseInt(strings.TrimSpace(kv[1]), 10, 64)
+			bytesInRate, err := strconv.ParseInt(strings.TrimSpace(v), 10, 64)
 			if err == nil {
 				entry.BytesInRate = &bytesInRate
 			}
 		case key == "bytes_out_cnt":
-			bytesOutCnt, err := strconv.ParseInt(strings.TrimSpace(kv[1]), 10, 64)
+			bytesOutCnt, err := strconv.ParseInt(strings.TrimSpace(v), 10, 64)
 			if err == nil {
 				entry.BytesOutCnt = &bytesOutCnt
 			}
 		case strings.HasPrefix(key, "bytes_out_rate("):
-			bytesOutRate, err := strconv.ParseInt(strings.TrimSpace(kv[1]), 10, 64)
+			bytesOutRate, err := strconv.ParseInt(strings.TrimSpace(v), 10, 64)
 			if err == nil {
 				entry.BytesOutRate = &bytesOutRate
 			}
 		case key == "use":
-			entry.Use = strings.TrimSpace(kv[1]) == "1"
+			entry.Use = strings.TrimSpace(v) == "1"
 		case key == "exp":
-			exp, err := strconv.ParseInt(strings.TrimSpace(kv[1]), 10, 64)
+			exp, err := strconv.ParseInt(strings.TrimSpace(v), 10, 64)
 			if err == nil {
 				entry.Exp = &exp
 			}
 		case key == "key":
-			entry.Key = strings.TrimSpace(kv[1])
+			entry.Key = strings.TrimSpace(v)
 		}
 	}
 	return entry
+}
+
+func parseStickTableEntryLine(data string) map[string]string {
+	words := strings.Split(data, " ")
+	retData := make(map[string]string)
+
+	currentKey := ""
+	for _, word := range words {
+		if currentKey != "" {
+			retData[currentKey] = fmt.Sprintf("%s %s", retData[currentKey], word)
+			if !strings.HasSuffix(word, "\\") {
+				currentKey = ""
+			}
+		} else {
+			kv := strings.Split(word, "=")
+			if len(kv) == 2 {
+				retData[kv[0]] = kv[1]
+				if strings.HasPrefix(kv[1], "\"") && strings.HasSuffix(kv[1], "\\") {
+					currentKey = kv[0]
+				}
+			}
+		}
+	}
+	return retData
 }
