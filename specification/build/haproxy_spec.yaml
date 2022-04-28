@@ -3609,6 +3609,7 @@ definitions:
           x-dependency:
             type:
               value: expect
+          x-nullable: true
         ok_status:
           enum:
           - L7OK

@@ -81,7 +81,7 @@ type HTTPCheck struct {
 	Method string `json:"method,omitempty"`
 
 	// min recv
-	MinRecv int64 `json:"min_recv,omitempty"`
+	MinRecv *int64 `json:"min_recv,omitempty"`
 
 	// ok status
 	// Enum: [L7OK L7OKC L6OK L4OK]

@@ -277,7 +277,7 @@ func ParseHTTPCheck(f types.Action) (check *models.HTTPCheck, err error) {
 			Pattern:         v.Pattern,
 		}
 		if v.MinRecv != nil {
-			check.MinRecv = *v.MinRecv
+			check.MinRecv = v.MinRecv
 		}
 	case *http_actions.CheckDisableOn404:
 		check = &models.HTTPCheck{
@@ -356,7 +356,7 @@ func SerializeHTTPCheck(f models.HTTPCheck) (action types.Action, err error) { /
 		}, nil
 	case models.HTTPCheckTypeExpect:
 		return &actions.CheckExpect{
-			MinRecv:         &f.MinRecv,
+			MinRecv:         f.MinRecv,
 			Match:           f.Match,
 			OKStatus:        f.OkStatus,
 			ErrorStatus:     f.ErrorStatus,
