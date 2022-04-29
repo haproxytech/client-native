@@ -76,7 +76,6 @@ http_request_rule:
       x-dependency:
         type:
           value: capture
-          required: true
     capture_len:
       type: integer
       x-display-name: Capture Len
@@ -91,7 +90,6 @@ http_request_rule:
       x-dependency:
         type:
           value: capture
-          required: true
     track-sc0-key:
       type: string
       pattern: '^[^\s]+$'
