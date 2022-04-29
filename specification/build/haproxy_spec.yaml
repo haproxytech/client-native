@@ -2582,7 +2582,6 @@ definitions:
           type: integer
           x-dependency:
             type:
-              required: true
               value: capture
           x-display-name: Capture SlotID
           x-nullable: true
@@ -2598,7 +2597,6 @@ definitions:
           type: string
           x-dependency:
             type:
-              required: true
               value: capture
           x-display-name: Capture Sample
         cond:
