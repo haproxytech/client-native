@@ -787,8 +787,8 @@ func SerializeHTTPRequestRule(f models.HTTPRequestRule) (rule types.Action, err 
 			Cond:          f.Cond,
 			CondTest:      f.CondTest,
 		}
-		if !http_actions.IsPayload(f.ReturnContentFormat) {
-			if !http_actions.IsPayload(f.ReturnContentFormat) && f.DenyStatus != nil {
+		if !http_actions.IsPayload(f.ReturnContentFormat) && f.DenyStatus != nil {
+			if ok := http_actions.AllowedErrorCode(*f.DenyStatus); !ok {
 				return rule, NewConfError(ErrValidationError, "invalid Status Code for error type response")
 			}
 		}
