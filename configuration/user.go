@@ -110,7 +110,7 @@ func (c *client) CreateUser(userlist string, data *models.User, transactionID st
 	if user == nil {
 		return c.HandleError(data.Username, "userlist", userlist, "", false, err)
 	}
-	if err := p.Insert("userlist", userlist, "user", serializeUser(*data), -1); err != nil {
+	if err := p.Insert("userlist", userlist, "user", SerializeUser(*data), -1); err != nil {
 		return c.HandleError(data.Username, "userlist", userlist, t, transactionID == "", err)
 	}
 	if err := c.SaveData(p, t, transactionID == ""); err != nil {
@@ -136,7 +136,7 @@ func (c *client) EditUser(username string, userlist string, data *models.User, t
 	if user == nil {
 		return c.HandleError(data.Username, "userlist", userlist, "", false, err)
 	}
-	if err := p.Set(parser.UserList, userlist, "user", serializeUser(*data), i); err != nil {
+	if err := p.Set(parser.UserList, userlist, "user", SerializeUser(*data), i); err != nil {
 		return c.HandleError(data.Username, "userlist", userlist, t, transactionID == "", err)
 	}
 	if err := c.SaveData(p, t, transactionID == ""); err != nil {
@@ -172,7 +172,7 @@ func ParseUser(u types.User) *models.User {
 	}
 }
 
-func serializeUser(u models.User) types.User {
+func SerializeUser(u models.User) types.User {
 	return types.User{
 		Name:       u.Username,
 		Password:   u.Password,

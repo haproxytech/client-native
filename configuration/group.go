@@ -110,7 +110,7 @@ func (c *client) CreateGroup(userlist string, data *models.Group, transactionID 
 	if group != nil {
 		return c.HandleError(data.Name, "userlist", userlist, "", false, err)
 	}
-	if err := p.Insert("userlist", userlist, "group", serializeGroup(*data), -1); err != nil {
+	if err := p.Insert("userlist", userlist, "group", SerializeGroup(*data), -1); err != nil {
 		return c.HandleError(data.Name, "userlist", userlist, t, transactionID == "", err)
 	}
 	if err := c.SaveData(p, t, transactionID == ""); err != nil {
@@ -169,7 +169,7 @@ func ParseGroup(u types.Group) *models.Group {
 	}
 }
 
-func serializeGroup(u models.Group) types.Group {
+func SerializeGroup(u models.Group) types.Group {
 	return types.Group{
 		Name:  u.Name,
 		Users: strings.Split(u.Users, ","),
