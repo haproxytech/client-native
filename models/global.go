@@ -63,11 +63,20 @@ type Global struct {
 	// Enum: [enabled disabled]
 	Daemon string `json:"daemon,omitempty"`
 
+	// description
+	Description string `json:"description,omitempty"`
+
+	// expose experimental directives
+	ExposeExperimentalDirectives bool `json:"expose_experimental_directives,omitempty"`
+
 	// external check
 	ExternalCheck bool `json:"external_check,omitempty"`
 
 	// gid
 	Gid int64 `json:"gid,omitempty"`
+
+	// grace
+	Grace *int64 `json:"grace,omitempty"`
 
 	// group
 	// Pattern: ^[^\s]+$
@@ -76,8 +85,20 @@ type Global struct {
 	// h1 case adjust file
 	H1CaseAdjustFile string `json:"h1_case_adjust_file,omitempty"`
 
+	// h2 workaround bogus websocket clients
+	H2WorkaroundBogusWebsocketClients bool `json:"h2_workaround_bogus_websocket_clients,omitempty"`
+
 	// hard stop after
 	HardStopAfter *int64 `json:"hard_stop_after,omitempty"`
+
+	// insecure fork wanted
+	InsecureForkWanted bool `json:"insecure_fork_wanted,omitempty"`
+
+	// insecure setuid wanted
+	InsecureSetuidWanted bool `json:"insecure_setuid_wanted,omitempty"`
+
+	// issuers chain path
+	IssuersChainPath string `json:"issuers_chain_path,omitempty"`
 
 	// localpeer
 	// Pattern: ^[^\s]+$
@@ -85,6 +106,9 @@ type Global struct {
 
 	// log send hostname
 	LogSendHostname *GlobalLogSendHostname `json:"log_send_hostname,omitempty"`
+
+	// lua load per thread
+	LuaLoadPerThread string `json:"lua_load_per_thread,omitempty"`
 
 	// lua loads
 	LuaLoads []*LuaLoad `json:"lua_loads"`
@@ -125,11 +149,17 @@ type Global struct {
 	// maxzlibmem
 	Maxzlibmem int64 `json:"maxzlibmem,omitempty"`
 
+	// mworker max reloads
+	MworkerMaxReloads int64 `json:"mworker_max_reloads,omitempty"`
+
 	// nbproc
 	Nbproc int64 `json:"nbproc,omitempty"`
 
 	// nbthread
 	Nbthread int64 `json:"nbthread,omitempty"`
+
+	// node
+	Node string `json:"node,omitempty"`
 
 	// noepoll
 	Noepoll bool `json:"noepoll,omitempty"`
@@ -152,8 +182,14 @@ type Global struct {
 	// nosplice
 	Nosplice bool `json:"nosplice,omitempty"`
 
+	// numa cpu mapping
+	NumaCPUMapping bool `json:"numa_cpu_mapping,omitempty"`
+
 	// pidfile
 	Pidfile string `json:"pidfile,omitempty"`
+
+	// pp2 never send local
+	Pp2NeverSendLocal bool `json:"pp2_never_send_local,omitempty"`
 
 	// profiling tasks
 	// Enum: [auto on off]
@@ -167,6 +203,9 @@ type Global struct {
 	// Pattern: ^[^\s]+$
 	ServerStateFile string `json:"server_state_file,omitempty"`
 
+	// set dumpable
+	SetDumpable bool `json:"set_dumpable,omitempty"`
+
 	// spread checks
 	SpreadChecks int64 `json:"spread_checks,omitempty"`
 
@@ -175,6 +214,9 @@ type Global struct {
 
 	// ssl default bind ciphersuites
 	SslDefaultBindCiphersuites string `json:"ssl_default_bind_ciphersuites,omitempty"`
+
+	// ssl default bind curves
+	SslDefaultBindCurves string `json:"ssl_default_bind_curves,omitempty"`
 
 	// ssl default bind options
 	SslDefaultBindOptions string `json:"ssl_default_bind_options,omitempty"`
@@ -192,8 +234,14 @@ type Global struct {
 	// Enum: [enabled disabled]
 	SslModeAsync string `json:"ssl_mode_async,omitempty"`
 
+	// ssl skip self issued ca
+	SslSkipSelfIssuedCa bool `json:"ssl_skip_self_issued_ca,omitempty"`
+
 	// stats timeout
 	StatsTimeout *int64 `json:"stats_timeout,omitempty"`
+
+	// strict limits
+	StrictLimits bool `json:"strict_limits,omitempty"`
 
 	// tune options
 	TuneOptions *GlobalTuneOptions `json:"tune_options,omitempty"`
@@ -204,9 +252,15 @@ type Global struct {
 	// uid
 	UID int64 `json:"uid,omitempty"`
 
+	// ulimit n
+	Ulimitn int64 `json:"ulimit_n,omitempty"`
+
 	// user
 	// Pattern: ^[^\s]+$
 	User string `json:"user,omitempty"`
+
+	// wurfl options
+	WurflOptions *GlobalWurflOptions `json:"wurfl_options,omitempty"`
 }
 
 // Validate validates this global
@@ -274,6 +328,10 @@ func (m *Global) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateUser(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateWurflOptions(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -649,6 +707,24 @@ func (m *Global) validateUser(formats strfmt.Registry) error {
 
 	if err := validate.Pattern("user", "body", string(m.User), `^[^\s]+$`); err != nil {
 		return err
+	}
+
+	return nil
+}
+
+func (m *Global) validateWurflOptions(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.WurflOptions) { // not required
+		return nil
+	}
+
+	if m.WurflOptions != nil {
+		if err := m.WurflOptions.Validate(formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("wurfl_options")
+			}
+			return err
+		}
 	}
 
 	return nil
@@ -1679,6 +1755,50 @@ func (m *GlobalTuneOptions) MarshalBinary() ([]byte, error) {
 // UnmarshalBinary interface implementation
 func (m *GlobalTuneOptions) UnmarshalBinary(b []byte) error {
 	var res GlobalTuneOptions
+	if err := swag.ReadJSON(b, &res); err != nil {
+		return err
+	}
+	*m = res
+	return nil
+}
+
+// GlobalWurflOptions global wurfl options
+//
+// swagger:model GlobalWurflOptions
+type GlobalWurflOptions struct {
+
+	// cache size
+	CacheSize int64 `json:"cache_size,omitempty"`
+
+	// data file
+	DataFile string `json:"data_file,omitempty"`
+
+	// information list
+	InformationList string `json:"information_list,omitempty"`
+
+	// information list separator
+	InformationListSeparator string `json:"information_list_separator,omitempty"`
+
+	// patch file
+	PatchFile string `json:"patch_file,omitempty"`
+}
+
+// Validate validates this global wurfl options
+func (m *GlobalWurflOptions) Validate(formats strfmt.Registry) error {
+	return nil
+}
+
+// MarshalBinary interface implementation
+func (m *GlobalWurflOptions) MarshalBinary() ([]byte, error) {
+	if m == nil {
+		return nil, nil
+	}
+	return swag.WriteJSON(m)
+}
+
+// UnmarshalBinary interface implementation
+func (m *GlobalWurflOptions) UnmarshalBinary(b []byte) error {
+	var res GlobalWurflOptions
 	if err := swag.ReadJSON(b, &res); err != nil {
 		return err
 	}

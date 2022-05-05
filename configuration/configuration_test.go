@@ -114,6 +114,40 @@ global
   noreuseport
   profiling.tasks on
   spread-checks 10
+  wurfl-data-file path
+  wurfl-information-list wurfl_id,wurfl_root_id,wurfl_isdevroot,wurfl_useragent,wurfl_api_version,wurfl_info,wurfl_last_load_time,wurfl_normalized_useragent
+  wurfl-information-list-separator ,
+  wurfl-patch-file path1,path2
+  wurfl-cache-size 64
+  ssl-default-bind-curves X25519:P-256
+  ssl-skip-self-issued-ca
+  node node
+  description description
+  expose-experimental-directives
+  insecure-fork-wanted
+  insecure-setuid-wanted
+  issuers-chain-path issuers-chain-path
+  h2-workaround-bogus-websocket-clients
+  lua-load-per-thread file.ext
+  mworker-max-reloads 5
+  numa-cpu-mapping
+  pp2-never-send-local
+  ulimit-n 10
+  set-dumpable
+  strict-limits
+  grace 10s
+  chroot /var/www
+  ssl-default-server-ciphers ECDH+AESGCM:ECDH+CHACHA20:ECDH+AES256:ECDH+AES128:!aNULL:!SHA1:!AESCCM
+  ssl-default-server-ciphersuites TLS_AES_128_GCM_SHA256:TLS_AES_256_GCM_SHA384:TLS_CHACHA20_POLY1305_SHA256
+  hard-stop-after 2s
+  localpeer test
+  user thomas
+  group anderson
+  nbthread 128
+  pidfile pidfile.text
+  ssl-default-bind-ciphers ECDH+AESGCM:ECDH+CHACHA20
+  ssl-default-bind-ciphersuites TLS_AES_128_GCM_SHA256:TLS_AES_256_GCM_SHA384
+  ssl-default-server-options ssl-min-ver TLSv1.1 no-tls-tickets
 
 defaults
   maxconn 2000

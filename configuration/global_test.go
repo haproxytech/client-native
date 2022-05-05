@@ -17,7 +17,6 @@ package configuration
 
 import (
 	"fmt"
-	"reflect"
 	"testing"
 
 	"github.com/haproxytech/client-native/v3/models"
@@ -158,6 +157,108 @@ func TestGetGlobal(t *testing.T) {
 	}
 	if global.SpreadChecks != 10 {
 		t.Errorf("SpreadChecks is %v, expected 10", global.SpreadChecks)
+	}
+	if global.WurflOptions.DataFile != "path" {
+		t.Errorf("WurflDataFile is %v, expected path", global.WurflOptions.DataFile)
+	}
+	if global.WurflOptions.InformationList != "wurfl_id,wurfl_root_id,wurfl_isdevroot,wurfl_useragent,wurfl_api_version,wurfl_info,wurfl_last_load_time,wurfl_normalized_useragent" {
+		t.Errorf("WurflInformationList is %v, expected wurfl_id,wurfl_root_id,wurfl_isdevroot,wurfl_useragent,wurfl_api_version,wurfl_info,wurfl_last_load_time,wurfl_normalized_useragent", global.WurflOptions.InformationList)
+	}
+	if global.WurflOptions.InformationListSeparator != "," {
+		t.Errorf("WurflInformationListSeparator is %v, expected ,", global.WurflOptions.InformationListSeparator)
+	}
+	if global.WurflOptions.PatchFile != "path1,path2" {
+		t.Errorf("WurflPatchFile is %v, expected path1,path2", global.WurflOptions.PatchFile)
+	}
+	if global.WurflOptions.CacheSize != 64 {
+		t.Errorf("WurflCacheSize is %v, expected 64", global.WurflOptions.CacheSize)
+	}
+	if global.SslDefaultBindCurves != "X25519:P-256" {
+		t.Errorf("SslDefaultBindCurves is %v, expected X25519:P-256", global.SslDefaultBindCurves)
+	}
+	if global.SslSkipSelfIssuedCa != true {
+		t.Errorf("SslSkipSelfIssuedCa is %v, expected enabled", global.SslSkipSelfIssuedCa)
+	}
+	if global.Node != "node" {
+		t.Errorf("Node is %v, expected node", global.Node)
+	}
+	if global.Description != "description" {
+		t.Errorf("Description is %v, expected description", global.Description)
+	}
+	if global.ExposeExperimentalDirectives != true {
+		t.Errorf("ExposeExperimentalDirectives is %v, expected enabled", global.ExposeExperimentalDirectives)
+	}
+	if global.InsecureForkWanted != true {
+		t.Errorf("InsecureForkWanted is %v, expected enabled", global.InsecureForkWanted)
+	}
+	if global.InsecureSetuidWanted != true {
+		t.Errorf("InsecureSetuidWanted is %v, expected enabled", global.InsecureSetuidWanted)
+	}
+	if global.IssuersChainPath != "issuers-chain-path" {
+		t.Errorf("IssuersChainPath is %v, expected issuers-chain-path", global.IssuersChainPath)
+	}
+	if global.H2WorkaroundBogusWebsocketClients != true {
+		t.Errorf("H2WorkaroundBogusWebsocketClients is %v, expected enabled", global.H2WorkaroundBogusWebsocketClients)
+	}
+	if global.LuaLoadPerThread != "file.ext" {
+		t.Errorf("LuaLoadPerThread is %v, expected file.ext", global.LuaLoadPerThread)
+	}
+	if global.MworkerMaxReloads != 5 {
+		t.Errorf("MworkerMaxReloads is %v, expected 5", global.MworkerMaxReloads)
+	}
+	if global.NumaCPUMapping != true {
+		t.Errorf("NumaCPUMapping is %v, expected enabled", global.NumaCPUMapping)
+	}
+	if global.Pp2NeverSendLocal != true {
+		t.Errorf("Pp2NeverSendLocal is %v, expected enabled", global.Pp2NeverSendLocal)
+	}
+	if global.Ulimitn != 10 {
+		t.Errorf("Ulimitn is %v, expected 10", global.Ulimitn)
+	}
+	if global.SetDumpable != true {
+		t.Errorf("SetDumpable is %v, expected enabled", global.SetDumpable)
+	}
+	if global.StrictLimits != true {
+		t.Errorf("StrictLimits is %v, expected enabled", global.StrictLimits)
+	}
+	if *global.Grace != 10000 {
+		t.Errorf("Grace is %v, expected 10000", global.Grace)
+	}
+	if global.SslDefaultServerCiphers != "ECDH+AESGCM:ECDH+CHACHA20:ECDH+AES256:ECDH+AES128:!aNULL:!SHA1:!AESCCM" {
+		t.Errorf("SslDefaultServerCiphers is %v, expected %v", global.SslDefaultServerCiphers, "ECDH+AESGCM:ECDH+CHACHA20:ECDH+AES256:ECDH+AES128:!aNULL:!SHA1:!AESCCM")
+	}
+	if global.SslDefaultServerCiphersuites != "TLS_AES_128_GCM_SHA256:TLS_AES_256_GCM_SHA384:TLS_CHACHA20_POLY1305_SHA256" {
+		t.Errorf("SslDefaultServerCiphersuites is %v, expected %v", global.SslDefaultServerCiphersuites, "TLS_AES_128_GCM_SHA256:TLS_AES_256_GCM_SHA384:TLS_CHACHA20_POLY1305_SHA256")
+	}
+	if global.Chroot != "/var/www" {
+		t.Errorf("Chroot is %v, expected /var/www", global.Chroot)
+	}
+	if *global.HardStopAfter != 2000 {
+		t.Errorf("HardStopAfter is %v, expected 20000", global.HardStopAfter)
+	}
+	if global.Localpeer != "test" {
+		t.Errorf("Localpeer is %v, expected test", global.Localpeer)
+	}
+	if global.User != "thomas" {
+		t.Errorf("User is %v, expected thomas", global.User)
+	}
+	if global.Group != "anderson" {
+		t.Errorf("Group is %v, expected anderson", global.Group)
+	}
+	if global.Nbthread != 128 {
+		t.Errorf("Nbthread is %v, expected 128", global.Nbthread)
+	}
+	if global.Pidfile != "pidfile.text" {
+		t.Errorf("Pidfile is %v, expected pidfile.text", global.Pidfile)
+	}
+	if global.SslDefaultBindCiphers != "ECDH+AESGCM:ECDH+CHACHA20" {
+		t.Errorf("SslDefaultBindCiphers is %v, expected %v", global.SslDefaultBindCiphers, "ECDH+AESGCM:ECDH+CHACHA20")
+	}
+	if global.SslDefaultBindCiphersuites != "TLS_AES_128_GCM_SHA256:TLS_AES_256_GCM_SHA384" {
+		t.Errorf("SslDefaultBindCiphersuites is %v, expected %v", global.SslDefaultBindCiphersuites, "TLS_AES_128_GCM_SHA256:TLS_AES_256_GCM_SHA384")
+	}
+	if global.SslDefaultServerOptions != "ssl-min-ver TLSv1.1 no-tls-tickets" {
+		t.Errorf("SslDefaultServerOptions is %v, expected ssl-min-ver TLSv1.1 no-tls-tickets", global.SslDefaultServerOptions)
 	}
 	if *global.TuneOptions.BuffersLimit != 11 {
 		t.Errorf("BuffersLimit is %v, expected 11", global.TuneOptions.BuffersLimit)
@@ -338,8 +439,9 @@ func TestPutGlobal(t *testing.T) {
 			Enabled: &enabled,
 			Param:   "something",
 		},
-		TuneOptions: &models.GlobalTuneOptions{},
-		UID:         1234,
+		TuneOptions:  &models.GlobalTuneOptions{},
+		UID:          1234,
+		WurflOptions: &models.GlobalWurflOptions{},
 	}
 
 	err := clientTest.PushGlobalConfiguration(g, "", version)
@@ -355,10 +457,22 @@ func TestPutGlobal(t *testing.T) {
 		t.Error(err.Error())
 	}
 
-	if !reflect.DeepEqual(global, g) {
-		fmt.Printf("Created global config: %v\n", global)
-		fmt.Printf("Given global config: %v\n", g)
-		t.Error("Created global config not equal to given global config")
+	var givenJSON []byte
+	givenJSON, err = g.MarshalBinary()
+	if err != nil {
+		t.Error(err.Error())
+	}
+
+	var onDiskJSON []byte
+	onDiskJSON, err = global.MarshalBinary()
+	if err != nil {
+		t.Error(err.Error())
+	}
+
+	if string(givenJSON) != string(onDiskJSON) {
+		fmt.Printf("Created global: %v\n", string(onDiskJSON))
+		fmt.Printf("Given global: %v\n", string(givenJSON))
+		t.Error("Created global not equal to given global")
 	}
 
 	if ver != version {

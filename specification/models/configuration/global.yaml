@@ -26,6 +26,39 @@ global:
       type: string
       pattern: '^[^\s]+$'
       x-display-name: User
+    node:
+      type: string
+    description:
+      type: string
+      x-display-name: Text that describes the instance
+    expose_experimental_directives:
+      type: boolean
+    grace:
+      type: integer
+      x-display-name: Defines a delay between SIGUSR1 and real soft-stop
+      x-nullable: true
+    insecure_fork_wanted:
+      type: boolean
+    insecure_setuid_wanted:
+      type: boolean
+    issuers_chain_path:
+      type: string
+    h2_workaround_bogus_websocket_clients:
+      type: boolean
+    lua_load_per_thread:
+      type: string
+    mworker_max_reloads:
+      type: integer
+    numa_cpu_mapping:
+      type: boolean
+    pp2_never_send_local:
+      type: boolean
+    ulimit_n:
+      type: integer
+    set_dumpable:
+      type: boolean
+    strict_limits:
+      type: boolean
     daemon:
       type: string
       enum: [enabled, disabled]
@@ -121,6 +154,24 @@ global:
     spread_checks:
       type: integer
       x-display-name: Add some randomness in the check interval
+    wurfl_options:
+      type: object
+      properties:
+        data_file:
+          type: string
+          x-display-name: The path of the WURFL data file
+        information_list:
+          type: string
+          x-display-name: A space-delimited list of WURFL capabilities
+        information_list_separator:
+          type: string
+          x-display-name: A char that will be used to separate values in a response header containing WURFL results
+        patch_file:
+          type: string
+          x-display-name: A list of WURFL patch file paths
+        cache_size:
+          type: integer
+          x-display-name: Sets the WURFL Useragent cache size
     tune_options:
       type: object
       properties:
@@ -324,6 +375,12 @@ global:
     ssl_default_server_ciphers:
       type: string
       x-display-name: SSL Default Server Ciphers
+    ssl_default_bind_curves:
+      type: string
+      x-display-name: SSL Default Bind Curves
+    ssl_skip_self_issued_ca:
+      type: boolean
+      x-display-name: Self issued CA, aka x509 root CA
     ssl_default_server_ciphersuites:
       type: string
       x-display-name: SSL Default Server Ciphersuites

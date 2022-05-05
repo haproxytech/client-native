@@ -163,6 +163,124 @@ func ParseGlobalSection(p parser.Parser) (*models.Global, error) { //nolint:goco
 		user = userParser.Value
 	}
 
+	var node string
+	data, err = p.Get(parser.Global, parser.GlobalSectionName, "node")
+	if err == nil {
+		nodeParser, ok := data.(*types.StringC)
+		if !ok {
+			return nil, misc.CreateTypeAssertError("node")
+		}
+		node = nodeParser.Value
+	}
+
+	var description string
+	data, err = p.Get(parser.Global, parser.GlobalSectionName, "description")
+	if err == nil {
+		descriptionParser, ok := data.(*types.StringC)
+		if !ok {
+			return nil, misc.CreateTypeAssertError("description")
+		}
+		description = descriptionParser.Value
+	}
+
+	_, err = p.Get(parser.Global, parser.GlobalSectionName, "expose-experimental-directives")
+	exposeExperimentalDirectives := true
+	if errors.Is(err, parser_errors.ErrFetch) {
+		exposeExperimentalDirectives = false
+	}
+
+	var grace *int64
+	data, err = p.Get(parser.Global, parser.GlobalSectionName, "grace")
+	if err == nil {
+		graceParser, ok := data.(*types.StringC)
+		if !ok {
+			return nil, misc.CreateTypeAssertError("grace")
+		}
+		grace = misc.ParseTimeout(graceParser.Value)
+	}
+
+	_, err = p.Get(parser.Global, parser.GlobalSectionName, "insecure-fork-wanted")
+	insecureForkWanted := true
+	if errors.Is(err, parser_errors.ErrFetch) {
+		insecureForkWanted = false
+	}
+
+	_, err = p.Get(parser.Global, parser.GlobalSectionName, "insecure-setuid-wanted")
+	insecureSetuidWanted := true
+	if errors.Is(err, parser_errors.ErrFetch) {
+		insecureSetuidWanted = false
+	}
+
+	var issuersChainPath string
+	data, err = p.Get(parser.Global, parser.GlobalSectionName, "issuers-chain-path")
+	if err == nil {
+		issuersChainPathParser, ok := data.(*types.StringC)
+		if !ok {
+			return nil, misc.CreateTypeAssertError("issuers-chain-path")
+		}
+		issuersChainPath = issuersChainPathParser.Value
+	}
+
+	_, err = p.Get(parser.Global, parser.GlobalSectionName, "h2-workaround-bogus-websocket-clients")
+	h2WorkaroundBogusWebsocketClients := true
+	if errors.Is(err, parser_errors.ErrFetch) {
+		h2WorkaroundBogusWebsocketClients = false
+	}
+
+	var luaLoadPerThread string
+	data, err = p.Get(parser.Global, parser.GlobalSectionName, "lua-load-per-thread")
+	if err == nil {
+		luaLoadPerThreadParser, ok := data.(*types.StringC)
+		if !ok {
+			return nil, misc.CreateTypeAssertError("lua-load-per-thread")
+		}
+		luaLoadPerThread = luaLoadPerThreadParser.Value
+	}
+
+	var mworkerMaxReloads int64
+	data, err = p.Get(parser.Global, parser.GlobalSectionName, "mworker-max-reloads")
+	if err == nil {
+		mworkerMaxReloadsParser, ok := data.(*types.Int64C)
+		if !ok {
+			return nil, misc.CreateTypeAssertError("mworker-max-reloads")
+		}
+		mworkerMaxReloads = mworkerMaxReloadsParser.Value
+	}
+
+	_, err = p.Get(parser.Global, parser.GlobalSectionName, "numa-cpu-mapping")
+	numaCPUMapping := true
+	if errors.Is(err, parser_errors.ErrFetch) {
+		numaCPUMapping = false
+	}
+
+	_, err = p.Get(parser.Global, parser.GlobalSectionName, "pp2-never-send-local")
+	pp2NeverSendLocal := true
+	if errors.Is(err, parser_errors.ErrFetch) {
+		pp2NeverSendLocal = false
+	}
+
+	var ulimitn int64
+	data, err = p.Get(parser.Global, parser.GlobalSectionName, "ulimit-n")
+	if err == nil {
+		ulimitnParser, ok := data.(*types.Int64C)
+		if !ok {
+			return nil, misc.CreateTypeAssertError("ulimit-n")
+		}
+		ulimitn = ulimitnParser.Value
+	}
+
+	_, err = p.Get(parser.Global, parser.GlobalSectionName, "set-dumpable")
+	setDumpable := true
+	if errors.Is(err, parser_errors.ErrFetch) {
+		setDumpable = false
+	}
+
+	_, err = p.Get(parser.Global, parser.GlobalSectionName, "strict-limits")
+	strictLimits := true
+	if errors.Is(err, parser_errors.ErrFetch) {
+		strictLimits = false
+	}
+
 	var gid int64
 	data, err = p.Get(parser.Global, parser.GlobalSectionName, "gid")
 	if err == nil {
@@ -298,6 +416,22 @@ func ParseGlobalSection(p parser.Parser) (*models.Global, error) { //nolint:goco
 		sslBindCiphersuites = sslBindCiphersuitesParser.Value
 	}
 
+	var sslDefaultBindCurves string
+	data, err = p.Get(parser.Global, parser.GlobalSectionName, "ssl-default-bind-curves")
+	if err == nil {
+		sslDefaultBindCurvesParser, ok := data.(*types.StringC)
+		if !ok {
+			return nil, misc.CreateTypeAssertError("ssl-default-bind-curves")
+		}
+		sslDefaultBindCurves = sslDefaultBindCurvesParser.Value
+	}
+
+	_, err = p.Get(parser.Global, parser.GlobalSectionName, "ssl-skip-self-issued-ca")
+	sslSkipSelfIssuedCa := true
+	if errors.Is(err, parser_errors.ErrFetch) {
+		sslSkipSelfIssuedCa = false
+	}
+
 	var sslBindOptions string
 	data, err = p.Get(parser.Global, parser.GlobalSectionName, "ssl-default-bind-options")
 	if err == nil {
@@ -308,14 +442,14 @@ func ParseGlobalSection(p parser.Parser) (*models.Global, error) { //nolint:goco
 		sslBindOptions = sslBindOptionsParser.Value
 	}
 
-	var sslServerCiphers string
+	var sslDefaultServerCiphers string
 	data, err = p.Get(parser.Global, parser.GlobalSectionName, "ssl-default-server-ciphers")
 	if err == nil {
-		sslServerCiphersParser, ok := data.(*types.StringC)
+		sslDefaultServerCiphersParser, ok := data.(*types.StringC)
 		if !ok {
 			return nil, misc.CreateTypeAssertError("ssl-default-server-ciphers")
 		}
-		sslServerCiphers = sslServerCiphersParser.Value
+		sslDefaultServerCiphers = sslDefaultServerCiphersParser.Value
 	}
 
 	var sslServerCiphersuites string
@@ -567,6 +701,63 @@ func ParseGlobalSection(p parser.Parser) (*models.Global, error) { //nolint:goco
 		spreadChecks = spreadChecksParser.Value
 	}
 
+	wurflOptions := models.GlobalWurflOptions{}
+
+	var wurflDataFile string
+	data, err = p.Get(parser.Global, parser.GlobalSectionName, "wurfl-data-file")
+	if err == nil {
+		wurflDataFileParser, ok := data.(*types.StringC)
+		if !ok {
+			return nil, misc.CreateTypeAssertError("wurfl-data-file")
+		}
+		wurflDataFile = wurflDataFileParser.Value
+		wurflOptions.DataFile = wurflDataFile
+	}
+
+	var wurflInformationList string
+	data, err = p.Get(parser.Global, parser.GlobalSectionName, "wurfl-information-list")
+	if err == nil {
+		wurflInformationListParser, ok := data.(*types.StringC)
+		if !ok {
+			return nil, misc.CreateTypeAssertError("wurfl-information-list")
+		}
+		wurflInformationList = wurflInformationListParser.Value
+		wurflOptions.InformationList = wurflInformationList
+	}
+
+	var wurflInformationListSeparator string
+	data, err = p.Get(parser.Global, parser.GlobalSectionName, "wurfl-information-list-separator")
+	if err == nil {
+		wurflInformationListSeparatorParser, ok := data.(*types.StringC)
+		if !ok {
+			return nil, misc.CreateTypeAssertError("wurfl-information-list-separator")
+		}
+		wurflInformationListSeparator = wurflInformationListSeparatorParser.Value
+		wurflOptions.InformationListSeparator = wurflInformationListSeparator
+	}
+
+	var wurflPatchFile string
+	data, err = p.Get(parser.Global, parser.GlobalSectionName, "wurfl-patch-file")
+	if err == nil {
+		wurflPatchFileParser, ok := data.(*types.StringC)
+		if !ok {
+			return nil, misc.CreateTypeAssertError("wurfl-patch-file")
+		}
+		wurflPatchFile = wurflPatchFileParser.Value
+		wurflOptions.PatchFile = wurflPatchFile
+	}
+
+	var wurflCacheSize int64
+	data, err = p.Get(parser.Global, parser.GlobalSectionName, "wurfl-cache-size")
+	if err == nil {
+		wurflCacheSizeParser, ok := data.(*types.Int64C)
+		if !ok {
+			return nil, misc.CreateTypeAssertError("wurfl-cache-size")
+		}
+		wurflCacheSize = wurflCacheSizeParser.Value
+		wurflOptions.CacheSize = wurflCacheSize
+	}
+
 	tuneOptions, err := parseTuneOptions(p)
 	if err != nil {
 		return nil, err
@@ -578,60 +769,78 @@ func ParseGlobalSection(p parser.Parser) (*models.Global, error) { //nolint:goco
 	}
 
 	global := &models.Global{
-		UID:                          uid,
-		User:                         user,
-		Gid:                          gid,
-		Group:                        group,
-		Chroot:                       chroot,
-		Localpeer:                    localPeer,
-		CaBase:                       caBase,
-		CrtBase:                      crtBase,
-		ServerStateBase:              srvStateBase,
-		ServerStateFile:              srvStateFile,
-		HardStopAfter:                hardStop,
-		Daemon:                       daemon,
-		MasterWorker:                 masterWorker,
-		Maxconn:                      mConn,
-		Nbproc:                       nbproc,
-		Nbthread:                     nbthread,
-		Pidfile:                      pidfile,
-		RuntimeAPIs:                  rAPIs,
-		StatsTimeout:                 statsTimeout,
-		CPUMaps:                      cpuMaps,
-		SslDefaultBindCiphers:        sslBindCiphers,
-		SslDefaultBindCiphersuites:   sslBindCiphersuites,
-		SslDefaultBindOptions:        sslBindOptions,
-		SslDefaultServerCiphers:      sslServerCiphers,
-		SslDefaultServerCiphersuites: sslServerCiphersuites,
-		SslDefaultServerOptions:      sslServerOptions,
-		SslModeAsync:                 sslModeAsync,
-		TuneOptions:                  tuneOptions,
-		TuneSslDefaultDhParam:        dhParam,
-		ExternalCheck:                externalCheck,
-		LuaLoads:                     luaLoads,
-		LuaPrependPath:               luaPrependPath,
-		LogSendHostname:              globalLogSendHostName,
-		H1CaseAdjusts:                h1CaseAdjusts,
-		H1CaseAdjustFile:             h1CaseAdjustFile,
-		BusyPolling:                  busyPolling,
-		MaxSpreadChecks:              maxSpreadChecks,
-		Maxconnrate:                  maxconnrate,
-		Maxcomprate:                  maxcomprate,
-		Maxcompcpuusage:              maxcompcpuusage,
-		Maxpipes:                     maxpipes,
-		Maxsessrate:                  maxsessrate,
-		Maxsslconn:                   maxsslconn,
-		Maxsslrate:                   maxsslrate,
-		Maxzlibmem:                   maxzlibmem,
-		Noepoll:                      noepoll,
-		Nokqueue:                     nokqueue,
-		Noevports:                    noevports,
-		Nopoll:                       nopoll,
-		Nosplice:                     nosplice,
-		Nogetaddrinfo:                nogetaddrinfo,
-		Noreuseport:                  noreuseport,
-		ProfilingTasks:               profilingTasks,
-		SpreadChecks:                 spreadChecks,
+		UID:                               uid,
+		User:                              user,
+		Gid:                               gid,
+		Group:                             group,
+		Chroot:                            chroot,
+		Localpeer:                         localPeer,
+		CaBase:                            caBase,
+		CrtBase:                           crtBase,
+		ServerStateBase:                   srvStateBase,
+		ServerStateFile:                   srvStateFile,
+		HardStopAfter:                     hardStop,
+		Daemon:                            daemon,
+		MasterWorker:                      masterWorker,
+		Maxconn:                           mConn,
+		Nbproc:                            nbproc,
+		Nbthread:                          nbthread,
+		Pidfile:                           pidfile,
+		RuntimeAPIs:                       rAPIs,
+		StatsTimeout:                      statsTimeout,
+		CPUMaps:                           cpuMaps,
+		SslDefaultBindCiphers:             sslBindCiphers,
+		SslDefaultBindCiphersuites:        sslBindCiphersuites,
+		SslDefaultBindCurves:              sslDefaultBindCurves,
+		SslDefaultBindOptions:             sslBindOptions,
+		SslDefaultServerCiphers:           sslDefaultServerCiphers,
+		SslDefaultServerCiphersuites:      sslServerCiphersuites,
+		SslDefaultServerOptions:           sslServerOptions,
+		SslModeAsync:                      sslModeAsync,
+		SslSkipSelfIssuedCa:               sslSkipSelfIssuedCa,
+		TuneOptions:                       tuneOptions,
+		TuneSslDefaultDhParam:             dhParam,
+		ExternalCheck:                     externalCheck,
+		LuaLoads:                          luaLoads,
+		LuaPrependPath:                    luaPrependPath,
+		LogSendHostname:                   globalLogSendHostName,
+		H1CaseAdjusts:                     h1CaseAdjusts,
+		H1CaseAdjustFile:                  h1CaseAdjustFile,
+		BusyPolling:                       busyPolling,
+		MaxSpreadChecks:                   maxSpreadChecks,
+		Maxconnrate:                       maxconnrate,
+		Maxcomprate:                       maxcomprate,
+		Maxcompcpuusage:                   maxcompcpuusage,
+		Maxpipes:                          maxpipes,
+		Maxsessrate:                       maxsessrate,
+		Maxsslconn:                        maxsslconn,
+		Maxsslrate:                        maxsslrate,
+		Maxzlibmem:                        maxzlibmem,
+		Noepoll:                           noepoll,
+		Nokqueue:                          nokqueue,
+		Noevports:                         noevports,
+		Nopoll:                            nopoll,
+		Nosplice:                          nosplice,
+		Nogetaddrinfo:                     nogetaddrinfo,
+		Noreuseport:                       noreuseport,
+		ProfilingTasks:                    profilingTasks,
+		SpreadChecks:                      spreadChecks,
+		Node:                              node,
+		Description:                       description,
+		ExposeExperimentalDirectives:      exposeExperimentalDirectives,
+		Grace:                             grace,
+		InsecureForkWanted:                insecureForkWanted,
+		InsecureSetuidWanted:              insecureSetuidWanted,
+		IssuersChainPath:                  issuersChainPath,
+		H2WorkaroundBogusWebsocketClients: h2WorkaroundBogusWebsocketClients,
+		LuaLoadPerThread:                  luaLoadPerThread,
+		MworkerMaxReloads:                 mworkerMaxReloads,
+		NumaCPUMapping:                    numaCPUMapping,
+		Pp2NeverSendLocal:                 pp2NeverSendLocal,
+		Ulimitn:                           ulimitn,
+		SetDumpable:                       setDumpable,
+		StrictLimits:                      strictLimits,
+		WurflOptions:                      &wurflOptions,
 	}
 
 	return global, nil
@@ -647,6 +856,7 @@ func SerializeGlobalSection(p parser.Parser, data *models.Global) error { //noli
 	if err := p.Set(parser.Global, parser.GlobalSectionName, "chroot", pChroot); err != nil {
 		return err
 	}
+
 	pCaBase := &types.StringC{
 		Value: data.CaBase,
 	}
@@ -656,6 +866,7 @@ func SerializeGlobalSection(p parser.Parser, data *models.Global) error { //noli
 	if err := p.Set(parser.Global, parser.GlobalSectionName, "ca-base", pCaBase); err != nil {
 		return err
 	}
+
 	pCrtBase := &types.StringC{
 		Value: data.CrtBase,
 	}
@@ -665,6 +876,7 @@ func SerializeGlobalSection(p parser.Parser, data *models.Global) error { //noli
 	if err := p.Set(parser.Global, parser.GlobalSectionName, "crt-base", pCrtBase); err != nil {
 		return err
 	}
+
 	pLocalPeer := &types.StringC{
 		Value: data.Localpeer,
 	}
@@ -674,6 +886,7 @@ func SerializeGlobalSection(p parser.Parser, data *models.Global) error { //noli
 	if err := p.Set(parser.Global, parser.GlobalSectionName, "localpeer", pLocalPeer); err != nil {
 		return err
 	}
+
 	pSrvStateBase := &types.StringC{
 		Value: data.ServerStateBase,
 	}
@@ -683,6 +896,7 @@ func SerializeGlobalSection(p parser.Parser, data *models.Global) error { //noli
 	if err := p.Set(parser.Global, parser.GlobalSectionName, "server-state-base", pSrvStateBase); err != nil {
 		return err
 	}
+
 	pSrvStateFile := &types.StringC{
 		Value: data.ServerStateFile,
 	}
@@ -692,6 +906,7 @@ func SerializeGlobalSection(p parser.Parser, data *models.Global) error { //noli
 	if err := p.Set(parser.Global, parser.GlobalSectionName, "server-state-file", pSrvStateFile); err != nil {
 		return err
 	}
+
 	var pHardStop *types.StringC
 	if data.HardStopAfter != nil {
 		pHardStop = &types.StringC{
@@ -701,6 +916,7 @@ func SerializeGlobalSection(p parser.Parser, data *models.Global) error { //noli
 	if err := p.Set(parser.Global, parser.GlobalSectionName, "hard-stop-after", pHardStop); err != nil {
 		return err
 	}
+
 	pUID := &types.Int64C{
 		Value: data.UID,
 	}
@@ -710,6 +926,7 @@ func SerializeGlobalSection(p parser.Parser, data *models.Global) error { //noli
 	if err := p.Set(parser.Global, parser.GlobalSectionName, "uid", pUID); err != nil {
 		return err
 	}
+
 	pUser := &types.StringC{
 		Value: data.User,
 	}
@@ -719,6 +936,7 @@ func SerializeGlobalSection(p parser.Parser, data *models.Global) error { //noli
 	if err := p.Set(parser.Global, parser.GlobalSectionName, "user", pUser); err != nil {
 		return err
 	}
+
 	pGID := &types.Int64C{
 		Value: data.Gid,
 	}
@@ -728,6 +946,7 @@ func SerializeGlobalSection(p parser.Parser, data *models.Global) error { //noli
 	if err := p.Set(parser.Global, parser.GlobalSectionName, "gid", pGID); err != nil {
 		return err
 	}
+
 	pGroup := &types.StringC{
 		Value: data.Group,
 	}
@@ -737,6 +956,7 @@ func SerializeGlobalSection(p parser.Parser, data *models.Global) error { //noli
 	if err := p.Set(parser.Global, parser.GlobalSectionName, "group", pGroup); err != nil {
 		return err
 	}
+
 	pDaemon := &types.Enabled{}
 	if data.Daemon != "enabled" {
 		pDaemon = nil
@@ -744,6 +964,7 @@ func SerializeGlobalSection(p parser.Parser, data *models.Global) error { //noli
 	if err := p.Set(parser.Global, parser.GlobalSectionName, "daemon", pDaemon); err != nil {
 		return err
 	}
+
 	pMasterWorker := &types.Enabled{}
 	if !data.MasterWorker {
 		pMasterWorker = nil
@@ -751,6 +972,7 @@ func SerializeGlobalSection(p parser.Parser, data *models.Global) error { //noli
 	if err := p.Set(parser.Global, parser.GlobalSectionName, "master-worker", pMasterWorker); err != nil {
 		return err
 	}
+
 	pMaxConn := &types.Int64C{
 		Value: data.Maxconn,
 	}
@@ -760,6 +982,7 @@ func SerializeGlobalSection(p parser.Parser, data *models.Global) error { //noli
 	if err := p.Set(parser.Global, parser.GlobalSectionName, "maxconn", pMaxConn); err != nil {
 		return err
 	}
+
 	pNbProc := &types.Int64C{
 		Value: data.Nbproc,
 	}
@@ -769,6 +992,7 @@ func SerializeGlobalSection(p parser.Parser, data *models.Global) error { //noli
 	if err := p.Set(parser.Global, parser.GlobalSectionName, "nbproc", pNbProc); err != nil {
 		return err
 	}
+
 	pNbthread := &types.Int64C{
 		Value: data.Nbthread,
 	}
@@ -778,6 +1002,7 @@ func SerializeGlobalSection(p parser.Parser, data *models.Global) error { //noli
 	if err := p.Set(parser.Global, parser.GlobalSectionName, "nbthread", pNbthread); err != nil {
 		return err
 	}
+
 	pPidfile := &types.StringC{
 		Value: data.Pidfile,
 	}
@@ -787,6 +1012,7 @@ func SerializeGlobalSection(p parser.Parser, data *models.Global) error { //noli
 	if err := p.Set(parser.Global, parser.GlobalSectionName, "pidfile", pPidfile); err != nil {
 		return err
 	}
+
 	sockets := []types.Socket{}
 	for _, rAPI := range data.RuntimeAPIs {
 		socket := types.Socket{
@@ -799,6 +1025,7 @@ func SerializeGlobalSection(p parser.Parser, data *models.Global) error { //noli
 	if err := p.Set(parser.Global, parser.GlobalSectionName, "stats socket", sockets); err != nil {
 		return err
 	}
+
 	var statsTimeout *types.StringC
 	if data.StatsTimeout != nil {
 		statsTimeout = &types.StringC{Value: strconv.FormatInt(*data.StatsTimeout, 10)}
@@ -808,6 +1035,7 @@ func SerializeGlobalSection(p parser.Parser, data *models.Global) error { //noli
 	if err := p.Set(parser.Global, parser.GlobalSectionName, "stats timeout", statsTimeout); err != nil {
 		return err
 	}
+
 	cpuMaps := []types.CPUMap{}
 	for _, cpuMap := range data.CPUMaps {
 		cm := types.CPUMap{
@@ -819,6 +1047,7 @@ func SerializeGlobalSection(p parser.Parser, data *models.Global) error { //noli
 	if err := p.Set(parser.Global, parser.GlobalSectionName, "cpu-map", cpuMaps); err != nil {
 		return err
 	}
+
 	pSSLBindCiphers := &types.StringC{
 		Value: data.SslDefaultBindCiphers,
 	}
@@ -828,6 +1057,7 @@ func SerializeGlobalSection(p parser.Parser, data *models.Global) error { //noli
 	if err := p.Set(parser.Global, parser.GlobalSectionName, "ssl-default-bind-ciphers", pSSLBindCiphers); err != nil {
 		return err
 	}
+
 	pSSLBindCiphersuites := &types.StringC{
 		Value: data.SslDefaultBindCiphersuites,
 	}
@@ -837,6 +1067,25 @@ func SerializeGlobalSection(p parser.Parser, data *models.Global) error { //noli
 	if err := p.Set(parser.Global, parser.GlobalSectionName, "ssl-default-bind-ciphersuites", pSSLBindCiphersuites); err != nil {
 		return err
 	}
+
+	pSSLDefaultBindCurves := &types.StringC{
+		Value: data.SslDefaultBindCurves,
+	}
+	if data.SslDefaultBindCurves == "" {
+		pSSLDefaultBindCurves = nil
+	}
+	if err := p.Set(parser.Global, parser.GlobalSectionName, "ssl-default-bind-curves", pSSLDefaultBindCurves); err != nil {
+		return err
+	}
+
+	pSslSkipSelfIssuedCa := &types.Enabled{}
+	if !data.ExternalCheck {
+		pSslSkipSelfIssuedCa = nil
+	}
+	if err := p.Set(parser.Global, parser.GlobalSectionName, "ssl-skip-self-issued-ca", pSslSkipSelfIssuedCa); err != nil {
+		return err
+	}
+
 	pSSLBindOptions := &types.StringC{
 		Value: data.SslDefaultBindOptions,
 	}
@@ -846,15 +1095,17 @@ func SerializeGlobalSection(p parser.Parser, data *models.Global) error { //noli
 	if err := p.Set(parser.Global, parser.GlobalSectionName, "ssl-default-bind-options", pSSLBindOptions); err != nil {
 		return err
 	}
-	pSSLServerCiphers := &types.StringC{
+
+	pSSLDefaultServerCiphers := &types.StringC{
 		Value: data.SslDefaultServerCiphers,
 	}
 	if data.SslDefaultServerCiphers == "" {
-		pSSLServerCiphers = nil
+		pSSLDefaultServerCiphers = nil
 	}
-	if err := p.Set(parser.Global, parser.GlobalSectionName, "ssl-default-server-ciphers", pSSLServerCiphers); err != nil {
+	if err := p.Set(parser.Global, parser.GlobalSectionName, "ssl-default-server-ciphers", pSSLDefaultServerCiphers); err != nil {
 		return err
 	}
+
 	pSSLServerCiphersuites := &types.StringC{
 		Value: data.SslDefaultServerCiphersuites,
 	}
@@ -864,6 +1115,7 @@ func SerializeGlobalSection(p parser.Parser, data *models.Global) error { //noli
 	if err := p.Set(parser.Global, parser.GlobalSectionName, "ssl-default-server-ciphersuites", pSSLServerCiphersuites); err != nil {
 		return err
 	}
+
 	pSSLServerOptions := &types.StringC{
 		Value: data.SslDefaultServerOptions,
 	}
@@ -873,6 +1125,7 @@ func SerializeGlobalSection(p parser.Parser, data *models.Global) error { //noli
 	if err := p.Set(parser.Global, parser.GlobalSectionName, "ssl-default-server-options", pSSLServerOptions); err != nil {
 		return err
 	}
+
 	sslModeAsync := &types.SslModeAsync{}
 	if data.SslModeAsync != "enabled" {
 		sslModeAsync = nil
@@ -1114,6 +1367,140 @@ func SerializeGlobalSection(p parser.Parser, data *models.Global) error { //noli
 		return err
 	}
 
+	node := &types.StringC{Value: data.Node}
+	if data.Node == "" {
+		node = nil
+	}
+	if err := p.Set(parser.Global, parser.GlobalSectionName, "node", node); err != nil {
+		return err
+	}
+
+	description := &types.StringC{Value: data.Description}
+	if data.Description == "" {
+		description = nil
+	}
+	if err := p.Set(parser.Global, parser.GlobalSectionName, "description", description); err != nil {
+		return err
+	}
+
+	exposeExperimentalDirectives := &types.Enabled{}
+	if !data.ExposeExperimentalDirectives {
+		exposeExperimentalDirectives = nil
+	}
+	if err := p.Set(parser.Global, parser.GlobalSectionName, "expose-experimental-directives", exposeExperimentalDirectives); err != nil {
+		return err
+	}
+
+	var grace *types.StringC
+	if data.Grace != nil {
+		grace = &types.StringC{Value: strconv.FormatInt(*data.Grace, 10)}
+	} else {
+		grace = nil
+	}
+	if err := p.Set(parser.Global, parser.GlobalSectionName, "grace", grace); err != nil {
+		return err
+	}
+
+	insecureForkWanted := &types.Enabled{}
+	if !data.InsecureForkWanted {
+		insecureForkWanted = nil
+	}
+	if err := p.Set(parser.Global, parser.GlobalSectionName, "insecure-fork-wanted", insecureForkWanted); err != nil {
+		return err
+	}
+
+	insecureSetuidWanted := &types.Enabled{}
+	if !data.InsecureForkWanted {
+		insecureSetuidWanted = nil
+	}
+	if err := p.Set(parser.Global, parser.GlobalSectionName, "insecure-setuid-wanted", insecureSetuidWanted); err != nil {
+		return err
+	}
+
+	issuersChainPath := &types.StringC{Value: data.IssuersChainPath}
+	if data.IssuersChainPath == "" {
+		issuersChainPath = nil
+	}
+	if err := p.Set(parser.Global, parser.GlobalSectionName, "issuers-chain-path", issuersChainPath); err != nil {
+		return err
+	}
+
+	workaround := &types.Enabled{}
+	if !data.H2WorkaroundBogusWebsocketClients {
+		workaround = nil
+	}
+	if err := p.Set(parser.Global, parser.GlobalSectionName, "h2-workaround-bogus-websocket-clients", workaround); err != nil {
+		return err
+	}
+
+	luaLoadPerThread := &types.StringC{Value: data.LuaLoadPerThread}
+	if data.LuaLoadPerThread == "" {
+		luaLoadPerThread = nil
+	}
+	if err := p.Set(parser.Global, parser.GlobalSectionName, "lua-load-per-thread", luaLoadPerThread); err != nil {
+		return err
+	}
+
+	mworkerMaxReloads := &types.Int64C{
+		Value: data.MworkerMaxReloads,
+	}
+	if data.MworkerMaxReloads == 0 {
+		mworkerMaxReloads = nil
+	}
+	if err := p.Set(parser.Global, parser.GlobalSectionName, "mworker-max-reloads", mworkerMaxReloads); err != nil {
+		return err
+	}
+
+	numaCPUMapping := &types.Enabled{}
+	if !data.NumaCPUMapping {
+		numaCPUMapping = nil
+	}
+	if err := p.Set(parser.Global, parser.GlobalSectionName, "numa-cpu-mapping", numaCPUMapping); err != nil {
+		return err
+	}
+
+	neverSendLocal := &types.Enabled{}
+	if !data.Pp2NeverSendLocal {
+		neverSendLocal = nil
+	}
+	if err := p.Set(parser.Global, parser.GlobalSectionName, "pp2-never-send-local", neverSendLocal); err != nil {
+		return err
+	}
+
+	ulimitN := &types.Int64C{
+		Value: data.Ulimitn,
+	}
+	if data.Ulimitn == 0 {
+		ulimitN = nil
+	}
+	if err := p.Set(parser.Global, parser.GlobalSectionName, "ulimit-n", ulimitN); err != nil {
+		return err
+	}
+
+	setDumpable := &types.Enabled{}
+	if !data.SetDumpable {
+		setDumpable = nil
+	}
+	if err := p.Set(parser.Global, parser.GlobalSectionName, "set-dumpable", setDumpable); err != nil {
+		return err
+	}
+
+	strictLimits := &types.Enabled{}
+	if !data.StrictLimits {
+		strictLimits = nil
+	}
+	if err := p.Set(parser.Global, parser.GlobalSectionName, "strict-limits", strictLimits); err != nil {
+		return err
+	}
+
+	if data.WurflOptions == nil {
+		data.WurflOptions = &models.GlobalWurflOptions{}
+	}
+
+	if err := serializeWurflOptions(p, data.WurflOptions); err != nil {
+		return err
+	}
+
 	// deprecated option
 	if data.TuneSslDefaultDhParam != 0 {
 		if data.TuneOptions != nil && data.TuneOptions.SslDefaultDhParam == 0 {
@@ -1124,6 +1511,28 @@ func SerializeGlobalSection(p parser.Parser, data *models.Global) error { //noli
 		}
 	}
 	return serializeTuneOptions(p, data.TuneOptions)
+}
+
+func serializeWurflOptions(p parser.Parser, options *models.GlobalWurflOptions) error {
+	if options == nil {
+		return nil
+	}
+	if err := serializeStringOption(p, "wurfl-data-file", options.DataFile); err != nil {
+		return err
+	}
+	if err := serializeStringOption(p, "wurfl-information-list", options.InformationList); err != nil {
+		return err
+	}
+	if err := serializeStringOption(p, "wurfl-information-list-separator", options.InformationListSeparator); err != nil {
+		return err
+	}
+	if err := serializeStringOption(p, "wurfl-patch-file", options.PatchFile); err != nil {
+		return err
+	}
+	if err := serializeInt64Option(p, "wurfl-cache-size", options.CacheSize); err != nil {
+		return err
+	}
+	return nil
 }
 
 func serializeTuneOptions(p parser.Parser, options *models.GlobalTuneOptions) error { //nolint:gocognit,gocyclo,cyclop
@@ -1328,6 +1737,14 @@ func serializeInt64Option(p parser.Parser, option string, data int64) error {
 		Value: data,
 	}
 	if data == 0 {
+		value = nil
+	}
+	return p.Set(parser.Global, parser.GlobalSectionName, option, value)
+}
+
+func serializeStringOption(p parser.Parser, option string, data string) error {
+	value := &types.StringC{Value: data}
+	if data == "" {
 		value = nil
 	}
 	return p.Set(parser.Global, parser.GlobalSectionName, option, value)
