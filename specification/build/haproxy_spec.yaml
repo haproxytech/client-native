@@ -389,6 +389,8 @@ definitions:
       additionalProperties: false
       description: HAProxy global configuration
       properties:
+        busy_polling:
+          type: boolean
         ca_base:
           type: string
           x-display-name: SSL CA Certificates Base Directory
@@ -499,18 +501,73 @@ definitions:
         master-worker:
           type: boolean
           x-display-name: Master Worker Mode
+        max_spread_checks:
+          type: integer
+        maxcompcpuusage:
+          type: integer
+          x-display-name: Maximum HAProxy CPU usage
+        maxcomprate:
+          type: integer
+          x-display-name: Maximum per-process input compression rate
         maxconn:
           type: integer
           x-display-name: Max Connections
+        maxconnrate:
+          type: integer
+          x-display-name: Maximum per-process number of concurrent connections
+        maxpipes:
+          type: integer
+          x-display-name: Maximum per-process number of pipes
+        maxsessrate:
+          type: integer
+          x-display-name: Maximum per-process number of sessions per second
+        maxsslconn:
+          type: integer
+          x-display-name: Maximum per-process number of concurrent SSL connections
+        maxsslrate:
+          type: integer
+          x-display-name: Maximum per-process number of SSL sessions per second
+        maxzlibmem:
+          type: integer
+          x-display-name: Maximum amount of RAM in megabytes per process usable by the zlib
         nbproc:
           type: integer
           x-display-name: Number of Processes
         nbthread:
           type: integer
           x-display-name: Number of Threads
+        noepoll:
+          type: boolean
+          x-display-name: Disable the use of the "epoll" event polling system on Linux
+        noevports:
+          type: boolean
+          x-display-name: Disable the use of the event ports event polling system on SunOS
+            system derived from Solaris 10 and later
+        nogetaddrinfo:
+          type: boolean
+          x-display-name: Disable the use of getaddrinfo for name resolving
+        nokqueue:
+          type: boolean
+          x-display-name: Disable the use of the "kqueue" event polling system on BSD
+        nopoll:
+          type: boolean
+          x-display-name: Disable the use of the "poll" event polling system
+        noreuseport:
+          type: boolean
+          x-display-name: Disable the use of SO_REUSEPORT
+        nosplice:
+          type: boolean
+          x-display-name: Disable the use of kernel tcp splicing between sockets on Linux
         pidfile:
           type: string
           x-display-name: PID File
+        profiling_tasks:
+          enum:
+          - auto
+          - "on"
+          - "off"
+          type: string
+          x-display-name: Enable or disables per-task CPU profiling
         runtime_apis:
           items:
             allOf:
@@ -534,6 +591,9 @@ definitions:
           pattern: ^[^\s]+$
           type: string
           x-display-name: Server State File
+        spread_checks:
+          type: integer
+          x-display-name: Add some randomness in the check interval
         ssl_default_bind_ciphers:
           type: string
           x-display-name: SSL Default Bind Ciphers
@@ -2582,7 +2642,6 @@ definitions:
           type: integer
           x-dependency:
             type:
-              required: true
               value: capture
           x-display-name: Capture SlotID
           x-nullable: true
@@ -2598,7 +2657,6 @@ definitions:
           type: string
           x-dependency:
             type:
-              required: true
               value: capture
           x-display-name: Capture Sample
         cond:
@@ -3806,6 +3864,7 @@ definitions:
           x-dependency:
             type:
               value: expect
+          x-nullable: true
         ok_status:
           enum:
           - L7OK

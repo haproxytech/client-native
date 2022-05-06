@@ -517,7 +517,7 @@ func ParseHTTPResponseRule(f types.Action) *models.HTTPResponseRule {
 	return nil
 }
 
-func SerializeHTTPResponseRule(f models.HTTPResponseRule) (rule types.Action, err error) { //nolint:gocyclo,ireturn,cyclop
+func SerializeHTTPResponseRule(f models.HTTPResponseRule) (rule types.Action, err error) { //nolint:gocyclo,ireturn,cyclop,gocognit
 	switch f.Type {
 	case "add-acl":
 		rule = &http_actions.AddACL{
@@ -573,9 +573,13 @@ func SerializeHTTPResponseRule(f models.HTTPResponseRule) (rule types.Action, er
 			CondTest: f.CondTest,
 		}
 	case "deny":
+		contentType := ""
+		if f.ReturnContentType != nil {
+			contentType = *f.ReturnContentType
+		}
 		rule = &http_actions.Deny{
 			Status:        f.DenyStatus,
-			ContentType:   *f.ReturnContentType,
+			ContentType:   contentType,
 			ContentFormat: f.ReturnContentFormat,
 			Content:       f.ReturnContent,
 			Hdrs:          modelHdr2ActionHdr(f.ReturnHeaders),
@@ -624,9 +628,13 @@ func SerializeHTTPResponseRule(f models.HTTPResponseRule) (rule types.Action, er
 			CondTest:   f.CondTest,
 		}
 	case "return":
+		contentType := ""
+		if f.ReturnContentType != nil {
+			contentType = *f.ReturnContentType
+		}
 		rule = &http_actions.Return{
 			Status:        f.ReturnStatusCode,
-			ContentType:   *f.ReturnContentType,
+			ContentType:   contentType,
 			ContentFormat: f.ReturnContentFormat,
 			Content:       f.ReturnContent,
 			Hdrs:          modelHdr2ActionHdr(f.ReturnHeaders),

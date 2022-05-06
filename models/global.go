@@ -46,6 +46,9 @@ type Global struct {
 	// runtime a p is
 	RuntimeAPIs []*RuntimeAPI `json:"runtime_apis"`
 
+	// busy polling
+	BusyPolling bool `json:"busy_polling,omitempty"`
+
 	// ca base
 	CaBase string `json:"ca_base,omitempty"`
 
@@ -92,8 +95,35 @@ type Global struct {
 	// master worker
 	MasterWorker bool `json:"master-worker,omitempty"`
 
+	// max spread checks
+	MaxSpreadChecks int64 `json:"max_spread_checks,omitempty"`
+
+	// maxcompcpuusage
+	Maxcompcpuusage int64 `json:"maxcompcpuusage,omitempty"`
+
+	// maxcomprate
+	Maxcomprate int64 `json:"maxcomprate,omitempty"`
+
 	// maxconn
 	Maxconn int64 `json:"maxconn,omitempty"`
+
+	// maxconnrate
+	Maxconnrate int64 `json:"maxconnrate,omitempty"`
+
+	// maxpipes
+	Maxpipes int64 `json:"maxpipes,omitempty"`
+
+	// maxsessrate
+	Maxsessrate int64 `json:"maxsessrate,omitempty"`
+
+	// maxsslconn
+	Maxsslconn int64 `json:"maxsslconn,omitempty"`
+
+	// maxsslrate
+	Maxsslrate int64 `json:"maxsslrate,omitempty"`
+
+	// maxzlibmem
+	Maxzlibmem int64 `json:"maxzlibmem,omitempty"`
 
 	// nbproc
 	Nbproc int64 `json:"nbproc,omitempty"`
@@ -101,8 +131,33 @@ type Global struct {
 	// nbthread
 	Nbthread int64 `json:"nbthread,omitempty"`
 
+	// noepoll
+	Noepoll bool `json:"noepoll,omitempty"`
+
+	// noevports
+	Noevports bool `json:"noevports,omitempty"`
+
+	// nogetaddrinfo
+	Nogetaddrinfo bool `json:"nogetaddrinfo,omitempty"`
+
+	// nokqueue
+	Nokqueue bool `json:"nokqueue,omitempty"`
+
+	// nopoll
+	Nopoll bool `json:"nopoll,omitempty"`
+
+	// noreuseport
+	Noreuseport bool `json:"noreuseport,omitempty"`
+
+	// nosplice
+	Nosplice bool `json:"nosplice,omitempty"`
+
 	// pidfile
 	Pidfile string `json:"pidfile,omitempty"`
+
+	// profiling tasks
+	// Enum: [auto on off]
+	ProfilingTasks string `json:"profiling_tasks,omitempty"`
 
 	// server state base
 	// Pattern: ^[^\s]+$
@@ -111,6 +166,9 @@ type Global struct {
 	// server state file
 	// Pattern: ^[^\s]+$
 	ServerStateFile string `json:"server_state_file,omitempty"`
+
+	// spread checks
+	SpreadChecks int64 `json:"spread_checks,omitempty"`
 
 	// ssl default bind ciphers
 	SslDefaultBindCiphers string `json:"ssl_default_bind_ciphers,omitempty"`
@@ -195,6 +253,10 @@ func (m *Global) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateLuaPrependPath(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateProfilingTasks(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -444,6 +506,52 @@ func (m *Global) validateLuaPrependPath(formats strfmt.Registry) error {
 			}
 		}
 
+	}
+
+	return nil
+}
+
+var globalTypeProfilingTasksPropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["auto","on","off"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		globalTypeProfilingTasksPropEnum = append(globalTypeProfilingTasksPropEnum, v)
+	}
+}
+
+const (
+
+	// GlobalProfilingTasksAuto captures enum value "auto"
+	GlobalProfilingTasksAuto string = "auto"
+
+	// GlobalProfilingTasksOn captures enum value "on"
+	GlobalProfilingTasksOn string = "on"
+
+	// GlobalProfilingTasksOff captures enum value "off"
+	GlobalProfilingTasksOff string = "off"
+)
+
+// prop value enum
+func (m *Global) validateProfilingTasksEnum(path, location string, value string) error {
+	if err := validate.Enum(path, location, value, globalTypeProfilingTasksPropEnum); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *Global) validateProfilingTasks(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.ProfilingTasks) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateProfilingTasksEnum("profiling_tasks", "body", m.ProfilingTasks); err != nil {
+		return err
 	}
 
 	return nil

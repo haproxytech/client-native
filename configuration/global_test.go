@@ -114,6 +114,54 @@ func TestGetGlobal(t *testing.T) {
 	if global.Gid != 1 {
 		t.Errorf("Gid is %v, expected 1", global.Gid)
 	}
+	if global.BusyPolling != true {
+		t.Errorf("BusyPolling is false, expected true")
+	}
+	if global.MaxSpreadChecks != 1 {
+		t.Errorf("MaxSpreadChecks is %v, expected 1", global.MaxSpreadChecks)
+	}
+	if global.Maxconnrate != 2 {
+		t.Errorf("Maxconnrate is %v, expected 2", global.Maxconnrate)
+	}
+	if global.Maxcomprate != 3 {
+		t.Errorf("Maxcomprate is %v, expected 3", global.Maxcomprate)
+	}
+	if global.Maxcompcpuusage != 4 {
+		t.Errorf("Maxcompcpuusage is %v, expected 4", global.Maxcompcpuusage)
+	}
+	if global.Maxpipes != 5 {
+		t.Errorf("Maxpipes is %v, expected 5", global.Maxpipes)
+	}
+	if global.Maxsessrate != 6 {
+		t.Errorf("Maxsessrate is %v, expected 6", global.Maxsessrate)
+	}
+	if global.Maxsslconn != 7 {
+		t.Errorf("Maxsslconn is %v, expected 7", global.Maxsslconn)
+	}
+	if global.Maxsslrate != 8 {
+		t.Errorf("Maxsslrate is %v, expected 8", global.Maxsslrate)
+	}
+	if global.Maxzlibmem != 9 {
+		t.Errorf("Maxzlibmem is %v, expected 9", global.Maxzlibmem)
+	}
+	if global.Noepoll != true {
+		t.Errorf("Noepoll is false, expected true")
+	}
+	if global.Nosplice != true {
+		t.Errorf("Nosplice is false, expected true")
+	}
+	if global.Nogetaddrinfo != true {
+		t.Errorf("Nogetaddrinfo is false, expected true")
+	}
+	if global.Noreuseport != true {
+		t.Errorf("Noreuseport is false, expected true")
+	}
+	if global.ProfilingTasks != "enabled" {
+		t.Errorf("ProfilingTasks is %s, expected on", global.ProfilingTasks)
+	}
+	if global.SpreadChecks != 10 {
+		t.Errorf("SpreadChecks is %v, expected 10", global.SpreadChecks)
+	}
 	if *global.TuneOptions.BuffersLimit != 11 {
 		t.Errorf("BuffersLimit is %v, expected 11", global.TuneOptions.BuffersLimit)
 	}

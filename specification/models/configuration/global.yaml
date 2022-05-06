@@ -65,6 +65,62 @@ global:
       type: string
       pattern: '^[^\s]+$'
       x-display-name: Server State File
+    busy_polling:
+      type: boolean
+    max_spread_checks:
+      type: integer
+    maxconnrate:
+      type: integer
+      x-display-name: Maximum per-process number of concurrent connections
+    maxcomprate:
+      type: integer
+      x-display-name: Maximum per-process input compression rate
+    maxcompcpuusage:
+      type: integer
+      x-display-name: Maximum HAProxy CPU usage
+    maxpipes:
+      type: integer
+      x-display-name: Maximum per-process number of pipes
+    maxsessrate:
+      type: integer
+      x-display-name: Maximum per-process number of sessions per second
+    maxsslrate:
+      type: integer
+      x-display-name: Maximum per-process number of SSL sessions per second
+    maxsslconn:
+      type: integer
+      x-display-name: Maximum per-process number of concurrent SSL connections
+    maxzlibmem:
+      type: integer
+      x-display-name: Maximum amount of RAM in megabytes per process usable by the zlib
+    noepoll:
+      type: boolean
+      x-display-name: Disable the use of the "epoll" event polling system on Linux
+    nokqueue:
+      type: boolean
+      x-display-name: Disable the use of the "kqueue" event polling system on BSD
+    noevports:
+      type: boolean
+      x-display-name: Disable the use of the event ports event polling system on SunOS system derived from Solaris 10 and later
+    nopoll:
+      type: boolean
+      x-display-name: Disable the use of the "poll" event polling system
+    nosplice:
+      type: boolean
+      x-display-name: Disable the use of kernel tcp splicing between sockets on Linux
+    nogetaddrinfo:
+      type: boolean
+      x-display-name: Disable the use of getaddrinfo for name resolving
+    noreuseport:
+      type: boolean
+      x-display-name: Disable the use of SO_REUSEPORT
+    profiling_tasks:
+      type: string
+      enum: ["auto", "on", "off"]
+      x-display-name: Enable or disables per-task CPU profiling
+    spread_checks:
+      type: integer
+      x-display-name: Add some randomness in the check interval
     tune_options:
       type: object
       properties:
