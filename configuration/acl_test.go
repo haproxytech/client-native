@@ -78,7 +78,7 @@ func TestClient_GetACLs(t *testing.T) {
 			wantErr: false,
 		},
 		{
-			name:    "Should return an error when parentName doesn't exists",
+			name:    "Should return an error when parentName doesn't exist",
 			args:    args{parentType: string(parser.Backends), parentName: "not_exists", transactionID: ""},
 			want:    1,
 			want1:   nil,

@@ -296,7 +296,7 @@ func (s *SingleRuntime) GetMapEntry(name, id string) (*models.MapEntry, error) {
 		}
 	}
 	// safe guard m.Key != id:
-	// when id doesn't exists in runtime maps,
+	// when id doesn't exist in runtime maps,
 	// but any existing key is substring of id
 	// get map command returns wrong result(BUG in HAProxy)
 	// so we need to check it

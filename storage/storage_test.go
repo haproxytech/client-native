@@ -205,7 +205,7 @@ key2 val2`
 			wantErr:  false,
 		},
 		{
-			name:     "Should return error if file doesn't exists",
+			name:     "Should return error if file doesn't exist",
 			dirname:  dirWithoutFile,
 			fileName: noFile,
 			want:     noFile,

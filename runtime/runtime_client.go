@@ -167,7 +167,7 @@ func (c *client) GetMapsPath(name string) (string, error) {
 			return m.File, nil // path from config
 		}
 	}
-	return "", fmt.Errorf("maps dir doesn't exists or not specified. Either use `maps-dir` CLI option or reload HAProxy if map section exists in config file")
+	return "", fmt.Errorf("maps dir doesn't exist or not specified. Either use `maps-dir` CLI option or reload HAProxy if map section exists in config file")
 }
 
 // SetFrontendMaxConn set maxconn for frontend

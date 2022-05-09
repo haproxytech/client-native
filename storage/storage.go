@@ -112,7 +112,7 @@ func (s *storage) Get(name string) (string, error) {
 		return "", err
 	}
 	if f == "" {
-		return "", conf.NewConfError(conf.ErrObjectDoesNotExist, fmt.Sprintf("file %s doesn't exists in dir: %s", name, s.dirname))
+		return "", conf.NewConfError(conf.ErrObjectDoesNotExist, fmt.Sprintf("file %s doesn't exist in dir: %s", name, s.dirname))
 	}
 	return f, nil
 }
@@ -235,7 +235,7 @@ func getFile(dirname, name string) (string, error) {
 	}
 	f := filepath.Join(dirname, name)
 	if _, err := os.Stat(f); os.IsNotExist(err) {
-		return "", conf.NewConfError(conf.ErrObjectDoesNotExist, fmt.Sprintf("file %s doesn't exists in dir: %s", name, dirname))
+		return "", conf.NewConfError(conf.ErrObjectDoesNotExist, fmt.Sprintf("file %s doesn't exist in dir: %s", name, dirname))
 	}
 	return f, nil
 }
