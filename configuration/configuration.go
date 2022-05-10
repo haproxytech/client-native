@@ -70,6 +70,14 @@ type client struct {
 	clientMu sync.Mutex
 }
 
+// SetValidateConfigFiles set before and after validation files
+func (c *client) SetValidateConfigFiles(before, after []string) {
+	c.clientMu.Lock()
+	defer c.clientMu.Unlock()
+	c.Transaction.ValidateConfigFilesBefore = before
+	c.Transaction.ValidateConfigFilesAfter = after
+}
+
 // HasParser checks whether transaction exists in parser
 func (c *client) HasParser(transactionID string) bool {
 	c.clientMu.Lock()

@@ -50,6 +50,7 @@ type TransactionClient interface {
 	GetParserTransactions() models.Transactions
 	GetFailedParserTransactionVersion(transactionID string) (int64, error)
 	CheckTransactionOrVersion(transactionID string, version int64) (string, error)
+	SetValidateConfigFiles(before, after []string)
 }
 
 // transactionCleanerHandler is just a type dealing with a transaction file:
@@ -69,6 +70,7 @@ type Transactions interface {
 	DeleteTransaction(transactionID string) error
 	CommitTransaction(transactionID string) (*models.Transaction, error)
 	MarkTransactionOutdated(transactionID string) (err error)
+	SetValidateConfigFiles(before, after []string)
 }
 
 // GetTransactions returns an array of transactions

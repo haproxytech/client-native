@@ -94,6 +94,12 @@ func newSingleSpoe(params Params) (*SingleSpoe, error) {
 	return ss, nil
 }
 
+// SetValidateConfigFiles set before and after validation files
+func (c *SingleSpoe) SetValidateConfigFiles(before, after []string) {
+	c.Transaction.ValidateConfigFilesBefore = before
+	c.Transaction.ValidateConfigFilesAfter = after
+}
+
 func (c *SingleSpoe) CheckTransactionOrVersion(transactionID string, version int64) (string, error) {
 	return c.Transaction.CheckTransactionOrVersion(transactionID, version)
 }
