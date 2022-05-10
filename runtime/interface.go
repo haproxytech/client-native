@@ -128,6 +128,7 @@ type Runtime interface {
 	Servers
 	ACLs
 	Tables
+	Raw
 }
 
 func New(ctx context.Context, opt ...options.RuntimeOption) (Runtime, error) {
