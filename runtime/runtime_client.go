@@ -372,6 +372,20 @@ func (c *client) SetServerCheckPort(backend, server string, port int) error {
 	return nil
 }
 
+// SetTableEntry create or update a stick-table entry in the table.
+func (c *client) SetTableEntry(table, key string, dataType models.StickTableEntry, process int) error {
+	for _, runtime := range c.runtimes {
+		if process == 0 || runtime.process == process {
+			err := runtime.SetTableEntry(table, key, dataType)
+			if err != nil {
+				return fmt.Errorf("%s %w", runtime.socketPath, err)
+			}
+			return nil
+		}
+	}
+	return fmt.Errorf("no valid runtimes found")
+}
+
 // Show tables show tables from runtime API and return it structured, if process is 0, return for all processes
 func (c *client) ShowTables(process int) (models.StickTables, error) {
 	tables := models.StickTables{}

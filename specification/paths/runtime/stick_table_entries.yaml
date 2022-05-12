@@ -1,4 +1,39 @@
 stick_table_entries:
+  post:
+    summary: Set Entry to Stick Table
+    description: Create or update a stick-table entry in the table.
+    operationId: setStickTableEntries
+    tags:
+      - StickTable
+    parameters:
+      - name: stick_table
+        in: query
+        description: Stick table name
+        required: true
+        type: string
+      - name: process
+        in: query
+        description: Process number if master-worker mode, if not only first process is returned
+        required: true
+        type: integer
+      - name: stick_table_entry
+        in: body
+        description: Stick table entry
+        schema:
+          type: object
+          required:
+            - key
+            - data_type
+          properties:
+            key:
+              type: string
+            data_type:
+              $ref: "#/definitions/stick_table_entry"
+    responses:
+      '204':
+        description: Successful operation
+      'default':
+        $ref: '#/responses/DefaultError'
   get:
     summary: Return Stick Table Entries
     description: Returns an array of all entries in a given stick tables.

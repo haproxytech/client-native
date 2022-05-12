@@ -1,6 +1,7 @@
 package runtime
 
 import (
+	"encoding/json"
 	"fmt"
 	"strconv"
 	"strings"
@@ -8,6 +9,31 @@ import (
 	"github.com/haproxytech/client-native/v3/errors"
 	"github.com/haproxytech/client-native/v3/models"
 )
+
+// SetTableEntry create or update a stick-table entry in the table.
+func (s *SingleRuntime) SetTableEntry(table, key string, dataType models.StickTableEntry) error {
+	b, err := json.Marshal(dataType)
+	if err != nil {
+		return err
+	}
+	var marshalDataType map[string]interface{}
+	if err = json.Unmarshal(b, &marshalDataType); err != nil {
+		return err
+	}
+
+	const setTableEntryCommand = "set table %s key %s data.%s %v"
+	for k, v := range marshalDataType {
+		if k == "id" || k == "key" || k == "use" {
+			continue
+		}
+		command := fmt.Sprintf(setTableEntryCommand, table, key, k, v)
+		_, err := s.ExecuteWithResponse(command)
+		if err != nil {
+			return err
+		}
+	}
+	return nil
+}
 
 // ShowTables returns Stick Tables descriptions from runtime
 func (s *SingleRuntime) ShowTables() (models.StickTables, error) {
