@@ -98,6 +98,8 @@ type ACLs interface {
 }
 
 type Tables interface {
+	// SetTableEntry create or update a stick-table entry in the table.
+	SetTableEntry(table, key string, dataType models.StickTableEntry, process int) error
 	// Show tables show tables from runtime API and return it structured, if process is 0, return for all processes
 	ShowTables(process int) (models.StickTables, error)
 	// GetTableEntries returns all entries for specified table in the given process with filters and a key

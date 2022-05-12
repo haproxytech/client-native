@@ -14051,6 +14051,42 @@ paths:
         summary: Return Stick Table Entries
         tags:
         - StickTable
+      post:
+        description: Create or update a stick-table entry in the table.
+        operationId: setStickTableEntries
+        parameters:
+        - description: Stick table name
+          in: query
+          name: stick_table
+          required: true
+          type: string
+        - description: Process number if master-worker mode, if not only first process is
+            returned
+          in: query
+          name: process
+          required: true
+          type: integer
+        - description: Stick table entry
+          in: body
+          name: stick_table_entry
+          schema:
+            properties:
+              data_type:
+                $ref: '#/definitions/stick_table_entry'
+              key:
+                type: string
+            required:
+            - key
+            - data_type
+            type: object
+        responses:
+          "204":
+            description: Successful operation
+          default:
+            $ref: '#/responses/DefaultError'
+        summary: Set Entry to Stick Table
+        tags:
+        - StickTable
   /services/haproxy/runtime/maps:
       get:
         description: Returns runtime map files.
