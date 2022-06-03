@@ -426,11 +426,41 @@ definitions:
         description:
           type: string
           x-display-name: Text that describes the instance
+        device_atlas_options:
+          properties:
+            json_file:
+              type: string
+              x-display-name: JSON file
+            log_level:
+              type: string
+              x-display-name: Log Level
+            properties_cookie:
+              type: string
+              x-display-name: Properties Cookie
+            separator:
+              type: string
+              x-display-name: Separator
+          type: object
         expose_experimental_directives:
           type: boolean
         external_check:
           type: boolean
           x-display-name: External Check
+        fifty_one_degrees_options:
+          properties:
+            cache_size:
+              type: integer
+              x-display-name: Cache Size
+            data_file:
+              type: string
+              x-display-name: Data File
+            property_name_list:
+              type: string
+              x-display-name: Name List
+            property_separator:
+              type: string
+              x-display-name: Property Separator
+          type: object
         gid:
           type: integer
           x-display-name: GID
@@ -595,6 +625,8 @@ definitions:
           - "off"
           type: string
           x-display-name: Enable or disables per-task CPU profiling
+        quiet:
+          type: boolean
         runtime_apis:
           items:
             allOf:
@@ -644,20 +676,71 @@ definitions:
         ssl_default_server_options:
           type: string
           x-display-name: SSL Default Server Options
+        ssl_dh_param_file:
+          type: string
+        ssl_engines:
+          items:
+            properties:
+              algorithms:
+                type: string
+                x-display-name: Algorithms
+                x-nullable: true
+              name:
+                type: string
+                x-display-name: Name
+            required:
+            - name
+            type: object
+            x-go-name: SslEngine
+          type: array
+          x-display-name: SSL Engines
+          x-go-name: SslEngines
+        ssl_load_extra_files:
+          type: string
+          x-display-name: SSL Load Extra Files
         ssl_mode_async:
           enum:
           - enabled
           - disabled
           type: string
           x-display-name: Asynchronous TLS I/O operations
+        ssl_server_verify:
+          enum:
+          - none
+          - required
+          type: string
+          x-display-name: Verify server certificates
         ssl_skip_self_issued_ca:
           type: boolean
           x-display-name: Self issued CA, aka x509 root CA
+        stats_maxconn:
+          type: integer
+          x-display-name: Stats maxconn
         stats_timeout:
           type: integer
           x-nullable: true
         strict_limits:
           type: boolean
+        thread_group_lines:
+          items:
+            properties:
+              group:
+                type: string
+                x-display-name: Group
+              num_or_range:
+                type: string
+                x-display-name: Number or Range
+            required:
+            - group
+            - num_or_range
+            type: object
+            x-go-name: ThreadGroup
+          type: array
+          x-display-name: Thread Groups
+          x-go-name: ThreadGroupLines
+        thread_groups:
+          type: integer
+          x-display-name: Number of Thread Groups
         tune_options:
           properties:
             buffers_limit:
@@ -677,6 +760,12 @@ definitions:
             fail_alloc:
               type: boolean
               x-display-name: Failed Allocation Chance
+            fd_edge_triggered:
+              enum:
+              - enabled
+              - disabled
+              type: string
+              x-display-name: Edge-triggered polling mode
             h2_header_table_size:
               maximum: 65535
               type: integer
@@ -882,6 +971,8 @@ definitions:
               type: string
               x-display-name: A list of WURFL patch file paths
           type: object
+        zero_warning:
+          type: boolean
       title: Global
       type: object
   defaults:

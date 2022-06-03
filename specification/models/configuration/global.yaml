@@ -172,6 +172,62 @@ global:
         cache_size:
           type: integer
           x-display-name: Sets the WURFL Useragent cache size
+    thread_groups:
+      type: integer
+      x-display-name: Number of Thread Groups
+    stats_maxconn:
+      type: integer
+      x-display-name: Stats maxconn
+    ssl_load_extra_files:
+      type: string
+      x-display-name: SSL Load Extra Files
+    thread_group_lines:
+      type: array
+      x-go-name: ThreadGroupLines
+      x-display-name: Thread Groups
+      items:
+        type: object
+        x-go-name: ThreadGroup
+        required:
+          - group
+          - num_or_range
+        properties:
+          group:
+            type: string
+            x-display-name: Group
+          num_or_range:
+            type: string
+            x-display-name: Number or Range
+    device_atlas_options:
+      type: object
+      properties:
+        json_file:
+          type: string
+          x-display-name: JSON file
+        log_level:
+          type: string
+          x-display-name: Log Level
+        separator:
+          type: string
+          x-display-name: Separator
+        properties_cookie:
+          type: string
+          x-display-name: Properties Cookie
+    fifty_one_degrees_options:
+      type: object
+      properties:
+        data_file:
+          type: string
+          x-display-name: Data File
+        property_name_list:
+          type: string
+          x-display-name: Name List
+        property_separator:
+          type: string
+          x-display-name: Property Separator
+        cache_size:
+          type: integer
+          x-display-name: Cache Size
     tune_options:
       type: object
       properties:
@@ -356,6 +412,10 @@ global:
           x-display-name: Zlib Window Size
           minimum: 8
           maximum: 15
+        fd_edge_triggered:
+          type: string
+          enum: [enabled, disabled]
+          x-display-name: Edge-triggered polling mode
     tune_ssl_default_dh_param:
       type: integer
       x-display-name: SSL Default DH Parameter Size
@@ -388,6 +448,12 @@ global:
       type: string
       enum: [enabled, disabled]
       x-display-name: Asynchronous TLS I/O operations
+    ssl_dh_param_file:
+      type: string
+    ssl_server_verify:
+      type: string
+      enum: [none, required]
+      x-display-name: Verify server certificates
     cpu_maps:
       x-go-name: CPUMaps
       type: array
@@ -476,4 +542,25 @@ global:
             type: string
     h1_case_adjust_file:
       type: string
+    quiet:
+      type: boolean
+    zero_warning:
+      type: boolean
+    ssl_engines:
+      type: array
+      x-go-name: SslEngines
+      x-display-name: SSL Engines
+      items:
+        type: object
+        x-go-name: SslEngine
+        required:
+          - name
+        properties:
+          name:
+            type: string
+            x-display-name: Name
+          algorithms:
+            type: string
+            x-display-name: Algorithms
+            x-nullable: true
   additionalProperties: false

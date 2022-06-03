@@ -148,6 +148,25 @@ global
   ssl-default-bind-ciphers ECDH+AESGCM:ECDH+CHACHA20
   ssl-default-bind-ciphersuites TLS_AES_128_GCM_SHA256:TLS_AES_256_GCM_SHA384
   ssl-default-server-options ssl-min-ver TLSv1.1 no-tls-tickets
+  thread-groups 1
+  thread-group first 1-16
+  stats maxconn 20
+  ssl-load-extra-files bundle
+  deviceatlas-json-file atlas.json
+  deviceatlas-log-level 1
+  deviceatlas-separator -
+  deviceatlas-properties-cookie chocolate
+  51degrees-data-file 51.file
+  51degrees-property-name-list first second third fourth fifth
+  51degrees-property-separator /
+  51degrees-cache-size 51
+  quiet
+  zero-warning
+  ssl-engine first
+  ssl-engine second RSA,DSA,DH,EC,RAND
+  ssl-engine third CIPHERS,DIGESTS,PKEY,PKEY_CRYPTO,PKEY_ASN1
+  ssl-dh-param-file ssl-dh-param-file.txt
+  ssl-server-verify required
 
 defaults
   maxconn 2000

@@ -19,6 +19,7 @@ import (
 	"errors"
 	"fmt"
 	"strconv"
+	"strings"
 
 	"github.com/go-openapi/strfmt"
 	parser "github.com/haproxytech/config-parser/v4"
@@ -478,6 +479,26 @@ func ParseGlobalSection(p parser.Parser) (*models.Global, error) { //nolint:goco
 		sslModeAsync = "enabled"
 	}
 
+	var sslDhParamFile string
+	data, err = p.Get(parser.Global, parser.GlobalSectionName, "ssl-dh-param-file")
+	if err == nil {
+		sslDhParamFileParser, ok := data.(*types.StringC)
+		if !ok {
+			return nil, misc.CreateTypeAssertError("ssl-dh-param-file")
+		}
+		sslDhParamFile = sslDhParamFileParser.Value
+	}
+
+	var sslServerVerify string
+	data, err = p.Get(parser.Global, parser.GlobalSectionName, "ssl-server-verify")
+	if err == nil {
+		sslServerVerifyParser, ok := data.(*types.StringC)
+		if !ok {
+			return nil, misc.CreateTypeAssertError("ssl-server-verify")
+		}
+		sslServerVerify = sslServerVerifyParser.Value
+	}
+
 	_, err = p.Get(parser.Global, parser.GlobalSectionName, "external-check")
 	externalCheck := true
 	if errors.Is(err, parser_errors.ErrFetch) {
@@ -701,6 +722,75 @@ func ParseGlobalSection(p parser.Parser) (*models.Global, error) { //nolint:goco
 		spreadChecks = spreadChecksParser.Value
 	}
 
+	var threadGroups int64
+	data, err = p.Get(parser.Global, parser.GlobalSectionName, "thread-groups")
+	if err == nil {
+		threadGroupsParser, ok := data.(*types.Int64C)
+		if !ok {
+			return nil, misc.CreateTypeAssertError("thread-groups")
+		}
+		threadGroups = threadGroupsParser.Value
+	}
+
+	/*
+		var statsMaxconn *int64
+
+
+			data, err = p.Get(parser.Global, parser.GlobalSectionName, "stats maxconn")
+			if errors.Is(err, parser_errors.ErrFetch) {
+				statsMaxconn = nil
+			} else {
+				statsMaxconnParser, ok := data.(*types.Int64C)
+				if !ok {
+					return nil, misc.CreateTypeAssertError("stats maxconn")
+				}
+				statsMaxconn = &statsMaxconnParser.Value
+			}*/
+
+	var SSLLoadExtraFiles string
+	data, err = p.Get(parser.Global, parser.GlobalSectionName, "ssl-load-extra-files")
+	if err == nil {
+		SSLLoadExtraFilesParser, ok := data.(*types.StringC)
+		if !ok {
+			return nil, misc.CreateTypeAssertError("ssl-load-extra-files")
+		}
+		SSLLoadExtraFiles = SSLLoadExtraFilesParser.Value
+	}
+
+	var threadGroupLines []*models.ThreadGroup
+	data, err = p.Get(parser.Global, parser.GlobalSectionName, "thread-group")
+	if err == nil {
+		items, ok := data.([]types.ThreadGroup)
+		if !ok {
+			return nil, misc.CreateTypeAssertError("thread-group")
+		}
+		for _, item := range items {
+			g := item.Group
+			nor := item.NumOrRange
+			threadGroupLines = append(threadGroupLines, &models.ThreadGroup{
+				Group:      &g,
+				NumOrRange: &nor,
+			})
+		}
+	}
+
+	var sslEngines []*models.SslEngine
+	data, err = p.Get(parser.Global, parser.GlobalSectionName, "ssl-engine")
+	if err == nil {
+		items, ok := data.([]types.SslEngine)
+		if !ok {
+			return nil, misc.CreateTypeAssertError("ssl-engine")
+		}
+		for _, item := range items {
+			name := item.Name
+			algo := strings.Join(item.Algorithms, ",")
+			sslEngines = append(sslEngines, &models.SslEngine{
+				Name:       &name,
+				Algorithms: &algo,
+			})
+		}
+	}
+
 	wurflOptions := models.GlobalWurflOptions{}
 
 	var wurflDataFile string
@@ -758,10 +848,33 @@ func ParseGlobalSection(p parser.Parser) (*models.Global, error) { //nolint:goco
 		wurflOptions.CacheSize = wurflCacheSize
 	}
 
+	_, err = p.Get(parser.Global, parser.GlobalSectionName, "quiet")
+	quiet := true
+	if errors.Is(err, parser_errors.ErrFetch) {
+		quiet = false
+	}
+
+	_, err = p.Get(parser.Global, parser.GlobalSectionName, "zero-warning")
+	zeroWarning := true
+	if errors.Is(err, parser_errors.ErrFetch) {
+		zeroWarning = false
+	}
+
 	tuneOptions, err := parseTuneOptions(p)
 	if err != nil {
 		return nil, err
 	}
+
+	deviceAtlasOptions, err := parseDeviceAtlasOptions(p)
+	if err != nil {
+		return nil, err
+	}
+
+	fiftyOneDegreesOptions, err := parseFiftyOneDegreesOptions(p)
+	if err != nil {
+		return nil, err
+	}
+
 	// deprecated option
 	dhParam := int64(0)
 	if tuneOptions != nil {
@@ -769,62 +882,66 @@ func ParseGlobalSection(p parser.Parser) (*models.Global, error) { //nolint:goco
 	}
 
 	global := &models.Global{
-		UID:                               uid,
-		User:                              user,
-		Gid:                               gid,
-		Group:                             group,
-		Chroot:                            chroot,
-		Localpeer:                         localPeer,
-		CaBase:                            caBase,
-		CrtBase:                           crtBase,
-		ServerStateBase:                   srvStateBase,
-		ServerStateFile:                   srvStateFile,
-		HardStopAfter:                     hardStop,
-		Daemon:                            daemon,
-		MasterWorker:                      masterWorker,
-		Maxconn:                           mConn,
-		Nbproc:                            nbproc,
-		Nbthread:                          nbthread,
-		Pidfile:                           pidfile,
-		RuntimeAPIs:                       rAPIs,
-		StatsTimeout:                      statsTimeout,
-		CPUMaps:                           cpuMaps,
-		SslDefaultBindCiphers:             sslBindCiphers,
-		SslDefaultBindCiphersuites:        sslBindCiphersuites,
-		SslDefaultBindCurves:              sslDefaultBindCurves,
-		SslDefaultBindOptions:             sslBindOptions,
-		SslDefaultServerCiphers:           sslDefaultServerCiphers,
-		SslDefaultServerCiphersuites:      sslServerCiphersuites,
-		SslDefaultServerOptions:           sslServerOptions,
-		SslModeAsync:                      sslModeAsync,
-		SslSkipSelfIssuedCa:               sslSkipSelfIssuedCa,
-		TuneOptions:                       tuneOptions,
-		TuneSslDefaultDhParam:             dhParam,
-		ExternalCheck:                     externalCheck,
-		LuaLoads:                          luaLoads,
-		LuaPrependPath:                    luaPrependPath,
-		LogSendHostname:                   globalLogSendHostName,
-		H1CaseAdjusts:                     h1CaseAdjusts,
-		H1CaseAdjustFile:                  h1CaseAdjustFile,
-		BusyPolling:                       busyPolling,
-		MaxSpreadChecks:                   maxSpreadChecks,
-		Maxconnrate:                       maxconnrate,
-		Maxcomprate:                       maxcomprate,
-		Maxcompcpuusage:                   maxcompcpuusage,
-		Maxpipes:                          maxpipes,
-		Maxsessrate:                       maxsessrate,
-		Maxsslconn:                        maxsslconn,
-		Maxsslrate:                        maxsslrate,
-		Maxzlibmem:                        maxzlibmem,
-		Noepoll:                           noepoll,
-		Nokqueue:                          nokqueue,
-		Noevports:                         noevports,
-		Nopoll:                            nopoll,
-		Nosplice:                          nosplice,
-		Nogetaddrinfo:                     nogetaddrinfo,
-		Noreuseport:                       noreuseport,
-		ProfilingTasks:                    profilingTasks,
-		SpreadChecks:                      spreadChecks,
+		UID:                          uid,
+		User:                         user,
+		Gid:                          gid,
+		Group:                        group,
+		Chroot:                       chroot,
+		Localpeer:                    localPeer,
+		CaBase:                       caBase,
+		CrtBase:                      crtBase,
+		ServerStateBase:              srvStateBase,
+		ServerStateFile:              srvStateFile,
+		HardStopAfter:                hardStop,
+		Daemon:                       daemon,
+		MasterWorker:                 masterWorker,
+		Maxconn:                      mConn,
+		Nbproc:                       nbproc,
+		Nbthread:                     nbthread,
+		Pidfile:                      pidfile,
+		RuntimeAPIs:                  rAPIs,
+		StatsTimeout:                 statsTimeout,
+		CPUMaps:                      cpuMaps,
+		SslDefaultBindCiphers:        sslBindCiphers,
+		SslDefaultBindCiphersuites:   sslBindCiphersuites,
+		SslDefaultBindCurves:         sslDefaultBindCurves,
+		SslDefaultBindOptions:        sslBindOptions,
+		SslDefaultServerCiphers:      sslDefaultServerCiphers,
+		SslDefaultServerCiphersuites: sslServerCiphersuites,
+		SslDefaultServerOptions:      sslServerOptions,
+		SslModeAsync:                 sslModeAsync,
+		SslSkipSelfIssuedCa:          sslSkipSelfIssuedCa,
+		TuneOptions:                  tuneOptions,
+		TuneSslDefaultDhParam:        dhParam,
+		ExternalCheck:                externalCheck,
+		LuaLoads:                     luaLoads,
+		LuaPrependPath:               luaPrependPath,
+		LogSendHostname:              globalLogSendHostName,
+		H1CaseAdjusts:                h1CaseAdjusts,
+		H1CaseAdjustFile:             h1CaseAdjustFile,
+		BusyPolling:                  busyPolling,
+		MaxSpreadChecks:              maxSpreadChecks,
+		Maxconnrate:                  maxconnrate,
+		Maxcomprate:                  maxcomprate,
+		Maxcompcpuusage:              maxcompcpuusage,
+		Maxpipes:                     maxpipes,
+		Maxsessrate:                  maxsessrate,
+		Maxsslconn:                   maxsslconn,
+		Maxsslrate:                   maxsslrate,
+		Maxzlibmem:                   maxzlibmem,
+		Noepoll:                      noepoll,
+		Nokqueue:                     nokqueue,
+		Noevports:                    noevports,
+		Nopoll:                       nopoll,
+		Nosplice:                     nosplice,
+		Nogetaddrinfo:                nogetaddrinfo,
+		Noreuseport:                  noreuseport,
+		ProfilingTasks:               profilingTasks,
+		SpreadChecks:                 spreadChecks,
+		ThreadGroups:                 threadGroups,
+		// StatsMaxconn:                      *statsMaxconn,
+		SslLoadExtraFiles:                 SSLLoadExtraFiles,
+		ThreadGroupLines:                  threadGroupLines,
 		Node:                              node,
 		Description:                       description,
 		ExposeExperimentalDirectives:      exposeExperimentalDirectives,
@@ -841,6 +958,13 @@ func ParseGlobalSection(p parser.Parser) (*models.Global, error) { //nolint:goco
 		SetDumpable:                       setDumpable,
 		StrictLimits:                      strictLimits,
 		WurflOptions:                      &wurflOptions,
+		DeviceAtlasOptions:                deviceAtlasOptions,
+		FiftyOneDegreesOptions:            fiftyOneDegreesOptions,
+		Quiet:                             quiet,
+		ZeroWarning:                       zeroWarning,
+		SslEngines:                        sslEngines,
+		SslDhParamFile:                    sslDhParamFile,
+		SslServerVerify:                   sslServerVerify,
 	}
 
 	return global, nil
@@ -1123,6 +1247,26 @@ func SerializeGlobalSection(p parser.Parser, data *models.Global) error { //noli
 		pSSLServerOptions = nil
 	}
 	if err := p.Set(parser.Global, parser.GlobalSectionName, "ssl-default-server-options", pSSLServerOptions); err != nil {
+		return err
+	}
+
+	pSSLDhParamFile := &types.StringC{
+		Value: data.SslDhParamFile,
+	}
+	if data.SslDhParamFile == "" {
+		pSSLDhParamFile = nil
+	}
+	if err := p.Set(parser.Global, parser.GlobalSectionName, "ssl-dh-param-file", pSSLDhParamFile); err != nil {
+		return err
+	}
+
+	pSSLServerVerify := &types.StringC{
+		Value: data.SslServerVerify,
+	}
+	if data.SslServerVerify == "" {
+		pSSLServerVerify = nil
+	}
+	if err := p.Set(parser.Global, parser.GlobalSectionName, "ssl-server-verify", pSSLServerVerify); err != nil {
 		return err
 	}
 
@@ -1493,11 +1637,96 @@ func SerializeGlobalSection(p parser.Parser, data *models.Global) error { //noli
 		return err
 	}
 
+	threadGroups := &types.Int64C{
+		Value: data.ThreadGroups,
+	}
+	if data.ThreadGroups == 0 {
+		threadGroups = nil
+	}
+	if err := p.Set(parser.Global, parser.GlobalSectionName, "thread-groups", threadGroups); err != nil {
+		return err
+	}
+
+	/*
+		statsMaxconn := &types.Int64C{
+			Value: data.StatsMaxconn,
+		}
+		if data.StatsMaxconn == 0 {
+			statsMaxconn = nil
+		}
+		if err := p.Set(parser.Global, parser.GlobalSectionName, "stats maxconn", statsMaxconn); err != nil {
+			return err
+		}*/
+
+	SSLLoadExtraFiles := &types.StringC{Value: data.SslLoadExtraFiles}
+	if data.SslLoadExtraFiles == "" {
+		SSLLoadExtraFiles = nil
+	}
+	if err := p.Set(parser.Global, parser.GlobalSectionName, "ssl-load-extra-files", SSLLoadExtraFiles); err != nil {
+		return err
+	}
+
+	quiet := &types.Enabled{}
+	if !data.Quiet {
+		quiet = nil
+	}
+	if err := p.Set(parser.Global, parser.GlobalSectionName, "quiet", quiet); err != nil {
+		return err
+	}
+
+	zeroWarning := &types.Enabled{}
+	if !data.ZeroWarning {
+		zeroWarning = nil
+	}
+	if err := p.Set(parser.Global, parser.GlobalSectionName, "zero-warning", zeroWarning); err != nil {
+		return err
+	}
+
+	threadGroupLines := []types.ThreadGroup{}
+	if data.ThreadGroupLines != nil && len(data.ThreadGroupLines) > 0 {
+		for _, threadGroupLine := range data.ThreadGroupLines {
+			if threadGroupLine != nil {
+				tgl := types.ThreadGroup{
+					Group:      *threadGroupLine.Group,
+					NumOrRange: *threadGroupLine.NumOrRange,
+				}
+				threadGroupLines = append(threadGroupLines, tgl)
+			}
+		}
+	}
+	if err := p.Set(parser.Global, parser.GlobalSectionName, "thread-group", threadGroupLines); err != nil {
+		return err
+	}
+
+	sslEngines := []types.SslEngine{}
+	if data.SslEngines != nil && len(data.SslEngines) > 0 {
+		for _, sslEngine := range data.SslEngines {
+			if sslEngine != nil {
+				se := types.SslEngine{
+					Name:       *sslEngine.Name,
+					Algorithms: strings.Split(*sslEngine.Algorithms, ","),
+				}
+				sslEngines = append(sslEngines, se)
+			}
+		}
+	}
+	if err := p.Set(parser.Global, parser.GlobalSectionName, "ssl-engine", sslEngines); err != nil {
+		return err
+	}
+
 	if data.WurflOptions == nil {
 		data.WurflOptions = &models.GlobalWurflOptions{}
 	}
 
 	if err := serializeWurflOptions(p, data.WurflOptions); err != nil {
+		return err
+	}
+
+	if err := serializeDeviceAtlasOptions(p, data.DeviceAtlasOptions); err != nil {
+		return err
+	}
+
+	if err := serializeFiftyOneDegreesOptions(p, data.FiftyOneDegreesOptions); err != nil {
 		return err
 	}
 
@@ -1530,6 +1759,44 @@ func serializeWurflOptions(p parser.Parser, options *models.GlobalWurflOptions) 
 		return err
 	}
 	if err := serializeInt64Option(p, "wurfl-cache-size", options.CacheSize); err != nil {
+		return err
+	}
+	return nil
+}
+
+func serializeDeviceAtlasOptions(p parser.Parser, options *models.GlobalDeviceAtlasOptions) error {
+	if options == nil {
+		return nil
+	}
+	if err := serializeStringOption(p, "deviceatlas-json-file", options.JSONFile); err != nil {
+		return err
+	}
+	if err := serializeStringOption(p, "deviceatlas-log-level", options.LogLevel); err != nil {
+		return err
+	}
+	if err := serializeStringOption(p, "deviceatlas-separator", options.Separator); err != nil {
+		return err
+	}
+	if err := serializeStringOption(p, "deviceatlas-properties-cookie", options.PropertiesCookie); err != nil {
+		return err
+	}
+	return nil
+}
+
+func serializeFiftyOneDegreesOptions(p parser.Parser, options *models.GlobalFiftyOneDegreesOptions) error {
+	if options == nil {
+		return nil
+	}
+	if err := serializeStringOption(p, "51degrees-data-file", options.DataFile); err != nil {
+		return err
+	}
+	if err := serializeStringOption(p, "51degrees-property-name-list", options.PropertyNameList); err != nil {
+		return err
+	}
+	if err := serializeStringOption(p, "51degrees-property-separator", options.PropertySeparator); err != nil {
+		return err
+	}
+	if err := serializeInt64Option(p, "51degrees-cache-size", options.CacheSize); err != nil {
 		return err
 	}
 	return nil
@@ -1683,6 +1950,9 @@ func serializeTuneOptions(p parser.Parser, options *models.GlobalTuneOptions) er
 	if err := serializeInt64Option(p, "tune.zlib.memlevel", options.ZlibMemlevel); err != nil {
 		return err
 	}
+	if err := serializeOnOffOption(p, "tune.fd.edge-triggered", options.FdEdgeTriggered); err != nil {
+		return err
+	}
 	return serializeInt64Option(p, "tune.zlib.windowsize", options.ZlibWindowsize)
 }
 
@@ -1762,7 +2032,72 @@ func serializeInt64POption(p parser.Parser, option string, data *int64) error {
 	return p.Set(parser.Global, parser.GlobalSectionName, option, value)
 }
 
-func parseTuneOptions(p parser.Parser) (*models.GlobalTuneOptions, error) { //nolint:gocognit, gocyclo, cyclop,maintidx
+func parseDeviceAtlasOptions(p parser.Parser) (*models.GlobalDeviceAtlasOptions, error) {
+	options := &models.GlobalDeviceAtlasOptions{}
+	var option string
+	var err error
+
+	option, err = parseStringOption(p, "deviceatlas-json-file")
+	if err != nil {
+		return nil, err
+	}
+	options.JSONFile = option
+
+	option, err = parseStringOption(p, "deviceatlas-log-level")
+	if err != nil {
+		return nil, err
+	}
+	options.LogLevel = option
+
+	option, err = parseStringOption(p, "deviceatlas-separator")
+	if err != nil {
+		return nil, err
+	}
+	options.Separator = option
+
+	option, err = parseStringOption(p, "deviceatlas-properties-cookie")
+	if err != nil {
+		return nil, err
+	}
+	options.PropertiesCookie = option
+
+	return options, nil
+}
+
+func parseFiftyOneDegreesOptions(p parser.Parser) (*models.GlobalFiftyOneDegreesOptions, error) {
+	options := &models.GlobalFiftyOneDegreesOptions{}
+	var option string
+	var optionInt int64
+	var err error
+
+	option, err = parseStringOption(p, "51degrees-data-file")
+	if err != nil {
+		return nil, err
+	}
+	options.DataFile = option
+
+	option, err = parseStringOption(p, "51degrees-property-name-list")
+	if err != nil {
+		return nil, err
+	}
+	options.PropertyNameList = option
+
+	option, err = parseStringOption(p, "51degrees-property-separator")
+	if err != nil {
+		return nil, err
+	}
+	options.PropertySeparator = option
+
+	optionInt, err = parseInt64Option(p, "51degrees-cache-size")
+	if err != nil {
+		return nil, err
+	}
+	options.CacheSize = optionInt
+
+	return options, nil
+}
+
+func parseTuneOptions(p parser.Parser) (*models.GlobalTuneOptions, error) { //nolint:gocognit, gocyclo, cyclop
 	options := &models.GlobalTuneOptions{}
 	var intOption int64
 	var intPOption *int64
@@ -2063,6 +2398,12 @@ func parseTuneOptions(p parser.Parser) (*models.GlobalTuneOptions, error) { //no
 		return nil, err
 	}
 	options.ZlibWindowsize = intOption
+
+	strOption, err = parseOnOffOption(p, "tune.fd.edge-triggered")
+	if err != nil {
+		return nil, err
+	}
+	options.FdEdgeTriggered = strOption
 
 	return options, nil
 }

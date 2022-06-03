@@ -389,8 +389,82 @@ func TestGetGlobal(t *testing.T) {
 	if *&global.TuneOptions.ZlibMemlevel != 54 {
 		t.Errorf("ZlibMemlevel is %v, expected 54", global.TuneOptions.ZlibMemlevel)
 	}
+	if *&global.TuneOptions.FdEdgeTriggered != "enabled" {
+		t.Errorf("FdEdgeTriggered is %v, expected enabled", global.TuneOptions.FdEdgeTriggered)
+	}
 	if *&global.TuneOptions.ZlibWindowsize != 55 {
 		t.Errorf("ZlibWindowsize is %v, expected 55", global.TuneOptions.ZlibWindowsize)
+	}
+	if global.ThreadGroups != 1 {
+		t.Errorf("ThreadGroups is %v, expected 1", global.ThreadGroups)
+	}
+	if len(global.ThreadGroupLines) == 1 {
+		if *global.ThreadGroupLines[0].Group != "first" {
+			t.Errorf("ThreadGroup[0] Group is %v, expected first", *global.ThreadGroupLines[0].Group)
+		}
+		if *global.ThreadGroupLines[0].NumOrRange != "1-16" {
+			t.Errorf("ThreadGroup[0] NumOrRange is %v, expected 1-16", *global.ThreadGroupLines[0].NumOrRange)
+		}
+	}
+	/*
+		if global.StatsMaxconn != 20 {
+			t.Errorf("StatsMaxconn is %v, expected 20", global.StatsMaxconn)
+		}*/
+	if global.DeviceAtlasOptions.JSONFile != "atlas.json" {
+		t.Errorf("DeviceAtlasOptions.JSONFile is %v, expected atlas.json", global.DeviceAtlasOptions.JSONFile)
+	}
+	if global.DeviceAtlasOptions.LogLevel != "1" {
+		t.Errorf("DeviceAtlasOptions.LogLevel is %v, expected 1", global.DeviceAtlasOptions.LogLevel)
+	}
+	if global.DeviceAtlasOptions.Separator != "-" {
+		t.Errorf("DeviceAtlasOptions.Separator is %v, expected -", global.DeviceAtlasOptions.Separator)
+	}
+	if global.DeviceAtlasOptions.PropertiesCookie != "chocolate" {
+		t.Errorf("DeviceAtlasOptions.PropertiesCookie is %v, expected chocolate", global.DeviceAtlasOptions.PropertiesCookie)
+	}
+	if global.FiftyOneDegreesOptions.DataFile != "51.file" {
+		t.Errorf("FiftyOneDegreesOptions.DataFile is %v, expected 51.file", global.FiftyOneDegreesOptions.DataFile)
+	}
+	if global.FiftyOneDegreesOptions.PropertyNameList != "first second third fourth fifth" {
+		t.Errorf("FiftyOneDegreesOptions.PropertyNameList is %v, expected 'first second third fourth fifth'", global.FiftyOneDegreesOptions.PropertyNameList)
+	}
+	if global.FiftyOneDegreesOptions.PropertySeparator != "/" {
+		t.Errorf("FiftyOneDegreesOptions.PropertySeparator is %v, expected /", global.FiftyOneDegreesOptions.PropertySeparator)
+	}
+	if global.FiftyOneDegreesOptions.CacheSize != 51 {
+		t.Errorf("FiftyOneDegreesOptions.CacheSize is %v, expected 51", global.FiftyOneDegreesOptions.CacheSize)
+	}
+	if global.Quiet != true {
+		t.Errorf("Quiet is false, expected true")
+	}
+	if global.ZeroWarning != true {
+		t.Errorf("ZeroWarning is false, expected true")
+	}
+	if len(global.SslEngines) == 3 {
+		if *global.SslEngines[0].Name != "first" {
+			t.Errorf("SslEngines[0] Name is %v, expected first", *global.SslEngines[0].Name)
+		}
+		if *global.SslEngines[0].Algorithms != "" {
+			t.Errorf("SslEngines[0] Algorithms is %v, expected empty", *global.SslEngines[0].Algorithms)
+		}
+		if *global.SslEngines[1].Name != "second" {
+			t.Errorf("SslEngines[1] Name is %v, expected second", *global.SslEngines[1].Name)
+		}
+		if *global.SslEngines[1].Algorithms != "RSA,DSA,DH,EC,RAND" {
+			t.Errorf("SslEngines[1] Algorithms is %v, expected RSA,DSA,DH,EC,RAND", *global.SslEngines[1].Algorithms)
+		}
+		if *global.SslEngines[2].Name != "third" {
+			t.Errorf("SslEngines[2] Name is %v, expected third", *global.SslEngines[2].Name)
+		}
+		if *global.SslEngines[2].Algorithms != "CIPHERS,DIGESTS,PKEY,PKEY_CRYPTO,PKEY_ASN1" {
+			t.Errorf("SslEngines[2] Algorithms is %v, expected CIPHERS,DIGESTS,PKEY,PKEY_CRYPTO,PKEY_ASN1", *global.SslEngines[2].Algorithms)
+		}
+	}
+	if global.SslDhParamFile != "ssl-dh-param-file.txt" {
+		t.Errorf("SslDhParamFile is %v, expected ssl-dh-param-file.txt", global.SslDhParamFile)
+	}
+	if global.SslServerVerify != "required" {
+		t.Errorf("SslServerVerify is %v, expected required", global.SslServerVerify)
 	}
 }
 
@@ -439,9 +513,11 @@ func TestPutGlobal(t *testing.T) {
 			Enabled: &enabled,
 			Param:   "something",
 		},
-		TuneOptions:  &models.GlobalTuneOptions{},
-		UID:          1234,
-		WurflOptions: &models.GlobalWurflOptions{},
+		TuneOptions:            &models.GlobalTuneOptions{},
+		UID:                    1234,
+		WurflOptions:           &models.GlobalWurflOptions{},
+		DeviceAtlasOptions:     &models.GlobalDeviceAtlasOptions{},
+		FiftyOneDegreesOptions: &models.GlobalFiftyOneDegreesOptions{},
 	}
 
 	err := clientTest.PushGlobalConfiguration(g, "", version)

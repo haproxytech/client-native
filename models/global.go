@@ -46,6 +46,12 @@ type Global struct {
 	// runtime a p is
 	RuntimeAPIs []*RuntimeAPI `json:"runtime_apis"`
 
+	// ssl engines
+	SslEngines []*SslEngine `json:"ssl_engines"`
+
+	// thread group lines
+	ThreadGroupLines []*ThreadGroup `json:"thread_group_lines"`
+
 	// busy polling
 	BusyPolling bool `json:"busy_polling,omitempty"`
 
@@ -66,11 +72,17 @@ type Global struct {
 	// description
 	Description string `json:"description,omitempty"`
 
+	// device atlas options
+	DeviceAtlasOptions *GlobalDeviceAtlasOptions `json:"device_atlas_options,omitempty"`
+
 	// expose experimental directives
 	ExposeExperimentalDirectives bool `json:"expose_experimental_directives,omitempty"`
 
 	// external check
 	ExternalCheck bool `json:"external_check,omitempty"`
+
+	// fifty one degrees options
+	FiftyOneDegreesOptions *GlobalFiftyOneDegreesOptions `json:"fifty_one_degrees_options,omitempty"`
 
 	// gid
 	Gid int64 `json:"gid,omitempty"`
@@ -195,6 +207,9 @@ type Global struct {
 	// Enum: [auto on off]
 	ProfilingTasks string `json:"profiling_tasks,omitempty"`
 
+	// quiet
+	Quiet bool `json:"quiet,omitempty"`
+
 	// server state base
 	// Pattern: ^[^\s]+$
 	ServerStateBase string `json:"server_state_base,omitempty"`
@@ -230,18 +245,34 @@ type Global struct {
 	// ssl default server options
 	SslDefaultServerOptions string `json:"ssl_default_server_options,omitempty"`
 
+	// ssl dh param file
+	SslDhParamFile string `json:"ssl_dh_param_file,omitempty"`
+
+	// ssl load extra files
+	SslLoadExtraFiles string `json:"ssl_load_extra_files,omitempty"`
+
 	// ssl mode async
 	// Enum: [enabled disabled]
 	SslModeAsync string `json:"ssl_mode_async,omitempty"`
 
+	// ssl server verify
+	// Enum: [none required]
+	SslServerVerify string `json:"ssl_server_verify,omitempty"`
+
 	// ssl skip self issued ca
 	SslSkipSelfIssuedCa bool `json:"ssl_skip_self_issued_ca,omitempty"`
+
+	// stats maxconn
+	StatsMaxconn int64 `json:"stats_maxconn,omitempty"`
 
 	// stats timeout
 	StatsTimeout *int64 `json:"stats_timeout,omitempty"`
 
 	// strict limits
 	StrictLimits bool `json:"strict_limits,omitempty"`
+
+	// thread groups
+	ThreadGroups int64 `json:"thread_groups,omitempty"`
 
 	// tune options
 	TuneOptions *GlobalTuneOptions `json:"tune_options,omitempty"`
@@ -261,6 +292,9 @@ type Global struct {
 
 	// wurfl options
 	WurflOptions *GlobalWurflOptions `json:"wurfl_options,omitempty"`
+
+	// zero warning
+	ZeroWarning bool `json:"zero_warning,omitempty"`
 }
 
 // Validate validates this global
@@ -279,11 +313,27 @@ func (m *Global) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
+	if err := m.validateSslEngines(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateThreadGroupLines(formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.validateChroot(formats); err != nil {
 		res = append(res, err)
 	}
 
 	if err := m.validateDaemon(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateDeviceAtlasOptions(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateFiftyOneDegreesOptions(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -320,6 +370,10 @@ func (m *Global) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateSslModeAsync(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateSslServerVerify(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -416,6 +470,56 @@ func (m *Global) validateRuntimeAPIs(formats strfmt.Registry) error {
 	return nil
 }
 
+func (m *Global) validateSslEngines(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.SslEngines) { // not required
+		return nil
+	}
+
+	for i := 0; i < len(m.SslEngines); i++ {
+		if swag.IsZero(m.SslEngines[i]) { // not required
+			continue
+		}
+
+		if m.SslEngines[i] != nil {
+			if err := m.SslEngines[i].Validate(formats); err != nil {
+				if ve, ok := err.(*errors.Validation); ok {
+					return ve.ValidateName("ssl_engines" + "." + strconv.Itoa(i))
+				}
+				return err
+			}
+		}
+
+	}
+
+	return nil
+}
+
+func (m *Global) validateThreadGroupLines(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.ThreadGroupLines) { // not required
+		return nil
+	}
+
+	for i := 0; i < len(m.ThreadGroupLines); i++ {
+		if swag.IsZero(m.ThreadGroupLines[i]) { // not required
+			continue
+		}
+
+		if m.ThreadGroupLines[i] != nil {
+			if err := m.ThreadGroupLines[i].Validate(formats); err != nil {
+				if ve, ok := err.(*errors.Validation); ok {
+					return ve.ValidateName("thread_group_lines" + "." + strconv.Itoa(i))
+				}
+				return err
+			}
+		}
+
+	}
+
+	return nil
+}
+
 func (m *Global) validateChroot(formats strfmt.Registry) error {
 
 	if swag.IsZero(m.Chroot) { // not required
@@ -467,6 +571,42 @@ func (m *Global) validateDaemon(formats strfmt.Registry) error {
 	// value enum
 	if err := m.validateDaemonEnum("daemon", "body", m.Daemon); err != nil {
 		return err
+	}
+
+	return nil
+}
+
+func (m *Global) validateDeviceAtlasOptions(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.DeviceAtlasOptions) { // not required
+		return nil
+	}
+
+	if m.DeviceAtlasOptions != nil {
+		if err := m.DeviceAtlasOptions.Validate(formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("device_atlas_options")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (m *Global) validateFiftyOneDegreesOptions(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.FiftyOneDegreesOptions) { // not required
+		return nil
+	}
+
+	if m.FiftyOneDegreesOptions != nil {
+		if err := m.FiftyOneDegreesOptions.Validate(formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("fifty_one_degrees_options")
+			}
+			return err
+		}
 	}
 
 	return nil
@@ -681,6 +821,49 @@ func (m *Global) validateSslModeAsync(formats strfmt.Registry) error {
 	return nil
 }
 
+var globalTypeSslServerVerifyPropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["none","required"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		globalTypeSslServerVerifyPropEnum = append(globalTypeSslServerVerifyPropEnum, v)
+	}
+}
+
+const (
+
+	// GlobalSslServerVerifyNone captures enum value "none"
+	GlobalSslServerVerifyNone string = "none"
+
+	// GlobalSslServerVerifyRequired captures enum value "required"
+	GlobalSslServerVerifyRequired string = "required"
+)
+
+// prop value enum
+func (m *Global) validateSslServerVerifyEnum(path, location string, value string) error {
+	if err := validate.Enum(path, location, value, globalTypeSslServerVerifyPropEnum); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *Global) validateSslServerVerify(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.SslServerVerify) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateSslServerVerifyEnum("ssl_server_verify", "body", m.SslServerVerify); err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func (m *Global) validateTuneOptions(formats strfmt.Registry) error {
 
 	if swag.IsZero(m.TuneOptions) { // not required
@@ -809,6 +992,88 @@ func (m *CPUMap) MarshalBinary() ([]byte, error) {
 // UnmarshalBinary interface implementation
 func (m *CPUMap) UnmarshalBinary(b []byte) error {
 	var res CPUMap
+	if err := swag.ReadJSON(b, &res); err != nil {
+		return err
+	}
+	*m = res
+	return nil
+}
+
+// GlobalDeviceAtlasOptions global device atlas options
+//
+// swagger:model GlobalDeviceAtlasOptions
+type GlobalDeviceAtlasOptions struct {
+
+	// json file
+	JSONFile string `json:"json_file,omitempty"`
+
+	// log level
+	LogLevel string `json:"log_level,omitempty"`
+
+	// properties cookie
+	PropertiesCookie string `json:"properties_cookie,omitempty"`
+
+	// separator
+	Separator string `json:"separator,omitempty"`
+}
+
+// Validate validates this global device atlas options
+func (m *GlobalDeviceAtlasOptions) Validate(formats strfmt.Registry) error {
+	return nil
+}
+
+// MarshalBinary interface implementation
+func (m *GlobalDeviceAtlasOptions) MarshalBinary() ([]byte, error) {
+	if m == nil {
+		return nil, nil
+	}
+	return swag.WriteJSON(m)
+}
+
+// UnmarshalBinary interface implementation
+func (m *GlobalDeviceAtlasOptions) UnmarshalBinary(b []byte) error {
+	var res GlobalDeviceAtlasOptions
+	if err := swag.ReadJSON(b, &res); err != nil {
+		return err
+	}
+	*m = res
+	return nil
+}
+
+// GlobalFiftyOneDegreesOptions global fifty one degrees options
+//
+// swagger:model GlobalFiftyOneDegreesOptions
+type GlobalFiftyOneDegreesOptions struct {
+
+	// cache size
+	CacheSize int64 `json:"cache_size,omitempty"`
+
+	// data file
+	DataFile string `json:"data_file,omitempty"`
+
+	// property name list
+	PropertyNameList string `json:"property_name_list,omitempty"`
+
+	// property separator
+	PropertySeparator string `json:"property_separator,omitempty"`
+}
+
+// Validate validates this global fifty one degrees options
+func (m *GlobalFiftyOneDegreesOptions) Validate(formats strfmt.Registry) error {
+	return nil
+}
+
+// MarshalBinary interface implementation
+func (m *GlobalFiftyOneDegreesOptions) MarshalBinary() ([]byte, error) {
+	if m == nil {
+		return nil, nil
+	}
+	return swag.WriteJSON(m)
+}
+
+// UnmarshalBinary interface implementation
+func (m *GlobalFiftyOneDegreesOptions) UnmarshalBinary(b []byte) error {
+	var res GlobalFiftyOneDegreesOptions
 	if err := swag.ReadJSON(b, &res); err != nil {
 		return err
 	}
@@ -1261,6 +1526,128 @@ func (m *RuntimeAPI) UnmarshalBinary(b []byte) error {
 	return nil
 }
 
+// SslEngine ssl engine
+//
+// swagger:model SslEngine
+type SslEngine struct {
+
+	// algorithms
+	Algorithms *string `json:"algorithms,omitempty"`
+
+	// name
+	// Required: true
+	Name *string `json:"name"`
+}
+
+// Validate validates this ssl engine
+func (m *SslEngine) Validate(formats strfmt.Registry) error {
+	var res []error
+
+	if err := m.validateName(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if len(res) > 0 {
+		return errors.CompositeValidationError(res...)
+	}
+	return nil
+}
+
+func (m *SslEngine) validateName(formats strfmt.Registry) error {
+
+	if err := validate.Required("name", "body", m.Name); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+// MarshalBinary interface implementation
+func (m *SslEngine) MarshalBinary() ([]byte, error) {
+	if m == nil {
+		return nil, nil
+	}
+	return swag.WriteJSON(m)
+}
+
+// UnmarshalBinary interface implementation
+func (m *SslEngine) UnmarshalBinary(b []byte) error {
+	var res SslEngine
+	if err := swag.ReadJSON(b, &res); err != nil {
+		return err
+	}
+	*m = res
+	return nil
+}
+
+// ThreadGroup thread group
+//
+// swagger:model ThreadGroup
+type ThreadGroup struct {
+
+	// group
+	// Required: true
+	Group *string `json:"group"`
+
+	// num or range
+	// Required: true
+	NumOrRange *string `json:"num_or_range"`
+}
+
+// Validate validates this thread group
+func (m *ThreadGroup) Validate(formats strfmt.Registry) error {
+	var res []error
+
+	if err := m.validateGroup(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateNumOrRange(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if len(res) > 0 {
+		return errors.CompositeValidationError(res...)
+	}
+	return nil
+}
+
+func (m *ThreadGroup) validateGroup(formats strfmt.Registry) error {
+
+	if err := validate.Required("group", "body", m.Group); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *ThreadGroup) validateNumOrRange(formats strfmt.Registry) error {
+
+	if err := validate.Required("num_or_range", "body", m.NumOrRange); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+// MarshalBinary interface implementation
+func (m *ThreadGroup) MarshalBinary() ([]byte, error) {
+	if m == nil {
+		return nil, nil
+	}
+	return swag.WriteJSON(m)
+}
+
+// UnmarshalBinary interface implementation
+func (m *ThreadGroup) UnmarshalBinary(b []byte) error {
+	var res ThreadGroup
+	if err := swag.ReadJSON(b, &res); err != nil {
+		return err
+	}
+	*m = res
+	return nil
+}
+
 // GlobalTuneOptions global tune options
 //
 // swagger:model GlobalTuneOptions
@@ -1281,6 +1668,10 @@ type GlobalTuneOptions struct {
 
 	// fail alloc
 	FailAlloc bool `json:"fail_alloc,omitempty"`
+
+	// fd edge triggered
+	// Enum: [enabled disabled]
+	FdEdgeTriggered string `json:"fd_edge_triggered,omitempty"`
 
 	// h2 header table size
 	// Maximum: 65535
@@ -1436,6 +1827,10 @@ func (m *GlobalTuneOptions) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
+	if err := m.validateFdEdgeTriggered(formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.validateH2HeaderTableSize(formats); err != nil {
 		res = append(res, err)
 	}
@@ -1485,6 +1880,49 @@ func (m *GlobalTuneOptions) validateBuffersReserve(formats strfmt.Registry) erro
 	}
 
 	if err := validate.MinimumInt("tune_options"+"."+"buffers_reserve", "body", int64(m.BuffersReserve), 2, false); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+var globalTuneOptionsTypeFdEdgeTriggeredPropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		globalTuneOptionsTypeFdEdgeTriggeredPropEnum = append(globalTuneOptionsTypeFdEdgeTriggeredPropEnum, v)
+	}
+}
+
+const (
+
+	// GlobalTuneOptionsFdEdgeTriggeredEnabled captures enum value "enabled"
+	GlobalTuneOptionsFdEdgeTriggeredEnabled string = "enabled"
+
+	// GlobalTuneOptionsFdEdgeTriggeredDisabled captures enum value "disabled"
+	GlobalTuneOptionsFdEdgeTriggeredDisabled string = "disabled"
+)
+
+// prop value enum
+func (m *GlobalTuneOptions) validateFdEdgeTriggeredEnum(path, location string, value string) error {
+	if err := validate.Enum(path, location, value, globalTuneOptionsTypeFdEdgeTriggeredPropEnum); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *GlobalTuneOptions) validateFdEdgeTriggered(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.FdEdgeTriggered) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateFdEdgeTriggeredEnum("tune_options"+"."+"fd_edge_triggered", "body", m.FdEdgeTriggered); err != nil {
 		return err
 	}
 
