@@ -226,7 +226,7 @@ func parseAddress(address string) (ipOrAddress string, port *int64) {
 	}
 }
 
-func ParseServer(ondiskServer types.Server) *models.Server { //nolint:gocyclo,cyclop,gocognit
+func ParseServer(ondiskServer types.Server) *models.Server { //nolint:gocyclo,cyclop,gocognit,maintidx
 	s := &models.Server{
 		Name: ondiskServer.Name,
 	}
@@ -473,7 +473,7 @@ func ParseServer(ondiskServer types.Server) *models.Server { //nolint:gocyclo,cy
 	return s
 }
 
-func SerializeServer(s models.Server) types.Server { //nolint:gocognit,gocyclo,cyclop,cyclop
+func SerializeServer(s models.Server) types.Server { //nolint:gocognit,gocyclo,cyclop,cyclop,maintidx
 	srv := types.Server{
 		Name:   s.Name,
 		Params: []params.ServerOption{},

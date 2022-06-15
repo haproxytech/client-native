@@ -37,7 +37,7 @@ func (s *SingleRuntime) GetInfo() models.ProcessInfo {
 	return data
 }
 
-func parseInfo(info string) *models.ProcessInfoItem { //nolint:gocognit,gocyclo,cyclop
+func parseInfo(info string) *models.ProcessInfoItem { //nolint:gocognit,gocyclo,cyclop,maintidx
 	data := &models.ProcessInfoItem{}
 
 	for _, line := range strings.Split(info, "\n") {

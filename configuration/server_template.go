@@ -190,7 +190,7 @@ func ParseServerTemplates(backend string, p parser.Parser) (models.ServerTemplat
 	return templates, nil
 }
 
-func ParseServerTemplate(ondiskServerTemplate types.ServerTemplate) *models.ServerTemplate { //nolint:cyclop,gocognit,gocyclo
+func ParseServerTemplate(ondiskServerTemplate types.ServerTemplate) *models.ServerTemplate { //nolint:cyclop,gocognit,gocyclo,maintidx
 	st := &models.ServerTemplate{
 		Prefix:     ondiskServerTemplate.Prefix,
 		NumOrRange: ondiskServerTemplate.NumOrRange,
@@ -434,7 +434,7 @@ func ParseServerTemplate(ondiskServerTemplate types.ServerTemplate) *models.Serv
 	return st
 }
 
-func SerializeServerTemplate(s models.ServerTemplate) types.ServerTemplate { //nolint:gocognit,gocyclo,cyclop
+func SerializeServerTemplate(s models.ServerTemplate) types.ServerTemplate { //nolint:gocognit,gocyclo,cyclop,maintidx
 	srv := types.ServerTemplate{
 		Prefix:     s.Prefix,
 		NumOrRange: s.NumOrRange,

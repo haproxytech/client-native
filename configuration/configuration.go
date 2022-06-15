@@ -716,7 +716,7 @@ func (s *SectionParser) stickTable() interface{} {
 	return bst
 }
 
-func (s *SectionParser) defaultServer() interface{} { //nolint:gocognit,gocyclo,cyclop
+func (s *SectionParser) defaultServer() interface{} { //nolint:gocognit,gocyclo,cyclop,maintidx
 	data, err := s.get("default-server", false)
 	if err != nil {
 		return nil
@@ -1891,7 +1891,7 @@ func (s *SectionObject) stickTable(field reflect.Value) error {
 	return nil
 }
 
-func (s *SectionObject) defaultServer(field reflect.Value) error { //nolint:gocognit,gocyclo,cyclop
+func (s *SectionObject) defaultServer(field reflect.Value) error { //nolint:gocognit,gocyclo,cyclop,maintidx
 	if s.Section == parser.Backends || s.Section == parser.Defaults {
 		if valueIsNil(field) {
 			if err := s.set("default-server", nil); err != nil {

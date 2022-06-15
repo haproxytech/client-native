@@ -232,7 +232,7 @@ func ParseTCPRequestRules(t, pName string, p parser.Parser) (models.TCPRequestRu
 	return tcpReqRules, nil
 }
 
-func ParseTCPRequestRule(f types.TCPType) (rule *models.TCPRequestRule, err error) { //nolint:gocyclo,cyclop
+func ParseTCPRequestRule(f types.TCPType) (rule *models.TCPRequestRule, err error) { //nolint:gocyclo,cyclop,maintidx
 	switch v := f.(type) {
 	case *tcp_types.InspectDelay:
 		return &models.TCPRequestRule{
@@ -514,7 +514,7 @@ func ParseTCPRequestRule(f types.TCPType) (rule *models.TCPRequestRule, err erro
 	return rule, nil
 }
 
-func SerializeTCPRequestRule(f models.TCPRequestRule) (rule types.TCPType, err error) { //nolint:gocyclo,cyclop
+func SerializeTCPRequestRule(f models.TCPRequestRule) (rule types.TCPType, err error) { //nolint:gocyclo,cyclop,maintidx
 	switch f.Type {
 	case models.TCPRequestRuleTypeConnection:
 		switch f.Action {

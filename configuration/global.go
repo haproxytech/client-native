@@ -80,7 +80,7 @@ func (c *client) PushGlobalConfiguration(data *models.Global, transactionID stri
 	return nil
 }
 
-func ParseGlobalSection(p parser.Parser) (*models.Global, error) { //nolint:gocognit,gocyclo,cyclop
+func ParseGlobalSection(p parser.Parser) (*models.Global, error) { //nolint:gocognit,gocyclo,cyclop,maintidx
 	var chroot string
 	data, err := p.Get(parser.Global, parser.GlobalSectionName, "chroot")
 	if err == nil {
@@ -846,7 +846,7 @@ func ParseGlobalSection(p parser.Parser) (*models.Global, error) { //nolint:goco
 	return global, nil
 }
 
-func SerializeGlobalSection(p parser.Parser, data *models.Global) error { //nolint:gocognit,gocyclo,cyclop
+func SerializeGlobalSection(p parser.Parser, data *models.Global) error { //nolint:gocognit,gocyclo,cyclop,maintidx
 	pChroot := &types.StringC{
 		Value: data.Chroot,
 	}
@@ -1762,7 +1762,7 @@ func serializeInt64POption(p parser.Parser, option string, data *int64) error {
 	return p.Set(parser.Global, parser.GlobalSectionName, option, value)
 }
 
-func parseTuneOptions(p parser.Parser) (*models.GlobalTuneOptions, error) { //nolint:gocognit, gocyclo, cyclop
+func parseTuneOptions(p parser.Parser) (*models.GlobalTuneOptions, error) { //nolint:gocognit, gocyclo, cyclop,maintidx
 	options := &models.GlobalTuneOptions{}
 	var intOption int64
 	var intPOption *int64
