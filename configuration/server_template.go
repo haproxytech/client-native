@@ -273,6 +273,11 @@ func ParseServerTemplate(ondiskServerTemplate types.ServerTemplate) *models.Serv
 			}
 		case *params.ServerOptionValue: //nolint:gocognit,gocyclo,dupl,cyclop
 			switch v.Name {
+			case "id":
+				p, err := strconv.ParseInt(v.Value, 10, 64)
+				if err == nil {
+					st.ID = &p
+				}
 			case "agent-send":
 				st.AgentSend = v.Value
 			case "agent-inter":
@@ -562,6 +567,9 @@ func SerializeServerTemplate(s models.ServerTemplate) types.ServerTemplate { //n
 		srv.Params = append(srv.Params, &params.ServerOptionWord{Name: "no-tfo"})
 	}
 	// ServerOptionValue
+	if s.ID != nil {
+		srv.Params = append(srv.Params, &params.ServerOptionValue{Name: "id", Value: strconv.FormatInt(*s.ID, 10)})
+	}
 	if s.AgentSend != "" {
 		srv.Params = append(srv.Params, &params.ServerOptionValue{Name: "agent-send", Value: s.AgentSend})
 	}

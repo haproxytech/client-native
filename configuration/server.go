@@ -307,6 +307,11 @@ func ParseServer(ondiskServer types.Server) *models.Server { //nolint:gocognit,g
 			}
 		case *params.ServerOptionValue: //nolint:gocognit,gocyclo,dupl,cyclop
 			switch v.Name {
+			case "id":
+				p, err := strconv.ParseInt(v.Value, 10, 64)
+				if err == nil {
+					s.ID = &p
+				}
 			case "agent-send":
 				s.AgentSend = v.Value
 			case "agent-inter":
@@ -593,6 +598,9 @@ func SerializeServer(s models.Server) types.Server { //nolint:gocognit,gocyclo
 		srv.Params = append(srv.Params, &params.ServerOptionWord{Name: "no-tfo"})
 	}
 	// ServerOptionValue
+	if s.ID != nil {
+		srv.Params = append(srv.Params, &params.ServerOptionValue{Name: "id", Value: strconv.FormatInt(*s.ID, 10)})
+	}
 	if s.AgentSend != "" {
 		srv.Params = append(srv.Params, &params.ServerOptionValue{Name: "agent-send", Value: s.AgentSend})
 	}
