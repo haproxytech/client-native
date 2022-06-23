@@ -1029,11 +1029,11 @@ func (c *client) GetACLFileEntry(id, value string) (fileEntry *models.ACLFileEnt
 // DeleteACLFileEntry deletes the value for the specified ACL file entry based on its ID
 func (c *client) DeleteACLFileEntry(id, value string) error {
 	if len(c.runtimes) == 0 {
-		return fmt.Errorf("missing runtimes, cannot add ACL file entry")
+		return fmt.Errorf("missing runtimes, cannot delete ACL file entry")
 	}
 	for _, runtime := range c.runtimes {
 		if err := runtime.DeleteACLFileEntry(id, value); err != nil {
-			return errors.Wrap(err, "cannot add ACL files entry for "+id)
+			return errors.Wrap(err, "cannot delete ACL files entry for "+id)
 		}
 	}
 
