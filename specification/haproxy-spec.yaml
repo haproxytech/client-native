@@ -603,7 +603,7 @@ tags:
   - name: DeclareCapture
   - name: Userlist
 security:
-  - basic_auth: [ ]
+  - basic_auth: []
 paths:
   /:
     $ref: "paths/general.yaml#/root"

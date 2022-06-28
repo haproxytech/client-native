@@ -7995,7 +7995,7 @@ tags:
     transaction mechanism is implicitly called with one operation in transaction.
 - name: Userlist
 security:
-  - basic_auth: [ ]
+  - basic_auth: []
 paths:
   /:
       get:
