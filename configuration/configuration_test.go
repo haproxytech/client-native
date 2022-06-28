@@ -284,6 +284,12 @@ frontend test
   http-response lua.foo param1 param2 if FALSE
   http-response deny deny_status 400 content-type application/json lf-file /var/errors.file
   http-response wait-for-body time 20s at-least 100k
+  http-after-response set-header Strict-Transport-Security "max-age=31536000"
+  http-after-response replace-header Set-Cookie (C=[^;]*);(.*) \1;ip=%bi;\2
+  http-after-response replace-value Cache-control ^public$ private
+  http-after-response set-status 503 reason "SlowDown"
+  http-after-response set-var(sess.last_redir) res.hdr(location)
+  http-after-response unset-var(sess.last_redir)
   tcp-request connection accept if TRUE
   tcp-request connection reject if FALSE
   tcp-request content accept if TRUE

@@ -40,6 +40,7 @@ type Configuration interface {
 	HTTPCheck
 	HTTPRequestRule
 	HTTPResponseRule
+	HTTPAfterResponseRule
 	LogTarget
 	Nameserver
 	PeerEntry
