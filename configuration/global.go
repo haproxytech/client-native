@@ -732,20 +732,17 @@ func ParseGlobalSection(p parser.Parser) (*models.Global, error) { //nolint:goco
 		threadGroups = threadGroupsParser.Value
 	}
 
-	/*
-		var statsMaxconn *int64
-
-
-			data, err = p.Get(parser.Global, parser.GlobalSectionName, "stats maxconn")
-			if errors.Is(err, parser_errors.ErrFetch) {
-				statsMaxconn = nil
-			} else {
-				statsMaxconnParser, ok := data.(*types.Int64C)
-				if !ok {
-					return nil, misc.CreateTypeAssertError("stats maxconn")
-				}
-				statsMaxconn = &statsMaxconnParser.Value
-			}*/
+	var statsMaxconn *int64
+	data, err = p.Get(parser.Global, parser.GlobalSectionName, "stats maxconn")
+	if errors.Is(err, parser_errors.ErrFetch) {
+		statsMaxconn = nil
+	} else {
+		statsMaxconnParser, ok := data.(*types.Int64C)
+		if !ok {
+			return nil, misc.CreateTypeAssertError("stats maxconn")
+		}
+		statsMaxconn = &statsMaxconnParser.Value
+	}
 
 	var SSLLoadExtraFiles string
 	data, err = p.Get(parser.Global, parser.GlobalSectionName, "ssl-load-extra-files")
@@ -882,64 +879,64 @@ func ParseGlobalSection(p parser.Parser) (*models.Global, error) { //nolint:goco
 	}
 
 	global := &models.Global{
-		UID:                          uid,
-		User:                         user,
-		Gid:                          gid,
-		Group:                        group,
-		Chroot:                       chroot,
-		Localpeer:                    localPeer,
-		CaBase:                       caBase,
-		CrtBase:                      crtBase,
-		ServerStateBase:              srvStateBase,
-		ServerStateFile:              srvStateFile,
-		HardStopAfter:                hardStop,
-		Daemon:                       daemon,
-		MasterWorker:                 masterWorker,
-		Maxconn:                      mConn,
-		Nbproc:                       nbproc,
-		Nbthread:                     nbthread,
-		Pidfile:                      pidfile,
-		RuntimeAPIs:                  rAPIs,
-		StatsTimeout:                 statsTimeout,
-		CPUMaps:                      cpuMaps,
-		SslDefaultBindCiphers:        sslBindCiphers,
-		SslDefaultBindCiphersuites:   sslBindCiphersuites,
-		SslDefaultBindCurves:         sslDefaultBindCurves,
-		SslDefaultBindOptions:        sslBindOptions,
-		SslDefaultServerCiphers:      sslDefaultServerCiphers,
-		SslDefaultServerCiphersuites: sslServerCiphersuites,
-		SslDefaultServerOptions:      sslServerOptions,
-		SslModeAsync:                 sslModeAsync,
-		SslSkipSelfIssuedCa:          sslSkipSelfIssuedCa,
-		TuneOptions:                  tuneOptions,
-		TuneSslDefaultDhParam:        dhParam,
-		ExternalCheck:                externalCheck,
-		LuaLoads:                     luaLoads,
-		LuaPrependPath:               luaPrependPath,
-		LogSendHostname:              globalLogSendHostName,
-		H1CaseAdjusts:                h1CaseAdjusts,
-		H1CaseAdjustFile:             h1CaseAdjustFile,
-		BusyPolling:                  busyPolling,
-		MaxSpreadChecks:              maxSpreadChecks,
-		Maxconnrate:                  maxconnrate,
-		Maxcomprate:                  maxcomprate,
-		Maxcompcpuusage:              maxcompcpuusage,
-		Maxpipes:                     maxpipes,
-		Maxsessrate:                  maxsessrate,
-		Maxsslconn:                   maxsslconn,
-		Maxsslrate:                   maxsslrate,
-		Maxzlibmem:                   maxzlibmem,
-		Noepoll:                      noepoll,
-		Nokqueue:                     nokqueue,
-		Noevports:                    noevports,
-		Nopoll:                       nopoll,
-		Nosplice:                     nosplice,
-		Nogetaddrinfo:                nogetaddrinfo,
-		Noreuseport:                  noreuseport,
-		ProfilingTasks:               profilingTasks,
-		SpreadChecks:                 spreadChecks,
-		ThreadGroups:                 threadGroups,
-		// StatsMaxconn:                      *statsMaxconn,
+		UID:                               uid,
+		User:                              user,
+		Gid:                               gid,
+		Group:                             group,
+		Chroot:                            chroot,
+		Localpeer:                         localPeer,
+		CaBase:                            caBase,
+		CrtBase:                           crtBase,
+		ServerStateBase:                   srvStateBase,
+		ServerStateFile:                   srvStateFile,
+		HardStopAfter:                     hardStop,
+		Daemon:                            daemon,
+		MasterWorker:                      masterWorker,
+		Maxconn:                           mConn,
+		Nbproc:                            nbproc,
+		Nbthread:                          nbthread,
+		Pidfile:                           pidfile,
+		RuntimeAPIs:                       rAPIs,
+		StatsTimeout:                      statsTimeout,
+		CPUMaps:                           cpuMaps,
+		SslDefaultBindCiphers:             sslBindCiphers,
+		SslDefaultBindCiphersuites:        sslBindCiphersuites,
+		SslDefaultBindCurves:              sslDefaultBindCurves,
+		SslDefaultBindOptions:             sslBindOptions,
+		SslDefaultServerCiphers:           sslDefaultServerCiphers,
+		SslDefaultServerCiphersuites:      sslServerCiphersuites,
+		SslDefaultServerOptions:           sslServerOptions,
+		SslModeAsync:                      sslModeAsync,
+		SslSkipSelfIssuedCa:               sslSkipSelfIssuedCa,
+		TuneOptions:                       tuneOptions,
+		TuneSslDefaultDhParam:             dhParam,
+		ExternalCheck:                     externalCheck,
+		LuaLoads:                          luaLoads,
+		LuaPrependPath:                    luaPrependPath,
+		LogSendHostname:                   globalLogSendHostName,
+		H1CaseAdjusts:                     h1CaseAdjusts,
+		H1CaseAdjustFile:                  h1CaseAdjustFile,
+		BusyPolling:                       busyPolling,
+		MaxSpreadChecks:                   maxSpreadChecks,
+		Maxconnrate:                       maxconnrate,
+		Maxcomprate:                       maxcomprate,
+		Maxcompcpuusage:                   maxcompcpuusage,
+		Maxpipes:                          maxpipes,
+		Maxsessrate:                       maxsessrate,
+		Maxsslconn:                        maxsslconn,
+		Maxsslrate:                        maxsslrate,
+		Maxzlibmem:                        maxzlibmem,
+		Noepoll:                           noepoll,
+		Nokqueue:                          nokqueue,
+		Noevports:                         noevports,
+		Nopoll:                            nopoll,
+		Nosplice:                          nosplice,
+		Nogetaddrinfo:                     nogetaddrinfo,
+		Noreuseport:                       noreuseport,
+		ProfilingTasks:                    profilingTasks,
+		SpreadChecks:                      spreadChecks,
+		ThreadGroups:                      threadGroups,
+		StatsMaxconn:                      statsMaxconn,
 		SslLoadExtraFiles:                 SSLLoadExtraFiles,
 		ThreadGroupLines:                  threadGroupLines,
 		Node:                              node,
@@ -1647,16 +1644,17 @@ func SerializeGlobalSection(p parser.Parser, data *models.Global) error { //noli
 		return err
 	}
 
-	/*
-		statsMaxconn := &types.Int64C{
-			Value: data.StatsMaxconn,
+	var statsMaxconn *types.Int64C
+	if data.StatsMaxconn == nil {
+		statsMaxconn = nil
+	} else {
+		statsMaxconn = &types.Int64C{
+			Value: *data.StatsMaxconn,
 		}
-		if data.StatsMaxconn == 0 {
-			statsMaxconn = nil
-		}
-		if err := p.Set(parser.Global, parser.GlobalSectionName, "stats maxconn", statsMaxconn); err != nil {
-			return err
-		}*/
+	}
+	if err := p.Set(parser.Global, parser.GlobalSectionName, "stats maxconn", statsMaxconn); err != nil {
+		return err
+	}
 
 	SSLLoadExtraFiles := &types.StringC{Value: data.SslLoadExtraFiles}
 	if data.SslLoadExtraFiles == "" {
@@ -1802,7 +1800,7 @@ func serializeFiftyOneDegreesOptions(p parser.Parser, options *models.GlobalFift
 	return nil
 }
 
-func serializeTuneOptions(p parser.Parser, options *models.GlobalTuneOptions) error { //nolint:gocognit,gocyclo,cyclop
+func serializeTuneOptions(p parser.Parser, options *models.GlobalTuneOptions) error { //nolint:gocognit,gocyclo,cyclop,maintidx
 	if options == nil {
 		return nil
 	}
@@ -2097,7 +2095,7 @@ func parseFiftyOneDegreesOptions(p parser.Parser) (*models.GlobalFiftyOneDegrees
 	return options, nil
 }
 
-func parseTuneOptions(p parser.Parser) (*models.GlobalTuneOptions, error) { //nolint:gocognit, gocyclo, cyclop
+func parseTuneOptions(p parser.Parser) (*models.GlobalTuneOptions, error) { //nolint:gocognit, gocyclo, cyclop,maintidx
 	options := &models.GlobalTuneOptions{}
 	var intOption int64
 	var intPOption *int64

@@ -263,7 +263,7 @@ type Global struct {
 	SslSkipSelfIssuedCa bool `json:"ssl_skip_self_issued_ca,omitempty"`
 
 	// stats maxconn
-	StatsMaxconn int64 `json:"stats_maxconn,omitempty"`
+	StatsMaxconn *int64 `json:"stats_maxconn,omitempty"`
 
 	// stats timeout
 	StatsTimeout *int64 `json:"stats_timeout,omitempty"`

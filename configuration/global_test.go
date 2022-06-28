@@ -19,6 +19,7 @@ import (
 	"fmt"
 	"testing"
 
+	"github.com/haproxytech/client-native/v3/misc"
 	"github.com/haproxytech/client-native/v3/models"
 )
 
@@ -406,10 +407,9 @@ func TestGetGlobal(t *testing.T) {
 			t.Errorf("ThreadGroup[0] NumOrRange is %v, expected 1-16", *global.ThreadGroupLines[0].NumOrRange)
 		}
 	}
-	/*
-		if global.StatsMaxconn != 20 {
-			t.Errorf("StatsMaxconn is %v, expected 20", global.StatsMaxconn)
-		}*/
+	if *global.StatsMaxconn != 20 {
+		t.Errorf("StatsMaxconn is %v, expected 20", *global.StatsMaxconn)
+	}
 	if global.DeviceAtlasOptions.JSONFile != "atlas.json" {
 		t.Errorf("DeviceAtlasOptions.JSONFile is %v, expected atlas.json", global.DeviceAtlasOptions.JSONFile)
 	}
@@ -518,6 +518,7 @@ func TestPutGlobal(t *testing.T) {
 		WurflOptions:           &models.GlobalWurflOptions{},
 		DeviceAtlasOptions:     &models.GlobalDeviceAtlasOptions{},
 		FiftyOneDegreesOptions: &models.GlobalFiftyOneDegreesOptions{},
+		StatsMaxconn:           misc.Int64P(30),
 	}
 
 	err := clientTest.PushGlobalConfiguration(g, "", version)

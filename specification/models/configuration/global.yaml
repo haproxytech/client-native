@@ -177,6 +177,7 @@ global:
       x-display-name: Number of Thread Groups
     stats_maxconn:
       type: integer
+      x-nullable: true
       x-display-name: Stats maxconn
     ssl_load_extra_files:
       type: string

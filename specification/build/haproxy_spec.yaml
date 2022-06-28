@@ -716,6 +716,7 @@ definitions:
         stats_maxconn:
           type: integer
           x-display-name: Stats maxconn
+          x-nullable: true
         stats_timeout:
           type: integer
           x-nullable: true
