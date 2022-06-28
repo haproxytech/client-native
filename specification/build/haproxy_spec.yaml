@@ -3915,6 +3915,149 @@ definitions:
     type: array
     items:
       $ref: '#/definitions/http_response_rule'
+  http_after_response_rule:
+      additionalProperties: false
+      description: HAProxy HTTP after response rule configuration (corresponds to http-after-response
+        directives)
+      example:
+        cond: unless
+        cond_test: '{ src 192.168.0.0/16 }'
+        hdr_format: max-age=31536000
+        hdr_name: Strict-Transport-Security
+        index: 0
+        type: set-header
+      properties:
+        cond:
+          enum:
+          - if
+          - unless
+          type: string
+          x-display-name: Condition
+        cond_test:
+          type: string
+          x-dependency:
+            cond:
+              required: true
+          x-display-name: Condition Test
+          x-dynamic-enum:
+            freeFormat: true
+            operation: getACLs
+            property: acl_name
+        hdr_format:
+          type: string
+          x-dependency:
+            type:
+              required: true
+              value:
+              - replace-header
+              - replace-value
+              - set-header
+              - add-header
+          x-display-name: Header Format
+        hdr_match:
+          type: string
+          x-dependency:
+            type:
+              required: true
+              value:
+              - replace-header
+              - replace-value
+          x-display-name: Header Match
+        hdr_method:
+          type: string
+          x-dependency:
+            type:
+              value:
+              - del-header
+          x-display-name: Header Match Method
+        hdr_name:
+          type: string
+          x-dependency:
+            type:
+              required: true
+              value:
+              - add-header
+              - replace-header
+              - del-header
+              - set-header
+              - replace-value
+          x-display-name: Header Name
+        index:
+          type: integer
+          x-nullable: true
+        status:
+          maximum: 999
+          minimum: 100
+          type: integer
+          x-dependency:
+            type:
+              required: true
+              value: set-status
+          x-nullable: false
+        status_reason:
+          type: string
+          x-dependency:
+            type:
+              value: set-status
+        strict_mode:
+          enum:
+          - "on"
+          - "off"
+          type: string
+          x-dependency:
+            type:
+              required: true
+              value: strict-mode
+        type:
+          enum:
+          - add-header
+          - allow
+          - del-header
+          - replace-header
+          - replace-value
+          - set-header
+          - set-status
+          - set-var
+          - strict-mode
+          - unset-var
+          type: string
+          x-nullable: false
+        var_expr:
+          type: string
+          x-dependency:
+            type:
+              required: true
+              value: set-var
+          x-display-name: Var Expression
+        var_name:
+          pattern: ^[^\s]+$
+          type: string
+          x-dependency:
+            type:
+              required: true
+              value:
+              - set-var
+              - unset-var
+        var_scope:
+          pattern: ^[^\s]+$
+          type: string
+          x-dependency:
+            type:
+              required: true
+              value:
+              - set-var
+              - unset-var
+      required:
+      - index
+      - type
+      title: HTTP after Response Rule
+      type: object
+  http_after_response_rules:
+    title: HTTP After Response Rules Array
+    description: HAProxy HTTP after response rules array (corresponds to http-after-response directives)
+    type: array
+    items:
+      $ref: '#/definitions/http_after_response_rule'
   http_check:
       properties:
         addr:
@@ -7852,7 +7995,7 @@ tags:
     transaction mechanism is implicitly called with one operation in transaction.
 - name: Userlist
 security:
-  - basic_auth: []
+  - basic_auth: [ ]
 paths:
   /:
       get:
@@ -11331,6 +11474,236 @@ paths:
         summary: Replace a HTTP Response Rule
         tags:
         - HTTPResponseRule
+  /services/haproxy/configuration/http_after_response_rules:
+      get:
+        description: Returns all HTTP After Response Rules that are configured in specified
+          parent.
+        operationId: getHTTPAfterResponseRules
+        parameters:
+        - description: Parent name
+          in: query
+          name: parent_name
+          required: true
+          type: string
+        - description: Parent type
+          enum:
+          - frontend
+          - backend
+          in: query
+          name: parent_type
+          required: true
+          type: string
+        - $ref: '#/parameters/transaction_id'
+        responses:
+          "200":
+            description: Successful operation
+            headers:
+              Configuration-Version:
+                description: Configuration file version
+                type: string
+            schema:
+              properties:
+                _version:
+                  type: integer
+                data:
+                  $ref: '#/definitions/http_after_response_rules'
+              required:
+              - data
+              type: object
+          default:
+            $ref: '#/responses/DefaultError'
+        summary: Return an array of all HTTP After Response Rules
+        tags:
+        - HTTPAfterResponseRule
+      post:
+        description: Adds a new HTTP After Response Rule of the specified type in the specified
+          parent.
+        operationId: createHTTPAfterResponseRule
+        parameters:
+        - description: Parent name
+          in: query
+          name: parent_name
+          required: true
+          type: string
+        - description: Parent type
+          enum:
+          - frontend
+          - backend
+          in: query
+          name: parent_type
+          required: true
+          type: string
+        - in: body
+          name: data
+          required: true
+          schema:
+            $ref: '#/definitions/http_after_response_rule'
+        - $ref: '#/parameters/transaction_id'
+        - $ref: '#/parameters/version'
+        - $ref: '#/parameters/force_reload'
+        responses:
+          "201":
+            description: HTTP Response Rule created
+            schema:
+              $ref: '#/definitions/http_after_response_rule'
+          "202":
+            description: Configuration change accepted and reload requested
+            headers:
+              Reload-ID:
+                description: ID of the requested reload
+                type: string
+            schema:
+              $ref: '#/definitions/http_after_response_rule'
+          "400":
+            $ref: '#/responses/BadRequest'
+          "409":
+            $ref: '#/responses/AlreadyExists'
+          default:
+            $ref: '#/responses/DefaultError'
+        summary: Add a new HTTP After Response Rule
+        tags:
+        - HTTPAfterResponseRule
+  /services/haproxy/configuration/http_after_response_rules/{index}:
+      delete:
+        description: Deletes a HTTP After Response Rule configuration by it's index from
+          the specified parent.
+        operationId: deleteHTTPAfterResponseRule
+        parameters:
+        - description: HTTP After Response Rule Index
+          in: path
+          name: index
+          required: true
+          type: integer
+        - description: Parent name
+          in: query
+          name: parent_name
+          required: true
+          type: string
+        - description: Parent type
+          enum:
+          - frontend
+          - backend
+          in: query
+          name: parent_type
+          required: true
+          type: string
+        - $ref: '#/parameters/transaction_id'
+        - $ref: '#/parameters/version'
+        - $ref: '#/parameters/force_reload'
+        responses:
+          "202":
+            description: Configuration change accepted and reload requested
+            headers:
+              Reload-ID:
+                description: ID of the requested reload
+                type: string
+          "204":
+            description: HTTP After Response Rule deleted
+          "404":
+            $ref: '#/responses/NotFound'
+          default:
+            $ref: '#/responses/DefaultError'
+        summary: Delete a HTTP After Response Rule
+        tags:
+        - HTTPAfterResponseRule
+      get:
+        description: Returns one HTTP After Response Rule configuration by it's index in
+          the specified parent.
+        operationId: getHTTPAfterResponseRule
+        parameters:
+        - description: HTTP After Response Rule Index
+          in: path
+          name: index
+          required: true
+          type: integer
+        - description: Parent name
+          in: query
+          name: parent_name
+          required: true
+          type: string
+        - description: Parent type
+          enum:
+          - frontend
+          - backend
+          in: query
+          name: parent_type
+          required: true
+          type: string
+        - $ref: '#/parameters/transaction_id'
+        responses:
+          "200":
+            description: Successful operation
+            headers:
+              Configuration-Version:
+                description: Configuration file version
+                type: string
+            schema:
+              properties:
+                _version:
+                  type: integer
+                data:
+                  $ref: '#/definitions/http_after_response_rule'
+              type: object
+          "404":
+            $ref: '#/responses/NotFound'
+          default:
+            $ref: '#/responses/DefaultError'
+        summary: Return one HTTP After Response Rule
+        tags:
+        - HTTPAfterResponseRule
+      put:
+        description: Replaces a HTTP After Response Rule configuration by it's index in
+          the specified parent.
+        operationId: replaceHTTPAfterResponseRule
+        parameters:
+        - description: HTTP After Response Rule Index
+          in: path
+          name: index
+          required: true
+          type: integer
+        - description: Parent name
+          in: query
+          name: parent_name
+          required: true
+          type: string
+        - description: Parent type
+          enum:
+          - frontend
+          - backend
+          in: query
+          name: parent_type
+          required: true
+          type: string
+        - in: body
+          name: data
+          required: true
+          schema:
+            $ref: '#/definitions/http_after_response_rule'
+        - $ref: '#/parameters/transaction_id'
+        - $ref: '#/parameters/version'
+        - $ref: '#/parameters/force_reload'
+        responses:
+          "200":
+            description: HTTP After Response Rule replaced
+            schema:
+              $ref: '#/definitions/http_after_response_rule'
+          "202":
+            description: Configuration change accepted and reload requested
+            headers:
+              Reload-ID:
+                description: ID of the requested reload
+                type: string
+            schema:
+              $ref: '#/definitions/http_after_response_rule'
+          "400":
+            $ref: '#/responses/BadRequest'
+          "404":
+            $ref: '#/responses/NotFound'
+          default:
+            $ref: '#/responses/DefaultError'
+        summary: Replace a HTTP After Response Rule
+        tags:
+        - HTTPAfterResponseRule
   /services/haproxy/configuration/tcp_checks:
       get:
         description: Returns all TCP checks that are configured in specified parent.

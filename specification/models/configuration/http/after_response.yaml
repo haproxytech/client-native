@@ -1,0 +1,117 @@
+---
+http_after_response_rule:
+  title: HTTP after Response Rule
+  description: HAProxy HTTP after response rule configuration (corresponds to http-after-response directives)
+  type: object
+  required:
+    - index
+    - type
+  properties:
+    index:
+      type: integer
+      x-nullable: true
+    type:
+      type: string
+      enum:
+        - add-header
+        - allow
+        - del-header
+        - replace-header
+        - replace-value
+        - set-header
+        - set-status
+        - set-var
+        - strict-mode
+        - unset-var
+      x-nullable: false
+    hdr_name:
+      type: string
+      x-display-name: Header Name
+      x-dependency:
+        type:
+          value: [add-header, replace-header, del-header, set-header, replace-value]
+          required: true
+    hdr_match:
+      type: string
+      x-display-name: Header Match
+      x-dependency:
+        type:
+          value: [replace-header, replace-value]
+          required: true
+    hdr_format:
+      type: string
+      x-display-name: Header Format
+      x-dependency:
+        type:
+          value: [replace-header, replace-value, set-header, add-header]
+          required: true
+    hdr_method:
+      type: string
+      x-display-name: Header Match Method
+      x-dependency:
+        type:
+          value: [del-header]
+    var_name:
+      type: string
+      pattern: '^[^\s]+$'
+      x-dependency:
+        type:
+          value: [set-var, unset-var]
+          required: true
+    var_scope:
+      type: string
+      pattern: '^[^\s]+$'
+      x-dependency:
+        type:
+          value: [set-var, unset-var]
+          required: true
+    var_expr:
+      type: string
+      x-display-name: Var Expression
+      x-dependency:
+        type:
+          value: set-var
+          required: true
+    status:
+      type: integer
+      minimum: 100
+      maximum: 999
+      x-nullable: false
+      x-dependency:
+        type:
+          value: set-status
+          required: true
+    status_reason:
+      type: string
+      x-dependency:
+        type:
+          value: set-status
+    strict_mode:
+      type: string
+      enum: ['on', 'off']
+      x-dependency:
+        type:
+          value: strict-mode
+          required: true
+    cond:
+      type: string
+      x-display-name: Condition
+      enum: [if, unless]
+    cond_test:
+      type: string
+      x-display-name: Condition Test
+      x-dynamic-enum:
+        operation: getACLs
+        property: acl_name
+        freeFormat: true
+      x-dependency:
+        cond:
+          required: true
+  additionalProperties: false
+  example:
+    index: 0
+    type: set-header
+    hdr_name: Strict-Transport-Security
+    hdr_format: max-age=31536000
+    cond: unless
+    cond_test: "{ src 192.168.0.0/16 }"

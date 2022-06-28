@@ -130,6 +130,14 @@ definitions:
     type: array
     items:
       $ref: '#/definitions/http_response_rule'
+  http_after_response_rule:
+    $ref: "models/configuration/http/after_response.yaml#/http_after_response_rule"
+  http_after_response_rules:
+    title: HTTP After Response Rules Array
+    description: HAProxy HTTP after response rules array (corresponds to http-after-response directives)
+    type: array
+    items:
+      $ref: '#/definitions/http_after_response_rule'
   http_check:
     $ref: "models/configuration/http/check.yaml#/http_check"
   http_checks:
@@ -595,7 +603,7 @@ tags:
   - name: DeclareCapture
   - name: Userlist
 security:
-  - basic_auth: []
+  - basic_auth: [ ]
 paths:
   /:
     $ref: "paths/general.yaml#/root"
@@ -699,6 +707,10 @@ paths:
     $ref: "paths/configuration/http/response.yaml#/http_response_rules"
   /services/haproxy/configuration/http_response_rules/{index}:
     $ref: "paths/configuration/http/response.yaml#/http_response_rules_one"
+  /services/haproxy/configuration/http_after_response_rules:
+    $ref: "paths/configuration/http/after_response.yaml#/http_after_response_rules"
+  /services/haproxy/configuration/http_after_response_rules/{index}:
+    $ref: "paths/configuration/http/after_response.yaml#/http_after_response_rules_one"
   /services/haproxy/configuration/tcp_checks:
     $ref: "paths/configuration/tcp/check.yaml#/tcp_checks"
   /services/haproxy/configuration/tcp_checks/{index}:

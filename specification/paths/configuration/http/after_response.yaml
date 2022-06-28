@@ -1,0 +1,216 @@
+---
+http_after_response_rules:
+  get:
+    summary: Return an array of all HTTP After Response Rules
+    description: Returns all HTTP After Response Rules that are configured in specified parent.
+    operationId: getHTTPAfterResponseRules
+    tags:
+      - HTTPAfterResponseRule
+    parameters:
+      - name: parent_name
+        in: query
+        description: Parent name
+        required: true
+        type: string
+      - name: parent_type
+        in: query
+        description: Parent type
+        required: true
+        type: string
+        enum: [frontend, backend]
+      - $ref: "#/parameters/transaction_id"
+    responses:
+      '200':
+        description: Successful operation
+        headers:
+          Configuration-Version:
+            description: Configuration file version
+            type: string
+        schema:
+          type: object
+          required:
+            - data
+          properties:
+            data:
+              $ref: "#/definitions/http_after_response_rules"
+            _version:
+              type: integer
+      'default':
+        $ref: '#/responses/DefaultError'
+  post:
+    summary: Add a new HTTP After Response Rule
+    description: Adds a new HTTP After Response Rule of the specified type in the specified parent.
+    operationId: createHTTPAfterResponseRule
+    tags:
+      - HTTPAfterResponseRule
+    parameters:
+      - name: parent_name
+        in: query
+        description: Parent name
+        required: true
+        type: string
+      - name: parent_type
+        in: query
+        description: Parent type
+        required: true
+        type: string
+        enum: [frontend, backend]
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/http_after_response_rule'
+      - $ref: "#/parameters/transaction_id"
+      - $ref: "#/parameters/version"
+      - $ref: "#/parameters/force_reload"
+    responses:
+      '202':
+        description: Configuration change accepted and reload requested
+        headers:
+          Reload-ID:
+            description: ID of the requested reload
+            type: string
+        schema:
+          $ref: "#/definitions/http_after_response_rule"
+      '201':
+        description: HTTP Response Rule created
+        schema:
+          $ref: '#/definitions/http_after_response_rule'
+      '409':
+        $ref: '#/responses/AlreadyExists'
+      '400':
+        $ref: '#/responses/BadRequest'
+      'default':
+        $ref: '#/responses/DefaultError'
+http_after_response_rules_one:
+  get:
+    summary: Return one HTTP After Response Rule
+    description: Returns one HTTP After Response Rule configuration by it's index in the specified parent.
+    operationId: getHTTPAfterResponseRule
+    tags:
+      - HTTPAfterResponseRule
+    parameters:
+      - name: index
+        in: path
+        description: HTTP After Response Rule Index
+        required: true
+        type: integer
+      - name: parent_name
+        in: query
+        description: Parent name
+        required: true
+        type: string
+      - name: parent_type
+        in: query
+        description: Parent type
+        required: true
+        type: string
+        enum: [frontend, backend]
+      - $ref: "#/parameters/transaction_id"
+    responses:
+      '200':
+        description: Successful operation
+        headers:
+          Configuration-Version:
+            description: Configuration file version
+            type: string
+        schema:
+          type: object
+          properties:
+            data:
+              $ref: "#/definitions/http_after_response_rule"
+            _version:
+              type: integer
+      '404':
+        $ref: '#/responses/NotFound'
+      'default':
+        $ref: '#/responses/DefaultError'
+  put:
+    summary: Replace a HTTP After Response Rule
+    description: Replaces a HTTP After Response Rule configuration by it's index in the specified parent.
+    operationId: replaceHTTPAfterResponseRule
+    tags:
+      - HTTPAfterResponseRule
+    parameters:
+      - name: index
+        in: path
+        description: HTTP After Response Rule Index
+        required: true
+        type: integer
+      - name: parent_name
+        in: query
+        description: Parent name
+        required: true
+        type: string
+      - name: parent_type
+        in: query
+        description: Parent type
+        required: true
+        type: string
+        enum: [frontend, backend]
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/http_after_response_rule'
+      - $ref: "#/parameters/transaction_id"
+      - $ref: "#/parameters/version"
+      - $ref: "#/parameters/force_reload"
+    responses:
+      '202':
+        description: Configuration change accepted and reload requested
+        headers:
+          Reload-ID:
+            description: ID of the requested reload
+            type: string
+        schema:
+          $ref: "#/definitions/http_after_response_rule"
+      '200':
+        description: HTTP After Response Rule replaced
+        schema:
+          $ref: '#/definitions/http_after_response_rule'
+      '400':
+        $ref: '#/responses/BadRequest'
+      '404':
+        $ref: '#/responses/NotFound'
+      'default':
+        $ref: '#/responses/DefaultError'
+  delete:
+    summary: Delete a HTTP After Response Rule
+    description: Deletes a HTTP After Response Rule configuration by it's index from the specified parent.
+    operationId: deleteHTTPAfterResponseRule
+    tags:
+      - HTTPAfterResponseRule
+    parameters:
+      - name: index
+        in: path
+        description: HTTP After Response Rule Index
+        required: true
+        type: integer
+      - name: parent_name
+        in: query
+        description: Parent name
+        required: true
+        type: string
+      - name: parent_type
+        in: query
+        description: Parent type
+        required: true
+        type: string
+        enum: [frontend, backend]
+      - $ref: "#/parameters/transaction_id"
+      - $ref: "#/parameters/version"
+      - $ref: "#/parameters/force_reload"
+    responses:
+      '202':
+        description: Configuration change accepted and reload requested
+        headers:
+          Reload-ID:
+            description: ID of the requested reload
+            type: string
+      '204':
+        description: HTTP After Response Rule deleted
+      '404':
+        $ref: '#/responses/NotFound'
+      'default':
+        $ref: '#/responses/DefaultError'
