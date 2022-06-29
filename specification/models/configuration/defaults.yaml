@@ -211,4 +211,16 @@ defaults:
       $ref: "#/definitions/compression"
     stats_options:
       $ref: "#/definitions/stats_options"
+    clitcpka_cnt:
+      type: integer
+      x-nullable: true
+      x-display-name: Clitcpka Cnt
+    clitcpka_idle:
+      type: integer
+      x-nullable: true
+      x-display-name: Clitcpka Idle
+    clitcpka_intvl:
+      type: integer
+      x-nullable: true
+      x-display-name: Clitcpka Intvl
   additionalProperties: false

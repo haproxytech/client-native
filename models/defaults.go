@@ -86,6 +86,15 @@ type Defaults struct {
 	// Enum: [enabled disabled]
 	Clitcpka string `json:"clitcpka,omitempty"`
 
+	// clitcpka cnt
+	ClitcpkaCnt *int64 `json:"clitcpka_cnt,omitempty"`
+
+	// clitcpka idle
+	ClitcpkaIdle *int64 `json:"clitcpka_idle,omitempty"`
+
+	// clitcpka intvl
+	ClitcpkaIntvl *int64 `json:"clitcpka_intvl,omitempty"`
+
 	// compression
 	Compression *Compression `json:"compression,omitempty"`
 
