@@ -207,6 +207,9 @@ defaults
   option h1-case-adjust-bogus-client
   option h1-case-adjust-bogus-server
   compression offload
+  clitcpka-cnt 10
+  clitcpka-idle 10s
+  clitcpka-intvl 10
 
 frontend test
   mode http
@@ -319,6 +322,9 @@ frontend test
   compression algo identity gzip
   compression type text/plain
   compression offload
+  clitcpka-cnt 10
+  clitcpka-idle 10s
+  clitcpka-intvl 10
 
 frontend test_2
   mode http
@@ -342,6 +348,9 @@ frontend test_2
   http-response capture res.header id 0
   unique-id-format %{+X}o%ci:%cp_%fi:%fp_%Ts_%rt
   unique-id-header X-Unique-ID-test-2
+  clitcpka-cnt 10
+  clitcpka-idle 10s
+  clitcpka-intvl 10
 
 backend test
   mode http

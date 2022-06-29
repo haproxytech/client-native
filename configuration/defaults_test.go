@@ -148,12 +148,29 @@ func TestGetDefaults(t *testing.T) { //nolint:gocognit,gocyclo
 			t.Errorf("Compression.Offload wrong: %v", d.Compression.Offload)
 		}
 	}
+	if d.ClitcpkaCnt == nil {
+		t.Errorf("ClitcpkaCnt is nil")
+	} else if *d.ClitcpkaCnt != 10 {
+		t.Errorf("ClitcpkaCnt not 10: %v", *d.ClitcpkaCnt)
+	}
+	if d.ClitcpkaIdle == nil {
+		t.Errorf("ClitcpkaIdle is nil")
+	} else if *d.ClitcpkaIdle != 10000 {
+		t.Errorf("ClitcpkaIdle not 10000: %v", *d.ClitcpkaIdle)
+	}
+	if d.ClitcpkaIntvl == nil {
+		t.Errorf("ClitcpkaIntvl is nil")
+	} else if *d.ClitcpkaIntvl != 10000 {
+		t.Errorf("ClitcpkaIntvl not 10000: %v", *d.ClitcpkaIntvl)
+	}
 }
 
 func TestPushDefaults(t *testing.T) {
 	tOut := int64(6000)
 	tOutS := int64(200)
 	balanceAlgorithm := "leastconn"
+	clitcpkaCnt := int64(10)
+	clitcpkaTimeout := int64(10000)
 	d := &models.Defaults{
 		Clitcpka:       "disabled",
 		BindProcess:    "1-4",
@@ -199,6 +216,9 @@ func TestPushDefaults(t *testing.T) {
 		AcceptInvalidHTTPResponse: "disabled",
 		DisableH2Upgrade:          "disabled",
 		LogHealthChecks:           "disabled",
+		ClitcpkaCnt:               &clitcpkaCnt,
+		ClitcpkaIdle:              &clitcpkaTimeout,
+		ClitcpkaIntvl:             &clitcpkaTimeout,
 	}
 
 	err := clientTest.PushDefaultsConfiguration(d, "", version)

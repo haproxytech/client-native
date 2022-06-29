@@ -144,6 +144,14 @@ func DashCase(fieldName string) string { //nolint:gocognit
 }
 
 func ParseTimeout(tOut string) *int64 {
+	return parseTimeout(tOut, 1)
+}
+
+func ParseTimeoutDefaultSeconds(tOut string) *int64 {
+	return parseTimeout(tOut, 1000)
+}
+
+func parseTimeout(tOut string, defaultMultiplier int64) *int64 {
 	var v int64
 	var err error
 	switch {
@@ -163,6 +171,7 @@ func ParseTimeout(tOut string) *int64 {
 		v = v * 1000 * 60 * 60 * 24
 	default:
 		v, err = strconv.ParseInt(tOut, 10, 64)
+		v *= defaultMultiplier
 	}
 	if err != nil {
 		return nil

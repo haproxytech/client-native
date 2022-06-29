@@ -83,6 +83,21 @@ func TestGetFrontends(t *testing.T) { //nolint:gocognit
 		if f.Clitcpka != "enabled" {
 			t.Errorf("%v: Clitcpka not enabled: %v", f.Name, f.Clitcpka)
 		}
+		if f.ClitcpkaCnt == nil {
+			t.Errorf("%v: ClitcpkaCnt is nil", f.Name)
+		} else if *f.ClitcpkaCnt != 10 {
+			t.Errorf("%v: ClitcpkaCnt not 10: %v", f.Name, *f.ClitcpkaCnt)
+		}
+		if f.ClitcpkaIdle == nil {
+			t.Errorf("%v: ClitcpkaIdle is nil", f.Name)
+		} else if *f.ClitcpkaIdle != 10000 {
+			t.Errorf("%v: ClitcpkaIdle not 10000: %v", f.Name, *f.ClitcpkaIdle)
+		}
+		if f.ClitcpkaIntvl == nil {
+			t.Errorf("%v: ClitcpkaIntvl is nil", f.Name)
+		} else if *f.ClitcpkaIntvl != 10000 {
+			t.Errorf("%v: ClitcpkaIntvl not 10000: %v", f.Name, *f.ClitcpkaIntvl)
+		}
 	}
 }
 
@@ -156,6 +171,21 @@ func TestGetFrontend(t *testing.T) {
 	if f.Clitcpka != "enabled" {
 		t.Errorf("%v: Clitcpka not enabled: %v", f.Name, f.Clitcpka)
 	}
+	if f.ClitcpkaCnt == nil {
+		t.Errorf("%v: ClitcpkaCnt is nil", f.Name)
+	} else if *f.ClitcpkaCnt != 10 {
+		t.Errorf("%v: ClitcpkaCnt not 10: %v", f.Name, *f.ClitcpkaCnt)
+	}
+	if f.ClitcpkaIdle == nil {
+		t.Errorf("%v: ClitcpkaIdle is nil", f.Name)
+	} else if *f.ClitcpkaIdle != 10000 {
+		t.Errorf("%v: ClitcpkaIdle not 10000: %v", f.Name, *f.ClitcpkaIdle)
+	}
+	if f.ClitcpkaIntvl == nil {
+		t.Errorf("%v: ClitcpkaIntvl is nil", f.Name)
+	} else if *f.ClitcpkaIntvl != 10000 {
+		t.Errorf("%v: ClitcpkaIntvl not 10000: %v", f.Name, *f.ClitcpkaIntvl)
+	}
 	if f.Compression == nil {
 		t.Errorf("%v: Compression is nil", f.Name)
 	} else {
@@ -196,6 +226,8 @@ func TestCreateEditDeleteFrontend(t *testing.T) {
 	// TestCreateFrontend
 	mConn := int64(3000)
 	tOut := int64(2)
+	clitcpkaCnt := int64(10)
+	clitcpkaTimeout := int64(10000)
 	f := &models.Frontend{
 		Name:                     "created",
 		Mode:                     "tcp",
@@ -209,6 +241,9 @@ func TestCreateEditDeleteFrontend(t *testing.T) {
 		UniqueIDHeader:           "X-Unique-Id",
 		AcceptInvalidHTTPRequest: "enabled",
 		DisableH2Upgrade:         "enabled",
+		ClitcpkaCnt:              &clitcpkaCnt,
+		ClitcpkaIdle:             &clitcpkaTimeout,
+		ClitcpkaIntvl:            &clitcpkaTimeout,
 	}
 
 	err := clientTest.CreateFrontend(f, "", version)
@@ -257,6 +292,9 @@ func TestCreateEditDeleteFrontend(t *testing.T) {
 		Compression: &models.Compression{
 			Offload: true,
 		},
+		ClitcpkaCnt:   &clitcpkaCnt,
+		ClitcpkaIdle:  &clitcpkaTimeout,
+		ClitcpkaIntvl: &clitcpkaTimeout,
 	}
 
 	err = clientTest.EditFrontend("created", f, "", version)
