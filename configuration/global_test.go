@@ -466,6 +466,44 @@ func TestGetGlobal(t *testing.T) {
 	if global.SslServerVerify != "required" {
 		t.Errorf("SslServerVerify is %v, expected required", global.SslServerVerify)
 	}
+	if len(global.SetVars) == 3 {
+		if *global.SetVars[0].Name != "proc.current_state" {
+			t.Errorf("SetVars[0] Name is %v, expected proc.current_state", *global.SetVars[0].Name)
+		}
+		if *global.SetVars[0].Expr != "str(primary)" {
+			t.Errorf("SetVars[0] Expr is %v, expected str(primary)", *global.SetVars[0].Expr)
+		}
+		if *global.SetVars[1].Name != "proc.prio" {
+			t.Errorf("SetVars[1] Name is %v, expected proc.prio", *global.SetVars[1].Name)
+		}
+		if *global.SetVars[1].Expr != "int(100)" {
+			t.Errorf("SetVars[1] Expr is %v, expected int(100)", *global.SetVars[1].Expr)
+		}
+		if *global.SetVars[2].Name != "proc.threshold" {
+			t.Errorf("SetVars[2] Name is %v, expected proc.threshold", *global.SetVars[2].Name)
+		}
+		if *global.SetVars[2].Expr != "int(200),sub(proc.prio)" {
+			t.Errorf("SetVars[2] Expr is %v, expected int(200),sub(proc.prio)", *global.SetVars[2].Expr)
+		}
+	} else {
+		t.Errorf("SetVars lenght is %v, expected 3", len(global.SetVars))
+	}
+	if len(global.SetVarFmts) == 2 {
+		if *global.SetVarFmts[0].Name != "proc.bootid" {
+			t.Errorf("SetVars[0] Name is %v, expected proc.bootid", *global.SetVarFmts[0].Name)
+		}
+		if *global.SetVarFmts[0].Format != `"%pid|%t"` {
+			t.Errorf("SetVars[0] Format is %v, expected %%pid|%%t", *global.SetVarFmts[0].Format)
+		}
+		if *global.SetVarFmts[1].Name != "proc.current_state" {
+			t.Errorf("SetVars[1] Name is %v, expected proc.current_state", *global.SetVarFmts[1].Name)
+		}
+		if *global.SetVarFmts[1].Format != `"primary"` {
+			t.Errorf("SetVars[1] Format is %v, expected \"primary\"", *global.SetVarFmts[1].Format)
+		}
+	} else {
+		t.Errorf("SetVarFmts lenght is %v, expected 2", len(global.SetVarFmts))
+	}
 }
 
 func TestPutGlobal(t *testing.T) {

@@ -23,6 +23,7 @@ import (
 
 	"github.com/go-openapi/strfmt"
 	parser "github.com/haproxytech/config-parser/v4"
+	"github.com/haproxytech/config-parser/v4/common"
 	parser_errors "github.com/haproxytech/config-parser/v4/errors"
 	"github.com/haproxytech/config-parser/v4/params"
 	"github.com/haproxytech/config-parser/v4/types"
@@ -857,6 +858,42 @@ func ParseGlobalSection(p parser.Parser) (*models.Global, error) { //nolint:goco
 		zeroWarning = false
 	}
 
+	var setVars []*models.SetVar
+	data, err = p.Get(parser.Global, parser.GlobalSectionName, "set-var")
+	if err == nil {
+		vars, ok := data.([]types.SetVar)
+		if !ok {
+			return nil, misc.CreateTypeAssertError("set-var")
+		}
+		for _, v := range vars {
+			name := v.Name
+			expr := v.Expr.String()
+			setVar := &models.SetVar{
+				Name: &name,
+				Expr: &expr,
+			}
+			setVars = append(setVars, setVar)
+		}
+	}
+
+	var setVarFormats []*models.SetVarFmt
+	data, err = p.Get(parser.Global, parser.GlobalSectionName, "set-var-fmt")
+	if err == nil {
+		formats, ok := data.([]types.SetVarFmt)
+		if !ok {
+			return nil, misc.CreateTypeAssertError("set-var-fmt")
+		}
+		for _, f := range formats {
+			name := f.Name
+			format := f.Format
+			setVarFmt := &models.SetVarFmt{
+				Name:   &name,
+				Format: &format,
+			}
+			setVarFormats = append(setVarFormats, setVarFmt)
+		}
+	}
+
 	tuneOptions, err := parseTuneOptions(p)
 	if err != nil {
 		return nil, err
@@ -962,6 +999,8 @@ func ParseGlobalSection(p parser.Parser) (*models.Global, error) { //nolint:goco
 		SslEngines:                        sslEngines,
 		SslDhParamFile:                    sslDhParamFile,
 		SslServerVerify:                   sslServerVerify,
+		SetVars:                           setVars,
+		SetVarFmts:                        setVarFormats,
 	}
 
 	return global, nil
@@ -1709,6 +1748,38 @@ func SerializeGlobalSection(p parser.Parser, data *models.Global) error { //noli
 		}
 	}
 	if err := p.Set(parser.Global, parser.GlobalSectionName, "ssl-engine", sslEngines); err != nil {
+		return err
+	}
+
+	setVars := []types.SetVar{}
+	if data.SetVars != nil && len(data.SetVars) > 0 {
+		for _, setVar := range data.SetVars {
+			if setVar != nil {
+				sv := types.SetVar{
+					Name: *setVar.Name,
+					Expr: common.Expression{Expr: strings.Split(*setVar.Expr, "")},
+				}
+				setVars = append(setVars, sv)
+			}
+		}
+	}
+	if err := p.Set(parser.Global, parser.GlobalSectionName, "set-var", setVars); err != nil {
+		return err
+	}
+
+	setVarFmts := []types.SetVarFmt{}
+	if data.SetVarFmts != nil && len(data.SetVarFmts) > 0 {
+		for _, setVarFmt := range data.SetVarFmts {
+			if setVarFmt != nil {
+				svf := types.SetVarFmt{
+					Name:   *setVarFmt.Name,
+					Format: *setVarFmt.Format,
+				}
+				setVarFmts = append(setVarFmts, svf)
+			}
+		}
+	}
+	if err := p.Set(parser.Global, parser.GlobalSectionName, "set-var-fmt", setVarFmts); err != nil {
 		return err
 	}
 

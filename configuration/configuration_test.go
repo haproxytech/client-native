@@ -167,6 +167,11 @@ global
   ssl-engine third CIPHERS,DIGESTS,PKEY,PKEY_CRYPTO,PKEY_ASN1
   ssl-dh-param-file ssl-dh-param-file.txt
   ssl-server-verify required
+  set-var proc.current_state str(primary)
+  set-var proc.prio int(100)
+  set-var proc.threshold int(200),sub(proc.prio)
+  set-var-fmt proc.bootid "%pid|%t"
+  set-var-fmt proc.current_state "primary"
 
 defaults
   maxconn 2000

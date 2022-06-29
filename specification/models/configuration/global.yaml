@@ -564,4 +564,38 @@ global:
             type: string
             x-display-name: Algorithms
             x-nullable: true
+    set_var:
+      type: array
+      x-go-name: SetVars
+      x-display-name: Set variables
+      items:
+        type: object
+        x-go-name: SetVar
+        required:
+          - name
+          - expr
+        properties:
+          name:
+            type: string
+            x-display-name: Name
+          expr:
+            type: string
+            x-display-name: Expression
+    set_var_fmt:
+      type: array
+      x-go-name: SetVarFmts
+      x-display-name: Set variable formats
+      items:
+        type: object
+        x-go-name: SetVarFmt
+        required:
+          - name
+          - format
+        properties:
+          name:
+            type: string
+            x-display-name: Name
+          format:
+            type: string
+            x-display-name: Format
   additionalProperties: false

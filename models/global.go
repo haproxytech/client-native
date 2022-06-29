@@ -46,6 +46,12 @@ type Global struct {
 	// runtime a p is
 	RuntimeAPIs []*RuntimeAPI `json:"runtime_apis"`
 
+	// set var fmts
+	SetVarFmts []*SetVarFmt `json:"set_var_fmt"`
+
+	// set vars
+	SetVars []*SetVar `json:"set_var"`
+
 	// ssl engines
 	SslEngines []*SslEngine `json:"ssl_engines"`
 
@@ -313,6 +319,14 @@ func (m *Global) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
+	if err := m.validateSetVarFmts(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateSetVars(formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.validateSslEngines(formats); err != nil {
 		res = append(res, err)
 	}
@@ -460,6 +474,56 @@ func (m *Global) validateRuntimeAPIs(formats strfmt.Registry) error {
 			if err := m.RuntimeAPIs[i].Validate(formats); err != nil {
 				if ve, ok := err.(*errors.Validation); ok {
 					return ve.ValidateName("runtime_apis" + "." + strconv.Itoa(i))
+				}
+				return err
+			}
+		}
+
+	}
+
+	return nil
+}
+
+func (m *Global) validateSetVarFmts(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.SetVarFmts) { // not required
+		return nil
+	}
+
+	for i := 0; i < len(m.SetVarFmts); i++ {
+		if swag.IsZero(m.SetVarFmts[i]) { // not required
+			continue
+		}
+
+		if m.SetVarFmts[i] != nil {
+			if err := m.SetVarFmts[i].Validate(formats); err != nil {
+				if ve, ok := err.(*errors.Validation); ok {
+					return ve.ValidateName("set_var_fmt" + "." + strconv.Itoa(i))
+				}
+				return err
+			}
+		}
+
+	}
+
+	return nil
+}
+
+func (m *Global) validateSetVars(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.SetVars) { // not required
+		return nil
+	}
+
+	for i := 0; i < len(m.SetVars); i++ {
+		if swag.IsZero(m.SetVars[i]) { // not required
+			continue
+		}
+
+		if m.SetVars[i] != nil {
+			if err := m.SetVars[i].Validate(formats); err != nil {
+				if ve, ok := err.(*errors.Validation); ok {
+					return ve.ValidateName("set_var" + "." + strconv.Itoa(i))
 				}
 				return err
 			}
@@ -1519,6 +1583,142 @@ func (m *RuntimeAPI) MarshalBinary() ([]byte, error) {
 // UnmarshalBinary interface implementation
 func (m *RuntimeAPI) UnmarshalBinary(b []byte) error {
 	var res RuntimeAPI
+	if err := swag.ReadJSON(b, &res); err != nil {
+		return err
+	}
+	*m = res
+	return nil
+}
+
+// SetVarFmt set var fmt
+//
+// swagger:model SetVarFmt
+type SetVarFmt struct {
+
+	// format
+	// Required: true
+	Format *string `json:"format"`
+
+	// name
+	// Required: true
+	Name *string `json:"name"`
+}
+
+// Validate validates this set var fmt
+func (m *SetVarFmt) Validate(formats strfmt.Registry) error {
+	var res []error
+
+	if err := m.validateFormat(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateName(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if len(res) > 0 {
+		return errors.CompositeValidationError(res...)
+	}
+	return nil
+}
+
+func (m *SetVarFmt) validateFormat(formats strfmt.Registry) error {
+
+	if err := validate.Required("format", "body", m.Format); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *SetVarFmt) validateName(formats strfmt.Registry) error {
+
+	if err := validate.Required("name", "body", m.Name); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+// MarshalBinary interface implementation
+func (m *SetVarFmt) MarshalBinary() ([]byte, error) {
+	if m == nil {
+		return nil, nil
+	}
+	return swag.WriteJSON(m)
+}
+
+// UnmarshalBinary interface implementation
+func (m *SetVarFmt) UnmarshalBinary(b []byte) error {
+	var res SetVarFmt
+	if err := swag.ReadJSON(b, &res); err != nil {
+		return err
+	}
+	*m = res
+	return nil
+}
+
+// SetVar set var
+//
+// swagger:model SetVar
+type SetVar struct {
+
+	// expr
+	// Required: true
+	Expr *string `json:"expr"`
+
+	// name
+	// Required: true
+	Name *string `json:"name"`
+}
+
+// Validate validates this set var
+func (m *SetVar) Validate(formats strfmt.Registry) error {
+	var res []error
+
+	if err := m.validateExpr(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateName(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if len(res) > 0 {
+		return errors.CompositeValidationError(res...)
+	}
+	return nil
+}
+
+func (m *SetVar) validateExpr(formats strfmt.Registry) error {
+
+	if err := validate.Required("expr", "body", m.Expr); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *SetVar) validateName(formats strfmt.Registry) error {
+
+	if err := validate.Required("name", "body", m.Name); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+// MarshalBinary interface implementation
+func (m *SetVar) MarshalBinary() ([]byte, error) {
+	if m == nil {
+		return nil, nil
+	}
+	return swag.WriteJSON(m)
+}
+
+// UnmarshalBinary interface implementation
+func (m *SetVar) UnmarshalBinary(b []byte) error {
+	var res SetVar
 	if err := swag.ReadJSON(b, &res); err != nil {
 		return err
 	}

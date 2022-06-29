@@ -652,6 +652,40 @@ definitions:
           x-display-name: Server State File
         set_dumpable:
           type: boolean
+        set_var:
+          items:
+            properties:
+              expr:
+                type: string
+                x-display-name: Expression
+              name:
+                type: string
+                x-display-name: Name
+            required:
+            - name
+            - expr
+            type: object
+            x-go-name: SetVar
+          type: array
+          x-display-name: Set variables
+          x-go-name: SetVars
+        set_var_fmt:
+          items:
+            properties:
+              format:
+                type: string
+                x-display-name: Format
+              name:
+                type: string
+                x-display-name: Name
+            required:
+            - name
+            - format
+            type: object
+            x-go-name: SetVarFmt
+          type: array
+          x-display-name: Set variable formats
+          x-go-name: SetVarFmts
         spread_checks:
           type: integer
           x-display-name: Add some randomness in the check interval
