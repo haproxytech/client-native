@@ -223,4 +223,56 @@ defaults:
       type: integer
       x-nullable: true
       x-display-name: Clitcpka Intvl
+    checkcache:
+      type: string
+      enum: [enabled, disabled]
+      x-display-name: Checkcache
+    http_ignore_probes:
+      type: string
+      enum: [enabled, disabled]
+      x-display-name: HTTP Ignore Probes
+    http_use_proxy_header:
+      type: string
+      enum: [enabled, disabled]
+      x-display-name: HTTP Use Proxy Header
+    httpslog:
+      type: string
+      enum: [enabled, disabled]
+      x-display-name: Httpslog
+    independent_streams:
+      type: string
+      enum: [enabled, disabled]
+      x-display-name: Independent Streams
+    nolinger:
+      type: string
+      enum: [enabled, disabled]
+      x-display-name: Nolinger
+    originalto:
+      type: string
+      enum: [enabled, disabled]
+      x-display-name: Originalto
+    persist:
+      type: string
+      enum: [enabled, disabled]
+      x-display-name: Persist
+    prefer_last_server:
+      type: string
+      enum: [enabled, disabled]
+      x-display-name: Prefer Last Server
+    socket_stats:
+      type: string
+      enum: [enabled, disabled]
+      x-display-name: Socket Stats
+    tcp_smart_accept:
+      type: string
+      enum: [enabled, disabled]
+      x-display-name: Tcp Smart Accept
+    tcp_smart_connect:
+      type: string
+      enum: [enabled, disabled]
+      x-display-name: Tcp Smart Connect
+    transparent:
+      type: string
+      enum: [enabled, disabled]
+      x-display-name: Transparent
   additionalProperties: false

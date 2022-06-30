@@ -62,6 +62,10 @@ type Backend struct {
 	// check timeout
 	CheckTimeout *int64 `json:"check_timeout,omitempty"`
 
+	// checkcache
+	// Enum: [enabled disabled]
+	Checkcache string `json:"checkcache,omitempty"`
+
 	// compression
 	Compression *Compression `json:"compression,omitempty"`
 
@@ -153,6 +157,10 @@ type Backend struct {
 	// Enum: [enabled disabled]
 	Httpclose string `json:"httpclose,omitempty"`
 
+	// independent streams
+	// Enum: [enabled disabled]
+	IndependentStreams string `json:"independent_streams,omitempty"`
+
 	// log health checks
 	// Enum: [enabled disabled]
 	LogHealthChecks string `json:"log_health_checks,omitempty"`
@@ -173,8 +181,24 @@ type Backend struct {
 	// Pattern: ^[A-Za-z0-9-_.:]+$
 	Name string `json:"name"`
 
+	// nolinger
+	// Enum: [enabled disabled]
+	Nolinger string `json:"nolinger,omitempty"`
+
+	// originalto
+	// Enum: [enabled disabled]
+	Originalto string `json:"originalto,omitempty"`
+
+	// persist
+	// Enum: [enabled disabled]
+	Persist string `json:"persist,omitempty"`
+
 	// pgsql check params
 	PgsqlCheckParams *PgsqlCheckParams `json:"pgsql_check_params,omitempty"`
+
+	// prefer last server
+	// Enum: [enabled disabled]
+	PreferLastServer string `json:"prefer_last_server,omitempty"`
 
 	// queue timeout
 	QueueTimeout *int64 `json:"queue_timeout,omitempty"`
@@ -191,6 +215,10 @@ type Backend struct {
 	// smtpchk params
 	SmtpchkParams *SmtpchkParams `json:"smtpchk_params,omitempty"`
 
+	// spop check
+	// Enum: [enabled disabled]
+	SpopCheck string `json:"spop_check,omitempty"`
+
 	// srvtcpka
 	// Enum: [enabled disabled]
 	Srvtcpka string `json:"srvtcpka,omitempty"`
@@ -201,9 +229,17 @@ type Backend struct {
 	// stick table
 	StickTable *ConfigStickTable `json:"stick_table,omitempty"`
 
+	// tcp smart connect
+	// Enum: [enabled disabled]
+	TCPSmartConnect string `json:"tcp_smart_connect,omitempty"`
+
 	// tcpka
 	// Enum: [enabled disabled]
 	Tcpka string `json:"tcpka,omitempty"`
+
+	// transparent
+	// Enum: [enabled disabled]
+	Transparent string `json:"transparent,omitempty"`
 
 	// tunnel timeout
 	TunnelTimeout *int64 `json:"tunnel_timeout,omitempty"`
@@ -234,6 +270,10 @@ func (m *Backend) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateBindProcess(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateCheckcache(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -325,6 +365,10 @@ func (m *Backend) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
+	if err := m.validateIndependentStreams(formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.validateLogHealthChecks(formats); err != nil {
 		res = append(res, err)
 	}
@@ -345,7 +389,23 @@ func (m *Backend) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
+	if err := m.validateNolinger(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateOriginalto(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validatePersist(formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.validatePgsqlCheckParams(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validatePreferLastServer(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -354,6 +414,10 @@ func (m *Backend) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateSmtpchkParams(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateSpopCheck(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -369,7 +433,15 @@ func (m *Backend) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
+	if err := m.validateTCPSmartConnect(formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.validateTcpka(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateTransparent(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -594,6 +666,49 @@ func (m *Backend) validateBindProcess(formats strfmt.Registry) error {
 	}
 
 	if err := validate.Pattern("bind_process", "body", string(m.BindProcess), `^[^\s]+$`); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+var backendTypeCheckcachePropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		backendTypeCheckcachePropEnum = append(backendTypeCheckcachePropEnum, v)
+	}
+}
+
+const (
+
+	// BackendCheckcacheEnabled captures enum value "enabled"
+	BackendCheckcacheEnabled string = "enabled"
+
+	// BackendCheckcacheDisabled captures enum value "disabled"
+	BackendCheckcacheDisabled string = "disabled"
+)
+
+// prop value enum
+func (m *Backend) validateCheckcacheEnum(path, location string, value string) error {
+	if err := validate.Enum(path, location, value, backendTypeCheckcachePropEnum); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *Backend) validateCheckcache(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.Checkcache) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateCheckcacheEnum("checkcache", "body", m.Checkcache); err != nil {
 		return err
 	}
 
@@ -1294,6 +1409,49 @@ func (m *Backend) validateHttpclose(formats strfmt.Registry) error {
 	return nil
 }
 
+var backendTypeIndependentStreamsPropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		backendTypeIndependentStreamsPropEnum = append(backendTypeIndependentStreamsPropEnum, v)
+	}
+}
+
+const (
+
+	// BackendIndependentStreamsEnabled captures enum value "enabled"
+	BackendIndependentStreamsEnabled string = "enabled"
+
+	// BackendIndependentStreamsDisabled captures enum value "disabled"
+	BackendIndependentStreamsDisabled string = "disabled"
+)
+
+// prop value enum
+func (m *Backend) validateIndependentStreamsEnum(path, location string, value string) error {
+	if err := validate.Enum(path, location, value, backendTypeIndependentStreamsPropEnum); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *Backend) validateIndependentStreams(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.IndependentStreams) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateIndependentStreamsEnum("independent_streams", "body", m.IndependentStreams); err != nil {
+		return err
+	}
+
+	return nil
+}
+
 var backendTypeLogHealthChecksPropEnum []interface{}
 
 func init() {
@@ -1424,6 +1582,135 @@ func (m *Backend) validateName(formats strfmt.Registry) error {
 	return nil
 }
 
+var backendTypeNolingerPropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		backendTypeNolingerPropEnum = append(backendTypeNolingerPropEnum, v)
+	}
+}
+
+const (
+
+	// BackendNolingerEnabled captures enum value "enabled"
+	BackendNolingerEnabled string = "enabled"
+
+	// BackendNolingerDisabled captures enum value "disabled"
+	BackendNolingerDisabled string = "disabled"
+)
+
+// prop value enum
+func (m *Backend) validateNolingerEnum(path, location string, value string) error {
+	if err := validate.Enum(path, location, value, backendTypeNolingerPropEnum); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *Backend) validateNolinger(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.Nolinger) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateNolingerEnum("nolinger", "body", m.Nolinger); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+var backendTypeOriginaltoPropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		backendTypeOriginaltoPropEnum = append(backendTypeOriginaltoPropEnum, v)
+	}
+}
+
+const (
+
+	// BackendOriginaltoEnabled captures enum value "enabled"
+	BackendOriginaltoEnabled string = "enabled"
+
+	// BackendOriginaltoDisabled captures enum value "disabled"
+	BackendOriginaltoDisabled string = "disabled"
+)
+
+// prop value enum
+func (m *Backend) validateOriginaltoEnum(path, location string, value string) error {
+	if err := validate.Enum(path, location, value, backendTypeOriginaltoPropEnum); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *Backend) validateOriginalto(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.Originalto) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateOriginaltoEnum("originalto", "body", m.Originalto); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+var backendTypePersistPropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		backendTypePersistPropEnum = append(backendTypePersistPropEnum, v)
+	}
+}
+
+const (
+
+	// BackendPersistEnabled captures enum value "enabled"
+	BackendPersistEnabled string = "enabled"
+
+	// BackendPersistDisabled captures enum value "disabled"
+	BackendPersistDisabled string = "disabled"
+)
+
+// prop value enum
+func (m *Backend) validatePersistEnum(path, location string, value string) error {
+	if err := validate.Enum(path, location, value, backendTypePersistPropEnum); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *Backend) validatePersist(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.Persist) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validatePersistEnum("persist", "body", m.Persist); err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func (m *Backend) validatePgsqlCheckParams(formats strfmt.Registry) error {
 
 	if swag.IsZero(m.PgsqlCheckParams) { // not required
@@ -1437,6 +1724,49 @@ func (m *Backend) validatePgsqlCheckParams(formats strfmt.Registry) error {
 			}
 			return err
 		}
+	}
+
+	return nil
+}
+
+var backendTypePreferLastServerPropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		backendTypePreferLastServerPropEnum = append(backendTypePreferLastServerPropEnum, v)
+	}
+}
+
+const (
+
+	// BackendPreferLastServerEnabled captures enum value "enabled"
+	BackendPreferLastServerEnabled string = "enabled"
+
+	// BackendPreferLastServerDisabled captures enum value "disabled"
+	BackendPreferLastServerDisabled string = "disabled"
+)
+
+// prop value enum
+func (m *Backend) validatePreferLastServerEnum(path, location string, value string) error {
+	if err := validate.Enum(path, location, value, backendTypePreferLastServerPropEnum); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *Backend) validatePreferLastServer(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.PreferLastServer) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validatePreferLastServerEnum("prefer_last_server", "body", m.PreferLastServer); err != nil {
+		return err
 	}
 
 	return nil
@@ -1473,6 +1803,49 @@ func (m *Backend) validateSmtpchkParams(formats strfmt.Registry) error {
 			}
 			return err
 		}
+	}
+
+	return nil
+}
+
+var backendTypeSpopCheckPropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		backendTypeSpopCheckPropEnum = append(backendTypeSpopCheckPropEnum, v)
+	}
+}
+
+const (
+
+	// BackendSpopCheckEnabled captures enum value "enabled"
+	BackendSpopCheckEnabled string = "enabled"
+
+	// BackendSpopCheckDisabled captures enum value "disabled"
+	BackendSpopCheckDisabled string = "disabled"
+)
+
+// prop value enum
+func (m *Backend) validateSpopCheckEnum(path, location string, value string) error {
+	if err := validate.Enum(path, location, value, backendTypeSpopCheckPropEnum); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *Backend) validateSpopCheck(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.SpopCheck) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateSpopCheckEnum("spop_check", "body", m.SpopCheck); err != nil {
+		return err
 	}
 
 	return nil
@@ -1557,6 +1930,49 @@ func (m *Backend) validateStickTable(formats strfmt.Registry) error {
 	return nil
 }
 
+var backendTypeTCPSmartConnectPropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		backendTypeTCPSmartConnectPropEnum = append(backendTypeTCPSmartConnectPropEnum, v)
+	}
+}
+
+const (
+
+	// BackendTCPSmartConnectEnabled captures enum value "enabled"
+	BackendTCPSmartConnectEnabled string = "enabled"
+
+	// BackendTCPSmartConnectDisabled captures enum value "disabled"
+	BackendTCPSmartConnectDisabled string = "disabled"
+)
+
+// prop value enum
+func (m *Backend) validateTCPSmartConnectEnum(path, location string, value string) error {
+	if err := validate.Enum(path, location, value, backendTypeTCPSmartConnectPropEnum); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *Backend) validateTCPSmartConnect(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.TCPSmartConnect) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateTCPSmartConnectEnum("tcp_smart_connect", "body", m.TCPSmartConnect); err != nil {
+		return err
+	}
+
+	return nil
+}
+
 var backendTypeTcpkaPropEnum []interface{}
 
 func init() {
@@ -1594,6 +2010,49 @@ func (m *Backend) validateTcpka(formats strfmt.Registry) error {
 
 	// value enum
 	if err := m.validateTcpkaEnum("tcpka", "body", m.Tcpka); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+var backendTypeTransparentPropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		backendTypeTransparentPropEnum = append(backendTypeTransparentPropEnum, v)
+	}
+}
+
+const (
+
+	// BackendTransparentEnabled captures enum value "enabled"
+	BackendTransparentEnabled string = "enabled"
+
+	// BackendTransparentDisabled captures enum value "disabled"
+	BackendTransparentDisabled string = "disabled"
+)
+
+// prop value enum
+func (m *Backend) validateTransparentEnum(path, location string, value string) error {
+	if err := validate.Enum(path, location, value, backendTypeTransparentPropEnum); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *Backend) validateTransparent(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.Transparent) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateTransparentEnum("transparent", "body", m.Transparent); err != nil {
 		return err
 	}
 

@@ -73,6 +73,10 @@ type Defaults struct {
 	// check timeout
 	CheckTimeout *int64 `json:"check_timeout,omitempty"`
 
+	// checkcache
+	// Enum: [enabled disabled]
+	Checkcache string `json:"checkcache,omitempty"`
+
 	// clflog
 	Clflog bool `json:"clflog,omitempty"`
 
@@ -165,6 +169,10 @@ type Defaults struct {
 	// Enum: [httpclose http-server-close http-keep-alive]
 	HTTPConnectionMode string `json:"http_connection_mode,omitempty"`
 
+	// http ignore probes
+	// Enum: [enabled disabled]
+	HTTPIgnoreProbes string `json:"http_ignore_probes,omitempty"`
+
 	// http keep alive timeout
 	HTTPKeepAliveTimeout *int64 `json:"http_keep_alive_timeout,omitempty"`
 
@@ -179,11 +187,23 @@ type Defaults struct {
 	// Enum: [aggressive always never safe]
 	HTTPReuse string `json:"http_reuse,omitempty"`
 
+	// http use proxy header
+	// Enum: [enabled disabled]
+	HTTPUseProxyHeader string `json:"http_use_proxy_header,omitempty"`
+
 	// httpchk params
 	HttpchkParams *HttpchkParams `json:"httpchk_params,omitempty"`
 
 	// httplog
 	Httplog bool `json:"httplog,omitempty"`
+
+	// httpslog
+	// Enum: [enabled disabled]
+	Httpslog string `json:"httpslog,omitempty"`
+
+	// independent streams
+	// Enum: [enabled disabled]
+	IndependentStreams string `json:"independent_streams,omitempty"`
 
 	// load server state from file
 	// Enum: [global local none]
@@ -224,8 +244,24 @@ type Defaults struct {
 	// mysql check params
 	MysqlCheckParams *MysqlCheckParams `json:"mysql_check_params,omitempty"`
 
+	// nolinger
+	// Enum: [enabled disabled]
+	Nolinger string `json:"nolinger,omitempty"`
+
+	// originalto
+	// Enum: [enabled disabled]
+	Originalto string `json:"originalto,omitempty"`
+
+	// persist
+	// Enum: [enabled disabled]
+	Persist string `json:"persist,omitempty"`
+
 	// pgsql check params
 	PgsqlCheckParams *PgsqlCheckParams `json:"pgsql_check_params,omitempty"`
+
+	// prefer last server
+	// Enum: [enabled disabled]
+	PreferLastServer string `json:"prefer_last_server,omitempty"`
 
 	// queue timeout
 	QueueTimeout *int64 `json:"queue_timeout,omitempty"`
@@ -245,6 +281,10 @@ type Defaults struct {
 	// smtpchk params
 	SmtpchkParams *SmtpchkParams `json:"smtpchk_params,omitempty"`
 
+	// socket stats
+	// Enum: [enabled disabled]
+	SocketStats string `json:"socket_stats,omitempty"`
+
 	// srvtcpka
 	// Enum: [enabled disabled]
 	Srvtcpka string `json:"srvtcpka,omitempty"`
@@ -252,12 +292,24 @@ type Defaults struct {
 	// stats options
 	StatsOptions *StatsOptions `json:"stats_options,omitempty"`
 
+	// tcp smart accept
+	// Enum: [enabled disabled]
+	TCPSmartAccept string `json:"tcp_smart_accept,omitempty"`
+
+	// tcp smart connect
+	// Enum: [enabled disabled]
+	TCPSmartConnect string `json:"tcp_smart_connect,omitempty"`
+
 	// tcpka
 	// Enum: [enabled disabled]
 	Tcpka string `json:"tcpka,omitempty"`
 
 	// tcplog
 	Tcplog bool `json:"tcplog,omitempty"`
+
+	// transparent
+	// Enum: [enabled disabled]
+	Transparent string `json:"transparent,omitempty"`
 
 	// tunnel timeout
 	TunnelTimeout *int64 `json:"tunnel_timeout,omitempty"`
@@ -302,6 +354,10 @@ func (m *Defaults) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateBindProcess(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateCheckcache(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -381,6 +437,10 @@ func (m *Defaults) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
+	if err := m.validateHTTPIgnoreProbes(formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.validateHTTPPretendKeepalive(formats); err != nil {
 		res = append(res, err)
 	}
@@ -389,7 +449,19 @@ func (m *Defaults) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
+	if err := m.validateHTTPUseProxyHeader(formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.validateHttpchkParams(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateHttpslog(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateIndependentStreams(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -425,7 +497,23 @@ func (m *Defaults) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
+	if err := m.validateNolinger(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateOriginalto(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validatePersist(formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.validatePgsqlCheckParams(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validatePreferLastServer(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -437,6 +525,10 @@ func (m *Defaults) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
+	if err := m.validateSocketStats(formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.validateSrvtcpka(formats); err != nil {
 		res = append(res, err)
 	}
@@ -445,7 +537,19 @@ func (m *Defaults) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
+	if err := m.validateTCPSmartAccept(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateTCPSmartConnect(formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.validateTcpka(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateTransparent(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -738,6 +842,49 @@ func (m *Defaults) validateBindProcess(formats strfmt.Registry) error {
 	}
 
 	if err := validate.Pattern("bind_process", "body", string(m.BindProcess), `^[^\s]+$`); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+var defaultsTypeCheckcachePropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		defaultsTypeCheckcachePropEnum = append(defaultsTypeCheckcachePropEnum, v)
+	}
+}
+
+const (
+
+	// DefaultsCheckcacheEnabled captures enum value "enabled"
+	DefaultsCheckcacheEnabled string = "enabled"
+
+	// DefaultsCheckcacheDisabled captures enum value "disabled"
+	DefaultsCheckcacheDisabled string = "disabled"
+)
+
+// prop value enum
+func (m *Defaults) validateCheckcacheEnum(path, location string, value string) error {
+	if err := validate.Enum(path, location, value, defaultsTypeCheckcachePropEnum); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *Defaults) validateCheckcache(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.Checkcache) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateCheckcacheEnum("checkcache", "body", m.Checkcache); err != nil {
 		return err
 	}
 
@@ -1316,6 +1463,49 @@ func (m *Defaults) validateHTTPConnectionMode(formats strfmt.Registry) error {
 	return nil
 }
 
+var defaultsTypeHTTPIgnoreProbesPropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		defaultsTypeHTTPIgnoreProbesPropEnum = append(defaultsTypeHTTPIgnoreProbesPropEnum, v)
+	}
+}
+
+const (
+
+	// DefaultsHTTPIgnoreProbesEnabled captures enum value "enabled"
+	DefaultsHTTPIgnoreProbesEnabled string = "enabled"
+
+	// DefaultsHTTPIgnoreProbesDisabled captures enum value "disabled"
+	DefaultsHTTPIgnoreProbesDisabled string = "disabled"
+)
+
+// prop value enum
+func (m *Defaults) validateHTTPIgnoreProbesEnum(path, location string, value string) error {
+	if err := validate.Enum(path, location, value, defaultsTypeHTTPIgnoreProbesPropEnum); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *Defaults) validateHTTPIgnoreProbes(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.HTTPIgnoreProbes) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateHTTPIgnoreProbesEnum("http_ignore_probes", "body", m.HTTPIgnoreProbes); err != nil {
+		return err
+	}
+
+	return nil
+}
+
 var defaultsTypeHTTPPretendKeepalivePropEnum []interface{}
 
 func init() {
@@ -1408,6 +1598,49 @@ func (m *Defaults) validateHTTPReuse(formats strfmt.Registry) error {
 	return nil
 }
 
+var defaultsTypeHTTPUseProxyHeaderPropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		defaultsTypeHTTPUseProxyHeaderPropEnum = append(defaultsTypeHTTPUseProxyHeaderPropEnum, v)
+	}
+}
+
+const (
+
+	// DefaultsHTTPUseProxyHeaderEnabled captures enum value "enabled"
+	DefaultsHTTPUseProxyHeaderEnabled string = "enabled"
+
+	// DefaultsHTTPUseProxyHeaderDisabled captures enum value "disabled"
+	DefaultsHTTPUseProxyHeaderDisabled string = "disabled"
+)
+
+// prop value enum
+func (m *Defaults) validateHTTPUseProxyHeaderEnum(path, location string, value string) error {
+	if err := validate.Enum(path, location, value, defaultsTypeHTTPUseProxyHeaderPropEnum); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *Defaults) validateHTTPUseProxyHeader(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.HTTPUseProxyHeader) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateHTTPUseProxyHeaderEnum("http_use_proxy_header", "body", m.HTTPUseProxyHeader); err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func (m *Defaults) validateHttpchkParams(formats strfmt.Registry) error {
 
 	if swag.IsZero(m.HttpchkParams) { // not required
@@ -1421,6 +1654,92 @@ func (m *Defaults) validateHttpchkParams(formats strfmt.Registry) error {
 			}
 			return err
 		}
+	}
+
+	return nil
+}
+
+var defaultsTypeHttpslogPropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		defaultsTypeHttpslogPropEnum = append(defaultsTypeHttpslogPropEnum, v)
+	}
+}
+
+const (
+
+	// DefaultsHttpslogEnabled captures enum value "enabled"
+	DefaultsHttpslogEnabled string = "enabled"
+
+	// DefaultsHttpslogDisabled captures enum value "disabled"
+	DefaultsHttpslogDisabled string = "disabled"
+)
+
+// prop value enum
+func (m *Defaults) validateHttpslogEnum(path, location string, value string) error {
+	if err := validate.Enum(path, location, value, defaultsTypeHttpslogPropEnum); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *Defaults) validateHttpslog(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.Httpslog) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateHttpslogEnum("httpslog", "body", m.Httpslog); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+var defaultsTypeIndependentStreamsPropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		defaultsTypeIndependentStreamsPropEnum = append(defaultsTypeIndependentStreamsPropEnum, v)
+	}
+}
+
+const (
+
+	// DefaultsIndependentStreamsEnabled captures enum value "enabled"
+	DefaultsIndependentStreamsEnabled string = "enabled"
+
+	// DefaultsIndependentStreamsDisabled captures enum value "disabled"
+	DefaultsIndependentStreamsDisabled string = "disabled"
+)
+
+// prop value enum
+func (m *Defaults) validateIndependentStreamsEnum(path, location string, value string) error {
+	if err := validate.Enum(path, location, value, defaultsTypeIndependentStreamsPropEnum); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *Defaults) validateIndependentStreams(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.IndependentStreams) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateIndependentStreamsEnum("independent_streams", "body", m.IndependentStreams); err != nil {
+		return err
 	}
 
 	return nil
@@ -1691,6 +2010,135 @@ func (m *Defaults) validateMysqlCheckParams(formats strfmt.Registry) error {
 	return nil
 }
 
+var defaultsTypeNolingerPropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		defaultsTypeNolingerPropEnum = append(defaultsTypeNolingerPropEnum, v)
+	}
+}
+
+const (
+
+	// DefaultsNolingerEnabled captures enum value "enabled"
+	DefaultsNolingerEnabled string = "enabled"
+
+	// DefaultsNolingerDisabled captures enum value "disabled"
+	DefaultsNolingerDisabled string = "disabled"
+)
+
+// prop value enum
+func (m *Defaults) validateNolingerEnum(path, location string, value string) error {
+	if err := validate.Enum(path, location, value, defaultsTypeNolingerPropEnum); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *Defaults) validateNolinger(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.Nolinger) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateNolingerEnum("nolinger", "body", m.Nolinger); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+var defaultsTypeOriginaltoPropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		defaultsTypeOriginaltoPropEnum = append(defaultsTypeOriginaltoPropEnum, v)
+	}
+}
+
+const (
+
+	// DefaultsOriginaltoEnabled captures enum value "enabled"
+	DefaultsOriginaltoEnabled string = "enabled"
+
+	// DefaultsOriginaltoDisabled captures enum value "disabled"
+	DefaultsOriginaltoDisabled string = "disabled"
+)
+
+// prop value enum
+func (m *Defaults) validateOriginaltoEnum(path, location string, value string) error {
+	if err := validate.Enum(path, location, value, defaultsTypeOriginaltoPropEnum); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *Defaults) validateOriginalto(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.Originalto) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateOriginaltoEnum("originalto", "body", m.Originalto); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+var defaultsTypePersistPropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		defaultsTypePersistPropEnum = append(defaultsTypePersistPropEnum, v)
+	}
+}
+
+const (
+
+	// DefaultsPersistEnabled captures enum value "enabled"
+	DefaultsPersistEnabled string = "enabled"
+
+	// DefaultsPersistDisabled captures enum value "disabled"
+	DefaultsPersistDisabled string = "disabled"
+)
+
+// prop value enum
+func (m *Defaults) validatePersistEnum(path, location string, value string) error {
+	if err := validate.Enum(path, location, value, defaultsTypePersistPropEnum); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *Defaults) validatePersist(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.Persist) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validatePersistEnum("persist", "body", m.Persist); err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func (m *Defaults) validatePgsqlCheckParams(formats strfmt.Registry) error {
 
 	if swag.IsZero(m.PgsqlCheckParams) { // not required
@@ -1704,6 +2152,49 @@ func (m *Defaults) validatePgsqlCheckParams(formats strfmt.Registry) error {
 			}
 			return err
 		}
+	}
+
+	return nil
+}
+
+var defaultsTypePreferLastServerPropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		defaultsTypePreferLastServerPropEnum = append(defaultsTypePreferLastServerPropEnum, v)
+	}
+}
+
+const (
+
+	// DefaultsPreferLastServerEnabled captures enum value "enabled"
+	DefaultsPreferLastServerEnabled string = "enabled"
+
+	// DefaultsPreferLastServerDisabled captures enum value "disabled"
+	DefaultsPreferLastServerDisabled string = "disabled"
+)
+
+// prop value enum
+func (m *Defaults) validatePreferLastServerEnum(path, location string, value string) error {
+	if err := validate.Enum(path, location, value, defaultsTypePreferLastServerPropEnum); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *Defaults) validatePreferLastServer(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.PreferLastServer) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validatePreferLastServerEnum("prefer_last_server", "body", m.PreferLastServer); err != nil {
+		return err
 	}
 
 	return nil
@@ -1740,6 +2231,49 @@ func (m *Defaults) validateSmtpchkParams(formats strfmt.Registry) error {
 			}
 			return err
 		}
+	}
+
+	return nil
+}
+
+var defaultsTypeSocketStatsPropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		defaultsTypeSocketStatsPropEnum = append(defaultsTypeSocketStatsPropEnum, v)
+	}
+}
+
+const (
+
+	// DefaultsSocketStatsEnabled captures enum value "enabled"
+	DefaultsSocketStatsEnabled string = "enabled"
+
+	// DefaultsSocketStatsDisabled captures enum value "disabled"
+	DefaultsSocketStatsDisabled string = "disabled"
+)
+
+// prop value enum
+func (m *Defaults) validateSocketStatsEnum(path, location string, value string) error {
+	if err := validate.Enum(path, location, value, defaultsTypeSocketStatsPropEnum); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *Defaults) validateSocketStats(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.SocketStats) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateSocketStatsEnum("socket_stats", "body", m.SocketStats); err != nil {
+		return err
 	}
 
 	return nil
@@ -1806,6 +2340,92 @@ func (m *Defaults) validateStatsOptions(formats strfmt.Registry) error {
 	return nil
 }
 
+var defaultsTypeTCPSmartAcceptPropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		defaultsTypeTCPSmartAcceptPropEnum = append(defaultsTypeTCPSmartAcceptPropEnum, v)
+	}
+}
+
+const (
+
+	// DefaultsTCPSmartAcceptEnabled captures enum value "enabled"
+	DefaultsTCPSmartAcceptEnabled string = "enabled"
+
+	// DefaultsTCPSmartAcceptDisabled captures enum value "disabled"
+	DefaultsTCPSmartAcceptDisabled string = "disabled"
+)
+
+// prop value enum
+func (m *Defaults) validateTCPSmartAcceptEnum(path, location string, value string) error {
+	if err := validate.Enum(path, location, value, defaultsTypeTCPSmartAcceptPropEnum); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *Defaults) validateTCPSmartAccept(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.TCPSmartAccept) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateTCPSmartAcceptEnum("tcp_smart_accept", "body", m.TCPSmartAccept); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+var defaultsTypeTCPSmartConnectPropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		defaultsTypeTCPSmartConnectPropEnum = append(defaultsTypeTCPSmartConnectPropEnum, v)
+	}
+}
+
+const (
+
+	// DefaultsTCPSmartConnectEnabled captures enum value "enabled"
+	DefaultsTCPSmartConnectEnabled string = "enabled"
+
+	// DefaultsTCPSmartConnectDisabled captures enum value "disabled"
+	DefaultsTCPSmartConnectDisabled string = "disabled"
+)
+
+// prop value enum
+func (m *Defaults) validateTCPSmartConnectEnum(path, location string, value string) error {
+	if err := validate.Enum(path, location, value, defaultsTypeTCPSmartConnectPropEnum); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *Defaults) validateTCPSmartConnect(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.TCPSmartConnect) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateTCPSmartConnectEnum("tcp_smart_connect", "body", m.TCPSmartConnect); err != nil {
+		return err
+	}
+
+	return nil
+}
+
 var defaultsTypeTcpkaPropEnum []interface{}
 
 func init() {
@@ -1843,6 +2463,49 @@ func (m *Defaults) validateTcpka(formats strfmt.Registry) error {
 
 	// value enum
 	if err := m.validateTcpkaEnum("tcpka", "body", m.Tcpka); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+var defaultsTypeTransparentPropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		defaultsTypeTransparentPropEnum = append(defaultsTypeTransparentPropEnum, v)
+	}
+}
+
+const (
+
+	// DefaultsTransparentEnabled captures enum value "enabled"
+	DefaultsTransparentEnabled string = "enabled"
+
+	// DefaultsTransparentDisabled captures enum value "disabled"
+	DefaultsTransparentDisabled string = "disabled"
+)
+
+// prop value enum
+func (m *Defaults) validateTransparentEnum(path, location string, value string) error {
+	if err := validate.Enum(path, location, value, defaultsTypeTransparentPropEnum); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *Defaults) validateTransparent(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.Transparent) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateTransparentEnum("transparent", "body", m.Transparent); err != nil {
 		return err
 	}
 

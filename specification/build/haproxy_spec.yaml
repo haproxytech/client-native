@@ -1061,6 +1061,12 @@ definitions:
         check_timeout:
           type: integer
           x-nullable: true
+        checkcache:
+          enum:
+          - enabled
+          - disabled
+          type: string
+          x-display-name: Checkcache
         clflog:
           type: boolean
           x-display-name: CLF Log
@@ -1176,6 +1182,12 @@ definitions:
           - http-server-close
           - http-keep-alive
           type: string
+        http_ignore_probes:
+          enum:
+          - enabled
+          - disabled
+          type: string
+          x-display-name: HTTP Ignore Probes
         http_keep_alive_timeout:
           type: integer
           x-nullable: true
@@ -1194,11 +1206,29 @@ definitions:
           - never
           - safe
           type: string
+        http_use_proxy_header:
+          enum:
+          - enabled
+          - disabled
+          type: string
+          x-display-name: HTTP Use Proxy Header
         httpchk_params:
           $ref: '#/definitions/httpchk_params'
         httplog:
           type: boolean
           x-display-name: HTTP Log
+        httpslog:
+          enum:
+          - enabled
+          - disabled
+          type: string
+          x-display-name: Httpslog
+        independent_streams:
+          enum:
+          - enabled
+          - disabled
+          type: string
+          x-display-name: Independent Streams
         load_server_state_from_file:
           enum:
           - global
@@ -1243,8 +1273,32 @@ definitions:
           $ref: '#/definitions/monitor_uri'
         mysql_check_params:
           $ref: '#/definitions/mysql_check_params'
+        nolinger:
+          enum:
+          - enabled
+          - disabled
+          type: string
+          x-display-name: Nolinger
+        originalto:
+          enum:
+          - enabled
+          - disabled
+          type: string
+          x-display-name: Originalto
+        persist:
+          enum:
+          - enabled
+          - disabled
+          type: string
+          x-display-name: Persist
         pgsql_check_params:
           $ref: '#/definitions/pgsql_check_params'
+        prefer_last_server:
+          enum:
+          - enabled
+          - disabled
+          type: string
+          x-display-name: Prefer Last Server
         queue_timeout:
           type: integer
           x-nullable: true
@@ -1261,6 +1315,12 @@ definitions:
           x-nullable: true
         smtpchk_params:
           $ref: '#/definitions/smtpchk_params'
+        socket_stats:
+          enum:
+          - enabled
+          - disabled
+          type: string
+          x-display-name: Socket Stats
         srvtcpka:
           enum:
           - enabled
@@ -1269,6 +1329,18 @@ definitions:
           x-display-name: Server TCP Keep Alive
         stats_options:
           $ref: '#/definitions/stats_options'
+        tcp_smart_accept:
+          enum:
+          - enabled
+          - disabled
+          type: string
+          x-display-name: Tcp Smart Accept
+        tcp_smart_connect:
+          enum:
+          - enabled
+          - disabled
+          type: string
+          x-display-name: Tcp Smart Connect
         tcpka:
           enum:
           - enabled
@@ -1278,6 +1350,12 @@ definitions:
         tcplog:
           type: boolean
           x-display-name: TCP Log
+        transparent:
+          enum:
+          - enabled
+          - disabled
+          type: string
+          x-display-name: Transparent
         tunnel_timeout:
           type: integer
           x-nullable: true
@@ -1405,6 +1483,12 @@ definitions:
           x-dependency:
             mode:
               value: http
+        http_ignore_probes:
+          enum:
+          - enabled
+          - disabled
+          type: string
+          x-display-name: HTTP Ignore Probes
         http_keep_alive_timeout:
           type: integer
           x-dependency:
@@ -1417,12 +1501,30 @@ definitions:
             mode:
               value: http
           x-nullable: true
+        http_use_proxy_header:
+          enum:
+          - enabled
+          - disabled
+          type: string
+          x-display-name: HTTP Use Proxy Header
         httplog:
           type: boolean
           x-dependency:
             mode:
               value: http
           x-display-name: HTTP Log
+        httpslog:
+          enum:
+          - enabled
+          - disabled
+          type: string
+          x-display-name: Httpslog
+        independent_streams:
+          enum:
+          - enabled
+          - disabled
+          type: string
+          x-display-name: Independent Streams
         log_format:
           type: string
         log_format_sd:
@@ -1459,10 +1561,34 @@ definitions:
           pattern: ^[A-Za-z0-9-_.:]+$
           type: string
           x-nullable: false
+        nolinger:
+          enum:
+          - enabled
+          - disabled
+          type: string
+          x-display-name: Nolinger
+        originalto:
+          enum:
+          - enabled
+          - disabled
+          type: string
+          x-display-name: Originalto
+        socket_stats:
+          enum:
+          - enabled
+          - disabled
+          type: string
+          x-display-name: Socket Stats
         stats_options:
           $ref: '#/definitions/stats_options'
         stick_table:
           $ref: '#/definitions/config_stick_table'
+        tcp_smart_accept:
+          enum:
+          - enabled
+          - disabled
+          type: string
+          x-display-name: Tcp Smart Accept
         tcpka:
           enum:
           - enabled
@@ -1550,6 +1676,12 @@ definitions:
         check_timeout:
           type: integer
           x-nullable: true
+        checkcache:
+          enum:
+          - enabled
+          - disabled
+          type: string
+          x-display-name: Checkcache
         compression:
           $ref: '#/definitions/compression'
         connect_timeout:
@@ -1725,6 +1857,12 @@ definitions:
             mode:
               value: http
           x-display-name: HTTP connection closing
+        independent_streams:
+          enum:
+          - enabled
+          - disabled
+          type: string
+          x-display-name: Independent Streams
         log_health_checks:
           enum:
           - enabled
@@ -1745,8 +1883,32 @@ definitions:
           pattern: ^[A-Za-z0-9-_.:]+$
           type: string
           x-nullable: false
+        nolinger:
+          enum:
+          - enabled
+          - disabled
+          type: string
+          x-display-name: Nolinger
+        originalto:
+          enum:
+          - enabled
+          - disabled
+          type: string
+          x-display-name: Originalto
+        persist:
+          enum:
+          - enabled
+          - disabled
+          type: string
+          x-display-name: Persist
         pgsql_check_params:
           $ref: '#/definitions/pgsql_check_params'
+        prefer_last_server:
+          enum:
+          - enabled
+          - disabled
+          type: string
+          x-display-name: Prefer Last Server
         queue_timeout:
           type: integer
           x-nullable: true
@@ -1760,6 +1922,12 @@ definitions:
           x-nullable: true
         smtpchk_params:
           $ref: '#/definitions/smtpchk_params'
+        spop_check:
+          enum:
+          - enabled
+          - disabled
+          type: string
+          x-display-name: Spop Check
         srvtcpka:
           enum:
           - enabled
@@ -1773,6 +1941,12 @@ definitions:
           $ref: '#/definitions/stats_options'
         stick_table:
           $ref: '#/definitions/config_stick_table'
+        tcp_smart_connect:
+          enum:
+          - enabled
+          - disabled
+          type: string
+          x-display-name: Tcp Smart Connect
         tcpka:
           enum:
           - enabled
@@ -1782,6 +1956,12 @@ definitions:
             mode:
               value: tcp
           x-display-name: TCP Keep Alive
+        transparent:
+          enum:
+          - enabled
+          - disabled
+          type: string
+          x-display-name: Transparent
         tunnel_timeout:
           type: integer
           x-nullable: true

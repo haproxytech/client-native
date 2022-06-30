@@ -222,6 +222,42 @@ backend:
       $ref: "#/definitions/compression"
     stats_options:
       $ref: "#/definitions/stats_options"
+    checkcache:
+      type: string
+      enum: [enabled, disabled]
+      x-display-name: Checkcache
+    independent_streams:
+      type: string
+      enum: [enabled, disabled]
+      x-display-name: Independent Streams
+    nolinger:
+      type: string
+      enum: [enabled, disabled]
+      x-display-name: Nolinger
+    originalto:
+      type: string
+      enum: [enabled, disabled]
+      x-display-name: Originalto
+    persist:
+      type: string
+      enum: [enabled, disabled]
+      x-display-name: Persist
+    prefer_last_server:
+      type: string
+      enum: [enabled, disabled]
+      x-display-name: Prefer Last Server
+    spop_check:
+      type: string
+      enum: [enabled, disabled]
+      x-display-name: Spop Check
+    tcp_smart_connect:
+      type: string
+      enum: [enabled, disabled]
+      x-display-name: Tcp Smart Connect
+    transparent:
+      type: string
+      enum: [enabled, disabled]
+      x-display-name: Transparent
   additionalProperties: false
   example:
     name: test_backend

@@ -104,14 +104,30 @@ type Frontend struct {
 	// Enum: [httpclose http-server-close http-keep-alive]
 	HTTPConnectionMode string `json:"http_connection_mode,omitempty"`
 
+	// http ignore probes
+	// Enum: [enabled disabled]
+	HTTPIgnoreProbes string `json:"http_ignore_probes,omitempty"`
+
 	// http keep alive timeout
 	HTTPKeepAliveTimeout *int64 `json:"http_keep_alive_timeout,omitempty"`
 
 	// http request timeout
 	HTTPRequestTimeout *int64 `json:"http_request_timeout,omitempty"`
 
+	// http use proxy header
+	// Enum: [enabled disabled]
+	HTTPUseProxyHeader string `json:"http_use_proxy_header,omitempty"`
+
 	// httplog
 	Httplog bool `json:"httplog,omitempty"`
+
+	// httpslog
+	// Enum: [enabled disabled]
+	Httpslog string `json:"httpslog,omitempty"`
+
+	// independent streams
+	// Enum: [enabled disabled]
+	IndependentStreams string `json:"independent_streams,omitempty"`
 
 	// log format
 	LogFormat string `json:"log_format,omitempty"`
@@ -149,11 +165,27 @@ type Frontend struct {
 	// Pattern: ^[A-Za-z0-9-_.:]+$
 	Name string `json:"name"`
 
+	// nolinger
+	// Enum: [enabled disabled]
+	Nolinger string `json:"nolinger,omitempty"`
+
+	// originalto
+	// Enum: [enabled disabled]
+	Originalto string `json:"originalto,omitempty"`
+
+	// socket stats
+	// Enum: [enabled disabled]
+	SocketStats string `json:"socket_stats,omitempty"`
+
 	// stats options
 	StatsOptions *StatsOptions `json:"stats_options,omitempty"`
 
 	// stick table
 	StickTable *ConfigStickTable `json:"stick_table,omitempty"`
+
+	// tcp smart accept
+	// Enum: [enabled disabled]
+	TCPSmartAccept string `json:"tcp_smart_accept,omitempty"`
 
 	// tcpka
 	// Enum: [enabled disabled]
@@ -225,6 +257,22 @@ func (m *Frontend) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
+	if err := m.validateHTTPIgnoreProbes(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateHTTPUseProxyHeader(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateHttpslog(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateIndependentStreams(formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.validateLogSeparateErrors(formats); err != nil {
 		res = append(res, err)
 	}
@@ -253,11 +301,27 @@ func (m *Frontend) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
+	if err := m.validateNolinger(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateOriginalto(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateSocketStats(formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.validateStatsOptions(formats); err != nil {
 		res = append(res, err)
 	}
 
 	if err := m.validateStickTable(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateTCPSmartAccept(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -720,6 +784,178 @@ func (m *Frontend) validateHTTPConnectionMode(formats strfmt.Registry) error {
 	return nil
 }
 
+var frontendTypeHTTPIgnoreProbesPropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		frontendTypeHTTPIgnoreProbesPropEnum = append(frontendTypeHTTPIgnoreProbesPropEnum, v)
+	}
+}
+
+const (
+
+	// FrontendHTTPIgnoreProbesEnabled captures enum value "enabled"
+	FrontendHTTPIgnoreProbesEnabled string = "enabled"
+
+	// FrontendHTTPIgnoreProbesDisabled captures enum value "disabled"
+	FrontendHTTPIgnoreProbesDisabled string = "disabled"
+)
+
+// prop value enum
+func (m *Frontend) validateHTTPIgnoreProbesEnum(path, location string, value string) error {
+	if err := validate.Enum(path, location, value, frontendTypeHTTPIgnoreProbesPropEnum); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *Frontend) validateHTTPIgnoreProbes(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.HTTPIgnoreProbes) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateHTTPIgnoreProbesEnum("http_ignore_probes", "body", m.HTTPIgnoreProbes); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+var frontendTypeHTTPUseProxyHeaderPropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		frontendTypeHTTPUseProxyHeaderPropEnum = append(frontendTypeHTTPUseProxyHeaderPropEnum, v)
+	}
+}
+
+const (
+
+	// FrontendHTTPUseProxyHeaderEnabled captures enum value "enabled"
+	FrontendHTTPUseProxyHeaderEnabled string = "enabled"
+
+	// FrontendHTTPUseProxyHeaderDisabled captures enum value "disabled"
+	FrontendHTTPUseProxyHeaderDisabled string = "disabled"
+)
+
+// prop value enum
+func (m *Frontend) validateHTTPUseProxyHeaderEnum(path, location string, value string) error {
+	if err := validate.Enum(path, location, value, frontendTypeHTTPUseProxyHeaderPropEnum); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *Frontend) validateHTTPUseProxyHeader(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.HTTPUseProxyHeader) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateHTTPUseProxyHeaderEnum("http_use_proxy_header", "body", m.HTTPUseProxyHeader); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+var frontendTypeHttpslogPropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		frontendTypeHttpslogPropEnum = append(frontendTypeHttpslogPropEnum, v)
+	}
+}
+
+const (
+
+	// FrontendHttpslogEnabled captures enum value "enabled"
+	FrontendHttpslogEnabled string = "enabled"
+
+	// FrontendHttpslogDisabled captures enum value "disabled"
+	FrontendHttpslogDisabled string = "disabled"
+)
+
+// prop value enum
+func (m *Frontend) validateHttpslogEnum(path, location string, value string) error {
+	if err := validate.Enum(path, location, value, frontendTypeHttpslogPropEnum); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *Frontend) validateHttpslog(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.Httpslog) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateHttpslogEnum("httpslog", "body", m.Httpslog); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+var frontendTypeIndependentStreamsPropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		frontendTypeIndependentStreamsPropEnum = append(frontendTypeIndependentStreamsPropEnum, v)
+	}
+}
+
+const (
+
+	// FrontendIndependentStreamsEnabled captures enum value "enabled"
+	FrontendIndependentStreamsEnabled string = "enabled"
+
+	// FrontendIndependentStreamsDisabled captures enum value "disabled"
+	FrontendIndependentStreamsDisabled string = "disabled"
+)
+
+// prop value enum
+func (m *Frontend) validateIndependentStreamsEnum(path, location string, value string) error {
+	if err := validate.Enum(path, location, value, frontendTypeIndependentStreamsPropEnum); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *Frontend) validateIndependentStreams(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.IndependentStreams) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateIndependentStreamsEnum("independent_streams", "body", m.IndependentStreams); err != nil {
+		return err
+	}
+
+	return nil
+}
+
 var frontendTypeLogSeparateErrorsPropEnum []interface{}
 
 func init() {
@@ -909,6 +1145,135 @@ func (m *Frontend) validateName(formats strfmt.Registry) error {
 	return nil
 }
 
+var frontendTypeNolingerPropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		frontendTypeNolingerPropEnum = append(frontendTypeNolingerPropEnum, v)
+	}
+}
+
+const (
+
+	// FrontendNolingerEnabled captures enum value "enabled"
+	FrontendNolingerEnabled string = "enabled"
+
+	// FrontendNolingerDisabled captures enum value "disabled"
+	FrontendNolingerDisabled string = "disabled"
+)
+
+// prop value enum
+func (m *Frontend) validateNolingerEnum(path, location string, value string) error {
+	if err := validate.Enum(path, location, value, frontendTypeNolingerPropEnum); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *Frontend) validateNolinger(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.Nolinger) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateNolingerEnum("nolinger", "body", m.Nolinger); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+var frontendTypeOriginaltoPropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		frontendTypeOriginaltoPropEnum = append(frontendTypeOriginaltoPropEnum, v)
+	}
+}
+
+const (
+
+	// FrontendOriginaltoEnabled captures enum value "enabled"
+	FrontendOriginaltoEnabled string = "enabled"
+
+	// FrontendOriginaltoDisabled captures enum value "disabled"
+	FrontendOriginaltoDisabled string = "disabled"
+)
+
+// prop value enum
+func (m *Frontend) validateOriginaltoEnum(path, location string, value string) error {
+	if err := validate.Enum(path, location, value, frontendTypeOriginaltoPropEnum); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *Frontend) validateOriginalto(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.Originalto) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateOriginaltoEnum("originalto", "body", m.Originalto); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+var frontendTypeSocketStatsPropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		frontendTypeSocketStatsPropEnum = append(frontendTypeSocketStatsPropEnum, v)
+	}
+}
+
+const (
+
+	// FrontendSocketStatsEnabled captures enum value "enabled"
+	FrontendSocketStatsEnabled string = "enabled"
+
+	// FrontendSocketStatsDisabled captures enum value "disabled"
+	FrontendSocketStatsDisabled string = "disabled"
+)
+
+// prop value enum
+func (m *Frontend) validateSocketStatsEnum(path, location string, value string) error {
+	if err := validate.Enum(path, location, value, frontendTypeSocketStatsPropEnum); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *Frontend) validateSocketStats(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.SocketStats) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateSocketStatsEnum("socket_stats", "body", m.SocketStats); err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func (m *Frontend) validateStatsOptions(formats strfmt.Registry) error {
 
 	if swag.IsZero(m.StatsOptions) { // not required
@@ -940,6 +1305,49 @@ func (m *Frontend) validateStickTable(formats strfmt.Registry) error {
 			}
 			return err
 		}
+	}
+
+	return nil
+}
+
+var frontendTypeTCPSmartAcceptPropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		frontendTypeTCPSmartAcceptPropEnum = append(frontendTypeTCPSmartAcceptPropEnum, v)
+	}
+}
+
+const (
+
+	// FrontendTCPSmartAcceptEnabled captures enum value "enabled"
+	FrontendTCPSmartAcceptEnabled string = "enabled"
+
+	// FrontendTCPSmartAcceptDisabled captures enum value "disabled"
+	FrontendTCPSmartAcceptDisabled string = "disabled"
+)
+
+// prop value enum
+func (m *Frontend) validateTCPSmartAcceptEnum(path, location string, value string) error {
+	if err := validate.Enum(path, location, value, frontendTypeTCPSmartAcceptPropEnum); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *Frontend) validateTCPSmartAccept(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.TCPSmartAccept) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateTCPSmartAcceptEnum("tcp_smart_accept", "body", m.TCPSmartAccept); err != nil {
+		return err
 	}
 
 	return nil
