@@ -474,6 +474,15 @@ cache test
   process-vary on
   max-secondary-entries 10
 
+ring myring
+  description "My local buffer"
+  format rfc3164
+  maxlen 1200
+  size 32764
+  timeout connect 5s
+  timeout server 10s
+  server mysyslogsrv 127.0.0.1:6514 log-proto octet-count
+
 backend test_2
   mode http
   balance roundrobin

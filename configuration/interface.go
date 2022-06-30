@@ -47,6 +47,7 @@ type Configuration interface {
 	PeerSection
 	Raw
 	Resolver
+	Ring
 	Server
 	ServerTemplate
 	Site

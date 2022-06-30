@@ -1,0 +1,34 @@
+---
+ring:
+  title: Ring
+  description: HAProxy ring configuration
+  type: object
+  required:
+    - name
+  properties:
+    name:
+      type: string
+      pattern: '^[A-Za-z0-9-_.:]+$'
+      x-nullable: false
+    description:
+      type: string
+      x-display-name: The description is an optional description string of the ring
+    format:
+      type: string
+      x-display-name: Format used to store events into the ring buffer
+      enum: [iso, local, raw, rfc3164, rfc5424, short, priority, timed]
+    maxlen:
+      type: integer
+      x-nullable: true
+      x-display-name: The maximum length of an event message stored into the ring
+    size:
+      type: integer
+      x-nullable: true
+      x-display-name: Optional size in bytes for the ring-buffer
+    timeout_connect:
+      type: integer
+      x-nullable: true
+    timeout_server:
+      type: integer
+      x-nullable: true
+  additionalProperties: false

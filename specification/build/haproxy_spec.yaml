@@ -1975,6 +1975,53 @@ definitions:
     type: array
     items:
       $ref: '#/definitions/backend'
+  ring:
+      additionalProperties: false
+      description: HAProxy ring configuration
+      properties:
+        description:
+          type: string
+          x-display-name: The description is an optional description string of the ring
+        format:
+          enum:
+          - iso
+          - local
+          - raw
+          - rfc3164
+          - rfc5424
+          - short
+          - priority
+          - timed
+          type: string
+          x-display-name: Format used to store events into the ring buffer
+        maxlen:
+          type: integer
+          x-display-name: The maximum length of an event message stored into the ring
+          x-nullable: true
+        name:
+          pattern: ^[A-Za-z0-9-_.:]+$
+          type: string
+          x-nullable: false
+        size:
+          type: integer
+          x-display-name: Optional size in bytes for the ring-buffer
+          x-nullable: true
+        timeout_connect:
+          type: integer
+          x-nullable: true
+        timeout_server:
+          type: integer
+          x-nullable: true
+      required:
+      - name
+      title: Ring
+      type: object
+  rings:
+    title: Rings
+    description: HAProxy rings array
+    type: array
+    items:
+      $ref: '#/definitions/ring'
   userlist:
       description: HAProxy configuration of access control
       properties:
@@ -8203,6 +8250,7 @@ tags:
     then use reloads endpoints to check the status of that reload ID. If force_reload is true, we override all
     of this and reload immediately.
 - name: Resolver
+- name: Ring
 - name: Server
   description: Managing backend server configurations (advanced mode)
 - name: ServerSwitchingRule
@@ -10469,6 +10517,166 @@ paths:
         summary: Replace a backend
         tags:
         - Backend
+  /services/haproxy/configuration/rings:
+      get:
+        description: Returns an array of all configured rings.
+        operationId: getRings
+        parameters:
+        - $ref: '#/parameters/transaction_id'
+        responses:
+          "200":
+            description: Successful operation
+            headers:
+              Configuration-Version:
+                description: Configuration file version
+                type: string
+            schema:
+              properties:
+                _version:
+                  type: integer
+                data:
+                  $ref: '#/definitions/rings'
+              required:
+              - data
+              type: object
+          default:
+            $ref: '#/responses/DefaultError'
+        summary: Return an array of rings
+        tags:
+        - Ring
+      post:
+        description: Adds a new ring to the configuration file.
+        operationId: createRing
+        parameters:
+        - in: body
+          name: data
+          required: true
+          schema:
+            $ref: '#/definitions/ring'
+        - $ref: '#/parameters/transaction_id'
+        - $ref: '#/parameters/version'
+        - $ref: '#/parameters/force_reload'
+        responses:
+          "201":
+            description: Ring created
+            schema:
+              $ref: '#/definitions/ring'
+          "202":
+            description: Configuration change accepted and reload requested
+            headers:
+              Reload-ID:
+                description: ID of the requested reload
+                type: string
+            schema:
+              $ref: '#/definitions/ring'
+          "400":
+            $ref: '#/responses/BadRequest'
+          "409":
+            $ref: '#/responses/AlreadyExists'
+          default:
+            $ref: '#/responses/DefaultError'
+        summary: Add a ring
+        tags:
+        - Ring
+  /services/haproxy/configuration/rings/{name}:
+      delete:
+        description: Deletes a ring from the configuration by it's name.
+        operationId: deleteRing
+        parameters:
+        - description: Ring name
+          in: path
+          name: name
+          required: true
+          type: string
+        - $ref: '#/parameters/transaction_id'
+        - $ref: '#/parameters/version'
+        - $ref: '#/parameters/force_reload'
+        responses:
+          "202":
+            description: Configuration change accepted and reload requested
+            headers:
+              Reload-ID:
+                description: ID of the requested reload
+                type: string
+          "204":
+            description: Ring deleted
+          "404":
+            $ref: '#/responses/NotFound'
+          default:
+            $ref: '#/responses/DefaultError'
+        summary: Delete a ring
+        tags:
+        - Ring
+      get:
+        description: Returns one ring configuration by it's name.
+        operationId: getRing
+        parameters:
+        - description: Ring name
+          in: path
+          name: name
+          required: true
+          type: string
+        - $ref: '#/parameters/transaction_id'
+        responses:
+          "200":
+            description: Successful operation
+            headers:
+              Configuration-Version:
+                description: Configuration file version
+                type: string
+            schema:
+              properties:
+                _version:
+                  type: integer
+                data:
+                  $ref: '#/definitions/ring'
+              type: object
+          "404":
+            $ref: '#/responses/NotFound'
+          default:
+            $ref: '#/responses/DefaultError'
+        summary: Return a ring
+        tags:
+        - Ring
+      put:
+        description: Replaces a ring configuration by it's name.
+        operationId: replaceRing
+        parameters:
+        - description: Ring name
+          in: path
+          name: name
+          required: true
+          type: string
+        - in: body
+          name: data
+          required: true
+          schema:
+            $ref: '#/definitions/ring'
+        - $ref: '#/parameters/transaction_id'
+        - $ref: '#/parameters/version'
+        - $ref: '#/parameters/force_reload'
+        responses:
+          "200":
+            description: Ring replaced
+            schema:
+              $ref: '#/definitions/ring'
+          "202":
+            description: Configuration change accepted and reload requested
+            headers:
+              Reload-ID:
+                description: ID of the requested reload
+                type: string
+            schema:
+              $ref: '#/definitions/ring'
+          "400":
+            $ref: '#/responses/BadRequest'
+          "404":
+            $ref: '#/responses/NotFound'
+          default:
+            $ref: '#/responses/DefaultError'
+        summary: Replace a ring
+        tags:
+        - Ring
   /services/haproxy/configuration/binds:
       get:
         description: Returns an array of all binds that are configured in specified frontend.

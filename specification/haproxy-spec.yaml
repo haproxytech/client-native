@@ -48,6 +48,14 @@ definitions:
     type: array
     items:
       $ref: '#/definitions/backend'
+  ring:
+    $ref: "models/configuration/ring.yaml#/ring"
+  rings:
+    title: Rings
+    description: HAProxy rings array
+    type: array
+    items:
+      $ref: '#/definitions/ring'
   userlist:
     $ref: "models/configuration/userlist.yaml#/userlist"
   userlists:
@@ -590,6 +598,7 @@ tags:
   - name: Nameserver
   - name: Peer
   - name: PeerEntry
+  - name: Ring
   - name: Cluster
   - name: Maps
   - name: SpecificationOpenapiv3
@@ -683,6 +692,10 @@ paths:
     $ref: "paths/configuration/backend.yaml#/backends"
   /services/haproxy/configuration/backends/{name}:
     $ref: "paths/configuration/backend.yaml#/backends_one"
+  /services/haproxy/configuration/rings:
+    $ref: "paths/configuration/ring.yaml#/rings"
+  /services/haproxy/configuration/rings/{name}:
+    $ref: "paths/configuration/ring.yaml#/rings_one"
   /services/haproxy/configuration/binds:
     $ref: "paths/configuration/bind.yaml#/binds"
   /services/haproxy/configuration/binds/{name}:
