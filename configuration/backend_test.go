@@ -41,6 +41,10 @@ func TestGetBackends(t *testing.T) { //nolint:gocognit,gocyclo
 		if b.Name != "test" && b.Name != "test_2" {
 			t.Errorf("Expected only test or test_2 backend, %v found", b.Name)
 		}
+		optionValue := "disabled"
+		if b.Name == "test" {
+			optionValue = "enabled"
+		}
 		if b.BindProcess != "all" {
 			t.Errorf("%v: BindProcess not all: %v", b.Name, b.BindProcess)
 		}
@@ -110,6 +114,34 @@ func TestGetBackends(t *testing.T) { //nolint:gocognit,gocyclo
 		if b.Srvtcpka != "enabled" {
 			t.Errorf("%v: Srvtcpka not enabled: %v", b.Name, b.Srvtcpka)
 		}
+		if b.Checkcache != optionValue {
+			t.Errorf("%v: Checkcache not %s: %v", b.Name, optionValue, b.Checkcache)
+		}
+		if b.IndependentStreams != optionValue {
+			t.Errorf("%v: IndependentStreams not %s: %v", b.Name, optionValue, b.IndependentStreams)
+		}
+		if b.Nolinger != optionValue {
+			t.Errorf("%v: Nolinger not %s: %v", b.Name, optionValue, b.Nolinger)
+		}
+		if b.Originalto != optionValue {
+			t.Errorf("%v: Originalto not %s: %v", b.Name, optionValue, b.Originalto)
+		}
+		if b.Persist != optionValue {
+			t.Errorf("%v: Persist not %s: %v", b.Name, optionValue, b.Persist)
+		}
+		if b.PreferLastServer != optionValue {
+			t.Errorf("%v: PreferLastServer not %s: %v", b.Name, optionValue, b.PreferLastServer)
+		}
+		if b.SpopCheck != optionValue {
+			t.Errorf("%v: SpopCheck not %s: %v", b.Name, optionValue, b.SpopCheck)
+		}
+		if b.TCPSmartConnect != optionValue {
+			t.Errorf("%v: TCPSmartConnect not %s: %v", b.Name, optionValue, b.TCPSmartConnect)
+		}
+		if b.Transparent != optionValue {
+			t.Errorf("%v: Transparent not %s: %v", b.Name, optionValue, b.Transparent)
+		}
+
 	}
 }
 
@@ -215,6 +247,33 @@ func TestGetBackend(t *testing.T) {
 			}
 		}
 	}
+	if b.Checkcache != "enabled" {
+		t.Errorf("%v: Checkcache not enabled: %v", b.Name, b.Checkcache)
+	}
+	if b.IndependentStreams != "enabled" {
+		t.Errorf("%v: IndependentStreams not enabled: %v", b.Name, b.IndependentStreams)
+	}
+	if b.Nolinger != "enabled" {
+		t.Errorf("%v: Nolinger not enabled: %v", b.Name, b.Nolinger)
+	}
+	if b.Originalto != "enabled" {
+		t.Errorf("%v: Originalto not enabled: %v", b.Name, b.Originalto)
+	}
+	if b.Persist != "enabled" {
+		t.Errorf("%v: Persist not enabled: %v", b.Name, b.Persist)
+	}
+	if b.PreferLastServer != "enabled" {
+		t.Errorf("%v: PreferLastServer not enabled: %v", b.Name, b.PreferLastServer)
+	}
+	if b.SpopCheck != "enabled" {
+		t.Errorf("%v: SpopCheck not enabled: %v", b.Name, b.SpopCheck)
+	}
+	if b.TCPSmartConnect != "enabled" {
+		t.Errorf("%v: TCPSmartConnect not enabled: %v", b.Name, b.TCPSmartConnect)
+	}
+	if b.Transparent != "enabled" {
+		t.Errorf("%v: Transparent not enabled: %v", b.Name, b.Transparent)
+	}
 
 	_, err = b.MarshalBinary()
 	if err != nil {
@@ -282,7 +341,16 @@ func TestCreateEditDeleteBackend(t *testing.T) {
 		Compression: &models.Compression{
 			Offload: true,
 		},
-		LogHealthChecks: "enabled",
+		LogHealthChecks:    "enabled",
+		Checkcache:         "enabled",
+		IndependentStreams: "enabled",
+		Nolinger:           "enabled",
+		Originalto:         "enabled",
+		Persist:            "enabled",
+		PreferLastServer:   "enabled",
+		SpopCheck:          "enabled",
+		TCPSmartConnect:    "enabled",
+		Transparent:        "enabled",
 	}
 
 	err := clientTest.CreateBackend(b, "", version)
@@ -412,6 +480,15 @@ func TestCreateEditDeleteBackend(t *testing.T) {
 				Method: "HEAD",
 				URI:    "/",
 			},
+			Checkcache:         "disabled",
+			IndependentStreams: "disabled",
+			Nolinger:           "disabled",
+			Originalto:         "disabled",
+			Persist:            "disabled",
+			PreferLastServer:   "disabled",
+			SpopCheck:          "disabled",
+			TCPSmartConnect:    "disabled",
+			Transparent:        "disabled",
 		},
 	}
 

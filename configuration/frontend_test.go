@@ -42,7 +42,9 @@ func TestGetFrontends(t *testing.T) { //nolint:gocognit
 		if f.Name != "test" && f.Name != "test_2" {
 			t.Errorf("Expected only test or test_2 frontend, %v found", f.Name)
 		}
+		optionValue := "disabled"
 		if f.Name == "test" {
+			optionValue = "enabled"
 			if f.BindProcess != "odd" {
 				t.Errorf("%v: BindProcess not all: %v", f.Name, f.BindProcess)
 			}
@@ -98,6 +100,31 @@ func TestGetFrontends(t *testing.T) { //nolint:gocognit
 		} else if *f.ClitcpkaIntvl != 10000 {
 			t.Errorf("%v: ClitcpkaIntvl not 10000: %v", f.Name, *f.ClitcpkaIntvl)
 		}
+		if f.HTTPIgnoreProbes != optionValue {
+			t.Errorf("%v: HTTPIgnoreProbes not %s: %v", f.Name, optionValue, f.HTTPIgnoreProbes)
+		}
+		if f.HTTPUseProxyHeader != optionValue {
+			t.Errorf("%v: HTTPUseProxyHeader not %s: %v", f.Name, optionValue, f.HTTPUseProxyHeader)
+		}
+		if f.Httpslog != optionValue {
+			t.Errorf("%v: Httpslog not %s: %v", f.Name, optionValue, f.Httpslog)
+		}
+		if f.IndependentStreams != optionValue {
+			t.Errorf("%v: IndependentStreams not %s: %v", f.Name, optionValue, f.IndependentStreams)
+		}
+		if f.Nolinger != optionValue {
+			t.Errorf("%v: Nolinger not %s: %v", f.Name, optionValue, f.Nolinger)
+		}
+		if f.Originalto != optionValue {
+			t.Errorf("%v: Originalto not %s: %v", f.Name, optionValue, f.Originalto)
+		}
+		if f.SocketStats != optionValue {
+			t.Errorf("%v: SocketStats not %s: %v", f.Name, optionValue, f.SocketStats)
+		}
+		if f.TCPSmartAccept != optionValue {
+			t.Errorf("%v: TCPSmartAccept not %s: %v", f.Name, optionValue, f.TCPSmartAccept)
+		}
+
 	}
 }
 
@@ -211,6 +238,31 @@ func TestGetFrontend(t *testing.T) {
 		}
 	}
 
+	if f.HTTPIgnoreProbes != "enabled" {
+		t.Errorf("%v: HTTPIgnoreProbes not enablesd: %v", f.Name, f.HTTPIgnoreProbes)
+	}
+	if f.HTTPUseProxyHeader != "enabled" {
+		t.Errorf("%v: HTTPUseProxyHeader not enablesd: %v", f.Name, f.HTTPUseProxyHeader)
+	}
+	if f.Httpslog != "enabled" {
+		t.Errorf("%v: Httpslog not enablesd: %v", f.Name, f.Httpslog)
+	}
+	if f.IndependentStreams != "enabled" {
+		t.Errorf("%v: IndependentStreams not enablesd: %v", f.Name, f.IndependentStreams)
+	}
+	if f.Nolinger != "enabled" {
+		t.Errorf("%v: Nolinger not enablesd: %v", f.Name, f.Nolinger)
+	}
+	if f.Originalto != "enabled" {
+		t.Errorf("%v: Originalto not enablesd: %v", f.Name, f.Originalto)
+	}
+	if f.SocketStats != "enabled" {
+		t.Errorf("%v: SocketStats not enablesd: %v", f.Name, f.SocketStats)
+	}
+	if f.TCPSmartAccept != "enabled" {
+		t.Errorf("%v: TCPSmartAccept not enablesd: %v", f.Name, f.TCPSmartAccept)
+	}
+
 	_, err = f.MarshalBinary()
 	if err != nil {
 		t.Error(err.Error())
@@ -244,6 +296,14 @@ func TestCreateEditDeleteFrontend(t *testing.T) {
 		ClitcpkaCnt:              &clitcpkaCnt,
 		ClitcpkaIdle:             &clitcpkaTimeout,
 		ClitcpkaIntvl:            &clitcpkaTimeout,
+		HTTPIgnoreProbes:         "enabled",
+		HTTPUseProxyHeader:       "enabled",
+		Httpslog:                 "enabled",
+		IndependentStreams:       "enabled",
+		Nolinger:                 "enabled",
+		Originalto:               "enabled",
+		SocketStats:              "enabled",
+		TCPSmartAccept:           "enabled",
 	}
 
 	err := clientTest.CreateFrontend(f, "", version)
@@ -292,9 +352,17 @@ func TestCreateEditDeleteFrontend(t *testing.T) {
 		Compression: &models.Compression{
 			Offload: true,
 		},
-		ClitcpkaCnt:   &clitcpkaCnt,
-		ClitcpkaIdle:  &clitcpkaTimeout,
-		ClitcpkaIntvl: &clitcpkaTimeout,
+		ClitcpkaCnt:        &clitcpkaCnt,
+		ClitcpkaIdle:       &clitcpkaTimeout,
+		ClitcpkaIntvl:      &clitcpkaTimeout,
+		HTTPIgnoreProbes:   "disabled",
+		HTTPUseProxyHeader: "disabled",
+		Httpslog:           "disabled",
+		IndependentStreams: "disabled",
+		Nolinger:           "disabled",
+		Originalto:         "disabled",
+		SocketStats:        "disabled",
+		TCPSmartAccept:     "disabled",
 	}
 
 	err = clientTest.EditFrontend("created", f, "", version)

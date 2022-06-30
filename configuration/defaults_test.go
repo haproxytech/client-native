@@ -163,6 +163,45 @@ func TestGetDefaults(t *testing.T) { //nolint:gocognit,gocyclo
 	} else if *d.ClitcpkaIntvl != 10000 {
 		t.Errorf("ClitcpkaIntvl not 10000: %v", *d.ClitcpkaIntvl)
 	}
+	if d.Checkcache != "disabled" {
+		t.Errorf("Checkcache not disabled: %v", d.Checkcache)
+	}
+	if d.HTTPIgnoreProbes != "disabled" {
+		t.Errorf("HTTPIgnoreProbes not disabled: %v", d.HTTPIgnoreProbes)
+	}
+	if d.HTTPUseProxyHeader != "disabled" {
+		t.Errorf("HTTPUseProxyHeader not disabled: %v", d.HTTPUseProxyHeader)
+	}
+	if d.Httpslog != "disabled" {
+		t.Errorf("Httpslog not disabled: %v", d.Httpslog)
+	}
+	if d.IndependentStreams != "disabled" {
+		t.Errorf("IndependentStreams not disabled: %v", d.IndependentStreams)
+	}
+	if d.Nolinger != "disabled" {
+		t.Errorf("Nolinger not disabled: %v", d.Nolinger)
+	}
+	if d.Originalto != "disabled" {
+		t.Errorf("Originalto not disabled: %v", d.Originalto)
+	}
+	if d.Persist != "enabled" {
+		t.Errorf("Persist not enabled: %v", d.Persist)
+	}
+	if d.PreferLastServer != "enabled" {
+		t.Errorf("PreferLastServer not enabled: %v", d.PreferLastServer)
+	}
+	if d.SocketStats != "enabled" {
+		t.Errorf("SocketStats not enabled: %v", d.SocketStats)
+	}
+	if d.TCPSmartAccept != "enabled" {
+		t.Errorf("TCPSmartAccept not enabled: %v", d.TCPSmartAccept)
+	}
+	if d.TCPSmartConnect != "enabled" {
+		t.Errorf("TCPSmartConnect not enabled: %v", d.TCPSmartConnect)
+	}
+	if d.Transparent != "enabled" {
+		t.Errorf("Transparent not enabled: %v", d.Transparent)
+	}
 }
 
 func TestPushDefaults(t *testing.T) {
@@ -219,6 +258,19 @@ func TestPushDefaults(t *testing.T) {
 		ClitcpkaCnt:               &clitcpkaCnt,
 		ClitcpkaIdle:              &clitcpkaTimeout,
 		ClitcpkaIntvl:             &clitcpkaTimeout,
+		Checkcache:                "enabled",
+		HTTPIgnoreProbes:          "enabled",
+		HTTPUseProxyHeader:        "enabled",
+		Httpslog:                  "enabled",
+		IndependentStreams:        "enabled",
+		Nolinger:                  "enabled",
+		Originalto:                "enabled",
+		Persist:                   "disabled",
+		PreferLastServer:          "disabled",
+		SocketStats:               "disabled",
+		TCPSmartAccept:            "disabled",
+		TCPSmartConnect:           "disabled",
+		Transparent:               "disabled",
 	}
 
 	err := clientTest.PushDefaultsConfiguration(d, "", version)

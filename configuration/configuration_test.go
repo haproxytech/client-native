@@ -189,6 +189,19 @@ defaults
   option httplog
   option disable-h2-upgrade
   option log-health-checks
+  no option checkcache
+  no option http-ignore-probes
+  no option http-use-proxy-header
+  no option httpslog
+  no option independent-streams
+  no option nolinger
+  no option originalto
+  option persist
+  option prefer-last-server
+  option socket-stats
+  option tcp-smart-accept
+  option tcp-smart-connect
+  option transparent
   timeout queue 900
   timeout server 2s
   timeout check 2s
@@ -226,6 +239,14 @@ frontend test
   option dontlognull
   option contstats
   option log-separate-errors
+  option http-ignore-probes
+  option http-use-proxy-header
+  option httpslog
+  option independent-streams
+  option nolinger
+  option originalto
+  option socket-stats
+  option tcp-smart-accept
   acl invalid_src  src          0.0.0.0/7 224.0.0.0/3
   acl invalid_src  src_port     0:1023
   acl local_dst    hdr(host) -i localhost
@@ -338,6 +359,14 @@ frontend test_2
   option dontlognull
   option contstats
   option log-separate-errors
+  no option http-ignore-probes
+  no option http-use-proxy-header
+  no option httpslog
+  no option independent-streams
+  no option nolinger
+  no option originalto
+  no option socket-stats
+  no option tcp-smart-accept
   log-tag bla
   option httpclose
   timeout http-request 2s
@@ -368,6 +397,15 @@ backend test
   option httpchk HEAD /
   option tcpka
   option srvtcpka
+  option checkcache
+  option independent-streams
+  option nolinger
+  option originalto
+  option persist
+  option prefer-last-server
+  option spop-check
+  option tcp-smart-connect
+  option transparent
   default-server fall 2s rise 4s inter 5s port 8888
   stick store-request src table test
   stick match src table test
@@ -447,6 +485,15 @@ backend test_2
   option httpchk HEAD /
   option tcpka
   option srvtcpka
+  no option checkcache
+  no option independent-streams
+  no option nolinger
+  no option originalto
+  no option persist
+  no option prefer-last-server
+  no option spop-check
+  no option tcp-smart-connect
+  no option transparent
   default-server fall 2s rise 4s inter 5s port 8888 slowstart 6000
   option contstats
   timeout check 2s
