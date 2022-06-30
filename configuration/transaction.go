@@ -172,12 +172,11 @@ func (t *Transaction) commitTransaction(transactionID string, skipVersion bool) 
 		return nil, err
 	}
 
-	// save to transaction file if transactions are not persistent
-	if !t.PersistentTransactions {
-		if err := t.TransactionClient.Save(transactionFile, transactionID); err != nil {
-			t.failTransaction(transactionID, t.writeFailedTransaction)
-			return nil, NewConfError(ErrErrorChangingConfig, err.Error())
-		}
+	// Always save parsed transaction file in order to validate the exact same
+	// configuration that will be deployed
+	if err := t.TransactionClient.Save(transactionFile, transactionID); err != nil {
+		t.failTransaction(transactionID, t.writeFailedTransaction)
+		return nil, NewConfError(ErrErrorChangingConfig, err.Error())
 	}
 
 	if !skipVersion {
