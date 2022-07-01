@@ -228,6 +228,9 @@ defaults
   clitcpka-cnt 10
   clitcpka-idle 10s
   clitcpka-intvl 10
+  srvtcpka-cnt 10
+  srvtcpka-idle 10s
+  srvtcpka-intvl 10
 
 frontend test
   mode http
@@ -450,6 +453,9 @@ backend test
   no option accept-invalid-http-response
   no option h1-case-adjust-bogus-server
   compression type application/json text/plain
+  srvtcpka-cnt 10
+  srvtcpka-idle 10s
+  srvtcpka-intvl 10
 
 peers mycluster
   peer hapee 192.168.1.1:1023
@@ -511,6 +517,9 @@ backend test_2
   cookie BLA rewrite httponly nocache
   stick-table type ip size 100k expire 1h peers mycluster store http_req_rate(10s)
   http-check expect rstatus some-pattern
+  srvtcpka-cnt 10
+  srvtcpka-idle 10s
+  srvtcpka-intvl 10
 `
 const testPath = "/tmp/haproxy-test.cfg"
 

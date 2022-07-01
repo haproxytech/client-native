@@ -343,6 +343,10 @@ func (s *SectionParser) checkSpecialFields(fieldName string) (match bool, data i
 		return true, s.clitcpkaIdle()
 	case "ClitcpkaIntvl":
 		return true, s.clitcpkaIntvl()
+	case "SrvtcpkaIdle":
+		return true, s.srvtcpkaIdle()
+	case "SrvtcpkaIntvl":
+		return true, s.srvtcpkaIntvl()
 	default:
 		return false, nil
 	}
@@ -1283,6 +1287,24 @@ func (s *SectionParser) clitcpkaIntvl() interface{} {
 	return misc.ParseTimeoutDefaultSeconds(d.Value)
 }
 
+func (s *SectionParser) srvtcpkaIdle() interface{} {
+	data, err := s.get("srvtcpka-idle", false)
+	if err != nil {
+		return nil
+	}
+	d := data.(*types.StringC)
+	return misc.ParseTimeoutDefaultSeconds(d.Value)
+}
+
+func (s *SectionParser) srvtcpkaIntvl() interface{} {
+	data, err := s.get("srvtcpka-intvl", false)
+	if err != nil {
+		return nil
+	}
+	d := data.(*types.StringC)
+	return misc.ParseTimeoutDefaultSeconds(d.Value)
+}
+
 // SectionObject represents a configuration section
 type SectionObject struct {
 	Object  interface{}
@@ -1410,6 +1432,10 @@ func (s *SectionObject) checkSpecialFields(fieldName string, field reflect.Value
 		return true, s.clitcpkaIdle(field)
 	case "ClitcpkaIntvl":
 		return true, s.clitcpkaIntvl(field)
+	case "SrvtcpkaIdle":
+		return true, s.srvtcpkaIdle(field)
+	case "SrvtcpkaIntvl":
+		return true, s.srvtcpkaIntvl(field)
 	default:
 		return false, nil
 	}
@@ -2856,6 +2882,28 @@ func (s *SectionObject) clitcpkaIntvl(field reflect.Value) error {
 	}
 	v := field.Int()
 	return s.set("clitcpka-intvl", types.StringC{Value: fmt.Sprintf("%dms", v)})
+}
+
+func (s *SectionObject) srvtcpkaIdle(field reflect.Value) error {
+	if valueIsNil(field) {
+		return s.set("srvtcpka-idle", nil)
+	}
+	if field.Kind() == reflect.Ptr {
+		field = field.Elem()
+	}
+	v := field.Int()
+	return s.set("srvtcpka-idle", types.StringC{Value: fmt.Sprintf("%dms", v)})
+}
+
+func (s *SectionObject) srvtcpkaIntvl(field reflect.Value) error {
+	if valueIsNil(field) {
+		return s.set("srvtcpka-intvl", nil)
+	}
+	if field.Kind() == reflect.Ptr {
+		field = field.Elem()
+	}
+	v := field.Int()
+	return s.set("srvtcpka-intvl", types.StringC{Value: fmt.Sprintf("%dms", v)})
 }
 
 func (c *client) deleteSection(section parser.Section, name string, transactionID string, version int64) error {

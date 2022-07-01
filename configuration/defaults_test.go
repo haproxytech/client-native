@@ -202,14 +202,29 @@ func TestGetDefaults(t *testing.T) { //nolint:gocognit,gocyclo
 	if d.Transparent != "enabled" {
 		t.Errorf("Transparent not enabled: %v", d.Transparent)
 	}
+	if d.SrvtcpkaCnt == nil {
+		t.Errorf("SrvtcpkaCnt is nil")
+	} else if *d.SrvtcpkaCnt != 10 {
+		t.Errorf("SrvtcpkaCnt not 10: %v", *d.SrvtcpkaCnt)
+	}
+	if d.SrvtcpkaIdle == nil {
+		t.Errorf("SrvtcpkaIdle is nil")
+	} else if *d.SrvtcpkaIdle != 10000 {
+		t.Errorf("SrvtcpkaIdle not 10000: %v", *d.SrvtcpkaIdle)
+	}
+	if d.SrvtcpkaIntvl == nil {
+		t.Errorf("SrvtcpkaIntvl is nil")
+	} else if *d.SrvtcpkaIntvl != 10000 {
+		t.Errorf("SrvtcpkaIntvl not 10000: %v", *d.SrvtcpkaIntvl)
+	}
 }
 
 func TestPushDefaults(t *testing.T) {
 	tOut := int64(6000)
 	tOutS := int64(200)
 	balanceAlgorithm := "leastconn"
-	clitcpkaCnt := int64(10)
-	clitcpkaTimeout := int64(10000)
+	cpkaCnt := int64(10)
+	cpkaTimeout := int64(10000)
 	d := &models.Defaults{
 		Clitcpka:       "disabled",
 		BindProcess:    "1-4",
@@ -255,9 +270,12 @@ func TestPushDefaults(t *testing.T) {
 		AcceptInvalidHTTPResponse: "disabled",
 		DisableH2Upgrade:          "disabled",
 		LogHealthChecks:           "disabled",
-		ClitcpkaCnt:               &clitcpkaCnt,
-		ClitcpkaIdle:              &clitcpkaTimeout,
-		ClitcpkaIntvl:             &clitcpkaTimeout,
+		ClitcpkaCnt:               &cpkaCnt,
+		ClitcpkaIdle:              &cpkaTimeout,
+		ClitcpkaIntvl:             &cpkaTimeout,
+		SrvtcpkaCnt:               &cpkaCnt,
+		SrvtcpkaIdle:              &cpkaTimeout,
+		SrvtcpkaIntvl:             &cpkaTimeout,
 		Checkcache:                "enabled",
 		HTTPIgnoreProbes:          "enabled",
 		HTTPUseProxyHeader:        "enabled",

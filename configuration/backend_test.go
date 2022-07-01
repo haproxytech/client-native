@@ -141,6 +141,21 @@ func TestGetBackends(t *testing.T) { //nolint:gocognit,gocyclo
 		if b.Transparent != optionValue {
 			t.Errorf("%v: Transparent not %s: %v", b.Name, optionValue, b.Transparent)
 		}
+		if b.SrvtcpkaCnt == nil {
+			t.Errorf("%v: SrvtcpkaCnt is nil", b.Name)
+		} else if *b.SrvtcpkaCnt != 10 {
+			t.Errorf("%v: SrvtcpkaCnt not 10: %v", b.Name, *b.SrvtcpkaCnt)
+		}
+		if b.SrvtcpkaIdle == nil {
+			t.Errorf("%v: SrvtcpkaIdle is nil", b.Name)
+		} else if *b.SrvtcpkaIdle != 10000 {
+			t.Errorf("%v: SrvtcpkaIdle not 10000: %v", b.Name, *b.SrvtcpkaIdle)
+		}
+		if b.SrvtcpkaIntvl == nil {
+			t.Errorf("%v: SrvtcpkaIntvl is nil", b.Name)
+		} else if *b.SrvtcpkaIntvl != 10000 {
+			t.Errorf("%v: SrvtcpkaIntvl not 10000: %v", b.Name, *b.SrvtcpkaIntvl)
+		}
 
 	}
 }
@@ -274,6 +289,21 @@ func TestGetBackend(t *testing.T) {
 	if b.Transparent != "enabled" {
 		t.Errorf("%v: Transparent not enabled: %v", b.Name, b.Transparent)
 	}
+	if b.SrvtcpkaCnt == nil {
+		t.Errorf("%v: SrvtcpkaCnt is nil", b.Name)
+	} else if *b.SrvtcpkaCnt != 10 {
+		t.Errorf("%v: SrvtcpkaCnt not 10: %v", b.Name, *b.SrvtcpkaCnt)
+	}
+	if b.SrvtcpkaIdle == nil {
+		t.Errorf("%v: SrvtcpkaIdle is nil", b.Name)
+	} else if *b.SrvtcpkaIdle != 10000 {
+		t.Errorf("%v: SrvtcpkaIdle not 10000: %v", b.Name, *b.SrvtcpkaIdle)
+	}
+	if b.SrvtcpkaIntvl == nil {
+		t.Errorf("%v: SrvtcpkaIntvl is nil", b.Name)
+	} else if *b.SrvtcpkaIntvl != 10000 {
+		t.Errorf("%v: SrvtcpkaIntvl not 10000: %v", b.Name, *b.SrvtcpkaIntvl)
+	}
 
 	_, err = b.MarshalBinary()
 	if err != nil {
@@ -291,6 +321,8 @@ func TestCreateEditDeleteBackend(t *testing.T) {
 	tOut := int64(5)
 	cookieName := "BLA"
 	balanceAlgorithm := "uri"
+	srvtcpkaCnt := int64(10)
+	srvtcpkaTimeout := int64(10000)
 	b := &models.Backend{
 		Name: "created",
 		Mode: "http",
@@ -351,6 +383,9 @@ func TestCreateEditDeleteBackend(t *testing.T) {
 		SpopCheck:          "enabled",
 		TCPSmartConnect:    "enabled",
 		Transparent:        "enabled",
+		SrvtcpkaCnt:        &srvtcpkaCnt,
+		SrvtcpkaIdle:       &srvtcpkaTimeout,
+		SrvtcpkaIntvl:      &srvtcpkaTimeout,
 	}
 
 	err := clientTest.CreateBackend(b, "", version)
@@ -489,6 +524,9 @@ func TestCreateEditDeleteBackend(t *testing.T) {
 			SpopCheck:          "disabled",
 			TCPSmartConnect:    "disabled",
 			Transparent:        "disabled",
+			SrvtcpkaCnt:        &srvtcpkaCnt,
+			SrvtcpkaIdle:       &srvtcpkaTimeout,
+			SrvtcpkaIntvl:      &srvtcpkaTimeout,
 		},
 	}
 
