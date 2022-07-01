@@ -289,6 +289,15 @@ type Defaults struct {
 	// Enum: [enabled disabled]
 	Srvtcpka string `json:"srvtcpka,omitempty"`
 
+	// srvtcpka cnt
+	SrvtcpkaCnt *int64 `json:"srvtcpka_cnt,omitempty"`
+
+	// srvtcpka idle
+	SrvtcpkaIdle *int64 `json:"srvtcpka_idle,omitempty"`
+
+	// srvtcpka intvl
+	SrvtcpkaIntvl *int64 `json:"srvtcpka_intvl,omitempty"`
+
 	// stats options
 	StatsOptions *StatsOptions `json:"stats_options,omitempty"`
 

@@ -1327,6 +1327,18 @@ definitions:
           - disabled
           type: string
           x-display-name: Server TCP Keep Alive
+        srvtcpka_cnt:
+          type: integer
+          x-display-name: Srvtcpka Cnt
+          x-nullable: true
+        srvtcpka_idle:
+          type: integer
+          x-display-name: Srvtcpka Idle
+          x-nullable: true
+        srvtcpka_intvl:
+          type: integer
+          x-display-name: Srvtcpka Intvl
+          x-nullable: true
         stats_options:
           $ref: '#/definitions/stats_options'
         tcp_smart_accept:
@@ -1937,6 +1949,18 @@ definitions:
             mode:
               value: tcp
           x-display-name: Server TCP Keep Alive
+        srvtcpka_cnt:
+          type: integer
+          x-display-name: Srvtcpka Cnt
+          x-nullable: true
+        srvtcpka_idle:
+          type: integer
+          x-display-name: Srvtcpka Idle
+          x-nullable: true
+        srvtcpka_intvl:
+          type: integer
+          x-display-name: Srvtcpka Intvl
+          x-nullable: true
         stats_options:
           $ref: '#/definitions/stats_options'
         stick_table:

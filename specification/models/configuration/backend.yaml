@@ -258,6 +258,18 @@ backend:
       type: string
       enum: [enabled, disabled]
       x-display-name: Transparent
+    srvtcpka_cnt:
+      type: integer
+      x-nullable: true
+      x-display-name: Srvtcpka Cnt
+    srvtcpka_idle:
+      type: integer
+      x-nullable: true
+      x-display-name: Srvtcpka Idle
+    srvtcpka_intvl:
+      type: integer
+      x-nullable: true
+      x-display-name: Srvtcpka Intvl
   additionalProperties: false
   example:
     name: test_backend
