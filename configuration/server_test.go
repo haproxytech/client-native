@@ -140,6 +140,41 @@ func TestGetServer(t *testing.T) {
 	}
 }
 
+func TestGetRingServer(t *testing.T) {
+	v, s, err := clientTest.GetServer("mysyslogsrv", "ring", "myring", "")
+	if err != nil {
+		t.Error(err.Error())
+	}
+
+	if v != version {
+		t.Errorf("Version %v returned, expected %v", v, version)
+	}
+
+	if s.Name != "mysyslogsrv" {
+		t.Errorf("Expected only mysyslogsrv, %v found", s.Name)
+	}
+	if s.Address != "127.0.0.1" {
+		t.Errorf("%v: Address not 127.0.0.1: %v", s.Name, s.Address)
+	}
+	if *s.Port != 6514 {
+		t.Errorf("%v: Port not 6514: %v", s.Name, *s.Port)
+	}
+
+	if s.LogProto != "octet-count" {
+		t.Errorf("%v: log-proto not octet-count: %v", s.Name, s.LogProto)
+	}
+
+	_, err = s.MarshalBinary()
+	if err != nil {
+		t.Error(err.Error())
+	}
+
+	_, _, err = clientTest.GetServer("non-existant", "ring", "myring", "")
+	if err == nil {
+		t.Error("Should throw error, non existant server")
+	}
+}
+
 func TestCreateEditDeleteServer(t *testing.T) {
 	// TestCreateServer
 	port := int64(4300)
