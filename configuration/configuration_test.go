@@ -202,6 +202,12 @@ defaults
   option tcp-smart-accept
   option tcp-smart-connect
   option transparent
+  option dontlog-normal
+  option http-no-delay
+  option splice-auto
+  option splice-request
+  option splice-response
+  option idle-close-on-response
   timeout queue 900
   timeout server 2s
   timeout check 2s
@@ -250,6 +256,12 @@ frontend test
   option originalto
   option socket-stats
   option tcp-smart-accept
+  option dontlog-normal
+  option http-no-delay
+  option splice-auto
+  option splice-request
+  option splice-response
+  option idle-close-on-response
   acl invalid_src  src          0.0.0.0/7 224.0.0.0/3
   acl invalid_src  src_port     0:1023
   acl local_dst    hdr(host) -i localhost
@@ -370,6 +382,12 @@ frontend test_2
   no option originalto
   no option socket-stats
   no option tcp-smart-accept
+  no option dontlog-normal
+  no option http-no-delay
+  no option splice-auto
+  no option splice-request
+  no option splice-response
+  no option idle-close-on-response
   log-tag bla
   option httpclose
   timeout http-request 2s
@@ -409,6 +427,9 @@ backend test
   option spop-check
   option tcp-smart-connect
   option transparent
+  option splice-auto
+  option splice-request
+  option splice-response
   default-server fall 2s rise 4s inter 5s port 8888
   stick store-request src table test
   stick match src table test
@@ -509,6 +530,9 @@ backend test_2
   no option spop-check
   no option tcp-smart-connect
   no option transparent
+  no option splice-auto
+  no option splice-request
+  no option splice-response
   default-server fall 2s rise 4s inter 5s port 8888 slowstart 6000
   option contstats
   timeout check 2s

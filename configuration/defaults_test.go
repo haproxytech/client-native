@@ -202,6 +202,25 @@ func TestGetDefaults(t *testing.T) { //nolint:gocognit,gocyclo
 	if d.Transparent != "enabled" {
 		t.Errorf("Transparent not enabled: %v", d.Transparent)
 	}
+	if d.DontlogNormal != "enabled" {
+		t.Errorf("DontlogNormal not enabled: %v", d.DontlogNormal)
+	}
+	if d.HTTPNoDelay != "enabled" {
+		t.Errorf("HTTPNoDelay not enabled: %v", d.HTTPNoDelay)
+	}
+	if d.SpliceAuto != "enabled" {
+		t.Errorf("SpliceAuto not enabled: %v", d.SpliceAuto)
+	}
+	if d.SpliceRequest != "enabled" {
+		t.Errorf("SpliceRequest not enabled: %v", d.SpliceRequest)
+	}
+	if d.SpliceResponse != "enabled" {
+		t.Errorf("SpliceResponse not enabled: %v", d.SpliceResponse)
+	}
+	if d.IdleCloseOnResponse != "enabled" {
+		t.Errorf("IdleCloseOnResponse not enabled: %v", d.IdleCloseOnResponse)
+	}
+
 	if d.SrvtcpkaCnt == nil {
 		t.Errorf("SrvtcpkaCnt is nil")
 	} else if *d.SrvtcpkaCnt != 10 {
@@ -289,6 +308,12 @@ func TestPushDefaults(t *testing.T) {
 		TCPSmartAccept:            "disabled",
 		TCPSmartConnect:           "disabled",
 		Transparent:               "disabled",
+		DontlogNormal:             "disabled",
+		HTTPNoDelay:               "disabled",
+		SpliceAuto:                "disabled",
+		SpliceRequest:             "disabled",
+		SpliceResponse:            "disabled",
+		IdleCloseOnResponse:       "disabled",
 	}
 
 	err := clientTest.PushDefaultsConfiguration(d, "", version)

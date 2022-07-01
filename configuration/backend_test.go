@@ -141,6 +141,15 @@ func TestGetBackends(t *testing.T) { //nolint:gocognit,gocyclo
 		if b.Transparent != optionValue {
 			t.Errorf("%v: Transparent not %s: %v", b.Name, optionValue, b.Transparent)
 		}
+		if b.SpliceAuto != optionValue {
+			t.Errorf("%v: SpliceAuto not %s: %v", b.Name, optionValue, b.SpliceAuto)
+		}
+		if b.SpliceRequest != optionValue {
+			t.Errorf("%v: SpliceRequest not %s: %v", b.Name, optionValue, b.SpliceRequest)
+		}
+		if b.SpliceResponse != optionValue {
+			t.Errorf("%v: SpliceResponse not %s: %v", b.Name, optionValue, b.SpliceResponse)
+		}
 		if b.SrvtcpkaCnt == nil {
 			t.Errorf("%v: SrvtcpkaCnt is nil", b.Name)
 		} else if *b.SrvtcpkaCnt != 10 {
@@ -289,6 +298,15 @@ func TestGetBackend(t *testing.T) {
 	if b.Transparent != "enabled" {
 		t.Errorf("%v: Transparent not enabled: %v", b.Name, b.Transparent)
 	}
+	if b.SpliceAuto != "enabled" {
+		t.Errorf("%v: SpliceAuto not enabled: %v", b.Name, b.SpliceAuto)
+	}
+	if b.SpliceRequest != "enabled" {
+		t.Errorf("%v: SpliceRequest not enabled: %v", b.Name, b.SpliceRequest)
+	}
+	if b.SpliceResponse != "enabled" {
+		t.Errorf("%v: SpliceResponse not enabled: %v", b.Name, b.SpliceResponse)
+	}
 	if b.SrvtcpkaCnt == nil {
 		t.Errorf("%v: SrvtcpkaCnt is nil", b.Name)
 	} else if *b.SrvtcpkaCnt != 10 {
@@ -383,6 +401,9 @@ func TestCreateEditDeleteBackend(t *testing.T) {
 		SpopCheck:          "enabled",
 		TCPSmartConnect:    "enabled",
 		Transparent:        "enabled",
+		SpliceAuto:         "enabled",
+		SpliceRequest:      "enabled",
+		SpliceResponse:     "enabled",
 		SrvtcpkaCnt:        &srvtcpkaCnt,
 		SrvtcpkaIdle:       &srvtcpkaTimeout,
 		SrvtcpkaIntvl:      &srvtcpkaTimeout,
@@ -524,6 +545,9 @@ func TestCreateEditDeleteBackend(t *testing.T) {
 			SpopCheck:          "disabled",
 			TCPSmartConnect:    "disabled",
 			Transparent:        "disabled",
+			SpliceAuto:         "disabled",
+			SpliceRequest:      "disabled",
+			SpliceResponse:     "disabled",
 			SrvtcpkaCnt:        &srvtcpkaCnt,
 			SrvtcpkaIdle:       &srvtcpkaTimeout,
 			SrvtcpkaIntvl:      &srvtcpkaTimeout,

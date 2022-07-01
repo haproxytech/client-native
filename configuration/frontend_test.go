@@ -124,6 +124,24 @@ func TestGetFrontends(t *testing.T) { //nolint:gocognit
 		if f.TCPSmartAccept != optionValue {
 			t.Errorf("%v: TCPSmartAccept not %s: %v", f.Name, optionValue, f.TCPSmartAccept)
 		}
+		if f.DontlogNormal != optionValue {
+			t.Errorf("%v: DontlogNormal not %s: %v", f.Name, optionValue, f.DontlogNormal)
+		}
+		if f.HTTPNoDelay != optionValue {
+			t.Errorf("%v: HTTPNoDelay not %s: %v", f.Name, optionValue, f.HTTPNoDelay)
+		}
+		if f.SpliceAuto != optionValue {
+			t.Errorf("%v: SpliceAuto not %s: %v", f.Name, optionValue, f.SpliceAuto)
+		}
+		if f.SpliceRequest != optionValue {
+			t.Errorf("%v: SpliceRequest not %s: %v", f.Name, optionValue, f.SpliceRequest)
+		}
+		if f.SpliceResponse != optionValue {
+			t.Errorf("%v: SpliceResponse not %s: %v", f.Name, optionValue, f.SpliceResponse)
+		}
+		if f.IdleCloseOnResponse != optionValue {
+			t.Errorf("%v: IdleCloseOnResponse not %s: %v", f.Name, optionValue, f.IdleCloseOnResponse)
+		}
 
 	}
 }
@@ -262,6 +280,24 @@ func TestGetFrontend(t *testing.T) {
 	if f.TCPSmartAccept != "enabled" {
 		t.Errorf("%v: TCPSmartAccept not enablesd: %v", f.Name, f.TCPSmartAccept)
 	}
+	if f.DontlogNormal != "enabled" {
+		t.Errorf("%v: DontlogNormal not enablesd: %v", f.Name, f.DontlogNormal)
+	}
+	if f.HTTPNoDelay != "enabled" {
+		t.Errorf("%v: HTTPNoDelay not enablesd: %v", f.Name, f.HTTPNoDelay)
+	}
+	if f.SpliceAuto != "enabled" {
+		t.Errorf("%v: SpliceAuto not enablesd: %v", f.Name, f.SpliceAuto)
+	}
+	if f.SpliceRequest != "enabled" {
+		t.Errorf("%v: SpliceRequest not enablesd: %v", f.Name, f.SpliceRequest)
+	}
+	if f.SpliceResponse != "enabled" {
+		t.Errorf("%v: SpliceResponse not enablesd: %v", f.Name, f.SpliceResponse)
+	}
+	if f.IdleCloseOnResponse != "enabled" {
+		t.Errorf("%v: IdleCloseOnResponse not enablesd: %v", f.Name, f.IdleCloseOnResponse)
+	}
 
 	_, err = f.MarshalBinary()
 	if err != nil {
@@ -304,6 +340,12 @@ func TestCreateEditDeleteFrontend(t *testing.T) {
 		Originalto:               "enabled",
 		SocketStats:              "enabled",
 		TCPSmartAccept:           "enabled",
+		DontlogNormal:            "enabled",
+		HTTPNoDelay:              "enabled",
+		SpliceAuto:               "enabled",
+		SpliceRequest:            "enabled",
+		SpliceResponse:           "enabled",
+		IdleCloseOnResponse:      "enabled",
 	}
 
 	err := clientTest.CreateFrontend(f, "", version)
@@ -352,17 +394,23 @@ func TestCreateEditDeleteFrontend(t *testing.T) {
 		Compression: &models.Compression{
 			Offload: true,
 		},
-		ClitcpkaCnt:        &clitcpkaCnt,
-		ClitcpkaIdle:       &clitcpkaTimeout,
-		ClitcpkaIntvl:      &clitcpkaTimeout,
-		HTTPIgnoreProbes:   "disabled",
-		HTTPUseProxyHeader: "disabled",
-		Httpslog:           "disabled",
-		IndependentStreams: "disabled",
-		Nolinger:           "disabled",
-		Originalto:         "disabled",
-		SocketStats:        "disabled",
-		TCPSmartAccept:     "disabled",
+		ClitcpkaCnt:         &clitcpkaCnt,
+		ClitcpkaIdle:        &clitcpkaTimeout,
+		ClitcpkaIntvl:       &clitcpkaTimeout,
+		HTTPIgnoreProbes:    "disabled",
+		HTTPUseProxyHeader:  "disabled",
+		Httpslog:            "disabled",
+		IndependentStreams:  "disabled",
+		Nolinger:            "disabled",
+		Originalto:          "disabled",
+		SocketStats:         "disabled",
+		TCPSmartAccept:      "disabled",
+		DontlogNormal:       "disabled",
+		HTTPNoDelay:         "disabled",
+		SpliceAuto:          "disabled",
+		SpliceRequest:       "disabled",
+		SpliceResponse:      "disabled",
+		IdleCloseOnResponse: "disabled",
 	}
 
 	err = clientTest.EditFrontend("created", f, "", version)
