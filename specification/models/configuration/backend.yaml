@@ -258,6 +258,18 @@ backend:
       type: string
       enum: [enabled, disabled]
       x-display-name: Transparent
+    splice_auto:
+      type: string
+      enum: [enabled, disabled]
+      x-display-name: Splice Auto
+    splice_request:
+      type: string
+      enum: [enabled, disabled]
+      x-display-name: Splice Request
+    splice_response:
+      type: string
+      enum: [enabled, disabled]
+      x-display-name: Splice Response
     srvtcpka_cnt:
       type: integer
       x-nullable: true

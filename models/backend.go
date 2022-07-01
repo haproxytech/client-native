@@ -215,6 +215,18 @@ type Backend struct {
 	// smtpchk params
 	SmtpchkParams *SmtpchkParams `json:"smtpchk_params,omitempty"`
 
+	// splice auto
+	// Enum: [enabled disabled]
+	SpliceAuto string `json:"splice_auto,omitempty"`
+
+	// splice request
+	// Enum: [enabled disabled]
+	SpliceRequest string `json:"splice_request,omitempty"`
+
+	// splice response
+	// Enum: [enabled disabled]
+	SpliceResponse string `json:"splice_response,omitempty"`
+
 	// spop check
 	// Enum: [enabled disabled]
 	SpopCheck string `json:"spop_check,omitempty"`
@@ -423,6 +435,18 @@ func (m *Backend) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateSmtpchkParams(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateSpliceAuto(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateSpliceRequest(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateSpliceResponse(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -1812,6 +1836,135 @@ func (m *Backend) validateSmtpchkParams(formats strfmt.Registry) error {
 			}
 			return err
 		}
+	}
+
+	return nil
+}
+
+var backendTypeSpliceAutoPropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		backendTypeSpliceAutoPropEnum = append(backendTypeSpliceAutoPropEnum, v)
+	}
+}
+
+const (
+
+	// BackendSpliceAutoEnabled captures enum value "enabled"
+	BackendSpliceAutoEnabled string = "enabled"
+
+	// BackendSpliceAutoDisabled captures enum value "disabled"
+	BackendSpliceAutoDisabled string = "disabled"
+)
+
+// prop value enum
+func (m *Backend) validateSpliceAutoEnum(path, location string, value string) error {
+	if err := validate.Enum(path, location, value, backendTypeSpliceAutoPropEnum); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *Backend) validateSpliceAuto(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.SpliceAuto) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateSpliceAutoEnum("splice_auto", "body", m.SpliceAuto); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+var backendTypeSpliceRequestPropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		backendTypeSpliceRequestPropEnum = append(backendTypeSpliceRequestPropEnum, v)
+	}
+}
+
+const (
+
+	// BackendSpliceRequestEnabled captures enum value "enabled"
+	BackendSpliceRequestEnabled string = "enabled"
+
+	// BackendSpliceRequestDisabled captures enum value "disabled"
+	BackendSpliceRequestDisabled string = "disabled"
+)
+
+// prop value enum
+func (m *Backend) validateSpliceRequestEnum(path, location string, value string) error {
+	if err := validate.Enum(path, location, value, backendTypeSpliceRequestPropEnum); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *Backend) validateSpliceRequest(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.SpliceRequest) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateSpliceRequestEnum("splice_request", "body", m.SpliceRequest); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+var backendTypeSpliceResponsePropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		backendTypeSpliceResponsePropEnum = append(backendTypeSpliceResponsePropEnum, v)
+	}
+}
+
+const (
+
+	// BackendSpliceResponseEnabled captures enum value "enabled"
+	BackendSpliceResponseEnabled string = "enabled"
+
+	// BackendSpliceResponseDisabled captures enum value "disabled"
+	BackendSpliceResponseDisabled string = "disabled"
+)
+
+// prop value enum
+func (m *Backend) validateSpliceResponseEnum(path, location string, value string) error {
+	if err := validate.Enum(path, location, value, backendTypeSpliceResponsePropEnum); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *Backend) validateSpliceResponse(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.SpliceResponse) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateSpliceResponseEnum("splice_response", "body", m.SpliceResponse); err != nil {
+		return err
 	}
 
 	return nil

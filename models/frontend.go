@@ -81,6 +81,10 @@ type Frontend struct {
 	// Enum: [enabled disabled]
 	DisableH2Upgrade string `json:"disable_h2_upgrade,omitempty"`
 
+	// dontlog normal
+	// Enum: [enabled disabled]
+	DontlogNormal string `json:"dontlog_normal,omitempty"`
+
 	// dontlognull
 	// Enum: [enabled disabled]
 	Dontlognull string `json:"dontlognull,omitempty"`
@@ -111,6 +115,10 @@ type Frontend struct {
 	// http keep alive timeout
 	HTTPKeepAliveTimeout *int64 `json:"http_keep_alive_timeout,omitempty"`
 
+	// http no delay
+	// Enum: [enabled disabled]
+	HTTPNoDelay string `json:"http_no_delay,omitempty"`
+
 	// http request timeout
 	HTTPRequestTimeout *int64 `json:"http_request_timeout,omitempty"`
 
@@ -124,6 +132,10 @@ type Frontend struct {
 	// httpslog
 	// Enum: [enabled disabled]
 	Httpslog string `json:"httpslog,omitempty"`
+
+	// idle close on response
+	// Enum: [enabled disabled]
+	IdleCloseOnResponse string `json:"idle_close_on_response,omitempty"`
 
 	// independent streams
 	// Enum: [enabled disabled]
@@ -176,6 +188,18 @@ type Frontend struct {
 	// socket stats
 	// Enum: [enabled disabled]
 	SocketStats string `json:"socket_stats,omitempty"`
+
+	// splice auto
+	// Enum: [enabled disabled]
+	SpliceAuto string `json:"splice_auto,omitempty"`
+
+	// splice request
+	// Enum: [enabled disabled]
+	SpliceRequest string `json:"splice_request,omitempty"`
+
+	// splice response
+	// Enum: [enabled disabled]
+	SpliceResponse string `json:"splice_response,omitempty"`
 
 	// stats options
 	StatsOptions *StatsOptions `json:"stats_options,omitempty"`
@@ -233,6 +257,10 @@ func (m *Frontend) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
+	if err := m.validateDontlogNormal(formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.validateDontlognull(formats); err != nil {
 		res = append(res, err)
 	}
@@ -261,11 +289,19 @@ func (m *Frontend) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
+	if err := m.validateHTTPNoDelay(formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.validateHTTPUseProxyHeader(formats); err != nil {
 		res = append(res, err)
 	}
 
 	if err := m.validateHttpslog(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateIdleCloseOnResponse(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -310,6 +346,18 @@ func (m *Frontend) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateSocketStats(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateSpliceAuto(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateSpliceRequest(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateSpliceResponse(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -542,6 +590,49 @@ func (m *Frontend) validateDisableH2Upgrade(formats strfmt.Registry) error {
 
 	// value enum
 	if err := m.validateDisableH2UpgradeEnum("disable_h2_upgrade", "body", m.DisableH2Upgrade); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+var frontendTypeDontlogNormalPropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		frontendTypeDontlogNormalPropEnum = append(frontendTypeDontlogNormalPropEnum, v)
+	}
+}
+
+const (
+
+	// FrontendDontlogNormalEnabled captures enum value "enabled"
+	FrontendDontlogNormalEnabled string = "enabled"
+
+	// FrontendDontlogNormalDisabled captures enum value "disabled"
+	FrontendDontlogNormalDisabled string = "disabled"
+)
+
+// prop value enum
+func (m *Frontend) validateDontlogNormalEnum(path, location string, value string) error {
+	if err := validate.Enum(path, location, value, frontendTypeDontlogNormalPropEnum); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *Frontend) validateDontlogNormal(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.DontlogNormal) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateDontlogNormalEnum("dontlog_normal", "body", m.DontlogNormal); err != nil {
 		return err
 	}
 
@@ -827,6 +918,49 @@ func (m *Frontend) validateHTTPIgnoreProbes(formats strfmt.Registry) error {
 	return nil
 }
 
+var frontendTypeHTTPNoDelayPropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		frontendTypeHTTPNoDelayPropEnum = append(frontendTypeHTTPNoDelayPropEnum, v)
+	}
+}
+
+const (
+
+	// FrontendHTTPNoDelayEnabled captures enum value "enabled"
+	FrontendHTTPNoDelayEnabled string = "enabled"
+
+	// FrontendHTTPNoDelayDisabled captures enum value "disabled"
+	FrontendHTTPNoDelayDisabled string = "disabled"
+)
+
+// prop value enum
+func (m *Frontend) validateHTTPNoDelayEnum(path, location string, value string) error {
+	if err := validate.Enum(path, location, value, frontendTypeHTTPNoDelayPropEnum); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *Frontend) validateHTTPNoDelay(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.HTTPNoDelay) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateHTTPNoDelayEnum("http_no_delay", "body", m.HTTPNoDelay); err != nil {
+		return err
+	}
+
+	return nil
+}
+
 var frontendTypeHTTPUseProxyHeaderPropEnum []interface{}
 
 func init() {
@@ -907,6 +1041,49 @@ func (m *Frontend) validateHttpslog(formats strfmt.Registry) error {
 
 	// value enum
 	if err := m.validateHttpslogEnum("httpslog", "body", m.Httpslog); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+var frontendTypeIdleCloseOnResponsePropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		frontendTypeIdleCloseOnResponsePropEnum = append(frontendTypeIdleCloseOnResponsePropEnum, v)
+	}
+}
+
+const (
+
+	// FrontendIdleCloseOnResponseEnabled captures enum value "enabled"
+	FrontendIdleCloseOnResponseEnabled string = "enabled"
+
+	// FrontendIdleCloseOnResponseDisabled captures enum value "disabled"
+	FrontendIdleCloseOnResponseDisabled string = "disabled"
+)
+
+// prop value enum
+func (m *Frontend) validateIdleCloseOnResponseEnum(path, location string, value string) error {
+	if err := validate.Enum(path, location, value, frontendTypeIdleCloseOnResponsePropEnum); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *Frontend) validateIdleCloseOnResponse(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.IdleCloseOnResponse) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateIdleCloseOnResponseEnum("idle_close_on_response", "body", m.IdleCloseOnResponse); err != nil {
 		return err
 	}
 
@@ -1268,6 +1445,135 @@ func (m *Frontend) validateSocketStats(formats strfmt.Registry) error {
 
 	// value enum
 	if err := m.validateSocketStatsEnum("socket_stats", "body", m.SocketStats); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+var frontendTypeSpliceAutoPropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		frontendTypeSpliceAutoPropEnum = append(frontendTypeSpliceAutoPropEnum, v)
+	}
+}
+
+const (
+
+	// FrontendSpliceAutoEnabled captures enum value "enabled"
+	FrontendSpliceAutoEnabled string = "enabled"
+
+	// FrontendSpliceAutoDisabled captures enum value "disabled"
+	FrontendSpliceAutoDisabled string = "disabled"
+)
+
+// prop value enum
+func (m *Frontend) validateSpliceAutoEnum(path, location string, value string) error {
+	if err := validate.Enum(path, location, value, frontendTypeSpliceAutoPropEnum); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *Frontend) validateSpliceAuto(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.SpliceAuto) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateSpliceAutoEnum("splice_auto", "body", m.SpliceAuto); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+var frontendTypeSpliceRequestPropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		frontendTypeSpliceRequestPropEnum = append(frontendTypeSpliceRequestPropEnum, v)
+	}
+}
+
+const (
+
+	// FrontendSpliceRequestEnabled captures enum value "enabled"
+	FrontendSpliceRequestEnabled string = "enabled"
+
+	// FrontendSpliceRequestDisabled captures enum value "disabled"
+	FrontendSpliceRequestDisabled string = "disabled"
+)
+
+// prop value enum
+func (m *Frontend) validateSpliceRequestEnum(path, location string, value string) error {
+	if err := validate.Enum(path, location, value, frontendTypeSpliceRequestPropEnum); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *Frontend) validateSpliceRequest(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.SpliceRequest) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateSpliceRequestEnum("splice_request", "body", m.SpliceRequest); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+var frontendTypeSpliceResponsePropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		frontendTypeSpliceResponsePropEnum = append(frontendTypeSpliceResponsePropEnum, v)
+	}
+}
+
+const (
+
+	// FrontendSpliceResponseEnabled captures enum value "enabled"
+	FrontendSpliceResponseEnabled string = "enabled"
+
+	// FrontendSpliceResponseDisabled captures enum value "disabled"
+	FrontendSpliceResponseDisabled string = "disabled"
+)
+
+// prop value enum
+func (m *Frontend) validateSpliceResponseEnum(path, location string, value string) error {
+	if err := validate.Enum(path, location, value, frontendTypeSpliceResponsePropEnum); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *Frontend) validateSpliceResponse(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.SpliceResponse) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateSpliceResponseEnum("splice_response", "body", m.SpliceResponse); err != nil {
 		return err
 	}
 

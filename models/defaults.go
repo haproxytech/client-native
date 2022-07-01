@@ -123,6 +123,10 @@ type Defaults struct {
 	// Enum: [enabled disabled]
 	DisableH2Upgrade string `json:"disable_h2_upgrade,omitempty"`
 
+	// dontlog normal
+	// Enum: [enabled disabled]
+	DontlogNormal string `json:"dontlog_normal,omitempty"`
+
 	// dontlognull
 	// Enum: [enabled disabled]
 	Dontlognull string `json:"dontlognull,omitempty"`
@@ -176,6 +180,10 @@ type Defaults struct {
 	// http keep alive timeout
 	HTTPKeepAliveTimeout *int64 `json:"http_keep_alive_timeout,omitempty"`
 
+	// http no delay
+	// Enum: [enabled disabled]
+	HTTPNoDelay string `json:"http_no_delay,omitempty"`
+
 	// http pretend keepalive
 	// Enum: [enabled disabled]
 	HTTPPretendKeepalive string `json:"http_pretend_keepalive,omitempty"`
@@ -200,6 +208,10 @@ type Defaults struct {
 	// httpslog
 	// Enum: [enabled disabled]
 	Httpslog string `json:"httpslog,omitempty"`
+
+	// idle close on response
+	// Enum: [enabled disabled]
+	IdleCloseOnResponse string `json:"idle_close_on_response,omitempty"`
 
 	// independent streams
 	// Enum: [enabled disabled]
@@ -284,6 +296,18 @@ type Defaults struct {
 	// socket stats
 	// Enum: [enabled disabled]
 	SocketStats string `json:"socket_stats,omitempty"`
+
+	// splice auto
+	// Enum: [enabled disabled]
+	SpliceAuto string `json:"splice_auto,omitempty"`
+
+	// splice request
+	// Enum: [enabled disabled]
+	SpliceRequest string `json:"splice_request,omitempty"`
+
+	// splice response
+	// Enum: [enabled disabled]
+	SpliceResponse string `json:"splice_response,omitempty"`
 
 	// srvtcpka
 	// Enum: [enabled disabled]
@@ -398,6 +422,10 @@ func (m *Defaults) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
+	if err := m.validateDontlogNormal(formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.validateDontlognull(formats); err != nil {
 		res = append(res, err)
 	}
@@ -450,6 +478,10 @@ func (m *Defaults) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
+	if err := m.validateHTTPNoDelay(formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.validateHTTPPretendKeepalive(formats); err != nil {
 		res = append(res, err)
 	}
@@ -467,6 +499,10 @@ func (m *Defaults) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateHttpslog(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateIdleCloseOnResponse(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -535,6 +571,18 @@ func (m *Defaults) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateSocketStats(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateSpliceAuto(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateSpliceRequest(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateSpliceResponse(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -1093,6 +1141,49 @@ func (m *Defaults) validateDisableH2Upgrade(formats strfmt.Registry) error {
 	return nil
 }
 
+var defaultsTypeDontlogNormalPropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		defaultsTypeDontlogNormalPropEnum = append(defaultsTypeDontlogNormalPropEnum, v)
+	}
+}
+
+const (
+
+	// DefaultsDontlogNormalEnabled captures enum value "enabled"
+	DefaultsDontlogNormalEnabled string = "enabled"
+
+	// DefaultsDontlogNormalDisabled captures enum value "disabled"
+	DefaultsDontlogNormalDisabled string = "disabled"
+)
+
+// prop value enum
+func (m *Defaults) validateDontlogNormalEnum(path, location string, value string) error {
+	if err := validate.Enum(path, location, value, defaultsTypeDontlogNormalPropEnum); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *Defaults) validateDontlogNormal(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.DontlogNormal) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateDontlogNormalEnum("dontlog_normal", "body", m.DontlogNormal); err != nil {
+		return err
+	}
+
+	return nil
+}
+
 var defaultsTypeDontlognullPropEnum []interface{}
 
 func init() {
@@ -1515,6 +1606,49 @@ func (m *Defaults) validateHTTPIgnoreProbes(formats strfmt.Registry) error {
 	return nil
 }
 
+var defaultsTypeHTTPNoDelayPropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		defaultsTypeHTTPNoDelayPropEnum = append(defaultsTypeHTTPNoDelayPropEnum, v)
+	}
+}
+
+const (
+
+	// DefaultsHTTPNoDelayEnabled captures enum value "enabled"
+	DefaultsHTTPNoDelayEnabled string = "enabled"
+
+	// DefaultsHTTPNoDelayDisabled captures enum value "disabled"
+	DefaultsHTTPNoDelayDisabled string = "disabled"
+)
+
+// prop value enum
+func (m *Defaults) validateHTTPNoDelayEnum(path, location string, value string) error {
+	if err := validate.Enum(path, location, value, defaultsTypeHTTPNoDelayPropEnum); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *Defaults) validateHTTPNoDelay(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.HTTPNoDelay) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateHTTPNoDelayEnum("http_no_delay", "body", m.HTTPNoDelay); err != nil {
+		return err
+	}
+
+	return nil
+}
+
 var defaultsTypeHTTPPretendKeepalivePropEnum []interface{}
 
 func init() {
@@ -1705,6 +1839,49 @@ func (m *Defaults) validateHttpslog(formats strfmt.Registry) error {
 
 	// value enum
 	if err := m.validateHttpslogEnum("httpslog", "body", m.Httpslog); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+var defaultsTypeIdleCloseOnResponsePropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		defaultsTypeIdleCloseOnResponsePropEnum = append(defaultsTypeIdleCloseOnResponsePropEnum, v)
+	}
+}
+
+const (
+
+	// DefaultsIdleCloseOnResponseEnabled captures enum value "enabled"
+	DefaultsIdleCloseOnResponseEnabled string = "enabled"
+
+	// DefaultsIdleCloseOnResponseDisabled captures enum value "disabled"
+	DefaultsIdleCloseOnResponseDisabled string = "disabled"
+)
+
+// prop value enum
+func (m *Defaults) validateIdleCloseOnResponseEnum(path, location string, value string) error {
+	if err := validate.Enum(path, location, value, defaultsTypeIdleCloseOnResponsePropEnum); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *Defaults) validateIdleCloseOnResponse(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.IdleCloseOnResponse) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateIdleCloseOnResponseEnum("idle_close_on_response", "body", m.IdleCloseOnResponse); err != nil {
 		return err
 	}
 
@@ -2282,6 +2459,135 @@ func (m *Defaults) validateSocketStats(formats strfmt.Registry) error {
 
 	// value enum
 	if err := m.validateSocketStatsEnum("socket_stats", "body", m.SocketStats); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+var defaultsTypeSpliceAutoPropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		defaultsTypeSpliceAutoPropEnum = append(defaultsTypeSpliceAutoPropEnum, v)
+	}
+}
+
+const (
+
+	// DefaultsSpliceAutoEnabled captures enum value "enabled"
+	DefaultsSpliceAutoEnabled string = "enabled"
+
+	// DefaultsSpliceAutoDisabled captures enum value "disabled"
+	DefaultsSpliceAutoDisabled string = "disabled"
+)
+
+// prop value enum
+func (m *Defaults) validateSpliceAutoEnum(path, location string, value string) error {
+	if err := validate.Enum(path, location, value, defaultsTypeSpliceAutoPropEnum); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *Defaults) validateSpliceAuto(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.SpliceAuto) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateSpliceAutoEnum("splice_auto", "body", m.SpliceAuto); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+var defaultsTypeSpliceRequestPropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		defaultsTypeSpliceRequestPropEnum = append(defaultsTypeSpliceRequestPropEnum, v)
+	}
+}
+
+const (
+
+	// DefaultsSpliceRequestEnabled captures enum value "enabled"
+	DefaultsSpliceRequestEnabled string = "enabled"
+
+	// DefaultsSpliceRequestDisabled captures enum value "disabled"
+	DefaultsSpliceRequestDisabled string = "disabled"
+)
+
+// prop value enum
+func (m *Defaults) validateSpliceRequestEnum(path, location string, value string) error {
+	if err := validate.Enum(path, location, value, defaultsTypeSpliceRequestPropEnum); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *Defaults) validateSpliceRequest(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.SpliceRequest) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateSpliceRequestEnum("splice_request", "body", m.SpliceRequest); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+var defaultsTypeSpliceResponsePropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		defaultsTypeSpliceResponsePropEnum = append(defaultsTypeSpliceResponsePropEnum, v)
+	}
+}
+
+const (
+
+	// DefaultsSpliceResponseEnabled captures enum value "enabled"
+	DefaultsSpliceResponseEnabled string = "enabled"
+
+	// DefaultsSpliceResponseDisabled captures enum value "disabled"
+	DefaultsSpliceResponseDisabled string = "disabled"
+)
+
+// prop value enum
+func (m *Defaults) validateSpliceResponseEnum(path, location string, value string) error {
+	if err := validate.Enum(path, location, value, defaultsTypeSpliceResponsePropEnum); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *Defaults) validateSpliceResponse(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.SpliceResponse) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateSpliceResponseEnum("splice_response", "body", m.SpliceResponse); err != nil {
 		return err
 	}
 

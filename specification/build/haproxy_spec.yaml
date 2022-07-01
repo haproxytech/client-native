@@ -1120,6 +1120,12 @@ definitions:
           - disabled
           type: string
           x-display-name: Disable HTTP/2 Upgrade
+        dontlog_normal:
+          enum:
+          - enabled
+          - disabled
+          type: string
+          x-display-name: Dontlog Normal
         dontlognull:
           enum:
           - enabled
@@ -1191,6 +1197,12 @@ definitions:
         http_keep_alive_timeout:
           type: integer
           x-nullable: true
+        http_no_delay:
+          enum:
+          - enabled
+          - disabled
+          type: string
+          x-display-name: HTTP No Delay
         http_pretend_keepalive:
           enum:
           - enabled
@@ -1223,6 +1235,12 @@ definitions:
           - disabled
           type: string
           x-display-name: Httpslog
+        idle_close_on_response:
+          enum:
+          - enabled
+          - disabled
+          type: string
+          x-display-name: Idle Close On Response
         independent_streams:
           enum:
           - enabled
@@ -1321,6 +1339,24 @@ definitions:
           - disabled
           type: string
           x-display-name: Socket Stats
+        splice_auto:
+          enum:
+          - enabled
+          - disabled
+          type: string
+          x-display-name: Splice Auto
+        splice_request:
+          enum:
+          - enabled
+          - disabled
+          type: string
+          x-display-name: Splice Request
+        splice_response:
+          enum:
+          - enabled
+          - disabled
+          type: string
+          x-display-name: Splice Response
         srvtcpka:
           enum:
           - enabled
@@ -1454,6 +1490,11 @@ definitions:
           - disabled
           type: string
           x-display-name: Disable HTTP/2 Upgrade
+        dontlog_normal:
+          enum:
+          - enabled
+          - disabled
+          type: string
         dontlognull:
           enum:
           - enabled
@@ -1507,6 +1548,12 @@ definitions:
             mode:
               value: http
           x-nullable: true
+        http_no_delay:
+          enum:
+          - enabled
+          - disabled
+          type: string
+          x-display-name: HTTP No Delay
         http_request_timeout:
           type: integer
           x-dependency:
@@ -1531,6 +1578,12 @@ definitions:
           - disabled
           type: string
           x-display-name: Httpslog
+        idle_close_on_response:
+          enum:
+          - enabled
+          - disabled
+          type: string
+          x-display-name: Idle Close On Response
         independent_streams:
           enum:
           - enabled
@@ -1591,6 +1644,24 @@ definitions:
           - disabled
           type: string
           x-display-name: Socket Stats
+        splice_auto:
+          enum:
+          - enabled
+          - disabled
+          type: string
+          x-display-name: Splice Auto
+        splice_request:
+          enum:
+          - enabled
+          - disabled
+          type: string
+          x-display-name: Splice Request
+        splice_response:
+          enum:
+          - enabled
+          - disabled
+          type: string
+          x-display-name: Splice Response
         stats_options:
           $ref: '#/definitions/stats_options'
         stick_table:
@@ -1934,6 +2005,24 @@ definitions:
           x-nullable: true
         smtpchk_params:
           $ref: '#/definitions/smtpchk_params'
+        splice_auto:
+          enum:
+          - enabled
+          - disabled
+          type: string
+          x-display-name: Splice Auto
+        splice_request:
+          enum:
+          - enabled
+          - disabled
+          type: string
+          x-display-name: Splice Request
+        splice_response:
+          enum:
+          - enabled
+          - disabled
+          type: string
+          x-display-name: Splice Response
         spop_check:
           enum:
           - enabled

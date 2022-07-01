@@ -197,6 +197,29 @@ frontend:
       type: string
       enum: [enabled, disabled]
       x-display-name: Tcp Smart Accept
+    dontlog_normal:
+      type: string
+      enum: [enabled, disabled]
+    http_no_delay:
+      type: string
+      enum: [enabled, disabled]
+      x-display-name: HTTP No Delay
+    splice_auto:
+      type: string
+      enum: [enabled, disabled]
+      x-display-name: Splice Auto
+    splice_request:
+      type: string
+      enum: [enabled, disabled]
+      x-display-name: Splice Request
+    splice_response:
+      type: string
+      enum: [enabled, disabled]
+      x-display-name: Splice Response
+    idle_close_on_response:
+      type: string
+      enum: [enabled, disabled]
+      x-display-name: Idle Close On Response
   additionalProperties: false
   example:
     name: test_frontend
