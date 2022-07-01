@@ -10,8 +10,16 @@ servers:
       - name: backend
         in: query
         description: Parent backend name
-        required: true
         type: string
+      - name: parent_name
+        in: query
+        description: Parent name
+        type: string
+      - name: parent_type
+        in: query
+        description: Parent type
+        type: string
+        enum: [backend, ring]
       - $ref: "#/parameters/transaction_id"
     responses:
       '200':
@@ -41,8 +49,16 @@ servers:
       - name: backend
         in: query
         description: Parent backend name
-        required: true
         type: string
+      - name: parent_name
+        in: query
+        description: Parent name
+        type: string
+      - name: parent_type
+        in: query
+        description: Parent type
+        type: string
+        enum: [backend, ring]
       - name: data
         in: body
         required: true
@@ -86,8 +102,16 @@ servers_one:
       - name: backend
         in: query
         description: Parent backend name
-        required: true
         type: string
+      - name: parent_name
+        in: query
+        description: Parent name
+        type: string
+      - name: parent_type
+        in: query
+        description: Parent type
+        type: string
+        enum: [backend, ring]
       - $ref: "#/parameters/transaction_id"
     responses:
       '200':
@@ -122,8 +146,16 @@ servers_one:
       - name: backend
         in: query
         description: Parent backend name
-        required: true
         type: string
+      - name: parent_name
+        in: query
+        description: Parent name
+        type: string
+      - name: parent_type
+        in: query
+        description: Parent type
+        type: string
+        enum: [backend, ring]
       - name: data
         in: body
         required: true
@@ -166,8 +198,16 @@ servers_one:
       - name: backend
         in: query
         description: Parent backend name
-        required: true
         type: string
+      - name: parent_name
+        in: query
+        description: Parent name
+        type: string
+      - name: parent_type
+        in: query
+        description: Parent type
+        type: string
+        enum: [backend, ring]
       - $ref: "#/parameters/transaction_id"
       - $ref: "#/parameters/version"
       - $ref: "#/parameters/force_reload"

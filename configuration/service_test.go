@@ -180,7 +180,7 @@ func (s *ServiceInitiationSuite) createExistingService(servers models.Servers) e
 		return err
 	}
 	for _, server := range servers {
-		err := s.client.CreateServer(s.serviceName, server, s.transactionID, 0)
+		err := s.client.CreateServer("backend", s.serviceName, server, s.transactionID, 0)
 		if err != nil {
 			return err
 		}
@@ -195,7 +195,7 @@ func (s *ServiceInitiationSuite) createExistingService(servers models.Servers) e
 
 	for i := len(servers); i < baseSlots; i++ {
 		maintServer.Name = fmt.Sprintf("s%d", i+1)
-		err := s.client.CreateServer(s.serviceName, maintServer, s.transactionID, 0)
+		err := s.client.CreateServer("backend", s.serviceName, maintServer, s.transactionID, 0)
 		if err != nil {
 			return err
 		}

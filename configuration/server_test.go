@@ -25,7 +25,7 @@ import (
 )
 
 func TestGetServers(t *testing.T) { //nolint:gocognit,gocyclo
-	v, servers, err := clientTest.GetServers("test", "")
+	v, servers, err := clientTest.GetServers("backend", "test", "")
 	if err != nil {
 		t.Error(err.Error())
 	}
@@ -75,7 +75,7 @@ func TestGetServers(t *testing.T) { //nolint:gocognit,gocyclo
 		}
 	}
 
-	_, servers, err = clientTest.GetServers("test_2", "")
+	_, servers, err = clientTest.GetServers("backend", "test_2", "")
 	if err != nil {
 		t.Error(err.Error())
 	}
@@ -85,7 +85,7 @@ func TestGetServers(t *testing.T) { //nolint:gocognit,gocyclo
 }
 
 func TestGetServer(t *testing.T) {
-	v, s, err := clientTest.GetServer("webserv", "test", "")
+	v, s, err := clientTest.GetServer("webserv", "backend", "test", "")
 	if err != nil {
 		t.Error(err.Error())
 	}
@@ -134,7 +134,7 @@ func TestGetServer(t *testing.T) {
 		t.Error(err.Error())
 	}
 
-	_, _, err = clientTest.GetServer("webserv", "test_2", "")
+	_, _, err = clientTest.GetServer("webserv", "backend", "test_2", "")
 	if err == nil {
 		t.Error("Should throw error, non existant server")
 	}
@@ -165,14 +165,14 @@ func TestCreateEditDeleteServer(t *testing.T) {
 		ProxyV2Options: []string{"ssl", "unique-id"},
 	}
 
-	err := clientTest.CreateServer("test", s, "", version)
+	err := clientTest.CreateServer("backend", "test", s, "", version)
 	if err != nil {
 		t.Error(err.Error())
 	} else {
 		version++
 	}
 
-	v, server, err := clientTest.GetServer("created", "test", "")
+	v, server, err := clientTest.GetServer("created", "backend", "test", "")
 	if err != nil {
 		t.Error(err.Error())
 	}
@@ -187,7 +187,7 @@ func TestCreateEditDeleteServer(t *testing.T) {
 		t.Errorf("Version %v returned, expected %v", v, version)
 	}
 
-	err = clientTest.CreateServer("test", s, "", version)
+	err = clientTest.CreateServer("backend", "test", s, "", version)
 	if err == nil {
 		t.Error("Should throw error server already exists")
 		version++
@@ -209,14 +209,14 @@ func TestCreateEditDeleteServer(t *testing.T) {
 		Slowstart:      &slowStart,
 	}
 
-	err = clientTest.EditServer("created", "test", s, "", version)
+	err = clientTest.EditServer("created", "backend", "test", s, "", version)
 	if err != nil {
 		t.Error(err.Error())
 	} else {
 		version++
 	}
 
-	v, server, err = clientTest.GetServer("created", "test", "")
+	v, server, err = clientTest.GetServer("created", "backend", "test", "")
 	if err != nil {
 		t.Error(err.Error())
 	}
@@ -232,7 +232,7 @@ func TestCreateEditDeleteServer(t *testing.T) {
 	}
 
 	// TestDeleteServer
-	err = clientTest.DeleteServer("created", "test", "", version)
+	err = clientTest.DeleteServer("created", "backend", "test", "", version)
 	if err != nil {
 		t.Error(err.Error())
 	} else {
@@ -243,12 +243,12 @@ func TestCreateEditDeleteServer(t *testing.T) {
 		t.Error("Version not incremented")
 	}
 
-	_, _, err = clientTest.GetServer("created", "test", "")
+	_, _, err = clientTest.GetServer("created", "backend", "test", "")
 	if err == nil {
 		t.Error("DeleteServer failed, server test still exists")
 	}
 
-	err = clientTest.DeleteServer("created", "test_2", "", version)
+	err = clientTest.DeleteServer("created", "backend", "test_2", "", version)
 	if err == nil {
 		t.Error("Should throw error, non existant server")
 		version++

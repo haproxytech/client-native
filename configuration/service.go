@@ -158,7 +158,7 @@ func (s *Service) Update(servers []ServiceServer) (bool, error) {
 
 // GetServers returns the list of servers as they are currently configured in the services backend
 func (s *Service) GetServers() (models.Servers, error) {
-	_, servers, err := s.client.GetServers(s.name, s.transactionID)
+	_, servers, err := s.client.GetServers("backend", s.name, s.transactionID)
 	return servers, err
 }
 
@@ -265,7 +265,7 @@ func (s *Service) getLastNodeIndex(nodeCount int) (int, bool) {
 
 func (s *Service) removeNodesAfterIndex(lastIndex int) error {
 	for i := lastIndex; i < len(s.nodes); i++ {
-		err := s.client.DeleteServer(s.nodes[i].name, s.name, s.transactionID, 0)
+		err := s.client.DeleteServer(s.nodes[i].name, "backend", s.name, s.transactionID, 0)
 		if err != nil {
 			return err
 		}
@@ -289,7 +289,7 @@ func (s *Service) createBackend() (bool, error) {
 }
 
 func (s *Service) loadNodes() (bool, error) {
-	_, servers, err := s.client.GetServers(s.name, s.transactionID)
+	_, servers, err := s.client.GetServers("backend", s.name, s.transactionID)
 	if err != nil {
 		return false, err
 	}
@@ -325,7 +325,7 @@ func (s *Service) updateConfig() (bool, error) {
 			if node.disabled {
 				server.Maintenance = "enabled"
 			}
-			err := s.client.EditServer(node.name, s.name, server, s.transactionID, 0)
+			err := s.client.EditServer(node.name, "backend", s.name, server, s.transactionID, 0)
 			if err != nil {
 				return false, err
 			}
@@ -380,7 +380,7 @@ func (s *Service) addNode() error {
 		Weight:      misc.Int64P(128),
 		Maintenance: "enabled",
 	}
-	err := s.client.CreateServer(s.name, server, s.transactionID, 0)
+	err := s.client.CreateServer("backend", s.name, server, s.transactionID, 0)
 	if err != nil {
 		return err
 	}

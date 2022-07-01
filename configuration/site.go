@@ -139,7 +139,7 @@ func (c *client) CreateSite(data *models.Site, transactionID string, version int
 			if s.Name == "" {
 				s.Name = s.Address + ":" + strconv.FormatInt(*s.Port, 10)
 			}
-			err = c.CreateServer(b.Name, s, t, 0)
+			err = c.CreateServer("backend", b.Name, s, t, 0)
 			if err != nil {
 				res = append(res, err)
 			}
@@ -254,7 +254,7 @@ func (c *client) EditSite(name string, data *models.Site, transactionID string, 
 						res = append(res, err)
 					}
 					for _, s := range b.Servers {
-						errC := c.CreateServer(b.Name, s, t, 0)
+						errC := c.CreateServer("backend", b.Name, s, t, 0)
 						if errC != nil {
 							res = append(res, errC)
 						}
@@ -297,7 +297,7 @@ func (c *client) EditSite(name string, data *models.Site, transactionID string, 
 						for _, confSrv := range confB.Servers {
 							if srv.Name == confSrv.Name {
 								if !reflect.DeepEqual(srv, confSrv) {
-									errS := c.EditServer(srv.Name, b.Name, srv, t, 0)
+									errS := c.EditServer(srv.Name, "backend", b.Name, srv, t, 0)
 									if errS != nil {
 										res = append(res, errS)
 									}
@@ -307,7 +307,7 @@ func (c *client) EditSite(name string, data *models.Site, transactionID string, 
 							}
 						}
 						if !found {
-							err = c.CreateServer(b.Name, srv, t, 0)
+							err = c.CreateServer("backend", b.Name, srv, t, 0)
 							if err != nil {
 								res = append(res, err)
 							}
@@ -323,7 +323,7 @@ func (c *client) EditSite(name string, data *models.Site, transactionID string, 
 							}
 						}
 						if !found {
-							err = c.DeleteServer(confSrv.Name, b.Name, t, 0)
+							err = c.DeleteServer(confSrv.Name, "backend", b.Name, t, 0)
 							if err != nil {
 								res = append(res, err)
 							}
@@ -519,7 +519,7 @@ func (c *client) parseFarm(name string, useAs string, cond string, condTest stri
 	backend := &models.Backend{Name: name}
 	if c.checkSectionExists(parser.Backends, name, p) {
 		if err := ParseSection(backend, parser.Backends, name, p); err == nil {
-			srvs, err := ParseServers(name, p)
+			srvs, err := ParseServers("backend", name, p)
 			if err != nil {
 				srvs = models.Servers{}
 			}

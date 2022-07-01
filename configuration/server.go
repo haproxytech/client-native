@@ -32,11 +32,11 @@ import (
 )
 
 type Server interface {
-	GetServers(backend string, transactionID string) (int64, models.Servers, error)
-	GetServer(name string, backend string, transactionID string) (int64, *models.Server, error)
-	DeleteServer(name string, backend string, transactionID string, version int64) error
-	CreateServer(backend string, data *models.Server, transactionID string, version int64) error
-	EditServer(name string, backend string, data *models.Server, transactionID string, version int64) error
+	GetServers(parentType string, parentName string, transactionID string) (int64, models.Servers, error)
+	GetServer(name string, parentType string, parentName string, transactionID string) (int64, *models.Server, error)
+	DeleteServer(name string, parentType string, parentName string, transactionID string, version int64) error
+	CreateServer(parentType string, parentName string, data *models.Server, transactionID string, version int64) error
+	EditServer(name string, parentType string, parentName string, data *models.Server, transactionID string, version int64) error
 	GetServerSwitchingRules(backend string, transactionID string) (int64, models.ServerSwitchingRules, error)
 	GetServerSwitchingRule(id int64, backend string, transactionID string) (int64, *models.ServerSwitchingRule, error)
 	DeleteServerSwitchingRule(id int64, backend string, transactionID string, version int64) error
@@ -46,7 +46,7 @@ type Server interface {
 
 // GetServers returns configuration version and an array of
 // configured servers in the specified backend. Returns error on fail.
-func (c *client) GetServers(backend string, transactionID string) (int64, models.Servers, error) {
+func (c *client) GetServers(parentType string, parentName string, transactionID string) (int64, models.Servers, error) {
 	p, err := c.GetParser(transactionID)
 	if err != nil {
 		return 0, nil, err
@@ -57,9 +57,9 @@ func (c *client) GetServers(backend string, transactionID string) (int64, models
 		return 0, nil, err
 	}
 
-	servers, err := ParseServers(backend, p)
+	servers, err := ParseServers(parentType, parentName, p)
 	if err != nil {
-		return v, nil, c.HandleError("", "backend", backend, "", false, err)
+		return v, nil, c.HandleError("", parentType, parentName, "", false, err)
 	}
 
 	return v, servers, nil
@@ -67,7 +67,7 @@ func (c *client) GetServers(backend string, transactionID string) (int64, models
 
 // GetServer returns configuration version and a requested server
 // in the specified backend. Returns error on fail or if server does not exist.
-func (c *client) GetServer(name string, backend string, transactionID string) (int64, *models.Server, error) {
+func (c *client) GetServer(name string, parentType string, parentName string, transactionID string) (int64, *models.Server, error) {
 	p, err := c.GetParser(transactionID)
 	if err != nil {
 		return 0, nil, err
@@ -78,9 +78,9 @@ func (c *client) GetServer(name string, backend string, transactionID string) (i
 		return 0, nil, err
 	}
 
-	server, _ := GetServerByName(name, backend, p)
+	server, _ := GetServerByName(name, parentType, parentName, p)
 	if server == nil {
-		return v, nil, NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("Server %s does not exist in backend %s", name, backend))
+		return v, nil, NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("server %s does not exist in %s %s", name, parentName, parentType))
 	}
 
 	return v, server, nil
@@ -88,20 +88,20 @@ func (c *client) GetServer(name string, backend string, transactionID string) (i
 
 // DeleteServer deletes a server in configuration. One of version or transactionID is
 // mandatory. Returns error on fail, nil on success.
-func (c *client) DeleteServer(name string, backend string, transactionID string, version int64) error {
+func (c *client) DeleteServer(name string, parentType string, parentName string, transactionID string, version int64) error {
 	p, t, err := c.loadDataForChange(transactionID, version)
 	if err != nil {
 		return err
 	}
 
-	server, i := GetServerByName(name, backend, p)
+	server, i := GetServerByName(name, parentType, parentName, p)
 	if server == nil {
-		e := NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("Server %s does not exist in backend %s", name, backend))
-		return c.HandleError(name, "backend", backend, t, transactionID == "", e)
+		e := NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("server %s does not exist in %s %s", name, parentName, parentType))
+		return c.HandleError(name, parentType, parentName, t, transactionID == "", e)
 	}
 
-	if err := p.Delete(parser.Backends, backend, "server", i); err != nil {
-		return c.HandleError(name, "backend", backend, t, transactionID == "", err)
+	if err := p.Delete(sectionType(parentType), parentName, "server", i); err != nil {
+		return c.HandleError(name, parentType, parentName, t, transactionID == "", err)
 	}
 
 	if err := c.SaveData(p, t, transactionID == ""); err != nil {
@@ -113,7 +113,7 @@ func (c *client) DeleteServer(name string, backend string, transactionID string,
 
 // CreateServer creates a server in configuration. One of version or transactionID is
 // mandatory. Returns error on fail, nil on success.
-func (c *client) CreateServer(backend string, data *models.Server, transactionID string, version int64) error {
+func (c *client) CreateServer(parentType string, parentName string, data *models.Server, transactionID string, version int64) error {
 	if c.UseModelsValidation {
 		validationErr := data.Validate(strfmt.Default)
 		if validationErr != nil {
@@ -125,14 +125,14 @@ func (c *client) CreateServer(backend string, data *models.Server, transactionID
 		return err
 	}
 
-	server, _ := GetServerByName(data.Name, backend, p)
+	server, _ := GetServerByName(data.Name, parentType, parentName, p)
 	if server != nil {
-		e := NewConfError(ErrObjectAlreadyExists, fmt.Sprintf("Server %s already exists in backend %s", data.Name, backend))
-		return c.HandleError(data.Name, "backend", backend, t, transactionID == "", e)
+		e := NewConfError(ErrObjectAlreadyExists, fmt.Sprintf("server %s already exists in %s %s", data.Name, parentName, parentType))
+		return c.HandleError(data.Name, parentType, parentName, t, transactionID == "", e)
 	}
 
-	if err := p.Insert(parser.Backends, backend, "server", SerializeServer(*data), -1); err != nil {
-		return c.HandleError(data.Name, "backend", backend, t, transactionID == "", err)
+	if err := p.Insert(sectionType(parentType), parentName, "server", SerializeServer(*data), -1); err != nil {
+		return c.HandleError(data.Name, parentType, parentName, t, transactionID == "", err)
 	}
 
 	if err := c.SaveData(p, t, transactionID == ""); err != nil {
@@ -143,7 +143,7 @@ func (c *client) CreateServer(backend string, data *models.Server, transactionID
 
 // EditServer edits a server in configuration. One of version or transactionID is
 // mandatory. Returns error on fail, nil on success.
-func (c *client) EditServer(name string, backend string, data *models.Server, transactionID string, version int64) error {
+func (c *client) EditServer(name string, parentType string, parentName string, data *models.Server, transactionID string, version int64) error {
 	if c.UseModelsValidation {
 		validationErr := data.Validate(strfmt.Default)
 		if validationErr != nil {
@@ -155,14 +155,14 @@ func (c *client) EditServer(name string, backend string, data *models.Server, tr
 		return err
 	}
 
-	server, i := GetServerByName(name, backend, p)
+	server, i := GetServerByName(name, parentType, parentName, p)
 	if server == nil {
-		e := NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("Server %v does not exist in backend %s", name, backend))
-		return c.HandleError(data.Name, "backend", backend, t, transactionID == "", e)
+		e := NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("server %v does not exist in %s %s", name, parentName, parentType))
+		return c.HandleError(data.Name, parentType, parentName, t, transactionID == "", e)
 	}
 
-	if err := p.Set(parser.Backends, backend, "server", SerializeServer(*data), i); err != nil {
-		return c.HandleError(data.Name, "backend", backend, t, transactionID == "", err)
+	if err := p.Set(sectionType(parentType), parentName, "server", SerializeServer(*data), i); err != nil {
+		return c.HandleError(data.Name, parentType, parentName, t, transactionID == "", err)
 	}
 
 	if err := c.SaveData(p, t, transactionID == ""); err != nil {
@@ -171,10 +171,10 @@ func (c *client) EditServer(name string, backend string, data *models.Server, tr
 	return nil
 }
 
-func ParseServers(backend string, p parser.Parser) (models.Servers, error) {
+func ParseServers(parentType string, parentName string, p parser.Parser) (models.Servers, error) {
 	servers := models.Servers{}
 
-	data, err := p.Get(parser.Backends, backend, "server", false)
+	data, err := p.Get(sectionType(parentType), parentName, "server", false)
 	if err != nil {
 		if errors.Is(err, parser_errors.ErrFetch) {
 			return servers, nil
@@ -784,8 +784,8 @@ func SerializeServer(s models.Server) types.Server { //nolint:gocognit,gocyclo,c
 	return srv
 }
 
-func GetServerByName(name string, backend string, p parser.Parser) (*models.Server, int) {
-	servers, err := ParseServers(backend, p)
+func GetServerByName(name string, parentType string, parentName string, p parser.Parser) (*models.Server, int) {
+	servers, err := ParseServers(parentType, parentName, p)
 	if err != nil {
 		return nil, 0
 	}
@@ -796,4 +796,14 @@ func GetServerByName(name string, backend string, p parser.Parser) (*models.Serv
 		}
 	}
 	return nil, 0
+}
+
+func sectionType(parentType string) parser.Section {
+	var sectionType parser.Section
+	if parentType == "backend" {
+		sectionType = parser.Backends
+	} else if parentType == "ring" {
+		sectionType = parser.Ring
+	}
+	return sectionType
 }

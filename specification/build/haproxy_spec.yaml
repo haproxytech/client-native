@@ -10870,7 +10870,17 @@ paths:
         - description: Parent backend name
           in: query
           name: backend
-          required: true
+          type: string
+        - description: Parent name
+          in: query
+          name: parent_name
+          type: string
+        - description: Parent type
+          enum:
+          - backend
+          - ring
+          in: query
+          name: parent_type
           type: string
         - $ref: '#/parameters/transaction_id'
         responses:
@@ -10901,7 +10911,17 @@ paths:
         - description: Parent backend name
           in: query
           name: backend
-          required: true
+          type: string
+        - description: Parent name
+          in: query
+          name: parent_name
+          type: string
+        - description: Parent type
+          enum:
+          - backend
+          - ring
+          in: query
+          name: parent_type
           type: string
         - in: body
           name: data
@@ -10946,7 +10966,17 @@ paths:
         - description: Parent backend name
           in: query
           name: backend
-          required: true
+          type: string
+        - description: Parent name
+          in: query
+          name: parent_name
+          type: string
+        - description: Parent type
+          enum:
+          - backend
+          - ring
+          in: query
+          name: parent_type
           type: string
         - $ref: '#/parameters/transaction_id'
         - $ref: '#/parameters/version'
@@ -10979,7 +11009,17 @@ paths:
         - description: Parent backend name
           in: query
           name: backend
-          required: true
+          type: string
+        - description: Parent name
+          in: query
+          name: parent_name
+          type: string
+        - description: Parent type
+          enum:
+          - backend
+          - ring
+          in: query
+          name: parent_type
           type: string
         - $ref: '#/parameters/transaction_id'
         responses:
@@ -11015,7 +11055,17 @@ paths:
         - description: Parent backend name
           in: query
           name: backend
-          required: true
+          type: string
+        - description: Parent name
+          in: query
+          name: parent_name
+          type: string
+        - description: Parent type
+          enum:
+          - backend
+          - ring
+          in: query
+          name: parent_type
           type: string
         - in: body
           name: data
