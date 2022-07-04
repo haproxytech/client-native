@@ -504,6 +504,28 @@ func TestGetGlobal(t *testing.T) {
 	} else {
 		t.Errorf("SetVarFmts lenght is %v, expected 2", len(global.SetVarFmts))
 	}
+	if len(global.PresetEnvs) == 1 {
+		if *global.PresetEnvs[0].Name != "first" {
+			t.Errorf("esetEnvs[0] Name is %v, expected first", *global.PresetEnvs[0].Name)
+		}
+		if *global.PresetEnvs[0].Value != "order" {
+			t.Errorf("esetEnvs[0] Value is %v, expected order", *global.PresetEnvs[0].Name)
+		}
+	}
+	if len(global.SetEnvs) == 1 {
+		if *global.SetEnvs[0].Name != "third" {
+			t.Errorf("setEnvs[0] Name is %v, expected third", *global.PresetEnvs[0].Name)
+		}
+		if *global.SetEnvs[0].Value != "sister" {
+			t.Errorf("setEnvs[0] Value is %v, expected sister", *global.PresetEnvs[0].Name)
+		}
+	}
+	if global.Resetenv != "first second" {
+		t.Errorf("Resetenv is %v, expected first second", global.Resetenv)
+	}
+	if global.Unsetenv != "third fourth" {
+		t.Errorf("Unsetenv is %v, expected third fourth", global.Resetenv)
+	}
 }
 
 func TestPutGlobal(t *testing.T) {

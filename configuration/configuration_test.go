@@ -172,6 +172,10 @@ global
   set-var proc.threshold int(200),sub(proc.prio)
   set-var-fmt proc.bootid "%pid|%t"
   set-var-fmt proc.current_state "primary"
+  presetenv first order
+  setenv third sister
+  resetenv first second
+  unsetenv third fourth
 
 defaults
   maxconn 2000

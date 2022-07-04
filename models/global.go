@@ -43,8 +43,14 @@ type Global struct {
 	// h1 case adjusts
 	H1CaseAdjusts []*H1CaseAdjust `json:"h1_case_adjust"`
 
+	// preset envs
+	PresetEnvs []*PresetEnv `json:"presetenv"`
+
 	// runtime a p is
 	RuntimeAPIs []*RuntimeAPI `json:"runtime_apis"`
+
+	// set envs
+	SetEnvs []*SetEnv `json:"setenv"`
 
 	// set var fmts
 	SetVarFmts []*SetVarFmt `json:"set_var_fmt"`
@@ -216,6 +222,9 @@ type Global struct {
 	// quiet
 	Quiet bool `json:"quiet,omitempty"`
 
+	// resetenv
+	Resetenv string `json:"resetenv,omitempty"`
+
 	// server state base
 	// Pattern: ^[^\s]+$
 	ServerStateBase string `json:"server_state_base,omitempty"`
@@ -292,6 +301,9 @@ type Global struct {
 	// ulimit n
 	Ulimitn int64 `json:"ulimit_n,omitempty"`
 
+	// unsetenv
+	Unsetenv string `json:"unsetenv,omitempty"`
+
 	// user
 	// Pattern: ^[^\s]+$
 	User string `json:"user,omitempty"`
@@ -315,7 +327,15 @@ func (m *Global) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
+	if err := m.validatePresetEnvs(formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.validateRuntimeAPIs(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateSetEnvs(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -459,6 +479,31 @@ func (m *Global) validateH1CaseAdjusts(formats strfmt.Registry) error {
 	return nil
 }
 
+func (m *Global) validatePresetEnvs(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.PresetEnvs) { // not required
+		return nil
+	}
+
+	for i := 0; i < len(m.PresetEnvs); i++ {
+		if swag.IsZero(m.PresetEnvs[i]) { // not required
+			continue
+		}
+
+		if m.PresetEnvs[i] != nil {
+			if err := m.PresetEnvs[i].Validate(formats); err != nil {
+				if ve, ok := err.(*errors.Validation); ok {
+					return ve.ValidateName("presetenv" + "." + strconv.Itoa(i))
+				}
+				return err
+			}
+		}
+
+	}
+
+	return nil
+}
+
 func (m *Global) validateRuntimeAPIs(formats strfmt.Registry) error {
 
 	if swag.IsZero(m.RuntimeAPIs) { // not required
@@ -474,6 +519,31 @@ func (m *Global) validateRuntimeAPIs(formats strfmt.Registry) error {
 			if err := m.RuntimeAPIs[i].Validate(formats); err != nil {
 				if ve, ok := err.(*errors.Validation); ok {
 					return ve.ValidateName("runtime_apis" + "." + strconv.Itoa(i))
+				}
+				return err
+			}
+		}
+
+	}
+
+	return nil
+}
+
+func (m *Global) validateSetEnvs(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.SetEnvs) { // not required
+		return nil
+	}
+
+	for i := 0; i < len(m.SetEnvs); i++ {
+		if swag.IsZero(m.SetEnvs[i]) { // not required
+			continue
+		}
+
+		if m.SetEnvs[i] != nil {
+			if err := m.SetEnvs[i].Validate(formats); err != nil {
+				if ve, ok := err.(*errors.Validation); ok {
+					return ve.ValidateName("setenv" + "." + strconv.Itoa(i))
 				}
 				return err
 			}
@@ -1483,6 +1553,74 @@ func (m *LuaPrependPath) UnmarshalBinary(b []byte) error {
 	return nil
 }
 
+// PresetEnv preset env
+//
+// swagger:model PresetEnv
+type PresetEnv struct {
+
+	// name
+	// Required: true
+	Name *string `json:"name"`
+
+	// value
+	// Required: true
+	Value *string `json:"value"`
+}
+
+// Validate validates this preset env
+func (m *PresetEnv) Validate(formats strfmt.Registry) error {
+	var res []error
+
+	if err := m.validateName(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateValue(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if len(res) > 0 {
+		return errors.CompositeValidationError(res...)
+	}
+	return nil
+}
+
+func (m *PresetEnv) validateName(formats strfmt.Registry) error {
+
+	if err := validate.Required("name", "body", m.Name); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *PresetEnv) validateValue(formats strfmt.Registry) error {
+
+	if err := validate.Required("value", "body", m.Value); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+// MarshalBinary interface implementation
+func (m *PresetEnv) MarshalBinary() ([]byte, error) {
+	if m == nil {
+		return nil, nil
+	}
+	return swag.WriteJSON(m)
+}
+
+// UnmarshalBinary interface implementation
+func (m *PresetEnv) UnmarshalBinary(b []byte) error {
+	var res PresetEnv
+	if err := swag.ReadJSON(b, &res); err != nil {
+		return err
+	}
+	*m = res
+	return nil
+}
+
 // RuntimeAPI runtime API
 //
 // swagger:model RuntimeAPI
@@ -1719,6 +1857,74 @@ func (m *SetVar) MarshalBinary() ([]byte, error) {
 // UnmarshalBinary interface implementation
 func (m *SetVar) UnmarshalBinary(b []byte) error {
 	var res SetVar
+	if err := swag.ReadJSON(b, &res); err != nil {
+		return err
+	}
+	*m = res
+	return nil
+}
+
+// SetEnv set env
+//
+// swagger:model SetEnv
+type SetEnv struct {
+
+	// name
+	// Required: true
+	Name *string `json:"name"`
+
+	// value
+	// Required: true
+	Value *string `json:"value"`
+}
+
+// Validate validates this set env
+func (m *SetEnv) Validate(formats strfmt.Registry) error {
+	var res []error
+
+	if err := m.validateName(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateValue(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if len(res) > 0 {
+		return errors.CompositeValidationError(res...)
+	}
+	return nil
+}
+
+func (m *SetEnv) validateName(formats strfmt.Registry) error {
+
+	if err := validate.Required("name", "body", m.Name); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *SetEnv) validateValue(formats strfmt.Registry) error {
+
+	if err := validate.Required("value", "body", m.Value); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+// MarshalBinary interface implementation
+func (m *SetEnv) MarshalBinary() ([]byte, error) {
+	if m == nil {
+		return nil, nil
+	}
+	return swag.WriteJSON(m)
+}
+
+// UnmarshalBinary interface implementation
+func (m *SetEnv) UnmarshalBinary(b []byte) error {
+	var res SetEnv
 	if err := swag.ReadJSON(b, &res); err != nil {
 		return err
 	}

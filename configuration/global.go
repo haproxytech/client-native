@@ -894,6 +894,58 @@ func ParseGlobalSection(p parser.Parser) (*models.Global, error) { //nolint:goco
 		}
 	}
 
+	var presetEnvs []*models.PresetEnv
+	data, err = p.Get(parser.Global, parser.GlobalSectionName, "presetenv")
+	if err == nil {
+		envs, ok := data.([]types.StringKeyValueC)
+		if !ok {
+			return nil, misc.CreateTypeAssertError("presetenv")
+		}
+		for _, e := range envs {
+			env := &models.PresetEnv{
+				Name:  &e.Key,
+				Value: &e.Value,
+			}
+			presetEnvs = append(presetEnvs, env)
+		}
+	}
+
+	var setEnvs []*models.SetEnv
+	data, err = p.Get(parser.Global, parser.GlobalSectionName, "setenv")
+	if err == nil {
+		envs, ok := data.([]types.StringKeyValueC)
+		if !ok {
+			return nil, misc.CreateTypeAssertError("setenv")
+		}
+		for _, e := range envs {
+			env := &models.SetEnv{
+				Name:  &e.Key,
+				Value: &e.Value,
+			}
+			setEnvs = append(setEnvs, env)
+		}
+	}
+
+	var resetEnv string
+	data, err = p.Get(parser.Global, parser.GlobalSectionName, "resetenv")
+	if err == nil {
+		resetEnvParser, ok := data.(*types.StringSliceC)
+		if !ok {
+			return nil, misc.CreateTypeAssertError("resetenv")
+		}
+		resetEnv = strings.Join(resetEnvParser.Value, " ")
+	}
+
+	var unsetEnv string
+	data, err = p.Get(parser.Global, parser.GlobalSectionName, "unsetenv")
+	if err == nil {
+		unsetEnvParser, ok := data.(*types.StringSliceC)
+		if !ok {
+			return nil, misc.CreateTypeAssertError("unsetenv")
+		}
+		unsetEnv = strings.Join(unsetEnvParser.Value, " ")
+	}
+
 	tuneOptions, err := parseTuneOptions(p)
 	if err != nil {
 		return nil, err
@@ -916,6 +968,10 @@ func ParseGlobalSection(p parser.Parser) (*models.Global, error) { //nolint:goco
 	}
 
 	global := &models.Global{
+		PresetEnvs:                        presetEnvs,
+		SetEnvs:                           setEnvs,
+		Resetenv:                          resetEnv,
+		Unsetenv:                          unsetEnv,
 		UID:                               uid,
 		User:                              user,
 		Gid:                               gid,
@@ -1780,6 +1836,54 @@ func SerializeGlobalSection(p parser.Parser, data *models.Global) error { //noli
 		}
 	}
 	if err := p.Set(parser.Global, parser.GlobalSectionName, "set-var-fmt", setVarFmts); err != nil {
+		return err
+	}
+
+	presetEnvs := []types.StringKeyValueC{}
+	if data.PresetEnvs != nil && len(data.PresetEnvs) > 0 {
+		for _, presetEnv := range data.PresetEnvs {
+			if presetEnv != nil {
+				env := types.StringKeyValueC{
+					Key:   *presetEnv.Name,
+					Value: *presetEnv.Value,
+				}
+				presetEnvs = append(presetEnvs, env)
+			}
+		}
+	}
+	if err := p.Set(parser.Global, parser.GlobalSectionName, "presetenv", presetEnvs); err != nil {
+		return err
+	}
+
+	setEnvs := []types.StringKeyValueC{}
+	if data.SetEnvs != nil && len(data.SetEnvs) > 0 {
+		for _, presetEnv := range data.SetEnvs {
+			if presetEnv != nil {
+				env := types.StringKeyValueC{
+					Key:   *presetEnv.Name,
+					Value: *presetEnv.Value,
+				}
+				setEnvs = append(setEnvs, env)
+			}
+		}
+	}
+	if err := p.Set(parser.Global, parser.GlobalSectionName, "setenv", setEnvs); err != nil {
+		return err
+	}
+
+	resetenv := &types.StringSliceC{}
+	if data.Resetenv == "" {
+		resetenv.Value = strings.Split(data.Resetenv, " ")
+	}
+	if err := p.Set(parser.Global, parser.GlobalSectionName, "resetenv", resetenv); err != nil {
+		return err
+	}
+
+	unsetenv := &types.StringSliceC{}
+	if data.Unsetenv == "" {
+		unsetenv.Value = strings.Split(data.Unsetenv, " ")
+	}
+	if err := p.Set(parser.Global, parser.GlobalSectionName, "unsetenv", unsetenv); err != nil {
 		return err
 	}
 

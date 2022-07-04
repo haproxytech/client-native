@@ -598,4 +598,44 @@ global:
           format:
             type: string
             x-display-name: Format
+    presetenv:
+      type: array
+      x-go-name: PresetEnvs
+      x-display-name: Preset environment variables
+      items:
+        type: object
+        x-go-name: PresetEnv
+        required:
+          - name
+          - value
+        properties:
+          name:
+            type: string
+            x-display-name: Name
+          value:
+            type: string
+            x-display-name: Value
+    setenv:
+      type: array
+      x-go-name: SetEnvs
+      x-display-name: Set environment variables
+      items:
+        type: object
+        x-go-name: SetEnv
+        required:
+          - name
+          - value
+        properties:
+          name:
+            type: string
+            x-display-name: Name
+          value:
+            type: string
+            x-display-name: Value
+    resetenv:
+      type: string
+      x-display-name: Remove all environment variables except the ones specified
+    unsetenv:
+      type: string
+      x-display-name: Removes environment variables specified in arguments
   additionalProperties: false

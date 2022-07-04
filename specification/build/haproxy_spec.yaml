@@ -618,6 +618,23 @@ definitions:
           x-display-name: PID File
         pp2_never_send_local:
           type: boolean
+        presetenv:
+          items:
+            properties:
+              name:
+                type: string
+                x-display-name: Name
+              value:
+                type: string
+                x-display-name: Value
+            required:
+            - name
+            - value
+            type: object
+            x-go-name: PresetEnv
+          type: array
+          x-display-name: Preset environment variables
+          x-go-name: PresetEnvs
         profiling_tasks:
           enum:
           - auto
@@ -627,6 +644,9 @@ definitions:
           x-display-name: Enable or disables per-task CPU profiling
         quiet:
           type: boolean
+        resetenv:
+          type: string
+          x-display-name: Remove all environment variables except the ones specified
         runtime_apis:
           items:
             allOf:
@@ -686,6 +706,23 @@ definitions:
           type: array
           x-display-name: Set variable formats
           x-go-name: SetVarFmts
+        setenv:
+          items:
+            properties:
+              name:
+                type: string
+                x-display-name: Name
+              value:
+                type: string
+                x-display-name: Value
+            required:
+            - name
+            - value
+            type: object
+            x-go-name: SetEnv
+          type: array
+          x-display-name: Set environment variables
+          x-go-name: SetEnvs
         spread_checks:
           type: integer
           x-display-name: Add some randomness in the check interval
@@ -983,6 +1020,9 @@ definitions:
           x-display-name: UID
         ulimit_n:
           type: integer
+        unsetenv:
+          type: string
+          x-display-name: Removes environment variables specified in arguments
         user:
           pattern: ^[^\s]+$
           type: string
