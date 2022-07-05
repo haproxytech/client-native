@@ -20,6 +20,7 @@ import (
 	"reflect"
 	"testing"
 
+	"github.com/haproxytech/client-native/v3/misc"
 	"github.com/haproxytech/client-native/v3/models"
 )
 
@@ -164,6 +165,65 @@ func TestGetBackends(t *testing.T) { //nolint:gocognit,gocyclo
 			t.Errorf("%v: SrvtcpkaIntvl is nil", b.Name)
 		} else if *b.SrvtcpkaIntvl != 10000 {
 			t.Errorf("%v: SrvtcpkaIntvl not 10000: %v", b.Name, *b.SrvtcpkaIntvl)
+		}
+		if b.StatsOptions == nil {
+			t.Errorf("%v: StatsOptions is nil", b.Name)
+		}
+		if b.StatsOptions.StatsShowModules != true {
+			t.Error("StatsShowModules not set")
+		}
+		if b.StatsOptions.StatsRealm != true {
+			t.Error("StatsRealm not set")
+		}
+		if b.StatsOptions.StatsRealmRealm == nil {
+			t.Errorf("%v: StatsRealmRealm is nil", b.Name)
+		} else if *b.StatsOptions.StatsRealmRealm != `HAProxy\\ Statistics` {
+			t.Errorf("%v: StatsRealmRealm not 'HAProxy Statistics': %v", b.Name, *b.StatsOptions.StatsRealmRealm)
+		}
+		if len(b.StatsOptions.StatsAuths) != 2 {
+			t.Errorf("%v: StatsAuths expected 2 instances got: %v", b.Name, len(b.StatsOptions.StatsAuths))
+		}
+		if b.StatsOptions.StatsAuths[0].User == nil {
+			t.Errorf("%v: StatsAuths 0 User is nil", b.Name)
+		} else if *b.StatsOptions.StatsAuths[0].User != "admin" {
+			t.Errorf("%v: StatsAuths 0 User not admin: %v", b.Name, *b.StatsOptions.StatsAuths[0])
+		}
+		if b.StatsOptions.StatsAuths[0].Passwd == nil {
+			t.Errorf("%v: StatsAuths 0 Passwd is nil", b.Name)
+		} else if *b.StatsOptions.StatsAuths[0].Passwd != "AdMiN123" {
+			t.Errorf("%v: StatsAuths 0 Passwd not AdMiN123: %v", b.Name, *b.StatsOptions.StatsAuths[0].Passwd)
+		}
+		if b.StatsOptions.StatsAuths[1].User == nil {
+			t.Errorf("%v: StatsAuths 1 User is nil", b.Name)
+		} else if *b.StatsOptions.StatsAuths[1].User != "admin2" {
+			t.Errorf("%v: StatsAuths 1 User not admin2: %v", b.Name, *b.StatsOptions.StatsAuths[1].User)
+		}
+		if b.StatsOptions.StatsAuths[1].Passwd == nil {
+			t.Errorf("%v: StatsAuths 1 Passwd is nil", b.Name)
+		} else if *b.StatsOptions.StatsAuths[1].Passwd != "AdMiN1234" {
+			t.Errorf("%v: StatsAuths 1 Passwd not AdMiN1234: %v", b.Name, *b.StatsOptions.StatsAuths[1].Passwd)
+		}
+		if len(b.StatsOptions.StatsHTTPRequests) != 2 {
+			t.Errorf("%v: StatsHTTPRequests expected 2 instances got: %v", b.Name, len(b.StatsOptions.StatsHTTPRequests))
+		}
+		if b.StatsOptions.StatsHTTPRequests[0].Type == nil {
+			t.Errorf("%v: StatsHTTPRequests 0 Type is nil", b.Name)
+		} else if *b.StatsOptions.StatsHTTPRequests[0].Type != "auth" {
+			t.Errorf("%v: StatsHTTPRequests 0 Type not auth: %v", b.Name, *b.StatsOptions.StatsHTTPRequests[0].Type)
+		}
+		if b.StatsOptions.StatsHTTPRequests[0].Realm != `HAProxy\\ Statistics` {
+			t.Errorf("%v: StatsHTTPRequests 0 Realm not 'HAProxy Statistics': %v", b.Name, b.StatsOptions.StatsHTTPRequests[0].Realm)
+		}
+		if b.StatsOptions.StatsHTTPRequests[1].Type == nil {
+			t.Errorf("%v: StatsHTTPRequests 1 Type is nil", b.Name)
+		} else if *b.StatsOptions.StatsHTTPRequests[1].Type != "allow" {
+			t.Errorf("%v: StatsHTTPRequests 1 Type not allow: %v", b.Name, *b.StatsOptions.StatsHTTPRequests[1].Type)
+		}
+		if b.StatsOptions.StatsHTTPRequests[1].Cond != "if" {
+			t.Errorf("%v: StatsHTTPRequests 1 Cond not if: %v", b.Name, b.StatsOptions.StatsHTTPRequests[1].Cond)
+		}
+		if b.StatsOptions.StatsHTTPRequests[1].CondTest != "something" {
+			t.Errorf("%v: StatsHTTPRequests 1 CondTest not something: %v", b.Name, b.StatsOptions.StatsHTTPRequests[1].CondTest)
 		}
 
 	}
@@ -322,6 +382,65 @@ func TestGetBackend(t *testing.T) {
 	} else if *b.SrvtcpkaIntvl != 10000 {
 		t.Errorf("%v: SrvtcpkaIntvl not 10000: %v", b.Name, *b.SrvtcpkaIntvl)
 	}
+	if b.StatsOptions == nil {
+		t.Errorf("%v: StatsOptions is nil", b.Name)
+	}
+	if b.StatsOptions.StatsShowModules != true {
+		t.Error("StatsShowModules not set")
+	}
+	if b.StatsOptions.StatsRealm != true {
+		t.Error("StatsRealm not set")
+	}
+	if b.StatsOptions.StatsRealmRealm == nil {
+		t.Errorf("%v: StatsRealmRealm is nil", b.Name)
+	} else if *b.StatsOptions.StatsRealmRealm != `HAProxy\\ Statistics` {
+		t.Errorf("%v: StatsRealmRealm not 'HAProxy Statistics': %v", b.Name, *b.StatsOptions.StatsRealmRealm)
+	}
+	if len(b.StatsOptions.StatsAuths) != 2 {
+		t.Errorf("%v: StatsAuths expected 2 instances got: %v", b.Name, len(b.StatsOptions.StatsAuths))
+	}
+	if b.StatsOptions.StatsAuths[0].User == nil {
+		t.Errorf("%v: StatsAuths 0 User is nil", b.Name)
+	} else if *b.StatsOptions.StatsAuths[0].User != "admin" {
+		t.Errorf("%v: StatsAuths 0 User not admin: %v", b.Name, *b.StatsOptions.StatsAuths[0])
+	}
+	if b.StatsOptions.StatsAuths[0].Passwd == nil {
+		t.Errorf("%v: StatsAuths 0 Passwd is nil", b.Name)
+	} else if *b.StatsOptions.StatsAuths[0].Passwd != "AdMiN123" {
+		t.Errorf("%v: StatsAuths 0 Passwd not AdMiN123: %v", b.Name, *b.StatsOptions.StatsAuths[0].Passwd)
+	}
+	if b.StatsOptions.StatsAuths[1].User == nil {
+		t.Errorf("%v: StatsAuths 1 User is nil", b.Name)
+	} else if *b.StatsOptions.StatsAuths[1].User != "admin2" {
+		t.Errorf("%v: StatsAuths 1 User not admin2: %v", b.Name, *b.StatsOptions.StatsAuths[1].User)
+	}
+	if b.StatsOptions.StatsAuths[1].Passwd == nil {
+		t.Errorf("%v: StatsAuths 1 Passwd is nil", b.Name)
+	} else if *b.StatsOptions.StatsAuths[1].Passwd != "AdMiN1234" {
+		t.Errorf("%v: StatsAuths 1 Passwd not AdMiN1234: %v", b.Name, *b.StatsOptions.StatsAuths[1].Passwd)
+	}
+	if len(b.StatsOptions.StatsHTTPRequests) != 2 {
+		t.Errorf("%v: StatsHTTPRequests expected 2 instances got: %v", b.Name, len(b.StatsOptions.StatsHTTPRequests))
+	}
+	if b.StatsOptions.StatsHTTPRequests[0].Type == nil {
+		t.Errorf("%v: StatsHTTPRequests 0 Type is nil", b.Name)
+	} else if *b.StatsOptions.StatsHTTPRequests[0].Type != "auth" {
+		t.Errorf("%v: StatsHTTPRequests 0 Type not auth: %v", b.Name, *b.StatsOptions.StatsHTTPRequests[0].Type)
+	}
+	if b.StatsOptions.StatsHTTPRequests[0].Realm != `HAProxy\\ Statistics` {
+		t.Errorf("%v: StatsHTTPRequests 0 Realm not 'HAProxy Statistics': %v", b.Name, b.StatsOptions.StatsHTTPRequests[0].Realm)
+	}
+	if b.StatsOptions.StatsHTTPRequests[1].Type == nil {
+		t.Errorf("%v: StatsHTTPRequests 1 Type is nil", b.Name)
+	} else if *b.StatsOptions.StatsHTTPRequests[1].Type != "allow" {
+		t.Errorf("%v: StatsHTTPRequests 1 Type not allow: %v", b.Name, *b.StatsOptions.StatsHTTPRequests[1].Type)
+	}
+	if b.StatsOptions.StatsHTTPRequests[1].Cond != "if" {
+		t.Errorf("%v: StatsHTTPRequests 1 Cond not if: %v", b.Name, b.StatsOptions.StatsHTTPRequests[1].Cond)
+	}
+	if b.StatsOptions.StatsHTTPRequests[1].CondTest != "something" {
+		t.Errorf("%v: StatsHTTPRequests 1 CondTest not something: %v", b.Name, b.StatsOptions.StatsHTTPRequests[1].CondTest)
+	}
 
 	_, err = b.MarshalBinary()
 	if err != nil {
@@ -341,6 +460,7 @@ func TestCreateEditDeleteBackend(t *testing.T) {
 	balanceAlgorithm := "uri"
 	srvtcpkaCnt := int64(10)
 	srvtcpkaTimeout := int64(10000)
+	statsRealm := "Haproxy Stats"
 	b := &models.Backend{
 		Name: "created",
 		Mode: "http",
@@ -407,6 +527,19 @@ func TestCreateEditDeleteBackend(t *testing.T) {
 		SrvtcpkaCnt:        &srvtcpkaCnt,
 		SrvtcpkaIdle:       &srvtcpkaTimeout,
 		SrvtcpkaIntvl:      &srvtcpkaTimeout,
+		StatsOptions: &models.StatsOptions{
+			StatsShowModules: true,
+			StatsRealm:       true,
+			StatsRealmRealm:  &statsRealm,
+			StatsAuths: []*models.StatsAuth{
+				{User: misc.StringP("user1"), Passwd: misc.StringP("pwd1")},
+				{User: misc.StringP("user2"), Passwd: misc.StringP("pwd2")},
+			},
+			StatsHTTPRequests: []*models.StatsHTTPRequest{
+				{Type: misc.StringP("allow"), Cond: "if", CondTest: "something"},
+				{Type: misc.StringP("auth"), Realm: "haproxy\\ stats"},
+			},
+		},
 	}
 
 	err := clientTest.CreateBackend(b, "", version)
@@ -551,6 +684,19 @@ func TestCreateEditDeleteBackend(t *testing.T) {
 			SrvtcpkaCnt:        &srvtcpkaCnt,
 			SrvtcpkaIdle:       &srvtcpkaTimeout,
 			SrvtcpkaIntvl:      &srvtcpkaTimeout,
+			StatsOptions: &models.StatsOptions{
+				StatsShowModules: true,
+				StatsRealm:       true,
+				StatsRealmRealm:  &statsRealm,
+				StatsAuths: []*models.StatsAuth{
+					{User: misc.StringP("new_user1"), Passwd: misc.StringP("new_pwd1")},
+					{User: misc.StringP("new_user2"), Passwd: misc.StringP("new_pwd2")},
+				},
+				StatsHTTPRequests: []*models.StatsHTTPRequest{
+					{Type: misc.StringP("allow"), Cond: "if", CondTest: "something_else"},
+					{Type: misc.StringP("auth"), Realm: "haproxy\\ stats2"},
+				},
+			},
 		},
 	}
 

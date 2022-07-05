@@ -237,6 +237,10 @@ defaults
   srvtcpka-cnt 10
   srvtcpka-idle 10s
   srvtcpka-intvl 10
+  stats auth admin:AdMiN123
+  stats auth admin2:AdMiN1234
+  stats show-modules
+  stats realm HAProxy\\ Statistics
 
 frontend test
   mode http
@@ -366,6 +370,10 @@ frontend test
   clitcpka-cnt 10
   clitcpka-idle 10s
   clitcpka-intvl 10
+  stats auth admin:AdMiN123
+  stats auth admin2:AdMiN1234
+  stats show-modules
+  stats realm HAProxy\\ Statistics
 
 frontend test_2
   mode http
@@ -406,6 +414,10 @@ frontend test_2
   clitcpka-cnt 10
   clitcpka-idle 10s
   clitcpka-intvl 10
+  stats auth admin:AdMiN123
+  stats auth admin2:AdMiN1234
+  stats show-modules
+  stats realm HAProxy\\ Statistics
 
 backend test
   mode http
@@ -477,6 +489,12 @@ backend test
   srvtcpka-cnt 10
   srvtcpka-idle 10s
   srvtcpka-intvl 10
+  stats http-request auth realm HAProxy\\ Statistics
+  stats http-request allow if something
+  stats auth admin:AdMiN123
+  stats auth admin2:AdMiN1234
+  stats show-modules
+  stats realm HAProxy\\ Statistics
 
 peers mycluster
   peer hapee 192.168.1.1:1023
@@ -544,6 +562,12 @@ backend test_2
   srvtcpka-cnt 10
   srvtcpka-idle 10s
   srvtcpka-intvl 10
+  stats http-request auth realm HAProxy\\ Statistics 
+  stats http-request allow if something
+  stats auth admin:AdMiN123
+  stats auth admin2:AdMiN1234
+  stats show-modules
+  stats realm HAProxy\\ Statistics
 `
 const testPath = "/tmp/haproxy-test.cfg"
 

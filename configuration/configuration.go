@@ -1159,8 +1159,8 @@ func (s *SectionParser) statsOptions() interface{} { //nolint:gocognit
 	}
 	ss := data.([]types.StatsSettings)
 	opt := &models.StatsOptions{}
-	for _, s := range ss {
-		switch v := s.(type) {
+	for _, stat := range ss {
+		switch v := stat.(type) {
 		case *stats.OneWord:
 			if v.Name == "enable" {
 				opt.StatsEnable = true
@@ -1170,6 +1170,9 @@ func (s *SectionParser) statsOptions() interface{} { //nolint:gocognit
 			}
 			if v.Name == "show-legends" {
 				opt.StatsShowLegends = true
+			}
+			if v.Name == "show-modules" {
+				opt.StatsShowModules = true
 			}
 		case *stats.ShowDesc:
 			if v.Desc != "" {
@@ -1201,6 +1204,33 @@ func (s *SectionParser) statsOptions() interface{} { //nolint:gocognit
 					opt.StatsAdminCond = v.Cond
 					opt.StatsAdminCondTest = v.CondTest
 				}
+			}
+		case *stats.Realm:
+			if v != nil {
+				opt.StatsRealm = true
+				opt.StatsRealmRealm = misc.StringP(v.Realm)
+			}
+		case *stats.Auth:
+			if v != nil {
+				opt.StatsAuths = append(opt.StatsAuths, &models.StatsAuth{
+					User:   misc.StringP(v.User),
+					Passwd: misc.StringP(v.Password),
+				})
+			}
+		case *stats.HTTPRequest:
+			if v != nil && s.Section == parser.Backends {
+				parts := strings.Split(v.Type, " ")
+				httpRequest := &models.StatsHTTPRequest{
+					Type: misc.StringP(parts[0]),
+				}
+				if len(parts) > 2 && parts[0] == "auth" && parts[1] == "realm" {
+					httpRequest.Realm = strings.Join(parts[2:], " ")
+				}
+				if v.Cond != "" {
+					httpRequest.Cond = v.Cond
+					httpRequest.CondTest = v.CondTest
+				}
+				opt.StatsHTTPRequests = append(opt.StatsHTTPRequests, httpRequest)
 			}
 		}
 	}
@@ -2810,6 +2840,38 @@ func (s *SectionObject) statsOptions(field reflect.Value) error {
 		s := &stats.Admin{
 			Cond:     opt.StatsAdminCond,
 			CondTest: opt.StatsAdminCondTest,
+		}
+		ss = append(ss, s)
+	}
+	if opt.StatsShowModules {
+		s := &stats.OneWord{
+			Name: "show-modules",
+		}
+		ss = append(ss, s)
+	}
+	if opt.StatsRealm {
+		s := &stats.Realm{
+			Realm: *opt.StatsRealmRealm,
+		}
+		ss = append(ss, s)
+	}
+
+	for _, auth := range opt.StatsAuths {
+		s := &stats.Auth{
+			User:     *auth.User,
+			Password: *auth.Passwd,
+		}
+		ss = append(ss, s)
+	}
+	for _, httpRequest := range opt.StatsHTTPRequests {
+		reqType := *httpRequest.Type
+		if reqType == "auth" && httpRequest.Realm != "" {
+			reqType = fmt.Sprintf("auth realm %s", httpRequest.Realm)
+		}
+		s := &stats.HTTPRequest{
+			Type:     reqType,
+			Cond:     httpRequest.Cond,
+			CondTest: httpRequest.CondTest,
 		}
 		ss = append(ss, s)
 	}

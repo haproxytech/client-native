@@ -236,6 +236,43 @@ func TestGetDefaults(t *testing.T) { //nolint:gocognit,gocyclo
 	} else if *d.SrvtcpkaIntvl != 10000 {
 		t.Errorf("SrvtcpkaIntvl not 10000: %v", *d.SrvtcpkaIntvl)
 	}
+	if d.StatsOptions == nil {
+		t.Errorf("StatsOptions is nil")
+	}
+	if d.StatsOptions.StatsShowModules != true {
+		t.Error("StatsShowModules not set")
+	}
+	if d.StatsOptions.StatsRealm != true {
+		t.Error("StatsRealm not set")
+	}
+	if d.StatsOptions.StatsRealmRealm == nil {
+		t.Errorf("StatsRealmRealm is nil")
+	} else if *d.StatsOptions.StatsRealmRealm != `HAProxy\\ Statistics` {
+		t.Errorf("StatsRealmRealm not 'HAProxy Statistics': %v", *d.StatsOptions.StatsRealmRealm)
+	}
+	if len(d.StatsOptions.StatsAuths) != 2 {
+		t.Errorf("StatsAuths expected 2 instances got: %v", len(d.StatsOptions.StatsAuths))
+	}
+	if d.StatsOptions.StatsAuths[0].User == nil {
+		t.Errorf("StatsAuths 0 User is nil")
+	} else if *d.StatsOptions.StatsAuths[0].User != "admin" {
+		t.Errorf("StatsAuths 0 User not admin: %v", *d.StatsOptions.StatsAuths[0].User)
+	}
+	if d.StatsOptions.StatsAuths[0].Passwd == nil {
+		t.Errorf("StatsAuths 0 Passwd is nil")
+	} else if *d.StatsOptions.StatsAuths[0].Passwd != "AdMiN123" {
+		t.Errorf("StatsAuths 0 Passwd not AdMiN123: %v", *d.StatsOptions.StatsAuths[0].Passwd)
+	}
+	if d.StatsOptions.StatsAuths[1].User == nil {
+		t.Errorf("StatsAuths 1 User is nil")
+	} else if *d.StatsOptions.StatsAuths[1].User != "admin2" {
+		t.Errorf("StatsAuths 1 User not admin2: %v", *d.StatsOptions.StatsAuths[1].User)
+	}
+	if d.StatsOptions.StatsAuths[1].Passwd == nil {
+		t.Errorf("StatsAuths 1 Passwd is nil")
+	} else if *d.StatsOptions.StatsAuths[1].Passwd != "AdMiN1234" {
+		t.Errorf("StatsAuths 1 Passwd not AdMiN1234: %v", *d.StatsOptions.StatsAuths[1].Passwd)
+	}
 }
 
 func TestPushDefaults(t *testing.T) {
@@ -244,6 +281,7 @@ func TestPushDefaults(t *testing.T) {
 	balanceAlgorithm := "leastconn"
 	cpkaCnt := int64(10)
 	cpkaTimeout := int64(10000)
+	statsRealm := "Haproxy Stats"
 	d := &models.Defaults{
 		Clitcpka:       "disabled",
 		BindProcess:    "1-4",
@@ -314,6 +352,15 @@ func TestPushDefaults(t *testing.T) {
 		SpliceRequest:             "disabled",
 		SpliceResponse:            "disabled",
 		IdleCloseOnResponse:       "disabled",
+		StatsOptions: &models.StatsOptions{
+			StatsShowModules: true,
+			StatsRealm:       true,
+			StatsRealmRealm:  &statsRealm,
+			StatsAuths: []*models.StatsAuth{
+				{User: misc.StringP("user1"), Passwd: misc.StringP("pwd1")},
+				{User: misc.StringP("user2"), Passwd: misc.StringP("pwd2")},
+			},
+		},
 	}
 
 	err := clientTest.PushDefaultsConfiguration(d, "", version)

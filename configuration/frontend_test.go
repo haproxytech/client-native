@@ -142,6 +142,43 @@ func TestGetFrontends(t *testing.T) { //nolint:gocognit
 		if f.IdleCloseOnResponse != optionValue {
 			t.Errorf("%v: IdleCloseOnResponse not %s: %v", f.Name, optionValue, f.IdleCloseOnResponse)
 		}
+		if f.StatsOptions == nil {
+			t.Errorf("%v: StatsOptions is nil", f.Name)
+		}
+		if f.StatsOptions.StatsShowModules != true {
+			t.Error("StatsShowModules not set")
+		}
+		if f.StatsOptions.StatsRealm != true {
+			t.Error("StatsRealm not set")
+		}
+		if f.StatsOptions.StatsRealmRealm == nil {
+			t.Errorf("%v: StatsRealmRealm is nil", f.Name)
+		} else if *f.StatsOptions.StatsRealmRealm != `HAProxy\\ Statistics` {
+			t.Errorf("%v: StatsRealmRealm not 'HAProxy Statistics': %v", f.Name, *f.StatsOptions.StatsRealmRealm)
+		}
+		if len(f.StatsOptions.StatsAuths) != 2 {
+			t.Errorf("%v: StatsAuths expected 2 instances got: %v", f.Name, len(f.StatsOptions.StatsAuths))
+		}
+		if f.StatsOptions.StatsAuths[0].User == nil {
+			t.Errorf("%v: StatsAuths 0 User is nil", f.Name)
+		} else if *f.StatsOptions.StatsAuths[0].User != "admin" {
+			t.Errorf("%v: StatsAuths 0 User not admin: %v", f.Name, *f.StatsOptions.StatsAuths[0].User)
+		}
+		if f.StatsOptions.StatsAuths[0].Passwd == nil {
+			t.Errorf("%v: StatsAuths 0 Passwd is nil", f.Name)
+		} else if *f.StatsOptions.StatsAuths[0].Passwd != "AdMiN123" {
+			t.Errorf("%v: StatsAuths 0 Passwd not AdMiN123: %v", f.Name, *f.StatsOptions.StatsAuths[0].Passwd)
+		}
+		if f.StatsOptions.StatsAuths[1].User == nil {
+			t.Errorf("%v: StatsAuths 1 User is nil", f.Name)
+		} else if *f.StatsOptions.StatsAuths[1].User != "admin2" {
+			t.Errorf("%v: StatsAuths 1 User not admin2: %v", f.Name, *f.StatsOptions.StatsAuths[1].User)
+		}
+		if f.StatsOptions.StatsAuths[1].Passwd == nil {
+			t.Errorf("%v: StatsAuths 1 Passwd is nil", f.Name)
+		} else if *f.StatsOptions.StatsAuths[1].Passwd != "AdMiN1234" {
+			t.Errorf("%v: StatsAuths 1 Passwd not AdMiN1234: %v", f.Name, *f.StatsOptions.StatsAuths[1].Passwd)
+		}
 
 	}
 }
@@ -298,6 +335,43 @@ func TestGetFrontend(t *testing.T) {
 	if f.IdleCloseOnResponse != "enabled" {
 		t.Errorf("%v: IdleCloseOnResponse not enablesd: %v", f.Name, f.IdleCloseOnResponse)
 	}
+	if f.StatsOptions == nil {
+		t.Errorf("%v: StatsOptions is nil", f.Name)
+	}
+	if f.StatsOptions.StatsShowModules != true {
+		t.Error("StatsShowModules not set")
+	}
+	if f.StatsOptions.StatsRealm != true {
+		t.Error("StatsRealm not set")
+	}
+	if f.StatsOptions.StatsRealmRealm == nil {
+		t.Errorf("%v: StatsRealmRealm is nil", f.Name)
+	} else if *f.StatsOptions.StatsRealmRealm != `HAProxy\\ Statistics` {
+		t.Errorf("%v: StatsRealmRealm not 'HAProxy Statistics': %v", f.Name, *f.StatsOptions.StatsRealmRealm)
+	}
+	if len(f.StatsOptions.StatsAuths) != 2 {
+		t.Errorf("%v: StatsAuths expected 2 instances got: %v", f.Name, len(f.StatsOptions.StatsAuths))
+	}
+	if f.StatsOptions.StatsAuths[0].User == nil {
+		t.Errorf("%v: StatsAuths 0 User is nil", f.Name)
+	} else if *f.StatsOptions.StatsAuths[0].User != "admin" {
+		t.Errorf("%v: StatsAuths 0 User not admin: %v", f.Name, *f.StatsOptions.StatsAuths[0].User)
+	}
+	if f.StatsOptions.StatsAuths[0].Passwd == nil {
+		t.Errorf("%v: StatsAuths 0 Passwd is nil", f.Name)
+	} else if *f.StatsOptions.StatsAuths[0].Passwd != "AdMiN123" {
+		t.Errorf("%v: StatsAuths 0 Passwd not AdMiN123: %v", f.Name, *f.StatsOptions.StatsAuths[0].Passwd)
+	}
+	if f.StatsOptions.StatsAuths[1].User == nil {
+		t.Errorf("%v: StatsAuths 1 User is nil", f.Name)
+	} else if *f.StatsOptions.StatsAuths[1].User != "admin2" {
+		t.Errorf("%v: StatsAuths 1 User not admin2: %v", f.Name, *f.StatsOptions.StatsAuths[1].User)
+	}
+	if f.StatsOptions.StatsAuths[1].Passwd == nil {
+		t.Errorf("%v: StatsAuths 1 Passwd is nil", f.Name)
+	} else if *f.StatsOptions.StatsAuths[1].Passwd != "AdMiN1234" {
+		t.Errorf("%v: StatsAuths 1 Passwd not AdMiN1234: %v", f.Name, *f.StatsOptions.StatsAuths[1].Passwd)
+	}
 
 	_, err = f.MarshalBinary()
 	if err != nil {
@@ -316,6 +390,7 @@ func TestCreateEditDeleteFrontend(t *testing.T) {
 	tOut := int64(2)
 	clitcpkaCnt := int64(10)
 	clitcpkaTimeout := int64(10000)
+	statsRealm := "Haproxy Stats"
 	f := &models.Frontend{
 		Name:                     "created",
 		Mode:                     "tcp",
@@ -346,6 +421,15 @@ func TestCreateEditDeleteFrontend(t *testing.T) {
 		SpliceRequest:            "enabled",
 		SpliceResponse:           "enabled",
 		IdleCloseOnResponse:      "enabled",
+		StatsOptions: &models.StatsOptions{
+			StatsShowModules: true,
+			StatsRealm:       true,
+			StatsRealmRealm:  &statsRealm,
+			StatsAuths: []*models.StatsAuth{
+				{User: misc.StringP("user1"), Passwd: misc.StringP("pwd1")},
+				{User: misc.StringP("user2"), Passwd: misc.StringP("pwd2")},
+			},
+		},
 	}
 
 	err := clientTest.CreateFrontend(f, "", version)
@@ -411,6 +495,15 @@ func TestCreateEditDeleteFrontend(t *testing.T) {
 		SpliceRequest:       "disabled",
 		SpliceResponse:      "disabled",
 		IdleCloseOnResponse: "disabled",
+		StatsOptions: &models.StatsOptions{
+			StatsShowModules: true,
+			StatsRealm:       true,
+			StatsRealmRealm:  &statsRealm,
+			StatsAuths: []*models.StatsAuth{
+				{User: misc.StringP("new_user1"), Passwd: misc.StringP("new_pwd1")},
+				{User: misc.StringP("new_user2"), Passwd: misc.StringP("new_pwd2")},
+			},
+		},
 	}
 
 	err = clientTest.EditFrontend("created", f, "", version)
