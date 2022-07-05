@@ -272,6 +272,8 @@ definitions:
       $ref: "#/definitions/spoe_transaction"
   info:
     $ref: "models/general.yaml#/info"
+  health:
+    $ref: "models/general.yaml#/health"
   reload:
     $ref: "models/general.yaml#/reload"
   reloads:
@@ -626,6 +628,8 @@ paths:
     $ref: "paths/general.yaml#/specification_openapiv3"
   /info:
     $ref: "paths/general.yaml#/info"
+  /health:
+    $ref: "paths/general.yaml#/health"
   /cluster:
     $ref: "paths/cluster.yaml#/cluster"
   /cluster/certificate:

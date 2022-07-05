@@ -345,3 +345,19 @@ reloads_one:
         $ref: '#/responses/NotFound'
       'default':
         $ref: '#/responses/DefaultError'
+health:
+  get:
+    tags:
+      - Health
+    summary: Return managed services health
+    description: Return managed services health
+    operationId: getHealth
+    produces:
+      - application/json
+    responses:
+      '200':
+        description: Success
+        schema:
+          $ref: '#/definitions/health'
+      'default':
+        $ref: '#/responses/DefaultError'

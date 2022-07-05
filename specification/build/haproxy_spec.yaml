@@ -6766,6 +6766,15 @@ definitions:
           type: object
       title: Information
       type: object
+  health:
+      properties:
+        haproxy:
+          enum:
+          - up
+          - down
+          - unknown
+          type: string
+      type: object
   reload:
       description: HAProxy reload
       example:
@@ -8556,6 +8565,22 @@ paths:
         summary: Return API, hardware and OS information
         tags:
         - Information
+  /health:
+      get:
+        description: Return managed services health
+        operationId: getHealth
+        produces:
+        - application/json
+        responses:
+          "200":
+            description: Success
+            schema:
+              $ref: '#/definitions/health'
+          default:
+            $ref: '#/responses/DefaultError'
+        summary: Return managed services health
+        tags:
+        - Health
   /cluster:
       delete:
         description: Delete cluster settings and move the node back to single mode

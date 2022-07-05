@@ -112,3 +112,9 @@ reload:
   example:
     id: 2019-01-03-44
     status: in_progress
+health:
+  type: object
+  properties:
+    haproxy:
+      type: string
+      enum: [up, down, unknown]
