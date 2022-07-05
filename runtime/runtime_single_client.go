@@ -123,7 +123,7 @@ func (s *SingleRuntime) readFromSocket(command string) (string, error) {
 
 	result := strings.TrimSuffix(data.String(), "\n> ")
 	result = strings.TrimSuffix(result, "\n")
-	return result, nil //nolint:nilerr
+	return result, nil
 }
 
 // ExecuteRaw executes command on runtime API and returns raw result

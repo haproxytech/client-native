@@ -16,7 +16,7 @@ linters-settings:
     min-len: 2
     min-occurrences: 3
   gci:
-    local-prefixes: github.com/haproxytech/client-native/v3
+    prefix: github.com/haproxytech/client-native/v3
 
 linters:
   enable-all: true
@@ -45,6 +45,9 @@ linters:
     - wastedassign
     - goconst
 
+    - gci
+    - exhaustruct
+    - nonamedreturns
     - forcetypeassert #tmp needs to be on
 
 issues:

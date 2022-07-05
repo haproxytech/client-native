@@ -1,6 +1,6 @@
 module github.com/haproxytech/client-native/v3
 
-go 1.17
+go 1.18
 
 require (
 	github.com/go-openapi/errors v0.20.2
@@ -9,7 +9,7 @@ require (
 	github.com/go-openapi/validate v0.22.0
 	github.com/google/go-cmp v0.5.2
 	github.com/google/renameio v1.0.1
-	github.com/google/uuid v1.1.1
+	github.com/google/uuid v1.3.0
 	github.com/haproxytech/config-parser/v4 v4.0.0-rc4
 	github.com/kballard/go-shellquote v0.0.0-20180428030007-95032a82bc51
 	github.com/mitchellh/mapstructure v1.4.1
