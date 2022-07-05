@@ -22,6 +22,7 @@ package models
 
 import (
 	"encoding/json"
+	"strconv"
 
 	"github.com/go-openapi/errors"
 	"github.com/go-openapi/strfmt"
@@ -44,15 +45,27 @@ type StatsOptions struct {
 	// stats admin cond test
 	StatsAdminCondTest string `json:"stats_admin_cond_test,omitempty"`
 
+	// stats auths
+	StatsAuths []*StatsAuth `json:"stats_auths"`
+
 	// stats enable
 	StatsEnable bool `json:"stats_enable,omitempty"`
 
 	// stats hide version
 	StatsHideVersion bool `json:"stats_hide_version,omitempty"`
 
+	// stats http requests
+	StatsHTTPRequests []*StatsHTTPRequest `json:"stats_http_requests"`
+
 	// stats maxconn
 	// Minimum: 1
 	StatsMaxconn int64 `json:"stats_maxconn,omitempty"`
+
+	// stats realm
+	StatsRealm bool `json:"stats_realm,omitempty"`
+
+	// stats realm realm
+	StatsRealmRealm *string `json:"stats_realm_realm,omitempty"`
 
 	// stats refresh delay
 	StatsRefreshDelay *int64 `json:"stats_refresh_delay,omitempty"`
@@ -62,6 +75,9 @@ type StatsOptions struct {
 
 	// stats show legends
 	StatsShowLegends bool `json:"stats_show_legends,omitempty"`
+
+	// stats show modules
+	StatsShowModules bool `json:"stats_show_modules,omitempty"`
 
 	// stats show node name
 	// Pattern: ^[^\s]+$
@@ -77,6 +93,14 @@ func (m *StatsOptions) Validate(formats strfmt.Registry) error {
 	var res []error
 
 	if err := m.validateStatsAdminCond(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateStatsAuths(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateStatsHTTPRequests(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -136,6 +160,56 @@ func (m *StatsOptions) validateStatsAdminCond(formats strfmt.Registry) error {
 	// value enum
 	if err := m.validateStatsAdminCondEnum("stats_admin_cond", "body", m.StatsAdminCond); err != nil {
 		return err
+	}
+
+	return nil
+}
+
+func (m *StatsOptions) validateStatsAuths(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.StatsAuths) { // not required
+		return nil
+	}
+
+	for i := 0; i < len(m.StatsAuths); i++ {
+		if swag.IsZero(m.StatsAuths[i]) { // not required
+			continue
+		}
+
+		if m.StatsAuths[i] != nil {
+			if err := m.StatsAuths[i].Validate(formats); err != nil {
+				if ve, ok := err.(*errors.Validation); ok {
+					return ve.ValidateName("stats_auths" + "." + strconv.Itoa(i))
+				}
+				return err
+			}
+		}
+
+	}
+
+	return nil
+}
+
+func (m *StatsOptions) validateStatsHTTPRequests(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.StatsHTTPRequests) { // not required
+		return nil
+	}
+
+	for i := 0; i < len(m.StatsHTTPRequests); i++ {
+		if swag.IsZero(m.StatsHTTPRequests[i]) { // not required
+			continue
+		}
+
+		if m.StatsHTTPRequests[i] != nil {
+			if err := m.StatsHTTPRequests[i].Validate(formats); err != nil {
+				if ve, ok := err.(*errors.Validation); ok {
+					return ve.ValidateName("stats_http_requests" + "." + strconv.Itoa(i))
+				}
+				return err
+			}
+		}
+
 	}
 
 	return nil

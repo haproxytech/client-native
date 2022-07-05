@@ -215,6 +215,29 @@ stats_options:
     stats_uri_prefix:
       type: string
       pattern: '^[^\s]+$'
+    stats_show_modules:
+      type: boolean
+      x-display-name: Stats Show Modules
+    stats_realm:
+      type: boolean
+      x-display-name: Stats Realm
+    stats_realm_realm:
+      type: string
+      x-nullable: true
+      x-dependency:
+        stats_realm:
+          value: true
+          required: true
+    stats_http_requests:
+      type: array
+      items: 
+        $ref: "#/definitions/stats_http_request"
+      x-display-name: Stats HTTP Requests
+    stats_auths:
+      type: array
+      items: 
+        $ref: "#/definitions/stats_auth"
+      x-display-name: Stats Auths
 smtpchk_params:
   type: object
   properties:
@@ -249,3 +272,33 @@ compression:
         type: string
     offload:
       type: boolean
+stats_http_request:
+  type: object
+  required:
+    - type
+  properties:
+    cond:
+      type: string
+    cond_test:
+      type: string
+      x-dependency:
+        cond:
+          required: true
+    type:
+      type: string
+      enum: [allow, deny, auth]
+    realm:
+      type: string
+      x-dependency:
+        type:
+          value: auth
+stats_auth:
+  type: object
+  required:
+    - user
+    - passwd
+  properties:
+    user:
+      type: string
+    passwd:
+      type: string

@@ -6284,15 +6284,35 @@ definitions:
             freeFormat: true
             operation: getACLs
             property: acl_name
+        stats_auths:
+          items:
+            $ref: '#/definitions/stats_auth'
+          type: array
+          x-display-name: Stats Auths
         stats_enable:
           type: boolean
           x-display-name: Stats Enable
         stats_hide_version:
           type: boolean
           x-display-name: Stats Hide Version
+        stats_http_requests:
+          items:
+            $ref: '#/definitions/stats_http_request'
+          type: array
+          x-display-name: Stats HTTP Requests
         stats_maxconn:
           minimum: 1
           type: integer
+        stats_realm:
+          type: boolean
+          x-display-name: Stats Realm
+        stats_realm_realm:
+          type: string
+          x-dependency:
+            stats_realm:
+              required: true
+              value: true
+          x-nullable: true
         stats_refresh_delay:
           type: integer
           x-nullable: true
@@ -6302,6 +6322,9 @@ definitions:
         stats_show_legends:
           type: boolean
           x-display-name: Stats Show Legends
+        stats_show_modules:
+          type: boolean
+          x-display-name: Stats Show Modules
         stats_show_node_name:
           pattern: ^[^\s]+$
           type: string
@@ -6309,6 +6332,39 @@ definitions:
         stats_uri_prefix:
           pattern: ^[^\s]+$
           type: string
+      type: object
+  stats_http_request:
+      properties:
+        cond:
+          type: string
+        cond_test:
+          type: string
+          x-dependency:
+            cond:
+              required: true
+        realm:
+          type: string
+          x-dependency:
+            type:
+              value: auth
+        type:
+          enum:
+          - allow
+          - deny
+          - auth
+          type: string
+      required:
+      - type
+      type: object
+  stats_auth:
+      properties:
+        passwd:
+          type: string
+        user:
+          type: string
+      required:
+      - user
+      - passwd
       type: object
   error:
       additionalProperties:

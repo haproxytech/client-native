@@ -234,6 +234,10 @@ definitions:
     $ref: "models/stats.yaml#/native_stats_collection"
   stats_options:
     $ref: "models/configuration/misc.yaml#/stats_options"
+  stats_http_request:
+    $ref: "models/configuration/misc.yaml#/stats_http_request"
+  stats_auth:
+    $ref: "models/configuration/misc.yaml#/stats_auth"
   error:
     $ref: "models/errors.yaml#/error"
   endpoint:
