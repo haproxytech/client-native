@@ -933,7 +933,9 @@ func ParseGlobalSection(p parser.Parser) (*models.Global, error) { //nolint:goco
 		if !ok {
 			return nil, misc.CreateTypeAssertError("resetenv")
 		}
-		resetEnv = strings.Join(resetEnvParser.Value, " ")
+		if len(resetEnvParser.Value) > 0 {
+			resetEnv = strings.Join(resetEnvParser.Value, " ")
+		}
 	}
 
 	var unsetEnv string
@@ -943,7 +945,9 @@ func ParseGlobalSection(p parser.Parser) (*models.Global, error) { //nolint:goco
 		if !ok {
 			return nil, misc.CreateTypeAssertError("unsetenv")
 		}
-		unsetEnv = strings.Join(unsetEnvParser.Value, " ")
+		if len(unsetEnvParser.Value) > 0 {
+			unsetEnv = strings.Join(unsetEnvParser.Value, " ")
+		}
 	}
 
 	tuneOptions, err := parseTuneOptions(p)
@@ -1873,6 +1877,8 @@ func SerializeGlobalSection(p parser.Parser, data *models.Global) error { //noli
 
 	resetenv := &types.StringSliceC{}
 	if data.Resetenv == "" {
+		resetenv = nil
+	} else {
 		resetenv.Value = strings.Split(data.Resetenv, " ")
 	}
 	if err := p.Set(parser.Global, parser.GlobalSectionName, "resetenv", resetenv); err != nil {
@@ -1881,6 +1887,8 @@ func SerializeGlobalSection(p parser.Parser, data *models.Global) error { //noli
 
 	unsetenv := &types.StringSliceC{}
 	if data.Unsetenv == "" {
+		unsetenv = nil
+	} else {
 		unsetenv.Value = strings.Split(data.Unsetenv, " ")
 	}
 	if err := p.Set(parser.Global, parser.GlobalSectionName, "unsetenv", unsetenv); err != nil {
