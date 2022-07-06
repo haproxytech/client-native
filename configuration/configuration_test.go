@@ -446,7 +446,7 @@ backend test
   option splice-auto
   option splice-request
   option splice-response
-  default-server fall 2s rise 4s inter 5s port 8888
+  default-server fall 2s rise 4s inter 5s port 8888 ws auto pool-low-conn 128
   stick store-request src table test
   stick match src table test
   stick on src table test
@@ -465,8 +465,8 @@ backend test
   external-check command /bin/false
   use-server webserv if TRUE
   use-server webserv2 unless TRUE
-  server webserv 192.168.1.1:9200 maxconn 1000 ssl weight 10 inter 2s cookie BLAH slowstart 6000 proxy-v2-options authority,crc32c
-  server webserv2 192.168.1.1:9300 maxconn 1000 ssl weight 10 inter 2s cookie BLAH slowstart 6000 proxy-v2-options authority,crc32c
+  server webserv 192.168.1.1:9200 maxconn 1000 ssl weight 10 inter 2s cookie BLAH slowstart 6000 proxy-v2-options authority,crc32c ws h1 pool-low-conn 128
+  server webserv2 192.168.1.1:9300 maxconn 1000 ssl weight 10 inter 2s cookie BLAH slowstart 6000 proxy-v2-options authority,crc32c ws h1 pool-low-conn 128
   http-request set-dst hdr(x-dst)
   http-request set-dst-port int(4000)
   http-check connect
@@ -566,7 +566,7 @@ backend test_2
   srvtcpka-cnt 10
   srvtcpka-idle 10s
   srvtcpka-intvl 10
-  stats http-request auth realm HAProxy\\ Statistics 
+  stats http-request auth realm HAProxy\\ Statistics
   stats http-request allow if something
   stats auth admin:AdMiN123
   stats auth admin2:AdMiN1234

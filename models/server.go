@@ -355,6 +355,10 @@ type Server struct {
 
 	// weight
 	Weight *int64 `json:"weight,omitempty"`
+
+	// ws
+	// Enum: [auto h1 h2]
+	Ws string `json:"ws,omitempty"`
 }
 
 // Validate validates this server
@@ -586,6 +590,10 @@ func (m *Server) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateVerify(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateWs(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -2464,6 +2472,52 @@ func (m *Server) validateVerify(formats strfmt.Registry) error {
 
 	// value enum
 	if err := m.validateVerifyEnum("verify", "body", m.Verify); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+var serverTypeWsPropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["auto","h1","h2"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		serverTypeWsPropEnum = append(serverTypeWsPropEnum, v)
+	}
+}
+
+const (
+
+	// ServerWsAuto captures enum value "auto"
+	ServerWsAuto string = "auto"
+
+	// ServerWsH1 captures enum value "h1"
+	ServerWsH1 string = "h1"
+
+	// ServerWsH2 captures enum value "h2"
+	ServerWsH2 string = "h2"
+)
+
+// prop value enum
+func (m *Server) validateWsEnum(path, location string, value string) error {
+	if err := validate.Enum(path, location, value, serverTypeWsPropEnum); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *Server) validateWs(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.Ws) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateWsEnum("ws", "body", m.Ws); err != nil {
 		return err
 	}
 

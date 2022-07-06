@@ -319,6 +319,10 @@ server:
     weight:
       type: integer
       x-nullable: true
+    ws:
+      type: string
+      enum: [auto, h1, h2]
+      x-display-name: Relaying websocket stream protocol
   additionalProperties: false
   example:
     name: www
@@ -649,6 +653,10 @@ server_template:
     weight:
       type: integer
       x-nullable: true
+    ws:
+      type: string
+      enum: [auto, h1, h2]
+      x-display-name: Relaying websocket stream protocol
   additionalProperties: false
   example:
     prefix: srv
@@ -969,3 +977,7 @@ default_server:
     weight:
       type: integer
       x-nullable: true
+    ws:
+      type: string
+      enum: [auto, h1, h2]
+      x-display-name: Relaying websocket stream protocol

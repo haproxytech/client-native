@@ -63,6 +63,12 @@ func TestGetServers(t *testing.T) { //nolint:gocognit,gocyclo
 		if *s.Inter != 2000 {
 			t.Errorf("%v: Inter not 2000: %v", s.Name, *s.Inter)
 		}
+		if s.Ws != "h1" {
+			t.Errorf("%v: Ws not h1: %v", s.Name, s.Ws)
+		}
+		if *s.PoolLowConn != 128 {
+			t.Errorf("%v: PoolLowConn not 128: %v", s.Name, *s.PoolLowConn)
+		}
 		if len(s.ProxyV2Options) != 2 {
 			t.Errorf("%v: ProxyV2Options < 2: %d", s.Name, len(s.ProxyV2Options))
 		} else {
@@ -117,6 +123,12 @@ func TestGetServer(t *testing.T) {
 	}
 	if *s.Inter != 2000 {
 		t.Errorf("%v: Inter not 2000: %v", s.Name, *s.Inter)
+	}
+	if s.Ws != "h1" {
+		t.Errorf("%v: Ws not h1: %v", s.Name, s.Ws)
+	}
+	if *s.PoolLowConn != 128 {
+		t.Errorf("%v: PoolLowConn not 128: %v", s.Name, *s.PoolLowConn)
 	}
 	if len(s.ProxyV2Options) != 2 {
 		t.Errorf("%v: ProxyV2Options < 2: %d", s.Name, len(s.ProxyV2Options))

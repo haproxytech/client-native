@@ -472,6 +472,8 @@ func ParseServer(ondiskServer types.Server) *models.Server { //nolint:gocyclo,cy
 				if err == nil {
 					s.Weight = &w
 				}
+			case "ws":
+				s.Ws = v.Value
 			}
 		}
 	}
@@ -780,6 +782,9 @@ func SerializeServer(s models.Server) types.Server { //nolint:gocognit,gocyclo,c
 	}
 	if s.Weight != nil {
 		srv.Params = append(srv.Params, &params.ServerOptionValue{Name: "weight", Value: strconv.FormatInt(*s.Weight, 10)})
+	}
+	if s.Ws != "" {
+		srv.Params = append(srv.Params, &params.ServerOptionValue{Name: "ws", Value: s.Ws})
 	}
 	return srv
 }

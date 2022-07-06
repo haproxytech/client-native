@@ -433,6 +433,8 @@ func ParseServerTemplate(ondiskServerTemplate types.ServerTemplate) *models.Serv
 				if err == nil {
 					st.Weight = &w
 				}
+			case "ws":
+				st.Ws = v.Value
 			}
 		}
 	}
@@ -739,6 +741,9 @@ func SerializeServerTemplate(s models.ServerTemplate) types.ServerTemplate { //n
 	}
 	if s.Weight != nil {
 		srv.Params = append(srv.Params, &params.ServerOptionValue{Name: "weight", Value: strconv.FormatInt(*s.Weight, 10)})
+	}
+	if s.Ws != "" {
+		srv.Params = append(srv.Params, &params.ServerOptionValue{Name: "ws", Value: s.Ws})
 	}
 	return srv
 }

@@ -2717,6 +2717,13 @@ definitions:
         weight:
           type: integer
           x-nullable: true
+        ws:
+          enum:
+          - auto
+          - h1
+          - h2
+          type: string
+          x-display-name: Relaying websocket stream protocol
       required:
       - name
       - address
@@ -3137,6 +3144,13 @@ definitions:
         weight:
           type: integer
           x-nullable: true
+        ws:
+          enum:
+          - auto
+          - h1
+          - h2
+          type: string
+          x-display-name: Relaying websocket stream protocol
       required:
       - prefix
       - num_or_range
@@ -7709,6 +7723,13 @@ definitions:
         weight:
           type: integer
           x-nullable: true
+        ws:
+          enum:
+          - auto
+          - h1
+          - h2
+          type: string
+          x-display-name: Relaying websocket stream protocol
       title: Default Server
       type: object
   httpchk_params:
