@@ -535,6 +535,9 @@ ring myring
 log-forward sylog-loadb
   dgram-bind 127.0.0.1:1514 transparent name webserv
   bind 127.0.0.1:1514
+  backlog 10
+  maxconn 1000
+  timeout client 10s
   log global
   log ring@myring local0
   log 127.0.0.1:10001 sample 1:4 local0

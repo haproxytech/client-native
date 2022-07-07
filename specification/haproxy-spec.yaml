@@ -64,6 +64,14 @@ definitions:
     type: array
     items:
       $ref: '#/definitions/dgram_bind'
+  log_forward:
+    $ref: "models/configuration/log_forward.yaml#/log_forward"
+  log_forwards:
+    title: Log Forwards
+    description: HAProxy log forwards array
+    type: array
+    items:
+      $ref: '#/definitions/log_forward'
   userlist:
     $ref: "models/configuration/userlist.yaml#/userlist"
   userlists:
@@ -614,6 +622,7 @@ tags:
   - name: PeerEntry
   - name: Ring
   - name: DgramBind
+  - name: LogForward
   - name: Cluster
   - name: Maps
   - name: SpecificationOpenapiv3
@@ -721,6 +730,10 @@ paths:
     $ref: "paths/configuration/dgram_bind.yaml#/dgram_binds"
   /services/haproxy/configuration/dgram_binds/{name}:
     $ref: "paths/configuration/dgram_bind.yaml#/dgram_binds_one"
+  /services/haproxy/configuration/log_forwards:
+    $ref: "paths/configuration/log_forward.yaml#/log_forwards"
+  /services/haproxy/configuration/log_forwards/{name}:
+    $ref: "paths/configuration/log_forward.yaml#/log_forwards_one"
   /services/haproxy/configuration/servers:
     $ref: "paths/configuration/server.yaml#/servers"
   /services/haproxy/configuration/servers/{name}:

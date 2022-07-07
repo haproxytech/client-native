@@ -2209,6 +2209,33 @@ definitions:
     type: array
     items:
       $ref: '#/definitions/dgram_bind'
+  log_forward:
+      additionalProperties: false
+      description: HAProxy log forward configuration
+      properties:
+        backlog:
+          type: integer
+          x-nullable: true
+        maxconn:
+          type: integer
+          x-nullable: true
+        name:
+          pattern: ^[A-Za-z0-9-_.:]+$
+          type: string
+          x-nullable: false
+        timeout_client:
+          type: integer
+          x-nullable: true
+      required:
+      - name
+      title: Log Forward
+      type: object
+  log_forwards:
+    title: Log Forwards
+    description: HAProxy log forwards array
+    type: array
+    items:
+      $ref: '#/definitions/log_forward'
   userlist:
       description: HAProxy configuration of access control
       properties:
@@ -8511,6 +8538,7 @@ tags:
 - name: HTTPRequestRule
 - name: HTTPResponseRule
 - name: Information
+- name: LogForward
 - name: LogTarget
 - name: Maps
 - name: Nameserver
@@ -11342,6 +11370,166 @@ paths:
         summary: Replace a dgram bind
         tags:
         - DgramBind
+  /services/haproxy/configuration/log_forwards:
+      get:
+        description: Returns an array of all configured log forwards.
+        operationId: getLogForwards
+        parameters:
+        - $ref: '#/parameters/transaction_id'
+        responses:
+          "200":
+            description: Successful operation
+            headers:
+              Configuration-Version:
+                description: Configuration file version
+                type: string
+            schema:
+              properties:
+                _version:
+                  type: integer
+                data:
+                  $ref: '#/definitions/log_forwards'
+              required:
+              - data
+              type: object
+          default:
+            $ref: '#/responses/DefaultError'
+        summary: Return an array of log forwards
+        tags:
+        - LogForward
+      post:
+        description: Adds a new log_forward to the configuration file.
+        operationId: createLogForward
+        parameters:
+        - in: body
+          name: data
+          required: true
+          schema:
+            $ref: '#/definitions/log_forward'
+        - $ref: '#/parameters/transaction_id'
+        - $ref: '#/parameters/version'
+        - $ref: '#/parameters/force_reload'
+        responses:
+          "201":
+            description: Log Forward created
+            schema:
+              $ref: '#/definitions/log_forward'
+          "202":
+            description: Configuration change accepted and reload requested
+            headers:
+              Reload-ID:
+                description: ID of the requested reload
+                type: string
+            schema:
+              $ref: '#/definitions/log_forward'
+          "400":
+            $ref: '#/responses/BadRequest'
+          "409":
+            $ref: '#/responses/AlreadyExists'
+          default:
+            $ref: '#/responses/DefaultError'
+        summary: Add a log forward
+        tags:
+        - LogForward
+  /services/haproxy/configuration/log_forwards/{name}:
+      delete:
+        description: Deletes a log forward from the configuration by it's name.
+        operationId: deleteLogForward
+        parameters:
+        - description: Log Forward name
+          in: path
+          name: name
+          required: true
+          type: string
+        - $ref: '#/parameters/transaction_id'
+        - $ref: '#/parameters/version'
+        - $ref: '#/parameters/force_reload'
+        responses:
+          "202":
+            description: Configuration change accepted and reload requested
+            headers:
+              Reload-ID:
+                description: ID of the requested reload
+                type: string
+          "204":
+            description: Log Forward deleted
+          "404":
+            $ref: '#/responses/NotFound'
+          default:
+            $ref: '#/responses/DefaultError'
+        summary: Delete a log forward
+        tags:
+        - LogForward
+      get:
+        description: Returns one log forward configuration by it's name.
+        operationId: getLogForward
+        parameters:
+        - description: Log Forward name
+          in: path
+          name: name
+          required: true
+          type: string
+        - $ref: '#/parameters/transaction_id'
+        responses:
+          "200":
+            description: Successful operation
+            headers:
+              Configuration-Version:
+                description: Configuration file version
+                type: string
+            schema:
+              properties:
+                _version:
+                  type: integer
+                data:
+                  $ref: '#/definitions/log_forward'
+              type: object
+          "404":
+            $ref: '#/responses/NotFound'
+          default:
+            $ref: '#/responses/DefaultError'
+        summary: Return a log forward
+        tags:
+        - LogForward
+      put:
+        description: Replaces a log forward configuration by it's name.
+        operationId: replaceLogForward
+        parameters:
+        - description: Log Forward name
+          in: path
+          name: name
+          required: true
+          type: string
+        - in: body
+          name: data
+          required: true
+          schema:
+            $ref: '#/definitions/log_forward'
+        - $ref: '#/parameters/transaction_id'
+        - $ref: '#/parameters/version'
+        - $ref: '#/parameters/force_reload'
+        responses:
+          "200":
+            description: Log Forward replaced
+            schema:
+              $ref: '#/definitions/log_forward'
+          "202":
+            description: Configuration change accepted and reload requested
+            headers:
+              Reload-ID:
+                description: ID of the requested reload
+                type: string
+            schema:
+              $ref: '#/definitions/log_forward'
+          "400":
+            $ref: '#/responses/BadRequest'
+          "404":
+            $ref: '#/responses/NotFound'
+          default:
+            $ref: '#/responses/DefaultError'
+        summary: Replace a log forward
+        tags:
+        - LogForward
   /services/haproxy/configuration/servers:
       get:
         description: Returns an array of all servers that are configured in specified backend.

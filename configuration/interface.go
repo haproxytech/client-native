@@ -43,6 +43,7 @@ type Configuration interface {
 	HTTPResponseRule
 	HTTPAfterResponseRule
 	LogTarget
+	LogForward
 	Nameserver
 	PeerEntry
 	PeerSection

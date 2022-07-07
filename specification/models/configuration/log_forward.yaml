@@ -1,0 +1,22 @@
+---
+log_forward:
+  title: Log Forward
+  description: HAProxy log forward configuration
+  type: object
+  required:
+    - name
+  properties:
+    name:
+      type: string
+      pattern: '^[A-Za-z0-9-_.:]+$'
+      x-nullable: false
+    backlog:
+      type: integer
+      x-nullable: true
+    maxconn:
+      type: integer
+      x-nullable: true
+    timeout_client:
+      type: integer
+      x-nullable: true
+  additionalProperties: false
