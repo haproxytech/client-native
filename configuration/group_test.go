@@ -19,7 +19,7 @@ import (
 	"io/ioutil"
 	"testing"
 
-	"github.com/haproxytech/client-native/v3/models"
+	"github.com/haproxytech/client-native/v4/models"
 )
 
 func generateGroupConfig(config string) (string, error) {
@@ -35,8 +35,7 @@ func generateGroupConfig(config string) (string, error) {
 }
 
 func TestGroup(t *testing.T) {
-	config :=
-		`# _version=1
+	config := `# _version=1
 global
 	daemon
 

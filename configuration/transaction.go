@@ -34,8 +34,8 @@ import (
 	spoe "github.com/haproxytech/config-parser/v4/spoe"
 	shellquote "github.com/kballard/go-shellquote"
 
-	"github.com/haproxytech/client-native/v3/configuration/options"
-	"github.com/haproxytech/client-native/v3/models"
+	"github.com/haproxytech/client-native/v4/configuration/options"
+	"github.com/haproxytech/client-native/v4/models"
 )
 
 type TransactionClient interface {

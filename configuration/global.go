@@ -28,8 +28,8 @@ import (
 	"github.com/haproxytech/config-parser/v4/params"
 	"github.com/haproxytech/config-parser/v4/types"
 
-	"github.com/haproxytech/client-native/v3/misc"
-	"github.com/haproxytech/client-native/v3/models"
+	"github.com/haproxytech/client-native/v4/misc"
+	"github.com/haproxytech/client-native/v4/models"
 )
 
 type Global interface {

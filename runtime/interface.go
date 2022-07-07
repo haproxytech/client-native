@@ -20,8 +20,8 @@ import (
 	"io"
 	"mime/multipart"
 
-	"github.com/haproxytech/client-native/v3/models"
-	"github.com/haproxytech/client-native/v3/runtime/options"
+	"github.com/haproxytech/client-native/v4/models"
+	"github.com/haproxytech/client-native/v4/runtime/options"
 )
 
 type Maps interface {

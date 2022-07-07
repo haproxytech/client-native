@@ -16,7 +16,7 @@ linters-settings:
     min-len: 2
     min-occurrences: 3
   gci:
-    local-prefixes: github.com/haproxytech/client-native/v3
+    local-prefixes: github.com/haproxytech/client-native/v4
 
 linters:
   enable-all: true

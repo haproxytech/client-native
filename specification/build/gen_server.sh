@@ -1,7 +1,7 @@
 swagger generate server -f haproxy_spec.yaml \
     -A "Data Plane" \
     -t /home/mjuraga/projects/haproxytech/ \
-    --existing-models github.com/haproxytech/client-native/v3/models \
+    --existing-models github.com/haproxytech/client-native/v4/models \
     --exclude-main \
     --skip-models \
     -s dataplaneapi \

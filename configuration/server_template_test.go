@@ -5,7 +5,7 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/haproxytech/client-native/v3/models"
+	"github.com/haproxytech/client-native/v4/models"
 )
 
 func TestGetServerTemplates(t *testing.T) { //nolint:gocognit,gocyclo

@@ -22,8 +22,8 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"github.com/haproxytech/client-native/v3/misc"
-	"github.com/haproxytech/client-native/v3/models"
+	"github.com/haproxytech/client-native/v4/misc"
+	"github.com/haproxytech/client-native/v4/models"
 )
 
 func TestGetSites(t *testing.T) { //nolint:gocognit,gocyclo
@@ -280,14 +280,14 @@ func TestCreateEditDeleteSite(t *testing.T) {
 			Mode:    "http",
 			Maxconn: &mConn,
 			Listeners: []*models.Bind{
-				&models.Bind{
+				{
 					BindParams: models.BindParams{
 						Name: "created1",
 					},
 					Address: "127.0.0.1",
 					Port:    &port,
 				},
-				&models.Bind{
+				{
 					BindParams: models.BindParams{
 						Name: "created2",
 					},
@@ -364,7 +364,7 @@ func TestCreateEditDeleteSite(t *testing.T) {
 			Mode:    "tcp",
 			Maxconn: &mConn,
 			Listeners: []*models.Bind{
-				&models.Bind{
+				{
 					BindParams: models.BindParams{
 						Name: "created1",
 					},

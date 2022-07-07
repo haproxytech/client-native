@@ -3,11 +3,11 @@ package clientnative
 import (
 	"context"
 
-	"github.com/haproxytech/client-native/v3/configuration"
-	"github.com/haproxytech/client-native/v3/options"
-	"github.com/haproxytech/client-native/v3/runtime"
-	"github.com/haproxytech/client-native/v3/spoe"
-	"github.com/haproxytech/client-native/v3/storage"
+	"github.com/haproxytech/client-native/v4/configuration"
+	"github.com/haproxytech/client-native/v4/options"
+	"github.com/haproxytech/client-native/v4/runtime"
+	"github.com/haproxytech/client-native/v4/spoe"
+	"github.com/haproxytech/client-native/v4/storage"
 )
 
 type HAProxyClient interface {

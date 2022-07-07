@@ -16,7 +16,7 @@ limitations under the License.
 
 package options
 
-import "github.com/haproxytech/client-native/v3/storage"
+import "github.com/haproxytech/client-native/v4/storage"
 
 type sslCrtStore struct {
 	storage storage.Storage

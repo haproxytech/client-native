@@ -23,8 +23,8 @@ import (
 	"github.com/haproxytech/config-parser/v4/spoe"
 	"github.com/haproxytech/config-parser/v4/types"
 
-	conf "github.com/haproxytech/client-native/v3/configuration"
-	"github.com/haproxytech/client-native/v3/models"
+	conf "github.com/haproxytech/client-native/v4/configuration"
+	"github.com/haproxytech/client-native/v4/models"
 )
 
 // GetGroups returns configuration version and an array of

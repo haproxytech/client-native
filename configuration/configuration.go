@@ -32,8 +32,8 @@ import (
 	"github.com/haproxytech/config-parser/v4/types"
 	"github.com/pkg/errors"
 
-	"github.com/haproxytech/client-native/v3/misc"
-	"github.com/haproxytech/client-native/v3/models"
+	"github.com/haproxytech/client-native/v4/misc"
+	"github.com/haproxytech/client-native/v4/models"
 )
 
 // ClientParams is just a placeholder for all client options

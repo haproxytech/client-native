@@ -21,7 +21,7 @@ import (
 
 	"github.com/go-openapi/strfmt"
 
-	"github.com/haproxytech/client-native/v3/models"
+	"github.com/haproxytech/client-native/v4/models"
 )
 
 // GetInfo fetches HAProxy info from runtime API

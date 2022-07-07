@@ -7,7 +7,7 @@ import (
 	"time"
 
 	"github.com/go-openapi/strfmt"
-	"github.com/haproxytech/client-native/v3/models"
+	"github.com/haproxytech/client-native/v4/models"
 )
 
 func TestSingleRuntime_ShowCerts(t *testing.T) {

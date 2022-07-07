@@ -19,7 +19,7 @@ import (
 	"io/ioutil"
 	"testing"
 
-	"github.com/haproxytech/client-native/v3/models"
+	"github.com/haproxytech/client-native/v4/models"
 )
 
 func generateUserListConfig(config string) (string, error) {
@@ -35,8 +35,7 @@ func generateUserListConfig(config string) (string, error) {
 }
 
 func TestUserList(t *testing.T) {
-	config :=
-		`# _version=1
+	config := `# _version=1
 global
 	daemon
 

@@ -21,8 +21,8 @@ import (
 
 	"github.com/stretchr/testify/suite"
 
-	"github.com/haproxytech/client-native/v3/misc"
-	"github.com/haproxytech/client-native/v3/models"
+	"github.com/haproxytech/client-native/v4/misc"
+	"github.com/haproxytech/client-native/v4/models"
 )
 
 const (

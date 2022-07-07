@@ -28,8 +28,8 @@ import (
 	http_actions "github.com/haproxytech/config-parser/v4/parsers/http/actions"
 	"github.com/haproxytech/config-parser/v4/types"
 
-	"github.com/haproxytech/client-native/v3/misc"
-	"github.com/haproxytech/client-native/v3/models"
+	"github.com/haproxytech/client-native/v4/misc"
+	"github.com/haproxytech/client-native/v4/models"
 )
 
 type HTTPAfterResponseRule interface {

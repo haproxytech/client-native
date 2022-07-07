@@ -1,4 +1,4 @@
-module github.com/haproxytech/client-native/v3
+module github.com/haproxytech/client-native/v4
 
 go 1.17
 

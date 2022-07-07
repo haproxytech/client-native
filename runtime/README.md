@@ -8,8 +8,8 @@ package main
 import (
 	"log"
 
-	"github.com/haproxytech/client-native/v3/runtime"
-	runtime_options "github.com/haproxytech/client-native/v3/runtime/options"
+	"github.com/haproxytech/client-native/v4/runtime"
+	runtime_options "github.com/haproxytech/client-native/v4/runtime/options"
 )
 
 func main() {

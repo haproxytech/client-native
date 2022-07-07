@@ -20,8 +20,8 @@ import (
 
 	"github.com/go-openapi/strfmt"
 
-	conf "github.com/haproxytech/client-native/v3/configuration"
-	"github.com/haproxytech/client-native/v3/models"
+	conf "github.com/haproxytech/client-native/v4/configuration"
+	"github.com/haproxytech/client-native/v4/models"
 )
 
 // GetScopes returns configuration version and an array of
