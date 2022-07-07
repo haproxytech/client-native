@@ -16,7 +16,7 @@ log_targets:
         description: Parent type
         required: true
         type: string
-        enum: [frontend, backend, defaults, global]
+        enum: [frontend, backend, defaults, global, log_forward]
       - $ref: "#/parameters/transaction_id"
     responses:
       '200':
@@ -52,7 +52,7 @@ log_targets:
         description: Parent type
         required: true
         type: string
-        enum: [frontend, backend, defaults, global]
+        enum: [frontend, backend, defaults, global, log_forward]
       - name: data
         in: body
         required: true
@@ -102,7 +102,7 @@ log_targets_one:
         description: Parent type
         required: true
         type: string
-        enum: [frontend, backend, defaults, global]
+        enum: [frontend, backend, defaults, global, log_forward]
       - $ref: "#/parameters/transaction_id"
     responses:
       '200':
@@ -143,7 +143,7 @@ log_targets_one:
         description: Parent type
         required: true
         type: string
-        enum: [frontend, backend, defaults, global]
+        enum: [frontend, backend, defaults, global, log_forward]
       - name: data
         in: body
         required: true
@@ -192,7 +192,7 @@ log_targets_one:
         description: Parent type
         required: true
         type: string
-        enum: [frontend, backend, defaults, global]
+        enum: [frontend, backend, defaults, global, log_forward]
       - $ref: "#/parameters/transaction_id"
       - $ref: "#/parameters/version"
       - $ref: "#/parameters/force_reload"

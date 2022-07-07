@@ -14367,6 +14367,7 @@ paths:
           - backend
           - defaults
           - global
+          - log_forward
           in: query
           name: parent_type
           required: true
@@ -14407,6 +14408,7 @@ paths:
           - backend
           - defaults
           - global
+          - log_forward
           in: query
           name: parent_type
           required: true
@@ -14462,6 +14464,7 @@ paths:
           - backend
           - defaults
           - global
+          - log_forward
           in: query
           name: parent_type
           required: true
@@ -14505,6 +14508,7 @@ paths:
           - backend
           - defaults
           - global
+          - log_forward
           in: query
           name: parent_type
           required: true
@@ -14551,6 +14555,7 @@ paths:
           - backend
           - defaults
           - global
+          - log_forward
           in: query
           name: parent_type
           required: true

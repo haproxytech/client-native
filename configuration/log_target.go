@@ -82,6 +82,8 @@ func (c *client) GetLogTarget(id int64, parentType, parentName string, transacti
 		section = parser.Backends
 	case "frontend":
 		section = parser.Frontends
+	case "log_forward":
+		section = parser.LogForward
 	}
 
 	data, err := p.GetOne(section, parentName, "log", int(id))
@@ -115,6 +117,8 @@ func (c *client) DeleteLogTarget(id int64, parentType string, parentName string,
 		section = parser.Backends
 	case "frontend":
 		section = parser.Frontends
+	case "log_forward":
+		section = parser.LogForward
 	}
 
 	if err := p.Delete(section, parentName, "log", int(id)); err != nil {
@@ -155,6 +159,8 @@ func (c *client) CreateLogTarget(parentType string, parentName string, data *mod
 		section = parser.Backends
 	case "frontend":
 		section = parser.Frontends
+	case "log_forward":
+		section = parser.LogForward
 	}
 
 	if err := p.Insert(section, parentName, "log", SerializeLogTarget(*data), int(*data.Index)); err != nil {
@@ -193,6 +199,8 @@ func (c *client) EditLogTarget(id int64, parentType string, parentName string, d
 		section = parser.Backends
 	case "frontend":
 		section = parser.Frontends
+	case "log_forward":
+		section = parser.LogForward
 	}
 
 	if _, err := p.GetOne(section, parentName, "log", int(id)); err != nil {
@@ -223,6 +231,8 @@ func ParseLogTargets(t, pName string, p parser.Parser) (models.LogTargets, error
 		section = parser.Backends
 	case "frontend":
 		section = parser.Frontends
+	case "log_forward":
+		section = parser.LogForward
 	}
 
 	logTargets := models.LogTargets{}
