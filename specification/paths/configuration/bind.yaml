@@ -10,8 +10,16 @@ binds:
       - name: frontend
         in: query
         description: Parent frontend name
-        required: true
         type: string
+      - name: parent_name
+        in: query
+        description: Parent name
+        type: string
+      - name: parent_type
+        in: query
+        description: Parent type
+        type: string
+        enum: [frontend, log_forward]
       - $ref: "#/parameters/transaction_id"
     responses:
       '200':
@@ -41,8 +49,16 @@ binds:
       - name: frontend
         in: query
         description: Parent frontend name
-        required: true
         type: string
+      - name: parent_name
+        in: query
+        description: Parent name
+        type: string
+      - name: parent_type
+        in: query
+        description: Parent type
+        type: string
+        enum: [frontend, log_forward]
       - name: data
         in: body
         required: true
@@ -86,8 +102,16 @@ binds_one:
       - name: frontend
         in: query
         description: Parent frontend name
-        required: true
         type: string
+      - name: parent_name
+        in: query
+        description: Parent name
+        type: string
+      - name: parent_type
+        in: query
+        description: Parent type
+        type: string
+        enum: [frontend, log_forward]
       - $ref: "#/parameters/transaction_id"
     responses:
       '200':
@@ -122,8 +146,16 @@ binds_one:
       - name: frontend
         in: query
         description: Parent frontend name
-        required: true
         type: string
+      - name: parent_name
+        in: query
+        description: Parent name
+        type: string
+      - name: parent_type
+        in: query
+        description: Parent type
+        type: string
+        enum: [frontend, log_forward]
       - name: data
         in: body
         required: true
@@ -166,8 +198,16 @@ binds_one:
       - name: frontend
         in: query
         description: Parent frontend name
-        required: true
         type: string
+      - name: parent_name
+        in: query
+        description: Parent name
+        type: string
+      - name: parent_type
+        in: query
+        description: Parent type
+        type: string
+        enum: [frontend, log_forward]
       - $ref: "#/parameters/transaction_id"
       - $ref: "#/parameters/version"
       - $ref: "#/parameters/force_reload"

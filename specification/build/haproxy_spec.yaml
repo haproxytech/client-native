@@ -11003,7 +11003,17 @@ paths:
         - description: Parent frontend name
           in: query
           name: frontend
-          required: true
+          type: string
+        - description: Parent name
+          in: query
+          name: parent_name
+          type: string
+        - description: Parent type
+          enum:
+          - frontend
+          - log_forward
+          in: query
+          name: parent_type
           type: string
         - $ref: '#/parameters/transaction_id'
         responses:
@@ -11034,7 +11044,17 @@ paths:
         - description: Parent frontend name
           in: query
           name: frontend
-          required: true
+          type: string
+        - description: Parent name
+          in: query
+          name: parent_name
+          type: string
+        - description: Parent type
+          enum:
+          - frontend
+          - log_forward
+          in: query
+          name: parent_type
           type: string
         - in: body
           name: data
@@ -11079,7 +11099,17 @@ paths:
         - description: Parent frontend name
           in: query
           name: frontend
-          required: true
+          type: string
+        - description: Parent name
+          in: query
+          name: parent_name
+          type: string
+        - description: Parent type
+          enum:
+          - frontend
+          - log_forward
+          in: query
+          name: parent_type
           type: string
         - $ref: '#/parameters/transaction_id'
         - $ref: '#/parameters/version'
@@ -11112,7 +11142,17 @@ paths:
         - description: Parent frontend name
           in: query
           name: frontend
-          required: true
+          type: string
+        - description: Parent name
+          in: query
+          name: parent_name
+          type: string
+        - description: Parent type
+          enum:
+          - frontend
+          - log_forward
+          in: query
+          name: parent_type
           type: string
         - $ref: '#/parameters/transaction_id'
         responses:
@@ -11148,7 +11188,17 @@ paths:
         - description: Parent frontend name
           in: query
           name: frontend
-          required: true
+          type: string
+        - description: Parent name
+          in: query
+          name: parent_name
+          type: string
+        - description: Parent type
+          enum:
+          - frontend
+          - log_forward
+          in: query
+          name: parent_type
           type: string
         - in: body
           name: data

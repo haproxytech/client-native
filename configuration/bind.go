@@ -31,16 +31,16 @@ import (
 )
 
 type Bind interface {
-	GetBinds(frontend string, transactionID string) (int64, models.Binds, error)
-	GetBind(name string, frontend string, transactionID string) (int64, *models.Bind, error)
-	DeleteBind(name string, frontend string, transactionID string, version int64) error
-	CreateBind(frontend string, data *models.Bind, transactionID string, version int64) error
-	EditBind(name string, frontend string, data *models.Bind, transactionID string, version int64) error
+	GetBinds(parentType string, parentName string, transactionID string) (int64, models.Binds, error)
+	GetBind(name string, parentType string, parentName string, transactionID string) (int64, *models.Bind, error)
+	DeleteBind(name string, parentType string, parentName string, transactionID string, version int64) error
+	CreateBind(parentType string, parentName string, data *models.Bind, transactionID string, version int64) error
+	EditBind(name string, parentType string, parentName string, data *models.Bind, transactionID string, version int64) error
 }
 
 // GetBinds returns configuration version and an array of
 // configured binds in the specified frontend. Returns error on fail.
-func (c *client) GetBinds(frontend string, transactionID string) (int64, models.Binds, error) {
+func (c *client) GetBinds(parentType string, parentName string, transactionID string) (int64, models.Binds, error) {
 	p, err := c.GetParser(transactionID)
 	if err != nil {
 		return 0, nil, err
@@ -51,9 +51,9 @@ func (c *client) GetBinds(frontend string, transactionID string) (int64, models.
 		return 0, nil, err
 	}
 
-	binds, err := ParseBinds(frontend, p)
+	binds, err := ParseBinds(parentType, parentName, p)
 	if err != nil {
-		return v, nil, c.HandleError("", "frontend", frontend, "", false, err)
+		return v, nil, c.HandleError("", parentType, parentName, "", false, err)
 	}
 
 	return v, binds, nil
@@ -61,7 +61,7 @@ func (c *client) GetBinds(frontend string, transactionID string) (int64, models.
 
 // GetBind returns configuration version and a requested bind
 // in the specified frontend. Returns error on fail or if bind does not exist.
-func (c *client) GetBind(name string, frontend string, transactionID string) (int64, *models.Bind, error) {
+func (c *client) GetBind(name string, parentType string, parentName string, transactionID string) (int64, *models.Bind, error) {
 	p, err := c.GetParser(transactionID)
 	if err != nil {
 		return 0, nil, err
@@ -72,9 +72,9 @@ func (c *client) GetBind(name string, frontend string, transactionID string) (in
 		return 0, nil, err
 	}
 
-	bind, _ := GetBindByName(name, frontend, p)
+	bind, _ := GetBindByName(name, parentType, parentName, p)
 	if bind == nil {
-		return v, nil, NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("Bind %s does not exist in frontend %s", name, frontend))
+		return v, nil, NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("Bind %s does not exist in %s %s", name, parentName, parentType))
 	}
 
 	return v, bind, nil
@@ -82,20 +82,20 @@ func (c *client) GetBind(name string, frontend string, transactionID string) (in
 
 // DeleteBind deletes a bind in configuration. One of version or transactionID is
 // mandatory. Returns error on fail, nil on success.
-func (c *client) DeleteBind(name string, frontend string, transactionID string, version int64) error {
+func (c *client) DeleteBind(name string, parentType string, parentName string, transactionID string, version int64) error {
 	p, t, err := c.loadDataForChange(transactionID, version)
 	if err != nil {
 		return err
 	}
 
-	bind, i := GetBindByName(name, frontend, p)
+	bind, i := GetBindByName(name, parentType, parentName, p)
 	if bind == nil {
-		e := NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("Bind %s does not exist in frontend %s", name, frontend))
-		return c.HandleError(name, "frontend", frontend, t, transactionID == "", e)
+		e := NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("Bind %s does not exist in %s %s", name, parentName, parentType))
+		return c.HandleError(name, parentType, parentName, t, transactionID == "", e)
 	}
 
-	if err := p.Delete(parser.Frontends, frontend, "bind", i); err != nil {
-		return c.HandleError(name, "frontend", frontend, t, transactionID == "", err)
+	if err := p.Delete(bindSectionType(parentType), parentName, "bind", i); err != nil {
+		return c.HandleError(name, parentType, parentName, t, transactionID == "", err)
 	}
 
 	if err := c.SaveData(p, t, transactionID == ""); err != nil {
@@ -106,7 +106,7 @@ func (c *client) DeleteBind(name string, frontend string, transactionID string, 
 
 // CreateBind creates a bind in configuration. One of version or transactionID is
 // mandatory. Returns error on fail, nil on success.
-func (c *client) CreateBind(frontend string, data *models.Bind, transactionID string, version int64) error {
+func (c *client) CreateBind(parentType string, parentName string, data *models.Bind, transactionID string, version int64) error {
 	if c.UseModelsValidation {
 		validationErr := data.Validate(strfmt.Default)
 		if validationErr != nil {
@@ -123,14 +123,14 @@ func (c *client) CreateBind(frontend string, data *models.Bind, transactionID st
 		return err
 	}
 
-	bind, _ := GetBindByName(data.Name, frontend, p)
+	bind, _ := GetBindByName(data.Name, parentType, parentName, p)
 	if bind != nil {
-		e := NewConfError(ErrObjectAlreadyExists, fmt.Sprintf("Bind %s already exists in frontend %s", data.Name, frontend))
-		return c.HandleError(data.Name, "frontend", frontend, t, transactionID == "", e)
+		e := NewConfError(ErrObjectAlreadyExists, fmt.Sprintf("bind %s already exists in %s %s", data.Name, parentName, parentType))
+		return c.HandleError(data.Name, parentType, parentName, t, transactionID == "", e)
 	}
 
-	if err := p.Insert(parser.Frontends, frontend, "bind", SerializeBind(*data), -1); err != nil {
-		return c.HandleError(data.Name, "frontend", frontend, t, transactionID == "", err)
+	if err := p.Insert(bindSectionType(parentType), parentName, "bind", SerializeBind(*data), -1); err != nil {
+		return c.HandleError(data.Name, parentType, parentName, t, transactionID == "", err)
 	}
 
 	if err := c.SaveData(p, t, transactionID == ""); err != nil {
@@ -142,7 +142,7 @@ func (c *client) CreateBind(frontend string, data *models.Bind, transactionID st
 
 // EditBind edits a bind in configuration. One of version or transactionID is
 // mandatory. Returns error on fail, nil on success.
-func (c *client) EditBind(name string, frontend string, data *models.Bind, transactionID string, version int64) error {
+func (c *client) EditBind(name string, parentType string, parentName string, data *models.Bind, transactionID string, version int64) error {
 	if c.UseModelsValidation {
 		validationErr := data.Validate(strfmt.Default)
 		if validationErr != nil {
@@ -158,14 +158,14 @@ func (c *client) EditBind(name string, frontend string, data *models.Bind, trans
 		return err
 	}
 
-	bind, i := GetBindByName(name, frontend, p)
+	bind, i := GetBindByName(name, parentType, parentName, p)
 	if bind == nil {
-		e := NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("Bind %v does not exist in frontend %s", name, frontend))
-		return c.HandleError(data.Name, "frontend", frontend, t, transactionID == "", e)
+		e := NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("Bind %v does not exist in %s %s", name, parentName, parentType))
+		return c.HandleError(data.Name, parentType, parentType, t, transactionID == "", e)
 	}
 
-	if err := p.Set(parser.Frontends, frontend, "bind", SerializeBind(*data), i); err != nil {
-		return c.HandleError(data.Name, "frontend", frontend, t, transactionID == "", err)
+	if err := p.Set(bindSectionType(parentType), parentName, "bind", SerializeBind(*data), i); err != nil {
+		return c.HandleError(data.Name, parentType, parentName, t, transactionID == "", err)
 	}
 
 	if err := c.SaveData(p, t, transactionID == ""); err != nil {
@@ -175,10 +175,10 @@ func (c *client) EditBind(name string, frontend string, data *models.Bind, trans
 	return nil
 }
 
-func ParseBinds(frontend string, p parser.Parser) (models.Binds, error) {
+func ParseBinds(parentType string, parentName string, p parser.Parser) (models.Binds, error) {
 	binds := models.Binds{}
 
-	data, err := p.Get(parser.Frontends, frontend, "bind", false)
+	data, err := p.Get(bindSectionType(parentType), parentName, "bind", false)
 	if err != nil {
 		if errors.Is(err, parser_errors.ErrFetch) {
 			return binds, nil
@@ -600,8 +600,8 @@ func serializeBindParams(b models.BindParams, path string) (options []params.Bin
 	return options
 }
 
-func GetBindByName(name string, frontend string, p parser.Parser) (*models.Bind, int) {
-	binds, err := ParseBinds(frontend, p)
+func GetBindByName(name string, parentType string, parentName string, p parser.Parser) (*models.Bind, int) {
+	binds, err := ParseBinds(parentType, parentName, p)
 	if err != nil {
 		return nil, 0
 	}
@@ -625,4 +625,14 @@ func validateParams(data *models.Bind) error {
 		return nil
 	}
 	return fmt.Errorf("missing port or address in bind %s", data.Name)
+}
+
+func bindSectionType(parentType string) parser.Section {
+	var sectionType parser.Section
+	if parentType == "frontend" {
+		sectionType = parser.Frontends
+	} else if parentType == "log_forward" {
+		sectionType = parser.LogForward
+	}
+	return sectionType
 }

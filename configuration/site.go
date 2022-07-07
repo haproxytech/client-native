@@ -116,7 +116,7 @@ func (c *client) CreateSite(data *models.Site, transactionID string, version int
 			if l.Name == "" {
 				l.Name = l.Address + ":" + strconv.FormatInt(*l.Port, 10)
 			}
-			err = c.CreateBind(data.Name, l, t, 0)
+			err = c.CreateBind("frontend", data.Name, l, t, 0)
 			if err != nil {
 				res = append(res, err)
 			}
@@ -198,7 +198,7 @@ func (c *client) EditSite(name string, data *models.Site, transactionID string, 
 				for _, confL := range confS.Service.Listeners {
 					if l.Name == confL.Name {
 						if !reflect.DeepEqual(l, confL) {
-							errB := c.EditBind(l.Name, data.Name, l, t, 0)
+							errB := c.EditBind(l.Name, "frontend", data.Name, l, t, 0)
 							if errB != nil {
 								res = append(res, errB)
 							}
@@ -212,7 +212,7 @@ func (c *client) EditSite(name string, data *models.Site, transactionID string, 
 					if l.Name == "" {
 						l.Name = l.Address + ":" + strconv.FormatInt(*l.Port, 10)
 					}
-					err = c.CreateBind(data.Name, l, t, 0)
+					err = c.CreateBind("frontend", data.Name, l, t, 0)
 					if err != nil {
 						res = append(res, err)
 					}
@@ -228,7 +228,7 @@ func (c *client) EditSite(name string, data *models.Site, transactionID string, 
 					}
 				}
 				if !found {
-					err = c.DeleteBind(confL.Name, data.Name, t, 0)
+					err = c.DeleteBind(confL.Name, "frontend", data.Name, t, 0)
 					if err != nil {
 						res = append(res, err)
 					}
@@ -483,7 +483,7 @@ func (c *client) parseSite(s string, p parser.Parser) *models.Site {
 		return nil
 	}
 
-	ls, _ := ParseBinds(s, p)
+	ls, _ := ParseBinds("frontend", s, p)
 	site := &models.Site{
 		Name: s,
 		Service: &models.SiteService{
