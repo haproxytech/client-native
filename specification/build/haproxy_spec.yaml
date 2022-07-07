@@ -2175,6 +2175,40 @@ definitions:
     type: array
     items:
       $ref: '#/definitions/ring'
+  dgram_bind:
+      description: HAProxy log forward dgram bind configuration
+      properties:
+        address:
+          pattern: ^[^\s]+$
+          type: string
+        interface:
+          type: string
+        name:
+          pattern: ^[^\s]+$
+          type: string
+          x-nullable: false
+        namespace:
+          type: string
+        port:
+          maximum: 65535
+          minimum: 1
+          type: integer
+          x-nullable: true
+        port-range-end:
+          maximum: 65535
+          minimum: 1
+          type: integer
+          x-nullable: true
+        transparent:
+          type: boolean
+      title: Dgram Bind
+      type: object
+  dgram_binds:
+    title: Dgram Bind
+    description: HAProxy dgram bind array
+    type: array
+    items:
+      $ref: '#/definitions/dgram_bind'
   userlist:
       description: HAProxy configuration of access control
       properties:
@@ -8465,6 +8499,7 @@ tags:
 - name: DeclareCapture
 - name: Defaults
   description: Managing defaults configuration (advanced mode)
+- name: DgramBind
 - name: Discovery
   description: API autodiscover endpoints
 - name: Filter
@@ -11117,6 +11152,196 @@ paths:
         summary: Replace a bind
         tags:
         - Bind
+  /services/haproxy/configuration/dgram_binds:
+      get:
+        description: Returns an array of all dgram binds that are configured in specified
+          log forward.
+        operationId: getDgramBinds
+        parameters:
+        - description: Parent log forward name
+          in: query
+          name: log_forward
+          required: true
+          type: string
+        - $ref: '#/parameters/transaction_id'
+        responses:
+          "200":
+            description: Successful operation
+            headers:
+              Configuration-Version:
+                description: Configuration file version
+                type: string
+            schema:
+              properties:
+                _version:
+                  type: integer
+                data:
+                  $ref: '#/definitions/dgram_binds'
+              required:
+              - data
+              type: object
+          default:
+            $ref: '#/responses/DefaultError'
+        summary: Return an array of dgram binds
+        tags:
+        - DgramBind
+      post:
+        description: Adds a new dgram bind in the specified log forward in the configuration
+          file.
+        operationId: createDgramBind
+        parameters:
+        - description: Parent log forward name
+          in: query
+          name: log_forward
+          required: true
+          type: string
+        - in: body
+          name: data
+          required: true
+          schema:
+            $ref: '#/definitions/dgram_bind'
+        - $ref: '#/parameters/transaction_id'
+        - $ref: '#/parameters/version'
+        - $ref: '#/parameters/force_reload'
+        responses:
+          "201":
+            description: Bind created
+            schema:
+              $ref: '#/definitions/dgram_bind'
+          "202":
+            description: Configuration change accepted and reload requested
+            headers:
+              Reload-ID:
+                description: ID of the requested reload
+                type: string
+            schema:
+              $ref: '#/definitions/dgram_bind'
+          "400":
+            $ref: '#/responses/BadRequest'
+          "409":
+            $ref: '#/responses/AlreadyExists'
+          default:
+            $ref: '#/responses/DefaultError'
+        summary: Add a new dgram bind
+        tags:
+        - DgramBind
+  /services/haproxy/configuration/dgram_binds/{name}:
+      delete:
+        description: Deletes a dgram bind configuration by it's name in the specified log
+          forward.
+        operationId: deleteDgramBind
+        parameters:
+        - description: Bind name
+          in: path
+          name: name
+          required: true
+          type: string
+        - description: Parent log forward name
+          in: query
+          name: log_forward
+          required: true
+          type: string
+        - $ref: '#/parameters/transaction_id'
+        - $ref: '#/parameters/version'
+        - $ref: '#/parameters/force_reload'
+        responses:
+          "202":
+            description: Configuration change accepted and reload requested
+            headers:
+              Reload-ID:
+                description: ID of the requested reload
+                type: string
+          "204":
+            description: Bind deleted
+          "404":
+            $ref: '#/responses/NotFound'
+          default:
+            $ref: '#/responses/DefaultError'
+        summary: Delete a dgram bind
+        tags:
+        - DgramBind
+      get:
+        description: Returns one dgram bind configuration by it's name in the specified
+          log forward.
+        operationId: getDgramBind
+        parameters:
+        - description: Bind name
+          in: path
+          name: name
+          required: true
+          type: string
+        - description: Parent log forward name
+          in: query
+          name: log_forward
+          required: true
+          type: string
+        - $ref: '#/parameters/transaction_id'
+        responses:
+          "200":
+            description: Successful operation
+            headers:
+              Configuration-Version:
+                description: Configuration file version
+                type: string
+            schema:
+              properties:
+                _version:
+                  type: integer
+                data:
+                  $ref: '#/definitions/dgram_bind'
+              type: object
+          "404":
+            $ref: '#/responses/AlreadyExists'
+          default:
+            $ref: '#/responses/DefaultError'
+        summary: Return one dgram bind
+        tags:
+        - DgramBind
+      put:
+        description: Replaces a dgram bind configuration by it's name in the specified log
+          forward.
+        operationId: replaceDgramBind
+        parameters:
+        - description: Bind name
+          in: path
+          name: name
+          required: true
+          type: string
+        - description: Parent log forward name
+          in: query
+          name: log_forward
+          required: true
+          type: string
+        - in: body
+          name: data
+          required: true
+          schema:
+            $ref: '#/definitions/dgram_bind'
+        - $ref: '#/parameters/transaction_id'
+        - $ref: '#/parameters/version'
+        - $ref: '#/parameters/force_reload'
+        responses:
+          "200":
+            description: Bind replaced
+            schema:
+              $ref: '#/definitions/dgram_bind'
+          "202":
+            description: Configuration change accepted and reload requested
+            headers:
+              Reload-ID:
+                description: ID of the requested reload
+                type: string
+            schema:
+              $ref: '#/definitions/dgram_bind'
+          "400":
+            $ref: '#/responses/BadRequest'
+          "404":
+            $ref: '#/responses/NotFound'
+          default:
+            $ref: '#/responses/DefaultError'
+        summary: Replace a dgram bind
+        tags:
+        - DgramBind
   /services/haproxy/configuration/servers:
       get:
         description: Returns an array of all servers that are configured in specified backend.

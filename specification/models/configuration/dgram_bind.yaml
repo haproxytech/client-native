@@ -1,0 +1,29 @@
+---
+dgram_bind:
+  title: Dgram Bind
+  description: HAProxy log forward dgram bind configuration
+  type: object
+  properties:
+    name:
+      type: string
+      pattern: '^[^\s]+$'
+      x-nullable: false
+    address:
+      type: string
+      pattern: '^[^\s]+$'
+    port:
+      maximum: 65535
+      minimum: 1
+      type: integer
+      x-nullable: true
+    port-range-end:
+      maximum: 65535
+      minimum: 1
+      type: integer
+      x-nullable: true
+    interface:
+      type: string
+    namespace:
+      type: string
+    transparent:
+      type: boolean

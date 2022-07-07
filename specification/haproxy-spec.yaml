@@ -56,6 +56,14 @@ definitions:
     type: array
     items:
       $ref: '#/definitions/ring'
+  dgram_bind:
+    $ref: "models/configuration/dgram_bind.yaml#/dgram_bind"
+  dgram_binds:
+    title: Dgram Bind
+    description: HAProxy dgram bind array
+    type: array
+    items:
+      $ref: '#/definitions/dgram_bind'
   userlist:
     $ref: "models/configuration/userlist.yaml#/userlist"
   userlists:
@@ -605,6 +613,7 @@ tags:
   - name: Peer
   - name: PeerEntry
   - name: Ring
+  - name: DgramBind
   - name: Cluster
   - name: Maps
   - name: SpecificationOpenapiv3
@@ -708,6 +717,10 @@ paths:
     $ref: "paths/configuration/bind.yaml#/binds"
   /services/haproxy/configuration/binds/{name}:
     $ref: "paths/configuration/bind.yaml#/binds_one"
+  /services/haproxy/configuration/dgram_binds:
+    $ref: "paths/configuration/dgram_bind.yaml#/dgram_binds"
+  /services/haproxy/configuration/dgram_binds/{name}:
+    $ref: "paths/configuration/dgram_bind.yaml#/dgram_binds_one"
   /services/haproxy/configuration/servers:
     $ref: "paths/configuration/server.yaml#/servers"
   /services/haproxy/configuration/servers/{name}:

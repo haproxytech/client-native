@@ -34,6 +34,7 @@ type Configuration interface {
 	Cache
 	Capture
 	Defaults
+	DgramBind
 	Frontend
 	Filter
 	Global

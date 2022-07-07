@@ -1,0 +1,186 @@
+---
+dgram_binds:
+  get:
+    summary: Return an array of dgram binds
+    description: Returns an array of all dgram binds that are configured in specified log forward.
+    operationId: getDgramBinds
+    tags:
+      - DgramBind
+    parameters:
+      - name: log_forward
+        in: query
+        description: Parent log forward name
+        required: true
+        type: string
+      - $ref: "#/parameters/transaction_id"
+    responses:
+      '200':
+        description: Successful operation
+        headers:
+          Configuration-Version:
+            description: Configuration file version
+            type: string
+        schema:
+          type: object
+          required:
+            - data
+          properties:
+            data:
+              $ref: "#/definitions/dgram_binds"
+            _version:
+              type: integer
+      'default':
+        $ref: '#/responses/DefaultError'
+  post:
+    summary: Add a new dgram bind
+    description: Adds a new dgram bind in the specified log forward in the configuration file.
+    operationId: createDgramBind
+    tags:
+      - DgramBind
+    parameters:
+      - name: log_forward
+        in: query
+        description: Parent log forward name
+        required: true
+        type: string
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/dgram_bind'
+      - $ref: "#/parameters/transaction_id"
+      - $ref: "#/parameters/version"
+      - $ref: "#/parameters/force_reload"
+    responses:
+      '202':
+        description: Configuration change accepted and reload requested
+        headers:
+          Reload-ID:
+            description: ID of the requested reload
+            type: string
+        schema:
+          $ref: "#/definitions/dgram_bind"
+      '201':
+        description: Bind created
+        schema:
+          $ref: "#/definitions/dgram_bind"
+      '409':
+        $ref: '#/responses/AlreadyExists'
+      '400':
+        $ref: '#/responses/BadRequest'
+      'default':
+        $ref: '#/responses/DefaultError'
+dgram_binds_one:
+  get:
+    summary: Return one dgram bind
+    description: Returns one dgram bind configuration by it's name in the specified log forward.
+    operationId: getDgramBind
+    tags:
+      - DgramBind
+    parameters:
+      - name: name
+        in: path
+        description: Bind name
+        required: true
+        type: string
+      - name: log_forward
+        in: query
+        description: Parent log forward name
+        required: true
+        type: string
+      - $ref: "#/parameters/transaction_id"
+    responses:
+      '200':
+        description: Successful operation
+        headers:
+          Configuration-Version:
+            description: Configuration file version
+            type: string
+        schema:
+          type: object
+          properties:
+            data:
+              $ref: "#/definitions/dgram_bind"
+            _version:
+              type: integer
+      '404':
+        $ref: '#/responses/AlreadyExists'
+      'default':
+        $ref: '#/responses/DefaultError'
+  put:
+    summary: Replace a dgram bind
+    description: Replaces a dgram bind configuration by it's name in the specified log forward.
+    operationId: replaceDgramBind
+    tags:
+      - DgramBind
+    parameters:
+      - name: name
+        in: path
+        description: Bind name
+        required: true
+        type: string
+      - name: log_forward
+        in: query
+        description: Parent log forward name
+        required: true
+        type: string
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/dgram_bind'
+      - $ref: "#/parameters/transaction_id"
+      - $ref: "#/parameters/version"
+      - $ref: "#/parameters/force_reload"
+    responses:
+      '202':
+        description: Configuration change accepted and reload requested
+        headers:
+          Reload-ID:
+            description: ID of the requested reload
+            type: string
+        schema:
+          $ref: "#/definitions/dgram_bind"
+      '200':
+        description: Bind replaced
+        schema:
+          $ref: "#/definitions/dgram_bind"
+      '400':
+        $ref: '#/responses/BadRequest'
+      '404':
+        $ref: '#/responses/NotFound'
+      'default':
+        $ref: '#/responses/DefaultError'
+  delete:
+    summary: Delete a dgram bind
+    description: Deletes a dgram bind configuration by it's name in the specified log forward.
+    operationId: deleteDgramBind
+    tags:
+      - DgramBind
+    parameters:
+      - name: name
+        in: path
+        description: Bind name
+        required: true
+        type: string
+      - name: log_forward
+        in: query
+        description: Parent log forward name
+        required: true
+        type: string
+      - $ref: "#/parameters/transaction_id"
+      - $ref: "#/parameters/version"
+      - $ref: "#/parameters/force_reload"
+    responses:
+      '202':
+        description: Configuration change accepted and reload requested
+        headers:
+          Reload-ID:
+            description: ID of the requested reload
+            type: string
+      '204':
+        description: Bind deleted
+      '404':
+        $ref: '#/responses/NotFound'
+      'default':
+        $ref: '#/responses/DefaultError'

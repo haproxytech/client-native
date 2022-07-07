@@ -532,6 +532,16 @@ ring myring
   timeout server 10s
   server mysyslogsrv 127.0.0.1:6514 log-proto octet-count
 
+log-forward sylog-loadb
+  dgram-bind 127.0.0.1:1514 transparent name webserv
+  bind 127.0.0.1:1514
+  log global
+  log ring@myring local0
+  log 127.0.0.1:10001 sample 1:4 local0
+  log 127.0.0.1:10002 sample 2:4 local0
+  log 127.0.0.1:10003 sample 3:4 local0
+  log 127.0.0.1:10004 sample 4:4 local0
+
 backend test_2
   mode http
   balance roundrobin
