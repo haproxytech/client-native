@@ -21,6 +21,8 @@ package models
 // Editing this file might prove futile when you re-run the swagger generate command
 
 import (
+	"context"
+
 	"github.com/go-openapi/strfmt"
 )
 
@@ -33,5 +35,10 @@ type SpoeScope string
 
 // Validate validates this spoe scope
 func (m SpoeScope) Validate(formats strfmt.Registry) error {
+	return nil
+}
+
+// ContextValidate validates this spoe scope based on context it is used
+func (m SpoeScope) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
 	return nil
 }

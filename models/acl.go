@@ -21,6 +21,8 @@ package models
 // Editing this file might prove futile when you re-run the swagger generate command
 
 import (
+	"context"
+
 	"github.com/go-openapi/errors"
 	"github.com/go-openapi/strfmt"
 	"github.com/go-openapi/swag"
@@ -84,11 +86,11 @@ func (m *ACL) Validate(formats strfmt.Registry) error {
 
 func (m *ACL) validateACLName(formats strfmt.Registry) error {
 
-	if err := validate.RequiredString("acl_name", "body", string(m.ACLName)); err != nil {
+	if err := validate.RequiredString("acl_name", "body", m.ACLName); err != nil {
 		return err
 	}
 
-	if err := validate.Pattern("acl_name", "body", string(m.ACLName), `^[^\s]+$`); err != nil {
+	if err := validate.Pattern("acl_name", "body", m.ACLName, `^[^\s]+$`); err != nil {
 		return err
 	}
 
@@ -97,11 +99,11 @@ func (m *ACL) validateACLName(formats strfmt.Registry) error {
 
 func (m *ACL) validateCriterion(formats strfmt.Registry) error {
 
-	if err := validate.RequiredString("criterion", "body", string(m.Criterion)); err != nil {
+	if err := validate.RequiredString("criterion", "body", m.Criterion); err != nil {
 		return err
 	}
 
-	if err := validate.Pattern("criterion", "body", string(m.Criterion), `^[^\s]+$`); err != nil {
+	if err := validate.Pattern("criterion", "body", m.Criterion, `^[^\s]+$`); err != nil {
 		return err
 	}
 
@@ -119,10 +121,15 @@ func (m *ACL) validateIndex(formats strfmt.Registry) error {
 
 func (m *ACL) validateValue(formats strfmt.Registry) error {
 
-	if err := validate.RequiredString("value", "body", string(m.Value)); err != nil {
+	if err := validate.RequiredString("value", "body", m.Value); err != nil {
 		return err
 	}
 
+	return nil
+}
+
+// ContextValidate validates this acl based on context it is used
+func (m *ACL) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
 	return nil
 }
 

@@ -21,6 +21,7 @@ package models
 // Editing this file might prove futile when you re-run the swagger generate command
 
 import (
+	"context"
 	"encoding/json"
 
 	"github.com/go-openapi/errors"
@@ -32,6 +33,7 @@ import (
 // TCPResponseRule TCP Response Rule
 //
 // HAProxy TCP Response Rule configuration (corresponds to tcp-response)
+// Example: {"cond":"if","cond_test":"{ src 192.168.0.0/16 }","index":0,"type":"content"}
 //
 // swagger:model tcp_response_rule
 type TCPResponseRule struct {
@@ -123,14 +125,13 @@ const (
 
 // prop value enum
 func (m *TCPResponseRule) validateActionEnum(path, location string, value string) error {
-	if err := validate.Enum(path, location, value, tcpResponseRuleTypeActionPropEnum); err != nil {
+	if err := validate.EnumCase(path, location, value, tcpResponseRuleTypeActionPropEnum, true); err != nil {
 		return err
 	}
 	return nil
 }
 
 func (m *TCPResponseRule) validateAction(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.Action) { // not required
 		return nil
 	}
@@ -166,14 +167,13 @@ const (
 
 // prop value enum
 func (m *TCPResponseRule) validateCondEnum(path, location string, value string) error {
-	if err := validate.Enum(path, location, value, tcpResponseRuleTypeCondPropEnum); err != nil {
+	if err := validate.EnumCase(path, location, value, tcpResponseRuleTypeCondPropEnum, true); err != nil {
 		return err
 	}
 	return nil
 }
 
 func (m *TCPResponseRule) validateCond(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.Cond) { // not required
 		return nil
 	}
@@ -196,12 +196,11 @@ func (m *TCPResponseRule) validateIndex(formats strfmt.Registry) error {
 }
 
 func (m *TCPResponseRule) validateLuaAction(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.LuaAction) { // not required
 		return nil
 	}
 
-	if err := validate.Pattern("lua_action", "body", string(m.LuaAction), `^[^\s]+$`); err != nil {
+	if err := validate.Pattern("lua_action", "body", m.LuaAction, `^[^\s]+$`); err != nil {
 		return err
 	}
 
@@ -225,13 +224,13 @@ const (
 	// TCPResponseRuleTypeContent captures enum value "content"
 	TCPResponseRuleTypeContent string = "content"
 
-	// TCPResponseRuleTypeInspectDelay captures enum value "inspect-delay"
-	TCPResponseRuleTypeInspectDelay string = "inspect-delay"
+	// TCPResponseRuleTypeInspectDashDelay captures enum value "inspect-delay"
+	TCPResponseRuleTypeInspectDashDelay string = "inspect-delay"
 )
 
 // prop value enum
 func (m *TCPResponseRule) validateTypeEnum(path, location string, value string) error {
-	if err := validate.Enum(path, location, value, tcpResponseRuleTypeTypePropEnum); err != nil {
+	if err := validate.EnumCase(path, location, value, tcpResponseRuleTypeTypePropEnum, true); err != nil {
 		return err
 	}
 	return nil
@@ -239,7 +238,7 @@ func (m *TCPResponseRule) validateTypeEnum(path, location string, value string) 
 
 func (m *TCPResponseRule) validateType(formats strfmt.Registry) error {
 
-	if err := validate.RequiredString("type", "body", string(m.Type)); err != nil {
+	if err := validate.RequiredString("type", "body", m.Type); err != nil {
 		return err
 	}
 
@@ -248,6 +247,11 @@ func (m *TCPResponseRule) validateType(formats strfmt.Registry) error {
 		return err
 	}
 
+	return nil
+}
+
+// ContextValidate validates this tcp response rule based on context it is used
+func (m *TCPResponseRule) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
 	return nil
 }
 

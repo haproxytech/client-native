@@ -21,6 +21,8 @@ package models
 // Editing this file might prove futile when you re-run the swagger generate command
 
 import (
+	"context"
+
 	"github.com/go-openapi/strfmt"
 )
 
@@ -31,5 +33,10 @@ type MonitorURI string
 
 // Validate validates this monitor uri
 func (m MonitorURI) Validate(formats strfmt.Registry) error {
+	return nil
+}
+
+// ContextValidate validates this monitor uri based on context it is used
+func (m MonitorURI) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
 	return nil
 }

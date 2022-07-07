@@ -21,6 +21,7 @@ package models
 // Editing this file might prove futile when you re-run the swagger generate command
 
 import (
+	"context"
 	"encoding/json"
 	"strconv"
 
@@ -214,7 +215,6 @@ func (m *HTTPCheck) Validate(formats strfmt.Registry) error {
 }
 
 func (m *HTTPCheck) validateCheckHeaders(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.CheckHeaders) { // not required
 		return nil
 	}
@@ -228,6 +228,8 @@ func (m *HTTPCheck) validateCheckHeaders(formats strfmt.Registry) error {
 			if err := m.CheckHeaders[i].Validate(formats); err != nil {
 				if ve, ok := err.(*errors.Validation); ok {
 					return ve.ValidateName("headers" + "." + strconv.Itoa(i))
+				} else if ce, ok := err.(*errors.CompositeError); ok {
+					return ce.ValidateName("headers" + "." + strconv.Itoa(i))
 				}
 				return err
 			}
@@ -239,12 +241,11 @@ func (m *HTTPCheck) validateCheckHeaders(formats strfmt.Registry) error {
 }
 
 func (m *HTTPCheck) validateAddr(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.Addr) { // not required
 		return nil
 	}
 
-	if err := validate.Pattern("addr", "body", string(m.Addr), `^[^\s]+$`); err != nil {
+	if err := validate.Pattern("addr", "body", m.Addr, `^[^\s]+$`); err != nil {
 		return err
 	}
 
@@ -252,12 +253,11 @@ func (m *HTTPCheck) validateAddr(formats strfmt.Registry) error {
 }
 
 func (m *HTTPCheck) validateAlpn(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.Alpn) { // not required
 		return nil
 	}
 
-	if err := validate.Pattern("alpn", "body", string(m.Alpn), `^[^\s]+$`); err != nil {
+	if err := validate.Pattern("alpn", "body", m.Alpn, `^[^\s]+$`); err != nil {
 		return err
 	}
 
@@ -296,14 +296,13 @@ const (
 
 // prop value enum
 func (m *HTTPCheck) validateErrorStatusEnum(path, location string, value string) error {
-	if err := validate.Enum(path, location, value, httpCheckTypeErrorStatusPropEnum); err != nil {
+	if err := validate.EnumCase(path, location, value, httpCheckTypeErrorStatusPropEnum, true); err != nil {
 		return err
 	}
 	return nil
 }
 
 func (m *HTTPCheck) validateErrorStatus(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.ErrorStatus) { // not required
 		return nil
 	}
@@ -360,19 +359,18 @@ const (
 
 // prop value enum
 func (m *HTTPCheck) validateMatchEnum(path, location string, value string) error {
-	if err := validate.Enum(path, location, value, httpCheckTypeMatchPropEnum); err != nil {
+	if err := validate.EnumCase(path, location, value, httpCheckTypeMatchPropEnum, true); err != nil {
 		return err
 	}
 	return nil
 }
 
 func (m *HTTPCheck) validateMatch(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.Match) { // not required
 		return nil
 	}
 
-	if err := validate.Pattern("match", "body", string(m.Match), `^[^\s]+$`); err != nil {
+	if err := validate.Pattern("match", "body", m.Match, `^[^\s]+$`); err != nil {
 		return err
 	}
 
@@ -413,14 +411,13 @@ const (
 
 // prop value enum
 func (m *HTTPCheck) validateOkStatusEnum(path, location string, value string) error {
-	if err := validate.Enum(path, location, value, httpCheckTypeOkStatusPropEnum); err != nil {
+	if err := validate.EnumCase(path, location, value, httpCheckTypeOkStatusPropEnum, true); err != nil {
 		return err
 	}
 	return nil
 }
 
 func (m *HTTPCheck) validateOkStatus(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.OkStatus) { // not required
 		return nil
 	}
@@ -434,16 +431,15 @@ func (m *HTTPCheck) validateOkStatus(formats strfmt.Registry) error {
 }
 
 func (m *HTTPCheck) validatePort(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.Port) { // not required
 		return nil
 	}
 
-	if err := validate.MinimumInt("port", "body", int64(*m.Port), 1, false); err != nil {
+	if err := validate.MinimumInt("port", "body", *m.Port, 1, false); err != nil {
 		return err
 	}
 
-	if err := validate.MaximumInt("port", "body", int64(*m.Port), 65535, false); err != nil {
+	if err := validate.MaximumInt("port", "body", *m.Port, 65535, false); err != nil {
 		return err
 	}
 
@@ -476,14 +472,13 @@ const (
 
 // prop value enum
 func (m *HTTPCheck) validateToutStatusEnum(path, location string, value string) error {
-	if err := validate.Enum(path, location, value, httpCheckTypeToutStatusPropEnum); err != nil {
+	if err := validate.EnumCase(path, location, value, httpCheckTypeToutStatusPropEnum, true); err != nil {
 		return err
 	}
 	return nil
 }
 
 func (m *HTTPCheck) validateToutStatus(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.ToutStatus) { // not required
 		return nil
 	}
@@ -516,8 +511,8 @@ const (
 	// HTTPCheckTypeConnect captures enum value "connect"
 	HTTPCheckTypeConnect string = "connect"
 
-	// HTTPCheckTypeDisableOn404 captures enum value "disable-on-404"
-	HTTPCheckTypeDisableOn404 string = "disable-on-404"
+	// HTTPCheckTypeDisableDashOnDash404 captures enum value "disable-on-404"
+	HTTPCheckTypeDisableDashOnDash404 string = "disable-on-404"
 
 	// HTTPCheckTypeExpect captures enum value "expect"
 	HTTPCheckTypeExpect string = "expect"
@@ -525,22 +520,22 @@ const (
 	// HTTPCheckTypeSend captures enum value "send"
 	HTTPCheckTypeSend string = "send"
 
-	// HTTPCheckTypeSendState captures enum value "send-state"
-	HTTPCheckTypeSendState string = "send-state"
+	// HTTPCheckTypeSendDashState captures enum value "send-state"
+	HTTPCheckTypeSendDashState string = "send-state"
 
-	// HTTPCheckTypeSetVar captures enum value "set-var"
-	HTTPCheckTypeSetVar string = "set-var"
+	// HTTPCheckTypeSetDashVar captures enum value "set-var"
+	HTTPCheckTypeSetDashVar string = "set-var"
 
-	// HTTPCheckTypeSetVarFmt captures enum value "set-var-fmt"
-	HTTPCheckTypeSetVarFmt string = "set-var-fmt"
+	// HTTPCheckTypeSetDashVarDashFmt captures enum value "set-var-fmt"
+	HTTPCheckTypeSetDashVarDashFmt string = "set-var-fmt"
 
-	// HTTPCheckTypeUnsetVar captures enum value "unset-var"
-	HTTPCheckTypeUnsetVar string = "unset-var"
+	// HTTPCheckTypeUnsetDashVar captures enum value "unset-var"
+	HTTPCheckTypeUnsetDashVar string = "unset-var"
 )
 
 // prop value enum
 func (m *HTTPCheck) validateTypeEnum(path, location string, value string) error {
-	if err := validate.Enum(path, location, value, httpCheckTypeTypePropEnum); err != nil {
+	if err := validate.EnumCase(path, location, value, httpCheckTypeTypePropEnum, true); err != nil {
 		return err
 	}
 	return nil
@@ -548,7 +543,7 @@ func (m *HTTPCheck) validateTypeEnum(path, location string, value string) error 
 
 func (m *HTTPCheck) validateType(formats strfmt.Registry) error {
 
-	if err := validate.RequiredString("type", "body", string(m.Type)); err != nil {
+	if err := validate.RequiredString("type", "body", m.Type); err != nil {
 		return err
 	}
 
@@ -561,12 +556,11 @@ func (m *HTTPCheck) validateType(formats strfmt.Registry) error {
 }
 
 func (m *HTTPCheck) validateVarName(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.VarName) { // not required
 		return nil
 	}
 
-	if err := validate.Pattern("var_name", "body", string(m.VarName), `^[^\s]+$`); err != nil {
+	if err := validate.Pattern("var_name", "body", m.VarName, `^[^\s]+$`); err != nil {
 		return err
 	}
 
@@ -574,13 +568,46 @@ func (m *HTTPCheck) validateVarName(formats strfmt.Registry) error {
 }
 
 func (m *HTTPCheck) validateVarScope(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.VarScope) { // not required
 		return nil
 	}
 
-	if err := validate.Pattern("var_scope", "body", string(m.VarScope), `^[^\s]+$`); err != nil {
+	if err := validate.Pattern("var_scope", "body", m.VarScope, `^[^\s]+$`); err != nil {
 		return err
+	}
+
+	return nil
+}
+
+// ContextValidate validate this http check based on the context it is used
+func (m *HTTPCheck) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+	var res []error
+
+	if err := m.contextValidateCheckHeaders(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if len(res) > 0 {
+		return errors.CompositeValidationError(res...)
+	}
+	return nil
+}
+
+func (m *HTTPCheck) contextValidateCheckHeaders(ctx context.Context, formats strfmt.Registry) error {
+
+	for i := 0; i < len(m.CheckHeaders); i++ {
+
+		if m.CheckHeaders[i] != nil {
+			if err := m.CheckHeaders[i].ContextValidate(ctx, formats); err != nil {
+				if ve, ok := err.(*errors.Validation); ok {
+					return ve.ValidateName("headers" + "." + strconv.Itoa(i))
+				} else if ce, ok := err.(*errors.CompositeError); ok {
+					return ce.ValidateName("headers" + "." + strconv.Itoa(i))
+				}
+				return err
+			}
+		}
+
 	}
 
 	return nil

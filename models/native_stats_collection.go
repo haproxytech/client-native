@@ -21,6 +21,7 @@ package models
 // Editing this file might prove futile when you re-run the swagger generate command
 
 import (
+	"context"
 	"strconv"
 
 	"github.com/go-openapi/errors"
@@ -60,7 +61,6 @@ func (m *NativeStatsCollection) Validate(formats strfmt.Registry) error {
 }
 
 func (m *NativeStatsCollection) validateStats(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.Stats) { // not required
 		return nil
 	}
@@ -74,6 +74,42 @@ func (m *NativeStatsCollection) validateStats(formats strfmt.Registry) error {
 			if err := m.Stats[i].Validate(formats); err != nil {
 				if ve, ok := err.(*errors.Validation); ok {
 					return ve.ValidateName("stats" + "." + strconv.Itoa(i))
+				} else if ce, ok := err.(*errors.CompositeError); ok {
+					return ce.ValidateName("stats" + "." + strconv.Itoa(i))
+				}
+				return err
+			}
+		}
+
+	}
+
+	return nil
+}
+
+// ContextValidate validate this native stats collection based on the context it is used
+func (m *NativeStatsCollection) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+	var res []error
+
+	if err := m.contextValidateStats(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if len(res) > 0 {
+		return errors.CompositeValidationError(res...)
+	}
+	return nil
+}
+
+func (m *NativeStatsCollection) contextValidateStats(ctx context.Context, formats strfmt.Registry) error {
+
+	for i := 0; i < len(m.Stats); i++ {
+
+		if m.Stats[i] != nil {
+			if err := m.Stats[i].ContextValidate(ctx, formats); err != nil {
+				if ve, ok := err.(*errors.Validation); ok {
+					return ve.ValidateName("stats" + "." + strconv.Itoa(i))
+				} else if ce, ok := err.(*errors.CompositeError); ok {
+					return ce.ValidateName("stats" + "." + strconv.Itoa(i))
 				}
 				return err
 			}

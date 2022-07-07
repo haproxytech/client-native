@@ -184,7 +184,7 @@ func ParseTCPResponseRule(t types.TCPType) *models.TCPResponseRule {
 	switch v := t.(type) {
 	case *tcp_types.InspectDelay:
 		return &models.TCPResponseRule{
-			Type:    models.TCPResponseRuleTypeInspectDelay,
+			Type:    models.TCPResponseRuleTypeInspectDashDelay,
 			Timeout: misc.ParseTimeout(v.Timeout),
 		}
 	case *tcp_types.Content:
@@ -245,7 +245,7 @@ func SerializeTCPResponseRule(t models.TCPResponseRule) types.TCPType {
 				},
 			}
 		}
-	case models.TCPResponseRuleTypeInspectDelay:
+	case models.TCPResponseRuleTypeInspectDashDelay:
 		if t.Timeout != nil {
 			return &tcp_types.InspectDelay{
 				Timeout: strconv.FormatInt(*t.Timeout, 10),

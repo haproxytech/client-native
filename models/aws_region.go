@@ -21,6 +21,7 @@ package models
 // Editing this file might prove futile when you re-run the swagger generate command
 
 import (
+	"context"
 	"encoding/json"
 	"strconv"
 
@@ -33,6 +34,7 @@ import (
 // AwsRegion AWS region
 //
 // AWS region configuration
+// Example: {"access_key_id":"****************L7GT","allowlist":[{"key":"tag-key","value":"Instance:Having:This:Tag"}],"denylist":[{"key":"tag:Environment","value":"development"}],"enabled":true,"id":"0","ipv4_address":"private","name":"frontend-service","region":"us-east-1","retry_timeout":1,"secret_access_key":"****************soLl"}
 //
 // swagger:model awsRegion
 type AwsRegion struct {
@@ -137,7 +139,6 @@ func (m *AwsRegion) Validate(formats strfmt.Registry) error {
 }
 
 func (m *AwsRegion) validateAllowlist(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.Allowlist) { // not required
 		return nil
 	}
@@ -151,6 +152,8 @@ func (m *AwsRegion) validateAllowlist(formats strfmt.Registry) error {
 			if err := m.Allowlist[i].Validate(formats); err != nil {
 				if ve, ok := err.(*errors.Validation); ok {
 					return ve.ValidateName("allowlist" + "." + strconv.Itoa(i))
+				} else if ce, ok := err.(*errors.CompositeError); ok {
+					return ce.ValidateName("allowlist" + "." + strconv.Itoa(i))
 				}
 				return err
 			}
@@ -162,7 +165,6 @@ func (m *AwsRegion) validateAllowlist(formats strfmt.Registry) error {
 }
 
 func (m *AwsRegion) validateDenylist(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.Denylist) { // not required
 		return nil
 	}
@@ -176,6 +178,8 @@ func (m *AwsRegion) validateDenylist(formats strfmt.Registry) error {
 			if err := m.Denylist[i].Validate(formats); err != nil {
 				if ve, ok := err.(*errors.Validation); ok {
 					return ve.ValidateName("denylist" + "." + strconv.Itoa(i))
+				} else if ce, ok := err.(*errors.CompositeError); ok {
+					return ce.ValidateName("denylist" + "." + strconv.Itoa(i))
 				}
 				return err
 			}
@@ -196,12 +200,11 @@ func (m *AwsRegion) validateEnabled(formats strfmt.Registry) error {
 }
 
 func (m *AwsRegion) validateID(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.ID) { // not required
 		return nil
 	}
 
-	if err := validate.Pattern("id", "body", string(*m.ID), `^[^\s]+$`); err != nil {
+	if err := validate.Pattern("id", "body", *m.ID, `^[^\s]+$`); err != nil {
 		return err
 	}
 
@@ -231,7 +234,7 @@ const (
 
 // prop value enum
 func (m *AwsRegion) validateIPV4AddressEnum(path, location string, value string) error {
-	if err := validate.Enum(path, location, value, awsRegionTypeIPV4AddressPropEnum); err != nil {
+	if err := validate.EnumCase(path, location, value, awsRegionTypeIPV4AddressPropEnum, true); err != nil {
 		return err
 	}
 	return nil
@@ -275,7 +278,7 @@ func (m *AwsRegion) validateRetryTimeout(formats strfmt.Registry) error {
 		return err
 	}
 
-	if err := validate.MinimumInt("retry_timeout", "body", int64(*m.RetryTimeout), 1, false); err != nil {
+	if err := validate.MinimumInt("retry_timeout", "body", *m.RetryTimeout, 1, false); err != nil {
 		return err
 	}
 
@@ -305,20 +308,90 @@ const (
 
 // prop value enum
 func (m *AwsRegion) validateServerSlotsGrowthTypeEnum(path, location string, value string) error {
-	if err := validate.Enum(path, location, value, awsRegionTypeServerSlotsGrowthTypePropEnum); err != nil {
+	if err := validate.EnumCase(path, location, value, awsRegionTypeServerSlotsGrowthTypePropEnum, true); err != nil {
 		return err
 	}
 	return nil
 }
 
 func (m *AwsRegion) validateServerSlotsGrowthType(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.ServerSlotsGrowthType) { // not required
 		return nil
 	}
 
 	// value enum
 	if err := m.validateServerSlotsGrowthTypeEnum("server_slots_growth_type", "body", *m.ServerSlotsGrowthType); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+// ContextValidate validate this aws region based on the context it is used
+func (m *AwsRegion) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+	var res []error
+
+	if err := m.contextValidateAllowlist(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.contextValidateDenylist(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.contextValidateID(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if len(res) > 0 {
+		return errors.CompositeValidationError(res...)
+	}
+	return nil
+}
+
+func (m *AwsRegion) contextValidateAllowlist(ctx context.Context, formats strfmt.Registry) error {
+
+	for i := 0; i < len(m.Allowlist); i++ {
+
+		if m.Allowlist[i] != nil {
+			if err := m.Allowlist[i].ContextValidate(ctx, formats); err != nil {
+				if ve, ok := err.(*errors.Validation); ok {
+					return ve.ValidateName("allowlist" + "." + strconv.Itoa(i))
+				} else if ce, ok := err.(*errors.CompositeError); ok {
+					return ce.ValidateName("allowlist" + "." + strconv.Itoa(i))
+				}
+				return err
+			}
+		}
+
+	}
+
+	return nil
+}
+
+func (m *AwsRegion) contextValidateDenylist(ctx context.Context, formats strfmt.Registry) error {
+
+	for i := 0; i < len(m.Denylist); i++ {
+
+		if m.Denylist[i] != nil {
+			if err := m.Denylist[i].ContextValidate(ctx, formats); err != nil {
+				if ve, ok := err.(*errors.Validation); ok {
+					return ve.ValidateName("denylist" + "." + strconv.Itoa(i))
+				} else if ce, ok := err.(*errors.CompositeError); ok {
+					return ce.ValidateName("denylist" + "." + strconv.Itoa(i))
+				}
+				return err
+			}
+		}
+
+	}
+
+	return nil
+}
+
+func (m *AwsRegion) contextValidateID(ctx context.Context, formats strfmt.Registry) error {
+
+	if err := validate.ReadOnly(ctx, "id", "body", m.ID); err != nil {
 		return err
 	}
 

@@ -21,6 +21,7 @@ package models
 // Editing this file might prove futile when you re-run the swagger generate command
 
 import (
+	"context"
 	"encoding/json"
 	"strconv"
 
@@ -98,7 +99,6 @@ func (m *Cookie) Validate(formats strfmt.Registry) error {
 }
 
 func (m *Cookie) validateDomains(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.Domains) { // not required
 		return nil
 	}
@@ -112,6 +112,8 @@ func (m *Cookie) validateDomains(formats strfmt.Registry) error {
 			if err := m.Domains[i].Validate(formats); err != nil {
 				if ve, ok := err.(*errors.Validation); ok {
 					return ve.ValidateName("domain" + "." + strconv.Itoa(i))
+				} else if ce, ok := err.(*errors.CompositeError); ok {
+					return ce.ValidateName("domain" + "." + strconv.Itoa(i))
 				}
 				return err
 			}
@@ -128,7 +130,7 @@ func (m *Cookie) validateName(formats strfmt.Registry) error {
 		return err
 	}
 
-	if err := validate.Pattern("name", "body", string(*m.Name), `^[^\s]+$`); err != nil {
+	if err := validate.Pattern("name", "body", *m.Name, `^[^\s]+$`); err != nil {
 		return err
 	}
 
@@ -161,14 +163,13 @@ const (
 
 // prop value enum
 func (m *Cookie) validateTypeEnum(path, location string, value string) error {
-	if err := validate.Enum(path, location, value, cookieTypeTypePropEnum); err != nil {
+	if err := validate.EnumCase(path, location, value, cookieTypeTypePropEnum, true); err != nil {
 		return err
 	}
 	return nil
 }
 
 func (m *Cookie) validateType(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.Type) { // not required
 		return nil
 	}
@@ -176,6 +177,40 @@ func (m *Cookie) validateType(formats strfmt.Registry) error {
 	// value enum
 	if err := m.validateTypeEnum("type", "body", m.Type); err != nil {
 		return err
+	}
+
+	return nil
+}
+
+// ContextValidate validate this cookie based on the context it is used
+func (m *Cookie) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+	var res []error
+
+	if err := m.contextValidateDomains(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if len(res) > 0 {
+		return errors.CompositeValidationError(res...)
+	}
+	return nil
+}
+
+func (m *Cookie) contextValidateDomains(ctx context.Context, formats strfmt.Registry) error {
+
+	for i := 0; i < len(m.Domains); i++ {
+
+		if m.Domains[i] != nil {
+			if err := m.Domains[i].ContextValidate(ctx, formats); err != nil {
+				if ve, ok := err.(*errors.Validation); ok {
+					return ve.ValidateName("domain" + "." + strconv.Itoa(i))
+				} else if ce, ok := err.(*errors.CompositeError); ok {
+					return ce.ValidateName("domain" + "." + strconv.Itoa(i))
+				}
+				return err
+			}
+		}
+
 	}
 
 	return nil
@@ -224,15 +259,19 @@ func (m *Domain) Validate(formats strfmt.Registry) error {
 }
 
 func (m *Domain) validateValue(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.Value) { // not required
 		return nil
 	}
 
-	if err := validate.Pattern("value", "body", string(m.Value), `^[^\s]+$`); err != nil {
+	if err := validate.Pattern("value", "body", m.Value, `^[^\s]+$`); err != nil {
 		return err
 	}
 
+	return nil
+}
+
+// ContextValidate validates this domain based on context it is used
+func (m *Domain) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
 	return nil
 }
 

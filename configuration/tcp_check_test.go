@@ -217,8 +217,8 @@ backend test
 			}
 
 			_, check, err = c.GetTCPCheck(counter.increment(), "backend", "test", "")
-			if check.Action != models.TCPCheckActionSendBinary {
-				t.Errorf("tcp-check action %v returned, expected %v", check.Action, models.TCPCheckActionSendBinary)
+			if check.Action != models.TCPCheckActionSendDashBinary {
+				t.Errorf("tcp-check action %v returned, expected %v", check.Action, models.TCPCheckActionSendDashBinary)
 			}
 			if check.HexString != "50494e470d0a" {
 				t.Errorf("tcp-check send-binary hex-string is invalid")
@@ -233,8 +233,8 @@ backend test
 			}
 
 			_, check, err = c.GetTCPCheck(counter.increment(), "backend", "test", "")
-			if check.Action != models.TCPCheckActionSendBinaryLf {
-				t.Errorf("tcp-check action %v returned, expected %v", check.Action, models.TCPCheckActionSendBinaryLf)
+			if check.Action != models.TCPCheckActionSendDashBinaryDashLf {
+				t.Errorf("tcp-check action %v returned, expected %v", check.Action, models.TCPCheckActionSendDashBinaryDashLf)
 			}
 			if check.HexFmt != "50494e470d0a" {
 				t.Errorf("tcp-check action data is invalid")
@@ -246,28 +246,28 @@ backend test
 			}
 
 			_, check, err = c.GetTCPCheck(counter.increment(), "backend", "test", "")
-			if check.Action != models.TCPCheckActionSetVar {
-				t.Errorf("tcp-check action %v returned, expected %v", check.Action, models.TCPCheckActionSetVar)
+			if check.Action != models.TCPCheckActionSetDashVar {
+				t.Errorf("tcp-check action %v returned, expected %v", check.Action, models.TCPCheckActionSetDashVar)
 			}
 			if check.VarScope != "req" {
 			}
 
 			_, check, err = c.GetTCPCheck(counter.increment(), "backend", "test", "")
-			if check.Action != models.TCPCheckActionUnsetVar {
+			if check.Action != models.TCPCheckActionUnsetDashVar {
 				t.Errorf("tcp-check action data is invalid")
 			}
 
 			_, check, err = c.GetTCPCheck(counter.increment(), "backend", "test", "")
-			if check.Action != models.TCPCheckActionSendLf {
-				t.Errorf("tcp-check action %v returned, expected %v", check.Action, models.TCPCheckActionSendLf)
+			if check.Action != models.TCPCheckActionSendDashLf {
+				t.Errorf("tcp-check action %v returned, expected %v", check.Action, models.TCPCheckActionSendDashLf)
 			}
 			if check.Fmt != "fmt" {
-				t.Errorf("tcp-check %v - fmt data is invalid", models.TCPCheckActionSendLf)
+				t.Errorf("tcp-check %v - fmt data is invalid", models.TCPCheckActionSendDashLf)
 			}
 
 			_, check, err = c.GetTCPCheck(counter.increment(), "backend", "test", "")
-			if check.Action != models.TCPCheckActionSendLf {
-				t.Errorf("tcp-check action %v returned, expected %v", check.Action, models.TCPCheckActionSendLf)
+			if check.Action != models.TCPCheckActionSendDashLf {
+				t.Errorf("tcp-check action %v returned, expected %v", check.Action, models.TCPCheckActionSendDashLf)
 			}
 			if check.Fmt != "fmt" {
 				t.Errorf("tcp-check action fmt data is invalid")
@@ -277,8 +277,8 @@ backend test
 			}
 
 			_, check, err = c.GetTCPCheck(counter.increment(), "backend", "test", "")
-			if check.Action != models.TCPCheckActionSetVarFmt {
-				t.Errorf("tcp-check action %v returned, expected %v", check.Action, models.TCPCheckActionSetVarFmt)
+			if check.Action != models.TCPCheckActionSetDashVarDashFmt {
+				t.Errorf("tcp-check action %v returned, expected %v", check.Action, models.TCPCheckActionSetDashVarDashFmt)
 			}
 			if check.VarScope != "check" {
 				t.Errorf("tcp-check set-var-fmt scope returned %v, expected %v", check.VarScope, "check")
@@ -290,8 +290,8 @@ backend test
 				t.Errorf("tcp-check set-var-fmt format returned %v, expected %v", check.VarFmt, `"%H"`)
 			}
 			_, check, err = c.GetTCPCheck(counter.increment(), "backend", "test", "")
-			if check.Action != models.TCPCheckActionSetVarFmt {
-				t.Errorf("tcp-check action %v returned, expected %v", check.Action, models.TCPCheckActionSetVarFmt)
+			if check.Action != models.TCPCheckActionSetDashVarDashFmt {
+				t.Errorf("tcp-check action %v returned, expected %v", check.Action, models.TCPCheckActionSetDashVarDashFmt)
 			}
 			if check.VarScope != "txn" {
 				t.Errorf("tcp-check set-var-fmt scope returned %v, expected %v", check.VarScope, "txn")

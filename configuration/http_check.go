@@ -281,7 +281,7 @@ func ParseHTTPCheck(f types.Action) (check *models.HTTPCheck, err error) {
 		}
 	case *http_actions.CheckDisableOn404:
 		check = &models.HTTPCheck{
-			Type: models.HTTPCheckTypeDisableOn404,
+			Type: models.HTTPCheckTypeDisableDashOnDash404,
 		}
 	case *http_actions.CheckSend:
 		check = &models.HTTPCheck{
@@ -307,25 +307,25 @@ func ParseHTTPCheck(f types.Action) (check *models.HTTPCheck, err error) {
 		check.CheckHeaders = headers
 	case *http_actions.CheckSendState:
 		check = &models.HTTPCheck{
-			Type: models.HTTPCheckTypeSendState,
+			Type: models.HTTPCheckTypeSendDashState,
 		}
 	case *actions.SetVarCheck:
 		check = &models.HTTPCheck{
-			Type:     models.HTTPCheckTypeSetVar,
+			Type:     models.HTTPCheckTypeSetDashVar,
 			VarScope: v.VarScope,
 			VarName:  v.VarName,
 			VarExpr:  strings.Join(v.Expr.Expr, " "),
 		}
 	case *actions.SetVarFmtCheck:
 		check = &models.HTTPCheck{
-			Type:     models.HTTPCheckTypeSetVarFmt,
+			Type:     models.HTTPCheckTypeSetDashVarDashFmt,
 			VarScope: v.VarScope,
 			VarName:  v.VarName,
 			VarExpr:  strings.Join(v.Format.Expr, " "),
 		}
 	case *actions.UnsetVarCheck:
 		check = &models.HTTPCheck{
-			Type:     models.HTTPCheckTypeUnsetVar,
+			Type:     models.HTTPCheckTypeUnsetDashVar,
 			VarScope: v.Scope,
 			VarName:  v.Name,
 		}
@@ -368,7 +368,7 @@ func SerializeHTTPCheck(f models.HTTPCheck) (action types.Action, err error) { /
 			ExclamationMark: f.ExclamationMark,
 			Pattern:         f.Pattern,
 		}, nil
-	case models.HTTPCheckTypeDisableOn404:
+	case models.HTTPCheckTypeDisableDashOnDash404:
 		return &http_actions.CheckDisableOn404{}, nil
 	case models.HTTPCheckTypeSend:
 		action := &http_actions.CheckSend{
@@ -393,21 +393,21 @@ func SerializeHTTPCheck(f models.HTTPCheck) (action types.Action, err error) { /
 		}
 		action.Header = headers
 		return action, nil
-	case models.HTTPCheckTypeSendState:
+	case models.HTTPCheckTypeSendDashState:
 		return &http_actions.CheckSendState{}, nil
-	case models.HTTPCheckTypeSetVar:
+	case models.HTTPCheckTypeSetDashVar:
 		return &actions.SetVarCheck{
 			VarScope: f.VarScope,
 			VarName:  f.VarName,
 			Expr:     common.Expression{Expr: strings.Split(f.VarExpr, " ")},
 		}, nil
-	case models.HTTPCheckTypeSetVarFmt:
+	case models.HTTPCheckTypeSetDashVarDashFmt:
 		return &actions.SetVarFmtCheck{
 			VarScope: f.VarScope,
 			VarName:  f.VarName,
 			Format:   common.Expression{Expr: strings.Split(f.VarFormat, " ")},
 		}, nil
-	case models.HTTPCheckTypeUnsetVar:
+	case models.HTTPCheckTypeUnsetDashVar:
 		return &actions.UnsetVarCheck{
 			Scope: f.VarScope,
 			Name:  f.VarName,

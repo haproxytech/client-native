@@ -236,7 +236,7 @@ func ParseTCPRequestRule(f types.TCPType) (rule *models.TCPRequestRule, err erro
 	switch v := f.(type) {
 	case *tcp_types.InspectDelay:
 		return &models.TCPRequestRule{
-			Type:    models.TCPRequestRuleTypeInspectDelay,
+			Type:    models.TCPRequestRuleTypeInspectDashDelay,
 			Timeout: misc.ParseTimeout(v.Timeout),
 		}, nil
 
@@ -255,11 +255,11 @@ func ParseTCPRequestRule(f types.TCPType) (rule *models.TCPRequestRule, err erro
 			rule.Cond = a.Cond
 			rule.CondTest = a.CondTest
 		case *tcp_actions.ExpectProxy:
-			rule.Action = models.TCPRequestRuleActionExpectProxy
+			rule.Action = models.TCPRequestRuleActionExpectDashProxy
 			rule.Cond = a.Cond
 			rule.CondTest = a.CondTest
 		case *tcp_actions.ExpectNetscalerCip:
-			rule.Action = models.TCPRequestRuleActionExpectNetscalerCip
+			rule.Action = models.TCPRequestRuleActionExpectDashNetscalerDashCip
 			rule.Cond = a.Cond
 			rule.CondTest = a.CondTest
 		case *tcp_actions.Capture:
@@ -269,7 +269,7 @@ func ParseTCPRequestRule(f types.TCPType) (rule *models.TCPRequestRule, err erro
 			rule.Cond = a.Cond
 			rule.CondTest = a.CondTest
 		case *actions.TrackSc:
-			rule.Action = models.TCPRequestRuleActionTrackSc0
+			rule.Action = models.TCPRequestRuleActionTrackDashSc0
 			rule.TrackKey = a.Key
 			var typ actions.TrackScT
 			switch a.Type {
@@ -287,28 +287,28 @@ func ParseTCPRequestRule(f types.TCPType) (rule *models.TCPRequestRule, err erro
 			rule.Cond = a.Cond
 			rule.CondTest = a.CondTest
 		case *actions.ScIncGpc0:
-			rule.Action = models.TCPRequestRuleActionScSetGpt0
+			rule.Action = models.TCPRequestRuleActionScDashSetDashGpt0
 			rule.ScIncID = a.ID
 			rule.Cond = a.Cond
 			rule.CondTest = a.CondTest
 		case *actions.ScIncGpc1:
-			rule.Action = models.TCPRequestRuleActionScIncGpc1
+			rule.Action = models.TCPRequestRuleActionScDashIncDashGpc1
 			rule.ScIncID = a.ID
 			rule.Cond = a.Cond
 			rule.CondTest = a.CondTest
 		case *actions.ScSetGpt0:
-			rule.Action = models.TCPRequestRuleActionScSetGpt0
+			rule.Action = models.TCPRequestRuleActionScDashSetDashGpt0
 			rule.ScIncID = a.ID
 			rule.Expr = a.Expr.String()
 			rule.Cond = a.Cond
 			rule.CondTest = a.CondTest
 		case *tcp_actions.SetSrc:
-			rule.Action = models.TCPRequestRuleActionSetSrc
+			rule.Action = models.TCPRequestRuleActionSetDashSrc
 			rule.Expr = a.Expr.String()
 			rule.Cond = a.Cond
 			rule.CondTest = a.CondTest
 		case *actions.SilentDrop:
-			rule.Action = models.TCPRequestRuleActionSilentDrop
+			rule.Action = models.TCPRequestRuleActionSilentDashDrop
 			rule.Cond = a.Cond
 			rule.CondTest = a.CondTest
 		case *actions.Lua:
@@ -333,7 +333,7 @@ func ParseTCPRequestRule(f types.TCPType) (rule *models.TCPRequestRule, err erro
 			rule.Cond = a.Cond
 			rule.CondTest = a.CondTest
 		case *actions.DoResolve:
-			rule.Action = models.TCPRequestRuleActionDoResolve
+			rule.Action = models.TCPRequestRuleActionDoDashResolve
 			rule.VarName = a.Var
 			rule.ResolveResolvers = a.Resolvers
 			rule.ResolveProtocol = a.Protocol
@@ -371,7 +371,7 @@ func ParseTCPRequestRule(f types.TCPType) (rule *models.TCPRequestRule, err erro
 				typ = actions.TrackSc2
 			}
 			rule.Type = string(typ)
-			rule.Action = models.TCPRequestRuleActionTrackSc0
+			rule.Action = models.TCPRequestRuleActionTrackDashSc0
 			rule.TrackKey = a.Key
 			if a.Table != "" {
 				rule.TrackTable = a.Table
@@ -379,56 +379,56 @@ func ParseTCPRequestRule(f types.TCPType) (rule *models.TCPRequestRule, err erro
 			rule.Cond = a.Cond
 			rule.CondTest = a.CondTest
 		case *actions.ScIncGpc0:
-			rule.Action = models.TCPRequestRuleActionScIncGpc0
+			rule.Action = models.TCPRequestRuleActionScDashIncDashGpc0
 			rule.ScIncID = a.ID
 			rule.Cond = a.Cond
 			rule.CondTest = a.CondTest
 		case *actions.ScIncGpc1:
-			rule.Action = models.TCPRequestRuleActionScIncGpc1
+			rule.Action = models.TCPRequestRuleActionScDashIncDashGpc1
 			rule.ScIncID = a.ID
 			rule.Cond = a.Cond
 			rule.CondTest = a.CondTest
 		case *actions.ScSetGpt0:
-			rule.Action = models.TCPRequestRuleActionScSetGpt0
+			rule.Action = models.TCPRequestRuleActionScDashSetDashGpt0
 			rule.ScIncID = a.ID
 			rule.GptValue = a.Expr.String()
 			rule.Cond = a.Cond
 			rule.CondTest = a.CondTest
 		case *actions.SetDst:
-			rule.Action = models.TCPRequestRuleActionSetDst
+			rule.Action = models.TCPRequestRuleActionSetDashDst
 			rule.Expr = a.Expr.String()
 			rule.Cond = a.Cond
 			rule.CondTest = a.CondTest
 		case *actions.SetDstPort:
-			rule.Action = models.TCPRequestRuleActionSetDstPort
+			rule.Action = models.TCPRequestRuleActionSetDashDstDashPort
 			rule.Expr = a.Expr.String()
 			rule.Cond = a.Cond
 			rule.CondTest = a.CondTest
 		case *actions.SetVar:
-			rule.Action = models.TCPRequestRuleActionSetVar
+			rule.Action = models.TCPRequestRuleActionSetDashVar
 			rule.VarScope = a.VarScope
 			rule.VarName = a.VarName
 			rule.Expr = a.Expr.String()
 			rule.Cond = a.Cond
 			rule.CondTest = a.CondTest
 		case *actions.UnsetVar:
-			rule.Action = models.TCPRequestRuleActionUnsetVar
+			rule.Action = models.TCPRequestRuleActionUnsetDashVar
 			rule.VarScope = a.Scope
 			rule.VarName = a.Name
 			rule.Cond = a.Cond
 			rule.CondTest = a.CondTest
 		case *actions.SilentDrop:
-			rule.Action = models.TCPRequestRuleActionSilentDrop
+			rule.Action = models.TCPRequestRuleActionSilentDashDrop
 			rule.Cond = a.Cond
 			rule.CondTest = a.CondTest
 		case *actions.SendSpoeGroup:
-			rule.Action = models.TCPRequestRuleActionSendSpoeGroup
+			rule.Action = models.TCPRequestRuleActionSendDashSpoeDashGroup
 			rule.SpoeEngineName = a.Engine
 			rule.SpoeGroupName = a.Group
 			rule.Cond = a.Cond
 			rule.CondTest = a.CondTest
 		case *actions.UseService:
-			rule.Action = models.TCPRequestRuleActionUseService
+			rule.Action = models.TCPRequestRuleActionUseDashService
 			rule.ServiceName = a.Name
 			rule.Cond = a.Cond
 			rule.CondTest = a.CondTest
@@ -465,7 +465,7 @@ func ParseTCPRequestRule(f types.TCPType) (rule *models.TCPRequestRule, err erro
 				typ = actions.TrackSc2
 			}
 			rule.Type = string(typ)
-			rule.Action = models.TCPRequestRuleActionTrackSc0
+			rule.Action = models.TCPRequestRuleActionTrackDashSc0
 			rule.TrackKey = a.Key
 			if a.Table != "" {
 				rule.TrackTable = a.Table
@@ -473,36 +473,36 @@ func ParseTCPRequestRule(f types.TCPType) (rule *models.TCPRequestRule, err erro
 			rule.Cond = a.Cond
 			rule.CondTest = a.CondTest
 		case *actions.ScIncGpc0:
-			rule.Action = models.TCPRequestRuleActionScIncGpc0
+			rule.Action = models.TCPRequestRuleActionScDashIncDashGpc0
 			rule.ScIncID = a.ID
 			rule.Cond = a.Cond
 			rule.CondTest = a.CondTest
 		case *actions.ScIncGpc1:
-			rule.Action = models.TCPRequestRuleActionScIncGpc1
+			rule.Action = models.TCPRequestRuleActionScDashIncDashGpc1
 			rule.ScIncID = a.ID
 			rule.Cond = a.Cond
 			rule.CondTest = a.CondTest
 		case *actions.ScSetGpt0:
-			rule.Action = models.TCPRequestRuleActionScSetGpt0
+			rule.Action = models.TCPRequestRuleActionScDashSetDashGpt0
 			rule.ScIncID = a.ID
 			rule.GptValue = a.Expr.String()
 			rule.Cond = a.Cond
 			rule.CondTest = a.CondTest
 		case *actions.SetVar:
-			rule.Action = models.TCPRequestRuleActionSetVar
+			rule.Action = models.TCPRequestRuleActionSetDashVar
 			rule.VarScope = a.VarScope
 			rule.VarName = a.VarName
 			rule.Expr = a.Expr.String()
 			rule.Cond = a.Cond
 			rule.CondTest = a.CondTest
 		case *actions.UnsetVar:
-			rule.Action = models.TCPRequestRuleActionUnsetVar
+			rule.Action = models.TCPRequestRuleActionUnsetDashVar
 			rule.VarScope = a.Scope
 			rule.VarName = a.Name
 			rule.Cond = a.Cond
 			rule.CondTest = a.CondTest
 		case *actions.SilentDrop:
-			rule.Action = models.TCPRequestRuleActionSilentDrop
+			rule.Action = models.TCPRequestRuleActionSilentDashDrop
 			rule.Cond = a.Cond
 			rule.CondTest = a.CondTest
 		default:
@@ -532,14 +532,14 @@ func SerializeTCPRequestRule(f models.TCPRequestRule) (rule types.TCPType, err e
 					CondTest: f.CondTest,
 				},
 			}, nil
-		case models.TCPRequestRuleActionExpectProxy:
+		case models.TCPRequestRuleActionExpectDashProxy:
 			return &tcp_types.Connection{
 				Action: &tcp_actions.ExpectProxy{
 					Cond:     f.Cond,
 					CondTest: f.CondTest,
 				},
 			}, nil
-		case models.TCPRequestRuleActionExpectNetscalerCip:
+		case models.TCPRequestRuleActionExpectDashNetscalerDashCip:
 			return &tcp_types.Connection{
 				Action: &tcp_actions.ExpectNetscalerCip{
 					Cond:     f.Cond,
@@ -555,7 +555,7 @@ func SerializeTCPRequestRule(f models.TCPRequestRule) (rule types.TCPType, err e
 					CondTest: f.CondTest,
 				},
 			}, nil
-		case models.TCPRequestRuleActionTrackSc0:
+		case models.TCPRequestRuleActionTrackDashSc0:
 			return &tcp_types.Connection{
 				Action: &actions.TrackSc{
 					Type:     actions.TrackSc0,
@@ -565,7 +565,7 @@ func SerializeTCPRequestRule(f models.TCPRequestRule) (rule types.TCPType, err e
 					CondTest: f.CondTest,
 				},
 			}, nil
-		case models.TCPRequestRuleActionTrackSc1:
+		case models.TCPRequestRuleActionTrackDashSc1:
 			return &tcp_types.Connection{
 				Action: &actions.TrackSc{
 					Type:     actions.TrackSc1,
@@ -575,7 +575,7 @@ func SerializeTCPRequestRule(f models.TCPRequestRule) (rule types.TCPType, err e
 					CondTest: f.CondTest,
 				},
 			}, nil
-		case models.TCPRequestRuleActionTrackSc2:
+		case models.TCPRequestRuleActionTrackDashSc2:
 			return &tcp_types.Connection{
 				Action: &actions.TrackSc{
 					Type:     actions.TrackSc2,
@@ -585,7 +585,7 @@ func SerializeTCPRequestRule(f models.TCPRequestRule) (rule types.TCPType, err e
 					CondTest: f.CondTest,
 				},
 			}, nil
-		case models.TCPRequestRuleActionScIncGpc0:
+		case models.TCPRequestRuleActionScDashIncDashGpc0:
 			return &tcp_types.Connection{
 				Action: &actions.ScIncGpc0{
 					ID:       f.ScIncID,
@@ -593,7 +593,7 @@ func SerializeTCPRequestRule(f models.TCPRequestRule) (rule types.TCPType, err e
 					CondTest: f.CondTest,
 				},
 			}, nil
-		case models.TCPRequestRuleActionScIncGpc1:
+		case models.TCPRequestRuleActionScDashIncDashGpc1:
 			return &tcp_types.Connection{
 				Action: &actions.ScIncGpc1{
 					ID:       f.ScIncID,
@@ -601,7 +601,7 @@ func SerializeTCPRequestRule(f models.TCPRequestRule) (rule types.TCPType, err e
 					CondTest: f.CondTest,
 				},
 			}, nil
-		case models.TCPRequestRuleActionSilentDrop:
+		case models.TCPRequestRuleActionSilentDashDrop:
 			return &tcp_types.Connection{
 				Action: &actions.SilentDrop{
 					Cond:     f.Cond,
@@ -628,7 +628,7 @@ func SerializeTCPRequestRule(f models.TCPRequestRule) (rule types.TCPType, err e
 					CondTest: f.CondTest,
 				},
 			}, nil
-		case models.TCPRequestRuleActionDoResolve:
+		case models.TCPRequestRuleActionDoDashResolve:
 			return &tcp_types.Content{
 				Action: &actions.DoResolve{
 					Var:       f.VarName,
@@ -671,7 +671,7 @@ func SerializeTCPRequestRule(f models.TCPRequestRule) (rule types.TCPType, err e
 					CondTest: f.CondTest,
 				},
 			}, nil
-		case models.TCPRequestRuleActionTrackSc0:
+		case models.TCPRequestRuleActionTrackDashSc0:
 			return &tcp_types.Content{
 				Action: &actions.TrackSc{
 					Type:     actions.TrackSc0,
@@ -681,7 +681,7 @@ func SerializeTCPRequestRule(f models.TCPRequestRule) (rule types.TCPType, err e
 					CondTest: f.CondTest,
 				},
 			}, nil
-		case models.TCPRequestRuleActionTrackSc1:
+		case models.TCPRequestRuleActionTrackDashSc1:
 			return &tcp_types.Content{
 				Action: &actions.TrackSc{
 					Type:     actions.TrackSc1,
@@ -691,7 +691,7 @@ func SerializeTCPRequestRule(f models.TCPRequestRule) (rule types.TCPType, err e
 					CondTest: f.CondTest,
 				},
 			}, nil
-		case models.TCPRequestRuleActionTrackSc2:
+		case models.TCPRequestRuleActionTrackDashSc2:
 			return &tcp_types.Content{
 				Action: &actions.TrackSc{
 					Type:     actions.TrackSc2,
@@ -701,7 +701,7 @@ func SerializeTCPRequestRule(f models.TCPRequestRule) (rule types.TCPType, err e
 					CondTest: f.CondTest,
 				},
 			}, nil
-		case models.TCPRequestRuleActionScIncGpc0:
+		case models.TCPRequestRuleActionScDashIncDashGpc0:
 			return &tcp_types.Content{
 				Action: &actions.ScIncGpc0{
 					ID:       f.ScIncID,
@@ -709,7 +709,7 @@ func SerializeTCPRequestRule(f models.TCPRequestRule) (rule types.TCPType, err e
 					CondTest: f.CondTest,
 				},
 			}, nil
-		case models.TCPRequestRuleActionScIncGpc1:
+		case models.TCPRequestRuleActionScDashIncDashGpc1:
 			return &tcp_types.Content{
 				Action: &actions.ScIncGpc1{
 					ID:       f.ScIncID,
@@ -717,7 +717,7 @@ func SerializeTCPRequestRule(f models.TCPRequestRule) (rule types.TCPType, err e
 					CondTest: f.CondTest,
 				},
 			}, nil
-		case models.TCPRequestRuleActionSetDst:
+		case models.TCPRequestRuleActionSetDashDst:
 			return &tcp_types.Content{
 				Action: &actions.SetDst{
 					Expr:     common.Expression{Expr: strings.Split(f.Expr, " ")},
@@ -725,7 +725,7 @@ func SerializeTCPRequestRule(f models.TCPRequestRule) (rule types.TCPType, err e
 					CondTest: f.CondTest,
 				},
 			}, nil
-		case models.TCPRequestRuleActionSetDstPort:
+		case models.TCPRequestRuleActionSetDashDstDashPort:
 			return &tcp_types.Content{
 				Action: &actions.SetDstPort{
 					Expr:     common.Expression{Expr: strings.Split(f.Expr, " ")},
@@ -733,7 +733,7 @@ func SerializeTCPRequestRule(f models.TCPRequestRule) (rule types.TCPType, err e
 					CondTest: f.CondTest,
 				},
 			}, nil
-		case models.TCPRequestRuleActionSetVar:
+		case models.TCPRequestRuleActionSetDashVar:
 			return &tcp_types.Content{
 				Action: &actions.SetVar{
 					VarName:  f.VarName,
@@ -743,7 +743,7 @@ func SerializeTCPRequestRule(f models.TCPRequestRule) (rule types.TCPType, err e
 					CondTest: f.CondTest,
 				},
 			}, nil
-		case models.TCPRequestRuleActionUnsetVar:
+		case models.TCPRequestRuleActionUnsetDashVar:
 			return &tcp_types.Content{
 				Action: &actions.UnsetVar{
 					Name:     f.VarName,
@@ -752,14 +752,14 @@ func SerializeTCPRequestRule(f models.TCPRequestRule) (rule types.TCPType, err e
 					CondTest: f.CondTest,
 				},
 			}, nil
-		case models.TCPRequestRuleActionSilentDrop:
+		case models.TCPRequestRuleActionSilentDashDrop:
 			return &tcp_types.Content{
 				Action: &actions.SilentDrop{
 					Cond:     f.Cond,
 					CondTest: f.CondTest,
 				},
 			}, nil
-		case models.TCPRequestRuleActionSendSpoeGroup:
+		case models.TCPRequestRuleActionSendDashSpoeDashGroup:
 			return &tcp_types.Content{
 				Action: &actions.SendSpoeGroup{
 					Engine:   f.SpoeEngineName,
@@ -768,7 +768,7 @@ func SerializeTCPRequestRule(f models.TCPRequestRule) (rule types.TCPType, err e
 					CondTest: f.CondTest,
 				},
 			}, nil
-		case models.TCPRequestRuleActionUseService:
+		case models.TCPRequestRuleActionUseDashService:
 			return &tcp_types.Content{
 				Action: &actions.UseService{
 					Name:     f.ServiceName,
@@ -803,7 +803,7 @@ func SerializeTCPRequestRule(f models.TCPRequestRule) (rule types.TCPType, err e
 					CondTest: f.CondTest,
 				},
 			}, nil
-		case models.TCPRequestRuleActionTrackSc0:
+		case models.TCPRequestRuleActionTrackDashSc0:
 			return &tcp_types.Session{
 				Action: &actions.TrackSc{
 					Type:     actions.TrackSc0,
@@ -813,7 +813,7 @@ func SerializeTCPRequestRule(f models.TCPRequestRule) (rule types.TCPType, err e
 					CondTest: f.CondTest,
 				},
 			}, nil
-		case models.TCPRequestRuleActionTrackSc1:
+		case models.TCPRequestRuleActionTrackDashSc1:
 			return &tcp_types.Session{
 				Action: &actions.TrackSc{
 					Type:     actions.TrackSc1,
@@ -823,7 +823,7 @@ func SerializeTCPRequestRule(f models.TCPRequestRule) (rule types.TCPType, err e
 					CondTest: f.CondTest,
 				},
 			}, nil
-		case models.TCPRequestRuleActionTrackSc2:
+		case models.TCPRequestRuleActionTrackDashSc2:
 			return &tcp_types.Session{
 				Action: &actions.TrackSc{
 					Type:     actions.TrackSc2,
@@ -833,7 +833,7 @@ func SerializeTCPRequestRule(f models.TCPRequestRule) (rule types.TCPType, err e
 					CondTest: f.CondTest,
 				},
 			}, nil
-		case models.TCPRequestRuleActionScIncGpc0:
+		case models.TCPRequestRuleActionScDashIncDashGpc0:
 			return &tcp_types.Session{
 				Action: &actions.ScIncGpc0{
 					ID:       f.ScIncID,
@@ -841,7 +841,7 @@ func SerializeTCPRequestRule(f models.TCPRequestRule) (rule types.TCPType, err e
 					CondTest: f.CondTest,
 				},
 			}, nil
-		case models.TCPRequestRuleActionScIncGpc1:
+		case models.TCPRequestRuleActionScDashIncDashGpc1:
 			return &tcp_types.Session{
 				Action: &actions.ScIncGpc1{
 					ID:       f.ScIncID,
@@ -858,7 +858,7 @@ func SerializeTCPRequestRule(f models.TCPRequestRule) (rule types.TCPType, err e
 					CondTest: f.CondTest,
 				},
 			}, nil
-		case models.TCPRequestRuleActionSetVar:
+		case models.TCPRequestRuleActionSetDashVar:
 			return &tcp_types.Session{
 				Action: &actions.SetVar{
 					VarName:  f.VarName,
@@ -868,7 +868,7 @@ func SerializeTCPRequestRule(f models.TCPRequestRule) (rule types.TCPType, err e
 					CondTest: f.CondTest,
 				},
 			}, nil
-		case models.TCPRequestRuleActionUnsetVar:
+		case models.TCPRequestRuleActionUnsetDashVar:
 			return &tcp_types.Session{
 				Action: &actions.UnsetVar{
 					Name:     f.VarName,
@@ -877,7 +877,7 @@ func SerializeTCPRequestRule(f models.TCPRequestRule) (rule types.TCPType, err e
 					CondTest: f.CondTest,
 				},
 			}, nil
-		case models.TCPRequestRuleActionSilentDrop:
+		case models.TCPRequestRuleActionSilentDashDrop:
 			return &tcp_types.Session{
 				Action: &actions.SilentDrop{
 					Cond:     f.Cond,
@@ -886,7 +886,7 @@ func SerializeTCPRequestRule(f models.TCPRequestRule) (rule types.TCPType, err e
 			}, nil
 		}
 		return nil, NewConfError(ErrValidationError, fmt.Sprintf("unsupported action '%T' in tcp_request_rule", f.Action))
-	case models.TCPRequestRuleTypeInspectDelay:
+	case models.TCPRequestRuleTypeInspectDashDelay:
 		if f.Timeout == nil {
 			return nil, NewConfError(ErrValidationError, fmt.Sprintf("unsupported action '%T' in tcp_request_rule", f.Type))
 		}

@@ -21,6 +21,8 @@ package models
 // Editing this file might prove futile when you re-run the swagger generate command
 
 import (
+	"context"
+
 	"github.com/go-openapi/errors"
 	"github.com/go-openapi/strfmt"
 	"github.com/go-openapi/swag"
@@ -83,12 +85,11 @@ func (m *StatsOptions) Validate(formats strfmt.Registry) error {
 }
 
 func (m *StatsOptions) validateStatsMaxconn(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.StatsMaxconn) { // not required
 		return nil
 	}
 
-	if err := validate.MinimumInt("stats_maxconn", "body", int64(m.StatsMaxconn), 1, false); err != nil {
+	if err := validate.MinimumInt("stats_maxconn", "body", m.StatsMaxconn, 1, false); err != nil {
 		return err
 	}
 
@@ -96,12 +97,11 @@ func (m *StatsOptions) validateStatsMaxconn(formats strfmt.Registry) error {
 }
 
 func (m *StatsOptions) validateStatsShowNodeName(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.StatsShowNodeName) { // not required
 		return nil
 	}
 
-	if err := validate.Pattern("stats_show_node_name", "body", string(*m.StatsShowNodeName), `^[^\s]+$`); err != nil {
+	if err := validate.Pattern("stats_show_node_name", "body", *m.StatsShowNodeName, `^[^\s]+$`); err != nil {
 		return err
 	}
 
@@ -109,15 +109,19 @@ func (m *StatsOptions) validateStatsShowNodeName(formats strfmt.Registry) error 
 }
 
 func (m *StatsOptions) validateStatsURIPrefix(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.StatsURIPrefix) { // not required
 		return nil
 	}
 
-	if err := validate.Pattern("stats_uri_prefix", "body", string(m.StatsURIPrefix), `^[^\s]+$`); err != nil {
+	if err := validate.Pattern("stats_uri_prefix", "body", m.StatsURIPrefix, `^[^\s]+$`); err != nil {
 		return err
 	}
 
+	return nil
+}
+
+// ContextValidate validates this stats options based on context it is used
+func (m *StatsOptions) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
 	return nil
 }
 

@@ -21,6 +21,7 @@ package models
 // Editing this file might prove futile when you re-run the swagger generate command
 
 import (
+	"context"
 	"encoding/json"
 
 	"github.com/go-openapi/errors"
@@ -99,14 +100,13 @@ const (
 
 // prop value enum
 func (m *HttpchkParams) validateMethodEnum(path, location string, value string) error {
-	if err := validate.Enum(path, location, value, httpchkParamsTypeMethodPropEnum); err != nil {
+	if err := validate.EnumCase(path, location, value, httpchkParamsTypeMethodPropEnum, true); err != nil {
 		return err
 	}
 	return nil
 }
 
 func (m *HttpchkParams) validateMethod(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.Method) { // not required
 		return nil
 	}
@@ -120,15 +120,19 @@ func (m *HttpchkParams) validateMethod(formats strfmt.Registry) error {
 }
 
 func (m *HttpchkParams) validateURI(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.URI) { // not required
 		return nil
 	}
 
-	if err := validate.Pattern("uri", "body", string(m.URI), `^[^ ]*$`); err != nil {
+	if err := validate.Pattern("uri", "body", m.URI, `^[^ ]*$`); err != nil {
 		return err
 	}
 
+	return nil
+}
+
+// ContextValidate validates this httpchk params based on context it is used
+func (m *HttpchkParams) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
 	return nil
 }
 

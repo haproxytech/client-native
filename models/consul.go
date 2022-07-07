@@ -21,6 +21,7 @@ package models
 // Editing this file might prove futile when you re-run the swagger generate command
 
 import (
+	"context"
 	"encoding/json"
 	"strconv"
 
@@ -33,6 +34,7 @@ import (
 // Consul Consul server
 //
 // Consul server configuration
+// Example: {"address":"127.0.0.1","enabled":true,"id":"0","port":90,"retry_timeout":10}
 //
 // swagger:model consul
 type Consul struct {
@@ -157,7 +159,7 @@ func (m *Consul) validateAddress(formats strfmt.Registry) error {
 		return err
 	}
 
-	if err := validate.Pattern("address", "body", string(*m.Address), `^[^\s]+$`); err != nil {
+	if err := validate.Pattern("address", "body", *m.Address, `^[^\s]+$`); err != nil {
 		return err
 	}
 
@@ -174,12 +176,11 @@ func (m *Consul) validateEnabled(formats strfmt.Registry) error {
 }
 
 func (m *Consul) validateID(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.ID) { // not required
 		return nil
 	}
 
-	if err := validate.Pattern("id", "body", string(*m.ID), `^[^\s]+$`); err != nil {
+	if err := validate.Pattern("id", "body", *m.ID, `^[^\s]+$`); err != nil {
 		return err
 	}
 
@@ -192,11 +193,11 @@ func (m *Consul) validatePort(formats strfmt.Registry) error {
 		return err
 	}
 
-	if err := validate.MinimumInt("port", "body", int64(*m.Port), 1, false); err != nil {
+	if err := validate.MinimumInt("port", "body", *m.Port, 1, false); err != nil {
 		return err
 	}
 
-	if err := validate.MaximumInt("port", "body", int64(*m.Port), 65535, false); err != nil {
+	if err := validate.MaximumInt("port", "body", *m.Port, 65535, false); err != nil {
 		return err
 	}
 
@@ -209,7 +210,7 @@ func (m *Consul) validateRetryTimeout(formats strfmt.Registry) error {
 		return err
 	}
 
-	if err := validate.MinimumInt("retry_timeout", "body", int64(*m.RetryTimeout), 1, false); err != nil {
+	if err := validate.MinimumInt("retry_timeout", "body", *m.RetryTimeout, 1, false); err != nil {
 		return err
 	}
 
@@ -239,14 +240,13 @@ const (
 
 // prop value enum
 func (m *Consul) validateServerSlotsGrowthTypeEnum(path, location string, value string) error {
-	if err := validate.Enum(path, location, value, consulTypeServerSlotsGrowthTypePropEnum); err != nil {
+	if err := validate.EnumCase(path, location, value, consulTypeServerSlotsGrowthTypePropEnum, true); err != nil {
 		return err
 	}
 	return nil
 }
 
 func (m *Consul) validateServerSlotsGrowthType(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.ServerSlotsGrowthType) { // not required
 		return nil
 	}
@@ -260,14 +260,13 @@ func (m *Consul) validateServerSlotsGrowthType(formats strfmt.Registry) error {
 }
 
 func (m *Consul) validateServiceBlacklist(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.ServiceBlacklist) { // not required
 		return nil
 	}
 
 	for i := 0; i < len(m.ServiceBlacklist); i++ {
 
-		if err := validate.Pattern("service-blacklist"+"."+strconv.Itoa(i), "body", string(m.ServiceBlacklist[i]), `^[^\s]+$`); err != nil {
+		if err := validate.Pattern("service-blacklist"+"."+strconv.Itoa(i), "body", m.ServiceBlacklist[i], `^[^\s]+$`); err != nil {
 			return err
 		}
 
@@ -277,14 +276,13 @@ func (m *Consul) validateServiceBlacklist(formats strfmt.Registry) error {
 }
 
 func (m *Consul) validateServiceWhitelist(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.ServiceWhitelist) { // not required
 		return nil
 	}
 
 	for i := 0; i < len(m.ServiceWhitelist); i++ {
 
-		if err := validate.Pattern("service-whitelist"+"."+strconv.Itoa(i), "body", string(m.ServiceWhitelist[i]), `^[^\s]+$`); err != nil {
+		if err := validate.Pattern("service-whitelist"+"."+strconv.Itoa(i), "body", m.ServiceWhitelist[i], `^[^\s]+$`); err != nil {
 			return err
 		}
 
@@ -294,14 +292,13 @@ func (m *Consul) validateServiceWhitelist(formats strfmt.Registry) error {
 }
 
 func (m *Consul) validateServiceAllowlist(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.ServiceAllowlist) { // not required
 		return nil
 	}
 
 	for i := 0; i < len(m.ServiceAllowlist); i++ {
 
-		if err := validate.Pattern("service_allowlist"+"."+strconv.Itoa(i), "body", string(m.ServiceAllowlist[i]), `^[^\s]+$`); err != nil {
+		if err := validate.Pattern("service_allowlist"+"."+strconv.Itoa(i), "body", m.ServiceAllowlist[i], `^[^\s]+$`); err != nil {
 			return err
 		}
 
@@ -311,14 +308,13 @@ func (m *Consul) validateServiceAllowlist(formats strfmt.Registry) error {
 }
 
 func (m *Consul) validateServiceDenylist(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.ServiceDenylist) { // not required
 		return nil
 	}
 
 	for i := 0; i < len(m.ServiceDenylist); i++ {
 
-		if err := validate.Pattern("service_denylist"+"."+strconv.Itoa(i), "body", string(m.ServiceDenylist[i]), `^[^\s]+$`); err != nil {
+		if err := validate.Pattern("service_denylist"+"."+strconv.Itoa(i), "body", m.ServiceDenylist[i], `^[^\s]+$`); err != nil {
 			return err
 		}
 
@@ -328,15 +324,19 @@ func (m *Consul) validateServiceDenylist(formats strfmt.Registry) error {
 }
 
 func (m *Consul) validateToken(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.Token) { // not required
 		return nil
 	}
 
-	if err := validate.Pattern("token", "body", string(m.Token), `^[^\s]+$`); err != nil {
+	if err := validate.Pattern("token", "body", m.Token, `^[^\s]+$`); err != nil {
 		return err
 	}
 
+	return nil
+}
+
+// ContextValidate validates this consul based on context it is used
+func (m *Consul) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
 	return nil
 }
 

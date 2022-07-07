@@ -280,39 +280,39 @@ func ParseTCPCheck(f types.Action) (check *models.TCPCheck, err error) {
 		}
 	case *tcp_actions.CheckSendLf:
 		check = &models.TCPCheck{
-			Action:       models.TCPCheckActionSendLf,
+			Action:       models.TCPCheckActionSendDashLf,
 			Fmt:          v.Fmt,
 			CheckComment: v.CheckComment,
 		}
 	case *tcp_actions.CheckSendBinary:
 		check = &models.TCPCheck{
-			Action:       models.TCPCheckActionSendBinary,
+			Action:       models.TCPCheckActionSendDashBinary,
 			HexString:    v.HexString,
 			CheckComment: v.CheckComment,
 		}
 	case *tcp_actions.CheckSendBinaryLf:
 		check = &models.TCPCheck{
-			Action:       models.TCPCheckActionSendBinaryLf,
+			Action:       models.TCPCheckActionSendDashBinaryDashLf,
 			HexFmt:       v.HexFmt,
 			CheckComment: v.CheckComment,
 		}
 	case *actions.SetVarCheck:
 		check = &models.TCPCheck{
-			Action:   models.TCPCheckActionSetVar,
+			Action:   models.TCPCheckActionSetDashVar,
 			VarScope: v.VarScope,
 			VarName:  v.VarName,
 			VarExpr:  strings.Join(v.Expr.Expr, " "),
 		}
 	case *actions.SetVarFmtCheck:
 		check = &models.TCPCheck{
-			Action:   models.TCPCheckActionSetVarFmt,
+			Action:   models.TCPCheckActionSetDashVarDashFmt,
 			VarScope: v.VarScope,
 			VarName:  v.VarName,
 			VarFmt:   strings.Join(v.Format.Expr, " "),
 		}
 	case *actions.UnsetVarCheck:
 		check = &models.TCPCheck{
-			Action:   models.TCPCheckActionUnsetVar,
+			Action:   models.TCPCheckActionUnsetDashVar,
 			VarScope: v.Scope,
 			VarName:  v.Name,
 		}
@@ -363,34 +363,34 @@ func SerializeTCPCheck(f models.TCPCheck) (action types.Action, err error) { //n
 			Data:         f.Data,
 			CheckComment: f.CheckComment,
 		}, nil
-	case models.TCPCheckActionSendLf:
+	case models.TCPCheckActionSendDashLf:
 		return &tcp_actions.CheckSendLf{
 			Fmt:          f.Fmt,
 			CheckComment: f.CheckComment,
 		}, nil
-	case models.TCPCheckActionSendBinary:
+	case models.TCPCheckActionSendDashBinary:
 		return &tcp_actions.CheckSendBinary{
 			HexString:    f.HexString,
 			CheckComment: f.CheckComment,
 		}, nil
-	case models.TCPCheckActionSendBinaryLf:
+	case models.TCPCheckActionSendDashBinaryDashLf:
 		return &tcp_actions.CheckSendBinaryLf{
 			HexFmt:       f.HexFmt,
 			CheckComment: f.CheckComment,
 		}, nil
-	case models.TCPCheckActionSetVar:
+	case models.TCPCheckActionSetDashVar:
 		return &actions.SetVarCheck{
 			VarScope: f.VarScope,
 			VarName:  f.VarName,
 			Expr:     common.Expression{Expr: strings.Split(f.VarExpr, " ")},
 		}, nil
-	case models.TCPCheckActionSetVarFmt:
+	case models.TCPCheckActionSetDashVarDashFmt:
 		return &actions.SetVarFmtCheck{
 			VarScope: f.VarScope,
 			VarName:  f.VarName,
 			Format:   common.Expression{Expr: strings.Split(f.VarFmt, " ")},
 		}, nil
-	case models.TCPCheckActionUnsetVar:
+	case models.TCPCheckActionUnsetDashVar:
 		return &actions.UnsetVarCheck{
 			Scope: f.VarScope,
 			Name:  f.VarName,

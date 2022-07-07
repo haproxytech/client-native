@@ -21,6 +21,7 @@ package models
 // Editing this file might prove futile when you re-run the swagger generate command
 
 import (
+	"context"
 	"encoding/json"
 
 	"github.com/go-openapi/errors"
@@ -70,14 +71,13 @@ func init() {
 
 // prop value enum
 func (m *Errorfile) validateCodeEnum(path, location string, value int64) error {
-	if err := validate.Enum(path, location, value, errorfileTypeCodePropEnum); err != nil {
+	if err := validate.EnumCase(path, location, value, errorfileTypeCodePropEnum, true); err != nil {
 		return err
 	}
 	return nil
 }
 
 func (m *Errorfile) validateCode(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.Code) { // not required
 		return nil
 	}
@@ -87,6 +87,11 @@ func (m *Errorfile) validateCode(formats strfmt.Registry) error {
 		return err
 	}
 
+	return nil
+}
+
+// ContextValidate validates this errorfile based on context it is used
+func (m *Errorfile) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
 	return nil
 }
 

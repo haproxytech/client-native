@@ -21,6 +21,8 @@ package models
 // Editing this file might prove futile when you re-run the swagger generate command
 
 import (
+	"context"
+
 	"github.com/go-openapi/errors"
 	"github.com/go-openapi/strfmt"
 	"github.com/go-openapi/swag"
@@ -139,12 +141,11 @@ func (m *Bind) Validate(formats strfmt.Registry) error {
 }
 
 func (m *Bind) validateAddress(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.Address) { // not required
 		return nil
 	}
 
-	if err := validate.Pattern("address", "body", string(m.Address), `^[^\s]+$`); err != nil {
+	if err := validate.Pattern("address", "body", m.Address, `^[^\s]+$`); err != nil {
 		return err
 	}
 
@@ -152,16 +153,15 @@ func (m *Bind) validateAddress(formats strfmt.Registry) error {
 }
 
 func (m *Bind) validatePort(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.Port) { // not required
 		return nil
 	}
 
-	if err := validate.MinimumInt("port", "body", int64(*m.Port), 1, false); err != nil {
+	if err := validate.MinimumInt("port", "body", *m.Port, 1, false); err != nil {
 		return err
 	}
 
-	if err := validate.MaximumInt("port", "body", int64(*m.Port), 65535, false); err != nil {
+	if err := validate.MaximumInt("port", "body", *m.Port, 65535, false); err != nil {
 		return err
 	}
 
@@ -169,19 +169,33 @@ func (m *Bind) validatePort(formats strfmt.Registry) error {
 }
 
 func (m *Bind) validatePortRangeEnd(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.PortRangeEnd) { // not required
 		return nil
 	}
 
-	if err := validate.MinimumInt("port-range-end", "body", int64(*m.PortRangeEnd), 1, false); err != nil {
+	if err := validate.MinimumInt("port-range-end", "body", *m.PortRangeEnd, 1, false); err != nil {
 		return err
 	}
 
-	if err := validate.MaximumInt("port-range-end", "body", int64(*m.PortRangeEnd), 65535, false); err != nil {
+	if err := validate.MaximumInt("port-range-end", "body", *m.PortRangeEnd, 65535, false); err != nil {
 		return err
 	}
 
+	return nil
+}
+
+// ContextValidate validate this bind based on the context it is used
+func (m *Bind) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+	var res []error
+
+	// validation for a type composition with BindParams
+	if err := m.BindParams.ContextValidate(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if len(res) > 0 {
+		return errors.CompositeValidationError(res...)
+	}
 	return nil
 }
 

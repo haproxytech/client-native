@@ -354,7 +354,7 @@ func ParseHTTPRequestRule(f types.Action) (rule *models.HTTPRequestRule, err err
 		}
 	case *http_actions.NormalizeURI:
 		rule = &models.HTTPRequestRule{
-			Type:             models.HTTPRequestRuleTypeNormalizeURI,
+			Type:             models.HTTPRequestRuleTypeNormalizeDashURI,
 			Normalizer:       v.Normalizer,
 			NormalizerFull:   v.Full,
 			NormalizerStrict: v.Strict,
@@ -580,7 +580,7 @@ func ParseHTTPRequestRule(f types.Action) (rule *models.HTTPRequestRule, err err
 		}
 	case *http_actions.SetTimeout:
 		rule = &models.HTTPRequestRule{
-			Type:        models.HTTPRequestRuleTypeSetTimeout,
+			Type:        models.HTTPRequestRuleTypeSetDashTimeout,
 			Timeout:     v.Timeout,
 			TimeoutType: v.Type,
 			Cond:        v.Cond,

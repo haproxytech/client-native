@@ -21,6 +21,7 @@ package models
 // Editing this file might prove futile when you re-run the swagger generate command
 
 import (
+	"context"
 	"encoding/json"
 
 	"github.com/go-openapi/errors"
@@ -80,7 +81,7 @@ const (
 
 // prop value enum
 func (m *Redispatch) validateEnabledEnum(path, location string, value string) error {
-	if err := validate.Enum(path, location, value, redispatchTypeEnabledPropEnum); err != nil {
+	if err := validate.EnumCase(path, location, value, redispatchTypeEnabledPropEnum, true); err != nil {
 		return err
 	}
 	return nil
@@ -97,6 +98,11 @@ func (m *Redispatch) validateEnabled(formats strfmt.Registry) error {
 		return err
 	}
 
+	return nil
+}
+
+// ContextValidate validates this redispatch based on context it is used
+func (m *Redispatch) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
 	return nil
 }
 

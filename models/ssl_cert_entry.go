@@ -21,6 +21,8 @@ package models
 // Editing this file might prove futile when you re-run the swagger generate command
 
 import (
+	"context"
+
 	"github.com/go-openapi/errors"
 	"github.com/go-openapi/strfmt"
 	"github.com/go-openapi/swag"
@@ -92,7 +94,6 @@ func (m *SslCertEntry) Validate(formats strfmt.Registry) error {
 }
 
 func (m *SslCertEntry) validateNotAfter(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.NotAfter) { // not required
 		return nil
 	}
@@ -105,7 +106,6 @@ func (m *SslCertEntry) validateNotAfter(formats strfmt.Registry) error {
 }
 
 func (m *SslCertEntry) validateNotBefore(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.NotBefore) { // not required
 		return nil
 	}
@@ -114,6 +114,11 @@ func (m *SslCertEntry) validateNotBefore(formats strfmt.Registry) error {
 		return err
 	}
 
+	return nil
+}
+
+// ContextValidate validates this ssl cert entry based on context it is used
+func (m *SslCertEntry) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
 	return nil
 }
 

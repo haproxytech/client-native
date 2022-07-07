@@ -21,6 +21,7 @@ package models
 // Editing this file might prove futile when you re-run the swagger generate command
 
 import (
+	"context"
 	"encoding/json"
 
 	"github.com/go-openapi/errors"
@@ -82,12 +83,11 @@ func (m *ConfigStickTable) Validate(formats strfmt.Registry) error {
 }
 
 func (m *ConfigStickTable) validatePeers(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.Peers) { // not required
 		return nil
 	}
 
-	if err := validate.Pattern("peers", "body", string(m.Peers), `^[^\s]+$`); err != nil {
+	if err := validate.Pattern("peers", "body", m.Peers, `^[^\s]+$`); err != nil {
 		return err
 	}
 
@@ -95,12 +95,11 @@ func (m *ConfigStickTable) validatePeers(formats strfmt.Registry) error {
 }
 
 func (m *ConfigStickTable) validateStore(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.Store) { // not required
 		return nil
 	}
 
-	if err := validate.Pattern("store", "body", string(m.Store), `^[^\s]+$`); err != nil {
+	if err := validate.Pattern("store", "body", m.Store, `^[^\s]+$`); err != nil {
 		return err
 	}
 
@@ -139,14 +138,13 @@ const (
 
 // prop value enum
 func (m *ConfigStickTable) validateTypeEnum(path, location string, value string) error {
-	if err := validate.Enum(path, location, value, configStickTableTypeTypePropEnum); err != nil {
+	if err := validate.EnumCase(path, location, value, configStickTableTypeTypePropEnum, true); err != nil {
 		return err
 	}
 	return nil
 }
 
 func (m *ConfigStickTable) validateType(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.Type) { // not required
 		return nil
 	}
@@ -156,6 +154,11 @@ func (m *ConfigStickTable) validateType(formats strfmt.Registry) error {
 		return err
 	}
 
+	return nil
+}
+
+// ContextValidate validates this config stick table based on context it is used
+func (m *ConfigStickTable) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
 	return nil
 }
 
