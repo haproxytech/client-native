@@ -21,6 +21,8 @@ package models
 // Editing this file might prove futile when you re-run the swagger generate command
 
 import (
+	"context"
+
 	"github.com/go-openapi/strfmt"
 	"github.com/go-openapi/swag"
 )
@@ -39,6 +41,11 @@ type SmtpchkParams struct {
 
 // Validate validates this smtpchk params
 func (m *SmtpchkParams) Validate(formats strfmt.Registry) error {
+	return nil
+}
+
+// ContextValidate validates this smtpchk params based on context it is used
+func (m *SmtpchkParams) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
 	return nil
 }
 

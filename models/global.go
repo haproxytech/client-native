@@ -21,6 +21,7 @@ package models
 // Editing this file might prove futile when you re-run the swagger generate command
 
 import (
+	"context"
 	"encoding/json"
 	"strconv"
 
@@ -430,7 +431,6 @@ func (m *Global) Validate(formats strfmt.Registry) error {
 }
 
 func (m *Global) validateCPUMaps(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.CPUMaps) { // not required
 		return nil
 	}
@@ -444,6 +444,8 @@ func (m *Global) validateCPUMaps(formats strfmt.Registry) error {
 			if err := m.CPUMaps[i].Validate(formats); err != nil {
 				if ve, ok := err.(*errors.Validation); ok {
 					return ve.ValidateName("cpu_maps" + "." + strconv.Itoa(i))
+				} else if ce, ok := err.(*errors.CompositeError); ok {
+					return ce.ValidateName("cpu_maps" + "." + strconv.Itoa(i))
 				}
 				return err
 			}
@@ -455,7 +457,6 @@ func (m *Global) validateCPUMaps(formats strfmt.Registry) error {
 }
 
 func (m *Global) validateH1CaseAdjusts(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.H1CaseAdjusts) { // not required
 		return nil
 	}
@@ -469,6 +470,8 @@ func (m *Global) validateH1CaseAdjusts(formats strfmt.Registry) error {
 			if err := m.H1CaseAdjusts[i].Validate(formats); err != nil {
 				if ve, ok := err.(*errors.Validation); ok {
 					return ve.ValidateName("h1_case_adjust" + "." + strconv.Itoa(i))
+				} else if ce, ok := err.(*errors.CompositeError); ok {
+					return ce.ValidateName("h1_case_adjust" + "." + strconv.Itoa(i))
 				}
 				return err
 			}
@@ -480,7 +483,6 @@ func (m *Global) validateH1CaseAdjusts(formats strfmt.Registry) error {
 }
 
 func (m *Global) validatePresetEnvs(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.PresetEnvs) { // not required
 		return nil
 	}
@@ -494,6 +496,8 @@ func (m *Global) validatePresetEnvs(formats strfmt.Registry) error {
 			if err := m.PresetEnvs[i].Validate(formats); err != nil {
 				if ve, ok := err.(*errors.Validation); ok {
 					return ve.ValidateName("presetenv" + "." + strconv.Itoa(i))
+				} else if ce, ok := err.(*errors.CompositeError); ok {
+					return ce.ValidateName("presetenv" + "." + strconv.Itoa(i))
 				}
 				return err
 			}
@@ -505,7 +509,6 @@ func (m *Global) validatePresetEnvs(formats strfmt.Registry) error {
 }
 
 func (m *Global) validateRuntimeAPIs(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.RuntimeAPIs) { // not required
 		return nil
 	}
@@ -519,6 +522,8 @@ func (m *Global) validateRuntimeAPIs(formats strfmt.Registry) error {
 			if err := m.RuntimeAPIs[i].Validate(formats); err != nil {
 				if ve, ok := err.(*errors.Validation); ok {
 					return ve.ValidateName("runtime_apis" + "." + strconv.Itoa(i))
+				} else if ce, ok := err.(*errors.CompositeError); ok {
+					return ce.ValidateName("runtime_apis" + "." + strconv.Itoa(i))
 				}
 				return err
 			}
@@ -530,7 +535,6 @@ func (m *Global) validateRuntimeAPIs(formats strfmt.Registry) error {
 }
 
 func (m *Global) validateSetEnvs(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.SetEnvs) { // not required
 		return nil
 	}
@@ -544,6 +548,8 @@ func (m *Global) validateSetEnvs(formats strfmt.Registry) error {
 			if err := m.SetEnvs[i].Validate(formats); err != nil {
 				if ve, ok := err.(*errors.Validation); ok {
 					return ve.ValidateName("setenv" + "." + strconv.Itoa(i))
+				} else if ce, ok := err.(*errors.CompositeError); ok {
+					return ce.ValidateName("setenv" + "." + strconv.Itoa(i))
 				}
 				return err
 			}
@@ -555,7 +561,6 @@ func (m *Global) validateSetEnvs(formats strfmt.Registry) error {
 }
 
 func (m *Global) validateSetVarFmts(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.SetVarFmts) { // not required
 		return nil
 	}
@@ -569,6 +574,8 @@ func (m *Global) validateSetVarFmts(formats strfmt.Registry) error {
 			if err := m.SetVarFmts[i].Validate(formats); err != nil {
 				if ve, ok := err.(*errors.Validation); ok {
 					return ve.ValidateName("set_var_fmt" + "." + strconv.Itoa(i))
+				} else if ce, ok := err.(*errors.CompositeError); ok {
+					return ce.ValidateName("set_var_fmt" + "." + strconv.Itoa(i))
 				}
 				return err
 			}
@@ -580,7 +587,6 @@ func (m *Global) validateSetVarFmts(formats strfmt.Registry) error {
 }
 
 func (m *Global) validateSetVars(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.SetVars) { // not required
 		return nil
 	}
@@ -594,6 +600,8 @@ func (m *Global) validateSetVars(formats strfmt.Registry) error {
 			if err := m.SetVars[i].Validate(formats); err != nil {
 				if ve, ok := err.(*errors.Validation); ok {
 					return ve.ValidateName("set_var" + "." + strconv.Itoa(i))
+				} else if ce, ok := err.(*errors.CompositeError); ok {
+					return ce.ValidateName("set_var" + "." + strconv.Itoa(i))
 				}
 				return err
 			}
@@ -605,7 +613,6 @@ func (m *Global) validateSetVars(formats strfmt.Registry) error {
 }
 
 func (m *Global) validateSslEngines(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.SslEngines) { // not required
 		return nil
 	}
@@ -619,6 +626,8 @@ func (m *Global) validateSslEngines(formats strfmt.Registry) error {
 			if err := m.SslEngines[i].Validate(formats); err != nil {
 				if ve, ok := err.(*errors.Validation); ok {
 					return ve.ValidateName("ssl_engines" + "." + strconv.Itoa(i))
+				} else if ce, ok := err.(*errors.CompositeError); ok {
+					return ce.ValidateName("ssl_engines" + "." + strconv.Itoa(i))
 				}
 				return err
 			}
@@ -630,7 +639,6 @@ func (m *Global) validateSslEngines(formats strfmt.Registry) error {
 }
 
 func (m *Global) validateThreadGroupLines(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.ThreadGroupLines) { // not required
 		return nil
 	}
@@ -644,6 +652,8 @@ func (m *Global) validateThreadGroupLines(formats strfmt.Registry) error {
 			if err := m.ThreadGroupLines[i].Validate(formats); err != nil {
 				if ve, ok := err.(*errors.Validation); ok {
 					return ve.ValidateName("thread_group_lines" + "." + strconv.Itoa(i))
+				} else if ce, ok := err.(*errors.CompositeError); ok {
+					return ce.ValidateName("thread_group_lines" + "." + strconv.Itoa(i))
 				}
 				return err
 			}
@@ -655,12 +665,11 @@ func (m *Global) validateThreadGroupLines(formats strfmt.Registry) error {
 }
 
 func (m *Global) validateChroot(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.Chroot) { // not required
 		return nil
 	}
 
-	if err := validate.Pattern("chroot", "body", string(m.Chroot), `^[^\s]+$`); err != nil {
+	if err := validate.Pattern("chroot", "body", m.Chroot, `^[^\s]+$`); err != nil {
 		return err
 	}
 
@@ -690,14 +699,13 @@ const (
 
 // prop value enum
 func (m *Global) validateDaemonEnum(path, location string, value string) error {
-	if err := validate.Enum(path, location, value, globalTypeDaemonPropEnum); err != nil {
+	if err := validate.EnumCase(path, location, value, globalTypeDaemonPropEnum, true); err != nil {
 		return err
 	}
 	return nil
 }
 
 func (m *Global) validateDaemon(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.Daemon) { // not required
 		return nil
 	}
@@ -711,7 +719,6 @@ func (m *Global) validateDaemon(formats strfmt.Registry) error {
 }
 
 func (m *Global) validateDeviceAtlasOptions(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.DeviceAtlasOptions) { // not required
 		return nil
 	}
@@ -720,6 +727,8 @@ func (m *Global) validateDeviceAtlasOptions(formats strfmt.Registry) error {
 		if err := m.DeviceAtlasOptions.Validate(formats); err != nil {
 			if ve, ok := err.(*errors.Validation); ok {
 				return ve.ValidateName("device_atlas_options")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("device_atlas_options")
 			}
 			return err
 		}
@@ -729,7 +738,6 @@ func (m *Global) validateDeviceAtlasOptions(formats strfmt.Registry) error {
 }
 
 func (m *Global) validateFiftyOneDegreesOptions(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.FiftyOneDegreesOptions) { // not required
 		return nil
 	}
@@ -738,6 +746,8 @@ func (m *Global) validateFiftyOneDegreesOptions(formats strfmt.Registry) error {
 		if err := m.FiftyOneDegreesOptions.Validate(formats); err != nil {
 			if ve, ok := err.(*errors.Validation); ok {
 				return ve.ValidateName("fifty_one_degrees_options")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("fifty_one_degrees_options")
 			}
 			return err
 		}
@@ -747,12 +757,11 @@ func (m *Global) validateFiftyOneDegreesOptions(formats strfmt.Registry) error {
 }
 
 func (m *Global) validateGroup(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.Group) { // not required
 		return nil
 	}
 
-	if err := validate.Pattern("group", "body", string(m.Group), `^[^\s]+$`); err != nil {
+	if err := validate.Pattern("group", "body", m.Group, `^[^\s]+$`); err != nil {
 		return err
 	}
 
@@ -760,12 +769,11 @@ func (m *Global) validateGroup(formats strfmt.Registry) error {
 }
 
 func (m *Global) validateLocalpeer(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.Localpeer) { // not required
 		return nil
 	}
 
-	if err := validate.Pattern("localpeer", "body", string(m.Localpeer), `^[^\s]+$`); err != nil {
+	if err := validate.Pattern("localpeer", "body", m.Localpeer, `^[^\s]+$`); err != nil {
 		return err
 	}
 
@@ -773,7 +781,6 @@ func (m *Global) validateLocalpeer(formats strfmt.Registry) error {
 }
 
 func (m *Global) validateLogSendHostname(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.LogSendHostname) { // not required
 		return nil
 	}
@@ -782,6 +789,8 @@ func (m *Global) validateLogSendHostname(formats strfmt.Registry) error {
 		if err := m.LogSendHostname.Validate(formats); err != nil {
 			if ve, ok := err.(*errors.Validation); ok {
 				return ve.ValidateName("log_send_hostname")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("log_send_hostname")
 			}
 			return err
 		}
@@ -791,7 +800,6 @@ func (m *Global) validateLogSendHostname(formats strfmt.Registry) error {
 }
 
 func (m *Global) validateLuaLoads(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.LuaLoads) { // not required
 		return nil
 	}
@@ -805,6 +813,8 @@ func (m *Global) validateLuaLoads(formats strfmt.Registry) error {
 			if err := m.LuaLoads[i].Validate(formats); err != nil {
 				if ve, ok := err.(*errors.Validation); ok {
 					return ve.ValidateName("lua_loads" + "." + strconv.Itoa(i))
+				} else if ce, ok := err.(*errors.CompositeError); ok {
+					return ce.ValidateName("lua_loads" + "." + strconv.Itoa(i))
 				}
 				return err
 			}
@@ -816,7 +826,6 @@ func (m *Global) validateLuaLoads(formats strfmt.Registry) error {
 }
 
 func (m *Global) validateLuaPrependPath(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.LuaPrependPath) { // not required
 		return nil
 	}
@@ -830,6 +839,8 @@ func (m *Global) validateLuaPrependPath(formats strfmt.Registry) error {
 			if err := m.LuaPrependPath[i].Validate(formats); err != nil {
 				if ve, ok := err.(*errors.Validation); ok {
 					return ve.ValidateName("lua_prepend_path" + "." + strconv.Itoa(i))
+				} else if ce, ok := err.(*errors.CompositeError); ok {
+					return ce.ValidateName("lua_prepend_path" + "." + strconv.Itoa(i))
 				}
 				return err
 			}
@@ -866,14 +877,13 @@ const (
 
 // prop value enum
 func (m *Global) validateProfilingTasksEnum(path, location string, value string) error {
-	if err := validate.Enum(path, location, value, globalTypeProfilingTasksPropEnum); err != nil {
+	if err := validate.EnumCase(path, location, value, globalTypeProfilingTasksPropEnum, true); err != nil {
 		return err
 	}
 	return nil
 }
 
 func (m *Global) validateProfilingTasks(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.ProfilingTasks) { // not required
 		return nil
 	}
@@ -887,12 +897,11 @@ func (m *Global) validateProfilingTasks(formats strfmt.Registry) error {
 }
 
 func (m *Global) validateServerStateBase(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.ServerStateBase) { // not required
 		return nil
 	}
 
-	if err := validate.Pattern("server_state_base", "body", string(m.ServerStateBase), `^[^\s]+$`); err != nil {
+	if err := validate.Pattern("server_state_base", "body", m.ServerStateBase, `^[^\s]+$`); err != nil {
 		return err
 	}
 
@@ -900,12 +909,11 @@ func (m *Global) validateServerStateBase(formats strfmt.Registry) error {
 }
 
 func (m *Global) validateServerStateFile(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.ServerStateFile) { // not required
 		return nil
 	}
 
-	if err := validate.Pattern("server_state_file", "body", string(m.ServerStateFile), `^[^\s]+$`); err != nil {
+	if err := validate.Pattern("server_state_file", "body", m.ServerStateFile, `^[^\s]+$`); err != nil {
 		return err
 	}
 
@@ -935,14 +943,13 @@ const (
 
 // prop value enum
 func (m *Global) validateSslModeAsyncEnum(path, location string, value string) error {
-	if err := validate.Enum(path, location, value, globalTypeSslModeAsyncPropEnum); err != nil {
+	if err := validate.EnumCase(path, location, value, globalTypeSslModeAsyncPropEnum, true); err != nil {
 		return err
 	}
 	return nil
 }
 
 func (m *Global) validateSslModeAsync(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.SslModeAsync) { // not required
 		return nil
 	}
@@ -978,14 +985,13 @@ const (
 
 // prop value enum
 func (m *Global) validateSslServerVerifyEnum(path, location string, value string) error {
-	if err := validate.Enum(path, location, value, globalTypeSslServerVerifyPropEnum); err != nil {
+	if err := validate.EnumCase(path, location, value, globalTypeSslServerVerifyPropEnum, true); err != nil {
 		return err
 	}
 	return nil
 }
 
 func (m *Global) validateSslServerVerify(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.SslServerVerify) { // not required
 		return nil
 	}
@@ -999,7 +1005,6 @@ func (m *Global) validateSslServerVerify(formats strfmt.Registry) error {
 }
 
 func (m *Global) validateTuneOptions(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.TuneOptions) { // not required
 		return nil
 	}
@@ -1008,6 +1013,8 @@ func (m *Global) validateTuneOptions(formats strfmt.Registry) error {
 		if err := m.TuneOptions.Validate(formats); err != nil {
 			if ve, ok := err.(*errors.Validation); ok {
 				return ve.ValidateName("tune_options")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("tune_options")
 			}
 			return err
 		}
@@ -1017,12 +1024,11 @@ func (m *Global) validateTuneOptions(formats strfmt.Registry) error {
 }
 
 func (m *Global) validateUser(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.User) { // not required
 		return nil
 	}
 
-	if err := validate.Pattern("user", "body", string(m.User), `^[^\s]+$`); err != nil {
+	if err := validate.Pattern("user", "body", m.User, `^[^\s]+$`); err != nil {
 		return err
 	}
 
@@ -1030,7 +1036,6 @@ func (m *Global) validateUser(formats strfmt.Registry) error {
 }
 
 func (m *Global) validateWurflOptions(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.WurflOptions) { // not required
 		return nil
 	}
@@ -1039,6 +1044,382 @@ func (m *Global) validateWurflOptions(formats strfmt.Registry) error {
 		if err := m.WurflOptions.Validate(formats); err != nil {
 			if ve, ok := err.(*errors.Validation); ok {
 				return ve.ValidateName("wurfl_options")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("wurfl_options")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
+// ContextValidate validate this global based on the context it is used
+func (m *Global) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+	var res []error
+
+	if err := m.contextValidateCPUMaps(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.contextValidateH1CaseAdjusts(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.contextValidatePresetEnvs(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.contextValidateRuntimeAPIs(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.contextValidateSetEnvs(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.contextValidateSetVarFmts(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.contextValidateSetVars(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.contextValidateSslEngines(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.contextValidateThreadGroupLines(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.contextValidateDeviceAtlasOptions(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.contextValidateFiftyOneDegreesOptions(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.contextValidateLogSendHostname(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.contextValidateLuaLoads(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.contextValidateLuaPrependPath(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.contextValidateTuneOptions(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.contextValidateWurflOptions(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if len(res) > 0 {
+		return errors.CompositeValidationError(res...)
+	}
+	return nil
+}
+
+func (m *Global) contextValidateCPUMaps(ctx context.Context, formats strfmt.Registry) error {
+
+	for i := 0; i < len(m.CPUMaps); i++ {
+
+		if m.CPUMaps[i] != nil {
+			if err := m.CPUMaps[i].ContextValidate(ctx, formats); err != nil {
+				if ve, ok := err.(*errors.Validation); ok {
+					return ve.ValidateName("cpu_maps" + "." + strconv.Itoa(i))
+				} else if ce, ok := err.(*errors.CompositeError); ok {
+					return ce.ValidateName("cpu_maps" + "." + strconv.Itoa(i))
+				}
+				return err
+			}
+		}
+
+	}
+
+	return nil
+}
+
+func (m *Global) contextValidateH1CaseAdjusts(ctx context.Context, formats strfmt.Registry) error {
+
+	for i := 0; i < len(m.H1CaseAdjusts); i++ {
+
+		if m.H1CaseAdjusts[i] != nil {
+			if err := m.H1CaseAdjusts[i].ContextValidate(ctx, formats); err != nil {
+				if ve, ok := err.(*errors.Validation); ok {
+					return ve.ValidateName("h1_case_adjust" + "." + strconv.Itoa(i))
+				} else if ce, ok := err.(*errors.CompositeError); ok {
+					return ce.ValidateName("h1_case_adjust" + "." + strconv.Itoa(i))
+				}
+				return err
+			}
+		}
+
+	}
+
+	return nil
+}
+
+func (m *Global) contextValidatePresetEnvs(ctx context.Context, formats strfmt.Registry) error {
+
+	for i := 0; i < len(m.PresetEnvs); i++ {
+
+		if m.PresetEnvs[i] != nil {
+			if err := m.PresetEnvs[i].ContextValidate(ctx, formats); err != nil {
+				if ve, ok := err.(*errors.Validation); ok {
+					return ve.ValidateName("presetenv" + "." + strconv.Itoa(i))
+				} else if ce, ok := err.(*errors.CompositeError); ok {
+					return ce.ValidateName("presetenv" + "." + strconv.Itoa(i))
+				}
+				return err
+			}
+		}
+
+	}
+
+	return nil
+}
+
+func (m *Global) contextValidateRuntimeAPIs(ctx context.Context, formats strfmt.Registry) error {
+
+	for i := 0; i < len(m.RuntimeAPIs); i++ {
+
+		if m.RuntimeAPIs[i] != nil {
+			if err := m.RuntimeAPIs[i].ContextValidate(ctx, formats); err != nil {
+				if ve, ok := err.(*errors.Validation); ok {
+					return ve.ValidateName("runtime_apis" + "." + strconv.Itoa(i))
+				} else if ce, ok := err.(*errors.CompositeError); ok {
+					return ce.ValidateName("runtime_apis" + "." + strconv.Itoa(i))
+				}
+				return err
+			}
+		}
+
+	}
+
+	return nil
+}
+
+func (m *Global) contextValidateSetEnvs(ctx context.Context, formats strfmt.Registry) error {
+
+	for i := 0; i < len(m.SetEnvs); i++ {
+
+		if m.SetEnvs[i] != nil {
+			if err := m.SetEnvs[i].ContextValidate(ctx, formats); err != nil {
+				if ve, ok := err.(*errors.Validation); ok {
+					return ve.ValidateName("setenv" + "." + strconv.Itoa(i))
+				} else if ce, ok := err.(*errors.CompositeError); ok {
+					return ce.ValidateName("setenv" + "." + strconv.Itoa(i))
+				}
+				return err
+			}
+		}
+
+	}
+
+	return nil
+}
+
+func (m *Global) contextValidateSetVarFmts(ctx context.Context, formats strfmt.Registry) error {
+
+	for i := 0; i < len(m.SetVarFmts); i++ {
+
+		if m.SetVarFmts[i] != nil {
+			if err := m.SetVarFmts[i].ContextValidate(ctx, formats); err != nil {
+				if ve, ok := err.(*errors.Validation); ok {
+					return ve.ValidateName("set_var_fmt" + "." + strconv.Itoa(i))
+				} else if ce, ok := err.(*errors.CompositeError); ok {
+					return ce.ValidateName("set_var_fmt" + "." + strconv.Itoa(i))
+				}
+				return err
+			}
+		}
+
+	}
+
+	return nil
+}
+
+func (m *Global) contextValidateSetVars(ctx context.Context, formats strfmt.Registry) error {
+
+	for i := 0; i < len(m.SetVars); i++ {
+
+		if m.SetVars[i] != nil {
+			if err := m.SetVars[i].ContextValidate(ctx, formats); err != nil {
+				if ve, ok := err.(*errors.Validation); ok {
+					return ve.ValidateName("set_var" + "." + strconv.Itoa(i))
+				} else if ce, ok := err.(*errors.CompositeError); ok {
+					return ce.ValidateName("set_var" + "." + strconv.Itoa(i))
+				}
+				return err
+			}
+		}
+
+	}
+
+	return nil
+}
+
+func (m *Global) contextValidateSslEngines(ctx context.Context, formats strfmt.Registry) error {
+
+	for i := 0; i < len(m.SslEngines); i++ {
+
+		if m.SslEngines[i] != nil {
+			if err := m.SslEngines[i].ContextValidate(ctx, formats); err != nil {
+				if ve, ok := err.(*errors.Validation); ok {
+					return ve.ValidateName("ssl_engines" + "." + strconv.Itoa(i))
+				} else if ce, ok := err.(*errors.CompositeError); ok {
+					return ce.ValidateName("ssl_engines" + "." + strconv.Itoa(i))
+				}
+				return err
+			}
+		}
+
+	}
+
+	return nil
+}
+
+func (m *Global) contextValidateThreadGroupLines(ctx context.Context, formats strfmt.Registry) error {
+
+	for i := 0; i < len(m.ThreadGroupLines); i++ {
+
+		if m.ThreadGroupLines[i] != nil {
+			if err := m.ThreadGroupLines[i].ContextValidate(ctx, formats); err != nil {
+				if ve, ok := err.(*errors.Validation); ok {
+					return ve.ValidateName("thread_group_lines" + "." + strconv.Itoa(i))
+				} else if ce, ok := err.(*errors.CompositeError); ok {
+					return ce.ValidateName("thread_group_lines" + "." + strconv.Itoa(i))
+				}
+				return err
+			}
+		}
+
+	}
+
+	return nil
+}
+
+func (m *Global) contextValidateDeviceAtlasOptions(ctx context.Context, formats strfmt.Registry) error {
+
+	if m.DeviceAtlasOptions != nil {
+		if err := m.DeviceAtlasOptions.ContextValidate(ctx, formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("device_atlas_options")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("device_atlas_options")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (m *Global) contextValidateFiftyOneDegreesOptions(ctx context.Context, formats strfmt.Registry) error {
+
+	if m.FiftyOneDegreesOptions != nil {
+		if err := m.FiftyOneDegreesOptions.ContextValidate(ctx, formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("fifty_one_degrees_options")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("fifty_one_degrees_options")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (m *Global) contextValidateLogSendHostname(ctx context.Context, formats strfmt.Registry) error {
+
+	if m.LogSendHostname != nil {
+		if err := m.LogSendHostname.ContextValidate(ctx, formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("log_send_hostname")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("log_send_hostname")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (m *Global) contextValidateLuaLoads(ctx context.Context, formats strfmt.Registry) error {
+
+	for i := 0; i < len(m.LuaLoads); i++ {
+
+		if m.LuaLoads[i] != nil {
+			if err := m.LuaLoads[i].ContextValidate(ctx, formats); err != nil {
+				if ve, ok := err.(*errors.Validation); ok {
+					return ve.ValidateName("lua_loads" + "." + strconv.Itoa(i))
+				} else if ce, ok := err.(*errors.CompositeError); ok {
+					return ce.ValidateName("lua_loads" + "." + strconv.Itoa(i))
+				}
+				return err
+			}
+		}
+
+	}
+
+	return nil
+}
+
+func (m *Global) contextValidateLuaPrependPath(ctx context.Context, formats strfmt.Registry) error {
+
+	for i := 0; i < len(m.LuaPrependPath); i++ {
+
+		if m.LuaPrependPath[i] != nil {
+			if err := m.LuaPrependPath[i].ContextValidate(ctx, formats); err != nil {
+				if ve, ok := err.(*errors.Validation); ok {
+					return ve.ValidateName("lua_prepend_path" + "." + strconv.Itoa(i))
+				} else if ce, ok := err.(*errors.CompositeError); ok {
+					return ce.ValidateName("lua_prepend_path" + "." + strconv.Itoa(i))
+				}
+				return err
+			}
+		}
+
+	}
+
+	return nil
+}
+
+func (m *Global) contextValidateTuneOptions(ctx context.Context, formats strfmt.Registry) error {
+
+	if m.TuneOptions != nil {
+		if err := m.TuneOptions.ContextValidate(ctx, formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("tune_options")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("tune_options")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (m *Global) contextValidateWurflOptions(ctx context.Context, formats strfmt.Registry) error {
+
+	if m.WurflOptions != nil {
+		if err := m.WurflOptions.ContextValidate(ctx, formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("wurfl_options")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("wurfl_options")
 			}
 			return err
 		}
@@ -1115,6 +1496,11 @@ func (m *CPUMap) validateProcess(formats strfmt.Registry) error {
 	return nil
 }
 
+// ContextValidate validates this CPU map based on context it is used
+func (m *CPUMap) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+	return nil
+}
+
 // MarshalBinary interface implementation
 func (m *CPUMap) MarshalBinary() ([]byte, error) {
 	if m == nil {
@@ -1156,6 +1542,11 @@ func (m *GlobalDeviceAtlasOptions) Validate(formats strfmt.Registry) error {
 	return nil
 }
 
+// ContextValidate validates this global device atlas options based on context it is used
+func (m *GlobalDeviceAtlasOptions) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+	return nil
+}
+
 // MarshalBinary interface implementation
 func (m *GlobalDeviceAtlasOptions) MarshalBinary() ([]byte, error) {
 	if m == nil {
@@ -1194,6 +1585,11 @@ type GlobalFiftyOneDegreesOptions struct {
 
 // Validate validates this global fifty one degrees options
 func (m *GlobalFiftyOneDegreesOptions) Validate(formats strfmt.Registry) error {
+	return nil
+}
+
+// ContextValidate validates this global fifty one degrees options based on context it is used
+func (m *GlobalFiftyOneDegreesOptions) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
 	return nil
 }
 
@@ -1262,6 +1658,11 @@ func (m *H1CaseAdjust) validateTo(formats strfmt.Registry) error {
 		return err
 	}
 
+	return nil
+}
+
+// ContextValidate validates this h1 case adjust based on context it is used
+func (m *H1CaseAdjust) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
 	return nil
 }
 
@@ -1339,7 +1740,7 @@ const (
 
 // prop value enum
 func (m *GlobalLogSendHostname) validateEnabledEnum(path, location string, value string) error {
-	if err := validate.Enum(path, location, value, globalLogSendHostnameTypeEnabledPropEnum); err != nil {
+	if err := validate.EnumCase(path, location, value, globalLogSendHostnameTypeEnabledPropEnum, true); err != nil {
 		return err
 	}
 	return nil
@@ -1360,15 +1761,19 @@ func (m *GlobalLogSendHostname) validateEnabled(formats strfmt.Registry) error {
 }
 
 func (m *GlobalLogSendHostname) validateParam(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.Param) { // not required
 		return nil
 	}
 
-	if err := validate.Pattern("log_send_hostname"+"."+"param", "body", string(m.Param), `^[^\s]+$`); err != nil {
+	if err := validate.Pattern("log_send_hostname"+"."+"param", "body", m.Param, `^[^\s]+$`); err != nil {
 		return err
 	}
 
+	return nil
+}
+
+// ContextValidate validates this global log send hostname based on context it is used
+func (m *GlobalLogSendHostname) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
 	return nil
 }
 
@@ -1421,10 +1826,15 @@ func (m *LuaLoad) validateFile(formats strfmt.Registry) error {
 		return err
 	}
 
-	if err := validate.Pattern("file", "body", string(*m.File), `^[^\s]+$`); err != nil {
+	if err := validate.Pattern("file", "body", *m.File, `^[^\s]+$`); err != nil {
 		return err
 	}
 
+	return nil
+}
+
+// ContextValidate validates this lua load based on context it is used
+func (m *LuaLoad) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
 	return nil
 }
 
@@ -1485,7 +1895,7 @@ func (m *LuaPrependPath) validatePath(formats strfmt.Registry) error {
 		return err
 	}
 
-	if err := validate.Pattern("path", "body", string(*m.Path), `^[^\s]+$`); err != nil {
+	if err := validate.Pattern("path", "body", *m.Path, `^[^\s]+$`); err != nil {
 		return err
 	}
 
@@ -1515,14 +1925,13 @@ const (
 
 // prop value enum
 func (m *LuaPrependPath) validateTypeEnum(path, location string, value string) error {
-	if err := validate.Enum(path, location, value, luaPrependPathTypeTypePropEnum); err != nil {
+	if err := validate.EnumCase(path, location, value, luaPrependPathTypeTypePropEnum, true); err != nil {
 		return err
 	}
 	return nil
 }
 
 func (m *LuaPrependPath) validateType(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.Type) { // not required
 		return nil
 	}
@@ -1532,6 +1941,11 @@ func (m *LuaPrependPath) validateType(formats strfmt.Registry) error {
 		return err
 	}
 
+	return nil
+}
+
+// ContextValidate validates this lua prepend path based on context it is used
+func (m *LuaPrependPath) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
 	return nil
 }
 
@@ -1600,6 +2014,11 @@ func (m *PresetEnv) validateValue(formats strfmt.Registry) error {
 		return err
 	}
 
+	return nil
+}
+
+// ContextValidate validates this preset env based on context it is used
+func (m *PresetEnv) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
 	return nil
 }
 
@@ -1703,10 +2122,25 @@ func (m *RuntimeAPI) validateAddress(formats strfmt.Registry) error {
 		return err
 	}
 
-	if err := validate.Pattern("address", "body", string(*m.Address), `^[^\s]+$`); err != nil {
+	if err := validate.Pattern("address", "body", *m.Address, `^[^\s]+$`); err != nil {
 		return err
 	}
 
+	return nil
+}
+
+// ContextValidate validate this runtime API based on the context it is used
+func (m *RuntimeAPI) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+	var res []error
+
+	// validation for a type composition with BindParams
+	if err := m.BindParams.ContextValidate(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if len(res) > 0 {
+		return errors.CompositeValidationError(res...)
+	}
 	return nil
 }
 
@@ -1778,6 +2212,11 @@ func (m *SetVarFmt) validateName(formats strfmt.Registry) error {
 	return nil
 }
 
+// ContextValidate validates this set var fmt based on context it is used
+func (m *SetVarFmt) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+	return nil
+}
+
 // MarshalBinary interface implementation
 func (m *SetVarFmt) MarshalBinary() ([]byte, error) {
 	if m == nil {
@@ -1843,6 +2282,11 @@ func (m *SetVar) validateName(formats strfmt.Registry) error {
 		return err
 	}
 
+	return nil
+}
+
+// ContextValidate validates this set var based on context it is used
+func (m *SetVar) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
 	return nil
 }
 
@@ -1914,6 +2358,11 @@ func (m *SetEnv) validateValue(formats strfmt.Registry) error {
 	return nil
 }
 
+// ContextValidate validates this set env based on context it is used
+func (m *SetEnv) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+	return nil
+}
+
 // MarshalBinary interface implementation
 func (m *SetEnv) MarshalBinary() ([]byte, error) {
 	if m == nil {
@@ -1965,6 +2414,11 @@ func (m *SslEngine) validateName(formats strfmt.Registry) error {
 		return err
 	}
 
+	return nil
+}
+
+// ContextValidate validates this ssl engine based on context it is used
+func (m *SslEngine) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
 	return nil
 }
 
@@ -2033,6 +2487,11 @@ func (m *ThreadGroup) validateNumOrRange(formats strfmt.Registry) error {
 		return err
 	}
 
+	return nil
+}
+
+// ContextValidate validates this thread group based on context it is used
+func (m *ThreadGroup) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
 	return nil
 }
 
@@ -2280,12 +2739,11 @@ func (m *GlobalTuneOptions) Validate(formats strfmt.Registry) error {
 }
 
 func (m *GlobalTuneOptions) validateBuffersReserve(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.BuffersReserve) { // not required
 		return nil
 	}
 
-	if err := validate.MinimumInt("tune_options"+"."+"buffers_reserve", "body", int64(m.BuffersReserve), 2, false); err != nil {
+	if err := validate.MinimumInt("tune_options"+"."+"buffers_reserve", "body", m.BuffersReserve, 2, false); err != nil {
 		return err
 	}
 
@@ -2315,14 +2773,13 @@ const (
 
 // prop value enum
 func (m *GlobalTuneOptions) validateFdEdgeTriggeredEnum(path, location string, value string) error {
-	if err := validate.Enum(path, location, value, globalTuneOptionsTypeFdEdgeTriggeredPropEnum); err != nil {
+	if err := validate.EnumCase(path, location, value, globalTuneOptionsTypeFdEdgeTriggeredPropEnum, true); err != nil {
 		return err
 	}
 	return nil
 }
 
 func (m *GlobalTuneOptions) validateFdEdgeTriggered(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.FdEdgeTriggered) { // not required
 		return nil
 	}
@@ -2336,12 +2793,11 @@ func (m *GlobalTuneOptions) validateFdEdgeTriggered(formats strfmt.Registry) err
 }
 
 func (m *GlobalTuneOptions) validateH2HeaderTableSize(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.H2HeaderTableSize) { // not required
 		return nil
 	}
 
-	if err := validate.MaximumInt("tune_options"+"."+"h2_header_table_size", "body", int64(m.H2HeaderTableSize), 65535, false); err != nil {
+	if err := validate.MaximumInt("tune_options"+"."+"h2_header_table_size", "body", m.H2HeaderTableSize, 65535, false); err != nil {
 		return err
 	}
 
@@ -2349,16 +2805,15 @@ func (m *GlobalTuneOptions) validateH2HeaderTableSize(formats strfmt.Registry) e
 }
 
 func (m *GlobalTuneOptions) validateHTTPMaxhdr(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.HTTPMaxhdr) { // not required
 		return nil
 	}
 
-	if err := validate.MinimumInt("tune_options"+"."+"http_maxhdr", "body", int64(m.HTTPMaxhdr), 1, false); err != nil {
+	if err := validate.MinimumInt("tune_options"+"."+"http_maxhdr", "body", m.HTTPMaxhdr, 1, false); err != nil {
 		return err
 	}
 
-	if err := validate.MaximumInt("tune_options"+"."+"http_maxhdr", "body", int64(m.HTTPMaxhdr), 32767, false); err != nil {
+	if err := validate.MaximumInt("tune_options"+"."+"http_maxhdr", "body", m.HTTPMaxhdr, 32767, false); err != nil {
 		return err
 	}
 
@@ -2388,14 +2843,13 @@ const (
 
 // prop value enum
 func (m *GlobalTuneOptions) validateIdlePoolSharedEnum(path, location string, value string) error {
-	if err := validate.Enum(path, location, value, globalTuneOptionsTypeIdlePoolSharedPropEnum); err != nil {
+	if err := validate.EnumCase(path, location, value, globalTuneOptionsTypeIdlePoolSharedPropEnum, true); err != nil {
 		return err
 	}
 	return nil
 }
 
 func (m *GlobalTuneOptions) validateIdlePoolShared(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.IdlePoolShared) { // not required
 		return nil
 	}
@@ -2409,16 +2863,15 @@ func (m *GlobalTuneOptions) validateIdlePoolShared(formats strfmt.Registry) erro
 }
 
 func (m *GlobalTuneOptions) validateIdletimer(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.Idletimer) { // not required
 		return nil
 	}
 
-	if err := validate.MinimumInt("tune_options"+"."+"idletimer", "body", int64(*m.Idletimer), 0, false); err != nil {
+	if err := validate.MinimumInt("tune_options"+"."+"idletimer", "body", *m.Idletimer, 0, false); err != nil {
 		return err
 	}
 
-	if err := validate.MaximumInt("tune_options"+"."+"idletimer", "body", int64(*m.Idletimer), 65535, false); err != nil {
+	if err := validate.MaximumInt("tune_options"+"."+"idletimer", "body", *m.Idletimer, 65535, false); err != nil {
 		return err
 	}
 
@@ -2448,14 +2901,13 @@ const (
 
 // prop value enum
 func (m *GlobalTuneOptions) validateListenerMultiQueueEnum(path, location string, value string) error {
-	if err := validate.Enum(path, location, value, globalTuneOptionsTypeListenerMultiQueuePropEnum); err != nil {
+	if err := validate.EnumCase(path, location, value, globalTuneOptionsTypeListenerMultiQueuePropEnum, true); err != nil {
 		return err
 	}
 	return nil
 }
 
 func (m *GlobalTuneOptions) validateListenerMultiQueue(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.ListenerMultiQueue) { // not required
 		return nil
 	}
@@ -2491,14 +2943,13 @@ const (
 
 // prop value enum
 func (m *GlobalTuneOptions) validateSchedLowLatencyEnum(path, location string, value string) error {
-	if err := validate.Enum(path, location, value, globalTuneOptionsTypeSchedLowLatencyPropEnum); err != nil {
+	if err := validate.EnumCase(path, location, value, globalTuneOptionsTypeSchedLowLatencyPropEnum, true); err != nil {
 		return err
 	}
 	return nil
 }
 
 func (m *GlobalTuneOptions) validateSchedLowLatency(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.SchedLowLatency) { // not required
 		return nil
 	}
@@ -2534,14 +2985,13 @@ const (
 
 // prop value enum
 func (m *GlobalTuneOptions) validateSslKeylogEnum(path, location string, value string) error {
-	if err := validate.Enum(path, location, value, globalTuneOptionsTypeSslKeylogPropEnum); err != nil {
+	if err := validate.EnumCase(path, location, value, globalTuneOptionsTypeSslKeylogPropEnum, true); err != nil {
 		return err
 	}
 	return nil
 }
 
 func (m *GlobalTuneOptions) validateSslKeylog(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.SslKeylog) { // not required
 		return nil
 	}
@@ -2555,16 +3005,15 @@ func (m *GlobalTuneOptions) validateSslKeylog(formats strfmt.Registry) error {
 }
 
 func (m *GlobalTuneOptions) validateZlibMemlevel(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.ZlibMemlevel) { // not required
 		return nil
 	}
 
-	if err := validate.MinimumInt("tune_options"+"."+"zlib_memlevel", "body", int64(m.ZlibMemlevel), 1, false); err != nil {
+	if err := validate.MinimumInt("tune_options"+"."+"zlib_memlevel", "body", m.ZlibMemlevel, 1, false); err != nil {
 		return err
 	}
 
-	if err := validate.MaximumInt("tune_options"+"."+"zlib_memlevel", "body", int64(m.ZlibMemlevel), 9, false); err != nil {
+	if err := validate.MaximumInt("tune_options"+"."+"zlib_memlevel", "body", m.ZlibMemlevel, 9, false); err != nil {
 		return err
 	}
 
@@ -2572,19 +3021,23 @@ func (m *GlobalTuneOptions) validateZlibMemlevel(formats strfmt.Registry) error 
 }
 
 func (m *GlobalTuneOptions) validateZlibWindowsize(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.ZlibWindowsize) { // not required
 		return nil
 	}
 
-	if err := validate.MinimumInt("tune_options"+"."+"zlib_windowsize", "body", int64(m.ZlibWindowsize), 8, false); err != nil {
+	if err := validate.MinimumInt("tune_options"+"."+"zlib_windowsize", "body", m.ZlibWindowsize, 8, false); err != nil {
 		return err
 	}
 
-	if err := validate.MaximumInt("tune_options"+"."+"zlib_windowsize", "body", int64(m.ZlibWindowsize), 15, false); err != nil {
+	if err := validate.MaximumInt("tune_options"+"."+"zlib_windowsize", "body", m.ZlibWindowsize, 15, false); err != nil {
 		return err
 	}
 
+	return nil
+}
+
+// ContextValidate validates this global tune options based on context it is used
+func (m *GlobalTuneOptions) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
 	return nil
 }
 
@@ -2629,6 +3082,11 @@ type GlobalWurflOptions struct {
 
 // Validate validates this global wurfl options
 func (m *GlobalWurflOptions) Validate(formats strfmt.Registry) error {
+	return nil
+}
+
+// ContextValidate validates this global wurfl options based on context it is used
+func (m *GlobalWurflOptions) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
 	return nil
 }
 

@@ -21,6 +21,8 @@ package models
 // Editing this file might prove futile when you re-run the swagger generate command
 
 import (
+	"context"
+
 	"github.com/go-openapi/errors"
 	"github.com/go-openapi/strfmt"
 	"github.com/go-openapi/swag"
@@ -89,12 +91,11 @@ func (m *DgramBind) Validate(formats strfmt.Registry) error {
 }
 
 func (m *DgramBind) validateAddress(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.Address) { // not required
 		return nil
 	}
 
-	if err := validate.Pattern("address", "body", string(m.Address), `^[^\s]+$`); err != nil {
+	if err := validate.Pattern("address", "body", m.Address, `^[^\s]+$`); err != nil {
 		return err
 	}
 
@@ -102,12 +103,11 @@ func (m *DgramBind) validateAddress(formats strfmt.Registry) error {
 }
 
 func (m *DgramBind) validateName(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.Name) { // not required
 		return nil
 	}
 
-	if err := validate.Pattern("name", "body", string(m.Name), `^[^\s]+$`); err != nil {
+	if err := validate.Pattern("name", "body", m.Name, `^[^\s]+$`); err != nil {
 		return err
 	}
 
@@ -115,16 +115,15 @@ func (m *DgramBind) validateName(formats strfmt.Registry) error {
 }
 
 func (m *DgramBind) validatePort(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.Port) { // not required
 		return nil
 	}
 
-	if err := validate.MinimumInt("port", "body", int64(*m.Port), 1, false); err != nil {
+	if err := validate.MinimumInt("port", "body", *m.Port, 1, false); err != nil {
 		return err
 	}
 
-	if err := validate.MaximumInt("port", "body", int64(*m.Port), 65535, false); err != nil {
+	if err := validate.MaximumInt("port", "body", *m.Port, 65535, false); err != nil {
 		return err
 	}
 
@@ -132,19 +131,23 @@ func (m *DgramBind) validatePort(formats strfmt.Registry) error {
 }
 
 func (m *DgramBind) validatePortRangeEnd(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.PortRangeEnd) { // not required
 		return nil
 	}
 
-	if err := validate.MinimumInt("port-range-end", "body", int64(*m.PortRangeEnd), 1, false); err != nil {
+	if err := validate.MinimumInt("port-range-end", "body", *m.PortRangeEnd, 1, false); err != nil {
 		return err
 	}
 
-	if err := validate.MaximumInt("port-range-end", "body", int64(*m.PortRangeEnd), 65535, false); err != nil {
+	if err := validate.MaximumInt("port-range-end", "body", *m.PortRangeEnd, 65535, false); err != nil {
 		return err
 	}
 
+	return nil
+}
+
+// ContextValidate validates this dgram bind based on context it is used
+func (m *DgramBind) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
 	return nil
 }
 

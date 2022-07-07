@@ -21,6 +21,7 @@ package models
 // Editing this file might prove futile when you re-run the swagger generate command
 
 import (
+	"context"
 	"encoding/json"
 
 	"github.com/go-openapi/errors"
@@ -70,23 +71,22 @@ func init() {
 
 const (
 
-	// MysqlCheckParamsClientVersionPre41 captures enum value "pre-41"
-	MysqlCheckParamsClientVersionPre41 string = "pre-41"
+	// MysqlCheckParamsClientVersionPreDash41 captures enum value "pre-41"
+	MysqlCheckParamsClientVersionPreDash41 string = "pre-41"
 
-	// MysqlCheckParamsClientVersionPost41 captures enum value "post-41"
-	MysqlCheckParamsClientVersionPost41 string = "post-41"
+	// MysqlCheckParamsClientVersionPostDash41 captures enum value "post-41"
+	MysqlCheckParamsClientVersionPostDash41 string = "post-41"
 )
 
 // prop value enum
 func (m *MysqlCheckParams) validateClientVersionEnum(path, location string, value string) error {
-	if err := validate.Enum(path, location, value, mysqlCheckParamsTypeClientVersionPropEnum); err != nil {
+	if err := validate.EnumCase(path, location, value, mysqlCheckParamsTypeClientVersionPropEnum, true); err != nil {
 		return err
 	}
 	return nil
 }
 
 func (m *MysqlCheckParams) validateClientVersion(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.ClientVersion) { // not required
 		return nil
 	}
@@ -96,6 +96,11 @@ func (m *MysqlCheckParams) validateClientVersion(formats strfmt.Registry) error 
 		return err
 	}
 
+	return nil
+}
+
+// ContextValidate validates this mysql check params based on context it is used
+func (m *MysqlCheckParams) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
 	return nil
 }
 

@@ -21,6 +21,7 @@ package models
 // Editing this file might prove futile when you re-run the swagger generate command
 
 import (
+	"context"
 	"encoding/json"
 
 	"github.com/go-openapi/errors"
@@ -105,12 +106,11 @@ func (m *LogTarget) Validate(formats strfmt.Registry) error {
 }
 
 func (m *LogTarget) validateAddress(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.Address) { // not required
 		return nil
 	}
 
-	if err := validate.Pattern("address", "body", string(m.Address), `^[^\s]+$`); err != nil {
+	if err := validate.Pattern("address", "body", m.Address, `^[^\s]+$`); err != nil {
 		return err
 	}
 
@@ -206,14 +206,13 @@ const (
 
 // prop value enum
 func (m *LogTarget) validateFacilityEnum(path, location string, value string) error {
-	if err := validate.Enum(path, location, value, logTargetTypeFacilityPropEnum); err != nil {
+	if err := validate.EnumCase(path, location, value, logTargetTypeFacilityPropEnum, true); err != nil {
 		return err
 	}
 	return nil
 }
 
 func (m *LogTarget) validateFacility(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.Facility) { // not required
 		return nil
 	}
@@ -255,14 +254,13 @@ const (
 
 // prop value enum
 func (m *LogTarget) validateFormatEnum(path, location string, value string) error {
-	if err := validate.Enum(path, location, value, logTargetTypeFormatPropEnum); err != nil {
+	if err := validate.EnumCase(path, location, value, logTargetTypeFormatPropEnum, true); err != nil {
 		return err
 	}
 	return nil
 }
 
 func (m *LogTarget) validateFormat(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.Format) { // not required
 		return nil
 	}
@@ -325,14 +323,13 @@ const (
 
 // prop value enum
 func (m *LogTarget) validateLevelEnum(path, location string, value string) error {
-	if err := validate.Enum(path, location, value, logTargetTypeLevelPropEnum); err != nil {
+	if err := validate.EnumCase(path, location, value, logTargetTypeLevelPropEnum, true); err != nil {
 		return err
 	}
 	return nil
 }
 
 func (m *LogTarget) validateLevel(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.Level) { // not required
 		return nil
 	}
@@ -386,14 +383,13 @@ const (
 
 // prop value enum
 func (m *LogTarget) validateMinlevelEnum(path, location string, value string) error {
-	if err := validate.Enum(path, location, value, logTargetTypeMinlevelPropEnum); err != nil {
+	if err := validate.EnumCase(path, location, value, logTargetTypeMinlevelPropEnum, true); err != nil {
 		return err
 	}
 	return nil
 }
 
 func (m *LogTarget) validateMinlevel(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.Minlevel) { // not required
 		return nil
 	}
@@ -403,6 +399,11 @@ func (m *LogTarget) validateMinlevel(formats strfmt.Registry) error {
 		return err
 	}
 
+	return nil
+}
+
+// ContextValidate validates this log target based on context it is used
+func (m *LogTarget) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
 	return nil
 }
 

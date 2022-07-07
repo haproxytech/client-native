@@ -21,6 +21,7 @@ package models
 // Editing this file might prove futile when you re-run the swagger generate command
 
 import (
+	"context"
 	"encoding/json"
 
 	"github.com/go-openapi/errors"
@@ -111,7 +112,7 @@ const (
 
 // prop value enum
 func (m *Capture) validateTypeEnum(path, location string, value string) error {
-	if err := validate.Enum(path, location, value, captureTypeTypePropEnum); err != nil {
+	if err := validate.EnumCase(path, location, value, captureTypeTypePropEnum, true); err != nil {
 		return err
 	}
 	return nil
@@ -119,7 +120,7 @@ func (m *Capture) validateTypeEnum(path, location string, value string) error {
 
 func (m *Capture) validateType(formats strfmt.Registry) error {
 
-	if err := validate.RequiredString("type", "body", string(m.Type)); err != nil {
+	if err := validate.RequiredString("type", "body", m.Type); err != nil {
 		return err
 	}
 
@@ -128,6 +129,11 @@ func (m *Capture) validateType(formats strfmt.Registry) error {
 		return err
 	}
 
+	return nil
+}
+
+// ContextValidate validates this capture based on context it is used
+func (m *Capture) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
 	return nil
 }
 

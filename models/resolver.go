@@ -21,6 +21,8 @@ package models
 // Editing this file might prove futile when you re-run the swagger generate command
 
 import (
+	"context"
+
 	"github.com/go-openapi/errors"
 	"github.com/go-openapi/strfmt"
 	"github.com/go-openapi/swag"
@@ -99,16 +101,15 @@ func (m *Resolver) Validate(formats strfmt.Registry) error {
 }
 
 func (m *Resolver) validateAcceptedPayloadSize(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.AcceptedPayloadSize) { // not required
 		return nil
 	}
 
-	if err := validate.MinimumInt("accepted_payload_size", "body", int64(m.AcceptedPayloadSize), 512, false); err != nil {
+	if err := validate.MinimumInt("accepted_payload_size", "body", m.AcceptedPayloadSize, 512, false); err != nil {
 		return err
 	}
 
-	if err := validate.MaximumInt("accepted_payload_size", "body", int64(m.AcceptedPayloadSize), 8192, false); err != nil {
+	if err := validate.MaximumInt("accepted_payload_size", "body", m.AcceptedPayloadSize, 8192, false); err != nil {
 		return err
 	}
 
@@ -117,11 +118,11 @@ func (m *Resolver) validateAcceptedPayloadSize(formats strfmt.Registry) error {
 
 func (m *Resolver) validateName(formats strfmt.Registry) error {
 
-	if err := validate.RequiredString("name", "body", string(m.Name)); err != nil {
+	if err := validate.RequiredString("name", "body", m.Name); err != nil {
 		return err
 	}
 
-	if err := validate.Pattern("name", "body", string(m.Name), `^[A-Za-z0-9-_.:]+$`); err != nil {
+	if err := validate.Pattern("name", "body", m.Name, `^[A-Za-z0-9-_.:]+$`); err != nil {
 		return err
 	}
 
@@ -129,15 +130,19 @@ func (m *Resolver) validateName(formats strfmt.Registry) error {
 }
 
 func (m *Resolver) validateResolveRetries(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.ResolveRetries) { // not required
 		return nil
 	}
 
-	if err := validate.MinimumInt("resolve_retries", "body", int64(m.ResolveRetries), 1, false); err != nil {
+	if err := validate.MinimumInt("resolve_retries", "body", m.ResolveRetries, 1, false); err != nil {
 		return err
 	}
 
+	return nil
+}
+
+// ContextValidate validates this resolver based on context it is used
+func (m *Resolver) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
 	return nil
 }
 

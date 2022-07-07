@@ -21,6 +21,8 @@ package models
 // Editing this file might prove futile when you re-run the swagger generate command
 
 import (
+	"context"
+
 	"github.com/go-openapi/errors"
 	"github.com/go-openapi/strfmt"
 	"github.com/go-openapi/swag"
@@ -75,7 +77,7 @@ func (m *User) Validate(formats strfmt.Registry) error {
 
 func (m *User) validatePassword(formats strfmt.Registry) error {
 
-	if err := validate.RequiredString("password", "body", string(m.Password)); err != nil {
+	if err := validate.RequiredString("password", "body", m.Password); err != nil {
 		return err
 	}
 
@@ -93,14 +95,19 @@ func (m *User) validateSecurePassword(formats strfmt.Registry) error {
 
 func (m *User) validateUsername(formats strfmt.Registry) error {
 
-	if err := validate.RequiredString("username", "body", string(m.Username)); err != nil {
+	if err := validate.RequiredString("username", "body", m.Username); err != nil {
 		return err
 	}
 
-	if err := validate.Pattern("username", "body", string(m.Username), `^[A-Za-z0-9-_.:]+$`); err != nil {
+	if err := validate.Pattern("username", "body", m.Username, `^[A-Za-z0-9-_.:]+$`); err != nil {
 		return err
 	}
 
+	return nil
+}
+
+// ContextValidate validates this user based on context it is used
+func (m *User) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
 	return nil
 }
 

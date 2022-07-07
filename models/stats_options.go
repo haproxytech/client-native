@@ -21,6 +21,7 @@ package models
 // Editing this file might prove futile when you re-run the swagger generate command
 
 import (
+	"context"
 	"encoding/json"
 	"strconv"
 
@@ -145,14 +146,13 @@ const (
 
 // prop value enum
 func (m *StatsOptions) validateStatsAdminCondEnum(path, location string, value string) error {
-	if err := validate.Enum(path, location, value, statsOptionsTypeStatsAdminCondPropEnum); err != nil {
+	if err := validate.EnumCase(path, location, value, statsOptionsTypeStatsAdminCondPropEnum, true); err != nil {
 		return err
 	}
 	return nil
 }
 
 func (m *StatsOptions) validateStatsAdminCond(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.StatsAdminCond) { // not required
 		return nil
 	}
@@ -166,7 +166,6 @@ func (m *StatsOptions) validateStatsAdminCond(formats strfmt.Registry) error {
 }
 
 func (m *StatsOptions) validateStatsAuths(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.StatsAuths) { // not required
 		return nil
 	}
@@ -180,6 +179,8 @@ func (m *StatsOptions) validateStatsAuths(formats strfmt.Registry) error {
 			if err := m.StatsAuths[i].Validate(formats); err != nil {
 				if ve, ok := err.(*errors.Validation); ok {
 					return ve.ValidateName("stats_auths" + "." + strconv.Itoa(i))
+				} else if ce, ok := err.(*errors.CompositeError); ok {
+					return ce.ValidateName("stats_auths" + "." + strconv.Itoa(i))
 				}
 				return err
 			}
@@ -191,7 +192,6 @@ func (m *StatsOptions) validateStatsAuths(formats strfmt.Registry) error {
 }
 
 func (m *StatsOptions) validateStatsHTTPRequests(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.StatsHTTPRequests) { // not required
 		return nil
 	}
@@ -205,6 +205,8 @@ func (m *StatsOptions) validateStatsHTTPRequests(formats strfmt.Registry) error 
 			if err := m.StatsHTTPRequests[i].Validate(formats); err != nil {
 				if ve, ok := err.(*errors.Validation); ok {
 					return ve.ValidateName("stats_http_requests" + "." + strconv.Itoa(i))
+				} else if ce, ok := err.(*errors.CompositeError); ok {
+					return ce.ValidateName("stats_http_requests" + "." + strconv.Itoa(i))
 				}
 				return err
 			}
@@ -216,12 +218,11 @@ func (m *StatsOptions) validateStatsHTTPRequests(formats strfmt.Registry) error 
 }
 
 func (m *StatsOptions) validateStatsMaxconn(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.StatsMaxconn) { // not required
 		return nil
 	}
 
-	if err := validate.MinimumInt("stats_maxconn", "body", int64(m.StatsMaxconn), 1, false); err != nil {
+	if err := validate.MinimumInt("stats_maxconn", "body", m.StatsMaxconn, 1, false); err != nil {
 		return err
 	}
 
@@ -229,12 +230,11 @@ func (m *StatsOptions) validateStatsMaxconn(formats strfmt.Registry) error {
 }
 
 func (m *StatsOptions) validateStatsShowNodeName(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.StatsShowNodeName) { // not required
 		return nil
 	}
 
-	if err := validate.Pattern("stats_show_node_name", "body", string(*m.StatsShowNodeName), `^[^\s]+$`); err != nil {
+	if err := validate.Pattern("stats_show_node_name", "body", *m.StatsShowNodeName, `^[^\s]+$`); err != nil {
 		return err
 	}
 
@@ -242,13 +242,70 @@ func (m *StatsOptions) validateStatsShowNodeName(formats strfmt.Registry) error 
 }
 
 func (m *StatsOptions) validateStatsURIPrefix(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.StatsURIPrefix) { // not required
 		return nil
 	}
 
-	if err := validate.Pattern("stats_uri_prefix", "body", string(m.StatsURIPrefix), `^[^\s]+$`); err != nil {
+	if err := validate.Pattern("stats_uri_prefix", "body", m.StatsURIPrefix, `^[^\s]+$`); err != nil {
 		return err
+	}
+
+	return nil
+}
+
+// ContextValidate validate this stats options based on the context it is used
+func (m *StatsOptions) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+	var res []error
+
+	if err := m.contextValidateStatsAuths(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.contextValidateStatsHTTPRequests(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if len(res) > 0 {
+		return errors.CompositeValidationError(res...)
+	}
+	return nil
+}
+
+func (m *StatsOptions) contextValidateStatsAuths(ctx context.Context, formats strfmt.Registry) error {
+
+	for i := 0; i < len(m.StatsAuths); i++ {
+
+		if m.StatsAuths[i] != nil {
+			if err := m.StatsAuths[i].ContextValidate(ctx, formats); err != nil {
+				if ve, ok := err.(*errors.Validation); ok {
+					return ve.ValidateName("stats_auths" + "." + strconv.Itoa(i))
+				} else if ce, ok := err.(*errors.CompositeError); ok {
+					return ce.ValidateName("stats_auths" + "." + strconv.Itoa(i))
+				}
+				return err
+			}
+		}
+
+	}
+
+	return nil
+}
+
+func (m *StatsOptions) contextValidateStatsHTTPRequests(ctx context.Context, formats strfmt.Registry) error {
+
+	for i := 0; i < len(m.StatsHTTPRequests); i++ {
+
+		if m.StatsHTTPRequests[i] != nil {
+			if err := m.StatsHTTPRequests[i].ContextValidate(ctx, formats); err != nil {
+				if ve, ok := err.(*errors.Validation); ok {
+					return ve.ValidateName("stats_http_requests" + "." + strconv.Itoa(i))
+				} else if ce, ok := err.(*errors.CompositeError); ok {
+					return ce.ValidateName("stats_http_requests" + "." + strconv.Itoa(i))
+				}
+				return err
+			}
+		}
+
 	}
 
 	return nil

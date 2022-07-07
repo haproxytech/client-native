@@ -21,6 +21,8 @@ package models
 // Editing this file might prove futile when you re-run the swagger generate command
 
 import (
+	"context"
+
 	"github.com/go-openapi/errors"
 	"github.com/go-openapi/strfmt"
 	"github.com/go-openapi/swag"
@@ -81,7 +83,7 @@ func (m *Cache) validateName(formats strfmt.Registry) error {
 		return err
 	}
 
-	if err := validate.Pattern("name", "body", string(*m.Name), `^[A-Za-z0-9-_.:]+$`); err != nil {
+	if err := validate.Pattern("name", "body", *m.Name, `^[A-Za-z0-9-_.:]+$`); err != nil {
 		return err
 	}
 
@@ -89,19 +91,23 @@ func (m *Cache) validateName(formats strfmt.Registry) error {
 }
 
 func (m *Cache) validateTotalMaxSize(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.TotalMaxSize) { // not required
 		return nil
 	}
 
-	if err := validate.MinimumInt("total_max_size", "body", int64(m.TotalMaxSize), 1, false); err != nil {
+	if err := validate.MinimumInt("total_max_size", "body", m.TotalMaxSize, 1, false); err != nil {
 		return err
 	}
 
-	if err := validate.MaximumInt("total_max_size", "body", int64(m.TotalMaxSize), 4095, false); err != nil {
+	if err := validate.MaximumInt("total_max_size", "body", m.TotalMaxSize, 4095, false); err != nil {
 		return err
 	}
 
+	return nil
+}
+
+// ContextValidate validates this cache based on context it is used
+func (m *Cache) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
 	return nil
 }
 

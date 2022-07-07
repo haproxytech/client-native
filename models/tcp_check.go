@@ -21,6 +21,7 @@ package models
 // Editing this file might prove futile when you re-run the swagger generate command
 
 import (
+	"context"
 	"encoding/json"
 
 	"github.com/go-openapi/errors"
@@ -228,28 +229,28 @@ const (
 	// TCPCheckActionSend captures enum value "send"
 	TCPCheckActionSend string = "send"
 
-	// TCPCheckActionSendLf captures enum value "send-lf"
-	TCPCheckActionSendLf string = "send-lf"
+	// TCPCheckActionSendDashLf captures enum value "send-lf"
+	TCPCheckActionSendDashLf string = "send-lf"
 
-	// TCPCheckActionSendBinary captures enum value "send-binary"
-	TCPCheckActionSendBinary string = "send-binary"
+	// TCPCheckActionSendDashBinary captures enum value "send-binary"
+	TCPCheckActionSendDashBinary string = "send-binary"
 
-	// TCPCheckActionSendBinaryLf captures enum value "send-binary-lf"
-	TCPCheckActionSendBinaryLf string = "send-binary-lf"
+	// TCPCheckActionSendDashBinaryDashLf captures enum value "send-binary-lf"
+	TCPCheckActionSendDashBinaryDashLf string = "send-binary-lf"
 
-	// TCPCheckActionSetVar captures enum value "set-var"
-	TCPCheckActionSetVar string = "set-var"
+	// TCPCheckActionSetDashVar captures enum value "set-var"
+	TCPCheckActionSetDashVar string = "set-var"
 
-	// TCPCheckActionSetVarFmt captures enum value "set-var-fmt"
-	TCPCheckActionSetVarFmt string = "set-var-fmt"
+	// TCPCheckActionSetDashVarDashFmt captures enum value "set-var-fmt"
+	TCPCheckActionSetDashVarDashFmt string = "set-var-fmt"
 
-	// TCPCheckActionUnsetVar captures enum value "unset-var"
-	TCPCheckActionUnsetVar string = "unset-var"
+	// TCPCheckActionUnsetDashVar captures enum value "unset-var"
+	TCPCheckActionUnsetDashVar string = "unset-var"
 )
 
 // prop value enum
 func (m *TCPCheck) validateActionEnum(path, location string, value string) error {
-	if err := validate.Enum(path, location, value, tcpCheckTypeActionPropEnum); err != nil {
+	if err := validate.EnumCase(path, location, value, tcpCheckTypeActionPropEnum, true); err != nil {
 		return err
 	}
 	return nil
@@ -257,7 +258,7 @@ func (m *TCPCheck) validateActionEnum(path, location string, value string) error
 
 func (m *TCPCheck) validateAction(formats strfmt.Registry) error {
 
-	if err := validate.RequiredString("action", "body", string(m.Action)); err != nil {
+	if err := validate.RequiredString("action", "body", m.Action); err != nil {
 		return err
 	}
 
@@ -270,12 +271,11 @@ func (m *TCPCheck) validateAction(formats strfmt.Registry) error {
 }
 
 func (m *TCPCheck) validateAddr(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.Addr) { // not required
 		return nil
 	}
 
-	if err := validate.Pattern("addr", "body", string(m.Addr), `^[^\s]+$`); err != nil {
+	if err := validate.Pattern("addr", "body", m.Addr, `^[^\s]+$`); err != nil {
 		return err
 	}
 
@@ -283,12 +283,11 @@ func (m *TCPCheck) validateAddr(formats strfmt.Registry) error {
 }
 
 func (m *TCPCheck) validateAlpn(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.Alpn) { // not required
 		return nil
 	}
 
-	if err := validate.Pattern("alpn", "body", string(m.Alpn), `^[^\s]+$`); err != nil {
+	if err := validate.Pattern("alpn", "body", m.Alpn, `^[^\s]+$`); err != nil {
 		return err
 	}
 
@@ -327,14 +326,13 @@ const (
 
 // prop value enum
 func (m *TCPCheck) validateErrorStatusEnum(path, location string, value string) error {
-	if err := validate.Enum(path, location, value, tcpCheckTypeErrorStatusPropEnum); err != nil {
+	if err := validate.EnumCase(path, location, value, tcpCheckTypeErrorStatusPropEnum, true); err != nil {
 		return err
 	}
 	return nil
 }
 
 func (m *TCPCheck) validateErrorStatus(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.ErrorStatus) { // not required
 		return nil
 	}
@@ -376,8 +374,8 @@ const (
 	// TCPCheckMatchRstring captures enum value "rstring"
 	TCPCheckMatchRstring string = "rstring"
 
-	// TCPCheckMatchStringLf captures enum value "string-lf"
-	TCPCheckMatchStringLf string = "string-lf"
+	// TCPCheckMatchStringDashLf captures enum value "string-lf"
+	TCPCheckMatchStringDashLf string = "string-lf"
 
 	// TCPCheckMatchBinary captures enum value "binary"
 	TCPCheckMatchBinary string = "binary"
@@ -385,25 +383,24 @@ const (
 	// TCPCheckMatchRbinary captures enum value "rbinary"
 	TCPCheckMatchRbinary string = "rbinary"
 
-	// TCPCheckMatchBinaryLf captures enum value "binary-lf"
-	TCPCheckMatchBinaryLf string = "binary-lf"
+	// TCPCheckMatchBinaryDashLf captures enum value "binary-lf"
+	TCPCheckMatchBinaryDashLf string = "binary-lf"
 )
 
 // prop value enum
 func (m *TCPCheck) validateMatchEnum(path, location string, value string) error {
-	if err := validate.Enum(path, location, value, tcpCheckTypeMatchPropEnum); err != nil {
+	if err := validate.EnumCase(path, location, value, tcpCheckTypeMatchPropEnum, true); err != nil {
 		return err
 	}
 	return nil
 }
 
 func (m *TCPCheck) validateMatch(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.Match) { // not required
 		return nil
 	}
 
-	if err := validate.Pattern("match", "body", string(m.Match), `^[^\s]+$`); err != nil {
+	if err := validate.Pattern("match", "body", m.Match, `^[^\s]+$`); err != nil {
 		return err
 	}
 
@@ -444,14 +441,13 @@ const (
 
 // prop value enum
 func (m *TCPCheck) validateOkStatusEnum(path, location string, value string) error {
-	if err := validate.Enum(path, location, value, tcpCheckTypeOkStatusPropEnum); err != nil {
+	if err := validate.EnumCase(path, location, value, tcpCheckTypeOkStatusPropEnum, true); err != nil {
 		return err
 	}
 	return nil
 }
 
 func (m *TCPCheck) validateOkStatus(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.OkStatus) { // not required
 		return nil
 	}
@@ -465,16 +461,15 @@ func (m *TCPCheck) validateOkStatus(formats strfmt.Registry) error {
 }
 
 func (m *TCPCheck) validatePort(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.Port) { // not required
 		return nil
 	}
 
-	if err := validate.MinimumInt("port", "body", int64(*m.Port), 1, false); err != nil {
+	if err := validate.MinimumInt("port", "body", *m.Port, 1, false); err != nil {
 		return err
 	}
 
-	if err := validate.MaximumInt("port", "body", int64(*m.Port), 65535, false); err != nil {
+	if err := validate.MaximumInt("port", "body", *m.Port, 65535, false); err != nil {
 		return err
 	}
 
@@ -507,14 +502,13 @@ const (
 
 // prop value enum
 func (m *TCPCheck) validateToutStatusEnum(path, location string, value string) error {
-	if err := validate.Enum(path, location, value, tcpCheckTypeToutStatusPropEnum); err != nil {
+	if err := validate.EnumCase(path, location, value, tcpCheckTypeToutStatusPropEnum, true); err != nil {
 		return err
 	}
 	return nil
 }
 
 func (m *TCPCheck) validateToutStatus(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.ToutStatus) { // not required
 		return nil
 	}
@@ -528,12 +522,11 @@ func (m *TCPCheck) validateToutStatus(formats strfmt.Registry) error {
 }
 
 func (m *TCPCheck) validateVarName(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.VarName) { // not required
 		return nil
 	}
 
-	if err := validate.Pattern("var_name", "body", string(m.VarName), `^[^\s]+$`); err != nil {
+	if err := validate.Pattern("var_name", "body", m.VarName, `^[^\s]+$`); err != nil {
 		return err
 	}
 
@@ -541,15 +534,19 @@ func (m *TCPCheck) validateVarName(formats strfmt.Registry) error {
 }
 
 func (m *TCPCheck) validateVarScope(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.VarScope) { // not required
 		return nil
 	}
 
-	if err := validate.Pattern("var_scope", "body", string(m.VarScope), `^[^\s]+$`); err != nil {
+	if err := validate.Pattern("var_scope", "body", m.VarScope, `^[^\s]+$`); err != nil {
 		return err
 	}
 
+	return nil
+}
+
+// ContextValidate validates this tcp check based on context it is used
+func (m *TCPCheck) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
 	return nil
 }
 

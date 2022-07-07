@@ -21,6 +21,7 @@ package models
 // Editing this file might prove futile when you re-run the swagger generate command
 
 import (
+	"context"
 	"encoding/json"
 
 	"github.com/go-openapi/errors"
@@ -79,14 +80,13 @@ const (
 
 // prop value enum
 func (m *Health) validateHaproxyEnum(path, location string, value string) error {
-	if err := validate.Enum(path, location, value, healthTypeHaproxyPropEnum); err != nil {
+	if err := validate.EnumCase(path, location, value, healthTypeHaproxyPropEnum, true); err != nil {
 		return err
 	}
 	return nil
 }
 
 func (m *Health) validateHaproxy(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.Haproxy) { // not required
 		return nil
 	}
@@ -96,6 +96,11 @@ func (m *Health) validateHaproxy(formats strfmt.Registry) error {
 		return err
 	}
 
+	return nil
+}
+
+// ContextValidate validates this health based on context it is used
+func (m *Health) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
 	return nil
 }
 

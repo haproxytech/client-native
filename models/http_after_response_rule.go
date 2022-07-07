@@ -21,6 +21,7 @@ package models
 // Editing this file might prove futile when you re-run the swagger generate command
 
 import (
+	"context"
 	"encoding/json"
 
 	"github.com/go-openapi/errors"
@@ -32,6 +33,7 @@ import (
 // HTTPAfterResponseRule HTTP after Response Rule
 //
 // HAProxy HTTP after response rule configuration (corresponds to http-after-response directives)
+// Example: {"cond":"unless","cond_test":"{ src 192.168.0.0/16 }","hdr_format":"max-age=31536000","hdr_name":"Strict-Transport-Security","index":0,"type":"set-header"}
 //
 // swagger:model http_after_response_rule
 type HTTPAfterResponseRule struct {
@@ -149,14 +151,13 @@ const (
 
 // prop value enum
 func (m *HTTPAfterResponseRule) validateCondEnum(path, location string, value string) error {
-	if err := validate.Enum(path, location, value, httpAfterResponseRuleTypeCondPropEnum); err != nil {
+	if err := validate.EnumCase(path, location, value, httpAfterResponseRuleTypeCondPropEnum, true); err != nil {
 		return err
 	}
 	return nil
 }
 
 func (m *HTTPAfterResponseRule) validateCond(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.Cond) { // not required
 		return nil
 	}
@@ -179,16 +180,15 @@ func (m *HTTPAfterResponseRule) validateIndex(formats strfmt.Registry) error {
 }
 
 func (m *HTTPAfterResponseRule) validateStatus(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.Status) { // not required
 		return nil
 	}
 
-	if err := validate.MinimumInt("status", "body", int64(m.Status), 100, false); err != nil {
+	if err := validate.MinimumInt("status", "body", m.Status, 100, false); err != nil {
 		return err
 	}
 
-	if err := validate.MaximumInt("status", "body", int64(m.Status), 999, false); err != nil {
+	if err := validate.MaximumInt("status", "body", m.Status, 999, false); err != nil {
 		return err
 	}
 
@@ -218,14 +218,13 @@ const (
 
 // prop value enum
 func (m *HTTPAfterResponseRule) validateStrictModeEnum(path, location string, value string) error {
-	if err := validate.Enum(path, location, value, httpAfterResponseRuleTypeStrictModePropEnum); err != nil {
+	if err := validate.EnumCase(path, location, value, httpAfterResponseRuleTypeStrictModePropEnum, true); err != nil {
 		return err
 	}
 	return nil
 }
 
 func (m *HTTPAfterResponseRule) validateStrictMode(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.StrictMode) { // not required
 		return nil
 	}
@@ -252,40 +251,40 @@ func init() {
 
 const (
 
-	// HTTPAfterResponseRuleTypeAddHeader captures enum value "add-header"
-	HTTPAfterResponseRuleTypeAddHeader string = "add-header"
+	// HTTPAfterResponseRuleTypeAddDashHeader captures enum value "add-header"
+	HTTPAfterResponseRuleTypeAddDashHeader string = "add-header"
 
 	// HTTPAfterResponseRuleTypeAllow captures enum value "allow"
 	HTTPAfterResponseRuleTypeAllow string = "allow"
 
-	// HTTPAfterResponseRuleTypeDelHeader captures enum value "del-header"
-	HTTPAfterResponseRuleTypeDelHeader string = "del-header"
+	// HTTPAfterResponseRuleTypeDelDashHeader captures enum value "del-header"
+	HTTPAfterResponseRuleTypeDelDashHeader string = "del-header"
 
-	// HTTPAfterResponseRuleTypeReplaceHeader captures enum value "replace-header"
-	HTTPAfterResponseRuleTypeReplaceHeader string = "replace-header"
+	// HTTPAfterResponseRuleTypeReplaceDashHeader captures enum value "replace-header"
+	HTTPAfterResponseRuleTypeReplaceDashHeader string = "replace-header"
 
-	// HTTPAfterResponseRuleTypeReplaceValue captures enum value "replace-value"
-	HTTPAfterResponseRuleTypeReplaceValue string = "replace-value"
+	// HTTPAfterResponseRuleTypeReplaceDashValue captures enum value "replace-value"
+	HTTPAfterResponseRuleTypeReplaceDashValue string = "replace-value"
 
-	// HTTPAfterResponseRuleTypeSetHeader captures enum value "set-header"
-	HTTPAfterResponseRuleTypeSetHeader string = "set-header"
+	// HTTPAfterResponseRuleTypeSetDashHeader captures enum value "set-header"
+	HTTPAfterResponseRuleTypeSetDashHeader string = "set-header"
 
-	// HTTPAfterResponseRuleTypeSetStatus captures enum value "set-status"
-	HTTPAfterResponseRuleTypeSetStatus string = "set-status"
+	// HTTPAfterResponseRuleTypeSetDashStatus captures enum value "set-status"
+	HTTPAfterResponseRuleTypeSetDashStatus string = "set-status"
 
-	// HTTPAfterResponseRuleTypeSetVar captures enum value "set-var"
-	HTTPAfterResponseRuleTypeSetVar string = "set-var"
+	// HTTPAfterResponseRuleTypeSetDashVar captures enum value "set-var"
+	HTTPAfterResponseRuleTypeSetDashVar string = "set-var"
 
-	// HTTPAfterResponseRuleTypeStrictMode captures enum value "strict-mode"
-	HTTPAfterResponseRuleTypeStrictMode string = "strict-mode"
+	// HTTPAfterResponseRuleTypeStrictDashMode captures enum value "strict-mode"
+	HTTPAfterResponseRuleTypeStrictDashMode string = "strict-mode"
 
-	// HTTPAfterResponseRuleTypeUnsetVar captures enum value "unset-var"
-	HTTPAfterResponseRuleTypeUnsetVar string = "unset-var"
+	// HTTPAfterResponseRuleTypeUnsetDashVar captures enum value "unset-var"
+	HTTPAfterResponseRuleTypeUnsetDashVar string = "unset-var"
 )
 
 // prop value enum
 func (m *HTTPAfterResponseRule) validateTypeEnum(path, location string, value string) error {
-	if err := validate.Enum(path, location, value, httpAfterResponseRuleTypeTypePropEnum); err != nil {
+	if err := validate.EnumCase(path, location, value, httpAfterResponseRuleTypeTypePropEnum, true); err != nil {
 		return err
 	}
 	return nil
@@ -293,7 +292,7 @@ func (m *HTTPAfterResponseRule) validateTypeEnum(path, location string, value st
 
 func (m *HTTPAfterResponseRule) validateType(formats strfmt.Registry) error {
 
-	if err := validate.RequiredString("type", "body", string(m.Type)); err != nil {
+	if err := validate.RequiredString("type", "body", m.Type); err != nil {
 		return err
 	}
 
@@ -306,12 +305,11 @@ func (m *HTTPAfterResponseRule) validateType(formats strfmt.Registry) error {
 }
 
 func (m *HTTPAfterResponseRule) validateVarName(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.VarName) { // not required
 		return nil
 	}
 
-	if err := validate.Pattern("var_name", "body", string(m.VarName), `^[^\s]+$`); err != nil {
+	if err := validate.Pattern("var_name", "body", m.VarName, `^[^\s]+$`); err != nil {
 		return err
 	}
 
@@ -319,15 +317,19 @@ func (m *HTTPAfterResponseRule) validateVarName(formats strfmt.Registry) error {
 }
 
 func (m *HTTPAfterResponseRule) validateVarScope(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.VarScope) { // not required
 		return nil
 	}
 
-	if err := validate.Pattern("var_scope", "body", string(m.VarScope), `^[^\s]+$`); err != nil {
+	if err := validate.Pattern("var_scope", "body", m.VarScope, `^[^\s]+$`); err != nil {
 		return err
 	}
 
+	return nil
+}
+
+// ContextValidate validates this http after response rule based on context it is used
+func (m *HTTPAfterResponseRule) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
 	return nil
 }
 

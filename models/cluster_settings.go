@@ -21,6 +21,7 @@ package models
 // Editing this file might prove futile when you re-run the swagger generate command
 
 import (
+	"context"
 	"encoding/json"
 	"strconv"
 
@@ -76,7 +77,6 @@ func (m *ClusterSettings) Validate(formats strfmt.Registry) error {
 }
 
 func (m *ClusterSettings) validateCluster(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.Cluster) { // not required
 		return nil
 	}
@@ -85,6 +85,8 @@ func (m *ClusterSettings) validateCluster(formats strfmt.Registry) error {
 		if err := m.Cluster.Validate(formats); err != nil {
 			if ve, ok := err.(*errors.Validation); ok {
 				return ve.ValidateName("cluster")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("cluster")
 			}
 			return err
 		}
@@ -116,14 +118,13 @@ const (
 
 // prop value enum
 func (m *ClusterSettings) validateModeEnum(path, location string, value string) error {
-	if err := validate.Enum(path, location, value, clusterSettingsTypeModePropEnum); err != nil {
+	if err := validate.EnumCase(path, location, value, clusterSettingsTypeModePropEnum, true); err != nil {
 		return err
 	}
 	return nil
 }
 
 func (m *ClusterSettings) validateMode(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.Mode) { // not required
 		return nil
 	}
@@ -162,20 +163,62 @@ const (
 
 // prop value enum
 func (m *ClusterSettings) validateStatusEnum(path, location string, value string) error {
-	if err := validate.Enum(path, location, value, clusterSettingsTypeStatusPropEnum); err != nil {
+	if err := validate.EnumCase(path, location, value, clusterSettingsTypeStatusPropEnum, true); err != nil {
 		return err
 	}
 	return nil
 }
 
 func (m *ClusterSettings) validateStatus(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.Status) { // not required
 		return nil
 	}
 
 	// value enum
 	if err := m.validateStatusEnum("status", "body", m.Status); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+// ContextValidate validate this cluster settings based on the context it is used
+func (m *ClusterSettings) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+	var res []error
+
+	if err := m.contextValidateCluster(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.contextValidateStatus(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if len(res) > 0 {
+		return errors.CompositeValidationError(res...)
+	}
+	return nil
+}
+
+func (m *ClusterSettings) contextValidateCluster(ctx context.Context, formats strfmt.Registry) error {
+
+	if m.Cluster != nil {
+		if err := m.Cluster.ContextValidate(ctx, formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("cluster")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("cluster")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (m *ClusterSettings) contextValidateStatus(ctx context.Context, formats strfmt.Registry) error {
+
+	if err := validate.ReadOnly(ctx, "status", "body", string(m.Status)); err != nil {
 		return err
 	}
 
@@ -258,7 +301,6 @@ func (m *ClusterSettingsCluster) Validate(formats strfmt.Registry) error {
 }
 
 func (m *ClusterSettingsCluster) validateClusterLogTargets(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.ClusterLogTargets) { // not required
 		return nil
 	}
@@ -272,6 +314,8 @@ func (m *ClusterSettingsCluster) validateClusterLogTargets(formats strfmt.Regist
 			if err := m.ClusterLogTargets[i].Validate(formats); err != nil {
 				if ve, ok := err.(*errors.Validation); ok {
 					return ve.ValidateName("cluster" + "." + "log_targets" + "." + strconv.Itoa(i))
+				} else if ce, ok := err.(*errors.CompositeError); ok {
+					return ce.ValidateName("cluster" + "." + "log_targets" + "." + strconv.Itoa(i))
 				}
 				return err
 			}
@@ -283,12 +327,11 @@ func (m *ClusterSettingsCluster) validateClusterLogTargets(formats strfmt.Regist
 }
 
 func (m *ClusterSettingsCluster) validateAddress(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.Address) { // not required
 		return nil
 	}
 
-	if err := validate.Pattern("cluster"+"."+"address", "body", string(m.Address), `^[^\s]+$`); err != nil {
+	if err := validate.Pattern("cluster"+"."+"address", "body", m.Address, `^[^\s]+$`); err != nil {
 		return err
 	}
 
@@ -296,16 +339,114 @@ func (m *ClusterSettingsCluster) validateAddress(formats strfmt.Registry) error 
 }
 
 func (m *ClusterSettingsCluster) validatePort(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.Port) { // not required
 		return nil
 	}
 
-	if err := validate.MinimumInt("cluster"+"."+"port", "body", int64(*m.Port), 1, false); err != nil {
+	if err := validate.MinimumInt("cluster"+"."+"port", "body", *m.Port, 1, false); err != nil {
 		return err
 	}
 
-	if err := validate.MaximumInt("cluster"+"."+"port", "body", int64(*m.Port), 65535, false); err != nil {
+	if err := validate.MaximumInt("cluster"+"."+"port", "body", *m.Port, 65535, false); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+// ContextValidate validate this cluster settings cluster based on the context it is used
+func (m *ClusterSettingsCluster) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+	var res []error
+
+	if err := m.contextValidateClusterLogTargets(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.contextValidateAddress(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.contextValidateAPIBasePath(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.contextValidateDescription(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.contextValidateName(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.contextValidatePort(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if len(res) > 0 {
+		return errors.CompositeValidationError(res...)
+	}
+	return nil
+}
+
+func (m *ClusterSettingsCluster) contextValidateClusterLogTargets(ctx context.Context, formats strfmt.Registry) error {
+
+	for i := 0; i < len(m.ClusterLogTargets); i++ {
+
+		if m.ClusterLogTargets[i] != nil {
+			if err := m.ClusterLogTargets[i].ContextValidate(ctx, formats); err != nil {
+				if ve, ok := err.(*errors.Validation); ok {
+					return ve.ValidateName("cluster" + "." + "log_targets" + "." + strconv.Itoa(i))
+				} else if ce, ok := err.(*errors.CompositeError); ok {
+					return ce.ValidateName("cluster" + "." + "log_targets" + "." + strconv.Itoa(i))
+				}
+				return err
+			}
+		}
+
+	}
+
+	return nil
+}
+
+func (m *ClusterSettingsCluster) contextValidateAddress(ctx context.Context, formats strfmt.Registry) error {
+
+	if err := validate.ReadOnly(ctx, "cluster"+"."+"address", "body", string(m.Address)); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *ClusterSettingsCluster) contextValidateAPIBasePath(ctx context.Context, formats strfmt.Registry) error {
+
+	if err := validate.ReadOnly(ctx, "cluster"+"."+"api_base_path", "body", string(m.APIBasePath)); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *ClusterSettingsCluster) contextValidateDescription(ctx context.Context, formats strfmt.Registry) error {
+
+	if err := validate.ReadOnly(ctx, "cluster"+"."+"description", "body", string(m.Description)); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *ClusterSettingsCluster) contextValidateName(ctx context.Context, formats strfmt.Registry) error {
+
+	if err := validate.ReadOnly(ctx, "cluster"+"."+"name", "body", string(m.Name)); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *ClusterSettingsCluster) contextValidatePort(ctx context.Context, formats strfmt.Registry) error {
+
+	if err := validate.ReadOnly(ctx, "cluster"+"."+"port", "body", m.Port); err != nil {
 		return err
 	}
 
@@ -391,11 +532,11 @@ func (m *ClusterLogTarget) validatePort(formats strfmt.Registry) error {
 		return err
 	}
 
-	if err := validate.MinimumInt("port", "body", int64(*m.Port), 1, false); err != nil {
+	if err := validate.MinimumInt("port", "body", *m.Port, 1, false); err != nil {
 		return err
 	}
 
-	if err := validate.MaximumInt("port", "body", int64(*m.Port), 65535, false); err != nil {
+	if err := validate.MaximumInt("port", "body", *m.Port, 65535, false); err != nil {
 		return err
 	}
 
@@ -425,7 +566,7 @@ const (
 
 // prop value enum
 func (m *ClusterLogTarget) validateProtocolEnum(path, location string, value string) error {
-	if err := validate.Enum(path, location, value, clusterLogTargetTypeProtocolPropEnum); err != nil {
+	if err := validate.EnumCase(path, location, value, clusterLogTargetTypeProtocolPropEnum, true); err != nil {
 		return err
 	}
 	return nil
@@ -442,6 +583,11 @@ func (m *ClusterLogTarget) validateProtocol(formats strfmt.Registry) error {
 		return err
 	}
 
+	return nil
+}
+
+// ContextValidate validates this cluster log target based on context it is used
+func (m *ClusterLogTarget) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
 	return nil
 }
 

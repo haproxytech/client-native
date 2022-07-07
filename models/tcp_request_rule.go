@@ -21,6 +21,7 @@ package models
 // Editing this file might prove futile when you re-run the swagger generate command
 
 import (
+	"context"
 	"encoding/json"
 
 	"github.com/go-openapi/errors"
@@ -32,6 +33,7 @@ import (
 // TCPRequestRule TCP Request Rule
 //
 // HAProxy TCP Request Rule configuration (corresponds to tcp-request)
+// Example: {"cond":"if","cond_test":"{ src 192.168.0.0/16 }","index":0,"type":"connection"}
 //
 // swagger:model tcp_request_rule
 type TCPRequestRule struct {
@@ -190,62 +192,62 @@ const (
 	// TCPRequestRuleActionCapture captures enum value "capture"
 	TCPRequestRuleActionCapture string = "capture"
 
-	// TCPRequestRuleActionDoResolve captures enum value "do-resolve"
-	TCPRequestRuleActionDoResolve string = "do-resolve"
+	// TCPRequestRuleActionDoDashResolve captures enum value "do-resolve"
+	TCPRequestRuleActionDoDashResolve string = "do-resolve"
 
-	// TCPRequestRuleActionExpectNetscalerCip captures enum value "expect-netscaler-cip"
-	TCPRequestRuleActionExpectNetscalerCip string = "expect-netscaler-cip"
+	// TCPRequestRuleActionExpectDashNetscalerDashCip captures enum value "expect-netscaler-cip"
+	TCPRequestRuleActionExpectDashNetscalerDashCip string = "expect-netscaler-cip"
 
-	// TCPRequestRuleActionExpectProxy captures enum value "expect-proxy"
-	TCPRequestRuleActionExpectProxy string = "expect-proxy"
+	// TCPRequestRuleActionExpectDashProxy captures enum value "expect-proxy"
+	TCPRequestRuleActionExpectDashProxy string = "expect-proxy"
 
 	// TCPRequestRuleActionReject captures enum value "reject"
 	TCPRequestRuleActionReject string = "reject"
 
-	// TCPRequestRuleActionScIncGpc0 captures enum value "sc-inc-gpc0"
-	TCPRequestRuleActionScIncGpc0 string = "sc-inc-gpc0"
+	// TCPRequestRuleActionScDashIncDashGpc0 captures enum value "sc-inc-gpc0"
+	TCPRequestRuleActionScDashIncDashGpc0 string = "sc-inc-gpc0"
 
-	// TCPRequestRuleActionScIncGpc1 captures enum value "sc-inc-gpc1"
-	TCPRequestRuleActionScIncGpc1 string = "sc-inc-gpc1"
+	// TCPRequestRuleActionScDashIncDashGpc1 captures enum value "sc-inc-gpc1"
+	TCPRequestRuleActionScDashIncDashGpc1 string = "sc-inc-gpc1"
 
-	// TCPRequestRuleActionScSetGpt0 captures enum value "sc-set-gpt0"
-	TCPRequestRuleActionScSetGpt0 string = "sc-set-gpt0"
+	// TCPRequestRuleActionScDashSetDashGpt0 captures enum value "sc-set-gpt0"
+	TCPRequestRuleActionScDashSetDashGpt0 string = "sc-set-gpt0"
 
-	// TCPRequestRuleActionSendSpoeGroup captures enum value "send-spoe-group"
-	TCPRequestRuleActionSendSpoeGroup string = "send-spoe-group"
+	// TCPRequestRuleActionSendDashSpoeDashGroup captures enum value "send-spoe-group"
+	TCPRequestRuleActionSendDashSpoeDashGroup string = "send-spoe-group"
 
-	// TCPRequestRuleActionSetDstPort captures enum value "set-dst-port"
-	TCPRequestRuleActionSetDstPort string = "set-dst-port"
+	// TCPRequestRuleActionSetDashDstDashPort captures enum value "set-dst-port"
+	TCPRequestRuleActionSetDashDstDashPort string = "set-dst-port"
 
-	// TCPRequestRuleActionSetDst captures enum value "set-dst"
-	TCPRequestRuleActionSetDst string = "set-dst"
+	// TCPRequestRuleActionSetDashDst captures enum value "set-dst"
+	TCPRequestRuleActionSetDashDst string = "set-dst"
 
-	// TCPRequestRuleActionSetPriority captures enum value "set-priority"
-	TCPRequestRuleActionSetPriority string = "set-priority"
+	// TCPRequestRuleActionSetDashPriority captures enum value "set-priority"
+	TCPRequestRuleActionSetDashPriority string = "set-priority"
 
-	// TCPRequestRuleActionSetSrc captures enum value "set-src"
-	TCPRequestRuleActionSetSrc string = "set-src"
+	// TCPRequestRuleActionSetDashSrc captures enum value "set-src"
+	TCPRequestRuleActionSetDashSrc string = "set-src"
 
-	// TCPRequestRuleActionSetVar captures enum value "set-var"
-	TCPRequestRuleActionSetVar string = "set-var"
+	// TCPRequestRuleActionSetDashVar captures enum value "set-var"
+	TCPRequestRuleActionSetDashVar string = "set-var"
 
-	// TCPRequestRuleActionSilentDrop captures enum value "silent-drop"
-	TCPRequestRuleActionSilentDrop string = "silent-drop"
+	// TCPRequestRuleActionSilentDashDrop captures enum value "silent-drop"
+	TCPRequestRuleActionSilentDashDrop string = "silent-drop"
 
-	// TCPRequestRuleActionTrackSc0 captures enum value "track-sc0"
-	TCPRequestRuleActionTrackSc0 string = "track-sc0"
+	// TCPRequestRuleActionTrackDashSc0 captures enum value "track-sc0"
+	TCPRequestRuleActionTrackDashSc0 string = "track-sc0"
 
-	// TCPRequestRuleActionTrackSc1 captures enum value "track-sc1"
-	TCPRequestRuleActionTrackSc1 string = "track-sc1"
+	// TCPRequestRuleActionTrackDashSc1 captures enum value "track-sc1"
+	TCPRequestRuleActionTrackDashSc1 string = "track-sc1"
 
-	// TCPRequestRuleActionTrackSc2 captures enum value "track-sc2"
-	TCPRequestRuleActionTrackSc2 string = "track-sc2"
+	// TCPRequestRuleActionTrackDashSc2 captures enum value "track-sc2"
+	TCPRequestRuleActionTrackDashSc2 string = "track-sc2"
 
-	// TCPRequestRuleActionUnsetVar captures enum value "unset-var"
-	TCPRequestRuleActionUnsetVar string = "unset-var"
+	// TCPRequestRuleActionUnsetDashVar captures enum value "unset-var"
+	TCPRequestRuleActionUnsetDashVar string = "unset-var"
 
-	// TCPRequestRuleActionUseService captures enum value "use-service"
-	TCPRequestRuleActionUseService string = "use-service"
+	// TCPRequestRuleActionUseDashService captures enum value "use-service"
+	TCPRequestRuleActionUseDashService string = "use-service"
 
 	// TCPRequestRuleActionLua captures enum value "lua"
 	TCPRequestRuleActionLua string = "lua"
@@ -253,14 +255,13 @@ const (
 
 // prop value enum
 func (m *TCPRequestRule) validateActionEnum(path, location string, value string) error {
-	if err := validate.Enum(path, location, value, tcpRequestRuleTypeActionPropEnum); err != nil {
+	if err := validate.EnumCase(path, location, value, tcpRequestRuleTypeActionPropEnum, true); err != nil {
 		return err
 	}
 	return nil
 }
 
 func (m *TCPRequestRule) validateAction(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.Action) { // not required
 		return nil
 	}
@@ -274,12 +275,11 @@ func (m *TCPRequestRule) validateAction(formats strfmt.Registry) error {
 }
 
 func (m *TCPRequestRule) validateCaptureSample(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.CaptureSample) { // not required
 		return nil
 	}
 
-	if err := validate.Pattern("capture_sample", "body", string(m.CaptureSample), `^[^\s]+$`); err != nil {
+	if err := validate.Pattern("capture_sample", "body", m.CaptureSample, `^[^\s]+$`); err != nil {
 		return err
 	}
 
@@ -309,14 +309,13 @@ const (
 
 // prop value enum
 func (m *TCPRequestRule) validateCondEnum(path, location string, value string) error {
-	if err := validate.Enum(path, location, value, tcpRequestRuleTypeCondPropEnum); err != nil {
+	if err := validate.EnumCase(path, location, value, tcpRequestRuleTypeCondPropEnum, true); err != nil {
 		return err
 	}
 	return nil
 }
 
 func (m *TCPRequestRule) validateCond(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.Cond) { // not required
 		return nil
 	}
@@ -339,12 +338,11 @@ func (m *TCPRequestRule) validateIndex(formats strfmt.Registry) error {
 }
 
 func (m *TCPRequestRule) validateLuaAction(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.LuaAction) { // not required
 		return nil
 	}
 
-	if err := validate.Pattern("lua_action", "body", string(m.LuaAction), `^[^\s]+$`); err != nil {
+	if err := validate.Pattern("lua_action", "body", m.LuaAction, `^[^\s]+$`); err != nil {
 		return err
 	}
 
@@ -374,14 +372,13 @@ const (
 
 // prop value enum
 func (m *TCPRequestRule) validatePriorityTypeEnum(path, location string, value string) error {
-	if err := validate.Enum(path, location, value, tcpRequestRuleTypePriorityTypePropEnum); err != nil {
+	if err := validate.EnumCase(path, location, value, tcpRequestRuleTypePriorityTypePropEnum, true); err != nil {
 		return err
 	}
 	return nil
 }
 
 func (m *TCPRequestRule) validatePriorityType(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.PriorityType) { // not required
 		return nil
 	}
@@ -417,14 +414,13 @@ const (
 
 // prop value enum
 func (m *TCPRequestRule) validateResolveProtocolEnum(path, location string, value string) error {
-	if err := validate.Enum(path, location, value, tcpRequestRuleTypeResolveProtocolPropEnum); err != nil {
+	if err := validate.EnumCase(path, location, value, tcpRequestRuleTypeResolveProtocolPropEnum, true); err != nil {
 		return err
 	}
 	return nil
 }
 
 func (m *TCPRequestRule) validateResolveProtocol(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.ResolveProtocol) { // not required
 		return nil
 	}
@@ -457,8 +453,8 @@ const (
 	// TCPRequestRuleTypeContent captures enum value "content"
 	TCPRequestRuleTypeContent string = "content"
 
-	// TCPRequestRuleTypeInspectDelay captures enum value "inspect-delay"
-	TCPRequestRuleTypeInspectDelay string = "inspect-delay"
+	// TCPRequestRuleTypeInspectDashDelay captures enum value "inspect-delay"
+	TCPRequestRuleTypeInspectDashDelay string = "inspect-delay"
 
 	// TCPRequestRuleTypeSession captures enum value "session"
 	TCPRequestRuleTypeSession string = "session"
@@ -466,7 +462,7 @@ const (
 
 // prop value enum
 func (m *TCPRequestRule) validateTypeEnum(path, location string, value string) error {
-	if err := validate.Enum(path, location, value, tcpRequestRuleTypeTypePropEnum); err != nil {
+	if err := validate.EnumCase(path, location, value, tcpRequestRuleTypeTypePropEnum, true); err != nil {
 		return err
 	}
 	return nil
@@ -474,7 +470,7 @@ func (m *TCPRequestRule) validateTypeEnum(path, location string, value string) e
 
 func (m *TCPRequestRule) validateType(formats strfmt.Registry) error {
 
-	if err := validate.RequiredString("type", "body", string(m.Type)); err != nil {
+	if err := validate.RequiredString("type", "body", m.Type); err != nil {
 		return err
 	}
 
@@ -487,12 +483,11 @@ func (m *TCPRequestRule) validateType(formats strfmt.Registry) error {
 }
 
 func (m *TCPRequestRule) validateVarName(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.VarName) { // not required
 		return nil
 	}
 
-	if err := validate.Pattern("var_name", "body", string(m.VarName), `^[^\s]+$`); err != nil {
+	if err := validate.Pattern("var_name", "body", m.VarName, `^[^\s]+$`); err != nil {
 		return err
 	}
 
@@ -500,15 +495,19 @@ func (m *TCPRequestRule) validateVarName(formats strfmt.Registry) error {
 }
 
 func (m *TCPRequestRule) validateVarScope(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.VarScope) { // not required
 		return nil
 	}
 
-	if err := validate.Pattern("var_scope", "body", string(m.VarScope), `^[^\s]+$`); err != nil {
+	if err := validate.Pattern("var_scope", "body", m.VarScope, `^[^\s]+$`); err != nil {
 		return err
 	}
 
+	return nil
+}
+
+// ContextValidate validates this tcp request rule based on context it is used
+func (m *TCPRequestRule) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
 	return nil
 }
 

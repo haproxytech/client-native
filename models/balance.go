@@ -21,6 +21,7 @@ package models
 // Editing this file might prove futile when you re-run the swagger generate command
 
 import (
+	"context"
 	"encoding/json"
 
 	"github.com/go-openapi/errors"
@@ -114,8 +115,8 @@ const (
 	// BalanceAlgorithmRoundrobin captures enum value "roundrobin"
 	BalanceAlgorithmRoundrobin string = "roundrobin"
 
-	// BalanceAlgorithmStaticRr captures enum value "static-rr"
-	BalanceAlgorithmStaticRr string = "static-rr"
+	// BalanceAlgorithmStaticDashRr captures enum value "static-rr"
+	BalanceAlgorithmStaticDashRr string = "static-rr"
 
 	// BalanceAlgorithmLeastconn captures enum value "leastconn"
 	BalanceAlgorithmLeastconn string = "leastconn"
@@ -138,13 +139,13 @@ const (
 	// BalanceAlgorithmRandom captures enum value "random"
 	BalanceAlgorithmRandom string = "random"
 
-	// BalanceAlgorithmRdpCookie captures enum value "rdp-cookie"
-	BalanceAlgorithmRdpCookie string = "rdp-cookie"
+	// BalanceAlgorithmRdpDashCookie captures enum value "rdp-cookie"
+	BalanceAlgorithmRdpDashCookie string = "rdp-cookie"
 )
 
 // prop value enum
 func (m *Balance) validateAlgorithmEnum(path, location string, value string) error {
-	if err := validate.Enum(path, location, value, balanceTypeAlgorithmPropEnum); err != nil {
+	if err := validate.EnumCase(path, location, value, balanceTypeAlgorithmPropEnum, true); err != nil {
 		return err
 	}
 	return nil
@@ -165,12 +166,11 @@ func (m *Balance) validateAlgorithm(formats strfmt.Registry) error {
 }
 
 func (m *Balance) validateRdpCookieName(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.RdpCookieName) { // not required
 		return nil
 	}
 
-	if err := validate.Pattern("rdp_cookie_name", "body", string(m.RdpCookieName), `^[^\s]+$`); err != nil {
+	if err := validate.Pattern("rdp_cookie_name", "body", m.RdpCookieName, `^[^\s]+$`); err != nil {
 		return err
 	}
 
@@ -178,15 +178,19 @@ func (m *Balance) validateRdpCookieName(formats strfmt.Registry) error {
 }
 
 func (m *Balance) validateURLParam(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.URLParam) { // not required
 		return nil
 	}
 
-	if err := validate.Pattern("url_param", "body", string(m.URLParam), `^[^\s]+$`); err != nil {
+	if err := validate.Pattern("url_param", "body", m.URLParam, `^[^\s]+$`); err != nil {
 		return err
 	}
 
+	return nil
+}
+
+// ContextValidate validates this balance based on context it is used
+func (m *Balance) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
 	return nil
 }
 

@@ -21,6 +21,7 @@ package models
 // Editing this file might prove futile when you re-run the swagger generate command
 
 import (
+	"context"
 	"encoding/json"
 	"strconv"
 
@@ -33,6 +34,7 @@ import (
 // ServerTemplate Server template
 //
 // Set a template to initialize servers with shared parameters.
+// Example: {"fqdn":"google.com","num_or_range":"1-3","port":80,"prefix":"srv"}
 //
 // swagger:model server_template
 type ServerTemplate struct {
@@ -611,12 +613,11 @@ func (m *ServerTemplate) Validate(formats strfmt.Registry) error {
 }
 
 func (m *ServerTemplate) validateAgentAddr(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.AgentAddr) { // not required
 		return nil
 	}
 
-	if err := validate.Pattern("agent-addr", "body", string(m.AgentAddr), `^[^\s]+$`); err != nil {
+	if err := validate.Pattern("agent-addr", "body", m.AgentAddr, `^[^\s]+$`); err != nil {
 		return err
 	}
 
@@ -646,14 +647,13 @@ const (
 
 // prop value enum
 func (m *ServerTemplate) validateAgentCheckEnum(path, location string, value string) error {
-	if err := validate.Enum(path, location, value, serverTemplateTypeAgentCheckPropEnum); err != nil {
+	if err := validate.EnumCase(path, location, value, serverTemplateTypeAgentCheckPropEnum, true); err != nil {
 		return err
 	}
 	return nil
 }
 
 func (m *ServerTemplate) validateAgentCheck(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.AgentCheck) { // not required
 		return nil
 	}
@@ -667,16 +667,15 @@ func (m *ServerTemplate) validateAgentCheck(formats strfmt.Registry) error {
 }
 
 func (m *ServerTemplate) validateAgentPort(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.AgentPort) { // not required
 		return nil
 	}
 
-	if err := validate.MinimumInt("agent-port", "body", int64(*m.AgentPort), 1, false); err != nil {
+	if err := validate.MinimumInt("agent-port", "body", *m.AgentPort, 1, false); err != nil {
 		return err
 	}
 
-	if err := validate.MaximumInt("agent-port", "body", int64(*m.AgentPort), 65535, false); err != nil {
+	if err := validate.MaximumInt("agent-port", "body", *m.AgentPort, 65535, false); err != nil {
 		return err
 	}
 
@@ -684,12 +683,11 @@ func (m *ServerTemplate) validateAgentPort(formats strfmt.Registry) error {
 }
 
 func (m *ServerTemplate) validateAlpn(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.Alpn) { // not required
 		return nil
 	}
 
-	if err := validate.Pattern("alpn", "body", string(m.Alpn), `^[^\s]+$`); err != nil {
+	if err := validate.Pattern("alpn", "body", m.Alpn, `^[^\s]+$`); err != nil {
 		return err
 	}
 
@@ -719,14 +717,13 @@ const (
 
 // prop value enum
 func (m *ServerTemplate) validateBackupEnum(path, location string, value string) error {
-	if err := validate.Enum(path, location, value, serverTemplateTypeBackupPropEnum); err != nil {
+	if err := validate.EnumCase(path, location, value, serverTemplateTypeBackupPropEnum, true); err != nil {
 		return err
 	}
 	return nil
 }
 
 func (m *ServerTemplate) validateBackup(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.Backup) { // not required
 		return nil
 	}
@@ -762,14 +759,13 @@ const (
 
 // prop value enum
 func (m *ServerTemplate) validateCheckEnum(path, location string, value string) error {
-	if err := validate.Enum(path, location, value, serverTemplateTypeCheckPropEnum); err != nil {
+	if err := validate.EnumCase(path, location, value, serverTemplateTypeCheckPropEnum, true); err != nil {
 		return err
 	}
 	return nil
 }
 
 func (m *ServerTemplate) validateCheck(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.Check) { // not required
 		return nil
 	}
@@ -805,14 +801,13 @@ const (
 
 // prop value enum
 func (m *ServerTemplate) validateCheckSendProxyEnum(path, location string, value string) error {
-	if err := validate.Enum(path, location, value, serverTemplateTypeCheckSendProxyPropEnum); err != nil {
+	if err := validate.EnumCase(path, location, value, serverTemplateTypeCheckSendProxyPropEnum, true); err != nil {
 		return err
 	}
 	return nil
 }
 
 func (m *ServerTemplate) validateCheckSendProxy(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.CheckSendProxy) { // not required
 		return nil
 	}
@@ -826,12 +821,11 @@ func (m *ServerTemplate) validateCheckSendProxy(formats strfmt.Registry) error {
 }
 
 func (m *ServerTemplate) validateCheckSni(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.CheckSni) { // not required
 		return nil
 	}
 
-	if err := validate.Pattern("check-sni", "body", string(m.CheckSni), `^[^\s]+$`); err != nil {
+	if err := validate.Pattern("check-sni", "body", m.CheckSni, `^[^\s]+$`); err != nil {
 		return err
 	}
 
@@ -861,14 +855,13 @@ const (
 
 // prop value enum
 func (m *ServerTemplate) validateCheckSslEnum(path, location string, value string) error {
-	if err := validate.Enum(path, location, value, serverTemplateTypeCheckSslPropEnum); err != nil {
+	if err := validate.EnumCase(path, location, value, serverTemplateTypeCheckSslPropEnum, true); err != nil {
 		return err
 	}
 	return nil
 }
 
 func (m *ServerTemplate) validateCheckSsl(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.CheckSsl) { // not required
 		return nil
 	}
@@ -882,12 +875,11 @@ func (m *ServerTemplate) validateCheckSsl(formats strfmt.Registry) error {
 }
 
 func (m *ServerTemplate) validateCheckAlpn(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.CheckAlpn) { // not required
 		return nil
 	}
 
-	if err := validate.Pattern("check_alpn", "body", string(m.CheckAlpn), `^[^\s]+$`); err != nil {
+	if err := validate.Pattern("check_alpn", "body", m.CheckAlpn, `^[^\s]+$`); err != nil {
 		return err
 	}
 
@@ -895,12 +887,11 @@ func (m *ServerTemplate) validateCheckAlpn(formats strfmt.Registry) error {
 }
 
 func (m *ServerTemplate) validateCheckProto(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.CheckProto) { // not required
 		return nil
 	}
 
-	if err := validate.Pattern("check_proto", "body", string(m.CheckProto), `^[^\s]+$`); err != nil {
+	if err := validate.Pattern("check_proto", "body", m.CheckProto, `^[^\s]+$`); err != nil {
 		return err
 	}
 
@@ -930,14 +921,13 @@ const (
 
 // prop value enum
 func (m *ServerTemplate) validateCheckViaSocks4Enum(path, location string, value string) error {
-	if err := validate.Enum(path, location, value, serverTemplateTypeCheckViaSocks4PropEnum); err != nil {
+	if err := validate.EnumCase(path, location, value, serverTemplateTypeCheckViaSocks4PropEnum, true); err != nil {
 		return err
 	}
 	return nil
 }
 
 func (m *ServerTemplate) validateCheckViaSocks4(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.CheckViaSocks4) { // not required
 		return nil
 	}
@@ -951,12 +941,11 @@ func (m *ServerTemplate) validateCheckViaSocks4(formats strfmt.Registry) error {
 }
 
 func (m *ServerTemplate) validateCookie(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.Cookie) { // not required
 		return nil
 	}
 
-	if err := validate.Pattern("cookie", "body", string(m.Cookie), `^[^\s]+$`); err != nil {
+	if err := validate.Pattern("cookie", "body", m.Cookie, `^[^\s]+$`); err != nil {
 		return err
 	}
 
@@ -986,14 +975,13 @@ const (
 
 // prop value enum
 func (m *ServerTemplate) validateForceSslv3Enum(path, location string, value string) error {
-	if err := validate.Enum(path, location, value, serverTemplateTypeForceSslv3PropEnum); err != nil {
+	if err := validate.EnumCase(path, location, value, serverTemplateTypeForceSslv3PropEnum, true); err != nil {
 		return err
 	}
 	return nil
 }
 
 func (m *ServerTemplate) validateForceSslv3(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.ForceSslv3) { // not required
 		return nil
 	}
@@ -1029,14 +1017,13 @@ const (
 
 // prop value enum
 func (m *ServerTemplate) validateForceTlsv10Enum(path, location string, value string) error {
-	if err := validate.Enum(path, location, value, serverTemplateTypeForceTlsv10PropEnum); err != nil {
+	if err := validate.EnumCase(path, location, value, serverTemplateTypeForceTlsv10PropEnum, true); err != nil {
 		return err
 	}
 	return nil
 }
 
 func (m *ServerTemplate) validateForceTlsv10(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.ForceTlsv10) { // not required
 		return nil
 	}
@@ -1072,14 +1059,13 @@ const (
 
 // prop value enum
 func (m *ServerTemplate) validateForceTlsv11Enum(path, location string, value string) error {
-	if err := validate.Enum(path, location, value, serverTemplateTypeForceTlsv11PropEnum); err != nil {
+	if err := validate.EnumCase(path, location, value, serverTemplateTypeForceTlsv11PropEnum, true); err != nil {
 		return err
 	}
 	return nil
 }
 
 func (m *ServerTemplate) validateForceTlsv11(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.ForceTlsv11) { // not required
 		return nil
 	}
@@ -1115,14 +1101,13 @@ const (
 
 // prop value enum
 func (m *ServerTemplate) validateForceTlsv12Enum(path, location string, value string) error {
-	if err := validate.Enum(path, location, value, serverTemplateTypeForceTlsv12PropEnum); err != nil {
+	if err := validate.EnumCase(path, location, value, serverTemplateTypeForceTlsv12PropEnum, true); err != nil {
 		return err
 	}
 	return nil
 }
 
 func (m *ServerTemplate) validateForceTlsv12(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.ForceTlsv12) { // not required
 		return nil
 	}
@@ -1158,14 +1143,13 @@ const (
 
 // prop value enum
 func (m *ServerTemplate) validateForceTlsv13Enum(path, location string, value string) error {
-	if err := validate.Enum(path, location, value, serverTemplateTypeForceTlsv13PropEnum); err != nil {
+	if err := validate.EnumCase(path, location, value, serverTemplateTypeForceTlsv13PropEnum, true); err != nil {
 		return err
 	}
 	return nil
 }
 
 func (m *ServerTemplate) validateForceTlsv13(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.ForceTlsv13) { // not required
 		return nil
 	}
@@ -1180,7 +1164,7 @@ func (m *ServerTemplate) validateForceTlsv13(formats strfmt.Registry) error {
 
 func (m *ServerTemplate) validateFqdn(formats strfmt.Registry) error {
 
-	if err := validate.RequiredString("fqdn", "body", string(m.Fqdn)); err != nil {
+	if err := validate.RequiredString("fqdn", "body", m.Fqdn); err != nil {
 		return err
 	}
 
@@ -1188,16 +1172,15 @@ func (m *ServerTemplate) validateFqdn(formats strfmt.Registry) error {
 }
 
 func (m *ServerTemplate) validateHealthCheckPort(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.HealthCheckPort) { // not required
 		return nil
 	}
 
-	if err := validate.MinimumInt("health_check_port", "body", int64(*m.HealthCheckPort), 1, false); err != nil {
+	if err := validate.MinimumInt("health_check_port", "body", *m.HealthCheckPort, 1, false); err != nil {
 		return err
 	}
 
-	if err := validate.MaximumInt("health_check_port", "body", int64(*m.HealthCheckPort), 65535, false); err != nil {
+	if err := validate.MaximumInt("health_check_port", "body", *m.HealthCheckPort, 65535, false); err != nil {
 		return err
 	}
 
@@ -1205,12 +1188,11 @@ func (m *ServerTemplate) validateHealthCheckPort(formats strfmt.Registry) error 
 }
 
 func (m *ServerTemplate) validateInitAddr(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.InitAddr) { // not required
 		return nil
 	}
 
-	if err := validate.Pattern("init-addr", "body", string(*m.InitAddr), `^[^\s]+$`); err != nil {
+	if err := validate.Pattern("init-addr", "body", *m.InitAddr, `^[^\s]+$`); err != nil {
 		return err
 	}
 
@@ -1234,20 +1216,19 @@ const (
 	// ServerTemplateLogProtoLegacy captures enum value "legacy"
 	ServerTemplateLogProtoLegacy string = "legacy"
 
-	// ServerTemplateLogProtoOctetCount captures enum value "octet-count"
-	ServerTemplateLogProtoOctetCount string = "octet-count"
+	// ServerTemplateLogProtoOctetDashCount captures enum value "octet-count"
+	ServerTemplateLogProtoOctetDashCount string = "octet-count"
 )
 
 // prop value enum
 func (m *ServerTemplate) validateLogProtoEnum(path, location string, value string) error {
-	if err := validate.Enum(path, location, value, serverTemplateTypeLogProtoPropEnum); err != nil {
+	if err := validate.EnumCase(path, location, value, serverTemplateTypeLogProtoPropEnum, true); err != nil {
 		return err
 	}
 	return nil
 }
 
 func (m *ServerTemplate) validateLogProto(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.LogProto) { // not required
 		return nil
 	}
@@ -1283,14 +1264,13 @@ const (
 
 // prop value enum
 func (m *ServerTemplate) validateMaintenanceEnum(path, location string, value string) error {
-	if err := validate.Enum(path, location, value, serverTemplateTypeMaintenancePropEnum); err != nil {
+	if err := validate.EnumCase(path, location, value, serverTemplateTypeMaintenancePropEnum, true); err != nil {
 		return err
 	}
 	return nil
 }
 
 func (m *ServerTemplate) validateMaintenance(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.Maintenance) { // not required
 		return nil
 	}
@@ -1326,14 +1306,13 @@ const (
 
 // prop value enum
 func (m *ServerTemplate) validateNoSslv3Enum(path, location string, value string) error {
-	if err := validate.Enum(path, location, value, serverTemplateTypeNoSslv3PropEnum); err != nil {
+	if err := validate.EnumCase(path, location, value, serverTemplateTypeNoSslv3PropEnum, true); err != nil {
 		return err
 	}
 	return nil
 }
 
 func (m *ServerTemplate) validateNoSslv3(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.NoSslv3) { // not required
 		return nil
 	}
@@ -1369,14 +1348,13 @@ const (
 
 // prop value enum
 func (m *ServerTemplate) validateNoTlsv10Enum(path, location string, value string) error {
-	if err := validate.Enum(path, location, value, serverTemplateTypeNoTlsv10PropEnum); err != nil {
+	if err := validate.EnumCase(path, location, value, serverTemplateTypeNoTlsv10PropEnum, true); err != nil {
 		return err
 	}
 	return nil
 }
 
 func (m *ServerTemplate) validateNoTlsv10(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.NoTlsv10) { // not required
 		return nil
 	}
@@ -1412,14 +1390,13 @@ const (
 
 // prop value enum
 func (m *ServerTemplate) validateNoTlsv11Enum(path, location string, value string) error {
-	if err := validate.Enum(path, location, value, serverTemplateTypeNoTlsv11PropEnum); err != nil {
+	if err := validate.EnumCase(path, location, value, serverTemplateTypeNoTlsv11PropEnum, true); err != nil {
 		return err
 	}
 	return nil
 }
 
 func (m *ServerTemplate) validateNoTlsv11(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.NoTlsv11) { // not required
 		return nil
 	}
@@ -1455,14 +1432,13 @@ const (
 
 // prop value enum
 func (m *ServerTemplate) validateNoTlsv12Enum(path, location string, value string) error {
-	if err := validate.Enum(path, location, value, serverTemplateTypeNoTlsv12PropEnum); err != nil {
+	if err := validate.EnumCase(path, location, value, serverTemplateTypeNoTlsv12PropEnum, true); err != nil {
 		return err
 	}
 	return nil
 }
 
 func (m *ServerTemplate) validateNoTlsv12(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.NoTlsv12) { // not required
 		return nil
 	}
@@ -1498,14 +1474,13 @@ const (
 
 // prop value enum
 func (m *ServerTemplate) validateNoTlsv13Enum(path, location string, value string) error {
-	if err := validate.Enum(path, location, value, serverTemplateTypeNoTlsv13PropEnum); err != nil {
+	if err := validate.EnumCase(path, location, value, serverTemplateTypeNoTlsv13PropEnum, true); err != nil {
 		return err
 	}
 	return nil
 }
 
 func (m *ServerTemplate) validateNoTlsv13(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.NoTlsv13) { // not required
 		return nil
 	}
@@ -1541,14 +1516,13 @@ const (
 
 // prop value enum
 func (m *ServerTemplate) validateNoVerifyhostEnum(path, location string, value string) error {
-	if err := validate.Enum(path, location, value, serverTemplateTypeNoVerifyhostPropEnum); err != nil {
+	if err := validate.EnumCase(path, location, value, serverTemplateTypeNoVerifyhostPropEnum, true); err != nil {
 		return err
 	}
 	return nil
 }
 
 func (m *ServerTemplate) validateNoVerifyhost(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.NoVerifyhost) { // not required
 		return nil
 	}
@@ -1563,7 +1537,7 @@ func (m *ServerTemplate) validateNoVerifyhost(formats strfmt.Registry) error {
 
 func (m *ServerTemplate) validateNumOrRange(formats strfmt.Registry) error {
 
-	if err := validate.RequiredString("num_or_range", "body", string(m.NumOrRange)); err != nil {
+	if err := validate.RequiredString("num_or_range", "body", m.NumOrRange); err != nil {
 		return err
 	}
 
@@ -1593,14 +1567,13 @@ const (
 
 // prop value enum
 func (m *ServerTemplate) validateObserveEnum(path, location string, value string) error {
-	if err := validate.Enum(path, location, value, serverTemplateTypeObservePropEnum); err != nil {
+	if err := validate.EnumCase(path, location, value, serverTemplateTypeObservePropEnum, true); err != nil {
 		return err
 	}
 	return nil
 }
 
 func (m *ServerTemplate) validateObserve(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.Observe) { // not required
 		return nil
 	}
@@ -1630,26 +1603,25 @@ const (
 	// ServerTemplateOnErrorFastinter captures enum value "fastinter"
 	ServerTemplateOnErrorFastinter string = "fastinter"
 
-	// ServerTemplateOnErrorFailCheck captures enum value "fail-check"
-	ServerTemplateOnErrorFailCheck string = "fail-check"
+	// ServerTemplateOnErrorFailDashCheck captures enum value "fail-check"
+	ServerTemplateOnErrorFailDashCheck string = "fail-check"
 
-	// ServerTemplateOnErrorSuddenDeath captures enum value "sudden-death"
-	ServerTemplateOnErrorSuddenDeath string = "sudden-death"
+	// ServerTemplateOnErrorSuddenDashDeath captures enum value "sudden-death"
+	ServerTemplateOnErrorSuddenDashDeath string = "sudden-death"
 
-	// ServerTemplateOnErrorMarkDown captures enum value "mark-down"
-	ServerTemplateOnErrorMarkDown string = "mark-down"
+	// ServerTemplateOnErrorMarkDashDown captures enum value "mark-down"
+	ServerTemplateOnErrorMarkDashDown string = "mark-down"
 )
 
 // prop value enum
 func (m *ServerTemplate) validateOnErrorEnum(path, location string, value string) error {
-	if err := validate.Enum(path, location, value, serverTemplateTypeOnErrorPropEnum); err != nil {
+	if err := validate.EnumCase(path, location, value, serverTemplateTypeOnErrorPropEnum, true); err != nil {
 		return err
 	}
 	return nil
 }
 
 func (m *ServerTemplate) validateOnError(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.OnError) { // not required
 		return nil
 	}
@@ -1676,20 +1648,19 @@ func init() {
 
 const (
 
-	// ServerTemplateOnMarkedDownShutdownSessions captures enum value "shutdown-sessions"
-	ServerTemplateOnMarkedDownShutdownSessions string = "shutdown-sessions"
+	// ServerTemplateOnMarkedDownShutdownDashSessions captures enum value "shutdown-sessions"
+	ServerTemplateOnMarkedDownShutdownDashSessions string = "shutdown-sessions"
 )
 
 // prop value enum
 func (m *ServerTemplate) validateOnMarkedDownEnum(path, location string, value string) error {
-	if err := validate.Enum(path, location, value, serverTemplateTypeOnMarkedDownPropEnum); err != nil {
+	if err := validate.EnumCase(path, location, value, serverTemplateTypeOnMarkedDownPropEnum, true); err != nil {
 		return err
 	}
 	return nil
 }
 
 func (m *ServerTemplate) validateOnMarkedDown(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.OnMarkedDown) { // not required
 		return nil
 	}
@@ -1716,20 +1687,19 @@ func init() {
 
 const (
 
-	// ServerTemplateOnMarkedUpShutdownBackupSessions captures enum value "shutdown-backup-sessions"
-	ServerTemplateOnMarkedUpShutdownBackupSessions string = "shutdown-backup-sessions"
+	// ServerTemplateOnMarkedUpShutdownDashBackupDashSessions captures enum value "shutdown-backup-sessions"
+	ServerTemplateOnMarkedUpShutdownDashBackupDashSessions string = "shutdown-backup-sessions"
 )
 
 // prop value enum
 func (m *ServerTemplate) validateOnMarkedUpEnum(path, location string, value string) error {
-	if err := validate.Enum(path, location, value, serverTemplateTypeOnMarkedUpPropEnum); err != nil {
+	if err := validate.EnumCase(path, location, value, serverTemplateTypeOnMarkedUpPropEnum, true); err != nil {
 		return err
 	}
 	return nil
 }
 
 func (m *ServerTemplate) validateOnMarkedUp(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.OnMarkedUp) { // not required
 		return nil
 	}
@@ -1743,16 +1713,15 @@ func (m *ServerTemplate) validateOnMarkedUp(formats strfmt.Registry) error {
 }
 
 func (m *ServerTemplate) validatePort(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.Port) { // not required
 		return nil
 	}
 
-	if err := validate.MinimumInt("port", "body", int64(*m.Port), 1, false); err != nil {
+	if err := validate.MinimumInt("port", "body", *m.Port, 1, false); err != nil {
 		return err
 	}
 
-	if err := validate.MaximumInt("port", "body", int64(*m.Port), 65535, false); err != nil {
+	if err := validate.MaximumInt("port", "body", *m.Port, 65535, false); err != nil {
 		return err
 	}
 
@@ -1761,11 +1730,11 @@ func (m *ServerTemplate) validatePort(formats strfmt.Registry) error {
 
 func (m *ServerTemplate) validatePrefix(formats strfmt.Registry) error {
 
-	if err := validate.RequiredString("prefix", "body", string(m.Prefix)); err != nil {
+	if err := validate.RequiredString("prefix", "body", m.Prefix); err != nil {
 		return err
 	}
 
-	if err := validate.Pattern("prefix", "body", string(m.Prefix), `^[^\s]+$`); err != nil {
+	if err := validate.Pattern("prefix", "body", m.Prefix, `^[^\s]+$`); err != nil {
 		return err
 	}
 
@@ -1773,12 +1742,11 @@ func (m *ServerTemplate) validatePrefix(formats strfmt.Registry) error {
 }
 
 func (m *ServerTemplate) validateProto(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.Proto) { // not required
 		return nil
 	}
 
-	if err := validate.Pattern("proto", "body", string(m.Proto), `^[^\s]+$`); err != nil {
+	if err := validate.Pattern("proto", "body", m.Proto, `^[^\s]+$`); err != nil {
 		return err
 	}
 
@@ -1798,14 +1766,13 @@ func init() {
 }
 
 func (m *ServerTemplate) validateProxyV2OptionsItemsEnum(path, location string, value string) error {
-	if err := validate.Enum(path, location, value, serverTemplateProxyV2OptionsItemsEnum); err != nil {
+	if err := validate.EnumCase(path, location, value, serverTemplateProxyV2OptionsItemsEnum, true); err != nil {
 		return err
 	}
 	return nil
 }
 
 func (m *ServerTemplate) validateProxyV2Options(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.ProxyV2Options) { // not required
 		return nil
 	}
@@ -1823,12 +1790,11 @@ func (m *ServerTemplate) validateProxyV2Options(formats strfmt.Registry) error {
 }
 
 func (m *ServerTemplate) validateResolveNet(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.ResolveNet) { // not required
 		return nil
 	}
 
-	if err := validate.Pattern("resolve-net", "body", string(m.ResolveNet), `^[^,\s][^\,]*[^,\s]*$`); err != nil {
+	if err := validate.Pattern("resolve-net", "body", m.ResolveNet, `^[^,\s][^\,]*[^,\s]*$`); err != nil {
 		return err
 	}
 
@@ -1858,14 +1824,13 @@ const (
 
 // prop value enum
 func (m *ServerTemplate) validateResolvePreferEnum(path, location string, value string) error {
-	if err := validate.Enum(path, location, value, serverTemplateTypeResolvePreferPropEnum); err != nil {
+	if err := validate.EnumCase(path, location, value, serverTemplateTypeResolvePreferPropEnum, true); err != nil {
 		return err
 	}
 	return nil
 }
 
 func (m *ServerTemplate) validateResolvePrefer(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.ResolvePrefer) { // not required
 		return nil
 	}
@@ -1879,12 +1844,11 @@ func (m *ServerTemplate) validateResolvePrefer(formats strfmt.Registry) error {
 }
 
 func (m *ServerTemplate) validateResolveOpts(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.ResolveOpts) { // not required
 		return nil
 	}
 
-	if err := validate.Pattern("resolve_opts", "body", string(m.ResolveOpts), `^[^,\s][^\,]*[^,\s]*$`); err != nil {
+	if err := validate.Pattern("resolve_opts", "body", m.ResolveOpts, `^[^,\s][^\,]*[^,\s]*$`); err != nil {
 		return err
 	}
 
@@ -1892,12 +1856,11 @@ func (m *ServerTemplate) validateResolveOpts(formats strfmt.Registry) error {
 }
 
 func (m *ServerTemplate) validateResolvers(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.Resolvers) { // not required
 		return nil
 	}
 
-	if err := validate.Pattern("resolvers", "body", string(m.Resolvers), `^[^\s]+$`); err != nil {
+	if err := validate.Pattern("resolvers", "body", m.Resolvers, `^[^\s]+$`); err != nil {
 		return err
 	}
 
@@ -1927,14 +1890,13 @@ const (
 
 // prop value enum
 func (m *ServerTemplate) validateSendProxyEnum(path, location string, value string) error {
-	if err := validate.Enum(path, location, value, serverTemplateTypeSendProxyPropEnum); err != nil {
+	if err := validate.EnumCase(path, location, value, serverTemplateTypeSendProxyPropEnum, true); err != nil {
 		return err
 	}
 	return nil
 }
 
 func (m *ServerTemplate) validateSendProxy(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.SendProxy) { // not required
 		return nil
 	}
@@ -1970,14 +1932,13 @@ const (
 
 // prop value enum
 func (m *ServerTemplate) validateSendProxyV2Enum(path, location string, value string) error {
-	if err := validate.Enum(path, location, value, serverTemplateTypeSendProxyV2PropEnum); err != nil {
+	if err := validate.EnumCase(path, location, value, serverTemplateTypeSendProxyV2PropEnum, true); err != nil {
 		return err
 	}
 	return nil
 }
 
 func (m *ServerTemplate) validateSendProxyV2(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.SendProxyV2) { // not required
 		return nil
 	}
@@ -2013,14 +1974,13 @@ const (
 
 // prop value enum
 func (m *ServerTemplate) validateSendProxyV2SslEnum(path, location string, value string) error {
-	if err := validate.Enum(path, location, value, serverTemplateTypeSendProxyV2SslPropEnum); err != nil {
+	if err := validate.EnumCase(path, location, value, serverTemplateTypeSendProxyV2SslPropEnum, true); err != nil {
 		return err
 	}
 	return nil
 }
 
 func (m *ServerTemplate) validateSendProxyV2Ssl(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.SendProxyV2Ssl) { // not required
 		return nil
 	}
@@ -2056,14 +2016,13 @@ const (
 
 // prop value enum
 func (m *ServerTemplate) validateSendProxyV2SslCnEnum(path, location string, value string) error {
-	if err := validate.Enum(path, location, value, serverTemplateTypeSendProxyV2SslCnPropEnum); err != nil {
+	if err := validate.EnumCase(path, location, value, serverTemplateTypeSendProxyV2SslCnPropEnum, true); err != nil {
 		return err
 	}
 	return nil
 }
 
 func (m *ServerTemplate) validateSendProxyV2SslCn(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.SendProxyV2SslCn) { // not required
 		return nil
 	}
@@ -2077,12 +2036,11 @@ func (m *ServerTemplate) validateSendProxyV2SslCn(formats strfmt.Registry) error
 }
 
 func (m *ServerTemplate) validateSni(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.Sni) { // not required
 		return nil
 	}
 
-	if err := validate.Pattern("sni", "body", string(m.Sni), `^[^\s]+$`); err != nil {
+	if err := validate.Pattern("sni", "body", m.Sni, `^[^\s]+$`); err != nil {
 		return err
 	}
 
@@ -2090,12 +2048,11 @@ func (m *ServerTemplate) validateSni(formats strfmt.Registry) error {
 }
 
 func (m *ServerTemplate) validateSocks4(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.Socks4) { // not required
 		return nil
 	}
 
-	if err := validate.Pattern("socks4", "body", string(m.Socks4), `^[^\s]+$`); err != nil {
+	if err := validate.Pattern("socks4", "body", m.Socks4, `^[^\s]+$`); err != nil {
 		return err
 	}
 
@@ -2125,14 +2082,13 @@ const (
 
 // prop value enum
 func (m *ServerTemplate) validateSslEnum(path, location string, value string) error {
-	if err := validate.Enum(path, location, value, serverTemplateTypeSslPropEnum); err != nil {
+	if err := validate.EnumCase(path, location, value, serverTemplateTypeSslPropEnum, true); err != nil {
 		return err
 	}
 	return nil
 }
 
 func (m *ServerTemplate) validateSsl(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.Ssl) { // not required
 		return nil
 	}
@@ -2146,12 +2102,11 @@ func (m *ServerTemplate) validateSsl(formats strfmt.Registry) error {
 }
 
 func (m *ServerTemplate) validateSslCafile(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.SslCafile) { // not required
 		return nil
 	}
 
-	if err := validate.Pattern("ssl_cafile", "body", string(m.SslCafile), `^[^\s]+$`); err != nil {
+	if err := validate.Pattern("ssl_cafile", "body", m.SslCafile, `^[^\s]+$`); err != nil {
 		return err
 	}
 
@@ -2159,12 +2114,11 @@ func (m *ServerTemplate) validateSslCafile(formats strfmt.Registry) error {
 }
 
 func (m *ServerTemplate) validateSslCertificate(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.SslCertificate) { // not required
 		return nil
 	}
 
-	if err := validate.Pattern("ssl_certificate", "body", string(m.SslCertificate), `^[^\s]+$`); err != nil {
+	if err := validate.Pattern("ssl_certificate", "body", m.SslCertificate, `^[^\s]+$`); err != nil {
 		return err
 	}
 
@@ -2188,29 +2142,28 @@ const (
 	// ServerTemplateSslMaxVerSSLv3 captures enum value "SSLv3"
 	ServerTemplateSslMaxVerSSLv3 string = "SSLv3"
 
-	// ServerTemplateSslMaxVerTLSv10 captures enum value "TLSv1.0"
-	ServerTemplateSslMaxVerTLSv10 string = "TLSv1.0"
+	// ServerTemplateSslMaxVerTLSv1Dot0 captures enum value "TLSv1.0"
+	ServerTemplateSslMaxVerTLSv1Dot0 string = "TLSv1.0"
 
-	// ServerTemplateSslMaxVerTLSv11 captures enum value "TLSv1.1"
-	ServerTemplateSslMaxVerTLSv11 string = "TLSv1.1"
+	// ServerTemplateSslMaxVerTLSv1Dot1 captures enum value "TLSv1.1"
+	ServerTemplateSslMaxVerTLSv1Dot1 string = "TLSv1.1"
 
-	// ServerTemplateSslMaxVerTLSv12 captures enum value "TLSv1.2"
-	ServerTemplateSslMaxVerTLSv12 string = "TLSv1.2"
+	// ServerTemplateSslMaxVerTLSv1Dot2 captures enum value "TLSv1.2"
+	ServerTemplateSslMaxVerTLSv1Dot2 string = "TLSv1.2"
 
-	// ServerTemplateSslMaxVerTLSv13 captures enum value "TLSv1.3"
-	ServerTemplateSslMaxVerTLSv13 string = "TLSv1.3"
+	// ServerTemplateSslMaxVerTLSv1Dot3 captures enum value "TLSv1.3"
+	ServerTemplateSslMaxVerTLSv1Dot3 string = "TLSv1.3"
 )
 
 // prop value enum
 func (m *ServerTemplate) validateSslMaxVerEnum(path, location string, value string) error {
-	if err := validate.Enum(path, location, value, serverTemplateTypeSslMaxVerPropEnum); err != nil {
+	if err := validate.EnumCase(path, location, value, serverTemplateTypeSslMaxVerPropEnum, true); err != nil {
 		return err
 	}
 	return nil
 }
 
 func (m *ServerTemplate) validateSslMaxVer(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.SslMaxVer) { // not required
 		return nil
 	}
@@ -2240,29 +2193,28 @@ const (
 	// ServerTemplateSslMinVerSSLv3 captures enum value "SSLv3"
 	ServerTemplateSslMinVerSSLv3 string = "SSLv3"
 
-	// ServerTemplateSslMinVerTLSv10 captures enum value "TLSv1.0"
-	ServerTemplateSslMinVerTLSv10 string = "TLSv1.0"
+	// ServerTemplateSslMinVerTLSv1Dot0 captures enum value "TLSv1.0"
+	ServerTemplateSslMinVerTLSv1Dot0 string = "TLSv1.0"
 
-	// ServerTemplateSslMinVerTLSv11 captures enum value "TLSv1.1"
-	ServerTemplateSslMinVerTLSv11 string = "TLSv1.1"
+	// ServerTemplateSslMinVerTLSv1Dot1 captures enum value "TLSv1.1"
+	ServerTemplateSslMinVerTLSv1Dot1 string = "TLSv1.1"
 
-	// ServerTemplateSslMinVerTLSv12 captures enum value "TLSv1.2"
-	ServerTemplateSslMinVerTLSv12 string = "TLSv1.2"
+	// ServerTemplateSslMinVerTLSv1Dot2 captures enum value "TLSv1.2"
+	ServerTemplateSslMinVerTLSv1Dot2 string = "TLSv1.2"
 
-	// ServerTemplateSslMinVerTLSv13 captures enum value "TLSv1.3"
-	ServerTemplateSslMinVerTLSv13 string = "TLSv1.3"
+	// ServerTemplateSslMinVerTLSv1Dot3 captures enum value "TLSv1.3"
+	ServerTemplateSslMinVerTLSv1Dot3 string = "TLSv1.3"
 )
 
 // prop value enum
 func (m *ServerTemplate) validateSslMinVerEnum(path, location string, value string) error {
-	if err := validate.Enum(path, location, value, serverTemplateTypeSslMinVerPropEnum); err != nil {
+	if err := validate.EnumCase(path, location, value, serverTemplateTypeSslMinVerPropEnum, true); err != nil {
 		return err
 	}
 	return nil
 }
 
 func (m *ServerTemplate) validateSslMinVer(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.SslMinVer) { // not required
 		return nil
 	}
@@ -2298,14 +2250,13 @@ const (
 
 // prop value enum
 func (m *ServerTemplate) validateSslReuseEnum(path, location string, value string) error {
-	if err := validate.Enum(path, location, value, serverTemplateTypeSslReusePropEnum); err != nil {
+	if err := validate.EnumCase(path, location, value, serverTemplateTypeSslReusePropEnum, true); err != nil {
 		return err
 	}
 	return nil
 }
 
 func (m *ServerTemplate) validateSslReuse(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.SslReuse) { // not required
 		return nil
 	}
@@ -2341,14 +2292,13 @@ const (
 
 // prop value enum
 func (m *ServerTemplate) validateStickEnum(path, location string, value string) error {
-	if err := validate.Enum(path, location, value, serverTemplateTypeStickPropEnum); err != nil {
+	if err := validate.EnumCase(path, location, value, serverTemplateTypeStickPropEnum, true); err != nil {
 		return err
 	}
 	return nil
 }
 
 func (m *ServerTemplate) validateStick(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.Stick) { // not required
 		return nil
 	}
@@ -2384,14 +2334,13 @@ const (
 
 // prop value enum
 func (m *ServerTemplate) validateTfoEnum(path, location string, value string) error {
-	if err := validate.Enum(path, location, value, serverTemplateTypeTfoPropEnum); err != nil {
+	if err := validate.EnumCase(path, location, value, serverTemplateTypeTfoPropEnum, true); err != nil {
 		return err
 	}
 	return nil
 }
 
 func (m *ServerTemplate) validateTfo(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.Tfo) { // not required
 		return nil
 	}
@@ -2427,14 +2376,13 @@ const (
 
 // prop value enum
 func (m *ServerTemplate) validateTLSTicketsEnum(path, location string, value string) error {
-	if err := validate.Enum(path, location, value, serverTemplateTypeTLSTicketsPropEnum); err != nil {
+	if err := validate.EnumCase(path, location, value, serverTemplateTypeTLSTicketsPropEnum, true); err != nil {
 		return err
 	}
 	return nil
 }
 
 func (m *ServerTemplate) validateTLSTickets(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.TLSTickets) { // not required
 		return nil
 	}
@@ -2470,14 +2418,13 @@ const (
 
 // prop value enum
 func (m *ServerTemplate) validateVerifyEnum(path, location string, value string) error {
-	if err := validate.Enum(path, location, value, serverTemplateTypeVerifyPropEnum); err != nil {
+	if err := validate.EnumCase(path, location, value, serverTemplateTypeVerifyPropEnum, true); err != nil {
 		return err
 	}
 	return nil
 }
 
 func (m *ServerTemplate) validateVerify(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.Verify) { // not required
 		return nil
 	}
@@ -2516,14 +2463,13 @@ const (
 
 // prop value enum
 func (m *ServerTemplate) validateWsEnum(path, location string, value string) error {
-	if err := validate.Enum(path, location, value, serverTemplateTypeWsPropEnum); err != nil {
+	if err := validate.EnumCase(path, location, value, serverTemplateTypeWsPropEnum, true); err != nil {
 		return err
 	}
 	return nil
 }
 
 func (m *ServerTemplate) validateWs(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.Ws) { // not required
 		return nil
 	}
@@ -2533,6 +2479,11 @@ func (m *ServerTemplate) validateWs(formats strfmt.Registry) error {
 		return err
 	}
 
+	return nil
+}
+
+// ContextValidate validates this server template based on context it is used
+func (m *ServerTemplate) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
 	return nil
 }
 

@@ -21,6 +21,8 @@ package models
 // Editing this file might prove futile when you re-run the swagger generate command
 
 import (
+	"context"
+
 	"github.com/go-openapi/strfmt"
 	"github.com/go-openapi/swag"
 )
@@ -47,6 +49,11 @@ type GeneralFile struct {
 
 // Validate validates this general file
 func (m *GeneralFile) Validate(formats strfmt.Registry) error {
+	return nil
+}
+
+// ContextValidate validates this general file based on context it is used
+func (m *GeneralFile) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
 	return nil
 }
 

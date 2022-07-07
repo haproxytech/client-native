@@ -298,7 +298,7 @@ func TestSerializeTCPRequestRule(t *testing.T) {
 		{
 			input: models.TCPRequestRule{
 				Type:     models.TCPRequestRuleTypeConnection,
-				Action:   models.TCPRequestRuleActionSilentDrop,
+				Action:   models.TCPRequestRuleActionSilentDashDrop,
 				Cond:     "if",
 				CondTest: "FALSE",
 			},
@@ -307,7 +307,7 @@ func TestSerializeTCPRequestRule(t *testing.T) {
 		{
 			input: models.TCPRequestRule{
 				Type:     models.TCPRequestRuleTypeContent,
-				Action:   models.TCPRequestRuleActionSilentDrop,
+				Action:   models.TCPRequestRuleActionSilentDashDrop,
 				Cond:     "if",
 				CondTest: "FALSE",
 			},
@@ -316,7 +316,7 @@ func TestSerializeTCPRequestRule(t *testing.T) {
 		{
 			input: models.TCPRequestRule{
 				Type:     models.TCPRequestRuleTypeSession,
-				Action:   models.TCPRequestRuleActionSilentDrop,
+				Action:   models.TCPRequestRuleActionSilentDashDrop,
 				Cond:     "if",
 				CondTest: "FALSE",
 			},
@@ -325,7 +325,7 @@ func TestSerializeTCPRequestRule(t *testing.T) {
 		{
 			input: models.TCPRequestRule{
 				Type:     models.TCPRequestRuleTypeConnection,
-				Action:   models.TCPRequestRuleActionExpectProxy,
+				Action:   models.TCPRequestRuleActionExpectDashProxy,
 				Cond:     "if",
 				CondTest: "{ src 1.2.3.4 5.6.7.8 }",
 			},

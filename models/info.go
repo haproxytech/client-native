@@ -21,6 +21,8 @@ package models
 // Editing this file might prove futile when you re-run the swagger generate command
 
 import (
+	"context"
+
 	"github.com/go-openapi/errors"
 	"github.com/go-openapi/strfmt"
 	"github.com/go-openapi/swag"
@@ -30,6 +32,7 @@ import (
 // Info Information
 //
 // General API, OS and hardware information
+// Example: {"api":{"build_date":"2019-08-21T17:31:56.000Z","version":"v1.2.1 45a3288.dev"},"system":{"cpu_info":{"model":"Intel(R) Core(TM) i7-7500U CPU @ 2.70GHz","num_cpus":4},"hostname":"test","mem_info":{"dataplaneapi_memory":44755536,"free_memory":5790642176,"total_memory":16681517056},"os_string":"Linux 4.15.0-58-generic #64-Ubuntu SMP Tue Aug 6 11:12:41 UTC 2019","time":1566401525,"uptime":87340}}
 //
 // swagger:model info
 type Info struct {
@@ -60,7 +63,6 @@ func (m *Info) Validate(formats strfmt.Registry) error {
 }
 
 func (m *Info) validateAPI(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.API) { // not required
 		return nil
 	}
@@ -69,6 +71,8 @@ func (m *Info) validateAPI(formats strfmt.Registry) error {
 		if err := m.API.Validate(formats); err != nil {
 			if ve, ok := err.(*errors.Validation); ok {
 				return ve.ValidateName("api")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("api")
 			}
 			return err
 		}
@@ -78,7 +82,6 @@ func (m *Info) validateAPI(formats strfmt.Registry) error {
 }
 
 func (m *Info) validateSystem(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.System) { // not required
 		return nil
 	}
@@ -87,6 +90,58 @@ func (m *Info) validateSystem(formats strfmt.Registry) error {
 		if err := m.System.Validate(formats); err != nil {
 			if ve, ok := err.(*errors.Validation); ok {
 				return ve.ValidateName("system")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("system")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
+// ContextValidate validate this info based on the context it is used
+func (m *Info) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+	var res []error
+
+	if err := m.contextValidateAPI(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.contextValidateSystem(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if len(res) > 0 {
+		return errors.CompositeValidationError(res...)
+	}
+	return nil
+}
+
+func (m *Info) contextValidateAPI(ctx context.Context, formats strfmt.Registry) error {
+
+	if m.API != nil {
+		if err := m.API.ContextValidate(ctx, formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("api")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("api")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (m *Info) contextValidateSystem(ctx context.Context, formats strfmt.Registry) error {
+
+	if m.System != nil {
+		if err := m.System.ContextValidate(ctx, formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("system")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("system")
 			}
 			return err
 		}
@@ -141,7 +196,6 @@ func (m *InfoAPI) Validate(formats strfmt.Registry) error {
 }
 
 func (m *InfoAPI) validateBuildDate(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.BuildDate) { // not required
 		return nil
 	}
@@ -150,6 +204,11 @@ func (m *InfoAPI) validateBuildDate(formats strfmt.Registry) error {
 		return err
 	}
 
+	return nil
+}
+
+// ContextValidate validates this info API based on context it is used
+func (m *InfoAPI) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
 	return nil
 }
 
@@ -214,7 +273,6 @@ func (m *InfoSystem) Validate(formats strfmt.Registry) error {
 }
 
 func (m *InfoSystem) validateCPUInfo(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.CPUInfo) { // not required
 		return nil
 	}
@@ -223,6 +281,8 @@ func (m *InfoSystem) validateCPUInfo(formats strfmt.Registry) error {
 		if err := m.CPUInfo.Validate(formats); err != nil {
 			if ve, ok := err.(*errors.Validation); ok {
 				return ve.ValidateName("system" + "." + "cpu_info")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("system" + "." + "cpu_info")
 			}
 			return err
 		}
@@ -232,7 +292,6 @@ func (m *InfoSystem) validateCPUInfo(formats strfmt.Registry) error {
 }
 
 func (m *InfoSystem) validateMemInfo(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.MemInfo) { // not required
 		return nil
 	}
@@ -241,6 +300,58 @@ func (m *InfoSystem) validateMemInfo(formats strfmt.Registry) error {
 		if err := m.MemInfo.Validate(formats); err != nil {
 			if ve, ok := err.(*errors.Validation); ok {
 				return ve.ValidateName("system" + "." + "mem_info")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("system" + "." + "mem_info")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
+// ContextValidate validate this info system based on the context it is used
+func (m *InfoSystem) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+	var res []error
+
+	if err := m.contextValidateCPUInfo(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.contextValidateMemInfo(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if len(res) > 0 {
+		return errors.CompositeValidationError(res...)
+	}
+	return nil
+}
+
+func (m *InfoSystem) contextValidateCPUInfo(ctx context.Context, formats strfmt.Registry) error {
+
+	if m.CPUInfo != nil {
+		if err := m.CPUInfo.ContextValidate(ctx, formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("system" + "." + "cpu_info")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("system" + "." + "cpu_info")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (m *InfoSystem) contextValidateMemInfo(ctx context.Context, formats strfmt.Registry) error {
+
+	if m.MemInfo != nil {
+		if err := m.MemInfo.ContextValidate(ctx, formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("system" + "." + "mem_info")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("system" + "." + "mem_info")
 			}
 			return err
 		}
@@ -284,6 +395,11 @@ func (m *InfoSystemCPUInfo) Validate(formats strfmt.Registry) error {
 	return nil
 }
 
+// ContextValidate validates this info system CPU info based on context it is used
+func (m *InfoSystemCPUInfo) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+	return nil
+}
+
 // MarshalBinary interface implementation
 func (m *InfoSystemCPUInfo) MarshalBinary() ([]byte, error) {
 	if m == nil {
@@ -319,6 +435,11 @@ type InfoSystemMemInfo struct {
 
 // Validate validates this info system mem info
 func (m *InfoSystemMemInfo) Validate(formats strfmt.Registry) error {
+	return nil
+}
+
+// ContextValidate validates this info system mem info based on context it is used
+func (m *InfoSystemMemInfo) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
 	return nil
 }
 

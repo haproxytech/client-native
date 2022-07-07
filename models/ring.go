@@ -21,6 +21,7 @@ package models
 // Editing this file might prove futile when you re-run the swagger generate command
 
 import (
+	"context"
 	"encoding/json"
 
 	"github.com/go-openapi/errors"
@@ -120,14 +121,13 @@ const (
 
 // prop value enum
 func (m *Ring) validateFormatEnum(path, location string, value string) error {
-	if err := validate.Enum(path, location, value, ringTypeFormatPropEnum); err != nil {
+	if err := validate.EnumCase(path, location, value, ringTypeFormatPropEnum, true); err != nil {
 		return err
 	}
 	return nil
 }
 
 func (m *Ring) validateFormat(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.Format) { // not required
 		return nil
 	}
@@ -142,14 +142,19 @@ func (m *Ring) validateFormat(formats strfmt.Registry) error {
 
 func (m *Ring) validateName(formats strfmt.Registry) error {
 
-	if err := validate.RequiredString("name", "body", string(m.Name)); err != nil {
+	if err := validate.RequiredString("name", "body", m.Name); err != nil {
 		return err
 	}
 
-	if err := validate.Pattern("name", "body", string(m.Name), `^[A-Za-z0-9-_.:]+$`); err != nil {
+	if err := validate.Pattern("name", "body", m.Name, `^[A-Za-z0-9-_.:]+$`); err != nil {
 		return err
 	}
 
+	return nil
+}
+
+// ContextValidate validates this ring based on context it is used
+func (m *Ring) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
 	return nil
 }
 
