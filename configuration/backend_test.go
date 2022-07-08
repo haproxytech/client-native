@@ -492,8 +492,10 @@ func TestCreateEditDeleteBackend(t *testing.T) {
 			Function: "crc32",
 		},
 		DefaultServer: &models.DefaultServer{
-			Fall:  &tOut,
-			Inter: &tOut,
+			ServerParams: models.ServerParams{
+				Fall:  &tOut,
+				Inter: &tOut,
+			},
 		},
 		HTTPConnectionMode:   "http-keep-alive",
 		HTTPKeepAlive:        "enabled",

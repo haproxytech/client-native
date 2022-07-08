@@ -188,9 +188,11 @@ func (s *ServiceInitiationSuite) createExistingService(servers models.Servers) e
 
 	defaultPort := int64(80)
 	maintServer := &models.Server{
-		Address:     "127.0.0.1",
-		Port:        &defaultPort,
-		Maintenance: "enabled",
+		Address: "127.0.0.1",
+		Port:    &defaultPort,
+		ServerParams: models.ServerParams{
+			Maintenance: "enabled",
+		},
 	}
 
 	for i := len(servers); i < baseSlots; i++ {

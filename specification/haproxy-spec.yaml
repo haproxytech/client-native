@@ -16,6 +16,8 @@ externalDocs:
 definitions:
   bind_params:
     $ref: "models/configuration/bind_params.yaml#/bind_params"
+  server_params:
+    $ref: "models/configuration/server_params.yaml#/server_params"
   site:
     $ref: "models/simple.yaml#/site"
   sites:
