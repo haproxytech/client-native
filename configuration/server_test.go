@@ -130,6 +130,9 @@ func TestGetServer(t *testing.T) {
 	if *s.PoolLowConn != 128 {
 		t.Errorf("%v: PoolLowConn not 128: %v", s.Name, *s.PoolLowConn)
 	}
+	if *s.ID != 1234 {
+		t.Errorf("%v: ID not 1234: %v", s.Name, *s.ID)
+	}
 	if len(s.ProxyV2Options) != 2 {
 		t.Errorf("%v: ProxyV2Options < 2: %d", s.Name, len(s.ProxyV2Options))
 	} else {
@@ -193,23 +196,25 @@ func TestCreateEditDeleteServer(t *testing.T) {
 	inter := int64(5000)
 	slowStart := int64(6000)
 	s := &models.Server{
-		Name:           "created",
-		Address:        "192.168.2.1",
-		Port:           &port,
-		Backup:         "enabled",
-		Check:          "enabled",
-		Maintenance:    "enabled",
-		Ssl:            "enabled",
-		AgentCheck:     "enabled",
-		SslCertificate: "dummy.crt",
-		TLSTickets:     "enabled",
-		Verify:         "none",
-		Inter:          &inter,
-		OnMarkedDown:   "shutdown-sessions",
-		OnError:        "mark-down",
-		OnMarkedUp:     "shutdown-backup-sessions",
-		Slowstart:      &slowStart,
-		ProxyV2Options: []string{"ssl", "unique-id"},
+		Name:    "created",
+		Address: "192.168.2.1",
+		Port:    &port,
+		ServerParams: models.ServerParams{
+			Backup:         "enabled",
+			Check:          "enabled",
+			Maintenance:    "enabled",
+			Ssl:            "enabled",
+			AgentCheck:     "enabled",
+			SslCertificate: "dummy.crt",
+			TLSTickets:     "enabled",
+			Verify:         "none",
+			Inter:          &inter,
+			OnMarkedDown:   "shutdown-sessions",
+			OnError:        "mark-down",
+			OnMarkedUp:     "shutdown-backup-sessions",
+			Slowstart:      &slowStart,
+			ProxyV2Options: []string{"ssl", "unique-id"},
+		},
 	}
 
 	err := clientTest.CreateServer("backend", "test", s, "", version)
@@ -244,16 +249,18 @@ func TestCreateEditDeleteServer(t *testing.T) {
 	port = int64(5300)
 	slowStart = int64(3000)
 	s = &models.Server{
-		Name:           "created",
-		Address:        "192.168.3.1",
-		Port:           &port,
-		AgentCheck:     "disabled",
-		Ssl:            "enabled",
-		SslCertificate: "dummy.crt",
-		SslCafile:      "dummy.ca",
-		TLSTickets:     "disabled",
-		Verify:         "required",
-		Slowstart:      &slowStart,
+		Name:    "created",
+		Address: "192.168.3.1",
+		Port:    &port,
+		ServerParams: models.ServerParams{
+			AgentCheck:     "disabled",
+			Ssl:            "enabled",
+			SslCertificate: "dummy.crt",
+			SslCafile:      "dummy.ca",
+			TLSTickets:     "disabled",
+			Verify:         "required",
+			Slowstart:      &slowStart,
+		},
 	}
 
 	err = clientTest.EditServer("created", "backend", "test", s, "", version)

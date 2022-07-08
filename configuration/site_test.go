@@ -307,13 +307,17 @@ func TestCreateEditDeleteSite(t *testing.T) {
 						Name:    "created1",
 						Address: "127.0.1.1",
 						Port:    &port,
-						Ssl:     "enabled",
+						ServerParams: models.ServerParams{
+							Ssl: "enabled",
+						},
 					},
 					{
 						Name:    "created2",
 						Address: "127.0.1.2",
 						Port:    &port,
-						Ssl:     "enabled",
+						ServerParams: models.ServerParams{
+							Ssl: "enabled",
+						},
 					},
 				},
 			},
@@ -386,7 +390,9 @@ func TestCreateEditDeleteSite(t *testing.T) {
 						Name:    "created3",
 						Address: "127.0.1.2",
 						Port:    &port,
-						Ssl:     "enabled",
+						ServerParams: models.ServerParams{
+							Ssl: "enabled",
+						},
 					},
 				},
 			},

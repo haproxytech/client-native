@@ -1,0 +1,303 @@
+server_params:
+  type: object
+  properties:
+    health_check_port:
+      type: integer
+      x-nullable: true
+      minimum: 1
+      maximum: 65535
+    ssl_certificate:
+      type: string
+      pattern: '^[^\s]+$'
+      x-dependency:
+        ssl:
+          value: enabled
+    maintenance:
+      type: string
+      enum: [enabled, disabled]
+    agent-check:
+      type: string
+      enum: [enabled, disabled]
+      x-dependency:
+        agent-port:
+          required: true
+    agent-send:
+      type: string
+    agent-inter:
+      type: integer
+      x-nullable: true
+    agent-addr:
+      type: string
+      pattern: '^[^\s]+$'
+    agent-port:
+      type: integer
+      x-nullable: true
+      minimum: 1
+      maximum: 65535
+    allow_0rtt:
+      type: boolean
+    alpn:
+      type: string
+      x-display-name: ALPN Protocols
+      pattern: '^[^\s]+$'
+    backup:
+      type: string
+      enum: [enabled, disabled]
+    ssl_cafile:
+      type: string
+      x-display-name: SSL CA File
+      pattern: '^[^\s]+$'
+      x-dependency:
+        ssl:
+          value: enabled
+    check:
+      type: string
+      enum: [enabled, disabled]
+    check-send-proxy:
+      type: string
+      enum: [enabled, disabled]
+    check_alpn:
+      type: string
+      x-display-name: Protocols
+      pattern: '^[^\s]+$'
+    check_proto:
+      type: string
+      x-display-name: Name
+      pattern: '^[^\s]+$'
+    check-sni:
+      type: string
+      pattern: '^[^\s]+$'
+    check-ssl:
+      type: string
+      enum: [enabled, disabled]
+    check_via_socks4:
+      type: string
+      enum: [enabled, disabled]
+    ciphers:
+      type: string
+      x-dependency:
+        ssl:
+          value: enabled
+    ciphersuites:
+      type: string
+      x-dependency:
+        ssl:
+          value: enabled
+    cookie:
+      type: string
+      pattern: '^[^\s]+$'
+    crl_file:
+      type: string
+      x-dependency:
+        ssl:
+          value: enabled
+    error_limit:
+      type: integer
+      x-display-name: Error count
+    fall:
+      type: integer
+      x-display-name: Nr. of consecutive failed checks
+      x-nullable: true
+    force_sslv3:
+      type: string
+      enum: [enabled, disabled]
+    force_tlsv10:
+      type: string
+      enum: [enabled, disabled]
+    force_tlsv11:
+      type: string
+      enum: [enabled, disabled]
+    force_tlsv12:
+      type: string
+      enum: [enabled, disabled]
+    force_tlsv13:
+      type: string
+      enum: [enabled, disabled]
+    init-addr:
+      pattern: ^[^\s]+$
+      type: string
+      x-nullable: true
+    inter:
+      type: integer
+      x-nullable: true
+    fastinter:
+      type: integer
+      x-nullable: true
+    downinter:
+      type: integer
+      x-nullable: true
+    log_proto:
+      type: string
+      enum: [legacy, octet-count]
+    maxconn:
+      type: integer
+      x-display-name: Max Concurrent Connections
+      x-nullable: true
+    maxqueue:
+      type: integer
+      x-display-name: Max Number of Connections
+      x-nullable: true
+    max_reuse:
+      type: integer
+      x-nullable: true
+    minconn:
+      type: integer
+      x-nullable: true
+    namespace:
+      type: string
+    no_sslv3:
+      type: string
+      enum: [enabled, disabled]
+    no_tlsv10:
+      type: string
+      enum: [enabled, disabled]
+    no_tlsv11:
+      type: string
+      enum: [enabled, disabled]
+    no_tlsv12:
+      type: string
+      enum: [enabled, disabled]
+    no_tlsv13:
+      type: string
+      enum: [enabled, disabled]
+    no_verifyhost:
+      type: string
+      enum: [enabled, disabled]
+    npn:
+      type: string
+      x-dependency:
+        ssl:
+          value: enabled
+    observe:
+      type: string
+      enum: [layer4, layer7]
+      x-dependency:
+        ssl:
+          value: enabled
+    on-error:
+      type: string
+      enum: [fastinter, fail-check, sudden-death, mark-down]
+    on-marked-down:
+      type: string
+      enum: [shutdown-sessions]
+    on-marked-up:
+      type: string
+      enum: [shutdown-backup-sessions]
+    pool_low_conn:
+      type: integer
+      x-nullable: true
+    pool_max_conn:
+      type: integer
+      x-nullable: true
+    pool_purge_delay:
+      type: integer
+      x-nullable: true
+    proto:
+      type: string
+      pattern: '^[^\s]+$'
+    redir:
+      type: string
+      x-display-name: Prefix
+    rise:
+      type: integer
+      x-nullable: true
+    resolve_opts:
+      type: string
+      pattern: '^[^,\s][^\,]*[^,\s]*$'
+    resolve-prefer:
+      type: string
+      enum: [ipv4, ipv6]
+      x-dependency:
+        resolvers:
+          required: true
+    resolve-net:
+      type: string
+      pattern: '^[^,\s][^\,]*[^,\s]*$'
+      x-dependency:
+        resolvers:
+          required: true
+    resolvers:
+      type: string
+      pattern: '^[^\s]+$'
+      x-dynamic-enum:
+        operation: getResolvers
+        property: name
+    send-proxy:
+      type: string
+      enum: [enabled, disabled]
+    send-proxy-v2:
+      type: string
+      enum: [enabled, disabled]
+    proxy-v2-options:
+      type: array
+      items:
+        type: string
+        enum: [ssl, cert-cn, ssl-cipher, cert-sig, cert-key, authority, crc32c, unique-id]
+    send_proxy_v2_ssl:
+      type: string
+      enum: [enabled, disabled]
+    send_proxy_v2_ssl_cn:
+      type: string
+      enum: [enabled, disabled]
+    slowstart:
+      type: integer
+      x-nullable: true
+    sni:
+      type: string
+      pattern: '^[^\s]+$'
+    source:
+      type: string
+    ssl:
+      type: string
+      enum: [enabled, disabled]
+    ssl_max_ver:
+      type: string
+      enum: [SSLv3, TLSv1.0, TLSv1.1, TLSv1.2, TLSv1.3]
+    ssl_min_ver:
+      type: string
+      enum: [SSLv3, TLSv1.0, TLSv1.1, TLSv1.2, TLSv1.3]
+    ssl_reuse:
+      type: string
+      enum: [enabled, disabled]
+    stick:
+      type: string
+      enum: [enabled, disabled]
+    socks4:
+      type: string
+      pattern: '^[^\s]+$'
+      x-dependency:
+        check-via-socks4:
+          required: true
+    tcp_ut:
+      type: integer
+    tfo:
+      type: string
+      enum: [enabled, disabled]
+    track:
+      type: string
+    tls_tickets:
+      type: string
+      enum: [enabled, disabled]
+      x-dependency:
+        ssl:
+          value: enabled
+    verify:
+      type: string
+      enum: [none, required]
+      x-dependency:
+        ssl:
+          value: enabled
+    verifyhost:
+      type: string
+      x-dependency:
+        ssl:
+          value: enabled
+        verify:
+          value: required
+    weight:
+      type: integer
+      x-nullable: true
+    ws:
+      type: string
+      enum: [auto, h1, h2]
+      x-display-name: Relaying websocket stream protocol

@@ -875,7 +875,7 @@ func (s *SectionParser) defaultServer() interface{} { //nolint:gocognit,gocyclo,
 				case "fall":
 					dServer.Fall = misc.ParseTimeout(v.Value)
 				case "init-addr":
-					dServer.InitAddr = v.Value
+					dServer.InitAddr = &v.Value
 				case "inter":
 					dServer.Inter = misc.ParseTimeout(v.Value)
 				case "fastinter":
@@ -2222,10 +2222,10 @@ func (s *SectionObject) defaultServer(field reflect.Value) error { //nolint:goco
 			}
 			ps = append(ps, param)
 		}
-		if ds.InitAddr != "" {
+		if ds.InitAddr != nil {
 			param := &params.ServerOptionValue{
 				Name:  "init-addr",
-				Value: ds.InitAddr,
+				Value: *ds.InitAddr,
 			}
 			ps = append(ps, param)
 		}

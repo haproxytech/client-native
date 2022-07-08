@@ -168,7 +168,9 @@ func TestCreateEditDeleteServerTemplate(t *testing.T) {
 		NumOrRange: "1-10",
 		Fqdn:       "site.com",
 		Port:       &port,
-		Check:      "enabled",
+		ServerParams: models.ServerParams{
+			Check: "enabled",
+		},
 	}
 
 	err := clientTest.CreateServerTemplate("test", template, "", version)
@@ -207,7 +209,9 @@ func TestCreateEditDeleteServerTemplate(t *testing.T) {
 		NumOrRange: "11-20",
 		Fqdn:       "site.com",
 		Port:       &port,
-		Check:      "disabled",
+		ServerParams: models.ServerParams{
+			Check: "disabled",
+		},
 	}
 
 	err = clientTest.EditServerTemplate("dev", "test", template, "", version)
