@@ -39,7 +39,7 @@ jobs:
           go-version: 1.18
       - name: downloading Swagger
         run: |
-          sudo wget -O /usr/local/bin/swagger https://github.com/go-swagger/go-swagger/releases/download/v0.23.0/swagger_linux_amd64
+          sudo wget -O /usr/local/bin/swagger https://github.com/go-swagger/go-swagger/releases/download/v0.29.0/swagger_linux_amd64
           sudo chmod +x /usr/local/bin/swagger
           swagger version
       - name: generating models
