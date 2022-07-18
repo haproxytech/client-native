@@ -99,7 +99,30 @@ func TestGetLogTarget(t *testing.T) {
 	if l.Minlevel != "notice" {
 		t.Errorf("%v: Minlevel not notice: %v", *l.Index, l.Minlevel)
 	}
+	_, err = l.MarshalBinary()
+	if err != nil {
+		t.Error(err.Error())
+	}
 
+	v, l, err = clientTest.GetLogTarget(2, "log_forward", "sylog-loadb", "")
+	if err != nil {
+		t.Error(err.Error())
+	}
+	if *l.Index != 2 {
+		t.Errorf("Log Target ID not 2, %v found", *l.Index)
+	}
+	if l.Address != "127.0.0.1:10001" {
+		t.Errorf("%v: Address not 127.0.0.1:10001: %v", *l.Index, l.Address)
+	}
+	if l.Facility != "local0" {
+		t.Errorf("%v: Facility not local0: %v", *l.Index, l.Facility)
+	}
+	if l.SampleRange != "1" {
+		t.Errorf("%v: SampleRange not 1: %v", *l.Index, l.SampleRange)
+	}
+	if l.SampleSize != 4 {
+		t.Errorf("%v: SampleSize not 4: %v", *l.Index, l.SampleSize)
+	}
 	_, err = l.MarshalBinary()
 	if err != nil {
 		t.Error(err.Error())

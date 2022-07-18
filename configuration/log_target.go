@@ -142,6 +142,14 @@ func (c *client) CreateLogTarget(parentType string, parentName string, data *mod
 		}
 	}
 
+	// additional validation
+	if data.SampleRange != "" && data.SampleSize == 0 {
+		return NewConfError(ErrValidationError, "sample_range set without sample_size")
+	}
+	if data.SampleSize != 0 && data.SampleRange == "" {
+		return NewConfError(ErrValidationError, "sample_size set without sample_range")
+	}
+
 	p, t, err := c.loadDataForChange(transactionID, version)
 	if err != nil {
 		return err
@@ -185,6 +193,14 @@ func (c *client) EditLogTarget(id int64, parentType string, parentName string, d
 	p, t, err := c.loadDataForChange(transactionID, version)
 	if err != nil {
 		return err
+	}
+
+	// additional validation
+	if data.SampleRange != "" && data.SampleSize == 0 {
+		return NewConfError(ErrValidationError, "sample_range set without sample_size")
+	}
+	if data.SampleSize != 0 && data.SampleRange == "" {
+		return NewConfError(ErrValidationError, "sample_size set without sample_range")
 	}
 
 	var section parser.Section
@@ -261,26 +277,30 @@ func ParseLogTargets(t, pName string, p parser.Parser) (models.LogTargets, error
 
 func ParseLogTarget(l types.Log) *models.LogTarget {
 	return &models.LogTarget{
-		Address:  l.Address,
-		Facility: l.Facility,
-		Format:   l.Format,
-		Global:   l.Global,
-		Length:   l.Length,
-		Level:    l.Level,
-		Minlevel: l.MinLevel,
-		Nolog:    l.NoLog,
+		Address:     l.Address,
+		Facility:    l.Facility,
+		Format:      l.Format,
+		Global:      l.Global,
+		Length:      l.Length,
+		Level:       l.Level,
+		Minlevel:    l.MinLevel,
+		Nolog:       l.NoLog,
+		SampleRange: l.SampleRange,
+		SampleSize:  l.SampleSize,
 	}
 }
 
 func SerializeLogTarget(l models.LogTarget) types.Log {
 	return types.Log{
-		Address:  l.Address,
-		Facility: l.Facility,
-		Format:   l.Format,
-		Global:   l.Global,
-		Length:   l.Length,
-		Level:    l.Level,
-		MinLevel: l.Minlevel,
-		NoLog:    l.Nolog,
+		Address:     l.Address,
+		Facility:    l.Facility,
+		Format:      l.Format,
+		Global:      l.Global,
+		Length:      l.Length,
+		Level:       l.Level,
+		MinLevel:    l.Minlevel,
+		NoLog:       l.Nolog,
+		SampleRange: l.SampleRange,
+		SampleSize:  l.SampleSize,
 	}
 }

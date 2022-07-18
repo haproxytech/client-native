@@ -38,6 +38,22 @@ log_target:
           value: false
         nolog:
           value: false
+    sample_range:
+      type: string
+      x-dependency:
+        global:
+          value: false
+        nolog:
+          value: false
+    sample_size:
+      type: integer
+      x-dependency:
+        global:
+          value: false
+        nolog:
+          value: false
+        sample_range:
+          required: true
     facility:
       type: string
       enum: [kern, user, mail, daemon, auth, syslog, lpr, news, uucp, cron, auth2, ftp, ntp, audit, alert, cron2, local0, local1, local2, local3, local4, local5, local6, local7]

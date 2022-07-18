@@ -69,6 +69,12 @@ type LogTarget struct {
 
 	// nolog
 	Nolog bool `json:"nolog,omitempty"`
+
+	// sample range
+	SampleRange string `json:"sample_range,omitempty"`
+
+	// sample size
+	SampleSize int64 `json:"sample_size,omitempty"`
 }
 
 // Validate validates this log target

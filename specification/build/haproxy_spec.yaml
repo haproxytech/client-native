@@ -5821,6 +5821,22 @@ definitions:
               value: false
         nolog:
           type: boolean
+        sample_range:
+          type: string
+          x-dependency:
+            global:
+              value: false
+            nolog:
+              value: false
+        sample_size:
+          type: integer
+          x-dependency:
+            global:
+              value: false
+            nolog:
+              value: false
+            sample_range:
+              required: true
       required:
       - index
       title: Log Target
