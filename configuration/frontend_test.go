@@ -373,6 +373,20 @@ func TestGetFrontend(t *testing.T) {
 		t.Errorf("%v: StatsAuths 1 Passwd not AdMiN1234: %v", f.Name, *f.StatsOptions.StatsAuths[1].Passwd)
 	}
 
+	if f.EmailAlert == nil {
+		t.Errorf("EmailAlert is nil")
+	} else if *f.EmailAlert.From != "srv01@example.com" {
+		t.Errorf("EmailAlert.From is not srv01@example.com: %v", *f.EmailAlert.From)
+	} else if *f.EmailAlert.To != "problems@example.com" {
+		t.Errorf("EmailAlert.To is not problems@example.com: %v", *f.EmailAlert.To)
+	} else if f.EmailAlert.Level != "warning" {
+		t.Errorf("EmailAlert.Level is not warning: %v", f.EmailAlert.Level)
+	} else if f.EmailAlert.Myhostname != "srv01" {
+		t.Errorf("EmailAlert.Myhostname is not srv01: %v", f.EmailAlert.Myhostname)
+	} else if *f.EmailAlert.Mailers != "localmailer1" {
+		t.Errorf("EmailAlert.Mailers is not localmailer1: %v", *f.EmailAlert.Mailers)
+	}
+
 	_, err = f.MarshalBinary()
 	if err != nil {
 		t.Error(err.Error())
@@ -503,6 +517,12 @@ func TestCreateEditDeleteFrontend(t *testing.T) {
 				{User: misc.StringP("new_user1"), Passwd: misc.StringP("new_pwd1")},
 				{User: misc.StringP("new_user2"), Passwd: misc.StringP("new_pwd2")},
 			},
+		},
+		EmailAlert: &models.EmailAlert{
+			From:    misc.StringP("srv01@example.com"),
+			To:      misc.StringP("problems@example.com"),
+			Level:   "warning",
+			Mailers: misc.StringP("localmailer1"),
 		},
 	}
 

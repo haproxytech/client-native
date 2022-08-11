@@ -220,6 +220,8 @@ frontend:
       type: string
       enum: [enabled, disabled]
       x-display-name: Idle Close On Response
+    email_alert:
+      $ref: "#/definitions/email_alert"
   additionalProperties: false
   example:
     name: test_frontend

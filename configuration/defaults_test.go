@@ -273,6 +273,20 @@ func TestGetDefaults(t *testing.T) { //nolint:gocognit,gocyclo
 	} else if *d.StatsOptions.StatsAuths[1].Passwd != "AdMiN1234" {
 		t.Errorf("StatsAuths 1 Passwd not AdMiN1234: %v", *d.StatsOptions.StatsAuths[1].Passwd)
 	}
+
+	if d.EmailAlert == nil {
+		t.Error("EmailAlert is nil")
+	} else if *d.EmailAlert.From != "srv01@example.com" {
+		t.Errorf("EmailAlert.From is not srv01@example.com: %v", *d.EmailAlert.From)
+	} else if *d.EmailAlert.To != "support@example.com" {
+		t.Errorf("EmailAlert.To is not support@example.com: %v", *d.EmailAlert.To)
+	} else if d.EmailAlert.Level != "err" {
+		t.Errorf("EmailAlert.Level is not err: %v", d.EmailAlert.Level)
+	} else if d.EmailAlert.Myhostname != "srv01" {
+		t.Errorf("EmailAlert.Myhostname is not srv01: %v", d.EmailAlert.Myhostname)
+	} else if *d.EmailAlert.Mailers != "localmailer1" {
+		t.Errorf("EmailAlert.Mailers is not localmailer1: %v", *d.EmailAlert.Mailers)
+	}
 }
 
 func TestPushDefaults(t *testing.T) {
@@ -360,6 +374,13 @@ func TestPushDefaults(t *testing.T) {
 				{User: misc.StringP("user1"), Passwd: misc.StringP("pwd1")},
 				{User: misc.StringP("user2"), Passwd: misc.StringP("pwd2")},
 			},
+		},
+		EmailAlert: &models.EmailAlert{
+			From:       misc.StringP("srv01@example.com"),
+			To:         misc.StringP("support@example.com"),
+			Level:      "err",
+			Myhostname: "srv01",
+			Mailers:    misc.StringP("localmailer1"),
 		},
 	}
 

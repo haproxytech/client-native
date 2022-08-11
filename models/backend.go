@@ -84,6 +84,9 @@ type Backend struct {
 	// Pattern: ^[^\s]+$
 	DynamicCookieKey string `json:"dynamic_cookie_key,omitempty"`
 
+	// email alert
+	EmailAlert *EmailAlert `json:"email_alert,omitempty"`
+
 	// external check
 	// Enum: [enabled disabled]
 	ExternalCheck string `json:"external_check,omitempty"`
@@ -313,6 +316,10 @@ func (m *Backend) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateDynamicCookieKey(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateEmailAlert(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -809,6 +816,25 @@ func (m *Backend) validateDynamicCookieKey(formats strfmt.Registry) error {
 
 	if err := validate.Pattern("dynamic_cookie_key", "body", m.DynamicCookieKey, `^[^\s]+$`); err != nil {
 		return err
+	}
+
+	return nil
+}
+
+func (m *Backend) validateEmailAlert(formats strfmt.Registry) error {
+	if swag.IsZero(m.EmailAlert) { // not required
+		return nil
+	}
+
+	if m.EmailAlert != nil {
+		if err := m.EmailAlert.Validate(formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("email_alert")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("email_alert")
+			}
+			return err
+		}
 	}
 
 	return nil
@@ -2220,6 +2246,10 @@ func (m *Backend) ContextValidate(ctx context.Context, formats strfmt.Registry) 
 		res = append(res, err)
 	}
 
+	if err := m.contextValidateEmailAlert(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.contextValidateForwardfor(ctx, formats); err != nil {
 		res = append(res, err)
 	}
@@ -2322,6 +2352,22 @@ func (m *Backend) contextValidateDefaultServer(ctx context.Context, formats strf
 				return ve.ValidateName("default_server")
 			} else if ce, ok := err.(*errors.CompositeError); ok {
 				return ce.ValidateName("default_server")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (m *Backend) contextValidateEmailAlert(ctx context.Context, formats strfmt.Registry) error {
+
+	if m.EmailAlert != nil {
+		if err := m.EmailAlert.ContextValidate(ctx, formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("email_alert")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("email_alert")
 			}
 			return err
 		}

@@ -226,6 +226,20 @@ func TestGetBackends(t *testing.T) { //nolint:gocognit,gocyclo
 			t.Errorf("%v: StatsHTTPRequests 1 CondTest not something: %v", b.Name, b.StatsOptions.StatsHTTPRequests[1].CondTest)
 		}
 
+		if b.EmailAlert == nil {
+			t.Error("EmailAlert is nil")
+		} else if *b.EmailAlert.From != "prod01@example.com" {
+			t.Errorf("EmailAlert.From is not prod01@example.com: %v", *b.EmailAlert.From)
+		} else if *b.EmailAlert.To != "sre@example.com" {
+			t.Errorf("EmailAlert.To is not sre@example.com: %v", *b.EmailAlert.To)
+		} else if b.EmailAlert.Level != "warning" {
+			t.Errorf("EmailAlert.Level is not warning: %v", b.EmailAlert.Level)
+		} else if b.EmailAlert.Myhostname != "prod01" {
+			t.Errorf("EmailAlert.Myhostname is not prod01: %v", b.EmailAlert.Myhostname)
+		} else if *b.EmailAlert.Mailers != "localmailer1" {
+			t.Errorf("EmailAlert.Mailers is not localmailer1: %v", *b.EmailAlert.Mailers)
+		}
+
 	}
 }
 
@@ -442,6 +456,20 @@ func TestGetBackend(t *testing.T) {
 		t.Errorf("%v: StatsHTTPRequests 1 CondTest not something: %v", b.Name, b.StatsOptions.StatsHTTPRequests[1].CondTest)
 	}
 
+	if b.EmailAlert == nil {
+		t.Error("EmailAlert is nil")
+	} else if *b.EmailAlert.From != "prod01@example.com" {
+		t.Errorf("EmailAlert.From is not prod01@example.com: %v", *b.EmailAlert.From)
+	} else if *b.EmailAlert.To != "sre@example.com" {
+		t.Errorf("EmailAlert.To is not sre@example.com: %v", *b.EmailAlert.To)
+	} else if b.EmailAlert.Level != "warning" {
+		t.Errorf("EmailAlert.Level is not warning: %v", b.EmailAlert.Level)
+	} else if b.EmailAlert.Myhostname != "prod01" {
+		t.Errorf("EmailAlert.Myhostname is not prod01: %v", b.EmailAlert.Myhostname)
+	} else if *b.EmailAlert.Mailers != "localmailer1" {
+		t.Errorf("EmailAlert.Mailers is not localmailer1: %v", *b.EmailAlert.Mailers)
+	}
+
 	_, err = b.MarshalBinary()
 	if err != nil {
 		t.Error(err.Error())
@@ -542,6 +570,12 @@ func TestCreateEditDeleteBackend(t *testing.T) {
 				{Type: misc.StringP("auth"), Realm: "haproxy\\ stats"},
 			},
 		},
+		EmailAlert: &models.EmailAlert{
+			From:    misc.StringP("prod01@example.com"),
+			To:      misc.StringP("sre@example.com"),
+			Level:   "warning",
+			Mailers: misc.StringP("localmailer1"),
+		},
 	}
 
 	err := clientTest.CreateBackend(b, "", version)
@@ -630,6 +664,12 @@ func TestCreateEditDeleteBackend(t *testing.T) {
 				Username:      "user",
 				ClientVersion: "pre-41",
 			},
+			EmailAlert: &models.EmailAlert{
+				From:    misc.StringP("prod01@example.com"),
+				To:      misc.StringP("sre@example.com"),
+				Level:   "warning",
+				Mailers: misc.StringP("localmailer1"),
+			},
 		},
 		{
 			Name: "created",
@@ -649,6 +689,12 @@ func TestCreateEditDeleteBackend(t *testing.T) {
 			AdvCheck:       "pgsql-check",
 			PgsqlCheckParams: &models.PgsqlCheckParams{
 				Username: "user",
+			},
+			EmailAlert: &models.EmailAlert{
+				From:    misc.StringP("prod01@example.com"),
+				To:      misc.StringP("sre@example.com"),
+				Level:   "warning",
+				Mailers: misc.StringP("localmailer1"),
 			},
 		},
 		{
@@ -699,12 +745,18 @@ func TestCreateEditDeleteBackend(t *testing.T) {
 					{Type: misc.StringP("auth"), Realm: "haproxy\\ stats2"},
 				},
 			},
+			EmailAlert: &models.EmailAlert{
+				From:    misc.StringP("prod01@example.com"),
+				To:      misc.StringP("sre@example.com"),
+				Level:   "warning",
+				Mailers: misc.StringP("localmailer1"),
+			},
 		},
 	}
 
 	for i, backend := range backends {
 		if errB := testBackendUpdate(backend, t); errB != nil {
-			t.Errorf("failed update for backend %d: %v", i, err)
+			t.Errorf("failed update for backend %d: %v", i, errB)
 		}
 	}
 
@@ -757,8 +809,8 @@ func testBackendUpdate(b *models.Backend, t *testing.T) error {
 	}
 
 	if !compareBackends(backend, b, t) {
-		fmt.Printf("Edited bck: %v\n", backend)
-		fmt.Printf("Given bck: %v\n", b)
+		fmt.Printf("Edited bck: %+v\n", backend)
+		fmt.Printf("Given bck: %+v\n", b)
 		return fmt.Errorf("edited backend not equal to given backend")
 	}
 

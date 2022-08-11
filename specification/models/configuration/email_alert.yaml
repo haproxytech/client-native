@@ -1,0 +1,23 @@
+---
+email_alert:
+  title: Email Alert
+  description: Send emails for important log messages.
+  type: object
+  required:
+    - from
+    - mailers
+    - to
+  properties:
+    from:
+      type: string
+      pattern: '^\S+@\S+$'
+    level:
+      type: string
+      enum: [emerg, alert, crit, err, warning, notice, info, debug]
+    mailers:
+      type: string
+    myhostname:
+      type: string
+    to:
+      type: string
+      pattern: '^\S+@\S+$'

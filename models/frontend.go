@@ -91,6 +91,9 @@ type Frontend struct {
 	// Enum: [enabled disabled]
 	Dontlognull string `json:"dontlognull,omitempty"`
 
+	// email alert
+	EmailAlert *EmailAlert `json:"email_alert,omitempty"`
+
 	// forwardfor
 	Forwardfor *Forwardfor `json:"forwardfor,omitempty"`
 
@@ -264,6 +267,10 @@ func (m *Frontend) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateDontlognull(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateEmailAlert(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -672,6 +679,25 @@ func (m *Frontend) validateDontlognull(formats strfmt.Registry) error {
 	// value enum
 	if err := m.validateDontlognullEnum("dontlognull", "body", m.Dontlognull); err != nil {
 		return err
+	}
+
+	return nil
+}
+
+func (m *Frontend) validateEmailAlert(formats strfmt.Registry) error {
+	if swag.IsZero(m.EmailAlert) { // not required
+		return nil
+	}
+
+	if m.EmailAlert != nil {
+		if err := m.EmailAlert.Validate(formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("email_alert")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("email_alert")
+			}
+			return err
+		}
 	}
 
 	return nil
@@ -1688,6 +1714,10 @@ func (m *Frontend) ContextValidate(ctx context.Context, formats strfmt.Registry)
 		res = append(res, err)
 	}
 
+	if err := m.contextValidateEmailAlert(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.contextValidateForwardfor(ctx, formats); err != nil {
 		res = append(res, err)
 	}
@@ -1722,6 +1752,22 @@ func (m *Frontend) contextValidateCompression(ctx context.Context, formats strfm
 				return ve.ValidateName("compression")
 			} else if ce, ok := err.(*errors.CompositeError); ok {
 				return ce.ValidateName("compression")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (m *Frontend) contextValidateEmailAlert(ctx context.Context, formats strfmt.Registry) error {
+
+	if m.EmailAlert != nil {
+		if err := m.EmailAlert.ContextValidate(ctx, formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("email_alert")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("email_alert")
 			}
 			return err
 		}

@@ -1567,6 +1567,8 @@ definitions:
         dynamic_cookie_key:
           pattern: ^[^\s]+$
           type: string
+        email_alert:
+          $ref: '#/definitions/email_alert'
         error_files:
           items:
             $ref: '#/definitions/errorfile'
@@ -1933,6 +1935,8 @@ definitions:
           - disabled
           type: string
           x-display-name: Don't Log Null
+        email_alert:
+          $ref: '#/definitions/email_alert'
         forwardfor:
           $ref: '#/definitions/forwardfor'
           x-dependency:
@@ -2216,6 +2220,8 @@ definitions:
             cookie:
               dynamic:
                 value: true
+        email_alert:
+          $ref: '#/definitions/email_alert'
         external_check:
           enum:
           - enabled
@@ -7682,6 +7688,36 @@ definitions:
           items:
             type: string
           type: array
+      type: object
+  email_alert:
+      description: Send emails for important log messages.
+      properties:
+        from:
+          pattern: ^\S+@\S+$
+          type: string
+        level:
+          enum:
+          - emerg
+          - alert
+          - crit
+          - err
+          - warning
+          - notice
+          - info
+          - debug
+          type: string
+        mailers:
+          type: string
+        myhostname:
+          type: string
+        to:
+          pattern: ^\S+@\S+$
+          type: string
+      required:
+      - from
+      - mailers
+      - to
+      title: Email Alert
       type: object
 responses:
   BadRequest:

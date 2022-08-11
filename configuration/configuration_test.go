@@ -245,6 +245,11 @@ defaults
   stats auth admin2:AdMiN1234
   stats show-modules
   stats realm HAProxy\\ Statistics
+  email-alert from srv01@example.com
+  email-alert to support@example.com
+  email-alert level err
+  email-alert myhostname srv01
+  email-alert mailers localmailer1
 
 frontend test
   mode http
@@ -378,6 +383,11 @@ frontend test
   stats auth admin2:AdMiN1234
   stats show-modules
   stats realm HAProxy\\ Statistics
+  email-alert from srv01@example.com
+  email-alert to problems@example.com
+  email-alert level warning
+  email-alert myhostname srv01
+  email-alert mailers localmailer1
 
 frontend test_2
   mode http
@@ -499,6 +509,11 @@ backend test
   stats auth admin2:AdMiN1234
   stats show-modules
   stats realm HAProxy\\ Statistics
+  email-alert from prod01@example.com
+  email-alert to sre@example.com
+  email-alert level warning
+  email-alert myhostname prod01
+  email-alert mailers localmailer1
 
 peers mycluster
   peer hapee 192.168.1.1:1023
@@ -585,6 +600,11 @@ backend test_2
   stats auth admin2:AdMiN1234
   stats show-modules
   stats realm HAProxy\\ Statistics
+  email-alert from prod01@example.com
+  email-alert to sre@example.com
+  email-alert level warning
+  email-alert myhostname prod01
+  email-alert mailers localmailer1
 `
 const testPath = "/tmp/haproxy-test.cfg"
 

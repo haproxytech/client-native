@@ -282,6 +282,8 @@ backend:
       type: integer
       x-nullable: true
       x-display-name: Srvtcpka Intvl
+    email_alert:
+      $ref: "#/definitions/email_alert"
   additionalProperties: false
   example:
     name: test_backend

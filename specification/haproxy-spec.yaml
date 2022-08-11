@@ -487,6 +487,8 @@ definitions:
     $ref: "models/configuration/http/misc.yaml#/return_header"
   compression:
     $ref: "models/configuration/misc.yaml#/compression"
+  email_alert:
+    $ref: "models/configuration/email_alert.yaml#/email_alert"
 responses:
   BadRequest:
     description: Bad request

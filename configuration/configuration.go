@@ -347,6 +347,8 @@ func (s *SectionParser) checkSpecialFields(fieldName string) (match bool, data i
 		return true, s.srvtcpkaIdle()
 	case "SrvtcpkaIntvl":
 		return true, s.srvtcpkaIntvl()
+	case "EmailAlert":
+		return true, s.emailAlert()
 	default:
 		return false, nil
 	}
@@ -1152,6 +1154,31 @@ func (s *SectionParser) httpCheck() interface{} {
 	return nil
 }
 
+func (s *SectionParser) emailAlert() interface{} {
+	data, err := s.get("email-alert", false)
+	if err != nil {
+		return nil
+	}
+	tokens := data.([]types.EmailAlert)
+	ea := &models.EmailAlert{}
+	for _, tok := range tokens {
+		t := tok
+		switch t.Attribute {
+		case "from":
+			ea.From = &t.Value
+		case "to":
+			ea.To = &t.Value
+		case "level":
+			ea.Level = t.Value
+		case "myhostname":
+			ea.Myhostname = t.Value
+		case "mailers":
+			ea.Mailers = &t.Value
+		}
+	}
+	return ea
+}
+
 func (s *SectionParser) statsOptions() interface{} { //nolint:gocognit
 	data, err := s.get("stats", false)
 	if err != nil {
@@ -1466,6 +1493,8 @@ func (s *SectionObject) checkSpecialFields(fieldName string, field reflect.Value
 		return true, s.srvtcpkaIdle(field)
 	case "SrvtcpkaIntvl":
 		return true, s.srvtcpkaIntvl(field)
+	case "EmailAlert":
+		return true, s.emailAlert(field)
 	default:
 		return false, nil
 	}
@@ -2768,6 +2797,56 @@ func (s *SectionObject) monitorFail(field reflect.Value) error {
 		Condition: *opt.Cond,
 		ACLList:   strings.Split(*opt.CondTest, " "),
 	})
+}
+
+func (s *SectionObject) emailAlert(field reflect.Value) error {
+	if valueIsNil(field) {
+		return nil
+	}
+	ea, ok := field.Elem().Interface().(models.EmailAlert)
+	if !ok {
+		return misc.CreateTypeAssertError("email-alert")
+	}
+
+	list := []types.EmailAlert{}
+
+	if ea.From != nil {
+		e := types.EmailAlert{
+			Attribute: "from",
+			Value:     *ea.From,
+		}
+		list = append(list, e)
+	}
+	if ea.To != nil {
+		e := types.EmailAlert{
+			Attribute: "to",
+			Value:     *ea.To,
+		}
+		list = append(list, e)
+	}
+	if ea.Level != "" {
+		e := types.EmailAlert{
+			Attribute: "level",
+			Value:     ea.Level,
+		}
+		list = append(list, e)
+	}
+	if ea.Myhostname != "" {
+		e := types.EmailAlert{
+			Attribute: "myhostname",
+			Value:     ea.Myhostname,
+		}
+		list = append(list, e)
+	}
+	if ea.Mailers != nil {
+		e := types.EmailAlert{
+			Attribute: "mailers",
+			Value:     *ea.Mailers,
+		}
+		list = append(list, e)
+	}
+
+	return s.set("email-alert", list)
 }
 
 func (s *SectionObject) statsOptions(field reflect.Value) error {
