@@ -2697,6 +2697,57 @@ definitions:
     type: array
     items:
       $ref: '#/definitions/group'
+  mailers_section:
+      additionalProperties: false
+      description: A list of SMTP servers used by HAProxy to send emails.
+      properties:
+        name:
+          pattern: ^[A-Za-z0-9-_]+$
+          type: string
+          x-nullable: false
+        timeout:
+          minimum: 0
+          type: integer
+          x-display-name: Timeout to send an email in milliseconds
+          x-nullable: true
+      required:
+      - name
+      title: Mailers Section
+      type: object
+  mailers_sections:
+    title: Mailers Sections
+    description: HAProxy mailers_section array
+    type: array
+    items:
+      $ref: "#/definitions/mailers_section"
+  mailer_entry:
+      description: Mailer entry of a Mailers section
+      properties:
+        address:
+          pattern: ^\S+$
+          type: string
+          x-nullable: false
+        name:
+          pattern: ^[A-Za-z0-9-_]+$
+          type: string
+          x-nullable: false
+        port:
+          maximum: 65535
+          minimum: 1
+          type: integer
+          x-nullable: false
+      required:
+      - name
+      - address
+      - port
+      title: Mailer Entry
+      type: object
+  mailer_entries:
+    title: Mailer Entries
+    description: HAProxy mailer entries
+    type: array
+    items:
+      $ref: "#/definitions/mailer_entry"
   peer_section:
       additionalProperties: false
       description: HAProxy peer_section configuration
@@ -7708,6 +7759,9 @@ definitions:
           type: string
         mailers:
           type: string
+          x-dynamic-enum:
+            operation: getMailersSections
+            property: name
         myhostname:
           type: string
         to:
@@ -7827,6 +7881,8 @@ tags:
 - name: Information
 - name: LogForward
 - name: LogTarget
+- name: MailerEntry
+- name: Mailers
 - name: Maps
 - name: Nameserver
 - name: Peer
@@ -9651,6 +9707,356 @@ paths:
         summary: Replace a group
         tags:
         - Group
+  /services/haproxy/configuration/mailers_section:
+      get:
+        description: Returns an array of all the configured mailers in HAProxy
+        operationId: getMailersSections
+        parameters:
+        - $ref: '#/parameters/transaction_id'
+        responses:
+          "200":
+            description: Successful operation
+            headers:
+              Configuration-Version:
+                description: Configuration file version
+                type: string
+            schema:
+              properties:
+                _version:
+                  type: integer
+                data:
+                  $ref: '#/definitions/mailers_sections'
+              required:
+              - data
+              type: object
+          default:
+            $ref: '#/responses/DefaultError'
+        summary: Return an array of mailers sections
+        tags:
+        - Mailers
+      post:
+        description: Creates a new empty Mailers section
+        operationId: createMailersSection
+        parameters:
+        - in: body
+          name: data
+          required: true
+          schema:
+            $ref: '#/definitions/mailers_section'
+        - $ref: '#/parameters/transaction_id'
+        - $ref: '#/parameters/version'
+        - $ref: '#/parameters/force_reload'
+        responses:
+          "201":
+            description: Mailers created
+            schema:
+              $ref: '#/definitions/mailers_section'
+          "202":
+            description: Configuration change accepted and reload requested
+            headers:
+              Reload-ID:
+                description: ID of the requested reload
+                type: string
+            schema:
+              $ref: '#/definitions/mailers_section'
+          "400":
+            $ref: '#/responses/BadRequest'
+          "409":
+            $ref: '#/responses/AlreadyExists'
+          default:
+            $ref: '#/responses/DefaultError'
+        summary: Add a new Mailers section
+        tags:
+        - Mailers
+  /services/haproxy/configuration/mailers_section/{name}:
+      delete:
+        description: Deletes a mailers from the configuration by it's name.
+        operationId: deleteMailersSection
+        parameters:
+        - description: Mailers name
+          in: path
+          name: name
+          required: true
+          type: string
+        - $ref: '#/parameters/transaction_id'
+        - $ref: '#/parameters/version'
+        - $ref: '#/parameters/force_reload'
+        responses:
+          "202":
+            description: Configuration change accepted and reload requested
+            headers:
+              Reload-ID:
+                description: ID of the requested reload
+                type: string
+          "204":
+            description: Mailers deleted
+          "404":
+            $ref: '#/responses/NotFound'
+          default:
+            $ref: '#/responses/DefaultError'
+        summary: Delete a Mailers section
+        tags:
+        - Mailers
+      get:
+        description: Returns one mailers configuration by it's name.
+        operationId: getMailersSection
+        parameters:
+        - description: Mailers name
+          in: path
+          name: name
+          required: true
+          type: string
+        - $ref: '#/parameters/transaction_id'
+        responses:
+          "200":
+            description: Successful operation
+            headers:
+              Configuration-Version:
+                description: Configuration file version
+                type: string
+            schema:
+              properties:
+                _version:
+                  type: integer
+                data:
+                  $ref: '#/definitions/mailers_section'
+              type: object
+          "404":
+            $ref: '#/responses/NotFound'
+          default:
+            $ref: '#/responses/DefaultError'
+        summary: Return a Mailers section
+        tags:
+        - Mailers
+      put:
+        description: Modifies a mailers configuration by it's name.
+        operationId: editMailersSection
+        parameters:
+        - description: Mailers name
+          in: path
+          name: name
+          required: true
+          type: string
+        - in: body
+          name: data
+          required: true
+          schema:
+            $ref: '#/definitions/mailers_section'
+        - $ref: '#/parameters/transaction_id'
+        - $ref: '#/parameters/version'
+        - $ref: '#/parameters/force_reload'
+        responses:
+          "200":
+            description: Mailers configuration updated
+            schema:
+              $ref: '#/definitions/mailers_section'
+          "202":
+            description: Configuration change accepted and reload requested
+            headers:
+              Reload-ID:
+                description: ID of the requested reload
+                type: string
+            schema:
+              $ref: '#/definitions/mailers_section'
+          "400":
+            $ref: '#/responses/BadRequest'
+          "404":
+            $ref: '#/responses/NotFound'
+          default:
+            $ref: '#/responses/DefaultError'
+        summary: Modify a Mailers section
+        tags:
+        - Mailers
+  /services/haproxy/configuration/mailer_entries:
+      get:
+        description: Returns an array of all the mailer_entries configured in the specified
+          mailers section.
+        operationId: getMailerEntries
+        parameters:
+        - description: Parent mailers section name
+          in: query
+          name: mailers_section
+          required: true
+          type: string
+        - $ref: '#/parameters/transaction_id'
+        responses:
+          "200":
+            description: Successful operation
+            headers:
+              Configuration-Version:
+                description: Configuration file version
+                type: string
+            schema:
+              properties:
+                _version:
+                  type: integer
+                data:
+                  $ref: '#/definitions/mailer_entries'
+              required:
+              - data
+              type: object
+          default:
+            $ref: '#/responses/DefaultError'
+        summary: Return an array of mailer_entries
+        tags:
+        - MailerEntry
+      post:
+        description: Adds a new mailer entry to the specified mailers section in the configuration
+          file.
+        operationId: createMailerEntry
+        parameters:
+        - description: Parent mailers section name
+          in: query
+          name: mailers_section
+          required: true
+          type: string
+        - in: body
+          name: data
+          required: true
+          schema:
+            $ref: '#/definitions/mailer_entry'
+        - $ref: '#/parameters/transaction_id'
+        - $ref: '#/parameters/version'
+        - $ref: '#/parameters/force_reload'
+        responses:
+          "201":
+            description: MailerEntry created
+            schema:
+              $ref: '#/definitions/mailer_entry'
+          "202":
+            description: Configuration change accepted and reload requested
+            headers:
+              Reload-ID:
+                description: ID of the requested reload
+                type: string
+            schema:
+              $ref: '#/definitions/mailer_entry'
+          "400":
+            $ref: '#/responses/BadRequest'
+          "409":
+            $ref: '#/responses/AlreadyExists'
+          default:
+            $ref: '#/responses/DefaultError'
+        summary: Add a new mailer_entry
+        tags:
+        - MailerEntry
+  /services/haproxy/configuration/mailer_entries/{name}:
+      delete:
+        description: Deletes a mailer entry configuration by it's name in the specified
+          mailers section.
+        operationId: deleteMailerEntry
+        parameters:
+        - description: MailerEntry name
+          in: path
+          name: name
+          required: true
+          type: string
+        - description: Parent mailers section name
+          in: query
+          name: mailers_section
+          required: true
+          type: string
+        - $ref: '#/parameters/transaction_id'
+        - $ref: '#/parameters/version'
+        - $ref: '#/parameters/force_reload'
+        responses:
+          "202":
+            description: Configuration change accepted and reload requested
+            headers:
+              Reload-ID:
+                description: ID of the requested reload
+                type: string
+          "204":
+            description: MailerEntry deleted
+          "404":
+            $ref: '#/responses/NotFound'
+          default:
+            $ref: '#/responses/DefaultError'
+        summary: Delete a mailer_entry
+        tags:
+        - MailerEntry
+      get:
+        description: Returns one mailer_entry configuration by it's name in the specified
+          mailers section.
+        operationId: getMailerEntry
+        parameters:
+        - description: MailerEntry name
+          in: path
+          name: name
+          required: true
+          type: string
+        - description: Parent mailers name
+          in: query
+          name: mailers_section
+          required: true
+          type: string
+        - $ref: '#/parameters/transaction_id'
+        responses:
+          "200":
+            description: Successful operation
+            headers:
+              Configuration-Version:
+                description: Configuration file version
+                type: string
+            schema:
+              properties:
+                _version:
+                  type: integer
+                data:
+                  $ref: '#/definitions/mailer_entry'
+              type: object
+          "404":
+            $ref: '#/responses/AlreadyExists'
+          default:
+            $ref: '#/responses/DefaultError'
+        summary: Return one mailer_entry
+        tags:
+        - MailerEntry
+      put:
+        description: Replaces a mailer entry configuration by it's name in the specified
+          mailers section.
+        operationId: replaceMailerEntry
+        parameters:
+        - description: MailerEntry name
+          in: path
+          name: name
+          required: true
+          type: string
+        - description: Parent mailers section name
+          in: query
+          name: mailers_section
+          required: true
+          type: string
+        - in: body
+          name: data
+          required: true
+          schema:
+            $ref: '#/definitions/mailer_entry'
+        - $ref: '#/parameters/transaction_id'
+        - $ref: '#/parameters/version'
+        - $ref: '#/parameters/force_reload'
+        responses:
+          "200":
+            description: MailerEntry replaced
+            schema:
+              $ref: '#/definitions/mailer_entry'
+          "202":
+            description: Configuration change accepted and reload requested
+            headers:
+              Reload-ID:
+                description: ID of the requested reload
+                type: string
+            schema:
+              $ref: '#/definitions/mailer_entry'
+          "400":
+            $ref: '#/responses/BadRequest'
+          "404":
+            $ref: '#/responses/NotFound'
+          default:
+            $ref: '#/responses/DefaultError'
+        summary: Replace a mailer_entry
+        tags:
+        - MailerEntry
   /services/haproxy/configuration/peer_section:
       get:
         description: Returns an array of all configured peer_section.

@@ -98,6 +98,22 @@ definitions:
     type: array
     items:
       $ref: '#/definitions/group'
+  mailers_section:
+    $ref: "models/configuration/mailers.yaml#/mailers_section"
+  mailers_sections:
+    title: Mailers Sections
+    description: HAProxy mailers_section array
+    type: array
+    items:
+      $ref: "#/definitions/mailers_section"
+  mailer_entry:
+    $ref: "models/configuration/mailers.yaml#/mailer_entry"
+  mailer_entries:
+    title: Mailer Entries
+    description: HAProxy mailer entries
+    type: array
+    items:
+      $ref: "#/definitions/mailer_entry"
   peer_section:
     $ref: "models/configuration/peers.yaml#/peer_section"
   peer_sections:
@@ -622,6 +638,8 @@ tags:
   - name: ACL
   - name: Resolver
   - name: Nameserver
+  - name: Mailers
+  - name: MailerEntry
   - name: Peer
   - name: PeerEntry
   - name: Ring
@@ -710,6 +728,14 @@ paths:
     $ref: "paths/configuration/userlist.yaml#/groups"
   /services/haproxy/configuration/groups/{name}:
     $ref: "paths/configuration/userlist.yaml#/groups_one"
+  /services/haproxy/configuration/mailers_section:
+    $ref: "paths/configuration/mailers.yaml#/mailers_section"
+  /services/haproxy/configuration/mailers_section/{name}:
+    $ref: "paths/configuration/mailers.yaml#/mailers_section_one"
+  /services/haproxy/configuration/mailer_entries:
+    $ref: "paths/configuration/mailers.yaml#/mailer_entries"
+  /services/haproxy/configuration/mailer_entries/{name}:
+    $ref: "paths/configuration/mailers.yaml#/mailer_entries_one"
   /services/haproxy/configuration/peer_section:
     $ref: "paths/configuration/peers.yaml#/peer_section"
   /services/haproxy/configuration/peer_section/{name}:

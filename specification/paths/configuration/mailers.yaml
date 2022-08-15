@@ -1,0 +1,347 @@
+---
+mailers_section:
+  get:
+    summary: Return an array of mailers sections
+    description: Returns an array of all the configured mailers in HAProxy
+    operationId: getMailersSections
+    parameters:
+      - $ref: "#/parameters/transaction_id"
+    tags:
+      - Mailers
+    responses:
+      '200':
+        description: Successful operation
+        headers:
+          Configuration-Version:
+            description: Configuration file version
+            type: string
+        schema:
+          type: object
+          required:
+            - data
+          properties:
+            data:
+              $ref: "#/definitions/mailers_sections"
+            _version:
+              type: integer
+      'default':
+        $ref: "#/responses/DefaultError"
+  post:
+    summary: Add a new Mailers section
+    description: Creates a new empty Mailers section
+    operationId: createMailersSection
+    parameters:
+      - name: data
+        required: true
+        in: body
+        schema:
+          $ref: "#/definitions/mailers_section"
+      - $ref: "#/parameters/transaction_id"
+      - $ref: "#/parameters/version"
+      - $ref: "#/parameters/force_reload"
+    tags:
+      - Mailers
+    responses:
+      '202':
+        description: Configuration change accepted and reload requested
+        headers:
+          Reload-ID:
+            description: ID of the requested reload
+            type: string
+        schema:
+          $ref: "#/definitions/mailers_section"
+      '201':
+        description: Mailers created
+        schema:
+          $ref: "#/definitions/mailers_section"
+      '409':
+        $ref: '#/responses/AlreadyExists'
+      '400':
+        $ref: '#/responses/BadRequest'
+      'default':
+        $ref: '#/responses/DefaultError'
+mailers_section_one:
+  get:
+    summary: Return a Mailers section
+    description: Returns one mailers configuration by it's name.
+    operationId: getMailersSection
+    tags:
+      - Mailers
+    parameters:
+      - name: name
+        in: path
+        description: Mailers name
+        required: true
+        type: string
+      - $ref: "#/parameters/transaction_id"
+    responses:
+      '200':
+        description: Successful operation
+        headers:
+          Configuration-Version:
+            description: Configuration file version
+            type: string
+        schema:
+          type: object
+          properties:
+            data:
+              $ref: "#/definitions/mailers_section"
+            _version:
+              type: integer
+      '404':
+        $ref: '#/responses/NotFound'
+      'default':
+        $ref: '#/responses/DefaultError'
+  put:
+    summary: Modify a Mailers section
+    description: Modifies a mailers configuration by it's name.
+    operationId: editMailersSection
+    tags:
+      - Mailers
+    parameters:
+      - name: name
+        in: path
+        description: Mailers name
+        required: true
+        type: string
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/mailers_section'
+      - $ref: "#/parameters/transaction_id"
+      - $ref: "#/parameters/version"
+      - $ref: "#/parameters/force_reload"
+    responses:
+      '202':
+        description: Configuration change accepted and reload requested
+        headers:
+          Reload-ID:
+            description: ID of the requested reload
+            type: string
+        schema:
+          $ref: "#/definitions/mailers_section"
+      '200':
+        description: Mailers configuration updated
+        schema:
+          $ref: "#/definitions/mailers_section"
+      '400':
+        $ref: '#/responses/BadRequest'
+      '404':
+        $ref: '#/responses/NotFound'
+      'default':
+        $ref: '#/responses/DefaultError'
+  delete:
+    summary: Delete a Mailers section
+    description: Deletes a mailers from the configuration by it's name.
+    operationId: deleteMailersSection
+    tags:
+      - Mailers
+    parameters:
+      - name: name
+        in: path
+        description: Mailers name
+        required: true
+        type: string
+      - $ref: "#/parameters/transaction_id"
+      - $ref: "#/parameters/version"
+      - $ref: "#/parameters/force_reload"
+    responses:
+      '202':
+        description: Configuration change accepted and reload requested
+        headers:
+          Reload-ID:
+            description: ID of the requested reload
+            type: string
+      '204':
+        description: Mailers deleted
+      '404':
+        $ref: '#/responses/NotFound'
+      'default':
+        $ref: '#/responses/DefaultError'
+mailer_entries:
+  get:
+    summary: Return an array of mailer_entries
+    description: Returns an array of all the mailer_entries configured in the specified mailers section.
+    operationId: getMailerEntries
+    tags:
+      - MailerEntry
+    parameters:
+      - name: mailers_section
+        in: query
+        description: Parent mailers section name
+        required: true
+        type: string
+      - $ref: "#/parameters/transaction_id"
+    responses:
+      '200':
+        description: Successful operation
+        headers:
+          Configuration-Version:
+            description: Configuration file version
+            type: string
+        schema:
+          type: object
+          required:
+            - data
+          properties:
+            data:
+              $ref: "#/definitions/mailer_entries"
+            _version:
+              type: integer
+      'default':
+        $ref: '#/responses/DefaultError'
+  post:
+    summary: Add a new mailer_entry
+    description: Adds a new mailer entry to the specified mailers section in the configuration file.
+    operationId: createMailerEntry
+    tags:
+      - MailerEntry
+    parameters:
+      - name: mailers_section
+        in: query
+        description: Parent mailers section name
+        required: true
+        type: string
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/mailer_entry'
+      - $ref: "#/parameters/transaction_id"
+      - $ref: "#/parameters/version"
+      - $ref: "#/parameters/force_reload"
+    responses:
+      '202':
+        description: Configuration change accepted and reload requested
+        headers:
+          Reload-ID:
+            description: ID of the requested reload
+            type: string
+        schema:
+          $ref: "#/definitions/mailer_entry"
+      '201':
+        description: MailerEntry created
+        schema:
+          $ref: "#/definitions/mailer_entry"
+      '409':
+        $ref: '#/responses/AlreadyExists'
+      '400':
+        $ref: '#/responses/BadRequest'
+      'default':
+        $ref: '#/responses/DefaultError'
+
+mailer_entries_one:
+  get:
+    summary: Return one mailer_entry
+    description: Returns one mailer_entry configuration by it's name in the specified mailers section.
+    operationId: getMailerEntry
+    tags:
+      - MailerEntry
+    parameters:
+      - name: name
+        in: path
+        description: MailerEntry name
+        required: true
+        type: string
+      - name: mailers_section
+        in: query
+        description: Parent mailers name
+        required: true
+        type: string
+      - $ref: "#/parameters/transaction_id"
+    responses:
+      '200':
+        description: Successful operation
+        headers:
+          Configuration-Version:
+            description: Configuration file version
+            type: string
+        schema:
+          type: object
+          properties:
+            data:
+              $ref: "#/definitions/mailer_entry"
+            _version:
+              type: integer
+      '404':
+        $ref: '#/responses/AlreadyExists'
+      'default':
+        $ref: '#/responses/DefaultError'
+  put:
+    summary: Replace a mailer_entry
+    description: Replaces a mailer entry configuration by it's name in the specified mailers section.
+    operationId: replaceMailerEntry
+    tags:
+      - MailerEntry
+    parameters:
+      - name: name
+        in: path
+        description: MailerEntry name
+        required: true
+        type: string
+      - name: mailers_section
+        in: query
+        description: Parent mailers section name
+        required: true
+        type: string
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/mailer_entry'
+      - $ref: "#/parameters/transaction_id"
+      - $ref: "#/parameters/version"
+      - $ref: "#/parameters/force_reload"
+    responses:
+      '202':
+        description: Configuration change accepted and reload requested
+        headers:
+          Reload-ID:
+            description: ID of the requested reload
+            type: string
+        schema:
+          $ref: "#/definitions/mailer_entry"
+      '200':
+        description: MailerEntry replaced
+        schema:
+          $ref: "#/definitions/mailer_entry"
+      '400':
+        $ref: '#/responses/BadRequest'
+      '404':
+        $ref: '#/responses/NotFound'
+      'default':
+        $ref: '#/responses/DefaultError'
+  delete:
+    summary: Delete a mailer_entry
+    description: Deletes a mailer entry configuration by it's name in the specified mailers section.
+    operationId: deleteMailerEntry
+    tags:
+      - MailerEntry
+    parameters:
+      - name: name
+        in: path
+        description: MailerEntry name
+        required: true
+        type: string
+      - name: mailers_section
+        in: query
+        description: Parent mailers section name
+        required: true
+        type: string
+      - $ref: "#/parameters/transaction_id"
+      - $ref: "#/parameters/version"
+      - $ref: "#/parameters/force_reload"
+    responses:
+      '202':
+        description: Configuration change accepted and reload requested
+        headers:
+          Reload-ID:
+            description: ID of the requested reload
+            type: string
+      '204':
+        description: MailerEntry deleted
+      '404':
+        $ref: '#/responses/NotFound'
+      'default':
+        $ref: '#/responses/DefaultError'

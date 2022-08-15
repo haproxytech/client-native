@@ -16,6 +16,9 @@ email_alert:
       enum: [emerg, alert, crit, err, warning, notice, info, debug]
     mailers:
       type: string
+      x-dynamic-enum:
+        operation: getMailersSections
+        property: name
     myhostname:
       type: string
     to:

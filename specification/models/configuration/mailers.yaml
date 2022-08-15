@@ -1,0 +1,40 @@
+---
+mailers_section:
+  title: Mailers Section
+  description: A list of SMTP servers used by HAProxy to send emails.
+  type: object
+  required:
+    - name
+  properties:
+    name:
+      type: string
+      pattern: '^[A-Za-z0-9-_]+$'
+      x-nullable: false
+    timeout:
+      type: integer
+      minimum: 0
+      x-nullable: true
+      x-display-name: Timeout to send an email in milliseconds
+  additionalProperties: false
+mailer_entry:
+  title: Mailer Entry
+  description: Mailer entry of a Mailers section
+  type: object
+  required:
+    - name
+    - address
+    - port
+  properties:
+    name:
+      type: string
+      pattern: '^[A-Za-z0-9-_]+$'
+      x-nullable: false
+    address:
+      type: string
+      pattern: '^\S+$'
+      x-nullable: false
+    port:
+      type: integer
+      minimum: 1
+      maximum: 65535
+      x-nullable: false

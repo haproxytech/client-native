@@ -44,6 +44,8 @@ type Configuration interface {
 	HTTPAfterResponseRule
 	LogTarget
 	LogForward
+	MailerEntry
+	MailersSection
 	Nameserver
 	PeerEntry
 	PeerSection

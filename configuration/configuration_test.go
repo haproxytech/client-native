@@ -560,6 +560,11 @@ log-forward sylog-loadb
   log 127.0.0.1:10003 sample 3:4 local0
   log 127.0.0.1:10004 sample 4:4 local0
 
+mailers localmailer1
+  mailer smtp1 10.0.10.1:514
+  mailer smtp2 10.0.10.2:514
+  timeout mail 15s
+
 backend test_2
   mode http
   balance roundrobin
