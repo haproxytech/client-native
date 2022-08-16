@@ -143,6 +143,7 @@ func DashCase(fieldName string) string { //nolint:gocognit
 	return n
 }
 
+// ParseTimeout returns the number of milliseconds in a timeout string.
 func ParseTimeout(tOut string) *int64 {
 	return parseTimeout(tOut, 1)
 }
@@ -155,6 +156,13 @@ func parseTimeout(tOut string, defaultMultiplier int64) *int64 {
 	var v int64
 	var err error
 	switch {
+	case strings.HasSuffix(tOut, "us"):
+		v, err = strconv.ParseInt(strings.TrimSuffix(tOut, "us"), 10, 64)
+		if v >= 1000 {
+			v /= 1000
+		} else if v > 0 {
+			v = 1
+		}
 	case strings.HasSuffix(tOut, "ms"):
 		v, err = strconv.ParseInt(strings.TrimSuffix(tOut, "ms"), 10, 64)
 	case strings.HasSuffix(tOut, "s"):
@@ -173,7 +181,7 @@ func parseTimeout(tOut string, defaultMultiplier int64) *int64 {
 		v, err = strconv.ParseInt(tOut, 10, 64)
 		v *= defaultMultiplier
 	}
-	if err != nil {
+	if err != nil || v < 0 {
 		return nil
 	}
 	return &v
