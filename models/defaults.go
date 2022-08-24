@@ -124,6 +124,10 @@ type Defaults struct {
 	// Enum: [enabled disabled]
 	DisableH2Upgrade string `json:"disable_h2_upgrade,omitempty"`
 
+	// disabled
+	// Enum: [enabled disabled]
+	Disabled string `json:"disabled,omitempty"`
+
 	// dontlog normal
 	// Enum: [enabled disabled]
 	DontlogNormal string `json:"dontlog_normal,omitempty"`
@@ -138,6 +142,10 @@ type Defaults struct {
 
 	// email alert
 	EmailAlert *EmailAlert `json:"email_alert,omitempty"`
+
+	// enabled
+	// Enum: [enabled disabled]
+	Enabled string `json:"enabled,omitempty"`
 
 	// external check
 	// Enum: [enabled disabled]
@@ -426,6 +434,10 @@ func (m *Defaults) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
+	if err := m.validateDisabled(formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.validateDontlogNormal(formats); err != nil {
 		res = append(res, err)
 	}
@@ -439,6 +451,10 @@ func (m *Defaults) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateEmailAlert(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateEnabled(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -1143,6 +1159,48 @@ func (m *Defaults) validateDisableH2Upgrade(formats strfmt.Registry) error {
 	return nil
 }
 
+var defaultsTypeDisabledPropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		defaultsTypeDisabledPropEnum = append(defaultsTypeDisabledPropEnum, v)
+	}
+}
+
+const (
+
+	// DefaultsDisabledEnabled captures enum value "enabled"
+	DefaultsDisabledEnabled string = "enabled"
+
+	// DefaultsDisabledDisabled captures enum value "disabled"
+	DefaultsDisabledDisabled string = "disabled"
+)
+
+// prop value enum
+func (m *Defaults) validateDisabledEnum(path, location string, value string) error {
+	if err := validate.EnumCase(path, location, value, defaultsTypeDisabledPropEnum, true); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *Defaults) validateDisabled(formats strfmt.Registry) error {
+	if swag.IsZero(m.Disabled) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateDisabledEnum("disabled", "body", m.Disabled); err != nil {
+		return err
+	}
+
+	return nil
+}
+
 var defaultsTypeDontlogNormalPropEnum []interface{}
 
 func init() {
@@ -1253,6 +1311,48 @@ func (m *Defaults) validateEmailAlert(formats strfmt.Registry) error {
 			}
 			return err
 		}
+	}
+
+	return nil
+}
+
+var defaultsTypeEnabledPropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		defaultsTypeEnabledPropEnum = append(defaultsTypeEnabledPropEnum, v)
+	}
+}
+
+const (
+
+	// DefaultsEnabledEnabled captures enum value "enabled"
+	DefaultsEnabledEnabled string = "enabled"
+
+	// DefaultsEnabledDisabled captures enum value "disabled"
+	DefaultsEnabledDisabled string = "disabled"
+)
+
+// prop value enum
+func (m *Defaults) validateEnabledEnum(path, location string, value string) error {
+	if err := validate.EnumCase(path, location, value, defaultsTypeEnabledPropEnum, true); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *Defaults) validateEnabled(formats strfmt.Registry) error {
+	if swag.IsZero(m.Enabled) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateEnabledEnum("enabled", "body", m.Enabled); err != nil {
+		return err
 	}
 
 	return nil

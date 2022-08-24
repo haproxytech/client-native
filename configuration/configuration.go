@@ -349,6 +349,13 @@ func (s *SectionParser) checkSpecialFields(fieldName string) (match bool, data i
 		return true, s.srvtcpkaIntvl()
 	case "EmailAlert":
 		return true, s.emailAlert()
+	case "ServerStateFileName":
+		return true, s.serverStateFileName()
+	case "UseFcgiApp":
+		return true, s.useFcgiApp()
+	case "Description":
+		return true, s.description()
+
 	default:
 		return false, nil
 	}
@@ -551,6 +558,19 @@ func (s *SectionParser) logasap() interface{} {
 		return "disabled"
 	}
 	return "enabled"
+}
+
+func (s *SectionParser) useFcgiApp() interface{} {
+	_, e := s.get("use-fcgi-app")
+	if e != nil {
+		return nil
+	}
+	data, err := s.get("use-fcgi-app")
+	if err == nil {
+		d := data.(*types.UseFcgiApp) //nolint:forcetypeassert
+		return d.Name
+	}
+	return nil
 }
 
 func (s *SectionParser) advCheck() interface{} {
@@ -1362,6 +1382,24 @@ func (s *SectionParser) srvtcpkaIntvl() interface{} {
 	return misc.ParseTimeoutDefaultSeconds(d.Value)
 }
 
+func (s *SectionParser) serverStateFileName() interface{} {
+	data, err := s.get("server-state-file-name", false)
+	if err != nil {
+		return nil
+	}
+	d := data.(*types.StringC)
+	return d.Value
+}
+
+func (s *SectionParser) description() interface{} {
+	data, err := s.get("description", false)
+	if err != nil {
+		return nil
+	}
+	d := data.(*types.StringC)
+	return d.Value
+}
+
 // SectionObject represents a configuration section
 type SectionObject struct {
 	Object  interface{}
@@ -1495,6 +1533,10 @@ func (s *SectionObject) checkSpecialFields(fieldName string, field reflect.Value
 		return true, s.srvtcpkaIntvl(field)
 	case "EmailAlert":
 		return true, s.emailAlert(field)
+	case "ServerStateFileName":
+		return true, s.serverStateFileName(field)
+	case "Description":
+		return true, s.description(field)
 	default:
 		return false, nil
 	}
@@ -3045,6 +3087,22 @@ func (s *SectionObject) srvtcpkaIntvl(field reflect.Value) error {
 	}
 	v := field.Int()
 	return s.set("srvtcpka-intvl", types.StringC{Value: fmt.Sprintf("%dms", v)})
+}
+
+func (s *SectionObject) serverStateFileName(field reflect.Value) error {
+	if field.Kind() == reflect.Ptr {
+		field = field.Elem()
+	}
+	v := field.String()
+	return s.set("server-state-file-name", types.StringC{Value: v})
+}
+
+func (s *SectionObject) description(field reflect.Value) error {
+	if field.Kind() == reflect.Ptr {
+		field = field.Elem()
+	}
+	v := field.String()
+	return s.set("description", types.StringC{Value: v})
 }
 
 func (c *client) deleteSection(section parser.Section, name string, transactionID string, version int64) error {

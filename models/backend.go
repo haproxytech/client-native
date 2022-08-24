@@ -80,12 +80,23 @@ type Backend struct {
 	// default server
 	DefaultServer *DefaultServer `json:"default_server,omitempty"`
 
+	// description
+	Description string `json:"description,omitempty"`
+
+	// disabled
+	// Enum: [enabled disabled]
+	Disabled string `json:"disabled,omitempty"`
+
 	// dynamic cookie key
 	// Pattern: ^[^\s]+$
 	DynamicCookieKey string `json:"dynamic_cookie_key,omitempty"`
 
 	// email alert
 	EmailAlert *EmailAlert `json:"email_alert,omitempty"`
+
+	// enabled
+	// Enum: [enabled disabled]
+	Enabled string `json:"enabled,omitempty"`
 
 	// external check
 	// Enum: [enabled disabled]
@@ -162,9 +173,16 @@ type Backend struct {
 	// Enum: [enabled disabled]
 	Httpclose string `json:"httpclose,omitempty"`
 
+	// id
+	ID *int64 `json:"id,omitempty"`
+
 	// independent streams
 	// Enum: [enabled disabled]
 	IndependentStreams string `json:"independent_streams,omitempty"`
+
+	// load server state from file
+	// Enum: [global local none]
+	LoadServerStateFromFile string `json:"load_server_state_from_file,omitempty"`
 
 	// log health checks
 	// Enum: [enabled disabled]
@@ -213,6 +231,9 @@ type Backend struct {
 
 	// retries
 	Retries *int64 `json:"retries,omitempty"`
+
+	// server state file name
+	ServerStateFileName string `json:"server_state_file_name,omitempty"`
 
 	// server timeout
 	ServerTimeout *int64 `json:"server_timeout,omitempty"`
@@ -269,6 +290,9 @@ type Backend struct {
 
 	// tunnel timeout
 	TunnelTimeout *int64 `json:"tunnel_timeout,omitempty"`
+
+	// use fcgi app
+	UseFcgiApp string `json:"use_fcgi_app,omitempty"`
 }
 
 // Validate validates this backend
@@ -315,11 +339,19 @@ func (m *Backend) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
+	if err := m.validateDisabled(formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.validateDynamicCookieKey(formats); err != nil {
 		res = append(res, err)
 	}
 
 	if err := m.validateEmailAlert(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateEnabled(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -396,6 +428,10 @@ func (m *Backend) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateIndependentStreams(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateLoadServerStateFromFile(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -809,6 +845,48 @@ func (m *Backend) validateDefaultServer(formats strfmt.Registry) error {
 	return nil
 }
 
+var backendTypeDisabledPropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		backendTypeDisabledPropEnum = append(backendTypeDisabledPropEnum, v)
+	}
+}
+
+const (
+
+	// BackendDisabledEnabled captures enum value "enabled"
+	BackendDisabledEnabled string = "enabled"
+
+	// BackendDisabledDisabled captures enum value "disabled"
+	BackendDisabledDisabled string = "disabled"
+)
+
+// prop value enum
+func (m *Backend) validateDisabledEnum(path, location string, value string) error {
+	if err := validate.EnumCase(path, location, value, backendTypeDisabledPropEnum, true); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *Backend) validateDisabled(formats strfmt.Registry) error {
+	if swag.IsZero(m.Disabled) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateDisabledEnum("disabled", "body", m.Disabled); err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func (m *Backend) validateDynamicCookieKey(formats strfmt.Registry) error {
 	if swag.IsZero(m.DynamicCookieKey) { // not required
 		return nil
@@ -835,6 +913,48 @@ func (m *Backend) validateEmailAlert(formats strfmt.Registry) error {
 			}
 			return err
 		}
+	}
+
+	return nil
+}
+
+var backendTypeEnabledPropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		backendTypeEnabledPropEnum = append(backendTypeEnabledPropEnum, v)
+	}
+}
+
+const (
+
+	// BackendEnabledEnabled captures enum value "enabled"
+	BackendEnabledEnabled string = "enabled"
+
+	// BackendEnabledDisabled captures enum value "disabled"
+	BackendEnabledDisabled string = "disabled"
+)
+
+// prop value enum
+func (m *Backend) validateEnabledEnum(path, location string, value string) error {
+	if err := validate.EnumCase(path, location, value, backendTypeEnabledPropEnum, true); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *Backend) validateEnabled(formats strfmt.Registry) error {
+	if swag.IsZero(m.Enabled) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateEnabledEnum("enabled", "body", m.Enabled); err != nil {
+		return err
 	}
 
 	return nil
@@ -1493,6 +1613,51 @@ func (m *Backend) validateIndependentStreams(formats strfmt.Registry) error {
 
 	// value enum
 	if err := m.validateIndependentStreamsEnum("independent_streams", "body", m.IndependentStreams); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+var backendTypeLoadServerStateFromFilePropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["global","local","none"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		backendTypeLoadServerStateFromFilePropEnum = append(backendTypeLoadServerStateFromFilePropEnum, v)
+	}
+}
+
+const (
+
+	// BackendLoadServerStateFromFileGlobal captures enum value "global"
+	BackendLoadServerStateFromFileGlobal string = "global"
+
+	// BackendLoadServerStateFromFileLocal captures enum value "local"
+	BackendLoadServerStateFromFileLocal string = "local"
+
+	// BackendLoadServerStateFromFileNone captures enum value "none"
+	BackendLoadServerStateFromFileNone string = "none"
+)
+
+// prop value enum
+func (m *Backend) validateLoadServerStateFromFileEnum(path, location string, value string) error {
+	if err := validate.EnumCase(path, location, value, backendTypeLoadServerStateFromFilePropEnum, true); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *Backend) validateLoadServerStateFromFile(formats strfmt.Registry) error {
+	if swag.IsZero(m.LoadServerStateFromFile) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateLoadServerStateFromFileEnum("load_server_state_from_file", "body", m.LoadServerStateFromFile); err != nil {
 		return err
 	}
 

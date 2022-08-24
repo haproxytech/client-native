@@ -892,6 +892,12 @@ definitions:
           type: boolean
         issuers_chain_path:
           type: string
+        load_server_state_from_file:
+          enum:
+          - global
+          - local
+          - none
+          type: string
         localpeer:
           pattern: ^[^\s]+$
           type: string
@@ -1552,6 +1558,11 @@ definitions:
           - disabled
           type: string
           x-display-name: Disable HTTP/2 Upgrade
+        disabled:
+          enum:
+          - enabled
+          - disabled
+          type: string
         dontlog_normal:
           enum:
           - enabled
@@ -1569,6 +1580,11 @@ definitions:
           type: string
         email_alert:
           $ref: '#/definitions/email_alert'
+        enabled:
+          enum:
+          - enabled
+          - disabled
+          type: string
         error_files:
           items:
             $ref: '#/definitions/errorfile'
@@ -1918,12 +1934,20 @@ definitions:
           x-dynamic-enum:
             operation: getBackends
             property: name
+        description:
+          type: string
+          x-display-name: Description
         disable_h2_upgrade:
           enum:
           - enabled
           - disabled
           type: string
           x-display-name: Disable HTTP/2 Upgrade
+        disabled:
+          enum:
+          - enabled
+          - disabled
+          type: string
         dontlog_normal:
           enum:
           - enabled
@@ -1937,6 +1961,11 @@ definitions:
           x-display-name: Don't Log Null
         email_alert:
           $ref: '#/definitions/email_alert'
+        enabled:
+          enum:
+          - enabled
+          - disabled
+          type: string
         forwardfor:
           $ref: '#/definitions/forwardfor'
           x-dependency:
@@ -2014,6 +2043,9 @@ definitions:
           - disabled
           type: string
           x-display-name: Httpslog
+        id:
+          type: integer
+          x-nullable: true
         idle_close_on_response:
           enum:
           - enabled
@@ -2213,6 +2245,14 @@ definitions:
               value: http
         default_server:
           $ref: '#/definitions/default_server'
+        description:
+          type: string
+          x-display-name: Description
+        disabled:
+          enum:
+          - enabled
+          - disabled
+          type: string
         dynamic_cookie_key:
           pattern: ^[^\s]+$
           type: string
@@ -2222,6 +2262,11 @@ definitions:
                 value: true
         email_alert:
           $ref: '#/definitions/email_alert'
+        enabled:
+          enum:
+          - enabled
+          - disabled
+          type: string
         external_check:
           enum:
           - enabled
@@ -2378,12 +2423,21 @@ definitions:
             mode:
               value: http
           x-display-name: HTTP connection closing
+        id:
+          type: integer
+          x-nullable: true
         independent_streams:
           enum:
           - enabled
           - disabled
           type: string
           x-display-name: Independent Streams
+        load_server_state_from_file:
+          enum:
+          - global
+          - local
+          - none
+          type: string
         log_health_checks:
           enum:
           - enabled
@@ -2438,6 +2492,9 @@ definitions:
         retries:
           type: integer
           x-nullable: true
+        server_state_file_name:
+          type: string
+          x-display-name: Server state file
         server_timeout:
           type: integer
           x-nullable: true
@@ -2516,6 +2573,9 @@ definitions:
         tunnel_timeout:
           type: integer
           x-nullable: true
+        use_fcgi_app:
+          type: string
+          x-display-name: FastCGI application
       required:
       - name
       title: Backend

@@ -250,6 +250,7 @@ defaults
   email-alert level err
   email-alert myhostname srv01
   email-alert mailers localmailer1
+  load-server-state-from-file global
 
 frontend test
   mode http
@@ -388,6 +389,9 @@ frontend test
   email-alert level warning
   email-alert myhostname srv01
   email-alert mailers localmailer1
+  description this is a frontend description
+  disabled
+  id 123
 
 frontend test_2
   mode http
@@ -514,6 +518,12 @@ backend test
   email-alert level warning
   email-alert myhostname prod01
   email-alert mailers localmailer1
+  load-server-state-from-file local
+  server-state-file-name use-backend-name
+  description this is a backend description
+  use-fcgi-app app-name
+  enabled
+  id 456
 
 peers mycluster
   peer hapee 192.168.1.1:1023

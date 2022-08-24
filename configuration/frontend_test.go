@@ -146,10 +146,10 @@ func TestGetFrontends(t *testing.T) { //nolint:gocognit
 			t.Errorf("%v: StatsOptions is nil", f.Name)
 		}
 		if f.StatsOptions.StatsShowModules != true {
-			t.Error("StatsShowModules not set")
+			t.Errorf("%v: StatsShowModules not set", f.Name)
 		}
 		if f.StatsOptions.StatsRealm != true {
-			t.Error("StatsRealm not set")
+			t.Errorf("%v: StatsRealm not set", f.Name)
 		}
 		if f.StatsOptions.StatsRealmRealm == nil {
 			t.Errorf("%v: StatsRealmRealm is nil", f.Name)
@@ -179,7 +179,6 @@ func TestGetFrontends(t *testing.T) { //nolint:gocognit
 		} else if *f.StatsOptions.StatsAuths[1].Passwd != "AdMiN1234" {
 			t.Errorf("%v: StatsAuths 1 Passwd not AdMiN1234: %v", f.Name, *f.StatsOptions.StatsAuths[1].Passwd)
 		}
-
 	}
 }
 
@@ -339,10 +338,10 @@ func TestGetFrontend(t *testing.T) {
 		t.Errorf("%v: StatsOptions is nil", f.Name)
 	}
 	if f.StatsOptions.StatsShowModules != true {
-		t.Error("StatsShowModules not set")
+		t.Errorf("%v: StatsShowModules not set", f.Name)
 	}
 	if f.StatsOptions.StatsRealm != true {
-		t.Error("StatsRealm not set")
+		t.Errorf("%v: StatsRealm not set", f.Name)
 	}
 	if f.StatsOptions.StatsRealmRealm == nil {
 		t.Errorf("%v: StatsRealmRealm is nil", f.Name)
@@ -371,6 +370,15 @@ func TestGetFrontend(t *testing.T) {
 		t.Errorf("%v: StatsAuths 1 Passwd is nil", f.Name)
 	} else if *f.StatsOptions.StatsAuths[1].Passwd != "AdMiN1234" {
 		t.Errorf("%v: StatsAuths 1 Passwd not AdMiN1234: %v", f.Name, *f.StatsOptions.StatsAuths[1].Passwd)
+	}
+	if f.Description != "this is a frontend description" {
+		t.Errorf("%v: Description not `this is a frontend description`: %v", f.Name, f.Description)
+	}
+	if f.Disabled != "enabled" {
+		t.Errorf("%v: Disabled not enabled: %v", f.Name, f.Disabled)
+	}
+	if *f.ID != 123 {
+		t.Errorf("ID not 123: %v", *f.ID)
 	}
 
 	if f.EmailAlert == nil {

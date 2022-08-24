@@ -222,6 +222,18 @@ frontend:
       x-display-name: Idle Close On Response
     email_alert:
       $ref: "#/definitions/email_alert"
+    description:
+      type: string
+      x-display-name: Description
+    id:
+      type: integer
+      x-nullable: true
+    enabled:
+      type: string
+      enum: [enabled, disabled]
+    disabled:
+      type: string
+      enum: [enabled, disabled]
   additionalProperties: false
   example:
     name: test_frontend

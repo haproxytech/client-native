@@ -273,6 +273,9 @@ func TestGetDefaults(t *testing.T) { //nolint:gocognit,gocyclo
 	} else if *d.StatsOptions.StatsAuths[1].Passwd != "AdMiN1234" {
 		t.Errorf("StatsAuths 1 Passwd not AdMiN1234: %v", *d.StatsOptions.StatsAuths[1].Passwd)
 	}
+	if d.LoadServerStateFromFile != "global" {
+		t.Errorf("LoadServerStateFromFile not global: %v", d.LoadServerStateFromFile)
+	}
 
 	if d.EmailAlert == nil {
 		t.Error("EmailAlert is nil")

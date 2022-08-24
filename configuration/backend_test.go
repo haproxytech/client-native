@@ -455,6 +455,24 @@ func TestGetBackend(t *testing.T) {
 	if b.StatsOptions.StatsHTTPRequests[1].CondTest != "something" {
 		t.Errorf("%v: StatsHTTPRequests 1 CondTest not something: %v", b.Name, b.StatsOptions.StatsHTTPRequests[1].CondTest)
 	}
+	if b.LoadServerStateFromFile != "local" {
+		t.Errorf("%v: LoadServerStateFromFile not global: %v", b.Name, b.LoadServerStateFromFile)
+	}
+	if b.ServerStateFileName != "use-backend-name" {
+		t.Errorf("%v: ServerStateFileName not: %v", b.Name, b.ServerStateFileName)
+	}
+	if b.Description != "this is a backend description" {
+		t.Errorf("%v: Description not `this is a backend description`: %v", b.Name, b.Description)
+	}
+	if b.UseFcgiApp != "app-name" {
+		t.Errorf("%v: UseFcgiApp not app-name: %v", b.Name, b.UseFcgiApp)
+	}
+	if b.Enabled != "enabled" {
+		t.Errorf("%v: Enabled not enabled: %v", b.Name, b.Enabled)
+	}
+	if *b.ID != 456 {
+		t.Errorf("ID not 456: %v", *b.ID)
+	}
 
 	if b.EmailAlert == nil {
 		t.Error("EmailAlert is nil")

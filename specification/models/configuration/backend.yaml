@@ -284,6 +284,27 @@ backend:
       x-display-name: Srvtcpka Intvl
     email_alert:
       $ref: "#/definitions/email_alert"
+    load_server_state_from_file:
+      type: string
+      enum: [global, local, none]
+    server_state_file_name:
+      type: string
+      x-display-name: Server state file
+    description:
+      type: string
+      x-display-name: Description
+    id:
+      type: integer
+      x-nullable: true
+    enabled:
+      type: string
+      enum: [enabled, disabled]
+    disabled:
+      type: string
+      enum: [enabled, disabled]
+    use_fcgi_app:
+      type: string
+      x-display-name: FastCGI application
   additionalProperties: false
   example:
     name: test_backend

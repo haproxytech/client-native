@@ -638,4 +638,7 @@ global:
     unsetenv:
       type: string
       x-display-name: Removes environment variables specified in arguments
+    load_server_state_from_file:
+      type: string
+      enum: [global, local, none]
   additionalProperties: false
