@@ -29,8 +29,8 @@ func TestGetBinds(t *testing.T) {
 		t.Error(err.Error())
 	}
 
-	if len(binds) != 2 {
-		t.Errorf("%v binds returned, expected 2", len(binds))
+	if len(binds) != 3 {
+		t.Errorf("%v binds returned, expected 3", len(binds))
 	}
 
 	if v != version {
@@ -38,10 +38,10 @@ func TestGetBinds(t *testing.T) {
 	}
 
 	for _, l := range binds {
-		if l.Name != "webserv" && l.Name != "webserv2" {
-			t.Errorf("Expected only webserv or webserv2 binds, %v found", l.Name)
+		if l.Name != "webserv" && l.Name != "webserv2" && l.Name != "ipv6" {
+			t.Errorf("Expected only webserv,webserv2, or ipv6 binds, %v found", l.Name)
 		}
-		if l.Address != "192.168.1.1" {
+		if l.Address != "192.168.1.1" && l.Address != "2a01:c9c0:a3:8::3" {
 			t.Errorf("%v: Address not 192.168.1.1: %v", l.Name, l.Address)
 		}
 		if *l.Port != 80 && *l.Port != 8080 {

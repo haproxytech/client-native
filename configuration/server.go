@@ -796,12 +796,15 @@ func SerializeServer(s models.Server) types.Server {
 		Params: []params.ServerOption{},
 	}
 	if s.Port != nil {
-		server.Address = s.Address + ":" + strconv.FormatInt(*s.Port, 10)
+		if misc.IsIPv6(server.Address) {
+			server.Address = fmt.Sprintf("[%s]:%v", s.Address, strconv.FormatInt(*s.Port, 10))
+		} else {
+			server.Address = fmt.Sprintf("%s:%v", s.Address, strconv.FormatInt(*s.Port, 10))
+		}
 	} else {
 		server.Address = s.Address
 	}
 	server.Params = serializeServerParams(s.ServerParams)
-
 	return server
 }
 

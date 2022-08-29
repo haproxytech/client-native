@@ -52,15 +52,15 @@ func TestGetSites(t *testing.T) { //nolint:gocognit,gocyclo
 			if s.Service.HTTPConnectionMode != "httpclose" {
 				t.Errorf("%v: HTTPConnectionMode not httpclose: %v", s.Name, s.Service.HTTPConnectionMode)
 			}
-			if len(s.Service.Listeners) != 2 {
-				t.Errorf("%v: Got %v listeners, expected 2", s.Name, len(s.Service.Listeners))
+			if len(s.Service.Listeners) != 3 {
+				t.Errorf("%v: Got %v listeners, expected 3", s.Name, len(s.Service.Listeners))
 			}
 			for _, l := range s.Service.Listeners {
-				if l.Name != "webserv" && l.Name != "webserv2" {
+				if l.Name != "webserv" && l.Name != "webserv2" && l.Name != "ipv6" {
 					t.Errorf("Expected only webserv or webserv2 listeners, %v found", l.Name)
 				}
-				if l.Address != "192.168.1.1" {
-					t.Errorf("%v: Address not 192.168.1.1: %v", l.Name, l.Address)
+				if l.Address != "192.168.1.1" && l.Address != "2a01:c9c0:a3:8::3" {
+					t.Errorf("%v: Address not 192.168.1.1 or 2a01:c9c0:a3:8::3: %v", l.Name, l.Address)
 				}
 				if *l.Port != 80 && *l.Port != 8080 {
 					t.Errorf("%v: Port not 80 or 8080: %v", l.Name, *l.Port)
@@ -189,15 +189,15 @@ func TestGetSite(t *testing.T) { //nolint:gocognit,gocyclo
 	if s.Service.HTTPConnectionMode != "httpclose" {
 		t.Errorf("%v: HTTPConnectionMode not httpclose: %v", s.Name, s.Service.HTTPConnectionMode)
 	}
-	if len(s.Service.Listeners) != 2 {
-		t.Errorf("%v: Got %v listeners, expected 2", s.Name, len(s.Service.Listeners))
+	if len(s.Service.Listeners) != 3 {
+		t.Errorf("%v: Got %v listeners, expected 3", s.Name, len(s.Service.Listeners))
 	}
 	for _, l := range s.Service.Listeners {
-		if l.Name != "webserv" && l.Name != "webserv2" {
+		if l.Name != "webserv" && l.Name != "webserv2" && l.Name != "ipv6" {
 			t.Errorf("Expected only webserv or webserv2 listeners, %v found", l.Name)
 		}
-		if l.Address != "192.168.1.1" {
-			t.Errorf("%v: Address not 192.168.1.1: %v", l.Name, l.Address)
+		if l.Address != "192.168.1.1" && l.Address != "2a01:c9c0:a3:8::3" {
+			t.Errorf("%v: Address not 192.168.1.1 or 2a01:c9c0:a3:8::3: %v", l.Name, l.Address)
 		}
 		if *l.Port != 80 && *l.Port != 8080 {
 			t.Errorf("%v: Port not 80 or 8080: %v", l.Name, *l.Port)
