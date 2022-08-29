@@ -251,6 +251,7 @@ frontend test
   backlog 2048
   bind 192.168.1.1:80 name webserv
   bind 192.168.1.1:8080 name webserv2
+  bind [2a01:c9c0:a3:8::3]:80 name ipv6
   bind-process odd
   option httplog
   option dontlognull

@@ -18,6 +18,7 @@ package configuration
 import (
 	"errors"
 	"fmt"
+	"net"
 	"strconv"
 	"strings"
 
@@ -27,6 +28,7 @@ import (
 	"github.com/haproxytech/config-parser/v4/params"
 	"github.com/haproxytech/config-parser/v4/types"
 
+	"github.com/haproxytech/client-native/v4/misc"
 	"github.com/haproxytech/client-native/v4/models"
 )
 
@@ -201,40 +203,28 @@ func ParseBind(ondiskBind types.Bind) *models.Bind {
 	if strings.HasPrefix(ondiskBind.Path, "/") {
 		b.Address = ondiskBind.Path
 	} else {
-		addSlice := strings.Split(ondiskBind.Path, ":")
-		switch n := len(addSlice); {
-		case n == 0:
+		address, _ := misc.ParseAddress(ondiskBind.Path, true)
+		host, port, err := net.SplitHostPort(address)
+		if err != nil {
 			return nil
-		case n == 4: // :::443
-			b.Address = "::"
-			if addSlice[3] != "" {
-				p, err := strconv.ParseInt(addSlice[3], 10, 64)
-				if err == nil {
-					b.Port = &p
-				}
-			}
-		case n > 1:
-			b.Address = addSlice[0]
-			ports := strings.Split(addSlice[1], "-")
+		}
+		b.Address = host
 
-			// *:<port>
-			if ports[0] != "" {
-				port, err := strconv.ParseInt(ports[0], 10, 64)
-				if err == nil {
-					b.Port = &port
-				}
+		ports := strings.Split(port, "-")
+		// *:<port>
+		if ports[0] != "" {
+			port, err := strconv.ParseInt(ports[0], 10, 64)
+			if err == nil {
+				b.Port = &port
 			}
-			// *:<port-first>-<port-last>
-			if b.Port != nil && len(ports) == 2 {
-				portRangeEnd, err := strconv.ParseInt(ports[1], 10, 64)
-				// Deny inverted interval.
-				if err == nil && (*b.Port < portRangeEnd) {
-					b.PortRangeEnd = &portRangeEnd
-				}
+		}
+		// *:<port-first>-<port-last>
+		if b.Port != nil && len(ports) == 2 {
+			portRangeEnd, err := strconv.ParseInt(ports[1], 10, 64)
+			// Deny inverted interval.
+			if err == nil && (*b.Port < portRangeEnd) {
+				b.PortRangeEnd = &portRangeEnd
 			}
-		case n > 0:
-			b.Address = addSlice[0]
-
 		}
 	}
 	b.BindParams = parseBindParams(ondiskBind.Params)
@@ -402,15 +392,19 @@ func SerializeBind(b models.Bind) types.Bind {
 		Params: []params.BindOption{},
 	}
 	if b.Port != nil {
-		bind.Path = b.Address + ":" + strconv.FormatInt(*b.Port, 10)
+		portOrRange := strconv.FormatInt(*b.Port, 10)
 		if b.PortRangeEnd != nil {
-			bind.Path = bind.Path + "-" + strconv.FormatInt(*b.PortRangeEnd, 10)
+			portOrRange = fmt.Sprintf("%v-%v", portOrRange, strconv.FormatInt(*b.PortRangeEnd, 10))
+		}
+		if misc.IsIPv6(b.Address) {
+			bind.Path = fmt.Sprintf("[%s]:%v", b.Address, portOrRange)
+		} else {
+			bind.Path = fmt.Sprintf("%s:%v", b.Address, portOrRange)
 		}
 	} else {
 		bind.Path = b.Address
 	}
 	bind.Params = serializeBindParams(b.BindParams, bind.Path)
-
 	return bind
 }
 
