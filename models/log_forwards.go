@@ -31,7 +31,7 @@ import (
 
 // LogForwards Log Forwards
 //
-// HAProxy log forwards array
+// # HAProxy log forwards array
 //
 // swagger:model log_forwards
 type LogForwards []*LogForward

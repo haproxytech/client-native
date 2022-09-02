@@ -31,7 +31,7 @@ import (
 
 // Nameservers Nameservers
 //
-// Nameservers array
+// # Nameservers array
 //
 // swagger:model nameservers
 type Nameservers []*Nameserver

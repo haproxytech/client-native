@@ -31,7 +31,7 @@ import (
 
 // ProcessInfos HAProxy Information
 //
-// General HAProxy process information
+// # General HAProxy process information
 //
 // swagger:model process_infos
 type ProcessInfos []*ProcessInfo

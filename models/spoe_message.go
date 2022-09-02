@@ -32,7 +32,7 @@ import (
 
 // SpoeMessage SPOE message
 //
-// SPOE message section configuration
+// # SPOE message section configuration
 //
 // swagger:model spoe_message
 type SpoeMessage struct {

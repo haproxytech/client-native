@@ -31,7 +31,7 @@ import (
 
 // MailerEntry Mailer Entry
 //
-// Mailer entry of a Mailers section
+// # Mailer entry of a Mailers section
 //
 // swagger:model mailer_entry
 type MailerEntry struct {

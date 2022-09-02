@@ -31,7 +31,7 @@ import (
 
 // SpoeMessages SPOE Messages
 //
-// SPOE Messages of one scope in SPOE file
+// # SPOE Messages of one scope in SPOE file
 //
 // swagger:model spoe_messages
 type SpoeMessages []*SpoeMessage

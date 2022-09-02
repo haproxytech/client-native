@@ -31,7 +31,7 @@ import (
 
 // User User
 //
-// HAProxy userlist user
+// # HAProxy userlist user
 //
 // swagger:model user
 type User struct {

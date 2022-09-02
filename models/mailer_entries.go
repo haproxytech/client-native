@@ -31,7 +31,7 @@ import (
 
 // MailerEntries Mailer Entries
 //
-// HAProxy mailer entries
+// # HAProxy mailer entries
 //
 // swagger:model mailer_entries
 type MailerEntries []*MailerEntry

@@ -31,7 +31,7 @@ import (
 
 // NativeStats Stats Array
 //
-// HAProxy stats array
+// # HAProxy stats array
 //
 // swagger:model native_stats
 type NativeStats []*NativeStatsCollection

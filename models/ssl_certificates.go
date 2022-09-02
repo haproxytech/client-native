@@ -31,7 +31,7 @@ import (
 
 // SslCertificates SSL Files Array
 //
-// Array of ssl certificate files
+// # Array of ssl certificate files
 //
 // swagger:model ssl_certificates
 type SslCertificates []*SslCertificate

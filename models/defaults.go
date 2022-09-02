@@ -33,7 +33,7 @@ import (
 
 // Defaults Defaults
 //
-// HAProxy defaults configuration
+// # HAProxy defaults configuration
 //
 // swagger:model defaults
 type Defaults struct {

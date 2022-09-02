@@ -31,7 +31,7 @@ import (
 
 // ACLFilesEntries ACL Files Entries
 //
-// Array of entries of one runtime acl file
+// # Array of entries of one runtime acl file
 //
 // swagger:model acl_files_entries
 type ACLFilesEntries []*ACLFileEntry

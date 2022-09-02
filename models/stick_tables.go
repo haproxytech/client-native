@@ -31,7 +31,7 @@ import (
 
 // StickTables Stick Tables Array
 //
-// Array of runtime stick tables
+// # Array of runtime stick tables
 //
 // swagger:model stick_tables
 type StickTables []*StickTable

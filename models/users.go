@@ -31,7 +31,7 @@ import (
 
 // Users Users
 //
-// HAProxy userlist users array
+// # HAProxy userlist users array
 //
 // swagger:model users
 type Users []*User

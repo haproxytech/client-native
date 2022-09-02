@@ -31,7 +31,7 @@ import (
 
 // DgramBinds Dgram Bind
 //
-// HAProxy dgram bind array
+// # HAProxy dgram bind array
 //
 // swagger:model dgram_binds
 type DgramBinds []*DgramBind

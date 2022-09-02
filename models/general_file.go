@@ -29,7 +29,7 @@ import (
 
 // GeneralFile General use file
 //
-// General use file
+// # General use file
 //
 // swagger:model general_file
 type GeneralFile struct {
