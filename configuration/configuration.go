@@ -3102,6 +3102,9 @@ func (s *SectionObject) description(field reflect.Value) error {
 		field = field.Elem()
 	}
 	v := field.String()
+	if v == "" {
+		return nil
+	}
 	return s.set("description", types.StringC{Value: v})
 }
 
