@@ -29,32 +29,32 @@ import (
 	"github.com/go-openapi/validate"
 )
 
-// PeerEntry Peer Entry
+// MailerEntry Mailer Entry
 //
-// # Peer Entry from peers table
+// # Mailer entry of a Mailers section
 //
-// swagger:model peer_entry
-type PeerEntry struct {
+// swagger:model mailer_entry
+type MailerEntry struct {
 
 	// address
 	// Required: true
-	// Pattern: ^[^\s]+$
-	Address *string `json:"address"`
+	// Pattern: ^\S+$
+	Address string `json:"address"`
 
 	// name
 	// Required: true
-	// Pattern: ^[A-Za-z0-9-_.:]+$
+	// Pattern: ^[A-Za-z0-9-_]+$
 	Name string `json:"name"`
 
 	// port
 	// Required: true
 	// Maximum: 65535
 	// Minimum: 1
-	Port *int64 `json:"port"`
+	Port int64 `json:"port"`
 }
 
-// Validate validates this peer entry
-func (m *PeerEntry) Validate(formats strfmt.Registry) error {
+// Validate validates this mailer entry
+func (m *MailerEntry) Validate(formats strfmt.Registry) error {
 	var res []error
 
 	if err := m.validateAddress(formats); err != nil {
@@ -75,56 +75,56 @@ func (m *PeerEntry) Validate(formats strfmt.Registry) error {
 	return nil
 }
 
-func (m *PeerEntry) validateAddress(formats strfmt.Registry) error {
+func (m *MailerEntry) validateAddress(formats strfmt.Registry) error {
 
-	if err := validate.Required("address", "body", m.Address); err != nil {
+	if err := validate.RequiredString("address", "body", m.Address); err != nil {
 		return err
 	}
 
-	if err := validate.Pattern("address", "body", *m.Address, `^[^\s]+$`); err != nil {
+	if err := validate.Pattern("address", "body", m.Address, `^\S+$`); err != nil {
 		return err
 	}
 
 	return nil
 }
 
-func (m *PeerEntry) validateName(formats strfmt.Registry) error {
+func (m *MailerEntry) validateName(formats strfmt.Registry) error {
 
 	if err := validate.RequiredString("name", "body", m.Name); err != nil {
 		return err
 	}
 
-	if err := validate.Pattern("name", "body", m.Name, `^[A-Za-z0-9-_.:]+$`); err != nil {
+	if err := validate.Pattern("name", "body", m.Name, `^[A-Za-z0-9-_]+$`); err != nil {
 		return err
 	}
 
 	return nil
 }
 
-func (m *PeerEntry) validatePort(formats strfmt.Registry) error {
+func (m *MailerEntry) validatePort(formats strfmt.Registry) error {
 
-	if err := validate.Required("port", "body", m.Port); err != nil {
+	if err := validate.Required("port", "body", int64(m.Port)); err != nil {
 		return err
 	}
 
-	if err := validate.MinimumInt("port", "body", *m.Port, 1, false); err != nil {
+	if err := validate.MinimumInt("port", "body", m.Port, 1, false); err != nil {
 		return err
 	}
 
-	if err := validate.MaximumInt("port", "body", *m.Port, 65535, false); err != nil {
+	if err := validate.MaximumInt("port", "body", m.Port, 65535, false); err != nil {
 		return err
 	}
 
 	return nil
 }
 
-// ContextValidate validates this peer entry based on context it is used
-func (m *PeerEntry) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+// ContextValidate validates this mailer entry based on context it is used
+func (m *MailerEntry) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
 	return nil
 }
 
 // MarshalBinary interface implementation
-func (m *PeerEntry) MarshalBinary() ([]byte, error) {
+func (m *MailerEntry) MarshalBinary() ([]byte, error) {
 	if m == nil {
 		return nil, nil
 	}
@@ -132,8 +132,8 @@ func (m *PeerEntry) MarshalBinary() ([]byte, error) {
 }
 
 // UnmarshalBinary interface implementation
-func (m *PeerEntry) UnmarshalBinary(b []byte) error {
-	var res PeerEntry
+func (m *MailerEntry) UnmarshalBinary(b []byte) error {
+	var res MailerEntry
 	if err := swag.ReadJSON(b, &res); err != nil {
 		return err
 	}

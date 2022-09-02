@@ -31,7 +31,7 @@ import (
 
 // Maps Map Files Array
 //
-// Array of runtime map files
+// # Array of runtime map files
 //
 // swagger:model maps
 type Maps []*Map

@@ -31,7 +31,7 @@ import (
 
 // LogForward Log Forward
 //
-// HAProxy log forward configuration
+// # HAProxy log forward configuration
 //
 // swagger:model log_forward
 type LogForward struct {

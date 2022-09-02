@@ -31,7 +31,7 @@ import (
 
 // StickTableEntries Stick Tables Entries
 //
-// Entries of one runtime stick table
+// # Entries of one runtime stick table
 //
 // swagger:model stick_table_entries
 type StickTableEntries []*StickTableEntry

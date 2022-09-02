@@ -29,7 +29,7 @@ import (
 
 // ACLFile ACL File
 //
-// ACL File
+// # ACL File
 //
 // swagger:model acl_file
 type ACLFile struct {

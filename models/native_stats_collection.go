@@ -31,7 +31,7 @@ import (
 
 // NativeStatsCollection Stats collection
 //
-// Stats from one runtime API
+// # Stats from one runtime API
 //
 // swagger:model native_stats_collection
 type NativeStatsCollection struct {

@@ -31,7 +31,7 @@ import (
 
 // Groups Groups
 //
-// HAProxy userlist groups array
+// # HAProxy userlist groups array
 //
 // swagger:model groups
 type Groups []*Group

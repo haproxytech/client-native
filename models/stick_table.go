@@ -33,7 +33,7 @@ import (
 
 // StickTable Stick Table
 //
-// Stick Table Information
+// # Stick Table Information
 //
 // swagger:model stick_table
 type StickTable struct {

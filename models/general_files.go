@@ -31,7 +31,7 @@ import (
 
 // GeneralFiles General Files Array
 //
-// Array of general use files
+// # Array of general use files
 //
 // swagger:model general_files
 type GeneralFiles []*GeneralFile

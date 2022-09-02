@@ -32,7 +32,7 @@ import (
 
 // Ring Ring
 //
-// HAProxy ring configuration
+// # HAProxy ring configuration
 //
 // swagger:model ring
 type Ring struct {

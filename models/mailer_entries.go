@@ -29,15 +29,15 @@ import (
 	"github.com/go-openapi/swag"
 )
 
-// SpoeGroups SPOE Groups
+// MailerEntries Mailer Entries
 //
-// # SPOE Groups of one scope in SPOE file
+// # HAProxy mailer entries
 //
-// swagger:model spoe_groups
-type SpoeGroups []*SpoeGroup
+// swagger:model mailer_entries
+type MailerEntries []*MailerEntry
 
-// Validate validates this spoe groups
-func (m SpoeGroups) Validate(formats strfmt.Registry) error {
+// Validate validates this mailer entries
+func (m MailerEntries) Validate(formats strfmt.Registry) error {
 	var res []error
 
 	for i := 0; i < len(m); i++ {
@@ -64,8 +64,8 @@ func (m SpoeGroups) Validate(formats strfmt.Registry) error {
 	return nil
 }
 
-// ContextValidate validate this spoe groups based on the context it is used
-func (m SpoeGroups) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+// ContextValidate validate this mailer entries based on the context it is used
+func (m MailerEntries) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
 	var res []error
 
 	for i := 0; i < len(m); i++ {

@@ -32,7 +32,7 @@ import (
 
 // SpoeAgent SPOE agent
 //
-// SPOE agent configuration
+// # SPOE agent configuration
 //
 // swagger:model spoe_agent
 type SpoeAgent struct {

@@ -31,7 +31,7 @@ import (
 
 // Userlist Userlist
 //
-// HAProxy configuration of access control
+// # HAProxy configuration of access control
 //
 // swagger:model userlist
 type Userlist struct {

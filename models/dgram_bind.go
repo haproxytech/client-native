@@ -31,7 +31,7 @@ import (
 
 // DgramBind Dgram Bind
 //
-// HAProxy log forward dgram bind configuration
+// # HAProxy log forward dgram bind configuration
 //
 // swagger:model dgram_bind
 type DgramBind struct {
