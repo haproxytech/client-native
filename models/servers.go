@@ -31,7 +31,7 @@ import (
 
 // Servers Servers
 //
-// HAProxy backend servers array
+// # HAProxy backend servers array
 //
 // swagger:model servers
 type Servers []*Server

@@ -33,7 +33,7 @@ import (
 
 // Global Global
 //
-// HAProxy global configuration
+// # HAProxy global configuration
 //
 // swagger:model global
 type Global struct {

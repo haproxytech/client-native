@@ -31,7 +31,7 @@ import (
 
 // RuntimeServers HAProxy Runtime Servers Array
 //
-// HAProxy runtime servers array
+// # HAProxy runtime servers array
 //
 // swagger:model runtime_servers
 type RuntimeServers []*RuntimeServer

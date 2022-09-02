@@ -31,7 +31,7 @@ import (
 
 // SpoeGroups SPOE Groups
 //
-// SPOE Groups of one scope in SPOE file
+// # SPOE Groups of one scope in SPOE file
 //
 // swagger:model spoe_groups
 type SpoeGroups []*SpoeGroup

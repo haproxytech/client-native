@@ -31,7 +31,7 @@ import (
 
 // Endpoints Endpoints Array
 //
-// Collection of endpoints
+// # Collection of endpoints
 //
 // swagger:model endpoints
 type Endpoints []*Endpoint

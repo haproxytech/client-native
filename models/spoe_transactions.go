@@ -31,7 +31,7 @@ import (
 
 // SpoeTransactions SPOE Transactions array
 //
-// SPOE Configuration transactions array
+// # SPOE Configuration transactions array
 //
 // swagger:model spoe_transactions
 type SpoeTransactions []*SpoeTransaction

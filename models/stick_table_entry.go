@@ -29,7 +29,7 @@ import (
 
 // StickTableEntry Stick Table Entry
 //
-// One entry in stick table
+// # One entry in stick table
 //
 // swagger:model stick_table_entry
 type StickTableEntry struct {

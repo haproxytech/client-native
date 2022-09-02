@@ -31,7 +31,7 @@ import (
 
 // MapEntries Maps Entries
 //
-// Entries of one runtime map
+// # Entries of one runtime map
 //
 // swagger:model map_entries
 type MapEntries []*MapEntry

@@ -36,7 +36,6 @@ import (
 // configure simple HAProxy configurations, for more advanced options use /haproxy/configuration
 // endpoints.
 //
-//
 // swagger:model sites
 type Sites []*Site
 

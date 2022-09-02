@@ -31,7 +31,7 @@ import (
 
 // PeerEntry Peer Entry
 //
-// Peer Entry from peers table
+// # Peer Entry from peers table
 //
 // swagger:model peer_entry
 type PeerEntry struct {

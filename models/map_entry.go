@@ -31,7 +31,7 @@ import (
 
 // MapEntry One Map Entry
 //
-// One Map Entry
+// # One Map Entry
 //
 // swagger:model map_entry
 type MapEntry struct {
