@@ -234,6 +234,11 @@ frontend:
     disabled:
       type: string
       enum: [enabled, disabled]
+    error_files:
+      type: array
+      x-go-name: ErrorFiles
+      items:
+        $ref: "#/definitions/errorfile"
   additionalProperties: false
   example:
     name: test_frontend

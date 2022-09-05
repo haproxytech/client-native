@@ -392,6 +392,9 @@ frontend test
   description this is a frontend description
   disabled
   id 123
+  errorfile 403 /test/403.html
+  errorfile 500 /test/500.html
+  errorfile 429 /test/429.html
 
 frontend test_2
   mode http
@@ -524,6 +527,9 @@ backend test
   use-fcgi-app app-name
   enabled
   id 456
+  errorfile 403 /test/403.html
+  errorfile 500 /test/500.html
+  errorfile 429 /test/429.html
 
 peers mycluster
   peer hapee 192.168.1.1:1023

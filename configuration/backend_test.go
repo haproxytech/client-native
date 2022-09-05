@@ -473,7 +473,27 @@ func TestGetBackend(t *testing.T) {
 	if *b.ID != 456 {
 		t.Errorf("ID not 456: %v", *b.ID)
 	}
-
+	if len(b.ErrorFiles) != 3 {
+		t.Errorf("ErrorFiles not 3: %v", len(b.ErrorFiles))
+	} else {
+		for _, ef := range b.ErrorFiles {
+			if ef.Code == 403 {
+				if ef.File != "/test/403.html" {
+					t.Errorf("File for %v not 403: %v", ef.Code, ef.File)
+				}
+			}
+			if ef.Code == 500 {
+				if ef.File != "/test/500.html" {
+					t.Errorf("File for %v not 500: %v", ef.Code, ef.File)
+				}
+			}
+			if ef.Code == 429 {
+				if ef.File != "/test/429.html" {
+					t.Errorf("File for %v not 429: %v", ef.Code, ef.File)
+				}
+			}
+		}
+	}
 	if b.EmailAlert == nil {
 		t.Error("EmailAlert is nil")
 	} else if *b.EmailAlert.From != "prod01@example.com" {

@@ -380,6 +380,27 @@ func TestGetFrontend(t *testing.T) {
 	if *f.ID != 123 {
 		t.Errorf("ID not 123: %v", *f.ID)
 	}
+	if len(f.ErrorFiles) != 3 {
+		t.Errorf("ErrorFiles not 3: %v", len(f.ErrorFiles))
+	} else {
+		for _, ef := range f.ErrorFiles {
+			if ef.Code == 403 {
+				if ef.File != "/test/403.html" {
+					t.Errorf("File for %v not 403: %v", ef.Code, ef.File)
+				}
+			}
+			if ef.Code == 500 {
+				if ef.File != "/test/500.html" {
+					t.Errorf("File for %v not 500: %v", ef.Code, ef.File)
+				}
+			}
+			if ef.Code == 429 {
+				if ef.File != "/test/429.html" {
+					t.Errorf("File for %v not 429: %v", ef.Code, ef.File)
+				}
+			}
+		}
+	}
 
 	if f.EmailAlert == nil {
 		t.Errorf("EmailAlert is nil")

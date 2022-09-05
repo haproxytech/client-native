@@ -23,6 +23,7 @@ package models
 import (
 	"context"
 	"encoding/json"
+	"strconv"
 
 	"github.com/go-openapi/errors"
 	"github.com/go-openapi/strfmt"
@@ -37,6 +38,9 @@ import (
 //
 // swagger:model frontend
 type Frontend struct {
+
+	// error files
+	ErrorFiles []*Errorfile `json:"error_files"`
 
 	// accept invalid http request
 	// Enum: [enabled disabled]
@@ -248,6 +252,10 @@ type Frontend struct {
 func (m *Frontend) Validate(formats strfmt.Registry) error {
 	var res []error
 
+	if err := m.validateErrorFiles(formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.validateAcceptInvalidHTTPRequest(formats); err != nil {
 		res = append(res, err)
 	}
@@ -411,6 +419,32 @@ func (m *Frontend) Validate(formats strfmt.Registry) error {
 	if len(res) > 0 {
 		return errors.CompositeValidationError(res...)
 	}
+	return nil
+}
+
+func (m *Frontend) validateErrorFiles(formats strfmt.Registry) error {
+	if swag.IsZero(m.ErrorFiles) { // not required
+		return nil
+	}
+
+	for i := 0; i < len(m.ErrorFiles); i++ {
+		if swag.IsZero(m.ErrorFiles[i]) { // not required
+			continue
+		}
+
+		if m.ErrorFiles[i] != nil {
+			if err := m.ErrorFiles[i].Validate(formats); err != nil {
+				if ve, ok := err.(*errors.Validation); ok {
+					return ve.ValidateName("error_files" + "." + strconv.Itoa(i))
+				} else if ce, ok := err.(*errors.CompositeError); ok {
+					return ce.ValidateName("error_files" + "." + strconv.Itoa(i))
+				}
+				return err
+			}
+		}
+
+	}
+
 	return nil
 }
 
@@ -1816,6 +1850,10 @@ func (m *Frontend) validateTcpka(formats strfmt.Registry) error {
 func (m *Frontend) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
 	var res []error
 
+	if err := m.contextValidateErrorFiles(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.contextValidateCompression(ctx, formats); err != nil {
 		res = append(res, err)
 	}
@@ -1847,6 +1885,26 @@ func (m *Frontend) ContextValidate(ctx context.Context, formats strfmt.Registry)
 	if len(res) > 0 {
 		return errors.CompositeValidationError(res...)
 	}
+	return nil
+}
+
+func (m *Frontend) contextValidateErrorFiles(ctx context.Context, formats strfmt.Registry) error {
+
+	for i := 0; i < len(m.ErrorFiles); i++ {
+
+		if m.ErrorFiles[i] != nil {
+			if err := m.ErrorFiles[i].ContextValidate(ctx, formats); err != nil {
+				if ve, ok := err.(*errors.Validation); ok {
+					return ve.ValidateName("error_files" + "." + strconv.Itoa(i))
+				} else if ce, ok := err.(*errors.CompositeError); ok {
+					return ce.ValidateName("error_files" + "." + strconv.Itoa(i))
+				}
+				return err
+			}
+		}
+
+	}
+
 	return nil
 }
 

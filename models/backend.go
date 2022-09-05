@@ -23,6 +23,7 @@ package models
 import (
 	"context"
 	"encoding/json"
+	"strconv"
 
 	"github.com/go-openapi/errors"
 	"github.com/go-openapi/strfmt"
@@ -37,6 +38,9 @@ import (
 //
 // swagger:model backend
 type Backend struct {
+
+	// error files
+	ErrorFiles []*Errorfile `json:"error_files"`
 
 	// abortonclose
 	// Enum: [enabled disabled]
@@ -299,6 +303,10 @@ type Backend struct {
 func (m *Backend) Validate(formats strfmt.Registry) error {
 	var res []error
 
+	if err := m.validateErrorFiles(formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.validateAbortonclose(formats); err != nil {
 		res = append(res, err)
 	}
@@ -526,6 +534,32 @@ func (m *Backend) Validate(formats strfmt.Registry) error {
 	if len(res) > 0 {
 		return errors.CompositeValidationError(res...)
 	}
+	return nil
+}
+
+func (m *Backend) validateErrorFiles(formats strfmt.Registry) error {
+	if swag.IsZero(m.ErrorFiles) { // not required
+		return nil
+	}
+
+	for i := 0; i < len(m.ErrorFiles); i++ {
+		if swag.IsZero(m.ErrorFiles[i]) { // not required
+			continue
+		}
+
+		if m.ErrorFiles[i] != nil {
+			if err := m.ErrorFiles[i].Validate(formats); err != nil {
+				if ve, ok := err.(*errors.Validation); ok {
+					return ve.ValidateName("error_files" + "." + strconv.Itoa(i))
+				} else if ce, ok := err.(*errors.CompositeError); ok {
+					return ce.ValidateName("error_files" + "." + strconv.Itoa(i))
+				}
+				return err
+			}
+		}
+
+	}
+
 	return nil
 }
 
@@ -2395,6 +2429,10 @@ func (m *Backend) validateTransparent(formats strfmt.Registry) error {
 func (m *Backend) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
 	var res []error
 
+	if err := m.contextValidateErrorFiles(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.contextValidateBalance(ctx, formats); err != nil {
 		res = append(res, err)
 	}
@@ -2458,6 +2496,26 @@ func (m *Backend) ContextValidate(ctx context.Context, formats strfmt.Registry) 
 	if len(res) > 0 {
 		return errors.CompositeValidationError(res...)
 	}
+	return nil
+}
+
+func (m *Backend) contextValidateErrorFiles(ctx context.Context, formats strfmt.Registry) error {
+
+	for i := 0; i < len(m.ErrorFiles); i++ {
+
+		if m.ErrorFiles[i] != nil {
+			if err := m.ErrorFiles[i].ContextValidate(ctx, formats); err != nil {
+				if ve, ok := err.(*errors.Validation); ok {
+					return ve.ValidateName("error_files" + "." + strconv.Itoa(i))
+				} else if ce, ok := err.(*errors.CompositeError); ok {
+					return ce.ValidateName("error_files" + "." + strconv.Itoa(i))
+				}
+				return err
+			}
+		}
+
+	}
+
 	return nil
 }
 

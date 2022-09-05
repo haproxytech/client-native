@@ -305,6 +305,11 @@ backend:
     use_fcgi_app:
       type: string
       x-display-name: FastCGI application
+    error_files:
+      type: array
+      x-go-name: ErrorFiles
+      items:
+        $ref: "#/definitions/errorfile"
   additionalProperties: false
   example:
     name: test_backend

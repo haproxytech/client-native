@@ -1966,6 +1966,11 @@ definitions:
           - enabled
           - disabled
           type: string
+        error_files:
+          items:
+            $ref: '#/definitions/errorfile'
+          type: array
+          x-go-name: ErrorFiles
         forwardfor:
           $ref: '#/definitions/forwardfor'
           x-dependency:
@@ -2267,6 +2272,11 @@ definitions:
           - enabled
           - disabled
           type: string
+        error_files:
+          items:
+            $ref: '#/definitions/errorfile'
+          type: array
+          x-go-name: ErrorFiles
         external_check:
           enum:
           - enabled

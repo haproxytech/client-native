@@ -1025,21 +1025,22 @@ func (s *SectionParser) errorFiles() interface{} {
 		return nil
 	}
 	d := data.([]types.ErrorFile)
-	if s.Section == parser.Defaults {
-		dEFiles := []*models.Errorfile{}
-		for _, ef := range d {
-			dEFile := &models.Errorfile{}
-			code, err := strconv.ParseInt(ef.Code, 10, 64)
-			if err != nil {
-				continue
-			}
-			dEFile.Code = code
-			dEFile.File = ef.File
-			dEFiles = append(dEFiles, dEFile)
+
+	dEFiles := []*models.Errorfile{}
+	for _, ef := range d {
+		dEFile := &models.Errorfile{}
+		code, err := strconv.ParseInt(ef.Code, 10, 64)
+		if err != nil {
+			continue
 		}
-		return dEFiles
+		dEFile.Code = code
+		dEFile.File = ef.File
+		dEFiles = append(dEFiles, dEFile)
 	}
-	return nil
+	if len(dEFiles) == 0 {
+		return nil
+	}
+	return dEFiles
 }
 
 func (s *SectionParser) hashType() interface{} {
@@ -2590,24 +2591,22 @@ func (s *SectionObject) loadServerStateFromFile(field reflect.Value) error {
 }
 
 func (s *SectionObject) errorFiles(field reflect.Value) error {
-	if s.Section == parser.Defaults {
-		if valueIsNil(field) {
-			if err := s.set("errorfile", nil); err != nil {
-				return err
-			}
-			return nil
-		}
-		efs, ok := field.Interface().([]*models.Errorfile)
-		if !ok {
-			return nil
-		}
-		errorFiles := []types.ErrorFile{}
-		for _, ef := range efs {
-			errorFiles = append(errorFiles, types.ErrorFile{Code: strconv.FormatInt(ef.Code, 10), File: ef.File})
-		}
-		if err := s.set("errorfile", errorFiles); err != nil {
+	if valueIsNil(field) {
+		if err := s.set("errorfile", nil); err != nil {
 			return err
 		}
+		return nil
+	}
+	efs, ok := field.Interface().([]*models.Errorfile)
+	if !ok {
+		return nil
+	}
+	errorFiles := []types.ErrorFile{}
+	for _, ef := range efs {
+		errorFiles = append(errorFiles, types.ErrorFile{Code: strconv.FormatInt(ef.Code, 10), File: ef.File})
+	}
+	if err := s.set("errorfile", errorFiles); err != nil {
+		return err
 	}
 	return nil
 }
