@@ -3093,6 +3093,9 @@ func (s *SectionObject) serverStateFileName(field reflect.Value) error {
 		field = field.Elem()
 	}
 	v := field.String()
+	if v == "" {
+		return nil
+	}
 	return s.set("server-state-file-name", types.StringC{Value: v})
 }
 
