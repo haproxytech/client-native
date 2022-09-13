@@ -157,3 +157,65 @@ consul:
     address: 127.0.0.1
     port: 90
     retry_timeout: 10
+
+nomad:
+  title: Nomad server
+  description: Nomad server configuration
+  type: object
+  required: [address, port, enabled, retry_timeout]
+  properties:
+    id:
+      type: string
+      x-nullable: true
+      pattern: '^[^\s]+$'
+      description: Auto generated ID.
+    address:
+      type: string
+      pattern: '^[^\s]+$'
+    port:
+      type: integer
+      minimum: 1
+      maximum: 65535
+    secret_id:
+      type: string
+      pattern: '^[^\s]+$'
+    enabled:
+      type: boolean
+    retry_timeout:
+      type: integer
+      minimum: 1
+      description: Duration in seconds in-between data pulling requests to the nomad server
+    allowlist:
+      type: array
+      items:
+        type: string
+        pattern: '^[^\s]+$'
+    denylist:
+      type: array
+      items:
+        type: string
+        pattern: '^[^\s]+$'
+    server_slots_base:
+      type: integer
+      default: 10
+    server_slots_growth_type:
+      type: string
+      enum: [linear, exponential]
+      default: exponential
+    server_slots_growth_increment:
+      type: integer
+    description:
+      type: string
+    name:
+      type: string
+    namespace:
+      type: string
+  additionalProperties: false
+  example:
+    id: "0"
+    enabled: true
+    address: 127.0.0.1
+    port: 4646
+    retry_timeout: 10a
+    service_allowlist: []
+    service_denylist: []

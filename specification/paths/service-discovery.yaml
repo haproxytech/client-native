@@ -229,3 +229,117 @@ consul_one:
         $ref: '#/responses/NotFound'
       'default':
         $ref: '#/responses/DefaultError'
+nomad:
+  get:
+    summary: Return an array of all configured Nomad servers
+    description: Returns all configured Nomad servers.
+    operationId: getNomads
+    tags:
+      - ServiceDiscovery
+    responses:
+      '200':
+        description: Successful operation
+        schema:
+          type: object
+          required:
+            - data
+          properties:
+            data:
+              $ref: "#/definitions/nomads"
+      'default':
+        $ref: '#/responses/DefaultError'
+  post:
+    summary: Add a new Nomad server
+    description: Adds a new Nomad server.
+    operationId: createNomad
+    tags:
+      - ServiceDiscovery
+    parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/nomad'
+    responses:
+      '201':
+        description: Nomad created
+        schema:
+          $ref: '#/definitions/nomad'
+      '409':
+        $ref: '#/responses/AlreadyExists'
+      '400':
+        $ref: '#/responses/BadRequest'
+      'default':
+        $ref: '#/responses/DefaultError'
+nomad_one:
+  get:
+    summary: Return one Nomad server
+    description: Returns one Nomad server configuration by it's id.
+    operationId: getNomad
+    tags:
+      - ServiceDiscovery
+    parameters:
+      - name: id
+        in: path
+        description: Nomad server id
+        required: true
+        type: string
+    responses:
+      '200':
+        description: Successful operation
+        schema:
+          type: object
+          properties:
+            data:
+              $ref: "#/definitions/nomad"
+      '404':
+        $ref: '#/responses/NotFound'
+      'default':
+        $ref: '#/responses/DefaultError'
+  put:
+    summary: Replace a Nomad server
+    description: Replaces a Nomad server configuration by it's id.
+    operationId: replaceNomad
+    tags:
+      - ServiceDiscovery
+    parameters:
+      - name: id
+        in: path
+        description: Nomad Index
+        required: true
+        type: string
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/nomad'
+    responses:
+      '200':
+        description: Nomad server replaced
+        schema:
+          $ref: '#/definitions/nomad'
+      '400':
+        $ref: '#/responses/BadRequest'
+      '404':
+        $ref: '#/responses/NotFound'
+      'default':
+        $ref: '#/responses/DefaultError'
+  delete:
+    summary: Delete a Nomad server
+    description: Deletes a Nomad server configuration by it's id.
+    operationId: deleteNomad
+    tags:
+      - ServiceDiscovery
+    parameters:
+      - name: id
+        in: path
+        description: Nomad server Index
+        required: true
+        type: string
+    responses:
+      '204':
+        description: Nomad server deleted
+      '404':
+        $ref: '#/responses/NotFound'
+      'default':
+        $ref: '#/responses/DefaultError'
