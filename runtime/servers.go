@@ -25,6 +25,12 @@ import (
 	"github.com/haproxytech/client-native/v4/models"
 )
 
+// AddServer adds a new server to a backend
+func (s *SingleRuntime) AddServer(backend, name, attributes string) error {
+	cmd := fmt.Sprintf("add server %s/%s %s", backend, name, attributes)
+	return s.Execute(cmd)
+}
+
 // SetServerAddr set ip [port] for server
 func (s *SingleRuntime) SetServerAddr(backend, server string, ip string, port int) error {
 	var cmd string

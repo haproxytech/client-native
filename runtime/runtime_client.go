@@ -184,6 +184,23 @@ func (c *client) SetFrontendMaxConn(frontend string, maxconn int) error {
 	return nil
 }
 
+// AddServer adds a new server to a backend
+func (c *client) AddServer(backend, name, attributes string) error {
+	if len(c.runtimes) == 0 {
+		return fmt.Errorf("no valid runtimes found")
+	}
+	if !c.IsVersionBiggerOrEqual(HAProxyVersion{Major: 2, Minor: 6}) {
+		return fmt.Errorf("operation not available with this version of HAProxy")
+	}
+	for _, runtime := range c.runtimes {
+		err := runtime.AddServer(backend, name, attributes)
+		if err != nil {
+			return fmt.Errorf("%s %w", runtime.socketPath, err)
+		}
+	}
+	return nil
+}
+
 // SetServerAddr set ip [port] for server
 func (c *client) SetServerAddr(backend, server string, ip string, port int) error {
 	if len(c.runtimes) == 0 {

@@ -59,6 +59,8 @@ type Maps interface {
 }
 
 type Servers interface {
+	// AddServer adds a new server to a backend
+	AddServer(backend, name, attributes string) error
 	// SetServerAddr set ip [port] for server
 	SetServerAddr(backend, server string, ip string, port int) error
 	// SetServerState set state for server
