@@ -31,6 +31,12 @@ func (s *SingleRuntime) AddServer(backend, name, attributes string) error {
 	return s.Execute(cmd)
 }
 
+// DeleteServer removes a server from a backend
+func (s *SingleRuntime) DeleteServer(backend, name string) error {
+	cmd := fmt.Sprintf("del server %s/%s", backend, name)
+	return s.Execute(cmd)
+}
+
 // SetServerAddr set ip [port] for server
 func (s *SingleRuntime) SetServerAddr(backend, server string, ip string, port int) error {
 	var cmd string
