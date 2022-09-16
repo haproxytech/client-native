@@ -6646,6 +6646,351 @@ definitions:
     type: array
     items:
       $ref: "#/definitions/reload"
+  runtime_add_server:
+      description: Settable properties when adding a new server using HAProxy's runtime.
+      properties:
+        address:
+          pattern: ^[^\s]+$
+          readOnly: true
+          type: string
+          x-nullable: false
+        agent-addr:
+          pattern: ^[^\s]+$
+          type: string
+        agent-check:
+          enum:
+          - enabled
+          - disabled
+          type: string
+          x-dependency:
+            agent-port:
+              required: true
+        agent-inter:
+          type: integer
+          x-nullable: true
+        agent-port:
+          maximum: 65535
+          minimum: 1
+          type: integer
+          x-nullable: true
+        agent-send:
+          type: string
+        allow_0rtt:
+          type: boolean
+        alpn:
+          pattern: ^[^\s]+$
+          type: string
+          x-display-name: ALPN Protocols
+        backup:
+          enum:
+          - enabled
+          - disabled
+          type: string
+        check:
+          enum:
+          - enabled
+          - disabled
+          type: string
+        check-send-proxy:
+          enum:
+          - enabled
+          - disabled
+          type: string
+        check-sni:
+          pattern: ^[^\s]+$
+          type: string
+        check-ssl:
+          enum:
+          - enabled
+          - disabled
+          type: string
+        check_alpn:
+          pattern: ^[^\s]+$
+          type: string
+          x-display-name: Protocols
+        check_proto:
+          pattern: ^[^\s]+$
+          type: string
+          x-display-name: Name
+        check_via_socks4:
+          enum:
+          - enabled
+          - disabled
+          type: string
+        ciphers:
+          type: string
+          x-dependency:
+            ssl:
+              value: enabled
+        ciphersuites:
+          type: string
+          x-dependency:
+            ssl:
+              value: enabled
+        crl_file:
+          type: string
+          x-dependency:
+            ssl:
+              value: enabled
+        downinter:
+          type: integer
+          x-nullable: true
+        error_limit:
+          type: integer
+          x-display-name: Error count
+        fall:
+          type: integer
+          x-display-name: Nr. of consecutive failed checks
+          x-nullable: true
+        fastinter:
+          type: integer
+          x-nullable: true
+        force_sslv3:
+          enum:
+          - enabled
+          - disabled
+          type: string
+        force_tlsv10:
+          enum:
+          - enabled
+          - disabled
+          type: string
+        force_tlsv11:
+          enum:
+          - enabled
+          - disabled
+          type: string
+        force_tlsv12:
+          enum:
+          - enabled
+          - disabled
+          type: string
+        force_tlsv13:
+          enum:
+          - enabled
+          - disabled
+          type: string
+        id:
+          readOnly: true
+          type: string
+        inter:
+          type: integer
+          x-nullable: true
+        maintenance:
+          enum:
+          - enabled
+          - disabled
+          type: string
+        maxconn:
+          type: integer
+          x-display-name: Max Concurrent Connections
+          x-nullable: true
+        maxqueue:
+          type: integer
+          x-display-name: Max Number of Connections
+          x-nullable: true
+        minconn:
+          type: integer
+          x-nullable: true
+        name:
+          readOnly: true
+          type: string
+        no_sslv3:
+          enum:
+          - enabled
+          - disabled
+          type: string
+        no_tlsv10:
+          enum:
+          - enabled
+          - disabled
+          type: string
+        no_tlsv11:
+          enum:
+          - enabled
+          - disabled
+          type: string
+        no_tlsv12:
+          enum:
+          - enabled
+          - disabled
+          type: string
+        no_tlsv13:
+          enum:
+          - enabled
+          - disabled
+          type: string
+        npn:
+          type: string
+          x-dependency:
+            ssl:
+              value: enabled
+        observe:
+          enum:
+          - layer4
+          - layer7
+          type: string
+          x-dependency:
+            ssl:
+              value: enabled
+        on-error:
+          enum:
+          - fastinter
+          - fail-check
+          - sudden-death
+          - mark-down
+          type: string
+        on-marked-down:
+          enum:
+          - shutdown-sessions
+          type: string
+        on-marked-up:
+          enum:
+          - shutdown-backup-sessions
+          type: string
+        pool_low_conn:
+          type: integer
+          x-nullable: true
+        pool_max_conn:
+          type: integer
+          x-nullable: true
+        pool_purge_delay:
+          type: integer
+          x-nullable: true
+        port:
+          maximum: 65535
+          minimum: 1
+          readOnly: true
+          type: integer
+          x-nullable: true
+        proto:
+          pattern: ^[^\s]+$
+          type: string
+        proxy-v2-options:
+          items:
+            enum:
+            - ssl
+            - cert-cn
+            - ssl-cipher
+            - cert-sig
+            - cert-key
+            - authority
+            - crc32c
+            - unique-id
+            type: string
+          type: array
+        rise:
+          type: integer
+          x-nullable: true
+        send-proxy:
+          enum:
+          - enabled
+          - disabled
+          type: string
+        send-proxy-v2:
+          enum:
+          - enabled
+          - disabled
+          type: string
+        send_proxy_v2_ssl:
+          enum:
+          - enabled
+          - disabled
+          type: string
+        send_proxy_v2_ssl_cn:
+          enum:
+          - enabled
+          - disabled
+          type: string
+        slowstart:
+          type: integer
+          x-nullable: true
+        sni:
+          pattern: ^[^\s]+$
+          type: string
+        source:
+          type: string
+        ssl:
+          enum:
+          - enabled
+          - disabled
+          type: string
+        ssl_cafile:
+          pattern: ^[^\s]+$
+          type: string
+          x-dependency:
+            ssl:
+              value: enabled
+          x-display-name: SSL CA File
+        ssl_certificate:
+          pattern: ^[^\s]+$
+          type: string
+          x-dependency:
+            ssl:
+              value: enabled
+        ssl_max_ver:
+          enum:
+          - SSLv3
+          - TLSv1.0
+          - TLSv1.1
+          - TLSv1.2
+          - TLSv1.3
+          type: string
+        ssl_min_ver:
+          enum:
+          - SSLv3
+          - TLSv1.0
+          - TLSv1.1
+          - TLSv1.2
+          - TLSv1.3
+          type: string
+        ssl_reuse:
+          enum:
+          - enabled
+          - disabled
+          type: string
+        tfo:
+          enum:
+          - enabled
+          - disabled
+          type: string
+        tls_tickets:
+          enum:
+          - enabled
+          - disabled
+          type: string
+          x-dependency:
+            ssl:
+              value: enabled
+        track:
+          type: string
+        verify:
+          enum:
+          - none
+          - required
+          type: string
+          x-dependency:
+            ssl:
+              value: enabled
+        verifyhost:
+          type: string
+          x-dependency:
+            ssl:
+              value: enabled
+            verify:
+              value: required
+        weight:
+          type: integer
+          x-nullable: true
+        ws:
+          enum:
+          - auto
+          - h1
+          - h2
+          type: string
+          x-display-name: Relaying websocket stream protocol
+      title: Runtime Add Server
+      type: object
   runtime_server:
       description: Runtime transient server properties
       example:
@@ -15602,6 +15947,32 @@ paths:
         tags:
         - Server
   /services/haproxy/runtime/servers/{name}:
+      delete:
+        description: Deletes a server from the specified backend
+        operationId: deleteRuntimeServer
+        parameters:
+        - description: Server name
+          in: path
+          name: name
+          required: true
+          type: string
+        - description: Parent backend name
+          in: query
+          name: backend
+          required: true
+          type: string
+        responses:
+          "204":
+            description: Server deleted
+          "400":
+            $ref: '#/responses/BadRequest'
+          "404":
+            $ref: '#/responses/NotFound'
+          default:
+            $ref: '#/responses/DefaultError'
+        summary: Deletes a server from a backend
+        tags:
+        - Server
       get:
         description: Returns one server runtime settings by it's name in the specified backend.
         operationId: getRuntimeServer
@@ -15626,6 +15997,41 @@ paths:
           default:
             $ref: '#/responses/DefaultError'
         summary: Return one server runtime settings
+        tags:
+        - Server
+      post:
+        description: Adds a new server to the specified backend
+        operationId: addRuntimeServer
+        parameters:
+        - description: Server name
+          in: path
+          name: name
+          required: true
+          type: string
+        - description: Parent backend name
+          in: query
+          name: backend
+          required: true
+          type: string
+        - in: body
+          name: data
+          required: true
+          schema:
+            $ref: '#/definitions/runtime_add_server'
+        responses:
+          "201":
+            description: Server added
+            schema:
+              $ref: '#/definitions/runtime_add_server'
+          "400":
+            $ref: '#/responses/BadRequest'
+          "404":
+            $ref: '#/responses/NotFound'
+          "409":
+            $ref: '#/responses/AlreadyExists'
+          default:
+            $ref: '#/responses/DefaultError'
+        summary: Adds a new server to a backend
         tags:
         - Server
       put:

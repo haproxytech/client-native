@@ -316,6 +316,8 @@ definitions:
     type: array
     items:
       $ref: "#/definitions/reload"
+  runtime_add_server:
+    $ref: "models/runtime/server.yaml#/add_server"
   runtime_server:
     $ref: "models/runtime/server.yaml#/server"
   runtime_servers:

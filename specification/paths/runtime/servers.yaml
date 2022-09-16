@@ -45,6 +45,41 @@ servers_one:
         $ref: '#/responses/NotFound'
       'default':
         $ref: '#/responses/DefaultError'
+  post:
+    summary: Adds a new server to a backend
+    description: Adds a new server to the specified backend
+    operationId: addRuntimeServer
+    tags:
+      - Server
+    parameters:
+      - name: name
+        in: path
+        description: Server name
+        required: true
+        type: string
+      - name: backend
+        in: query
+        description: Parent backend name
+        required: true
+        type: string
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/runtime_add_server'
+    responses:
+      '201':
+        description: Server added
+        schema:
+          $ref: "#/definitions/runtime_add_server"
+      '400':
+        $ref: '#/responses/BadRequest'
+      '404':
+        $ref: '#/responses/NotFound'
+      '409':
+        $ref: '#/responses/AlreadyExists'
+      'default':
+        $ref: '#/responses/DefaultError'
   put:
     summary: Replace server transient settings
     description: Replaces a server transient settings by it's name in the specified backend.
@@ -72,6 +107,32 @@ servers_one:
         description: Server transient settings replaced
         schema:
           $ref: "#/definitions/runtime_server"
+      '400':
+        $ref: '#/responses/BadRequest'
+      '404':
+        $ref: '#/responses/NotFound'
+      'default':
+        $ref: '#/responses/DefaultError'
+  delete:
+    summary: Deletes a server from a backend
+    description: Deletes a server from the specified backend
+    operationId: deleteRuntimeServer
+    tags:
+      - Server
+    parameters:
+      - name: name
+        in: path
+        description: Server name
+        required: true
+        type: string
+      - name: backend
+        in: query
+        description: Parent backend name
+        required: true
+        type: string
+    responses:
+      '204':
+        description: Server deleted
       '400':
         $ref: '#/responses/BadRequest'
       '404':
