@@ -475,13 +475,13 @@ func serializeBindParams(b models.BindParams, path string) (options []params.Bin
 		options = append(options, &params.BindOptionValue{Name: "ca-sign-pass", Value: b.CaSignPass})
 	}
 	if b.Ciphers != "" {
-		options = append(options, &params.BindOptionValue{Name: "ciphers ", Value: b.Ciphers})
+		options = append(options, &params.BindOptionValue{Name: "ciphers", Value: b.Ciphers})
 	}
 	if b.Ciphersuites != "" {
-		options = append(options, &params.BindOptionValue{Name: "ciphersuites ", Value: b.Ciphersuites})
+		options = append(options, &params.BindOptionValue{Name: "ciphersuites", Value: b.Ciphersuites})
 	}
 	if b.CrlFile != "" {
-		options = append(options, &params.BindOptionValue{Name: "crl-file ", Value: b.CrlFile})
+		options = append(options, &params.BindOptionValue{Name: "crl-file", Value: b.CrlFile})
 	}
 	if b.CrtIgnoreErr != "" {
 		options = append(options, &params.BindOptionValue{Name: "crt-ignore-err", Value: b.CrtIgnoreErr})
