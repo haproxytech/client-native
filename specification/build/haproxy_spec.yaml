@@ -1829,6 +1829,9 @@ definitions:
           x-display-name: External Check Path
         forwardfor:
           $ref: '#/definitions/forwardfor'
+        fullconn:
+          type: integer
+          x-nullable: true
         h1_case_adjust_bogus_client:
           enum:
           - enabled
@@ -1900,6 +1903,10 @@ definitions:
           - never
           - safe
           type: string
+        http_send_name_header:
+          type: string
+          x-display-name: Add the server name to a request
+          x-nullable: true
         http_use_proxy_header:
           enum:
           - enabled
@@ -1960,6 +1967,10 @@ definitions:
           - disabled
           type: string
           x-display-name: Log ASAP
+        max_keep_alive_queue:
+          type: integer
+          x-display-name: Maximum server queue size for maintaining keep-alive connections
+          x-nullable: true
         maxconn:
           type: integer
           x-display-name: Max Connections
@@ -1991,6 +2002,8 @@ definitions:
           - disabled
           type: string
           x-display-name: Persist
+        persist_rule:
+          $ref: '#/definitions/persist_rule'
         pgsql_check_params:
           $ref: '#/definitions/pgsql_check_params'
         prefer_last_server:
@@ -2007,6 +2020,9 @@ definitions:
         retries:
           type: integer
           x-nullable: true
+        retry_on:
+          type: string
+          x-display-name: Specify when to attempt to automatically retry a failed request
         server_fin_timeout:
           type: integer
           x-nullable: true
@@ -2547,11 +2563,32 @@ definitions:
           pattern: ^[^\s]+$
           type: string
           x-display-name: External Check Path
+        force_persist:
+          properties:
+            cond:
+              enum:
+              - if
+              - unless
+              type: string
+              x-display-name: Condition
+            cond_test:
+              type: string
+              x-dependency:
+                cond:
+                  required: true
+              x-display-name: Condition Test
+          required:
+          - cond
+          - cond_test
+          type: object
         forwardfor:
           $ref: '#/definitions/forwardfor'
           x-dependency:
             mode:
               value: http
+        fullconn:
+          type: integer
+          x-nullable: true
         h1_case_adjust_bogus_server:
           enum:
           - enabled
@@ -2665,6 +2702,10 @@ definitions:
           x-dependency:
             mode:
               value: http
+        http_send_name_header:
+          type: string
+          x-display-name: The header string to use to send the server name
+          x-nullable: true
         httpchk_params:
           $ref: '#/definitions/httpchk_params'
           x-dependency:
@@ -2682,6 +2723,24 @@ definitions:
         id:
           type: integer
           x-nullable: true
+        ignore_persist:
+          properties:
+            cond:
+              enum:
+              - if
+              - unless
+              type: string
+              x-display-name: Condition
+            cond_test:
+              type: string
+              x-dependency:
+                cond:
+                  required: true
+              x-display-name: Condition Test
+          required:
+          - cond
+          - cond_test
+          type: object
         independent_streams:
           enum:
           - enabled
@@ -2703,6 +2762,10 @@ definitions:
         log_tag:
           pattern: ^[^\s]+$
           type: string
+        max_keep_alive_queue:
+          type: integer
+          x-display-name: Maximum keep alive queue
+          x-nullable: true
         mode:
           enum:
           - http
@@ -2732,6 +2795,8 @@ definitions:
           - disabled
           type: string
           x-display-name: Persist
+        persist_rule:
+          $ref: '#/definitions/persist_rule'
         pgsql_check_params:
           $ref: '#/definitions/pgsql_check_params'
         prefer_last_server:
@@ -2748,6 +2813,9 @@ definitions:
         retries:
           type: integer
           x-nullable: true
+        retry_on:
+          type: string
+          x-display-name: Retry on
         server_fin_timeout:
           type: integer
           x-nullable: true
@@ -8271,6 +8339,22 @@ definitions:
           enum:
           - avalanche
           type: string
+      type: object
+  persist_rule:
+      properties:
+        rdp_cookie_name:
+          pattern: ^[^\s]+$
+          type: string
+          x-dependency:
+            type:
+              value: rdp-cookie
+          x-display-name: Rdp Cookie Name
+        type:
+          enum:
+          - rdp-cookie
+          type: string
+      required:
+      - type
       type: object
   forwardfor:
       properties:

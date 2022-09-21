@@ -562,6 +562,36 @@ func TestGetBackend(t *testing.T) {
 		t.Errorf("EmailAlert.Mailers is not localmailer1: %v", *b.EmailAlert.Mailers)
 	}
 
+	if *b.Fullconn != 11 {
+		t.Errorf("Fullconn not 11: %v", *b.Fullconn)
+	}
+	if *b.MaxKeepAliveQueue != 101 {
+		t.Errorf("MaxKeepAliveQueue not 101: %v", *b.MaxKeepAliveQueue)
+	}
+
+	if *b.IgnorePersist.Cond != "if" {
+		t.Errorf("IgnorePersist Cond not if: %v", *b.IgnorePersist.Cond)
+	}
+	if *b.IgnorePersist.CondTest != "acl-name" {
+		t.Errorf("IgnorePersist CondTest not acl-name: %v", *b.IgnorePersist.CondTest)
+	}
+
+	if *b.ForcePersist.Cond != "unless" {
+		t.Errorf("ForcePersist Cond not if: %v", *b.ForcePersist.Cond)
+	}
+	if *b.ForcePersist.CondTest != "acl-name-2" {
+		t.Errorf("ForcePersist CondTest not acl-name-2: %v", *b.ForcePersist.CondTest)
+	}
+	if b.RetryOn != "504 505" {
+		t.Errorf("RetryOn CondTest not 504 505: %v", b.RetryOn)
+	}
+	if *b.HTTPSendNameHeader != "X-My-Awesome-Header" {
+		t.Errorf("%v: HTTPSendNameHeader not X-My-Awesome-Header: %v", b.Name, *b.HTTPSendNameHeader)
+	}
+	if b.PersistRule.RdpCookieName != "name" {
+		t.Errorf("%v: PersistRule.RdpCookieName is not name: %v", b.Name, b.PersistRule.RdpCookieName)
+	}
+
 	_, err = b.MarshalBinary()
 	if err != nil {
 		t.Error(err.Error())

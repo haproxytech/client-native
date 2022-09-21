@@ -259,6 +259,11 @@ defaults
   email-alert myhostname srv01
   email-alert mailers localmailer1
   load-server-state-from-file global
+  fullconn 10
+  max-keep-alive-queue 100
+  retry-on 503 504
+  http-send-name-header
+  persist rdp-cookie
 
 frontend test
   mode http
@@ -592,6 +597,13 @@ backend test
   errorloc302 404 http://www.myawesomesite.com/not_found
   errorloc303 404 http://www.myawesomesite.com/not_found
   error-log-format %T\ %t\ Some\ Text
+  fullconn 11
+  max-keep-alive-queue 101
+  ignore-persist if acl-name
+  force-persist unless acl-name-2
+  retry-on 504 505
+  http-send-name-header X-My-Awesome-Header
+  persist rdp-cookie(name)
 
 peers mycluster
   enabled

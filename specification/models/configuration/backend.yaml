@@ -12,6 +12,8 @@ backend:
       x-nullable: false
     balance:
       $ref: "#/definitions/balance"
+    persist_rule:
+      $ref: "#/definitions/persist_rule"
     hash_type:
       $ref: "#/definitions/hash_type"
     http-check:
@@ -317,6 +319,52 @@ backend:
       $ref: "#/definitions/errorloc"
     errorloc303:
       $ref: "#/definitions/errorloc"
+    fullconn:
+      type: integer
+      x-nullable: true
+    force_persist:
+      type: object
+      required:
+        - cond
+        - cond_test
+      properties:
+        cond:
+          type: string
+          x-display-name: Condition
+          enum: [if, unless]
+        cond_test:
+          type: string
+          x-display-name: Condition Test
+          x-dependency:
+            cond:
+              required: true
+    ignore_persist:
+      type: object
+      required:
+        - cond
+        - cond_test
+      properties:
+        cond:
+          type: string
+          x-display-name: Condition
+          enum: [if, unless]
+        cond_test:
+          type: string
+          x-display-name: Condition Test
+          x-dependency:
+            cond:
+              required: true
+    http_send_name_header:
+      type: string
+      x-nullable: true
+      x-display-name: The header string to use to send the server name
+    max_keep_alive_queue:
+      type: integer
+      x-nullable: true
+      x-display-name: Maximum keep alive queue
+    retry_on:
+      type: string
+      x-display-name: Retry on
   additionalProperties: false
   example:
     name: test_backend

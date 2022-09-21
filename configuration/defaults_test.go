@@ -302,6 +302,22 @@ func TestGetDefaults(t *testing.T) { //nolint:gocognit,gocyclo
 	} else if *d.EmailAlert.Mailers != "localmailer1" {
 		t.Errorf("EmailAlert.Mailers is not localmailer1: %v", *d.EmailAlert.Mailers)
 	}
+
+	if *d.Fullconn != 10 {
+		t.Errorf("Fullconn not 10: %v", *d.Fullconn)
+	}
+	if *d.HTTPSendNameHeader != "" {
+		t.Errorf("HTTPSendNameHeader not empty: %v", *d.HTTPSendNameHeader)
+	}
+	if *d.MaxKeepAliveQueue != 100 {
+		t.Errorf("MaxKeepAliveQueue not 100: %v", *d.MaxKeepAliveQueue)
+	}
+	if d.RetryOn != "503 504" {
+		t.Errorf("RetryOn not 503 504: %v", d.RetryOn)
+	}
+	if d.PersistRule.RdpCookieName != "" {
+		t.Errorf("PersistRule.RdpCookieName not empty: %v", d.PersistRule.RdpCookieName)
+	}
 }
 
 func TestPushDefaults(t *testing.T) {
@@ -397,6 +413,7 @@ func TestPushDefaults(t *testing.T) {
 			Myhostname: "srv01",
 			Mailers:    misc.StringP("localmailer1"),
 		},
+		HTTPSendNameHeader: misc.StringP(""),
 	}
 
 	err := clientTest.PushDefaultsConfiguration(d, "", version)

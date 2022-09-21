@@ -16,6 +16,21 @@ forwardfor:
       pattern: '^[^\s]+$'
     ifnone:
       type: boolean
+persist_rule:
+  type: object
+  required:
+    - type
+  properties:
+    type:
+      type: string
+      enum: [rdp-cookie]
+    rdp_cookie_name:
+      type: string
+      x-display-name: Rdp Cookie Name
+      pattern: '^[^\s]+$'
+      x-dependency:
+        type:
+          value: rdp-cookie
 balance:
   type: object
   required:

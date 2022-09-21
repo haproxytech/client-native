@@ -172,6 +172,9 @@ type Defaults struct {
 	// forwardfor
 	Forwardfor *Forwardfor `json:"forwardfor,omitempty"`
 
+	// fullconn
+	Fullconn *int64 `json:"fullconn,omitempty"`
+
 	// h1 case adjust bogus client
 	// Enum: [enabled disabled]
 	H1CaseAdjustBogusClient string `json:"h1_case_adjust_bogus_client,omitempty"`
@@ -224,6 +227,9 @@ type Defaults struct {
 	// Enum: [aggressive always never safe]
 	HTTPReuse string `json:"http_reuse,omitempty"`
 
+	// http send name header
+	HTTPSendNameHeader *string `json:"http_send_name_header,omitempty"`
+
 	// http use proxy header
 	// Enum: [enabled disabled]
 	HTTPUseProxyHeader string `json:"http_use_proxy_header,omitempty"`
@@ -272,6 +278,9 @@ type Defaults struct {
 	// Enum: [enabled disabled]
 	Logasap string `json:"logasap,omitempty"`
 
+	// max keep alive queue
+	MaxKeepAliveQueue *int64 `json:"max_keep_alive_queue,omitempty"`
+
 	// maxconn
 	Maxconn *int64 `json:"maxconn,omitempty"`
 
@@ -297,6 +306,9 @@ type Defaults struct {
 	// Enum: [enabled disabled]
 	Persist string `json:"persist,omitempty"`
 
+	// persist rule
+	PersistRule *PersistRule `json:"persist_rule,omitempty"`
+
 	// pgsql check params
 	PgsqlCheckParams *PgsqlCheckParams `json:"pgsql_check_params,omitempty"`
 
@@ -312,6 +324,9 @@ type Defaults struct {
 
 	// retries
 	Retries *int64 `json:"retries,omitempty"`
+
+	// retry on
+	RetryOn string `json:"retry_on,omitempty"`
 
 	// server fin timeout
 	ServerFinTimeout *int64 `json:"server_fin_timeout,omitempty"`
@@ -607,6 +622,10 @@ func (m *Defaults) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validatePersist(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validatePersistRule(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -2499,6 +2518,25 @@ func (m *Defaults) validatePersist(formats strfmt.Registry) error {
 	return nil
 }
 
+func (m *Defaults) validatePersistRule(formats strfmt.Registry) error {
+	if swag.IsZero(m.PersistRule) { // not required
+		return nil
+	}
+
+	if m.PersistRule != nil {
+		if err := m.PersistRule.Validate(formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("persist_rule")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("persist_rule")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
 func (m *Defaults) validatePgsqlCheckParams(formats strfmt.Registry) error {
 	if swag.IsZero(m.PgsqlCheckParams) { // not required
 		return nil
@@ -3059,6 +3097,10 @@ func (m *Defaults) ContextValidate(ctx context.Context, formats strfmt.Registry)
 		res = append(res, err)
 	}
 
+	if err := m.contextValidatePersistRule(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.contextValidatePgsqlCheckParams(ctx, formats); err != nil {
 		res = append(res, err)
 	}
@@ -3319,6 +3361,22 @@ func (m *Defaults) contextValidateMysqlCheckParams(ctx context.Context, formats 
 				return ve.ValidateName("mysql_check_params")
 			} else if ce, ok := err.(*errors.CompositeError); ok {
 				return ce.ValidateName("mysql_check_params")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (m *Defaults) contextValidatePersistRule(ctx context.Context, formats strfmt.Registry) error {
+
+	if m.PersistRule != nil {
+		if err := m.PersistRule.ContextValidate(ctx, formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("persist_rule")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("persist_rule")
 			}
 			return err
 		}

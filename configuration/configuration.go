@@ -273,23 +273,19 @@ func (s *SectionParser) parseField(fieldName string) interface{} {
 	if match, data := s.checkSpecialFields(fieldName); match {
 		return data
 	}
-
 	if match, data := s.checkTimeouts(fieldName); match {
 		return data
 	}
-
-	if match, data := s.checkSingleLine(fieldName); match {
-		return data
-	}
-
 	if match, data := s.checkOptions(fieldName); match {
 		return data
 	}
-
+	if match, data := s.checkSingleLine(fieldName); match {
+		return data
+	}
 	return nil
 }
 
-func (s *SectionParser) checkSpecialFields(fieldName string) (match bool, data interface{}) { //nolint:cyclop
+func (s *SectionParser) checkSpecialFields(fieldName string) (match bool, data interface{}) { //nolint:gocyclo,cyclop
 	switch fieldName {
 	case "MonitorFail":
 		return true, s.monitorFail()
@@ -305,6 +301,8 @@ func (s *SectionParser) checkSpecialFields(fieldName string) (match bool, data i
 		return true, s.redispatch()
 	case "Balance":
 		return true, s.balance()
+	case "PersistRule":
+		return true, s.persistRule()
 	case "BindProcess":
 		return true, s.bindProcess()
 	case "Cookie":
@@ -373,6 +371,12 @@ func (s *SectionParser) checkSpecialFields(fieldName string) (match bool, data i
 		return true, s.httpRestirctReqHdrNames()
 	case "DefaultBind":
 		return true, s.defaultBind()
+	case "HTTPSendNameHeader":
+		return true, s.httpSendNameHeader()
+	case "ForcePersist":
+		return true, s.forcePersist()
+	case "IgnorePersist":
+		return true, s.ignorePersist()
 	default:
 		return false, nil
 	}
@@ -882,6 +886,23 @@ func (s *SectionParser) bindProcess() interface{} {
 	return d.Process
 }
 
+func (s *SectionParser) persistRule() interface{} {
+	data, err := s.get("persist", false)
+	if err != nil {
+		return nil
+	}
+	d := data.(*types.Persist)
+	p := &models.PersistRule{
+		Type: &d.Type,
+	}
+	switch prm := d.Params.(type) {
+	case *params.PersistRdpCookie:
+		p.RdpCookieName = prm.Name
+	default:
+	}
+	return p
+}
+
 func (s *SectionParser) balance() interface{} {
 	data, err := s.get("balance", false)
 	if err != nil {
@@ -1258,6 +1279,51 @@ func (s *SectionParser) defaultBind() interface{} {
 	}
 }
 
+func (s *SectionParser) httpSendNameHeader() interface{} {
+	if s.Section == parser.Defaults || s.Section == parser.Backends {
+		data, err := s.get("http-send-name-header", false)
+		if err != nil {
+			return nil
+		}
+		d := data.(*types.HTTPSendNameHeader)
+		if d == nil {
+			return nil
+		}
+		return &d.Name
+	}
+	return nil
+}
+
+func (s *SectionParser) forcePersist() interface{} {
+	if s.Section == parser.Backends {
+		data, err := s.get("force-persist", false)
+		if err != nil {
+			return nil
+		}
+		d := data.(*types.ForcePersist)
+		return &models.BackendForcePersist{
+			Cond:     &d.Cond,
+			CondTest: &d.CondTest,
+		}
+	}
+	return nil
+}
+
+func (s *SectionParser) ignorePersist() interface{} {
+	if s.Section == parser.Backends {
+		data, err := s.get("ignore-persist", false)
+		if err != nil {
+			return nil
+		}
+		d := data.(*types.IgnorePersist)
+		return &models.BackendIgnorePersist{
+			Cond:     &d.Cond,
+			CondTest: &d.CondTest,
+		}
+	}
+	return nil
+}
+
 // SectionObject represents a configuration section
 type SectionObject struct {
 	Object  interface{}
@@ -1323,7 +1389,7 @@ func (s *SectionObject) checkParams(fieldName string) (match bool) {
 	return s.Section != parser.FCGIApp && strings.HasSuffix(fieldName, "Params")
 }
 
-func (s *SectionObject) checkSpecialFields(fieldName string, field reflect.Value) (match bool, err error) {
+func (s *SectionObject) checkSpecialFields(fieldName string, field reflect.Value) (match bool, err error) { //nolint:gocyclo,cyclop
 	switch fieldName {
 	case "MonitorURI":
 		return true, s.monitorURI(field)
@@ -1339,6 +1405,8 @@ func (s *SectionObject) checkSpecialFields(fieldName string, field reflect.Value
 		return true, s.redispatch(field)
 	case "Balance":
 		return true, s.balance(field)
+	case "PersistRule":
+		return true, s.persistRule(field)
 	case "BindProcess":
 		return true, s.bindProcess(field)
 	case "Cookie":
@@ -1405,6 +1473,12 @@ func (s *SectionObject) checkSpecialFields(fieldName string, field reflect.Value
 		return true, s.httpRestrictReqHdrNames(field)
 	case "DefaultBind":
 		return true, s.defaultBind(field)
+	case "HTTPSendNameHeader":
+		return true, s.httpSendNameHeader(field)
+	case "ForcePersist":
+		return true, s.forcePersist(field)
+	case "IgnorePersist":
+		return true, s.ignorePersist(field)
 	default:
 		return false, nil
 	}
@@ -2081,6 +2155,35 @@ func (s *SectionObject) bindProcess(field reflect.Value) error {
 	return nil
 }
 
+func (s *SectionObject) persistRule(field reflect.Value) error {
+	if s.Section == parser.Backends || s.Section == parser.Defaults {
+		if valueIsNil(field) {
+			if err := s.set("persist", nil); err != nil {
+				return err
+			}
+			return nil
+		}
+		b, ok := field.Elem().Interface().(models.PersistRule)
+		if !ok {
+			return misc.CreateTypeAssertError("persist")
+		}
+		d := types.Persist{
+			Type: *b.Type,
+		}
+		switch *b.Type {
+		case "rdp-cookie":
+			d.Params = &params.PersistRdpCookie{
+				Name: b.RdpCookieName,
+			}
+		default:
+		}
+		if err := s.set("persist", &d); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
 func (s *SectionObject) balance(field reflect.Value) error {
 	if s.Section == parser.Backends || s.Section == parser.Defaults {
 		if valueIsNil(field) {
@@ -2575,6 +2678,45 @@ func (s *SectionObject) defaultBind(field reflect.Value) error {
 		return err
 	}
 	return nil
+}
+
+func (s *SectionObject) httpSendNameHeader(field reflect.Value) error {
+	if field.Kind() == reflect.Ptr {
+		if field.IsNil() {
+			return s.set("http-send-name-header", nil)
+		}
+		field = field.Elem()
+	}
+	v := field.String()
+	return s.set("http-send-name-header", types.HTTPSendNameHeader{Name: v})
+}
+
+func (s *SectionObject) forcePersist(field reflect.Value) error {
+	if valueIsNil(field) {
+		return s.set("force-persist", nil)
+	}
+	opt, ok := field.Elem().Interface().(models.BackendForcePersist)
+	if !ok {
+		return misc.CreateTypeAssertError("force-persist")
+	}
+	return s.set("force-persist", types.ForcePersist{
+		Cond:     *opt.Cond,
+		CondTest: *opt.CondTest,
+	})
+}
+
+func (s *SectionObject) ignorePersist(field reflect.Value) error {
+	if valueIsNil(field) {
+		return s.set("ignore-persist", nil)
+	}
+	opt, ok := field.Elem().Interface().(models.BackendIgnorePersist)
+	if !ok {
+		return misc.CreateTypeAssertError("ignore-persist")
+	}
+	return s.set("ignore-persist", types.IgnorePersist{
+		Cond:     *opt.Cond,
+		CondTest: *opt.CondTest,
+	})
 }
 
 func (c *client) deleteSection(section parser.Section, name string, transactionID string, version int64) error {

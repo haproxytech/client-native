@@ -121,8 +121,14 @@ type Backend struct {
 	// Pattern: ^[^\s]+$
 	ExternalCheckPath string `json:"external_check_path,omitempty"`
 
+	// force persist
+	ForcePersist *BackendForcePersist `json:"force_persist,omitempty"`
+
 	// forwardfor
 	Forwardfor *Forwardfor `json:"forwardfor,omitempty"`
+
+	// fullconn
+	Fullconn *int64 `json:"fullconn,omitempty"`
 
 	// h1 case adjust bogus server
 	// Enum: [enabled disabled]
@@ -181,6 +187,9 @@ type Backend struct {
 	// Enum: [aggressive always never safe]
 	HTTPReuse string `json:"http_reuse,omitempty"`
 
+	// http send name header
+	HTTPSendNameHeader *string `json:"http_send_name_header,omitempty"`
+
 	// httpchk params
 	HttpchkParams *HttpchkParams `json:"httpchk_params,omitempty"`
 
@@ -190,6 +199,9 @@ type Backend struct {
 
 	// id
 	ID *int64 `json:"id,omitempty"`
+
+	// ignore persist
+	IgnorePersist *BackendIgnorePersist `json:"ignore_persist,omitempty"`
 
 	// independent streams
 	// Enum: [enabled disabled]
@@ -206,6 +218,9 @@ type Backend struct {
 	// log tag
 	// Pattern: ^[^\s]+$
 	LogTag string `json:"log_tag,omitempty"`
+
+	// max keep alive queue
+	MaxKeepAliveQueue *int64 `json:"max_keep_alive_queue,omitempty"`
 
 	// mode
 	// Enum: [http tcp]
@@ -231,6 +246,9 @@ type Backend struct {
 	// Enum: [enabled disabled]
 	Persist string `json:"persist,omitempty"`
 
+	// persist rule
+	PersistRule *PersistRule `json:"persist_rule,omitempty"`
+
 	// pgsql check params
 	PgsqlCheckParams *PgsqlCheckParams `json:"pgsql_check_params,omitempty"`
 
@@ -246,6 +264,9 @@ type Backend struct {
 
 	// retries
 	Retries *int64 `json:"retries,omitempty"`
+
+	// retry on
+	RetryOn string `json:"retry_on,omitempty"`
 
 	// server fin timeout
 	ServerFinTimeout *int64 `json:"server_fin_timeout,omitempty"`
@@ -396,6 +417,10 @@ func (m *Backend) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
+	if err := m.validateForcePersist(formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.validateForwardfor(formats); err != nil {
 		res = append(res, err)
 	}
@@ -460,6 +485,10 @@ func (m *Backend) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
+	if err := m.validateIgnorePersist(formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.validateIndependentStreams(formats); err != nil {
 		res = append(res, err)
 	}
@@ -497,6 +526,10 @@ func (m *Backend) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validatePersist(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validatePersistRule(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -1060,6 +1093,25 @@ func (m *Backend) validateExternalCheckPath(formats strfmt.Registry) error {
 
 	if err := validate.Pattern("external_check_path", "body", m.ExternalCheckPath, `^[^\s]+$`); err != nil {
 		return err
+	}
+
+	return nil
+}
+
+func (m *Backend) validateForcePersist(formats strfmt.Registry) error {
+	if swag.IsZero(m.ForcePersist) { // not required
+		return nil
+	}
+
+	if m.ForcePersist != nil {
+		if err := m.ForcePersist.Validate(formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("force_persist")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("force_persist")
+			}
+			return err
+		}
 	}
 
 	return nil
@@ -1661,6 +1713,25 @@ func (m *Backend) validateHttpclose(formats strfmt.Registry) error {
 	return nil
 }
 
+func (m *Backend) validateIgnorePersist(formats strfmt.Registry) error {
+	if swag.IsZero(m.IgnorePersist) { // not required
+		return nil
+	}
+
+	if m.IgnorePersist != nil {
+		if err := m.IgnorePersist.Validate(formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("ignore_persist")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("ignore_persist")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
 var backendTypeIndependentStreamsPropEnum []interface{}
 
 func init() {
@@ -1997,6 +2068,25 @@ func (m *Backend) validatePersist(formats strfmt.Registry) error {
 	// value enum
 	if err := m.validatePersistEnum("persist", "body", m.Persist); err != nil {
 		return err
+	}
+
+	return nil
+}
+
+func (m *Backend) validatePersistRule(formats strfmt.Registry) error {
+	if swag.IsZero(m.PersistRule) { // not required
+		return nil
+	}
+
+	if m.PersistRule != nil {
+		if err := m.PersistRule.Validate(formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("persist_rule")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("persist_rule")
+			}
+			return err
+		}
 	}
 
 	return nil
@@ -2515,6 +2605,10 @@ func (m *Backend) ContextValidate(ctx context.Context, formats strfmt.Registry) 
 		res = append(res, err)
 	}
 
+	if err := m.contextValidateForcePersist(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.contextValidateForwardfor(ctx, formats); err != nil {
 		res = append(res, err)
 	}
@@ -2531,7 +2625,15 @@ func (m *Backend) ContextValidate(ctx context.Context, formats strfmt.Registry) 
 		res = append(res, err)
 	}
 
+	if err := m.contextValidateIgnorePersist(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.contextValidateMysqlCheckParams(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.contextValidatePersistRule(ctx, formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -2713,6 +2815,22 @@ func (m *Backend) contextValidateErrorloc303(ctx context.Context, formats strfmt
 	return nil
 }
 
+func (m *Backend) contextValidateForcePersist(ctx context.Context, formats strfmt.Registry) error {
+
+	if m.ForcePersist != nil {
+		if err := m.ForcePersist.ContextValidate(ctx, formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("force_persist")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("force_persist")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
 func (m *Backend) contextValidateForwardfor(ctx context.Context, formats strfmt.Registry) error {
 
 	if m.Forwardfor != nil {
@@ -2777,6 +2895,22 @@ func (m *Backend) contextValidateHttpchkParams(ctx context.Context, formats strf
 	return nil
 }
 
+func (m *Backend) contextValidateIgnorePersist(ctx context.Context, formats strfmt.Registry) error {
+
+	if m.IgnorePersist != nil {
+		if err := m.IgnorePersist.ContextValidate(ctx, formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("ignore_persist")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("ignore_persist")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
 func (m *Backend) contextValidateMysqlCheckParams(ctx context.Context, formats strfmt.Registry) error {
 
 	if m.MysqlCheckParams != nil {
@@ -2785,6 +2919,22 @@ func (m *Backend) contextValidateMysqlCheckParams(ctx context.Context, formats s
 				return ve.ValidateName("mysql_check_params")
 			} else if ce, ok := err.(*errors.CompositeError); ok {
 				return ce.ValidateName("mysql_check_params")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (m *Backend) contextValidatePersistRule(ctx context.Context, formats strfmt.Registry) error {
+
+	if m.PersistRule != nil {
+		if err := m.PersistRule.ContextValidate(ctx, formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("persist_rule")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("persist_rule")
 			}
 			return err
 		}
@@ -2884,6 +3034,222 @@ func (m *Backend) MarshalBinary() ([]byte, error) {
 // UnmarshalBinary interface implementation
 func (m *Backend) UnmarshalBinary(b []byte) error {
 	var res Backend
+	if err := swag.ReadJSON(b, &res); err != nil {
+		return err
+	}
+	*m = res
+	return nil
+}
+
+// BackendForcePersist backend force persist
+//
+// swagger:model BackendForcePersist
+type BackendForcePersist struct {
+
+	// cond
+	// Required: true
+	// Enum: [if unless]
+	Cond *string `json:"cond"`
+
+	// cond test
+	// Required: true
+	CondTest *string `json:"cond_test"`
+}
+
+// Validate validates this backend force persist
+func (m *BackendForcePersist) Validate(formats strfmt.Registry) error {
+	var res []error
+
+	if err := m.validateCond(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateCondTest(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if len(res) > 0 {
+		return errors.CompositeValidationError(res...)
+	}
+	return nil
+}
+
+var backendForcePersistTypeCondPropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["if","unless"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		backendForcePersistTypeCondPropEnum = append(backendForcePersistTypeCondPropEnum, v)
+	}
+}
+
+const (
+
+	// BackendForcePersistCondIf captures enum value "if"
+	BackendForcePersistCondIf string = "if"
+
+	// BackendForcePersistCondUnless captures enum value "unless"
+	BackendForcePersistCondUnless string = "unless"
+)
+
+// prop value enum
+func (m *BackendForcePersist) validateCondEnum(path, location string, value string) error {
+	if err := validate.EnumCase(path, location, value, backendForcePersistTypeCondPropEnum, true); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *BackendForcePersist) validateCond(formats strfmt.Registry) error {
+
+	if err := validate.Required("force_persist"+"."+"cond", "body", m.Cond); err != nil {
+		return err
+	}
+
+	// value enum
+	if err := m.validateCondEnum("force_persist"+"."+"cond", "body", *m.Cond); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *BackendForcePersist) validateCondTest(formats strfmt.Registry) error {
+
+	if err := validate.Required("force_persist"+"."+"cond_test", "body", m.CondTest); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+// ContextValidate validates this backend force persist based on context it is used
+func (m *BackendForcePersist) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+	return nil
+}
+
+// MarshalBinary interface implementation
+func (m *BackendForcePersist) MarshalBinary() ([]byte, error) {
+	if m == nil {
+		return nil, nil
+	}
+	return swag.WriteJSON(m)
+}
+
+// UnmarshalBinary interface implementation
+func (m *BackendForcePersist) UnmarshalBinary(b []byte) error {
+	var res BackendForcePersist
+	if err := swag.ReadJSON(b, &res); err != nil {
+		return err
+	}
+	*m = res
+	return nil
+}
+
+// BackendIgnorePersist backend ignore persist
+//
+// swagger:model BackendIgnorePersist
+type BackendIgnorePersist struct {
+
+	// cond
+	// Required: true
+	// Enum: [if unless]
+	Cond *string `json:"cond"`
+
+	// cond test
+	// Required: true
+	CondTest *string `json:"cond_test"`
+}
+
+// Validate validates this backend ignore persist
+func (m *BackendIgnorePersist) Validate(formats strfmt.Registry) error {
+	var res []error
+
+	if err := m.validateCond(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateCondTest(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if len(res) > 0 {
+		return errors.CompositeValidationError(res...)
+	}
+	return nil
+}
+
+var backendIgnorePersistTypeCondPropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["if","unless"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		backendIgnorePersistTypeCondPropEnum = append(backendIgnorePersistTypeCondPropEnum, v)
+	}
+}
+
+const (
+
+	// BackendIgnorePersistCondIf captures enum value "if"
+	BackendIgnorePersistCondIf string = "if"
+
+	// BackendIgnorePersistCondUnless captures enum value "unless"
+	BackendIgnorePersistCondUnless string = "unless"
+)
+
+// prop value enum
+func (m *BackendIgnorePersist) validateCondEnum(path, location string, value string) error {
+	if err := validate.EnumCase(path, location, value, backendIgnorePersistTypeCondPropEnum, true); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *BackendIgnorePersist) validateCond(formats strfmt.Registry) error {
+
+	if err := validate.Required("ignore_persist"+"."+"cond", "body", m.Cond); err != nil {
+		return err
+	}
+
+	// value enum
+	if err := m.validateCondEnum("ignore_persist"+"."+"cond", "body", *m.Cond); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *BackendIgnorePersist) validateCondTest(formats strfmt.Registry) error {
+
+	if err := validate.Required("ignore_persist"+"."+"cond_test", "body", m.CondTest); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+// ContextValidate validates this backend ignore persist based on context it is used
+func (m *BackendIgnorePersist) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+	return nil
+}
+
+// MarshalBinary interface implementation
+func (m *BackendIgnorePersist) MarshalBinary() ([]byte, error) {
+	if m == nil {
+		return nil, nil
+	}
+	return swag.WriteJSON(m)
+}
+
+// UnmarshalBinary interface implementation
+func (m *BackendIgnorePersist) UnmarshalBinary(b []byte) error {
+	var res BackendIgnorePersist
 	if err := swag.ReadJSON(b, &res); err != nil {
 		return err
 	}

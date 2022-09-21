@@ -11,6 +11,8 @@ defaults:
       $ref: "#/definitions/balance"
     hash_type:
       $ref: "#/definitions/hash_type"
+    persist_rule:
+      $ref: "#/definitions/persist_rule"
     maxconn:
       type: integer
       x-nullable: true
@@ -337,4 +339,18 @@ defaults:
       $ref: "#/definitions/errorloc"
     error_log_format:
       type: string
+    fullconn:
+      type: integer
+      x-nullable: true
+    http_send_name_header:
+      type: string
+      x-nullable: true
+      x-display-name: Add the server name to a request
+    max_keep_alive_queue:
+      type: integer
+      x-nullable: true
+      x-display-name: Maximum server queue size for maintaining keep-alive connections
+    retry_on:
+      type: string
+      x-display-name: Specify when to attempt to automatically retry a failed request
   additionalProperties: false

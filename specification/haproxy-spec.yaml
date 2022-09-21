@@ -424,6 +424,8 @@ definitions:
     $ref: "models/configuration/misc.yaml#/balance"
   hash_type:
     $ref: "models/configuration/hash_type.yaml#/hash_type"
+  persist_rule:
+    $ref: "models/configuration/misc.yaml#/persist_rule"
   forwardfor:
     $ref: "models/configuration/misc.yaml#/forwardfor"
   default_server:
