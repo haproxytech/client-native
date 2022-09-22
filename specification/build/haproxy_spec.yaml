@@ -3046,6 +3046,24 @@ definitions:
             type:
               value: auth
           x-display-name: Authentication Realm
+        bandwidth_limit_limit:
+          type: string
+          x-dependency:
+            type:
+              value: set-bandwidth-limit
+          x-display-name: Standard HAProxy expression
+        bandwidth_limit_name:
+          type: string
+          x-dependency:
+            type:
+              value: set-bandwidth-limit
+          x-display-name: Bandwidth limit name
+        bandwidth_limit_period:
+          type: string
+          x-dependency:
+            type:
+              value: set-bandwidth-limit
+          x-display-name: Standard HAProxy expression
         cache_name:
           pattern: ^[^\s]+$
           type: string
@@ -3607,6 +3625,7 @@ definitions:
           - use-service
           - wait-for-body
           - wait-for-handshake
+          - set-bandwidth-limit
           type: string
           x-nullable: false
         uri-fmt:
@@ -3713,6 +3732,24 @@ definitions:
               - add-acl
               - del-acl
           x-display-name: ACK Key Format
+        bandwidth_limit_limit:
+          type: string
+          x-dependency:
+            type:
+              value: set-bandwidth-limit
+          x-display-name: Standard HAProxy expression
+        bandwidth_limit_name:
+          type: string
+          x-dependency:
+            type:
+              value: set-bandwidth-limit
+          x-display-name: Bandwidth limit name
+        bandwidth_limit_period:
+          type: string
+          x-dependency:
+            type:
+              value: set-bandwidth-limit
+          x-display-name: Standard HAProxy expression
         cache_name:
           pattern: ^[^\s]+$
           type: string
@@ -4121,6 +4158,7 @@ definitions:
           - track-sc2
           - unset-var
           - wait-for-body
+          - set-bandwidth-limit
           type: string
           x-nullable: false
         var_expr:
@@ -4610,6 +4648,7 @@ definitions:
           - unset-var
           - use-service
           - lua
+          - set-bandwidth-limit
           type: string
           x-dependency:
             type:
@@ -4619,6 +4658,30 @@ definitions:
               - content
               - session
           x-nullable: false
+        bandwidth_limit_limit:
+          type: string
+          x-dependency:
+            action:
+              value: set-bandwidth-limit
+            type:
+              value: content
+          x-display-name: Standard HAProxy expression
+        bandwidth_limit_name:
+          type: string
+          x-dependency:
+            action:
+              value: set-bandwidth-limit
+            type:
+              value: content
+          x-display-name: Bandwidth limit name
+        bandwidth_limit_period:
+          type: string
+          x-dependency:
+            action:
+              value: set-bandwidth-limit
+            type:
+              value: content
+          x-display-name: Standard HAProxy expression
         capture_len:
           type: integer
           x-dependency:
@@ -4921,12 +4984,37 @@ definitions:
           - accept
           - reject
           - lua
+          - set-bandwidth-limit
           type: string
           x-dependency:
             type:
               required: true
               value: content
           x-nullable: false
+        bandwidth_limit_limit:
+          type: string
+          x-dependency:
+            action:
+              value: set-bandwidth-limit
+            type:
+              value: content
+          x-display-name: Standard HAProxy expression
+        bandwidth_limit_name:
+          type: string
+          x-dependency:
+            action:
+              value: set-bandwidth-limit
+            type:
+              value: content
+          x-display-name: Bandwidth limit name
+        bandwidth_limit_period:
+          type: string
+          x-dependency:
+            action:
+              value: set-bandwidth-limit
+            type:
+              value: content
+          x-display-name: Standard HAProxy expression
         cond:
           enum:
           - if

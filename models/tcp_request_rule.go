@@ -39,8 +39,17 @@ import (
 type TCPRequestRule struct {
 
 	// action
-	// Enum: [accept capture do-resolve expect-netscaler-cip expect-proxy reject sc-inc-gpc0 sc-inc-gpc1 sc-set-gpt0 send-spoe-group set-dst-port set-dst set-priority set-src set-var silent-drop track-sc0 track-sc1 track-sc2 unset-var use-service lua]
+	// Enum: [accept capture do-resolve expect-netscaler-cip expect-proxy reject sc-inc-gpc0 sc-inc-gpc1 sc-set-gpt0 send-spoe-group set-dst-port set-dst set-priority set-src set-var silent-drop track-sc0 track-sc1 track-sc2 unset-var use-service lua set-bandwidth-limit]
 	Action string `json:"action,omitempty"`
+
+	// bandwidth limit limit
+	BandwidthLimitLimit string `json:"bandwidth_limit_limit,omitempty"`
+
+	// bandwidth limit name
+	BandwidthLimitName string `json:"bandwidth_limit_name,omitempty"`
+
+	// bandwidth limit period
+	BandwidthLimitPeriod string `json:"bandwidth_limit_period,omitempty"`
 
 	// capture len
 	CaptureLen int64 `json:"capture_len,omitempty"`
@@ -176,7 +185,7 @@ var tcpRequestRuleTypeActionPropEnum []interface{}
 
 func init() {
 	var res []string
-	if err := json.Unmarshal([]byte(`["accept","capture","do-resolve","expect-netscaler-cip","expect-proxy","reject","sc-inc-gpc0","sc-inc-gpc1","sc-set-gpt0","send-spoe-group","set-dst-port","set-dst","set-priority","set-src","set-var","silent-drop","track-sc0","track-sc1","track-sc2","unset-var","use-service","lua"]`), &res); err != nil {
+	if err := json.Unmarshal([]byte(`["accept","capture","do-resolve","expect-netscaler-cip","expect-proxy","reject","sc-inc-gpc0","sc-inc-gpc1","sc-set-gpt0","send-spoe-group","set-dst-port","set-dst","set-priority","set-src","set-var","silent-drop","track-sc0","track-sc1","track-sc2","unset-var","use-service","lua","set-bandwidth-limit"]`), &res); err != nil {
 		panic(err)
 	}
 	for _, v := range res {
@@ -251,6 +260,9 @@ const (
 
 	// TCPRequestRuleActionLua captures enum value "lua"
 	TCPRequestRuleActionLua string = "lua"
+
+	// TCPRequestRuleActionSetDashBandwidthDashLimit captures enum value "set-bandwidth-limit"
+	TCPRequestRuleActionSetDashBandwidthDashLimit string = "set-bandwidth-limit"
 )
 
 // prop value enum

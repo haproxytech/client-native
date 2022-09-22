@@ -16,7 +16,7 @@ tcp_response_rule:
       x-nullable: false
     action:
       type: string
-      enum: [accept, reject, lua]
+      enum: [accept, reject, lua, set-bandwidth-limit]
       x-nullable: false
       x-dependency:
         type:
@@ -45,6 +45,30 @@ tcp_response_rule:
       x-dependency:
         action:
           value: lua
+        type:
+          value: content
+    bandwidth_limit_name:
+      type: string
+      x-display-name: Bandwidth limit name
+      x-dependency:
+        action:
+          value: set-bandwidth-limit
+        type:
+          value: content
+    bandwidth_limit_limit:
+      type: string
+      x-display-name: Standard HAProxy expression
+      x-dependency:
+        action:
+          value: set-bandwidth-limit
+        type:
+          value: content
+    bandwidth_limit_period:
+      type: string
+      x-display-name: Standard HAProxy expression
+      x-dependency:
+        action:
+          value: set-bandwidth-limit
         type:
           value: content
     cond:

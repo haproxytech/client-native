@@ -46,6 +46,7 @@ http_response_rule:
         - track-sc2
         - unset-var
         - wait-for-body
+        - set-bandwidth-limit
       x-nullable: false
     capture_sample:
       type: string
@@ -398,6 +399,24 @@ http_response_rule:
       x-dependency:
         type:
           value: wait-for-body
+    bandwidth_limit_name:
+      type: string
+      x-display-name: Bandwidth limit name
+      x-dependency:
+        type:
+          value: set-bandwidth-limit
+    bandwidth_limit_limit:
+      type: string
+      x-display-name: Standard HAProxy expression
+      x-dependency:
+        type:
+          value: set-bandwidth-limit
+    bandwidth_limit_period:
+      type: string
+      x-display-name: Standard HAProxy expression
+      x-dependency:
+        type:
+          value: set-bandwidth-limit
     cond:
       type: string
       x-display-name: Condition

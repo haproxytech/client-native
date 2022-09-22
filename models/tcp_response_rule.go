@@ -39,8 +39,17 @@ import (
 type TCPResponseRule struct {
 
 	// action
-	// Enum: [accept reject lua]
+	// Enum: [accept reject lua set-bandwidth-limit]
 	Action string `json:"action,omitempty"`
+
+	// bandwidth limit limit
+	BandwidthLimitLimit string `json:"bandwidth_limit_limit,omitempty"`
+
+	// bandwidth limit name
+	BandwidthLimitName string `json:"bandwidth_limit_name,omitempty"`
+
+	// bandwidth limit period
+	BandwidthLimitPeriod string `json:"bandwidth_limit_period,omitempty"`
 
 	// cond
 	// Enum: [if unless]
@@ -103,7 +112,7 @@ var tcpResponseRuleTypeActionPropEnum []interface{}
 
 func init() {
 	var res []string
-	if err := json.Unmarshal([]byte(`["accept","reject","lua"]`), &res); err != nil {
+	if err := json.Unmarshal([]byte(`["accept","reject","lua","set-bandwidth-limit"]`), &res); err != nil {
 		panic(err)
 	}
 	for _, v := range res {
@@ -121,6 +130,9 @@ const (
 
 	// TCPResponseRuleActionLua captures enum value "lua"
 	TCPResponseRuleActionLua string = "lua"
+
+	// TCPResponseRuleActionSetDashBandwidthDashLimit captures enum value "set-bandwidth-limit"
+	TCPResponseRuleActionSetDashBandwidthDashLimit string = "set-bandwidth-limit"
 )
 
 // prop value enum
