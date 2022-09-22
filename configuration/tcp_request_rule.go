@@ -438,6 +438,13 @@ func ParseTCPRequestRule(f types.TCPType) (rule *models.TCPRequestRule, err erro
 			rule.LuaParams = a.Params
 			rule.Cond = a.Cond
 			rule.CondTest = a.CondTest
+		case *actions.SetBandwidthLimit:
+			rule.Action = models.TCPRequestRuleActionSetDashBandwidthDashLimit
+			rule.BandwidthLimitName = a.Name
+			rule.BandwidthLimitLimit = a.Limit.String()
+			rule.BandwidthLimitPeriod = a.Period.String()
+			rule.Cond = a.Cond
+			rule.CondTest = a.CondTest
 		default:
 			return nil, NewConfError(ErrValidationError, fmt.Sprintf("unsupported action '%T' in tcp_request_rule", a))
 		}
@@ -781,6 +788,16 @@ func SerializeTCPRequestRule(f models.TCPRequestRule) (rule types.TCPType, err e
 				Action: &actions.Lua{
 					Action:   f.LuaAction,
 					Params:   f.LuaParams,
+					Cond:     f.Cond,
+					CondTest: f.CondTest,
+				},
+			}, nil
+		case models.TCPRequestRuleActionSetDashBandwidthDashLimit:
+			return &tcp_types.Content{
+				Action: &actions.SetBandwidthLimit{
+					Name:     f.BandwidthLimitName,
+					Limit:    common.Expression{Expr: strings.Split(f.BandwidthLimitLimit, " ")},
+					Period:   common.Expression{Expr: strings.Split(f.BandwidthLimitPeriod, " ")},
 					Cond:     f.Cond,
 					CondTest: f.CondTest,
 				},

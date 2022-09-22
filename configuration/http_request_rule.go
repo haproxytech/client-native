@@ -696,6 +696,15 @@ func ParseHTTPRequestRule(f types.Action) (rule *models.HTTPRequestRule, err err
 			Cond:     v.Cond,
 			CondTest: v.CondTest,
 		}
+	case *actions.SetBandwidthLimit:
+		rule = &models.HTTPRequestRule{
+			Type:                 "set-bandwidth-limit",
+			BandwidthLimitName:   v.Name,
+			BandwidthLimitLimit:  v.Limit.String(),
+			BandwidthLimitPeriod: v.Period.String(),
+			Cond:                 v.Cond,
+			CondTest:             v.CondTest,
+		}
 	}
 
 	return rule, err
@@ -1126,6 +1135,14 @@ func SerializeHTTPRequestRule(f models.HTTPRequestRule) (rule types.Action, err 
 		}
 	case "wait-for-handshake":
 		rule = &http_actions.WaitForHandshake{
+			Cond:     f.Cond,
+			CondTest: f.CondTest,
+		}
+	case "set-bandwidth-limit":
+		rule = &actions.SetBandwidthLimit{
+			Name:     f.BandwidthLimitName,
+			Limit:    common.Expression{Expr: strings.Split(f.BandwidthLimitLimit, " ")},
+			Period:   common.Expression{Expr: strings.Split(f.BandwidthLimitPeriod, " ")},
 			Cond:     f.Cond,
 			CondTest: f.CondTest,
 		}

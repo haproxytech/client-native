@@ -227,7 +227,7 @@ func ParseHTTPResponseRules(t, pName string, p parser.Parser) (models.HTTPRespon
 	return httpResRules, nil
 }
 
-func ParseHTTPResponseRule(f types.Action) *models.HTTPResponseRule { //nolint:maintidx
+func ParseHTTPResponseRule(f types.Action) *models.HTTPResponseRule { //nolint:maintidx,cyclop,gocyclo
 	switch v := f.(type) {
 	case *http_actions.AddACL:
 		return &models.HTTPResponseRule{
@@ -513,6 +513,15 @@ func ParseHTTPResponseRule(f types.Action) *models.HTTPResponseRule { //nolint:m
 			WaitTime:    misc.ParseTimeout(v.Time),
 			WaitAtLeast: misc.ParseSize(v.AtLeast),
 		}
+	case *actions.SetBandwidthLimit:
+		return &models.HTTPResponseRule{
+			Type:                 "set-bandwidth-limit",
+			BandwidthLimitName:   v.Name,
+			BandwidthLimitLimit:  v.Limit.String(),
+			BandwidthLimitPeriod: v.Period.String(),
+			Cond:                 v.Cond,
+			CondTest:             v.CondTest,
+		}
 	}
 	return nil
 }
@@ -787,6 +796,14 @@ func SerializeHTTPResponseRule(f models.HTTPResponseRule) (rule types.Action, er
 		rule = &http_actions.WaitForBody{
 			Time:     fmt.Sprintf("%v", f.WaitTime),
 			AtLeast:  fmt.Sprintf("%v", f.WaitAtLeast),
+			Cond:     f.Cond,
+			CondTest: f.CondTest,
+		}
+	case "set-bandwidth-limit":
+		rule = &actions.SetBandwidthLimit{
+			Name:     f.BandwidthLimitName,
+			Limit:    common.Expression{Expr: strings.Split(f.BandwidthLimitLimit, " ")},
+			Period:   common.Expression{Expr: strings.Split(f.BandwidthLimitPeriod, " ")},
 			Cond:     f.Cond,
 			CondTest: f.CondTest,
 		}

@@ -18,9 +18,11 @@ package configuration
 import (
 	"errors"
 	"strconv"
+	"strings"
 
 	"github.com/go-openapi/strfmt"
 	parser "github.com/haproxytech/config-parser/v4"
+	"github.com/haproxytech/config-parser/v4/common"
 	parser_errors "github.com/haproxytech/config-parser/v4/errors"
 	"github.com/haproxytech/config-parser/v4/parsers/actions"
 	tcp_actions "github.com/haproxytech/config-parser/v4/parsers/tcp/actions"
@@ -212,6 +214,16 @@ func ParseTCPResponseRule(t types.TCPType) *models.TCPResponseRule {
 				Cond:      a.Cond,
 				CondTest:  a.CondTest,
 			}
+		case *actions.SetBandwidthLimit:
+			return &models.TCPResponseRule{
+				Type:                 models.TCPResponseRuleTypeContent,
+				Action:               models.TCPRequestRuleActionSetDashBandwidthDashLimit,
+				BandwidthLimitName:   a.Name,
+				BandwidthLimitLimit:  a.Limit.String(),
+				BandwidthLimitPeriod: a.Period.String(),
+				Cond:                 a.Cond,
+				CondTest:             a.CondTest,
+			}
 		}
 	}
 	return nil
@@ -240,6 +252,16 @@ func SerializeTCPResponseRule(t models.TCPResponseRule) types.TCPType {
 				Action: &actions.Lua{
 					Action:   t.LuaAction,
 					Params:   t.LuaParams,
+					Cond:     t.Cond,
+					CondTest: t.CondTest,
+				},
+			}
+		case models.TCPRequestRuleActionSetDashBandwidthDashLimit:
+			return &tcp_types.Content{
+				Action: &actions.SetBandwidthLimit{
+					Name:     t.BandwidthLimitName,
+					Limit:    common.Expression{Expr: strings.Split(t.BandwidthLimitLimit, " ")},
+					Period:   common.Expression{Expr: strings.Split(t.BandwidthLimitPeriod, " ")},
 					Cond:     t.Cond,
 					CondTest: t.CondTest,
 				},

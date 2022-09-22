@@ -323,6 +323,9 @@ frontend test
   http-request wait-for-body time 20s at-least 100k
   http-request set-timeout server 20
   http-request set-timeout tunnel 20
+  http-request set-bandwidth-limit my-limit limit 1m period 10s
+  http-request set-bandwidth-limit my-limit-reverse period 20s limit 2m
+  http-request set-bandwidth-limit my-limit-cond limit 3m if FALSE
   http-response allow if src 192.168.0.0/16
   http-response set-header X-SSL %[ssl_fc]
   http-response set-var(req.my_var) req.fhdr(user-agent),lower
@@ -345,6 +348,9 @@ frontend test
   http-response lua.foo param1 param2 if FALSE
   http-response deny deny_status 400 content-type application/json lf-file /var/errors.file
   http-response wait-for-body time 20s at-least 100k
+  http-response set-bandwidth-limit my-limit limit 1m period 10s
+  http-response set-bandwidth-limit my-limit-reverse period 20s limit 2m
+  http-response set-bandwidth-limit my-limit-cond limit 3m if FALSE
   http-after-response set-header Strict-Transport-Security "max-age=31536000"
   http-after-response replace-header Set-Cookie (C=[^;]*);(.*) \1;ip=%bi;\2
   http-after-response replace-value Cache-control ^public$ private
@@ -359,6 +365,9 @@ frontend test
   tcp-request connection silent-drop if TRUE
   tcp-request connection lua.foo param1 param2 if FALSE
   tcp-request content lua.foo param1 param2 if FALSE
+  tcp-request content set-bandwidth-limit my-limit limit 1m period 10s
+  tcp-request content set-bandwidth-limit my-limit-reverse period 20s limit 2m
+  tcp-request content set-bandwidth-limit my-limit-cond limit 3m if FALSE
   log global
   no log
   log 127.0.0.1:514 local0 notice notice
@@ -476,6 +485,9 @@ backend test
   tcp-response content accept if TRUE
   tcp-response content reject if FALSE
   tcp-response content lua.foo param1 param2 if FALSE
+  tcp-response content set-bandwidth-limit my-limit limit 1m period 10s
+  tcp-response content set-bandwidth-limit my-limit-reverse period 20s limit 2m
+  tcp-response content set-bandwidth-limit my-limit-cond limit 3m if FALSE
   option contstats
   timeout check 2s
   timeout tunnel 5s

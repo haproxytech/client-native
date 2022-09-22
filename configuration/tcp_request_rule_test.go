@@ -29,8 +29,8 @@ func TestGetTCPRequestRules(t *testing.T) { //nolint:gocognit,gocyclo
 		t.Error(err.Error())
 	}
 
-	if len(tRules) != 8 {
-		t.Errorf("%v tcp request rules returned, expected 8", len(tRules))
+	if len(tRules) != 11 {
+		t.Errorf("%v tcp request rules returned, expected 11", len(tRules))
 	}
 
 	if v != version {
@@ -155,6 +155,60 @@ func TestGetTCPRequestRules(t *testing.T) { //nolint:gocognit,gocyclo
 			if r.CondTest != "FALSE" {
 				t.Errorf("%v: CondTest not src FALSE: %v", *r.Index, r.CondTest)
 			}
+		case 8:
+			if r.Type != "content" {
+				t.Errorf("%v: Type not content: %v", *r.Index, r.Type)
+			}
+			if r.Action != "set-bandwidth-limit" {
+				t.Errorf("%v: Action not set-bandwidth-limit: %v", *r.Index, r.Action)
+			}
+			if r.BandwidthLimitName != "my-limit" {
+				t.Errorf("%v: BandwidthLimitName not my-limit: %v", *r.Index, r.BandwidthLimitName)
+			}
+			if r.BandwidthLimitLimit != "1m" {
+				t.Errorf("%v: BandwidthLimitLimit not 1m: %v", *r.Index, r.BandwidthLimitLimit)
+			}
+			if r.BandwidthLimitPeriod != "10s" {
+				t.Errorf("%v: BandwidthLimitPeriod not 10s: %v", *r.Index, r.BandwidthLimitPeriod)
+			}
+		case 9:
+			if r.Type != "content" {
+				t.Errorf("%v: Type not content: %v", *r.Index, r.Type)
+			}
+			if r.Action != "set-bandwidth-limit" {
+				t.Errorf("%v: Action not set-bandwidth-limit: %v", *r.Index, r.Action)
+			}
+			if r.BandwidthLimitName != "my-limit-reverse" {
+				t.Errorf("%v: BandwidthLimitName not my-limit-reverse: %v", *r.Index, r.BandwidthLimitName)
+			}
+			if r.BandwidthLimitLimit != "2m" {
+				t.Errorf("%v: BandwidthLimitLimit not 2m: %v", *r.Index, r.BandwidthLimitLimit)
+			}
+			if r.BandwidthLimitPeriod != "20s" {
+				t.Errorf("%v: BandwidthLimitPeriod no 20s: %v", *r.Index, r.BandwidthLimitPeriod)
+			}
+		case 10:
+			if r.Type != "content" {
+				t.Errorf("%v: Type not content: %v", *r.Index, r.Type)
+			}
+			if r.Action != "set-bandwidth-limit" {
+				t.Errorf("%v: Action not set-bandwidth-limit: %v", *r.Index, r.Action)
+			}
+			if r.BandwidthLimitName != "my-limit-cond" {
+				t.Errorf("%v: BandwidthLimitName not my-limit-cond: %v", *r.Index, r.BandwidthLimitName)
+			}
+			if r.BandwidthLimitLimit != "3m" {
+				t.Errorf("%v: BandwidthLimitLimit not 3m: %v", *r.Index, r.BandwidthLimitLimit)
+			}
+			if r.BandwidthLimitPeriod != "" {
+				t.Errorf("%v: BandwidthLimitPeriod not empty", *r.Index)
+			}
+			if r.Cond != "if" {
+				t.Errorf("%v: Cond not if: %v", *r.Index, r.Cond)
+			}
+			if r.CondTest != "FALSE" {
+				t.Errorf("%v: CondTest not FALSE: %v", *r.Index, r.CondTest)
+			}
 		default:
 			t.Errorf("Expext tcp-request 0-7, %v found", *r.Index)
 		}
@@ -267,7 +321,7 @@ func TestCreateEditDeleteTCPRequestRule(t *testing.T) {
 	}
 
 	// TestDeleteTCPRequest
-	err = clientTest.DeleteTCPRequestRule(8, "frontend", "test", "", version)
+	err = clientTest.DeleteTCPRequestRule(11, "frontend", "test", "", version)
 	if err != nil {
 		t.Error(err.Error())
 	} else {
@@ -278,9 +332,9 @@ func TestCreateEditDeleteTCPRequestRule(t *testing.T) {
 		t.Error("Version not incremented")
 	}
 
-	_, _, err = clientTest.GetTCPRequestRule(8, "frontend", "test", "")
+	_, _, err = clientTest.GetTCPRequestRule(11, "frontend", "test", "")
 	if err == nil {
-		t.Error("DeleteTCPRequestRule failed, TCP Request Rule 6 still exists")
+		t.Error("DeleteTCPRequestRule failed, TCP Request Rule 11 still exists")
 	}
 
 	err = clientTest.DeleteTCPRequestRule(2, "backend", "test_2", "", version)
