@@ -4,6 +4,11 @@ global:
   description: HAProxy global configuration
   type: object
   properties:
+    anonkey:
+      type: integer
+      minimum: 0
+      maximum: 4294967295
+      x-nullable: true
     chroot:
       type: string
       pattern: '^[^\s]+$'
@@ -319,6 +324,9 @@ global:
           type: integer
           x-display-name: Pattern Lookup Cache Size
           x-nullable: true
+        peers_max_updates_at_once:
+          type: integer
+          x-display-name: Maximum number of stick-table updates at once
         pipesize:
           type: integer
           x-display-name: Pipe Buffer Size

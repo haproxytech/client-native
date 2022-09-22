@@ -65,6 +65,11 @@ type Global struct {
 	// thread group lines
 	ThreadGroupLines []*ThreadGroup `json:"thread_group_lines"`
 
+	// anonkey
+	// Maximum: 4.294967295e+09
+	// Minimum: 0
+	Anonkey *int64 `json:"anonkey,omitempty"`
+
 	// busy polling
 	BusyPolling bool `json:"busy_polling,omitempty"`
 
@@ -357,6 +362,10 @@ func (m *Global) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateThreadGroupLines(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateAnonkey(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -667,6 +676,22 @@ func (m *Global) validateThreadGroupLines(formats strfmt.Registry) error {
 			}
 		}
 
+	}
+
+	return nil
+}
+
+func (m *Global) validateAnonkey(formats strfmt.Registry) error {
+	if swag.IsZero(m.Anonkey) { // not required
+		return nil
+	}
+
+	if err := validate.MinimumInt("anonkey", "body", *m.Anonkey, 0, false); err != nil {
+		return err
+	}
+
+	if err := validate.MaximumInt("anonkey", "body", *m.Anonkey, 4.294967295e+09, false); err != nil {
+		return err
 	}
 
 	return nil
@@ -2654,6 +2679,9 @@ type GlobalTuneOptions struct {
 
 	// pattern cache size
 	PatternCacheSize *int64 `json:"pattern_cache_size,omitempty"`
+
+	// peers max updates at once
+	PeersMaxUpdatesAtOnce int64 `json:"peers_max_updates_at_once,omitempty"`
 
 	// pipesize
 	Pipesize int64 `json:"pipesize,omitempty"`

@@ -36,6 +36,9 @@ func TestGetGlobal(t *testing.T) {
 	if global.Daemon != "enabled" {
 		t.Errorf("Daemon is %v, expected enabled", global.Daemon)
 	}
+	if *global.Anonkey != 25 {
+		t.Errorf("Anonkey is %v, expected 25", *global.Anonkey)
+	}
 	if len(global.RuntimeAPIs) == 1 {
 		if *global.RuntimeAPIs[0].Address != "/var/run/haproxy.sock" {
 			t.Errorf("RuntimeAPI.Address is %v, expected /var/run/haproxy.sock", *global.RuntimeAPIs[0].Address)
@@ -324,6 +327,9 @@ func TestGetGlobal(t *testing.T) {
 	if *global.TuneOptions.PatternCacheSize != 31 {
 		t.Errorf("PatternCacheSize is %v, expected 31", global.TuneOptions.PatternCacheSize)
 	}
+	if global.TuneOptions.PeersMaxUpdatesAtOnce != 200 {
+		t.Errorf("PeersMaxUpdatesAtOnce is %v, expected 200", global.TuneOptions.PeersMaxUpdatesAtOnce)
+	}
 	if global.TuneOptions.Pipesize != 32 {
 		t.Errorf("Pipesize is %v, expected 32", global.TuneOptions.Pipesize)
 	}
@@ -573,12 +579,15 @@ func TestPutGlobal(t *testing.T) {
 			Enabled: &enabled,
 			Param:   "something",
 		},
-		TuneOptions:            &models.GlobalTuneOptions{},
+		TuneOptions: &models.GlobalTuneOptions{
+			PeersMaxUpdatesAtOnce: 100,
+		},
 		UID:                    1234,
 		WurflOptions:           &models.GlobalWurflOptions{},
 		DeviceAtlasOptions:     &models.GlobalDeviceAtlasOptions{},
 		FiftyOneDegreesOptions: &models.GlobalFiftyOneDegreesOptions{},
 		StatsMaxconn:           misc.Int64P(30),
+		Anonkey:                misc.Int64P(40),
 	}
 
 	err := clientTest.PushGlobalConfiguration(g, "", version)

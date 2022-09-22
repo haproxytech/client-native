@@ -781,6 +781,11 @@ definitions:
       additionalProperties: false
       description: HAProxy global configuration
       properties:
+        anonkey:
+          maximum: 4294967295
+          minimum: 0
+          type: integer
+          x-nullable: true
         busy_polling:
           type: boolean
         ca_base:
@@ -1310,6 +1315,9 @@ definitions:
               type: integer
               x-display-name: Pattern Lookup Cache Size
               x-nullable: true
+            peers_max_updates_at_once:
+              type: integer
+              x-display-name: Maximum number of stick-table updates at once
             pipesize:
               type: integer
               x-display-name: Pipe Buffer Size

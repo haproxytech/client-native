@@ -176,6 +176,8 @@ global
   setenv third sister
   resetenv first second
   unsetenv third fourth
+  anonkey 25
+  tune.peers.max-updates-at-once 200
 
 defaults
   maxconn 2000

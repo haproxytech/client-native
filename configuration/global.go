@@ -83,8 +83,18 @@ func (c *client) PushGlobalConfiguration(data *models.Global, transactionID stri
 }
 
 func ParseGlobalSection(p parser.Parser) (*models.Global, error) { //nolint:gocognit,gocyclo,cyclop,maintidx
+	var anonkey *int64
+	data, err := p.Get(parser.Global, parser.GlobalSectionName, "anonkey")
+	if err == nil {
+		anonkeyParser, ok := data.(*types.Int64C)
+		if !ok {
+			return nil, misc.CreateTypeAssertError("anonkey")
+		}
+		anonkey = &anonkeyParser.Value
+	}
+
 	var chroot string
-	data, err := p.Get(parser.Global, parser.GlobalSectionName, "chroot")
+	data, err = p.Get(parser.Global, parser.GlobalSectionName, "chroot")
 	if err == nil {
 		chrootParser, ok := data.(*types.StringC)
 		if !ok {
@@ -972,6 +982,7 @@ func ParseGlobalSection(p parser.Parser) (*models.Global, error) { //nolint:goco
 	}
 
 	global := &models.Global{
+		Anonkey:                           anonkey,
 		PresetEnvs:                        presetEnvs,
 		SetEnvs:                           setEnvs,
 		Resetenv:                          resetEnv,
@@ -1067,6 +1078,18 @@ func ParseGlobalSection(p parser.Parser) (*models.Global, error) { //nolint:goco
 }
 
 func SerializeGlobalSection(p parser.Parser, data *models.Global) error { //nolint:gocognit,gocyclo,cyclop,maintidx
+	var pAnonkey *types.Int64C
+	if data.Anonkey == nil {
+		pAnonkey = nil
+	} else {
+		pAnonkey = &types.Int64C{
+			Value: *data.Anonkey,
+		}
+	}
+	if err := p.Set(parser.Global, parser.GlobalSectionName, "anonkey", pAnonkey); err != nil {
+		return err
+	}
+
 	pChroot := &types.StringC{
 		Value: data.Chroot,
 	}
@@ -2059,6 +2082,9 @@ func serializeTuneOptions(p parser.Parser, options *models.GlobalTuneOptions) er
 	if err := serializeInt64POption(p, "tune.pattern.cache-size", options.PatternCacheSize); err != nil {
 		return err
 	}
+	if err := serializeInt64Option(p, "tune.peers.max-updates-at-once", options.PeersMaxUpdatesAtOnce); err != nil {
+		return err
+	}
 	if err := serializeInt64Option(p, "tune.pipesize", options.Pipesize); err != nil {
 		return err
 	}
@@ -2429,6 +2455,12 @@ func parseTuneOptions(p parser.Parser) (*models.GlobalTuneOptions, error) { //no
 		return nil, err
 	}
 	options.PatternCacheSize = intPOption
+
+	intOption, err = parseInt64Option(p, "tune.peers.max-updates-at-once")
+	if err != nil {
+		return nil, err
+	}
+	options.PeersMaxUpdatesAtOnce = intOption
 
 	intOption, err = parseInt64Option(p, "tune.pipesize")
 	if err != nil {
