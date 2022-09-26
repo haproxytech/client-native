@@ -14,6 +14,18 @@ externalDocs:
   url: https://cbonte.github.io/haproxy-dconv/
   description: HAProxy Documentation
 definitions:
+  fcgiApp:
+    $ref: "models/configuration/fcgi.yaml#/app"
+  fcgiApps:
+    type: array
+    items:
+      $ref: "#/definitions/fcgiApp"
+  fcgiSetParam:
+    $ref: "models/configuration/fcgi.yaml#/setParam"
+  fcgiPassHeader:
+    $ref: "models/configuration/fcgi.yaml#/passHeader"
+  fcgiLogStderr:
+    $ref: "models/configuration/fcgi.yaml#/logStderr"
   bind_params:
     $ref: "models/configuration/bind_params.yaml#/bind_params"
   server_params:
@@ -665,6 +677,7 @@ tags:
   - name: Cache
   - name: DeclareCapture
   - name: Userlist
+  - name: FCGIApp
 security:
   - basic_auth: []
 paths:
@@ -752,6 +765,10 @@ paths:
     $ref: "paths/configuration/peers.yaml#/peer_entries"
   /services/haproxy/configuration/peer_entries/{name}:
     $ref: "paths/configuration/peers.yaml#/peer_entries_one"
+  /services/haproxy/configuration/fci_apps:
+    $ref: "paths/configuration/fcgi-app.yaml#/apps"
+  /services/haproxy/configuration/fci_apps/{name}:
+    $ref: "paths/configuration/fcgi-app.yaml#/apps_one"
   /services/haproxy/configuration/backends:
     $ref: "paths/configuration/backend.yaml#/backends"
   /services/haproxy/configuration/backends/{name}:

@@ -1,0 +1,147 @@
+---
+app:
+  title: FCGI application
+  description: HAProxy FastCGI application configuration
+  type: object
+  required:
+    - name
+    - docroot
+  properties:
+    name:
+      type: string
+      pattern: '^[^\s]+$'
+      x-nullable: false
+      description: Declares a FastCGI application
+      readOnly: true
+    docroot:
+      type: string
+      description: Defines the document root on the remote host. The parameter serves to build the default value of FastCGI parameters SCRIPT_FILENAME and PATH_TRANSLATED. It is a mandatory setting.
+    index:
+      type: string
+      description: Defines the script name to append after a URI that ends with a slash ("/") to set the default value for the FastCGI parameter SCRIPT_NAME. It is an optional setting.
+    log_stderrs:
+      type: array
+      items:
+        $ref: "#/definitions/fcgiLogStderr"
+    pass_headers:
+      type: array
+      items:
+        $ref: "#/definitions/fcgiPassHeader"
+    path_info:
+      type: string
+      description: |-
+        Defines a regular expression to extract the script-name and the path-info from the URI.
+        Thus, <regex> must have two captures: the first to capture the script name, and the second to capture the path- info.
+        If not defined, it does not perform matching on the URI, and does not fill the FastCGI parameters PATH_INFO and PATH_TRANSLATED.
+    get_values:
+      type: string
+      description: Enables or disables the retrieval of variables related to connection management.
+      enum: [enabled, disabled]
+    keep_conn:
+      type: string
+      description: Tells the FastCGI application whether or not to keep the connection open after it sends a response. If disabled, the FastCGI application closes the connection after responding to this request.
+      enum: [enabled, disabled]
+    max_reqs:
+      type: integer
+      description: Defines the maximum number of concurrent requests this application can accept. If the FastCGI application retrieves the variable FCGI_MAX_REQS during connection establishment, it can override this option. Furthermore, if the application does not do multiplexing, it will ignore this option.
+      default: 1
+      minimum: 1
+    mpxs_conns:
+      type: string
+      description: Enables or disables the support of connection multiplexing. If the FastCGI application retrieves the variable FCGI_MPXS_CONNS during connection establishment, it can override this option.
+      enum: [enabled, disabled]
+    set_params:
+      type: array
+      items:
+        $ref: "#/definitions/fcgiSetParam"
+
+setParam:
+  description: |-
+    Sets a FastCGI parameter to pass to this application.
+    Its value, defined by <format> can take a formatted string, the same as the log directive.
+    Optionally, you can follow it with an ACL-based condition, in which case the FastCGI application evaluates it only if the condition is true.
+  type: object
+  properties:
+    name:
+      type: string
+    format:
+      type: string
+    cond:
+      type: string
+      x-display-name: Condition
+      enum: [if, unless]
+    cond_test:
+      type: string
+      x-display-name: Condition Test
+      x-dependency:
+        cond:
+          required: true
+
+passHeader:
+  description: |-
+    Specifies the name of a request header to pass to the FastCGI application.
+    Optionally, you can follow it with an ACL-based condition, in which case the FastCGI application evaluates it only if the condition is true.
+    Most request headers are already available to the FastCGI application with the prefix "HTTP".
+    Thus, you only need this directive to pass headers that are purposefully omitted.
+    Currently, the headers "Authorization", "Proxy-Authorization", and hop-by-hop headers are omitted.
+    Note that the headers "Content-type" and "Content-length" never pass to the FastCGI application because they are already converted into parameters.
+  type: object
+  properties:
+    name:
+      type: string
+    cond:
+      type: string
+      x-display-name: Condition
+      enum: [if, unless]
+    cond_test:
+      type: string
+      x-display-name: Condition Test
+      x-dependency:
+        cond:
+          required: true
+
+logStderr:
+  description: |-
+    Enables logging of STDERR messages that the FastCGI application reports.
+    It is an optional setting. By default, HAProxy Enterprise ignores STDERR messages.
+  type: object
+  properties:
+    global:
+      title: Global
+      type: boolean
+    address:
+      type: string
+    len:
+      title: Length
+      type: integer
+    format:
+      title: Format
+      type: string
+    sample:
+      title: Sample
+      type: object
+      required:
+        - ranges
+        - size
+      properties:
+        ranges:
+          title: Range
+          type: string
+        size:
+          title: Size
+          type: integer
+    facility:
+      title: Facility
+      type: string
+    level:
+      title: Level
+      type: string
+      x-dependency:
+        facility:
+          required: true
+    minlevel:
+      title: Minimum level
+      type: string
+      x-dependency:
+        facility:
+          required: true

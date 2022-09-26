@@ -315,7 +315,7 @@ type Backend struct {
 	TunnelTimeout *int64 `json:"tunnel_timeout,omitempty"`
 
 	// use fcgi app
-	UseFcgiApp string `json:"use_fcgi_app,omitempty"`
+	UseFCGIApp string `json:"use_fcgi_app,omitempty"`
 }
 
 // Validate validates this backend

@@ -353,7 +353,7 @@ func (s *SectionParser) checkSpecialFields(fieldName string) (match bool, data i
 		return true, s.emailAlert()
 	case "ServerStateFileName":
 		return true, s.serverStateFileName()
-	case "UseFcgiApp":
+	case "UseFCGIApp":
 		return true, s.useFcgiApp()
 	case "Description":
 		return true, s.description()

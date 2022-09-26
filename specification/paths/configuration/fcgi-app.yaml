@@ -1,0 +1,161 @@
+---
+apps:
+  get:
+    summary: Return an array of FCGI apps
+    description: Returns an array of all configured FCGI applications.
+    operationId: getFCGIApps
+    parameters:
+      - $ref: "#/parameters/transaction_id"
+    tags:
+      - FCGIApp
+    responses:
+      '200':
+        description: Successful operation
+        headers:
+          Configuration-Version:
+            description: Configuration file version
+            type: string
+        schema:
+          type: object
+          required:
+            - data
+          properties:
+            data:
+              $ref: "#/definitions/fcgiApps"
+            _version:
+              type: integer
+      'default':
+        $ref: '#/responses/DefaultError'
+  post:
+    summary: Add an FCGI app
+    description: Adds a new FCGI application to the configuration file.
+    operationId: createFCGIApp
+    parameters:
+      - name: data
+        required: true
+        in: body
+        schema:
+          $ref: "#/definitions/fcgiApp"
+      - $ref: "#/parameters/transaction_id"
+      - $ref: "#/parameters/version"
+      - $ref: "#/parameters/force_reload"
+    tags:
+      - FCGIApp
+    responses:
+      '202':
+        description: Configuration change accepted and reload requested
+        headers:
+          Reload-ID:
+            description: ID of the requested reload
+            type: string
+        schema:
+          $ref: "#/definitions/fcgiApp"
+      '201':
+        description: Application created
+        schema:
+          $ref: "#/definitions/fcgiApp"
+      '409':
+        $ref: '#/responses/AlreadyExists'
+      '400':
+        $ref: '#/responses/BadRequest'
+      'default':
+        $ref: '#/responses/DefaultError'
+apps_one:
+  get:
+    summary: Return a FCGI app
+    description: Returns one FCGI application configuration by its name.
+    operationId: getFCGIApp
+    tags:
+      - FCGIApp
+    parameters:
+      - name: name
+        in: path
+        description: Application name
+        required: true
+        type: string
+      - $ref: "#/parameters/transaction_id"
+    responses:
+      '200':
+        description: Successful operation
+        headers:
+          Configuration-Version:
+            description: Configuration file version
+            type: string
+        schema:
+          type: object
+          properties:
+            data:
+              $ref: "#/definitions/fcgiApp"
+            _version:
+              type: integer
+      '404':
+        $ref: '#/responses/NotFound'
+      'default':
+        $ref: '#/responses/DefaultError'
+  put:
+    summary: Replace a FCGI app
+    description: Replaces a FCGI application configuration by its name.
+    operationId: replaceFCGIApp
+    tags:
+      - FCGIApp
+    parameters:
+      - name: name
+        in: path
+        description: Application name
+        required: true
+        type: string
+      - name: data
+        required: true
+        in: body
+        schema:
+          $ref: "#/definitions/fcgiApp"
+      - $ref: "#/parameters/transaction_id"
+      - $ref: "#/parameters/version"
+      - $ref: "#/parameters/force_reload"
+    responses:
+      '202':
+        description: Configuration change accepted and reload requested
+        headers:
+          Reload-ID:
+            description: ID of the requested reload
+            type: string
+        schema:
+          $ref: "#/definitions/fcgiApp"
+      '200':
+        description: Application replaced
+        schema:
+          $ref: "#/definitions/fcgiApp"
+      '400':
+        $ref: '#/responses/BadRequest'
+      '404':
+        $ref: '#/responses/NotFound'
+      'default':
+        $ref: '#/responses/DefaultError'
+  delete:
+    summary: Delete an FCGI app
+    description: Deletes an FCGI application from the configuration by its name.
+    operationId: deleteFCGIApp
+    tags:
+      - FCGIApp
+    parameters:
+      - name: name
+        in: path
+        description: Application name
+        required: true
+        type: string
+      - $ref: "#/parameters/transaction_id"
+      - $ref: "#/parameters/version"
+      - $ref: "#/parameters/force_reload"
+    responses:
+      '202':
+        description: Configuration change accepted and reload requested
+        headers:
+          Reload-ID:
+            description: ID of the requested reload
+            type: string
+      '204':
+        description: Application deleted
+      '404':
+        $ref: '#/responses/NotFound'
+      'default':
+        $ref: '#/responses/DefaultError'

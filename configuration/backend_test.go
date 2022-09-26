@@ -473,8 +473,8 @@ func TestGetBackend(t *testing.T) {
 	if b.Description != "this is a backend description" {
 		t.Errorf("%v: Description not `this is a backend description`: %v", b.Name, b.Description)
 	}
-	if b.UseFcgiApp != "app-name" {
-		t.Errorf("%v: UseFcgiApp not app-name: %v", b.Name, b.UseFcgiApp)
+	if b.UseFCGIApp != "app-name" {
+		t.Errorf("%v: UseFcgiApp not app-name: %v", b.Name, b.UseFCGIApp)
 	}
 	if b.Enabled != "enabled" {
 		t.Errorf("%v: Enabled not enabled: %v", b.Name, b.Enabled)

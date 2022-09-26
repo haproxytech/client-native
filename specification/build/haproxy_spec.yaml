@@ -14,6 +14,175 @@ externalDocs:
   url: https://cbonte.github.io/haproxy-dconv/
   description: HAProxy Documentation
 definitions:
+  fcgiApp:
+      description: HAProxy FastCGI application configuration
+      properties:
+        docroot:
+          description: Defines the document root on the remote host. The parameter serves
+            to build the default value of FastCGI parameters SCRIPT_FILENAME and PATH_TRANSLATED.
+            It is a mandatory setting.
+          type: string
+        get_values:
+          description: Enables or disables the retrieval of variables related to connection
+            management.
+          enum:
+          - enabled
+          - disabled
+          type: string
+        index:
+          description: Defines the script name to append after a URI that ends with a slash
+            ("/") to set the default value for the FastCGI parameter SCRIPT_NAME. It is
+            an optional setting.
+          type: string
+        keep_conn:
+          description: Tells the FastCGI application whether or not to keep the connection
+            open after it sends a response. If disabled, the FastCGI application closes
+            the connection after responding to this request.
+          enum:
+          - enabled
+          - disabled
+          type: string
+        log_stderrs:
+          items:
+            $ref: '#/definitions/fcgiLogStderr'
+          type: array
+        max_reqs:
+          default: 1
+          description: Defines the maximum number of concurrent requests this application
+            can accept. If the FastCGI application retrieves the variable FCGI_MAX_REQS
+            during connection establishment, it can override this option. Furthermore, if
+            the application does not do multiplexing, it will ignore this option.
+          minimum: 1
+          type: integer
+        mpxs_conns:
+          description: Enables or disables the support of connection multiplexing. If the
+            FastCGI application retrieves the variable FCGI_MPXS_CONNS during connection
+            establishment, it can override this option.
+          enum:
+          - enabled
+          - disabled
+          type: string
+        name:
+          description: Declares a FastCGI application
+          pattern: ^[^\s]+$
+          readOnly: true
+          type: string
+          x-nullable: false
+        pass_headers:
+          items:
+            $ref: '#/definitions/fcgiPassHeader'
+          type: array
+        path_info:
+          description: |-
+            Defines a regular expression to extract the script-name and the path-info from the URI.
+            Thus, <regex> must have two captures: the first to capture the script name, and the second to capture the path- info.
+            If not defined, it does not perform matching on the URI, and does not fill the FastCGI parameters PATH_INFO and PATH_TRANSLATED.
+          type: string
+        set_params:
+          items:
+            $ref: '#/definitions/fcgiSetParam'
+          type: array
+      required:
+      - name
+      - docroot
+      title: FCGI application
+      type: object
+  fcgiApps:
+    type: array
+    items:
+      $ref: "#/definitions/fcgiApp"
+  fcgiSetParam:
+      description: |-
+        Sets a FastCGI parameter to pass to this application.
+        Its value, defined by <format> can take a formatted string, the same as the log directive.
+        Optionally, you can follow it with an ACL-based condition, in which case the FastCGI application evaluates it only if the condition is true.
+      properties:
+        cond:
+          enum:
+          - if
+          - unless
+          type: string
+          x-display-name: Condition
+        cond_test:
+          type: string
+          x-dependency:
+            cond:
+              required: true
+          x-display-name: Condition Test
+        format:
+          type: string
+        name:
+          type: string
+      type: object
+  fcgiPassHeader:
+      description: |-
+        Specifies the name of a request header to pass to the FastCGI application.
+        Optionally, you can follow it with an ACL-based condition, in which case the FastCGI application evaluates it only if the condition is true.
+        Most request headers are already available to the FastCGI application with the prefix "HTTP".
+        Thus, you only need this directive to pass headers that are purposefully omitted.
+        Currently, the headers "Authorization", "Proxy-Authorization", and hop-by-hop headers are omitted.
+        Note that the headers "Content-type" and "Content-length" never pass to the FastCGI application because they are already converted into parameters.
+      properties:
+        cond:
+          enum:
+          - if
+          - unless
+          type: string
+          x-display-name: Condition
+        cond_test:
+          type: string
+          x-dependency:
+            cond:
+              required: true
+          x-display-name: Condition Test
+        name:
+          type: string
+      type: object
+  fcgiLogStderr:
+      description: |-
+        Enables logging of STDERR messages that the FastCGI application reports.
+        It is an optional setting. By default, HAProxy Enterprise ignores STDERR messages.
+      properties:
+        address:
+          type: string
+        facility:
+          title: Facility
+          type: string
+        format:
+          title: Format
+          type: string
+        global:
+          title: Global
+          type: boolean
+        len:
+          title: Length
+          type: integer
+        level:
+          title: Level
+          type: string
+          x-dependency:
+            facility:
+              required: true
+        minlevel:
+          title: Minimum level
+          type: string
+          x-dependency:
+            facility:
+              required: true
+        sample:
+          properties:
+            ranges:
+              title: Range
+              type: string
+            size:
+              title: Size
+              type: integer
+          required:
+          - ranges
+          - size
+          title: Sample
+          type: object
+      type: object
   bind_params:
       additionalProperties: false
       example:
@@ -8753,6 +8922,7 @@ tags:
 - name: DgramBind
 - name: Discovery
   description: API autodiscover endpoints
+- name: FCGIApp
 - name: Filter
 - name: Frontend
   description: Managing frontend configuration (advanced mode)
@@ -11251,6 +11421,166 @@ paths:
         summary: Replace a peer_entry
         tags:
         - PeerEntry
+  /services/haproxy/configuration/fci_apps:
+      get:
+        description: Returns an array of all configured FCGI applications.
+        operationId: getFCGIApps
+        parameters:
+        - $ref: '#/parameters/transaction_id'
+        responses:
+          "200":
+            description: Successful operation
+            headers:
+              Configuration-Version:
+                description: Configuration file version
+                type: string
+            schema:
+              properties:
+                _version:
+                  type: integer
+                data:
+                  $ref: '#/definitions/fcgiApps'
+              required:
+              - data
+              type: object
+          default:
+            $ref: '#/responses/DefaultError'
+        summary: Return an array of FCGI apps
+        tags:
+        - FCGIApp
+      post:
+        description: Adds a new FCGI application to the configuration file.
+        operationId: createFCGIApp
+        parameters:
+        - in: body
+          name: data
+          required: true
+          schema:
+            $ref: '#/definitions/fcgiApp'
+        - $ref: '#/parameters/transaction_id'
+        - $ref: '#/parameters/version'
+        - $ref: '#/parameters/force_reload'
+        responses:
+          "201":
+            description: Application created
+            schema:
+              $ref: '#/definitions/fcgiApp'
+          "202":
+            description: Configuration change accepted and reload requested
+            headers:
+              Reload-ID:
+                description: ID of the requested reload
+                type: string
+            schema:
+              $ref: '#/definitions/fcgiApp'
+          "400":
+            $ref: '#/responses/BadRequest'
+          "409":
+            $ref: '#/responses/AlreadyExists'
+          default:
+            $ref: '#/responses/DefaultError'
+        summary: Add an FCGI app
+        tags:
+        - FCGIApp
+  /services/haproxy/configuration/fci_apps/{name}:
+      delete:
+        description: Deletes an FCGI application from the configuration by its name.
+        operationId: deleteFCGIApp
+        parameters:
+        - description: Application name
+          in: path
+          name: name
+          required: true
+          type: string
+        - $ref: '#/parameters/transaction_id'
+        - $ref: '#/parameters/version'
+        - $ref: '#/parameters/force_reload'
+        responses:
+          "202":
+            description: Configuration change accepted and reload requested
+            headers:
+              Reload-ID:
+                description: ID of the requested reload
+                type: string
+          "204":
+            description: Application deleted
+          "404":
+            $ref: '#/responses/NotFound'
+          default:
+            $ref: '#/responses/DefaultError'
+        summary: Delete an FCGI app
+        tags:
+        - FCGIApp
+      get:
+        description: Returns one FCGI application configuration by its name.
+        operationId: getFCGIApp
+        parameters:
+        - description: Application name
+          in: path
+          name: name
+          required: true
+          type: string
+        - $ref: '#/parameters/transaction_id'
+        responses:
+          "200":
+            description: Successful operation
+            headers:
+              Configuration-Version:
+                description: Configuration file version
+                type: string
+            schema:
+              properties:
+                _version:
+                  type: integer
+                data:
+                  $ref: '#/definitions/fcgiApp'
+              type: object
+          "404":
+            $ref: '#/responses/NotFound'
+          default:
+            $ref: '#/responses/DefaultError'
+        summary: Return a FCGI app
+        tags:
+        - FCGIApp
+      put:
+        description: Replaces a FCGI application configuration by its name.
+        operationId: replaceFCGIApp
+        parameters:
+        - description: Application name
+          in: path
+          name: name
+          required: true
+          type: string
+        - in: body
+          name: data
+          required: true
+          schema:
+            $ref: '#/definitions/fcgiApp'
+        - $ref: '#/parameters/transaction_id'
+        - $ref: '#/parameters/version'
+        - $ref: '#/parameters/force_reload'
+        responses:
+          "200":
+            description: Application replaced
+            schema:
+              $ref: '#/definitions/fcgiApp'
+          "202":
+            description: Configuration change accepted and reload requested
+            headers:
+              Reload-ID:
+                description: ID of the requested reload
+                type: string
+            schema:
+              $ref: '#/definitions/fcgiApp'
+          "400":
+            $ref: '#/responses/BadRequest'
+          "404":
+            $ref: '#/responses/NotFound'
+          default:
+            $ref: '#/responses/DefaultError'
+        summary: Replace a FCGI app
+        tags:
+        - FCGIApp
   /services/haproxy/configuration/backends:
       get:
         description: Returns an array of all configured backends.
