@@ -16,7 +16,7 @@ tcp_request_rule:
       x-nullable: false
     action:
       type: string
-      enum: [accept, capture, do-resolve, expect-netscaler-cip, expect-proxy, reject, sc-inc-gpc0, sc-inc-gpc1, sc-set-gpt0, send-spoe-group, set-dst-port, set-dst, set-priority, set-src, set-var, silent-drop, track-sc0, track-sc1, track-sc2, unset-var, use-service, lua, set-bandwidth-limit]
+      enum: [accept, capture, do-resolve, expect-netscaler-cip, expect-proxy, reject, sc-inc-gpc0, sc-inc-gpc1, sc-set-gpt0, send-spoe-group, set-dst-port, set-dst, set-priority, set-src, set-var, silent-drop, track-sc0, track-sc1, track-sc2, unset-var, use-service, lua, set-bandwidth-limit, set-src-port, set-mark, set-tos, set-var-fmt, set-log-level, set-nice, switch-mode]
       x-nullable: false
       x-dependency:
         type:
@@ -129,20 +129,29 @@ tcp_request_rule:
       x-display-name: Variable name
       x-dependency:
         action:
-          value: [set-var, unset-var]
+          value: [set-var, unset-var, set-var-fmt]
           required: true
         type:
-          value: [session, content]
+          value: [session, connection, content]
     var_scope:
       type: string
       pattern: '^[^\s]+$'
       x-display-name: Variable scope
       x-dependency:
         action:
-          value: [set-var, unset-var]
+          value: [set-var, unset-var, set-var-fmt]
           required: true
         type:
-          value: [session, content]
+          value: [session, connection, content]
+    var_format:
+      type: string
+      x-display-name: Var Format
+      x-dependency:
+        action:
+          value: set-var-fmt
+          required: true
+        type:
+          value: [connection, content]
     track_key:
       type: string
       x-display-name: Sample expression rule
@@ -182,7 +191,7 @@ tcp_request_rule:
       x-display-name: Standard HAProxy expression
       x-dependency:
         action:
-          value: [do-resolve, set-var, set-src, set-priority, set-dst, set-dst-port]
+          value: [do-resolve, set-var, set-src, set-priority, set-dst, set-dst-port, set-src-port]
           required: true
         type:
           value: [session, connection, content]
@@ -226,6 +235,56 @@ tcp_request_rule:
       x-dependency:
         action:
           value: set-bandwidth-limit
+        type:
+          value: content
+    log_level:
+      type: string
+      enum: [emerg, alert, crit, err, warning, notice, info, debug, silent]
+      x-dependency:
+        action:
+          value: set-log-level
+          required: true
+        type:
+          value: content
+    mark_value:
+      type: string
+      pattern: '^(0x[0-9A-Fa-f]+|[0-9]+)$'
+      x-display-name: Mark Value
+      x-dependency:
+        action:
+          value: set-mark
+          required: true
+        type:
+          value: [connection, content]
+    nice_value:
+      type: integer
+      minimum: -1024
+      maximum: 1024
+      x-nullable: false
+      x-display-name: Nice Value
+      x-dependency:
+        action:
+          value: set-nice
+          required: true
+        type:
+          value: content
+    tos_value:
+      type: string
+      pattern: '^(0x[0-9A-Fa-f]+|[0-9]+)$'
+      x-display-name: Tos Value
+      x-dependency:
+        action:
+          value: set-tos
+          required: true
+        type:
+          value: [connection, content]
+    switch_mode_proto:
+      type: string
+      x-display-name: Switch Mode Proto
+      x-dependency:
+        action:
+          value: switch-mode
+          required: true
         type:
           value: content
     cond:

@@ -4680,6 +4680,13 @@ definitions:
           - use-service
           - lua
           - set-bandwidth-limit
+          - set-src-port
+          - set-mark
+          - set-tos
+          - set-var-fmt
+          - set-log-level
+          - set-nice
+          - switch-mode
           type: string
           x-dependency:
             type:
@@ -4778,6 +4785,7 @@ definitions:
               - set-priority
               - set-dst
               - set-dst-port
+              - set-src-port
             type:
               value:
               - session
@@ -4800,6 +4808,24 @@ definitions:
         index:
           type: integer
           x-nullable: true
+        log_level:
+          enum:
+          - emerg
+          - alert
+          - crit
+          - err
+          - warning
+          - notice
+          - info
+          - debug
+          - silent
+          type: string
+          x-dependency:
+            action:
+              required: true
+              value: set-log-level
+            type:
+              value: content
         lua_action:
           pattern: ^[^\s]+$
           type: string
@@ -4822,6 +4848,30 @@ definitions:
               - connection
               - content
           x-display-name: Lua action params
+        mark_value:
+          pattern: ^(0x[0-9A-Fa-f]+|[0-9]+)$
+          type: string
+          x-dependency:
+            action:
+              required: true
+              value: set-mark
+            type:
+              value:
+              - connection
+              - content
+          x-display-name: Mark Value
+        nice_value:
+          maximum: 1024
+          minimum: -1024
+          type: integer
+          x-dependency:
+            action:
+              required: true
+              value: set-nice
+            type:
+              value: content
+          x-display-name: Nice Value
+          x-nullable: false
         priority_type:
           enum:
           - class
@@ -4917,6 +4967,15 @@ definitions:
               value:
               - content
           x-display-name: Group name
+        switch_mode_proto:
+          type: string
+          x-dependency:
+            action:
+              required: true
+              value: switch-mode
+            type:
+              value: content
+          x-display-name: Switch Mode Proto
         timeout:
           type: integer
           x-dependency:
@@ -4924,6 +4983,18 @@ definitions:
               required: true
               value: inspect-delay
           x-nullable: true
+        tos_value:
+          pattern: ^(0x[0-9A-Fa-f]+|[0-9]+)$
+          type: string
+          x-dependency:
+            action:
+              required: true
+              value: set-tos
+            type:
+              value:
+              - connection
+              - content
+          x-display-name: Tos Value
         track_key:
           type: string
           x-dependency:
@@ -4962,6 +5033,17 @@ definitions:
           - session
           type: string
           x-nullable: false
+        var_format:
+          type: string
+          x-dependency:
+            action:
+              required: true
+              value: set-var-fmt
+            type:
+              value:
+              - connection
+              - content
+          x-display-name: Var Format
         var_name:
           pattern: ^[^\s]+$
           type: string
@@ -4971,9 +5053,11 @@ definitions:
               value:
               - set-var
               - unset-var
+              - set-var-fmt
             type:
               value:
               - session
+              - connection
               - content
           x-display-name: Variable name
         var_scope:
@@ -4985,9 +5069,11 @@ definitions:
               value:
               - set-var
               - unset-var
+              - set-var-fmt
             type:
               value:
               - session
+              - connection
               - content
           x-display-name: Variable scope
       required:
@@ -5016,6 +5102,17 @@ definitions:
           - reject
           - lua
           - set-bandwidth-limit
+          - close
+          - sc-inc-gpc0
+          - sc-inc-gpc1
+          - sc-set-gpt0
+          - send-spoe-group
+          - set-log-level
+          - set-mark
+          - set-nice
+          - set-tos
+          - silent-drop
+          - unset-var
           type: string
           x-dependency:
             type:
@@ -5067,9 +5164,38 @@ definitions:
             freeFormat: true
             operation: getACLs
             property: acl_name
+        expr:
+          type: string
+          x-dependency:
+            action:
+              required: true
+              value:
+              - set-src-port
+              - sc-set-gpt0
+            type:
+              value: content
+          x-display-name: Standard HAProxy expression
         index:
           type: integer
           x-nullable: true
+        log_level:
+          enum:
+          - emerg
+          - alert
+          - crit
+          - err
+          - warning
+          - notice
+          - info
+          - debug
+          - silent
+          type: string
+          x-dependency:
+            action:
+              required: true
+              value: set-log-level
+            type:
+              value: content
         lua_action:
           pattern: ^[^\s]+$
           type: string
@@ -5088,6 +5214,69 @@ definitions:
             type:
               value: content
           x-display-name: Lua action params
+        mark_value:
+          pattern: ^(0x[0-9A-Fa-f]+|[0-9]+)$
+          type: string
+          x-dependency:
+            action:
+              required: true
+              value: set-mark
+            type:
+              value: content
+          x-display-name: Mark Value
+        nice_value:
+          maximum: 1024
+          minimum: -1024
+          type: integer
+          x-dependency:
+            action:
+              required: true
+              value: set-nice
+            type:
+              value: content
+          x-display-name: Nice Value
+          x-nullable: false
+        sc_id:
+          type: integer
+          x-dependency:
+            action:
+              required: true
+              value:
+              - sc-inc-gpc0
+              - sc-inc-gpc1
+              - sc-set-gpt0
+            type:
+              value: content
+        sc_int:
+          type: integer
+          x-dependency:
+            action:
+              required: true
+              value: sc-set-gpt0
+            type:
+              value: content
+          x-display-name: ScSet Integer Value
+          x-nullable: true
+        spoe_engine:
+          pattern: ^[^\s]+$
+          type: string
+          x-dependency:
+            action:
+              required: true
+              value: send-spoe-group
+            type:
+              value: content
+          x-display-name: SPOE Engine
+        spoe_group:
+          pattern: ^[^\s]+$
+          type: string
+          x-dependency:
+            action:
+              required: true
+              value: send-spoe-group
+            type:
+              value: content
+          x-display-name: SPOE Group
         timeout:
           type: integer
           x-dependency:
@@ -5095,12 +5284,40 @@ definitions:
               required: true
               value: inspect-delay
           x-nullable: true
+        tos_value:
+          pattern: ^(0x[0-9A-Fa-f]+|[0-9]+)$
+          type: string
+          x-dependency:
+            action:
+              required: true
+              value: set-tos
+            type:
+              value: content
+          x-display-name: Tos Value
         type:
           enum:
           - content
           - inspect-delay
           type: string
           x-nullable: false
+        var_name:
+          pattern: ^[^\s]+$
+          type: string
+          x-dependency:
+            action:
+              required: true
+              value:
+              - unset-var
+            type:
+              value: content
+        var_scope:
+          pattern: ^[^\s]+$
+          type: string
+          x-dependency:
+            action:
+              value: unset-var
+            type:
+              value: content
       required:
       - index
       - type

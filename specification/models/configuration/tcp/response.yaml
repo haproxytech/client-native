@@ -16,7 +16,7 @@ tcp_response_rule:
       x-nullable: false
     action:
       type: string
-      enum: [accept, reject, lua, set-bandwidth-limit]
+      enum: [accept, reject, lua, set-bandwidth-limit, close, sc-inc-gpc0, sc-inc-gpc1, sc-set-gpt0, send-spoe-group, set-log-level, set-mark, set-nice, set-tos, silent-drop, unset-var]
       x-nullable: false
       x-dependency:
         type:
@@ -69,6 +69,111 @@ tcp_response_rule:
       x-dependency:
         action:
           value: set-bandwidth-limit
+        type:
+          value: content
+    expr:
+      type: string
+      x-display-name: Standard HAProxy expression
+      x-dependency:
+        action:
+          value: [set-src-port, sc-set-gpt0]
+          required: true
+        type:
+          value: content
+    sc_id:
+      type: integer
+      x-dependency:
+        action:
+          value: [sc-inc-gpc0, sc-inc-gpc1, sc-set-gpt0]
+          required: true
+        type:
+          value: content
+    sc_int:
+      type: integer
+      x-nullable: true
+      x-display-name: ScSet Integer Value
+      x-dependency:
+        action:
+          value: sc-set-gpt0
+          required: true
+        type:
+          value: content
+    spoe_engine:
+      type: string
+      x-display-name: SPOE Engine
+      pattern: '^[^\s]+$'
+      x-dependency:
+        action:
+          value: send-spoe-group
+          required: true
+        type:
+          value: content
+    spoe_group:
+      type: string
+      x-display-name: SPOE Group
+      pattern: '^[^\s]+$'
+      x-dependency:
+        action:
+          value: send-spoe-group
+          required: true
+        type:
+          value: content
+    log_level:
+      type: string
+      enum: [emerg, alert, crit, err, warning, notice, info, debug, silent]
+      x-dependency:
+        action:
+          value: set-log-level
+          required: true
+        type:
+          value: content
+    mark_value:
+      type: string
+      pattern: '^(0x[0-9A-Fa-f]+|[0-9]+)$'
+      x-display-name: Mark Value
+      x-dependency:
+        action:
+          value: set-mark
+          required: true
+        type:
+          value: content
+    nice_value:
+      type: integer
+      minimum: -1024
+      maximum: 1024
+      x-nullable: false
+      x-display-name: Nice Value
+      x-dependency:
+        action:
+          value: set-nice
+          required: true
+        type:
+          value: content
+    tos_value:
+      type: string
+      pattern: '^(0x[0-9A-Fa-f]+|[0-9]+)$'
+      x-display-name: Tos Value
+      x-dependency:
+        action:
+          value: set-tos
+          required: true
+        type:
+          value: content
+    var_name:
+      type: string
+      pattern: '^[^\s]+$'
+      x-dependency:
+        action:
+          value: [unset-var]
+          required: true
+        type:
+          value: content
+    var_scope:
+      type: string
+      pattern: '^[^\s]+$'
+      x-dependency:
+        action:
+          value: unset-var
         type:
           value: content
     cond:

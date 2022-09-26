@@ -39,7 +39,7 @@ import (
 type TCPRequestRule struct {
 
 	// action
-	// Enum: [accept capture do-resolve expect-netscaler-cip expect-proxy reject sc-inc-gpc0 sc-inc-gpc1 sc-set-gpt0 send-spoe-group set-dst-port set-dst set-priority set-src set-var silent-drop track-sc0 track-sc1 track-sc2 unset-var use-service lua set-bandwidth-limit]
+	// Enum: [accept capture do-resolve expect-netscaler-cip expect-proxy reject sc-inc-gpc0 sc-inc-gpc1 sc-set-gpt0 send-spoe-group set-dst-port set-dst set-priority set-src set-var silent-drop track-sc0 track-sc1 track-sc2 unset-var use-service lua set-bandwidth-limit set-src-port set-mark set-tos set-var-fmt set-log-level set-nice switch-mode]
 	Action string `json:"action,omitempty"`
 
 	// bandwidth limit limit
@@ -75,12 +75,25 @@ type TCPRequestRule struct {
 	// Required: true
 	Index *int64 `json:"index"`
 
+	// log level
+	// Enum: [emerg alert crit err warning notice info debug silent]
+	LogLevel string `json:"log_level,omitempty"`
+
 	// lua action
 	// Pattern: ^[^\s]+$
 	LuaAction string `json:"lua_action,omitempty"`
 
 	// lua params
 	LuaParams string `json:"lua_params,omitempty"`
+
+	// mark value
+	// Pattern: ^(0x[0-9A-Fa-f]+|[0-9]+)$
+	MarkValue string `json:"mark_value,omitempty"`
+
+	// nice value
+	// Maximum: 1024
+	// Minimum: -1024
+	NiceValue int64 `json:"nice_value,omitempty"`
 
 	// priority type
 	// Enum: [class offset]
@@ -108,8 +121,15 @@ type TCPRequestRule struct {
 	// spoe group name
 	SpoeGroupName string `json:"spoe_group_name,omitempty"`
 
+	// switch mode proto
+	SwitchModeProto string `json:"switch_mode_proto,omitempty"`
+
 	// timeout
 	Timeout *int64 `json:"timeout,omitempty"`
+
+	// tos value
+	// Pattern: ^(0x[0-9A-Fa-f]+|[0-9]+)$
+	TosValue string `json:"tos_value,omitempty"`
 
 	// track key
 	TrackKey string `json:"track_key,omitempty"`
@@ -121,6 +141,9 @@ type TCPRequestRule struct {
 	// Required: true
 	// Enum: [connection content inspect-delay session]
 	Type string `json:"type"`
+
+	// var format
+	VarFormat string `json:"var_format,omitempty"`
 
 	// var name
 	// Pattern: ^[^\s]+$
@@ -151,7 +174,19 @@ func (m *TCPRequestRule) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
+	if err := m.validateLogLevel(formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.validateLuaAction(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateMarkValue(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateNiceValue(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -160,6 +195,10 @@ func (m *TCPRequestRule) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateResolveProtocol(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateTosValue(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -185,7 +224,7 @@ var tcpRequestRuleTypeActionPropEnum []interface{}
 
 func init() {
 	var res []string
-	if err := json.Unmarshal([]byte(`["accept","capture","do-resolve","expect-netscaler-cip","expect-proxy","reject","sc-inc-gpc0","sc-inc-gpc1","sc-set-gpt0","send-spoe-group","set-dst-port","set-dst","set-priority","set-src","set-var","silent-drop","track-sc0","track-sc1","track-sc2","unset-var","use-service","lua","set-bandwidth-limit"]`), &res); err != nil {
+	if err := json.Unmarshal([]byte(`["accept","capture","do-resolve","expect-netscaler-cip","expect-proxy","reject","sc-inc-gpc0","sc-inc-gpc1","sc-set-gpt0","send-spoe-group","set-dst-port","set-dst","set-priority","set-src","set-var","silent-drop","track-sc0","track-sc1","track-sc2","unset-var","use-service","lua","set-bandwidth-limit","set-src-port","set-mark","set-tos","set-var-fmt","set-log-level","set-nice","switch-mode"]`), &res); err != nil {
 		panic(err)
 	}
 	for _, v := range res {
@@ -263,6 +302,27 @@ const (
 
 	// TCPRequestRuleActionSetDashBandwidthDashLimit captures enum value "set-bandwidth-limit"
 	TCPRequestRuleActionSetDashBandwidthDashLimit string = "set-bandwidth-limit"
+
+	// TCPRequestRuleActionSetDashSrcDashPort captures enum value "set-src-port"
+	TCPRequestRuleActionSetDashSrcDashPort string = "set-src-port"
+
+	// TCPRequestRuleActionSetDashMark captures enum value "set-mark"
+	TCPRequestRuleActionSetDashMark string = "set-mark"
+
+	// TCPRequestRuleActionSetDashTos captures enum value "set-tos"
+	TCPRequestRuleActionSetDashTos string = "set-tos"
+
+	// TCPRequestRuleActionSetDashVarDashFmt captures enum value "set-var-fmt"
+	TCPRequestRuleActionSetDashVarDashFmt string = "set-var-fmt"
+
+	// TCPRequestRuleActionSetDashLogDashLevel captures enum value "set-log-level"
+	TCPRequestRuleActionSetDashLogDashLevel string = "set-log-level"
+
+	// TCPRequestRuleActionSetDashNice captures enum value "set-nice"
+	TCPRequestRuleActionSetDashNice string = "set-nice"
+
+	// TCPRequestRuleActionSwitchDashMode captures enum value "switch-mode"
+	TCPRequestRuleActionSwitchDashMode string = "switch-mode"
 )
 
 // prop value enum
@@ -349,12 +409,103 @@ func (m *TCPRequestRule) validateIndex(formats strfmt.Registry) error {
 	return nil
 }
 
+var tcpRequestRuleTypeLogLevelPropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["emerg","alert","crit","err","warning","notice","info","debug","silent"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		tcpRequestRuleTypeLogLevelPropEnum = append(tcpRequestRuleTypeLogLevelPropEnum, v)
+	}
+}
+
+const (
+
+	// TCPRequestRuleLogLevelEmerg captures enum value "emerg"
+	TCPRequestRuleLogLevelEmerg string = "emerg"
+
+	// TCPRequestRuleLogLevelAlert captures enum value "alert"
+	TCPRequestRuleLogLevelAlert string = "alert"
+
+	// TCPRequestRuleLogLevelCrit captures enum value "crit"
+	TCPRequestRuleLogLevelCrit string = "crit"
+
+	// TCPRequestRuleLogLevelErr captures enum value "err"
+	TCPRequestRuleLogLevelErr string = "err"
+
+	// TCPRequestRuleLogLevelWarning captures enum value "warning"
+	TCPRequestRuleLogLevelWarning string = "warning"
+
+	// TCPRequestRuleLogLevelNotice captures enum value "notice"
+	TCPRequestRuleLogLevelNotice string = "notice"
+
+	// TCPRequestRuleLogLevelInfo captures enum value "info"
+	TCPRequestRuleLogLevelInfo string = "info"
+
+	// TCPRequestRuleLogLevelDebug captures enum value "debug"
+	TCPRequestRuleLogLevelDebug string = "debug"
+
+	// TCPRequestRuleLogLevelSilent captures enum value "silent"
+	TCPRequestRuleLogLevelSilent string = "silent"
+)
+
+// prop value enum
+func (m *TCPRequestRule) validateLogLevelEnum(path, location string, value string) error {
+	if err := validate.EnumCase(path, location, value, tcpRequestRuleTypeLogLevelPropEnum, true); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *TCPRequestRule) validateLogLevel(formats strfmt.Registry) error {
+	if swag.IsZero(m.LogLevel) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateLogLevelEnum("log_level", "body", m.LogLevel); err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func (m *TCPRequestRule) validateLuaAction(formats strfmt.Registry) error {
 	if swag.IsZero(m.LuaAction) { // not required
 		return nil
 	}
 
 	if err := validate.Pattern("lua_action", "body", m.LuaAction, `^[^\s]+$`); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *TCPRequestRule) validateMarkValue(formats strfmt.Registry) error {
+	if swag.IsZero(m.MarkValue) { // not required
+		return nil
+	}
+
+	if err := validate.Pattern("mark_value", "body", m.MarkValue, `^(0x[0-9A-Fa-f]+|[0-9]+)$`); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *TCPRequestRule) validateNiceValue(formats strfmt.Registry) error {
+	if swag.IsZero(m.NiceValue) { // not required
+		return nil
+	}
+
+	if err := validate.MinimumInt("nice_value", "body", m.NiceValue, -1024, false); err != nil {
+		return err
+	}
+
+	if err := validate.MaximumInt("nice_value", "body", m.NiceValue, 1024, false); err != nil {
 		return err
 	}
 
@@ -439,6 +590,18 @@ func (m *TCPRequestRule) validateResolveProtocol(formats strfmt.Registry) error 
 
 	// value enum
 	if err := m.validateResolveProtocolEnum("resolve_protocol", "body", m.ResolveProtocol); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *TCPRequestRule) validateTosValue(formats strfmt.Registry) error {
+	if swag.IsZero(m.TosValue) { // not required
+		return nil
+	}
+
+	if err := validate.Pattern("tos_value", "body", m.TosValue, `^(0x[0-9A-Fa-f]+|[0-9]+)$`); err != nil {
 		return err
 	}
 

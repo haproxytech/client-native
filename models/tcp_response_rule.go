@@ -39,7 +39,7 @@ import (
 type TCPResponseRule struct {
 
 	// action
-	// Enum: [accept reject lua set-bandwidth-limit]
+	// Enum: [accept reject lua set-bandwidth-limit close sc-inc-gpc0 sc-inc-gpc1 sc-set-gpt0 send-spoe-group set-log-level set-mark set-nice set-tos silent-drop unset-var]
 	Action string `json:"action,omitempty"`
 
 	// bandwidth limit limit
@@ -58,9 +58,16 @@ type TCPResponseRule struct {
 	// cond test
 	CondTest string `json:"cond_test,omitempty"`
 
+	// expr
+	Expr string `json:"expr,omitempty"`
+
 	// index
 	// Required: true
 	Index *int64 `json:"index"`
+
+	// log level
+	// Enum: [emerg alert crit err warning notice info debug silent]
+	LogLevel string `json:"log_level,omitempty"`
 
 	// lua action
 	// Pattern: ^[^\s]+$
@@ -69,13 +76,48 @@ type TCPResponseRule struct {
 	// lua params
 	LuaParams string `json:"lua_params,omitempty"`
 
+	// mark value
+	// Pattern: ^(0x[0-9A-Fa-f]+|[0-9]+)$
+	MarkValue string `json:"mark_value,omitempty"`
+
+	// nice value
+	// Maximum: 1024
+	// Minimum: -1024
+	NiceValue int64 `json:"nice_value,omitempty"`
+
+	// sc id
+	ScID int64 `json:"sc_id,omitempty"`
+
+	// sc int
+	ScInt *int64 `json:"sc_int,omitempty"`
+
+	// spoe engine
+	// Pattern: ^[^\s]+$
+	SpoeEngine string `json:"spoe_engine,omitempty"`
+
+	// spoe group
+	// Pattern: ^[^\s]+$
+	SpoeGroup string `json:"spoe_group,omitempty"`
+
 	// timeout
 	Timeout *int64 `json:"timeout,omitempty"`
+
+	// tos value
+	// Pattern: ^(0x[0-9A-Fa-f]+|[0-9]+)$
+	TosValue string `json:"tos_value,omitempty"`
 
 	// type
 	// Required: true
 	// Enum: [content inspect-delay]
 	Type string `json:"type"`
+
+	// var name
+	// Pattern: ^[^\s]+$
+	VarName string `json:"var_name,omitempty"`
+
+	// var scope
+	// Pattern: ^[^\s]+$
+	VarScope string `json:"var_scope,omitempty"`
 }
 
 // Validate validates this tcp response rule
@@ -94,11 +136,43 @@ func (m *TCPResponseRule) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
+	if err := m.validateLogLevel(formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.validateLuaAction(formats); err != nil {
 		res = append(res, err)
 	}
 
+	if err := m.validateMarkValue(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateNiceValue(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateSpoeEngine(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateSpoeGroup(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateTosValue(formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.validateType(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateVarName(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateVarScope(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -112,7 +186,7 @@ var tcpResponseRuleTypeActionPropEnum []interface{}
 
 func init() {
 	var res []string
-	if err := json.Unmarshal([]byte(`["accept","reject","lua","set-bandwidth-limit"]`), &res); err != nil {
+	if err := json.Unmarshal([]byte(`["accept","reject","lua","set-bandwidth-limit","close","sc-inc-gpc0","sc-inc-gpc1","sc-set-gpt0","send-spoe-group","set-log-level","set-mark","set-nice","set-tos","silent-drop","unset-var"]`), &res); err != nil {
 		panic(err)
 	}
 	for _, v := range res {
@@ -133,6 +207,39 @@ const (
 
 	// TCPResponseRuleActionSetDashBandwidthDashLimit captures enum value "set-bandwidth-limit"
 	TCPResponseRuleActionSetDashBandwidthDashLimit string = "set-bandwidth-limit"
+
+	// TCPResponseRuleActionClose captures enum value "close"
+	TCPResponseRuleActionClose string = "close"
+
+	// TCPResponseRuleActionScDashIncDashGpc0 captures enum value "sc-inc-gpc0"
+	TCPResponseRuleActionScDashIncDashGpc0 string = "sc-inc-gpc0"
+
+	// TCPResponseRuleActionScDashIncDashGpc1 captures enum value "sc-inc-gpc1"
+	TCPResponseRuleActionScDashIncDashGpc1 string = "sc-inc-gpc1"
+
+	// TCPResponseRuleActionScDashSetDashGpt0 captures enum value "sc-set-gpt0"
+	TCPResponseRuleActionScDashSetDashGpt0 string = "sc-set-gpt0"
+
+	// TCPResponseRuleActionSendDashSpoeDashGroup captures enum value "send-spoe-group"
+	TCPResponseRuleActionSendDashSpoeDashGroup string = "send-spoe-group"
+
+	// TCPResponseRuleActionSetDashLogDashLevel captures enum value "set-log-level"
+	TCPResponseRuleActionSetDashLogDashLevel string = "set-log-level"
+
+	// TCPResponseRuleActionSetDashMark captures enum value "set-mark"
+	TCPResponseRuleActionSetDashMark string = "set-mark"
+
+	// TCPResponseRuleActionSetDashNice captures enum value "set-nice"
+	TCPResponseRuleActionSetDashNice string = "set-nice"
+
+	// TCPResponseRuleActionSetDashTos captures enum value "set-tos"
+	TCPResponseRuleActionSetDashTos string = "set-tos"
+
+	// TCPResponseRuleActionSilentDashDrop captures enum value "silent-drop"
+	TCPResponseRuleActionSilentDashDrop string = "silent-drop"
+
+	// TCPResponseRuleActionUnsetDashVar captures enum value "unset-var"
+	TCPResponseRuleActionUnsetDashVar string = "unset-var"
 )
 
 // prop value enum
@@ -207,12 +314,139 @@ func (m *TCPResponseRule) validateIndex(formats strfmt.Registry) error {
 	return nil
 }
 
+var tcpResponseRuleTypeLogLevelPropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["emerg","alert","crit","err","warning","notice","info","debug","silent"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		tcpResponseRuleTypeLogLevelPropEnum = append(tcpResponseRuleTypeLogLevelPropEnum, v)
+	}
+}
+
+const (
+
+	// TCPResponseRuleLogLevelEmerg captures enum value "emerg"
+	TCPResponseRuleLogLevelEmerg string = "emerg"
+
+	// TCPResponseRuleLogLevelAlert captures enum value "alert"
+	TCPResponseRuleLogLevelAlert string = "alert"
+
+	// TCPResponseRuleLogLevelCrit captures enum value "crit"
+	TCPResponseRuleLogLevelCrit string = "crit"
+
+	// TCPResponseRuleLogLevelErr captures enum value "err"
+	TCPResponseRuleLogLevelErr string = "err"
+
+	// TCPResponseRuleLogLevelWarning captures enum value "warning"
+	TCPResponseRuleLogLevelWarning string = "warning"
+
+	// TCPResponseRuleLogLevelNotice captures enum value "notice"
+	TCPResponseRuleLogLevelNotice string = "notice"
+
+	// TCPResponseRuleLogLevelInfo captures enum value "info"
+	TCPResponseRuleLogLevelInfo string = "info"
+
+	// TCPResponseRuleLogLevelDebug captures enum value "debug"
+	TCPResponseRuleLogLevelDebug string = "debug"
+
+	// TCPResponseRuleLogLevelSilent captures enum value "silent"
+	TCPResponseRuleLogLevelSilent string = "silent"
+)
+
+// prop value enum
+func (m *TCPResponseRule) validateLogLevelEnum(path, location string, value string) error {
+	if err := validate.EnumCase(path, location, value, tcpResponseRuleTypeLogLevelPropEnum, true); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *TCPResponseRule) validateLogLevel(formats strfmt.Registry) error {
+	if swag.IsZero(m.LogLevel) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateLogLevelEnum("log_level", "body", m.LogLevel); err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func (m *TCPResponseRule) validateLuaAction(formats strfmt.Registry) error {
 	if swag.IsZero(m.LuaAction) { // not required
 		return nil
 	}
 
 	if err := validate.Pattern("lua_action", "body", m.LuaAction, `^[^\s]+$`); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *TCPResponseRule) validateMarkValue(formats strfmt.Registry) error {
+	if swag.IsZero(m.MarkValue) { // not required
+		return nil
+	}
+
+	if err := validate.Pattern("mark_value", "body", m.MarkValue, `^(0x[0-9A-Fa-f]+|[0-9]+)$`); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *TCPResponseRule) validateNiceValue(formats strfmt.Registry) error {
+	if swag.IsZero(m.NiceValue) { // not required
+		return nil
+	}
+
+	if err := validate.MinimumInt("nice_value", "body", m.NiceValue, -1024, false); err != nil {
+		return err
+	}
+
+	if err := validate.MaximumInt("nice_value", "body", m.NiceValue, 1024, false); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *TCPResponseRule) validateSpoeEngine(formats strfmt.Registry) error {
+	if swag.IsZero(m.SpoeEngine) { // not required
+		return nil
+	}
+
+	if err := validate.Pattern("spoe_engine", "body", m.SpoeEngine, `^[^\s]+$`); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *TCPResponseRule) validateSpoeGroup(formats strfmt.Registry) error {
+	if swag.IsZero(m.SpoeGroup) { // not required
+		return nil
+	}
+
+	if err := validate.Pattern("spoe_group", "body", m.SpoeGroup, `^[^\s]+$`); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *TCPResponseRule) validateTosValue(formats strfmt.Registry) error {
+	if swag.IsZero(m.TosValue) { // not required
+		return nil
+	}
+
+	if err := validate.Pattern("tos_value", "body", m.TosValue, `^(0x[0-9A-Fa-f]+|[0-9]+)$`); err != nil {
 		return err
 	}
 
@@ -256,6 +490,30 @@ func (m *TCPResponseRule) validateType(formats strfmt.Registry) error {
 
 	// value enum
 	if err := m.validateTypeEnum("type", "body", m.Type); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *TCPResponseRule) validateVarName(formats strfmt.Registry) error {
+	if swag.IsZero(m.VarName) { // not required
+		return nil
+	}
+
+	if err := validate.Pattern("var_name", "body", m.VarName, `^[^\s]+$`); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *TCPResponseRule) validateVarScope(formats strfmt.Registry) error {
+	if swag.IsZero(m.VarScope) { // not required
+		return nil
+	}
+
+	if err := validate.Pattern("var_scope", "body", m.VarScope, `^[^\s]+$`); err != nil {
 		return err
 	}
 
