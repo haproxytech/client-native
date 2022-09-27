@@ -457,14 +457,6 @@ definitions:
     type: array
     items:
       $ref: '#/definitions/consul'
-  nomad:
-    $ref: "models/service-discovery.yaml#/nomad"
-  nomads:
-    title: Nomads
-    description: Nomads array
-    type: array
-    items:
-      $ref: '#/definitions/nomad'
   monitor_uri:
     $ref: "models/monitor.yaml#/monitor_uri"
   monitor_fail:
@@ -692,10 +684,6 @@ paths:
     $ref: "paths/service-discovery.yaml#/consul"
   /service_discovery/consul/{id}:
     $ref: "paths/service-discovery.yaml#/consul_one"
-  /service_discovery/nomad:
-    $ref: "paths/service-discovery.yaml#/nomad"
-  /service_discovery/nomad/{id}:
-    $ref: "paths/service-discovery.yaml#/nomad_one"
   /services:
     $ref: "paths/general.yaml#/services"
   /services/haproxy:
