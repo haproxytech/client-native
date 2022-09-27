@@ -142,7 +142,8 @@ add_server:
       x-nullable: true
     error_limit:
       type: integer
-      x-display-name: Error count
+      x-display-name: Healthcheck error limit
+      x-nullable: true
     fall:
       type: integer
       x-display-name: Nr. of consecutive failed checks

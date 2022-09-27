@@ -114,7 +114,7 @@ type RuntimeAddServer struct {
 	Downinter *int64 `json:"downinter,omitempty"`
 
 	// error limit
-	ErrorLimit int64 `json:"error_limit,omitempty"`
+	ErrorLimit *int64 `json:"error_limit,omitempty"`
 
 	// fall
 	Fall *int64 `json:"fall,omitempty"`
