@@ -226,6 +226,14 @@ func ParseSection(object interface{}, section parser.Section, pName string, p pa
 	return sp.Parse()
 }
 
+func NewParseSection(section parser.Section, pName string, p parser.Parser) *SectionParser {
+	return &SectionParser{
+		Section: section,
+		Name:    pName,
+		Parser:  p,
+	}
+}
+
 // SectionParser is used set fields of a section based on the provided parser
 type SectionParser struct {
 	Object  interface{}
@@ -1549,7 +1557,7 @@ func (s *SectionObject) setFieldValue(fieldName string, field reflect.Value) err
 }
 
 func (s *SectionObject) checkParams(fieldName string) (match bool) {
-	return strings.HasSuffix(fieldName, "Params")
+	return s.Section != parser.FCGIApp && strings.HasSuffix(fieldName, "Params")
 }
 
 func (s *SectionObject) checkSpecialFields(fieldName string, field reflect.Value) (match bool, err error) {

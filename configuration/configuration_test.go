@@ -610,6 +610,51 @@ cache test
   process-vary on
   max-secondary-entries 10
 
+fcgi-app test
+  acl invalid_src src 0.0.0.0/7 224.0.0.0/3
+  acl invalid_src src_port 0:1023
+  acl local_dst hdr(host) -i localhost
+  docroot /path/to/chroot
+  index index.php
+  path-info ^(/.+\.php)(/.*)?$
+  option get-values
+  no option keep-conn
+  no option mpxs-conns
+  option max-reqs 1024
+  set-param name fmt if acl
+  set-param name fmt unless acl
+  set-param name fmt
+  pass-header x-header unless acl
+  pass-header x-header if acl
+  pass-header x-header
+  log-stderr 127.0.0.1:1515 len 8192 format rfc5424 sample 1,2-5:6 local2 info debug
+  log-stderr 127.0.0.1:1515 len 8192 format rfc5424 sample 1,2-5:6 local2 info
+  log-stderr 127.0.0.1:1515 local2
+  log-stderr global
+
+
+fcgi-app test_2
+  acl invalid_src src 0.0.0.0/7 224.0.0.0/3
+  acl invalid_src src_port 0:1023
+  acl local_dst hdr(host) -i localhost
+  docroot /path/to/chroot
+  index index.php
+  path-info ^(/.+\.php)(/.*)?$
+  option get-values
+  no option keep-conn
+  no option mpxs-conns
+  set-param name fmt if acl
+  set-param name fmt unless acl
+  set-param name fmt
+  option max-reqs 1024
+  pass-header x-header unless acl
+  pass-header x-header if acl
+  pass-header x-header
+  log-stderr 127.0.0.1:1515 len 8192 format rfc5424 sample 1,2-5:6 local2 info debug
+  log-stderr 127.0.0.1:1515 len 8192 format rfc5424 sample 1,2-5:6 local2 info
+  log-stderr 127.0.0.1:1515 local2
+  log-stderr global
+
 ring myring
   description "My local buffer"
   format rfc3164

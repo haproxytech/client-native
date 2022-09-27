@@ -149,7 +149,6 @@ func (c *client) CreateFilter(parentType string, parentName string, data *models
 
 // EditFilter edits a filter in configuration. One of version or transactionID is
 // mandatory. Returns error on fail, nil on success.
-// nolint:dupl
 func (c *client) EditFilter(id int64, parentType string, parentName string, data *models.Filter, transactionID string, version int64) error {
 	if c.UseModelsValidation {
 		validationErr := data.Validate(strfmt.Default)

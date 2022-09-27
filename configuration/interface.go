@@ -35,8 +35,9 @@ type Configuration interface {
 	Capture
 	Defaults
 	DgramBind
-	Frontend
+	FCGIApp
 	Filter
+	Frontend
 	Global
 	HTTPCheck
 	HTTPRequestRule
