@@ -368,6 +368,17 @@ frontend test
   tcp-request content set-bandwidth-limit my-limit limit 1m period 10s
   tcp-request content set-bandwidth-limit my-limit-reverse period 20s limit 2m
   tcp-request content set-bandwidth-limit my-limit-cond limit 3m if FALSE
+  tcp-request connection set-mark 0x1Ab if FALSE
+  tcp-request connection set-src-port hdr(port) if FALSE
+  tcp-request connection set-tos 1 if FALSE
+  tcp-request connection set-var-fmt(sess.dn) ssl_c_s_dn if FALSE
+  tcp-request content set-log-level silent if FALSE
+  tcp-request content set-mark 0x1Ac if FALSE
+  tcp-request content set-nice 2 if FALSE
+  tcp-request content set-src-port hdr(port) if FALSE
+  tcp-request content set-tos 3 if FALSE
+  tcp-request content set-var-fmt(req.tn) ssl_c_s_tn if FALSE
+  tcp-request content switch-mode http proto my-proto if FALSE
   log global
   no log
   log 127.0.0.1:514 local0 notice notice

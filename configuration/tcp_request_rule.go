@@ -317,6 +317,28 @@ func ParseTCPRequestRule(f types.TCPType) (rule *models.TCPRequestRule, err erro
 			rule.LuaParams = a.Params
 			rule.Cond = a.Cond
 			rule.CondTest = a.CondTest
+		case *actions.SetMark:
+			rule.Action = models.TCPRequestRuleActionSetDashMark
+			rule.MarkValue = a.Value
+			rule.Cond = a.Cond
+			rule.CondTest = a.CondTest
+		case *actions.SetSrcPort:
+			rule.Action = models.TCPRequestRuleActionSetDashSrcDashPort
+			rule.Expr = a.Expr.String()
+			rule.Cond = a.Cond
+			rule.CondTest = a.CondTest
+		case *actions.SetTos:
+			rule.Action = models.TCPRequestRuleActionSetDashTos
+			rule.TosValue = a.Value
+			rule.Cond = a.Cond
+			rule.CondTest = a.CondTest
+		case *actions.SetVarFmt:
+			rule.Action = models.TCPRequestRuleActionSetDashVarDashFmt
+			rule.VarName = a.VarName
+			rule.VarFormat = strings.Join(a.Fmt.Expr, " ")
+			rule.VarScope = a.VarScope
+			rule.Cond = a.Cond
+			rule.CondTest = a.CondTest
 		default:
 			return nil, NewConfError(ErrValidationError, fmt.Sprintf("unsupported action '%T' in tcp_request_rule", a))
 		}
@@ -443,6 +465,47 @@ func ParseTCPRequestRule(f types.TCPType) (rule *models.TCPRequestRule, err erro
 			rule.BandwidthLimitName = a.Name
 			rule.BandwidthLimitLimit = a.Limit.String()
 			rule.BandwidthLimitPeriod = a.Period.String()
+			rule.Cond = a.Cond
+			rule.CondTest = a.CondTest
+		case *actions.SetMark:
+			rule.Action = models.TCPRequestRuleActionSetDashMark
+			rule.MarkValue = a.Value
+			rule.Cond = a.Cond
+			rule.CondTest = a.CondTest
+		case *actions.SetSrcPort:
+			rule.Action = models.TCPRequestRuleActionSetDashSrcDashPort
+			rule.Expr = a.Expr.String()
+			rule.Cond = a.Cond
+			rule.CondTest = a.CondTest
+		case *actions.SetTos:
+			rule.Action = models.TCPRequestRuleActionSetDashTos
+			rule.TosValue = a.Value
+			rule.Cond = a.Cond
+			rule.CondTest = a.CondTest
+		case *actions.SetVarFmt:
+			rule.Action = models.TCPRequestRuleActionSetDashVarDashFmt
+			rule.VarName = a.VarName
+			rule.VarFormat = strings.Join(a.Fmt.Expr, " ")
+			rule.VarScope = a.VarScope
+			rule.Cond = a.Cond
+			rule.CondTest = a.CondTest
+		case *actions.SetNice:
+			nice, err := strconv.ParseInt(a.Value, 10, 64)
+			if err != nil {
+				return nil, err
+			}
+			rule.Action = models.TCPRequestRuleActionSetDashNice
+			rule.NiceValue = nice
+			rule.Cond = a.Cond
+			rule.CondTest = a.CondTest
+		case *actions.SetLogLevel:
+			rule.Action = models.TCPRequestRuleActionSetDashLogDashLevel
+			rule.LogLevel = a.Level
+			rule.Cond = a.Cond
+			rule.CondTest = a.CondTest
+		case *tcp_actions.SwitchMode:
+			rule.Action = models.TCPRequestRuleActionSwitchDashMode
+			rule.SwitchModeProto = a.Proto
 			rule.Cond = a.Cond
 			rule.CondTest = a.CondTest
 		default:
@@ -624,6 +687,40 @@ func SerializeTCPRequestRule(f models.TCPRequestRule) (rule types.TCPType, err e
 					CondTest: f.CondTest,
 				},
 			}, nil
+		case models.TCPRequestRuleActionSetDashMark:
+			return &tcp_types.Connection{
+				Action: &actions.SetMark{
+					Value:    f.MarkValue,
+					Cond:     f.Cond,
+					CondTest: f.CondTest,
+				},
+			}, nil
+		case models.TCPRequestRuleActionSetDashSrcDashPort:
+			return &tcp_types.Connection{
+				Action: &actions.SetSrcPort{
+					Expr:     common.Expression{Expr: strings.Split(f.Expr, " ")},
+					Cond:     f.Cond,
+					CondTest: f.CondTest,
+				},
+			}, nil
+		case models.TCPRequestRuleActionSetDashTos:
+			return &tcp_types.Connection{
+				Action: &actions.SetTos{
+					Value:    f.TosValue,
+					Cond:     f.Cond,
+					CondTest: f.CondTest,
+				},
+			}, nil
+		case models.TCPRequestRuleActionSetDashVarDashFmt:
+			return &tcp_types.Connection{
+				Action: &actions.SetVarFmt{
+					Fmt:      common.Expression{Expr: strings.Split(f.VarFormat, " ")},
+					VarName:  f.VarName,
+					VarScope: f.VarScope,
+					Cond:     f.Cond,
+					CondTest: f.CondTest,
+				},
+			}, nil
 		}
 		return nil, NewConfError(ErrValidationError, fmt.Sprintf("unsupported action '%T' in tcp_request_rule", f.Action))
 	case models.TCPRequestRuleTypeContent:
@@ -798,6 +895,64 @@ func SerializeTCPRequestRule(f models.TCPRequestRule) (rule types.TCPType, err e
 					Name:     f.BandwidthLimitName,
 					Limit:    common.Expression{Expr: strings.Split(f.BandwidthLimitLimit, " ")},
 					Period:   common.Expression{Expr: strings.Split(f.BandwidthLimitPeriod, " ")},
+					Cond:     f.Cond,
+					CondTest: f.CondTest,
+				},
+			}, nil
+		case models.TCPRequestRuleActionSetDashMark:
+			return &tcp_types.Connection{
+				Action: &actions.SetMark{
+					Value:    f.MarkValue,
+					Cond:     f.Cond,
+					CondTest: f.CondTest,
+				},
+			}, nil
+		case models.TCPRequestRuleActionSetDashSrcDashPort:
+			return &tcp_types.Connection{
+				Action: &actions.SetSrcPort{
+					Expr:     common.Expression{Expr: strings.Split(f.Expr, " ")},
+					Cond:     f.Cond,
+					CondTest: f.CondTest,
+				},
+			}, nil
+		case models.TCPRequestRuleActionSetDashTos:
+			return &tcp_types.Connection{
+				Action: &actions.SetTos{
+					Value:    f.TosValue,
+					Cond:     f.Cond,
+					CondTest: f.CondTest,
+				},
+			}, nil
+		case models.TCPRequestRuleActionSetDashVarDashFmt:
+			return &tcp_types.Connection{
+				Action: &actions.SetVarFmt{
+					Fmt:      common.Expression{Expr: strings.Split(f.VarFormat, " ")},
+					VarName:  f.VarName,
+					VarScope: f.VarScope,
+					Cond:     f.Cond,
+					CondTest: f.CondTest,
+				},
+			}, nil
+		case models.TCPRequestRuleActionSetDashNice:
+			return &tcp_types.Connection{
+				Action: &actions.SetNice{
+					Value:    strconv.FormatInt(f.NiceValue, 10),
+					Cond:     f.Cond,
+					CondTest: f.CondTest,
+				},
+			}, nil
+		case models.TCPRequestRuleActionSetDashLogDashLevel:
+			return &tcp_types.Connection{
+				Action: &actions.SetLogLevel{
+					Level:    f.LogLevel,
+					Cond:     f.Cond,
+					CondTest: f.CondTest,
+				},
+			}, nil
+		case models.TCPRequestRuleActionSwitchDashMode:
+			return &tcp_types.Connection{
+				Action: &tcp_actions.SwitchMode{
+					Proto:    f.SwitchModeProto,
 					Cond:     f.Cond,
 					CondTest: f.CondTest,
 				},

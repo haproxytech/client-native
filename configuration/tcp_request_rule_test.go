@@ -29,8 +29,8 @@ func TestGetTCPRequestRules(t *testing.T) { //nolint:gocognit,gocyclo
 		t.Error(err.Error())
 	}
 
-	if len(tRules) != 11 {
-		t.Errorf("%v tcp request rules returned, expected 11", len(tRules))
+	if len(tRules) != 22 {
+		t.Errorf("%v tcp request rules returned, expected 22", len(tRules))
 	}
 
 	if v != version {
@@ -209,8 +209,196 @@ func TestGetTCPRequestRules(t *testing.T) { //nolint:gocognit,gocyclo
 			if r.CondTest != "FALSE" {
 				t.Errorf("%v: CondTest not FALSE: %v", *r.Index, r.CondTest)
 			}
+		case 11:
+			if r.Type != "connection" {
+				t.Errorf("%v: Type not connection: %v", *r.Index, r.Type)
+			}
+			if r.Action != "set-mark" {
+				t.Errorf("%v: Action not set-mark: %v", *r.Index, r.Action)
+			}
+			if r.MarkValue != "0x1Ab" {
+				t.Errorf("%v: MarkValue not 0x1Ab: %v", *r.Index, r.MarkValue)
+			}
+			if r.Cond != "if" {
+				t.Errorf("%v: Cond not if: %v", *r.Index, r.Cond)
+			}
+			if r.CondTest != "FALSE" {
+				t.Errorf("%v: CondTest not FALSE: %v", *r.Index, r.CondTest)
+			}
+		case 12:
+			if r.Type != "connection" {
+				t.Errorf("%v: Type not connection: %v", *r.Index, r.Type)
+			}
+			if r.Action != "set-src-port" {
+				t.Errorf("%v: Action not set-src-port: %v", *r.Index, r.Action)
+			}
+			if r.Expr != "hdr(port)" {
+				t.Errorf("%v: Expr not hdr(port): %v", *r.Index, r.Expr)
+			}
+			if r.Cond != "if" {
+				t.Errorf("%v: Cond not if: %v", *r.Index, r.Cond)
+			}
+			if r.CondTest != "FALSE" {
+				t.Errorf("%v: CondTest not FALSE: %v", *r.Index, r.CondTest)
+			}
+		case 13:
+			if r.Type != "connection" {
+				t.Errorf("%v: Type not connection: %v", *r.Index, r.Type)
+			}
+			if r.Action != "set-tos" {
+				t.Errorf("%v: Action not set-tos: %v", *r.Index, r.Action)
+			}
+			if r.TosValue != "1" {
+				t.Errorf("%v: TosValue not 1: %v", *r.Index, r.TosValue)
+			}
+			if r.Cond != "if" {
+				t.Errorf("%v: Cond not if: %v", *r.Index, r.Cond)
+			}
+			if r.CondTest != "FALSE" {
+				t.Errorf("%v: CondTest not FALSE: %v", *r.Index, r.CondTest)
+			}
+		case 14:
+			if r.Type != "connection" {
+				t.Errorf("%v: Type not connection: %v", *r.Index, r.Type)
+			}
+			if r.Action != "set-var-fmt" {
+				t.Errorf("%v: Action not set-var-fmt: %v", *r.Index, r.Action)
+			}
+			if r.VarName != "dn" {
+				t.Errorf("%v: VarName not dn: %v", *r.Index, r.VarName)
+			}
+			if r.VarScope != "sess" {
+				t.Errorf("%v: VarScope not sess: %v", *r.Index, r.VarScope)
+			}
+			if r.VarFormat != "ssl_c_s_dn" {
+				t.Errorf("%v: VarFormat not ssl_c_s_dn: %v", *r.Index, r.VarFormat)
+			}
+			if r.Cond != "if" {
+				t.Errorf("%v: Cond not if: %v", *r.Index, r.Cond)
+			}
+			if r.CondTest != "FALSE" {
+				t.Errorf("%v: CondTest not FALSE: %v", *r.Index, r.CondTest)
+			}
+		case 15:
+			if r.Type != "content" {
+				t.Errorf("%v: Type not content: %v", *r.Index, r.Type)
+			}
+			if r.Action != "set-log-level" {
+				t.Errorf("%v: Action not set-log-level: %v", *r.Index, r.Action)
+			}
+			if r.LogLevel != "silent" {
+				t.Errorf("%v: LogLevel not silent %v", *r.Index, r.LogLevel)
+			}
+			if r.Cond != "if" {
+				t.Errorf("%v: Cond not if: %v", *r.Index, r.Cond)
+			}
+			if r.CondTest != "FALSE" {
+				t.Errorf("%v: CondTest not FALSE: %v", *r.Index, r.CondTest)
+			}
+		case 16:
+			if r.Type != "content" {
+				t.Errorf("%v: Type not content: %v", *r.Index, r.Type)
+			}
+			if r.Action != "set-mark" {
+				t.Errorf("%v: Action not set-mark: %v", *r.Index, r.Action)
+			}
+			if r.MarkValue != "0x1Ac" {
+				t.Errorf("%v: MarkValue not 0x1Ac: %v", *r.Index, r.MarkValue)
+			}
+			if r.Cond != "if" {
+				t.Errorf("%v: Cond not if: %v", *r.Index, r.Cond)
+			}
+			if r.CondTest != "FALSE" {
+				t.Errorf("%v: CondTest not FALSE: %v", *r.Index, r.CondTest)
+			}
+		case 17:
+			if r.Type != "content" {
+				t.Errorf("%v: Type not content: %v", *r.Index, r.Type)
+			}
+			if r.Action != "set-nice" {
+				t.Errorf("%v: Action not set-nice: %v", *r.Index, r.Action)
+			}
+			if r.NiceValue != 2 {
+				t.Errorf("%v: NiceValue not 2 %v", *r.Index, r.NiceValue)
+			}
+			if r.Cond != "if" {
+				t.Errorf("%v: Cond not if: %v", *r.Index, r.Cond)
+			}
+			if r.CondTest != "FALSE" {
+				t.Errorf("%v: CondTest not FALSE: %v", *r.Index, r.CondTest)
+			}
+		case 18:
+			if r.Type != "content" {
+				t.Errorf("%v: Type not content: %v", *r.Index, r.Type)
+			}
+			if r.Action != "set-src-port" {
+				t.Errorf("%v: Action not set-src-port: %v", *r.Index, r.Action)
+			}
+			if r.Expr != "hdr(port)" {
+				t.Errorf("%v: Expr not hdr(port): %v", *r.Index, r.Expr)
+			}
+			if r.Cond != "if" {
+				t.Errorf("%v: Cond not if: %v", *r.Index, r.Cond)
+			}
+			if r.CondTest != "FALSE" {
+				t.Errorf("%v: CondTest not FALSE: %v", *r.Index, r.CondTest)
+			}
+		case 19:
+			if r.Type != "content" {
+				t.Errorf("%v: Type not content: %v", *r.Index, r.Type)
+			}
+			if r.Action != "set-tos" {
+				t.Errorf("%v: Action not set-tos: %v", *r.Index, r.Action)
+			}
+			if r.TosValue != "3" {
+				t.Errorf("%v: TosValue not 3: %v", *r.Index, r.TosValue)
+			}
+			if r.Cond != "if" {
+				t.Errorf("%v: Cond not if: %v", *r.Index, r.Cond)
+			}
+			if r.CondTest != "FALSE" {
+				t.Errorf("%v: CondTest not FALSE: %v", *r.Index, r.CondTest)
+			}
+		case 20:
+			if r.Type != "content" {
+				t.Errorf("%v: Type not content: %v", *r.Index, r.Type)
+			}
+			if r.Action != "set-var-fmt" {
+				t.Errorf("%v: Action not set-var-fmt: %v", *r.Index, r.Action)
+			}
+			if r.VarName != "tn" {
+				t.Errorf("%v: VarName not tn: %v", *r.Index, r.VarName)
+			}
+			if r.VarScope != "req" {
+				t.Errorf("%v: VarScope not req: %v", *r.Index, r.VarScope)
+			}
+			if r.VarFormat != "ssl_c_s_tn" {
+				t.Errorf("%v: VarFormat not ssl_c_s_tn: %v", *r.Index, r.VarFormat)
+			}
+			if r.Cond != "if" {
+				t.Errorf("%v: Cond not if: %v", *r.Index, r.Cond)
+			}
+			if r.CondTest != "FALSE" {
+				t.Errorf("%v: CondTest not FALSE: %v", *r.Index, r.CondTest)
+			}
+		case 21:
+			if r.Type != "content" {
+				t.Errorf("%v: Type not content: %v", *r.Index, r.Type)
+			}
+			if r.Action != "switch-mode" {
+				t.Errorf("%v: Action not switch-mode: %v", *r.Index, r.Action)
+			}
+			if r.SwitchModeProto != "my-proto" {
+				t.Errorf("%v: SwitchModeProto not my-proto: %v", *r.Index, r.SwitchModeProto)
+			}
+			if r.Cond != "if" {
+				t.Errorf("%v: Cond not if: %v", *r.Index, r.Cond)
+			}
+			if r.CondTest != "FALSE" {
+				t.Errorf("%v: CondTest not FALSE: %v", *r.Index, r.CondTest)
+			}
 		default:
-			t.Errorf("Expext tcp-request 0-7, %v found", *r.Index)
+			t.Errorf("Expext tcp-request 0-21, %v found", *r.Index)
 		}
 	}
 
@@ -332,9 +520,9 @@ func TestCreateEditDeleteTCPRequestRule(t *testing.T) {
 		t.Error("Version not incremented")
 	}
 
-	_, _, err = clientTest.GetTCPRequestRule(11, "frontend", "test", "")
+	_, _, err = clientTest.GetTCPRequestRule(22, "frontend", "test", "")
 	if err == nil {
-		t.Error("DeleteTCPRequestRule failed, TCP Request Rule 11 still exists")
+		t.Error("DeleteTCPRequestRule failed, TCP Request Rule 22 still exists")
 	}
 
 	err = clientTest.DeleteTCPRequestRule(2, "backend", "test_2", "", version)
