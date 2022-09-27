@@ -29,8 +29,8 @@ func TestGetTCPResponseRules(t *testing.T) { //nolint:gocognit
 		t.Error(err.Error())
 	}
 
-	if len(tRules) != 6 {
-		t.Errorf("%v tcp response rules returned, expected 6", len(tRules))
+	if len(tRules) != 17 {
+		t.Errorf("%v tcp response rules returned, expected 17", len(tRules))
 	}
 
 	if v != version {
@@ -138,8 +138,187 @@ func TestGetTCPResponseRules(t *testing.T) { //nolint:gocognit
 			if r.CondTest != "FALSE" {
 				t.Errorf("%v: CondTest not FALSE: %v", *r.Index, r.CondTest)
 			}
+		case 6:
+			if r.Type != "content" {
+				t.Errorf("%v: Type not content: %v", *r.Index, r.Type)
+			}
+			if r.Action != "close" {
+				t.Errorf("%v: Action not close: %v", *r.Index, r.Action)
+			}
+			if r.Cond != "if" {
+				t.Errorf("%v: Cond not if: %v", *r.Index, r.Cond)
+			}
+			if r.CondTest != "FALSE" {
+				t.Errorf("%v: CondTest not FALSE: %v", *r.Index, r.CondTest)
+			}
+		case 7:
+			if r.Type != "content" {
+				t.Errorf("%v: Type not content: %v", *r.Index, r.Type)
+			}
+			if r.Action != "sc-inc-gpc0" {
+				t.Errorf("%v: Action not sc-inc-gpc0: %v", *r.Index, r.Action)
+			}
+			if r.ScID != 1 {
+				t.Errorf("%v: ScID not 1 %v", *r.Index, r.ScID)
+			}
+			if r.Cond != "if" {
+				t.Errorf("%v: Cond not if: %v", *r.Index, r.Cond)
+			}
+			if r.CondTest != "FALSE" {
+				t.Errorf("%v: CondTest not FALSE: %v", *r.Index, r.CondTest)
+			}
+		case 8:
+			if r.Type != "content" {
+				t.Errorf("%v: Type not content: %v", *r.Index, r.Type)
+			}
+			if r.Action != "sc-inc-gpc1" {
+				t.Errorf("%v: Action not sc-inc-gpc1: %v", *r.Index, r.Action)
+			}
+			if r.ScID != 2 {
+				t.Errorf("%v: ScID not 2 %v", *r.Index, r.ScID)
+			}
+			if r.Cond != "if" {
+				t.Errorf("%v: Cond not if: %v", *r.Index, r.Cond)
+			}
+			if r.CondTest != "FALSE" {
+				t.Errorf("%v: CondTest not FALSE: %v", *r.Index, r.CondTest)
+			}
+		case 9:
+			if r.Type != "content" {
+				t.Errorf("%v: Type not content: %v", *r.Index, r.Type)
+			}
+			if r.Action != "sc-set-gpt0" {
+				t.Errorf("%v: Action not sc-set-gpt0: %v", *r.Index, r.Action)
+			}
+			if r.ScID != 3 {
+				t.Errorf("%v: ScID not 3 %v", *r.Index, r.ScID)
+			}
+			if r.Expr != "hdr(Host),lower" {
+				t.Errorf("%v: Expr not hdr(Host),lower: %v", *r.Index, r.Expr)
+			}
+			if r.Cond != "if" {
+				t.Errorf("%v: Cond not if: %v", *r.Index, r.Cond)
+			}
+			if r.CondTest != "FALSE" {
+				t.Errorf("%v: CondTest not FALSE: %v", *r.Index, r.CondTest)
+			}
+		case 10:
+			if r.Type != "content" {
+				t.Errorf("%v: Type not content: %v", *r.Index, r.Type)
+			}
+			if r.Action != "send-spoe-group" {
+				t.Errorf("%v: Action not send-spoe-group: %v", *r.Index, r.Action)
+			}
+			if r.SpoeEngine != "engine" {
+				t.Errorf("%v: SpoeEngine not engine %v", *r.Index, r.SpoeEngine)
+			}
+			if r.SpoeGroup != "group" {
+				t.Errorf("%v: SpoeGroup not group %v", *r.Index, r.SpoeGroup)
+			}
+			if r.Cond != "if" {
+				t.Errorf("%v: Cond not if: %v", *r.Index, r.Cond)
+			}
+			if r.CondTest != "FALSE" {
+				t.Errorf("%v: CondTest not FALSE: %v", *r.Index, r.CondTest)
+			}
+		case 11:
+			if r.Type != "content" {
+				t.Errorf("%v: Type not content: %v", *r.Index, r.Type)
+			}
+			if r.Action != "set-log-level" {
+				t.Errorf("%v: Action not set-log-level: %v", *r.Index, r.Action)
+			}
+			if r.LogLevel != "silent" {
+				t.Errorf("%v: LogLevel not silent %v", *r.Index, r.LogLevel)
+			}
+			if r.Cond != "if" {
+				t.Errorf("%v: Cond not if: %v", *r.Index, r.Cond)
+			}
+			if r.CondTest != "FALSE" {
+				t.Errorf("%v: CondTest not FALSE: %v", *r.Index, r.CondTest)
+			}
+		case 12:
+			if r.Type != "content" {
+				t.Errorf("%v: Type not content: %v", *r.Index, r.Type)
+			}
+			if r.Action != "set-mark" {
+				t.Errorf("%v: Action not set-mark: %v", *r.Index, r.Action)
+			}
+			if r.MarkValue != "0x1Ab" {
+				t.Errorf("%v: MarkValue not 0x1Ab %v", *r.Index, r.MarkValue)
+			}
+			if r.Cond != "if" {
+				t.Errorf("%v: Cond not if: %v", *r.Index, r.Cond)
+			}
+			if r.CondTest != "FALSE" {
+				t.Errorf("%v: CondTest not FALSE: %v", *r.Index, r.CondTest)
+			}
+		case 13:
+			if r.Type != "content" {
+				t.Errorf("%v: Type not content: %v", *r.Index, r.Type)
+			}
+			if r.Action != "set-nice" {
+				t.Errorf("%v: Action not set-nice: %v", *r.Index, r.Action)
+			}
+			if r.NiceValue != 1 {
+				t.Errorf("%v: NiceValue not 1 %v", *r.Index, r.NiceValue)
+			}
+			if r.Cond != "if" {
+				t.Errorf("%v: Cond not if: %v", *r.Index, r.Cond)
+			}
+			if r.CondTest != "FALSE" {
+				t.Errorf("%v: CondTest not FALSE: %v", *r.Index, r.CondTest)
+			}
+		case 14:
+			if r.Type != "content" {
+				t.Errorf("%v: Type not content: %v", *r.Index, r.Type)
+			}
+			if r.Action != "set-tos" {
+				t.Errorf("%v: Action not set-tos: %v", *r.Index, r.Action)
+			}
+			if r.TosValue != "2" {
+				t.Errorf("%v: TosValue not 2 %v", *r.Index, r.TosValue)
+			}
+			if r.Cond != "if" {
+				t.Errorf("%v: Cond not if: %v", *r.Index, r.Cond)
+			}
+			if r.CondTest != "FALSE" {
+				t.Errorf("%v: CondTest not FALSE: %v", *r.Index, r.CondTest)
+			}
+		case 15:
+			if r.Type != "content" {
+				t.Errorf("%v: Type not content: %v", *r.Index, r.Type)
+			}
+			if r.Action != "silent-drop" {
+				t.Errorf("%v: Action not silent-drop: %v", *r.Index, r.Action)
+			}
+			if r.Cond != "if" {
+				t.Errorf("%v: Cond not if: %v", *r.Index, r.Cond)
+			}
+			if r.CondTest != "FALSE" {
+				t.Errorf("%v: CondTest not FALSE: %v", *r.Index, r.CondTest)
+			}
+		case 16:
+			if r.Type != "content" {
+				t.Errorf("%v: Type not content: %v", *r.Index, r.Type)
+			}
+			if r.Action != "unset-var" {
+				t.Errorf("%v: Action not unset-var: %v", *r.Index, r.Action)
+			}
+			if r.VarName != "my_var" {
+				t.Errorf("%v: VarName not my_var: %v", *r.Index, r.VarName)
+			}
+			if r.VarScope != "req" {
+				t.Errorf("%v: VarScope not req: %v", *r.Index, r.VarScope)
+			}
+			if r.Cond != "if" {
+				t.Errorf("%v: Cond not if: %v", *r.Index, r.Cond)
+			}
+			if r.CondTest != "FALSE" {
+				t.Errorf("%v: CondTest not FALSE: %v", *r.Index, r.CondTest)
+			}
 		default:
-			t.Errorf("Expext only tcp-response 0, 1 or 2, %v found", *r.Index)
+			t.Errorf("Expect only tcp-response 0 to 16 %v found", *r.Index)
 		}
 	}
 
@@ -261,9 +440,9 @@ func TestCreateEditDeleteTCPResponseRule(t *testing.T) {
 		t.Error("Version not incremented")
 	}
 
-	_, _, err = clientTest.GetTCPResponseRule(6, "test", "")
+	_, _, err = clientTest.GetTCPResponseRule(17, "test", "")
 	if err == nil {
-		t.Error("DeleteTCPResponseRule failed, TCP Response Rule 6 still exists")
+		t.Error("DeleteTCPResponseRule failed, TCP Response Rule 17 still exists")
 	}
 
 	err = clientTest.DeleteTCPResponseRule(3, "test_2", "", version)

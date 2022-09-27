@@ -491,6 +491,17 @@ backend test
   tcp-response content set-bandwidth-limit my-limit limit 1m period 10s
   tcp-response content set-bandwidth-limit my-limit-reverse period 20s limit 2m
   tcp-response content set-bandwidth-limit my-limit-cond limit 3m if FALSE
+  tcp-response content close if FALSE
+  tcp-response content sc-inc-gpc0(1) if FALSE
+  tcp-response content sc-inc-gpc1(2) if FALSE
+  tcp-response content sc-set-gpt0(3) hdr(Host),lower if FALSE
+  tcp-response content send-spoe-group engine group if FALSE
+  tcp-response content set-log-level silent if FALSE
+  tcp-response content set-mark 0x1Ab if FALSE
+  tcp-response content set-nice 1 if FALSE
+  tcp-response content set-tos 2 if FALSE
+  tcp-response content silent-drop if FALSE
+  tcp-response content unset-var(req.my_var) if FALSE
   option contstats
   timeout check 2s
   timeout tunnel 5s
