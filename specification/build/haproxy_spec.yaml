@@ -11421,7 +11421,7 @@ paths:
         summary: Replace a peer_entry
         tags:
         - PeerEntry
-  /services/haproxy/configuration/fci_apps:
+  /services/haproxy/configuration/fcgi_apps:
       get:
         description: Returns an array of all configured FCGI applications.
         operationId: getFCGIApps
@@ -11482,7 +11482,7 @@ paths:
         summary: Add an FCGI app
         tags:
         - FCGIApp
-  /services/haproxy/configuration/fci_apps/{name}:
+  /services/haproxy/configuration/fcgi_apps/{name}:
       delete:
         description: Deletes an FCGI application from the configuration by its name.
         operationId: deleteFCGIApp
@@ -15510,6 +15510,7 @@ paths:
           enum:
           - frontend
           - backend
+          - fcgi-app
           in: query
           name: parent_type
           required: true

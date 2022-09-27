@@ -765,9 +765,9 @@ paths:
     $ref: "paths/configuration/peers.yaml#/peer_entries"
   /services/haproxy/configuration/peer_entries/{name}:
     $ref: "paths/configuration/peers.yaml#/peer_entries_one"
-  /services/haproxy/configuration/fci_apps:
+  /services/haproxy/configuration/fcgi_apps:
     $ref: "paths/configuration/fcgi-app.yaml#/apps"
-  /services/haproxy/configuration/fci_apps/{name}:
+  /services/haproxy/configuration/fcgi_apps/{name}:
     $ref: "paths/configuration/fcgi-app.yaml#/apps_one"
   /services/haproxy/configuration/backends:
     $ref: "paths/configuration/backend.yaml#/backends"

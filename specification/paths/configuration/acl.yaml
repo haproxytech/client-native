@@ -17,7 +17,7 @@ acls:
         description: Parent type
         required: true
         type: string
-        enum: [frontend, backend]
+        enum: [frontend, backend, fcgi-app]
       - name: acl_name
         in: query
         description: ACL name
