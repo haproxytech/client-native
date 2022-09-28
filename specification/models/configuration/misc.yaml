@@ -124,7 +124,7 @@ errorfile:
   properties:
     code:
       type: integer
-      enum: [200, 400, 403, 405, 408, 425, 429, 500, 502, 503, 504]
+      enum: [200, 400, 401, 403, 404, 405, 407, 408, 410, 413, 425, 429, 500, 501, 502, 503, 504]
     file:
       type: string
 cookie:
@@ -230,12 +230,12 @@ stats_options:
           required: true
     stats_http_requests:
       type: array
-      items: 
+      items:
         $ref: "#/definitions/stats_http_request"
       x-display-name: Stats HTTP Requests
     stats_auths:
       type: array
-      items: 
+      items:
         $ref: "#/definitions/stats_auth"
       x-display-name: Stats Auths
 smtpchk_params:

@@ -102,6 +102,12 @@ type Backend struct {
 	// Enum: [enabled disabled]
 	Enabled string `json:"enabled,omitempty"`
 
+	// errorloc302
+	Errorloc302 *Errorloc `json:"errorloc302,omitempty"`
+
+	// errorloc303
+	Errorloc303 *Errorloc `json:"errorloc303,omitempty"`
+
 	// external check
 	// Enum: [enabled disabled]
 	ExternalCheck string `json:"external_check,omitempty"`
@@ -360,6 +366,14 @@ func (m *Backend) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateEnabled(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateErrorloc302(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateErrorloc303(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -989,6 +1003,44 @@ func (m *Backend) validateEnabled(formats strfmt.Registry) error {
 	// value enum
 	if err := m.validateEnabledEnum("enabled", "body", m.Enabled); err != nil {
 		return err
+	}
+
+	return nil
+}
+
+func (m *Backend) validateErrorloc302(formats strfmt.Registry) error {
+	if swag.IsZero(m.Errorloc302) { // not required
+		return nil
+	}
+
+	if m.Errorloc302 != nil {
+		if err := m.Errorloc302.Validate(formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("errorloc302")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("errorloc302")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (m *Backend) validateErrorloc303(formats strfmt.Registry) error {
+	if swag.IsZero(m.Errorloc303) { // not required
+		return nil
+	}
+
+	if m.Errorloc303 != nil {
+		if err := m.Errorloc303.Validate(formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("errorloc303")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("errorloc303")
+			}
+			return err
+		}
 	}
 
 	return nil
@@ -2453,6 +2505,14 @@ func (m *Backend) ContextValidate(ctx context.Context, formats strfmt.Registry) 
 		res = append(res, err)
 	}
 
+	if err := m.contextValidateErrorloc302(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.contextValidateErrorloc303(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.contextValidateForwardfor(ctx, formats); err != nil {
 		res = append(res, err)
 	}
@@ -2591,6 +2651,38 @@ func (m *Backend) contextValidateEmailAlert(ctx context.Context, formats strfmt.
 				return ve.ValidateName("email_alert")
 			} else if ce, ok := err.(*errors.CompositeError); ok {
 				return ce.ValidateName("email_alert")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (m *Backend) contextValidateErrorloc302(ctx context.Context, formats strfmt.Registry) error {
+
+	if m.Errorloc302 != nil {
+		if err := m.Errorloc302.ContextValidate(ctx, formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("errorloc302")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("errorloc302")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (m *Backend) contextValidateErrorloc303(ctx context.Context, formats strfmt.Registry) error {
+
+	if m.Errorloc303 != nil {
+		if err := m.Errorloc303.ContextValidate(ctx, formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("errorloc303")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("errorloc303")
 			}
 			return err
 		}

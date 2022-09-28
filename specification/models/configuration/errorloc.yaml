@@ -1,0 +1,12 @@
+---
+errorloc:
+  type: object
+  required:
+    - url
+    - code
+  properties:
+    url:
+      type: string
+    code:
+      type: integer
+      enum: [200, 400, 401, 403, 404, 405, 407, 408, 410, 413, 425, 429, 500, 501, 502, 503, 504]

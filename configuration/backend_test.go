@@ -473,6 +473,18 @@ func TestGetBackend(t *testing.T) {
 	if *b.ID != 456 {
 		t.Errorf("ID not 456: %v", *b.ID)
 	}
+	if *b.Errorloc302.Code != 404 {
+		t.Errorf("%v: Errorloc302 Code not 404: %v", b.Name, *b.Errorloc302.Code)
+	}
+	if *b.Errorloc302.URL != "http://www.myawesomesite.com/not_found" {
+		t.Errorf("%v: Errorloc302 Code not http://www.myawesomesite.com/not_found: %v", b.Name, *b.Errorloc302.URL)
+	}
+	if *b.Errorloc303.Code != 404 {
+		t.Errorf("%v: Errorloc302 Code not 404: %v", b.Name, *b.Errorloc303.Code)
+	}
+	if *b.Errorloc303.URL != "http://www.myawesomesite.com/not_found" {
+		t.Errorf("%v: Errorloc302 Code not http://www.myawesomesite.com/not_found: %v", b.Name, *b.Errorloc303.URL)
+	}
 	if len(b.ErrorFiles) != 3 {
 		t.Errorf("ErrorFiles not 3: %v", len(b.ErrorFiles))
 	} else {

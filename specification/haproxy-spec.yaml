@@ -507,6 +507,8 @@ definitions:
     $ref: "models/configuration/misc.yaml#/compression"
   email_alert:
     $ref: "models/configuration/email_alert.yaml#/email_alert"
+  errorloc:
+    $ref: "models/configuration/errorloc.yaml#/errorloc"
 responses:
   BadRequest:
     description: Bad request

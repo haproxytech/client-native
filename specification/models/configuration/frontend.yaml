@@ -239,6 +239,12 @@ frontend:
       x-go-name: ErrorFiles
       items:
         $ref: "#/definitions/errorfile"
+    errorloc302:
+      $ref: "#/definitions/errorloc"
+    errorloc303:
+      $ref: "#/definitions/errorloc"
+    error_log_format:
+      type: string
   additionalProperties: false
   example:
     name: test_frontend

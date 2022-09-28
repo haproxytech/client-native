@@ -407,6 +407,9 @@ frontend test
   errorfile 403 /test/403.html
   errorfile 500 /test/500.html
   errorfile 429 /test/429.html
+  errorloc302 404 http://www.myawesomesite.com/not_found
+  errorloc303 404 http://www.myawesomesite.com/not_found
+  error-log-format %T\ %t\ Some\ Text
 
 frontend test_2
   mode http
@@ -545,6 +548,9 @@ backend test
   errorfile 403 /test/403.html
   errorfile 500 /test/500.html
   errorfile 429 /test/429.html
+  errorloc302 404 http://www.myawesomesite.com/not_found
+  errorloc303 404 http://www.myawesomesite.com/not_found
+  error-log-format %T\ %t\ Some\ Text
 
 peers mycluster
   peer hapee 192.168.1.1:1023

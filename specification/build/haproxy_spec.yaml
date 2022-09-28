@@ -1598,6 +1598,12 @@ definitions:
             $ref: '#/definitions/errorfile'
           type: array
           x-go-name: ErrorFiles
+        error_log_format:
+          type: string
+        errorloc302:
+          $ref: '#/definitions/errorloc'
+        errorloc303:
+          $ref: '#/definitions/errorloc'
         external_check:
           enum:
           - enabled
@@ -1979,6 +1985,12 @@ definitions:
             $ref: '#/definitions/errorfile'
           type: array
           x-go-name: ErrorFiles
+        error_log_format:
+          type: string
+        errorloc302:
+          $ref: '#/definitions/errorloc'
+        errorloc303:
+          $ref: '#/definitions/errorloc'
         forwardfor:
           $ref: '#/definitions/forwardfor'
           x-dependency:
@@ -2285,6 +2297,10 @@ definitions:
             $ref: '#/definitions/errorfile'
           type: array
           x-go-name: ErrorFiles
+        errorloc302:
+          $ref: '#/definitions/errorloc'
+        errorloc303:
+          $ref: '#/definitions/errorloc'
         external_check:
           enum:
           - enabled
@@ -7650,12 +7666,18 @@ definitions:
           enum:
           - 200
           - 400
+          - 401
           - 403
+          - 404
           - 405
+          - 407
           - 408
+          - 410
+          - 413
           - 425
           - 429
           - 500
+          - 501
           - 502
           - 503
           - 504
@@ -8284,6 +8306,34 @@ definitions:
       - mailers
       - to
       title: Email Alert
+      type: object
+  errorloc:
+      properties:
+        code:
+          enum:
+          - 200
+          - 400
+          - 401
+          - 403
+          - 404
+          - 405
+          - 407
+          - 408
+          - 410
+          - 413
+          - 425
+          - 429
+          - 500
+          - 501
+          - 502
+          - 503
+          - 504
+          type: integer
+        url:
+          type: string
+      required:
+      - url
+      - code
       type: object
 responses:
   BadRequest:

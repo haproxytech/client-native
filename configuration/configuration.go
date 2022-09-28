@@ -355,6 +355,10 @@ func (s *SectionParser) checkSpecialFields(fieldName string) (match bool, data i
 		return true, s.useFcgiApp()
 	case "Description":
 		return true, s.description()
+	case "Errorloc302":
+		return true, s.errorloc302()
+	case "Errorloc303":
+		return true, s.errorloc303()
 
 	default:
 		return false, nil
@@ -1401,6 +1405,46 @@ func (s *SectionParser) description() interface{} {
 	return d.Value
 }
 
+func (s *SectionParser) errorloc302() interface{} {
+	data, err := s.get("errorloc302", false)
+	if err != nil {
+		return nil
+	}
+	d := data.(*types.ErrorLoc302)
+	if d == nil {
+		return nil
+	}
+	intCode, err := strconv.ParseInt(d.Code, 10, 64)
+	if err != nil {
+		return nil
+	}
+	value := &models.Errorloc{
+		Code: &intCode,
+		URL:  &d.URL,
+	}
+	return value
+}
+
+func (s *SectionParser) errorloc303() interface{} {
+	data, err := s.get("errorloc303", false)
+	if err != nil {
+		return nil
+	}
+	d := data.(*types.ErrorLoc303)
+	if d == nil {
+		return nil
+	}
+	intCode, err := strconv.ParseInt(d.Code, 10, 64)
+	if err != nil {
+		return nil
+	}
+	value := &models.Errorloc{
+		Code: &intCode,
+		URL:  &d.URL,
+	}
+	return value
+}
+
 // SectionObject represents a configuration section
 type SectionObject struct {
 	Object  interface{}
@@ -1538,6 +1582,10 @@ func (s *SectionObject) checkSpecialFields(fieldName string, field reflect.Value
 		return true, s.serverStateFileName(field)
 	case "Description":
 		return true, s.description(field)
+	case "Errorloc302":
+		return true, s.errorloc302(field)
+	case "Errorloc303":
+		return true, s.errorloc303(field)
 	default:
 		return false, nil
 	}
@@ -3108,6 +3156,44 @@ func (s *SectionObject) description(field reflect.Value) error {
 		return nil
 	}
 	return s.set("description", types.StringC{Value: v})
+}
+
+func (s *SectionObject) errorloc302(field reflect.Value) error {
+	if valueIsNil(field) {
+		return nil
+	}
+	errorLoc, ok := field.Elem().Interface().(models.Errorloc)
+	if !ok {
+		return misc.CreateTypeAssertError("errorloc302")
+	}
+
+	e := &types.ErrorLoc302{
+		Code: fmt.Sprintf("%d", *errorLoc.Code),
+		URL:  *errorLoc.URL,
+	}
+	if err := s.set("errorloc302", e); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (s *SectionObject) errorloc303(field reflect.Value) error {
+	if valueIsNil(field) {
+		return nil
+	}
+	errorLoc, ok := field.Elem().Interface().(models.Errorloc)
+	if !ok {
+		return misc.CreateTypeAssertError("errorloc303")
+	}
+
+	e := &types.ErrorLoc303{
+		Code: fmt.Sprintf("%d", *errorLoc.Code),
+		URL:  *errorLoc.URL,
+	}
+	if err := s.set("errorloc303", e); err != nil {
+		return err
+	}
+	return nil
 }
 
 func (c *client) deleteSection(section parser.Section, name string, transactionID string, version int64) error {

@@ -380,6 +380,21 @@ func TestGetFrontend(t *testing.T) {
 	if *f.ID != 123 {
 		t.Errorf("ID not 123: %v", *f.ID)
 	}
+	if *f.Errorloc302.Code != 404 {
+		t.Errorf("%v: Errorloc302 Code not 404: %v", f.Name, *f.Errorloc302.Code)
+	}
+	if *f.Errorloc302.URL != "http://www.myawesomesite.com/not_found" {
+		t.Errorf("%v: Errorloc302 Code not http://www.myawesomesite.com/not_found: %v", f.Name, *f.Errorloc302.URL)
+	}
+	if *f.Errorloc303.Code != 404 {
+		t.Errorf("%v: Errorloc302 Code not 404: %v", f.Name, *f.Errorloc303.Code)
+	}
+	if *f.Errorloc303.URL != "http://www.myawesomesite.com/not_found" {
+		t.Errorf("%v: Errorloc302 Code not http://www.myawesomesite.com/not_found: %v", f.Name, *f.Errorloc303.URL)
+	}
+	if f.ErrorLogFormat != "%T\\ %t\\ Some\\ Text" {
+		t.Errorf("%v: Errorloc302 Code not %%T\\ %%t\\ Some\\ Text: %v", f.Name, *f.Errorloc302.URL)
+	}
 	if len(f.ErrorFiles) != 3 {
 		t.Errorf("ErrorFiles not 3: %v", len(f.ErrorFiles))
 	} else {

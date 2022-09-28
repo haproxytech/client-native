@@ -310,6 +310,10 @@ backend:
       x-go-name: ErrorFiles
       items:
         $ref: "#/definitions/errorfile"
+    errorloc302:
+      $ref: "#/definitions/errorloc"
+    errorloc303:
+      $ref: "#/definitions/errorloc"
   additionalProperties: false
   example:
     name: test_backend

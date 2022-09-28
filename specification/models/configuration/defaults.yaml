@@ -319,4 +319,10 @@ defaults:
     disabled:
       type: string
       enum: [enabled, disabled]
+    errorloc302:
+      $ref: "#/definitions/errorloc"
+    errorloc303:
+      $ref: "#/definitions/errorloc"
+    error_log_format:
+      type: string
   additionalProperties: false
