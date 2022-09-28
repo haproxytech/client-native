@@ -23,7 +23,7 @@ balance:
   properties:
     algorithm:
       type: string
-      enum: [roundrobin, static-rr, leastconn, first, source, uri, url_param, hdr, random, rdp-cookie]
+      enum: [roundrobin, static-rr, leastconn, first, source, uri, url_param, hdr, random, rdp-cookie, hash]
     uri_whole:
       type: boolean
       x-display-name: Uri Whole
@@ -95,6 +95,12 @@ balance:
       x-dependency:
         algorithm:
           value: uri
+    hash_expression:
+      type: string
+      x-display-name: Hash Expression
+      x-dependency:
+        algorithm:
+          value: hash
 httpchk_params:
   type: object
   x-display-name: HTTP Check

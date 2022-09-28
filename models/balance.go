@@ -37,8 +37,11 @@ type Balance struct {
 
 	// algorithm
 	// Required: true
-	// Enum: [roundrobin static-rr leastconn first source uri url_param hdr random rdp-cookie]
+	// Enum: [roundrobin static-rr leastconn first source uri url_param hdr random rdp-cookie hash]
 	Algorithm *string `json:"algorithm"`
+
+	// hash expression
+	HashExpression string `json:"hash_expression,omitempty"`
 
 	// hdr name
 	HdrName string `json:"hdr_name,omitempty"`
@@ -102,7 +105,7 @@ var balanceTypeAlgorithmPropEnum []interface{}
 
 func init() {
 	var res []string
-	if err := json.Unmarshal([]byte(`["roundrobin","static-rr","leastconn","first","source","uri","url_param","hdr","random","rdp-cookie"]`), &res); err != nil {
+	if err := json.Unmarshal([]byte(`["roundrobin","static-rr","leastconn","first","source","uri","url_param","hdr","random","rdp-cookie","hash"]`), &res); err != nil {
 		panic(err)
 	}
 	for _, v := range res {
@@ -141,6 +144,9 @@ const (
 
 	// BalanceAlgorithmRdpDashCookie captures enum value "rdp-cookie"
 	BalanceAlgorithmRdpDashCookie string = "rdp-cookie"
+
+	// BalanceAlgorithmHash captures enum value "hash"
+	BalanceAlgorithmHash string = "hash"
 )
 
 // prop value enum

@@ -7742,7 +7742,14 @@ definitions:
           - hdr
           - random
           - rdp-cookie
+          - hash
           type: string
+        hash_expression:
+          type: string
+          x-dependency:
+            algorithm:
+              value: hash
+          x-display-name: Hash Expression
         hdr_name:
           type: string
           x-dependency:

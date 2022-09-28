@@ -1142,6 +1142,8 @@ func (s *SectionParser) balance() interface{} {
 		b.URLParam = prm.Param
 		b.URLParamCheckPost = prm.CheckPost
 		b.URLParamMaxWait = prm.MaxWait
+	case *params.BalanceHash:
+		b.HashExpression = prm.Expression
 	}
 	return b
 }
@@ -2826,6 +2828,10 @@ func (s *SectionObject) balance(field reflect.Value) error {
 		case "rdp-cookie":
 			d.Params = &params.BalanceRdpCookie{
 				Name: b.RdpCookieName,
+			}
+		case "hash":
+			d.Params = &params.BalanceHash{
+				Expression: b.HashExpression,
 			}
 		}
 		if err := s.set("balance", &d); err != nil {
