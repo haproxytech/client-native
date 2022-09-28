@@ -1600,6 +1600,11 @@ definitions:
           x-go-name: ErrorFiles
         error_log_format:
           type: string
+        errorfiles_from_http_errors:
+          items:
+            $ref: '#/definitions/errorfiles'
+          type: array
+          x-go-name: ErrorFilesFromHTTPErrors
         errorloc302:
           $ref: '#/definitions/errorloc'
         errorloc303:
@@ -1987,6 +1992,11 @@ definitions:
           x-go-name: ErrorFiles
         error_log_format:
           type: string
+        errorfiles_from_http_errors:
+          items:
+            $ref: '#/definitions/errorfiles'
+          type: array
+          x-go-name: ErrorFilesFromHTTPErrors
         errorloc302:
           $ref: '#/definitions/errorloc'
         errorloc303:
@@ -2297,6 +2307,11 @@ definitions:
             $ref: '#/definitions/errorfile'
           type: array
           x-go-name: ErrorFiles
+        errorfiles_from_http_errors:
+          items:
+            $ref: '#/definitions/errorfiles'
+          type: array
+          x-go-name: ErrorFilesFromHTTPErrors
         errorloc302:
           $ref: '#/definitions/errorloc'
         errorloc303:
@@ -7686,6 +7701,33 @@ definitions:
           type: string
       type: object
       x-display-name: Error File
+  errorfiles:
+      properties:
+        codes:
+          items:
+            enum:
+            - 200
+            - 400
+            - 401
+            - 403
+            - 404
+            - 405
+            - 407
+            - 408
+            - 410
+            - 413
+            - 425
+            - 429
+            - 500
+            - 501
+            - 502
+            - 503
+            - 504
+            type: integer
+          type: array
+        name:
+          type: string
+      type: object
   cookie:
       properties:
         domain:

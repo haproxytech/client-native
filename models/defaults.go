@@ -41,6 +41,9 @@ type Defaults struct {
 	// error files
 	ErrorFiles []*Errorfile `json:"error_files"`
 
+	// error files from HTTP errors
+	ErrorFilesFromHTTPErrors []*Errorfiles `json:"errorfiles_from_http_errors"`
+
 	// abortonclose
 	// Enum: [enabled disabled]
 	Abortonclose string `json:"abortonclose,omitempty"`
@@ -383,6 +386,10 @@ func (m *Defaults) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
+	if err := m.validateErrorFilesFromHTTPErrors(formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.validateAbortonclose(formats); err != nil {
 		res = append(res, err)
 	}
@@ -673,6 +680,32 @@ func (m *Defaults) validateErrorFiles(formats strfmt.Registry) error {
 					return ve.ValidateName("error_files" + "." + strconv.Itoa(i))
 				} else if ce, ok := err.(*errors.CompositeError); ok {
 					return ce.ValidateName("error_files" + "." + strconv.Itoa(i))
+				}
+				return err
+			}
+		}
+
+	}
+
+	return nil
+}
+
+func (m *Defaults) validateErrorFilesFromHTTPErrors(formats strfmt.Registry) error {
+	if swag.IsZero(m.ErrorFilesFromHTTPErrors) { // not required
+		return nil
+	}
+
+	for i := 0; i < len(m.ErrorFilesFromHTTPErrors); i++ {
+		if swag.IsZero(m.ErrorFilesFromHTTPErrors[i]) { // not required
+			continue
+		}
+
+		if m.ErrorFilesFromHTTPErrors[i] != nil {
+			if err := m.ErrorFilesFromHTTPErrors[i].Validate(formats); err != nil {
+				if ve, ok := err.(*errors.Validation); ok {
+					return ve.ValidateName("errorfiles_from_http_errors" + "." + strconv.Itoa(i))
+				} else if ce, ok := err.(*errors.CompositeError); ok {
+					return ce.ValidateName("errorfiles_from_http_errors" + "." + strconv.Itoa(i))
 				}
 				return err
 			}
@@ -2982,6 +3015,10 @@ func (m *Defaults) ContextValidate(ctx context.Context, formats strfmt.Registry)
 		res = append(res, err)
 	}
 
+	if err := m.contextValidateErrorFilesFromHTTPErrors(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.contextValidateBalance(ctx, formats); err != nil {
 		res = append(res, err)
 	}
@@ -3062,6 +3099,26 @@ func (m *Defaults) contextValidateErrorFiles(ctx context.Context, formats strfmt
 					return ve.ValidateName("error_files" + "." + strconv.Itoa(i))
 				} else if ce, ok := err.(*errors.CompositeError); ok {
 					return ce.ValidateName("error_files" + "." + strconv.Itoa(i))
+				}
+				return err
+			}
+		}
+
+	}
+
+	return nil
+}
+
+func (m *Defaults) contextValidateErrorFilesFromHTTPErrors(ctx context.Context, formats strfmt.Registry) error {
+
+	for i := 0; i < len(m.ErrorFilesFromHTTPErrors); i++ {
+
+		if m.ErrorFilesFromHTTPErrors[i] != nil {
+			if err := m.ErrorFilesFromHTTPErrors[i].ContextValidate(ctx, formats); err != nil {
+				if ve, ok := err.(*errors.Validation); ok {
+					return ve.ValidateName("errorfiles_from_http_errors" + "." + strconv.Itoa(i))
+				} else if ce, ok := err.(*errors.CompositeError); ok {
+					return ce.ValidateName("errorfiles_from_http_errors" + "." + strconv.Itoa(i))
 				}
 				return err
 			}

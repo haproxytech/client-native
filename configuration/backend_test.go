@@ -506,6 +506,39 @@ func TestGetBackend(t *testing.T) {
 			}
 		}
 	}
+	if len(b.ErrorFilesFromHTTPErrors) != 3 {
+		t.Errorf("ErrorFilesFromHTTPErrors not 3: %v", len(b.ErrorFilesFromHTTPErrors))
+	} else {
+		for _, ef := range b.ErrorFilesFromHTTPErrors {
+			if ef.Name == "my_errors" {
+				if len(ef.Codes) != 3 {
+					t.Errorf("ErrorFilesFromHTTPErrors Codes not 3 for errofiles name %s: %v", ef.Name, len(ef.Codes))
+				}
+				if ef.Codes[0] != 404 {
+					t.Errorf("Codes[0] not 404 for errofiles name %s: %v", ef.Name, ef.Codes[0])
+				}
+				if ef.Codes[1] != 401 {
+					t.Errorf("Codes[1] not 401 for errofiles name %s: %v", ef.Name, ef.Codes[1])
+				}
+				if ef.Codes[2] != 500 {
+					t.Errorf("Codes[2] not 500 for errofiles name %s: %v", ef.Name, ef.Codes[2])
+				}
+			}
+			if ef.Name == "other_errors" {
+				if len(ef.Codes) != 0 {
+					t.Errorf("ErrorFilesFromHTTPErrors Codes not 0 for errofiles name %s: %v", ef.Name, len(ef.Codes))
+				}
+			}
+			if ef.Name == "another_errors" {
+				if len(ef.Codes) != 1 {
+					t.Errorf("ErrorFilesFromHTTPErrors Codes not 1 for errofiles name %s: %v", ef.Name, len(ef.Codes))
+				}
+				if ef.Codes[0] != 501 {
+					t.Errorf("Codes[0] not 501 for errofiles name %s: %v", ef.Name, ef.Codes[0])
+				}
+			}
+		}
+	}
 	if b.EmailAlert == nil {
 		t.Error("EmailAlert is nil")
 	} else if *b.EmailAlert.From != "prod01@example.com" {
@@ -625,6 +658,10 @@ func TestCreateEditDeleteBackend(t *testing.T) {
 			To:      misc.StringP("sre@example.com"),
 			Level:   "warning",
 			Mailers: misc.StringP("localmailer1"),
+		},
+		ErrorFilesFromHTTPErrors: []*models.Errorfiles{
+			{Name: "test_errors", Codes: []int64{400}},
+			{Name: "test_errors_all"},
 		},
 	}
 

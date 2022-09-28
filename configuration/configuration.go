@@ -305,6 +305,8 @@ func (s *SectionParser) checkSpecialFields(fieldName string) (match bool, data i
 		return true, s.hashType()
 	case "ErrorFiles":
 		return true, s.errorFiles()
+	case "ErrorFilesFromHTTPErrors":
+		return true, s.errorfilesFromHTTPErrors()
 	case "DefaultServer":
 		return true, s.defaultServer()
 	case "LoadServerStateFromFile":
@@ -1047,6 +1049,26 @@ func (s *SectionParser) errorFiles() interface{} {
 	return dEFiles
 }
 
+func (s *SectionParser) errorfilesFromHTTPErrors() interface{} {
+	data, err := s.get("errorfiles", false)
+	if err != nil {
+		return nil
+	}
+	d := data.([]types.ErrorFiles)
+
+	dEFiles := make([]*models.Errorfiles, len(d))
+	for i, ef := range d {
+		dEFile := &models.Errorfiles{}
+		dEFile.Codes = ef.Codes
+		dEFile.Name = ef.Name
+		dEFiles[i] = dEFile
+	}
+	if len(dEFiles) == 0 {
+		return nil
+	}
+	return dEFiles
+}
+
 func (s *SectionParser) hashType() interface{} {
 	data, err := s.get("hash-type", false)
 	if err != nil {
@@ -1534,6 +1556,8 @@ func (s *SectionObject) checkSpecialFields(fieldName string, field reflect.Value
 		return true, s.hashType(field)
 	case "ErrorFiles":
 		return true, s.errorFiles(field)
+	case "ErrorFilesFromHTTPErrors":
+		return true, s.errorFilesFromHTTPErrors(field)
 	case "DefaultServer":
 		return true, s.defaultServer(field)
 	case "LoadServerStateFromFile":
@@ -2654,6 +2678,27 @@ func (s *SectionObject) errorFiles(field reflect.Value) error {
 		errorFiles = append(errorFiles, types.ErrorFile{Code: strconv.FormatInt(ef.Code, 10), File: ef.File})
 	}
 	if err := s.set("errorfile", errorFiles); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (s *SectionObject) errorFilesFromHTTPErrors(field reflect.Value) error {
+	if valueIsNil(field) {
+		if err := s.set("errorfiles", nil); err != nil {
+			return err
+		}
+		return nil
+	}
+	efs, ok := field.Interface().([]*models.Errorfiles)
+	if !ok {
+		return nil
+	}
+	errorFiles := make([]types.ErrorFiles, len(efs))
+	for i, ef := range efs {
+		errorFiles[i] = types.ErrorFiles{Codes: ef.Codes, Name: ef.Name}
+	}
+	if err := s.set("errorfiles", errorFiles); err != nil {
 		return err
 	}
 	return nil

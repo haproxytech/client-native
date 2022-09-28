@@ -406,6 +406,8 @@ definitions:
     $ref: "models/configuration/misc.yaml#/redispatch"
   errorfile:
     $ref: "models/configuration/misc.yaml#/errorfile"
+  errorfiles:
+    $ref: "models/configuration/errorfiles.yaml#/errorfiles"
   cookie:
     $ref: "models/configuration/misc.yaml#/cookie"
   capture:

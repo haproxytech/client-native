@@ -310,6 +310,11 @@ backend:
       x-go-name: ErrorFiles
       items:
         $ref: "#/definitions/errorfile"
+    errorfiles_from_http_errors:
+      type: array
+      x-go-name: ErrorFilesFromHTTPErrors
+      items:
+        $ref: "#/definitions/errorfiles"
     errorloc302:
       $ref: "#/definitions/errorloc"
     errorloc303:

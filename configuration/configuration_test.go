@@ -548,6 +548,9 @@ backend test
   errorfile 403 /test/403.html
   errorfile 500 /test/500.html
   errorfile 429 /test/429.html
+  errorfiles my_errors 404 401 500
+  errorfiles other_errors
+  errorfiles another_errors 501
   errorloc302 404 http://www.myawesomesite.com/not_found
   errorloc303 404 http://www.myawesomesite.com/not_found
   error-log-format %T\ %t\ Some\ Text

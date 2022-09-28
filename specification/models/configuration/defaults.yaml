@@ -319,6 +319,11 @@ defaults:
     disabled:
       type: string
       enum: [enabled, disabled]
+    errorfiles_from_http_errors:
+      type: array
+      x-go-name: ErrorFilesFromHTTPErrors
+      items:
+        $ref: "#/definitions/errorfiles"
     errorloc302:
       $ref: "#/definitions/errorloc"
     errorloc303:
