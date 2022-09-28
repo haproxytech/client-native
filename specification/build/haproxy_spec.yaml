@@ -5872,6 +5872,25 @@ definitions:
         trace_rnd_parsing: true
         type: trace
       properties:
+        app_name:
+          description: Name of the fcgi-app section this filter will use.
+          pattern: ^[^\s]+$
+          type: string
+          x-dependency:
+            type:
+              required: true
+              value: fcgi-app
+        bandwidth_limit_name:
+          description: Filter name that will be used by 'set-bandwidth-limit' actions to
+            reference a specific bandwidth limitation filter
+          pattern: ^[^\s]+$
+          type: string
+          x-dependency:
+            type:
+              required: true
+              value:
+              - bwlim-in
+              - bwlim-out
         cache_name:
           pattern: ^[^\s]+$
           type: string
@@ -5879,9 +5898,73 @@ definitions:
             type:
               required: true
               value: cache
+        default_limit:
+          description: |-
+            The max number of bytes that can be forwarded over the period.
+            The value must be specified for per-stream and shared bandwidth limitation filters.
+            It follows the HAProxy size format and is expressed in bytes.
+          type: integer
+          x-dependency:
+            type:
+              required: true
+              value:
+              - bwlim-in
+              - bwlim-out
+        default_period:
+          description: |-
+            The default time period used to evaluate the bandwidth limitation rate.
+            It can be specified for per-stream bandwidth limitation filters only.
+            It follows the HAProxy time format and is expressed in milliseconds.
+          type: integer
+          x-dependency:
+            default_limit:
+              required: true
+            type:
+              required: true
+              value:
+              - bwlim-in
+              - bwlim-out
         index:
           type: integer
           x-nullable: true
+        key:
+          description: |-
+            A sample expression rule.
+            It describes what elements will be analyzed, extracted, combined, and used to select which table entry to update the counters.
+            It must be specified for shared bandwidth limitation filters only.
+          type: string
+          x-dependency:
+            limit:
+              required: true
+            type:
+              required: true
+              value:
+              - bwlim-in
+              - bwlim-out
+        limit:
+          description: |-
+            The max number of bytes that can be forwarded over the period.
+            The value must be specified for per-stream and shared bandwidth limitation filters.
+            It follows the HAProxy size format and is expressed in bytes.
+          type: integer
+          x-dependency:
+            type:
+              required: true
+              value:
+              - bwlim-in
+              - bwlim-out
+        min_size:
+          description: |-
+            The optional minimum number of bytes forwarded at a time by a stream excluding the last packet that may be smaller.
+            This value can be specified for per-stream and shared bandwidth limitation filters.
+            It follows the HAProxy size format and is expressed in bytes.
+          type: integer
+          x-dependency:
+            type:
+              required: true
+              value:
+              - bwlim-in
+              - bwlim-out
         spoe_config:
           pattern: ^[^\s]+$
           type: string
@@ -5895,6 +5978,19 @@ definitions:
           x-dependency:
             type:
               value: spoe
+        table:
+          description: |-
+            An optional table to be used instead of the default one, which is the stick-table declared in the current proxy.
+            It can be specified for shared bandwidth limitation filters only.
+          type: string
+          x-dependency:
+            limit:
+              required: true
+            type:
+              required: true
+              value:
+              - bwlim-in
+              - bwlim-out
         trace_hexdump:
           type: boolean
           x-dependency:
@@ -5924,6 +6020,9 @@ definitions:
           - compression
           - spoe
           - cache
+          - fcgi-app
+          - bwlim-in
+          - bwlim-out
           type: string
           x-nullable: false
       required:

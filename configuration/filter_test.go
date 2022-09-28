@@ -29,7 +29,7 @@ func TestGetFilters(t *testing.T) { //nolint:gocognit
 		t.Error(err.Error())
 	}
 
-	if len(filters) != 3 {
+	if len(filters) != 6 {
 		t.Errorf("%v filters returned, expected 3", len(filters))
 	}
 
@@ -65,6 +65,48 @@ func TestGetFilters(t *testing.T) { //nolint:gocognit
 			}
 			if f.TraceRndForwarding != true {
 				t.Errorf("%v: TraceRndForwarding not true: %v", *f.Index, f.TraceRndForwarding)
+			}
+		case 3:
+			if f.Type != "fcgi-app" {
+				t.Errorf("%v: Type not fcgi-app: %v", *f.Index, f.Type)
+			}
+			if f.AppName != "my-app" {
+				t.Errorf("%v: AppName not my-app: %v", *f.Index, f.AppName)
+			}
+		case 4:
+			if f.Type != "bwlim-in" {
+				t.Errorf("%v: Type not bwlim-in: %v", *f.Index, f.Type)
+			}
+			if f.BandwidthLimitName != "in" {
+				t.Errorf("%v: BandwidthLimitName not in: %v", *f.Index, f.BandwidthLimitName)
+			}
+			if f.DefaultLimit != 1024 {
+				t.Errorf("%v: DefaultLimit not 1024: %v", *f.Index, f.DefaultLimit)
+			}
+			if f.DefaultPeriod != 10 {
+				t.Errorf("%v: DefaultPeriod not 10: %v", *f.Index, f.DefaultPeriod)
+			}
+			if f.MinSize != 32 {
+				t.Errorf("%v: MinSize not 32: %v", *f.Index, f.MinSize)
+			}
+		case 5:
+			if f.Type != "bwlim-out" {
+				t.Errorf("%v: Type not bwlim-out: %v", *f.Index, f.Type)
+			}
+			if f.BandwidthLimitName != "out" {
+				t.Errorf("%v: BandwidthLimitName not out: %v", *f.Index, f.BandwidthLimitName)
+			}
+			if f.Limit != 1024 {
+				t.Errorf("%v: Limit not 1024: %v", *f.Index, f.Limit)
+			}
+			if f.Key != "name(arg1)" {
+				t.Errorf("%v: Limit not name(arg1): %v", *f.Index, f.Key)
+			}
+			if f.Table != "st_src_global" {
+				t.Errorf("%v: Limit not st_src_global: %v", *f.Index, f.Table)
+			}
+			if f.MinSize != 32 {
+				t.Errorf("%v: MinSize not 32: %v", *f.Index, f.MinSize)
 			}
 		default:
 			t.Errorf("Expext only filter 1, 2 or 3, %v found", *f.Index)
@@ -191,9 +233,12 @@ func TestCreateEditDeleteFilter(t *testing.T) {
 		t.Error("Version not incremented")
 	}
 
-	_, _, err = clientTest.GetFilter(3, "frontend", "test", "")
+	_, filters, _ := clientTest.GetFilters("frontend", "test", "")
+	_ = filters
+
+	_, _, err = clientTest.GetFilter(6, "frontend", "test", "")
 	if err == nil {
-		t.Error("DeleteFilter failed, filter 3 still exists")
+		t.Error("DeleteFilter failed, filter 5 still exists")
 	}
 
 	err = clientTest.DeleteFilter(1, "backend", "test_2", "", version)

@@ -292,6 +292,9 @@ frontend test
   filter trace name BEFORE-HTTP-COMP random-parsing hexdump
   filter compression
   filter trace name AFTER-HTTP-COMP random-forwarding
+  filter fcgi-app my-app
+  filter bwlim-in in default-limit 1024 default-period 10 min-size 32
+  filter bwlim-out out limit 1024 key name(arg1) table st_src_global min-size 32
   http-request allow if src 192.168.0.0/16
   http-request set-header X-SSL %[ssl_fc]
   http-request set-var(req.my_var) req.fhdr(user-agent),lower

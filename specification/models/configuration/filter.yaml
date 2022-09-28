@@ -12,7 +12,7 @@ filter:
       x-nullable: true
     type:
       type: string
-      enum: [trace, compression, spoe, cache]
+      enum: [trace, compression, spoe, cache, fcgi-app, bwlim-in, bwlim-out]
       x-nullable: false
     trace_name:
       type: string
@@ -49,6 +49,87 @@ filter:
       x-dependency:
         type:
           value: spoe
+          required: true
+    limit:
+      type: integer
+      description: |-
+        The max number of bytes that can be forwarded over the period.
+        The value must be specified for per-stream and shared bandwidth limitation filters.
+        It follows the HAProxy size format and is expressed in bytes.
+      x-dependency:
+        type:
+          value: [bwlim-in, bwlim-out]
+          required: true
+    key:
+      type: string
+      description: |-
+        A sample expression rule.
+        It describes what elements will be analyzed, extracted, combined, and used to select which table entry to update the counters.
+        It must be specified for shared bandwidth limitation filters only.
+      x-dependency:
+        type:
+          value: [bwlim-in, bwlim-out]
+          required: true
+        limit:
+          required: true
+    default_limit:
+      description: |-
+        The max number of bytes that can be forwarded over the period.
+        The value must be specified for per-stream and shared bandwidth limitation filters.
+        It follows the HAProxy size format and is expressed in bytes.
+      type: integer
+      x-dependency:
+        type:
+          value: [bwlim-in, bwlim-out]
+          required: true
+    table:
+      description: |-
+        An optional table to be used instead of the default one, which is the stick-table declared in the current proxy.
+        It can be specified for shared bandwidth limitation filters only.
+      x-dependency:
+        type:
+          value: [bwlim-in, bwlim-out]
+          required: true
+        limit:
+          required: true
+      type: string
+    default_period:
+      description: |-
+        The default time period used to evaluate the bandwidth limitation rate.
+        It can be specified for per-stream bandwidth limitation filters only.
+        It follows the HAProxy time format and is expressed in milliseconds.
+      type: integer
+      x-dependency:
+        type:
+          value: [bwlim-in, bwlim-out]
+          required: true
+        default_limit:
+          required: true
+    min_size:
+      description: |-
+        The optional minimum number of bytes forwarded at a time by a stream excluding the last packet that may be smaller.
+        This value can be specified for per-stream and shared bandwidth limitation filters.
+        It follows the HAProxy size format and is expressed in bytes.
+      type: integer
+      x-dependency:
+        type:
+          value: [bwlim-in, bwlim-out]
+          required: true
+    bandwidth_limit_name:
+      type: string
+      description: Filter name that will be used by 'set-bandwidth-limit' actions to reference a specific bandwidth limitation filter
+      pattern: '^[^\s]+$'
+      x-dependency:
+        type:
+          value: [bwlim-in, bwlim-out]
+          required: true
+    app_name:
+      type: string
+      description: Name of the fcgi-app section this filter will use.
+      pattern: '^[^\s]+$'
+      x-dependency:
+        type:
+          value: fcgi-app
           required: true
     cache_name:
       type: string

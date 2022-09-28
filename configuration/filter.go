@@ -217,6 +217,34 @@ func ParseFilters(t, pName string, p parser.Parser) (models.Filters, error) {
 
 func ParseFilter(f types.Filter) *models.Filter {
 	switch v := f.(type) {
+	case *filters.BandwidthLimit:
+		filter := &models.Filter{
+			BandwidthLimitName: v.Name,
+			Type:               v.Attribute,
+		}
+
+		if len(v.Limit) > 0 && len(v.Key) > 0 {
+			filter.Key = v.Key
+			filter.Limit, _ = strconv.ParseInt(v.Limit, 10, 64)
+
+			if table := v.Table; table != nil {
+				filter.Table = *table
+			}
+		} else {
+			filter.DefaultLimit, _ = strconv.ParseInt(v.DefaultLimit, 10, 64)
+			filter.DefaultPeriod, _ = strconv.ParseInt(v.DefaultPeriod, 10, 64)
+		}
+
+		if minSize := v.MinSize; minSize != nil {
+			filter.MinSize, _ = strconv.ParseInt(*minSize, 10, 64)
+		}
+
+		return filter
+	case *filters.FcgiApp:
+		return &models.Filter{
+			Type:    "fcgi-app",
+			AppName: v.Name,
+		}
 	case *filters.Trace:
 		return &models.Filter{
 			Type:               "trace",

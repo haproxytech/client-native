@@ -38,13 +38,46 @@ import (
 // swagger:model filter
 type Filter struct {
 
+	// Name of the fcgi-app section this filter will use.
+	// Pattern: ^[^\s]+$
+	AppName string `json:"app_name,omitempty"`
+
+	// Filter name that will be used by 'set-bandwidth-limit' actions to reference a specific bandwidth limitation filter
+	// Pattern: ^[^\s]+$
+	BandwidthLimitName string `json:"bandwidth_limit_name,omitempty"`
+
 	// cache name
 	// Pattern: ^[^\s]+$
 	CacheName string `json:"cache_name,omitempty"`
 
+	// The max number of bytes that can be forwarded over the period.
+	// The value must be specified for per-stream and shared bandwidth limitation filters.
+	// It follows the HAProxy size format and is expressed in bytes.
+	DefaultLimit int64 `json:"default_limit,omitempty"`
+
+	// The default time period used to evaluate the bandwidth limitation rate.
+	// It can be specified for per-stream bandwidth limitation filters only.
+	// It follows the HAProxy time format and is expressed in milliseconds.
+	DefaultPeriod int64 `json:"default_period,omitempty"`
+
 	// index
 	// Required: true
 	Index *int64 `json:"index"`
+
+	// A sample expression rule.
+	// It describes what elements will be analyzed, extracted, combined, and used to select which table entry to update the counters.
+	// It must be specified for shared bandwidth limitation filters only.
+	Key string `json:"key,omitempty"`
+
+	// The max number of bytes that can be forwarded over the period.
+	// The value must be specified for per-stream and shared bandwidth limitation filters.
+	// It follows the HAProxy size format and is expressed in bytes.
+	Limit int64 `json:"limit,omitempty"`
+
+	// The optional minimum number of bytes forwarded at a time by a stream excluding the last packet that may be smaller.
+	// This value can be specified for per-stream and shared bandwidth limitation filters.
+	// It follows the HAProxy size format and is expressed in bytes.
+	MinSize int64 `json:"min_size,omitempty"`
 
 	// spoe config
 	// Pattern: ^[^\s]+$
@@ -53,6 +86,10 @@ type Filter struct {
 	// spoe engine
 	// Pattern: ^[^\s]+$
 	SpoeEngine string `json:"spoe_engine,omitempty"`
+
+	// An optional table to be used instead of the default one, which is the stick-table declared in the current proxy.
+	// It can be specified for shared bandwidth limitation filters only.
+	Table string `json:"table,omitempty"`
 
 	// trace hexdump
 	TraceHexdump bool `json:"trace_hexdump,omitempty"`
@@ -69,13 +106,21 @@ type Filter struct {
 
 	// type
 	// Required: true
-	// Enum: [trace compression spoe cache]
+	// Enum: [trace compression spoe cache fcgi-app bwlim-in bwlim-out]
 	Type string `json:"type"`
 }
 
 // Validate validates this filter
 func (m *Filter) Validate(formats strfmt.Registry) error {
 	var res []error
+
+	if err := m.validateAppName(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateBandwidthLimitName(formats); err != nil {
+		res = append(res, err)
+	}
 
 	if err := m.validateCacheName(formats); err != nil {
 		res = append(res, err)
@@ -104,6 +149,30 @@ func (m *Filter) Validate(formats strfmt.Registry) error {
 	if len(res) > 0 {
 		return errors.CompositeValidationError(res...)
 	}
+	return nil
+}
+
+func (m *Filter) validateAppName(formats strfmt.Registry) error {
+	if swag.IsZero(m.AppName) { // not required
+		return nil
+	}
+
+	if err := validate.Pattern("app_name", "body", m.AppName, `^[^\s]+$`); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *Filter) validateBandwidthLimitName(formats strfmt.Registry) error {
+	if swag.IsZero(m.BandwidthLimitName) { // not required
+		return nil
+	}
+
+	if err := validate.Pattern("bandwidth_limit_name", "body", m.BandwidthLimitName, `^[^\s]+$`); err != nil {
+		return err
+	}
+
 	return nil
 }
 
@@ -168,7 +237,7 @@ var filterTypeTypePropEnum []interface{}
 
 func init() {
 	var res []string
-	if err := json.Unmarshal([]byte(`["trace","compression","spoe","cache"]`), &res); err != nil {
+	if err := json.Unmarshal([]byte(`["trace","compression","spoe","cache","fcgi-app","bwlim-in","bwlim-out"]`), &res); err != nil {
 		panic(err)
 	}
 	for _, v := range res {
@@ -189,6 +258,15 @@ const (
 
 	// FilterTypeCache captures enum value "cache"
 	FilterTypeCache string = "cache"
+
+	// FilterTypeFCGIDashApp captures enum value "fcgi-app"
+	FilterTypeFCGIDashApp string = "fcgi-app"
+
+	// FilterTypeBwlimDashIn captures enum value "bwlim-in"
+	FilterTypeBwlimDashIn string = "bwlim-in"
+
+	// FilterTypeBwlimDashOut captures enum value "bwlim-out"
+	FilterTypeBwlimDashOut string = "bwlim-out"
 )
 
 // prop value enum
