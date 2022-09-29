@@ -20,7 +20,7 @@ import (
 	"fmt"
 	"strconv"
 
-	strfmt "github.com/go-openapi/strfmt"
+	"github.com/go-openapi/strfmt"
 	parser "github.com/haproxytech/config-parser/v4"
 	parser_errors "github.com/haproxytech/config-parser/v4/errors"
 	"github.com/haproxytech/config-parser/v4/types"
@@ -49,7 +49,12 @@ func (c *client) GetACLs(parentType, parentName string, transactionID string, ac
 		return 0, nil, err
 	}
 
-	acls, err := ParseACLs(parentType, parentName, p, aclName...)
+	section, err := c.getACLParserFromParent(parentType)
+	if err != nil {
+		return 0, nil, err
+	}
+
+	acls, err := ParseACLs(section, parentName, p, aclName...)
 	if err != nil {
 		return v, nil, c.HandleError("", parentType, parentName, "", false, err)
 	}
@@ -70,11 +75,9 @@ func (c *client) GetACL(id int64, parentType, parentName string, transactionID s
 		return 0, nil, err
 	}
 
-	var section parser.Section
-	if parentType == "backend" {
-		section = parser.Backends
-	} else if parentType == "frontend" {
-		section = parser.Frontends
+	section, err := c.getACLParserFromParent(parentType)
+	if err != nil {
+		return 0, nil, err
 	}
 
 	data, err := p.GetOne(section, parentName, "acl", int(id))
@@ -96,11 +99,9 @@ func (c *client) DeleteACL(id int64, parentType string, parentName string, trans
 		return err
 	}
 
-	var section parser.Section
-	if parentType == "backend" {
-		section = parser.Backends
-	} else if parentType == "frontend" {
-		section = parser.Frontends
+	section, err := c.getACLParserFromParent(parentType)
+	if err != nil {
+		return err
 	}
 
 	if err := p.Delete(section, parentName, "acl", int(id)); err != nil {
@@ -128,11 +129,9 @@ func (c *client) CreateACL(parentType string, parentName string, data *models.AC
 		return err
 	}
 
-	var section parser.Section
-	if parentType == "backend" {
-		section = parser.Backends
-	} else if parentType == "frontend" {
-		section = parser.Frontends
+	section, err := c.getACLParserFromParent(parentType)
+	if err != nil {
+		return err
 	}
 
 	if err := p.Insert(section, parentName, "acl", SerializeACL(*data), int(*data.Index)); err != nil {
@@ -145,9 +144,21 @@ func (c *client) CreateACL(parentType string, parentName string, data *models.AC
 	return nil
 }
 
+func (c *client) getACLParserFromParent(parent string) (parser.Section, error) {
+	switch parent {
+	case "backend":
+		return parser.Backends, nil
+	case "frontend":
+		return parser.Frontends, nil
+	case "fcgi-app":
+		return parser.FCGIApp, nil
+	default:
+		return "", fmt.Errorf("unsupported parent: %s", parent)
+	}
+}
+
 // EditACL edits a ACL line in configuration. One of version or transactionID is
 // mandatory. Returns error on fail, nil on success.
-// nolint:dupl
 func (c *client) EditACL(id int64, parentType string, parentName string, data *models.ACL, transactionID string, version int64) error {
 	if c.UseModelsValidation {
 		validationErr := data.Validate(strfmt.Default)
@@ -160,11 +171,9 @@ func (c *client) EditACL(id int64, parentType string, parentName string, data *m
 		return err
 	}
 
-	var section parser.Section
-	if parentType == "backend" {
-		section = parser.Backends
-	} else if parentType == "frontend" {
-		section = parser.Frontends
+	section, err := c.getACLParserFromParent(parentType)
+	if err != nil {
+		return err
 	}
 
 	if _, err := p.GetOne(section, parentName, "acl", int(id)); err != nil {
@@ -181,16 +190,9 @@ func (c *client) EditACL(id int64, parentType string, parentName string, data *m
 	return nil
 }
 
-func ParseACLs(t, pName string, p parser.Parser, aclName ...string) (models.Acls, error) {
-	section := parser.Global
-	if t == "frontend" {
-		section = parser.Frontends
-	} else if t == "backend" {
-		section = parser.Backends
-	}
-
+func ParseACLs(section parser.Section, name string, p parser.Parser, aclName ...string) (models.Acls, error) {
 	acls := models.Acls{}
-	data, err := p.Get(section, pName, "acl", false)
+	data, err := p.Get(section, name, "acl", false)
 	if err != nil {
 		if errors.Is(err, parser_errors.ErrFetch) {
 			return acls, nil

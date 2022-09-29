@@ -20,10 +20,11 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/haproxytech/client-native/v4/misc"
-	"github.com/haproxytech/client-native/v4/models"
 	parser "github.com/haproxytech/config-parser/v4"
 	"github.com/stretchr/testify/assert"
+
+	"github.com/haproxytech/client-native/v4/misc"
+	"github.com/haproxytech/client-native/v4/models"
 )
 
 func TestClient_GetACLs(t *testing.T) {
@@ -40,6 +41,36 @@ func TestClient_GetACLs(t *testing.T) {
 		want1   models.Acls
 		wantErr bool
 	}{
+		{
+			name: "Should return acl list in one fcgi-app",
+			args: args{parentType: string(parser.FCGIApp), parentName: "test", transactionID: ""},
+			want: 1,
+			want1: models.Acls{
+				&models.ACL{ACLName: "invalid_src", Criterion: "src", Index: misc.Int64P(0), Value: "0.0.0.0/7 224.0.0.0/3"},
+				&models.ACL{ACLName: "invalid_src", Criterion: "src_port", Index: misc.Int64P(1), Value: "0:1023"},
+				&models.ACL{ACLName: "local_dst", Criterion: "hdr(host)", Index: misc.Int64P(2), Value: "-i localhost"},
+			},
+			wantErr: false,
+		},
+		{
+			name: "Should return acl list in one fcgi-app by acl name",
+			args: args{parentType: string(parser.FCGIApp), parentName: "test", transactionID: "", aclName: []string{"invalid_src"}},
+			want: 1,
+			want1: models.Acls{
+				&models.ACL{ACLName: "invalid_src", Criterion: "src", Index: misc.Int64P(0), Value: "0.0.0.0/7 224.0.0.0/3"},
+				&models.ACL{ACLName: "invalid_src", Criterion: "src_port", Index: misc.Int64P(1), Value: "0:1023"},
+			},
+			wantErr: false,
+		},
+		{
+			name: "Should return acl list in one fcgi-app by acl name 2",
+			args: args{parentType: string(parser.FCGIApp), parentName: "test", transactionID: "", aclName: []string{"local_dst"}},
+			want: 1,
+			want1: models.Acls{
+				&models.ACL{ACLName: "local_dst", Criterion: "hdr(host)", Index: misc.Int64P(2), Value: "-i localhost"},
+			},
+			wantErr: false,
+		},
 		{
 			name: "Should return acl list in one frontend",
 			args: args{parentType: string(parser.Frontends), parentName: "test", transactionID: ""},
@@ -141,6 +172,11 @@ func TestGetACL(t *testing.T) {
 	}
 
 	_, _, err = clientTest.GetACL(100, "backend", "fake", "")
+	if err == nil {
+		t.Error("Should throw error, non existent backend and ACL")
+	}
+
+	_, _, err = clientTest.GetACL(100, "fcgi-app", "fake", "")
 	if err == nil {
 		t.Error("Should throw error, non existent backend and ACL")
 	}
