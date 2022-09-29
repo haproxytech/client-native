@@ -239,11 +239,9 @@ frontend:
       type: integer
       x-nullable: true
     enabled:
-      type: string
-      enum: [enabled, disabled]
+      type: boolean
     disabled:
-      type: string
-      enum: [enabled, disabled]
+      type: boolean
     error_files:
       type: array
       x-go-name: ErrorFiles

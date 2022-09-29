@@ -97,8 +97,7 @@ type Frontend struct {
 	DisableH2Upgrade string `json:"disable_h2_upgrade,omitempty"`
 
 	// disabled
-	// Enum: [enabled disabled]
-	Disabled string `json:"disabled,omitempty"`
+	Disabled bool `json:"disabled,omitempty"`
 
 	// dontlog normal
 	// Enum: [enabled disabled]
@@ -112,8 +111,7 @@ type Frontend struct {
 	EmailAlert *EmailAlert `json:"email_alert,omitempty"`
 
 	// enabled
-	// Enum: [enabled disabled]
-	Enabled string `json:"enabled,omitempty"`
+	Enabled bool `json:"enabled,omitempty"`
 
 	// error log format
 	ErrorLogFormat string `json:"error_log_format,omitempty"`
@@ -310,10 +308,6 @@ func (m *Frontend) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
-	if err := m.validateDisabled(formats); err != nil {
-		res = append(res, err)
-	}
-
 	if err := m.validateDontlogNormal(formats); err != nil {
 		res = append(res, err)
 	}
@@ -323,10 +317,6 @@ func (m *Frontend) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateEmailAlert(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateEnabled(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -720,48 +710,6 @@ func (m *Frontend) validateDisableH2Upgrade(formats strfmt.Registry) error {
 	return nil
 }
 
-var frontendTypeDisabledPropEnum []interface{}
-
-func init() {
-	var res []string
-	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
-		panic(err)
-	}
-	for _, v := range res {
-		frontendTypeDisabledPropEnum = append(frontendTypeDisabledPropEnum, v)
-	}
-}
-
-const (
-
-	// FrontendDisabledEnabled captures enum value "enabled"
-	FrontendDisabledEnabled string = "enabled"
-
-	// FrontendDisabledDisabled captures enum value "disabled"
-	FrontendDisabledDisabled string = "disabled"
-)
-
-// prop value enum
-func (m *Frontend) validateDisabledEnum(path, location string, value string) error {
-	if err := validate.EnumCase(path, location, value, frontendTypeDisabledPropEnum, true); err != nil {
-		return err
-	}
-	return nil
-}
-
-func (m *Frontend) validateDisabled(formats strfmt.Registry) error {
-	if swag.IsZero(m.Disabled) { // not required
-		return nil
-	}
-
-	// value enum
-	if err := m.validateDisabledEnum("disabled", "body", m.Disabled); err != nil {
-		return err
-	}
-
-	return nil
-}
-
 var frontendTypeDontlogNormalPropEnum []interface{}
 
 func init() {
@@ -860,48 +808,6 @@ func (m *Frontend) validateEmailAlert(formats strfmt.Registry) error {
 			}
 			return err
 		}
-	}
-
-	return nil
-}
-
-var frontendTypeEnabledPropEnum []interface{}
-
-func init() {
-	var res []string
-	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
-		panic(err)
-	}
-	for _, v := range res {
-		frontendTypeEnabledPropEnum = append(frontendTypeEnabledPropEnum, v)
-	}
-}
-
-const (
-
-	// FrontendEnabledEnabled captures enum value "enabled"
-	FrontendEnabledEnabled string = "enabled"
-
-	// FrontendEnabledDisabled captures enum value "disabled"
-	FrontendEnabledDisabled string = "disabled"
-)
-
-// prop value enum
-func (m *Frontend) validateEnabledEnum(path, location string, value string) error {
-	if err := validate.EnumCase(path, location, value, frontendTypeEnabledPropEnum, true); err != nil {
-		return err
-	}
-	return nil
-}
-
-func (m *Frontend) validateEnabled(formats strfmt.Registry) error {
-	if swag.IsZero(m.Enabled) { // not required
-		return nil
-	}
-
-	// value enum
-	if err := m.validateEnabledEnum("enabled", "body", m.Enabled); err != nil {
-		return err
 	}
 
 	return nil

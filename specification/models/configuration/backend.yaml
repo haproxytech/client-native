@@ -297,11 +297,9 @@ backend:
       type: integer
       x-nullable: true
     enabled:
-      type: string
-      enum: [enabled, disabled]
+      type: boolean
     disabled:
-      type: string
-      enum: [enabled, disabled]
+      type: boolean
     use_fcgi_app:
       type: string
       x-display-name: FastCGI application

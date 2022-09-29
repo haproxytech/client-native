@@ -91,8 +91,7 @@ type Backend struct {
 	Description string `json:"description,omitempty"`
 
 	// disabled
-	// Enum: [enabled disabled]
-	Disabled string `json:"disabled,omitempty"`
+	Disabled bool `json:"disabled,omitempty"`
 
 	// dynamic cookie key
 	// Pattern: ^[^\s]+$
@@ -102,8 +101,7 @@ type Backend struct {
 	EmailAlert *EmailAlert `json:"email_alert,omitempty"`
 
 	// enabled
-	// Enum: [enabled disabled]
-	Enabled string `json:"enabled,omitempty"`
+	Enabled bool `json:"enabled,omitempty"`
 
 	// errorloc302
 	Errorloc302 *Errorloc `json:"errorloc302,omitempty"`
@@ -370,19 +368,11 @@ func (m *Backend) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
-	if err := m.validateDisabled(formats); err != nil {
-		res = append(res, err)
-	}
-
 	if err := m.validateDynamicCookieKey(formats); err != nil {
 		res = append(res, err)
 	}
 
 	if err := m.validateEmailAlert(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateEnabled(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -940,48 +930,6 @@ func (m *Backend) validateDefaultServer(formats strfmt.Registry) error {
 	return nil
 }
 
-var backendTypeDisabledPropEnum []interface{}
-
-func init() {
-	var res []string
-	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
-		panic(err)
-	}
-	for _, v := range res {
-		backendTypeDisabledPropEnum = append(backendTypeDisabledPropEnum, v)
-	}
-}
-
-const (
-
-	// BackendDisabledEnabled captures enum value "enabled"
-	BackendDisabledEnabled string = "enabled"
-
-	// BackendDisabledDisabled captures enum value "disabled"
-	BackendDisabledDisabled string = "disabled"
-)
-
-// prop value enum
-func (m *Backend) validateDisabledEnum(path, location string, value string) error {
-	if err := validate.EnumCase(path, location, value, backendTypeDisabledPropEnum, true); err != nil {
-		return err
-	}
-	return nil
-}
-
-func (m *Backend) validateDisabled(formats strfmt.Registry) error {
-	if swag.IsZero(m.Disabled) { // not required
-		return nil
-	}
-
-	// value enum
-	if err := m.validateDisabledEnum("disabled", "body", m.Disabled); err != nil {
-		return err
-	}
-
-	return nil
-}
-
 func (m *Backend) validateDynamicCookieKey(formats strfmt.Registry) error {
 	if swag.IsZero(m.DynamicCookieKey) { // not required
 		return nil
@@ -1008,48 +956,6 @@ func (m *Backend) validateEmailAlert(formats strfmt.Registry) error {
 			}
 			return err
 		}
-	}
-
-	return nil
-}
-
-var backendTypeEnabledPropEnum []interface{}
-
-func init() {
-	var res []string
-	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
-		panic(err)
-	}
-	for _, v := range res {
-		backendTypeEnabledPropEnum = append(backendTypeEnabledPropEnum, v)
-	}
-}
-
-const (
-
-	// BackendEnabledEnabled captures enum value "enabled"
-	BackendEnabledEnabled string = "enabled"
-
-	// BackendEnabledDisabled captures enum value "disabled"
-	BackendEnabledDisabled string = "disabled"
-)
-
-// prop value enum
-func (m *Backend) validateEnabledEnum(path, location string, value string) error {
-	if err := validate.EnumCase(path, location, value, backendTypeEnabledPropEnum, true); err != nil {
-		return err
-	}
-	return nil
-}
-
-func (m *Backend) validateEnabled(formats strfmt.Registry) error {
-	if swag.IsZero(m.Enabled) { // not required
-		return nil
-	}
-
-	// value enum
-	if err := m.validateEnabledEnum("enabled", "body", m.Enabled); err != nil {
-		return err
 	}
 
 	return nil

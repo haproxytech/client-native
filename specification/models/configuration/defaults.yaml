@@ -323,11 +323,9 @@ defaults:
     email_alert:
       $ref: "#/definitions/email_alert"
     enabled:
-      type: string
-      enum: [enabled, disabled]
+      type: boolean
     disabled:
-      type: string
-      enum: [enabled, disabled]
+      type: boolean
     errorfiles_from_http_errors:
       type: array
       x-go-name: ErrorFilesFromHTTPErrors
