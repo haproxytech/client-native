@@ -166,6 +166,16 @@ cookie:
           value:
             type: string
             pattern: '^[^\s]+$'
+    attr:
+      type: array
+      x-go-name: Attrs
+      items:
+        type: object
+        x-go-name: Attr
+        properties:
+          value:
+            type: string
+            pattern: '^[^\s]+$'
     maxidle:
       type: integer
     maxlife:

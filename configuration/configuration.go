@@ -1092,7 +1092,12 @@ func (s *SectionParser) cookie() interface{} {
 	for i, domain := range d.Domain {
 		domains[i] = &models.Domain{Value: domain}
 	}
+	attrs := make([]*models.Attr, len(d.Attr))
+	for i, attr := range d.Attr {
+		attrs[i] = &models.Attr{Value: attr}
+	}
 	return &models.Cookie{
+		Attrs:    attrs,
 		Domains:  domains,
 		Dynamic:  d.Dynamic,
 		Httponly: d.Httponly,
@@ -2746,7 +2751,12 @@ func (s *SectionObject) cookie(field reflect.Value) error {
 		for i, domain := range d.Domains {
 			domains[i] = domain.Value
 		}
+		attrs := make([]string, len(d.Attrs))
+		for i, attr := range d.Attrs {
+			attrs[i] = attr.Value
+		}
 		data := types.Cookie{
+			Attr:     attrs,
 			Domain:   domains,
 			Dynamic:  d.Dynamic,
 			Httponly: d.Httponly,

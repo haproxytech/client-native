@@ -36,6 +36,9 @@ import (
 // swagger:model cookie
 type Cookie struct {
 
+	// attrs
+	Attrs []*Attr `json:"attr"`
+
 	// domains
 	Domains []*Domain `json:"domain"`
 
@@ -80,6 +83,10 @@ type Cookie struct {
 func (m *Cookie) Validate(formats strfmt.Registry) error {
 	var res []error
 
+	if err := m.validateAttrs(formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.validateDomains(formats); err != nil {
 		res = append(res, err)
 	}
@@ -95,6 +102,32 @@ func (m *Cookie) Validate(formats strfmt.Registry) error {
 	if len(res) > 0 {
 		return errors.CompositeValidationError(res...)
 	}
+	return nil
+}
+
+func (m *Cookie) validateAttrs(formats strfmt.Registry) error {
+	if swag.IsZero(m.Attrs) { // not required
+		return nil
+	}
+
+	for i := 0; i < len(m.Attrs); i++ {
+		if swag.IsZero(m.Attrs[i]) { // not required
+			continue
+		}
+
+		if m.Attrs[i] != nil {
+			if err := m.Attrs[i].Validate(formats); err != nil {
+				if ve, ok := err.(*errors.Validation); ok {
+					return ve.ValidateName("attr" + "." + strconv.Itoa(i))
+				} else if ce, ok := err.(*errors.CompositeError); ok {
+					return ce.ValidateName("attr" + "." + strconv.Itoa(i))
+				}
+				return err
+			}
+		}
+
+	}
+
 	return nil
 }
 
@@ -186,6 +219,10 @@ func (m *Cookie) validateType(formats strfmt.Registry) error {
 func (m *Cookie) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
 	var res []error
 
+	if err := m.contextValidateAttrs(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.contextValidateDomains(ctx, formats); err != nil {
 		res = append(res, err)
 	}
@@ -193,6 +230,26 @@ func (m *Cookie) ContextValidate(ctx context.Context, formats strfmt.Registry) e
 	if len(res) > 0 {
 		return errors.CompositeValidationError(res...)
 	}
+	return nil
+}
+
+func (m *Cookie) contextValidateAttrs(ctx context.Context, formats strfmt.Registry) error {
+
+	for i := 0; i < len(m.Attrs); i++ {
+
+		if m.Attrs[i] != nil {
+			if err := m.Attrs[i].ContextValidate(ctx, formats); err != nil {
+				if ve, ok := err.(*errors.Validation); ok {
+					return ve.ValidateName("attr" + "." + strconv.Itoa(i))
+				} else if ce, ok := err.(*errors.CompositeError); ok {
+					return ce.ValidateName("attr" + "." + strconv.Itoa(i))
+				}
+				return err
+			}
+		}
+
+	}
+
 	return nil
 }
 
@@ -227,6 +284,65 @@ func (m *Cookie) MarshalBinary() ([]byte, error) {
 // UnmarshalBinary interface implementation
 func (m *Cookie) UnmarshalBinary(b []byte) error {
 	var res Cookie
+	if err := swag.ReadJSON(b, &res); err != nil {
+		return err
+	}
+	*m = res
+	return nil
+}
+
+// Attr attr
+//
+// swagger:model Attr
+type Attr struct {
+
+	// value
+	// Pattern: ^[^\s]+$
+	Value string `json:"value,omitempty"`
+}
+
+// Validate validates this attr
+func (m *Attr) Validate(formats strfmt.Registry) error {
+	var res []error
+
+	if err := m.validateValue(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if len(res) > 0 {
+		return errors.CompositeValidationError(res...)
+	}
+	return nil
+}
+
+func (m *Attr) validateValue(formats strfmt.Registry) error {
+	if swag.IsZero(m.Value) { // not required
+		return nil
+	}
+
+	if err := validate.Pattern("value", "body", m.Value, `^[^\s]+$`); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+// ContextValidate validates this attr based on context it is used
+func (m *Attr) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+	return nil
+}
+
+// MarshalBinary interface implementation
+func (m *Attr) MarshalBinary() ([]byte, error) {
+	if m == nil {
+		return nil, nil
+	}
+	return swag.WriteJSON(m)
+}
+
+// UnmarshalBinary interface implementation
+func (m *Attr) UnmarshalBinary(b []byte) error {
+	var res Attr
 	if err := swag.ReadJSON(b, &res); err != nil {
 		return err
 	}

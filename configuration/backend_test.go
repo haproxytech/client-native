@@ -586,6 +586,7 @@ func TestCreateEditDeleteBackend(t *testing.T) {
 				{Value: "dom1"},
 				{Value: "dom2"},
 			},
+			Attrs:    []*models.Attr{},
 			Dynamic:  true,
 			Httponly: true,
 			Indirect: true,

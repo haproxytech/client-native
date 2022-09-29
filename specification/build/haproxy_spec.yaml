@@ -7954,6 +7954,16 @@ definitions:
       type: object
   cookie:
       properties:
+        attr:
+          items:
+            properties:
+              value:
+                pattern: ^[^\s]+$
+                type: string
+            type: object
+            x-go-name: Attr
+          type: array
+          x-go-name: Attrs
         domain:
           items:
             properties:
