@@ -3416,6 +3416,8 @@ func translateToParserData(field reflect.Value) common.ParserData {
 		return types.StringC{Value: field.String()}
 	case reflect.Ptr:
 		return types.Int64C{Value: field.Elem().Int()}
+	case reflect.Bool:
+		return types.Enabled{}
 	default:
 		return nil
 	}

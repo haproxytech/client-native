@@ -476,8 +476,8 @@ func TestGetBackend(t *testing.T) {
 	if b.UseFCGIApp != "app-name" {
 		t.Errorf("%v: UseFcgiApp not app-name: %v", b.Name, b.UseFCGIApp)
 	}
-	if b.Enabled != "enabled" {
-		t.Errorf("%v: Enabled not enabled: %v", b.Name, b.Enabled)
+	if !b.Enabled {
+		t.Errorf("%v: Enabled not enabled", b.Name)
 	}
 	if *b.ID != 456 {
 		t.Errorf("ID not 456: %v", *b.ID)
@@ -673,6 +673,7 @@ func TestCreateEditDeleteBackend(t *testing.T) {
 			{Name: "test_errors", Codes: []int64{400}},
 			{Name: "test_errors_all"},
 		},
+		Disabled: true,
 	}
 
 	err := clientTest.CreateBackend(b, "", version)

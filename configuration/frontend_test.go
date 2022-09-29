@@ -383,8 +383,8 @@ func TestGetFrontend(t *testing.T) {
 	if f.Description != "this is a frontend description" {
 		t.Errorf("%v: Description not `this is a frontend description`: %v", f.Name, f.Description)
 	}
-	if f.Disabled != "enabled" {
-		t.Errorf("%v: Disabled not enabled: %v", f.Name, f.Disabled)
+	if !f.Disabled {
+		t.Errorf("%v: Disabled not enabled", f.Name)
 	}
 	if *f.ID != 123 {
 		t.Errorf("ID not 123: %v", *f.ID)
@@ -497,6 +497,7 @@ func TestCreateEditDeleteFrontend(t *testing.T) {
 				{User: misc.StringP("user2"), Passwd: misc.StringP("pwd2")},
 			},
 		},
+		Enabled: true,
 	}
 
 	err := clientTest.CreateFrontend(f, "", version)
