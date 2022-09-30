@@ -97,6 +97,11 @@ add_server:
       type: string
       x-display-name: Protocols
       pattern: '^[^\s]+$'
+    health_check_port:
+      type: integer
+      x-nullable: true
+      minimum: 1
+      maximum: 65535
     check_proto:
       type: string
       x-display-name: Name

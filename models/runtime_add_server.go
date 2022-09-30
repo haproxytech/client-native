@@ -142,6 +142,11 @@ type RuntimeAddServer struct {
 	// Enum: [enabled disabled]
 	ForceTlsv13 string `json:"force_tlsv13,omitempty"`
 
+	// health check port
+	// Maximum: 65535
+	// Minimum: 1
+	HealthCheckPort *int64 `json:"health_check_port,omitempty"`
+
 	// id
 	// Read Only: true
 	ID string `json:"id,omitempty"`
@@ -379,6 +384,10 @@ func (m *RuntimeAddServer) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateForceTlsv13(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateHealthCheckPort(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -1044,6 +1053,22 @@ func (m *RuntimeAddServer) validateForceTlsv13(formats strfmt.Registry) error {
 
 	// value enum
 	if err := m.validateForceTlsv13Enum("force_tlsv13", "body", m.ForceTlsv13); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *RuntimeAddServer) validateHealthCheckPort(formats strfmt.Registry) error {
+	if swag.IsZero(m.HealthCheckPort) { // not required
+		return nil
+	}
+
+	if err := validate.MinimumInt("health_check_port", "body", *m.HealthCheckPort, 1, false); err != nil {
+		return err
+	}
+
+	if err := validate.MaximumInt("health_check_port", "body", *m.HealthCheckPort, 65535, false); err != nil {
 		return err
 	}
 

@@ -7128,6 +7128,11 @@ definitions:
           - enabled
           - disabled
           type: string
+        health_check_port:
+          maximum: 65535
+          minimum: 1
+          type: integer
+          x-nullable: true
         id:
           readOnly: true
           type: string
