@@ -30,7 +30,7 @@ func TestGetPeerSections(t *testing.T) {
 	}
 
 	if len(peerSections) != 1 {
-		t.Errorf("%v peerSections returned, expected 2", len(peerSections))
+		t.Errorf("%v peerSections returned, expected 1", len(peerSections))
 	}
 
 	if v != version {
@@ -49,11 +49,71 @@ func TestGetPeerSection(t *testing.T) {
 	}
 
 	if v != version {
-		t.Errorf("Version %v returned, expected %v", v, version)
+		t.Errorf("%v: Version not %v: %v", l.Name, v, version)
 	}
 
 	if l.Name != "mycluster" {
-		t.Errorf("Expected mycluster peerSection, %v found", l.Name)
+		t.Errorf("%v: Name not: %v", l.Name, l.Name)
+	}
+
+	if !l.Enabled {
+		t.Errorf("%v: Enabled not true", l.Name)
+	}
+
+	if l.DefaultServer.Fall == nil {
+		t.Errorf("%v: DefaultServer.Fall is nil", l.Name)
+	} else if *l.DefaultServer.Fall != 2000 {
+		t.Errorf("%v: DefaultServer.Fall not 2000: %v", l.Name, *l.DefaultServer.Fall)
+	}
+	if l.DefaultServer.Rise == nil {
+		t.Errorf("%v: DefaultServer.Rise is nil", l.Name)
+	} else if *l.DefaultServer.Rise != 4000 {
+		t.Errorf("%v: DefaultServer.Rise not 4000: %v", l.Name, *l.DefaultServer.Rise)
+	}
+	if l.DefaultServer.Inter == nil {
+		t.Errorf("%v: DefaultServer.Inter is nil", l.Name)
+	} else if *l.DefaultServer.Inter != 5000 {
+		t.Errorf("%v: DefaultServer.Inter not 5000: %v", l.Name, *l.DefaultServer.Inter)
+	}
+	if l.DefaultServer.Port == nil {
+		t.Errorf("%v: DefaultServer.Port is nil", l.Name)
+	} else if *l.DefaultServer.Port != 8888 {
+		t.Errorf("%v: DefaultServer.Port not 8888: %v", l.Name, *l.DefaultServer.Port)
+	}
+	if l.DefaultServer.Slowstart == nil {
+		t.Errorf("%v: DefaultServer.Slowstart is nil", l.Name)
+	} else if *l.DefaultServer.Slowstart != 6000 {
+		t.Errorf("%v: DefaultServer.Slowstart not 6000: %v", l.Name, *l.DefaultServer.Slowstart)
+	}
+
+	if !l.DefaultBind.V4v6 {
+		t.Errorf("%v: DefaultBind.V4v6 not true", l.Name)
+	}
+	if !l.DefaultBind.Ssl {
+		t.Errorf("%v: DefaultBind.Ssl not true", l.Name)
+	}
+	if l.DefaultBind.SslCertificate != "/etc/haproxy/site.pem" {
+		t.Errorf("%v: DefaultBind.SslCertificate not etc/haproxy/site.pem: %v", l.Name, l.DefaultBind.SslCertificate)
+	}
+	if l.DefaultBind.Alpn != "h2,http/1.1" {
+		t.Errorf("%v: DefaultBind.Alpn not h2,http/1.1: %v", l.Name, l.DefaultBind.Alpn)
+	}
+
+	if l.StickTable.Type != "ip" {
+		t.Errorf("%v: StickTable.Type not ip: %v", l.Name, l.StickTable.Type)
+	}
+	if l.StickTable.Size == nil {
+		t.Errorf("%v: StickTable.Size is nil", l.Name)
+	} else if *l.StickTable.Size != 204800 {
+		t.Errorf("%v: StickTable.Size not 204800: %v", l.Name, *l.StickTable.Size)
+	}
+	if l.StickTable.Expire == nil {
+		t.Errorf("%v: StickTable.Expire is nil", l.Name)
+	} else if *l.StickTable.Expire != 3600000 {
+		t.Errorf("%v: StickTable.Expire not 3600000: %v", l.Name, *l.StickTable.Expire)
+	}
+	if l.StickTable.Store != "http_req_rate(10s)" {
+		t.Errorf("%v: StickTable.Store not http_req_rate(10s): %v", l.Name, l.StickTable.Store)
 	}
 
 	_, err = l.MarshalBinary()
@@ -68,8 +128,29 @@ func TestGetPeerSection(t *testing.T) {
 }
 
 func TestCreateEditDeletePeerSection(t *testing.T) {
+	tOut := int64(5)
+	tSize := int64(20000)
 	f := &models.PeerSection{
-		Name: "testcluster",
+		Name:     "testcluster",
+		Disabled: true,
+		DefaultServer: &models.DefaultServer{
+			ServerParams: models.ServerParams{
+				Fall:  &tOut,
+				Inter: &tOut,
+			},
+		},
+		DefaultBind: &models.DefaultBind{
+			BindParams: models.BindParams{
+				Alpn:           "h2,http/1.1",
+				Ssl:            true,
+				SslCertificate: "/etc/haproxy/cluster.pem",
+			},
+		},
+		StickTable: &models.ConfigStickTable{
+			Size:   &tSize,
+			Expire: &tSize,
+			Type:   "integer",
+		},
 	}
 	err := clientTest.CreatePeerSection(f, "", version)
 	if err != nil {

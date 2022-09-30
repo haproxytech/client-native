@@ -289,7 +289,7 @@ func (s *SectionParser) parseField(fieldName string) interface{} {
 	return nil
 }
 
-func (s *SectionParser) checkSpecialFields(fieldName string) (match bool, data interface{}) {
+func (s *SectionParser) checkSpecialFields(fieldName string) (match bool, data interface{}) { //nolint:cyclop
 	switch fieldName {
 	case "MonitorFail":
 		return true, s.monitorFail()
@@ -371,6 +371,8 @@ func (s *SectionParser) checkSpecialFields(fieldName string) (match bool, data i
 		return true, s.errorloc303()
 	case "HTTPRestrictReqHdrNames":
 		return true, s.httpRestirctReqHdrNames()
+	case "DefaultBind":
+		return true, s.defaultBind()
 	default:
 		return false, nil
 	}
@@ -1495,6 +1497,18 @@ func (s *SectionParser) httpRestirctReqHdrNames() interface{} {
 	return d.Policy
 }
 
+func (s *SectionParser) defaultBind() interface{} {
+	data, err := s.get("default-bind", false)
+	if err != nil {
+		return nil
+	}
+
+	d := data.(*types.DefaultBind)
+	return &models.DefaultBind{
+		BindParams: parseBindParams(d.Params),
+	}
+}
+
 // SectionObject represents a configuration section
 type SectionObject struct {
 	Object  interface{}
@@ -1640,6 +1654,8 @@ func (s *SectionObject) checkSpecialFields(fieldName string, field reflect.Value
 		return true, s.errorloc303(field)
 	case "HTTPRestrictReqHdrNames":
 		return true, s.httpRestrictReqHdrNames(field)
+	case "DefaultBind":
+		return true, s.defaultBind(field)
 	default:
 		return false, nil
 	}
@@ -2113,7 +2129,7 @@ func (s *SectionObject) getFieldByName(fieldName string) interface{} {
 }
 
 func (s *SectionObject) stickTable(field reflect.Value) error {
-	if s.Section == parser.Backends || s.Section == parser.Frontends {
+	if s.Section == parser.Backends || s.Section == parser.Frontends || s.Section == parser.Peers {
 		if valueIsNil(field) {
 			if err := s.set("stick-table", nil); err != nil {
 				return err
@@ -2148,7 +2164,7 @@ func (s *SectionObject) stickTable(field reflect.Value) error {
 }
 
 func (s *SectionObject) defaultServer(field reflect.Value) error { //nolint:gocognit,gocyclo,cyclop,maintidx
-	if s.Section == parser.Backends || s.Section == parser.Defaults {
+	if s.Section == parser.Backends || s.Section == parser.Defaults || s.Section == parser.Peers {
 		if valueIsNil(field) {
 			if err := s.set("default-server", nil); err != nil {
 				return err
@@ -3286,6 +3302,30 @@ func (s *SectionObject) httpRestrictReqHdrNames(field reflect.Value) error {
 	}
 	t := &types.OptionHTTPRestrictReqHdrNames{Policy: field.String()}
 	if err := s.set("option http-restrict-req-hdr-names", t); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (s *SectionObject) defaultBind(field reflect.Value) error {
+	if s.Section != parser.Peers {
+		return nil
+	}
+	if valueIsNil(field) {
+		if err := s.set("default-bind", nil); err != nil {
+			return err
+		}
+		return nil
+	}
+	db, ok := field.Elem().Interface().(models.DefaultBind)
+	if !ok {
+		return misc.CreateTypeAssertError("default-bind")
+	}
+	dBind := &types.DefaultBind{
+		Params: serializeBindParams(db.BindParams, ""),
+	}
+
+	if err := s.set("default-bind", dBind); err != nil {
 		return err
 	}
 	return nil
