@@ -60,6 +60,9 @@ func TestGetDefaults(t *testing.T) { //nolint:gocognit,gocyclo
 	if d.HTTPConnectionMode != "httpclose" {
 		t.Errorf("HTTPConnectionMode not httpclose: %v", d.HTTPConnectionMode)
 	}
+	if d.HTTPRestrictReqHdrNames != "reject" {
+		t.Errorf("HTTPRestrictReqHdrNames not reject: %v", d.HTTPRestrictReqHdrNames)
+	}
 	if d.DefaultBackend != "test" {
 		t.Errorf("DefaultBackend not test: %v", d.DefaultBackend)
 	}
@@ -80,6 +83,15 @@ func TestGetDefaults(t *testing.T) { //nolint:gocognit,gocyclo
 	}
 	if *d.ServerTimeout != 2000 {
 		t.Errorf("ServerTimeout not 2000: %v", *d.ServerTimeout)
+	}
+	if *d.ServerFinTimeout != 1000 {
+		t.Errorf("ServerFinTimeout not 1000: %v", *d.ServerFinTimeout)
+	}
+	if *d.ClientFinTimeout != 1000 {
+		t.Errorf("ServerFinTimeout not 1000: %v", *d.ClientFinTimeout)
+	}
+	if *d.TarpitTimeout != 2000 {
+		t.Errorf("TarpitTimeout not 2000: %v", *d.TarpitTimeout)
 	}
 	if *d.HTTPRequestTimeout != 2000 {
 		t.Errorf("HTTPRequestTimeout not 2000: %v", *d.HTTPRequestTimeout)

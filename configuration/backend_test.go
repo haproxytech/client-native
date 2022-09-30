@@ -286,6 +286,9 @@ func TestGetBackend(t *testing.T) {
 	if b.HTTPConnectionMode != "http-keep-alive" {
 		t.Errorf("%v: HTTPConnectionMode not http-keep-alive: %v", b.Name, b.HTTPConnectionMode)
 	}
+	if b.HTTPRestrictReqHdrNames != "preserve" {
+		t.Errorf("%v: HTTPRestrictReqHdrNames not delete: %v", b.Name, b.HTTPRestrictReqHdrNames)
+	}
 	if *b.Forwardfor.Enabled != "enabled" {
 		t.Errorf("%v: Forwardfor not enabled: %v", b.Name, b.Forwardfor)
 	}
@@ -318,6 +321,12 @@ func TestGetBackend(t *testing.T) {
 	}
 	if *b.ServerTimeout != 3000 {
 		t.Errorf("%v: ServerTimeout not 3000: %v", b.Name, *b.ServerTimeout)
+	}
+	if *b.ServerFinTimeout != 1000 {
+		t.Errorf("%v: ServerFinTimeout not 1000: %v", b.Name, *b.ServerFinTimeout)
+	}
+	if *b.TarpitTimeout != 2000 {
+		t.Errorf("%v: TarpitTimeout not 2000: %v", b.Name, *b.TarpitTimeout)
 	}
 	if b.AcceptInvalidHTTPResponse != "disabled" {
 		t.Errorf("%v: AcceptInvalidHTTPResponse not disabled: %v", b.Name, b.AcceptInvalidHTTPResponse)
@@ -599,7 +608,7 @@ func TestCreateEditDeleteBackend(t *testing.T) {
 			Secure:   false,
 			Type:     "prefix",
 		},
-		HashType: &models.BackendHashType{
+		HashType: &models.HashType{
 			Method:   "map-based",
 			Function: "crc32",
 		},

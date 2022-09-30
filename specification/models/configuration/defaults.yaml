@@ -9,6 +9,8 @@ defaults:
       enum: [tcp, http]
     balance:
       $ref: "#/definitions/balance"
+    hash_type:
+      $ref: "#/definitions/hash_type"
     maxconn:
       type: integer
       x-nullable: true
@@ -62,6 +64,10 @@ defaults:
     httplog:
       type: boolean
       x-display-name: HTTP Log
+    http_restrict_req_hdr_names:
+      type: string
+      enum: [preserve, delete, reject]
+      x-display-name: Restrict HTTP Request Header Names
     clflog:
       type: boolean
       x-display-name: CLF Log
@@ -139,6 +145,9 @@ defaults:
       type: integer
       x-nullable: true
     tunnel_timeout:
+      type: integer
+      x-nullable: true
+    tarpit_timeout:
       type: integer
       x-nullable: true
     external_check:

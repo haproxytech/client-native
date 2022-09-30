@@ -131,7 +131,7 @@ type Backend struct {
 	H1CaseAdjustBogusServer string `json:"h1_case_adjust_bogus_server,omitempty"`
 
 	// hash type
-	HashType *BackendHashType `json:"hash_type,omitempty"`
+	HashType *HashType `json:"hash_type,omitempty"`
 
 	// http buffer request
 	// Enum: [enabled disabled]
@@ -174,6 +174,10 @@ type Backend struct {
 
 	// http request timeout
 	HTTPRequestTimeout *int64 `json:"http_request_timeout,omitempty"`
+
+	// http restrict req hdr names
+	// Enum: [preserve delete reject]
+	HTTPRestrictReqHdrNames string `json:"http_restrict_req_hdr_names,omitempty"`
 
 	// http reuse
 	// Enum: [aggressive always never safe]
@@ -245,6 +249,9 @@ type Backend struct {
 	// retries
 	Retries *int64 `json:"retries,omitempty"`
 
+	// server fin timeout
+	ServerFinTimeout *int64 `json:"server_fin_timeout,omitempty"`
+
 	// server state file name
 	ServerStateFileName string `json:"server_state_file_name,omitempty"`
 
@@ -288,6 +295,9 @@ type Backend struct {
 
 	// stick table
 	StickTable *ConfigStickTable `json:"stick_table,omitempty"`
+
+	// tarpit timeout
+	TarpitTimeout *int64 `json:"tarpit_timeout,omitempty"`
 
 	// tcp smart connect
 	// Enum: [enabled disabled]
@@ -441,6 +451,10 @@ func (m *Backend) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateHTTPProxy(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateHTTPRestrictReqHdrNames(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -1581,6 +1595,51 @@ func (m *Backend) validateHTTPProxy(formats strfmt.Registry) error {
 
 	// value enum
 	if err := m.validateHTTPProxyEnum("http_proxy", "body", m.HTTPProxy); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+var backendTypeHTTPRestrictReqHdrNamesPropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["preserve","delete","reject"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		backendTypeHTTPRestrictReqHdrNamesPropEnum = append(backendTypeHTTPRestrictReqHdrNamesPropEnum, v)
+	}
+}
+
+const (
+
+	// BackendHTTPRestrictReqHdrNamesPreserve captures enum value "preserve"
+	BackendHTTPRestrictReqHdrNamesPreserve string = "preserve"
+
+	// BackendHTTPRestrictReqHdrNamesDelete captures enum value "delete"
+	BackendHTTPRestrictReqHdrNamesDelete string = "delete"
+
+	// BackendHTTPRestrictReqHdrNamesReject captures enum value "reject"
+	BackendHTTPRestrictReqHdrNamesReject string = "reject"
+)
+
+// prop value enum
+func (m *Backend) validateHTTPRestrictReqHdrNamesEnum(path, location string, value string) error {
+	if err := validate.EnumCase(path, location, value, backendTypeHTTPRestrictReqHdrNamesPropEnum, true); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *Backend) validateHTTPRestrictReqHdrNames(formats strfmt.Registry) error {
+	if swag.IsZero(m.HTTPRestrictReqHdrNames) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateHTTPRestrictReqHdrNamesEnum("http_restrict_req_hdr_names", "body", m.HTTPRestrictReqHdrNames); err != nil {
 		return err
 	}
 
@@ -2919,198 +2978,6 @@ func (m *Backend) MarshalBinary() ([]byte, error) {
 // UnmarshalBinary interface implementation
 func (m *Backend) UnmarshalBinary(b []byte) error {
 	var res Backend
-	if err := swag.ReadJSON(b, &res); err != nil {
-		return err
-	}
-	*m = res
-	return nil
-}
-
-// BackendHashType backend hash type
-//
-// swagger:model BackendHashType
-type BackendHashType struct {
-
-	// function
-	// Enum: [sdbm djb2 wt6 crc32]
-	Function string `json:"function,omitempty"`
-
-	// method
-	// Enum: [map-based consistent]
-	Method string `json:"method,omitempty"`
-
-	// modifier
-	// Enum: [avalanche]
-	Modifier string `json:"modifier,omitempty"`
-}
-
-// Validate validates this backend hash type
-func (m *BackendHashType) Validate(formats strfmt.Registry) error {
-	var res []error
-
-	if err := m.validateFunction(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateMethod(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateModifier(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if len(res) > 0 {
-		return errors.CompositeValidationError(res...)
-	}
-	return nil
-}
-
-var backendHashTypeTypeFunctionPropEnum []interface{}
-
-func init() {
-	var res []string
-	if err := json.Unmarshal([]byte(`["sdbm","djb2","wt6","crc32"]`), &res); err != nil {
-		panic(err)
-	}
-	for _, v := range res {
-		backendHashTypeTypeFunctionPropEnum = append(backendHashTypeTypeFunctionPropEnum, v)
-	}
-}
-
-const (
-
-	// BackendHashTypeFunctionSdbm captures enum value "sdbm"
-	BackendHashTypeFunctionSdbm string = "sdbm"
-
-	// BackendHashTypeFunctionDjb2 captures enum value "djb2"
-	BackendHashTypeFunctionDjb2 string = "djb2"
-
-	// BackendHashTypeFunctionWt6 captures enum value "wt6"
-	BackendHashTypeFunctionWt6 string = "wt6"
-
-	// BackendHashTypeFunctionCrc32 captures enum value "crc32"
-	BackendHashTypeFunctionCrc32 string = "crc32"
-)
-
-// prop value enum
-func (m *BackendHashType) validateFunctionEnum(path, location string, value string) error {
-	if err := validate.EnumCase(path, location, value, backendHashTypeTypeFunctionPropEnum, true); err != nil {
-		return err
-	}
-	return nil
-}
-
-func (m *BackendHashType) validateFunction(formats strfmt.Registry) error {
-	if swag.IsZero(m.Function) { // not required
-		return nil
-	}
-
-	// value enum
-	if err := m.validateFunctionEnum("hash_type"+"."+"function", "body", m.Function); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-var backendHashTypeTypeMethodPropEnum []interface{}
-
-func init() {
-	var res []string
-	if err := json.Unmarshal([]byte(`["map-based","consistent"]`), &res); err != nil {
-		panic(err)
-	}
-	for _, v := range res {
-		backendHashTypeTypeMethodPropEnum = append(backendHashTypeTypeMethodPropEnum, v)
-	}
-}
-
-const (
-
-	// BackendHashTypeMethodMapDashBased captures enum value "map-based"
-	BackendHashTypeMethodMapDashBased string = "map-based"
-
-	// BackendHashTypeMethodConsistent captures enum value "consistent"
-	BackendHashTypeMethodConsistent string = "consistent"
-)
-
-// prop value enum
-func (m *BackendHashType) validateMethodEnum(path, location string, value string) error {
-	if err := validate.EnumCase(path, location, value, backendHashTypeTypeMethodPropEnum, true); err != nil {
-		return err
-	}
-	return nil
-}
-
-func (m *BackendHashType) validateMethod(formats strfmt.Registry) error {
-	if swag.IsZero(m.Method) { // not required
-		return nil
-	}
-
-	// value enum
-	if err := m.validateMethodEnum("hash_type"+"."+"method", "body", m.Method); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-var backendHashTypeTypeModifierPropEnum []interface{}
-
-func init() {
-	var res []string
-	if err := json.Unmarshal([]byte(`["avalanche"]`), &res); err != nil {
-		panic(err)
-	}
-	for _, v := range res {
-		backendHashTypeTypeModifierPropEnum = append(backendHashTypeTypeModifierPropEnum, v)
-	}
-}
-
-const (
-
-	// BackendHashTypeModifierAvalanche captures enum value "avalanche"
-	BackendHashTypeModifierAvalanche string = "avalanche"
-)
-
-// prop value enum
-func (m *BackendHashType) validateModifierEnum(path, location string, value string) error {
-	if err := validate.EnumCase(path, location, value, backendHashTypeTypeModifierPropEnum, true); err != nil {
-		return err
-	}
-	return nil
-}
-
-func (m *BackendHashType) validateModifier(formats strfmt.Registry) error {
-	if swag.IsZero(m.Modifier) { // not required
-		return nil
-	}
-
-	// value enum
-	if err := m.validateModifierEnum("hash_type"+"."+"modifier", "body", m.Modifier); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-// ContextValidate validates this backend hash type based on context it is used
-func (m *BackendHashType) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
-	return nil
-}
-
-// MarshalBinary interface implementation
-func (m *BackendHashType) MarshalBinary() ([]byte, error) {
-	if m == nil {
-		return nil, nil
-	}
-	return swag.WriteJSON(m)
-}
-
-// UnmarshalBinary interface implementation
-func (m *BackendHashType) UnmarshalBinary(b []byte) error {
-	var res BackendHashType
 	if err := swag.ReadJSON(b, &res); err != nil {
 		return err
 	}

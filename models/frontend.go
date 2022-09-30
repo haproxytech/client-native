@@ -59,6 +59,9 @@ type Frontend struct {
 	// clflog
 	Clflog bool `json:"clflog,omitempty"`
 
+	// client fin timeout
+	ClientFinTimeout *int64 `json:"client_fin_timeout,omitempty"`
+
 	// client timeout
 	ClientTimeout *int64 `json:"client_timeout,omitempty"`
 
@@ -154,6 +157,10 @@ type Frontend struct {
 	// http request timeout
 	HTTPRequestTimeout *int64 `json:"http_request_timeout,omitempty"`
 
+	// http restrict req hdr names
+	// Enum: [preserve delete reject]
+	HTTPRestrictReqHdrNames string `json:"http_restrict_req_hdr_names,omitempty"`
+
 	// http use proxy header
 	// Enum: [enabled disabled]
 	HTTPUseProxyHeader string `json:"http_use_proxy_header,omitempty"`
@@ -241,6 +248,9 @@ type Frontend struct {
 
 	// stick table
 	StickTable *ConfigStickTable `json:"stick_table,omitempty"`
+
+	// tarpit timeout
+	TarpitTimeout *int64 `json:"tarpit_timeout,omitempty"`
 
 	// tcp smart accept
 	// Enum: [enabled disabled]
@@ -353,6 +363,10 @@ func (m *Frontend) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateHTTPNoDelay(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateHTTPRestrictReqHdrNames(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -1199,6 +1213,51 @@ func (m *Frontend) validateHTTPNoDelay(formats strfmt.Registry) error {
 
 	// value enum
 	if err := m.validateHTTPNoDelayEnum("http_no_delay", "body", m.HTTPNoDelay); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+var frontendTypeHTTPRestrictReqHdrNamesPropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["preserve","delete","reject"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		frontendTypeHTTPRestrictReqHdrNamesPropEnum = append(frontendTypeHTTPRestrictReqHdrNamesPropEnum, v)
+	}
+}
+
+const (
+
+	// FrontendHTTPRestrictReqHdrNamesPreserve captures enum value "preserve"
+	FrontendHTTPRestrictReqHdrNamesPreserve string = "preserve"
+
+	// FrontendHTTPRestrictReqHdrNamesDelete captures enum value "delete"
+	FrontendHTTPRestrictReqHdrNamesDelete string = "delete"
+
+	// FrontendHTTPRestrictReqHdrNamesReject captures enum value "reject"
+	FrontendHTTPRestrictReqHdrNamesReject string = "reject"
+)
+
+// prop value enum
+func (m *Frontend) validateHTTPRestrictReqHdrNamesEnum(path, location string, value string) error {
+	if err := validate.EnumCase(path, location, value, frontendTypeHTTPRestrictReqHdrNamesPropEnum, true); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *Frontend) validateHTTPRestrictReqHdrNames(formats strfmt.Registry) error {
+	if swag.IsZero(m.HTTPRestrictReqHdrNames) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateHTTPRestrictReqHdrNamesEnum("http_restrict_req_hdr_names", "body", m.HTTPRestrictReqHdrNames); err != nil {
 		return err
 	}
 

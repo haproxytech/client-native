@@ -13,17 +13,7 @@ backend:
     balance:
       $ref: "#/definitions/balance"
     hash_type:
-      type: object
-      properties:
-        method:
-          type: string
-          enum: [map-based, consistent]
-        function:
-          type: string
-          enum: [sdbm, djb2, wt6, crc32]
-        modifier:
-          type: string
-          enum: [avalanche]
+      $ref: "#/definitions/hash_type"
     http-check:
       $ref: "#/definitions/http_check"
     bind_process:
@@ -78,6 +68,10 @@ backend:
       x-dependency:
         mode:
           value: http
+    http_restrict_req_hdr_names:
+      type: string
+      enum: [preserve, delete, reject]
+      x-display-name: Restrict HTTP Request Header Names
     log_tag:
       type: string
       pattern: '^[^\s]+$'
@@ -176,12 +170,18 @@ backend:
       x-dependency:
         mode:
           value: http
+    tarpit_timeout:
+      type: integer
+      x-nullable: true
     retries:
       type: integer
       x-nullable: true
     redispatch:
       $ref: "#/definitions/redispatch"
     server_timeout:
+      type: integer
+      x-nullable: true
+    server_fin_timeout:
       type: integer
       x-nullable: true
     tunnel_timeout:

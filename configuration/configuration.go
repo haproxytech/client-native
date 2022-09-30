@@ -361,7 +361,8 @@ func (s *SectionParser) checkSpecialFields(fieldName string) (match bool, data i
 		return true, s.errorloc302()
 	case "Errorloc303":
 		return true, s.errorloc303()
-
+	case "HTTPRestrictReqHdrNames":
+		return true, s.httpRestirctReqHdrNames()
 	default:
 		return false, nil
 	}
@@ -1075,7 +1076,7 @@ func (s *SectionParser) hashType() interface{} {
 		return nil
 	}
 	d := data.(*types.HashType)
-	return &models.BackendHashType{
+	return &models.HashType{
 		Method:   d.Method,
 		Function: d.Function,
 		Modifier: d.Modifier,
@@ -1474,6 +1475,18 @@ func (s *SectionParser) errorloc303() interface{} {
 	return value
 }
 
+func (s *SectionParser) httpRestirctReqHdrNames() interface{} {
+	data, err := s.get("option http-restrict-req-hdr-names", false)
+	if err != nil {
+		return nil
+	}
+	d := data.(*types.OptionHTTPRestrictReqHdrNames)
+	if d == nil {
+		return nil
+	}
+	return d.Policy
+}
+
 // SectionObject represents a configuration section
 type SectionObject struct {
 	Object  interface{}
@@ -1617,6 +1630,8 @@ func (s *SectionObject) checkSpecialFields(fieldName string, field reflect.Value
 		return true, s.errorloc302(field)
 	case "Errorloc303":
 		return true, s.errorloc303(field)
+	case "HTTPRestrictReqHdrNames":
+		return true, s.httpRestrictReqHdrNames(field)
 	default:
 		return false, nil
 	}
@@ -2712,14 +2727,14 @@ func (s *SectionObject) errorFilesFromHTTPErrors(field reflect.Value) error {
 }
 
 func (s *SectionObject) hashType(field reflect.Value) error {
-	if s.Section == parser.Backends {
+	if s.Section == parser.Backends || s.Section == parser.Defaults {
 		if valueIsNil(field) {
 			if err := s.set("hash-type", nil); err != nil {
 				return err
 			}
 			return nil
 		}
-		b, ok := field.Elem().Interface().(models.BackendHashType)
+		b, ok := field.Elem().Interface().(models.HashType)
 		if !ok {
 			return misc.CreateTypeAssertError("hash-type")
 		}
@@ -3221,7 +3236,7 @@ func (s *SectionObject) description(field reflect.Value) error {
 
 func (s *SectionObject) errorloc302(field reflect.Value) error {
 	if valueIsNil(field) {
-		return nil
+		return s.set("errorloc302", nil)
 	}
 	errorLoc, ok := field.Elem().Interface().(models.Errorloc)
 	if !ok {
@@ -3240,7 +3255,7 @@ func (s *SectionObject) errorloc302(field reflect.Value) error {
 
 func (s *SectionObject) errorloc303(field reflect.Value) error {
 	if valueIsNil(field) {
-		return nil
+		return s.set("errorloc303", nil)
 	}
 	errorLoc, ok := field.Elem().Interface().(models.Errorloc)
 	if !ok {
@@ -3252,6 +3267,17 @@ func (s *SectionObject) errorloc303(field reflect.Value) error {
 		URL:  *errorLoc.URL,
 	}
 	if err := s.set("errorloc303", e); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (s *SectionObject) httpRestrictReqHdrNames(field reflect.Value) error {
+	if valueIsNil(field) {
+		return s.set("option http-restrict-req-hdr-names", nil)
+	}
+	t := &types.OptionHTTPRestrictReqHdrNames{Policy: field.String()}
+	if err := s.set("option http-restrict-req-hdr-names", t); err != nil {
 		return err
 	}
 	return nil

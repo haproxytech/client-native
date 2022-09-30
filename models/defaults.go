@@ -182,6 +182,9 @@ type Defaults struct {
 	// Enum: [enabled disabled]
 	H1CaseAdjustBogusServer string `json:"h1_case_adjust_bogus_server,omitempty"`
 
+	// hash type
+	HashType *HashType `json:"hash_type,omitempty"`
+
 	// http buffer request
 	// Enum: [enabled disabled]
 	HTTPBufferRequest string `json:"http-buffer-request,omitempty"`
@@ -214,6 +217,10 @@ type Defaults struct {
 
 	// http request timeout
 	HTTPRequestTimeout *int64 `json:"http_request_timeout,omitempty"`
+
+	// http restrict req hdr names
+	// Enum: [preserve delete reject]
+	HTTPRestrictReqHdrNames string `json:"http_restrict_req_hdr_names,omitempty"`
 
 	// http reuse
 	// Enum: [aggressive always never safe]
@@ -348,6 +355,9 @@ type Defaults struct {
 
 	// stats options
 	StatsOptions *StatsOptions `json:"stats_options,omitempty"`
+
+	// tarpit timeout
+	TarpitTimeout *int64 `json:"tarpit_timeout,omitempty"`
 
 	// tcp smart accept
 	// Enum: [enabled disabled]
@@ -506,6 +516,10 @@ func (m *Defaults) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
+	if err := m.validateHashType(formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.validateHTTPBufferRequest(formats); err != nil {
 		res = append(res, err)
 	}
@@ -531,6 +545,10 @@ func (m *Defaults) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateHTTPPretendKeepalive(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateHTTPRestrictReqHdrNames(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -1615,6 +1633,25 @@ func (m *Defaults) validateH1CaseAdjustBogusServer(formats strfmt.Registry) erro
 	return nil
 }
 
+func (m *Defaults) validateHashType(formats strfmt.Registry) error {
+	if swag.IsZero(m.HashType) { // not required
+		return nil
+	}
+
+	if m.HashType != nil {
+		if err := m.HashType.Validate(formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("hash_type")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("hash_type")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
 var defaultsTypeHTTPBufferRequestPropEnum []interface{}
 
 func init() {
@@ -1883,6 +1920,51 @@ func (m *Defaults) validateHTTPPretendKeepalive(formats strfmt.Registry) error {
 
 	// value enum
 	if err := m.validateHTTPPretendKeepaliveEnum("http_pretend_keepalive", "body", m.HTTPPretendKeepalive); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+var defaultsTypeHTTPRestrictReqHdrNamesPropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["preserve","delete","reject"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		defaultsTypeHTTPRestrictReqHdrNamesPropEnum = append(defaultsTypeHTTPRestrictReqHdrNamesPropEnum, v)
+	}
+}
+
+const (
+
+	// DefaultsHTTPRestrictReqHdrNamesPreserve captures enum value "preserve"
+	DefaultsHTTPRestrictReqHdrNamesPreserve string = "preserve"
+
+	// DefaultsHTTPRestrictReqHdrNamesDelete captures enum value "delete"
+	DefaultsHTTPRestrictReqHdrNamesDelete string = "delete"
+
+	// DefaultsHTTPRestrictReqHdrNamesReject captures enum value "reject"
+	DefaultsHTTPRestrictReqHdrNamesReject string = "reject"
+)
+
+// prop value enum
+func (m *Defaults) validateHTTPRestrictReqHdrNamesEnum(path, location string, value string) error {
+	if err := validate.EnumCase(path, location, value, defaultsTypeHTTPRestrictReqHdrNamesPropEnum, true); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *Defaults) validateHTTPRestrictReqHdrNames(formats strfmt.Registry) error {
+	if swag.IsZero(m.HTTPRestrictReqHdrNames) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateHTTPRestrictReqHdrNamesEnum("http_restrict_req_hdr_names", "body", m.HTTPRestrictReqHdrNames); err != nil {
 		return err
 	}
 
@@ -3051,6 +3133,10 @@ func (m *Defaults) ContextValidate(ctx context.Context, formats strfmt.Registry)
 		res = append(res, err)
 	}
 
+	if err := m.contextValidateHashType(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.contextValidateHTTPCheck(ctx, formats); err != nil {
 		res = append(res, err)
 	}
@@ -3249,6 +3335,22 @@ func (m *Defaults) contextValidateForwardfor(ctx context.Context, formats strfmt
 				return ve.ValidateName("forwardfor")
 			} else if ce, ok := err.(*errors.CompositeError); ok {
 				return ce.ValidateName("forwardfor")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (m *Defaults) contextValidateHashType(ctx context.Context, formats strfmt.Registry) error {
+
+	if m.HashType != nil {
+		if err := m.HashType.ContextValidate(ctx, formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("hash_type")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("hash_type")
 			}
 			return err
 		}

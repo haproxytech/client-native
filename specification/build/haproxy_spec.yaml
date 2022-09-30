@@ -1637,6 +1637,8 @@ definitions:
           - disabled
           type: string
           x-display-name: H1 Adjust Bogus Server
+        hash_type:
+          $ref: '#/definitions/hash_type'
         http-buffer-request:
           enum:
           - enabled
@@ -1680,6 +1682,13 @@ definitions:
         http_request_timeout:
           type: integer
           x-nullable: true
+        http_restrict_req_hdr_names:
+          enum:
+          - preserve
+          - delete
+          - reject
+          type: string
+          x-display-name: Restrict HTTP Request Header Names
         http_reuse:
           enum:
           - aggressive
@@ -1846,6 +1855,9 @@ definitions:
           x-nullable: true
         stats_options:
           $ref: '#/definitions/stats_options'
+        tarpit_timeout:
+          type: integer
+          x-nullable: true
         tcp_smart_accept:
           enum:
           - enabled
@@ -1916,6 +1928,9 @@ definitions:
             mode:
               value: http
           x-display-name: CLF Log
+        client_fin_timeout:
+          type: integer
+          x-nullable: true
         client_timeout:
           type: integer
           x-nullable: true
@@ -2060,6 +2075,13 @@ definitions:
             mode:
               value: http
           x-nullable: true
+        http_restrict_req_hdr_names:
+          enum:
+          - preserve
+          - delete
+          - reject
+          type: string
+          x-display-name: Restrict HTTP Request Header Names
         http_use_proxy_header:
           enum:
           - enabled
@@ -2169,6 +2191,9 @@ definitions:
           $ref: '#/definitions/stats_options'
         stick_table:
           $ref: '#/definitions/config_stick_table'
+        tarpit_timeout:
+          type: integer
+          x-nullable: true
         tcp_smart_accept:
           enum:
           - enabled
@@ -2345,24 +2370,7 @@ definitions:
               value: http
           x-display-name: H1 Adjust Bogus Server
         hash_type:
-          properties:
-            function:
-              enum:
-              - sdbm
-              - djb2
-              - wt6
-              - crc32
-              type: string
-            method:
-              enum:
-              - map-based
-              - consistent
-              type: string
-            modifier:
-              enum:
-              - avalanche
-              type: string
-          type: object
+          $ref: '#/definitions/hash_type'
         http-buffer-request:
           enum:
           - enabled
@@ -2448,6 +2456,13 @@ definitions:
             mode:
               value: http
           x-nullable: true
+        http_restrict_req_hdr_names:
+          enum:
+          - preserve
+          - delete
+          - reject
+          type: string
+          x-display-name: Restrict HTTP Request Header Names
         http_reuse:
           enum:
           - aggressive
@@ -2541,6 +2556,9 @@ definitions:
         retries:
           type: integer
           x-nullable: true
+        server_fin_timeout:
+          type: integer
+          x-nullable: true
         server_state_file_name:
           type: string
           x-display-name: Server state file
@@ -2598,6 +2616,9 @@ definitions:
           $ref: '#/definitions/stats_options'
         stick_table:
           $ref: '#/definitions/config_stick_table'
+        tarpit_timeout:
+          type: integer
+          x-nullable: true
         tcp_smart_connect:
           enum:
           - enabled
@@ -7823,6 +7844,25 @@ definitions:
           x-display-name: Url Param Max Weight
       required:
       - algorithm
+      type: object
+  hash_type:
+      properties:
+        function:
+          enum:
+          - sdbm
+          - djb2
+          - wt6
+          - crc32
+          type: string
+        method:
+          enum:
+          - map-based
+          - consistent
+          type: string
+        modifier:
+          enum:
+          - avalanche
+          type: string
       type: object
   forwardfor:
       properties:

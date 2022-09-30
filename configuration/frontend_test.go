@@ -219,6 +219,9 @@ func TestGetFrontend(t *testing.T) {
 	if f.HTTPConnectionMode != "httpclose" {
 		t.Errorf("%v: HTTPConnectionMode not httpclose: %v", f.Name, f.HTTPConnectionMode)
 	}
+	if f.HTTPRestrictReqHdrNames != "delete" {
+		t.Errorf("%v: HTTPRestrictReqHdrNames not delete: %v", f.Name, f.HTTPRestrictReqHdrNames)
+	}
 	if f.Contstats != "enabled" {
 		t.Errorf("%v: Contstats not enabled: %v", f.Name, f.Contstats)
 	}
@@ -239,6 +242,12 @@ func TestGetFrontend(t *testing.T) {
 	}
 	if *f.ClientTimeout != 4000 {
 		t.Errorf("%v: ClientTimeout not 4000: %v", f.Name, *f.ClientTimeout)
+	}
+	if *f.ClientFinTimeout != 1000 {
+		t.Errorf("%v: ServerFinTimeout not 1000: %v", f.Name, *f.ClientFinTimeout)
+	}
+	if *f.TarpitTimeout != 2000 {
+		t.Errorf("%v: TarpitTimeout not 2000: %v", f.Name, *f.TarpitTimeout)
 	}
 	if f.AcceptInvalidHTTPRequest != "disabled" {
 		t.Errorf("%v: AcceptInvalidHTTPRequest not disabled: %v", f.Name, f.AcceptInvalidHTTPRequest)

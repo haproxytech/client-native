@@ -1,0 +1,13 @@
+---
+hash_type:
+  type: object
+  properties:
+    method:
+      type: string
+      enum: [map-based, consistent]
+    function:
+      type: string
+      enum: [sdbm, djb2, wt6, crc32]
+    modifier:
+      type: string
+      enum: [avalanche]

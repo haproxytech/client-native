@@ -214,6 +214,7 @@ defaults
   option splice-request
   option splice-response
   option idle-close-on-response
+  option http-restrict-req-hdr-names reject
   timeout queue 900
   timeout server 2s
   timeout check 2s
@@ -221,6 +222,9 @@ defaults
   timeout connect 5s
   timeout http-request 2s
   timeout http-keep-alive 3s
+  timeout server-fin 1000
+  timeout client-fin 1000
+  timeout tarpit 2000
   default-server fall 2s rise 4s inter 5s port 8888
   default_backend test
   option external-check
@@ -279,6 +283,7 @@ frontend test
   option splice-request
   option splice-response
   option idle-close-on-response
+  option http-restrict-req-hdr-names delete
   acl invalid_src  src          0.0.0.0/7 224.0.0.0/3
   acl invalid_src  src_port     0:1023
   acl local_dst    hdr(host) -i localhost
@@ -391,6 +396,8 @@ frontend test
   use_backend test_2 if TRUE
   use_backend %[req.cookie(foo)]
   timeout client 4s
+  timeout client-fin 1000
+  timeout tarpit 2000
   option tcpka
   option clitcpka
   unique-id-format %{+X}o%ci:%cp_%fi:%fp_%Ts_%rt:%pid
@@ -489,6 +496,7 @@ backend test
   option splice-auto
   option splice-request
   option splice-response
+  option http-restrict-req-hdr-names preserve
   default-server fall 2s rise 4s inter 5s port 8888 ws auto pool-low-conn 128
   stick store-request src table test
   stick match src table test
@@ -517,6 +525,8 @@ backend test
   timeout check 2s
   timeout tunnel 5s
   timeout server 3s
+  timeout server-fin 1000
+  timeout tarpit 2000
   cookie BLA rewrite httponly nocache
   option external-check
   external-check command /bin/false

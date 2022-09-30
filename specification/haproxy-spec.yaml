@@ -396,6 +396,8 @@ definitions:
       $ref: "#/definitions/general_file"
   balance:
     $ref: "models/configuration/misc.yaml#/balance"
+  hash_type:
+    $ref: "models/configuration/hash_type.yaml#/hash_type"
   forwardfor:
     $ref: "models/configuration/misc.yaml#/forwardfor"
   default_server:
