@@ -138,8 +138,8 @@ func (c *client) GetVersion() (HAProxyVersion, error) {
 	return *c.haproxyVersion, err
 }
 
-func (c *client) IsVersionBiggerOrEqual(minimumVersion HAProxyVersion) bool {
-	return c.haproxyVersion.IsBiggerOrEqual(minimumVersion)
+func (c *client) IsVersionBiggerOrEqual(minimumVersion *HAProxyVersion) bool {
+	return IsBiggerOrEqual(minimumVersion, c.haproxyVersion)
 }
 
 // GetMapsPath returns runtime map file path or map id
@@ -189,8 +189,8 @@ func (c *client) AddServer(backend, name, attributes string) error {
 	if len(c.runtimes) == 0 {
 		return fmt.Errorf("no valid runtimes found")
 	}
-	if !c.IsVersionBiggerOrEqual(HAProxyVersion{Major: 2, Minor: 6}) {
-		return fmt.Errorf("operation not available with this version of HAProxy")
+	if !c.IsVersionBiggerOrEqual(&HAProxyVersion{Major: 2, Minor: 6}) {
+		return fmt.Errorf("this operation requires HAProxy 2.6 or later")
 	}
 	for _, runtime := range c.runtimes {
 		err := runtime.AddServer(backend, name, attributes)
@@ -206,8 +206,8 @@ func (c *client) DeleteServer(backend, name string) error {
 	if len(c.runtimes) == 0 {
 		return fmt.Errorf("no valid runtimes found")
 	}
-	if !c.IsVersionBiggerOrEqual(HAProxyVersion{Major: 2, Minor: 6}) {
-		return fmt.Errorf("operation not available with this version of HAProxy")
+	if !c.IsVersionBiggerOrEqual(&HAProxyVersion{Major: 2, Minor: 6}) {
+		return fmt.Errorf("this operation requires HAProxy 2.6 or later")
 	}
 	for _, runtime := range c.runtimes {
 		err := runtime.DeleteServer(backend, name)
@@ -778,7 +778,7 @@ func (c *client) AddMapPayloadVersioned(name string, entries models.MapEntries) 
 	}
 	canAtomicUpdate := false
 	v := HAProxyVersion{Major: 2, Minor: 4}
-	if c.IsVersionBiggerOrEqual(v) {
+	if c.IsVersionBiggerOrEqual(&v) {
 		canAtomicUpdate = true
 	}
 	exceededSize, payload := parseMapPayload(entries, maxBufSize)
@@ -1081,7 +1081,7 @@ func (c *client) AddACLAtomic(aclID string, entries models.ACLFilesEntries) erro
 		return fmt.Errorf("no valid runtimes found")
 	}
 	v := HAProxyVersion{Major: 2, Minor: 4}
-	if !c.IsVersionBiggerOrEqual(v) {
+	if !c.IsVersionBiggerOrEqual(&v) {
 		return fmt.Errorf("not supported for HAProxy versions lower than 2.4 %w", native_errors.ErrGeneral)
 	}
 	var lastErr error

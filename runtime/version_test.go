@@ -107,14 +107,14 @@ func TestHAProxyVersion_IsBiggerOrEqual(t *testing.T) {
 			want: true,
 		},
 		{
-			name: "Return true when minimum major > current major",
+			name: "Return false when minimum major > current major",
 			fields: fields{
 				Major: 2,
 			},
 			args: args{minimumVersion: runtime.HAProxyVersion{
 				Major: 3,
 			}},
-			want: true,
+			want: false,
 		},
 		{
 			name: "Return true when major and minor are same",
@@ -129,7 +129,7 @@ func TestHAProxyVersion_IsBiggerOrEqual(t *testing.T) {
 			want: true,
 		},
 		{
-			name: "Return true when majors are same and minimum minor > current minor",
+			name: "Return false when majors are same and minimum minor > current minor",
 			fields: fields{
 				Major: 2,
 				Minor: 2,
@@ -138,10 +138,10 @@ func TestHAProxyVersion_IsBiggerOrEqual(t *testing.T) {
 				Major: 2,
 				Minor: 3,
 			}},
-			want: true,
+			want: false,
 		},
 		{
-			name: "Return true when majors, minors are same and patch > current patch",
+			name: "Return false when majors, minors are same and patch > current patch",
 			fields: fields{
 				Major: 2,
 				Minor: 4,
@@ -152,20 +152,20 @@ func TestHAProxyVersion_IsBiggerOrEqual(t *testing.T) {
 				Minor: 4,
 				Patch: 2,
 			}},
-			want: true,
+			want: false,
 		},
 		{
-			name: "Return false when minimum major < current major",
+			name: "Return true when minimum major < current major",
 			fields: fields{
 				Major: 3,
 			},
 			args: args{minimumVersion: runtime.HAProxyVersion{
 				Major: 2,
 			}},
-			want: false,
+			want: true,
 		},
 		{
-			name: "Return false when majors are same but minor < current minor",
+			name: "Return true when majors are same but minor < current minor",
 			fields: fields{
 				Major: 2,
 				Minor: 4,
@@ -174,10 +174,10 @@ func TestHAProxyVersion_IsBiggerOrEqual(t *testing.T) {
 				Major: 2,
 				Minor: 1,
 			}},
-			want: false,
+			want: true,
 		},
 		{
-			name: "Return false when majors, minors are same but patch < current patch",
+			name: "Return true when majors, minors are same but patch < current patch",
 			fields: fields{
 				Major: 2,
 				Minor: 4,
@@ -188,7 +188,7 @@ func TestHAProxyVersion_IsBiggerOrEqual(t *testing.T) {
 				Minor: 4,
 				Patch: 1,
 			}},
-			want: false,
+			want: true,
 		},
 	}
 	for _, tt := range tests {
@@ -198,7 +198,7 @@ func TestHAProxyVersion_IsBiggerOrEqual(t *testing.T) {
 				Minor: tt.fields.Minor,
 				Patch: tt.fields.Patch,
 			}
-			if got := v.IsBiggerOrEqual(tt.args.minimumVersion); got != tt.want {
+			if got := runtime.IsBiggerOrEqual(&tt.args.minimumVersion, v); got != tt.want {
 				t.Errorf("HAProxyVersion.IsBiggerOrEqual() = %v, want %v", got, tt.want)
 			}
 		})
