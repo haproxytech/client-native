@@ -19,3 +19,9 @@ bind:
       x-nullable: true
   allOf:
     - $ref: '#/definitions/bind_params'
+default_bind:
+  title: Default Bind
+  description: HAProxy default bind configuration
+  type: object
+  allOf:
+    - $ref: '#/definitions/bind_params'

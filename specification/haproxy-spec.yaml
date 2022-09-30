@@ -525,6 +525,8 @@ definitions:
     $ref: "models/configuration/email_alert.yaml#/email_alert"
   errorloc:
     $ref: "models/configuration/errorloc.yaml#/errorloc"
+  default_bind:
+    $ref: "models/configuration/bind.yaml#/default_bind"
 responses:
   BadRequest:
     description: Bad request

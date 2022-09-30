@@ -3033,10 +3033,20 @@ definitions:
       additionalProperties: false
       description: HAProxy peer_section configuration
       properties:
+        default_bind:
+          $ref: '#/definitions/default_bind'
+        default_server:
+          $ref: '#/definitions/default_server'
+        disabled:
+          type: boolean
+        enabled:
+          type: boolean
         name:
           pattern: ^[A-Za-z0-9-_.:]+$
           type: string
           x-nullable: false
+        stick_table:
+          $ref: '#/definitions/config_stick_table'
       required:
       - name
       title: Peer Section
@@ -8905,6 +8915,12 @@ definitions:
       required:
       - url
       - code
+      type: object
+  default_bind:
+      allOf:
+      - $ref: '#/definitions/bind_params'
+      description: HAProxy default bind configuration
+      title: Default Bind
       type: object
 responses:
   BadRequest:
