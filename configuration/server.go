@@ -234,243 +234,239 @@ func parseAddress(address string) (ipOrAddress string, port *int64) {
 	}
 }
 
-func parseServerParams(serverOptions []params.ServerOption) (s models.ServerParams) { //nolint:gocognit,gocyclo,cyclop,cyclop,maintidx
+func parseServerParams(serverOptions []params.ServerOption, serverParams *models.ServerParams) { //nolint:gocognit,gocyclo,cyclop,cyclop,maintidx
 	for _, p := range serverOptions {
 		switch v := p.(type) {
 		case *params.ServerOptionWord:
 			switch v.Name {
 			case "agent-check":
-				s.AgentCheck = "enabled"
+				serverParams.AgentCheck = "enabled"
 			case "no-agent-check":
-				s.AgentCheck = "disabled"
+				serverParams.AgentCheck = "disabled"
 			case "allow-0rtt":
-				s.Allow0rtt = true
+				serverParams.Allow0rtt = true
 			case "backup":
-				s.Backup = "enabled"
+				serverParams.Backup = "enabled"
 			case "no-backup":
-				s.Backup = "disabled"
+				serverParams.Backup = "disabled"
 			case "check":
-				s.Check = "enabled"
+				serverParams.Check = "enabled"
 			case "no-check":
-				s.Check = "disabled"
+				serverParams.Check = "disabled"
 			case "check-send-proxy":
-				s.CheckSendProxy = "enabled"
+				serverParams.CheckSendProxy = "enabled"
 			case "check-ssl":
-				s.CheckSsl = "enabled"
+				serverParams.CheckSsl = "enabled"
 			case "no-check-ssl":
-				s.CheckSsl = "disabled"
+				serverParams.CheckSsl = "disabled"
 			case "check-via-socks4":
-				s.CheckViaSocks4 = "enabled"
+				serverParams.CheckViaSocks4 = "enabled"
 			case "disabled":
-				s.Maintenance = "enabled"
+				serverParams.Maintenance = "enabled"
 			case "enabled":
-				s.Maintenance = "disabled"
+				serverParams.Maintenance = "disabled"
 			case "force-sslv3":
-				s.ForceSslv3 = "enabled"
+				serverParams.ForceSslv3 = "enabled"
 			case "force-tlsv10":
-				s.ForceTlsv10 = "enabled"
+				serverParams.ForceTlsv10 = "enabled"
 			case "no-tlsv10":
-				s.ForceTlsv10 = "disabled"
+				serverParams.ForceTlsv10 = "disabled"
 			case "force-tlsv11":
-				s.ForceTlsv11 = "enabled"
+				serverParams.ForceTlsv11 = "enabled"
 			case "no-tlsv11":
-				s.ForceTlsv11 = "disabled"
+				serverParams.ForceTlsv11 = "disabled"
 			case "force-tlsv12":
-				s.ForceTlsv12 = "enabled"
+				serverParams.ForceTlsv12 = "enabled"
 			case "no-tlsv12":
-				s.ForceTlsv12 = "disabled"
+				serverParams.ForceTlsv12 = "disabled"
 			case "force-tlsv13":
-				s.ForceTlsv13 = "enabled"
+				serverParams.ForceTlsv13 = "enabled"
 			case "no-tlsv13":
-				s.ForceTlsv13 = "disabled"
+				serverParams.ForceTlsv13 = "disabled"
 			case "send-proxy":
-				s.SendProxy = "enabled"
+				serverParams.SendProxy = "enabled"
 			case "no-send-proxy":
-				s.SendProxy = "disabled"
+				serverParams.SendProxy = "disabled"
 			case "send-proxy-v2":
-				s.SendProxyV2 = "enabled"
+				serverParams.SendProxyV2 = "enabled"
 			case "no-send-proxy-v2":
-				s.SendProxyV2 = "disabled"
+				serverParams.SendProxyV2 = "disabled"
 			case "send-proxy-v2-ssl":
-				s.SendProxyV2Ssl = "enabled"
+				serverParams.SendProxyV2Ssl = "enabled"
 			case "send-proxy-v2-ssl-cn":
-				s.SendProxyV2SslCn = "enabled"
+				serverParams.SendProxyV2SslCn = "enabled"
 			case "ssl":
-				s.Ssl = "enabled"
+				serverParams.Ssl = "enabled"
 			case "no-ssl":
-				s.Ssl = "disabled"
+				serverParams.Ssl = "disabled"
 			case "ssl-reuse":
-				s.SslReuse = "enabled"
+				serverParams.SslReuse = "enabled"
 			case "no-ssl-reuse":
-				s.SslReuse = "disabled"
+				serverParams.SslReuse = "disabled"
 			case "tls-tickets":
-				s.TLSTickets = "enabled"
+				serverParams.TLSTickets = "enabled"
 			case "no-tls-tickets":
-				s.TLSTickets = "disabled"
+				serverParams.TLSTickets = "disabled"
 			case "tfo":
-				s.Tfo = "enabled"
+				serverParams.Tfo = "enabled"
 			case "no-tfo":
-				s.Tfo = "disabled"
+				serverParams.Tfo = "disabled"
 			case "stick":
-				s.Stick = "enabled"
+				serverParams.Stick = "enabled"
 			case "no-stick":
-				s.Stick = "disabled"
+				serverParams.Stick = "disabled"
 			}
 		case *params.ServerOptionValue:
 			switch v.Name {
 			case "agent-send":
-				s.AgentSend = v.Value
+				serverParams.AgentSend = v.Value
 			case "agent-inter":
-				s.AgentInter = misc.ParseTimeout(v.Value)
+				serverParams.AgentInter = misc.ParseTimeout(v.Value)
 			case "agent-addr":
-				s.AgentAddr = v.Value
+				serverParams.AgentAddr = v.Value
 			case "agent-port":
 				p, err := strconv.ParseInt(v.Value, 10, 64)
 				if err == nil && p != 0 {
-					s.AgentPort = &p
+					serverParams.AgentPort = &p
 				}
 			case "alpn":
-				s.Alpn = v.Value
+				serverParams.Alpn = v.Value
 			case "ca-file":
-				s.SslCafile = v.Value
+				serverParams.SslCafile = v.Value
 			case "check-alpn":
-				s.CheckAlpn = v.Value
+				serverParams.CheckAlpn = v.Value
 			case "check-proto":
-				s.CheckProto = v.Value
+				serverParams.CheckProto = v.Value
 			case "check-sni":
-				s.CheckSni = v.Value
+				serverParams.CheckSni = v.Value
 			case "ciphers":
-				s.Ciphers = v.Value
+				serverParams.Ciphers = v.Value
 			case "ciphersuites":
-				s.Ciphersuites = v.Value
+				serverParams.Ciphersuites = v.Value
 			case "cookie":
-				s.Cookie = v.Value
+				serverParams.Cookie = v.Value
 			case "crl-file":
-				s.CrlFile = v.Value
+				serverParams.CrlFile = v.Value
 			case "crt":
-				s.SslCertificate = v.Value
+				serverParams.SslCertificate = v.Value
 			case "error-limit":
 				c, err := strconv.ParseInt(v.Value, 10, 64)
 				if err == nil {
-					s.ErrorLimit = c
+					serverParams.ErrorLimit = c
 				}
 			case "fall":
-				c, err := strconv.ParseInt(v.Value, 10, 64)
-				if err == nil {
-					s.Fall = &c
-				}
+				serverParams.Fall = misc.ParseTimeout(v.Value)
 			case "init-addr":
-				s.InitAddr = &v.Value
+				serverParams.InitAddr = &v.Value
 			case "inter":
-				s.Inter = misc.ParseTimeout(v.Value)
+				serverParams.Inter = misc.ParseTimeout(v.Value)
 			case "fastinter":
-				s.Fastinter = misc.ParseTimeout(v.Value)
+				serverParams.Fastinter = misc.ParseTimeout(v.Value)
 			case "downinter":
-				s.Downinter = misc.ParseTimeout(v.Value)
+				serverParams.Downinter = misc.ParseTimeout(v.Value)
 			case "log-proto":
-				s.LogProto = v.Value
+				serverParams.LogProto = v.Value
 			case "maxconn":
 				m, err := strconv.ParseInt(v.Value, 10, 64)
 				if err == nil {
-					s.Maxconn = &m
+					serverParams.Maxconn = &m
 				}
 			case "maxqueue":
 				m, err := strconv.ParseInt(v.Value, 10, 64)
 				if err == nil {
-					s.Maxqueue = &m
+					serverParams.Maxqueue = &m
 				}
 			case "max-reuse":
 				c, err := strconv.ParseInt(v.Value, 10, 64)
 				if err == nil {
-					s.MaxReuse = &c
+					serverParams.MaxReuse = &c
 				}
 			case "minconn":
 				m, err := strconv.ParseInt(v.Value, 10, 64)
 				if err == nil {
-					s.Minconn = &m
+					serverParams.Minconn = &m
 				}
 			case "namespace":
-				s.Namespace = v.Value
+				serverParams.Namespace = v.Value
 			case "npn":
-				s.Npn = v.Value
+				serverParams.Npn = v.Value
 			case "observe":
-				s.Observe = v.Value
+				serverParams.Observe = v.Value
 			case "on-error":
-				s.OnError = v.Value
+				serverParams.OnError = v.Value
 			case "on-marked-down":
-				s.OnMarkedDown = v.Value
+				serverParams.OnMarkedDown = v.Value
 			case "on-marked-up":
-				s.OnMarkedUp = v.Value
+				serverParams.OnMarkedUp = v.Value
 			case "pool-low-conn":
 				m, err := strconv.ParseInt(v.Value, 10, 64)
 				if err == nil {
-					s.PoolLowConn = &m
+					serverParams.PoolLowConn = &m
 				}
 			case "pool-max-conn":
 				m, err := strconv.ParseInt(v.Value, 10, 64)
 				if err == nil {
-					s.PoolMaxConn = &m
+					serverParams.PoolMaxConn = &m
 				}
 			case "pool-purge-delay":
 				d, err := strconv.ParseInt(v.Value, 10, 64)
 				if err == nil {
-					s.PoolPurgeDelay = &d
+					serverParams.PoolPurgeDelay = &d
 				}
 			case "port":
 				p, err := strconv.ParseInt(v.Value, 10, 64)
 				if err == nil {
-					s.HealthCheckPort = &p
+					serverParams.HealthCheckPort = &p
 				}
 			case "proto":
-				s.Proto = v.Value
+				serverParams.Proto = v.Value
 			case "redir":
-				s.Redir = v.Value
+				serverParams.Redir = v.Value
 			case "rise":
-				s.Rise = misc.ParseTimeout(v.Value)
+				serverParams.Rise = misc.ParseTimeout(v.Value)
 			case "resolve-opts":
-				s.ResolveOpts = v.Value
+				serverParams.ResolveOpts = v.Value
 			case "resolve-prefer":
-				s.ResolvePrefer = v.Value
+				serverParams.ResolvePrefer = v.Value
 			case "resolve-net":
-				s.ResolveNet = v.Value
+				serverParams.ResolveNet = v.Value
 			case "resolvers":
-				s.Resolvers = v.Value
+				serverParams.Resolvers = v.Value
 			case "proxy-v2-options":
-				s.ProxyV2Options = strings.Split(v.Value, ",")
+				serverParams.ProxyV2Options = strings.Split(v.Value, ",")
 			case "slowstart":
-				s.Slowstart = misc.ParseTimeout(v.Value)
+				serverParams.Slowstart = misc.ParseTimeout(v.Value)
 			case "sni":
-				s.Sni = v.Value
+				serverParams.Sni = v.Value
 			case "source":
-				s.Source = v.Value
+				serverParams.Source = v.Value
 			case "ssl-max-ver":
-				s.SslMaxVer = v.Value
+				serverParams.SslMaxVer = v.Value
 			case "ssl-min-ver":
-				s.SslMinVer = v.Value
+				serverParams.SslMinVer = v.Value
 			case "socks4":
-				s.Socks4 = v.Value
+				serverParams.Socks4 = v.Value
 			case "tcp-ut":
 				d, err := strconv.ParseInt(v.Value, 10, 64)
 				if err == nil {
-					s.TCPUt = d
+					serverParams.TCPUt = d
 				}
 			case "track":
-				s.Track = v.Value
+				serverParams.Track = v.Value
 			case "verify":
-				s.Verify = v.Value
+				serverParams.Verify = v.Value
 			case "verifyhost":
-				s.Verifyhost = v.Value
+				serverParams.Verifyhost = v.Value
 			case "weight":
 				w, err := strconv.ParseInt(v.Value, 10, 64)
 				if err == nil {
-					s.Weight = &w
+					serverParams.Weight = &w
 				}
 			case "ws":
-				s.Ws = v.Value
+				serverParams.Ws = v.Value
 			}
 		}
 	}
-	return s
 }
 
 func ParseServer(ondiskServer types.Server) *models.Server {
@@ -493,7 +489,7 @@ func ParseServer(ondiskServer types.Server) *models.Server {
 			}
 		}
 	}
-	s.ServerParams = parseServerParams(ondiskServer.Params)
+	parseServerParams(ondiskServer.Params, &s.ServerParams)
 	return s
 }
 

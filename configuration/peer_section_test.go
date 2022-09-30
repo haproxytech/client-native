@@ -75,10 +75,10 @@ func TestGetPeerSection(t *testing.T) {
 	} else if *l.DefaultServer.Inter != 5000 {
 		t.Errorf("%v: DefaultServer.Inter not 5000: %v", l.Name, *l.DefaultServer.Inter)
 	}
-	if l.DefaultServer.Port == nil {
-		t.Errorf("%v: DefaultServer.Port is nil", l.Name)
-	} else if *l.DefaultServer.Port != 8888 {
-		t.Errorf("%v: DefaultServer.Port not 8888: %v", l.Name, *l.DefaultServer.Port)
+	if l.DefaultServer.HealthCheckPort == nil {
+		t.Errorf("%v: DefaultServer.HealthCheckPort is nil", l.Name)
+	} else if *l.DefaultServer.HealthCheckPort != 8888 {
+		t.Errorf("%v: DefaultServer.HealthCheckPort not 8888: %v", l.Name, *l.DefaultServer.HealthCheckPort)
 	}
 	if l.DefaultServer.Slowstart == nil {
 		t.Errorf("%v: DefaultServer.Slowstart is nil", l.Name)

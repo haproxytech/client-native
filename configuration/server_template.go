@@ -195,7 +195,7 @@ func ParseServerTemplate(ondiskServerTemplate types.ServerTemplate) *models.Serv
 		Fqdn:       ondiskServerTemplate.Fqdn,
 		Port:       &ondiskServerTemplate.Port,
 	}
-	template.ServerParams = parseServerParams(ondiskServerTemplate.Params)
+	parseServerParams(ondiskServerTemplate.Params, &template.ServerParams)
 	return template
 }
 

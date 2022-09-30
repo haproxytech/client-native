@@ -108,8 +108,8 @@ func TestGetDefaults(t *testing.T) { //nolint:gocognit,gocyclo
 	if *d.DefaultServer.Inter != 5000 {
 		t.Errorf("DefaultServer.Inter not 5000: %v", *d.DefaultServer.Inter)
 	}
-	if *d.DefaultServer.Port != 8888 {
-		t.Errorf("DefaultServer.Port not 8888: %v", *d.DefaultServer.Port)
+	if *d.DefaultServer.HealthCheckPort != 8888 {
+		t.Errorf("DefaultServer.HealthCheckPort not 8888: %v", *d.DefaultServer.HealthCheckPort)
 	}
 	if len(d.ErrorFiles) != 3 {
 		t.Errorf("ErrorFiles not 3: %v", len(d.ErrorFiles))

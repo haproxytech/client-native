@@ -88,8 +88,8 @@ func TestGetBackends(t *testing.T) { //nolint:gocognit,gocyclo
 		if *b.DefaultServer.Inter != 5000 {
 			t.Errorf("%v: DefaultServer.Inter not 5000: %v", b.Name, *b.DefaultServer.Inter)
 		}
-		if *b.DefaultServer.Port != 8888 {
-			t.Errorf("%v: DefaultServer.Port not 8888: %v", b.Name, *b.DefaultServer.Port)
+		if *b.DefaultServer.HealthCheckPort != 8888 {
+			t.Errorf("%v: DefaultServer.HealthCheckPort not 8888: %v", b.Name, *b.DefaultServer.HealthCheckPort)
 		}
 		if *b.Cookie.Name != "BLA" {
 			t.Errorf("%v: HTTPCookie Name not BLA: %v", b.Name, b.Cookie)
@@ -301,8 +301,8 @@ func TestGetBackend(t *testing.T) {
 	if *b.DefaultServer.Inter != 5000 {
 		t.Errorf("%v: DefaultServer.Inter not 5000: %v", b.Name, *b.DefaultServer.Inter)
 	}
-	if *b.DefaultServer.Port != 8888 {
-		t.Errorf("%v: DefaultServer.Port not 8888: %v", b.Name, *b.DefaultServer.Port)
+	if *b.DefaultServer.HealthCheckPort != 8888 {
+		t.Errorf("%v: DefaultServer.HealthCheckPort not 8888: %v", b.Name, *b.DefaultServer.HealthCheckPort)
 	}
 	if *b.Cookie.Name != "BLA" {
 		t.Errorf("%v: HTTPCookie Name not BLA: %v", b.Name, b.Cookie)
