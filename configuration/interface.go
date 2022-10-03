@@ -51,6 +51,7 @@ type Configuration interface {
 	Nameserver
 	PeerEntry
 	PeerSection
+	Program
 	Raw
 	Resolver
 	Ring
