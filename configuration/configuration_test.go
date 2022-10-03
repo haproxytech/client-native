@@ -601,6 +601,16 @@ peers mycluster
   peer hapee 192.168.1.1:1023
   peer aggregator HARDCODEDCLUSTERIP:10023
 
+program test
+  command echo "Hello, World!"
+  user hapee-lb
+  group hapee
+  option start-on-reload
+
+program test_2
+  command echo "Hello, World!"
+  no option start-on-reload
+
 resolvers test
   nameserver dns1 10.0.0.1:53
   accepted_payload_size 8192
