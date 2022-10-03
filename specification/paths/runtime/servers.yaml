@@ -18,6 +18,36 @@ servers:
           $ref: "#/definitions/runtime_servers"
       'default':
         $ref: '#/responses/DefaultError'
+  post:
+    summary: Adds a new server to a backend
+    description: Adds a new server to the specified backend
+    operationId: addRuntimeServer
+    tags:
+      - Server
+    parameters:
+      - name: backend
+        in: query
+        description: Parent backend name
+        required: true
+        type: string
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/runtime_add_server'
+    responses:
+      '201':
+        description: Server added
+        schema:
+          $ref: "#/definitions/runtime_add_server"
+      '400':
+        $ref: '#/responses/BadRequest'
+      '404':
+        $ref: '#/responses/NotFound'
+      '409':
+        $ref: '#/responses/AlreadyExists'
+      'default':
+        $ref: '#/responses/DefaultError'
 servers_one:
   get:
     summary: Return one server runtime settings
@@ -43,41 +73,6 @@ servers_one:
           $ref: "#/definitions/runtime_server"
       '404':
         $ref: '#/responses/NotFound'
-      'default':
-        $ref: '#/responses/DefaultError'
-  post:
-    summary: Adds a new server to a backend
-    description: Adds a new server to the specified backend
-    operationId: addRuntimeServer
-    tags:
-      - Server
-    parameters:
-      - name: name
-        in: path
-        description: Server name
-        required: true
-        type: string
-      - name: backend
-        in: query
-        description: Parent backend name
-        required: true
-        type: string
-      - name: data
-        in: body
-        required: true
-        schema:
-          $ref: '#/definitions/runtime_add_server'
-    responses:
-      '201':
-        description: Server added
-        schema:
-          $ref: "#/definitions/runtime_add_server"
-      '400':
-        $ref: '#/responses/BadRequest'
-      '404':
-        $ref: '#/responses/NotFound'
-      '409':
-        $ref: '#/responses/AlreadyExists'
       'default':
         $ref: '#/responses/DefaultError'
   put:

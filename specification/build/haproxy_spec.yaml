@@ -16661,6 +16661,36 @@ paths:
         summary: Return an array of runtime servers' settings
         tags:
         - Server
+      post:
+        description: Adds a new server to the specified backend
+        operationId: addRuntimeServer
+        parameters:
+        - description: Parent backend name
+          in: query
+          name: backend
+          required: true
+          type: string
+        - in: body
+          name: data
+          required: true
+          schema:
+            $ref: '#/definitions/runtime_add_server'
+        responses:
+          "201":
+            description: Server added
+            schema:
+              $ref: '#/definitions/runtime_add_server'
+          "400":
+            $ref: '#/responses/BadRequest'
+          "404":
+            $ref: '#/responses/NotFound'
+          "409":
+            $ref: '#/responses/AlreadyExists'
+          default:
+            $ref: '#/responses/DefaultError'
+        summary: Adds a new server to a backend
+        tags:
+        - Server
   /services/haproxy/runtime/servers/{name}:
       delete:
         description: Deletes a server from the specified backend
@@ -16712,41 +16742,6 @@ paths:
           default:
             $ref: '#/responses/DefaultError'
         summary: Return one server runtime settings
-        tags:
-        - Server
-      post:
-        description: Adds a new server to the specified backend
-        operationId: addRuntimeServer
-        parameters:
-        - description: Server name
-          in: path
-          name: name
-          required: true
-          type: string
-        - description: Parent backend name
-          in: query
-          name: backend
-          required: true
-          type: string
-        - in: body
-          name: data
-          required: true
-          schema:
-            $ref: '#/definitions/runtime_add_server'
-        responses:
-          "201":
-            description: Server added
-            schema:
-              $ref: '#/definitions/runtime_add_server'
-          "400":
-            $ref: '#/responses/BadRequest'
-          "404":
-            $ref: '#/responses/NotFound'
-          "409":
-            $ref: '#/responses/AlreadyExists'
-          default:
-            $ref: '#/responses/DefaultError'
-        summary: Adds a new server to a backend
         tags:
         - Server
       put:
