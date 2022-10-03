@@ -1,0 +1,33 @@
+---
+program:
+  title: Program
+  description: HAProxy program configuration
+  type: object
+  required:
+    - name
+    - command
+  properties:
+    name:
+      type: string
+      pattern: '^[A-Za-z0-9-_.:]+$'
+      x-nullable: false
+      readOnly: true
+    command:
+      type: string
+      description: The command to be run, with flags and options.
+    user:
+      type: string
+      description: The user to run the command as, if different than the HAProxy user.
+    group:
+      type: string
+      description: The group to run the command as, if different than the HAProxy group.
+    start-on-reload:
+      type: string
+      enum: [enabled, disabled]
+      description: HAProxy stops and recreates child programs at reload.
+  example:
+    name: mirror
+    command: spoa-mirror --runtime 0 --mirror-url http://test.local
+    user: myusername
+    group: mygroupname
+    start-on-reload: enabled
