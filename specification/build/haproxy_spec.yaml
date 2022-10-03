@@ -12015,6 +12015,7 @@ paths:
           enum:
           - frontend
           - log_forward
+          - peers
           in: query
           name: parent_type
           type: string
@@ -12056,6 +12057,7 @@ paths:
           enum:
           - frontend
           - log_forward
+          - peers
           in: query
           name: parent_type
           type: string
@@ -12111,6 +12113,7 @@ paths:
           enum:
           - frontend
           - log_forward
+          - peers
           in: query
           name: parent_type
           type: string
@@ -12154,6 +12157,7 @@ paths:
           enum:
           - frontend
           - log_forward
+          - peers
           in: query
           name: parent_type
           type: string
@@ -12200,6 +12204,7 @@ paths:
           enum:
           - frontend
           - log_forward
+          - peers
           in: query
           name: parent_type
           type: string
@@ -12600,6 +12605,7 @@ paths:
           enum:
           - backend
           - ring
+          - peers
           in: query
           name: parent_type
           type: string
@@ -12641,6 +12647,7 @@ paths:
           enum:
           - backend
           - ring
+          - peers
           in: query
           name: parent_type
           type: string
@@ -12696,6 +12703,7 @@ paths:
           enum:
           - backend
           - ring
+          - peers
           in: query
           name: parent_type
           type: string
@@ -12739,6 +12747,7 @@ paths:
           enum:
           - backend
           - ring
+          - peers
           in: query
           name: parent_type
           type: string
@@ -12785,6 +12794,7 @@ paths:
           enum:
           - backend
           - ring
+          - peers
           in: query
           name: parent_type
           type: string
@@ -15371,6 +15381,7 @@ paths:
           - defaults
           - global
           - log_forward
+          - peers
           in: query
           name: parent_type
           required: true
@@ -15412,6 +15423,7 @@ paths:
           - defaults
           - global
           - log_forward
+          - peers
           in: query
           name: parent_type
           required: true
@@ -15468,6 +15480,7 @@ paths:
           - defaults
           - global
           - log_forward
+          - peers
           in: query
           name: parent_type
           required: true
@@ -15512,6 +15525,7 @@ paths:
           - defaults
           - global
           - log_forward
+          - peers
           in: query
           name: parent_type
           required: true
@@ -15559,6 +15573,7 @@ paths:
           - defaults
           - global
           - log_forward
+          - peers
           in: query
           name: parent_type
           required: true

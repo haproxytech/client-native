@@ -19,7 +19,7 @@ servers:
         in: query
         description: Parent type
         type: string
-        enum: [backend, ring]
+        enum: [backend, ring, peers]
       - $ref: "#/parameters/transaction_id"
     responses:
       '200':
@@ -58,7 +58,7 @@ servers:
         in: query
         description: Parent type
         type: string
-        enum: [backend, ring]
+        enum: [backend, ring, peers]
       - name: data
         in: body
         required: true
@@ -111,7 +111,7 @@ servers_one:
         in: query
         description: Parent type
         type: string
-        enum: [backend, ring]
+        enum: [backend, ring, peers]
       - $ref: "#/parameters/transaction_id"
     responses:
       '200':
@@ -155,7 +155,7 @@ servers_one:
         in: query
         description: Parent type
         type: string
-        enum: [backend, ring]
+        enum: [backend, ring, peers]
       - name: data
         in: body
         required: true
@@ -207,7 +207,7 @@ servers_one:
         in: query
         description: Parent type
         type: string
-        enum: [backend, ring]
+        enum: [backend, ring, peers]
       - $ref: "#/parameters/transaction_id"
       - $ref: "#/parameters/version"
       - $ref: "#/parameters/force_reload"

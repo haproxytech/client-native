@@ -19,7 +19,7 @@ binds:
         in: query
         description: Parent type
         type: string
-        enum: [frontend, log_forward]
+        enum: [frontend, log_forward, peers]
       - $ref: "#/parameters/transaction_id"
     responses:
       '200':
@@ -58,7 +58,7 @@ binds:
         in: query
         description: Parent type
         type: string
-        enum: [frontend, log_forward]
+        enum: [frontend, log_forward, peers]
       - name: data
         in: body
         required: true
@@ -111,7 +111,7 @@ binds_one:
         in: query
         description: Parent type
         type: string
-        enum: [frontend, log_forward]
+        enum: [frontend, log_forward, peers]
       - $ref: "#/parameters/transaction_id"
     responses:
       '200':
@@ -155,7 +155,7 @@ binds_one:
         in: query
         description: Parent type
         type: string
-        enum: [frontend, log_forward]
+        enum: [frontend, log_forward, peers]
       - name: data
         in: body
         required: true
@@ -207,7 +207,7 @@ binds_one:
         in: query
         description: Parent type
         type: string
-        enum: [frontend, log_forward]
+        enum: [frontend, log_forward, peers]
       - $ref: "#/parameters/transaction_id"
       - $ref: "#/parameters/version"
       - $ref: "#/parameters/force_reload"
