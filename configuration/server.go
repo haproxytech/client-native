@@ -824,10 +824,13 @@ func GetServerByName(name string, parentType string, parentName string, p parser
 
 func sectionType(parentType string) parser.Section {
 	var sectionType parser.Section
-	if parentType == "backend" {
+	switch parentType {
+	case "backend":
 		sectionType = parser.Backends
-	} else if parentType == "ring" {
+	case "ring":
 		sectionType = parser.Ring
+	case "peers":
+		sectionType = parser.Peers
 	}
 	return sectionType
 }

@@ -71,20 +71,7 @@ func (c *client) GetLogTarget(id int64, parentType, parentName string, transacti
 	}
 
 	var section parser.Section
-	switch parentType {
-	case "global":
-		section = parser.Global
-		parentName = parser.GlobalSectionName
-	case "defaults":
-		section = parser.Defaults
-		parentName = parser.DefaultSectionName
-	case "backend":
-		section = parser.Backends
-	case "frontend":
-		section = parser.Frontends
-	case "log_forward":
-		section = parser.LogForward
-	}
+	section, parentName = logTargetSectionType(parentType, parentName)
 
 	data, err := p.GetOne(section, parentName, "log", int(id))
 	if err != nil {
@@ -106,20 +93,7 @@ func (c *client) DeleteLogTarget(id int64, parentType string, parentName string,
 	}
 
 	var section parser.Section
-	switch parentType {
-	case "global":
-		section = parser.Global
-		parentName = parser.GlobalSectionName
-	case "defaults":
-		section = parser.Defaults
-		parentName = parser.DefaultSectionName
-	case "backend":
-		section = parser.Backends
-	case "frontend":
-		section = parser.Frontends
-	case "log_forward":
-		section = parser.LogForward
-	}
+	section, parentName = logTargetSectionType(parentType, parentName)
 
 	if err := p.Delete(section, parentName, "log", int(id)); err != nil {
 		return c.HandleError(strconv.FormatInt(id, 10), parentType, parentName, t, transactionID == "", err)
@@ -156,20 +130,7 @@ func (c *client) CreateLogTarget(parentType string, parentName string, data *mod
 	}
 
 	var section parser.Section
-	switch parentType {
-	case "global":
-		section = parser.Global
-		parentName = parser.GlobalSectionName
-	case "defaults":
-		section = parser.Defaults
-		parentName = parser.DefaultSectionName
-	case "backend":
-		section = parser.Backends
-	case "frontend":
-		section = parser.Frontends
-	case "log_forward":
-		section = parser.LogForward
-	}
+	section, parentName = logTargetSectionType(parentType, parentName)
 
 	if err := p.Insert(section, parentName, "log", SerializeLogTarget(*data), int(*data.Index)); err != nil {
 		return c.HandleError(strconv.FormatInt(*data.Index, 10), parentType, parentName, t, transactionID == "", err)
@@ -204,20 +165,7 @@ func (c *client) EditLogTarget(id int64, parentType string, parentName string, d
 	}
 
 	var section parser.Section
-	switch parentType {
-	case "global":
-		section = parser.Global
-		parentName = parser.GlobalSectionName
-	case "defaults":
-		section = parser.Defaults
-		parentName = parser.DefaultSectionName
-	case "backend":
-		section = parser.Backends
-	case "frontend":
-		section = parser.Frontends
-	case "log_forward":
-		section = parser.LogForward
-	}
+	section, parentName = logTargetSectionType(parentType, parentName)
 
 	if _, err := p.GetOne(section, parentName, "log", int(id)); err != nil {
 		return c.HandleError(strconv.FormatInt(id, 10), parentType, parentName, t, transactionID == "", err)
@@ -235,21 +183,7 @@ func (c *client) EditLogTarget(id int64, parentType string, parentName string, d
 
 func ParseLogTargets(t, pName string, p parser.Parser) (models.LogTargets, error) {
 	var section parser.Section
-
-	switch t {
-	case "global":
-		section = parser.Global
-		pName = parser.GlobalSectionName
-	case "defaults":
-		section = parser.Defaults
-		pName = parser.DefaultSectionName
-	case "backend":
-		section = parser.Backends
-	case "frontend":
-		section = parser.Frontends
-	case "log_forward":
-		section = parser.LogForward
-	}
+	section, pName = logTargetSectionType(t, pName)
 
 	logTargets := models.LogTargets{}
 	data, err := p.Get(section, pName, "log", false)
@@ -303,4 +237,25 @@ func SerializeLogTarget(l models.LogTarget) types.Log {
 		SampleRange: l.SampleRange,
 		SampleSize:  l.SampleSize,
 	}
+}
+
+func logTargetSectionType(parentType string, parentName string) (parser.Section, string) {
+	var section parser.Section
+	switch parentType {
+	case "global":
+		section = parser.Global
+		parentName = parser.GlobalSectionName
+	case "defaults":
+		section = parser.Defaults
+		parentName = parser.DefaultSectionName
+	case "backend":
+		section = parser.Backends
+	case "frontend":
+		section = parser.Frontends
+	case "log_forward":
+		section = parser.LogForward
+	case "peers":
+		section = parser.Peers
+	}
+	return section, parentName
 }
