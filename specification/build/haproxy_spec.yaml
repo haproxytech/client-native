@@ -8287,27 +8287,6 @@ definitions:
   default_server:
       allOf:
       - $ref: '#/definitions/server_params'
-      properties:
-        ca_file:
-          type: string
-          x-dependency:
-            ssl:
-              value: true
-        disabled:
-          enum:
-          - enabled
-          - disabled
-          type: string
-        enabled:
-          enum:
-          - enabled
-          - disabled
-          type: string
-        port:
-          maximum: 65535
-          minimum: 1
-          type: integer
-          x-nullable: true
       title: Default Server
       type: object
   httpchk_params:

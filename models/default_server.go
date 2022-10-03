@@ -22,12 +22,10 @@ package models
 
 import (
 	"context"
-	"encoding/json"
 
 	"github.com/go-openapi/errors"
 	"github.com/go-openapi/strfmt"
 	"github.com/go-openapi/swag"
-	"github.com/go-openapi/validate"
 )
 
 // DefaultServer Default Server
@@ -35,22 +33,6 @@ import (
 // swagger:model default_server
 type DefaultServer struct {
 	ServerParams
-
-	// ca file
-	CaFile string `json:"ca_file,omitempty"`
-
-	// disabled
-	// Enum: [enabled disabled]
-	Disabled string `json:"disabled,omitempty"`
-
-	// enabled
-	// Enum: [enabled disabled]
-	Enabled string `json:"enabled,omitempty"`
-
-	// port
-	// Maximum: 65535
-	// Minimum: 1
-	Port *int64 `json:"port,omitempty"`
 }
 
 // UnmarshalJSON unmarshals this object from a JSON structure
@@ -61,27 +43,6 @@ func (m *DefaultServer) UnmarshalJSON(raw []byte) error {
 		return err
 	}
 	m.ServerParams = aO0
-
-	// now for regular properties
-	var propsDefaultServer struct {
-		CaFile string `json:"ca_file,omitempty"`
-
-		Disabled string `json:"disabled,omitempty"`
-
-		Enabled string `json:"enabled,omitempty"`
-
-		Port *int64 `json:"port,omitempty"`
-	}
-	if err := swag.ReadJSON(raw, &propsDefaultServer); err != nil {
-		return err
-	}
-	m.CaFile = propsDefaultServer.CaFile
-
-	m.Disabled = propsDefaultServer.Disabled
-
-	m.Enabled = propsDefaultServer.Enabled
-
-	m.Port = propsDefaultServer.Port
 
 	return nil
 }
@@ -95,30 +56,6 @@ func (m DefaultServer) MarshalJSON() ([]byte, error) {
 		return nil, err
 	}
 	_parts = append(_parts, aO0)
-
-	// now for regular properties
-	var propsDefaultServer struct {
-		CaFile string `json:"ca_file,omitempty"`
-
-		Disabled string `json:"disabled,omitempty"`
-
-		Enabled string `json:"enabled,omitempty"`
-
-		Port *int64 `json:"port,omitempty"`
-	}
-	propsDefaultServer.CaFile = m.CaFile
-
-	propsDefaultServer.Disabled = m.Disabled
-
-	propsDefaultServer.Enabled = m.Enabled
-
-	propsDefaultServer.Port = m.Port
-
-	jsonDataPropsDefaultServer, errDefaultServer := swag.WriteJSON(propsDefaultServer)
-	if errDefaultServer != nil {
-		return nil, errDefaultServer
-	}
-	_parts = append(_parts, jsonDataPropsDefaultServer)
 	return swag.ConcatJSON(_parts...), nil
 }
 
@@ -131,121 +68,9 @@ func (m *DefaultServer) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
-	if err := m.validateDisabled(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateEnabled(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validatePort(formats); err != nil {
-		res = append(res, err)
-	}
-
 	if len(res) > 0 {
 		return errors.CompositeValidationError(res...)
 	}
-	return nil
-}
-
-var defaultServerTypeDisabledPropEnum []interface{}
-
-func init() {
-	var res []string
-	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
-		panic(err)
-	}
-	for _, v := range res {
-		defaultServerTypeDisabledPropEnum = append(defaultServerTypeDisabledPropEnum, v)
-	}
-}
-
-const (
-
-	// DefaultServerDisabledEnabled captures enum value "enabled"
-	DefaultServerDisabledEnabled string = "enabled"
-
-	// DefaultServerDisabledDisabled captures enum value "disabled"
-	DefaultServerDisabledDisabled string = "disabled"
-)
-
-// prop value enum
-func (m *DefaultServer) validateDisabledEnum(path, location string, value string) error {
-	if err := validate.EnumCase(path, location, value, defaultServerTypeDisabledPropEnum, true); err != nil {
-		return err
-	}
-	return nil
-}
-
-func (m *DefaultServer) validateDisabled(formats strfmt.Registry) error {
-	if swag.IsZero(m.Disabled) { // not required
-		return nil
-	}
-
-	// value enum
-	if err := m.validateDisabledEnum("disabled", "body", m.Disabled); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-var defaultServerTypeEnabledPropEnum []interface{}
-
-func init() {
-	var res []string
-	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
-		panic(err)
-	}
-	for _, v := range res {
-		defaultServerTypeEnabledPropEnum = append(defaultServerTypeEnabledPropEnum, v)
-	}
-}
-
-const (
-
-	// DefaultServerEnabledEnabled captures enum value "enabled"
-	DefaultServerEnabledEnabled string = "enabled"
-
-	// DefaultServerEnabledDisabled captures enum value "disabled"
-	DefaultServerEnabledDisabled string = "disabled"
-)
-
-// prop value enum
-func (m *DefaultServer) validateEnabledEnum(path, location string, value string) error {
-	if err := validate.EnumCase(path, location, value, defaultServerTypeEnabledPropEnum, true); err != nil {
-		return err
-	}
-	return nil
-}
-
-func (m *DefaultServer) validateEnabled(formats strfmt.Registry) error {
-	if swag.IsZero(m.Enabled) { // not required
-		return nil
-	}
-
-	// value enum
-	if err := m.validateEnabledEnum("enabled", "body", m.Enabled); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func (m *DefaultServer) validatePort(formats strfmt.Registry) error {
-	if swag.IsZero(m.Port) { // not required
-		return nil
-	}
-
-	if err := validate.MinimumInt("port", "body", *m.Port, 1, false); err != nil {
-		return err
-	}
-
-	if err := validate.MaximumInt("port", "body", *m.Port, 65535, false); err != nil {
-		return err
-	}
-
 	return nil
 }
 

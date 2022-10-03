@@ -70,22 +70,5 @@ server_template:
 default_server:
   title: Default Server
   type: object
-  properties:
-    port:
-      type: integer
-      x-nullable: true
-      minimum: 1
-      maximum: 65535
-    ca_file:
-      type: string
-      x-dependency:
-        ssl:
-          value: true
-    enabled:
-      type: string
-      enum: [enabled, disabled]
-    disabled:
-      type: string
-      enum: [enabled, disabled]
   allOf:
     - $ref: '#/definitions/server_params'
