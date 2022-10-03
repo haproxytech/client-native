@@ -1,0 +1,60 @@
+---
+http_error_rule:
+  title: HTTP Error Rule
+  description: HAProxy HTTP error rule configuration (corresponds to http-error directives)
+  type: object
+  required:
+    - index
+    - type
+    - status
+  properties:
+    index:
+      type: integer
+      x-nullable: true
+    type:
+      type: string
+      enum:
+        - status
+      x-nullable: false
+    status:
+      type: integer
+      enum: [200, 400, 401, 403, 404, 405, 407, 408, 410, 413, 425, 429, 500, 501, 502, 503, 504]
+      x-nullable: false
+      x-dependency:
+        type:
+          value: status
+          required: true
+    return_content_type:
+      type: string
+      x-dependency:
+        type:
+          value: status
+      x-display-name: Return content type
+      x-nullable: true
+    return_content_format:
+      type: string
+      enum: [default-errorfile, errorfile, errorfiles, file, lf-file, string, lf-string]
+      x-dependency:
+        type:
+          value: status
+    return_content:
+      type: string
+      x-dependency:
+        return_content_format:
+          value: [errofile, errorfiles, file, lf-file, string, lf-string]
+          required: true
+    return_hdrs:
+      type: array
+      x-go-name: ReturnHeaders
+      x-dependency:
+        return_content_format:
+          value: [file, lf-file, string, lf-string]
+      items:
+        $ref: "#/definitions/return_header"
+  additionalProperties: false
+  example:
+    index: 0
+    type: status
+    status: 425
+    hdr_name: X-Haproxy-Current-Date
+    hdr_format: "%T"

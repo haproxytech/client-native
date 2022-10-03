@@ -236,6 +236,8 @@ defaults
   monitor-uri /monitor
   http-check send-state
   http-check disable-on-404
+  http-error status 503 content-type "application/json" file /test/503
+  http-error status 429 content-type application/json file /test/429
   option accept-invalid-http-request
   option accept-invalid-http-response
   option h1-case-adjust-bogus-client
@@ -365,6 +367,7 @@ frontend test
   http-after-response set-status 503 reason "SlowDown"
   http-after-response set-var(sess.last_redir) res.hdr(location)
   http-after-response unset-var(sess.last_redir)
+  http-error status 400 content-type application/json lf-file /var/errors.file
   tcp-request connection accept if TRUE
   tcp-request connection reject if FALSE
   tcp-request content accept if TRUE
@@ -720,6 +723,8 @@ backend test_2
   cookie BLA rewrite httponly nocache
   stick-table type ip size 100k expire 1h peers mycluster store http_req_rate(10s)
   http-check expect rstatus some-pattern
+  http-error status 200 content-type "text/plain" string "My content" hdr Some-Header value
+  http-error status 503 content-type application/json string "My content" hdr Additional-Header value1 hdr Some-Header value
   srvtcpka-cnt 10
   srvtcpka-idle 10s
   srvtcpka-intvl 10

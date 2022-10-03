@@ -4575,6 +4575,105 @@ definitions:
     type: array
     items:
       $ref: '#/definitions/http_after_response_rule'
+  http_error_rule:
+      additionalProperties: false
+      description: HAProxy HTTP error rule configuration (corresponds to http-error directives)
+      example:
+        hdr_format: '%T'
+        hdr_name: X-Haproxy-Current-Date
+        index: 0
+        status: 425
+        type: status
+      properties:
+        index:
+          type: integer
+          x-nullable: true
+        return_content:
+          type: string
+          x-dependency:
+            return_content_format:
+              required: true
+              value:
+              - errofile
+              - errorfiles
+              - file
+              - lf-file
+              - string
+              - lf-string
+        return_content_format:
+          enum:
+          - default-errorfile
+          - errorfile
+          - errorfiles
+          - file
+          - lf-file
+          - string
+          - lf-string
+          type: string
+          x-dependency:
+            type:
+              value: status
+        return_content_type:
+          type: string
+          x-dependency:
+            type:
+              value: status
+          x-display-name: Return content type
+          x-nullable: true
+        return_hdrs:
+          items:
+            $ref: '#/definitions/return_header'
+          type: array
+          x-dependency:
+            return_content_format:
+              value:
+              - file
+              - lf-file
+              - string
+              - lf-string
+          x-go-name: ReturnHeaders
+        status:
+          enum:
+          - 200
+          - 400
+          - 401
+          - 403
+          - 404
+          - 405
+          - 407
+          - 408
+          - 410
+          - 413
+          - 425
+          - 429
+          - 500
+          - 501
+          - 502
+          - 503
+          - 504
+          type: integer
+          x-dependency:
+            type:
+              required: true
+              value: status
+          x-nullable: false
+        type:
+          enum:
+          - status
+          type: string
+          x-nullable: false
+      required:
+      - index
+      - type
+      - status
+      title: HTTP Error Rule
+      type: object
+  http_error_rules:
+    title: HTTP Error Rules Array
+    description: HAProxy HTTP error rules array (corresponds to http-error directives)
+    type: array
+    items:
+      $ref: '#/definitions/http_error_rule'
   http_check:
       properties:
         addr:
@@ -9026,6 +9125,7 @@ tags:
 - name: Global
   description: Managing global configuration (advanced mode)
 - name: HTTPCheck
+- name: HTTPErrorRule
 - name: HTTPRequestRule
 - name: HTTPResponseRule
 - name: Information
@@ -13931,6 +14031,234 @@ paths:
         summary: Replace a HTTP After Response Rule
         tags:
         - HTTPAfterResponseRule
+  /services/haproxy/configuration/http_error_rules:
+      get:
+        description: Returns all HTTP Error Rules that are configured in the specified parent.
+        operationId: getHTTPErrorRules
+        parameters:
+        - description: Parent name
+          in: query
+          name: parent_name
+          type: string
+        - description: Parent type
+          enum:
+          - frontend
+          - backend
+          - defaults
+          in: query
+          name: parent_type
+          required: true
+          type: string
+        - $ref: '#/parameters/transaction_id'
+        responses:
+          "200":
+            description: Successful operation
+            headers:
+              Configuration-Version:
+                description: Configuration file version
+                type: string
+            schema:
+              properties:
+                _version:
+                  type: integer
+                data:
+                  $ref: '#/definitions/http_error_rules'
+              required:
+              - data
+              type: object
+          default:
+            $ref: '#/responses/DefaultError'
+        summary: Return an array of all HTTP Error Rules
+        tags:
+        - HTTPErrorRule
+      post:
+        description: Adds a new HTTP Error Rule of the specified type in the specified parent.
+        operationId: createHTTPErrorRule
+        parameters:
+        - description: Parent name
+          in: query
+          name: parent_name
+          type: string
+        - description: Parent type
+          enum:
+          - frontend
+          - backend
+          - defaults
+          in: query
+          name: parent_type
+          required: true
+          type: string
+        - in: body
+          name: data
+          required: true
+          schema:
+            $ref: '#/definitions/http_error_rule'
+        - $ref: '#/parameters/transaction_id'
+        - $ref: '#/parameters/version'
+        - $ref: '#/parameters/force_reload'
+        responses:
+          "201":
+            description: HTTP Error Rule created
+            schema:
+              $ref: '#/definitions/http_error_rule'
+          "202":
+            description: Configuration change accepted and reload requested
+            headers:
+              Reload-ID:
+                description: ID of the requested reload
+                type: string
+            schema:
+              $ref: '#/definitions/http_error_rule'
+          "400":
+            $ref: '#/responses/BadRequest'
+          "409":
+            $ref: '#/responses/AlreadyExists'
+          default:
+            $ref: '#/responses/DefaultError'
+        summary: Add a new HTTP Error Rule
+        tags:
+        - HTTPErrorRule
+  /services/haproxy/configuration/http_error_rules/{index}:
+      delete:
+        description: Deletes a HTTP Error Rule configuration by its index from the specified
+          parent.
+        operationId: deleteHTTPErrorRule
+        parameters:
+        - description: HTTP Error Rule Index
+          in: path
+          name: index
+          required: true
+          type: integer
+        - description: Parent name
+          in: query
+          name: parent_name
+          type: string
+        - description: Parent type
+          enum:
+          - frontend
+          - backend
+          - defaults
+          in: query
+          name: parent_type
+          required: true
+          type: string
+        - $ref: '#/parameters/transaction_id'
+        - $ref: '#/parameters/version'
+        - $ref: '#/parameters/force_reload'
+        responses:
+          "202":
+            description: Configuration change accepted and reload requested
+            headers:
+              Reload-ID:
+                description: ID of the requested reload
+                type: string
+          "204":
+            description: HTTP Error Rule deleted
+          "404":
+            $ref: '#/responses/NotFound'
+          default:
+            $ref: '#/responses/DefaultError'
+        summary: Delete a HTTP Error Rule
+        tags:
+        - HTTPErrorRule
+      get:
+        description: Returns one HTTP Error Rule configuration by its index in the specified
+          parent.
+        operationId: getHTTPErrorRule
+        parameters:
+        - description: HTTP Error Rule Index
+          in: path
+          name: index
+          required: true
+          type: integer
+        - description: Parent name
+          in: query
+          name: parent_name
+          type: string
+        - description: Parent type
+          enum:
+          - frontend
+          - backend
+          - defaults
+          in: query
+          name: parent_type
+          required: true
+          type: string
+        - $ref: '#/parameters/transaction_id'
+        responses:
+          "200":
+            description: Successful operation
+            headers:
+              Configuration-Version:
+                description: Configuration file version
+                type: string
+            schema:
+              properties:
+                _version:
+                  type: integer
+                data:
+                  $ref: '#/definitions/http_error_rule'
+              type: object
+          "404":
+            $ref: '#/responses/NotFound'
+          default:
+            $ref: '#/responses/DefaultError'
+        summary: Return one HTTP Error Rule
+        tags:
+        - HTTPErrorRule
+      put:
+        description: Replaces a HTTP Error Rule configuration by its index in the specified
+          parent.
+        operationId: replaceHTTPErrorRule
+        parameters:
+        - description: HTTP Error Rule Index
+          in: path
+          name: index
+          required: true
+          type: integer
+        - description: Parent name
+          in: query
+          name: parent_name
+          type: string
+        - description: Parent type
+          enum:
+          - frontend
+          - backend
+          - defaults
+          in: query
+          name: parent_type
+          required: true
+          type: string
+        - in: body
+          name: data
+          required: true
+          schema:
+            $ref: '#/definitions/http_error_rule'
+        - $ref: '#/parameters/transaction_id'
+        - $ref: '#/parameters/version'
+        - $ref: '#/parameters/force_reload'
+        responses:
+          "200":
+            description: HTTP Error Rule replaced
+            schema:
+              $ref: '#/definitions/http_error_rule'
+          "202":
+            description: Configuration change accepted and reload requested
+            headers:
+              Reload-ID:
+                description: ID of the requested reload
+                type: string
+            schema:
+              $ref: '#/definitions/http_error_rule'
+          "400":
+            $ref: '#/responses/BadRequest'
+          "404":
+            $ref: '#/responses/NotFound'
+          default:
+            $ref: '#/responses/DefaultError'
+        summary: Replace a HTTP Error Rule
+        tags:
+        - HTTPErrorRule
   /services/haproxy/configuration/tcp_checks:
       get:
         description: Returns all TCP checks that are configured in specified parent.

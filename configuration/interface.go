@@ -43,6 +43,7 @@ type Configuration interface {
 	HTTPRequestRule
 	HTTPResponseRule
 	HTTPAfterResponseRule
+	HTTPErrorRule
 	LogTarget
 	LogForward
 	MailerEntry

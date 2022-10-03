@@ -192,6 +192,14 @@ definitions:
     type: array
     items:
       $ref: '#/definitions/http_after_response_rule'
+  http_error_rule:
+    $ref: "models/configuration/http/error.yaml#/http_error_rule"
+  http_error_rules:
+    title: HTTP Error Rules Array
+    description: HAProxy HTTP error rules array (corresponds to http-error directives)
+    type: array
+    items:
+      $ref: '#/definitions/http_error_rule'
   http_check:
     $ref: "models/configuration/http/check.yaml#/http_check"
   http_checks:
@@ -650,6 +658,7 @@ tags:
   - name: HTTPCheck
   - name: HTTPRequestRule
   - name: HTTPResponseRule
+  - name: HTTPErrorRule
   - name: BackendSwitchingRule
   - name: ServerSwitchingRule
   - name: TCPResponseRule
@@ -815,6 +824,10 @@ paths:
     $ref: "paths/configuration/http/after_response.yaml#/http_after_response_rules"
   /services/haproxy/configuration/http_after_response_rules/{index}:
     $ref: "paths/configuration/http/after_response.yaml#/http_after_response_rules_one"
+  /services/haproxy/configuration/http_error_rules:
+    $ref: "paths/configuration/http/error.yaml#/http_error_rules"
+  /services/haproxy/configuration/http_error_rules/{index}:
+    $ref: "paths/configuration/http/error.yaml#/http_error_rules_one"
   /services/haproxy/configuration/tcp_checks:
     $ref: "paths/configuration/tcp/check.yaml#/tcp_checks"
   /services/haproxy/configuration/tcp_checks/{index}:
