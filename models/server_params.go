@@ -139,6 +139,10 @@ type ServerParams struct {
 	// Enum: [enabled disabled]
 	ForceTlsv13 string `json:"force_tlsv13,omitempty"`
 
+	// health check address
+	// Pattern: ^[^\s]+$
+	HealthCheckAddress string `json:"health_check_address,omitempty"`
+
 	// health check port
 	// Maximum: 65535
 	// Minimum: 1
@@ -415,6 +419,10 @@ func (m *ServerParams) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateForceTlsv13(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateHealthCheckAddress(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -1116,6 +1124,18 @@ func (m *ServerParams) validateForceTlsv13(formats strfmt.Registry) error {
 
 	// value enum
 	if err := m.validateForceTlsv13Enum("force_tlsv13", "body", m.ForceTlsv13); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *ServerParams) validateHealthCheckAddress(formats strfmt.Registry) error {
+	if swag.IsZero(m.HealthCheckAddress) { // not required
+		return nil
+	}
+
+	if err := validate.Pattern("health_check_address", "body", m.HealthCheckAddress, `^[^\s]+$`); err != nil {
 		return err
 	}
 

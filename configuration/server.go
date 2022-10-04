@@ -413,6 +413,8 @@ func parseServerParams(serverOptions []params.ServerOption, serverParams *models
 				if err == nil {
 					serverParams.PoolPurgeDelay = &d
 				}
+			case "addr":
+				serverParams.HealthCheckAddress = v.Value
 			case "port":
 				p, err := strconv.ParseInt(v.Value, 10, 64)
 				if err == nil {
@@ -727,6 +729,9 @@ func serializeServerParams(s models.ServerParams) (options []params.ServerOption
 	}
 	if s.PoolPurgeDelay != nil {
 		options = append(options, &params.ServerOptionValue{Name: "pool-purge-delay", Value: strconv.FormatInt(*s.PoolPurgeDelay, 10)})
+	}
+	if s.HealthCheckAddress != "" {
+		options = append(options, &params.ServerOptionValue{Name: "addr", Value: s.HealthCheckAddress})
 	}
 	if s.HealthCheckPort != nil {
 		options = append(options, &params.ServerOptionValue{Name: "port", Value: strconv.FormatInt(*s.HealthCheckPort, 10)})

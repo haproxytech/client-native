@@ -102,6 +102,9 @@ add_server:
       x-nullable: true
       minimum: 1
       maximum: 65535
+    health_check_address:
+      type: string
+      pattern: '^[^\s]+$'
     check_proto:
       type: string
       x-display-name: Name
