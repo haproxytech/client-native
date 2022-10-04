@@ -320,15 +320,21 @@ func Test_parseAddress(t *testing.T) {
 		wantPort        *int64
 	}{
 		{
-			name:            "IPv6 with port",
+			name:            "IPv6 with brackets",
 			args:            args{address: "[fd00:6:48:c85:deb:f:62:4]:80"},
 			wantIpOrAddress: "fd00:6:48:c85:deb:f:62:4",
 			wantPort:        misc.Int64P(80),
 		},
 		{
-			name:            "IPv6 without port",
-			args:            args{address: "fd00:6:48:c85:deb:f:62:4"},
+			name:            "IPv6 without brackets",
+			args:            args{address: "fd00:6:48:c85:deb:f:62:4:443"},
 			wantIpOrAddress: "fd00:6:48:c85:deb:f:62:4",
+			wantPort:        misc.Int64P(443),
+		},
+		{
+			name:            "IPv6 without brackets, without port",
+			args:            args{address: "fd00:6:48:c85:deb:f:62:a123"},
+			wantIpOrAddress: "fd00:6:48:c85:deb:f:62:a123",
 			wantPort:        nil,
 		},
 		{
