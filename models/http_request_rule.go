@@ -40,7 +40,7 @@ import (
 type HTTPRequestRule struct {
 
 	// return headers
-	ReturnHeaders []*ReturnHeader `json:"return_hdrs"`
+	ReturnHeaders []*ReturnHeader `json:"return_hdrs,omitempty"`
 
 	// acl file
 	// Pattern: ^[^\s]+$

@@ -234,7 +234,7 @@ type RuntimeAddServer struct {
 	Proto string `json:"proto,omitempty"`
 
 	// proxy v2 options
-	ProxyV2Options []string `json:"proxy-v2-options"`
+	ProxyV2Options []string `json:"proxy-v2-options,omitempty"`
 
 	// rise
 	Rise *int64 `json:"rise,omitempty"`

@@ -21,10 +21,12 @@ app:
       description: Defines the script name to append after a URI that ends with a slash ("/") to set the default value for the FastCGI parameter SCRIPT_NAME. It is an optional setting.
     log_stderrs:
       type: array
+      x-omitempty: true
       items:
         $ref: "#/definitions/fcgiLogStderr"
     pass_headers:
       type: array
+      x-omitempty: true
       items:
         $ref: "#/definitions/fcgiPassHeader"
     path_info:
@@ -52,6 +54,7 @@ app:
       enum: [enabled, disabled]
     set_params:
       type: array
+      x-omitempty: true
       items:
         $ref: "#/definitions/fcgiSetParam"
 

@@ -3,6 +3,7 @@ native_stats:
   title: Stats Array
   description: HAProxy stats array
   type: array
+  x-omitempty: true
   items:
     $ref: "#/definitions/native_stats_collection"
 native_stats_collection:
@@ -14,6 +15,7 @@ native_stats_collection:
       type: string
     stats:
       type: array
+      x-omitempty: true
       items:
         $ref: "#/definitions/native_stat"
     error:

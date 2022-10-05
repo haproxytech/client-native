@@ -233,6 +233,7 @@ server_params:
       enum: [enabled, disabled]
     proxy-v2-options:
       type: array
+      x-omitempty: true
       items:
         type: string
         enum: [ssl, cert-cn, ssl-cipher, cert-sig, cert-key, authority, crc32c, unique-id]

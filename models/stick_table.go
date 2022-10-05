@@ -39,7 +39,7 @@ import (
 type StickTable struct {
 
 	// fields
-	Fields []*StickTableField `json:"fields"`
+	Fields []*StickTableField `json:"fields,omitempty"`
 
 	// name
 	Name string `json:"name,omitempty"`

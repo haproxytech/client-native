@@ -164,6 +164,7 @@ http_check:
           value: send
     headers:
       type: array
+      x-omitempty: true
       x-go-name: CheckHeaders
       x-dependency:
         type:

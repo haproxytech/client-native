@@ -37,7 +37,7 @@ import (
 type HTTPCheck struct {
 
 	// check headers
-	CheckHeaders []*ReturnHeader `json:"headers"`
+	CheckHeaders []*ReturnHeader `json:"headers,omitempty"`
 
 	// addr
 	// Pattern: ^[^\s]+$

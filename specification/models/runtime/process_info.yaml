@@ -2,6 +2,7 @@ process_infos:
   title: HAProxy Information
   description: General HAProxy process information
   type: array
+  x-omitempty: true
   items:
     $ref: '#/definitions/process_info'
 process_info:

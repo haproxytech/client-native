@@ -84,6 +84,7 @@ definitions:
           items:
             $ref: '#/definitions/fcgiLogStderr'
           type: array
+          x-omitempty: true
         max_reqs:
           default: 1
           description: Defines the maximum number of concurrent requests this application
@@ -110,6 +111,7 @@ definitions:
           items:
             $ref: '#/definitions/fcgiPassHeader'
           type: array
+          x-omitempty: true
         path_info:
           description: |-
             Defines a regular expression to extract the script-name and the path-info from the URI.
@@ -120,6 +122,7 @@ definitions:
           items:
             $ref: '#/definitions/fcgiSetParam'
           type: array
+          x-omitempty: true
       required:
       - name
       - docroot
@@ -706,6 +709,7 @@ definitions:
             - unique-id
             type: string
           type: array
+          x-omitempty: true
         redir:
           type: string
           x-display-name: Prefix
@@ -929,6 +933,7 @@ definitions:
                 items:
                   $ref: '#/definitions/server'
                 type: array
+                x-omitempty: true
               use_as:
                 enum:
                 - default
@@ -941,6 +946,7 @@ definitions:
             type: object
             x-go-name: SiteFarm
           type: array
+          x-omitempty: true
         name:
           pattern: ^[A-Za-z0-9-_.:]+$
           type: string
@@ -963,6 +969,7 @@ definitions:
               items:
                 $ref: '#/definitions/bind'
               type: array
+              x-omitempty: true
             maxconn:
               type: integer
               x-display-name: Max Connections
@@ -1022,6 +1029,7 @@ definitions:
           type: array
           x-display-name: CPU Maps
           x-go-name: CPUMaps
+          x-omitempty: true
         crt_base:
           type: string
           x-display-name: SSL Certificates Base Directory
@@ -1093,6 +1101,7 @@ definitions:
             x-go-name: H1CaseAdjust
           type: array
           x-go-name: H1CaseAdjusts
+          x-omitempty: true
         h1_case_adjust_file:
           type: string
         h2_workaround_bogus_websocket_clients:
@@ -1144,6 +1153,7 @@ definitions:
             type: object
             x-go-name: LuaLoad
           type: array
+          x-omitempty: true
         lua_prepend_path:
           items:
             properties:
@@ -1160,6 +1170,7 @@ definitions:
             type: object
             x-go-name: LuaPrependPath
           type: array
+          x-omitempty: true
         master-worker:
           type: boolean
           x-display-name: Master Worker Mode
@@ -1248,6 +1259,7 @@ definitions:
           type: array
           x-display-name: Preset environment variables
           x-go-name: PresetEnvs
+          x-omitempty: true
         profiling_tasks:
           enum:
           - auto
@@ -1275,6 +1287,7 @@ definitions:
           type: array
           x-display-name: Runtime APIs
           x-go-name: RuntimeAPIs
+          x-omitempty: true
         server_state_base:
           pattern: ^[^\s]+$
           type: string
@@ -1302,6 +1315,7 @@ definitions:
           type: array
           x-display-name: Set variables
           x-go-name: SetVars
+          x-omitempty: true
         set_var_fmt:
           items:
             properties:
@@ -1319,6 +1333,7 @@ definitions:
           type: array
           x-display-name: Set variable formats
           x-go-name: SetVarFmts
+          x-omitempty: true
         setenv:
           items:
             properties:
@@ -1336,6 +1351,7 @@ definitions:
           type: array
           x-display-name: Set environment variables
           x-go-name: SetEnvs
+          x-omitempty: true
         spread_checks:
           type: integer
           x-display-name: Add some randomness in the check interval
@@ -1379,6 +1395,7 @@ definitions:
           type: array
           x-display-name: SSL Engines
           x-go-name: SslEngines
+          x-omitempty: true
         ssl_load_extra_files:
           type: string
           x-display-name: SSL Load Extra Files
@@ -1423,6 +1440,7 @@ definitions:
           type: array
           x-display-name: Thread Groups
           x-go-name: ThreadGroupLines
+          x-omitempty: true
         thread_groups:
           type: integer
           x-display-name: Number of Thread Groups
@@ -1802,6 +1820,7 @@ definitions:
             $ref: '#/definitions/errorfile'
           type: array
           x-go-name: ErrorFiles
+          x-omitempty: true
         error_log_format:
           type: string
         errorfiles_from_http_errors:
@@ -1809,6 +1828,7 @@ definitions:
             $ref: '#/definitions/errorfiles'
           type: array
           x-go-name: ErrorFilesFromHTTPErrors
+          x-omitempty: true
         errorloc302:
           $ref: '#/definitions/errorloc'
         errorloc303:
@@ -2219,6 +2239,7 @@ definitions:
             $ref: '#/definitions/errorfile'
           type: array
           x-go-name: ErrorFiles
+          x-omitempty: true
         error_log_format:
           type: string
         errorfiles_from_http_errors:
@@ -2226,6 +2247,7 @@ definitions:
             $ref: '#/definitions/errorfiles'
           type: array
           x-go-name: ErrorFilesFromHTTPErrors
+          x-omitempty: true
         errorloc302:
           $ref: '#/definitions/errorloc'
         errorloc303:
@@ -2540,11 +2562,13 @@ definitions:
             $ref: '#/definitions/errorfile'
           type: array
           x-go-name: ErrorFiles
+          x-omitempty: true
         errorfiles_from_http_errors:
           items:
             $ref: '#/definitions/errorfiles'
           type: array
           x-go-name: ErrorFilesFromHTTPErrors
+          x-omitempty: true
         errorloc302:
           $ref: '#/definitions/errorloc'
         errorloc303:
@@ -3758,6 +3782,7 @@ definitions:
               - string
               - lf-string
           x-go-name: ReturnHeaders
+          x-omitempty: true
         return_status_code:
           maximum: 599
           minimum: 200
@@ -4322,6 +4347,7 @@ definitions:
               - string
               - lf-string
           x-go-name: ReturnHeaders
+          x-omitempty: true
         return_status_code:
           maximum: 599
           minimum: 200
@@ -4741,6 +4767,7 @@ definitions:
               - string
               - lf-string
           x-go-name: ReturnHeaders
+          x-omitempty: true
         status:
           enum:
           - 200
@@ -4849,6 +4876,7 @@ definitions:
             type:
               value: send
           x-go-name: CheckHeaders
+          x-omitempty: true
         index:
           type: integer
           x-nullable: true
@@ -6465,6 +6493,7 @@ definitions:
         $ref: '#/definitions/native_stats_collection'
       title: Stats Array
       type: array
+      x-omitempty: true
   native_stat:
       description: Current stats for one object.
       properties:
@@ -6966,6 +6995,7 @@ definitions:
           items:
             $ref: '#/definitions/native_stat'
           type: array
+          x-omitempty: true
       title: Stats collection
       type: object
   stats_options:
@@ -6998,6 +7028,7 @@ definitions:
             $ref: '#/definitions/stats_auth'
           type: array
           x-display-name: Stats Auths
+          x-omitempty: true
         stats_enable:
           type: boolean
           x-display-name: Stats Enable
@@ -7009,6 +7040,7 @@ definitions:
             $ref: '#/definitions/stats_http_request'
           type: array
           x-display-name: Stats HTTP Requests
+          x-omitempty: true
         stats_maxconn:
           minimum: 1
           type: integer
@@ -7117,6 +7149,7 @@ definitions:
         $ref: '#/definitions/process_info'
       title: HAProxy Information
       type: array
+      x-omitempty: true
   process_info:
       properties:
         error:
@@ -7713,6 +7746,7 @@ definitions:
             - unique-id
             type: string
           type: array
+          x-omitempty: true
         rise:
           type: integer
           x-nullable: true
@@ -7913,6 +7947,7 @@ definitions:
             type: object
             x-go-name: StickTableField
           type: array
+          x-omitempty: true
         name:
           type: string
         process:
@@ -8061,6 +8096,7 @@ definitions:
                 x-go-name: ClusterLogTarget
               type: array
               x-go-name: ClusterLogTargets
+              x-omitempty: true
             name:
               readOnly: true
               type: string
@@ -8171,6 +8207,7 @@ definitions:
           items:
             type: string
           type: array
+          x-omitempty: true
       title: One SSL Certificate Entry
       type: object
   acl_file:
@@ -8460,6 +8497,7 @@ definitions:
             - 504
             type: integer
           type: array
+          x-omitempty: true
         name:
           type: string
       type: object
@@ -8475,6 +8513,7 @@ definitions:
             x-go-name: Attr
           type: array
           x-go-name: Attrs
+          x-omitempty: true
         domain:
           items:
             properties:
@@ -8485,6 +8524,7 @@ definitions:
             x-go-name: Domain
           type: array
           x-go-name: Domains
+          x-omitempty: true
         dynamic:
           type: boolean
         httponly:
@@ -8687,11 +8727,13 @@ definitions:
           items:
             $ref: '#/definitions/awsFilters'
           type: array
+          x-omitempty: true
         denylist:
           description: Specify the AWS filters used to filter the EC2 instances to ignore
           items:
             $ref: '#/definitions/awsFilters'
           type: array
+          x-omitempty: true
         description:
           type: string
         enabled:
@@ -8797,22 +8839,26 @@ definitions:
             pattern: ^[^\s]+$
             type: string
           type: array
+          x-omitempty: true
         service-whitelist:
           description: deprecated, use service_allowlist
           items:
             pattern: ^[^\s]+$
             type: string
           type: array
+          x-omitempty: true
         service_allowlist:
           items:
             pattern: ^[^\s]+$
             type: string
           type: array
+          x-omitempty: true
         service_denylist:
           items:
             pattern: ^[^\s]+$
             type: string
           type: array
+          x-omitempty: true
         token:
           pattern: ^[^\s]+$
           type: string
@@ -8877,6 +8923,7 @@ definitions:
         type: string
       title: SPOE files
       type: array
+      x-omitempty: true
   spoe_scope:
       description: SPOE scope name
       title: SPOE scope
@@ -9054,12 +9101,14 @@ definitions:
             - raw-deflate
             type: string
           type: array
+          x-omitempty: true
         offload:
           type: boolean
         types:
           items:
             type: string
           type: array
+          x-omitempty: true
       type: object
   email_alert:
       description: Send emails for important log messages.

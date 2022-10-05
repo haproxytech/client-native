@@ -47,7 +47,7 @@ type StatsOptions struct {
 	StatsAdminCondTest string `json:"stats_admin_cond_test,omitempty"`
 
 	// stats auths
-	StatsAuths []*StatsAuth `json:"stats_auths"`
+	StatsAuths []*StatsAuth `json:"stats_auths,omitempty"`
 
 	// stats enable
 	StatsEnable bool `json:"stats_enable,omitempty"`
@@ -56,7 +56,7 @@ type StatsOptions struct {
 	StatsHideVersion bool `json:"stats_hide_version,omitempty"`
 
 	// stats http requests
-	StatsHTTPRequests []*StatsHTTPRequest `json:"stats_http_requests"`
+	StatsHTTPRequests []*StatsHTTPRequest `json:"stats_http_requests,omitempty"`
 
 	// stats maxconn
 	// Minimum: 1

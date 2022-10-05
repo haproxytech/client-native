@@ -173,6 +173,7 @@ cookie:
       type: boolean
     domain:
       type: array
+      x-omitempty: true
       x-go-name: Domains
       items:
         type: object
@@ -183,6 +184,7 @@ cookie:
             pattern: '^[^\s]+$'
     attr:
       type: array
+      x-omitempty: true
       x-go-name: Attrs
       items:
         type: object
@@ -261,11 +263,13 @@ stats_options:
           required: true
     stats_http_requests:
       type: array
+      x-omitempty: true
       items:
         $ref: "#/definitions/stats_http_request"
       x-display-name: Stats HTTP Requests
     stats_auths:
       type: array
+      x-omitempty: true
       items:
         $ref: "#/definitions/stats_auth"
       x-display-name: Stats Auths
@@ -294,11 +298,13 @@ compression:
   properties:
     algorithms:
       type: array
+      x-omitempty: true
       items:
         type: string
         enum: [identity, gzip, deflate, raw-deflate]
     types:
       type: array
+      x-omitempty: true
       items:
         type: string
     offload:

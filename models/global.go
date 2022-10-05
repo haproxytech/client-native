@@ -39,31 +39,31 @@ import (
 type Global struct {
 
 	// CPU maps
-	CPUMaps []*CPUMap `json:"cpu_maps"`
+	CPUMaps []*CPUMap `json:"cpu_maps,omitempty"`
 
 	// h1 case adjusts
-	H1CaseAdjusts []*H1CaseAdjust `json:"h1_case_adjust"`
+	H1CaseAdjusts []*H1CaseAdjust `json:"h1_case_adjust,omitempty"`
 
 	// preset envs
-	PresetEnvs []*PresetEnv `json:"presetenv"`
+	PresetEnvs []*PresetEnv `json:"presetenv,omitempty"`
 
 	// runtime a p is
-	RuntimeAPIs []*RuntimeAPI `json:"runtime_apis"`
+	RuntimeAPIs []*RuntimeAPI `json:"runtime_apis,omitempty"`
 
 	// set envs
-	SetEnvs []*SetEnv `json:"setenv"`
+	SetEnvs []*SetEnv `json:"setenv,omitempty"`
 
 	// set var fmts
-	SetVarFmts []*SetVarFmt `json:"set_var_fmt"`
+	SetVarFmts []*SetVarFmt `json:"set_var_fmt,omitempty"`
 
 	// set vars
-	SetVars []*SetVar `json:"set_var"`
+	SetVars []*SetVar `json:"set_var,omitempty"`
 
 	// ssl engines
-	SslEngines []*SslEngine `json:"ssl_engines"`
+	SslEngines []*SslEngine `json:"ssl_engines,omitempty"`
 
 	// thread group lines
-	ThreadGroupLines []*ThreadGroup `json:"thread_group_lines"`
+	ThreadGroupLines []*ThreadGroup `json:"thread_group_lines,omitempty"`
 
 	// anonkey
 	// Maximum: 4.294967295e+09
@@ -145,10 +145,10 @@ type Global struct {
 	LuaLoadPerThread string `json:"lua_load_per_thread,omitempty"`
 
 	// lua loads
-	LuaLoads []*LuaLoad `json:"lua_loads"`
+	LuaLoads []*LuaLoad `json:"lua_loads,omitempty"`
 
 	// lua prepend path
-	LuaPrependPath []*LuaPrependPath `json:"lua_prepend_path"`
+	LuaPrependPath []*LuaPrependPath `json:"lua_prepend_path,omitempty"`
 
 	// master worker
 	MasterWorker bool `json:"master-worker,omitempty"`

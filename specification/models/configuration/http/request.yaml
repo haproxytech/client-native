@@ -534,6 +534,7 @@ http_request_rule:
           required: true
     return_hdrs:
       type: array
+      x-omitempty: true
       x-go-name: ReturnHeaders
       x-dependency:
         return_content_format:

@@ -189,6 +189,7 @@ global:
       x-display-name: SSL Load Extra Files
     thread_group_lines:
       type: array
+      x-omitempty: true
       x-go-name: ThreadGroupLines
       x-display-name: Thread Groups
       items:
@@ -466,6 +467,7 @@ global:
     cpu_maps:
       x-go-name: CPUMaps
       type: array
+      x-omitempty: true
       x-display-name: CPU Maps
       items:
         type: object
@@ -482,6 +484,7 @@ global:
             x-display-name: CPU Set
     runtime_apis:
       type: array
+      x-omitempty: true
       x-display-name: Runtime APIs
       x-go-name: RuntimeAPIs
       items:
@@ -500,6 +503,7 @@ global:
       x-nullable: true
     lua_loads:
       type: array
+      x-omitempty: true
       items:
         type: object
         x-go-name: LuaLoad
@@ -511,6 +515,7 @@ global:
             pattern: '^[^\s]+$'
     lua_prepend_path:
       type: array
+      x-omitempty: true
       items:
         type: object
         x-go-name: LuaPrependPath
@@ -537,6 +542,7 @@ global:
           pattern: '^[^\s]+$'
     h1_case_adjust:
       type: array
+      x-omitempty: true
       x-go-name: H1CaseAdjusts
       items:
         type: object
@@ -557,6 +563,7 @@ global:
       type: boolean
     ssl_engines:
       type: array
+      x-omitempty: true
       x-go-name: SslEngines
       x-display-name: SSL Engines
       items:
@@ -574,6 +581,7 @@ global:
             x-nullable: true
     set_var:
       type: array
+      x-omitempty: true
       x-go-name: SetVars
       x-display-name: Set variables
       items:
@@ -591,6 +599,7 @@ global:
             x-display-name: Expression
     set_var_fmt:
       type: array
+      x-omitempty: true
       x-go-name: SetVarFmts
       x-display-name: Set variable formats
       items:
@@ -608,6 +617,7 @@ global:
             x-display-name: Format
     presetenv:
       type: array
+      x-omitempty: true
       x-go-name: PresetEnvs
       x-display-name: Preset environment variables
       items:
@@ -625,6 +635,7 @@ global:
             x-display-name: Value
     setenv:
       type: array
+      x-omitempty: true
       x-go-name: SetEnvs
       x-display-name: Set environment variables
       items:

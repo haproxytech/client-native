@@ -54,7 +54,7 @@ type FCGIApp struct {
 	KeepConn string `json:"keep_conn,omitempty"`
 
 	// log stderrs
-	LogStderrs []*FCGILogStderr `json:"log_stderrs"`
+	LogStderrs []*FCGILogStderr `json:"log_stderrs,omitempty"`
 
 	// Defines the maximum number of concurrent requests this application can accept. If the FastCGI application retrieves the variable FCGI_MAX_REQS during connection establishment, it can override this option. Furthermore, if the application does not do multiplexing, it will ignore this option.
 	// Minimum: 1
@@ -71,7 +71,7 @@ type FCGIApp struct {
 	Name string `json:"name"`
 
 	// pass headers
-	PassHeaders []*FCGIPassHeader `json:"pass_headers"`
+	PassHeaders []*FCGIPassHeader `json:"pass_headers,omitempty"`
 
 	// Defines a regular expression to extract the script-name and the path-info from the URI.
 	// Thus, <regex> must have two captures: the first to capture the script name, and the second to capture the path- info.
@@ -79,7 +79,7 @@ type FCGIApp struct {
 	PathInfo string `json:"path_info,omitempty"`
 
 	// set params
-	SetParams []*FCGISetParam `json:"set_params"`
+	SetParams []*FCGISetParam `json:"set_params,omitempty"`
 }
 
 // Validate validates this fcgi app

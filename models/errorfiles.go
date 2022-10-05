@@ -37,7 +37,7 @@ import (
 type Errorfiles struct {
 
 	// codes
-	Codes []int64 `json:"codes"`
+	Codes []int64 `json:"codes,omitempty"`
 
 	// name
 	Name string `json:"name,omitempty"`

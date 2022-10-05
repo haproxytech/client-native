@@ -43,7 +43,7 @@ type NativeStatsCollection struct {
 	RuntimeAPI string `json:"runtimeAPI,omitempty"`
 
 	// stats
-	Stats []*NativeStat `json:"stats"`
+	Stats []*NativeStat `json:"stats,omitempty"`
 }
 
 // Validate validates this native stats collection

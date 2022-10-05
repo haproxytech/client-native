@@ -43,10 +43,10 @@ type AwsRegion struct {
 	AccessKeyID string `json:"access_key_id,omitempty"`
 
 	// Specify the AWS filters used to filter the EC2 instances to add
-	Allowlist []*AwsFilters `json:"allowlist"`
+	Allowlist []*AwsFilters `json:"allowlist,omitempty"`
 
 	// Specify the AWS filters used to filter the EC2 instances to ignore
-	Denylist []*AwsFilters `json:"denylist"`
+	Denylist []*AwsFilters `json:"denylist,omitempty"`
 
 	// description
 	Description string `json:"description,omitempty"`

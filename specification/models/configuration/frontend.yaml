@@ -244,11 +244,13 @@ frontend:
       type: boolean
     error_files:
       type: array
+      x-omitempty: true
       x-go-name: ErrorFiles
       items:
         $ref: "#/definitions/errorfile"
     errorfiles_from_http_errors:
       type: array
+      x-omitempty: true
       x-go-name: ErrorFilesFromHTTPErrors
       items:
         $ref: "#/definitions/errorfiles"

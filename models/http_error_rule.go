@@ -40,7 +40,7 @@ import (
 type HTTPErrorRule struct {
 
 	// return headers
-	ReturnHeaders []*ReturnHeader `json:"return_hdrs"`
+	ReturnHeaders []*ReturnHeader `json:"return_hdrs,omitempty"`
 
 	// index
 	// Required: true

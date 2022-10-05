@@ -83,16 +83,16 @@ type Consul struct {
 	ServerSlotsGrowthType *string `json:"server_slots_growth_type,omitempty"`
 
 	// deprecated, use service_denylist
-	ServiceBlacklist []string `json:"service-blacklist"`
+	ServiceBlacklist []string `json:"service-blacklist,omitempty"`
 
 	// deprecated, use service_allowlist
-	ServiceWhitelist []string `json:"service-whitelist"`
+	ServiceWhitelist []string `json:"service-whitelist,omitempty"`
 
 	// service allowlist
-	ServiceAllowlist []string `json:"service_allowlist"`
+	ServiceAllowlist []string `json:"service_allowlist,omitempty"`
 
 	// service denylist
-	ServiceDenylist []string `json:"service_denylist"`
+	ServiceDenylist []string `json:"service_denylist,omitempty"`
 
 	// token
 	// Pattern: ^[^\s]+$

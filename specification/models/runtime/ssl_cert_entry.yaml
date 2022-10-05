@@ -17,6 +17,7 @@ ssl_cert_entry:
       format: date
     subject_alternative_names:
       type: array
+      x-omitempty: true
       items:
         type: string
     algorithm:

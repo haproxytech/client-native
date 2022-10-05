@@ -37,10 +37,10 @@ import (
 type Cookie struct {
 
 	// attrs
-	Attrs []*Attr `json:"attr"`
+	Attrs []*Attr `json:"attr,omitempty"`
 
 	// domains
-	Domains []*Domain `json:"domain"`
+	Domains []*Domain `json:"domain,omitempty"`
 
 	// dynamic
 	Dynamic bool `json:"dynamic,omitempty"`

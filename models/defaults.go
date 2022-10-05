@@ -39,10 +39,10 @@ import (
 type Defaults struct {
 
 	// error files
-	ErrorFiles []*Errorfile `json:"error_files"`
+	ErrorFiles []*Errorfile `json:"error_files,omitempty"`
 
 	// error files from HTTP errors
-	ErrorFilesFromHTTPErrors []*Errorfiles `json:"errorfiles_from_http_errors"`
+	ErrorFilesFromHTTPErrors []*Errorfiles `json:"errorfiles_from_http_errors,omitempty"`
 
 	// abortonclose
 	// Enum: [enabled disabled]

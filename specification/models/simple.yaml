@@ -33,10 +33,12 @@ site:
           x-nullable: true
         listeners:
           type: array
+          x-omitempty: true
           items:
             $ref: "#/definitions/bind"
     farms:
       type: array
+      x-omitempty: true
       items:
         type: object
         x-go-name: SiteFarm
@@ -76,6 +78,7 @@ site:
             $ref: "#/definitions/forwardfor"
           servers:
             type: array
+            x-omitempty: true
             items:
               $ref: "#/definitions/server"
   additionalProperties: false

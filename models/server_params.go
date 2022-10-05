@@ -235,7 +235,7 @@ type ServerParams struct {
 	Proto string `json:"proto,omitempty"`
 
 	// proxy v2 options
-	ProxyV2Options []string `json:"proxy-v2-options"`
+	ProxyV2Options []string `json:"proxy-v2-options,omitempty"`
 
 	// redir
 	Redir string `json:"redir,omitempty"`

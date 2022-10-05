@@ -72,7 +72,7 @@ type SslCertEntry struct {
 	Subject string `json:"subject,omitempty"`
 
 	// subject alternative names
-	SubjectAlternativeNames []string `json:"subject_alternative_names"`
+	SubjectAlternativeNames []string `json:"subject_alternative_names,omitempty"`
 }
 
 // Validate validates this ssl cert entry

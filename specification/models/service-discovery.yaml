@@ -54,11 +54,13 @@ awsRegion:
     allowlist:
       type: array
       description: Specify the AWS filters used to filter the EC2 instances to add
+      x-omitempty: true
       items:
         $ref: "#/definitions/awsFilters"
     denylist:
       type: array
       description: Specify the AWS filters used to filter the EC2 instances to ignore
+      x-omitempty: true
       items:
         $ref: "#/definitions/awsFilters"
     server_slots_base:
@@ -115,23 +117,27 @@ consul:
       description: Duration in seconds in-between data pulling requests to the consul server
     service-whitelist:
       type: array
+      x-omitempty: true
       items:
         type: string
         pattern: '^[^\s]+$'
       description: "deprecated, use service_allowlist"
     service-blacklist:
       type: array
+      x-omitempty: true
       items:
         type: string
         pattern: '^[^\s]+$'
       description: "deprecated, use service_denylist"
     service_allowlist:
       type: array
+      x-omitempty: true
       items:
         type: string
         pattern: '^[^\s]+$'
     service_denylist:
       type: array
+      x-omitempty: true
       items:
         type: string
         pattern: '^[^\s]+$'

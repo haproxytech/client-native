@@ -3,6 +3,7 @@ spoe_files:
   title: SPOE files
   description: SPOE files
   type: array
+  x-omitempty: true
   items:
     type: string
 spoe_scope:

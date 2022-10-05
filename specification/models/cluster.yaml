@@ -39,6 +39,7 @@ settings:
         log_targets:
           type: array
           x-go-name: ClusterLogTargets
+          x-omitempty: true
           items:
             type: object
             x-go-name: ClusterLogTarget

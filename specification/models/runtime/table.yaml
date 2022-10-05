@@ -20,6 +20,7 @@ table:
       x-nullable: true
     fields:
       type: array
+      x-omitempty: true
       items:
         x-go-name: StickTableField
         type: object

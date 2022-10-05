@@ -182,6 +182,7 @@ defaults:
       enum: [global, local, none]
     error_files:
       type: array
+      x-omitempty: true
       x-go-name: ErrorFiles
       items:
         $ref: "#/definitions/errorfile"
@@ -330,6 +331,7 @@ defaults:
       type: boolean
     errorfiles_from_http_errors:
       type: array
+      x-omitempty: true
       x-go-name: ErrorFilesFromHTTPErrors
       items:
         $ref: "#/definitions/errorfiles"

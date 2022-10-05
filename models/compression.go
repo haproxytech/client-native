@@ -37,13 +37,13 @@ import (
 type Compression struct {
 
 	// algorithms
-	Algorithms []string `json:"algorithms"`
+	Algorithms []string `json:"algorithms,omitempty"`
 
 	// offload
 	Offload bool `json:"offload,omitempty"`
 
 	// types
-	Types []string `json:"types"`
+	Types []string `json:"types,omitempty"`
 }
 
 // Validate validates this compression
