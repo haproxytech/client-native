@@ -18,7 +18,6 @@ package configuration
 import (
 	"errors"
 	"fmt"
-	"net"
 	"strconv"
 	"strings"
 
@@ -200,16 +199,13 @@ func ParseBinds(parentType string, parentName string, p parser.Parser) (models.B
 
 func ParseBind(ondiskBind types.Bind) *models.Bind {
 	b := &models.Bind{}
-	if strings.HasPrefix(ondiskBind.Path, "/") {
-		b.Address = ondiskBind.Path
-	} else {
-		address, _ := misc.ParseAddress(ondiskBind.Path, true)
-		host, port, err := net.SplitHostPort(address)
-		if err != nil {
-			return nil
-		}
-		b.Address = host
+	address, port, err := misc.ParseBindAddress(ondiskBind.Path)
+	if err != nil {
+		return nil
+	}
 
+	b.Address = address
+	if port != "" {
 		ports := strings.Split(port, "-")
 		// *:<port>
 		if ports[0] != "" {
@@ -234,7 +230,7 @@ func ParseBind(ondiskBind types.Bind) *models.Bind {
 	return b
 }
 
-func parseBindParams(bindOptions []params.BindOption) (b models.BindParams) { // nolint:gocognit,gocyclo,cyclop,maintidx
+func parseBindParams(bindOptions []params.BindOption) (b models.BindParams) { //nolint:gocognit,gocyclo,cyclop,maintidx
 	for _, p := range bindOptions {
 		switch v := p.(type) {
 		case *params.BindOptionDoubleWord:

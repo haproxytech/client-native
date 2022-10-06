@@ -21,6 +21,88 @@ import (
 	"strings"
 )
 
+func ParseBindAddress(path string) (string, string, error) {
+	switch {
+	// environment variables, port can be part of it or not
+	case strings.HasPrefix(path, "\"$"), strings.HasPrefix(path, "$"):
+		if last := strings.LastIndex(path, ":"); last > 0 {
+			return path[:last], path[last+1:], nil
+		}
+		return path, "", nil
+	// unix socket, abstract namespace or file descriptor, no port available
+	case strings.HasPrefix(path, "/"),
+		strings.HasPrefix(path, "unix@"),
+		strings.HasPrefix(path, "absn@"),
+		strings.HasPrefix(path, "fd@"),
+		strings.HasPrefix(path, "sockpair@"):
+
+		return path, "", nil
+	// ipv6 address and port is mandatory
+	case strings.HasPrefix(path, "ipv6@"),
+		strings.HasPrefix(path, "udp6@"),
+		strings.HasPrefix(path, "quicv6@"),
+		strings.HasPrefix(path, "["),
+		strings.Count(path, ":") > 1:
+
+		pathSlice := strings.SplitN(path, "@", 2)
+		prefix := ""
+		address := ""
+		if len(pathSlice) > 1 {
+			prefix = fmt.Sprintf("%s@", pathSlice[0])
+			address = pathSlice[1]
+		} else {
+			address = pathSlice[0]
+		}
+		if strings.HasPrefix(address, "[") {
+			host, port, err := net.SplitHostPort(address)
+			if err != nil {
+				return "", "", err
+			}
+			return fmt.Sprintf("%s%s", prefix, host), port, nil
+		}
+		index := strings.LastIndex(address, ":")
+		if index == -1 {
+			return "", "", &net.AddrError{Err: "missing port in address", Addr: address}
+		}
+		port := address[strings.LastIndex(address, ":")+1:]
+		host := fmt.Sprintf("[%s]", address[:strings.LastIndex(address, ":")])
+		host, port, err := net.SplitHostPort(fmt.Sprintf("%s:%s", host, port))
+		if err != nil {
+			return "", "", err
+		}
+		return fmt.Sprintf("%s%s", prefix, host), port, nil
+
+	// ipv4 address and port is mandatory
+	case strings.HasPrefix(path, "ipv4@"),
+		strings.HasPrefix(path, "udp4@"),
+		strings.HasPrefix(path, "quicv4@"):
+
+		pathSlice := strings.SplitN(path, "@", 2)
+		prefix := ""
+		address := ""
+		if len(pathSlice) > 1 {
+			prefix = fmt.Sprintf("%s@", pathSlice[0])
+			address = pathSlice[1]
+		} else {
+			address = pathSlice[0]
+		}
+		// split host/port, validate ip address and return it
+		host, port, err := net.SplitHostPort(address)
+		if err != nil {
+			return "", "", err
+		}
+		return fmt.Sprintf("%s%s", prefix, host), port, nil
+	// hostname and port is mandatory
+	default:
+		// split host/port, validate ip address and return it
+		host, port, err := net.SplitHostPort(path)
+		if err != nil {
+			return "", "", err
+		}
+		return host, port, nil
+	}
+}
+
 func IsPrefixed(address string) bool {
 	switch {
 	case strings.HasPrefix(address, "ipv4@"):
