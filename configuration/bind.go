@@ -392,11 +392,7 @@ func SerializeBind(b models.Bind) types.Bind {
 		if b.PortRangeEnd != nil {
 			portOrRange = fmt.Sprintf("%v-%v", portOrRange, strconv.FormatInt(*b.PortRangeEnd, 10))
 		}
-		if misc.IsIPv6(b.Address) {
-			bind.Path = fmt.Sprintf("[%s]:%v", b.Address, portOrRange)
-		} else {
-			bind.Path = fmt.Sprintf("%s:%v", b.Address, portOrRange)
-		}
+		bind.Path = fmt.Sprintf("%s:%v", misc.SanitizeIPv6Address(b.Address), portOrRange)
 	} else {
 		bind.Path = b.Address
 	}
@@ -404,7 +400,7 @@ func SerializeBind(b models.Bind) types.Bind {
 	return bind
 }
 
-func serializeBindParams(b models.BindParams, path string) (options []params.BindOption) { // nolint:gocognit,gocyclo,cyclop,maintidx
+func serializeBindParams(b models.BindParams, path string) (options []params.BindOption) { //nolint:gocognit,gocyclo,cyclop,maintidx
 	if b.Name != "" {
 		options = append(options, &params.BindOptionValue{Name: "name", Value: b.Name})
 	} else if path != "" {

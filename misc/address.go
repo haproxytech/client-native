@@ -21,6 +21,26 @@ import (
 	"strings"
 )
 
+func SanitizeIPv6Address(addr string) string {
+	switch {
+	case strings.HasPrefix(addr, "ipv6@"),
+		strings.HasPrefix(addr, "udp6@"),
+		strings.HasPrefix(addr, "quicv6@"):
+		addrSlice := strings.SplitN(addr, "@", 2)
+		if strings.HasPrefix(addrSlice[1], "[") {
+			return addr
+		}
+		return fmt.Sprintf("%s@[%s]", addrSlice[0], addrSlice[1])
+	case strings.Count(addr, ":") > 1:
+		if strings.HasPrefix(addr, "[") {
+			return addr
+		}
+		return fmt.Sprintf("[%s]", addr)
+	default:
+		return addr
+	}
+}
+
 func ParseBindAddress(path string) (string, string, error) {
 	switch {
 	// environment variables, port can be part of it or not
