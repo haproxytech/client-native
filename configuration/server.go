@@ -218,7 +218,15 @@ func parseAddress(address string) (ipOrAddress string, port *int64) {
 		}
 		return split[0], port
 	case c > 1: // IPv6 2001:0DB8:0000:0000:0000:0000:1428:57ab
-		return address, nil
+		// Assume the last element is the port number.
+		// This is an imperfect solution, which is why dataplaneapi
+		// adds brackets to IPv6 when it can.
+		idx := strings.LastIndex(address, ":")
+		p, err := strconv.ParseUint(address[idx+1:], 10, 16)
+		if err != nil {
+			return address, nil
+		}
+		return address[:idx], misc.Int64P(int(p))
 	case c == 0:
 		return address, nil // IPv4 or socket address
 	default:
@@ -478,10 +486,15 @@ func ParseServer(ondiskServer types.Server) *models.Server { //nolint:gocyclo,cy
 	return s
 }
 
-func SerializeServer(s models.Server) types.Server { //nolint:gocognit,gocyclo,cyclop,cyclop
+func SerializeServer(s models.Server) types.Server { //nolint:gocognit,gocyclo,cyclop,cyclop,maintidx
 	srv := types.Server{
 		Name:   s.Name,
 		Params: []params.ServerOption{},
+	}
+	if s.Port != nil {
+		srv.Address = fmt.Sprintf("%s:%d", misc.SanitizeIPv6Address(s.Address), *s.Port)
+	} else {
+		srv.Address = misc.SanitizeIPv6Address(s.Address)
 	}
 	// ServerOptionWord
 	if s.AgentCheck == "enabled" {

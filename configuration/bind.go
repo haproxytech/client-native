@@ -27,6 +27,7 @@ import (
 	"github.com/haproxytech/config-parser/v4/params"
 	"github.com/haproxytech/config-parser/v4/types"
 
+	"github.com/haproxytech/client-native/v3/misc"
 	"github.com/haproxytech/client-native/v3/models"
 )
 
@@ -198,43 +199,28 @@ func ParseBinds(frontend string, p parser.Parser) (models.Binds, error) {
 
 func ParseBind(ondiskBind types.Bind) *models.Bind {
 	b := &models.Bind{}
-	if strings.HasPrefix(ondiskBind.Path, "/") {
-		b.Address = ondiskBind.Path
-	} else {
-		addSlice := strings.Split(ondiskBind.Path, ":")
-		switch n := len(addSlice); {
-		case n == 0:
-			return nil
-		case n == 4: // :::443
-			b.Address = "::"
-			if addSlice[3] != "" {
-				p, err := strconv.ParseInt(addSlice[3], 10, 64)
-				if err == nil {
-					b.Port = &p
-				}
-			}
-		case n > 1:
-			b.Address = addSlice[0]
-			ports := strings.Split(addSlice[1], "-")
+	address, port, err := misc.ParseBindAddress(ondiskBind.Path)
+	if err != nil {
+		return nil
+	}
 
-			// *:<port>
-			if ports[0] != "" {
-				port, err := strconv.ParseInt(ports[0], 10, 64)
-				if err == nil {
-					b.Port = &port
-				}
+	b.Address = address
+	if port != "" {
+		ports := strings.Split(port, "-")
+		// *:<port>
+		if ports[0] != "" {
+			port, err := strconv.ParseInt(ports[0], 10, 64)
+			if err == nil {
+				b.Port = &port
 			}
-			// *:<port-first>-<port-last>
-			if b.Port != nil && len(ports) == 2 {
-				portRangeEnd, err := strconv.ParseInt(ports[1], 10, 64)
-				// Deny inverted interval.
-				if err == nil && (*b.Port < portRangeEnd) {
-					b.PortRangeEnd = &portRangeEnd
-				}
+		}
+		// *:<port-first>-<port-last>
+		if b.Port != nil && len(ports) == 2 {
+			portRangeEnd, err := strconv.ParseInt(ports[1], 10, 64)
+			// Deny inverted interval.
+			if err == nil && (*b.Port < portRangeEnd) {
+				b.PortRangeEnd = &portRangeEnd
 			}
-		case n > 0:
-			b.Address = addSlice[0]
-
 		}
 	}
 	b.BindParams = parseBindParams(ondiskBind.Params)
@@ -402,19 +388,19 @@ func SerializeBind(b models.Bind) types.Bind {
 		Params: []params.BindOption{},
 	}
 	if b.Port != nil {
-		bind.Path = b.Address + ":" + strconv.FormatInt(*b.Port, 10)
+		portOrRange := strconv.FormatInt(*b.Port, 10)
 		if b.PortRangeEnd != nil {
-			bind.Path = bind.Path + "-" + strconv.FormatInt(*b.PortRangeEnd, 10)
+			portOrRange = fmt.Sprintf("%v-%v", portOrRange, strconv.FormatInt(*b.PortRangeEnd, 10))
 		}
+		bind.Path = fmt.Sprintf("%s:%v", misc.SanitizeIPv6Address(b.Address), portOrRange)
 	} else {
 		bind.Path = b.Address
 	}
 	bind.Params = serializeBindParams(b.BindParams, bind.Path)
-
 	return bind
 }
 
-func serializeBindParams(b models.BindParams, path string) (options []params.BindOption) { // nolint:gocognit,gocyclo,cyclop
+func serializeBindParams(b models.BindParams, path string) (options []params.BindOption) { //nolint:gocognit,gocyclo,cyclop,maintidx
 	if b.Name != "" {
 		options = append(options, &params.BindOptionValue{Name: "name", Value: b.Name})
 	} else if path != "" {
