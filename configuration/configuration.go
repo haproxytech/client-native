@@ -377,6 +377,8 @@ func (s *SectionParser) checkSpecialFields(fieldName string) (match bool, data i
 		return true, s.forcePersist()
 	case "IgnorePersist":
 		return true, s.ignorePersist()
+	case "Source":
+		return true, s.source()
 	default:
 		return false, nil
 	}
@@ -1324,6 +1326,41 @@ func (s *SectionParser) ignorePersist() interface{} {
 	return nil
 }
 
+func (s *SectionParser) source() interface{} {
+	if s.Section == parser.Backends || s.Section == parser.Defaults {
+		data, err := s.get("source", false)
+		if err != nil {
+			return nil
+		}
+		d := data.(*types.Source)
+		source := &models.Source{
+			Address:       &d.Address,
+			AddressSecond: d.AddressSecond,
+			Hdr:           d.Hdr,
+			Occ:           d.Occ,
+			Interface:     d.Interface,
+		}
+		if d.Port != 0 {
+			source.Port = d.Port
+		}
+		if d.PortSecond != 0 {
+			source.PortSecond = d.PortSecond
+		}
+		switch {
+		case d.Client:
+			source.Usesrc = models.SourceUsesrcClient
+		case d.ClientIP:
+			source.Usesrc = models.SourceUsesrcClientip
+		case d.HdrIP:
+			source.Usesrc = models.SourceUsesrcHdrIP
+		case len(d.AddressSecond) > 0:
+			source.Usesrc = models.SourceUsesrcAddress
+		}
+		return source
+	}
+	return nil
+}
+
 // SectionObject represents a configuration section
 type SectionObject struct {
 	Object  interface{}
@@ -1479,6 +1516,8 @@ func (s *SectionObject) checkSpecialFields(fieldName string, field reflect.Value
 		return true, s.forcePersist(field)
 	case "IgnorePersist":
 		return true, s.ignorePersist(field)
+	case "Source":
+		return true, s.source(field)
 	default:
 		return false, nil
 	}
@@ -2717,6 +2756,37 @@ func (s *SectionObject) ignorePersist(field reflect.Value) error {
 		Cond:     *opt.Cond,
 		CondTest: *opt.CondTest,
 	})
+}
+
+func (s *SectionObject) source(field reflect.Value) error {
+	if valueIsNil(field) {
+		if err := s.set("source", nil); err != nil {
+			return err
+		}
+		return nil
+	}
+	so, ok := field.Elem().Interface().(models.Source)
+	if !ok {
+		return misc.CreateTypeAssertError("source")
+	}
+	source := types.Source{
+		Address:       *so.Address,
+		Port:          so.Port,
+		AddressSecond: so.AddressSecond,
+		PortSecond:    so.PortSecond,
+		Hdr:           so.Hdr,
+		Occ:           so.Occ,
+		Interface:     so.Interface,
+	}
+	switch so.Usesrc {
+	case models.SourceUsesrcClient:
+		source.Client = true
+	case models.SourceUsesrcClientip:
+		source.ClientIP = true
+	case models.SourceUsesrcHdrIP:
+		source.HdrIP = true
+	}
+	return s.set("sources", source)
 }
 
 func (c *client) deleteSection(section parser.Section, name string, transactionID string, version int64) error {

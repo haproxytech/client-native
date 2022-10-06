@@ -318,6 +318,30 @@ func TestGetDefaults(t *testing.T) { //nolint:gocognit,gocyclo
 	if d.PersistRule.RdpCookieName != "" {
 		t.Errorf("PersistRule.RdpCookieName not empty: %v", d.PersistRule.RdpCookieName)
 	}
+	if *d.Source.Address != "192.168.1.200" {
+		t.Errorf("Source Address not 192.168.1.200: %v", *d.Source.Address)
+	}
+	if d.Source.Port != 80 {
+		t.Errorf("Source Port not 80: %v", d.Source.Port)
+	}
+	if d.Source.Usesrc != "address" {
+		t.Errorf("Source Usesrc not address: %v", d.Source.Usesrc)
+	}
+	if d.Source.Hdr != "" {
+		t.Errorf("Source Hdr not empty: %v", d.Source.Hdr)
+	}
+	if d.Source.Occ != "" {
+		t.Errorf("Source Occ not empty: %v", d.Source.Occ)
+	}
+	if d.Source.AddressSecond != "192.168.1.201" {
+		t.Errorf("Source Address not 192.168.1.201 %v", d.Source.AddressSecond)
+	}
+	if d.Source.PortSecond != 443 {
+		t.Errorf("Source PortSecond not 443: %v", d.Source.PortSecond)
+	}
+	if d.Source.Interface != "" {
+		t.Errorf("Source Interface not empty: %v", d.Source.Interface)
+	}
 }
 
 func TestPushDefaults(t *testing.T) {

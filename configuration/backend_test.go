@@ -591,6 +591,30 @@ func TestGetBackend(t *testing.T) {
 	if b.PersistRule.RdpCookieName != "name" {
 		t.Errorf("%v: PersistRule.RdpCookieName is not name: %v", b.Name, b.PersistRule.RdpCookieName)
 	}
+	if *b.Source.Address != "192.168.1.222" {
+		t.Errorf("Source Address not 192.168.1.222 %v", *b.Source.Address)
+	}
+	if b.Source.Port != 0 {
+		t.Errorf("Source Port not 0: %v", b.Source.Port)
+	}
+	if b.Source.Usesrc != "hdr_ip" {
+		t.Errorf("Source Usesrc not hdr_ip: %v", b.Source.Usesrc)
+	}
+	if b.Source.AddressSecond != "" {
+		t.Errorf("Source Address not empty: %v", b.Source.AddressSecond)
+	}
+	if b.Source.PortSecond != 0 {
+		t.Errorf("Source PortSecond not 0: %v", b.Source.PortSecond)
+	}
+	if b.Source.Hdr != "hdr" {
+		t.Errorf("Source Hdr not hdr: %v", b.Source.Hdr)
+	}
+	if b.Source.Occ != "occ" {
+		t.Errorf("Source Occ not occ: %v", b.Source.Occ)
+	}
+	if b.Source.Interface != "" {
+		t.Errorf("Source Interface not empty: %v", b.Source.Interface)
+	}
 
 	_, err = b.MarshalBinary()
 	if err != nil {

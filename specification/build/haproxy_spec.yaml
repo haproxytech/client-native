@@ -2057,6 +2057,8 @@ definitions:
           - disabled
           type: string
           x-display-name: Socket Stats
+        source:
+          $ref: '#/definitions/source'
         splice_auto:
           enum:
           - enabled
@@ -2851,6 +2853,8 @@ definitions:
           x-nullable: true
         smtpchk_params:
           $ref: '#/definitions/smtpchk_params'
+        source:
+          $ref: '#/definitions/source'
         splice_auto:
           enum:
           - enabled
@@ -9140,6 +9144,42 @@ definitions:
             type: string
           type: array
           x-omitempty: true
+      type: object
+  source:
+      properties:
+        address:
+          type: string
+        address_second:
+          type: string
+        hdr:
+          type: string
+          x-dependency:
+            usesrc:
+              value: hdr_ip
+        interface:
+          type: string
+        occ:
+          type: string
+          x-dependency:
+            usesrc:
+              value: hdr_ip
+        port:
+          maximum: 65535
+          minimum: 1
+          type: integer
+        port_second:
+          maximum: 65535
+          minimum: 1
+          type: integer
+        usesrc:
+          enum:
+          - address
+          - client
+          - clientip
+          - hdr_ip
+          type: string
+      required:
+      - address
       type: object
   email_alert:
       description: Send emails for important log messages.

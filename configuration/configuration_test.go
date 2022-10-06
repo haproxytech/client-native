@@ -264,6 +264,7 @@ defaults
   retry-on 503 504
   http-send-name-header
   persist rdp-cookie
+  source 192.168.1.200:80 usesrc 192.168.1.201:443
 
 frontend test
   mode http
@@ -604,6 +605,7 @@ backend test
   retry-on 504 505
   http-send-name-header X-My-Awesome-Header
   persist rdp-cookie(name)
+  source 192.168.1.222 usesrc hdr_ip(hdr,occ)
 
 peers mycluster
   enabled

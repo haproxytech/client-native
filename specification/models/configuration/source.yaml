@@ -1,0 +1,33 @@
+---
+source:
+  type: object
+  required:
+    - address
+  properties:
+    address:
+      type: string
+    port:
+      maximum: 65535
+      minimum: 1
+      type: integer
+    usesrc:
+      type: string
+      enum: [address, client, clientip, hdr_ip]
+    address_second:
+      type: string
+    port_second:
+      maximum: 65535
+      minimum: 1
+      type: integer
+    hdr:
+      type: string
+      x-dependency:
+        usesrc:
+          value: hdr_ip
+    occ:
+      type: string
+      x-dependency:
+        usesrc:
+          value: hdr_ip
+    interface:
+      type: string

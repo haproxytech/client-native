@@ -341,6 +341,9 @@ type Defaults struct {
 	// Enum: [enabled disabled]
 	SocketStats string `json:"socket_stats,omitempty"`
 
+	// source
+	Source *Source `json:"source,omitempty"`
+
 	// splice auto
 	// Enum: [enabled disabled]
 	SpliceAuto string `json:"splice_auto,omitempty"`
@@ -646,6 +649,10 @@ func (m *Defaults) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateSocketStats(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateSource(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -2678,6 +2685,25 @@ func (m *Defaults) validateSocketStats(formats strfmt.Registry) error {
 	return nil
 }
 
+func (m *Defaults) validateSource(formats strfmt.Registry) error {
+	if swag.IsZero(m.Source) { // not required
+		return nil
+	}
+
+	if m.Source != nil {
+		if err := m.Source.Validate(formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("source")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("source")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
 var defaultsTypeSpliceAutoPropEnum []interface{}
 
 func init() {
@@ -3113,6 +3139,10 @@ func (m *Defaults) ContextValidate(ctx context.Context, formats strfmt.Registry)
 		res = append(res, err)
 	}
 
+	if err := m.contextValidateSource(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.contextValidateStatsOptions(ctx, formats); err != nil {
 		res = append(res, err)
 	}
@@ -3425,6 +3455,22 @@ func (m *Defaults) contextValidateSmtpchkParams(ctx context.Context, formats str
 				return ve.ValidateName("smtpchk_params")
 			} else if ce, ok := err.(*errors.CompositeError); ok {
 				return ce.ValidateName("smtpchk_params")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (m *Defaults) contextValidateSource(ctx context.Context, formats strfmt.Registry) error {
+
+	if m.Source != nil {
+		if err := m.Source.ContextValidate(ctx, formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("source")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("source")
 			}
 			return err
 		}

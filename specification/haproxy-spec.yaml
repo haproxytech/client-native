@@ -545,6 +545,8 @@ definitions:
     $ref: "models/configuration/http/misc.yaml#/return_header"
   compression:
     $ref: "models/configuration/misc.yaml#/compression"
+  source:
+    $ref: "models/configuration/source.yaml#/source"
   email_alert:
     $ref: "models/configuration/email_alert.yaml#/email_alert"
   errorloc:

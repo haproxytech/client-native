@@ -355,4 +355,6 @@ defaults:
     retry_on:
       type: string
       x-display-name: Specify when to attempt to automatically retry a failed request
+    source:
+      $ref: "#/definitions/source"
   additionalProperties: false

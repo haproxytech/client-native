@@ -367,6 +367,8 @@ backend:
     retry_on:
       type: string
       x-display-name: Retry on
+    source:
+      $ref: "#/definitions/source"
   additionalProperties: false
   example:
     name: test_backend
