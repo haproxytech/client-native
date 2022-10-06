@@ -804,13 +804,9 @@ func SerializeServer(s models.Server) types.Server {
 		Params: []params.ServerOption{},
 	}
 	if s.Port != nil {
-		if misc.IsIPv6(s.Address) {
-			server.Address = fmt.Sprintf("[%s]:%d", s.Address, *s.Port)
-		} else {
-			server.Address = fmt.Sprintf("%s:%d", s.Address, *s.Port)
-		}
+		server.Address = fmt.Sprintf("%s:%d", misc.SanitizeIPv6Address(s.Address), *s.Port)
 	} else {
-		server.Address = s.Address
+		server.Address = misc.SanitizeIPv6Address(s.Address)
 	}
 	server.Params = serializeServerParams(s.ServerParams)
 	return server
