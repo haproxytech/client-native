@@ -388,9 +388,10 @@ func ParseGlobalSection(p parser.Parser) (*models.Global, error) { //nolint:goco
 			return nil, misc.CreateTypeAssertError("cpu-map")
 		}
 		for _, m := range cMaps {
+			ondiskMap := m
 			cpuMap := &models.CPUMap{
-				Process: &m.Process,
-				CPUSet:  &m.CPUSet,
+				Process: &ondiskMap.Process,
+				CPUSet:  &ondiskMap.CPUSet,
 			}
 			cpuMaps = append(cpuMaps, cpuMap)
 		}
@@ -928,9 +929,10 @@ func ParseGlobalSection(p parser.Parser) (*models.Global, error) { //nolint:goco
 			return nil, misc.CreateTypeAssertError("setenv")
 		}
 		for _, e := range envs {
+			ondiskEnv := e
 			env := &models.SetEnv{
-				Name:  &e.Key,
-				Value: &e.Value,
+				Name:  &ondiskEnv.Key,
+				Value: &ondiskEnv.Value,
 			}
 			setEnvs = append(setEnvs, env)
 		}
