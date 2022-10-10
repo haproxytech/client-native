@@ -714,6 +714,17 @@ mailers localmailer1
   mailer smtp2 10.0.10.2:514
   timeout mail 15s
 
+http-errors website-1
+    errorfile 400 /etc/haproxy/errorfiles/site1/400.http
+    errorfile 404 /etc/haproxy/errorfiles/site1/404.http
+    errorfile 408 /dev/null  # work around Chrome pre-connect bug
+
+http-errors website-2
+    errorfile 400 /etc/haproxy/errorfiles/site2/400.http
+    errorfile 404 /etc/haproxy/errorfiles/site2/404.http
+    errorfile 501 /etc/haproxy/errorfiles/site2/501.http
+
+
 backend test_2
   mode http
   balance roundrobin

@@ -1,0 +1,26 @@
+---
+http_errors_section:
+  title: http-errors section
+  description: A globally declared group of HTTP errors
+  type: object
+  required:
+    - name
+    - error_files
+  properties:
+    name:
+      type: string
+      pattern: '^[A-Za-z0-9-_]+$'
+      x-nullable: false
+    error_files:
+      type: array
+      x-go-name: ErrorFiles
+      items:
+        $ref: "#/definitions/errorfile"
+  additionalProperties: false
+  example:
+    name: website-1
+    error_files:
+      - code: 400
+        name: /etc/haproxy/errorfiles/site1/400.http
+      - code: 404
+        name: /etc/haproxy/errorfiles/site1/404.http

@@ -148,6 +148,14 @@ definitions:
     type: array
     items:
       $ref: '#/definitions/peer_entry'
+  http_errors_section:
+    $ref: "models/configuration/http_errors.yaml#/http_errors_section"
+  http_errors_sections:
+    title: http-errors sections
+    description: An array of HAProxy http-error sections
+    type: array
+    items:
+      $ref: "#/definitions/http_errors_section"
   bind:
     $ref: "models/configuration/bind.yaml#/bind"
   binds:
@@ -681,6 +689,7 @@ tags:
   - name: MailerEntry
   - name: Peer
   - name: PeerEntry
+  - name: HTTPErrors
   - name: Ring
   - name: DgramBind
   - name: LogForward
@@ -785,6 +794,10 @@ paths:
     $ref: "paths/configuration/peers.yaml#/peer_entries"
   /services/haproxy/configuration/peer_entries/{name}:
     $ref: "paths/configuration/peers.yaml#/peer_entries_one"
+  /services/haproxy/configuration/http_errors_sections:
+    $ref: "paths/configuration/http_errors.yaml#/http_errors_section"
+  /services/haproxy/configuration/http_errors_sections/{name}:
+    $ref: "paths/configuration/http_errors.yaml#/http_errors_section_one"
   /services/haproxy/configuration/programs:
     $ref: "paths/configuration/program.yaml#/programs"
   /services/haproxy/configuration/programs/{name}:

@@ -3217,6 +3217,37 @@ definitions:
     type: array
     items:
       $ref: '#/definitions/peer_entry'
+  http_errors_section:
+      additionalProperties: false
+      description: A globally declared group of HTTP errors
+      example:
+        error_files:
+        - code: 400
+          name: /etc/haproxy/errorfiles/site1/400.http
+        - code: 404
+          name: /etc/haproxy/errorfiles/site1/404.http
+        name: website-1
+      properties:
+        error_files:
+          items:
+            $ref: '#/definitions/errorfile'
+          type: array
+          x-go-name: ErrorFiles
+        name:
+          pattern: ^[A-Za-z0-9-_]+$
+          type: string
+          x-nullable: false
+      required:
+      - name
+      - error_files
+      title: http-errors section
+      type: object
+  http_errors_sections:
+    title: http-errors sections
+    description: An array of HAProxy http-error sections
+    type: array
+    items:
+      $ref: "#/definitions/http_errors_section"
   bind:
       allOf:
       - $ref: '#/definitions/bind_params'
@@ -9282,6 +9313,7 @@ tags:
   description: Managing global configuration (advanced mode)
 - name: HTTPCheck
 - name: HTTPErrorRule
+- name: HTTPErrors
 - name: HTTPRequestRule
 - name: HTTPResponseRule
 - name: Information
@@ -11775,6 +11807,166 @@ paths:
         summary: Replace a peer_entry
         tags:
         - PeerEntry
+  /services/haproxy/configuration/http_errors_sections:
+      get:
+        description: Returns an array of all configured http-error sections.
+        operationId: getHTTPErrorsSections
+        parameters:
+        - $ref: '#/parameters/transaction_id'
+        responses:
+          "200":
+            description: Successful operation
+            headers:
+              Configuration-Version:
+                description: Configuration file version
+                type: string
+            schema:
+              properties:
+                _version:
+                  type: integer
+                data:
+                  $ref: '#/definitions/http_errors_sections'
+              required:
+              - data
+              type: object
+          default:
+            $ref: '#/responses/DefaultError'
+        summary: Return an array of http-error sections
+        tags:
+        - HTTPErrors
+      post:
+        description: Adds a new http-error section to the configuration.
+        operationId: createHTTPErrorsSection
+        parameters:
+        - in: body
+          name: data
+          required: true
+          schema:
+            $ref: '#/definitions/http_errors_section'
+        - $ref: '#/parameters/transaction_id'
+        - $ref: '#/parameters/version'
+        - $ref: '#/parameters/force_reload'
+        responses:
+          "201":
+            description: http-error section created
+            schema:
+              $ref: '#/definitions/http_errors_section'
+          "202":
+            description: Configuration change accepted and reload requested
+            headers:
+              Reload-ID:
+                description: ID of the requested reload
+                type: string
+            schema:
+              $ref: '#/definitions/http_errors_section'
+          "400":
+            $ref: '#/responses/BadRequest'
+          "409":
+            $ref: '#/responses/AlreadyExists'
+          default:
+            $ref: '#/responses/DefaultError'
+        summary: Add a new http-error section
+        tags:
+        - HTTPErrors
+  /services/haproxy/configuration/http_errors_sections/{name}:
+      delete:
+        description: Deletes a http-error section with a given name from the configuration.
+        operationId: deleteHTTPErrorsSection
+        parameters:
+        - description: http-error section name
+          in: path
+          name: name
+          required: true
+          type: string
+        - $ref: '#/parameters/transaction_id'
+        - $ref: '#/parameters/version'
+        - $ref: '#/parameters/force_reload'
+        responses:
+          "202":
+            description: Configuration change accepted and reload requested
+            headers:
+              Reload-ID:
+                description: ID of the requested reload
+                type: string
+          "204":
+            description: http-error section deleted
+          "404":
+            $ref: '#/responses/NotFound'
+          default:
+            $ref: '#/responses/DefaultError'
+        summary: Delete a http-error section
+        tags:
+        - HTTPErrors
+      get:
+        description: Returns one http-error section with a given name from the configuration.
+        operationId: getHTTPErrorsSection
+        parameters:
+        - description: http-error section name
+          in: path
+          name: name
+          required: true
+          type: string
+        - $ref: '#/parameters/transaction_id'
+        responses:
+          "200":
+            description: Successful operation
+            headers:
+              Configuration-Version:
+                description: Configuration file version
+                type: string
+            schema:
+              properties:
+                _version:
+                  type: integer
+                data:
+                  $ref: '#/definitions/http_errors_section'
+              type: object
+          "404":
+            $ref: '#/responses/NotFound'
+          default:
+            $ref: '#/responses/DefaultError'
+        summary: Return a http-error section
+        tags:
+        - HTTPErrors
+      put:
+        description: Replaces a http-error section with a given name in the configuration.
+        operationId: replaceHTTPErrorsSection
+        parameters:
+        - description: http-error section name
+          in: path
+          name: name
+          required: true
+          type: string
+        - in: body
+          name: data
+          required: true
+          schema:
+            $ref: '#/definitions/http_errors_section'
+        - $ref: '#/parameters/transaction_id'
+        - $ref: '#/parameters/version'
+        - $ref: '#/parameters/force_reload'
+        responses:
+          "200":
+            description: http-error section updated
+            schema:
+              $ref: '#/definitions/http_errors_section'
+          "202":
+            description: Configuration change accepted and reload requested
+            headers:
+              Reload-ID:
+                description: ID of the requested reload
+                type: string
+            schema:
+              $ref: '#/definitions/http_errors_section'
+          "400":
+            $ref: '#/responses/BadRequest'
+          "404":
+            $ref: '#/responses/NotFound'
+          default:
+            $ref: '#/responses/DefaultError'
+        summary: Replace a http-error section
+        tags:
+        - HTTPErrors
   /services/haproxy/configuration/programs:
       get:
         description: Returns an array of all configured programs in the process-manager

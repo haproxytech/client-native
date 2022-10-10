@@ -1,0 +1,161 @@
+---
+http_errors_section:
+  get:
+    summary: Return an array of http-error sections
+    description: Returns an array of all configured http-error sections.
+    operationId: getHTTPErrorsSections
+    parameters:
+      - $ref: "#/parameters/transaction_id"
+    tags:
+      - HTTPErrors
+    responses:
+      '200':
+        description: Successful operation
+        headers:
+          Configuration-Version:
+            description: Configuration file version
+            type: string
+        schema:
+          type: object
+          required:
+            - data
+          properties:
+            data:
+              $ref: "#/definitions/http_errors_sections"
+            _version:
+              type: integer
+      'default':
+        $ref: "#/responses/DefaultError"
+  post:
+    summary: Add a new http-error section
+    description: Adds a new http-error section to the configuration.
+    operationId: createHTTPErrorsSection
+    parameters:
+      - name: data
+        required: true
+        in: body
+        schema:
+          $ref: "#/definitions/http_errors_section"
+      - $ref: "#/parameters/transaction_id"
+      - $ref: "#/parameters/version"
+      - $ref: "#/parameters/force_reload"
+    tags:
+      - HTTPErrors
+    responses:
+      '202':
+        description: Configuration change accepted and reload requested
+        headers:
+          Reload-ID:
+            description: ID of the requested reload
+            type: string
+        schema:
+          $ref: "#/definitions/http_errors_section"
+      '201':
+        description: http-error section created
+        schema:
+          $ref: "#/definitions/http_errors_section"
+      '409':
+        $ref: '#/responses/AlreadyExists'
+      '400':
+        $ref: '#/responses/BadRequest'
+      'default':
+        $ref: '#/responses/DefaultError'
+http_errors_section_one:
+  get:
+    summary: Return a http-error section
+    description: Returns one http-error section with a given name from the configuration.
+    operationId: getHTTPErrorsSection
+    tags:
+      - HTTPErrors
+    parameters:
+      - name: name
+        in: path
+        description: http-error section name
+        required: true
+        type: string
+      - $ref: "#/parameters/transaction_id"
+    responses:
+      '200':
+        description: Successful operation
+        headers:
+          Configuration-Version:
+            description: Configuration file version
+            type: string
+        schema:
+          type: object
+          properties:
+            data:
+              $ref: "#/definitions/http_errors_section"
+            _version:
+              type: integer
+      '404':
+        $ref: '#/responses/NotFound'
+      'default':
+        $ref: '#/responses/DefaultError'
+  put:
+    summary: Replace a http-error section
+    description: Replaces a http-error section with a given name in the configuration.
+    operationId: replaceHTTPErrorsSection
+    tags:
+      - HTTPErrors
+    parameters:
+      - name: name
+        in: path
+        description: http-error section name
+        required: true
+        type: string
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/http_errors_section'
+      - $ref: "#/parameters/transaction_id"
+      - $ref: "#/parameters/version"
+      - $ref: "#/parameters/force_reload"
+    responses:
+      '202':
+        description: Configuration change accepted and reload requested
+        headers:
+          Reload-ID:
+            description: ID of the requested reload
+            type: string
+        schema:
+          $ref: "#/definitions/http_errors_section"
+      '200':
+        description: http-error section updated
+        schema:
+          $ref: "#/definitions/http_errors_section"
+      '400':
+        $ref: '#/responses/BadRequest'
+      '404':
+        $ref: '#/responses/NotFound'
+      'default':
+        $ref: '#/responses/DefaultError'
+  delete:
+    summary: Delete a http-error section
+    description: Deletes a http-error section with a given name from the configuration.
+    operationId: deleteHTTPErrorsSection
+    tags:
+      - HTTPErrors
+    parameters:
+      - name: name
+        in: path
+        description: http-error section name
+        required: true
+        type: string
+      - $ref: "#/parameters/transaction_id"
+      - $ref: "#/parameters/version"
+      - $ref: "#/parameters/force_reload"
+    responses:
+      '202':
+        description: Configuration change accepted and reload requested
+        headers:
+          Reload-ID:
+            description: ID of the requested reload
+            type: string
+      '204':
+        description: http-error section deleted
+      '404':
+        $ref: '#/responses/NotFound'
+      'default':
+        $ref: '#/responses/DefaultError'
