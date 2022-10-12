@@ -9568,12 +9568,7 @@ paths:
           200:
             description: Successful operation
             schema:
-              properties:
-                data:
-                  $ref: '#/definitions/awsRegions'
-              required:
-              - data
-              type: object
+              $ref: '#/definitions/awsRegions'
           default:
             $ref: '#/responses/DefaultError'
         summary: Return an array of all configured AWS regions
@@ -9637,10 +9632,7 @@ paths:
           "200":
             description: Successful operation
             schema:
-              properties:
-                data:
-                  $ref: '#/definitions/awsRegion'
-              type: object
+              $ref: '#/definitions/awsRegion'
           "404":
             $ref: '#/responses/NotFound'
           default:
@@ -9684,12 +9676,7 @@ paths:
           "200":
             description: Successful operation
             schema:
-              properties:
-                data:
-                  $ref: '#/definitions/consuls'
-              required:
-              - data
-              type: object
+              $ref: '#/definitions/consuls'
           default:
             $ref: '#/responses/DefaultError'
         summary: Return an array of all configured Consul servers
@@ -9751,10 +9738,7 @@ paths:
           "200":
             description: Successful operation
             schema:
-              properties:
-                data:
-                  $ref: '#/definitions/consul'
-              type: object
+              $ref: '#/definitions/consul'
           "404":
             $ref: '#/responses/NotFound'
           default:
@@ -9836,14 +9820,7 @@ paths:
                 description: Configuration file version
                 type: string
             schema:
-              properties:
-                _version:
-                  type: integer
-                data:
-                  $ref: '#/definitions/sites'
-              required:
-              - data
-              type: object
+              $ref: '#/definitions/sites'
           default:
             $ref: '#/responses/DefaultError'
         summary: Return an array of sites
@@ -9930,12 +9907,7 @@ paths:
                 description: Configuration file version
                 type: string
             schema:
-              properties:
-                _version:
-                  type: integer
-                data:
-                  $ref: '#/definitions/site'
-              type: object
+              $ref: '#/definitions/site'
           "404":
             $ref: '#/responses/NotFound'
           default:
@@ -10405,12 +10377,7 @@ paths:
                 description: Configuration file version
                 type: string
             schema:
-              properties:
-                _version:
-                  type: integer
-                data:
-                  $ref: '#/definitions/global'
-              type: object
+              $ref: '#/definitions/global'
           default:
             $ref: '#/responses/DefaultError'
         summary: Return a global part of configuration
@@ -10462,12 +10429,7 @@ paths:
                 description: Configuration file version
                 type: string
             schema:
-              properties:
-                _version:
-                  type: integer
-                data:
-                  $ref: '#/definitions/defaults'
-              type: object
+              $ref: '#/definitions/defaults'
           default:
             $ref: '#/responses/DefaultError'
         summary: Return defaults part of configuration
@@ -10519,14 +10481,7 @@ paths:
                 description: Configuration file version
                 type: string
             schema:
-              properties:
-                _version:
-                  type: integer
-                data:
-                  $ref: '#/definitions/frontends'
-              required:
-              - data
-              type: object
+              $ref: '#/definitions/frontends'
           default:
             $ref: '#/responses/DefaultError'
         summary: Return an array of frontends
@@ -10613,12 +10568,7 @@ paths:
                 description: Configuration file version
                 type: string
             schema:
-              properties:
-                _version:
-                  type: integer
-                data:
-                  $ref: '#/definitions/frontend'
-              type: object
+              $ref: '#/definitions/frontend'
           "404":
             $ref: '#/responses/NotFound'
           default:
@@ -10679,14 +10629,7 @@ paths:
                 description: Configuration file version
                 type: string
             schema:
-              properties:
-                _version:
-                  type: integer
-                data:
-                  $ref: '#/definitions/userlists'
-              required:
-              - data
-              type: object
+              $ref: '#/definitions/userlists'
           default:
             $ref: '#/responses/DefaultError'
         summary: Return an array of userlists
@@ -10773,12 +10716,7 @@ paths:
                 description: Configuration file version
                 type: string
             schema:
-              properties:
-                _version:
-                  type: integer
-                data:
-                  $ref: '#/definitions/userlist'
-              type: object
+              $ref: '#/definitions/userlist'
           "404":
             $ref: '#/responses/AlreadyExists'
           default:
@@ -10804,14 +10742,7 @@ paths:
                 description: Configuration file version
                 type: string
             schema:
-              properties:
-                _version:
-                  type: integer
-                data:
-                  $ref: '#/definitions/users'
-              required:
-              - data
-              type: object
+              $ref: '#/definitions/users'
           default:
             $ref: '#/responses/DefaultError'
         summary: Return an array of userlist users
@@ -10910,12 +10841,7 @@ paths:
                 description: Configuration file version
                 type: string
             schema:
-              properties:
-                _version:
-                  type: integer
-                data:
-                  $ref: '#/definitions/user'
-              type: object
+              $ref: '#/definitions/user'
           "404":
             $ref: '#/responses/AlreadyExists'
           default:
@@ -10984,14 +10910,7 @@ paths:
                 description: Configuration file version
                 type: string
             schema:
-              properties:
-                _version:
-                  type: integer
-                data:
-                  $ref: '#/definitions/groups'
-              required:
-              - data
-              type: object
+              $ref: '#/definitions/groups'
           default:
             $ref: '#/responses/DefaultError'
         summary: Return an array of userlist groups
@@ -11090,12 +11009,7 @@ paths:
                 description: Configuration file version
                 type: string
             schema:
-              properties:
-                _version:
-                  type: integer
-                data:
-                  $ref: '#/definitions/group'
-              type: object
+              $ref: '#/definitions/group'
           "404":
             $ref: '#/responses/AlreadyExists'
           default:
@@ -11160,14 +11074,7 @@ paths:
                 description: Configuration file version
                 type: string
             schema:
-              properties:
-                _version:
-                  type: integer
-                data:
-                  $ref: '#/definitions/mailers_sections'
-              required:
-              - data
-              type: object
+              $ref: '#/definitions/mailers_sections'
           default:
             $ref: '#/responses/DefaultError'
         summary: Return an array of mailers sections
@@ -11254,12 +11161,7 @@ paths:
                 description: Configuration file version
                 type: string
             schema:
-              properties:
-                _version:
-                  type: integer
-                data:
-                  $ref: '#/definitions/mailers_section'
-              type: object
+              $ref: '#/definitions/mailers_section'
           "404":
             $ref: '#/responses/NotFound'
           default:
@@ -11326,14 +11228,7 @@ paths:
                 description: Configuration file version
                 type: string
             schema:
-              properties:
-                _version:
-                  type: integer
-                data:
-                  $ref: '#/definitions/mailer_entries'
-              required:
-              - data
-              type: object
+              $ref: '#/definitions/mailer_entries'
           default:
             $ref: '#/responses/DefaultError'
         summary: Return an array of mailer_entries
@@ -11438,12 +11333,7 @@ paths:
                 description: Configuration file version
                 type: string
             schema:
-              properties:
-                _version:
-                  type: integer
-                data:
-                  $ref: '#/definitions/mailer_entry'
-              type: object
+              $ref: '#/definitions/mailer_entry'
           "404":
             $ref: '#/responses/AlreadyExists'
           default:
@@ -11510,14 +11400,7 @@ paths:
                 description: Configuration file version
                 type: string
             schema:
-              properties:
-                _version:
-                  type: integer
-                data:
-                  $ref: '#/definitions/peer_sections'
-              required:
-              - data
-              type: object
+              $ref: '#/definitions/peer_sections'
           default:
             $ref: '#/responses/DefaultError'
         summary: Return an array of peer_section
@@ -11604,12 +11487,7 @@ paths:
                 description: Configuration file version
                 type: string
             schema:
-              properties:
-                _version:
-                  type: integer
-                data:
-                  $ref: '#/definitions/peer_section'
-              type: object
+              $ref: '#/definitions/peer_section'
           "404":
             $ref: '#/responses/NotFound'
           default:
@@ -11637,14 +11515,7 @@ paths:
                 description: Configuration file version
                 type: string
             schema:
-              properties:
-                _version:
-                  type: integer
-                data:
-                  $ref: '#/definitions/peer_entries'
-              required:
-              - data
-              type: object
+              $ref: '#/definitions/peer_entries'
           default:
             $ref: '#/responses/DefaultError'
         summary: Return an array of peer_entries
@@ -11749,12 +11620,7 @@ paths:
                 description: Configuration file version
                 type: string
             schema:
-              properties:
-                _version:
-                  type: integer
-                data:
-                  $ref: '#/definitions/peer_entry'
-              type: object
+              $ref: '#/definitions/peer_entry'
           "404":
             $ref: '#/responses/AlreadyExists'
           default:
@@ -11821,14 +11687,7 @@ paths:
                 description: Configuration file version
                 type: string
             schema:
-              properties:
-                _version:
-                  type: integer
-                data:
-                  $ref: '#/definitions/http_errors_sections'
-              required:
-              - data
-              type: object
+              $ref: '#/definitions/http_errors_sections'
           default:
             $ref: '#/responses/DefaultError'
         summary: Return an array of http-error sections
@@ -11915,12 +11774,7 @@ paths:
                 description: Configuration file version
                 type: string
             schema:
-              properties:
-                _version:
-                  type: integer
-                data:
-                  $ref: '#/definitions/http_errors_section'
-              type: object
+              $ref: '#/definitions/http_errors_section'
           "404":
             $ref: '#/responses/NotFound'
           default:
@@ -11982,14 +11836,7 @@ paths:
                 description: Configuration file version
                 type: string
             schema:
-              properties:
-                _version:
-                  type: integer
-                data:
-                  $ref: '#/definitions/programs'
-              required:
-              - data
-              type: object
+              $ref: '#/definitions/programs'
           default:
             $ref: '#/responses/DefaultError'
         summary: Return an array of programs
@@ -12078,12 +11925,7 @@ paths:
                 description: Configuration file version
                 type: string
             schema:
-              properties:
-                _version:
-                  type: integer
-                data:
-                  $ref: '#/definitions/program'
-              type: object
+              $ref: '#/definitions/program'
           "404":
             $ref: '#/responses/NotFound'
           default:
@@ -12144,14 +11986,7 @@ paths:
                 description: Configuration file version
                 type: string
             schema:
-              properties:
-                _version:
-                  type: integer
-                data:
-                  $ref: '#/definitions/fcgiApps'
-              required:
-              - data
-              type: object
+              $ref: '#/definitions/fcgiApps'
           default:
             $ref: '#/responses/DefaultError'
         summary: Return an array of FCGI apps
@@ -12238,12 +12073,7 @@ paths:
                 description: Configuration file version
                 type: string
             schema:
-              properties:
-                _version:
-                  type: integer
-                data:
-                  $ref: '#/definitions/fcgiApp'
-              type: object
+              $ref: '#/definitions/fcgiApp'
           "404":
             $ref: '#/responses/NotFound'
           default:
@@ -12304,14 +12134,7 @@ paths:
                 description: Configuration file version
                 type: string
             schema:
-              properties:
-                _version:
-                  type: integer
-                data:
-                  $ref: '#/definitions/backends'
-              required:
-              - data
-              type: object
+              $ref: '#/definitions/backends'
           default:
             $ref: '#/responses/DefaultError'
         summary: Return an array of backends
@@ -12398,12 +12221,7 @@ paths:
                 description: Configuration file version
                 type: string
             schema:
-              properties:
-                _version:
-                  type: integer
-                data:
-                  $ref: '#/definitions/backend'
-              type: object
+              $ref: '#/definitions/backend'
           "404":
             $ref: '#/responses/NotFound'
           default:
@@ -12464,14 +12282,7 @@ paths:
                 description: Configuration file version
                 type: string
             schema:
-              properties:
-                _version:
-                  type: integer
-                data:
-                  $ref: '#/definitions/rings'
-              required:
-              - data
-              type: object
+              $ref: '#/definitions/rings'
           default:
             $ref: '#/responses/DefaultError'
         summary: Return an array of rings
@@ -12558,12 +12369,7 @@ paths:
                 description: Configuration file version
                 type: string
             schema:
-              properties:
-                _version:
-                  type: integer
-                data:
-                  $ref: '#/definitions/ring'
-              type: object
+              $ref: '#/definitions/ring'
           "404":
             $ref: '#/responses/NotFound'
           default:
@@ -12640,14 +12446,7 @@ paths:
                 description: Configuration file version
                 type: string
             schema:
-              properties:
-                _version:
-                  type: integer
-                data:
-                  $ref: '#/definitions/binds'
-              required:
-              - data
-              type: object
+              $ref: '#/definitions/binds'
           default:
             $ref: '#/responses/DefaultError'
         summary: Return an array of binds
@@ -12782,12 +12581,7 @@ paths:
                 description: Configuration file version
                 type: string
             schema:
-              properties:
-                _version:
-                  type: integer
-                data:
-                  $ref: '#/definitions/bind'
-              type: object
+              $ref: '#/definitions/bind'
           "404":
             $ref: '#/responses/AlreadyExists'
           default:
@@ -12870,14 +12664,7 @@ paths:
                 description: Configuration file version
                 type: string
             schema:
-              properties:
-                _version:
-                  type: integer
-                data:
-                  $ref: '#/definitions/dgram_binds'
-              required:
-              - data
-              type: object
+              $ref: '#/definitions/dgram_binds'
           default:
             $ref: '#/responses/DefaultError'
         summary: Return an array of dgram binds
@@ -12982,12 +12769,7 @@ paths:
                 description: Configuration file version
                 type: string
             schema:
-              properties:
-                _version:
-                  type: integer
-                data:
-                  $ref: '#/definitions/dgram_bind'
-              type: object
+              $ref: '#/definitions/dgram_bind'
           "404":
             $ref: '#/responses/AlreadyExists'
           default:
@@ -13054,14 +12836,7 @@ paths:
                 description: Configuration file version
                 type: string
             schema:
-              properties:
-                _version:
-                  type: integer
-                data:
-                  $ref: '#/definitions/log_forwards'
-              required:
-              - data
-              type: object
+              $ref: '#/definitions/log_forwards'
           default:
             $ref: '#/responses/DefaultError'
         summary: Return an array of log forwards
@@ -13148,12 +12923,7 @@ paths:
                 description: Configuration file version
                 type: string
             schema:
-              properties:
-                _version:
-                  type: integer
-                data:
-                  $ref: '#/definitions/log_forward'
-              type: object
+              $ref: '#/definitions/log_forward'
           "404":
             $ref: '#/responses/NotFound'
           default:
@@ -13230,14 +13000,7 @@ paths:
                 description: Configuration file version
                 type: string
             schema:
-              properties:
-                _version:
-                  type: integer
-                data:
-                  $ref: '#/definitions/servers'
-              required:
-              - data
-              type: object
+              $ref: '#/definitions/servers'
           default:
             $ref: '#/responses/DefaultError'
         summary: Return an array of servers
@@ -13372,12 +13135,7 @@ paths:
                 description: Configuration file version
                 type: string
             schema:
-              properties:
-                _version:
-                  type: integer
-                data:
-                  $ref: '#/definitions/server'
-              type: object
+              $ref: '#/definitions/server'
           "404":
             $ref: '#/responses/NotFound'
           default:
@@ -13458,17 +13216,9 @@ paths:
             headers:
               Configuration-Version:
                 description: Configuration file version
-                type: integer
-                x-nullable: false
+                type: string
             schema:
-              properties:
-                _version:
-                  type: integer
-                data:
-                  $ref: '#/definitions/server_templates'
-              required:
-              - data
-              type: object
+              $ref: '#/definitions/server_templates'
           default:
             $ref: '#/responses/DefaultError'
         summary: Return an array of server templates
@@ -13571,15 +13321,9 @@ paths:
             headers:
               Configuration-Version:
                 description: Configuration file version
-                type: integer
-                x-nullable: false
+                type: string
             schema:
-              properties:
-                _version:
-                  type: integer
-                data:
-                  $ref: '#/definitions/server_template'
-              type: object
+              $ref: '#/definitions/server_template'
           "404":
             $ref: '#/responses/NotFound'
           default:
@@ -13658,14 +13402,7 @@ paths:
                 description: Configuration file version
                 type: string
             schema:
-              properties:
-                _version:
-                  type: integer
-                data:
-                  $ref: '#/definitions/http_checks'
-              required:
-              - data
-              type: object
+              $ref: '#/definitions/http_checks'
           default:
             $ref: '#/responses/DefaultError'
         summary: Return an array of HTTP checks
@@ -13790,12 +13527,7 @@ paths:
                 description: Configuration file version
                 type: string
             schema:
-              properties:
-                _version:
-                  type: integer
-                data:
-                  $ref: '#/definitions/http_check'
-              type: object
+              $ref: '#/definitions/http_check'
           "404":
             $ref: '#/responses/NotFound'
           default:
@@ -13882,14 +13614,7 @@ paths:
                 description: Configuration file version
                 type: string
             schema:
-              properties:
-                _version:
-                  type: integer
-                data:
-                  $ref: '#/definitions/http_request_rules'
-              required:
-              - data
-              type: object
+              $ref: '#/definitions/http_request_rules'
           default:
             $ref: '#/responses/DefaultError'
         summary: Return an array of all HTTP Request Rules
@@ -14018,12 +13743,7 @@ paths:
                 description: Configuration file version
                 type: string
             schema:
-              properties:
-                _version:
-                  type: integer
-                data:
-                  $ref: '#/definitions/http_request_rule'
-              type: object
+              $ref: '#/definitions/http_request_rule'
           "404":
             $ref: '#/responses/NotFound'
           default:
@@ -14111,14 +13831,7 @@ paths:
                 description: Configuration file version
                 type: string
             schema:
-              properties:
-                _version:
-                  type: integer
-                data:
-                  $ref: '#/definitions/http_response_rules'
-              required:
-              - data
-              type: object
+              $ref: '#/definitions/http_response_rules'
           default:
             $ref: '#/responses/DefaultError'
         summary: Return an array of all HTTP Response Rules
@@ -14247,12 +13960,7 @@ paths:
                 description: Configuration file version
                 type: string
             schema:
-              properties:
-                _version:
-                  type: integer
-                data:
-                  $ref: '#/definitions/http_response_rule'
-              type: object
+              $ref: '#/definitions/http_response_rule'
           "404":
             $ref: '#/responses/NotFound'
           default:
@@ -14341,14 +14049,7 @@ paths:
                 description: Configuration file version
                 type: string
             schema:
-              properties:
-                _version:
-                  type: integer
-                data:
-                  $ref: '#/definitions/http_after_response_rules'
-              required:
-              - data
-              type: object
+              $ref: '#/definitions/http_after_response_rules'
           default:
             $ref: '#/responses/DefaultError'
         summary: Return an array of all HTTP After Response Rules
@@ -14477,12 +14178,7 @@ paths:
                 description: Configuration file version
                 type: string
             schema:
-              properties:
-                _version:
-                  type: integer
-                data:
-                  $ref: '#/definitions/http_after_response_rule'
-              type: object
+              $ref: '#/definitions/http_after_response_rule'
           "404":
             $ref: '#/responses/NotFound'
           default:
@@ -14570,14 +14266,7 @@ paths:
                 description: Configuration file version
                 type: string
             schema:
-              properties:
-                _version:
-                  type: integer
-                data:
-                  $ref: '#/definitions/http_error_rules'
-              required:
-              - data
-              type: object
+              $ref: '#/definitions/http_error_rules'
           default:
             $ref: '#/responses/DefaultError'
         summary: Return an array of all HTTP Error Rules
@@ -14705,12 +14394,7 @@ paths:
                 description: Configuration file version
                 type: string
             schema:
-              properties:
-                _version:
-                  type: integer
-                data:
-                  $ref: '#/definitions/http_error_rule'
-              type: object
+              $ref: '#/definitions/http_error_rule'
           "404":
             $ref: '#/responses/NotFound'
           default:
@@ -14797,14 +14481,7 @@ paths:
                 description: Configuration file version
                 type: string
             schema:
-              properties:
-                _version:
-                  type: integer
-                data:
-                  $ref: '#/definitions/tcp_checks'
-              required:
-              - data
-              type: object
+              $ref: '#/definitions/tcp_checks'
           default:
             $ref: '#/responses/DefaultError'
         summary: Return an array of TCP checks
@@ -14929,12 +14606,7 @@ paths:
                 description: Configuration file version
                 type: string
             schema:
-              properties:
-                _version:
-                  type: integer
-                data:
-                  $ref: '#/definitions/tcp_check'
-              type: object
+              $ref: '#/definitions/tcp_check'
           "404":
             $ref: '#/responses/NotFound'
           default:
@@ -15021,14 +14693,7 @@ paths:
                 description: Configuration file version
                 type: string
             schema:
-              properties:
-                _version:
-                  type: integer
-                data:
-                  $ref: '#/definitions/tcp_request_rules'
-              required:
-              - data
-              type: object
+              $ref: '#/definitions/tcp_request_rules'
           default:
             $ref: '#/responses/DefaultError'
         summary: Return an array of all TCP Request Rules
@@ -15157,12 +14822,7 @@ paths:
                 description: Configuration file version
                 type: string
             schema:
-              properties:
-                _version:
-                  type: integer
-                data:
-                  $ref: '#/definitions/tcp_request_rule'
-              type: object
+              $ref: '#/definitions/tcp_request_rule'
           "404":
             $ref: '#/responses/NotFound'
           default:
@@ -15242,14 +14902,7 @@ paths:
                 description: Configuration file version
                 type: string
             schema:
-              properties:
-                _version:
-                  type: integer
-                data:
-                  $ref: '#/definitions/tcp_response_rules'
-              required:
-              - data
-              type: object
+              $ref: '#/definitions/tcp_response_rules'
           default:
             $ref: '#/responses/DefaultError'
         summary: Return an array of all TCP Response Rules
@@ -15354,12 +15007,7 @@ paths:
                 description: Configuration file version
                 type: string
             schema:
-              properties:
-                _version:
-                  type: integer
-                data:
-                  $ref: '#/definitions/tcp_response_rule'
-              type: object
+              $ref: '#/definitions/tcp_response_rule'
           "404":
             $ref: '#/responses/NotFound'
           default:
@@ -15432,14 +15080,7 @@ paths:
                 description: Configuration file version
                 type: string
             schema:
-              properties:
-                _version:
-                  type: integer
-                data:
-                  $ref: '#/definitions/backend_switching_rules'
-              required:
-              - data
-              type: object
+              $ref: '#/definitions/backend_switching_rules'
           default:
             $ref: '#/responses/DefaultError'
         summary: Return an array of all Backend Switching Rules
@@ -15544,12 +15185,7 @@ paths:
                 description: Configuration file version
                 type: string
             schema:
-              properties:
-                _version:
-                  type: integer
-                data:
-                  $ref: '#/definitions/backend_switching_rule'
-              type: object
+              $ref: '#/definitions/backend_switching_rule'
           "404":
             $ref: '#/responses/NotFound'
           default:
@@ -15622,14 +15258,7 @@ paths:
                 description: Configuration file version
                 type: string
             schema:
-              properties:
-                _version:
-                  type: integer
-                data:
-                  $ref: '#/definitions/server_switching_rules'
-              required:
-              - data
-              type: object
+              $ref: '#/definitions/server_switching_rules'
           default:
             $ref: '#/responses/DefaultError'
         summary: Return an array of all Server Switching Rules
@@ -15734,12 +15363,7 @@ paths:
                 description: Configuration file version
                 type: string
             schema:
-              properties:
-                _version:
-                  type: integer
-                data:
-                  $ref: '#/definitions/server_switching_rule'
-              type: object
+              $ref: '#/definitions/server_switching_rule'
           "404":
             $ref: '#/responses/NotFound'
           default:
@@ -15819,14 +15443,7 @@ paths:
                 description: Configuration file version
                 type: string
             schema:
-              properties:
-                _version:
-                  type: integer
-                data:
-                  $ref: '#/definitions/filters'
-              required:
-              - data
-              type: object
+              $ref: '#/definitions/filters'
           default:
             $ref: '#/responses/DefaultError'
         summary: Return an array of all Filters
@@ -15952,12 +15569,7 @@ paths:
                 description: Configuration file version
                 type: string
             schema:
-              properties:
-                _version:
-                  type: integer
-                data:
-                  $ref: '#/definitions/filter'
-              type: object
+              $ref: '#/definitions/filter'
           "404":
             $ref: '#/responses/NotFound'
           default:
@@ -16036,14 +15648,7 @@ paths:
                 description: Configuration file version
                 type: string
             schema:
-              properties:
-                _version:
-                  type: integer
-                data:
-                  $ref: '#/definitions/stick_rules'
-              required:
-              - data
-              type: object
+              $ref: '#/definitions/stick_rules'
           default:
             $ref: '#/responses/DefaultError'
         summary: Return an array of all Stick Rules
@@ -16147,12 +15752,7 @@ paths:
                 description: Configuration file version
                 type: string
             schema:
-              properties:
-                _version:
-                  type: integer
-                data:
-                  $ref: '#/definitions/stick_rule'
-              type: object
+              $ref: '#/definitions/stick_rule'
           "404":
             $ref: '#/responses/NotFound'
           default:
@@ -16235,14 +15835,7 @@ paths:
                 description: Configuration file version
                 type: string
             schema:
-              properties:
-                _version:
-                  type: integer
-                data:
-                  $ref: '#/definitions/log_targets'
-              required:
-              - data
-              type: object
+              $ref: '#/definitions/log_targets'
           default:
             $ref: '#/responses/DefaultError'
         summary: Return an array of all Log Targets
@@ -16379,12 +15972,7 @@ paths:
                 description: Configuration file version
                 type: string
             schema:
-              properties:
-                _version:
-                  type: integer
-                data:
-                  $ref: '#/definitions/log_target'
-              type: object
+              $ref: '#/definitions/log_target'
           "404":
             $ref: '#/responses/NotFound'
           default:
@@ -16480,14 +16068,7 @@ paths:
                 description: Configuration file version
                 type: string
             schema:
-              properties:
-                _version:
-                  type: integer
-                data:
-                  $ref: '#/definitions/acls'
-              required:
-              - data
-              type: object
+              $ref: '#/definitions/acls'
           default:
             $ref: '#/responses/DefaultError'
         summary: Return an array of all ACL lines
@@ -16613,12 +16194,7 @@ paths:
                 description: Configuration file version
                 type: string
             schema:
-              properties:
-                _version:
-                  type: integer
-                data:
-                  $ref: '#/definitions/acl'
-              type: object
+              $ref: '#/definitions/acl'
           "404":
             $ref: '#/responses/NotFound'
           default:
@@ -16692,14 +16268,7 @@ paths:
                 description: Configuration file version
                 type: string
             schema:
-              properties:
-                _version:
-                  type: integer
-                data:
-                  $ref: '#/definitions/caches'
-              required:
-              - data
-              type: object
+              $ref: '#/definitions/caches'
           default:
             $ref: '#/responses/DefaultError'
         summary: Return an array of caches
@@ -16786,12 +16355,7 @@ paths:
                 description: Configuration file version
                 type: string
             schema:
-              properties:
-                _version:
-                  type: integer
-                data:
-                  $ref: '#/definitions/cache'
-              type: object
+              $ref: '#/definitions/cache'
           "404":
             $ref: '#/responses/NotFound'
           default:
@@ -16852,14 +16416,7 @@ paths:
                 description: Configuration file version
                 type: string
             schema:
-              properties:
-                _version:
-                  type: integer
-                data:
-                  $ref: '#/definitions/resolvers'
-              required:
-              - data
-              type: object
+              $ref: '#/definitions/resolvers'
           default:
             $ref: '#/responses/DefaultError'
         summary: Return an array of resolvers
@@ -16946,12 +16503,7 @@ paths:
                 description: Configuration file version
                 type: string
             schema:
-              properties:
-                _version:
-                  type: integer
-                data:
-                  $ref: '#/definitions/resolver'
-              type: object
+              $ref: '#/definitions/resolver'
           "404":
             $ref: '#/responses/NotFound'
           default:
@@ -17017,14 +16569,7 @@ paths:
                 description: Configuration file version
                 type: string
             schema:
-              properties:
-                _version:
-                  type: integer
-                data:
-                  $ref: '#/definitions/nameservers'
-              required:
-              - data
-              type: object
+              $ref: '#/definitions/nameservers'
           default:
             $ref: '#/responses/DefaultError'
         summary: Return an array of nameservers
@@ -17126,12 +16671,7 @@ paths:
                 description: Configuration file version
                 type: string
             schema:
-              properties:
-                _version:
-                  type: integer
-                data:
-                  $ref: '#/definitions/nameserver'
-              type: object
+              $ref: '#/definitions/nameserver'
           "404":
             $ref: '#/responses/NotFound'
           default:
@@ -17191,7 +16731,7 @@ paths:
         - $ref: '#/parameters/transaction_id'
         - $ref: '#/parameters/version'
         produces:
-        - application/json
+        - text/plain
         responses:
           "200":
             description: Operation successful
@@ -17200,14 +16740,7 @@ paths:
                 description: Configuration file version
                 type: string
             schema:
-              properties:
-                _version:
-                  type: integer
-                data:
-                  type: string
-              required:
-              - data
-              type: object
+              type: string
           default:
             $ref: '#/responses/DefaultError'
         summary: Return HAProxy configuration
@@ -17252,7 +16785,7 @@ paths:
         - $ref: '#/parameters/version'
         - $ref: '#/parameters/force_reload'
         produces:
-        - application/json
+        - text/plain
         responses:
           "201":
             description: New HAProxy configuration pushed
@@ -18009,6 +17542,8 @@ paths:
         operationId: getConfigurationVersion
         parameters:
         - $ref: '#/parameters/transaction_id'
+        produces:
+        - application/json
         responses:
           "200":
             description: Configuration version
@@ -18501,6 +18036,9 @@ paths:
           name: name
           required: true
           type: string
+        produces:
+        - application/json
+        - text/plain
         responses:
           "200":
             description: Successful operation
@@ -18509,12 +18047,7 @@ paths:
                 description: Spoe configuration file version
                 type: string
             schema:
-              properties:
-                _version:
-                  type: integer
-                data:
-                  type: string
-              type: object
+              type: string
           "404":
             $ref: '#/responses/NotFound'
           default:
@@ -18541,14 +18074,7 @@ paths:
                 description: Spoe configuration file version
                 type: string
             schema:
-              properties:
-                _version:
-                  type: integer
-                data:
-                  $ref: '#/definitions/spoe_scopes'
-              required:
-              - data
-              type: object
+              $ref: '#/definitions/spoe_scopes'
           default:
             $ref: '#/responses/DefaultError'
         summary: Return an array of spoe scopes
@@ -18634,14 +18160,7 @@ paths:
                 description: Spoe configuration file version
                 type: string
             schema:
-              properties:
-                _version:
-                  type: integer
-                data:
-                  $ref: '#/definitions/spoe_scope'
-              required:
-              - data
-              type: object
+              $ref: '#/definitions/spoe_scope'
           "404":
             $ref: '#/responses/NotFound'
           default:
@@ -18673,14 +18192,7 @@ paths:
                 description: Spoe configuration file version
                 type: string
             schema:
-              properties:
-                _version:
-                  type: integer
-                data:
-                  $ref: '#/definitions/spoe_agents'
-              required:
-              - data
-              type: object
+              $ref: '#/definitions/spoe_agents'
           default:
             $ref: '#/responses/DefaultError'
         summary: Return an array of spoe agents in one scope
@@ -18781,14 +18293,7 @@ paths:
                 description: Spoe configuration file version
                 type: string
             schema:
-              properties:
-                _version:
-                  type: integer
-                data:
-                  $ref: '#/definitions/spoe_agent'
-              required:
-              - data
-              type: object
+              $ref: '#/definitions/spoe_agent'
           "404":
             $ref: '#/responses/NotFound'
           default:
@@ -18860,14 +18365,7 @@ paths:
                 description: Spoe configuration file version
                 type: string
             schema:
-              properties:
-                _version:
-                  type: integer
-                data:
-                  $ref: '#/definitions/spoe_messages'
-              required:
-              - data
-              type: object
+              $ref: '#/definitions/spoe_messages'
           default:
             $ref: '#/responses/DefaultError'
         summary: Return an array of spoe messages in one scope
@@ -18968,14 +18466,7 @@ paths:
                 description: Spoe configuration file version
                 type: string
             schema:
-              properties:
-                _version:
-                  type: integer
-                data:
-                  $ref: '#/definitions/spoe_message'
-              required:
-              - data
-              type: object
+              $ref: '#/definitions/spoe_message'
           "404":
             $ref: '#/responses/NotFound'
           default:
@@ -19047,14 +18538,7 @@ paths:
                 description: Spoe configuration file version
                 type: string
             schema:
-              properties:
-                _version:
-                  type: integer
-                data:
-                  $ref: '#/definitions/spoe_groups'
-              required:
-              - data
-              type: object
+              $ref: '#/definitions/spoe_groups'
           default:
             $ref: '#/responses/DefaultError'
         summary: Return an array of SPOE groups
@@ -19155,14 +18639,7 @@ paths:
                 description: Spoe configuration file version
                 type: string
             schema:
-              properties:
-                _version:
-                  type: integer
-                data:
-                  $ref: '#/definitions/spoe_group'
-              required:
-              - data
-              type: object
+              $ref: '#/definitions/spoe_group'
           "404":
             $ref: '#/responses/NotFound'
           default:
@@ -19253,14 +18730,7 @@ paths:
                 description: Configuration file version
                 type: string
             schema:
-              properties:
-                _version:
-                  type: integer
-                data:
-                  $ref: '#/definitions/captures'
-              required:
-              - data
-              type: object
+              $ref: '#/definitions/captures'
           default:
             $ref: '#/responses/DefaultError'
         summary: Return an array of declare captures
@@ -19365,12 +18835,7 @@ paths:
                 description: Configuration file version
                 type: string
             schema:
-              properties:
-                _version:
-                  type: integer
-                data:
-                  $ref: '#/definitions/capture'
-              type: object
+              $ref: '#/definitions/capture'
           "404":
             $ref: '#/responses/AlreadyExists'
           default:

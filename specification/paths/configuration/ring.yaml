@@ -16,14 +16,7 @@ rings:
             description: Configuration file version
             type: string
         schema:
-          type: object
-          required:
-            - data
-          properties:
-            data:
-              $ref: "#/definitions/rings"
-            _version:
-              type: integer
+          $ref: "#/definitions/rings"
       'default':
         $ref: '#/responses/DefaultError'
   post:
@@ -82,12 +75,7 @@ rings_one:
             description: Configuration file version
             type: string
         schema:
-          type: object
-          properties:
-            data:
-              $ref: "#/definitions/ring"
-            _version:
-              type: integer
+          $ref: "#/definitions/ring"
       '404':
         $ref: '#/responses/NotFound'
       'default':

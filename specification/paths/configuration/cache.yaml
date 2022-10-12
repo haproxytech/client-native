@@ -16,14 +16,7 @@ caches:
             description: Configuration file version
             type: string
         schema:
-          type: object
-          required:
-            - data
-          properties:
-            data:
-              $ref: "#/definitions/caches"
-            _version:
-              type: integer
+          $ref: "#/definitions/caches"
       'default':
         $ref: '#/responses/DefaultError'
   post:
@@ -82,12 +75,7 @@ caches_one:
             description: Configuration file version
             type: string
         schema:
-          type: object
-          properties:
-            data:
-              $ref: "#/definitions/cache"
-            _version:
-              type: integer
+          $ref: "#/definitions/cache"
       '404':
         $ref: '#/responses/NotFound'
       'default':

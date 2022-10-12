@@ -27,14 +27,7 @@ http_request_rules:
             description: Configuration file version
             type: string
         schema:
-          type: object
-          required:
-            - data
-          properties:
-            data:
-              $ref: "#/definitions/http_request_rules"
-            _version:
-              type: integer
+          $ref: "#/definitions/http_request_rules"
       'default':
         $ref: '#/responses/DefaultError'
   post:
@@ -115,12 +108,7 @@ http_request_rules_one:
             description: Configuration file version
             type: string
         schema:
-          type: object
-          properties:
-            data:
-              $ref: "#/definitions/http_request_rule"
-            _version:
-              type: integer
+          $ref: "#/definitions/http_request_rule"
       '404':
         $ref: '#/responses/NotFound'
       'default':

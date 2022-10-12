@@ -16,14 +16,7 @@ userlists:
             description: Configuration file version
             type: string
         schema:
-          type: object
-          required:
-            - data
-          properties:
-            data:
-              $ref: "#/definitions/userlists"
-            _version:
-              type: integer
+          $ref: "#/definitions/userlists"
       'default':
         $ref: '#/responses/DefaultError'
   post:
@@ -82,12 +75,7 @@ userlists_one:
             description: Configuration file version
             type: string
         schema:
-          type: object
-          properties:
-            data:
-              $ref: "#/definitions/userlist"
-            _version:
-              type: integer
+          $ref: "#/definitions/userlist"
       '404':
         $ref: '#/responses/AlreadyExists'
       'default':
@@ -141,14 +129,7 @@ users:
             description: Configuration file version
             type: string
         schema:
-          type: object
-          required:
-            - data
-          properties:
-            data:
-              $ref: "#/definitions/users"
-            _version:
-              type: integer
+          $ref: "#/definitions/users"
       'default':
         $ref: '#/responses/DefaultError'
   post:
@@ -215,12 +196,7 @@ users_one:
             description: Configuration file version
             type: string
         schema:
-          type: object
-          properties:
-            data:
-              $ref: "#/definitions/user"
-            _version:
-              type: integer
+          $ref: "#/definitions/user"
       '404':
         $ref: '#/responses/AlreadyExists'
       'default':
@@ -321,14 +297,7 @@ groups:
             description: Configuration file version
             type: string
         schema:
-          type: object
-          required:
-            - data
-          properties:
-            data:
-              $ref: "#/definitions/groups"
-            _version:
-              type: integer
+          $ref: "#/definitions/groups"
       'default':
         $ref: '#/responses/DefaultError'
   post:
@@ -395,12 +364,7 @@ groups_one:
             description: Configuration file version
             type: string
         schema:
-          type: object
-          properties:
-            data:
-              $ref: "#/definitions/group"
-            _version:
-              type: integer
+          $ref: "#/definitions/group"
       '404':
         $ref: '#/responses/AlreadyExists'
       'default':

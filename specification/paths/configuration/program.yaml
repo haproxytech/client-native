@@ -16,14 +16,7 @@ programs:
             description: Configuration file version
             type: string
         schema:
-          type: object
-          required:
-            - data
-          properties:
-            data:
-              $ref: "#/definitions/programs"
-            _version:
-              type: integer
+          $ref: "#/definitions/programs"
       'default':
         $ref: '#/responses/DefaultError'
   post:
@@ -83,12 +76,7 @@ programs_one:
             description: Configuration file version
             type: string
         schema:
-          type: object
-          properties:
-            data:
-              $ref: "#/definitions/program"
-            _version:
-              type: integer
+          $ref: "#/definitions/program"
       '404':
         $ref: '#/responses/NotFound'
       'default':

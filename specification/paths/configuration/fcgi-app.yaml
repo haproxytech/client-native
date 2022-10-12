@@ -16,14 +16,7 @@ apps:
             description: Configuration file version
             type: string
         schema:
-          type: object
-          required:
-            - data
-          properties:
-            data:
-              $ref: "#/definitions/fcgiApps"
-            _version:
-              type: integer
+          $ref: "#/definitions/fcgiApps"
       'default':
         $ref: '#/responses/DefaultError'
   post:
@@ -82,12 +75,7 @@ apps_one:
             description: Configuration file version
             type: string
         schema:
-          type: object
-          properties:
-            data:
-              $ref: "#/definitions/fcgiApp"
-            _version:
-              type: integer
+          $ref: "#/definitions/fcgiApp"
       '404':
         $ref: '#/responses/NotFound'
       'default':

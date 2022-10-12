@@ -10,12 +10,7 @@ aws:
       200:
         description: Successful operation
         schema:
-          type: object
-          required:
-            - data
-          properties:
-            data:
-              $ref: "#/definitions/awsRegions"
+          $ref: "#/definitions/awsRegions"
       'default':
         $ref: '#/responses/DefaultError'
   post:
@@ -60,10 +55,7 @@ aws_one:
       '200':
         description: Successful operation
         schema:
-          type: object
-          properties:
-            data:
-              $ref: "#/definitions/awsRegion"
+          $ref: "#/definitions/awsRegion"
       '404':
         $ref: '#/responses/NotFound'
       'default':
@@ -126,12 +118,7 @@ consul:
       '200':
         description: Successful operation
         schema:
-          type: object
-          required:
-            - data
-          properties:
-            data:
-              $ref: "#/definitions/consuls"
+          $ref: "#/definitions/consuls"
       'default':
         $ref: '#/responses/DefaultError'
   post:
@@ -174,10 +161,7 @@ consul_one:
       '200':
         description: Successful operation
         schema:
-          type: object
-          properties:
-            data:
-              $ref: "#/definitions/consul"
+          $ref: "#/definitions/consul"
       '404':
         $ref: '#/responses/NotFound'
       'default':

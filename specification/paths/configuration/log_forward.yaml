@@ -16,14 +16,7 @@ log_forwards:
             description: Configuration file version
             type: string
         schema:
-          type: object
-          required:
-            - data
-          properties:
-            data:
-              $ref: "#/definitions/log_forwards"
-            _version:
-              type: integer
+          $ref: "#/definitions/log_forwards"
       'default':
         $ref: '#/responses/DefaultError'
   post:
@@ -82,12 +75,7 @@ log_forwards_one:
             description: Configuration file version
             type: string
         schema:
-          type: object
-          properties:
-            data:
-              $ref: "#/definitions/log_forward"
-            _version:
-              type: integer
+          $ref: "#/definitions/log_forward"
       '404':
         $ref: '#/responses/NotFound'
       'default':

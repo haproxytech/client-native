@@ -6,6 +6,8 @@ version:
     operationId: getConfigurationVersion
     tags:
       - Configuration
+    produces:
+      - application/json
     parameters:
       - $ref: "#/parameters/transaction_id"
     responses:

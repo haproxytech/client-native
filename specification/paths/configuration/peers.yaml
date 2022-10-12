@@ -16,14 +16,7 @@ peer_section:
             description: Configuration file version
             type: string
         schema:
-          type: object
-          required:
-            - data
-          properties:
-            data:
-              $ref: "#/definitions/peer_sections"
-            _version:
-              type: integer
+          $ref: "#/definitions/peer_sections"
       'default':
         $ref: '#/responses/DefaultError'
   post:
@@ -82,12 +75,7 @@ peer_section_one:
             description: Configuration file version
             type: string
         schema:
-          type: object
-          properties:
-            data:
-              $ref: "#/definitions/peer_section"
-            _version:
-              type: integer
+          $ref: "#/definitions/peer_section"
       '404':
         $ref: '#/responses/NotFound'
       'default':
@@ -142,14 +130,7 @@ peer_entries:
             description: Configuration file version
             type: string
         schema:
-          type: object
-          required:
-            - data
-          properties:
-            data:
-              $ref: "#/definitions/peer_entries"
-            _version:
-              type: integer
+          $ref: "#/definitions/peer_entries"
       'default':
         $ref: '#/responses/DefaultError'
   post:
@@ -218,12 +199,7 @@ peer_entries_one:
             description: Configuration file version
             type: string
         schema:
-          type: object
-          properties:
-            data:
-              $ref: "#/definitions/peer_entry"
-            _version:
-              type: integer
+          $ref: "#/definitions/peer_entry"
       '404':
         $ref: '#/responses/AlreadyExists'
       'default':

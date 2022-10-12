@@ -16,14 +16,7 @@ mailers_section:
             description: Configuration file version
             type: string
         schema:
-          type: object
-          required:
-            - data
-          properties:
-            data:
-              $ref: "#/definitions/mailers_sections"
-            _version:
-              type: integer
+          $ref: "#/definitions/mailers_sections"
       'default':
         $ref: "#/responses/DefaultError"
   post:
@@ -82,12 +75,7 @@ mailers_section_one:
             description: Configuration file version
             type: string
         schema:
-          type: object
-          properties:
-            data:
-              $ref: "#/definitions/mailers_section"
-            _version:
-              type: integer
+          $ref: "#/definitions/mailers_section"
       '404':
         $ref: '#/responses/NotFound'
       'default':
@@ -181,14 +169,7 @@ mailer_entries:
             description: Configuration file version
             type: string
         schema:
-          type: object
-          required:
-            - data
-          properties:
-            data:
-              $ref: "#/definitions/mailer_entries"
-            _version:
-              type: integer
+          $ref: "#/definitions/mailer_entries"
       'default':
         $ref: '#/responses/DefaultError'
   post:
@@ -258,12 +239,7 @@ mailer_entries_one:
             description: Configuration file version
             type: string
         schema:
-          type: object
-          properties:
-            data:
-              $ref: "#/definitions/mailer_entry"
-            _version:
-              type: integer
+          $ref: "#/definitions/mailer_entry"
       '404':
         $ref: '#/responses/AlreadyExists'
       'default':

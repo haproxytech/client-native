@@ -16,14 +16,7 @@ http_errors_section:
             description: Configuration file version
             type: string
         schema:
-          type: object
-          required:
-            - data
-          properties:
-            data:
-              $ref: "#/definitions/http_errors_sections"
-            _version:
-              type: integer
+          $ref: "#/definitions/http_errors_sections"
       'default':
         $ref: "#/responses/DefaultError"
   post:
@@ -82,12 +75,7 @@ http_errors_section_one:
             description: Configuration file version
             type: string
         schema:
-          type: object
-          properties:
-            data:
-              $ref: "#/definitions/http_errors_section"
-            _version:
-              type: integer
+          $ref: "#/definitions/http_errors_section"
       '404':
         $ref: '#/responses/NotFound'
       'default':

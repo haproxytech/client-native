@@ -16,14 +16,7 @@ resolvers:
             description: Configuration file version
             type: string
         schema:
-          type: object
-          required:
-            - data
-          properties:
-            data:
-              $ref: "#/definitions/resolvers"
-            _version:
-              type: integer
+          $ref: "#/definitions/resolvers"
       'default':
         $ref: '#/responses/DefaultError'
   post:
@@ -82,12 +75,7 @@ resolvers_one:
             description: Configuration file version
             type: string
         schema:
-          type: object
-          properties:
-            data:
-              $ref: "#/definitions/resolver"
-            _version:
-              type: integer
+          $ref: "#/definitions/resolver"
       '404':
         $ref: '#/responses/NotFound'
       'default':
@@ -181,14 +169,7 @@ nameservers:
             description: Configuration file version
             type: string
         schema:
-          type: object
-          required:
-            - data
-          properties:
-            data:
-              $ref: "#/definitions/nameservers"
-            _version:
-              type: integer
+          $ref: "#/definitions/nameservers"
       'default':
         $ref: '#/responses/DefaultError'
   post:
@@ -257,12 +238,7 @@ nameservers_one:
             description: Configuration file version
             type: string
         schema:
-          type: object
-          properties:
-            data:
-              $ref: "#/definitions/nameserver"
-            _version:
-              type: integer
+          $ref: "#/definitions/nameserver"
       '404':
         $ref: '#/responses/NotFound'
       'default':

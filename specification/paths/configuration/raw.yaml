@@ -8,7 +8,7 @@ configuration:
       - $ref: "#/parameters/transaction_id"
       - $ref: "#/parameters/version"
     produces:
-      - application/json
+      - text/plain
     tags:
       - Configuration
     responses:
@@ -19,14 +19,7 @@ configuration:
             description: Configuration file version
             type: string
         schema:
-          type: object
-          required:
-            - data
-          properties:
-            data:
-              type: string
-            _version:
-              type: integer
+          type: string
       'default':
         $ref: '#/responses/DefaultError'
   post:
@@ -34,7 +27,7 @@ configuration:
     description: Push a new haproxy configuration file in plain text
     operationId: postHAProxyConfiguration
     produces:
-      - application/json
+      - text/plain
     consumes:
       - text/plain
     parameters:

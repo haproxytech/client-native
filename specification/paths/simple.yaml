@@ -16,14 +16,7 @@ sites:
             description: Configuration file version
             type: string
         schema:
-          type: object
-          required:
-            - data
-          properties:
-            data:
-              $ref: "#/definitions/sites"
-            _version:
-              type: integer
+          $ref: "#/definitions/sites"
       'default':
         $ref: '#/responses/DefaultError'
   post:
@@ -82,12 +75,7 @@ sites_one:
             description: Configuration file version
             type: string
         schema:
-          type: object
-          properties:
-            data:
-              $ref: "#/definitions/site"
-            _version:
-              type: integer
+          $ref: "#/definitions/site"
       '404':
         $ref: '#/responses/NotFound'
       'default':

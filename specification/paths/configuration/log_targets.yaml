@@ -26,14 +26,7 @@ log_targets:
             description: Configuration file version
             type: string
         schema:
-          type: object
-          required:
-            - data
-          properties:
-            data:
-              $ref: "#/definitions/log_targets"
-            _version:
-              type: integer
+          $ref: "#/definitions/log_targets"
       'default':
         $ref: '#/responses/DefaultError'
   post:
@@ -112,12 +105,7 @@ log_targets_one:
             description: Configuration file version
             type: string
         schema:
-          type: object
-          properties:
-            data:
-              $ref: "#/definitions/log_target"
-            _version:
-              type: integer
+          $ref: "#/definitions/log_target"
       '404':
         $ref: '#/responses/NotFound'
       'default':
