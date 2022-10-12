@@ -6,8 +6,8 @@ import (
 	"strconv"
 	"strings"
 
-	native_errors "github.com/haproxytech/client-native/v4/errors"
-	"github.com/haproxytech/client-native/v4/models"
+	native_errors "github.com/haproxytech/client-native/v5/errors"
+	"github.com/haproxytech/client-native/v5/models"
 )
 
 // ShowACLS returns Acl files description from runtime

@@ -21,8 +21,8 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/haproxytech/client-native/v4/misc"
-	"github.com/haproxytech/client-native/v4/models"
+	"github.com/haproxytech/client-native/v5/misc"
+	"github.com/haproxytech/client-native/v5/models"
 )
 
 func TestSingleSpoe_GetScopes(t *testing.T) {

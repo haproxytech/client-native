@@ -7,8 +7,8 @@ import (
 
 	"github.com/go-openapi/strfmt"
 
-	native_errors "github.com/haproxytech/client-native/v4/errors"
-	"github.com/haproxytech/client-native/v4/models"
+	native_errors "github.com/haproxytech/client-native/v5/errors"
+	"github.com/haproxytech/client-native/v5/models"
 )
 
 // ShowCerts returns Certs files description from runtime
@@ -26,7 +26,6 @@ func (s *SingleRuntime) ShowCerts() (models.SslCertificates, error) {
 // Sample output format:
 // /etc/ssl/cert-0.pem
 // /etc/ssl/...
-//
 func (s *SingleRuntime) parseCerts(output string) models.SslCertificates {
 	output = strings.TrimSpace(output)
 	if output == "" {

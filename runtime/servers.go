@@ -20,9 +20,9 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/haproxytech/client-native/v4/errors"
-	"github.com/haproxytech/client-native/v4/misc"
-	"github.com/haproxytech/client-native/v4/models"
+	"github.com/haproxytech/client-native/v5/errors"
+	"github.com/haproxytech/client-native/v5/misc"
+	"github.com/haproxytech/client-native/v5/models"
 )
 
 // AddServer adds a new server to a backend

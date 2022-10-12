@@ -29,12 +29,12 @@ import (
 	"testing"
 	"time"
 
-	clientnative "github.com/haproxytech/client-native/v4"
-	"github.com/haproxytech/client-native/v4/configuration"
-	configuration_options "github.com/haproxytech/client-native/v4/configuration/options"
-	"github.com/haproxytech/client-native/v4/options"
-	"github.com/haproxytech/client-native/v4/runtime"
-	runtime_options "github.com/haproxytech/client-native/v4/runtime/options"
+	clientnative "github.com/haproxytech/client-native/v5"
+	"github.com/haproxytech/client-native/v5/configuration"
+	configuration_options "github.com/haproxytech/client-native/v5/configuration/options"
+	"github.com/haproxytech/client-native/v5/options"
+	"github.com/haproxytech/client-native/v5/runtime"
+	runtime_options "github.com/haproxytech/client-native/v5/runtime/options"
 )
 
 type ClientResponse struct {

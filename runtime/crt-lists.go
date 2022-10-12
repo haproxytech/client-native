@@ -6,7 +6,7 @@ import (
 	"strconv"
 	"strings"
 
-	native_errors "github.com/haproxytech/client-native/v4/errors"
+	native_errors "github.com/haproxytech/client-native/v5/errors"
 )
 
 type CrtLists []*CrtList
@@ -38,7 +38,6 @@ func (s *SingleRuntime) ShowCrtLists() (CrtLists, error) {
 // Sample output format:
 // /etc/ssl/crt-list
 // /etc/ssl/...
-//
 func (s *SingleRuntime) parseCrtLists(output string) CrtLists {
 	output = strings.TrimSpace(output)
 	if output == "" {

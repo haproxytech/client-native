@@ -19,8 +19,8 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/haproxytech/client-native/v4/misc"
-	"github.com/haproxytech/client-native/v4/models"
+	"github.com/haproxytech/client-native/v5/misc"
+	"github.com/haproxytech/client-native/v5/models"
 )
 
 func TestGetHTTPAfterResponseRules(t *testing.T) {
@@ -170,7 +170,7 @@ func TestDeleteHTTPAfterResponseRule(t *testing.T) {
 		t.Error(err.Error())
 	}
 
-	for index, _ := range hRules {
+	for index := range hRules {
 		if err = clientTest.DeleteHTTPResponseRule(int64(index), "frontend", "test", tx.ID, 0); err != nil {
 			t.Error(err.Error())
 		}
