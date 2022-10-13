@@ -142,6 +142,42 @@ func (c *client) IsVersionBiggerOrEqual(minimumVersion *HAProxyVersion) bool {
 	return IsBiggerOrEqual(minimumVersion, c.haproxyVersion)
 }
 
+// Reloads HAProxy's configuration file. Similar to SIGUSR2. Returns the startup logs.
+func (c *client) Reload() (string, error) {
+	var status, logs string
+
+	if c.options.MasterSocketData == nil {
+		return "", fmt.Errorf("cannot reload: not connected to a master socket")
+	}
+	if !c.IsVersionBiggerOrEqual(&HAProxyVersion{Major: 2, Minor: 7}) {
+		return "", fmt.Errorf("cannot reload: requires HAProxy 2.7 or later")
+	}
+
+	for _, runtime := range c.runtimes {
+		output, err := runtime.ExecuteMaster("reload")
+		if err != nil {
+			return "", fmt.Errorf("cannot reload: %w", err)
+		}
+		parts := strings.SplitN(output, "\n--\n", 2)
+		if len(parts) == 1 {
+			// No startup logs. This happens when HAProxy is compiled without USE_SHM_OPEN.
+			status = output[:len(output)-1]
+		} else {
+			status, logs = parts[0], parts[1]
+		}
+		switch status {
+		case "Success=1":
+			// Do nothing.
+		case "Success=0":
+			return logs, fmt.Errorf("failed to reload configuration")
+		default:
+			return logs, fmt.Errorf("reload: unknown status: %s", status)
+		}
+	}
+
+	return logs, nil
+}
+
 // GetMapsPath returns runtime map file path or map id
 func (c *client) GetMapsPath(name string) (string, error) {
 	name = misc.SanitizeFilename(name)
