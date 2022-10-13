@@ -1353,7 +1353,7 @@ func (s *SectionParser) source() interface{} {
 			source.Usesrc = models.SourceUsesrcClientip
 		case d.HdrIP:
 			source.Usesrc = models.SourceUsesrcHdrIP
-		case len(d.AddressSecond) > 0:
+		case d.AddressSecond != "":
 			source.Usesrc = models.SourceUsesrcAddress
 		}
 		return source
@@ -2786,7 +2786,7 @@ func (s *SectionObject) source(field reflect.Value) error {
 	case models.SourceUsesrcHdrIP:
 		source.HdrIP = true
 	}
-	return s.set("sources", source)
+	return s.set("source", source)
 }
 
 func (c *client) deleteSection(section parser.Section, name string, transactionID string, version int64) error {

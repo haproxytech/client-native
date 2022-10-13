@@ -438,6 +438,10 @@ func TestPushDefaults(t *testing.T) {
 			Mailers:    misc.StringP("localmailer1"),
 		},
 		HTTPSendNameHeader: misc.StringP(""),
+		Source: &models.Source{
+			Address:   misc.StringP("127.0.0.1"),
+			Interface: "lo",
+		},
 	}
 
 	err := clientTest.PushDefaultsConfiguration(d, "", version)
