@@ -25,7 +25,12 @@ import (
 
 const (
 	taskTimeout = 30 * time.Second
+
+	statsSocket  socketType = "stats"
+	masterSocket socketType = "master"
 )
+
+type socketType string
 
 // TaskResponse ...
 type TaskResponse struct {
@@ -37,6 +42,7 @@ type TaskResponse struct {
 type Task struct {
 	command  string
 	response chan TaskResponse
+	socket   socketType
 }
 
 // SingleRuntime handles one runtime API
@@ -71,7 +77,7 @@ func (s *SingleRuntime) handleIncomingJobs(ctx context.Context) {
 			if !ok {
 				return
 			}
-			result, err := s.readFromSocket(job.command)
+			result, err := s.readFromSocket(job.command, job.socket)
 			if err != nil {
 				job.response <- TaskResponse{err: err}
 			} else {
@@ -83,7 +89,7 @@ func (s *SingleRuntime) handleIncomingJobs(ctx context.Context) {
 	}
 }
 
-func (s *SingleRuntime) readFromSocket(command string) (string, error) {
+func (s *SingleRuntime) readFromSocket(command string, socket socketType) (string, error) {
 	var api net.Conn
 	var err error
 
@@ -97,10 +103,18 @@ func (s *SingleRuntime) readFromSocket(command string) (string, error) {
 		return "", err
 	}
 
-	fullCommand := fmt.Sprintf("set severity-output number;%s\n", command)
-	if s.worker > 0 {
-		fullCommand = fmt.Sprintf("@%v set severity-output number;@%v %s;quit\n", s.worker, s.worker, command)
+	var fullCommand string
+
+	switch socket {
+	case statsSocket:
+		fullCommand = fmt.Sprintf("set severity-output number;%s\n", command)
+		if s.worker > 0 {
+			fullCommand = fmt.Sprintf("@%v set severity-output number;@%v %s;quit\n", s.worker, s.worker, command)
+		}
+	case masterSocket:
+		fullCommand = fmt.Sprintf("%s;quit", command)
 	}
+
 	_, err = api.Write([]byte(fullCommand))
 	if err != nil {
 		return "", err
@@ -129,7 +143,7 @@ func (s *SingleRuntime) readFromSocket(command string) (string, error) {
 // ExecuteRaw executes command on runtime API and returns raw result
 func (s *SingleRuntime) ExecuteRaw(command string) (string, error) {
 	// allow one retry if connection breaks temporarily
-	return s.executeRaw(command, 1)
+	return s.executeRaw(command, 1, statsSocket)
 }
 
 // Execute executes command on runtime API
@@ -164,17 +178,23 @@ func (s *SingleRuntime) ExecuteWithResponse(command string) (string, error) {
 	return "", nil
 }
 
-func (s *SingleRuntime) executeRaw(command string, retry int) (string, error) {
+func (s *SingleRuntime) ExecuteMaster(command string) (string, error) {
+	// allow one retry if connection breaks temporarily
+	return s.executeRaw(command, 1, masterSocket)
+}
+
+func (s *SingleRuntime) executeRaw(command string, retry int, socket socketType) (string, error) {
 	response := make(chan TaskResponse)
 	task := Task{
 		command:  command,
 		response: response,
+		socket:   socket,
 	}
 	s.jobs <- task
 	rsp := <-response
 	if rsp.err != nil && retry > 0 {
 		retry--
-		return s.executeRaw(command, retry)
+		return s.executeRaw(command, retry, socket)
 	}
 	return rsp.result, rsp.err
 }

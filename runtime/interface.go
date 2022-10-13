@@ -126,6 +126,11 @@ type Info interface {
 	GetVersion() (HAProxyVersion, error)
 }
 
+type Manage interface {
+	// Reloads HAProxy's configuration file. Similar to SIGUSR2. Returns the startup logs.
+	Reload() (string, error)
+}
+
 type Raw interface {
 	// ExecuteRaw does not procces response, just returns its values for all processes
 	ExecuteRaw(command string) ([]string, error)
@@ -134,6 +139,7 @@ type Raw interface {
 type Runtime interface {
 	Info
 	Frontend
+	Manage
 	Maps
 	Servers
 	ACLs
