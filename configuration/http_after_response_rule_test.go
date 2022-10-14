@@ -170,8 +170,8 @@ func TestDeleteHTTPAfterResponseRule(t *testing.T) {
 		t.Error(err.Error())
 	}
 
-	for index, _ := range hRules {
-		if err = clientTest.DeleteHTTPResponseRule(int64(index), "frontend", "test", tx.ID, 0); err != nil {
+	for range hRules {
+		if err = clientTest.DeleteHTTPAfterResponseRule(int64(0), "frontend", "test", tx.ID, 0); err != nil {
 			t.Error(err.Error())
 		}
 	}
