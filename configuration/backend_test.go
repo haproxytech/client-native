@@ -46,6 +46,11 @@ func TestGetBackends(t *testing.T) { //nolint:gocognit,gocyclo
 		if b.Name == "test" {
 			optionValue = "enabled"
 		}
+		if b.Name == "test_2" {
+			if b.From != "test_defaults_2" {
+				t.Errorf("%v: From not test_defaults_2: %v", b.Name, b.From)
+			}
+		}
 		if b.BindProcess != "all" {
 			t.Errorf("%v: BindProcess not all: %v", b.Name, b.BindProcess)
 		}
@@ -776,6 +781,7 @@ func TestCreateEditDeleteBackend(t *testing.T) {
 	s := int64(25600)
 	backends := []*models.Backend{
 		{
+			From: "test_defaults",
 			Name: "created",
 			Mode: "http",
 			Balance: &models.Balance{

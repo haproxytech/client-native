@@ -179,6 +179,17 @@ global
   anonkey 25
   tune.peers.max-updates-at-once 200
 
+defaults test_defaults
+  maxconn 2000
+  backlog 1024
+  mode http
+  bind-process 1-4
+  balance roundrobin
+
+defaults test_defaults_2 from test_defaults
+  option srvtcpka
+  option clitcpka
+
 defaults
   maxconn 2000
   backlog 1024
@@ -441,7 +452,7 @@ frontend test
   errorloc303 404 http://www.myawesomesite.com/not_found
   error-log-format %T\ %t\ Some\ Text
 
-frontend test_2
+frontend test_2 from test_defaults
   mode http
   bind-process even
   option httplog
@@ -717,17 +728,16 @@ mailers localmailer1
   timeout mail 15s
 
 http-errors website-1
-    errorfile 400 /etc/haproxy/errorfiles/site1/400.http
-    errorfile 404 /etc/haproxy/errorfiles/site1/404.http
-    errorfile 408 /dev/null  # work around Chrome pre-connect bug
+  errorfile 400 /etc/haproxy/errorfiles/site1/400.http
+  errorfile 404 /etc/haproxy/errorfiles/site1/404.http
+  errorfile 408 /dev/null  # work around Chrome pre-connect bug
 
 http-errors website-2
-    errorfile 400 /etc/haproxy/errorfiles/site2/400.http
-    errorfile 404 /etc/haproxy/errorfiles/site2/404.http
-    errorfile 501 /etc/haproxy/errorfiles/site2/501.http
+  errorfile 400 /etc/haproxy/errorfiles/site2/400.http
+  errorfile 404 /etc/haproxy/errorfiles/site2/404.http
+  errorfile 501 /etc/haproxy/errorfiles/site2/501.http
 
-
-backend test_2
+backend test_2 from test_defaults_2
   mode http
   balance roundrobin
   bind-process all
