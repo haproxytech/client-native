@@ -172,6 +172,10 @@ type Defaults struct {
 	// forwardfor
 	Forwardfor *Forwardfor `json:"forwardfor,omitempty"`
 
+	// from
+	// Pattern: ^[A-Za-z0-9-_.:]+$
+	From string `json:"from,omitempty"`
+
 	// fullconn
 	Fullconn *int64 `json:"fullconn,omitempty"`
 
@@ -293,6 +297,10 @@ type Defaults struct {
 
 	// mysql check params
 	MysqlCheckParams *MysqlCheckParams `json:"mysql_check_params,omitempty"`
+
+	// name
+	// Pattern: ^[A-Za-z0-9-_.:]+$
+	Name string `json:"name,omitempty"`
 
 	// nolinger
 	// Enum: [enabled disabled]
@@ -516,6 +524,10 @@ func (m *Defaults) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
+	if err := m.validateFrom(formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.validateH1CaseAdjustBogusClient(formats); err != nil {
 		res = append(res, err)
 	}
@@ -613,6 +625,10 @@ func (m *Defaults) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateMysqlCheckParams(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateName(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -1476,6 +1492,18 @@ func (m *Defaults) validateForwardfor(formats strfmt.Registry) error {
 			}
 			return err
 		}
+	}
+
+	return nil
+}
+
+func (m *Defaults) validateFrom(formats strfmt.Registry) error {
+	if swag.IsZero(m.From) { // not required
+		return nil
+	}
+
+	if err := validate.Pattern("from", "body", m.From, `^[A-Za-z0-9-_.:]+$`); err != nil {
+		return err
 	}
 
 	return nil
@@ -2394,6 +2422,18 @@ func (m *Defaults) validateMysqlCheckParams(formats strfmt.Registry) error {
 			}
 			return err
 		}
+	}
+
+	return nil
+}
+
+func (m *Defaults) validateName(formats strfmt.Registry) error {
+	if swag.IsZero(m.Name) { // not required
+		return nil
+	}
+
+	if err := validate.Pattern("name", "body", m.Name, `^[A-Za-z0-9-_.:]+$`); err != nil {
+		return err
 	}
 
 	return nil

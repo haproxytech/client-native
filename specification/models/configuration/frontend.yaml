@@ -10,6 +10,9 @@ frontend:
       type: string
       pattern: '^[A-Za-z0-9-_.:]+$'
       x-nullable: false
+    from:
+      type: string
+      pattern: '^[A-Za-z0-9-_.:]+$'
     mode:
       type: string
       enum: [http, tcp]

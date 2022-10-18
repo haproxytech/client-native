@@ -1,0 +1,161 @@
+---
+defaults:
+  get:
+    summary: Return an array of defaults
+    description: Returns an array of all configured defaults.
+    operationId: getDefaultsSections
+    parameters:
+      - $ref: "#/parameters/transaction_id"
+    tags:
+      - Defaults
+    responses:
+      '200':
+        description: Successful operation
+        headers:
+          Configuration-Version:
+            description: Configuration file version
+            type: string
+        schema:
+          type: object
+          required:
+            - data
+          properties:
+            data:
+              $ref: "#/definitions/defaults_sections"
+            _version:
+              type: integer
+      'default':
+        $ref: '#/responses/DefaultError'
+  post:
+    summary: Add a defaults section
+    description: Adds a new defaults section to the configuration file.
+    operationId: createDefaultsSection
+    parameters:
+      - name: data
+        required: true
+        in: body
+        schema:
+          $ref: "#/definitions/defaults"
+      - $ref: "#/parameters/transaction_id"
+      - $ref: "#/parameters/version"
+      - $ref: "#/parameters/force_reload"
+    tags:
+      - Defaults
+    responses:
+      '202':
+        description: Configuration change accepted and reload requested
+        headers:
+          Reload-ID:
+            description: ID of the requested reload
+            type: string
+        schema:
+          $ref: "#/definitions/defaults"
+      '201':
+        description: Defaults created
+        schema:
+          $ref: "#/definitions/defaults"
+      '409':
+        $ref: '#/responses/AlreadyExists'
+      '400':
+        $ref: '#/responses/BadRequest'
+      'default':
+        $ref: '#/responses/DefaultError'
+defaults_one:
+  get:
+    summary: Return a defautls section
+    description: Returns one defautls section configuration by it's name.
+    operationId: getDefaultsSection
+    tags:
+      - Defaults
+    parameters:
+      - name: name
+        in: path
+        description: Defaults name
+        required: true
+        type: string
+      - $ref: "#/parameters/transaction_id"
+    responses:
+      '200':
+        description: Successful operation
+        headers:
+          Configuration-Version:
+            description: Configuration file version
+            type: string
+        schema:
+          type: object
+          properties:
+            data:
+              $ref: "#/definitions/defaults"
+            _version:
+              type: integer
+      '404':
+        $ref: '#/responses/NotFound'
+      'default':
+        $ref: '#/responses/DefaultError'
+  put:
+    summary: Replace a defatults section
+    description: Replaces a defatults section configuration by it's name.
+    operationId: replaceDefaultsSection
+    tags:
+      - Defaults
+    parameters:
+      - name: name
+        in: path
+        description: Defaults name
+        required: true
+        type: string
+      - name: data
+        required: true
+        in: body
+        schema:
+          $ref: "#/definitions/defaults"
+      - $ref: "#/parameters/transaction_id"
+      - $ref: "#/parameters/version"
+      - $ref: "#/parameters/force_reload"
+    responses:
+      '202':
+        description: Configuration change accepted and reload requested
+        headers:
+          Reload-ID:
+            description: ID of the requested reload
+            type: string
+        schema:
+          $ref: "#/definitions/defaults"
+      '200':
+        description: Defaults section replaced
+        schema:
+          $ref: "#/definitions/defaults"
+      '400':
+        $ref: '#/responses/BadRequest'
+      '404':
+        $ref: '#/responses/NotFound'
+      'default':
+        $ref: '#/responses/DefaultError'
+  delete:
+    summary: Delete a defaults section
+    description: Deletes a defaults section from the configuration by it's name.
+    operationId: deleteDefaultsSection
+    tags:
+      - Defaults
+    parameters:
+      - name: name
+        in: path
+        description: Defaults name
+        required: true
+        type: string
+      - $ref: "#/parameters/transaction_id"
+      - $ref: "#/parameters/version"
+      - $ref: "#/parameters/force_reload"
+    responses:
+      '202':
+        description: Configuration change accepted and reload requested
+        headers:
+          Reload-ID:
+            description: ID of the requested reload
+            type: string
+      '204':
+        description: Defaults section deleted
+      '404':
+        $ref: '#/responses/NotFound'
+      'default':
+        $ref: '#/responses/DefaultError'

@@ -127,6 +127,10 @@ type Backend struct {
 	// forwardfor
 	Forwardfor *Forwardfor `json:"forwardfor,omitempty"`
 
+	// from
+	// Pattern: ^[A-Za-z0-9-_.:]+$
+	From string `json:"from,omitempty"`
+
 	// fullconn
 	Fullconn *int64 `json:"fullconn,omitempty"`
 
@@ -425,6 +429,10 @@ func (m *Backend) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateForwardfor(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateFrom(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -1138,6 +1146,18 @@ func (m *Backend) validateForwardfor(formats strfmt.Registry) error {
 			}
 			return err
 		}
+	}
+
+	return nil
+}
+
+func (m *Backend) validateFrom(formats strfmt.Registry) error {
+	if swag.IsZero(m.From) { // not required
+		return nil
+	}
+
+	if err := validate.Pattern("from", "body", m.From, `^[A-Za-z0-9-_.:]+$`); err != nil {
+		return err
 	}
 
 	return nil

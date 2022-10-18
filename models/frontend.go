@@ -125,6 +125,10 @@ type Frontend struct {
 	// forwardfor
 	Forwardfor *Forwardfor `json:"forwardfor,omitempty"`
 
+	// from
+	// Pattern: ^[A-Za-z0-9-_.:]+$
+	From string `json:"from,omitempty"`
+
 	// h1 case adjust bogus client
 	// Enum: [enabled disabled]
 	H1CaseAdjustBogusClient string `json:"h1_case_adjust_bogus_client,omitempty"`
@@ -329,6 +333,10 @@ func (m *Frontend) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateForwardfor(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateFrom(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -865,6 +873,18 @@ func (m *Frontend) validateForwardfor(formats strfmt.Registry) error {
 			}
 			return err
 		}
+	}
+
+	return nil
+}
+
+func (m *Frontend) validateFrom(formats strfmt.Registry) error {
+	if swag.IsZero(m.From) { // not required
+		return nil
+	}
+
+	if err := validate.Pattern("from", "body", m.From, `^[A-Za-z0-9-_.:]+$`); err != nil {
+		return err
 	}
 
 	return nil

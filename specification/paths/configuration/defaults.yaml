@@ -1,8 +1,9 @@
 ---
 defaults:
   get:
+    deprecated: true
     summary: Return defaults part of configuration
-    description: Returns defaults part of configuration.
+    description: Returns defaults part of configuration, this has been deprecated, use named_defaults instead.
     operationId: getDefaults
     parameters:
       - $ref: "#/parameters/transaction_id"
@@ -25,8 +26,9 @@ defaults:
       'default':
         $ref: '#/responses/DefaultError'
   put:
+    deprecated: true
     summary: Replace defaults
-    description: Replace defaults part of config
+    description: Replace defaults part of config, this has been deprecated, use named_defaults instead.
     operationId: replaceDefaults
     parameters:
       - name: data
