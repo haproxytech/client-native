@@ -287,6 +287,8 @@ func (s *SectionParser) parseField(fieldName string) interface{} {
 
 func (s *SectionParser) checkSpecialFields(fieldName string) (match bool, data interface{}) { //nolint:gocyclo,cyclop
 	switch fieldName {
+	case "From":
+		return true, s.from()
 	case "MonitorFail":
 		return true, s.monitorFail()
 	case "MonitorURI":
@@ -422,6 +424,14 @@ func (s *SectionParser) checkOptions(fieldName string) (match bool, data interfa
 
 func (s *SectionParser) get(attribute string, createIfNotExists ...bool) (data common.ParserData, err error) {
 	return s.Parser.Get(s.Section, s.Name, attribute, createIfNotExists...)
+}
+
+func (s *SectionParser) from() interface{} {
+	from, err := s.Parser.SectionsDefaultsFromGet(s.Section, s.Name)
+	if err != nil {
+		return ""
+	}
+	return from
 }
 
 func (s *SectionParser) httpConnectionMode() interface{} {
@@ -1428,6 +1438,8 @@ func (s *SectionObject) checkParams(fieldName string) (match bool) {
 
 func (s *SectionObject) checkSpecialFields(fieldName string, field reflect.Value) (match bool, err error) { //nolint:gocyclo,cyclop
 	switch fieldName {
+	case "From":
+		return true, s.from(field)
 	case "MonitorURI":
 		return true, s.monitorURI(field)
 	case "MonitorFail":
@@ -1601,6 +1613,16 @@ func (s *SectionObject) isNoOption(attribute string) bool {
 
 func (s *SectionObject) set(attribute string, data interface{}) error {
 	return s.Parser.Set(s.Section, s.Name, attribute, data)
+}
+
+func (s *SectionObject) from(field reflect.Value) error {
+	if s.Section == parser.Frontends || s.Section == parser.Backends || s.Section == parser.Defaults {
+		if valueIsNil(field) {
+			return s.Parser.SectionsDefaultsFromSet(s.Section, s.Name, "")
+		}
+		return s.Parser.SectionsDefaultsFromSet(s.Section, s.Name, field.String())
+	}
+	return nil
 }
 
 func (s *SectionObject) httplog(field reflect.Value) error {

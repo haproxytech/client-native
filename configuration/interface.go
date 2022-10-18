@@ -19,6 +19,8 @@ import (
 	"context"
 	"fmt"
 	"os/exec"
+	"strconv"
+	"strings"
 
 	parser "github.com/haproxytech/config-parser/v4"
 	parser_options "github.com/haproxytech/config-parser/v4/options"
@@ -97,9 +99,9 @@ func New(ctx context.Context, opt ...options.ConfigurationOption) (Configuration
 		optionsWrapper.Haproxy = options.DefaultHaproxy
 	}
 
-	// #nosec G204
-	if err1 := exec.Command(optionsWrapper.Haproxy, "-v").Run(); err1 != nil {
-		return nil, NewConfError(ErrCannotFindHAProxy, fmt.Sprintf("path to HAProxy binary not valid: %s", optionsWrapper.Haproxy))
+	versionString, err := c.fetchVersion(optionsWrapper.Haproxy)
+	if err != nil {
+		return nil, NewConfError(ErrCannotFindHAProxy, fmt.Sprintf("path to HAProxy binary not valid: %s, err: %s", optionsWrapper.Haproxy, err.Error()))
 	}
 
 	c.TransactionClient = c
@@ -115,6 +117,13 @@ func New(ctx context.Context, opt ...options.ConfigurationOption) (Configuration
 	if c.ConfigurationOptions.UseMd5Hash {
 		parserOptions = append(parserOptions, parser_options.UseMd5Hash)
 	}
+
+	// HAProxy lower then 2.4 doesn't support from keyword to inherit defaults section, so if it's lower than that don't set it
+	// if it isn't set the from to all frontend/backend section that have it unset to the proper defaults section
+	if noNamedDefaultsFrom(versionString) {
+		parserOptions = append(parserOptions, parser_options.NoNamedDefaultsFrom)
+	}
+
 	parserOptions = append(parserOptions, parser_options.Path(optionsWrapper.ConfigurationFile))
 	p, err := parser.New(parserOptions...)
 	if err != nil {
@@ -128,4 +137,51 @@ func New(ctx context.Context, opt ...options.ConfigurationOption) (Configuration
 
 func (c *client) Parser() parser.Parser {
 	return c.parser
+}
+
+func (c *client) fetchVersion(haproxy string) (string, error) {
+	versionString, err := exec.Command(haproxy, "-v").Output()
+	if err != nil {
+		return "", err
+	}
+	return string(versionString), nil
+}
+
+func getVersionNumbers(version string) (int64, int64, int64, error) {
+	if !strings.HasPrefix(version, "HAProxy version ") {
+		return 0, 0, 0, fmt.Errorf("not a haproxy version string")
+	}
+	version = version[strings.Index(version, "HAProxy version ")+len("HAProxy version "):]
+	versionSlice := strings.SplitN(version, "-", 2)
+	if len(versionSlice) != 2 {
+		return 0, 0, 0, fmt.Errorf("not a haproxy version string")
+	}
+
+	versionInts := strings.SplitN(versionSlice[0], ".", 3)
+	if len(versionInts) != 3 {
+		return 0, 0, 0, fmt.Errorf("not a haproxy version string")
+	}
+
+	major, err := strconv.ParseInt(versionInts[0], 10, 64)
+	if err != nil {
+		return 0, 0, 0, fmt.Errorf("not a haproxy version string")
+	}
+	minor, err := strconv.ParseInt(versionInts[1], 10, 64)
+	if err != nil {
+		return 0, 0, 0, fmt.Errorf("not a haproxy version string")
+	}
+	patch, err := strconv.ParseInt(versionInts[2], 10, 64)
+	if err != nil {
+		return 0, 0, 0, fmt.Errorf("not a haproxy version string")
+	}
+	return major, minor, patch, nil
+}
+
+func noNamedDefaultsFrom(version string) bool {
+	major, minor, _, err := getVersionNumbers(version)
+	if err != nil {
+		return true
+	}
+
+	return major < 2 || (major == 2 && minor < 4)
 }
