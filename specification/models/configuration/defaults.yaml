@@ -4,6 +4,12 @@ defaults:
   description: HAProxy defaults configuration
   type: object
   properties:
+    name:
+      type: string
+      pattern: '^[A-Za-z0-9-_.:]+$'
+    from:
+      type: string
+      pattern: '^[A-Za-z0-9-_.:]+$'
     mode:
       type: string
       enum: [tcp, http]

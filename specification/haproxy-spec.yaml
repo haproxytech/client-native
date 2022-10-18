@@ -52,6 +52,12 @@ definitions:
     $ref: "models/configuration/global.yaml#/global"
   defaults:
     $ref: "models/configuration/defaults.yaml#/defaults"
+  defaults_sections:
+    title: Defaults Sections
+    description: HAProxy defaults sections array
+    type: array
+    items:
+      $ref: '#/definitions/defaults'
   frontend:
     $ref: "models/configuration/frontend.yaml#/frontend"
   frontends:
@@ -764,6 +770,10 @@ paths:
     $ref: "paths/configuration/global.yaml#/global"
   /services/haproxy/configuration/defaults:
     $ref: "paths/configuration/defaults.yaml#/defaults"
+  /services/haproxy/configuration/named_defaults:
+    $ref: "paths/configuration/named_defaults.yaml#/defaults"
+  /services/haproxy/configuration/named_defaults/{name}:
+    $ref: "paths/configuration/named_defaults.yaml#/defaults_one"
   /services/haproxy/configuration/frontends:
     $ref: "paths/configuration/frontend.yaml#/frontends"
   /services/haproxy/configuration/frontends/{name}:

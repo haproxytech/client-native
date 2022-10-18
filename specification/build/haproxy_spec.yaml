@@ -1849,6 +1849,9 @@ definitions:
           x-display-name: External Check Path
         forwardfor:
           $ref: '#/definitions/forwardfor'
+        from:
+          pattern: ^[A-Za-z0-9-_.:]+$
+          type: string
         fullconn:
           type: integer
           x-nullable: true
@@ -2004,6 +2007,9 @@ definitions:
           $ref: '#/definitions/monitor_uri'
         mysql_check_params:
           $ref: '#/definitions/mysql_check_params'
+        name:
+          pattern: ^[A-Za-z0-9-_.:]+$
+          type: string
         nolinger:
           enum:
           - enabled
@@ -2141,6 +2147,12 @@ definitions:
           x-display-name: Unique ID header
       title: Defaults
       type: object
+  defaults_sections:
+    title: Defaults Sections
+    description: HAProxy defaults sections array
+    type: array
+    items:
+      $ref: '#/definitions/defaults'
   frontend:
       additionalProperties: false
       description: HAProxy frontend configuration
@@ -2259,6 +2271,9 @@ definitions:
           x-dependency:
             mode:
               value: http
+        from:
+          pattern: ^[A-Za-z0-9-_.:]+$
+          type: string
         h1_case_adjust_bogus_client:
           enum:
           - enabled
@@ -2612,6 +2627,9 @@ definitions:
           x-dependency:
             mode:
               value: http
+        from:
+          pattern: ^[A-Za-z0-9-_.:]+$
+          type: string
         fullconn:
           type: integer
           x-nullable: true
@@ -10490,7 +10508,9 @@ paths:
         - Global
   /services/haproxy/configuration/defaults:
       get:
-        description: Returns defaults part of configuration.
+        deprecated: true
+        description: Returns defaults part of configuration, this has been deprecated, use
+          named_defaults instead.
         operationId: getDefaults
         parameters:
         - $ref: '#/parameters/transaction_id'
@@ -10514,7 +10534,9 @@ paths:
         tags:
         - Defaults
       put:
-        description: Replace defaults part of config
+        deprecated: true
+        description: Replace defaults part of config, this has been deprecated, use named_defaults
+          instead.
         operationId: replaceDefaults
         parameters:
         - in: body
@@ -10543,6 +10565,166 @@ paths:
           default:
             $ref: '#/responses/DefaultError'
         summary: Replace defaults
+        tags:
+        - Defaults
+  /services/haproxy/configuration/named_defaults:
+      get:
+        description: Returns an array of all configured defaults.
+        operationId: getDefaultsSections
+        parameters:
+        - $ref: '#/parameters/transaction_id'
+        responses:
+          "200":
+            description: Successful operation
+            headers:
+              Configuration-Version:
+                description: Configuration file version
+                type: string
+            schema:
+              properties:
+                _version:
+                  type: integer
+                data:
+                  $ref: '#/definitions/defaults_sections'
+              required:
+              - data
+              type: object
+          default:
+            $ref: '#/responses/DefaultError'
+        summary: Return an array of defaults
+        tags:
+        - Defaults
+      post:
+        description: Adds a new defaults section to the configuration file.
+        operationId: createDefaultsSection
+        parameters:
+        - in: body
+          name: data
+          required: true
+          schema:
+            $ref: '#/definitions/defaults'
+        - $ref: '#/parameters/transaction_id'
+        - $ref: '#/parameters/version'
+        - $ref: '#/parameters/force_reload'
+        responses:
+          "201":
+            description: Defaults created
+            schema:
+              $ref: '#/definitions/defaults'
+          "202":
+            description: Configuration change accepted and reload requested
+            headers:
+              Reload-ID:
+                description: ID of the requested reload
+                type: string
+            schema:
+              $ref: '#/definitions/defaults'
+          "400":
+            $ref: '#/responses/BadRequest'
+          "409":
+            $ref: '#/responses/AlreadyExists'
+          default:
+            $ref: '#/responses/DefaultError'
+        summary: Add a defaults section
+        tags:
+        - Defaults
+  /services/haproxy/configuration/named_defaults/{name}:
+      delete:
+        description: Deletes a defaults section from the configuration by it's name.
+        operationId: deleteDefaultsSection
+        parameters:
+        - description: Defaults name
+          in: path
+          name: name
+          required: true
+          type: string
+        - $ref: '#/parameters/transaction_id'
+        - $ref: '#/parameters/version'
+        - $ref: '#/parameters/force_reload'
+        responses:
+          "202":
+            description: Configuration change accepted and reload requested
+            headers:
+              Reload-ID:
+                description: ID of the requested reload
+                type: string
+          "204":
+            description: Defaults section deleted
+          "404":
+            $ref: '#/responses/NotFound'
+          default:
+            $ref: '#/responses/DefaultError'
+        summary: Delete a defaults section
+        tags:
+        - Defaults
+      get:
+        description: Returns one defautls section configuration by it's name.
+        operationId: getDefaultsSection
+        parameters:
+        - description: Defaults name
+          in: path
+          name: name
+          required: true
+          type: string
+        - $ref: '#/parameters/transaction_id'
+        responses:
+          "200":
+            description: Successful operation
+            headers:
+              Configuration-Version:
+                description: Configuration file version
+                type: string
+            schema:
+              properties:
+                _version:
+                  type: integer
+                data:
+                  $ref: '#/definitions/defaults'
+              type: object
+          "404":
+            $ref: '#/responses/NotFound'
+          default:
+            $ref: '#/responses/DefaultError'
+        summary: Return a defautls section
+        tags:
+        - Defaults
+      put:
+        description: Replaces a defatults section configuration by it's name.
+        operationId: replaceDefaultsSection
+        parameters:
+        - description: Defaults name
+          in: path
+          name: name
+          required: true
+          type: string
+        - in: body
+          name: data
+          required: true
+          schema:
+            $ref: '#/definitions/defaults'
+        - $ref: '#/parameters/transaction_id'
+        - $ref: '#/parameters/version'
+        - $ref: '#/parameters/force_reload'
+        responses:
+          "200":
+            description: Defaults section replaced
+            schema:
+              $ref: '#/definitions/defaults'
+          "202":
+            description: Configuration change accepted and reload requested
+            headers:
+              Reload-ID:
+                description: ID of the requested reload
+                type: string
+            schema:
+              $ref: '#/definitions/defaults'
+          "400":
+            $ref: '#/responses/BadRequest'
+          "404":
+            $ref: '#/responses/NotFound'
+          default:
+            $ref: '#/responses/DefaultError'
+        summary: Replace a defatults section
         tags:
         - Defaults
   /services/haproxy/configuration/frontends:
