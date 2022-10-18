@@ -485,3 +485,172 @@ func TestPushDefaults(t *testing.T) {
 		t.Error("Should have returned version conflict.")
 	}
 }
+
+func TestGetDefaultsSections(t *testing.T) {
+	v, defaults, err := clientTest.GetDefaultsSections("")
+	if err != nil {
+		t.Error(err.Error())
+	}
+
+	if len(defaults) != 3 {
+		t.Errorf("%v defaults returned, expected 2", len(defaults))
+	}
+
+	if v != version {
+		t.Errorf("Version %v returned, expected %v", v, version)
+	}
+
+	unnamedSectionFound := false
+	for _, d := range defaults {
+		if d.Name == "test_defaults" {
+			if d.From != "" {
+				t.Errorf("%s: From not empty string: %s", d.Name, d.From)
+			}
+		}
+		if d.Name == "test_defaults_2" {
+			if d.From != "test_defaults" {
+				t.Errorf("%s: From not test_defaults: %s", d.Name, d.From)
+			}
+		}
+		if d.Name == "unnamed_defaults_1" {
+			unnamedSectionFound = true
+		}
+	}
+
+	if !unnamedSectionFound {
+		t.Errorf("Unnamed section not found")
+	}
+}
+
+func TestGetDefaultsSection(t *testing.T) {
+	v, d, err := clientTest.GetDefaultsSection("test_defaults", "")
+	if err != nil {
+		t.Error(err.Error())
+	}
+
+	if v != version {
+		t.Errorf("Version %v returned, expected %v", v, version)
+	}
+	if d.Name != "test_defaults" {
+		t.Errorf("%s: Name not test_defaults: %s", d.Name, d.Name)
+	}
+	if d.From != "" {
+		t.Errorf("%s: From not empty string: %s", d.Name, d.From)
+	}
+}
+
+func TestEditCreateDeleteDefaultsSection(t *testing.T) {
+	// test creating a new section
+	d := &models.Defaults{
+		Name:           "created",
+		Clitcpka:       "disabled",
+		BindProcess:    "1-4",
+		DefaultBackend: "test2",
+	}
+	err := clientTest.CreateDefaultsSection(d, "", version)
+	if err != nil {
+		t.Error(err.Error())
+	} else {
+		version++
+	}
+
+	v, defaults, err := clientTest.GetDefaultsSection("created", "")
+	if err != nil {
+		t.Error(err.Error())
+	}
+
+	var givenJSON []byte
+	givenJSON, err = d.MarshalBinary()
+	if err != nil {
+		t.Error(err.Error())
+	}
+
+	var ondiskJSON []byte
+	ondiskJSON, err = defaults.MarshalBinary()
+	if err != nil {
+		t.Error(err.Error())
+	}
+
+	if string(givenJSON) != string(ondiskJSON) {
+		fmt.Printf("Created defaults: %v\n", string(ondiskJSON))
+		fmt.Printf("Given defaults: %v\n", string(givenJSON))
+		t.Error("Created defaults not equal to given defaults")
+	}
+
+	if v != version {
+		t.Errorf("Version %v returned, expected %v", v, version)
+	}
+
+	err = clientTest.CreateDefaultsSection(d, "", version)
+	if err == nil {
+		t.Error("Should throw error defaults section already exists")
+		version++
+	}
+
+	d = &models.Defaults{
+		From:           "unnamed_defaults_1",
+		Name:           "created",
+		Clitcpka:       "enabled",
+		BindProcess:    "1-4",
+		DefaultBackend: "test2",
+	}
+	err = clientTest.EditDefaultsSection("created", d, "", version)
+	if err != nil {
+		t.Error(err.Error())
+	} else {
+		version++
+	}
+
+	v, defaults, err = clientTest.GetDefaultsSection("created", "")
+	if err != nil {
+		t.Error(err.Error())
+	}
+
+	givenJSON, err = d.MarshalBinary()
+	if err != nil {
+		t.Error(err.Error())
+	}
+
+	ondiskJSON, err = defaults.MarshalBinary()
+	if err != nil {
+		t.Error(err.Error())
+	}
+
+	if string(givenJSON) != string(ondiskJSON) {
+		fmt.Printf("Created defaults: %v\n", string(ondiskJSON))
+		fmt.Printf("Given defaults: %v\n", string(givenJSON))
+		t.Error("Created defaults not equal to given defaults")
+	}
+
+	if v != version {
+		t.Errorf("Version %v returned, expected %v", v, version)
+	}
+
+	err = clientTest.EditDefaultsSection("i_dont_exist", d, "", version)
+	if err == nil {
+		t.Error("editing non-existing defaults section succeeded")
+	}
+
+	// TestDeleteDefaultsSection
+	err = clientTest.DeleteDefaultsSection("created", "", version)
+	if err != nil {
+		t.Error(err.Error())
+	} else {
+		version++
+	}
+
+	if v, _ := clientTest.GetVersion(""); v != version {
+		t.Error("Version not incremented")
+	}
+
+	_, _, err = clientTest.GetDefaultsSection("created", "")
+	if err == nil {
+		t.Error("DeleteDefaultsSection failed, defaults section created still exists")
+	}
+
+	err = clientTest.DeleteDefaultsSection("i_dont_exist", "", version)
+	if err == nil {
+		t.Error("Should throw error, non existant defaults section")
+		version++
+	}
+}

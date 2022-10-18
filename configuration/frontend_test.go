@@ -49,6 +49,12 @@ func TestGetFrontends(t *testing.T) { //nolint:gocognit
 				t.Errorf("%v: BindProcess not all: %v", f.Name, f.BindProcess)
 			}
 		}
+		if f.Name == "test_2" {
+			if f.From != "test_defaults" {
+				t.Errorf("%v: From not test_defaults: %v", f.Name, f.From)
+			}
+		}
+
 		if f.Mode != "http" {
 			t.Errorf("%v: Mode not http: %v", f.Name, f.Mode)
 		}
@@ -459,6 +465,7 @@ func TestCreateEditDeleteFrontend(t *testing.T) {
 	clitcpkaTimeout := int64(10000)
 	statsRealm := "Haproxy Stats"
 	f := &models.Frontend{
+		From:                     "unnamed_defaults_1",
 		Name:                     "created",
 		Mode:                     "tcp",
 		Maxconn:                  &mConn,
