@@ -710,6 +710,8 @@ func (t *Transaction) HandleError(id, parentType, parentName, transactionID stri
 		} else {
 			e = NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("Object %s does not exist", id))
 		}
+	case errors.Is(err, parser_errors.ErrFromDefaultsSectionMissing):
+		e = NewConfError(ErrValidationError, fmt.Sprintf("Object %s references missing defaults section in from", id))
 	case errors.Is(err, parser_errors.ErrSectionAlreadyExists):
 		e = NewConfError(ErrObjectAlreadyExists, fmt.Sprintf("Object %s already exists", id))
 	case errors.Is(err, parser_errors.ErrFetch):
