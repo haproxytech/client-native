@@ -76,7 +76,9 @@ func (c *client) GetHTTPErrorRule(id int64, parentType, parentName string, trans
 	switch parentType {
 	case "defaults":
 		section = parser.Defaults
-		parentName = parser.DefaultSectionName
+		if parentName == "" {
+			parentName = parser.DefaultSectionName
+		}
 	case "frontend":
 		section = parser.Frontends
 	case "backend":
@@ -106,7 +108,9 @@ func (c *client) DeleteHTTPErrorRule(id int64, parentType string, parentName str
 	switch parentType {
 	case "defaults":
 		section = parser.Defaults
-		parentName = parser.DefaultSectionName
+		if parentName == "" {
+			parentName = parser.DefaultSectionName
+		}
 	case "frontend":
 		section = parser.Frontends
 	case "backend":
@@ -142,7 +146,9 @@ func (c *client) CreateHTTPErrorRule(parentType string, parentName string, data 
 	switch parentType {
 	case "defaults":
 		section = parser.Defaults
-		parentName = parser.DefaultSectionName
+		if parentName == "" {
+			parentName = parser.DefaultSectionName
+		}
 	case "frontend":
 		section = parser.Frontends
 	case "backend":
@@ -182,7 +188,9 @@ func (c *client) EditHTTPErrorRule(id int64, parentType string, parentName strin
 	switch parentType {
 	case "defaults":
 		section = parser.Defaults
-		parentName = parser.DefaultSectionName
+		if parentName == "" {
+			parentName = parser.DefaultSectionName
+		}
 	case "frontend":
 		section = parser.Frontends
 	case "backend":
@@ -212,7 +220,9 @@ func ParseHTTPErrorRules(t, pName string, p parser.Parser) (models.HTTPErrorRule
 	switch t {
 	case "defaults":
 		section = parser.Defaults
-		pName = parser.DefaultSectionName
+		if pName == "" {
+			pName = parser.DefaultSectionName
+		}
 	case "frontend":
 		section = parser.Frontends
 	case "backend":

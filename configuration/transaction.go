@@ -706,7 +706,7 @@ func (t *Transaction) HandleError(id, parentType, parentName, transactionID stri
 	var e error
 	switch {
 	case errors.Is(err, parser_errors.ErrSectionMissing):
-		if parentName != "" {
+		if parentType != "" {
 			e = NewConfError(ErrParentDoesNotExist, fmt.Sprintf("%s %s does not exist", parentType, parentName))
 		} else {
 			e = NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("Object %s does not exist", id))

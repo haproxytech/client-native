@@ -79,7 +79,9 @@ func (c *client) GetTCPCheck(id int64, parentType string, parentName string, tra
 		section = parser.Backends
 	} else if parentType == "defaults" {
 		section = parser.Defaults
-		parentName = parser.DefaultSectionName
+		if parentName == "defaults" {
+			parentName = parser.DefaultSectionName
+		}
 	}
 
 	data, err := p.GetOne(section, parentName, "tcp-check", int(id))
@@ -108,7 +110,9 @@ func (c *client) DeleteTCPCheck(id int64, parentType string, parentName string, 
 		section = parser.Backends
 	} else if parentType == "defaults" {
 		section = parser.Defaults
-		parentName = parser.DefaultSectionName
+		if parentName == "defaults" {
+			parentName = parser.DefaultSectionName
+		}
 	}
 
 	if err := p.Delete(section, parentName, "tcp-check", int(id)); err != nil {
@@ -141,7 +145,9 @@ func (c *client) CreateTCPCheck(parentType string, parentName string, data *mode
 		section = parser.Backends
 	} else if parentType == "defaults" {
 		section = parser.Defaults
-		parentName = parser.DefaultSectionName
+		if parentName == "defaults" {
+			parentName = parser.DefaultSectionName
+		}
 	}
 
 	s, err := SerializeTCPCheck(*data)
@@ -160,7 +166,8 @@ func (c *client) CreateTCPCheck(parentType string, parentName string, data *mode
 
 // EditTCPCheck edits a tcp check in the configuration. One of version or transactionID is mandatory.
 // Returns error on fail, nil on success.
-// nolint:dupl
+//
+//nolint:dupl
 func (c *client) EditTCPCheck(id int64, parentType string, parentName string, data *models.TCPCheck, transactionID string, version int64) error {
 	if c.UseModelsValidation {
 		validationErr := data.Validate(strfmt.Default)
@@ -177,7 +184,9 @@ func (c *client) EditTCPCheck(id int64, parentType string, parentName string, da
 		section = parser.Backends
 	} else if parentType == "defaults" {
 		section = parser.Defaults
-		parentName = parser.DefaultSectionName
+		if parentName == "defaults" {
+			parentName = parser.DefaultSectionName
+		}
 	}
 
 	if _, err = p.GetOne(section, parentName, "tcp-check", int(id)); err != nil {
@@ -203,7 +212,9 @@ func ParseTCPChecks(t, pName string, p parser.Parser) (models.TCPChecks, error) 
 	switch t {
 	case "defaults":
 		section = parser.Defaults
-		pName = parser.DefaultSectionName
+		if pName == "defaults" {
+			pName = parser.DefaultSectionName
+		}
 	case "backend":
 		section = parser.Backends
 	default:

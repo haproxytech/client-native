@@ -247,7 +247,9 @@ func logTargetSectionType(parentType string, parentName string) (parser.Section,
 		parentName = parser.GlobalSectionName
 	case "defaults":
 		section = parser.Defaults
-		parentName = parser.DefaultSectionName
+		if parentName == "" {
+			parentName = parser.DefaultSectionName
+		}
 	case "backend":
 		section = parser.Backends
 	case "frontend":

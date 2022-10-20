@@ -79,7 +79,9 @@ func (c *client) GetHTTPCheck(id int64, parentType string, parentName string, tr
 		section = parser.Backends
 	} else if parentType == "defaults" {
 		section = parser.Defaults
-		parentName = parser.DefaultSectionName
+		if parentName == "" {
+			parentName = parser.DefaultSectionName
+		}
 	}
 
 	data, err := p.GetOne(section, parentName, "http-check", int(id))
@@ -108,7 +110,9 @@ func (c *client) DeleteHTTPCheck(id int64, parentType string, parentName string,
 		section = parser.Backends
 	} else if parentType == "defaults" {
 		section = parser.Defaults
-		parentName = parser.DefaultSectionName
+		if parentName == "" {
+			parentName = parser.DefaultSectionName
+		}
 	}
 
 	if err := p.Delete(section, parentName, "http-check", int(id)); err != nil {
@@ -141,7 +145,9 @@ func (c *client) CreateHTTPCheck(parentType string, parentName string, data *mod
 		section = parser.Backends
 	} else if parentType == "defaults" {
 		section = parser.Defaults
-		parentName = parser.DefaultSectionName
+		if parentName == "" {
+			parentName = parser.DefaultSectionName
+		}
 	}
 
 	check, err := SerializeHTTPCheck(*data)
@@ -160,7 +166,8 @@ func (c *client) CreateHTTPCheck(parentType string, parentName string, data *mod
 
 // EditHTTPCheck edits a http check in the configuration. One of version or transactionID is mandatory.
 // Returns error on fail, nil on success.
-// nolint:dupl
+//
+//nolint:dupl
 func (c *client) EditHTTPCheck(id int64, parentType string, parentName string, data *models.HTTPCheck, transactionID string, version int64) error {
 	if c.UseModelsValidation {
 		validationErr := data.Validate(strfmt.Default)
@@ -177,7 +184,9 @@ func (c *client) EditHTTPCheck(id int64, parentType string, parentName string, d
 		section = parser.Backends
 	} else if parentType == "defaults" {
 		section = parser.Defaults
-		parentName = parser.DefaultSectionName
+		if parentName == "" {
+			parentName = parser.DefaultSectionName
+		}
 	}
 
 	if _, err = p.GetOne(section, parentName, "http-check", int(id)); err != nil {
@@ -203,7 +212,9 @@ func ParseHTTPChecks(t, pName string, p parser.Parser) (models.HTTPChecks, error
 	switch t {
 	case "defaults":
 		section = parser.Defaults
-		pName = parser.DefaultSectionName
+		if pName == "" {
+			pName = parser.DefaultSectionName
+		}
 	case "backend":
 		section = parser.Backends
 	default:
