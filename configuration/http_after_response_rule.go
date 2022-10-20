@@ -155,7 +155,8 @@ func (c *client) CreateHTTPAfterResponseRule(parentType string, parentName strin
 
 // EditHTTPAfterResponseRule edits a http response rule in configuration. One of version or transactionID is mandatory.
 // Returns error on fail, nil on success.
-// nolint:dupl
+//
+//nolint:dupl
 func (c *client) EditHTTPAfterResponseRule(id int64, parentType string, parentName string, data *models.HTTPAfterResponseRule, transactionID string, version int64) error {
 	if c.UseModelsValidation {
 		validationErr := data.Validate(strfmt.Default)
