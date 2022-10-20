@@ -79,7 +79,7 @@ func (c *client) GetTCPCheck(id int64, parentType string, parentName string, tra
 		section = parser.Backends
 	} else if parentType == "defaults" {
 		section = parser.Defaults
-		if parentName == "defaults" {
+		if parentName == "" {
 			parentName = parser.DefaultSectionName
 		}
 	}
@@ -110,7 +110,7 @@ func (c *client) DeleteTCPCheck(id int64, parentType string, parentName string, 
 		section = parser.Backends
 	} else if parentType == "defaults" {
 		section = parser.Defaults
-		if parentName == "defaults" {
+		if parentName == "" {
 			parentName = parser.DefaultSectionName
 		}
 	}
@@ -145,7 +145,7 @@ func (c *client) CreateTCPCheck(parentType string, parentName string, data *mode
 		section = parser.Backends
 	} else if parentType == "defaults" {
 		section = parser.Defaults
-		if parentName == "defaults" {
+		if parentName == "" {
 			parentName = parser.DefaultSectionName
 		}
 	}
@@ -184,7 +184,7 @@ func (c *client) EditTCPCheck(id int64, parentType string, parentName string, da
 		section = parser.Backends
 	} else if parentType == "defaults" {
 		section = parser.Defaults
-		if parentName == "defaults" {
+		if parentName == "" {
 			parentName = parser.DefaultSectionName
 		}
 	}
@@ -212,7 +212,7 @@ func ParseTCPChecks(t, pName string, p parser.Parser) (models.TCPChecks, error) 
 	switch t {
 	case "defaults":
 		section = parser.Defaults
-		if pName == "defaults" {
+		if pName == "" {
 			pName = parser.DefaultSectionName
 		}
 	case "backend":
