@@ -116,6 +116,9 @@ func (c *client) AddParser(transactionID string) error {
 	if c.ConfigurationOptions.UseMd5Hash {
 		parserOptions = append(parserOptions, parser_options.UseMd5Hash)
 	}
+	if c.noNamedDefaultsFrom {
+		parserOptions = append(parserOptions, parser_options.NoNamedDefaultsFrom)
+	}
 
 	tFile := ""
 	var err error
