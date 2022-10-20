@@ -59,8 +59,9 @@ type transactionCleanerHandler func(transactionId, configurationFile string)
 
 type Transaction struct {
 	options.ConfigurationOptions
-	TransactionClient TransactionClient
-	mu                sync.Mutex
+	noNamedDefaultsFrom bool
+	TransactionClient   TransactionClient
+	mu                  sync.Mutex
 }
 
 type Transactions interface {

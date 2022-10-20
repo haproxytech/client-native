@@ -103,6 +103,8 @@ func New(ctx context.Context, opt ...options.ConfigurationOption) (Configuration
 	if err != nil {
 		return nil, NewConfError(ErrCannotFindHAProxy, fmt.Sprintf("path to HAProxy binary not valid: %s, err: %s", optionsWrapper.Haproxy, err.Error()))
 	}
+	noNamedDefaultsFrom := noNamedDefaultsFrom(versionString)
+	c.noNamedDefaultsFrom = true
 
 	c.TransactionClient = c
 	c.ConfigurationOptions = optionsWrapper
@@ -120,11 +122,12 @@ func New(ctx context.Context, opt ...options.ConfigurationOption) (Configuration
 
 	// HAProxy lower then 2.4 doesn't support from keyword to inherit defaults section, so if it's lower than that don't set it
 	// if it isn't set the from to all frontend/backend section that have it unset to the proper defaults section
-	if noNamedDefaultsFrom(versionString) {
+	if noNamedDefaultsFrom {
 		parserOptions = append(parserOptions, parser_options.NoNamedDefaultsFrom)
 	}
 
 	parserOptions = append(parserOptions, parser_options.Path(optionsWrapper.ConfigurationFile))
+
 	p, err := parser.New(parserOptions...)
 	if err != nil {
 		return nil, NewConfError(ErrCannotReadConfFile, fmt.Sprintf("Cannot read %s", c.ConfigurationFile))
