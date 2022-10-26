@@ -16,11 +16,13 @@
 package configuration
 
 import (
+	"errors"
 	"fmt"
 	"strconv"
 
 	strfmt "github.com/go-openapi/strfmt"
 	parser "github.com/haproxytech/config-parser/v4"
+	parsererrors "github.com/haproxytech/config-parser/v4/errors"
 	"github.com/haproxytech/config-parser/v4/types"
 
 	"github.com/haproxytech/client-native/v4/misc"
@@ -82,45 +84,56 @@ func (c *client) GetLogForward(name string, transactionID string) (int64, *model
 	}
 
 	lf := &models.LogForward{Name: name}
+	if err = ParseLogForward(p, lf); err != nil {
+		return 0, nil, err
+	}
+	return v, lf, nil
+}
 
-	backlog, err := p.Get(parser.LogForward, name, "backlog", true)
-	if err != nil {
-		return v, nil, err
+func ParseLogForward(p parser.Parser, lf *models.LogForward) error {
+	backlog, err := p.Get(parser.LogForward, lf.Name, "backlog", false)
+	if err != nil && !errors.Is(err, parsererrors.ErrFetch) {
+		return err
 	}
-	bl, ok := backlog.(*types.Int64C)
-	if !ok {
-		return v, nil, misc.CreateTypeAssertError("backlog")
-	}
-	if bl.Value > 0 {
-		lf.Backlog = &bl.Value
+	if err == nil {
+		bl, ok := backlog.(*types.Int64C)
+		if !ok {
+			return misc.CreateTypeAssertError("backlog")
+		}
+		if bl.Value > 0 {
+			lf.Backlog = &bl.Value
+		}
 	}
 
-	maxconn, err := p.Get(parser.LogForward, name, "maxconn", true)
-	if err != nil {
-		return v, nil, err
+	maxconn, err := p.Get(parser.LogForward, lf.Name, "maxconn", false)
+	if err != nil && !errors.Is(err, parsererrors.ErrFetch) {
+		return err
 	}
-	mc, ok := maxconn.(*types.Int64C)
-	if !ok {
-		return v, nil, misc.CreateTypeAssertError("maxconn")
-	}
-	if mc.Value > 0 {
-		lf.Maxconn = &mc.Value
+	if err == nil {
+		mc, ok := maxconn.(*types.Int64C)
+		if !ok {
+			return misc.CreateTypeAssertError("maxconn")
+		}
+		if mc.Value > 0 {
+			lf.Maxconn = &mc.Value
+		}
 	}
 
 	// timeouts
-	tConnect, err := p.Get(parser.LogForward, name, "timeout client", true)
-	if err != nil {
-		return v, nil, err
+	tConnect, err := p.Get(parser.LogForward, lf.Name, "timeout client", false)
+	if err != nil && !errors.Is(err, parsererrors.ErrFetch) {
+		return err
 	}
-	tc, ok := tConnect.(*types.SimpleTimeout)
-	if !ok {
-		return v, nil, misc.CreateTypeAssertError("timeout client")
+	if err == nil {
+		tc, ok := tConnect.(*types.SimpleTimeout)
+		if !ok {
+			return misc.CreateTypeAssertError("timeout client")
+		}
+		if tc.Value != "" {
+			lf.TimeoutClient = misc.ParseTimeout(tc.Value)
+		}
 	}
-	if tc.Value != "" {
-		lf.TimeoutClient = misc.ParseTimeout(tc.Value)
-	}
-
-	return v, lf, nil
+	return nil
 }
 
 // DeleteLogForward deletes a log forward in configuration. One of version or transactionID is
