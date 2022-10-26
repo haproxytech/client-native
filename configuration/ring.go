@@ -16,11 +16,13 @@
 package configuration
 
 import (
+	"errors"
 	"fmt"
 	"strconv"
 
 	strfmt "github.com/go-openapi/strfmt"
 	parser "github.com/haproxytech/config-parser/v4"
+	parsererrors "github.com/haproxytech/config-parser/v4/errors"
 	"github.com/haproxytech/config-parser/v4/types"
 
 	"github.com/haproxytech/client-native/v4/misc"
@@ -82,82 +84,99 @@ func (c *client) GetRing(name string, transactionID string) (int64, *models.Ring
 	}
 
 	ring := &models.Ring{Name: name}
+	if err = ParseRingSection(p, ring); err != nil {
+		return 0, nil, err
+	}
+	return v, ring, nil
+}
 
-	description, err := p.Get(parser.Ring, name, "description", true)
-	if err != nil {
-		return v, nil, err
+func ParseRingSection(p parser.Parser, ring *models.Ring) error { //nolint:gocognit
+	description, err := p.Get(parser.Ring, ring.Name, "description", false)
+	if err != nil && !errors.Is(err, parsererrors.ErrFetch) {
+		return err
 	}
-	desc, ok := description.(*types.StringC)
-	if !ok {
-		return 0, nil, misc.CreateTypeAssertError("description")
-	}
+	if err == nil {
+		desc, ok := description.(*types.StringC)
+		if !ok {
+			return misc.CreateTypeAssertError("description")
+		}
 
-	if desc.Value != "" {
-		ring.Description = desc.Value
-	}
-
-	format, err := p.Get(parser.Ring, name, "format", true)
-	if err != nil {
-		return v, nil, err
-	}
-	f, ok := format.(*types.StringC)
-	if !ok {
-		return v, nil, misc.CreateTypeAssertError("format")
-	}
-	if f.Value != "" {
-		ring.Format = f.Value
+		if desc.Value != "" {
+			ring.Description = desc.Value
+		}
 	}
 
-	maxlen, err := p.Get(parser.Ring, name, "maxlen", true)
-	if err != nil {
-		return v, nil, err
+	format, err := p.Get(parser.Ring, ring.Name, "format", true)
+	if err != nil && !errors.Is(err, parsererrors.ErrFetch) {
+		return err
 	}
-	mx, ok := maxlen.(*types.Int64C)
-	if !ok {
-		return v, nil, misc.CreateTypeAssertError("maxlen")
-	}
-	if mx.Value > 0 {
-		ring.Maxlen = &mx.Value
+	if err == nil {
+		f, ok := format.(*types.StringC)
+		if !ok {
+			return misc.CreateTypeAssertError("format")
+		}
+		if f.Value != "" {
+			ring.Format = f.Value
+		}
 	}
 
-	size, err := p.Get(parser.Ring, name, "size", true)
-	if err != nil {
-		return v, nil, err
+	maxlen, err := p.Get(parser.Ring, ring.Name, "maxlen", true)
+	if err != nil && !errors.Is(err, parsererrors.ErrFetch) {
+		return err
 	}
-	sz, ok := size.(*types.StringC)
-	if !ok {
-		return v, nil, misc.CreateTypeAssertError("size")
+	if err == nil {
+		mx, ok := maxlen.(*types.Int64C)
+		if !ok {
+			return misc.CreateTypeAssertError("maxlen")
+		}
+		if mx.Value > 0 {
+			ring.Maxlen = &mx.Value
+		}
 	}
-	if sz.Value != "" {
-		ring.Size = misc.ParseSize(sz.Value)
+
+	size, err := p.Get(parser.Ring, ring.Name, "size", true)
+	if err != nil && !errors.Is(err, parsererrors.ErrFetch) {
+		return err
+	}
+	if err == nil {
+		sz, ok := size.(*types.StringC)
+		if !ok {
+			return misc.CreateTypeAssertError("size")
+		}
+		if sz.Value != "" {
+			ring.Size = misc.ParseSize(sz.Value)
+		}
 	}
 
 	// timeouts
-	tConnect, err := p.Get(parser.Ring, name, "timeout connect", true)
-	if err != nil {
-		return v, nil, err
+	tConnect, err := p.Get(parser.Ring, ring.Name, "timeout connect", true)
+	if err != nil && !errors.Is(err, parsererrors.ErrFetch) {
+		return err
 	}
-	tc, ok := tConnect.(*types.SimpleTimeout)
-	if !ok {
-		return v, nil, misc.CreateTypeAssertError("timeout connect")
-	}
-	if tc.Value != "" {
-		ring.TimeoutConnect = misc.ParseTimeout(tc.Value)
-	}
-
-	tServer, err := p.Get(parser.Ring, name, "timeout server", true)
-	if err != nil {
-		return v, nil, err
-	}
-	ts, ok := tServer.(*types.SimpleTimeout)
-	if !ok {
-		return v, nil, misc.CreateTypeAssertError("timeout server")
-	}
-	if ts.Value != "" {
-		ring.TimeoutServer = misc.ParseTimeout(ts.Value)
+	if err == nil {
+		tc, ok := tConnect.(*types.SimpleTimeout)
+		if !ok {
+			return misc.CreateTypeAssertError("timeout connect")
+		}
+		if tc.Value != "" {
+			ring.TimeoutConnect = misc.ParseTimeout(tc.Value)
+		}
 	}
 
-	return v, ring, nil
+	tServer, err := p.Get(parser.Ring, ring.Name, "timeout server", true)
+	if err != nil && !errors.Is(err, parsererrors.ErrFetch) {
+		return err
+	}
+	if err == nil {
+		ts, ok := tServer.(*types.SimpleTimeout)
+		if !ok {
+			return misc.CreateTypeAssertError("timeout server")
+		}
+		if ts.Value != "" {
+			ring.TimeoutServer = misc.ParseTimeout(ts.Value)
+		}
+	}
+	return nil
 }
 
 // DeleteRing deletes a ring in configuration. One of version or transactionID is
