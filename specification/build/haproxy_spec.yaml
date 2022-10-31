@@ -1658,6 +1658,9 @@ definitions:
           x-display-name: HTTP Use Proxy Header
         httpchk_params:
           $ref: '#/definitions/httpchk_params'
+          x-dependency:
+            adv_check:
+              value: httpchk
         httplog:
           type: boolean
           x-display-name: HTTP Log
@@ -1723,6 +1726,9 @@ definitions:
           $ref: '#/definitions/monitor_uri'
         mysql_check_params:
           $ref: '#/definitions/mysql_check_params'
+          x-dependency:
+            adv_check:
+              value: mysql-check
         nolinger:
           enum:
           - enabled
@@ -1743,6 +1749,9 @@ definitions:
           x-display-name: Persist
         pgsql_check_params:
           $ref: '#/definitions/pgsql_check_params'
+          x-dependency:
+            adv_check:
+              value: pgsql-check
         prefer_last_server:
           enum:
           - enabled
@@ -1765,6 +1774,9 @@ definitions:
           x-nullable: true
         smtpchk_params:
           $ref: '#/definitions/smtpchk_params'
+          x-dependency:
+            adv_check:
+              value: smtpchk
         socket_stats:
           enum:
           - enabled
@@ -2361,6 +2373,8 @@ definitions:
         httpchk_params:
           $ref: '#/definitions/httpchk_params'
           x-dependency:
+            adv_check:
+              value: httpchk
             mode:
               value: http
         httpclose:
@@ -2394,6 +2408,9 @@ definitions:
           type: string
         mysql_check_params:
           $ref: '#/definitions/mysql_check_params'
+          x-dependency:
+            adv_check:
+              value: mysql-check
         name:
           pattern: ^[A-Za-z0-9-_.:]+$
           type: string
@@ -2418,6 +2435,9 @@ definitions:
           x-display-name: Persist
         pgsql_check_params:
           $ref: '#/definitions/pgsql_check_params'
+          x-dependency:
+            adv_check:
+              value: pgsql-check
         prefer_last_server:
           enum:
           - enabled
@@ -2437,6 +2457,9 @@ definitions:
           x-nullable: true
         smtpchk_params:
           $ref: '#/definitions/smtpchk_params'
+          x-dependency:
+            adv_check:
+              value: smtpchk
         splice_auto:
           enum:
           - enabled
