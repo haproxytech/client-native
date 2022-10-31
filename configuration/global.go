@@ -259,10 +259,18 @@ func ParseGlobalSection(p parser.Parser) (*models.Global, error) { //nolint:goco
 		mworkerMaxReloads = mworkerMaxReloadsParser.Value
 	}
 
-	_, err = p.Get(parser.Global, parser.GlobalSectionName, "numa-cpu-mapping")
-	numaCPUMapping := true
-	if errors.Is(err, parser_errors.ErrFetch) {
-		numaCPUMapping = false
+	var numaCPUMapping string
+	data, err = p.Get(parser.Global, parser.GlobalSectionName, "numa-cpu-mapping")
+	if err == nil {
+		numaCPUMappingParser, ok := data.(*types.NumaCPUMapping)
+		if !ok {
+			return nil, misc.CreateTypeAssertError("numa-cpu-mapping")
+		}
+		if numaCPUMappingParser.NoOption {
+			numaCPUMapping = "disabled"
+		} else {
+			numaCPUMapping = "enabled"
+		}
 	}
 
 	_, err = p.Get(parser.Global, parser.GlobalSectionName, "pp2-never-send-local")
@@ -1716,9 +1724,11 @@ func SerializeGlobalSection(p parser.Parser, data *models.Global) error { //noli
 		return err
 	}
 
-	numaCPUMapping := &types.Enabled{}
-	if !data.NumaCPUMapping {
+	numaCPUMapping := &types.NumaCPUMapping{}
+	if data.NumaCPUMapping == "" {
 		numaCPUMapping = nil
+	} else if data.NumaCPUMapping == "disabled" {
+		numaCPUMapping.NoOption = true
 	}
 	if err := p.Set(parser.Global, parser.GlobalSectionName, "numa-cpu-mapping", numaCPUMapping); err != nil {
 		return err

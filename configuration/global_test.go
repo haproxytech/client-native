@@ -210,7 +210,7 @@ func TestGetGlobal(t *testing.T) {
 	if global.MworkerMaxReloads != 5 {
 		t.Errorf("MworkerMaxReloads is %v, expected 5", global.MworkerMaxReloads)
 	}
-	if global.NumaCPUMapping != true {
+	if global.NumaCPUMapping != "enabled" {
 		t.Errorf("NumaCPUMapping is %v, expected enabled", global.NumaCPUMapping)
 	}
 	if global.Pp2NeverSendLocal != true {
@@ -588,6 +588,7 @@ func TestPutGlobal(t *testing.T) {
 		FiftyOneDegreesOptions: &models.GlobalFiftyOneDegreesOptions{},
 		StatsMaxconn:           misc.Int64P(30),
 		Anonkey:                misc.Int64P(40),
+		NumaCPUMapping:         "disabled",
 	}
 
 	err := clientTest.PushGlobalConfiguration(g, "", version)
