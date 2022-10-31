@@ -3226,6 +3226,13 @@ definitions:
           pattern: ^[A-Za-z0-9-_.:]+$
           type: string
           x-nullable: false
+        shards:
+          description: |-
+            In some configurations, one would like to distribute the stick-table contents
+            to some peers in place of sending all the stick-table contents to each peer
+            declared in the "peers" section. In such cases, "shards" specifies the
+            number of peer involved in this stick-table contents distribution.
+          type: integer
         stick_table:
           $ref: '#/definitions/config_stick_table'
       required:
