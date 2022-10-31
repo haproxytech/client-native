@@ -918,6 +918,9 @@ definitions:
           type: string
         httpchk_params:
           $ref: '#/definitions/httpchk_params'
+          x-dependency:
+            adv_check:
+              value: httpchk
         httplog:
           type: boolean
           x-display-name: HTTP Log
@@ -959,8 +962,14 @@ definitions:
           $ref: '#/definitions/monitor_uri'
         mysql_check_params:
           $ref: '#/definitions/mysql_check_params'
+          x-dependency:
+            adv_check:
+              value: mysql-check
         pgsql_check_params:
           $ref: '#/definitions/pgsql_check_params'
+          x-dependency:
+            adv_check:
+              value: pgsql-check
         queue_timeout:
           type: integer
           x-nullable: true
@@ -977,6 +986,9 @@ definitions:
           x-nullable: true
         smtpchk_params:
           $ref: '#/definitions/smtpchk_params'
+          x-dependency:
+            adv_check:
+              value: smtpchk
         stats_options:
           $ref: '#/definitions/stats_options'
         tcplog:
@@ -1345,6 +1357,8 @@ definitions:
         httpchk_params:
           $ref: '#/definitions/httpchk_params'
           x-dependency:
+            adv_check:
+              value: httpchk
             mode:
               value: http
         log_tag:
@@ -1357,12 +1371,18 @@ definitions:
           type: string
         mysql_check_params:
           $ref: '#/definitions/mysql_check_params'
+          x-dependency:
+            adv_check:
+              value: mysql-check
         name:
           pattern: ^[A-Za-z0-9-_.:]+$
           type: string
           x-nullable: false
         pgsql_check_params:
           $ref: '#/definitions/pgsql_check_params'
+          x-dependency:
+            adv_check:
+              value: pgsql-check
         queue_timeout:
           type: integer
           x-nullable: true
@@ -1376,6 +1396,9 @@ definitions:
           x-nullable: true
         smtpchk_params:
           $ref: '#/definitions/smtpchk_params'
+          x-dependency:
+            adv_check:
+              value: smtpchk
         stats_options:
           $ref: '#/definitions/stats_options'
         stick_table:
