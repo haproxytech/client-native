@@ -290,6 +290,8 @@ func (s *SectionParser) parseField(fieldName string) interface{} {
 
 func (s *SectionParser) checkSpecialFields(fieldName string) (match bool, data interface{}) { //nolint:gocyclo,cyclop
 	switch fieldName {
+	case "Shards":
+		return true, s.shards()
 	case "From":
 		return true, s.from()
 	case "MonitorFail":
@@ -1374,6 +1376,21 @@ func (s *SectionParser) source() interface{} {
 	return nil
 }
 
+func (s *SectionParser) shards() interface{} {
+	if s.Section == parser.Peers {
+		data, err := s.get("shards", false)
+		if err != nil {
+			return nil
+		}
+
+		d := data.(*types.Int64C)
+
+		return d.Value
+	}
+
+	return nil
+}
+
 // SectionObject represents a configuration section
 type SectionObject struct {
 	Object  interface{}
@@ -1441,6 +1458,8 @@ func (s *SectionObject) checkParams(fieldName string) (match bool) {
 
 func (s *SectionObject) checkSpecialFields(fieldName string, field reflect.Value) (match bool, err error) { //nolint:gocyclo,cyclop
 	switch fieldName {
+	case "Shard":
+		return true, s.shard(field)
 	case "From":
 		return true, s.from(field)
 	case "MonitorURI":
@@ -2812,6 +2831,20 @@ func (s *SectionObject) source(field reflect.Value) error {
 		source.HdrIP = true
 	}
 	return s.set("source", source)
+}
+
+func (s *SectionObject) shard(field reflect.Value) error {
+	if s.Section == parser.Peers {
+		if valueIsNil(field) {
+			return s.set("shards", nil)
+		}
+		if field.Kind() == reflect.Ptr {
+			field = field.Elem()
+		}
+		v := field.Int()
+		return s.set("shards", types.Int64C{Value: v})
+	}
+	return nil
 }
 
 func (c *client) deleteSection(section parser.Section, name string, transactionID string, version int64) error {

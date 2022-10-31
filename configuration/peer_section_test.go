@@ -115,6 +115,9 @@ func TestGetPeerSection(t *testing.T) {
 	if l.StickTable.Store != "http_req_rate(10s)" {
 		t.Errorf("%v: StickTable.Store not http_req_rate(10s): %v", l.Name, l.StickTable.Store)
 	}
+	if l.Shards != 3 {
+		t.Errorf("%v: Shards not 3: %v", l.Name, l.Shards)
+	}
 
 	_, err = l.MarshalBinary()
 	if err != nil {
@@ -151,6 +154,7 @@ func TestCreateEditDeletePeerSection(t *testing.T) {
 			Expire: &tSize,
 			Type:   "integer",
 		},
+		Shards: 4,
 	}
 	err := clientTest.CreatePeerSection(f, "", version)
 	if err != nil {
