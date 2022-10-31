@@ -55,7 +55,8 @@ global:
     mworker_max_reloads:
       type: integer
     numa_cpu_mapping:
-      type: boolean
+      type: string
+      enum: [enabled, disabled]
     pp2_never_send_local:
       type: boolean
     ulimit_n:
