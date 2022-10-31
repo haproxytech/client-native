@@ -209,7 +209,8 @@ type Global struct {
 	Nosplice bool `json:"nosplice,omitempty"`
 
 	// numa cpu mapping
-	NumaCPUMapping bool `json:"numa_cpu_mapping,omitempty"`
+	// Enum: [enabled disabled]
+	NumaCPUMapping string `json:"numa_cpu_mapping,omitempty"`
 
 	// pidfile
 	Pidfile string `json:"pidfile,omitempty"`
@@ -394,6 +395,10 @@ func (m *Global) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateMworkerMaxReloads(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateNumaCPUMapping(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -862,6 +867,48 @@ func (m *Global) validateMworkerMaxReloads(formats strfmt.Registry) error {
 	}
 
 	if err := validate.MinimumInt("mworker_max_reloads", "body", *m.MworkerMaxReloads, 0, false); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+var globalTypeNumaCPUMappingPropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		globalTypeNumaCPUMappingPropEnum = append(globalTypeNumaCPUMappingPropEnum, v)
+	}
+}
+
+const (
+
+	// GlobalNumaCPUMappingEnabled captures enum value "enabled"
+	GlobalNumaCPUMappingEnabled string = "enabled"
+
+	// GlobalNumaCPUMappingDisabled captures enum value "disabled"
+	GlobalNumaCPUMappingDisabled string = "disabled"
+)
+
+// prop value enum
+func (m *Global) validateNumaCPUMappingEnum(path, location string, value string) error {
+	if err := validate.EnumCase(path, location, value, globalTypeNumaCPUMappingPropEnum, true); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *Global) validateNumaCPUMapping(formats strfmt.Registry) error {
+	if swag.IsZero(m.NumaCPUMapping) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateNumaCPUMappingEnum("numa_cpu_mapping", "body", m.NumaCPUMapping); err != nil {
 		return err
 	}
 

@@ -1007,7 +1007,10 @@ definitions:
           type: boolean
           x-display-name: Disable the use of kernel tcp splicing between sockets on Linux
         numa_cpu_mapping:
-          type: boolean
+          enum:
+          - enabled
+          - disabled
+          type: string
         pidfile:
           type: string
           x-display-name: PID File

@@ -53,7 +53,8 @@ global:
       minimum: 0
       x-nullable: true
     numa_cpu_mapping:
-      type: boolean
+      type: string
+      enum: [enabled, disabled]
     pp2_never_send_local:
       type: boolean
     ulimit_n:
