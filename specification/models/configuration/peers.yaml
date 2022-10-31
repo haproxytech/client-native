@@ -20,6 +20,13 @@ peer_section:
       $ref: "#/definitions/default_bind"
     stick_table:
       $ref: "#/definitions/config_stick_table"
+    shards:
+      type: integer
+      description: |-
+        In some configurations, one would like to distribute the stick-table contents
+        to some peers in place of sending all the stick-table contents to each peer
+        declared in the "peers" section. In such cases, "shards" specifies the
+        number of peer involved in this stick-table contents distribution.
   additionalProperties: false
 peer_entry:
   title: Peer Entry

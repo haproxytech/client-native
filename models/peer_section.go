@@ -53,6 +53,12 @@ type PeerSection struct {
 	// Pattern: ^[A-Za-z0-9-_.:]+$
 	Name string `json:"name"`
 
+	// In some configurations, one would like to distribute the stick-table contents
+	// to some peers in place of sending all the stick-table contents to each peer
+	// declared in the "peers" section. In such cases, "shards" specifies the
+	// number of peer involved in this stick-table contents distribution.
+	Shards int64 `json:"shards,omitempty"`
+
 	// stick table
 	StickTable *ConfigStickTable `json:"stick_table,omitempty"`
 }
