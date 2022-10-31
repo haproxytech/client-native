@@ -141,10 +141,19 @@ backend:
       enum: [ssl-hello-chk, smtpchk, ldap-check, mysql-check, pgsql-check, tcp-check, redis-check, httpchk]
     smtpchk_params:
       $ref: "#/definitions/smtpchk_params"
+      x-dependency:
+        adv_check:
+          value: smtpchk
     mysql_check_params:
       $ref: "#/definitions/mysql_check_params"
+      x-dependency:
+        adv_check:
+          value: mysql-check
     pgsql_check_params:
       $ref: "#/definitions/pgsql_check_params"
+      x-dependency:
+        adv_check:
+          value: pgsql-check
     external_check:
       type: string
       enum: [enabled, disabled]
@@ -197,6 +206,8 @@ backend:
       x-dependency:
         mode:
           value: http
+        adv_check:
+          value: httpchk
     http_reuse:
       type: string
       enum: [aggressive, always, never, safe]
