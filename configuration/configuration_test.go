@@ -625,6 +625,7 @@ peers mycluster
   stick-table type ip size 200k expire 1h store http_req_rate(10s)
   peer hapee 192.168.1.1:1023
   peer aggregator HARDCODEDCLUSTERIP:10023
+  shards 3
 
 program test
   command echo "Hello, World!"
