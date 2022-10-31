@@ -33,12 +33,24 @@ defaults:
       enum: [ssl-hello-chk, smtpchk, ldap-check, mysql-check, pgsql-check, tcp-check, redis-check, httpchk]
     smtpchk_params:
       $ref: "#/definitions/smtpchk_params"
+      x-dependency:
+        adv_check:
+          value: smtpchk
     mysql_check_params:
       $ref: "#/definitions/mysql_check_params"
+      x-dependency:
+        adv_check:
+          value: mysql-check
     pgsql_check_params:
       $ref: "#/definitions/pgsql_check_params"
+      x-dependency:
+        adv_check:
+          value: pgsql-check
     httpchk_params:
       $ref: "#/definitions/httpchk_params"
+      x-dependency:
+        adv_check:
+          value: httpchk
     http-check:
       $ref: "#/definitions/http_check"
     bind_process:
