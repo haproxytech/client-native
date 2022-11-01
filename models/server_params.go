@@ -275,6 +275,9 @@ type ServerParams struct {
 	// Enum: [enabled disabled]
 	SendProxyV2SslCn string `json:"send_proxy_v2_ssl_cn,omitempty"`
 
+	// shard
+	Shard int64 `json:"shard,omitempty"`
+
 	// slowstart
 	Slowstart *int64 `json:"slowstart,omitempty"`
 

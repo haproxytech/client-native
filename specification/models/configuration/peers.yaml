@@ -49,3 +49,5 @@ peer_entry:
       x-nullable: true
       minimum: 1
       maximum: 65535
+    shard:
+      type: integer

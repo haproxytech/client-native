@@ -18,6 +18,7 @@ package configuration
 import (
 	"errors"
 	"fmt"
+	"strconv"
 
 	strfmt "github.com/go-openapi/strfmt"
 	parser "github.com/haproxytech/config-parser/v4"
@@ -189,19 +190,30 @@ func ParsePeerEntries(peerSection string, p parser.Parser) (models.PeerEntries, 
 }
 
 func ParsePeerEntry(p types.Peer) *models.PeerEntry {
-	return &models.PeerEntry{
+	peer := &models.PeerEntry{
 		Address: &p.IP,
 		Port:    &p.Port,
 		Name:    p.Name,
 	}
+	if p.Shard != "" {
+		shard, err := strconv.ParseInt(p.Shard, 10, 64)
+		if err == nil {
+			peer.Shard = shard
+		}
+	}
+	return peer
 }
 
 func SerializePeerEntry(pe models.PeerEntry) types.Peer {
-	return types.Peer{
+	peer := types.Peer{
 		Name: pe.Name,
 		IP:   *pe.Address,
 		Port: *pe.Port,
 	}
+	if pe.Shard != 0 {
+		peer.Shard = fmt.Sprintf("%d", pe.Shard)
+	}
+	return peer
 }
 
 func GetPeerEntryByName(name string, peerSection string, p parser.Parser) (*models.PeerEntry, int) {
