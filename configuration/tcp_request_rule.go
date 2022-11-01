@@ -270,18 +270,15 @@ func ParseTCPRequestRule(f types.TCPType) (rule *models.TCPRequestRule, err erro
 			rule.Cond = a.Cond
 			rule.CondTest = a.CondTest
 		case *actions.TrackSc:
-			rule.Action = models.TCPRequestRuleActionTrackDashSc0
 			rule.TrackKey = a.Key
-			var typ actions.TrackScT
 			switch a.Type {
 			case actions.TrackSc0:
-				typ = actions.TrackSc0
+				rule.Action = models.TCPRequestRuleActionTrackDashSc0
 			case actions.TrackSc1:
-				typ = actions.TrackSc1
+				rule.Action = models.TCPRequestRuleActionTrackDashSc1
 			case actions.TrackSc2:
-				typ = actions.TrackSc2
+				rule.Action = models.TCPRequestRuleActionTrackDashSc2
 			}
-			rule.Type = string(typ)
 			if a.Table != "" {
 				rule.TrackTable = a.Table
 			}
@@ -384,17 +381,14 @@ func ParseTCPRequestRule(f types.TCPType) (rule *models.TCPRequestRule, err erro
 			rule.Cond = a.Cond
 			rule.CondTest = a.CondTest
 		case *actions.TrackSc:
-			var typ actions.TrackScT
 			switch a.Type {
 			case actions.TrackSc0:
-				typ = actions.TrackSc0
+				rule.Action = models.TCPRequestRuleActionTrackDashSc0
 			case actions.TrackSc1:
-				typ = actions.TrackSc1
+				rule.Action = models.TCPRequestRuleActionTrackDashSc1
 			case actions.TrackSc2:
-				typ = actions.TrackSc2
+				rule.Action = models.TCPRequestRuleActionTrackDashSc2
 			}
-			rule.Type = string(typ)
-			rule.Action = models.TCPRequestRuleActionTrackDashSc0
 			rule.TrackKey = a.Key
 			if a.Table != "" {
 				rule.TrackTable = a.Table
@@ -526,17 +520,14 @@ func ParseTCPRequestRule(f types.TCPType) (rule *models.TCPRequestRule, err erro
 			rule.Cond = a.Cond
 			rule.CondTest = a.CondTest
 		case *actions.TrackSc:
-			var typ actions.TrackScT
 			switch a.Type {
 			case actions.TrackSc0:
-				typ = actions.TrackSc0
+				rule.Action = models.TCPRequestRuleActionTrackDashSc0
 			case actions.TrackSc1:
-				typ = actions.TrackSc1
+				rule.Action = models.TCPRequestRuleActionTrackDashSc1
 			case actions.TrackSc2:
-				typ = actions.TrackSc2
+				rule.Action = models.TCPRequestRuleActionTrackDashSc2
 			}
-			rule.Type = string(typ)
-			rule.Action = models.TCPRequestRuleActionTrackDashSc0
 			rule.TrackKey = a.Key
 			if a.Table != "" {
 				rule.TrackTable = a.Table
