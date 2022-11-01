@@ -74,6 +74,9 @@ func TestGetPeerEntry(t *testing.T) {
 	if *l.Port != 1023 {
 		t.Errorf("%v: Port not 1023: %v", l.Name, *l.Port)
 	}
+	if l.Shard != 1 {
+		t.Errorf("%v: Shard not 1: %v", l.Name, l.Shard)
+	}
 
 	_, err = l.MarshalBinary()
 	if err != nil {
@@ -98,6 +101,7 @@ func TestCreateEditDeletePeerEntry(t *testing.T) {
 		Address: &address,
 		Port:    &port,
 		Name:    "hapcommunity",
+		Shard:   2,
 	}
 
 	err = clientTest.CreatePeerEntry("mycluster", e, "", version)

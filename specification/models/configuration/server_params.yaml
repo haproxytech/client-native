@@ -243,6 +243,8 @@ server_params:
     send_proxy_v2_ssl_cn:
       type: string
       enum: [enabled, disabled]
+    shard:
+      type: integer
     slowstart:
       type: integer
       x-nullable: true

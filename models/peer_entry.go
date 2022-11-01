@@ -51,6 +51,9 @@ type PeerEntry struct {
 	// Maximum: 65535
 	// Minimum: 1
 	Port *int64 `json:"port"`
+
+	// shard
+	Shard int64 `json:"shard,omitempty"`
 }
 
 // Validate validates this peer entry

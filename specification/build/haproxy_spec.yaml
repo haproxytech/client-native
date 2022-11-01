@@ -759,6 +759,8 @@ definitions:
           - enabled
           - disabled
           type: string
+        shard:
+          type: integer
         slowstart:
           type: integer
           x-nullable: true
@@ -3260,6 +3262,8 @@ definitions:
           minimum: 1
           type: integer
           x-nullable: true
+        shard:
+          type: integer
       required:
       - name
       - address

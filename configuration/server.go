@@ -436,6 +436,13 @@ func parseServerParams(serverOptions []params.ServerOption, serverParams *models
 				serverParams.Resolvers = v.Value
 			case "proxy-v2-options":
 				serverParams.ProxyV2Options = strings.Split(v.Value, ",")
+			case "shard":
+				if v.Value != "" {
+					p, err := strconv.ParseInt(v.Value, 10, 64)
+					if err == nil {
+						serverParams.Shard = p
+					}
+				}
 			case "slowstart":
 				serverParams.Slowstart = misc.ParseTimeout(v.Value)
 			case "sni":
@@ -623,11 +630,6 @@ func serializeServerParams(s models.ServerParams) (options []params.ServerOption
 	if s.Tfo == "disabled" {
 		options = append(options, &params.ServerOptionWord{Name: "no-tfo"})
 	}
-	// ServerOptionValue
-	/*
-		if s.ID != nil {
-			options = append(options, &params.ServerOptionValue{Name: "id", Value: strconv.FormatInt(*s.ID, 10)})
-		}*/
 	if s.AgentSend != "" {
 		options = append(options, &params.ServerOptionValue{Name: "agent-send", Value: s.AgentSend})
 	}
@@ -759,6 +761,9 @@ func serializeServerParams(s models.ServerParams) (options []params.ServerOption
 	}
 	if len(s.ProxyV2Options) > 0 {
 		options = append(options, &params.ServerOptionValue{Name: "proxy-v2-options", Value: strings.Join(s.ProxyV2Options, ",")})
+	}
+	if s.Shard != 0 {
+		options = append(options, &params.ServerOptionValue{Name: "shard", Value: strconv.FormatInt(s.Shard, 10)})
 	}
 	if s.Slowstart != nil {
 		options = append(options, &params.ServerOptionValue{Name: "slowstart", Value: strconv.FormatInt(*s.Slowstart, 10)})
