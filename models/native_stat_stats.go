@@ -61,7 +61,7 @@ type NativeStatStats struct {
 	AgentRise *int64 `json:"agent_rise,omitempty"`
 
 	// agent status
-	// Enum: [UNK INI SOCKERR L40K L4TOUT L4CON L7OK L7STS]
+	// Enum: [UNK INI SOCKERR L4OK L4TOUT L4CON L7OK L7STS]
 	AgentStatus string `json:"agent_status,omitempty"`
 
 	// algo
@@ -95,7 +95,7 @@ type NativeStatStats struct {
 	CheckRise *int64 `json:"check_rise,omitempty"`
 
 	// check status
-	// Enum: [UNK INI SOCKERR L40K L4TOUT L4CON L6OK L6TOUT L6RSP L7OK L7OKC L7TOUT L7RSP L7STS]
+	// Enum: [UNK INI SOCKERR L4OK L4TOUT L4CON L6OK L6TOUT L6RSP L7OK L7OKC L7TOUT L7RSP L7STS]
 	CheckStatus string `json:"check_status,omitempty"`
 
 	// chkdown
@@ -305,7 +305,7 @@ var nativeStatStatsTypeAgentStatusPropEnum []interface{}
 
 func init() {
 	var res []string
-	if err := json.Unmarshal([]byte(`["UNK","INI","SOCKERR","L40K","L4TOUT","L4CON","L7OK","L7STS"]`), &res); err != nil {
+	if err := json.Unmarshal([]byte(`["UNK","INI","SOCKERR","L4OK","L4TOUT","L4CON","L7OK","L7STS"]`), &res); err != nil {
 		panic(err)
 	}
 	for _, v := range res {
@@ -324,8 +324,8 @@ const (
 	// NativeStatStatsAgentStatusSOCKERR captures enum value "SOCKERR"
 	NativeStatStatsAgentStatusSOCKERR string = "SOCKERR"
 
-	// NativeStatStatsAgentStatusL40K captures enum value "L40K"
-	NativeStatStatsAgentStatusL40K string = "L40K"
+	// NativeStatStatsAgentStatusL4OK captures enum value "L4OK"
+	NativeStatStatsAgentStatusL4OK string = "L4OK"
 
 	// NativeStatStatsAgentStatusL4TOUT captures enum value "L4TOUT"
 	NativeStatStatsAgentStatusL4TOUT string = "L4TOUT"
@@ -365,7 +365,7 @@ var nativeStatStatsTypeCheckStatusPropEnum []interface{}
 
 func init() {
 	var res []string
-	if err := json.Unmarshal([]byte(`["UNK","INI","SOCKERR","L40K","L4TOUT","L4CON","L6OK","L6TOUT","L6RSP","L7OK","L7OKC","L7TOUT","L7RSP","L7STS"]`), &res); err != nil {
+	if err := json.Unmarshal([]byte(`["UNK","INI","SOCKERR","L4OK","L4TOUT","L4CON","L6OK","L6TOUT","L6RSP","L7OK","L7OKC","L7TOUT","L7RSP","L7STS"]`), &res); err != nil {
 		panic(err)
 	}
 	for _, v := range res {
@@ -384,8 +384,8 @@ const (
 	// NativeStatStatsCheckStatusSOCKERR captures enum value "SOCKERR"
 	NativeStatStatsCheckStatusSOCKERR string = "SOCKERR"
 
-	// NativeStatStatsCheckStatusL40K captures enum value "L40K"
-	NativeStatStatsCheckStatusL40K string = "L40K"
+	// NativeStatStatsCheckStatusL4OK captures enum value "L4OK"
+	NativeStatStatsCheckStatusL4OK string = "L4OK"
 
 	// NativeStatStatsCheckStatusL4TOUT captures enum value "L4TOUT"
 	NativeStatStatsCheckStatusL4TOUT string = "L4TOUT"
