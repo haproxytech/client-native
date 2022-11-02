@@ -5630,7 +5630,7 @@ definitions:
           - UNK
           - INI
           - SOCKERR
-          - L40K
+          - L4OK
           - L4TOUT
           - L4CON
           - L7OK
@@ -5689,7 +5689,7 @@ definitions:
           - UNK
           - INI
           - SOCKERR
-          - L40K
+          - L4OK
           - L4TOUT
           - L4CON
           - L6OK
