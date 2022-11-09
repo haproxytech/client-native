@@ -1299,7 +1299,7 @@ func SerializeGlobalSection(p parser.Parser, data *models.Global) error { //noli
 	}
 
 	pSslSkipSelfIssuedCa := &types.Enabled{}
-	if !data.ExternalCheck {
+	if !data.SslSkipSelfIssuedCa {
 		pSslSkipSelfIssuedCa = nil
 	}
 	if err := p.Set(parser.Global, parser.GlobalSectionName, "ssl-skip-self-issued-ca", pSslSkipSelfIssuedCa); err != nil {
