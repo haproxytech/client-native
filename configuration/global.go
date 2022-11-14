@@ -1817,7 +1817,7 @@ func SerializeGlobalSection(p parser.Parser, data *models.Global) error { //noli
 			if setVar != nil {
 				sv := types.SetVar{
 					Name: *setVar.Name,
-					Expr: common.Expression{Expr: strings.Split(*setVar.Expr, "")},
+					Expr: common.Expression{Expr: strings.Split(*setVar.Expr, " ")},
 				}
 				setVars = append(setVars, sv)
 			}
