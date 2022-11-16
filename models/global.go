@@ -87,6 +87,9 @@ type Global struct {
 	// Enum: [enabled disabled]
 	Daemon string `json:"daemon,omitempty"`
 
+	// default path
+	DefaultPath *GlobalDefaultPath `json:"default_path,omitempty"`
+
 	// description
 	Description string `json:"description,omitempty"`
 
@@ -375,6 +378,10 @@ func (m *Global) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateDaemon(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateDefaultPath(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -751,6 +758,25 @@ func (m *Global) validateDaemon(formats strfmt.Registry) error {
 	// value enum
 	if err := m.validateDaemonEnum("daemon", "body", m.Daemon); err != nil {
 		return err
+	}
+
+	return nil
+}
+
+func (m *Global) validateDefaultPath(formats strfmt.Registry) error {
+	if swag.IsZero(m.DefaultPath) { // not required
+		return nil
+	}
+
+	if m.DefaultPath != nil {
+		if err := m.DefaultPath.Validate(formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("default_path")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("default_path")
+			}
+			return err
+		}
 	}
 
 	return nil
@@ -1219,6 +1245,10 @@ func (m *Global) ContextValidate(ctx context.Context, formats strfmt.Registry) e
 		res = append(res, err)
 	}
 
+	if err := m.contextValidateDefaultPath(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.contextValidateDeviceAtlasOptions(ctx, formats); err != nil {
 		res = append(res, err)
 	}
@@ -1433,6 +1463,22 @@ func (m *Global) contextValidateThreadGroupLines(ctx context.Context, formats st
 	return nil
 }
 
+func (m *Global) contextValidateDefaultPath(ctx context.Context, formats strfmt.Registry) error {
+
+	if m.DefaultPath != nil {
+		if err := m.DefaultPath.ContextValidate(ctx, formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("default_path")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("default_path")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
 func (m *Global) contextValidateDeviceAtlasOptions(ctx context.Context, formats strfmt.Registry) error {
 
 	if m.DeviceAtlasOptions != nil {
@@ -1637,6 +1683,123 @@ func (m *CPUMap) MarshalBinary() ([]byte, error) {
 // UnmarshalBinary interface implementation
 func (m *CPUMap) UnmarshalBinary(b []byte) error {
 	var res CPUMap
+	if err := swag.ReadJSON(b, &res); err != nil {
+		return err
+	}
+	*m = res
+	return nil
+}
+
+// GlobalDefaultPath global default path
+//
+// swagger:model GlobalDefaultPath
+type GlobalDefaultPath struct {
+
+	// path
+	// Pattern: ^[^\s]+$
+	Path string `json:"path,omitempty"`
+
+	// type
+	// Required: true
+	// Enum: [current config parent origin]
+	Type string `json:"type"`
+}
+
+// Validate validates this global default path
+func (m *GlobalDefaultPath) Validate(formats strfmt.Registry) error {
+	var res []error
+
+	if err := m.validatePath(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateType(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if len(res) > 0 {
+		return errors.CompositeValidationError(res...)
+	}
+	return nil
+}
+
+func (m *GlobalDefaultPath) validatePath(formats strfmt.Registry) error {
+	if swag.IsZero(m.Path) { // not required
+		return nil
+	}
+
+	if err := validate.Pattern("default_path"+"."+"path", "body", m.Path, `^[^\s]+$`); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+var globalDefaultPathTypeTypePropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["current","config","parent","origin"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		globalDefaultPathTypeTypePropEnum = append(globalDefaultPathTypeTypePropEnum, v)
+	}
+}
+
+const (
+
+	// GlobalDefaultPathTypeCurrent captures enum value "current"
+	GlobalDefaultPathTypeCurrent string = "current"
+
+	// GlobalDefaultPathTypeConfig captures enum value "config"
+	GlobalDefaultPathTypeConfig string = "config"
+
+	// GlobalDefaultPathTypeParent captures enum value "parent"
+	GlobalDefaultPathTypeParent string = "parent"
+
+	// GlobalDefaultPathTypeOrigin captures enum value "origin"
+	GlobalDefaultPathTypeOrigin string = "origin"
+)
+
+// prop value enum
+func (m *GlobalDefaultPath) validateTypeEnum(path, location string, value string) error {
+	if err := validate.EnumCase(path, location, value, globalDefaultPathTypeTypePropEnum, true); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *GlobalDefaultPath) validateType(formats strfmt.Registry) error {
+
+	if err := validate.RequiredString("default_path"+"."+"type", "body", m.Type); err != nil {
+		return err
+	}
+
+	// value enum
+	if err := m.validateTypeEnum("default_path"+"."+"type", "body", m.Type); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+// ContextValidate validates this global default path based on context it is used
+func (m *GlobalDefaultPath) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+	return nil
+}
+
+// MarshalBinary interface implementation
+func (m *GlobalDefaultPath) MarshalBinary() ([]byte, error) {
+	if m == nil {
+		return nil, nil
+	}
+	return swag.WriteJSON(m)
+}
+
+// UnmarshalBinary interface implementation
+func (m *GlobalDefaultPath) UnmarshalBinary(b []byte) error {
+	var res GlobalDefaultPath
 	if err := swag.ReadJSON(b, &res); err != nil {
 		return err
 	}

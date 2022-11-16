@@ -1040,6 +1040,25 @@ definitions:
           - enabled
           - disabled
           type: string
+        default_path:
+          properties:
+            path:
+              pattern: ^[^\s]+$
+              type: string
+              x-dependency:
+                type:
+                  value: origin
+            type:
+              enum:
+              - current
+              - config
+              - parent
+              - origin
+              type: string
+              x-nullable: false
+          required:
+          - type
+          type: object
         description:
           type: string
           x-display-name: Text that describes the instance
