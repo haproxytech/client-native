@@ -28,6 +28,7 @@ const testConf = `
 # _version=1
 global
 	daemon
+	default-path origin /some/path
 	nbproc 4
 	maxconn 2000
 	external-check

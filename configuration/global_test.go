@@ -532,6 +532,16 @@ func TestGetGlobal(t *testing.T) {
 	if global.Unsetenv != "third fourth" {
 		t.Errorf("Unsetenv is %v, expected third fourth", global.Resetenv)
 	}
+	if global.DefaultPath == nil {
+		t.Error("DefaultPath is nil, expected not nil")
+	} else {
+		if global.DefaultPath.Type != "origin" {
+			t.Errorf("DefaultPath Type is %v, expected origin", global.DefaultPath.Type)
+		}
+		if global.DefaultPath.Path != "/some/path" {
+			t.Errorf("DefaultPath Path is %v, expected /some/path", global.DefaultPath.Path)
+		}
+	}
 }
 
 func TestPutGlobal(t *testing.T) {
@@ -589,6 +599,10 @@ func TestPutGlobal(t *testing.T) {
 		StatsMaxconn:           misc.Int64P(30),
 		Anonkey:                misc.Int64P(40),
 		NumaCPUMapping:         "disabled",
+		DefaultPath: &models.GlobalDefaultPath{
+			Type: "origin",
+			Path: "/some/other/path",
+		},
 	}
 
 	err := clientTest.PushGlobalConfiguration(g, "", version)
