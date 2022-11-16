@@ -661,4 +661,19 @@ global:
     load_server_state_from_file:
       type: string
       enum: [global, local, none]
+    default_path:
+      type: object
+      required:
+        - type
+      properties:
+        type:
+          type: string
+          enum: [current, config, parent, origin]
+          x-nullable: false
+        path:
+          type: string
+          pattern: '^[^\s]+$'
+          x-dependency:
+            type:
+              value: origin
   additionalProperties: false
