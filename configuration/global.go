@@ -985,6 +985,19 @@ func ParseGlobalSection(p parser.Parser) (*models.Global, error) { //nolint:goco
 		return nil, err
 	}
 
+	var defaultPath *models.GlobalDefaultPath
+	data, err = p.Get(parser.Global, parser.GlobalSectionName, "default-path")
+	if err == nil {
+		defaultPathParser, ok := data.(*types.DefaultPath)
+		if !ok {
+			return nil, misc.CreateTypeAssertError("default-path")
+		}
+		defaultPath = &models.GlobalDefaultPath{
+			Type: defaultPathParser.Type,
+			Path: defaultPathParser.Path,
+		}
+	}
+
 	// deprecated option
 	dhParam := int64(0)
 	if tuneOptions != nil {
@@ -1009,6 +1022,7 @@ func ParseGlobalSection(p parser.Parser) (*models.Global, error) { //nolint:goco
 		ServerStateFile:                   srvStateFile,
 		HardStopAfter:                     hardStop,
 		Daemon:                            daemon,
+		DefaultPath:                       defaultPath,
 		MasterWorker:                      masterWorker,
 		Maxconn:                           mConn,
 		Nbproc:                            nbproc,
@@ -1943,6 +1957,15 @@ func SerializeGlobalSection(p parser.Parser, data *models.Global) error { //noli
 	}
 
 	if err := serializeFiftyOneDegreesOptions(p, data.FiftyOneDegreesOptions); err != nil {
+		return err
+	}
+
+	defaultPath := &types.DefaultPath{}
+	if data.DefaultPath != nil {
+		defaultPath.Type = data.DefaultPath.Type
+		defaultPath.Path = data.DefaultPath.Path
+	}
+	if err := p.Set(parser.Global, parser.GlobalSectionName, "default-path", defaultPath); err != nil {
 		return err
 	}
 
