@@ -186,9 +186,7 @@ frontend:
       enum: [enabled, disabled]
       x-display-name: Nolinger
     originalto:
-      type: string
-      enum: [enabled, disabled]
-      x-display-name: Originalto
+      $ref: "#/definitions/originalto"
     socket_stats:
       type: string
       enum: [enabled, disabled]

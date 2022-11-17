@@ -1736,11 +1736,7 @@ definitions:
           type: string
           x-display-name: Nolinger
         originalto:
-          enum:
-          - enabled
-          - disabled
-          type: string
-          x-display-name: Originalto
+          $ref: '#/definitions/originalto'
         persist:
           enum:
           - enabled
@@ -2077,11 +2073,7 @@ definitions:
           type: string
           x-display-name: Nolinger
         originalto:
-          enum:
-          - enabled
-          - disabled
-          type: string
-          x-display-name: Originalto
+          $ref: '#/definitions/originalto'
         socket_stats:
           enum:
           - enabled
@@ -2422,11 +2414,7 @@ definitions:
           type: string
           x-display-name: Nolinger
         originalto:
-          enum:
-          - enabled
-          - disabled
-          type: string
-          x-display-name: Originalto
+          $ref: '#/definitions/originalto'
         persist:
           enum:
           - enabled
@@ -7494,6 +7482,22 @@ definitions:
       - cond
       - cond_test
       type: object
+  originalto:
+      properties:
+        enabled:
+          enum:
+          - enabled
+          type: string
+        except:
+          pattern: ^[^\s]+$
+          type: string
+        header:
+          pattern: ^[^\s]+$
+          type: string
+      required:
+      - enabled
+      type: object
+      x-display-name: OriginalTo
   smtpchk_params:
       properties:
         domain:
