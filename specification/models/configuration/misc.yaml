@@ -339,3 +339,18 @@ stats_auth:
       type: string
     passwd:
       type: string
+originalto:
+  type: object
+  x-display-name: OriginalTo
+  required:
+    - enabled
+  properties:
+    enabled:
+      type: string
+      enum: [enabled]
+    except:
+      type: string
+      pattern: '^[^\s]+$'
+    header:
+      type: string
+      pattern: '^[^\s]+$'

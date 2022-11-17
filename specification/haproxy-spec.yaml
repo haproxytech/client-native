@@ -507,6 +507,8 @@ definitions:
     $ref: "models/monitor.yaml#/monitor_uri"
   monitor_fail:
     $ref: "models/monitor.yaml#/monitor_fail"
+  originalto:
+    $ref: "models/configuration/misc.yaml#/originalto"
   smtpchk_params:
     $ref: "models/configuration/misc.yaml#/smtpchk_params"
   mysql_check_params:

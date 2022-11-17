@@ -226,8 +226,7 @@ type Frontend struct {
 	Nolinger string `json:"nolinger,omitempty"`
 
 	// originalto
-	// Enum: [enabled disabled]
-	Originalto string `json:"originalto,omitempty"`
+	Originalto *Originalto `json:"originalto,omitempty"`
 
 	// socket stats
 	// Enum: [enabled disabled]
@@ -1587,43 +1586,20 @@ func (m *Frontend) validateNolinger(formats strfmt.Registry) error {
 	return nil
 }
 
-var frontendTypeOriginaltoPropEnum []interface{}
-
-func init() {
-	var res []string
-	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
-		panic(err)
-	}
-	for _, v := range res {
-		frontendTypeOriginaltoPropEnum = append(frontendTypeOriginaltoPropEnum, v)
-	}
-}
-
-const (
-
-	// FrontendOriginaltoEnabled captures enum value "enabled"
-	FrontendOriginaltoEnabled string = "enabled"
-
-	// FrontendOriginaltoDisabled captures enum value "disabled"
-	FrontendOriginaltoDisabled string = "disabled"
-)
-
-// prop value enum
-func (m *Frontend) validateOriginaltoEnum(path, location string, value string) error {
-	if err := validate.EnumCase(path, location, value, frontendTypeOriginaltoPropEnum, true); err != nil {
-		return err
-	}
-	return nil
-}
-
 func (m *Frontend) validateOriginalto(formats strfmt.Registry) error {
 	if swag.IsZero(m.Originalto) { // not required
 		return nil
 	}
 
-	// value enum
-	if err := m.validateOriginaltoEnum("originalto", "body", m.Originalto); err != nil {
-		return err
+	if m.Originalto != nil {
+		if err := m.Originalto.Validate(formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("originalto")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("originalto")
+			}
+			return err
+		}
 	}
 
 	return nil
@@ -1959,6 +1935,10 @@ func (m *Frontend) ContextValidate(ctx context.Context, formats strfmt.Registry)
 		res = append(res, err)
 	}
 
+	if err := m.contextValidateOriginalto(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.contextValidateStatsOptions(ctx, formats); err != nil {
 		res = append(res, err)
 	}
@@ -2118,6 +2098,22 @@ func (m *Frontend) contextValidateMonitorURI(ctx context.Context, formats strfmt
 			return ce.ValidateName("monitor_uri")
 		}
 		return err
+	}
+
+	return nil
+}
+
+func (m *Frontend) contextValidateOriginalto(ctx context.Context, formats strfmt.Registry) error {
+
+	if m.Originalto != nil {
+		if err := m.Originalto.ContextValidate(ctx, formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("originalto")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("originalto")
+			}
+			return err
+		}
 	}
 
 	return nil
