@@ -121,8 +121,21 @@ func TestGetFrontends(t *testing.T) { //nolint:gocognit
 		if f.Nolinger != optionValue {
 			t.Errorf("%v: Nolinger not %s: %v", f.Name, optionValue, f.Nolinger)
 		}
-		if f.Originalto != optionValue {
-			t.Errorf("%v: Originalto not %s: %v", f.Name, optionValue, f.Originalto)
+		if f.Originalto == nil {
+			t.Errorf("%v: Originalto is nil, expected not nil", f.Name)
+		} else {
+			if *f.Originalto.Enabled != "enabled" {
+				t.Errorf("%v: Originalto.Enabled is not enabled: %v", f.Name, *f.Originalto.Enabled)
+			}
+			if f.Originalto.Except != "127.0.0.1" {
+				t.Errorf("%v: Originalto.Except is not 127.0.0.1: %v", f.Name, f.Originalto.Except)
+			}
+			if f.Name == "test" && f.Originalto.Header != "" {
+				t.Errorf("%v: Originalto.Header is not empty: %v", f.Name, f.Originalto.Header)
+			}
+			if f.Name == "test_2" && f.Originalto.Header != "X-Client-Dst" {
+				t.Errorf("%v: Originalto.Header is not X-Client-Dst: %v", f.Name, f.Originalto.Header)
+			}
 		}
 		if f.SocketStats != optionValue {
 			t.Errorf("%v: SocketStats not %s: %v", f.Name, optionValue, f.SocketStats)
@@ -322,8 +335,18 @@ func TestGetFrontend(t *testing.T) {
 	if f.Nolinger != "enabled" {
 		t.Errorf("%v: Nolinger not enablesd: %v", f.Name, f.Nolinger)
 	}
-	if f.Originalto != "enabled" {
-		t.Errorf("%v: Originalto not enablesd: %v", f.Name, f.Originalto)
+	if f.Originalto == nil {
+		t.Errorf("%v: Originalto is nil, expected not nil", f.Name)
+	} else {
+		if *f.Originalto.Enabled != "enabled" {
+			t.Errorf("%v: Originalto.Enabled is not enabled: %v", f.Name, *f.Originalto.Enabled)
+		}
+		if f.Originalto.Except != "127.0.0.1" {
+			t.Errorf("%v: Originalto.Except is not 127.0.0.1: %v", f.Name, f.Originalto.Except)
+		}
+		if f.Originalto.Header != "" {
+			t.Errorf("%v: Originalto.Header is not empty: %v", f.Name, f.Originalto.Header)
+		}
 	}
 	if f.SocketStats != "enabled" {
 		t.Errorf("%v: SocketStats not enablesd: %v", f.Name, f.SocketStats)
@@ -486,15 +509,19 @@ func TestCreateEditDeleteFrontend(t *testing.T) {
 		Httpslog:                 "enabled",
 		IndependentStreams:       "enabled",
 		Nolinger:                 "enabled",
-		Originalto:               "enabled",
-		SocketStats:              "enabled",
-		TCPSmartAccept:           "enabled",
-		DontlogNormal:            "enabled",
-		HTTPNoDelay:              "enabled",
-		SpliceAuto:               "enabled",
-		SpliceRequest:            "enabled",
-		SpliceResponse:           "enabled",
-		IdleCloseOnResponse:      "enabled",
+		Originalto: &models.Originalto{
+			Enabled: misc.StringP("enabled"),
+			Except:  "127.0.0.1",
+			Header:  "X-Client-Dst",
+		},
+		SocketStats:         "enabled",
+		TCPSmartAccept:      "enabled",
+		DontlogNormal:       "enabled",
+		HTTPNoDelay:         "enabled",
+		SpliceAuto:          "enabled",
+		SpliceRequest:       "enabled",
+		SpliceResponse:      "enabled",
+		IdleCloseOnResponse: "enabled",
 		StatsOptions: &models.StatsOptions{
 			StatsShowModules: true,
 			StatsRealm:       true,
@@ -553,15 +580,19 @@ func TestCreateEditDeleteFrontend(t *testing.T) {
 		Compression: &models.Compression{
 			Offload: true,
 		},
-		ClitcpkaCnt:         &clitcpkaCnt,
-		ClitcpkaIdle:        &clitcpkaTimeout,
-		ClitcpkaIntvl:       &clitcpkaTimeout,
-		HTTPIgnoreProbes:    "disabled",
-		HTTPUseProxyHeader:  "disabled",
-		Httpslog:            "disabled",
-		IndependentStreams:  "disabled",
-		Nolinger:            "disabled",
-		Originalto:          "disabled",
+		ClitcpkaCnt:        &clitcpkaCnt,
+		ClitcpkaIdle:       &clitcpkaTimeout,
+		ClitcpkaIntvl:      &clitcpkaTimeout,
+		HTTPIgnoreProbes:   "disabled",
+		HTTPUseProxyHeader: "disabled",
+		Httpslog:           "disabled",
+		IndependentStreams: "disabled",
+		Nolinger:           "disabled",
+		Originalto: &models.Originalto{
+			Enabled: misc.StringP("enabled"),
+			Except:  "127.0.0.1",
+			Header:  "X-Client-Dst",
+		},
 		SocketStats:         "disabled",
 		TCPSmartAccept:      "disabled",
 		DontlogNormal:       "disabled",
