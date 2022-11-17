@@ -386,6 +386,8 @@ func (s *SectionParser) checkSpecialFields(fieldName string) (match bool, data i
 		return true, s.ignorePersist()
 	case "Source":
 		return true, s.source()
+	case "Originalto":
+		return true, s.originalto()
 	default:
 		return false, nil
 	}
@@ -1391,6 +1393,21 @@ func (s *SectionParser) shards() interface{} {
 	return nil
 }
 
+func (s *SectionParser) originalto() interface{} {
+	data, err := s.get("option originalto", false)
+	if err != nil {
+		return nil
+	}
+	d := data.(*types.OptionOriginalTo)
+	enabled := "enabled"
+	originalto := &models.Originalto{
+		Except:  d.Except,
+		Header:  d.Header,
+		Enabled: &enabled,
+	}
+	return originalto
+}
+
 // SectionObject represents a configuration section
 type SectionObject struct {
 	Object  interface{}
@@ -1552,6 +1569,8 @@ func (s *SectionObject) checkSpecialFields(fieldName string, field reflect.Value
 		return true, s.ignorePersist(field)
 	case "Source":
 		return true, s.source(field)
+	case "Originalto":
+		return true, s.originalto(field)
 	default:
 		return false, nil
 	}
@@ -2845,6 +2864,24 @@ func (s *SectionObject) shard(field reflect.Value) error {
 		return s.set("shards", types.Int64C{Value: v})
 	}
 	return nil
+}
+
+func (s *SectionObject) originalto(field reflect.Value) error {
+	if !(s.Section == parser.Defaults || s.Section == parser.Frontends || s.Section == parser.Backends) {
+		return nil
+	}
+	if valueIsNil(field) {
+		return s.set("option originalto", nil)
+	}
+	originalto, ok := field.Elem().Interface().(models.Originalto)
+	if !ok {
+		return misc.CreateTypeAssertError("option originalto")
+	}
+	d := &types.OptionOriginalTo{
+		Except: originalto.Except,
+		Header: originalto.Header,
+	}
+	return s.set("option originalto", d)
 }
 
 func (c *client) deleteSection(section parser.Section, name string, transactionID string, version int64) error {
