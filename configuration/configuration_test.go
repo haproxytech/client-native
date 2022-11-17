@@ -199,7 +199,7 @@ defaults
   no option httpslog
   no option independent-streams
   no option nolinger
-  no option originalto
+  option originalto 
   option persist
   option prefer-last-server
   option socket-stats
@@ -262,7 +262,7 @@ frontend test
   option httpslog
   option independent-streams
   option nolinger
-  option originalto
+  option originalto except 127.0.0.1
   option socket-stats
   option tcp-smart-accept
   option dontlog-normal
@@ -392,7 +392,7 @@ frontend test_2
   no option httpslog
   no option independent-streams
   no option nolinger
-  no option originalto
+  option originalto except 127.0.0.1 header X-Client-Dst
   no option socket-stats
   no option tcp-smart-accept
   no option dontlog-normal
@@ -438,7 +438,7 @@ backend test
   option checkcache
   option independent-streams
   option nolinger
-  option originalto
+  option originalto header X-Client-Dst
   option persist
   option prefer-last-server
   option spop-check
@@ -560,7 +560,7 @@ backend test_2
   no option checkcache
   no option independent-streams
   no option nolinger
-  no option originalto
+  option originalto header X-Client-Dst except 127.0.0.1
   no option persist
   no option prefer-last-server
   no option spop-check

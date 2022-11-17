@@ -124,11 +124,21 @@ func TestGetBackends(t *testing.T) { //nolint:gocognit,gocyclo
 		if b.Nolinger != optionValue {
 			t.Errorf("%v: Nolinger not %s: %v", b.Name, optionValue, b.Nolinger)
 		}
-		if b.Originalto != optionValue {
-			t.Errorf("%v: Originalto not %s: %v", b.Name, optionValue, b.Originalto)
-		}
-		if b.Persist != optionValue {
-			t.Errorf("%v: Persist not %s: %v", b.Name, optionValue, b.Persist)
+		if b.Originalto == nil {
+			t.Errorf("%v: Originalto is nil, expected not nil", b.Name)
+		} else {
+			if *b.Originalto.Enabled != "enabled" {
+				t.Errorf("%v: Originalto.Enabled is not enabled: %v", b.Name, *b.Originalto.Enabled)
+			}
+			if b.Name == "test" && b.Originalto.Except != "" {
+				t.Errorf("%v: Originalto.Except is not empty: %v", b.Name, b.Originalto.Except)
+			}
+			if b.Name == "test_2" && b.Originalto.Except != "127.0.0.1" {
+				t.Errorf("%v: Originalto.Except is not 127.0.0.1: %v", b.Name, b.Originalto.Except)
+			}
+			if b.Originalto.Header != "X-Client-Dst" {
+				t.Errorf("%v: Originalto.Header is not X-Client-Dst: %v", b.Name, b.Originalto.Header)
+			}
 		}
 		if b.PreferLastServer != optionValue {
 			t.Errorf("%v: PreferLastServer not %s: %v", b.Name, optionValue, b.PreferLastServer)
@@ -340,11 +350,18 @@ func TestGetBackend(t *testing.T) {
 	if b.Nolinger != "enabled" {
 		t.Errorf("%v: Nolinger not enabled: %v", b.Name, b.Nolinger)
 	}
-	if b.Originalto != "enabled" {
-		t.Errorf("%v: Originalto not enabled: %v", b.Name, b.Originalto)
-	}
-	if b.Persist != "enabled" {
-		t.Errorf("%v: Persist not enabled: %v", b.Name, b.Persist)
+	if b.Originalto == nil {
+		t.Errorf("%v: Originalto is nil, expected not nil", b.Name)
+	} else {
+		if *b.Originalto.Enabled != "enabled" {
+			t.Errorf("%v: Originalto.Enabled is not enabled: %v", b.Name, *b.Originalto.Enabled)
+		}
+		if b.Originalto.Except != "" {
+			t.Errorf("%v: Originalto.Except is not empty: %v", b.Name, b.Originalto.Except)
+		}
+		if b.Originalto.Header != "X-Client-Dst" {
+			t.Errorf("%v: Originalto.Header is not X-Client-Dst: %v", b.Name, b.Originalto.Header)
+		}
 	}
 	if b.PreferLastServer != "enabled" {
 		t.Errorf("%v: PreferLastServer not enabled: %v", b.Name, b.PreferLastServer)
@@ -517,18 +534,21 @@ func TestCreateEditDeleteBackend(t *testing.T) {
 		Checkcache:         "enabled",
 		IndependentStreams: "enabled",
 		Nolinger:           "enabled",
-		Originalto:         "enabled",
-		Persist:            "enabled",
-		PreferLastServer:   "enabled",
-		SpopCheck:          "enabled",
-		TCPSmartConnect:    "enabled",
-		Transparent:        "enabled",
-		SpliceAuto:         "enabled",
-		SpliceRequest:      "enabled",
-		SpliceResponse:     "enabled",
-		SrvtcpkaCnt:        &srvtcpkaCnt,
-		SrvtcpkaIdle:       &srvtcpkaTimeout,
-		SrvtcpkaIntvl:      &srvtcpkaTimeout,
+		Originalto: &models.Originalto{
+			Enabled: misc.StringP("enabled"),
+			Except:  "127.0.0.1",
+			Header:  "X-Client-Dst",
+		},
+		PreferLastServer: "enabled",
+		SpopCheck:        "enabled",
+		TCPSmartConnect:  "enabled",
+		Transparent:      "enabled",
+		SpliceAuto:       "enabled",
+		SpliceRequest:    "enabled",
+		SpliceResponse:   "enabled",
+		SrvtcpkaCnt:      &srvtcpkaCnt,
+		SrvtcpkaIdle:     &srvtcpkaTimeout,
+		SrvtcpkaIntvl:    &srvtcpkaTimeout,
 		StatsOptions: &models.StatsOptions{
 			StatsShowModules: true,
 			StatsRealm:       true,
@@ -630,6 +650,10 @@ func TestCreateEditDeleteBackend(t *testing.T) {
 				Username:      "user",
 				ClientVersion: "pre-41",
 			},
+			Originalto: &models.Originalto{
+				Enabled: misc.StringP("enabled"),
+				Except:  "127.0.0.1",
+			},
 		},
 		{
 			Name: "created",
@@ -649,6 +673,10 @@ func TestCreateEditDeleteBackend(t *testing.T) {
 			AdvCheck:       "pgsql-check",
 			PgsqlCheckParams: &models.PgsqlCheckParams{
 				Username: "user",
+			},
+			Originalto: &models.Originalto{
+				Enabled: misc.StringP("enabled"),
+				Header:  "X-Client-Dst",
 			},
 		},
 		{
@@ -674,8 +702,6 @@ func TestCreateEditDeleteBackend(t *testing.T) {
 			Checkcache:         "disabled",
 			IndependentStreams: "disabled",
 			Nolinger:           "disabled",
-			Originalto:         "disabled",
-			Persist:            "disabled",
 			PreferLastServer:   "disabled",
 			SpopCheck:          "disabled",
 			TCPSmartConnect:    "disabled",
@@ -698,6 +724,11 @@ func TestCreateEditDeleteBackend(t *testing.T) {
 					{Type: misc.StringP("allow"), Cond: "if", CondTest: "something_else"},
 					{Type: misc.StringP("auth"), Realm: "haproxy\\ stats2"},
 				},
+			},
+			Originalto: &models.Originalto{
+				Enabled: misc.StringP("enabled"),
+				Except:  "127.0.0.1",
+				Header:  "X-Client-Dst",
 			},
 		},
 	}
@@ -908,6 +939,13 @@ func compareBackends(x, y *models.Backend, t *testing.T) bool { //nolint:gocogni
 
 	x.PgsqlCheckParams = nil
 	y.PgsqlCheckParams = nil
+
+	if !reflect.DeepEqual(x.Originalto, y.Originalto) {
+		return false
+	}
+
+	x.Originalto = nil
+	y.Originalto = nil
 
 	return reflect.DeepEqual(x, y)
 }

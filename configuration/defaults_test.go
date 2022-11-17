@@ -181,11 +181,18 @@ func TestGetDefaults(t *testing.T) { //nolint:gocognit,gocyclo
 	if d.Nolinger != "disabled" {
 		t.Errorf("Nolinger not disabled: %v", d.Nolinger)
 	}
-	if d.Originalto != "disabled" {
-		t.Errorf("Originalto not disabled: %v", d.Originalto)
-	}
-	if d.Persist != "enabled" {
-		t.Errorf("Persist not enabled: %v", d.Persist)
+	if d.Originalto == nil {
+		t.Error("Originalto is nil, expected not nil")
+	} else {
+		if *d.Originalto.Enabled != "enabled" {
+			t.Errorf("Originalto.Enabled is not enabled: %v", *d.Originalto.Enabled)
+		}
+		if d.Originalto.Except != "" {
+			t.Errorf("Originalto.Except is not empty: %v", d.Originalto.Except)
+		}
+		if d.Originalto.Header != "" {
+			t.Errorf("Originalto.Header is not empty: %v", d.Originalto.Header)
+		}
 	}
 	if d.PreferLastServer != "enabled" {
 		t.Errorf("PreferLastServer not enabled: %v", d.PreferLastServer)
@@ -339,19 +346,22 @@ func TestPushDefaults(t *testing.T) {
 		Httpslog:                  "enabled",
 		IndependentStreams:        "enabled",
 		Nolinger:                  "enabled",
-		Originalto:                "enabled",
-		Persist:                   "disabled",
-		PreferLastServer:          "disabled",
-		SocketStats:               "disabled",
-		TCPSmartAccept:            "disabled",
-		TCPSmartConnect:           "disabled",
-		Transparent:               "disabled",
-		DontlogNormal:             "disabled",
-		HTTPNoDelay:               "disabled",
-		SpliceAuto:                "disabled",
-		SpliceRequest:             "disabled",
-		SpliceResponse:            "disabled",
-		IdleCloseOnResponse:       "disabled",
+		Originalto: &models.Originalto{
+			Enabled: misc.StringP("enabled"),
+			Except:  "127.0.0.1",
+			Header:  "X-Client-Dst",
+		},
+		PreferLastServer:    "disabled",
+		SocketStats:         "disabled",
+		TCPSmartAccept:      "disabled",
+		TCPSmartConnect:     "disabled",
+		Transparent:         "disabled",
+		DontlogNormal:       "disabled",
+		HTTPNoDelay:         "disabled",
+		SpliceAuto:          "disabled",
+		SpliceRequest:       "disabled",
+		SpliceResponse:      "disabled",
+		IdleCloseOnResponse: "disabled",
 		StatsOptions: &models.StatsOptions{
 			StatsShowModules: true,
 			StatsRealm:       true,

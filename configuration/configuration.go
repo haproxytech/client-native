@@ -347,6 +347,8 @@ func (s *SectionParser) checkSpecialFields(fieldName string) (match bool, data i
 		return true, s.srvtcpkaIdle()
 	case "SrvtcpkaIntvl":
 		return true, s.srvtcpkaIntvl()
+	case "Originalto":
+		return true, s.originalto()
 	default:
 		return false, nil
 	}
@@ -1335,6 +1337,21 @@ func (s *SectionParser) srvtcpkaIntvl() interface{} {
 	return misc.ParseTimeoutDefaultSeconds(d.Value)
 }
 
+func (s *SectionParser) originalto() interface{} {
+	data, err := s.get("option originalto", false)
+	if err != nil {
+		return nil
+	}
+	d := data.(*types.OptionOriginalTo)
+	enabled := "enabled"
+	originalto := &models.Originalto{
+		Except:  d.Except,
+		Header:  d.Header,
+		Enabled: &enabled,
+	}
+	return originalto
+}
+
 // SectionObject represents a configuration section
 type SectionObject struct {
 	Object  interface{}
@@ -1466,6 +1483,8 @@ func (s *SectionObject) checkSpecialFields(fieldName string, field reflect.Value
 		return true, s.srvtcpkaIdle(field)
 	case "SrvtcpkaIntvl":
 		return true, s.srvtcpkaIntvl(field)
+	case "Originalto":
+		return true, s.originalto(field)
 	default:
 		return false, nil
 	}
@@ -2966,6 +2985,24 @@ func (s *SectionObject) srvtcpkaIntvl(field reflect.Value) error {
 	}
 	v := field.Int()
 	return s.set("srvtcpka-intvl", types.StringC{Value: fmt.Sprintf("%dms", v)})
+}
+
+func (s *SectionObject) originalto(field reflect.Value) error {
+	if !(s.Section == parser.Defaults || s.Section == parser.Frontends || s.Section == parser.Backends) {
+		return nil
+	}
+	if valueIsNil(field) {
+		return s.set("option originalto", nil)
+	}
+	originalto, ok := field.Elem().Interface().(models.Originalto)
+	if !ok {
+		return misc.CreateTypeAssertError("option originalto")
+	}
+	d := &types.OptionOriginalTo{
+		Except: originalto.Except,
+		Header: originalto.Header,
+	}
+	return s.set("option originalto", d)
 }
 
 func (c *client) deleteSection(section parser.Section, name string, transactionID string, version int64) error {
