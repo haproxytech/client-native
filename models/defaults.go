@@ -307,8 +307,7 @@ type Defaults struct {
 	Nolinger string `json:"nolinger,omitempty"`
 
 	// originalto
-	// Enum: [enabled disabled]
-	Originalto string `json:"originalto,omitempty"`
+	Originalto *Originalto `json:"originalto,omitempty"`
 
 	// persist
 	// Enum: [enabled disabled]
@@ -2481,43 +2480,20 @@ func (m *Defaults) validateNolinger(formats strfmt.Registry) error {
 	return nil
 }
 
-var defaultsTypeOriginaltoPropEnum []interface{}
-
-func init() {
-	var res []string
-	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
-		panic(err)
-	}
-	for _, v := range res {
-		defaultsTypeOriginaltoPropEnum = append(defaultsTypeOriginaltoPropEnum, v)
-	}
-}
-
-const (
-
-	// DefaultsOriginaltoEnabled captures enum value "enabled"
-	DefaultsOriginaltoEnabled string = "enabled"
-
-	// DefaultsOriginaltoDisabled captures enum value "disabled"
-	DefaultsOriginaltoDisabled string = "disabled"
-)
-
-// prop value enum
-func (m *Defaults) validateOriginaltoEnum(path, location string, value string) error {
-	if err := validate.EnumCase(path, location, value, defaultsTypeOriginaltoPropEnum, true); err != nil {
-		return err
-	}
-	return nil
-}
-
 func (m *Defaults) validateOriginalto(formats strfmt.Registry) error {
 	if swag.IsZero(m.Originalto) { // not required
 		return nil
 	}
 
-	// value enum
-	if err := m.validateOriginaltoEnum("originalto", "body", m.Originalto); err != nil {
-		return err
+	if m.Originalto != nil {
+		if err := m.Originalto.Validate(formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("originalto")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("originalto")
+			}
+			return err
+		}
 	}
 
 	return nil
@@ -3163,6 +3139,10 @@ func (m *Defaults) ContextValidate(ctx context.Context, formats strfmt.Registry)
 		res = append(res, err)
 	}
 
+	if err := m.contextValidateOriginalto(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.contextValidatePersistRule(ctx, formats); err != nil {
 		res = append(res, err)
 	}
@@ -3431,6 +3411,22 @@ func (m *Defaults) contextValidateMysqlCheckParams(ctx context.Context, formats 
 				return ve.ValidateName("mysql_check_params")
 			} else if ce, ok := err.(*errors.CompositeError); ok {
 				return ce.ValidateName("mysql_check_params")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (m *Defaults) contextValidateOriginalto(ctx context.Context, formats strfmt.Registry) error {
+
+	if m.Originalto != nil {
+		if err := m.Originalto.ContextValidate(ctx, formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("originalto")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("originalto")
 			}
 			return err
 		}

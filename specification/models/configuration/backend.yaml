@@ -251,9 +251,7 @@ backend:
       enum: [enabled, disabled]
       x-display-name: Nolinger
     originalto:
-      type: string
-      enum: [enabled, disabled]
-      x-display-name: Originalto
+      $ref: "#/definitions/originalto"
     persist:
       type: string
       enum: [enabled, disabled]
