@@ -1964,6 +1964,8 @@ func SerializeGlobalSection(p parser.Parser, data *models.Global) error { //noli
 	if data.DefaultPath != nil {
 		defaultPath.Type = data.DefaultPath.Type
 		defaultPath.Path = data.DefaultPath.Path
+	} else {
+		defaultPath = nil
 	}
 	if err := p.Set(parser.Global, parser.GlobalSectionName, "default-path", defaultPath); err != nil {
 		return err
