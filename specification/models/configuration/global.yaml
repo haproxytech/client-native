@@ -54,6 +54,9 @@ global:
       type: string
     mworker_max_reloads:
       type: integer
+      x-display-name: The number of times a worker can survive a reload
+      minimum: 0
+      x-nullable: true
     numa_cpu_mapping:
       type: string
       enum: [enabled, disabled]
