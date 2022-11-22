@@ -204,7 +204,7 @@ func TestGetGlobal(t *testing.T) {
 	if global.LuaLoadPerThread != "file.ext" {
 		t.Errorf("LuaLoadPerThread is %v, expected file.ext", global.LuaLoadPerThread)
 	}
-	if global.MworkerMaxReloads != 5 {
+	if *global.MworkerMaxReloads != 5 {
 		t.Errorf("MworkerMaxReloads is %v, expected 5", global.MworkerMaxReloads)
 	}
 	if global.NumaCPUMapping != true {

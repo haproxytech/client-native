@@ -175,7 +175,8 @@ type Global struct {
 	Maxzlibmem int64 `json:"maxzlibmem,omitempty"`
 
 	// mworker max reloads
-	MworkerMaxReloads int64 `json:"mworker_max_reloads,omitempty"`
+	// Minimum: 0
+	MworkerMaxReloads *int64 `json:"mworker_max_reloads,omitempty"`
 
 	// nbproc
 	Nbproc int64 `json:"nbproc,omitempty"`
@@ -389,6 +390,10 @@ func (m *Global) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateLuaPrependPath(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateMworkerMaxReloads(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -846,6 +851,18 @@ func (m *Global) validateLuaPrependPath(formats strfmt.Registry) error {
 			}
 		}
 
+	}
+
+	return nil
+}
+
+func (m *Global) validateMworkerMaxReloads(formats strfmt.Registry) error {
+	if swag.IsZero(m.MworkerMaxReloads) { // not required
+		return nil
+	}
+
+	if err := validate.MinimumInt("mworker_max_reloads", "body", *m.MworkerMaxReloads, 0, false); err != nil {
+		return err
 	}
 
 	return nil

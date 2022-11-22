@@ -239,14 +239,16 @@ func ParseGlobalSection(p parser.Parser) (*models.Global, error) { //nolint:goco
 		luaLoadPerThread = luaLoadPerThreadParser.Value
 	}
 
-	var mworkerMaxReloads int64
+	var mworkerMaxReloads *int64
 	data, err = p.Get(parser.Global, parser.GlobalSectionName, "mworker-max-reloads")
-	if err == nil {
+	if errors.Is(err, parser_errors.ErrFetch) {
+		mworkerMaxReloads = nil
+	} else {
 		mworkerMaxReloadsParser, ok := data.(*types.Int64C)
 		if !ok {
 			return nil, misc.CreateTypeAssertError("mworker-max-reloads")
 		}
-		mworkerMaxReloads = mworkerMaxReloadsParser.Value
+		mworkerMaxReloads = &mworkerMaxReloadsParser.Value
 	}
 
 	_, err = p.Get(parser.Global, parser.GlobalSectionName, "numa-cpu-mapping")
@@ -1681,11 +1683,13 @@ func SerializeGlobalSection(p parser.Parser, data *models.Global) error { //noli
 		return err
 	}
 
-	mworkerMaxReloads := &types.Int64C{
-		Value: data.MworkerMaxReloads,
-	}
-	if data.MworkerMaxReloads == 0 {
+	var mworkerMaxReloads *types.Int64C
+	if data.MworkerMaxReloads == nil {
 		mworkerMaxReloads = nil
+	} else {
+		mworkerMaxReloads = &types.Int64C{
+			Value: *data.MworkerMaxReloads,
+		}
 	}
 	if err := p.Set(parser.Global, parser.GlobalSectionName, "mworker-max-reloads", mworkerMaxReloads); err != nil {
 		return err
