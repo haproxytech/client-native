@@ -65,7 +65,7 @@ func (c *client) GetUserList(name string, transactionID string) (int64, *models.
 		return 0, nil, err
 	}
 	if !c.checkSectionExists(parser.UserList, name, p) {
-		return v, nil, NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("Userlist %s does not exist", name))
+		return v, nil, NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("userlist %s does not exist", name))
 	}
 	return v, &models.Userlist{Name: name}, nil
 }

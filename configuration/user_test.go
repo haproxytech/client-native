@@ -294,15 +294,18 @@ userlist delete_test
 				SecurePassword: &securePassword,
 				Groups:         "zion,io",
 			}
-			if c.EditUser("trinity", "replace_test", &edit, "", 1) != nil {
+			if c.EditUser("trinity", "replace_test", &edit, "", 2) != nil {
 				t.Errorf("Replacing an existing user request failed")
 			}
 
 			// test delete
-			if c.DeleteUser("", "delete_test", "", 2) == nil {
+			if c.DeleteUser("trinity", "replace_test", "", 3) != nil {
+				t.Errorf("Deleting an existing user request failed")
+			}
+			if c.DeleteUser("", "delete_test", "", 4) == nil {
 				t.Errorf("Attempt to delete an empty user didn't throw an error")
 			}
-			if c.DeleteUser("fake", "delete_test", "", 3) == nil {
+			if c.DeleteUser("fake", "delete_test", "", 4) == nil {
 				t.Errorf("Attempt to delete an non existing user didn't throw an error")
 			}
 		})

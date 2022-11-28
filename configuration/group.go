@@ -79,10 +79,12 @@ func (c *client) DeleteGroup(name string, userlist string, transactionID string,
 	if err != nil {
 		return err
 	}
+	if _, _, err := c.GetUserList(userlist, transactionID); err != nil {
+		return err
+	}
 	group, i := GetGroupByName(name, userlist, p)
 	if group == nil {
-		e := NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("Group %s does not exist in userlist %s", name, userlist))
-		return c.HandleError(name, "userlist", userlist, "", false, e)
+		return NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("group %s does not exist", name))
 	}
 	if err := p.Delete("userlist", userlist, "group", i); err != nil {
 		return c.HandleError(name, "userlist", userlist, t, transactionID == "", err)
@@ -106,9 +108,12 @@ func (c *client) CreateGroup(userlist string, data *models.Group, transactionID 
 	if err != nil {
 		return err
 	}
+	if _, _, err := c.GetUserList(userlist, transactionID); err != nil {
+		return err
+	}
 	group, _ := GetGroupByName(data.Name, userlist, p)
 	if group != nil {
-		return c.HandleError(data.Name, "userlist", userlist, "", false, err)
+		return NewConfError(ErrObjectAlreadyExists, fmt.Sprintf("group %s already exists", data.Name))
 	}
 	if err := p.Insert("userlist", userlist, "group", SerializeGroup(*data), -1); err != nil {
 		return c.HandleError(data.Name, "userlist", userlist, t, transactionID == "", err)
@@ -132,9 +137,12 @@ func (c *client) EditGroup(name string, userlist string, data *models.Group, tra
 	if err != nil {
 		return err
 	}
+	if _, _, err := c.GetUserList(userlist, transactionID); err != nil {
+		return err
+	}
 	group, i := GetGroupByName(data.Name, userlist, p)
-	if group != nil {
-		return c.HandleError(data.Name, "userlist", userlist, "", false, err)
+	if group == nil {
+		return NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("group %s does not exist", data.Name))
 	}
 	if _, err := p.GetOne("userlist", userlist, "group", i); err != nil {
 		return c.HandleError(data.Name, "userlist", userlist, t, transactionID == "", err)

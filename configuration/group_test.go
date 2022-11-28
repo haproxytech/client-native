@@ -255,10 +255,10 @@ userlist delete_test
 
 			// test replace
 			edit := models.Group{
-				Name:  "matrix",
+				Name:  "zion",
 				Users: "trinity",
 			}
-			if c.EditGroup("matrix", "replace_test", &edit, "", 2) != nil {
+			if c.EditGroup("zion", "replace_test", &edit, "", 2) != nil {
 				t.Errorf("Replacing an existing group request failed")
 			}
 

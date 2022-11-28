@@ -79,10 +79,12 @@ func (c *client) DeleteUser(username string, userlist string, transactionID stri
 	if err != nil {
 		return err
 	}
+	if _, _, err := c.GetUserList(userlist, transactionID); err != nil {
+		return err
+	}
 	user, i := GetUserByUsername(username, userlist, p)
 	if user == nil {
-		e := NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("User %s does not exist in userlist %s", username, userlist))
-		return c.HandleError(username, "userlist", userlist, "", false, e)
+		return NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("user %s does not exist", username))
 	}
 	if err := p.Delete("userlist", userlist, "user", i); err != nil {
 		return c.HandleError(username, "userlist", userlist, t, transactionID == "", err)
@@ -106,9 +108,13 @@ func (c *client) CreateUser(userlist string, data *models.User, transactionID st
 	if err != nil {
 		return err
 	}
+
+	if _, _, err := c.GetUserList(userlist, transactionID); err != nil {
+		return err
+	}
 	user, _ := GetUserByUsername(data.Username, userlist, p)
-	if user == nil {
-		return c.HandleError(data.Username, "userlist", userlist, "", false, err)
+	if user != nil {
+		return NewConfError(ErrObjectAlreadyExists, fmt.Sprintf("user %s already exists", data.Username))
 	}
 	if err := p.Insert("userlist", userlist, "user", SerializeUser(*data), -1); err != nil {
 		return c.HandleError(data.Username, "userlist", userlist, t, transactionID == "", err)
@@ -132,9 +138,12 @@ func (c *client) EditUser(username string, userlist string, data *models.User, t
 	if err != nil {
 		return err
 	}
+	if _, _, err := c.GetUserList(userlist, transactionID); err != nil {
+		return err
+	}
 	user, i := GetUserByUsername(data.Username, userlist, p)
 	if user == nil {
-		return c.HandleError(data.Username, "userlist", userlist, "", false, err)
+		return NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("user %s does not exist", data.Username))
 	}
 	if err := p.Set(parser.UserList, userlist, "user", SerializeUser(*data), i); err != nil {
 		return c.HandleError(data.Username, "userlist", userlist, t, transactionID == "", err)
