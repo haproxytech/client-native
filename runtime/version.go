@@ -63,6 +63,9 @@ func (v *HAProxyVersion) ParseHAProxyVersion(version string) error {
 }
 
 func (v *HAProxyVersion) IsBiggerOrEqual(minimumVersion HAProxyVersion) bool {
+	if v == nil {
+		return false
+	}
 	if minimumVersion.Major > v.Major {
 		return true
 	}
