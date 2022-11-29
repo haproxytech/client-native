@@ -213,7 +213,7 @@ defaults
   no option httpslog
   no option independent-streams
   no option nolinger
-  option originalto 
+  option originalto
   option persist
   option prefer-last-server
   option socket-stats
@@ -400,7 +400,6 @@ frontend test
   tcp-request connection set-mark 0x1Ab if FALSE
   tcp-request connection set-src-port hdr(port) if FALSE
   tcp-request connection set-tos 1 if FALSE
-  tcp-request connection set-var-fmt(sess.dn) ssl_c_s_dn if FALSE
   tcp-request content set-log-level silent if FALSE
   tcp-request content set-mark 0x1Ac if FALSE
   tcp-request content set-nice 2 if FALSE
