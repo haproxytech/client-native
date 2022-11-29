@@ -29,8 +29,8 @@ func TestGetTCPRequestRules(t *testing.T) { //nolint:gocognit,gocyclo
 		t.Error(err.Error())
 	}
 
-	if len(tRules) != 22 {
-		t.Errorf("%v tcp request rules returned, expected 22", len(tRules))
+	if len(tRules) != 21 {
+		t.Errorf("%v tcp request rules returned, expected 21", len(tRules))
 	}
 
 	if v != version {
@@ -258,28 +258,6 @@ func TestGetTCPRequestRules(t *testing.T) { //nolint:gocognit,gocyclo
 				t.Errorf("%v: CondTest not FALSE: %v", *r.Index, r.CondTest)
 			}
 		case 14:
-			if r.Type != "connection" {
-				t.Errorf("%v: Type not connection: %v", *r.Index, r.Type)
-			}
-			if r.Action != "set-var-fmt" {
-				t.Errorf("%v: Action not set-var-fmt: %v", *r.Index, r.Action)
-			}
-			if r.VarName != "dn" {
-				t.Errorf("%v: VarName not dn: %v", *r.Index, r.VarName)
-			}
-			if r.VarScope != "sess" {
-				t.Errorf("%v: VarScope not sess: %v", *r.Index, r.VarScope)
-			}
-			if r.VarFormat != "ssl_c_s_dn" {
-				t.Errorf("%v: VarFormat not ssl_c_s_dn: %v", *r.Index, r.VarFormat)
-			}
-			if r.Cond != "if" {
-				t.Errorf("%v: Cond not if: %v", *r.Index, r.Cond)
-			}
-			if r.CondTest != "FALSE" {
-				t.Errorf("%v: CondTest not FALSE: %v", *r.Index, r.CondTest)
-			}
-		case 15:
 			if r.Type != "content" {
 				t.Errorf("%v: Type not content: %v", *r.Index, r.Type)
 			}
@@ -295,7 +273,7 @@ func TestGetTCPRequestRules(t *testing.T) { //nolint:gocognit,gocyclo
 			if r.CondTest != "FALSE" {
 				t.Errorf("%v: CondTest not FALSE: %v", *r.Index, r.CondTest)
 			}
-		case 16:
+		case 15:
 			if r.Type != "content" {
 				t.Errorf("%v: Type not content: %v", *r.Index, r.Type)
 			}
@@ -311,7 +289,7 @@ func TestGetTCPRequestRules(t *testing.T) { //nolint:gocognit,gocyclo
 			if r.CondTest != "FALSE" {
 				t.Errorf("%v: CondTest not FALSE: %v", *r.Index, r.CondTest)
 			}
-		case 17:
+		case 16:
 			if r.Type != "content" {
 				t.Errorf("%v: Type not content: %v", *r.Index, r.Type)
 			}
@@ -327,7 +305,7 @@ func TestGetTCPRequestRules(t *testing.T) { //nolint:gocognit,gocyclo
 			if r.CondTest != "FALSE" {
 				t.Errorf("%v: CondTest not FALSE: %v", *r.Index, r.CondTest)
 			}
-		case 18:
+		case 17:
 			if r.Type != "content" {
 				t.Errorf("%v: Type not content: %v", *r.Index, r.Type)
 			}
@@ -343,7 +321,7 @@ func TestGetTCPRequestRules(t *testing.T) { //nolint:gocognit,gocyclo
 			if r.CondTest != "FALSE" {
 				t.Errorf("%v: CondTest not FALSE: %v", *r.Index, r.CondTest)
 			}
-		case 19:
+		case 18:
 			if r.Type != "content" {
 				t.Errorf("%v: Type not content: %v", *r.Index, r.Type)
 			}
@@ -359,7 +337,7 @@ func TestGetTCPRequestRules(t *testing.T) { //nolint:gocognit,gocyclo
 			if r.CondTest != "FALSE" {
 				t.Errorf("%v: CondTest not FALSE: %v", *r.Index, r.CondTest)
 			}
-		case 20:
+		case 19:
 			if r.Type != "content" {
 				t.Errorf("%v: Type not content: %v", *r.Index, r.Type)
 			}
@@ -381,7 +359,7 @@ func TestGetTCPRequestRules(t *testing.T) { //nolint:gocognit,gocyclo
 			if r.CondTest != "FALSE" {
 				t.Errorf("%v: CondTest not FALSE: %v", *r.Index, r.CondTest)
 			}
-		case 21:
+		case 20:
 			if r.Type != "content" {
 				t.Errorf("%v: Type not content: %v", *r.Index, r.Type)
 			}
