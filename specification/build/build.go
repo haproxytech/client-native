@@ -10,7 +10,7 @@ import (
 	"sort"
 	"strings"
 
-	"gopkg.in/yaml.v2"
+	"gopkg.in/yaml.v3"
 )
 
 var cache map[string]interface{}
@@ -57,9 +57,9 @@ func expandRef(refValue string, absPath string, prefix string) string {
 		}
 		cache[filePath] = m
 	}
-	retVal := make(map[interface{}]interface{})
+	retVal := make(map[string]interface{})
 	if m[keyPath[1:]] != nil {
-		retVal = m[keyPath[1:]].(map[interface{}]interface{})
+		retVal = m[keyPath[1:]].(map[string]interface{})
 	} else {
 		fmt.Println(refValue)
 		fmt.Println(keyPath)
