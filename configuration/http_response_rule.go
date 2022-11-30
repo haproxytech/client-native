@@ -397,7 +397,7 @@ func ParseHTTPResponseRule(f types.Action) *models.HTTPResponseRule {
 			Cond:      v.Cond,
 			CondTest:  v.CondTest,
 		}
-	case *http_actions.SetLogLevel:
+	case *actions.SetLogLevel:
 		return &models.HTTPResponseRule{
 			Type:     "set-log-level",
 			LogLevel: v.Level,
@@ -413,14 +413,14 @@ func ParseHTTPResponseRule(f types.Action) *models.HTTPResponseRule {
 			Cond:        v.Cond,
 			CondTest:    v.CondTest,
 		}
-	case *http_actions.SetMark:
+	case *actions.SetMark:
 		return &models.HTTPResponseRule{
 			Type:      "set-mark",
 			MarkValue: v.Value,
 			Cond:      v.Cond,
 			CondTest:  v.CondTest,
 		}
-	case *http_actions.SetNice:
+	case *actions.SetNice:
 		nice, _ := strconv.ParseInt(v.Value, 10, 64)
 		return &models.HTTPResponseRule{
 			Type:      "set-nice",
@@ -440,7 +440,7 @@ func ParseHTTPResponseRule(f types.Action) *models.HTTPResponseRule {
 			r.Status = status
 		}
 		return r
-	case *http_actions.SetTos:
+	case *actions.SetTos:
 		return &models.HTTPResponseRule{
 			Type:     "set-tos",
 			TosValue: v.Value,
@@ -687,7 +687,7 @@ func SerializeHTTPResponseRule(f models.HTTPResponseRule) (rule types.Action, er
 			CondTest: f.CondTest,
 		}
 	case "set-log-level":
-		rule = &http_actions.SetLogLevel{
+		rule = &actions.SetLogLevel{
 			Level:    f.LogLevel,
 			Cond:     f.Cond,
 			CondTest: f.CondTest,
@@ -701,13 +701,13 @@ func SerializeHTTPResponseRule(f models.HTTPResponseRule) (rule types.Action, er
 			CondTest: f.CondTest,
 		}
 	case "set-mark":
-		rule = &http_actions.SetMark{
+		rule = &actions.SetMark{
 			Value:    f.MarkValue,
 			Cond:     f.Cond,
 			CondTest: f.CondTest,
 		}
 	case "set-nice":
-		rule = &http_actions.SetNice{
+		rule = &actions.SetNice{
 			Value:    strconv.FormatInt(f.NiceValue, 10),
 			Cond:     f.Cond,
 			CondTest: f.CondTest,
@@ -720,7 +720,7 @@ func SerializeHTTPResponseRule(f models.HTTPResponseRule) (rule types.Action, er
 			CondTest: f.CondTest,
 		}
 	case "set-tos":
-		rule = &http_actions.SetTos{
+		rule = &actions.SetTos{
 			Value:    f.TosValue,
 			Cond:     f.Cond,
 			CondTest: f.CondTest,
