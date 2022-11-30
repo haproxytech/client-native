@@ -106,6 +106,7 @@ func New(ctx context.Context, opt ...options.ConfigurationOption) (Configuration
 	}
 
 	parserOptions := []parser_options.ParserOption{}
+	parserOptions = append(parserOptions, parser_options.NoNamedDefaultsFrom)
 	if c.ConfigurationOptions.UseMd5Hash {
 		parserOptions = append(parserOptions, parser_options.UseMd5Hash)
 	}
