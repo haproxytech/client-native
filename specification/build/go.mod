@@ -1,5 +1,5 @@
 module github.com/haproxytech/dataplaneapi-specification/build
 
-go 1.17
+go 1.19
 
-require gopkg.in/yaml.v2 v2.2.8
+require gopkg.in/yaml.v3 v3.0.1
