@@ -50,6 +50,8 @@ linters:
     - nonamedreturns
     - forcetypeassert #tmp needs to be on
 
+    - maintidx #for this branch only
+
 issues:
   exclude:
     # bugs of typecheck linter
