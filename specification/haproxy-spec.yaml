@@ -11,7 +11,7 @@ info:
     url: https://my.haproxy.com/portal/cust/login
     email: support@haproxy.com
 externalDocs:
-  url: https://cbonte.github.io/haproxy-dconv/
+  url: https://docs.haproxy.org/
   description: HAProxy Documentation
 definitions:
   program:
