@@ -165,15 +165,26 @@ func SerializeProgramSection(p parser.Parser, data *models.Program) error {
 		return fmt.Errorf("empty program")
 	}
 
+	if data.Command == nil {
+		return fmt.Errorf("command must be set")
+	}
 	if err := p.Set(parser.Program, data.Name, "command", types.Command{Args: *data.Command}); err != nil {
 		return err
 	}
 
-	if err := p.Set(parser.Program, data.Name, "user", types.StringC{Value: data.User}); err != nil {
+	user := &types.StringC{Value: data.User}
+	if data.User == "" {
+		user = nil
+	}
+	if err := p.Set(parser.Program, data.Name, "user", user); err != nil {
 		return err
 	}
 
-	if err := p.Set(parser.Program, data.Name, "group", types.StringC{Value: data.Group}); err != nil {
+	group := &types.StringC{Value: data.Group}
+	if data.Group == "" {
+		group = nil
+	}
+	if err := p.Set(parser.Program, data.Name, "group", group); err != nil {
 		return err
 	}
 
