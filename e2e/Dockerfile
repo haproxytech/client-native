@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-ARG HAPROXY_VERSION=2.3
+ARG HAPROXY_VERSION=2.7
 ARG DOCKER_URL=haproxytech
 
 FROM ${DOCKER_URL}/haproxy-alpine:${HAPROXY_VERSION}
