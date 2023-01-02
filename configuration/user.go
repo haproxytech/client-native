@@ -25,6 +25,7 @@ import (
 	parser_errors "github.com/haproxytech/config-parser/v4/errors"
 	"github.com/haproxytech/config-parser/v4/types"
 
+	"github.com/haproxytech/client-native/v4/misc"
 	"github.com/haproxytech/client-native/v4/models"
 )
 
@@ -182,6 +183,10 @@ func ParseUser(u types.User) *models.User {
 }
 
 func SerializeUser(u models.User) types.User {
+	if u.SecurePassword == nil {
+		u.SecurePassword = misc.BoolP(false)
+	}
+
 	return types.User{
 		Name:       u.Username,
 		Password:   u.Password,
