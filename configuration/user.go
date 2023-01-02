@@ -191,13 +191,7 @@ func SerializeUser(u models.User) types.User {
 		Name:       u.Username,
 		Password:   u.Password,
 		IsInsecure: !*u.SecurePassword,
-		Groups: func() []string {
-			if len(u.Groups) == 0 {
-				return nil
-			}
-
-			return strings.Split(u.Groups, ",")
-		}(),
+		Groups:     strings.Split(u.Groups, ","),
 	}
 }
 
