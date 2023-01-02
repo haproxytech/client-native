@@ -20,7 +20,7 @@ import (
 	"fmt"
 	"strings"
 
-	strfmt "github.com/go-openapi/strfmt"
+	"github.com/go-openapi/strfmt"
 	parser "github.com/haproxytech/config-parser/v4"
 	parser_errors "github.com/haproxytech/config-parser/v4/errors"
 	"github.com/haproxytech/config-parser/v4/types"
@@ -185,8 +185,14 @@ func SerializeUser(u models.User) types.User {
 	return types.User{
 		Name:       u.Username,
 		Password:   u.Password,
-		IsInsecure: *u.SecurePassword,
-		Groups:     strings.Split(u.Groups, ","),
+		IsInsecure: !*u.SecurePassword,
+		Groups: func() []string {
+			if len(u.Groups) == 0 {
+				return nil
+			}
+
+			return strings.Split(u.Groups, ",")
+		}(),
 	}
 }
 
