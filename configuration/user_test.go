@@ -19,6 +19,9 @@ import (
 	"io/ioutil"
 	"testing"
 
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
+
 	"github.com/haproxytech/client-native/v4/models"
 )
 
@@ -297,6 +300,14 @@ userlist delete_test
 			if c.EditUser("trinity", "replace_test", &edit, "", 2) != nil {
 				t.Errorf("Replacing an existing user request failed")
 			}
+
+			_, u, err := c.GetUser("trinity", "replace_test", "")
+			require.NoError(t, err)
+
+			assert.Equal(t, edit.Username, u.Username)
+			assert.Equal(t, edit.Password, u.Password)
+			assert.Equal(t, *edit.SecurePassword, *u.SecurePassword)
+			assert.Equal(t, edit.Groups, u.Groups)
 
 			// test delete
 			if c.DeleteUser("trinity", "replace_test", "", 3) != nil {
