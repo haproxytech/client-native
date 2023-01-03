@@ -31,7 +31,6 @@ definitions:
               type: string
           name:
               pattern: ^[A-Za-z0-9-_.:]+$
-              readOnly: true
               type: string
               x-nullable: false
           start-on-reload:
@@ -92,7 +91,6 @@ definitions:
           name:
               description: Declares a FastCGI application
               pattern: ^[^\s]+$
-              readOnly: true
               type: string
               x-nullable: false
           pass_headers:
@@ -214,10 +212,6 @@ definitions:
       type: object
   bind_params:
       additionalProperties: false
-      example:
-          address: 127.0.0.1
-          name: http
-          port: 80
       properties:
           accept_netscaler_cip:
               type: integer
@@ -322,8 +316,10 @@ definitions:
                   - user
                   - operator
                   - admin
+              example: user
               type: string
           maxconn:
+              example: 1234
               type: integer
           mode:
               type: string
@@ -334,8 +330,10 @@ definitions:
               type: string
               x-nullable: false
           namespace:
+              example: app
               type: string
           nice:
+              example: 1
               type: integer
           no_ca_names:
               type: boolean
@@ -387,6 +385,7 @@ definitions:
                   - none
                   - number
                   - string
+              example: none
               type: string
               x-display-name: Format
           ssl:
@@ -447,6 +446,7 @@ definitions:
                   - none
                   - optional
                   - required
+              example: none
               type: string
               x-dependency:
                   ssl:
@@ -867,22 +867,13 @@ definitions:
                   - address: 127.0.1.1
                     name: www_server
                     port: 4567
-                    weight: 30
                   - address: 127.0.1.2
                     name: www_server_new
                     port: 4567
-                    weight: 70
                 use_as: default
           name: test_site
           service:
               http_connection_mode: httpclose
-              listeners:
-                  - address: 127.0.0.1
-                    name: test_listener
-                    port: 80
-                  - address: 127.0.0.1
-                    name: test_listener_2
-                    port: 8080
               maxconn: 2000
               mode: http
       properties:
@@ -3304,19 +3295,23 @@ definitions:
     items:
       $ref: "#/definitions/http_errors_section"
   bind:
+      additionalProperties: false
       allOf:
           - $ref: '#/definitions/bind_params'
       description: HAProxy frontend bind configuration
       properties:
           address:
+              example: 127.0.0.1
               pattern: ^[^\s]+$
               type: string
           port:
+              example: 80
               maximum: 65535
               minimum: 1
               type: integer
               x-nullable: true
           port-range-end:
+              example: 81
               maximum: 65535
               minimum: 1
               type: integer
@@ -3336,10 +3331,8 @@ definitions:
       description: HAProxy backend server configuration
       example:
           address: 10.1.1.1
-          check: enabled
           name: www
           port: 8080
-          weight: 80
       properties:
           address:
               pattern: ^[^\s]+$
@@ -4797,8 +4790,6 @@ definitions:
       additionalProperties: false
       description: HAProxy HTTP error rule configuration (corresponds to http-error directives)
       example:
-          hdr_format: '%T'
-          hdr_name: X-Haproxy-Current-Date
           index: 0
           status: 425
           type: status

@@ -38,7 +38,7 @@ import (
 // configure simple HAProxy configurations, for more advanced options use /haproxy/configuration
 // endpoints.
 //
-// Example: {"farms":[{"balance":{"algorithm":"roundrobin"},"mode":"http","name":"www_backend","servers":[{"address":"127.0.1.1","name":"www_server","port":4567,"weight":30},{"address":"127.0.1.2","name":"www_server_new","port":4567,"weight":70}],"use_as":"default"}],"name":"test_site","service":{"http_connection_mode":"httpclose","listeners":[{"address":"127.0.0.1","name":"test_listener","port":80},{"address":"127.0.0.1","name":"test_listener_2","port":8080}],"maxconn":2000,"mode":"http"}}
+// Example: {"farms":[{"balance":{"algorithm":"roundrobin"},"mode":"http","name":"www_backend","servers":[{"address":"127.0.1.1","name":"www_server","port":4567},{"address":"127.0.1.2","name":"www_server_new","port":4567}],"use_as":"default"}],"name":"test_site","service":{"http_connection_mode":"httpclose","maxconn":2000,"mode":"http"}}
 //
 // swagger:model site
 type Site struct {

@@ -31,7 +31,6 @@ import (
 )
 
 // BindParams bind params
-// Example: {"address":"127.0.0.1","name":"http","port":80}
 //
 // swagger:model bind_params
 type BindParams struct {
@@ -122,10 +121,12 @@ type BindParams struct {
 	Interface string `json:"interface,omitempty"`
 
 	// level
+	// Example: user
 	// Enum: [user operator admin]
 	Level string `json:"level,omitempty"`
 
 	// maxconn
+	// Example: 1234
 	Maxconn int64 `json:"maxconn,omitempty"`
 
 	// mode
@@ -139,9 +140,11 @@ type BindParams struct {
 	Name string `json:"name,omitempty"`
 
 	// namespace
+	// Example: app
 	Namespace string `json:"namespace,omitempty"`
 
 	// nice
+	// Example: 1
 	Nice int64 `json:"nice,omitempty"`
 
 	// no ca names
@@ -179,6 +182,7 @@ type BindParams struct {
 	Proto string `json:"proto,omitempty"`
 
 	// severity output
+	// Example: none
 	// Enum: [none number string]
 	SeverityOutput string `json:"severity_output,omitempty"`
 
@@ -229,6 +233,7 @@ type BindParams struct {
 	V6only bool `json:"v6only,omitempty"`
 
 	// verify
+	// Example: none
 	// Enum: [none optional required]
 	Verify string `json:"verify,omitempty"`
 }

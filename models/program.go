@@ -47,7 +47,6 @@ type Program struct {
 
 	// name
 	// Required: true
-	// Read Only: true
 	// Pattern: ^[A-Za-z0-9-_.:]+$
 	Name string `json:"name"`
 
@@ -145,26 +144,8 @@ func (m *Program) validateStartOnReload(formats strfmt.Registry) error {
 	return nil
 }
 
-// ContextValidate validate this program based on the context it is used
+// ContextValidate validates this program based on context it is used
 func (m *Program) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
-	var res []error
-
-	if err := m.contextValidateName(ctx, formats); err != nil {
-		res = append(res, err)
-	}
-
-	if len(res) > 0 {
-		return errors.CompositeValidationError(res...)
-	}
-	return nil
-}
-
-func (m *Program) contextValidateName(ctx context.Context, formats strfmt.Registry) error {
-
-	if err := validate.ReadOnly(ctx, "name", "body", string(m.Name)); err != nil {
-		return err
-	}
-
 	return nil
 }
 

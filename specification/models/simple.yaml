@@ -88,13 +88,6 @@ site:
       mode: http
       http_connection_mode: httpclose
       maxconn: 2000
-      listeners:
-        - name: test_listener
-          address: 127.0.0.1
-          port: 80
-        - name: test_listener_2
-          address: 127.0.0.1
-          port: 8080
     farms:
       - name: www_backend
         use_as: default
@@ -105,8 +98,6 @@ site:
           - name: www_server
             address: 127.0.1.1
             port: 4567
-            weight: 30
           - name: www_server_new
             address: 127.0.1.2
             port: 4567
-            weight: 70

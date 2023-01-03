@@ -57,5 +57,3 @@ http_error_rule:
     index: 0
     type: status
     status: 425
-    hdr_name: X-Haproxy-Current-Date
-    hdr_format: "%T"

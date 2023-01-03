@@ -32,7 +32,7 @@ import (
 // Server Server
 //
 // HAProxy backend server configuration
-// Example: {"address":"10.1.1.1","check":"enabled","name":"www","port":8080,"weight":80}
+// Example: {"address":"10.1.1.1","name":"www","port":8080}
 //
 // swagger:model server
 type Server struct {

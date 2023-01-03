@@ -34,7 +34,7 @@ import (
 // HTTPErrorRule HTTP Error Rule
 //
 // HAProxy HTTP error rule configuration (corresponds to http-error directives)
-// Example: {"hdr_format":"%T","hdr_name":"X-Haproxy-Current-Date","index":0,"status":425,"type":"status"}
+// Example: {"index":0,"status":425,"type":"status"}
 //
 // swagger:model http_error_rule
 type HTTPErrorRule struct {

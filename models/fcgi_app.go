@@ -66,7 +66,6 @@ type FCGIApp struct {
 
 	// Declares a FastCGI application
 	// Required: true
-	// Read Only: true
 	// Pattern: ^[^\s]+$
 	Name string `json:"name"`
 
@@ -374,10 +373,6 @@ func (m *FCGIApp) ContextValidate(ctx context.Context, formats strfmt.Registry) 
 		res = append(res, err)
 	}
 
-	if err := m.contextValidateName(ctx, formats); err != nil {
-		res = append(res, err)
-	}
-
 	if err := m.contextValidatePassHeaders(ctx, formats); err != nil {
 		res = append(res, err)
 	}
@@ -407,15 +402,6 @@ func (m *FCGIApp) contextValidateLogStderrs(ctx context.Context, formats strfmt.
 			}
 		}
 
-	}
-
-	return nil
-}
-
-func (m *FCGIApp) contextValidateName(ctx context.Context, formats strfmt.Registry) error {
-
-	if err := validate.ReadOnly(ctx, "name", "body", string(m.Name)); err != nil {
-		return err
 	}
 
 	return nil

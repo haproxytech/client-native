@@ -107,12 +107,15 @@ bind_params:
     level:
       type: string
       enum: [user, operator, admin]
+      example: user
     severity_output:
       type: string
       x-display-name: Format
       enum: [none, number, string]
+      example: none
     maxconn:
       type: integer
+      example: 1234
     mode:
       type: string
     mss:
@@ -123,8 +126,10 @@ bind_params:
       x-nullable: false
     namespace:
       type: string
+      example: app
     nice:
       type: integer
+      example: 1
     no_ca_names:
       type: boolean
       x-dependency:
@@ -219,8 +224,5 @@ bind_params:
       x-dependency:
         ssl:
           value: enabled
+      example: none
   additionalProperties: false
-  example:
-    name: http
-    address: 127.0.0.1
-    port: 80

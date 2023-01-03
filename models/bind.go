@@ -38,15 +38,18 @@ type Bind struct {
 	BindParams
 
 	// address
+	// Example: 127.0.0.1
 	// Pattern: ^[^\s]+$
 	Address string `json:"address,omitempty"`
 
 	// port
+	// Example: 80
 	// Maximum: 65535
 	// Minimum: 1
 	Port *int64 `json:"port,omitempty"`
 
 	// port range end
+	// Example: 81
 	// Maximum: 65535
 	// Minimum: 1
 	PortRangeEnd *int64 `json:"port-range-end,omitempty"`

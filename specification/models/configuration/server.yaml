@@ -30,8 +30,6 @@ server:
     name: www
     address: 10.1.1.1
     port: 8080
-    check: enabled
-    weight: 80
 server_template:
   title: Server template
   description: Set a template to initialize servers with shared parameters.

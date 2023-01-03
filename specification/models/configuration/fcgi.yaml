@@ -12,7 +12,6 @@ app:
       pattern: '^[^\s]+$'
       x-nullable: false
       description: Declares a FastCGI application
-      readOnly: true
     docroot:
       type: string
       description: Defines the document root on the remote host. The parameter serves to build the default value of FastCGI parameters SCRIPT_FILENAME and PATH_TRANSLATED. It is a mandatory setting.

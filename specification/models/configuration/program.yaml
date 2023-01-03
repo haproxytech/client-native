@@ -11,7 +11,6 @@ program:
       type: string
       pattern: '^[A-Za-z0-9-_.:]+$'
       x-nullable: false
-      readOnly: true
     command:
       type: string
       description: The command to be run, with flags and options.
