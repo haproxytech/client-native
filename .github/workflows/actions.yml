@@ -120,7 +120,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        haproxyVersion: [2.1, 2.2, 2.3, 2.4, 2.5, 2.6, 2.7]
+        haproxyVersion: [2.1, 2.2, 2.3, 2.4, 2.5, 2.6, 2.7, 2.8]
     steps:
       - name: Check out code into the Go module directory
         uses: actions/checkout@v2
