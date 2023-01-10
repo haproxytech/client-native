@@ -1,6 +1,7 @@
 PROJECT_PATH=${PWD}
 DOCKER_HAPROXY_VERSION?=2.4
 SWAGGER_VERSION=v0.30.2
+GO_VERSION:=${shell go mod edit -json | jq -r .Go}
 
 .PHONY: test
 test:
@@ -12,7 +13,8 @@ e2e:
 
 .PHONY: e2e-docker
 e2e-docker:
-	docker build -f e2e/Dockerfile --build-arg HAPROXY_VERSION=${DOCKER_HAPROXY_VERSION} -t client-native-test:${DOCKER_HAPROXY_VERSION} .
+	docker build -f e2e/Dockerfile-base --build-arg HAPROXY_VERSION=${DOCKER_HAPROXY_VERSION} --build-arg GO_VERSION=${GO_VERSION} -t test_env:${DOCKER_HAPROXY_VERSION} .
+	docker build -f e2e/Dockerfile -t client-native-test:${DOCKER_HAPROXY_VERSION} .
 	docker run --rm -it client-native-test:${DOCKER_HAPROXY_VERSION}
 
 .PHONY: spec
