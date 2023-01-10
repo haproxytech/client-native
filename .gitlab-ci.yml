@@ -154,21 +154,20 @@ test:
     name: $CI_REGISTRY_GO/docker:stable
     entrypoint: [""]
   services:
-    - name: $CI_REGISTRY_GO/docker:18.09.7-dind
+    - name: $CI_REGISTRY_GO/docker:20.10.11-dind
       alias: docker
   tags:
     - go
   before_script:
     - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN $CI_REGISTRY_GO
-    - docker pull $CI_REGISTRY_GO/client-native:$HAPROXY_VERSION
-    - docker image tag $CI_REGISTRY_GO/client-native:$HAPROXY_VERSION test_env:$HAPROXY_VERSION
-    - docker build --file ./e2e/Dockerfile --build-arg HAPROXY_VERSION=$HAPROXY_VERSION --build-arg DOCKER_URL=$CI_REGISTRY_GO --tag client-native-test:$HAPROXY_VERSION .
+    - docker pull $CI_REGISTRY_GO/client-native-env:$HAPROXY_VERSION
+    - docker image tag $CI_REGISTRY_GO/client-native-env:$HAPROXY_VERSION test_env:$HAPROXY_VERSION
+    - docker build -f ./e2e/Dockerfile --build-arg HAPROXY_VERSION=${HAPROXY_VERSION} -t client-native-test:${HAPROXY_VERSION} .
   script:
     - docker run client-native-test:$HAPROXY_VERSION
   rules:
     - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
     - if: $CI_PIPELINE_SOURCE == 'push'
-
 HAProxy-2.1:
   extends: .e2e
   variables:
