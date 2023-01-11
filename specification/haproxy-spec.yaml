@@ -637,6 +637,7 @@ securityDefinitions:
 basePath: /v2
 schemes:
   - http
+  - https
 consumes:
   - application/json
 produces:
