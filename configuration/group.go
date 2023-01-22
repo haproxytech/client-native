@@ -178,9 +178,14 @@ func ParseGroup(u types.Group) *models.Group {
 }
 
 func SerializeGroup(u models.Group) types.Group {
+	var users []string
+	if u.Users != "" {
+		users = strings.Split(u.Users, ",")
+	}
+
 	return types.Group{
 		Name:  u.Name,
-		Users: strings.Split(u.Users, ","),
+		Users: users,
 	}
 }
 

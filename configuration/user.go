@@ -187,11 +187,16 @@ func SerializeUser(u models.User) types.User {
 		u.SecurePassword = misc.BoolP(false)
 	}
 
+	var groups []string
+	if u.Groups != "" {
+		groups = strings.Split(u.Groups, ",")
+	}
+
 	return types.User{
 		Name:       u.Username,
 		Password:   u.Password,
 		IsInsecure: !*u.SecurePassword,
-		Groups:     strings.Split(u.Groups, ","),
+		Groups:     groups,
 	}
 }
 
