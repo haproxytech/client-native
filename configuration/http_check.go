@@ -340,9 +340,13 @@ func SerializeHTTPCheck(f models.HTTPCheck) (action types.Action, err error) { /
 		return &http_actions.CheckComment{
 			LogMessage: f.CheckComment,
 		}, nil
-	case models.TCPCheckActionConnect:
+	case models.HTTPCheckTypeConnect:
+		port := f.PortString
+		if f.Port != nil {
+			port = strconv.FormatInt(*f.Port, 10)
+		}
 		return &actions.CheckConnect{
-			Port:         f.PortString,
+			Port:         port,
 			Addr:         f.Addr,
 			SNI:          f.Sni,
 			ALPN:         f.Alpn,
@@ -414,5 +418,5 @@ func SerializeHTTPCheck(f models.HTTPCheck) (action types.Action, err error) { /
 		}, nil
 	}
 
-	return nil, NewConfError(ErrValidationError, "unsupported action in tcp_check")
+	return nil, NewConfError(ErrValidationError, "unsupported action in http_check")
 }
