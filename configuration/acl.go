@@ -202,7 +202,7 @@ func ParseACLs(section parser.Section, name string, p parser.Parser, aclName ...
 
 	aclLines, ok := data.([]types.ACL)
 	if !ok {
-		return nil, fmt.Errorf("type assert error []types.DeclareCapture")
+		return nil, fmt.Errorf("type assert error []types.ACL")
 	}
 	lACL := len(aclName)
 	for i, r := range aclLines {
