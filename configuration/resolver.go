@@ -256,7 +256,7 @@ func ParseResolverSection(p parser.Parser, resolver *models.Resolver) error { //
 		return err
 	}
 	if data, err = p.Get(parser.Resolvers, name, "parse-resolv-conf", false); err == nil {
-		d, ok := data.(*types.StringC)
+		d, ok := data.(*types.Enabled)
 		if ok && d != nil {
 			resolver.ParseResolvConf = true
 		}
@@ -363,7 +363,7 @@ func SerializeResolverSection(p parser.Parser, data *models.Resolver) error { //
 		}
 	}
 	if data.ParseResolvConf {
-		b := types.StringC{Value: strconv.FormatBool(data.ParseResolvConf)}
+		b := &types.Enabled{}
 		if err = p.Set(parser.Resolvers, data.Name, "parse-resolv-conf", b); err != nil {
 			return err
 		}
