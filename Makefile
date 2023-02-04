@@ -22,19 +22,13 @@ e2e-docker:
 spec:
 	go run specification/build/build.go -file specification/haproxy-spec.yaml > specification/build/haproxy_spec.yaml
 
-.PHONY: models-native
-models-native: spec
-	swagger generate model -f ${PROJECT_PATH}/specification/build/haproxy_spec.yaml -r ${PROJECT_PATH}/specification/copyright.txt -m models -t ${PROJECT_PATH}
-
 .PHONY: models
-models: spec
-	cd build/models;docker build \
-		--build-arg SWAGGER_VERSION=${SWAGGER_VERSION} \
-		--build-arg UID=$(shell id -u) \
-		--build-arg GID=$(shell id -g) \
-		-t client-native-models .
-	docker run --rm -it -v "$(PWD)":/data client-native-models
-	ls -lah models
+models: spec swagger-check
+	./bin/swagger generate model --additional-initialism=FCGI -f ${PROJECT_PATH}/specification/build/haproxy_spec.yaml -r ${PROJECT_PATH}/specification/copyright.txt -m models -t ${PROJECT_PATH}
+
+.PHONY: swagger-check
+swagger-check:
+	cd bin; SWAGGER_VERSION=${SWAGGER_VERSION} sh swagger-check.sh
 
 .PHONY: lint
 lint:
