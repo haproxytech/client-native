@@ -36,14 +36,9 @@ jobs:
       - name: Set up Go
         uses: actions/setup-go@v2
         with:
-          go-version: 1.19
-      - name: downloading Swagger
-        run: |
-          sudo wget -O /usr/local/bin/swagger https://github.com/go-swagger/go-swagger/releases/download/v0.30.2/swagger_linux_amd64
-          sudo chmod +x /usr/local/bin/swagger
-          swagger version
+          go-version-file: 'go.mod'
       - name: generating models
-        run: make models-native
+        run: make models
       - name: changes
         run: test -z "$(git diff 2> /dev/null)" || exit "Models are not generated, issue \`make models\` and commit the result"
       - name: untracked files

@@ -55,8 +55,7 @@ Then, in the `tags` section, reference your types like so:
 
 ## 3. Validate your changes and generate models
 
-Run `make models` or `make models-native` (be SURE to use the same version of
-swagger as the one in the Makefile) to validate the syntax of the YAML files
+Run `make models` to validate the syntax of the YAML files
 and generate Go model files for each type.
 
 The new files will be placed in the [models](../models/) folder.
