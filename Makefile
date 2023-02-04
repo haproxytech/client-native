@@ -2,6 +2,7 @@ PROJECT_PATH=${PWD}
 DOCKER_HAPROXY_VERSION?=2.7
 SWAGGER_VERSION=v0.30.2
 GO_VERSION:=${shell go mod edit -json | jq -r .Go}
+GOLANGCI_LINT_VERSION=1.51.1
 
 .PHONY: test
 test:
@@ -37,9 +38,12 @@ models: spec
 
 .PHONY: lint
 lint:
+	cd bin;GOLANGCI_LINT_VERSION=${GOLANGCI_LINT_VERSION} sh lint-check.sh
+	bin/golangci-lint run --timeout 5m --color always --max-issues-per-linter 0 --max-same-issues 0
+
+.PHONY: lint-yaml
+lint-yaml:
 	docker run --rm -v $(pwd):/data cytopia/yamllint .
-	docker run --rm ghcr.io/haproxytech/go-linter:1.46.2 --version
-	docker run --rm -v ${PROJECT_PATH}:/app -w /app ghcr.io/haproxytech/go-linter:1.46.2 --timeout 5m --color always --max-issues-per-linter 0 --max-same-issues 0
 
 .PHONY: gofumpt
 gofumpt:

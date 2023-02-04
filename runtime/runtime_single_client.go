@@ -137,7 +137,7 @@ func (s *SingleRuntime) readFromSocket(command string, socket socketType) (strin
 
 	result := strings.TrimSuffix(data.String(), "\n> ")
 	result = strings.TrimSuffix(result, "\n")
-	return result, nil
+	return result, nil //nolint:nilerr
 }
 
 // ExecuteRaw executes command on runtime API and returns raw result

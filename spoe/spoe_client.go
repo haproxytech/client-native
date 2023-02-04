@@ -19,7 +19,6 @@ import (
 	"bytes"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"os"
 	"path"
 	"path/filepath"
@@ -117,7 +116,7 @@ func (c *spoeclient) Create(name string, readCloser io.ReadCloser) (string, erro
 	if _, err := os.Stat(name); err == nil {
 		return "", fmt.Errorf("file %s already exists. You should delete an existing file first", name)
 	}
-	b, err := ioutil.ReadAll(readCloser)
+	b, err := io.ReadAll(readCloser)
 	if err != nil {
 		return "", err
 	}
@@ -159,7 +158,7 @@ func (c *spoeclient) Get(name string) (string, error) {
 
 // getSpoeFiles returns files list in dir or error
 func (c *spoeclient) getSpoeFiles(dir string) ([]string, error) {
-	fis, err := ioutil.ReadDir(dir)
+	fis, err := os.ReadDir(dir)
 	if err != nil {
 		return nil, err
 	}

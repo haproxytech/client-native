@@ -1,4 +1,7 @@
 ---
+variables:
+  DOCKER_HOST: tcp://docker:2375
+  GO_VERSION: "1.20"
 stages:
   - check-commit
   - generate
@@ -6,14 +9,11 @@ stages:
   - lint
   - test
   - e2e
-variables:
-  DOCKER_HOST: tcp://docker:2375
-
 build-specification:
   stage: build
   needs: []
   image:
-    name: $CI_REGISTRY_GO/golang:1.19
+    name: $CI_REGISTRY_GO/golang:$GO_VERSION
     entrypoint: [""]
   tags:
     - go
@@ -45,7 +45,7 @@ yaml-lint:
   variables:
     GOPATH: $CI_PROJECT_DIR/.go
   image:
-    name: $CI_REGISTRY_GO/golang:1.19
+    name: $CI_REGISTRY_GO/golang:$GO_VERSION
     entrypoint: [""]
   before_script:
     - mkdir -p .go
@@ -56,10 +56,10 @@ yaml-lint:
 generate:
   stage: generate
   image:
-    name: $CI_REGISTRY_GO/docker:stable-go1.19
+    name: $CI_REGISTRY_GO/docker:stable-go$GO_VERSION
     entrypoint: [""]
   services:
-    - name: $CI_REGISTRY_GO/docker:18.09.7-dind
+    - name: $CI_REGISTRY_GO/docker:20.10-dind
       alias: docker
   tags:
     - go
@@ -93,7 +93,7 @@ tidy:
   stage: lint
   needs: ["build"]
   image:
-    name: $CI_REGISTRY_GO/golang:1.19
+    name: $CI_REGISTRY_GO/golang:$GO_VERSION
     entrypoint: [""]
   tags:
     - go
@@ -104,16 +104,15 @@ tidy:
     - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
     - if: $CI_PIPELINE_SOURCE == 'push'
 
-golangci-lint:
+lint:
   stage: lint
-  needs: ["generate", "build"]
   image:
-    name: $CI_REGISTRY_GO/lint:1.46.2
+    name: $CI_REGISTRY_GO/golang:$GO_VERSION
     entrypoint: [""]
   tags:
     - go
   script:
-    - golangci-lint run --timeout 5m --color always --max-issues-per-linter 0 --max-same-issues 0
+    - make lint
   rules:
     - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
     - if: $CI_PIPELINE_SOURCE == 'push'
@@ -136,7 +135,7 @@ test:
   stage: test
   needs: ["generate", "build"]
   image:
-    name: $CI_REGISTRY_GO/golang:1.19
+    name: $CI_REGISTRY_GO/golang:$GO_VERSION
     entrypoint: [""]
   tags:
     - go

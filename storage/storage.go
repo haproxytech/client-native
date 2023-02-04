@@ -23,7 +23,7 @@ import (
 	"encoding/pem"
 	"fmt"
 	"io"
-	"io/ioutil"
+	"io/fs"
 	"os"
 	"path/filepath"
 	"strings"
@@ -184,7 +184,7 @@ func (s *storage) Create(name string, readCloser io.ReadCloser) (string, error) 
 }
 
 func (s *storage) createSSL(name string, readCloser io.ReadCloser) (string, error) {
-	b, err := ioutil.ReadAll(readCloser)
+	b, err := io.ReadAll(readCloser)
 	if err != nil {
 		return "", err
 	}
@@ -200,7 +200,7 @@ func (s *storage) createSSL(name string, readCloser io.ReadCloser) (string, erro
 }
 
 func (s *storage) createFile(name string, readCloser io.ReadCloser) (string, error) {
-	b, err := ioutil.ReadAll(readCloser)
+	b, err := io.ReadAll(readCloser)
 	if err != nil {
 		return "", err
 	}
@@ -221,7 +221,7 @@ func (s *storage) remove(name string) error {
 }
 
 func readFile(name string) (string, error) {
-	b, err := ioutil.ReadFile(name)
+	b, err := os.ReadFile(name)
 	if err != nil {
 		return "", err
 	}
@@ -254,11 +254,19 @@ func remove(name string) error {
 }
 
 func readDir(dirname string) ([]os.FileInfo, error) {
-	files, err := ioutil.ReadDir(dirname)
+	entries, err := os.ReadDir(dirname)
 	if err != nil {
 		return nil, err
 	}
-	return files, nil
+	infos := make([]fs.FileInfo, 0, len(entries))
+	for _, entry := range entries {
+		info, err := entry.Info()
+		if err != nil {
+			return nil, err
+		}
+		infos = append(infos, info)
+	}
+	return infos, nil
 }
 
 func (s storage) validatePEM(raw []byte) error {

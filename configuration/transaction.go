@@ -19,7 +19,7 @@ import (
 	"bytes"
 	"errors"
 	"fmt"
-	"io/ioutil"
+	"io/fs"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -427,14 +427,14 @@ func (t *Transaction) parseTransactions(status string) (*models.Transactions, er
 	}
 
 	transactions := models.Transactions{}
-	files, err := ioutil.ReadDir(t.TransactionDir)
+	files, err := os.ReadDir(t.TransactionDir)
 	if err != nil {
 		return nil, err
 	}
 
-	readDirAndAppend := func(f os.FileInfo) error {
-		var ffiles []os.FileInfo
-		ffiles, err = ioutil.ReadDir(filepath.Join(t.TransactionDir, f.Name()))
+	readDirAndAppend := func(f fs.DirEntry) error {
+		var ffiles []fs.DirEntry
+		ffiles, err = os.ReadDir(filepath.Join(t.TransactionDir, f.Name()))
 		if err != nil {
 			return err
 		}
