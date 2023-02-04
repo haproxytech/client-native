@@ -2,3 +2,4 @@ cmd/
 .vscode/
 .idea/
 bin/golangci-lint
+bin/swagger
