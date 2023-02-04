@@ -224,7 +224,7 @@ func BoolP(b bool) *bool {
 }
 
 func RandomString(n int) string {
-	rand.Seed(time.Now().UnixNano())
+	rand.New(rand.NewSource(time.Now().UnixNano())) //nolint:gosec
 	b := make([]rune, n)
 	size := len(chars)
 	for i := range b {

@@ -19,7 +19,6 @@ import (
 	"bufio"
 	"bytes"
 	"fmt"
-	"io/ioutil"
 	"os"
 	"os/exec"
 	"strconv"
@@ -85,7 +84,7 @@ func (c *client) GetRawConfiguration(transactionID string, version int64) (int64
 // matches
 func (c *client) PostRawConfiguration(config *string, version int64, skipVersionCheck bool, onlyValidate ...bool) error {
 	if len(onlyValidate) > 0 && onlyValidate[0] {
-		f, err := ioutil.TempFile("/tmp", "onlyvalidate")
+		f, err := os.CreateTemp("/tmp", "onlyvalidate")
 		if err != nil {
 			return NewConfError(ErrGeneralError, err.Error())
 		}

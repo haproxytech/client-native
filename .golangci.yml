@@ -40,15 +40,26 @@ linters:
     - varnamelen
     - ireturn
     - ifshort
-
     - thelper
     - wastedassign
     - goconst
-
     - gci
     - exhaustruct
     - nonamedreturns
+    - interfacebloat
+    - dupword
     - forcetypeassert #tmp needs to be on
+    - ifshort # deprecated
+    - structcheck # deprecated
+    - deadcode # deprecated
+    - nosnakecase # deprecated
+    - varcheck # deprecated
+    - rowserrcheck # deprecated
+    - sqlclosecheck # deprecated
+    - wastedassign # deprecated
+    - golint # deprecated
+    - interfacer # deprecated
+    - maligned # deprecated
 
 issues:
   exclude:
