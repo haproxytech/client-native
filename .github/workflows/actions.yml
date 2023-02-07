@@ -48,12 +48,23 @@ jobs:
     needs: ["generate-specification","generate-models"]
     runs-on: ubuntu-latest
     steps:
-      - name: Check out code into the Go module directory
+      - name: Check out code
         uses: actions/checkout@v3
-      - name: golangci-lint
-        uses: docker://ghcr.io/haproxytech/go-linter:1.46.2
+      - name: Set up Go
+        uses: actions/setup-go@v3
         with:
-          args: --timeout 5m --max-issues-per-linter 0 --max-same-issues 0
+          go-version-file: 'go.mod'
+      - uses: actions/cache@v2
+        with:
+          path: |
+            ~/.cache/go-build
+            ~/go/pkg/mod
+          key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
+          restore-keys: |
+            ${{ runner.os }}-go-
+      - name: Lint
+        run: |
+          make lint
   lint-spec:
     needs: ["generate-specification","generate-models"]
     runs-on: ubuntu-latest
