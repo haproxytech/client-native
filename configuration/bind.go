@@ -285,6 +285,8 @@ func parseBindParams(bindOptions []params.BindOption) (b models.BindParams) { //
 				b.Tfo = true
 			case "v6only":
 				b.V6only = true
+			case "quic-force-retry":
+				b.QuicForceRetry = true
 			}
 		case *params.BindOptionValue:
 			switch v.Name {
@@ -377,6 +379,8 @@ func parseBindParams(bindOptions []params.BindOption) (b models.BindParams) { //
 				b.UID = v.Value
 			case "user":
 				b.User = v.Value
+			case "quic-cc-algo":
+				b.QuicCcAlgo = v.Value
 			}
 		}
 	}
@@ -582,6 +586,12 @@ func serializeBindParams(b models.BindParams, path string) (options []params.Bin
 	}
 	if b.User != "" {
 		options = append(options, &params.BindOptionValue{Name: "user", Value: b.User})
+	}
+	if b.QuicCcAlgo != "" {
+		options = append(options, &params.BindOptionValue{Name: "quic-cc-algo", Value: b.QuicCcAlgo})
+	}
+	if b.QuicForceRetry {
+		options = append(options, &params.BindOptionWord{Name: "quic-force-retry"})
 	}
 	return options
 }

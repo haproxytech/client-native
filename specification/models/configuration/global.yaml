@@ -13,6 +13,9 @@ global:
       type: string
       pattern: '^[^\s]+$'
       x-display-name: Chroot
+    cluster_secret:
+      type: string
+      x-display-name: Cluster Secret
     gid:
       type: integer
       x-display-name: GID
@@ -135,6 +138,9 @@ global:
     maxzlibmem:
       type: integer
       x-display-name: Maximum amount of RAM in megabytes per process usable by the zlib
+    no-quic:
+      type: boolean
+      x-display-name: Disable the use of the QUIC protocol
     noepoll:
       type: boolean
       x-display-name: Disable the use of the "epoll" event polling system on Linux
@@ -416,6 +422,30 @@ global:
           type: integer
           x-display-name: Variables Transaction Max Size
           x-nullable: true
+        quic_frontend_conn_tc_buffers_limit:
+          type: integer
+          x-display-name: QUIC Frontend Connection TX Buffer Limit
+          x-nullable: true
+        quic_frontend_max_idle_timeout:
+          type: integer
+          x-display-name: QUIC Frontend Max Idle Timeout
+          x-nullable: true
+        quic_frontend_max_streams_bidi:
+          type: integer
+          x-display-name: QUIC Max Number of Bidirectional Streams
+          x-nullable: true
+        quic_max_frame_loss:
+          type: integer
+          x-display-name: QUIC Max Limit for Frame Loss
+          x-nullable: true
+        quic_retry_threshold:
+          type: integer
+          x-display-name: QUIC Retry Threshold
+          x-nullable: true
+        quic_socket_owner:
+          type: string
+          enum: [listener, connection]
+          x-display-name: QUIC Socket Owner
         zlib_memlevel:
           type: integer
           x-display-name: Zlib Memory Level

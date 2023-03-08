@@ -52,6 +52,9 @@ func TestGetGlobal(t *testing.T) {
 	} else {
 		t.Errorf("RuntimeAPI is not set")
 	}
+	if global.ClusterSecret != "my_secret" {
+		t.Errorf("ClusterSecret is %v, expected my_secret", global.ClusterSecret)
+	}
 	if global.CaBase != "/etc/ssl/certs" {
 		t.Errorf("CaBase is %v, expected /etc/ssl/certs", global.CaBase)
 	}
@@ -143,6 +146,9 @@ func TestGetGlobal(t *testing.T) {
 	}
 	if global.Maxzlibmem != 9 {
 		t.Errorf("Maxzlibmem is %v, expected 9", global.Maxzlibmem)
+	}
+	if global.NoQuic != true {
+		t.Errorf("NoQuic is false, expected true")
 	}
 	if global.Noepoll != true {
 		t.Errorf("Noepoll is false, expected true")
@@ -393,13 +399,31 @@ func TestGetGlobal(t *testing.T) {
 	if *global.TuneOptions.VarsTxnMaxSize != 53 {
 		t.Errorf("VarsTxnMaxSize is %v, expected 53", global.TuneOptions.VarsTxnMaxSize)
 	}
-	if *&global.TuneOptions.ZlibMemlevel != 54 {
+	if *global.TuneOptions.QuicFrontendConnTcBuffersLimit != 10 {
+		t.Errorf("QuicFrontendConnTcBuffersLimit is %v, expected 10", global.TuneOptions.QuicFrontendConnTcBuffersLimit)
+	}
+	if *global.TuneOptions.QuicFrontendMaxIdleTimeout != 10000 {
+		t.Errorf("QuicFrontendMaxIdleTimeout is %v, expected 10000", global.TuneOptions.QuicFrontendMaxIdleTimeout)
+	}
+	if *global.TuneOptions.QuicFrontendMaxStreamsBidi != 100 {
+		t.Errorf("QuicFrontendMaxStreamsBidi is %v, expected 100", global.TuneOptions.QuicFrontendMaxStreamsBidi)
+	}
+	if *global.TuneOptions.QuicMaxFrameLoss != 5 {
+		t.Errorf("QuicMaxFrameLoss is %v, expected 5", global.TuneOptions.QuicMaxFrameLoss)
+	}
+	if *global.TuneOptions.QuicRetryThreshold != 5 {
+		t.Errorf("QuicRetryThreshold is %v, expected 5", global.TuneOptions.QuicRetryThreshold)
+	}
+	if global.TuneOptions.QuicSocketOwner != "connection" {
+		t.Errorf("QuicSocketOwner is %v, expected connection", global.TuneOptions.QuicSocketOwner)
+	}
+	if global.TuneOptions.ZlibMemlevel != 54 {
 		t.Errorf("ZlibMemlevel is %v, expected 54", global.TuneOptions.ZlibMemlevel)
 	}
-	if *&global.TuneOptions.FdEdgeTriggered != "enabled" {
+	if global.TuneOptions.FdEdgeTriggered != "enabled" {
 		t.Errorf("FdEdgeTriggered is %v, expected enabled", global.TuneOptions.FdEdgeTriggered)
 	}
-	if *&global.TuneOptions.ZlibWindowsize != 55 {
+	if global.TuneOptions.ZlibWindowsize != 55 {
 		t.Errorf("ZlibWindowsize is %v, expected 55", global.TuneOptions.ZlibWindowsize)
 	}
 	if global.ThreadGroups != 1 {
@@ -590,7 +614,10 @@ func TestPutGlobal(t *testing.T) {
 			Param:   "something",
 		},
 		TuneOptions: &models.GlobalTuneOptions{
-			PeersMaxUpdatesAtOnce: 100,
+			PeersMaxUpdatesAtOnce:          100,
+			QuicFrontendConnTcBuffersLimit: nil,
+			QuicFrontendMaxIdleTimeout:     misc.Int64P(5000),
+			QuicSocketOwner:                "listener",
 		},
 		UID:                    1234,
 		WurflOptions:           &models.GlobalWurflOptions{},
@@ -603,6 +630,8 @@ func TestPutGlobal(t *testing.T) {
 			Type: "origin",
 			Path: "/some/other/path",
 		},
+		NoQuic:        false,
+		ClusterSecret: "",
 	}
 
 	err := clientTest.PushGlobalConfiguration(g, "", version)

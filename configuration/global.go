@@ -93,6 +93,16 @@ func ParseGlobalSection(p parser.Parser) (*models.Global, error) { //nolint:goco
 		anonkey = &anonkeyParser.Value
 	}
 
+	var clusterSecret string
+	data, err = p.Get(parser.Global, parser.GlobalSectionName, "cluster-secret")
+	if err == nil {
+		csParser, ok := data.(*types.StringC)
+		if !ok {
+			return nil, misc.CreateTypeAssertError("cluster-secret")
+		}
+		clusterSecret = csParser.Value
+	}
+
 	var chroot string
 	data, err = p.Get(parser.Global, parser.GlobalSectionName, "chroot")
 	if err == nil {
@@ -687,6 +697,12 @@ func ParseGlobalSection(p parser.Parser) (*models.Global, error) { //nolint:goco
 		maxzlibmem = maxzlibmemParser.Value
 	}
 
+	var noQuic bool
+	_, err = p.Get(parser.Global, parser.GlobalSectionName, "no-quic")
+	if !errors.Is(err, parser_errors.ErrFetch) {
+		noQuic = true
+	}
+
 	var noepoll bool
 	_, err = p.Get(parser.Global, parser.GlobalSectionName, "noepoll")
 	if !errors.Is(err, parser_errors.ErrFetch) {
@@ -1016,6 +1032,7 @@ func ParseGlobalSection(p parser.Parser) (*models.Global, error) { //nolint:goco
 		User:                              user,
 		Gid:                               gid,
 		Group:                             group,
+		ClusterSecret:                     clusterSecret,
 		Chroot:                            chroot,
 		Localpeer:                         localPeer,
 		CaBase:                            caBase,
@@ -1060,6 +1077,7 @@ func ParseGlobalSection(p parser.Parser) (*models.Global, error) { //nolint:goco
 		Maxsslconn:                        maxsslconn,
 		Maxsslrate:                        maxsslrate,
 		Maxzlibmem:                        maxzlibmem,
+		NoQuic:                            noQuic,
 		Noepoll:                           noepoll,
 		Nokqueue:                          nokqueue,
 		Noevports:                         noevports,
@@ -1113,6 +1131,16 @@ func SerializeGlobalSection(p parser.Parser, data *models.Global) error { //noli
 		}
 	}
 	if err := p.Set(parser.Global, parser.GlobalSectionName, "anonkey", pAnonkey); err != nil {
+		return err
+	}
+
+	pClusterSecret := &types.StringC{
+		Value: data.ClusterSecret,
+	}
+	if data.ClusterSecret == "" {
+		pClusterSecret = nil
+	}
+	if err := p.Set(parser.Global, parser.GlobalSectionName, "cluster-secret", pClusterSecret); err != nil {
 		return err
 	}
 
@@ -1562,6 +1590,14 @@ func SerializeGlobalSection(p parser.Parser, data *models.Global) error { //noli
 		maxzlibmem = nil
 	}
 	if err := p.Set(parser.Global, parser.GlobalSectionName, "maxzlibmem", maxzlibmem); err != nil {
+		return err
+	}
+
+	noQuic := &types.Enabled{}
+	if !data.NoQuic {
+		noQuic = nil
+	}
+	if err := p.Set(parser.Global, parser.GlobalSectionName, "no-quic", noQuic); err != nil {
 		return err
 	}
 
@@ -2195,6 +2231,29 @@ func serializeTuneOptions(p parser.Parser, options *models.GlobalTuneOptions) er
 	if err := serializeTimeoutSizeOption(p, "tune.vars.txn-max-size", options.VarsTxnMaxSize); err != nil {
 		return err
 	}
+	if err := serializeInt64POption(p, "tune.quic.frontend.conn-tx-buffers.limit", options.QuicFrontendConnTcBuffersLimit); err != nil {
+		return err
+	}
+	if err := serializeTimeoutSizeOption(p, "tune.quic.frontend.max-idle-timeout", options.QuicFrontendMaxIdleTimeout); err != nil {
+		return err
+	}
+	if err := serializeInt64POption(p, "tune.quic.frontend.max-streams-bidi", options.QuicFrontendMaxStreamsBidi); err != nil {
+		return err
+	}
+	if err := serializeInt64POption(p, "tune.quic.max-frame-loss", options.QuicMaxFrameLoss); err != nil {
+		return err
+	}
+	if err := serializeInt64POption(p, "tune.quic.retry-threshold", options.QuicRetryThreshold); err != nil {
+		return err
+	}
+	value := &types.QuicSocketOwner{Owner: options.QuicSocketOwner}
+	if options.QuicSocketOwner == "" {
+		value = nil
+	}
+	if err := p.Set(parser.Global, parser.GlobalSectionName, "tune.quic.socket-owner", value); err != nil {
+		return err
+	}
+
 	if err := serializeInt64Option(p, "tune.zlib.memlevel", options.ZlibMemlevel); err != nil {
 		return err
 	}
@@ -2640,6 +2699,45 @@ func parseTuneOptions(p parser.Parser) (*models.GlobalTuneOptions, error) { //no
 		return nil, err
 	}
 	options.VarsTxnMaxSize = misc.ParseSize(strOption)
+
+	intPOption, err = parseInt64POption(p, "tune.quic.frontend.conn-tx-buffers.limit")
+	if err != nil {
+		return nil, err
+	}
+	options.QuicFrontendConnTcBuffersLimit = intPOption
+
+	strOption, err = parseStringOption(p, "tune.quic.frontend.max-idle-timeout")
+	if err != nil {
+		return nil, err
+	}
+	options.QuicFrontendMaxIdleTimeout = misc.ParseTimeout(strOption)
+
+	intPOption, err = parseInt64POption(p, "tune.quic.frontend.max-streams-bidi")
+	if err != nil {
+		return nil, err
+	}
+	options.QuicFrontendMaxStreamsBidi = intPOption
+
+	intPOption, err = parseInt64POption(p, "tune.quic.max-frame-loss")
+	if err != nil {
+		return nil, err
+	}
+	options.QuicMaxFrameLoss = intPOption
+
+	intPOption, err = parseInt64POption(p, "tune.quic.retry-threshold")
+	if err != nil {
+		return nil, err
+	}
+	options.QuicRetryThreshold = intPOption
+
+	so, err := p.Get(parser.Global, parser.GlobalSectionName, "tune.quic.socket-owner")
+	if err == nil {
+		value, ok := so.(*types.QuicSocketOwner)
+		if !ok {
+			return nil, misc.CreateTypeAssertError("tune.quic.socket-owner")
+		}
+		options.QuicSocketOwner = value.Owner
+	}
 
 	intOption, err = parseInt64Option(p, "tune.zlib.memlevel")
 	if err != nil {
