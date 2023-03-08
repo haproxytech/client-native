@@ -181,6 +181,13 @@ type BindParams struct {
 	// proto
 	Proto string `json:"proto,omitempty"`
 
+	// quic cc algo
+	// Enum: [cubic newreno]
+	QuicCcAlgo string `json:"quic-cc-algo,omitempty"`
+
+	// quic force retry
+	QuicForceRetry bool `json:"quic-force-retry,omitempty"`
+
 	// severity output
 	// Example: none
 	// Enum: [none number string]
@@ -255,6 +262,10 @@ func (m *BindParams) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateProcess(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateQuicCcAlgo(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -363,6 +374,48 @@ func (m *BindParams) validateProcess(formats strfmt.Registry) error {
 	}
 
 	if err := validate.Pattern("process", "body", m.Process, `^[^\s]+$`); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+var bindParamsTypeQuicCcAlgoPropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["cubic","newreno"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		bindParamsTypeQuicCcAlgoPropEnum = append(bindParamsTypeQuicCcAlgoPropEnum, v)
+	}
+}
+
+const (
+
+	// BindParamsQuicCcAlgoCubic captures enum value "cubic"
+	BindParamsQuicCcAlgoCubic string = "cubic"
+
+	// BindParamsQuicCcAlgoNewreno captures enum value "newreno"
+	BindParamsQuicCcAlgoNewreno string = "newreno"
+)
+
+// prop value enum
+func (m *BindParams) validateQuicCcAlgoEnum(path, location string, value string) error {
+	if err := validate.EnumCase(path, location, value, bindParamsTypeQuicCcAlgoPropEnum, true); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *BindParams) validateQuicCcAlgo(formats strfmt.Registry) error {
+	if swag.IsZero(m.QuicCcAlgo) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateQuicCcAlgoEnum("quic-cc-algo", "body", m.QuicCcAlgo); err != nil {
 		return err
 	}
 

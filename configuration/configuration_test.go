@@ -34,6 +34,7 @@ global
 	external-check
   ca-base /etc/ssl/certs
   crt-base /etc/ssl/private
+  cluster-secret my_secret
 	stats socket /var/run/haproxy.sock level admin mode 0660
   lua-prepend-path /usr/share/haproxy-lua/?/init.lua
   lua-prepend-path /usr/share/haproxy-lua/?.lua cpath
@@ -94,6 +95,12 @@ global
   tune.vars.reqres-max-size 51
   tune.vars.sess-max-size 52
   tune.vars.txn-max-size 53
+  tune.quic.frontend.conn-tx-buffers.limit 10
+  tune.quic.frontend.max-idle-timeout 10000
+  tune.quic.frontend.max-streams-bidi 100
+  tune.quic.max-frame-loss 5
+  tune.quic.retry-threshold 5
+  tune.quic.socket-owner connection
   tune.zlib.memlevel 54
   tune.zlib.windowsize 55
   busy-polling
@@ -106,6 +113,7 @@ global
   maxsslconn 7
   maxsslrate 8
   maxzlibmem 9
+  no-quic
   noepoll
   nokqueue
   noevports

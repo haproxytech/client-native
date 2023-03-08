@@ -225,4 +225,9 @@ bind_params:
         ssl:
           value: enabled
       example: none
+    quic-cc-algo:
+      type: string
+      enum: [cubic, newreno]
+    quic-force-retry:
+      type: boolean
   additionalProperties: false

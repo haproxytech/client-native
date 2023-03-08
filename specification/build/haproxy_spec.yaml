@@ -380,6 +380,13 @@ definitions:
           proto:
               type: string
               x-display-name: Protocol name
+          quic-cc-algo:
+              enum:
+                  - cubic
+                  - newreno
+              type: string
+          quic-force-retry:
+              type: boolean
           severity_output:
               enum:
                   - none
@@ -993,6 +1000,9 @@ definitions:
               pattern: ^[^\s]+$
               type: string
               x-display-name: Chroot
+          cluster_secret:
+              type: string
+              x-display-name: Cluster Secret
           cpu_maps:
               items:
                   properties:
@@ -1214,6 +1224,9 @@ definitions:
           nbthread:
               type: integer
               x-display-name: Number of Threads
+          no-quic:
+              type: boolean
+              x-display-name: Disable the use of the QUIC protocol
           node:
               type: string
           noepoll:
@@ -1560,6 +1573,32 @@ definitions:
                   pool_low_fd_ratio:
                       type: integer
                       x-display-name: Max Used Low FD Ratio
+                  quic_frontend_conn_tc_buffers_limit:
+                      type: integer
+                      x-display-name: QUIC Frontend Connection TX Buffer Limit
+                      x-nullable: true
+                  quic_frontend_max_idle_timeout:
+                      type: integer
+                      x-display-name: QUIC Frontend Max Idle Timeout
+                      x-nullable: true
+                  quic_frontend_max_streams_bidi:
+                      type: integer
+                      x-display-name: QUIC Max Number of Bidirectional Streams
+                      x-nullable: true
+                  quic_max_frame_loss:
+                      type: integer
+                      x-display-name: QUIC Max Limit for Frame Loss
+                      x-nullable: true
+                  quic_retry_threshold:
+                      type: integer
+                      x-display-name: QUIC Retry Threshold
+                      x-nullable: true
+                  quic_socket_owner:
+                      enum:
+                          - listener
+                          - connection
+                      type: string
+                      x-display-name: QUIC Socket Owner
                   rcvbuf_client:
                       type: integer
                       x-display-name: Receive Buffer Client Size

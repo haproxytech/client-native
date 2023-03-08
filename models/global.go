@@ -80,6 +80,9 @@ type Global struct {
 	// Pattern: ^[^\s]+$
 	Chroot string `json:"chroot,omitempty"`
 
+	// cluster secret
+	ClusterSecret string `json:"cluster_secret,omitempty"`
+
 	// crt base
 	CrtBase string `json:"crt_base,omitempty"`
 
@@ -195,6 +198,9 @@ type Global struct {
 
 	// nbthread
 	Nbthread int64 `json:"nbthread,omitempty"`
+
+	// no quic
+	NoQuic bool `json:"no-quic,omitempty"`
 
 	// node
 	Node string `json:"node,omitempty"`
@@ -2919,6 +2925,25 @@ type GlobalTuneOptions struct {
 	// pool low fd ratio
 	PoolLowFdRatio int64 `json:"pool_low_fd_ratio,omitempty"`
 
+	// quic frontend conn tc buffers limit
+	QuicFrontendConnTcBuffersLimit *int64 `json:"quic_frontend_conn_tc_buffers_limit,omitempty"`
+
+	// quic frontend max idle timeout
+	QuicFrontendMaxIdleTimeout *int64 `json:"quic_frontend_max_idle_timeout,omitempty"`
+
+	// quic frontend max streams bidi
+	QuicFrontendMaxStreamsBidi *int64 `json:"quic_frontend_max_streams_bidi,omitempty"`
+
+	// quic max frame loss
+	QuicMaxFrameLoss *int64 `json:"quic_max_frame_loss,omitempty"`
+
+	// quic retry threshold
+	QuicRetryThreshold *int64 `json:"quic_retry_threshold,omitempty"`
+
+	// quic socket owner
+	// Enum: [listener connection]
+	QuicSocketOwner string `json:"quic_socket_owner,omitempty"`
+
 	// rcvbuf client
 	RcvbufClient *int64 `json:"rcvbuf_client,omitempty"`
 
@@ -3021,6 +3046,10 @@ func (m *GlobalTuneOptions) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateListenerMultiQueue(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateQuicSocketOwner(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -3222,6 +3251,48 @@ func (m *GlobalTuneOptions) validateListenerMultiQueue(formats strfmt.Registry) 
 
 	// value enum
 	if err := m.validateListenerMultiQueueEnum("tune_options"+"."+"listener_multi_queue", "body", m.ListenerMultiQueue); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+var globalTuneOptionsTypeQuicSocketOwnerPropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["listener","connection"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		globalTuneOptionsTypeQuicSocketOwnerPropEnum = append(globalTuneOptionsTypeQuicSocketOwnerPropEnum, v)
+	}
+}
+
+const (
+
+	// GlobalTuneOptionsQuicSocketOwnerListener captures enum value "listener"
+	GlobalTuneOptionsQuicSocketOwnerListener string = "listener"
+
+	// GlobalTuneOptionsQuicSocketOwnerConnection captures enum value "connection"
+	GlobalTuneOptionsQuicSocketOwnerConnection string = "connection"
+)
+
+// prop value enum
+func (m *GlobalTuneOptions) validateQuicSocketOwnerEnum(path, location string, value string) error {
+	if err := validate.EnumCase(path, location, value, globalTuneOptionsTypeQuicSocketOwnerPropEnum, true); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *GlobalTuneOptions) validateQuicSocketOwner(formats strfmt.Registry) error {
+	if swag.IsZero(m.QuicSocketOwner) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateQuicSocketOwnerEnum("tune_options"+"."+"quic_socket_owner", "body", m.QuicSocketOwner); err != nil {
 		return err
 	}
 
