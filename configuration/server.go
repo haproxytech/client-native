@@ -235,6 +235,7 @@ func parseAddress(address string) (ipOrAddress string, port *int64) {
 }
 
 func parseServerParams(serverOptions []params.ServerOption, serverParams *models.ServerParams) { //nolint:gocognit,gocyclo,cyclop,cyclop,maintidx
+	var sourceArgs []string
 	for _, p := range serverOptions {
 		switch v := p.(type) {
 		case *params.ServerOptionWord:
@@ -449,6 +450,8 @@ func parseServerParams(serverOptions []params.ServerOption, serverParams *models
 				serverParams.Sni = v.Value
 			case "source":
 				serverParams.Source = v.Value
+			case "usesrc", "interface":
+				sourceArgs = append(sourceArgs, v.Name+" "+v.Value)
 			case "ssl-max-ver":
 				serverParams.SslMaxVer = v.Value
 			case "ssl-min-ver":
@@ -475,6 +478,10 @@ func parseServerParams(serverOptions []params.ServerOption, serverParams *models
 				serverParams.Ws = v.Value
 			}
 		}
+	}
+	// Add corresponding arguments to the source option.
+	if serverParams.Source != "" && len(sourceArgs) > 0 {
+		serverParams.Source += " " + strings.Join(sourceArgs, " ")
 	}
 }
 

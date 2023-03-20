@@ -2991,7 +2991,7 @@ func (c *client) loadDataForChange(transactionID string, version int64) (parser.
 }
 
 func valueIsNil(v reflect.Value) bool {
-	switch v.Kind() { //nolint:exhaustive
+	switch v.Kind() { //nolint:exhaustive,nolintlint
 	case reflect.Int64:
 		return v.Int() == 0
 	case reflect.String:
