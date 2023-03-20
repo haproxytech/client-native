@@ -2849,6 +2849,10 @@ func (s *SectionObject) source(field reflect.Value) error {
 	case models.SourceUsesrcHdrIP:
 		source.HdrIP = true
 	}
+	// source parser serialization expects UseSrc flag to be set in order to include related arguments.
+	if source.Client || source.ClientIP || source.HdrIP || source.AddressSecond != "" {
+		source.UseSrc = true
+	}
 	return s.set("source", source)
 }
 
