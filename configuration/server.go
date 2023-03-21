@@ -270,6 +270,8 @@ func parseServerParams(serverOptions []params.ServerOption, serverParams *models
 				serverParams.ForceSslv3 = "enabled"
 			case "force-tlsv10":
 				serverParams.ForceTlsv10 = "enabled"
+			case "no-sslv3":
+				serverParams.NoSslv3 = "enabled"
 			case "no-tlsv10":
 				serverParams.ForceTlsv10 = "disabled"
 			case "force-tlsv11":
@@ -294,8 +296,12 @@ func parseServerParams(serverOptions []params.ServerOption, serverParams *models
 				serverParams.SendProxyV2 = "disabled"
 			case "send-proxy-v2-ssl":
 				serverParams.SendProxyV2Ssl = "enabled"
+			case "no-send-proxy-v2-ssl":
+				serverParams.SendProxyV2Ssl = "disabled"
 			case "send-proxy-v2-ssl-cn":
 				serverParams.SendProxyV2SslCn = "enabled"
+			case "no-send-proxy-v2-ssl-cn":
+				serverParams.SendProxyV2SslCn = "disabled"
 			case "ssl":
 				serverParams.Ssl = "enabled"
 			case "no-ssl":
@@ -314,7 +320,7 @@ func parseServerParams(serverOptions []params.ServerOption, serverParams *models
 				serverParams.Tfo = "disabled"
 			case "stick":
 				serverParams.Stick = "enabled"
-			case "no-stick":
+			case "non-stick":
 				serverParams.Stick = "disabled"
 			}
 		case *params.ServerOptionValue:
@@ -550,7 +556,7 @@ func serializeServerParams(s models.ServerParams) (options []params.ServerOption
 	if s.ForceSslv3 == "enabled" {
 		options = append(options, &params.ServerOptionWord{Name: "force-sslv3"})
 	}
-	if s.ForceSslv3 == "disabled" {
+	if s.NoSslv3 == "enabled" {
 		options = append(options, &params.ServerOptionWord{Name: "no-sslv3"})
 	}
 	if s.ForceTlsv10 == "enabled" {
@@ -629,7 +635,7 @@ func serializeServerParams(s models.ServerParams) (options []params.ServerOption
 		options = append(options, &params.ServerOptionWord{Name: "stick"})
 	}
 	if s.Stick == "disabled" {
-		options = append(options, &params.ServerOptionWord{Name: "no-stick"})
+		options = append(options, &params.ServerOptionWord{Name: "non-stick"})
 	}
 	if s.Tfo == "enabled" {
 		options = append(options, &params.ServerOptionWord{Name: "tfo"})
@@ -716,7 +722,7 @@ func serializeServerParams(s models.ServerParams) (options []params.ServerOption
 		options = append(options, &params.ServerOptionValue{Name: "namespace", Value: s.Namespace})
 	}
 	if s.Npn != "" {
-		options = append(options, &params.ServerOptionValue{Name: "non", Value: s.Npn})
+		options = append(options, &params.ServerOptionValue{Name: "npn", Value: s.Npn})
 	}
 	if s.Observe != "" {
 		options = append(options, &params.ServerOptionValue{Name: "observe", Value: s.Observe})
@@ -822,6 +828,9 @@ func SerializeServer(s models.Server) types.Server {
 		server.Address = misc.SanitizeIPv6Address(s.Address)
 	}
 	server.Params = serializeServerParams(s.ServerParams)
+	if s.ID != nil {
+		server.Params = append(server.Params, &params.ServerOptionValue{Name: "id", Value: strconv.FormatInt(*s.ID, 10)})
+	}
 	return server
 }
 
