@@ -1658,6 +1658,18 @@ definitions:
                       type: integer
                       x-display-name: SSL Maximum Size
                       x-nullable: true
+                  ssl_ocsp_update_max_delay:
+                      type: integer
+                      x-display-name: SSL Maximum Interval Between Two Automatic Updates of the same OCSP Response
+                      x-nullable: true
+                  ssl_ocsp_update_min_delay:
+                      type: integer
+                      x-display-name: SSL Minimum Interval Between Two Automatic Updates of the same OCSP Response
+                      x-nullable: true
+                  stick_counters:
+                      type: integer
+                      x-display-name: Number of stick-counters
+                      x-nullable: true
                   vars_global_max_size:
                       type: integer
                       x-display-name: Variables Global Max Size
@@ -3914,7 +3926,9 @@ definitions:
               x-dependency:
                   type:
                       required: true
-                      value: sc-set-gpt0
+                      value:
+                          - sc-add-gpc
+                          - sc-set-gpt0
               x-display-name: ScSet Expression Value
           sc_id:
               type: integer
@@ -3922,15 +3936,27 @@ definitions:
                   type:
                       required: true
                       value:
+                          - sc-add-gpc
+                          - sc-inc-gpc
                           - sc-inc-gpc0
                           - sc-inc-gpc1
                           - sc-set-gpt0
+          sc_idx:
+              type: integer
+              x-dependency:
+                  type:
+                      required: true
+                      value:
+                          - sc-add-gpc
+                          - sc-inc-gpc
           sc_int:
               type: integer
               x-dependency:
                   type:
                       required: true
-                      value: sc-set-gpt0
+                      value:
+                          - sc-add-gpc
+                          - sc-set-gpt0
               x-display-name: ScSet Integer Value
               x-nullable: true
           service_name:
@@ -4056,6 +4082,8 @@ definitions:
                   - replace-uri
                   - replace-value
                   - return
+                  - sc-add-gpc
+                  - sc-inc-gpc
                   - sc-inc-gpc0
                   - sc-inc-gpc1
                   - sc-set-gpt0
@@ -4478,7 +4506,9 @@ definitions:
               x-dependency:
                   type:
                       required: true
-                      value: sc-set-gpt0
+                      value:
+                          - sc-add-gpc
+                          - sc-set-gpt0
               x-display-name: ScSet Expression Value
           sc_id:
               type: integer
@@ -4486,15 +4516,27 @@ definitions:
                   type:
                       required: true
                       value:
+                          - sc-add-gpc
+                          - sc-inc-gpc
                           - sc-inc-gpc0
                           - sc-inc-gpc1
                           - sc-set-gpt0
+          sc_idx:
+              type: integer
+              x-dependency:
+                  type:
+                      required: true
+                      value:
+                          - sc-add-gpc
+                          - sc-inc-gpc
           sc_int:
               type: integer
               x-dependency:
                   type:
                       required: true
-                      value: sc-set-gpt0
+                      value:
+                          - sc-add-gpc
+                          - sc-set-gpt0
               x-display-name: ScSet Integer Value
               x-nullable: true
           spoe_engine:
@@ -4602,6 +4644,8 @@ definitions:
                   - replace-header
                   - replace-value
                   - return
+                  - sc-add-gpc
+                  - sc-inc-gpc
                   - sc-inc-gpc0
                   - sc-inc-gpc1
                   - sc-set-gpt0
@@ -4694,6 +4738,23 @@ definitions:
           index: 0
           type: set-header
       properties:
+          acl_file:
+              pattern: ^[^\s]+$
+              type: string
+              x-dependency:
+                  type:
+                      required: true
+                      value:
+                          - del-acl
+          acl_keyfmt:
+              pattern: ^[^\s]+$
+              type: string
+              x-dependency:
+                  type:
+                      required: true
+                      value:
+                          - del-acl
+              x-display-name: ACK Key Format
           cond:
               enum:
                   - if
@@ -4752,6 +4813,80 @@ definitions:
           index:
               type: integer
               x-nullable: true
+          log_level:
+              enum:
+                  - emerg
+                  - alert
+                  - crit
+                  - err
+                  - warning
+                  - notice
+                  - info
+                  - debug
+                  - silent
+              type: string
+              x-dependency:
+                  type:
+                      required: true
+                      value: set-log-level
+          map_file:
+              pattern: ^[^\s]+$
+              type: string
+              x-dependency:
+                  type:
+                      required: true
+                      value:
+                          - set-map
+                          - del-map
+          map_keyfmt:
+              pattern: ^[^\s]+$
+              type: string
+              x-dependency:
+                  type:
+                      required: true
+                      value:
+                          - set-map
+                          - del-map
+              x-display-name: Map Key Format
+          map_valuefmt:
+              pattern: ^[^\s]+$
+              type: string
+              x-dependency:
+                  type:
+                      required: true
+                      value: set-map
+              x-display-name: Map Value Format
+          sc_expr:
+              type: string
+              x-dependency:
+                  type:
+                      required: true
+                      value: sc-set-gpt0
+              x-display-name: ScSet Expression Value
+          sc_id:
+              type: integer
+              x-dependency:
+                  type:
+                      required: true
+                      value:
+                          - sc-inc-gpc
+                          - sc-inc-gpc0
+                          - sc-inc-gpc1
+                          - sc-set-gpt0
+          sc_idx:
+              type: integer
+              x-dependency:
+                  type:
+                      required: true
+                      value: sc-inc-gpc
+          sc_int:
+              type: integer
+              x-dependency:
+                  type:
+                      required: true
+                      value: sc-set-gpt0
+              x-display-name: ScSet Integer Value
+              x-nullable: true
           status:
               maximum: 999
               minimum: 100
@@ -4779,10 +4914,18 @@ definitions:
               enum:
                   - add-header
                   - allow
+                  - del-acl
                   - del-header
+                  - del-map
                   - replace-header
                   - replace-value
+                  - sc-inc-gpc
+                  - sc-inc-gpc0
+                  - sc-inc-gpc1
+                  - sc-set-gpt0
                   - set-header
+                  - set-log-level
+                  - set-map
                   - set-status
                   - set-var
                   - strict-mode
@@ -5194,6 +5337,8 @@ definitions:
                   - expect-netscaler-cip
                   - expect-proxy
                   - reject
+                  - sc-add-gpc
+                  - sc-inc-gpc
                   - sc-inc-gpc0
                   - sc-inc-gpc1
                   - sc-set-gpt0
@@ -5451,12 +5596,27 @@ definitions:
                       value:
                           - content
               x-display-name: Variable name
+          sc_idx:
+              type: string
+              x-dependency:
+                  action:
+                      required: true
+                      value: []
+                  type:
+                      required: true
+                      value:
+                          - connection
+                          - content
+                          - session
+              x-display-name: Sticky counter Index
           sc_inc_id:
               type: string
               x-dependency:
                   action:
                       required: true
                       value:
+                          - sc-add-gpc
+                          - sc-inc-gpc
                           - sc-inc-gpc0
                           - sc-inc-gpc1
                           - sc-set-gpt0
@@ -5467,6 +5627,16 @@ definitions:
                           - content
                           - session
               x-display-name: Sticky counter ID
+          sc_int:
+              type: integer
+              x-dependency:
+                  type:
+                      required: true
+                      value:
+                          - sc-add-gpc
+                          - sc-set-gpt0
+              x-display-name: ScSet Integer Value
+              x-nullable: true
           service_name:
               type: string
               x-dependency:
@@ -5634,6 +5804,8 @@ definitions:
                   - lua
                   - set-bandwidth-limit
                   - close
+                  - sc-add-gpc
+                  - sc-inc-gpc
                   - sc-inc-gpc0
                   - sc-inc-gpc1
                   - sc-set-gpt0
@@ -5767,15 +5939,38 @@ definitions:
                       value: content
               x-display-name: Nice Value
               x-nullable: false
+          sc_expr:
+              type: string
+              x-dependency:
+                  action:
+                      required: true
+                      value:
+                          - sc-add-gpc
+                          - sc-inc-gpc
+                  type:
+                      value: content
+              x-display-name: ScSet Expression Value
           sc_id:
               type: integer
               x-dependency:
                   action:
                       required: true
                       value:
+                          - sc-add-gpc
+                          - sc-inc-gpc
                           - sc-inc-gpc0
                           - sc-inc-gpc1
                           - sc-set-gpt0
+                  type:
+                      value: content
+          sc_idx:
+              type: integer
+              x-dependency:
+                  action:
+                      required: true
+                      value:
+                          - sc-add-gpc
+                          - sc-inc-gpc
                   type:
                       value: content
           sc_int:
@@ -5783,7 +5978,9 @@ definitions:
               x-dependency:
                   action:
                       required: true
-                      value: sc-set-gpt0
+                      value:
+                          - sc-add-gpc
+                          - sc-inc-gpc
                   type:
                       value: content
               x-display-name: ScSet Integer Value

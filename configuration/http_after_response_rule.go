@@ -243,6 +243,14 @@ func ParseHTTPAfterRule(f types.Action) *models.HTTPAfterResponseRule {
 			Cond:     v.Cond,
 			CondTest: v.CondTest,
 		}
+	case *http_actions.DelACL:
+		return &models.HTTPAfterResponseRule{
+			Type:      "del-acl",
+			ACLFile:   v.FileName,
+			ACLKeyfmt: v.KeyFmt,
+			Cond:      v.Cond,
+			CondTest:  v.CondTest,
+		}
 	case *http_actions.DelHeader:
 		return &models.HTTPAfterResponseRule{
 			Type:      "del-header",
@@ -250,6 +258,14 @@ func ParseHTTPAfterRule(f types.Action) *models.HTTPAfterResponseRule {
 			Cond:      v.Cond,
 			CondTest:  v.CondTest,
 			HdrMethod: v.Method,
+		}
+	case *http_actions.DelMap:
+		return &models.HTTPAfterResponseRule{
+			Type:      "del-map",
+			MapFile:   v.FileName,
+			MapKeyfmt: v.KeyFmt,
+			Cond:      v.Cond,
+			CondTest:  v.CondTest,
 		}
 	case *http_actions.ReplaceHeader:
 		return &models.HTTPAfterResponseRule{
@@ -269,6 +285,45 @@ func ParseHTTPAfterRule(f types.Action) *models.HTTPAfterResponseRule {
 			Cond:      v.Cond,
 			CondTest:  v.CondTest,
 		}
+	case *actions.ScIncGpc:
+		ID, _ := strconv.ParseInt(v.ID, 10, 64)
+		Idx, _ := strconv.ParseInt(v.Idx, 10, 64)
+		return &models.HTTPAfterResponseRule{
+			Type:     "sc-inc-gpc",
+			ScID:     ID,
+			ScIdx:    Idx,
+			Cond:     v.Cond,
+			CondTest: v.CondTest,
+		}
+	case *actions.ScIncGpc0:
+		ID, _ := strconv.ParseInt(v.ID, 10, 64)
+		return &models.HTTPAfterResponseRule{
+			Type:     "sc-inc-gpc0",
+			ScID:     ID,
+			Cond:     v.Cond,
+			CondTest: v.CondTest,
+		}
+	case *actions.ScIncGpc1:
+		ID, _ := strconv.ParseInt(v.ID, 10, 64)
+		return &models.HTTPAfterResponseRule{
+			Type:     "sc-inc-gpc1",
+			ScID:     ID,
+			Cond:     v.Cond,
+			CondTest: v.CondTest,
+		}
+	case *actions.ScSetGpt0:
+		if (v.Int == nil && len(v.Expr.Expr) == 0) || (v.Int != nil && len(v.Expr.Expr) > 0) {
+			return nil
+		}
+		ID, _ := strconv.ParseInt(v.ID, 10, 64)
+		return &models.HTTPAfterResponseRule{
+			Type:     "sc-set-gpt0",
+			ScID:     ID,
+			ScExpr:   strings.Join(v.Expr.Expr, " "),
+			ScInt:    v.Int,
+			Cond:     v.Cond,
+			CondTest: v.CondTest,
+		}
 	case *http_actions.SetHeader:
 		return &models.HTTPAfterResponseRule{
 			Type:      "set-header",
@@ -276,6 +331,22 @@ func ParseHTTPAfterRule(f types.Action) *models.HTTPAfterResponseRule {
 			HdrFormat: v.Fmt,
 			Cond:      v.Cond,
 			CondTest:  v.CondTest,
+		}
+	case *actions.SetLogLevel:
+		return &models.HTTPAfterResponseRule{
+			Type:     "set-log-level",
+			LogLevel: v.Level,
+			Cond:     v.Cond,
+			CondTest: v.CondTest,
+		}
+	case *http_actions.SetMap:
+		return &models.HTTPAfterResponseRule{
+			Type:        "set-map",
+			MapFile:     v.FileName,
+			MapKeyfmt:   v.KeyFmt,
+			MapValuefmt: v.ValueFmt,
+			Cond:        v.Cond,
+			CondTest:    v.CondTest,
 		}
 	case *http_actions.SetStatus:
 		status, _ := strconv.ParseInt(v.Status, 10, 64)
@@ -331,10 +402,24 @@ func SerializeHTTPAfterRule(f models.HTTPAfterResponseRule) (rule types.Action, 
 			Cond:     f.Cond,
 			CondTest: f.CondTest,
 		}
+	case "del-acl":
+		rule = &http_actions.DelACL{
+			FileName: f.ACLFile,
+			KeyFmt:   f.ACLKeyfmt,
+			Cond:     f.Cond,
+			CondTest: f.CondTest,
+		}
 	case "del-header":
 		rule = &http_actions.DelHeader{
 			Name:     f.HdrName,
 			Method:   f.HdrMethod,
+			Cond:     f.Cond,
+			CondTest: f.CondTest,
+		}
+	case "del-map":
+		rule = &http_actions.DelMap{
+			FileName: f.MapFile,
+			KeyFmt:   f.MapKeyfmt,
 			Cond:     f.Cond,
 			CondTest: f.CondTest,
 		}
@@ -354,10 +439,57 @@ func SerializeHTTPAfterRule(f models.HTTPAfterResponseRule) (rule types.Action, 
 			Cond:       f.Cond,
 			CondTest:   f.CondTest,
 		}
+	case "sc-inc-gpc":
+		rule = &actions.ScIncGpc{
+			ID:       strconv.FormatInt(f.ScID, 10),
+			Idx:      strconv.FormatInt(f.ScIdx, 10),
+			Cond:     f.Cond,
+			CondTest: f.CondTest,
+		}
+	case "sc-inc-gpc0":
+		rule = &actions.ScIncGpc0{
+			ID:       strconv.FormatInt(f.ScID, 10),
+			Cond:     f.Cond,
+			CondTest: f.CondTest,
+		}
+	case "sc-inc-gpc1":
+		rule = &actions.ScIncGpc1{
+			ID:       strconv.FormatInt(f.ScID, 10),
+			Cond:     f.Cond,
+			CondTest: f.CondTest,
+		}
+	case "sc-set-gpt0":
+		if len(f.ScExpr) > 0 && f.ScInt != nil {
+			return nil, NewConfError(ErrValidationError, "sc-set-gpt0 int and expr are exclusive")
+		}
+		if len(f.ScExpr) == 0 && f.ScInt == nil {
+			return nil, NewConfError(ErrValidationError, "sc-set-gpt0 int or expr has to be set")
+		}
+		rule = &actions.ScSetGpt0{
+			ID:       strconv.FormatInt(f.ScID, 10),
+			Int:      f.ScInt,
+			Expr:     common.Expression{Expr: strings.Split(f.ScExpr, " ")},
+			Cond:     f.Cond,
+			CondTest: f.CondTest,
+		}
 	case "set-header":
 		rule = &http_actions.SetHeader{
 			Name:     f.HdrName,
 			Fmt:      f.HdrFormat,
+			Cond:     f.Cond,
+			CondTest: f.CondTest,
+		}
+	case "set-log-level":
+		rule = &actions.SetLogLevel{
+			Level:    f.LogLevel,
+			Cond:     f.Cond,
+			CondTest: f.CondTest,
+		}
+	case "set-map":
+		rule = &http_actions.SetMap{
+			FileName: f.MapFile,
+			KeyFmt:   f.MapKeyfmt,
+			ValueFmt: f.MapValuefmt,
 			Cond:     f.Cond,
 			CondTest: f.CondTest,
 		}

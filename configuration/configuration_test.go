@@ -90,11 +90,14 @@ global
   tune.ssl.default-dh-param 45
   tune.ssl.ssl-ctx-cache-size 46
   tune.ssl.capture-buffer-size 47
-  tune.vars.global-max-size 49
-  tune.vars.proc-max-size 50
-  tune.vars.reqres-max-size 51
-  tune.vars.sess-max-size 52
-  tune.vars.txn-max-size 53
+  tune.ssl.ocsp-update.maxdelay 48
+  tune.ssl.ocsp-update.mindelay 49
+  tune.stick-counters 50
+  tune.vars.global-max-size 51
+  tune.vars.proc-max-size 52
+  tune.vars.reqres-max-size 53
+  tune.vars.sess-max-size 54
+  tune.vars.txn-max-size 55
   tune.quic.frontend.conn-tx-buffers.limit 10
   tune.quic.frontend.max-idle-timeout 10000
   tune.quic.frontend.max-streams-bidi 100
@@ -328,10 +331,13 @@ frontend test
   http-request set-var(req.my_var) req.fhdr(user-agent),lower
   http-request set-map(map.lst) %[src] %[req.hdr(X-Value)]
   http-request del-map(map.lst) %[src] if FALSE
+  http-request del-acl(map.lst) %[src] if FALSE
   http-request cache-use cache-name if FALSE
   http-request disable-l7-retry if FALSE
   http-request early-hint hint-name %[src] if FALSE
   http-request replace-uri ^http://(.*) https://1 if FALSE
+  http-request sc-add-gpc(0,1) 1 if FALSE
+  http-request sc-inc-gpc(0,1) if FALSE
   http-request sc-inc-gpc0(0) if FALSE
   http-request sc-inc-gpc1(0) if FALSE
   http-request do-resolve(txn.myip,mydns,ipv4) hdr(Host),lower
@@ -367,7 +373,10 @@ frontend test
   http-response set-var(req.my_var) req.fhdr(user-agent),lower
   http-response set-map(map.lst) %[src] %[res.hdr(X-Value)]
   http-response del-map(map.lst) %[src] if FALSE
+  http-response del-acl(map.lst) %[src] if FALSE
   http-response cache-store cache-name if FALSE
+  http-response sc-add-gpc(0,1) 1 if FALSE
+  http-response sc-inc-gpc(0,1) if FALSE
   http-response sc-inc-gpc0(0) if FALSE
   http-response sc-inc-gpc1(0) if FALSE
   http-response sc-set-gpt0(1) hdr(Host),lower if FALSE
@@ -387,7 +396,16 @@ frontend test
   http-response set-bandwidth-limit my-limit limit 1m period 10s
   http-response set-bandwidth-limit my-limit-reverse period 20s limit 2m
   http-response set-bandwidth-limit my-limit-cond limit 3m if FALSE
+  http-after-response set-map(map.lst) %[src] %[res.hdr(X-Value)]
+  http-after-response del-map(map.lst) %[src] if FALSE
+  http-after-response del-acl(map.lst) %[src] if FALSE
+  http-after-response sc-inc-gpc(0,1) if FALSE
+  http-after-response sc-inc-gpc0(0) if FALSE
+  http-after-response sc-inc-gpc1(0) if FALSE
+  http-after-response sc-set-gpt0(1) hdr(Host),lower if FALSE
+  http-after-response sc-set-gpt0(1) 20 if FALSE
   http-after-response set-header Strict-Transport-Security "max-age=31536000"
+  http-after-response set-log-level silent if FALSE
   http-after-response replace-header Set-Cookie (C=[^;]*);(.*) \1;ip=%bi;\2
   http-after-response replace-value Cache-control ^public$ private
   http-after-response set-status 503 reason "SlowDown"
@@ -401,7 +419,9 @@ frontend test
   tcp-request connection silent-drop
   tcp-request connection silent-drop if TRUE
   tcp-request connection lua.foo param1 param2 if FALSE
+  tcp-request connection sc-add-gpc(0,1) 1 if FALSE
   tcp-request content lua.foo param1 param2 if FALSE
+  tcp-request content sc-add-gpc(0,1) 1 if FALSE
   tcp-request content set-bandwidth-limit my-limit limit 1m period 10s
   tcp-request content set-bandwidth-limit my-limit-reverse period 20s limit 2m
   tcp-request content set-bandwidth-limit my-limit-cond limit 3m if FALSE
@@ -415,6 +435,7 @@ frontend test
   tcp-request content set-tos 3 if FALSE
   tcp-request content set-var-fmt(req.tn) ssl_c_s_tn if FALSE
   tcp-request content switch-mode http proto my-proto if FALSE
+  tcp-request session sc-add-gpc(0,1) 1 if FALSE
   log global
   no log
   log 127.0.0.1:514 local0 notice notice
@@ -542,6 +563,7 @@ backend test
   tcp-response content set-bandwidth-limit my-limit-reverse period 20s limit 2m
   tcp-response content set-bandwidth-limit my-limit-cond limit 3m if FALSE
   tcp-response content close if FALSE
+  tcp-response content sc-add-gpc(0,1) 1 if FALSE
   tcp-response content sc-inc-gpc0(1) if FALSE
   tcp-response content sc-inc-gpc1(2) if FALSE
   tcp-response content sc-set-gpt0(3) hdr(Host),lower if FALSE

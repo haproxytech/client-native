@@ -402,6 +402,18 @@ global:
           type: integer
           x-display-name: SSL Maximum Size of Cipherlist Buffer
           x-nullable: true
+        ssl_ocsp_update_max_delay:
+          type: integer
+          x-display-name: SSL Maximum Interval Between Two Automatic Updates of the same OCSP Response
+          x-nullable: true
+        ssl_ocsp_update_min_delay:
+          type: integer
+          x-display-name: SSL Minimum Interval Between Two Automatic Updates of the same OCSP Response
+          x-nullable: true
+        stick_counters:
+          type: integer
+          x-display-name: Number of stick-counters
+          x-nullable: true
         vars_global_max_size:
           type: integer
           x-display-name: Variables Global Max Size

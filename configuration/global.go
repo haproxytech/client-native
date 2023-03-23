@@ -2670,6 +2670,24 @@ func parseTuneOptions(p parser.Parser) (*models.GlobalTuneOptions, error) { //no
 	}
 	options.SslCaptureBufferSize = intPOption
 
+	intPOption, err = parseInt64POption(p, "tune.ssl.ocsp-update.maxdelay")
+	if err != nil {
+		return nil, err
+	}
+	options.SslOcspUpdateMaxDelay = intPOption
+
+	intPOption, err = parseInt64POption(p, "tune.ssl.ocsp-update.mindelay")
+	if err != nil {
+		return nil, err
+	}
+	options.SslOcspUpdateMinDelay = intPOption
+
+	intPOption, err = parseInt64POption(p, "tune.stick-counters")
+	if err != nil {
+		return nil, err
+	}
+	options.StickCounters = intPOption
+
 	strOption, err = parseStringOption(p, "tune.vars.global-max-size")
 	if err != nil {
 		return nil, err

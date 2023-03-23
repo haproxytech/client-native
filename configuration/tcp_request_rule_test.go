@@ -29,8 +29,8 @@ func TestGetTCPRequestRules(t *testing.T) { //nolint:gocognit,gocyclo
 		t.Error(err.Error())
 	}
 
-	if len(tRules) != 21 {
-		t.Errorf("%v tcp request rules returned, expected 21", len(tRules))
+	if len(tRules) != 24 {
+		t.Errorf("%v tcp request rules returned, expected 24", len(tRules))
 	}
 
 	if v != version {
@@ -137,6 +137,25 @@ func TestGetTCPRequestRules(t *testing.T) { //nolint:gocognit,gocyclo
 				t.Errorf("%v: CondTest not src FALSE: %v", *r.Index, r.CondTest)
 			}
 		case 7:
+			if r.Type != "connection" {
+				t.Errorf("%v: Type not connection: %v", *r.Index, r.Type)
+			}
+			if r.Action != "sc-add-gpc" {
+				t.Errorf("%v: Type not sc-add-gpc: %v", *r.Index, r.Type)
+			}
+			if r.ScIdx != "0" {
+				t.Errorf("%v: ScIdx not 0: %v", *r.Index, r.ScIdx)
+			}
+			if r.ScIncID != "1" {
+				t.Errorf("%v: ScID not 1: %v", *r.Index, r.ScIncID)
+			}
+			if r.Cond != "if" {
+				t.Errorf("%v: Cond not if: %v", *r.Index, r.Cond)
+			}
+			if r.CondTest != "FALSE" {
+				t.Errorf("%v: CondTest not FALSE: %v", *r.Index, r.CondTest)
+			}
+		case 8:
 			if r.Type != "content" {
 				t.Errorf("%v: Type not content: %v", *r.Index, r.Type)
 			}
@@ -155,7 +174,26 @@ func TestGetTCPRequestRules(t *testing.T) { //nolint:gocognit,gocyclo
 			if r.CondTest != "FALSE" {
 				t.Errorf("%v: CondTest not src FALSE: %v", *r.Index, r.CondTest)
 			}
-		case 8:
+		case 9:
+			if r.Type != "content" {
+				t.Errorf("%v: Type not content: %v", *r.Index, r.Type)
+			}
+			if r.Action != "sc-add-gpc" {
+				t.Errorf("%v: Type not sc-add-gpc: %v", *r.Index, r.Type)
+			}
+			if r.ScIdx != "0" {
+				t.Errorf("%v: ScIdx not 0: %v", *r.Index, r.ScIdx)
+			}
+			if r.ScIncID != "1" {
+				t.Errorf("%v: ScID not 1: %v", *r.Index, r.ScIncID)
+			}
+			if r.Cond != "if" {
+				t.Errorf("%v: Cond not if: %v", *r.Index, r.Cond)
+			}
+			if r.CondTest != "FALSE" {
+				t.Errorf("%v: CondTest not FALSE: %v", *r.Index, r.CondTest)
+			}
+		case 10:
 			if r.Type != "content" {
 				t.Errorf("%v: Type not content: %v", *r.Index, r.Type)
 			}
@@ -171,7 +209,7 @@ func TestGetTCPRequestRules(t *testing.T) { //nolint:gocognit,gocyclo
 			if r.BandwidthLimitPeriod != "10s" {
 				t.Errorf("%v: BandwidthLimitPeriod not 10s: %v", *r.Index, r.BandwidthLimitPeriod)
 			}
-		case 9:
+		case 11:
 			if r.Type != "content" {
 				t.Errorf("%v: Type not content: %v", *r.Index, r.Type)
 			}
@@ -187,7 +225,7 @@ func TestGetTCPRequestRules(t *testing.T) { //nolint:gocognit,gocyclo
 			if r.BandwidthLimitPeriod != "20s" {
 				t.Errorf("%v: BandwidthLimitPeriod no 20s: %v", *r.Index, r.BandwidthLimitPeriod)
 			}
-		case 10:
+		case 12:
 			if r.Type != "content" {
 				t.Errorf("%v: Type not content: %v", *r.Index, r.Type)
 			}
@@ -209,7 +247,7 @@ func TestGetTCPRequestRules(t *testing.T) { //nolint:gocognit,gocyclo
 			if r.CondTest != "FALSE" {
 				t.Errorf("%v: CondTest not FALSE: %v", *r.Index, r.CondTest)
 			}
-		case 11:
+		case 13:
 			if r.Type != "connection" {
 				t.Errorf("%v: Type not connection: %v", *r.Index, r.Type)
 			}
@@ -225,7 +263,7 @@ func TestGetTCPRequestRules(t *testing.T) { //nolint:gocognit,gocyclo
 			if r.CondTest != "FALSE" {
 				t.Errorf("%v: CondTest not FALSE: %v", *r.Index, r.CondTest)
 			}
-		case 12:
+		case 14:
 			if r.Type != "connection" {
 				t.Errorf("%v: Type not connection: %v", *r.Index, r.Type)
 			}
@@ -241,7 +279,7 @@ func TestGetTCPRequestRules(t *testing.T) { //nolint:gocognit,gocyclo
 			if r.CondTest != "FALSE" {
 				t.Errorf("%v: CondTest not FALSE: %v", *r.Index, r.CondTest)
 			}
-		case 13:
+		case 15:
 			if r.Type != "connection" {
 				t.Errorf("%v: Type not connection: %v", *r.Index, r.Type)
 			}
@@ -257,7 +295,7 @@ func TestGetTCPRequestRules(t *testing.T) { //nolint:gocognit,gocyclo
 			if r.CondTest != "FALSE" {
 				t.Errorf("%v: CondTest not FALSE: %v", *r.Index, r.CondTest)
 			}
-		case 14:
+		case 16:
 			if r.Type != "content" {
 				t.Errorf("%v: Type not content: %v", *r.Index, r.Type)
 			}
@@ -273,7 +311,7 @@ func TestGetTCPRequestRules(t *testing.T) { //nolint:gocognit,gocyclo
 			if r.CondTest != "FALSE" {
 				t.Errorf("%v: CondTest not FALSE: %v", *r.Index, r.CondTest)
 			}
-		case 15:
+		case 17:
 			if r.Type != "content" {
 				t.Errorf("%v: Type not content: %v", *r.Index, r.Type)
 			}
@@ -289,7 +327,7 @@ func TestGetTCPRequestRules(t *testing.T) { //nolint:gocognit,gocyclo
 			if r.CondTest != "FALSE" {
 				t.Errorf("%v: CondTest not FALSE: %v", *r.Index, r.CondTest)
 			}
-		case 16:
+		case 18:
 			if r.Type != "content" {
 				t.Errorf("%v: Type not content: %v", *r.Index, r.Type)
 			}
@@ -305,7 +343,7 @@ func TestGetTCPRequestRules(t *testing.T) { //nolint:gocognit,gocyclo
 			if r.CondTest != "FALSE" {
 				t.Errorf("%v: CondTest not FALSE: %v", *r.Index, r.CondTest)
 			}
-		case 17:
+		case 19:
 			if r.Type != "content" {
 				t.Errorf("%v: Type not content: %v", *r.Index, r.Type)
 			}
@@ -321,7 +359,7 @@ func TestGetTCPRequestRules(t *testing.T) { //nolint:gocognit,gocyclo
 			if r.CondTest != "FALSE" {
 				t.Errorf("%v: CondTest not FALSE: %v", *r.Index, r.CondTest)
 			}
-		case 18:
+		case 20:
 			if r.Type != "content" {
 				t.Errorf("%v: Type not content: %v", *r.Index, r.Type)
 			}
@@ -337,7 +375,7 @@ func TestGetTCPRequestRules(t *testing.T) { //nolint:gocognit,gocyclo
 			if r.CondTest != "FALSE" {
 				t.Errorf("%v: CondTest not FALSE: %v", *r.Index, r.CondTest)
 			}
-		case 19:
+		case 21:
 			if r.Type != "content" {
 				t.Errorf("%v: Type not content: %v", *r.Index, r.Type)
 			}
@@ -359,7 +397,7 @@ func TestGetTCPRequestRules(t *testing.T) { //nolint:gocognit,gocyclo
 			if r.CondTest != "FALSE" {
 				t.Errorf("%v: CondTest not FALSE: %v", *r.Index, r.CondTest)
 			}
-		case 20:
+		case 22:
 			if r.Type != "content" {
 				t.Errorf("%v: Type not content: %v", *r.Index, r.Type)
 			}
@@ -375,8 +413,27 @@ func TestGetTCPRequestRules(t *testing.T) { //nolint:gocognit,gocyclo
 			if r.CondTest != "FALSE" {
 				t.Errorf("%v: CondTest not FALSE: %v", *r.Index, r.CondTest)
 			}
+		case 23:
+			if r.Type != "session" {
+				t.Errorf("%v: Type not session: %v", *r.Index, r.Type)
+			}
+			if r.Action != "sc-add-gpc" {
+				t.Errorf("%v: Type not sc-add-gpc: %v", *r.Index, r.Type)
+			}
+			if r.ScIdx != "0" {
+				t.Errorf("%v: ScIdx not 0: %v", *r.Index, r.ScIdx)
+			}
+			if r.ScIncID != "1" {
+				t.Errorf("%v: ScID not 1: %v", *r.Index, r.ScIncID)
+			}
+			if r.Cond != "if" {
+				t.Errorf("%v: Cond not if: %v", *r.Index, r.Cond)
+			}
+			if r.CondTest != "FALSE" {
+				t.Errorf("%v: CondTest not FALSE: %v", *r.Index, r.CondTest)
+			}
 		default:
-			t.Errorf("Expext tcp-request 0-21, %v found", *r.Index)
+			t.Errorf("Expect tcp-request 0-23, %v found", *r.Index)
 		}
 	}
 
@@ -487,7 +544,7 @@ func TestCreateEditDeleteTCPRequestRule(t *testing.T) {
 	}
 
 	// TestDeleteTCPRequest
-	err = clientTest.DeleteTCPRequestRule(11, "frontend", "test", "", version)
+	err = clientTest.DeleteTCPRequestRule(24, "frontend", "test", "", version)
 	if err != nil {
 		t.Error(err.Error())
 	} else {
@@ -498,12 +555,12 @@ func TestCreateEditDeleteTCPRequestRule(t *testing.T) {
 		t.Error("Version not incremented")
 	}
 
-	_, _, err = clientTest.GetTCPRequestRule(22, "frontend", "test", "")
+	_, _, err = clientTest.GetTCPRequestRule(24, "frontend", "test", "")
 	if err == nil {
 		t.Error("DeleteTCPRequestRule failed, TCP Request Rule 22 still exists")
 	}
 
-	err = clientTest.DeleteTCPRequestRule(2, "backend", "test_2", "", version)
+	err = clientTest.DeleteTCPRequestRule(24, "backend", "test_2", "", version)
 	if err == nil {
 		t.Error("Should throw error, non existant TCP Request Rule")
 		version++

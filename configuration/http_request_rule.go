@@ -438,6 +438,34 @@ func ParseHTTPRequestRule(f types.Action) (rule *models.HTTPRequestRule, err err
 			ReturnStatusCode:    v.Status,
 			Type:                "return",
 		}
+	case *actions.ScAddGpc:
+		if v.Int == nil && len(v.Expr.Expr) == 0 {
+			return nil, NewConfError(ErrValidationError, "sc-add-gpc int or expr has to be set")
+		}
+		if v.Int != nil && len(v.Expr.Expr) > 0 {
+			return nil, NewConfError(ErrValidationError, "sc-add-gpc int and expr are exclusive")
+		}
+		ID, _ := strconv.ParseInt(v.ID, 10, 64)
+		Idx, _ := strconv.ParseInt(v.Idx, 10, 64)
+		rule = &models.HTTPRequestRule{
+			Type:     "sc-add-gpc",
+			ScID:     ID,
+			ScIdx:    Idx,
+			ScExpr:   strings.Join(v.Expr.Expr, " "),
+			ScInt:    v.Int,
+			Cond:     v.Cond,
+			CondTest: v.CondTest,
+		}
+	case *actions.ScIncGpc:
+		ID, _ := strconv.ParseInt(v.ID, 10, 64)
+		Idx, _ := strconv.ParseInt(v.Idx, 10, 64)
+		rule = &models.HTTPRequestRule{
+			Type:     "sc-inc-gpc",
+			ScID:     ID,
+			ScIdx:    Idx,
+			Cond:     v.Cond,
+			CondTest: v.CondTest,
+		}
 	case *actions.ScIncGpc0:
 		ID, _ := strconv.ParseInt(v.ID, 10, 64)
 		rule = &models.HTTPRequestRule{
@@ -911,6 +939,28 @@ func SerializeHTTPRequestRule(f models.HTTPRequestRule) (rule types.Action, err 
 			if ok := http_actions.AllowedErrorCode(*f.ReturnStatusCode); !ok {
 				return rule, NewConfError(ErrValidationError, "invalid Status Code for error type response")
 			}
+		}
+	case "sc-add-gpc":
+		if len(f.ScExpr) > 0 && f.ScInt != nil {
+			return nil, NewConfError(ErrValidationError, "sc-add-gpc int and expr are exclusive")
+		}
+		if len(f.ScExpr) == 0 && f.ScInt == nil {
+			return nil, NewConfError(ErrValidationError, "sc-add-gpc int or expr has to be set")
+		}
+		rule = &actions.ScAddGpc{
+			ID:       strconv.FormatInt(f.ScID, 10),
+			Idx:      strconv.FormatInt(f.ScIdx, 10),
+			Int:      f.ScInt,
+			Expr:     common.Expression{Expr: strings.Split(f.ScExpr, " ")},
+			Cond:     f.Cond,
+			CondTest: f.CondTest,
+		}
+	case "sc-inc-gpc":
+		rule = &actions.ScAddGpc{
+			ID:       strconv.FormatInt(f.ScID, 10),
+			Idx:      strconv.FormatInt(f.ScIdx, 10),
+			Cond:     f.Cond,
+			CondTest: f.CondTest,
 		}
 	case "sc-inc-gpc0":
 		rule = &actions.ScIncGpc0{

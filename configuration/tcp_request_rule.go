@@ -284,8 +284,22 @@ func ParseTCPRequestRule(f types.TCPType) (rule *models.TCPRequestRule, err erro
 			}
 			rule.Cond = a.Cond
 			rule.CondTest = a.CondTest
+		case *actions.ScAddGpc:
+			rule.Action = models.TCPRequestRuleActionScDashAddDashGpc
+			rule.ScIncID = a.ID
+			rule.ScIdx = a.Idx
+			rule.ScInt = a.Int
+			rule.Expr = a.Expr.String()
+			rule.Cond = a.Cond
+			rule.CondTest = a.CondTest
+		case *actions.ScIncGpc:
+			rule.Action = models.TCPRequestRuleActionScDashIncDashGpc
+			rule.ScIncID = a.ID
+			rule.ScIdx = a.Idx
+			rule.Cond = a.Cond
+			rule.CondTest = a.CondTest
 		case *actions.ScIncGpc0:
-			rule.Action = models.TCPRequestRuleActionScDashSetDashGpt0
+			rule.Action = models.TCPRequestRuleActionScDashIncDashGpc0
 			rule.ScIncID = a.ID
 			rule.Cond = a.Cond
 			rule.CondTest = a.CondTest
@@ -297,6 +311,7 @@ func ParseTCPRequestRule(f types.TCPType) (rule *models.TCPRequestRule, err erro
 		case *actions.ScSetGpt0:
 			rule.Action = models.TCPRequestRuleActionScDashSetDashGpt0
 			rule.ScIncID = a.ID
+			rule.ScInt = a.Int
 			rule.Expr = a.Expr.String()
 			rule.Cond = a.Cond
 			rule.CondTest = a.CondTest
@@ -404,6 +419,20 @@ func ParseTCPRequestRule(f types.TCPType) (rule *models.TCPRequestRule, err erro
 			}
 			rule.Cond = a.Cond
 			rule.CondTest = a.CondTest
+		case *actions.ScAddGpc:
+			rule.Action = models.TCPRequestRuleActionScDashAddDashGpc
+			rule.ScIncID = a.ID
+			rule.ScIdx = a.Idx
+			rule.ScInt = a.Int
+			rule.Expr = a.Expr.String()
+			rule.Cond = a.Cond
+			rule.CondTest = a.CondTest
+		case *actions.ScIncGpc:
+			rule.Action = models.TCPRequestRuleActionScDashIncDashGpc
+			rule.ScIncID = a.ID
+			rule.ScIdx = a.Idx
+			rule.Cond = a.Cond
+			rule.CondTest = a.CondTest
 		case *actions.ScIncGpc0:
 			rule.Action = models.TCPRequestRuleActionScDashIncDashGpc0
 			rule.ScIncID = a.ID
@@ -417,6 +446,7 @@ func ParseTCPRequestRule(f types.TCPType) (rule *models.TCPRequestRule, err erro
 		case *actions.ScSetGpt0:
 			rule.Action = models.TCPRequestRuleActionScDashSetDashGpt0
 			rule.ScIncID = a.ID
+			rule.ScInt = a.Int
 			rule.GptValue = a.Expr.String()
 			rule.Cond = a.Cond
 			rule.CondTest = a.CondTest
@@ -543,6 +573,20 @@ func ParseTCPRequestRule(f types.TCPType) (rule *models.TCPRequestRule, err erro
 			}
 			rule.Cond = a.Cond
 			rule.CondTest = a.CondTest
+		case *actions.ScAddGpc:
+			rule.Action = models.TCPRequestRuleActionScDashAddDashGpc
+			rule.ScIncID = a.ID
+			rule.ScIdx = a.Idx
+			rule.ScInt = a.Int
+			rule.Expr = a.Expr.String()
+			rule.Cond = a.Cond
+			rule.CondTest = a.CondTest
+		case *actions.ScIncGpc:
+			rule.Action = models.TCPRequestRuleActionScDashIncDashGpc
+			rule.ScIncID = a.ID
+			rule.ScIdx = a.Idx
+			rule.Cond = a.Cond
+			rule.CondTest = a.CondTest
 		case *actions.ScIncGpc0:
 			rule.Action = models.TCPRequestRuleActionScDashIncDashGpc0
 			rule.ScIncID = a.ID
@@ -656,6 +700,26 @@ func SerializeTCPRequestRule(f models.TCPRequestRule) (rule types.TCPType, err e
 					CondTest: f.CondTest,
 				},
 			}, nil
+		case models.TCPRequestRuleActionScDashAddDashGpc:
+			return &tcp_types.Connection{
+				Action: &actions.ScAddGpc{
+					ID:       f.ScIncID,
+					Idx:      f.ScIdx,
+					Int:      f.ScInt,
+					Expr:     common.Expression{Expr: strings.Split(f.Expr, " ")},
+					Cond:     f.Cond,
+					CondTest: f.CondTest,
+				},
+			}, nil
+		case models.TCPRequestRuleActionScDashIncDashGpc:
+			return &tcp_types.Connection{
+				Action: &actions.ScIncGpc{
+					ID:       f.ScIncID,
+					Idx:      f.ScIdx,
+					Cond:     f.Cond,
+					CondTest: f.CondTest,
+				},
+			}, nil
 		case models.TCPRequestRuleActionScDashIncDashGpc0:
 			return &tcp_types.Connection{
 				Action: &actions.ScIncGpc0{
@@ -668,6 +732,15 @@ func SerializeTCPRequestRule(f models.TCPRequestRule) (rule types.TCPType, err e
 			return &tcp_types.Connection{
 				Action: &actions.ScIncGpc1{
 					ID:       f.ScIncID,
+					Cond:     f.Cond,
+					CondTest: f.CondTest,
+				},
+			}, nil
+		case models.TCPRequestRuleActionScDashSetDashGpt0:
+			return &tcp_types.Connection{
+				Action: &actions.ScSetGpt0{
+					ID:       f.ScIncID,
+					Expr:     common.Expression{Expr: strings.Split(f.Expr, " ")},
 					Cond:     f.Cond,
 					CondTest: f.CondTest,
 				},
@@ -806,6 +879,26 @@ func SerializeTCPRequestRule(f models.TCPRequestRule) (rule types.TCPType, err e
 					CondTest: f.CondTest,
 				},
 			}, nil
+		case models.TCPRequestRuleActionScDashAddDashGpc:
+			return &tcp_types.Connection{
+				Action: &actions.ScAddGpc{
+					ID:       f.ScIncID,
+					Idx:      f.ScIdx,
+					Int:      f.ScInt,
+					Expr:     common.Expression{Expr: strings.Split(f.Expr, " ")},
+					Cond:     f.Cond,
+					CondTest: f.CondTest,
+				},
+			}, nil
+		case models.TCPRequestRuleActionScDashIncDashGpc:
+			return &tcp_types.Connection{
+				Action: &actions.ScIncGpc{
+					ID:       f.ScIncID,
+					Idx:      f.ScIdx,
+					Cond:     f.Cond,
+					CondTest: f.CondTest,
+				},
+			}, nil
 		case models.TCPRequestRuleActionScDashIncDashGpc0:
 			return &tcp_types.Content{
 				Action: &actions.ScIncGpc0{
@@ -818,6 +911,15 @@ func SerializeTCPRequestRule(f models.TCPRequestRule) (rule types.TCPType, err e
 			return &tcp_types.Content{
 				Action: &actions.ScIncGpc1{
 					ID:       f.ScIncID,
+					Cond:     f.Cond,
+					CondTest: f.CondTest,
+				},
+			}, nil
+		case models.TCPRequestRuleActionScDashSetDashGpt0:
+			return &tcp_types.Connection{
+				Action: &actions.ScSetGpt0{
+					ID:       f.ScIncID,
+					Expr:     common.Expression{Expr: strings.Split(f.Expr, " ")},
 					Cond:     f.Cond,
 					CondTest: f.CondTest,
 				},
@@ -1006,6 +1108,26 @@ func SerializeTCPRequestRule(f models.TCPRequestRule) (rule types.TCPType, err e
 					CondTest: f.CondTest,
 				},
 			}, nil
+		case models.TCPRequestRuleActionScDashAddDashGpc:
+			return &tcp_types.Connection{
+				Action: &actions.ScAddGpc{
+					ID:       f.ScIncID,
+					Idx:      f.ScIdx,
+					Int:      f.ScInt,
+					Expr:     common.Expression{Expr: strings.Split(f.Expr, " ")},
+					Cond:     f.Cond,
+					CondTest: f.CondTest,
+				},
+			}, nil
+		case models.TCPRequestRuleActionScDashIncDashGpc:
+			return &tcp_types.Connection{
+				Action: &actions.ScIncGpc{
+					ID:       f.ScIncID,
+					Idx:      f.ScIdx,
+					Cond:     f.Cond,
+					CondTest: f.CondTest,
+				},
+			}, nil
 		case models.TCPRequestRuleActionScDashIncDashGpc0:
 			return &tcp_types.Session{
 				Action: &actions.ScIncGpc0{
@@ -1027,6 +1149,15 @@ func SerializeTCPRequestRule(f models.TCPRequestRule) (rule types.TCPType, err e
 				Action: &actions.ScSetGpt0{
 					ID:       f.ScIncID,
 					Expr:     common.Expression{Expr: []string{f.GptValue}},
+					Cond:     f.Cond,
+					CondTest: f.CondTest,
+				},
+			}, nil
+		case models.TCPRequestRuleActionScDashSetDashGpt0:
+			return &tcp_types.Connection{
+				Action: &actions.ScSetGpt0{
+					ID:       f.ScIncID,
+					Expr:     common.Expression{Expr: strings.Split(f.Expr, " ")},
 					Cond:     f.Cond,
 					CondTest: f.CondTest,
 				},

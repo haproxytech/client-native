@@ -2991,6 +2991,15 @@ type GlobalTuneOptions struct {
 	// ssl maxrecord
 	SslMaxrecord *int64 `json:"ssl_maxrecord,omitempty"`
 
+	// ssl ocsp update max delay
+	SslOcspUpdateMaxDelay *int64 `json:"ssl_ocsp_update_max_delay,omitempty"`
+
+	// ssl ocsp update min delay
+	SslOcspUpdateMinDelay *int64 `json:"ssl_ocsp_update_min_delay,omitempty"`
+
+	// stick counters
+	StickCounters *int64 `json:"stick_counters,omitempty"`
+
 	// vars global max size
 	VarsGlobalMaxSize *int64 `json:"vars_global_max_size,omitempty"`
 

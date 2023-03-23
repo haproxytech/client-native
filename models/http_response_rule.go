@@ -166,6 +166,9 @@ type HTTPResponseRule struct {
 	// sc id
 	ScID int64 `json:"sc_id,omitempty"`
 
+	// sc idx
+	ScIdx int64 `json:"sc_idx,omitempty"`
+
 	// sc int
 	ScInt *int64 `json:"sc_int,omitempty"`
 
@@ -219,7 +222,7 @@ type HTTPResponseRule struct {
 
 	// type
 	// Required: true
-	// Enum: [add-acl add-header allow cache-store capture del-acl del-header del-map deny redirect replace-header replace-value return sc-inc-gpc0 sc-inc-gpc1 sc-set-gpt0 send-spoe-group set-header set-log-level set-map set-mark set-nice set-status set-tos set-var set-var-fmt silent-drop strict-mode track-sc0 track-sc1 track-sc2 unset-var wait-for-body set-bandwidth-limit]
+	// Enum: [add-acl add-header allow cache-store capture del-acl del-header del-map deny redirect replace-header replace-value return sc-add-gpc sc-inc-gpc sc-inc-gpc0 sc-inc-gpc1 sc-set-gpt0 send-spoe-group set-header set-log-level set-map set-mark set-nice set-status set-tos set-var set-var-fmt silent-drop strict-mode track-sc0 track-sc1 track-sc2 unset-var wait-for-body set-bandwidth-limit]
 	Type string `json:"type"`
 
 	// var expr
@@ -1002,7 +1005,7 @@ var httpResponseRuleTypeTypePropEnum []interface{}
 
 func init() {
 	var res []string
-	if err := json.Unmarshal([]byte(`["add-acl","add-header","allow","cache-store","capture","del-acl","del-header","del-map","deny","redirect","replace-header","replace-value","return","sc-inc-gpc0","sc-inc-gpc1","sc-set-gpt0","send-spoe-group","set-header","set-log-level","set-map","set-mark","set-nice","set-status","set-tos","set-var","set-var-fmt","silent-drop","strict-mode","track-sc0","track-sc1","track-sc2","unset-var","wait-for-body","set-bandwidth-limit"]`), &res); err != nil {
+	if err := json.Unmarshal([]byte(`["add-acl","add-header","allow","cache-store","capture","del-acl","del-header","del-map","deny","redirect","replace-header","replace-value","return","sc-add-gpc","sc-inc-gpc","sc-inc-gpc0","sc-inc-gpc1","sc-set-gpt0","send-spoe-group","set-header","set-log-level","set-map","set-mark","set-nice","set-status","set-tos","set-var","set-var-fmt","silent-drop","strict-mode","track-sc0","track-sc1","track-sc2","unset-var","wait-for-body","set-bandwidth-limit"]`), &res); err != nil {
 		panic(err)
 	}
 	for _, v := range res {
@@ -1050,6 +1053,12 @@ const (
 
 	// HTTPResponseRuleTypeReturn captures enum value "return"
 	HTTPResponseRuleTypeReturn string = "return"
+
+	// HTTPResponseRuleTypeScDashAddDashGpc captures enum value "sc-add-gpc"
+	HTTPResponseRuleTypeScDashAddDashGpc string = "sc-add-gpc"
+
+	// HTTPResponseRuleTypeScDashIncDashGpc captures enum value "sc-inc-gpc"
+	HTTPResponseRuleTypeScDashIncDashGpc string = "sc-inc-gpc"
 
 	// HTTPResponseRuleTypeScDashIncDashGpc0 captures enum value "sc-inc-gpc0"
 	HTTPResponseRuleTypeScDashIncDashGpc0 string = "sc-inc-gpc0"

@@ -120,8 +120,8 @@ func New(ctx context.Context, opt ...options.ConfigurationOption) (Configuration
 		parserOptions = append(parserOptions, parser_options.UseMd5Hash)
 	}
 
-	// HAProxy lower then 2.4 doesn't support from keyword to inherit defaults section, so if it's lower than that don't set it
-	// if it isn't set the from to all frontend/backend section that have it unset to the proper defaults section
+	// HAProxy lower than 2.4 doesn't support from keyword to inherit defaults section, so if it's lower than that don't set it
+	// if it isn't set then add from to all frontend/backend section that have it unset to the proper defaults section
 	if noNamedDefaultsFrom {
 		parserOptions = append(parserOptions, parser_options.NoNamedDefaultsFrom)
 	}

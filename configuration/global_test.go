@@ -384,20 +384,29 @@ func TestGetGlobal(t *testing.T) {
 	if *global.TuneOptions.SslCaptureBufferSize != 47 {
 		t.Errorf("SslCaptureBufferSize is %v, expected 47", global.TuneOptions.SslCaptureBufferSize)
 	}
-	if *global.TuneOptions.VarsGlobalMaxSize != 49 {
-		t.Errorf("VarsGlobalMaxSize is %v, expected 49", global.TuneOptions.VarsGlobalMaxSize)
+	if *global.TuneOptions.SslOcspUpdateMaxDelay != 48 {
+		t.Errorf("SslCaptureBufferSize is %v, expected 48", global.TuneOptions.SslCaptureBufferSize)
 	}
-	if *global.TuneOptions.VarsProcMaxSize != 50 {
-		t.Errorf("VarsProcMaxSize is %v, expected 50", global.TuneOptions.VarsProcMaxSize)
+	if *global.TuneOptions.SslOcspUpdateMinDelay != 49 {
+		t.Errorf("SslCaptureBufferSize is %v, expected 49", global.TuneOptions.SslCaptureBufferSize)
 	}
-	if *global.TuneOptions.VarsReqresMaxSize != 51 {
-		t.Errorf("VarsReqresMaxSize is %v, expected 51", global.TuneOptions.VarsReqresMaxSize)
+	if *global.TuneOptions.StickCounters != 50 {
+		t.Errorf("SslCaptureBufferSize is %v, expected 50", global.TuneOptions.SslCaptureBufferSize)
 	}
-	if *global.TuneOptions.VarsSessMaxSize != 52 {
-		t.Errorf("VarsSessMaxSize is %v, expected 52", global.TuneOptions.VarsSessMaxSize)
+	if *global.TuneOptions.VarsGlobalMaxSize != 51 {
+		t.Errorf("VarsGlobalMaxSize is %v, expected 51", global.TuneOptions.VarsGlobalMaxSize)
 	}
-	if *global.TuneOptions.VarsTxnMaxSize != 53 {
-		t.Errorf("VarsTxnMaxSize is %v, expected 53", global.TuneOptions.VarsTxnMaxSize)
+	if *global.TuneOptions.VarsProcMaxSize != 52 {
+		t.Errorf("VarsProcMaxSize is %v, expected 52", global.TuneOptions.VarsProcMaxSize)
+	}
+	if *global.TuneOptions.VarsReqresMaxSize != 53 {
+		t.Errorf("VarsReqresMaxSize is %v, expected 53", global.TuneOptions.VarsReqresMaxSize)
+	}
+	if *global.TuneOptions.VarsSessMaxSize != 54 {
+		t.Errorf("VarsSessMaxSize is %v, expected 54", global.TuneOptions.VarsSessMaxSize)
+	}
+	if *global.TuneOptions.VarsTxnMaxSize != 55 {
+		t.Errorf("VarsTxnMaxSize is %v, expected 55", global.TuneOptions.VarsTxnMaxSize)
 	}
 	if *global.TuneOptions.QuicFrontendConnTcBuffersLimit != 10 {
 		t.Errorf("QuicFrontendConnTcBuffersLimit is %v, expected 10", global.TuneOptions.QuicFrontendConnTcBuffersLimit)
@@ -618,6 +627,9 @@ func TestPutGlobal(t *testing.T) {
 			QuicFrontendConnTcBuffersLimit: nil,
 			QuicFrontendMaxIdleTimeout:     misc.Int64P(5000),
 			QuicSocketOwner:                "listener",
+			SslOcspUpdateMaxDelay:          misc.Int64P(48),
+			SslOcspUpdateMinDelay:          misc.Int64P(49),
+			StickCounters:                  misc.Int64P(50),
 		},
 		UID:                    1234,
 		WurflOptions:           &models.GlobalWurflOptions{},

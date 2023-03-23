@@ -29,8 +29,8 @@ func TestGetHTTPRequestRules(t *testing.T) { //nolint:gocognit,gocyclo
 		t.Error(err.Error())
 	}
 
-	if len(hRules) != 39 {
-		t.Errorf("%v http request rules returned, expected 39", len(hRules))
+	if len(hRules) != 42 {
+		t.Errorf("%v http request rules returned, expected 42", len(hRules))
 	}
 
 	if v != version {
@@ -102,6 +102,22 @@ func TestGetHTTPRequestRules(t *testing.T) { //nolint:gocognit,gocyclo
 				t.Errorf("%v: CondTest not FALSE: %v", *r.Index, r.CondTest)
 			}
 		case 5:
+			if r.Type != "del-acl" {
+				t.Errorf("%v: Type not del-acl: %v", *r.Index, r.Type)
+			}
+			if r.ACLFile != "map.lst" {
+				t.Errorf("%v: ACLFile not map.lst: %v", *r.Index, r.ACLFile)
+			}
+			if r.ACLKeyfmt != "%[src]" {
+				t.Errorf("%v: ACLKeyfmt not %%[src]: %v", *r.Index, r.ACLKeyfmt)
+			}
+			if r.Cond != "if" {
+				t.Errorf("%v: Cond not if: %v", *r.Index, r.Cond)
+			}
+			if r.CondTest != "FALSE" {
+				t.Errorf("%v: CondTest not FALSE: %v", *r.Index, r.CondTest)
+			}
+		case 6:
 			if r.Type != "cache-use" {
 				t.Errorf("%v: Type not cache-use: %v", *r.Index, r.Type)
 			}
@@ -114,7 +130,7 @@ func TestGetHTTPRequestRules(t *testing.T) { //nolint:gocognit,gocyclo
 			if r.CondTest != "FALSE" {
 				t.Errorf("%v: CondTest not FALSE: %v", *r.Index, r.CondTest)
 			}
-		case 6:
+		case 7:
 			if r.Type != "disable-l7-retry" {
 				t.Errorf("%v: Type not disable-l7-retry: %v", *r.Index, r.Type)
 			}
@@ -124,7 +140,7 @@ func TestGetHTTPRequestRules(t *testing.T) { //nolint:gocognit,gocyclo
 			if r.CondTest != "FALSE" {
 				t.Errorf("%v: CondTest not FALSE: %v", *r.Index, r.CondTest)
 			}
-		case 7:
+		case 8:
 			if r.Type != "early-hint" {
 				t.Errorf("%v: Type not early-hint: %v", *r.Index, r.Type)
 			}
@@ -140,7 +156,7 @@ func TestGetHTTPRequestRules(t *testing.T) { //nolint:gocognit,gocyclo
 			if r.CondTest != "FALSE" {
 				t.Errorf("%v: CondTest not FALSE: %v", *r.Index, r.CondTest)
 			}
-		case 8:
+		case 9:
 			if r.Type != "replace-uri" {
 				t.Errorf("%v: Type not replace-uri: %v", *r.Index, r.Type)
 			}
@@ -156,7 +172,39 @@ func TestGetHTTPRequestRules(t *testing.T) { //nolint:gocognit,gocyclo
 			if r.CondTest != "FALSE" {
 				t.Errorf("%v: CondTest not FALSE: %v", *r.Index, r.CondTest)
 			}
-		case 9:
+		case 10:
+			if r.Type != "sc-add-gpc" {
+				t.Errorf("%v: Type not sc-add-gpc: %v", *r.Index, r.Type)
+			}
+			if r.ScIdx != 0 {
+				t.Errorf("%v: ScIdx not 0: %v", *r.Index, r.ScID)
+			}
+			if r.ScID != 1 {
+				t.Errorf("%v: ScID not 1: %v", *r.Index, r.ScID)
+			}
+			if r.Cond != "if" {
+				t.Errorf("%v: Cond not if: %v", *r.Index, r.Cond)
+			}
+			if r.CondTest != "FALSE" {
+				t.Errorf("%v: CondTest not FALSE: %v", *r.Index, r.CondTest)
+			}
+		case 11:
+			if r.Type != "sc-inc-gpc" {
+				t.Errorf("%v: Type not sc-inc-gpc: %v", *r.Index, r.Type)
+			}
+			if r.ScIdx != 0 {
+				t.Errorf("%v: ScIdx not 0: %v", *r.Index, r.ScID)
+			}
+			if r.ScID != 1 {
+				t.Errorf("%v: ScID not 1: %v", *r.Index, r.ScID)
+			}
+			if r.Cond != "if" {
+				t.Errorf("%v: Cond not if: %v", *r.Index, r.Cond)
+			}
+			if r.CondTest != "FALSE" {
+				t.Errorf("%v: CondTest not FALSE: %v", *r.Index, r.CondTest)
+			}
+		case 12:
 			if r.Type != "sc-inc-gpc0" {
 				t.Errorf("%v: Type not sc-inc-gpc0: %v", *r.Index, r.Type)
 			}
@@ -169,7 +217,7 @@ func TestGetHTTPRequestRules(t *testing.T) { //nolint:gocognit,gocyclo
 			if r.CondTest != "FALSE" {
 				t.Errorf("%v: CondTest not FALSE: %v", *r.Index, r.CondTest)
 			}
-		case 10:
+		case 13:
 			if r.Type != "sc-inc-gpc1" {
 				t.Errorf("%v: Type not sc-inc-gpc1: %v", *r.Index, r.Type)
 			}
@@ -182,7 +230,7 @@ func TestGetHTTPRequestRules(t *testing.T) { //nolint:gocognit,gocyclo
 			if r.CondTest != "FALSE" {
 				t.Errorf("%v: CondTest not FALSE: %v", *r.Index, r.CondTest)
 			}
-		case 11:
+		case 14:
 			if r.Type != "do-resolve" {
 				t.Errorf("%v: Type not do-resolve: %v", *r.Index, r.Type)
 			}
@@ -198,7 +246,7 @@ func TestGetHTTPRequestRules(t *testing.T) { //nolint:gocognit,gocyclo
 			if r.Expr != "hdr(Host),lower" {
 				t.Errorf("%v: Expr not hdr(Host),lower: %v", *r.Index, r.Expr)
 			}
-		case 12:
+		case 15:
 			if r.Type != "sc-set-gpt0" {
 				t.Errorf("%v: Type not sc-set-gpt0: %v", *r.Index, r.Type)
 			}
@@ -217,7 +265,7 @@ func TestGetHTTPRequestRules(t *testing.T) { //nolint:gocognit,gocyclo
 			if r.CondTest != "FALSE" {
 				t.Errorf("%v: CondTest not FALSE: %v", *r.Index, r.CondTest)
 			}
-		case 13:
+		case 16:
 			if r.Type != "sc-set-gpt0" {
 				t.Errorf("%v: Type not sc-set-gpt0: %v", *r.Index, r.Type)
 			}
@@ -240,7 +288,7 @@ func TestGetHTTPRequestRules(t *testing.T) { //nolint:gocognit,gocyclo
 			if r.CondTest != "FALSE" {
 				t.Errorf("%v: CondTest not FALSE: %v", *r.Index, r.CondTest)
 			}
-		case 14:
+		case 17:
 			if r.Type != "set-mark" {
 				t.Errorf("%v: Type not set-mark: %v", *r.Index, r.Type)
 			}
@@ -253,7 +301,7 @@ func TestGetHTTPRequestRules(t *testing.T) { //nolint:gocognit,gocyclo
 			if r.CondTest != "FALSE" {
 				t.Errorf("%v: CondTest not FALSE: %v", *r.Index, r.CondTest)
 			}
-		case 15:
+		case 18:
 			if r.Type != "set-nice" {
 				t.Errorf("%v: Type not set-nice: %v", *r.Index, r.Type)
 			}
@@ -266,7 +314,7 @@ func TestGetHTTPRequestRules(t *testing.T) { //nolint:gocognit,gocyclo
 			if r.CondTest != "FALSE" {
 				t.Errorf("%v: CondTest not FALSE: %v", *r.Index, r.CondTest)
 			}
-		case 16:
+		case 19:
 			if r.Type != "set-method" {
 				t.Errorf("%v: Type not set-method: %v", *r.Index, r.Type)
 			}
@@ -279,7 +327,7 @@ func TestGetHTTPRequestRules(t *testing.T) { //nolint:gocognit,gocyclo
 			if r.CondTest != "FALSE" {
 				t.Errorf("%v: CondTest not FALSE: %v", *r.Index, r.CondTest)
 			}
-		case 17:
+		case 20:
 			if r.Type != "set-priority-class" {
 				t.Errorf("%v: Type not set-priority-class: %v", *r.Index, r.Type)
 			}
@@ -292,7 +340,7 @@ func TestGetHTTPRequestRules(t *testing.T) { //nolint:gocognit,gocyclo
 			if r.CondTest != "FALSE" {
 				t.Errorf("%v: CondTest not FALSE: %v", *r.Index, r.CondTest)
 			}
-		case 18:
+		case 21:
 			if r.Type != "set-priority-offset" {
 				t.Errorf("%v: Type not set-priority-offset: %v", *r.Index, r.Type)
 			}
@@ -305,7 +353,7 @@ func TestGetHTTPRequestRules(t *testing.T) { //nolint:gocognit,gocyclo
 			if r.CondTest != "FALSE" {
 				t.Errorf("%v: CondTest not FALSE: %v", *r.Index, r.CondTest)
 			}
-		case 19:
+		case 22:
 			if r.Type != "set-src" {
 				t.Errorf("%v: Type not set-src: %v", *r.Index, r.Type)
 			}
@@ -318,7 +366,7 @@ func TestGetHTTPRequestRules(t *testing.T) { //nolint:gocognit,gocyclo
 			if r.CondTest != "FALSE" {
 				t.Errorf("%v: CondTest not FALSE: %v", *r.Index, r.CondTest)
 			}
-		case 20:
+		case 23:
 			if r.Type != "set-src-port" {
 				t.Errorf("%v: Type not set-src-port: %v", *r.Index, r.Type)
 			}
@@ -331,7 +379,7 @@ func TestGetHTTPRequestRules(t *testing.T) { //nolint:gocognit,gocyclo
 			if r.CondTest != "FALSE" {
 				t.Errorf("%v: CondTest not FALSE: %v", *r.Index, r.CondTest)
 			}
-		case 21:
+		case 24:
 			if r.Type != "wait-for-handshake" {
 				t.Errorf("%v: Type not wait-for-handshake: %v", *r.Index, r.Type)
 			}
@@ -341,7 +389,7 @@ func TestGetHTTPRequestRules(t *testing.T) { //nolint:gocognit,gocyclo
 			if r.CondTest != "FALSE" {
 				t.Errorf("%v: CondTest not FALSE: %v", *r.Index, r.CondTest)
 			}
-		case 22:
+		case 25:
 			if r.Type != "set-tos" {
 				t.Errorf("%v: Type not set-tos: %v", *r.Index, r.Type)
 			}
@@ -354,7 +402,7 @@ func TestGetHTTPRequestRules(t *testing.T) { //nolint:gocognit,gocyclo
 			if r.CondTest != "FALSE" {
 				t.Errorf("%v: CondTest not FALSE: %v", *r.Index, r.CondTest)
 			}
-		case 23:
+		case 26:
 			if r.Type != "silent-drop" {
 				t.Errorf("%v: Type not silent-drop: %v", *r.Index, r.Type)
 			}
@@ -364,7 +412,7 @@ func TestGetHTTPRequestRules(t *testing.T) { //nolint:gocognit,gocyclo
 			if r.CondTest != "FALSE" {
 				t.Errorf("%v: CondTest not FALSE: %v", *r.Index, r.CondTest)
 			}
-		case 24:
+		case 27:
 			if r.Type != "unset-var" {
 				t.Errorf("%v: Type not unset-var: %v", *r.Index, r.Type)
 			}
@@ -380,7 +428,7 @@ func TestGetHTTPRequestRules(t *testing.T) { //nolint:gocognit,gocyclo
 			if r.CondTest != "FALSE" {
 				t.Errorf("%v: CondTest not FALSE: %v", *r.Index, r.CondTest)
 			}
-		case 25:
+		case 28:
 			if r.Type != "strict-mode" {
 				t.Errorf("%v: Type not strict-mode: %v", *r.Index, r.Type)
 			}
@@ -393,7 +441,7 @@ func TestGetHTTPRequestRules(t *testing.T) { //nolint:gocognit,gocyclo
 			if r.CondTest != "FALSE" {
 				t.Errorf("%v: CondTest not FALSE: %v", *r.Index, r.CondTest)
 			}
-		case 26:
+		case 29:
 			if r.Type != "lua" {
 				t.Errorf("%v: Type not lua: %v", *r.Index, r.Type)
 			}
@@ -409,7 +457,7 @@ func TestGetHTTPRequestRules(t *testing.T) { //nolint:gocognit,gocyclo
 			if r.CondTest != "FALSE" {
 				t.Errorf("%v: CondTest not FALSE: %v", *r.Index, r.CondTest)
 			}
-		case 27:
+		case 30:
 			if r.Type != "use-service" {
 				t.Errorf("%v: Type not use-service: %v", *r.Index, r.Type)
 			}
@@ -422,7 +470,7 @@ func TestGetHTTPRequestRules(t *testing.T) { //nolint:gocognit,gocyclo
 			if r.CondTest != "FALSE" {
 				t.Errorf("%v: CondTest not FALSE: %v", *r.Index, r.CondTest)
 			}
-		case 28:
+		case 31:
 			if r.Type != "return" {
 				t.Errorf("%v: Type not return: %v", *r.Index, r.Type)
 			}
@@ -453,7 +501,7 @@ func TestGetHTTPRequestRules(t *testing.T) { //nolint:gocognit,gocyclo
 			if r.CondTest != "FALSE" {
 				t.Errorf("%v: CondTest not FALSE: %v", *r.Index, r.CondTest)
 			}
-		case 29:
+		case 32:
 			if r.Type != "redirect" {
 				t.Errorf("%v: Type not redirect: %v", *r.Index, r.Type)
 			}
@@ -475,7 +523,7 @@ func TestGetHTTPRequestRules(t *testing.T) { //nolint:gocognit,gocyclo
 			if r.CondTest != "!{ ssl_fc }" {
 				t.Errorf("%v: CondTest not !{ ssl_fc }: %v", *r.Index, r.CondTest)
 			}
-		case 30:
+		case 33:
 			if r.Type != "redirect" {
 				t.Errorf("%v: Type not redirect: %v", *r.Index, r.Type)
 			}
@@ -499,7 +547,7 @@ func TestGetHTTPRequestRules(t *testing.T) { //nolint:gocognit,gocyclo
 			if r.CondTest != "" {
 				t.Errorf("%v: CondTest not empty: %v", *r.Index, r.CondTest)
 			}
-		case 31:
+		case 34:
 			if r.Type != "deny" {
 				t.Errorf("%v: Type not deny: %v", *r.Index, r.Type)
 			}
@@ -509,7 +557,7 @@ func TestGetHTTPRequestRules(t *testing.T) { //nolint:gocognit,gocyclo
 			if r.CondTest != "src 192.168.0.0/16" {
 				t.Errorf("%v: CondTest not src 192.168.0.0/16: %v", *r.Index, r.CondTest)
 			}
-		case 32:
+		case 35:
 			if r.Type != "deny" {
 				t.Errorf("%v: Type not deny: %v", *r.Index, r.Type)
 			}
@@ -525,7 +573,7 @@ func TestGetHTTPRequestRules(t *testing.T) { //nolint:gocognit,gocyclo
 			if r.ReturnContent != "/var/errors.file" {
 				t.Errorf(`%v: ReturnContent not "/var/errors.file": %v`, *r.Index, r.ReturnContent)
 			}
-		case 33:
+		case 36:
 			if r.Type != "wait-for-body" {
 				t.Errorf("%v: Type not wait-for-body: %v", *r.Index, r.Type)
 			}
@@ -535,7 +583,7 @@ func TestGetHTTPRequestRules(t *testing.T) { //nolint:gocognit,gocyclo
 			if *r.WaitAtLeast != 102400 {
 				t.Errorf("%v: AtLeast not 102400: %v", *r.Index, *r.WaitAtLeast)
 			}
-		case 34:
+		case 37:
 			if r.Type != "set-timeout" {
 				t.Errorf("%v: Type not set-timeout: %v", *r.Index, r.Type)
 			}
@@ -545,7 +593,7 @@ func TestGetHTTPRequestRules(t *testing.T) { //nolint:gocognit,gocyclo
 			if r.Timeout != "20" {
 				t.Errorf("%v: Timeout not 20: %v", *r.Index, r.Timeout)
 			}
-		case 35:
+		case 38:
 			if r.Type != "set-timeout" {
 				t.Errorf("%v: Type not set-timeout: %v", *r.Index, r.Type)
 			}
@@ -555,7 +603,7 @@ func TestGetHTTPRequestRules(t *testing.T) { //nolint:gocognit,gocyclo
 			if r.Timeout != "20" {
 				t.Errorf("%v: Timeout not 20: %v", *r.Index, r.Timeout)
 			}
-		case 36:
+		case 39:
 			if r.Type != "set-bandwidth-limit" {
 				t.Errorf("%v: Type not set-bandwidth-limit: %v", *r.Index, r.Type)
 			}
@@ -568,7 +616,7 @@ func TestGetHTTPRequestRules(t *testing.T) { //nolint:gocognit,gocyclo
 			if r.BandwidthLimitPeriod != "10s" {
 				t.Errorf("%v: BandwidthLimitPeriod not 10s: %v", *r.Index, r.BandwidthLimitPeriod)
 			}
-		case 37:
+		case 40:
 			if r.Type != "set-bandwidth-limit" {
 				t.Errorf("%v: Type not set-bandwidth-limit: %v", *r.Index, r.Type)
 			}
@@ -581,7 +629,7 @@ func TestGetHTTPRequestRules(t *testing.T) { //nolint:gocognit,gocyclo
 			if r.BandwidthLimitPeriod != "20s" {
 				t.Errorf("%v: BandwidthLimitPeriod no 20s: %v", *r.Index, r.BandwidthLimitPeriod)
 			}
-		case 38:
+		case 41:
 			if r.Type != "set-bandwidth-limit" {
 				t.Errorf("%v: Type not set-bandwidth-limit: %v", *r.Index, r.Type)
 			}
@@ -630,7 +678,7 @@ func TestGetHTTPRequestRules(t *testing.T) { //nolint:gocognit,gocyclo
 				t.Errorf("%v: Expr not v: %v", *r.Index, r.Expr)
 			}
 		default:
-			t.Errorf("Expext only http-request 0 to %v, %v found", *r.Index, len(hRules)-1)
+			t.Errorf("Expect only http-request 0 to %v, %v found", *r.Index, len(hRules)-1)
 		}
 	}
 
@@ -763,7 +811,7 @@ func TestCreateEditDeleteHTTPRequestRule(t *testing.T) {
 	}
 
 	// TestDeleteHTTPRequest
-	err = clientTest.DeleteHTTPRequestRule(39, "frontend", "test", "", version)
+	err = clientTest.DeleteHTTPRequestRule(42, "frontend", "test", "", version)
 	if err != nil {
 		t.Error(err.Error())
 	} else {
@@ -774,7 +822,7 @@ func TestCreateEditDeleteHTTPRequestRule(t *testing.T) {
 		t.Error("Version not incremented")
 	}
 
-	_, _, err = clientTest.GetHTTPRequestRule(39, "frontend", "test", "")
+	_, _, err = clientTest.GetHTTPRequestRule(42, "frontend", "test", "")
 	if err == nil {
 		t.Error("DeleteHTTPRequestRule failed, HTTP Request Rule 39 still exists")
 	}

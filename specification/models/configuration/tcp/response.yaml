@@ -16,7 +16,7 @@ tcp_response_rule:
       x-nullable: false
     action:
       type: string
-      enum: [accept, reject, lua, set-bandwidth-limit, close, sc-inc-gpc0, sc-inc-gpc1, sc-set-gpt0, send-spoe-group, set-log-level, set-mark, set-nice, set-tos, silent-drop, unset-var]
+      enum: [accept, reject, lua, set-bandwidth-limit, close, sc-add-gpc, sc-inc-gpc, sc-inc-gpc0, sc-inc-gpc1, sc-set-gpt0, send-spoe-group, set-log-level, set-mark, set-nice, set-tos, silent-drop, unset-var]
       x-nullable: false
       x-dependency:
         type:
@@ -84,7 +84,24 @@ tcp_response_rule:
       type: integer
       x-dependency:
         action:
-          value: [sc-inc-gpc0, sc-inc-gpc1, sc-set-gpt0]
+          value: [sc-add-gpc, sc-inc-gpc, sc-inc-gpc0, sc-inc-gpc1, sc-set-gpt0]
+          required: true
+        type:
+          value: content
+    sc_idx:
+      type: integer
+      x-dependency:
+        action:
+          value: [sc-add-gpc, sc-inc-gpc]
+          required: true
+        type:
+          value: content
+    sc_expr:
+      type: string
+      x-display-name: ScSet Expression Value
+      x-dependency:
+        action:
+          value: [sc-add-gpc, sc-inc-gpc]
           required: true
         type:
           value: content
@@ -94,7 +111,7 @@ tcp_response_rule:
       x-display-name: ScSet Integer Value
       x-dependency:
         action:
-          value: sc-set-gpt0
+          value: [sc-add-gpc, sc-inc-gpc]
           required: true
         type:
           value: content

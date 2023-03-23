@@ -353,6 +353,31 @@ func ParseHTTPResponseRule(f types.Action) *models.HTTPResponseRule { //nolint:m
 			ReturnContentType:   &v.ContentType,
 			ReturnStatusCode:    v.Status,
 		}
+	case *actions.ScAddGpc:
+		if (v.Int == nil && len(v.Expr.Expr) == 0) || (v.Int != nil && len(v.Expr.Expr) > 0) {
+			return nil
+		}
+		ID, _ := strconv.ParseInt(v.ID, 10, 64)
+		Idx, _ := strconv.ParseInt(v.Idx, 10, 64)
+		return &models.HTTPResponseRule{
+			Type:     "sc-add-gpc",
+			ScID:     ID,
+			ScIdx:    Idx,
+			ScExpr:   strings.Join(v.Expr.Expr, " "),
+			ScInt:    v.Int,
+			Cond:     v.Cond,
+			CondTest: v.CondTest,
+		}
+	case *actions.ScIncGpc:
+		ID, _ := strconv.ParseInt(v.ID, 10, 64)
+		Idx, _ := strconv.ParseInt(v.Idx, 10, 64)
+		return &models.HTTPResponseRule{
+			Type:     "sc-inc-gpc",
+			ScID:     ID,
+			ScIdx:    Idx,
+			Cond:     v.Cond,
+			CondTest: v.CondTest,
+		}
 	case *actions.ScIncGpc0:
 		ID, _ := strconv.ParseInt(v.ID, 10, 64)
 		return &models.HTTPResponseRule{
@@ -655,6 +680,20 @@ func SerializeHTTPResponseRule(f models.HTTPResponseRule) (rule types.Action, er
 			if ok := http_actions.AllowedErrorCode(*f.ReturnStatusCode); !ok {
 				return rule, NewConfError(ErrValidationError, "invalid Status Code for error type response")
 			}
+		}
+	case "sc-add-gpc":
+		rule = &actions.ScAddGpc{
+			ID:       strconv.FormatInt(f.ScID, 10),
+			Idx:      strconv.FormatInt(f.ScIdx, 10),
+			Cond:     f.Cond,
+			CondTest: f.CondTest,
+		}
+	case "sc-inc-gpc":
+		rule = &actions.ScAddGpc{
+			ID:       strconv.FormatInt(f.ScID, 10),
+			Idx:      strconv.FormatInt(f.ScIdx, 10),
+			Cond:     f.Cond,
+			CondTest: f.CondTest,
 		}
 	case "sc-inc-gpc0":
 		rule = &actions.ScIncGpc0{

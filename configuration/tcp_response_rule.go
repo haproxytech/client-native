@@ -245,6 +245,36 @@ func ParseTCPResponseRule(t types.TCPType) (*models.TCPResponseRule, error) {
 				Cond:     a.Cond,
 				CondTest: a.CondTest,
 			}, nil
+		case *actions.ScAddGpc:
+			if a.Int == nil && len(a.Expr.Expr) == 0 {
+				return nil, NewConfError(ErrValidationError, "sc-set-gpt0 int or expr has to be set")
+			}
+			if a.Int != nil && len(a.Expr.Expr) > 0 {
+				return nil, NewConfError(ErrValidationError, "sc-set-gpt0 int and expr are exclusive")
+			}
+			ID, _ := strconv.ParseInt(a.ID, 10, 64)
+			Idx, _ := strconv.ParseInt(a.Idx, 10, 64)
+			return &models.TCPResponseRule{
+				Type:     models.TCPResponseRuleTypeContent,
+				Action:   models.TCPResponseRuleActionScDashAddDashGpc,
+				ScID:     ID,
+				ScIdx:    Idx,
+				Expr:     strings.Join(a.Expr.Expr, " "),
+				ScInt:    a.Int,
+				Cond:     a.Cond,
+				CondTest: a.CondTest,
+			}, nil
+		case *actions.ScIncGpc:
+			ID, _ := strconv.ParseInt(a.ID, 10, 64)
+			Idx, _ := strconv.ParseInt(a.Idx, 10, 64)
+			return &models.TCPResponseRule{
+				Type:     models.TCPResponseRuleTypeContent,
+				Action:   models.TCPResponseRuleActionScDashIncDashGpc,
+				ScID:     ID,
+				ScIdx:    Idx,
+				Cond:     a.Cond,
+				CondTest: a.CondTest,
+			}, nil
 		case *actions.ScIncGpc0:
 			ID, _ := strconv.ParseInt(a.ID, 10, 64)
 			return &models.TCPResponseRule{
@@ -386,6 +416,32 @@ func SerializeTCPResponseRule(t models.TCPResponseRule) (types.TCPType, error) {
 		case models.TCPResponseRuleActionClose:
 			return &tcp_types.Content{
 				Action: &tcp_actions.Close{
+					Cond:     t.Cond,
+					CondTest: t.CondTest,
+				},
+			}, nil
+		case models.TCPResponseRuleActionScDashAddDashGpc:
+			if len(t.Expr) > 0 && t.ScInt != nil {
+				return nil, NewConfError(ErrValidationError, "sc-set-gpt0 int and expr are exclusive")
+			}
+			if len(t.Expr) == 0 && t.ScInt == nil {
+				return nil, NewConfError(ErrValidationError, "sc-set-gpt0 int or expr has to be set")
+			}
+			return &tcp_types.Content{
+				Action: &actions.ScAddGpc{
+					ID:       strconv.FormatInt(t.ScID, 10),
+					Idx:      strconv.FormatInt(t.ScIdx, 10),
+					Int:      t.ScInt,
+					Expr:     common.Expression{Expr: strings.Split(t.Expr, " ")},
+					Cond:     t.Cond,
+					CondTest: t.CondTest,
+				},
+			}, nil
+		case models.TCPResponseRuleActionScDashIncDashGpc:
+			return &tcp_types.Content{
+				Action: &actions.ScIncGpc{
+					ID:       strconv.FormatInt(t.ScID, 10),
+					Idx:      strconv.FormatInt(t.ScIdx, 10),
 					Cond:     t.Cond,
 					CondTest: t.CondTest,
 				},

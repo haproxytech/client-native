@@ -15,10 +15,18 @@ http_after_response_rule:
       enum:
         - add-header
         - allow
+        - del-acl
         - del-header
+        - del-map
         - replace-header
         - replace-value
+        - sc-inc-gpc
+        - sc-inc-gpc0
+        - sc-inc-gpc1
+        - sc-set-gpt0
         - set-header
+        - set-log-level
+        - set-map
         - set-status
         - set-var
         - strict-mode
@@ -51,6 +59,13 @@ http_after_response_rule:
       x-dependency:
         type:
           value: [del-header]
+    log_level:
+      type: string
+      enum: [emerg, alert, crit, err, warning, notice, info, debug, silent]
+      x-dependency:
+        type:
+          value: set-log-level
+          required: true
     var_name:
       type: string
       pattern: '^[^\s]+$'
@@ -92,6 +107,71 @@ http_after_response_rule:
       x-dependency:
         type:
           value: strict-mode
+          required: true
+    acl_file:
+      type: string
+      pattern: '^[^\s]+$'
+      x-dependency:
+        type:
+          value: [del-acl]
+          required: true
+    acl_keyfmt:
+      type: string
+      x-display-name: ACK Key Format
+      pattern: '^[^\s]+$'
+      x-dependency:
+        type:
+          value: [del-acl]
+          required: true
+    map_file:
+      type: string
+      pattern: '^[^\s]+$'
+      x-dependency:
+        type:
+          value: [set-map, del-map]
+          required: true
+    map_keyfmt:
+      type: string
+      x-display-name: Map Key Format
+      pattern: '^[^\s]+$'
+      x-dependency:
+        type:
+          value: [set-map, del-map]
+          required: true
+    map_valuefmt:
+      type: string
+      x-display-name: Map Value Format
+      pattern: '^[^\s]+$'
+      x-dependency:
+        type:
+          value: set-map
+          required: true
+    sc_id:
+      type: integer
+      x-dependency:
+        type:
+          value: [sc-inc-gpc, sc-inc-gpc0, sc-inc-gpc1, sc-set-gpt0]
+          required: true
+    sc_idx:
+      type: integer
+      x-dependency:
+        type:
+          value: sc-inc-gpc
+          required: true
+    sc_expr:
+      type: string
+      x-display-name: ScSet Expression Value
+      x-dependency:
+        type:
+          value: sc-set-gpt0
+          required: true
+    sc_int:
+      type: integer
+      x-nullable: true
+      x-display-name: ScSet Integer Value
+      x-dependency:
+        type:
+          value: sc-set-gpt0
           required: true
     cond:
       type: string

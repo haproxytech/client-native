@@ -38,6 +38,14 @@ import (
 // swagger:model http_after_response_rule
 type HTTPAfterResponseRule struct {
 
+	// acl file
+	// Pattern: ^[^\s]+$
+	ACLFile string `json:"acl_file,omitempty"`
+
+	// acl keyfmt
+	// Pattern: ^[^\s]+$
+	ACLKeyfmt string `json:"acl_keyfmt,omitempty"`
+
 	// cond
 	// Enum: [if unless]
 	Cond string `json:"cond,omitempty"`
@@ -61,6 +69,34 @@ type HTTPAfterResponseRule struct {
 	// Required: true
 	Index *int64 `json:"index"`
 
+	// log level
+	// Enum: [emerg alert crit err warning notice info debug silent]
+	LogLevel string `json:"log_level,omitempty"`
+
+	// map file
+	// Pattern: ^[^\s]+$
+	MapFile string `json:"map_file,omitempty"`
+
+	// map keyfmt
+	// Pattern: ^[^\s]+$
+	MapKeyfmt string `json:"map_keyfmt,omitempty"`
+
+	// map valuefmt
+	// Pattern: ^[^\s]+$
+	MapValuefmt string `json:"map_valuefmt,omitempty"`
+
+	// sc expr
+	ScExpr string `json:"sc_expr,omitempty"`
+
+	// sc id
+	ScID int64 `json:"sc_id,omitempty"`
+
+	// sc idx
+	ScIdx int64 `json:"sc_idx,omitempty"`
+
+	// sc int
+	ScInt *int64 `json:"sc_int,omitempty"`
+
 	// status
 	// Maximum: 999
 	// Minimum: 100
@@ -75,7 +111,7 @@ type HTTPAfterResponseRule struct {
 
 	// type
 	// Required: true
-	// Enum: [add-header allow del-header replace-header replace-value set-header set-status set-var strict-mode unset-var]
+	// Enum: [add-header allow del-acl del-header del-map replace-header replace-value sc-inc-gpc sc-inc-gpc0 sc-inc-gpc1 sc-set-gpt0 set-header set-log-level set-map set-status set-var strict-mode unset-var]
 	Type string `json:"type"`
 
 	// var expr
@@ -94,11 +130,35 @@ type HTTPAfterResponseRule struct {
 func (m *HTTPAfterResponseRule) Validate(formats strfmt.Registry) error {
 	var res []error
 
+	if err := m.validateACLFile(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateACLKeyfmt(formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.validateCond(formats); err != nil {
 		res = append(res, err)
 	}
 
 	if err := m.validateIndex(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateLogLevel(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateMapFile(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateMapKeyfmt(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateMapValuefmt(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -125,6 +185,30 @@ func (m *HTTPAfterResponseRule) Validate(formats strfmt.Registry) error {
 	if len(res) > 0 {
 		return errors.CompositeValidationError(res...)
 	}
+	return nil
+}
+
+func (m *HTTPAfterResponseRule) validateACLFile(formats strfmt.Registry) error {
+	if swag.IsZero(m.ACLFile) { // not required
+		return nil
+	}
+
+	if err := validate.Pattern("acl_file", "body", m.ACLFile, `^[^\s]+$`); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *HTTPAfterResponseRule) validateACLKeyfmt(formats strfmt.Registry) error {
+	if swag.IsZero(m.ACLKeyfmt) { // not required
+		return nil
+	}
+
+	if err := validate.Pattern("acl_keyfmt", "body", m.ACLKeyfmt, `^[^\s]+$`); err != nil {
+		return err
+	}
+
 	return nil
 }
 
@@ -173,6 +257,105 @@ func (m *HTTPAfterResponseRule) validateCond(formats strfmt.Registry) error {
 func (m *HTTPAfterResponseRule) validateIndex(formats strfmt.Registry) error {
 
 	if err := validate.Required("index", "body", m.Index); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+var httpAfterResponseRuleTypeLogLevelPropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["emerg","alert","crit","err","warning","notice","info","debug","silent"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		httpAfterResponseRuleTypeLogLevelPropEnum = append(httpAfterResponseRuleTypeLogLevelPropEnum, v)
+	}
+}
+
+const (
+
+	// HTTPAfterResponseRuleLogLevelEmerg captures enum value "emerg"
+	HTTPAfterResponseRuleLogLevelEmerg string = "emerg"
+
+	// HTTPAfterResponseRuleLogLevelAlert captures enum value "alert"
+	HTTPAfterResponseRuleLogLevelAlert string = "alert"
+
+	// HTTPAfterResponseRuleLogLevelCrit captures enum value "crit"
+	HTTPAfterResponseRuleLogLevelCrit string = "crit"
+
+	// HTTPAfterResponseRuleLogLevelErr captures enum value "err"
+	HTTPAfterResponseRuleLogLevelErr string = "err"
+
+	// HTTPAfterResponseRuleLogLevelWarning captures enum value "warning"
+	HTTPAfterResponseRuleLogLevelWarning string = "warning"
+
+	// HTTPAfterResponseRuleLogLevelNotice captures enum value "notice"
+	HTTPAfterResponseRuleLogLevelNotice string = "notice"
+
+	// HTTPAfterResponseRuleLogLevelInfo captures enum value "info"
+	HTTPAfterResponseRuleLogLevelInfo string = "info"
+
+	// HTTPAfterResponseRuleLogLevelDebug captures enum value "debug"
+	HTTPAfterResponseRuleLogLevelDebug string = "debug"
+
+	// HTTPAfterResponseRuleLogLevelSilent captures enum value "silent"
+	HTTPAfterResponseRuleLogLevelSilent string = "silent"
+)
+
+// prop value enum
+func (m *HTTPAfterResponseRule) validateLogLevelEnum(path, location string, value string) error {
+	if err := validate.EnumCase(path, location, value, httpAfterResponseRuleTypeLogLevelPropEnum, true); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *HTTPAfterResponseRule) validateLogLevel(formats strfmt.Registry) error {
+	if swag.IsZero(m.LogLevel) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateLogLevelEnum("log_level", "body", m.LogLevel); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *HTTPAfterResponseRule) validateMapFile(formats strfmt.Registry) error {
+	if swag.IsZero(m.MapFile) { // not required
+		return nil
+	}
+
+	if err := validate.Pattern("map_file", "body", m.MapFile, `^[^\s]+$`); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *HTTPAfterResponseRule) validateMapKeyfmt(formats strfmt.Registry) error {
+	if swag.IsZero(m.MapKeyfmt) { // not required
+		return nil
+	}
+
+	if err := validate.Pattern("map_keyfmt", "body", m.MapKeyfmt, `^[^\s]+$`); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *HTTPAfterResponseRule) validateMapValuefmt(formats strfmt.Registry) error {
+	if swag.IsZero(m.MapValuefmt) { // not required
+		return nil
+	}
+
+	if err := validate.Pattern("map_valuefmt", "body", m.MapValuefmt, `^[^\s]+$`); err != nil {
 		return err
 	}
 
@@ -241,7 +424,7 @@ var httpAfterResponseRuleTypeTypePropEnum []interface{}
 
 func init() {
 	var res []string
-	if err := json.Unmarshal([]byte(`["add-header","allow","del-header","replace-header","replace-value","set-header","set-status","set-var","strict-mode","unset-var"]`), &res); err != nil {
+	if err := json.Unmarshal([]byte(`["add-header","allow","del-acl","del-header","del-map","replace-header","replace-value","sc-inc-gpc","sc-inc-gpc0","sc-inc-gpc1","sc-set-gpt0","set-header","set-log-level","set-map","set-status","set-var","strict-mode","unset-var"]`), &res); err != nil {
 		panic(err)
 	}
 	for _, v := range res {
@@ -257,8 +440,14 @@ const (
 	// HTTPAfterResponseRuleTypeAllow captures enum value "allow"
 	HTTPAfterResponseRuleTypeAllow string = "allow"
 
+	// HTTPAfterResponseRuleTypeDelDashACL captures enum value "del-acl"
+	HTTPAfterResponseRuleTypeDelDashACL string = "del-acl"
+
 	// HTTPAfterResponseRuleTypeDelDashHeader captures enum value "del-header"
 	HTTPAfterResponseRuleTypeDelDashHeader string = "del-header"
+
+	// HTTPAfterResponseRuleTypeDelDashMap captures enum value "del-map"
+	HTTPAfterResponseRuleTypeDelDashMap string = "del-map"
 
 	// HTTPAfterResponseRuleTypeReplaceDashHeader captures enum value "replace-header"
 	HTTPAfterResponseRuleTypeReplaceDashHeader string = "replace-header"
@@ -266,8 +455,26 @@ const (
 	// HTTPAfterResponseRuleTypeReplaceDashValue captures enum value "replace-value"
 	HTTPAfterResponseRuleTypeReplaceDashValue string = "replace-value"
 
+	// HTTPAfterResponseRuleTypeScDashIncDashGpc captures enum value "sc-inc-gpc"
+	HTTPAfterResponseRuleTypeScDashIncDashGpc string = "sc-inc-gpc"
+
+	// HTTPAfterResponseRuleTypeScDashIncDashGpc0 captures enum value "sc-inc-gpc0"
+	HTTPAfterResponseRuleTypeScDashIncDashGpc0 string = "sc-inc-gpc0"
+
+	// HTTPAfterResponseRuleTypeScDashIncDashGpc1 captures enum value "sc-inc-gpc1"
+	HTTPAfterResponseRuleTypeScDashIncDashGpc1 string = "sc-inc-gpc1"
+
+	// HTTPAfterResponseRuleTypeScDashSetDashGpt0 captures enum value "sc-set-gpt0"
+	HTTPAfterResponseRuleTypeScDashSetDashGpt0 string = "sc-set-gpt0"
+
 	// HTTPAfterResponseRuleTypeSetDashHeader captures enum value "set-header"
 	HTTPAfterResponseRuleTypeSetDashHeader string = "set-header"
+
+	// HTTPAfterResponseRuleTypeSetDashLogDashLevel captures enum value "set-log-level"
+	HTTPAfterResponseRuleTypeSetDashLogDashLevel string = "set-log-level"
+
+	// HTTPAfterResponseRuleTypeSetDashMap captures enum value "set-map"
+	HTTPAfterResponseRuleTypeSetDashMap string = "set-map"
 
 	// HTTPAfterResponseRuleTypeSetDashStatus captures enum value "set-status"
 	HTTPAfterResponseRuleTypeSetDashStatus string = "set-status"

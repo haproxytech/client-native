@@ -29,7 +29,7 @@ func TestGetTCPResponseRules(t *testing.T) { //nolint:gocognit
 		t.Error(err.Error())
 	}
 
-	if len(tRules) != 17 {
+	if len(tRules) != 18 {
 		t.Errorf("%v tcp response rules returned, expected 17", len(tRules))
 	}
 
@@ -155,6 +155,25 @@ func TestGetTCPResponseRules(t *testing.T) { //nolint:gocognit
 			if r.Type != "content" {
 				t.Errorf("%v: Type not content: %v", *r.Index, r.Type)
 			}
+			if r.Action != "sc-add-gpc" {
+				t.Errorf("%v: Type not sc-add-gpc: %v", *r.Index, r.Type)
+			}
+			if r.ScIdx != 0 {
+				t.Errorf("%v: ScIdx not 0: %v", *r.Index, r.ScIdx)
+			}
+			if r.ScID != 1 {
+				t.Errorf("%v: ScID not 1: %v", *r.Index, r.ScID)
+			}
+			if r.Cond != "if" {
+				t.Errorf("%v: Cond not if: %v", *r.Index, r.Cond)
+			}
+			if r.CondTest != "FALSE" {
+				t.Errorf("%v: CondTest not FALSE: %v", *r.Index, r.CondTest)
+			}
+		case 8:
+			if r.Type != "content" {
+				t.Errorf("%v: Type not content: %v", *r.Index, r.Type)
+			}
 			if r.Action != "sc-inc-gpc0" {
 				t.Errorf("%v: Action not sc-inc-gpc0: %v", *r.Index, r.Action)
 			}
@@ -167,7 +186,7 @@ func TestGetTCPResponseRules(t *testing.T) { //nolint:gocognit
 			if r.CondTest != "FALSE" {
 				t.Errorf("%v: CondTest not FALSE: %v", *r.Index, r.CondTest)
 			}
-		case 8:
+		case 9:
 			if r.Type != "content" {
 				t.Errorf("%v: Type not content: %v", *r.Index, r.Type)
 			}
@@ -183,7 +202,7 @@ func TestGetTCPResponseRules(t *testing.T) { //nolint:gocognit
 			if r.CondTest != "FALSE" {
 				t.Errorf("%v: CondTest not FALSE: %v", *r.Index, r.CondTest)
 			}
-		case 9:
+		case 10:
 			if r.Type != "content" {
 				t.Errorf("%v: Type not content: %v", *r.Index, r.Type)
 			}
@@ -202,7 +221,7 @@ func TestGetTCPResponseRules(t *testing.T) { //nolint:gocognit
 			if r.CondTest != "FALSE" {
 				t.Errorf("%v: CondTest not FALSE: %v", *r.Index, r.CondTest)
 			}
-		case 10:
+		case 11:
 			if r.Type != "content" {
 				t.Errorf("%v: Type not content: %v", *r.Index, r.Type)
 			}
@@ -221,7 +240,7 @@ func TestGetTCPResponseRules(t *testing.T) { //nolint:gocognit
 			if r.CondTest != "FALSE" {
 				t.Errorf("%v: CondTest not FALSE: %v", *r.Index, r.CondTest)
 			}
-		case 11:
+		case 12:
 			if r.Type != "content" {
 				t.Errorf("%v: Type not content: %v", *r.Index, r.Type)
 			}
@@ -237,7 +256,7 @@ func TestGetTCPResponseRules(t *testing.T) { //nolint:gocognit
 			if r.CondTest != "FALSE" {
 				t.Errorf("%v: CondTest not FALSE: %v", *r.Index, r.CondTest)
 			}
-		case 12:
+		case 13:
 			if r.Type != "content" {
 				t.Errorf("%v: Type not content: %v", *r.Index, r.Type)
 			}
@@ -253,7 +272,7 @@ func TestGetTCPResponseRules(t *testing.T) { //nolint:gocognit
 			if r.CondTest != "FALSE" {
 				t.Errorf("%v: CondTest not FALSE: %v", *r.Index, r.CondTest)
 			}
-		case 13:
+		case 14:
 			if r.Type != "content" {
 				t.Errorf("%v: Type not content: %v", *r.Index, r.Type)
 			}
@@ -269,7 +288,7 @@ func TestGetTCPResponseRules(t *testing.T) { //nolint:gocognit
 			if r.CondTest != "FALSE" {
 				t.Errorf("%v: CondTest not FALSE: %v", *r.Index, r.CondTest)
 			}
-		case 14:
+		case 15:
 			if r.Type != "content" {
 				t.Errorf("%v: Type not content: %v", *r.Index, r.Type)
 			}
@@ -285,7 +304,7 @@ func TestGetTCPResponseRules(t *testing.T) { //nolint:gocognit
 			if r.CondTest != "FALSE" {
 				t.Errorf("%v: CondTest not FALSE: %v", *r.Index, r.CondTest)
 			}
-		case 15:
+		case 16:
 			if r.Type != "content" {
 				t.Errorf("%v: Type not content: %v", *r.Index, r.Type)
 			}
@@ -298,7 +317,7 @@ func TestGetTCPResponseRules(t *testing.T) { //nolint:gocognit
 			if r.CondTest != "FALSE" {
 				t.Errorf("%v: CondTest not FALSE: %v", *r.Index, r.CondTest)
 			}
-		case 16:
+		case 17:
 			if r.Type != "content" {
 				t.Errorf("%v: Type not content: %v", *r.Index, r.Type)
 			}
@@ -318,7 +337,7 @@ func TestGetTCPResponseRules(t *testing.T) { //nolint:gocognit
 				t.Errorf("%v: CondTest not FALSE: %v", *r.Index, r.CondTest)
 			}
 		default:
-			t.Errorf("Expect only tcp-response 0 to 16 %v found", *r.Index)
+			t.Errorf("Expect only tcp-response 0 to 17 %v found", *r.Index)
 		}
 	}
 
@@ -429,7 +448,7 @@ func TestCreateEditDeleteTCPResponseRule(t *testing.T) {
 	}
 
 	// TestDeleteTCPResponse
-	err = clientTest.DeleteTCPResponseRule(2, "test", "", version)
+	err = clientTest.DeleteTCPResponseRule(18, "test", "", version)
 	if err != nil {
 		t.Error(err.Error())
 	} else {
@@ -440,12 +459,12 @@ func TestCreateEditDeleteTCPResponseRule(t *testing.T) {
 		t.Error("Version not incremented")
 	}
 
-	_, _, err = clientTest.GetTCPResponseRule(17, "test", "")
+	_, _, err = clientTest.GetTCPResponseRule(18, "test", "")
 	if err == nil {
 		t.Error("DeleteTCPResponseRule failed, TCP Response Rule 17 still exists")
 	}
 
-	err = clientTest.DeleteTCPResponseRule(3, "test_2", "", version)
+	err = clientTest.DeleteTCPResponseRule(18, "test_2", "", version)
 	if err == nil {
 		t.Error("Should throw error, non existant TCP Response Rule")
 		version++
