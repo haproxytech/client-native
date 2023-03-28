@@ -111,7 +111,7 @@ type HTTPAfterResponseRule struct {
 
 	// type
 	// Required: true
-	// Enum: [add-header allow del-acl del-header del-map replace-header replace-value sc-inc-gpc sc-inc-gpc0 sc-inc-gpc1 sc-set-gpt0 set-header set-log-level set-map set-status set-var strict-mode unset-var]
+	// Enum: [add-header allow del-acl del-header del-map replace-header replace-value sc-add-gpc sc-inc-gpc sc-inc-gpc0 sc-inc-gpc1 sc-set-gpt0 set-header set-log-level set-map set-status set-var strict-mode unset-var]
 	Type string `json:"type"`
 
 	// var expr
@@ -424,7 +424,7 @@ var httpAfterResponseRuleTypeTypePropEnum []interface{}
 
 func init() {
 	var res []string
-	if err := json.Unmarshal([]byte(`["add-header","allow","del-acl","del-header","del-map","replace-header","replace-value","sc-inc-gpc","sc-inc-gpc0","sc-inc-gpc1","sc-set-gpt0","set-header","set-log-level","set-map","set-status","set-var","strict-mode","unset-var"]`), &res); err != nil {
+	if err := json.Unmarshal([]byte(`["add-header","allow","del-acl","del-header","del-map","replace-header","replace-value","sc-add-gpc","sc-inc-gpc","sc-inc-gpc0","sc-inc-gpc1","sc-set-gpt0","set-header","set-log-level","set-map","set-status","set-var","strict-mode","unset-var"]`), &res); err != nil {
 		panic(err)
 	}
 	for _, v := range res {
@@ -454,6 +454,9 @@ const (
 
 	// HTTPAfterResponseRuleTypeReplaceDashValue captures enum value "replace-value"
 	HTTPAfterResponseRuleTypeReplaceDashValue string = "replace-value"
+
+	// HTTPAfterResponseRuleTypeScDashAddDashGpc captures enum value "sc-add-gpc"
+	HTTPAfterResponseRuleTypeScDashAddDashGpc string = "sc-add-gpc"
 
 	// HTTPAfterResponseRuleTypeScDashIncDashGpc captures enum value "sc-inc-gpc"
 	HTTPAfterResponseRuleTypeScDashIncDashGpc string = "sc-inc-gpc"

@@ -4853,7 +4853,9 @@ definitions:
               x-dependency:
                   type:
                       required: true
-                      value: sc-set-gpt0
+                      value:
+                          - sc-add-gpc
+                          - sc-set-gpt0
               x-display-name: ScSet Expression Value
           sc_id:
               type: integer
@@ -4861,6 +4863,7 @@ definitions:
                   type:
                       required: true
                       value:
+                          - sc-add-gpc
                           - sc-inc-gpc
                           - sc-inc-gpc0
                           - sc-inc-gpc1
@@ -4870,13 +4873,17 @@ definitions:
               x-dependency:
                   type:
                       required: true
-                      value: sc-inc-gpc
+                      value:
+                          - sc-add-gpc
+                          - sc-inc-gpc
           sc_int:
               type: integer
               x-dependency:
                   type:
                       required: true
-                      value: sc-set-gpt0
+                      value:
+                          - sc-add-gpc
+                          - sc-set-gpt0
               x-display-name: ScSet Integer Value
               x-nullable: true
           status:
@@ -4911,6 +4918,7 @@ definitions:
                   - del-map
                   - replace-header
                   - replace-value
+                  - sc-add-gpc
                   - sc-inc-gpc
                   - sc-inc-gpc0
                   - sc-inc-gpc1

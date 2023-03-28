@@ -285,6 +285,19 @@ func ParseHTTPAfterRule(f types.Action) *models.HTTPAfterResponseRule {
 			Cond:      v.Cond,
 			CondTest:  v.CondTest,
 		}
+	case *actions.ScAddGpc:
+		ID, _ := strconv.ParseInt(v.ID, 10, 64)
+		Idx, _ := strconv.ParseInt(v.Idx, 10, 64)
+		if (v.Int == nil && len(v.Expr.Expr) == 0) || (v.Int != nil && len(v.Expr.Expr) > 0) {
+			return nil
+		}
+		return &models.HTTPAfterResponseRule{
+			Type:     "sc-add-gpc",
+			ScID:     ID,
+			ScIdx:    Idx,
+			Cond:     v.Cond,
+			CondTest: v.CondTest,
+		}
 	case *actions.ScIncGpc:
 		ID, _ := strconv.ParseInt(v.ID, 10, 64)
 		Idx, _ := strconv.ParseInt(v.Idx, 10, 64)
@@ -438,6 +451,13 @@ func SerializeHTTPAfterRule(f models.HTTPAfterResponseRule) (rule types.Action, 
 			MatchRegex: f.HdrMatch,
 			Cond:       f.Cond,
 			CondTest:   f.CondTest,
+		}
+	case "sc-add-gpc":
+		rule = &actions.ScAddGpc{
+			ID:       strconv.FormatInt(f.ScID, 10),
+			Idx:      strconv.FormatInt(f.ScIdx, 10),
+			Cond:     f.Cond,
+			CondTest: f.CondTest,
 		}
 	case "sc-inc-gpc":
 		rule = &actions.ScIncGpc{

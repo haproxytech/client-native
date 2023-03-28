@@ -20,6 +20,7 @@ http_after_response_rule:
         - del-map
         - replace-header
         - replace-value
+        - sc-add-gpc
         - sc-inc-gpc
         - sc-inc-gpc0
         - sc-inc-gpc1
@@ -150,20 +151,20 @@ http_after_response_rule:
       type: integer
       x-dependency:
         type:
-          value: [sc-inc-gpc, sc-inc-gpc0, sc-inc-gpc1, sc-set-gpt0]
+          value: [sc-add-gpc, sc-inc-gpc, sc-inc-gpc0, sc-inc-gpc1, sc-set-gpt0]
           required: true
     sc_idx:
       type: integer
       x-dependency:
         type:
-          value: sc-inc-gpc
+          value: [sc-add-gpc, sc-inc-gpc]
           required: true
     sc_expr:
       type: string
       x-display-name: ScSet Expression Value
       x-dependency:
         type:
-          value: sc-set-gpt0
+          value: [sc-add-gpc, sc-set-gpt0]
           required: true
     sc_int:
       type: integer
@@ -171,7 +172,7 @@ http_after_response_rule:
       x-display-name: ScSet Integer Value
       x-dependency:
         type:
-          value: sc-set-gpt0
+          value: [sc-add-gpc, sc-set-gpt0]
           required: true
     cond:
       type: string

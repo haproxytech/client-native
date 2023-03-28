@@ -399,6 +399,7 @@ frontend test
   http-after-response set-map(map.lst) %[src] %[res.hdr(X-Value)]
   http-after-response del-map(map.lst) %[src] if FALSE
   http-after-response del-acl(map.lst) %[src] if FALSE
+  http-after-response sc-add-gpc(0,1) 1 if FALSE
   http-after-response sc-inc-gpc(0,1) if FALSE
   http-after-response sc-inc-gpc0(0) if FALSE
   http-after-response sc-inc-gpc1(0) if FALSE

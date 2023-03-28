@@ -29,7 +29,7 @@ func TestGetHTTPAfterResponseRules(t *testing.T) {
 		t.Error(err.Error())
 	}
 
-	if expected := 15; len(hRules) != expected {
+	if expected := 16; len(hRules) != expected {
 		t.Errorf("%v http after response rules returned, expected %d", len(hRules), expected)
 	}
 
@@ -85,7 +85,7 @@ func TestGetHTTPAfterResponseRules(t *testing.T) {
 				t.Errorf("%v: CondTest not %s: %v", *r.Index, condTest, r.CondTest)
 			}
 		case 3:
-			if actionType := "sc-inc-gpc"; r.Type != actionType {
+			if actionType := "sc-add-gpc"; r.Type != actionType {
 				t.Errorf("%v: Type not %s: %v", *r.Index, actionType, r.Type)
 			}
 			if scIdx := int64(0); r.ScIdx != scIdx {
@@ -101,6 +101,22 @@ func TestGetHTTPAfterResponseRules(t *testing.T) {
 				t.Errorf("%v: CondTest not %s: %v", *r.Index, condTest, r.CondTest)
 			}
 		case 4:
+			if actionType := "sc-inc-gpc"; r.Type != actionType {
+				t.Errorf("%v: Type not %s: %v", *r.Index, actionType, r.Type)
+			}
+			if scIdx := int64(0); r.ScIdx != scIdx {
+				t.Errorf("%v: ScIdx not %d: %v", *r.Index, scIdx, r.ScID)
+			}
+			if scId := int64(1); r.ScID != scId {
+				t.Errorf("%v: ScID not %d: %v", *r.Index, scId, r.ScID)
+			}
+			if cond := "if"; r.Cond != cond {
+				t.Errorf("%v: Cond not %s: %v", *r.Index, cond, r.Cond)
+			}
+			if condTest := "FALSE"; r.CondTest != condTest {
+				t.Errorf("%v: CondTest not %s: %v", *r.Index, condTest, r.CondTest)
+			}
+		case 5:
 			if actionType := "sc-inc-gpc0"; r.Type != actionType {
 				t.Errorf("%v: Type not %s: %v", *r.Index, actionType, r.Type)
 			}
@@ -113,7 +129,7 @@ func TestGetHTTPAfterResponseRules(t *testing.T) {
 			if condTest := "FALSE"; r.CondTest != condTest {
 				t.Errorf("%v: CondTest not %s: %v", *r.Index, condTest, r.CondTest)
 			}
-		case 5:
+		case 6:
 			if actionType := "sc-inc-gpc1"; r.Type != actionType {
 				t.Errorf("%v: Type not %s: %v", *r.Index, actionType, r.Type)
 			}
@@ -126,7 +142,7 @@ func TestGetHTTPAfterResponseRules(t *testing.T) {
 			if condTest := "FALSE"; r.CondTest != condTest {
 				t.Errorf("%v: CondTest not %s: %v", *r.Index, condTest, r.CondTest)
 			}
-		case 6:
+		case 7:
 			if actionType := "sc-set-gpt0"; r.Type != actionType {
 				t.Errorf("%v: Type not %s: %v", *r.Index, actionType, r.Type)
 			}
@@ -145,7 +161,7 @@ func TestGetHTTPAfterResponseRules(t *testing.T) {
 			if condTest := "FALSE"; r.CondTest != condTest {
 				t.Errorf("%v: CondTest not %s: %v", *r.Index, condTest, r.CondTest)
 			}
-		case 7:
+		case 8:
 			if r.Type != "sc-set-gpt0" {
 				t.Errorf("%v: Type not sc-set-gpt0: %v", *r.Index, r.Type)
 			}
@@ -168,7 +184,7 @@ func TestGetHTTPAfterResponseRules(t *testing.T) {
 			if condTest := "FALSE"; r.CondTest != condTest {
 				t.Errorf("%v: CondTest not %s: %v", *r.Index, condTest, r.CondTest)
 			}
-		case 8:
+		case 9:
 			if actionType := "set-header"; r.Type != actionType {
 				t.Errorf("%v: Type not allow: %v", *r.Index, actionType)
 			}
@@ -178,7 +194,7 @@ func TestGetHTTPAfterResponseRules(t *testing.T) {
 			if headerFmt := `"max-age=31536000"`; r.HdrFormat != headerFmt {
 				t.Errorf("%v: HdrFmt not %s: %v", *r.Index, headerFmt, r.HdrName)
 			}
-		case 9:
+		case 10:
 			if actionType := "set-log-level"; r.Type != actionType {
 				t.Errorf("%v: Action not %s: %v", *r.Index, actionType, r.Type)
 			}
@@ -191,7 +207,7 @@ func TestGetHTTPAfterResponseRules(t *testing.T) {
 			if condTest := "FALSE"; r.CondTest != condTest {
 				t.Errorf("%v: CondTest not %s: %v", *r.Index, condTest, r.CondTest)
 			}
-		case 10:
+		case 11:
 			if actionType := "replace-header"; r.Type != actionType {
 				t.Errorf("%v: Type not allow: %v", *r.Index, actionType)
 			}
@@ -204,7 +220,7 @@ func TestGetHTTPAfterResponseRules(t *testing.T) {
 			if headerFmt := `\1;ip=%bi;\2`; r.HdrFormat != headerFmt {
 				t.Errorf("%v: HdrFmt not %s: %v", *r.Index, headerFmt, r.HdrName)
 			}
-		case 11:
+		case 12:
 			if actionType := "replace-value"; r.Type != actionType {
 				t.Errorf("%v: Type not allow: %v", *r.Index, actionType)
 			}
@@ -217,7 +233,7 @@ func TestGetHTTPAfterResponseRules(t *testing.T) {
 			if headerFmt := "private"; r.HdrFormat != headerFmt {
 				t.Errorf("%v: HdrFmt not %s: %v", *r.Index, headerFmt, r.HdrName)
 			}
-		case 12:
+		case 13:
 			if actionType := "set-status"; r.Type != actionType {
 				t.Errorf("%v: Type not allow: %v", *r.Index, actionType)
 			}
@@ -227,7 +243,7 @@ func TestGetHTTPAfterResponseRules(t *testing.T) {
 			if reason := fmt.Sprintf("%q", "SlowDown"); r.StatusReason != reason {
 				t.Errorf("%v: reason not %s: %v", *r.Index, reason, r.HdrName)
 			}
-		case 13:
+		case 14:
 			if actionType := "set-var"; r.Type != actionType {
 				t.Errorf("%v: Type not %s: %v", *r.Index, actionType, r.Type)
 			}
@@ -240,7 +256,7 @@ func TestGetHTTPAfterResponseRules(t *testing.T) {
 			if expr := "res.hdr(location)"; r.VarExpr != expr {
 				t.Errorf("%v: VarExpr not %s: %v", *r.Index, expr, r.VarExpr)
 			}
-		case 14:
+		case 15:
 			if actionType := "unset-var"; r.Type != actionType {
 				t.Errorf("%v: Type not %s: %v", *r.Index, actionType, r.Type)
 			}
