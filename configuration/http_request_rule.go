@@ -491,7 +491,7 @@ func ParseHTTPRequestRule(f types.Action) (rule *models.HTTPRequestRule, err err
 			Cond:      v.Cond,
 			CondTest:  v.CondTest,
 		}
-	case *http_actions.SetLogLevel:
+	case *actions.SetLogLevel:
 		rule = &models.HTTPRequestRule{
 			Type:     "set-log-level",
 			LogLevel: v.Level,
@@ -507,7 +507,7 @@ func ParseHTTPRequestRule(f types.Action) (rule *models.HTTPRequestRule, err err
 			Cond:        v.Cond,
 			CondTest:    v.CondTest,
 		}
-	case *http_actions.SetMark:
+	case *actions.SetMark:
 		rule = &models.HTTPRequestRule{
 			Type:      "set-mark",
 			MarkValue: v.Value,
@@ -521,7 +521,7 @@ func ParseHTTPRequestRule(f types.Action) (rule *models.HTTPRequestRule, err err
 			Cond:      v.Cond,
 			CondTest:  v.CondTest,
 		}
-	case *http_actions.SetNice:
+	case *actions.SetNice:
 		nice, _ := strconv.ParseInt(v.Value, 10, 64)
 		rule = &models.HTTPRequestRule{
 			Type:      "set-nice",
@@ -571,7 +571,7 @@ func ParseHTTPRequestRule(f types.Action) (rule *models.HTTPRequestRule, err err
 			Cond:     v.Cond,
 			CondTest: v.CondTest,
 		}
-	case *http_actions.SetSrcPort:
+	case *actions.SetSrcPort:
 		rule = &models.HTTPRequestRule{
 			Type:     "set-src-port",
 			Expr:     v.Expr.String(),
@@ -586,7 +586,7 @@ func ParseHTTPRequestRule(f types.Action) (rule *models.HTTPRequestRule, err err
 			Cond:        v.Cond,
 			CondTest:    v.CondTest,
 		}
-	case *http_actions.SetTos:
+	case *actions.SetTos:
 		rule = &models.HTTPRequestRule{
 			Type:     "set-tos",
 			TosValue: v.Value,
@@ -948,7 +948,7 @@ func SerializeHTTPRequestRule(f models.HTTPRequestRule) (rule types.Action, err 
 			CondTest: f.CondTest,
 		}
 	case "set-log-level":
-		rule = &http_actions.SetLogLevel{
+		rule = &actions.SetLogLevel{
 			Level:    f.LogLevel,
 			Cond:     f.Cond,
 			CondTest: f.CondTest,
@@ -962,7 +962,7 @@ func SerializeHTTPRequestRule(f models.HTTPRequestRule) (rule types.Action, err 
 			CondTest: f.CondTest,
 		}
 	case "set-mark":
-		rule = &http_actions.SetMark{
+		rule = &actions.SetMark{
 			Value:    f.MarkValue,
 			Cond:     f.Cond,
 			CondTest: f.CondTest,
@@ -974,7 +974,7 @@ func SerializeHTTPRequestRule(f models.HTTPRequestRule) (rule types.Action, err 
 			CondTest: f.CondTest,
 		}
 	case "set-nice":
-		rule = &http_actions.SetNice{
+		rule = &actions.SetNice{
 			Value:    strconv.FormatInt(f.NiceValue, 10),
 			Cond:     f.Cond,
 			CondTest: f.CondTest,
@@ -1016,7 +1016,7 @@ func SerializeHTTPRequestRule(f models.HTTPRequestRule) (rule types.Action, err 
 			CondTest: f.CondTest,
 		}
 	case "set-src-port":
-		rule = &http_actions.SetSrcPort{
+		rule = &actions.SetSrcPort{
 			Expr:     common.Expression{Expr: strings.Split(f.Expr, " ")},
 			Cond:     f.Cond,
 			CondTest: f.CondTest,
@@ -1029,7 +1029,7 @@ func SerializeHTTPRequestRule(f models.HTTPRequestRule) (rule types.Action, err 
 			CondTest: f.CondTest,
 		}
 	case "set-tos":
-		rule = &http_actions.SetTos{
+		rule = &actions.SetTos{
 			Value:    f.TosValue,
 			Cond:     f.Cond,
 			CondTest: f.CondTest,
