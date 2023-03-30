@@ -500,7 +500,7 @@ definitions:
               type: string
               x-display-name: Prefix
           resolve-net:
-              pattern: ^[^,\s][^\,]*[^,\s]*$
+              pattern: ^([A-Za-z0-9.:/]+)(,[A-Za-z0-9.:/]+)*$
               type: string
               x-dependency:
                   resolvers:
@@ -514,7 +514,7 @@ definitions:
                   resolvers:
                       required: true
           resolve_opts:
-              pattern: ^[^,\s][^\,]*[^,\s]*$
+              pattern: ^(allow-dup-ip|ignore-weight|prevent-dup-ip)(,(allow-dup-ip|ignore-weight|prevent-dup-ip))*$
               type: string
           resolvers:
               pattern: ^[^\s]+$
