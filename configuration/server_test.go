@@ -179,6 +179,33 @@ func TestGetRingServer(t *testing.T) {
 		t.Errorf("%v: log-proto not octet-count: %v", s.Name, s.LogProto)
 	}
 
+	v, s, err = clientTest.GetServer("s1", "ring", "myring", "")
+	if err != nil {
+		t.Error(err.Error())
+	}
+
+	if v != version {
+		t.Errorf("Version %v returned, expected %v", v, version)
+	}
+
+	if s.Name != "s1" {
+		t.Errorf("Expected only s1, %v found", s.Name)
+	}
+	if s.Address != "192.168.1.1" {
+		t.Errorf("%v: Address not 192.168.1.1: %v", s.Name, s.Address)
+	}
+	if *s.Port != 80 {
+		t.Errorf("%v: Port not 6514: %v", s.Name, *s.Port)
+	}
+
+	if s.ResolveOpts != "allow-dup-ip,ignore-weight" {
+		t.Errorf("%v: resolve_opts not allow-dup-ip,ignore-weight: %v", s.Name, s.ResolveOpts)
+	}
+
+	if s.ResolveNet != "10.0.0.0/8,10.200.200.0/12" {
+		t.Errorf("%v: resolve-net not 10.0.0.0/8,10.200.200.0/12: %v", s.Name, s.ResolveNet)
+	}
+
 	_, err = s.MarshalBinary()
 	if err != nil {
 		t.Error(err.Error())
