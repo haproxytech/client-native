@@ -739,6 +739,7 @@ ring myring
   timeout connect 5s
   timeout server 10s
   server mysyslogsrv 127.0.0.1:6514 log-proto octet-count
+  server s1 192.168.1.1:80 check resolve-opts allow-dup-ip,ignore-weight resolve-net 10.0.0.0/8,10.200.200.0/12
 
 log-forward sylog-loadb
   dgram-bind 127.0.0.1:1514 transparent name webserv

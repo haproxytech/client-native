@@ -206,7 +206,7 @@ server_params:
       x-nullable: true
     resolve_opts:
       type: string
-      pattern: '^[^,\s][^\,]*[^,\s]*$'
+      pattern: '^(allow-dup-ip|ignore-weight|prevent-dup-ip)(,(allow-dup-ip|ignore-weight|prevent-dup-ip))*$'
     resolve-prefer:
       type: string
       enum: [ipv4, ipv6]
@@ -215,7 +215,7 @@ server_params:
           required: true
     resolve-net:
       type: string
-      pattern: '^[^,\s][^\,]*[^,\s]*$'
+      pattern: '^([A-Za-z0-9.:/]+)(,[A-Za-z0-9.:/]+)*$'
       x-dependency:
         resolvers:
           required: true
