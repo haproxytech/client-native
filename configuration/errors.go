@@ -16,60 +16,67 @@
 package configuration
 
 import (
+	"errors"
 	"fmt"
 
 	oaerrors "github.com/go-openapi/errors"
 )
 
-const (
+var (
 	// General error, unknown cause
-	ErrGeneralError = 0
+	ErrGeneralError = errors.New("unknown error")
 
 	// Errors regarding configurations
-	ErrNoParentSpecified      = 10
-	ErrParentDoesNotExist     = 11
-	ErrBothVersionTransaction = 12
-	ErrNoVersionTransaction   = 13
-	ErrValidationError        = 14
-	ErrVersionMismatch        = 15
+	ErrNoParentSpecified      = errors.New("unspecified parent")
+	ErrParentDoesNotExist     = errors.New("missing parent")
+	ErrBothVersionTransaction = errors.New("both version and transaction specified, specify only one")
+	ErrNoVersionTransaction   = errors.New("version or transaction not specified")
+	ErrValidationError        = errors.New("validation error")
+	ErrVersionMismatch        = errors.New("version mismatch")
 
-	ErrTransactionDoesNotExist  = 20
-	ErrTransactionAlreadyExists = 21
-	ErrCannotParseTransaction   = 22
+	ErrTransactionDoesNotExist  = errors.New("transaction does not exist")
+	ErrTransactionAlreadyExists = errors.New("transaction already exist")
+	ErrCannotParseTransaction   = errors.New("failed to parse transaction")
 
-	ErrObjectDoesNotExist    = 30
-	ErrObjectAlreadyExists   = 31
-	ErrObjectIndexOutOfRange = 32
+	ErrObjectDoesNotExist    = errors.New("missing object")
+	ErrObjectAlreadyExists   = errors.New("object already exists")
+	ErrObjectIndexOutOfRange = errors.New("index out of range")
 
-	ErrErrorChangingConfig = 40
-	ErrCannotReadConfFile  = 41
-	ErrCannotReadVersion   = 42
-	ErrCannotSetVersion    = 43
+	ErrErrorChangingConfig = errors.New("invalid change")
+	ErrCannotReadConfFile  = errors.New("failed to read configuration")
+	ErrCannotReadVersion   = errors.New("cannot read version")
+	ErrCannotSetVersion    = errors.New("cannot set version")
 
-	ErrCannotFindHAProxy = 50
+	ErrCannotFindHAProxy = errors.New("failed to find HAProxy")
 
-	ErrClientDoesNotExists = 60
+	ErrClientDoesNotExists = errors.New("client does not exist")
 )
 
 // ConfError general configuration client error
 type ConfError struct {
-	code int
-	msg  string
+	err    error
+	reason string // optional
+}
+
+func (e *ConfError) Err() error {
+	return e.err
 }
 
 // Error implementation for ConfError
 func (e *ConfError) Error() string {
-	return fmt.Sprintf("%v: %s", e.code, e.msg)
+	if e.reason == "" {
+		return e.err.Error()
+	}
+	return fmt.Sprintf("%s: %s", e.err.Error(), e.reason)
 }
 
-// Code returns ConfError code, which is one of constants in this package
-func (e *ConfError) Code() int {
-	return e.code
+func (e *ConfError) Is(target error) bool {
+	return e.err == target
 }
 
 // NewConfError constructor for ConfError
-func NewConfError(code int, msg string) *ConfError {
-	return &ConfError{code: code, msg: msg}
+func NewConfError(err error, reason string) *ConfError {
+	return &ConfError{err: err, reason: reason}
 }
 
 // CompositeTransactionError helper function to aggregate multiple errors

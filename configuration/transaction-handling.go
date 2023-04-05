@@ -85,7 +85,7 @@ func (c *client) GetFailedParserTransactionVersion(transactionID string) (int64,
 
 	ver, ok := data.(*types.ConfigVersion)
 	if !ok {
-		return 0, NewConfError(ErrCannotReadVersion, "cannot read version")
+		return 0, NewConfError(ErrCannotReadVersion, "")
 	}
 	return ver.Value, nil
 }

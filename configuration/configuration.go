@@ -95,7 +95,7 @@ func (c *client) GetParser(transactionID string) (parser.Parser, error) {
 	p, ok := c.parsers[transactionID]
 	c.clientMu.Unlock()
 	if !ok {
-		return nil, NewConfError(ErrTransactionDoesNotExist, fmt.Sprintf("Transaction %s does not exist", transactionID))
+		return nil, NewConfError(ErrTransactionDoesNotExist, transactionID)
 	}
 	return p, nil
 }
@@ -109,7 +109,7 @@ func (c *client) AddParser(transactionID string) error {
 	_, ok := c.parsers[transactionID]
 	c.clientMu.Unlock()
 	if ok {
-		return NewConfError(ErrTransactionAlreadyExists, fmt.Sprintf("Transaction %s already exists", transactionID))
+		return NewConfError(ErrTransactionAlreadyExists, transactionID)
 	}
 
 	parserOptions := []parser_options.ParserOption{}
@@ -150,7 +150,7 @@ func (c *client) DeleteParser(transactionID string) error {
 	_, ok := c.parsers[transactionID]
 	c.clientMu.Unlock()
 	if !ok {
-		return NewConfError(ErrTransactionDoesNotExist, fmt.Sprintf("Transaction %s does not exist", transactionID))
+		return NewConfError(ErrTransactionDoesNotExist, transactionID)
 	}
 	delete(c.parsers, transactionID)
 	return nil
@@ -165,7 +165,7 @@ func (c *client) CommitParser(transactionID string) error {
 	p, ok := c.parsers[transactionID]
 	c.clientMu.Unlock()
 	if !ok {
-		return NewConfError(ErrTransactionDoesNotExist, fmt.Sprintf("Transaction %s does not exist", transactionID))
+		return NewConfError(ErrTransactionDoesNotExist, transactionID)
 	}
 	c.parser = p
 	delete(c.parsers, transactionID)
@@ -180,7 +180,7 @@ func (c *client) GetVersion(transactionID string) (int64, error) {
 func (c *client) getVersion(transactionID string) (int64, error) {
 	p, err := c.GetParser(transactionID)
 	if err != nil {
-		return 0, NewConfError(ErrCannotReadVersion, fmt.Sprintf("Cannot read version: %s", err.Error()))
+		return 0, NewConfError(ErrCannotReadVersion, err.Error())
 	}
 
 	data, _ := p.Get(parser.Comments, parser.CommentsSectionName, "# _version", true)
@@ -194,7 +194,7 @@ func (c *client) IncrementVersion() error {
 	ver.Value++
 
 	if err := c.parser.Save(c.ConfigurationFile); err != nil {
-		return NewConfError(ErrCannotSetVersion, fmt.Sprintf("Cannot set version: %s", err.Error()))
+		return NewConfError(ErrCannotSetVersion, err.Error())
 	}
 	return nil
 }

@@ -178,7 +178,7 @@ func TestCreateEditDeleteCache(t *testing.T) {
 	err = clientTest.DeleteCache("created_cache", "", 999999)
 	if err != nil {
 		if confErr, ok := err.(*ConfError); ok {
-			if confErr.Code() != ErrVersionMismatch {
+			if !confErr.Is(ErrVersionMismatch) {
 				t.Error("Should throw ErrVersionMismatch error")
 			}
 		} else {

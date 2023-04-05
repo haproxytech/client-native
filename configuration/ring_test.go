@@ -145,7 +145,7 @@ func TestCreateEditDeleteRing(t *testing.T) {
 	err = clientTest.DeleteRing("created_ring", "", 999999)
 	if err != nil {
 		if confErr, ok := err.(*ConfError); ok {
-			if confErr.Code() != ErrVersionMismatch {
+			if !confErr.Is(ErrVersionMismatch) {
 				t.Error("should throw ErrVersionMismatch error")
 			}
 		} else {

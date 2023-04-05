@@ -129,7 +129,7 @@ func TestCreateEditDeleteLogForward(t *testing.T) {
 	err = clientTest.DeleteLogForward("created_log_forward", "", 999999)
 	if err != nil {
 		if confErr, ok := err.(*ConfError); ok {
-			if confErr.Code() != ErrVersionMismatch {
+			if !confErr.Is(ErrVersionMismatch) {
 				t.Error("should throw ErrVersionMismatch error")
 			}
 		} else {
