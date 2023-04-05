@@ -276,7 +276,8 @@ func (t *Transaction) checkTransactionFile(transactionID string) error {
 
 	err = cmd.Run()
 	if err != nil {
-		return NewConfError(ErrValidationError, t.parseHAProxyCheckError(stderr.Bytes(), transactionID))
+		errStr := fmt.Sprintf("%s: %s", err.Error(), t.parseHAProxyCheckError(stderr.Bytes(), transactionID))
+		return NewConfError(ErrValidationError, errStr)
 	}
 	return nil
 }
