@@ -228,6 +228,26 @@ func addConfigFilesToArgs(args []string, clientParams options.ConfigurationOptio
 	return result
 }
 
+// Returns a copy of envs without the unwanted environment variables.
+func removeFromEnv(envs []string, unwanted ...string) []string {
+	newEnv := make([]string, 0, len(envs))
+
+	for _, v := range envs {
+		skip := false
+		for _, bad := range unwanted {
+			if strings.HasPrefix(v, bad+"=") {
+				skip = true
+				break
+			}
+		}
+		if !skip {
+			newEnv = append(newEnv, v)
+		}
+	}
+
+	return newEnv
+}
+
 func (t *Transaction) checkTransactionFile(transactionID string) error {
 	// check only against HAProxy file
 	_, ok := t.TransactionClient.(*client)
@@ -249,7 +269,10 @@ func (t *Transaction) checkTransactionFile(transactionID string) error {
 
 	var name string
 	var args []string
-	var envs []string
+
+	// Inherit the environment but filter out a few unwanted variables.
+	envs := removeFromEnv(os.Environ(), "HAPROXY_STARTUPLOGS_FD",
+		"HAPROXY_MWORKER_WAIT_ONLY", "HAPROXY_PROCESSES")
 
 	switch {
 	case len(t.ValidateCmd) > 0:
