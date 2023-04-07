@@ -147,7 +147,8 @@ func (c *client) CreateACL(parentType string, parentName string, data *models.AC
 
 // EditACL edits a ACL line in configuration. One of version or transactionID is
 // mandatory. Returns error on fail, nil on success.
-// nolint:dupl
+//
+//nolint:dupl
 func (c *client) EditACL(id int64, parentType string, parentName string, data *models.ACL, transactionID string, version int64) error {
 	if c.UseModelsValidation {
 		validationErr := data.Validate(strfmt.Default)

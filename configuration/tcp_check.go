@@ -160,7 +160,8 @@ func (c *client) CreateTCPCheck(parentType string, parentName string, data *mode
 
 // EditTCPCheck edits a tcp check in the configuration. One of version or transactionID is mandatory.
 // Returns error on fail, nil on success.
-// nolint:dupl
+//
+//nolint:dupl
 func (c *client) EditTCPCheck(id int64, parentType string, parentName string, data *models.TCPCheck, transactionID string, version int64) error {
 	if c.UseModelsValidation {
 		validationErr := data.Validate(strfmt.Default)

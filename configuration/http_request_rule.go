@@ -160,7 +160,8 @@ func (c *client) CreateHTTPRequestRule(parentType string, parentName string, dat
 
 // EditHTTPRequestRule edits a http request rule in configuration. One of version or transactionID is
 // mandatory. Returns error on fail, nil on success.
-// nolint:dupl
+//
+//nolint:dupl
 func (c *client) EditHTTPRequestRule(id int64, parentType string, parentName string, data *models.HTTPRequestRule, transactionID string, version int64) error {
 	if c.UseModelsValidation {
 		validationErr := data.Validate(strfmt.Default)

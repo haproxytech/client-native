@@ -161,7 +161,8 @@ func (c *client) CreateTCPRequestRule(parentType string, parentName string, data
 
 // EditTCPRequestRule edits a tcp request rule in configuration. One of version or transactionID is
 // mandatory. Returns error on fail, nil on success.
-// nolint:dupl
+//
+//nolint:dupl
 func (c *client) EditTCPRequestRule(id int64, parentType string, parentName string, data *models.TCPRequestRule, transactionID string, version int64) error {
 	if c.UseModelsValidation {
 		validationErr := data.Validate(strfmt.Default)

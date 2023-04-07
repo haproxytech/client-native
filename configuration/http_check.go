@@ -160,7 +160,8 @@ func (c *client) CreateHTTPCheck(parentType string, parentName string, data *mod
 
 // EditHTTPCheck edits a http check in the configuration. One of version or transactionID is mandatory.
 // Returns error on fail, nil on success.
-// nolint:dupl
+//
+//nolint:dupl
 func (c *client) EditHTTPCheck(id int64, parentType string, parentName string, data *models.HTTPCheck, transactionID string, version int64) error {
 	if c.UseModelsValidation {
 		validationErr := data.Validate(strfmt.Default)
