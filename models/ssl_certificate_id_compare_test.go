@@ -21,24 +21,21 @@ package models
 
 import (
 	"encoding/json"
-	"math/rand"
 	"testing"
-	"time"
 
 	"github.com/go-faker/faker/v4"
 	"github.com/go-faker/faker/v4/pkg/options"
-	"github.com/go-openapi/strfmt"
 
 	jsoniter "github.com/json-iterator/go"
 )
 
-func TestSslCertificateEqual(t *testing.T) {
+func TestSslCertificateIDEqual(t *testing.T) {
 	samples := []struct {
-		a, b SslCertificate
+		a, b SslCertificateID
 	}{}
 	for i := 0; i < 2; i++ {
-		var sample SslCertificate
-		var result SslCertificate
+		var sample SslCertificateID
+		var result SslCertificateID
 		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Error(err)
@@ -53,7 +50,7 @@ func TestSslCertificateEqual(t *testing.T) {
 		}
 
 		samples = append(samples, struct {
-			a, b SslCertificate
+			a, b SslCertificateID
 		}{sample, result})
 	}
 
@@ -69,18 +66,18 @@ func TestSslCertificateEqual(t *testing.T) {
 			if err != nil {
 				t.Error(err)
 			}
-			t.Errorf("Expected SslCertificate to be equal, but it is not %s %s", a, b)
+			t.Errorf("Expected SslCertificateID to be equal, but it is not %s %s", a, b)
 		}
 	}
 }
 
-func TestSslCertificateEqualFalse(t *testing.T) {
+func TestSslCertificateIDEqualFalse(t *testing.T) {
 	samples := []struct {
-		a, b SslCertificate
+		a, b SslCertificateID
 	}{}
 	for i := 0; i < 2; i++ {
-		var sample SslCertificate
-		var result SslCertificate
+		var sample SslCertificateID
+		var result SslCertificateID
 		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Error(err)
@@ -89,11 +86,8 @@ func TestSslCertificateEqualFalse(t *testing.T) {
 		if err != nil {
 			t.Error(err)
 		}
-		result.NotAfter = Ptr(strfmt.DateTime(time.Now().AddDate(rand.Intn(10), rand.Intn(12), rand.Intn(28))))
-		result.NotBefore = Ptr(strfmt.DateTime(time.Now().AddDate(rand.Intn(10), rand.Intn(12), rand.Intn(28))))
-		result.Size = Ptr(*sample.Size + 1)
 		samples = append(samples, struct {
-			a, b SslCertificate
+			a, b SslCertificateID
 		}{sample, result})
 	}
 
@@ -109,18 +103,18 @@ func TestSslCertificateEqualFalse(t *testing.T) {
 			if err != nil {
 				t.Error(err)
 			}
-			t.Errorf("Expected SslCertificate to be different, but it is not %s %s", a, b)
+			t.Errorf("Expected SslCertificateID to be different, but it is not %s %s", a, b)
 		}
 	}
 }
 
-func TestSslCertificateDiff(t *testing.T) {
+func TestSslCertificateIDDiff(t *testing.T) {
 	samples := []struct {
-		a, b SslCertificate
+		a, b SslCertificateID
 	}{}
 	for i := 0; i < 2; i++ {
-		var sample SslCertificate
-		var result SslCertificate
+		var sample SslCertificateID
+		var result SslCertificateID
 		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Error(err)
@@ -135,7 +129,7 @@ func TestSslCertificateDiff(t *testing.T) {
 		}
 
 		samples = append(samples, struct {
-			a, b SslCertificate
+			a, b SslCertificateID
 		}{sample, result})
 	}
 
@@ -151,18 +145,18 @@ func TestSslCertificateDiff(t *testing.T) {
 			if err != nil {
 				t.Error(err)
 			}
-			t.Errorf("Expected SslCertificate to be equal, but it is not %s %s, %v", a, b, result)
+			t.Errorf("Expected SslCertificateID to be equal, but it is not %s %s, %v", a, b, result)
 		}
 	}
 }
 
-func TestSslCertificateDiffFalse(t *testing.T) {
+func TestSslCertificateIDDiffFalse(t *testing.T) {
 	samples := []struct {
-		a, b SslCertificate
+		a, b SslCertificateID
 	}{}
 	for i := 0; i < 2; i++ {
-		var sample SslCertificate
-		var result SslCertificate
+		var sample SslCertificateID
+		var result SslCertificateID
 		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Error(err)
@@ -171,17 +165,14 @@ func TestSslCertificateDiffFalse(t *testing.T) {
 		if err != nil {
 			t.Error(err)
 		}
-		result.NotAfter = Ptr(strfmt.DateTime(time.Now().AddDate(rand.Intn(10), rand.Intn(12), rand.Intn(28))))
-		result.NotBefore = Ptr(strfmt.DateTime(time.Now().AddDate(rand.Intn(10), rand.Intn(12), rand.Intn(28))))
-		result.Size = Ptr(*sample.Size + 1)
 		samples = append(samples, struct {
-			a, b SslCertificate
+			a, b SslCertificateID
 		}{sample, result})
 	}
 
 	for _, sample := range samples {
 		result := sample.a.Diff(sample.b)
-		if len(result) != 20 {
+		if len(result) != 3 {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {
@@ -191,7 +182,7 @@ func TestSslCertificateDiffFalse(t *testing.T) {
 			if err != nil {
 				t.Error(err)
 			}
-			t.Errorf("Expected SslCertificate to be different in 20 cases, but it is not (%d) %s %s", len(result), a, b)
+			t.Errorf("Expected SslCertificateID to be different in 3 cases, but it is not (%d) %s %s", len(result), a, b)
 		}
 	}
 }

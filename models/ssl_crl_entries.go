@@ -29,15 +29,13 @@ import (
 	"github.com/go-openapi/swag"
 )
 
-// SslCertificates SSL Certificate Files Array
+// SslCrlEntries ssl crl entries
 //
-// # Array of ssl certificate files
-//
-// swagger:model ssl_certificates
-type SslCertificates []*SslCertificate
+// swagger:model ssl_crl_entries
+type SslCrlEntries []*SslCrlEntry
 
-// Validate validates this ssl certificates
-func (m SslCertificates) Validate(formats strfmt.Registry) error {
+// Validate validates this ssl crl entries
+func (m SslCrlEntries) Validate(formats strfmt.Registry) error {
 	var res []error
 
 	for i := 0; i < len(m); i++ {
@@ -64,8 +62,8 @@ func (m SslCertificates) Validate(formats strfmt.Registry) error {
 	return nil
 }
 
-// ContextValidate validate this ssl certificates based on the context it is used
-func (m SslCertificates) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+// ContextValidate validate this ssl crl entries based on the context it is used
+func (m SslCrlEntries) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
 	var res []error
 
 	for i := 0; i < len(m); i++ {

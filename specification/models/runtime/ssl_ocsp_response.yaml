@@ -1,0 +1,38 @@
+ssl_ocsp_response:
+  title: SSL OCSP Response
+  description: SSL OCSP Response
+  type: object
+  properties:
+    ocsp_response_status:
+      type: string
+    response_type:
+      type: string
+    version:
+      type: string
+    responder_id:
+      type: array
+      x-omitempty: true
+      items:
+        type: string
+    produced_at:
+      type: string
+      format: date
+    base64_response:
+      type: string
+    responses:
+      type: object
+      x-go-name: OCSPResponses
+      properties:
+        certificate_id:
+          $ref: '#/definitions/ssl_certificate_id/properties/certificate_id'
+        cert_status:
+          type: string
+        this_update:
+          type: string
+          format: date
+        next_update:
+          type: string
+          format: date
+        revocation_reason:
+          type: string
+          x-omitempty: true

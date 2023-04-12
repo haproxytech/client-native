@@ -1,0 +1,21 @@
+ssl_certificate_id:
+  title: SSL Certificate ID
+  description: SSL Certificate ID
+  type: object
+  properties:
+    certificate_id_key:
+      type: string
+    certificate_path:
+      type: string
+    certificate_id:
+      type: object
+      x-go-name: CertificateId
+      properties:
+        hash_algorithm:
+          type: string
+        issuer_name_hash:
+          type: string
+        issuer_key_hash:
+          type: string
+        serial_number:
+          type: string

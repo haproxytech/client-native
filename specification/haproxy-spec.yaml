@@ -461,13 +461,57 @@ definitions:
   ssl_certificate:
     $ref: "models/storage/ssl_certificate.yaml#/ssl_certificate"
   ssl_certificates:
-    title: SSL Files Array
+    title: SSL Certificate Files Array
     description: Array of ssl certificate files
     type: array
     items:
       $ref: "#/definitions/ssl_certificate"
-  ssl_cert_entry:
-    $ref: "models/runtime/ssl_cert_entry.yaml#/ssl_cert_entry"
+  ssl_ca_file:
+    $ref: "models/storage/ssl_ca_file.yaml#/ssl_ca_file"
+  ssl_ca_files:
+    title: SSL CA Files Array
+    description: Array of SSL CA files
+    type: array
+    items:
+      $ref: "#/definitions/ssl_ca_file"
+  ssl_crl:
+    $ref: "models/storage/ssl_crl.yaml#/ssl_crl"
+  ssl_crls:
+    title: SSL CRL Files Array
+    description: Array of ssl crl files
+    type: array
+    items:
+      $ref: "#/definitions/ssl_crl"
+  ssl_crl_entry:
+    $ref: "models/runtime/ssl_crl_entry.yaml#/ssl_crl_entry"
+  ssl_crl_entries:
+    type: array
+    items:
+      $ref: "#/definitions/ssl_crl_entry"
+  ssl_certificate_id:
+    $ref: "models/runtime/ssl_certificate_id.yaml#/ssl_certificate_id"
+  ssl_crt_list:
+    $ref: "models/runtime/ssl_crt_list.yaml#/ssl_crt_list"
+  ssl_crt_lists:
+    title: SSL Crt List Array
+    description: Array of SSL Crt List
+    type: array
+    items:
+      $ref: "#/definitions/ssl_crt_list"
+  ssl_crt_list_entry:
+    $ref: "models/runtime/ssl_crt_list_entry.yaml#/ssl_crt_list_entry"
+  ssl_crt_list_entries:
+    title: SSL Crt List Entry Array
+    description: Array of SSL Crt List Entry
+    type: array
+    items:
+      $ref: "#/definitions/ssl_crt_list_entry"
+  ssl_ocsp_response:
+    $ref: "models/runtime/ssl_ocsp_response.yaml#/ssl_ocsp_response"
+  ssl_ocsp_update:
+    $ref: "models/runtime/ssl_ocsp_update.yaml#/ssl_ocsp_update"
+  ssl_providers:
+    $ref: "models/runtime/ssl_providers.yaml#/ssl_providers"
   acl_file:
     $ref: "models/runtime/acl_file.yaml#/acl_file"
   acl_files:
@@ -1158,6 +1202,28 @@ paths:
     $ref: "paths/runtime/servers.yaml#/servers"
   /services/haproxy/runtime/backends/{parent_name}/servers/{name}:
     $ref: "paths/runtime/servers.yaml#/servers_one"
+  /services/haproxy/runtime/ssl_ca_files:
+    $ref: "paths/runtime/ssl_ca_files.yaml#/ssl_ca_files"
+  /services/haproxy/runtime/ssl_ca_files/{name}:
+    $ref: "paths/runtime/ssl_ca_files.yaml#/ssl_ca_files_one"
+  /services/haproxy/runtime/ssl_ca_files/{name}/entries:
+    $ref: "paths/runtime/ssl_ca_files.yaml#/ssl_ca_files_entries"
+  /services/haproxy/runtime/ssl_ca_files/{name}/entries/{index}:
+    $ref: "paths/runtime/ssl_ca_files.yaml#/ssl_ca_files_entries_one"
+  /services/haproxy/runtime/ssl_certs:
+    $ref: "paths/runtime/ssl_certs.yaml#/ssl_certs"
+  /services/haproxy/runtime/ssl_certs/{name}:
+    $ref: "paths/runtime/ssl_certs.yaml#/ssl_certs_one"
+  /services/haproxy/runtime/ssl_crl_files:
+    $ref: "paths/runtime/ssl_crl_files.yaml#/ssl_crl_files"
+  /services/haproxy/runtime/ssl_crl_files/{name}:
+    $ref: "paths/runtime/ssl_crl_files.yaml#/ssl_crl_files_one"
+  /services/haproxy/runtime/ssl_crt_lists:
+    $ref: "paths/runtime/ssl_crt_lists.yaml#/ssl_crt_lists"
+  /services/haproxy/runtime/ssl_crt_lists/cert_entries:
+    $ref: "paths/runtime/ssl_crt_lists.yaml#/ssl_crt_list_entries"
+  /services/haproxy/runtime/ssl_crt_lists/cert_entry:
+    $ref: "paths/runtime/ssl_crt_lists.yaml#/ssl_crt_list_entry_one"
   /services/haproxy/runtime/stick_tables:
     $ref: "paths/runtime/stick_tables.yaml#/stick_tables"
   /services/haproxy/runtime/stick_tables/{name}:

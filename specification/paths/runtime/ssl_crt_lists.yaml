@@ -1,0 +1,113 @@
+ssl_crt_lists:
+  get:
+    tags:
+      - SSLRuntime
+    summary: Returns CrtList files description from runtime
+    description: Returns CrtList files description from runtime
+    produces:
+      - application/json
+    responses:
+      "200":
+        description: Successful operation
+        schema:
+          $ref: '#/definitions/ssl_crt_lists'
+      default:
+        $ref: '#/responses/DefaultError'
+ssl_crt_list_entries:
+  get:
+    tags:
+      - SSLRuntime
+    summary: Returns one CrtList runtime entries
+    description: Returns one CrtList runtime entries
+    parameters:
+      - description: SSL crt list file
+        in: query
+        name: name
+        required: true
+        type: string
+    produces:
+      - application/json
+    responses:
+      "200":
+        description: Successful operation
+        schema:
+          $ref: '#/definitions/ssl_crt_list_entries'
+      default:
+        $ref: '#/responses/DefaultError'
+ssl_crt_list_entry_one:
+  get:
+    tags:
+      - SSLRuntime
+    summary: Returns one structured runtime CrtList file
+    description: Returns one structured runtime CrtList file
+    parameters:
+      - description: SSL crt list file
+        in: query
+        name: name
+        required: true
+        type: string
+    produces:
+      - application/json
+    responses:
+      "200":
+        description: Successful operation
+        schema:
+          $ref: '#/definitions/ssl_crt_list'
+      default:
+        $ref: '#/responses/DefaultError'
+  post:
+    tags:
+      - SSLRuntime
+    summary: Adds an entry into the CrtList file
+    description: Adds an entry into the CrtList file
+    parameters:
+      - description: SSL crt list name
+        in: query
+        name: name
+        required: true
+        type: string
+      - in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/ssl_crt_list_entry'
+    produces:
+      - application/json
+    responses:
+      "201":
+        description: Successful operation
+      "400":
+        $ref: '#/responses/BadRequest'
+      "409":
+        $ref: '#/responses/AlreadyExists'
+      default:
+        $ref: '#/responses/DefaultError'
+  delete:
+    tags:
+      - SSLRuntime
+    summary: Deletes an entry from CrtList file
+    description: Deletes an entry from CrtList file
+    parameters:
+      - description: SSL crt list name
+        in: query
+        name: name
+        required: true
+        type: string
+      - description: SSL cert entry name
+        in: query
+        name: cert_file
+        required: true
+        type: string
+      - description: The line number in the crt list
+        in: query
+        name: line_number
+        required: true
+        type: integer
+        minimum: 0
+    responses:
+      "204":
+        description: Successful operation
+      "400":
+        $ref: '#/responses/BadRequest'
+      default:
+        $ref: '#/responses/DefaultError'

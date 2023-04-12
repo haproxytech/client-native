@@ -1,0 +1,20 @@
+ssl_crt_list_entry:
+  title: SSL Crt List Entry
+  description: SSL Crt List Entry
+  type: object
+  properties:
+    line_number:
+      type: integer
+      minimum: 0
+      x-nullable: false
+    file:
+      type: string
+    ssl_bind_config:
+      type: string
+      x-go-name: SSLBindConfig
+    sni_filter:
+      type: array
+      x-omitempty: true
+      x-go-name: SNIFilter
+      items:
+        type: string

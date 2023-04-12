@@ -7,25 +7,17 @@ import (
 	"strings"
 
 	native_errors "github.com/haproxytech/client-native/v6/errors"
+	"github.com/haproxytech/client-native/v6/models"
 )
 
-type CrtLists []*CrtList
-
-type CrtList struct {
-	File string
-}
-
-type CrtListEntries []*CrtListEntry
-
-type CrtListEntry struct {
-	File          string
-	SSLBindConfig string
-	SNIFilter     []string
-	LineNumber    int
-}
+// These type aliases are provided for backward compatibility.
+type CrtListEntry = models.SslCrtListEntry //nolint:gofumpt
+type CrtListEntries = models.SslCrtListEntries
+type CrtList = models.SslCrtList
+type CrtLists = models.SslCrtLists
 
 // ShowCrtLists returns CrtList files description from runtime
-func (s *SingleRuntime) ShowCrtLists() (CrtLists, error) {
+func (s *SingleRuntime) ShowCrtLists() (models.SslCrtLists, error) {
 	response, err := s.ExecuteWithResponse("show ssl crt-list")
 	if err != nil {
 		return nil, fmt.Errorf("%s %w", err.Error(), native_errors.ErrNotFound)
@@ -38,36 +30,26 @@ func (s *SingleRuntime) ShowCrtLists() (CrtLists, error) {
 // Sample output format:
 // /etc/ssl/crt-list
 // /etc/ssl/...
-func (s *SingleRuntime) parseCrtLists(output string) CrtLists {
+func (s *SingleRuntime) parseCrtLists(output string) models.SslCrtLists {
 	output = strings.TrimSpace(output)
 	if output == "" {
 		return nil
 	}
-	crtLists := CrtLists{}
 
-	lines := strings.Split(output, "\n")
-	for _, line := range lines {
-		c := s.parseCrtList(line)
-		if c != nil {
-			crtLists = append(crtLists, c)
+	list := make(models.SslCrtLists, 0, 8)
+
+	strings.SplitSeq(output, "\n")(func(line string) bool {
+		if line != "" {
+			list = append(list, &models.SslCrtList{File: line})
 		}
-	}
-	return crtLists
-}
+		return true
+	})
 
-// parseCrtList parses one line from CrtList files array and return it structured
-func (s *SingleRuntime) parseCrtList(line string) *CrtList {
-	if line == "" {
-		return nil
-	}
-	crtList := &CrtList{
-		File: line,
-	}
-	return crtList
+	return list
 }
 
 // GetCrtList returns one structured runtime CrtList file
-func (s *SingleRuntime) GetCrtList(file string) (*CrtList, error) {
+func (s *SingleRuntime) GetCrtList(file string) (*models.SslCrtList, error) {
 	crtLists, err := s.ShowCrtLists()
 	if err != nil {
 		return nil, err
@@ -82,13 +64,13 @@ func (s *SingleRuntime) GetCrtList(file string) (*CrtList, error) {
 }
 
 // ShowCrtListEntries returns one CrtList runtime entries
-func (s *SingleRuntime) ShowCrtListEntries(file string) (CrtListEntries, error) {
+func (s *SingleRuntime) ShowCrtListEntries(file string) (models.SslCrtListEntries, error) {
 	cmd := "show ssl crt-list -n " + file
 	response, err := s.ExecuteWithResponse(cmd)
 	if err != nil {
 		return nil, fmt.Errorf("%s %w", err.Error(), native_errors.ErrNotFound)
 	}
-	return ParseCrtListEntries(response)
+	return parseCrtListEntries(response)
 }
 
 // ParseCrtListEntries parses array of entries in one CrtList file
@@ -96,12 +78,12 @@ func (s *SingleRuntime) ShowCrtListEntries(file string) (CrtListEntries, error) 
 // /etc/ssl/cert-0.pem !*.crt-test.platform.domain.com !connectivitynotification.platform.domain.com !connectivitytunnel.platform.domain.com !authentication.cert.another.domain.com !*.authentication.cert.another.domain.com
 // /etc/ssl/cert-1.pem [verify optional ca-file /etc/ssl/ca-file-1.pem] *.crt-test.platform.domain.com !connectivitynotification.platform.domain.com !connectivitytunnel.platform.domain.com !authentication.cert.another.domain.com !*.authentication.cert.another.domain.com
 // /etc/ssl/cert-2.pem [verify required ca-file /etc/ssl/ca-file-2.pem]
-func ParseCrtListEntries(output string) (CrtListEntries, error) {
+func parseCrtListEntries(output string) (models.SslCrtListEntries, error) {
 	output = strings.TrimSpace(output)
 	if output == "" || strings.HasPrefix(output, "didn't find the specified filename") {
 		return nil, native_errors.ErrNotFound
 	}
-	ce := CrtListEntries{}
+	ce := models.SslCrtListEntries{}
 
 	lines := strings.Split(strings.TrimSpace(output), "\n")
 	for _, line := range lines {
@@ -119,20 +101,21 @@ func ParseCrtListEntries(output string) (CrtListEntries, error) {
 // cert2.pem [alpn h2,http/1.1]
 // certW.pem                   *.domain.tld !secure.domain.tld
 // certS.pem [curves X25519:P-256 ciphers ECDHE-ECDSA-AES256-GCM-SHA384] secure.domain.tld
-func parseCrtListEntry(line string) *CrtListEntry {
+func parseCrtListEntry(line string) *models.SslCrtListEntry {
 	if line == "" || strings.HasPrefix(strings.TrimSpace(line), "#") {
 		return nil
 	}
 
-	c := &CrtListEntry{}
+	c := &models.SslCrtListEntry{}
 	re := regexp.MustCompile(`(\S+)(?:\s\[(.*)\])?(?:\s(.*))?`)
 	matches := re.FindStringSubmatch(line)
 	if matches != nil {
 		split := strings.Split(matches[1], ":")
-		linenumber, _ := strconv.ParseInt(split[1], 0, 32)
-		c.LineNumber = int(linenumber)
+		lineNumber, _ := strconv.ParseInt(split[1], 0, 64)
+		c.LineNumber = lineNumber
 		c.File = split[0]
-		c.SSLBindConfig = matches[2]
+		//nolint:gocritic
+		c.SSLBindConfig = strings.Replace(matches[2], "\u0000", "", -1)
 		c.SNIFilter = strings.Fields(matches[3])
 	}
 
@@ -140,16 +123,40 @@ func parseCrtListEntry(line string) *CrtListEntry {
 }
 
 // AddCrtListEntry adds an entry into the CrtList file
-func (s *SingleRuntime) AddCrtListEntry(crtList string, entry CrtListEntry) error {
-	cmd := fmt.Sprintf("add ssl crt-list %s <<\n%s", crtList, entry.File)
+func (s *SingleRuntime) AddCrtListEntry(crtList string, entry models.SslCrtListEntry) error {
+	if crtList == "" {
+		return fmt.Errorf("%s %w", "Argument crtList empty", native_errors.ErrGeneral)
+	}
+	if entry.File == "" {
+		return fmt.Errorf("%s %w", "Filename empty", native_errors.ErrGeneral)
+	}
+
+	// The syntax of the command changes if any of those are set.
+	extended := entry.SSLBindConfig != "" || len(entry.SNIFilter) > 0
+
+	var sb strings.Builder
+	sb.Grow(64)
+	sb.WriteString("add ssl crt-list ")
+	sb.WriteString(crtList)
+	sb.WriteByte(' ')
+	if extended {
+		sb.WriteString("<<\n")
+	}
+	sb.WriteString(entry.File)
 	if entry.SSLBindConfig != "" {
-		cmd = fmt.Sprintf("%s [%s]", cmd, entry.SSLBindConfig)
+		sb.WriteString(" [")
+		sb.WriteString(entry.SSLBindConfig)
+		sb.WriteByte(']')
 	}
-	for _, sni := range entry.SNIFilter {
-		cmd = fmt.Sprintf("%s %s", cmd, sni)
+	if len(entry.SNIFilter) > 0 {
+		sb.WriteByte(' ')
+		sb.WriteString(strings.Join(entry.SNIFilter, " "))
 	}
-	cmd += "\n"
-	response, err := s.ExecuteWithResponse(cmd)
+	if extended {
+		sb.WriteByte('\n')
+	}
+
+	response, err := s.ExecuteWithResponse(sb.String())
 	if err != nil {
 		return fmt.Errorf("%s %w", err.Error(), native_errors.ErrGeneral)
 	}

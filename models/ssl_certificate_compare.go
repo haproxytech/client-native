@@ -45,6 +45,14 @@ func (s SslCertificate) Equal(t SslCertificate, opts ...Options) bool {
 		return false
 	}
 
+	if s.ChainIssuer != t.ChainIssuer {
+		return false
+	}
+
+	if s.ChainSubject != t.ChainSubject {
+		return false
+	}
+
 	if s.Description != t.Description {
 		return false
 	}
@@ -125,6 +133,10 @@ func (s SslCertificate) Equal(t SslCertificate, opts ...Options) bool {
 		return false
 	}
 
+	if s.Status != t.Status {
+		return false
+	}
+
 	if s.StorageName != t.StorageName {
 		return false
 	}
@@ -167,6 +179,14 @@ func (s SslCertificate) Diff(t SslCertificate, opts ...Options) map[string][]int
 
 	if s.AuthorityKeyID != t.AuthorityKeyID {
 		diff["AuthorityKeyID"] = []interface{}{s.AuthorityKeyID, t.AuthorityKeyID}
+	}
+
+	if s.ChainIssuer != t.ChainIssuer {
+		diff["ChainIssuer"] = []interface{}{s.ChainIssuer, t.ChainIssuer}
+	}
+
+	if s.ChainSubject != t.ChainSubject {
+		diff["ChainSubject"] = []interface{}{s.ChainSubject, t.ChainSubject}
 	}
 
 	if s.Description != t.Description {
@@ -247,6 +267,10 @@ func (s SslCertificate) Diff(t SslCertificate, opts ...Options) map[string][]int
 
 	if !equalPointers(s.Size, t.Size) {
 		diff["Size"] = []interface{}{ValueOrNil(s.Size), ValueOrNil(t.Size)}
+	}
+
+	if s.Status != t.Status {
+		diff["Status"] = []interface{}{s.Status, t.Status}
 	}
 
 	if s.StorageName != t.StorageName {

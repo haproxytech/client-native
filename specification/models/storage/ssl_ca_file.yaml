@@ -1,0 +1,11 @@
+ssl_ca_file:
+  title: SSL File
+  description: A file containing one or more SSL/TLS certificates and keys
+  type: object
+  properties:
+    file:
+      type: string
+    count:
+      type: string
+    storage_name:
+      type: string

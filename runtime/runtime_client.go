@@ -1031,7 +1031,7 @@ func (c *client) NewCertEntry(filename string) error {
 	if !c.runtime.IsValid() {
 		return errors.New("no valid runtime found")
 	}
-	if err := c.runtime.NewCertEntry(filename); err != nil {
+	if err := c.runtime.NewCertificate(filename); err != nil {
 		return fmt.Errorf("%s %w", c.runtime.socketPath, err)
 	}
 
@@ -1042,7 +1042,7 @@ func (c *client) SetCertEntry(filename string, payload string) error {
 	if !c.runtime.IsValid() {
 		return errors.New("no valid runtime found")
 	}
-	if err := c.runtime.SetCertEntry(filename, payload); err != nil {
+	if err := c.runtime.SetCertificate(filename, payload); err != nil {
 		return fmt.Errorf("%s %w", c.runtime.socketPath, err)
 	}
 
@@ -1053,7 +1053,7 @@ func (c *client) CommitCertEntry(filename string) error {
 	if !c.runtime.IsValid() {
 		return errors.New("no valid runtime found")
 	}
-	if err := c.runtime.CommitCertEntry(filename); err != nil {
+	if err := c.runtime.CommitCertificate(filename); err != nil {
 		return fmt.Errorf("%s %w", c.runtime.socketPath, err)
 	}
 
@@ -1064,14 +1064,14 @@ func (c *client) AbortCertEntry(filename string) error {
 	if !c.runtime.IsValid() {
 		return errors.New("no valid runtime found")
 	}
-	if err := c.runtime.AbortCertEntry(filename); err != nil {
+	if err := c.runtime.AbortCertificate(filename); err != nil {
 		return fmt.Errorf("%s %w", c.runtime.socketPath, err)
 	}
 
 	return nil
 }
 
-func (c *client) AddCrtListEntry(crtList string, entry CrtListEntry) error {
+func (c *client) AddCrtListEntry(crtList string, entry models.SslCrtListEntry) error {
 	if !c.runtime.IsValid() {
 		return errors.New("no valid runtime found")
 	}
@@ -1100,9 +1100,359 @@ func (c *client) DeleteCertEntry(filename string) error {
 		return errors.New("no valid runtime found")
 	}
 
-	if err := c.runtime.DeleteCertEntry(filename); err != nil {
+	if err := c.runtime.DeleteCertificate(filename); err != nil {
 		return fmt.Errorf("%s %w", c.runtime.socketPath, err)
 	}
 
+	return nil
+}
+
+// ShowCAFiles returns CA files description from runtime
+func (c *client) ShowCAFiles() (models.SslCaFiles, error) {
+	if !c.runtime.IsValid() {
+		return nil, errors.New("no valid runtime found")
+	}
+	sslCaFile, err := c.runtime.ShowCAFiles()
+	if err != nil {
+		return nil, fmt.Errorf("cannot retrieve SSL CA files: %w", err)
+	}
+	return sslCaFile, nil
+}
+
+// GetCAFile returns one structured runtime CA file
+func (c *client) GetCAFile(name string) (*models.SslCaFile, error) {
+	if !c.runtime.IsValid() {
+		return nil, errors.New("no valid runtime found")
+	}
+	sslCaFile, err := c.runtime.GetCAFile(name)
+	if err != nil {
+		return nil, fmt.Errorf("%s %w", c.runtime.socketPath, err)
+	}
+	return sslCaFile, nil
+}
+
+// ShowCAFile returns one CA runtime file
+func (c *client) ShowCAFile(name string, index *int64) (*models.SslCertificate, error) {
+	if !c.runtime.IsValid() {
+		return nil, errors.New("no valid runtime found")
+	}
+	sslCertEntry, err := c.runtime.ShowCAFile(name, index)
+	if err != nil {
+		return nil, fmt.Errorf("%s %w", c.runtime.socketPath, err)
+	}
+	return sslCertEntry, nil
+}
+
+// NewCAFile creates a new empty CA file
+func (c *client) NewCAFile(name string) error {
+	if !c.runtime.IsValid() {
+		return errors.New("no valid runtime found")
+	}
+	if err := c.runtime.NewCAFile(name); err != nil {
+		return fmt.Errorf("%s %w", c.runtime.socketPath, err)
+	}
+	return nil
+}
+
+// SetCAFile sets a certificate payload to a CA file
+func (c *client) SetCAFile(name, payload string) error {
+	if !c.runtime.IsValid() {
+		return errors.New("no valid runtime found")
+	}
+	if err := c.runtime.SetCAFile(name, payload); err != nil {
+		return fmt.Errorf("%s %w", c.runtime.socketPath, err)
+	}
+	return nil
+}
+
+// CommitCAFile commits a CA file
+func (c *client) CommitCAFile(name string) error {
+	if !c.runtime.IsValid() {
+		return errors.New("no valid runtime found")
+	}
+	if err := c.runtime.CommitCAFile(name); err != nil {
+		return fmt.Errorf("%s %w", c.runtime.socketPath, err)
+	}
+	return nil
+}
+
+// AbortCAFile aborts and destroys a CA file update transaction
+func (c *client) AbortCAFile(name string) error {
+	if !c.runtime.IsValid() {
+		return errors.New("no valid runtime found")
+	}
+	if err := c.runtime.AbortCAFile(name); err != nil {
+		return fmt.Errorf("%s %w", c.runtime.socketPath, err)
+	}
+	return nil
+}
+
+// AddCAFileEntry adds an entry into the CA file
+func (c *client) AddCAFileEntry(name, payload string) error {
+	if !c.runtime.IsValid() {
+		return errors.New("no valid runtime found")
+	}
+	if err := c.runtime.AddCAFileEntry(name, payload); err != nil {
+		return fmt.Errorf("%s %w", c.runtime.socketPath, err)
+	}
+	return nil
+}
+
+// DeleteCAFile deletes a CA file
+func (c *client) DeleteCAFile(name string) error {
+	if !c.runtime.IsValid() {
+		return errors.New("no valid runtime found")
+	}
+	if err := c.runtime.DeleteCAFile(name); err != nil {
+		return fmt.Errorf("%s %w", c.runtime.socketPath, err)
+	}
+	return nil
+}
+
+// ShowCerts returns cert files description from runtime
+func (c *client) ShowCerts() (models.SslCertificates, error) {
+	if !c.runtime.IsValid() {
+		return nil, errors.New("no valid runtime found")
+	}
+	sslCertificates, err := c.runtime.ShowCerts()
+	if err != nil {
+		return nil, fmt.Errorf("%s %w", c.runtime.socketPath, err)
+	}
+	return sslCertificates, nil
+}
+
+// GetCert returns one certificate file
+func (c *client) GetCert(name string) (*models.SslCertificate, error) {
+	if !c.runtime.IsValid() {
+		return nil, errors.New("no valid runtime found")
+	}
+	sslCertificate, err := c.runtime.GetCert(name)
+	if err != nil {
+		return nil, fmt.Errorf("%s %w", c.runtime.socketPath, err)
+	}
+	return sslCertificate, nil
+}
+
+// ShowCertEntry returns a structured certificate
+func (c *client) ShowCertificate(name string) (*models.SslCertificate, error) {
+	if !c.runtime.IsValid() {
+		return nil, errors.New("no valid runtime found")
+	}
+	cert, err := c.runtime.ShowCertificate(name)
+	if err != nil {
+		return nil, fmt.Errorf("%s %w", c.runtime.socketPath, err)
+	}
+	return cert, nil
+}
+
+// ShowCrlFiles returns Crl files description from runtime
+func (c *client) ShowCrlFiles() (models.SslCrls, error) {
+	if !c.runtime.IsValid() {
+		return nil, errors.New("no valid runtime found")
+	}
+	sslCrlFiles, err := c.runtime.ShowCrlFiles()
+	if err != nil {
+		return nil, fmt.Errorf("%s %w", c.runtime.socketPath, err)
+	}
+	return sslCrlFiles, nil
+}
+
+// GetCrlFile returns one structured runtime Crl file
+func (c *client) GetCrlFile(name string) (*models.SslCrl, error) {
+	if !c.runtime.IsValid() {
+		return nil, errors.New("no valid runtime found")
+	}
+	sslCrlFile, err := c.runtime.GetCrlFile(name)
+	if err != nil {
+		return nil, fmt.Errorf("%s %w", c.runtime.socketPath, err)
+	}
+	return sslCrlFile, nil
+}
+
+// ShowCrlFile returns one Crl runtime file
+func (c *client) ShowCrlFile(name string, index *int64) (*models.SslCrlEntries, error) {
+	if !c.runtime.IsValid() {
+		return nil, errors.New("no valid runtime found")
+	}
+	entries, err := c.runtime.ShowCrlFile(name, index)
+	if err != nil {
+		return nil, fmt.Errorf("%s %w", c.runtime.socketPath, err)
+	}
+	return entries, nil
+}
+
+// NewCrlFile creates a Crl file into the Crt-list file
+func (c *client) NewCrlFile(name string) error {
+	if !c.runtime.IsValid() {
+		return errors.New("no valid runtime found")
+	}
+	if err := c.runtime.NewCrlFile(name); err != nil {
+		return fmt.Errorf("%s %w", c.runtime.socketPath, err)
+	}
+	return nil
+}
+
+// SetCrlFile sets a payload to a Crl file
+func (c *client) SetCrlFile(name string, payload string) error {
+	if !c.runtime.IsValid() {
+		return errors.New("no valid runtime found")
+	}
+	if err := c.runtime.SetCrlFile(name, payload); err != nil {
+		return fmt.Errorf("%s %w", c.runtime.socketPath, err)
+	}
+	return nil
+}
+
+// CommitCrlFile commits a Crl file
+func (c *client) CommitCrlFile(name string) error {
+	if !c.runtime.IsValid() {
+		return errors.New("no valid runtime found")
+	}
+	if err := c.runtime.CommitCrlFile(name); err != nil {
+		return fmt.Errorf("%s %w", c.runtime.socketPath, err)
+	}
+	return nil
+}
+
+// AbortCrlFile aborts and destroys a Crl file update transaction
+func (c *client) AbortCrlFile(name string) error {
+	if !c.runtime.IsValid() {
+		return errors.New("no valid runtime found")
+	}
+	if err := c.runtime.AbortCrlFile(name); err != nil {
+		return fmt.Errorf("%s %w", c.runtime.socketPath, err)
+	}
+	return nil
+}
+
+// DeleteCrlFile deletes a cert entry
+func (c *client) DeleteCrlFile(name string) error {
+	if !c.runtime.IsValid() {
+		return errors.New("no valid runtime found")
+	}
+	if err := c.runtime.DeleteCrlFile(name); err != nil {
+		return fmt.Errorf("%s %w", c.runtime.socketPath, err)
+	}
+	return nil
+}
+
+// ShowCrtLists returns CrtList files description from runtime
+func (c *client) ShowCrtLists() (models.SslCrtLists, error) {
+	if !c.runtime.IsValid() {
+		return nil, errors.New("no valid runtime found")
+	}
+	sslCrtLists, err := c.runtime.ShowCrtLists()
+	if err != nil {
+		return nil, fmt.Errorf("%s %w", c.runtime.socketPath, err)
+	}
+	return sslCrtLists, nil
+}
+
+// GetCrtList returns one structured runtime CrtList file
+func (c *client) GetCrtList(name string) (*models.SslCrtList, error) {
+	if !c.runtime.IsValid() {
+		return nil, errors.New("no valid runtime found")
+	}
+	sslCrtList, err := c.runtime.GetCrtList(name)
+	if err != nil {
+		return nil, fmt.Errorf("%s %w", c.runtime.socketPath, err)
+	}
+	return sslCrtList, nil
+}
+
+// ShowCrtListEntries returns one CrtList runtime entries
+func (c *client) ShowCrtListEntries(name string) (models.SslCrtListEntries, error) {
+	if !c.runtime.IsValid() {
+		return nil, errors.New("no valid runtime found")
+	}
+	sslCrtListEntries, err := c.runtime.ShowCrtListEntries(name)
+	if err != nil {
+		return nil, fmt.Errorf("%s %w", c.runtime.socketPath, err)
+	}
+	return sslCrtListEntries, nil
+}
+
+// ShowOcspResponses returns the IDs of the ocsp responses as well as the corresponding frontend
+// certificate's path, the issuer's name and key hash and the serial number of
+// the certificate for which the OCSP response was built
+func (c *client) ShowOcspResponses() ([]*models.SslCertificateID, error) {
+	if !c.runtime.IsValid() {
+		return nil, errors.New("no valid runtime found")
+	}
+	sslOcspResponses, err := c.runtime.ShowOcspResponses()
+	if err != nil {
+		return nil, fmt.Errorf("%s %w", c.runtime.socketPath, err)
+	}
+	return sslOcspResponses, nil
+}
+
+// ShowOcspResponse returns the contents of the corresponding OCSP response
+func (c *client) ShowOcspResponse(idOrPath string, ofmt ...OcspResponseFmt) (*models.SslOcspResponse, error) {
+	if !c.runtime.IsValid() {
+		return nil, errors.New("no valid runtime found")
+	}
+	sslOcspResponse, err := c.runtime.ShowOcspResponse(idOrPath, ofmt...)
+	if err != nil {
+		return nil, fmt.Errorf("%s %w", c.runtime.socketPath, err)
+	}
+	return sslOcspResponse, nil
+}
+
+// ShowOcspUpdates displays the entries concerned by the OCSP update
+func (c *client) ShowOcspUpdates() ([]*models.SslOcspUpdate, error) {
+	if !c.runtime.IsValid() {
+		return nil, errors.New("no valid runtime found")
+	}
+	sslOcspUpdates, err := c.runtime.ShowOcspUpdates()
+	if err != nil {
+		return nil, fmt.Errorf("%s %w", c.runtime.socketPath, err)
+	}
+	return sslOcspUpdates, nil
+}
+
+// SetOcspResponse update an OCSP Response for a certificate using a payload
+func (c *client) SetOcspResponse(payload string) error {
+	if !c.runtime.IsValid() {
+		return errors.New("no valid runtime found")
+	}
+	if err := c.runtime.SetOcspResponse(payload); err != nil {
+		return fmt.Errorf("%s %w", c.runtime.socketPath, err)
+	}
+	return nil
+}
+
+// UpdateOcspResponse creates an OCSP request for the specified certFile and send it to the OCSP Responder
+// whose URI is specified in the AIA field of the certificate
+func (c *client) UpdateOcspResponse(name string) (*models.SslOcspResponse, error) {
+	if !c.runtime.IsValid() {
+		return nil, errors.New("no valid runtime found")
+	}
+	sslOcspResponse, err := c.runtime.UpdateOcspResponse(name)
+	if err != nil {
+		return nil, fmt.Errorf("%s %w", c.runtime.socketPath, err)
+	}
+	return sslOcspResponse, nil
+}
+
+// ShowSSLProviders shows the names of the providers loaded by OpenSSL during init
+func (c *client) ShowSSLProviders() (*models.SslProviders, error) {
+	if !c.runtime.IsValid() {
+		return nil, errors.New("no valid runtime found")
+	}
+	sslProviders, err := c.runtime.ShowSSLProviders()
+	if err != nil {
+		return nil, fmt.Errorf("%s %w", c.runtime.socketPath, err)
+	}
+	return sslProviders, nil
+}
+
+// SetRateLimitSSLSessionGlobal sets the SSL session global rate limit
+func (c *client) SetRateLimitSSLSessionGlobal(value uint64) error {
+	if !c.runtime.IsValid() {
+		return errors.New("no valid runtime found")
+	}
+	if err := c.runtime.SetRateLimitSSLSessionGlobal(value); err != nil {
+		return fmt.Errorf("%s %w", c.runtime.socketPath, err)
+	}
 	return nil
 }

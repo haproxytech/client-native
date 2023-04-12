@@ -1,0 +1,21 @@
+ssl_ocsp_update:
+  title: SSL OCSP Update
+  description: SSL OCSP Update
+  type: object
+  properties:
+    cert_id:
+      type: string
+    path:
+      type: string
+    next_update:
+      type: string
+    last_update:
+      type: string
+    successes:
+      type: integer
+    failures:
+      type: integer
+    last_update_status:
+      type: integer
+    last_update_status_str:
+      type: string

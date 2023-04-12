@@ -1,0 +1,109 @@
+ssl_certs:
+  get:
+    tags:
+      - SSLRuntime
+    summary: Return a list of SSL certificate files
+    description: Returns certificate files descriptions from runtime.
+    operationId: getAllCerts
+    produces:
+      - application/json
+    responses:
+      "200":
+        description: Successful operation
+        schema:
+          $ref: '#/definitions/ssl_certificates'
+      default:
+        $ref: '#/responses/DefaultError'
+  post:
+    tags:
+      - SSLRuntime
+    summary: Create a new SSL certificate file
+    description: Creates a new SSL certificate file using the runtime socket.
+    operationId: createCert
+    consumes:
+      - multipart/form-data
+    parameters:
+      - description: Certificate file
+        in: formData
+        name: file_upload
+        required: true
+        type: file
+        x-mimetype: text/plain
+    produces:
+      - application/json
+    responses:
+      "201":
+        description: Certificate created
+      "400":
+        $ref: '#/responses/BadRequest'
+      "409":
+        $ref: '#/responses/AlreadyExists'
+      default:
+        $ref: '#/responses/DefaultError'
+ssl_certs_one:
+  get:
+    tags:
+      - SSLRuntime
+    summary: Return one structured certificate
+    description: Returns one structured certificate using the runtime socket.
+    operationId: getCert
+    parameters:
+      - description: SSL certificate name
+        in: path
+        name: name
+        required: true
+        type: string
+    produces:
+      - application/json
+    responses:
+      "200":
+        description: Successful operation
+        schema:
+          $ref: '#/definitions/ssl_certificate'
+      default:
+        $ref: '#/responses/DefaultError'
+  put:
+    tags:
+      - SSLRuntime
+    summary: Replace the contents of a certificate
+    description: Sets a certificate payload using the runtime socket.
+    operationId: replaceCert
+    consumes:
+      - multipart/form-data
+    parameters:
+      - description: SSL certificate name
+        in: path
+        name: name
+        required: true
+        type: string
+      - in: formData
+        name: file_upload
+        required: true
+        type: file
+        x-mimetype: text/plain
+    responses:
+      "200":
+        description: File updated
+      "400":
+        $ref: '#/responses/BadRequest'
+      default:
+        $ref: '#/responses/DefaultError'
+  delete:
+    tags:
+      - SSLRuntime
+    summary: Delete a certificate
+    description: Deletes a certificate using the runtime socket.
+    operationId: deleteCert
+    parameters:
+      - description: SSL certificate name
+        in: path
+        name: name
+        required: true
+        type: string
+    responses:
+      "204":
+        description: File deleted
+      "400":
+        $ref: '#/responses/BadRequest'
+      default:
+        $ref: '#/responses/DefaultError'

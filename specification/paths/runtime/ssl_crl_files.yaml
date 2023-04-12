@@ -1,0 +1,118 @@
+ssl_crl_files:
+  get:
+    tags:
+      - SSLRuntime
+    summary: Return an array of all the CRL files
+    description: Returns all the certificate revocation list files using the runtime socket.
+    operationId: getAllCrl
+    produces:
+      - application/json
+    responses:
+      "200":
+        description: Successful operation
+        schema:
+          $ref: '#/definitions/ssl_crls'
+      default:
+        $ref: '#/responses/DefaultError'
+  post:
+    tags:
+      - SSLRuntime
+    summary: Create a new CRL file
+    description: Creates a new CRL file with its contents using the runtime socket.
+    operationId: createCrl
+    consumes:
+      - multipart/form-data
+    parameters:
+      - description: CRL file
+        in: formData
+        name: file_upload
+        required: true
+        type: file
+        x-mimetype: text/plain
+    produces:
+      - application/json
+    responses:
+      "201":
+        description: CRL file created
+      "400":
+        $ref: '#/responses/BadRequest'
+      "409":
+        $ref: '#/responses/AlreadyExists'
+      default:
+        $ref: '#/responses/DefaultError'
+ssl_crl_files_one:
+  get:
+    tags:
+      - SSLRuntime
+    summary: Get the contents of a CRL file
+    description: Returns one or all entries in a CRL file using the runtime socket.
+    operationId: getCrl
+    parameters:
+      - description: CRL file name
+        in: path
+        name: name
+        required: true
+        type: string
+      - description: Entry index to return. Starts at 1. If not provided, all entries are returned.
+        in: query
+        name: index
+        type: integer
+        minimum: 1
+        x-nullable: true
+    produces:
+      - application/json
+    responses:
+      "200":
+        description: Successful operation
+        schema:
+          $ref: '#/definitions/ssl_crl_entries'
+      "404":
+        $ref: '#/responses/NotFound'
+      default:
+        $ref: '#/responses/DefaultError'
+  put:
+    tags:
+      - SSLRuntime
+    summary: Replace the contents of a CRL file
+    description: Replaces the contents of a CRL file using the runtime socket.
+    operationId: replaceCrl
+    consumes:
+      - multipart/form-data
+    parameters:
+      - description: CRL file name
+        in: path
+        name: name
+        required: true
+        type: string
+      - description: CRL file contents
+        in: formData
+        name: file_upload
+        required: true
+        type: file
+        x-mimetype: text/plain
+    responses:
+      "200":
+        description: File modified
+      "400":
+        $ref: '#/responses/BadRequest'
+      default:
+        $ref: '#/responses/DefaultError'
+  delete:
+    tags:
+      - SSLRuntime
+    summary: Delete a CRL file
+    description: Deletes a CRL file using the runtime socket.
+    operationId: deleteCrl
+    parameters:
+      - description: CRL file name
+        in: path
+        name: name
+        required: true
+        type: string
+    responses:
+      "204":
+        description: File deleted
+      "400":
+        $ref: '#/responses/BadRequest'
+      default:
+        $ref: '#/responses/DefaultError'

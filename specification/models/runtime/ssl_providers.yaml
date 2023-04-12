@@ -1,0 +1,9 @@
+ssl_providers:
+  title: SSL Providers
+  description: SSL Providers
+  type: object
+  properties:
+    providers:
+      type: array
+      items:
+        type: string

@@ -15,6 +15,11 @@ ssl_certificate:
       readOnly: true
       x-nullable: true
       description: File size in bytes.
+    status:
+      type: string
+      readOnly: true
+      x-omitempty: true
+      description: Only set when using the runtime API.
     serial:
       type: string
     not_before:
@@ -55,3 +60,9 @@ ssl_certificate:
       type: string
     subject_key_id:
       type: string
+    chain_subject:
+      type: string
+      x-omitempty: true
+    chain_issuer:
+      type: string
+      x-omitempty: true

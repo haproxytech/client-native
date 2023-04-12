@@ -4,7 +4,8 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/haproxytech/client-native/v5/misc"
+	"github.com/haproxytech/client-native/v6/misc"
+	"github.com/haproxytech/client-native/v6/models"
 )
 
 func TestSingleRuntime_ShowCrtLists(t *testing.T) {
@@ -19,15 +20,15 @@ func TestSingleRuntime_ShowCrtLists(t *testing.T) {
 	tests := []struct {
 		name           string
 		fields         fields
-		want           CrtLists
+		want           models.SslCrtLists
 		wantErr        bool
 		socketResponse map[string]string
 	}{
 		{
 			name:   "Simple show crt-list files, should return a file",
 			fields: fields{socketPath: haProxy.Addr().String()},
-			want: CrtLists{
-				&CrtList{
+			want: models.SslCrtLists{
+				&models.SslCrtList{
 					File: "/etc/haproxy/crt-list",
 				},
 			},
@@ -85,7 +86,7 @@ func TestSingleRuntime_GetCrtList(t *testing.T) {
 		name           string
 		fields         fields
 		args           args
-		want           *CrtList
+		want           *models.SslCrtList
 		wantErr        bool
 		socketResponse map[string]string
 	}{
@@ -95,7 +96,7 @@ func TestSingleRuntime_GetCrtList(t *testing.T) {
 			args: args{
 				file: "/etc/haproxy/crt-list",
 			},
-			want: &CrtList{
+			want: &models.SslCrtList{
 				File: "/etc/haproxy/crt-list",
 			},
 			socketResponse: map[string]string{
@@ -167,7 +168,7 @@ func TestSingleRuntime_ShowCrtListEntries(t *testing.T) {
 		name           string
 		fields         fields
 		args           args
-		want           CrtListEntries
+		want           models.SslCrtListEntries
 		wantErr        bool
 		socketResponse map[string]string
 	}{
@@ -177,8 +178,8 @@ func TestSingleRuntime_ShowCrtListEntries(t *testing.T) {
 			args: args{
 				file: "/etc/haproxy/crt-list",
 			},
-			want: CrtListEntries{
-				&CrtListEntry{
+			want: models.SslCrtListEntries{
+				&models.SslCrtListEntry{
 					LineNumber: 1,
 					File:       "/etc/ssl/cert-0.pem",
 					SNIFilter: []string{
@@ -189,7 +190,7 @@ func TestSingleRuntime_ShowCrtListEntries(t *testing.T) {
 						"!*.authentication.cert.another.domain.com",
 					},
 				},
-				&CrtListEntry{
+				&models.SslCrtListEntry{
 					LineNumber:    2,
 					File:          "/etc/ssl/cert-1.pem",
 					SSLBindConfig: "verify optional ca-file /etc/ssl/ca-file-1.pem",
@@ -198,7 +199,7 @@ func TestSingleRuntime_ShowCrtListEntries(t *testing.T) {
 						"!connectivitynotification.platform.domain.com",
 					},
 				},
-				&CrtListEntry{
+				&models.SslCrtListEntry{
 					LineNumber:    4,
 					File:          "/etc/ssl/cert-2.pem",
 					SSLBindConfig: "verify required ca-file /etc/ssl/ca-file-2.pem",
@@ -261,7 +262,7 @@ func TestSingleRuntime_AddCrtListEntry(t *testing.T) {
 	}
 	type args struct {
 		crtList string
-		entry   CrtListEntry
+		entry   models.SslCrtListEntry
 	}
 	tests := []struct {
 		name           string
@@ -274,37 +275,16 @@ func TestSingleRuntime_AddCrtListEntry(t *testing.T) {
 			name:   "add crt-list entries to crt-list file, should return no error",
 			fields: fields{socketPath: haProxy.Addr().String()},
 			args: args{
-				crtList: "/etc/haproxy/crt-list",
-				entry: CrtListEntry{
+				crtList: "crt-list1",
+				entry: models.SslCrtListEntry{
 					File:          "/etc/ssl/cert-0.pem",
 					SSLBindConfig: "alpn h2",
-					SNIFilter: []string{
-						"test.domain.com",
-					},
+					SNIFilter:     []string{"test.domain.com"},
 				},
 			},
 			wantErr: false,
 			socketResponse: map[string]string{
-				"add ssl crt-list /etc/haproxy/crt-list <<\n/etc/ssl/cert-0.pem [alpn h2] test.domain.com\n": ` Inserting certificate '/etc/ssl/cert-0.pem' in crt-list '/etc/ssl/crt-list'.
-				Success!
-				`,
-			},
-		},
-		{
-			name:   "add crt-list entries to crt-list file without SSLBindConfig, should return no error",
-			fields: fields{socketPath: haProxy.Addr().String()},
-			args: args{
-				crtList: "/etc/haproxy/crt-list",
-				entry: CrtListEntry{
-					File: "/etc/ssl/cert-0.pem",
-					SNIFilter: []string{
-						"test.domain.com",
-					},
-				},
-			},
-			wantErr: false,
-			socketResponse: map[string]string{
-				"add ssl crt-list /etc/haproxy/crt-list <<\n/etc/ssl/cert-0.pem test.domain.com\n": ` Inserting certificate '/etc/ssl/cert-0.pem' in crt-list '/etc/ssl/crt-list'.
+				"add ssl crt-list crt-list1 <<\n/etc/ssl/cert-0.pem [alpn h2] test.domain.com\n": ` Inserting certificate '/etc/ssl/cert-0.pem' in crt-list '/etc/ssl/crt-list'.
 				Success!
 				`,
 			},
@@ -314,9 +294,8 @@ func TestSingleRuntime_AddCrtListEntry(t *testing.T) {
 			fields: fields{socketPath: haProxy.Addr().String()},
 			args: args{
 				crtList: "/etc/haproxy/crt-list",
-				entry: CrtListEntry{
-					File:      "/etc/ssl/not_known.pem",
-					SNIFilter: []string{},
+				entry: models.SslCrtListEntry{
+					File: "/etc/ssl/not_known.pem",
 				},
 			},
 			wantErr: true,

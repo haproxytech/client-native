@@ -42,6 +42,12 @@ type SslCertificate struct {
 	// authority key id
 	AuthorityKeyID string `json:"authority_key_id,omitempty"`
 
+	// chain issuer
+	ChainIssuer string `json:"chain_issuer,omitempty"`
+
+	// chain subject
+	ChainSubject string `json:"chain_subject,omitempty"`
+
 	// description
 	Description string `json:"description,omitempty"`
 
@@ -84,6 +90,10 @@ type SslCertificate struct {
 	// File size in bytes.
 	// Read Only: true
 	Size *int64 `json:"size,omitempty"`
+
+	// Only set when using the runtime API.
+	// Read Only: true
+	Status string `json:"status,omitempty"`
 
 	// storage name
 	StorageName string `json:"storage_name,omitempty"`
@@ -168,6 +178,10 @@ func (m *SslCertificate) ContextValidate(ctx context.Context, formats strfmt.Reg
 		res = append(res, err)
 	}
 
+	if err := m.contextValidateStatus(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
 	if len(res) > 0 {
 		return errors.CompositeValidationError(res...)
 	}
@@ -222,6 +236,15 @@ func (m *SslCertificate) contextValidateNotBefore(ctx context.Context, formats s
 func (m *SslCertificate) contextValidateSize(ctx context.Context, formats strfmt.Registry) error {
 
 	if err := validate.ReadOnly(ctx, "size", "body", m.Size); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *SslCertificate) contextValidateStatus(ctx context.Context, formats strfmt.Registry) error {
+
+	if err := validate.ReadOnly(ctx, "status", "body", string(m.Status)); err != nil {
 		return err
 	}
 

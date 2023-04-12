@@ -1,0 +1,34 @@
+ssl_crl_entry:
+  title: One CRL Entry
+  description: A certificate revocation list entry.
+  type: object
+  properties:
+    storage_name:
+      type: string
+    status:
+      type: string
+    version:
+      type: string
+    last_update:
+      type: string
+      format: date
+    next_update:
+      type: string
+      format: date
+    revoked_certificates:
+      type: array
+      x-omitempty: true
+      items:
+        type: object
+        x-go-name: RevokedCertificates
+        properties:
+          serial_number:
+            type: string
+          revocation_date:
+            type: string
+            format: date
+
+    signature_algorithm:
+      type: string
+    issuer:
+      type: string

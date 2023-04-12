@@ -142,14 +142,44 @@ type Raw interface {
 	ExecuteRaw(command string) (string, error)
 }
 
-type Cert interface {
-	NewCertEntry(filename string) error
-	SetCertEntry(filename, payload string) error
-	CommitCertEntry(filename string) error
-	AbortCertEntry(filename string) error
-	AddCrtListEntry(crtList string, entry CrtListEntry) error
+type SSL interface {
+	ShowCAFiles() (models.SslCaFiles, error)
+	GetCAFile(name string) (*models.SslCaFile, error)
+	ShowCAFile(name string, index *int64) (*models.SslCertificate, error)
+	NewCAFile(name string) error
+	SetCAFile(name, payload string) error
+	CommitCAFile(name string) error
+	AbortCAFile(name string) error
+	AddCAFileEntry(name, payload string) error
+	DeleteCAFile(name string) error
+	ShowCerts() (models.SslCertificates, error)
+	GetCert(name string) (*models.SslCertificate, error)
+	ShowCertificate(name string) (*models.SslCertificate, error)
+	NewCertEntry(name string) error
+	SetCertEntry(name, payload string) error
+	CommitCertEntry(name string) error
+	AbortCertEntry(name string) error
+	DeleteCertEntry(name string) error
+	ShowCrlFiles() (models.SslCrls, error)
+	GetCrlFile(name string) (*models.SslCrl, error)
+	ShowCrlFile(name string, index *int64) (*models.SslCrlEntries, error)
+	NewCrlFile(name string) error
+	SetCrlFile(name string, payload string) error
+	CommitCrlFile(name string) error
+	AbortCrlFile(name string) error
+	DeleteCrlFile(name string) error
+	ShowCrtLists() (models.SslCrtLists, error)
+	GetCrtList(name string) (*models.SslCrtList, error)
+	ShowCrtListEntries(name string) (models.SslCrtListEntries, error)
+	AddCrtListEntry(crtList string, entry models.SslCrtListEntry) error
 	DeleteCrtListEntry(crtList, filename string, lineNumber *int64) error
-	DeleteCertEntry(filename string) error
+	ShowOcspResponses() ([]*models.SslCertificateID, error)
+	ShowOcspResponse(idOrPath string, ofmt ...OcspResponseFmt) (*models.SslOcspResponse, error)
+	ShowOcspUpdates() ([]*models.SslOcspUpdate, error)
+	SetOcspResponse(payload string) error
+	UpdateOcspResponse(name string) (*models.SslOcspResponse, error)
+	ShowSSLProviders() (*models.SslProviders, error)
+	SetRateLimitSSLSessionGlobal(value uint64) error
 }
 
 type Runtime interface {
@@ -161,7 +191,7 @@ type Runtime interface {
 	ACLs
 	Tables
 	Raw
-	Cert
+	SSL
 	SocketPath() string
 	IsStatsSocket() bool
 }
