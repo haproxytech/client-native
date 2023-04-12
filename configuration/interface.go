@@ -63,6 +63,7 @@ type Configuration interface {
 	Site
 	StickRule
 	ServiceI
+	Table
 	TCPCheck
 	TCPRequestRule
 	TCPResponseRule

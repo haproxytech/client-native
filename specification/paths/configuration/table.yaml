@@ -1,0 +1,185 @@
+tables:
+  get:
+    summary: Return an array of tables
+    description: Returns an array of all tables that are configured in specified peer section.
+    operationId: getTables
+    tags:
+      - Table
+    parameters:
+      - name: peer_section
+        in: query
+        description: Parent peer section name
+        required: true
+        type: string
+      - $ref: "#/parameters/transaction_id"
+    responses:
+      '200':
+        description: Successful operation
+        headers:
+          Configuration-Version:
+            description: Configuration file version
+            type: string
+        schema:
+          type: object
+          required:
+            - data
+          properties:
+            data:
+              $ref: "#/definitions/table"
+            _version:
+              type: integer
+      'default':
+        $ref: '#/responses/DefaultError'
+  post:
+    summary: Add a new table
+    description: Adds a new table in the specified peer section in the configuration file.
+    operationId: createTable
+    tags:
+      - Table
+    parameters:
+      - name: peer_section
+        in: query
+        description: Parent peer section name
+        required: true
+        type: string
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/table'
+      - $ref: "#/parameters/transaction_id"
+      - $ref: "#/parameters/version"
+      - $ref: "#/parameters/force_reload"
+    responses:
+      '202':
+        description: Configuration change accepted and reload requested
+        headers:
+          Reload-ID:
+            description: ID of the requested reload
+            type: string
+        schema:
+          $ref: "#/definitions/table"
+      '201':
+        description: Table created
+        schema:
+          $ref: "#/definitions/table"
+      '409':
+        $ref: '#/responses/AlreadyExists'
+      '400':
+        $ref: '#/responses/BadRequest'
+      'default':
+        $ref: '#/responses/DefaultError'
+table:
+  get:
+    summary: Return one table
+    description: Returns one table configuration by it's name in the specified peer section.
+    operationId: getTable
+    tags:
+      - Table
+    parameters:
+      - name: name
+        in: path
+        description: Table name
+        required: true
+        type: string
+      - name: peer_section
+        in: query
+        description: Parent peers name
+        required: true
+        type: string
+      - $ref: "#/parameters/transaction_id"
+    responses:
+      '200':
+        description: Successful operation
+        headers:
+          Configuration-Version:
+            description: Configuration file version
+            type: string
+        schema:
+          type: object
+          properties:
+            data:
+              $ref: "#/definitions/table"
+            _version:
+              type: integer
+      '404':
+        $ref: '#/responses/AlreadyExists'
+      'default':
+        $ref: '#/responses/DefaultError'
+  put:
+    summary: Replace a table
+    description: Replaces a table configuration by it's name in the specified peer section.
+    operationId: replaceTable
+    tags:
+      - Table
+    parameters:
+      - name: name
+        in: path
+        description: Table name
+        required: true
+        type: string
+      - name: peer_section
+        in: query
+        description: Parent peers name
+        required: true
+        type: string
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/table'
+      - $ref: "#/parameters/transaction_id"
+      - $ref: "#/parameters/version"
+      - $ref: "#/parameters/force_reload"
+    responses:
+      '202':
+        description: Configuration change accepted and reload requested
+        headers:
+          Reload-ID:
+            description: ID of the requested reload
+            type: string
+        schema:
+          $ref: "#/definitions/table"
+      '200':
+        description: Table replaced
+        schema:
+          $ref: "#/definitions/table"
+      '400':
+        $ref: '#/responses/BadRequest'
+      '404':
+        $ref: '#/responses/NotFound'
+      'default':
+        $ref: '#/responses/DefaultError'
+  delete:
+    summary: Delete a table
+    description: Deletes a table configuration by it's name in the specified peer section.
+    operationId: deleteTable
+    tags:
+      - Table
+    parameters:
+      - name: name
+        in: path
+        description: Table name
+        required: true
+        type: string
+      - name: peer_section
+        in: query
+        description: Parent peers name
+        required: true
+        type: string
+      - $ref: "#/parameters/transaction_id"
+      - $ref: "#/parameters/version"
+      - $ref: "#/parameters/force_reload"
+    responses:
+      '202':
+        description: Configuration change accepted and reload requested
+        headers:
+          Reload-ID:
+            description: ID of the requested reload
+            type: string
+      '204':
+        description: Table deleted
+      '404':
+        $ref: '#/responses/NotFound'
+      'default':
+        $ref: '#/responses/DefaultError'
