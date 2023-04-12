@@ -561,6 +561,14 @@ definitions:
     $ref: "models/configuration/errorloc.yaml#/errorloc"
   default_bind:
     $ref: "models/configuration/bind.yaml#/default_bind"
+  table:
+    $ref: "models/configuration/table.yaml#/table"
+  tables:
+    title: Tables
+    description: HAProxy table array
+    type: array
+    items:
+      $ref: '#/definitions/table'
 responses:
   BadRequest:
     description: Bad request
@@ -717,6 +725,7 @@ tags:
   - name: Userlist
   - name: FCGIApp
   - name: ProcessManager
+  - name: Table
 security:
   - basic_auth: []
 paths:
@@ -868,6 +877,10 @@ paths:
     $ref: "paths/configuration/http/error.yaml#/http_error_rules"
   /services/haproxy/configuration/http_error_rules/{index}:
     $ref: "paths/configuration/http/error.yaml#/http_error_rules_one"
+  /services/haproxy/configuration/tables:
+    $ref: "paths/configuration/table.yaml#/tables"
+  /services/haproxy/configuration/tables/{name}:
+    $ref: "paths/configuration/table.yaml#/table"
   /services/haproxy/configuration/tcp_checks:
     $ref: "paths/configuration/tcp/check.yaml#/tcp_checks"
   /services/haproxy/configuration/tcp_checks/{index}:

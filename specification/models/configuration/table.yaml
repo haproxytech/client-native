@@ -1,0 +1,29 @@
+table:
+  type: object
+  properties:
+    expire:
+      pattern: ^\d+(ms|s|m|h|d)?$
+      type: string
+      x-nullable: true
+    name:
+      type: string
+      x-nullable: false
+    no_purge:
+      type: boolean
+      x-display-name: No Purge
+    size:
+      type: string
+      pattern: ^\d+(k|K|m|M|g|G)?$
+    store:
+      type: string
+    type:
+      enum:
+        - ip
+        - integer
+        - string
+        - binary
+      type: string
+    type_len:
+      type: integer
+      x-display-name: Type
+      x-nullable: true

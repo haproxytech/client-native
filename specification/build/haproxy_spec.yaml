@@ -3265,8 +3265,6 @@ definitions:
                   declared in the "peers" section. In such cases, "shards" specifies the
                   number of peer involved in this stick-table contents distribution.
               type: integer
-          stick_table:
-              $ref: '#/definitions/config_stick_table'
       required:
           - name
       title: Peer Section
@@ -9340,6 +9338,41 @@ definitions:
       description: HAProxy default bind configuration
       title: Default Bind
       type: object
+  table:
+      properties:
+          expire:
+              pattern: ^\d+(ms|s|m|h|d)?$
+              type: string
+              x-nullable: true
+          name:
+              type: string
+              x-nullable: false
+          no_purge:
+              type: boolean
+              x-display-name: No Purge
+          size:
+              pattern: ^\d+(k|K|m|M|g|G)?$
+              type: string
+          store:
+              type: string
+          type:
+              enum:
+                  - ip
+                  - integer
+                  - string
+                  - binary
+              type: string
+          type_len:
+              type: integer
+              x-display-name: Type
+              x-nullable: true
+      type: object
+  tables:
+    title: Tables
+    description: HAProxy table array
+    type: array
+    items:
+      $ref: '#/definitions/table'
 responses:
   BadRequest:
     description: Bad request
@@ -9488,6 +9521,7 @@ tags:
 - name: TCPCheck
 - name: TCPRequestRule
 - name: TCPResponseRule
+- name: Table
 - name: Transactions
   description: |
     Managing transactions. Configuration changes can be grouped in the transaction. You start the
@@ -15016,6 +15050,191 @@ paths:
           summary: Replace a HTTP Error Rule
           tags:
               - HTTPErrorRule
+  /services/haproxy/configuration/tables:
+      get:
+          description: Returns an array of all tables that are configured in specified peer section.
+          operationId: getTables
+          parameters:
+              - description: Parent peer section name
+                in: query
+                name: peer_section
+                required: true
+                type: string
+              - $ref: '#/parameters/transaction_id'
+          responses:
+              "200":
+                  description: Successful operation
+                  headers:
+                      Configuration-Version:
+                          description: Configuration file version
+                          type: string
+                  schema:
+                      properties:
+                          _version:
+                              type: integer
+                          data:
+                              $ref: '#/definitions/table'
+                      required:
+                          - data
+                      type: object
+              default:
+                  $ref: '#/responses/DefaultError'
+          summary: Return an array of tables
+          tags:
+              - Table
+      post:
+          description: Adds a new table in the specified peer section in the configuration file.
+          operationId: createTable
+          parameters:
+              - description: Parent peer section name
+                in: query
+                name: peer_section
+                required: true
+                type: string
+              - in: body
+                name: data
+                required: true
+                schema:
+                  $ref: '#/definitions/table'
+              - $ref: '#/parameters/transaction_id'
+              - $ref: '#/parameters/version'
+              - $ref: '#/parameters/force_reload'
+          responses:
+              "201":
+                  description: Table created
+                  schema:
+                      $ref: '#/definitions/table'
+              "202":
+                  description: Configuration change accepted and reload requested
+                  headers:
+                      Reload-ID:
+                          description: ID of the requested reload
+                          type: string
+                  schema:
+                      $ref: '#/definitions/table'
+              "400":
+                  $ref: '#/responses/BadRequest'
+              "409":
+                  $ref: '#/responses/AlreadyExists'
+              default:
+                  $ref: '#/responses/DefaultError'
+          summary: Add a new table
+          tags:
+              - Table
+  /services/haproxy/configuration/tables/{name}:
+      delete:
+          description: Deletes a table configuration by it's name in the specified peer section.
+          operationId: deleteTable
+          parameters:
+              - description: Table name
+                in: path
+                name: name
+                required: true
+                type: string
+              - description: Parent peers name
+                in: query
+                name: peer_section
+                required: true
+                type: string
+              - $ref: '#/parameters/transaction_id'
+              - $ref: '#/parameters/version'
+              - $ref: '#/parameters/force_reload'
+          responses:
+              "202":
+                  description: Configuration change accepted and reload requested
+                  headers:
+                      Reload-ID:
+                          description: ID of the requested reload
+                          type: string
+              "204":
+                  description: Table deleted
+              "404":
+                  $ref: '#/responses/NotFound'
+              default:
+                  $ref: '#/responses/DefaultError'
+          summary: Delete a table
+          tags:
+              - Table
+      get:
+          description: Returns one table configuration by it's name in the specified peer section.
+          operationId: getTable
+          parameters:
+              - description: Table name
+                in: path
+                name: name
+                required: true
+                type: string
+              - description: Parent peers name
+                in: query
+                name: peer_section
+                required: true
+                type: string
+              - $ref: '#/parameters/transaction_id'
+          responses:
+              "200":
+                  description: Successful operation
+                  headers:
+                      Configuration-Version:
+                          description: Configuration file version
+                          type: string
+                  schema:
+                      properties:
+                          _version:
+                              type: integer
+                          data:
+                              $ref: '#/definitions/table'
+                      type: object
+              "404":
+                  $ref: '#/responses/AlreadyExists'
+              default:
+                  $ref: '#/responses/DefaultError'
+          summary: Return one table
+          tags:
+              - Table
+      put:
+          description: Replaces a table configuration by it's name in the specified peer section.
+          operationId: replaceTable
+          parameters:
+              - description: Table name
+                in: path
+                name: name
+                required: true
+                type: string
+              - description: Parent peers name
+                in: query
+                name: peer_section
+                required: true
+                type: string
+              - in: body
+                name: data
+                required: true
+                schema:
+                  $ref: '#/definitions/table'
+              - $ref: '#/parameters/transaction_id'
+              - $ref: '#/parameters/version'
+              - $ref: '#/parameters/force_reload'
+          responses:
+              "200":
+                  description: Table replaced
+                  schema:
+                      $ref: '#/definitions/table'
+              "202":
+                  description: Configuration change accepted and reload requested
+                  headers:
+                      Reload-ID:
+                          description: ID of the requested reload
+                          type: string
+                  schema:
+                      $ref: '#/definitions/table'
+              "400":
+                  $ref: '#/responses/BadRequest'
+              "404":
+                  $ref: '#/responses/NotFound'
+              default:
+                  $ref: '#/responses/DefaultError'
+          summary: Replace a table
+          tags:
+              - Table
   /services/haproxy/configuration/tcp_checks:
       get:
           description: Returns all TCP checks that are configured in specified parent.

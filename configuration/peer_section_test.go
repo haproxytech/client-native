@@ -99,22 +99,6 @@ func TestGetPeerSection(t *testing.T) {
 		t.Errorf("%v: DefaultBind.Alpn not h2,http/1.1: %v", l.Name, l.DefaultBind.Alpn)
 	}
 
-	if l.StickTable.Type != "ip" {
-		t.Errorf("%v: StickTable.Type not ip: %v", l.Name, l.StickTable.Type)
-	}
-	if l.StickTable.Size == nil {
-		t.Errorf("%v: StickTable.Size is nil", l.Name)
-	} else if *l.StickTable.Size != 204800 {
-		t.Errorf("%v: StickTable.Size not 204800: %v", l.Name, *l.StickTable.Size)
-	}
-	if l.StickTable.Expire == nil {
-		t.Errorf("%v: StickTable.Expire is nil", l.Name)
-	} else if *l.StickTable.Expire != 3600000 {
-		t.Errorf("%v: StickTable.Expire not 3600000: %v", l.Name, *l.StickTable.Expire)
-	}
-	if l.StickTable.Store != "http_req_rate(10s)" {
-		t.Errorf("%v: StickTable.Store not http_req_rate(10s): %v", l.Name, l.StickTable.Store)
-	}
 	if l.Shards != 3 {
 		t.Errorf("%v: Shards not 3: %v", l.Name, l.Shards)
 	}
@@ -132,7 +116,6 @@ func TestGetPeerSection(t *testing.T) {
 
 func TestCreateEditDeletePeerSection(t *testing.T) {
 	tOut := int64(5)
-	tSize := int64(20000)
 	f := &models.PeerSection{
 		Name:     "testcluster",
 		Disabled: true,
@@ -148,11 +131,6 @@ func TestCreateEditDeletePeerSection(t *testing.T) {
 				Ssl:            true,
 				SslCertificate: "/etc/haproxy/cluster.pem",
 			},
-		},
-		StickTable: &models.ConfigStickTable{
-			Size:   &tSize,
-			Expire: &tSize,
-			Type:   "integer",
 		},
 		Shards: 4,
 	}

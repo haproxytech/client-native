@@ -630,10 +630,11 @@ peers mycluster
   enabled
   default-server fall 2s rise 4s inter 5s port 8888 slowstart 6000
   default-bind v4v6 ssl crt /etc/haproxy/site.pem alpn h2,http/1.1
-  stick-table type ip size 200k expire 1h store http_req_rate(10s)
   peer hapee 192.168.1.1:1023 shard 1
   peer aggregator HARDCODEDCLUSTERIP:10023
   shards 3
+  table t1 type string len 1000 size 200k expire 5m nopurge store gpc0,conn_rate(30s)
+  table t2 type string len 1000 size 200k expire 5m nopurge store gpc0 store gpc1,conn_rate(30s)
 
 program test
   command echo "Hello, World!"
