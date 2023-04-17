@@ -204,8 +204,10 @@ func SerializeServerTemplate(s models.ServerTemplate) types.ServerTemplate {
 		Prefix:     s.Prefix,
 		NumOrRange: s.NumOrRange,
 		Fqdn:       s.Fqdn,
-		Port:       *s.Port,
 		Params:     []params.ServerOption{},
+	}
+	if s.Port != nil {
+		template.Port = *s.Port
 	}
 	template.Params = serializeServerParams(s.ServerParams)
 	return template

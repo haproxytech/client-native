@@ -207,15 +207,9 @@ server_params:
     resolve-prefer:
       type: string
       enum: [ipv4, ipv6]
-      x-dependency:
-        resolvers:
-          required: true
     resolve-net:
       type: string
       pattern: '^([A-Za-z0-9.:/]+)(,[A-Za-z0-9.:/]+)*$'
-      x-dependency:
-        resolvers:
-          required: true
     resolvers:
       type: string
       pattern: '^[^\s]+$'
