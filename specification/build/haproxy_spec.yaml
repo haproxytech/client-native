@@ -711,17 +711,11 @@ definitions:
           resolve-net:
               pattern: ^([A-Za-z0-9.:/]+)(,[A-Za-z0-9.:/]+)*$
               type: string
-              x-dependency:
-                  resolvers:
-                      required: true
           resolve-prefer:
               enum:
                   - ipv4
                   - ipv6
               type: string
-              x-dependency:
-                  resolvers:
-                      required: true
           resolve_opts:
               pattern: ^(allow-dup-ip|ignore-weight|prevent-dup-ip)(,(allow-dup-ip|ignore-weight|prevent-dup-ip))*$
               type: string
