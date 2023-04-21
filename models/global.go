@@ -2849,6 +2849,18 @@ type GlobalTuneOptions struct {
 	// Enum: [enabled disabled]
 	FdEdgeTriggered string `json:"fd_edge_triggered,omitempty"`
 
+	// h2 be initial window size
+	H2BeInitialWindowSize int64 `json:"h2_be_initial_window_size,omitempty"`
+
+	// h2 be max concurrent streams
+	H2BeMaxConcurrentStreams int64 `json:"h2_be_max_concurrent_streams,omitempty"`
+
+	// h2 fe initial window size
+	H2FeInitialWindowSize int64 `json:"h2_fe_initial_window_size,omitempty"`
+
+	// h2 fe max concurrent streams
+	H2FeMaxConcurrentStreams int64 `json:"h2_fe_max_concurrent_streams,omitempty"`
+
 	// h2 header table size
 	// Maximum: 65535
 	H2HeaderTableSize int64 `json:"h2_header_table_size,omitempty"`
@@ -2885,6 +2897,9 @@ type GlobalTuneOptions struct {
 	// listener multi queue
 	// Enum: [enabled disabled]
 	ListenerMultiQueue string `json:"listener_multi_queue,omitempty"`
+
+	// lua burst timeout
+	LuaBurstTimeout *int64 `json:"lua_burst_timeout,omitempty"`
 
 	// lua forced yield
 	LuaForcedYield int64 `json:"lua_forced_yield,omitempty"`

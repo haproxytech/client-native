@@ -2141,6 +2141,9 @@ func serializeTuneOptions(p parser.Parser, options *models.GlobalTuneOptions) er
 	if err := serializeTimeoutSizeOption(p, "tune.lua.session-timeout", options.LuaSessionTimeout); err != nil {
 		return err
 	}
+	if err := serializeTimeoutSizeOption(p, "tune.lua.burst-timeout", options.LuaBurstTimeout); err != nil {
+		return err
+	}
 	if err := serializeTimeoutSizeOption(p, "tune.lua.task-timeout", options.LuaTaskTimeout); err != nil {
 		return err
 	}
@@ -2253,11 +2256,22 @@ func serializeTuneOptions(p parser.Parser, options *models.GlobalTuneOptions) er
 	if err := p.Set(parser.Global, parser.GlobalSectionName, "tune.quic.socket-owner", value); err != nil {
 		return err
 	}
-
 	if err := serializeInt64Option(p, "tune.zlib.memlevel", options.ZlibMemlevel); err != nil {
 		return err
 	}
 	if err := serializeOnOffOption(p, "tune.fd.edge-triggered", options.FdEdgeTriggered); err != nil {
+		return err
+	}
+	if err := serializeInt64Option(p, "tune.h2.be.initial-window-size", options.H2BeInitialWindowSize); err != nil {
+		return err
+	}
+	if err := serializeInt64Option(p, "tune.h2.be.max-concurrent-streams", options.H2BeMaxConcurrentStreams); err != nil {
+		return err
+	}
+	if err := serializeInt64Option(p, "tune.h2.fe.initial-window-size", options.H2FeInitialWindowSize); err != nil {
+		return err
+	}
+	if err := serializeInt64Option(p, "tune.h2.fe.max-concurrent-streams", options.H2FeMaxConcurrentStreams); err != nil {
 		return err
 	}
 	return serializeInt64Option(p, "tune.zlib.windowsize", options.ZlibWindowsize)
@@ -2520,6 +2534,12 @@ func parseTuneOptions(p parser.Parser) (*models.GlobalTuneOptions, error) { //no
 	}
 	options.LuaSessionTimeout = misc.ParseTimeout(strOption)
 
+	strOption, err = parseStringOption(p, "tune.lua.burst-timeout")
+	if err != nil {
+		return nil, err
+	}
+	options.LuaBurstTimeout = misc.ParseTimeout(strOption)
+
 	strOption, err = parseStringOption(p, "tune.lua.task-timeout")
 	if err != nil {
 		return nil, err
@@ -2774,6 +2794,30 @@ func parseTuneOptions(p parser.Parser) (*models.GlobalTuneOptions, error) { //no
 		return nil, err
 	}
 	options.FdEdgeTriggered = strOption
+
+	intOption, err = parseInt64Option(p, "tune.h2.be.initial-window-size")
+	if err != nil {
+		return nil, err
+	}
+	options.H2BeInitialWindowSize = intOption
+
+	intOption, err = parseInt64Option(p, "tune.h2.be.max-concurrent-streams")
+	if err != nil {
+		return nil, err
+	}
+	options.H2BeMaxConcurrentStreams = intOption
+
+	intOption, err = parseInt64Option(p, "tune.h2.fe.initial-window-size")
+	if err != nil {
+		return nil, err
+	}
+	options.H2FeInitialWindowSize = intOption
+
+	intOption, err = parseInt64Option(p, "tune.h2.fe.max-concurrent-streams")
+	if err != nil {
+		return nil, err
+	}
+	options.H2FeMaxConcurrentStreams = intOption
 
 	return options, nil
 }

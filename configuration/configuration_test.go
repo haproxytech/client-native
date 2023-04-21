@@ -190,6 +190,11 @@ global
   unsetenv third fourth
   anonkey 25
   tune.peers.max-updates-at-once 200
+  tune.h2.be.initial-window-size 201
+  tune.h2.be.max-concurrent-streams 202
+  tune.h2.fe.initial-window-size 203
+  tune.h2.fe.max-concurrent-streams 204
+  tune.lua.burst-timeout 205
 
 defaults test_defaults
   maxconn 2000

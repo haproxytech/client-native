@@ -315,6 +315,9 @@ func TestGetGlobal(t *testing.T) {
 	if *global.TuneOptions.LuaSessionTimeout != 25 {
 		t.Errorf("LuaSessionTimeout is %v, expected 25", global.TuneOptions.LuaSessionTimeout)
 	}
+	if *global.TuneOptions.LuaBurstTimeout != 205 {
+		t.Errorf("LuaSessionTimeout is %v, expected 205", global.TuneOptions.LuaBurstTimeout)
+	}
 	if *global.TuneOptions.LuaTaskTimeout != 26 {
 		t.Errorf("LuaTaskTimeout is %v, expected 26", global.TuneOptions.LuaTaskTimeout)
 	}
@@ -434,6 +437,18 @@ func TestGetGlobal(t *testing.T) {
 	}
 	if global.TuneOptions.ZlibWindowsize != 55 {
 		t.Errorf("ZlibWindowsize is %v, expected 55", global.TuneOptions.ZlibWindowsize)
+	}
+	if global.TuneOptions.H2BeInitialWindowSize != 201 {
+		t.Errorf("H2BeInitialWindowSize is %v, expected 201", global.TuneOptions.H2BeInitialWindowSize)
+	}
+	if global.TuneOptions.H2BeMaxConcurrentStreams != 202 {
+		t.Errorf("H2BeMaxConcurrentStreams is %v, expected 202", global.TuneOptions.H2BeMaxConcurrentStreams)
+	}
+	if global.TuneOptions.H2FeInitialWindowSize != 203 {
+		t.Errorf("H2FeInitialWindowSize is %v, expected 203", global.TuneOptions.H2FeInitialWindowSize)
+	}
+	if global.TuneOptions.H2FeMaxConcurrentStreams != 204 {
+		t.Errorf("H2FeMaxConcurrentStreams is %v, expected 204", global.TuneOptions.H2FeMaxConcurrentStreams)
 	}
 	if global.ThreadGroups != 1 {
 		t.Errorf("ThreadGroups is %v, expected 1", global.ThreadGroups)
