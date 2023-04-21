@@ -147,6 +147,9 @@ type BindParams struct {
 	// Example: 1
 	Nice int64 `json:"nice,omitempty"`
 
+	// no alpn
+	NoAlpn bool `json:"no_alpn,omitempty"`
+
 	// no ca names
 	NoCaNames bool `json:"no_ca_names,omitempty"`
 

@@ -335,6 +335,11 @@ definitions:
           nice:
               example: 1
               type: integer
+          no_alpn:
+              type: boolean
+              x-dependency:
+                  ssl:
+                      value: true
           no_ca_names:
               type: boolean
               x-dependency:

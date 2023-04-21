@@ -98,6 +98,7 @@ func TestCreateEditDeleteBind(t *testing.T) {
 		BindParams: models.BindParams{
 			Name:           "created",
 			Ssl:            true,
+			NoAlpn:         true,
 			SslCertificate: "dummy.crt",
 			Interface:      "eth0",
 			Verify:         "optional",
@@ -145,6 +146,7 @@ func TestCreateEditDeleteBind(t *testing.T) {
 		Port:    &port,
 		BindParams: models.BindParams{
 			Name:           "created",
+			NoAlpn:         false,
 			Transparent:    true,
 			TCPUserTimeout: &tOut,
 			SslMinVer:      "TLSv1.2",

@@ -135,6 +135,11 @@ bind_params:
       x-dependency:
         ssl:
           value: true
+    no_alpn:
+      type: boolean
+      x-dependency:
+        ssl:
+          value: true
     no_sslv3:
       type: boolean
       x-dependency:

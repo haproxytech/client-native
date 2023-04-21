@@ -287,6 +287,8 @@ func parseBindParams(bindOptions []params.BindOption) (b models.BindParams) { //
 				b.V6only = true
 			case "quic-force-retry":
 				b.QuicForceRetry = true
+			case "no-alpn":
+				b.NoAlpn = true
 			}
 		case *params.BindOptionValue:
 			switch v.Name {
@@ -592,6 +594,9 @@ func serializeBindParams(b models.BindParams, path string) (options []params.Bin
 	}
 	if b.QuicForceRetry {
 		options = append(options, &params.BindOptionWord{Name: "quic-force-retry"})
+	}
+	if b.NoAlpn {
+		options = append(options, &params.BindOptionWord{Name: "no-alpn"})
 	}
 	return options
 }
