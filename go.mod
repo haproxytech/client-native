@@ -33,7 +33,7 @@ require (
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/rogpeppe/go-internal v1.6.1 // indirect
 	go.mongodb.org/mongo-driver v1.11.3 // indirect
-	golang.org/x/exp v0.0.0-20230321023759-10a507213a29 // indirect
+	golang.org/x/exp v0.0.0-20230425010034-47ecfdc1ba53 // indirect
 	golang.org/x/sys v0.7.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
