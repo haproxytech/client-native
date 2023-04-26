@@ -25,7 +25,7 @@ tables:
             - data
           properties:
             data:
-              $ref: "#/definitions/table"
+              $ref: "#/definitions/tables"
             _version:
               type: integer
       'default':
