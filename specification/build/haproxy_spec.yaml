@@ -15073,7 +15073,7 @@ paths:
                           _version:
                               type: integer
                           data:
-                              $ref: '#/definitions/table'
+                              $ref: '#/definitions/tables'
                       required:
                           - data
                       type: object
