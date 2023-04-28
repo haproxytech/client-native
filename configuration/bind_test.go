@@ -29,8 +29,8 @@ func TestGetBinds(t *testing.T) {
 		t.Error(err.Error())
 	}
 
-	if len(binds) != 3 {
-		t.Errorf("%v binds returned, expected 3", len(binds))
+	if len(binds) != 4 {
+		t.Errorf("%v binds returned, expected 4", len(binds))
 	}
 
 	if v != version {
@@ -38,14 +38,17 @@ func TestGetBinds(t *testing.T) {
 	}
 
 	for _, l := range binds {
-		if l.Name != "webserv" && l.Name != "webserv2" && l.Name != "ipv6" {
+		if l.Name != "webserv" && l.Name != "webserv2" && l.Name != "webserv3" && l.Name != "ipv6" {
 			t.Errorf("Expected only webserv,webserv2, or ipv6 binds, %v found", l.Name)
 		}
-		if l.Address != "192.168.1.1" && l.Address != "2a01:c9c0:a3:8::3" {
-			t.Errorf("%v: Address not 192.168.1.1: %v", l.Name, l.Address)
+		if l.Address != "192.168.1.1" && l.Address != "192.168.1.2" && l.Address != "2a01:c9c0:a3:8::3" {
+			t.Errorf("%v: Address not 192.168.1.1 or 192.168.1.2 or 2a01:c9c0:a3:8::3: %v", l.Name, l.Address)
 		}
 		if *l.Port != 80 && *l.Port != 8080 {
 			t.Errorf("%v: Port not 80 or 8080: %v", l.Name, *l.Port)
+		}
+		if l.Thread != "all" && l.Thread != "1/all" && l.Thread != "1/1" && l.Thread != "1/1-1" {
+			t.Errorf("%v: Thread not all or 1/all or 1/1-1: %v", l.Name, l.Thread)
 		}
 	}
 
@@ -107,6 +110,7 @@ func TestCreateEditDeleteBind(t *testing.T) {
 			Ciphers:        "ECDH+AESGCM:ECDH+CHACHA20",
 			Ciphersuites:   "TLS_AES_128_GCM_SHA256:TLS_AES_256_GCM_SHA384",
 			CrlFile:        "dummy.crl",
+			Thread:         "1/all",
 		},
 	}
 
@@ -152,6 +156,7 @@ func TestCreateEditDeleteBind(t *testing.T) {
 			SslMinVer:      "TLSv1.2",
 			SslMaxVer:      "TLSv1.3",
 			Interface:      "eth1",
+			Thread:         "odd",
 		},
 	}
 

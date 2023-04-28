@@ -375,6 +375,8 @@ func parseBindParams(bindOptions []params.BindOption) (b models.BindParams) { //
 				b.SslMaxVer = v.Value
 			case "ssl-min-ver":
 				b.SslMinVer = v.Value
+			case "thread":
+				b.Thread = v.Value
 			case "tls-ticket-keys":
 				b.TLSTicketKeys = v.Value
 			case "uid":
@@ -576,6 +578,9 @@ func serializeBindParams(b models.BindParams, path string) (options []params.Bin
 	}
 	if b.Tfo {
 		options = append(options, &params.ServerOptionWord{Name: "tfo"})
+	}
+	if b.Thread != "" {
+		options = append(options, &params.BindOptionValue{Name: "thread", Value: b.Thread})
 	}
 	if b.TLSTicketKeys != "" {
 		options = append(options, &params.BindOptionValue{Name: "tls-ticket-keys", Value: b.TLSTicketKeys})

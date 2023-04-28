@@ -224,6 +224,9 @@ type BindParams struct {
 	// tfo
 	Tfo bool `json:"tfo,omitempty"`
 
+	// thread
+	Thread string `json:"thread,omitempty"`
+
 	// tls ticket keys
 	TLSTicketKeys string `json:"tls_ticket_keys,omitempty"`
 
