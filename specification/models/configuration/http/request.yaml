@@ -26,6 +26,7 @@ http_request_rule:
         - disable-l7-retry
         - do-resolve
         - early-hint
+        - lua
         - normalize-uri
         - redirect
         - reject
