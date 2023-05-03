@@ -4065,6 +4065,7 @@ definitions:
                   - disable-l7-retry
                   - do-resolve
                   - early-hint
+                  - lua
                   - normalize-uri
                   - redirect
                   - reject
@@ -4632,6 +4633,7 @@ definitions:
                   - del-header
                   - del-map
                   - deny
+                  - lua
                   - redirect
                   - replace-header
                   - replace-value

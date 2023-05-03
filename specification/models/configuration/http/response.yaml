@@ -22,6 +22,7 @@ http_response_rule:
         - del-header
         - del-map
         - deny
+        - lua
         - redirect
         - replace-header
         - replace-value
