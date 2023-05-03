@@ -2129,6 +2129,9 @@ func serializeTuneOptions(p parser.Parser, options *models.GlobalTuneOptions) er
 	if err := serializeTimeoutSizeOption(p, "tune.idletimer", options.Idletimer); err != nil {
 		return err
 	}
+	if err := serializeListenerDefaultShards(p, "tune.listener.default-shards", options.ListenerDefaultShards); err != nil {
+		return err
+	}
 	if err := serializeOnOffOption(p, "tune.listener.multi-queue", options.ListenerMultiQueue); err != nil {
 		return err
 	}
@@ -2323,6 +2326,21 @@ func serializeAutoOnOffOption(p parser.Parser, option, data string) error {
 	return p.Set(parser.Global, parser.GlobalSectionName, option, value)
 }
 
+func serializeListenerDefaultShards(p parser.Parser, option, data string) error {
+	var value *types.StringC
+	switch data {
+	case models.GlobalTuneOptionsListenerDefaultShardsByDashProcess:
+		value = &types.StringC{Value: models.GlobalTuneOptionsListenerDefaultShardsByDashProcess}
+	case models.GlobalTuneOptionsListenerDefaultShardsByDashThread:
+		value = &types.StringC{Value: models.GlobalTuneOptionsListenerDefaultShardsByDashThread}
+	case models.GlobalTuneOptionsListenerDefaultShardsByDashGroup:
+		value = &types.StringC{Value: models.GlobalTuneOptionsListenerDefaultShardsByDashGroup}
+	default:
+		value = nil
+	}
+	return p.Set(parser.Global, parser.GlobalSectionName, option, value)
+}
+
 func serializeInt64Option(p parser.Parser, option string, data int64) error {
 	value := &types.Int64C{
 		Value: data,
@@ -2509,6 +2527,12 @@ func parseTuneOptions(p parser.Parser) (*models.GlobalTuneOptions, error) { //no
 		return nil, err
 	}
 	options.Idletimer = misc.ParseTimeout(strOption)
+
+	strOption, err = parseListenerDefaultShards(p, "tune.listener.default-shards")
+	if err != nil {
+		return nil, err
+	}
+	options.ListenerDefaultShards = strOption
 
 	strOption, err = parseOnOffOption(p, "tune.listener.multi-queue")
 	if err != nil {
@@ -2915,6 +2939,30 @@ func parseAutoOnOffOption(p parser.Parser, option string) (string, error) {
 			return "enabled", nil
 		case "off":
 			return "disabled", nil
+		default:
+			return "", fmt.Errorf("unsupported value for %s: %s", option, value.Value)
+		}
+	}
+	if errors.Is(err, parser_errors.ErrFetch) {
+		return "", nil
+	}
+	return "", err
+}
+
+func parseListenerDefaultShards(p parser.Parser, option string) (string, error) {
+	data, err := p.Get(parser.Global, parser.GlobalSectionName, option)
+	if err == nil {
+		value, ok := data.(*types.StringC)
+		if !ok {
+			return "", misc.CreateTypeAssertError(option)
+		}
+		switch value.Value {
+		case models.GlobalTuneOptionsListenerDefaultShardsByDashProcess:
+			return models.GlobalTuneOptionsListenerDefaultShardsByDashProcess, nil
+		case models.GlobalTuneOptionsListenerDefaultShardsByDashThread:
+			return models.GlobalTuneOptionsListenerDefaultShardsByDashThread, nil
+		case models.GlobalTuneOptionsListenerDefaultShardsByDashGroup:
+			return models.GlobalTuneOptionsListenerDefaultShardsByDashGroup, nil
 		default:
 			return "", fmt.Errorf("unsupported value for %s: %s", option, value.Value)
 		}

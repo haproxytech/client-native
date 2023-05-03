@@ -62,6 +62,7 @@ global
   tune.http.maxhdr 21
   tune.idle-pool.shared on
   tune.idletimer 22
+  tune.listener.default-shards by-process
   tune.listener.multi-queue on
   tune.lua.forced-yield 23
   tune.lua.maxmem

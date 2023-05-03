@@ -312,6 +312,10 @@ global:
           x-nullable: true
           minimum: 0
           maximum: 65535
+        listener_default_shards:
+          type: string
+          enum: [by-process, by-thread, by-group]
+          x-display-name: Listener Default Shards
         listener_multi_queue:
           type: string
           enum: [enabled, disabled]

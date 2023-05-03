@@ -1537,6 +1537,13 @@ definitions:
                       type: integer
                       x-display-name: Idle Stream Duration
                       x-nullable: true
+                  listener_default_shards:
+                      enum:
+                          - by-process
+                          - by-thread
+                          - by-group
+                      type: string
+                      x-display-name: Listener Default Shards
                   listener_multi_queue:
                       enum:
                           - enabled

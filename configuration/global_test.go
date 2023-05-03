@@ -306,6 +306,9 @@ func TestGetGlobal(t *testing.T) {
 	if *global.TuneOptions.Idletimer != 22 {
 		t.Errorf("Idletimer is %v, expected 22", global.TuneOptions.Idletimer)
 	}
+	if global.TuneOptions.ListenerDefaultShards != "by-process" {
+		t.Errorf("ListenerDefaultShards is %v, expected by-process", global.TuneOptions.ListenerDefaultShards)
+	}
 	if global.TuneOptions.LuaForcedYield != 23 {
 		t.Errorf("LuaForcedYield is %v, expected 23", global.TuneOptions.LuaForcedYield)
 	}

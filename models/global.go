@@ -2894,6 +2894,10 @@ type GlobalTuneOptions struct {
 	// Minimum: 0
 	Idletimer *int64 `json:"idletimer,omitempty"`
 
+	// listener default shards
+	// Enum: [by-process by-thread by-group]
+	ListenerDefaultShards string `json:"listener_default_shards,omitempty"`
+
 	// listener multi queue
 	// Enum: [enabled disabled]
 	ListenerMultiQueue string `json:"listener_multi_queue,omitempty"`
@@ -3069,6 +3073,10 @@ func (m *GlobalTuneOptions) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
+	if err := m.validateListenerDefaultShards(formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.validateListenerMultiQueue(formats); err != nil {
 		res = append(res, err)
 	}
@@ -3233,6 +3241,51 @@ func (m *GlobalTuneOptions) validateIdletimer(formats strfmt.Registry) error {
 	}
 
 	if err := validate.MaximumInt("tune_options"+"."+"idletimer", "body", *m.Idletimer, 65535, false); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+var globalTuneOptionsTypeListenerDefaultShardsPropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["by-process","by-thread","by-group"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		globalTuneOptionsTypeListenerDefaultShardsPropEnum = append(globalTuneOptionsTypeListenerDefaultShardsPropEnum, v)
+	}
+}
+
+const (
+
+	// GlobalTuneOptionsListenerDefaultShardsByDashProcess captures enum value "by-process"
+	GlobalTuneOptionsListenerDefaultShardsByDashProcess string = "by-process"
+
+	// GlobalTuneOptionsListenerDefaultShardsByDashThread captures enum value "by-thread"
+	GlobalTuneOptionsListenerDefaultShardsByDashThread string = "by-thread"
+
+	// GlobalTuneOptionsListenerDefaultShardsByDashGroup captures enum value "by-group"
+	GlobalTuneOptionsListenerDefaultShardsByDashGroup string = "by-group"
+)
+
+// prop value enum
+func (m *GlobalTuneOptions) validateListenerDefaultShardsEnum(path, location string, value string) error {
+	if err := validate.EnumCase(path, location, value, globalTuneOptionsTypeListenerDefaultShardsPropEnum, true); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *GlobalTuneOptions) validateListenerDefaultShards(formats strfmt.Registry) error {
+	if swag.IsZero(m.ListenerDefaultShards) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateListenerDefaultShardsEnum("tune_options"+"."+"listener_default_shards", "body", m.ListenerDefaultShards); err != nil {
 		return err
 	}
 
