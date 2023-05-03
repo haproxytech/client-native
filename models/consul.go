@@ -44,12 +44,27 @@ type Consul struct {
 	// Pattern: ^[^\s]+$
 	Address *string `json:"address"`
 
+	// Name of the defaults section to be used in backends created by this service
+	Defaults string `json:"defaults,omitempty"`
+
 	// description
 	Description string `json:"description,omitempty"`
 
 	// enabled
 	// Required: true
 	Enabled *bool `json:"enabled"`
+
+	// Defines the health check conditions required for each node to be considered valid for the service.
+	//   none: all nodes are considered valid
+	//   any: a node is considered valid if any one health check is 'passing'
+	//   all: a node is considered valid if all health checks are 'passing'
+	//   min: a node is considered valid if the number of 'passing' checks is greater or equal to the 'health_check_policy_min' value.
+	//     If the node has less health checks configured then 'health_check_policy_min' it is considered invalid.
+	// Enum: [none any all min]
+	HealthCheckPolicy string `json:"health_check_policy,omitempty"`
+
+	// health check policy min
+	HealthCheckPolicyMin int64 `json:"health_check_policy_min,omitempty"`
 
 	// Auto generated ID.
 	// Pattern: ^[^\s]+$
@@ -111,6 +126,10 @@ func (m *Consul) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
+	if err := m.validateHealthCheckPolicy(formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.validateID(formats); err != nil {
 		res = append(res, err)
 	}
@@ -169,6 +188,54 @@ func (m *Consul) validateAddress(formats strfmt.Registry) error {
 func (m *Consul) validateEnabled(formats strfmt.Registry) error {
 
 	if err := validate.Required("enabled", "body", m.Enabled); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+var consulTypeHealthCheckPolicyPropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["none","any","all","min"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		consulTypeHealthCheckPolicyPropEnum = append(consulTypeHealthCheckPolicyPropEnum, v)
+	}
+}
+
+const (
+
+	// ConsulHealthCheckPolicyNone captures enum value "none"
+	ConsulHealthCheckPolicyNone string = "none"
+
+	// ConsulHealthCheckPolicyAny captures enum value "any"
+	ConsulHealthCheckPolicyAny string = "any"
+
+	// ConsulHealthCheckPolicyAll captures enum value "all"
+	ConsulHealthCheckPolicyAll string = "all"
+
+	// ConsulHealthCheckPolicyMin captures enum value "min"
+	ConsulHealthCheckPolicyMin string = "min"
+)
+
+// prop value enum
+func (m *Consul) validateHealthCheckPolicyEnum(path, location string, value string) error {
+	if err := validate.EnumCase(path, location, value, consulTypeHealthCheckPolicyPropEnum, true); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *Consul) validateHealthCheckPolicy(formats strfmt.Registry) error {
+	if swag.IsZero(m.HealthCheckPolicy) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateHealthCheckPolicyEnum("health_check_policy", "body", m.HealthCheckPolicy); err != nil {
 		return err
 	}
 

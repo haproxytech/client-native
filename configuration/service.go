@@ -101,9 +101,9 @@ func (s *Service) Delete() error {
 }
 
 // Init initiates the client by reading the configuration associated with it or created the initial configuration if it does not exist.
-func (s *Service) Init(transactionID string) (bool, error) {
+func (s *Service) Init(transactionID string, from string) (bool, error) {
 	s.SetTransactionID(transactionID)
-	newBackend, err := s.createBackend()
+	newBackend, err := s.createBackend(from)
 	if err != nil {
 		return false, err
 	}
@@ -274,10 +274,11 @@ func (s *Service) removeNodesAfterIndex(lastIndex int) error {
 	return nil
 }
 
-func (s *Service) createBackend() (bool, error) {
+func (s *Service) createBackend(from string) (bool, error) {
 	_, _, err := s.client.GetBackend(s.name, s.transactionID)
 	if err != nil {
 		err := s.client.CreateBackend(&models.Backend{
+			From: from,
 			Name: s.name,
 		}, s.transactionID, 0)
 		if err != nil {

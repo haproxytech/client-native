@@ -156,6 +156,24 @@ consul:
       type: string
     namespace:
       type: string
+    defaults:
+      type: string
+      description: Name of the defaults section to be used in backends created by this service
+    health_check_policy:
+      type: string
+      enum: [none, any, all, min]
+      description: |-
+        Defines the health check conditions required for each node to be considered valid for the service.
+          none: all nodes are considered valid
+          any: a node is considered valid if any one health check is 'passing'
+          all: a node is considered valid if all health checks are 'passing'
+          min: a node is considered valid if the number of 'passing' checks is greater or equal to the 'health_check_policy_min' value.
+            If the node has less health checks configured then 'health_check_policy_min' it is considered invalid.
+    health_check_policy_min:
+      type: integer
+      x-dependency:
+        health_check_policy:
+          value: min
   additionalProperties: false
   example:
     id: "0"

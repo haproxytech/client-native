@@ -101,7 +101,7 @@ func (s *ServiceInitiationSuite) BeforeTest(suiteName, testName string) {
 
 func (s *ServiceInitiationSuite) AfterTest(suiteName, testName string) {
 	// run Init to set transactionID if test did not run it
-	_, err := s.service.Init(s.transactionID)
+	_, err := s.service.Init(s.transactionID, "")
 	s.Nil(err)
 	err = s.service.Delete()
 	s.Nil(err)
@@ -109,7 +109,7 @@ func (s *ServiceInitiationSuite) AfterTest(suiteName, testName string) {
 }
 
 func (s *ServiceInitiationSuite) TestInitAndDelete() {
-	r, err := s.service.Init(s.transactionID)
+	r, err := s.service.Init(s.transactionID, "")
 	s.True(r)
 	s.Nil(err)
 	err = s.service.Delete()
@@ -129,7 +129,7 @@ func (s *ServiceInitiationSuite) TestRecreatingAfterDeletion() {
 }
 
 func (s *ServiceInitiationSuite) TestCreateNewBackendAndServers() {
-	r, err := s.service.Init(s.transactionID)
+	r, err := s.service.Init(s.transactionID, "")
 	s.True(r)
 	s.Nil(err)
 	_, backned, err := s.client.GetBackend(s.serviceName, s.transactionID)
@@ -151,7 +151,7 @@ func (s *ServiceInitiationSuite) TestLoadExistingBackend() {
 	}
 	s.Nil(s.createExistingService(servers))
 
-	r, err := s.service.Init(s.transactionID)
+	r, err := s.service.Init(s.transactionID, "")
 	// Only existing data for was loaded
 	// No modifications on the config have been done as the server count matches base slots value so reload should be false
 	s.False(r)
@@ -225,7 +225,7 @@ func (s *ServiceUpdateSuit) BeforeTest(suiteName, testName string) {
 	})
 	s.NotNil(service)
 	s.Nil(err)
-	r, err := service.Init(s.transactionID)
+	r, err := service.Init(s.transactionID, "")
 	s.True(r)
 	s.Nil(err)
 	s.service = service
