@@ -9210,6 +9210,9 @@ definitions:
                   type: string
               type: array
               x-omitempty: true
+          service_name_regexp:
+              description: Regular expression used to filter services by name.
+              type: string
           token:
               pattern: ^[^\s]+$
               type: string

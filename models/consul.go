@@ -109,6 +109,9 @@ type Consul struct {
 	// service denylist
 	ServiceDenylist []string `json:"service_denylist,omitempty"`
 
+	// Regular expression used to filter services by name.
+	ServiceNameRegexp string `json:"service_name_regexp,omitempty"`
+
 	// token
 	// Pattern: ^[^\s]+$
 	Token string `json:"token,omitempty"`
