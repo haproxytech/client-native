@@ -107,6 +107,7 @@ global
   tune.quic.socket-owner connection
   tune.zlib.memlevel 54
   tune.zlib.windowsize 55
+  tune.memory.hot-size 56
   busy-polling
   max-spread-checks 1
   maxconnrate 2

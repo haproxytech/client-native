@@ -441,6 +441,9 @@ func TestGetGlobal(t *testing.T) {
 	if global.TuneOptions.ZlibWindowsize != 55 {
 		t.Errorf("ZlibWindowsize is %v, expected 55", global.TuneOptions.ZlibWindowsize)
 	}
+	if *global.TuneOptions.MemoryHotSize != 56 {
+		t.Errorf("MemoryHotSize is %v, expected 56", global.TuneOptions.MemoryHotSize)
+	}
 	if global.TuneOptions.H2BeInitialWindowSize != 201 {
 		t.Errorf("H2BeInitialWindowSize is %v, expected 201", global.TuneOptions.H2BeInitialWindowSize)
 	}

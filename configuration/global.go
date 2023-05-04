@@ -2162,6 +2162,9 @@ func serializeTuneOptions(p parser.Parser, options *models.GlobalTuneOptions) er
 	if err := serializeInt64Option(p, "tune.maxrewrite", options.Maxrewrite); err != nil {
 		return err
 	}
+	if err := serializeInt64POption(p, "tune.memory.hot-size", options.MemoryHotSize); err != nil {
+		return err
+	}
 	if err := serializeInt64POption(p, "tune.pattern.cache-size", options.PatternCacheSize); err != nil {
 		return err
 	}
@@ -2593,6 +2596,12 @@ func parseTuneOptions(p parser.Parser) (*models.GlobalTuneOptions, error) { //no
 		return nil, err
 	}
 	options.Maxrewrite = intOption
+
+	intPOption, err = parseInt64POption(p, "tune.memory.hot-size")
+	if err != nil {
+		return nil, err
+	}
+	options.MemoryHotSize = intPOption
 
 	intPOption, err = parseInt64POption(p, "tune.pattern.cache-size")
 	if err != nil {

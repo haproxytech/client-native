@@ -2929,6 +2929,9 @@ type GlobalTuneOptions struct {
 	// maxrewrite
 	Maxrewrite int64 `json:"maxrewrite,omitempty"`
 
+	// memory hot size
+	MemoryHotSize *int64 `json:"memory_hot_size,omitempty"`
+
 	// pattern cache size
 	PatternCacheSize *int64 `json:"pattern_cache_size,omitempty"`
 
