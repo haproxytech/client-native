@@ -31,3 +31,18 @@ func Backups(number int) ConfigurationOption {
 		backupsNumber: number,
 	}
 }
+
+type backupsDir struct {
+	backupsDir string
+}
+
+func (u backupsDir) Set(p *ConfigurationOptions) error {
+	p.BackupsDir = u.backupsDir
+	return nil
+}
+
+func BackupsDir(bckDir string) ConfigurationOption {
+	return backupsDir{
+		backupsDir: bckDir,
+	}
+}
