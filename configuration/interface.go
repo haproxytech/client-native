@@ -19,6 +19,7 @@ import (
 	"context"
 	"fmt"
 	"os/exec"
+	"path/filepath"
 
 	parser "github.com/haproxytech/config-parser/v4"
 	parser_options "github.com/haproxytech/config-parser/v4/options"
@@ -85,6 +86,10 @@ func New(ctx context.Context, opt ...options.ConfigurationOption) (Configuration
 
 	if optionsWrapper.ConfigurationFile == "" {
 		optionsWrapper.ConfigurationFile = options.DefaultConfigurationFile
+	}
+
+	if optionsWrapper.BackupsDir == "" {
+		optionsWrapper.BackupsDir = filepath.Dir(optionsWrapper.ConfigurationFile)
 	}
 
 	if optionsWrapper.Haproxy == "" {

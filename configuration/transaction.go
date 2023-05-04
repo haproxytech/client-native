@@ -194,10 +194,7 @@ func (t *Transaction) commitTransaction(transactionID string, skipVersion bool) 
 
 	// Fail backing up and cleaning backups silently
 	if t.BackupsNumber > 0 {
-		backupConfFile := fmt.Sprintf("%v.%v", t.ConfigurationFile, strconv.Itoa(int(version)))
-		_ = t.TransactionClient.Save(backupConfFile, "")
-		backupToDel := fmt.Sprintf("%v.%v", t.ConfigurationFile, strconv.Itoa(int(version)-t.BackupsNumber))
-		os.Remove(backupToDel)
+		t.backupCfgAndCleanup(version)
 	}
 
 	if err := t.TransactionClient.Save(t.ConfigurationFile, transactionID); err != nil {
@@ -213,6 +210,15 @@ func (t *Transaction) commitTransaction(transactionID string, skipVersion bool) 
 	}
 
 	return &models.Transaction{ID: transactionID, Version: tVersion, Status: "success"}, nil
+}
+
+func (t *Transaction) backupCfgAndCleanup(version int64) {
+	backupFilePrefix := filepath.Join(t.BackupsDir, filepath.Base(t.ConfigurationFile))
+
+	backupConfFile := fmt.Sprintf("%v.%v", backupFilePrefix, strconv.Itoa(int(version)))
+	_ = t.TransactionClient.Save(backupConfFile, "")
+	backupToDel := fmt.Sprintf("%v.%v", backupFilePrefix, strconv.Itoa(int(version)-t.BackupsNumber))
+	os.Remove(backupToDel)
 }
 
 func addConfigFilesToArgs(args []string, clientParams options.ConfigurationOptions) []string {
