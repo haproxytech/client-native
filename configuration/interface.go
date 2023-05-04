@@ -19,6 +19,7 @@ import (
 	"context"
 	"fmt"
 	"os/exec"
+	"path/filepath"
 	"strconv"
 	"strings"
 
@@ -94,6 +95,10 @@ func New(ctx context.Context, opt ...options.ConfigurationOption) (Configuration
 
 	if optionsWrapper.ConfigurationFile == "" {
 		optionsWrapper.ConfigurationFile = options.DefaultConfigurationFile
+	}
+
+	if optionsWrapper.BackupsDir == "" {
+		optionsWrapper.BackupsDir = filepath.Dir(optionsWrapper.ConfigurationFile)
 	}
 
 	if optionsWrapper.Haproxy == "" {

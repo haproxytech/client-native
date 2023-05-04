@@ -20,6 +20,7 @@ type ConfigurationOptions struct {
 	ConfigurationFile               string
 	Haproxy                         string
 	TransactionDir                  string
+	BackupsDir                      string
 	PersistentTransactions          bool
 	SkipFailedTransactions          bool
 	BackupsNumber                   int
