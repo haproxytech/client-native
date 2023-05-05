@@ -162,6 +162,7 @@ consul:
     health_check_policy:
       type: string
       enum: [none, any, all, min]
+      default: none
       description: |-
         Defines the health check conditions required for each node to be considered valid for the service.
           none: all nodes are considered valid

@@ -9138,6 +9138,7 @@ definitions:
           enabled:
               type: boolean
           health_check_policy:
+              default: none
               description: |-
                   Defines the health check conditions required for each node to be considered valid for the service.
                     none: all nodes are considered valid

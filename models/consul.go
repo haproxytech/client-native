@@ -61,7 +61,7 @@ type Consul struct {
 	//   min: a node is considered valid if the number of 'passing' checks is greater or equal to the 'health_check_policy_min' value.
 	//     If the node has less health checks configured then 'health_check_policy_min' it is considered invalid.
 	// Enum: [none any all min]
-	HealthCheckPolicy string `json:"health_check_policy,omitempty"`
+	HealthCheckPolicy *string `json:"health_check_policy,omitempty"`
 
 	// health check policy min
 	HealthCheckPolicyMin int64 `json:"health_check_policy_min,omitempty"`
@@ -238,7 +238,7 @@ func (m *Consul) validateHealthCheckPolicy(formats strfmt.Registry) error {
 	}
 
 	// value enum
-	if err := m.validateHealthCheckPolicyEnum("health_check_policy", "body", m.HealthCheckPolicy); err != nil {
+	if err := m.validateHealthCheckPolicyEnum("health_check_policy", "body", *m.HealthCheckPolicy); err != nil {
 		return err
 	}
 
