@@ -59,6 +59,11 @@ bind_params:
       x-dependency:
         ssl:
           value: true
+    client_sigalgs:
+      type: string
+      x-dependency:
+        ssl:
+          value: true
     crl_file:
       type: string
       x-dependency:
@@ -172,6 +177,11 @@ bind_params:
           value: true
     npn:
       type: string
+    ocsp_update:
+      type: string
+      x-dependency:
+        ssl:
+          value: true
     prefer_client_ciphers:
       type: boolean
     process:
@@ -180,6 +190,11 @@ bind_params:
     proto:
       type: string
       x-display-name: Protocol name
+    sigalgs:
+      type: string
+      x-dependency:
+        ssl:
+          value: true
     ssl:
       type: boolean
     ssl_certificate:  # crt command

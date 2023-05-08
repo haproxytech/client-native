@@ -330,6 +330,8 @@ func parseBindParams(bindOptions []params.BindOption) (b models.BindParams) { //
 				b.Ciphers = v.Value
 			case "ciphersuites":
 				b.Ciphersuites = v.Value
+			case "client-sigalgs":
+				b.ClientSigalgs = v.Value
 			case "crl-file":
 				b.CrlFile = v.Value
 			case "crt-ignore-err":
@@ -369,8 +371,12 @@ func parseBindParams(bindOptions []params.BindOption) (b models.BindParams) { //
 				}
 			case "npn":
 				b.Npn = v.Value
+			case "ocsp-update":
+				b.OcspUpdate = v.Value
 			case "proto":
 				b.Proto = v.Value
+			case "sigalgs":
+				b.Sigalgs = v.Value
 			case "ssl-max-ver":
 				b.SslMaxVer = v.Value
 			case "ssl-min-ver":
@@ -474,6 +480,9 @@ func serializeBindParams(b models.BindParams, path string) (options []params.Bin
 	if b.Ciphersuites != "" {
 		options = append(options, &params.BindOptionValue{Name: "ciphersuites", Value: b.Ciphersuites})
 	}
+	if b.ClientSigalgs != "" {
+		options = append(options, &params.BindOptionValue{Name: "client-sigalgs", Value: b.ClientSigalgs})
+	}
 	if b.CrlFile != "" {
 		options = append(options, &params.BindOptionValue{Name: "crl-file", Value: b.CrlFile})
 	}
@@ -561,11 +570,17 @@ func serializeBindParams(b models.BindParams, path string) (options []params.Bin
 	if b.Npn != "" {
 		options = append(options, &params.BindOptionValue{Name: "npn", Value: b.Npn})
 	}
+	if b.OcspUpdate != "" {
+		options = append(options, &params.BindOptionValue{Name: "ocsp-update", Value: b.OcspUpdate})
+	}
 	if b.PreferClientCiphers {
 		options = append(options, &params.ServerOptionWord{Name: "prefer-client-ciphers"})
 	}
 	if b.Proto != "" {
 		options = append(options, &params.BindOptionValue{Name: "proto", Value: b.Proto})
+	}
+	if b.Sigalgs != "" {
+		options = append(options, &params.BindOptionValue{Name: "sigalgs", Value: b.Sigalgs})
 	}
 	if b.SslMaxVer != "" {
 		options = append(options, &params.BindOptionValue{Name: "ssl-max-ver", Value: b.SslMaxVer})

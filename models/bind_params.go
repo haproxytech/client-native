@@ -69,6 +69,9 @@ type BindParams struct {
 	// ciphersuites
 	Ciphersuites string `json:"ciphersuites,omitempty"`
 
+	// client sigalgs
+	ClientSigalgs string `json:"client_sigalgs,omitempty"`
+
 	// crl file
 	CrlFile string `json:"crl_file,omitempty"`
 
@@ -174,6 +177,9 @@ type BindParams struct {
 	// npn
 	Npn string `json:"npn,omitempty"`
 
+	// ocsp update
+	OcspUpdate string `json:"ocsp_update,omitempty"`
+
 	// prefer client ciphers
 	PreferClientCiphers bool `json:"prefer_client_ciphers,omitempty"`
 
@@ -195,6 +201,9 @@ type BindParams struct {
 	// Example: none
 	// Enum: [none number string]
 	SeverityOutput string `json:"severity_output,omitempty"`
+
+	// sigalgs
+	Sigalgs string `json:"sigalgs,omitempty"`
 
 	// ssl
 	Ssl bool `json:"ssl,omitempty"`
