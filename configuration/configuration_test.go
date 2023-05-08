@@ -197,6 +197,8 @@ global
   tune.h2.fe.initial-window-size 203
   tune.h2.fe.max-concurrent-streams 204
   tune.lua.burst-timeout 205
+  ssl-default-bind-sigalgs RSA+SHA256
+  ssl-default-bind-client-sigalgs ECDSA+SHA256:RSA+SHA256
 
 defaults test_defaults
   maxconn 2000

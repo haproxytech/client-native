@@ -475,6 +475,26 @@ func ParseGlobalSection(p parser.Parser) (*models.Global, error) { //nolint:goco
 		sslBindOptions = sslBindOptionsParser.Value
 	}
 
+	var sslBindSigalgs string
+	data, err = p.Get(parser.Global, parser.GlobalSectionName, "ssl-default-bind-sigalgs")
+	if err == nil {
+		sslBindSigalgsParser, ok := data.(*types.StringC)
+		if !ok {
+			return nil, misc.CreateTypeAssertError("ssl-default-bind-sigalgs")
+		}
+		sslBindSigalgs = sslBindSigalgsParser.Value
+	}
+
+	var sslBindClientSigalgs string
+	data, err = p.Get(parser.Global, parser.GlobalSectionName, "ssl-default-bind-client-sigalgs")
+	if err == nil {
+		sslBindClientSigalgsParser, ok := data.(*types.StringC)
+		if !ok {
+			return nil, misc.CreateTypeAssertError("ssl-default-bind-client-sigalgs")
+		}
+		sslBindClientSigalgs = sslBindClientSigalgsParser.Value
+	}
+
 	var sslDefaultServerCiphers string
 	data, err = p.Get(parser.Global, parser.GlobalSectionName, "ssl-default-server-ciphers")
 	if err == nil {
@@ -1116,6 +1136,8 @@ func ParseGlobalSection(p parser.Parser) (*models.Global, error) { //nolint:goco
 		SslServerVerify:                   sslServerVerify,
 		SetVars:                           setVars,
 		SetVarFmts:                        setVarFormats,
+		SslDefaultBindSigalgs:             sslBindSigalgs,
+		SslDefaultBindClientSigalgs:       sslBindClientSigalgs,
 	}
 
 	return global, nil
@@ -1390,6 +1412,26 @@ func SerializeGlobalSection(p parser.Parser, data *models.Global) error { //noli
 		pSSLBindOptions = nil
 	}
 	if err := p.Set(parser.Global, parser.GlobalSectionName, "ssl-default-bind-options", pSSLBindOptions); err != nil {
+		return err
+	}
+
+	pSSLBindSigalgs := &types.StringC{
+		Value: data.SslDefaultBindSigalgs,
+	}
+	if data.SslDefaultBindSigalgs == "" {
+		pSSLBindSigalgs = nil
+	}
+	if err := p.Set(parser.Global, parser.GlobalSectionName, "ssl-default-bind-sigalgs", pSSLBindSigalgs); err != nil {
+		return err
+	}
+
+	pSSLBindClientSigalgs := &types.StringC{
+		Value: data.SslDefaultBindClientSigalgs,
+	}
+	if data.SslDefaultBindClientSigalgs == "" {
+		pSSLBindClientSigalgs = nil
+	}
+	if err := p.Set(parser.Global, parser.GlobalSectionName, "ssl-default-bind-client-sigalgs", pSSLBindClientSigalgs); err != nil {
 		return err
 	}
 

@@ -596,6 +596,12 @@ func TestGetGlobal(t *testing.T) {
 			t.Errorf("DefaultPath Path is %v, expected /some/path", global.DefaultPath.Path)
 		}
 	}
+	if global.SslDefaultBindSigalgs != "RSA+SHA256" {
+		t.Errorf("SslDefaultBindSigalgs is %v, expected RSA+SHA256", global.SslDefaultBindSigalgs)
+	}
+	if global.SslDefaultBindClientSigalgs != "ECDSA+SHA256:RSA+SHA256" {
+		t.Errorf("SslDefaultBindClientSigalgs is %v, expected ECDSA+SHA256:RSA+SHA256", global.SslDefaultBindClientSigalgs)
+	}
 }
 
 func TestPutGlobal(t *testing.T) {

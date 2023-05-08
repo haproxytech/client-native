@@ -266,11 +266,17 @@ type Global struct {
 	// ssl default bind ciphersuites
 	SslDefaultBindCiphersuites string `json:"ssl_default_bind_ciphersuites,omitempty"`
 
+	// ssl default bind client sigalgs
+	SslDefaultBindClientSigalgs string `json:"ssl_default_bind_client_sigalgs,omitempty"`
+
 	// ssl default bind curves
 	SslDefaultBindCurves string `json:"ssl_default_bind_curves,omitempty"`
 
 	// ssl default bind options
 	SslDefaultBindOptions string `json:"ssl_default_bind_options,omitempty"`
+
+	// ssl default bind sigalgs
+	SslDefaultBindSigalgs string `json:"ssl_default_bind_sigalgs,omitempty"`
 
 	// ssl default server ciphers
 	SslDefaultServerCiphers string `json:"ssl_default_server_ciphers,omitempty"`

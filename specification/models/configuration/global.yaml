@@ -503,6 +503,9 @@ global:
     ssl_default_bind_options:
       type: string
       x-display-name: SSL Default Bind Options
+    ssl_default_bind_sigalgs:
+      type: string
+      x-display-name: SSL Default Bind Sigalgs
     ssl_default_bind_ciphers:
       type: string
       x-display-name: SSL Default Bind Ciphers
@@ -524,6 +527,9 @@ global:
     ssl_default_server_ciphersuites:
       type: string
       x-display-name: SSL Default Server Ciphersuites
+    ssl_default_bind_client_sigalgs:
+      type: string
+      x-display-name: SSL Default Bind Client Sigalgs
     ssl_mode_async:
       type: string
       enum: [enabled, disabled]
