@@ -2112,6 +2112,13 @@ func (s *SectionObject) defaultServer(field reflect.Value) error { //nolint:goco
 			}
 			ps = append(ps, param)
 		}
+		if ds.CaFile != "" {
+			param := &params.ServerOptionValue{
+				Name:  "ca-file",
+				Value: ds.CaFile,
+			}
+			ps = append(ps, param)
+		}
 		if ds.CrlFile != "" {
 			param := &params.ServerOptionValue{
 				Name:  "crl-file",
