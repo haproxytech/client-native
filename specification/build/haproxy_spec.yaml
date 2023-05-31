@@ -9582,6 +9582,12 @@ definitions:
           - to
       title: Email Alert
       type: object
+  email_alerts:
+    title: Email Alerts Array
+    description: Email Alerts array (corresponds to email-alert directives)
+    type: array
+    items:
+      $ref: '#/definitions/email_alert'
   errorloc:
       properties:
           code:

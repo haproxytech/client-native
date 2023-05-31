@@ -557,6 +557,12 @@ definitions:
     $ref: "models/configuration/source.yaml#/source"
   email_alert:
     $ref: "models/configuration/email_alert.yaml#/email_alert"
+  email_alerts:
+    title: Email Alerts Array
+    description: Email Alerts array (corresponds to email-alert directives)
+    type: array
+    items:
+      $ref: '#/definitions/email_alert'
   errorloc:
     $ref: "models/configuration/errorloc.yaml#/errorloc"
   default_bind:
