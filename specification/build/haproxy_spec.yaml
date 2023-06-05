@@ -1136,6 +1136,32 @@ definitions:
               type: integer
               x-display-name: Hard Stop After
               x-nullable: true
+          httpclient_resolvers_disabled:
+              enum:
+                  - enabled
+                  - disabled
+              type: string
+              x-display-name: HTTP Client Resolvers Disabled
+          httpclient_resolvers_id:
+              type: string
+              x-display-name: HTTP Client Resolvers ID
+          httpclient_resolvers_prefer:
+              enum:
+                  - ipv4
+                  - ipv6
+              type: string
+              x-display-name: HTTP Client Resolvers Prefer
+          httpclient_ssl_ca_file:
+              type: string
+              x-display-name: HTTP Client SSL CA File
+          httpclient_ssl_verify:
+              enum:
+                  - ""
+                  - none
+                  - required
+              type: string
+              x-display-name: HTTP Client SSL Verify
+              x-nullable: true
           insecure_fork_wanted:
               type: boolean
           insecure_setuid_wanted:
@@ -1276,6 +1302,9 @@ definitions:
               x-display-name: PID File
           pp2_never_send_local:
               type: boolean
+          prealloc-fd:
+              type: boolean
+              x-display-name: Prealloc FD
           presetenv:
               items:
                   properties:

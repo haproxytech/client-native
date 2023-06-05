@@ -127,6 +127,24 @@ type Global struct {
 	// hard stop after
 	HardStopAfter *int64 `json:"hard_stop_after,omitempty"`
 
+	// httpclient resolvers disabled
+	// Enum: [enabled disabled]
+	HttpclientResolversDisabled string `json:"httpclient_resolvers_disabled,omitempty"`
+
+	// httpclient resolvers id
+	HttpclientResolversID string `json:"httpclient_resolvers_id,omitempty"`
+
+	// httpclient resolvers prefer
+	// Enum: [ipv4 ipv6]
+	HttpclientResolversPrefer string `json:"httpclient_resolvers_prefer,omitempty"`
+
+	// httpclient ssl ca file
+	HttpclientSslCaFile string `json:"httpclient_ssl_ca_file,omitempty"`
+
+	// httpclient ssl verify
+	// Enum: [ none required]
+	HttpclientSslVerify *string `json:"httpclient_ssl_verify,omitempty"`
+
 	// insecure fork wanted
 	InsecureForkWanted bool `json:"insecure_fork_wanted,omitempty"`
 
@@ -235,6 +253,9 @@ type Global struct {
 
 	// pp2 never send local
 	Pp2NeverSendLocal bool `json:"pp2_never_send_local,omitempty"`
+
+	// prealloc fd
+	PreallocFd bool `json:"prealloc-fd,omitempty"`
 
 	// profiling tasks
 	// Enum: [auto on off]
@@ -407,6 +428,18 @@ func (m *Global) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateGroup(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateHttpclientResolversDisabled(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateHttpclientResolversPrefer(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateHttpclientSslVerify(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -843,6 +876,135 @@ func (m *Global) validateGroup(formats strfmt.Registry) error {
 	}
 
 	if err := validate.Pattern("group", "body", m.Group, `^[^\s]+$`); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+var globalTypeHttpclientResolversDisabledPropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		globalTypeHttpclientResolversDisabledPropEnum = append(globalTypeHttpclientResolversDisabledPropEnum, v)
+	}
+}
+
+const (
+
+	// GlobalHttpclientResolversDisabledEnabled captures enum value "enabled"
+	GlobalHttpclientResolversDisabledEnabled string = "enabled"
+
+	// GlobalHttpclientResolversDisabledDisabled captures enum value "disabled"
+	GlobalHttpclientResolversDisabledDisabled string = "disabled"
+)
+
+// prop value enum
+func (m *Global) validateHttpclientResolversDisabledEnum(path, location string, value string) error {
+	if err := validate.EnumCase(path, location, value, globalTypeHttpclientResolversDisabledPropEnum, true); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *Global) validateHttpclientResolversDisabled(formats strfmt.Registry) error {
+	if swag.IsZero(m.HttpclientResolversDisabled) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateHttpclientResolversDisabledEnum("httpclient_resolvers_disabled", "body", m.HttpclientResolversDisabled); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+var globalTypeHttpclientResolversPreferPropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["ipv4","ipv6"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		globalTypeHttpclientResolversPreferPropEnum = append(globalTypeHttpclientResolversPreferPropEnum, v)
+	}
+}
+
+const (
+
+	// GlobalHttpclientResolversPreferIPV4 captures enum value "ipv4"
+	GlobalHttpclientResolversPreferIPV4 string = "ipv4"
+
+	// GlobalHttpclientResolversPreferIPV6 captures enum value "ipv6"
+	GlobalHttpclientResolversPreferIPV6 string = "ipv6"
+)
+
+// prop value enum
+func (m *Global) validateHttpclientResolversPreferEnum(path, location string, value string) error {
+	if err := validate.EnumCase(path, location, value, globalTypeHttpclientResolversPreferPropEnum, true); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *Global) validateHttpclientResolversPrefer(formats strfmt.Registry) error {
+	if swag.IsZero(m.HttpclientResolversPrefer) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateHttpclientResolversPreferEnum("httpclient_resolvers_prefer", "body", m.HttpclientResolversPrefer); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+var globalTypeHttpclientSslVerifyPropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["","none","required"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		globalTypeHttpclientSslVerifyPropEnum = append(globalTypeHttpclientSslVerifyPropEnum, v)
+	}
+}
+
+const (
+
+	// GlobalHttpclientSslVerifyEmpty captures enum value ""
+	GlobalHttpclientSslVerifyEmpty string = ""
+
+	// GlobalHttpclientSslVerifyNone captures enum value "none"
+	GlobalHttpclientSslVerifyNone string = "none"
+
+	// GlobalHttpclientSslVerifyRequired captures enum value "required"
+	GlobalHttpclientSslVerifyRequired string = "required"
+)
+
+// prop value enum
+func (m *Global) validateHttpclientSslVerifyEnum(path, location string, value string) error {
+	if err := validate.EnumCase(path, location, value, globalTypeHttpclientSslVerifyPropEnum, true); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *Global) validateHttpclientSslVerify(formats strfmt.Registry) error {
+	if swag.IsZero(m.HttpclientSslVerify) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateHttpclientSslVerifyEnum("httpclient_ssl_verify", "body", *m.HttpclientSslVerify); err != nil {
 		return err
 	}
 

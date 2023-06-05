@@ -500,6 +500,24 @@ func TestGetGlobal(t *testing.T) {
 	if global.ZeroWarning != true {
 		t.Errorf("ZeroWarning is false, expected true")
 	}
+	if global.PreallocFd != true {
+		t.Errorf("PreallocFd is false, expected true")
+	}
+	if global.HttpclientResolversDisabled != "enabled" {
+		t.Errorf("HttpclientResolversDisabled is %v, expected enabled", global.HttpclientResolversDisabled)
+	}
+	if global.HttpclientResolversID != "resolver_1" {
+		t.Errorf("HttpclientResolversDisabled is %v, expected resolver_1", global.HttpclientResolversID)
+	}
+	if global.HttpclientResolversPrefer != "ipv4" {
+		t.Errorf("HttpclientResolversPrefer is %v, expected ipv4", global.HttpclientResolversPrefer)
+	}
+	if global.HttpclientSslCaFile != "my_test_file.ca" {
+		t.Errorf("HttpclientSslCaFile is %v, expected my_test_file.ca", global.HttpclientSslCaFile)
+	}
+	if *global.HttpclientSslVerify != "none" {
+		t.Errorf("HttpclientSslVerify is %v, expected \"\"", global.HttpclientSslVerify)
+	}
 	if len(global.SslEngines) == 3 {
 		if *global.SslEngines[0].Name != "first" {
 			t.Errorf("SslEngines[0] Name is %v, expected first", *global.SslEngines[0].Name)
@@ -658,13 +676,18 @@ func TestPutGlobal(t *testing.T) {
 			SslOcspUpdateMinDelay:          misc.Int64P(49),
 			StickCounters:                  misc.Int64P(50),
 		},
-		UID:                    1234,
-		WurflOptions:           &models.GlobalWurflOptions{},
-		DeviceAtlasOptions:     &models.GlobalDeviceAtlasOptions{},
-		FiftyOneDegreesOptions: &models.GlobalFiftyOneDegreesOptions{},
-		StatsMaxconn:           misc.Int64P(30),
-		Anonkey:                misc.Int64P(40),
-		NumaCPUMapping:         "disabled",
+		HttpclientResolversDisabled: "disabled",
+		HttpclientResolversPrefer:   "ipv6",
+		HttpclientResolversID:       "my2",
+		HttpclientSslCaFile:         "my_ca_file.ca",
+		HttpclientSslVerify:         misc.StringP(""),
+		UID:                         1234,
+		WurflOptions:                &models.GlobalWurflOptions{},
+		DeviceAtlasOptions:          &models.GlobalDeviceAtlasOptions{},
+		FiftyOneDegreesOptions:      &models.GlobalFiftyOneDegreesOptions{},
+		StatsMaxconn:                misc.Int64P(30),
+		Anonkey:                     misc.Int64P(40),
+		NumaCPUMapping:              "disabled",
 		DefaultPath: &models.GlobalDefaultPath{
 			Type: "origin",
 			Path: "/some/other/path",

@@ -429,6 +429,46 @@ func ParseGlobalSection(p parser.Parser) (*models.Global, error) { //nolint:goco
 		statsTimeout = misc.ParseTimeout(statsTimeoutParser.Value)
 	}
 
+	httpClientResolversDisabled, err := parseOnOffOption(p, "httpclient.resolvers.disabled")
+	if err != nil {
+		return nil, err
+	}
+
+	httpClientResolversID, err := parseStringOption(p, "httpclient.resolvers.id")
+	if err != nil {
+		return nil, err
+	}
+
+	var httpClientResolversPrefer string
+	data, err = p.Get(parser.Global, parser.GlobalSectionName, "httpclient.resolvers.prefer")
+	if err == nil {
+		httpClientResolversPreferParser, ok := data.(*types.HTTPClientResolversPrefer)
+		if !ok {
+			return nil, misc.CreateTypeAssertError("httpclient.resolvers.prefer")
+		}
+		httpClientResolversPrefer = httpClientResolversPreferParser.Type
+	}
+
+	httpClientSSLCaFile, err := parseStringOption(p, "httpclient.ssl.ca-file")
+	if err != nil {
+		return nil, err
+	}
+
+	var httpClientSSLVerify *string
+	data, err = p.Get(parser.Global, parser.GlobalSectionName, "httpclient.ssl.verify")
+	if err == nil {
+		httpClientSSLVerifyParser, ok := data.(*types.HTTPClientSSLVerify)
+		if !ok {
+			return nil, misc.CreateTypeAssertError("httpclient.ssl.verify")
+		}
+		httpClientSSLVerify = &httpClientSSLVerifyParser.Type
+	}
+
+	preallocFD, err := parseBoolOption(p, "prealloc-fd")
+	if err != nil {
+		return nil, err
+	}
+
 	var sslBindCiphers string
 	data, err = p.Get(parser.Global, parser.GlobalSectionName, "ssl-default-bind-ciphers")
 	if err == nil {
@@ -1070,6 +1110,12 @@ func ParseGlobalSection(p parser.Parser) (*models.Global, error) { //nolint:goco
 		RuntimeAPIs:                       rAPIs,
 		StatsTimeout:                      statsTimeout,
 		CPUMaps:                           cpuMaps,
+		HttpclientResolversDisabled:       httpClientResolversDisabled,
+		HttpclientResolversID:             httpClientResolversID,
+		HttpclientResolversPrefer:         httpClientResolversPrefer,
+		HttpclientSslCaFile:               httpClientSSLCaFile,
+		HttpclientSslVerify:               httpClientSSLVerify,
+		PreallocFd:                        preallocFD,
 		SslDefaultBindCiphers:             sslBindCiphers,
 		SslDefaultBindCiphersuites:        sslBindCiphersuites,
 		SslDefaultBindCurves:              sslDefaultBindCurves,
@@ -1364,6 +1410,42 @@ func SerializeGlobalSection(p parser.Parser, data *models.Global) error { //noli
 		cpuMaps = append(cpuMaps, cm)
 	}
 	if err := p.Set(parser.Global, parser.GlobalSectionName, "cpu-map", cpuMaps); err != nil {
+		return err
+	}
+
+	if err := serializeOnOffOption(p, "httpclient.resolvers.disabled", data.HttpclientResolversDisabled); err != nil {
+		return err
+	}
+
+	if err := serializeStringOption(p, "httpclient.resolvers.id", data.HttpclientResolversID); err != nil {
+		return err
+	}
+
+	pHTTPClientResolversPrefer := &types.HTTPClientResolversPrefer{
+		Type: data.HttpclientResolversPrefer,
+	}
+	if data.HttpclientResolversPrefer == "" {
+		pHTTPClientResolversPrefer = nil
+	}
+	if err := p.Set(parser.Global, parser.GlobalSectionName, "httpclient.resolvers.prefer", pHTTPClientResolversPrefer); err != nil {
+		return err
+	}
+
+	if err := serializeStringOption(p, "httpclient.ssl.ca-file", data.HttpclientSslCaFile); err != nil {
+		return err
+	}
+
+	var pHTTPClientSSLCaFile *types.HTTPClientSSLVerify
+	if data.HttpclientSslVerify != nil {
+		pHTTPClientSSLCaFile = &types.HTTPClientSSLVerify{
+			Type: *data.HttpclientSslVerify,
+		}
+	}
+	if err := p.Set(parser.Global, parser.GlobalSectionName, "httpclient.ssl.verify", pHTTPClientSSLCaFile); err != nil {
+		return err
+	}
+
+	if err := serializeBoolOption(p, "prealloc-fd", data.PreallocFd); err != nil {
 		return err
 	}
 

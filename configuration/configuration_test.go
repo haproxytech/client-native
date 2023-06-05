@@ -176,6 +176,12 @@ global
   51degrees-cache-size 51
   quiet
   zero-warning
+  httpclient.resolvers.disabled on
+  httpclient.resolvers.prefer ipv4
+  httpclient.resolvers.id resolver_1
+  httpclient.ssl.ca-file my_test_file.ca
+  httpclient.ssl.verify none
+  prealloc-fd
   ssl-engine first
   ssl-engine second RSA,DSA,DH,EC,RAND
   ssl-engine third CIPHERS,DIGESTS,PKEY,PKEY_CRYPTO,PKEY_ASN1

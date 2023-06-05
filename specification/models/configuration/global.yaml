@@ -169,6 +169,28 @@ global:
     spread_checks:
       type: integer
       x-display-name: Add some randomness in the check interval
+    httpclient_resolvers_disabled:
+      type: string
+      enum: [enabled, disabled]
+      x-display-name: HTTP Client Resolvers Disabled
+    httpclient_resolvers_id:
+      type: string
+      x-display-name: HTTP Client Resolvers ID
+    httpclient_resolvers_prefer:
+      type: string
+      enum: ["ipv4", "ipv6"]
+      x-display-name: HTTP Client Resolvers Prefer
+    httpclient_ssl_ca_file:
+      type: string
+      x-display-name: HTTP Client SSL CA File
+    httpclient_ssl_verify:
+      type: string
+      enum: ["", "none", "required"]
+      x-display-name: HTTP Client SSL Verify
+      x-nullable: true
+    prealloc-fd:
+      type: boolean
+      x-display-name: Prealloc FD
     wurfl_options:
       type: object
       properties:
