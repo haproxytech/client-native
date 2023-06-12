@@ -321,7 +321,7 @@ type ServerParams struct {
 	Stick string `json:"stick,omitempty"`
 
 	// tcp ut
-	TCPUt int64 `json:"tcp_ut,omitempty"`
+	TCPUt *int64 `json:"tcp_ut,omitempty"`
 
 	// tfo
 	// Enum: [enabled disabled]

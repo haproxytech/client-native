@@ -462,10 +462,7 @@ func parseServerParams(serverOptions []params.ServerOption, serverParams *models
 			case "socks4":
 				serverParams.Socks4 = v.Value
 			case "tcp-ut":
-				d, err := strconv.ParseInt(v.Value, 10, 64)
-				if err == nil {
-					serverParams.TCPUt = d
-				}
+				serverParams.TCPUt = misc.ParseTimeout(v.Value)
 			case "track":
 				serverParams.Track = v.Value
 			case "verify":
@@ -793,8 +790,8 @@ func serializeServerParams(s models.ServerParams) (options []params.ServerOption
 	if s.Socks4 != "" {
 		options = append(options, &params.ServerOptionValue{Name: "socks4", Value: s.Socks4})
 	}
-	if s.TCPUt != 0 {
-		options = append(options, &params.ServerOptionValue{Name: "tcp-ut", Value: strconv.FormatInt(s.TCPUt, 10)})
+	if s.TCPUt != nil {
+		options = append(options, &params.ServerOptionValue{Name: "tcp-ut", Value: strconv.FormatInt(*s.TCPUt, 10)})
 	}
 	if s.Track != "" {
 		options = append(options, &params.ServerOptionValue{Name: "track", Value: s.Track})

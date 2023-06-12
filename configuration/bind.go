@@ -297,10 +297,7 @@ func parseBindParams(bindOptions []params.BindOption) (b models.BindParams) { //
 			case "process":
 				b.Process = v.Value
 			case "tcp-ut":
-				t, err := strconv.ParseInt(v.Value, 10, 64)
-				if err == nil {
-					b.TCPUserTimeout = &t
-				}
+				b.TCPUserTimeout = misc.ParseTimeout(v.Value)
 			case "crt":
 				b.SslCertificate = v.Value
 			case "ca-file":

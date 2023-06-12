@@ -270,6 +270,7 @@ server_params:
           required: true
     tcp_ut:
       type: integer
+      x-nullable: true
     tfo:
       type: string
       enum: [enabled, disabled]

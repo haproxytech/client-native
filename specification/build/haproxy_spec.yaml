@@ -832,6 +832,7 @@ definitions:
               type: string
           tcp_ut:
               type: integer
+              x-nullable: true
           tfo:
               enum:
                   - enabled

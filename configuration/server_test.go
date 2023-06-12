@@ -146,6 +146,9 @@ func TestGetServer(t *testing.T) {
 	if *s.PoolPurgeDelay != 10000 {
 		t.Errorf("%v: PoolPurgeDelay not 10000: %v", s.Name, *s.PoolPurgeDelay)
 	}
+	if *s.TCPUt != 2000 {
+		t.Errorf("%v: TCPUt not 2000: %v", s.Name, *s.TCPUt)
+	}
 
 	_, err = s.MarshalBinary()
 	if err != nil {
