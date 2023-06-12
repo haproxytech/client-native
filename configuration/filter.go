@@ -303,6 +303,30 @@ func SerializeFilter(f models.Filter) types.Filter {
 		return &filters.Cache{
 			Name: f.CacheName,
 		}
+	case "fcgi-app":
+		return &filters.FcgiApp{
+			Name: f.AppName,
+		}
+	case "bwlim-in":
+		return &filters.BandwidthLimit{
+			Attribute:     "bwlim-in",
+			Name:          f.BandwidthLimitName,
+			DefaultLimit:  strconv.FormatInt(f.DefaultLimit, 10),
+			DefaultPeriod: strconv.FormatInt(f.DefaultPeriod, 10),
+			Limit:         strconv.FormatInt(f.Limit, 10),
+			Key:           f.Key,
+			Table:         &f.Table,
+		}
+	case "bwlim-out":
+		return &filters.BandwidthLimit{
+			Attribute:     "bwlim-out",
+			Name:          f.BandwidthLimitName,
+			DefaultLimit:  strconv.FormatInt(f.DefaultLimit, 10),
+			DefaultPeriod: strconv.FormatInt(f.DefaultPeriod, 10),
+			Limit:         strconv.FormatInt(f.Limit, 10),
+			Key:           f.Key,
+			Table:         &f.Table,
+		}
 	}
 	return nil
 }
