@@ -222,23 +222,32 @@ func ParseFilter(f types.Filter) *models.Filter {
 			BandwidthLimitName: v.Name,
 			Type:               v.Attribute,
 		}
-
 		if len(v.Limit) > 0 && len(v.Key) > 0 {
 			filter.Key = v.Key
-			filter.Limit, _ = strconv.ParseInt(v.Limit, 10, 64)
+			limit := misc.ParseSize(v.Limit)
+			if limit != nil {
+				filter.Limit = *limit
+			}
 
 			if table := v.Table; table != nil {
 				filter.Table = *table
 			}
 		} else {
-			filter.DefaultLimit, _ = strconv.ParseInt(v.DefaultLimit, 10, 64)
-			filter.DefaultPeriod, _ = strconv.ParseInt(v.DefaultPeriod, 10, 64)
+			defaultLimit := misc.ParseSize(v.DefaultLimit)
+			if defaultLimit != nil {
+				filter.DefaultLimit = *defaultLimit
+			}
+			defaultPeriod := misc.ParseTimeout(v.DefaultPeriod)
+			if defaultPeriod != nil {
+				filter.DefaultPeriod = *defaultPeriod
+			}
 		}
-
 		if minSize := v.MinSize; minSize != nil {
-			filter.MinSize, _ = strconv.ParseInt(*minSize, 10, 64)
+			minSizeValue := misc.ParseSize(*v.MinSize)
+			if minSizeValue != nil {
+				filter.MinSize = *minSizeValue
+			}
 		}
-
 		return filter
 	case *filters.FcgiApp:
 		return &models.Filter{

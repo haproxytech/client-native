@@ -83,11 +83,11 @@ func TestGetFilters(t *testing.T) { //nolint:gocognit
 			if f.DefaultLimit != 1024 {
 				t.Errorf("%v: DefaultLimit not 1024: %v", *f.Index, f.DefaultLimit)
 			}
-			if f.DefaultPeriod != 10 {
-				t.Errorf("%v: DefaultPeriod not 10: %v", *f.Index, f.DefaultPeriod)
+			if f.DefaultPeriod != 1000 {
+				t.Errorf("%v: DefaultPeriod not 1000: %v", *f.Index, f.DefaultPeriod)
 			}
-			if f.MinSize != 32 {
-				t.Errorf("%v: MinSize not 32: %v", *f.Index, f.MinSize)
+			if f.MinSize != 1048576 {
+				t.Errorf("%v: MinSize not 1048576: %v", *f.Index, f.MinSize)
 			}
 		case 5:
 			if f.Type != "bwlim-out" {
