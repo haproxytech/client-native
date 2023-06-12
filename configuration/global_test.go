@@ -120,6 +120,9 @@ func TestGetGlobal(t *testing.T) {
 	if global.BusyPolling != true {
 		t.Errorf("BusyPolling is false, expected true")
 	}
+	if *global.CloseSpreadTime != 1000 {
+		t.Errorf("CloseSpreadTime is %v, expected 1000", global.CloseSpreadTime)
+	}
 	if *global.MaxSpreadChecks != 1 {
 		t.Errorf("MaxSpreadChecks is %v, expected 1", global.MaxSpreadChecks)
 	}

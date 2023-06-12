@@ -1017,6 +1017,9 @@ definitions:
               pattern: ^[^\s]+$
               type: string
               x-display-name: Chroot
+          close_spread_time:
+              type: integer
+              x-nullable: true
           cluster_secret:
               type: string
               x-display-name: Cluster Secret

@@ -115,6 +115,9 @@ global:
     max_spread_checks:
       type: integer
       x-nullable: true
+    close_spread_time:
+      type: integer
+      x-nullable: true
     maxconnrate:
       type: integer
       x-display-name: Maximum per-process number of concurrent connections

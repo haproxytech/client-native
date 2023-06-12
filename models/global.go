@@ -80,6 +80,9 @@ type Global struct {
 	// Pattern: ^[^\s]+$
 	Chroot string `json:"chroot,omitempty"`
 
+	// close spread time
+	CloseSpreadTime *int64 `json:"close_spread_time,omitempty"`
+
 	// cluster secret
 	ClusterSecret string `json:"cluster_secret,omitempty"`
 

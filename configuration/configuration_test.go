@@ -110,6 +110,7 @@ global
   tune.memory.hot-size 56
   busy-polling
   max-spread-checks 1ms
+  close-spread-time 1s
   maxconnrate 2
   maxcomprate 3
   maxcompcpuusage 4
