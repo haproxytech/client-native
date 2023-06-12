@@ -416,10 +416,7 @@ func parseServerParams(serverOptions []params.ServerOption, serverParams *models
 					serverParams.PoolMaxConn = &m
 				}
 			case "pool-purge-delay":
-				d, err := strconv.ParseInt(v.Value, 10, 64)
-				if err == nil {
-					serverParams.PoolPurgeDelay = &d
-				}
+				serverParams.PoolPurgeDelay = misc.ParseTimeout(v.Value)
 			case "addr":
 				serverParams.HealthCheckAddress = v.Value
 			case "port":

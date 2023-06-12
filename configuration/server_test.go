@@ -143,6 +143,9 @@ func TestGetServer(t *testing.T) {
 			t.Errorf("%v: ProxyV2Options[0] not crc32c: %s", s.Name, s.ProxyV2Options[1])
 		}
 	}
+	if *s.PoolPurgeDelay != 10000 {
+		t.Errorf("%v: PoolPurgeDelay not 10000: %v", s.Name, *s.PoolPurgeDelay)
+	}
 
 	_, err = s.MarshalBinary()
 	if err != nil {
