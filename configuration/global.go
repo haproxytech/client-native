@@ -667,15 +667,11 @@ func ParseGlobalSection(p parser.Parser) (*models.Global, error) { //nolint:goco
 		busyPolling = true
 	}
 
-	var maxSpreadChecks int64
-	data, err = p.Get(parser.Global, parser.GlobalSectionName, "max-spread-checks")
-	if err == nil {
-		maxSpreadChecksParser, ok := data.(*types.Int64C)
-		if !ok {
-			return nil, misc.CreateTypeAssertError("max-spread-checks")
-		}
-		maxSpreadChecks = maxSpreadChecksParser.Value
+	maxSpreadChecksStr, err := parseStringOption(p, "max-spread-checks")
+	if err != nil {
+		return nil, err
 	}
+	maxSpreadChecks := misc.ParseTimeout(maxSpreadChecksStr)
 
 	var maxconnrate int64
 	data, err = p.Get(parser.Global, parser.GlobalSectionName, "maxconnrate")
@@ -1627,13 +1623,7 @@ func SerializeGlobalSection(p parser.Parser, data *models.Global) error { //noli
 		return err
 	}
 
-	maxSpreadChecks := &types.Int64C{
-		Value: data.MaxSpreadChecks,
-	}
-	if data.MaxSpreadChecks == 0 {
-		maxSpreadChecks = nil
-	}
-	if err := p.Set(parser.Global, parser.GlobalSectionName, "max-spread-checks", maxSpreadChecks); err != nil {
+	if err := serializeTimeoutSizeOption(p, "max-spread-checks", data.MaxSpreadChecks); err != nil {
 		return err
 	}
 

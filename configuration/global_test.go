@@ -120,7 +120,7 @@ func TestGetGlobal(t *testing.T) {
 	if global.BusyPolling != true {
 		t.Errorf("BusyPolling is false, expected true")
 	}
-	if global.MaxSpreadChecks != 1 {
+	if *global.MaxSpreadChecks != 1 {
 		t.Errorf("MaxSpreadChecks is %v, expected 1", global.MaxSpreadChecks)
 	}
 	if global.Maxconnrate != 2 {

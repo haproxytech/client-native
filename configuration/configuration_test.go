@@ -109,7 +109,7 @@ global
   tune.zlib.windowsize 55
   tune.memory.hot-size 56
   busy-polling
-  max-spread-checks 1
+  max-spread-checks 1ms
   maxconnrate 2
   maxcomprate 3
   maxcompcpuusage 4

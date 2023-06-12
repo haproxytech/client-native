@@ -178,7 +178,7 @@ type Global struct {
 	MasterWorker bool `json:"master-worker,omitempty"`
 
 	// max spread checks
-	MaxSpreadChecks int64 `json:"max_spread_checks,omitempty"`
+	MaxSpreadChecks *int64 `json:"max_spread_checks,omitempty"`
 
 	// maxcompcpuusage
 	Maxcompcpuusage int64 `json:"maxcompcpuusage,omitempty"`

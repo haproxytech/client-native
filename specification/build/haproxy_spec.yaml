@@ -1228,6 +1228,7 @@ definitions:
               x-display-name: Master Worker Mode
           max_spread_checks:
               type: integer
+              x-nullable: true
           maxcompcpuusage:
               type: integer
               x-display-name: Maximum HAProxy CPU usage
