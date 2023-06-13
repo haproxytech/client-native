@@ -6,7 +6,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/haproxytech/client-native/v4/models"
+	"github.com/haproxytech/client-native/v5/models"
 )
 
 func TestSingleRuntime_ShowACLS(t *testing.T) {
