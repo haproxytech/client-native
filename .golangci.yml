@@ -66,7 +66,7 @@ issues:
     # bugs of typecheck linter
     - "undeclared name: `shellquote`"
     - "github.com/kballard/go-shellquote\" imported but not used"
-    - "github.com/haproxytech/config-parser/v4/types\" imported but not used"
+    - "github.com/haproxytech/config-parser/v5/types\" imported but not used"
 
 run:
   skip-dirs:

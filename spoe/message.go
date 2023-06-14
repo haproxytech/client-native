@@ -19,10 +19,10 @@ import (
 	"fmt"
 
 	"github.com/go-openapi/strfmt"
-	parser "github.com/haproxytech/config-parser/v4"
-	"github.com/haproxytech/config-parser/v4/spoe"
-	spoe_types "github.com/haproxytech/config-parser/v4/spoe/types"
-	"github.com/haproxytech/config-parser/v4/types"
+	parser "github.com/haproxytech/config-parser/v5"
+	"github.com/haproxytech/config-parser/v5/spoe"
+	spoe_types "github.com/haproxytech/config-parser/v5/spoe/types"
+	"github.com/haproxytech/config-parser/v5/types"
 
 	conf "github.com/haproxytech/client-native/v5/configuration"
 	"github.com/haproxytech/client-native/v5/models"

@@ -20,7 +20,7 @@ import (
 	"reflect"
 	"testing"
 
-	parser "github.com/haproxytech/config-parser/v4"
+	parser "github.com/haproxytech/config-parser/v5"
 	"github.com/stretchr/testify/assert"
 
 	"github.com/haproxytech/client-native/v5/misc"

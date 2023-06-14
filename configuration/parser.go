@@ -15,7 +15,7 @@
 
 package configuration
 
-import parser "github.com/haproxytech/config-parser/v4"
+import parser "github.com/haproxytech/config-parser/v5"
 
 type Parser interface {
 	Parser() parser.Parser
