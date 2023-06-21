@@ -67,6 +67,7 @@ http_request_rule:
         - track-sc0
         - track-sc1
         - track-sc2
+        - track-sc
         - unset-var
         - use-service
         - wait-for-body
@@ -95,6 +96,7 @@ http_request_rule:
         type:
           value: capture
     track-sc0-key:
+      x-deprecated: true
       type: string
       pattern: '^[^\s]+$'
       x-display-name: track-sc0 Key
@@ -103,6 +105,7 @@ http_request_rule:
           value: track-sc0
           required: true
     track-sc0-table:
+      x-deprecated: true
       type: string
       pattern: '^[^\s]+$'
       x-display-name: track-sc0 Table
@@ -110,6 +113,7 @@ http_request_rule:
         type:
           value: track-sc0
     track-sc1-key:
+      x-deprecated: true
       type: string
       pattern: '^[^\s]+$'
       x-display-name: track-sc1 Key
@@ -118,6 +122,7 @@ http_request_rule:
           value: track-sc1
           required: true
     track-sc1-table:
+      x-deprecated: true
       type: string
       pattern: '^[^\s]+$'
       x-display-name: track-sc1 Table
@@ -125,6 +130,7 @@ http_request_rule:
         type:
           value: track-sc1
     track-sc2-key:
+      x-deprecated: true
       type: string
       pattern: '^[^\s]+$'
       x-display-name: track-sc2 Key
@@ -133,12 +139,35 @@ http_request_rule:
           value: track-sc2
           required: true
     track-sc2-table:
+      x-deprecated: true
       type: string
       pattern: '^[^\s]+$'
       x-display-name: track-sc2 Table
       x-dependency:
         type:
           value: track-sc2
+    track_sc_key:
+      type: string
+      pattern: '^[^\s]+$'
+      x-display-name: track-sc Key
+      x-dependency:
+        type:
+          value: track-sc
+          required: true
+    track_sc_table:
+      type: string
+      pattern: '^[^\s]+$'
+      x-display-name: track-sc Table
+      x-dependency:
+        type:
+          value: track-sc
+    track_sc_stick_counter:
+      type: integer
+      x-display-name: track-sc StickCounter
+      x-nullable: true
+      x-dependency:
+        type:
+          value: track-sc
     auth_realm:
       type: string
       x-display-name: Authentication Realm

@@ -4101,6 +4101,7 @@ definitions:
                   type:
                       required: true
                       value: track-sc0
+              x-deprecated: true
               x-display-name: track-sc0 Key
           track-sc0-table:
               pattern: ^[^\s]+$
@@ -4108,6 +4109,7 @@ definitions:
               x-dependency:
                   type:
                       value: track-sc0
+              x-deprecated: true
               x-display-name: track-sc0 Table
           track-sc1-key:
               pattern: ^[^\s]+$
@@ -4116,6 +4118,7 @@ definitions:
                   type:
                       required: true
                       value: track-sc1
+              x-deprecated: true
               x-display-name: track-sc1 Key
           track-sc1-table:
               pattern: ^[^\s]+$
@@ -4123,6 +4126,7 @@ definitions:
               x-dependency:
                   type:
                       value: track-sc1
+              x-deprecated: true
               x-display-name: track-sc1 Table
           track-sc2-key:
               pattern: ^[^\s]+$
@@ -4131,6 +4135,7 @@ definitions:
                   type:
                       required: true
                       value: track-sc2
+              x-deprecated: true
               x-display-name: track-sc2 Key
           track-sc2-table:
               pattern: ^[^\s]+$
@@ -4138,7 +4143,30 @@ definitions:
               x-dependency:
                   type:
                       value: track-sc2
+              x-deprecated: true
               x-display-name: track-sc2 Table
+          track_sc_key:
+              pattern: ^[^\s]+$
+              type: string
+              x-dependency:
+                  type:
+                      required: true
+                      value: track-sc
+              x-display-name: track-sc Key
+          track_sc_stick_counter:
+              type: integer
+              x-dependency:
+                  type:
+                      value: track-sc
+              x-display-name: track-sc StickCounter
+              x-nullable: true
+          track_sc_table:
+              pattern: ^[^\s]+$
+              type: string
+              x-dependency:
+                  type:
+                      value: track-sc
+              x-display-name: track-sc Table
           type:
               enum:
                   - add-acl
@@ -4195,6 +4223,7 @@ definitions:
                   - track-sc0
                   - track-sc1
                   - track-sc2
+                  - track-sc
                   - unset-var
                   - use-service
                   - wait-for-body
@@ -4673,6 +4702,7 @@ definitions:
                   type:
                       required: true
                       value: track-sc0
+              x-deprecated: true
               x-display-name: track-sc0 Key
           track-sc0-table:
               pattern: ^[^\s]+$
@@ -4680,6 +4710,7 @@ definitions:
               x-dependency:
                   type:
                       value: track-sc0
+              x-deprecated: true
               x-display-name: track-sc0 Table
           track-sc1-key:
               pattern: ^[^\s]+$
@@ -4688,6 +4719,7 @@ definitions:
                   type:
                       required: true
                       value: track-sc1
+              x-deprecated: true
               x-display-name: track-sc1 Key
           track-sc1-table:
               pattern: ^[^\s]+$
@@ -4695,6 +4727,7 @@ definitions:
               x-dependency:
                   type:
                       value: track-sc1
+              x-deprecated: true
               x-display-name: track-sc1 Table
           track-sc2-key:
               pattern: ^[^\s]+$
@@ -4703,6 +4736,7 @@ definitions:
                   type:
                       required: true
                       value: track-sc2
+              x-deprecated: true
               x-display-name: track-sc2 Key
           track-sc2-table:
               pattern: ^[^\s]+$
@@ -4710,7 +4744,30 @@ definitions:
               x-dependency:
                   type:
                       value: track-sc2
+              x-deprecated: true
               x-display-name: track-sc2 Table
+          track_sc_key:
+              pattern: ^[^\s]+$
+              type: string
+              x-dependency:
+                  type:
+                      required: true
+                      value: track-sc
+              x-display-name: track-sc Key
+          track_sc_stick_counter:
+              type: integer
+              x-dependency:
+                  type:
+                      value: track-sc
+              x-display-name: track-sc StickCounter
+              x-nullable: true
+          track_sc_table:
+              pattern: ^[^\s]+$
+              type: string
+              x-dependency:
+                  type:
+                      value: track-sc
+              x-display-name: track-sc Table
           type:
               enum:
                   - add-acl
@@ -4747,6 +4804,7 @@ definitions:
                   - track-sc0
                   - track-sc1
                   - track-sc2
+                  - track-sc
                   - unset-var
                   - wait-for-body
                   - set-bandwidth-limit
@@ -5443,6 +5501,7 @@ definitions:
                   - track-sc0
                   - track-sc1
                   - track-sc2
+                  - track-sc
                   - unset-var
                   - use-service
                   - lua
@@ -5796,12 +5855,30 @@ definitions:
                           - track-sc0
                           - track-sc1
                           - track-sc2
+                          - track-sc
                   type:
                       value:
                           - session
                           - connection
                           - content
               x-display-name: Sample expression rule
+          track_stick_counter:
+              type: integer
+              x-dependency:
+                  action:
+                      required: false
+                      value:
+                          - track-sc0
+                          - track-sc1
+                          - track-sc2
+                          - track-sc
+                  type:
+                      value:
+                          - session
+                          - connection
+                          - content
+              x-display-name: Track Stick Counter
+              x-nullable: true
           track_table:
               type: string
               x-dependency:
@@ -5811,6 +5888,7 @@ definitions:
                           - track-sc0
                           - track-sc1
                           - track-sc2
+                          - track-sc
                   type:
                       value:
                           - session

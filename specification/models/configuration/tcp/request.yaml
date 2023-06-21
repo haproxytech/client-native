@@ -16,7 +16,7 @@ tcp_request_rule:
       x-nullable: false
     action:
       type: string
-      enum: [accept, capture, do-resolve, expect-netscaler-cip, expect-proxy, reject, sc-add-gpc, sc-inc-gpc, sc-inc-gpc0, sc-inc-gpc1, sc-set-gpt0, send-spoe-group, set-dst-port, set-dst, set-priority, set-src, set-var, silent-drop, track-sc0, track-sc1, track-sc2, unset-var, use-service, lua, set-bandwidth-limit, set-src-port, set-mark, set-tos, set-var-fmt, set-log-level, set-nice, switch-mode]
+      enum: [accept, capture, do-resolve, expect-netscaler-cip, expect-proxy, reject, sc-add-gpc, sc-inc-gpc, sc-inc-gpc0, sc-inc-gpc1, sc-set-gpt0, send-spoe-group, set-dst-port, set-dst, set-priority, set-src, set-var, silent-drop, track-sc0, track-sc1, track-sc2, track-sc, unset-var, use-service, lua, set-bandwidth-limit, set-src-port, set-mark, set-tos, set-var-fmt, set-log-level, set-nice, switch-mode]
       x-nullable: false
       x-dependency:
         type:
@@ -175,7 +175,7 @@ tcp_request_rule:
       x-display-name: Sample expression rule
       x-dependency:
         action:
-          value: [track-sc0, track-sc1, track-sc2]
+          value: [track-sc0, track-sc1, track-sc2, track-sc]
           required: true
         type:
           value: [session, connection, content]
@@ -184,7 +184,17 @@ tcp_request_rule:
       x-display-name: Optional table name
       x-dependency:
         action:
-          value: [track-sc0, track-sc1, track-sc2]
+          value: [track-sc0, track-sc1, track-sc2, track-sc]
+          required: false
+        type:
+          value: [session, connection, content]
+    track_stick_counter:
+      type: integer
+      x-display-name: Track Stick Counter
+      x-nullable: true
+      x-dependency:
+        action:
+          value: [track-sc0, track-sc1, track-sc2, track-sc]
           required: false
         type:
           value: [session, connection, content]
