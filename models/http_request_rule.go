@@ -272,9 +272,20 @@ type HTTPRequestRule struct {
 	// Pattern: ^[^\s]+$
 	TrackSc2Table string `json:"track-sc2-table,omitempty"`
 
+	// track sc key
+	// Pattern: ^[^\s]+$
+	TrackScKey string `json:"track_sc_key,omitempty"`
+
+	// track sc stick counter
+	TrackScStickCounter *int64 `json:"track_sc_stick_counter,omitempty"`
+
+	// track sc table
+	// Pattern: ^[^\s]+$
+	TrackScTable string `json:"track_sc_table,omitempty"`
+
 	// type
 	// Required: true
-	// Enum: [add-acl add-header allow auth cache-use capture del-acl del-header del-map deny disable-l7-retry do-resolve early-hint lua normalize-uri redirect reject replace-header replace-path replace-pathq replace-uri replace-value return sc-add-gpc sc-inc-gpc sc-inc-gpc0 sc-inc-gpc1 sc-set-gpt0 send-spoe-group set-dst set-dst-port set-header set-log-level set-map set-mark set-method set-nice set-path set-pathq set-priority-class set-priority-offset set-query set-src set-src-port set-timeout set-tos set-uri set-var silent-drop strict-mode tarpit track-sc0 track-sc1 track-sc2 unset-var use-service wait-for-body wait-for-handshake set-bandwidth-limit]
+	// Enum: [add-acl add-header allow auth cache-use capture del-acl del-header del-map deny disable-l7-retry do-resolve early-hint lua normalize-uri redirect reject replace-header replace-path replace-pathq replace-uri replace-value return sc-add-gpc sc-inc-gpc sc-inc-gpc0 sc-inc-gpc1 sc-set-gpt0 send-spoe-group set-dst set-dst-port set-header set-log-level set-map set-mark set-method set-nice set-path set-pathq set-priority-class set-priority-offset set-query set-src set-src-port set-timeout set-tos set-uri set-var silent-drop strict-mode tarpit track-sc0 track-sc1 track-sc2 track-sc unset-var use-service wait-for-body wait-for-handshake set-bandwidth-limit]
 	Type string `json:"type"`
 
 	// uri fmt
@@ -461,6 +472,14 @@ func (m *HTTPRequestRule) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateTrackSc2Table(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateTrackScKey(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateTrackScTable(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -1291,11 +1310,35 @@ func (m *HTTPRequestRule) validateTrackSc2Table(formats strfmt.Registry) error {
 	return nil
 }
 
+func (m *HTTPRequestRule) validateTrackScKey(formats strfmt.Registry) error {
+	if swag.IsZero(m.TrackScKey) { // not required
+		return nil
+	}
+
+	if err := validate.Pattern("track_sc_key", "body", m.TrackScKey, `^[^\s]+$`); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *HTTPRequestRule) validateTrackScTable(formats strfmt.Registry) error {
+	if swag.IsZero(m.TrackScTable) { // not required
+		return nil
+	}
+
+	if err := validate.Pattern("track_sc_table", "body", m.TrackScTable, `^[^\s]+$`); err != nil {
+		return err
+	}
+
+	return nil
+}
+
 var httpRequestRuleTypeTypePropEnum []interface{}
 
 func init() {
 	var res []string
-	if err := json.Unmarshal([]byte(`["add-acl","add-header","allow","auth","cache-use","capture","del-acl","del-header","del-map","deny","disable-l7-retry","do-resolve","early-hint","lua","normalize-uri","redirect","reject","replace-header","replace-path","replace-pathq","replace-uri","replace-value","return","sc-add-gpc","sc-inc-gpc","sc-inc-gpc0","sc-inc-gpc1","sc-set-gpt0","send-spoe-group","set-dst","set-dst-port","set-header","set-log-level","set-map","set-mark","set-method","set-nice","set-path","set-pathq","set-priority-class","set-priority-offset","set-query","set-src","set-src-port","set-timeout","set-tos","set-uri","set-var","silent-drop","strict-mode","tarpit","track-sc0","track-sc1","track-sc2","unset-var","use-service","wait-for-body","wait-for-handshake","set-bandwidth-limit"]`), &res); err != nil {
+	if err := json.Unmarshal([]byte(`["add-acl","add-header","allow","auth","cache-use","capture","del-acl","del-header","del-map","deny","disable-l7-retry","do-resolve","early-hint","lua","normalize-uri","redirect","reject","replace-header","replace-path","replace-pathq","replace-uri","replace-value","return","sc-add-gpc","sc-inc-gpc","sc-inc-gpc0","sc-inc-gpc1","sc-set-gpt0","send-spoe-group","set-dst","set-dst-port","set-header","set-log-level","set-map","set-mark","set-method","set-nice","set-path","set-pathq","set-priority-class","set-priority-offset","set-query","set-src","set-src-port","set-timeout","set-tos","set-uri","set-var","silent-drop","strict-mode","tarpit","track-sc0","track-sc1","track-sc2","track-sc","unset-var","use-service","wait-for-body","wait-for-handshake","set-bandwidth-limit"]`), &res); err != nil {
 		panic(err)
 	}
 	for _, v := range res {
@@ -1466,6 +1509,9 @@ const (
 
 	// HTTPRequestRuleTypeTrackDashSc2 captures enum value "track-sc2"
 	HTTPRequestRuleTypeTrackDashSc2 string = "track-sc2"
+
+	// HTTPRequestRuleTypeTrackDashSc captures enum value "track-sc"
+	HTTPRequestRuleTypeTrackDashSc string = "track-sc"
 
 	// HTTPRequestRuleTypeUnsetDashVar captures enum value "unset-var"
 	HTTPRequestRuleTypeUnsetDashVar string = "unset-var"

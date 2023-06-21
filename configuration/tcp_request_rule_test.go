@@ -20,6 +20,7 @@ import (
 	"reflect"
 	"testing"
 
+	"github.com/haproxytech/client-native/v5/misc"
 	"github.com/haproxytech/client-native/v5/models"
 )
 
@@ -29,8 +30,8 @@ func TestGetTCPRequestRules(t *testing.T) { //nolint:gocognit,gocyclo
 		t.Error(err.Error())
 	}
 
-	if len(tRules) != 24 {
-		t.Errorf("%v tcp request rules returned, expected 24", len(tRules))
+	if len(tRules) != 30 {
+		t.Errorf("%v tcp request rules returned, expected 30", len(tRules))
 	}
 
 	if v != version {
@@ -432,8 +433,141 @@ func TestGetTCPRequestRules(t *testing.T) { //nolint:gocognit,gocyclo
 			if r.CondTest != "FALSE" {
 				t.Errorf("%v: CondTest not FALSE: %v", *r.Index, r.CondTest)
 			}
+		case 24:
+			if r.Type != "content" {
+				t.Errorf("%v: Type not content: %v", *r.Index, r.Type)
+			}
+			if r.Action != "track-sc" {
+				t.Errorf("%v: Action not track-sc: %v", *r.Index, r.Action)
+			}
+			if *r.TrackStickCounter != 0 {
+				t.Errorf("%v: TrackStickCounter not 0: %v", *r.Index, r.Action)
+			}
+			if r.TrackKey != "src" {
+				t.Errorf("%v: TrackKey not src: %v", *r.Index, r.Action)
+			}
+			if r.TrackTable != "tr0" {
+				t.Errorf("%v: TrackKey not tr0: %v", *r.Index, r.Action)
+			}
+			if r.Cond != "if" {
+				t.Errorf("%v: Cond not if: %v", *r.Index, r.Cond)
+			}
+			if r.CondTest != "TRUE" {
+				t.Errorf("%v: CondTest not FALSE: %v", *r.Index, r.CondTest)
+			}
+
+		case 25:
+			if r.Type != "connection" {
+				t.Errorf("%v: Type not connection: %v", *r.Index, r.Type)
+			}
+			if r.Action != "track-sc" {
+				t.Errorf("%v: Action not track-sc: %v", *r.Index, r.Action)
+			}
+			if *r.TrackStickCounter != 0 {
+				t.Errorf("%v: TrackStickCounter not 0: %v", *r.Index, r.Action)
+			}
+			if r.TrackKey != "src" {
+				t.Errorf("%v: TrackKey not src: %v", *r.Index, r.Action)
+			}
+			if r.TrackTable != "tr0" {
+				t.Errorf("%v: TrackKey not tr0: %v", *r.Index, r.Action)
+			}
+			if r.Cond != "if" {
+				t.Errorf("%v: Cond not if: %v", *r.Index, r.Cond)
+			}
+			if r.CondTest != "TRUE" {
+				t.Errorf("%v: CondTest not FALSE: %v", *r.Index, r.CondTest)
+			}
+		case 26:
+			if r.Type != "session" {
+				t.Errorf("%v: Type not session: %v", *r.Index, r.Type)
+			}
+			if r.Action != "track-sc" {
+				t.Errorf("%v: Action not track-sc: %v", *r.Index, r.Action)
+			}
+			if *r.TrackStickCounter != 0 {
+				t.Errorf("%v: TrackStickCounter not 0: %v", *r.Index, r.Action)
+			}
+			if r.TrackKey != "src" {
+				t.Errorf("%v: TrackKey not src: %v", *r.Index, r.Action)
+			}
+			if r.TrackTable != "tr0" {
+				t.Errorf("%v: TrackKey not tr0: %v", *r.Index, r.Action)
+			}
+			if r.Cond != "if" {
+				t.Errorf("%v: Cond not if: %v", *r.Index, r.Cond)
+			}
+			if r.CondTest != "TRUE" {
+				t.Errorf("%v: CondTest not FALSE: %v", *r.Index, r.CondTest)
+			}
+		case 27:
+			if r.Type != "content" {
+				t.Errorf("%v: Type not content: %v", *r.Index, r.Type)
+			}
+			if r.Action != "track-sc" {
+				t.Errorf("%v: Action not track-sc: %v", *r.Index, r.Action)
+			}
+			if *r.TrackStickCounter != 5 {
+				t.Errorf("%v: TrackStickCounter not 5: %v", *r.Index, r.Action)
+			}
+			if r.TrackKey != "src" {
+				t.Errorf("%v: TrackKey not src: %v", *r.Index, r.Action)
+			}
+			if r.TrackTable != "test" {
+				t.Errorf("%v: TrackKey not test: %v", *r.Index, r.Action)
+			}
+			if r.Cond != "if" {
+				t.Errorf("%v: Cond not if: %v", *r.Index, r.Cond)
+			}
+			if r.CondTest != "TRUE" {
+				t.Errorf("%v: CondTest not FALSE: %v", *r.Index, r.CondTest)
+			}
+		case 28:
+			if r.Type != "connection" {
+				t.Errorf("%v: Type not connection: %v", *r.Index, r.Type)
+			}
+			if r.Action != "track-sc" {
+				t.Errorf("%v: Action not track-sc: %v", *r.Index, r.Action)
+			}
+			if *r.TrackStickCounter != 5 {
+				t.Errorf("%v: TrackStickCounter not 5: %v", *r.Index, r.Action)
+			}
+			if r.TrackKey != "src" {
+				t.Errorf("%v: TrackKey not src: %v", *r.Index, r.Action)
+			}
+			if r.TrackTable != "test" {
+				t.Errorf("%v: TrackKey not test: %v", *r.Index, r.Action)
+			}
+			if r.Cond != "if" {
+				t.Errorf("%v: Cond not if: %v", *r.Index, r.Cond)
+			}
+			if r.CondTest != "TRUE" {
+				t.Errorf("%v: CondTest not FALSE: %v", *r.Index, r.CondTest)
+			}
+		case 29:
+			if r.Type != "session" {
+				t.Errorf("%v: Type not session: %v", *r.Index, r.Type)
+			}
+			if r.Action != "track-sc" {
+				t.Errorf("%v: Action not track-sc: %v", *r.Index, r.Action)
+			}
+			if *r.TrackStickCounter != 5 {
+				t.Errorf("%v: TrackStickCounter not 5: %v", *r.Index, r.Action)
+			}
+			if r.TrackKey != "src" {
+				t.Errorf("%v: TrackKey not src: %v", *r.Index, r.Action)
+			}
+			if r.TrackTable != "test" {
+				t.Errorf("%v: TrackKey not test: %v", *r.Index, r.Action)
+			}
+			if r.Cond != "if" {
+				t.Errorf("%v: Cond not if: %v", *r.Index, r.Cond)
+			}
+			if r.CondTest != "TRUE" {
+				t.Errorf("%v: CondTest not FALSE: %v", *r.Index, r.CondTest)
+			}
 		default:
-			t.Errorf("Expect tcp-request 0-23, %v found", *r.Index)
+			t.Errorf("Expect tcp-request 0-26, %v found", *r.Index)
 		}
 	}
 
@@ -544,7 +678,7 @@ func TestCreateEditDeleteTCPRequestRule(t *testing.T) {
 	}
 
 	// TestDeleteTCPRequest
-	err = clientTest.DeleteTCPRequestRule(24, "frontend", "test", "", version)
+	err = clientTest.DeleteTCPRequestRule(30, "frontend", "test", "", version)
 	if err != nil {
 		t.Error(err.Error())
 	} else {
@@ -555,12 +689,12 @@ func TestCreateEditDeleteTCPRequestRule(t *testing.T) {
 		t.Error("Version not incremented")
 	}
 
-	_, _, err = clientTest.GetTCPRequestRule(24, "frontend", "test", "")
+	_, _, err = clientTest.GetTCPRequestRule(30, "frontend", "test", "")
 	if err == nil {
-		t.Error("DeleteTCPRequestRule failed, TCP Request Rule 22 still exists")
+		t.Error("DeleteTCPRequestRule failed, TCP Request Rule 30 still exists")
 	}
 
-	err = clientTest.DeleteTCPRequestRule(24, "backend", "test_2", "", version)
+	err = clientTest.DeleteTCPRequestRule(27, "backend", "test_2", "", version)
 	if err == nil {
 		t.Error("Should throw error, non existant TCP Request Rule")
 		version++
@@ -607,6 +741,141 @@ func TestSerializeTCPRequestRule(t *testing.T) {
 				CondTest: "{ src 1.2.3.4 5.6.7.8 }",
 			},
 			expectedResult: "connection expect-proxy layer4 if { src 1.2.3.4 5.6.7.8 }",
+		},
+		{
+			input: models.TCPRequestRule{
+				Type:              models.TCPRequestRuleTypeConnection,
+				Action:            models.TCPRequestRuleActionTrackDashSc,
+				Cond:              "if",
+				CondTest:          "TRUE",
+				TrackKey:          "src",
+				TrackTable:        "tr0",
+				TrackStickCounter: misc.Int64P(3),
+			},
+			expectedResult: "connection track-sc3 src table tr0 if TRUE",
+		},
+		{
+			input: models.TCPRequestRule{
+				Type:       models.TCPRequestRuleTypeConnection,
+				Action:     models.TCPRequestRuleActionTrackDashSc0,
+				Cond:       "if",
+				CondTest:   "TRUE",
+				TrackKey:   "src",
+				TrackTable: "tr0",
+			},
+			expectedResult: "connection track-sc0 src table tr0 if TRUE",
+		},
+		{
+			input: models.TCPRequestRule{
+				Type:       models.TCPRequestRuleTypeConnection,
+				Action:     models.TCPRequestRuleActionTrackDashSc1,
+				Cond:       "if",
+				CondTest:   "TRUE",
+				TrackKey:   "src",
+				TrackTable: "tr1",
+			},
+			expectedResult: "connection track-sc1 src table tr1 if TRUE",
+		},
+		{
+			input: models.TCPRequestRule{
+				Type:       models.TCPRequestRuleTypeConnection,
+				Action:     models.TCPRequestRuleActionTrackDashSc2,
+				Cond:       "if",
+				CondTest:   "TRUE",
+				TrackKey:   "src",
+				TrackTable: "tr2",
+			},
+			expectedResult: "connection track-sc2 src table tr2 if TRUE",
+		},
+		{
+			input: models.TCPRequestRule{
+				Type:              models.TCPRequestRuleTypeContent,
+				Action:            models.TCPRequestRuleActionTrackDashSc,
+				Cond:              "if",
+				CondTest:          "TRUE",
+				TrackKey:          "src",
+				TrackTable:        "tr0",
+				TrackStickCounter: misc.Int64P(3),
+			},
+			expectedResult: "content track-sc3 src table tr0 if TRUE",
+		},
+		{
+			input: models.TCPRequestRule{
+				Type:       models.TCPRequestRuleTypeContent,
+				Action:     models.TCPRequestRuleActionTrackDashSc0,
+				Cond:       "if",
+				CondTest:   "TRUE",
+				TrackKey:   "src",
+				TrackTable: "tr0",
+			},
+			expectedResult: "content track-sc0 src table tr0 if TRUE",
+		},
+		{
+			input: models.TCPRequestRule{
+				Type:       models.TCPRequestRuleTypeContent,
+				Action:     models.TCPRequestRuleActionTrackDashSc1,
+				Cond:       "if",
+				CondTest:   "TRUE",
+				TrackKey:   "src",
+				TrackTable: "tr1",
+			},
+			expectedResult: "content track-sc1 src table tr1 if TRUE",
+		},
+		{
+			input: models.TCPRequestRule{
+				Type:       models.TCPRequestRuleTypeContent,
+				Action:     models.TCPRequestRuleActionTrackDashSc2,
+				Cond:       "if",
+				CondTest:   "TRUE",
+				TrackKey:   "src",
+				TrackTable: "tr2",
+			},
+			expectedResult: "content track-sc2 src table tr2 if TRUE",
+		},
+		{
+			input: models.TCPRequestRule{
+				Type:              models.TCPRequestRuleTypeSession,
+				Action:            models.TCPRequestRuleActionTrackDashSc,
+				Cond:              "if",
+				CondTest:          "TRUE",
+				TrackKey:          "src",
+				TrackTable:        "tr0",
+				TrackStickCounter: misc.Int64P(3),
+			},
+			expectedResult: "session track-sc3 src table tr0 if TRUE",
+		},
+		{
+			input: models.TCPRequestRule{
+				Type:       models.TCPRequestRuleTypeSession,
+				Action:     models.TCPRequestRuleActionTrackDashSc0,
+				Cond:       "if",
+				CondTest:   "TRUE",
+				TrackKey:   "src",
+				TrackTable: "tr0",
+			},
+			expectedResult: "session track-sc0 src table tr0 if TRUE",
+		},
+		{
+			input: models.TCPRequestRule{
+				Type:       models.TCPRequestRuleTypeSession,
+				Action:     models.TCPRequestRuleActionTrackDashSc1,
+				Cond:       "if",
+				CondTest:   "TRUE",
+				TrackKey:   "src",
+				TrackTable: "tr1",
+			},
+			expectedResult: "session track-sc1 src table tr1 if TRUE",
+		},
+		{
+			input: models.TCPRequestRule{
+				Type:       models.TCPRequestRuleTypeSession,
+				Action:     models.TCPRequestRuleActionTrackDashSc2,
+				Cond:       "if",
+				CondTest:   "TRUE",
+				TrackKey:   "src",
+				TrackTable: "tr2",
+			},
+			expectedResult: "session track-sc2 src table tr2 if TRUE",
 		},
 	}
 

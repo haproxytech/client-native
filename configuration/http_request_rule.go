@@ -676,25 +676,13 @@ func ParseHTTPRequestRule(f types.Action) (rule *models.HTTPRequestRule, err err
 			DenyStatus: v.Status,
 		}
 	case *actions.TrackSc:
-		var typ actions.TrackScT
-		switch v.Type {
-		case actions.TrackSc0:
-			typ = actions.TrackSc0
-		case actions.TrackSc1:
-			typ = actions.TrackSc1
-		case actions.TrackSc2:
-			typ = actions.TrackSc2
-		}
 		rule = &models.HTTPRequestRule{
-			Type:          string(typ),
-			TrackSc0Key:   v.Key,
-			TrackSc0Table: v.Table,
-			TrackSc1Key:   v.Key,
-			TrackSc1Table: v.Table,
-			TrackSc2Key:   v.Key,
-			TrackSc2Table: v.Table,
-			Cond:          v.Cond,
-			CondTest:      v.CondTest,
+			Type:                string(actions.TrackScType),
+			TrackScKey:          v.Key,
+			TrackScTable:        v.Table,
+			Cond:                v.Cond,
+			CondTest:            v.CondTest,
+			TrackScStickCounter: &v.StickCounter,
 		}
 	case *actions.UnsetVar:
 		rule = &models.HTTPRequestRule{
@@ -1142,27 +1130,42 @@ func SerializeHTTPRequestRule(f models.HTTPRequestRule) (rule types.Action, err 
 		}
 	case "track-sc0":
 		rule = &actions.TrackSc{
-			Type:     actions.TrackSc0,
-			Key:      f.TrackSc0Key,
-			Table:    f.TrackSc0Table,
-			Cond:     f.Cond,
-			CondTest: f.CondTest,
+			Type:         actions.TrackScType,
+			StickCounter: 0,
+			Key:          f.TrackSc0Key,
+			Table:        f.TrackSc0Table,
+			Cond:         f.Cond,
+			CondTest:     f.CondTest,
 		}
 	case "track-sc1":
 		rule = &actions.TrackSc{
-			Type:     actions.TrackSc1,
-			Key:      f.TrackSc1Key,
-			Table:    f.TrackSc1Table,
-			Cond:     f.Cond,
-			CondTest: f.CondTest,
+			Type:         actions.TrackScType,
+			StickCounter: 1,
+			Key:          f.TrackSc1Key,
+			Table:        f.TrackSc1Table,
+			Cond:         f.Cond,
+			CondTest:     f.CondTest,
 		}
 	case "track-sc2":
 		rule = &actions.TrackSc{
-			Type:     actions.TrackSc2,
-			Key:      f.TrackSc2Key,
-			Table:    f.TrackSc2Table,
-			Cond:     f.Cond,
-			CondTest: f.CondTest,
+			Type:         actions.TrackScType,
+			StickCounter: 2,
+			Key:          f.TrackSc2Key,
+			Table:        f.TrackSc2Table,
+			Cond:         f.Cond,
+			CondTest:     f.CondTest,
+		}
+	case "track-sc":
+		if f.TrackScStickCounter == nil {
+			return nil, NewConfError(ErrValidationError, "track_sc_stick_counter must be set")
+		}
+		rule = &actions.TrackSc{
+			StickCounter: *f.TrackScStickCounter,
+			Type:         actions.TrackScType,
+			Key:          f.TrackScKey,
+			Table:        f.TrackScTable,
+			Cond:         f.Cond,
+			CondTest:     f.CondTest,
 		}
 	case "unset-var":
 		rule = &actions.UnsetVar{

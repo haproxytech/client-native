@@ -20,6 +20,7 @@ import (
 	"reflect"
 	"testing"
 
+	"github.com/haproxytech/client-native/v5/misc"
 	"github.com/haproxytech/client-native/v5/models"
 )
 
@@ -29,8 +30,8 @@ func TestGetHTTPRequestRules(t *testing.T) { //nolint:gocognit,gocyclo
 		t.Error(err.Error())
 	}
 
-	if len(hRules) != 42 {
-		t.Errorf("%v http request rules returned, expected 42", len(hRules))
+	if len(hRules) != 46 {
+		t.Errorf("%v http request rules returned, expected 46", len(hRules))
 	}
 
 	if v != version {
@@ -648,8 +649,84 @@ func TestGetHTTPRequestRules(t *testing.T) { //nolint:gocognit,gocyclo
 			if r.CondTest != "FALSE" {
 				t.Errorf("%v: CondTest not FALSE: %v", *r.Index, r.CondTest)
 			}
+		case 42:
+			if r.Type != "track-sc" {
+				t.Errorf("%v: Type not track-sc: %v", *r.Index, r.Type)
+			}
+			if *r.TrackScStickCounter != 0 {
+				t.Errorf("%v: TrackScStickCounter not 0: %v", *r.Index, r.TrackScStickCounter)
+			}
+			if r.TrackScKey != "src" {
+				t.Errorf("%v: TrackScKey not src: %v", *r.Index, r.TrackScKey)
+			}
+			if r.TrackScTable != "tr0" {
+				t.Errorf("%v: TrackScTable not tr0: %v", *r.Index, r.TrackScTable)
+			}
+			if r.Cond != "if" {
+				t.Errorf("%v: Cond not if: %v", *r.Index, r.Cond)
+			}
+			if r.CondTest != "TRUE" {
+				t.Errorf("%v: CondTest not TRUE: %v", *r.Index, r.CondTest)
+			}
+		case 43:
+			if r.Type != "track-sc" {
+				t.Errorf("%v: Type not track-sc: %v", *r.Index, r.Type)
+			}
+			if *r.TrackScStickCounter != 1 {
+				t.Errorf("%v: TrackScStickCounter not 1: %v", *r.Index, r.TrackScStickCounter)
+			}
+			if r.TrackScKey != "src" {
+				t.Errorf("%v: TrackScKey not src: %v", *r.Index, r.TrackScKey)
+			}
+			if r.TrackScTable != "tr1" {
+				t.Errorf("%v: TrackScTable not tr1: %v", *r.Index, r.TrackScTable)
+			}
+			if r.Cond != "if" {
+				t.Errorf("%v: Cond not if: %v", *r.Index, r.Cond)
+			}
+			if r.CondTest != "TRUE" {
+				t.Errorf("%v: CondTest not TRUE: %v", *r.Index, r.CondTest)
+			}
+		case 44:
+			if r.Type != "track-sc" {
+				t.Errorf("%v: Type not track-sc: %v", *r.Index, r.Type)
+			}
+			if *r.TrackScStickCounter != 2 {
+				t.Errorf("%v: TrackScStickCounter not 2: %v", *r.Index, r.TrackScStickCounter)
+			}
+			if r.TrackScKey != "src" {
+				t.Errorf("%v: TrackScKey not src: %v", *r.Index, r.TrackScKey)
+			}
+			if r.TrackScTable != "tr2" {
+				t.Errorf("%v: TrackScTable not tr2: %v", *r.Index, r.TrackScTable)
+			}
+			if r.Cond != "if" {
+				t.Errorf("%v: Cond not if: %v", *r.Index, r.Cond)
+			}
+			if r.CondTest != "TRUE" {
+				t.Errorf("%v: CondTest not TRUE: %v", *r.Index, r.CondTest)
+			}
+		case 45:
+			if r.Type != "track-sc" {
+				t.Errorf("%v: Type not track-sc: %v", *r.Index, r.Type)
+			}
+			if *r.TrackScStickCounter != 5 {
+				t.Errorf("%v: TrackScStickCounter not 5: %v", *r.Index, r.TrackScStickCounter)
+			}
+			if r.TrackScKey != "src" {
+				t.Errorf("%v: TrackScKey not src: %v", *r.Index, r.TrackScKey)
+			}
+			if r.TrackScTable != "test" {
+				t.Errorf("%v: TrackScTable not test: %v", *r.Index, r.TrackScTable)
+			}
+			if r.Cond != "if" {
+				t.Errorf("%v: Cond not if: %v", *r.Index, r.Cond)
+			}
+			if r.CondTest != "TRUE" {
+				t.Errorf("%v: CondTest not TRUE: %v", *r.Index, r.CondTest)
+			}
 		default:
-			t.Errorf("Expext only http-request 0 to 31, %v found", *r.Index)
+			t.Errorf("Expext only http-request 0 to 42, %v found", *r.Index)
 		}
 	}
 
@@ -811,7 +888,7 @@ func TestCreateEditDeleteHTTPRequestRule(t *testing.T) {
 	}
 
 	// TestDeleteHTTPRequest
-	err = clientTest.DeleteHTTPRequestRule(42, "frontend", "test", "", version)
+	err = clientTest.DeleteHTTPRequestRule(46, "frontend", "test", "", version)
 	if err != nil {
 		t.Error(err.Error())
 	} else {
@@ -822,14 +899,77 @@ func TestCreateEditDeleteHTTPRequestRule(t *testing.T) {
 		t.Error("Version not incremented")
 	}
 
-	_, _, err = clientTest.GetHTTPRequestRule(42, "frontend", "test", "")
+	_, _, err = clientTest.GetHTTPRequestRule(46, "frontend", "test", "")
 	if err == nil {
-		t.Error("DeleteHTTPRequestRule failed, HTTP Request Rule 39 still exists")
+		t.Error("DeleteHTTPRequestRule failed, HTTP Request Rule 46 still exists")
 	}
 
 	err = clientTest.DeleteHTTPRequestRule(2, "backend", "test_2", "", version)
 	if err == nil {
 		t.Error("Should throw error, non existant HTTP Request Rule")
 		version++
+	}
+}
+
+func TestSerializeHTTPRequestRule(t *testing.T) {
+	testCases := []struct {
+		input          models.HTTPRequestRule
+		expectedResult string
+	}{
+		{
+			input: models.HTTPRequestRule{
+				Type:                models.HTTPRequestRuleTypeTrackDashSc,
+				Cond:                "if",
+				CondTest:            "TRUE",
+				TrackScKey:          "src",
+				TrackScTable:        "tr0",
+				TrackScStickCounter: misc.Int64P(3),
+			},
+			expectedResult: "track-sc3 src table tr0 if TRUE",
+		},
+		{
+			input: models.HTTPRequestRule{
+				Type:          models.HTTPRequestRuleTypeTrackDashSc0,
+				Cond:          "if",
+				CondTest:      "TRUE",
+				TrackSc0Key:   "src",
+				TrackSc0Table: "tr0",
+			},
+			expectedResult: "track-sc0 src table tr0 if TRUE",
+		},
+		{
+			input: models.HTTPRequestRule{
+				Type:          models.HTTPRequestRuleTypeTrackDashSc1,
+				Cond:          "if",
+				CondTest:      "TRUE",
+				TrackSc1Key:   "src",
+				TrackSc1Table: "tr1",
+			},
+			expectedResult: "track-sc1 src table tr1 if TRUE",
+		},
+		{
+			input: models.HTTPRequestRule{
+				Type:          models.HTTPRequestRuleTypeTrackDashSc2,
+				Cond:          "if",
+				CondTest:      "TRUE",
+				TrackSc2Key:   "src",
+				TrackSc2Table: "tr2",
+			},
+			expectedResult: "track-sc2 src table tr2 if TRUE",
+		},
+	}
+
+	for _, testCase := range testCases {
+		t.Run(testCase.expectedResult, func(t *testing.T) {
+			tcpType, err := SerializeHTTPRequestRule(testCase.input)
+			if err != nil {
+				t.Error(err.Error())
+			}
+
+			actual := tcpType.String()
+			if actual != testCase.expectedResult {
+				t.Errorf("Expected %q, got: %q", testCase.expectedResult, actual)
+			}
+		})
 	}
 }
