@@ -48,12 +48,13 @@ const (
 
 type Storage interface {
 	GetAll() ([]string, error)
-	Get(name string) (string, error)
+	Get(name string) (string, int64, error)
 	GetContents(name string) (string, error)
 	GetRawContents(name string) (io.ReadCloser, error)
+	GetCertificatesInfo(name string) (*CertificatesInfo, error)
 	Delete(name string) error
 	Replace(name string, config string) (string, error)
-	Create(name string, contents io.ReadCloser) (string, error)
+	Create(name string, contents io.ReadCloser) (string, int64, error)
 }
 
 type storage struct {
@@ -106,19 +107,20 @@ func (s *storage) GetAll() ([]string, error) {
 	return files, nil
 }
 
-func (s *storage) Get(name string) (string, error) {
-	f, err := getFile(s.dirname, name)
+// Get returns the full path of a file and checks if it exists.
+func (s *storage) Get(name string) (string, int64, error) {
+	f, size, err := getFile(s.dirname, name)
 	if err != nil {
-		return "", err
+		return "", -1, err
 	}
 	if f == "" {
-		return "", conf.NewConfError(conf.ErrObjectDoesNotExist, fmt.Sprintf("file %s doesn't exist in dir: %s", name, s.dirname))
+		return "", -1, conf.NewConfError(conf.ErrObjectDoesNotExist, fmt.Sprintf("file %s doesn't exist in dir: %s", name, s.dirname))
 	}
-	return f, nil
+	return f, size, nil
 }
 
 func (s *storage) GetContents(name string) (string, error) {
-	f, err := getFile(s.dirname, name)
+	f, _, err := getFile(s.dirname, name)
 	if err != nil {
 		return "", err
 	}
@@ -126,15 +128,50 @@ func (s *storage) GetContents(name string) (string, error) {
 }
 
 func (s *storage) GetRawContents(name string) (io.ReadCloser, error) {
-	fname, err := getFile(s.dirname, name)
+	fname, _, err := getFile(s.dirname, name)
 	if err != nil {
 		return nil, err
 	}
 	return os.Open(fname)
 }
 
+func (s *storage) GetCertificatesInfo(name string) (*CertificatesInfo, error) {
+	f := name
+	var err error
+
+	if !strings.HasPrefix(name, s.dirname) {
+		f, _, err = s.Get(name)
+		if err != nil {
+			return nil, err
+		}
+	}
+
+	raw, err := os.ReadFile(f)
+	if err != nil {
+		return nil, err
+	}
+
+	ci := newCertsInfo()
+
+	for {
+		block, rest := pem.Decode(raw)
+		if block == nil {
+			break
+		}
+		if block.Type == "CERTIFICATE" {
+			err := ci.parseCertificate(block.Bytes)
+			if err != nil {
+				return nil, err
+			}
+		}
+		raw = rest
+	}
+
+	return ci.toCertificatesInfo(), nil
+}
+
 func (s *storage) Delete(name string) error {
-	f, err := s.Get(name)
+	f, _, err := s.Get(name)
 	if err != nil {
 		return err
 	}
@@ -142,7 +179,7 @@ func (s *storage) Delete(name string) error {
 }
 
 func (s storage) Replace(name string, config string) (string, error) {
-	f, err := getFile(s.dirname, name)
+	f, _, err := getFile(s.dirname, name)
 	if err != nil {
 		return "", err
 	}
@@ -162,7 +199,7 @@ func (s storage) Replace(name string, config string) (string, error) {
 	return f, nil
 }
 
-func (s *storage) Create(name string, readCloser io.ReadCloser) (string, error) {
+func (s *storage) Create(name string, readCloser io.ReadCloser) (string, int64, error) {
 	name = misc.SanitizeFilename(name)
 	if s.fileType == MapsType {
 		if !strings.HasSuffix(name, ".map") {
@@ -171,7 +208,7 @@ func (s *storage) Create(name string, readCloser io.ReadCloser) (string, error) 
 	}
 	f := filepath.Join(s.dirname, name)
 	if _, err := os.Stat(f); err == nil {
-		return "", conf.NewConfError(conf.ErrObjectAlreadyExists, fmt.Sprintf("file %s already exists", f))
+		return "", -1, conf.NewConfError(conf.ErrObjectAlreadyExists, fmt.Sprintf("file %s already exists", f))
 	}
 
 	switch s.fileType { //nolint:exhaustive
@@ -180,35 +217,35 @@ func (s *storage) Create(name string, readCloser io.ReadCloser) (string, error) 
 	case MapsType, GeneralType:
 		return s.createFile(f, readCloser)
 	}
-	return f, nil
+	return f, -1, nil
 }
 
-func (s *storage) createSSL(name string, readCloser io.ReadCloser) (string, error) {
+func (s *storage) createSSL(name string, readCloser io.ReadCloser) (string, int64, error) {
 	b, err := io.ReadAll(readCloser)
 	if err != nil {
-		return "", err
+		return "", -1, err
 	}
 	err = s.validatePEM(b)
 	if err != nil {
-		return "", err
+		return "", -1, err
 	}
 	err = renameio.WriteFile(name, b, 0o644)
 	if err != nil {
-		return "", err
+		return "", -1, err
 	}
-	return name, nil
+	return name, int64(len(b)), nil
 }
 
-func (s *storage) createFile(name string, readCloser io.ReadCloser) (string, error) {
+func (s *storage) createFile(name string, readCloser io.ReadCloser) (string, int64, error) {
 	b, err := io.ReadAll(readCloser)
 	if err != nil {
-		return "", err
+		return "", -1, err
 	}
 	err = renameio.WriteFile(name, b, 0o644)
 	if err != nil {
-		return "", err
+		return "", -1, err
 	}
-	return name, nil
+	return name, int64(len(b)), nil
 }
 
 func (s *storage) remove(name string) error {
@@ -228,16 +265,17 @@ func readFile(name string) (string, error) {
 	return string(b), nil
 }
 
-func getFile(dirname, name string) (string, error) {
+func getFile(dirname, name string) (string, int64, error) {
 	name = misc.SanitizeFilename(name)
 	if name == "" {
-		return "", fmt.Errorf("no file name")
+		return "", -1, fmt.Errorf("no file name")
 	}
 	f := filepath.Join(dirname, name)
-	if _, err := os.Stat(f); os.IsNotExist(err) {
-		return "", conf.NewConfError(conf.ErrObjectDoesNotExist, fmt.Sprintf("file %s doesn't exist in dir: %s", name, dirname))
+	finfo, err := os.Stat(f)
+	if os.IsNotExist(err) {
+		return "", -1, conf.NewConfError(conf.ErrObjectDoesNotExist, fmt.Sprintf("file %s doesn't exist in dir: %s", name, dirname))
 	}
-	return f, nil
+	return f, finfo.Size(), nil
 }
 
 func remove(name string) error {

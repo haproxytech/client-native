@@ -217,7 +217,7 @@ key2 val2`
 			s := storage{
 				dirname: tt.dirname,
 			}
-			got, err := s.Get(tt.fileName)
+			got, _, err := s.Get(tt.fileName)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("Storage.Get() error = %v, wantErr %v", err, tt.wantErr)
 				return
@@ -386,7 +386,7 @@ func Test_storage_Create(t *testing.T) {
 				dirname:  tt.dirname,
 				fileType: tt.fileType,
 			}
-			got, err := s.Create(tt.file, tt.readCloser)
+			got, _, err := s.Create(tt.file, tt.readCloser)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("storage.Create() error = %v, wantErr %v", err, tt.wantErr)
 				return
@@ -462,6 +462,50 @@ func Test_storage_validatePEM(t *testing.T) {
 
 			if err := s.validatePEM(tt.content); (err != nil) != tt.wantErr {
 				t.Errorf("storage.validatePEM() error = %v, wantErr %v", err, tt.wantErr)
+				return
+			}
+		})
+	}
+}
+
+func Test_storage_getCertificatesInfo(t *testing.T) {
+	tests := []struct {
+		name     string
+		dirname  string
+		filename string
+	}{
+		{
+			name:     "only public pem",
+			filename: "only-public.pem",
+			dirname:  "invalid",
+		},
+		{
+			name:     "only private pem",
+			filename: "only-private.pem",
+			dirname:  "invalid",
+		},
+		{
+			name:     "public, private and intermediate pems with correct order",
+			filename: "OK-key_crt_int1_int2.pem",
+			dirname:  "valid",
+		},
+		{
+			name:     "self-signed cert without RSA",
+			filename: "self-signed-without-rsa.pem",
+			dirname:  "valid",
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			s := storage{
+				dirname: "../storage/test-certs/" + tt.dirname,
+			}
+
+			info, err := s.GetCertificatesInfo(tt.filename)
+
+			if err != nil || info == nil {
+				t.Errorf("storage.GetCertificatesInfo() error = %v", err)
+				t.Logf("%+v", info)
 				return
 			}
 		})

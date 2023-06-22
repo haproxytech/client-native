@@ -8616,6 +8616,9 @@ definitions:
               type: string
           id:
               type: string
+          size:
+              description: File size in bytes.
+              type: integer
           storage_name:
               type: string
       title: Map File
@@ -8649,8 +8652,29 @@ definitions:
       properties:
           description:
               type: string
+          domains:
+              items:
+                  type: string
+              type: array
           file:
               type: string
+          ip_addresses:
+              items:
+                  type: string
+              type: array
+          issuers:
+              items:
+                  type: string
+              type: array
+          not_after:
+              format: date
+              type: string
+          not_before:
+              format: date
+              type: string
+          size:
+              description: File size in bytes.
+              type: integer
           storage_name:
               type: string
       title: SSL File
@@ -8737,6 +8761,9 @@ definitions:
               type: string
           id:
               type: string
+          size:
+              description: File size in bytes.
+              type: integer
           storage_name:
               type: string
       title: General use file

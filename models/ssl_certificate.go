@@ -23,8 +23,10 @@ package models
 import (
 	"context"
 
+	"github.com/go-openapi/errors"
 	"github.com/go-openapi/strfmt"
 	"github.com/go-openapi/swag"
+	"github.com/go-openapi/validate"
 )
 
 // SslCertificate SSL File
@@ -37,8 +39,28 @@ type SslCertificate struct {
 	// description
 	Description string `json:"description,omitempty"`
 
+	// domains
+	Domains []string `json:"domains"`
+
 	// file
 	File string `json:"file,omitempty"`
+
+	// ip addresses
+	IPAddresses []string `json:"ip_addresses"`
+
+	// issuers
+	Issuers []string `json:"issuers"`
+
+	// not after
+	// Format: date
+	NotAfter strfmt.Date `json:"not_after,omitempty"`
+
+	// not before
+	// Format: date
+	NotBefore strfmt.Date `json:"not_before,omitempty"`
+
+	// File size in bytes.
+	Size int64 `json:"size,omitempty"`
 
 	// storage name
 	StorageName string `json:"storage_name,omitempty"`
@@ -46,6 +68,43 @@ type SslCertificate struct {
 
 // Validate validates this ssl certificate
 func (m *SslCertificate) Validate(formats strfmt.Registry) error {
+	var res []error
+
+	if err := m.validateNotAfter(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateNotBefore(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if len(res) > 0 {
+		return errors.CompositeValidationError(res...)
+	}
+	return nil
+}
+
+func (m *SslCertificate) validateNotAfter(formats strfmt.Registry) error {
+	if swag.IsZero(m.NotAfter) { // not required
+		return nil
+	}
+
+	if err := validate.FormatOf("not_after", "body", "date", m.NotAfter.String(), formats); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *SslCertificate) validateNotBefore(formats strfmt.Registry) error {
+	if swag.IsZero(m.NotBefore) { // not required
+		return nil
+	}
+
+	if err := validate.FormatOf("not_before", "body", "date", m.NotBefore.String(), formats); err != nil {
+		return err
+	}
+
 	return nil
 }
 
