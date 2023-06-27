@@ -4285,6 +4285,16 @@ definitions:
                       value: expect
               x-display-name: Expect Match
           method:
+              enum:
+                  - HEAD
+                  - PUT
+                  - POST
+                  - GET
+                  - TRACE
+                  - PATCH
+                  - DELETE
+                  - CONNECT
+                  - OPTIONS
               type: string
               x-dependency:
                   type:
@@ -7057,6 +7067,9 @@ definitions:
                   - GET
                   - TRACE
                   - PATCH
+                  - DELETE
+                  - CONNECT
+                  - OPTIONS
               type: string
           uri:
               pattern: ^[^ ]*$

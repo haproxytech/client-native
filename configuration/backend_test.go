@@ -20,6 +20,8 @@ import (
 	"reflect"
 	"testing"
 
+	"github.com/google/go-cmp/cmp"
+	"github.com/google/go-cmp/cmp/cmpopts"
 	"github.com/haproxytech/client-native/v4/misc"
 	"github.com/haproxytech/client-native/v4/models"
 )
@@ -699,6 +701,13 @@ func TestCreateEditDeleteBackend(t *testing.T) {
 				Method: "HEAD",
 				URI:    "/",
 			},
+			HTTPCheck: &models.HTTPCheck{
+				Type:    "send",
+				Method:  "OPTIONS",
+				URI:     "/",
+				Version: "HTTP/1.1",
+				Index:   misc.Int64P(0),
+			},
 			Checkcache:         "disabled",
 			IndependentStreams: "disabled",
 			Nolinger:           "disabled",
@@ -897,6 +906,14 @@ func compareBackends(x, y *models.Backend, t *testing.T) bool { //nolint:gocogni
 
 	x.HttpchkParams = nil
 	y.HttpchkParams = nil
+
+	if !cmp.Equal(x.HTTPCheck, y.HTTPCheck, cmpopts.EquateEmpty()) {
+		t.Errorf("Diff in HTTPChecK %s", cmp.Diff(x.HTTPCheck, y.HTTPCheck, cmpopts.EquateEmpty()))
+		return false
+	}
+
+	x.HTTPCheck = nil
+	y.HTTPCheck = nil
 
 	if !reflect.DeepEqual(x.StickTable, y.StickTable) {
 		return false
