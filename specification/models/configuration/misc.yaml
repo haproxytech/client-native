@@ -122,7 +122,7 @@ httpchk_params:
   properties:
     method:
       type: string
-      enum: [HEAD, PUT, POST, GET, TRACE, PATCH]
+      enum: [HEAD, PUT, POST, GET, TRACE, PATCH, DELETE, CONNECT, OPTIONS]
     uri:
       type: string
       pattern: '^[^ ]*$'

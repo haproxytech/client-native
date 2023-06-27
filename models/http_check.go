@@ -79,6 +79,7 @@ type HTTPCheck struct {
 	Match string `json:"match,omitempty"`
 
 	// method
+	// Enum: [HEAD PUT POST GET TRACE PATCH DELETE CONNECT OPTIONS]
 	Method string `json:"method,omitempty"`
 
 	// min recv
@@ -181,6 +182,10 @@ func (m *HTTPCheck) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateMatch(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateMethod(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -376,6 +381,69 @@ func (m *HTTPCheck) validateMatch(formats strfmt.Registry) error {
 
 	// value enum
 	if err := m.validateMatchEnum("match", "body", m.Match); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+var httpCheckTypeMethodPropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["HEAD","PUT","POST","GET","TRACE","PATCH","DELETE","CONNECT","OPTIONS"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		httpCheckTypeMethodPropEnum = append(httpCheckTypeMethodPropEnum, v)
+	}
+}
+
+const (
+
+	// HTTPCheckMethodHEAD captures enum value "HEAD"
+	HTTPCheckMethodHEAD string = "HEAD"
+
+	// HTTPCheckMethodPUT captures enum value "PUT"
+	HTTPCheckMethodPUT string = "PUT"
+
+	// HTTPCheckMethodPOST captures enum value "POST"
+	HTTPCheckMethodPOST string = "POST"
+
+	// HTTPCheckMethodGET captures enum value "GET"
+	HTTPCheckMethodGET string = "GET"
+
+	// HTTPCheckMethodTRACE captures enum value "TRACE"
+	HTTPCheckMethodTRACE string = "TRACE"
+
+	// HTTPCheckMethodPATCH captures enum value "PATCH"
+	HTTPCheckMethodPATCH string = "PATCH"
+
+	// HTTPCheckMethodDELETE captures enum value "DELETE"
+	HTTPCheckMethodDELETE string = "DELETE"
+
+	// HTTPCheckMethodCONNECT captures enum value "CONNECT"
+	HTTPCheckMethodCONNECT string = "CONNECT"
+
+	// HTTPCheckMethodOPTIONS captures enum value "OPTIONS"
+	HTTPCheckMethodOPTIONS string = "OPTIONS"
+)
+
+// prop value enum
+func (m *HTTPCheck) validateMethodEnum(path, location string, value string) error {
+	if err := validate.EnumCase(path, location, value, httpCheckTypeMethodPropEnum, true); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *HTTPCheck) validateMethod(formats strfmt.Registry) error {
+	if swag.IsZero(m.Method) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateMethodEnum("method", "body", m.Method); err != nil {
 		return err
 	}
 
