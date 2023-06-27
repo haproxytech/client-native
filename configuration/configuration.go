@@ -2409,7 +2409,11 @@ func (s *SectionObject) httpCheck(field reflect.Value) error {
 					return nil
 				}
 			}
-			if err := s.Parser.Insert(s.Section, s.Name, "http-check", hc, 0); err != nil {
+			check, err := SerializeHTTPCheck(*hc)
+			if err != nil {
+				return err
+			}
+			if err = s.Parser.Insert(s.Section, s.Name, "http-check", check, 0); err != nil {
 				return err
 			}
 		}
