@@ -80,9 +80,6 @@ func TestGetBind(t *testing.T) {
 	if *l.Port != 80 {
 		t.Errorf("%v: Port not 80 or 8080: %v", l.Name, *l.Port)
 	}
-	if l.OcspUpdate != "on" {
-		t.Errorf("OcspUpdate %v returned, expected on", l.OcspUpdate)
-	}
 	if l.Sigalgs != "RSA+SHA256" {
 		t.Errorf("Sigalgs %v returned, expected on", l.Sigalgs)
 	}
@@ -120,7 +117,6 @@ func TestCreateEditDeleteBind(t *testing.T) {
 			Ciphersuites:   "TLS_AES_128_GCM_SHA256:TLS_AES_256_GCM_SHA384",
 			CrlFile:        "dummy.crl",
 			Thread:         "1/all",
-			OcspUpdate:     "on",
 			Sigalgs:        "ECDSA+SHA256:RSA+SHA256",
 			ClientSigalgs:  "ECDSA+SHA256",
 		},
@@ -169,7 +165,6 @@ func TestCreateEditDeleteBind(t *testing.T) {
 			SslMaxVer:      "TLSv1.3",
 			Interface:      "eth1",
 			Thread:         "odd",
-			OcspUpdate:     "off",
 			Sigalgs:        "ECDSA+SHA256",
 			ClientSigalgs:  "ECDSA+SHA256:RSA+SHA256",
 		},

@@ -177,9 +177,6 @@ type BindParams struct {
 	// npn
 	Npn string `json:"npn,omitempty"`
 
-	// ocsp update
-	OcspUpdate string `json:"ocsp_update,omitempty"`
-
 	// prefer client ciphers
 	PreferClientCiphers bool `json:"prefer_client_ciphers,omitempty"`
 

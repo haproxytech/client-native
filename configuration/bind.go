@@ -368,8 +368,6 @@ func parseBindParams(bindOptions []params.BindOption) (b models.BindParams) { //
 				}
 			case "npn":
 				b.Npn = v.Value
-			case "ocsp-update":
-				b.OcspUpdate = v.Value
 			case "proto":
 				b.Proto = v.Value
 			case "sigalgs":
@@ -566,9 +564,6 @@ func serializeBindParams(b models.BindParams, path string) (options []params.Bin
 	}
 	if b.Npn != "" {
 		options = append(options, &params.BindOptionValue{Name: "npn", Value: b.Npn})
-	}
-	if b.OcspUpdate != "" {
-		options = append(options, &params.BindOptionValue{Name: "ocsp-update", Value: b.OcspUpdate})
 	}
 	if b.PreferClientCiphers {
 		options = append(options, &params.ServerOptionWord{Name: "prefer-client-ciphers"})
