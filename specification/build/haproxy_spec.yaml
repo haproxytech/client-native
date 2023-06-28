@@ -382,11 +382,6 @@ definitions:
                       value: true
           npn:
               type: string
-          ocsp_update:
-              type: string
-              x-dependency:
-                  ssl:
-                      value: true
           prefer_client_ciphers:
               type: boolean
           process:
