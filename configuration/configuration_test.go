@@ -199,7 +199,7 @@ defaults
   no option httpslog
   no option independent-streams
   no option nolinger
-  option originalto 
+  option originalto
   option persist
   option prefer-last-server
   option socket-stats
