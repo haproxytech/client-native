@@ -417,8 +417,8 @@ func TestGetGlobal(t *testing.T) {
 	if *global.TuneOptions.VarsTxnMaxSize != 55 {
 		t.Errorf("VarsTxnMaxSize is %v, expected 55", global.TuneOptions.VarsTxnMaxSize)
 	}
-	if *global.TuneOptions.QuicFrontendConnTcBuffersLimit != 10 {
-		t.Errorf("QuicFrontendConnTcBuffersLimit is %v, expected 10", global.TuneOptions.QuicFrontendConnTcBuffersLimit)
+	if *global.TuneOptions.QuicFrontendConnTxBuffersLimit != 10 {
+		t.Errorf("QuicFrontendConnTxBuffersLimit is %v, expected 10", global.TuneOptions.QuicFrontendConnTxBuffersLimit)
 	}
 	if *global.TuneOptions.QuicFrontendMaxIdleTimeout != 10000 {
 		t.Errorf("QuicFrontendMaxIdleTimeout is %v, expected 10000", global.TuneOptions.QuicFrontendMaxIdleTimeout)
@@ -672,7 +672,7 @@ func TestPutGlobal(t *testing.T) {
 		},
 		TuneOptions: &models.GlobalTuneOptions{
 			PeersMaxUpdatesAtOnce:          100,
-			QuicFrontendConnTcBuffersLimit: nil,
+			QuicFrontendConnTxBuffersLimit: nil,
 			QuicFrontendMaxIdleTimeout:     misc.Int64P(5000),
 			QuicSocketOwner:                "listener",
 			SslOcspUpdateMaxDelay:          misc.Int64P(48),

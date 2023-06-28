@@ -484,7 +484,7 @@ global:
           type: integer
           x-display-name: Variables Transaction Max Size
           x-nullable: true
-        quic_frontend_conn_tc_buffers_limit:
+        quic_frontend_conn_tx_buffers_limit:
           type: integer
           x-display-name: QUIC Frontend Connection TX Buffer Limit
           x-nullable: true
