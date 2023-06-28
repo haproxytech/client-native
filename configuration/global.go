@@ -2365,7 +2365,7 @@ func serializeTuneOptions(p parser.Parser, options *models.GlobalTuneOptions) er
 	if err := serializeTimeoutSizeOption(p, "tune.vars.txn-max-size", options.VarsTxnMaxSize); err != nil {
 		return err
 	}
-	if err := serializeInt64POption(p, "tune.quic.frontend.conn-tx-buffers.limit", options.QuicFrontendConnTcBuffersLimit); err != nil {
+	if err := serializeInt64POption(p, "tune.quic.frontend.conn-tx-buffers.limit", options.QuicFrontendConnTxBuffersLimit); err != nil {
 		return err
 	}
 	if err := serializeTimeoutSizeOption(p, "tune.quic.frontend.max-idle-timeout", options.QuicFrontendMaxIdleTimeout); err != nil {
@@ -2900,7 +2900,7 @@ func parseTuneOptions(p parser.Parser) (*models.GlobalTuneOptions, error) { //no
 	if err != nil {
 		return nil, err
 	}
-	options.QuicFrontendConnTcBuffersLimit = intPOption
+	options.QuicFrontendConnTxBuffersLimit = intPOption
 
 	strOption, err = parseStringOption(p, "tune.quic.frontend.max-idle-timeout")
 	if err != nil {

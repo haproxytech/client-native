@@ -1656,7 +1656,7 @@ definitions:
                   pool_low_fd_ratio:
                       type: integer
                       x-display-name: Max Used Low FD Ratio
-                  quic_frontend_conn_tc_buffers_limit:
+                  quic_frontend_conn_tx_buffers_limit:
                       type: integer
                       x-display-name: QUIC Frontend Connection TX Buffer Limit
                       x-nullable: true

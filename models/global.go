@@ -3118,8 +3118,8 @@ type GlobalTuneOptions struct {
 	// pool low fd ratio
 	PoolLowFdRatio int64 `json:"pool_low_fd_ratio,omitempty"`
 
-	// quic frontend conn tc buffers limit
-	QuicFrontendConnTcBuffersLimit *int64 `json:"quic_frontend_conn_tc_buffers_limit,omitempty"`
+	// quic frontend conn tx buffers limit
+	QuicFrontendConnTxBuffersLimit *int64 `json:"quic_frontend_conn_tx_buffers_limit,omitempty"`
 
 	// quic frontend max idle timeout
 	QuicFrontendMaxIdleTimeout *int64 `json:"quic_frontend_max_idle_timeout,omitempty"`
