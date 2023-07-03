@@ -86,6 +86,9 @@ func TestGetBind(t *testing.T) {
 	if l.ClientSigalgs != "ECDSA+SHA256:RSA+SHA256" {
 		t.Errorf("ClientSigalgs %v returned, expected on", l.ClientSigalgs)
 	}
+	if l.CaVerifyFile != "ca.pem" {
+		t.Errorf("CaVerifyFile '%v' returned, expected 'ca.pem'", l.CaVerifyFile)
+	}
 
 	_, err = l.MarshalBinary()
 	if err != nil {
@@ -119,6 +122,7 @@ func TestCreateEditDeleteBind(t *testing.T) {
 			Thread:         "1/all",
 			Sigalgs:        "ECDSA+SHA256:RSA+SHA256",
 			ClientSigalgs:  "ECDSA+SHA256",
+			CaVerifyFile:   "ca.pem",
 		},
 	}
 
