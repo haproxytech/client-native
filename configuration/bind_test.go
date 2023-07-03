@@ -106,6 +106,7 @@ func TestCreateEditDeleteBind(t *testing.T) {
 			Ciphers:        "ECDH+AESGCM:ECDH+CHACHA20",
 			Ciphersuites:   "TLS_AES_128_GCM_SHA256:TLS_AES_256_GCM_SHA384",
 			CrlFile:        "dummy.crl",
+			CaVerifyFile:   "ca.pem",
 		},
 	}
 
