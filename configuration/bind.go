@@ -302,6 +302,8 @@ func parseBindParams(bindOptions []params.BindOption) (b models.BindParams) { //
 				b.SslCertificate = v.Value
 			case "ca-file":
 				b.SslCafile = v.Value
+			case "ca-verify-file":
+				b.CaVerifyFile = v.Value
 			case "verify":
 				b.Verify = v.Value
 			case "alpn":
@@ -423,6 +425,9 @@ func serializeBindParams(b models.BindParams, path string) (options []params.Bin
 	}
 	if b.SslCafile != "" {
 		options = append(options, &params.BindOptionValue{Name: "ca-file", Value: b.SslCafile})
+	}
+	if b.CaVerifyFile != "" {
+		options = append(options, &params.BindOptionValue{Name: "ca-verify-file", Value: b.CaVerifyFile})
 	}
 	if b.TCPUserTimeout != nil {
 		options = append(options, &params.BindOptionValue{Name: "tcp-ut", Value: strconv.FormatInt(*b.TCPUserTimeout, 10)})
