@@ -103,7 +103,7 @@ func TestGetStickRules(t *testing.T) { //nolint:gocognit,gocyclo
 				t.Errorf("%v: Cond not if: %v", *sr.Index, sr.CondTest)
 			}
 		default:
-			t.Errorf("Expext only stick rule < 5, %v found", *sr.Index)
+			t.Errorf("Expect only stick rule < 5, %v found", *sr.Index)
 		}
 	}
 
@@ -143,7 +143,7 @@ func TestGetStickRule(t *testing.T) {
 
 	_, _, err = clientTest.GetStickRule(5, "test_2", "")
 	if err == nil {
-		t.Error("Should throw error, non existant stick rule")
+		t.Error("Should throw error, non existent stick rule")
 	}
 }
 
@@ -231,7 +231,7 @@ func TestCreateEditDeleteStickRule(t *testing.T) {
 
 	err = clientTest.DeleteStickRule(6, "test_2", "", version)
 	if err == nil {
-		t.Error("Should throw error, non existant stick rule")
+		t.Error("Should throw error, non existent stick rule")
 		version++
 	}
 }

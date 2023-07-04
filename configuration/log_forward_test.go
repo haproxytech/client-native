@@ -66,7 +66,7 @@ func TestGetLogForward(t *testing.T) {
 
 	_, _, err = clientTest.GetLogForward("doesnotexist", "")
 	if err == nil {
-		t.Error("should throw error, non existant log forwards section")
+		t.Error("should throw error, non existent log forwards section")
 	}
 }
 
@@ -143,7 +143,7 @@ func TestCreateEditDeleteLogForward(t *testing.T) {
 
 	err = clientTest.DeleteLogForward("doesnotexist", "", version)
 	if err == nil {
-		t.Error("should throw error, non existant log forward")
+		t.Error("should throw error, non existent log forward")
 		version++
 	}
 }

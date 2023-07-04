@@ -1687,7 +1687,7 @@ definitions:
                       x-nullable: true
                   recv_enough:
                       type: integer
-                      x-display-name: Recieve Enough Socket Buffer Size
+                      x-display-name: Receive Enough Socket Buffer Size
                   runqueue_depth:
                       type: integer
                       x-display-name: Max Tasks in Run Queue
@@ -9959,7 +9959,7 @@ tags:
     Managing transactions. Configuration changes can be grouped in the transaction. You start the
     transaction with trasactions POST, and call the configuration changes you need with parameter
     transaction_id. When you want to commit the transaction, you call the transactions PUT and all changes
-    in that transaction is commited. If you call a configuration change without the transaction_id,
+    in that transaction is committed. If you call a configuration change without the transaction_id,
     transaction mechanism is implicitly called with one operation in transaction.
 - name: Userlist
 security:
@@ -11189,7 +11189,7 @@ paths:
           tags:
               - Defaults
       get:
-          description: Returns one defautls section configuration by it's name.
+          description: Returns one defaults section configuration by it's name.
           operationId: getDefaultsSection
           parameters:
               - description: Defaults name
@@ -11216,7 +11216,7 @@ paths:
                   $ref: '#/responses/NotFound'
               default:
                   $ref: '#/responses/DefaultError'
-          summary: Return a defautls section
+          summary: Return a defaults section
           tags:
               - Defaults
       put:

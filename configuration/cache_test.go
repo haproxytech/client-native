@@ -94,7 +94,7 @@ func TestGetCache(t *testing.T) {
 
 	_, _, err = clientTest.GetCache("doesnotexist", "")
 	if err == nil {
-		t.Error("Should throw error, non existant caches section")
+		t.Error("Should throw error, non existent caches section")
 	}
 }
 
@@ -192,7 +192,7 @@ func TestCreateEditDeleteCache(t *testing.T) {
 
 	err = clientTest.DeleteCache("doesnotexist", "", version)
 	if err == nil {
-		t.Error("Should throw error, non existant cache")
+		t.Error("Should throw error, non existent cache")
 		version++
 	}
 }

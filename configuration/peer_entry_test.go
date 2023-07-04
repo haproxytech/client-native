@@ -85,7 +85,7 @@ func TestGetPeerEntry(t *testing.T) {
 
 	_, _, err = clientTest.GetPeerEntry("community", "mycluster", "")
 	if err == nil {
-		t.Error("Should throw error, non existant peer entry")
+		t.Error("Should throw error, non existent peer entry")
 	}
 }
 
@@ -180,7 +180,7 @@ func TestCreateEditDeletePeerEntry(t *testing.T) {
 
 	err = clientTest.DeletePeerEntry("hapcommunity", "mycluster", "", version)
 	if err == nil {
-		t.Error("Should throw error, non existant peer entry")
+		t.Error("Should throw error, non existent peer entry")
 		version++
 	}
 }

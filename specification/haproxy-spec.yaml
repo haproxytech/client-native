@@ -666,7 +666,7 @@ tags:
       Managing transactions. Configuration changes can be grouped in the transaction. You start the
       transaction with trasactions POST, and call the configuration changes you need with parameter
       transaction_id. When you want to commit the transaction, you call the transactions PUT and all changes
-      in that transaction is commited. If you call a configuration change without the transaction_id,
+      in that transaction is committed. If you call a configuration change without the transaction_id,
       transaction mechanism is implicitly called with one operation in transaction.
   - name: Reloads
     description: |

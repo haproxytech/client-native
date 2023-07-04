@@ -110,7 +110,7 @@ func TestGetPeerSection(t *testing.T) {
 
 	_, _, err = clientTest.GetPeerSection("doesnotexist", "")
 	if err == nil {
-		t.Error("Should throw error, non existant peer section")
+		t.Error("Should throw error, non existent peer section")
 	}
 }
 
@@ -190,7 +190,7 @@ func TestCreateEditDeletePeerSection(t *testing.T) {
 
 	err = clientTest.DeletePeerSection("doesnotexist", "", version)
 	if err == nil {
-		t.Error("Should throw error, non existant peerSection")
+		t.Error("Should throw error, non existent peerSection")
 		version++
 	}
 }
