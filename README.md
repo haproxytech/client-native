@@ -59,7 +59,7 @@ opt := []options.Option{
     options.Runtime(runtimeClient),
 }
 
-// aditional options - not mandatory
+// additional options - not mandatory
 
 //maps storage
 mapStorage, err := storage.New(MapsDir, storage.MapsType)

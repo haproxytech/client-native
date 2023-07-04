@@ -109,7 +109,7 @@ func TestGetFilters(t *testing.T) { //nolint:gocognit
 				t.Errorf("%v: MinSize not 32: %v", *f.Index, f.MinSize)
 			}
 		default:
-			t.Errorf("Expext only filter 1, 2 or 3, %v found", *f.Index)
+			t.Errorf("Expect only filter 1, 2 or 3, %v found", *f.Index)
 		}
 	}
 
@@ -155,7 +155,7 @@ func TestGetFilter(t *testing.T) {
 
 	_, _, err = clientTest.GetFilter(3, "backend", "test2", "")
 	if err == nil {
-		t.Error("Should throw error, non existant filter")
+		t.Error("Should throw error, non existent filter")
 	}
 }
 
@@ -243,7 +243,7 @@ func TestCreateEditDeleteFilter(t *testing.T) {
 
 	err = clientTest.DeleteFilter(1, "backend", "test_2", "", version)
 	if err == nil {
-		t.Error("Should throw error, non existant filter")
+		t.Error("Should throw error, non existent filter")
 		version++
 	}
 }

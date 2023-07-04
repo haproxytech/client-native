@@ -60,7 +60,7 @@ func TestGetServerSwitchingRules(t *testing.T) {
 				t.Errorf("%v: CondTest not TRUE: %v", *sr.Index, sr.CondTest)
 			}
 		default:
-			t.Errorf("Expext only server switching rule 0 or 1, %v found", *sr.Index)
+			t.Errorf("Expect only server switching rule 0 or 1, %v found", *sr.Index)
 		}
 	}
 
@@ -100,7 +100,7 @@ func TestGetServerSwitchingRule(t *testing.T) {
 
 	_, _, err = clientTest.GetServerSwitchingRule(3, "test2", "")
 	if err == nil {
-		t.Error("Should throw error, non existant server switching rule")
+		t.Error("Should throw error, non existent server switching rule")
 	}
 }
 
@@ -185,7 +185,7 @@ func TestCreateEditDeleteServerSwitchingRule(t *testing.T) {
 
 	err = clientTest.DeleteServerSwitchingRule(2, "test_2", "", version)
 	if err == nil {
-		t.Error("Should throw error, non existant server switching rule")
+		t.Error("Should throw error, non existent server switching rule")
 		version++
 	}
 }

@@ -77,7 +77,7 @@ func TestGetNameserver(t *testing.T) {
 
 	_, _, err = clientTest.GetNameserver("community", "test", "")
 	if err == nil {
-		t.Error("Should throw error, non existant nameserver")
+		t.Error("Should throw error, non existent nameserver")
 	}
 }
 
@@ -171,7 +171,7 @@ func TestCreateEditDeleteNameserver(t *testing.T) {
 
 	err = clientTest.DeleteNameserver("hapcommunity", "test", "", version)
 	if err == nil {
-		t.Error("Should throw error, non existant nameserver")
+		t.Error("Should throw error, non existent nameserver")
 		version++
 	}
 }

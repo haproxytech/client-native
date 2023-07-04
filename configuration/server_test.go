@@ -157,7 +157,7 @@ func TestGetServer(t *testing.T) {
 
 	_, _, err = clientTest.GetServer("webserv", "backend", "test_2", "")
 	if err == nil {
-		t.Error("Should throw error, non existant server")
+		t.Error("Should throw error, non existent server")
 	}
 }
 
@@ -217,9 +217,9 @@ func TestGetRingServer(t *testing.T) {
 		t.Error(err.Error())
 	}
 
-	_, _, err = clientTest.GetServer("non-existant", "ring", "myring", "")
+	_, _, err = clientTest.GetServer("non-existent", "ring", "myring", "")
 	if err == nil {
-		t.Error("Should throw error, non existant server")
+		t.Error("Should throw error, non existent server")
 	}
 }
 
@@ -337,7 +337,7 @@ func TestCreateEditDeleteServer(t *testing.T) {
 
 	err = clientTest.DeleteServer("created", "backend", "test_2", "", version)
 	if err == nil {
-		t.Error("Should throw error, non existant server")
+		t.Error("Should throw error, non existent server")
 		version++
 	}
 }

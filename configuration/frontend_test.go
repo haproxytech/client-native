@@ -476,7 +476,7 @@ func TestGetFrontend(t *testing.T) {
 
 	_, _, err = clientTest.GetFrontend("doesnotexist", "")
 	if err == nil {
-		t.Error("Should throw error, non existant frontend")
+		t.Error("Should throw error, non existent frontend")
 	}
 }
 
@@ -669,7 +669,7 @@ func TestCreateEditDeleteFrontend(t *testing.T) {
 
 	err = clientTest.DeleteFrontend("doesnotexist", "", version)
 	if err == nil {
-		t.Error("Should throw error, non existant frontend")
+		t.Error("Should throw error, non existent frontend")
 		version++
 	}
 }

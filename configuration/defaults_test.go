@@ -664,7 +664,7 @@ func TestEditCreateDeleteDefaultsSection(t *testing.T) {
 
 	err = clientTest.DeleteDefaultsSection("i_dont_exist", "", version)
 	if err == nil {
-		t.Error("Should throw error, non existant defaults section")
+		t.Error("Should throw error, non existent defaults section")
 		version++
 	}
 }

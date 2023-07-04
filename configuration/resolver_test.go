@@ -64,7 +64,7 @@ func TestGetResolver(t *testing.T) {
 
 	_, _, err = clientTest.GetResolver("doesnotexist", "")
 	if err == nil {
-		t.Error("Should throw error, non existant resolvers section")
+		t.Error("Should throw error, non existent resolvers section")
 	}
 }
 
@@ -139,7 +139,7 @@ func TestCreateEditDeleteResolver(t *testing.T) {
 
 	err = clientTest.DeleteResolver("doesnotexist", "", version)
 	if err == nil {
-		t.Error("Should throw error, non existant resolver")
+		t.Error("Should throw error, non existent resolver")
 		version++
 	}
 }
