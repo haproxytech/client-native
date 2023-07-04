@@ -419,7 +419,7 @@ func TestGetTCPRequestRule(t *testing.T) {
 
 	_, _, err = clientTest.GetTCPRequestRule(3, "backend", "test_2", "")
 	if err == nil {
-		t.Error("Should throw error, non existant TCP Request Rule")
+		t.Error("Should throw error, non existent TCP Request Rule")
 	}
 }
 
@@ -505,7 +505,7 @@ func TestCreateEditDeleteTCPRequestRule(t *testing.T) {
 
 	err = clientTest.DeleteTCPRequestRule(2, "backend", "test_2", "", version)
 	if err == nil {
-		t.Error("Should throw error, non existant TCP Request Rule")
+		t.Error("Should throw error, non existent TCP Request Rule")
 		version++
 	}
 }

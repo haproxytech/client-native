@@ -439,7 +439,7 @@ func TestGetHTTPResponseRule(t *testing.T) {
 
 	_, _, err = clientTest.GetHTTPResponseRule(3, "backend", "test2", "")
 	if err == nil {
-		t.Error("Should throw error, non existant HTTPResponse Rule")
+		t.Error("Should throw error, non existent HTTPResponse Rule")
 	}
 
 	_, r, err = clientTest.GetHTTPResponseRule(0, "frontend", "test_2", "")
@@ -533,7 +533,7 @@ func TestCreateEditDeleteHTTPResponseRule(t *testing.T) {
 
 	err = clientTest.DeleteHTTPResponseRule(2, "backend", "test_2", "", version)
 	if err == nil {
-		t.Error("Should throw error, non existant HTTPResponse Rule")
+		t.Error("Should throw error, non existent HTTPResponse Rule")
 		version++
 	}
 }

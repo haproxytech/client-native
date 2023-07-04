@@ -357,7 +357,7 @@ global:
           x-nullable: true
         recv_enough:
           type: integer
-          x-display-name: Recieve Enough Socket Buffer Size
+          x-display-name: Receive Enough Socket Buffer Size
         runqueue_depth:
           type: integer
           x-display-name: Max Tasks in Run Queue

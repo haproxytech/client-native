@@ -190,7 +190,7 @@ func TestGetHTTPChecks(t *testing.T) { //nolint:gocognit,gocyclo
 				t.Errorf("%v: Action not disable-on-404: %v", *r.Index, r.Type)
 			}
 		default:
-			t.Errorf("Expext only http checks 0 to 31, %v found", *r.Index)
+			t.Errorf("Expect only http checks 0 to 31, %v found", *r.Index)
 		}
 	}
 
@@ -213,7 +213,7 @@ func TestGetHTTPChecks(t *testing.T) { //nolint:gocognit,gocyclo
 				t.Errorf("%v: Action not disable-on-404: %v", *r.Index, r.Type)
 			}
 		default:
-			t.Errorf("Expext only http-check 0 to %v, %v found", *r.Index, len(checks)-1)
+			t.Errorf("Expect only http-check 0 to %v, %v found", *r.Index, len(checks)-1)
 		}
 	}
 
@@ -250,7 +250,7 @@ func TestGetHTTPCheck(t *testing.T) {
 
 	_, _, err = clientTest.GetHTTPCheck(3, "backend", "test_2", "")
 	if err == nil {
-		t.Error("Should throw error, non existant HTTP Request Rule")
+		t.Error("Should throw error, non existent HTTP Request Rule")
 	}
 
 	_, check, err = clientTest.GetHTTPCheck(0, "defaults", "", "")
@@ -375,7 +375,7 @@ func TestCreateEditDeleteHTTPCheck(t *testing.T) {
 
 	err = clientTest.DeleteHTTPCheck(5, "backend", "test_2", "", version)
 	if err == nil {
-		t.Error("Should throw error, non existant HTTP Check")
+		t.Error("Should throw error, non existent HTTP Check")
 		version++
 	}
 }

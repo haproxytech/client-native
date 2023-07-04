@@ -361,7 +361,7 @@ func TestGetTCPResponseRule(t *testing.T) {
 
 	_, _, err = clientTest.GetTCPResponseRule(3, "test_2", "")
 	if err == nil {
-		t.Error("Should throw error, non existant TCP Response Rule")
+		t.Error("Should throw error, non existent TCP Response Rule")
 	}
 }
 
@@ -447,7 +447,7 @@ func TestCreateEditDeleteTCPResponseRule(t *testing.T) {
 
 	err = clientTest.DeleteTCPResponseRule(3, "test_2", "", version)
 	if err == nil {
-		t.Error("Should throw error, non existant TCP Response Rule")
+		t.Error("Should throw error, non existent TCP Response Rule")
 		version++
 	}
 }

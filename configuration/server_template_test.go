@@ -59,7 +59,7 @@ func TestGetServerTemplate(t *testing.T) {
 	}
 	_, _, err = clientTest.GetServerTemplate("test2", "example", "")
 	if err == nil {
-		t.Error("Should throw error, non existant server template")
+		t.Error("Should throw error, non existent server template")
 	}
 }
 
@@ -255,7 +255,7 @@ func TestCreateEditDeleteServerTemplate(t *testing.T) {
 
 	err = clientTest.DeleteServerTemplate("dev", "test2", "", version)
 	if err == nil {
-		t.Error("Should throw error, non existant server")
+		t.Error("Should throw error, non existent server")
 		version++
 	}
 }

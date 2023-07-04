@@ -452,7 +452,7 @@ func TestCreateEditDeleteSite(t *testing.T) {
 
 	err = clientTest.DeleteSite("doesnotexist", "", version)
 	if err == nil {
-		t.Error("Should throw error, non existant site")
+		t.Error("Should throw error, non existent site")
 	}
 }
 

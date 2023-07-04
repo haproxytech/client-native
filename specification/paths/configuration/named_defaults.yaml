@@ -62,8 +62,8 @@ defaults:
         $ref: '#/responses/DefaultError'
 defaults_one:
   get:
-    summary: Return a defautls section
-    description: Returns one defautls section configuration by it's name.
+    summary: Return a defaults section
+    description: Returns one defaults section configuration by it's name.
     operationId: getDefaultsSection
     tags:
       - Defaults

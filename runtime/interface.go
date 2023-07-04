@@ -132,7 +132,7 @@ type Manage interface {
 }
 
 type Raw interface {
-	// ExecuteRaw does not procces response, just returns its values for all processes
+	// ExecuteRaw does not process response, just returns its values for all processes
 	ExecuteRaw(command string) ([]string, error)
 }
 

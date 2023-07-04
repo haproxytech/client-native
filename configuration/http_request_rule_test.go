@@ -601,7 +601,7 @@ func TestGetHTTPRequestRules(t *testing.T) { //nolint:gocognit,gocyclo
 				t.Errorf("%v: CondTest not FALSE: %v", *r.Index, r.CondTest)
 			}
 		default:
-			t.Errorf("Expext only http-request 0 to 31, %v found", *r.Index)
+			t.Errorf("Expect only http-request 0 to 38, %v found", *r.Index)
 		}
 	}
 
@@ -673,12 +673,12 @@ func TestGetHTTPRequestRule(t *testing.T) {
 
 	_, _, err = clientTest.GetHTTPRequestRule(3, "backend", "test_2", "")
 	if err == nil {
-		t.Error("Should throw error, non existant HTTP Request Rule")
+		t.Error("Should throw error, non existent HTTP Request Rule")
 	}
 
 	_, r, err = clientTest.GetHTTPRequestRule(0, "frontend", "test_2", "")
 	if err != nil {
-		t.Error("Should throw error, non existant HTTP Request Rule")
+		t.Error("Should throw error, non existent HTTP Request Rule")
 	}
 	if r.Type != "capture" {
 		t.Errorf("%v: Type not allow: %v", *r.Index, r.Type)
@@ -689,7 +689,7 @@ func TestGetHTTPRequestRule(t *testing.T) {
 
 	_, r, err = clientTest.GetHTTPRequestRule(1, "frontend", "test_2", "")
 	if err != nil {
-		t.Error("Should throw error, non existant HTTP Request Rule")
+		t.Error("Should throw error, non existent HTTP Request Rule")
 	}
 	if *r.CaptureID != 0 {
 		t.Errorf("%v: Wrong slotIndex: %v", *r.Index, *r.CaptureID)
@@ -781,7 +781,7 @@ func TestCreateEditDeleteHTTPRequestRule(t *testing.T) {
 
 	err = clientTest.DeleteHTTPRequestRule(2, "backend", "test_2", "", version)
 	if err == nil {
-		t.Error("Should throw error, non existant HTTP Request Rule")
+		t.Error("Should throw error, non existent HTTP Request Rule")
 		version++
 	}
 }

@@ -42,7 +42,7 @@ type serviceNode struct {
 	modified bool
 }
 
-// Service represents the maping from a discovery service into a configuration backend.
+// Service represents the mapping from a discovery service into a configuration backend.
 type Service struct {
 	client        Configuration
 	name          string

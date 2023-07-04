@@ -138,7 +138,7 @@ func TestCreateHTTPErrorsSection(t *testing.T) {
 	assert.NoError(t, err)
 	assert.NotNil(t, found)
 	assert.Equal(t, configVersion, version)
-	assert.Equal(t, &valid, found, "added and subsequently retrived sections should match")
+	assert.Equal(t, &valid, found, "added and subsequently retrieved sections should match")
 
 	// Test expected failures.
 	existing := testDataHTTPErrors["website-2"]

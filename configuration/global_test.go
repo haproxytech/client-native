@@ -516,7 +516,7 @@ func TestGetGlobal(t *testing.T) {
 			t.Errorf("SetVars[2] Expr is %v, expected int(200),sub(proc.prio)", *global.SetVars[2].Expr)
 		}
 	} else {
-		t.Errorf("SetVars lenght is %v, expected 3", len(global.SetVars))
+		t.Errorf("SetVars length is %v, expected 3", len(global.SetVars))
 	}
 	if len(global.SetVarFmts) == 2 {
 		if *global.SetVarFmts[0].Name != "proc.bootid" {
@@ -532,7 +532,7 @@ func TestGetGlobal(t *testing.T) {
 			t.Errorf("SetVars[1] Format is %v, expected \"primary\"", *global.SetVarFmts[1].Format)
 		}
 	} else {
-		t.Errorf("SetVarFmts lenght is %v, expected 2", len(global.SetVarFmts))
+		t.Errorf("SetVarFmts length is %v, expected 2", len(global.SetVarFmts))
 	}
 	if len(global.PresetEnvs) == 1 {
 		if *global.PresetEnvs[0].Name != "first" {

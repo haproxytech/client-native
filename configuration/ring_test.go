@@ -66,7 +66,7 @@ func TestGetRing(t *testing.T) {
 
 	_, _, err = clientTest.GetRing("doesnotexist", "")
 	if err == nil {
-		t.Error("should throw error, non existant rings section")
+		t.Error("should throw error, non existent rings section")
 	}
 }
 
@@ -159,7 +159,7 @@ func TestCreateEditDeleteRing(t *testing.T) {
 
 	err = clientTest.DeleteRing("doesnotexist", "", version)
 	if err == nil {
-		t.Error("should throw error, non existant ring")
+		t.Error("should throw error, non existent ring")
 		version++
 	}
 }

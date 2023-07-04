@@ -61,7 +61,7 @@ func TestGetLogTargets(t *testing.T) {
 				t.Errorf("%v: Minlevel not notice: %v", *l.Index, l.Minlevel)
 			}
 		default:
-			t.Errorf("Expext only log 0, 1, or 2, %v found", *l.Index)
+			t.Errorf("Expect only log 0, 1, or 2, %v found", *l.Index)
 		}
 	}
 
@@ -130,7 +130,7 @@ func TestGetLogTarget(t *testing.T) {
 
 	_, _, err = clientTest.GetLogTarget(3, "backend", "test_2", "")
 	if err == nil {
-		t.Error("Should throw error, non existant Log Target")
+		t.Error("Should throw error, non existent Log Target")
 	}
 }
 
@@ -217,7 +217,7 @@ func TestCreateEditDeleteLogTarget(t *testing.T) {
 
 	err = clientTest.DeleteLogTarget(2, "backend", "test_2", "", version)
 	if err == nil {
-		t.Error("Should throw error, non existant Log Target")
+		t.Error("Should throw error, non existent Log Target")
 		version++
 	}
 }
