@@ -598,6 +598,9 @@ func serializeBindParams(b models.BindParams, path string) (options []params.Bin
 	if b.QuicForceRetry {
 		options = append(options, &params.BindOptionWord{Name: "quic-force-retry"})
 	}
+	if b.Nice != 0 {
+		options = append(options, &params.BindOptionValue{Name: "nice", Value: strconv.FormatInt(b.Nice, 10)})
+	}
 	return options
 }
 

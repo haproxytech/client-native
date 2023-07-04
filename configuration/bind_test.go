@@ -78,6 +78,10 @@ func TestGetBind(t *testing.T) {
 		t.Errorf("%v: Port not 80 or 8080: %v", l.Name, *l.Port)
 	}
 
+	if l.Nice != 789 {
+		t.Errorf("Nice '%v' returned, expected '789'", l.Nice)
+	}
+
 	_, err = l.MarshalBinary()
 	if err != nil {
 		t.Error(err.Error())
@@ -107,6 +111,7 @@ func TestCreateEditDeleteBind(t *testing.T) {
 			Ciphersuites:   "TLS_AES_128_GCM_SHA256:TLS_AES_256_GCM_SHA384",
 			CrlFile:        "dummy.crl",
 			CaVerifyFile:   "ca.pem",
+			Nice:           123,
 		},
 	}
 
