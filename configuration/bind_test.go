@@ -90,6 +90,10 @@ func TestGetBind(t *testing.T) {
 		t.Errorf("CaVerifyFile '%v' returned, expected 'ca.pem'", l.CaVerifyFile)
 	}
 
+	if l.Nice != 789 {
+		t.Errorf("Nice '%v' returned, expected '789'", l.Nice)
+	}
+
 	_, err = l.MarshalBinary()
 	if err != nil {
 		t.Error(err.Error())
@@ -123,6 +127,7 @@ func TestCreateEditDeleteBind(t *testing.T) {
 			Sigalgs:        "ECDSA+SHA256:RSA+SHA256",
 			ClientSigalgs:  "ECDSA+SHA256",
 			CaVerifyFile:   "ca.pem",
+			Nice:           123,
 		},
 	}
 

@@ -308,7 +308,7 @@ defaults
 frontend test
   mode http
   backlog 2048
-  bind 192.168.1.1:80 name webserv thread all sigalgs RSA+SHA256 client-sigalgs ECDSA+SHA256:RSA+SHA256 ca-verify-file ca.pem
+  bind 192.168.1.1:80 name webserv thread all sigalgs RSA+SHA256 client-sigalgs ECDSA+SHA256:RSA+SHA256 ca-verify-file ca.pem nice 789
   bind 192.168.1.1:8080 name webserv2 thread 1/all
   bind 192.168.1.2:8080 name webserv3 thread 1/1
   bind [2a01:c9c0:a3:8::3]:80 name ipv6 thread 1/1-1
