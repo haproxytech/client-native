@@ -32,7 +32,7 @@ log_target:
           value: false
     format:
       type: string
-      enum: [rfc3164, rfc5424, short, raw]
+      enum: [local, rfc3164, rfc5424, priority, short, timed, iso, raw]
       x-dependency:
         global:
           value: false
