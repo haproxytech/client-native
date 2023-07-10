@@ -46,7 +46,7 @@ type LogTarget struct {
 	Facility string `json:"facility,omitempty"`
 
 	// format
-	// Enum: [rfc3164 rfc5424 short raw]
+	// Enum: [local rfc3164 rfc5424 priority short timed iso raw]
 	Format string `json:"format,omitempty"`
 
 	// global
@@ -235,7 +235,7 @@ var logTargetTypeFormatPropEnum []interface{}
 
 func init() {
 	var res []string
-	if err := json.Unmarshal([]byte(`["rfc3164","rfc5424","short","raw"]`), &res); err != nil {
+	if err := json.Unmarshal([]byte(`["local","rfc3164","rfc5424","priority","short","timed","iso","raw"]`), &res); err != nil {
 		panic(err)
 	}
 	for _, v := range res {
@@ -245,14 +245,26 @@ func init() {
 
 const (
 
+	// LogTargetFormatLocal captures enum value "local"
+	LogTargetFormatLocal string = "local"
+
 	// LogTargetFormatRfc3164 captures enum value "rfc3164"
 	LogTargetFormatRfc3164 string = "rfc3164"
 
 	// LogTargetFormatRfc5424 captures enum value "rfc5424"
 	LogTargetFormatRfc5424 string = "rfc5424"
 
+	// LogTargetFormatPriority captures enum value "priority"
+	LogTargetFormatPriority string = "priority"
+
 	// LogTargetFormatShort captures enum value "short"
 	LogTargetFormatShort string = "short"
+
+	// LogTargetFormatTimed captures enum value "timed"
+	LogTargetFormatTimed string = "timed"
+
+	// LogTargetFormatIso captures enum value "iso"
+	LogTargetFormatIso string = "iso"
 
 	// LogTargetFormatRaw captures enum value "raw"
 	LogTargetFormatRaw string = "raw"

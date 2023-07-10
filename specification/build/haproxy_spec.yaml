@@ -6849,9 +6849,13 @@ definitions:
                       value: false
           format:
               enum:
+                  - local
                   - rfc3164
                   - rfc5424
+                  - priority
                   - short
+                  - timed
+                  - iso
                   - raw
               type: string
               x-dependency:
