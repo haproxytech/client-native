@@ -2800,6 +2800,7 @@ definitions:
               x-dependency:
                   mode:
                       value: http
+              x-deprecated: true
               x-display-name: HTTP keep-alive
           http-no-delay:
               enum:
@@ -2818,6 +2819,7 @@ definitions:
               x-dependency:
                   mode:
                       value: http
+              x-deprecated: true
               x-display-name: HTTP server close
           http-use-htx:
               enum:
@@ -2902,6 +2904,7 @@ definitions:
               x-dependency:
                   mode:
                       value: http
+              x-deprecated: true
               x-display-name: HTTP connection closing
           id:
               type: integer

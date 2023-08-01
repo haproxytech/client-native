@@ -836,8 +836,8 @@ func TestCreateEditDeleteBackend(t *testing.T) {
 				Secure:   true,
 				Type:     "rewrite",
 			},
+			// Use non deprecated option only
 			HTTPConnectionMode: "httpclose",
-			Httpclose:          "enabled",
 			ConnectTimeout:     &tOut,
 			StickTable: &models.ConfigStickTable{
 				Expire: &e,
@@ -887,6 +887,8 @@ func TestCreateEditDeleteBackend(t *testing.T) {
 				Level:   "warning",
 				Mailers: misc.StringP("localmailer1"),
 			},
+			// Use deprecated option only
+			Httpclose: "enabled",
 			Originalto: &models.Originalto{
 				Enabled: misc.StringP("enabled"),
 				Header:  "X-Client-Dst",
@@ -1182,5 +1184,234 @@ func compareBackends(x, y *models.Backend, t *testing.T) bool { //nolint:gocogni
 	x.Originalto = nil
 	y.Originalto = nil
 
+	// Due to deprecated fields Httpclose, HTTPKeepAlive, HTTPServerClose
+	// in favor of HTTPConnectionMode
+	// If HTTPConnectionMode is set in original backend
+	// - Httpclose, HTTPKeepAlive, HTTPServerClose will be set in updated backend, even if not present in original backend
+	// If HTTPConnectionMode is unset in original backend:
+	// - it will be set in updated backend
+	switch y.HTTPConnectionMode {
+	case "http-keep-alive":
+		if x.HTTPKeepAlive != "enabled" {
+			return false
+		}
+		x.HTTPKeepAlive = ""
+	case "http-server-close":
+		if x.HTTPServerClose != "enabled" {
+			return false
+		}
+		x.HTTPServerClose = ""
+	case "httpclose":
+		if x.Httpclose != "enabled" {
+			return false
+		}
+		x.Httpclose = ""
+	case "":
+		x.HTTPConnectionMode = ""
+	}
+
 	return reflect.DeepEqual(x, y)
+}
+
+func TestCreateEditDeleteBackendHTTPConnectionMode(t *testing.T) {
+	// TestCreateBackend
+	tOut := int64(5)
+
+	// Backend with HTTPConnectionMode only
+	b := &models.Backend{
+		Name: "special-httpconnectionmode",
+		Mode: "http",
+		DefaultServer: &models.DefaultServer{
+			ServerParams: models.ServerParams{
+				Fall:  &tOut,
+				Inter: &tOut,
+			},
+		},
+		HTTPConnectionMode: "http-keep-alive",
+	}
+
+	err := clientTest.CreateBackend(b, "", version)
+	if err != nil {
+		t.Error(err.Error())
+	} else {
+		version++
+	}
+
+	v, backend, err := clientTest.GetBackend("special-httpconnectionmode", "")
+	if err != nil {
+		t.Error(err.Error())
+	}
+
+	if backend.HTTPConnectionMode != "http-keep-alive" {
+		t.Errorf("Created backend is not correct for HTTPConnectionMode: %s", backend.HTTPConnectionMode)
+	}
+	if backend.HTTPKeepAlive != "enabled" {
+		t.Errorf("Created backend is not correct for HTTPKeepAlive: %s", backend.HTTPConnectionMode)
+	}
+
+	if v != version {
+		t.Errorf("Version %v returned, expected %v", v, version)
+	}
+
+	err = clientTest.CreateBackend(b, "", version)
+	if err == nil {
+		t.Error("Should throw error bck already exists")
+		version++
+	}
+
+	type testinput struct {
+		backend                    *models.Backend
+		expectedHTTPConnectionMode string
+		expectedHTTPKeepAlive      string
+		expectedHttpclose          string
+		exptectedHTTPServerClose   string
+	}
+	// TestEditBackend
+	inputs := []testinput{
+		{
+			// Update HTTPConnectionMode
+			backend: &models.Backend{
+				Name: "special-httpconnectionmode",
+				Mode: "http",
+				DefaultServer: &models.DefaultServer{
+					ServerParams: models.ServerParams{
+						Fall:  &tOut,
+						Inter: &tOut,
+					},
+				},
+				HTTPConnectionMode: "httpclose",
+			},
+			expectedHTTPConnectionMode: "httpclose",
+			expectedHTTPKeepAlive:      "",
+			exptectedHTTPServerClose:   "",
+			expectedHttpclose:          "enabled",
+		},
+		{
+			// Use only deprecated option
+			backend: &models.Backend{
+				Name: "special-httpconnectionmode",
+				Mode: "http",
+				DefaultServer: &models.DefaultServer{
+					ServerParams: models.ServerParams{
+						Fall:  &tOut,
+						Inter: &tOut,
+					},
+				},
+				HTTPServerClose: "enabled",
+			},
+			expectedHTTPConnectionMode: "http-server-close",
+			expectedHTTPKeepAlive:      "",
+			exptectedHTTPServerClose:   "enabled",
+			expectedHttpclose:          "",
+		},
+		{
+			// Use both - Priority on HTTPConnection
+			backend: &models.Backend{
+				Name: "special-httpconnectionmode",
+				Mode: "http",
+				DefaultServer: &models.DefaultServer{
+					ServerParams: models.ServerParams{
+						Fall:  &tOut,
+						Inter: &tOut,
+					},
+				},
+				HTTPConnectionMode: "http-keep-alive",
+				HTTPServerClose:    "enabled",
+			},
+			expectedHTTPConnectionMode: "http-keep-alive",
+			expectedHTTPKeepAlive:      "enabled",
+			exptectedHTTPServerClose:   "",
+			expectedHttpclose:          "",
+		},
+		{
+			// no option with deprecated option
+			backend: &models.Backend{
+				Name: "special-httpconnectionmode",
+				Mode: "http",
+				DefaultServer: &models.DefaultServer{
+					ServerParams: models.ServerParams{
+						Fall:  &tOut,
+						Inter: &tOut,
+					},
+				},
+				HTTPServerClose: "disabled",
+			},
+			expectedHTTPConnectionMode: "", // not possible to set no option with this field
+			expectedHTTPKeepAlive:      "",
+			exptectedHTTPServerClose:   "disabled",
+			expectedHttpclose:          "",
+		},
+		{
+			// set back with HTTPConnectionMode
+			backend: &models.Backend{
+				Name: "special-httpconnectionmode",
+				Mode: "http",
+				DefaultServer: &models.DefaultServer{
+					ServerParams: models.ServerParams{
+						Fall:  &tOut,
+						Inter: &tOut,
+					},
+				},
+				HTTPConnectionMode: "httpclose",
+			},
+			expectedHTTPConnectionMode: "httpclose",
+			expectedHTTPKeepAlive:      "",
+			exptectedHTTPServerClose:   "",
+			expectedHttpclose:          "enabled",
+		},
+		{
+			// remove option
+			backend: &models.Backend{
+				Name: "special-httpconnectionmode",
+				Mode: "http",
+				DefaultServer: &models.DefaultServer{
+					ServerParams: models.ServerParams{
+						Fall:  &tOut,
+						Inter: &tOut,
+					},
+				},
+				HTTPConnectionMode: "",
+			},
+			expectedHTTPConnectionMode: "",
+			expectedHTTPKeepAlive:      "",
+			exptectedHTTPServerClose:   "",
+			expectedHttpclose:          "",
+		},
+	}
+
+	for i, input := range inputs {
+		err := clientTest.EditBackend("special-httpconnectionmode", input.backend, "", version)
+		if err != nil {
+			t.Error(err.Error())
+		} else {
+			version++
+		}
+
+		_, backend, err := clientTest.GetBackend("special-httpconnectionmode", "")
+		if err != nil {
+			t.Error(err.Error())
+		}
+
+		if backend.HTTPConnectionMode != input.expectedHTTPConnectionMode {
+			t.Errorf("Updated backend %d is not correct for HTTPConnectionMode: %s", i, backend.HTTPConnectionMode)
+		}
+		if backend.HTTPKeepAlive != input.expectedHTTPKeepAlive {
+			t.Errorf("Updated backend %d is not correct for HTTPKeepAlive: %s", i, backend.HTTPConnectionMode)
+		}
+		if backend.HTTPServerClose != input.exptectedHTTPServerClose {
+			t.Errorf("Updated backend  %d is not correct for HTTPServerClose: %s", i, backend.HTTPServerClose)
+		}
+		if backend.Httpclose != input.expectedHttpclose {
+			t.Errorf("Updated backend %d is not correct for Httpclose: %s", i, backend.Httpclose)
+		}
+
+	}
+
+	// TestDeleteBackend
+	err = clientTest.DeleteBackend("special-httpconnectionmode", "", version)
+	if err != nil {
+		t.Error(err.Error())
+	} else {
+		version++
+	}
 }
