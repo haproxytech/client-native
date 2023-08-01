@@ -53,8 +53,7 @@ type ACL struct {
 	Index *int64 `json:"index"`
 
 	// value
-	// Required: true
-	Value string `json:"value"`
+	Value string `json:"value,omitempty"`
 }
 
 // Validate validates this acl
@@ -70,10 +69,6 @@ func (m *ACL) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateIndex(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateValue(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -112,15 +107,6 @@ func (m *ACL) validateCriterion(formats strfmt.Registry) error {
 func (m *ACL) validateIndex(formats strfmt.Registry) error {
 
 	if err := validate.Required("index", "body", m.Index); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func (m *ACL) validateValue(formats strfmt.Registry) error {
-
-	if err := validate.RequiredString("value", "body", m.Value); err != nil {
 		return err
 	}
 

@@ -6962,7 +6962,6 @@ definitions:
           - index
           - acl_name
           - criterion
-          - value
       title: ACL Lines
       type: object
   acls:

@@ -10,7 +10,6 @@ acl:
     - index
     - acl_name
     - criterion
-    - value
   properties:
     index:
       type: integer

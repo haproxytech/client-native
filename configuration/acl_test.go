@@ -79,6 +79,7 @@ func TestClient_GetACLs(t *testing.T) {
 				&models.ACL{ACLName: "invalid_src", Criterion: "src", Index: misc.Int64P(0), Value: "0.0.0.0/7 224.0.0.0/3"},
 				&models.ACL{ACLName: "invalid_src", Criterion: "src_port", Index: misc.Int64P(1), Value: "0:1023"},
 				&models.ACL{ACLName: "local_dst", Criterion: "hdr(host)", Index: misc.Int64P(2), Value: "-i localhost"},
+				&models.ACL{ACLName: "waf_wafTest_drop", Criterion: "var(txn.wafTest.drop),bool", Index: misc.Int64P(3), Value: ""},
 			},
 			wantErr: false,
 		},
@@ -246,7 +247,7 @@ func TestCreateEditDeleteACL(t *testing.T) {
 	}
 
 	// TestDeleteACL
-	err = clientTest.DeleteACL(3, "frontend", "test", "", version)
+	err = clientTest.DeleteACL(4, "frontend", "test", "", version)
 	if err != nil {
 		t.Error(err.Error())
 	} else {
@@ -257,9 +258,9 @@ func TestCreateEditDeleteACL(t *testing.T) {
 		t.Error("Version not incremented")
 	}
 
-	_, _, err = clientTest.GetACL(3, "frontend", "test", "")
+	_, _, err = clientTest.GetACL(4, "frontend", "test", "")
 	if err == nil {
-		t.Error("DeleteACL failed, ACL Rule 3 still exists")
+		t.Error("DeleteACL failed, ACL Rule 4 still exists")
 	}
 
 	err = clientTest.DeleteACL(2, "backend", "test_2", "", version)

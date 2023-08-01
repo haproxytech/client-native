@@ -335,6 +335,7 @@ frontend test
   acl invalid_src  src          0.0.0.0/7 224.0.0.0/3
   acl invalid_src  src_port     0:1023
   acl local_dst    hdr(host) -i localhost
+  acl waf_wafTest_drop var(txn.wafTest.drop),bool
   monitor-uri /healthz
   monitor fail if site_dead
   filter trace name BEFORE-HTTP-COMP random-parsing hexdump
