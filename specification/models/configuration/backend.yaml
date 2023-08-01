@@ -34,6 +34,7 @@ backend:
     http-keep-alive:
       type: string
       enum: [enabled, disabled]
+      x-deprecated: true
       x-display-name: HTTP keep-alive
       x-dependency:
         mode:
@@ -55,6 +56,7 @@ backend:
     http-server-close:
       type: string
       enum: [enabled, disabled]
+      x-deprecated: true
       x-display-name: HTTP server close
       x-dependency:
         mode:
@@ -62,6 +64,7 @@ backend:
     httpclose:
       type: string
       enum: [enabled, disabled]
+      x-deprecated: true
       x-display-name: HTTP connection closing
       x-dependency:
         mode:
