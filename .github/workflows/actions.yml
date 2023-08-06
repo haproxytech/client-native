@@ -37,6 +37,8 @@ jobs:
         uses: actions/setup-go@v3
         with:
           go-version-file: 'go.mod'
+      - name: clearing models
+        run: rm -rf models/*
       - name: generating models
         run: make models equal
       - name: changes
