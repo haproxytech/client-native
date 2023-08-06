@@ -65,6 +65,7 @@ generate:
   tags:
     - go
   before_script:
+    - rm -rf models/*
     - make models
   script:
     - test -z "$(git diff 2> /dev/null)" || exit "Models are not generated, issue \`make models\` and commit the result"
