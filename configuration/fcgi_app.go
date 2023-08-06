@@ -274,14 +274,10 @@ func (c *client) GetFCGIApplication(name string, transactionID string) (int64, *
 }
 
 func (c *client) DeleteFCGIApplication(name string, transactionID string, version int64) error {
-	if err := c.deleteSection(parser.FCGIApp, name, transactionID, version); err != nil {
-		return err
-	}
-
-	return nil
+	return c.deleteSection(parser.FCGIApp, name, transactionID, version)
 }
 
-func (c *client) EditFCGIApplication(name string, data *models.FCGIApp, transactionID string, version int64) error {
+func (c *client) EditFCGIApplication(name string, data *models.FCGIApp, transactionID string, version int64) error { //nolint:revive
 	if c.UseModelsValidation {
 		validationErr := data.Validate(strfmt.Default)
 		if validationErr != nil {
@@ -304,11 +300,7 @@ func (c *client) EditFCGIApplication(name string, data *models.FCGIApp, transact
 		return err
 	}
 
-	if err = c.SaveData(p, t, transactionID == ""); err != nil {
-		return err
-	}
-
-	return nil
+	return c.SaveData(p, t, transactionID == "")
 }
 
 func (c *client) CreateFCGIApplication(data *models.FCGIApp, transactionID string, version int64) error {
@@ -337,11 +329,7 @@ func (c *client) CreateFCGIApplication(data *models.FCGIApp, transactionID strin
 		return err
 	}
 
-	if err := c.SaveData(p, t, transactionID == ""); err != nil {
-		return err
-	}
-
-	return nil
+	return c.SaveData(p, t, transactionID == "")
 }
 
 //nolint:gocognit

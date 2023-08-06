@@ -95,10 +95,7 @@ func (c *client) GetBackend(name string, transactionID string) (int64, *models.B
 // DeleteBackend deletes a backend in configuration. One of version or transactionID is
 // mandatory. Returns error on fail, nil on success.
 func (c *client) DeleteBackend(name string, transactionID string, version int64) error {
-	if err := c.deleteSection(parser.Backends, name, transactionID, version); err != nil {
-		return err
-	}
-	return nil
+	return c.deleteSection(parser.Backends, name, transactionID, version)
 }
 
 // CreateBackend creates a backend in configuration. One of version or transactionID is
@@ -110,10 +107,7 @@ func (c *client) CreateBackend(data *models.Backend, transactionID string, versi
 			return NewConfError(ErrValidationError, validationErr.Error())
 		}
 	}
-	if err := c.createSection(parser.Backends, data.Name, data, transactionID, version); err != nil {
-		return err
-	}
-	return nil
+	return c.createSection(parser.Backends, data.Name, data, transactionID, version)
 }
 
 // EditBackend edits a backend in configuration. One of version or transactionID is
@@ -125,8 +119,5 @@ func (c *client) EditBackend(name string, data *models.Backend, transactionID st
 			return NewConfError(ErrValidationError, validationErr.Error())
 		}
 	}
-	if err := c.editSection(parser.Backends, name, data, transactionID, version); err != nil {
-		return err
-	}
-	return nil
+	return c.editSection(parser.Backends, name, data, transactionID, version)
 }

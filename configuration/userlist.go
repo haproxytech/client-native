@@ -85,8 +85,5 @@ func (c *client) CreateUserList(data *models.Userlist, transactionID string, ver
 			return NewConfError(ErrValidationError, validationErr.Error())
 		}
 	}
-	if err := c.createSection(parser.UserList, data.Name, data, transactionID, version); err != nil {
-		return err
-	}
-	return nil
+	return c.createSection(parser.UserList, data.Name, data, transactionID, version)
 }

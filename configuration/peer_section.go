@@ -90,10 +90,7 @@ func (c *client) GetPeerSection(name string, transactionID string) (int64, *mode
 // DeletePeerSection deletes a peerSection in configuration. One of version or transactionID is
 // mandatory. Returns error on fail, nil on success.
 func (c *client) DeletePeerSection(name string, transactionID string, version int64) error {
-	if err := c.deleteSection(parser.Peers, name, transactionID, version); err != nil {
-		return err
-	}
-	return nil
+	return c.deleteSection(parser.Peers, name, transactionID, version)
 }
 
 // CreatePeerSection creates a peerSection in configuration. One of version or transactionID is

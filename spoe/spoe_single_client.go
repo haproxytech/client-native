@@ -334,11 +334,7 @@ func (c *SingleSpoe) deleteSection(scope string, section parser.Section, name st
 		return c.Transaction.HandleError(name, "", "", t, transactionID == "", err)
 	}
 
-	if err := c.Transaction.SaveData(p, t, transactionID == ""); err != nil {
-		return err
-	}
-
-	return nil
+	return c.Transaction.SaveData(p, t, transactionID == "")
 }
 
 func (c *SingleSpoe) checkSectionExists(scope string, section parser.Section, sectionName string, p *spoe.Parser) bool {

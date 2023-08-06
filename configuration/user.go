@@ -90,10 +90,7 @@ func (c *client) DeleteUser(username string, userlist string, transactionID stri
 	if err := p.Delete("userlist", userlist, "user", i); err != nil {
 		return c.HandleError(username, "userlist", userlist, t, transactionID == "", err)
 	}
-	if err := c.SaveData(p, t, transactionID == ""); err != nil {
-		return err
-	}
-	return nil
+	return c.SaveData(p, t, transactionID == "")
 }
 
 // CreateUser creates a User line in the configuration. One of version or transactionID is mandatory.
@@ -120,15 +117,12 @@ func (c *client) CreateUser(userlist string, data *models.User, transactionID st
 	if err := p.Insert("userlist", userlist, "user", SerializeUser(*data), -1); err != nil {
 		return c.HandleError(data.Username, "userlist", userlist, t, transactionID == "", err)
 	}
-	if err := c.SaveData(p, t, transactionID == ""); err != nil {
-		return err
-	}
-	return nil
+	return c.SaveData(p, t, transactionID == "")
 }
 
 // EditUser edits a User line in the configuration. One of version or transactionID is mandatory.
 // Returns error on fail, nil on success.
-func (c *client) EditUser(username string, userlist string, data *models.User, transactionID string, version int64) error {
+func (c *client) EditUser(username string, userlist string, data *models.User, transactionID string, version int64) error { //nolint:revive
 	if c.UseModelsValidation {
 		validationErr := data.Validate(strfmt.Default)
 		if validationErr != nil {
@@ -149,10 +143,7 @@ func (c *client) EditUser(username string, userlist string, data *models.User, t
 	if err := p.Set(parser.UserList, userlist, "user", SerializeUser(*data), i); err != nil {
 		return c.HandleError(data.Username, "userlist", userlist, t, transactionID == "", err)
 	}
-	if err := c.SaveData(p, t, transactionID == ""); err != nil {
-		return err
-	}
-	return nil
+	return c.SaveData(p, t, transactionID == "")
 }
 
 func ParseUsers(userlist string, p parser.Parser) (models.Users, error) {

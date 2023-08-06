@@ -97,10 +97,7 @@ func (c *client) DeletePeerEntry(name string, peerSection string, transactionID 
 		return c.HandleError(name, "peers", peerSection, t, transactionID == "", err)
 	}
 
-	if err := c.SaveData(p, t, transactionID == ""); err != nil {
-		return err
-	}
-	return nil
+	return c.SaveData(p, t, transactionID == "")
 }
 
 // CreatePeerEntry creates a peer entry in configuration. One of version or transactionID is
@@ -127,11 +124,7 @@ func (c *client) CreatePeerEntry(peerSection string, data *models.PeerEntry, tra
 		return c.HandleError(data.Name, "peers", peerSection, t, transactionID == "", err)
 	}
 
-	if err := c.SaveData(p, t, transactionID == ""); err != nil {
-		return err
-	}
-
-	return nil
+	return c.SaveData(p, t, transactionID == "")
 }
 
 // EditPeerEntry edits a peer entry in configuration. One of version or transactionID is
@@ -158,11 +151,7 @@ func (c *client) EditPeerEntry(name string, peerSection string, data *models.Pee
 		return c.HandleError(data.Name, "peers", peerSection, t, transactionID == "", err)
 	}
 
-	if err := c.SaveData(p, t, transactionID == ""); err != nil {
-		return err
-	}
-
-	return nil
+	return c.SaveData(p, t, transactionID == "")
 }
 
 func ParsePeerEntries(peerSection string, p parser.Parser) (models.PeerEntries, error) {

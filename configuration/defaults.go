@@ -63,11 +63,7 @@ func (c *client) PushDefaultsConfiguration(data *models.Defaults, transactionID 
 		}
 	}
 
-	if err := c.editSection(parser.Defaults, parser.DefaultSectionName, data, transactionID, version); err != nil {
-		return err
-	}
-
-	return nil
+	return c.editSection(parser.Defaults, parser.DefaultSectionName, data, transactionID, version)
 }
 
 // GetDefaultsSections returns configuration version and an array of
@@ -128,10 +124,7 @@ func (c *client) GetDefaultsSection(name string, transactionID string) (int64, *
 // DeleteDefaultsSection deletes a defaults section in configuration. One of version or transactionID is
 // mandatory. Returns error on fail, nil on success.
 func (c *client) DeleteDefaultsSection(name string, transactionID string, version int64) error {
-	if err := c.deleteSection(parser.Defaults, name, transactionID, version); err != nil {
-		return err
-	}
-	return nil
+	return c.deleteSection(parser.Defaults, name, transactionID, version)
 }
 
 // EditDefaultsSection edits a defaults section in configuration. One of version or transactionID is
@@ -144,11 +137,7 @@ func (c *client) EditDefaultsSection(name string, data *models.Defaults, transac
 		}
 	}
 
-	if err := c.editSection(parser.Defaults, name, data, transactionID, version); err != nil {
-		return err
-	}
-
-	return nil
+	return c.editSection(parser.Defaults, name, data, transactionID, version)
 }
 
 // CreateDefaultsSection creates a defaults section in configuration. One of version or transactionID is
@@ -161,9 +150,5 @@ func (c *client) CreateDefaultsSection(data *models.Defaults, transactionID stri
 		}
 	}
 
-	if err := c.createSection(parser.Defaults, data.Name, data, transactionID, version); err != nil {
-		return err
-	}
-
-	return nil
+	return c.createSection(parser.Defaults, data.Name, data, transactionID, version)
 }

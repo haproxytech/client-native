@@ -99,11 +99,7 @@ func (c *client) DeleteLogTarget(id int64, parentType string, parentName string,
 		return c.HandleError(strconv.FormatInt(id, 10), parentType, parentName, t, transactionID == "", err)
 	}
 
-	if err := c.SaveData(p, t, transactionID == ""); err != nil {
-		return err
-	}
-
-	return nil
+	return c.SaveData(p, t, transactionID == "")
 }
 
 // CreateLogTarget creates a log target in configuration. One of version or transactionID is
@@ -136,10 +132,7 @@ func (c *client) CreateLogTarget(parentType string, parentName string, data *mod
 		return c.HandleError(strconv.FormatInt(*data.Index, 10), parentType, parentName, t, transactionID == "", err)
 	}
 
-	if err := c.SaveData(p, t, transactionID == ""); err != nil {
-		return err
-	}
-	return nil
+	return c.SaveData(p, t, transactionID == "")
 }
 
 // EditLogTarget edits a log target in configuration. One of version or transactionID is
@@ -175,10 +168,7 @@ func (c *client) EditLogTarget(id int64, parentType string, parentName string, d
 		return c.HandleError(strconv.FormatInt(id, 10), parentType, parentName, t, transactionID == "", err)
 	}
 
-	if err := c.SaveData(p, t, transactionID == ""); err != nil {
-		return err
-	}
-	return nil
+	return c.SaveData(p, t, transactionID == "")
 }
 
 func ParseLogTargets(t, pName string, p parser.Parser) (models.LogTargets, error) {

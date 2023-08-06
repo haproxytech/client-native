@@ -93,10 +93,7 @@ func (c *client) DeleteStickRule(id int64, backend string, transactionID string,
 		return c.HandleError(strconv.FormatInt(id, 10), "backend", backend, t, transactionID == "", err)
 	}
 
-	if err := c.SaveData(p, t, transactionID == ""); err != nil {
-		return err
-	}
-	return nil
+	return c.SaveData(p, t, transactionID == "")
 }
 
 // CreateStickRule creates a stick rule in configuration. One of version or transactionID is
@@ -117,10 +114,7 @@ func (c *client) CreateStickRule(backend string, data *models.StickRule, transac
 		return c.HandleError(strconv.FormatInt(*data.Index, 10), "backend", backend, t, transactionID == "", err)
 	}
 
-	if err := c.SaveData(p, t, transactionID == ""); err != nil {
-		return err
-	}
-	return nil
+	return c.SaveData(p, t, transactionID == "")
 }
 
 // EditStickRule edits a stick rule in configuration. One of version or transactionID is
@@ -145,10 +139,7 @@ func (c *client) EditStickRule(id int64, backend string, data *models.StickRule,
 		return c.HandleError(strconv.FormatInt(*data.Index, 10), "backend", backend, t, transactionID == "", err)
 	}
 
-	if err := c.SaveData(p, t, transactionID == ""); err != nil {
-		return err
-	}
-	return nil
+	return c.SaveData(p, t, transactionID == "")
 }
 
 func ParseStickRules(backend string, p parser.Parser) (models.StickRules, error) {

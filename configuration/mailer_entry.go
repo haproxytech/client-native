@@ -95,11 +95,7 @@ func (c *client) DeleteMailerEntry(name string, mailersSection string, transacti
 		return c.HandleError(name, "mailers", mailersSection, t, transactionID == "", err)
 	}
 
-	if err := c.SaveData(p, t, transactionID == ""); err != nil {
-		return err
-	}
-
-	return nil
+	return c.SaveData(p, t, transactionID == "")
 }
 
 // CreateMailerEntry creates a mailer entry in configuration. One of version or transactionID is
@@ -126,11 +122,7 @@ func (c *client) CreateMailerEntry(mailersSection string, data *models.MailerEnt
 		return c.HandleError(data.Name, "mailers", mailersSection, t, transactionID == "", err)
 	}
 
-	if err := c.SaveData(p, t, transactionID == ""); err != nil {
-		return err
-	}
-
-	return nil
+	return c.SaveData(p, t, transactionID == "")
 }
 
 // EditMailerEntry edits a mailer entry in configuration. One of version or transactionID is
@@ -157,11 +149,7 @@ func (c *client) EditMailerEntry(name string, mailersSection string, data *model
 		return c.HandleError(data.Name, "mailers", mailersSection, t, transactionID == "", err)
 	}
 
-	if err := c.SaveData(p, t, transactionID == ""); err != nil {
-		return err
-	}
-
-	return nil
+	return c.SaveData(p, t, transactionID == "")
 }
 
 func ParseMailerEntries(mailersSection string, p parser.Parser) (models.MailerEntries, error) {

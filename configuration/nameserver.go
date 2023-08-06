@@ -98,10 +98,7 @@ func (c *client) DeleteNameserver(name string, resolverSection string, transacti
 		return c.HandleError(name, "resolvers", resolverSection, t, transactionID == "", err)
 	}
 
-	if err := c.SaveData(p, t, transactionID == ""); err != nil {
-		return err
-	}
-	return nil
+	return c.SaveData(p, t, transactionID == "")
 }
 
 // CreateNameserver creates a nameserver in configuration. One of version or transactionID is
@@ -128,11 +125,7 @@ func (c *client) CreateNameserver(resolverSection string, data *models.Nameserve
 		return c.HandleError(data.Name, "resolvers", resolverSection, t, transactionID == "", err)
 	}
 
-	if err := c.SaveData(p, t, transactionID == ""); err != nil {
-		return err
-	}
-
-	return nil
+	return c.SaveData(p, t, transactionID == "")
 }
 
 // EditNameserver edits a nameserver in configuration. One of version or transactionID is
@@ -159,11 +152,7 @@ func (c *client) EditNameserver(name string, resolverSection string, data *model
 		return c.HandleError(data.Name, "resolvers", resolverSection, t, transactionID == "", err)
 	}
 
-	if err := c.SaveData(p, t, transactionID == ""); err != nil {
-		return err
-	}
-
-	return nil
+	return c.SaveData(p, t, transactionID == "")
 }
 
 func ParseNameservers(resolverSection string, p parser.Parser) (models.Nameservers, error) {

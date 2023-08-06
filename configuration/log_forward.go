@@ -139,10 +139,7 @@ func ParseLogForward(p parser.Parser, lf *models.LogForward) error {
 // DeleteLogForward deletes a log forward in configuration. One of version or transactionID is
 // mandatory. Returns error on fail, nil on success.
 func (c *client) DeleteLogForward(name string, transactionID string, version int64) error {
-	if err := c.deleteSection(parser.LogForward, name, transactionID, version); err != nil {
-		return err
-	}
-	return nil
+	return c.deleteSection(parser.LogForward, name, transactionID, version)
 }
 
 // CreateLogForward creates a log forward in configuration. One of version or transactionID is
@@ -172,16 +169,12 @@ func (c *client) CreateLogForward(data *models.LogForward, transactionID string,
 		return err
 	}
 
-	if err := c.SaveData(p, t, transactionID == ""); err != nil {
-		return err
-	}
-
-	return nil
+	return c.SaveData(p, t, transactionID == "")
 }
 
 // EditLogForward edits a log forward in configuration. One of version or transactionID is
 // mandatory. Returns error on fail, nil on success.
-func (c *client) EditLogForward(name string, data *models.LogForward, transactionID string, version int64) error {
+func (c *client) EditLogForward(name string, data *models.LogForward, transactionID string, version int64) error { //nolint:revive
 	if c.UseModelsValidation {
 		validationErr := data.Validate(strfmt.Default)
 		if validationErr != nil {
@@ -202,10 +195,7 @@ func (c *client) EditLogForward(name string, data *models.LogForward, transactio
 		return err
 	}
 
-	if err := c.SaveData(p, t, transactionID == ""); err != nil {
-		return err
-	}
-	return nil
+	return c.SaveData(p, t, transactionID == "")
 }
 
 func SerializeLogForwardSection(p parser.Parser, data *models.LogForward) error {

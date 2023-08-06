@@ -29,9 +29,5 @@ func fmtFile(fileName string) error {
 		return fmt.Errorf("failed to perform goimports: %w", err)
 	}
 
-	if err := os.WriteFile(fileName, formattedCode, 0o600); err != nil {
-		return err
-	}
-
-	return nil
+	return os.WriteFile(fileName, formattedCode, 0o600)
 }

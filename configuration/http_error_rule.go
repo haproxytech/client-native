@@ -121,11 +121,7 @@ func (c *client) DeleteHTTPErrorRule(id int64, parentType string, parentName str
 		return c.HandleError(strconv.FormatInt(id, 10), parentType, parentName, t, transactionID == "", err)
 	}
 
-	if err := c.SaveData(p, t, transactionID == ""); err != nil {
-		return err
-	}
-
-	return nil
+	return c.SaveData(p, t, transactionID == "")
 }
 
 // CreateHTTPErrorRule creates a http error rule in configuration. One of version or transactionID is
@@ -163,10 +159,7 @@ func (c *client) CreateHTTPErrorRule(parentType string, parentName string, data 
 		return c.HandleError(strconv.FormatInt(*data.Index, 10), parentType, parentName, t, transactionID == "", err)
 	}
 
-	if err := c.SaveData(p, t, transactionID == ""); err != nil {
-		return err
-	}
-	return nil
+	return c.SaveData(p, t, transactionID == "")
 }
 
 // EditHTTPErrorRule edits a http error rule in configuration. One of version or transactionID is
@@ -209,10 +202,7 @@ func (c *client) EditHTTPErrorRule(id int64, parentType string, parentName strin
 		return c.HandleError(strconv.FormatInt(id, 10), parentType, parentName, t, transactionID == "", err)
 	}
 
-	if err := c.SaveData(p, t, transactionID == ""); err != nil {
-		return err
-	}
-	return nil
+	return c.SaveData(p, t, transactionID == "")
 }
 
 func ParseHTTPErrorRules(t, pName string, p parser.Parser) (models.HTTPErrorRules, error) {

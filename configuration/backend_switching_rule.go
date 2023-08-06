@@ -85,10 +85,7 @@ func (c *client) DeleteBackendSwitchingRule(id int64, frontend string, transacti
 		return c.HandleError(strconv.FormatInt(id, 10), "frontend", frontend, t, transactionID == "", err)
 	}
 
-	if err := c.SaveData(p, t, transactionID == ""); err != nil {
-		return err
-	}
-	return nil
+	return c.SaveData(p, t, transactionID == "")
 }
 
 // CreateBackendSwitchingRule creates a backend switching rule in configuration. One of version or transactionID is
@@ -110,11 +107,7 @@ func (c *client) CreateBackendSwitchingRule(frontend string, data *models.Backen
 		return c.HandleError(strconv.FormatInt(*data.Index, 10), "frontend", frontend, t, transactionID == "", err)
 	}
 
-	if err := c.SaveData(p, t, transactionID == ""); err != nil {
-		return err
-	}
-
-	return nil
+	return c.SaveData(p, t, transactionID == "")
 }
 
 // EditBackendSwitchingRule edits a backend switching rule in configuration. One of version or transactionID is
@@ -139,11 +132,7 @@ func (c *client) EditBackendSwitchingRule(id int64, frontend string, data *model
 		return c.HandleError(strconv.FormatInt(id, 10), "frontend", frontend, t, transactionID == "", err)
 	}
 
-	if err := c.SaveData(p, t, transactionID == ""); err != nil {
-		return err
-	}
-
-	return nil
+	return c.SaveData(p, t, transactionID == "")
 }
 
 func ParseBackendSwitchingRules(frontend string, p parser.Parser) (models.BackendSwitchingRules, error) {

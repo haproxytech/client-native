@@ -119,10 +119,7 @@ func (c *SingleSpoe) GetMessage(scope, name, transactionID string) (int64, *mode
 // DeleteMessage deletes an message in configuration. One of version or transactionID is
 // mandatory. Returns error on fail, nil on success.
 func (c *SingleSpoe) DeleteMessage(scope, name, transactionID string, version int64) error {
-	if err := c.deleteSection(scope, parser.SPOEMessage, name, transactionID, version); err != nil {
-		return err
-	}
-	return nil
+	return c.deleteSection(scope, parser.SPOEMessage, name, transactionID, version)
 }
 
 // CreateMessage creates a message in configuration. One of version or transactionID is
@@ -154,16 +151,12 @@ func (c *SingleSpoe) CreateMessage(scope string, data *models.SpoeMessage, trans
 		return err
 	}
 
-	if err := c.Transaction.SaveData(p, t, transactionID == ""); err != nil {
-		return err
-	}
-
-	return nil
+	return c.Transaction.SaveData(p, t, transactionID == "")
 }
 
 // EditMessage edits a message in configuration. One of version or transactionID is
 // mandatory. Returns error on fail, nil on success.
-func (c *SingleSpoe) EditMessage(scope string, data *models.SpoeMessage, name, transactionID string, version int64) error {
+func (c *SingleSpoe) EditMessage(scope string, data *models.SpoeMessage, name, transactionID string, version int64) error { //nolint:revive
 	if c.Transaction.UseModelsValidation {
 		validationErr := data.Validate(strfmt.Default)
 		if validationErr != nil {
@@ -186,11 +179,7 @@ func (c *SingleSpoe) EditMessage(scope string, data *models.SpoeMessage, name, t
 		return err
 	}
 
-	if err := c.Transaction.SaveData(p, t, transactionID == ""); err != nil {
-		return err
-	}
-
-	return nil
+	return c.Transaction.SaveData(p, t, transactionID == "")
 }
 
 func (c *SingleSpoe) createEditMessage(scope string, data *models.SpoeMessage, t string, transactionID string, p *spoe.Parser) error {

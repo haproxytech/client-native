@@ -97,11 +97,7 @@ func (c *client) DeleteServerTemplate(prefix string, backend string, transaction
 		return c.HandleError(prefix, "backend", backend, t, transactionID == "", err)
 	}
 
-	if err := c.SaveData(p, t, transactionID == ""); err != nil {
-		return err
-	}
-
-	return nil
+	return c.SaveData(p, t, transactionID == "")
 }
 
 // CreateServerTemplate creates a server template in configuration. One of version or transactionID is
@@ -128,10 +124,7 @@ func (c *client) CreateServerTemplate(backend string, data *models.ServerTemplat
 		return c.HandleError(data.Prefix, "backend", backend, t, transactionID == "", err)
 	}
 
-	if err := c.SaveData(p, t, transactionID == ""); err != nil {
-		return err
-	}
-	return nil
+	return c.SaveData(p, t, transactionID == "")
 }
 
 // EditServerTemplate edits a server template in configuration. One of version or transactionID is
@@ -158,10 +151,7 @@ func (c *client) EditServerTemplate(prefix string, backend string, data *models.
 		return c.HandleError(data.Prefix, "backend", backend, t, transactionID == "", err)
 	}
 
-	if err := c.SaveData(p, t, transactionID == ""); err != nil {
-		return err
-	}
-	return nil
+	return c.SaveData(p, t, transactionID == "")
 }
 
 func ParseServerTemplates(backend string, p parser.Parser) (models.ServerTemplates, error) {

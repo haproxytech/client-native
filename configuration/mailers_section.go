@@ -123,14 +123,10 @@ func (c *client) CreateMailersSection(data *models.MailersSection, transactionID
 		return err
 	}
 
-	if err := c.SaveData(p, t, transactionID == ""); err != nil {
-		return err
-	}
-
-	return nil
+	return c.SaveData(p, t, transactionID == "")
 }
 
-func (c *client) EditMailersSection(name string, data *models.MailersSection, transactionID string, version int64) error {
+func (c *client) EditMailersSection(name string, data *models.MailersSection, transactionID string, version int64) error { //nolint:revive
 	if c.UseModelsValidation {
 		validationErr := data.Validate(strfmt.Default)
 		if validationErr != nil {
@@ -151,11 +147,7 @@ func (c *client) EditMailersSection(name string, data *models.MailersSection, tr
 		return err
 	}
 
-	if err := c.SaveData(p, t, transactionID == ""); err != nil {
-		return err
-	}
-
-	return nil
+	return c.SaveData(p, t, transactionID == "")
 }
 
 func ParseMailersSection(p parser.Parser, ms *models.MailersSection) error {

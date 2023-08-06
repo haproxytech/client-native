@@ -60,6 +60,7 @@ linters:
     - golint # deprecated
     - interfacer # deprecated
     - maligned # deprecated
+    - depguard
 
 issues:
   exclude:

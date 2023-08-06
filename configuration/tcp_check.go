@@ -119,10 +119,7 @@ func (c *client) DeleteTCPCheck(id int64, parentType string, parentName string, 
 		return c.HandleError(strconv.FormatInt(id, 10), parentType, parentName, t, transactionID == "", err)
 	}
 
-	if err := c.SaveData(p, t, transactionID == ""); err != nil {
-		return err
-	}
-	return nil
+	return c.SaveData(p, t, transactionID == "")
 }
 
 // CreateTCPCheck creates a tcp check in the configuration. One of version or transationID is mandatory.
@@ -158,17 +155,12 @@ func (c *client) CreateTCPCheck(parentType string, parentName string, data *mode
 	if err := p.Insert(section, parentName, "tcp-check", s, int(*data.Index)); err != nil {
 		return c.HandleError(strconv.FormatInt(*data.Index, 10), parentType, parentName, t, transactionID == "", err)
 	}
-	if err := c.SaveData(p, t, transactionID == ""); err != nil {
-		return err
-	}
-	return nil
+	return c.SaveData(p, t, transactionID == "")
 }
 
 // EditTCPCheck edits a tcp check in the configuration. One of version or transactionID is mandatory.
 // Returns error on fail, nil on success.
-//
-//nolint:dupl
-func (c *client) EditTCPCheck(id int64, parentType string, parentName string, data *models.TCPCheck, transactionID string, version int64) error {
+func (c *client) EditTCPCheck(id int64, parentType string, parentName string, data *models.TCPCheck, transactionID string, version int64) error { //nolint:dupl
 	if c.UseModelsValidation {
 		validationErr := data.Validate(strfmt.Default)
 		if validationErr != nil {
@@ -201,10 +193,7 @@ func (c *client) EditTCPCheck(id int64, parentType string, parentName string, da
 	if err := p.Set(section, parentName, "tcp-check", s, int(id)); err != nil {
 		return c.HandleError(strconv.FormatInt(id, 10), parentType, parentName, t, transactionID == "", err)
 	}
-	if err := c.SaveData(p, t, transactionID == ""); err != nil {
-		return err
-	}
-	return nil
+	return c.SaveData(p, t, transactionID == "")
 }
 
 func ParseTCPChecks(t, pName string, p parser.Parser) (models.TCPChecks, error) {

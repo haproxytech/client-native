@@ -119,10 +119,7 @@ func (c *client) DeleteHTTPCheck(id int64, parentType string, parentName string,
 		return c.HandleError(strconv.FormatInt(id, 10), parentType, parentName, t, transactionID == "", err)
 	}
 
-	if err := c.SaveData(p, t, transactionID == ""); err != nil {
-		return err
-	}
-	return nil
+	return c.SaveData(p, t, transactionID == "")
 }
 
 // CreateHTTPCheck creates a http check in the configuration. One of version or transationID is mandatory.
@@ -158,17 +155,12 @@ func (c *client) CreateHTTPCheck(parentType string, parentName string, data *mod
 	if err := p.Insert(section, parentName, "http-check", check, int(*data.Index)); err != nil {
 		return c.HandleError(strconv.FormatInt(*data.Index, 10), parentType, parentName, t, transactionID == "", err)
 	}
-	if err := c.SaveData(p, t, transactionID == ""); err != nil {
-		return err
-	}
-	return nil
+	return c.SaveData(p, t, transactionID == "")
 }
 
 // EditHTTPCheck edits a http check in the configuration. One of version or transactionID is mandatory.
 // Returns error on fail, nil on success.
-//
-//nolint:dupl
-func (c *client) EditHTTPCheck(id int64, parentType string, parentName string, data *models.HTTPCheck, transactionID string, version int64) error {
+func (c *client) EditHTTPCheck(id int64, parentType string, parentName string, data *models.HTTPCheck, transactionID string, version int64) error { //nolint:dupl
 	if c.UseModelsValidation {
 		validationErr := data.Validate(strfmt.Default)
 		if validationErr != nil {
@@ -201,10 +193,7 @@ func (c *client) EditHTTPCheck(id int64, parentType string, parentName string, d
 	if err := p.Set(section, parentName, "http-check", check, int(id)); err != nil {
 		return c.HandleError(strconv.FormatInt(id, 10), parentType, parentName, t, transactionID == "", err)
 	}
-	if err := c.SaveData(p, t, transactionID == ""); err != nil {
-		return err
-	}
-	return nil
+	return c.SaveData(p, t, transactionID == "")
 }
 
 func ParseHTTPChecks(t, pName string, p parser.Parser) (models.HTTPChecks, error) {

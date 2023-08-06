@@ -108,11 +108,7 @@ func (c *client) DeleteFilter(id int64, parentType string, parentName string, tr
 		return c.HandleError(strconv.FormatInt(id, 10), parentType, parentName, t, transactionID == "", err)
 	}
 
-	if err := c.SaveData(p, t, transactionID == ""); err != nil {
-		return err
-	}
-
-	return nil
+	return c.SaveData(p, t, transactionID == "")
 }
 
 // CreateFilter creates a filter in configuration. One of version or transactionID is
@@ -141,10 +137,7 @@ func (c *client) CreateFilter(parentType string, parentName string, data *models
 		return c.HandleError(strconv.FormatInt(*data.Index, 10), parentType, parentName, t, transactionID == "", err)
 	}
 
-	if err := c.SaveData(p, t, transactionID == ""); err != nil {
-		return err
-	}
-	return nil
+	return c.SaveData(p, t, transactionID == "")
 }
 
 // EditFilter edits a filter in configuration. One of version or transactionID is
@@ -176,11 +169,7 @@ func (c *client) EditFilter(id int64, parentType string, parentName string, data
 		return c.HandleError(strconv.FormatInt(id, 10), parentType, parentName, t, transactionID == "", err)
 	}
 
-	if err := c.SaveData(p, t, transactionID == ""); err != nil {
-		return err
-	}
-
-	return nil
+	return c.SaveData(p, t, transactionID == "")
 }
 
 func ParseFilters(t, pName string, p parser.Parser) (models.Filters, error) {

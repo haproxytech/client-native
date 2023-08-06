@@ -85,10 +85,7 @@ func (c *client) DeleteServerSwitchingRule(id int64, backend string, transaction
 		return c.HandleError(strconv.FormatInt(id, 10), "backend", backend, t, transactionID == "", err)
 	}
 
-	if err := c.SaveData(p, t, transactionID == ""); err != nil {
-		return err
-	}
-	return nil
+	return c.SaveData(p, t, transactionID == "")
 }
 
 // CreateServerSwitchingRule creates a server switching rule in configuration. One of version or transactionID is
@@ -109,10 +106,7 @@ func (c *client) CreateServerSwitchingRule(backend string, data *models.ServerSw
 		return c.HandleError(strconv.FormatInt(*data.Index, 10), "backend", backend, t, transactionID == "", err)
 	}
 
-	if err := c.SaveData(p, t, transactionID == ""); err != nil {
-		return err
-	}
-	return nil
+	return c.SaveData(p, t, transactionID == "")
 }
 
 // EditServerSwitchingRule edits a server switching rule in configuration. One of version or transactionID is
@@ -137,10 +131,7 @@ func (c *client) EditServerSwitchingRule(id int64, backend string, data *models.
 		return c.HandleError(strconv.FormatInt(*data.Index, 10), "backend", backend, t, transactionID == "", err)
 	}
 
-	if err := c.SaveData(p, t, transactionID == ""); err != nil {
-		return err
-	}
-	return nil
+	return c.SaveData(p, t, transactionID == "")
 }
 
 func ParseServerSwitchingRules(backend string, p parser.Parser) (models.ServerSwitchingRules, error) {

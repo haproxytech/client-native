@@ -90,10 +90,7 @@ func (c *client) GetFrontend(name string, transactionID string) (int64, *models.
 // DeleteFrontend deletes a frontend in configuration. One of version or transactionID is
 // mandatory. Returns error on fail, nil on success.
 func (c *client) DeleteFrontend(name string, transactionID string, version int64) error {
-	if err := c.deleteSection(parser.Frontends, name, transactionID, version); err != nil {
-		return err
-	}
-	return nil
+	return c.deleteSection(parser.Frontends, name, transactionID, version)
 }
 
 // EditFrontend edits a frontend in configuration. One of version or transactionID is
@@ -106,11 +103,7 @@ func (c *client) EditFrontend(name string, data *models.Frontend, transactionID 
 		}
 	}
 
-	if err := c.editSection(parser.Frontends, name, data, transactionID, version); err != nil {
-		return err
-	}
-
-	return nil
+	return c.editSection(parser.Frontends, name, data, transactionID, version)
 }
 
 // CreateFrontend creates a frontend in configuration. One of version or transactionID is
@@ -123,9 +116,5 @@ func (c *client) CreateFrontend(data *models.Frontend, transactionID string, ver
 		}
 	}
 
-	if err := c.createSection(parser.Frontends, data.Name, data, transactionID, version); err != nil {
-		return err
-	}
-
-	return nil
+	return c.createSection(parser.Frontends, data.Name, data, transactionID, version)
 }
