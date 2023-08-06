@@ -82,11 +82,7 @@ func (c *SingleSpoe) DeleteScope(name, transactionID string, version int64) erro
 		return c.Transaction.HandleError(name, "", "", t, transactionID == "", err)
 	}
 
-	if err := c.Transaction.SaveData(p, t, transactionID == ""); err != nil {
-		return err
-	}
-
-	return nil
+	return c.Transaction.SaveData(p, t, transactionID == "")
 }
 
 // CreateScope creates a scope in configuration
@@ -116,9 +112,5 @@ func (c *SingleSpoe) CreateScope(data *models.SpoeScope, transactionID string, v
 		return err
 	}
 
-	if err := c.Transaction.SaveData(p, t, transactionID == ""); err != nil {
-		return err
-	}
-
-	return nil
+	return c.Transaction.SaveData(p, t, transactionID == "")
 }

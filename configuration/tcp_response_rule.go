@@ -101,10 +101,7 @@ func (c *client) DeleteTCPResponseRule(id int64, backend string, transactionID s
 		return c.HandleError(strconv.FormatInt(id, 10), "backend", backend, t, transactionID == "", err)
 	}
 
-	if err := c.SaveData(p, t, transactionID == ""); err != nil {
-		return err
-	}
-	return nil
+	return c.SaveData(p, t, transactionID == "")
 }
 
 // CreateTCPResponseRule creates a tcp response rule in configuration. One of version or transactionID is
@@ -129,10 +126,7 @@ func (c *client) CreateTCPResponseRule(backend string, data *models.TCPResponseR
 		return c.HandleError(strconv.FormatInt(*data.Index, 10), "backend", backend, t, transactionID == "", err)
 	}
 
-	if err := c.SaveData(p, t, transactionID == ""); err != nil {
-		return err
-	}
-	return nil
+	return c.SaveData(p, t, transactionID == "")
 }
 
 // EditTCPResponseRule edits a tcp response rule in configuration. One of version or transactionID is
@@ -161,10 +155,7 @@ func (c *client) EditTCPResponseRule(id int64, backend string, data *models.TCPR
 		return c.HandleError(strconv.FormatInt(*data.Index, 10), "backend", backend, t, transactionID == "", err)
 	}
 
-	if err := c.SaveData(p, t, transactionID == ""); err != nil {
-		return err
-	}
-	return nil
+	return c.SaveData(p, t, transactionID == "")
 }
 
 func ParseTCPResponseRules(backend string, p parser.Parser) (models.TCPResponseRules, error) {

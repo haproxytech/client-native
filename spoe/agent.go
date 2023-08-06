@@ -288,10 +288,7 @@ func (c *SingleSpoe) GetAgent(scope, name, transactionID string) (int64, *models
 // DeleteAgent deletes an agent in configuration. One of version or transactionID is
 // mandatory. Returns error on fail, nil on success.
 func (c *SingleSpoe) DeleteAgent(scope, name, transactionID string, version int64) error {
-	if err := c.deleteSection(scope, parser.SPOEAgent, name, transactionID, version); err != nil {
-		return err
-	}
-	return nil
+	return c.deleteSection(scope, parser.SPOEAgent, name, transactionID, version)
 }
 
 // CreateAgent creates a agent in configuration. One of version or transactionID is
@@ -323,11 +320,7 @@ func (c *SingleSpoe) CreateAgent(scope string, data *models.SpoeAgent, transacti
 		return err
 	}
 
-	if err := c.Transaction.SaveData(p, t, transactionID == ""); err != nil {
-		return err
-	}
-
-	return nil
+	return c.Transaction.SaveData(p, t, transactionID == "")
 }
 
 // EditAgent edits a agent in configuration. One of version or transactionID is
@@ -355,11 +348,7 @@ func (c *SingleSpoe) EditAgent(scope string, data *models.SpoeAgent, transaction
 		return err
 	}
 
-	if err := c.Transaction.SaveData(p, t, transactionID == ""); err != nil {
-		return err
-	}
-
-	return nil
+	return c.Transaction.SaveData(p, t, transactionID == "")
 }
 
 func (c *SingleSpoe) createEditAgent(scope string, data *models.SpoeAgent, t string, transactionID string, p *spoe.Parser) error { //nolint:gocognit,gocyclo,cyclop,maintidx

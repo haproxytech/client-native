@@ -21,7 +21,7 @@ type HAProxyClient interface {
 	Spoe() (spoe.Spoe, error)
 }
 
-func New(ctx context.Context, opt ...options.Option) (HAProxyClient, error) {
+func New(ctx context.Context, opt ...options.Option) (HAProxyClient, error) { //nolint:revive
 	o := options.Options{}
 	var err error
 

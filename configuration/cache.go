@@ -108,11 +108,7 @@ func (c *client) DeleteCache(name string, transactionID string, version int64) e
 		return c.HandleError(name, "", "", t, transactionID == "", err)
 	}
 
-	if err := c.SaveData(p, t, transactionID == ""); err != nil {
-		return err
-	}
-
-	return nil
+	return c.SaveData(p, t, transactionID == "")
 }
 
 // EditCache edits a cache in configuration. One of version or transactionID is
@@ -139,11 +135,7 @@ func (c *client) EditCache(name string, data *models.Cache, transactionID string
 		return err
 	}
 
-	if err := c.SaveData(p, t, transactionID == ""); err != nil {
-		return err
-	}
-
-	return nil
+	return c.SaveData(p, t, transactionID == "")
 }
 
 // CreateCache creates a cache in configuration. One of version or transactionID is
@@ -174,11 +166,7 @@ func (c *client) CreateCache(data *models.Cache, transactionID string, version i
 		return err
 	}
 
-	if err := c.SaveData(p, t, transactionID == ""); err != nil {
-		return err
-	}
-
-	return nil
+	return c.SaveData(p, t, transactionID == "")
 }
 
 func ParseCacheSection(p parser.Parser, cache *models.Cache) error {

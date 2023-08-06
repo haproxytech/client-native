@@ -154,11 +154,7 @@ func (c *client) CreateSite(data *models.Site, transactionID string, version int
 		return c.HandleError(data.Name, "", "", t, transactionID == "", CompositeTransactionError(res...))
 	}
 
-	if err := c.SaveData(p, t, transactionID == ""); err != nil {
-		return err
-	}
-
-	return nil
+	return c.SaveData(p, t, transactionID == "")
 }
 
 // EditSite edits a site in configuration. One of version or transactionID is
@@ -393,11 +389,7 @@ func (c *client) EditSite(name string, data *models.Site, transactionID string, 
 		return c.HandleError(data.Name, "", "", t, transactionID == "", CompositeTransactionError(res...))
 	}
 
-	if err := c.SaveData(p, t, transactionID == ""); err != nil {
-		return err
-	}
-
-	return nil
+	return c.SaveData(p, t, transactionID == "")
 }
 
 // DeleteSite deletes a site in configuration. One of version or transactionID is
@@ -454,11 +446,7 @@ func (c *client) DeleteSite(name string, transactionID string, version int64) er
 		return c.HandleError(name, "", "", t, transactionID == "", CompositeTransactionError(res...))
 	}
 
-	if err := c.SaveData(p, t, transactionID == ""); err != nil {
-		return err
-	}
-
-	return nil
+	return c.SaveData(p, t, transactionID == "")
 }
 
 func (c *client) parseSites(p parser.Parser) (models.Sites, error) {
@@ -617,10 +605,7 @@ func (c *client) addDefaultBckToFrontend(fName string, bName string, t string, p
 		return err
 	}
 	frontend.DefaultBackend = bName
-	if err := c.EditFrontend(fName, frontend, t, 0); err != nil {
-		return err
-	}
-	return nil
+	return c.EditFrontend(fName, frontend, t, 0)
 }
 
 func (c *client) removeDefaultBckToFrontend(fName string, t string, p parser.Parser) error {
@@ -629,10 +614,7 @@ func (c *client) removeDefaultBckToFrontend(fName string, t string, p parser.Par
 		return err
 	}
 	frontend.DefaultBackend = ""
-	if err := c.EditFrontend(fName, frontend, t, 0); err != nil {
-		return err
-	}
-	return nil
+	return c.EditFrontend(fName, frontend, t, 0)
 }
 
 func (c *client) editService(name string, service *models.SiteService, t string, p parser.Parser) error {
@@ -645,10 +627,7 @@ func (c *client) editService(name string, service *models.SiteService, t string,
 	frontend.Maxconn = service.Maxconn
 	frontend.Mode = service.Mode
 
-	if err := c.EditFrontend(name, frontend, t, 0); err != nil {
-		return err
-	}
-	return nil
+	return c.EditFrontend(name, frontend, t, 0)
 }
 
 func (c *client) editFarm(name string, farm *models.SiteFarm, t string, p parser.Parser) error {
@@ -661,8 +640,5 @@ func (c *client) editFarm(name string, farm *models.SiteFarm, t string, p parser
 	backend.Forwardfor = farm.Forwardfor
 	backend.Balance = farm.Balance
 
-	if err := c.EditBackend(name, backend, t, 0); err != nil {
-		return err
-	}
-	return nil
+	return c.EditBackend(name, backend, t, 0)
 }

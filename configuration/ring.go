@@ -182,10 +182,7 @@ func ParseRingSection(p parser.Parser, ring *models.Ring) error { //nolint:gocog
 // DeleteRing deletes a ring in configuration. One of version or transactionID is
 // mandatory. Returns error on fail, nil on success.
 func (c *client) DeleteRing(name string, transactionID string, version int64) error {
-	if err := c.deleteSection(parser.Ring, name, transactionID, version); err != nil {
-		return err
-	}
-	return nil
+	return c.deleteSection(parser.Ring, name, transactionID, version)
 }
 
 // CreateRing creates a ring in configuration. One of version or transactionID is
@@ -215,16 +212,12 @@ func (c *client) CreateRing(data *models.Ring, transactionID string, version int
 		return err
 	}
 
-	if err := c.SaveData(p, t, transactionID == ""); err != nil {
-		return err
-	}
-
-	return nil
+	return c.SaveData(p, t, transactionID == "")
 }
 
 // EditRing edits a ring in configuration. One of version or transactionID is
 // mandatory. Returns error on fail, nil on success.
-func (c *client) EditRing(name string, data *models.Ring, transactionID string, version int64) error {
+func (c *client) EditRing(name string, data *models.Ring, transactionID string, version int64) error { //nolint:revive
 	if c.UseModelsValidation {
 		validationErr := data.Validate(strfmt.Default)
 		if validationErr != nil {
@@ -245,10 +238,7 @@ func (c *client) EditRing(name string, data *models.Ring, transactionID string, 
 		return err
 	}
 
-	if err := c.SaveData(p, t, transactionID == ""); err != nil {
-		return err
-	}
-	return nil
+	return c.SaveData(p, t, transactionID == "")
 }
 
 func SerializeRingSection(p parser.Parser, data *models.Ring) error { //nolint:gocognit

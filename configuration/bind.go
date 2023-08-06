@@ -99,10 +99,7 @@ func (c *client) DeleteBind(name string, parentType string, parentName string, t
 		return c.HandleError(name, parentType, parentName, t, transactionID == "", err)
 	}
 
-	if err := c.SaveData(p, t, transactionID == ""); err != nil {
-		return err
-	}
-	return nil
+	return c.SaveData(p, t, transactionID == "")
 }
 
 // CreateBind creates a bind in configuration. One of version or transactionID is
@@ -134,11 +131,7 @@ func (c *client) CreateBind(parentType string, parentName string, data *models.B
 		return c.HandleError(data.Name, parentType, parentName, t, transactionID == "", err)
 	}
 
-	if err := c.SaveData(p, t, transactionID == ""); err != nil {
-		return err
-	}
-
-	return nil
+	return c.SaveData(p, t, transactionID == "")
 }
 
 // EditBind edits a bind in configuration. One of version or transactionID is
@@ -169,11 +162,7 @@ func (c *client) EditBind(name string, parentType string, parentName string, dat
 		return c.HandleError(data.Name, parentType, parentName, t, transactionID == "", err)
 	}
 
-	if err := c.SaveData(p, t, transactionID == ""); err != nil {
-		return err
-	}
-
-	return nil
+	return c.SaveData(p, t, transactionID == "")
 }
 
 func ParseBinds(parentType string, parentName string, p parser.Parser) (models.Binds, error) {

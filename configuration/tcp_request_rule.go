@@ -115,11 +115,7 @@ func (c *client) DeleteTCPRequestRule(id int64, parentType string, parentName st
 		return c.HandleError(strconv.FormatInt(id, 10), parentType, parentName, t, transactionID == "", err)
 	}
 
-	if err := c.SaveData(p, t, transactionID == ""); err != nil {
-		return err
-	}
-
-	return nil
+	return c.SaveData(p, t, transactionID == "")
 }
 
 // CreateTCPRequestRule creates a tcp request rule in configuration. One of version or transactionID is
@@ -153,10 +149,7 @@ func (c *client) CreateTCPRequestRule(parentType string, parentName string, data
 		return c.HandleError(strconv.FormatInt(*data.Index, 10), parentType, parentName, t, transactionID == "", err)
 	}
 
-	if err := c.SaveData(p, t, transactionID == ""); err != nil {
-		return err
-	}
-	return nil
+	return c.SaveData(p, t, transactionID == "")
 }
 
 // EditTCPRequestRule edits a tcp request rule in configuration. One of version or transactionID is
@@ -195,10 +188,7 @@ func (c *client) EditTCPRequestRule(id int64, parentType string, parentName stri
 		return c.HandleError(strconv.FormatInt(id, 10), parentType, parentName, t, transactionID == "", err)
 	}
 
-	if err := c.SaveData(p, t, transactionID == ""); err != nil {
-		return err
-	}
-	return nil
+	return c.SaveData(p, t, transactionID == "")
 }
 
 func ParseTCPRequestRules(t, pName string, p parser.Parser) (models.TCPRequestRules, error) {

@@ -104,11 +104,7 @@ func (c *client) DeleteServer(name string, parentType string, parentName string,
 		return c.HandleError(name, parentType, parentName, t, transactionID == "", err)
 	}
 
-	if err := c.SaveData(p, t, transactionID == ""); err != nil {
-		return err
-	}
-
-	return nil
+	return c.SaveData(p, t, transactionID == "")
 }
 
 // CreateServer creates a server in configuration. One of version or transactionID is
@@ -135,10 +131,7 @@ func (c *client) CreateServer(parentType string, parentName string, data *models
 		return c.HandleError(data.Name, parentType, parentName, t, transactionID == "", err)
 	}
 
-	if err := c.SaveData(p, t, transactionID == ""); err != nil {
-		return err
-	}
-	return nil
+	return c.SaveData(p, t, transactionID == "")
 }
 
 // EditServer edits a server in configuration. One of version or transactionID is
@@ -165,10 +158,7 @@ func (c *client) EditServer(name string, parentType string, parentName string, d
 		return c.HandleError(data.Name, parentType, parentName, t, transactionID == "", err)
 	}
 
-	if err := c.SaveData(p, t, transactionID == ""); err != nil {
-		return err
-	}
-	return nil
+	return c.SaveData(p, t, transactionID == "")
 }
 
 func ParseServers(parentType string, parentName string, p parser.Parser) (models.Servers, error) {

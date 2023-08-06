@@ -112,11 +112,7 @@ func (c *client) DeleteHTTPResponseRule(id int64, parentType string, parentName 
 		return c.HandleError(strconv.FormatInt(id, 10), parentType, parentName, t, transactionID == "", err)
 	}
 
-	if err := c.SaveData(p, t, transactionID == ""); err != nil {
-		return err
-	}
-
-	return nil
+	return c.SaveData(p, t, transactionID == "")
 }
 
 // CreateHTTPResponseRule creates a http response rule in configuration. One of version or transactionID is
@@ -148,10 +144,7 @@ func (c *client) CreateHTTPResponseRule(parentType string, parentName string, da
 		return c.HandleError(strconv.FormatInt(*data.Index, 10), parentType, parentName, t, transactionID == "", err)
 	}
 
-	if err := c.SaveData(p, t, transactionID == ""); err != nil {
-		return err
-	}
-	return nil
+	return c.SaveData(p, t, transactionID == "")
 }
 
 // EditHTTPResponseRule edits a http response rule in configuration. One of version or transactionID is
@@ -190,10 +183,7 @@ func (c *client) EditHTTPResponseRule(id int64, parentType string, parentName st
 		return c.HandleError(strconv.FormatInt(id, 10), parentType, parentName, t, transactionID == "", err)
 	}
 
-	if err := c.SaveData(p, t, transactionID == ""); err != nil {
-		return err
-	}
-	return nil
+	return c.SaveData(p, t, transactionID == "")
 }
 
 func ParseHTTPResponseRules(t, pName string, p parser.Parser) (models.HTTPResponseRules, error) {

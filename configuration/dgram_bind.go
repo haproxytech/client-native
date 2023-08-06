@@ -98,10 +98,7 @@ func (c *client) DeleteDgramBind(name string, logForward string, transactionID s
 		return c.HandleError(name, "log-forward", logForward, t, transactionID == "", err)
 	}
 
-	if err := c.SaveData(p, t, transactionID == ""); err != nil {
-		return err
-	}
-	return nil
+	return c.SaveData(p, t, transactionID == "")
 }
 
 // CreateDgramBind creates a dgram-bind in configuration. One of version or transactionID is
@@ -133,11 +130,7 @@ func (c *client) CreateDgramBind(logForward string, data *models.DgramBind, tran
 		return c.HandleError(data.Name, "log-forward", logForward, t, transactionID == "", err)
 	}
 
-	if err := c.SaveData(p, t, transactionID == ""); err != nil {
-		return err
-	}
-
-	return nil
+	return c.SaveData(p, t, transactionID == "")
 }
 
 // EditDgramBind edits a dgram-bind in configuration. One of version or transactionID is
@@ -168,11 +161,7 @@ func (c *client) EditDgramBind(name string, logForward string, data *models.Dgra
 		return c.HandleError(data.Name, "log-forward", logForward, t, transactionID == "", err)
 	}
 
-	if err := c.SaveData(p, t, transactionID == ""); err != nil {
-		return err
-	}
-
-	return nil
+	return c.SaveData(p, t, transactionID == "")
 }
 
 func ParseDgramBinds(logForward string, p parser.Parser) (models.DgramBinds, error) {

@@ -96,10 +96,7 @@ func (c *client) DeleteTable(name string, peerSection string, transactionID stri
 		return c.HandleError(name, "peers", peerSection, t, transactionID == "", err)
 	}
 
-	if err := c.SaveData(p, t, transactionID == ""); err != nil {
-		return err
-	}
-	return nil
+	return c.SaveData(p, t, transactionID == "")
 }
 
 // CreateTable creates a table in configuration. One of version or transactionID is
@@ -126,11 +123,7 @@ func (c *client) CreateTable(peerSection string, data *models.Table, transaction
 		return c.HandleError(data.Name, "tables", peerSection, t, transactionID == "", err)
 	}
 
-	if err := c.SaveData(p, t, transactionID == ""); err != nil {
-		return err
-	}
-
-	return nil
+	return c.SaveData(p, t, transactionID == "")
 }
 
 // EditTable edits a table in configuration. One of version or transactionID is
@@ -157,11 +150,7 @@ func (c *client) EditTable(name string, peerSection string, data *models.Table, 
 		return c.HandleError(data.Name, "peers", peerSection, t, transactionID == "", err)
 	}
 
-	if err := c.SaveData(p, t, transactionID == ""); err != nil {
-		return err
-	}
-
-	return nil
+	return c.SaveData(p, t, transactionID == "")
 }
 
 func ParseTables(peerSection string, p parser.Parser) (models.Tables, error) {

@@ -87,10 +87,7 @@ func (c *client) DeleteDeclareCapture(index int64, frontend string, transactionI
 	if err := p.Delete("frontend", frontend, "declare capture", int(index)); err != nil {
 		return c.HandleError(strconv.FormatInt(index, 10), "frontend", frontend, t, transactionID == "", err)
 	}
-	if err := c.SaveData(p, t, transactionID == ""); err != nil {
-		return err
-	}
-	return nil
+	return c.SaveData(p, t, transactionID == "")
 }
 
 // CreateDeclareCapture creates a DeclareCapture line in the configuration. One of version or transactionID is mandatory.
@@ -109,10 +106,7 @@ func (c *client) CreateDeclareCapture(frontend string, data *models.Capture, tra
 	if err := p.Insert("frontend", frontend, "declare capture", SerializeDeclareCapture(*data), int(*data.Index)); err != nil {
 		return c.HandleError(strconv.FormatInt(*data.Index, 10), "frontend", frontend, t, transactionID == "", err)
 	}
-	if err := c.SaveData(p, t, transactionID == ""); err != nil {
-		return err
-	}
-	return nil
+	return c.SaveData(p, t, transactionID == "")
 }
 
 // EditDeclareCapture edits a DeclareCapture line in the configuration. One of version or transactionID is mandatory.
@@ -131,10 +125,7 @@ func (c *client) EditDeclareCapture(index int64, frontend string, data *models.C
 	if _, err := p.GetOne("frontend", frontend, "declare capture", int(index)); err != nil {
 		return c.HandleError(strconv.FormatInt(index, 10), "frontend", frontend, t, transactionID == "", err)
 	}
-	if err := c.SaveData(p, t, transactionID == ""); err != nil {
-		return err
-	}
-	return nil
+	return c.SaveData(p, t, transactionID == "")
 }
 
 func ParseDeclareCaptures(frontend string, p parser.Parser) (models.Captures, error) {

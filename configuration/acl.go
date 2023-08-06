@@ -108,10 +108,7 @@ func (c *client) DeleteACL(id int64, parentType string, parentName string, trans
 		return c.HandleError(strconv.FormatInt(id, 10), parentType, parentName, t, transactionID == "", err)
 	}
 
-	if err := c.SaveData(p, t, transactionID == ""); err != nil {
-		return err
-	}
-	return nil
+	return c.SaveData(p, t, transactionID == "")
 }
 
 // CreateACL creates a ACL line in configuration. One of version or transactionID is
@@ -138,10 +135,7 @@ func (c *client) CreateACL(parentType string, parentName string, data *models.AC
 		return c.HandleError(strconv.FormatInt(*data.Index, 10), parentType, parentName, t, transactionID == "", err)
 	}
 
-	if err := c.SaveData(p, t, transactionID == ""); err != nil {
-		return err
-	}
-	return nil
+	return c.SaveData(p, t, transactionID == "")
 }
 
 func (c *client) getACLParserFromParent(parent string) (parser.Section, error) {
@@ -184,10 +178,7 @@ func (c *client) EditACL(id int64, parentType string, parentName string, data *m
 		return c.HandleError(strconv.FormatInt(id, 10), parentType, parentName, t, transactionID == "", err)
 	}
 
-	if err := c.SaveData(p, t, transactionID == ""); err != nil {
-		return err
-	}
-	return nil
+	return c.SaveData(p, t, transactionID == "")
 }
 
 func ParseACLs(section parser.Section, name string, p parser.Parser, aclName ...string) (models.Acls, error) {

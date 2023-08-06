@@ -89,11 +89,7 @@ func (c *client) GetProgram(name string, transactionID string) (int64, *models.P
 }
 
 func (c *client) DeleteProgram(name string, transactionID string, version int64) error {
-	if err := c.deleteSection(parser.Program, name, transactionID, version); err != nil {
-		return err
-	}
-
-	return nil
+	return c.deleteSection(parser.Program, name, transactionID, version)
 }
 
 func (c *client) CreateProgram(data *models.Program, transactionID string, version int64) error {
@@ -123,11 +119,7 @@ func (c *client) CreateProgram(data *models.Program, transactionID string, versi
 		return err
 	}
 
-	if err = c.SaveData(p, t, transactionID == ""); err != nil {
-		return err
-	}
-
-	return nil
+	return c.SaveData(p, t, transactionID == "")
 }
 
 func (c *client) EditProgram(name string, data *models.Program, transactionID string, version int64) error {
@@ -153,11 +145,7 @@ func (c *client) EditProgram(name string, data *models.Program, transactionID st
 		return err
 	}
 
-	if err = c.SaveData(p, t, transactionID == ""); err != nil {
-		return err
-	}
-
-	return nil
+	return c.SaveData(p, t, transactionID == "")
 }
 
 func SerializeProgramSection(p parser.Parser, data *models.Program) error {
@@ -188,11 +176,7 @@ func SerializeProgramSection(p parser.Parser, data *models.Program) error {
 		return err
 	}
 
-	if err := p.Set(parser.Program, data.Name, "option start-on-reload", serializeSimpleOption(data.StartOnReload)); err != nil {
-		return err
-	}
-
-	return nil
+	return p.Set(parser.Program, data.Name, "option start-on-reload", serializeSimpleOption(data.StartOnReload))
 }
 
 func ParseProgram(p parser.Parser, name string) (*models.Program, error) {

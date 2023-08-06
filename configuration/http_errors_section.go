@@ -119,11 +119,7 @@ func (c *client) CreateHTTPErrorsSection(data *models.HTTPErrorsSection, transac
 		return err
 	}
 
-	if err = c.SaveData(p, t, transactionID == ""); err != nil {
-		return err
-	}
-
-	return nil
+	return c.SaveData(p, t, transactionID == "")
 }
 
 // EditHTTPErrorsSection replaces a single http-errors section with a given name.
@@ -157,11 +153,7 @@ func (c *client) EditHTTPErrorsSection(name string, data *models.HTTPErrorsSecti
 		return err
 	}
 
-	if err = c.SaveData(p, t, transactionID == ""); err != nil {
-		return err
-	}
-
-	return nil
+	return c.SaveData(p, t, transactionID == "")
 }
 
 // SerializeProgramSection saves a single http-errors section's data in the configuration.

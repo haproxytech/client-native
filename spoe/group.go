@@ -87,10 +87,7 @@ func (c *SingleSpoe) GetGroup(scope, name, transactionID string) (int64, *models
 // DeleteGroup deletes an group in configuration. One of version or transactionID is
 // mandatory. Returns error on fail, nil on success.
 func (c *SingleSpoe) DeleteGroup(scope, name, transactionID string, version int64) error {
-	if err := c.deleteSection(scope, parser.SPOEGroup, name, transactionID, version); err != nil {
-		return err
-	}
-	return nil
+	return c.deleteSection(scope, parser.SPOEGroup, name, transactionID, version)
 }
 
 // CreateGroup creates a group in configuration. One of version or transactionID is
@@ -123,16 +120,12 @@ func (c *SingleSpoe) CreateGroup(scope string, data *models.SpoeGroup, transacti
 		return err
 	}
 
-	if err := c.Transaction.SaveData(p, t, transactionID == ""); err != nil {
-		return err
-	}
-
-	return nil
+	return c.Transaction.SaveData(p, t, transactionID == "")
 }
 
 // EditMessage edits a group in configuration. One of version or transactionID is
 // mandatory. Returns error on fail, nil on success.
-func (c *SingleSpoe) EditGroup(scope string, data *models.SpoeGroup, name, transactionID string, version int64) error {
+func (c *SingleSpoe) EditGroup(scope string, data *models.SpoeGroup, name, transactionID string, version int64) error { //nolint:revive
 	if c.Transaction.UseModelsValidation {
 		validationErr := data.Validate(strfmt.Default)
 		if validationErr != nil {
@@ -155,11 +148,7 @@ func (c *SingleSpoe) EditGroup(scope string, data *models.SpoeGroup, name, trans
 		return err
 	}
 
-	if err := c.Transaction.SaveData(p, t, transactionID == ""); err != nil {
-		return err
-	}
-
-	return nil
+	return c.Transaction.SaveData(p, t, transactionID == "")
 }
 
 func (c *SingleSpoe) createEditGroup(scope string, data *models.SpoeGroup, t string, transactionID string, p *spoe.Parser) error {

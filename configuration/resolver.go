@@ -109,11 +109,7 @@ func (c *client) DeleteResolver(name string, transactionID string, version int64
 		return c.HandleError(name, "", "", t, transactionID == "", err)
 	}
 
-	if err := c.SaveData(p, t, transactionID == ""); err != nil {
-		return err
-	}
-
-	return nil
+	return c.SaveData(p, t, transactionID == "")
 }
 
 // EditResolver edits a resolver in configuration. One of version or transactionID is
@@ -140,11 +136,7 @@ func (c *client) EditResolver(name string, data *models.Resolver, transactionID 
 		return err
 	}
 
-	if err := c.SaveData(p, t, transactionID == ""); err != nil {
-		return err
-	}
-
-	return nil
+	return c.SaveData(p, t, transactionID == "")
 }
 
 // CreateResolver creates a resolver in configuration. One of version or transactionID is
@@ -175,11 +167,7 @@ func (c *client) CreateResolver(data *models.Resolver, transactionID string, ver
 		return err
 	}
 
-	if err := c.SaveData(p, t, transactionID == ""); err != nil {
-		return err
-	}
-
-	return nil
+	return c.SaveData(p, t, transactionID == "")
 }
 
 func ParseResolverSection(p parser.Parser, resolver *models.Resolver) error { //nolint:gocognit,gocyclo,cyclop

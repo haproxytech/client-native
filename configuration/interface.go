@@ -76,7 +76,7 @@ type Configuration interface {
 	Group
 }
 
-func New(ctx context.Context, opt ...options.ConfigurationOption) (Configuration, error) {
+func New(ctx context.Context, opt ...options.ConfigurationOption) (Configuration, error) { //nolint:revive
 	c := &client{}
 	var err error
 

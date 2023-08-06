@@ -76,10 +76,7 @@ func (c *client) PushGlobalConfiguration(data *models.Global, transactionID stri
 	if err := SerializeGlobalSection(p, data); err != nil {
 		return err
 	}
-	if err := c.SaveData(p, t, transactionID == ""); err != nil {
-		return err
-	}
-	return nil
+	return c.SaveData(p, t, transactionID == "")
 }
 
 func ParseGlobalSection(p parser.Parser) (*models.Global, error) { //nolint:gocognit,gocyclo,cyclop,maintidx
@@ -2164,6 +2161,7 @@ func serializeWurflOptions(p parser.Parser, options *models.GlobalWurflOptions) 
 	if err := serializeStringOption(p, "wurfl-patch-file", options.PatchFile); err != nil {
 		return err
 	}
+	//nolint:revive
 	if err := serializeInt64Option(p, "wurfl-cache-size", options.CacheSize); err != nil {
 		return err
 	}
@@ -2183,6 +2181,7 @@ func serializeDeviceAtlasOptions(p parser.Parser, options *models.GlobalDeviceAt
 	if err := serializeStringOption(p, "deviceatlas-separator", options.Separator); err != nil {
 		return err
 	}
+	//nolint:revive
 	if err := serializeStringOption(p, "deviceatlas-properties-cookie", options.PropertiesCookie); err != nil {
 		return err
 	}
@@ -2202,6 +2201,7 @@ func serializeFiftyOneDegreesOptions(p parser.Parser, options *models.GlobalFift
 	if err := serializeStringOption(p, "51degrees-property-separator", options.PropertySeparator); err != nil {
 		return err
 	}
+	//nolint:revive
 	if err := serializeInt64Option(p, "51degrees-cache-size", options.CacheSize); err != nil {
 		return err
 	}

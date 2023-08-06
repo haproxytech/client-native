@@ -89,10 +89,7 @@ func (c *client) DeleteGroup(name string, userlist string, transactionID string,
 	if err := p.Delete("userlist", userlist, "group", i); err != nil {
 		return c.HandleError(name, "userlist", userlist, t, transactionID == "", err)
 	}
-	if err := c.SaveData(p, t, transactionID == ""); err != nil {
-		return err
-	}
-	return nil
+	return c.SaveData(p, t, transactionID == "")
 }
 
 // CreateGroup creates a Group line in the configuration. One of version or transactionID is mandatory.
@@ -118,15 +115,12 @@ func (c *client) CreateGroup(userlist string, data *models.Group, transactionID 
 	if err := p.Insert("userlist", userlist, "group", SerializeGroup(*data), -1); err != nil {
 		return c.HandleError(data.Name, "userlist", userlist, t, transactionID == "", err)
 	}
-	if err := c.SaveData(p, t, transactionID == ""); err != nil {
-		return err
-	}
-	return nil
+	return c.SaveData(p, t, transactionID == "")
 }
 
 // EditGroup edits a Group line in the configuration. One of version or transactionID is mandatory.
 // Returns error on fail, nil on success.
-func (c *client) EditGroup(name string, userlist string, data *models.Group, transactionID string, version int64) error {
+func (c *client) EditGroup(name string, userlist string, data *models.Group, transactionID string, version int64) error { //nolint:revive
 	if c.UseModelsValidation {
 		validationErr := data.Validate(strfmt.Default)
 		if validationErr != nil {
@@ -147,10 +141,7 @@ func (c *client) EditGroup(name string, userlist string, data *models.Group, tra
 	if _, err := p.GetOne("userlist", userlist, "group", i); err != nil {
 		return c.HandleError(data.Name, "userlist", userlist, t, transactionID == "", err)
 	}
-	if err := c.SaveData(p, t, transactionID == ""); err != nil {
-		return err
-	}
-	return nil
+	return c.SaveData(p, t, transactionID == "")
 }
 
 func ParseGroups(userlist string, p parser.Parser) (models.Groups, error) {
