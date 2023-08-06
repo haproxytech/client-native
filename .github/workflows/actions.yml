@@ -38,9 +38,9 @@ jobs:
         with:
           go-version-file: 'go.mod'
       - name: generating models
-        run: make models
+        run: make models equal
       - name: changes
-        run: test -z "$(git diff 2> /dev/null)" || exit "Models are not generated, issue \`make models\` and commit the result"
+        run: test -z "$(git diff 2> /dev/null)" || exit "Models are not generated, issue \`make models equal\` and commit the result"
       - name: untracked files
         run: test -z "$(git ls-files --others --exclude-standard 2> /dev/null)" || exit "Models generation created untracked files, cannot proceed"
   lint:

@@ -64,9 +64,9 @@ generate:
   tags:
     - go
   before_script:
-    - make models
+    - make models equal
   script:
-    - test -z "$(git diff 2> /dev/null)" || exit "Models are not generated, issue \`make models\` and commit the result"
+    - test -z "$(git diff 2> /dev/null)" || exit "Models are not generated, issue \`make models equal\` and commit the result"
     - test -z "$(git ls-files --others --exclude-standard 2> /dev/null)" || exit "Models generation created untracked files, cannot proceed"
   rules:
     - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
