@@ -1,0 +1,144 @@
+
+{{ range .TestType}}
+func Test{{$.Name}}{{.}}(t *testing.T) {
+    faker := gofakeit.NewCrypto()
+	gofakeit.SetGlobalFaker(faker)
+	samples := []struct {
+		a, b {{$.Name}}
+	}{}
+	for i := 0; i < 100; i++ {
+		var sample {{$.Name}}
+		var result {{$.Name}}
+		err := gofakeit.Struct(&sample)
+		if err != nil {
+			t.Errorf(err.Error())
+		}
+        buf := new(bytes.Buffer)
+		enc := gob.NewEncoder(buf)
+		err = enc.Encode(&sample)
+		if err != nil {
+			t.Errorf(err.Error())
+		}
+		dec := gob.NewDecoder(buf)
+		err = dec.Decode(&result)
+        if err != nil {
+            t.Errorf(err.Error())
+        }
+
+		samples = append(samples, struct {
+			a, b {{$.Name}}
+		}{sample, result})
+	}
+
+	for _, sample := range samples {
+		result := sample.a.{{.}}(sample.b)
+        {{- if eq . "Equal" }}
+		if !result {
+        {{end -}}
+        {{- if eq . "Diff" }}
+		if len(result) != 0 {
+        {{end -}}
+			json := jsoniter.ConfigCompatibleWithStandardLibrary
+			a, err := json.Marshal(&sample.a)
+			if err != nil {
+				t.Errorf(err.Error())
+			}
+			b, err := json.Marshal(&sample.b)
+			if err != nil {
+				t.Errorf(err.Error())
+			}
+            {{- if eq . "Equal" }}
+			    t.Errorf("Expected {{$.Name}} to be equal, but it is not %s %s", a, b)
+            {{end -}}
+            {{- if eq . "Diff" }}
+			    t.Errorf("Expected {{$.Name}} to be equal, but it is not %s %s, %v", a, b, result)
+            {{end -}}
+		}
+	}
+}
+
+{{ if eq . "Diffs" -}}
+/*
+{{end -}}
+func Test{{$.Name}}{{.}}False(t *testing.T) {
+    faker := gofakeit.NewCrypto()
+	gofakeit.SetGlobalFaker(faker)
+	samples := []struct {
+		a, b {{$.Name}}
+	}{}
+	for i := 0; i < 100; i++ {
+		var sample {{$.Name}}
+		var result {{$.Name}}
+		err := gofakeit.Struct(&sample)
+		if err != nil {
+			t.Errorf(err.Error())
+		}
+		err = gofakeit.Struct(&result)
+		if err != nil {
+			t.Errorf(err.Error())
+		}
+        {{- range $.Fields}}
+            {{- if (eq .Type "bool") }}
+                result.{{.Name}} = !sample.{{.Name}}
+            {{- end}}
+            {{- if (eq .Type "*bool") }}
+                result.{{.Name}} = Ptr(!*sample.{{.Name}})
+            {{- end}}
+            {{- if (HasPrefix .Type "int") }}
+                result.{{.Name}} = sample.{{.Name}}+1
+            {{- end}}
+            {{- if (HasPrefix .Type "*int") }}
+                result.{{.Name}} = Ptr(*sample.{{.Name}}+1)
+            {{- end}}
+            {{- if or (HasPrefix .Type "DateTime") (HasPrefix .Type "Date") }}
+				{{- if ne .TypeInFile "" }}
+                	result.{{.Name}} = {{.TypeInFile}}(time.Now().AddDate(rand.Intn(10), rand.Intn(12), rand.Intn(28)))
+				{{- else}}
+					result.{{.Name}} = time.Now().AddDate(rand.Intn(10), rand.Intn(12), rand.Intn(28))
+            	{{- end}}
+            {{- end}}
+			{{- /*//{{.Name}} => {{.Type}}*/}}
+        {{- end}}
+		samples = append(samples, struct {
+			a, b {{$.Name}}
+		}{sample, result})
+	}
+
+	for _, sample := range samples {
+		result := sample.a.{{.}}(sample.b)
+        {{- if eq . "Equal" }}
+		if result {
+        {{end -}}
+        {{- if eq . "Diff" }}
+        {{- if eq $.FieldCount 0 }}
+        if len(result) == 0 {
+        {{- else  }}
+            {{- if $.HasIndex }}
+                if len(result) != {{$.FieldCount}} -1 {
+            {{- else }}
+                if len(result) != {{$.FieldCount}} {
+            {{end -}}
+        {{end -}}
+        {{end -}}
+			json := jsoniter.ConfigCompatibleWithStandardLibrary
+			a, err := json.Marshal(&sample.a)
+			if err != nil {
+				t.Errorf(err.Error())
+			}
+			b, err := json.Marshal(&sample.b)
+			if err != nil {
+				t.Errorf(err.Error())
+			}
+            {{- if eq . "Equal" }}
+			    t.Errorf("Expected {{$.Name}} to be different, but it is not %s %s", a, b)
+            {{end -}}
+            {{- if eq . "Diff" }}
+                t.Errorf("Expected {{$.Name}} to be different in {{$.FieldCount}} cases, but it is not (%d) %s %s", len(result), a, b)
+            {{end -}}
+		}
+	}
+}
+{{if eq . "Diffs" -}}
+*/
+{{end}}
+{{end}}

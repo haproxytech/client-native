@@ -1,0 +1,244 @@
+
+// Equal checks if two structs of type {{.Name}} are equal
+//
+{{- if or .NeedsOptions .NeedsOptionsIndex }}
+// By default empty maps and slices are equal to nil:
+{{- end}}
+//  var a, b {{.Name}}
+//  equal := a.Equal(b)
+{{- if or .NeedsOptions .NeedsOptionsIndex }}
+// For more advanced use case you can configure these options (default values are shown):
+//  var a, b {{.Name}}
+//  equal := a.Equal(b,Options{
+{{- if .NeedsOptions }}
+//  	NilSameAsEmpty: true,
+{{end -}}
+{{- if .NeedsOptionsIndex }}
+//  	SkipIndex: true,
+{{end -}}
+//  })
+{{else}}
+// opts ...Options are ignored in this method
+{{end -}}
+func (s {{.Name}}) Equal(t {{.Name}}, opts ...Options) bool {
+{{- if or .NeedsOptions .NeedsOptionsIndex }}
+    opt := getOptions(opts...)
+{{end}}
+{{- if eq .Mode "struct" }}
+    {{- range .Fields}}
+	{{- if and (HasPrefix .Name "Index") (HasPrefix .Type "*int64") }}
+	if !opt.SkipIndex && !equalPointers(s.{{.Name}}, t.{{.Name}}){
+        return false
+	}
+	{{- else if or (eq .Type "string" "bool") (HasPrefix .Type "int") }}
+	if s.{{.Name}} != t.{{.Name}} {
+		return false
+	}
+	{{- else if or (HasPrefix .Type "[]int") (HasPrefix .Type "[]string")}}
+    if !equalComparableSlice(s.{{.Name}}, t.{{.Name}}, opt) {
+        return false
+    }
+	{{- else if or (HasPrefix .Type "*string") (HasPrefix .Type "*int") (HasPrefix .Type "*bool")}}
+	if !equalPointers(s.{{.Name}}, t.{{.Name}}) {
+		return false
+	}
+	{{- else if HasPrefix .Type "map" }}
+	if !equalComparableMap(s.{{.Name}}, t.{{.Name}}, opt) {
+		return false
+	}
+	{{- else if HasPrefix .Type "[]"}}
+	if !CheckSameNilAndLen(s.{{.Name}}, t.{{.Name}}, opt){
+	   return false
+	}
+	for i := range s.{{.Name}} {
+		if !s.{{.Name}}[i].Equal({{if HasPrefix .Type "[]*"}}*{{end}}t.{{.Name}}[i], opt) {
+			return false
+		}
+	}
+	{{- else if .IsEmbedded}}
+	if !s.{{.Name}}.Equal({{if HasPrefix .Type "[]*"}}*{{end}}t.{{.Name}}, opt) {
+		return false
+	}
+	{{- else if (HasPrefix .Type "Date")}}
+    if !s.{{.Name}}.Equal(t.{{.Name}}) {
+        return false
+    }
+	{{- else if or (HasPrefix .Type "*") (not .IsBasicType)}}
+	    {{- if eq .TypeInFile "time.Time"}} {{/* time.Time has Equal, but nothing else */}}
+		if !s.{{.Name}}.Equal({{if HasPrefix .Type "*"}}*{{end}}t.{{.Name}}) {
+			return false
+		}
+		{{- else }}
+		if !s.{{.Name}}.Equal({{if HasPrefix .Type "*"}}*{{end}}t.{{.Name}}, opt) {
+			return false
+		}
+		{{- end }}
+	{{- else}}
+	if !s.{{.Name}}.Equal(&t.{{.Name}}, opt) {
+		return false
+	}
+	{{end}}
+	{{end}}
+	return true
+{{end}}
+{{- if eq .Mode "array" }}
+    {{- if and .IsComparable .IsBasicType }}
+	return equalComparableSlice(s,t,opt)
+	{{- else }}
+	if !opt.NilSameAsEmpty {
+		if s == nil && t != nil {
+			return false
+		}
+		if t == nil && s != nil {
+			return false
+		}
+	}
+    if len(s) != len(t) {
+		return false
+	}
+    for i, v := range s {
+		{{- if .IsBasicType}}
+			{{- if HasPrefix .Type "*"}}
+				if *v != *t[i] {
+					return false
+				}
+			{{- else -}}
+				if v != t[i] {
+					return false
+				}
+			{{- end}}
+		{{- else}}
+			if !v.Equal({{if .IsPointer}}*{{end}}t[i], opt) {
+				return false
+			}
+		{{end}}
+	}
+	return true
+	{{- end }}
+{{- end -}}
+{{- if eq .Mode "ident" }}
+    return s == t
+{{- end -}}
+}
+
+// Diff checks if two structs of type {{.Name}} are equal
+//
+{{- if .NeedsOptions }}
+// By default empty arrays, maps and slices are equal to nil:
+{{- end}}
+//  var a, b {{.Name}}
+//  diff := a.Diff(b)
+{{- if or .NeedsOptions .NeedsOptionsIndex }}
+// For more advanced use case you can configure the options (default values are shown):
+//  var a, b {{.Name}}
+//  equal := a.Diff(b,Options{
+{{- if .NeedsOptions }}
+//  	NilSameAsEmpty: true,
+{{end -}}
+{{- if .NeedsOptionsIndex }}
+//  	SkipIndex: true,
+{{end -}}
+//  })
+{{else}}
+// opts ...Options are ignored in this method
+{{end -}}
+func (s {{.Name}}) Diff(t {{.Name}}, opts ...Options) map[string][]interface{} {
+{{- if or .NeedsOptions .NeedsOptionsIndex }}
+    opt := getOptions(opts...)
+{{end}}
+    diff := make(map[string][]interface{})
+    {{- range .Fields}}
+	{{- if and (HasPrefix .Name "Index") (HasPrefix .Type "*int64") }}
+	if !opt.SkipIndex && !equalPointers(s.{{.Name}}, t.{{.Name}}){
+        diff["{{.Name}}"] = []interface{}{s.{{.Name}}, t.{{.Name}}}
+	}
+	{{- else if or (eq .Type "string" "bool") (HasPrefix .Type "int") }}
+	if s.{{.Name}} != t.{{.Name}} {
+		diff["{{.Name}}"] = []interface{}{s.{{.Name}}, t.{{.Name}}}
+	}
+	{{- else if or (HasPrefix .Type "[]int") (HasPrefix .Type "[]string")}}
+    if !equalComparableSlice(s.{{.Name}}, t.{{.Name}}, opt) {
+        diff["{{.Name}}"] = []interface{}{s.{{.Name}}, t.{{.Name}}}
+    }
+	{{- else if or (HasPrefix .Type "*string") (HasPrefix .Type "*int") (HasPrefix .Type "*bool")}}
+	if !equalPointers(s.{{.Name}}, t.{{.Name}}) {
+		diff["{{.Name}}"] = []interface{}{s.{{.Name}}, t.{{.Name}}}
+	}
+	{{- else if HasPrefix .Type "map" }}
+	if !equalComparableMap(s.{{.Name}}, t.{{.Name}}, opt) {
+		diff["{{.Name}}"] = []interface{}{s.{{.Name}}, t.{{.Name}}}
+	}
+	{{- else if HasPrefix .Type "[]"}}
+	if len(s.{{.Name}}) != len(t.{{.Name}}) {
+		diff["{{.Name}}"] = []interface{}{s.{{.Name}}, t.{{.Name}}}
+	} else {
+	    diff2 := make(map[string][]interface{})
+		for i := range s.{{.Name}} {
+			diffSub := s.{{.Name}}[i].Diff({{if HasPrefix .Type "[]*"}}*{{end}}t.{{.Name}}[i], opt)
+			if len(diffSub) > 0 {
+				diff2[strconv.Itoa(i)] = []interface{}{ diffSub }
+			}
+		}
+		if len(diff2) > 0 {
+			diff["{{.Name}}"] = []interface{}{diff2}
+		}
+	}
+	{{- else if .IsEmbedded}}
+	if !s.{{.Name}}.Equal(t.{{.Name}}, opt) {
+		diff["{{.Name}}"] = []interface{}{s.{{.Name}}, t.{{.Name}}}
+	}
+	{{- else if (HasPrefix .Type "Date")}}
+    if !s.{{.Name}}.Equal(t.{{.Name}}) {
+        diff["{{.Name}}"] = []interface{}{s.{{.Name}}, t.{{.Name}}}
+    }
+	{{- else if or (HasPrefix .Type "*") (not .IsBasicType)}}
+	if !s.{{.Name}}.Equal({{if HasPrefix .Type "*"}}*{{end}}t.{{.Name}}, opt) {
+		diff["{{.Name}}"] = []interface{}{s.{{.Name}}, t.{{.Name}}}
+	}
+	{{- else}}
+	if !s.{{.Name}}.Equal(&t.{{.Name}}, opt) {
+		diff["{{.Name}}"] = []interface{}{s.{{.Name}}, t.{{.Name}}}
+	}
+	{{end}}
+	{{end}}
+
+{{- if eq .Mode "array" }}
+	if !opt.NilSameAsEmpty {
+		if s == nil && t != nil {
+		  diff["{{.Name}}"] = []interface{}{s, t}
+		  return diff
+		}
+		if t == nil && s != nil {
+		  diff["{{.Name}}"] = []interface{}{s, t}
+		  return diff
+		}
+	}
+    if len(s) != len(t) {
+		diff["{{.Name}}"] = []interface{}{s, t}
+		return diff
+	}
+    for i, v := range s {
+		{{- if .IsBasicType}}
+			{{- if HasPrefix .Type "*"}}
+				if *v != *t[i] {
+					diff[fmt.Sprintf("{{.Name}}[%d]", i)] = []interface{}{*v, *t[i]}
+				}
+			{{- else -}}
+				if v != t[i] {
+					diff[fmt.Sprintf("{{.Name}}[%d]", i)] = []interface{}{v, t[i]}
+				}
+			{{- end}}
+		{{- else}}
+			if !v.Equal({{if .IsPointer}}*{{end}}t[i], opt) {
+				diff[fmt.Sprintf("{{.Name}}[%d]", i)] = []interface{}{v, t[i]}
+			}
+		{{end}}
+	}
+{{- end -}}
+{{- if eq .Mode "ident" }}
+    if s != t {
+		diff["{{.Name}}"] = []interface{}{s, t}
+	}
+{{- end}}
+	return diff
+}
