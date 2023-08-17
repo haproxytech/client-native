@@ -11,23 +11,30 @@ ssl_certificate:
       type: string
     size:
       type: integer
+      readOnly: true
+      x-nullable: true
       description: File size in bytes.
     not_after:
       type: string
-      format: date
+      format: date-time
+      readOnly: true
+      x-nullable: true
+      x-go-custom-tag: gorm:"type:timestamp with time zone"
     not_before:
       type: string
-      format: date
+      format: date-time
+      readOnly: true
+      x-nullable: true
+      x-go-custom-tag: gorm:"type:timestamp with time zone"
     issuers:
-      type: array
-      items:
-        type: string
+      type: string
+      readOnly: true
+      x-omitempty: true
     domains:
-      type: array
-      items:
-        type: string
+      type: string
+      readOnly: true
+      x-omitempty: true
     ip_addresses:
-      type: array
-      items:
-        type: string
-
+      type: string
+      readOnly: true
+      x-omitempty: true

@@ -44,7 +44,7 @@ type GeneralFile struct {
 	ID string `json:"id,omitempty"`
 
 	// File size in bytes.
-	Size int64 `json:"size,omitempty"`
+	Size *int64 `json:"size,omitempty"`
 
 	// storage name
 	StorageName string `json:"storage_name,omitempty"`

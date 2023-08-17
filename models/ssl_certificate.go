@@ -40,27 +40,33 @@ type SslCertificate struct {
 	Description string `json:"description,omitempty"`
 
 	// domains
-	Domains []string `json:"domains"`
+	// Read Only: true
+	Domains string `json:"domains,omitempty"`
 
 	// file
 	File string `json:"file,omitempty"`
 
 	// ip addresses
-	IPAddresses []string `json:"ip_addresses"`
+	// Read Only: true
+	IPAddresses string `json:"ip_addresses,omitempty"`
 
 	// issuers
-	Issuers []string `json:"issuers"`
+	// Read Only: true
+	Issuers string `json:"issuers,omitempty"`
 
 	// not after
-	// Format: date
-	NotAfter strfmt.Date `json:"not_after,omitempty"`
+	// Read Only: true
+	// Format: date-time
+	NotAfter *strfmt.DateTime `json:"not_after,omitempty" gorm:"type:timestamp with time zone"`
 
 	// not before
-	// Format: date
-	NotBefore strfmt.Date `json:"not_before,omitempty"`
+	// Read Only: true
+	// Format: date-time
+	NotBefore *strfmt.DateTime `json:"not_before,omitempty" gorm:"type:timestamp with time zone"`
 
 	// File size in bytes.
-	Size int64 `json:"size,omitempty"`
+	// Read Only: true
+	Size *int64 `json:"size,omitempty"`
 
 	// storage name
 	StorageName string `json:"storage_name,omitempty"`
@@ -89,7 +95,7 @@ func (m *SslCertificate) validateNotAfter(formats strfmt.Registry) error {
 		return nil
 	}
 
-	if err := validate.FormatOf("not_after", "body", "date", m.NotAfter.String(), formats); err != nil {
+	if err := validate.FormatOf("not_after", "body", "date-time", m.NotAfter.String(), formats); err != nil {
 		return err
 	}
 
@@ -101,15 +107,98 @@ func (m *SslCertificate) validateNotBefore(formats strfmt.Registry) error {
 		return nil
 	}
 
-	if err := validate.FormatOf("not_before", "body", "date", m.NotBefore.String(), formats); err != nil {
+	if err := validate.FormatOf("not_before", "body", "date-time", m.NotBefore.String(), formats); err != nil {
 		return err
 	}
 
 	return nil
 }
 
-// ContextValidate validates this ssl certificate based on context it is used
+// ContextValidate validate this ssl certificate based on the context it is used
 func (m *SslCertificate) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+	var res []error
+
+	if err := m.contextValidateDomains(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.contextValidateIPAddresses(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.contextValidateIssuers(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.contextValidateNotAfter(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.contextValidateNotBefore(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.contextValidateSize(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if len(res) > 0 {
+		return errors.CompositeValidationError(res...)
+	}
+	return nil
+}
+
+func (m *SslCertificate) contextValidateDomains(ctx context.Context, formats strfmt.Registry) error {
+
+	if err := validate.ReadOnly(ctx, "domains", "body", string(m.Domains)); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *SslCertificate) contextValidateIPAddresses(ctx context.Context, formats strfmt.Registry) error {
+
+	if err := validate.ReadOnly(ctx, "ip_addresses", "body", string(m.IPAddresses)); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *SslCertificate) contextValidateIssuers(ctx context.Context, formats strfmt.Registry) error {
+
+	if err := validate.ReadOnly(ctx, "issuers", "body", string(m.Issuers)); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *SslCertificate) contextValidateNotAfter(ctx context.Context, formats strfmt.Registry) error {
+
+	if err := validate.ReadOnly(ctx, "not_after", "body", m.NotAfter); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *SslCertificate) contextValidateNotBefore(ctx context.Context, formats strfmt.Registry) error {
+
+	if err := validate.ReadOnly(ctx, "not_before", "body", m.NotBefore); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *SslCertificate) contextValidateSize(ctx context.Context, formats strfmt.Registry) error {
+
+	if err := validate.ReadOnly(ctx, "size", "body", m.Size); err != nil {
+		return err
+	}
+
 	return nil
 }
 

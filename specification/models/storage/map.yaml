@@ -13,4 +13,5 @@ map:
       type: string
     size:
       type: integer
+      x-nullable: true
       description: File size in bytes.

@@ -151,23 +151,7 @@ func (s *storage) GetCertificatesInfo(name string) (*CertificatesInfo, error) {
 		return nil, err
 	}
 
-	ci := newCertsInfo()
-
-	for {
-		block, rest := pem.Decode(raw)
-		if block == nil {
-			break
-		}
-		if block.Type == "CERTIFICATE" {
-			err := ci.parseCertificate(block.Bytes)
-			if err != nil {
-				return nil, err
-			}
-		}
-		raw = rest
-	}
-
-	return ci.toCertificatesInfo(), nil
+	return ParseCertificatesInfo(raw)
 }
 
 func (s *storage) Delete(name string) error {

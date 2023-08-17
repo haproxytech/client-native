@@ -8620,6 +8620,7 @@ definitions:
           size:
               description: File size in bytes.
               type: integer
+              x-nullable: true
           storage_name:
               type: string
       title: Map File
@@ -8654,28 +8655,36 @@ definitions:
           description:
               type: string
           domains:
-              items:
-                  type: string
-              type: array
+              readOnly: true
+              type: string
+              x-omitempty: true
           file:
               type: string
           ip_addresses:
-              items:
-                  type: string
-              type: array
+              readOnly: true
+              type: string
+              x-omitempty: true
           issuers:
-              items:
-                  type: string
-              type: array
+              readOnly: true
+              type: string
+              x-omitempty: true
           not_after:
-              format: date
+              format: date-time
+              readOnly: true
               type: string
+              x-go-custom-tag: gorm:"type:timestamp with time zone"
+              x-nullable: true
           not_before:
-              format: date
+              format: date-time
+              readOnly: true
               type: string
+              x-go-custom-tag: gorm:"type:timestamp with time zone"
+              x-nullable: true
           size:
               description: File size in bytes.
+              readOnly: true
               type: integer
+              x-nullable: true
           storage_name:
               type: string
       title: SSL File
@@ -8765,6 +8774,7 @@ definitions:
           size:
               description: File size in bytes.
               type: integer
+              x-nullable: true
           storage_name:
               type: string
       title: General use file

@@ -17,13 +17,15 @@ package storage
 
 import (
 	"crypto/x509"
+	"encoding/pem"
+	"strings"
 	"time"
 )
 
 // Information about stored certificates to be returned by the API.
 type CertificatesInfo struct {
-	NotAfter, NotBefore time.Time
-	DNS, IPs, Issuers   []string
+	NotAfter, NotBefore *time.Time
+	DNS, IPs, Issuers   string
 }
 
 // Private struct to store unique info about multiple certificates.
@@ -34,11 +36,30 @@ type certsInfo struct {
 
 func newCertsInfo() *certsInfo {
 	return &certsInfo{
-		NotAfter: time.Unix(9000000000, 0), // March 2255
-		DNS:      make(map[string]struct{}),
-		IPs:      make(map[string]struct{}),
-		Issuers:  make(map[string]struct{}),
+		DNS:     make(map[string]struct{}),
+		IPs:     make(map[string]struct{}),
+		Issuers: make(map[string]struct{}),
 	}
+}
+
+func ParseCertificatesInfo(bundle []byte) (*CertificatesInfo, error) {
+	ci := newCertsInfo()
+
+	for {
+		block, rest := pem.Decode(bundle)
+		if block == nil {
+			break
+		}
+		if block.Type == "CERTIFICATE" {
+			err := ci.parseCertificate(block.Bytes)
+			if err != nil {
+				return nil, err
+			}
+		}
+		bundle = rest
+	}
+
+	return ci.toCertificatesInfo(), nil
 }
 
 // This function is called for each certificate found in a PEM file.
@@ -50,7 +71,7 @@ func (ci *certsInfo) parseCertificate(der []byte) error {
 	}
 
 	// Only keep the earliest expiration date.
-	if crt.NotAfter.Before(ci.NotAfter) {
+	if ci.NotAfter.IsZero() || crt.NotAfter.Before(ci.NotAfter) {
 		ci.NotAfter = crt.NotAfter
 	}
 	// Only keep the youngest NotBefore date.
@@ -76,13 +97,18 @@ func (ci *certsInfo) parseCertificate(der []byte) error {
 
 // Transform a dirty *certsInfo into a clean *CertificatesInfo for the API.
 func (ci *certsInfo) toCertificatesInfo() *CertificatesInfo {
-	return &CertificatesInfo{
-		NotAfter:  ci.NotAfter,
-		NotBefore: ci.NotBefore,
-		DNS:       mapKeys(ci.DNS),
-		IPs:       mapKeys(ci.IPs),
-		Issuers:   mapKeys(ci.Issuers),
+	csi := &CertificatesInfo{
+		DNS:     strings.Join(mapKeys(ci.DNS), ", "),
+		IPs:     strings.Join(mapKeys(ci.IPs), ", "),
+		Issuers: strings.Join(mapKeys(ci.Issuers), ", "),
 	}
+	if !ci.NotAfter.IsZero() {
+		csi.NotAfter = &ci.NotAfter
+	}
+	if !ci.NotBefore.IsZero() {
+		csi.NotBefore = &ci.NotBefore
+	}
+	return csi
 }
 
 func mapKeys(m map[string]struct{}) []string {
