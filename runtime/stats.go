@@ -61,6 +61,10 @@ func (s *SingleRuntime) GetStats() *models.NativeStatsCollection {
 			oneLineData.Name = line[1]
 			oneLineData.Type = "server"
 			oneLineData.BackendName = line[0]
+		case "3":
+			// we ignore socket/listener
+		default:
+			// add logging when available fmt.Printf("unexpected stat type: %s", line[32])
 		}
 
 		var st models.NativeStatStats
