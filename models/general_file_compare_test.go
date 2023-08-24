@@ -91,7 +91,7 @@ func TestGeneralFileEqualFalse(t *testing.T) {
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		result.Size = sample.Size + 1
+		result.Size = Ptr(*sample.Size + 1)
 		samples = append(samples, struct {
 			a, b GeneralFile
 		}{sample, result})
@@ -178,7 +178,7 @@ func TestGeneralFileDiffFalse(t *testing.T) {
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		result.Size = sample.Size + 1
+		result.Size = Ptr(*sample.Size + 1)
 		samples = append(samples, struct {
 			a, b GeneralFile
 		}{sample, result})

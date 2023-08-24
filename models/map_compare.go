@@ -36,7 +36,7 @@ func (s Map) Equal(t Map, opts ...Options) bool {
 		return false
 	}
 
-	if s.Size != t.Size {
+	if !equalPointers(s.Size, t.Size) {
 		return false
 	}
 
@@ -67,7 +67,7 @@ func (s Map) Diff(t Map, opts ...Options) map[string][]interface{} {
 		diff["ID"] = []interface{}{s.ID, t.ID}
 	}
 
-	if s.Size != t.Size {
+	if !equalPointers(s.Size, t.Size) {
 		diff["Size"] = []interface{}{s.Size, t.Size}
 	}
 

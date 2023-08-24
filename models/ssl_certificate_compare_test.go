@@ -94,9 +94,9 @@ func TestSslCertificateEqualFalse(t *testing.T) {
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		result.NotAfter = strfmt.Date(time.Now().AddDate(rand.Intn(10), rand.Intn(12), rand.Intn(28)))
-		result.NotBefore = strfmt.Date(time.Now().AddDate(rand.Intn(10), rand.Intn(12), rand.Intn(28)))
-		result.Size = sample.Size + 1
+		result.NotAfter = Ptr(strfmt.DateTime(time.Now().AddDate(rand.Intn(10), rand.Intn(12), rand.Intn(28))))
+		result.NotBefore = Ptr(strfmt.DateTime(time.Now().AddDate(rand.Intn(10), rand.Intn(12), rand.Intn(28))))
+		result.Size = Ptr(*sample.Size + 1)
 		samples = append(samples, struct {
 			a, b SslCertificate
 		}{sample, result})
@@ -183,9 +183,9 @@ func TestSslCertificateDiffFalse(t *testing.T) {
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		result.NotAfter = strfmt.Date(time.Now().AddDate(rand.Intn(10), rand.Intn(12), rand.Intn(28)))
-		result.NotBefore = strfmt.Date(time.Now().AddDate(rand.Intn(10), rand.Intn(12), rand.Intn(28)))
-		result.Size = sample.Size + 1
+		result.NotAfter = Ptr(strfmt.DateTime(time.Now().AddDate(rand.Intn(10), rand.Intn(12), rand.Intn(28))))
+		result.NotBefore = Ptr(strfmt.DateTime(time.Now().AddDate(rand.Intn(10), rand.Intn(12), rand.Intn(28))))
+		result.Size = Ptr(*sample.Size + 1)
 		samples = append(samples, struct {
 			a, b SslCertificate
 		}{sample, result})

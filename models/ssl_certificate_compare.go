@@ -19,25 +19,16 @@ package models
 
 // Equal checks if two structs of type SslCertificate are equal
 //
-// By default empty maps and slices are equal to nil:
-//
 //	var a, b SslCertificate
 //	equal := a.Equal(b)
 //
-// For more advanced use case you can configure these options (default values are shown):
-//
-//	var a, b SslCertificate
-//	equal := a.Equal(b,Options{
-//		NilSameAsEmpty: true,
-//	})
+// opts ...Options are ignored in this method
 func (s SslCertificate) Equal(t SslCertificate, opts ...Options) bool {
-	opt := getOptions(opts...)
-
 	if s.Description != t.Description {
 		return false
 	}
 
-	if !equalComparableSlice(s.Domains, t.Domains, opt) {
+	if s.Domains != t.Domains {
 		return false
 	}
 
@@ -45,23 +36,23 @@ func (s SslCertificate) Equal(t SslCertificate, opts ...Options) bool {
 		return false
 	}
 
-	if !equalComparableSlice(s.IPAddresses, t.IPAddresses, opt) {
+	if s.IPAddresses != t.IPAddresses {
 		return false
 	}
 
-	if !equalComparableSlice(s.Issuers, t.Issuers, opt) {
+	if s.Issuers != t.Issuers {
 		return false
 	}
 
-	if !s.NotAfter.Equal(t.NotAfter) {
+	if !s.NotAfter.Equal(*t.NotAfter) {
 		return false
 	}
 
-	if !s.NotBefore.Equal(t.NotBefore) {
+	if !s.NotBefore.Equal(*t.NotBefore) {
 		return false
 	}
 
-	if s.Size != t.Size {
+	if !equalPointers(s.Size, t.Size) {
 		return false
 	}
 
@@ -74,26 +65,17 @@ func (s SslCertificate) Equal(t SslCertificate, opts ...Options) bool {
 
 // Diff checks if two structs of type SslCertificate are equal
 //
-// By default empty arrays, maps and slices are equal to nil:
-//
 //	var a, b SslCertificate
 //	diff := a.Diff(b)
 //
-// For more advanced use case you can configure the options (default values are shown):
-//
-//	var a, b SslCertificate
-//	equal := a.Diff(b,Options{
-//		NilSameAsEmpty: true,
-//	})
+// opts ...Options are ignored in this method
 func (s SslCertificate) Diff(t SslCertificate, opts ...Options) map[string][]interface{} {
-	opt := getOptions(opts...)
-
 	diff := make(map[string][]interface{})
 	if s.Description != t.Description {
 		diff["Description"] = []interface{}{s.Description, t.Description}
 	}
 
-	if !equalComparableSlice(s.Domains, t.Domains, opt) {
+	if s.Domains != t.Domains {
 		diff["Domains"] = []interface{}{s.Domains, t.Domains}
 	}
 
@@ -101,23 +83,23 @@ func (s SslCertificate) Diff(t SslCertificate, opts ...Options) map[string][]int
 		diff["File"] = []interface{}{s.File, t.File}
 	}
 
-	if !equalComparableSlice(s.IPAddresses, t.IPAddresses, opt) {
+	if s.IPAddresses != t.IPAddresses {
 		diff["IPAddresses"] = []interface{}{s.IPAddresses, t.IPAddresses}
 	}
 
-	if !equalComparableSlice(s.Issuers, t.Issuers, opt) {
+	if s.Issuers != t.Issuers {
 		diff["Issuers"] = []interface{}{s.Issuers, t.Issuers}
 	}
 
-	if !s.NotAfter.Equal(t.NotAfter) {
+	if !s.NotAfter.Equal(*t.NotAfter) {
 		diff["NotAfter"] = []interface{}{s.NotAfter, t.NotAfter}
 	}
 
-	if !s.NotBefore.Equal(t.NotBefore) {
+	if !s.NotBefore.Equal(*t.NotBefore) {
 		diff["NotBefore"] = []interface{}{s.NotBefore, t.NotBefore}
 	}
 
-	if s.Size != t.Size {
+	if !equalPointers(s.Size, t.Size) {
 		diff["Size"] = []interface{}{s.Size, t.Size}
 	}
 
