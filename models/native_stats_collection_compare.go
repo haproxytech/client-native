@@ -47,10 +47,11 @@ func (s NativeStatsCollection) Equal(t NativeStatsCollection, opts ...Options) b
 
 	if !CheckSameNilAndLen(s.Stats, t.Stats, opt) {
 		return false
-	}
-	for i := range s.Stats {
-		if !s.Stats[i].Equal(*t.Stats[i], opt) {
-			return false
+	} else {
+		for i := range s.Stats {
+			if !s.Stats[i].Equal(*t.Stats[i], opt) {
+				return false
+			}
 		}
 	}
 
@@ -59,15 +60,15 @@ func (s NativeStatsCollection) Equal(t NativeStatsCollection, opts ...Options) b
 
 // Diff checks if two structs of type NativeStatsCollection are equal
 //
-// By default empty arrays, maps and slices are equal to nil:
+// By default empty maps and slices are equal to nil:
 //
 //	var a, b NativeStatsCollection
 //	diff := a.Diff(b)
 //
-// For more advanced use case you can configure the options (default values are shown):
+// For more advanced use case you can configure these options (default values are shown):
 //
 //	var a, b NativeStatsCollection
-//	equal := a.Diff(b,Options{
+//	diff := a.Diff(b,Options{
 //		NilSameAsEmpty: true,
 //	})
 func (s NativeStatsCollection) Diff(t NativeStatsCollection, opts ...Options) map[string][]interface{} {
@@ -87,9 +88,11 @@ func (s NativeStatsCollection) Diff(t NativeStatsCollection, opts ...Options) ma
 	} else {
 		diff2 := make(map[string][]interface{})
 		for i := range s.Stats {
-			diffSub := s.Stats[i].Diff(*t.Stats[i], opt)
-			if len(diffSub) > 0 {
-				diff2[strconv.Itoa(i)] = []interface{}{diffSub}
+			if !s.Stats[i].Equal(*t.Stats[i], opt) {
+				diffSub := s.Stats[i].Diff(*t.Stats[i], opt)
+				if len(diffSub) > 0 {
+					diff2[strconv.Itoa(i)] = []interface{}{diffSub}
+				}
 			}
 		}
 		if len(diff2) > 0 {

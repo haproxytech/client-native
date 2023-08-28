@@ -36,7 +36,7 @@ func (s SpoeScope) Equal(t SpoeScope, opts ...Options) bool {
 func (s SpoeScope) Diff(t SpoeScope, opts ...Options) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if s != t {
-		diff["SpoeScope"] = []interface{}{s, t}
+		diff["Diff"] = []interface{}{s, t}
 	}
 	return diff
 }

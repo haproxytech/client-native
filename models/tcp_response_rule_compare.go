@@ -134,13 +134,15 @@ func (s TCPResponseRule) Equal(t TCPResponseRule, opts ...Options) bool {
 
 // Diff checks if two structs of type TCPResponseRule are equal
 //
+// By default empty maps and slices are equal to nil:
+//
 //	var a, b TCPResponseRule
 //	diff := a.Diff(b)
 //
-// For more advanced use case you can configure the options (default values are shown):
+// For more advanced use case you can configure these options (default values are shown):
 //
 //	var a, b TCPResponseRule
-//	equal := a.Diff(b,Options{
+//	diff := a.Diff(b,Options{
 //		SkipIndex: true,
 //	})
 func (s TCPResponseRule) Diff(t TCPResponseRule, opts ...Options) map[string][]interface{} {

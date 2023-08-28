@@ -59,15 +59,15 @@ func (s ProcessInfos) Equal(t ProcessInfos, opts ...Options) bool {
 
 // Diff checks if two structs of type ProcessInfos are equal
 //
-// By default empty arrays, maps and slices are equal to nil:
+// By default empty maps and slices are equal to nil:
 //
 //	var a, b ProcessInfos
 //	diff := a.Diff(b)
 //
-// For more advanced use case you can configure the options (default values are shown):
+// For more advanced use case you can configure these options (default values are shown):
 //
 //	var a, b ProcessInfos
-//	equal := a.Diff(b,Options{
+//	diff := a.Diff(b,Options{
 //		NilSameAsEmpty: true,
 //	})
 func (s ProcessInfos) Diff(t ProcessInfos, opts ...Options) map[string][]interface{} {
@@ -76,21 +76,21 @@ func (s ProcessInfos) Diff(t ProcessInfos, opts ...Options) map[string][]interfa
 	diff := make(map[string][]interface{})
 	if !opt.NilSameAsEmpty {
 		if s == nil && t != nil {
-			diff["ProcessInfos"] = []interface{}{s, t}
+			diff["Diff"] = []interface{}{s, t}
 			return diff
 		}
 		if t == nil && s != nil {
-			diff["ProcessInfos"] = []interface{}{s, t}
+			diff["Diff"] = []interface{}{s, t}
 			return diff
 		}
 	}
 	if len(s) != len(t) {
-		diff["ProcessInfos"] = []interface{}{s, t}
+		diff["Diff"] = []interface{}{s, t}
 		return diff
 	}
 	for i, v := range s {
 		if !v.Equal(*t[i], opt) {
-			diff[fmt.Sprintf("ProcessInfos[%d]", i)] = []interface{}{v, t[i]}
+			diff[fmt.Sprintf("Diff[%d]", i)] = []interface{}{v, t[i]}
 		}
 
 	}

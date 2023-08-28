@@ -59,15 +59,15 @@ func (s ServerTemplates) Equal(t ServerTemplates, opts ...Options) bool {
 
 // Diff checks if two structs of type ServerTemplates are equal
 //
-// By default empty arrays, maps and slices are equal to nil:
+// By default empty maps and slices are equal to nil:
 //
 //	var a, b ServerTemplates
 //	diff := a.Diff(b)
 //
-// For more advanced use case you can configure the options (default values are shown):
+// For more advanced use case you can configure these options (default values are shown):
 //
 //	var a, b ServerTemplates
-//	equal := a.Diff(b,Options{
+//	diff := a.Diff(b,Options{
 //		NilSameAsEmpty: true,
 //	})
 func (s ServerTemplates) Diff(t ServerTemplates, opts ...Options) map[string][]interface{} {
@@ -76,21 +76,21 @@ func (s ServerTemplates) Diff(t ServerTemplates, opts ...Options) map[string][]i
 	diff := make(map[string][]interface{})
 	if !opt.NilSameAsEmpty {
 		if s == nil && t != nil {
-			diff["ServerTemplates"] = []interface{}{s, t}
+			diff["Diff"] = []interface{}{s, t}
 			return diff
 		}
 		if t == nil && s != nil {
-			diff["ServerTemplates"] = []interface{}{s, t}
+			diff["Diff"] = []interface{}{s, t}
 			return diff
 		}
 	}
 	if len(s) != len(t) {
-		diff["ServerTemplates"] = []interface{}{s, t}
+		diff["Diff"] = []interface{}{s, t}
 		return diff
 	}
 	for i, v := range s {
 		if !v.Equal(*t[i], opt) {
-			diff[fmt.Sprintf("ServerTemplates[%d]", i)] = []interface{}{v, t[i]}
+			diff[fmt.Sprintf("Diff[%d]", i)] = []interface{}{v, t[i]}
 		}
 
 	}

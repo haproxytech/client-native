@@ -17,10 +17,6 @@
 
 package models
 
-import (
-	"strconv"
-)
-
 // Equal checks if two structs of type RuntimeAddServer are equal
 //
 // By default empty maps and slices are equal to nil:
@@ -338,15 +334,15 @@ func (s RuntimeAddServer) Equal(t RuntimeAddServer, opts ...Options) bool {
 
 // Diff checks if two structs of type RuntimeAddServer are equal
 //
-// By default empty arrays, maps and slices are equal to nil:
+// By default empty maps and slices are equal to nil:
 //
 //	var a, b RuntimeAddServer
 //	diff := a.Diff(b)
 //
-// For more advanced use case you can configure the options (default values are shown):
+// For more advanced use case you can configure these options (default values are shown):
 //
 //	var a, b RuntimeAddServer
-//	equal := a.Diff(b,Options{
+//	diff := a.Diff(b,Options{
 //		NilSameAsEmpty: true,
 //	})
 func (s RuntimeAddServer) Diff(t RuntimeAddServer, opts ...Options) map[string][]interface{} {
@@ -561,18 +557,8 @@ func (s RuntimeAddServer) Diff(t RuntimeAddServer, opts ...Options) map[string][
 		diff["Proto"] = []interface{}{s.Proto, t.Proto}
 	}
 
-	if !CheckSameNilAndLen(s.ProxyV2Options, t.ProxyV2Options, opt) {
+	if !equalComparableSlice(s.ProxyV2Options, t.ProxyV2Options, opt) {
 		diff["ProxyV2Options"] = []interface{}{s.ProxyV2Options, t.ProxyV2Options}
-	} else {
-		diff2 := make(map[string][]interface{})
-		for i := range s.ProxyV2Options {
-			if s.ProxyV2Options[i] != t.ProxyV2Options[i] {
-				diff2[strconv.Itoa(i)] = []interface{}{s.ProxyV2Options[i], t.ProxyV2Options[i]}
-			}
-		}
-		if len(diff2) > 0 {
-			diff["ProxyV2Options"] = []interface{}{diff2}
-		}
 	}
 
 	if !equalPointers(s.Rise, t.Rise) {

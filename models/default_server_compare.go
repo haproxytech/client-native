@@ -42,15 +42,15 @@ func (s DefaultServer) Equal(t DefaultServer, opts ...Options) bool {
 
 // Diff checks if two structs of type DefaultServer are equal
 //
-// By default empty arrays, maps and slices are equal to nil:
+// By default empty maps and slices are equal to nil:
 //
 //	var a, b DefaultServer
 //	diff := a.Diff(b)
 //
-// For more advanced use case you can configure the options (default values are shown):
+// For more advanced use case you can configure these options (default values are shown):
 //
 //	var a, b DefaultServer
-//	equal := a.Diff(b,Options{
+//	diff := a.Diff(b,Options{
 //		NilSameAsEmpty: true,
 //	})
 func (s DefaultServer) Diff(t DefaultServer, opts ...Options) map[string][]interface{} {

@@ -51,10 +51,11 @@ func (s StatsOptions) Equal(t StatsOptions, opts ...Options) bool {
 
 	if !CheckSameNilAndLen(s.StatsAuths, t.StatsAuths, opt) {
 		return false
-	}
-	for i := range s.StatsAuths {
-		if !s.StatsAuths[i].Equal(*t.StatsAuths[i], opt) {
-			return false
+	} else {
+		for i := range s.StatsAuths {
+			if !s.StatsAuths[i].Equal(*t.StatsAuths[i], opt) {
+				return false
+			}
 		}
 	}
 
@@ -68,10 +69,11 @@ func (s StatsOptions) Equal(t StatsOptions, opts ...Options) bool {
 
 	if !CheckSameNilAndLen(s.StatsHTTPRequests, t.StatsHTTPRequests, opt) {
 		return false
-	}
-	for i := range s.StatsHTTPRequests {
-		if !s.StatsHTTPRequests[i].Equal(*t.StatsHTTPRequests[i], opt) {
-			return false
+	} else {
+		for i := range s.StatsHTTPRequests {
+			if !s.StatsHTTPRequests[i].Equal(*t.StatsHTTPRequests[i], opt) {
+				return false
+			}
 		}
 	}
 
@@ -116,15 +118,15 @@ func (s StatsOptions) Equal(t StatsOptions, opts ...Options) bool {
 
 // Diff checks if two structs of type StatsOptions are equal
 //
-// By default empty arrays, maps and slices are equal to nil:
+// By default empty maps and slices are equal to nil:
 //
 //	var a, b StatsOptions
 //	diff := a.Diff(b)
 //
-// For more advanced use case you can configure the options (default values are shown):
+// For more advanced use case you can configure these options (default values are shown):
 //
 //	var a, b StatsOptions
-//	equal := a.Diff(b,Options{
+//	diff := a.Diff(b,Options{
 //		NilSameAsEmpty: true,
 //	})
 func (s StatsOptions) Diff(t StatsOptions, opts ...Options) map[string][]interface{} {
@@ -148,9 +150,11 @@ func (s StatsOptions) Diff(t StatsOptions, opts ...Options) map[string][]interfa
 	} else {
 		diff2 := make(map[string][]interface{})
 		for i := range s.StatsAuths {
-			diffSub := s.StatsAuths[i].Diff(*t.StatsAuths[i], opt)
-			if len(diffSub) > 0 {
-				diff2[strconv.Itoa(i)] = []interface{}{diffSub}
+			if !s.StatsAuths[i].Equal(*t.StatsAuths[i], opt) {
+				diffSub := s.StatsAuths[i].Diff(*t.StatsAuths[i], opt)
+				if len(diffSub) > 0 {
+					diff2[strconv.Itoa(i)] = []interface{}{diffSub}
+				}
 			}
 		}
 		if len(diff2) > 0 {
@@ -171,9 +175,11 @@ func (s StatsOptions) Diff(t StatsOptions, opts ...Options) map[string][]interfa
 	} else {
 		diff2 := make(map[string][]interface{})
 		for i := range s.StatsHTTPRequests {
-			diffSub := s.StatsHTTPRequests[i].Diff(*t.StatsHTTPRequests[i], opt)
-			if len(diffSub) > 0 {
-				diff2[strconv.Itoa(i)] = []interface{}{diffSub}
+			if !s.StatsHTTPRequests[i].Equal(*t.StatsHTTPRequests[i], opt) {
+				diffSub := s.StatsHTTPRequests[i].Diff(*t.StatsHTTPRequests[i], opt)
+				if len(diffSub) > 0 {
+					diff2[strconv.Itoa(i)] = []interface{}{diffSub}
+				}
 			}
 		}
 		if len(diff2) > 0 {

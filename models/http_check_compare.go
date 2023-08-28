@@ -38,10 +38,11 @@ func (s HTTPCheck) Equal(t HTTPCheck, opts ...Options) bool {
 
 	if !CheckSameNilAndLen(s.CheckHeaders, t.CheckHeaders, opt) {
 		return false
-	}
-	for i := range s.CheckHeaders {
-		if !s.CheckHeaders[i].Equal(*t.CheckHeaders[i], opt) {
-			return false
+	} else {
+		for i := range s.CheckHeaders {
+			if !s.CheckHeaders[i].Equal(*t.CheckHeaders[i], opt) {
+				return false
+			}
 		}
 	}
 
@@ -186,12 +187,12 @@ func (s HTTPCheck) Equal(t HTTPCheck, opts ...Options) bool {
 
 // Diff checks if two structs of type HTTPCheck are equal
 //
-// By default empty arrays, maps and slices are equal to nil:
+// By default empty maps and slices are equal to nil:
 //  var a, b HTTPCheck
 //  diff := a.Diff(b)
-// For more advanced use case you can configure the options (default values are shown):
+// For more advanced use case you can configure these options (default values are shown):
 //  var a, b HTTPCheck
-//  equal := a.Diff(b,Options{
+//  diff := a.Diff(b,Options{
 //  	NilSameAsEmpty: true,
 
 //		SkipIndex: true,
@@ -205,9 +206,11 @@ func (s HTTPCheck) Diff(t HTTPCheck, opts ...Options) map[string][]interface{} {
 	} else {
 		diff2 := make(map[string][]interface{})
 		for i := range s.CheckHeaders {
-			diffSub := s.CheckHeaders[i].Diff(*t.CheckHeaders[i], opt)
-			if len(diffSub) > 0 {
-				diff2[strconv.Itoa(i)] = []interface{}{diffSub}
+			if !s.CheckHeaders[i].Equal(*t.CheckHeaders[i], opt) {
+				diffSub := s.CheckHeaders[i].Diff(*t.CheckHeaders[i], opt)
+				if len(diffSub) > 0 {
+					diff2[strconv.Itoa(i)] = []interface{}{diffSub}
+				}
 			}
 		}
 		if len(diff2) > 0 {

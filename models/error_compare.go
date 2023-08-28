@@ -50,15 +50,15 @@ func (s Error) Equal(t Error, opts ...Options) bool {
 
 // Diff checks if two structs of type Error are equal
 //
-// By default empty arrays, maps and slices are equal to nil:
+// By default empty maps and slices are equal to nil:
 //
 //	var a, b Error
 //	diff := a.Diff(b)
 //
-// For more advanced use case you can configure the options (default values are shown):
+// For more advanced use case you can configure these options (default values are shown):
 //
 //	var a, b Error
-//	equal := a.Diff(b,Options{
+//	diff := a.Diff(b,Options{
 //		NilSameAsEmpty: true,
 //	})
 func (s Error) Diff(t Error, opts ...Options) map[string][]interface{} {

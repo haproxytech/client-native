@@ -170,13 +170,15 @@ func (s TCPCheck) Equal(t TCPCheck, opts ...Options) bool {
 
 // Diff checks if two structs of type TCPCheck are equal
 //
+// By default empty maps and slices are equal to nil:
+//
 //	var a, b TCPCheck
 //	diff := a.Diff(b)
 //
-// For more advanced use case you can configure the options (default values are shown):
+// For more advanced use case you can configure these options (default values are shown):
 //
 //	var a, b TCPCheck
-//	equal := a.Diff(b,Options{
+//	diff := a.Diff(b,Options{
 //		SkipIndex: true,
 //	})
 func (s TCPCheck) Diff(t TCPCheck, opts ...Options) map[string][]interface{} {

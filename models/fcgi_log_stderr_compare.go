@@ -70,15 +70,15 @@ func (s FCGILogStderr) Equal(t FCGILogStderr, opts ...Options) bool {
 
 // Diff checks if two structs of type FCGILogStderr are equal
 //
-// By default empty arrays, maps and slices are equal to nil:
+// By default empty maps and slices are equal to nil:
 //
 //	var a, b FCGILogStderr
 //	diff := a.Diff(b)
 //
-// For more advanced use case you can configure the options (default values are shown):
+// For more advanced use case you can configure these options (default values are shown):
 //
 //	var a, b FCGILogStderr
-//	equal := a.Diff(b,Options{
+//	diff := a.Diff(b,Options{
 //		NilSameAsEmpty: true,
 //	})
 func (s FCGILogStderr) Diff(t FCGILogStderr, opts ...Options) map[string][]interface{} {

@@ -36,7 +36,7 @@ func (s MonitorURI) Equal(t MonitorURI, opts ...Options) bool {
 func (s MonitorURI) Diff(t MonitorURI, opts ...Options) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if s != t {
-		diff["MonitorURI"] = []interface{}{s, t}
+		diff["Diff"] = []interface{}{s, t}
 	}
 	return diff
 }

@@ -59,15 +59,15 @@ func (s NativeStats) Equal(t NativeStats, opts ...Options) bool {
 
 // Diff checks if two structs of type NativeStats are equal
 //
-// By default empty arrays, maps and slices are equal to nil:
+// By default empty maps and slices are equal to nil:
 //
 //	var a, b NativeStats
 //	diff := a.Diff(b)
 //
-// For more advanced use case you can configure the options (default values are shown):
+// For more advanced use case you can configure these options (default values are shown):
 //
 //	var a, b NativeStats
-//	equal := a.Diff(b,Options{
+//	diff := a.Diff(b,Options{
 //		NilSameAsEmpty: true,
 //	})
 func (s NativeStats) Diff(t NativeStats, opts ...Options) map[string][]interface{} {
@@ -76,21 +76,21 @@ func (s NativeStats) Diff(t NativeStats, opts ...Options) map[string][]interface
 	diff := make(map[string][]interface{})
 	if !opt.NilSameAsEmpty {
 		if s == nil && t != nil {
-			diff["NativeStats"] = []interface{}{s, t}
+			diff["Diff"] = []interface{}{s, t}
 			return diff
 		}
 		if t == nil && s != nil {
-			diff["NativeStats"] = []interface{}{s, t}
+			diff["Diff"] = []interface{}{s, t}
 			return diff
 		}
 	}
 	if len(s) != len(t) {
-		diff["NativeStats"] = []interface{}{s, t}
+		diff["Diff"] = []interface{}{s, t}
 		return diff
 	}
 	for i, v := range s {
 		if !v.Equal(*t[i], opt) {
-			diff[fmt.Sprintf("NativeStats[%d]", i)] = []interface{}{v, t[i]}
+			diff[fmt.Sprintf("Diff[%d]", i)] = []interface{}{v, t[i]}
 		}
 
 	}

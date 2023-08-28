@@ -39,82 +39,91 @@ func (s Global) Equal(t Global, opts ...Options) bool {
 
 	if !CheckSameNilAndLen(s.CPUMaps, t.CPUMaps, opt) {
 		return false
-	}
-	for i := range s.CPUMaps {
-		if !s.CPUMaps[i].Equal(*t.CPUMaps[i], opt) {
-			return false
+	} else {
+		for i := range s.CPUMaps {
+			if !s.CPUMaps[i].Equal(*t.CPUMaps[i], opt) {
+				return false
+			}
 		}
 	}
 
 	if !CheckSameNilAndLen(s.H1CaseAdjusts, t.H1CaseAdjusts, opt) {
 		return false
-	}
-	for i := range s.H1CaseAdjusts {
-		if !s.H1CaseAdjusts[i].Equal(*t.H1CaseAdjusts[i], opt) {
-			return false
+	} else {
+		for i := range s.H1CaseAdjusts {
+			if !s.H1CaseAdjusts[i].Equal(*t.H1CaseAdjusts[i], opt) {
+				return false
+			}
 		}
 	}
 
 	if !CheckSameNilAndLen(s.PresetEnvs, t.PresetEnvs, opt) {
 		return false
-	}
-	for i := range s.PresetEnvs {
-		if !s.PresetEnvs[i].Equal(*t.PresetEnvs[i], opt) {
-			return false
+	} else {
+		for i := range s.PresetEnvs {
+			if !s.PresetEnvs[i].Equal(*t.PresetEnvs[i], opt) {
+				return false
+			}
 		}
 	}
 
 	if !CheckSameNilAndLen(s.RuntimeAPIs, t.RuntimeAPIs, opt) {
 		return false
-	}
-	for i := range s.RuntimeAPIs {
-		if !s.RuntimeAPIs[i].Equal(*t.RuntimeAPIs[i], opt) {
-			return false
+	} else {
+		for i := range s.RuntimeAPIs {
+			if !s.RuntimeAPIs[i].Equal(*t.RuntimeAPIs[i], opt) {
+				return false
+			}
 		}
 	}
 
 	if !CheckSameNilAndLen(s.SetEnvs, t.SetEnvs, opt) {
 		return false
-	}
-	for i := range s.SetEnvs {
-		if !s.SetEnvs[i].Equal(*t.SetEnvs[i], opt) {
-			return false
+	} else {
+		for i := range s.SetEnvs {
+			if !s.SetEnvs[i].Equal(*t.SetEnvs[i], opt) {
+				return false
+			}
 		}
 	}
 
 	if !CheckSameNilAndLen(s.SetVarFmts, t.SetVarFmts, opt) {
 		return false
-	}
-	for i := range s.SetVarFmts {
-		if !s.SetVarFmts[i].Equal(*t.SetVarFmts[i], opt) {
-			return false
+	} else {
+		for i := range s.SetVarFmts {
+			if !s.SetVarFmts[i].Equal(*t.SetVarFmts[i], opt) {
+				return false
+			}
 		}
 	}
 
 	if !CheckSameNilAndLen(s.SetVars, t.SetVars, opt) {
 		return false
-	}
-	for i := range s.SetVars {
-		if !s.SetVars[i].Equal(*t.SetVars[i], opt) {
-			return false
+	} else {
+		for i := range s.SetVars {
+			if !s.SetVars[i].Equal(*t.SetVars[i], opt) {
+				return false
+			}
 		}
 	}
 
 	if !CheckSameNilAndLen(s.SslEngines, t.SslEngines, opt) {
 		return false
-	}
-	for i := range s.SslEngines {
-		if !s.SslEngines[i].Equal(*t.SslEngines[i], opt) {
-			return false
+	} else {
+		for i := range s.SslEngines {
+			if !s.SslEngines[i].Equal(*t.SslEngines[i], opt) {
+				return false
+			}
 		}
 	}
 
 	if !CheckSameNilAndLen(s.ThreadGroupLines, t.ThreadGroupLines, opt) {
 		return false
-	}
-	for i := range s.ThreadGroupLines {
-		if !s.ThreadGroupLines[i].Equal(*t.ThreadGroupLines[i], opt) {
-			return false
+	} else {
+		for i := range s.ThreadGroupLines {
+			if !s.ThreadGroupLines[i].Equal(*t.ThreadGroupLines[i], opt) {
+				return false
+			}
 		}
 	}
 
@@ -248,19 +257,21 @@ func (s Global) Equal(t Global, opts ...Options) bool {
 
 	if !CheckSameNilAndLen(s.LuaLoads, t.LuaLoads, opt) {
 		return false
-	}
-	for i := range s.LuaLoads {
-		if !s.LuaLoads[i].Equal(*t.LuaLoads[i], opt) {
-			return false
+	} else {
+		for i := range s.LuaLoads {
+			if !s.LuaLoads[i].Equal(*t.LuaLoads[i], opt) {
+				return false
+			}
 		}
 	}
 
 	if !CheckSameNilAndLen(s.LuaPrependPath, t.LuaPrependPath, opt) {
 		return false
-	}
-	for i := range s.LuaPrependPath {
-		if !s.LuaPrependPath[i].Equal(*t.LuaPrependPath[i], opt) {
-			return false
+	} else {
+		for i := range s.LuaPrependPath {
+			if !s.LuaPrependPath[i].Equal(*t.LuaPrependPath[i], opt) {
+				return false
+			}
 		}
 	}
 
@@ -509,15 +520,15 @@ func (s Global) Equal(t Global, opts ...Options) bool {
 
 // Diff checks if two structs of type Global are equal
 //
-// By default empty arrays, maps and slices are equal to nil:
+// By default empty maps and slices are equal to nil:
 //
 //	var a, b Global
 //	diff := a.Diff(b)
 //
-// For more advanced use case you can configure the options (default values are shown):
+// For more advanced use case you can configure these options (default values are shown):
 //
 //	var a, b Global
-//	equal := a.Diff(b,Options{
+//	diff := a.Diff(b,Options{
 //		NilSameAsEmpty: true,
 //	})
 func (s Global) Diff(t Global, opts ...Options) map[string][]interface{} {
@@ -529,9 +540,11 @@ func (s Global) Diff(t Global, opts ...Options) map[string][]interface{} {
 	} else {
 		diff2 := make(map[string][]interface{})
 		for i := range s.CPUMaps {
-			diffSub := s.CPUMaps[i].Diff(*t.CPUMaps[i], opt)
-			if len(diffSub) > 0 {
-				diff2[strconv.Itoa(i)] = []interface{}{diffSub}
+			if !s.CPUMaps[i].Equal(*t.CPUMaps[i], opt) {
+				diffSub := s.CPUMaps[i].Diff(*t.CPUMaps[i], opt)
+				if len(diffSub) > 0 {
+					diff2[strconv.Itoa(i)] = []interface{}{diffSub}
+				}
 			}
 		}
 		if len(diff2) > 0 {
@@ -544,9 +557,11 @@ func (s Global) Diff(t Global, opts ...Options) map[string][]interface{} {
 	} else {
 		diff2 := make(map[string][]interface{})
 		for i := range s.H1CaseAdjusts {
-			diffSub := s.H1CaseAdjusts[i].Diff(*t.H1CaseAdjusts[i], opt)
-			if len(diffSub) > 0 {
-				diff2[strconv.Itoa(i)] = []interface{}{diffSub}
+			if !s.H1CaseAdjusts[i].Equal(*t.H1CaseAdjusts[i], opt) {
+				diffSub := s.H1CaseAdjusts[i].Diff(*t.H1CaseAdjusts[i], opt)
+				if len(diffSub) > 0 {
+					diff2[strconv.Itoa(i)] = []interface{}{diffSub}
+				}
 			}
 		}
 		if len(diff2) > 0 {
@@ -559,9 +574,11 @@ func (s Global) Diff(t Global, opts ...Options) map[string][]interface{} {
 	} else {
 		diff2 := make(map[string][]interface{})
 		for i := range s.PresetEnvs {
-			diffSub := s.PresetEnvs[i].Diff(*t.PresetEnvs[i], opt)
-			if len(diffSub) > 0 {
-				diff2[strconv.Itoa(i)] = []interface{}{diffSub}
+			if !s.PresetEnvs[i].Equal(*t.PresetEnvs[i], opt) {
+				diffSub := s.PresetEnvs[i].Diff(*t.PresetEnvs[i], opt)
+				if len(diffSub) > 0 {
+					diff2[strconv.Itoa(i)] = []interface{}{diffSub}
+				}
 			}
 		}
 		if len(diff2) > 0 {
@@ -574,9 +591,11 @@ func (s Global) Diff(t Global, opts ...Options) map[string][]interface{} {
 	} else {
 		diff2 := make(map[string][]interface{})
 		for i := range s.RuntimeAPIs {
-			diffSub := s.RuntimeAPIs[i].Diff(*t.RuntimeAPIs[i], opt)
-			if len(diffSub) > 0 {
-				diff2[strconv.Itoa(i)] = []interface{}{diffSub}
+			if !s.RuntimeAPIs[i].Equal(*t.RuntimeAPIs[i], opt) {
+				diffSub := s.RuntimeAPIs[i].Diff(*t.RuntimeAPIs[i], opt)
+				if len(diffSub) > 0 {
+					diff2[strconv.Itoa(i)] = []interface{}{diffSub}
+				}
 			}
 		}
 		if len(diff2) > 0 {
@@ -589,9 +608,11 @@ func (s Global) Diff(t Global, opts ...Options) map[string][]interface{} {
 	} else {
 		diff2 := make(map[string][]interface{})
 		for i := range s.SetEnvs {
-			diffSub := s.SetEnvs[i].Diff(*t.SetEnvs[i], opt)
-			if len(diffSub) > 0 {
-				diff2[strconv.Itoa(i)] = []interface{}{diffSub}
+			if !s.SetEnvs[i].Equal(*t.SetEnvs[i], opt) {
+				diffSub := s.SetEnvs[i].Diff(*t.SetEnvs[i], opt)
+				if len(diffSub) > 0 {
+					diff2[strconv.Itoa(i)] = []interface{}{diffSub}
+				}
 			}
 		}
 		if len(diff2) > 0 {
@@ -604,9 +625,11 @@ func (s Global) Diff(t Global, opts ...Options) map[string][]interface{} {
 	} else {
 		diff2 := make(map[string][]interface{})
 		for i := range s.SetVarFmts {
-			diffSub := s.SetVarFmts[i].Diff(*t.SetVarFmts[i], opt)
-			if len(diffSub) > 0 {
-				diff2[strconv.Itoa(i)] = []interface{}{diffSub}
+			if !s.SetVarFmts[i].Equal(*t.SetVarFmts[i], opt) {
+				diffSub := s.SetVarFmts[i].Diff(*t.SetVarFmts[i], opt)
+				if len(diffSub) > 0 {
+					diff2[strconv.Itoa(i)] = []interface{}{diffSub}
+				}
 			}
 		}
 		if len(diff2) > 0 {
@@ -619,9 +642,11 @@ func (s Global) Diff(t Global, opts ...Options) map[string][]interface{} {
 	} else {
 		diff2 := make(map[string][]interface{})
 		for i := range s.SetVars {
-			diffSub := s.SetVars[i].Diff(*t.SetVars[i], opt)
-			if len(diffSub) > 0 {
-				diff2[strconv.Itoa(i)] = []interface{}{diffSub}
+			if !s.SetVars[i].Equal(*t.SetVars[i], opt) {
+				diffSub := s.SetVars[i].Diff(*t.SetVars[i], opt)
+				if len(diffSub) > 0 {
+					diff2[strconv.Itoa(i)] = []interface{}{diffSub}
+				}
 			}
 		}
 		if len(diff2) > 0 {
@@ -634,9 +659,11 @@ func (s Global) Diff(t Global, opts ...Options) map[string][]interface{} {
 	} else {
 		diff2 := make(map[string][]interface{})
 		for i := range s.SslEngines {
-			diffSub := s.SslEngines[i].Diff(*t.SslEngines[i], opt)
-			if len(diffSub) > 0 {
-				diff2[strconv.Itoa(i)] = []interface{}{diffSub}
+			if !s.SslEngines[i].Equal(*t.SslEngines[i], opt) {
+				diffSub := s.SslEngines[i].Diff(*t.SslEngines[i], opt)
+				if len(diffSub) > 0 {
+					diff2[strconv.Itoa(i)] = []interface{}{diffSub}
+				}
 			}
 		}
 		if len(diff2) > 0 {
@@ -649,9 +676,11 @@ func (s Global) Diff(t Global, opts ...Options) map[string][]interface{} {
 	} else {
 		diff2 := make(map[string][]interface{})
 		for i := range s.ThreadGroupLines {
-			diffSub := s.ThreadGroupLines[i].Diff(*t.ThreadGroupLines[i], opt)
-			if len(diffSub) > 0 {
-				diff2[strconv.Itoa(i)] = []interface{}{diffSub}
+			if !s.ThreadGroupLines[i].Equal(*t.ThreadGroupLines[i], opt) {
+				diffSub := s.ThreadGroupLines[i].Diff(*t.ThreadGroupLines[i], opt)
+				if len(diffSub) > 0 {
+					diff2[strconv.Itoa(i)] = []interface{}{diffSub}
+				}
 			}
 		}
 		if len(diff2) > 0 {
@@ -792,9 +821,11 @@ func (s Global) Diff(t Global, opts ...Options) map[string][]interface{} {
 	} else {
 		diff2 := make(map[string][]interface{})
 		for i := range s.LuaLoads {
-			diffSub := s.LuaLoads[i].Diff(*t.LuaLoads[i], opt)
-			if len(diffSub) > 0 {
-				diff2[strconv.Itoa(i)] = []interface{}{diffSub}
+			if !s.LuaLoads[i].Equal(*t.LuaLoads[i], opt) {
+				diffSub := s.LuaLoads[i].Diff(*t.LuaLoads[i], opt)
+				if len(diffSub) > 0 {
+					diff2[strconv.Itoa(i)] = []interface{}{diffSub}
+				}
 			}
 		}
 		if len(diff2) > 0 {
@@ -807,9 +838,11 @@ func (s Global) Diff(t Global, opts ...Options) map[string][]interface{} {
 	} else {
 		diff2 := make(map[string][]interface{})
 		for i := range s.LuaPrependPath {
-			diffSub := s.LuaPrependPath[i].Diff(*t.LuaPrependPath[i], opt)
-			if len(diffSub) > 0 {
-				diff2[strconv.Itoa(i)] = []interface{}{diffSub}
+			if !s.LuaPrependPath[i].Equal(*t.LuaPrependPath[i], opt) {
+				diffSub := s.LuaPrependPath[i].Diff(*t.LuaPrependPath[i], opt)
+				if len(diffSub) > 0 {
+					diff2[strconv.Itoa(i)] = []interface{}{diffSub}
+				}
 			}
 		}
 		if len(diff2) > 0 {
@@ -1446,15 +1479,15 @@ func (s RuntimeAPI) Equal(t RuntimeAPI, opts ...Options) bool {
 
 // Diff checks if two structs of type RuntimeAPI are equal
 //
-// By default empty arrays, maps and slices are equal to nil:
+// By default empty maps and slices are equal to nil:
 //
 //	var a, b RuntimeAPI
 //	diff := a.Diff(b)
 //
-// For more advanced use case you can configure the options (default values are shown):
+// For more advanced use case you can configure these options (default values are shown):
 //
 //	var a, b RuntimeAPI
-//	equal := a.Diff(b,Options{
+//	diff := a.Diff(b,Options{
 //		NilSameAsEmpty: true,
 //	})
 func (s RuntimeAPI) Diff(t RuntimeAPI, opts ...Options) map[string][]interface{} {

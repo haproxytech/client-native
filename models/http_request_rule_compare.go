@@ -38,10 +38,11 @@ func (s HTTPRequestRule) Equal(t HTTPRequestRule, opts ...Options) bool {
 
 	if !CheckSameNilAndLen(s.ReturnHeaders, t.ReturnHeaders, opt) {
 		return false
-	}
-	for i := range s.ReturnHeaders {
-		if !s.ReturnHeaders[i].Equal(*t.ReturnHeaders[i], opt) {
-			return false
+	} else {
+		for i := range s.ReturnHeaders {
+			if !s.ReturnHeaders[i].Equal(*t.ReturnHeaders[i], opt) {
+				return false
+			}
 		}
 	}
 
@@ -350,12 +351,12 @@ func (s HTTPRequestRule) Equal(t HTTPRequestRule, opts ...Options) bool {
 
 // Diff checks if two structs of type HTTPRequestRule are equal
 //
-// By default empty arrays, maps and slices are equal to nil:
+// By default empty maps and slices are equal to nil:
 //  var a, b HTTPRequestRule
 //  diff := a.Diff(b)
-// For more advanced use case you can configure the options (default values are shown):
+// For more advanced use case you can configure these options (default values are shown):
 //  var a, b HTTPRequestRule
-//  equal := a.Diff(b,Options{
+//  diff := a.Diff(b,Options{
 //  	NilSameAsEmpty: true,
 
 //		SkipIndex: true,
@@ -369,9 +370,11 @@ func (s HTTPRequestRule) Diff(t HTTPRequestRule, opts ...Options) map[string][]i
 	} else {
 		diff2 := make(map[string][]interface{})
 		for i := range s.ReturnHeaders {
-			diffSub := s.ReturnHeaders[i].Diff(*t.ReturnHeaders[i], opt)
-			if len(diffSub) > 0 {
-				diff2[strconv.Itoa(i)] = []interface{}{diffSub}
+			if !s.ReturnHeaders[i].Equal(*t.ReturnHeaders[i], opt) {
+				diffSub := s.ReturnHeaders[i].Diff(*t.ReturnHeaders[i], opt)
+				if len(diffSub) > 0 {
+					diff2[strconv.Itoa(i)] = []interface{}{diffSub}
+				}
 			}
 		}
 		if len(diff2) > 0 {

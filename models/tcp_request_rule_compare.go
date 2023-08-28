@@ -182,13 +182,15 @@ func (s TCPRequestRule) Equal(t TCPRequestRule, opts ...Options) bool {
 
 // Diff checks if two structs of type TCPRequestRule are equal
 //
+// By default empty maps and slices are equal to nil:
+//
 //	var a, b TCPRequestRule
 //	diff := a.Diff(b)
 //
-// For more advanced use case you can configure the options (default values are shown):
+// For more advanced use case you can configure these options (default values are shown):
 //
 //	var a, b TCPRequestRule
-//	equal := a.Diff(b,Options{
+//	diff := a.Diff(b,Options{
 //		SkipIndex: true,
 //	})
 func (s TCPRequestRule) Diff(t TCPRequestRule, opts ...Options) map[string][]interface{} {

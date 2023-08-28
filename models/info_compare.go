@@ -46,15 +46,15 @@ func (s Info) Equal(t Info, opts ...Options) bool {
 
 // Diff checks if two structs of type Info are equal
 //
-// By default empty arrays, maps and slices are equal to nil:
+// By default empty maps and slices are equal to nil:
 //
 //	var a, b Info
 //	diff := a.Diff(b)
 //
-// For more advanced use case you can configure the options (default values are shown):
+// For more advanced use case you can configure these options (default values are shown):
 //
 //	var a, b Info
-//	equal := a.Diff(b,Options{
+//	diff := a.Diff(b,Options{
 //		NilSameAsEmpty: true,
 //	})
 func (s Info) Diff(t Info, opts ...Options) map[string][]interface{} {
@@ -154,15 +154,15 @@ func (s InfoSystem) Equal(t InfoSystem, opts ...Options) bool {
 
 // Diff checks if two structs of type InfoSystem are equal
 //
-// By default empty arrays, maps and slices are equal to nil:
+// By default empty maps and slices are equal to nil:
 //
 //	var a, b InfoSystem
 //	diff := a.Diff(b)
 //
-// For more advanced use case you can configure the options (default values are shown):
+// For more advanced use case you can configure these options (default values are shown):
 //
 //	var a, b InfoSystem
-//	equal := a.Diff(b,Options{
+//	diff := a.Diff(b,Options{
 //		NilSameAsEmpty: true,
 //	})
 func (s InfoSystem) Diff(t InfoSystem, opts ...Options) map[string][]interface{} {

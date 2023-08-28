@@ -62,15 +62,15 @@ func (s PeerSection) Equal(t PeerSection, opts ...Options) bool {
 
 // Diff checks if two structs of type PeerSection are equal
 //
-// By default empty arrays, maps and slices are equal to nil:
+// By default empty maps and slices are equal to nil:
 //
 //	var a, b PeerSection
 //	diff := a.Diff(b)
 //
-// For more advanced use case you can configure the options (default values are shown):
+// For more advanced use case you can configure these options (default values are shown):
 //
 //	var a, b PeerSection
-//	equal := a.Diff(b,Options{
+//	diff := a.Diff(b,Options{
 //		NilSameAsEmpty: true,
 //	})
 func (s PeerSection) Diff(t PeerSection, opts ...Options) map[string][]interface{} {

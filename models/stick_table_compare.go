@@ -39,10 +39,11 @@ func (s StickTable) Equal(t StickTable, opts ...Options) bool {
 
 	if !CheckSameNilAndLen(s.Fields, t.Fields, opt) {
 		return false
-	}
-	for i := range s.Fields {
-		if !s.Fields[i].Equal(*t.Fields[i], opt) {
-			return false
+	} else {
+		for i := range s.Fields {
+			if !s.Fields[i].Equal(*t.Fields[i], opt) {
+				return false
+			}
 		}
 	}
 
@@ -71,15 +72,15 @@ func (s StickTable) Equal(t StickTable, opts ...Options) bool {
 
 // Diff checks if two structs of type StickTable are equal
 //
-// By default empty arrays, maps and slices are equal to nil:
+// By default empty maps and slices are equal to nil:
 //
 //	var a, b StickTable
 //	diff := a.Diff(b)
 //
-// For more advanced use case you can configure the options (default values are shown):
+// For more advanced use case you can configure these options (default values are shown):
 //
 //	var a, b StickTable
-//	equal := a.Diff(b,Options{
+//	diff := a.Diff(b,Options{
 //		NilSameAsEmpty: true,
 //	})
 func (s StickTable) Diff(t StickTable, opts ...Options) map[string][]interface{} {
@@ -91,9 +92,11 @@ func (s StickTable) Diff(t StickTable, opts ...Options) map[string][]interface{}
 	} else {
 		diff2 := make(map[string][]interface{})
 		for i := range s.Fields {
-			diffSub := s.Fields[i].Diff(*t.Fields[i], opt)
-			if len(diffSub) > 0 {
-				diff2[strconv.Itoa(i)] = []interface{}{diffSub}
+			if !s.Fields[i].Equal(*t.Fields[i], opt) {
+				diffSub := s.Fields[i].Diff(*t.Fields[i], opt)
+				if len(diffSub) > 0 {
+					diff2[strconv.Itoa(i)] = []interface{}{diffSub}
+				}
 			}
 		}
 		if len(diff2) > 0 {

@@ -43,19 +43,21 @@ func (s AwsRegion) Equal(t AwsRegion, opts ...Options) bool {
 
 	if !CheckSameNilAndLen(s.Allowlist, t.Allowlist, opt) {
 		return false
-	}
-	for i := range s.Allowlist {
-		if !s.Allowlist[i].Equal(*t.Allowlist[i], opt) {
-			return false
+	} else {
+		for i := range s.Allowlist {
+			if !s.Allowlist[i].Equal(*t.Allowlist[i], opt) {
+				return false
+			}
 		}
 	}
 
 	if !CheckSameNilAndLen(s.Denylist, t.Denylist, opt) {
 		return false
-	}
-	for i := range s.Denylist {
-		if !s.Denylist[i].Equal(*t.Denylist[i], opt) {
-			return false
+	} else {
+		for i := range s.Denylist {
+			if !s.Denylist[i].Equal(*t.Denylist[i], opt) {
+				return false
+			}
 		}
 	}
 
@@ -108,15 +110,15 @@ func (s AwsRegion) Equal(t AwsRegion, opts ...Options) bool {
 
 // Diff checks if two structs of type AwsRegion are equal
 //
-// By default empty arrays, maps and slices are equal to nil:
+// By default empty maps and slices are equal to nil:
 //
 //	var a, b AwsRegion
 //	diff := a.Diff(b)
 //
-// For more advanced use case you can configure the options (default values are shown):
+// For more advanced use case you can configure these options (default values are shown):
 //
 //	var a, b AwsRegion
-//	equal := a.Diff(b,Options{
+//	diff := a.Diff(b,Options{
 //		NilSameAsEmpty: true,
 //	})
 func (s AwsRegion) Diff(t AwsRegion, opts ...Options) map[string][]interface{} {
@@ -132,9 +134,11 @@ func (s AwsRegion) Diff(t AwsRegion, opts ...Options) map[string][]interface{} {
 	} else {
 		diff2 := make(map[string][]interface{})
 		for i := range s.Allowlist {
-			diffSub := s.Allowlist[i].Diff(*t.Allowlist[i], opt)
-			if len(diffSub) > 0 {
-				diff2[strconv.Itoa(i)] = []interface{}{diffSub}
+			if !s.Allowlist[i].Equal(*t.Allowlist[i], opt) {
+				diffSub := s.Allowlist[i].Diff(*t.Allowlist[i], opt)
+				if len(diffSub) > 0 {
+					diff2[strconv.Itoa(i)] = []interface{}{diffSub}
+				}
 			}
 		}
 		if len(diff2) > 0 {
@@ -147,9 +151,11 @@ func (s AwsRegion) Diff(t AwsRegion, opts ...Options) map[string][]interface{} {
 	} else {
 		diff2 := make(map[string][]interface{})
 		for i := range s.Denylist {
-			diffSub := s.Denylist[i].Diff(*t.Denylist[i], opt)
-			if len(diffSub) > 0 {
-				diff2[strconv.Itoa(i)] = []interface{}{diffSub}
+			if !s.Denylist[i].Equal(*t.Denylist[i], opt) {
+				diffSub := s.Denylist[i].Diff(*t.Denylist[i], opt)
+				if len(diffSub) > 0 {
+					diff2[strconv.Itoa(i)] = []interface{}{diffSub}
+				}
 			}
 		}
 		if len(diff2) > 0 {

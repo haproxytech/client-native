@@ -134,13 +134,15 @@ func (s HTTPAfterResponseRule) Equal(t HTTPAfterResponseRule, opts ...Options) b
 
 // Diff checks if two structs of type HTTPAfterResponseRule are equal
 //
+// By default empty maps and slices are equal to nil:
+//
 //	var a, b HTTPAfterResponseRule
 //	diff := a.Diff(b)
 //
-// For more advanced use case you can configure the options (default values are shown):
+// For more advanced use case you can configure these options (default values are shown):
 //
 //	var a, b HTTPAfterResponseRule
-//	equal := a.Diff(b,Options{
+//	diff := a.Diff(b,Options{
 //		SkipIndex: true,
 //	})
 func (s HTTPAfterResponseRule) Diff(t HTTPAfterResponseRule, opts ...Options) map[string][]interface{} {

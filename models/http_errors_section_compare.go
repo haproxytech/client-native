@@ -39,10 +39,11 @@ func (s HTTPErrorsSection) Equal(t HTTPErrorsSection, opts ...Options) bool {
 
 	if !CheckSameNilAndLen(s.ErrorFiles, t.ErrorFiles, opt) {
 		return false
-	}
-	for i := range s.ErrorFiles {
-		if !s.ErrorFiles[i].Equal(*t.ErrorFiles[i], opt) {
-			return false
+	} else {
+		for i := range s.ErrorFiles {
+			if !s.ErrorFiles[i].Equal(*t.ErrorFiles[i], opt) {
+				return false
+			}
 		}
 	}
 
@@ -55,15 +56,15 @@ func (s HTTPErrorsSection) Equal(t HTTPErrorsSection, opts ...Options) bool {
 
 // Diff checks if two structs of type HTTPErrorsSection are equal
 //
-// By default empty arrays, maps and slices are equal to nil:
+// By default empty maps and slices are equal to nil:
 //
 //	var a, b HTTPErrorsSection
 //	diff := a.Diff(b)
 //
-// For more advanced use case you can configure the options (default values are shown):
+// For more advanced use case you can configure these options (default values are shown):
 //
 //	var a, b HTTPErrorsSection
-//	equal := a.Diff(b,Options{
+//	diff := a.Diff(b,Options{
 //		NilSameAsEmpty: true,
 //	})
 func (s HTTPErrorsSection) Diff(t HTTPErrorsSection, opts ...Options) map[string][]interface{} {
@@ -75,9 +76,11 @@ func (s HTTPErrorsSection) Diff(t HTTPErrorsSection, opts ...Options) map[string
 	} else {
 		diff2 := make(map[string][]interface{})
 		for i := range s.ErrorFiles {
-			diffSub := s.ErrorFiles[i].Diff(*t.ErrorFiles[i], opt)
-			if len(diffSub) > 0 {
-				diff2[strconv.Itoa(i)] = []interface{}{diffSub}
+			if !s.ErrorFiles[i].Equal(*t.ErrorFiles[i], opt) {
+				diffSub := s.ErrorFiles[i].Diff(*t.ErrorFiles[i], opt)
+				if len(diffSub) > 0 {
+					diff2[strconv.Itoa(i)] = []interface{}{diffSub}
+				}
 			}
 		}
 		if len(diff2) > 0 {

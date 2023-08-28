@@ -82,13 +82,15 @@ func (s LogTarget) Equal(t LogTarget, opts ...Options) bool {
 
 // Diff checks if two structs of type LogTarget are equal
 //
+// By default empty maps and slices are equal to nil:
+//
 //	var a, b LogTarget
 //	diff := a.Diff(b)
 //
-// For more advanced use case you can configure the options (default values are shown):
+// For more advanced use case you can configure these options (default values are shown):
 //
 //	var a, b LogTarget
-//	equal := a.Diff(b,Options{
+//	diff := a.Diff(b,Options{
 //		SkipIndex: true,
 //	})
 func (s LogTarget) Diff(t LogTarget, opts ...Options) map[string][]interface{} {

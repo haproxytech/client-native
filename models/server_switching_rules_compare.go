@@ -59,15 +59,15 @@ func (s ServerSwitchingRules) Equal(t ServerSwitchingRules, opts ...Options) boo
 
 // Diff checks if two structs of type ServerSwitchingRules are equal
 //
-// By default empty arrays, maps and slices are equal to nil:
+// By default empty maps and slices are equal to nil:
 //
 //	var a, b ServerSwitchingRules
 //	diff := a.Diff(b)
 //
-// For more advanced use case you can configure the options (default values are shown):
+// For more advanced use case you can configure these options (default values are shown):
 //
 //	var a, b ServerSwitchingRules
-//	equal := a.Diff(b,Options{
+//	diff := a.Diff(b,Options{
 //		NilSameAsEmpty: true,
 //	})
 func (s ServerSwitchingRules) Diff(t ServerSwitchingRules, opts ...Options) map[string][]interface{} {
@@ -76,21 +76,21 @@ func (s ServerSwitchingRules) Diff(t ServerSwitchingRules, opts ...Options) map[
 	diff := make(map[string][]interface{})
 	if !opt.NilSameAsEmpty {
 		if s == nil && t != nil {
-			diff["ServerSwitchingRules"] = []interface{}{s, t}
+			diff["Diff"] = []interface{}{s, t}
 			return diff
 		}
 		if t == nil && s != nil {
-			diff["ServerSwitchingRules"] = []interface{}{s, t}
+			diff["Diff"] = []interface{}{s, t}
 			return diff
 		}
 	}
 	if len(s) != len(t) {
-		diff["ServerSwitchingRules"] = []interface{}{s, t}
+		diff["Diff"] = []interface{}{s, t}
 		return diff
 	}
 	for i, v := range s {
 		if !v.Equal(*t[i], opt) {
-			diff[fmt.Sprintf("ServerSwitchingRules[%d]", i)] = []interface{}{v, t[i]}
+			diff[fmt.Sprintf("Diff[%d]", i)] = []interface{}{v, t[i]}
 		}
 
 	}

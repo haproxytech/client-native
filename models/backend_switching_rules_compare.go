@@ -59,15 +59,15 @@ func (s BackendSwitchingRules) Equal(t BackendSwitchingRules, opts ...Options) b
 
 // Diff checks if two structs of type BackendSwitchingRules are equal
 //
-// By default empty arrays, maps and slices are equal to nil:
+// By default empty maps and slices are equal to nil:
 //
 //	var a, b BackendSwitchingRules
 //	diff := a.Diff(b)
 //
-// For more advanced use case you can configure the options (default values are shown):
+// For more advanced use case you can configure these options (default values are shown):
 //
 //	var a, b BackendSwitchingRules
-//	equal := a.Diff(b,Options{
+//	diff := a.Diff(b,Options{
 //		NilSameAsEmpty: true,
 //	})
 func (s BackendSwitchingRules) Diff(t BackendSwitchingRules, opts ...Options) map[string][]interface{} {
@@ -76,21 +76,21 @@ func (s BackendSwitchingRules) Diff(t BackendSwitchingRules, opts ...Options) ma
 	diff := make(map[string][]interface{})
 	if !opt.NilSameAsEmpty {
 		if s == nil && t != nil {
-			diff["BackendSwitchingRules"] = []interface{}{s, t}
+			diff["Diff"] = []interface{}{s, t}
 			return diff
 		}
 		if t == nil && s != nil {
-			diff["BackendSwitchingRules"] = []interface{}{s, t}
+			diff["Diff"] = []interface{}{s, t}
 			return diff
 		}
 	}
 	if len(s) != len(t) {
-		diff["BackendSwitchingRules"] = []interface{}{s, t}
+		diff["Diff"] = []interface{}{s, t}
 		return diff
 	}
 	for i, v := range s {
 		if !v.Equal(*t[i], opt) {
-			diff[fmt.Sprintf("BackendSwitchingRules[%d]", i)] = []interface{}{v, t[i]}
+			diff[fmt.Sprintf("Diff[%d]", i)] = []interface{}{v, t[i]}
 		}
 
 	}

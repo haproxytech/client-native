@@ -70,6 +70,20 @@ func toCamelCase(s string) string {
 	return result
 }
 
+func toLowerCase(s string) string {
+	caser := cases.Lower(language.Und)
+	var result string
+	words := strings.Split(s, "_")
+
+	for _, word := range words {
+		result += caser.String(word)
+	}
+
+	result = strings.ToLower(result[:1]) + result[1:]
+
+	return result
+}
+
 // isComparable checks if a given type is comparable.
 // It takes in the name of the type as a string and returns a boolean value.
 func isComparable(typeName string) bool {

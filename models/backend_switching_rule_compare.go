@@ -54,13 +54,15 @@ func (s BackendSwitchingRule) Equal(t BackendSwitchingRule, opts ...Options) boo
 
 // Diff checks if two structs of type BackendSwitchingRule are equal
 //
+// By default empty maps and slices are equal to nil:
+//
 //	var a, b BackendSwitchingRule
 //	diff := a.Diff(b)
 //
-// For more advanced use case you can configure the options (default values are shown):
+// For more advanced use case you can configure these options (default values are shown):
 //
 //	var a, b BackendSwitchingRule
-//	equal := a.Diff(b,Options{
+//	diff := a.Diff(b,Options{
 //		SkipIndex: true,
 //	})
 func (s BackendSwitchingRule) Diff(t BackendSwitchingRule, opts ...Options) map[string][]interface{} {
