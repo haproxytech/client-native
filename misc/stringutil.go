@@ -247,7 +247,7 @@ func SanitizeFilename(name string) string {
 	}
 	// leave all alphanumeric and 3 additional ones
 	// # _ -
-	reg := regexp.MustCompile(`[^a-zA-Z0-9#_\\-]+`)
+	reg := regexp.MustCompile(`[^a-zA-Z0-9_\\-]+`)
 	name = reg.ReplaceAllString(name, "_")
 
 	if ext != "" {

@@ -25,14 +25,9 @@ func TestSanitizeFilename(t *testing.T) {
 		want  string
 	}{
 		{
-			name:  "Should preserve # and . in input",
-			input: "#4_abc.#",
-			want:  "#4_abc.#",
-		},
-		{
 			name:  "Should convert leading dots",
 			input: ".....file.map!!@#",
-			want:  "_file.map_#",
+			want:  "_file.map_",
 		},
 		{
 			name:  "Should convert hidden files",
@@ -47,7 +42,7 @@ func TestSanitizeFilename(t *testing.T) {
 		{
 			name:  "Should sanitize input correctly",
 			input: "#1_?a;b/c!&?",
-			want:  "#1__a_b_c_",
+			want:  "_1__a_b_c_",
 		},
 		{
 			name:  "Should return same input when name doesn't contain regex characters",
