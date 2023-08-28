@@ -82,7 +82,7 @@ func (s NativeStatsCollection) Diff(t NativeStatsCollection, opts ...Options) ma
 		diff["RuntimeAPI"] = []interface{}{s.RuntimeAPI, t.RuntimeAPI}
 	}
 
-	if len(s.Stats) != len(t.Stats) {
+	if !CheckSameNilAndLen(s.Stats, t.Stats, opt) {
 		diff["Stats"] = []interface{}{s.Stats, t.Stats}
 	} else {
 		diff2 := make(map[string][]interface{})

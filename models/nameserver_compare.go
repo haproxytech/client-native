@@ -48,7 +48,7 @@ func (s Nameserver) Equal(t Nameserver, opts ...Options) bool {
 func (s Nameserver) Diff(t Nameserver, opts ...Options) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if !equalPointers(s.Address, t.Address) {
-		diff["Address"] = []interface{}{s.Address, t.Address}
+		diff["Address"] = []interface{}{ValueOrNil(s.Address), ValueOrNil(t.Address)}
 	}
 
 	if s.Name != t.Name {
@@ -56,7 +56,7 @@ func (s Nameserver) Diff(t Nameserver, opts ...Options) map[string][]interface{}
 	}
 
 	if !equalPointers(s.Port, t.Port) {
-		diff["Port"] = []interface{}{s.Port, t.Port}
+		diff["Port"] = []interface{}{ValueOrNil(s.Port), ValueOrNil(t.Port)}
 	}
 
 	return diff

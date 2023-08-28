@@ -64,11 +64,11 @@ func (s ConfigStickTable) Equal(t ConfigStickTable, opts ...Options) bool {
 func (s ConfigStickTable) Diff(t ConfigStickTable, opts ...Options) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if !equalPointers(s.Expire, t.Expire) {
-		diff["Expire"] = []interface{}{s.Expire, t.Expire}
+		diff["Expire"] = []interface{}{ValueOrNil(s.Expire), ValueOrNil(t.Expire)}
 	}
 
 	if !equalPointers(s.Keylen, t.Keylen) {
-		diff["Keylen"] = []interface{}{s.Keylen, t.Keylen}
+		diff["Keylen"] = []interface{}{ValueOrNil(s.Keylen), ValueOrNil(t.Keylen)}
 	}
 
 	if s.Nopurge != t.Nopurge {
@@ -80,7 +80,7 @@ func (s ConfigStickTable) Diff(t ConfigStickTable, opts ...Options) map[string][
 	}
 
 	if !equalPointers(s.Size, t.Size) {
-		diff["Size"] = []interface{}{s.Size, t.Size}
+		diff["Size"] = []interface{}{ValueOrNil(s.Size), ValueOrNil(t.Size)}
 	}
 
 	if s.Store != t.Store {

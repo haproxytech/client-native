@@ -524,7 +524,7 @@ func (s Global) Diff(t Global, opts ...Options) map[string][]interface{} {
 	opt := getOptions(opts...)
 
 	diff := make(map[string][]interface{})
-	if len(s.CPUMaps) != len(t.CPUMaps) {
+	if !CheckSameNilAndLen(s.CPUMaps, t.CPUMaps, opt) {
 		diff["CPUMaps"] = []interface{}{s.CPUMaps, t.CPUMaps}
 	} else {
 		diff2 := make(map[string][]interface{})
@@ -539,7 +539,7 @@ func (s Global) Diff(t Global, opts ...Options) map[string][]interface{} {
 		}
 	}
 
-	if len(s.H1CaseAdjusts) != len(t.H1CaseAdjusts) {
+	if !CheckSameNilAndLen(s.H1CaseAdjusts, t.H1CaseAdjusts, opt) {
 		diff["H1CaseAdjusts"] = []interface{}{s.H1CaseAdjusts, t.H1CaseAdjusts}
 	} else {
 		diff2 := make(map[string][]interface{})
@@ -554,7 +554,7 @@ func (s Global) Diff(t Global, opts ...Options) map[string][]interface{} {
 		}
 	}
 
-	if len(s.PresetEnvs) != len(t.PresetEnvs) {
+	if !CheckSameNilAndLen(s.PresetEnvs, t.PresetEnvs, opt) {
 		diff["PresetEnvs"] = []interface{}{s.PresetEnvs, t.PresetEnvs}
 	} else {
 		diff2 := make(map[string][]interface{})
@@ -569,7 +569,7 @@ func (s Global) Diff(t Global, opts ...Options) map[string][]interface{} {
 		}
 	}
 
-	if len(s.RuntimeAPIs) != len(t.RuntimeAPIs) {
+	if !CheckSameNilAndLen(s.RuntimeAPIs, t.RuntimeAPIs, opt) {
 		diff["RuntimeAPIs"] = []interface{}{s.RuntimeAPIs, t.RuntimeAPIs}
 	} else {
 		diff2 := make(map[string][]interface{})
@@ -584,7 +584,7 @@ func (s Global) Diff(t Global, opts ...Options) map[string][]interface{} {
 		}
 	}
 
-	if len(s.SetEnvs) != len(t.SetEnvs) {
+	if !CheckSameNilAndLen(s.SetEnvs, t.SetEnvs, opt) {
 		diff["SetEnvs"] = []interface{}{s.SetEnvs, t.SetEnvs}
 	} else {
 		diff2 := make(map[string][]interface{})
@@ -599,7 +599,7 @@ func (s Global) Diff(t Global, opts ...Options) map[string][]interface{} {
 		}
 	}
 
-	if len(s.SetVarFmts) != len(t.SetVarFmts) {
+	if !CheckSameNilAndLen(s.SetVarFmts, t.SetVarFmts, opt) {
 		diff["SetVarFmts"] = []interface{}{s.SetVarFmts, t.SetVarFmts}
 	} else {
 		diff2 := make(map[string][]interface{})
@@ -614,7 +614,7 @@ func (s Global) Diff(t Global, opts ...Options) map[string][]interface{} {
 		}
 	}
 
-	if len(s.SetVars) != len(t.SetVars) {
+	if !CheckSameNilAndLen(s.SetVars, t.SetVars, opt) {
 		diff["SetVars"] = []interface{}{s.SetVars, t.SetVars}
 	} else {
 		diff2 := make(map[string][]interface{})
@@ -629,7 +629,7 @@ func (s Global) Diff(t Global, opts ...Options) map[string][]interface{} {
 		}
 	}
 
-	if len(s.SslEngines) != len(t.SslEngines) {
+	if !CheckSameNilAndLen(s.SslEngines, t.SslEngines, opt) {
 		diff["SslEngines"] = []interface{}{s.SslEngines, t.SslEngines}
 	} else {
 		diff2 := make(map[string][]interface{})
@@ -644,7 +644,7 @@ func (s Global) Diff(t Global, opts ...Options) map[string][]interface{} {
 		}
 	}
 
-	if len(s.ThreadGroupLines) != len(t.ThreadGroupLines) {
+	if !CheckSameNilAndLen(s.ThreadGroupLines, t.ThreadGroupLines, opt) {
 		diff["ThreadGroupLines"] = []interface{}{s.ThreadGroupLines, t.ThreadGroupLines}
 	} else {
 		diff2 := make(map[string][]interface{})
@@ -660,7 +660,7 @@ func (s Global) Diff(t Global, opts ...Options) map[string][]interface{} {
 	}
 
 	if !equalPointers(s.Anonkey, t.Anonkey) {
-		diff["Anonkey"] = []interface{}{s.Anonkey, t.Anonkey}
+		diff["Anonkey"] = []interface{}{ValueOrNil(s.Anonkey), ValueOrNil(t.Anonkey)}
 	}
 
 	if s.BusyPolling != t.BusyPolling {
@@ -676,7 +676,7 @@ func (s Global) Diff(t Global, opts ...Options) map[string][]interface{} {
 	}
 
 	if !equalPointers(s.CloseSpreadTime, t.CloseSpreadTime) {
-		diff["CloseSpreadTime"] = []interface{}{s.CloseSpreadTime, t.CloseSpreadTime}
+		diff["CloseSpreadTime"] = []interface{}{ValueOrNil(s.CloseSpreadTime), ValueOrNil(t.CloseSpreadTime)}
 	}
 
 	if s.ClusterSecret != t.ClusterSecret {
@@ -692,7 +692,7 @@ func (s Global) Diff(t Global, opts ...Options) map[string][]interface{} {
 	}
 
 	if !s.DefaultPath.Equal(*t.DefaultPath, opt) {
-		diff["DefaultPath"] = []interface{}{s.DefaultPath, t.DefaultPath}
+		diff["DefaultPath"] = []interface{}{ValueOrNil(s.DefaultPath), ValueOrNil(t.DefaultPath)}
 	}
 
 	if s.Description != t.Description {
@@ -700,7 +700,7 @@ func (s Global) Diff(t Global, opts ...Options) map[string][]interface{} {
 	}
 
 	if !s.DeviceAtlasOptions.Equal(*t.DeviceAtlasOptions, opt) {
-		diff["DeviceAtlasOptions"] = []interface{}{s.DeviceAtlasOptions, t.DeviceAtlasOptions}
+		diff["DeviceAtlasOptions"] = []interface{}{ValueOrNil(s.DeviceAtlasOptions), ValueOrNil(t.DeviceAtlasOptions)}
 	}
 
 	if s.ExposeExperimentalDirectives != t.ExposeExperimentalDirectives {
@@ -712,7 +712,7 @@ func (s Global) Diff(t Global, opts ...Options) map[string][]interface{} {
 	}
 
 	if !s.FiftyOneDegreesOptions.Equal(*t.FiftyOneDegreesOptions, opt) {
-		diff["FiftyOneDegreesOptions"] = []interface{}{s.FiftyOneDegreesOptions, t.FiftyOneDegreesOptions}
+		diff["FiftyOneDegreesOptions"] = []interface{}{ValueOrNil(s.FiftyOneDegreesOptions), ValueOrNil(t.FiftyOneDegreesOptions)}
 	}
 
 	if s.Gid != t.Gid {
@@ -720,7 +720,7 @@ func (s Global) Diff(t Global, opts ...Options) map[string][]interface{} {
 	}
 
 	if !equalPointers(s.Grace, t.Grace) {
-		diff["Grace"] = []interface{}{s.Grace, t.Grace}
+		diff["Grace"] = []interface{}{ValueOrNil(s.Grace), ValueOrNil(t.Grace)}
 	}
 
 	if s.Group != t.Group {
@@ -736,7 +736,7 @@ func (s Global) Diff(t Global, opts ...Options) map[string][]interface{} {
 	}
 
 	if !equalPointers(s.HardStopAfter, t.HardStopAfter) {
-		diff["HardStopAfter"] = []interface{}{s.HardStopAfter, t.HardStopAfter}
+		diff["HardStopAfter"] = []interface{}{ValueOrNil(s.HardStopAfter), ValueOrNil(t.HardStopAfter)}
 	}
 
 	if s.HttpclientResolversDisabled != t.HttpclientResolversDisabled {
@@ -756,7 +756,7 @@ func (s Global) Diff(t Global, opts ...Options) map[string][]interface{} {
 	}
 
 	if !equalPointers(s.HttpclientSslVerify, t.HttpclientSslVerify) {
-		diff["HttpclientSslVerify"] = []interface{}{s.HttpclientSslVerify, t.HttpclientSslVerify}
+		diff["HttpclientSslVerify"] = []interface{}{ValueOrNil(s.HttpclientSslVerify), ValueOrNil(t.HttpclientSslVerify)}
 	}
 
 	if s.InsecureForkWanted != t.InsecureForkWanted {
@@ -780,14 +780,14 @@ func (s Global) Diff(t Global, opts ...Options) map[string][]interface{} {
 	}
 
 	if !s.LogSendHostname.Equal(*t.LogSendHostname, opt) {
-		diff["LogSendHostname"] = []interface{}{s.LogSendHostname, t.LogSendHostname}
+		diff["LogSendHostname"] = []interface{}{ValueOrNil(s.LogSendHostname), ValueOrNil(t.LogSendHostname)}
 	}
 
 	if s.LuaLoadPerThread != t.LuaLoadPerThread {
 		diff["LuaLoadPerThread"] = []interface{}{s.LuaLoadPerThread, t.LuaLoadPerThread}
 	}
 
-	if len(s.LuaLoads) != len(t.LuaLoads) {
+	if !CheckSameNilAndLen(s.LuaLoads, t.LuaLoads, opt) {
 		diff["LuaLoads"] = []interface{}{s.LuaLoads, t.LuaLoads}
 	} else {
 		diff2 := make(map[string][]interface{})
@@ -802,7 +802,7 @@ func (s Global) Diff(t Global, opts ...Options) map[string][]interface{} {
 		}
 	}
 
-	if len(s.LuaPrependPath) != len(t.LuaPrependPath) {
+	if !CheckSameNilAndLen(s.LuaPrependPath, t.LuaPrependPath, opt) {
 		diff["LuaPrependPath"] = []interface{}{s.LuaPrependPath, t.LuaPrependPath}
 	} else {
 		diff2 := make(map[string][]interface{})
@@ -822,7 +822,7 @@ func (s Global) Diff(t Global, opts ...Options) map[string][]interface{} {
 	}
 
 	if !equalPointers(s.MaxSpreadChecks, t.MaxSpreadChecks) {
-		diff["MaxSpreadChecks"] = []interface{}{s.MaxSpreadChecks, t.MaxSpreadChecks}
+		diff["MaxSpreadChecks"] = []interface{}{ValueOrNil(s.MaxSpreadChecks), ValueOrNil(t.MaxSpreadChecks)}
 	}
 
 	if s.Maxcompcpuusage != t.Maxcompcpuusage {
@@ -862,7 +862,7 @@ func (s Global) Diff(t Global, opts ...Options) map[string][]interface{} {
 	}
 
 	if !equalPointers(s.MworkerMaxReloads, t.MworkerMaxReloads) {
-		diff["MworkerMaxReloads"] = []interface{}{s.MworkerMaxReloads, t.MworkerMaxReloads}
+		diff["MworkerMaxReloads"] = []interface{}{ValueOrNil(s.MworkerMaxReloads), ValueOrNil(t.MworkerMaxReloads)}
 	}
 
 	if s.Nbproc != t.Nbproc {
@@ -1010,11 +1010,11 @@ func (s Global) Diff(t Global, opts ...Options) map[string][]interface{} {
 	}
 
 	if !equalPointers(s.StatsMaxconn, t.StatsMaxconn) {
-		diff["StatsMaxconn"] = []interface{}{s.StatsMaxconn, t.StatsMaxconn}
+		diff["StatsMaxconn"] = []interface{}{ValueOrNil(s.StatsMaxconn), ValueOrNil(t.StatsMaxconn)}
 	}
 
 	if !equalPointers(s.StatsTimeout, t.StatsTimeout) {
-		diff["StatsTimeout"] = []interface{}{s.StatsTimeout, t.StatsTimeout}
+		diff["StatsTimeout"] = []interface{}{ValueOrNil(s.StatsTimeout), ValueOrNil(t.StatsTimeout)}
 	}
 
 	if s.StrictLimits != t.StrictLimits {
@@ -1026,7 +1026,7 @@ func (s Global) Diff(t Global, opts ...Options) map[string][]interface{} {
 	}
 
 	if !s.TuneOptions.Equal(*t.TuneOptions, opt) {
-		diff["TuneOptions"] = []interface{}{s.TuneOptions, t.TuneOptions}
+		diff["TuneOptions"] = []interface{}{ValueOrNil(s.TuneOptions), ValueOrNil(t.TuneOptions)}
 	}
 
 	if s.TuneSslDefaultDhParam != t.TuneSslDefaultDhParam {
@@ -1050,7 +1050,7 @@ func (s Global) Diff(t Global, opts ...Options) map[string][]interface{} {
 	}
 
 	if !s.WurflOptions.Equal(*t.WurflOptions, opt) {
-		diff["WurflOptions"] = []interface{}{s.WurflOptions, t.WurflOptions}
+		diff["WurflOptions"] = []interface{}{ValueOrNil(s.WurflOptions), ValueOrNil(t.WurflOptions)}
 	}
 
 	if s.ZeroWarning != t.ZeroWarning {
@@ -1087,11 +1087,11 @@ func (s CPUMap) Equal(t CPUMap, opts ...Options) bool {
 func (s CPUMap) Diff(t CPUMap, opts ...Options) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if !equalPointers(s.CPUSet, t.CPUSet) {
-		diff["CPUSet"] = []interface{}{s.CPUSet, t.CPUSet}
+		diff["CPUSet"] = []interface{}{ValueOrNil(s.CPUSet), ValueOrNil(t.CPUSet)}
 	}
 
 	if !equalPointers(s.Process, t.Process) {
-		diff["Process"] = []interface{}{s.Process, t.Process}
+		diff["Process"] = []interface{}{ValueOrNil(s.Process), ValueOrNil(t.Process)}
 	}
 
 	return diff
@@ -1267,11 +1267,11 @@ func (s H1CaseAdjust) Equal(t H1CaseAdjust, opts ...Options) bool {
 func (s H1CaseAdjust) Diff(t H1CaseAdjust, opts ...Options) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if !equalPointers(s.From, t.From) {
-		diff["From"] = []interface{}{s.From, t.From}
+		diff["From"] = []interface{}{ValueOrNil(s.From), ValueOrNil(t.From)}
 	}
 
 	if !equalPointers(s.To, t.To) {
-		diff["To"] = []interface{}{s.To, t.To}
+		diff["To"] = []interface{}{ValueOrNil(s.To), ValueOrNil(t.To)}
 	}
 
 	return diff
@@ -1304,7 +1304,7 @@ func (s GlobalLogSendHostname) Equal(t GlobalLogSendHostname, opts ...Options) b
 func (s GlobalLogSendHostname) Diff(t GlobalLogSendHostname, opts ...Options) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if !equalPointers(s.Enabled, t.Enabled) {
-		diff["Enabled"] = []interface{}{s.Enabled, t.Enabled}
+		diff["Enabled"] = []interface{}{ValueOrNil(s.Enabled), ValueOrNil(t.Enabled)}
 	}
 
 	if s.Param != t.Param {
@@ -1337,7 +1337,7 @@ func (s LuaLoad) Equal(t LuaLoad, opts ...Options) bool {
 func (s LuaLoad) Diff(t LuaLoad, opts ...Options) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if !equalPointers(s.File, t.File) {
-		diff["File"] = []interface{}{s.File, t.File}
+		diff["File"] = []interface{}{ValueOrNil(s.File), ValueOrNil(t.File)}
 	}
 
 	return diff
@@ -1370,7 +1370,7 @@ func (s LuaPrependPath) Equal(t LuaPrependPath, opts ...Options) bool {
 func (s LuaPrependPath) Diff(t LuaPrependPath, opts ...Options) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if !equalPointers(s.Path, t.Path) {
-		diff["Path"] = []interface{}{s.Path, t.Path}
+		diff["Path"] = []interface{}{ValueOrNil(s.Path), ValueOrNil(t.Path)}
 	}
 
 	if s.Type != t.Type {
@@ -1407,11 +1407,11 @@ func (s PresetEnv) Equal(t PresetEnv, opts ...Options) bool {
 func (s PresetEnv) Diff(t PresetEnv, opts ...Options) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if !equalPointers(s.Name, t.Name) {
-		diff["Name"] = []interface{}{s.Name, t.Name}
+		diff["Name"] = []interface{}{ValueOrNil(s.Name), ValueOrNil(t.Name)}
 	}
 
 	if !equalPointers(s.Value, t.Value) {
-		diff["Value"] = []interface{}{s.Value, t.Value}
+		diff["Value"] = []interface{}{ValueOrNil(s.Value), ValueOrNil(t.Value)}
 	}
 
 	return diff
@@ -1466,7 +1466,7 @@ func (s RuntimeAPI) Diff(t RuntimeAPI, opts ...Options) map[string][]interface{}
 	}
 
 	if !equalPointers(s.Address, t.Address) {
-		diff["Address"] = []interface{}{s.Address, t.Address}
+		diff["Address"] = []interface{}{ValueOrNil(s.Address), ValueOrNil(t.Address)}
 	}
 
 	return diff
@@ -1499,11 +1499,11 @@ func (s SetVarFmt) Equal(t SetVarFmt, opts ...Options) bool {
 func (s SetVarFmt) Diff(t SetVarFmt, opts ...Options) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if !equalPointers(s.Format, t.Format) {
-		diff["Format"] = []interface{}{s.Format, t.Format}
+		diff["Format"] = []interface{}{ValueOrNil(s.Format), ValueOrNil(t.Format)}
 	}
 
 	if !equalPointers(s.Name, t.Name) {
-		diff["Name"] = []interface{}{s.Name, t.Name}
+		diff["Name"] = []interface{}{ValueOrNil(s.Name), ValueOrNil(t.Name)}
 	}
 
 	return diff
@@ -1536,11 +1536,11 @@ func (s SetVar) Equal(t SetVar, opts ...Options) bool {
 func (s SetVar) Diff(t SetVar, opts ...Options) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if !equalPointers(s.Expr, t.Expr) {
-		diff["Expr"] = []interface{}{s.Expr, t.Expr}
+		diff["Expr"] = []interface{}{ValueOrNil(s.Expr), ValueOrNil(t.Expr)}
 	}
 
 	if !equalPointers(s.Name, t.Name) {
-		diff["Name"] = []interface{}{s.Name, t.Name}
+		diff["Name"] = []interface{}{ValueOrNil(s.Name), ValueOrNil(t.Name)}
 	}
 
 	return diff
@@ -1573,11 +1573,11 @@ func (s SetEnv) Equal(t SetEnv, opts ...Options) bool {
 func (s SetEnv) Diff(t SetEnv, opts ...Options) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if !equalPointers(s.Name, t.Name) {
-		diff["Name"] = []interface{}{s.Name, t.Name}
+		diff["Name"] = []interface{}{ValueOrNil(s.Name), ValueOrNil(t.Name)}
 	}
 
 	if !equalPointers(s.Value, t.Value) {
-		diff["Value"] = []interface{}{s.Value, t.Value}
+		diff["Value"] = []interface{}{ValueOrNil(s.Value), ValueOrNil(t.Value)}
 	}
 
 	return diff
@@ -1610,11 +1610,11 @@ func (s SslEngine) Equal(t SslEngine, opts ...Options) bool {
 func (s SslEngine) Diff(t SslEngine, opts ...Options) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if !equalPointers(s.Algorithms, t.Algorithms) {
-		diff["Algorithms"] = []interface{}{s.Algorithms, t.Algorithms}
+		diff["Algorithms"] = []interface{}{ValueOrNil(s.Algorithms), ValueOrNil(t.Algorithms)}
 	}
 
 	if !equalPointers(s.Name, t.Name) {
-		diff["Name"] = []interface{}{s.Name, t.Name}
+		diff["Name"] = []interface{}{ValueOrNil(s.Name), ValueOrNil(t.Name)}
 	}
 
 	return diff
@@ -1647,11 +1647,11 @@ func (s ThreadGroup) Equal(t ThreadGroup, opts ...Options) bool {
 func (s ThreadGroup) Diff(t ThreadGroup, opts ...Options) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if !equalPointers(s.Group, t.Group) {
-		diff["Group"] = []interface{}{s.Group, t.Group}
+		diff["Group"] = []interface{}{ValueOrNil(s.Group), ValueOrNil(t.Group)}
 	}
 
 	if !equalPointers(s.NumOrRange, t.NumOrRange) {
-		diff["NumOrRange"] = []interface{}{s.NumOrRange, t.NumOrRange}
+		diff["NumOrRange"] = []interface{}{ValueOrNil(s.NumOrRange), ValueOrNil(t.NumOrRange)}
 	}
 
 	return diff
@@ -1944,7 +1944,7 @@ func (s GlobalTuneOptions) Equal(t GlobalTuneOptions, opts ...Options) bool {
 func (s GlobalTuneOptions) Diff(t GlobalTuneOptions, opts ...Options) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if !equalPointers(s.BuffersLimit, t.BuffersLimit) {
-		diff["BuffersLimit"] = []interface{}{s.BuffersLimit, t.BuffersLimit}
+		diff["BuffersLimit"] = []interface{}{ValueOrNil(s.BuffersLimit), ValueOrNil(t.BuffersLimit)}
 	}
 
 	if s.BuffersReserve != t.BuffersReserve {
@@ -1988,7 +1988,7 @@ func (s GlobalTuneOptions) Diff(t GlobalTuneOptions, opts ...Options) map[string
 	}
 
 	if !equalPointers(s.H2InitialWindowSize, t.H2InitialWindowSize) {
-		diff["H2InitialWindowSize"] = []interface{}{s.H2InitialWindowSize, t.H2InitialWindowSize}
+		diff["H2InitialWindowSize"] = []interface{}{ValueOrNil(s.H2InitialWindowSize), ValueOrNil(t.H2InitialWindowSize)}
 	}
 
 	if s.H2MaxConcurrentStreams != t.H2MaxConcurrentStreams {
@@ -2016,7 +2016,7 @@ func (s GlobalTuneOptions) Diff(t GlobalTuneOptions, opts ...Options) map[string
 	}
 
 	if !equalPointers(s.Idletimer, t.Idletimer) {
-		diff["Idletimer"] = []interface{}{s.Idletimer, t.Idletimer}
+		diff["Idletimer"] = []interface{}{ValueOrNil(s.Idletimer), ValueOrNil(t.Idletimer)}
 	}
 
 	if s.ListenerDefaultShards != t.ListenerDefaultShards {
@@ -2028,7 +2028,7 @@ func (s GlobalTuneOptions) Diff(t GlobalTuneOptions, opts ...Options) map[string
 	}
 
 	if !equalPointers(s.LuaBurstTimeout, t.LuaBurstTimeout) {
-		diff["LuaBurstTimeout"] = []interface{}{s.LuaBurstTimeout, t.LuaBurstTimeout}
+		diff["LuaBurstTimeout"] = []interface{}{ValueOrNil(s.LuaBurstTimeout), ValueOrNil(t.LuaBurstTimeout)}
 	}
 
 	if s.LuaForcedYield != t.LuaForcedYield {
@@ -2040,15 +2040,15 @@ func (s GlobalTuneOptions) Diff(t GlobalTuneOptions, opts ...Options) map[string
 	}
 
 	if !equalPointers(s.LuaServiceTimeout, t.LuaServiceTimeout) {
-		diff["LuaServiceTimeout"] = []interface{}{s.LuaServiceTimeout, t.LuaServiceTimeout}
+		diff["LuaServiceTimeout"] = []interface{}{ValueOrNil(s.LuaServiceTimeout), ValueOrNil(t.LuaServiceTimeout)}
 	}
 
 	if !equalPointers(s.LuaSessionTimeout, t.LuaSessionTimeout) {
-		diff["LuaSessionTimeout"] = []interface{}{s.LuaSessionTimeout, t.LuaSessionTimeout}
+		diff["LuaSessionTimeout"] = []interface{}{ValueOrNil(s.LuaSessionTimeout), ValueOrNil(t.LuaSessionTimeout)}
 	}
 
 	if !equalPointers(s.LuaTaskTimeout, t.LuaTaskTimeout) {
-		diff["LuaTaskTimeout"] = []interface{}{s.LuaTaskTimeout, t.LuaTaskTimeout}
+		diff["LuaTaskTimeout"] = []interface{}{ValueOrNil(s.LuaTaskTimeout), ValueOrNil(t.LuaTaskTimeout)}
 	}
 
 	if s.Maxaccept != t.Maxaccept {
@@ -2064,11 +2064,11 @@ func (s GlobalTuneOptions) Diff(t GlobalTuneOptions, opts ...Options) map[string
 	}
 
 	if !equalPointers(s.MemoryHotSize, t.MemoryHotSize) {
-		diff["MemoryHotSize"] = []interface{}{s.MemoryHotSize, t.MemoryHotSize}
+		diff["MemoryHotSize"] = []interface{}{ValueOrNil(s.MemoryHotSize), ValueOrNil(t.MemoryHotSize)}
 	}
 
 	if !equalPointers(s.PatternCacheSize, t.PatternCacheSize) {
-		diff["PatternCacheSize"] = []interface{}{s.PatternCacheSize, t.PatternCacheSize}
+		diff["PatternCacheSize"] = []interface{}{ValueOrNil(s.PatternCacheSize), ValueOrNil(t.PatternCacheSize)}
 	}
 
 	if s.PeersMaxUpdatesAtOnce != t.PeersMaxUpdatesAtOnce {
@@ -2088,23 +2088,23 @@ func (s GlobalTuneOptions) Diff(t GlobalTuneOptions, opts ...Options) map[string
 	}
 
 	if !equalPointers(s.QuicFrontendConnTxBuffersLimit, t.QuicFrontendConnTxBuffersLimit) {
-		diff["QuicFrontendConnTxBuffersLimit"] = []interface{}{s.QuicFrontendConnTxBuffersLimit, t.QuicFrontendConnTxBuffersLimit}
+		diff["QuicFrontendConnTxBuffersLimit"] = []interface{}{ValueOrNil(s.QuicFrontendConnTxBuffersLimit), ValueOrNil(t.QuicFrontendConnTxBuffersLimit)}
 	}
 
 	if !equalPointers(s.QuicFrontendMaxIdleTimeout, t.QuicFrontendMaxIdleTimeout) {
-		diff["QuicFrontendMaxIdleTimeout"] = []interface{}{s.QuicFrontendMaxIdleTimeout, t.QuicFrontendMaxIdleTimeout}
+		diff["QuicFrontendMaxIdleTimeout"] = []interface{}{ValueOrNil(s.QuicFrontendMaxIdleTimeout), ValueOrNil(t.QuicFrontendMaxIdleTimeout)}
 	}
 
 	if !equalPointers(s.QuicFrontendMaxStreamsBidi, t.QuicFrontendMaxStreamsBidi) {
-		diff["QuicFrontendMaxStreamsBidi"] = []interface{}{s.QuicFrontendMaxStreamsBidi, t.QuicFrontendMaxStreamsBidi}
+		diff["QuicFrontendMaxStreamsBidi"] = []interface{}{ValueOrNil(s.QuicFrontendMaxStreamsBidi), ValueOrNil(t.QuicFrontendMaxStreamsBidi)}
 	}
 
 	if !equalPointers(s.QuicMaxFrameLoss, t.QuicMaxFrameLoss) {
-		diff["QuicMaxFrameLoss"] = []interface{}{s.QuicMaxFrameLoss, t.QuicMaxFrameLoss}
+		diff["QuicMaxFrameLoss"] = []interface{}{ValueOrNil(s.QuicMaxFrameLoss), ValueOrNil(t.QuicMaxFrameLoss)}
 	}
 
 	if !equalPointers(s.QuicRetryThreshold, t.QuicRetryThreshold) {
-		diff["QuicRetryThreshold"] = []interface{}{s.QuicRetryThreshold, t.QuicRetryThreshold}
+		diff["QuicRetryThreshold"] = []interface{}{ValueOrNil(s.QuicRetryThreshold), ValueOrNil(t.QuicRetryThreshold)}
 	}
 
 	if s.QuicSocketOwner != t.QuicSocketOwner {
@@ -2112,11 +2112,11 @@ func (s GlobalTuneOptions) Diff(t GlobalTuneOptions, opts ...Options) map[string
 	}
 
 	if !equalPointers(s.RcvbufClient, t.RcvbufClient) {
-		diff["RcvbufClient"] = []interface{}{s.RcvbufClient, t.RcvbufClient}
+		diff["RcvbufClient"] = []interface{}{ValueOrNil(s.RcvbufClient), ValueOrNil(t.RcvbufClient)}
 	}
 
 	if !equalPointers(s.RcvbufServer, t.RcvbufServer) {
-		diff["RcvbufServer"] = []interface{}{s.RcvbufServer, t.RcvbufServer}
+		diff["RcvbufServer"] = []interface{}{ValueOrNil(s.RcvbufServer), ValueOrNil(t.RcvbufServer)}
 	}
 
 	if s.RecvEnough != t.RecvEnough {
@@ -2132,19 +2132,19 @@ func (s GlobalTuneOptions) Diff(t GlobalTuneOptions, opts ...Options) map[string
 	}
 
 	if !equalPointers(s.SndbufClient, t.SndbufClient) {
-		diff["SndbufClient"] = []interface{}{s.SndbufClient, t.SndbufClient}
+		diff["SndbufClient"] = []interface{}{ValueOrNil(s.SndbufClient), ValueOrNil(t.SndbufClient)}
 	}
 
 	if !equalPointers(s.SndbufServer, t.SndbufServer) {
-		diff["SndbufServer"] = []interface{}{s.SndbufServer, t.SndbufServer}
+		diff["SndbufServer"] = []interface{}{ValueOrNil(s.SndbufServer), ValueOrNil(t.SndbufServer)}
 	}
 
 	if !equalPointers(s.SslCachesize, t.SslCachesize) {
-		diff["SslCachesize"] = []interface{}{s.SslCachesize, t.SslCachesize}
+		diff["SslCachesize"] = []interface{}{ValueOrNil(s.SslCachesize), ValueOrNil(t.SslCachesize)}
 	}
 
 	if !equalPointers(s.SslCaptureBufferSize, t.SslCaptureBufferSize) {
-		diff["SslCaptureBufferSize"] = []interface{}{s.SslCaptureBufferSize, t.SslCaptureBufferSize}
+		diff["SslCaptureBufferSize"] = []interface{}{ValueOrNil(s.SslCaptureBufferSize), ValueOrNil(t.SslCaptureBufferSize)}
 	}
 
 	if s.SslCtxCacheSize != t.SslCtxCacheSize {
@@ -2164,43 +2164,43 @@ func (s GlobalTuneOptions) Diff(t GlobalTuneOptions, opts ...Options) map[string
 	}
 
 	if !equalPointers(s.SslLifetime, t.SslLifetime) {
-		diff["SslLifetime"] = []interface{}{s.SslLifetime, t.SslLifetime}
+		diff["SslLifetime"] = []interface{}{ValueOrNil(s.SslLifetime), ValueOrNil(t.SslLifetime)}
 	}
 
 	if !equalPointers(s.SslMaxrecord, t.SslMaxrecord) {
-		diff["SslMaxrecord"] = []interface{}{s.SslMaxrecord, t.SslMaxrecord}
+		diff["SslMaxrecord"] = []interface{}{ValueOrNil(s.SslMaxrecord), ValueOrNil(t.SslMaxrecord)}
 	}
 
 	if !equalPointers(s.SslOcspUpdateMaxDelay, t.SslOcspUpdateMaxDelay) {
-		diff["SslOcspUpdateMaxDelay"] = []interface{}{s.SslOcspUpdateMaxDelay, t.SslOcspUpdateMaxDelay}
+		diff["SslOcspUpdateMaxDelay"] = []interface{}{ValueOrNil(s.SslOcspUpdateMaxDelay), ValueOrNil(t.SslOcspUpdateMaxDelay)}
 	}
 
 	if !equalPointers(s.SslOcspUpdateMinDelay, t.SslOcspUpdateMinDelay) {
-		diff["SslOcspUpdateMinDelay"] = []interface{}{s.SslOcspUpdateMinDelay, t.SslOcspUpdateMinDelay}
+		diff["SslOcspUpdateMinDelay"] = []interface{}{ValueOrNil(s.SslOcspUpdateMinDelay), ValueOrNil(t.SslOcspUpdateMinDelay)}
 	}
 
 	if !equalPointers(s.StickCounters, t.StickCounters) {
-		diff["StickCounters"] = []interface{}{s.StickCounters, t.StickCounters}
+		diff["StickCounters"] = []interface{}{ValueOrNil(s.StickCounters), ValueOrNil(t.StickCounters)}
 	}
 
 	if !equalPointers(s.VarsGlobalMaxSize, t.VarsGlobalMaxSize) {
-		diff["VarsGlobalMaxSize"] = []interface{}{s.VarsGlobalMaxSize, t.VarsGlobalMaxSize}
+		diff["VarsGlobalMaxSize"] = []interface{}{ValueOrNil(s.VarsGlobalMaxSize), ValueOrNil(t.VarsGlobalMaxSize)}
 	}
 
 	if !equalPointers(s.VarsProcMaxSize, t.VarsProcMaxSize) {
-		diff["VarsProcMaxSize"] = []interface{}{s.VarsProcMaxSize, t.VarsProcMaxSize}
+		diff["VarsProcMaxSize"] = []interface{}{ValueOrNil(s.VarsProcMaxSize), ValueOrNil(t.VarsProcMaxSize)}
 	}
 
 	if !equalPointers(s.VarsReqresMaxSize, t.VarsReqresMaxSize) {
-		diff["VarsReqresMaxSize"] = []interface{}{s.VarsReqresMaxSize, t.VarsReqresMaxSize}
+		diff["VarsReqresMaxSize"] = []interface{}{ValueOrNil(s.VarsReqresMaxSize), ValueOrNil(t.VarsReqresMaxSize)}
 	}
 
 	if !equalPointers(s.VarsSessMaxSize, t.VarsSessMaxSize) {
-		diff["VarsSessMaxSize"] = []interface{}{s.VarsSessMaxSize, t.VarsSessMaxSize}
+		diff["VarsSessMaxSize"] = []interface{}{ValueOrNil(s.VarsSessMaxSize), ValueOrNil(t.VarsSessMaxSize)}
 	}
 
 	if !equalPointers(s.VarsTxnMaxSize, t.VarsTxnMaxSize) {
-		diff["VarsTxnMaxSize"] = []interface{}{s.VarsTxnMaxSize, t.VarsTxnMaxSize}
+		diff["VarsTxnMaxSize"] = []interface{}{ValueOrNil(s.VarsTxnMaxSize), ValueOrNil(t.VarsTxnMaxSize)}
 	}
 
 	if s.ZlibMemlevel != t.ZlibMemlevel {

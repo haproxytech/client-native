@@ -44,11 +44,11 @@ func (s StatsAuth) Equal(t StatsAuth, opts ...Options) bool {
 func (s StatsAuth) Diff(t StatsAuth, opts ...Options) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if !equalPointers(s.Passwd, t.Passwd) {
-		diff["Passwd"] = []interface{}{s.Passwd, t.Passwd}
+		diff["Passwd"] = []interface{}{ValueOrNil(s.Passwd), ValueOrNil(t.Passwd)}
 	}
 
 	if !equalPointers(s.User, t.User) {
-		diff["User"] = []interface{}{s.User, t.User}
+		diff["User"] = []interface{}{ValueOrNil(s.User), ValueOrNil(t.User)}
 	}
 
 	return diff

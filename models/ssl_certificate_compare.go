@@ -92,15 +92,15 @@ func (s SslCertificate) Diff(t SslCertificate, opts ...Options) map[string][]int
 	}
 
 	if !s.NotAfter.Equal(*t.NotAfter) {
-		diff["NotAfter"] = []interface{}{s.NotAfter, t.NotAfter}
+		diff["NotAfter"] = []interface{}{ValueOrNil(s.NotAfter), ValueOrNil(t.NotAfter)}
 	}
 
 	if !s.NotBefore.Equal(*t.NotBefore) {
-		diff["NotBefore"] = []interface{}{s.NotBefore, t.NotBefore}
+		diff["NotBefore"] = []interface{}{ValueOrNil(s.NotBefore), ValueOrNil(t.NotBefore)}
 	}
 
 	if !equalPointers(s.Size, t.Size) {
-		diff["Size"] = []interface{}{s.Size, t.Size}
+		diff["Size"] = []interface{}{ValueOrNil(s.Size), ValueOrNil(t.Size)}
 	}
 
 	if s.StorageName != t.StorageName {

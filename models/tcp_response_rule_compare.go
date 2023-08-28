@@ -176,7 +176,7 @@ func (s TCPResponseRule) Diff(t TCPResponseRule, opts ...Options) map[string][]i
 	}
 
 	if !opt.SkipIndex && !equalPointers(s.Index, t.Index) {
-		diff["Index"] = []interface{}{s.Index, t.Index}
+		diff["Index"] = []interface{}{ValueOrNil(s.Index), ValueOrNil(t.Index)}
 	}
 
 	if s.LogLevel != t.LogLevel {
@@ -212,7 +212,7 @@ func (s TCPResponseRule) Diff(t TCPResponseRule, opts ...Options) map[string][]i
 	}
 
 	if !equalPointers(s.ScInt, t.ScInt) {
-		diff["ScInt"] = []interface{}{s.ScInt, t.ScInt}
+		diff["ScInt"] = []interface{}{ValueOrNil(s.ScInt), ValueOrNil(t.ScInt)}
 	}
 
 	if s.SpoeEngine != t.SpoeEngine {
@@ -224,7 +224,7 @@ func (s TCPResponseRule) Diff(t TCPResponseRule, opts ...Options) map[string][]i
 	}
 
 	if !equalPointers(s.Timeout, t.Timeout) {
-		diff["Timeout"] = []interface{}{s.Timeout, t.Timeout}
+		diff["Timeout"] = []interface{}{ValueOrNil(s.Timeout), ValueOrNil(t.Timeout)}
 	}
 
 	if s.TosValue != t.TosValue {

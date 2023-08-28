@@ -78,11 +78,11 @@ func (s PeerSection) Diff(t PeerSection, opts ...Options) map[string][]interface
 
 	diff := make(map[string][]interface{})
 	if !s.DefaultBind.Equal(*t.DefaultBind, opt) {
-		diff["DefaultBind"] = []interface{}{s.DefaultBind, t.DefaultBind}
+		diff["DefaultBind"] = []interface{}{ValueOrNil(s.DefaultBind), ValueOrNil(t.DefaultBind)}
 	}
 
 	if !s.DefaultServer.Equal(*t.DefaultServer, opt) {
-		diff["DefaultServer"] = []interface{}{s.DefaultServer, t.DefaultServer}
+		diff["DefaultServer"] = []interface{}{ValueOrNil(s.DefaultServer), ValueOrNil(t.DefaultServer)}
 	}
 
 	if s.Disabled != t.Disabled {

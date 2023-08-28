@@ -62,11 +62,11 @@ func (s Info) Diff(t Info, opts ...Options) map[string][]interface{} {
 
 	diff := make(map[string][]interface{})
 	if !s.API.Equal(*t.API, opt) {
-		diff["API"] = []interface{}{s.API, t.API}
+		diff["API"] = []interface{}{ValueOrNil(s.API), ValueOrNil(t.API)}
 	}
 
 	if !s.System.Equal(*t.System, opt) {
-		diff["System"] = []interface{}{s.System, t.System}
+		diff["System"] = []interface{}{ValueOrNil(s.System), ValueOrNil(t.System)}
 	}
 
 	return diff
@@ -170,7 +170,7 @@ func (s InfoSystem) Diff(t InfoSystem, opts ...Options) map[string][]interface{}
 
 	diff := make(map[string][]interface{})
 	if !s.CPUInfo.Equal(*t.CPUInfo, opt) {
-		diff["CPUInfo"] = []interface{}{s.CPUInfo, t.CPUInfo}
+		diff["CPUInfo"] = []interface{}{ValueOrNil(s.CPUInfo), ValueOrNil(t.CPUInfo)}
 	}
 
 	if s.Hostname != t.Hostname {
@@ -178,7 +178,7 @@ func (s InfoSystem) Diff(t InfoSystem, opts ...Options) map[string][]interface{}
 	}
 
 	if !s.MemInfo.Equal(*t.MemInfo, opt) {
-		diff["MemInfo"] = []interface{}{s.MemInfo, t.MemInfo}
+		diff["MemInfo"] = []interface{}{ValueOrNil(s.MemInfo), ValueOrNil(t.MemInfo)}
 	}
 
 	if s.OsString != t.OsString {
@@ -190,7 +190,7 @@ func (s InfoSystem) Diff(t InfoSystem, opts ...Options) map[string][]interface{}
 	}
 
 	if !equalPointers(s.Uptime, t.Uptime) {
-		diff["Uptime"] = []interface{}{s.Uptime, t.Uptime}
+		diff["Uptime"] = []interface{}{ValueOrNil(s.Uptime), ValueOrNil(t.Uptime)}
 	}
 
 	return diff

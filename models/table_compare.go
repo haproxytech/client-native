@@ -64,7 +64,7 @@ func (s Table) Equal(t Table, opts ...Options) bool {
 func (s Table) Diff(t Table, opts ...Options) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if !equalPointers(s.Expire, t.Expire) {
-		diff["Expire"] = []interface{}{s.Expire, t.Expire}
+		diff["Expire"] = []interface{}{ValueOrNil(s.Expire), ValueOrNil(t.Expire)}
 	}
 
 	if s.Name != t.Name {
@@ -88,7 +88,7 @@ func (s Table) Diff(t Table, opts ...Options) map[string][]interface{} {
 	}
 
 	if !equalPointers(s.TypeLen, t.TypeLen) {
-		diff["TypeLen"] = []interface{}{s.TypeLen, t.TypeLen}
+		diff["TypeLen"] = []interface{}{ValueOrNil(s.TypeLen), ValueOrNil(t.TypeLen)}
 	}
 
 	return diff

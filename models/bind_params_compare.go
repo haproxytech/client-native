@@ -540,7 +540,7 @@ func (s BindParams) Diff(t BindParams, opts ...Options) map[string][]interface{}
 	}
 
 	if !equalPointers(s.TCPUserTimeout, t.TCPUserTimeout) {
-		diff["TCPUserTimeout"] = []interface{}{s.TCPUserTimeout, t.TCPUserTimeout}
+		diff["TCPUserTimeout"] = []interface{}{ValueOrNil(s.TCPUserTimeout), ValueOrNil(t.TCPUserTimeout)}
 	}
 
 	if s.Tfo != t.Tfo {

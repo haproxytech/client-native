@@ -17,6 +17,10 @@
 
 package models
 
+import (
+	"strconv"
+)
+
 // Equal checks if two structs of type RuntimeAddServer are equal
 //
 // By default empty maps and slices are equal to nil:
@@ -362,11 +366,11 @@ func (s RuntimeAddServer) Diff(t RuntimeAddServer, opts ...Options) map[string][
 	}
 
 	if !equalPointers(s.AgentInter, t.AgentInter) {
-		diff["AgentInter"] = []interface{}{s.AgentInter, t.AgentInter}
+		diff["AgentInter"] = []interface{}{ValueOrNil(s.AgentInter), ValueOrNil(t.AgentInter)}
 	}
 
 	if !equalPointers(s.AgentPort, t.AgentPort) {
-		diff["AgentPort"] = []interface{}{s.AgentPort, t.AgentPort}
+		diff["AgentPort"] = []interface{}{ValueOrNil(s.AgentPort), ValueOrNil(t.AgentPort)}
 	}
 
 	if s.AgentSend != t.AgentSend {
@@ -426,19 +430,19 @@ func (s RuntimeAddServer) Diff(t RuntimeAddServer, opts ...Options) map[string][
 	}
 
 	if !equalPointers(s.Downinter, t.Downinter) {
-		diff["Downinter"] = []interface{}{s.Downinter, t.Downinter}
+		diff["Downinter"] = []interface{}{ValueOrNil(s.Downinter), ValueOrNil(t.Downinter)}
 	}
 
 	if !equalPointers(s.ErrorLimit, t.ErrorLimit) {
-		diff["ErrorLimit"] = []interface{}{s.ErrorLimit, t.ErrorLimit}
+		diff["ErrorLimit"] = []interface{}{ValueOrNil(s.ErrorLimit), ValueOrNil(t.ErrorLimit)}
 	}
 
 	if !equalPointers(s.Fall, t.Fall) {
-		diff["Fall"] = []interface{}{s.Fall, t.Fall}
+		diff["Fall"] = []interface{}{ValueOrNil(s.Fall), ValueOrNil(t.Fall)}
 	}
 
 	if !equalPointers(s.Fastinter, t.Fastinter) {
-		diff["Fastinter"] = []interface{}{s.Fastinter, t.Fastinter}
+		diff["Fastinter"] = []interface{}{ValueOrNil(s.Fastinter), ValueOrNil(t.Fastinter)}
 	}
 
 	if s.ForceSslv3 != t.ForceSslv3 {
@@ -466,7 +470,7 @@ func (s RuntimeAddServer) Diff(t RuntimeAddServer, opts ...Options) map[string][
 	}
 
 	if !equalPointers(s.HealthCheckPort, t.HealthCheckPort) {
-		diff["HealthCheckPort"] = []interface{}{s.HealthCheckPort, t.HealthCheckPort}
+		diff["HealthCheckPort"] = []interface{}{ValueOrNil(s.HealthCheckPort), ValueOrNil(t.HealthCheckPort)}
 	}
 
 	if s.ID != t.ID {
@@ -474,7 +478,7 @@ func (s RuntimeAddServer) Diff(t RuntimeAddServer, opts ...Options) map[string][
 	}
 
 	if !equalPointers(s.Inter, t.Inter) {
-		diff["Inter"] = []interface{}{s.Inter, t.Inter}
+		diff["Inter"] = []interface{}{ValueOrNil(s.Inter), ValueOrNil(t.Inter)}
 	}
 
 	if s.Maintenance != t.Maintenance {
@@ -482,15 +486,15 @@ func (s RuntimeAddServer) Diff(t RuntimeAddServer, opts ...Options) map[string][
 	}
 
 	if !equalPointers(s.Maxconn, t.Maxconn) {
-		diff["Maxconn"] = []interface{}{s.Maxconn, t.Maxconn}
+		diff["Maxconn"] = []interface{}{ValueOrNil(s.Maxconn), ValueOrNil(t.Maxconn)}
 	}
 
 	if !equalPointers(s.Maxqueue, t.Maxqueue) {
-		diff["Maxqueue"] = []interface{}{s.Maxqueue, t.Maxqueue}
+		diff["Maxqueue"] = []interface{}{ValueOrNil(s.Maxqueue), ValueOrNil(t.Maxqueue)}
 	}
 
 	if !equalPointers(s.Minconn, t.Minconn) {
-		diff["Minconn"] = []interface{}{s.Minconn, t.Minconn}
+		diff["Minconn"] = []interface{}{ValueOrNil(s.Minconn), ValueOrNil(t.Minconn)}
 	}
 
 	if s.Name != t.Name {
@@ -538,31 +542,41 @@ func (s RuntimeAddServer) Diff(t RuntimeAddServer, opts ...Options) map[string][
 	}
 
 	if !equalPointers(s.PoolLowConn, t.PoolLowConn) {
-		diff["PoolLowConn"] = []interface{}{s.PoolLowConn, t.PoolLowConn}
+		diff["PoolLowConn"] = []interface{}{ValueOrNil(s.PoolLowConn), ValueOrNil(t.PoolLowConn)}
 	}
 
 	if !equalPointers(s.PoolMaxConn, t.PoolMaxConn) {
-		diff["PoolMaxConn"] = []interface{}{s.PoolMaxConn, t.PoolMaxConn}
+		diff["PoolMaxConn"] = []interface{}{ValueOrNil(s.PoolMaxConn), ValueOrNil(t.PoolMaxConn)}
 	}
 
 	if !equalPointers(s.PoolPurgeDelay, t.PoolPurgeDelay) {
-		diff["PoolPurgeDelay"] = []interface{}{s.PoolPurgeDelay, t.PoolPurgeDelay}
+		diff["PoolPurgeDelay"] = []interface{}{ValueOrNil(s.PoolPurgeDelay), ValueOrNil(t.PoolPurgeDelay)}
 	}
 
 	if !equalPointers(s.Port, t.Port) {
-		diff["Port"] = []interface{}{s.Port, t.Port}
+		diff["Port"] = []interface{}{ValueOrNil(s.Port), ValueOrNil(t.Port)}
 	}
 
 	if s.Proto != t.Proto {
 		diff["Proto"] = []interface{}{s.Proto, t.Proto}
 	}
 
-	if !equalComparableSlice(s.ProxyV2Options, t.ProxyV2Options, opt) {
+	if !CheckSameNilAndLen(s.ProxyV2Options, t.ProxyV2Options, opt) {
 		diff["ProxyV2Options"] = []interface{}{s.ProxyV2Options, t.ProxyV2Options}
+	} else {
+		diff2 := make(map[string][]interface{})
+		for i := range s.ProxyV2Options {
+			if s.ProxyV2Options[i] != t.ProxyV2Options[i] {
+				diff2[strconv.Itoa(i)] = []interface{}{s.ProxyV2Options[i], t.ProxyV2Options[i]}
+			}
+		}
+		if len(diff2) > 0 {
+			diff["ProxyV2Options"] = []interface{}{diff2}
+		}
 	}
 
 	if !equalPointers(s.Rise, t.Rise) {
-		diff["Rise"] = []interface{}{s.Rise, t.Rise}
+		diff["Rise"] = []interface{}{ValueOrNil(s.Rise), ValueOrNil(t.Rise)}
 	}
 
 	if s.SendProxy != t.SendProxy {
@@ -582,7 +596,7 @@ func (s RuntimeAddServer) Diff(t RuntimeAddServer, opts ...Options) map[string][
 	}
 
 	if !equalPointers(s.Slowstart, t.Slowstart) {
-		diff["Slowstart"] = []interface{}{s.Slowstart, t.Slowstart}
+		diff["Slowstart"] = []interface{}{ValueOrNil(s.Slowstart), ValueOrNil(t.Slowstart)}
 	}
 
 	if s.Sni != t.Sni {
@@ -638,7 +652,7 @@ func (s RuntimeAddServer) Diff(t RuntimeAddServer, opts ...Options) map[string][
 	}
 
 	if !equalPointers(s.Weight, t.Weight) {
-		diff["Weight"] = []interface{}{s.Weight, t.Weight}
+		diff["Weight"] = []interface{}{ValueOrNil(s.Weight), ValueOrNil(t.Weight)}
 	}
 
 	if s.Ws != t.Ws {

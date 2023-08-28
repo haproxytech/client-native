@@ -143,7 +143,7 @@ func (s StatsOptions) Diff(t StatsOptions, opts ...Options) map[string][]interfa
 		diff["StatsAdminCondTest"] = []interface{}{s.StatsAdminCondTest, t.StatsAdminCondTest}
 	}
 
-	if len(s.StatsAuths) != len(t.StatsAuths) {
+	if !CheckSameNilAndLen(s.StatsAuths, t.StatsAuths, opt) {
 		diff["StatsAuths"] = []interface{}{s.StatsAuths, t.StatsAuths}
 	} else {
 		diff2 := make(map[string][]interface{})
@@ -166,7 +166,7 @@ func (s StatsOptions) Diff(t StatsOptions, opts ...Options) map[string][]interfa
 		diff["StatsHideVersion"] = []interface{}{s.StatsHideVersion, t.StatsHideVersion}
 	}
 
-	if len(s.StatsHTTPRequests) != len(t.StatsHTTPRequests) {
+	if !CheckSameNilAndLen(s.StatsHTTPRequests, t.StatsHTTPRequests, opt) {
 		diff["StatsHTTPRequests"] = []interface{}{s.StatsHTTPRequests, t.StatsHTTPRequests}
 	} else {
 		diff2 := make(map[string][]interface{})
@@ -190,15 +190,15 @@ func (s StatsOptions) Diff(t StatsOptions, opts ...Options) map[string][]interfa
 	}
 
 	if !equalPointers(s.StatsRealmRealm, t.StatsRealmRealm) {
-		diff["StatsRealmRealm"] = []interface{}{s.StatsRealmRealm, t.StatsRealmRealm}
+		diff["StatsRealmRealm"] = []interface{}{ValueOrNil(s.StatsRealmRealm), ValueOrNil(t.StatsRealmRealm)}
 	}
 
 	if !equalPointers(s.StatsRefreshDelay, t.StatsRefreshDelay) {
-		diff["StatsRefreshDelay"] = []interface{}{s.StatsRefreshDelay, t.StatsRefreshDelay}
+		diff["StatsRefreshDelay"] = []interface{}{ValueOrNil(s.StatsRefreshDelay), ValueOrNil(t.StatsRefreshDelay)}
 	}
 
 	if !equalPointers(s.StatsShowDesc, t.StatsShowDesc) {
-		diff["StatsShowDesc"] = []interface{}{s.StatsShowDesc, t.StatsShowDesc}
+		diff["StatsShowDesc"] = []interface{}{ValueOrNil(s.StatsShowDesc), ValueOrNil(t.StatsShowDesc)}
 	}
 
 	if s.StatsShowLegends != t.StatsShowLegends {
@@ -210,7 +210,7 @@ func (s StatsOptions) Diff(t StatsOptions, opts ...Options) map[string][]interfa
 	}
 
 	if !equalPointers(s.StatsShowNodeName, t.StatsShowNodeName) {
-		diff["StatsShowNodeName"] = []interface{}{s.StatsShowNodeName, t.StatsShowNodeName}
+		diff["StatsShowNodeName"] = []interface{}{ValueOrNil(s.StatsShowNodeName), ValueOrNil(t.StatsShowNodeName)}
 	}
 
 	if s.StatsURIPrefix != t.StatsURIPrefix {

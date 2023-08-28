@@ -140,7 +140,7 @@ func (s Filter) Diff(t Filter, opts ...Options) map[string][]interface{} {
 	}
 
 	if !opt.SkipIndex && !equalPointers(s.Index, t.Index) {
-		diff["Index"] = []interface{}{s.Index, t.Index}
+		diff["Index"] = []interface{}{ValueOrNil(s.Index), ValueOrNil(t.Index)}
 	}
 
 	if s.Key != t.Key {

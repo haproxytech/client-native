@@ -68,7 +68,7 @@ func (s Source) Equal(t Source, opts ...Options) bool {
 func (s Source) Diff(t Source, opts ...Options) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if !equalPointers(s.Address, t.Address) {
-		diff["Address"] = []interface{}{s.Address, t.Address}
+		diff["Address"] = []interface{}{ValueOrNil(s.Address), ValueOrNil(t.Address)}
 	}
 
 	if s.AddressSecond != t.AddressSecond {

@@ -78,11 +78,11 @@ func (s SpoeMessage) Diff(t SpoeMessage, opts ...Options) map[string][]interface
 	}
 
 	if !s.Event.Equal(*t.Event, opt) {
-		diff["Event"] = []interface{}{s.Event, t.Event}
+		diff["Event"] = []interface{}{ValueOrNil(s.Event), ValueOrNil(t.Event)}
 	}
 
 	if !equalPointers(s.Name, t.Name) {
-		diff["Name"] = []interface{}{s.Name, t.Name}
+		diff["Name"] = []interface{}{ValueOrNil(s.Name), ValueOrNil(t.Name)}
 	}
 
 	return diff
@@ -127,7 +127,7 @@ func (s SpoeMessageEvent) Diff(t SpoeMessageEvent, opts ...Options) map[string][
 	}
 
 	if !equalPointers(s.Name, t.Name) {
-		diff["Name"] = []interface{}{s.Name, t.Name}
+		diff["Name"] = []interface{}{ValueOrNil(s.Name), ValueOrNil(t.Name)}
 	}
 
 	return diff

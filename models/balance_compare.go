@@ -88,7 +88,7 @@ func (s Balance) Equal(t Balance, opts ...Options) bool {
 func (s Balance) Diff(t Balance, opts ...Options) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if !equalPointers(s.Algorithm, t.Algorithm) {
-		diff["Algorithm"] = []interface{}{s.Algorithm, t.Algorithm}
+		diff["Algorithm"] = []interface{}{ValueOrNil(s.Algorithm), ValueOrNil(t.Algorithm)}
 	}
 
 	if s.HashExpression != t.HashExpression {

@@ -88,7 +88,7 @@ func (s HTTPErrorRule) Diff(t HTTPErrorRule, opts ...Options) map[string][]inter
 	opt := getOptions(opts...)
 
 	diff := make(map[string][]interface{})
-	if len(s.ReturnHeaders) != len(t.ReturnHeaders) {
+	if !CheckSameNilAndLen(s.ReturnHeaders, t.ReturnHeaders, opt) {
 		diff["ReturnHeaders"] = []interface{}{s.ReturnHeaders, t.ReturnHeaders}
 	} else {
 		diff2 := make(map[string][]interface{})
@@ -104,7 +104,7 @@ func (s HTTPErrorRule) Diff(t HTTPErrorRule, opts ...Options) map[string][]inter
 	}
 
 	if !opt.SkipIndex && !equalPointers(s.Index, t.Index) {
-		diff["Index"] = []interface{}{s.Index, t.Index}
+		diff["Index"] = []interface{}{ValueOrNil(s.Index), ValueOrNil(t.Index)}
 	}
 
 	if s.ReturnContent != t.ReturnContent {
@@ -116,7 +116,7 @@ func (s HTTPErrorRule) Diff(t HTTPErrorRule, opts ...Options) map[string][]inter
 	}
 
 	if !equalPointers(s.ReturnContentType, t.ReturnContentType) {
-		diff["ReturnContentType"] = []interface{}{s.ReturnContentType, t.ReturnContentType}
+		diff["ReturnContentType"] = []interface{}{ValueOrNil(s.ReturnContentType), ValueOrNil(t.ReturnContentType)}
 	}
 
 	if s.Status != t.Status {

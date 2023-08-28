@@ -52,11 +52,11 @@ func (s LogForward) Equal(t LogForward, opts ...Options) bool {
 func (s LogForward) Diff(t LogForward, opts ...Options) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if !equalPointers(s.Backlog, t.Backlog) {
-		diff["Backlog"] = []interface{}{s.Backlog, t.Backlog}
+		diff["Backlog"] = []interface{}{ValueOrNil(s.Backlog), ValueOrNil(t.Backlog)}
 	}
 
 	if !equalPointers(s.Maxconn, t.Maxconn) {
-		diff["Maxconn"] = []interface{}{s.Maxconn, t.Maxconn}
+		diff["Maxconn"] = []interface{}{ValueOrNil(s.Maxconn), ValueOrNil(t.Maxconn)}
 	}
 
 	if s.Name != t.Name {
@@ -64,7 +64,7 @@ func (s LogForward) Diff(t LogForward, opts ...Options) map[string][]interface{}
 	}
 
 	if !equalPointers(s.TimeoutClient, t.TimeoutClient) {
-		diff["TimeoutClient"] = []interface{}{s.TimeoutClient, t.TimeoutClient}
+		diff["TimeoutClient"] = []interface{}{ValueOrNil(s.TimeoutClient), ValueOrNil(t.TimeoutClient)}
 	}
 
 	return diff

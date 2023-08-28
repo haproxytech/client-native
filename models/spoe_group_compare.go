@@ -48,7 +48,7 @@ func (s SpoeGroup) Diff(t SpoeGroup, opts ...Options) map[string][]interface{} {
 	}
 
 	if !equalPointers(s.Name, t.Name) {
-		diff["Name"] = []interface{}{s.Name, t.Name}
+		diff["Name"] = []interface{}{ValueOrNil(s.Name), ValueOrNil(t.Name)}
 	}
 
 	return diff

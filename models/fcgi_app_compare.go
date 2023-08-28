@@ -115,7 +115,7 @@ func (s FCGIApp) Diff(t FCGIApp, opts ...Options) map[string][]interface{} {
 
 	diff := make(map[string][]interface{})
 	if !equalPointers(s.Docroot, t.Docroot) {
-		diff["Docroot"] = []interface{}{s.Docroot, t.Docroot}
+		diff["Docroot"] = []interface{}{ValueOrNil(s.Docroot), ValueOrNil(t.Docroot)}
 	}
 
 	if s.GetValues != t.GetValues {
@@ -130,7 +130,7 @@ func (s FCGIApp) Diff(t FCGIApp, opts ...Options) map[string][]interface{} {
 		diff["KeepConn"] = []interface{}{s.KeepConn, t.KeepConn}
 	}
 
-	if len(s.LogStderrs) != len(t.LogStderrs) {
+	if !CheckSameNilAndLen(s.LogStderrs, t.LogStderrs, opt) {
 		diff["LogStderrs"] = []interface{}{s.LogStderrs, t.LogStderrs}
 	} else {
 		diff2 := make(map[string][]interface{})
@@ -157,7 +157,7 @@ func (s FCGIApp) Diff(t FCGIApp, opts ...Options) map[string][]interface{} {
 		diff["Name"] = []interface{}{s.Name, t.Name}
 	}
 
-	if len(s.PassHeaders) != len(t.PassHeaders) {
+	if !CheckSameNilAndLen(s.PassHeaders, t.PassHeaders, opt) {
 		diff["PassHeaders"] = []interface{}{s.PassHeaders, t.PassHeaders}
 	} else {
 		diff2 := make(map[string][]interface{})
@@ -176,7 +176,7 @@ func (s FCGIApp) Diff(t FCGIApp, opts ...Options) map[string][]interface{} {
 		diff["PathInfo"] = []interface{}{s.PathInfo, t.PathInfo}
 	}
 
-	if len(s.SetParams) != len(t.SetParams) {
+	if !CheckSameNilAndLen(s.SetParams, t.SetParams, opt) {
 		diff["SetParams"] = []interface{}{s.SetParams, t.SetParams}
 	} else {
 		diff2 := make(map[string][]interface{})

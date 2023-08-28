@@ -78,7 +78,7 @@ func (s NativeStat) Diff(t NativeStat, opts ...Options) map[string][]interface{}
 	}
 
 	if !s.Stats.Equal(*t.Stats, opt) {
-		diff["Stats"] = []interface{}{s.Stats, t.Stats}
+		diff["Stats"] = []interface{}{ValueOrNil(s.Stats), ValueOrNil(t.Stats)}
 	}
 
 	if s.Type != t.Type {

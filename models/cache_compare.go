@@ -72,11 +72,11 @@ func (s Cache) Diff(t Cache, opts ...Options) map[string][]interface{} {
 	}
 
 	if !equalPointers(s.Name, t.Name) {
-		diff["Name"] = []interface{}{s.Name, t.Name}
+		diff["Name"] = []interface{}{ValueOrNil(s.Name), ValueOrNil(t.Name)}
 	}
 
 	if !equalPointers(s.ProcessVary, t.ProcessVary) {
-		diff["ProcessVary"] = []interface{}{s.ProcessVary, t.ProcessVary}
+		diff["ProcessVary"] = []interface{}{ValueOrNil(s.ProcessVary), ValueOrNil(t.ProcessVary)}
 	}
 
 	if s.TotalMaxSize != t.TotalMaxSize {

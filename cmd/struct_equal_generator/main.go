@@ -19,6 +19,12 @@ func main() {
 		log.Panic(err)
 	}
 	for _, fileName := range args.Files {
+		types := scanAllTypes(fileName)
+		for _, t := range types {
+			generatedTypes[t] = true
+		}
+	}
+	for _, fileName := range args.Files {
 		packageName, err = generate(fileName, args)
 		if err != nil {
 			log.Panic(err)
@@ -30,10 +36,41 @@ func main() {
 	}
 }
 
-var sourceofFile string //nolint:gochecknoglobals
+var sourceOfFile string //nolint:gochecknoglobals
 
-//nolint:gocognit
-func generate(fileName string, args Args) (string, error) {
+func scanAllTypes(fileName string) []string {
+	fset := token.NewFileSet()
+
+	src, err := os.ReadFile(fileName)
+	if err != nil {
+		return []string{}
+	}
+	sourceOfFile = string(src)
+
+	// node, err := parser.ParseFile(fset, fileName, nil, parser.ParseComments)
+	node, err := parser.ParseFile(fset, "", src, 0)
+	if err != nil {
+		return []string{}
+	}
+
+	typesInFile := []string{}
+	for _, f := range node.Decls {
+		g, ok := f.(*ast.GenDecl)
+		if !ok {
+			continue
+		}
+		for _, spec := range g.Specs {
+			currSpecType, ok := spec.(*ast.TypeSpec)
+			if !ok {
+				continue
+			}
+			typesInFile = append(typesInFile, currSpecType.Name.Name)
+		}
+	}
+	return typesInFile
+}
+
+func generate(fileName string, args Args) (string, error) { //nolint:gocognit,maintidx
 	fset := token.NewFileSet()
 	var packageName string
 
@@ -41,7 +78,7 @@ func generate(fileName string, args Args) (string, error) {
 	if err != nil {
 		return packageName, err
 	}
-	sourceofFile = string(src)
+	sourceOfFile = string(src)
 
 	// node, err := parser.ParseFile(fset, fileName, nil, parser.ParseComments)
 	node, err := parser.ParseFile(fset, "", src, 0)
@@ -96,6 +133,15 @@ func generate(fileName string, args Args) (string, error) {
 	}
 
 	packageName = node.Name.String()
+	imports := map[string]string{}
+	for _, imp := range node.Imports {
+		if imp.Name != nil {
+			imports[imp.Name.Name] = strings.Trim(imp.Path.Value, "\"")
+		} else {
+			s := strings.Split(imp.Path.Value, "/")
+			imports[strings.Trim(s[len(s)-1], "\"")] = strings.Trim(imp.Path.Value, "\"")
+		}
+	}
 
 	hasTests := false
 	// For each declaration in the node's declarations list, check if it is a generic declaration.
@@ -119,14 +165,35 @@ func generate(fileName string, args Args) (string, error) {
 				needsOptionsIndex := false
 				for _, field := range currType.Fields.List {
 					if len(field.Names) > 0 {
-						res := getTypeString(field.Type)
-						fields = append(fields, Field{
+						res := getTypeString(field.Type, imports)
+						f := Field{
 							Name:         field.Names[0].Name,
 							Type:         res.Name,
 							TypeInFile:   res.TypeName,
 							IsBasicType:  res.IsBasicType,
 							IsComparable: res.IsComparable,
-						})
+							HasString:    res.HasStringer,
+							HasEqual:     res.HasEqual,
+							HasEqualOpt:  res.HasEqualOpt,
+							IsArray:      res.IsArray,
+							IsMap:        res.IsMap,
+						}
+						if res.SubType != nil {
+							f.SubType = &Field{
+								Name:         res.SubType.Name,
+								Type:         res.SubType.Name,
+								TypeInFile:   res.SubType.TypeName,
+								IsBasicType:  res.SubType.IsBasicType,
+								IsComparable: res.SubType.IsComparable,
+								// IsEmbedded:   res.SubType.IsEmbedded,
+								HasString:   res.SubType.HasStringer,
+								HasEqual:    res.SubType.HasEqual,
+								HasEqualOpt: res.SubType.HasEqualOpt,
+								IsArray:     res.SubType.IsArray,
+								IsMap:       res.SubType.IsMap,
+							}
+						}
+						fields = append(fields, f)
 						if field.Names[0].Name == "Index" {
 							needsOptionsIndex = true
 						}
@@ -140,11 +207,14 @@ func generate(fileName string, args Args) (string, error) {
 					}
 					// For embedded struct
 					if len(field.Names) == 0 && field.Type != nil {
-						res := getTypeString(field.Type)
+						res := getTypeString(field.Type, imports)
 						fields = append(fields, Field{
 							Name:         res.Name,
 							IsEmbedded:   true,
 							IsComparable: res.IsComparable,
+							HasString:    res.HasStringer,
+							HasEqual:     res.HasEqual,
+							HasEqualOpt:  res.HasEqualOpt,
 						})
 						if res.Name == "Index" {
 							needsOptionsIndex = true
@@ -181,7 +251,7 @@ func generate(fileName string, args Args) (string, error) {
 					log.Panic(err)
 				}
 			case *ast.ArrayType:
-				res := getTypeString(currType.Elt)
+				res := getTypeString(currType.Elt, imports)
 				// needsOptions := !res.IsBasicType
 				needsOptions := true
 				needsOptionsIndex := false
@@ -197,7 +267,7 @@ func generate(fileName string, args Args) (string, error) {
 					CurrType:          currSpecType,
 					IsBasicType:       res.IsBasicType,
 					IsComplex:         res.IsComplex,
-					IsComparable:      res.IsComparable,
+					IsComparable:      false,
 					IsPointer:         strings.HasPrefix(res.Name, "*"),
 					NeedsOptions:      needsOptions,
 					NeedsOptionsIndex: needsOptionsIndex,

@@ -27,63 +27,67 @@ func (s {{.Name}}) Equal(t {{.Name}}, opts ...Options) bool {
 {{- if eq .Mode "struct" }}
 	{{- range .Fields}}
 	{{- if and (HasPrefix .Name "Index") (HasPrefix .Type "*int64") }}
-	if !opt.SkipIndex && !equalPointers(s.{{.Name}}, t.{{.Name}}){
-		return false
-	}
-	{{- else if or (eq .Type "string" "bool") (HasPrefix .Type "int") }}
-	if s.{{.Name}} != t.{{.Name}} {
-		return false
-	}
-	{{- else if or (HasPrefix .Type "[]int") (HasPrefix .Type "[]string")}}
-	if !equalComparableSlice(s.{{.Name}}, t.{{.Name}}, opt) {
-		return false
-	}
-	{{- else if or (HasPrefix .Type "*string") (HasPrefix .Type "*int") (HasPrefix .Type "*bool")}}
-	if !equalPointers(s.{{.Name}}, t.{{.Name}}) {
-		return false
-	}
-	{{- else if HasPrefix .Type "map" }}
-	if !equalComparableMap(s.{{.Name}}, t.{{.Name}}, opt) {
-		return false
-	}
-	{{- else if HasPrefix .Type "[]"}}
-	if !CheckSameNilAndLen(s.{{.Name}}, t.{{.Name}}, opt){
-	   return false
-	}
-	for i := range s.{{.Name}} {
-		if !s.{{.Name}}[i].Equal({{if HasPrefix .Type "[]*"}}*{{end}}t.{{.Name}}[i], opt) {
+		if !opt.SkipIndex && !equalPointers(s.{{.Name}}, t.{{.Name}}){
 			return false
 		}
-	}
-	{{- else if .IsEmbedded}}
-	if !s.{{.Name}}.Equal({{if HasPrefix .Type "[]*"}}*{{end}}t.{{.Name}}, opt) {
-		return false
-	}
-	{{- else if (HasPrefix .Type "Date")}}
-	if !s.{{.Name}}.Equal(t.{{.Name}}) {
-		return false
-	}
-	{{- else if or (HasPrefix .Type "*") (not .IsBasicType)}}
-		{{- if or (eq .TypeInFile "time.Time") (eq .TypeInFile "strfmt.DateTime") }} {{/* time.Time has Equal, but nothing else */}}
-		if !s.{{.Name}}.Equal({{if HasPrefix .Type "*"}}*{{end}}t.{{.Name}}) {
-			return false
+	{{- else if or .HasEqual .HasEqualOpt }}
+		if !s.{{.Name}}.Equal({{if HasPrefix .Type "*"}}*{{end}}t.{{.Name}}{{if .HasEqualOpt}}, opt{{end}}) {
+				return false
 		}
+	{{- else if or .IsBasicType .IsComparable}}
+	    {{- if HasPrefix .Type "*" }}
+		  if !equalPointers(s.{{.Name}}, t.{{.Name}}) {
+		    return false
+		  }
 		{{- else }}
-		if !s.{{.Name}}.Equal({{if HasPrefix .Type "*"}}*{{end}}t.{{.Name}}, opt) {
+			if s.{{.Name}} != t.{{.Name}} {
+				return false
+			}
+		{{- end }}
+	{{- else if HasPrefix .Type "map" }}
+		if !equalComparableMap(s.{{.Name}}, t.{{.Name}}, opt) {
 			return false
 		}
+	{{- else if .IsArray }}
+	    {{- if or .IsComparable .SubType.IsComparable }}
+			if !equalComparableSlice(s.{{.Name}}, t.{{.Name}}, opt) {
+				return false
+			}
+		{{- else }}
+			if !CheckSameNilAndLen(s.{{.Name}}, t.{{.Name}}, opt){
+			return false
+			}
+			for i := range s.{{.Name}} {
+			    {{- if .SubType.HasEqual}}
+					if !s.{{.Name}}[i].Equal({{if HasPrefix .Type "[]*"}}*{{end}}t.{{.Name}}[i]) {
+						return false
+					}
+			    {{- else if .SubType.HasEqualOpt}}
+					if !s.{{.Name}}[i].Equal({{if HasPrefix .Type "[]*"}}*{{end}}t.{{.Name}}[i], opt) {
+						return false
+					}
+				{{- else }}
+				    {{- if HasPrefix .SubType.Type "*" }}
+						if !equalPointers(s.{{.Name}}, t.{{.Name}}) {
+							return false
+						}
+					{{- else }}
+						if s.{{.Name}}[i] != t.{{.Name}}[i] {
+							return false
+						}
+					{{- end }}
+				{{- end }}
+			}
 		{{- end }}
 	{{- else}}
-	if !s.{{.Name}}.Equal(&t.{{.Name}}, opt) {
-		return false
-	}
+		ERR // {{ . | JSON }}
 	{{end}}
 	{{end}}
 	return true
 {{end}}
 {{- if eq .Mode "array" }}
 	{{- if and .IsComparable .IsBasicType }}
-	return equalComparableSlice(s,t,opt)
+	return equalComparableSlice(s, t, opt)
 	{{- else }}
 	if !opt.NilSameAsEmpty {
 		if s == nil && t != nil {
@@ -148,62 +152,66 @@ func (s {{.Name}}) Diff(t {{.Name}}, opts ...Options) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	{{- range .Fields}}
 	{{- if and (HasPrefix .Name "Index") (HasPrefix .Type "*int64") }}
-	if !opt.SkipIndex && !equalPointers(s.{{.Name}}, t.{{.Name}}){
-		diff["{{.Name}}"] = []interface{}{s.{{.Name}}, t.{{.Name}}}
-	}
-	{{- else if or (eq .Type "string" "bool") (HasPrefix .Type "int") }}
-	if s.{{.Name}} != t.{{.Name}} {
-		diff["{{.Name}}"] = []interface{}{s.{{.Name}}, t.{{.Name}}}
-	}
-	{{- else if or (HasPrefix .Type "[]int") (HasPrefix .Type "[]string")}}
-	if !equalComparableSlice(s.{{.Name}}, t.{{.Name}}, opt) {
-		diff["{{.Name}}"] = []interface{}{s.{{.Name}}, t.{{.Name}}}
-	}
-	{{- else if or (HasPrefix .Type "*string") (HasPrefix .Type "*int") (HasPrefix .Type "*bool")}}
-	if !equalPointers(s.{{.Name}}, t.{{.Name}}) {
-		diff["{{.Name}}"] = []interface{}{s.{{.Name}}, t.{{.Name}}}
-	}
-	{{- else if HasPrefix .Type "map" }}
-	if !equalComparableMap(s.{{.Name}}, t.{{.Name}}, opt) {
-		diff["{{.Name}}"] = []interface{}{s.{{.Name}}, t.{{.Name}}}
-	}
-	{{- else if HasPrefix .Type "[]"}}
-	if len(s.{{.Name}}) != len(t.{{.Name}}) {
-		diff["{{.Name}}"] = []interface{}{s.{{.Name}}, t.{{.Name}}}
-	} else {
-		diff2 := make(map[string][]interface{})
-		for i := range s.{{.Name}} {
-			diffSub := s.{{.Name}}[i].Diff({{if HasPrefix .Type "[]*"}}*{{end}}t.{{.Name}}[i], opt)
-			if len(diffSub) > 0 {
-				diff2[strconv.Itoa(i)] = []interface{}{ diffSub }
+		if !opt.SkipIndex && !equalPointers(s.{{.Name}}, t.{{.Name}}){
+			diff["{{.Name}}"] = []interface{}{ValueOrNil(s.{{.Name}}), ValueOrNil(t.{{.Name}})}
+		}
+	{{- else if or .HasEqual .HasEqualOpt }}
+		if !s.{{.Name}}.Equal({{if HasPrefix .Type "*"}}*{{end}}t.{{.Name}}{{if .HasEqualOpt}}, opt{{end}}) {
+				diff["{{.Name}}"] = []interface{}{ {{if HasPrefix .Type "*"}}ValueOrNil({{end}}s.{{.Name}}{{if HasPrefix .Type "*"}}){{end}}, {{if HasPrefix .Type "*"}}ValueOrNil({{end}}t.{{.Name}}{{if HasPrefix .Type "*"}}){{end}} }
+		}
+	{{- else if or .IsBasicType .IsComparable}}
+	    {{- if HasPrefix .Type "*" }}
+		  if !equalPointers(s.{{.Name}}, t.{{.Name}}) {
+		    diff["{{.Name}}"] = []interface{}{ ValueOrNil(s.{{.Name}}), ValueOrNil(t.{{.Name}})}
+		  }
+		{{- else }}
+			if s.{{.Name}} != t.{{.Name}} {
+				diff["{{.Name}}"] = []interface{}{s.{{.Name}}, t.{{.Name}}}
 			}
+		{{- end }}
+	{{- else if HasPrefix .Type "map" }}
+		if !equalComparableMap(s.{{.Name}}, t.{{.Name}}, opt) {
+			diff["{{.Name}}"] = []interface{}{ s.{{.Name}}, t.{{.Name}}}
 		}
-		if len(diff2) > 0 {
-			diff["{{.Name}}"] = []interface{}{diff2}
-		}
-	}
-	{{- else if .IsEmbedded}}
-	if !s.{{.Name}}.Equal(t.{{.Name}}, opt) {
-		diff["{{.Name}}"] = []interface{}{s.{{.Name}}, t.{{.Name}}}
-	}
-	{{- else if (HasPrefix .Type "Date")}}
-	if !s.{{.Name}}.Equal(t.{{.Name}}) {
-		diff["{{.Name}}"] = []interface{}{s.{{.Name}}, t.{{.Name}}}
-	}
-	{{- else if or (HasPrefix .Type "*") (not .IsBasicType)}}
-		{{- if or (eq .TypeInFile "time.Time") (eq .TypeInFile "strfmt.DateTime") }} {{/* time.Time has Equal, but nothing else */}}
-		if !s.{{.Name}}.Equal({{if HasPrefix .Type "*"}}*{{end}}t.{{.Name}}) {
-			diff["{{.Name}}"] = []interface{}{s.{{.Name}}, t.{{.Name}}}
-		}
-		{{- else}}
-		if !s.{{.Name}}.Equal({{if HasPrefix .Type "*"}}*{{end}}t.{{.Name}}, opt) {
-			diff["{{.Name}}"] = []interface{}{s.{{.Name}}, t.{{.Name}}}
-		}
-		{{- end}}
+	{{- else if .IsArray }}
+	    {{- if .IsComparable }}
+			if !equalComparableSlice(s.{{.Name}}, t.{{.Name}}, opt) {
+				diff["{{.Name}}"] = []interface{}{ s.{{.Name}}, t.{{.Name}}}
+			}
+		{{- else }}
+			if !CheckSameNilAndLen(s.{{.Name}}, t.{{.Name}}, opt){
+				diff["{{.Name}}"] = []interface{}{ s.{{.Name}}, t.{{.Name}}}
+			} else {
+				diff2 := make(map[string][]interface{})
+				for i := range s.{{.Name}} {
+			    {{- if .SubType.HasEqual}}
+					if !s.{{.Name}}[i].Equal({{if HasPrefix .Type "[]*"}}*{{end}}t.{{.Name}}[i]) {
+						diff2[strconv.Itoa(i)] = []interface{}{s.{{.Name}}[i], t.{{.Name}}[i] }
+					}
+			    {{- else if .SubType.HasEqualOpt}}
+					diffSub := s.{{.Name}}[i].Diff({{if HasPrefix .Type "[]*"}}*{{end}}t.{{.Name}}[i], opt)
+					if len(diffSub) > 0 {
+						diff2[strconv.Itoa(i)] = []interface{}{ diffSub }
+					}
+				{{- else }}
+				    {{- if HasPrefix .SubType.Type "*" }}
+						if !equalPointers(s.{{.Name}}, t.{{.Name}}) {
+							diff2[strconv.Itoa(i)] = []interface{}{ ValueOrNil(s.{{.Name}}[i]), ValueOrNil(t.{{.Name}}[i])  }
+						}
+					{{- else }}
+						if s.{{.Name}}[i] != t.{{.Name}}[i] {
+							diff2[strconv.Itoa(i)] = []interface{}{ s.{{.Name}}[i], t.{{.Name}}[i]  }
+						}
+					{{- end }}
+				{{- end }}
+				}
+				if len(diff2) > 0 {
+					diff["{{.Name}}"] = []interface{}{diff2}
+				}
+			}
+		{{- end }}
 	{{- else}}
-	if !s.{{.Name}}.Equal(&t.{{.Name}}, opt) {
-		diff["{{.Name}}"] = []interface{}{s.{{.Name}}, t.{{.Name}}}
-	}
+		ERR // {{ . | JSON }}
 	{{end}}
 	{{end}}
 {{- if eq .Mode "array" }}

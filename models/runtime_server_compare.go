@@ -80,7 +80,7 @@ func (s RuntimeServer) Diff(t RuntimeServer, opts ...Options) map[string][]inter
 	}
 
 	if !equalPointers(s.Port, t.Port) {
-		diff["Port"] = []interface{}{s.Port, t.Port}
+		diff["Port"] = []interface{}{ValueOrNil(s.Port), ValueOrNil(t.Port)}
 	}
 
 	return diff

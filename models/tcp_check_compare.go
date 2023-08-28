@@ -228,7 +228,7 @@ func (s TCPCheck) Diff(t TCPCheck, opts ...Options) map[string][]interface{} {
 	}
 
 	if !opt.SkipIndex && !equalPointers(s.Index, t.Index) {
-		diff["Index"] = []interface{}{s.Index, t.Index}
+		diff["Index"] = []interface{}{ValueOrNil(s.Index), ValueOrNil(t.Index)}
 	}
 
 	if s.Linger != t.Linger {
@@ -264,7 +264,7 @@ func (s TCPCheck) Diff(t TCPCheck, opts ...Options) map[string][]interface{} {
 	}
 
 	if !equalPointers(s.Port, t.Port) {
-		diff["Port"] = []interface{}{s.Port, t.Port}
+		diff["Port"] = []interface{}{ValueOrNil(s.Port), ValueOrNil(t.Port)}
 	}
 
 	if s.PortString != t.PortString {

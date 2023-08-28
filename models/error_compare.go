@@ -66,11 +66,11 @@ func (s Error) Diff(t Error, opts ...Options) map[string][]interface{} {
 
 	diff := make(map[string][]interface{})
 	if !equalPointers(s.Code, t.Code) {
-		diff["Code"] = []interface{}{s.Code, t.Code}
+		diff["Code"] = []interface{}{ValueOrNil(s.Code), ValueOrNil(t.Code)}
 	}
 
 	if !equalPointers(s.Message, t.Message) {
-		diff["Message"] = []interface{}{s.Message, t.Message}
+		diff["Message"] = []interface{}{ValueOrNil(s.Message), ValueOrNil(t.Message)}
 	}
 
 	if !equalComparableMap(s.Error, t.Error, opt) {

@@ -60,7 +60,7 @@ func (s User) Diff(t User, opts ...Options) map[string][]interface{} {
 	}
 
 	if !equalPointers(s.SecurePassword, t.SecurePassword) {
-		diff["SecurePassword"] = []interface{}{s.SecurePassword, t.SecurePassword}
+		diff["SecurePassword"] = []interface{}{ValueOrNil(s.SecurePassword), ValueOrNil(t.SecurePassword)}
 	}
 
 	if s.Username != t.Username {

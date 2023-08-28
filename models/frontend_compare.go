@@ -331,7 +331,7 @@ func (s Frontend) Diff(t Frontend, opts ...Options) map[string][]interface{} {
 	opt := getOptions(opts...)
 
 	diff := make(map[string][]interface{})
-	if len(s.ErrorFiles) != len(t.ErrorFiles) {
+	if !CheckSameNilAndLen(s.ErrorFiles, t.ErrorFiles, opt) {
 		diff["ErrorFiles"] = []interface{}{s.ErrorFiles, t.ErrorFiles}
 	} else {
 		diff2 := make(map[string][]interface{})
@@ -346,7 +346,7 @@ func (s Frontend) Diff(t Frontend, opts ...Options) map[string][]interface{} {
 		}
 	}
 
-	if len(s.ErrorFilesFromHTTPErrors) != len(t.ErrorFilesFromHTTPErrors) {
+	if !CheckSameNilAndLen(s.ErrorFilesFromHTTPErrors, t.ErrorFilesFromHTTPErrors, opt) {
 		diff["ErrorFilesFromHTTPErrors"] = []interface{}{s.ErrorFilesFromHTTPErrors, t.ErrorFilesFromHTTPErrors}
 	} else {
 		diff2 := make(map[string][]interface{})
@@ -366,7 +366,7 @@ func (s Frontend) Diff(t Frontend, opts ...Options) map[string][]interface{} {
 	}
 
 	if !equalPointers(s.Backlog, t.Backlog) {
-		diff["Backlog"] = []interface{}{s.Backlog, t.Backlog}
+		diff["Backlog"] = []interface{}{ValueOrNil(s.Backlog), ValueOrNil(t.Backlog)}
 	}
 
 	if s.BindProcess != t.BindProcess {
@@ -378,11 +378,11 @@ func (s Frontend) Diff(t Frontend, opts ...Options) map[string][]interface{} {
 	}
 
 	if !equalPointers(s.ClientFinTimeout, t.ClientFinTimeout) {
-		diff["ClientFinTimeout"] = []interface{}{s.ClientFinTimeout, t.ClientFinTimeout}
+		diff["ClientFinTimeout"] = []interface{}{ValueOrNil(s.ClientFinTimeout), ValueOrNil(t.ClientFinTimeout)}
 	}
 
 	if !equalPointers(s.ClientTimeout, t.ClientTimeout) {
-		diff["ClientTimeout"] = []interface{}{s.ClientTimeout, t.ClientTimeout}
+		diff["ClientTimeout"] = []interface{}{ValueOrNil(s.ClientTimeout), ValueOrNil(t.ClientTimeout)}
 	}
 
 	if s.Clitcpka != t.Clitcpka {
@@ -390,19 +390,19 @@ func (s Frontend) Diff(t Frontend, opts ...Options) map[string][]interface{} {
 	}
 
 	if !equalPointers(s.ClitcpkaCnt, t.ClitcpkaCnt) {
-		diff["ClitcpkaCnt"] = []interface{}{s.ClitcpkaCnt, t.ClitcpkaCnt}
+		diff["ClitcpkaCnt"] = []interface{}{ValueOrNil(s.ClitcpkaCnt), ValueOrNil(t.ClitcpkaCnt)}
 	}
 
 	if !equalPointers(s.ClitcpkaIdle, t.ClitcpkaIdle) {
-		diff["ClitcpkaIdle"] = []interface{}{s.ClitcpkaIdle, t.ClitcpkaIdle}
+		diff["ClitcpkaIdle"] = []interface{}{ValueOrNil(s.ClitcpkaIdle), ValueOrNil(t.ClitcpkaIdle)}
 	}
 
 	if !equalPointers(s.ClitcpkaIntvl, t.ClitcpkaIntvl) {
-		diff["ClitcpkaIntvl"] = []interface{}{s.ClitcpkaIntvl, t.ClitcpkaIntvl}
+		diff["ClitcpkaIntvl"] = []interface{}{ValueOrNil(s.ClitcpkaIntvl), ValueOrNil(t.ClitcpkaIntvl)}
 	}
 
 	if !s.Compression.Equal(*t.Compression, opt) {
-		diff["Compression"] = []interface{}{s.Compression, t.Compression}
+		diff["Compression"] = []interface{}{ValueOrNil(s.Compression), ValueOrNil(t.Compression)}
 	}
 
 	if s.Contstats != t.Contstats {
@@ -434,7 +434,7 @@ func (s Frontend) Diff(t Frontend, opts ...Options) map[string][]interface{} {
 	}
 
 	if !s.EmailAlert.Equal(*t.EmailAlert, opt) {
-		diff["EmailAlert"] = []interface{}{s.EmailAlert, t.EmailAlert}
+		diff["EmailAlert"] = []interface{}{ValueOrNil(s.EmailAlert), ValueOrNil(t.EmailAlert)}
 	}
 
 	if s.Enabled != t.Enabled {
@@ -446,15 +446,15 @@ func (s Frontend) Diff(t Frontend, opts ...Options) map[string][]interface{} {
 	}
 
 	if !s.Errorloc302.Equal(*t.Errorloc302, opt) {
-		diff["Errorloc302"] = []interface{}{s.Errorloc302, t.Errorloc302}
+		diff["Errorloc302"] = []interface{}{ValueOrNil(s.Errorloc302), ValueOrNil(t.Errorloc302)}
 	}
 
 	if !s.Errorloc303.Equal(*t.Errorloc303, opt) {
-		diff["Errorloc303"] = []interface{}{s.Errorloc303, t.Errorloc303}
+		diff["Errorloc303"] = []interface{}{ValueOrNil(s.Errorloc303), ValueOrNil(t.Errorloc303)}
 	}
 
 	if !s.Forwardfor.Equal(*t.Forwardfor, opt) {
-		diff["Forwardfor"] = []interface{}{s.Forwardfor, t.Forwardfor}
+		diff["Forwardfor"] = []interface{}{ValueOrNil(s.Forwardfor), ValueOrNil(t.Forwardfor)}
 	}
 
 	if s.From != t.From {
@@ -482,7 +482,7 @@ func (s Frontend) Diff(t Frontend, opts ...Options) map[string][]interface{} {
 	}
 
 	if !equalPointers(s.HTTPKeepAliveTimeout, t.HTTPKeepAliveTimeout) {
-		diff["HTTPKeepAliveTimeout"] = []interface{}{s.HTTPKeepAliveTimeout, t.HTTPKeepAliveTimeout}
+		diff["HTTPKeepAliveTimeout"] = []interface{}{ValueOrNil(s.HTTPKeepAliveTimeout), ValueOrNil(t.HTTPKeepAliveTimeout)}
 	}
 
 	if s.HTTPNoDelay != t.HTTPNoDelay {
@@ -490,7 +490,7 @@ func (s Frontend) Diff(t Frontend, opts ...Options) map[string][]interface{} {
 	}
 
 	if !equalPointers(s.HTTPRequestTimeout, t.HTTPRequestTimeout) {
-		diff["HTTPRequestTimeout"] = []interface{}{s.HTTPRequestTimeout, t.HTTPRequestTimeout}
+		diff["HTTPRequestTimeout"] = []interface{}{ValueOrNil(s.HTTPRequestTimeout), ValueOrNil(t.HTTPRequestTimeout)}
 	}
 
 	if s.HTTPRestrictReqHdrNames != t.HTTPRestrictReqHdrNames {
@@ -510,7 +510,7 @@ func (s Frontend) Diff(t Frontend, opts ...Options) map[string][]interface{} {
 	}
 
 	if !equalPointers(s.ID, t.ID) {
-		diff["ID"] = []interface{}{s.ID, t.ID}
+		diff["ID"] = []interface{}{ValueOrNil(s.ID), ValueOrNil(t.ID)}
 	}
 
 	if s.IdleCloseOnResponse != t.IdleCloseOnResponse {
@@ -542,7 +542,7 @@ func (s Frontend) Diff(t Frontend, opts ...Options) map[string][]interface{} {
 	}
 
 	if !equalPointers(s.Maxconn, t.Maxconn) {
-		diff["Maxconn"] = []interface{}{s.Maxconn, t.Maxconn}
+		diff["Maxconn"] = []interface{}{ValueOrNil(s.Maxconn), ValueOrNil(t.Maxconn)}
 	}
 
 	if s.Mode != t.Mode {
@@ -550,7 +550,7 @@ func (s Frontend) Diff(t Frontend, opts ...Options) map[string][]interface{} {
 	}
 
 	if !s.MonitorFail.Equal(*t.MonitorFail, opt) {
-		diff["MonitorFail"] = []interface{}{s.MonitorFail, t.MonitorFail}
+		diff["MonitorFail"] = []interface{}{ValueOrNil(s.MonitorFail), ValueOrNil(t.MonitorFail)}
 	}
 
 	if !s.MonitorURI.Equal(t.MonitorURI, opt) {
@@ -566,7 +566,7 @@ func (s Frontend) Diff(t Frontend, opts ...Options) map[string][]interface{} {
 	}
 
 	if !s.Originalto.Equal(*t.Originalto, opt) {
-		diff["Originalto"] = []interface{}{s.Originalto, t.Originalto}
+		diff["Originalto"] = []interface{}{ValueOrNil(s.Originalto), ValueOrNil(t.Originalto)}
 	}
 
 	if s.SocketStats != t.SocketStats {
@@ -586,15 +586,15 @@ func (s Frontend) Diff(t Frontend, opts ...Options) map[string][]interface{} {
 	}
 
 	if !s.StatsOptions.Equal(*t.StatsOptions, opt) {
-		diff["StatsOptions"] = []interface{}{s.StatsOptions, t.StatsOptions}
+		diff["StatsOptions"] = []interface{}{ValueOrNil(s.StatsOptions), ValueOrNil(t.StatsOptions)}
 	}
 
 	if !s.StickTable.Equal(*t.StickTable, opt) {
-		diff["StickTable"] = []interface{}{s.StickTable, t.StickTable}
+		diff["StickTable"] = []interface{}{ValueOrNil(s.StickTable), ValueOrNil(t.StickTable)}
 	}
 
 	if !equalPointers(s.TarpitTimeout, t.TarpitTimeout) {
-		diff["TarpitTimeout"] = []interface{}{s.TarpitTimeout, t.TarpitTimeout}
+		diff["TarpitTimeout"] = []interface{}{ValueOrNil(s.TarpitTimeout), ValueOrNil(t.TarpitTimeout)}
 	}
 
 	if s.TCPSmartAccept != t.TCPSmartAccept {

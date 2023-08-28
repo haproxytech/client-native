@@ -236,7 +236,7 @@ func (s TCPRequestRule) Diff(t TCPRequestRule, opts ...Options) map[string][]int
 	}
 
 	if !opt.SkipIndex && !equalPointers(s.Index, t.Index) {
-		diff["Index"] = []interface{}{s.Index, t.Index}
+		diff["Index"] = []interface{}{ValueOrNil(s.Index), ValueOrNil(t.Index)}
 	}
 
 	if s.LogLevel != t.LogLevel {
@@ -284,7 +284,7 @@ func (s TCPRequestRule) Diff(t TCPRequestRule, opts ...Options) map[string][]int
 	}
 
 	if !equalPointers(s.ScInt, t.ScInt) {
-		diff["ScInt"] = []interface{}{s.ScInt, t.ScInt}
+		diff["ScInt"] = []interface{}{ValueOrNil(s.ScInt), ValueOrNil(t.ScInt)}
 	}
 
 	if s.ServiceName != t.ServiceName {
@@ -304,7 +304,7 @@ func (s TCPRequestRule) Diff(t TCPRequestRule, opts ...Options) map[string][]int
 	}
 
 	if !equalPointers(s.Timeout, t.Timeout) {
-		diff["Timeout"] = []interface{}{s.Timeout, t.Timeout}
+		diff["Timeout"] = []interface{}{ValueOrNil(s.Timeout), ValueOrNil(t.Timeout)}
 	}
 
 	if s.TosValue != t.TosValue {
@@ -316,7 +316,7 @@ func (s TCPRequestRule) Diff(t TCPRequestRule, opts ...Options) map[string][]int
 	}
 
 	if !equalPointers(s.TrackStickCounter, t.TrackStickCounter) {
-		diff["TrackStickCounter"] = []interface{}{s.TrackStickCounter, t.TrackStickCounter}
+		diff["TrackStickCounter"] = []interface{}{ValueOrNil(s.TrackStickCounter), ValueOrNil(t.TrackStickCounter)}
 	}
 
 	if s.TrackTable != t.TrackTable {

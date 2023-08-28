@@ -44,11 +44,11 @@ func (s MonitorFail) Equal(t MonitorFail, opts ...Options) bool {
 func (s MonitorFail) Diff(t MonitorFail, opts ...Options) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if !equalPointers(s.Cond, t.Cond) {
-		diff["Cond"] = []interface{}{s.Cond, t.Cond}
+		diff["Cond"] = []interface{}{ValueOrNil(s.Cond), ValueOrNil(t.Cond)}
 	}
 
 	if !equalPointers(s.CondTest, t.CondTest) {
-		diff["CondTest"] = []interface{}{s.CondTest, t.CondTest}
+		diff["CondTest"] = []interface{}{ValueOrNil(s.CondTest), ValueOrNil(t.CondTest)}
 	}
 
 	return diff

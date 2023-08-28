@@ -78,7 +78,7 @@ func (s ClusterSettings) Diff(t ClusterSettings, opts ...Options) map[string][]i
 	}
 
 	if !s.Cluster.Equal(*t.Cluster, opt) {
-		diff["Cluster"] = []interface{}{s.Cluster, t.Cluster}
+		diff["Cluster"] = []interface{}{ValueOrNil(s.Cluster), ValueOrNil(t.Cluster)}
 	}
 
 	if s.Mode != t.Mode {
@@ -161,7 +161,7 @@ func (s ClusterSettingsCluster) Diff(t ClusterSettingsCluster, opts ...Options) 
 	opt := getOptions(opts...)
 
 	diff := make(map[string][]interface{})
-	if len(s.ClusterLogTargets) != len(t.ClusterLogTargets) {
+	if !CheckSameNilAndLen(s.ClusterLogTargets, t.ClusterLogTargets, opt) {
 		diff["ClusterLogTargets"] = []interface{}{s.ClusterLogTargets, t.ClusterLogTargets}
 	} else {
 		diff2 := make(map[string][]interface{})
@@ -197,7 +197,7 @@ func (s ClusterSettingsCluster) Diff(t ClusterSettingsCluster, opts ...Options) 
 	}
 
 	if !equalPointers(s.Port, t.Port) {
-		diff["Port"] = []interface{}{s.Port, t.Port}
+		diff["Port"] = []interface{}{ValueOrNil(s.Port), ValueOrNil(t.Port)}
 	}
 
 	return diff
@@ -238,7 +238,7 @@ func (s ClusterLogTarget) Equal(t ClusterLogTarget, opts ...Options) bool {
 func (s ClusterLogTarget) Diff(t ClusterLogTarget, opts ...Options) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if !equalPointers(s.Address, t.Address) {
-		diff["Address"] = []interface{}{s.Address, t.Address}
+		diff["Address"] = []interface{}{ValueOrNil(s.Address), ValueOrNil(t.Address)}
 	}
 
 	if s.LogFormat != t.LogFormat {
@@ -246,11 +246,11 @@ func (s ClusterLogTarget) Diff(t ClusterLogTarget, opts ...Options) map[string][
 	}
 
 	if !equalPointers(s.Port, t.Port) {
-		diff["Port"] = []interface{}{s.Port, t.Port}
+		diff["Port"] = []interface{}{ValueOrNil(s.Port), ValueOrNil(t.Port)}
 	}
 
 	if !equalPointers(s.Protocol, t.Protocol) {
-		diff["Protocol"] = []interface{}{s.Protocol, t.Protocol}
+		diff["Protocol"] = []interface{}{ValueOrNil(s.Protocol), ValueOrNil(t.Protocol)}
 	}
 
 	return diff

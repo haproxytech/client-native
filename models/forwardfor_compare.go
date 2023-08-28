@@ -52,7 +52,7 @@ func (s Forwardfor) Equal(t Forwardfor, opts ...Options) bool {
 func (s Forwardfor) Diff(t Forwardfor, opts ...Options) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if !equalPointers(s.Enabled, t.Enabled) {
-		diff["Enabled"] = []interface{}{s.Enabled, t.Enabled}
+		diff["Enabled"] = []interface{}{ValueOrNil(s.Enabled), ValueOrNil(t.Enabled)}
 	}
 
 	if s.Except != t.Except {

@@ -44,11 +44,11 @@ func (s AwsFilters) Equal(t AwsFilters, opts ...Options) bool {
 func (s AwsFilters) Diff(t AwsFilters, opts ...Options) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if !equalPointers(s.Key, t.Key) {
-		diff["Key"] = []interface{}{s.Key, t.Key}
+		diff["Key"] = []interface{}{ValueOrNil(s.Key), ValueOrNil(t.Key)}
 	}
 
 	if !equalPointers(s.Value, t.Value) {
-		diff["Value"] = []interface{}{s.Value, t.Value}
+		diff["Value"] = []interface{}{ValueOrNil(s.Value), ValueOrNil(t.Value)}
 	}
 
 	return diff

@@ -114,7 +114,7 @@ func (s FCGILogStderr) Diff(t FCGILogStderr, opts ...Options) map[string][]inter
 	}
 
 	if !s.Sample.Equal(*t.Sample, opt) {
-		diff["Sample"] = []interface{}{s.Sample, t.Sample}
+		diff["Sample"] = []interface{}{ValueOrNil(s.Sample), ValueOrNil(t.Sample)}
 	}
 
 	return diff
@@ -147,11 +147,11 @@ func (s FCGILogStderrSample) Equal(t FCGILogStderrSample, opts ...Options) bool 
 func (s FCGILogStderrSample) Diff(t FCGILogStderrSample, opts ...Options) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if !equalPointers(s.Ranges, t.Ranges) {
-		diff["Ranges"] = []interface{}{s.Ranges, t.Ranges}
+		diff["Ranges"] = []interface{}{ValueOrNil(s.Ranges), ValueOrNil(t.Ranges)}
 	}
 
 	if !equalPointers(s.Size, t.Size) {
-		diff["Size"] = []interface{}{s.Size, t.Size}
+		diff["Size"] = []interface{}{ValueOrNil(s.Size), ValueOrNil(t.Size)}
 	}
 
 	return diff

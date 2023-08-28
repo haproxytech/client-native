@@ -80,11 +80,11 @@ func (s DgramBind) Diff(t DgramBind, opts ...Options) map[string][]interface{} {
 	}
 
 	if !equalPointers(s.Port, t.Port) {
-		diff["Port"] = []interface{}{s.Port, t.Port}
+		diff["Port"] = []interface{}{ValueOrNil(s.Port), ValueOrNil(t.Port)}
 	}
 
 	if !equalPointers(s.PortRangeEnd, t.PortRangeEnd) {
-		diff["PortRangeEnd"] = []interface{}{s.PortRangeEnd, t.PortRangeEnd}
+		diff["PortRangeEnd"] = []interface{}{ValueOrNil(s.PortRangeEnd), ValueOrNil(t.PortRangeEnd)}
 	}
 
 	if s.Transparent != t.Transparent {

@@ -82,7 +82,7 @@ func (s Server) Diff(t Server, opts ...Options) map[string][]interface{} {
 	}
 
 	if !equalPointers(s.ID, t.ID) {
-		diff["ID"] = []interface{}{s.ID, t.ID}
+		diff["ID"] = []interface{}{ValueOrNil(s.ID), ValueOrNil(t.ID)}
 	}
 
 	if s.Name != t.Name {
@@ -90,7 +90,7 @@ func (s Server) Diff(t Server, opts ...Options) map[string][]interface{} {
 	}
 
 	if !equalPointers(s.Port, t.Port) {
-		diff["Port"] = []interface{}{s.Port, t.Port}
+		diff["Port"] = []interface{}{ValueOrNil(s.Port), ValueOrNil(t.Port)}
 	}
 
 	return diff

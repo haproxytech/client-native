@@ -76,7 +76,7 @@ func (s ServerSwitchingRule) Diff(t ServerSwitchingRule, opts ...Options) map[st
 	}
 
 	if !opt.SkipIndex && !equalPointers(s.Index, t.Index) {
-		diff["Index"] = []interface{}{s.Index, t.Index}
+		diff["Index"] = []interface{}{ValueOrNil(s.Index), ValueOrNil(t.Index)}
 	}
 
 	if s.TargetServer != t.TargetServer {

@@ -88,27 +88,27 @@ func (s Resolver) Diff(t Resolver, opts ...Options) map[string][]interface{} {
 	}
 
 	if !equalPointers(s.HoldNx, t.HoldNx) {
-		diff["HoldNx"] = []interface{}{s.HoldNx, t.HoldNx}
+		diff["HoldNx"] = []interface{}{ValueOrNil(s.HoldNx), ValueOrNil(t.HoldNx)}
 	}
 
 	if !equalPointers(s.HoldObsolete, t.HoldObsolete) {
-		diff["HoldObsolete"] = []interface{}{s.HoldObsolete, t.HoldObsolete}
+		diff["HoldObsolete"] = []interface{}{ValueOrNil(s.HoldObsolete), ValueOrNil(t.HoldObsolete)}
 	}
 
 	if !equalPointers(s.HoldOther, t.HoldOther) {
-		diff["HoldOther"] = []interface{}{s.HoldOther, t.HoldOther}
+		diff["HoldOther"] = []interface{}{ValueOrNil(s.HoldOther), ValueOrNil(t.HoldOther)}
 	}
 
 	if !equalPointers(s.HoldRefused, t.HoldRefused) {
-		diff["HoldRefused"] = []interface{}{s.HoldRefused, t.HoldRefused}
+		diff["HoldRefused"] = []interface{}{ValueOrNil(s.HoldRefused), ValueOrNil(t.HoldRefused)}
 	}
 
 	if !equalPointers(s.HoldTimeout, t.HoldTimeout) {
-		diff["HoldTimeout"] = []interface{}{s.HoldTimeout, t.HoldTimeout}
+		diff["HoldTimeout"] = []interface{}{ValueOrNil(s.HoldTimeout), ValueOrNil(t.HoldTimeout)}
 	}
 
 	if !equalPointers(s.HoldValid, t.HoldValid) {
-		diff["HoldValid"] = []interface{}{s.HoldValid, t.HoldValid}
+		diff["HoldValid"] = []interface{}{ValueOrNil(s.HoldValid), ValueOrNil(t.HoldValid)}
 	}
 
 	if s.Name != t.Name {

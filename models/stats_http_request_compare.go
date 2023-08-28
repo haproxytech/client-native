@@ -64,7 +64,7 @@ func (s StatsHTTPRequest) Diff(t StatsHTTPRequest, opts ...Options) map[string][
 	}
 
 	if !equalPointers(s.Type, t.Type) {
-		diff["Type"] = []interface{}{s.Type, t.Type}
+		diff["Type"] = []interface{}{ValueOrNil(s.Type), ValueOrNil(t.Type)}
 	}
 
 	return diff

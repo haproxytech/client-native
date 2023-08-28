@@ -128,71 +128,71 @@ func (s StickTableEntry) Equal(t StickTableEntry, opts ...Options) bool {
 func (s StickTableEntry) Diff(t StickTableEntry, opts ...Options) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if !equalPointers(s.BytesInCnt, t.BytesInCnt) {
-		diff["BytesInCnt"] = []interface{}{s.BytesInCnt, t.BytesInCnt}
+		diff["BytesInCnt"] = []interface{}{ValueOrNil(s.BytesInCnt), ValueOrNil(t.BytesInCnt)}
 	}
 
 	if !equalPointers(s.BytesInRate, t.BytesInRate) {
-		diff["BytesInRate"] = []interface{}{s.BytesInRate, t.BytesInRate}
+		diff["BytesInRate"] = []interface{}{ValueOrNil(s.BytesInRate), ValueOrNil(t.BytesInRate)}
 	}
 
 	if !equalPointers(s.BytesOutCnt, t.BytesOutCnt) {
-		diff["BytesOutCnt"] = []interface{}{s.BytesOutCnt, t.BytesOutCnt}
+		diff["BytesOutCnt"] = []interface{}{ValueOrNil(s.BytesOutCnt), ValueOrNil(t.BytesOutCnt)}
 	}
 
 	if !equalPointers(s.BytesOutRate, t.BytesOutRate) {
-		diff["BytesOutRate"] = []interface{}{s.BytesOutRate, t.BytesOutRate}
+		diff["BytesOutRate"] = []interface{}{ValueOrNil(s.BytesOutRate), ValueOrNil(t.BytesOutRate)}
 	}
 
 	if !equalPointers(s.ConnCnt, t.ConnCnt) {
-		diff["ConnCnt"] = []interface{}{s.ConnCnt, t.ConnCnt}
+		diff["ConnCnt"] = []interface{}{ValueOrNil(s.ConnCnt), ValueOrNil(t.ConnCnt)}
 	}
 
 	if !equalPointers(s.ConnCur, t.ConnCur) {
-		diff["ConnCur"] = []interface{}{s.ConnCur, t.ConnCur}
+		diff["ConnCur"] = []interface{}{ValueOrNil(s.ConnCur), ValueOrNil(t.ConnCur)}
 	}
 
 	if !equalPointers(s.ConnRate, t.ConnRate) {
-		diff["ConnRate"] = []interface{}{s.ConnRate, t.ConnRate}
+		diff["ConnRate"] = []interface{}{ValueOrNil(s.ConnRate), ValueOrNil(t.ConnRate)}
 	}
 
 	if !equalPointers(s.Exp, t.Exp) {
-		diff["Exp"] = []interface{}{s.Exp, t.Exp}
+		diff["Exp"] = []interface{}{ValueOrNil(s.Exp), ValueOrNil(t.Exp)}
 	}
 
 	if !equalPointers(s.Gpc0, t.Gpc0) {
-		diff["Gpc0"] = []interface{}{s.Gpc0, t.Gpc0}
+		diff["Gpc0"] = []interface{}{ValueOrNil(s.Gpc0), ValueOrNil(t.Gpc0)}
 	}
 
 	if !equalPointers(s.Gpc0Rate, t.Gpc0Rate) {
-		diff["Gpc0Rate"] = []interface{}{s.Gpc0Rate, t.Gpc0Rate}
+		diff["Gpc0Rate"] = []interface{}{ValueOrNil(s.Gpc0Rate), ValueOrNil(t.Gpc0Rate)}
 	}
 
 	if !equalPointers(s.Gpc1, t.Gpc1) {
-		diff["Gpc1"] = []interface{}{s.Gpc1, t.Gpc1}
+		diff["Gpc1"] = []interface{}{ValueOrNil(s.Gpc1), ValueOrNil(t.Gpc1)}
 	}
 
 	if !equalPointers(s.Gpc1Rate, t.Gpc1Rate) {
-		diff["Gpc1Rate"] = []interface{}{s.Gpc1Rate, t.Gpc1Rate}
+		diff["Gpc1Rate"] = []interface{}{ValueOrNil(s.Gpc1Rate), ValueOrNil(t.Gpc1Rate)}
 	}
 
 	if !equalPointers(s.Gpt0, t.Gpt0) {
-		diff["Gpt0"] = []interface{}{s.Gpt0, t.Gpt0}
+		diff["Gpt0"] = []interface{}{ValueOrNil(s.Gpt0), ValueOrNil(t.Gpt0)}
 	}
 
 	if !equalPointers(s.HTTPErrCnt, t.HTTPErrCnt) {
-		diff["HTTPErrCnt"] = []interface{}{s.HTTPErrCnt, t.HTTPErrCnt}
+		diff["HTTPErrCnt"] = []interface{}{ValueOrNil(s.HTTPErrCnt), ValueOrNil(t.HTTPErrCnt)}
 	}
 
 	if !equalPointers(s.HTTPErrRate, t.HTTPErrRate) {
-		diff["HTTPErrRate"] = []interface{}{s.HTTPErrRate, t.HTTPErrRate}
+		diff["HTTPErrRate"] = []interface{}{ValueOrNil(s.HTTPErrRate), ValueOrNil(t.HTTPErrRate)}
 	}
 
 	if !equalPointers(s.HTTPReqCnt, t.HTTPReqCnt) {
-		diff["HTTPReqCnt"] = []interface{}{s.HTTPReqCnt, t.HTTPReqCnt}
+		diff["HTTPReqCnt"] = []interface{}{ValueOrNil(s.HTTPReqCnt), ValueOrNil(t.HTTPReqCnt)}
 	}
 
 	if !equalPointers(s.HTTPReqRate, t.HTTPReqRate) {
-		diff["HTTPReqRate"] = []interface{}{s.HTTPReqRate, t.HTTPReqRate}
+		diff["HTTPReqRate"] = []interface{}{ValueOrNil(s.HTTPReqRate), ValueOrNil(t.HTTPReqRate)}
 	}
 
 	if s.ID != t.ID {
@@ -204,15 +204,15 @@ func (s StickTableEntry) Diff(t StickTableEntry, opts ...Options) map[string][]i
 	}
 
 	if !equalPointers(s.ServerID, t.ServerID) {
-		diff["ServerID"] = []interface{}{s.ServerID, t.ServerID}
+		diff["ServerID"] = []interface{}{ValueOrNil(s.ServerID), ValueOrNil(t.ServerID)}
 	}
 
 	if !equalPointers(s.SessCnt, t.SessCnt) {
-		diff["SessCnt"] = []interface{}{s.SessCnt, t.SessCnt}
+		diff["SessCnt"] = []interface{}{ValueOrNil(s.SessCnt), ValueOrNil(t.SessCnt)}
 	}
 
 	if !equalPointers(s.SessRate, t.SessRate) {
-		diff["SessRate"] = []interface{}{s.SessRate, t.SessRate}
+		diff["SessRate"] = []interface{}{ValueOrNil(s.SessRate), ValueOrNil(t.SessRate)}
 	}
 
 	if s.Use != t.Use {

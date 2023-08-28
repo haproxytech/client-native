@@ -348,7 +348,7 @@ func (s NativeStatStats) Equal(t NativeStatStats, opts ...Options) bool {
 func (s NativeStatStats) Diff(t NativeStatStats, opts ...Options) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if !equalPointers(s.Act, t.Act) {
-		diff["Act"] = []interface{}{s.Act, t.Act}
+		diff["Act"] = []interface{}{ValueOrNil(s.Act), ValueOrNil(t.Act)}
 	}
 
 	if s.Addr != t.Addr {
@@ -356,7 +356,7 @@ func (s NativeStatStats) Diff(t NativeStatStats, opts ...Options) map[string][]i
 	}
 
 	if !equalPointers(s.AgentCode, t.AgentCode) {
-		diff["AgentCode"] = []interface{}{s.AgentCode, t.AgentCode}
+		diff["AgentCode"] = []interface{}{ValueOrNil(s.AgentCode), ValueOrNil(t.AgentCode)}
 	}
 
 	if s.AgentDesc != t.AgentDesc {
@@ -364,19 +364,19 @@ func (s NativeStatStats) Diff(t NativeStatStats, opts ...Options) map[string][]i
 	}
 
 	if !equalPointers(s.AgentDuration, t.AgentDuration) {
-		diff["AgentDuration"] = []interface{}{s.AgentDuration, t.AgentDuration}
+		diff["AgentDuration"] = []interface{}{ValueOrNil(s.AgentDuration), ValueOrNil(t.AgentDuration)}
 	}
 
 	if !equalPointers(s.AgentFall, t.AgentFall) {
-		diff["AgentFall"] = []interface{}{s.AgentFall, t.AgentFall}
+		diff["AgentFall"] = []interface{}{ValueOrNil(s.AgentFall), ValueOrNil(t.AgentFall)}
 	}
 
 	if !equalPointers(s.AgentHealth, t.AgentHealth) {
-		diff["AgentHealth"] = []interface{}{s.AgentHealth, t.AgentHealth}
+		diff["AgentHealth"] = []interface{}{ValueOrNil(s.AgentHealth), ValueOrNil(t.AgentHealth)}
 	}
 
 	if !equalPointers(s.AgentRise, t.AgentRise) {
-		diff["AgentRise"] = []interface{}{s.AgentRise, t.AgentRise}
+		diff["AgentRise"] = []interface{}{ValueOrNil(s.AgentRise), ValueOrNil(t.AgentRise)}
 	}
 
 	if s.AgentStatus != t.AgentStatus {
@@ -388,19 +388,19 @@ func (s NativeStatStats) Diff(t NativeStatStats, opts ...Options) map[string][]i
 	}
 
 	if !equalPointers(s.Bck, t.Bck) {
-		diff["Bck"] = []interface{}{s.Bck, t.Bck}
+		diff["Bck"] = []interface{}{ValueOrNil(s.Bck), ValueOrNil(t.Bck)}
 	}
 
 	if !equalPointers(s.Bin, t.Bin) {
-		diff["Bin"] = []interface{}{s.Bin, t.Bin}
+		diff["Bin"] = []interface{}{ValueOrNil(s.Bin), ValueOrNil(t.Bin)}
 	}
 
 	if !equalPointers(s.Bout, t.Bout) {
-		diff["Bout"] = []interface{}{s.Bout, t.Bout}
+		diff["Bout"] = []interface{}{ValueOrNil(s.Bout), ValueOrNil(t.Bout)}
 	}
 
 	if !equalPointers(s.CheckCode, t.CheckCode) {
-		diff["CheckCode"] = []interface{}{s.CheckCode, t.CheckCode}
+		diff["CheckCode"] = []interface{}{ValueOrNil(s.CheckCode), ValueOrNil(t.CheckCode)}
 	}
 
 	if s.CheckDesc != t.CheckDesc {
@@ -408,19 +408,19 @@ func (s NativeStatStats) Diff(t NativeStatStats, opts ...Options) map[string][]i
 	}
 
 	if !equalPointers(s.CheckDuration, t.CheckDuration) {
-		diff["CheckDuration"] = []interface{}{s.CheckDuration, t.CheckDuration}
+		diff["CheckDuration"] = []interface{}{ValueOrNil(s.CheckDuration), ValueOrNil(t.CheckDuration)}
 	}
 
 	if !equalPointers(s.CheckFall, t.CheckFall) {
-		diff["CheckFall"] = []interface{}{s.CheckFall, t.CheckFall}
+		diff["CheckFall"] = []interface{}{ValueOrNil(s.CheckFall), ValueOrNil(t.CheckFall)}
 	}
 
 	if !equalPointers(s.CheckHealth, t.CheckHealth) {
-		diff["CheckHealth"] = []interface{}{s.CheckHealth, t.CheckHealth}
+		diff["CheckHealth"] = []interface{}{ValueOrNil(s.CheckHealth), ValueOrNil(t.CheckHealth)}
 	}
 
 	if !equalPointers(s.CheckRise, t.CheckRise) {
-		diff["CheckRise"] = []interface{}{s.CheckRise, t.CheckRise}
+		diff["CheckRise"] = []interface{}{ValueOrNil(s.CheckRise), ValueOrNil(t.CheckRise)}
 	}
 
 	if s.CheckStatus != t.CheckStatus {
@@ -428,43 +428,43 @@ func (s NativeStatStats) Diff(t NativeStatStats, opts ...Options) map[string][]i
 	}
 
 	if !equalPointers(s.Chkdown, t.Chkdown) {
-		diff["Chkdown"] = []interface{}{s.Chkdown, t.Chkdown}
+		diff["Chkdown"] = []interface{}{ValueOrNil(s.Chkdown), ValueOrNil(t.Chkdown)}
 	}
 
 	if !equalPointers(s.Chkfail, t.Chkfail) {
-		diff["Chkfail"] = []interface{}{s.Chkfail, t.Chkfail}
+		diff["Chkfail"] = []interface{}{ValueOrNil(s.Chkfail), ValueOrNil(t.Chkfail)}
 	}
 
 	if !equalPointers(s.CliAbrt, t.CliAbrt) {
-		diff["CliAbrt"] = []interface{}{s.CliAbrt, t.CliAbrt}
+		diff["CliAbrt"] = []interface{}{ValueOrNil(s.CliAbrt), ValueOrNil(t.CliAbrt)}
 	}
 
 	if !equalPointers(s.CompByp, t.CompByp) {
-		diff["CompByp"] = []interface{}{s.CompByp, t.CompByp}
+		diff["CompByp"] = []interface{}{ValueOrNil(s.CompByp), ValueOrNil(t.CompByp)}
 	}
 
 	if !equalPointers(s.CompIn, t.CompIn) {
-		diff["CompIn"] = []interface{}{s.CompIn, t.CompIn}
+		diff["CompIn"] = []interface{}{ValueOrNil(s.CompIn), ValueOrNil(t.CompIn)}
 	}
 
 	if !equalPointers(s.CompOut, t.CompOut) {
-		diff["CompOut"] = []interface{}{s.CompOut, t.CompOut}
+		diff["CompOut"] = []interface{}{ValueOrNil(s.CompOut), ValueOrNil(t.CompOut)}
 	}
 
 	if !equalPointers(s.CompRsp, t.CompRsp) {
-		diff["CompRsp"] = []interface{}{s.CompRsp, t.CompRsp}
+		diff["CompRsp"] = []interface{}{ValueOrNil(s.CompRsp), ValueOrNil(t.CompRsp)}
 	}
 
 	if !equalPointers(s.ConnRate, t.ConnRate) {
-		diff["ConnRate"] = []interface{}{s.ConnRate, t.ConnRate}
+		diff["ConnRate"] = []interface{}{ValueOrNil(s.ConnRate), ValueOrNil(t.ConnRate)}
 	}
 
 	if !equalPointers(s.ConnRateMax, t.ConnRateMax) {
-		diff["ConnRateMax"] = []interface{}{s.ConnRateMax, t.ConnRateMax}
+		diff["ConnRateMax"] = []interface{}{ValueOrNil(s.ConnRateMax), ValueOrNil(t.ConnRateMax)}
 	}
 
 	if !equalPointers(s.ConnTot, t.ConnTot) {
-		diff["ConnTot"] = []interface{}{s.ConnTot, t.ConnTot}
+		diff["ConnTot"] = []interface{}{ValueOrNil(s.ConnTot), ValueOrNil(t.ConnTot)}
 	}
 
 	if s.Cookie != t.Cookie {
@@ -472,39 +472,39 @@ func (s NativeStatStats) Diff(t NativeStatStats, opts ...Options) map[string][]i
 	}
 
 	if !equalPointers(s.Ctime, t.Ctime) {
-		diff["Ctime"] = []interface{}{s.Ctime, t.Ctime}
+		diff["Ctime"] = []interface{}{ValueOrNil(s.Ctime), ValueOrNil(t.Ctime)}
 	}
 
 	if !equalPointers(s.Dcon, t.Dcon) {
-		diff["Dcon"] = []interface{}{s.Dcon, t.Dcon}
+		diff["Dcon"] = []interface{}{ValueOrNil(s.Dcon), ValueOrNil(t.Dcon)}
 	}
 
 	if !equalPointers(s.Downtime, t.Downtime) {
-		diff["Downtime"] = []interface{}{s.Downtime, t.Downtime}
+		diff["Downtime"] = []interface{}{ValueOrNil(s.Downtime), ValueOrNil(t.Downtime)}
 	}
 
 	if !equalPointers(s.Dreq, t.Dreq) {
-		diff["Dreq"] = []interface{}{s.Dreq, t.Dreq}
+		diff["Dreq"] = []interface{}{ValueOrNil(s.Dreq), ValueOrNil(t.Dreq)}
 	}
 
 	if !equalPointers(s.Dresp, t.Dresp) {
-		diff["Dresp"] = []interface{}{s.Dresp, t.Dresp}
+		diff["Dresp"] = []interface{}{ValueOrNil(s.Dresp), ValueOrNil(t.Dresp)}
 	}
 
 	if !equalPointers(s.Dses, t.Dses) {
-		diff["Dses"] = []interface{}{s.Dses, t.Dses}
+		diff["Dses"] = []interface{}{ValueOrNil(s.Dses), ValueOrNil(t.Dses)}
 	}
 
 	if !equalPointers(s.Econ, t.Econ) {
-		diff["Econ"] = []interface{}{s.Econ, t.Econ}
+		diff["Econ"] = []interface{}{ValueOrNil(s.Econ), ValueOrNil(t.Econ)}
 	}
 
 	if !equalPointers(s.Ereq, t.Ereq) {
-		diff["Ereq"] = []interface{}{s.Ereq, t.Ereq}
+		diff["Ereq"] = []interface{}{ValueOrNil(s.Ereq), ValueOrNil(t.Ereq)}
 	}
 
 	if !equalPointers(s.Eresp, t.Eresp) {
-		diff["Eresp"] = []interface{}{s.Eresp, t.Eresp}
+		diff["Eresp"] = []interface{}{ValueOrNil(s.Eresp), ValueOrNil(t.Eresp)}
 	}
 
 	if s.Hanafail != t.Hanafail {
@@ -512,47 +512,47 @@ func (s NativeStatStats) Diff(t NativeStatStats, opts ...Options) map[string][]i
 	}
 
 	if !equalPointers(s.Hrsp1xx, t.Hrsp1xx) {
-		diff["Hrsp1xx"] = []interface{}{s.Hrsp1xx, t.Hrsp1xx}
+		diff["Hrsp1xx"] = []interface{}{ValueOrNil(s.Hrsp1xx), ValueOrNil(t.Hrsp1xx)}
 	}
 
 	if !equalPointers(s.Hrsp2xx, t.Hrsp2xx) {
-		diff["Hrsp2xx"] = []interface{}{s.Hrsp2xx, t.Hrsp2xx}
+		diff["Hrsp2xx"] = []interface{}{ValueOrNil(s.Hrsp2xx), ValueOrNil(t.Hrsp2xx)}
 	}
 
 	if !equalPointers(s.Hrsp3xx, t.Hrsp3xx) {
-		diff["Hrsp3xx"] = []interface{}{s.Hrsp3xx, t.Hrsp3xx}
+		diff["Hrsp3xx"] = []interface{}{ValueOrNil(s.Hrsp3xx), ValueOrNil(t.Hrsp3xx)}
 	}
 
 	if !equalPointers(s.Hrsp4xx, t.Hrsp4xx) {
-		diff["Hrsp4xx"] = []interface{}{s.Hrsp4xx, t.Hrsp4xx}
+		diff["Hrsp4xx"] = []interface{}{ValueOrNil(s.Hrsp4xx), ValueOrNil(t.Hrsp4xx)}
 	}
 
 	if !equalPointers(s.Hrsp5xx, t.Hrsp5xx) {
-		diff["Hrsp5xx"] = []interface{}{s.Hrsp5xx, t.Hrsp5xx}
+		diff["Hrsp5xx"] = []interface{}{ValueOrNil(s.Hrsp5xx), ValueOrNil(t.Hrsp5xx)}
 	}
 
 	if !equalPointers(s.HrspOther, t.HrspOther) {
-		diff["HrspOther"] = []interface{}{s.HrspOther, t.HrspOther}
+		diff["HrspOther"] = []interface{}{ValueOrNil(s.HrspOther), ValueOrNil(t.HrspOther)}
 	}
 
 	if !equalPointers(s.Iid, t.Iid) {
-		diff["Iid"] = []interface{}{s.Iid, t.Iid}
+		diff["Iid"] = []interface{}{ValueOrNil(s.Iid), ValueOrNil(t.Iid)}
 	}
 
 	if !equalPointers(s.Intercepted, t.Intercepted) {
-		diff["Intercepted"] = []interface{}{s.Intercepted, t.Intercepted}
+		diff["Intercepted"] = []interface{}{ValueOrNil(s.Intercepted), ValueOrNil(t.Intercepted)}
 	}
 
 	if !equalPointers(s.Lastchg, t.Lastchg) {
-		diff["Lastchg"] = []interface{}{s.Lastchg, t.Lastchg}
+		diff["Lastchg"] = []interface{}{ValueOrNil(s.Lastchg), ValueOrNil(t.Lastchg)}
 	}
 
 	if !equalPointers(s.Lastsess, t.Lastsess) {
-		diff["Lastsess"] = []interface{}{s.Lastsess, t.Lastsess}
+		diff["Lastsess"] = []interface{}{ValueOrNil(s.Lastsess), ValueOrNil(t.Lastsess)}
 	}
 
 	if !equalPointers(s.Lbtot, t.Lbtot) {
-		diff["Lbtot"] = []interface{}{s.Lbtot, t.Lbtot}
+		diff["Lbtot"] = []interface{}{ValueOrNil(s.Lbtot), ValueOrNil(t.Lbtot)}
 	}
 
 	if s.Mode != t.Mode {
@@ -560,71 +560,71 @@ func (s NativeStatStats) Diff(t NativeStatStats, opts ...Options) map[string][]i
 	}
 
 	if !equalPointers(s.Pid, t.Pid) {
-		diff["Pid"] = []interface{}{s.Pid, t.Pid}
+		diff["Pid"] = []interface{}{ValueOrNil(s.Pid), ValueOrNil(t.Pid)}
 	}
 
 	if !equalPointers(s.Qcur, t.Qcur) {
-		diff["Qcur"] = []interface{}{s.Qcur, t.Qcur}
+		diff["Qcur"] = []interface{}{ValueOrNil(s.Qcur), ValueOrNil(t.Qcur)}
 	}
 
 	if !equalPointers(s.Qlimit, t.Qlimit) {
-		diff["Qlimit"] = []interface{}{s.Qlimit, t.Qlimit}
+		diff["Qlimit"] = []interface{}{ValueOrNil(s.Qlimit), ValueOrNil(t.Qlimit)}
 	}
 
 	if !equalPointers(s.Qmax, t.Qmax) {
-		diff["Qmax"] = []interface{}{s.Qmax, t.Qmax}
+		diff["Qmax"] = []interface{}{ValueOrNil(s.Qmax), ValueOrNil(t.Qmax)}
 	}
 
 	if !equalPointers(s.Qtime, t.Qtime) {
-		diff["Qtime"] = []interface{}{s.Qtime, t.Qtime}
+		diff["Qtime"] = []interface{}{ValueOrNil(s.Qtime), ValueOrNil(t.Qtime)}
 	}
 
 	if !equalPointers(s.Rate, t.Rate) {
-		diff["Rate"] = []interface{}{s.Rate, t.Rate}
+		diff["Rate"] = []interface{}{ValueOrNil(s.Rate), ValueOrNil(t.Rate)}
 	}
 
 	if !equalPointers(s.RateLim, t.RateLim) {
-		diff["RateLim"] = []interface{}{s.RateLim, t.RateLim}
+		diff["RateLim"] = []interface{}{ValueOrNil(s.RateLim), ValueOrNil(t.RateLim)}
 	}
 
 	if !equalPointers(s.RateMax, t.RateMax) {
-		diff["RateMax"] = []interface{}{s.RateMax, t.RateMax}
+		diff["RateMax"] = []interface{}{ValueOrNil(s.RateMax), ValueOrNil(t.RateMax)}
 	}
 
 	if !equalPointers(s.ReqRate, t.ReqRate) {
-		diff["ReqRate"] = []interface{}{s.ReqRate, t.ReqRate}
+		diff["ReqRate"] = []interface{}{ValueOrNil(s.ReqRate), ValueOrNil(t.ReqRate)}
 	}
 
 	if !equalPointers(s.ReqRateMax, t.ReqRateMax) {
-		diff["ReqRateMax"] = []interface{}{s.ReqRateMax, t.ReqRateMax}
+		diff["ReqRateMax"] = []interface{}{ValueOrNil(s.ReqRateMax), ValueOrNil(t.ReqRateMax)}
 	}
 
 	if !equalPointers(s.ReqTot, t.ReqTot) {
-		diff["ReqTot"] = []interface{}{s.ReqTot, t.ReqTot}
+		diff["ReqTot"] = []interface{}{ValueOrNil(s.ReqTot), ValueOrNil(t.ReqTot)}
 	}
 
 	if !equalPointers(s.Rtime, t.Rtime) {
-		diff["Rtime"] = []interface{}{s.Rtime, t.Rtime}
+		diff["Rtime"] = []interface{}{ValueOrNil(s.Rtime), ValueOrNil(t.Rtime)}
 	}
 
 	if !equalPointers(s.Scur, t.Scur) {
-		diff["Scur"] = []interface{}{s.Scur, t.Scur}
+		diff["Scur"] = []interface{}{ValueOrNil(s.Scur), ValueOrNil(t.Scur)}
 	}
 
 	if !equalPointers(s.Sid, t.Sid) {
-		diff["Sid"] = []interface{}{s.Sid, t.Sid}
+		diff["Sid"] = []interface{}{ValueOrNil(s.Sid), ValueOrNil(t.Sid)}
 	}
 
 	if !equalPointers(s.Slim, t.Slim) {
-		diff["Slim"] = []interface{}{s.Slim, t.Slim}
+		diff["Slim"] = []interface{}{ValueOrNil(s.Slim), ValueOrNil(t.Slim)}
 	}
 
 	if !equalPointers(s.Smax, t.Smax) {
-		diff["Smax"] = []interface{}{s.Smax, t.Smax}
+		diff["Smax"] = []interface{}{ValueOrNil(s.Smax), ValueOrNil(t.Smax)}
 	}
 
 	if !equalPointers(s.SrvAbrt, t.SrvAbrt) {
-		diff["SrvAbrt"] = []interface{}{s.SrvAbrt, t.SrvAbrt}
+		diff["SrvAbrt"] = []interface{}{ValueOrNil(s.SrvAbrt), ValueOrNil(t.SrvAbrt)}
 	}
 
 	if s.Status != t.Status {
@@ -632,11 +632,11 @@ func (s NativeStatStats) Diff(t NativeStatStats, opts ...Options) map[string][]i
 	}
 
 	if !equalPointers(s.Stot, t.Stot) {
-		diff["Stot"] = []interface{}{s.Stot, t.Stot}
+		diff["Stot"] = []interface{}{ValueOrNil(s.Stot), ValueOrNil(t.Stot)}
 	}
 
 	if !equalPointers(s.Throttle, t.Throttle) {
-		diff["Throttle"] = []interface{}{s.Throttle, t.Throttle}
+		diff["Throttle"] = []interface{}{ValueOrNil(s.Throttle), ValueOrNil(t.Throttle)}
 	}
 
 	if s.Tracked != t.Tracked {
@@ -644,19 +644,19 @@ func (s NativeStatStats) Diff(t NativeStatStats, opts ...Options) map[string][]i
 	}
 
 	if !equalPointers(s.Ttime, t.Ttime) {
-		diff["Ttime"] = []interface{}{s.Ttime, t.Ttime}
+		diff["Ttime"] = []interface{}{ValueOrNil(s.Ttime), ValueOrNil(t.Ttime)}
 	}
 
 	if !equalPointers(s.Weight, t.Weight) {
-		diff["Weight"] = []interface{}{s.Weight, t.Weight}
+		diff["Weight"] = []interface{}{ValueOrNil(s.Weight), ValueOrNil(t.Weight)}
 	}
 
 	if !equalPointers(s.Wredis, t.Wredis) {
-		diff["Wredis"] = []interface{}{s.Wredis, t.Wredis}
+		diff["Wredis"] = []interface{}{ValueOrNil(s.Wredis), ValueOrNil(t.Wredis)}
 	}
 
 	if !equalPointers(s.Wretr, t.Wretr) {
-		diff["Wretr"] = []interface{}{s.Wretr, t.Wretr}
+		diff["Wretr"] = []interface{}{ValueOrNil(s.Wretr), ValueOrNil(t.Wretr)}
 	}
 
 	return diff

@@ -17,6 +17,10 @@
 
 package models
 
+import (
+	"strconv"
+)
+
 // Equal checks if two structs of type Consul are equal
 //
 // By default empty maps and slices are equal to nil:
@@ -134,7 +138,7 @@ func (s Consul) Diff(t Consul, opts ...Options) map[string][]interface{} {
 
 	diff := make(map[string][]interface{})
 	if !equalPointers(s.Address, t.Address) {
-		diff["Address"] = []interface{}{s.Address, t.Address}
+		diff["Address"] = []interface{}{ValueOrNil(s.Address), ValueOrNil(t.Address)}
 	}
 
 	if s.Defaults != t.Defaults {
@@ -146,11 +150,11 @@ func (s Consul) Diff(t Consul, opts ...Options) map[string][]interface{} {
 	}
 
 	if !equalPointers(s.Enabled, t.Enabled) {
-		diff["Enabled"] = []interface{}{s.Enabled, t.Enabled}
+		diff["Enabled"] = []interface{}{ValueOrNil(s.Enabled), ValueOrNil(t.Enabled)}
 	}
 
 	if !equalPointers(s.HealthCheckPolicy, t.HealthCheckPolicy) {
-		diff["HealthCheckPolicy"] = []interface{}{s.HealthCheckPolicy, t.HealthCheckPolicy}
+		diff["HealthCheckPolicy"] = []interface{}{ValueOrNil(s.HealthCheckPolicy), ValueOrNil(t.HealthCheckPolicy)}
 	}
 
 	if s.HealthCheckPolicyMin != t.HealthCheckPolicyMin {
@@ -158,7 +162,7 @@ func (s Consul) Diff(t Consul, opts ...Options) map[string][]interface{} {
 	}
 
 	if !equalPointers(s.ID, t.ID) {
-		diff["ID"] = []interface{}{s.ID, t.ID}
+		diff["ID"] = []interface{}{ValueOrNil(s.ID), ValueOrNil(t.ID)}
 	}
 
 	if s.Name != t.Name {
@@ -170,15 +174,15 @@ func (s Consul) Diff(t Consul, opts ...Options) map[string][]interface{} {
 	}
 
 	if !equalPointers(s.Port, t.Port) {
-		diff["Port"] = []interface{}{s.Port, t.Port}
+		diff["Port"] = []interface{}{ValueOrNil(s.Port), ValueOrNil(t.Port)}
 	}
 
 	if !equalPointers(s.RetryTimeout, t.RetryTimeout) {
-		diff["RetryTimeout"] = []interface{}{s.RetryTimeout, t.RetryTimeout}
+		diff["RetryTimeout"] = []interface{}{ValueOrNil(s.RetryTimeout), ValueOrNil(t.RetryTimeout)}
 	}
 
 	if !equalPointers(s.ServerSlotsBase, t.ServerSlotsBase) {
-		diff["ServerSlotsBase"] = []interface{}{s.ServerSlotsBase, t.ServerSlotsBase}
+		diff["ServerSlotsBase"] = []interface{}{ValueOrNil(s.ServerSlotsBase), ValueOrNil(t.ServerSlotsBase)}
 	}
 
 	if s.ServerSlotsGrowthIncrement != t.ServerSlotsGrowthIncrement {
@@ -186,23 +190,63 @@ func (s Consul) Diff(t Consul, opts ...Options) map[string][]interface{} {
 	}
 
 	if !equalPointers(s.ServerSlotsGrowthType, t.ServerSlotsGrowthType) {
-		diff["ServerSlotsGrowthType"] = []interface{}{s.ServerSlotsGrowthType, t.ServerSlotsGrowthType}
+		diff["ServerSlotsGrowthType"] = []interface{}{ValueOrNil(s.ServerSlotsGrowthType), ValueOrNil(t.ServerSlotsGrowthType)}
 	}
 
-	if !equalComparableSlice(s.ServiceBlacklist, t.ServiceBlacklist, opt) {
+	if !CheckSameNilAndLen(s.ServiceBlacklist, t.ServiceBlacklist, opt) {
 		diff["ServiceBlacklist"] = []interface{}{s.ServiceBlacklist, t.ServiceBlacklist}
+	} else {
+		diff2 := make(map[string][]interface{})
+		for i := range s.ServiceBlacklist {
+			if s.ServiceBlacklist[i] != t.ServiceBlacklist[i] {
+				diff2[strconv.Itoa(i)] = []interface{}{s.ServiceBlacklist[i], t.ServiceBlacklist[i]}
+			}
+		}
+		if len(diff2) > 0 {
+			diff["ServiceBlacklist"] = []interface{}{diff2}
+		}
 	}
 
-	if !equalComparableSlice(s.ServiceWhitelist, t.ServiceWhitelist, opt) {
+	if !CheckSameNilAndLen(s.ServiceWhitelist, t.ServiceWhitelist, opt) {
 		diff["ServiceWhitelist"] = []interface{}{s.ServiceWhitelist, t.ServiceWhitelist}
+	} else {
+		diff2 := make(map[string][]interface{})
+		for i := range s.ServiceWhitelist {
+			if s.ServiceWhitelist[i] != t.ServiceWhitelist[i] {
+				diff2[strconv.Itoa(i)] = []interface{}{s.ServiceWhitelist[i], t.ServiceWhitelist[i]}
+			}
+		}
+		if len(diff2) > 0 {
+			diff["ServiceWhitelist"] = []interface{}{diff2}
+		}
 	}
 
-	if !equalComparableSlice(s.ServiceAllowlist, t.ServiceAllowlist, opt) {
+	if !CheckSameNilAndLen(s.ServiceAllowlist, t.ServiceAllowlist, opt) {
 		diff["ServiceAllowlist"] = []interface{}{s.ServiceAllowlist, t.ServiceAllowlist}
+	} else {
+		diff2 := make(map[string][]interface{})
+		for i := range s.ServiceAllowlist {
+			if s.ServiceAllowlist[i] != t.ServiceAllowlist[i] {
+				diff2[strconv.Itoa(i)] = []interface{}{s.ServiceAllowlist[i], t.ServiceAllowlist[i]}
+			}
+		}
+		if len(diff2) > 0 {
+			diff["ServiceAllowlist"] = []interface{}{diff2}
+		}
 	}
 
-	if !equalComparableSlice(s.ServiceDenylist, t.ServiceDenylist, opt) {
+	if !CheckSameNilAndLen(s.ServiceDenylist, t.ServiceDenylist, opt) {
 		diff["ServiceDenylist"] = []interface{}{s.ServiceDenylist, t.ServiceDenylist}
+	} else {
+		diff2 := make(map[string][]interface{})
+		for i := range s.ServiceDenylist {
+			if s.ServiceDenylist[i] != t.ServiceDenylist[i] {
+				diff2[strconv.Itoa(i)] = []interface{}{s.ServiceDenylist[i], t.ServiceDenylist[i]}
+			}
+		}
+		if len(diff2) > 0 {
+			diff["ServiceDenylist"] = []interface{}{diff2}
+		}
 	}
 
 	if s.ServiceNameRegexp != t.ServiceNameRegexp {

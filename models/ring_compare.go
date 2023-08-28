@@ -72,7 +72,7 @@ func (s Ring) Diff(t Ring, opts ...Options) map[string][]interface{} {
 	}
 
 	if !equalPointers(s.Maxlen, t.Maxlen) {
-		diff["Maxlen"] = []interface{}{s.Maxlen, t.Maxlen}
+		diff["Maxlen"] = []interface{}{ValueOrNil(s.Maxlen), ValueOrNil(t.Maxlen)}
 	}
 
 	if s.Name != t.Name {
@@ -80,15 +80,15 @@ func (s Ring) Diff(t Ring, opts ...Options) map[string][]interface{} {
 	}
 
 	if !equalPointers(s.Size, t.Size) {
-		diff["Size"] = []interface{}{s.Size, t.Size}
+		diff["Size"] = []interface{}{ValueOrNil(s.Size), ValueOrNil(t.Size)}
 	}
 
 	if !equalPointers(s.TimeoutConnect, t.TimeoutConnect) {
-		diff["TimeoutConnect"] = []interface{}{s.TimeoutConnect, t.TimeoutConnect}
+		diff["TimeoutConnect"] = []interface{}{ValueOrNil(s.TimeoutConnect), ValueOrNil(t.TimeoutConnect)}
 	}
 
 	if !equalPointers(s.TimeoutServer, t.TimeoutServer) {
-		diff["TimeoutServer"] = []interface{}{s.TimeoutServer, t.TimeoutServer}
+		diff["TimeoutServer"] = []interface{}{ValueOrNil(s.TimeoutServer), ValueOrNil(t.TimeoutServer)}
 	}
 
 	return diff

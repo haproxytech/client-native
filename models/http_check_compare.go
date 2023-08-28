@@ -200,7 +200,7 @@ func (s HTTPCheck) Diff(t HTTPCheck, opts ...Options) map[string][]interface{} {
 	opt := getOptions(opts...)
 
 	diff := make(map[string][]interface{})
-	if len(s.CheckHeaders) != len(t.CheckHeaders) {
+	if !CheckSameNilAndLen(s.CheckHeaders, t.CheckHeaders, opt) {
 		diff["CheckHeaders"] = []interface{}{s.CheckHeaders, t.CheckHeaders}
 	} else {
 		diff2 := make(map[string][]interface{})
@@ -248,7 +248,7 @@ func (s HTTPCheck) Diff(t HTTPCheck, opts ...Options) map[string][]interface{} {
 	}
 
 	if !opt.SkipIndex && !equalPointers(s.Index, t.Index) {
-		diff["Index"] = []interface{}{s.Index, t.Index}
+		diff["Index"] = []interface{}{ValueOrNil(s.Index), ValueOrNil(t.Index)}
 	}
 
 	if s.Linger != t.Linger {
@@ -264,7 +264,7 @@ func (s HTTPCheck) Diff(t HTTPCheck, opts ...Options) map[string][]interface{} {
 	}
 
 	if !equalPointers(s.MinRecv, t.MinRecv) {
-		diff["MinRecv"] = []interface{}{s.MinRecv, t.MinRecv}
+		diff["MinRecv"] = []interface{}{ValueOrNil(s.MinRecv), ValueOrNil(t.MinRecv)}
 	}
 
 	if s.OkStatus != t.OkStatus {
@@ -284,7 +284,7 @@ func (s HTTPCheck) Diff(t HTTPCheck, opts ...Options) map[string][]interface{} {
 	}
 
 	if !equalPointers(s.Port, t.Port) {
-		diff["Port"] = []interface{}{s.Port, t.Port}
+		diff["Port"] = []interface{}{ValueOrNil(s.Port), ValueOrNil(t.Port)}
 	}
 
 	if s.PortString != t.PortString {

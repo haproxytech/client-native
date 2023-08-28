@@ -17,6 +17,10 @@
 
 package models
 
+import (
+	"strconv"
+)
+
 // Equal checks if two structs of type Errorfiles are equal
 //
 // By default empty maps and slices are equal to nil:
@@ -61,8 +65,18 @@ func (s Errorfiles) Diff(t Errorfiles, opts ...Options) map[string][]interface{}
 	opt := getOptions(opts...)
 
 	diff := make(map[string][]interface{})
-	if !equalComparableSlice(s.Codes, t.Codes, opt) {
+	if !CheckSameNilAndLen(s.Codes, t.Codes, opt) {
 		diff["Codes"] = []interface{}{s.Codes, t.Codes}
+	} else {
+		diff2 := make(map[string][]interface{})
+		for i := range s.Codes {
+			if s.Codes[i] != t.Codes[i] {
+				diff2[strconv.Itoa(i)] = []interface{}{s.Codes[i], t.Codes[i]}
+			}
+		}
+		if len(diff2) > 0 {
+			diff["Codes"] = []interface{}{diff2}
+		}
 	}
 
 	if s.Name != t.Name {

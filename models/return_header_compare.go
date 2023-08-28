@@ -44,11 +44,11 @@ func (s ReturnHeader) Equal(t ReturnHeader, opts ...Options) bool {
 func (s ReturnHeader) Diff(t ReturnHeader, opts ...Options) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if !equalPointers(s.Fmt, t.Fmt) {
-		diff["Fmt"] = []interface{}{s.Fmt, t.Fmt}
+		diff["Fmt"] = []interface{}{ValueOrNil(s.Fmt), ValueOrNil(t.Fmt)}
 	}
 
 	if !equalPointers(s.Name, t.Name) {
-		diff["Name"] = []interface{}{s.Name, t.Name}
+		diff["Name"] = []interface{}{ValueOrNil(s.Name), ValueOrNil(t.Name)}
 	}
 
 	return diff

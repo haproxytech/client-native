@@ -95,15 +95,15 @@ func Test{{$.Name}}{{.}}False(t *testing.T) {
 					result.{{.Name}} = {{.TypeInFile}}(time.Now().AddDate(rand.Intn(10), rand.Intn(12), rand.Intn(28)))
 				{{- else}}
 					result.{{.Name}} = time.Now().AddDate(rand.Intn(10), rand.Intn(12), rand.Intn(28))
-				{{- end}}
-			{{- end}}
-			{{- if or (HasPrefix .Type "*DateTime") (HasPrefix .Type "*Date") }}
+            	{{- end}}
+            {{- end}}
+            {{- if or (HasPrefix .Type "*DateTime") (HasPrefix .Type "*Date") }}
 				{{- if ne .TypeInFile "" }}
-					result.{{.Name}} = Ptr({{.TypeInFile}}(time.Now().AddDate(rand.Intn(10), rand.Intn(12), rand.Intn(28))))
+                	result.{{.Name}} = Ptr({{.TypeInFile}}(time.Now().AddDate(rand.Intn(10), rand.Intn(12), rand.Intn(28))))
 				{{- else}}
 					result.{{.Name}} = Ptr(time.Now().AddDate(rand.Intn(10), rand.Intn(12), rand.Intn(28)))
-				{{- end}}
-			{{- end}}
+            	{{- end}}
+            {{- end}}
 			{{- /*//{{.Name}} => {{.Type}}*/}}
 		{{- end}}
 		samples = append(samples, struct {

@@ -86,7 +86,7 @@ func (s StickTable) Diff(t StickTable, opts ...Options) map[string][]interface{}
 	opt := getOptions(opts...)
 
 	diff := make(map[string][]interface{})
-	if len(s.Fields) != len(t.Fields) {
+	if !CheckSameNilAndLen(s.Fields, t.Fields, opt) {
 		diff["Fields"] = []interface{}{s.Fields, t.Fields}
 	} else {
 		diff2 := make(map[string][]interface{})
@@ -106,11 +106,11 @@ func (s StickTable) Diff(t StickTable, opts ...Options) map[string][]interface{}
 	}
 
 	if !equalPointers(s.Process, t.Process) {
-		diff["Process"] = []interface{}{s.Process, t.Process}
+		diff["Process"] = []interface{}{ValueOrNil(s.Process), ValueOrNil(t.Process)}
 	}
 
 	if !equalPointers(s.Size, t.Size) {
-		diff["Size"] = []interface{}{s.Size, t.Size}
+		diff["Size"] = []interface{}{ValueOrNil(s.Size), ValueOrNil(t.Size)}
 	}
 
 	if s.Type != t.Type {
@@ -118,7 +118,7 @@ func (s StickTable) Diff(t StickTable, opts ...Options) map[string][]interface{}
 	}
 
 	if !equalPointers(s.Used, t.Used) {
-		diff["Used"] = []interface{}{s.Used, t.Used}
+		diff["Used"] = []interface{}{ValueOrNil(s.Used), ValueOrNil(t.Used)}
 	}
 
 	return diff

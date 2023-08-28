@@ -87,3 +87,10 @@ func equalComparableMap[T comparable](m1, m2 map[string]T, opt Options) bool {
 	}
 	return true
 }
+
+func ValueOrNil[T any](v *T) any {
+	if v == nil {
+		return nil
+	}
+	return *v
+}

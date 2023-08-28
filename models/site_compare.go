@@ -74,7 +74,7 @@ func (s Site) Diff(t Site, opts ...Options) map[string][]interface{} {
 	opt := getOptions(opts...)
 
 	diff := make(map[string][]interface{})
-	if len(s.Farms) != len(t.Farms) {
+	if !CheckSameNilAndLen(s.Farms, t.Farms, opt) {
 		diff["Farms"] = []interface{}{s.Farms, t.Farms}
 	} else {
 		diff2 := make(map[string][]interface{})
@@ -94,7 +94,7 @@ func (s Site) Diff(t Site, opts ...Options) map[string][]interface{} {
 	}
 
 	if !s.Service.Equal(*t.Service, opt) {
-		diff["Service"] = []interface{}{s.Service, t.Service}
+		diff["Service"] = []interface{}{ValueOrNil(s.Service), ValueOrNil(t.Service)}
 	}
 
 	return diff
@@ -174,7 +174,7 @@ func (s SiteFarm) Diff(t SiteFarm, opts ...Options) map[string][]interface{} {
 
 	diff := make(map[string][]interface{})
 	if !s.Balance.Equal(*t.Balance, opt) {
-		diff["Balance"] = []interface{}{s.Balance, t.Balance}
+		diff["Balance"] = []interface{}{ValueOrNil(s.Balance), ValueOrNil(t.Balance)}
 	}
 
 	if s.Cond != t.Cond {
@@ -186,7 +186,7 @@ func (s SiteFarm) Diff(t SiteFarm, opts ...Options) map[string][]interface{} {
 	}
 
 	if !s.Forwardfor.Equal(*t.Forwardfor, opt) {
-		diff["Forwardfor"] = []interface{}{s.Forwardfor, t.Forwardfor}
+		diff["Forwardfor"] = []interface{}{ValueOrNil(s.Forwardfor), ValueOrNil(t.Forwardfor)}
 	}
 
 	if s.Mode != t.Mode {
@@ -197,7 +197,7 @@ func (s SiteFarm) Diff(t SiteFarm, opts ...Options) map[string][]interface{} {
 		diff["Name"] = []interface{}{s.Name, t.Name}
 	}
 
-	if len(s.Servers) != len(t.Servers) {
+	if !CheckSameNilAndLen(s.Servers, t.Servers, opt) {
 		diff["Servers"] = []interface{}{s.Servers, t.Servers}
 	} else {
 		diff2 := make(map[string][]interface{})
@@ -280,7 +280,7 @@ func (s SiteService) Diff(t SiteService, opts ...Options) map[string][]interface
 		diff["HTTPConnectionMode"] = []interface{}{s.HTTPConnectionMode, t.HTTPConnectionMode}
 	}
 
-	if len(s.Listeners) != len(t.Listeners) {
+	if !CheckSameNilAndLen(s.Listeners, t.Listeners, opt) {
 		diff["Listeners"] = []interface{}{s.Listeners, t.Listeners}
 	} else {
 		diff2 := make(map[string][]interface{})
@@ -296,7 +296,7 @@ func (s SiteService) Diff(t SiteService, opts ...Options) map[string][]interface
 	}
 
 	if !equalPointers(s.Maxconn, t.Maxconn) {
-		diff["Maxconn"] = []interface{}{s.Maxconn, t.Maxconn}
+		diff["Maxconn"] = []interface{}{ValueOrNil(s.Maxconn), ValueOrNil(t.Maxconn)}
 	}
 
 	if s.Mode != t.Mode {

@@ -48,7 +48,7 @@ func (s MailersSection) Diff(t MailersSection, opts ...Options) map[string][]int
 	}
 
 	if !equalPointers(s.Timeout, t.Timeout) {
-		diff["Timeout"] = []interface{}{s.Timeout, t.Timeout}
+		diff["Timeout"] = []interface{}{ValueOrNil(s.Timeout), ValueOrNil(t.Timeout)}
 	}
 
 	return diff

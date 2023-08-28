@@ -127,7 +127,7 @@ func (s AwsRegion) Diff(t AwsRegion, opts ...Options) map[string][]interface{} {
 		diff["AccessKeyID"] = []interface{}{s.AccessKeyID, t.AccessKeyID}
 	}
 
-	if len(s.Allowlist) != len(t.Allowlist) {
+	if !CheckSameNilAndLen(s.Allowlist, t.Allowlist, opt) {
 		diff["Allowlist"] = []interface{}{s.Allowlist, t.Allowlist}
 	} else {
 		diff2 := make(map[string][]interface{})
@@ -142,7 +142,7 @@ func (s AwsRegion) Diff(t AwsRegion, opts ...Options) map[string][]interface{} {
 		}
 	}
 
-	if len(s.Denylist) != len(t.Denylist) {
+	if !CheckSameNilAndLen(s.Denylist, t.Denylist, opt) {
 		diff["Denylist"] = []interface{}{s.Denylist, t.Denylist}
 	} else {
 		diff2 := make(map[string][]interface{})
@@ -162,27 +162,27 @@ func (s AwsRegion) Diff(t AwsRegion, opts ...Options) map[string][]interface{} {
 	}
 
 	if !equalPointers(s.Enabled, t.Enabled) {
-		diff["Enabled"] = []interface{}{s.Enabled, t.Enabled}
+		diff["Enabled"] = []interface{}{ValueOrNil(s.Enabled), ValueOrNil(t.Enabled)}
 	}
 
 	if !equalPointers(s.ID, t.ID) {
-		diff["ID"] = []interface{}{s.ID, t.ID}
+		diff["ID"] = []interface{}{ValueOrNil(s.ID), ValueOrNil(t.ID)}
 	}
 
 	if !equalPointers(s.IPV4Address, t.IPV4Address) {
-		diff["IPV4Address"] = []interface{}{s.IPV4Address, t.IPV4Address}
+		diff["IPV4Address"] = []interface{}{ValueOrNil(s.IPV4Address), ValueOrNil(t.IPV4Address)}
 	}
 
 	if !equalPointers(s.Name, t.Name) {
-		diff["Name"] = []interface{}{s.Name, t.Name}
+		diff["Name"] = []interface{}{ValueOrNil(s.Name), ValueOrNil(t.Name)}
 	}
 
 	if !equalPointers(s.Region, t.Region) {
-		diff["Region"] = []interface{}{s.Region, t.Region}
+		diff["Region"] = []interface{}{ValueOrNil(s.Region), ValueOrNil(t.Region)}
 	}
 
 	if !equalPointers(s.RetryTimeout, t.RetryTimeout) {
-		diff["RetryTimeout"] = []interface{}{s.RetryTimeout, t.RetryTimeout}
+		diff["RetryTimeout"] = []interface{}{ValueOrNil(s.RetryTimeout), ValueOrNil(t.RetryTimeout)}
 	}
 
 	if s.SecretAccessKey != t.SecretAccessKey {
@@ -190,7 +190,7 @@ func (s AwsRegion) Diff(t AwsRegion, opts ...Options) map[string][]interface{} {
 	}
 
 	if !equalPointers(s.ServerSlotsBase, t.ServerSlotsBase) {
-		diff["ServerSlotsBase"] = []interface{}{s.ServerSlotsBase, t.ServerSlotsBase}
+		diff["ServerSlotsBase"] = []interface{}{ValueOrNil(s.ServerSlotsBase), ValueOrNil(t.ServerSlotsBase)}
 	}
 
 	if s.ServerSlotsGrowthIncrement != t.ServerSlotsGrowthIncrement {
@@ -198,7 +198,7 @@ func (s AwsRegion) Diff(t AwsRegion, opts ...Options) map[string][]interface{} {
 	}
 
 	if !equalPointers(s.ServerSlotsGrowthType, t.ServerSlotsGrowthType) {
-		diff["ServerSlotsGrowthType"] = []interface{}{s.ServerSlotsGrowthType, t.ServerSlotsGrowthType}
+		diff["ServerSlotsGrowthType"] = []interface{}{ValueOrNil(s.ServerSlotsGrowthType), ValueOrNil(t.ServerSlotsGrowthType)}
 	}
 
 	return diff

@@ -68,7 +68,7 @@ func (s GeneralFile) Diff(t GeneralFile, opts ...Options) map[string][]interface
 	}
 
 	if !equalPointers(s.Size, t.Size) {
-		diff["Size"] = []interface{}{s.Size, t.Size}
+		diff["Size"] = []interface{}{ValueOrNil(s.Size), ValueOrNil(t.Size)}
 	}
 
 	if s.StorageName != t.StorageName {

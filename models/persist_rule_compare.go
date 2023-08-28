@@ -48,7 +48,7 @@ func (s PersistRule) Diff(t PersistRule, opts ...Options) map[string][]interface
 	}
 
 	if !equalPointers(s.Type, t.Type) {
-		diff["Type"] = []interface{}{s.Type, t.Type}
+		diff["Type"] = []interface{}{ValueOrNil(s.Type), ValueOrNil(t.Type)}
 	}
 
 	return diff

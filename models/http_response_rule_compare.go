@@ -296,7 +296,7 @@ func (s HTTPResponseRule) Diff(t HTTPResponseRule, opts ...Options) map[string][
 	opt := getOptions(opts...)
 
 	diff := make(map[string][]interface{})
-	if len(s.ReturnHeaders) != len(t.ReturnHeaders) {
+	if !CheckSameNilAndLen(s.ReturnHeaders, t.ReturnHeaders, opt) {
 		diff["ReturnHeaders"] = []interface{}{s.ReturnHeaders, t.ReturnHeaders}
 	} else {
 		diff2 := make(map[string][]interface{})
@@ -336,7 +336,7 @@ func (s HTTPResponseRule) Diff(t HTTPResponseRule, opts ...Options) map[string][
 	}
 
 	if !equalPointers(s.CaptureID, t.CaptureID) {
-		diff["CaptureID"] = []interface{}{s.CaptureID, t.CaptureID}
+		diff["CaptureID"] = []interface{}{ValueOrNil(s.CaptureID), ValueOrNil(t.CaptureID)}
 	}
 
 	if s.CaptureSample != t.CaptureSample {
@@ -352,7 +352,7 @@ func (s HTTPResponseRule) Diff(t HTTPResponseRule, opts ...Options) map[string][
 	}
 
 	if !equalPointers(s.DenyStatus, t.DenyStatus) {
-		diff["DenyStatus"] = []interface{}{s.DenyStatus, t.DenyStatus}
+		diff["DenyStatus"] = []interface{}{ValueOrNil(s.DenyStatus), ValueOrNil(t.DenyStatus)}
 	}
 
 	if s.HdrFormat != t.HdrFormat {
@@ -372,7 +372,7 @@ func (s HTTPResponseRule) Diff(t HTTPResponseRule, opts ...Options) map[string][
 	}
 
 	if !opt.SkipIndex && !equalPointers(s.Index, t.Index) {
-		diff["Index"] = []interface{}{s.Index, t.Index}
+		diff["Index"] = []interface{}{ValueOrNil(s.Index), ValueOrNil(t.Index)}
 	}
 
 	if s.LogLevel != t.LogLevel {
@@ -408,7 +408,7 @@ func (s HTTPResponseRule) Diff(t HTTPResponseRule, opts ...Options) map[string][
 	}
 
 	if !equalPointers(s.RedirCode, t.RedirCode) {
-		diff["RedirCode"] = []interface{}{s.RedirCode, t.RedirCode}
+		diff["RedirCode"] = []interface{}{ValueOrNil(s.RedirCode), ValueOrNil(t.RedirCode)}
 	}
 
 	if s.RedirOption != t.RedirOption {
@@ -432,11 +432,11 @@ func (s HTTPResponseRule) Diff(t HTTPResponseRule, opts ...Options) map[string][
 	}
 
 	if !equalPointers(s.ReturnContentType, t.ReturnContentType) {
-		diff["ReturnContentType"] = []interface{}{s.ReturnContentType, t.ReturnContentType}
+		diff["ReturnContentType"] = []interface{}{ValueOrNil(s.ReturnContentType), ValueOrNil(t.ReturnContentType)}
 	}
 
 	if !equalPointers(s.ReturnStatusCode, t.ReturnStatusCode) {
-		diff["ReturnStatusCode"] = []interface{}{s.ReturnStatusCode, t.ReturnStatusCode}
+		diff["ReturnStatusCode"] = []interface{}{ValueOrNil(s.ReturnStatusCode), ValueOrNil(t.ReturnStatusCode)}
 	}
 
 	if s.ScExpr != t.ScExpr {
@@ -452,7 +452,7 @@ func (s HTTPResponseRule) Diff(t HTTPResponseRule, opts ...Options) map[string][
 	}
 
 	if !equalPointers(s.ScInt, t.ScInt) {
-		diff["ScInt"] = []interface{}{s.ScInt, t.ScInt}
+		diff["ScInt"] = []interface{}{ValueOrNil(s.ScInt), ValueOrNil(t.ScInt)}
 	}
 
 	if s.SpoeEngine != t.SpoeEngine {
@@ -508,7 +508,7 @@ func (s HTTPResponseRule) Diff(t HTTPResponseRule, opts ...Options) map[string][
 	}
 
 	if !equalPointers(s.TrackScStickCounter, t.TrackScStickCounter) {
-		diff["TrackScStickCounter"] = []interface{}{s.TrackScStickCounter, t.TrackScStickCounter}
+		diff["TrackScStickCounter"] = []interface{}{ValueOrNil(s.TrackScStickCounter), ValueOrNil(t.TrackScStickCounter)}
 	}
 
 	if s.TrackScTable != t.TrackScTable {
@@ -536,11 +536,11 @@ func (s HTTPResponseRule) Diff(t HTTPResponseRule, opts ...Options) map[string][
 	}
 
 	if !equalPointers(s.WaitAtLeast, t.WaitAtLeast) {
-		diff["WaitAtLeast"] = []interface{}{s.WaitAtLeast, t.WaitAtLeast}
+		diff["WaitAtLeast"] = []interface{}{ValueOrNil(s.WaitAtLeast), ValueOrNil(t.WaitAtLeast)}
 	}
 
 	if !equalPointers(s.WaitTime, t.WaitTime) {
-		diff["WaitTime"] = []interface{}{s.WaitTime, t.WaitTime}
+		diff["WaitTime"] = []interface{}{ValueOrNil(s.WaitTime), ValueOrNil(t.WaitTime)}
 	}
 
 	return diff

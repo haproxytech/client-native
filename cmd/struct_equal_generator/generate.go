@@ -10,6 +10,7 @@ func generateEqualAndDiff(opt generateEqualAndDiffOptions) error {
 		"HasPrefix": strings.HasPrefix,
 		"Title":     toTitle,
 		"CamelCase": toCamelCase,
+		"JSON":      toJSON,
 	}
 	tmpl, err := template.New("generate.tmpl").Funcs(funcMaps).Parse(tmplEqualAndDiff)
 	if err != nil {

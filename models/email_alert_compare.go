@@ -56,7 +56,7 @@ func (s EmailAlert) Equal(t EmailAlert, opts ...Options) bool {
 func (s EmailAlert) Diff(t EmailAlert, opts ...Options) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if !equalPointers(s.From, t.From) {
-		diff["From"] = []interface{}{s.From, t.From}
+		diff["From"] = []interface{}{ValueOrNil(s.From), ValueOrNil(t.From)}
 	}
 
 	if s.Level != t.Level {
@@ -64,7 +64,7 @@ func (s EmailAlert) Diff(t EmailAlert, opts ...Options) map[string][]interface{}
 	}
 
 	if !equalPointers(s.Mailers, t.Mailers) {
-		diff["Mailers"] = []interface{}{s.Mailers, t.Mailers}
+		diff["Mailers"] = []interface{}{ValueOrNil(s.Mailers), ValueOrNil(t.Mailers)}
 	}
 
 	if s.Myhostname != t.Myhostname {
@@ -72,7 +72,7 @@ func (s EmailAlert) Diff(t EmailAlert, opts ...Options) map[string][]interface{}
 	}
 
 	if !equalPointers(s.To, t.To) {
-		diff["To"] = []interface{}{s.To, t.To}
+		diff["To"] = []interface{}{ValueOrNil(s.To), ValueOrNil(t.To)}
 	}
 
 	return diff

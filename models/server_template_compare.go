@@ -86,7 +86,7 @@ func (s ServerTemplate) Diff(t ServerTemplate, opts ...Options) map[string][]int
 	}
 
 	if !equalPointers(s.ID, t.ID) {
-		diff["ID"] = []interface{}{s.ID, t.ID}
+		diff["ID"] = []interface{}{ValueOrNil(s.ID), ValueOrNil(t.ID)}
 	}
 
 	if s.NumOrRange != t.NumOrRange {
@@ -94,7 +94,7 @@ func (s ServerTemplate) Diff(t ServerTemplate, opts ...Options) map[string][]int
 	}
 
 	if !equalPointers(s.Port, t.Port) {
-		diff["Port"] = []interface{}{s.Port, t.Port}
+		diff["Port"] = []interface{}{ValueOrNil(s.Port), ValueOrNil(t.Port)}
 	}
 
 	if s.Prefix != t.Prefix {

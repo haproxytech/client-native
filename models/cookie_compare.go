@@ -119,7 +119,7 @@ func (s Cookie) Diff(t Cookie, opts ...Options) map[string][]interface{} {
 	opt := getOptions(opts...)
 
 	diff := make(map[string][]interface{})
-	if len(s.Attrs) != len(t.Attrs) {
+	if !CheckSameNilAndLen(s.Attrs, t.Attrs, opt) {
 		diff["Attrs"] = []interface{}{s.Attrs, t.Attrs}
 	} else {
 		diff2 := make(map[string][]interface{})
@@ -134,7 +134,7 @@ func (s Cookie) Diff(t Cookie, opts ...Options) map[string][]interface{} {
 		}
 	}
 
-	if len(s.Domains) != len(t.Domains) {
+	if !CheckSameNilAndLen(s.Domains, t.Domains, opt) {
 		diff["Domains"] = []interface{}{s.Domains, t.Domains}
 	} else {
 		diff2 := make(map[string][]interface{})
@@ -170,7 +170,7 @@ func (s Cookie) Diff(t Cookie, opts ...Options) map[string][]interface{} {
 	}
 
 	if !equalPointers(s.Name, t.Name) {
-		diff["Name"] = []interface{}{s.Name, t.Name}
+		diff["Name"] = []interface{}{ValueOrNil(s.Name), ValueOrNil(t.Name)}
 	}
 
 	if s.Nocache != t.Nocache {

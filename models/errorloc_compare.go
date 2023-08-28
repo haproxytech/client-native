@@ -44,11 +44,11 @@ func (s Errorloc) Equal(t Errorloc, opts ...Options) bool {
 func (s Errorloc) Diff(t Errorloc, opts ...Options) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if !equalPointers(s.Code, t.Code) {
-		diff["Code"] = []interface{}{s.Code, t.Code}
+		diff["Code"] = []interface{}{ValueOrNil(s.Code), ValueOrNil(t.Code)}
 	}
 
 	if !equalPointers(s.URL, t.URL) {
-		diff["URL"] = []interface{}{s.URL, t.URL}
+		diff["URL"] = []interface{}{ValueOrNil(s.URL), ValueOrNil(t.URL)}
 	}
 
 	return diff

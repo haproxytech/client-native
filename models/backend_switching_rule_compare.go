@@ -76,7 +76,7 @@ func (s BackendSwitchingRule) Diff(t BackendSwitchingRule, opts ...Options) map[
 	}
 
 	if !opt.SkipIndex && !equalPointers(s.Index, t.Index) {
-		diff["Index"] = []interface{}{s.Index, t.Index}
+		diff["Index"] = []interface{}{ValueOrNil(s.Index), ValueOrNil(t.Index)}
 	}
 
 	if s.Name != t.Name {

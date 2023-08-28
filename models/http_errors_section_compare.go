@@ -70,7 +70,7 @@ func (s HTTPErrorsSection) Diff(t HTTPErrorsSection, opts ...Options) map[string
 	opt := getOptions(opts...)
 
 	diff := make(map[string][]interface{})
-	if len(s.ErrorFiles) != len(t.ErrorFiles) {
+	if !CheckSameNilAndLen(s.ErrorFiles, t.ErrorFiles, opt) {
 		diff["ErrorFiles"] = []interface{}{s.ErrorFiles, t.ErrorFiles}
 	} else {
 		diff2 := make(map[string][]interface{})

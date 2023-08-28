@@ -37,7 +37,23 @@ import (
 func (s SpoeFiles) Equal(t SpoeFiles, opts ...Options) bool {
 	opt := getOptions(opts...)
 
-	return equalComparableSlice(s, t, opt)
+	if !opt.NilSameAsEmpty {
+		if s == nil && t != nil {
+			return false
+		}
+		if t == nil && s != nil {
+			return false
+		}
+	}
+	if len(s) != len(t) {
+		return false
+	}
+	for i, v := range s {
+		if v != t[i] {
+			return false
+		}
+	}
+	return true
 }
 
 // Diff checks if two structs of type SpoeFiles are equal

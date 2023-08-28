@@ -70,7 +70,7 @@ func (s ProcessInfo) Diff(t ProcessInfo, opts ...Options) map[string][]interface
 	}
 
 	if !s.Info.Equal(*t.Info, opt) {
-		diff["Info"] = []interface{}{s.Info, t.Info}
+		diff["Info"] = []interface{}{ValueOrNil(s.Info), ValueOrNil(t.Info)}
 	}
 
 	if s.RuntimeAPI != t.RuntimeAPI {

@@ -17,6 +17,10 @@
 
 package models
 
+import (
+	"strconv"
+)
+
 // Equal checks if two structs of type Compression are equal
 //
 // By default empty maps and slices are equal to nil:
@@ -65,16 +69,36 @@ func (s Compression) Diff(t Compression, opts ...Options) map[string][]interface
 	opt := getOptions(opts...)
 
 	diff := make(map[string][]interface{})
-	if !equalComparableSlice(s.Algorithms, t.Algorithms, opt) {
+	if !CheckSameNilAndLen(s.Algorithms, t.Algorithms, opt) {
 		diff["Algorithms"] = []interface{}{s.Algorithms, t.Algorithms}
+	} else {
+		diff2 := make(map[string][]interface{})
+		for i := range s.Algorithms {
+			if s.Algorithms[i] != t.Algorithms[i] {
+				diff2[strconv.Itoa(i)] = []interface{}{s.Algorithms[i], t.Algorithms[i]}
+			}
+		}
+		if len(diff2) > 0 {
+			diff["Algorithms"] = []interface{}{diff2}
+		}
 	}
 
 	if s.Offload != t.Offload {
 		diff["Offload"] = []interface{}{s.Offload, t.Offload}
 	}
 
-	if !equalComparableSlice(s.Types, t.Types, opt) {
+	if !CheckSameNilAndLen(s.Types, t.Types, opt) {
 		diff["Types"] = []interface{}{s.Types, t.Types}
+	} else {
+		diff2 := make(map[string][]interface{})
+		for i := range s.Types {
+			if s.Types[i] != t.Types[i] {
+				diff2[strconv.Itoa(i)] = []interface{}{s.Types[i], t.Types[i]}
+			}
+		}
+		if len(diff2) > 0 {
+			diff["Types"] = []interface{}{diff2}
+		}
 	}
 
 	return diff

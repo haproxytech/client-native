@@ -64,7 +64,7 @@ func (s Capture) Diff(t Capture, opts ...Options) map[string][]interface{} {
 
 	diff := make(map[string][]interface{})
 	if !opt.SkipIndex && !equalPointers(s.Index, t.Index) {
-		diff["Index"] = []interface{}{s.Index, t.Index}
+		diff["Index"] = []interface{}{ValueOrNil(s.Index), ValueOrNil(t.Index)}
 	}
 
 	if s.Length != t.Length {

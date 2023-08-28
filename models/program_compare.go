@@ -56,7 +56,7 @@ func (s Program) Equal(t Program, opts ...Options) bool {
 func (s Program) Diff(t Program, opts ...Options) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if !equalPointers(s.Command, t.Command) {
-		diff["Command"] = []interface{}{s.Command, t.Command}
+		diff["Command"] = []interface{}{ValueOrNil(s.Command), ValueOrNil(t.Command)}
 	}
 
 	if s.Group != t.Group {

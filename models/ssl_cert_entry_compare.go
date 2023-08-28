@@ -17,6 +17,10 @@
 
 package models
 
+import (
+	"strconv"
+)
+
 // Equal checks if two structs of type SslCertEntry are equal
 //
 // By default empty maps and slices are equal to nil:
@@ -145,8 +149,18 @@ func (s SslCertEntry) Diff(t SslCertEntry, opts ...Options) map[string][]interfa
 		diff["Subject"] = []interface{}{s.Subject, t.Subject}
 	}
 
-	if !equalComparableSlice(s.SubjectAlternativeNames, t.SubjectAlternativeNames, opt) {
+	if !CheckSameNilAndLen(s.SubjectAlternativeNames, t.SubjectAlternativeNames, opt) {
 		diff["SubjectAlternativeNames"] = []interface{}{s.SubjectAlternativeNames, t.SubjectAlternativeNames}
+	} else {
+		diff2 := make(map[string][]interface{})
+		for i := range s.SubjectAlternativeNames {
+			if s.SubjectAlternativeNames[i] != t.SubjectAlternativeNames[i] {
+				diff2[strconv.Itoa(i)] = []interface{}{s.SubjectAlternativeNames[i], t.SubjectAlternativeNames[i]}
+			}
+		}
+		if len(diff2) > 0 {
+			diff["SubjectAlternativeNames"] = []interface{}{diff2}
+		}
 	}
 
 	return diff

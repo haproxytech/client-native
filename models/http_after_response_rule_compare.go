@@ -180,7 +180,7 @@ func (s HTTPAfterResponseRule) Diff(t HTTPAfterResponseRule, opts ...Options) ma
 	}
 
 	if !opt.SkipIndex && !equalPointers(s.Index, t.Index) {
-		diff["Index"] = []interface{}{s.Index, t.Index}
+		diff["Index"] = []interface{}{ValueOrNil(s.Index), ValueOrNil(t.Index)}
 	}
 
 	if s.LogLevel != t.LogLevel {
@@ -212,7 +212,7 @@ func (s HTTPAfterResponseRule) Diff(t HTTPAfterResponseRule, opts ...Options) ma
 	}
 
 	if !equalPointers(s.ScInt, t.ScInt) {
-		diff["ScInt"] = []interface{}{s.ScInt, t.ScInt}
+		diff["ScInt"] = []interface{}{ValueOrNil(s.ScInt), ValueOrNil(t.ScInt)}
 	}
 
 	if s.Status != t.Status {
