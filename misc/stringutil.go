@@ -74,7 +74,7 @@ func CamelCase(fieldName string, initCase bool) string {
 }
 
 // SnakeCase turns camel case to snake case string
-func SnakeCase(fieldName string) string { //nolint:gocognit
+func SnakeCase(fieldName string) string {
 	fieldName = strings.Trim(fieldName, " ")
 	n := ""
 	for i, v := range fieldName {
@@ -109,7 +109,7 @@ func SnakeCase(fieldName string) string { //nolint:gocognit
 }
 
 // DashCase turns camel case to snake case string
-func DashCase(fieldName string) string { //nolint:gocognit
+func DashCase(fieldName string) string {
 	fieldName = strings.Trim(fieldName, " ")
 	n := ""
 	for i, v := range fieldName {

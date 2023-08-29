@@ -1,6 +1,6 @@
 module github.com/haproxytech/client-native/v5
 
-go 1.20
+go 1.21
 
 require (
 	github.com/go-openapi/errors v0.20.4
