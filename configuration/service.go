@@ -319,7 +319,7 @@ func (s *Service) updateConfig() (bool, error) {
 			server := &models.Server{
 				Name:    node.name,
 				Address: node.address,
-				Port:    &node.port,
+				Port:    misc.Ptr(node.port),
 				ServerParams: models.ServerParams{
 					Weight: misc.Int64P(128),
 					Check:  "enabled",
