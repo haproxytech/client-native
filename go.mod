@@ -11,7 +11,7 @@ require (
 	github.com/google/go-cmp v0.5.9
 	github.com/google/renameio v1.0.1
 	github.com/google/uuid v1.3.1
-	github.com/haproxytech/config-parser/v5 v5.0.1-0.20230621085204-83b68fc565ef
+	github.com/haproxytech/config-parser/v5 v5.0.1-0.20230821131853-5878ad7f5340
 	github.com/json-iterator/go v1.1.12
 	github.com/kballard/go-shellquote v0.0.0-20180428030007-95032a82bc51
 	github.com/mitchellh/mapstructure v1.5.0
@@ -39,7 +39,6 @@ require (
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/rogpeppe/go-internal v1.6.1 // indirect
 	go.mongodb.org/mongo-driver v1.12.1 // indirect
-	golang.org/x/exp v0.0.0-20230817173708-d852ddb80c63 // indirect
 	golang.org/x/mod v0.12.0 // indirect
 	golang.org/x/sys v0.11.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
