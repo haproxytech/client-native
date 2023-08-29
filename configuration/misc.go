@@ -3,6 +3,7 @@ package configuration
 import (
 	"github.com/haproxytech/config-parser/v5/parsers/http/actions"
 
+	"github.com/haproxytech/client-native/v5/misc"
 	"github.com/haproxytech/client-native/v5/models"
 )
 
@@ -13,8 +14,8 @@ func actionHdr2ModelHdr(hdrs []*actions.Hdr) []*models.ReturnHeader {
 	headers := []*models.ReturnHeader{}
 	for _, h := range hdrs {
 		hdr := models.ReturnHeader{
-			Fmt:  &h.Fmt,
-			Name: &h.Name,
+			Fmt:  misc.Ptr(h.Fmt),
+			Name: misc.Ptr(h.Name),
 		}
 		headers = append(headers, &hdr)
 	}

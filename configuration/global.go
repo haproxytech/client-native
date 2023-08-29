@@ -999,8 +999,8 @@ func ParseGlobalSection(p parser.Parser) (*models.Global, error) { //nolint:goco
 		}
 		for _, e := range envs {
 			env := &models.PresetEnv{
-				Name:  &e.Key,
-				Value: &e.Value,
+				Name:  misc.Ptr(e.Key),
+				Value: misc.Ptr(e.Value),
 			}
 			presetEnvs = append(presetEnvs, env)
 		}
