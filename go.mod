@@ -34,6 +34,6 @@ require (
 	github.com/rogpeppe/go-internal v1.6.1 // indirect
 	go.mongodb.org/mongo-driver v1.12.1 // indirect
 	golang.org/x/exp v0.0.0-20230817173708-d852ddb80c63 // indirect
-	golang.org/x/sys v0.11.0 // indirect
+	golang.org/x/sys v0.12.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
