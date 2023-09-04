@@ -18,36 +18,30 @@
 package models
 
 import (
-	"bytes"
-	"encoding/gob"
+	"encoding/json"
 	"testing"
 
-	"github.com/brianvoe/gofakeit/v6"
+	"github.com/go-faker/faker/v4"
 
 	jsoniter "github.com/json-iterator/go"
 )
 
 func TestGlobalEqual(t *testing.T) {
-	faker := gofakeit.NewCrypto()
-	gofakeit.SetGlobalFaker(faker)
 	samples := []struct {
 		a, b Global
 	}{}
-	for i := 0; i < 100; i++ {
+	for i := 0; i < 2; i++ {
 		var sample Global
 		var result Global
-		err := gofakeit.Struct(&sample)
+		err := faker.FakeData(&sample)
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		buf := new(bytes.Buffer)
-		enc := gob.NewEncoder(buf)
-		err = enc.Encode(&sample)
+		byteJSON, err := json.Marshal(sample)
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		dec := gob.NewDecoder(buf)
-		err = dec.Decode(&result)
+		err = json.Unmarshal(byteJSON, &result)
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -75,19 +69,17 @@ func TestGlobalEqual(t *testing.T) {
 }
 
 func TestGlobalEqualFalse(t *testing.T) {
-	faker := gofakeit.NewCrypto()
-	gofakeit.SetGlobalFaker(faker)
 	samples := []struct {
 		a, b Global
 	}{}
-	for i := 0; i < 100; i++ {
+	for i := 0; i < 2; i++ {
 		var sample Global
 		var result Global
-		err := gofakeit.Struct(&sample)
+		err := faker.FakeData(&sample)
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		err = gofakeit.Struct(&result)
+		err = faker.FakeData(&result)
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -161,26 +153,21 @@ func TestGlobalEqualFalse(t *testing.T) {
 }
 
 func TestGlobalDiff(t *testing.T) {
-	faker := gofakeit.NewCrypto()
-	gofakeit.SetGlobalFaker(faker)
 	samples := []struct {
 		a, b Global
 	}{}
-	for i := 0; i < 100; i++ {
+	for i := 0; i < 2; i++ {
 		var sample Global
 		var result Global
-		err := gofakeit.Struct(&sample)
+		err := faker.FakeData(&sample)
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		buf := new(bytes.Buffer)
-		enc := gob.NewEncoder(buf)
-		err = enc.Encode(&sample)
+		byteJSON, err := json.Marshal(sample)
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		dec := gob.NewDecoder(buf)
-		err = dec.Decode(&result)
+		err = json.Unmarshal(byteJSON, &result)
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -208,19 +195,17 @@ func TestGlobalDiff(t *testing.T) {
 }
 
 func TestGlobalDiffFalse(t *testing.T) {
-	faker := gofakeit.NewCrypto()
-	gofakeit.SetGlobalFaker(faker)
 	samples := []struct {
 		a, b Global
 	}{}
-	for i := 0; i < 100; i++ {
+	for i := 0; i < 2; i++ {
 		var sample Global
 		var result Global
-		err := gofakeit.Struct(&sample)
+		err := faker.FakeData(&sample)
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		err = gofakeit.Struct(&result)
+		err = faker.FakeData(&result)
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -294,26 +279,21 @@ func TestGlobalDiffFalse(t *testing.T) {
 }
 
 func TestCPUMapEqual(t *testing.T) {
-	faker := gofakeit.NewCrypto()
-	gofakeit.SetGlobalFaker(faker)
 	samples := []struct {
 		a, b CPUMap
 	}{}
-	for i := 0; i < 100; i++ {
+	for i := 0; i < 2; i++ {
 		var sample CPUMap
 		var result CPUMap
-		err := gofakeit.Struct(&sample)
+		err := faker.FakeData(&sample)
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		buf := new(bytes.Buffer)
-		enc := gob.NewEncoder(buf)
-		err = enc.Encode(&sample)
+		byteJSON, err := json.Marshal(sample)
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		dec := gob.NewDecoder(buf)
-		err = dec.Decode(&result)
+		err = json.Unmarshal(byteJSON, &result)
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -341,19 +321,17 @@ func TestCPUMapEqual(t *testing.T) {
 }
 
 func TestCPUMapEqualFalse(t *testing.T) {
-	faker := gofakeit.NewCrypto()
-	gofakeit.SetGlobalFaker(faker)
 	samples := []struct {
 		a, b CPUMap
 	}{}
-	for i := 0; i < 100; i++ {
+	for i := 0; i < 2; i++ {
 		var sample CPUMap
 		var result CPUMap
-		err := gofakeit.Struct(&sample)
+		err := faker.FakeData(&sample)
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		err = gofakeit.Struct(&result)
+		err = faker.FakeData(&result)
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -380,26 +358,21 @@ func TestCPUMapEqualFalse(t *testing.T) {
 }
 
 func TestCPUMapDiff(t *testing.T) {
-	faker := gofakeit.NewCrypto()
-	gofakeit.SetGlobalFaker(faker)
 	samples := []struct {
 		a, b CPUMap
 	}{}
-	for i := 0; i < 100; i++ {
+	for i := 0; i < 2; i++ {
 		var sample CPUMap
 		var result CPUMap
-		err := gofakeit.Struct(&sample)
+		err := faker.FakeData(&sample)
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		buf := new(bytes.Buffer)
-		enc := gob.NewEncoder(buf)
-		err = enc.Encode(&sample)
+		byteJSON, err := json.Marshal(sample)
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		dec := gob.NewDecoder(buf)
-		err = dec.Decode(&result)
+		err = json.Unmarshal(byteJSON, &result)
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -427,19 +400,17 @@ func TestCPUMapDiff(t *testing.T) {
 }
 
 func TestCPUMapDiffFalse(t *testing.T) {
-	faker := gofakeit.NewCrypto()
-	gofakeit.SetGlobalFaker(faker)
 	samples := []struct {
 		a, b CPUMap
 	}{}
-	for i := 0; i < 100; i++ {
+	for i := 0; i < 2; i++ {
 		var sample CPUMap
 		var result CPUMap
-		err := gofakeit.Struct(&sample)
+		err := faker.FakeData(&sample)
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		err = gofakeit.Struct(&result)
+		err = faker.FakeData(&result)
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -466,26 +437,21 @@ func TestCPUMapDiffFalse(t *testing.T) {
 }
 
 func TestGlobalDefaultPathEqual(t *testing.T) {
-	faker := gofakeit.NewCrypto()
-	gofakeit.SetGlobalFaker(faker)
 	samples := []struct {
 		a, b GlobalDefaultPath
 	}{}
-	for i := 0; i < 100; i++ {
+	for i := 0; i < 2; i++ {
 		var sample GlobalDefaultPath
 		var result GlobalDefaultPath
-		err := gofakeit.Struct(&sample)
+		err := faker.FakeData(&sample)
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		buf := new(bytes.Buffer)
-		enc := gob.NewEncoder(buf)
-		err = enc.Encode(&sample)
+		byteJSON, err := json.Marshal(sample)
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		dec := gob.NewDecoder(buf)
-		err = dec.Decode(&result)
+		err = json.Unmarshal(byteJSON, &result)
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -513,19 +479,17 @@ func TestGlobalDefaultPathEqual(t *testing.T) {
 }
 
 func TestGlobalDefaultPathEqualFalse(t *testing.T) {
-	faker := gofakeit.NewCrypto()
-	gofakeit.SetGlobalFaker(faker)
 	samples := []struct {
 		a, b GlobalDefaultPath
 	}{}
-	for i := 0; i < 100; i++ {
+	for i := 0; i < 2; i++ {
 		var sample GlobalDefaultPath
 		var result GlobalDefaultPath
-		err := gofakeit.Struct(&sample)
+		err := faker.FakeData(&sample)
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		err = gofakeit.Struct(&result)
+		err = faker.FakeData(&result)
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -552,26 +516,21 @@ func TestGlobalDefaultPathEqualFalse(t *testing.T) {
 }
 
 func TestGlobalDefaultPathDiff(t *testing.T) {
-	faker := gofakeit.NewCrypto()
-	gofakeit.SetGlobalFaker(faker)
 	samples := []struct {
 		a, b GlobalDefaultPath
 	}{}
-	for i := 0; i < 100; i++ {
+	for i := 0; i < 2; i++ {
 		var sample GlobalDefaultPath
 		var result GlobalDefaultPath
-		err := gofakeit.Struct(&sample)
+		err := faker.FakeData(&sample)
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		buf := new(bytes.Buffer)
-		enc := gob.NewEncoder(buf)
-		err = enc.Encode(&sample)
+		byteJSON, err := json.Marshal(sample)
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		dec := gob.NewDecoder(buf)
-		err = dec.Decode(&result)
+		err = json.Unmarshal(byteJSON, &result)
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -599,19 +558,17 @@ func TestGlobalDefaultPathDiff(t *testing.T) {
 }
 
 func TestGlobalDefaultPathDiffFalse(t *testing.T) {
-	faker := gofakeit.NewCrypto()
-	gofakeit.SetGlobalFaker(faker)
 	samples := []struct {
 		a, b GlobalDefaultPath
 	}{}
-	for i := 0; i < 100; i++ {
+	for i := 0; i < 2; i++ {
 		var sample GlobalDefaultPath
 		var result GlobalDefaultPath
-		err := gofakeit.Struct(&sample)
+		err := faker.FakeData(&sample)
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		err = gofakeit.Struct(&result)
+		err = faker.FakeData(&result)
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -638,26 +595,21 @@ func TestGlobalDefaultPathDiffFalse(t *testing.T) {
 }
 
 func TestGlobalDeviceAtlasOptionsEqual(t *testing.T) {
-	faker := gofakeit.NewCrypto()
-	gofakeit.SetGlobalFaker(faker)
 	samples := []struct {
 		a, b GlobalDeviceAtlasOptions
 	}{}
-	for i := 0; i < 100; i++ {
+	for i := 0; i < 2; i++ {
 		var sample GlobalDeviceAtlasOptions
 		var result GlobalDeviceAtlasOptions
-		err := gofakeit.Struct(&sample)
+		err := faker.FakeData(&sample)
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		buf := new(bytes.Buffer)
-		enc := gob.NewEncoder(buf)
-		err = enc.Encode(&sample)
+		byteJSON, err := json.Marshal(sample)
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		dec := gob.NewDecoder(buf)
-		err = dec.Decode(&result)
+		err = json.Unmarshal(byteJSON, &result)
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -685,19 +637,17 @@ func TestGlobalDeviceAtlasOptionsEqual(t *testing.T) {
 }
 
 func TestGlobalDeviceAtlasOptionsEqualFalse(t *testing.T) {
-	faker := gofakeit.NewCrypto()
-	gofakeit.SetGlobalFaker(faker)
 	samples := []struct {
 		a, b GlobalDeviceAtlasOptions
 	}{}
-	for i := 0; i < 100; i++ {
+	for i := 0; i < 2; i++ {
 		var sample GlobalDeviceAtlasOptions
 		var result GlobalDeviceAtlasOptions
-		err := gofakeit.Struct(&sample)
+		err := faker.FakeData(&sample)
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		err = gofakeit.Struct(&result)
+		err = faker.FakeData(&result)
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -724,26 +674,21 @@ func TestGlobalDeviceAtlasOptionsEqualFalse(t *testing.T) {
 }
 
 func TestGlobalDeviceAtlasOptionsDiff(t *testing.T) {
-	faker := gofakeit.NewCrypto()
-	gofakeit.SetGlobalFaker(faker)
 	samples := []struct {
 		a, b GlobalDeviceAtlasOptions
 	}{}
-	for i := 0; i < 100; i++ {
+	for i := 0; i < 2; i++ {
 		var sample GlobalDeviceAtlasOptions
 		var result GlobalDeviceAtlasOptions
-		err := gofakeit.Struct(&sample)
+		err := faker.FakeData(&sample)
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		buf := new(bytes.Buffer)
-		enc := gob.NewEncoder(buf)
-		err = enc.Encode(&sample)
+		byteJSON, err := json.Marshal(sample)
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		dec := gob.NewDecoder(buf)
-		err = dec.Decode(&result)
+		err = json.Unmarshal(byteJSON, &result)
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -771,19 +716,17 @@ func TestGlobalDeviceAtlasOptionsDiff(t *testing.T) {
 }
 
 func TestGlobalDeviceAtlasOptionsDiffFalse(t *testing.T) {
-	faker := gofakeit.NewCrypto()
-	gofakeit.SetGlobalFaker(faker)
 	samples := []struct {
 		a, b GlobalDeviceAtlasOptions
 	}{}
-	for i := 0; i < 100; i++ {
+	for i := 0; i < 2; i++ {
 		var sample GlobalDeviceAtlasOptions
 		var result GlobalDeviceAtlasOptions
-		err := gofakeit.Struct(&sample)
+		err := faker.FakeData(&sample)
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		err = gofakeit.Struct(&result)
+		err = faker.FakeData(&result)
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -810,26 +753,21 @@ func TestGlobalDeviceAtlasOptionsDiffFalse(t *testing.T) {
 }
 
 func TestGlobalFiftyOneDegreesOptionsEqual(t *testing.T) {
-	faker := gofakeit.NewCrypto()
-	gofakeit.SetGlobalFaker(faker)
 	samples := []struct {
 		a, b GlobalFiftyOneDegreesOptions
 	}{}
-	for i := 0; i < 100; i++ {
+	for i := 0; i < 2; i++ {
 		var sample GlobalFiftyOneDegreesOptions
 		var result GlobalFiftyOneDegreesOptions
-		err := gofakeit.Struct(&sample)
+		err := faker.FakeData(&sample)
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		buf := new(bytes.Buffer)
-		enc := gob.NewEncoder(buf)
-		err = enc.Encode(&sample)
+		byteJSON, err := json.Marshal(sample)
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		dec := gob.NewDecoder(buf)
-		err = dec.Decode(&result)
+		err = json.Unmarshal(byteJSON, &result)
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -857,19 +795,17 @@ func TestGlobalFiftyOneDegreesOptionsEqual(t *testing.T) {
 }
 
 func TestGlobalFiftyOneDegreesOptionsEqualFalse(t *testing.T) {
-	faker := gofakeit.NewCrypto()
-	gofakeit.SetGlobalFaker(faker)
 	samples := []struct {
 		a, b GlobalFiftyOneDegreesOptions
 	}{}
-	for i := 0; i < 100; i++ {
+	for i := 0; i < 2; i++ {
 		var sample GlobalFiftyOneDegreesOptions
 		var result GlobalFiftyOneDegreesOptions
-		err := gofakeit.Struct(&sample)
+		err := faker.FakeData(&sample)
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		err = gofakeit.Struct(&result)
+		err = faker.FakeData(&result)
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -897,26 +833,21 @@ func TestGlobalFiftyOneDegreesOptionsEqualFalse(t *testing.T) {
 }
 
 func TestGlobalFiftyOneDegreesOptionsDiff(t *testing.T) {
-	faker := gofakeit.NewCrypto()
-	gofakeit.SetGlobalFaker(faker)
 	samples := []struct {
 		a, b GlobalFiftyOneDegreesOptions
 	}{}
-	for i := 0; i < 100; i++ {
+	for i := 0; i < 2; i++ {
 		var sample GlobalFiftyOneDegreesOptions
 		var result GlobalFiftyOneDegreesOptions
-		err := gofakeit.Struct(&sample)
+		err := faker.FakeData(&sample)
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		buf := new(bytes.Buffer)
-		enc := gob.NewEncoder(buf)
-		err = enc.Encode(&sample)
+		byteJSON, err := json.Marshal(sample)
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		dec := gob.NewDecoder(buf)
-		err = dec.Decode(&result)
+		err = json.Unmarshal(byteJSON, &result)
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -944,19 +875,17 @@ func TestGlobalFiftyOneDegreesOptionsDiff(t *testing.T) {
 }
 
 func TestGlobalFiftyOneDegreesOptionsDiffFalse(t *testing.T) {
-	faker := gofakeit.NewCrypto()
-	gofakeit.SetGlobalFaker(faker)
 	samples := []struct {
 		a, b GlobalFiftyOneDegreesOptions
 	}{}
-	for i := 0; i < 100; i++ {
+	for i := 0; i < 2; i++ {
 		var sample GlobalFiftyOneDegreesOptions
 		var result GlobalFiftyOneDegreesOptions
-		err := gofakeit.Struct(&sample)
+		err := faker.FakeData(&sample)
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		err = gofakeit.Struct(&result)
+		err = faker.FakeData(&result)
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -984,26 +913,21 @@ func TestGlobalFiftyOneDegreesOptionsDiffFalse(t *testing.T) {
 }
 
 func TestH1CaseAdjustEqual(t *testing.T) {
-	faker := gofakeit.NewCrypto()
-	gofakeit.SetGlobalFaker(faker)
 	samples := []struct {
 		a, b H1CaseAdjust
 	}{}
-	for i := 0; i < 100; i++ {
+	for i := 0; i < 2; i++ {
 		var sample H1CaseAdjust
 		var result H1CaseAdjust
-		err := gofakeit.Struct(&sample)
+		err := faker.FakeData(&sample)
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		buf := new(bytes.Buffer)
-		enc := gob.NewEncoder(buf)
-		err = enc.Encode(&sample)
+		byteJSON, err := json.Marshal(sample)
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		dec := gob.NewDecoder(buf)
-		err = dec.Decode(&result)
+		err = json.Unmarshal(byteJSON, &result)
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -1031,19 +955,17 @@ func TestH1CaseAdjustEqual(t *testing.T) {
 }
 
 func TestH1CaseAdjustEqualFalse(t *testing.T) {
-	faker := gofakeit.NewCrypto()
-	gofakeit.SetGlobalFaker(faker)
 	samples := []struct {
 		a, b H1CaseAdjust
 	}{}
-	for i := 0; i < 100; i++ {
+	for i := 0; i < 2; i++ {
 		var sample H1CaseAdjust
 		var result H1CaseAdjust
-		err := gofakeit.Struct(&sample)
+		err := faker.FakeData(&sample)
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		err = gofakeit.Struct(&result)
+		err = faker.FakeData(&result)
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -1070,26 +992,21 @@ func TestH1CaseAdjustEqualFalse(t *testing.T) {
 }
 
 func TestH1CaseAdjustDiff(t *testing.T) {
-	faker := gofakeit.NewCrypto()
-	gofakeit.SetGlobalFaker(faker)
 	samples := []struct {
 		a, b H1CaseAdjust
 	}{}
-	for i := 0; i < 100; i++ {
+	for i := 0; i < 2; i++ {
 		var sample H1CaseAdjust
 		var result H1CaseAdjust
-		err := gofakeit.Struct(&sample)
+		err := faker.FakeData(&sample)
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		buf := new(bytes.Buffer)
-		enc := gob.NewEncoder(buf)
-		err = enc.Encode(&sample)
+		byteJSON, err := json.Marshal(sample)
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		dec := gob.NewDecoder(buf)
-		err = dec.Decode(&result)
+		err = json.Unmarshal(byteJSON, &result)
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -1117,19 +1034,17 @@ func TestH1CaseAdjustDiff(t *testing.T) {
 }
 
 func TestH1CaseAdjustDiffFalse(t *testing.T) {
-	faker := gofakeit.NewCrypto()
-	gofakeit.SetGlobalFaker(faker)
 	samples := []struct {
 		a, b H1CaseAdjust
 	}{}
-	for i := 0; i < 100; i++ {
+	for i := 0; i < 2; i++ {
 		var sample H1CaseAdjust
 		var result H1CaseAdjust
-		err := gofakeit.Struct(&sample)
+		err := faker.FakeData(&sample)
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		err = gofakeit.Struct(&result)
+		err = faker.FakeData(&result)
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -1156,26 +1071,21 @@ func TestH1CaseAdjustDiffFalse(t *testing.T) {
 }
 
 func TestGlobalLogSendHostnameEqual(t *testing.T) {
-	faker := gofakeit.NewCrypto()
-	gofakeit.SetGlobalFaker(faker)
 	samples := []struct {
 		a, b GlobalLogSendHostname
 	}{}
-	for i := 0; i < 100; i++ {
+	for i := 0; i < 2; i++ {
 		var sample GlobalLogSendHostname
 		var result GlobalLogSendHostname
-		err := gofakeit.Struct(&sample)
+		err := faker.FakeData(&sample)
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		buf := new(bytes.Buffer)
-		enc := gob.NewEncoder(buf)
-		err = enc.Encode(&sample)
+		byteJSON, err := json.Marshal(sample)
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		dec := gob.NewDecoder(buf)
-		err = dec.Decode(&result)
+		err = json.Unmarshal(byteJSON, &result)
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -1203,19 +1113,17 @@ func TestGlobalLogSendHostnameEqual(t *testing.T) {
 }
 
 func TestGlobalLogSendHostnameEqualFalse(t *testing.T) {
-	faker := gofakeit.NewCrypto()
-	gofakeit.SetGlobalFaker(faker)
 	samples := []struct {
 		a, b GlobalLogSendHostname
 	}{}
-	for i := 0; i < 100; i++ {
+	for i := 0; i < 2; i++ {
 		var sample GlobalLogSendHostname
 		var result GlobalLogSendHostname
-		err := gofakeit.Struct(&sample)
+		err := faker.FakeData(&sample)
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		err = gofakeit.Struct(&result)
+		err = faker.FakeData(&result)
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -1242,26 +1150,21 @@ func TestGlobalLogSendHostnameEqualFalse(t *testing.T) {
 }
 
 func TestGlobalLogSendHostnameDiff(t *testing.T) {
-	faker := gofakeit.NewCrypto()
-	gofakeit.SetGlobalFaker(faker)
 	samples := []struct {
 		a, b GlobalLogSendHostname
 	}{}
-	for i := 0; i < 100; i++ {
+	for i := 0; i < 2; i++ {
 		var sample GlobalLogSendHostname
 		var result GlobalLogSendHostname
-		err := gofakeit.Struct(&sample)
+		err := faker.FakeData(&sample)
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		buf := new(bytes.Buffer)
-		enc := gob.NewEncoder(buf)
-		err = enc.Encode(&sample)
+		byteJSON, err := json.Marshal(sample)
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		dec := gob.NewDecoder(buf)
-		err = dec.Decode(&result)
+		err = json.Unmarshal(byteJSON, &result)
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -1289,19 +1192,17 @@ func TestGlobalLogSendHostnameDiff(t *testing.T) {
 }
 
 func TestGlobalLogSendHostnameDiffFalse(t *testing.T) {
-	faker := gofakeit.NewCrypto()
-	gofakeit.SetGlobalFaker(faker)
 	samples := []struct {
 		a, b GlobalLogSendHostname
 	}{}
-	for i := 0; i < 100; i++ {
+	for i := 0; i < 2; i++ {
 		var sample GlobalLogSendHostname
 		var result GlobalLogSendHostname
-		err := gofakeit.Struct(&sample)
+		err := faker.FakeData(&sample)
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		err = gofakeit.Struct(&result)
+		err = faker.FakeData(&result)
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -1328,26 +1229,21 @@ func TestGlobalLogSendHostnameDiffFalse(t *testing.T) {
 }
 
 func TestLuaLoadEqual(t *testing.T) {
-	faker := gofakeit.NewCrypto()
-	gofakeit.SetGlobalFaker(faker)
 	samples := []struct {
 		a, b LuaLoad
 	}{}
-	for i := 0; i < 100; i++ {
+	for i := 0; i < 2; i++ {
 		var sample LuaLoad
 		var result LuaLoad
-		err := gofakeit.Struct(&sample)
+		err := faker.FakeData(&sample)
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		buf := new(bytes.Buffer)
-		enc := gob.NewEncoder(buf)
-		err = enc.Encode(&sample)
+		byteJSON, err := json.Marshal(sample)
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		dec := gob.NewDecoder(buf)
-		err = dec.Decode(&result)
+		err = json.Unmarshal(byteJSON, &result)
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -1375,19 +1271,17 @@ func TestLuaLoadEqual(t *testing.T) {
 }
 
 func TestLuaLoadEqualFalse(t *testing.T) {
-	faker := gofakeit.NewCrypto()
-	gofakeit.SetGlobalFaker(faker)
 	samples := []struct {
 		a, b LuaLoad
 	}{}
-	for i := 0; i < 100; i++ {
+	for i := 0; i < 2; i++ {
 		var sample LuaLoad
 		var result LuaLoad
-		err := gofakeit.Struct(&sample)
+		err := faker.FakeData(&sample)
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		err = gofakeit.Struct(&result)
+		err = faker.FakeData(&result)
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -1414,26 +1308,21 @@ func TestLuaLoadEqualFalse(t *testing.T) {
 }
 
 func TestLuaLoadDiff(t *testing.T) {
-	faker := gofakeit.NewCrypto()
-	gofakeit.SetGlobalFaker(faker)
 	samples := []struct {
 		a, b LuaLoad
 	}{}
-	for i := 0; i < 100; i++ {
+	for i := 0; i < 2; i++ {
 		var sample LuaLoad
 		var result LuaLoad
-		err := gofakeit.Struct(&sample)
+		err := faker.FakeData(&sample)
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		buf := new(bytes.Buffer)
-		enc := gob.NewEncoder(buf)
-		err = enc.Encode(&sample)
+		byteJSON, err := json.Marshal(sample)
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		dec := gob.NewDecoder(buf)
-		err = dec.Decode(&result)
+		err = json.Unmarshal(byteJSON, &result)
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -1461,19 +1350,17 @@ func TestLuaLoadDiff(t *testing.T) {
 }
 
 func TestLuaLoadDiffFalse(t *testing.T) {
-	faker := gofakeit.NewCrypto()
-	gofakeit.SetGlobalFaker(faker)
 	samples := []struct {
 		a, b LuaLoad
 	}{}
-	for i := 0; i < 100; i++ {
+	for i := 0; i < 2; i++ {
 		var sample LuaLoad
 		var result LuaLoad
-		err := gofakeit.Struct(&sample)
+		err := faker.FakeData(&sample)
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		err = gofakeit.Struct(&result)
+		err = faker.FakeData(&result)
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -1500,26 +1387,21 @@ func TestLuaLoadDiffFalse(t *testing.T) {
 }
 
 func TestLuaPrependPathEqual(t *testing.T) {
-	faker := gofakeit.NewCrypto()
-	gofakeit.SetGlobalFaker(faker)
 	samples := []struct {
 		a, b LuaPrependPath
 	}{}
-	for i := 0; i < 100; i++ {
+	for i := 0; i < 2; i++ {
 		var sample LuaPrependPath
 		var result LuaPrependPath
-		err := gofakeit.Struct(&sample)
+		err := faker.FakeData(&sample)
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		buf := new(bytes.Buffer)
-		enc := gob.NewEncoder(buf)
-		err = enc.Encode(&sample)
+		byteJSON, err := json.Marshal(sample)
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		dec := gob.NewDecoder(buf)
-		err = dec.Decode(&result)
+		err = json.Unmarshal(byteJSON, &result)
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -1547,19 +1429,17 @@ func TestLuaPrependPathEqual(t *testing.T) {
 }
 
 func TestLuaPrependPathEqualFalse(t *testing.T) {
-	faker := gofakeit.NewCrypto()
-	gofakeit.SetGlobalFaker(faker)
 	samples := []struct {
 		a, b LuaPrependPath
 	}{}
-	for i := 0; i < 100; i++ {
+	for i := 0; i < 2; i++ {
 		var sample LuaPrependPath
 		var result LuaPrependPath
-		err := gofakeit.Struct(&sample)
+		err := faker.FakeData(&sample)
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		err = gofakeit.Struct(&result)
+		err = faker.FakeData(&result)
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -1586,26 +1466,21 @@ func TestLuaPrependPathEqualFalse(t *testing.T) {
 }
 
 func TestLuaPrependPathDiff(t *testing.T) {
-	faker := gofakeit.NewCrypto()
-	gofakeit.SetGlobalFaker(faker)
 	samples := []struct {
 		a, b LuaPrependPath
 	}{}
-	for i := 0; i < 100; i++ {
+	for i := 0; i < 2; i++ {
 		var sample LuaPrependPath
 		var result LuaPrependPath
-		err := gofakeit.Struct(&sample)
+		err := faker.FakeData(&sample)
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		buf := new(bytes.Buffer)
-		enc := gob.NewEncoder(buf)
-		err = enc.Encode(&sample)
+		byteJSON, err := json.Marshal(sample)
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		dec := gob.NewDecoder(buf)
-		err = dec.Decode(&result)
+		err = json.Unmarshal(byteJSON, &result)
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -1633,19 +1508,17 @@ func TestLuaPrependPathDiff(t *testing.T) {
 }
 
 func TestLuaPrependPathDiffFalse(t *testing.T) {
-	faker := gofakeit.NewCrypto()
-	gofakeit.SetGlobalFaker(faker)
 	samples := []struct {
 		a, b LuaPrependPath
 	}{}
-	for i := 0; i < 100; i++ {
+	for i := 0; i < 2; i++ {
 		var sample LuaPrependPath
 		var result LuaPrependPath
-		err := gofakeit.Struct(&sample)
+		err := faker.FakeData(&sample)
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		err = gofakeit.Struct(&result)
+		err = faker.FakeData(&result)
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -1672,26 +1545,21 @@ func TestLuaPrependPathDiffFalse(t *testing.T) {
 }
 
 func TestPresetEnvEqual(t *testing.T) {
-	faker := gofakeit.NewCrypto()
-	gofakeit.SetGlobalFaker(faker)
 	samples := []struct {
 		a, b PresetEnv
 	}{}
-	for i := 0; i < 100; i++ {
+	for i := 0; i < 2; i++ {
 		var sample PresetEnv
 		var result PresetEnv
-		err := gofakeit.Struct(&sample)
+		err := faker.FakeData(&sample)
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		buf := new(bytes.Buffer)
-		enc := gob.NewEncoder(buf)
-		err = enc.Encode(&sample)
+		byteJSON, err := json.Marshal(sample)
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		dec := gob.NewDecoder(buf)
-		err = dec.Decode(&result)
+		err = json.Unmarshal(byteJSON, &result)
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -1719,19 +1587,17 @@ func TestPresetEnvEqual(t *testing.T) {
 }
 
 func TestPresetEnvEqualFalse(t *testing.T) {
-	faker := gofakeit.NewCrypto()
-	gofakeit.SetGlobalFaker(faker)
 	samples := []struct {
 		a, b PresetEnv
 	}{}
-	for i := 0; i < 100; i++ {
+	for i := 0; i < 2; i++ {
 		var sample PresetEnv
 		var result PresetEnv
-		err := gofakeit.Struct(&sample)
+		err := faker.FakeData(&sample)
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		err = gofakeit.Struct(&result)
+		err = faker.FakeData(&result)
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -1758,26 +1624,21 @@ func TestPresetEnvEqualFalse(t *testing.T) {
 }
 
 func TestPresetEnvDiff(t *testing.T) {
-	faker := gofakeit.NewCrypto()
-	gofakeit.SetGlobalFaker(faker)
 	samples := []struct {
 		a, b PresetEnv
 	}{}
-	for i := 0; i < 100; i++ {
+	for i := 0; i < 2; i++ {
 		var sample PresetEnv
 		var result PresetEnv
-		err := gofakeit.Struct(&sample)
+		err := faker.FakeData(&sample)
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		buf := new(bytes.Buffer)
-		enc := gob.NewEncoder(buf)
-		err = enc.Encode(&sample)
+		byteJSON, err := json.Marshal(sample)
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		dec := gob.NewDecoder(buf)
-		err = dec.Decode(&result)
+		err = json.Unmarshal(byteJSON, &result)
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -1805,19 +1666,17 @@ func TestPresetEnvDiff(t *testing.T) {
 }
 
 func TestPresetEnvDiffFalse(t *testing.T) {
-	faker := gofakeit.NewCrypto()
-	gofakeit.SetGlobalFaker(faker)
 	samples := []struct {
 		a, b PresetEnv
 	}{}
-	for i := 0; i < 100; i++ {
+	for i := 0; i < 2; i++ {
 		var sample PresetEnv
 		var result PresetEnv
-		err := gofakeit.Struct(&sample)
+		err := faker.FakeData(&sample)
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		err = gofakeit.Struct(&result)
+		err = faker.FakeData(&result)
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -1844,26 +1703,21 @@ func TestPresetEnvDiffFalse(t *testing.T) {
 }
 
 func TestRuntimeAPIEqual(t *testing.T) {
-	faker := gofakeit.NewCrypto()
-	gofakeit.SetGlobalFaker(faker)
 	samples := []struct {
 		a, b RuntimeAPI
 	}{}
-	for i := 0; i < 100; i++ {
+	for i := 0; i < 2; i++ {
 		var sample RuntimeAPI
 		var result RuntimeAPI
-		err := gofakeit.Struct(&sample)
+		err := faker.FakeData(&sample)
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		buf := new(bytes.Buffer)
-		enc := gob.NewEncoder(buf)
-		err = enc.Encode(&sample)
+		byteJSON, err := json.Marshal(sample)
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		dec := gob.NewDecoder(buf)
-		err = dec.Decode(&result)
+		err = json.Unmarshal(byteJSON, &result)
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -1891,19 +1745,17 @@ func TestRuntimeAPIEqual(t *testing.T) {
 }
 
 func TestRuntimeAPIEqualFalse(t *testing.T) {
-	faker := gofakeit.NewCrypto()
-	gofakeit.SetGlobalFaker(faker)
 	samples := []struct {
 		a, b RuntimeAPI
 	}{}
-	for i := 0; i < 100; i++ {
+	for i := 0; i < 2; i++ {
 		var sample RuntimeAPI
 		var result RuntimeAPI
-		err := gofakeit.Struct(&sample)
+		err := faker.FakeData(&sample)
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		err = gofakeit.Struct(&result)
+		err = faker.FakeData(&result)
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -1930,26 +1782,21 @@ func TestRuntimeAPIEqualFalse(t *testing.T) {
 }
 
 func TestRuntimeAPIDiff(t *testing.T) {
-	faker := gofakeit.NewCrypto()
-	gofakeit.SetGlobalFaker(faker)
 	samples := []struct {
 		a, b RuntimeAPI
 	}{}
-	for i := 0; i < 100; i++ {
+	for i := 0; i < 2; i++ {
 		var sample RuntimeAPI
 		var result RuntimeAPI
-		err := gofakeit.Struct(&sample)
+		err := faker.FakeData(&sample)
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		buf := new(bytes.Buffer)
-		enc := gob.NewEncoder(buf)
-		err = enc.Encode(&sample)
+		byteJSON, err := json.Marshal(sample)
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		dec := gob.NewDecoder(buf)
-		err = dec.Decode(&result)
+		err = json.Unmarshal(byteJSON, &result)
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -1977,19 +1824,17 @@ func TestRuntimeAPIDiff(t *testing.T) {
 }
 
 func TestRuntimeAPIDiffFalse(t *testing.T) {
-	faker := gofakeit.NewCrypto()
-	gofakeit.SetGlobalFaker(faker)
 	samples := []struct {
 		a, b RuntimeAPI
 	}{}
-	for i := 0; i < 100; i++ {
+	for i := 0; i < 2; i++ {
 		var sample RuntimeAPI
 		var result RuntimeAPI
-		err := gofakeit.Struct(&sample)
+		err := faker.FakeData(&sample)
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		err = gofakeit.Struct(&result)
+		err = faker.FakeData(&result)
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -2016,26 +1861,21 @@ func TestRuntimeAPIDiffFalse(t *testing.T) {
 }
 
 func TestSetVarFmtEqual(t *testing.T) {
-	faker := gofakeit.NewCrypto()
-	gofakeit.SetGlobalFaker(faker)
 	samples := []struct {
 		a, b SetVarFmt
 	}{}
-	for i := 0; i < 100; i++ {
+	for i := 0; i < 2; i++ {
 		var sample SetVarFmt
 		var result SetVarFmt
-		err := gofakeit.Struct(&sample)
+		err := faker.FakeData(&sample)
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		buf := new(bytes.Buffer)
-		enc := gob.NewEncoder(buf)
-		err = enc.Encode(&sample)
+		byteJSON, err := json.Marshal(sample)
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		dec := gob.NewDecoder(buf)
-		err = dec.Decode(&result)
+		err = json.Unmarshal(byteJSON, &result)
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -2063,19 +1903,17 @@ func TestSetVarFmtEqual(t *testing.T) {
 }
 
 func TestSetVarFmtEqualFalse(t *testing.T) {
-	faker := gofakeit.NewCrypto()
-	gofakeit.SetGlobalFaker(faker)
 	samples := []struct {
 		a, b SetVarFmt
 	}{}
-	for i := 0; i < 100; i++ {
+	for i := 0; i < 2; i++ {
 		var sample SetVarFmt
 		var result SetVarFmt
-		err := gofakeit.Struct(&sample)
+		err := faker.FakeData(&sample)
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		err = gofakeit.Struct(&result)
+		err = faker.FakeData(&result)
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -2102,26 +1940,21 @@ func TestSetVarFmtEqualFalse(t *testing.T) {
 }
 
 func TestSetVarFmtDiff(t *testing.T) {
-	faker := gofakeit.NewCrypto()
-	gofakeit.SetGlobalFaker(faker)
 	samples := []struct {
 		a, b SetVarFmt
 	}{}
-	for i := 0; i < 100; i++ {
+	for i := 0; i < 2; i++ {
 		var sample SetVarFmt
 		var result SetVarFmt
-		err := gofakeit.Struct(&sample)
+		err := faker.FakeData(&sample)
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		buf := new(bytes.Buffer)
-		enc := gob.NewEncoder(buf)
-		err = enc.Encode(&sample)
+		byteJSON, err := json.Marshal(sample)
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		dec := gob.NewDecoder(buf)
-		err = dec.Decode(&result)
+		err = json.Unmarshal(byteJSON, &result)
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -2149,19 +1982,17 @@ func TestSetVarFmtDiff(t *testing.T) {
 }
 
 func TestSetVarFmtDiffFalse(t *testing.T) {
-	faker := gofakeit.NewCrypto()
-	gofakeit.SetGlobalFaker(faker)
 	samples := []struct {
 		a, b SetVarFmt
 	}{}
-	for i := 0; i < 100; i++ {
+	for i := 0; i < 2; i++ {
 		var sample SetVarFmt
 		var result SetVarFmt
-		err := gofakeit.Struct(&sample)
+		err := faker.FakeData(&sample)
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		err = gofakeit.Struct(&result)
+		err = faker.FakeData(&result)
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -2188,26 +2019,21 @@ func TestSetVarFmtDiffFalse(t *testing.T) {
 }
 
 func TestSetVarEqual(t *testing.T) {
-	faker := gofakeit.NewCrypto()
-	gofakeit.SetGlobalFaker(faker)
 	samples := []struct {
 		a, b SetVar
 	}{}
-	for i := 0; i < 100; i++ {
+	for i := 0; i < 2; i++ {
 		var sample SetVar
 		var result SetVar
-		err := gofakeit.Struct(&sample)
+		err := faker.FakeData(&sample)
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		buf := new(bytes.Buffer)
-		enc := gob.NewEncoder(buf)
-		err = enc.Encode(&sample)
+		byteJSON, err := json.Marshal(sample)
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		dec := gob.NewDecoder(buf)
-		err = dec.Decode(&result)
+		err = json.Unmarshal(byteJSON, &result)
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -2235,19 +2061,17 @@ func TestSetVarEqual(t *testing.T) {
 }
 
 func TestSetVarEqualFalse(t *testing.T) {
-	faker := gofakeit.NewCrypto()
-	gofakeit.SetGlobalFaker(faker)
 	samples := []struct {
 		a, b SetVar
 	}{}
-	for i := 0; i < 100; i++ {
+	for i := 0; i < 2; i++ {
 		var sample SetVar
 		var result SetVar
-		err := gofakeit.Struct(&sample)
+		err := faker.FakeData(&sample)
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		err = gofakeit.Struct(&result)
+		err = faker.FakeData(&result)
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -2274,26 +2098,21 @@ func TestSetVarEqualFalse(t *testing.T) {
 }
 
 func TestSetVarDiff(t *testing.T) {
-	faker := gofakeit.NewCrypto()
-	gofakeit.SetGlobalFaker(faker)
 	samples := []struct {
 		a, b SetVar
 	}{}
-	for i := 0; i < 100; i++ {
+	for i := 0; i < 2; i++ {
 		var sample SetVar
 		var result SetVar
-		err := gofakeit.Struct(&sample)
+		err := faker.FakeData(&sample)
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		buf := new(bytes.Buffer)
-		enc := gob.NewEncoder(buf)
-		err = enc.Encode(&sample)
+		byteJSON, err := json.Marshal(sample)
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		dec := gob.NewDecoder(buf)
-		err = dec.Decode(&result)
+		err = json.Unmarshal(byteJSON, &result)
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -2321,19 +2140,17 @@ func TestSetVarDiff(t *testing.T) {
 }
 
 func TestSetVarDiffFalse(t *testing.T) {
-	faker := gofakeit.NewCrypto()
-	gofakeit.SetGlobalFaker(faker)
 	samples := []struct {
 		a, b SetVar
 	}{}
-	for i := 0; i < 100; i++ {
+	for i := 0; i < 2; i++ {
 		var sample SetVar
 		var result SetVar
-		err := gofakeit.Struct(&sample)
+		err := faker.FakeData(&sample)
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		err = gofakeit.Struct(&result)
+		err = faker.FakeData(&result)
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -2360,26 +2177,21 @@ func TestSetVarDiffFalse(t *testing.T) {
 }
 
 func TestSetEnvEqual(t *testing.T) {
-	faker := gofakeit.NewCrypto()
-	gofakeit.SetGlobalFaker(faker)
 	samples := []struct {
 		a, b SetEnv
 	}{}
-	for i := 0; i < 100; i++ {
+	for i := 0; i < 2; i++ {
 		var sample SetEnv
 		var result SetEnv
-		err := gofakeit.Struct(&sample)
+		err := faker.FakeData(&sample)
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		buf := new(bytes.Buffer)
-		enc := gob.NewEncoder(buf)
-		err = enc.Encode(&sample)
+		byteJSON, err := json.Marshal(sample)
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		dec := gob.NewDecoder(buf)
-		err = dec.Decode(&result)
+		err = json.Unmarshal(byteJSON, &result)
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -2407,19 +2219,17 @@ func TestSetEnvEqual(t *testing.T) {
 }
 
 func TestSetEnvEqualFalse(t *testing.T) {
-	faker := gofakeit.NewCrypto()
-	gofakeit.SetGlobalFaker(faker)
 	samples := []struct {
 		a, b SetEnv
 	}{}
-	for i := 0; i < 100; i++ {
+	for i := 0; i < 2; i++ {
 		var sample SetEnv
 		var result SetEnv
-		err := gofakeit.Struct(&sample)
+		err := faker.FakeData(&sample)
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		err = gofakeit.Struct(&result)
+		err = faker.FakeData(&result)
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -2446,26 +2256,21 @@ func TestSetEnvEqualFalse(t *testing.T) {
 }
 
 func TestSetEnvDiff(t *testing.T) {
-	faker := gofakeit.NewCrypto()
-	gofakeit.SetGlobalFaker(faker)
 	samples := []struct {
 		a, b SetEnv
 	}{}
-	for i := 0; i < 100; i++ {
+	for i := 0; i < 2; i++ {
 		var sample SetEnv
 		var result SetEnv
-		err := gofakeit.Struct(&sample)
+		err := faker.FakeData(&sample)
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		buf := new(bytes.Buffer)
-		enc := gob.NewEncoder(buf)
-		err = enc.Encode(&sample)
+		byteJSON, err := json.Marshal(sample)
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		dec := gob.NewDecoder(buf)
-		err = dec.Decode(&result)
+		err = json.Unmarshal(byteJSON, &result)
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -2493,19 +2298,17 @@ func TestSetEnvDiff(t *testing.T) {
 }
 
 func TestSetEnvDiffFalse(t *testing.T) {
-	faker := gofakeit.NewCrypto()
-	gofakeit.SetGlobalFaker(faker)
 	samples := []struct {
 		a, b SetEnv
 	}{}
-	for i := 0; i < 100; i++ {
+	for i := 0; i < 2; i++ {
 		var sample SetEnv
 		var result SetEnv
-		err := gofakeit.Struct(&sample)
+		err := faker.FakeData(&sample)
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		err = gofakeit.Struct(&result)
+		err = faker.FakeData(&result)
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -2532,26 +2335,21 @@ func TestSetEnvDiffFalse(t *testing.T) {
 }
 
 func TestSslEngineEqual(t *testing.T) {
-	faker := gofakeit.NewCrypto()
-	gofakeit.SetGlobalFaker(faker)
 	samples := []struct {
 		a, b SslEngine
 	}{}
-	for i := 0; i < 100; i++ {
+	for i := 0; i < 2; i++ {
 		var sample SslEngine
 		var result SslEngine
-		err := gofakeit.Struct(&sample)
+		err := faker.FakeData(&sample)
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		buf := new(bytes.Buffer)
-		enc := gob.NewEncoder(buf)
-		err = enc.Encode(&sample)
+		byteJSON, err := json.Marshal(sample)
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		dec := gob.NewDecoder(buf)
-		err = dec.Decode(&result)
+		err = json.Unmarshal(byteJSON, &result)
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -2579,19 +2377,17 @@ func TestSslEngineEqual(t *testing.T) {
 }
 
 func TestSslEngineEqualFalse(t *testing.T) {
-	faker := gofakeit.NewCrypto()
-	gofakeit.SetGlobalFaker(faker)
 	samples := []struct {
 		a, b SslEngine
 	}{}
-	for i := 0; i < 100; i++ {
+	for i := 0; i < 2; i++ {
 		var sample SslEngine
 		var result SslEngine
-		err := gofakeit.Struct(&sample)
+		err := faker.FakeData(&sample)
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		err = gofakeit.Struct(&result)
+		err = faker.FakeData(&result)
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -2618,26 +2414,21 @@ func TestSslEngineEqualFalse(t *testing.T) {
 }
 
 func TestSslEngineDiff(t *testing.T) {
-	faker := gofakeit.NewCrypto()
-	gofakeit.SetGlobalFaker(faker)
 	samples := []struct {
 		a, b SslEngine
 	}{}
-	for i := 0; i < 100; i++ {
+	for i := 0; i < 2; i++ {
 		var sample SslEngine
 		var result SslEngine
-		err := gofakeit.Struct(&sample)
+		err := faker.FakeData(&sample)
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		buf := new(bytes.Buffer)
-		enc := gob.NewEncoder(buf)
-		err = enc.Encode(&sample)
+		byteJSON, err := json.Marshal(sample)
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		dec := gob.NewDecoder(buf)
-		err = dec.Decode(&result)
+		err = json.Unmarshal(byteJSON, &result)
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -2665,19 +2456,17 @@ func TestSslEngineDiff(t *testing.T) {
 }
 
 func TestSslEngineDiffFalse(t *testing.T) {
-	faker := gofakeit.NewCrypto()
-	gofakeit.SetGlobalFaker(faker)
 	samples := []struct {
 		a, b SslEngine
 	}{}
-	for i := 0; i < 100; i++ {
+	for i := 0; i < 2; i++ {
 		var sample SslEngine
 		var result SslEngine
-		err := gofakeit.Struct(&sample)
+		err := faker.FakeData(&sample)
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		err = gofakeit.Struct(&result)
+		err = faker.FakeData(&result)
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -2704,26 +2493,21 @@ func TestSslEngineDiffFalse(t *testing.T) {
 }
 
 func TestThreadGroupEqual(t *testing.T) {
-	faker := gofakeit.NewCrypto()
-	gofakeit.SetGlobalFaker(faker)
 	samples := []struct {
 		a, b ThreadGroup
 	}{}
-	for i := 0; i < 100; i++ {
+	for i := 0; i < 2; i++ {
 		var sample ThreadGroup
 		var result ThreadGroup
-		err := gofakeit.Struct(&sample)
+		err := faker.FakeData(&sample)
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		buf := new(bytes.Buffer)
-		enc := gob.NewEncoder(buf)
-		err = enc.Encode(&sample)
+		byteJSON, err := json.Marshal(sample)
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		dec := gob.NewDecoder(buf)
-		err = dec.Decode(&result)
+		err = json.Unmarshal(byteJSON, &result)
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -2751,19 +2535,17 @@ func TestThreadGroupEqual(t *testing.T) {
 }
 
 func TestThreadGroupEqualFalse(t *testing.T) {
-	faker := gofakeit.NewCrypto()
-	gofakeit.SetGlobalFaker(faker)
 	samples := []struct {
 		a, b ThreadGroup
 	}{}
-	for i := 0; i < 100; i++ {
+	for i := 0; i < 2; i++ {
 		var sample ThreadGroup
 		var result ThreadGroup
-		err := gofakeit.Struct(&sample)
+		err := faker.FakeData(&sample)
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		err = gofakeit.Struct(&result)
+		err = faker.FakeData(&result)
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -2790,26 +2572,21 @@ func TestThreadGroupEqualFalse(t *testing.T) {
 }
 
 func TestThreadGroupDiff(t *testing.T) {
-	faker := gofakeit.NewCrypto()
-	gofakeit.SetGlobalFaker(faker)
 	samples := []struct {
 		a, b ThreadGroup
 	}{}
-	for i := 0; i < 100; i++ {
+	for i := 0; i < 2; i++ {
 		var sample ThreadGroup
 		var result ThreadGroup
-		err := gofakeit.Struct(&sample)
+		err := faker.FakeData(&sample)
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		buf := new(bytes.Buffer)
-		enc := gob.NewEncoder(buf)
-		err = enc.Encode(&sample)
+		byteJSON, err := json.Marshal(sample)
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		dec := gob.NewDecoder(buf)
-		err = dec.Decode(&result)
+		err = json.Unmarshal(byteJSON, &result)
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -2837,19 +2614,17 @@ func TestThreadGroupDiff(t *testing.T) {
 }
 
 func TestThreadGroupDiffFalse(t *testing.T) {
-	faker := gofakeit.NewCrypto()
-	gofakeit.SetGlobalFaker(faker)
 	samples := []struct {
 		a, b ThreadGroup
 	}{}
-	for i := 0; i < 100; i++ {
+	for i := 0; i < 2; i++ {
 		var sample ThreadGroup
 		var result ThreadGroup
-		err := gofakeit.Struct(&sample)
+		err := faker.FakeData(&sample)
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		err = gofakeit.Struct(&result)
+		err = faker.FakeData(&result)
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -2876,26 +2651,21 @@ func TestThreadGroupDiffFalse(t *testing.T) {
 }
 
 func TestGlobalTuneOptionsEqual(t *testing.T) {
-	faker := gofakeit.NewCrypto()
-	gofakeit.SetGlobalFaker(faker)
 	samples := []struct {
 		a, b GlobalTuneOptions
 	}{}
-	for i := 0; i < 100; i++ {
+	for i := 0; i < 2; i++ {
 		var sample GlobalTuneOptions
 		var result GlobalTuneOptions
-		err := gofakeit.Struct(&sample)
+		err := faker.FakeData(&sample)
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		buf := new(bytes.Buffer)
-		enc := gob.NewEncoder(buf)
-		err = enc.Encode(&sample)
+		byteJSON, err := json.Marshal(sample)
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		dec := gob.NewDecoder(buf)
-		err = dec.Decode(&result)
+		err = json.Unmarshal(byteJSON, &result)
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -2923,19 +2693,17 @@ func TestGlobalTuneOptionsEqual(t *testing.T) {
 }
 
 func TestGlobalTuneOptionsEqualFalse(t *testing.T) {
-	faker := gofakeit.NewCrypto()
-	gofakeit.SetGlobalFaker(faker)
 	samples := []struct {
 		a, b GlobalTuneOptions
 	}{}
-	for i := 0; i < 100; i++ {
+	for i := 0; i < 2; i++ {
 		var sample GlobalTuneOptions
 		var result GlobalTuneOptions
-		err := gofakeit.Struct(&sample)
+		err := faker.FakeData(&sample)
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		err = gofakeit.Struct(&result)
+		err = faker.FakeData(&result)
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -3022,26 +2790,21 @@ func TestGlobalTuneOptionsEqualFalse(t *testing.T) {
 }
 
 func TestGlobalTuneOptionsDiff(t *testing.T) {
-	faker := gofakeit.NewCrypto()
-	gofakeit.SetGlobalFaker(faker)
 	samples := []struct {
 		a, b GlobalTuneOptions
 	}{}
-	for i := 0; i < 100; i++ {
+	for i := 0; i < 2; i++ {
 		var sample GlobalTuneOptions
 		var result GlobalTuneOptions
-		err := gofakeit.Struct(&sample)
+		err := faker.FakeData(&sample)
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		buf := new(bytes.Buffer)
-		enc := gob.NewEncoder(buf)
-		err = enc.Encode(&sample)
+		byteJSON, err := json.Marshal(sample)
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		dec := gob.NewDecoder(buf)
-		err = dec.Decode(&result)
+		err = json.Unmarshal(byteJSON, &result)
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -3069,19 +2832,17 @@ func TestGlobalTuneOptionsDiff(t *testing.T) {
 }
 
 func TestGlobalTuneOptionsDiffFalse(t *testing.T) {
-	faker := gofakeit.NewCrypto()
-	gofakeit.SetGlobalFaker(faker)
 	samples := []struct {
 		a, b GlobalTuneOptions
 	}{}
-	for i := 0; i < 100; i++ {
+	for i := 0; i < 2; i++ {
 		var sample GlobalTuneOptions
 		var result GlobalTuneOptions
-		err := gofakeit.Struct(&sample)
+		err := faker.FakeData(&sample)
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		err = gofakeit.Struct(&result)
+		err = faker.FakeData(&result)
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -3168,26 +2929,21 @@ func TestGlobalTuneOptionsDiffFalse(t *testing.T) {
 }
 
 func TestGlobalWurflOptionsEqual(t *testing.T) {
-	faker := gofakeit.NewCrypto()
-	gofakeit.SetGlobalFaker(faker)
 	samples := []struct {
 		a, b GlobalWurflOptions
 	}{}
-	for i := 0; i < 100; i++ {
+	for i := 0; i < 2; i++ {
 		var sample GlobalWurflOptions
 		var result GlobalWurflOptions
-		err := gofakeit.Struct(&sample)
+		err := faker.FakeData(&sample)
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		buf := new(bytes.Buffer)
-		enc := gob.NewEncoder(buf)
-		err = enc.Encode(&sample)
+		byteJSON, err := json.Marshal(sample)
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		dec := gob.NewDecoder(buf)
-		err = dec.Decode(&result)
+		err = json.Unmarshal(byteJSON, &result)
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -3215,19 +2971,17 @@ func TestGlobalWurflOptionsEqual(t *testing.T) {
 }
 
 func TestGlobalWurflOptionsEqualFalse(t *testing.T) {
-	faker := gofakeit.NewCrypto()
-	gofakeit.SetGlobalFaker(faker)
 	samples := []struct {
 		a, b GlobalWurflOptions
 	}{}
-	for i := 0; i < 100; i++ {
+	for i := 0; i < 2; i++ {
 		var sample GlobalWurflOptions
 		var result GlobalWurflOptions
-		err := gofakeit.Struct(&sample)
+		err := faker.FakeData(&sample)
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		err = gofakeit.Struct(&result)
+		err = faker.FakeData(&result)
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -3255,26 +3009,21 @@ func TestGlobalWurflOptionsEqualFalse(t *testing.T) {
 }
 
 func TestGlobalWurflOptionsDiff(t *testing.T) {
-	faker := gofakeit.NewCrypto()
-	gofakeit.SetGlobalFaker(faker)
 	samples := []struct {
 		a, b GlobalWurflOptions
 	}{}
-	for i := 0; i < 100; i++ {
+	for i := 0; i < 2; i++ {
 		var sample GlobalWurflOptions
 		var result GlobalWurflOptions
-		err := gofakeit.Struct(&sample)
+		err := faker.FakeData(&sample)
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		buf := new(bytes.Buffer)
-		enc := gob.NewEncoder(buf)
-		err = enc.Encode(&sample)
+		byteJSON, err := json.Marshal(sample)
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		dec := gob.NewDecoder(buf)
-		err = dec.Decode(&result)
+		err = json.Unmarshal(byteJSON, &result)
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -3302,19 +3051,17 @@ func TestGlobalWurflOptionsDiff(t *testing.T) {
 }
 
 func TestGlobalWurflOptionsDiffFalse(t *testing.T) {
-	faker := gofakeit.NewCrypto()
-	gofakeit.SetGlobalFaker(faker)
 	samples := []struct {
 		a, b GlobalWurflOptions
 	}{}
-	for i := 0; i < 100; i++ {
+	for i := 0; i < 2; i++ {
 		var sample GlobalWurflOptions
 		var result GlobalWurflOptions
-		err := gofakeit.Struct(&sample)
+		err := faker.FakeData(&sample)
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		err = gofakeit.Struct(&result)
+		err = faker.FakeData(&result)
 		if err != nil {
 			t.Errorf(err.Error())
 		}

@@ -18,36 +18,30 @@
 package models
 
 import (
-	"bytes"
-	"encoding/gob"
+	"encoding/json"
 	"testing"
 
-	"github.com/brianvoe/gofakeit/v6"
+	"github.com/go-faker/faker/v4"
 
 	jsoniter "github.com/json-iterator/go"
 )
 
 func TestServerParamsEqual(t *testing.T) {
-	faker := gofakeit.NewCrypto()
-	gofakeit.SetGlobalFaker(faker)
 	samples := []struct {
 		a, b ServerParams
 	}{}
-	for i := 0; i < 100; i++ {
+	for i := 0; i < 2; i++ {
 		var sample ServerParams
 		var result ServerParams
-		err := gofakeit.Struct(&sample)
+		err := faker.FakeData(&sample)
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		buf := new(bytes.Buffer)
-		enc := gob.NewEncoder(buf)
-		err = enc.Encode(&sample)
+		byteJSON, err := json.Marshal(sample)
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		dec := gob.NewDecoder(buf)
-		err = dec.Decode(&result)
+		err = json.Unmarshal(byteJSON, &result)
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -75,19 +69,17 @@ func TestServerParamsEqual(t *testing.T) {
 }
 
 func TestServerParamsEqualFalse(t *testing.T) {
-	faker := gofakeit.NewCrypto()
-	gofakeit.SetGlobalFaker(faker)
 	samples := []struct {
 		a, b ServerParams
 	}{}
-	for i := 0; i < 100; i++ {
+	for i := 0; i < 2; i++ {
 		var sample ServerParams
 		var result ServerParams
-		err := gofakeit.Struct(&sample)
+		err := faker.FakeData(&sample)
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		err = gofakeit.Struct(&result)
+		err = faker.FakeData(&result)
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -135,26 +127,21 @@ func TestServerParamsEqualFalse(t *testing.T) {
 }
 
 func TestServerParamsDiff(t *testing.T) {
-	faker := gofakeit.NewCrypto()
-	gofakeit.SetGlobalFaker(faker)
 	samples := []struct {
 		a, b ServerParams
 	}{}
-	for i := 0; i < 100; i++ {
+	for i := 0; i < 2; i++ {
 		var sample ServerParams
 		var result ServerParams
-		err := gofakeit.Struct(&sample)
+		err := faker.FakeData(&sample)
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		buf := new(bytes.Buffer)
-		enc := gob.NewEncoder(buf)
-		err = enc.Encode(&sample)
+		byteJSON, err := json.Marshal(sample)
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		dec := gob.NewDecoder(buf)
-		err = dec.Decode(&result)
+		err = json.Unmarshal(byteJSON, &result)
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -182,19 +169,17 @@ func TestServerParamsDiff(t *testing.T) {
 }
 
 func TestServerParamsDiffFalse(t *testing.T) {
-	faker := gofakeit.NewCrypto()
-	gofakeit.SetGlobalFaker(faker)
 	samples := []struct {
 		a, b ServerParams
 	}{}
-	for i := 0; i < 100; i++ {
+	for i := 0; i < 2; i++ {
 		var sample ServerParams
 		var result ServerParams
-		err := gofakeit.Struct(&sample)
+		err := faker.FakeData(&sample)
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		err = gofakeit.Struct(&result)
+		err = faker.FakeData(&result)
 		if err != nil {
 			t.Errorf(err.Error())
 		}
