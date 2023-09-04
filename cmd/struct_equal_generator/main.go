@@ -71,7 +71,7 @@ func scanAllTypes(fileName string) []string {
 	return typesInFile
 }
 
-func generate(fileName string, args Args) (string, error) { //nolint:gocognit,maintidx
+func generate(fileName string, args Args) (string, error) { //nolint:gocognit
 	fset := token.NewFileSet()
 	var packageName string
 
@@ -164,65 +164,7 @@ func generate(fileName string, args Args) (string, error) { //nolint:gocognit,ma
 				var fields []Field
 				needsOptions := false
 				needsOptionsIndex := false
-				for _, field := range currType.Fields.List {
-					if len(field.Names) > 0 {
-						res := getTypeString(field.Type, imports)
-						f := Field{
-							Name:         field.Names[0].Name,
-							Type:         res.Name,
-							TypeInFile:   res.TypeName,
-							IsBasicType:  res.IsBasicType,
-							IsComparable: res.IsComparable,
-							HasString:    res.HasStringer,
-							HasEqual:     res.HasEqual,
-							HasEqualOpt:  res.HasEqualOpt,
-							IsArray:      res.IsArray,
-							IsMap:        res.IsMap,
-						}
-						if res.SubType != nil {
-							f.SubType = &Field{
-								Name:         res.SubType.Name,
-								Type:         res.SubType.Name,
-								TypeInFile:   res.SubType.TypeName,
-								IsBasicType:  res.SubType.IsBasicType,
-								IsComparable: res.SubType.IsComparable,
-								// IsEmbedded:   res.SubType.IsEmbedded,
-								HasString:   res.SubType.HasStringer,
-								HasEqual:    res.SubType.HasEqual,
-								HasEqualOpt: res.SubType.HasEqualOpt,
-								IsArray:     res.SubType.IsArray,
-								IsMap:       res.SubType.IsMap,
-							}
-						}
-						fields = append(fields, f)
-						if field.Names[0].Name == "Index" {
-							needsOptionsIndex = true
-						}
-						if strings.HasPrefix(res.Name, "[]") {
-							needsOptions = true
-						}
-						if strings.HasPrefix(res.Name, "map") {
-							needsOptions = true
-						}
-						needsOptions = needsOptions || res.IsComplex
-					}
-					// For embedded struct
-					if len(field.Names) == 0 && field.Type != nil {
-						res := getTypeString(field.Type, imports)
-						fields = append(fields, Field{
-							Name:         res.Name,
-							IsEmbedded:   true,
-							IsComparable: res.IsComparable,
-							HasString:    res.HasStringer,
-							HasEqual:     res.HasEqual,
-							HasEqualOpt:  res.HasEqualOpt,
-						})
-						if res.Name == "Index" {
-							needsOptionsIndex = true
-						}
-						needsOptions = true
-					}
-				}
+				fields, needsOptions, needsOptionsIndex = getFields(fields, currType, imports)
 				hasTests = true
 				err = generateEqualAndDiff(generateEqualAndDiffOptions{
 					PackageName:       packageName,
@@ -321,4 +263,79 @@ func generate(fileName string, args Args) (string, error) { //nolint:gocognit,ma
 		return packageName, err
 	}
 	return packageName, nil
+}
+
+func getFields(fields []Field, node *ast.StructType, imports map[string]string) (fieldsResult []Field, needsOptions, needsOptionsIndex bool) { //nolint:gocognit
+	for _, field := range node.Fields.List {
+		if len(field.Names) > 0 {
+			res := getTypeString(field.Type, imports)
+			if res.StructType != nil {
+				var structFields []Field
+				structFields, no, nOpt := getFields(structFields, res.StructType, imports)
+				needsOptions = needsOptions || no
+				needsOptionsIndex = needsOptionsIndex || nOpt
+				structName := field.Names[0].Name
+				for _, f := range structFields {
+					f.Name = structName + "." + f.Name
+					fields = append(fields, f)
+				}
+				continue
+			}
+			f := Field{
+				Name:         field.Names[0].Name,
+				Type:         res.Name,
+				TypeInFile:   res.TypeName,
+				IsBasicType:  res.IsBasicType,
+				IsComparable: res.IsComparable,
+				HasString:    res.HasStringer,
+				HasEqual:     res.HasEqual,
+				HasEqualOpt:  res.HasEqualOpt,
+				IsArray:      res.IsArray,
+				IsMap:        res.IsMap,
+			}
+			if res.SubType != nil {
+				f.SubType = &Field{
+					Name:         res.SubType.Name,
+					Type:         res.SubType.Name,
+					TypeInFile:   res.SubType.TypeName,
+					IsBasicType:  res.SubType.IsBasicType,
+					IsComparable: res.SubType.IsComparable,
+					// IsEmbedded:   res.SubType.IsEmbedded,
+					HasString:   res.SubType.HasStringer,
+					HasEqual:    res.SubType.HasEqual,
+					HasEqualOpt: res.SubType.HasEqualOpt,
+					IsArray:     res.SubType.IsArray,
+					IsMap:       res.SubType.IsMap,
+				}
+			}
+			fields = append(fields, f)
+			if field.Names[0].Name == "Index" {
+				needsOptionsIndex = true
+			}
+			if strings.HasPrefix(res.Name, "[]") {
+				needsOptions = true
+			}
+			if strings.HasPrefix(res.Name, "map") {
+				needsOptions = true
+			}
+			needsOptions = needsOptions || res.IsComplex
+		}
+		// For embedded struct
+		if len(field.Names) == 0 && field.Type != nil {
+			res := getTypeString(field.Type, imports)
+			fields = append(fields, Field{
+				Name:         res.Name,
+				IsEmbedded:   true,
+				IsComparable: res.IsComparable,
+				HasString:    res.HasStringer,
+				HasEqual:     res.HasEqual,
+				HasEqualOpt:  res.HasEqualOpt,
+			})
+			if res.Name == "Index" {
+				needsOptionsIndex = true
+			}
+			needsOptions = true
+		}
+	}
+	return fields, needsOptions, needsOptionsIndex
 }

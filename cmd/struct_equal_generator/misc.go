@@ -120,6 +120,7 @@ type getTypeStringResponse struct {
 	HasEqualOpt  bool
 	IsArray      bool
 	IsMap        bool
+	StructType   *ast.StructType
 	SubType      *getTypeStringResponse
 }
 
@@ -192,6 +193,10 @@ func getTypeString(expr ast.Expr, imports map[string]string) getTypeStringRespon
 		res := getTypeString(t.X, imports)
 		res.Name = "*" + res.Name
 		return res
+	case *ast.StructType:
+		return getTypeStringResponse{
+			StructType: t,
+		}
 	}
 	return getTypeStringResponse{}
 }

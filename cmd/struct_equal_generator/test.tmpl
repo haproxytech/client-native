@@ -11,14 +11,11 @@ func Test{{$.Name}}{{.}}(t *testing.T) {
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		buf := new(bytes.Buffer)
-		enc := gob.NewEncoder(buf)
-		err = enc.Encode(&sample)
+		byteJSON, err := json.Marshal(sample)
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		dec := gob.NewDecoder(buf)
-		err = dec.Decode(&result)
+		err = json.Unmarshal(byteJSON, &result)
 		if err != nil {
 			t.Errorf(err.Error())
 		}
