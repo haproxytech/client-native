@@ -220,6 +220,16 @@ func (s {{.Data.Name}}) {{.Name}}(t {{.Data.Name}}, opts ...Options) {{- if eq $
 	{{- end }}
 	{{- end }}
 {{- end -}}
+{{- if eq .Data.Mode "map" }}
+	{{- if eq $topLevel.Name "Equal" }}
+		return equalComparableMap(s, t, opt)
+	{{- else if eq $topLevel.Name "Diff" }}
+		if !equalComparableMap(s, t, opt) {
+			diff["{{.Name}}"] = []interface{}{s, t}
+		}
+		return diff
+	{{- end }}
+{{- end -}}
 {{- if eq .Data.Mode "ident" }}
 	{{- if eq $topLevel.Name "Equal" }}
 		return s == t

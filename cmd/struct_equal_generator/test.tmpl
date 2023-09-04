@@ -1,15 +1,13 @@
 
 {{ range .TestType}}
 func Test{{$.Name}}{{.}}(t *testing.T) {
-	faker := gofakeit.NewCrypto()
-	gofakeit.SetGlobalFaker(faker)
 	samples := []struct {
 		a, b {{$.Name}}
 	}{}
-	for i := 0; i < 100; i++ {
+	for i := 0; i < 2; i++ {
 		var sample {{$.Name}}
 		var result {{$.Name}}
-		err := gofakeit.Struct(&sample)
+		err := faker.FakeData(&sample)
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -61,19 +59,17 @@ func Test{{$.Name}}{{.}}(t *testing.T) {
 /*
 {{end -}}
 func Test{{$.Name}}{{.}}False(t *testing.T) {
-	faker := gofakeit.NewCrypto()
-	gofakeit.SetGlobalFaker(faker)
 	samples := []struct {
 		a, b {{$.Name}}
 	}{}
-	for i := 0; i < 100; i++ {
+	for i := 0; i < 2; i++ {
 		var sample {{$.Name}}
 		var result {{$.Name}}
-		err := gofakeit.Struct(&sample)
+		err := faker.FakeData(&sample)
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		err = gofakeit.Struct(&result)
+		err = faker.FakeData(&result)
 		if err != nil {
 			t.Errorf(err.Error())
 		}

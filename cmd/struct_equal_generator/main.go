@@ -24,6 +24,7 @@ func main() {
 			generatedTypes[t] = true
 		}
 	}
+
 	for _, fileName := range args.Files {
 		packageName, err = generate(fileName, args)
 		if err != nil {
@@ -272,6 +273,32 @@ func generate(fileName string, args Args) (string, error) { //nolint:gocognit,ma
 					NeedsOptions:      needsOptions,
 					NeedsOptionsIndex: needsOptionsIndex,
 					Mode:              "array",
+				})
+				if err != nil {
+					log.Panic(err)
+				}
+			case *ast.MapType:
+				res := getTypeString(currType, imports)
+				// needsOptions := !res.IsBasicType
+				needsOptions := true
+				needsOptionsIndex := false
+				if res.Name == "Index" {
+					needsOptionsIndex = true
+				}
+				err = generateEqualAndDiff(generateEqualAndDiffOptions{
+					PackageName:       packageName,
+					File:              file,
+					FileTest:          fileTest,
+					Name:              currSpecType.Name.Name,
+					Type:              res.Name,
+					CurrType:          currSpecType,
+					IsBasicType:       res.IsBasicType,
+					IsComplex:         res.IsComplex,
+					IsComparable:      false,
+					IsPointer:         strings.HasPrefix(res.Name, "*"),
+					NeedsOptions:      needsOptions,
+					NeedsOptionsIndex: needsOptionsIndex,
+					Mode:              "map",
 				})
 				if err != nil {
 					log.Panic(err)
