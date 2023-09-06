@@ -144,12 +144,13 @@ func (c *client) IsVersionBiggerOrEqual(minimumVersion HAProxyVersion) bool {
 
 // GetMapsPath returns runtime map file path or map id
 func (c *client) GetMapsPath(name string) (string, error) {
-	name = misc.SanitizeFilename(name)
-
 	// we can refer to runtime map with either id or path
 	if strings.HasPrefix(name, "#") { // id
 		return name, nil
 	}
+	// if not id then sanitize filename
+	name = misc.SanitizeFilename(name)
+
 	// CLI
 	if c.options.MapsDir != nil && *c.options.MapsDir != "" {
 		ext := filepath.Ext(name)
