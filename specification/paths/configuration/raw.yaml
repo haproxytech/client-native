@@ -15,8 +15,14 @@ configuration:
       '200':
         description: Operation successful
         headers:
+          Cluster-Version:
+            description: Cluster configuration version
+            type: string
           Configuration-Version:
             description: Configuration file version
+            type: string
+          Configuration-Checksum:
+            description: Configuration file md5 checksum
             type: string
         schema:
           type: object
@@ -77,12 +83,32 @@ configuration:
           Reload-ID:
             description: ID of the requested reload
             type: string
+          Cluster-Version:
+            description: Cluster configuration version
+            type: string
+          Configuration-Version:
+            description: Configuration file version
+            type: string
+          Configuration-Checksum:
+            description: Configuration file md5 checksum
+            type: string
         schema:
           type: string
       '201':
         description: New HAProxy configuration pushed
+        headers:
+          Cluster-Version:
+            description: Cluster configuration version
+            type: string
+          Configuration-Version:
+            description: Configuration file version
+            type: string
+          Configuration-Checksum:
+            description: Configuration file md5 checksum
+            type: string
         schema:
           type: string
+
       '400':
         $ref: '#/responses/BadRequest'
       'default':

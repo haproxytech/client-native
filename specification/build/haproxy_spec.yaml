@@ -18081,6 +18081,12 @@ paths:
               "200":
                   description: Operation successful
                   headers:
+                      Cluster-Version:
+                          description: Cluster configuration version
+                          type: string
+                      Configuration-Checksum:
+                          description: Configuration file md5 checksum
+                          type: string
                       Configuration-Version:
                           description: Configuration file version
                           type: string
@@ -18139,11 +18145,30 @@ paths:
           responses:
               "201":
                   description: New HAProxy configuration pushed
+                  headers:
+                      Cluster-Version:
+                          description: Cluster configuration version
+                          type: string
+                      Configuration-Checksum:
+                          description: Configuration file md5 checksum
+                          type: string
+                      Configuration-Version:
+                          description: Configuration file version
+                          type: string
                   schema:
                       type: string
               "202":
                   description: Configuration change accepted and reload requested
                   headers:
+                      Cluster-Version:
+                          description: Cluster configuration version
+                          type: string
+                      Configuration-Checksum:
+                          description: Configuration file md5 checksum
+                          type: string
+                      Configuration-Version:
+                          description: Configuration file version
+                          type: string
                       Reload-ID:
                           description: ID of the requested reload
                           type: string
