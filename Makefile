@@ -29,7 +29,7 @@ swagger-check:
 
 .PHONY: lint
 lint:
-	docker run --rm -v $(pwd):/data cytopia/yamllint .
+	docker run --rm -v $(PROJECT_PATH):/data cytopia/yamllint .
 	docker run --rm ghcr.io/haproxytech/go-linter:1.46.2 --version
 	docker run --rm -v ${PROJECT_PATH}:/app -w /app ghcr.io/haproxytech/go-linter:1.46.2 --timeout 5m --color always --max-issues-per-linter 0 --max-same-issues 0
 
