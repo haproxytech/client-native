@@ -26,42 +26,57 @@ import (
 )
 
 type Raw interface {
+	GetRawConfigurationWithClusterData(transactionID string, version int64) (int64, int64, string, string, error)
 	GetRawConfiguration(transactionID string, version int64) (int64, string, error)
 	PostRawConfiguration(config *string, version int64, skipVersionCheck bool, onlyValidate ...bool) error
 }
 
+func (c *client) GetRawConfiguration(transactionID string, version int64) (int64, string, error) {
+	v, _, _, data, err := c.getRawConfiguration(transactionID, version)
+	if err != nil {
+		return 0, "", err
+	}
+	return v, data, nil
+}
+
+func (c *client) GetRawConfigurationWithClusterData(transactionID string, version int64) (int64, int64, string, string, error) {
+	return c.getRawConfiguration(transactionID, version)
+}
+
 // GetRawConfiguration returns configuration version and a
 // string containing raw config file
-func (c *client) GetRawConfiguration(transactionID string, version int64) (int64, string, error) {
+func (c *client) getRawConfiguration(transactionID string, version int64) (int64, int64, string, string, error) { //nolint: gocognit
 	config := c.ConfigurationFile
 	var err error
 	if transactionID != "" && version != 0 {
-		return 0, "", NewConfError(ErrBothVersionTransaction, "Both version and transactionID specified, specify only one")
+		return 0, 0, "", "", NewConfError(ErrBothVersionTransaction, "Both version and transactionID specified, specify only one")
 	}
 	if transactionID != "" {
 		config, err = c.GetTransactionFile(transactionID)
 		if err != nil {
-			return 0, "", err
+			return 0, 0, "", "", err
 		}
 	} else if version != 0 {
 		config, err = c.getBackupFile(version)
 		if err != nil {
-			return 0, "", err
+			return 0, 0, "", "", err
 		}
 	}
 	file, err := os.Open(config)
 	if err != nil {
-		return 0, "", NewConfError(ErrCannotReadConfFile, err.Error())
+		return 0, 0, "", "", NewConfError(ErrCannotReadConfFile, err.Error())
 	}
 	defer file.Close()
 
 	dataStr := ""
 	ondiskV := int64(0)
+	ondiskClusterV := int64(0)
+	ondiskMD5Hash := ""
 	scanner := bufio.NewScanner(file)
 	// parse out version
 	for scanner.Scan() {
-		line := scanner.Text()
-		if strings.HasPrefix(line, "# _version=") {
+		switch line := scanner.Text(); {
+		case strings.HasPrefix(line, "# _version="):
 			w := strings.Split(line, "=")
 			if len(w) == 2 {
 				ondiskV, err = strconv.ParseInt(w[1], 10, 64)
@@ -69,15 +84,31 @@ func (c *client) GetRawConfiguration(transactionID string, version int64) (int64
 					ondiskV = int64(0)
 				}
 			}
-		} else {
+			dataStr += line + "\n"
+		case strings.HasPrefix(line, "# _md5hash="):
+			w := strings.Split(line, "=")
+			if len(w) == 2 {
+				ondiskMD5Hash = strings.TrimSpace(w[1])
+			}
+			dataStr += line + "\n"
+		case strings.HasPrefix(line, "# _cluster_version="):
+			w := strings.Split(line, "=")
+			if len(w) == 2 {
+				ondiskClusterV, err = strconv.ParseInt(w[1], 10, 64)
+				if err != nil {
+					ondiskClusterV = int64(0)
+				}
+			}
+			dataStr += line + "\n"
+		default:
 			dataStr += line + "\n"
 		}
 	}
 	if err = scanner.Err(); err != nil {
-		return ondiskV, "", NewConfError(ErrCannotReadConfFile, err.Error())
+		return ondiskV, 0, "", "", NewConfError(ErrCannotReadConfFile, err.Error())
 	}
 
-	return ondiskV, dataStr, nil
+	return ondiskV, ondiskClusterV, ondiskMD5Hash, dataStr, nil
 }
 
 // PostRawConfiguration pushes given string to the config file if the version
