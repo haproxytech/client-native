@@ -619,7 +619,8 @@ func (t *Transaction) getBackupFile(version int64) (string, error) {
 	if version == 0 {
 		return t.ConfigurationFile, nil
 	}
-	backupFileName := fmt.Sprintf("%v.%v", t.ConfigurationFile, version)
+	fileName := fmt.Sprintf("%v.%v", t.ConfigurationFile, version)
+	backupFileName := filepath.Join(t.BackupsDir, filepath.Base(fileName))
 
 	if _, err := os.Stat(backupFileName); err == nil {
 		return backupFileName, nil
