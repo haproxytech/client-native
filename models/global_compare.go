@@ -219,11 +219,19 @@ func (s Global) Equal(t Global, opts ...Options) bool {
 		return false
 	}
 
+	if s.HttpclientRetries != t.HttpclientRetries {
+		return false
+	}
+
 	if s.HttpclientSslCaFile != t.HttpclientSslCaFile {
 		return false
 	}
 
 	if !equalPointers(s.HttpclientSslVerify, t.HttpclientSslVerify) {
+		return false
+	}
+
+	if !equalPointers(s.HttpclientTimeoutConnect, t.HttpclientTimeoutConnect) {
 		return false
 	}
 
@@ -780,12 +788,20 @@ func (s Global) Diff(t Global, opts ...Options) map[string][]interface{} {
 		diff["HttpclientResolversPrefer"] = []interface{}{s.HttpclientResolversPrefer, t.HttpclientResolversPrefer}
 	}
 
+	if s.HttpclientRetries != t.HttpclientRetries {
+		diff["HttpclientRetries"] = []interface{}{s.HttpclientRetries, t.HttpclientRetries}
+	}
+
 	if s.HttpclientSslCaFile != t.HttpclientSslCaFile {
 		diff["HttpclientSslCaFile"] = []interface{}{s.HttpclientSslCaFile, t.HttpclientSslCaFile}
 	}
 
 	if !equalPointers(s.HttpclientSslVerify, t.HttpclientSslVerify) {
 		diff["HttpclientSslVerify"] = []interface{}{ValueOrNil(s.HttpclientSslVerify), ValueOrNil(t.HttpclientSslVerify)}
+	}
+
+	if !equalPointers(s.HttpclientTimeoutConnect, t.HttpclientTimeoutConnect) {
+		diff["HttpclientTimeoutConnect"] = []interface{}{ValueOrNil(s.HttpclientTimeoutConnect), ValueOrNil(t.HttpclientTimeoutConnect)}
 	}
 
 	if s.InsecureForkWanted != t.InsecureForkWanted {

@@ -515,11 +515,17 @@ func TestGetGlobal(t *testing.T) {
 	if global.HttpclientResolversPrefer != "ipv4" {
 		t.Errorf("HttpclientResolversPrefer is %v, expected ipv4", global.HttpclientResolversPrefer)
 	}
+	if global.HttpclientRetries != 3 {
+		t.Errorf("HttpclientRetries is %v, expected 3", global.HttpclientRetries)
+	}
 	if global.HttpclientSslCaFile != "my_test_file.ca" {
 		t.Errorf("HttpclientSslCaFile is %v, expected my_test_file.ca", global.HttpclientSslCaFile)
 	}
 	if *global.HttpclientSslVerify != "none" {
 		t.Errorf("HttpclientSslVerify is %v, expected \"\"", global.HttpclientSslVerify)
+	}
+	if *global.HttpclientTimeoutConnect != 2000 {
+		t.Errorf("HttpclientTimeoutConnect is %v, expected 2000", global.HttpclientTimeoutConnect)
 	}
 	if len(global.SslEngines) == 3 {
 		if *global.SslEngines[0].Name != "first" {
@@ -682,7 +688,9 @@ func TestPutGlobal(t *testing.T) {
 		HttpclientResolversDisabled: "disabled",
 		HttpclientResolversPrefer:   "ipv6",
 		HttpclientResolversID:       "my2",
+		HttpclientRetries:           5,
 		HttpclientSslCaFile:         "my_ca_file.ca",
+		HttpclientTimeoutConnect:    misc.Int64P(5000),
 		HttpclientSslVerify:         misc.StringP(""),
 		UID:                         1234,
 		WurflOptions:                &models.GlobalWurflOptions{},

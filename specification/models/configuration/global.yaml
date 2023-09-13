@@ -184,6 +184,9 @@ global:
       type: string
       enum: ["ipv4", "ipv6"]
       x-display-name: HTTP Client Resolvers Prefer
+    httpclient_retries:
+      type: integer
+      x-display-name: HTTP Client Retries
     httpclient_ssl_ca_file:
       type: string
       x-display-name: HTTP Client SSL CA File
@@ -191,6 +194,10 @@ global:
       type: string
       enum: ["", "none", "required"]
       x-display-name: HTTP Client SSL Verify
+      x-nullable: true
+    httpclient_timeout_connect:
+      type: integer
+      x-display-name: HTTP Client Connect Timeout
       x-nullable: true
     prealloc-fd:
       type: boolean

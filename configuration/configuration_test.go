@@ -180,8 +180,10 @@ global
   httpclient.resolvers.disabled on
   httpclient.resolvers.prefer ipv4
   httpclient.resolvers.id resolver_1
+  httpclient.retries 3
   httpclient.ssl.ca-file my_test_file.ca
   httpclient.ssl.verify none
+  httpclient.timeout.connect 2s
   prealloc-fd
   ssl-engine first
   ssl-engine second RSA,DSA,DH,EC,RAND

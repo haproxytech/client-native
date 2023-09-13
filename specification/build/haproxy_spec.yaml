@@ -1150,6 +1150,9 @@ definitions:
                   - ipv6
               type: string
               x-display-name: HTTP Client Resolvers Prefer
+          httpclient_retries:
+              type: integer
+              x-display-name: HTTP Client Retries
           httpclient_ssl_ca_file:
               type: string
               x-display-name: HTTP Client SSL CA File
@@ -1160,6 +1163,10 @@ definitions:
                   - required
               type: string
               x-display-name: HTTP Client SSL Verify
+              x-nullable: true
+          httpclient_timeout_connect:
+              type: integer
+              x-display-name: HTTP Client Connect Timeout
               x-nullable: true
           insecure_fork_wanted:
               type: boolean

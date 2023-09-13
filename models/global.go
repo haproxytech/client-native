@@ -141,12 +141,18 @@ type Global struct {
 	// Enum: [ipv4 ipv6]
 	HttpclientResolversPrefer string `json:"httpclient_resolvers_prefer,omitempty"`
 
+	// httpclient retries
+	HttpclientRetries int64 `json:"httpclient_retries,omitempty"`
+
 	// httpclient ssl ca file
 	HttpclientSslCaFile string `json:"httpclient_ssl_ca_file,omitempty"`
 
 	// httpclient ssl verify
 	// Enum: [ none required]
 	HttpclientSslVerify *string `json:"httpclient_ssl_verify,omitempty"`
+
+	// httpclient timeout connect
+	HttpclientTimeoutConnect *int64 `json:"httpclient_timeout_connect,omitempty"`
 
 	// insecure fork wanted
 	InsecureForkWanted bool `json:"insecure_fork_wanted,omitempty"`

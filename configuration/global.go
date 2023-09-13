@@ -446,6 +446,11 @@ func ParseGlobalSection(p parser.Parser) (*models.Global, error) { //nolint:goco
 		httpClientResolversPrefer = httpClientResolversPreferParser.Type
 	}
 
+	httpClientRetries, err := parseInt64Option(p, "httpclient.retries")
+	if err != nil {
+		return nil, err
+	}
+
 	httpClientSSLCaFile, err := parseStringOption(p, "httpclient.ssl.ca-file")
 	if err != nil {
 		return nil, err
@@ -460,6 +465,12 @@ func ParseGlobalSection(p parser.Parser) (*models.Global, error) { //nolint:goco
 		}
 		httpClientSSLVerify = &httpClientSSLVerifyParser.Type
 	}
+
+	httpClientTimeoutConnectStr, err := parseStringOption(p, "httpclient.timeout.connect")
+	if err != nil {
+		return nil, err
+	}
+	httpClientTimeoutConnect := misc.ParseTimeout(httpClientTimeoutConnectStr)
 
 	preallocFD, err := parseBoolOption(p, "prealloc-fd")
 	if err != nil {
@@ -1112,8 +1123,10 @@ func ParseGlobalSection(p parser.Parser) (*models.Global, error) { //nolint:goco
 		HttpclientResolversDisabled:       httpClientResolversDisabled,
 		HttpclientResolversID:             httpClientResolversID,
 		HttpclientResolversPrefer:         httpClientResolversPrefer,
+		HttpclientRetries:                 httpClientRetries,
 		HttpclientSslCaFile:               httpClientSSLCaFile,
 		HttpclientSslVerify:               httpClientSSLVerify,
+		HttpclientTimeoutConnect:          httpClientTimeoutConnect,
 		PreallocFd:                        preallocFD,
 		SslDefaultBindCiphers:             sslBindCiphers,
 		SslDefaultBindCiphersuites:        sslBindCiphersuites,
@@ -1435,6 +1448,10 @@ func SerializeGlobalSection(p parser.Parser, data *models.Global) error { //noli
 		return err
 	}
 
+	if err := serializeInt64Option(p, "httpclient.retries", data.HttpclientRetries); err != nil {
+		return err
+	}
+
 	var pHTTPClientSSLCaFile *types.HTTPClientSSLVerify
 	if data.HttpclientSslVerify != nil {
 		pHTTPClientSSLCaFile = &types.HTTPClientSSLVerify{
@@ -1442,6 +1459,10 @@ func SerializeGlobalSection(p parser.Parser, data *models.Global) error { //noli
 		}
 	}
 	if err := p.Set(parser.Global, parser.GlobalSectionName, "httpclient.ssl.verify", pHTTPClientSSLCaFile); err != nil {
+		return err
+	}
+
+	if err := serializeTimeoutSizeOption(p, "httpclient.timeout.connect", data.HttpclientTimeoutConnect); err != nil {
 		return err
 	}
 
