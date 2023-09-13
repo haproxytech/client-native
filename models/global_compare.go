@@ -451,11 +451,19 @@ func (s Global) Equal(t Global, opts ...Options) bool {
 		return false
 	}
 
+	if s.SslDefaultServerClientSigalgs != t.SslDefaultServerClientSigalgs {
+		return false
+	}
+
 	if s.SslDefaultServerCurves != t.SslDefaultServerCurves {
 		return false
 	}
 
 	if s.SslDefaultServerOptions != t.SslDefaultServerOptions {
+		return false
+	}
+
+	if s.SslDefaultServerSigalgs != t.SslDefaultServerSigalgs {
 		return false
 	}
 
@@ -1038,12 +1046,20 @@ func (s Global) Diff(t Global, opts ...Options) map[string][]interface{} {
 		diff["SslDefaultServerCiphersuites"] = []interface{}{s.SslDefaultServerCiphersuites, t.SslDefaultServerCiphersuites}
 	}
 
+	if s.SslDefaultServerClientSigalgs != t.SslDefaultServerClientSigalgs {
+		diff["SslDefaultServerClientSigalgs"] = []interface{}{s.SslDefaultServerClientSigalgs, t.SslDefaultServerClientSigalgs}
+	}
+
 	if s.SslDefaultServerCurves != t.SslDefaultServerCurves {
 		diff["SslDefaultServerCurves"] = []interface{}{s.SslDefaultServerCurves, t.SslDefaultServerCurves}
 	}
 
 	if s.SslDefaultServerOptions != t.SslDefaultServerOptions {
 		diff["SslDefaultServerOptions"] = []interface{}{s.SslDefaultServerOptions, t.SslDefaultServerOptions}
+	}
+
+	if s.SslDefaultServerSigalgs != t.SslDefaultServerSigalgs {
+		diff["SslDefaultServerSigalgs"] = []interface{}{s.SslDefaultServerSigalgs, t.SslDefaultServerSigalgs}
 	}
 
 	if s.SslDhParamFile != t.SslDhParamFile {

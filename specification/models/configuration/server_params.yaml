@@ -86,6 +86,11 @@ server_params:
       x-dependency:
         ssl:
           value: enabled
+    client_sigalgs:
+      type: string
+      x-dependency:
+        ssl:
+          value: true
     cookie:
       type: string
       pattern: '^[^\s]+$'
@@ -244,6 +249,11 @@ server_params:
       enum: [enabled, disabled]
     shard:
       type: integer
+    sigalgs:
+      type: string
+      x-dependency:
+        ssl:
+          value: true
     slowstart:
       type: integer
       x-nullable: true

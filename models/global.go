@@ -314,11 +314,17 @@ type Global struct {
 	// ssl default server ciphersuites
 	SslDefaultServerCiphersuites string `json:"ssl_default_server_ciphersuites,omitempty"`
 
+	// ssl default server client sigalgs
+	SslDefaultServerClientSigalgs string `json:"ssl_default_server_client_sigalgs,omitempty"`
+
 	// ssl default server curves
 	SslDefaultServerCurves string `json:"ssl_default_server_curves,omitempty"`
 
 	// ssl default server options
 	SslDefaultServerOptions string `json:"ssl_default_server_options,omitempty"`
+
+	// ssl default server sigalgs
+	SslDefaultServerSigalgs string `json:"ssl_default_server_sigalgs,omitempty"`
 
 	// ssl dh param file
 	SslDhParamFile string `json:"ssl_dh_param_file,omitempty"`

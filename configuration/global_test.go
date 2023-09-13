@@ -632,6 +632,12 @@ func TestGetGlobal(t *testing.T) {
 	if global.SslDefaultBindClientSigalgs != "ECDSA+SHA256:RSA+SHA256" {
 		t.Errorf("SslDefaultBindClientSigalgs is %v, expected ECDSA+SHA256:RSA+SHA256", global.SslDefaultBindClientSigalgs)
 	}
+	if global.SslDefaultServerSigalgs != "RSA+SHA256" {
+		t.Errorf("SslDefaultServerSigalgs is %v, expected RSA+SHA256", global.SslDefaultServerSigalgs)
+	}
+	if global.SslDefaultServerClientSigalgs != "ECDSA+SHA256:RSA+SHA256" {
+		t.Errorf("SslDefaultServerClientSigalgs is %v, expected ECDSA+SHA256:RSA+SHA256", global.SslDefaultServerClientSigalgs)
+	}
 }
 
 func TestPutGlobal(t *testing.T) {
@@ -707,8 +713,10 @@ func TestPutGlobal(t *testing.T) {
 			Type: "origin",
 			Path: "/some/other/path",
 		},
-		NoQuic:        false,
-		ClusterSecret: "",
+		NoQuic:                        false,
+		ClusterSecret:                 "",
+		SslDefaultServerSigalgs:       "ECDSA+SHA256",
+		SslDefaultServerClientSigalgs: "ECDSA+SHA256",
 	}
 
 	err := clientTest.PushGlobalConfiguration(g, "", version)

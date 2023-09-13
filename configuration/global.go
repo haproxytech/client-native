@@ -553,6 +553,26 @@ func ParseGlobalSection(p parser.Parser) (*models.Global, error) { //nolint:goco
 		sslBindClientSigalgs = sslBindClientSigalgsParser.Value
 	}
 
+	var sslServerSigalgs string
+	data, err = p.Get(parser.Global, parser.GlobalSectionName, "ssl-default-server-sigalgs")
+	if err == nil {
+		sslServerSigalgsParser, ok := data.(*types.StringC)
+		if !ok {
+			return nil, misc.CreateTypeAssertError("ssl-default-server-sigalgs")
+		}
+		sslServerSigalgs = sslServerSigalgsParser.Value
+	}
+
+	var sslServerClientSigalgs string
+	data, err = p.Get(parser.Global, parser.GlobalSectionName, "ssl-default-server-client-sigalgs")
+	if err == nil {
+		sslServerClientSigalgsParser, ok := data.(*types.StringC)
+		if !ok {
+			return nil, misc.CreateTypeAssertError("ssl-default-server-client-sigalgs")
+		}
+		sslServerClientSigalgs = sslServerClientSigalgsParser.Value
+	}
+
 	var sslDefaultServerCiphers string
 	data, err = p.Get(parser.Global, parser.GlobalSectionName, "ssl-default-server-ciphers")
 	if err == nil {
@@ -1208,6 +1228,8 @@ func ParseGlobalSection(p parser.Parser) (*models.Global, error) { //nolint:goco
 		SetVarFmts:                        setVarFormats,
 		SslDefaultBindSigalgs:             sslBindSigalgs,
 		SslDefaultBindClientSigalgs:       sslBindClientSigalgs,
+		SslDefaultServerSigalgs:           sslServerSigalgs,
+		SslDefaultServerClientSigalgs:     sslServerClientSigalgs,
 	}
 
 	return global, nil
@@ -1556,6 +1578,26 @@ func SerializeGlobalSection(p parser.Parser, data *models.Global) error { //noli
 		pSSLBindClientSigalgs = nil
 	}
 	if err := p.Set(parser.Global, parser.GlobalSectionName, "ssl-default-bind-client-sigalgs", pSSLBindClientSigalgs); err != nil {
+		return err
+	}
+
+	pSSLServerSigalgs := &types.StringC{
+		Value: data.SslDefaultServerSigalgs,
+	}
+	if data.SslDefaultServerSigalgs == "" {
+		pSSLServerSigalgs = nil
+	}
+	if err := p.Set(parser.Global, parser.GlobalSectionName, "ssl-default-server-sigalgs", pSSLServerSigalgs); err != nil {
+		return err
+	}
+
+	pSSLServerClientSigalgs := &types.StringC{
+		Value: data.SslDefaultServerClientSigalgs,
+	}
+	if data.SslDefaultServerClientSigalgs == "" {
+		pSSLServerClientSigalgs = nil
+	}
+	if err := p.Set(parser.Global, parser.GlobalSectionName, "ssl-default-server-client-sigalgs", pSSLServerClientSigalgs); err != nil {
 		return err
 	}
 

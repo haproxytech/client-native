@@ -209,6 +209,8 @@ global
   tune.lua.burst-timeout 205
   ssl-default-bind-sigalgs RSA+SHA256
   ssl-default-bind-client-sigalgs ECDSA+SHA256:RSA+SHA256
+  ssl-default-server-sigalgs RSA+SHA256
+  ssl-default-server-client-sigalgs ECDSA+SHA256:RSA+SHA256
 
 defaults test_defaults
   maxconn 2000
@@ -621,7 +623,7 @@ backend test
   external-check command /bin/false
   use-server webserv if TRUE
   use-server webserv2 unless TRUE
-  server webserv 192.168.1.1:9200 maxconn 1000 ssl weight 10 inter 2s cookie BLAH slowstart 6000 proxy-v2-options authority,crc32c ws h1 pool-low-conn 128 id 1234 pool-purge-delay 10s tcp-ut 2s curves secp384r1
+  server webserv 192.168.1.1:9200 maxconn 1000 ssl weight 10 inter 2s cookie BLAH slowstart 6000 proxy-v2-options authority,crc32c ws h1 pool-low-conn 128 id 1234 pool-purge-delay 10s tcp-ut 2s curves secp384r1 client-sigalgs ECDSA+SHA256:RSA+SHA256 sigalgs ECDSA+SHA256
   server webserv2 192.168.1.1:9300 maxconn 1000 ssl weight 10 inter 2s cookie BLAH slowstart 6000 proxy-v2-options authority,crc32c ws h1 pool-low-conn 128
   http-request set-dst hdr(x-dst)
   http-request set-dst-port int(4000)

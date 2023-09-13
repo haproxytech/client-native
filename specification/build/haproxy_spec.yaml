@@ -551,6 +551,11 @@ definitions:
               x-dependency:
                   ssl:
                       value: enabled
+          client_sigalgs:
+              type: string
+              x-dependency:
+                  ssl:
+                      value: true
           cookie:
               pattern: ^[^\s]+$
               type: string
@@ -772,6 +777,11 @@ definitions:
               type: string
           shard:
               type: integer
+          sigalgs:
+              type: string
+              x-dependency:
+                  ssl:
+                      value: true
           slowstart:
               type: integer
               x-nullable: true
@@ -1454,12 +1464,18 @@ definitions:
           ssl_default_server_ciphersuites:
               type: string
               x-display-name: SSL Default Server Ciphersuites
+          ssl_default_server_client_sigalgs:
+              type: string
+              x-display-name: SSL Default Server Client Sigalgs
           ssl_default_server_curves:
               type: string
               x-display-name: SSL Default Server Curves
           ssl_default_server_options:
               type: string
               x-display-name: SSL Default Server Options
+          ssl_default_server_sigalgs:
+              type: string
+              x-display-name: SSL Default Server Sigalgs
           ssl_dh_param_file:
               type: string
           ssl_engines:

@@ -101,6 +101,10 @@ func (s ServerParams) Equal(t ServerParams, opts ...Options) bool {
 		return false
 	}
 
+	if s.ClientSigalgs != t.ClientSigalgs {
+		return false
+	}
+
 	if s.Cookie != t.Cookie {
 		return false
 	}
@@ -301,6 +305,10 @@ func (s ServerParams) Equal(t ServerParams, opts ...Options) bool {
 		return false
 	}
 
+	if s.Sigalgs != t.Sigalgs {
+		return false
+	}
+
 	if !equalPointers(s.Slowstart, t.Slowstart) {
 		return false
 	}
@@ -463,6 +471,10 @@ func (s ServerParams) Diff(t ServerParams, opts ...Options) map[string][]interfa
 
 	if s.Ciphersuites != t.Ciphersuites {
 		diff["Ciphersuites"] = []interface{}{s.Ciphersuites, t.Ciphersuites}
+	}
+
+	if s.ClientSigalgs != t.ClientSigalgs {
+		diff["ClientSigalgs"] = []interface{}{s.ClientSigalgs, t.ClientSigalgs}
 	}
 
 	if s.Cookie != t.Cookie {
@@ -663,6 +675,10 @@ func (s ServerParams) Diff(t ServerParams, opts ...Options) map[string][]interfa
 
 	if s.Shard != t.Shard {
 		diff["Shard"] = []interface{}{s.Shard, t.Shard}
+	}
+
+	if s.Sigalgs != t.Sigalgs {
+		diff["Sigalgs"] = []interface{}{s.Sigalgs, t.Sigalgs}
 	}
 
 	if !equalPointers(s.Slowstart, t.Slowstart) {

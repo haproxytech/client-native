@@ -340,6 +340,8 @@ func parseServerParams(serverOptions []params.ServerOption, serverParams *models
 				serverParams.Ciphers = v.Value
 			case "ciphersuites":
 				serverParams.Ciphersuites = v.Value
+			case "client-sigalgs":
+				serverParams.ClientSigalgs = v.Value
 			case "cookie":
 				serverParams.Cookie = v.Value
 			case "crl-file":
@@ -439,6 +441,8 @@ func parseServerParams(serverOptions []params.ServerOption, serverParams *models
 						serverParams.Shard = p
 					}
 				}
+			case "sigalgs":
+				serverParams.Sigalgs = v.Value
 			case "slowstart":
 				serverParams.Slowstart = misc.ParseTimeout(v.Value)
 			case "sni":
@@ -662,6 +666,9 @@ func serializeServerParams(s models.ServerParams) (options []params.ServerOption
 	if s.Ciphersuites != "" {
 		options = append(options, &params.ServerOptionValue{Name: "ciphersuites", Value: s.Ciphersuites})
 	}
+	if s.ClientSigalgs != "" {
+		options = append(options, &params.ServerOptionValue{Name: "client-sigalgs", Value: s.ClientSigalgs})
+	}
 	if s.Cookie != "" {
 		options = append(options, &params.ServerOptionValue{Name: "cookie", Value: s.Cookie})
 	}
@@ -766,6 +773,9 @@ func serializeServerParams(s models.ServerParams) (options []params.ServerOption
 	}
 	if s.Shard != 0 {
 		options = append(options, &params.ServerOptionValue{Name: "shard", Value: strconv.FormatInt(s.Shard, 10)})
+	}
+	if s.Sigalgs != "" {
+		options = append(options, &params.ServerOptionValue{Name: "sigalgs", Value: s.Sigalgs})
 	}
 	if s.Slowstart != nil {
 		options = append(options, &params.ServerOptionValue{Name: "slowstart", Value: strconv.FormatInt(*s.Slowstart, 10)})
