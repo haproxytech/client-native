@@ -211,6 +211,9 @@ global
   ssl-default-bind-client-sigalgs ECDSA+SHA256:RSA+SHA256
   ssl-default-server-sigalgs RSA+SHA256
   ssl-default-server-client-sigalgs ECDSA+SHA256:RSA+SHA256
+  ssl-propquery provider
+  ssl-provider default
+  ssl-provider-path test
 
 defaults test_defaults
   maxconn 2000

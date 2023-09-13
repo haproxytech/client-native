@@ -336,6 +336,15 @@ type Global struct {
 	// Enum: [enabled disabled]
 	SslModeAsync string `json:"ssl_mode_async,omitempty"`
 
+	// ssl propquery
+	SslPropquery string `json:"ssl_propquery,omitempty"`
+
+	// ssl provider
+	SslProvider string `json:"ssl_provider,omitempty"`
+
+	// ssl provider path
+	SslProviderPath string `json:"ssl_provider_path,omitempty"`
+
 	// ssl server verify
 	// Enum: [none required]
 	SslServerVerify string `json:"ssl_server_verify,omitempty"`

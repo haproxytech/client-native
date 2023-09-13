@@ -619,6 +619,21 @@ func ParseGlobalSection(p parser.Parser) (*models.Global, error) { //nolint:goco
 		sslDhParamFile = sslDhParamFileParser.Value
 	}
 
+	sslPropquery, err := parseStringOption(p, "ssl-propquery")
+	if err != nil {
+		return nil, err
+	}
+
+	sslProvider, err := parseStringOption(p, "ssl-provider")
+	if err != nil {
+		return nil, err
+	}
+
+	sslProviderPath, err := parseStringOption(p, "ssl-provider-path")
+	if err != nil {
+		return nil, err
+	}
+
 	var sslServerVerify string
 	data, err = p.Get(parser.Global, parser.GlobalSectionName, "ssl-server-verify")
 	if err == nil {
@@ -1167,6 +1182,9 @@ func ParseGlobalSection(p parser.Parser) (*models.Global, error) { //nolint:goco
 		SslDefaultServerCiphersuites:      sslServerCiphersuites,
 		SslDefaultServerOptions:           sslServerOptions,
 		SslModeAsync:                      sslModeAsync,
+		SslPropquery:                      sslPropquery,
+		SslProvider:                       sslProvider,
+		SslProviderPath:                   sslProviderPath,
 		SslSkipSelfIssuedCa:               sslSkipSelfIssuedCa,
 		TuneOptions:                       tuneOptions,
 		TuneSslDefaultDhParam:             dhParam,
@@ -1656,6 +1674,18 @@ func SerializeGlobalSection(p parser.Parser, data *models.Global) error { //noli
 		sslModeAsync = nil
 	}
 	if err := p.Set(parser.Global, parser.GlobalSectionName, "ssl-mode-async", sslModeAsync); err != nil {
+		return err
+	}
+
+	if err := serializeStringOption(p, "ssl-propquery", data.SslPropquery); err != nil {
+		return err
+	}
+
+	if err := serializeStringOption(p, "ssl-provider", data.SslProvider); err != nil {
+		return err
+	}
+
+	if err := serializeStringOption(p, "ssl-provider-path", data.SslProviderPath); err != nil {
 		return err
 	}
 

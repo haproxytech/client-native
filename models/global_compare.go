@@ -479,6 +479,18 @@ func (s Global) Equal(t Global, opts ...Options) bool {
 		return false
 	}
 
+	if s.SslPropquery != t.SslPropquery {
+		return false
+	}
+
+	if s.SslProvider != t.SslProvider {
+		return false
+	}
+
+	if s.SslProviderPath != t.SslProviderPath {
+		return false
+	}
+
 	if s.SslServerVerify != t.SslServerVerify {
 		return false
 	}
@@ -1072,6 +1084,18 @@ func (s Global) Diff(t Global, opts ...Options) map[string][]interface{} {
 
 	if s.SslModeAsync != t.SslModeAsync {
 		diff["SslModeAsync"] = []interface{}{s.SslModeAsync, t.SslModeAsync}
+	}
+
+	if s.SslPropquery != t.SslPropquery {
+		diff["SslPropquery"] = []interface{}{s.SslPropquery, t.SslPropquery}
+	}
+
+	if s.SslProvider != t.SslProvider {
+		diff["SslProvider"] = []interface{}{s.SslProvider, t.SslProvider}
+	}
+
+	if s.SslProviderPath != t.SslProviderPath {
+		diff["SslProviderPath"] = []interface{}{s.SslProviderPath, t.SslProviderPath}
 	}
 
 	if s.SslServerVerify != t.SslServerVerify {

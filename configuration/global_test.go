@@ -638,6 +638,15 @@ func TestGetGlobal(t *testing.T) {
 	if global.SslDefaultServerClientSigalgs != "ECDSA+SHA256:RSA+SHA256" {
 		t.Errorf("SslDefaultServerClientSigalgs is %v, expected ECDSA+SHA256:RSA+SHA256", global.SslDefaultServerClientSigalgs)
 	}
+	if global.SslPropquery != "provider" {
+		t.Errorf("SslPropquery is %v, expected provider", global.SslPropquery)
+	}
+	if global.SslProvider != "default" {
+		t.Errorf("SslProvider is %v, expected default", global.SslProvider)
+	}
+	if global.SslProviderPath != "test" {
+		t.Errorf("SslProviderPath is %v, expected test", global.SslProviderPath)
+	}
 }
 
 func TestPutGlobal(t *testing.T) {
@@ -717,6 +726,9 @@ func TestPutGlobal(t *testing.T) {
 		ClusterSecret:                 "",
 		SslDefaultServerSigalgs:       "ECDSA+SHA256",
 		SslDefaultServerClientSigalgs: "ECDSA+SHA256",
+		SslPropquery:                  "foo",
+		SslProvider:                   "my_provider",
+		SslProviderPath:               "providers/",
 	}
 
 	err := clientTest.PushGlobalConfiguration(g, "", version)
