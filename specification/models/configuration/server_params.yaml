@@ -94,6 +94,11 @@ server_params:
       x-dependency:
         ssl:
           value: enabled
+    curves:
+      type: string
+      x-dependency:
+        ssl:
+          value: true
     error_limit:
       type: integer
       x-display-name: Error count

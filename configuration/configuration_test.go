@@ -135,6 +135,7 @@ global
   wurfl-patch-file path1,path2
   wurfl-cache-size 64
   ssl-default-bind-curves X25519:P-256
+  ssl-default-server-curves brainpoolP384r1,brainpoolP512r1
   ssl-skip-self-issued-ca
   node node
   description description
@@ -620,7 +621,7 @@ backend test
   external-check command /bin/false
   use-server webserv if TRUE
   use-server webserv2 unless TRUE
-  server webserv 192.168.1.1:9200 maxconn 1000 ssl weight 10 inter 2s cookie BLAH slowstart 6000 proxy-v2-options authority,crc32c ws h1 pool-low-conn 128 id 1234 pool-purge-delay 10s tcp-ut 2s
+  server webserv 192.168.1.1:9200 maxconn 1000 ssl weight 10 inter 2s cookie BLAH slowstart 6000 proxy-v2-options authority,crc32c ws h1 pool-low-conn 128 id 1234 pool-purge-delay 10s tcp-ut 2s curves secp384r1
   server webserv2 192.168.1.1:9300 maxconn 1000 ssl weight 10 inter 2s cookie BLAH slowstart 6000 proxy-v2-options authority,crc32c ws h1 pool-low-conn 128
   http-request set-dst hdr(x-dst)
   http-request set-dst-port int(4000)

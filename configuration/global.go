@@ -507,6 +507,16 @@ func ParseGlobalSection(p parser.Parser) (*models.Global, error) { //nolint:goco
 		sslDefaultBindCurves = sslDefaultBindCurvesParser.Value
 	}
 
+	var sslDefaultServerCurves string
+	data, err = p.Get(parser.Global, parser.GlobalSectionName, "ssl-default-server-curves")
+	if err == nil {
+		sslDefaultServerCurvesParser, ok := data.(*types.StringC)
+		if !ok {
+			return nil, misc.CreateTypeAssertError("ssl-default-server-curves")
+		}
+		sslDefaultServerCurves = sslDefaultServerCurvesParser.Value
+	}
+
 	_, err = p.Get(parser.Global, parser.GlobalSectionName, "ssl-skip-self-issued-ca")
 	sslSkipSelfIssuedCa := true
 	if errors.Is(err, parser_errors.ErrFetch) {
@@ -1131,6 +1141,7 @@ func ParseGlobalSection(p parser.Parser) (*models.Global, error) { //nolint:goco
 		SslDefaultBindCiphers:             sslBindCiphers,
 		SslDefaultBindCiphersuites:        sslBindCiphersuites,
 		SslDefaultBindCurves:              sslDefaultBindCurves,
+		SslDefaultServerCurves:            sslDefaultServerCurves,
 		SslDefaultBindOptions:             sslBindOptions,
 		SslDefaultServerCiphers:           sslDefaultServerCiphers,
 		SslDefaultServerCiphersuites:      sslServerCiphersuites,
@@ -1497,6 +1508,16 @@ func SerializeGlobalSection(p parser.Parser, data *models.Global) error { //noli
 		pSSLDefaultBindCurves = nil
 	}
 	if err := p.Set(parser.Global, parser.GlobalSectionName, "ssl-default-bind-curves", pSSLDefaultBindCurves); err != nil {
+		return err
+	}
+
+	pSSLDefaultServerCurves := &types.StringC{
+		Value: data.SslDefaultServerCurves,
+	}
+	if data.SslDefaultServerCurves == "" {
+		pSSLDefaultServerCurves = nil
+	}
+	if err := p.Set(parser.Global, parser.GlobalSectionName, "ssl-default-server-curves", pSSLDefaultServerCurves); err != nil {
 		return err
 	}
 

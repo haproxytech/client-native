@@ -109,6 +109,10 @@ func (s ServerParams) Equal(t ServerParams, opts ...Options) bool {
 		return false
 	}
 
+	if s.Curves != t.Curves {
+		return false
+	}
+
 	if !equalPointers(s.Downinter, t.Downinter) {
 		return false
 	}
@@ -467,6 +471,10 @@ func (s ServerParams) Diff(t ServerParams, opts ...Options) map[string][]interfa
 
 	if s.CrlFile != t.CrlFile {
 		diff["CrlFile"] = []interface{}{s.CrlFile, t.CrlFile}
+	}
+
+	if s.Curves != t.Curves {
+		diff["Curves"] = []interface{}{s.Curves, t.Curves}
 	}
 
 	if !equalPointers(s.Downinter, t.Downinter) {

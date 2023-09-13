@@ -107,6 +107,9 @@ type ServerParams struct {
 	// crl file
 	CrlFile string `json:"crl_file,omitempty"`
 
+	// curves
+	Curves string `json:"curves,omitempty"`
+
 	// downinter
 	Downinter *int64 `json:"downinter,omitempty"`
 

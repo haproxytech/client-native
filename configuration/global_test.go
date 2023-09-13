@@ -189,6 +189,9 @@ func TestGetGlobal(t *testing.T) {
 	if global.SslDefaultBindCurves != "X25519:P-256" {
 		t.Errorf("SslDefaultBindCurves is %v, expected X25519:P-256", global.SslDefaultBindCurves)
 	}
+	if global.SslDefaultServerCurves != "brainpoolP384r1,brainpoolP512r1" {
+		t.Errorf("SslDefaultServerCurves is %v, expected brainpoolP384r1,brainpoolP512r1", global.SslDefaultServerCurves)
+	}
 	if global.SslSkipSelfIssuedCa != true {
 		t.Errorf("SslSkipSelfIssuedCa is %v, expected enabled", global.SslSkipSelfIssuedCa)
 	}
@@ -655,12 +658,13 @@ func TestPutGlobal(t *testing.T) {
 				},
 			},
 		},
-		Maxconn:               1000,
-		SslDefaultBindCiphers: "test",
-		SslDefaultBindOptions: "ssl-min-ver TLSv1.0 no-tls-tickets",
-		StatsTimeout:          &tOut,
-		TuneSslDefaultDhParam: 1024,
-		ExternalCheck:         false,
+		Maxconn:                1000,
+		SslDefaultBindCiphers:  "test",
+		SslDefaultBindOptions:  "ssl-min-ver TLSv1.0 no-tls-tickets",
+		SslDefaultServerCurves: "secp384r1",
+		StatsTimeout:           &tOut,
+		TuneSslDefaultDhParam:  1024,
+		ExternalCheck:          false,
 		LuaPrependPath: []*models.LuaPrependPath{
 			{
 				Path: &luaPrependPath,

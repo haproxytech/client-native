@@ -149,6 +149,9 @@ func TestGetServer(t *testing.T) {
 	if *s.TCPUt != 2000 {
 		t.Errorf("%v: TCPUt not 2000: %v", s.Name, *s.TCPUt)
 	}
+	if s.Curves != "secp384r1" {
+		t.Errorf("%v: Curves not secp384r1: %v", s.Name, s.Curves)
+	}
 
 	_, err = s.MarshalBinary()
 	if err != nil {
@@ -247,6 +250,7 @@ func TestCreateEditDeleteServer(t *testing.T) {
 			OnMarkedUp:     "shutdown-backup-sessions",
 			Slowstart:      &slowStart,
 			ProxyV2Options: []string{"ssl", "unique-id"},
+			Curves:         "brainpoolP384r1",
 		},
 	}
 

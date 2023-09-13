@@ -346,6 +346,8 @@ func parseServerParams(serverOptions []params.ServerOption, serverParams *models
 				serverParams.CrlFile = v.Value
 			case "crt":
 				serverParams.SslCertificate = v.Value
+			case "curves":
+				serverParams.Curves = v.Value
 			case "error-limit":
 				c, err := strconv.ParseInt(v.Value, 10, 64)
 				if err == nil {
@@ -665,6 +667,9 @@ func serializeServerParams(s models.ServerParams) (options []params.ServerOption
 	}
 	if s.CrlFile != "" {
 		options = append(options, &params.ServerOptionValue{Name: "crl-file", Value: s.CrlFile})
+	}
+	if s.Curves != "" {
+		options = append(options, &params.ServerOptionValue{Name: "curves", Value: s.Curves})
 	}
 	if s.SslCertificate != "" {
 		options = append(options, &params.ServerOptionValue{Name: "crt", Value: s.SslCertificate})

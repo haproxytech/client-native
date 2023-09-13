@@ -314,6 +314,9 @@ type Global struct {
 	// ssl default server ciphersuites
 	SslDefaultServerCiphersuites string `json:"ssl_default_server_ciphersuites,omitempty"`
 
+	// ssl default server curves
+	SslDefaultServerCurves string `json:"ssl_default_server_curves,omitempty"`
+
 	// ssl default server options
 	SslDefaultServerOptions string `json:"ssl_default_server_options,omitempty"`
 

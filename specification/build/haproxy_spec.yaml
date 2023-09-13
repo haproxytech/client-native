@@ -559,6 +559,11 @@ definitions:
               x-dependency:
                   ssl:
                       value: enabled
+          curves:
+              type: string
+              x-dependency:
+                  ssl:
+                      value: true
           downinter:
               type: integer
               x-nullable: true
@@ -1449,6 +1454,9 @@ definitions:
           ssl_default_server_ciphersuites:
               type: string
               x-display-name: SSL Default Server Ciphersuites
+          ssl_default_server_curves:
+              type: string
+              x-display-name: SSL Default Server Curves
           ssl_default_server_options:
               type: string
               x-display-name: SSL Default Server Options

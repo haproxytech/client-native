@@ -451,6 +451,10 @@ func (s Global) Equal(t Global, opts ...Options) bool {
 		return false
 	}
 
+	if s.SslDefaultServerCurves != t.SslDefaultServerCurves {
+		return false
+	}
+
 	if s.SslDefaultServerOptions != t.SslDefaultServerOptions {
 		return false
 	}
@@ -1032,6 +1036,10 @@ func (s Global) Diff(t Global, opts ...Options) map[string][]interface{} {
 
 	if s.SslDefaultServerCiphersuites != t.SslDefaultServerCiphersuites {
 		diff["SslDefaultServerCiphersuites"] = []interface{}{s.SslDefaultServerCiphersuites, t.SslDefaultServerCiphersuites}
+	}
+
+	if s.SslDefaultServerCurves != t.SslDefaultServerCurves {
+		diff["SslDefaultServerCurves"] = []interface{}{s.SslDefaultServerCurves, t.SslDefaultServerCurves}
 	}
 
 	if s.SslDefaultServerOptions != t.SslDefaultServerOptions {
