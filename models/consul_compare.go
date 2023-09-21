@@ -61,6 +61,10 @@ func (s Consul) Equal(t Consul, opts ...Options) bool {
 		return false
 	}
 
+	if !equalPointers(s.Mode, t.Mode) {
+		return false
+	}
+
 	if s.Name != t.Name {
 		return false
 	}
@@ -159,6 +163,10 @@ func (s Consul) Diff(t Consul, opts ...Options) map[string][]interface{} {
 
 	if !equalPointers(s.ID, t.ID) {
 		diff["ID"] = []interface{}{ValueOrNil(s.ID), ValueOrNil(t.ID)}
+	}
+
+	if !equalPointers(s.Mode, t.Mode) {
+		diff["Mode"] = []interface{}{ValueOrNil(s.Mode), ValueOrNil(t.Mode)}
 	}
 
 	if s.Name != t.Name {

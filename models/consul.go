@@ -70,6 +70,10 @@ type Consul struct {
 	// Pattern: ^[^\s]+$
 	ID *string `json:"id,omitempty"`
 
+	// mode
+	// Enum: [http https]
+	Mode *string `json:"mode,omitempty"`
+
 	// name
 	Name string `json:"name,omitempty"`
 
@@ -134,6 +138,10 @@ func (m *Consul) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateID(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateMode(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -251,6 +259,48 @@ func (m *Consul) validateID(formats strfmt.Registry) error {
 	}
 
 	if err := validate.Pattern("id", "body", *m.ID, `^[^\s]+$`); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+var consulTypeModePropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["http","https"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		consulTypeModePropEnum = append(consulTypeModePropEnum, v)
+	}
+}
+
+const (
+
+	// ConsulModeHTTP captures enum value "http"
+	ConsulModeHTTP string = "http"
+
+	// ConsulModeHTTPS captures enum value "https"
+	ConsulModeHTTPS string = "https"
+)
+
+// prop value enum
+func (m *Consul) validateModeEnum(path, location string, value string) error {
+	if err := validate.EnumCase(path, location, value, consulTypeModePropEnum, true); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *Consul) validateMode(formats strfmt.Registry) error {
+	if swag.IsZero(m.Mode) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateModeEnum("mode", "body", *m.Mode); err != nil {
 		return err
 	}
 

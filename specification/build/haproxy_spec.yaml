@@ -9397,6 +9397,12 @@ definitions:
               pattern: ^[^\s]+$
               type: string
               x-nullable: true
+          mode:
+              default: http
+              enum:
+                  - http
+                  - https
+              type: string
           name:
               type: string
           namespace:
