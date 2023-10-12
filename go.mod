@@ -7,7 +7,7 @@ require (
 	github.com/go-openapi/strfmt v0.21.7
 	github.com/go-openapi/swag v0.22.4
 	github.com/go-openapi/validate v0.22.1
-	github.com/google/go-cmp v0.5.9
+	github.com/google/go-cmp v0.6.0
 	github.com/google/renameio v1.0.1
 	github.com/google/uuid v1.3.1
 	github.com/haproxytech/config-parser/v4 v4.1.2
@@ -33,6 +33,6 @@ require (
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/rogpeppe/go-internal v1.6.1 // indirect
 	go.mongodb.org/mongo-driver v1.12.1 // indirect
-	golang.org/x/sys v0.12.0 // indirect
+	golang.org/x/sys v0.13.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
