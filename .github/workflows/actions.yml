@@ -121,7 +121,7 @@ jobs:
       id: go
     - name: Test
       run: |
-        go test -v ./...
+        go test -race -v ./...
   e2e:
     name: e2e on HAProxy
     needs: ["go-test"]
