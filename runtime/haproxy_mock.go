@@ -7,6 +7,7 @@ import (
 	"net"
 	"os"
 	"strings"
+	"sync"
 	"testing"
 )
 
@@ -16,6 +17,8 @@ type HAProxyMock struct {
 	running   bool
 	responses map[string]string
 	t         *testing.T
+
+	mu sync.RWMutex
 }
 
 // NewHAProxyMock - create new haproxy mock
@@ -32,15 +35,15 @@ func NewHAProxyMock(t *testing.T) *HAProxyMock {
 
 // Stop - stop mock
 func (haproxy *HAProxyMock) Stop() {
-	haproxy.running = false
+	haproxy.setRunning(false)
 }
 
 // Start - start mock
 func (haproxy *HAProxyMock) Start() {
-	haproxy.running = true
+	haproxy.setRunning(true)
 	go func() {
 		for {
-			if !haproxy.running {
+			if !haproxy.getRunning() {
 				return
 			}
 			conn, err := haproxy.Accept()
@@ -53,9 +56,34 @@ func (haproxy *HAProxyMock) Start() {
 	}()
 }
 
-// SetResponses - setting the expected responses
+// SetResponses - setting the expected responses, safe for concurrent use
 func (haproxy *HAProxyMock) SetResponses(responses *map[string]string) {
+	haproxy.mu.Lock()
 	haproxy.responses = *responses
+	haproxy.mu.Unlock()
+}
+
+// getResponses gets the responses of the mock, safe for concurrent use
+func (haproxy *HAProxyMock) getResponses() map[string]string {
+	haproxy.mu.RLock()
+	defer haproxy.mu.RUnlock()
+
+	return haproxy.responses
+}
+
+// setRunning sets the running state of the mock, safe for concurrent use
+func (haproxy *HAProxyMock) setRunning(running bool) {
+	haproxy.mu.Lock()
+	haproxy.running = running
+	haproxy.mu.Unlock()
+}
+
+// getRunning gets the running state of the mock, safe for concurrent use
+func (haproxy *HAProxyMock) getRunning() bool {
+	haproxy.mu.RLock()
+	defer haproxy.mu.RUnlock()
+
+	return haproxy.running
 }
 
 func (haproxy *HAProxyMock) handleConnection(conn net.Conn) {
@@ -81,7 +109,7 @@ func (haproxy *HAProxyMock) handleConnection(conn net.Conn) {
 		if len(split) > 0 {
 			s = split[len(split)-1]
 		}
-		response := haproxy.responses[s]
+		response := haproxy.getResponses()[s]
 		_, err = w.WriteString(response)
 		if err != nil {
 			haproxy.t.Log(err)
