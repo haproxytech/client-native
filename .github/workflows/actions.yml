@@ -132,21 +132,5 @@ jobs:
     steps:
       - name: Check out code
         uses: actions/checkout@v3
-      - name: Build
-        uses: docker/build-push-action@v2
-        with:
-          file: ./e2e/Dockerfile-base
-          build-args: |
-            HAPROXY_VERSION=${{ matrix.haproxyVersion }}
-          tags: test_env:${{ matrix.haproxyVersion }}
-      - name: Build
-        uses: docker/build-push-action@v2
-        with:
-          file: ./e2e/Dockerfile
-          build-args: |
-            HAPROXY_VERSION=${{ matrix.haproxyVersion }}
-          tags: client-native-test:${{ matrix.haproxyVersion }}
-      - uses: addnab/docker-run-action@v2
-        with:
-          image: client-native-test:${{ matrix.haproxyVersion }}
-          run: go test -tags integration ./...
+      - name: e2e Test
+        run: DOCKER_HAPROXY_VERSION=${{ matrix.haproxyVersion }} make e2e-docker

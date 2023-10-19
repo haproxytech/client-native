@@ -10,13 +10,13 @@ test:
 
 .PHONY: e2e
 e2e:
-	go test -tags integration ./...
+	go install github.com/oktalz/gotest@latest
+	gotest -t integration
 
 .PHONY: e2e-docker
 e2e-docker:
-	docker build -f e2e/Dockerfile-base --build-arg HAPROXY_VERSION=${DOCKER_HAPROXY_VERSION} --build-arg GO_VERSION=${GO_VERSION} -t test_env:${DOCKER_HAPROXY_VERSION} .
-	docker build -f e2e/Dockerfile -t client-native-test:${DOCKER_HAPROXY_VERSION} .
-	docker run --rm -it client-native-test:${DOCKER_HAPROXY_VERSION}
+	docker build -f e2e/Dockerfile --build-arg GO_VERSION=${GO_VERSION} --build-arg HAPROXY_VERSION=${DOCKER_HAPROXY_VERSION} -t client-native-test:${DOCKER_HAPROXY_VERSION} .
+	docker run --rm -t client-native-test:${DOCKER_HAPROXY_VERSION}
 
 .PHONY: spec
 spec:

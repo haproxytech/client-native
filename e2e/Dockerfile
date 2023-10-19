@@ -13,14 +13,31 @@
 # limitations under the License.
 
 ARG HAPROXY_VERSION=2.7
+ARG DOCKER_URL=haproxytech
+ARG GO_VERSION=1.21
 
-FROM test_env:$HAPROXY_VERSION
+FROM golang:${GO_VERSION}-alpine as go_image
+
+FROM ${DOCKER_URL}/haproxy-alpine:${HAPROXY_VERSION}
+
+RUN apk add --no-cache -U socat openssl util-linux htop tzdata bash gcc openssl wget git curl make bash jq git && \
+    rm -f /usr/local/bin/dataplaneapi /usr/bin/dataplaneapi && \
+    rm -f /usr/local/etc/haproxy/haproxy.cfg && \
+    chgrp -R haproxy /etc/haproxy /run /var &&\
+    chmod -R g+w /etc/haproxy /run /var &&\
+    mkdir -p /root/go
+COPY --from=go_image /usr/local/go/ /usr/local/go/
+
+ENV PATH=$PATH:/usr/local/go/bin \
+    CGO_ENABLED=0 \
+    HAPROXY_VERSION=$HAPROXY_VERSION
+RUN GOBIN=/usr/local/go/bin go install github.com/oktalz/gotest@latest
+
+WORKDIR /src
 
 COPY /go.mod /src/go.mod
 COPY /go.sum /src/go.sum
 RUN go mod download
 
 COPY / /src
-
-ENTRYPOINT ["go"]
-CMD ["test", "-tags", "integration", "./..."]
+ENTRYPOINT ["gotest","-t", "integration"]
