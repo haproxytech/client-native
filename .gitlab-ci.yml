@@ -2,7 +2,7 @@
 variables:
   DOCKER_HOST: tcp://docker:2375
   GO_VERSION: "1.21"
-  DOCKER_VERSION: "23.0"
+  DOCKER_VERSION: "24.0"
 stages:
   - check-commit
   - generate
@@ -42,18 +42,6 @@ yaml-lint:
     - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
     - if: $CI_PIPELINE_SOURCE == 'push'
 
-.go-cache:
-  variables:
-    GOPATH: $CI_PROJECT_DIR/.go
-  image:
-    name: $CI_REGISTRY_GO/golang:$GO_VERSION
-    entrypoint: [""]
-  before_script:
-    - mkdir -p .go
-  cache:
-    paths:
-      - .go/pkg/mod/
-
 generate:
   stage: generate
   image:
@@ -75,7 +63,6 @@ generate:
     - if: $CI_PIPELINE_SOURCE == 'push'
 
 build:
-  extends: .go-cache
   stage: build
   needs: []
   tags:
@@ -130,9 +117,8 @@ lint-commit-msg:
     - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
 
 test:
-  extends: .go-cache
   stage: test
-  needs: ["generate", "build"]
+  needs: ["build"]
   image:
     name: $CI_REGISTRY_GO/golang:$GO_VERSION
     entrypoint: [""]
@@ -143,29 +129,28 @@ test:
   rules:
     - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
     - if: $CI_PIPELINE_SOURCE == 'push'
-
 .e2e:
   stage: e2e
-  needs: ["test"]
-  extends: .go-cache
+  needs: ["build"]
   image:
-    name: $CI_REGISTRY_GO/docker:$DOCKER_VERSION
+    name: $CI_REGISTRY_GO/docker:stable-go$GO_VERSION
     entrypoint: [""]
   services:
     - name: $CI_REGISTRY_GO/docker:$DOCKER_VERSION-dind
       alias: docker
   tags:
     - go
-  before_script:
-    - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN $CI_REGISTRY_GO
-    - docker pull $CI_REGISTRY_GO/client-native-env:$HAPROXY_VERSION
-    - docker image tag $CI_REGISTRY_GO/client-native-env:$HAPROXY_VERSION test_env:$HAPROXY_VERSION
-    - docker build -f ./e2e/Dockerfile --build-arg HAPROXY_VERSION=${HAPROXY_VERSION} -t client-native-test:${HAPROXY_VERSION} .
-  script:
-    - docker run client-native-test:$HAPROXY_VERSION
   rules:
     - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
     - if: $CI_PIPELINE_SOURCE == 'push'
+  before_script:
+    - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN $CI_REGISTRY_GO
+    - docker pull -q $CI_REGISTRY_GO/golang:$GO_VERSION-alpine
+    - docker image tag $CI_REGISTRY_GO/golang:$GO_VERSION-alpine golang:$GO_VERSION-alpine
+    - docker pull -q $CI_REGISTRY_GO/haproxy-alpine:$HAPROXY_VERSION
+    - docker image tag $CI_REGISTRY_GO/haproxy-alpine:$HAPROXY_VERSION haproxytech/haproxy-alpine:$HAPROXY_VERSION
+  script:
+    - DOCKER_HAPROXY_VERSION=$HAPROXY_VERSION make e2e-docker
 HAProxy-2.1:
   extends: .e2e
   variables:
