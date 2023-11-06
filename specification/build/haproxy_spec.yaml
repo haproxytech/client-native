@@ -7199,6 +7199,7 @@ definitions:
               pattern: ^[^\s]+$
               type: string
               x-nullable: true
+              x-omitempty: false
           stats_uri_prefix:
               pattern: ^[^\s]+$
               type: string

@@ -1071,9 +1071,7 @@ func (s *SectionParser) statsOptions() interface{} { //nolint:gocognit
 				opt.StatsRefreshDelay = misc.ParseTimeout(v.Delay)
 			}
 		case *stats.ShowNode:
-			if v.Name != "" {
-				opt.StatsShowNodeName = misc.StringP(v.Name)
-			}
+			opt.StatsShowNodeName = misc.StringP(v.Name)
 		case *stats.URI:
 			if v.Prefix != "" {
 				opt.StatsURIPrefix = v.Prefix
