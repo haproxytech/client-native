@@ -245,6 +245,7 @@ stats_options:
       type: string
       pattern: '^[^\s]+$'
       x-nullable: true
+      x-omitempty: false
     stats_uri_prefix:
       type: string
       pattern: '^[^\s]+$'
