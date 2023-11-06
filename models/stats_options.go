@@ -82,7 +82,7 @@ type StatsOptions struct {
 
 	// stats show node name
 	// Pattern: ^[^\s]+$
-	StatsShowNodeName *string `json:"stats_show_node_name,omitempty"`
+	StatsShowNodeName *string `json:"stats_show_node_name"`
 
 	// stats uri prefix
 	// Pattern: ^[^\s]+$
