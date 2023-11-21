@@ -88,6 +88,97 @@ awsRegion:
       - key: tag:Environment
         value: development
 
+opennebula:
+  title: OpenNebula server
+  description: OpenNebula server configuration
+  type: object
+  required: [rpcEndpoint, enabled, retry_timeout]
+  properties:
+    id:
+      type: string
+      x-nullable: true
+      pattern: '^[^\s]+$'
+      description: Auto generated ID.
+    rpcEndpoint:
+      type: string
+      pattern: '^[^\s]+$'
+      description: RPC endpoint for OpenNebula server
+    user:
+      type: string
+      pattern: '^[^\s]+$'
+      description: Username for authentication
+    password:
+      type: string
+      pattern: '^[^\s]+$'
+      description: Password for authentication
+    cluster:
+      type: string
+      pattern: '^[^\s]+$'
+      description: OpenNebula cluster ID
+    enabled:
+      type: boolean
+    retry_timeout:
+      type: integer
+      minimum: 1
+      description: Duration in seconds in-between data pulling requests to the OpenNebula server
+    service-whitelist:
+      type: array
+      x-omitempty: true
+      items:
+        type: string
+        pattern: '^[^\s]+$'
+      description: Whitelist of services to include
+    service-blacklist:
+      type: array
+      x-omitempty: true
+      items:
+        type: string
+        pattern: '^[^\s]+$'
+      description: Blacklist of services to exclude
+    server_slots_base:
+      type: integer
+      default: 10
+    server_slots_growth_type:
+      type: string
+      enum: [linear, exponential]
+      default: exponential
+    server_slots_growth_increment:
+      type: integer
+    description:
+      type: string
+    name:
+      type: string
+    namespace:
+      type: string
+    defaults:
+      type: string
+      description: Name of the defaults section to be used in backends created by this service
+    health_check_policy:
+      type: string
+      enum: [none, any, all, min]
+      default: none
+      description: |-
+        Defines the health check conditions required for each node to be considered valid for the service.
+          none: all nodes are considered valid
+          any: a node is considered valid if any one health check is 'passing'
+          all: a node is considered valid if all health checks are 'passing'
+          min: a node is considered valid if the number of 'passing' checks is greater or equal to the 'health_check_policy_min' value.
+            If the node has less health checks configured then 'health_check_policy_min' it is considered invalid.
+    health_check_policy_min:
+      type: integer
+      x-dependency:
+        health_check_policy:
+          value: min
+    service_name_regexp:
+      type: string
+      description: Regular expression used to filter services by name.
+  additionalProperties: false
+  example:
+    id: "0"
+    enabled: true
+    rpcEndpoint: "http://localhost:2633/RPC2"
+    retry_timeout: 10
+
 consul:
   title: Consul server
   description: Consul server configuration

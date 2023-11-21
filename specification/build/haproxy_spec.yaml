@@ -9353,6 +9353,111 @@ definitions:
     type: array
     items:
       $ref: '#/definitions/awsRegion'
+  opennebula:
+      additionalProperties: false
+      description: OpenNebula server configuration
+      example:
+          enabled: true
+          id: "0"
+          retry_timeout: 10
+          rpcEndpoint: http://localhost:2633/RPC2
+      properties:
+          cluster:
+              description: OpenNebula cluster ID
+              pattern: ^[^\s]+$
+              type: string
+          defaults:
+              description: Name of the defaults section to be used in backends created by this service
+              type: string
+          description:
+              type: string
+          enabled:
+              type: boolean
+          health_check_policy:
+              default: none
+              description: |-
+                  Defines the health check conditions required for each node to be considered valid for the service.
+                    none: all nodes are considered valid
+                    any: a node is considered valid if any one health check is 'passing'
+                    all: a node is considered valid if all health checks are 'passing'
+                    min: a node is considered valid if the number of 'passing' checks is greater or equal to the 'health_check_policy_min' value.
+                      If the node has less health checks configured then 'health_check_policy_min' it is considered invalid.
+              enum:
+                  - none
+                  - any
+                  - all
+                  - min
+              type: string
+          health_check_policy_min:
+              type: integer
+              x-dependency:
+                  health_check_policy:
+                      value: min
+          id:
+              description: Auto generated ID.
+              pattern: ^[^\s]+$
+              type: string
+              x-nullable: true
+          name:
+              type: string
+          namespace:
+              type: string
+          password:
+              description: Password for authentication
+              pattern: ^[^\s]+$
+              type: string
+          retry_timeout:
+              description: Duration in seconds in-between data pulling requests to the OpenNebula server
+              minimum: 1
+              type: integer
+          rpcEndpoint:
+              description: RPC endpoint for OpenNebula server
+              pattern: ^[^\s]+$
+              type: string
+          server_slots_base:
+              default: 10
+              type: integer
+          server_slots_growth_increment:
+              type: integer
+          server_slots_growth_type:
+              default: exponential
+              enum:
+                  - linear
+                  - exponential
+              type: string
+          service-blacklist:
+              description: Blacklist of services to exclude
+              items:
+                  pattern: ^[^\s]+$
+                  type: string
+              type: array
+              x-omitempty: true
+          service-whitelist:
+              description: Whitelist of services to include
+              items:
+                  pattern: ^[^\s]+$
+                  type: string
+              type: array
+              x-omitempty: true
+          service_name_regexp:
+              description: Regular expression used to filter services by name.
+              type: string
+          user:
+              description: Username for authentication
+              pattern: ^[^\s]+$
+              type: string
+      required:
+          - rpcEndpoint
+          - enabled
+          - retry_timeout
+      title: OpenNebula server
+      type: object
+  opennebulas:
+    title: OpenNebulas
+    description: OpenNebulas array
+    type: array
+    items:
+      $ref: '#/definitions/opennebula'
   consul:
       additionalProperties: false
       description: Consul server configuration
@@ -10335,6 +10440,120 @@ paths:
               default:
                   $ref: '#/responses/DefaultError'
           summary: Replace an AWS region
+          tags:
+              - ServiceDiscovery
+  /service_discovery/opennebula:
+      get:
+          description: Returns all configured OpenNebula servers.
+          operationId: getOpenNebulas
+          responses:
+              "200":
+                  description: Successful operation
+                  schema:
+                      properties:
+                          data:
+                              $ref: '#/definitions/opennebulas'
+                      required:
+                          - data
+                      type: object
+              default:
+                  $ref: '#/responses/DefaultError'
+          summary: Return an array of all configured OpenNebula servers
+          tags:
+              - ServiceDiscovery
+      post:
+          description: Adds a new OpenNebula server.
+          operationId: createOpenNebula
+          parameters:
+              - in: body
+                name: data
+                required: true
+                schema:
+                  $ref: '#/definitions/opennebula'
+          responses:
+              "201":
+                  description: OpenNebula created
+                  schema:
+                      $ref: '#/definitions/opennebula'
+              "400":
+                  $ref: '#/responses/BadRequest'
+              "409":
+                  $ref: '#/responses/AlreadyExists'
+              default:
+                  $ref: '#/responses/DefaultError'
+          summary: Add a new OpenNebula server
+          tags:
+              - ServiceDiscovery
+  /service_discovery/opennebula/{id}:
+      delete:
+          description: Deletes an OpenNebula server configuration by it's id.
+          operationId: deleteOpenNebula
+          parameters:
+              - description: OpenNebula server Index
+                in: path
+                name: id
+                required: true
+                type: string
+          responses:
+              "204":
+                  description: OpenNebula server deleted
+              "404":
+                  $ref: '#/responses/NotFound'
+              default:
+                  $ref: '#/responses/DefaultError'
+          summary: Delete an OpenNebula server
+          tags:
+              - ServiceDiscovery
+      get:
+          description: Returns one OpenNebula server configuration by it's id.
+          operationId: getOpenNebula
+          parameters:
+              - description: OpenNebula server id
+                in: path
+                name: id
+                required: true
+                type: string
+          responses:
+              "200":
+                  description: Successful operation
+                  schema:
+                      properties:
+                          data:
+                              $ref: '#/definitions/opennebula'
+                      type: object
+              "404":
+                  $ref: '#/responses/NotFound'
+              default:
+                  $ref: '#/responses/DefaultError'
+          summary: Return one OpenNebula server
+          tags:
+              - ServiceDiscovery
+      put:
+          description: Replaces an OpenNebula server configuration by it's id.
+          operationId: replaceOpenNebula
+          parameters:
+              - description: OpenNebula Index
+                in: path
+                name: id
+                required: true
+                type: string
+              - in: body
+                name: data
+                required: true
+                schema:
+                  $ref: '#/definitions/opennebula'
+          responses:
+              "200":
+                  description: OpenNebula server replaced
+                  schema:
+                      $ref: '#/definitions/opennebula'
+              "400":
+                  $ref: '#/responses/BadRequest'
+              "404":
+                  $ref: '#/responses/NotFound'
+              default:
+                  $ref: '#/responses/DefaultError'
+          summary: Replace an OpenNebula server
           tags:
               - ServiceDiscovery
   /service_discovery/consul:
