@@ -1419,6 +1419,11 @@ definitions:
               x-display-name: Set variable formats
               x-go-name: SetVarFmts
               x-omitempty: true
+          setcap:
+              pattern: ^[^\s]+$
+              type: string
+              x-display-name: OS Capabilities
+              x-omitempty: true
           setenv:
               items:
                   properties:

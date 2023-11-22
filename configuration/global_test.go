@@ -647,6 +647,9 @@ func TestGetGlobal(t *testing.T) {
 	if global.SslProviderPath != "test" {
 		t.Errorf("SslProviderPath is %v, expected test", global.SslProviderPath)
 	}
+	if global.Setcap != "cap_net_raw,cap_net_bind_service" {
+		t.Errorf("Setcap is %v, expected cap_net_raw,cap_net_bind_service", global.Setcap)
+	}
 }
 
 func TestPutGlobal(t *testing.T) {
@@ -729,6 +732,7 @@ func TestPutGlobal(t *testing.T) {
 		SslPropquery:                  "foo",
 		SslProvider:                   "my_provider",
 		SslProviderPath:               "providers/",
+		Setcap:                        "none",
 	}
 
 	err := clientTest.PushGlobalConfiguration(g, "", version)

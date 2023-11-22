@@ -287,6 +287,10 @@ type Global struct {
 	// set dumpable
 	SetDumpable bool `json:"set_dumpable,omitempty"`
 
+	// setcap
+	// Pattern: ^[^\s]+$
+	Setcap string `json:"setcap,omitempty"`
+
 	// spread checks
 	SpreadChecks int64 `json:"spread_checks,omitempty"`
 
@@ -507,6 +511,10 @@ func (m *Global) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateServerStateFile(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateSetcap(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -1283,6 +1291,18 @@ func (m *Global) validateServerStateFile(formats strfmt.Registry) error {
 	}
 
 	if err := validate.Pattern("server_state_file", "body", m.ServerStateFile, `^[^\s]+$`); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *Global) validateSetcap(formats strfmt.Registry) error {
+	if swag.IsZero(m.Setcap) { // not required
+		return nil
+	}
+
+	if err := validate.Pattern("setcap", "body", m.Setcap, `^[^\s]+$`); err != nil {
 		return err
 	}
 

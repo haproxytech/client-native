@@ -1131,6 +1131,11 @@ func ParseGlobalSection(p parser.Parser) (*models.Global, error) { //nolint:goco
 		}
 	}
 
+	setcap, err := parseStringOption(p, "setcap")
+	if err != nil {
+		return nil, err
+	}
+
 	// deprecated option
 	dhParam := int64(0)
 	if tuneOptions != nil {
@@ -1248,6 +1253,7 @@ func ParseGlobalSection(p parser.Parser) (*models.Global, error) { //nolint:goco
 		SslDefaultBindClientSigalgs:       sslBindClientSigalgs,
 		SslDefaultServerSigalgs:           sslServerSigalgs,
 		SslDefaultServerClientSigalgs:     sslServerClientSigalgs,
+		Setcap:                            setcap,
 	}
 
 	return global, nil
@@ -2244,6 +2250,10 @@ func SerializeGlobalSection(p parser.Parser, data *models.Global) error { //noli
 		defaultPath = nil
 	}
 	if err := p.Set(parser.Global, parser.GlobalSectionName, "default-path", defaultPath); err != nil {
+		return err
+	}
+
+	if err := serializeStringOption(p, "setcap", data.Setcap); err != nil {
 		return err
 	}
 

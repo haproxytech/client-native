@@ -802,4 +802,9 @@ global:
           x-dependency:
             type:
               value: origin
+    setcap:
+      type: string
+      pattern: '^[^\s]+$'
+      x-omitempty: true
+      x-display-name: OS Capabilities
   additionalProperties: false

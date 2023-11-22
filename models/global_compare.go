@@ -415,6 +415,10 @@ func (s Global) Equal(t Global, opts ...Options) bool {
 		return false
 	}
 
+	if s.Setcap != t.Setcap {
+		return false
+	}
+
 	if s.SpreadChecks != t.SpreadChecks {
 		return false
 	}
@@ -1020,6 +1024,10 @@ func (s Global) Diff(t Global, opts ...Options) map[string][]interface{} {
 
 	if s.SetDumpable != t.SetDumpable {
 		diff["SetDumpable"] = []interface{}{s.SetDumpable, t.SetDumpable}
+	}
+
+	if s.Setcap != t.Setcap {
+		diff["Setcap"] = []interface{}{s.Setcap, t.Setcap}
 	}
 
 	if s.SpreadChecks != t.SpreadChecks {

@@ -214,6 +214,7 @@ global
   ssl-propquery provider
   ssl-provider default
   ssl-provider-path test
+  setcap cap_net_raw,cap_net_bind_service
 
 defaults test_defaults
   maxconn 2000
