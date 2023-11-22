@@ -92,7 +92,14 @@ opennebula:
   title: OpenNebula server
   description: OpenNebula server configuration
   type: object
-  required: [rpcEndpoint, enabled, retry_timeout]
+  required:
+    - rpcEndpoint
+    - user
+    - password
+    - insecure
+    - name
+    - enabled
+    - retry_timeout
   properties:
     id:
       type: string
@@ -111,6 +118,8 @@ opennebula:
       type: string
       pattern: '^[^\s]+$'
       description: Password for authentication
+    insecure: 
+      type: boolean
     cluster:
       type: string
       pattern: '^[^\s]+$'
@@ -148,8 +157,6 @@ opennebula:
       type: string
     name:
       type: string
-    namespace:
-      type: string
     defaults:
       type: string
       description: Name of the defaults section to be used in backends created by this service
@@ -176,7 +183,11 @@ opennebula:
   example:
     id: "0"
     enabled: true
+    name: frontend-service
     rpcEndpoint: "http://localhost:2633/RPC2"
+    user: oneadmin
+    password: oneadmin
+    insecure: true
     retry_timeout: 10
 
 consul:

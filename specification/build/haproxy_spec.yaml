@@ -9359,8 +9359,12 @@ definitions:
       example:
           enabled: true
           id: "0"
+          insecure: true
+          name: frontend-service
+          password: oneadmin
           retry_timeout: 10
           rpcEndpoint: http://localhost:2633/RPC2
+          user: oneadmin
       properties:
           cluster:
               description: OpenNebula cluster ID
@@ -9398,9 +9402,9 @@ definitions:
               pattern: ^[^\s]+$
               type: string
               x-nullable: true
+          insecure:
+              type: boolean
           name:
-              type: string
-          namespace:
               type: string
           password:
               description: Password for authentication
@@ -9448,6 +9452,10 @@ definitions:
               type: string
       required:
           - rpcEndpoint
+          - user
+          - password
+          - insecure
+          - name
           - enabled
           - retry_timeout
       title: OpenNebula server

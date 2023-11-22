@@ -34,7 +34,7 @@ import (
 // Opennebula OpenNebula server
 //
 // OpenNebula server configuration
-// Example: {"enabled":true,"id":"0","retry_timeout":10,"rpcEndpoint":"http://localhost:2633/RPC2"}
+// Example: {"enabled":true,"id":"0","insecure":true,"name":"frontend-service","password":"oneadmin","retry_timeout":10,"rpcEndpoint":"http://localhost:2633/RPC2","user":"oneadmin"}
 //
 // swagger:model opennebula
 type Opennebula struct {
@@ -69,15 +69,18 @@ type Opennebula struct {
 	// Pattern: ^[^\s]+$
 	ID *string `json:"id,omitempty"`
 
-	// name
-	Name string `json:"name,omitempty"`
+	// insecure
+	// Required: true
+	Insecure *bool `json:"insecure"`
 
-	// namespace
-	Namespace string `json:"namespace,omitempty"`
+	// name
+	// Required: true
+	Name *string `json:"name"`
 
 	// Password for authentication
+	// Required: true
 	// Pattern: ^[^\s]+$
-	Password string `json:"password,omitempty"`
+	Password *string `json:"password"`
 
 	// Duration in seconds in-between data pulling requests to the OpenNebula server
 	// Required: true
@@ -109,8 +112,9 @@ type Opennebula struct {
 	ServiceNameRegexp string `json:"service_name_regexp,omitempty"`
 
 	// Username for authentication
+	// Required: true
 	// Pattern: ^[^\s]+$
-	User string `json:"user,omitempty"`
+	User *string `json:"user"`
 }
 
 // Validate validates this opennebula
@@ -130,6 +134,14 @@ func (m *Opennebula) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateID(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateInsecure(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateName(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -248,12 +260,31 @@ func (m *Opennebula) validateID(formats strfmt.Registry) error {
 	return nil
 }
 
-func (m *Opennebula) validatePassword(formats strfmt.Registry) error {
-	if swag.IsZero(m.Password) { // not required
-		return nil
+func (m *Opennebula) validateInsecure(formats strfmt.Registry) error {
+
+	if err := validate.Required("insecure", "body", m.Insecure); err != nil {
+		return err
 	}
 
-	if err := validate.Pattern("password", "body", m.Password, `^[^\s]+$`); err != nil {
+	return nil
+}
+
+func (m *Opennebula) validateName(formats strfmt.Registry) error {
+
+	if err := validate.Required("name", "body", m.Name); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *Opennebula) validatePassword(formats strfmt.Registry) error {
+
+	if err := validate.Required("password", "body", m.Password); err != nil {
+		return err
+	}
+
+	if err := validate.Pattern("password", "body", *m.Password, `^[^\s]+$`); err != nil {
 		return err
 	}
 
@@ -361,11 +392,12 @@ func (m *Opennebula) validateServiceWhitelist(formats strfmt.Registry) error {
 }
 
 func (m *Opennebula) validateUser(formats strfmt.Registry) error {
-	if swag.IsZero(m.User) { // not required
-		return nil
+
+	if err := validate.Required("user", "body", m.User); err != nil {
+		return err
 	}
 
-	if err := validate.Pattern("user", "body", m.User, `^[^\s]+$`); err != nil {
+	if err := validate.Pattern("user", "body", *m.User, `^[^\s]+$`); err != nil {
 		return err
 	}
 
