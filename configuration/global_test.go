@@ -288,6 +288,9 @@ func TestGetGlobal(t *testing.T) {
 	if global.TuneOptions.CompMaxlevel != 14 {
 		t.Errorf("CompMaxlevel is %v, expected 14", global.TuneOptions.CompMaxlevel)
 	}
+	if !global.TuneOptions.DisableZeroCopyForwarding {
+		t.Errorf("DisableZeroCopyForwarding is %v, expected true", global.TuneOptions.DisableZeroCopyForwarding)
+	}
 	if global.TuneOptions.H2HeaderTableSize != 15 {
 		t.Errorf("H2HeaderTableSize is %v, expected 15", global.TuneOptions.H2HeaderTableSize)
 	}
@@ -699,6 +702,7 @@ func TestPutGlobal(t *testing.T) {
 			Param:   "something",
 		},
 		TuneOptions: &models.GlobalTuneOptions{
+			DisableZeroCopyForwarding:      true,
 			PeersMaxUpdatesAtOnce:          100,
 			QuicFrontendConnTxBuffersLimit: nil,
 			QuicFrontendMaxIdleTimeout:     misc.Int64P(5000),

@@ -51,6 +51,7 @@ global
   tune.buffers.reserve 12
   tune.bufsize 13
   tune.comp.maxlevel 14
+  tune.disable-zero-copy-forwarding
   tune.fail-alloc
   tune.fd.edge-triggered on
   tune.h2.header-table-size 15

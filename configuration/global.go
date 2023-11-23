@@ -2348,6 +2348,9 @@ func serializeTuneOptions(p parser.Parser, options *models.GlobalTuneOptions) er
 	if err := serializeInt64Option(p, "tune.comp.maxlevel", options.CompMaxlevel); err != nil {
 		return err
 	}
+	if err := serializeBoolOption(p, "tune.disable-zero-copy-forwarding", options.DisableZeroCopyForwarding); err != nil {
+		return err
+	}
 	if err := serializeBoolOption(p, "tune.fail-alloc", options.FailAlloc); err != nil {
 		return err
 	}
@@ -2719,6 +2722,12 @@ func parseTuneOptions(p parser.Parser) (*models.GlobalTuneOptions, error) { //no
 		return nil, err
 	}
 	options.CompMaxlevel = intOption
+
+	boolOption, err = parseBoolOption(p, "tune.disable-zero-copy-forwarding")
+	if err != nil {
+		return nil, err
+	}
+	options.DisableZeroCopyForwarding = boolOption
 
 	boolOption, err = parseBoolOption(p, "tune.fail-alloc")
 	if err != nil {
