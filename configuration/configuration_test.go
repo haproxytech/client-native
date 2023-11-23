@@ -70,6 +70,7 @@ global
   tune.lua.session-timeout 25
   tune.lua.task-timeout 26
   tune.lua.service-timeout 27
+  tune.max-checks-per-thread 0
   tune.maxaccept 28
   tune.maxpollevents 29
   tune.maxrewrite 30

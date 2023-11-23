@@ -336,6 +336,9 @@ func TestGetGlobal(t *testing.T) {
 	if *global.TuneOptions.LuaServiceTimeout != 27 {
 		t.Errorf("LuaServiceTimeout is %v, expected 27", global.TuneOptions.LuaServiceTimeout)
 	}
+	if *global.TuneOptions.MaxChecksPerThread != 0 {
+		t.Errorf("MaxChecksPerThread is %v, expected 0", *global.TuneOptions.MaxChecksPerThread)
+	}
 	if global.TuneOptions.Maxaccept != 28 {
 		t.Errorf("Maxaccept is %v, expected 28", global.TuneOptions.Maxaccept)
 	}
@@ -703,6 +706,7 @@ func TestPutGlobal(t *testing.T) {
 		},
 		TuneOptions: &models.GlobalTuneOptions{
 			DisableZeroCopyForwarding:      true,
+			MaxChecksPerThread:             misc.Int64P(20),
 			PeersMaxUpdatesAtOnce:          100,
 			QuicFrontendConnTxBuffersLimit: nil,
 			QuicFrontendMaxIdleTimeout:     misc.Int64P(5000),

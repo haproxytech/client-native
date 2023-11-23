@@ -3138,6 +3138,9 @@ type GlobalTuneOptions struct {
 	// lua task timeout
 	LuaTaskTimeout *int64 `json:"lua_task_timeout,omitempty"`
 
+	// max checks per thread
+	MaxChecksPerThread *int64 `json:"max_checks_per_thread,omitempty"`
+
 	// maxaccept
 	Maxaccept int64 `json:"maxaccept,omitempty"`
 

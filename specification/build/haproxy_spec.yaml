@@ -1670,6 +1670,10 @@ definitions:
                       type: integer
                       x-display-name: Lua Task Timeout
                       x-nullable: true
+                  max_checks_per_thread:
+                      type: integer
+                      x-display-name: Maximum checks per thread
+                      x-nullable: true
                   maxaccept:
                       type: integer
                       x-display-name: Maximum Accept Events

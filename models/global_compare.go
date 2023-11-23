@@ -1881,6 +1881,10 @@ func (s GlobalTuneOptions) Equal(t GlobalTuneOptions, opts ...Options) bool {
 		return false
 	}
 
+	if !equalPointers(s.MaxChecksPerThread, t.MaxChecksPerThread) {
+		return false
+	}
+
 	if s.Maxaccept != t.Maxaccept {
 		return false
 	}
@@ -2162,6 +2166,10 @@ func (s GlobalTuneOptions) Diff(t GlobalTuneOptions, opts ...Options) map[string
 
 	if !equalPointers(s.LuaTaskTimeout, t.LuaTaskTimeout) {
 		diff["LuaTaskTimeout"] = []interface{}{ValueOrNil(s.LuaTaskTimeout), ValueOrNil(t.LuaTaskTimeout)}
+	}
+
+	if !equalPointers(s.MaxChecksPerThread, t.MaxChecksPerThread) {
+		diff["MaxChecksPerThread"] = []interface{}{ValueOrNil(s.MaxChecksPerThread), ValueOrNil(t.MaxChecksPerThread)}
 	}
 
 	if s.Maxaccept != t.Maxaccept {

@@ -2405,6 +2405,9 @@ func serializeTuneOptions(p parser.Parser, options *models.GlobalTuneOptions) er
 	if err := serializeTimeoutSizeOption(p, "tune.lua.service-timeout", options.LuaServiceTimeout); err != nil {
 		return err
 	}
+	if err := serializeInt64POption(p, "tune.max-checks-per-thread", options.MaxChecksPerThread); err != nil {
+		return err
+	}
 	if err := serializeInt64Option(p, "tune.maxaccept", options.Maxaccept); err != nil {
 		return err
 	}
@@ -2836,6 +2839,12 @@ func parseTuneOptions(p parser.Parser) (*models.GlobalTuneOptions, error) { //no
 		return nil, err
 	}
 	options.LuaServiceTimeout = misc.ParseTimeout(strOption)
+
+	intPOption, err = parseInt64POption(p, "tune.max-checks-per-thread")
+	if err != nil {
+		return nil, err
+	}
+	options.MaxChecksPerThread = intPOption
 
 	intOption, err = parseInt64Option(p, "tune.maxaccept")
 	if err != nil {

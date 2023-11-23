@@ -378,6 +378,10 @@ global:
           type: integer
           x-display-name: Lua Service timeout
           x-nullable: true
+        max_checks_per_thread:
+          type: integer
+          x-nullable: true
+          x-display-name: Maximum checks per thread
         maxaccept:
           type: integer
           x-display-name: Maximum Accept Events
