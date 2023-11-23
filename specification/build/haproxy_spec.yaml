@@ -2183,6 +2183,7 @@ definitions:
               enum:
                   - tcp
                   - http
+                  - log
               type: string
           monitor_uri:
               $ref: '#/definitions/monitor_uri'
@@ -3001,6 +3002,7 @@ definitions:
               enum:
                   - http
                   - tcp
+                  - log
               type: string
           mysql_check_params:
               $ref: '#/definitions/mysql_check_params'

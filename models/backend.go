@@ -227,7 +227,7 @@ type Backend struct {
 	MaxKeepAliveQueue *int64 `json:"max_keep_alive_queue,omitempty"`
 
 	// mode
-	// Enum: [http tcp]
+	// Enum: [http tcp log]
 	Mode string `json:"mode,omitempty"`
 
 	// mysql check params
@@ -1903,7 +1903,7 @@ var backendTypeModePropEnum []interface{}
 
 func init() {
 	var res []string
-	if err := json.Unmarshal([]byte(`["http","tcp"]`), &res); err != nil {
+	if err := json.Unmarshal([]byte(`["http","tcp","log"]`), &res); err != nil {
 		panic(err)
 	}
 	for _, v := range res {
@@ -1918,6 +1918,9 @@ const (
 
 	// BackendModeTCP captures enum value "tcp"
 	BackendModeTCP string = "tcp"
+
+	// BackendModeLog captures enum value "log"
+	BackendModeLog string = "log"
 )
 
 // prop value enum

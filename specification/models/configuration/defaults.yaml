@@ -12,7 +12,7 @@ defaults:
       pattern: '^[A-Za-z0-9-_.:]+$'
     mode:
       type: string
-      enum: [tcp, http]
+      enum: [tcp, http, log]
     balance:
       $ref: "#/definitions/balance"
     hash_type:

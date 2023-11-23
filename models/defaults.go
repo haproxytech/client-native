@@ -289,7 +289,7 @@ type Defaults struct {
 	Maxconn *int64 `json:"maxconn,omitempty"`
 
 	// mode
-	// Enum: [tcp http]
+	// Enum: [tcp http log]
 	Mode string `json:"mode,omitempty"`
 
 	// monitor uri
@@ -2352,7 +2352,7 @@ var defaultsTypeModePropEnum []interface{}
 
 func init() {
 	var res []string
-	if err := json.Unmarshal([]byte(`["tcp","http"]`), &res); err != nil {
+	if err := json.Unmarshal([]byte(`["tcp","http","log"]`), &res); err != nil {
 		panic(err)
 	}
 	for _, v := range res {
@@ -2367,6 +2367,9 @@ const (
 
 	// DefaultsModeHTTP captures enum value "http"
 	DefaultsModeHTTP string = "http"
+
+	// DefaultsModeLog captures enum value "log"
+	DefaultsModeLog string = "log"
 )
 
 // prop value enum

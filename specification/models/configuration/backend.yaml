@@ -26,7 +26,7 @@ backend:
       pattern: '^[^\s]+$'
     mode:
       type: string
-      enum: [http, tcp]
+      enum: [http, tcp, log]
     allbackups:
       type: string
       enum: [enabled, disabled]
