@@ -295,6 +295,9 @@ global:
         comp_maxlevel:
           type: integer
           x-display-name: Maximum Compression Level
+        disable_zero_copy_forwarding:
+          type: boolean
+          x-display-name: Disable zero-copy forwarding
         fail_alloc:
           type: boolean
           x-display-name: Failed Allocation Chance

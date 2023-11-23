@@ -3057,6 +3057,9 @@ type GlobalTuneOptions struct {
 	// comp maxlevel
 	CompMaxlevel int64 `json:"comp_maxlevel,omitempty"`
 
+	// disable zero copy forwarding
+	DisableZeroCopyForwarding bool `json:"disable_zero_copy_forwarding,omitempty"`
+
 	// fail alloc
 	FailAlloc bool `json:"fail_alloc,omitempty"`
 

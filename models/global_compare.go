@@ -1785,6 +1785,10 @@ func (s GlobalTuneOptions) Equal(t GlobalTuneOptions, opts ...Options) bool {
 		return false
 	}
 
+	if s.DisableZeroCopyForwarding != t.DisableZeroCopyForwarding {
+		return false
+	}
+
 	if s.FailAlloc != t.FailAlloc {
 		return false
 	}
@@ -2062,6 +2066,10 @@ func (s GlobalTuneOptions) Diff(t GlobalTuneOptions, opts ...Options) map[string
 
 	if s.CompMaxlevel != t.CompMaxlevel {
 		diff["CompMaxlevel"] = []interface{}{s.CompMaxlevel, t.CompMaxlevel}
+	}
+
+	if s.DisableZeroCopyForwarding != t.DisableZeroCopyForwarding {
+		diff["DisableZeroCopyForwarding"] = []interface{}{s.DisableZeroCopyForwarding, t.DisableZeroCopyForwarding}
 	}
 
 	if s.FailAlloc != t.FailAlloc {

@@ -11,7 +11,7 @@ require (
 	github.com/google/go-cmp v0.6.0
 	github.com/google/renameio v1.0.1
 	github.com/google/uuid v1.3.1
-	github.com/haproxytech/config-parser/v5 v5.0.1-0.20231123111836-e1d76c798b24
+	github.com/haproxytech/config-parser/v5 v5.0.1-0.20231127082548-5bf41201fa06
 	github.com/json-iterator/go v1.1.12
 	github.com/kballard/go-shellquote v0.0.0-20180428030007-95032a82bc51
 	github.com/mitchellh/mapstructure v1.5.0
