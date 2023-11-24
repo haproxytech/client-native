@@ -8940,6 +8940,7 @@ definitions:
                   - djb2
                   - wt6
                   - crc32
+                  - none
               type: string
           method:
               enum:

@@ -7,7 +7,7 @@ hash_type:
       enum: [map-based, consistent]
     function:
       type: string
-      enum: [sdbm, djb2, wt6, crc32]
+      enum: [sdbm, djb2, wt6, crc32, none]
     modifier:
       type: string
       enum: [avalanche]
