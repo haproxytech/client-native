@@ -194,6 +194,10 @@ type BindParams struct {
 	// quic force retry
 	QuicForceRetry bool `json:"quic-force-retry,omitempty"`
 
+	// quic socket
+	// Enum: [connection listener]
+	QuicSocket string `json:"quic-socket,omitempty"`
+
 	// severity output
 	// Example: none
 	// Enum: [none number string]
@@ -278,6 +282,10 @@ func (m *BindParams) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateQuicCcAlgo(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateQuicSocket(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -428,6 +436,48 @@ func (m *BindParams) validateQuicCcAlgo(formats strfmt.Registry) error {
 
 	// value enum
 	if err := m.validateQuicCcAlgoEnum("quic-cc-algo", "body", m.QuicCcAlgo); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+var bindParamsTypeQuicSocketPropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["connection","listener"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		bindParamsTypeQuicSocketPropEnum = append(bindParamsTypeQuicSocketPropEnum, v)
+	}
+}
+
+const (
+
+	// BindParamsQuicSocketConnection captures enum value "connection"
+	BindParamsQuicSocketConnection string = "connection"
+
+	// BindParamsQuicSocketListener captures enum value "listener"
+	BindParamsQuicSocketListener string = "listener"
+)
+
+// prop value enum
+func (m *BindParams) validateQuicSocketEnum(path, location string, value string) error {
+	if err := validate.EnumCase(path, location, value, bindParamsTypeQuicSocketPropEnum, true); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *BindParams) validateQuicSocket(formats strfmt.Registry) error {
+	if swag.IsZero(m.QuicSocket) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateQuicSocketEnum("quic-socket", "body", m.QuicSocket); err != nil {
 		return err
 	}
 

@@ -224,6 +224,10 @@ func (s BindParams) Equal(t BindParams, opts ...Options) bool {
 		return false
 	}
 
+	if s.QuicSocket != t.QuicSocket {
+		return false
+	}
+
 	if s.SeverityOutput != t.SeverityOutput {
 		return false
 	}
@@ -505,6 +509,10 @@ func (s BindParams) Diff(t BindParams, opts ...Options) map[string][]interface{}
 
 	if s.QuicForceRetry != t.QuicForceRetry {
 		diff["QuicForceRetry"] = []interface{}{s.QuicForceRetry, t.QuicForceRetry}
+	}
+
+	if s.QuicSocket != t.QuicSocket {
+		diff["QuicSocket"] = []interface{}{s.QuicSocket, t.QuicSocket}
 	}
 
 	if s.SeverityOutput != t.SeverityOutput {

@@ -377,6 +377,8 @@ func parseBindParams(bindOptions []params.BindOption) (b models.BindParams) { //
 				b.User = v.Value
 			case "quic-cc-algo":
 				b.QuicCcAlgo = v.Value
+			case "quic-socket":
+				b.QuicSocket = v.Value
 			}
 		}
 	}
@@ -600,6 +602,9 @@ func serializeBindParams(b models.BindParams, path string) (options []params.Bin
 	}
 	if b.QuicForceRetry {
 		options = append(options, &params.BindOptionWord{Name: "quic-force-retry"})
+	}
+	if b.QuicSocket != "" {
+		options = append(options, &params.BindOptionValue{Name: "quic-socket", Value: b.QuicSocket})
 	}
 	if b.NoAlpn {
 		options = append(options, &params.BindOptionWord{Name: "no-alpn"})

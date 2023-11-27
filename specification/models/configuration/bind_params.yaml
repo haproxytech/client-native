@@ -247,4 +247,7 @@ bind_params:
       enum: [cubic, newreno]
     quic-force-retry:
       type: boolean
+    quic-socket:
+      type: string
+      enum: [connection, listener]
   additionalProperties: false
