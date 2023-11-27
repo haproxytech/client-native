@@ -1136,6 +1136,11 @@ func ParseGlobalSection(p parser.Parser) (*models.Global, error) { //nolint:goco
 		return nil, err
 	}
 
+	limitedQuic, err := parseBoolOption(p, "limited-quic")
+	if err != nil {
+		return nil, err
+	}
+
 	// deprecated option
 	dhParam := int64(0)
 	if tuneOptions != nil {
@@ -1254,6 +1259,7 @@ func ParseGlobalSection(p parser.Parser) (*models.Global, error) { //nolint:goco
 		SslDefaultServerSigalgs:           sslServerSigalgs,
 		SslDefaultServerClientSigalgs:     sslServerClientSigalgs,
 		Setcap:                            setcap,
+		LimitedQuic:                       limitedQuic,
 	}
 
 	return global, nil
@@ -2254,6 +2260,10 @@ func SerializeGlobalSection(p parser.Parser, data *models.Global) error { //noli
 	}
 
 	if err := serializeStringOption(p, "setcap", data.Setcap); err != nil {
+		return err
+	}
+
+	if err := serializeBoolOption(p, "limited-quic", data.LimitedQuic); err != nil {
 		return err
 	}
 

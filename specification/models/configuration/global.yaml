@@ -53,6 +53,8 @@ global:
       type: string
     h2_workaround_bogus_websocket_clients:
       type: boolean
+    limited_quic:
+      type: boolean
     lua_load_per_thread:
       type: string
     mworker_max_reloads:

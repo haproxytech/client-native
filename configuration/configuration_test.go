@@ -43,6 +43,7 @@ global
   h1-case-adjust-file /etc/headers.adjust
   h1-case-adjust host Host
   h1-case-adjust content-type Content-Type
+  limited-quic
   uid 1
   gid 1
   profiling.memory on

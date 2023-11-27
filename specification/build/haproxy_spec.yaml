@@ -1194,6 +1194,8 @@ definitions:
               type: boolean
           issuers_chain_path:
               type: string
+          limited_quic:
+              type: boolean
           load_server_state_from_file:
               enum:
                   - global
