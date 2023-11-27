@@ -163,6 +163,9 @@ type Global struct {
 	// issuers chain path
 	IssuersChainPath string `json:"issuers_chain_path,omitempty"`
 
+	// limited quic
+	LimitedQuic bool `json:"limited_quic,omitempty"`
+
 	// load server state from file
 	// Enum: [global local none]
 	LoadServerStateFromFile string `json:"load_server_state_from_file,omitempty"`

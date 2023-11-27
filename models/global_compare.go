@@ -247,6 +247,10 @@ func (s Global) Equal(t Global, opts ...Options) bool {
 		return false
 	}
 
+	if s.LimitedQuic != t.LimitedQuic {
+		return false
+	}
+
 	if s.LoadServerStateFromFile != t.LoadServerStateFromFile {
 		return false
 	}
@@ -842,6 +846,10 @@ func (s Global) Diff(t Global, opts ...Options) map[string][]interface{} {
 
 	if s.IssuersChainPath != t.IssuersChainPath {
 		diff["IssuersChainPath"] = []interface{}{s.IssuersChainPath, t.IssuersChainPath}
+	}
+
+	if s.LimitedQuic != t.LimitedQuic {
+		diff["LimitedQuic"] = []interface{}{s.LimitedQuic, t.LimitedQuic}
 	}
 
 	if s.LoadServerStateFromFile != t.LoadServerStateFromFile {

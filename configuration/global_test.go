@@ -656,6 +656,9 @@ func TestGetGlobal(t *testing.T) {
 	if global.Setcap != "cap_net_raw,cap_net_bind_service" {
 		t.Errorf("Setcap is %v, expected cap_net_raw,cap_net_bind_service", global.Setcap)
 	}
+	if global.LimitedQuic != true {
+		t.Errorf("limited_quic in gloabl should be true")
+	}
 }
 
 func TestPutGlobal(t *testing.T) {
@@ -741,6 +744,7 @@ func TestPutGlobal(t *testing.T) {
 		SslProvider:                   "my_provider",
 		SslProviderPath:               "providers/",
 		Setcap:                        "none",
+		LimitedQuic:                   true,
 	}
 
 	err := clientTest.PushGlobalConfiguration(g, "", version)
