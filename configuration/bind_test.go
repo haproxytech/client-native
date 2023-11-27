@@ -29,7 +29,7 @@ func TestGetBinds(t *testing.T) {
 		t.Error(err.Error())
 	}
 
-	if len(binds) != 4 {
+	if len(binds) != 5 {
 		t.Errorf("%v binds returned, expected 4", len(binds))
 	}
 
@@ -38,7 +38,7 @@ func TestGetBinds(t *testing.T) {
 	}
 
 	for _, l := range binds {
-		if l.Name != "webserv" && l.Name != "webserv2" && l.Name != "webserv3" && l.Name != "ipv6" {
+		if l.Name != "webserv" && l.Name != "webserv2" && l.Name != "webserv3" && l.Name != "ipv6" && l.Name != "test-quic" {
 			t.Errorf("Expected only webserv,webserv2, or ipv6 binds, %v found", l.Name)
 		}
 		if l.Address != "192.168.1.1" && l.Address != "192.168.1.2" && l.Address != "2a01:c9c0:a3:8::3" {
@@ -49,6 +49,9 @@ func TestGetBinds(t *testing.T) {
 		}
 		if l.Thread != "all" && l.Thread != "1/all" && l.Thread != "1/1" && l.Thread != "1/1-1" {
 			t.Errorf("%v: Thread not all or 1/all or 1/1-1: %v", l.Name, l.Thread)
+		}
+		if l.Name == "test-quic" && l.QuicSocket != "connection" {
+			t.Errorf("%v: quic-soket not connection: %v", l.Name, l.QuicSocket)
 		}
 	}
 
@@ -128,6 +131,7 @@ func TestCreateEditDeleteBind(t *testing.T) {
 			ClientSigalgs:  "ECDSA+SHA256",
 			CaVerifyFile:   "ca.pem",
 			Nice:           123,
+			QuicSocket:     "listener",
 		},
 	}
 

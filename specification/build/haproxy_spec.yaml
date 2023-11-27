@@ -397,6 +397,11 @@ definitions:
               type: string
           quic-force-retry:
               type: boolean
+          quic-socket:
+              enum:
+                  - connection
+                  - listener
+              type: string
           severity_output:
               enum:
                   - none
