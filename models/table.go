@@ -58,6 +58,9 @@ type Table struct {
 
 	// type len
 	TypeLen *int64 `json:"type_len,omitempty"`
+
+	// write to
+	WriteTo *string `json:"write_to,omitempty"`
 }
 
 // Validate validates this table

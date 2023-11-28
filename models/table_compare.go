@@ -52,6 +52,10 @@ func (s Table) Equal(t Table, opts ...Options) bool {
 		return false
 	}
 
+	if !equalPointers(s.WriteTo, t.WriteTo) {
+		return false
+	}
+
 	return true
 }
 
@@ -89,6 +93,10 @@ func (s Table) Diff(t Table, opts ...Options) map[string][]interface{} {
 
 	if !equalPointers(s.TypeLen, t.TypeLen) {
 		diff["TypeLen"] = []interface{}{ValueOrNil(s.TypeLen), ValueOrNil(t.TypeLen)}
+	}
+
+	if !equalPointers(s.WriteTo, t.WriteTo) {
+		diff["WriteTo"] = []interface{}{ValueOrNil(s.WriteTo), ValueOrNil(t.WriteTo)}
 	}
 
 	return diff

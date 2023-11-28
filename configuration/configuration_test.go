@@ -707,6 +707,7 @@ peers mycluster
   shards 3
   table t1 type string len 1000 size 200k expire 5m nopurge store gpc0,conn_rate(30s)
   table t2 type string len 1000 size 200k expire 5m nopurge store gpc0 store gpc1,conn_rate(30s)
+  table t9 type string len 1000 size 200k expire 5m write-to t2 nopurge store gpc0,conn_rate(30s)
 
 program test
   command echo "Hello, World!"

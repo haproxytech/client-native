@@ -198,6 +198,9 @@ func ParseTable(t types.Table) *models.Table {
 	if t.TypeLen != 0 {
 		table.TypeLen = &t.TypeLen
 	}
+	if t.WriteTo != "" {
+		table.WriteTo = &t.WriteTo
+	}
 
 	return table
 }
@@ -222,6 +225,9 @@ func SerializeTable(t models.Table) types.Table {
 	}
 	if t.TypeLen != nil {
 		table.TypeLen = *t.TypeLen
+	}
+	if t.WriteTo != nil {
+		table.WriteTo = *t.WriteTo
 	}
 	return table
 }

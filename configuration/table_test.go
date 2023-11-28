@@ -20,6 +20,7 @@ import (
 	"reflect"
 	"testing"
 
+	"github.com/haproxytech/client-native/v5/misc"
 	"github.com/haproxytech/client-native/v5/models"
 )
 
@@ -29,8 +30,8 @@ func TestGetTables(t *testing.T) { //nolint:gocognit,gocyclo
 		t.Error(err.Error())
 	}
 
-	if len(tables) != 2 {
-		t.Errorf("%v tables returned, expected 2", len(tables))
+	if len(tables) != 3 {
+		t.Errorf("%v tables returned, expected 3", len(tables))
 	}
 
 	if v != version {
@@ -38,7 +39,7 @@ func TestGetTables(t *testing.T) { //nolint:gocognit,gocyclo
 	}
 
 	for _, table := range tables {
-		if table.Name != "t1" && table.Name != "t2" {
+		if table.Name != "t1" && table.Name != "t2" && table.Name != "t9" {
 			t.Errorf("table.Name not t1 or t2: %s", table.Name)
 		}
 		if table.Type != "string" {
@@ -105,6 +106,9 @@ func TestTable(t *testing.T) {
 	if table.Store != "gpc0,conn_rate(30s)" {
 		t.Errorf("%s: t.Store[0] not gpc0,conn_rate(30s): %s", table.Name, table.Store)
 	}
+	if table.Name == "t9" && table.WriteTo != misc.Ptr("t2") {
+		t.Errorf("%v: expected write-to t2", table.Name)
+	}
 }
 
 func TestCreateEditDeleteTable(t *testing.T) {
@@ -144,6 +148,7 @@ func TestCreateEditDeleteTable(t *testing.T) {
 		Size:    "200k",
 		NoPurge: true,
 		Store:   "gpc0,conn_rate(30s)",
+		WriteTo: misc.Ptr("t99"),
 	}
 
 	err = clientTest.EditTable("t3", "mycluster", table, "", version)
