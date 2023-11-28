@@ -51,6 +51,10 @@ type ConfigStickTable struct {
 	// size
 	Size *int64 `json:"size,omitempty"`
 
+	// srvkey
+	// Enum: [addr name]
+	Srvkey *string `json:"srvkey,omitempty"`
+
 	// store
 	// Pattern: ^[^\s]+$
 	Store string `json:"store,omitempty"`
@@ -58,6 +62,10 @@ type ConfigStickTable struct {
 	// type
 	// Enum: [ip ipv6 integer string binary]
 	Type string `json:"type,omitempty"`
+
+	// write to
+	// Pattern: ^[^\s]+$
+	WriteTo *string `json:"write_to,omitempty"`
 }
 
 // Validate validates this config stick table
@@ -68,11 +76,19 @@ func (m *ConfigStickTable) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
+	if err := m.validateSrvkey(formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.validateStore(formats); err != nil {
 		res = append(res, err)
 	}
 
 	if err := m.validateType(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateWriteTo(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -88,6 +104,48 @@ func (m *ConfigStickTable) validatePeers(formats strfmt.Registry) error {
 	}
 
 	if err := validate.Pattern("peers", "body", m.Peers, `^[^\s]+$`); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+var configStickTableTypeSrvkeyPropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["addr","name"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		configStickTableTypeSrvkeyPropEnum = append(configStickTableTypeSrvkeyPropEnum, v)
+	}
+}
+
+const (
+
+	// ConfigStickTableSrvkeyAddr captures enum value "addr"
+	ConfigStickTableSrvkeyAddr string = "addr"
+
+	// ConfigStickTableSrvkeyName captures enum value "name"
+	ConfigStickTableSrvkeyName string = "name"
+)
+
+// prop value enum
+func (m *ConfigStickTable) validateSrvkeyEnum(path, location string, value string) error {
+	if err := validate.EnumCase(path, location, value, configStickTableTypeSrvkeyPropEnum, true); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *ConfigStickTable) validateSrvkey(formats strfmt.Registry) error {
+	if swag.IsZero(m.Srvkey) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateSrvkeyEnum("srvkey", "body", *m.Srvkey); err != nil {
 		return err
 	}
 
@@ -151,6 +209,18 @@ func (m *ConfigStickTable) validateType(formats strfmt.Registry) error {
 
 	// value enum
 	if err := m.validateTypeEnum("type", "body", m.Type); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *ConfigStickTable) validateWriteTo(formats strfmt.Registry) error {
+	if swag.IsZero(m.WriteTo) { // not required
+		return nil
+	}
+
+	if err := validate.Pattern("write_to", "body", *m.WriteTo, `^[^\s]+$`); err != nil {
 		return err
 	}
 

@@ -850,7 +850,7 @@ backend test_2 from test_defaults_2
   timeout tunnel 5s
   timeout server 3s
   cookie BLA rewrite httponly nocache
-  stick-table type ip size 100k expire 1h peers mycluster store http_req_rate(10s)
+  stick-table type ip size 100k expire 1h peers mycluster write-to t99 store http_req_rate(10s)
   http-check expect rstatus some-pattern
   http-error status 200 content-type "text/plain" string "My content" hdr Some-Header value
   http-error status 503 content-type application/json string "My content" hdr Additional-Header value1 hdr Some-Header value

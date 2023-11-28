@@ -3627,6 +3627,12 @@ definitions:
           size:
               type: integer
               x-nullable: true
+          srvkey:
+              enum:
+                  - addr
+                  - name
+              type: string
+              x-nullable: true
           store:
               pattern: ^[^\s]+$
               type: string
@@ -3638,6 +3644,10 @@ definitions:
                   - string
                   - binary
               type: string
+          write_to:
+              pattern: ^[^\s]+$
+              type: string
+              x-nullable: true
       type: object
   http_request_rule:
       additionalProperties: false

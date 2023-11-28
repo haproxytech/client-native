@@ -44,11 +44,19 @@ func (s ConfigStickTable) Equal(t ConfigStickTable, opts ...Options) bool {
 		return false
 	}
 
+	if !equalPointers(s.Srvkey, t.Srvkey) {
+		return false
+	}
+
 	if s.Store != t.Store {
 		return false
 	}
 
 	if s.Type != t.Type {
+		return false
+	}
+
+	if !equalPointers(s.WriteTo, t.WriteTo) {
 		return false
 	}
 
@@ -83,12 +91,20 @@ func (s ConfigStickTable) Diff(t ConfigStickTable, opts ...Options) map[string][
 		diff["Size"] = []interface{}{ValueOrNil(s.Size), ValueOrNil(t.Size)}
 	}
 
+	if !equalPointers(s.Srvkey, t.Srvkey) {
+		diff["Srvkey"] = []interface{}{ValueOrNil(s.Srvkey), ValueOrNil(t.Srvkey)}
+	}
+
 	if s.Store != t.Store {
 		diff["Store"] = []interface{}{s.Store, t.Store}
 	}
 
 	if s.Type != t.Type {
 		diff["Type"] = []interface{}{s.Type, t.Type}
+	}
+
+	if !equalPointers(s.WriteTo, t.WriteTo) {
+		diff["WriteTo"] = []interface{}{ValueOrNil(s.WriteTo), ValueOrNil(t.WriteTo)}
 	}
 
 	return diff

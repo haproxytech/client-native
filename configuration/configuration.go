@@ -783,6 +783,12 @@ func (s *SectionParser) stickTable() interface{} {
 	if d.NoPurge {
 		bst.Nopurge = true
 	}
+	if d.SrvKey != "" {
+		bst.Srvkey = &d.SrvKey
+	}
+	if d.WriteTo != "" {
+		bst.WriteTo = &d.WriteTo
+	}
 	return bst
 }
 
@@ -2109,6 +2115,12 @@ func (s *SectionObject) stickTable(field reflect.Value) error {
 		}
 		if st.Size != nil {
 			d.Size = strconv.FormatInt(*st.Size, 10)
+		}
+		if st.Srvkey != nil {
+			d.SrvKey = *st.Srvkey
+		}
+		if st.WriteTo != nil {
+			d.WriteTo = *st.WriteTo
 		}
 		if err := s.set("stick-table", d); err != nil {
 			return err

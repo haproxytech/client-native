@@ -63,6 +63,14 @@ stick_table:
     peers:
       type: string
       pattern: '^[^\s]+$'
+    srvkey:
+      type: string
+      enum: [addr, name]
+      x-nullable: true
     store:
       type: string
       pattern: '^[^\s]+$'
+    write_to:
+      type: string
+      pattern: '^[^\s]+$'
+      x-nullable: true
