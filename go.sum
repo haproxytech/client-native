@@ -84,8 +84,8 @@ github.com/google/renameio v1.0.1/go.mod h1:t/HQoYBZSsWSNK35C6CO/TpPLDVWvxOHboWU
 github.com/google/uuid v1.1.1/go.mod h1:TIyPZe4MgqvfeYDBFedMoGGpEw/LqOeaOT+nhxU+yHo=
 github.com/google/uuid v1.3.1 h1:KjJaJ9iWZ3jOFZIf1Lqf4laDRCasjl0BCmnEGxkdLb4=
 github.com/google/uuid v1.3.1/go.mod h1:TIyPZe4MgqvfeYDBFedMoGGpEw/LqOeaOT+nhxU+yHo=
-github.com/haproxytech/config-parser/v5 v5.0.1-0.20231128142306-0c8eee965bc0 h1:b1pr9s5Q32uWDp/WTPlR0x66HX9Fn+2Gy0bph1pty9c=
-github.com/haproxytech/config-parser/v5 v5.0.1-0.20231128142306-0c8eee965bc0/go.mod h1:ASOyT1KguwXaY0NfoLNjLLs0OlnYHnFgUJsdJe6NhZg=
+github.com/haproxytech/config-parser/v5 v5.0.1-0.20231129113339-1c7b68ae137f h1:inHv5bMjx2wd6FMkNBTKMmzlFsOkKfj3KNQoGcx+Uk4=
+github.com/haproxytech/config-parser/v5 v5.0.1-0.20231129113339-1c7b68ae137f/go.mod h1:ASOyT1KguwXaY0NfoLNjLLs0OlnYHnFgUJsdJe6NhZg=
 github.com/haproxytech/go-logger v1.1.0 h1:HgGtYaI1ApkvbQdsm7f9AzQQoxTB7w37criTflh7IQE=
 github.com/haproxytech/go-logger v1.1.0/go.mod h1:OekUd8HCb7ubxMplzHUPBTHNxZmddOWfOjWclZsqIeM=
 github.com/inconshreveable/mousetrap v1.0.0/go.mod h1:PxqpIevigyE2G7u3NXJIT2ANytuPF1OarO4DADm73n8=

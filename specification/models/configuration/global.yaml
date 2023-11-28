@@ -361,6 +361,14 @@ global:
         lua_forced_yield:
           type: integer
           x-display-name: Lua Forced Yield
+        lua_log_loggers:
+          type: string
+          enum: ["enabled", "disabled"]
+          x-display-name: Send Lua Logs to the Loggers
+        lua_log_stderr:
+          type: string
+          enum: ["auto", "enabled", "disabled"]
+          x-display-name: Send Lua Logs to stderr
         lua_maxmem:
           type: boolean
           x-display-name: Lua Maximum Memory Usage

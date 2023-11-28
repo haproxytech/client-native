@@ -3129,6 +3129,14 @@ type GlobalTuneOptions struct {
 	// lua forced yield
 	LuaForcedYield int64 `json:"lua_forced_yield,omitempty"`
 
+	// lua log loggers
+	// Enum: [enabled disabled]
+	LuaLogLoggers string `json:"lua_log_loggers,omitempty"`
+
+	// lua log stderr
+	// Enum: [auto enabled disabled]
+	LuaLogStderr string `json:"lua_log_stderr,omitempty"`
+
 	// lua maxmem
 	LuaMaxmem bool `json:"lua_maxmem,omitempty"`
 
@@ -3317,6 +3325,14 @@ func (m *GlobalTuneOptions) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateListenerMultiQueue(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateLuaLogLoggers(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateLuaLogStderr(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -3567,6 +3583,93 @@ func (m *GlobalTuneOptions) validateListenerMultiQueue(formats strfmt.Registry) 
 
 	// value enum
 	if err := m.validateListenerMultiQueueEnum("tune_options"+"."+"listener_multi_queue", "body", m.ListenerMultiQueue); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+var globalTuneOptionsTypeLuaLogLoggersPropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		globalTuneOptionsTypeLuaLogLoggersPropEnum = append(globalTuneOptionsTypeLuaLogLoggersPropEnum, v)
+	}
+}
+
+const (
+
+	// GlobalTuneOptionsLuaLogLoggersEnabled captures enum value "enabled"
+	GlobalTuneOptionsLuaLogLoggersEnabled string = "enabled"
+
+	// GlobalTuneOptionsLuaLogLoggersDisabled captures enum value "disabled"
+	GlobalTuneOptionsLuaLogLoggersDisabled string = "disabled"
+)
+
+// prop value enum
+func (m *GlobalTuneOptions) validateLuaLogLoggersEnum(path, location string, value string) error {
+	if err := validate.EnumCase(path, location, value, globalTuneOptionsTypeLuaLogLoggersPropEnum, true); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *GlobalTuneOptions) validateLuaLogLoggers(formats strfmt.Registry) error {
+	if swag.IsZero(m.LuaLogLoggers) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateLuaLogLoggersEnum("tune_options"+"."+"lua_log_loggers", "body", m.LuaLogLoggers); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+var globalTuneOptionsTypeLuaLogStderrPropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["auto","enabled","disabled"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		globalTuneOptionsTypeLuaLogStderrPropEnum = append(globalTuneOptionsTypeLuaLogStderrPropEnum, v)
+	}
+}
+
+const (
+
+	// GlobalTuneOptionsLuaLogStderrAuto captures enum value "auto"
+	GlobalTuneOptionsLuaLogStderrAuto string = "auto"
+
+	// GlobalTuneOptionsLuaLogStderrEnabled captures enum value "enabled"
+	GlobalTuneOptionsLuaLogStderrEnabled string = "enabled"
+
+	// GlobalTuneOptionsLuaLogStderrDisabled captures enum value "disabled"
+	GlobalTuneOptionsLuaLogStderrDisabled string = "disabled"
+)
+
+// prop value enum
+func (m *GlobalTuneOptions) validateLuaLogStderrEnum(path, location string, value string) error {
+	if err := validate.EnumCase(path, location, value, globalTuneOptionsTypeLuaLogStderrPropEnum, true); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *GlobalTuneOptions) validateLuaLogStderr(formats strfmt.Registry) error {
+	if swag.IsZero(m.LuaLogStderr) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateLuaLogStderrEnum("tune_options"+"."+"lua_log_stderr", "body", m.LuaLogStderr); err != nil {
 		return err
 	}
 

@@ -321,6 +321,12 @@ func TestGetGlobal(t *testing.T) {
 	if global.TuneOptions.LuaForcedYield != 23 {
 		t.Errorf("LuaForcedYield is %v, expected 23", global.TuneOptions.LuaForcedYield)
 	}
+	if global.TuneOptions.LuaLogLoggers != "enabled" {
+		t.Errorf("LuaLogLoggers is %v, expected on", global.TuneOptions.LuaLogLoggers)
+	}
+	if global.TuneOptions.LuaLogStderr != "auto" {
+		t.Errorf("LuaLogStderr is %v, expected auto", global.TuneOptions.LuaLogStderr)
+	}
 	if global.TuneOptions.LuaMaxmem != true {
 		t.Errorf("Maxzlibmem is false, expected true")
 	}
@@ -721,6 +727,8 @@ func TestPutGlobal(t *testing.T) {
 		},
 		TuneOptions: &models.GlobalTuneOptions{
 			DisableZeroCopyForwarding:      true,
+			LuaLogLoggers:                  "disabled",
+			LuaLogStderr:                   "disabled",
 			MaxChecksPerThread:             misc.Int64P(20),
 			PeersMaxUpdatesAtOnce:          100,
 			QuicFrontendConnTxBuffersLimit: nil,

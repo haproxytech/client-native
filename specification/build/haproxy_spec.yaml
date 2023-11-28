@@ -1662,6 +1662,19 @@ definitions:
                   lua_forced_yield:
                       type: integer
                       x-display-name: Lua Forced Yield
+                  lua_log_loggers:
+                      enum:
+                          - enabled
+                          - disabled
+                      type: string
+                      x-display-name: Send Lua Logs to the Loggers
+                  lua_log_stderr:
+                      enum:
+                          - auto
+                          - enabled
+                          - disabled
+                      type: string
+                      x-display-name: Send Lua Logs to stderr
                   lua_maxmem:
                       type: boolean
                       x-display-name: Lua Maximum Memory Usage

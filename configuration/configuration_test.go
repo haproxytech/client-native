@@ -67,6 +67,8 @@ global
   tune.listener.default-shards by-process
   tune.listener.multi-queue on
   tune.lua.forced-yield 23
+  tune.lua.log.loggers on
+  tune.lua.log.stderr auto
   tune.lua.maxmem
   tune.lua.session-timeout 25
   tune.lua.task-timeout 26

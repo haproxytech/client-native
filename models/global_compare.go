@@ -1873,6 +1873,14 @@ func (s GlobalTuneOptions) Equal(t GlobalTuneOptions, opts ...Options) bool {
 		return false
 	}
 
+	if s.LuaLogLoggers != t.LuaLogLoggers {
+		return false
+	}
+
+	if s.LuaLogStderr != t.LuaLogStderr {
+		return false
+	}
+
 	if s.LuaMaxmem != t.LuaMaxmem {
 		return false
 	}
@@ -2174,6 +2182,14 @@ func (s GlobalTuneOptions) Diff(t GlobalTuneOptions, opts ...Options) map[string
 
 	if s.LuaForcedYield != t.LuaForcedYield {
 		diff["LuaForcedYield"] = []interface{}{s.LuaForcedYield, t.LuaForcedYield}
+	}
+
+	if s.LuaLogLoggers != t.LuaLogLoggers {
+		diff["LuaLogLoggers"] = []interface{}{s.LuaLogLoggers, t.LuaLogLoggers}
+	}
+
+	if s.LuaLogStderr != t.LuaLogStderr {
+		diff["LuaLogStderr"] = []interface{}{s.LuaLogStderr, t.LuaLogStderr}
 	}
 
 	if s.LuaMaxmem != t.LuaMaxmem {
