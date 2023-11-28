@@ -164,6 +164,10 @@ func (s BindParams) Equal(t BindParams, opts ...Options) bool {
 		return false
 	}
 
+	if s.Nbconn != t.Nbconn {
+		return false
+	}
+
 	if s.Nice != t.Nice {
 		return false
 	}
@@ -449,6 +453,10 @@ func (s BindParams) Diff(t BindParams, opts ...Options) map[string][]interface{}
 
 	if s.Namespace != t.Namespace {
 		diff["Namespace"] = []interface{}{s.Namespace, t.Namespace}
+	}
+
+	if s.Nbconn != t.Nbconn {
+		diff["Nbconn"] = []interface{}{s.Nbconn, t.Nbconn}
 	}
 
 	if s.Nice != t.Nice {

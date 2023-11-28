@@ -146,6 +146,9 @@ type BindParams struct {
 	// Example: app
 	Namespace string `json:"namespace,omitempty"`
 
+	// nbconn
+	Nbconn int64 `json:"nbconn,omitempty"`
+
 	// nice
 	// Example: 1
 	Nice int64 `json:"nice,omitempty"`

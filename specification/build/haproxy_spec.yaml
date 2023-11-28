@@ -337,6 +337,9 @@ definitions:
           namespace:
               example: app
               type: string
+          nbconn:
+              type: integer
+              x-display-name: Number of connection
           nice:
               example: 1
               type: integer

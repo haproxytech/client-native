@@ -331,6 +331,7 @@ frontend test
   bind 192.168.1.2:8080 name webserv3 thread 1/1
   bind [2a01:c9c0:a3:8::3]:80 name ipv6 thread 1/1-1
   bind 192.168.1.1:80 name test-quic quic-socket connection thread 1/1
+  bind 192.168.1.1:80 name testnbcon thread 1/all nbconn 6 
   bind-process odd
   option httplog
   option dontlognull

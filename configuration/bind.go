@@ -219,7 +219,7 @@ func ParseBind(ondiskBind types.Bind) *models.Bind {
 	return b
 }
 
-func parseBindParams(bindOptions []params.BindOption) (b models.BindParams) { //nolint:gocyclo,cyclop,maintidx
+func parseBindParams(bindOptions []params.BindOption) (b models.BindParams) { //nolint:gocyclo,cyclop,maintidx,gocognit
 	for _, p := range bindOptions {
 		switch v := p.(type) {
 		case *params.BindOptionDoubleWord:
@@ -352,6 +352,11 @@ func parseBindParams(bindOptions []params.BindOption) (b models.BindParams) { //
 				b.Mss = v.Value
 			case "namespace":
 				b.Namespace = v.Value
+			case "nbconn":
+				n, err := strconv.ParseInt(v.Value, 10, 64)
+				if err == nil {
+					b.Nbconn = n
+				}
 			case "nice":
 				n, err := strconv.ParseInt(v.Value, 10, 64)
 				if err == nil {
@@ -536,6 +541,9 @@ func serializeBindParams(b models.BindParams, path string) (options []params.Bin
 	}
 	if b.Namespace != "" {
 		options = append(options, &params.BindOptionValue{Name: "namespace", Value: b.Namespace})
+	}
+	if b.Nbconn != 0 {
+		options = append(options, &params.BindOptionValue{Name: "nbconn", Value: strconv.FormatInt(b.Nbconn, 10)})
 	}
 	if b.NoCaNames {
 		options = append(options, &params.ServerOptionWord{Name: "no-ca-names"})

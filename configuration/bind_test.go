@@ -29,8 +29,8 @@ func TestGetBinds(t *testing.T) {
 		t.Error(err.Error())
 	}
 
-	if len(binds) != 5 {
-		t.Errorf("%v binds returned, expected 4", len(binds))
+	if len(binds) != 6 {
+		t.Errorf("%v binds returned, expected 6", len(binds))
 	}
 
 	if v != version {
@@ -38,7 +38,7 @@ func TestGetBinds(t *testing.T) {
 	}
 
 	for _, l := range binds {
-		if l.Name != "webserv" && l.Name != "webserv2" && l.Name != "webserv3" && l.Name != "ipv6" && l.Name != "test-quic" {
+		if l.Name != "webserv" && l.Name != "webserv2" && l.Name != "webserv3" && l.Name != "ipv6" && l.Name != "test-quic" && l.Name != "testnbcon" {
 			t.Errorf("Expected only webserv,webserv2, or ipv6 binds, %v found", l.Name)
 		}
 		if l.Address != "192.168.1.1" && l.Address != "192.168.1.2" && l.Address != "2a01:c9c0:a3:8::3" {
@@ -52,6 +52,12 @@ func TestGetBinds(t *testing.T) {
 		}
 		if l.Name == "test-quic" && l.QuicSocket != "connection" {
 			t.Errorf("%v: quic-soket not connection: %v", l.Name, l.QuicSocket)
+		}
+		if l.Name != "testnbcon" && l.Nbconn != 0 {
+			t.Errorf("%v: nbcon should be 0: %v", l.Name, l.Nbconn)
+		}
+		if l.Name == "testnbcon" && l.Nbconn != 6 {
+			t.Errorf("%v: nbconn should be 6: %v", l.Name, l.Nbconn)
 		}
 	}
 
@@ -132,6 +138,7 @@ func TestCreateEditDeleteBind(t *testing.T) {
 			CaVerifyFile:   "ca.pem",
 			Nice:           123,
 			QuicSocket:     "listener",
+			Nbconn:         12,
 		},
 	}
 

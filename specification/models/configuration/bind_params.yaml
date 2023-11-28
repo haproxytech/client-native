@@ -132,6 +132,9 @@ bind_params:
     namespace:
       type: string
       example: app
+    nbconn:
+      type: integer
+      x-display-name: Number of connection
     nice:
       type: integer
       example: 1
