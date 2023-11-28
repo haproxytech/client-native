@@ -79,12 +79,16 @@ global
   tune.pipesize 32
   tune.pool-high-fd-ratio 33
   tune.pool-low-fd-ratio 34
+  tune.rcvbuf.backend 1024
   tune.rcvbuf.client 35
+  tune.rcvbuf.frontend 2048
   tune.rcvbuf.server 36
   tune.recv_enough 37
   tune.runqueue-depth 38
   tune.sched.low-latency on
+  tune.sndbuf.backend 1024
   tune.sndbuf.client 39
+  tune.sndbuf.frontend 2048
   tune.sndbuf.server 40
   tune.ssl.cachesize 41
   tune.ssl.force-private-cache

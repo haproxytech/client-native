@@ -3190,8 +3190,14 @@ type GlobalTuneOptions struct {
 	// Enum: [listener connection]
 	QuicSocketOwner string `json:"quic_socket_owner,omitempty"`
 
+	// rcvbuf backend
+	RcvbufBackend *int64 `json:"rcvbuf_backend,omitempty"`
+
 	// rcvbuf client
 	RcvbufClient *int64 `json:"rcvbuf_client,omitempty"`
+
+	// rcvbuf frontend
+	RcvbufFrontend *int64 `json:"rcvbuf_frontend,omitempty"`
 
 	// rcvbuf server
 	RcvbufServer *int64 `json:"rcvbuf_server,omitempty"`
@@ -3206,8 +3212,14 @@ type GlobalTuneOptions struct {
 	// Enum: [enabled disabled]
 	SchedLowLatency string `json:"sched_low_latency,omitempty"`
 
+	// sndbuf backend
+	SndbufBackend *int64 `json:"sndbuf_backend,omitempty"`
+
 	// sndbuf client
 	SndbufClient *int64 `json:"sndbuf_client,omitempty"`
+
+	// sndbuf frontend
+	SndbufFrontend *int64 `json:"sndbuf_frontend,omitempty"`
 
 	// sndbuf server
 	SndbufServer *int64 `json:"sndbuf_server,omitempty"`

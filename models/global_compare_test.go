@@ -2752,11 +2752,15 @@ func TestGlobalTuneOptionsEqualFalse(t *testing.T) {
 		result.QuicFrontendMaxStreamsBidi = Ptr(*sample.QuicFrontendMaxStreamsBidi + 1)
 		result.QuicMaxFrameLoss = Ptr(*sample.QuicMaxFrameLoss + 1)
 		result.QuicRetryThreshold = Ptr(*sample.QuicRetryThreshold + 1)
+		result.RcvbufBackend = Ptr(*sample.RcvbufBackend + 1)
 		result.RcvbufClient = Ptr(*sample.RcvbufClient + 1)
+		result.RcvbufFrontend = Ptr(*sample.RcvbufFrontend + 1)
 		result.RcvbufServer = Ptr(*sample.RcvbufServer + 1)
 		result.RecvEnough = sample.RecvEnough + 1
 		result.RunqueueDepth = sample.RunqueueDepth + 1
+		result.SndbufBackend = Ptr(*sample.SndbufBackend + 1)
 		result.SndbufClient = Ptr(*sample.SndbufClient + 1)
+		result.SndbufFrontend = Ptr(*sample.SndbufFrontend + 1)
 		result.SndbufServer = Ptr(*sample.SndbufServer + 1)
 		result.SslCachesize = Ptr(*sample.SslCachesize + 1)
 		result.SslCaptureBufferSize = Ptr(*sample.SslCaptureBufferSize + 1)
@@ -2893,11 +2897,15 @@ func TestGlobalTuneOptionsDiffFalse(t *testing.T) {
 		result.QuicFrontendMaxStreamsBidi = Ptr(*sample.QuicFrontendMaxStreamsBidi + 1)
 		result.QuicMaxFrameLoss = Ptr(*sample.QuicMaxFrameLoss + 1)
 		result.QuicRetryThreshold = Ptr(*sample.QuicRetryThreshold + 1)
+		result.RcvbufBackend = Ptr(*sample.RcvbufBackend + 1)
 		result.RcvbufClient = Ptr(*sample.RcvbufClient + 1)
+		result.RcvbufFrontend = Ptr(*sample.RcvbufFrontend + 1)
 		result.RcvbufServer = Ptr(*sample.RcvbufServer + 1)
 		result.RecvEnough = sample.RecvEnough + 1
 		result.RunqueueDepth = sample.RunqueueDepth + 1
+		result.SndbufBackend = Ptr(*sample.SndbufBackend + 1)
 		result.SndbufClient = Ptr(*sample.SndbufClient + 1)
+		result.SndbufFrontend = Ptr(*sample.SndbufFrontend + 1)
 		result.SndbufServer = Ptr(*sample.SndbufServer + 1)
 		result.SslCachesize = Ptr(*sample.SslCachesize + 1)
 		result.SslCaptureBufferSize = Ptr(*sample.SslCaptureBufferSize + 1)
@@ -2923,7 +2931,7 @@ func TestGlobalTuneOptionsDiffFalse(t *testing.T) {
 
 	for _, sample := range samples {
 		result := sample.a.Diff(sample.b)
-		if len(result) != 69 {
+		if len(result) != 73 {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {
@@ -2933,7 +2941,7 @@ func TestGlobalTuneOptionsDiffFalse(t *testing.T) {
 			if err != nil {
 				t.Errorf(err.Error())
 			}
-			t.Errorf("Expected GlobalTuneOptions to be different in 69 cases, but it is not (%d) %s %s", len(result), a, b)
+			t.Errorf("Expected GlobalTuneOptions to be different in 73 cases, but it is not (%d) %s %s", len(result), a, b)
 		}
 	}
 }

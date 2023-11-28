@@ -413,13 +413,21 @@ global:
         pool_low_fd_ratio:
           type: integer
           x-display-name: Max Used Low FD Ratio
+        rcvbuf_backend:
+          type: integer
+          x-display-name: Backend Receive Buffer Size
+          x-nullable: true
         rcvbuf_client:
           type: integer
-          x-display-name: Receive Buffer Client Size
+          x-display-name: Client Receive Buffer Size
+          x-nullable: true
+        rcvbuf_frontend:
+          type: integer
+          x-display-name: Frontend Receive Buffer Size
           x-nullable: true
         rcvbuf_server:
           type: integer
-          x-display-name: Receive Buffer Server Size
+          x-display-name: Server Receive Buffer Size
           x-nullable: true
         recv_enough:
           type: integer
@@ -431,13 +439,21 @@ global:
           type: string
           enum: [enabled, disabled]
           x-display-name: Low Latency Task Scheduler
+        sndbuf_backend:
+          type: integer
+          x-display-name: Backend Send Buffer Size
+          x-nullable: true
         sndbuf_client:
           type: integer
-          x-display-name: Send Buffer Client Size
+          x-display-name: Client Send Buffer Size
+          x-nullable: true
+        sndbuf_frontend:
+          type: integer
+          x-display-name: Frontend Send Buffer Size
           x-nullable: true
         sndbuf_server:
           type: integer
-          x-display-name: Send Buffer Server Size
+          x-display-name: Server Send Buffer Size
           x-nullable: true
         ssl_cachesize:
           type: integer

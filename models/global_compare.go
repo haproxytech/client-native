@@ -1953,7 +1953,15 @@ func (s GlobalTuneOptions) Equal(t GlobalTuneOptions, opts ...Options) bool {
 		return false
 	}
 
+	if !equalPointers(s.RcvbufBackend, t.RcvbufBackend) {
+		return false
+	}
+
 	if !equalPointers(s.RcvbufClient, t.RcvbufClient) {
+		return false
+	}
+
+	if !equalPointers(s.RcvbufFrontend, t.RcvbufFrontend) {
 		return false
 	}
 
@@ -1973,7 +1981,15 @@ func (s GlobalTuneOptions) Equal(t GlobalTuneOptions, opts ...Options) bool {
 		return false
 	}
 
+	if !equalPointers(s.SndbufBackend, t.SndbufBackend) {
+		return false
+	}
+
 	if !equalPointers(s.SndbufClient, t.SndbufClient) {
+		return false
+	}
+
+	if !equalPointers(s.SndbufFrontend, t.SndbufFrontend) {
 		return false
 	}
 
@@ -2240,8 +2256,16 @@ func (s GlobalTuneOptions) Diff(t GlobalTuneOptions, opts ...Options) map[string
 		diff["QuicSocketOwner"] = []interface{}{s.QuicSocketOwner, t.QuicSocketOwner}
 	}
 
+	if !equalPointers(s.RcvbufBackend, t.RcvbufBackend) {
+		diff["RcvbufBackend"] = []interface{}{ValueOrNil(s.RcvbufBackend), ValueOrNil(t.RcvbufBackend)}
+	}
+
 	if !equalPointers(s.RcvbufClient, t.RcvbufClient) {
 		diff["RcvbufClient"] = []interface{}{ValueOrNil(s.RcvbufClient), ValueOrNil(t.RcvbufClient)}
+	}
+
+	if !equalPointers(s.RcvbufFrontend, t.RcvbufFrontend) {
+		diff["RcvbufFrontend"] = []interface{}{ValueOrNil(s.RcvbufFrontend), ValueOrNil(t.RcvbufFrontend)}
 	}
 
 	if !equalPointers(s.RcvbufServer, t.RcvbufServer) {
@@ -2260,8 +2284,16 @@ func (s GlobalTuneOptions) Diff(t GlobalTuneOptions, opts ...Options) map[string
 		diff["SchedLowLatency"] = []interface{}{s.SchedLowLatency, t.SchedLowLatency}
 	}
 
+	if !equalPointers(s.SndbufBackend, t.SndbufBackend) {
+		diff["SndbufBackend"] = []interface{}{ValueOrNil(s.SndbufBackend), ValueOrNil(t.SndbufBackend)}
+	}
+
 	if !equalPointers(s.SndbufClient, t.SndbufClient) {
 		diff["SndbufClient"] = []interface{}{ValueOrNil(s.SndbufClient), ValueOrNil(t.SndbufClient)}
+	}
+
+	if !equalPointers(s.SndbufFrontend, t.SndbufFrontend) {
+		diff["SndbufFrontend"] = []interface{}{ValueOrNil(s.SndbufFrontend), ValueOrNil(t.SndbufFrontend)}
 	}
 
 	if !equalPointers(s.SndbufServer, t.SndbufServer) {

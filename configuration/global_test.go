@@ -363,8 +363,14 @@ func TestGetGlobal(t *testing.T) {
 	if global.TuneOptions.PoolLowFdRatio != 34 {
 		t.Errorf("PoolLowFdRatio is %v, expected 34", global.TuneOptions.PoolLowFdRatio)
 	}
+	if *global.TuneOptions.RcvbufBackend != 1024 {
+		t.Errorf("RcvbufBackend is %v, expected 1024", global.TuneOptions.RcvbufBackend)
+	}
 	if *global.TuneOptions.RcvbufClient != 35 {
 		t.Errorf("RcvbufClient is %v, expected 35", global.TuneOptions.RcvbufClient)
+	}
+	if *global.TuneOptions.RcvbufFrontend != 2048 {
+		t.Errorf("RcvbufFrontend is %v, expected 2048", global.TuneOptions.RcvbufFrontend)
 	}
 	if *global.TuneOptions.RcvbufServer != 36 {
 		t.Errorf("RcvbufServer is %v, expected 36", global.TuneOptions.RcvbufServer)
@@ -375,8 +381,14 @@ func TestGetGlobal(t *testing.T) {
 	if global.TuneOptions.RunqueueDepth != 38 {
 		t.Errorf("RunqueueDepth is %v, expected 38", global.TuneOptions.RunqueueDepth)
 	}
+	if *global.TuneOptions.SndbufBackend != 1024 {
+		t.Errorf("SndbufBackend is %v, expected 1024", global.TuneOptions.SndbufBackend)
+	}
 	if *global.TuneOptions.SndbufClient != 39 {
 		t.Errorf("SndbufClient is %v, expected 39", global.TuneOptions.SndbufClient)
+	}
+	if *global.TuneOptions.SndbufFrontend != 2048 {
+		t.Errorf("SndbufFrontend is %v, expected 2048", global.TuneOptions.SndbufFrontend)
 	}
 	if *global.TuneOptions.SndbufServer != 40 {
 		t.Errorf("SndbufServer is %v, expected 40", global.TuneOptions.SndbufServer)
@@ -714,6 +726,10 @@ func TestPutGlobal(t *testing.T) {
 			QuicFrontendConnTxBuffersLimit: nil,
 			QuicFrontendMaxIdleTimeout:     misc.Int64P(5000),
 			QuicSocketOwner:                "listener",
+			RcvbufBackend:                  misc.Int64P(8192),
+			RcvbufFrontend:                 misc.Int64P(4096),
+			SndbufBackend:                  misc.Int64P(1234),
+			SndbufFrontend:                 misc.Int64P(5678),
 			SslOcspUpdateMaxDelay:          misc.Int64P(48),
 			SslOcspUpdateMinDelay:          misc.Int64P(49),
 			StickCounters:                  misc.Int64P(50),

@@ -2445,7 +2445,13 @@ func serializeTuneOptions(p parser.Parser, options *models.GlobalTuneOptions) er
 	if err := serializeInt64Option(p, "tune.pool-low-fd-ratio", options.PoolLowFdRatio); err != nil {
 		return err
 	}
+	if err := serializeInt64POption(p, "tune.rcvbuf.backend", options.RcvbufBackend); err != nil {
+		return err
+	}
 	if err := serializeInt64POption(p, "tune.rcvbuf.client", options.RcvbufClient); err != nil {
+		return err
+	}
+	if err := serializeInt64POption(p, "tune.rcvbuf.frontend", options.RcvbufFrontend); err != nil {
 		return err
 	}
 	if err := serializeInt64POption(p, "tune.rcvbuf.server", options.RcvbufServer); err != nil {
@@ -2460,7 +2466,13 @@ func serializeTuneOptions(p parser.Parser, options *models.GlobalTuneOptions) er
 	if err := serializeOnOffOption(p, "tune.sched.low-latency", options.SchedLowLatency); err != nil {
 		return err
 	}
+	if err := serializeInt64POption(p, "tune.sndbuf.backend", options.SndbufBackend); err != nil {
+		return err
+	}
 	if err := serializeInt64POption(p, "tune.sndbuf.client", options.SndbufClient); err != nil {
+		return err
+	}
+	if err := serializeInt64POption(p, "tune.sndbuf.frontend", options.SndbufFrontend); err != nil {
 		return err
 	}
 	if err := serializeInt64POption(p, "tune.sndbuf.server", options.SndbufServer); err != nil {
@@ -2910,11 +2922,23 @@ func parseTuneOptions(p parser.Parser) (*models.GlobalTuneOptions, error) { //no
 	}
 	options.PoolLowFdRatio = intOption
 
+	intPOption, err = parseInt64POption(p, "tune.rcvbuf.backend")
+	if err != nil {
+		return nil, err
+	}
+	options.RcvbufBackend = intPOption
+
 	intPOption, err = parseInt64POption(p, "tune.rcvbuf.client")
 	if err != nil {
 		return nil, err
 	}
 	options.RcvbufClient = intPOption
+
+	intPOption, err = parseInt64POption(p, "tune.rcvbuf.frontend")
+	if err != nil {
+		return nil, err
+	}
+	options.RcvbufFrontend = intPOption
 
 	intPOption, err = parseInt64POption(p, "tune.rcvbuf.server")
 	if err != nil {
@@ -2940,11 +2964,23 @@ func parseTuneOptions(p parser.Parser) (*models.GlobalTuneOptions, error) { //no
 	}
 	options.SchedLowLatency = strOption
 
+	intPOption, err = parseInt64POption(p, "tune.sndbuf.backend")
+	if err != nil {
+		return nil, err
+	}
+	options.SndbufBackend = intPOption
+
 	intPOption, err = parseInt64POption(p, "tune.sndbuf.client")
 	if err != nil {
 		return nil, err
 	}
 	options.SndbufClient = intPOption
+
+	intPOption, err = parseInt64POption(p, "tune.sndbuf.frontend")
+	if err != nil {
+		return nil, err
+	}
+	options.SndbufFrontend = intPOption
 
 	intPOption, err = parseInt64POption(p, "tune.sndbuf.server")
 	if err != nil {
