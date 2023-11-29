@@ -30,8 +30,8 @@ func TestGetHTTPResponseRules(t *testing.T) { //nolint:gocognit,gocyclo
 		t.Error(err.Error())
 	}
 
-	if len(hRules) != 32 {
-		t.Errorf("%v http response rules returned, expected 32", len(hRules))
+	if len(hRules) != 35 {
+		t.Errorf("%v http response rules returned, expected 35", len(hRules))
 	}
 
 	if v != version {
@@ -529,8 +529,38 @@ func TestGetHTTPResponseRules(t *testing.T) { //nolint:gocognit,gocyclo
 			if r.CondTest != "TRUE" {
 				t.Errorf("%v: CondTest not TRUE: %v", *r.Index, r.CondTest)
 			}
+		case 32:
+			if r.Type != "set-timeout" {
+				t.Errorf("%v: Type not set-timeout: %v", *r.Index, r.Type)
+			}
+			if r.TimeoutType != "server" {
+				t.Errorf("%v: TimeoutType not server: %v", *r.Index, r.TimeoutType)
+			}
+			if r.Timeout != "20" {
+				t.Errorf("%v: Timeout not 20: %v", *r.Index, r.Timeout)
+			}
+		case 33:
+			if r.Type != "set-timeout" {
+				t.Errorf("%v: Type not set-timeout: %v", *r.Index, r.Type)
+			}
+			if r.TimeoutType != "tunnel" {
+				t.Errorf("%v: TimeoutType not tunnel: %v", *r.Index, r.TimeoutType)
+			}
+			if r.Timeout != "20" {
+				t.Errorf("%v: Timeout not 20: %v", *r.Index, r.Timeout)
+			}
+		case 34:
+			if r.Type != "set-timeout" {
+				t.Errorf("%v: Type not set-timeout: %v", *r.Index, r.Type)
+			}
+			if r.TimeoutType != "client" {
+				t.Errorf("%v: TimeoutType not client: %v", *r.Index, r.TimeoutType)
+			}
+			if r.Timeout != "20" {
+				t.Errorf("%v: Timeout not 20: %v", *r.Index, r.Timeout)
+			}
 		default:
-			t.Errorf("Expect only http-response 0 to 28, %v found", *r.Index)
+			t.Errorf("Expect only http-response 0 to 34, %v found", *r.Index)
 		}
 	}
 
@@ -649,7 +679,7 @@ func TestCreateEditDeleteHTTPResponseRule(t *testing.T) {
 	}
 
 	// TestDeleteHTTPResponse
-	err = clientTest.DeleteHTTPResponseRule(32, "frontend", "test", "", version)
+	err = clientTest.DeleteHTTPResponseRule(35, "frontend", "test", "", version)
 	if err != nil {
 		t.Error(err.Error())
 	} else {
@@ -660,9 +690,9 @@ func TestCreateEditDeleteHTTPResponseRule(t *testing.T) {
 		t.Error("Version not incremented")
 	}
 
-	_, _, err = clientTest.GetHTTPResponseRule(32, "frontend", "test", "")
+	_, _, err = clientTest.GetHTTPResponseRule(35, "frontend", "test", "")
 	if err == nil {
-		t.Error("DeleteHTTPResponseRule failed, HTTPResponse Rule 32 still exists")
+		t.Error("DeleteHTTPResponseRule failed, HTTPResponse Rule 35 still exists")
 	}
 
 	err = clientTest.DeleteHTTPResponseRule(2, "backend", "test_2", "", version)

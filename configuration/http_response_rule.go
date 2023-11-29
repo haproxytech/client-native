@@ -456,6 +456,14 @@ func ParseHTTPResponseRule(f types.Action) *models.HTTPResponseRule { //nolint:m
 			r.Status = status
 		}
 		return r
+	case *http_actions.SetTimeout:
+		return &models.HTTPResponseRule{
+			Type:        models.HTTPResponseRuleTypeSetDashTimeout,
+			Timeout:     v.Timeout,
+			TimeoutType: v.Type,
+			Cond:        v.Cond,
+			CondTest:    v.CondTest,
+		}
 	case *actions.SetTos:
 		return &models.HTTPResponseRule{
 			Type:     "set-tos",
@@ -743,6 +751,13 @@ func SerializeHTTPResponseRule(f models.HTTPResponseRule) (rule types.Action, er
 		rule = &http_actions.SetStatus{
 			Status:   strconv.FormatInt(f.Status, 10),
 			Reason:   f.StatusReason,
+			Cond:     f.Cond,
+			CondTest: f.CondTest,
+		}
+	case "set-timeout":
+		rule = &http_actions.SetTimeout{
+			Timeout:  f.Timeout,
+			Type:     f.TimeoutType,
 			Cond:     f.Cond,
 			CondTest: f.CondTest,
 		}

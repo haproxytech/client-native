@@ -210,6 +210,14 @@ func (s HTTPResponseRule) Equal(t HTTPResponseRule, opts ...Options) bool {
 		return false
 	}
 
+	if s.Timeout != t.Timeout {
+		return false
+	}
+
+	if s.TimeoutType != t.TimeoutType {
+		return false
+	}
+
 	if s.TosValue != t.TosValue {
 		return false
 	}
@@ -476,6 +484,14 @@ func (s HTTPResponseRule) Diff(t HTTPResponseRule, opts ...Options) map[string][
 
 	if s.StrictMode != t.StrictMode {
 		diff["StrictMode"] = []interface{}{s.StrictMode, t.StrictMode}
+	}
+
+	if s.Timeout != t.Timeout {
+		diff["Timeout"] = []interface{}{s.Timeout, t.Timeout}
+	}
+
+	if s.TimeoutType != t.TimeoutType {
+		diff["TimeoutType"] = []interface{}{s.TimeoutType, t.TimeoutType}
 	}
 
 	if s.TosValue != t.TosValue {

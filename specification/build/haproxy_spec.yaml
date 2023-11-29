@@ -4185,6 +4185,7 @@ definitions:
               enum:
                   - server
                   - tunnel
+                  - client
               type: string
               x-dependency:
                   type:
@@ -4791,6 +4792,22 @@ definitions:
                   type:
                       required: true
                       value: strict-mode
+          timeout:
+              type: string
+              x-dependency:
+                  type:
+                      required: true
+                      value: set-timeout
+          timeout_type:
+              enum:
+                  - server
+                  - tunnel
+                  - client
+              type: string
+              x-dependency:
+                  type:
+                      required: true
+                      value: set-timeout
           tos_value:
               pattern: ^(0x[0-9A-Fa-f]+|[0-9]+)$
               type: string
@@ -4900,6 +4917,7 @@ definitions:
                   - set-mark
                   - set-nice
                   - set-status
+                  - set-timeout
                   - set-tos
                   - set-var
                   - set-var-fmt

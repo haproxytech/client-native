@@ -241,7 +241,7 @@ type HTTPRequestRule struct {
 	Timeout string `json:"timeout,omitempty"`
 
 	// timeout type
-	// Enum: [server tunnel]
+	// Enum: [server tunnel client]
 	TimeoutType string `json:"timeout_type,omitempty"`
 
 	// tos value
@@ -1188,7 +1188,7 @@ var httpRequestRuleTypeTimeoutTypePropEnum []interface{}
 
 func init() {
 	var res []string
-	if err := json.Unmarshal([]byte(`["server","tunnel"]`), &res); err != nil {
+	if err := json.Unmarshal([]byte(`["server","tunnel","client"]`), &res); err != nil {
 		panic(err)
 	}
 	for _, v := range res {
@@ -1203,6 +1203,9 @@ const (
 
 	// HTTPRequestRuleTimeoutTypeTunnel captures enum value "tunnel"
 	HTTPRequestRuleTimeoutTypeTunnel string = "tunnel"
+
+	// HTTPRequestRuleTimeoutTypeClient captures enum value "client"
+	HTTPRequestRuleTimeoutTypeClient string = "client"
 )
 
 // prop value enum

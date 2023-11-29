@@ -403,6 +403,7 @@ frontend test
   http-request wait-for-body time 20s at-least 100k
   http-request set-timeout server 20
   http-request set-timeout tunnel 20
+  http-request set-timeout client 20
   http-request set-bandwidth-limit my-limit limit 1m period 10s
   http-request set-bandwidth-limit my-limit-reverse period 20s limit 2m
   http-request set-bandwidth-limit my-limit-cond limit 3m if FALSE
@@ -442,6 +443,9 @@ frontend test
   http-response track-sc1 src table tr1 if TRUE
   http-response track-sc2 src table tr2 if TRUE
   http-response track-sc5 src table test if TRUE
+  http-response set-timeout server 20
+  http-response set-timeout tunnel 20
+  http-response set-timeout client 20
   http-after-response set-map(map.lst) %[src] %[res.hdr(X-Value)]
   http-after-response del-map(map.lst) %[src] if FALSE
   http-after-response del-acl(map.lst) %[src] if FALSE

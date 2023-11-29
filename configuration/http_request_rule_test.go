@@ -30,8 +30,8 @@ func TestGetHTTPRequestRules(t *testing.T) { //nolint:gocognit,gocyclo
 		t.Error(err.Error())
 	}
 
-	if len(hRules) != 46 {
-		t.Errorf("%v http request rules returned, expected 46", len(hRules))
+	if len(hRules) != 47 {
+		t.Errorf("%v http request rules returned, expected 47", len(hRules))
 	}
 
 	if v != version {
@@ -605,6 +605,16 @@ func TestGetHTTPRequestRules(t *testing.T) { //nolint:gocognit,gocyclo
 				t.Errorf("%v: Timeout not 20: %v", *r.Index, r.Timeout)
 			}
 		case 39:
+			if r.Type != "set-timeout" {
+				t.Errorf("%v: Type not set-timeout: %v", *r.Index, r.Type)
+			}
+			if r.TimeoutType != "client" {
+				t.Errorf("%v: TimeoutType not client: %v", *r.Index, r.TimeoutType)
+			}
+			if r.Timeout != "20" {
+				t.Errorf("%v: Timeout not 20: %v", *r.Index, r.Timeout)
+			}
+		case 40:
 			if r.Type != "set-bandwidth-limit" {
 				t.Errorf("%v: Type not set-bandwidth-limit: %v", *r.Index, r.Type)
 			}
@@ -617,7 +627,7 @@ func TestGetHTTPRequestRules(t *testing.T) { //nolint:gocognit,gocyclo
 			if r.BandwidthLimitPeriod != "10s" {
 				t.Errorf("%v: BandwidthLimitPeriod not 10s: %v", *r.Index, r.BandwidthLimitPeriod)
 			}
-		case 40:
+		case 41:
 			if r.Type != "set-bandwidth-limit" {
 				t.Errorf("%v: Type not set-bandwidth-limit: %v", *r.Index, r.Type)
 			}
@@ -630,7 +640,7 @@ func TestGetHTTPRequestRules(t *testing.T) { //nolint:gocognit,gocyclo
 			if r.BandwidthLimitPeriod != "20s" {
 				t.Errorf("%v: BandwidthLimitPeriod no 20s: %v", *r.Index, r.BandwidthLimitPeriod)
 			}
-		case 41:
+		case 42:
 			if r.Type != "set-bandwidth-limit" {
 				t.Errorf("%v: Type not set-bandwidth-limit: %v", *r.Index, r.Type)
 			}
@@ -649,7 +659,7 @@ func TestGetHTTPRequestRules(t *testing.T) { //nolint:gocognit,gocyclo
 			if r.CondTest != "FALSE" {
 				t.Errorf("%v: CondTest not FALSE: %v", *r.Index, r.CondTest)
 			}
-		case 42:
+		case 43:
 			if r.Type != "track-sc" {
 				t.Errorf("%v: Type not track-sc: %v", *r.Index, r.Type)
 			}
@@ -668,7 +678,7 @@ func TestGetHTTPRequestRules(t *testing.T) { //nolint:gocognit,gocyclo
 			if r.CondTest != "TRUE" {
 				t.Errorf("%v: CondTest not TRUE: %v", *r.Index, r.CondTest)
 			}
-		case 43:
+		case 44:
 			if r.Type != "track-sc" {
 				t.Errorf("%v: Type not track-sc: %v", *r.Index, r.Type)
 			}
@@ -687,7 +697,7 @@ func TestGetHTTPRequestRules(t *testing.T) { //nolint:gocognit,gocyclo
 			if r.CondTest != "TRUE" {
 				t.Errorf("%v: CondTest not TRUE: %v", *r.Index, r.CondTest)
 			}
-		case 44:
+		case 45:
 			if r.Type != "track-sc" {
 				t.Errorf("%v: Type not track-sc: %v", *r.Index, r.Type)
 			}
@@ -706,7 +716,7 @@ func TestGetHTTPRequestRules(t *testing.T) { //nolint:gocognit,gocyclo
 			if r.CondTest != "TRUE" {
 				t.Errorf("%v: CondTest not TRUE: %v", *r.Index, r.CondTest)
 			}
-		case 45:
+		case 46:
 			if r.Type != "track-sc" {
 				t.Errorf("%v: Type not track-sc: %v", *r.Index, r.Type)
 			}
@@ -726,7 +736,7 @@ func TestGetHTTPRequestRules(t *testing.T) { //nolint:gocognit,gocyclo
 				t.Errorf("%v: CondTest not TRUE: %v", *r.Index, r.CondTest)
 			}
 		default:
-			t.Errorf("Expect only http-request 0 to 42, %v found", *r.Index)
+			t.Errorf("Expect only http-request 0 to 46, %v found", *r.Index)
 		}
 	}
 
@@ -888,7 +898,7 @@ func TestCreateEditDeleteHTTPRequestRule(t *testing.T) {
 	}
 
 	// TestDeleteHTTPRequest
-	err = clientTest.DeleteHTTPRequestRule(46, "frontend", "test", "", version)
+	err = clientTest.DeleteHTTPRequestRule(47, "frontend", "test", "", version)
 	if err != nil {
 		t.Error(err.Error())
 	} else {
@@ -899,9 +909,9 @@ func TestCreateEditDeleteHTTPRequestRule(t *testing.T) {
 		t.Error("Version not incremented")
 	}
 
-	_, _, err = clientTest.GetHTTPRequestRule(46, "frontend", "test", "")
+	_, _, err = clientTest.GetHTTPRequestRule(47, "frontend", "test", "")
 	if err == nil {
-		t.Error("DeleteHTTPRequestRule failed, HTTP Request Rule 46 still exists")
+		t.Error("DeleteHTTPRequestRule failed, HTTP Request Rule 47 still exists")
 	}
 
 	err = clientTest.DeleteHTTPRequestRule(2, "backend", "test_2", "", version)

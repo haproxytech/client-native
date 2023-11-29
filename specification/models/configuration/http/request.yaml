@@ -237,7 +237,7 @@ http_request_rule:
           value: path-strip-dotdot
     timeout_type:
       type: string
-      enum: [server, tunnel]
+      enum: [server, tunnel, client]
       x-dependency:
         type:
           value: set-timeout

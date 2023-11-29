@@ -39,6 +39,7 @@ http_response_rule:
         - set-mark
         - set-nice
         - set-status
+        - set-timeout
         - set-tos
         - set-var
         - set-var-fmt
@@ -98,6 +99,19 @@ http_response_rule:
       x-dependency:
         type:
           value: redirect
+          required: true
+    timeout_type:
+      type: string
+      enum: [server, tunnel, client]
+      x-dependency:
+        type:
+          value: set-timeout
+          required: true
+    timeout:
+      type: string
+      x-dependency:
+        type:
+          value: set-timeout
           required: true
     hdr_name:
       type: string

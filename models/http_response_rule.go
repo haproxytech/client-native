@@ -192,6 +192,13 @@ type HTTPResponseRule struct {
 	// Enum: [on off]
 	StrictMode string `json:"strict_mode,omitempty"`
 
+	// timeout
+	Timeout string `json:"timeout,omitempty"`
+
+	// timeout type
+	// Enum: [server tunnel client]
+	TimeoutType string `json:"timeout_type,omitempty"`
+
 	// tos value
 	// Pattern: ^(0x[0-9A-Fa-f]+|[0-9]+)$
 	TosValue string `json:"tos_value,omitempty"`
@@ -233,7 +240,7 @@ type HTTPResponseRule struct {
 
 	// type
 	// Required: true
-	// Enum: [add-acl add-header allow cache-store capture del-acl del-header del-map deny lua redirect replace-header replace-value return sc-add-gpc sc-inc-gpc sc-inc-gpc0 sc-inc-gpc1 sc-set-gpt0 send-spoe-group set-header set-log-level set-map set-mark set-nice set-status set-tos set-var set-var-fmt silent-drop strict-mode track-sc0 track-sc1 track-sc2 track-sc unset-var wait-for-body set-bandwidth-limit]
+	// Enum: [add-acl add-header allow cache-store capture del-acl del-header del-map deny lua redirect replace-header replace-value return sc-add-gpc sc-inc-gpc sc-inc-gpc0 sc-inc-gpc1 sc-set-gpt0 send-spoe-group set-header set-log-level set-map set-mark set-nice set-status set-timeout set-tos set-var set-var-fmt silent-drop strict-mode track-sc0 track-sc1 track-sc2 track-sc unset-var wait-for-body set-bandwidth-limit]
 	Type string `json:"type"`
 
 	// var expr
@@ -354,6 +361,10 @@ func (m *HTTPResponseRule) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateStrictMode(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateTimeoutType(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -936,6 +947,51 @@ func (m *HTTPResponseRule) validateStrictMode(formats strfmt.Registry) error {
 	return nil
 }
 
+var httpResponseRuleTypeTimeoutTypePropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["server","tunnel","client"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		httpResponseRuleTypeTimeoutTypePropEnum = append(httpResponseRuleTypeTimeoutTypePropEnum, v)
+	}
+}
+
+const (
+
+	// HTTPResponseRuleTimeoutTypeServer captures enum value "server"
+	HTTPResponseRuleTimeoutTypeServer string = "server"
+
+	// HTTPResponseRuleTimeoutTypeTunnel captures enum value "tunnel"
+	HTTPResponseRuleTimeoutTypeTunnel string = "tunnel"
+
+	// HTTPResponseRuleTimeoutTypeClient captures enum value "client"
+	HTTPResponseRuleTimeoutTypeClient string = "client"
+)
+
+// prop value enum
+func (m *HTTPResponseRule) validateTimeoutTypeEnum(path, location string, value string) error {
+	if err := validate.EnumCase(path, location, value, httpResponseRuleTypeTimeoutTypePropEnum, true); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *HTTPResponseRule) validateTimeoutType(formats strfmt.Registry) error {
+	if swag.IsZero(m.TimeoutType) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateTimeoutTypeEnum("timeout_type", "body", m.TimeoutType); err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func (m *HTTPResponseRule) validateTosValue(formats strfmt.Registry) error {
 	if swag.IsZero(m.TosValue) { // not required
 		return nil
@@ -1048,7 +1104,7 @@ var httpResponseRuleTypeTypePropEnum []interface{}
 
 func init() {
 	var res []string
-	if err := json.Unmarshal([]byte(`["add-acl","add-header","allow","cache-store","capture","del-acl","del-header","del-map","deny","lua","redirect","replace-header","replace-value","return","sc-add-gpc","sc-inc-gpc","sc-inc-gpc0","sc-inc-gpc1","sc-set-gpt0","send-spoe-group","set-header","set-log-level","set-map","set-mark","set-nice","set-status","set-tos","set-var","set-var-fmt","silent-drop","strict-mode","track-sc0","track-sc1","track-sc2","track-sc","unset-var","wait-for-body","set-bandwidth-limit"]`), &res); err != nil {
+	if err := json.Unmarshal([]byte(`["add-acl","add-header","allow","cache-store","capture","del-acl","del-header","del-map","deny","lua","redirect","replace-header","replace-value","return","sc-add-gpc","sc-inc-gpc","sc-inc-gpc0","sc-inc-gpc1","sc-set-gpt0","send-spoe-group","set-header","set-log-level","set-map","set-mark","set-nice","set-status","set-timeout","set-tos","set-var","set-var-fmt","silent-drop","strict-mode","track-sc0","track-sc1","track-sc2","track-sc","unset-var","wait-for-body","set-bandwidth-limit"]`), &res); err != nil {
 		panic(err)
 	}
 	for _, v := range res {
@@ -1135,6 +1191,9 @@ const (
 
 	// HTTPResponseRuleTypeSetDashStatus captures enum value "set-status"
 	HTTPResponseRuleTypeSetDashStatus string = "set-status"
+
+	// HTTPResponseRuleTypeSetDashTimeout captures enum value "set-timeout"
+	HTTPResponseRuleTypeSetDashTimeout string = "set-timeout"
 
 	// HTTPResponseRuleTypeSetDashTos captures enum value "set-tos"
 	HTTPResponseRuleTypeSetDashTos string = "set-tos"
