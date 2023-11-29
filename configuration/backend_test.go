@@ -260,6 +260,12 @@ func TestGetBackends(t *testing.T) { //nolint:gocognit,gocyclo
 			t.Errorf("EmailAlert.Mailers is not localmailer1: %v", *b.EmailAlert.Mailers)
 		}
 
+		if b.Name == "test" && (b.DefaultServer.LogBufsize == nil || *b.DefaultServer.LogBufsize != 6) {
+			t.Errorf("%v: DefaultServer.LogBufsize not 6: %v", b.Name, b.DefaultServer.LogBufsize)
+		}
+		if b.Name == "test2" && b.DefaultServer.LogBufsize != nil {
+			t.Errorf("%v: DefaultServer.LogBufsize should be nil: %v", b.Name, b.DefaultServer.LogBufsize)
+		}
 	}
 }
 
@@ -323,6 +329,9 @@ func TestGetBackend(t *testing.T) {
 	}
 	if *b.DefaultServer.HealthCheckPort != 8888 {
 		t.Errorf("%v: DefaultServer.HealthCheckPort not 8888: %v", b.Name, *b.DefaultServer.HealthCheckPort)
+	}
+	if b.Name == "test" && (b.DefaultServer.LogBufsize == nil || *b.DefaultServer.LogBufsize != 6) {
+		t.Errorf("%v: DefaultServer.LogBufsize not 6: %v", b.Name, b.DefaultServer.LogBufsize)
 	}
 	if *b.Cookie.Name != "BLA" {
 		t.Errorf("%v: HTTPCookie Name not BLA: %v", b.Name, b.Cookie)
@@ -698,8 +707,9 @@ func TestCreateEditDeleteBackend(t *testing.T) {
 		},
 		DefaultServer: &models.DefaultServer{
 			ServerParams: models.ServerParams{
-				Fall:  &tOut,
-				Inter: &tOut,
+				Fall:       &tOut,
+				Inter:      &tOut,
+				LogBufsize: misc.Int64P(123),
 			},
 		},
 		HTTPConnectionMode:   "http-keep-alive",

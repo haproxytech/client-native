@@ -630,6 +630,9 @@ definitions:
           inter:
               type: integer
               x-nullable: true
+          log-bufsize:
+              type: integer
+              x-nullable: true
           log_proto:
               enum:
                   - legacy

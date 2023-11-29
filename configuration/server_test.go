@@ -79,6 +79,13 @@ func TestGetServers(t *testing.T) { //nolint:gocognit,gocyclo
 				t.Errorf("%v: ProxyV2Options[0] not crc32c: %s", s.Name, s.ProxyV2Options[1])
 			}
 		}
+
+		if s.Name == "webserv" && (s.LogBufsize == nil || *s.LogBufsize != 10) {
+			t.Errorf("%v: LogBufsize should be 10: %v", s.Name, s.LogBufsize)
+		}
+		if s.Name == "webserv2" && s.LogBufsize != nil {
+			t.Errorf("%v: LogBufsize should be nil: %v", s.Name, s.LogBufsize)
+		}
 	}
 
 	_, servers, err = clientTest.GetServers("backend", "test_2", "")
@@ -157,6 +164,9 @@ func TestGetServer(t *testing.T) {
 	}
 	if s.Sigalgs != "ECDSA+SHA256" {
 		t.Errorf("%v: Sigalgs not ECDSA+SHA256: %v", s.Name, s.Sigalgs)
+	}
+	if s.LogBufsize == nil || *s.LogBufsize != 10 {
+		t.Errorf("%v: LogBufsize should be 10: %v", s.Name, s.LogBufsize)
 	}
 
 	_, err = s.MarshalBinary()
@@ -259,6 +269,7 @@ func TestCreateEditDeleteServer(t *testing.T) {
 			Curves:         "brainpoolP384r1",
 			Sigalgs:        "RSA+SHA256",
 			ClientSigalgs:  "ECDSA+SHA256",
+			LogBufsize:     misc.Int64P(11),
 		},
 	}
 

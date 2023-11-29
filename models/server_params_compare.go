@@ -169,6 +169,10 @@ func (s ServerParams) Equal(t ServerParams, opts ...Options) bool {
 		return false
 	}
 
+	if !equalPointers(s.LogBufsize, t.LogBufsize) {
+		return false
+	}
+
 	if s.LogProto != t.LogProto {
 		return false
 	}
@@ -539,6 +543,10 @@ func (s ServerParams) Diff(t ServerParams, opts ...Options) map[string][]interfa
 
 	if !equalPointers(s.Inter, t.Inter) {
 		diff["Inter"] = []interface{}{ValueOrNil(s.Inter), ValueOrNil(t.Inter)}
+	}
+
+	if !equalPointers(s.LogBufsize, t.LogBufsize) {
+		diff["LogBufsize"] = []interface{}{ValueOrNil(s.LogBufsize), ValueOrNil(t.LogBufsize)}
 	}
 
 	if s.LogProto != t.LogProto {

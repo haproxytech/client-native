@@ -365,6 +365,11 @@ func parseServerParams(serverOptions []params.ServerOption, serverParams *models
 				serverParams.Fastinter = misc.ParseTimeout(v.Value)
 			case "downinter":
 				serverParams.Downinter = misc.ParseTimeout(v.Value)
+			case "log-bufsize":
+				l, err := strconv.ParseInt(v.Value, 10, 64)
+				if err == nil {
+					serverParams.LogBufsize = &l
+				}
 			case "log-proto":
 				serverParams.LogProto = v.Value
 			case "maxconn":
@@ -698,6 +703,9 @@ func serializeServerParams(s models.ServerParams) (options []params.ServerOption
 	}
 	if s.Downinter != nil {
 		options = append(options, &params.ServerOptionValue{Name: "downinter", Value: strconv.FormatInt(*s.Downinter, 10)})
+	}
+	if s.LogBufsize != nil {
+		options = append(options, &params.ServerOptionValue{Name: "log-bufsize", Value: strconv.FormatInt(*s.LogBufsize, 10)})
 	}
 	if s.LogProto != "" {
 		options = append(options, &params.ServerOptionValue{Name: "log-proto", Value: s.LogProto})

@@ -161,6 +161,9 @@ type ServerParams struct {
 	// inter
 	Inter *int64 `json:"inter,omitempty"`
 
+	// log bufsize
+	LogBufsize *int64 `json:"log-bufsize,omitempty"`
+
 	// log proto
 	// Enum: [legacy octet-count]
 	LogProto string `json:"log_proto,omitempty"`

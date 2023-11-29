@@ -142,6 +142,9 @@ server_params:
     log_proto:
       type: string
       enum: [legacy, octet-count]
+    log-bufsize:
+      type: integer
+      x-nullable: true
     maxconn:
       type: integer
       x-display-name: Max Concurrent Connections
