@@ -30,8 +30,8 @@ func TestGetTCPRequestRules(t *testing.T) { //nolint:gocognit,gocyclo
 		t.Error(err.Error())
 	}
 
-	if len(tRules) != 30 {
-		t.Errorf("%v tcp request rules returned, expected 30", len(tRules))
+	if len(tRules) != 33 {
+		t.Errorf("%v tcp request rules returned, expected 33", len(tRules))
 	}
 
 	if v != version {
@@ -566,6 +566,45 @@ func TestGetTCPRequestRules(t *testing.T) { //nolint:gocognit,gocyclo
 			if r.CondTest != "TRUE" {
 				t.Errorf("%v: CondTest not FALSE: %v", *r.Index, r.CondTest)
 			}
+		case 30:
+			if r.Type != "session" {
+				t.Errorf("%v: Type not session: %v", *r.Index, r.Type)
+			}
+			if r.Action != "attach-srv" {
+				t.Errorf("%v: Action not attach-srv: %v", *r.Index, r.Action)
+			}
+			if r.ServerName != "srv1" {
+				t.Errorf("%v: ServerName not srv1: %v", *r.Index, r.ServerName)
+			}
+		case 31:
+			if r.Type != "session" {
+				t.Errorf("%v: Type not session: %v", *r.Index, r.Type)
+			}
+			if r.Action != "attach-srv" {
+				t.Errorf("%v: Action not attach-srv: %v", *r.Index, r.Action)
+			}
+			if r.ServerName != "srv2" {
+				t.Errorf("%v: ServerName not srv2: %v", *r.Index, r.ServerName)
+			}
+			if r.Expr != "example.com" {
+				t.Errorf("%v: Expr not example.com: %v", *r.Index, r.Expr)
+			}
+		case 32:
+			if r.Type != "session" {
+				t.Errorf("%v: Type not session: %v", *r.Index, r.Type)
+			}
+			if r.Action != "attach-srv" {
+				t.Errorf("%v: Action not attach-srv: %v", *r.Index, r.Action)
+			}
+			if r.ServerName != "srv3" {
+				t.Errorf("%v: ServerName not srv1: %v", *r.Index, r.ServerName)
+			}
+			if r.Cond != "if" {
+				t.Errorf("%v: Cond is not if: %v", *r.Index, r.Cond)
+			}
+			if r.CondTest != "is_cached" {
+				t.Errorf("%v: CondTest not is_cached: %v", *r.Index, r.CondTest)
+			}
 		default:
 			t.Errorf("Expect tcp-request 0-26, %v found", *r.Index)
 		}
@@ -678,7 +717,7 @@ func TestCreateEditDeleteTCPRequestRule(t *testing.T) {
 	}
 
 	// TestDeleteTCPRequest
-	err = clientTest.DeleteTCPRequestRule(30, "frontend", "test", "", version)
+	err = clientTest.DeleteTCPRequestRule(33, "frontend", "test", "", version)
 	if err != nil {
 		t.Error(err.Error())
 	} else {
@@ -689,9 +728,9 @@ func TestCreateEditDeleteTCPRequestRule(t *testing.T) {
 		t.Error("Version not incremented")
 	}
 
-	_, _, err = clientTest.GetTCPRequestRule(30, "frontend", "test", "")
+	_, _, err = clientTest.GetTCPRequestRule(33, "frontend", "test", "")
 	if err == nil {
-		t.Error("DeleteTCPRequestRule failed, TCP Request Rule 30 still exists")
+		t.Error("DeleteTCPRequestRule failed, TCP Request Rule 33 still exists")
 	}
 
 	err = clientTest.DeleteTCPRequestRule(27, "backend", "test_2", "", version)
@@ -876,6 +915,33 @@ func TestSerializeTCPRequestRule(t *testing.T) {
 				TrackTable: "tr2",
 			},
 			expectedResult: "session track-sc2 src table tr2 if TRUE",
+		},
+		{
+			input: models.TCPRequestRule{
+				Type:       models.TCPRequestRuleTypeSession,
+				Action:     models.TCPRequestRuleActionAttachDashSrv,
+				ServerName: "srv8",
+				Expr:       "haproxy.org",
+			},
+			expectedResult: "session attach-srv srv8 name haproxy.org",
+		},
+		{
+			input: models.TCPRequestRule{
+				Type:       models.TCPRequestRuleTypeSession,
+				Action:     models.TCPRequestRuleActionAttachDashSrv,
+				ServerName: "srv8",
+			},
+			expectedResult: "session attach-srv srv8",
+		},
+		{
+			input: models.TCPRequestRule{
+				Type:       models.TCPRequestRuleTypeSession,
+				Action:     models.TCPRequestRuleActionAttachDashSrv,
+				ServerName: "srv8",
+				Cond:       "unless",
+				CondTest:   "limit_exceeded",
+			},
+			expectedResult: "session attach-srv srv8 unless limit_exceeded",
 		},
 	}
 

@@ -5617,6 +5617,7 @@ definitions:
           action:
               enum:
                   - accept
+                  - attach-srv
                   - capture
                   - do-resolve
                   - expect-netscaler-cip
@@ -5923,6 +5924,15 @@ definitions:
                           - sc-set-gpt0
               x-display-name: ScSet Integer Value
               x-nullable: true
+          server_name:
+              type: string
+              x-dependency:
+                  action:
+                      required: true
+                      value: attach-srv
+                  type:
+                      value: session
+              x-display-name: Server name
           service_name:
               type: string
               x-dependency:

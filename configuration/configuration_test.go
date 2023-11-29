@@ -494,6 +494,9 @@ frontend test
   tcp-request content track-sc5 src table test if TRUE
   tcp-request connection track-sc5 src table test if TRUE
   tcp-request session track-sc5 src table test if TRUE
+  tcp-request session attach-srv srv1
+  tcp-request session attach-srv srv2 name example.com
+  tcp-request session attach-srv srv3 if is_cached
   log global
   no log
   log 127.0.0.1:514 local0 notice notice

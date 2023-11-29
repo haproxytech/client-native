@@ -532,6 +532,12 @@ func ParseTCPRequestRule(f types.TCPType) (rule *models.TCPRequestRule, err erro
 			rule.Action = models.TCPRequestRuleActionAccept
 			rule.Cond = a.Cond
 			rule.CondTest = a.CondTest
+		case *tcp_actions.AttachSrv:
+			rule.Action = models.TCPRequestRuleActionAttachDashSrv
+			rule.ServerName = a.Server
+			rule.Expr = a.Name.String()
+			rule.Cond = a.Cond
+			rule.CondTest = a.CondTest
 		case *actions.Reject:
 			rule.Action = models.TCPRequestRuleActionAccept
 			rule.Cond = a.Cond
@@ -1073,6 +1079,15 @@ func SerializeTCPRequestRule(f models.TCPRequestRule) (rule types.TCPType, err e
 		case models.TCPRequestRuleActionAccept:
 			return &tcp_types.Session{
 				Action: &tcp_actions.Accept{
+					Cond:     f.Cond,
+					CondTest: f.CondTest,
+				},
+			}, nil
+		case models.TCPRequestRuleActionAttachDashSrv:
+			return &tcp_types.Session{
+				Action: &tcp_actions.AttachSrv{
+					Server:   f.ServerName,
+					Name:     common.Expression{Expr: []string{f.Expr}},
 					Cond:     f.Cond,
 					CondTest: f.CondTest,
 				},

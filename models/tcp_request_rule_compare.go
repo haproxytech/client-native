@@ -125,6 +125,10 @@ func (s TCPRequestRule) Equal(t TCPRequestRule, opts ...Options) bool {
 		return false
 	}
 
+	if s.ServerName != t.ServerName {
+		return false
+	}
+
 	if s.ServiceName != t.ServiceName {
 		return false
 	}
@@ -287,6 +291,10 @@ func (s TCPRequestRule) Diff(t TCPRequestRule, opts ...Options) map[string][]int
 
 	if !equalPointers(s.ScInt, t.ScInt) {
 		diff["ScInt"] = []interface{}{ValueOrNil(s.ScInt), ValueOrNil(t.ScInt)}
+	}
+
+	if s.ServerName != t.ServerName {
+		diff["ServerName"] = []interface{}{s.ServerName, t.ServerName}
 	}
 
 	if s.ServiceName != t.ServiceName {
