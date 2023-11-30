@@ -81,7 +81,25 @@ func (s Defaults) Equal(t Defaults, opts ...Options) bool {
 		return false
 	}
 
-	if !s.Balance.Equal(*t.Balance, opt) {
+	if s.Balance == nil || t.Balance == nil {
+		if s.Balance != nil || t.Balance != nil {
+			if opt.NilSameAsEmpty {
+				empty := &Balance{}
+				if s.Balance == nil {
+					if !(t.Balance.Equal(*empty)) {
+						return false
+					}
+				}
+				if t.Balance == nil {
+					if !(s.Balance.Equal(*empty)) {
+						return false
+					}
+				}
+			} else {
+				return false
+			}
+		}
+	} else if !s.Balance.Equal(*t.Balance, opt) {
 		return false
 	}
 
@@ -125,7 +143,25 @@ func (s Defaults) Equal(t Defaults, opts ...Options) bool {
 		return false
 	}
 
-	if !s.Compression.Equal(*t.Compression, opt) {
+	if s.Compression == nil || t.Compression == nil {
+		if s.Compression != nil || t.Compression != nil {
+			if opt.NilSameAsEmpty {
+				empty := &Compression{}
+				if s.Compression == nil {
+					if !(t.Compression.Equal(*empty)) {
+						return false
+					}
+				}
+				if t.Compression == nil {
+					if !(s.Compression.Equal(*empty)) {
+						return false
+					}
+				}
+			} else {
+				return false
+			}
+		}
+	} else if !s.Compression.Equal(*t.Compression, opt) {
 		return false
 	}
 
@@ -137,7 +173,25 @@ func (s Defaults) Equal(t Defaults, opts ...Options) bool {
 		return false
 	}
 
-	if !s.Cookie.Equal(*t.Cookie, opt) {
+	if s.Cookie == nil || t.Cookie == nil {
+		if s.Cookie != nil || t.Cookie != nil {
+			if opt.NilSameAsEmpty {
+				empty := &Cookie{}
+				if s.Cookie == nil {
+					if !(t.Cookie.Equal(*empty)) {
+						return false
+					}
+				}
+				if t.Cookie == nil {
+					if !(s.Cookie.Equal(*empty)) {
+						return false
+					}
+				}
+			} else {
+				return false
+			}
+		}
+	} else if !s.Cookie.Equal(*t.Cookie, opt) {
 		return false
 	}
 
@@ -145,7 +199,25 @@ func (s Defaults) Equal(t Defaults, opts ...Options) bool {
 		return false
 	}
 
-	if !s.DefaultServer.Equal(*t.DefaultServer, opt) {
+	if s.DefaultServer == nil || t.DefaultServer == nil {
+		if s.DefaultServer != nil || t.DefaultServer != nil {
+			if opt.NilSameAsEmpty {
+				empty := &DefaultServer{}
+				if s.DefaultServer == nil {
+					if !(t.DefaultServer.Equal(*empty)) {
+						return false
+					}
+				}
+				if t.DefaultServer == nil {
+					if !(s.DefaultServer.Equal(*empty)) {
+						return false
+					}
+				}
+			} else {
+				return false
+			}
+		}
+	} else if !s.DefaultServer.Equal(*t.DefaultServer, opt) {
 		return false
 	}
 
@@ -169,7 +241,25 @@ func (s Defaults) Equal(t Defaults, opts ...Options) bool {
 		return false
 	}
 
-	if !s.EmailAlert.Equal(*t.EmailAlert, opt) {
+	if s.EmailAlert == nil || t.EmailAlert == nil {
+		if s.EmailAlert != nil || t.EmailAlert != nil {
+			if opt.NilSameAsEmpty {
+				empty := &EmailAlert{}
+				if s.EmailAlert == nil {
+					if !(t.EmailAlert.Equal(*empty)) {
+						return false
+					}
+				}
+				if t.EmailAlert == nil {
+					if !(s.EmailAlert.Equal(*empty)) {
+						return false
+					}
+				}
+			} else {
+				return false
+			}
+		}
+	} else if !s.EmailAlert.Equal(*t.EmailAlert, opt) {
 		return false
 	}
 
@@ -181,11 +271,47 @@ func (s Defaults) Equal(t Defaults, opts ...Options) bool {
 		return false
 	}
 
-	if !s.Errorloc302.Equal(*t.Errorloc302, opt) {
+	if s.Errorloc302 == nil || t.Errorloc302 == nil {
+		if s.Errorloc302 != nil || t.Errorloc302 != nil {
+			if opt.NilSameAsEmpty {
+				empty := &Errorloc{}
+				if s.Errorloc302 == nil {
+					if !(t.Errorloc302.Equal(*empty)) {
+						return false
+					}
+				}
+				if t.Errorloc302 == nil {
+					if !(s.Errorloc302.Equal(*empty)) {
+						return false
+					}
+				}
+			} else {
+				return false
+			}
+		}
+	} else if !s.Errorloc302.Equal(*t.Errorloc302, opt) {
 		return false
 	}
 
-	if !s.Errorloc303.Equal(*t.Errorloc303, opt) {
+	if s.Errorloc303 == nil || t.Errorloc303 == nil {
+		if s.Errorloc303 != nil || t.Errorloc303 != nil {
+			if opt.NilSameAsEmpty {
+				empty := &Errorloc{}
+				if s.Errorloc303 == nil {
+					if !(t.Errorloc303.Equal(*empty)) {
+						return false
+					}
+				}
+				if t.Errorloc303 == nil {
+					if !(s.Errorloc303.Equal(*empty)) {
+						return false
+					}
+				}
+			} else {
+				return false
+			}
+		}
+	} else if !s.Errorloc303.Equal(*t.Errorloc303, opt) {
 		return false
 	}
 
@@ -201,7 +327,25 @@ func (s Defaults) Equal(t Defaults, opts ...Options) bool {
 		return false
 	}
 
-	if !s.Forwardfor.Equal(*t.Forwardfor, opt) {
+	if s.Forwardfor == nil || t.Forwardfor == nil {
+		if s.Forwardfor != nil || t.Forwardfor != nil {
+			if opt.NilSameAsEmpty {
+				empty := &Forwardfor{}
+				if s.Forwardfor == nil {
+					if !(t.Forwardfor.Equal(*empty)) {
+						return false
+					}
+				}
+				if t.Forwardfor == nil {
+					if !(s.Forwardfor.Equal(*empty)) {
+						return false
+					}
+				}
+			} else {
+				return false
+			}
+		}
+	} else if !s.Forwardfor.Equal(*t.Forwardfor, opt) {
 		return false
 	}
 
@@ -221,7 +365,25 @@ func (s Defaults) Equal(t Defaults, opts ...Options) bool {
 		return false
 	}
 
-	if !s.HashType.Equal(*t.HashType, opt) {
+	if s.HashType == nil || t.HashType == nil {
+		if s.HashType != nil || t.HashType != nil {
+			if opt.NilSameAsEmpty {
+				empty := &HashType{}
+				if s.HashType == nil {
+					if !(t.HashType.Equal(*empty)) {
+						return false
+					}
+				}
+				if t.HashType == nil {
+					if !(s.HashType.Equal(*empty)) {
+						return false
+					}
+				}
+			} else {
+				return false
+			}
+		}
+	} else if !s.HashType.Equal(*t.HashType, opt) {
 		return false
 	}
 
@@ -229,7 +391,25 @@ func (s Defaults) Equal(t Defaults, opts ...Options) bool {
 		return false
 	}
 
-	if !s.HTTPCheck.Equal(*t.HTTPCheck, opt) {
+	if s.HTTPCheck == nil || t.HTTPCheck == nil {
+		if s.HTTPCheck != nil || t.HTTPCheck != nil {
+			if opt.NilSameAsEmpty {
+				empty := &HTTPCheck{}
+				if s.HTTPCheck == nil {
+					if !(t.HTTPCheck.Equal(*empty)) {
+						return false
+					}
+				}
+				if t.HTTPCheck == nil {
+					if !(s.HTTPCheck.Equal(*empty)) {
+						return false
+					}
+				}
+			} else {
+				return false
+			}
+		}
+	} else if !s.HTTPCheck.Equal(*t.HTTPCheck, opt) {
 		return false
 	}
 
@@ -277,7 +457,25 @@ func (s Defaults) Equal(t Defaults, opts ...Options) bool {
 		return false
 	}
 
-	if !s.HttpchkParams.Equal(*t.HttpchkParams, opt) {
+	if s.HttpchkParams == nil || t.HttpchkParams == nil {
+		if s.HttpchkParams != nil || t.HttpchkParams != nil {
+			if opt.NilSameAsEmpty {
+				empty := &HttpchkParams{}
+				if s.HttpchkParams == nil {
+					if !(t.HttpchkParams.Equal(*empty)) {
+						return false
+					}
+				}
+				if t.HttpchkParams == nil {
+					if !(s.HttpchkParams.Equal(*empty)) {
+						return false
+					}
+				}
+			} else {
+				return false
+			}
+		}
+	} else if !s.HttpchkParams.Equal(*t.HttpchkParams, opt) {
 		return false
 	}
 
@@ -341,7 +539,25 @@ func (s Defaults) Equal(t Defaults, opts ...Options) bool {
 		return false
 	}
 
-	if !s.MysqlCheckParams.Equal(*t.MysqlCheckParams, opt) {
+	if s.MysqlCheckParams == nil || t.MysqlCheckParams == nil {
+		if s.MysqlCheckParams != nil || t.MysqlCheckParams != nil {
+			if opt.NilSameAsEmpty {
+				empty := &MysqlCheckParams{}
+				if s.MysqlCheckParams == nil {
+					if !(t.MysqlCheckParams.Equal(*empty)) {
+						return false
+					}
+				}
+				if t.MysqlCheckParams == nil {
+					if !(s.MysqlCheckParams.Equal(*empty)) {
+						return false
+					}
+				}
+			} else {
+				return false
+			}
+		}
+	} else if !s.MysqlCheckParams.Equal(*t.MysqlCheckParams, opt) {
 		return false
 	}
 
@@ -353,7 +569,25 @@ func (s Defaults) Equal(t Defaults, opts ...Options) bool {
 		return false
 	}
 
-	if !s.Originalto.Equal(*t.Originalto, opt) {
+	if s.Originalto == nil || t.Originalto == nil {
+		if s.Originalto != nil || t.Originalto != nil {
+			if opt.NilSameAsEmpty {
+				empty := &Originalto{}
+				if s.Originalto == nil {
+					if !(t.Originalto.Equal(*empty)) {
+						return false
+					}
+				}
+				if t.Originalto == nil {
+					if !(s.Originalto.Equal(*empty)) {
+						return false
+					}
+				}
+			} else {
+				return false
+			}
+		}
+	} else if !s.Originalto.Equal(*t.Originalto, opt) {
 		return false
 	}
 
@@ -361,11 +595,47 @@ func (s Defaults) Equal(t Defaults, opts ...Options) bool {
 		return false
 	}
 
-	if !s.PersistRule.Equal(*t.PersistRule, opt) {
+	if s.PersistRule == nil || t.PersistRule == nil {
+		if s.PersistRule != nil || t.PersistRule != nil {
+			if opt.NilSameAsEmpty {
+				empty := &PersistRule{}
+				if s.PersistRule == nil {
+					if !(t.PersistRule.Equal(*empty)) {
+						return false
+					}
+				}
+				if t.PersistRule == nil {
+					if !(s.PersistRule.Equal(*empty)) {
+						return false
+					}
+				}
+			} else {
+				return false
+			}
+		}
+	} else if !s.PersistRule.Equal(*t.PersistRule, opt) {
 		return false
 	}
 
-	if !s.PgsqlCheckParams.Equal(*t.PgsqlCheckParams, opt) {
+	if s.PgsqlCheckParams == nil || t.PgsqlCheckParams == nil {
+		if s.PgsqlCheckParams != nil || t.PgsqlCheckParams != nil {
+			if opt.NilSameAsEmpty {
+				empty := &PgsqlCheckParams{}
+				if s.PgsqlCheckParams == nil {
+					if !(t.PgsqlCheckParams.Equal(*empty)) {
+						return false
+					}
+				}
+				if t.PgsqlCheckParams == nil {
+					if !(s.PgsqlCheckParams.Equal(*empty)) {
+						return false
+					}
+				}
+			} else {
+				return false
+			}
+		}
+	} else if !s.PgsqlCheckParams.Equal(*t.PgsqlCheckParams, opt) {
 		return false
 	}
 
@@ -377,7 +647,25 @@ func (s Defaults) Equal(t Defaults, opts ...Options) bool {
 		return false
 	}
 
-	if !s.Redispatch.Equal(*t.Redispatch, opt) {
+	if s.Redispatch == nil || t.Redispatch == nil {
+		if s.Redispatch != nil || t.Redispatch != nil {
+			if opt.NilSameAsEmpty {
+				empty := &Redispatch{}
+				if s.Redispatch == nil {
+					if !(t.Redispatch.Equal(*empty)) {
+						return false
+					}
+				}
+				if t.Redispatch == nil {
+					if !(s.Redispatch.Equal(*empty)) {
+						return false
+					}
+				}
+			} else {
+				return false
+			}
+		}
+	} else if !s.Redispatch.Equal(*t.Redispatch, opt) {
 		return false
 	}
 
@@ -397,7 +685,25 @@ func (s Defaults) Equal(t Defaults, opts ...Options) bool {
 		return false
 	}
 
-	if !s.SmtpchkParams.Equal(*t.SmtpchkParams, opt) {
+	if s.SmtpchkParams == nil || t.SmtpchkParams == nil {
+		if s.SmtpchkParams != nil || t.SmtpchkParams != nil {
+			if opt.NilSameAsEmpty {
+				empty := &SmtpchkParams{}
+				if s.SmtpchkParams == nil {
+					if !(t.SmtpchkParams.Equal(*empty)) {
+						return false
+					}
+				}
+				if t.SmtpchkParams == nil {
+					if !(s.SmtpchkParams.Equal(*empty)) {
+						return false
+					}
+				}
+			} else {
+				return false
+			}
+		}
+	} else if !s.SmtpchkParams.Equal(*t.SmtpchkParams, opt) {
 		return false
 	}
 
@@ -405,7 +711,25 @@ func (s Defaults) Equal(t Defaults, opts ...Options) bool {
 		return false
 	}
 
-	if !s.Source.Equal(*t.Source, opt) {
+	if s.Source == nil || t.Source == nil {
+		if s.Source != nil || t.Source != nil {
+			if opt.NilSameAsEmpty {
+				empty := &Source{}
+				if s.Source == nil {
+					if !(t.Source.Equal(*empty)) {
+						return false
+					}
+				}
+				if t.Source == nil {
+					if !(s.Source.Equal(*empty)) {
+						return false
+					}
+				}
+			} else {
+				return false
+			}
+		}
+	} else if !s.Source.Equal(*t.Source, opt) {
 		return false
 	}
 
@@ -437,7 +761,25 @@ func (s Defaults) Equal(t Defaults, opts ...Options) bool {
 		return false
 	}
 
-	if !s.StatsOptions.Equal(*t.StatsOptions, opt) {
+	if s.StatsOptions == nil || t.StatsOptions == nil {
+		if s.StatsOptions != nil || t.StatsOptions != nil {
+			if opt.NilSameAsEmpty {
+				empty := &StatsOptions{}
+				if s.StatsOptions == nil {
+					if !(t.StatsOptions.Equal(*empty)) {
+						return false
+					}
+				}
+				if t.StatsOptions == nil {
+					if !(s.StatsOptions.Equal(*empty)) {
+						return false
+					}
+				}
+			} else {
+				return false
+			}
+		}
+	} else if !s.StatsOptions.Equal(*t.StatsOptions, opt) {
 		return false
 	}
 
@@ -555,7 +897,25 @@ func (s Defaults) Diff(t Defaults, opts ...Options) map[string][]interface{} {
 		diff["Backlog"] = []interface{}{ValueOrNil(s.Backlog), ValueOrNil(t.Backlog)}
 	}
 
-	if !s.Balance.Equal(*t.Balance, opt) {
+	if s.Balance == nil || t.Balance == nil {
+		if s.Balance != nil || t.Balance != nil {
+			if opt.NilSameAsEmpty {
+				empty := &Balance{}
+				if s.Balance == nil {
+					if !(t.Balance.Equal(*empty)) {
+						diff["Balance"] = []interface{}{ValueOrNil(s.Balance), ValueOrNil(t.Balance)}
+					}
+				}
+				if t.Balance == nil {
+					if !(s.Balance.Equal(*empty)) {
+						diff["Balance"] = []interface{}{ValueOrNil(s.Balance), ValueOrNil(t.Balance)}
+					}
+				}
+			} else {
+				diff["Balance"] = []interface{}{ValueOrNil(s.Balance), ValueOrNil(t.Balance)}
+			}
+		}
+	} else if !s.Balance.Equal(*t.Balance, opt) {
 		diff["Balance"] = []interface{}{ValueOrNil(s.Balance), ValueOrNil(t.Balance)}
 	}
 
@@ -599,7 +959,25 @@ func (s Defaults) Diff(t Defaults, opts ...Options) map[string][]interface{} {
 		diff["ClitcpkaIntvl"] = []interface{}{ValueOrNil(s.ClitcpkaIntvl), ValueOrNil(t.ClitcpkaIntvl)}
 	}
 
-	if !s.Compression.Equal(*t.Compression, opt) {
+	if s.Compression == nil || t.Compression == nil {
+		if s.Compression != nil || t.Compression != nil {
+			if opt.NilSameAsEmpty {
+				empty := &Compression{}
+				if s.Compression == nil {
+					if !(t.Compression.Equal(*empty)) {
+						diff["Compression"] = []interface{}{ValueOrNil(s.Compression), ValueOrNil(t.Compression)}
+					}
+				}
+				if t.Compression == nil {
+					if !(s.Compression.Equal(*empty)) {
+						diff["Compression"] = []interface{}{ValueOrNil(s.Compression), ValueOrNil(t.Compression)}
+					}
+				}
+			} else {
+				diff["Compression"] = []interface{}{ValueOrNil(s.Compression), ValueOrNil(t.Compression)}
+			}
+		}
+	} else if !s.Compression.Equal(*t.Compression, opt) {
 		diff["Compression"] = []interface{}{ValueOrNil(s.Compression), ValueOrNil(t.Compression)}
 	}
 
@@ -611,7 +989,25 @@ func (s Defaults) Diff(t Defaults, opts ...Options) map[string][]interface{} {
 		diff["Contstats"] = []interface{}{s.Contstats, t.Contstats}
 	}
 
-	if !s.Cookie.Equal(*t.Cookie, opt) {
+	if s.Cookie == nil || t.Cookie == nil {
+		if s.Cookie != nil || t.Cookie != nil {
+			if opt.NilSameAsEmpty {
+				empty := &Cookie{}
+				if s.Cookie == nil {
+					if !(t.Cookie.Equal(*empty)) {
+						diff["Cookie"] = []interface{}{ValueOrNil(s.Cookie), ValueOrNil(t.Cookie)}
+					}
+				}
+				if t.Cookie == nil {
+					if !(s.Cookie.Equal(*empty)) {
+						diff["Cookie"] = []interface{}{ValueOrNil(s.Cookie), ValueOrNil(t.Cookie)}
+					}
+				}
+			} else {
+				diff["Cookie"] = []interface{}{ValueOrNil(s.Cookie), ValueOrNil(t.Cookie)}
+			}
+		}
+	} else if !s.Cookie.Equal(*t.Cookie, opt) {
 		diff["Cookie"] = []interface{}{ValueOrNil(s.Cookie), ValueOrNil(t.Cookie)}
 	}
 
@@ -619,7 +1015,25 @@ func (s Defaults) Diff(t Defaults, opts ...Options) map[string][]interface{} {
 		diff["DefaultBackend"] = []interface{}{s.DefaultBackend, t.DefaultBackend}
 	}
 
-	if !s.DefaultServer.Equal(*t.DefaultServer, opt) {
+	if s.DefaultServer == nil || t.DefaultServer == nil {
+		if s.DefaultServer != nil || t.DefaultServer != nil {
+			if opt.NilSameAsEmpty {
+				empty := &DefaultServer{}
+				if s.DefaultServer == nil {
+					if !(t.DefaultServer.Equal(*empty)) {
+						diff["DefaultServer"] = []interface{}{ValueOrNil(s.DefaultServer), ValueOrNil(t.DefaultServer)}
+					}
+				}
+				if t.DefaultServer == nil {
+					if !(s.DefaultServer.Equal(*empty)) {
+						diff["DefaultServer"] = []interface{}{ValueOrNil(s.DefaultServer), ValueOrNil(t.DefaultServer)}
+					}
+				}
+			} else {
+				diff["DefaultServer"] = []interface{}{ValueOrNil(s.DefaultServer), ValueOrNil(t.DefaultServer)}
+			}
+		}
+	} else if !s.DefaultServer.Equal(*t.DefaultServer, opt) {
 		diff["DefaultServer"] = []interface{}{ValueOrNil(s.DefaultServer), ValueOrNil(t.DefaultServer)}
 	}
 
@@ -643,7 +1057,25 @@ func (s Defaults) Diff(t Defaults, opts ...Options) map[string][]interface{} {
 		diff["DynamicCookieKey"] = []interface{}{s.DynamicCookieKey, t.DynamicCookieKey}
 	}
 
-	if !s.EmailAlert.Equal(*t.EmailAlert, opt) {
+	if s.EmailAlert == nil || t.EmailAlert == nil {
+		if s.EmailAlert != nil || t.EmailAlert != nil {
+			if opt.NilSameAsEmpty {
+				empty := &EmailAlert{}
+				if s.EmailAlert == nil {
+					if !(t.EmailAlert.Equal(*empty)) {
+						diff["EmailAlert"] = []interface{}{ValueOrNil(s.EmailAlert), ValueOrNil(t.EmailAlert)}
+					}
+				}
+				if t.EmailAlert == nil {
+					if !(s.EmailAlert.Equal(*empty)) {
+						diff["EmailAlert"] = []interface{}{ValueOrNil(s.EmailAlert), ValueOrNil(t.EmailAlert)}
+					}
+				}
+			} else {
+				diff["EmailAlert"] = []interface{}{ValueOrNil(s.EmailAlert), ValueOrNil(t.EmailAlert)}
+			}
+		}
+	} else if !s.EmailAlert.Equal(*t.EmailAlert, opt) {
 		diff["EmailAlert"] = []interface{}{ValueOrNil(s.EmailAlert), ValueOrNil(t.EmailAlert)}
 	}
 
@@ -655,11 +1087,47 @@ func (s Defaults) Diff(t Defaults, opts ...Options) map[string][]interface{} {
 		diff["ErrorLogFormat"] = []interface{}{s.ErrorLogFormat, t.ErrorLogFormat}
 	}
 
-	if !s.Errorloc302.Equal(*t.Errorloc302, opt) {
+	if s.Errorloc302 == nil || t.Errorloc302 == nil {
+		if s.Errorloc302 != nil || t.Errorloc302 != nil {
+			if opt.NilSameAsEmpty {
+				empty := &Errorloc{}
+				if s.Errorloc302 == nil {
+					if !(t.Errorloc302.Equal(*empty)) {
+						diff["Errorloc302"] = []interface{}{ValueOrNil(s.Errorloc302), ValueOrNil(t.Errorloc302)}
+					}
+				}
+				if t.Errorloc302 == nil {
+					if !(s.Errorloc302.Equal(*empty)) {
+						diff["Errorloc302"] = []interface{}{ValueOrNil(s.Errorloc302), ValueOrNil(t.Errorloc302)}
+					}
+				}
+			} else {
+				diff["Errorloc302"] = []interface{}{ValueOrNil(s.Errorloc302), ValueOrNil(t.Errorloc302)}
+			}
+		}
+	} else if !s.Errorloc302.Equal(*t.Errorloc302, opt) {
 		diff["Errorloc302"] = []interface{}{ValueOrNil(s.Errorloc302), ValueOrNil(t.Errorloc302)}
 	}
 
-	if !s.Errorloc303.Equal(*t.Errorloc303, opt) {
+	if s.Errorloc303 == nil || t.Errorloc303 == nil {
+		if s.Errorloc303 != nil || t.Errorloc303 != nil {
+			if opt.NilSameAsEmpty {
+				empty := &Errorloc{}
+				if s.Errorloc303 == nil {
+					if !(t.Errorloc303.Equal(*empty)) {
+						diff["Errorloc303"] = []interface{}{ValueOrNil(s.Errorloc303), ValueOrNil(t.Errorloc303)}
+					}
+				}
+				if t.Errorloc303 == nil {
+					if !(s.Errorloc303.Equal(*empty)) {
+						diff["Errorloc303"] = []interface{}{ValueOrNil(s.Errorloc303), ValueOrNil(t.Errorloc303)}
+					}
+				}
+			} else {
+				diff["Errorloc303"] = []interface{}{ValueOrNil(s.Errorloc303), ValueOrNil(t.Errorloc303)}
+			}
+		}
+	} else if !s.Errorloc303.Equal(*t.Errorloc303, opt) {
 		diff["Errorloc303"] = []interface{}{ValueOrNil(s.Errorloc303), ValueOrNil(t.Errorloc303)}
 	}
 
@@ -675,7 +1143,25 @@ func (s Defaults) Diff(t Defaults, opts ...Options) map[string][]interface{} {
 		diff["ExternalCheckPath"] = []interface{}{s.ExternalCheckPath, t.ExternalCheckPath}
 	}
 
-	if !s.Forwardfor.Equal(*t.Forwardfor, opt) {
+	if s.Forwardfor == nil || t.Forwardfor == nil {
+		if s.Forwardfor != nil || t.Forwardfor != nil {
+			if opt.NilSameAsEmpty {
+				empty := &Forwardfor{}
+				if s.Forwardfor == nil {
+					if !(t.Forwardfor.Equal(*empty)) {
+						diff["Forwardfor"] = []interface{}{ValueOrNil(s.Forwardfor), ValueOrNil(t.Forwardfor)}
+					}
+				}
+				if t.Forwardfor == nil {
+					if !(s.Forwardfor.Equal(*empty)) {
+						diff["Forwardfor"] = []interface{}{ValueOrNil(s.Forwardfor), ValueOrNil(t.Forwardfor)}
+					}
+				}
+			} else {
+				diff["Forwardfor"] = []interface{}{ValueOrNil(s.Forwardfor), ValueOrNil(t.Forwardfor)}
+			}
+		}
+	} else if !s.Forwardfor.Equal(*t.Forwardfor, opt) {
 		diff["Forwardfor"] = []interface{}{ValueOrNil(s.Forwardfor), ValueOrNil(t.Forwardfor)}
 	}
 
@@ -695,7 +1181,25 @@ func (s Defaults) Diff(t Defaults, opts ...Options) map[string][]interface{} {
 		diff["H1CaseAdjustBogusServer"] = []interface{}{s.H1CaseAdjustBogusServer, t.H1CaseAdjustBogusServer}
 	}
 
-	if !s.HashType.Equal(*t.HashType, opt) {
+	if s.HashType == nil || t.HashType == nil {
+		if s.HashType != nil || t.HashType != nil {
+			if opt.NilSameAsEmpty {
+				empty := &HashType{}
+				if s.HashType == nil {
+					if !(t.HashType.Equal(*empty)) {
+						diff["HashType"] = []interface{}{ValueOrNil(s.HashType), ValueOrNil(t.HashType)}
+					}
+				}
+				if t.HashType == nil {
+					if !(s.HashType.Equal(*empty)) {
+						diff["HashType"] = []interface{}{ValueOrNil(s.HashType), ValueOrNil(t.HashType)}
+					}
+				}
+			} else {
+				diff["HashType"] = []interface{}{ValueOrNil(s.HashType), ValueOrNil(t.HashType)}
+			}
+		}
+	} else if !s.HashType.Equal(*t.HashType, opt) {
 		diff["HashType"] = []interface{}{ValueOrNil(s.HashType), ValueOrNil(t.HashType)}
 	}
 
@@ -703,7 +1207,25 @@ func (s Defaults) Diff(t Defaults, opts ...Options) map[string][]interface{} {
 		diff["HTTPBufferRequest"] = []interface{}{s.HTTPBufferRequest, t.HTTPBufferRequest}
 	}
 
-	if !s.HTTPCheck.Equal(*t.HTTPCheck, opt) {
+	if s.HTTPCheck == nil || t.HTTPCheck == nil {
+		if s.HTTPCheck != nil || t.HTTPCheck != nil {
+			if opt.NilSameAsEmpty {
+				empty := &HTTPCheck{}
+				if s.HTTPCheck == nil {
+					if !(t.HTTPCheck.Equal(*empty)) {
+						diff["HTTPCheck"] = []interface{}{ValueOrNil(s.HTTPCheck), ValueOrNil(t.HTTPCheck)}
+					}
+				}
+				if t.HTTPCheck == nil {
+					if !(s.HTTPCheck.Equal(*empty)) {
+						diff["HTTPCheck"] = []interface{}{ValueOrNil(s.HTTPCheck), ValueOrNil(t.HTTPCheck)}
+					}
+				}
+			} else {
+				diff["HTTPCheck"] = []interface{}{ValueOrNil(s.HTTPCheck), ValueOrNil(t.HTTPCheck)}
+			}
+		}
+	} else if !s.HTTPCheck.Equal(*t.HTTPCheck, opt) {
 		diff["HTTPCheck"] = []interface{}{ValueOrNil(s.HTTPCheck), ValueOrNil(t.HTTPCheck)}
 	}
 
@@ -751,7 +1273,25 @@ func (s Defaults) Diff(t Defaults, opts ...Options) map[string][]interface{} {
 		diff["HTTPUseProxyHeader"] = []interface{}{s.HTTPUseProxyHeader, t.HTTPUseProxyHeader}
 	}
 
-	if !s.HttpchkParams.Equal(*t.HttpchkParams, opt) {
+	if s.HttpchkParams == nil || t.HttpchkParams == nil {
+		if s.HttpchkParams != nil || t.HttpchkParams != nil {
+			if opt.NilSameAsEmpty {
+				empty := &HttpchkParams{}
+				if s.HttpchkParams == nil {
+					if !(t.HttpchkParams.Equal(*empty)) {
+						diff["HttpchkParams"] = []interface{}{ValueOrNil(s.HttpchkParams), ValueOrNil(t.HttpchkParams)}
+					}
+				}
+				if t.HttpchkParams == nil {
+					if !(s.HttpchkParams.Equal(*empty)) {
+						diff["HttpchkParams"] = []interface{}{ValueOrNil(s.HttpchkParams), ValueOrNil(t.HttpchkParams)}
+					}
+				}
+			} else {
+				diff["HttpchkParams"] = []interface{}{ValueOrNil(s.HttpchkParams), ValueOrNil(t.HttpchkParams)}
+			}
+		}
+	} else if !s.HttpchkParams.Equal(*t.HttpchkParams, opt) {
 		diff["HttpchkParams"] = []interface{}{ValueOrNil(s.HttpchkParams), ValueOrNil(t.HttpchkParams)}
 	}
 
@@ -815,7 +1355,25 @@ func (s Defaults) Diff(t Defaults, opts ...Options) map[string][]interface{} {
 		diff["MonitorURI"] = []interface{}{s.MonitorURI, t.MonitorURI}
 	}
 
-	if !s.MysqlCheckParams.Equal(*t.MysqlCheckParams, opt) {
+	if s.MysqlCheckParams == nil || t.MysqlCheckParams == nil {
+		if s.MysqlCheckParams != nil || t.MysqlCheckParams != nil {
+			if opt.NilSameAsEmpty {
+				empty := &MysqlCheckParams{}
+				if s.MysqlCheckParams == nil {
+					if !(t.MysqlCheckParams.Equal(*empty)) {
+						diff["MysqlCheckParams"] = []interface{}{ValueOrNil(s.MysqlCheckParams), ValueOrNil(t.MysqlCheckParams)}
+					}
+				}
+				if t.MysqlCheckParams == nil {
+					if !(s.MysqlCheckParams.Equal(*empty)) {
+						diff["MysqlCheckParams"] = []interface{}{ValueOrNil(s.MysqlCheckParams), ValueOrNil(t.MysqlCheckParams)}
+					}
+				}
+			} else {
+				diff["MysqlCheckParams"] = []interface{}{ValueOrNil(s.MysqlCheckParams), ValueOrNil(t.MysqlCheckParams)}
+			}
+		}
+	} else if !s.MysqlCheckParams.Equal(*t.MysqlCheckParams, opt) {
 		diff["MysqlCheckParams"] = []interface{}{ValueOrNil(s.MysqlCheckParams), ValueOrNil(t.MysqlCheckParams)}
 	}
 
@@ -827,7 +1385,25 @@ func (s Defaults) Diff(t Defaults, opts ...Options) map[string][]interface{} {
 		diff["Nolinger"] = []interface{}{s.Nolinger, t.Nolinger}
 	}
 
-	if !s.Originalto.Equal(*t.Originalto, opt) {
+	if s.Originalto == nil || t.Originalto == nil {
+		if s.Originalto != nil || t.Originalto != nil {
+			if opt.NilSameAsEmpty {
+				empty := &Originalto{}
+				if s.Originalto == nil {
+					if !(t.Originalto.Equal(*empty)) {
+						diff["Originalto"] = []interface{}{ValueOrNil(s.Originalto), ValueOrNil(t.Originalto)}
+					}
+				}
+				if t.Originalto == nil {
+					if !(s.Originalto.Equal(*empty)) {
+						diff["Originalto"] = []interface{}{ValueOrNil(s.Originalto), ValueOrNil(t.Originalto)}
+					}
+				}
+			} else {
+				diff["Originalto"] = []interface{}{ValueOrNil(s.Originalto), ValueOrNil(t.Originalto)}
+			}
+		}
+	} else if !s.Originalto.Equal(*t.Originalto, opt) {
 		diff["Originalto"] = []interface{}{ValueOrNil(s.Originalto), ValueOrNil(t.Originalto)}
 	}
 
@@ -835,11 +1411,47 @@ func (s Defaults) Diff(t Defaults, opts ...Options) map[string][]interface{} {
 		diff["Persist"] = []interface{}{s.Persist, t.Persist}
 	}
 
-	if !s.PersistRule.Equal(*t.PersistRule, opt) {
+	if s.PersistRule == nil || t.PersistRule == nil {
+		if s.PersistRule != nil || t.PersistRule != nil {
+			if opt.NilSameAsEmpty {
+				empty := &PersistRule{}
+				if s.PersistRule == nil {
+					if !(t.PersistRule.Equal(*empty)) {
+						diff["PersistRule"] = []interface{}{ValueOrNil(s.PersistRule), ValueOrNil(t.PersistRule)}
+					}
+				}
+				if t.PersistRule == nil {
+					if !(s.PersistRule.Equal(*empty)) {
+						diff["PersistRule"] = []interface{}{ValueOrNil(s.PersistRule), ValueOrNil(t.PersistRule)}
+					}
+				}
+			} else {
+				diff["PersistRule"] = []interface{}{ValueOrNil(s.PersistRule), ValueOrNil(t.PersistRule)}
+			}
+		}
+	} else if !s.PersistRule.Equal(*t.PersistRule, opt) {
 		diff["PersistRule"] = []interface{}{ValueOrNil(s.PersistRule), ValueOrNil(t.PersistRule)}
 	}
 
-	if !s.PgsqlCheckParams.Equal(*t.PgsqlCheckParams, opt) {
+	if s.PgsqlCheckParams == nil || t.PgsqlCheckParams == nil {
+		if s.PgsqlCheckParams != nil || t.PgsqlCheckParams != nil {
+			if opt.NilSameAsEmpty {
+				empty := &PgsqlCheckParams{}
+				if s.PgsqlCheckParams == nil {
+					if !(t.PgsqlCheckParams.Equal(*empty)) {
+						diff["PgsqlCheckParams"] = []interface{}{ValueOrNil(s.PgsqlCheckParams), ValueOrNil(t.PgsqlCheckParams)}
+					}
+				}
+				if t.PgsqlCheckParams == nil {
+					if !(s.PgsqlCheckParams.Equal(*empty)) {
+						diff["PgsqlCheckParams"] = []interface{}{ValueOrNil(s.PgsqlCheckParams), ValueOrNil(t.PgsqlCheckParams)}
+					}
+				}
+			} else {
+				diff["PgsqlCheckParams"] = []interface{}{ValueOrNil(s.PgsqlCheckParams), ValueOrNil(t.PgsqlCheckParams)}
+			}
+		}
+	} else if !s.PgsqlCheckParams.Equal(*t.PgsqlCheckParams, opt) {
 		diff["PgsqlCheckParams"] = []interface{}{ValueOrNil(s.PgsqlCheckParams), ValueOrNil(t.PgsqlCheckParams)}
 	}
 
@@ -851,7 +1463,25 @@ func (s Defaults) Diff(t Defaults, opts ...Options) map[string][]interface{} {
 		diff["QueueTimeout"] = []interface{}{ValueOrNil(s.QueueTimeout), ValueOrNil(t.QueueTimeout)}
 	}
 
-	if !s.Redispatch.Equal(*t.Redispatch, opt) {
+	if s.Redispatch == nil || t.Redispatch == nil {
+		if s.Redispatch != nil || t.Redispatch != nil {
+			if opt.NilSameAsEmpty {
+				empty := &Redispatch{}
+				if s.Redispatch == nil {
+					if !(t.Redispatch.Equal(*empty)) {
+						diff["Redispatch"] = []interface{}{ValueOrNil(s.Redispatch), ValueOrNil(t.Redispatch)}
+					}
+				}
+				if t.Redispatch == nil {
+					if !(s.Redispatch.Equal(*empty)) {
+						diff["Redispatch"] = []interface{}{ValueOrNil(s.Redispatch), ValueOrNil(t.Redispatch)}
+					}
+				}
+			} else {
+				diff["Redispatch"] = []interface{}{ValueOrNil(s.Redispatch), ValueOrNil(t.Redispatch)}
+			}
+		}
+	} else if !s.Redispatch.Equal(*t.Redispatch, opt) {
 		diff["Redispatch"] = []interface{}{ValueOrNil(s.Redispatch), ValueOrNil(t.Redispatch)}
 	}
 
@@ -871,7 +1501,25 @@ func (s Defaults) Diff(t Defaults, opts ...Options) map[string][]interface{} {
 		diff["ServerTimeout"] = []interface{}{ValueOrNil(s.ServerTimeout), ValueOrNil(t.ServerTimeout)}
 	}
 
-	if !s.SmtpchkParams.Equal(*t.SmtpchkParams, opt) {
+	if s.SmtpchkParams == nil || t.SmtpchkParams == nil {
+		if s.SmtpchkParams != nil || t.SmtpchkParams != nil {
+			if opt.NilSameAsEmpty {
+				empty := &SmtpchkParams{}
+				if s.SmtpchkParams == nil {
+					if !(t.SmtpchkParams.Equal(*empty)) {
+						diff["SmtpchkParams"] = []interface{}{ValueOrNil(s.SmtpchkParams), ValueOrNil(t.SmtpchkParams)}
+					}
+				}
+				if t.SmtpchkParams == nil {
+					if !(s.SmtpchkParams.Equal(*empty)) {
+						diff["SmtpchkParams"] = []interface{}{ValueOrNil(s.SmtpchkParams), ValueOrNil(t.SmtpchkParams)}
+					}
+				}
+			} else {
+				diff["SmtpchkParams"] = []interface{}{ValueOrNil(s.SmtpchkParams), ValueOrNil(t.SmtpchkParams)}
+			}
+		}
+	} else if !s.SmtpchkParams.Equal(*t.SmtpchkParams, opt) {
 		diff["SmtpchkParams"] = []interface{}{ValueOrNil(s.SmtpchkParams), ValueOrNil(t.SmtpchkParams)}
 	}
 
@@ -879,7 +1527,25 @@ func (s Defaults) Diff(t Defaults, opts ...Options) map[string][]interface{} {
 		diff["SocketStats"] = []interface{}{s.SocketStats, t.SocketStats}
 	}
 
-	if !s.Source.Equal(*t.Source, opt) {
+	if s.Source == nil || t.Source == nil {
+		if s.Source != nil || t.Source != nil {
+			if opt.NilSameAsEmpty {
+				empty := &Source{}
+				if s.Source == nil {
+					if !(t.Source.Equal(*empty)) {
+						diff["Source"] = []interface{}{ValueOrNil(s.Source), ValueOrNil(t.Source)}
+					}
+				}
+				if t.Source == nil {
+					if !(s.Source.Equal(*empty)) {
+						diff["Source"] = []interface{}{ValueOrNil(s.Source), ValueOrNil(t.Source)}
+					}
+				}
+			} else {
+				diff["Source"] = []interface{}{ValueOrNil(s.Source), ValueOrNil(t.Source)}
+			}
+		}
+	} else if !s.Source.Equal(*t.Source, opt) {
 		diff["Source"] = []interface{}{ValueOrNil(s.Source), ValueOrNil(t.Source)}
 	}
 
@@ -911,7 +1577,25 @@ func (s Defaults) Diff(t Defaults, opts ...Options) map[string][]interface{} {
 		diff["SrvtcpkaIntvl"] = []interface{}{ValueOrNil(s.SrvtcpkaIntvl), ValueOrNil(t.SrvtcpkaIntvl)}
 	}
 
-	if !s.StatsOptions.Equal(*t.StatsOptions, opt) {
+	if s.StatsOptions == nil || t.StatsOptions == nil {
+		if s.StatsOptions != nil || t.StatsOptions != nil {
+			if opt.NilSameAsEmpty {
+				empty := &StatsOptions{}
+				if s.StatsOptions == nil {
+					if !(t.StatsOptions.Equal(*empty)) {
+						diff["StatsOptions"] = []interface{}{ValueOrNil(s.StatsOptions), ValueOrNil(t.StatsOptions)}
+					}
+				}
+				if t.StatsOptions == nil {
+					if !(s.StatsOptions.Equal(*empty)) {
+						diff["StatsOptions"] = []interface{}{ValueOrNil(s.StatsOptions), ValueOrNil(t.StatsOptions)}
+					}
+				}
+			} else {
+				diff["StatsOptions"] = []interface{}{ValueOrNil(s.StatsOptions), ValueOrNil(t.StatsOptions)}
+			}
+		}
+	} else if !s.StatsOptions.Equal(*t.StatsOptions, opt) {
 		diff["StatsOptions"] = []interface{}{ValueOrNil(s.StatsOptions), ValueOrNil(t.StatsOptions)}
 	}
 

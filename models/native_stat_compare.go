@@ -41,7 +41,25 @@ func (s NativeStat) Equal(t NativeStat, opts ...Options) bool {
 		return false
 	}
 
-	if !s.Stats.Equal(*t.Stats, opt) {
+	if s.Stats == nil || t.Stats == nil {
+		if s.Stats != nil || t.Stats != nil {
+			if opt.NilSameAsEmpty {
+				empty := &NativeStatStats{}
+				if s.Stats == nil {
+					if !(t.Stats.Equal(*empty)) {
+						return false
+					}
+				}
+				if t.Stats == nil {
+					if !(s.Stats.Equal(*empty)) {
+						return false
+					}
+				}
+			} else {
+				return false
+			}
+		}
+	} else if !s.Stats.Equal(*t.Stats, opt) {
 		return false
 	}
 
@@ -77,7 +95,25 @@ func (s NativeStat) Diff(t NativeStat, opts ...Options) map[string][]interface{}
 		diff["Name"] = []interface{}{s.Name, t.Name}
 	}
 
-	if !s.Stats.Equal(*t.Stats, opt) {
+	if s.Stats == nil || t.Stats == nil {
+		if s.Stats != nil || t.Stats != nil {
+			if opt.NilSameAsEmpty {
+				empty := &NativeStatStats{}
+				if s.Stats == nil {
+					if !(t.Stats.Equal(*empty)) {
+						diff["Stats"] = []interface{}{ValueOrNil(s.Stats), ValueOrNil(t.Stats)}
+					}
+				}
+				if t.Stats == nil {
+					if !(s.Stats.Equal(*empty)) {
+						diff["Stats"] = []interface{}{ValueOrNil(s.Stats), ValueOrNil(t.Stats)}
+					}
+				}
+			} else {
+				diff["Stats"] = []interface{}{ValueOrNil(s.Stats), ValueOrNil(t.Stats)}
+			}
+		}
+	} else if !s.Stats.Equal(*t.Stats, opt) {
 		diff["Stats"] = []interface{}{ValueOrNil(s.Stats), ValueOrNil(t.Stats)}
 	}
 

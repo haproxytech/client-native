@@ -41,7 +41,25 @@ func (s ClusterSettings) Equal(t ClusterSettings, opts ...Options) bool {
 		return false
 	}
 
-	if !s.Cluster.Equal(*t.Cluster, opt) {
+	if s.Cluster == nil || t.Cluster == nil {
+		if s.Cluster != nil || t.Cluster != nil {
+			if opt.NilSameAsEmpty {
+				empty := &ClusterSettingsCluster{}
+				if s.Cluster == nil {
+					if !(t.Cluster.Equal(*empty)) {
+						return false
+					}
+				}
+				if t.Cluster == nil {
+					if !(s.Cluster.Equal(*empty)) {
+						return false
+					}
+				}
+			} else {
+				return false
+			}
+		}
+	} else if !s.Cluster.Equal(*t.Cluster, opt) {
 		return false
 	}
 
@@ -77,7 +95,25 @@ func (s ClusterSettings) Diff(t ClusterSettings, opts ...Options) map[string][]i
 		diff["BootstrapKey"] = []interface{}{s.BootstrapKey, t.BootstrapKey}
 	}
 
-	if !s.Cluster.Equal(*t.Cluster, opt) {
+	if s.Cluster == nil || t.Cluster == nil {
+		if s.Cluster != nil || t.Cluster != nil {
+			if opt.NilSameAsEmpty {
+				empty := &ClusterSettingsCluster{}
+				if s.Cluster == nil {
+					if !(t.Cluster.Equal(*empty)) {
+						diff["Cluster"] = []interface{}{ValueOrNil(s.Cluster), ValueOrNil(t.Cluster)}
+					}
+				}
+				if t.Cluster == nil {
+					if !(s.Cluster.Equal(*empty)) {
+						diff["Cluster"] = []interface{}{ValueOrNil(s.Cluster), ValueOrNil(t.Cluster)}
+					}
+				}
+			} else {
+				diff["Cluster"] = []interface{}{ValueOrNil(s.Cluster), ValueOrNil(t.Cluster)}
+			}
+		}
+	} else if !s.Cluster.Equal(*t.Cluster, opt) {
 		diff["Cluster"] = []interface{}{ValueOrNil(s.Cluster), ValueOrNil(t.Cluster)}
 	}
 

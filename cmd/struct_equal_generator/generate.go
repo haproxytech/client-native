@@ -7,11 +7,12 @@ import (
 
 func generateEqualAndDiff(opt generateEqualAndDiffOptions) error {
 	funcMaps := template.FuncMap{
-		"HasPrefix": strings.HasPrefix,
-		"Title":     toTitle,
-		"CamelCase": toCamelCase,
-		"LowerCase": toLowerCase,
-		"JSON":      toJSON,
+		"HasPrefix":  strings.HasPrefix,
+		"TrimPrefix": strings.TrimPrefix,
+		"Title":      toTitle,
+		"CamelCase":  toCamelCase,
+		"LowerCase":  toLowerCase,
+		"JSON":       toJSON,
 	}
 	tmpl, err := template.New("generate.tmpl").Funcs(funcMaps).Parse(tmplEqualAndDiff)
 	if err != nil {

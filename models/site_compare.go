@@ -51,7 +51,25 @@ func (s Site) Equal(t Site, opts ...Options) bool {
 		return false
 	}
 
-	if !s.Service.Equal(*t.Service, opt) {
+	if s.Service == nil || t.Service == nil {
+		if s.Service != nil || t.Service != nil {
+			if opt.NilSameAsEmpty {
+				empty := &SiteService{}
+				if s.Service == nil {
+					if !(t.Service.Equal(*empty)) {
+						return false
+					}
+				}
+				if t.Service == nil {
+					if !(s.Service.Equal(*empty)) {
+						return false
+					}
+				}
+			} else {
+				return false
+			}
+		}
+	} else if !s.Service.Equal(*t.Service, opt) {
 		return false
 	}
 
@@ -96,7 +114,25 @@ func (s Site) Diff(t Site, opts ...Options) map[string][]interface{} {
 		diff["Name"] = []interface{}{s.Name, t.Name}
 	}
 
-	if !s.Service.Equal(*t.Service, opt) {
+	if s.Service == nil || t.Service == nil {
+		if s.Service != nil || t.Service != nil {
+			if opt.NilSameAsEmpty {
+				empty := &SiteService{}
+				if s.Service == nil {
+					if !(t.Service.Equal(*empty)) {
+						diff["Service"] = []interface{}{ValueOrNil(s.Service), ValueOrNil(t.Service)}
+					}
+				}
+				if t.Service == nil {
+					if !(s.Service.Equal(*empty)) {
+						diff["Service"] = []interface{}{ValueOrNil(s.Service), ValueOrNil(t.Service)}
+					}
+				}
+			} else {
+				diff["Service"] = []interface{}{ValueOrNil(s.Service), ValueOrNil(t.Service)}
+			}
+		}
+	} else if !s.Service.Equal(*t.Service, opt) {
 		diff["Service"] = []interface{}{ValueOrNil(s.Service), ValueOrNil(t.Service)}
 	}
 
@@ -119,7 +155,25 @@ func (s Site) Diff(t Site, opts ...Options) map[string][]interface{} {
 func (s SiteFarm) Equal(t SiteFarm, opts ...Options) bool {
 	opt := getOptions(opts...)
 
-	if !s.Balance.Equal(*t.Balance, opt) {
+	if s.Balance == nil || t.Balance == nil {
+		if s.Balance != nil || t.Balance != nil {
+			if opt.NilSameAsEmpty {
+				empty := &Balance{}
+				if s.Balance == nil {
+					if !(t.Balance.Equal(*empty)) {
+						return false
+					}
+				}
+				if t.Balance == nil {
+					if !(s.Balance.Equal(*empty)) {
+						return false
+					}
+				}
+			} else {
+				return false
+			}
+		}
+	} else if !s.Balance.Equal(*t.Balance, opt) {
 		return false
 	}
 
@@ -131,7 +185,25 @@ func (s SiteFarm) Equal(t SiteFarm, opts ...Options) bool {
 		return false
 	}
 
-	if !s.Forwardfor.Equal(*t.Forwardfor, opt) {
+	if s.Forwardfor == nil || t.Forwardfor == nil {
+		if s.Forwardfor != nil || t.Forwardfor != nil {
+			if opt.NilSameAsEmpty {
+				empty := &Forwardfor{}
+				if s.Forwardfor == nil {
+					if !(t.Forwardfor.Equal(*empty)) {
+						return false
+					}
+				}
+				if t.Forwardfor == nil {
+					if !(s.Forwardfor.Equal(*empty)) {
+						return false
+					}
+				}
+			} else {
+				return false
+			}
+		}
+	} else if !s.Forwardfor.Equal(*t.Forwardfor, opt) {
 		return false
 	}
 
@@ -177,7 +249,26 @@ func (s SiteFarm) Diff(t SiteFarm, opts ...Options) map[string][]interface{} {
 	opt := getOptions(opts...)
 
 	diff := make(map[string][]interface{})
-	if !s.Balance.Equal(*t.Balance, opt) {
+
+	if s.Balance == nil || t.Balance == nil {
+		if s.Balance != nil || t.Balance != nil {
+			if opt.NilSameAsEmpty {
+				empty := &Balance{}
+				if s.Balance == nil {
+					if !(t.Balance.Equal(*empty)) {
+						diff["Balance"] = []interface{}{ValueOrNil(s.Balance), ValueOrNil(t.Balance)}
+					}
+				}
+				if t.Balance == nil {
+					if !(s.Balance.Equal(*empty)) {
+						diff["Balance"] = []interface{}{ValueOrNil(s.Balance), ValueOrNil(t.Balance)}
+					}
+				}
+			} else {
+				diff["Balance"] = []interface{}{ValueOrNil(s.Balance), ValueOrNil(t.Balance)}
+			}
+		}
+	} else if !s.Balance.Equal(*t.Balance, opt) {
 		diff["Balance"] = []interface{}{ValueOrNil(s.Balance), ValueOrNil(t.Balance)}
 	}
 
@@ -189,7 +280,25 @@ func (s SiteFarm) Diff(t SiteFarm, opts ...Options) map[string][]interface{} {
 		diff["CondTest"] = []interface{}{s.CondTest, t.CondTest}
 	}
 
-	if !s.Forwardfor.Equal(*t.Forwardfor, opt) {
+	if s.Forwardfor == nil || t.Forwardfor == nil {
+		if s.Forwardfor != nil || t.Forwardfor != nil {
+			if opt.NilSameAsEmpty {
+				empty := &Forwardfor{}
+				if s.Forwardfor == nil {
+					if !(t.Forwardfor.Equal(*empty)) {
+						diff["Forwardfor"] = []interface{}{ValueOrNil(s.Forwardfor), ValueOrNil(t.Forwardfor)}
+					}
+				}
+				if t.Forwardfor == nil {
+					if !(s.Forwardfor.Equal(*empty)) {
+						diff["Forwardfor"] = []interface{}{ValueOrNil(s.Forwardfor), ValueOrNil(t.Forwardfor)}
+					}
+				}
+			} else {
+				diff["Forwardfor"] = []interface{}{ValueOrNil(s.Forwardfor), ValueOrNil(t.Forwardfor)}
+			}
+		}
+	} else if !s.Forwardfor.Equal(*t.Forwardfor, opt) {
 		diff["Forwardfor"] = []interface{}{ValueOrNil(s.Forwardfor), ValueOrNil(t.Forwardfor)}
 	}
 

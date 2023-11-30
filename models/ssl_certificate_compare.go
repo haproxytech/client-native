@@ -17,13 +17,26 @@
 
 package models
 
+import (
+	"github.com/go-openapi/strfmt"
+)
+
 // Equal checks if two structs of type SslCertificate are equal
+//
+// By default empty maps and slices are equal to nil:
 //
 //	var a, b SslCertificate
 //	equal := a.Equal(b)
 //
-// opts ...Options are ignored in this method
+// For more advanced use case you can configure these options (default values are shown):
+//
+//	var a, b SslCertificate
+//	equal := a.Equal(b,Options{
+//		NilSameAsEmpty: true,
+//	})
 func (s SslCertificate) Equal(t SslCertificate, opts ...Options) bool {
+	opt := getOptions(opts...)
+
 	if s.Description != t.Description {
 		return false
 	}
@@ -44,11 +57,47 @@ func (s SslCertificate) Equal(t SslCertificate, opts ...Options) bool {
 		return false
 	}
 
-	if !s.NotAfter.Equal(*t.NotAfter) {
+	if s.NotAfter == nil || t.NotAfter == nil {
+		if s.NotAfter != nil || t.NotAfter != nil {
+			if opt.NilSameAsEmpty {
+				empty := &strfmt.DateTime{}
+				if s.NotAfter == nil {
+					if !(t.NotAfter.Equal(*empty)) {
+						return false
+					}
+				}
+				if t.NotAfter == nil {
+					if !(s.NotAfter.Equal(*empty)) {
+						return false
+					}
+				}
+			} else {
+				return false
+			}
+		}
+	} else if !s.NotAfter.Equal(*t.NotAfter) {
 		return false
 	}
 
-	if !s.NotBefore.Equal(*t.NotBefore) {
+	if s.NotBefore == nil || t.NotBefore == nil {
+		if s.NotBefore != nil || t.NotBefore != nil {
+			if opt.NilSameAsEmpty {
+				empty := &strfmt.DateTime{}
+				if s.NotBefore == nil {
+					if !(t.NotBefore.Equal(*empty)) {
+						return false
+					}
+				}
+				if t.NotBefore == nil {
+					if !(s.NotBefore.Equal(*empty)) {
+						return false
+					}
+				}
+			} else {
+				return false
+			}
+		}
+	} else if !s.NotBefore.Equal(*t.NotBefore) {
 		return false
 	}
 
@@ -65,11 +114,20 @@ func (s SslCertificate) Equal(t SslCertificate, opts ...Options) bool {
 
 // Diff checks if two structs of type SslCertificate are equal
 //
+// By default empty maps and slices are equal to nil:
+//
 //	var a, b SslCertificate
 //	diff := a.Diff(b)
 //
-// opts ...Options are ignored in this method
+// For more advanced use case you can configure these options (default values are shown):
+//
+//	var a, b SslCertificate
+//	diff := a.Diff(b,Options{
+//		NilSameAsEmpty: true,
+//	})
 func (s SslCertificate) Diff(t SslCertificate, opts ...Options) map[string][]interface{} {
+	opt := getOptions(opts...)
+
 	diff := make(map[string][]interface{})
 	if s.Description != t.Description {
 		diff["Description"] = []interface{}{s.Description, t.Description}
@@ -91,11 +149,47 @@ func (s SslCertificate) Diff(t SslCertificate, opts ...Options) map[string][]int
 		diff["Issuers"] = []interface{}{s.Issuers, t.Issuers}
 	}
 
-	if !s.NotAfter.Equal(*t.NotAfter) {
+	if s.NotAfter == nil || t.NotAfter == nil {
+		if s.NotAfter != nil || t.NotAfter != nil {
+			if opt.NilSameAsEmpty {
+				empty := &strfmt.DateTime{}
+				if s.NotAfter == nil {
+					if !(t.NotAfter.Equal(*empty)) {
+						diff["NotAfter"] = []interface{}{ValueOrNil(s.NotAfter), ValueOrNil(t.NotAfter)}
+					}
+				}
+				if t.NotAfter == nil {
+					if !(s.NotAfter.Equal(*empty)) {
+						diff["NotAfter"] = []interface{}{ValueOrNil(s.NotAfter), ValueOrNil(t.NotAfter)}
+					}
+				}
+			} else {
+				diff["NotAfter"] = []interface{}{ValueOrNil(s.NotAfter), ValueOrNil(t.NotAfter)}
+			}
+		}
+	} else if !s.NotAfter.Equal(*t.NotAfter) {
 		diff["NotAfter"] = []interface{}{ValueOrNil(s.NotAfter), ValueOrNil(t.NotAfter)}
 	}
 
-	if !s.NotBefore.Equal(*t.NotBefore) {
+	if s.NotBefore == nil || t.NotBefore == nil {
+		if s.NotBefore != nil || t.NotBefore != nil {
+			if opt.NilSameAsEmpty {
+				empty := &strfmt.DateTime{}
+				if s.NotBefore == nil {
+					if !(t.NotBefore.Equal(*empty)) {
+						diff["NotBefore"] = []interface{}{ValueOrNil(s.NotBefore), ValueOrNil(t.NotBefore)}
+					}
+				}
+				if t.NotBefore == nil {
+					if !(s.NotBefore.Equal(*empty)) {
+						diff["NotBefore"] = []interface{}{ValueOrNil(s.NotBefore), ValueOrNil(t.NotBefore)}
+					}
+				}
+			} else {
+				diff["NotBefore"] = []interface{}{ValueOrNil(s.NotBefore), ValueOrNil(t.NotBefore)}
+			}
+		}
+	} else if !s.NotBefore.Equal(*t.NotBefore) {
 		diff["NotBefore"] = []interface{}{ValueOrNil(s.NotBefore), ValueOrNil(t.NotBefore)}
 	}
 

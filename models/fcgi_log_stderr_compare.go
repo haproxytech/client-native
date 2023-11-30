@@ -61,7 +61,25 @@ func (s FCGILogStderr) Equal(t FCGILogStderr, opts ...Options) bool {
 		return false
 	}
 
-	if !s.Sample.Equal(*t.Sample, opt) {
+	if s.Sample == nil || t.Sample == nil {
+		if s.Sample != nil || t.Sample != nil {
+			if opt.NilSameAsEmpty {
+				empty := &FCGILogStderrSample{}
+				if s.Sample == nil {
+					if !(t.Sample.Equal(*empty)) {
+						return false
+					}
+				}
+				if t.Sample == nil {
+					if !(s.Sample.Equal(*empty)) {
+						return false
+					}
+				}
+			} else {
+				return false
+			}
+		}
+	} else if !s.Sample.Equal(*t.Sample, opt) {
 		return false
 	}
 
@@ -113,7 +131,25 @@ func (s FCGILogStderr) Diff(t FCGILogStderr, opts ...Options) map[string][]inter
 		diff["Minlevel"] = []interface{}{s.Minlevel, t.Minlevel}
 	}
 
-	if !s.Sample.Equal(*t.Sample, opt) {
+	if s.Sample == nil || t.Sample == nil {
+		if s.Sample != nil || t.Sample != nil {
+			if opt.NilSameAsEmpty {
+				empty := &FCGILogStderrSample{}
+				if s.Sample == nil {
+					if !(t.Sample.Equal(*empty)) {
+						diff["Sample"] = []interface{}{ValueOrNil(s.Sample), ValueOrNil(t.Sample)}
+					}
+				}
+				if t.Sample == nil {
+					if !(s.Sample.Equal(*empty)) {
+						diff["Sample"] = []interface{}{ValueOrNil(s.Sample), ValueOrNil(t.Sample)}
+					}
+				}
+			} else {
+				diff["Sample"] = []interface{}{ValueOrNil(s.Sample), ValueOrNil(t.Sample)}
+			}
+		}
+	} else if !s.Sample.Equal(*t.Sample, opt) {
 		diff["Sample"] = []interface{}{ValueOrNil(s.Sample), ValueOrNil(t.Sample)}
 	}
 

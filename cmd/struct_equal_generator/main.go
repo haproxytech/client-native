@@ -71,7 +71,7 @@ func scanAllTypes(fileName string) []string {
 	return typesInFile
 }
 
-func generate(fileName string, args Args) (string, error) { //nolint:gocognit
+func generate(fileName string, args Args) (string, error) { //nolint:gocognit,maintidx
 	fset := token.NewFileSet()
 	var packageName string
 
@@ -165,6 +165,12 @@ func generate(fileName string, args Args) (string, error) { //nolint:gocognit
 				needsOptions := false
 				needsOptionsIndex := false
 				fields, needsOptions, needsOptionsIndex = getFields(fields, currType, imports)
+				for _, f := range fields {
+					if strings.HasPrefix(f.Type, "*") && (f.HasEqualOpt || f.HasEqual) {
+						needsOptions = true
+						break
+					}
+				}
 				hasTests = true
 				err = generateEqualAndDiff(generateEqualAndDiffOptions{
 					PackageName:       packageName,

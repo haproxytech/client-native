@@ -37,7 +37,25 @@ func (s ProcessInfo) Equal(t ProcessInfo, opts ...Options) bool {
 		return false
 	}
 
-	if !s.Info.Equal(*t.Info, opt) {
+	if s.Info == nil || t.Info == nil {
+		if s.Info != nil || t.Info != nil {
+			if opt.NilSameAsEmpty {
+				empty := &ProcessInfoItem{}
+				if s.Info == nil {
+					if !(t.Info.Equal(*empty)) {
+						return false
+					}
+				}
+				if t.Info == nil {
+					if !(s.Info.Equal(*empty)) {
+						return false
+					}
+				}
+			} else {
+				return false
+			}
+		}
+	} else if !s.Info.Equal(*t.Info, opt) {
 		return false
 	}
 
@@ -69,7 +87,25 @@ func (s ProcessInfo) Diff(t ProcessInfo, opts ...Options) map[string][]interface
 		diff["Error"] = []interface{}{s.Error, t.Error}
 	}
 
-	if !s.Info.Equal(*t.Info, opt) {
+	if s.Info == nil || t.Info == nil {
+		if s.Info != nil || t.Info != nil {
+			if opt.NilSameAsEmpty {
+				empty := &ProcessInfoItem{}
+				if s.Info == nil {
+					if !(t.Info.Equal(*empty)) {
+						diff["Info"] = []interface{}{ValueOrNil(s.Info), ValueOrNil(t.Info)}
+					}
+				}
+				if t.Info == nil {
+					if !(s.Info.Equal(*empty)) {
+						diff["Info"] = []interface{}{ValueOrNil(s.Info), ValueOrNil(t.Info)}
+					}
+				}
+			} else {
+				diff["Info"] = []interface{}{ValueOrNil(s.Info), ValueOrNil(t.Info)}
+			}
+		}
+	} else if !s.Info.Equal(*t.Info, opt) {
 		diff["Info"] = []interface{}{ValueOrNil(s.Info), ValueOrNil(t.Info)}
 	}
 

@@ -57,6 +57,7 @@ func (s DefaultBind) Diff(t DefaultBind, opts ...Options) map[string][]interface
 	opt := getOptions(opts...)
 
 	diff := make(map[string][]interface{})
+
 	if !s.BindParams.Equal(t.BindParams, opt) {
 		diff["BindParams"] = []interface{}{s.BindParams, t.BindParams}
 	}

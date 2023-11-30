@@ -41,7 +41,25 @@ func (s SpoeMessage) Equal(t SpoeMessage, opts ...Options) bool {
 		return false
 	}
 
-	if !s.Event.Equal(*t.Event, opt) {
+	if s.Event == nil || t.Event == nil {
+		if s.Event != nil || t.Event != nil {
+			if opt.NilSameAsEmpty {
+				empty := &SpoeMessageEvent{}
+				if s.Event == nil {
+					if !(t.Event.Equal(*empty)) {
+						return false
+					}
+				}
+				if t.Event == nil {
+					if !(s.Event.Equal(*empty)) {
+						return false
+					}
+				}
+			} else {
+				return false
+			}
+		}
+	} else if !s.Event.Equal(*t.Event, opt) {
 		return false
 	}
 
@@ -69,6 +87,7 @@ func (s SpoeMessage) Diff(t SpoeMessage, opts ...Options) map[string][]interface
 	opt := getOptions(opts...)
 
 	diff := make(map[string][]interface{})
+
 	if !s.ACL.Equal(t.ACL, opt) {
 		diff["ACL"] = []interface{}{s.ACL, t.ACL}
 	}
@@ -77,7 +96,25 @@ func (s SpoeMessage) Diff(t SpoeMessage, opts ...Options) map[string][]interface
 		diff["Args"] = []interface{}{s.Args, t.Args}
 	}
 
-	if !s.Event.Equal(*t.Event, opt) {
+	if s.Event == nil || t.Event == nil {
+		if s.Event != nil || t.Event != nil {
+			if opt.NilSameAsEmpty {
+				empty := &SpoeMessageEvent{}
+				if s.Event == nil {
+					if !(t.Event.Equal(*empty)) {
+						diff["Event"] = []interface{}{ValueOrNil(s.Event), ValueOrNil(t.Event)}
+					}
+				}
+				if t.Event == nil {
+					if !(s.Event.Equal(*empty)) {
+						diff["Event"] = []interface{}{ValueOrNil(s.Event), ValueOrNil(t.Event)}
+					}
+				}
+			} else {
+				diff["Event"] = []interface{}{ValueOrNil(s.Event), ValueOrNil(t.Event)}
+			}
+		}
+	} else if !s.Event.Equal(*t.Event, opt) {
 		diff["Event"] = []interface{}{ValueOrNil(s.Event), ValueOrNil(t.Event)}
 	}
 

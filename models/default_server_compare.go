@@ -57,6 +57,7 @@ func (s DefaultServer) Diff(t DefaultServer, opts ...Options) map[string][]inter
 	opt := getOptions(opts...)
 
 	diff := make(map[string][]interface{})
+
 	if !s.ServerParams.Equal(t.ServerParams, opt) {
 		diff["ServerParams"] = []interface{}{s.ServerParams, t.ServerParams}
 	}

@@ -40,7 +40,43 @@ func (s {{.Data.Name}}) {{.Name}}(t {{.Data.Name}}, opts ...Options) {{- if eq $
 			{{- end }}
 		}
 	{{- else if or .HasEqual .HasEqualOpt }}
-		if !s.{{.Name}}.Equal({{if HasPrefix .Type "*"}}*{{end}}t.{{.Name}}{{if .HasEqualOpt}}, opt{{end}}) {
+	    {{if HasPrefix .Type "*"}}
+		if s.{{.Name}} == nil || t.{{.Name}} == nil {
+			if s.{{.Name}} != nil || t.{{.Name}} != nil {
+				if opt.NilSameAsEmpty {
+					{{- if eq .TypeInFile "" }}
+					empty := &{{ TrimPrefix .Type "*"}}{}
+					{{- else }}
+					empty := &{{ TrimPrefix .TypeInFile "*"}}{}
+					{{- end }}
+					if s.{{.Name}} == nil {
+						if !(t.{{.Name}}.Equal(*empty)){
+							{{- if eq $topLevel.Name "Equal" }}
+								return false
+							{{- else if eq $topLevel.Name "Diff" }}
+								diff["{{.Name}}"] = []interface{}{ {{if HasPrefix .Type "*"}}ValueOrNil({{end}}s.{{.Name}}{{if HasPrefix .Type "*"}}){{end}}, {{if HasPrefix .Type "*"}}ValueOrNil({{end}}t.{{.Name}}{{if HasPrefix .Type "*"}}){{end}} }
+							{{- end }}
+						}
+					}
+					if t.{{.Name}} == nil {
+						if !(s.{{.Name}}.Equal(*empty)){
+							{{- if eq $topLevel.Name "Equal" }}
+								return false
+							{{- else if eq $topLevel.Name "Diff" }}
+								diff["{{.Name}}"] = []interface{}{ {{if HasPrefix .Type "*"}}ValueOrNil({{end}}s.{{.Name}}{{if HasPrefix .Type "*"}}){{end}}, {{if HasPrefix .Type "*"}}ValueOrNil({{end}}t.{{.Name}}{{if HasPrefix .Type "*"}}){{end}} }
+							{{- end }}
+						}
+					}
+				} else {
+					{{- if eq $topLevel.Name "Equal" }}
+						return false
+					{{- else if eq $topLevel.Name "Diff" }}
+						diff["{{.Name}}"] = []interface{}{ {{if HasPrefix .Type "*"}}ValueOrNil({{end}}s.{{.Name}}{{if HasPrefix .Type "*"}}){{end}}, {{if HasPrefix .Type "*"}}ValueOrNil({{end}}t.{{.Name}}{{if HasPrefix .Type "*"}}){{end}} }
+					{{- end }}
+				}
+			}
+		{{- end}}
+		{{if HasPrefix .Type "*"}} } else {{end}}if !s.{{.Name}}.Equal({{if HasPrefix .Type "*"}}*{{end}}t.{{.Name}}{{if .HasEqualOpt}}, opt{{end}}) {
 			{{- if eq $topLevel.Name "Equal" }}
 				return false
 			{{- else if eq $topLevel.Name "Diff" }}

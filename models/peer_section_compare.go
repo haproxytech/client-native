@@ -33,11 +33,47 @@ package models
 func (s PeerSection) Equal(t PeerSection, opts ...Options) bool {
 	opt := getOptions(opts...)
 
-	if !s.DefaultBind.Equal(*t.DefaultBind, opt) {
+	if s.DefaultBind == nil || t.DefaultBind == nil {
+		if s.DefaultBind != nil || t.DefaultBind != nil {
+			if opt.NilSameAsEmpty {
+				empty := &DefaultBind{}
+				if s.DefaultBind == nil {
+					if !(t.DefaultBind.Equal(*empty)) {
+						return false
+					}
+				}
+				if t.DefaultBind == nil {
+					if !(s.DefaultBind.Equal(*empty)) {
+						return false
+					}
+				}
+			} else {
+				return false
+			}
+		}
+	} else if !s.DefaultBind.Equal(*t.DefaultBind, opt) {
 		return false
 	}
 
-	if !s.DefaultServer.Equal(*t.DefaultServer, opt) {
+	if s.DefaultServer == nil || t.DefaultServer == nil {
+		if s.DefaultServer != nil || t.DefaultServer != nil {
+			if opt.NilSameAsEmpty {
+				empty := &DefaultServer{}
+				if s.DefaultServer == nil {
+					if !(t.DefaultServer.Equal(*empty)) {
+						return false
+					}
+				}
+				if t.DefaultServer == nil {
+					if !(s.DefaultServer.Equal(*empty)) {
+						return false
+					}
+				}
+			} else {
+				return false
+			}
+		}
+	} else if !s.DefaultServer.Equal(*t.DefaultServer, opt) {
 		return false
 	}
 
@@ -77,11 +113,48 @@ func (s PeerSection) Diff(t PeerSection, opts ...Options) map[string][]interface
 	opt := getOptions(opts...)
 
 	diff := make(map[string][]interface{})
-	if !s.DefaultBind.Equal(*t.DefaultBind, opt) {
+
+	if s.DefaultBind == nil || t.DefaultBind == nil {
+		if s.DefaultBind != nil || t.DefaultBind != nil {
+			if opt.NilSameAsEmpty {
+				empty := &DefaultBind{}
+				if s.DefaultBind == nil {
+					if !(t.DefaultBind.Equal(*empty)) {
+						diff["DefaultBind"] = []interface{}{ValueOrNil(s.DefaultBind), ValueOrNil(t.DefaultBind)}
+					}
+				}
+				if t.DefaultBind == nil {
+					if !(s.DefaultBind.Equal(*empty)) {
+						diff["DefaultBind"] = []interface{}{ValueOrNil(s.DefaultBind), ValueOrNil(t.DefaultBind)}
+					}
+				}
+			} else {
+				diff["DefaultBind"] = []interface{}{ValueOrNil(s.DefaultBind), ValueOrNil(t.DefaultBind)}
+			}
+		}
+	} else if !s.DefaultBind.Equal(*t.DefaultBind, opt) {
 		diff["DefaultBind"] = []interface{}{ValueOrNil(s.DefaultBind), ValueOrNil(t.DefaultBind)}
 	}
 
-	if !s.DefaultServer.Equal(*t.DefaultServer, opt) {
+	if s.DefaultServer == nil || t.DefaultServer == nil {
+		if s.DefaultServer != nil || t.DefaultServer != nil {
+			if opt.NilSameAsEmpty {
+				empty := &DefaultServer{}
+				if s.DefaultServer == nil {
+					if !(t.DefaultServer.Equal(*empty)) {
+						diff["DefaultServer"] = []interface{}{ValueOrNil(s.DefaultServer), ValueOrNil(t.DefaultServer)}
+					}
+				}
+				if t.DefaultServer == nil {
+					if !(s.DefaultServer.Equal(*empty)) {
+						diff["DefaultServer"] = []interface{}{ValueOrNil(s.DefaultServer), ValueOrNil(t.DefaultServer)}
+					}
+				}
+			} else {
+				diff["DefaultServer"] = []interface{}{ValueOrNil(s.DefaultServer), ValueOrNil(t.DefaultServer)}
+			}
+		}
+	} else if !s.DefaultServer.Equal(*t.DefaultServer, opt) {
 		diff["DefaultServer"] = []interface{}{ValueOrNil(s.DefaultServer), ValueOrNil(t.DefaultServer)}
 	}
 

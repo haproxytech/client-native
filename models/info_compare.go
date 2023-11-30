@@ -33,11 +33,47 @@ package models
 func (s Info) Equal(t Info, opts ...Options) bool {
 	opt := getOptions(opts...)
 
-	if !s.API.Equal(*t.API, opt) {
+	if s.API == nil || t.API == nil {
+		if s.API != nil || t.API != nil {
+			if opt.NilSameAsEmpty {
+				empty := &InfoAPI{}
+				if s.API == nil {
+					if !(t.API.Equal(*empty)) {
+						return false
+					}
+				}
+				if t.API == nil {
+					if !(s.API.Equal(*empty)) {
+						return false
+					}
+				}
+			} else {
+				return false
+			}
+		}
+	} else if !s.API.Equal(*t.API, opt) {
 		return false
 	}
 
-	if !s.System.Equal(*t.System, opt) {
+	if s.System == nil || t.System == nil {
+		if s.System != nil || t.System != nil {
+			if opt.NilSameAsEmpty {
+				empty := &InfoSystem{}
+				if s.System == nil {
+					if !(t.System.Equal(*empty)) {
+						return false
+					}
+				}
+				if t.System == nil {
+					if !(s.System.Equal(*empty)) {
+						return false
+					}
+				}
+			} else {
+				return false
+			}
+		}
+	} else if !s.System.Equal(*t.System, opt) {
 		return false
 	}
 
@@ -61,11 +97,48 @@ func (s Info) Diff(t Info, opts ...Options) map[string][]interface{} {
 	opt := getOptions(opts...)
 
 	diff := make(map[string][]interface{})
-	if !s.API.Equal(*t.API, opt) {
+
+	if s.API == nil || t.API == nil {
+		if s.API != nil || t.API != nil {
+			if opt.NilSameAsEmpty {
+				empty := &InfoAPI{}
+				if s.API == nil {
+					if !(t.API.Equal(*empty)) {
+						diff["API"] = []interface{}{ValueOrNil(s.API), ValueOrNil(t.API)}
+					}
+				}
+				if t.API == nil {
+					if !(s.API.Equal(*empty)) {
+						diff["API"] = []interface{}{ValueOrNil(s.API), ValueOrNil(t.API)}
+					}
+				}
+			} else {
+				diff["API"] = []interface{}{ValueOrNil(s.API), ValueOrNil(t.API)}
+			}
+		}
+	} else if !s.API.Equal(*t.API, opt) {
 		diff["API"] = []interface{}{ValueOrNil(s.API), ValueOrNil(t.API)}
 	}
 
-	if !s.System.Equal(*t.System, opt) {
+	if s.System == nil || t.System == nil {
+		if s.System != nil || t.System != nil {
+			if opt.NilSameAsEmpty {
+				empty := &InfoSystem{}
+				if s.System == nil {
+					if !(t.System.Equal(*empty)) {
+						diff["System"] = []interface{}{ValueOrNil(s.System), ValueOrNil(t.System)}
+					}
+				}
+				if t.System == nil {
+					if !(s.System.Equal(*empty)) {
+						diff["System"] = []interface{}{ValueOrNil(s.System), ValueOrNil(t.System)}
+					}
+				}
+			} else {
+				diff["System"] = []interface{}{ValueOrNil(s.System), ValueOrNil(t.System)}
+			}
+		}
+	} else if !s.System.Equal(*t.System, opt) {
 		diff["System"] = []interface{}{ValueOrNil(s.System), ValueOrNil(t.System)}
 	}
 
@@ -79,6 +152,7 @@ func (s Info) Diff(t Info, opts ...Options) map[string][]interface{} {
 //
 // opts ...Options are ignored in this method
 func (s InfoAPI) Equal(t InfoAPI, opts ...Options) bool {
+
 	if !s.BuildDate.Equal(t.BuildDate) {
 		return false
 	}
@@ -98,6 +172,7 @@ func (s InfoAPI) Equal(t InfoAPI, opts ...Options) bool {
 // opts ...Options are ignored in this method
 func (s InfoAPI) Diff(t InfoAPI, opts ...Options) map[string][]interface{} {
 	diff := make(map[string][]interface{})
+
 	if !s.BuildDate.Equal(t.BuildDate) {
 		diff["BuildDate"] = []interface{}{s.BuildDate, t.BuildDate}
 	}
@@ -125,7 +200,25 @@ func (s InfoAPI) Diff(t InfoAPI, opts ...Options) map[string][]interface{} {
 func (s InfoSystem) Equal(t InfoSystem, opts ...Options) bool {
 	opt := getOptions(opts...)
 
-	if !s.CPUInfo.Equal(*t.CPUInfo, opt) {
+	if s.CPUInfo == nil || t.CPUInfo == nil {
+		if s.CPUInfo != nil || t.CPUInfo != nil {
+			if opt.NilSameAsEmpty {
+				empty := &InfoSystemCPUInfo{}
+				if s.CPUInfo == nil {
+					if !(t.CPUInfo.Equal(*empty)) {
+						return false
+					}
+				}
+				if t.CPUInfo == nil {
+					if !(s.CPUInfo.Equal(*empty)) {
+						return false
+					}
+				}
+			} else {
+				return false
+			}
+		}
+	} else if !s.CPUInfo.Equal(*t.CPUInfo, opt) {
 		return false
 	}
 
@@ -133,7 +226,25 @@ func (s InfoSystem) Equal(t InfoSystem, opts ...Options) bool {
 		return false
 	}
 
-	if !s.MemInfo.Equal(*t.MemInfo, opt) {
+	if s.MemInfo == nil || t.MemInfo == nil {
+		if s.MemInfo != nil || t.MemInfo != nil {
+			if opt.NilSameAsEmpty {
+				empty := &InfoSystemMemInfo{}
+				if s.MemInfo == nil {
+					if !(t.MemInfo.Equal(*empty)) {
+						return false
+					}
+				}
+				if t.MemInfo == nil {
+					if !(s.MemInfo.Equal(*empty)) {
+						return false
+					}
+				}
+			} else {
+				return false
+			}
+		}
+	} else if !s.MemInfo.Equal(*t.MemInfo, opt) {
 		return false
 	}
 
@@ -169,7 +280,26 @@ func (s InfoSystem) Diff(t InfoSystem, opts ...Options) map[string][]interface{}
 	opt := getOptions(opts...)
 
 	diff := make(map[string][]interface{})
-	if !s.CPUInfo.Equal(*t.CPUInfo, opt) {
+
+	if s.CPUInfo == nil || t.CPUInfo == nil {
+		if s.CPUInfo != nil || t.CPUInfo != nil {
+			if opt.NilSameAsEmpty {
+				empty := &InfoSystemCPUInfo{}
+				if s.CPUInfo == nil {
+					if !(t.CPUInfo.Equal(*empty)) {
+						diff["CPUInfo"] = []interface{}{ValueOrNil(s.CPUInfo), ValueOrNil(t.CPUInfo)}
+					}
+				}
+				if t.CPUInfo == nil {
+					if !(s.CPUInfo.Equal(*empty)) {
+						diff["CPUInfo"] = []interface{}{ValueOrNil(s.CPUInfo), ValueOrNil(t.CPUInfo)}
+					}
+				}
+			} else {
+				diff["CPUInfo"] = []interface{}{ValueOrNil(s.CPUInfo), ValueOrNil(t.CPUInfo)}
+			}
+		}
+	} else if !s.CPUInfo.Equal(*t.CPUInfo, opt) {
 		diff["CPUInfo"] = []interface{}{ValueOrNil(s.CPUInfo), ValueOrNil(t.CPUInfo)}
 	}
 
@@ -177,7 +307,25 @@ func (s InfoSystem) Diff(t InfoSystem, opts ...Options) map[string][]interface{}
 		diff["Hostname"] = []interface{}{s.Hostname, t.Hostname}
 	}
 
-	if !s.MemInfo.Equal(*t.MemInfo, opt) {
+	if s.MemInfo == nil || t.MemInfo == nil {
+		if s.MemInfo != nil || t.MemInfo != nil {
+			if opt.NilSameAsEmpty {
+				empty := &InfoSystemMemInfo{}
+				if s.MemInfo == nil {
+					if !(t.MemInfo.Equal(*empty)) {
+						diff["MemInfo"] = []interface{}{ValueOrNil(s.MemInfo), ValueOrNil(t.MemInfo)}
+					}
+				}
+				if t.MemInfo == nil {
+					if !(s.MemInfo.Equal(*empty)) {
+						diff["MemInfo"] = []interface{}{ValueOrNil(s.MemInfo), ValueOrNil(t.MemInfo)}
+					}
+				}
+			} else {
+				diff["MemInfo"] = []interface{}{ValueOrNil(s.MemInfo), ValueOrNil(t.MemInfo)}
+			}
+		}
+	} else if !s.MemInfo.Equal(*t.MemInfo, opt) {
 		diff["MemInfo"] = []interface{}{ValueOrNil(s.MemInfo), ValueOrNil(t.MemInfo)}
 	}
 

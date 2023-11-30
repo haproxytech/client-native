@@ -159,7 +159,25 @@ func (s Global) Equal(t Global, opts ...Options) bool {
 		return false
 	}
 
-	if !s.DefaultPath.Equal(*t.DefaultPath, opt) {
+	if s.DefaultPath == nil || t.DefaultPath == nil {
+		if s.DefaultPath != nil || t.DefaultPath != nil {
+			if opt.NilSameAsEmpty {
+				empty := &GlobalDefaultPath{}
+				if s.DefaultPath == nil {
+					if !(t.DefaultPath.Equal(*empty)) {
+						return false
+					}
+				}
+				if t.DefaultPath == nil {
+					if !(s.DefaultPath.Equal(*empty)) {
+						return false
+					}
+				}
+			} else {
+				return false
+			}
+		}
+	} else if !s.DefaultPath.Equal(*t.DefaultPath, opt) {
 		return false
 	}
 
@@ -167,7 +185,25 @@ func (s Global) Equal(t Global, opts ...Options) bool {
 		return false
 	}
 
-	if !s.DeviceAtlasOptions.Equal(*t.DeviceAtlasOptions, opt) {
+	if s.DeviceAtlasOptions == nil || t.DeviceAtlasOptions == nil {
+		if s.DeviceAtlasOptions != nil || t.DeviceAtlasOptions != nil {
+			if opt.NilSameAsEmpty {
+				empty := &GlobalDeviceAtlasOptions{}
+				if s.DeviceAtlasOptions == nil {
+					if !(t.DeviceAtlasOptions.Equal(*empty)) {
+						return false
+					}
+				}
+				if t.DeviceAtlasOptions == nil {
+					if !(s.DeviceAtlasOptions.Equal(*empty)) {
+						return false
+					}
+				}
+			} else {
+				return false
+			}
+		}
+	} else if !s.DeviceAtlasOptions.Equal(*t.DeviceAtlasOptions, opt) {
 		return false
 	}
 
@@ -179,7 +215,25 @@ func (s Global) Equal(t Global, opts ...Options) bool {
 		return false
 	}
 
-	if !s.FiftyOneDegreesOptions.Equal(*t.FiftyOneDegreesOptions, opt) {
+	if s.FiftyOneDegreesOptions == nil || t.FiftyOneDegreesOptions == nil {
+		if s.FiftyOneDegreesOptions != nil || t.FiftyOneDegreesOptions != nil {
+			if opt.NilSameAsEmpty {
+				empty := &GlobalFiftyOneDegreesOptions{}
+				if s.FiftyOneDegreesOptions == nil {
+					if !(t.FiftyOneDegreesOptions.Equal(*empty)) {
+						return false
+					}
+				}
+				if t.FiftyOneDegreesOptions == nil {
+					if !(s.FiftyOneDegreesOptions.Equal(*empty)) {
+						return false
+					}
+				}
+			} else {
+				return false
+			}
+		}
+	} else if !s.FiftyOneDegreesOptions.Equal(*t.FiftyOneDegreesOptions, opt) {
 		return false
 	}
 
@@ -259,7 +313,25 @@ func (s Global) Equal(t Global, opts ...Options) bool {
 		return false
 	}
 
-	if !s.LogSendHostname.Equal(*t.LogSendHostname, opt) {
+	if s.LogSendHostname == nil || t.LogSendHostname == nil {
+		if s.LogSendHostname != nil || t.LogSendHostname != nil {
+			if opt.NilSameAsEmpty {
+				empty := &GlobalLogSendHostname{}
+				if s.LogSendHostname == nil {
+					if !(t.LogSendHostname.Equal(*empty)) {
+						return false
+					}
+				}
+				if t.LogSendHostname == nil {
+					if !(s.LogSendHostname.Equal(*empty)) {
+						return false
+					}
+				}
+			} else {
+				return false
+			}
+		}
+	} else if !s.LogSendHostname.Equal(*t.LogSendHostname, opt) {
 		return false
 	}
 
@@ -523,7 +595,25 @@ func (s Global) Equal(t Global, opts ...Options) bool {
 		return false
 	}
 
-	if !s.TuneOptions.Equal(*t.TuneOptions, opt) {
+	if s.TuneOptions == nil || t.TuneOptions == nil {
+		if s.TuneOptions != nil || t.TuneOptions != nil {
+			if opt.NilSameAsEmpty {
+				empty := &GlobalTuneOptions{}
+				if s.TuneOptions == nil {
+					if !(t.TuneOptions.Equal(*empty)) {
+						return false
+					}
+				}
+				if t.TuneOptions == nil {
+					if !(s.TuneOptions.Equal(*empty)) {
+						return false
+					}
+				}
+			} else {
+				return false
+			}
+		}
+	} else if !s.TuneOptions.Equal(*t.TuneOptions, opt) {
 		return false
 	}
 
@@ -547,7 +637,25 @@ func (s Global) Equal(t Global, opts ...Options) bool {
 		return false
 	}
 
-	if !s.WurflOptions.Equal(*t.WurflOptions, opt) {
+	if s.WurflOptions == nil || t.WurflOptions == nil {
+		if s.WurflOptions != nil || t.WurflOptions != nil {
+			if opt.NilSameAsEmpty {
+				empty := &GlobalWurflOptions{}
+				if s.WurflOptions == nil {
+					if !(t.WurflOptions.Equal(*empty)) {
+						return false
+					}
+				}
+				if t.WurflOptions == nil {
+					if !(s.WurflOptions.Equal(*empty)) {
+						return false
+					}
+				}
+			} else {
+				return false
+			}
+		}
+	} else if !s.WurflOptions.Equal(*t.WurflOptions, opt) {
 		return false
 	}
 
@@ -760,7 +868,25 @@ func (s Global) Diff(t Global, opts ...Options) map[string][]interface{} {
 		diff["Daemon"] = []interface{}{s.Daemon, t.Daemon}
 	}
 
-	if !s.DefaultPath.Equal(*t.DefaultPath, opt) {
+	if s.DefaultPath == nil || t.DefaultPath == nil {
+		if s.DefaultPath != nil || t.DefaultPath != nil {
+			if opt.NilSameAsEmpty {
+				empty := &GlobalDefaultPath{}
+				if s.DefaultPath == nil {
+					if !(t.DefaultPath.Equal(*empty)) {
+						diff["DefaultPath"] = []interface{}{ValueOrNil(s.DefaultPath), ValueOrNil(t.DefaultPath)}
+					}
+				}
+				if t.DefaultPath == nil {
+					if !(s.DefaultPath.Equal(*empty)) {
+						diff["DefaultPath"] = []interface{}{ValueOrNil(s.DefaultPath), ValueOrNil(t.DefaultPath)}
+					}
+				}
+			} else {
+				diff["DefaultPath"] = []interface{}{ValueOrNil(s.DefaultPath), ValueOrNil(t.DefaultPath)}
+			}
+		}
+	} else if !s.DefaultPath.Equal(*t.DefaultPath, opt) {
 		diff["DefaultPath"] = []interface{}{ValueOrNil(s.DefaultPath), ValueOrNil(t.DefaultPath)}
 	}
 
@@ -768,7 +894,25 @@ func (s Global) Diff(t Global, opts ...Options) map[string][]interface{} {
 		diff["Description"] = []interface{}{s.Description, t.Description}
 	}
 
-	if !s.DeviceAtlasOptions.Equal(*t.DeviceAtlasOptions, opt) {
+	if s.DeviceAtlasOptions == nil || t.DeviceAtlasOptions == nil {
+		if s.DeviceAtlasOptions != nil || t.DeviceAtlasOptions != nil {
+			if opt.NilSameAsEmpty {
+				empty := &GlobalDeviceAtlasOptions{}
+				if s.DeviceAtlasOptions == nil {
+					if !(t.DeviceAtlasOptions.Equal(*empty)) {
+						diff["DeviceAtlasOptions"] = []interface{}{ValueOrNil(s.DeviceAtlasOptions), ValueOrNil(t.DeviceAtlasOptions)}
+					}
+				}
+				if t.DeviceAtlasOptions == nil {
+					if !(s.DeviceAtlasOptions.Equal(*empty)) {
+						diff["DeviceAtlasOptions"] = []interface{}{ValueOrNil(s.DeviceAtlasOptions), ValueOrNil(t.DeviceAtlasOptions)}
+					}
+				}
+			} else {
+				diff["DeviceAtlasOptions"] = []interface{}{ValueOrNil(s.DeviceAtlasOptions), ValueOrNil(t.DeviceAtlasOptions)}
+			}
+		}
+	} else if !s.DeviceAtlasOptions.Equal(*t.DeviceAtlasOptions, opt) {
 		diff["DeviceAtlasOptions"] = []interface{}{ValueOrNil(s.DeviceAtlasOptions), ValueOrNil(t.DeviceAtlasOptions)}
 	}
 
@@ -780,7 +924,25 @@ func (s Global) Diff(t Global, opts ...Options) map[string][]interface{} {
 		diff["ExternalCheck"] = []interface{}{s.ExternalCheck, t.ExternalCheck}
 	}
 
-	if !s.FiftyOneDegreesOptions.Equal(*t.FiftyOneDegreesOptions, opt) {
+	if s.FiftyOneDegreesOptions == nil || t.FiftyOneDegreesOptions == nil {
+		if s.FiftyOneDegreesOptions != nil || t.FiftyOneDegreesOptions != nil {
+			if opt.NilSameAsEmpty {
+				empty := &GlobalFiftyOneDegreesOptions{}
+				if s.FiftyOneDegreesOptions == nil {
+					if !(t.FiftyOneDegreesOptions.Equal(*empty)) {
+						diff["FiftyOneDegreesOptions"] = []interface{}{ValueOrNil(s.FiftyOneDegreesOptions), ValueOrNil(t.FiftyOneDegreesOptions)}
+					}
+				}
+				if t.FiftyOneDegreesOptions == nil {
+					if !(s.FiftyOneDegreesOptions.Equal(*empty)) {
+						diff["FiftyOneDegreesOptions"] = []interface{}{ValueOrNil(s.FiftyOneDegreesOptions), ValueOrNil(t.FiftyOneDegreesOptions)}
+					}
+				}
+			} else {
+				diff["FiftyOneDegreesOptions"] = []interface{}{ValueOrNil(s.FiftyOneDegreesOptions), ValueOrNil(t.FiftyOneDegreesOptions)}
+			}
+		}
+	} else if !s.FiftyOneDegreesOptions.Equal(*t.FiftyOneDegreesOptions, opt) {
 		diff["FiftyOneDegreesOptions"] = []interface{}{ValueOrNil(s.FiftyOneDegreesOptions), ValueOrNil(t.FiftyOneDegreesOptions)}
 	}
 
@@ -860,7 +1022,25 @@ func (s Global) Diff(t Global, opts ...Options) map[string][]interface{} {
 		diff["Localpeer"] = []interface{}{s.Localpeer, t.Localpeer}
 	}
 
-	if !s.LogSendHostname.Equal(*t.LogSendHostname, opt) {
+	if s.LogSendHostname == nil || t.LogSendHostname == nil {
+		if s.LogSendHostname != nil || t.LogSendHostname != nil {
+			if opt.NilSameAsEmpty {
+				empty := &GlobalLogSendHostname{}
+				if s.LogSendHostname == nil {
+					if !(t.LogSendHostname.Equal(*empty)) {
+						diff["LogSendHostname"] = []interface{}{ValueOrNil(s.LogSendHostname), ValueOrNil(t.LogSendHostname)}
+					}
+				}
+				if t.LogSendHostname == nil {
+					if !(s.LogSendHostname.Equal(*empty)) {
+						diff["LogSendHostname"] = []interface{}{ValueOrNil(s.LogSendHostname), ValueOrNil(t.LogSendHostname)}
+					}
+				}
+			} else {
+				diff["LogSendHostname"] = []interface{}{ValueOrNil(s.LogSendHostname), ValueOrNil(t.LogSendHostname)}
+			}
+		}
+	} else if !s.LogSendHostname.Equal(*t.LogSendHostname, opt) {
 		diff["LogSendHostname"] = []interface{}{ValueOrNil(s.LogSendHostname), ValueOrNil(t.LogSendHostname)}
 	}
 
@@ -1138,7 +1318,25 @@ func (s Global) Diff(t Global, opts ...Options) map[string][]interface{} {
 		diff["ThreadGroups"] = []interface{}{s.ThreadGroups, t.ThreadGroups}
 	}
 
-	if !s.TuneOptions.Equal(*t.TuneOptions, opt) {
+	if s.TuneOptions == nil || t.TuneOptions == nil {
+		if s.TuneOptions != nil || t.TuneOptions != nil {
+			if opt.NilSameAsEmpty {
+				empty := &GlobalTuneOptions{}
+				if s.TuneOptions == nil {
+					if !(t.TuneOptions.Equal(*empty)) {
+						diff["TuneOptions"] = []interface{}{ValueOrNil(s.TuneOptions), ValueOrNil(t.TuneOptions)}
+					}
+				}
+				if t.TuneOptions == nil {
+					if !(s.TuneOptions.Equal(*empty)) {
+						diff["TuneOptions"] = []interface{}{ValueOrNil(s.TuneOptions), ValueOrNil(t.TuneOptions)}
+					}
+				}
+			} else {
+				diff["TuneOptions"] = []interface{}{ValueOrNil(s.TuneOptions), ValueOrNil(t.TuneOptions)}
+			}
+		}
+	} else if !s.TuneOptions.Equal(*t.TuneOptions, opt) {
 		diff["TuneOptions"] = []interface{}{ValueOrNil(s.TuneOptions), ValueOrNil(t.TuneOptions)}
 	}
 
@@ -1162,7 +1360,25 @@ func (s Global) Diff(t Global, opts ...Options) map[string][]interface{} {
 		diff["User"] = []interface{}{s.User, t.User}
 	}
 
-	if !s.WurflOptions.Equal(*t.WurflOptions, opt) {
+	if s.WurflOptions == nil || t.WurflOptions == nil {
+		if s.WurflOptions != nil || t.WurflOptions != nil {
+			if opt.NilSameAsEmpty {
+				empty := &GlobalWurflOptions{}
+				if s.WurflOptions == nil {
+					if !(t.WurflOptions.Equal(*empty)) {
+						diff["WurflOptions"] = []interface{}{ValueOrNil(s.WurflOptions), ValueOrNil(t.WurflOptions)}
+					}
+				}
+				if t.WurflOptions == nil {
+					if !(s.WurflOptions.Equal(*empty)) {
+						diff["WurflOptions"] = []interface{}{ValueOrNil(s.WurflOptions), ValueOrNil(t.WurflOptions)}
+					}
+				}
+			} else {
+				diff["WurflOptions"] = []interface{}{ValueOrNil(s.WurflOptions), ValueOrNil(t.WurflOptions)}
+			}
+		}
+	} else if !s.WurflOptions.Equal(*t.WurflOptions, opt) {
 		diff["WurflOptions"] = []interface{}{ValueOrNil(s.WurflOptions), ValueOrNil(t.WurflOptions)}
 	}
 
@@ -1574,6 +1790,7 @@ func (s RuntimeAPI) Diff(t RuntimeAPI, opts ...Options) map[string][]interface{}
 	opt := getOptions(opts...)
 
 	diff := make(map[string][]interface{})
+
 	if !s.BindParams.Equal(t.BindParams, opt) {
 		diff["BindParams"] = []interface{}{s.BindParams, t.BindParams}
 	}
