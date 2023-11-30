@@ -420,7 +420,7 @@ http_response_rule:
       x-nullable: true
     return_content_format:
       type: string
-      enum: [default-errorfile, errorfile, errorfiles, file, lf-file, string, lf-string]
+      enum: [default-errorfiles, errorfile, errorfiles, file, lf-file, string, lf-string]
       x-dependency:
         type:
           value: [deny, return]

@@ -149,7 +149,7 @@ type HTTPResponseRule struct {
 	ReturnContent string `json:"return_content,omitempty"`
 
 	// return content format
-	// Enum: [default-errorfile errorfile errorfiles file lf-file string lf-string]
+	// Enum: [default-errorfiles errorfile errorfiles file lf-file string lf-string]
 	ReturnContentFormat string `json:"return_content_format,omitempty"`
 
 	// return content type
@@ -796,7 +796,7 @@ var httpResponseRuleTypeReturnContentFormatPropEnum []interface{}
 
 func init() {
 	var res []string
-	if err := json.Unmarshal([]byte(`["default-errorfile","errorfile","errorfiles","file","lf-file","string","lf-string"]`), &res); err != nil {
+	if err := json.Unmarshal([]byte(`["default-errorfiles","errorfile","errorfiles","file","lf-file","string","lf-string"]`), &res); err != nil {
 		panic(err)
 	}
 	for _, v := range res {
@@ -806,8 +806,8 @@ func init() {
 
 const (
 
-	// HTTPResponseRuleReturnContentFormatDefaultDashErrorfile captures enum value "default-errorfile"
-	HTTPResponseRuleReturnContentFormatDefaultDashErrorfile string = "default-errorfile"
+	// HTTPResponseRuleReturnContentFormatDefaultDashErrorfiles captures enum value "default-errorfiles"
+	HTTPResponseRuleReturnContentFormatDefaultDashErrorfiles string = "default-errorfiles"
 
 	// HTTPResponseRuleReturnContentFormatErrorfile captures enum value "errorfile"
 	HTTPResponseRuleReturnContentFormatErrorfile string = "errorfile"

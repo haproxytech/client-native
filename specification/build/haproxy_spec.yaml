@@ -4060,7 +4060,7 @@ definitions:
                           - lf-string
           return_content_format:
               enum:
-                  - default-errorfile
+                  - default-errorfiles
                   - errorfile
                   - errorfiles
                   - file
@@ -4673,7 +4673,7 @@ definitions:
                           - lf-string
           return_content_format:
               enum:
-                  - default-errorfile
+                  - default-errorfiles
                   - errorfile
                   - errorfiles
                   - file
@@ -5264,7 +5264,7 @@ definitions:
                           - lf-string
           return_content_format:
               enum:
-                  - default-errorfile
+                  - default-errorfiles
                   - errorfile
                   - errorfiles
                   - file
