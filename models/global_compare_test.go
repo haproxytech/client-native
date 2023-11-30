@@ -2718,6 +2718,7 @@ func TestGlobalTuneOptionsEqualFalse(t *testing.T) {
 		result.Bufsize = sample.Bufsize + 1
 		result.CompMaxlevel = sample.CompMaxlevel + 1
 		result.DisableZeroCopyForwarding = !sample.DisableZeroCopyForwarding
+		result.EventsMaxEventsAtOnce = sample.EventsMaxEventsAtOnce + 1
 		result.FailAlloc = !sample.FailAlloc
 		result.H2BeInitialWindowSize = sample.H2BeInitialWindowSize + 1
 		result.H2BeMaxConcurrentStreams = sample.H2BeMaxConcurrentStreams + 1
@@ -2863,6 +2864,7 @@ func TestGlobalTuneOptionsDiffFalse(t *testing.T) {
 		result.Bufsize = sample.Bufsize + 1
 		result.CompMaxlevel = sample.CompMaxlevel + 1
 		result.DisableZeroCopyForwarding = !sample.DisableZeroCopyForwarding
+		result.EventsMaxEventsAtOnce = sample.EventsMaxEventsAtOnce + 1
 		result.FailAlloc = !sample.FailAlloc
 		result.H2BeInitialWindowSize = sample.H2BeInitialWindowSize + 1
 		result.H2BeMaxConcurrentStreams = sample.H2BeMaxConcurrentStreams + 1
@@ -2931,7 +2933,7 @@ func TestGlobalTuneOptionsDiffFalse(t *testing.T) {
 
 	for _, sample := range samples {
 		result := sample.a.Diff(sample.b)
-		if len(result) != 75 {
+		if len(result) != 76 {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {
@@ -2941,7 +2943,7 @@ func TestGlobalTuneOptionsDiffFalse(t *testing.T) {
 			if err != nil {
 				t.Errorf(err.Error())
 			}
-			t.Errorf("Expected GlobalTuneOptions to be different in 75 cases, but it is not (%d) %s %s", len(result), a, b)
+			t.Errorf("Expected GlobalTuneOptions to be different in 76 cases, but it is not (%d) %s %s", len(result), a, b)
 		}
 	}
 }

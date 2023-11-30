@@ -1590,6 +1590,10 @@ definitions:
                   disable_zero_copy_forwarding:
                       type: boolean
                       x-display-name: Disable zero-copy forwarding
+                  events_max_events_at_once:
+                      maximum: 10000
+                      minimum: 1
+                      type: integer
                   fail_alloc:
                       type: boolean
                       x-display-name: Failed Allocation Chance

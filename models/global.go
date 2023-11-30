@@ -3063,6 +3063,11 @@ type GlobalTuneOptions struct {
 	// disable zero copy forwarding
 	DisableZeroCopyForwarding bool `json:"disable_zero_copy_forwarding,omitempty"`
 
+	// events max events at once
+	// Maximum: 10000
+	// Minimum: 1
+	EventsMaxEventsAtOnce int64 `json:"events_max_events_at_once,omitempty"`
+
 	// fail alloc
 	FailAlloc bool `json:"fail_alloc,omitempty"`
 
@@ -3300,6 +3305,10 @@ func (m *GlobalTuneOptions) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
+	if err := m.validateEventsMaxEventsAtOnce(formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.validateFdEdgeTriggered(formats); err != nil {
 		res = append(res, err)
 	}
@@ -3368,6 +3377,22 @@ func (m *GlobalTuneOptions) validateBuffersReserve(formats strfmt.Registry) erro
 	}
 
 	if err := validate.MinimumInt("tune_options"+"."+"buffers_reserve", "body", m.BuffersReserve, 2, false); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *GlobalTuneOptions) validateEventsMaxEventsAtOnce(formats strfmt.Registry) error {
+	if swag.IsZero(m.EventsMaxEventsAtOnce) { // not required
+		return nil
+	}
+
+	if err := validate.MinimumInt("tune_options"+"."+"events_max_events_at_once", "body", m.EventsMaxEventsAtOnce, 1, false); err != nil {
+		return err
+	}
+
+	if err := validate.MaximumInt("tune_options"+"."+"events_max_events_at_once", "body", m.EventsMaxEventsAtOnce, 10000, false); err != nil {
 		return err
 	}
 
