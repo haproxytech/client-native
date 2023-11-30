@@ -22,15 +22,12 @@ e2e-docker:
 spec:
 	go run specification/build/build.go -file specification/haproxy-spec.yaml > specification/build/haproxy_spec.yaml
 
-.PHONY: equal
-equal:
-	rm -rf models/*_compare.go
-	rm -rf models/*_compare_test.go
-	go run cmd/struct_equal_generator/*.go -l ${PROJECT_PATH}/specification/copyright.txt ${PROJECT_PATH}/models
-
 .PHONY: models
 models: spec swagger-check
 	./bin/swagger generate model --additional-initialism=FCGI -f ${PROJECT_PATH}/specification/build/haproxy_spec.yaml -r ${PROJECT_PATH}/specification/copyright.txt -m models -t ${PROJECT_PATH}
+	rm -rf models/*_compare.go
+	rm -rf models/*_compare_test.go
+	go run cmd/struct_equal_generator/*.go -l ${PROJECT_PATH}/specification/copyright.txt ${PROJECT_PATH}/models
 
 .PHONY: swagger-check
 swagger-check:
