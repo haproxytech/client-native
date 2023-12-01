@@ -285,7 +285,7 @@ func SerializeRingSection(p parser.Parser, data *models.Ring) error { //nolint:g
 			return err
 		}
 	} else {
-		d := types.StringC{Value: fmt.Sprint(*data.Size)}
+		d := types.StringC{Value: strconv.FormatInt(*data.Size, 10)}
 		if err = p.Set(parser.Ring, data.Name, "size", d); err != nil {
 			return err
 		}
