@@ -3108,6 +3108,10 @@ type GlobalTuneOptions struct {
 	// h2 max frame size
 	H2MaxFrameSize int64 `json:"h2_max_frame_size,omitempty"`
 
+	// h2 zero copy fwd send
+	// Enum: [enabled disabled]
+	H2ZeroCopyFwdSend string `json:"h2_zero_copy_fwd_send,omitempty"`
+
 	// http cookielen
 	HTTPCookielen int64 `json:"http_cookielen,omitempty"`
 
@@ -3333,6 +3337,10 @@ func (m *GlobalTuneOptions) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
+	if err := m.validateH2ZeroCopyFwdSend(formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.validateHTTPMaxhdr(formats); err != nil {
 		res = append(res, err)
 	}
@@ -3547,6 +3555,48 @@ func (m *GlobalTuneOptions) validateH2HeaderTableSize(formats strfmt.Registry) e
 	}
 
 	if err := validate.MaximumInt("tune_options"+"."+"h2_header_table_size", "body", m.H2HeaderTableSize, 65535, false); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+var globalTuneOptionsTypeH2ZeroCopyFwdSendPropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		globalTuneOptionsTypeH2ZeroCopyFwdSendPropEnum = append(globalTuneOptionsTypeH2ZeroCopyFwdSendPropEnum, v)
+	}
+}
+
+const (
+
+	// GlobalTuneOptionsH2ZeroCopyFwdSendEnabled captures enum value "enabled"
+	GlobalTuneOptionsH2ZeroCopyFwdSendEnabled string = "enabled"
+
+	// GlobalTuneOptionsH2ZeroCopyFwdSendDisabled captures enum value "disabled"
+	GlobalTuneOptionsH2ZeroCopyFwdSendDisabled string = "disabled"
+)
+
+// prop value enum
+func (m *GlobalTuneOptions) validateH2ZeroCopyFwdSendEnum(path, location string, value string) error {
+	if err := validate.EnumCase(path, location, value, globalTuneOptionsTypeH2ZeroCopyFwdSendPropEnum, true); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *GlobalTuneOptions) validateH2ZeroCopyFwdSend(formats strfmt.Registry) error {
+	if swag.IsZero(m.H2ZeroCopyFwdSend) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateH2ZeroCopyFwdSendEnum("tune_options"+"."+"h2_zero_copy_fwd_send", "body", m.H2ZeroCopyFwdSend); err != nil {
 		return err
 	}
 

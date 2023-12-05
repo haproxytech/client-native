@@ -2066,6 +2066,10 @@ func (s GlobalTuneOptions) Equal(t GlobalTuneOptions, opts ...Options) bool {
 		return false
 	}
 
+	if s.H2ZeroCopyFwdSend != t.H2ZeroCopyFwdSend {
+		return false
+	}
+
 	if s.HTTPCookielen != t.HTTPCookielen {
 		return false
 	}
@@ -2387,6 +2391,10 @@ func (s GlobalTuneOptions) Diff(t GlobalTuneOptions, opts ...Options) map[string
 
 	if s.H2MaxFrameSize != t.H2MaxFrameSize {
 		diff["H2MaxFrameSize"] = []interface{}{s.H2MaxFrameSize, t.H2MaxFrameSize}
+	}
+
+	if s.H2ZeroCopyFwdSend != t.H2ZeroCopyFwdSend {
+		diff["H2ZeroCopyFwdSend"] = []interface{}{s.H2ZeroCopyFwdSend, t.H2ZeroCopyFwdSend}
 	}
 
 	if s.HTTPCookielen != t.HTTPCookielen {

@@ -2569,6 +2569,9 @@ func serializeTuneOptions(p parser.Parser, options *models.GlobalTuneOptions) er
 	if err := serializeInt64Option(p, "tune.h2.fe.max-concurrent-streams", options.H2FeMaxConcurrentStreams); err != nil {
 		return err
 	}
+	if err := serializeOnOffOption(p, "tune.h2.zero-copy-fwd-send", options.H2ZeroCopyFwdSend); err != nil {
+		return err
+	}
 	return serializeInt64Option(p, "tune.zlib.windowsize", options.ZlibWindowsize)
 }
 
@@ -3206,6 +3209,12 @@ func parseTuneOptions(p parser.Parser) (*models.GlobalTuneOptions, error) { //no
 		return nil, err
 	}
 	options.H2FeMaxConcurrentStreams = intOption
+
+	strOption, err = parseOnOffOption(p, "tune.h2.zero-copy-fwd-send")
+	if err != nil {
+		return nil, err
+	}
+	options.H2ZeroCopyFwdSend = strOption
 
 	return options, nil
 }

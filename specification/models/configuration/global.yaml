@@ -341,6 +341,10 @@ global:
         h2_fe_max_concurrent_streams:
           type: integer
           x-display-name: Maximum number of concurrent streams per incoming connection
+        h2_zero_copy_fwd_send:
+          type: string
+          enum: [enabled, disabled]
+          x-display-name: enable or disable the zero-copy sends of data for the HTTP/2 multiplexer
         http_cookielen:
           type: integer
           x-display-name: Maximum Cookie Length

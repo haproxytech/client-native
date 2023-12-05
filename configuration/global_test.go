@@ -312,6 +312,9 @@ func TestGetGlobal(t *testing.T) {
 	if global.TuneOptions.H2MaxFrameSize != 18 {
 		t.Errorf("H2MaxFrameSize is %v, expected 18", global.TuneOptions.H2MaxFrameSize)
 	}
+	if global.TuneOptions.H2ZeroCopyFwdSend != "enabled" {
+		t.Errorf("H2ZeroCopyFwdSend is %v, expected enabled", global.TuneOptions.H2ZeroCopyFwdSend)
+	}
 	if global.TuneOptions.HTTPCookielen != 19 {
 		t.Errorf("HTTPCookielen is %v, expected 19", global.TuneOptions.HTTPCookielen)
 	}
@@ -739,6 +742,7 @@ func TestPutGlobal(t *testing.T) {
 			EventsMaxEventsAtOnce:          50,
 			H1ZeroCopyFwdRecv:              "disabled",
 			H1ZeroCopyFwdSend:              "disabled",
+			H2ZeroCopyFwdSend:              "disabled",
 			LuaLogLoggers:                  "disabled",
 			LuaLogStderr:                   "disabled",
 			MaxChecksPerThread:             misc.Int64P(20),

@@ -62,6 +62,7 @@ global
   tune.h2.initial-window-size 16
   tune.h2.max-concurrent-streams 17
   tune.h2.max-frame-size 18
+  tune.h2.zero-copy-fwd-send on
   tune.http.cookielen 19
   tune.http.logurilen 20
   tune.http.maxhdr 21

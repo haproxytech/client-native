@@ -1641,6 +1641,12 @@ definitions:
                   h2_max_frame_size:
                       type: integer
                       x-display-name: HTTP/2 Maximum Frame Size
+                  h2_zero_copy_fwd_send:
+                      enum:
+                          - enabled
+                          - disabled
+                      type: string
+                      x-display-name: enable or disable the zero-copy sends of data for the HTTP/2 multiplexer
                   http_cookielen:
                       type: integer
                       x-display-name: Maximum Cookie Length
