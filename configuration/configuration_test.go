@@ -57,6 +57,7 @@ global
   tune.fail-alloc
   tune.fd.edge-triggered on
   tune.h1.zero-copy-fwd-recv on
+  tune.h1.zero-copy-fwd-send on
   tune.h2.header-table-size 15
   tune.h2.initial-window-size 16
   tune.h2.max-concurrent-streams 17

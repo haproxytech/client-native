@@ -2554,6 +2554,9 @@ func serializeTuneOptions(p parser.Parser, options *models.GlobalTuneOptions) er
 	if err := serializeOnOffOption(p, "tune.h1.zero-copy-fwd-recv", options.H1ZeroCopyFwdRecv); err != nil {
 		return err
 	}
+	if err := serializeOnOffOption(p, "tune.h1.zero-copy-fwd-send", options.H1ZeroCopyFwdSend); err != nil {
+		return err
+	}
 	if err := serializeInt64Option(p, "tune.h2.be.initial-window-size", options.H2BeInitialWindowSize); err != nil {
 		return err
 	}
@@ -3173,6 +3176,12 @@ func parseTuneOptions(p parser.Parser) (*models.GlobalTuneOptions, error) { //no
 		return nil, err
 	}
 	options.H1ZeroCopyFwdRecv = strOption
+
+	strOption, err = parseOnOffOption(p, "tune.h1.zero-copy-fwd-send")
+	if err != nil {
+		return nil, err
+	}
+	options.H1ZeroCopyFwdSend = strOption
 
 	intOption, err = parseInt64Option(p, "tune.h2.be.initial-window-size")
 	if err != nil {

@@ -2030,6 +2030,10 @@ func (s GlobalTuneOptions) Equal(t GlobalTuneOptions, opts ...Options) bool {
 		return false
 	}
 
+	if s.H1ZeroCopyFwdSend != t.H1ZeroCopyFwdSend {
+		return false
+	}
+
 	if s.H2BeInitialWindowSize != t.H2BeInitialWindowSize {
 		return false
 	}
@@ -2347,6 +2351,10 @@ func (s GlobalTuneOptions) Diff(t GlobalTuneOptions, opts ...Options) map[string
 
 	if s.H1ZeroCopyFwdRecv != t.H1ZeroCopyFwdRecv {
 		diff["H1ZeroCopyFwdRecv"] = []interface{}{s.H1ZeroCopyFwdRecv, t.H1ZeroCopyFwdRecv}
+	}
+
+	if s.H1ZeroCopyFwdSend != t.H1ZeroCopyFwdSend {
+		diff["H1ZeroCopyFwdSend"] = []interface{}{s.H1ZeroCopyFwdSend, t.H1ZeroCopyFwdSend}
 	}
 
 	if s.H2BeInitialWindowSize != t.H2BeInitialWindowSize {

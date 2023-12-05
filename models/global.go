@@ -3079,6 +3079,10 @@ type GlobalTuneOptions struct {
 	// Enum: [enabled disabled]
 	H1ZeroCopyFwdRecv string `json:"h1_zero_copy_fwd_recv,omitempty"`
 
+	// h1 zero copy fwd send
+	// Enum: [enabled disabled]
+	H1ZeroCopyFwdSend string `json:"h1_zero_copy_fwd_send,omitempty"`
+
 	// h2 be initial window size
 	H2BeInitialWindowSize int64 `json:"h2_be_initial_window_size,omitempty"`
 
@@ -3321,6 +3325,10 @@ func (m *GlobalTuneOptions) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
+	if err := m.validateH1ZeroCopyFwdSend(formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.validateH2HeaderTableSize(formats); err != nil {
 		res = append(res, err)
 	}
@@ -3485,6 +3493,48 @@ func (m *GlobalTuneOptions) validateH1ZeroCopyFwdRecv(formats strfmt.Registry) e
 
 	// value enum
 	if err := m.validateH1ZeroCopyFwdRecvEnum("tune_options"+"."+"h1_zero_copy_fwd_recv", "body", m.H1ZeroCopyFwdRecv); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+var globalTuneOptionsTypeH1ZeroCopyFwdSendPropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		globalTuneOptionsTypeH1ZeroCopyFwdSendPropEnum = append(globalTuneOptionsTypeH1ZeroCopyFwdSendPropEnum, v)
+	}
+}
+
+const (
+
+	// GlobalTuneOptionsH1ZeroCopyFwdSendEnabled captures enum value "enabled"
+	GlobalTuneOptionsH1ZeroCopyFwdSendEnabled string = "enabled"
+
+	// GlobalTuneOptionsH1ZeroCopyFwdSendDisabled captures enum value "disabled"
+	GlobalTuneOptionsH1ZeroCopyFwdSendDisabled string = "disabled"
+)
+
+// prop value enum
+func (m *GlobalTuneOptions) validateH1ZeroCopyFwdSendEnum(path, location string, value string) error {
+	if err := validate.EnumCase(path, location, value, globalTuneOptionsTypeH1ZeroCopyFwdSendPropEnum, true); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *GlobalTuneOptions) validateH1ZeroCopyFwdSend(formats strfmt.Registry) error {
+	if swag.IsZero(m.H1ZeroCopyFwdSend) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateH1ZeroCopyFwdSendEnum("tune_options"+"."+"h1_zero_copy_fwd_send", "body", m.H1ZeroCopyFwdSend); err != nil {
 		return err
 	}
 

@@ -311,6 +311,10 @@ global:
           type: string
           enum: [enabled, disabled]
           x-display-name: enable or disable the zero-copy receives of data for the HTTP/1 multiplexer
+        h1_zero_copy_fwd_send:
+          type: string
+          enum: [enabled, disabled]
+          x-display-name: enable or disable the zero-copy sends of data for the HTTP/1 multiplexer
         h2_header_table_size:
           type: integer
           x-display-name: HTTP/2 Dynamic Header Table Size

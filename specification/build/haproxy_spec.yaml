@@ -1609,6 +1609,12 @@ definitions:
                           - disabled
                       type: string
                       x-display-name: enable or disable the zero-copy receives of data for the HTTP/1 multiplexer
+                  h1_zero_copy_fwd_send:
+                      enum:
+                          - enabled
+                          - disabled
+                      type: string
+                      x-display-name: enable or disable the zero-copy sends of data for the HTTP/1 multiplexer
                   h2_be_initial_window_size:
                       type: integer
                       x-display-name: Initial window size for outgoing connections
