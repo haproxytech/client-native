@@ -238,6 +238,16 @@ server_params:
     send-proxy-v2:
       type: string
       enum: [enabled, disabled]
+    set-proxy-v2-tlv-fmt:
+      type: object
+      required:
+        - id
+        - value
+      properties:
+        id:
+          type: string
+        value:
+          type: string
     proxy-v2-options:
       type: array
       x-omitempty: true

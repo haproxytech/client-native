@@ -336,7 +336,7 @@ frontend test
   bind 192.168.1.2:8080 name webserv3 thread 1/1
   bind [2a01:c9c0:a3:8::3]:80 name ipv6 thread 1/1-1
   bind 192.168.1.1:80 name test-quic quic-socket connection thread 1/1
-  bind 192.168.1.1:80 name testnbcon thread 1/all nbconn 6 
+  bind 192.168.1.1:80 name testnbcon thread 1/all nbconn 6
   bind-process odd
   option httplog
   option dontlognull
@@ -650,7 +650,7 @@ backend test
   external-check command /bin/false
   use-server webserv if TRUE
   use-server webserv2 unless TRUE
-  server webserv 192.168.1.1:9200 maxconn 1000 ssl weight 10 inter 2s cookie BLAH slowstart 6000 proxy-v2-options authority,crc32c ws h1 pool-low-conn 128 id 1234 pool-purge-delay 10s tcp-ut 2s curves secp384r1 client-sigalgs ECDSA+SHA256:RSA+SHA256 sigalgs ECDSA+SHA256 log-bufsize 10
+  server webserv 192.168.1.1:9200 maxconn 1000 ssl weight 10 inter 2s cookie BLAH slowstart 6000 proxy-v2-options authority,crc32c ws h1 pool-low-conn 128 id 1234 pool-purge-delay 10s tcp-ut 2s curves secp384r1 client-sigalgs ECDSA+SHA256:RSA+SHA256 sigalgs ECDSA+SHA256 log-bufsize 10 set-proxy-v2-tlv-fmt(0x20) %[fc_pp_tlv(0x20)]
   server webserv2 192.168.1.1:9300 maxconn 1000 ssl weight 10 inter 2s cookie BLAH slowstart 6000 proxy-v2-options authority,crc32c ws h1 pool-low-conn 128
   http-request set-dst hdr(x-dst)
   http-request set-dst-port int(4000)

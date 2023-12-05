@@ -86,6 +86,26 @@ func TestGetServers(t *testing.T) { //nolint:gocognit,gocyclo
 		if s.Name == "webserv2" && s.LogBufsize != nil {
 			t.Errorf("%v: LogBufsize should be nil: %v", s.Name, s.LogBufsize)
 		}
+		if s.Name == "webserv" {
+			if s.SetProxyV2TlvFmt != nil {
+				if s.SetProxyV2TlvFmt.ID != nil {
+					if *s.SetProxyV2TlvFmt.ID != "0x20" {
+						t.Errorf("%v: SetProxyV2TlvFmt ID should be 0x20: %s", s.Name, *s.SetProxyV2TlvFmt.ID)
+					}
+				} else {
+					t.Errorf("%v: SetProxyV2TlvFmt ID should be set", s.Name)
+				}
+				if s.SetProxyV2TlvFmt.Value != nil {
+					if *s.SetProxyV2TlvFmt.Value != "%[fc_pp_tlv(0x20)]" {
+						t.Errorf("%v: SetProxyV2TlvFmt Value should be %%[fc_pp_tlv(0x20)]: %s", s.Name, *s.SetProxyV2TlvFmt.Value)
+					}
+				} else {
+					t.Errorf("%v: SetProxyV2TlvFmt Value should be set", s.Name)
+				}
+			} else {
+				t.Errorf("%v: SetProxyV2TlvFmt should be set", s.Name)
+			}
+		}
 	}
 
 	_, servers, err = clientTest.GetServers("backend", "test_2", "")
@@ -167,6 +187,24 @@ func TestGetServer(t *testing.T) {
 	}
 	if s.LogBufsize == nil || *s.LogBufsize != 10 {
 		t.Errorf("%v: LogBufsize should be 10: %v", s.Name, s.LogBufsize)
+	}
+	if s.SetProxyV2TlvFmt != nil {
+		if s.SetProxyV2TlvFmt.ID != nil {
+			if *s.SetProxyV2TlvFmt.ID != "0x20" {
+				t.Errorf("%v: SetProxyV2TlvFmt ID should be 0x20: %s", s.Name, *s.SetProxyV2TlvFmt.ID)
+			}
+		} else {
+			t.Errorf("%v: SetProxyV2TlvFmt ID should be set", s.Name)
+		}
+		if s.SetProxyV2TlvFmt.Value != nil {
+			if *s.SetProxyV2TlvFmt.Value != "%[fc_pp_tlv(0x20)]" {
+				t.Errorf("%v: SetProxyV2TlvFmt Value should be %%[fc_pp_tlv(0x20)]: %s", s.Name, *s.SetProxyV2TlvFmt.Value)
+			}
+		} else {
+			t.Errorf("%v: SetProxyV2TlvFmt Value should be set", s.Name)
+		}
+	} else {
+		t.Errorf("%v: SetProxyV2TlvFmt should be set", s.Name)
 	}
 
 	_, err = s.MarshalBinary()
@@ -270,6 +308,10 @@ func TestCreateEditDeleteServer(t *testing.T) {
 			Sigalgs:        "RSA+SHA256",
 			ClientSigalgs:  "ECDSA+SHA256",
 			LogBufsize:     misc.Int64P(11),
+			SetProxyV2TlvFmt: &models.ServerParamsSetProxyV2TlvFmt{
+				ID:    misc.StringP("0x50"),
+				Value: misc.StringP("%[fc_pp_tlv(0x20)]"),
+			},
 		},
 	}
 

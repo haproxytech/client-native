@@ -305,6 +305,28 @@ func (s ServerParams) Equal(t ServerParams, opts ...Options) bool {
 		return false
 	}
 
+	if s.SetProxyV2TlvFmt == nil || t.SetProxyV2TlvFmt == nil {
+		if s.SetProxyV2TlvFmt != nil || t.SetProxyV2TlvFmt != nil {
+			if opt.NilSameAsEmpty {
+				empty := &ServerParamsSetProxyV2TlvFmt{}
+				if s.SetProxyV2TlvFmt == nil {
+					if !(t.SetProxyV2TlvFmt.Equal(*empty)) {
+						return false
+					}
+				}
+				if t.SetProxyV2TlvFmt == nil {
+					if !(s.SetProxyV2TlvFmt.Equal(*empty)) {
+						return false
+					}
+				}
+			} else {
+				return false
+			}
+		}
+	} else if !s.SetProxyV2TlvFmt.Equal(*t.SetProxyV2TlvFmt, opt) {
+		return false
+	}
+
 	if s.Shard != t.Shard {
 		return false
 	}
@@ -681,6 +703,28 @@ func (s ServerParams) Diff(t ServerParams, opts ...Options) map[string][]interfa
 		diff["SendProxyV2SslCn"] = []interface{}{s.SendProxyV2SslCn, t.SendProxyV2SslCn}
 	}
 
+	if s.SetProxyV2TlvFmt == nil || t.SetProxyV2TlvFmt == nil {
+		if s.SetProxyV2TlvFmt != nil || t.SetProxyV2TlvFmt != nil {
+			if opt.NilSameAsEmpty {
+				empty := &ServerParamsSetProxyV2TlvFmt{}
+				if s.SetProxyV2TlvFmt == nil {
+					if !(t.SetProxyV2TlvFmt.Equal(*empty)) {
+						diff["SetProxyV2TlvFmt"] = []interface{}{ValueOrNil(s.SetProxyV2TlvFmt), ValueOrNil(t.SetProxyV2TlvFmt)}
+					}
+				}
+				if t.SetProxyV2TlvFmt == nil {
+					if !(s.SetProxyV2TlvFmt.Equal(*empty)) {
+						diff["SetProxyV2TlvFmt"] = []interface{}{ValueOrNil(s.SetProxyV2TlvFmt), ValueOrNil(t.SetProxyV2TlvFmt)}
+					}
+				}
+			} else {
+				diff["SetProxyV2TlvFmt"] = []interface{}{ValueOrNil(s.SetProxyV2TlvFmt), ValueOrNil(t.SetProxyV2TlvFmt)}
+			}
+		}
+	} else if !s.SetProxyV2TlvFmt.Equal(*t.SetProxyV2TlvFmt, opt) {
+		diff["SetProxyV2TlvFmt"] = []interface{}{ValueOrNil(s.SetProxyV2TlvFmt), ValueOrNil(t.SetProxyV2TlvFmt)}
+	}
+
 	if s.Shard != t.Shard {
 		diff["Shard"] = []interface{}{s.Shard, t.Shard}
 	}
@@ -763,6 +807,43 @@ func (s ServerParams) Diff(t ServerParams, opts ...Options) map[string][]interfa
 
 	if s.Ws != t.Ws {
 		diff["Ws"] = []interface{}{s.Ws, t.Ws}
+	}
+
+	return diff
+}
+
+// Equal checks if two structs of type ServerParamsSetProxyV2TlvFmt are equal
+//
+//	var a, b ServerParamsSetProxyV2TlvFmt
+//	equal := a.Equal(b)
+//
+// opts ...Options are ignored in this method
+func (s ServerParamsSetProxyV2TlvFmt) Equal(t ServerParamsSetProxyV2TlvFmt, opts ...Options) bool {
+	if !equalPointers(s.ID, t.ID) {
+		return false
+	}
+
+	if !equalPointers(s.Value, t.Value) {
+		return false
+	}
+
+	return true
+}
+
+// Diff checks if two structs of type ServerParamsSetProxyV2TlvFmt are equal
+//
+//	var a, b ServerParamsSetProxyV2TlvFmt
+//	diff := a.Diff(b)
+//
+// opts ...Options are ignored in this method
+func (s ServerParamsSetProxyV2TlvFmt) Diff(t ServerParamsSetProxyV2TlvFmt, opts ...Options) map[string][]interface{} {
+	diff := make(map[string][]interface{})
+	if !equalPointers(s.ID, t.ID) {
+		diff["ID"] = []interface{}{ValueOrNil(s.ID), ValueOrNil(t.ID)}
+	}
+
+	if !equalPointers(s.Value, t.Value) {
+		diff["Value"] = []interface{}{ValueOrNil(s.Value), ValueOrNil(t.Value)}
 	}
 
 	return diff

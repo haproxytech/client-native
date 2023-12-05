@@ -786,6 +786,16 @@ definitions:
                   - enabled
                   - disabled
               type: string
+          set-proxy-v2-tlv-fmt:
+              properties:
+                  id:
+                      type: string
+                  value:
+                      type: string
+              required:
+                  - id
+                  - value
+              type: object
           shard:
               type: integer
           sigalgs:

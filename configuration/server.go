@@ -478,6 +478,13 @@ func parseServerParams(serverOptions []params.ServerOption, serverParams *models
 			case "ws":
 				serverParams.Ws = v.Value
 			}
+		case *params.ServerOptionIDValue:
+			if v.Name == "set-proxy-v2-tlv-fmt" {
+				serverParams.SetProxyV2TlvFmt = &models.ServerParamsSetProxyV2TlvFmt{
+					ID:    &v.ID,
+					Value: &v.Value,
+				}
+			}
 		}
 	}
 	// Add corresponding arguments to the source option.
@@ -802,6 +809,9 @@ func serializeServerParams(s models.ServerParams) (options []params.ServerOption
 	}
 	if s.Socks4 != "" {
 		options = append(options, &params.ServerOptionValue{Name: "socks4", Value: s.Socks4})
+	}
+	if s.SetProxyV2TlvFmt != nil && s.SetProxyV2TlvFmt.ID != nil && s.SetProxyV2TlvFmt.Value != nil {
+		options = append(options, &params.ServerOptionIDValue{Name: "set-proxy-v2-tlv-fmt", ID: *s.SetProxyV2TlvFmt.ID, Value: *s.SetProxyV2TlvFmt.Value})
 	}
 	if s.TCPUt != nil {
 		options = append(options, &params.ServerOptionValue{Name: "tcp-ut", Value: strconv.FormatInt(*s.TCPUt, 10)})

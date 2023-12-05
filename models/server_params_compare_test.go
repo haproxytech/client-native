@@ -213,7 +213,7 @@ func TestServerParamsDiffFalse(t *testing.T) {
 
 	for _, sample := range samples {
 		result := sample.a.Diff(sample.b)
-		if len(result) != 89 {
+		if len(result) != 90 {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {
@@ -223,7 +223,165 @@ func TestServerParamsDiffFalse(t *testing.T) {
 			if err != nil {
 				t.Errorf(err.Error())
 			}
-			t.Errorf("Expected ServerParams to be different in 89 cases, but it is not (%d) %s %s", len(result), a, b)
+			t.Errorf("Expected ServerParams to be different in 90 cases, but it is not (%d) %s %s", len(result), a, b)
+		}
+	}
+}
+
+func TestServerParamsSetProxyV2TlvFmtEqual(t *testing.T) {
+	samples := []struct {
+		a, b ServerParamsSetProxyV2TlvFmt
+	}{}
+	for i := 0; i < 2; i++ {
+		var sample ServerParamsSetProxyV2TlvFmt
+		var result ServerParamsSetProxyV2TlvFmt
+		err := faker.FakeData(&sample)
+		if err != nil {
+			t.Errorf(err.Error())
+		}
+		byteJSON, err := json.Marshal(sample)
+		if err != nil {
+			t.Errorf(err.Error())
+		}
+		err = json.Unmarshal(byteJSON, &result)
+		if err != nil {
+			t.Errorf(err.Error())
+		}
+
+		samples = append(samples, struct {
+			a, b ServerParamsSetProxyV2TlvFmt
+		}{sample, result})
+	}
+
+	for _, sample := range samples {
+		result := sample.a.Equal(sample.b)
+		if !result {
+			json := jsoniter.ConfigCompatibleWithStandardLibrary
+			a, err := json.Marshal(&sample.a)
+			if err != nil {
+				t.Errorf(err.Error())
+			}
+			b, err := json.Marshal(&sample.b)
+			if err != nil {
+				t.Errorf(err.Error())
+			}
+			t.Errorf("Expected ServerParamsSetProxyV2TlvFmt to be equal, but it is not %s %s", a, b)
+		}
+	}
+}
+
+func TestServerParamsSetProxyV2TlvFmtEqualFalse(t *testing.T) {
+	samples := []struct {
+		a, b ServerParamsSetProxyV2TlvFmt
+	}{}
+	for i := 0; i < 2; i++ {
+		var sample ServerParamsSetProxyV2TlvFmt
+		var result ServerParamsSetProxyV2TlvFmt
+		err := faker.FakeData(&sample)
+		if err != nil {
+			t.Errorf(err.Error())
+		}
+		err = faker.FakeData(&result)
+		if err != nil {
+			t.Errorf(err.Error())
+		}
+		samples = append(samples, struct {
+			a, b ServerParamsSetProxyV2TlvFmt
+		}{sample, result})
+	}
+
+	for _, sample := range samples {
+		result := sample.a.Equal(sample.b)
+		if result {
+			json := jsoniter.ConfigCompatibleWithStandardLibrary
+			a, err := json.Marshal(&sample.a)
+			if err != nil {
+				t.Errorf(err.Error())
+			}
+			b, err := json.Marshal(&sample.b)
+			if err != nil {
+				t.Errorf(err.Error())
+			}
+			t.Errorf("Expected ServerParamsSetProxyV2TlvFmt to be different, but it is not %s %s", a, b)
+		}
+	}
+}
+
+func TestServerParamsSetProxyV2TlvFmtDiff(t *testing.T) {
+	samples := []struct {
+		a, b ServerParamsSetProxyV2TlvFmt
+	}{}
+	for i := 0; i < 2; i++ {
+		var sample ServerParamsSetProxyV2TlvFmt
+		var result ServerParamsSetProxyV2TlvFmt
+		err := faker.FakeData(&sample)
+		if err != nil {
+			t.Errorf(err.Error())
+		}
+		byteJSON, err := json.Marshal(sample)
+		if err != nil {
+			t.Errorf(err.Error())
+		}
+		err = json.Unmarshal(byteJSON, &result)
+		if err != nil {
+			t.Errorf(err.Error())
+		}
+
+		samples = append(samples, struct {
+			a, b ServerParamsSetProxyV2TlvFmt
+		}{sample, result})
+	}
+
+	for _, sample := range samples {
+		result := sample.a.Diff(sample.b)
+		if len(result) != 0 {
+			json := jsoniter.ConfigCompatibleWithStandardLibrary
+			a, err := json.Marshal(&sample.a)
+			if err != nil {
+				t.Errorf(err.Error())
+			}
+			b, err := json.Marshal(&sample.b)
+			if err != nil {
+				t.Errorf(err.Error())
+			}
+			t.Errorf("Expected ServerParamsSetProxyV2TlvFmt to be equal, but it is not %s %s, %v", a, b, result)
+		}
+	}
+}
+
+func TestServerParamsSetProxyV2TlvFmtDiffFalse(t *testing.T) {
+	samples := []struct {
+		a, b ServerParamsSetProxyV2TlvFmt
+	}{}
+	for i := 0; i < 2; i++ {
+		var sample ServerParamsSetProxyV2TlvFmt
+		var result ServerParamsSetProxyV2TlvFmt
+		err := faker.FakeData(&sample)
+		if err != nil {
+			t.Errorf(err.Error())
+		}
+		err = faker.FakeData(&result)
+		if err != nil {
+			t.Errorf(err.Error())
+		}
+		samples = append(samples, struct {
+			a, b ServerParamsSetProxyV2TlvFmt
+		}{sample, result})
+	}
+
+	for _, sample := range samples {
+		result := sample.a.Diff(sample.b)
+		if len(result) != 2 {
+			json := jsoniter.ConfigCompatibleWithStandardLibrary
+			a, err := json.Marshal(&sample.a)
+			if err != nil {
+				t.Errorf(err.Error())
+			}
+			b, err := json.Marshal(&sample.b)
+			if err != nil {
+				t.Errorf(err.Error())
+			}
+			t.Errorf("Expected ServerParamsSetProxyV2TlvFmt to be different in 2 cases, but it is not (%d) %s %s", len(result), a, b)
 		}
 	}
 }

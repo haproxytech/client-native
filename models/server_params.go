@@ -284,6 +284,9 @@ type ServerParams struct {
 	// Enum: [enabled disabled]
 	SendProxyV2SslCn string `json:"send_proxy_v2_ssl_cn,omitempty"`
 
+	// set proxy v2 tlv fmt
+	SetProxyV2TlvFmt *ServerParamsSetProxyV2TlvFmt `json:"set-proxy-v2-tlv-fmt,omitempty"`
+
 	// shard
 	Shard int64 `json:"shard,omitempty"`
 
@@ -534,6 +537,10 @@ func (m *ServerParams) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateSendProxyV2SslCn(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateSetProxyV2TlvFmt(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -1983,6 +1990,25 @@ func (m *ServerParams) validateSendProxyV2SslCn(formats strfmt.Registry) error {
 	return nil
 }
 
+func (m *ServerParams) validateSetProxyV2TlvFmt(formats strfmt.Registry) error {
+	if swag.IsZero(m.SetProxyV2TlvFmt) { // not required
+		return nil
+	}
+
+	if m.SetProxyV2TlvFmt != nil {
+		if err := m.SetProxyV2TlvFmt.Validate(formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("set-proxy-v2-tlv-fmt")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("set-proxy-v2-tlv-fmt")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
 func (m *ServerParams) validateSni(formats strfmt.Registry) error {
 	if swag.IsZero(m.Sni) { // not required
 		return nil
@@ -2430,8 +2456,33 @@ func (m *ServerParams) validateWs(formats strfmt.Registry) error {
 	return nil
 }
 
-// ContextValidate validates this server params based on context it is used
+// ContextValidate validate this server params based on the context it is used
 func (m *ServerParams) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+	var res []error
+
+	if err := m.contextValidateSetProxyV2TlvFmt(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if len(res) > 0 {
+		return errors.CompositeValidationError(res...)
+	}
+	return nil
+}
+
+func (m *ServerParams) contextValidateSetProxyV2TlvFmt(ctx context.Context, formats strfmt.Registry) error {
+
+	if m.SetProxyV2TlvFmt != nil {
+		if err := m.SetProxyV2TlvFmt.ContextValidate(ctx, formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("set-proxy-v2-tlv-fmt")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("set-proxy-v2-tlv-fmt")
+			}
+			return err
+		}
+	}
+
 	return nil
 }
 
@@ -2446,6 +2497,79 @@ func (m *ServerParams) MarshalBinary() ([]byte, error) {
 // UnmarshalBinary interface implementation
 func (m *ServerParams) UnmarshalBinary(b []byte) error {
 	var res ServerParams
+	if err := swag.ReadJSON(b, &res); err != nil {
+		return err
+	}
+	*m = res
+	return nil
+}
+
+// ServerParamsSetProxyV2TlvFmt server params set proxy v2 tlv fmt
+//
+// swagger:model ServerParamsSetProxyV2TlvFmt
+type ServerParamsSetProxyV2TlvFmt struct {
+
+	// id
+	// Required: true
+	ID *string `json:"id"`
+
+	// value
+	// Required: true
+	Value *string `json:"value"`
+}
+
+// Validate validates this server params set proxy v2 tlv fmt
+func (m *ServerParamsSetProxyV2TlvFmt) Validate(formats strfmt.Registry) error {
+	var res []error
+
+	if err := m.validateID(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateValue(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if len(res) > 0 {
+		return errors.CompositeValidationError(res...)
+	}
+	return nil
+}
+
+func (m *ServerParamsSetProxyV2TlvFmt) validateID(formats strfmt.Registry) error {
+
+	if err := validate.Required("set-proxy-v2-tlv-fmt"+"."+"id", "body", m.ID); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *ServerParamsSetProxyV2TlvFmt) validateValue(formats strfmt.Registry) error {
+
+	if err := validate.Required("set-proxy-v2-tlv-fmt"+"."+"value", "body", m.Value); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+// ContextValidate validates this server params set proxy v2 tlv fmt based on context it is used
+func (m *ServerParamsSetProxyV2TlvFmt) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+	return nil
+}
+
+// MarshalBinary interface implementation
+func (m *ServerParamsSetProxyV2TlvFmt) MarshalBinary() ([]byte, error) {
+	if m == nil {
+		return nil, nil
+	}
+	return swag.WriteJSON(m)
+}
+
+// UnmarshalBinary interface implementation
+func (m *ServerParamsSetProxyV2TlvFmt) UnmarshalBinary(b []byte) error {
+	var res ServerParamsSetProxyV2TlvFmt
 	if err := swag.ReadJSON(b, &res); err != nil {
 		return err
 	}
