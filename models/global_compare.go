@@ -2170,6 +2170,10 @@ func (s GlobalTuneOptions) Equal(t GlobalTuneOptions, opts ...Options) bool {
 		return false
 	}
 
+	if s.PtZeroCopyForwarding != t.PtZeroCopyForwarding {
+		return false
+	}
+
 	if !equalPointers(s.QuicFrontendConnTxBuffersLimit, t.QuicFrontendConnTxBuffersLimit) {
 		return false
 	}
@@ -2495,6 +2499,10 @@ func (s GlobalTuneOptions) Diff(t GlobalTuneOptions, opts ...Options) map[string
 
 	if s.PoolLowFdRatio != t.PoolLowFdRatio {
 		diff["PoolLowFdRatio"] = []interface{}{s.PoolLowFdRatio, t.PoolLowFdRatio}
+	}
+
+	if s.PtZeroCopyForwarding != t.PtZeroCopyForwarding {
+		diff["PtZeroCopyForwarding"] = []interface{}{s.PtZeroCopyForwarding, t.PtZeroCopyForwarding}
 	}
 
 	if !equalPointers(s.QuicFrontendConnTxBuffersLimit, t.QuicFrontendConnTxBuffersLimit) {

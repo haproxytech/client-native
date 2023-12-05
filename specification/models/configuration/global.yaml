@@ -437,6 +437,10 @@ global:
         pool_low_fd_ratio:
           type: integer
           x-display-name: Max Used Low FD Ratio
+        pt_zero_copy_forwarding:
+          type: string
+          enum: [enabled, disabled]
+          x-display-name: enable or disable the zero-copy forwarding of data for the pass-through multiplexer
         rcvbuf_backend:
           type: integer
           x-display-name: Backend Receive Buffer Size

@@ -3196,6 +3196,10 @@ type GlobalTuneOptions struct {
 	// pool low fd ratio
 	PoolLowFdRatio int64 `json:"pool_low_fd_ratio,omitempty"`
 
+	// pt zero copy forwarding
+	// Enum: [enabled disabled]
+	PtZeroCopyForwarding string `json:"pt_zero_copy_forwarding,omitempty"`
+
 	// quic frontend conn tx buffers limit
 	QuicFrontendConnTxBuffersLimit *int64 `json:"quic_frontend_conn_tx_buffers_limit,omitempty"`
 
@@ -3366,6 +3370,10 @@ func (m *GlobalTuneOptions) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateLuaLogStderr(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validatePtZeroCopyForwarding(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -3845,6 +3853,48 @@ func (m *GlobalTuneOptions) validateLuaLogStderr(formats strfmt.Registry) error 
 
 	// value enum
 	if err := m.validateLuaLogStderrEnum("tune_options"+"."+"lua_log_stderr", "body", m.LuaLogStderr); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+var globalTuneOptionsTypePtZeroCopyForwardingPropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		globalTuneOptionsTypePtZeroCopyForwardingPropEnum = append(globalTuneOptionsTypePtZeroCopyForwardingPropEnum, v)
+	}
+}
+
+const (
+
+	// GlobalTuneOptionsPtZeroCopyForwardingEnabled captures enum value "enabled"
+	GlobalTuneOptionsPtZeroCopyForwardingEnabled string = "enabled"
+
+	// GlobalTuneOptionsPtZeroCopyForwardingDisabled captures enum value "disabled"
+	GlobalTuneOptionsPtZeroCopyForwardingDisabled string = "disabled"
+)
+
+// prop value enum
+func (m *GlobalTuneOptions) validatePtZeroCopyForwardingEnum(path, location string, value string) error {
+	if err := validate.EnumCase(path, location, value, globalTuneOptionsTypePtZeroCopyForwardingPropEnum, true); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *GlobalTuneOptions) validatePtZeroCopyForwarding(formats strfmt.Registry) error {
+	if swag.IsZero(m.PtZeroCopyForwarding) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validatePtZeroCopyForwardingEnum("tune_options"+"."+"pt_zero_copy_forwarding", "body", m.PtZeroCopyForwarding); err != nil {
 		return err
 	}
 

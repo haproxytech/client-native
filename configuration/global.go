@@ -2572,6 +2572,9 @@ func serializeTuneOptions(p parser.Parser, options *models.GlobalTuneOptions) er
 	if err := serializeOnOffOption(p, "tune.h2.zero-copy-fwd-send", options.H2ZeroCopyFwdSend); err != nil {
 		return err
 	}
+	if err := serializeOnOffOption(p, "tune.pt.zero-copy-forwarding", options.PtZeroCopyForwarding); err != nil {
+		return err
+	}
 	return serializeInt64Option(p, "tune.zlib.windowsize", options.ZlibWindowsize)
 }
 
@@ -3215,6 +3218,12 @@ func parseTuneOptions(p parser.Parser) (*models.GlobalTuneOptions, error) { //no
 		return nil, err
 	}
 	options.H2ZeroCopyFwdSend = strOption
+
+	strOption, err = parseOnOffOption(p, "tune.pt.zero-copy-forwarding")
+	if err != nil {
+		return nil, err
+	}
+	options.PtZeroCopyForwarding = strOption
 
 	return options, nil
 }

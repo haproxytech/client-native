@@ -1751,6 +1751,12 @@ definitions:
                   pool_low_fd_ratio:
                       type: integer
                       x-display-name: Max Used Low FD Ratio
+                  pt_zero_copy_forwarding:
+                      enum:
+                          - enabled
+                          - disabled
+                      type: string
+                      x-display-name: enable or disable the zero-copy forwarding of data for the pass-through multiplexer
                   quic_frontend_conn_tx_buffers_limit:
                       type: integer
                       x-display-name: QUIC Frontend Connection TX Buffer Limit

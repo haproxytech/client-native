@@ -381,6 +381,9 @@ func TestGetGlobal(t *testing.T) {
 	if global.TuneOptions.PoolLowFdRatio != 34 {
 		t.Errorf("PoolLowFdRatio is %v, expected 34", global.TuneOptions.PoolLowFdRatio)
 	}
+	if global.TuneOptions.PtZeroCopyForwarding != "enabled" {
+		t.Errorf("PtZeroCopyForwarding is %v, expected enabled", global.TuneOptions.PtZeroCopyForwarding)
+	}
 	if *global.TuneOptions.RcvbufBackend != 1024 {
 		t.Errorf("RcvbufBackend is %v, expected 1024", global.TuneOptions.RcvbufBackend)
 	}
@@ -747,6 +750,7 @@ func TestPutGlobal(t *testing.T) {
 			LuaLogStderr:                   "disabled",
 			MaxChecksPerThread:             misc.Int64P(20),
 			PeersMaxUpdatesAtOnce:          100,
+			PtZeroCopyForwarding:           "disabled",
 			QuicFrontendConnTxBuffersLimit: nil,
 			QuicFrontendMaxIdleTimeout:     misc.Int64P(5000),
 			QuicSocketOwner:                "listener",

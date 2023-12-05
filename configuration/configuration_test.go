@@ -85,6 +85,7 @@ global
   tune.pipesize 32
   tune.pool-high-fd-ratio 33
   tune.pool-low-fd-ratio 34
+  tune.pt.zero-copy-forwarding on
   tune.rcvbuf.backend 1024
   tune.rcvbuf.client 35
   tune.rcvbuf.frontend 2048
