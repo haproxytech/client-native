@@ -294,6 +294,9 @@ func TestGetGlobal(t *testing.T) {
 	if global.TuneOptions.EventsMaxEventsAtOnce != 10 {
 		t.Errorf("TuneOptions.EventsMaxEventsAtOnce is %v, expected 10", global.TuneOptions.EventsMaxEventsAtOnce)
 	}
+	if global.TuneOptions.H1ZeroCopyFwdRecv != "enabled" {
+		t.Errorf("H1ZeroCopyFwdRecv is %v, expected enabled", global.TuneOptions.H1ZeroCopyFwdRecv)
+	}
 	if global.TuneOptions.H2HeaderTableSize != 15 {
 		t.Errorf("H2HeaderTableSize is %v, expected 15", global.TuneOptions.H2HeaderTableSize)
 	}
@@ -731,6 +734,7 @@ func TestPutGlobal(t *testing.T) {
 		TuneOptions: &models.GlobalTuneOptions{
 			DisableZeroCopyForwarding:      true,
 			EventsMaxEventsAtOnce:          50,
+			H1ZeroCopyFwdRecv:              "disabled",
 			LuaLogLoggers:                  "disabled",
 			LuaLogStderr:                   "disabled",
 			MaxChecksPerThread:             misc.Int64P(20),
