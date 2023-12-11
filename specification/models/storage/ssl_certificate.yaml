@@ -14,23 +14,31 @@ ssl_certificate:
       readOnly: true
       x-nullable: true
       description: File size in bytes.
-    not_after:
+    serial:
       type: string
-      format: date-time
-      readOnly: true
-      x-nullable: true
-      x-go-custom-tag: gorm:"type:timestamp with time zone"
     not_before:
       type: string
       format: date-time
       readOnly: true
       x-nullable: true
       x-go-custom-tag: gorm:"type:timestamp with time zone"
-    issuers:
+    not_after:
+      type: string
+      format: date-time
+      readOnly: true
+      x-nullable: true
+      x-go-custom-tag: gorm:"type:timestamp with time zone"
+    algorithm:
+      type: string
+    sha1_finger_print:
+      type: string
+    sha256_finger_print:
+      type: string
+    domains:
       type: string
       readOnly: true
       x-omitempty: true
-    domains:
+    issuers:
       type: string
       readOnly: true
       x-omitempty: true
@@ -38,3 +46,11 @@ ssl_certificate:
       type: string
       readOnly: true
       x-omitempty: true
+    authority_key_id:
+      type: string
+    subject:
+      type: string
+    subject_alternative_names:
+      type: string
+    subject_key_id:
+      type: string

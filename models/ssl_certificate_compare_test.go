@@ -178,7 +178,7 @@ func TestSslCertificateDiffFalse(t *testing.T) {
 
 	for _, sample := range samples {
 		result := sample.a.Diff(sample.b)
-		if len(result) != 9 {
+		if len(result) != 17 {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {
@@ -188,7 +188,7 @@ func TestSslCertificateDiffFalse(t *testing.T) {
 			if err != nil {
 				t.Errorf(err.Error())
 			}
-			t.Errorf("Expected SslCertificate to be different in 9 cases, but it is not (%d) %s %s", len(result), a, b)
+			t.Errorf("Expected SslCertificate to be different in 17 cases, but it is not (%d) %s %s", len(result), a, b)
 		}
 	}
 }

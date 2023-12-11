@@ -420,7 +420,7 @@ func Test_storage_validatePEM(t *testing.T) {
 	validChain, err := readPem("valid/OK-key_crt_int1_int2.pem")
 	require.NoError(t, err)
 
-	validSelfSignedWithoutRSA, err := readPem("valid/self-signed-without-rsa.pem")
+	validSelfSignedWithoutRSA, err := readPem("invalid/self-signed-without-rsa.pem")
 	require.NoError(t, err)
 
 	tests := []struct {
@@ -470,33 +470,44 @@ func Test_storage_validatePEM(t *testing.T) {
 
 func Test_storage_getCertificatesInfo(t *testing.T) {
 	tests := []struct {
-		name     string
 		dirname  string
 		filename string
 	}{
 		{
-			name:     "only public pem",
 			filename: "only-public.pem",
 			dirname:  "invalid",
 		},
 		{
-			name:     "only private pem",
 			filename: "only-private.pem",
 			dirname:  "invalid",
 		},
 		{
-			name:     "public, private and intermediate pems with correct order",
+			filename: "NOK-crt_key_int1.pem",
+			dirname:  "invalid",
+		},
+		{
+			filename: "NOK-int1_int2.pem",
+			dirname:  "invalid",
+		},
+		{
+			filename: "self-signed-without-rsa.pem",
+			dirname:  "invalid",
+		},
+		{
 			filename: "OK-key_crt_int1_int2.pem",
 			dirname:  "valid",
 		},
 		{
-			name:     "self-signed cert without RSA",
-			filename: "self-signed-without-rsa.pem",
+			filename: "OK-crt_key_int1_int2.pem",
+			dirname:  "valid",
+		},
+		{
+			filename: "OK-int1_key_crt_int2.pem",
 			dirname:  "valid",
 		},
 	}
 	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
+		t.Run(tt.filename, func(t *testing.T) {
 			s := storage{
 				dirname: "../storage/test-certs/" + tt.dirname,
 			}
@@ -507,6 +518,13 @@ func Test_storage_getCertificatesInfo(t *testing.T) {
 				t.Errorf("storage.GetCertificatesInfo() error = %v", err)
 				t.Logf("%+v", info)
 				return
+			}
+
+			if tt.dirname == "valid" {
+				require.NotEmpty(t, info.Sha1FingerPrint)
+				require.NotEmpty(t, info.Sha256FingerPrint)
+				require.NotEmpty(t, info.Subject)
+				require.NotEmpty(t, info.Serial)
 			}
 		})
 	}

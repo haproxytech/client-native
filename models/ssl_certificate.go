@@ -36,6 +36,12 @@ import (
 // swagger:model ssl_certificate
 type SslCertificate struct {
 
+	// algorithm
+	Algorithm string `json:"algorithm,omitempty"`
+
+	// authority key id
+	AuthorityKeyID string `json:"authority_key_id,omitempty"`
+
 	// description
 	Description string `json:"description,omitempty"`
 
@@ -64,12 +70,30 @@ type SslCertificate struct {
 	// Format: date-time
 	NotBefore *strfmt.DateTime `json:"not_before,omitempty" gorm:"type:timestamp with time zone"`
 
+	// serial
+	Serial string `json:"serial,omitempty"`
+
+	// sha1 finger print
+	Sha1FingerPrint string `json:"sha1_finger_print,omitempty"`
+
+	// sha256 finger print
+	Sha256FingerPrint string `json:"sha256_finger_print,omitempty"`
+
 	// File size in bytes.
 	// Read Only: true
 	Size *int64 `json:"size,omitempty"`
 
 	// storage name
 	StorageName string `json:"storage_name,omitempty"`
+
+	// subject
+	Subject string `json:"subject,omitempty"`
+
+	// subject alternative names
+	SubjectAlternativeNames string `json:"subject_alternative_names,omitempty"`
+
+	// subject key id
+	SubjectKeyID string `json:"subject_key_id,omitempty"`
 }
 
 // Validate validates this ssl certificate

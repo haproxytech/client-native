@@ -8825,6 +8825,10 @@ definitions:
   ssl_certificate:
       description: A file containing one or more SSL/TLS certificates and keys
       properties:
+          algorithm:
+              type: string
+          authority_key_id:
+              type: string
           description:
               type: string
           domains:
@@ -8853,12 +8857,24 @@ definitions:
               type: string
               x-go-custom-tag: gorm:"type:timestamp with time zone"
               x-nullable: true
+          serial:
+              type: string
+          sha1_finger_print:
+              type: string
+          sha256_finger_print:
+              type: string
           size:
               description: File size in bytes.
               readOnly: true
               type: integer
               x-nullable: true
           storage_name:
+              type: string
+          subject:
+              type: string
+          subject_alternative_names:
+              type: string
+          subject_key_id:
               type: string
       title: SSL File
       type: object
