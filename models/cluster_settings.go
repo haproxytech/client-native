@@ -46,11 +46,13 @@ type ClusterSettings struct {
 
 	// mode
 	// Enum: [single cluster]
+	// +kubebuilder:validation:Enum=single;cluster;
 	Mode string `json:"mode,omitempty"`
 
 	// status
 	// Read Only: true
 	// Enum: [active unreachable waiting_approval]
+	// +kubebuilder:validation:Enum=active;unreachable;waiting_approval;
 	Status string `json:"status,omitempty"`
 }
 
@@ -492,6 +494,7 @@ type ClusterLogTarget struct {
 	// protocol
 	// Required: true
 	// Enum: [tcp udp]
+	// +kubebuilder:validation:Enum=tcp;udp;
 	Protocol *string `json:"protocol"`
 }
 

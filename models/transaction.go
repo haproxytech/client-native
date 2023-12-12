@@ -47,6 +47,7 @@ type Transaction struct {
 
 	// status
 	// Enum: [failed outdated in_progress success]
+	// +kubebuilder:validation:Enum=failed;outdated;in_progress;success;
 	Status string `json:"status,omitempty"`
 }
 

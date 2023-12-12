@@ -53,6 +53,7 @@ type ConfigStickTable struct {
 
 	// srvkey
 	// Enum: [addr name]
+	// +kubebuilder:validation:Enum=addr;name;
 	Srvkey *string `json:"srvkey,omitempty"`
 
 	// store
@@ -61,6 +62,7 @@ type ConfigStickTable struct {
 
 	// type
 	// Enum: [ip ipv6 integer string binary]
+	// +kubebuilder:validation:Enum=ip;ipv6;integer;string;binary;
 	Type string `json:"type,omitempty"`
 
 	// write to

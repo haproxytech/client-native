@@ -34,9 +34,9 @@ import (
 //
 // swagger:model health
 type Health struct {
-
 	// haproxy
 	// Enum: [up down unknown]
+	// +kubebuilder:validation:Enum=up;down;unknown;
 	Haproxy string `json:"haproxy,omitempty"`
 }
 

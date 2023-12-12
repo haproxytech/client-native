@@ -34,10 +34,10 @@ import (
 //
 // swagger:model tcp_check
 type TCPCheck struct {
-
 	// action
 	// Required: true
 	// Enum: [comment connect expect send send-lf send-binary send-binary-lf set-var set-var-fmt unset-var]
+	// +kubebuilder:validation:Enum=comment;connect;expect;send;send-lf;send-binary;send-binary-lf;set-var;set-var-fmt;unset-var;
 	Action string `json:"action"`
 
 	// addr
@@ -59,6 +59,7 @@ type TCPCheck struct {
 
 	// error status
 	// Enum: [L7OKC L7RSP L7STS L6RSP L4CON]
+	// +kubebuilder:validation:Enum=L7OKC;L7RSP;L7STS;L6RSP;L4CON;
 	ErrorStatus string `json:"error_status,omitempty"`
 
 	// exclamation mark
@@ -86,6 +87,7 @@ type TCPCheck struct {
 	// match
 	// Pattern: ^[^\s]+$
 	// Enum: [string rstring string-lf binary rbinary binary-lf]
+	// +kubebuilder:validation:Enum=string;rstring;string-lf;binary;rbinary;binary-lf;
 	Match string `json:"match,omitempty"`
 
 	// min recv
@@ -93,6 +95,7 @@ type TCPCheck struct {
 
 	// ok status
 	// Enum: [L7OK L7OKC L6OK L4OK]
+	// +kubebuilder:validation:Enum=L7OK;L7OKC;L6OK;L4OK;
 	OkStatus string `json:"ok_status,omitempty"`
 
 	// on error
@@ -129,6 +132,7 @@ type TCPCheck struct {
 
 	// tout status
 	// Enum: [L7TOUT L6TOUT L4TOUT]
+	// +kubebuilder:validation:Enum=L7TOUT;L6TOUT;L4TOUT;
 	ToutStatus string `json:"tout_status,omitempty"`
 
 	// var expr

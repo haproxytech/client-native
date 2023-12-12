@@ -45,6 +45,7 @@ type RuntimeServer struct {
 
 	// admin state
 	// Enum: [ready maint drain]
+	// +kubebuilder:validation:Enum=ready;maint;drain;
 	AdminState string `json:"admin_state,omitempty"`
 
 	// id
@@ -57,6 +58,7 @@ type RuntimeServer struct {
 
 	// operational state
 	// Enum: [up down stopping]
+	// +kubebuilder:validation:Enum=up;down;stopping;
 	OperationalState string `json:"operational_state,omitempty"`
 
 	// port

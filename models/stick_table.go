@@ -52,6 +52,7 @@ type StickTable struct {
 
 	// type
 	// Enum: [ip ipv6 integer string binary]
+	// +kubebuilder:validation:Enum=ip;ipv6;integer;string;binary;
 	Type string `json:"type,omitempty"`
 
 	// used
@@ -209,9 +210,9 @@ func (m *StickTable) UnmarshalBinary(b []byte) error {
 //
 // swagger:model StickTableField
 type StickTableField struct {
-
 	// field
 	// Enum: [server_id gpc0 gpc0_rate gpc1 gpc1_rate gpt0 conn_cnt conn_cur conn_rate sess_cnt sess_rate http_req_cnt http_req_rate http_err_cnt http_err_rate bytes_in_cnt bytes_in_rate bytes_out_cnt bytes_out_rate]
+	// +kubebuilder:validation:Enum=server_id;gpc0;gpc0_rate;gpc1;gpc1_rate;gpt0;conn_cnt;conn_cur;conn_rate;sess_cnt;sess_rate;http_req_cnt;http_req_rate;http_err_cnt;http_err_rate;bytes_in_cnt;bytes_in_rate;bytes_out_cnt;bytes_out_rate;
 	Field string `json:"field,omitempty"`
 
 	// period
@@ -219,6 +220,7 @@ type StickTableField struct {
 
 	// type
 	// Enum: [rate counter]
+	// +kubebuilder:validation:Enum=rate;counter;
 	Type string `json:"type,omitempty"`
 }
 

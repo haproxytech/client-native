@@ -44,6 +44,7 @@ type FCGIApp struct {
 
 	// Enables or disables the retrieval of variables related to connection management.
 	// Enum: [enabled disabled]
+	// +kubebuilder:validation:Enum=enabled;disabled;
 	GetValues string `json:"get_values,omitempty"`
 
 	// Defines the script name to append after a URI that ends with a slash ("/") to set the default value for the FastCGI parameter SCRIPT_NAME. It is an optional setting.
@@ -51,6 +52,7 @@ type FCGIApp struct {
 
 	// Tells the FastCGI application whether or not to keep the connection open after it sends a response. If disabled, the FastCGI application closes the connection after responding to this request.
 	// Enum: [enabled disabled]
+	// +kubebuilder:validation:Enum=enabled;disabled;
 	KeepConn string `json:"keep_conn,omitempty"`
 
 	// log stderrs
@@ -62,6 +64,7 @@ type FCGIApp struct {
 
 	// Enables or disables the support of connection multiplexing. If the FastCGI application retrieves the variable FCGI_MPXS_CONNS during connection establishment, it can override this option.
 	// Enum: [enabled disabled]
+	// +kubebuilder:validation:Enum=enabled;disabled;
 	MpxsConns string `json:"mpxs_conns,omitempty"`
 
 	// Declares a FastCGI application

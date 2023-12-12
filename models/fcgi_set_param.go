@@ -36,9 +36,9 @@ import (
 //
 // swagger:model fcgiSetParam
 type FCGISetParam struct {
-
 	// cond
 	// Enum: [if unless]
+	// +kubebuilder:validation:Enum=if;unless;
 	Cond string `json:"cond,omitempty"`
 
 	// cond test

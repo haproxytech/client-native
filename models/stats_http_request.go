@@ -47,6 +47,7 @@ type StatsHTTPRequest struct {
 	// type
 	// Required: true
 	// Enum: [allow deny auth]
+	// +kubebuilder:validation:Enum=allow;deny;auth;
 	Type *string `json:"type"`
 }
 

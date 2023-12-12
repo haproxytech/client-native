@@ -47,6 +47,7 @@ type SpoeTransaction struct {
 
 	// status
 	// Enum: [failed in_progress success]
+	// +kubebuilder:validation:Enum=failed;in_progress;success;
 	Status string `json:"status,omitempty"`
 }
 

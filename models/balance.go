@@ -34,10 +34,10 @@ import (
 //
 // swagger:model balance
 type Balance struct {
-
 	// algorithm
 	// Required: true
 	// Enum: [roundrobin static-rr leastconn first source uri url_param hdr random rdp-cookie hash]
+	// +kubebuilder:validation:Enum=roundrobin;static-rr;leastconn;first;source;uri;url_param;hdr;random;rdp-cookie;hash;
 	Algorithm *string `json:"algorithm"`
 
 	// hash expression

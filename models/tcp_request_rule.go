@@ -37,9 +37,9 @@ import (
 //
 // swagger:model tcp_request_rule
 type TCPRequestRule struct {
-
 	// action
 	// Enum: [accept attach-srv capture do-resolve expect-netscaler-cip expect-proxy reject sc-add-gpc sc-inc-gpc sc-inc-gpc0 sc-inc-gpc1 sc-set-gpt0 send-spoe-group set-dst-port set-dst set-priority set-src set-var silent-drop track-sc0 track-sc1 track-sc2 track-sc unset-var use-service lua set-bandwidth-limit set-src-port set-mark set-tos set-var-fmt set-log-level set-nice switch-mode]
+	// +kubebuilder:validation:Enum=accept;attach-srv;capture;do-resolve;expect-netscaler-cip;expect-proxy;reject;sc-add-gpc;sc-inc-gpc;sc-inc-gpc0;sc-inc-gpc1;sc-set-gpt0;send-spoe-group;set-dst-port;set-dst;set-priority;set-src;set-var;silent-drop;track-sc0;track-sc1;track-sc2;track-sc;unset-var;use-service;lua;set-bandwidth-limit;set-src-port;set-mark;set-tos;set-var-fmt;set-log-level;set-nice;switch-mode;
 	Action string `json:"action,omitempty"`
 
 	// bandwidth limit limit
@@ -60,6 +60,7 @@ type TCPRequestRule struct {
 
 	// cond
 	// Enum: [if unless]
+	// +kubebuilder:validation:Enum=if;unless;
 	Cond string `json:"cond,omitempty"`
 
 	// cond test
@@ -77,6 +78,7 @@ type TCPRequestRule struct {
 
 	// log level
 	// Enum: [emerg alert crit err warning notice info debug silent]
+	// +kubebuilder:validation:Enum=emerg;alert;crit;err;warning;notice;info;debug;silent;
 	LogLevel string `json:"log_level,omitempty"`
 
 	// lua action
@@ -97,10 +99,12 @@ type TCPRequestRule struct {
 
 	// priority type
 	// Enum: [class offset]
+	// +kubebuilder:validation:Enum=class;offset;
 	PriorityType string `json:"priority_type,omitempty"`
 
 	// resolve protocol
 	// Enum: [ipv4 ipv6]
+	// +kubebuilder:validation:Enum=ipv4;ipv6;
 	ResolveProtocol string `json:"resolve_protocol,omitempty"`
 
 	// resolve resolvers
@@ -152,6 +156,7 @@ type TCPRequestRule struct {
 	// type
 	// Required: true
 	// Enum: [connection content inspect-delay session]
+	// +kubebuilder:validation:Enum=connection;content;inspect-delay;session;
 	Type string `json:"type"`
 
 	// var format

@@ -47,18 +47,22 @@ type Backend struct {
 
 	// abortonclose
 	// Enum: [enabled disabled]
+	// +kubebuilder:validation:Enum=enabled;disabled;
 	Abortonclose string `json:"abortonclose,omitempty"`
 
 	// accept invalid http response
 	// Enum: [enabled disabled]
+	// +kubebuilder:validation:Enum=enabled;disabled;
 	AcceptInvalidHTTPResponse string `json:"accept_invalid_http_response,omitempty"`
 
 	// adv check
 	// Enum: [ssl-hello-chk smtpchk ldap-check mysql-check pgsql-check tcp-check redis-check httpchk]
+	// +kubebuilder:validation:Enum=ssl-hello-chk;smtpchk;ldap-check;mysql-check;pgsql-check;tcp-check;redis-check;httpchk;
 	AdvCheck string `json:"adv_check,omitempty"`
 
 	// allbackups
 	// Enum: [enabled disabled]
+	// +kubebuilder:validation:Enum=enabled;disabled;
 	Allbackups string `json:"allbackups,omitempty"`
 
 	// balance
@@ -73,6 +77,7 @@ type Backend struct {
 
 	// checkcache
 	// Enum: [enabled disabled]
+	// +kubebuilder:validation:Enum=enabled;disabled;
 	Checkcache string `json:"checkcache,omitempty"`
 
 	// compression
@@ -111,6 +116,7 @@ type Backend struct {
 
 	// external check
 	// Enum: [enabled disabled]
+	// +kubebuilder:validation:Enum=enabled;disabled;
 	ExternalCheck string `json:"external_check,omitempty"`
 
 	// external check command
@@ -136,6 +142,7 @@ type Backend struct {
 
 	// h1 case adjust bogus server
 	// Enum: [enabled disabled]
+	// +kubebuilder:validation:Enum=enabled;disabled;
 	H1CaseAdjustBogusServer string `json:"h1_case_adjust_bogus_server,omitempty"`
 
 	// hash type
@@ -143,6 +150,7 @@ type Backend struct {
 
 	// http buffer request
 	// Enum: [enabled disabled]
+	// +kubebuilder:validation:Enum=enabled;disabled;
 	HTTPBufferRequest string `json:"http-buffer-request,omitempty"`
 
 	// http check
@@ -150,23 +158,28 @@ type Backend struct {
 
 	// http keep alive
 	// Enum: [enabled disabled]
+	// +kubebuilder:validation:Enum=enabled;disabled;
 	HTTPKeepAlive string `json:"http-keep-alive,omitempty"`
 
 	// http no delay
 	// Enum: [enabled disabled]
+	// +kubebuilder:validation:Enum=enabled;disabled;
 	HTTPNoDelay string `json:"http-no-delay,omitempty"`
 
 	// http server close
 	// Enum: [enabled disabled]
+	// +kubebuilder:validation:Enum=enabled;disabled;
 	HTTPServerClose string `json:"http-server-close,omitempty"`
 
 	// http use htx
 	// Pattern: ^[^\s]+$
 	// Enum: [enabled disabled]
+	// +kubebuilder:validation:Enum=enabled;disabled;
 	HTTPUseHtx string `json:"http-use-htx,omitempty"`
 
 	// http connection mode
 	// Enum: [httpclose http-server-close http-keep-alive]
+	// +kubebuilder:validation:Enum=httpclose;http-server-close;http-keep-alive;
 	HTTPConnectionMode string `json:"http_connection_mode,omitempty"`
 
 	// http keep alive timeout
@@ -174,10 +187,12 @@ type Backend struct {
 
 	// http pretend keepalive
 	// Enum: [enabled disabled]
+	// +kubebuilder:validation:Enum=enabled;disabled;
 	HTTPPretendKeepalive string `json:"http_pretend_keepalive,omitempty"`
 
 	// http proxy
 	// Enum: [enabled disabled]
+	// +kubebuilder:validation:Enum=enabled;disabled;
 	HTTPProxy string `json:"http_proxy,omitempty"`
 
 	// http request timeout
@@ -185,10 +200,12 @@ type Backend struct {
 
 	// http restrict req hdr names
 	// Enum: [preserve delete reject]
+	// +kubebuilder:validation:Enum=preserve;delete;reject;
 	HTTPRestrictReqHdrNames string `json:"http_restrict_req_hdr_names,omitempty"`
 
 	// http reuse
 	// Enum: [aggressive always never safe]
+	// +kubebuilder:validation:Enum=aggressive;always;never;safe;
 	HTTPReuse string `json:"http_reuse,omitempty"`
 
 	// http send name header
@@ -199,6 +216,7 @@ type Backend struct {
 
 	// httpclose
 	// Enum: [enabled disabled]
+	// +kubebuilder:validation:Enum=enabled;disabled;
 	Httpclose string `json:"httpclose,omitempty"`
 
 	// id
@@ -209,14 +227,17 @@ type Backend struct {
 
 	// independent streams
 	// Enum: [enabled disabled]
+	// +kubebuilder:validation:Enum=enabled;disabled;
 	IndependentStreams string `json:"independent_streams,omitempty"`
 
 	// load server state from file
 	// Enum: [global local none]
+	// +kubebuilder:validation:Enum=global;local;none;
 	LoadServerStateFromFile string `json:"load_server_state_from_file,omitempty"`
 
 	// log health checks
 	// Enum: [enabled disabled]
+	// +kubebuilder:validation:Enum=enabled;disabled;
 	LogHealthChecks string `json:"log_health_checks,omitempty"`
 
 	// log tag
@@ -228,6 +249,7 @@ type Backend struct {
 
 	// mode
 	// Enum: [http tcp log]
+	// +kubebuilder:validation:Enum=http;tcp;log;
 	Mode string `json:"mode,omitempty"`
 
 	// mysql check params
@@ -240,6 +262,7 @@ type Backend struct {
 
 	// nolinger
 	// Enum: [enabled disabled]
+	// +kubebuilder:validation:Enum=enabled;disabled;
 	Nolinger string `json:"nolinger,omitempty"`
 
 	// originalto
@@ -247,6 +270,7 @@ type Backend struct {
 
 	// persist
 	// Enum: [enabled disabled]
+	// +kubebuilder:validation:Enum=enabled;disabled;
 	Persist string `json:"persist,omitempty"`
 
 	// persist rule
@@ -257,6 +281,7 @@ type Backend struct {
 
 	// prefer last server
 	// Enum: [enabled disabled]
+	// +kubebuilder:validation:Enum=enabled;disabled;
 	PreferLastServer string `json:"prefer_last_server,omitempty"`
 
 	// queue timeout
@@ -288,22 +313,27 @@ type Backend struct {
 
 	// splice auto
 	// Enum: [enabled disabled]
+	// +kubebuilder:validation:Enum=enabled;disabled;
 	SpliceAuto string `json:"splice_auto,omitempty"`
 
 	// splice request
 	// Enum: [enabled disabled]
+	// +kubebuilder:validation:Enum=enabled;disabled;
 	SpliceRequest string `json:"splice_request,omitempty"`
 
 	// splice response
 	// Enum: [enabled disabled]
+	// +kubebuilder:validation:Enum=enabled;disabled;
 	SpliceResponse string `json:"splice_response,omitempty"`
 
 	// spop check
 	// Enum: [enabled disabled]
+	// +kubebuilder:validation:Enum=enabled;disabled;
 	SpopCheck string `json:"spop_check,omitempty"`
 
 	// srvtcpka
 	// Enum: [enabled disabled]
+	// +kubebuilder:validation:Enum=enabled;disabled;
 	Srvtcpka string `json:"srvtcpka,omitempty"`
 
 	// srvtcpka cnt
@@ -326,14 +356,17 @@ type Backend struct {
 
 	// tcp smart connect
 	// Enum: [enabled disabled]
+	// +kubebuilder:validation:Enum=enabled;disabled;
 	TCPSmartConnect string `json:"tcp_smart_connect,omitempty"`
 
 	// tcpka
 	// Enum: [enabled disabled]
+	// +kubebuilder:validation:Enum=enabled;disabled;
 	Tcpka string `json:"tcpka,omitempty"`
 
 	// transparent
 	// Enum: [enabled disabled]
+	// +kubebuilder:validation:Enum=enabled;disabled;
 	Transparent string `json:"transparent,omitempty"`
 
 	// tunnel timeout
@@ -3110,10 +3143,10 @@ func (m *Backend) UnmarshalBinary(b []byte) error {
 //
 // swagger:model BackendForcePersist
 type BackendForcePersist struct {
-
 	// cond
 	// Required: true
 	// Enum: [if unless]
+	// +kubebuilder:validation:Enum=if;unless;
 	Cond *string `json:"cond"`
 
 	// cond test
@@ -3218,10 +3251,10 @@ func (m *BackendForcePersist) UnmarshalBinary(b []byte) error {
 //
 // swagger:model BackendIgnorePersist
 type BackendIgnorePersist struct {
-
 	// cond
 	// Required: true
 	// Enum: [if unless]
+	// +kubebuilder:validation:Enum=if;unless;
 	Cond *string `json:"cond"`
 
 	// cond test

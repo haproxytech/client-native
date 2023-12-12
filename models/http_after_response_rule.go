@@ -48,6 +48,7 @@ type HTTPAfterResponseRule struct {
 
 	// cond
 	// Enum: [if unless]
+	// +kubebuilder:validation:Enum=if;unless;
 	Cond string `json:"cond,omitempty"`
 
 	// cond test
@@ -71,6 +72,7 @@ type HTTPAfterResponseRule struct {
 
 	// log level
 	// Enum: [emerg alert crit err warning notice info debug silent]
+	// +kubebuilder:validation:Enum=emerg;alert;crit;err;warning;notice;info;debug;silent;
 	LogLevel string `json:"log_level,omitempty"`
 
 	// map file
@@ -107,11 +109,13 @@ type HTTPAfterResponseRule struct {
 
 	// strict mode
 	// Enum: [on off]
+	// +kubebuilder:validation:Enum=on;off;
 	StrictMode string `json:"strict_mode,omitempty"`
 
 	// type
 	// Required: true
 	// Enum: [add-header allow del-acl del-header del-map replace-header replace-value sc-add-gpc sc-inc-gpc sc-inc-gpc0 sc-inc-gpc1 sc-set-gpt0 set-header set-log-level set-map set-status set-var strict-mode unset-var]
+	// +kubebuilder:validation:Enum=add-header;allow;del-acl;del-header;del-map;replace-header;replace-value;sc-add-gpc;sc-inc-gpc;sc-inc-gpc0;sc-inc-gpc1;sc-set-gpt0;set-header;set-log-level;set-map;set-status;set-var;strict-mode;unset-var;
 	Type string `json:"type"`
 
 	// var expr
