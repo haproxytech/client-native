@@ -28,6 +28,7 @@ models: spec swagger-check
 	rm -rf models/*_compare.go
 	rm -rf models/*_compare_test.go
 	go run cmd/struct_equal_generator/*.go -l ${PROJECT_PATH}/specification/copyright.txt ${PROJECT_PATH}/models
+	go run cmd/struct_tags_checker/*.go -l ${PROJECT_PATH}/specification/copyright.txt ${PROJECT_PATH}/models
 
 .PHONY: swagger-check
 swagger-check:

@@ -32,7 +32,7 @@ import (
 //
 // swagger:model default_server
 type DefaultServer struct {
-	ServerParams
+	ServerParams `json:",inline"`
 }
 
 // UnmarshalJSON unmarshals this object from a JSON structure

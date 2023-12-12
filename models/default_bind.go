@@ -34,7 +34,7 @@ import (
 //
 // swagger:model default_bind
 type DefaultBind struct {
-	BindParams
+	BindParams `json:",inline"`
 }
 
 // UnmarshalJSON unmarshals this object from a JSON structure

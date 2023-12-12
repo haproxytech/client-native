@@ -16,6 +16,7 @@ require (
 	github.com/kballard/go-shellquote v0.0.0-20180428030007-95032a82bc51
 	github.com/mitchellh/mapstructure v1.5.0
 	github.com/pkg/errors v0.9.1
+	github.com/sirkon/dst v0.26.4
 	github.com/stretchr/testify v1.8.4
 	golang.org/x/text v0.14.0
 	golang.org/x/tools v0.16.0

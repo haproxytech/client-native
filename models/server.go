@@ -36,7 +36,7 @@ import (
 //
 // swagger:model server
 type Server struct {
-	ServerParams
+	ServerParams `json:",inline"`
 
 	// address
 	// Required: true
