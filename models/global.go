@@ -2573,7 +2573,7 @@ func (m *PresetEnv) UnmarshalBinary(b []byte) error {
 //
 // swagger:model RuntimeAPI
 type RuntimeAPI struct {
-	BindParams
+	BindParams `json:",inline"`
 
 	// address
 	// Required: true

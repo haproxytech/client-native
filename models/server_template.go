@@ -36,7 +36,7 @@ import (
 //
 // swagger:model server_template
 type ServerTemplate struct {
-	ServerParams
+	ServerParams `json:",inline"`
 
 	// fqdn
 	// Required: true

@@ -35,7 +35,7 @@ import (
 //
 // swagger:model bind
 type Bind struct {
-	BindParams
+	BindParams `json:",inline"`
 
 	// address
 	// Example: 127.0.0.1
