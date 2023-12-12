@@ -62,6 +62,7 @@ type NativeStatStats struct {
 
 	// agent status
 	// Enum: [UNK INI SOCKERR L4OK L4TOUT L4CON L7OK L7STS]
+	// +kubebuilder:validation:Enum=UNK;INI;SOCKERR;L4OK;L4TOUT;L4CON;L7OK;L7STS;
 	AgentStatus string `json:"agent_status,omitempty"`
 
 	// algo
@@ -96,6 +97,7 @@ type NativeStatStats struct {
 
 	// check status
 	// Enum: [UNK INI SOCKERR L4OK L4TOUT L4CON L6OK L6TOUT L6RSP L7OK L7OKC L7TOUT L7RSP L7STS]
+	// +kubebuilder:validation:Enum=UNK;INI;SOCKERR;L4OK;L4TOUT;L4CON;L6OK;L6TOUT;L6RSP;L7OK;L7OKC;L7TOUT;L7RSP;L7STS;
 	CheckStatus string `json:"check_status,omitempty"`
 
 	// chkdown
@@ -196,6 +198,7 @@ type NativeStatStats struct {
 
 	// mode
 	// Enum: [tcp http health unknown]
+	// +kubebuilder:validation:Enum=tcp;http;health;unknown;
 	Mode string `json:"mode,omitempty"`
 
 	// pid
@@ -251,6 +254,7 @@ type NativeStatStats struct {
 
 	// status
 	// Enum: [UP DOWN NOLB MAINT no check]
+	// +kubebuilder:validation:Enum=UP;DOWN;NOLB;MAINT;no;check;
 	Status string `json:"status,omitempty"`
 
 	// stot

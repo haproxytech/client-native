@@ -37,9 +37,9 @@ import (
 //
 // swagger:model tcp_response_rule
 type TCPResponseRule struct {
-
 	// action
 	// Enum: [accept reject lua set-bandwidth-limit close sc-add-gpc sc-inc-gpc sc-inc-gpc0 sc-inc-gpc1 sc-set-gpt0 send-spoe-group set-log-level set-mark set-nice set-tos silent-drop unset-var]
+	// +kubebuilder:validation:Enum=accept;reject;lua;set-bandwidth-limit;close;sc-add-gpc;sc-inc-gpc;sc-inc-gpc0;sc-inc-gpc1;sc-set-gpt0;send-spoe-group;set-log-level;set-mark;set-nice;set-tos;silent-drop;unset-var;
 	Action string `json:"action,omitempty"`
 
 	// bandwidth limit limit
@@ -53,6 +53,7 @@ type TCPResponseRule struct {
 
 	// cond
 	// Enum: [if unless]
+	// +kubebuilder:validation:Enum=if;unless;
 	Cond string `json:"cond,omitempty"`
 
 	// cond test
@@ -67,6 +68,7 @@ type TCPResponseRule struct {
 
 	// log level
 	// Enum: [emerg alert crit err warning notice info debug silent]
+	// +kubebuilder:validation:Enum=emerg;alert;crit;err;warning;notice;info;debug;silent;
 	LogLevel string `json:"log_level,omitempty"`
 
 	// lua action
@@ -115,6 +117,7 @@ type TCPResponseRule struct {
 	// type
 	// Required: true
 	// Enum: [content inspect-delay]
+	// +kubebuilder:validation:Enum=content;inspect-delay;
 	Type string `json:"type"`
 
 	// var name

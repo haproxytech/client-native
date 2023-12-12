@@ -61,6 +61,7 @@ type Consul struct {
 	//   min: a node is considered valid if the number of 'passing' checks is greater or equal to the 'health_check_policy_min' value.
 	//     If the node has less health checks configured then 'health_check_policy_min' it is considered invalid.
 	// Enum: [none any all min]
+	// +kubebuilder:validation:Enum=none;any;all;min;
 	HealthCheckPolicy *string `json:"health_check_policy,omitempty"`
 
 	// health check policy min
@@ -72,6 +73,7 @@ type Consul struct {
 
 	// mode
 	// Enum: [http https]
+	// +kubebuilder:validation:Enum=http;https;
 	Mode *string `json:"mode,omitempty"`
 
 	// name
@@ -99,6 +101,7 @@ type Consul struct {
 
 	// server slots growth type
 	// Enum: [linear exponential]
+	// +kubebuilder:validation:Enum=linear;exponential;
 	ServerSlotsGrowthType *string `json:"server_slots_growth_type,omitempty"`
 
 	// deprecated, use service_denylist

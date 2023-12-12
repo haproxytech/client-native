@@ -63,6 +63,7 @@ type Source struct {
 
 	// usesrc
 	// Enum: [address client clientip hdr_ip]
+	// +kubebuilder:validation:Enum=address;client;clientip;hdr_ip;
 	Usesrc string `json:"usesrc,omitempty"`
 }
 

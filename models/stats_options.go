@@ -41,6 +41,7 @@ type StatsOptions struct {
 
 	// stats admin cond
 	// Enum: [if unless]
+	// +kubebuilder:validation:Enum=if;unless;
 	StatsAdminCond string `json:"stats_admin_cond,omitempty"`
 
 	// stats admin cond test

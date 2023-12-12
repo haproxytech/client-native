@@ -107,6 +107,7 @@ type Filter struct {
 	// type
 	// Required: true
 	// Enum: [trace compression spoe cache fcgi-app bwlim-in bwlim-out]
+	// +kubebuilder:validation:Enum=trace;compression;spoe;cache;fcgi-app;bwlim-in;bwlim-out;
 	Type string `json:"type"`
 }
 

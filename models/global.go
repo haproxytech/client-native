@@ -91,6 +91,7 @@ type Global struct {
 
 	// daemon
 	// Enum: [enabled disabled]
+	// +kubebuilder:validation:Enum=enabled;disabled;
 	Daemon string `json:"daemon,omitempty"`
 
 	// default path
@@ -132,6 +133,7 @@ type Global struct {
 
 	// httpclient resolvers disabled
 	// Enum: [enabled disabled]
+	// +kubebuilder:validation:Enum=enabled;disabled;
 	HttpclientResolversDisabled string `json:"httpclient_resolvers_disabled,omitempty"`
 
 	// httpclient resolvers id
@@ -139,6 +141,7 @@ type Global struct {
 
 	// httpclient resolvers prefer
 	// Enum: [ipv4 ipv6]
+	// +kubebuilder:validation:Enum=ipv4;ipv6;
 	HttpclientResolversPrefer string `json:"httpclient_resolvers_prefer,omitempty"`
 
 	// httpclient retries
@@ -149,6 +152,7 @@ type Global struct {
 
 	// httpclient ssl verify
 	// Enum: [ none required]
+	// +kubebuilder:validation:Enum=;none;required;
 	HttpclientSslVerify *string `json:"httpclient_ssl_verify,omitempty"`
 
 	// httpclient timeout connect
@@ -168,6 +172,7 @@ type Global struct {
 
 	// load server state from file
 	// Enum: [global local none]
+	// +kubebuilder:validation:Enum=global;local;none;
 	LoadServerStateFromFile string `json:"load_server_state_from_file,omitempty"`
 
 	// localpeer
@@ -258,6 +263,7 @@ type Global struct {
 
 	// numa cpu mapping
 	// Enum: [enabled disabled]
+	// +kubebuilder:validation:Enum=enabled;disabled;
 	NumaCPUMapping string `json:"numa_cpu_mapping,omitempty"`
 
 	// pidfile
@@ -271,6 +277,7 @@ type Global struct {
 
 	// profiling tasks
 	// Enum: [auto on off]
+	// +kubebuilder:validation:Enum=auto;on;off;
 	ProfilingTasks string `json:"profiling_tasks,omitempty"`
 
 	// quiet
@@ -341,6 +348,7 @@ type Global struct {
 
 	// ssl mode async
 	// Enum: [enabled disabled]
+	// +kubebuilder:validation:Enum=enabled;disabled;
 	SslModeAsync string `json:"ssl_mode_async,omitempty"`
 
 	// ssl propquery
@@ -354,6 +362,7 @@ type Global struct {
 
 	// ssl server verify
 	// Enum: [none required]
+	// +kubebuilder:validation:Enum=none;required;
 	SslServerVerify string `json:"ssl_server_verify,omitempty"`
 
 	// ssl skip self issued ca
@@ -1943,6 +1952,7 @@ type GlobalDefaultPath struct {
 	// type
 	// Required: true
 	// Enum: [current config parent origin]
+	// +kubebuilder:validation:Enum=current;config;parent;origin;
 	Type string `json:"type"`
 }
 
@@ -2217,10 +2227,10 @@ func (m *H1CaseAdjust) UnmarshalBinary(b []byte) error {
 //
 // swagger:model GlobalLogSendHostname
 type GlobalLogSendHostname struct {
-
 	// enabled
 	// Required: true
 	// Enum: [enabled disabled]
+	// +kubebuilder:validation:Enum=enabled;disabled;
 	Enabled *string `json:"enabled"`
 
 	// param
@@ -2397,6 +2407,7 @@ type LuaPrependPath struct {
 
 	// type
 	// Enum: [path cpath]
+	// +kubebuilder:validation:Enum=path;cpath;
 	Type string `json:"type,omitempty"`
 }
 
@@ -3073,14 +3084,17 @@ type GlobalTuneOptions struct {
 
 	// fd edge triggered
 	// Enum: [enabled disabled]
+	// +kubebuilder:validation:Enum=enabled;disabled;
 	FdEdgeTriggered string `json:"fd_edge_triggered,omitempty"`
 
 	// h1 zero copy fwd recv
 	// Enum: [enabled disabled]
+	// +kubebuilder:validation:Enum=enabled;disabled;
 	H1ZeroCopyFwdRecv string `json:"h1_zero_copy_fwd_recv,omitempty"`
 
 	// h1 zero copy fwd send
 	// Enum: [enabled disabled]
+	// +kubebuilder:validation:Enum=enabled;disabled;
 	H1ZeroCopyFwdSend string `json:"h1_zero_copy_fwd_send,omitempty"`
 
 	// h2 be initial window size
@@ -3110,6 +3124,7 @@ type GlobalTuneOptions struct {
 
 	// h2 zero copy fwd send
 	// Enum: [enabled disabled]
+	// +kubebuilder:validation:Enum=enabled;disabled;
 	H2ZeroCopyFwdSend string `json:"h2_zero_copy_fwd_send,omitempty"`
 
 	// http cookielen
@@ -3125,6 +3140,7 @@ type GlobalTuneOptions struct {
 
 	// idle pool shared
 	// Enum: [enabled disabled]
+	// +kubebuilder:validation:Enum=enabled;disabled;
 	IdlePoolShared string `json:"idle_pool_shared,omitempty"`
 
 	// idletimer
@@ -3134,10 +3150,12 @@ type GlobalTuneOptions struct {
 
 	// listener default shards
 	// Enum: [by-process by-thread by-group]
+	// +kubebuilder:validation:Enum=by-process;by-thread;by-group;
 	ListenerDefaultShards string `json:"listener_default_shards,omitempty"`
 
 	// listener multi queue
 	// Enum: [enabled disabled]
+	// +kubebuilder:validation:Enum=enabled;disabled;
 	ListenerMultiQueue string `json:"listener_multi_queue,omitempty"`
 
 	// lua burst timeout
@@ -3148,10 +3166,12 @@ type GlobalTuneOptions struct {
 
 	// lua log loggers
 	// Enum: [enabled disabled]
+	// +kubebuilder:validation:Enum=enabled;disabled;
 	LuaLogLoggers string `json:"lua_log_loggers,omitempty"`
 
 	// lua log stderr
 	// Enum: [auto enabled disabled]
+	// +kubebuilder:validation:Enum=auto;enabled;disabled;
 	LuaLogStderr string `json:"lua_log_stderr,omitempty"`
 
 	// lua maxmem
@@ -3198,6 +3218,7 @@ type GlobalTuneOptions struct {
 
 	// pt zero copy forwarding
 	// Enum: [enabled disabled]
+	// +kubebuilder:validation:Enum=enabled;disabled;
 	PtZeroCopyForwarding string `json:"pt_zero_copy_forwarding,omitempty"`
 
 	// quic frontend conn tx buffers limit
@@ -3217,6 +3238,7 @@ type GlobalTuneOptions struct {
 
 	// quic socket owner
 	// Enum: [listener connection]
+	// +kubebuilder:validation:Enum=listener;connection;
 	QuicSocketOwner string `json:"quic_socket_owner,omitempty"`
 
 	// rcvbuf backend
@@ -3239,6 +3261,7 @@ type GlobalTuneOptions struct {
 
 	// sched low latency
 	// Enum: [enabled disabled]
+	// +kubebuilder:validation:Enum=enabled;disabled;
 	SchedLowLatency string `json:"sched_low_latency,omitempty"`
 
 	// sndbuf backend
@@ -3270,6 +3293,7 @@ type GlobalTuneOptions struct {
 
 	// ssl keylog
 	// Enum: [enabled disabled]
+	// +kubebuilder:validation:Enum=enabled;disabled;
 	SslKeylog string `json:"ssl_keylog,omitempty"`
 
 	// ssl lifetime

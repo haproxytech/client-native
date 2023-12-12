@@ -34,10 +34,10 @@ import (
 //
 // swagger:model redispatch
 type Redispatch struct {
-
 	// enabled
 	// Required: true
 	// Enum: [enabled disabled]
+	// +kubebuilder:validation:Enum=enabled;disabled;
 	Enabled *string `json:"enabled"`
 
 	// interval

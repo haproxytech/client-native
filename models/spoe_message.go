@@ -188,9 +188,9 @@ func (m *SpoeMessage) UnmarshalBinary(b []byte) error {
 //
 // swagger:model SpoeMessageEvent
 type SpoeMessageEvent struct {
-
 	// cond
 	// Enum: [if unless]
+	// +kubebuilder:validation:Enum=if;unless;
 	Cond string `json:"cond,omitempty"`
 
 	// cond test
@@ -199,6 +199,7 @@ type SpoeMessageEvent struct {
 	// name
 	// Required: true
 	// Enum: [on-client-session on-server-session on-frontend-tcp-request on-backend-tcp-request on-tcp-response on-frontend-http-request on-backend-http-request on-http-response]
+	// +kubebuilder:validation:Enum=on-client-session;on-server-session;on-frontend-tcp-request;on-backend-tcp-request;on-tcp-response;on-frontend-http-request;on-backend-http-request;on-http-response;
 	Name *string `json:"name"`
 }
 

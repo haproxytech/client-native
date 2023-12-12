@@ -36,17 +36,19 @@ import (
 //
 // swagger:model spoe_agent
 type SpoeAgent struct {
-
 	// async
 	// Enum: [enabled disabled]
+	// +kubebuilder:validation:Enum=enabled;disabled;
 	Async string `json:"async,omitempty"`
 
 	// continue on error
 	// Enum: [enabled]
+	// +kubebuilder:validation:Enum=enabled;
 	ContinueOnError string `json:"continue-on-error,omitempty"`
 
 	// dontlog normal
 	// Enum: [enabled disabled]
+	// +kubebuilder:validation:Enum=enabled;disabled;
 	DontlogNormal string `json:"dontlog-normal,omitempty"`
 
 	// engine name
@@ -54,6 +56,7 @@ type SpoeAgent struct {
 
 	// force set var
 	// Enum: [enabled]
+	// +kubebuilder:validation:Enum=enabled;
 	ForceSetVar string `json:"force-set-var,omitempty"`
 
 	// groups
@@ -105,6 +108,7 @@ type SpoeAgent struct {
 
 	// pipelining
 	// Enum: [enabled disabled]
+	// +kubebuilder:validation:Enum=enabled;disabled;
 	Pipelining string `json:"pipelining,omitempty"`
 
 	// processing timeout
@@ -115,6 +119,7 @@ type SpoeAgent struct {
 
 	// send frag payload
 	// Enum: [enabled disabled]
+	// +kubebuilder:validation:Enum=enabled;disabled;
 	SendFragPayload string `json:"send-frag-payload,omitempty"`
 
 	// use backend

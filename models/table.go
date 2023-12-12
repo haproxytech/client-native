@@ -54,6 +54,7 @@ type Table struct {
 
 	// type
 	// Enum: [ip integer string binary]
+	// +kubebuilder:validation:Enum=ip;integer;string;binary;
 	Type string `json:"type,omitempty"`
 
 	// type len

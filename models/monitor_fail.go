@@ -34,10 +34,10 @@ import (
 //
 // swagger:model monitor_fail
 type MonitorFail struct {
-
 	// cond
 	// Required: true
 	// Enum: [if unless]
+	// +kubebuilder:validation:Enum=if;unless;
 	Cond *string `json:"cond"`
 
 	// cond test

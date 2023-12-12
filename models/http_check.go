@@ -61,6 +61,7 @@ type HTTPCheck struct {
 
 	// error status
 	// Enum: [L7OKC L7RSP L7STS L6RSP L4CON]
+	// +kubebuilder:validation:Enum=L7OKC;L7RSP;L7STS;L6RSP;L4CON;
 	ErrorStatus string `json:"error_status,omitempty"`
 
 	// exclamation mark
@@ -76,10 +77,12 @@ type HTTPCheck struct {
 	// match
 	// Pattern: ^[^\s]+$
 	// Enum: [status rstatus hdr fhdr string rstring]
+	// +kubebuilder:validation:Enum=status;rstatus;hdr;fhdr;string;rstring;
 	Match string `json:"match,omitempty"`
 
 	// method
 	// Enum: [HEAD PUT POST GET TRACE PATCH DELETE CONNECT OPTIONS]
+	// +kubebuilder:validation:Enum=HEAD;PUT;POST;GET;TRACE;PATCH;DELETE;CONNECT;OPTIONS;
 	Method string `json:"method,omitempty"`
 
 	// min recv
@@ -87,6 +90,7 @@ type HTTPCheck struct {
 
 	// ok status
 	// Enum: [L7OK L7OKC L6OK L4OK]
+	// +kubebuilder:validation:Enum=L7OK;L7OKC;L6OK;L4OK;
 	OkStatus string `json:"ok_status,omitempty"`
 
 	// on error
@@ -123,11 +127,13 @@ type HTTPCheck struct {
 
 	// tout status
 	// Enum: [L7TOUT L6TOUT L4TOUT]
+	// +kubebuilder:validation:Enum=L7TOUT;L6TOUT;L4TOUT;
 	ToutStatus string `json:"tout_status,omitempty"`
 
 	// type
 	// Required: true
 	// Enum: [comment connect disable-on-404 expect send send-state set-var set-var-fmt unset-var]
+	// +kubebuilder:validation:Enum=comment;connect;disable-on-404;expect;send;send-state;set-var;set-var-fmt;unset-var;
 	Type string `json:"type"`
 
 	// uri
