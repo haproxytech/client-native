@@ -36,9 +36,9 @@ import (
 //
 // swagger:model log_target
 type LogTarget struct {
-
 	// address
 	// Pattern: ^[^\s]+$
+	// +kubebuilder:validation:Pattern=`^[^\s]+$`
 	Address string `json:"address,omitempty"`
 
 	// facility

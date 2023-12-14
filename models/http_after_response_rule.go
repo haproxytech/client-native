@@ -37,13 +37,14 @@ import (
 //
 // swagger:model http_after_response_rule
 type HTTPAfterResponseRule struct {
-
 	// acl file
 	// Pattern: ^[^\s]+$
+	// +kubebuilder:validation:Pattern=`^[^\s]+$`
 	ACLFile string `json:"acl_file,omitempty"`
 
 	// acl keyfmt
 	// Pattern: ^[^\s]+$
+	// +kubebuilder:validation:Pattern=`^[^\s]+$`
 	ACLKeyfmt string `json:"acl_keyfmt,omitempty"`
 
 	// cond
@@ -77,14 +78,17 @@ type HTTPAfterResponseRule struct {
 
 	// map file
 	// Pattern: ^[^\s]+$
+	// +kubebuilder:validation:Pattern=`^[^\s]+$`
 	MapFile string `json:"map_file,omitempty"`
 
 	// map keyfmt
 	// Pattern: ^[^\s]+$
+	// +kubebuilder:validation:Pattern=`^[^\s]+$`
 	MapKeyfmt string `json:"map_keyfmt,omitempty"`
 
 	// map valuefmt
 	// Pattern: ^[^\s]+$
+	// +kubebuilder:validation:Pattern=`^[^\s]+$`
 	MapValuefmt string `json:"map_valuefmt,omitempty"`
 
 	// sc expr
@@ -102,6 +106,8 @@ type HTTPAfterResponseRule struct {
 	// status
 	// Maximum: 999
 	// Minimum: 100
+	// +kubebuilder:validation:Maximum=999
+	// +kubebuilder:validation:Minimum=100
 	Status int64 `json:"status,omitempty"`
 
 	// status reason
@@ -123,10 +129,12 @@ type HTTPAfterResponseRule struct {
 
 	// var name
 	// Pattern: ^[^\s]+$
+	// +kubebuilder:validation:Pattern=`^[^\s]+$`
 	VarName string `json:"var_name,omitempty"`
 
 	// var scope
 	// Pattern: ^[^\s]+$
+	// +kubebuilder:validation:Pattern=`^[^\s]+$`
 	VarScope string `json:"var_scope,omitempty"`
 }
 

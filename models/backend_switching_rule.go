@@ -52,6 +52,7 @@ type BackendSwitchingRule struct {
 	// name
 	// Required: true
 	// Pattern: ^[^\s]+$
+	// +kubebuilder:validation:Pattern=`^[^\s]+$`
 	Name string `json:"name"`
 }
 

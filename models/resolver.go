@@ -35,10 +35,11 @@ import (
 //
 // swagger:model resolver
 type Resolver struct {
-
 	// accepted payload size
 	// Maximum: 8192
 	// Minimum: 512
+	// +kubebuilder:validation:Maximum=8192
+	// +kubebuilder:validation:Minimum=512
 	AcceptedPayloadSize int64 `json:"accepted_payload_size,omitempty"`
 
 	// hold nx
@@ -62,6 +63,7 @@ type Resolver struct {
 	// name
 	// Required: true
 	// Pattern: ^[A-Za-z0-9-_.:]+$
+	// +kubebuilder:validation:Pattern=`^[A-Za-z0-9-_.:]+$`
 	Name string `json:"name"`
 
 	// parse resolv conf
@@ -69,6 +71,7 @@ type Resolver struct {
 
 	// resolve retries
 	// Minimum: 1
+	// +kubebuilder:validation:Minimum=1
 	ResolveRetries int64 `json:"resolve_retries,omitempty"`
 
 	// timeout resolve

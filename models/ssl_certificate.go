@@ -63,11 +63,13 @@ type SslCertificate struct {
 	// not after
 	// Read Only: true
 	// Format: date-time
+	// +kubebuilder:validation:Format=date-time
 	NotAfter *strfmt.DateTime `json:"not_after,omitempty" gorm:"type:timestamp with time zone"`
 
 	// not before
 	// Read Only: true
 	// Format: date-time
+	// +kubebuilder:validation:Format=date-time
 	NotBefore *strfmt.DateTime `json:"not_before,omitempty" gorm:"type:timestamp with time zone"`
 
 	// serial

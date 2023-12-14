@@ -35,9 +35,9 @@ import (
 //
 // swagger:model server_params
 type ServerParams struct {
-
 	// agent addr
 	// Pattern: ^[^\s]+$
+	// +kubebuilder:validation:Pattern=`^[^\s]+$`
 	AgentAddr string `json:"agent-addr,omitempty"`
 
 	// agent check
@@ -51,6 +51,8 @@ type ServerParams struct {
 	// agent port
 	// Maximum: 65535
 	// Minimum: 1
+	// +kubebuilder:validation:Maximum=65535
+	// +kubebuilder:validation:Minimum=1
 	AgentPort *int64 `json:"agent-port,omitempty"`
 
 	// agent send
@@ -61,6 +63,7 @@ type ServerParams struct {
 
 	// alpn
 	// Pattern: ^[^\s]+$
+	// +kubebuilder:validation:Pattern=`^[^\s]+$`
 	Alpn string `json:"alpn,omitempty"`
 
 	// backup
@@ -80,6 +83,7 @@ type ServerParams struct {
 
 	// check sni
 	// Pattern: ^[^\s]+$
+	// +kubebuilder:validation:Pattern=`^[^\s]+$`
 	CheckSni string `json:"check-sni,omitempty"`
 
 	// check ssl
@@ -89,10 +93,12 @@ type ServerParams struct {
 
 	// check alpn
 	// Pattern: ^[^\s]+$
+	// +kubebuilder:validation:Pattern=`^[^\s]+$`
 	CheckAlpn string `json:"check_alpn,omitempty"`
 
 	// check proto
 	// Pattern: ^[^\s]+$
+	// +kubebuilder:validation:Pattern=`^[^\s]+$`
 	CheckProto string `json:"check_proto,omitempty"`
 
 	// check via socks4
@@ -111,6 +117,7 @@ type ServerParams struct {
 
 	// cookie
 	// Pattern: ^[^\s]+$
+	// +kubebuilder:validation:Pattern=`^[^\s]+$`
 	Cookie string `json:"cookie,omitempty"`
 
 	// crl file
@@ -158,15 +165,19 @@ type ServerParams struct {
 
 	// health check address
 	// Pattern: ^[^\s]+$
+	// +kubebuilder:validation:Pattern=`^[^\s]+$`
 	HealthCheckAddress string `json:"health_check_address,omitempty"`
 
 	// health check port
 	// Maximum: 65535
 	// Minimum: 1
+	// +kubebuilder:validation:Maximum=65535
+	// +kubebuilder:validation:Minimum=1
 	HealthCheckPort *int64 `json:"health_check_port,omitempty"`
 
 	// init addr
 	// Pattern: ^[^\s]+$
+	// +kubebuilder:validation:Pattern=`^[^\s]+$`
 	InitAddr *string `json:"init-addr,omitempty"`
 
 	// inter
@@ -264,6 +275,7 @@ type ServerParams struct {
 
 	// proto
 	// Pattern: ^[^\s]+$
+	// +kubebuilder:validation:Pattern=`^[^\s]+$`
 	Proto string `json:"proto,omitempty"`
 
 	// proxy v2 options
@@ -274,6 +286,7 @@ type ServerParams struct {
 
 	// resolve net
 	// Pattern: ^([A-Za-z0-9.:/]+)(,[A-Za-z0-9.:/]+)*$
+	// +kubebuilder:validation:Pattern=`^([A-Za-z0-9.:/]+)(,[A-Za-z0-9.:/]+)*$`
 	ResolveNet string `json:"resolve-net,omitempty"`
 
 	// resolve prefer
@@ -283,10 +296,12 @@ type ServerParams struct {
 
 	// resolve opts
 	// Pattern: ^(allow-dup-ip|ignore-weight|prevent-dup-ip)(,(allow-dup-ip|ignore-weight|prevent-dup-ip))*$
+	// +kubebuilder:validation:Pattern=`^(allow-dup-ip|ignore-weight|prevent-dup-ip)(,(allow-dup-ip|ignore-weight|prevent-dup-ip))*$`
 	ResolveOpts string `json:"resolve_opts,omitempty"`
 
 	// resolvers
 	// Pattern: ^[^\s]+$
+	// +kubebuilder:validation:Pattern=`^[^\s]+$`
 	Resolvers string `json:"resolvers,omitempty"`
 
 	// rise
@@ -326,10 +341,12 @@ type ServerParams struct {
 
 	// sni
 	// Pattern: ^[^\s]+$
+	// +kubebuilder:validation:Pattern=`^[^\s]+$`
 	Sni string `json:"sni,omitempty"`
 
 	// socks4
 	// Pattern: ^[^\s]+$
+	// +kubebuilder:validation:Pattern=`^[^\s]+$`
 	Socks4 string `json:"socks4,omitempty"`
 
 	// source
@@ -342,10 +359,12 @@ type ServerParams struct {
 
 	// ssl cafile
 	// Pattern: ^[^\s]+$
+	// +kubebuilder:validation:Pattern=`^[^\s]+$`
 	SslCafile string `json:"ssl_cafile,omitempty"`
 
 	// ssl certificate
 	// Pattern: ^[^\s]+$
+	// +kubebuilder:validation:Pattern=`^[^\s]+$`
 	SslCertificate string `json:"ssl_certificate,omitempty"`
 
 	// ssl max ver

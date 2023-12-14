@@ -256,6 +256,7 @@ type ClusterSettingsCluster struct {
 	// address
 	// Read Only: true
 	// Pattern: ^[^\s]+$
+	// +kubebuilder:validation:Pattern=`^[^\s]+$`
 	Address string `json:"address,omitempty"`
 
 	// api base path
@@ -277,6 +278,8 @@ type ClusterSettingsCluster struct {
 	// Read Only: true
 	// Maximum: 65535
 	// Minimum: 1
+	// +kubebuilder:validation:Maximum=65535
+	// +kubebuilder:validation:Minimum=1
 	Port *int64 `json:"port,omitempty"`
 }
 
@@ -489,6 +492,8 @@ type ClusterLogTarget struct {
 	// Required: true
 	// Maximum: 65535
 	// Minimum: 1
+	// +kubebuilder:validation:Maximum=65535
+	// +kubebuilder:validation:Minimum=1
 	Port *int64 `json:"port"`
 
 	// protocol

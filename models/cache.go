@@ -48,6 +48,7 @@ type Cache struct {
 	// name
 	// Required: true
 	// Pattern: ^[A-Za-z0-9-_.:]+$
+	// +kubebuilder:validation:Pattern=`^[A-Za-z0-9-_.:]+$`
 	Name *string `json:"name"`
 
 	// process vary
@@ -56,6 +57,8 @@ type Cache struct {
 	// total max size
 	// Maximum: 4095
 	// Minimum: 1
+	// +kubebuilder:validation:Maximum=4095
+	// +kubebuilder:validation:Minimum=1
 	TotalMaxSize int64 `json:"total_max_size,omitempty"`
 }
 

@@ -42,10 +42,12 @@ type TCPCheck struct {
 
 	// addr
 	// Pattern: ^[^\s]+$
+	// +kubebuilder:validation:Pattern=`^[^\s]+$`
 	Addr string `json:"addr,omitempty"`
 
 	// alpn
 	// Pattern: ^[^\s]+$
+	// +kubebuilder:validation:Pattern=`^[^\s]+$`
 	Alpn string `json:"alpn,omitempty"`
 
 	// check comment
@@ -87,6 +89,7 @@ type TCPCheck struct {
 	// match
 	// Pattern: ^[^\s]+$
 	// Enum: [string rstring string-lf binary rbinary binary-lf]
+	// +kubebuilder:validation:Pattern=`^[^\s]+$`
 	// +kubebuilder:validation:Enum=string;rstring;string-lf;binary;rbinary;binary-lf;
 	Match string `json:"match,omitempty"`
 
@@ -110,6 +113,8 @@ type TCPCheck struct {
 	// port
 	// Maximum: 65535
 	// Minimum: 1
+	// +kubebuilder:validation:Maximum=65535
+	// +kubebuilder:validation:Minimum=1
 	Port *int64 `json:"port,omitempty"`
 
 	// port string
@@ -143,10 +148,12 @@ type TCPCheck struct {
 
 	// var name
 	// Pattern: ^[^\s]+$
+	// +kubebuilder:validation:Pattern=`^[^\s]+$`
 	VarName string `json:"var_name,omitempty"`
 
 	// var scope
 	// Pattern: ^[^\s]+$
+	// +kubebuilder:validation:Pattern=`^[^\s]+$`
 	VarScope string `json:"var_scope,omitempty"`
 
 	// via socks4

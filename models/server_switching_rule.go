@@ -52,6 +52,7 @@ type ServerSwitchingRule struct {
 	// target server
 	// Required: true
 	// Pattern: ^[^\s]+$
+	// +kubebuilder:validation:Pattern=`^[^\s]+$`
 	TargetServer string `json:"target_server"`
 }
 

@@ -54,11 +54,15 @@ type Source struct {
 	// port
 	// Maximum: 65535
 	// Minimum: 1
+	// +kubebuilder:validation:Maximum=65535
+	// +kubebuilder:validation:Minimum=1
 	Port int64 `json:"port,omitempty"`
 
 	// port second
 	// Maximum: 65535
 	// Minimum: 1
+	// +kubebuilder:validation:Maximum=65535
+	// +kubebuilder:validation:Minimum=1
 	PortSecond int64 `json:"port_second,omitempty"`
 
 	// usesrc

@@ -50,10 +50,12 @@ type SslCertEntry struct {
 
 	// not after
 	// Format: date
+	// +kubebuilder:validation:Format=date
 	NotAfter strfmt.Date `json:"not_after,omitempty"`
 
 	// not before
 	// Format: date
+	// +kubebuilder:validation:Format=date
 	NotBefore strfmt.Date `json:"not_before,omitempty"`
 
 	// serial

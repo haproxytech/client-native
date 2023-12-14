@@ -36,10 +36,10 @@ import (
 //
 // swagger:model email_alert
 type EmailAlert struct {
-
 	// from
 	// Required: true
 	// Pattern: ^\S+@\S+$
+	// +kubebuilder:validation:Pattern=`^\S+@\S+$`
 	From *string `json:"from"`
 
 	// level
@@ -57,6 +57,7 @@ type EmailAlert struct {
 	// to
 	// Required: true
 	// Pattern: ^\S+@\S+$
+	// +kubebuilder:validation:Pattern=`^\S+@\S+$`
 	To *string `json:"to"`
 }
 

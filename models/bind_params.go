@@ -46,6 +46,7 @@ type BindParams struct {
 
 	// alpn
 	// Pattern: ^[^\s]+$
+	// +kubebuilder:validation:Pattern=`^[^\s]+$`
 	Alpn string `json:"alpn,omitempty"`
 
 	// backlog
@@ -141,6 +142,7 @@ type BindParams struct {
 
 	// name
 	// Pattern: ^[^\s]+$
+	// +kubebuilder:validation:Pattern=`^[^\s]+$`
 	Name string `json:"name,omitempty"`
 
 	// namespace
@@ -186,6 +188,7 @@ type BindParams struct {
 
 	// process
 	// Pattern: ^[^\s]+$
+	// +kubebuilder:validation:Pattern=`^[^\s]+$`
 	Process string `json:"process,omitempty"`
 
 	// proto
@@ -218,10 +221,12 @@ type BindParams struct {
 
 	// ssl cafile
 	// Pattern: ^[^\s]+$
+	// +kubebuilder:validation:Pattern=`^[^\s]+$`
 	SslCafile string `json:"ssl_cafile,omitempty"`
 
 	// ssl certificate
 	// Pattern: ^[^\s]+$
+	// +kubebuilder:validation:Pattern=`^[^\s]+$`
 	SslCertificate string `json:"ssl_certificate,omitempty"`
 
 	// ssl max ver
