@@ -35,21 +35,24 @@ import (
 //
 // swagger:model peer_entry
 type PeerEntry struct {
-
 	// address
 	// Required: true
 	// Pattern: ^[^\s]+$
+	// +kubebuilder:validation:Pattern=`^[^\s]+$`
 	Address *string `json:"address"`
 
 	// name
 	// Required: true
 	// Pattern: ^[A-Za-z0-9-_.:]+$
+	// +kubebuilder:validation:Pattern=`^[A-Za-z0-9-_.:]+$`
 	Name string `json:"name"`
 
 	// port
 	// Required: true
 	// Maximum: 65535
 	// Minimum: 1
+	// +kubebuilder:validation:Maximum=65535
+	// +kubebuilder:validation:Minimum=1
 	Port *int64 `json:"port"`
 
 	// shard

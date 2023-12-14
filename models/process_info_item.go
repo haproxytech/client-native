@@ -153,6 +153,7 @@ type ProcessInfoItem struct {
 
 	// HAProxy version release date
 	// Format: date
+	// +kubebuilder:validation:Format=date
 	ReleaseDate strfmt.Date `json:"release_date,omitempty"`
 
 	// run queue

@@ -60,6 +60,7 @@ type FCGIApp struct {
 
 	// Defines the maximum number of concurrent requests this application can accept. If the FastCGI application retrieves the variable FCGI_MAX_REQS during connection establishment, it can override this option. Furthermore, if the application does not do multiplexing, it will ignore this option.
 	// Minimum: 1
+	// +kubebuilder:validation:Minimum=1
 	MaxReqs int64 `json:"max_reqs,omitempty"`
 
 	// Enables or disables the support of connection multiplexing. If the FastCGI application retrieves the variable FCGI_MPXS_CONNS during connection establishment, it can override this option.
@@ -70,6 +71,7 @@ type FCGIApp struct {
 	// Declares a FastCGI application
 	// Required: true
 	// Pattern: ^[^\s]+$
+	// +kubebuilder:validation:Pattern=`^[^\s]+$`
 	Name string `json:"name"`
 
 	// pass headers

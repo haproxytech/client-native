@@ -77,6 +77,7 @@ type Defaults struct {
 
 	// bind process
 	// Pattern: ^[^\s]+$
+	// +kubebuilder:validation:Pattern=`^[^\s]+$`
 	BindProcess string `json:"bind_process,omitempty"`
 
 	// check timeout
@@ -126,6 +127,7 @@ type Defaults struct {
 
 	// default backend
 	// Pattern: ^[A-Za-z0-9-_.:]+$
+	// +kubebuilder:validation:Pattern=`^[A-Za-z0-9-_.:]+$`
 	DefaultBackend string `json:"default_backend,omitempty"`
 
 	// default server
@@ -151,6 +153,7 @@ type Defaults struct {
 
 	// dynamic cookie key
 	// Pattern: ^[^\s]+$
+	// +kubebuilder:validation:Pattern=`^[^\s]+$`
 	DynamicCookieKey string `json:"dynamic_cookie_key,omitempty"`
 
 	// email alert
@@ -175,10 +178,12 @@ type Defaults struct {
 
 	// external check command
 	// Pattern: ^[^\s]+$
+	// +kubebuilder:validation:Pattern=`^[^\s]+$`
 	ExternalCheckCommand string `json:"external_check_command,omitempty"`
 
 	// external check path
 	// Pattern: ^[^\s]+$
+	// +kubebuilder:validation:Pattern=`^[^\s]+$`
 	ExternalCheckPath string `json:"external_check_path,omitempty"`
 
 	// forwardfor
@@ -186,6 +191,7 @@ type Defaults struct {
 
 	// from
 	// Pattern: ^[A-Za-z0-9-_.:]+$
+	// +kubebuilder:validation:Pattern=`^[A-Za-z0-9-_.:]+$`
 	From string `json:"from,omitempty"`
 
 	// fullconn
@@ -305,6 +311,7 @@ type Defaults struct {
 
 	// log tag
 	// Pattern: ^[^\s]+$
+	// +kubebuilder:validation:Pattern=`^[^\s]+$`
 	LogTag string `json:"log_tag,omitempty"`
 
 	// logasap
@@ -331,6 +338,7 @@ type Defaults struct {
 
 	// name
 	// Pattern: ^[A-Za-z0-9-_.:]+$
+	// +kubebuilder:validation:Pattern=`^[A-Za-z0-9-_.:]+$`
 	Name string `json:"name,omitempty"`
 
 	// nolinger

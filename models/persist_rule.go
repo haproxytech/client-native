@@ -34,9 +34,9 @@ import (
 //
 // swagger:model persist_rule
 type PersistRule struct {
-
 	// rdp cookie name
 	// Pattern: ^[^\s]+$
+	// +kubebuilder:validation:Pattern=`^[^\s]+$`
 	RdpCookieName string `json:"rdp_cookie_name,omitempty"`
 
 	// type

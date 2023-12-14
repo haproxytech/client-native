@@ -46,6 +46,7 @@ type ConfigStickTable struct {
 
 	// peers
 	// Pattern: ^[^\s]+$
+	// +kubebuilder:validation:Pattern=`^[^\s]+$`
 	Peers string `json:"peers,omitempty"`
 
 	// size
@@ -58,6 +59,7 @@ type ConfigStickTable struct {
 
 	// store
 	// Pattern: ^[^\s]+$
+	// +kubebuilder:validation:Pattern=`^[^\s]+$`
 	Store string `json:"store,omitempty"`
 
 	// type
@@ -67,6 +69,7 @@ type ConfigStickTable struct {
 
 	// write to
 	// Pattern: ^[^\s]+$
+	// +kubebuilder:validation:Pattern=`^[^\s]+$`
 	WriteTo *string `json:"write_to,omitempty"`
 }
 

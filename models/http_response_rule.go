@@ -44,10 +44,12 @@ type HTTPResponseRule struct {
 
 	// acl file
 	// Pattern: ^[^\s]+$
+	// +kubebuilder:validation:Pattern=`^[^\s]+$`
 	ACLFile string `json:"acl_file,omitempty"`
 
 	// acl keyfmt
 	// Pattern: ^[^\s]+$
+	// +kubebuilder:validation:Pattern=`^[^\s]+$`
 	ACLKeyfmt string `json:"acl_keyfmt,omitempty"`
 
 	// bandwidth limit limit
@@ -61,6 +63,7 @@ type HTTPResponseRule struct {
 
 	// cache name
 	// Pattern: ^[^\s]+$
+	// +kubebuilder:validation:Pattern=`^[^\s]+$`
 	CacheName string `json:"cache_name,omitempty"`
 
 	// capture id
@@ -68,6 +71,7 @@ type HTTPResponseRule struct {
 
 	// capture sample
 	// Pattern: ^[^\s]+$
+	// +kubebuilder:validation:Pattern=`^[^\s]+$`
 	CaptureSample string `json:"capture_sample,omitempty"`
 
 	// cond
@@ -81,6 +85,8 @@ type HTTPResponseRule struct {
 	// deny status
 	// Maximum: 599
 	// Minimum: 200
+	// +kubebuilder:validation:Maximum=599
+	// +kubebuilder:validation:Minimum=200
 	DenyStatus *int64 `json:"deny_status,omitempty"`
 
 	// hdr format
@@ -106,6 +112,7 @@ type HTTPResponseRule struct {
 
 	// lua action
 	// Pattern: ^[^\s]+$
+	// +kubebuilder:validation:Pattern=`^[^\s]+$`
 	LuaAction string `json:"lua_action,omitempty"`
 
 	// lua params
@@ -113,23 +120,29 @@ type HTTPResponseRule struct {
 
 	// map file
 	// Pattern: ^[^\s]+$
+	// +kubebuilder:validation:Pattern=`^[^\s]+$`
 	MapFile string `json:"map_file,omitempty"`
 
 	// map keyfmt
 	// Pattern: ^[^\s]+$
+	// +kubebuilder:validation:Pattern=`^[^\s]+$`
 	MapKeyfmt string `json:"map_keyfmt,omitempty"`
 
 	// map valuefmt
 	// Pattern: ^[^\s]+$
+	// +kubebuilder:validation:Pattern=`^[^\s]+$`
 	MapValuefmt string `json:"map_valuefmt,omitempty"`
 
 	// mark value
 	// Pattern: ^(0x[0-9A-Fa-f]+|[0-9]+)$
+	// +kubebuilder:validation:Pattern=`^(0x[0-9A-Fa-f]+|[0-9]+)$`
 	MarkValue string `json:"mark_value,omitempty"`
 
 	// nice value
 	// Maximum: 1024
 	// Minimum: -1024
+	// +kubebuilder:validation:Maximum=1024
+	// +kubebuilder:validation:Minimum=-1024
 	NiceValue int64 `json:"nice_value,omitempty"`
 
 	// redir code
@@ -147,6 +160,7 @@ type HTTPResponseRule struct {
 
 	// redir value
 	// Pattern: ^[^\s]+$
+	// +kubebuilder:validation:Pattern=`^[^\s]+$`
 	RedirValue string `json:"redir_value,omitempty"`
 
 	// return content
@@ -163,6 +177,8 @@ type HTTPResponseRule struct {
 	// return status code
 	// Maximum: 599
 	// Minimum: 200
+	// +kubebuilder:validation:Maximum=599
+	// +kubebuilder:validation:Minimum=200
 	ReturnStatusCode *int64 `json:"return_status_code,omitempty"`
 
 	// sc expr
@@ -179,15 +195,19 @@ type HTTPResponseRule struct {
 
 	// spoe engine
 	// Pattern: ^[^\s]+$
+	// +kubebuilder:validation:Pattern=`^[^\s]+$`
 	SpoeEngine string `json:"spoe_engine,omitempty"`
 
 	// spoe group
 	// Pattern: ^[^\s]+$
+	// +kubebuilder:validation:Pattern=`^[^\s]+$`
 	SpoeGroup string `json:"spoe_group,omitempty"`
 
 	// status
 	// Maximum: 999
 	// Minimum: 100
+	// +kubebuilder:validation:Maximum=999
+	// +kubebuilder:validation:Minimum=100
 	Status int64 `json:"status,omitempty"`
 
 	// status reason
@@ -208,34 +228,42 @@ type HTTPResponseRule struct {
 
 	// tos value
 	// Pattern: ^(0x[0-9A-Fa-f]+|[0-9]+)$
+	// +kubebuilder:validation:Pattern=`^(0x[0-9A-Fa-f]+|[0-9]+)$`
 	TosValue string `json:"tos_value,omitempty"`
 
 	// track sc0 key
 	// Pattern: ^[^\s]+$
+	// +kubebuilder:validation:Pattern=`^[^\s]+$`
 	TrackSc0Key string `json:"track-sc0-key,omitempty"`
 
 	// track sc0 table
 	// Pattern: ^[^\s]+$
+	// +kubebuilder:validation:Pattern=`^[^\s]+$`
 	TrackSc0Table string `json:"track-sc0-table,omitempty"`
 
 	// track sc1 key
 	// Pattern: ^[^\s]+$
+	// +kubebuilder:validation:Pattern=`^[^\s]+$`
 	TrackSc1Key string `json:"track-sc1-key,omitempty"`
 
 	// track sc1 table
 	// Pattern: ^[^\s]+$
+	// +kubebuilder:validation:Pattern=`^[^\s]+$`
 	TrackSc1Table string `json:"track-sc1-table,omitempty"`
 
 	// track sc2 key
 	// Pattern: ^[^\s]+$
+	// +kubebuilder:validation:Pattern=`^[^\s]+$`
 	TrackSc2Key string `json:"track-sc2-key,omitempty"`
 
 	// track sc2 table
 	// Pattern: ^[^\s]+$
+	// +kubebuilder:validation:Pattern=`^[^\s]+$`
 	TrackSc2Table string `json:"track-sc2-table,omitempty"`
 
 	// track sc key
 	// Pattern: ^[^\s]+$
+	// +kubebuilder:validation:Pattern=`^[^\s]+$`
 	TrackScKey string `json:"track_sc_key,omitempty"`
 
 	// track sc stick counter
@@ -243,6 +271,7 @@ type HTTPResponseRule struct {
 
 	// track sc table
 	// Pattern: ^[^\s]+$
+	// +kubebuilder:validation:Pattern=`^[^\s]+$`
 	TrackScTable string `json:"track_sc_table,omitempty"`
 
 	// type
@@ -259,10 +288,12 @@ type HTTPResponseRule struct {
 
 	// var name
 	// Pattern: ^[^\s]+$
+	// +kubebuilder:validation:Pattern=`^[^\s]+$`
 	VarName string `json:"var_name,omitempty"`
 
 	// var scope
 	// Pattern: ^[^\s]+$
+	// +kubebuilder:validation:Pattern=`^[^\s]+$`
 	VarScope string `json:"var_scope,omitempty"`
 
 	// wait at least

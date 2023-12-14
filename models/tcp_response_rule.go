@@ -73,6 +73,7 @@ type TCPResponseRule struct {
 
 	// lua action
 	// Pattern: ^[^\s]+$
+	// +kubebuilder:validation:Pattern=`^[^\s]+$`
 	LuaAction string `json:"lua_action,omitempty"`
 
 	// lua params
@@ -80,11 +81,14 @@ type TCPResponseRule struct {
 
 	// mark value
 	// Pattern: ^(0x[0-9A-Fa-f]+|[0-9]+)$
+	// +kubebuilder:validation:Pattern=`^(0x[0-9A-Fa-f]+|[0-9]+)$`
 	MarkValue string `json:"mark_value,omitempty"`
 
 	// nice value
 	// Maximum: 1024
 	// Minimum: -1024
+	// +kubebuilder:validation:Maximum=1024
+	// +kubebuilder:validation:Minimum=-1024
 	NiceValue int64 `json:"nice_value,omitempty"`
 
 	// sc expr
@@ -101,10 +105,12 @@ type TCPResponseRule struct {
 
 	// spoe engine
 	// Pattern: ^[^\s]+$
+	// +kubebuilder:validation:Pattern=`^[^\s]+$`
 	SpoeEngine string `json:"spoe_engine,omitempty"`
 
 	// spoe group
 	// Pattern: ^[^\s]+$
+	// +kubebuilder:validation:Pattern=`^[^\s]+$`
 	SpoeGroup string `json:"spoe_group,omitempty"`
 
 	// timeout
@@ -112,6 +118,7 @@ type TCPResponseRule struct {
 
 	// tos value
 	// Pattern: ^(0x[0-9A-Fa-f]+|[0-9]+)$
+	// +kubebuilder:validation:Pattern=`^(0x[0-9A-Fa-f]+|[0-9]+)$`
 	TosValue string `json:"tos_value,omitempty"`
 
 	// type
@@ -122,10 +129,12 @@ type TCPResponseRule struct {
 
 	// var name
 	// Pattern: ^[^\s]+$
+	// +kubebuilder:validation:Pattern=`^[^\s]+$`
 	VarName string `json:"var_name,omitempty"`
 
 	// var scope
 	// Pattern: ^[^\s]+$
+	// +kubebuilder:validation:Pattern=`^[^\s]+$`
 	VarScope string `json:"var_scope,omitempty"`
 }
 

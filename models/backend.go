@@ -70,6 +70,7 @@ type Backend struct {
 
 	// bind process
 	// Pattern: ^[^\s]+$
+	// +kubebuilder:validation:Pattern=`^[^\s]+$`
 	BindProcess string `json:"bind_process,omitempty"`
 
 	// check timeout
@@ -100,6 +101,7 @@ type Backend struct {
 
 	// dynamic cookie key
 	// Pattern: ^[^\s]+$
+	// +kubebuilder:validation:Pattern=`^[^\s]+$`
 	DynamicCookieKey string `json:"dynamic_cookie_key,omitempty"`
 
 	// email alert
@@ -121,10 +123,12 @@ type Backend struct {
 
 	// external check command
 	// Pattern: ^[^\s]+$
+	// +kubebuilder:validation:Pattern=`^[^\s]+$`
 	ExternalCheckCommand string `json:"external_check_command,omitempty"`
 
 	// external check path
 	// Pattern: ^[^\s]+$
+	// +kubebuilder:validation:Pattern=`^[^\s]+$`
 	ExternalCheckPath string `json:"external_check_path,omitempty"`
 
 	// force persist
@@ -135,6 +139,7 @@ type Backend struct {
 
 	// from
 	// Pattern: ^[A-Za-z0-9-_.:]+$
+	// +kubebuilder:validation:Pattern=`^[A-Za-z0-9-_.:]+$`
 	From string `json:"from,omitempty"`
 
 	// fullconn
@@ -174,6 +179,7 @@ type Backend struct {
 	// http use htx
 	// Pattern: ^[^\s]+$
 	// Enum: [enabled disabled]
+	// +kubebuilder:validation:Pattern=`^[^\s]+$`
 	// +kubebuilder:validation:Enum=enabled;disabled;
 	HTTPUseHtx string `json:"http-use-htx,omitempty"`
 
@@ -242,6 +248,7 @@ type Backend struct {
 
 	// log tag
 	// Pattern: ^[^\s]+$
+	// +kubebuilder:validation:Pattern=`^[^\s]+$`
 	LogTag string `json:"log_tag,omitempty"`
 
 	// max keep alive queue
@@ -258,6 +265,7 @@ type Backend struct {
 	// name
 	// Required: true
 	// Pattern: ^[A-Za-z0-9-_.:]+$
+	// +kubebuilder:validation:Pattern=`^[A-Za-z0-9-_.:]+$`
 	Name string `json:"name"`
 
 	// nolinger

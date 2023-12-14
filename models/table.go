@@ -34,9 +34,9 @@ import (
 //
 // swagger:model table
 type Table struct {
-
 	// expire
 	// Pattern: ^\d+(ms|s|m|h|d)?$
+	// +kubebuilder:validation:Pattern=`^\d+(ms|s|m|h|d)?$`
 	Expire *string `json:"expire,omitempty"`
 
 	// name
@@ -47,6 +47,7 @@ type Table struct {
 
 	// size
 	// Pattern: ^\d+(k|K|m|M|g|G)?$
+	// +kubebuilder:validation:Pattern=`^\d+(k|K|m|M|g|G)?$`
 	Size string `json:"size,omitempty"`
 
 	// store

@@ -58,6 +58,7 @@ type AwsRegion struct {
 	// Auto generated ID.
 	// Read Only: true
 	// Pattern: ^[^\s]+$
+	// +kubebuilder:validation:Pattern=`^[^\s]+$`
 	ID *string `json:"id,omitempty"`
 
 	// Select which IPv4 address the Service Discovery has to use for the backend server entry
@@ -77,6 +78,7 @@ type AwsRegion struct {
 	// Duration in seconds in-between data pulling requests to the AWS region
 	// Required: true
 	// Minimum: 1
+	// +kubebuilder:validation:Minimum=1
 	RetryTimeout *int64 `json:"retry_timeout"`
 
 	// AWS Secret Access Key.

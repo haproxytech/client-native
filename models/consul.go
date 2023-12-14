@@ -38,10 +38,10 @@ import (
 //
 // swagger:model consul
 type Consul struct {
-
 	// address
 	// Required: true
 	// Pattern: ^[^\s]+$
+	// +kubebuilder:validation:Pattern=`^[^\s]+$`
 	Address *string `json:"address"`
 
 	// Name of the defaults section to be used in backends created by this service
@@ -69,6 +69,7 @@ type Consul struct {
 
 	// Auto generated ID.
 	// Pattern: ^[^\s]+$
+	// +kubebuilder:validation:Pattern=`^[^\s]+$`
 	ID *string `json:"id,omitempty"`
 
 	// mode
@@ -86,11 +87,14 @@ type Consul struct {
 	// Required: true
 	// Maximum: 65535
 	// Minimum: 1
+	// +kubebuilder:validation:Maximum=65535
+	// +kubebuilder:validation:Minimum=1
 	Port *int64 `json:"port"`
 
 	// Duration in seconds in-between data pulling requests to the consul server
 	// Required: true
 	// Minimum: 1
+	// +kubebuilder:validation:Minimum=1
 	RetryTimeout *int64 `json:"retry_timeout"`
 
 	// server slots base
@@ -121,6 +125,7 @@ type Consul struct {
 
 	// token
 	// Pattern: ^[^\s]+$
+	// +kubebuilder:validation:Pattern=`^[^\s]+$`
 	Token string `json:"token,omitempty"`
 }
 

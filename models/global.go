@@ -68,6 +68,8 @@ type Global struct {
 	// anonkey
 	// Maximum: 4.294967295e+09
 	// Minimum: 0
+	// +kubebuilder:validation:Maximum=4.294967295e+09
+	// +kubebuilder:validation:Minimum=0
 	Anonkey *int64 `json:"anonkey,omitempty"`
 
 	// busy polling
@@ -78,6 +80,7 @@ type Global struct {
 
 	// chroot
 	// Pattern: ^[^\s]+$
+	// +kubebuilder:validation:Pattern=`^[^\s]+$`
 	Chroot string `json:"chroot,omitempty"`
 
 	// close spread time
@@ -120,6 +123,7 @@ type Global struct {
 
 	// group
 	// Pattern: ^[^\s]+$
+	// +kubebuilder:validation:Pattern=`^[^\s]+$`
 	Group string `json:"group,omitempty"`
 
 	// h1 case adjust file
@@ -152,7 +156,7 @@ type Global struct {
 
 	// httpclient ssl verify
 	// Enum: [ none required]
-	// +kubebuilder:validation:Enum=;none;required;
+	// +kubebuilder:validation:Enum="";none;required;
 	HttpclientSslVerify *string `json:"httpclient_ssl_verify,omitempty"`
 
 	// httpclient timeout connect
@@ -177,6 +181,7 @@ type Global struct {
 
 	// localpeer
 	// Pattern: ^[^\s]+$
+	// +kubebuilder:validation:Pattern=`^[^\s]+$`
 	Localpeer string `json:"localpeer,omitempty"`
 
 	// log send hostname
@@ -226,6 +231,7 @@ type Global struct {
 
 	// mworker max reloads
 	// Minimum: 0
+	// +kubebuilder:validation:Minimum=0
 	MworkerMaxReloads *int64 `json:"mworker_max_reloads,omitempty"`
 
 	// nbproc
@@ -288,10 +294,12 @@ type Global struct {
 
 	// server state base
 	// Pattern: ^[^\s]+$
+	// +kubebuilder:validation:Pattern=`^[^\s]+$`
 	ServerStateBase string `json:"server_state_base,omitempty"`
 
 	// server state file
 	// Pattern: ^[^\s]+$
+	// +kubebuilder:validation:Pattern=`^[^\s]+$`
 	ServerStateFile string `json:"server_state_file,omitempty"`
 
 	// set dumpable
@@ -299,6 +307,7 @@ type Global struct {
 
 	// setcap
 	// Pattern: ^[^\s]+$
+	// +kubebuilder:validation:Pattern=`^[^\s]+$`
 	Setcap string `json:"setcap,omitempty"`
 
 	// spread checks
@@ -397,6 +406,7 @@ type Global struct {
 
 	// user
 	// Pattern: ^[^\s]+$
+	// +kubebuilder:validation:Pattern=`^[^\s]+$`
 	User string `json:"user,omitempty"`
 
 	// wurfl options
@@ -1944,9 +1954,9 @@ func (m *CPUMap) UnmarshalBinary(b []byte) error {
 //
 // swagger:model GlobalDefaultPath
 type GlobalDefaultPath struct {
-
 	// path
 	// Pattern: ^[^\s]+$
+	// +kubebuilder:validation:Pattern=`^[^\s]+$`
 	Path string `json:"path,omitempty"`
 
 	// type
@@ -2235,6 +2245,7 @@ type GlobalLogSendHostname struct {
 
 	// param
 	// Pattern: ^[^\s]+$
+	// +kubebuilder:validation:Pattern=`^[^\s]+$`
 	Param string `json:"param,omitempty"`
 }
 
@@ -2338,10 +2349,10 @@ func (m *GlobalLogSendHostname) UnmarshalBinary(b []byte) error {
 //
 // swagger:model LuaLoad
 type LuaLoad struct {
-
 	// file
 	// Required: true
 	// Pattern: ^[^\s]+$
+	// +kubebuilder:validation:Pattern=`^[^\s]+$`
 	File *string `json:"file"`
 }
 
@@ -2399,10 +2410,10 @@ func (m *LuaLoad) UnmarshalBinary(b []byte) error {
 //
 // swagger:model LuaPrependPath
 type LuaPrependPath struct {
-
 	// path
 	// Required: true
 	// Pattern: ^[^\s]+$
+	// +kubebuilder:validation:Pattern=`^[^\s]+$`
 	Path *string `json:"path"`
 
 	// type
@@ -2589,6 +2600,7 @@ type RuntimeAPI struct {
 	// address
 	// Required: true
 	// Pattern: ^[^\s]+$
+	// +kubebuilder:validation:Pattern=`^[^\s]+$`
 	Address *string `json:"address"`
 }
 
@@ -3063,6 +3075,7 @@ type GlobalTuneOptions struct {
 
 	// buffers reserve
 	// Minimum: 2
+	// +kubebuilder:validation:Minimum=2
 	BuffersReserve int64 `json:"buffers_reserve,omitempty"`
 
 	// bufsize
@@ -3077,6 +3090,8 @@ type GlobalTuneOptions struct {
 	// events max events at once
 	// Maximum: 10000
 	// Minimum: 1
+	// +kubebuilder:validation:Maximum=10000
+	// +kubebuilder:validation:Minimum=1
 	EventsMaxEventsAtOnce int64 `json:"events_max_events_at_once,omitempty"`
 
 	// fail alloc
@@ -3111,6 +3126,7 @@ type GlobalTuneOptions struct {
 
 	// h2 header table size
 	// Maximum: 65535
+	// +kubebuilder:validation:Maximum=65535
 	H2HeaderTableSize int64 `json:"h2_header_table_size,omitempty"`
 
 	// h2 initial window size
@@ -3136,6 +3152,8 @@ type GlobalTuneOptions struct {
 	// http maxhdr
 	// Maximum: 32767
 	// Minimum: 1
+	// +kubebuilder:validation:Maximum=32767
+	// +kubebuilder:validation:Minimum=1
 	HTTPMaxhdr int64 `json:"http_maxhdr,omitempty"`
 
 	// idle pool shared
@@ -3146,6 +3164,8 @@ type GlobalTuneOptions struct {
 	// idletimer
 	// Maximum: 65535
 	// Minimum: 0
+	// +kubebuilder:validation:Maximum=65535
+	// +kubebuilder:validation:Minimum=0
 	Idletimer *int64 `json:"idletimer,omitempty"`
 
 	// listener default shards
@@ -3329,11 +3349,15 @@ type GlobalTuneOptions struct {
 	// zlib memlevel
 	// Maximum: 9
 	// Minimum: 1
+	// +kubebuilder:validation:Maximum=9
+	// +kubebuilder:validation:Minimum=1
 	ZlibMemlevel int64 `json:"zlib_memlevel,omitempty"`
 
 	// zlib windowsize
 	// Maximum: 15
 	// Minimum: 8
+	// +kubebuilder:validation:Maximum=15
+	// +kubebuilder:validation:Minimum=8
 	ZlibWindowsize int64 `json:"zlib_windowsize,omitempty"`
 }
 

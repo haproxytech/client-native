@@ -52,10 +52,12 @@ type StickRule struct {
 	// pattern
 	// Required: true
 	// Pattern: ^[^\s]+$
+	// +kubebuilder:validation:Pattern=`^[^\s]+$`
 	Pattern string `json:"pattern"`
 
 	// table
 	// Pattern: ^[^\s]+$
+	// +kubebuilder:validation:Pattern=`^[^\s]+$`
 	Table string `json:"table,omitempty"`
 
 	// type

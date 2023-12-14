@@ -35,21 +35,24 @@ import (
 //
 // swagger:model mailer_entry
 type MailerEntry struct {
-
 	// address
 	// Required: true
 	// Pattern: ^\S+$
+	// +kubebuilder:validation:Pattern=`^\S+$`
 	Address string `json:"address"`
 
 	// name
 	// Required: true
 	// Pattern: ^[A-Za-z0-9-_]+$
+	// +kubebuilder:validation:Pattern=`^[A-Za-z0-9-_]+$`
 	Name string `json:"name"`
 
 	// port
 	// Required: true
 	// Maximum: 65535
 	// Minimum: 1
+	// +kubebuilder:validation:Maximum=65535
+	// +kubebuilder:validation:Minimum=1
 	Port int64 `json:"port"`
 }
 

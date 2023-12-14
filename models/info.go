@@ -172,9 +172,9 @@ func (m *Info) UnmarshalBinary(b []byte) error {
 //
 // swagger:model InfoAPI
 type InfoAPI struct {
-
 	// HAProxy Dataplane API build date
 	// Format: date-time
+	// +kubebuilder:validation:Format=date-time
 	BuildDate strfmt.DateTime `json:"build_date,omitempty"`
 
 	// HAProxy Dataplane API version string

@@ -54,6 +54,7 @@ type Balance struct {
 
 	// rdp cookie name
 	// Pattern: ^[^\s]+$
+	// +kubebuilder:validation:Pattern=`^[^\s]+$`
 	RdpCookieName string `json:"rdp_cookie_name,omitempty"`
 
 	// uri depth
@@ -70,6 +71,7 @@ type Balance struct {
 
 	// url param
 	// Pattern: ^[^\s]+$
+	// +kubebuilder:validation:Pattern=`^[^\s]+$`
 	URLParam string `json:"url_param,omitempty"`
 
 	// url param check post

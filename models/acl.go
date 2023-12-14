@@ -37,15 +37,16 @@ import (
 //
 // swagger:model acl
 type ACL struct {
-
 	// acl name
 	// Required: true
 	// Pattern: ^[^\s]+$
+	// +kubebuilder:validation:Pattern=`^[^\s]+$`
 	ACLName string `json:"acl_name"`
 
 	// criterion
 	// Required: true
 	// Pattern: ^[^\s]+$
+	// +kubebuilder:validation:Pattern=`^[^\s]+$`
 	Criterion string `json:"criterion"`
 
 	// index

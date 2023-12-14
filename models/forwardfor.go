@@ -42,10 +42,12 @@ type Forwardfor struct {
 
 	// except
 	// Pattern: ^[^\s]+$
+	// +kubebuilder:validation:Pattern=`^[^\s]+$`
 	Except string `json:"except,omitempty"`
 
 	// header
 	// Pattern: ^[^\s]+$
+	// +kubebuilder:validation:Pattern=`^[^\s]+$`
 	Header string `json:"header,omitempty"`
 
 	// ifnone

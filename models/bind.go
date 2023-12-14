@@ -40,18 +40,23 @@ type Bind struct {
 	// address
 	// Example: 127.0.0.1
 	// Pattern: ^[^\s]+$
+	// +kubebuilder:validation:Pattern=`^[^\s]+$`
 	Address string `json:"address,omitempty"`
 
 	// port
 	// Example: 80
 	// Maximum: 65535
 	// Minimum: 1
+	// +kubebuilder:validation:Maximum=65535
+	// +kubebuilder:validation:Minimum=1
 	Port *int64 `json:"port,omitempty"`
 
 	// port range end
 	// Example: 81
 	// Maximum: 65535
 	// Minimum: 1
+	// +kubebuilder:validation:Maximum=65535
+	// +kubebuilder:validation:Minimum=1
 	PortRangeEnd *int64 `json:"port-range-end,omitempty"`
 }
 

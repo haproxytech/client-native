@@ -41,6 +41,7 @@ type Server struct {
 	// address
 	// Required: true
 	// Pattern: ^[^\s]+$
+	// +kubebuilder:validation:Pattern=`^[^\s]+$`
 	Address string `json:"address"`
 
 	// id
@@ -49,11 +50,14 @@ type Server struct {
 	// name
 	// Required: true
 	// Pattern: ^[^\s]+$
+	// +kubebuilder:validation:Pattern=`^[^\s]+$`
 	Name string `json:"name"`
 
 	// port
 	// Maximum: 65535
 	// Minimum: 1
+	// +kubebuilder:validation:Maximum=65535
+	// +kubebuilder:validation:Minimum=1
 	Port *int64 `json:"port,omitempty"`
 }
 

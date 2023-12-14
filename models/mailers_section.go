@@ -35,14 +35,15 @@ import (
 //
 // swagger:model mailers_section
 type MailersSection struct {
-
 	// name
 	// Required: true
 	// Pattern: ^[A-Za-z0-9-_]+$
+	// +kubebuilder:validation:Pattern=`^[A-Za-z0-9-_]+$`
 	Name string `json:"name"`
 
 	// timeout
 	// Minimum: 0
+	// +kubebuilder:validation:Minimum=0
 	Timeout *int64 `json:"timeout,omitempty"`
 }
 

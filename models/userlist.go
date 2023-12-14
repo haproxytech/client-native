@@ -35,10 +35,10 @@ import (
 //
 // swagger:model userlist
 type Userlist struct {
-
 	// name
 	// Required: true
 	// Pattern: ^[A-Za-z0-9-_.:]+$
+	// +kubebuilder:validation:Pattern=`^[A-Za-z0-9-_.:]+$`
 	Name string `json:"name"`
 }
 

@@ -37,14 +37,15 @@ import (
 //
 // swagger:model runtime_add_server
 type RuntimeAddServer struct {
-
 	// address
 	// Read Only: true
 	// Pattern: ^[^\s]+$
+	// +kubebuilder:validation:Pattern=`^[^\s]+$`
 	Address string `json:"address,omitempty"`
 
 	// agent addr
 	// Pattern: ^[^\s]+$
+	// +kubebuilder:validation:Pattern=`^[^\s]+$`
 	AgentAddr string `json:"agent-addr,omitempty"`
 
 	// agent check
@@ -58,6 +59,8 @@ type RuntimeAddServer struct {
 	// agent port
 	// Maximum: 65535
 	// Minimum: 1
+	// +kubebuilder:validation:Maximum=65535
+	// +kubebuilder:validation:Minimum=1
 	AgentPort *int64 `json:"agent-port,omitempty"`
 
 	// agent send
@@ -68,6 +71,7 @@ type RuntimeAddServer struct {
 
 	// alpn
 	// Pattern: ^[^\s]+$
+	// +kubebuilder:validation:Pattern=`^[^\s]+$`
 	Alpn string `json:"alpn,omitempty"`
 
 	// backup
@@ -87,6 +91,7 @@ type RuntimeAddServer struct {
 
 	// check sni
 	// Pattern: ^[^\s]+$
+	// +kubebuilder:validation:Pattern=`^[^\s]+$`
 	CheckSni string `json:"check-sni,omitempty"`
 
 	// check ssl
@@ -96,10 +101,12 @@ type RuntimeAddServer struct {
 
 	// check alpn
 	// Pattern: ^[^\s]+$
+	// +kubebuilder:validation:Pattern=`^[^\s]+$`
 	CheckAlpn string `json:"check_alpn,omitempty"`
 
 	// check proto
 	// Pattern: ^[^\s]+$
+	// +kubebuilder:validation:Pattern=`^[^\s]+$`
 	CheckProto string `json:"check_proto,omitempty"`
 
 	// check via socks4
@@ -155,11 +162,14 @@ type RuntimeAddServer struct {
 
 	// health check address
 	// Pattern: ^[^\s]+$
+	// +kubebuilder:validation:Pattern=`^[^\s]+$`
 	HealthCheckAddress string `json:"health_check_address,omitempty"`
 
 	// health check port
 	// Maximum: 65535
 	// Minimum: 1
+	// +kubebuilder:validation:Maximum=65535
+	// +kubebuilder:validation:Minimum=1
 	HealthCheckPort *int64 `json:"health_check_port,omitempty"`
 
 	// id
@@ -248,10 +258,13 @@ type RuntimeAddServer struct {
 	// Read Only: true
 	// Maximum: 65535
 	// Minimum: 1
+	// +kubebuilder:validation:Maximum=65535
+	// +kubebuilder:validation:Minimum=1
 	Port *int64 `json:"port,omitempty"`
 
 	// proto
 	// Pattern: ^[^\s]+$
+	// +kubebuilder:validation:Pattern=`^[^\s]+$`
 	Proto string `json:"proto,omitempty"`
 
 	// proxy v2 options
@@ -285,6 +298,7 @@ type RuntimeAddServer struct {
 
 	// sni
 	// Pattern: ^[^\s]+$
+	// +kubebuilder:validation:Pattern=`^[^\s]+$`
 	Sni string `json:"sni,omitempty"`
 
 	// source
@@ -297,10 +311,12 @@ type RuntimeAddServer struct {
 
 	// ssl cafile
 	// Pattern: ^[^\s]+$
+	// +kubebuilder:validation:Pattern=`^[^\s]+$`
 	SslCafile string `json:"ssl_cafile,omitempty"`
 
 	// ssl certificate
 	// Pattern: ^[^\s]+$
+	// +kubebuilder:validation:Pattern=`^[^\s]+$`
 	SslCertificate string `json:"ssl_certificate,omitempty"`
 
 	// ssl max ver

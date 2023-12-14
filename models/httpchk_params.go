@@ -41,6 +41,7 @@ type HttpchkParams struct {
 
 	// uri
 	// Pattern: ^[^ ]*$
+	// +kubebuilder:validation:Pattern=`^[^ ]*$`
 	URI string `json:"uri,omitempty"`
 
 	// version

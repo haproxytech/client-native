@@ -56,6 +56,7 @@ type TCPRequestRule struct {
 
 	// capture sample
 	// Pattern: ^[^\s]+$
+	// +kubebuilder:validation:Pattern=`^[^\s]+$`
 	CaptureSample string `json:"capture_sample,omitempty"`
 
 	// cond
@@ -83,6 +84,7 @@ type TCPRequestRule struct {
 
 	// lua action
 	// Pattern: ^[^\s]+$
+	// +kubebuilder:validation:Pattern=`^[^\s]+$`
 	LuaAction string `json:"lua_action,omitempty"`
 
 	// lua params
@@ -90,11 +92,14 @@ type TCPRequestRule struct {
 
 	// mark value
 	// Pattern: ^(0x[0-9A-Fa-f]+|[0-9]+)$
+	// +kubebuilder:validation:Pattern=`^(0x[0-9A-Fa-f]+|[0-9]+)$`
 	MarkValue string `json:"mark_value,omitempty"`
 
 	// nice value
 	// Maximum: 1024
 	// Minimum: -1024
+	// +kubebuilder:validation:Maximum=1024
+	// +kubebuilder:validation:Minimum=-1024
 	NiceValue int64 `json:"nice_value,omitempty"`
 
 	// priority type
@@ -142,6 +147,7 @@ type TCPRequestRule struct {
 
 	// tos value
 	// Pattern: ^(0x[0-9A-Fa-f]+|[0-9]+)$
+	// +kubebuilder:validation:Pattern=`^(0x[0-9A-Fa-f]+|[0-9]+)$`
 	TosValue string `json:"tos_value,omitempty"`
 
 	// track key
@@ -164,10 +170,12 @@ type TCPRequestRule struct {
 
 	// var name
 	// Pattern: ^[^\s]+$
+	// +kubebuilder:validation:Pattern=`^[^\s]+$`
 	VarName string `json:"var_name,omitempty"`
 
 	// var scope
 	// Pattern: ^[^\s]+$
+	// +kubebuilder:validation:Pattern=`^[^\s]+$`
 	VarScope string `json:"var_scope,omitempty"`
 }
 

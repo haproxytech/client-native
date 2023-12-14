@@ -55,6 +55,7 @@ type Frontend struct {
 
 	// bind process
 	// Pattern: ^[^\s]+$
+	// +kubebuilder:validation:Pattern=`^[^\s]+$`
 	BindProcess string `json:"bind_process,omitempty"`
 
 	// clflog
@@ -90,6 +91,7 @@ type Frontend struct {
 
 	// default backend
 	// Pattern: ^[A-Za-z0-9-_.:]+$
+	// +kubebuilder:validation:Pattern=`^[A-Za-z0-9-_.:]+$`
 	DefaultBackend string `json:"default_backend,omitempty"`
 
 	// description
@@ -133,6 +135,7 @@ type Frontend struct {
 
 	// from
 	// Pattern: ^[A-Za-z0-9-_.:]+$
+	// +kubebuilder:validation:Pattern=`^[A-Za-z0-9-_.:]+$`
 	From string `json:"from,omitempty"`
 
 	// h1 case adjust bogus client
@@ -215,6 +218,7 @@ type Frontend struct {
 
 	// log tag
 	// Pattern: ^[A-Za-z0-9-_.:]+$
+	// +kubebuilder:validation:Pattern=`^[A-Za-z0-9-_.:]+$`
 	LogTag string `json:"log_tag,omitempty"`
 
 	// logasap
@@ -239,6 +243,7 @@ type Frontend struct {
 	// name
 	// Required: true
 	// Pattern: ^[A-Za-z0-9-_.:]+$
+	// +kubebuilder:validation:Pattern=`^[A-Za-z0-9-_.:]+$`
 	Name string `json:"name"`
 
 	// nolinger

@@ -43,6 +43,7 @@ type Transaction struct {
 
 	// id
 	// Pattern: ^[^\s]+$
+	// +kubebuilder:validation:Pattern=`^[^\s]+$`
 	ID string `json:"id,omitempty"`
 
 	// status

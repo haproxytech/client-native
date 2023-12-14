@@ -37,17 +37,19 @@ import (
 //
 // swagger:model filter
 type Filter struct {
-
 	// Name of the fcgi-app section this filter will use.
 	// Pattern: ^[^\s]+$
+	// +kubebuilder:validation:Pattern=`^[^\s]+$`
 	AppName string `json:"app_name,omitempty"`
 
 	// Filter name that will be used by 'set-bandwidth-limit' actions to reference a specific bandwidth limitation filter
 	// Pattern: ^[^\s]+$
+	// +kubebuilder:validation:Pattern=`^[^\s]+$`
 	BandwidthLimitName string `json:"bandwidth_limit_name,omitempty"`
 
 	// cache name
 	// Pattern: ^[^\s]+$
+	// +kubebuilder:validation:Pattern=`^[^\s]+$`
 	CacheName string `json:"cache_name,omitempty"`
 
 	// The max number of bytes that can be forwarded over the period.
@@ -81,10 +83,12 @@ type Filter struct {
 
 	// spoe config
 	// Pattern: ^[^\s]+$
+	// +kubebuilder:validation:Pattern=`^[^\s]+$`
 	SpoeConfig string `json:"spoe_config,omitempty"`
 
 	// spoe engine
 	// Pattern: ^[^\s]+$
+	// +kubebuilder:validation:Pattern=`^[^\s]+$`
 	SpoeEngine string `json:"spoe_engine,omitempty"`
 
 	// An optional table to be used instead of the default one, which is the stick-table declared in the current proxy.
@@ -96,6 +100,7 @@ type Filter struct {
 
 	// trace name
 	// Pattern: ^[^\s]+$
+	// +kubebuilder:validation:Pattern=`^[^\s]+$`
 	TraceName string `json:"trace_name,omitempty"`
 
 	// trace rnd forwarding

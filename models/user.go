@@ -50,6 +50,7 @@ type User struct {
 	// username
 	// Required: true
 	// Pattern: ^[A-Za-z0-9-_.:]+$
+	// +kubebuilder:validation:Pattern=`^[A-Za-z0-9-_.:]+$`
 	Username string `json:"username"`
 }
 

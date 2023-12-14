@@ -51,6 +51,7 @@ type PeerSection struct {
 	// name
 	// Required: true
 	// Pattern: ^[A-Za-z0-9-_.:]+$
+	// +kubebuilder:validation:Pattern=`^[A-Za-z0-9-_.:]+$`
 	Name string `json:"name"`
 
 	// In some configurations, one would like to distribute the stick-table contents
