@@ -92,6 +92,7 @@ tidy:
 
 lint:
   stage: lint
+  needs: ["build"]
   image:
     name: $CI_REGISTRY_GO/golang:$GO_VERSION
     entrypoint: [""]
@@ -99,6 +100,24 @@ lint:
     - go
   script:
     - make lint
+  rules:
+    - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
+    - if: $CI_PIPELINE_SOURCE == 'push'
+
+license-check:
+  stage: lint
+  needs: ["build"]
+  image:
+    name: $CI_REGISTRY_GO/golang:$GO_VERSION
+    entrypoint: [""]
+  tags:
+    - go
+  script:
+    - go install github.com/google/go-licenses@latest
+    - PROJECT="$(go list -m)"
+    - ALLOWED_LICENSES="$(<.allowed_license_types)"
+    - go-licenses report --ignore "$PROJECT" .
+    - go-licenses check --allowed_licenses="$ALLOWED_LICENSES" --ignore "$PROJECT" .
   rules:
     - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
     - if: $CI_PIPELINE_SOURCE == 'push'

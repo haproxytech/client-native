@@ -77,6 +77,33 @@ jobs:
         with:
           file_or_dir: .
           config_file: .yamllint.yml
+  license:
+    name: license-check
+    needs: ["generate-specification","generate-models"]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code into the Go module directory
+        uses: actions/checkout@v3
+      - name: Set up Go
+        uses: actions/setup-go@v3
+        with:
+          go-version-file: 'go.mod'
+      - uses: actions/cache@v2
+        with:
+          path: |
+            ~/.cache/go-build
+            ~/go/pkg/mod
+          key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
+          restore-keys: |
+            ${{ runner.os }}-go-
+      - name: go-licenses install
+        run: go install github.com/google/go-licenses@latest
+      - name: Check Licenses
+        run: |
+          PROJECT="$(go list -m)"
+          ALLOWED_LICENSES="$(<.allowed_license_types)"
+          go-licenses report --ignore "$PROJECT" .
+          go-licenses check --allowed_licenses="$ALLOWED_LICENSES" --ignore "$PROJECT" .
   tidy:
     name: go mod tidy
     needs: ["generate-specification","generate-models"]
