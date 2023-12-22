@@ -6,22 +6,22 @@ bind:
     - $ref: '#/definitions/bind_params'
     - type: object
       properties:
-          address:
-            type: string
-            pattern: '^[^\s]+$'
-            example: 127.0.0.1
-          port:
-            maximum: 65535
-            minimum: 1
-            type: integer
-            x-nullable: true
-            example: 80
-          port-range-end:
-            maximum: 65535
-            minimum: 1
-            type: integer
-            x-nullable: true
-            example: 81
+        address:
+          type: string
+          pattern: '^[^\s]+$'
+          example: 127.0.0.1
+        port:
+          maximum: 65535
+          minimum: 1
+          type: integer
+          x-nullable: true
+          example: 80
+        port-range-end:
+          maximum: 65535
+          minimum: 1
+          type: integer
+          x-nullable: true
+          example: 81
       additionalProperties: false
 default_bind:
   title: Default Bind

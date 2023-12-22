@@ -1,3 +1,4 @@
+---
 server_params:
   type: object
   properties:

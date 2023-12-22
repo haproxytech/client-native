@@ -1,3 +1,4 @@
+---
 tables:
   get:
     summary: Return an array of tables
