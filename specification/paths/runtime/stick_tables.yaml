@@ -1,3 +1,4 @@
+---
 stick_tables:
   get:
     summary: Return Stick Tables

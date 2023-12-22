@@ -1,3 +1,4 @@
+---
 ssl_certificates:
   get:
     summary: Return all available SSL certificates on disk

@@ -1,3 +1,4 @@
+---
 maps_entries:
   get:  # show map [map]
     summary: Return one map runtime entries

@@ -1,3 +1,4 @@
+---
 maps:
   get:
     summary: Return a list of all managed map files

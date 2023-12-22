@@ -1,3 +1,4 @@
+---
 maps:
   get:  # show map
     summary: Return runtime map files

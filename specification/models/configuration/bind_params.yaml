@@ -1,3 +1,4 @@
+---
 bind_params:
   type: object
   properties:
