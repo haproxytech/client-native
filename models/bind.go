@@ -64,55 +64,55 @@ func (m *Bind) UnmarshalJSON(raw []byte) error {
 	}
 	m.BindParams = aO0
 
-	// now for regular properties
-	var propsBind struct {
+	// AO1
+	var dataAO1 struct {
 		Address string `json:"address,omitempty"`
 
 		Port *int64 `json:"port,omitempty"`
 
 		PortRangeEnd *int64 `json:"port-range-end,omitempty"`
 	}
-	if err := swag.ReadJSON(raw, &propsBind); err != nil {
+	if err := swag.ReadJSON(raw, &dataAO1); err != nil {
 		return err
 	}
-	m.Address = propsBind.Address
 
-	m.Port = propsBind.Port
+	m.Address = dataAO1.Address
 
-	m.PortRangeEnd = propsBind.PortRangeEnd
+	m.Port = dataAO1.Port
+
+	m.PortRangeEnd = dataAO1.PortRangeEnd
 
 	return nil
 }
 
 // MarshalJSON marshals this object to a JSON structure
 func (m Bind) MarshalJSON() ([]byte, error) {
-	_parts := make([][]byte, 0, 1)
+	_parts := make([][]byte, 0, 2)
 
 	aO0, err := swag.WriteJSON(m.BindParams)
 	if err != nil {
 		return nil, err
 	}
 	_parts = append(_parts, aO0)
-
-	// now for regular properties
-	var propsBind struct {
+	var dataAO1 struct {
 		Address string `json:"address,omitempty"`
 
 		Port *int64 `json:"port,omitempty"`
 
 		PortRangeEnd *int64 `json:"port-range-end,omitempty"`
 	}
-	propsBind.Address = m.Address
 
-	propsBind.Port = m.Port
+	dataAO1.Address = m.Address
 
-	propsBind.PortRangeEnd = m.PortRangeEnd
+	dataAO1.Port = m.Port
 
-	jsonDataPropsBind, errBind := swag.WriteJSON(propsBind)
-	if errBind != nil {
-		return nil, errBind
+	dataAO1.PortRangeEnd = m.PortRangeEnd
+
+	jsonDataAO1, errAO1 := swag.WriteJSON(dataAO1)
+	if errAO1 != nil {
+		return nil, errAO1
 	}
-	_parts = append(_parts, jsonDataPropsBind)
+	_parts = append(_parts, jsonDataAO1)
 	return swag.ConcatJSON(_parts...), nil
 }
 
@@ -144,6 +144,7 @@ func (m *Bind) Validate(formats strfmt.Registry) error {
 }
 
 func (m *Bind) validateAddress(formats strfmt.Registry) error {
+
 	if swag.IsZero(m.Address) { // not required
 		return nil
 	}
@@ -156,6 +157,7 @@ func (m *Bind) validateAddress(formats strfmt.Registry) error {
 }
 
 func (m *Bind) validatePort(formats strfmt.Registry) error {
+
 	if swag.IsZero(m.Port) { // not required
 		return nil
 	}
@@ -172,6 +174,7 @@ func (m *Bind) validatePort(formats strfmt.Registry) error {
 }
 
 func (m *Bind) validatePortRangeEnd(formats strfmt.Registry) error {
+
 	if swag.IsZero(m.PortRangeEnd) { // not required
 		return nil
 	}

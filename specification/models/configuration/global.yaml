@@ -590,16 +590,16 @@ global:
       x-display-name: Runtime APIs
       x-go-name: RuntimeAPIs
       items:
-        type: object
         x-go-name: RuntimeAPI
-        required:
-          - address
-        properties:
-          address:
-            type: string
-            pattern: '^[^\s]+$'
         allOf:
           - $ref: '#/definitions/bind_params'
+          - type: object
+            required:
+              - address
+            properties:
+              address:
+                type: string
+                pattern: '^[^\s]+$'
     stats_timeout:
       type: integer
       x-nullable: true

@@ -2,29 +2,29 @@
 server:
   title: Server
   description: HAProxy backend server configuration
-  type: object
-  required:
-    - name
-    - address
-  properties:
-    name:
-      type: string
-      pattern: '^[^\s]+$'
-      x-nullable: false
-    address:
-      type: string
-      pattern: '^[^\s]+$'
-      x-nullable: false
-    port:
-      type: integer
-      x-nullable: true
-      minimum: 1
-      maximum: 65535
-    id:
-      type: integer
-      x-nullable: true
   allOf:
     - $ref: '#/definitions/server_params'
+    - type: object
+      required:
+        - name
+        - address
+      properties:
+        name:
+          type: string
+          pattern: '^[^\s]+$'
+          x-nullable: false
+        address:
+          type: string
+          pattern: '^[^\s]+$'
+          x-nullable: false
+        port:
+          type: integer
+          x-nullable: true
+          minimum: 1
+          maximum: 65535
+        id:
+          type: integer
+          x-nullable: true
   additionalProperties: false
   example:
     name: www
@@ -33,32 +33,32 @@ server:
 server_template:
   title: Server template
   description: Set a template to initialize servers with shared parameters.
-  type: object
-  required:
-    - prefix
-    - num_or_range
-    - fqdn
-  properties:
-    prefix:
-      type: string
-      pattern: '^[^\s]+$'
-      x-nullable: false
-    num_or_range:
-      type: string
-      x-nullable: false
-    fqdn:
-      type: string
-      x-nullable: false
-    port:
-      type: integer
-      x-nullable: true
-      minimum: 1
-      maximum: 65535
-    id:
-      type: integer
-      x-nullable: true
   allOf:
     - $ref: '#/definitions/server_params'
+    - type: object
+      required:
+        - prefix
+        - num_or_range
+        - fqdn
+      properties:
+        prefix:
+          type: string
+          pattern: '^[^\s]+$'
+          x-nullable: false
+        num_or_range:
+          type: string
+          x-nullable: false
+        fqdn:
+          type: string
+          x-nullable: false
+        port:
+          type: integer
+          x-nullable: true
+          minimum: 1
+          maximum: 65535
+        id:
+          type: integer
+          x-nullable: true
   additionalProperties: false
   example:
     prefix: srv
@@ -67,6 +67,5 @@ server_template:
     port: 80
 default_server:
   title: Default Server
-  type: object
   allOf:
     - $ref: '#/definitions/server_params'

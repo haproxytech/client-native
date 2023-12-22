@@ -1339,13 +1339,13 @@ definitions:
               items:
                   allOf:
                       - $ref: '#/definitions/bind_params'
-                  properties:
-                      address:
-                          pattern: ^[^\s]+$
-                          type: string
-                  required:
-                      - address
-                  type: object
+                      - properties:
+                          address:
+                              pattern: ^[^\s]+$
+                              type: string
+                        required:
+                          - address
+                        type: object
                   x-go-name: RuntimeAPI
               type: array
               x-display-name: Runtime APIs
@@ -3425,29 +3425,29 @@ definitions:
     items:
       $ref: "#/definitions/http_errors_section"
   bind:
-      additionalProperties: false
       allOf:
           - $ref: '#/definitions/bind_params'
+          - additionalProperties: false
+            properties:
+              address:
+                  example: 127.0.0.1
+                  pattern: ^[^\s]+$
+                  type: string
+              port:
+                  example: 80
+                  maximum: 65535
+                  minimum: 1
+                  type: integer
+                  x-nullable: true
+              port-range-end:
+                  example: 81
+                  maximum: 65535
+                  minimum: 1
+                  type: integer
+                  x-nullable: true
+            type: object
       description: HAProxy frontend bind configuration
-      properties:
-          address:
-              example: 127.0.0.1
-              pattern: ^[^\s]+$
-              type: string
-          port:
-              example: 80
-              maximum: 65535
-              minimum: 1
-              type: integer
-              x-nullable: true
-          port-range-end:
-              example: 81
-              maximum: 65535
-              minimum: 1
-              type: integer
-              x-nullable: true
       title: Bind
-      type: object
   binds:
     title: Binds
     description: HAProxy frontend binds array (corresponds to bind directives)
@@ -3458,33 +3458,33 @@ definitions:
       additionalProperties: false
       allOf:
           - $ref: '#/definitions/server_params'
+          - properties:
+              address:
+                  pattern: ^[^\s]+$
+                  type: string
+                  x-nullable: false
+              id:
+                  type: integer
+                  x-nullable: true
+              name:
+                  pattern: ^[^\s]+$
+                  type: string
+                  x-nullable: false
+              port:
+                  maximum: 65535
+                  minimum: 1
+                  type: integer
+                  x-nullable: true
+            required:
+              - name
+              - address
+            type: object
       description: HAProxy backend server configuration
       example:
           address: 10.1.1.1
           name: www
           port: 8080
-      properties:
-          address:
-              pattern: ^[^\s]+$
-              type: string
-              x-nullable: false
-          id:
-              type: integer
-              x-nullable: true
-          name:
-              pattern: ^[^\s]+$
-              type: string
-              x-nullable: false
-          port:
-              maximum: 65535
-              minimum: 1
-              type: integer
-              x-nullable: true
-      required:
-          - name
-          - address
       title: Server
-      type: object
   servers:
     title: Servers
     description: HAProxy backend servers array
@@ -3495,37 +3495,37 @@ definitions:
       additionalProperties: false
       allOf:
           - $ref: '#/definitions/server_params'
+          - properties:
+              fqdn:
+                  type: string
+                  x-nullable: false
+              id:
+                  type: integer
+                  x-nullable: true
+              num_or_range:
+                  type: string
+                  x-nullable: false
+              port:
+                  maximum: 65535
+                  minimum: 1
+                  type: integer
+                  x-nullable: true
+              prefix:
+                  pattern: ^[^\s]+$
+                  type: string
+                  x-nullable: false
+            required:
+              - prefix
+              - num_or_range
+              - fqdn
+            type: object
       description: Set a template to initialize servers with shared parameters.
       example:
           fqdn: google.com
           num_or_range: 1-3
           port: 80
           prefix: srv
-      properties:
-          fqdn:
-              type: string
-              x-nullable: false
-          id:
-              type: integer
-              x-nullable: true
-          num_or_range:
-              type: string
-              x-nullable: false
-          port:
-              maximum: 65535
-              minimum: 1
-              type: integer
-              x-nullable: true
-          prefix:
-              pattern: ^[^\s]+$
-              type: string
-              x-nullable: false
-      required:
-          - prefix
-          - num_or_range
-          - fqdn
       title: Server template
-      type: object
   server_templates:
     title: Server templates
     description: HAProxy backend server templates array
@@ -8902,7 +8902,6 @@ definitions:
       allOf:
           - $ref: '#/definitions/server_params'
       title: Default Server
-      type: object
   httpchk_params:
       properties:
           method:
@@ -9748,7 +9747,6 @@ definitions:
           - $ref: '#/definitions/bind_params'
       description: HAProxy default bind configuration
       title: Default Bind
-      type: object
   table:
       properties:
           expire:
