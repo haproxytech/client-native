@@ -72,8 +72,8 @@ func (m *ServerTemplate) UnmarshalJSON(raw []byte) error {
 	}
 	m.ServerParams = aO0
 
-	// now for regular properties
-	var propsServerTemplate struct {
+	// AO1
+	var dataAO1 struct {
 		Fqdn string `json:"fqdn"`
 
 		ID *int64 `json:"id,omitempty"`
@@ -84,34 +84,33 @@ func (m *ServerTemplate) UnmarshalJSON(raw []byte) error {
 
 		Prefix string `json:"prefix"`
 	}
-	if err := swag.ReadJSON(raw, &propsServerTemplate); err != nil {
+	if err := swag.ReadJSON(raw, &dataAO1); err != nil {
 		return err
 	}
-	m.Fqdn = propsServerTemplate.Fqdn
 
-	m.ID = propsServerTemplate.ID
+	m.Fqdn = dataAO1.Fqdn
 
-	m.NumOrRange = propsServerTemplate.NumOrRange
+	m.ID = dataAO1.ID
 
-	m.Port = propsServerTemplate.Port
+	m.NumOrRange = dataAO1.NumOrRange
 
-	m.Prefix = propsServerTemplate.Prefix
+	m.Port = dataAO1.Port
+
+	m.Prefix = dataAO1.Prefix
 
 	return nil
 }
 
 // MarshalJSON marshals this object to a JSON structure
 func (m ServerTemplate) MarshalJSON() ([]byte, error) {
-	_parts := make([][]byte, 0, 1)
+	_parts := make([][]byte, 0, 2)
 
 	aO0, err := swag.WriteJSON(m.ServerParams)
 	if err != nil {
 		return nil, err
 	}
 	_parts = append(_parts, aO0)
-
-	// now for regular properties
-	var propsServerTemplate struct {
+	var dataAO1 struct {
 		Fqdn string `json:"fqdn"`
 
 		ID *int64 `json:"id,omitempty"`
@@ -122,21 +121,22 @@ func (m ServerTemplate) MarshalJSON() ([]byte, error) {
 
 		Prefix string `json:"prefix"`
 	}
-	propsServerTemplate.Fqdn = m.Fqdn
 
-	propsServerTemplate.ID = m.ID
+	dataAO1.Fqdn = m.Fqdn
 
-	propsServerTemplate.NumOrRange = m.NumOrRange
+	dataAO1.ID = m.ID
 
-	propsServerTemplate.Port = m.Port
+	dataAO1.NumOrRange = m.NumOrRange
 
-	propsServerTemplate.Prefix = m.Prefix
+	dataAO1.Port = m.Port
 
-	jsonDataPropsServerTemplate, errServerTemplate := swag.WriteJSON(propsServerTemplate)
-	if errServerTemplate != nil {
-		return nil, errServerTemplate
+	dataAO1.Prefix = m.Prefix
+
+	jsonDataAO1, errAO1 := swag.WriteJSON(dataAO1)
+	if errAO1 != nil {
+		return nil, errAO1
 	}
-	_parts = append(_parts, jsonDataPropsServerTemplate)
+	_parts = append(_parts, jsonDataAO1)
 	return swag.ConcatJSON(_parts...), nil
 }
 
@@ -190,6 +190,7 @@ func (m *ServerTemplate) validateNumOrRange(formats strfmt.Registry) error {
 }
 
 func (m *ServerTemplate) validatePort(formats strfmt.Registry) error {
+
 	if swag.IsZero(m.Port) { // not required
 		return nil
 	}

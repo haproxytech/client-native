@@ -70,8 +70,8 @@ func (m *Server) UnmarshalJSON(raw []byte) error {
 	}
 	m.ServerParams = aO0
 
-	// now for regular properties
-	var propsServer struct {
+	// AO1
+	var dataAO1 struct {
 		Address string `json:"address"`
 
 		ID *int64 `json:"id,omitempty"`
@@ -80,32 +80,31 @@ func (m *Server) UnmarshalJSON(raw []byte) error {
 
 		Port *int64 `json:"port,omitempty"`
 	}
-	if err := swag.ReadJSON(raw, &propsServer); err != nil {
+	if err := swag.ReadJSON(raw, &dataAO1); err != nil {
 		return err
 	}
-	m.Address = propsServer.Address
 
-	m.ID = propsServer.ID
+	m.Address = dataAO1.Address
 
-	m.Name = propsServer.Name
+	m.ID = dataAO1.ID
 
-	m.Port = propsServer.Port
+	m.Name = dataAO1.Name
+
+	m.Port = dataAO1.Port
 
 	return nil
 }
 
 // MarshalJSON marshals this object to a JSON structure
 func (m Server) MarshalJSON() ([]byte, error) {
-	_parts := make([][]byte, 0, 1)
+	_parts := make([][]byte, 0, 2)
 
 	aO0, err := swag.WriteJSON(m.ServerParams)
 	if err != nil {
 		return nil, err
 	}
 	_parts = append(_parts, aO0)
-
-	// now for regular properties
-	var propsServer struct {
+	var dataAO1 struct {
 		Address string `json:"address"`
 
 		ID *int64 `json:"id,omitempty"`
@@ -114,19 +113,20 @@ func (m Server) MarshalJSON() ([]byte, error) {
 
 		Port *int64 `json:"port,omitempty"`
 	}
-	propsServer.Address = m.Address
 
-	propsServer.ID = m.ID
+	dataAO1.Address = m.Address
 
-	propsServer.Name = m.Name
+	dataAO1.ID = m.ID
 
-	propsServer.Port = m.Port
+	dataAO1.Name = m.Name
 
-	jsonDataPropsServer, errServer := swag.WriteJSON(propsServer)
-	if errServer != nil {
-		return nil, errServer
+	dataAO1.Port = m.Port
+
+	jsonDataAO1, errAO1 := swag.WriteJSON(dataAO1)
+	if errAO1 != nil {
+		return nil, errAO1
 	}
-	_parts = append(_parts, jsonDataPropsServer)
+	_parts = append(_parts, jsonDataAO1)
 	return swag.ConcatJSON(_parts...), nil
 }
 
@@ -184,6 +184,7 @@ func (m *Server) validateName(formats strfmt.Registry) error {
 }
 
 func (m *Server) validatePort(formats strfmt.Registry) error {
+
 	if swag.IsZero(m.Port) { // not required
 		return nil
 	}
