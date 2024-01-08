@@ -210,6 +210,8 @@ global
   set-var proc.threshold int(200),sub(proc.prio)
   set-var-fmt proc.bootid "%pid|%t"
   set-var-fmt proc.current_state "primary"
+  server-state-base /path
+  server-state-file serverstatefile
   presetenv first order
   setenv third sister
   resetenv first second

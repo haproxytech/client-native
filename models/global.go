@@ -174,11 +174,6 @@ type Global struct {
 	// limited quic
 	LimitedQuic bool `json:"limited_quic,omitempty"`
 
-	// load server state from file
-	// Enum: [global local none]
-	// +kubebuilder:validation:Enum=global;local;none;
-	LoadServerStateFromFile string `json:"load_server_state_from_file,omitempty"`
-
 	// localpeer
 	// Pattern: ^[^\s]+$
 	// +kubebuilder:validation:Pattern=`^[^\s]+$`
@@ -493,10 +488,6 @@ func (m *Global) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateHttpclientSslVerify(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateLoadServerStateFromFile(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -1062,51 +1053,6 @@ func (m *Global) validateHttpclientSslVerify(formats strfmt.Registry) error {
 
 	// value enum
 	if err := m.validateHttpclientSslVerifyEnum("httpclient_ssl_verify", "body", *m.HttpclientSslVerify); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-var globalTypeLoadServerStateFromFilePropEnum []interface{}
-
-func init() {
-	var res []string
-	if err := json.Unmarshal([]byte(`["global","local","none"]`), &res); err != nil {
-		panic(err)
-	}
-	for _, v := range res {
-		globalTypeLoadServerStateFromFilePropEnum = append(globalTypeLoadServerStateFromFilePropEnum, v)
-	}
-}
-
-const (
-
-	// GlobalLoadServerStateFromFileGlobal captures enum value "global"
-	GlobalLoadServerStateFromFileGlobal string = "global"
-
-	// GlobalLoadServerStateFromFileLocal captures enum value "local"
-	GlobalLoadServerStateFromFileLocal string = "local"
-
-	// GlobalLoadServerStateFromFileNone captures enum value "none"
-	GlobalLoadServerStateFromFileNone string = "none"
-)
-
-// prop value enum
-func (m *Global) validateLoadServerStateFromFileEnum(path, location string, value string) error {
-	if err := validate.EnumCase(path, location, value, globalTypeLoadServerStateFromFilePropEnum, true); err != nil {
-		return err
-	}
-	return nil
-}
-
-func (m *Global) validateLoadServerStateFromFile(formats strfmt.Registry) error {
-	if swag.IsZero(m.LoadServerStateFromFile) { // not required
-		return nil
-	}
-
-	// value enum
-	if err := m.validateLoadServerStateFromFileEnum("load_server_state_from_file", "body", m.LoadServerStateFromFile); err != nil {
 		return err
 	}
 

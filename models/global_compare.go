@@ -305,10 +305,6 @@ func (s Global) Equal(t Global, opts ...Options) bool {
 		return false
 	}
 
-	if s.LoadServerStateFromFile != t.LoadServerStateFromFile {
-		return false
-	}
-
 	if s.Localpeer != t.Localpeer {
 		return false
 	}
@@ -1012,10 +1008,6 @@ func (s Global) Diff(t Global, opts ...Options) map[string][]interface{} {
 
 	if s.LimitedQuic != t.LimitedQuic {
 		diff["LimitedQuic"] = []interface{}{s.LimitedQuic, t.LimitedQuic}
-	}
-
-	if s.LoadServerStateFromFile != t.LoadServerStateFromFile {
-		diff["LoadServerStateFromFile"] = []interface{}{s.LoadServerStateFromFile, t.LoadServerStateFromFile}
 	}
 
 	if s.Localpeer != t.Localpeer {

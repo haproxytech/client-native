@@ -1212,12 +1212,6 @@ definitions:
               type: string
           limited_quic:
               type: boolean
-          load_server_state_from_file:
-              enum:
-                  - global
-                  - local
-                  - none
-              type: string
           localpeer:
               pattern: ^[^\s]+$
               type: string

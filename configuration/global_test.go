@@ -171,6 +171,12 @@ func TestGetGlobal(t *testing.T) {
 	if global.SpreadChecks != 10 {
 		t.Errorf("SpreadChecks is %v, expected 10", global.SpreadChecks)
 	}
+	if global.ServerStateBase != "/path" {
+		t.Errorf("ServerStateBase is %v, expected /path", global.ServerStateBase)
+	}
+	if global.ServerStateFile != "serverstatefile" {
+		t.Errorf("ServerStateFile is %v, expected serverstatefile", global.ServerStateFile)
+	}
 	if global.WurflOptions.DataFile != "path" {
 		t.Errorf("WurflDataFile is %v, expected path", global.WurflOptions.DataFile)
 	}
