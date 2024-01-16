@@ -164,7 +164,9 @@ func (c *client) DeleteParser(transactionID string) error {
 	if !ok {
 		return NewConfError(ErrTransactionDoesNotExist, transactionID)
 	}
+	c.clientMu.Lock()
 	delete(c.parsers, transactionID)
+	c.clientMu.Unlock()
 	return nil
 }
 
