@@ -155,7 +155,7 @@ test:
   tags:
     - go
   before_script:
-    - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN $CI_REGISTRY_GO
+    - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY_GO
     - docker pull $CI_REGISTRY_GO/client-native-env:$HAPROXY_VERSION
     - docker image tag $CI_REGISTRY_GO/client-native-env:$HAPROXY_VERSION test_env:$HAPROXY_VERSION
     - docker build -f ./e2e/Dockerfile --build-arg HAPROXY_VERSION=${HAPROXY_VERSION} -t client-native-test:${HAPROXY_VERSION} .
