@@ -163,7 +163,7 @@ test:
     - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
     - if: $CI_PIPELINE_SOURCE == 'push'
   before_script:
-    - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN $CI_REGISTRY_GO
+    - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY_GO
     - docker pull -q $CI_REGISTRY_GO/golang:$GO_VERSION-alpine
     - docker image tag $CI_REGISTRY_GO/golang:$GO_VERSION-alpine golang:$GO_VERSION-alpine
     - docker pull -q $CI_REGISTRY_GO/haproxy-alpine:$HAPROXY_VERSION
