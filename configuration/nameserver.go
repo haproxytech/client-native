@@ -53,7 +53,7 @@ func (c *client) GetNameservers(resolverSection string, transactionID string) (i
 
 	nameservers, err := ParseNameservers(resolverSection, p)
 	if err != nil {
-		return v, nil, c.HandleError("", "resolvers", resolverSection, "", false, err)
+		return v, nil, c.HandleError("", ResolverParentName, resolverSection, "", false, err)
 	}
 
 	return v, nameservers, nil
@@ -91,11 +91,11 @@ func (c *client) DeleteNameserver(name string, resolverSection string, transacti
 	nameserver, i := GetNameserverByName(name, resolverSection, p)
 	if nameserver == nil {
 		e := NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("Nameserver %s does not exist in resolvers section %s", name, resolverSection))
-		return c.HandleError(name, "resolvers", resolverSection, t, transactionID == "", e)
+		return c.HandleError(name, ResolverParentName, resolverSection, t, transactionID == "", e)
 	}
 
 	if err := p.Delete(parser.Resolvers, resolverSection, "nameserver", i); err != nil {
-		return c.HandleError(name, "resolvers", resolverSection, t, transactionID == "", err)
+		return c.HandleError(name, ResolverParentName, resolverSection, t, transactionID == "", err)
 	}
 
 	return c.SaveData(p, t, transactionID == "")
@@ -118,11 +118,11 @@ func (c *client) CreateNameserver(resolverSection string, data *models.Nameserve
 	nameserver, _ := GetNameserverByName(data.Name, resolverSection, p)
 	if nameserver != nil {
 		e := NewConfError(ErrObjectAlreadyExists, fmt.Sprintf("Nameserver %s already exists in resolvers section %s", data.Name, resolverSection))
-		return c.HandleError(data.Name, "resolvers", resolverSection, t, transactionID == "", e)
+		return c.HandleError(data.Name, ResolverParentName, resolverSection, t, transactionID == "", e)
 	}
 
 	if err := p.Insert(parser.Resolvers, resolverSection, "nameserver", SerializeNameserver(*data), -1); err != nil {
-		return c.HandleError(data.Name, "resolvers", resolverSection, t, transactionID == "", err)
+		return c.HandleError(data.Name, ResolverParentName, resolverSection, t, transactionID == "", err)
 	}
 
 	return c.SaveData(p, t, transactionID == "")
@@ -145,11 +145,11 @@ func (c *client) EditNameserver(name string, resolverSection string, data *model
 	nameserver, i := GetNameserverByName(name, resolverSection, p)
 	if nameserver == nil {
 		e := NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("Nameserver %v does not exist in resolvers section %s", name, resolverSection))
-		return c.HandleError(data.Name, "resolvers", resolverSection, t, transactionID == "", e)
+		return c.HandleError(data.Name, ResolverParentName, resolverSection, t, transactionID == "", e)
 	}
 
 	if err := p.Set(parser.Resolvers, resolverSection, "nameserver", SerializeNameserver(*data), i); err != nil {
-		return c.HandleError(data.Name, "resolvers", resolverSection, t, transactionID == "", err)
+		return c.HandleError(data.Name, ResolverParentName, resolverSection, t, transactionID == "", err)
 	}
 
 	return c.SaveData(p, t, transactionID == "")

@@ -185,7 +185,7 @@ func ParseServers(parentType string, parentName string, p parser.Parser) (models
 	return servers, nil
 }
 
-func parseAddress(address string) (ipOrAddress string, port *int64) {
+func ParseAddress(address string) (ipOrAddress string, port *int64) {
 	if strings.HasPrefix(address, "[") && strings.ContainsRune(address, ']') { // IPv6 with port [2001:0DB8:0000:0000:0000:0000:1428:57ab]:80
 		split := strings.Split(address, "]")
 		split[0] = strings.TrimPrefix(split[0], "[")
@@ -497,7 +497,7 @@ func ParseServer(ondiskServer types.Server) *models.Server {
 	s := &models.Server{
 		Name: ondiskServer.Name,
 	}
-	address, port := parseAddress(ondiskServer.Address)
+	address, port := ParseAddress(ondiskServer.Address)
 	if address == "" {
 		return nil
 	}
@@ -868,11 +868,11 @@ func GetServerByName(name string, parentType string, parentName string, p parser
 func sectionType(parentType string) parser.Section {
 	var sectionType parser.Section
 	switch parentType {
-	case "backend":
+	case BackendParentName:
 		sectionType = parser.Backends
-	case "ring":
+	case RingParentName:
 		sectionType = parser.Ring
-	case "peers":
+	case PeersParentName:
 		sectionType = parser.Peers
 	}
 	return sectionType

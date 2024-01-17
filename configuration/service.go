@@ -34,7 +34,7 @@ type ServiceServer struct {
 	Port    int
 }
 
-type serviceNode struct {
+type ServiceNode struct {
 	address  string
 	port     int64
 	name     string
@@ -46,7 +46,7 @@ type serviceNode struct {
 type Service struct {
 	client        Configuration
 	name          string
-	nodes         []*serviceNode
+	nodes         []*ServiceNode
 	usedNames     map[string]struct{}
 	transactionID string
 	scaling       ScalingParams
@@ -75,7 +75,7 @@ func (c *client) NewService(name string, scaling ScalingParams) (*Service, error
 	service := &Service{
 		client:    c,
 		name:      name,
-		nodes:     make([]*serviceNode, 0),
+		nodes:     make([]*ServiceNode, 0),
 		usedNames: make(map[string]struct{}),
 		scaling:   scaling,
 	}
@@ -158,7 +158,7 @@ func (s *Service) Update(servers []ServiceServer) (bool, error) {
 
 // GetServers returns the list of servers as they are currently configured in the services backend
 func (s *Service) GetServers() (models.Servers, error) {
-	_, servers, err := s.client.GetServers("backend", s.name, s.transactionID)
+	_, servers, err := s.client.GetServers(BackendParentName, s.name, s.transactionID)
 	return servers, err
 }
 
@@ -265,7 +265,7 @@ func (s *Service) getLastNodeIndex(nodeCount int) (int, bool) {
 
 func (s *Service) removeNodesAfterIndex(lastIndex int) error {
 	for i := lastIndex; i < len(s.nodes); i++ {
-		err := s.client.DeleteServer(s.nodes[i].name, "backend", s.name, s.transactionID, 0)
+		err := s.client.DeleteServer(s.nodes[i].name, BackendParentName, s.name, s.transactionID, 0)
 		if err != nil {
 			return err
 		}
@@ -290,12 +290,12 @@ func (s *Service) createBackend(from string) (bool, error) {
 }
 
 func (s *Service) loadNodes() (bool, error) {
-	_, servers, err := s.client.GetServers("backend", s.name, s.transactionID)
+	_, servers, err := s.client.GetServers(BackendParentName, s.name, s.transactionID)
 	if err != nil {
 		return false, err
 	}
 	for _, server := range servers {
-		sNode := &serviceNode{
+		sNode := &ServiceNode{
 			name:     server.Name,
 			address:  server.Address,
 			port:     *server.Port,
@@ -328,7 +328,7 @@ func (s *Service) updateConfig() (bool, error) {
 			if node.disabled {
 				server.Maintenance = "enabled"
 			}
-			err := s.client.EditServer(node.name, "backend", s.name, server, s.transactionID, 0)
+			err := s.client.EditServer(node.name, BackendParentName, s.name, server, s.transactionID, 0)
 			if err != nil {
 				return false, err
 			}
@@ -339,7 +339,7 @@ func (s *Service) updateConfig() (bool, error) {
 	return reload, nil
 }
 
-func (s *Service) nodeRemoved(node *serviceNode, servers []ServiceServer) bool {
+func (s *Service) nodeRemoved(node *ServiceNode, servers []ServiceServer) bool {
 	for _, server := range servers {
 		if s.nodesMatch(node, server) {
 			return false
@@ -348,7 +348,7 @@ func (s *Service) nodeRemoved(node *serviceNode, servers []ServiceServer) bool {
 	return true
 }
 
-func (s *Service) nodesMatch(sNode *serviceNode, servers ServiceServer) bool {
+func (s *Service) nodesMatch(sNode *ServiceNode, servers ServiceServer) bool {
 	return !sNode.disabled && sNode.address == servers.Address && sNode.port == int64(servers.Port)
 }
 
@@ -385,11 +385,11 @@ func (s *Service) addNode() error {
 			Maintenance: "enabled",
 		},
 	}
-	err := s.client.CreateServer("backend", s.name, server, s.transactionID, 0)
+	err := s.client.CreateServer(BackendParentName, s.name, server, s.transactionID, 0)
 	if err != nil {
 		return err
 	}
-	s.nodes = append(s.nodes, &serviceNode{
+	s.nodes = append(s.nodes, &ServiceNode{
 		name:     name,
 		address:  "127.0.0.1",
 		port:     80,
@@ -430,4 +430,8 @@ func (s *Service) swapDisabledNode(index int) {
 			break
 		}
 	}
+}
+
+func (s *Service) GetNodes() []*ServiceNode {
+	return s.nodes
 }

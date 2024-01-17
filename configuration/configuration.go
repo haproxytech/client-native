@@ -36,6 +36,18 @@ import (
 	"github.com/haproxytech/client-native/v5/models"
 )
 
+const (
+	BackendParentName    = "backend"
+	FrontendParentName   = "frontend"
+	DefaultsParentName   = "defaults"
+	LogForwardParentName = "log_forward"
+	PeersParentName      = "peers"
+	RingParentName       = "ring"
+	GlobalParentName     = "global"
+	FCGIAppParentName    = "fcgi-app"
+	ResolverParentName   = "resolvers"
+)
+
 // ClientParams is just a placeholder for all client options
 type ClientParams struct {
 	ConfigurationFile         string

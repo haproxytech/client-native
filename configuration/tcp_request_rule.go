@@ -77,9 +77,9 @@ func (c *client) GetTCPRequestRule(id int64, parentType, parentName string, tran
 	}
 
 	var section parser.Section
-	if parentType == "backend" {
+	if parentType == BackendParentName {
 		section = parser.Backends
-	} else if parentType == "frontend" {
+	} else if parentType == FrontendParentName {
 		section = parser.Frontends
 	}
 
@@ -105,9 +105,9 @@ func (c *client) DeleteTCPRequestRule(id int64, parentType string, parentName st
 		return err
 	}
 	var section parser.Section
-	if parentType == "backend" {
+	if parentType == BackendParentName {
 		section = parser.Backends
-	} else if parentType == "frontend" {
+	} else if parentType == FrontendParentName {
 		section = parser.Frontends
 	}
 
@@ -134,9 +134,9 @@ func (c *client) CreateTCPRequestRule(parentType string, parentName string, data
 	}
 
 	var section parser.Section
-	if parentType == "backend" {
+	if parentType == BackendParentName {
 		section = parser.Backends
-	} else if parentType == "frontend" {
+	} else if parentType == FrontendParentName {
 		section = parser.Frontends
 	}
 
@@ -169,9 +169,9 @@ func (c *client) EditTCPRequestRule(id int64, parentType string, parentName stri
 	}
 
 	var section parser.Section
-	if parentType == "backend" {
+	if parentType == BackendParentName {
 		section = parser.Backends
-	} else if parentType == "frontend" {
+	} else if parentType == FrontendParentName {
 		section = parser.Frontends
 	}
 
@@ -193,9 +193,9 @@ func (c *client) EditTCPRequestRule(id int64, parentType string, parentName stri
 
 func ParseTCPRequestRules(t, pName string, p parser.Parser) (models.TCPRequestRules, error) {
 	section := parser.Global
-	if t == "frontend" {
+	if t == FrontendParentName {
 		section = parser.Frontends
-	} else if t == "backend" {
+	} else if t == BackendParentName {
 		section = parser.Backends
 	}
 

@@ -52,7 +52,7 @@ func (c *client) GetPeerEntries(peerSection string, transactionID string) (int64
 
 	peerEntries, err := ParsePeerEntries(peerSection, p)
 	if err != nil {
-		return v, nil, c.HandleError("", "peers", peerSection, "", false, err)
+		return v, nil, c.HandleError("", PeersParentName, peerSection, "", false, err)
 	}
 
 	return v, peerEntries, nil
@@ -90,11 +90,11 @@ func (c *client) DeletePeerEntry(name string, peerSection string, transactionID 
 	peerEntry, i := GetPeerEntryByName(name, peerSection, p)
 	if peerEntry == nil {
 		e := NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("PeerEntry %s does not exist in peer section %s", name, peerSection))
-		return c.HandleError(name, "peers", peerSection, t, transactionID == "", e)
+		return c.HandleError(name, PeersParentName, peerSection, t, transactionID == "", e)
 	}
 
 	if err := p.Delete(parser.Peers, peerSection, "peer", i); err != nil {
-		return c.HandleError(name, "peers", peerSection, t, transactionID == "", err)
+		return c.HandleError(name, PeersParentName, peerSection, t, transactionID == "", err)
 	}
 
 	return c.SaveData(p, t, transactionID == "")
@@ -117,11 +117,11 @@ func (c *client) CreatePeerEntry(peerSection string, data *models.PeerEntry, tra
 	peerEntry, _ := GetPeerEntryByName(data.Name, peerSection, p)
 	if peerEntry != nil {
 		e := NewConfError(ErrObjectAlreadyExists, fmt.Sprintf("PeerEntry %s already exists in peer section %s", data.Name, peerSection))
-		return c.HandleError(data.Name, "peers", peerSection, t, transactionID == "", e)
+		return c.HandleError(data.Name, PeersParentName, peerSection, t, transactionID == "", e)
 	}
 
 	if err := p.Insert(parser.Peers, peerSection, "peer", SerializePeerEntry(*data), -1); err != nil {
-		return c.HandleError(data.Name, "peers", peerSection, t, transactionID == "", err)
+		return c.HandleError(data.Name, PeersParentName, peerSection, t, transactionID == "", err)
 	}
 
 	return c.SaveData(p, t, transactionID == "")
@@ -144,11 +144,11 @@ func (c *client) EditPeerEntry(name string, peerSection string, data *models.Pee
 	peerEntry, i := GetPeerEntryByName(name, peerSection, p)
 	if peerEntry == nil {
 		e := NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("PeerEntry %v does not exist in peer section %s", name, peerSection))
-		return c.HandleError(data.Name, "peers", peerSection, t, transactionID == "", e)
+		return c.HandleError(data.Name, PeersParentName, peerSection, t, transactionID == "", e)
 	}
 
 	if err := p.Set(parser.Peers, peerSection, "peer", SerializePeerEntry(*data), i); err != nil {
-		return c.HandleError(data.Name, "peers", peerSection, t, transactionID == "", err)
+		return c.HandleError(data.Name, PeersParentName, peerSection, t, transactionID == "", err)
 	}
 
 	return c.SaveData(p, t, transactionID == "")

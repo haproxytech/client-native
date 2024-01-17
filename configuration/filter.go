@@ -72,9 +72,9 @@ func (c *client) GetFilter(id int64, parentType, parentName string, transactionI
 	}
 
 	var section parser.Section
-	if parentType == "backend" {
+	if parentType == BackendParentName {
 		section = parser.Backends
-	} else if parentType == "frontend" {
+	} else if parentType == FrontendParentName {
 		section = parser.Frontends
 	}
 
@@ -98,9 +98,9 @@ func (c *client) DeleteFilter(id int64, parentType string, parentName string, tr
 	}
 
 	var section parser.Section
-	if parentType == "backend" {
+	if parentType == BackendParentName {
 		section = parser.Backends
-	} else if parentType == "frontend" {
+	} else if parentType == FrontendParentName {
 		section = parser.Frontends
 	}
 
@@ -127,9 +127,9 @@ func (c *client) CreateFilter(parentType string, parentName string, data *models
 	}
 
 	var section parser.Section
-	if parentType == "backend" {
+	if parentType == BackendParentName {
 		section = parser.Backends
-	} else if parentType == "frontend" {
+	} else if parentType == FrontendParentName {
 		section = parser.Frontends
 	}
 
@@ -155,9 +155,9 @@ func (c *client) EditFilter(id int64, parentType string, parentName string, data
 	}
 
 	var section parser.Section
-	if parentType == "backend" {
+	if parentType == BackendParentName {
 		section = parser.Backends
-	} else if parentType == "frontend" {
+	} else if parentType == FrontendParentName {
 		section = parser.Frontends
 	}
 
@@ -174,9 +174,9 @@ func (c *client) EditFilter(id int64, parentType string, parentName string, data
 
 func ParseFilters(t, pName string, p parser.Parser) (models.Filters, error) {
 	section := parser.Global
-	if t == "frontend" {
+	if t == FrontendParentName {
 		section = parser.Frontends
-	} else if t == "backend" {
+	} else if t == BackendParentName {
 		section = parser.Backends
 	}
 
@@ -240,7 +240,7 @@ func ParseFilter(f types.Filter) *models.Filter {
 		return filter
 	case *filters.FcgiApp:
 		return &models.Filter{
-			Type:    "fcgi-app",
+			Type:    FCGIAppParentName,
 			AppName: v.Name,
 		}
 	case *filters.Trace:

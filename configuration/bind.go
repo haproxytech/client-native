@@ -653,11 +653,11 @@ func validateParams(data *models.Bind) error {
 func bindSectionType(parentType string) parser.Section {
 	var sectionType parser.Section
 	switch parentType {
-	case "frontend":
+	case FrontendParentName:
 		sectionType = parser.Frontends
-	case "log_forward":
+	case LogForwardParentName:
 		sectionType = parser.LogForward
-	case "peers":
+	case PeersParentName:
 		sectionType = parser.Peers
 	}
 	return sectionType

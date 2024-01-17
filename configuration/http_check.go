@@ -75,9 +75,9 @@ func (c *client) GetHTTPCheck(id int64, parentType string, parentName string, tr
 	}
 
 	var section parser.Section
-	if parentType == "backend" {
+	if parentType == BackendParentName {
 		section = parser.Backends
-	} else if parentType == "defaults" {
+	} else if parentType == DefaultsParentName {
 		section = parser.Defaults
 		if parentName == "" {
 			parentName = parser.DefaultSectionName
@@ -106,9 +106,9 @@ func (c *client) DeleteHTTPCheck(id int64, parentType string, parentName string,
 	}
 
 	var section parser.Section
-	if parentType == "backend" {
+	if parentType == BackendParentName {
 		section = parser.Backends
-	} else if parentType == "defaults" {
+	} else if parentType == DefaultsParentName {
 		section = parser.Defaults
 		if parentName == "" {
 			parentName = parser.DefaultSectionName
@@ -138,9 +138,9 @@ func (c *client) CreateHTTPCheck(parentType string, parentName string, data *mod
 	}
 
 	var section parser.Section
-	if parentType == "backend" {
+	if parentType == BackendParentName {
 		section = parser.Backends
-	} else if parentType == "defaults" {
+	} else if parentType == DefaultsParentName {
 		section = parser.Defaults
 		if parentName == "" {
 			parentName = parser.DefaultSectionName
@@ -172,9 +172,9 @@ func (c *client) EditHTTPCheck(id int64, parentType string, parentName string, d
 		return err
 	}
 	var section parser.Section
-	if parentType == "backend" {
+	if parentType == BackendParentName {
 		section = parser.Backends
-	} else if parentType == "defaults" {
+	} else if parentType == DefaultsParentName {
 		section = parser.Defaults
 		if parentName == "" {
 			parentName = parser.DefaultSectionName
@@ -199,12 +199,12 @@ func (c *client) EditHTTPCheck(id int64, parentType string, parentName string, d
 func ParseHTTPChecks(t, pName string, p parser.Parser) (models.HTTPChecks, error) {
 	var section parser.Section
 	switch t {
-	case "defaults":
+	case DefaultsParentName:
 		section = parser.Defaults
 		if pName == "" {
 			pName = parser.DefaultSectionName
 		}
-	case "backend":
+	case BackendParentName:
 		section = parser.Backends
 	default:
 		return nil, NewConfError(ErrValidationError, fmt.Sprintf("unsupported section in http_check: %s", t))

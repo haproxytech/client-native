@@ -75,9 +75,9 @@ func (c *client) GetHTTPAfterResponseRule(id int64, parentType, parentName strin
 	}
 
 	var section parser.Section
-	if parentType == "backend" {
+	if parentType == BackendParentName {
 		section = parser.Backends
-	} else if parentType == "frontend" {
+	} else if parentType == FrontendParentName {
 		section = parser.Frontends
 	}
 
@@ -101,9 +101,9 @@ func (c *client) DeleteHTTPAfterResponseRule(id int64, parentType string, parent
 	}
 
 	var section parser.Section
-	if parentType == "backend" {
+	if parentType == BackendParentName {
 		section = parser.Backends
-	} else if parentType == "frontend" {
+	} else if parentType == FrontendParentName {
 		section = parser.Frontends
 	}
 
@@ -129,9 +129,9 @@ func (c *client) CreateHTTPAfterResponseRule(parentType string, parentName strin
 	}
 
 	var section parser.Section
-	if parentType == "backend" {
+	if parentType == BackendParentName {
 		section = parser.Backends
-	} else if parentType == "frontend" {
+	} else if parentType == FrontendParentName {
 		section = parser.Frontends
 	}
 
@@ -164,9 +164,9 @@ func (c *client) EditHTTPAfterResponseRule(id int64, parentType string, parentNa
 	}
 
 	var section parser.Section
-	if parentType == "backend" {
+	if parentType == BackendParentName {
 		section = parser.Backends
-	} else if parentType == "frontend" {
+	} else if parentType == FrontendParentName {
 		section = parser.Frontends
 	}
 
@@ -187,9 +187,9 @@ func (c *client) EditHTTPAfterResponseRule(id int64, parentType string, parentNa
 
 func ParseHTTPAfterRules(t, pName string, p parser.Parser) (models.HTTPAfterResponseRules, error) {
 	section := parser.Global
-	if t == "frontend" {
+	if t == FrontendParentName {
 		section = parser.Frontends
-	} else if t == "backend" {
+	} else if t == BackendParentName {
 		section = parser.Backends
 	}
 

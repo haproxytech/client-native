@@ -51,7 +51,7 @@ func (c *client) GetTables(peerSection string, transactionID string) (int64, mod
 
 	Tables, err := ParseTables(peerSection, p)
 	if err != nil {
-		return v, nil, c.HandleError("", "peers", peerSection, "", false, err)
+		return v, nil, c.HandleError("", PeersParentName, peerSection, "", false, err)
 	}
 
 	return v, Tables, nil
@@ -89,11 +89,11 @@ func (c *client) DeleteTable(name string, peerSection string, transactionID stri
 	Table, i := GetTableByName(name, peerSection, p)
 	if Table == nil {
 		e := NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("Table %s does not exist in peer section %s", name, peerSection))
-		return c.HandleError(name, "peers", peerSection, t, transactionID == "", e)
+		return c.HandleError(name, PeersParentName, peerSection, t, transactionID == "", e)
 	}
 
 	if err := p.Delete(parser.Peers, peerSection, "table", i); err != nil {
-		return c.HandleError(name, "peers", peerSection, t, transactionID == "", err)
+		return c.HandleError(name, PeersParentName, peerSection, t, transactionID == "", err)
 	}
 
 	return c.SaveData(p, t, transactionID == "")
@@ -143,11 +143,11 @@ func (c *client) EditTable(name string, peerSection string, data *models.Table, 
 	Table, i := GetTableByName(name, peerSection, p)
 	if Table == nil {
 		e := NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("Table %v does not exist in peer section %s", name, peerSection))
-		return c.HandleError(data.Name, "peers", peerSection, t, transactionID == "", e)
+		return c.HandleError(data.Name, PeersParentName, peerSection, t, transactionID == "", e)
 	}
 
 	if err := p.Set(parser.Peers, peerSection, "table", SerializeTable(*data), i); err != nil {
-		return c.HandleError(data.Name, "peers", peerSection, t, transactionID == "", err)
+		return c.HandleError(data.Name, PeersParentName, peerSection, t, transactionID == "", err)
 	}
 
 	return c.SaveData(p, t, transactionID == "")

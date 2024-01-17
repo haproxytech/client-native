@@ -232,21 +232,21 @@ func SerializeLogTarget(l models.LogTarget) types.Log {
 func logTargetSectionType(parentType string, parentName string) (parser.Section, string) {
 	var section parser.Section
 	switch parentType {
-	case "global":
+	case GlobalParentName:
 		section = parser.Global
 		parentName = parser.GlobalSectionName
-	case "defaults":
+	case DefaultsParentName:
 		section = parser.Defaults
 		if parentName == "" {
 			parentName = parser.DefaultSectionName
 		}
-	case "backend":
+	case BackendParentName:
 		section = parser.Backends
-	case "frontend":
+	case FrontendParentName:
 		section = parser.Frontends
-	case "log_forward":
+	case LogForwardParentName:
 		section = parser.LogForward
-	case "peers":
+	case PeersParentName:
 		section = parser.Peers
 	}
 	return section, parentName

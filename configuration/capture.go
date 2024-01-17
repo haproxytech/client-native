@@ -49,7 +49,7 @@ func (c *client) GetDeclareCaptures(frontend string, transactionID string) (int6
 	}
 	captures, err := ParseDeclareCaptures(frontend, p)
 	if err != nil {
-		return v, nil, c.HandleError("", "frontend", frontend, "", false, err)
+		return v, nil, c.HandleError("", FrontendParentName, frontend, "", false, err)
 	}
 	return v, captures, nil
 }
@@ -67,9 +67,9 @@ func (c *client) GetDeclareCapture(index int64, frontend string, transactionID s
 		return 0, nil, err
 	}
 
-	data, err := p.GetOne("frontend", frontend, "declare capture", int(index))
+	data, err := p.GetOne(FrontendParentName, frontend, "declare capture", int(index))
 	if err != nil {
-		return v, nil, c.HandleError(strconv.FormatInt(index, 10), "frontend", frontend, "", false, err)
+		return v, nil, c.HandleError(strconv.FormatInt(index, 10), FrontendParentName, frontend, "", false, err)
 	}
 
 	declareCapture := ParseDeclareCapture(data.(types.DeclareCapture))
@@ -84,8 +84,8 @@ func (c *client) DeleteDeclareCapture(index int64, frontend string, transactionI
 	if err != nil {
 		return err
 	}
-	if err := p.Delete("frontend", frontend, "declare capture", int(index)); err != nil {
-		return c.HandleError(strconv.FormatInt(index, 10), "frontend", frontend, t, transactionID == "", err)
+	if err := p.Delete(FrontendParentName, frontend, "declare capture", int(index)); err != nil {
+		return c.HandleError(strconv.FormatInt(index, 10), FrontendParentName, frontend, t, transactionID == "", err)
 	}
 	return c.SaveData(p, t, transactionID == "")
 }
@@ -103,8 +103,8 @@ func (c *client) CreateDeclareCapture(frontend string, data *models.Capture, tra
 	if err != nil {
 		return err
 	}
-	if err := p.Insert("frontend", frontend, "declare capture", SerializeDeclareCapture(*data), int(*data.Index)); err != nil {
-		return c.HandleError(strconv.FormatInt(*data.Index, 10), "frontend", frontend, t, transactionID == "", err)
+	if err := p.Insert(FrontendParentName, frontend, "declare capture", SerializeDeclareCapture(*data), int(*data.Index)); err != nil {
+		return c.HandleError(strconv.FormatInt(*data.Index, 10), FrontendParentName, frontend, t, transactionID == "", err)
 	}
 	return c.SaveData(p, t, transactionID == "")
 }
@@ -122,15 +122,15 @@ func (c *client) EditDeclareCapture(index int64, frontend string, data *models.C
 	if err != nil {
 		return err
 	}
-	if _, err := p.GetOne("frontend", frontend, "declare capture", int(index)); err != nil {
-		return c.HandleError(strconv.FormatInt(index, 10), "frontend", frontend, t, transactionID == "", err)
+	if _, err := p.GetOne(FrontendParentName, frontend, "declare capture", int(index)); err != nil {
+		return c.HandleError(strconv.FormatInt(index, 10), FrontendParentName, frontend, t, transactionID == "", err)
 	}
 	return c.SaveData(p, t, transactionID == "")
 }
 
 func ParseDeclareCaptures(frontend string, p parser.Parser) (models.Captures, error) {
 	captures := models.Captures{}
-	data, err := p.Get("frontend", frontend, "declare capture", false)
+	data, err := p.Get(FrontendParentName, frontend, "declare capture", false)
 	if err != nil {
 		if errors.Is(err, parser_errors.ErrFetch) {
 			return captures, nil

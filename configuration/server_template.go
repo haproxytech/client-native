@@ -52,7 +52,7 @@ func (c *client) GetServerTemplates(backend string, transactionID string) (int64
 
 	templates, err := ParseServerTemplates(backend, p)
 	if err != nil {
-		return v, nil, c.HandleError("", "backend", backend, "", false, err)
+		return v, nil, c.HandleError("", BackendParentName, backend, "", false, err)
 	}
 
 	return v, templates, nil
@@ -90,11 +90,11 @@ func (c *client) DeleteServerTemplate(prefix string, backend string, transaction
 	template, i := GetServerTemplateByPrefix(prefix, backend, p)
 	if template == nil {
 		e := NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("Server template %s does not exist in backend %s", prefix, backend))
-		return c.HandleError(prefix, "backend", backend, t, transactionID == "", e)
+		return c.HandleError(prefix, BackendParentName, backend, t, transactionID == "", e)
 	}
 
 	if err := p.Delete(parser.Backends, backend, "server-template", i); err != nil {
-		return c.HandleError(prefix, "backend", backend, t, transactionID == "", err)
+		return c.HandleError(prefix, BackendParentName, backend, t, transactionID == "", err)
 	}
 
 	return c.SaveData(p, t, transactionID == "")
@@ -117,11 +117,11 @@ func (c *client) CreateServerTemplate(backend string, data *models.ServerTemplat
 	template, _ := GetServerTemplateByPrefix(data.Prefix, backend, p)
 	if template != nil {
 		e := NewConfError(ErrObjectAlreadyExists, fmt.Sprintf("Server template %s already exists in backend %s", data.Prefix, backend))
-		return c.HandleError(data.Prefix, "backend", backend, t, transactionID == "", e)
+		return c.HandleError(data.Prefix, BackendParentName, backend, t, transactionID == "", e)
 	}
 
 	if err := p.Insert(parser.Backends, backend, "server-template", SerializeServerTemplate(*data), -1); err != nil {
-		return c.HandleError(data.Prefix, "backend", backend, t, transactionID == "", err)
+		return c.HandleError(data.Prefix, BackendParentName, backend, t, transactionID == "", err)
 	}
 
 	return c.SaveData(p, t, transactionID == "")
@@ -144,11 +144,11 @@ func (c *client) EditServerTemplate(prefix string, backend string, data *models.
 	template, i := GetServerTemplateByPrefix(prefix, backend, p)
 	if template == nil {
 		e := NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("Server template %v does not exist in backend %s", prefix, backend))
-		return c.HandleError(data.Prefix, "backend", backend, t, transactionID == "", e)
+		return c.HandleError(data.Prefix, BackendParentName, backend, t, transactionID == "", e)
 	}
 
 	if err := p.Set(parser.Backends, backend, "server-template", SerializeServerTemplate(*data), i); err != nil {
-		return c.HandleError(data.Prefix, "backend", backend, t, transactionID == "", err)
+		return c.HandleError(data.Prefix, BackendParentName, backend, t, transactionID == "", err)
 	}
 
 	return c.SaveData(p, t, transactionID == "")
