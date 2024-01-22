@@ -5,7 +5,7 @@ go 1.19
 require (
 	github.com/go-openapi/errors v0.21.0
 	github.com/go-openapi/strfmt v0.22.0
-	github.com/go-openapi/swag v0.22.7
+	github.com/go-openapi/swag v0.22.8
 	github.com/go-openapi/validate v0.22.6
 	github.com/google/go-cmp v0.6.0
 	github.com/google/renameio v1.0.1
