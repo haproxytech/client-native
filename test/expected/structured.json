@@ -490,9 +490,6 @@
         "ulimit_n": 10,
         "unsetenv": "third fourth",
         "user": "thomas",
-        "waf-body-limit": 15000,
-        "waf-json-levels": 8,
-        "waf-load": "/tmp/rules.conf",
         "wurfl_options": {
             "cache_size": 64,
             "data_file": "path",
@@ -1085,18 +1082,6 @@
                     "var_name": "my_var",
                     "var_scope": "req"
                 }
-            ],
-            "waf_body_rules": [
-                {
-                    "index": 0,
-                    "type": "allow"
-                },
-                {
-                    "cond": "if",
-                    "cond_test": "{ var(txn.myip) -m ip 127.0.0.0/8 10.0.0.0/8 }",
-                    "index": 1,
-                    "type": "deny"
-                }
             ]
         },
         {
@@ -1263,51 +1248,6 @@
             "total_max_size": 1024
         }
     ],
-    "dynamic_update": {
-        "dynamic_update_rules": [
-            {
-                "ciphers": "ECDHE+aRSA+AES256",
-                "crt": "/etc/haproxy/site.pem",
-                "force_sslv3": true,
-                "force_tlsv10": true,
-                "force_tlsv11": true,
-                "force_tlsv12": true,
-                "no_sslv3": true,
-                "no_tls_tickets": true,
-                "no_tlsv10": true,
-                "no_tlsv11": true,
-                "no_tlsv12": true,
-                "verify": "required",
-                "verifyhost": "site.com",
-                "delay": 300000,
-                "dontlog-normal": true,
-                "id": "/etc/hapee-2.5/redirects.map",
-                "index": 0,
-                "log": true,
-                "map": true,
-                "modified": true,
-                "purge_count": 1000,
-                "purge_id": "5000",
-                "purge_interval": 10000,
-                "retries": 3,
-                "source_address": "127.0.0.1",
-                "source_port": 80,
-                "timeout": 5000,
-                "tls_ticket_keys": true,
-                "url": "http://10.0.0.1:80/redirects.map",
-                "xdelay": 300000,
-                "xmodified": true,
-                "xnext": 10000,
-                "xretry": 5000,
-                "xstart": 5000
-            },
-            {
-                "id": "/etc/hapee-2.4/redirects.map",
-                "index": 1,
-                "url": "http://10.0.0.2:81/redirects.map"
-            }
-        ]
-    },
     "fcgi_apps": [
         {
             "docroot": "/path/to/chroot",
@@ -1579,14 +1519,6 @@
                     "capture_sample": "res.header",
                     "index": 0,
                     "type": "capture"
-                }
-            ],
-            "waf_body_rules": [
-                {
-                    "cond": "unless",
-                    "cond_test": "{ var(txn.jwt_alg) \"RS256\" }",
-                    "index": 0,
-                    "type": "deny"
                 }
             ]
         },
@@ -2863,40 +2795,6 @@
                     "index": 32,
                     "server_name": "srv3",
                     "type": "session"
-                }
-            ],
-            "waf_body_rules": [
-                {
-                    "cond": "if",
-                    "cond_test": "src 192.168.0.0/16",
-                    "index": 0,
-                    "type": "allow"
-                },
-                {
-                    "index": 1,
-                    "type": "set-var",
-                    "var_expr": "req.fhdr(user-agent),lower",
-                    "var_name": "my_var",
-                    "var_scope": "req"
-                },
-                {
-                    "cond": "if",
-                    "cond_test": "FALSE",
-                    "index": 2,
-                    "type": "unset-var",
-                    "var_name": "my_var",
-                    "var_scope": "req"
-                },
-                {
-                    "cond": "unless",
-                    "cond_test": "src 192.168.0.0/16",
-                    "index": 3,
-                    "type": "deny"
-                },
-                {
-                    "deny_status": 400,
-                    "index": 4,
-                    "type": "deny"
                 }
             ]
         }
