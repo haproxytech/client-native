@@ -5,7 +5,7 @@ info:
   description: |
     API for editing and managing haproxy instances. Provides process information, configuration management,
     haproxy stats and logs.
-  version: '2.9'
+  version: '3.0'
   contact:
     name: HAProxy Support
     url: https://my.haproxy.com/portal/cust/login
@@ -648,7 +648,7 @@ parameters:
 securityDefinitions:
   basic_auth:
     type: basic
-basePath: /v2
+basePath: /v3
 schemes:
   - http
   - https
