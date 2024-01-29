@@ -16,7 +16,7 @@ limitations under the License.
 
 package options
 
-import "github.com/haproxytech/client-native/v5/runtime"
+import "github.com/haproxytech/client-native/v6/runtime"
 
 type rntm struct {
 	cfg runtime.Runtime

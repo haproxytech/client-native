@@ -22,8 +22,8 @@ import (
 	"os/exec"
 	"testing"
 
-	client_native "github.com/haproxytech/client-native/v5"
-	"github.com/haproxytech/client-native/v5/e2e"
+	client_native "github.com/haproxytech/client-native/v6"
+	"github.com/haproxytech/client-native/v6/e2e"
 	"github.com/stretchr/testify/suite"
 )
 

@@ -20,7 +20,7 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/haproxytech/client-native/v5/misc"
+	"github.com/haproxytech/client-native/v6/misc"
 )
 
 func TestSingleSpoe_GetConfigurationVersion(t *testing.T) {

@@ -25,7 +25,7 @@ import (
 	parser_errors "github.com/haproxytech/config-parser/v5/errors"
 	"github.com/haproxytech/config-parser/v5/types"
 
-	"github.com/haproxytech/client-native/v5/models"
+	"github.com/haproxytech/client-native/v6/models"
 )
 
 type Group interface {

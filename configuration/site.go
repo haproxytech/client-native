@@ -23,8 +23,8 @@ import (
 	"github.com/go-openapi/strfmt"
 	parser "github.com/haproxytech/config-parser/v5"
 
-	"github.com/haproxytech/client-native/v5/misc"
-	"github.com/haproxytech/client-native/v5/models"
+	"github.com/haproxytech/client-native/v6/misc"
+	"github.com/haproxytech/client-native/v6/models"
 )
 
 type Site interface {

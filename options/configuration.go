@@ -16,7 +16,7 @@ limitations under the License.
 
 package options
 
-import "github.com/haproxytech/client-native/v5/configuration"
+import "github.com/haproxytech/client-native/v6/configuration"
 
 type config struct {
 	cfg configuration.Configuration

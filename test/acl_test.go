@@ -26,8 +26,8 @@ import (
 	parser "github.com/haproxytech/config-parser/v5"
 	"github.com/stretchr/testify/require"
 
-	"github.com/haproxytech/client-native/v5/configuration"
-	"github.com/haproxytech/client-native/v5/models"
+	"github.com/haproxytech/client-native/v6/configuration"
+	"github.com/haproxytech/client-native/v6/models"
 )
 
 func aclExpectation() map[string]models.Acls {

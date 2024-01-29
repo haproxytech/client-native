@@ -23,9 +23,9 @@ import (
 
 	"github.com/google/go-cmp/cmp"
 	"github.com/google/go-cmp/cmp/cmpopts"
-	"github.com/haproxytech/client-native/v5/configuration"
-	"github.com/haproxytech/client-native/v5/misc"
-	"github.com/haproxytech/client-native/v5/models"
+	"github.com/haproxytech/client-native/v6/configuration"
+	"github.com/haproxytech/client-native/v6/misc"
+	"github.com/haproxytech/client-native/v6/models"
 	"github.com/stretchr/testify/require"
 )
 

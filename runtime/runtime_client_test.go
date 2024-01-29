@@ -18,7 +18,7 @@ package runtime
 import (
 	"testing"
 
-	"github.com/haproxytech/client-native/v5/models"
+	"github.com/haproxytech/client-native/v6/models"
 	"github.com/stretchr/testify/assert"
 )
 

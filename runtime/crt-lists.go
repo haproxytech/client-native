@@ -6,7 +6,7 @@ import (
 	"strconv"
 	"strings"
 
-	native_errors "github.com/haproxytech/client-native/v5/errors"
+	native_errors "github.com/haproxytech/client-native/v6/errors"
 )
 
 type CrtLists []*CrtList

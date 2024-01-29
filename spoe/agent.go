@@ -24,9 +24,9 @@ import (
 	"github.com/haproxytech/config-parser/v5/spoe"
 	"github.com/haproxytech/config-parser/v5/types"
 
-	conf "github.com/haproxytech/client-native/v5/configuration"
-	"github.com/haproxytech/client-native/v5/misc"
-	"github.com/haproxytech/client-native/v5/models"
+	conf "github.com/haproxytech/client-native/v6/configuration"
+	"github.com/haproxytech/client-native/v6/misc"
+	"github.com/haproxytech/client-native/v6/models"
 )
 
 // GetAgents returns configuration version and an array of

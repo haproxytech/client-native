@@ -23,7 +23,7 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/haproxytech/client-native/v5/misc"
+	"github.com/haproxytech/client-native/v6/misc"
 	"github.com/stretchr/testify/require"
 )
 

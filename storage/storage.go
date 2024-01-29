@@ -30,8 +30,8 @@ import (
 
 	"github.com/google/renameio"
 
-	conf "github.com/haproxytech/client-native/v5/configuration"
-	"github.com/haproxytech/client-native/v5/misc"
+	conf "github.com/haproxytech/client-native/v6/configuration"
+	"github.com/haproxytech/client-native/v6/misc"
 )
 
 type FileType string

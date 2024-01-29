@@ -6,8 +6,8 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/haproxytech/client-native/v5/errors"
-	"github.com/haproxytech/client-native/v5/models"
+	"github.com/haproxytech/client-native/v6/errors"
+	"github.com/haproxytech/client-native/v6/models"
 )
 
 // SetTableEntry create or update a stick-table entry in the table.

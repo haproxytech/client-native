@@ -16,7 +16,7 @@ limitations under the License.
 
 package options
 
-import "github.com/haproxytech/client-native/v5/storage"
+import "github.com/haproxytech/client-native/v6/storage"
 
 type mapStore struct {
 	storage storage.Storage

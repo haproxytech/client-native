@@ -17,10 +17,10 @@ limitations under the License.
 package options
 
 import (
-	"github.com/haproxytech/client-native/v5/configuration"
-	"github.com/haproxytech/client-native/v5/runtime"
-	"github.com/haproxytech/client-native/v5/spoe"
-	"github.com/haproxytech/client-native/v5/storage"
+	"github.com/haproxytech/client-native/v6/configuration"
+	"github.com/haproxytech/client-native/v6/runtime"
+	"github.com/haproxytech/client-native/v6/spoe"
+	"github.com/haproxytech/client-native/v6/storage"
 )
 
 type Options struct {

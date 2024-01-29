@@ -3,8 +3,8 @@ package configuration
 import (
 	"github.com/haproxytech/config-parser/v5/parsers/http/actions"
 
-	"github.com/haproxytech/client-native/v5/misc"
-	"github.com/haproxytech/client-native/v5/models"
+	"github.com/haproxytech/client-native/v6/misc"
+	"github.com/haproxytech/client-native/v6/models"
 )
 
 func actionHdr2ModelHdr(hdrs []*actions.Hdr) []*models.ReturnHeader {

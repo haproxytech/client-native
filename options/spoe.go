@@ -16,7 +16,7 @@ limitations under the License.
 
 package options
 
-import "github.com/haproxytech/client-native/v5/spoe"
+import "github.com/haproxytech/client-native/v6/spoe"
 
 type sp struct {
 	storage spoe.Spoe

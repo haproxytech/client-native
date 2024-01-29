@@ -20,7 +20,7 @@ models can be generated with [make models](Makefile). It automatically combines 
 ## Usage Example
 
 ```go
-//import cfg_opt "github.com/haproxytech/client-native/v5/configuration/options"
+//import cfg_opt "github.com/haproxytech/client-native/v6/configuration/options"
 confClient, err := configuration.New(context.Background(),
     cfg_opt.ConfigurationFile(haproxyOptions.ConfigFile),
     cfg_opt.HAProxyBin(haproxyOptions.HAProxy),
@@ -35,7 +35,7 @@ if err != nil {
 }
 
 // runtime
-// import runtime_options "github.com/haproxytech/client-native/v5/runtime/options"
+// import runtime_options "github.com/haproxytech/client-native/v6/runtime/options"
 nbproc := 8
 ms := runtime_options.MasterSocket(masterSocket, nbproc)
 runtimeClient, err = runtime_api.New(ctx, ms)
@@ -53,7 +53,7 @@ if err != nil {
 }
 // end runtime
 
-// import "github.com/haproxytech/client-native/v5/options"
+// import "github.com/haproxytech/client-native/v6/options"
 opt := []options.Option{
     options.Configuration(confClient),
     options.Runtime(runtimeClient),

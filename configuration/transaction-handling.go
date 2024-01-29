@@ -22,7 +22,7 @@ import (
 	parser_options "github.com/haproxytech/config-parser/v5/options"
 	"github.com/haproxytech/config-parser/v5/types"
 
-	"github.com/haproxytech/client-native/v5/models"
+	"github.com/haproxytech/client-native/v6/models"
 )
 
 type TransactionHandling interface {

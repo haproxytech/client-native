@@ -22,8 +22,8 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"github.com/haproxytech/client-native/v5/misc"
-	"github.com/haproxytech/client-native/v5/models"
+	"github.com/haproxytech/client-native/v6/misc"
+	"github.com/haproxytech/client-native/v6/models"
 )
 
 func TestSingleSpoe_GetGroups(t *testing.T) {

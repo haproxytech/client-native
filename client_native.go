@@ -21,10 +21,10 @@ import (
 	"log"
 	"sync"
 
-	"github.com/haproxytech/client-native/v5/configuration"
-	"github.com/haproxytech/client-native/v5/runtime"
-	"github.com/haproxytech/client-native/v5/spoe"
-	"github.com/haproxytech/client-native/v5/storage"
+	"github.com/haproxytech/client-native/v6/configuration"
+	"github.com/haproxytech/client-native/v6/runtime"
+	"github.com/haproxytech/client-native/v6/spoe"
+	"github.com/haproxytech/client-native/v6/storage"
 )
 
 // LogFunc - default log function is from the stdlib
