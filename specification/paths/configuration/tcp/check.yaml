@@ -26,14 +26,7 @@ tcp_checks:
             description: Configuration file version
             type: string
         schema:
-          type: object
-          required:
-            - data
-          properties:
-            data:
-              $ref: "#/definitions/tcp_checks"
-            _version:
-              type: integer
+          $ref: "#/definitions/tcp_checks"
       'default':
         $ref: '#/responses/DefaultError'
   post:
@@ -112,12 +105,7 @@ tcp_checks_one:
             description: Configuration file version
             type: string
         schema:
-          type: object
-          properties:
-            data:
-              $ref: "#/definitions/tcp_check"
-            _version:
-              type: integer
+          $ref: "#/definitions/tcp_check"
       '404':
         $ref: '#/responses/NotFound'
       'default':

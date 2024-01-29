@@ -65,8 +65,6 @@ spoes_one:
           properties:
             data:
               type: string
-            _version:
-              type: integer
       '404':
         $ref: '#/responses/NotFound'
       'default':
@@ -112,14 +110,7 @@ spoe_scopes:
             description: Spoe configuration file version
             type: string
         schema:
-          type: object
-          properties:
-            data:
-              $ref: "#/definitions/spoe_scopes"
-            _version:
-              type: integer
-          required:
-            - data
+          $ref: "#/definitions/spoe_scopes"
       'default':
         $ref: '#/responses/DefaultError'
   post:
@@ -179,14 +170,7 @@ spoe_scopes_one:
             description: Spoe configuration file version
             type: string
         schema:
-          type: object
-          properties:
-            data:
-              $ref: "#/definitions/spoe_scope"
-            _version:
-              type: integer
-          required:
-            - data
+          $ref: "#/definitions/spoe_scope"
       '404':
         $ref: '#/responses/NotFound'
       'default':
@@ -244,14 +228,7 @@ spoe_agents:
             description: Spoe configuration file version
             type: string
         schema:
-          type: object
-          properties:
-            data:
-              $ref: "#/definitions/spoe_agents"
-            _version:
-              type: integer
-          required:
-            - data
+          $ref: "#/definitions/spoe_agents"
       'default':
         $ref: '#/responses/DefaultError'
   post:
@@ -321,14 +298,7 @@ spoe_agents_one:
             description: Spoe configuration file version
             type: string
         schema:
-          type: object
-          properties:
-            data:
-              $ref: "#/definitions/spoe_agent"
-            _version:
-              type: integer
-          required:
-            - data
+          $ref: "#/definitions/spoe_agent"
       '404':
         $ref: '#/responses/NotFound'
       'default':
@@ -431,14 +401,7 @@ spoe_messages:
             description: Spoe configuration file version
             type: string
         schema:
-          type: object
-          properties:
-            data:
-              $ref: "#/definitions/spoe_messages"
-            _version:
-              type: integer
-          required:
-            - data
+          $ref: "#/definitions/spoe_messages"
       'default':
         $ref: '#/responses/DefaultError'
   post:
@@ -508,14 +471,7 @@ spoe_messages_one:
             description: Spoe configuration file version
             type: string
         schema:
-          type: object
-          properties:
-            data:
-              $ref: "#/definitions/spoe_message"
-            _version:
-              type: integer
-          required:
-            - data
+          $ref: "#/definitions/spoe_message"
       '404':
         $ref: '#/responses/NotFound'
       'default':
@@ -618,14 +574,7 @@ spoe_groups:
             description: Spoe configuration file version
             type: string
         schema:
-          type: object
-          properties:
-            data:
-              $ref: "#/definitions/spoe_groups"
-            _version:
-              type: integer
-          required:
-            - data
+          $ref: "#/definitions/spoe_groups"
       'default':
         $ref: '#/responses/DefaultError'
   post:
@@ -695,14 +644,7 @@ spoe_groups_one:
             description: Spoe configuration file version
             type: string
         schema:
-          type: object
-          properties:
-            data:
-              $ref: "#/definitions/spoe_group"
-            _version:
-              type: integer
-          required:
-            - data
+          $ref: "#/definitions/spoe_group"
       '404':
         $ref: '#/responses/NotFound'
       'default':

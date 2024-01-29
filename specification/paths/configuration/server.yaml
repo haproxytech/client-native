@@ -29,14 +29,7 @@ servers:
             description: Configuration file version
             type: string
         schema:
-          type: object
-          required:
-            - data
-          properties:
-            data:
-              $ref: "#/definitions/servers"
-            _version:
-              type: integer
+          $ref: "#/definitions/servers"
       'default':
         $ref: '#/responses/DefaultError'
   post:
@@ -121,12 +114,7 @@ servers_one:
             description: Configuration file version
             type: string
         schema:
-          type: object
-          properties:
-            data:
-              $ref: "#/definitions/server"
-            _version:
-              type: integer
+          $ref: "#/definitions/server"
       '404':
         $ref: '#/responses/NotFound'
       'default':
@@ -247,14 +235,7 @@ server_templates:
             type: integer
             x-nullable: false
         schema:
-          type: object
-          required:
-            - data
-          properties:
-            data:
-              $ref: "#/definitions/server_templates"
-            _version:
-              type: integer
+          $ref: "#/definitions/server_templates"
       'default':
         $ref: '#/responses/DefaultError'
   post:
@@ -324,12 +305,7 @@ server_templates_one:
             type: integer
             x-nullable: false
         schema:
-          type: object
-          properties:
-            data:
-              $ref: "#/definitions/server_template"
-            _version:
-              type: integer
+          $ref: "#/definitions/server_template"
       '404':
         $ref: '#/responses/NotFound'
       'default':

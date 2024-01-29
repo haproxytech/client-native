@@ -31,8 +31,6 @@ configuration:
           properties:
             data:
               type: string
-            _version:
-              type: integer
       'default':
         $ref: '#/responses/DefaultError'
   post:

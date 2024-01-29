@@ -16,14 +16,7 @@ backends:
             description: Configuration file version
             type: string
         schema:
-          type: object
-          required:
-            - data
-          properties:
-            data:
-              $ref: "#/definitions/backends"
-            _version:
-              type: integer
+          $ref: "#/definitions/backends"
       'default':
         $ref: '#/responses/DefaultError'
   post:
@@ -82,12 +75,7 @@ backends_one:
             description: Configuration file version
             type: string
         schema:
-          type: object
-          properties:
-            data:
-              $ref: "#/definitions/backend"
-            _version:
-              type: integer
+          $ref: "#/definitions/backend"
       '404':
         $ref: '#/responses/NotFound'
       'default':

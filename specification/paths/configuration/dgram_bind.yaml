@@ -21,14 +21,7 @@ dgram_binds:
             description: Configuration file version
             type: string
         schema:
-          type: object
-          required:
-            - data
-          properties:
-            data:
-              $ref: "#/definitions/dgram_binds"
-            _version:
-              type: integer
+          $ref: "#/definitions/dgram_binds"
       'default':
         $ref: '#/responses/DefaultError'
   post:
@@ -97,12 +90,7 @@ dgram_binds_one:
             description: Configuration file version
             type: string
         schema:
-          type: object
-          properties:
-            data:
-              $ref: "#/definitions/dgram_bind"
-            _version:
-              type: integer
+          $ref: "#/definitions/dgram_bind"
       '404':
         $ref: '#/responses/AlreadyExists'
       'default':

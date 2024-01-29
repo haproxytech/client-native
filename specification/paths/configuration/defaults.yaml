@@ -17,12 +17,7 @@ defaults:
             description: Configuration file version
             type: string
         schema:
-          type: object
-          properties:
-            data:
-              $ref: "#/definitions/defaults"
-            _version:
-              type: integer
+          $ref: "#/definitions/defaults"
       'default':
         $ref: '#/responses/DefaultError'
   put:

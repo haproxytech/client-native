@@ -29,14 +29,7 @@ binds:
             description: Configuration file version
             type: string
         schema:
-          type: object
-          required:
-            - data
-          properties:
-            data:
-              $ref: "#/definitions/binds"
-            _version:
-              type: integer
+          $ref: "#/definitions/binds"
       'default':
         $ref: '#/responses/DefaultError'
   post:
@@ -121,12 +114,7 @@ binds_one:
             description: Configuration file version
             type: string
         schema:
-          type: object
-          properties:
-            data:
-              $ref: "#/definitions/bind"
-            _version:
-              type: integer
+          $ref: "#/definitions/bind"
       '404':
         $ref: '#/responses/AlreadyExists'
       'default':

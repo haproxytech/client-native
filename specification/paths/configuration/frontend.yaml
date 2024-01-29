@@ -16,14 +16,7 @@ frontends:
             description: Configuration file version
             type: string
         schema:
-          type: object
-          required:
-            - data
-          properties:
-            data:
-              $ref: "#/definitions/frontends"
-            _version:
-              type: integer
+          $ref: "#/definitions/frontends"
       'default':
         $ref: '#/responses/DefaultError'
   post:
@@ -82,12 +75,7 @@ frontends_one:
             description: Configuration file version
             type: string
         schema:
-          type: object
-          properties:
-            data:
-              $ref: "#/definitions/frontend"
-            _version:
-              type: integer
+          $ref: "#/definitions/frontend"
       '404':
         $ref: '#/responses/NotFound'
       'default':
