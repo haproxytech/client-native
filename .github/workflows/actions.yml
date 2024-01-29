@@ -40,7 +40,7 @@ jobs:
       - name: clearing models
         run: rm -rf models/*
       - name: generating models
-        run: make models equal
+        run: make models
       - name: changes
         run: test -z "$(git diff 2> /dev/null)" || exit "Models are not generated, issue \`make models equal\` and commit the result"
       - name: untracked files
