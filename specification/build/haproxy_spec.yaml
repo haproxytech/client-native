@@ -14163,7 +14163,7 @@ paths:
                   headers:
                       Configuration-Version:
                           description: Configuration file version
-                          type: integer
+                          type: string
                           x-nullable: false
                   schema:
                       $ref: '#/definitions/server_templates'
@@ -14266,7 +14266,7 @@ paths:
                   headers:
                       Configuration-Version:
                           description: Configuration file version
-                          type: integer
+                          type: string
                           x-nullable: false
                   schema:
                       $ref: '#/definitions/server_template'

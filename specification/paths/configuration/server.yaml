@@ -232,7 +232,7 @@ server_templates:
         headers:
           Configuration-Version:
             description: Configuration file version
-            type: integer
+            type: string
             x-nullable: false
         schema:
           $ref: "#/definitions/server_templates"
@@ -302,7 +302,7 @@ server_templates_one:
         headers:
           Configuration-Version:
             description: Configuration file version
-            type: integer
+            type: string
             x-nullable: false
         schema:
           $ref: "#/definitions/server_template"
