@@ -26,6 +26,10 @@ import (
 )
 
 //go:embed expected/structured.json
+var expectedStructuredV2JSON []byte
+var expectedStructuredV2 map[string]interface{}
+
+//go:embed expected/structured.json
 var expectedStructuredJSON []byte
 var expectedStructured map[string]interface{}
 
@@ -33,390 +37,541 @@ var onceStrutructured sync.Once
 
 func initStructuredExpected() {
 	onceStrutructured.Do(func() {
-		err := json.Unmarshal(expectedStructuredJSON, &expectedStructured)
+		err := json.Unmarshal(expectedStructuredV2JSON, &expectedStructuredV2)
+		if err != nil {
+			panic(err)
+		}
+		err = json.Unmarshal(expectedStructuredJSON, &expectedStructured)
 		if err != nil {
 			panic(err)
 		}
 	})
 }
 
-func expectedResources[T any](res T, elementKey string) error {
+func expectedResources[T any](elementKey string) (map[string]T, error) {
 	v := expectedStructured[elementKey]
 	j, err := json.Marshal(v)
 	if err != nil {
-		return err
+		return nil, err
 	}
-	err = json.Unmarshal(j, &res)
+	var elems map[string]T
+	err = json.Unmarshal(j, &elems)
+	if err != nil {
+		// Case Defaults, Globals
+		var elem T
+		err = json.Unmarshal(j, &elem)
+		if err != nil {
+			return nil, err
+		}
+		return map[string]T{"": elem}, err
+	}
+
+	return elems, nil
+}
+
+func expectedChildResources[P, T any](res map[string][]T, parentKey, parentNameKey, elementKey string) error {
+	v := expectedStructured[parentKey]
+	parentMap, ok := v.(map[string]interface{})
+	if !ok {
+		return fmt.Errorf("expectedStructuredV3[%s] is not a map[string]interface{}", parentKey)
+	}
+
+	for pname, pmvalue := range parentMap {
+		var pkey string
+		switch parentKey {
+		case "frontends":
+			pkey = configuration.FrontendParentName
+		case "backends":
+			pkey = configuration.BackendParentName
+		case "fcgi_apps":
+			pkey = configuration.FCGIAppParentName
+		case "log_forwards":
+			pkey = configuration.LogForwardParentName
+		case "userlists":
+			pkey = "userlist"
+		case "mailers_sections":
+			pkey = "mailers_sections"
+		case "resolvers":
+			pkey = configuration.ResolverParentName
+		case "peers":
+			pkey = configuration.PeersParentName
+		case "rings":
+			pkey = configuration.RingParentName
+		case "defaults":
+			pkey = configuration.DefaultsParentName
+		}
+		key := fmt.Sprintf("%s/%s", pkey, pname)
+		if pname == "dynamic_update_rule_list" {
+			key = "dynamic_update"
+		}
+
+		switch pmap := pmvalue.(type) {
+		case map[string]interface{}:
+			e, ok := pmap[elementKey]
+			if !ok {
+				res[key] = []T{}
+				continue
+			}
+			// Case list of T
+			var resources []T
+			elistj, err := json.Marshal(e)
+			if err != nil {
+				return err
+			}
+			err = json.Unmarshal(elistj, &resources)
+			if err == nil {
+				res[key] = append(res[key], resources...)
+			} else {
+				// Case map[string]T
+				var resources map[string]T
+				err = json.Unmarshal(elistj, &resources)
+				if err != nil {
+					return err
+				}
+				for _, v := range resources {
+					res[key] = append(res[key], v)
+				}
+			}
+		case []interface{}:
+			// Case dynnamic update rule
+			var resources []T
+			elistj, err := json.Marshal(pmap)
+			if err != nil {
+				continue
+			}
+			err = json.Unmarshal(elistj, &resources)
+			if err == nil {
+				res[key] = append(res[key], resources...)
+			}
+		default:
+			// fmt.Printf("pmap type not handled: %+v\n", pmap)
+			continue
+		}
+
+	}
+
+	return nil
+}
+
+func expectedRootChildResources[P, T any](res map[string][]T, parentKey, parentNameKey, elementKey string) error {
+	v := expectedStructured[parentKey]
+	parentMap, ok := v.(map[string]interface{})
+	if !ok {
+		return fmt.Errorf("expectedStructuredV3[%s] is not a map[string]interface{}", parentKey)
+	}
+	key := parentKey
+
+	e, ok := parentMap[elementKey]
+	if !ok {
+		res[key] = []T{}
+	}
+	var resources []T
+	elistj, err := json.Marshal(e)
 	if err != nil {
 		return err
 	}
-	return nil
-}
 
-func expectedChildResources[P, T any](res map[string]T, parentKey, parentNameKey, elementKey string) error {
-	v := expectedStructured[parentKey]
-	vlist, ok := v.([]interface{})
-	if ok {
-		for _, p := range vlist {
-			pj, err := json.Marshal(p)
-			if err != nil {
-				return err
-			}
-			var parent P
-			err = json.Unmarshal(pj, &parent)
-			if err != nil {
-				return err
-			}
-
-			pmap := p.(map[string]interface{})
-			pName, ok := pmap[parentNameKey]
-			if !ok {
-				continue
-			}
-			var pkey string
-			switch parentKey {
-			case "frontends":
-				pkey = configuration.FrontendParentName
-			case "backends":
-				pkey = configuration.BackendParentName
-			case "fcgi_apps":
-				pkey = configuration.FCGIAppParentName
-			case "log_forwards":
-				pkey = configuration.LogForwardParentName
-			case "userlists":
-				pkey = "userlist"
-			case "mailers_sections":
-				pkey = "mailers_sections"
-			case "resolvers":
-				pkey = configuration.ResolverParentName
-			case "peers":
-				pkey = configuration.PeersParentName
-			case "rings":
-				pkey = configuration.RingParentName
-			}
-			key := fmt.Sprintf("%s/%s", pkey, pName)
-
-			ellist, ok := pmap[elementKey]
-			if !ok {
-				res[key] = *new(T)
-				continue
-			}
-			elistj, err := json.Marshal(ellist)
-			if err != nil {
-				return err
-			}
-			var resources T
-			err = json.Unmarshal(elistj, &resources)
-			if err != nil {
-				return err
-			}
-			res[key] = resources
-		}
-	} else {
-		pmap := v.(map[string]interface{})
-		key := parentKey
-
-		ellist, ok := pmap[elementKey]
-		if !ok {
-			res[key] = *new(T)
-		}
-		elistj, err := json.Marshal(ellist)
-		if err != nil {
-			return err
-		}
-		var resources T
-		err = json.Unmarshal(elistj, &resources)
-		if err != nil {
-			return err
-		}
-		res[key] = resources
+	err = json.Unmarshal(elistj, &resources)
+	if err == nil {
+		res[key] = append(res[key], resources...)
 	}
 
 	return nil
 }
 
+func toResMap[T any](keyRoot string, resources map[string]T) map[string][]*T {
+	res := make(map[string][]*T)
+	for _, v := range resources {
+		currentv := v
+		res[keyRoot] = append(res[keyRoot], &currentv)
+	}
+	return res
+}
+
+func toSliceOfPtrs[T any](resources []T) []*T {
+	res := make([]*T, 0)
+	for _, v := range resources {
+		currentv := v
+		res = append(res, &currentv)
+	}
+	return res
+}
+
 func StructuredToBackendMap() map[string]models.Backends {
-	var l models.Backends
-	_ = expectedResources(&l, "backends")
+	resources, _ := expectedResources[models.Backend]("backends")
 	res := make(map[string]models.Backends)
 	keyRoot := ""
-	res[keyRoot] = l
+	t := toResMap(keyRoot, resources)
+	res[keyRoot] = t[keyRoot]
 	return res
 }
 
 func StructuredToFrontendMap() map[string]models.Frontends {
-	var l models.Frontends
-	_ = expectedResources(&l, "frontends")
+	resources, _ := expectedResources[models.Frontend]("frontends")
 	res := make(map[string]models.Frontends)
 	keyRoot := ""
-	res[keyRoot] = l
+	t := toResMap(keyRoot, resources)
+	res[keyRoot] = t[keyRoot]
 	return res
 }
 
 func StructuredToCacheMap() map[string]models.Caches {
-	var l models.Caches
-	_ = expectedResources(&l, "caches")
+	resources, _ := expectedResources[models.Cache]("caches")
 	res := make(map[string]models.Caches)
 	keyRoot := ""
-	res[keyRoot] = l
+	t := toResMap(keyRoot, resources)
+	res[keyRoot] = t[keyRoot]
 	return res
 }
 
 func StructuredToACLMap() map[string]models.Acls {
 	res := make(map[string]models.Acls)
-	_ = expectedChildResources[models.Frontend](res, "frontends", "name", "acls")
-	_ = expectedChildResources[models.Backend](res, "backends", "name", "acls")
-	_ = expectedChildResources[models.FCGIApp](res, "fcgi_apps", "name", "acls")
+	resources := make(map[string][]models.ACL)
+	_ = expectedChildResources[models.Frontend, models.ACL](resources, "frontends", "name", "acl_list")
+	_ = expectedChildResources[models.Backend, models.ACL](resources, "backends", "name", "acl_list")
+	_ = expectedChildResources[models.FCGIApp, models.ACL](resources, "fcgi_apps", "name", "acl_list")
+	for k, v := range resources {
+		res[k] = toSliceOfPtrs(v)
+	}
 	return res
 }
 
 func StructuredToBackendSwitchingRuleMap() map[string]models.BackendSwitchingRules {
 	res := make(map[string]models.BackendSwitchingRules)
-	_ = expectedChildResources[models.Frontend](res, "frontends", "name", "backend_switching_rules")
+	resources := make(map[string][]models.BackendSwitchingRule)
+	_ = expectedChildResources[models.Frontend, models.BackendSwitchingRule](resources, "frontends", "name", "backend_switching_rule_list")
+	for k, v := range resources {
+		res[k] = toSliceOfPtrs(v)
+	}
 	return res
 }
 
 func StructuredToBindMap() map[string]models.Binds {
 	res := make(map[string]models.Binds)
-	_ = expectedChildResources[models.Frontend](res, "frontends", "name", "binds")
-	_ = expectedChildResources[models.LogForward](res, "log_forwards", "name", "binds")
-	_ = expectedChildResources[models.PeerSection](res, "peers", "name", "binds")
+	resources := make(map[string][]models.Bind)
+	_ = expectedChildResources[models.Frontend, models.Bind](resources, "frontends", "name", "binds")
+	_ = expectedChildResources[models.LogForward, models.Bind](resources, "log_forwards", "name", "binds")
+	_ = expectedChildResources[models.PeerSection, models.Bind](resources, "peers", "name", "bindss")
+	for k, v := range resources {
+		res[k] = toSliceOfPtrs(v)
+	}
 	return res
 }
 
 func StructuredToCaptureMap() map[string]models.Captures {
 	res := make(map[string]models.Captures)
-	_ = expectedChildResources[models.Frontend](res, "frontends", "name", "captures")
+	resources := make(map[string][]models.Capture)
+	_ = expectedChildResources[models.Frontend, models.Capture](resources, "frontends", "name", "captures")
+	for k, v := range resources {
+		res[k] = toSliceOfPtrs(v)
+	}
 	return res
 }
 
 func StructuredToDefaultsMap() models.Defaults {
-	var l models.Defaults
-	_ = expectedResources(&l, "defaults")
-	return l
+	resources, _ := expectedResources[models.Defaults]("defaults")
+	return resources[""]
 }
 
 func StructuredToGlobalMap() models.Global {
-	var l models.Global
-	_ = expectedResources(&l, "global")
-	return l
+	resources, _ := expectedResources[models.Global]("global")
+	return resources[""]
 }
 
 func StructuredToNamedDefaultsMap() map[string][]*models.Defaults {
-	var l []*models.Defaults
+	resources, _ := expectedResources[models.Defaults]("named_defaults")
 	res := make(map[string][]*models.Defaults)
-	_ = expectedResources(&l, "named_defaults")
-	for _, v := range l {
-		res[v.Name] = append(res[v.Name], v)
+	for _, v := range resources {
+		currentv := v
+		res[v.Name] = append(res[v.Name], &currentv)
 	}
 	return res
 }
 
 func StructuredToDgramBindMap() map[string]models.DgramBinds {
 	res := make(map[string]models.DgramBinds)
-	_ = expectedChildResources[models.LogForward](res, "log_forwards", "name", "dgram_binds")
+	resources := make(map[string][]models.DgramBind)
+	_ = expectedChildResources[models.LogForward, models.DgramBind](resources, "log_forwards", "name", "dgram_binds")
+	for k, v := range resources {
+		res[k] = toSliceOfPtrs(v)
+	}
 	return res
 }
 
 func StructuredToFCGIAppMap() map[string]models.FCGIApps {
+	resources, _ := expectedResources[models.FCGIApp]("fcgi_apps")
 	res := make(map[string]models.FCGIApps)
-	var l models.FCGIApps
-	_ = expectedResources(&l, "fcgi_apps")
 	keyRoot := ""
-	res[keyRoot] = l
+	t := toResMap(keyRoot, resources)
+	res[keyRoot] = t[keyRoot]
 	return res
 }
 
 func StructuredToFilterMap() map[string]models.Filters {
 	res := make(map[string]models.Filters)
-	_ = expectedChildResources[models.Frontend](res, "frontends", "name", "filters")
-	_ = expectedChildResources[models.Backend](res, "backends", "name", "filters")
+	resources := make(map[string][]models.Filter)
+	_ = expectedChildResources[models.Frontend, models.Filter](resources, "frontends", "name", "filter_list")
+	_ = expectedChildResources[models.Backend, models.Filter](resources, "backends", "name", "filter_list")
+	for k, v := range resources {
+		res[k] = toSliceOfPtrs(v)
+	}
 	return res
 }
 
 func StructuredToGroupMap() map[string]models.Groups {
 	res := make(map[string]models.Groups)
-	_ = expectedChildResources[models.Userlist](res, "userlists", "name", "groups")
+	resources := make(map[string][]models.Group)
+	_ = expectedChildResources[models.Userlist, models.Group](resources, "userlists", "name", "groups")
+	for k, v := range resources {
+		res[k] = toSliceOfPtrs(v)
+	}
 	return res
 }
 
 func StructuredToHTTPAfterResponseRuleMap() map[string]models.HTTPAfterResponseRules {
 	res := make(map[string]models.HTTPAfterResponseRules)
-	_ = expectedChildResources[models.Frontend](res, "frontends", "name", "http_after_response_rules")
-	_ = expectedChildResources[models.Backend](res, "backends", "name", "http_after_response_rules")
+	resources := make(map[string][]models.HTTPAfterResponseRule)
+	_ = expectedChildResources[models.Frontend, models.HTTPAfterResponseRule](resources, "frontends", "name", "http_after_response_rule_list")
+	_ = expectedChildResources[models.Backend, models.HTTPAfterResponseRule](resources, "backends", "name", "http_after_response_rule_list")
+	for k, v := range resources {
+		res[k] = toSliceOfPtrs(v)
+	}
 	return res
 }
 
 func StructuredToHTTPCheckMap() map[string]models.HTTPChecks {
 	res := make(map[string]models.HTTPChecks)
-	_ = expectedChildResources[models.Backend](res, "backends", "name", "http_checks")
-	_ = expectedChildResources[models.Defaults](res, "defaults", "name", "http_checks")
+	resources := make(map[string][]models.HTTPCheck)
+	_ = expectedChildResources[models.Backend, models.HTTPCheck](resources, "backends", "name", "http_check_list")
+	_ = expectedRootChildResources[models.Defaults, models.HTTPCheck](resources, "defaults", "name", "http_check_list")
+	for k, v := range resources {
+		res[k] = toSliceOfPtrs(v)
+	}
 	return res
 }
 
 func StructuredToHTTPErrorRuleMap() map[string]models.HTTPErrorRules {
 	res := make(map[string]models.HTTPErrorRules)
-	_ = expectedChildResources[models.Backend](res, "backends", "name", "http_error_rules")
-	_ = expectedChildResources[models.Frontend](res, "frontends", "name", "http_error_rules")
-	_ = expectedChildResources[models.Defaults](res, "defaults", "name", "http_error_rules")
+	resources := make(map[string][]models.HTTPErrorRule)
+	_ = expectedChildResources[models.Backend, models.HTTPErrorRule](resources, "backends", "name", "http_error_rule_list")
+	_ = expectedChildResources[models.Frontend, models.HTTPErrorRule](resources, "frontends", "name", "http_error_rule_list")
+	_ = expectedRootChildResources[models.Defaults, models.HTTPErrorRule](resources, "defaults", "name", "http_error_rule_list")
+	for k, v := range resources {
+		res[k] = toSliceOfPtrs(v)
+	}
 	return res
 }
 
 func StructuredToHTTPErrorSectionMap() map[string]models.HTTPErrorsSections {
+	resources, _ := expectedResources[models.HTTPErrorsSection]("http_errors")
 	res := make(map[string]models.HTTPErrorsSections)
-	var l models.HTTPErrorsSections
-	_ = expectedResources(&l, "http_errors")
 	keyRoot := ""
-	res[keyRoot] = l
+	t := toResMap(keyRoot, resources)
+	res[keyRoot] = t[keyRoot]
 	return res
 }
 
 func StructuredToHTTPRequestRuleMap() map[string]models.HTTPRequestRules {
 	res := make(map[string]models.HTTPRequestRules)
-	_ = expectedChildResources[models.Backend](res, "backends", "name", "http_request_rules")
-	_ = expectedChildResources[models.Frontend](res, "frontends", "name", "http_request_rules")
+	resources := make(map[string][]models.HTTPRequestRule)
+	_ = expectedChildResources[models.Backend, models.HTTPRequestRule](resources, "backends", "name", "http_request_rule_list")
+	_ = expectedChildResources[models.Frontend, models.HTTPRequestRule](resources, "frontends", "name", "http_request_rule_list")
+	for k, v := range resources {
+		res[k] = toSliceOfPtrs(v)
+	}
 	return res
 }
 
 func StructuredToHTTPResponseRuleMap() map[string]models.HTTPResponseRules {
 	res := make(map[string]models.HTTPResponseRules)
-	_ = expectedChildResources[models.Backend](res, "backends", "name", "http_response_rules")
-	_ = expectedChildResources[models.Frontend](res, "frontends", "name", "http_response_rules")
+	resources := make(map[string][]models.HTTPResponseRule)
+	_ = expectedChildResources[models.Backend, models.HTTPResponseRule](resources, "backends", "name", "http_response_rule_list")
+	_ = expectedChildResources[models.Frontend, models.HTTPResponseRule](resources, "frontends", "name", "http_response_rule_list")
+	for k, v := range resources {
+		res[k] = toSliceOfPtrs(v)
+	}
 	return res
 }
 
 func StructuredToLogForwardMap() map[string]models.LogForwards {
+	resources, _ := expectedResources[models.LogForward]("log_forwards")
 	res := make(map[string]models.LogForwards)
-	var l models.LogForwards
-	_ = expectedResources(&l, "log_forwards")
 	keyRoot := ""
-	res[keyRoot] = l
+	t := toResMap(keyRoot, resources)
+	res[keyRoot] = t[keyRoot]
 	return res
 }
 
 func StructuredToLogTargetMap() map[string]models.LogTargets {
 	res := make(map[string]models.LogTargets)
-	_ = expectedChildResources[models.Backend](res, "backends", "name", "log_targets")
-	_ = expectedChildResources[models.Frontend](res, "frontends", "name", "log_targets")
-	_ = expectedChildResources[models.LogForward](res, "log_forwards", "name", "log_targets")
-	_ = expectedChildResources[models.PeerSection](res, "peers", "name", "log_targets")
-	_ = expectedChildResources[models.Defaults](res, "defaults", "name", "log_targets")
-	_ = expectedChildResources[models.Global](res, "global", "name", "log_targets")
+	resources := make(map[string][]models.LogTarget)
+	_ = expectedChildResources[models.Backend, models.LogTarget](resources, "backends", "name", "log_target_list")
+	_ = expectedChildResources[models.Frontend, models.LogTarget](resources, "frontends", "name", "log_target_list")
+	_ = expectedChildResources[models.LogForward, models.LogTarget](resources, "log_forwards", "name", "log_target_list")
+	_ = expectedChildResources[models.PeerSection, models.LogTarget](resources, "peers", "name", "log_target_list")
+	_ = expectedRootChildResources[models.Defaults](resources, "defaults", "name", "log_target_list")
+	_ = expectedRootChildResources[models.Global](resources, "global", "name", "log_target_list")
+	for k, v := range resources {
+		res[k] = toSliceOfPtrs(v)
+	}
 	return res
 }
 
 func StructuredToMailerEntryMap() map[string]models.MailerEntries {
 	res := make(map[string]models.MailerEntries)
-	_ = expectedChildResources[models.MailersSection](res, "mailers_sections", "name", "mailer_entries")
+	resources := make(map[string][]models.MailerEntry)
+	_ = expectedChildResources[models.MailersSection, models.MailerEntry](resources, "mailers_sections", "name", "mailer_entries")
+	for k, v := range resources {
+		res[k] = toSliceOfPtrs(v)
+	}
 	return res
 }
 
 func StructuredToMailersSectionMap() map[string]models.MailersSections {
+	resources, _ := expectedResources[models.MailersSection]("mailers_sections")
 	res := make(map[string]models.MailersSections)
-	var l models.MailersSections
-	_ = expectedResources(&l, "mailers_sections")
 	keyRoot := ""
-	res[keyRoot] = l
+	t := toResMap(keyRoot, resources)
+	res[keyRoot] = t[keyRoot]
 	return res
 }
 
 func StructuredToNameserverMap() map[string]models.Nameservers {
 	res := make(map[string]models.Nameservers)
-	_ = expectedChildResources[models.Resolver](res, "resolvers", "name", "nameservers")
+	resources := make(map[string][]models.Nameserver)
+	_ = expectedChildResources[models.Resolver, models.Nameserver](resources, "resolvers", "name", "nameservers")
+	for k, v := range resources {
+		res[k] = toSliceOfPtrs(v)
+	}
 	return res
 }
 
 func StructuredToPeerEntryMap() map[string]models.PeerEntries {
 	res := make(map[string]models.PeerEntries)
-	_ = expectedChildResources[models.PeerSection](res, "peers", "name", "peer_entries")
+	resources := make(map[string][]models.PeerEntry)
+	_ = expectedChildResources[models.PeerSection, models.PeerEntry](resources, "peers", "name", "peer_entries")
+	for k, v := range resources {
+		res[k] = toSliceOfPtrs(v)
+	}
 	return res
 }
 
 func StructuredToPeerSectionMap() map[string]models.PeerSections {
+	resources, _ := expectedResources[models.PeerSection]("peers")
 	res := make(map[string]models.PeerSections)
-	var l models.PeerSections
-	_ = expectedResources(&l, "peers")
 	keyRoot := ""
-	res[keyRoot] = l
+	t := toResMap(keyRoot, resources)
+	res[keyRoot] = t[keyRoot]
 	return res
 }
 
 func StructuredToProgramMap() map[string]models.Programs {
+	resources, _ := expectedResources[models.Program]("programs")
 	res := make(map[string]models.Programs)
-	var l models.Programs
-	_ = expectedResources(&l, "programs")
 	keyRoot := ""
-	res[keyRoot] = l
+	t := toResMap(keyRoot, resources)
+	res[keyRoot] = t[keyRoot]
 	return res
 }
 
 func StructuredToResolverMap() map[string]models.Resolvers {
+	resources, _ := expectedResources[models.Resolver]("resolvers")
 	res := make(map[string]models.Resolvers)
-	var l models.Resolvers
-	_ = expectedResources(&l, "resolvers")
 	keyRoot := ""
-	res[keyRoot] = l
+	t := toResMap(keyRoot, resources)
+	res[keyRoot] = t[keyRoot]
 	return res
 }
 
 func StructuredToRingMap() map[string]models.Rings {
+	resources, _ := expectedResources[models.Ring]("rings")
 	res := make(map[string]models.Rings)
-	var l models.Rings
-	_ = expectedResources(&l, "rings")
 	keyRoot := ""
-	res[keyRoot] = l
+	t := toResMap(keyRoot, resources)
+	res[keyRoot] = t[keyRoot]
 	return res
 }
 
 func StructuredToServerSwitchingRuleMap() map[string]models.ServerSwitchingRules {
 	res := make(map[string]models.ServerSwitchingRules)
-	_ = expectedChildResources[models.Backend](res, "backends", "name", "server_switching_rules")
+	resources := make(map[string][]models.ServerSwitchingRule)
+	_ = expectedChildResources[models.Backend](resources, "backends", "name", "server_switching_rule_list")
+	for k, v := range resources {
+		res[k] = toSliceOfPtrs(v)
+	}
 	return res
 }
 
 func StructuredToServerTemplateMap() map[string]models.ServerTemplates {
 	res := make(map[string]models.ServerTemplates)
-	_ = expectedChildResources[models.Backend](res, "backends", "name", "server_templates")
-
+	resources := make(map[string][]models.ServerTemplate)
+	_ = expectedChildResources[models.Backend, models.ServerTemplate](resources, "backends", "name", "server_templates")
+	for k, v := range resources {
+		res[k] = toSliceOfPtrs(v)
+	}
 	return res
 }
 
 func StructuredToServerMap() map[string]models.Servers { //nolint:dupl
 	res := make(map[string]models.Servers)
-	_ = expectedChildResources[models.Backend](res, "backends", "name", "servers")
-	_ = expectedChildResources[models.Ring](res, "rings", "name", "servers")
-	_ = expectedChildResources[models.PeerSection](res, "peers", "name", "servers")
+	resources := make(map[string][]models.Server)
+	_ = expectedChildResources[models.Backend, models.Server](resources, "backends", "name", "servers")
+	_ = expectedChildResources[models.Ring, models.Server](resources, "rings", "name", "servers")
+	_ = expectedChildResources[models.PeerSection, models.Server](resources, "peers", "name", "servers")
+	for k, v := range resources {
+		res[k] = toSliceOfPtrs(v)
+	}
 	return res
 }
 
 func StructuredToStickRuleMap() map[string]models.StickRules {
 	res := make(map[string]models.StickRules)
-	_ = expectedChildResources[models.Backend](res, "backends", "name", "stick_rules")
+	resources := make(map[string][]models.StickRule)
+	_ = expectedChildResources[models.Backend, models.StickRule](resources, "backends", "name", "stick_rule_list")
+	for k, v := range resources {
+		res[k] = toSliceOfPtrs(v)
+	}
 	return res
 }
 
 func StructuredToTCPRequestRuleMap() map[string]models.TCPRequestRules {
 	res := make(map[string]models.TCPRequestRules)
-	_ = expectedChildResources[models.Backend](res, "backends", "name", "tcp_request_rules")
-	_ = expectedChildResources[models.Frontend](res, "frontends", "name", "tcp_request_rules")
+	resources := make(map[string][]models.TCPRequestRule)
+	_ = expectedChildResources[models.Backend, models.TCPRequestRule](resources, "backends", "name", "tcp_request_rule_list")
+	_ = expectedChildResources[models.Frontend](resources, "frontends", "name", "tcp_request_rule_list")
+	for k, v := range resources {
+		res[k] = toSliceOfPtrs(v)
+	}
 	return res
 }
 
 func StructuredToTCPResponseRuleMap() map[string]models.TCPResponseRules {
 	res := make(map[string]models.TCPResponseRules)
-	_ = expectedChildResources[models.Backend](res, "backends", "name", "tcp_response_rules")
+	resources := make(map[string][]models.TCPResponseRule)
+	_ = expectedChildResources[models.Backend](resources, "backends", "name", "tcp_response_rule_list")
+	for k, v := range resources {
+		res[k] = toSliceOfPtrs(v)
+	}
 	return res
 }
 
 func StructuredToTCPCheckMap() map[string]models.TCPChecks {
 	res := make(map[string]models.TCPChecks)
-	_ = expectedChildResources[models.Backend](res, "backends", "name", "tcp_checks")
-	_ = expectedChildResources[models.Defaults](res, "defaults", "name", "tcp_checks")
+	resources := make(map[string][]models.TCPCheck)
+	_ = expectedChildResources[models.Backend, models.TCPCheck](resources, "backends", "name", "tcp_check_rule_list")
+	_ = expectedRootChildResources[models.Defaults, models.TCPCheck](resources, "defaults", "name", "tcp_check_rule_list")
+	for k, v := range resources {
+		res[k] = toSliceOfPtrs(v)
+	}
 	return res
 }
 
 func StructuredToUserMap() map[string]models.Users {
 	res := make(map[string]models.Users)
-	_ = expectedChildResources[models.Defaults](res, "userlists", "name", "users")
+	resources := make(map[string][]models.User)
+	_ = expectedChildResources[models.Defaults, models.User](resources, "userlists", "name", "users")
+	for k, v := range resources {
+		res[k] = toSliceOfPtrs(v)
+	}
 	return res
 }

@@ -132,7 +132,7 @@
         "tcp_smart_connect": "enabled",
         "tcpka": "enabled",
         "transparent": "enabled",
-        "http_checks": [
+        "http_check_list": [
             {
                 "index": 0,
                 "type": "send-state"
@@ -142,7 +142,7 @@
                 "type": "disable-on-404"
             }
         ],
-        "http_error_rules": [
+        "http_error_rule_list": [
             {
                 "index": 0,
                 "return_content": "/test/503",
@@ -160,7 +160,7 @@
                 "type": "status"
             }
         ],
-        "tcp_check_rules": [
+        "tcp_check_rule_list": [
             {
                 "action": "send",
                 "data": "GET\\ /\\ HTTP/2.0\\r\\n",
@@ -498,7 +498,7 @@
             "patch_file": "path1,path2"
         },
         "zero_warning": true,
-        "log_targets": [
+        "log_target_list": [
             {
                 "address": "127.0.0.1:10001",
                 "facility": "local0",
@@ -515,8 +515,8 @@
             }
         ]
     },
-    "backends": [
-        {
+    "backends": {
+        "test": {
             "error_files": [
                 {
                     "code": 403,
@@ -698,7 +698,7 @@
             "transparent": "enabled",
             "tunnel_timeout": 5000,
             "use_fcgi_app": "app-name",
-            "http_checks": [
+            "http_check_list": [
                 {
                     "index": 0,
                     "type": "connect"
@@ -790,7 +790,7 @@
                     "type": "disable-on-404"
                 }
             ],
-            "http_request_rules": [
+            "http_request_rule_list": [
                 {
                     "expr": "hdr(x-dst)",
                     "index": 0,
@@ -802,7 +802,7 @@
                     "type": "set-dst-port"
                 }
             ],
-            "server_switching_rules": [
+            "server_switching_rule_list": [
                 {
                     "cond": "if",
                     "cond_test": "TRUE",
@@ -816,87 +816,7 @@
                     "target_server": "webserv2"
                 }
             ],
-            "server_templates": [
-                {
-                    "check": "enabled",
-                    "fqdn": "google.com",
-                    "num_or_range": "1-3",
-                    "port": 80,
-                    "prefix": "srv"
-                },
-                {
-                    "backup": "enabled",
-                    "check": "enabled",
-                    "fqdn": "google.com",
-                    "num_or_range": "1-10",
-                    "port": 8080,
-                    "prefix": "site"
-                },
-                {
-                    "backup": "disabled",
-                    "check": "enabled",
-                    "fqdn": "google.com",
-                    "num_or_range": "10-100",
-                    "port": 443,
-                    "prefix": "website"
-                },
-                {
-                    "backup": "enabled",
-                    "check": "enabled",
-                    "fqdn": "test.com",
-                    "num_or_range": "5",
-                    "port": 0,
-                    "prefix": "test"
-                }
-            ],
-            "servers": [
-                {
-                    "client_sigalgs": "ECDSA+SHA256:RSA+SHA256",
-                    "cookie": "BLAH",
-                    "curves": "secp384r1",
-                    "inter": 2000,
-                    "log-bufsize": 10,
-                    "maxconn": 1000,
-                    "pool_low_conn": 128,
-                    "pool_purge_delay": 10000,
-                    "proxy-v2-options": [
-                        "authority",
-                        "crc32c"
-                    ],
-                    "set-proxy-v2-tlv-fmt": {
-                        "id": "0x20",
-                        "value": "%[fc_pp_tlv(0x20)]"
-                    },
-                    "sigalgs": "ECDSA+SHA256",
-                    "slowstart": 6000,
-                    "ssl": "enabled",
-                    "tcp_ut": 2000,
-                    "weight": 10,
-                    "ws": "h1",
-                    "address": "192.168.1.1",
-                    "id": 1234,
-                    "name": "webserv",
-                    "port": 9200
-                },
-                {
-                    "cookie": "BLAH",
-                    "inter": 2000,
-                    "maxconn": 1000,
-                    "pool_low_conn": 128,
-                    "proxy-v2-options": [
-                        "authority",
-                        "crc32c"
-                    ],
-                    "slowstart": 6000,
-                    "ssl": "enabled",
-                    "weight": 10,
-                    "ws": "h1",
-                    "address": "192.168.1.1",
-                    "name": "webserv2",
-                    "port": 9300
-                }
-            ],
-            "stick_rules": [
+            "stick_rule_list": [
                 {
                     "index": 0,
                     "pattern": "src",
@@ -935,7 +855,7 @@
                     "type": "store-response"
                 }
             ],
-            "tcp_response_rules": [
+            "tcp_response_rule_list": [
                 {
                     "action": "accept",
                     "cond": "if",
@@ -1082,9 +1002,101 @@
                     "var_name": "my_var",
                     "var_scope": "req"
                 }
-            ]
+            ],
+            "waf_body_rule_list": [
+                {
+                    "index": 0,
+                    "type": "allow"
+                },
+                {
+                    "cond": "if",
+                    "cond_test": "{ var(txn.myip) -m ip 127.0.0.0/8 10.0.0.0/8 }",
+                    "index": 1,
+                    "type": "deny"
+                }
+            ],
+            "server_templates": {
+                "site": {
+                    "backup": "enabled",
+                    "check": "enabled",
+                    "fqdn": "google.com",
+                    "num_or_range": "1-10",
+                    "port": 8080,
+                    "prefix": "site"
+                },
+                "srv": {
+                    "check": "enabled",
+                    "fqdn": "google.com",
+                    "num_or_range": "1-3",
+                    "port": 80,
+                    "prefix": "srv"
+                },
+                "test": {
+                    "backup": "enabled",
+                    "check": "enabled",
+                    "fqdn": "test.com",
+                    "num_or_range": "5",
+                    "port": 0,
+                    "prefix": "test"
+                },
+                "website": {
+                    "backup": "disabled",
+                    "check": "enabled",
+                    "fqdn": "google.com",
+                    "num_or_range": "10-100",
+                    "port": 443,
+                    "prefix": "website"
+                }
+            },
+            "servers": {
+                "webserv": {
+                    "client_sigalgs": "ECDSA+SHA256:RSA+SHA256",
+                    "cookie": "BLAH",
+                    "curves": "secp384r1",
+                    "inter": 2000,
+                    "log-bufsize": 10,
+                    "maxconn": 1000,
+                    "pool_low_conn": 128,
+                    "pool_purge_delay": 10000,
+                    "proxy-v2-options": [
+                        "authority",
+                        "crc32c"
+                    ],
+                    "set-proxy-v2-tlv-fmt": {
+                        "id": "0x20",
+                        "value": "%[fc_pp_tlv(0x20)]"
+                    },
+                    "sigalgs": "ECDSA+SHA256",
+                    "slowstart": 6000,
+                    "ssl": "enabled",
+                    "tcp_ut": 2000,
+                    "weight": 10,
+                    "ws": "h1",
+                    "address": "192.168.1.1",
+                    "id": 1234,
+                    "name": "webserv",
+                    "port": 9200
+                },
+                "webserv2": {
+                    "cookie": "BLAH",
+                    "inter": 2000,
+                    "maxconn": 1000,
+                    "pool_low_conn": 128,
+                    "proxy-v2-options": [
+                        "authority",
+                        "crc32c"
+                    ],
+                    "slowstart": 6000,
+                    "ssl": "enabled",
+                    "weight": 10,
+                    "ws": "h1",
+                    "address": "192.168.1.1",
+                    "name": "webserv2",
+                    "port": 9300
+                }
+            }
         },
-        {
+        "test_2": {
             "adv_check": "httpchk",
             "balance": {
                 "algorithm": "roundrobin"
@@ -1194,7 +1206,7 @@
             "tcpka": "enabled",
             "transparent": "disabled",
             "tunnel_timeout": 5000,
-            "http_checks": [
+            "http_check_list": [
                 {
                     "index": 0,
                     "match": "rstatus",
@@ -1202,7 +1214,7 @@
                     "type": "expect"
                 }
             ],
-            "http_error_rules": [
+            "http_error_rule_list": [
                 {
                     "return_hdrs": [
                         {
@@ -1237,9 +1249,9 @@
                 }
             ]
         }
-    ],
-    "caches": [
-        {
+    },
+    "caches": {
+        "test": {
             "max_age": 60,
             "max_object_size": 8,
             "max_secondary_entries": 10,
@@ -1247,9 +1259,9 @@
             "process_vary": true,
             "total_max_size": 1024
         }
-    ],
-    "fcgi_apps": [
-        {
+    },
+    "fcgi_apps": {
+        "test": {
             "docroot": "/path/to/chroot",
             "get_values": "enabled",
             "index": "index.php",
@@ -1323,7 +1335,7 @@
                     "name": "name"
                 }
             ],
-            "acls": [
+            "acl_list": [
                 {
                     "acl_name": "invalid_src",
                     "criterion": "src",
@@ -1344,7 +1356,7 @@
                 }
             ]
         },
-        {
+        "test_2": {
             "docroot": "/path/to/chroot",
             "get_values": "enabled",
             "index": "index.php",
@@ -1418,7 +1430,7 @@
                     "name": "name"
                 }
             ],
-            "acls": [
+            "acl_list": [
                 {
                     "acl_name": "invalid_src",
                     "criterion": "src",
@@ -1439,90 +1451,9 @@
                 }
             ]
         }
-    ],
-    "frontends": [
-        {
-            "backlog": 2048,
-            "bind_process": "even",
-            "client_timeout": 4000,
-            "clitcpka": "enabled",
-            "clitcpka_cnt": 10,
-            "clitcpka_idle": 10000,
-            "clitcpka_intvl": 10000,
-            "contstats": "enabled",
-            "default_backend": "test_2",
-            "dontlog_normal": "disabled",
-            "dontlognull": "enabled",
-            "from": "test_defaults",
-            "http_connection_mode": "httpclose",
-            "http_ignore_probes": "disabled",
-            "http_keep_alive_timeout": 3000,
-            "http_no_delay": "disabled",
-            "http_request_timeout": 2000,
-            "http_use_proxy_header": "disabled",
-            "httplog": true,
-            "httpslog": "disabled",
-            "idle_close_on_response": "disabled",
-            "independent_streams": "disabled",
-            "log_separate_errors": "enabled",
-            "log_tag": "bla",
-            "maxconn": 2000,
-            "mode": "http",
-            "name": "test_2",
-            "nolinger": "disabled",
-            "originalto": {
-                "enabled": "enabled",
-                "except": "127.0.0.1",
-                "header": "X-Client-Dst"
-            },
-            "socket_stats": "disabled",
-            "splice_auto": "disabled",
-            "splice_request": "disabled",
-            "splice_response": "disabled",
-            "stats_options": {
-                "stats_auths": [
-                    {
-                        "passwd": "AdMiN123",
-                        "user": "admin"
-                    },
-                    {
-                        "passwd": "AdMiN1234",
-                        "user": "admin2"
-                    }
-                ],
-                "stats_realm": true,
-                "stats_realm_realm": "HAProxy\\\\ Statistics",
-                "stats_show_modules": true,
-                "stats_show_node_name": null
-            },
-            "tcp_smart_accept": "disabled",
-            "tcpka": "enabled",
-            "unique_id_format": "%{+X}o%ci:%cp_%fi:%fp_%Ts_%rt",
-            "unique_id_header": "X-Unique-ID-test-2",
-            "http_request_rules": [
-                {
-                    "capture_len": 10,
-                    "capture_sample": "req.cook_cnt(FirstVisit),bool",
-                    "index": 0,
-                    "type": "capture"
-                },
-                {
-                    "capture_id": 0,
-                    "capture_sample": "req.cook_cnt(FirstVisit),bool",
-                    "index": 1,
-                    "type": "capture"
-                }
-            ],
-            "http_response_rules": [
-                {
-                    "capture_id": 0,
-                    "capture_sample": "res.header",
-                    "index": 0,
-                    "type": "capture"
-                }
-            ]
-        },
-        {
+    },
+    "frontends": {
+        "test": {
             "error_files": [
                 {
                     "code": 403,
@@ -1633,7 +1564,7 @@
             "tcpka": "enabled",
             "unique_id_format": "%{+X}o%ci:%cp_%fi:%fp_%Ts_%rt:%pid",
             "unique_id_header": "X-Unique-ID",
-            "acls": [
+            "acl_list": [
                 {
                     "acl_name": "invalid_src",
                     "criterion": "src",
@@ -1658,7 +1589,7 @@
                     "index": 3
                 }
             ],
-            "backend_switching_rules": [
+            "backend_switching_rule_list": [
                 {
                     "cond": "if",
                     "cond_test": "TRUE",
@@ -1670,58 +1601,14 @@
                     "name": "%[req.cookie(foo)]"
                 }
             ],
-            "binds": [
-                {
-                    "ca_verify_file": "ca.pem",
-                    "client_sigalgs": "ECDSA+SHA256:RSA+SHA256",
-                    "name": "webserv",
-                    "nice": 789,
-                    "sigalgs": "RSA+SHA256",
-                    "thread": "all",
-                    "address": "192.168.1.1",
-                    "port": 80
-                },
-                {
-                    "name": "webserv2",
-                    "thread": "1/all",
-                    "address": "192.168.1.1",
-                    "port": 8080
-                },
-                {
-                    "name": "webserv3",
-                    "thread": "1/1",
-                    "address": "192.168.1.2",
-                    "port": 8080
-                },
-                {
-                    "name": "ipv6",
-                    "thread": "1/1-1",
-                    "address": "2a01:c9c0:a3:8::3",
-                    "port": 80
-                },
-                {
-                    "name": "test-quic",
-                    "quic-socket": "connection",
-                    "thread": "1/1",
-                    "address": "192.168.1.1",
-                    "port": 80
-                },
-                {
-                    "name": "testnbcon",
-                    "nbconn": 6,
-                    "thread": "1/all",
-                    "address": "192.168.1.1",
-                    "port": 80
-                }
-            ],
-            "captures": [
+            "capture_list": [
                 {
                     "index": 0,
                     "length": 1,
                     "type": "request"
                 }
             ],
-            "filters": [
+            "filter_list": [
                 {
                     "index": 0,
                     "rule-files": null,
@@ -1768,7 +1655,7 @@
                     "type": "bwlim-out"
                 }
             ],
-            "http_after_response_rules": [
+            "http_after_response_rule_list": [
                 {
                     "index": 0,
                     "map_file": "map.lst",
@@ -1881,7 +1768,7 @@
                     "var_scope": "sess"
                 }
             ],
-            "http_error_rules": [
+            "http_error_rule_list": [
                 {
                     "index": 0,
                     "return_content": "/var/errors.file",
@@ -1891,7 +1778,7 @@
                     "type": "status"
                 }
             ],
-            "http_request_rules": [
+            "http_request_rule_list": [
                 {
                     "cond": "if",
                     "cond_test": "src 192.168.0.0/16",
@@ -2241,7 +2128,7 @@
                     "type": "track-sc"
                 }
             ],
-            "http_response_rules": [
+            "http_response_rule_list": [
                 {
                     "cond": "if",
                     "cond_test": "src 192.168.0.0/16",
@@ -2502,7 +2389,7 @@
                     "type": "set-timeout"
                 }
             ],
-            "log_targets": [
+            "log_target_list": [
                 {
                     "global": true,
                     "index": 0
@@ -2519,7 +2406,7 @@
                     "minlevel": "notice"
                 }
             ],
-            "tcp_request_rules": [
+            "tcp_request_rule_list": [
                 {
                     "action": "accept",
                     "cond": "if",
@@ -2796,28 +2683,144 @@
                     "server_name": "srv3",
                     "type": "session"
                 }
-            ]
-        }
-    ],
-    "http_errors": [
-        {
-            "error_files": [
+            ],
+            "binds": {
+                "ipv6": {
+                    "name": "ipv6",
+                    "thread": "1/1-1",
+                    "address": "2a01:c9c0:a3:8::3",
+                    "port": 80
+                },
+                "test-quic": {
+                    "name": "test-quic",
+                    "quic-socket": "connection",
+                    "thread": "1/1",
+                    "address": "192.168.1.1",
+                    "port": 80
+                },
+                "testnbcon": {
+                    "name": "testnbcon",
+                    "nbconn": 6,
+                    "thread": "1/all",
+                    "address": "192.168.1.1",
+                    "port": 80
+                },
+                "webserv": {
+                    "ca_verify_file": "ca.pem",
+                    "client_sigalgs": "ECDSA+SHA256:RSA+SHA256",
+                    "name": "webserv",
+                    "nice": 789,
+                    "sigalgs": "RSA+SHA256",
+                    "thread": "all",
+                    "address": "192.168.1.1",
+                    "port": 80
+                },
+                "webserv2": {
+                    "name": "webserv2",
+                    "thread": "1/all",
+                    "address": "192.168.1.1",
+                    "port": 8080
+                },
+                "webserv3": {
+                    "name": "webserv3",
+                    "thread": "1/1",
+                    "address": "192.168.1.2",
+                    "port": 8080
+                }
+            }
+        },
+        "test_2": {
+            "backlog": 2048,
+            "bind_process": "even",
+            "client_timeout": 4000,
+            "clitcpka": "enabled",
+            "clitcpka_cnt": 10,
+            "clitcpka_idle": 10000,
+            "clitcpka_intvl": 10000,
+            "contstats": "enabled",
+            "default_backend": "test_2",
+            "dontlog_normal": "disabled",
+            "dontlognull": "enabled",
+            "from": "test_defaults",
+            "http_connection_mode": "httpclose",
+            "http_ignore_probes": "disabled",
+            "http_keep_alive_timeout": 3000,
+            "http_no_delay": "disabled",
+            "http_request_timeout": 2000,
+            "http_use_proxy_header": "disabled",
+            "httplog": true,
+            "httpslog": "disabled",
+            "idle_close_on_response": "disabled",
+            "independent_streams": "disabled",
+            "log_separate_errors": "enabled",
+            "log_tag": "bla",
+            "maxconn": 2000,
+            "mode": "http",
+            "name": "test_2",
+            "nolinger": "disabled",
+            "originalto": {
+                "enabled": "enabled",
+                "except": "127.0.0.1",
+                "header": "X-Client-Dst"
+            },
+            "socket_stats": "disabled",
+            "splice_auto": "disabled",
+            "splice_request": "disabled",
+            "splice_response": "disabled",
+            "stats_options": {
+                "stats_auths": [
+                    {
+                        "passwd": "AdMiN123",
+                        "user": "admin"
+                    },
+                    {
+                        "passwd": "AdMiN1234",
+                        "user": "admin2"
+                    }
+                ],
+                "stats_realm": true,
+                "stats_realm_realm": "HAProxy\\\\ Statistics",
+                "stats_show_modules": true,
+                "stats_show_node_name": null
+            },
+            "tcp_smart_accept": "disabled",
+            "tcpka": "enabled",
+            "unique_id_format": "%{+X}o%ci:%cp_%fi:%fp_%Ts_%rt",
+            "unique_id_header": "X-Unique-ID-test-2",
+            "http_request_rule_list": [
                 {
-                    "code": 400,
-                    "file": "/etc/haproxy/errorfiles/site2/400.http"
+                    "capture_len": 10,
+                    "capture_sample": "req.cook_cnt(FirstVisit),bool",
+                    "index": 0,
+                    "type": "capture"
                 },
                 {
-                    "code": 404,
-                    "file": "/etc/haproxy/errorfiles/site2/404.http"
-                },
-                {
-                    "code": 501,
-                    "file": "/etc/haproxy/errorfiles/site2/501.http"
+                    "capture_id": 0,
+                    "capture_sample": "req.cook_cnt(FirstVisit),bool",
+                    "index": 1,
+                    "type": "capture"
                 }
             ],
-            "name": "website-2"
-        },
-        {
+            "http_response_rule_list": [
+                {
+                    "capture_id": 0,
+                    "capture_sample": "res.header",
+                    "index": 0,
+                    "type": "capture"
+                }
+            ],
+            "waf_body_rule_list": [
+                {
+                    "cond": "unless",
+                    "cond_test": "{ var(txn.jwt_alg) \"RS256\" }",
+                    "index": 0,
+                    "type": "deny"
+                }
+            ]
+        }
+    },
+    "http_errors": {
+        "website-1": {
             "error_files": [
                 {
                     "code": 400,
@@ -2833,30 +2836,32 @@
                 }
             ],
             "name": "website-1"
+        },
+        "website-2": {
+            "error_files": [
+                {
+                    "code": 400,
+                    "file": "/etc/haproxy/errorfiles/site2/400.http"
+                },
+                {
+                    "code": 404,
+                    "file": "/etc/haproxy/errorfiles/site2/404.http"
+                },
+                {
+                    "code": 501,
+                    "file": "/etc/haproxy/errorfiles/site2/501.http"
+                }
+            ],
+            "name": "website-2"
         }
-    ],
-    "log_forwards": [
-        {
+    },
+    "log_forwards": {
+        "sylog-loadb": {
             "backlog": 10,
             "maxconn": 1000,
             "name": "sylog-loadb",
             "timeout_client": 10000,
-            "binds": [
-                {
-                    "name": "127.0.0.1:1514",
-                    "address": "127.0.0.1",
-                    "port": 1514
-                }
-            ],
-            "dgram_binds": [
-                {
-                    "address": "127.0.0.1",
-                    "name": "webserv",
-                    "port": 1514,
-                    "transparent": true
-                }
-            ],
-            "log_targets": [
+            "log_target_list": [
                 {
                     "global": true,
                     "index": 0
@@ -2894,29 +2899,60 @@
                     "sample_range": "4",
                     "sample_size": 4
                 }
-            ]
+            ],
+            "binds": {
+                "127.0.0.1:1514": {
+                    "name": "127.0.0.1:1514",
+                    "address": "127.0.0.1",
+                    "port": 1514
+                }
+            },
+            "dgram_binds": {
+                "webserv": {
+                    "address": "127.0.0.1",
+                    "name": "webserv",
+                    "port": 1514,
+                    "transparent": true
+                }
+            }
         }
-    ],
-    "mailers_sections": [
-        {
+    },
+    "mailers_sections": {
+        "localmailer1": {
             "name": "localmailer1",
             "timeout": 15000,
-            "mailer_entries": [
-                {
+            "mailer_entries": {
+                "smtp1": {
                     "address": "10.0.10.1",
                     "name": "smtp1",
                     "port": 514
                 },
-                {
+                "smtp2": {
                     "address": "10.0.10.2",
                     "name": "smtp2",
                     "port": 514
                 }
-            ]
+            }
         }
-    ],
-    "named_defaults": [
-        {
+    },
+    "named_defaults": {
+        "test_defaults": {
+            "backlog": 1024,
+            "balance": {
+                "algorithm": "roundrobin"
+            },
+            "bind_process": "1-4",
+            "maxconn": 2000,
+            "mode": "http",
+            "name": "test_defaults"
+        },
+        "test_defaults_2": {
+            "clitcpka": "enabled",
+            "from": "test_defaults",
+            "name": "test_defaults_2",
+            "srvtcpka": "enabled"
+        },
+        "unnamed_defaults_1": {
             "error_files": [
                 {
                     "code": 403,
@@ -3050,7 +3086,7 @@
             "tcp_smart_connect": "enabled",
             "tcpka": "enabled",
             "transparent": "enabled",
-            "http_checks": [
+            "http_check_list": [
                 {
                     "index": 0,
                     "type": "send-state"
@@ -3060,7 +3096,7 @@
                     "type": "disable-on-404"
                 }
             ],
-            "http_error_rules": [
+            "http_error_rule_list": [
                 {
                     "index": 0,
                     "return_content": "/test/503",
@@ -3078,33 +3114,17 @@
                     "type": "status"
                 }
             ],
-            "tcp_check_rules": [
+            "tcp_check_rule_list": [
                 {
                     "action": "send",
                     "data": "GET\\ /\\ HTTP/2.0\\r\\n",
                     "index": 0
                 }
             ]
-        },
-        {
-            "backlog": 1024,
-            "balance": {
-                "algorithm": "roundrobin"
-            },
-            "bind_process": "1-4",
-            "maxconn": 2000,
-            "mode": "http",
-            "name": "test_defaults"
-        },
-        {
-            "clitcpka": "enabled",
-            "from": "test_defaults",
-            "name": "test_defaults_2",
-            "srvtcpka": "enabled"
         }
-    ],
-    "peers": [
-        {
+    },
+    "peers": {
+        "mycluster": {
             "default_bind": {
                 "alpn": "h2,http/1.1",
                 "ssl": true,
@@ -3121,37 +3141,37 @@
             "enabled": true,
             "name": "mycluster",
             "shards": 3,
-            "peer_entries": [
-                {
+            "peer_entries": {
+                "aggregator": {
+                    "address": "HARDCODEDCLUSTERIP",
+                    "name": "aggregator",
+                    "port": 10023
+                },
+                "hapee": {
                     "address": "192.168.1.1",
                     "name": "hapee",
                     "port": 1023,
                     "shard": 1
-                },
-                {
-                    "address": "HARDCODEDCLUSTERIP",
-                    "name": "aggregator",
-                    "port": 10023
                 }
-            ]
+            }
         }
-    ],
-    "programs": [
-        {
+    },
+    "programs": {
+        "test": {
             "command": "echo \"Hello, World!\"",
             "group": "hapee",
             "name": "test",
             "start-on-reload": "enabled",
             "user": "hapee-lb"
         },
-        {
+        "test_2": {
             "command": "echo \"Hello, World!\"",
             "name": "test_2",
             "start-on-reload": "disabled"
         }
-    ],
-    "resolvers": [
-        {
+    },
+    "resolvers": {
+        "test": {
             "accepted_payload_size": 8192,
             "hold_nx": 30000,
             "hold_other": 30000,
@@ -3162,17 +3182,17 @@
             "resolve_retries": 3,
             "timeout_resolve": 1000,
             "timeout_retry": 1000,
-            "nameservers": [
-                {
+            "nameservers": {
+                "dns1": {
                     "address": "10.0.0.1",
                     "name": "dns1",
                     "port": 53
                 }
-            ]
+            }
         }
-    ],
-    "rings": [
-        {
+    },
+    "rings": {
+        "myring": {
             "description": "\"My local buffer\"",
             "format": "rfc3164",
             "maxlen": 1200,
@@ -3180,14 +3200,14 @@
             "size": 32764,
             "timeout_connect": 5000,
             "timeout_server": 10000,
-            "servers": [
-                {
+            "servers": {
+                "mysyslogsrv": {
                     "log_proto": "octet-count",
                     "address": "127.0.0.1",
                     "name": "mysyslogsrv",
                     "port": 6514
                 },
-                {
+                "s1": {
                     "check": "enabled",
                     "resolve-net": "10.0.0.0/8,10.200.200.0/12",
                     "resolve_opts": "allow-dup-ip,ignore-weight",
@@ -3195,68 +3215,68 @@
                     "name": "s1",
                     "port": 80
                 }
-            ]
+            }
         }
-    ],
-    "userlists": [
-        {
+    },
+    "userlists": {
+        "first": {
             "name": "first",
-            "groups": [
-                {
+            "groups": {
+                "G1": {
                     "name": "G1",
                     "users": "tiger,scott"
                 },
-                {
+                "G2": {
                     "name": "G2",
                     "users": "scott"
                 }
-            ],
-            "users": [
-                {
-                    "password": "$6$k6y3o.eP$JlKBx9za9667qe4xHSwRv6J.C0/D7cV91",
-                    "secure_password": true,
-                    "username": "tiger"
-                },
-                {
+            },
+            "users": {
+                "scott": {
                     "password": "elgato",
                     "secure_password": false,
                     "username": "scott"
+                },
+                "tiger": {
+                    "password": "$6$k6y3o.eP$JlKBx9za9667qe4xHSwRv6J.C0/D7cV91",
+                    "secure_password": true,
+                    "username": "tiger"
                 }
-            ]
+            }
         },
-        {
+        "second": {
             "name": "second",
-            "groups": [
-                {
+            "groups": {
+                "one": {
                     "name": "one"
                 },
-                {
-                    "name": "two"
-                },
-                {
+                "three": {
                     "name": "three"
+                },
+                "two": {
+                    "name": "two"
                 }
-            ],
-            "users": [
-                {
+            },
+            "users": {
+                "anderson": {
+                    "groups": "two",
+                    "password": "hello",
+                    "secure_password": false,
+                    "username": "anderson"
+                },
+                "neo": {
                     "groups": "one",
                     "password": "$6$k6y3o.eP$JlKBxxHSwRv6J.C0/D7cV91",
                     "secure_password": true,
                     "username": "neo"
                 },
-                {
+                "thomas": {
                     "groups": "one,two",
                     "password": "white-rabbit",
                     "secure_password": false,
                     "username": "thomas"
-                },
-                {
-                    "groups": "two",
-                    "password": "hello",
-                    "secure_password": false,
-                    "username": "anderson"
                 }
-            ]
+            }
         }
-    ]
+    }
 }
