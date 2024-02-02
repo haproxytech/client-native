@@ -83,6 +83,44 @@ func (s {{.Data.Name}}) {{.Name}}(t {{.Data.Name}}, opts ...Options) {{- if eq $
 				diff["{{.Name}}"] = []interface{}{ {{if HasPrefix .Type "*"}}ValueOrNil({{end}}s.{{.Name}}{{if HasPrefix .Type "*"}}){{end}}, {{if HasPrefix .Type "*"}}ValueOrNil({{end}}t.{{.Name}}{{if HasPrefix .Type "*"}}){{end}} }
 			{{- end }}
 		}
+	{{- else if HasPrefix .Type "map" }}
+	    {{- if eq .Type "map[string]map[string]string"}}
+			if !equalMapStringMapSting(s.{{.Name}}, t.{{.Name}}, opt) {
+				{{- if eq $topLevel.Name "Equal" }}
+					return false
+				{{- else if eq $topLevel.Name "Diff" }}
+					diff["{{.Name}}"] = []interface{}{ s.{{.Name}}, t.{{.Name}}}
+				{{- end }}
+			}
+		{{- else }}
+			{{- if not .IsComparable }}
+				if !CheckSameNilAndLenMap[{{.MapKeyType}},{{.MapItemType}}](s.{{.Name}}, t.{{.Name}}, opt){
+					{{- if eq $topLevel.Name "Equal" }}
+						return false
+					{{- else if eq $topLevel.Name "Diff" }}
+						diff["{{.Name}}"] = []interface{}{ s.{{.Name}}, t.{{.Name}}}
+					{{- end }}
+				}
+
+				for k,v := range s.{{.Name}} {
+					if !t.{{.Name}}[k].Equal(v, opt) {
+						{{- if eq $topLevel.Name "Equal" }}
+							return false
+						{{- else if eq $topLevel.Name "Diff" }}
+							diff["{{.Name}}"] = []interface{}{ s.{{.Name}}, t.{{.Name}}}
+						{{- end }}
+					}
+				}
+			{{- else }}
+				if !equalComparableMap(s.{{.Name}}, t.{{.Name}}, opt) {
+					{{- if eq $topLevel.Name "Equal" }}
+						return false
+					{{- else if eq $topLevel.Name "Diff" }}
+						diff["{{.Name}}"] = []interface{}{ s.{{.Name}}, t.{{.Name}}}
+					{{- end }}
+				}
+			{{- end }}
+		{{- end }}
 	{{- else if or .IsBasicType .IsComparable}}
 	    {{- if HasPrefix .Type "*" }}
 		  if !equalPointers(s.{{.Name}}, t.{{.Name}}) {
@@ -101,14 +139,6 @@ func (s {{.Data.Name}}) {{.Name}}(t {{.Data.Name}}, opts ...Options) {{- if eq $
 				{{- end }}
 			}
 		{{- end }}
-	{{- else if HasPrefix .Type "map" }}
-		if !equalComparableMap(s.{{.Name}}, t.{{.Name}}, opt) {
-			{{- if eq $topLevel.Name "Equal" }}
-				return false
-			{{- else if eq $topLevel.Name "Diff" }}
-			    diff["{{.Name}}"] = []interface{}{ s.{{.Name}}, t.{{.Name}}}
-			{{- end }}
-		}
 	{{- else if .IsArray }}
 	    {{- if or .IsComparable .SubType.IsComparable }}
 			if !equalComparableSlice(s.{{.Name}}, t.{{.Name}}, opt) {

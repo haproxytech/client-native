@@ -22,6 +22,8 @@ type Field struct {
 	HasEqualOpt  bool
 	IsArray      bool
 	IsMap        bool
+	MapKeyType   string
+	MapItemType  string
 	SubType      *Field
 }
 
@@ -120,6 +122,8 @@ type getTypeStringResponse struct {
 	HasEqualOpt  bool
 	IsArray      bool
 	IsMap        bool
+	MapKeyType   string
+	MapItemType  string
 	StructType   *ast.StructType
 	SubType      *getTypeStringResponse
 }
@@ -172,9 +176,12 @@ func getTypeString(expr ast.Expr, imports map[string]string) getTypeStringRespon
 		rKey := getTypeString(t.Key, imports)
 		rValue := getTypeString(t.Value, imports)
 		return getTypeStringResponse{
-			Name:      "map[" + rKey.Name + "]" + rValue.Name,
-			IsComplex: rValue.IsComplex,
-			IsMap:     true,
+			Name:         "map[" + rKey.Name + "]" + rValue.Name,
+			MapKeyType:   rKey.Name,
+			MapItemType:  rValue.Name,
+			IsComplex:    rValue.IsComplex,
+			IsMap:        true,
+			IsComparable: isComparable(rValue.Name),
 		}
 	case *ast.SelectorExpr:
 		start := expr.Pos() - 1

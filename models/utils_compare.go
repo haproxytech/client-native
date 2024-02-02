@@ -63,6 +63,23 @@ func CheckSameNilAndLen[T any](s, t []T, opts ...Options) bool {
 	return true
 }
 
+func CheckSameNilAndLenMap[S comparable, T any](s, t map[S]T, opts ...Options) bool {
+	opt := getOptions(opts...)
+
+	if !opt.NilSameAsEmpty {
+		if s == nil && t != nil {
+			return false
+		}
+		if t == nil && s != nil {
+			return false
+		}
+	}
+	if len(s) != len(t) {
+		return false
+	}
+	return true
+}
+
 func equalComparableSlice[T comparable](s1, s2 []T, opt Options) bool {
 	if !opt.NilSameAsEmpty {
 		if s1 == nil && s2 != nil {
@@ -112,4 +129,29 @@ func ValueOrNil[T any](v *T) any {
 		return nil
 	}
 	return *v
+}
+
+func equalMapStringMapSting(m1, m2 map[string]map[string]string, opt Options) bool {
+	if !opt.NilSameAsEmpty {
+		if m1 == nil && m2 != nil {
+			return false
+		}
+		if m2 == nil && m1 != nil {
+			return false
+		}
+	}
+
+	if len(m1) != len(m2) {
+		return false
+	}
+	for k1, v1 := range m1 {
+		if v2, ok := m2[k1]; !ok {
+			return false
+		} else {
+			if !equalComparableMap(v1, v2, opt) {
+				return false
+			}
+		}
+	}
+	return true
 }
