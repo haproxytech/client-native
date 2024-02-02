@@ -21,9 +21,9 @@ linters-settings:
 linters:
   enable-all: true
   disable:
-    - golint # deprecated, replaced with revive
-    - interfacer # deprecated
-    - maligned # deprecated
+    - golint  # deprecated, replaced with revive
+    - interfacer  # deprecated
+    - maligned  # deprecated
     - wrapcheck
     - nlreturn
     - gomnd
@@ -48,18 +48,18 @@ linters:
     - nonamedreturns
     - interfacebloat
     - dupword
-    - forcetypeassert #tmp needs to be on
-    - ifshort # deprecated
-    - structcheck # deprecated
-    - deadcode # deprecated
-    - nosnakecase # deprecated
-    - varcheck # deprecated
-    - rowserrcheck # deprecated
-    - sqlclosecheck # deprecated
-    - wastedassign # deprecated
-    - golint # deprecated
-    - interfacer # deprecated
-    - maligned # deprecated
+    - forcetypeassert  # tmp needs to be on
+    - ifshort  # deprecated
+    - structcheck  # deprecated
+    - deadcode  # deprecated
+    - nosnakecase  # deprecated
+    - varcheck  # deprecated
+    - rowserrcheck  # deprecated
+    - sqlclosecheck  # deprecated
+    - wastedassign  # deprecated
+    - golint  # deprecated
+    - interfacer  # deprecated
+    - maligned  # deprecated
     - depguard
 
 issues:
