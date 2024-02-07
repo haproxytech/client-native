@@ -3,14 +3,14 @@ module github.com/haproxytech/client-native/v6
 go 1.21
 
 require (
-	github.com/go-faker/faker/v4 v4.2.0
+	github.com/go-faker/faker/v4 v4.2.1
 	github.com/go-openapi/errors v0.21.0
 	github.com/go-openapi/strfmt v0.22.0
-	github.com/go-openapi/swag v0.22.8
-	github.com/go-openapi/validate v0.22.6
+	github.com/go-openapi/swag v0.22.9
+	github.com/go-openapi/validate v0.23.0
 	github.com/google/go-cmp v0.6.0
 	github.com/google/renameio v1.0.1
-	github.com/google/uuid v1.5.0
+	github.com/google/uuid v1.6.0
 	github.com/haproxytech/config-parser/v5 v5.0.1-0.20231205133436-67d880c8f163
 	github.com/json-iterator/go v1.1.12
 	github.com/kballard/go-shellquote v0.0.0-20180428030007-95032a82bc51
