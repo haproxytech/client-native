@@ -364,10 +364,7 @@ groups_one:
             description: Configuration file version
             type: string
         schema:
-          type: object
-          properties:
-            data:
-              $ref: "#/definitions/group"
+          $ref: "#/definitions/group"
       '404':
         $ref: '#/responses/AlreadyExists'
       'default':

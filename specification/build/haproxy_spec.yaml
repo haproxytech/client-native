@@ -11972,10 +11972,7 @@ paths:
                           description: Configuration file version
                           type: string
                   schema:
-                      properties:
-                          data:
-                              $ref: '#/definitions/group'
-                      type: object
+                      $ref: '#/definitions/group'
               "404":
                   $ref: '#/responses/AlreadyExists'
               default:
