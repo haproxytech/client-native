@@ -5,11 +5,11 @@ go 1.20
 require (
 	github.com/go-openapi/errors v0.21.0
 	github.com/go-openapi/strfmt v0.22.0
-	github.com/go-openapi/swag v0.22.8
-	github.com/go-openapi/validate v0.22.6
+	github.com/go-openapi/swag v0.22.9
+	github.com/go-openapi/validate v0.23.0
 	github.com/google/go-cmp v0.6.0
 	github.com/google/renameio v1.0.1
-	github.com/google/uuid v1.5.0
+	github.com/google/uuid v1.6.0
 	github.com/haproxytech/config-parser/v4 v4.1.1-0.20230601141531-c98eb6bc716e
 	github.com/kballard/go-shellquote v0.0.0-20180428030007-95032a82bc51
 	github.com/mitchellh/mapstructure v1.5.0
