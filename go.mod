@@ -19,7 +19,7 @@ require (
 	github.com/sirkon/dst v0.26.4
 	github.com/stretchr/testify v1.8.4
 	golang.org/x/text v0.14.0
-	golang.org/x/tools v0.17.0
+	golang.org/x/tools v0.18.0
 )
 
 require (
