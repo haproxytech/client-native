@@ -4049,7 +4049,6 @@ definitions:
               type: string
               x-dependency:
                   type:
-                      required: true
                       value: redirect
               x-display-name: Redirect Option
           redir_type:
