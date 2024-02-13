@@ -3,7 +3,7 @@ module github.com/haproxytech/client-native/v5
 go 1.21
 
 require (
-	github.com/go-faker/faker/v4 v4.2.1
+	github.com/go-faker/faker/v4 v4.3.0
 	github.com/go-openapi/errors v0.21.0
 	github.com/go-openapi/strfmt v0.22.0
 	github.com/go-openapi/swag v0.22.9
