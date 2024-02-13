@@ -205,7 +205,6 @@ http_request_rule:
       x-dependency:
         type:
           value: redirect
-          required: true
     deny_status:
       type: integer
       minimum: 200
