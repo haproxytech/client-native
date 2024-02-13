@@ -166,10 +166,6 @@ test:
     - merge_requests
     - branches
 
-HAProxy-2.1:
-  extends: .e2e
-  variables:
-    HAPROXY_VERSION: "2.1"
 HAProxy-2.2:
   extends: .e2e
   variables:
