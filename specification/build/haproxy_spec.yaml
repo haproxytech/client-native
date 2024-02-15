@@ -7194,6 +7194,7 @@ definitions:
           hrsp_other: 0
           iid: 0
           intercepted: 346
+          last_chk: L4OK in 0ms
           mode: http
           pid: 3204
           rate: 64
@@ -7476,6 +7477,11 @@ definitions:
                   type:
                       - frontend
                       - backend
+              x-nullable: true
+          last_chk:
+              type: string
+              x-dependency:
+                  type: server
               x-nullable: true
           lastchg:
               type: integer
