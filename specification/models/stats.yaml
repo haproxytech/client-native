@@ -384,6 +384,11 @@ native_stat_stats:
       x-nullable: true
       x-dependency:
         type: frontend
+    last_chk:
+      type: string
+      x-nullable: true
+      x-dependency:
+        type: server
   example:
     scur: 129
     smax: 2000
@@ -420,3 +425,4 @@ native_stat_stats:
     intercepted: 346
     dcon: 0
     dses: 0
+    last_chk: "L4OK in 0ms"
