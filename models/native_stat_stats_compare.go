@@ -220,6 +220,10 @@ func (s NativeStatStats) Equal(t NativeStatStats, opts ...Options) bool {
 		return false
 	}
 
+	if !equalPointers(s.LastChk, t.LastChk) {
+		return false
+	}
+
 	if !equalPointers(s.Lastchg, t.Lastchg) {
 		return false
 	}
@@ -541,6 +545,10 @@ func (s NativeStatStats) Diff(t NativeStatStats, opts ...Options) map[string][]i
 
 	if !equalPointers(s.Intercepted, t.Intercepted) {
 		diff["Intercepted"] = []interface{}{ValueOrNil(s.Intercepted), ValueOrNil(t.Intercepted)}
+	}
+
+	if !equalPointers(s.LastChk, t.LastChk) {
+		diff["LastChk"] = []interface{}{ValueOrNil(s.LastChk), ValueOrNil(t.LastChk)}
 	}
 
 	if !equalPointers(s.Lastchg, t.Lastchg) {
