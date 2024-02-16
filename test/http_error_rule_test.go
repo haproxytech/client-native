@@ -53,7 +53,7 @@ func TestGetHTTPErrorRules(t *testing.T) { //nolint:gocognit,gocyclo
 	if err != nil {
 		t.Error(err.Error())
 	}
-	mr[configuration.DefaultsParentName] = checks
+	mr[configuration.DefaultsParentName+"/unnamed_defaults_1"] = checks
 
 	_, checks, err = clientTest.GetHTTPErrorRules(configuration.BackendParentName, "test_2", "")
 	if err != nil {

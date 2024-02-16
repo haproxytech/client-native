@@ -11,33 +11,10 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func defaultsExpectation() models.Defaults {
+func namedDefaultsExpectation() map[string][]*models.Defaults {
 	initStructuredExpected()
 	res := StructuredToDefaultsMap()
 	return res
-}
-
-func namedDefaultsExpectation() map[string][]*models.Defaults {
-	initStructuredExpected()
-	res := StructuredToNamedDefaultsMap()
-	return res
-}
-
-func TestGetDefaults(t *testing.T) { //nolint:gocognit,gocyclo
-	v, d, err := clientTest.GetDefaultsConfiguration("")
-	if err != nil {
-		t.Error(err.Error())
-	}
-
-	if v != version {
-		t.Errorf("Version %v returned, expected %v", v, version)
-	}
-	checkDefaults(t, d)
-}
-
-func checkDefaults(t *testing.T, g *models.Defaults) {
-	want := defaultsExpectation()
-	require.True(t, g.Equal(want), "%s - diff %v", g.Name, cmp.Diff(*g, want))
 }
 
 func TestPushDefaults(t *testing.T) {

@@ -11229,60 +11229,6 @@ paths:
               - Global
   /services/haproxy/configuration/defaults:
       get:
-          deprecated: true
-          description: Returns defaults part of configuration, this has been deprecated, use named_defaults instead.
-          operationId: getDefaults
-          parameters:
-              - $ref: '#/parameters/transaction_id'
-          responses:
-              "200":
-                  description: Successful operation
-                  headers:
-                      Configuration-Version:
-                          description: Configuration file version
-                          type: string
-                  schema:
-                      $ref: '#/definitions/defaults'
-              default:
-                  $ref: '#/responses/DefaultError'
-          summary: Return defaults part of configuration
-          tags:
-              - Defaults
-      put:
-          deprecated: true
-          description: Replace defaults part of config, this has been deprecated, use named_defaults instead.
-          operationId: replaceDefaults
-          parameters:
-              - in: body
-                name: data
-                required: true
-                schema:
-                  $ref: '#/definitions/defaults'
-              - $ref: '#/parameters/transaction_id'
-              - $ref: '#/parameters/version'
-              - $ref: '#/parameters/force_reload'
-          responses:
-              "200":
-                  description: Defaults replaced
-                  schema:
-                      $ref: '#/definitions/defaults'
-              "202":
-                  description: Configuration change accepted and reload requested
-                  headers:
-                      Reload-ID:
-                          description: ID of the requested reload
-                          type: string
-                  schema:
-                      $ref: '#/definitions/defaults'
-              "400":
-                  $ref: '#/responses/BadRequest'
-              default:
-                  $ref: '#/responses/DefaultError'
-          summary: Replace defaults
-          tags:
-              - Defaults
-  /services/haproxy/configuration/named_defaults:
-      get:
           description: Returns an array of all configured defaults.
           operationId: getDefaultsSections
           parameters:
@@ -11301,7 +11247,7 @@ paths:
           summary: Return an array of defaults
           tags:
               - Defaults
-      post:
+      put:
           description: Adds a new defaults section to the configuration file.
           operationId: createDefaultsSection
           parameters:
@@ -11335,7 +11281,7 @@ paths:
           summary: Add a defaults section
           tags:
               - Defaults
-  /services/haproxy/configuration/named_defaults/{name}:
+  /services/haproxy/configuration/defaults/{name}:
       delete:
           description: Deletes a defaults section from the configuration by it's name.
           operationId: deleteDefaultsSection

@@ -268,18 +268,13 @@ func StructuredToCaptureMap() map[string]models.Captures {
 	return res
 }
 
-func StructuredToDefaultsMap() models.Defaults {
-	resources, _ := expectedResources[models.Defaults]("defaults")
-	return resources[""]
-}
-
 func StructuredToGlobalMap() models.Global {
 	resources, _ := expectedResources[models.Global]("global")
 	return resources[""]
 }
 
-func StructuredToNamedDefaultsMap() map[string][]*models.Defaults {
-	resources, _ := expectedResources[models.Defaults]("named_defaults")
+func StructuredToDefaultsMap() map[string][]*models.Defaults {
+	resources, _ := expectedResources[models.Defaults]("defaults")
 	res := make(map[string][]*models.Defaults)
 	for _, v := range resources {
 		currentv := v
@@ -343,7 +338,7 @@ func StructuredToHTTPCheckMap() map[string]models.HTTPChecks {
 	res := make(map[string]models.HTTPChecks)
 	resources := make(map[string][]models.HTTPCheck)
 	_ = expectedChildResources[models.Backend, models.HTTPCheck](resources, "backends", "name", "http_check_list")
-	_ = expectedRootChildResources[models.Defaults, models.HTTPCheck](resources, "defaults", "name", "http_check_list")
+	_ = expectedChildResources[models.Defaults, models.HTTPCheck](resources, "defaults", "name", "http_check_list")
 	for k, v := range resources {
 		res[k] = toSliceOfPtrs(v)
 	}
@@ -355,7 +350,7 @@ func StructuredToHTTPErrorRuleMap() map[string]models.HTTPErrorRules {
 	resources := make(map[string][]models.HTTPErrorRule)
 	_ = expectedChildResources[models.Backend, models.HTTPErrorRule](resources, "backends", "name", "http_error_rule_list")
 	_ = expectedChildResources[models.Frontend, models.HTTPErrorRule](resources, "frontends", "name", "http_error_rule_list")
-	_ = expectedRootChildResources[models.Defaults, models.HTTPErrorRule](resources, "defaults", "name", "http_error_rule_list")
+	_ = expectedChildResources[models.Defaults, models.HTTPErrorRule](resources, "defaults", "name", "http_error_rule_list")
 	for k, v := range resources {
 		res[k] = toSliceOfPtrs(v)
 	}

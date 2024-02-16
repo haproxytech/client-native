@@ -61,7 +61,7 @@ func TestGetHTTPChecks(t *testing.T) { //nolint:gocognit,gocyclo
 	if err != nil {
 		t.Error(err.Error())
 	}
-	mchecks[configuration.DefaultsParentName] = checks
+	mchecks[configuration.DefaultsParentName+"/unnamed_defaults_1"] = checks
 
 	_, checks, err = clientTest.GetHTTPChecks(configuration.BackendParentName, "test_2", "")
 	if err != nil {
@@ -115,7 +115,7 @@ func TestGetHTTPCheck(t *testing.T) {
 	if err != nil {
 		t.Error(err.Error())
 	}
-	m[configuration.DefaultsParentName+"/0"] = models.HTTPChecks{check}
+	m[configuration.DefaultsParentName+"/unnamed_defaults_1/0"] = models.HTTPChecks{check}
 	checkHttpChecks(t, m)
 }
 

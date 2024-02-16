@@ -1,10 +1,9 @@
 ---
 defaults:
   get:
-    deprecated: true
-    summary: Return defaults part of configuration
-    description: Returns defaults part of configuration, this has been deprecated, use named_defaults instead.
-    operationId: getDefaults
+    summary: Return an array of defaults
+    description: Returns an array of all configured defaults.
+    operationId: getDefaultsSections
     parameters:
       - $ref: "#/parameters/transaction_id"
     tags:
@@ -17,14 +16,13 @@ defaults:
             description: Configuration file version
             type: string
         schema:
-          $ref: "#/definitions/defaults"
+          $ref: "#/definitions/defaults_sections"
       'default':
         $ref: '#/responses/DefaultError'
   put:
-    deprecated: true
-    summary: Replace defaults
-    description: Replace defaults part of config, this has been deprecated, use named_defaults instead.
-    operationId: replaceDefaults
+    summary: Add a defaults section
+    description: Adds a new defaults section to the configuration file.
+    operationId: createDefaultsSection
     parameters:
       - name: data
         required: true
@@ -45,11 +43,107 @@ defaults:
             type: string
         schema:
           $ref: "#/definitions/defaults"
+      '201':
+        description: Defaults created
+        schema:
+          $ref: "#/definitions/defaults"
+      '409':
+        $ref: '#/responses/AlreadyExists'
+      '400':
+        $ref: '#/responses/BadRequest'
+      'default':
+        $ref: '#/responses/DefaultError'
+defaults_one:
+  get:
+    summary: Return a defaults section
+    description: Returns one defaults section configuration by it's name.
+    operationId: getDefaultsSection
+    tags:
+      - Defaults
+    parameters:
+      - name: name
+        in: path
+        description: Defaults name
+        required: true
+        type: string
+      - $ref: "#/parameters/transaction_id"
+    responses:
       '200':
-        description: Defaults replaced
+        description: Successful operation
+        headers:
+          Configuration-Version:
+            description: Configuration file version
+            type: string
+        schema:
+          $ref: "#/definitions/defaults"
+      '404':
+        $ref: '#/responses/NotFound'
+      'default':
+        $ref: '#/responses/DefaultError'
+  put:
+    summary: Replace a defatults section
+    description: Replaces a defatults section configuration by it's name.
+    operationId: replaceDefaultsSection
+    tags:
+      - Defaults
+    parameters:
+      - name: name
+        in: path
+        description: Defaults name
+        required: true
+        type: string
+      - name: data
+        required: true
+        in: body
+        schema:
+          $ref: "#/definitions/defaults"
+      - $ref: "#/parameters/transaction_id"
+      - $ref: "#/parameters/version"
+      - $ref: "#/parameters/force_reload"
+    responses:
+      '202':
+        description: Configuration change accepted and reload requested
+        headers:
+          Reload-ID:
+            description: ID of the requested reload
+            type: string
+        schema:
+          $ref: "#/definitions/defaults"
+      '200':
+        description: Defaults section replaced
         schema:
           $ref: "#/definitions/defaults"
       '400':
         $ref: '#/responses/BadRequest'
+      '404':
+        $ref: '#/responses/NotFound'
+      'default':
+        $ref: '#/responses/DefaultError'
+  delete:
+    summary: Delete a defaults section
+    description: Deletes a defaults section from the configuration by it's name.
+    operationId: deleteDefaultsSection
+    tags:
+      - Defaults
+    parameters:
+      - name: name
+        in: path
+        description: Defaults name
+        required: true
+        type: string
+      - $ref: "#/parameters/transaction_id"
+      - $ref: "#/parameters/version"
+      - $ref: "#/parameters/force_reload"
+    responses:
+      '202':
+        description: Configuration change accepted and reload requested
+        headers:
+          Reload-ID:
+            description: ID of the requested reload
+            type: string
+      '204':
+        description: Defaults section deleted
+      '404':
+        $ref: '#/responses/NotFound'
       'default':
         $ref: '#/responses/DefaultError'
