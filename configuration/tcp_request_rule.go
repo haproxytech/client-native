@@ -26,6 +26,7 @@ import (
 	"github.com/haproxytech/config-parser/v5/common"
 	parser_errors "github.com/haproxytech/config-parser/v5/errors"
 	"github.com/haproxytech/config-parser/v5/parsers/actions"
+	http_actions "github.com/haproxytech/config-parser/v5/parsers/http/actions"
 	tcp_actions "github.com/haproxytech/config-parser/v5/parsers/tcp/actions"
 	tcp_types "github.com/haproxytech/config-parser/v5/parsers/tcp/types"
 	"github.com/haproxytech/config-parser/v5/types"
@@ -786,6 +787,22 @@ func SerializeTCPRequestRule(f models.TCPRequestRule) (rule types.TCPType, err e
 					Fmt:      common.Expression{Expr: strings.Split(f.VarFormat, " ")},
 					VarName:  f.VarName,
 					VarScope: f.VarScope,
+					Cond:     f.Cond,
+					CondTest: f.CondTest,
+				},
+			}, nil
+		case models.TCPRequestRuleActionSetDashSrc:
+			return &tcp_types.Connection{
+				Action: &http_actions.SetSrc{
+					Expr:     common.Expression{Expr: strings.Split(f.Expr, " ")},
+					Cond:     f.Cond,
+					CondTest: f.CondTest,
+				},
+			}, nil
+		case models.TCPRequestRuleActionSetDashDst:
+			return &tcp_types.Connection{
+				Action: &actions.SetDst{
+					Expr:     common.Expression{Expr: strings.Split(f.Expr, " ")},
 					Cond:     f.Cond,
 					CondTest: f.CondTest,
 				},
