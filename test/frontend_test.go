@@ -201,6 +201,18 @@ func TestCreateEditDeleteFrontend(t *testing.T) {
 		},
 		Compression: &models.Compression{
 			Offload: true,
+			TypesReq: []string{
+				"text/html",
+				"text/plain",
+			},
+			TypesRes: []string{
+				"text/plain",
+			},
+			AlgoReq: "deflate",
+			AlgosRes: []string{
+				"deflate",
+				"gzip",
+			},
 		},
 		ClitcpkaCnt:        &clitcpkaCnt,
 		ClitcpkaIdle:       &clitcpkaTimeout,

@@ -33,7 +33,15 @@ package models
 func (s Compression) Equal(t Compression, opts ...Options) bool {
 	opt := getOptions(opts...)
 
+	if s.AlgoReq != t.AlgoReq {
+		return false
+	}
+
 	if !equalComparableSlice(s.Algorithms, t.Algorithms, opt) {
+		return false
+	}
+
+	if !equalComparableSlice(s.AlgosRes, t.AlgosRes, opt) {
 		return false
 	}
 
@@ -46,6 +54,14 @@ func (s Compression) Equal(t Compression, opts ...Options) bool {
 	}
 
 	if !equalComparableSlice(s.Types, t.Types, opt) {
+		return false
+	}
+
+	if !equalComparableSlice(s.TypesReq, t.TypesReq, opt) {
+		return false
+	}
+
+	if !equalComparableSlice(s.TypesRes, t.TypesRes, opt) {
 		return false
 	}
 
@@ -69,8 +85,16 @@ func (s Compression) Diff(t Compression, opts ...Options) map[string][]interface
 	opt := getOptions(opts...)
 
 	diff := make(map[string][]interface{})
+	if s.AlgoReq != t.AlgoReq {
+		diff["AlgoReq"] = []interface{}{s.AlgoReq, t.AlgoReq}
+	}
+
 	if !equalComparableSlice(s.Algorithms, t.Algorithms, opt) {
 		diff["Algorithms"] = []interface{}{s.Algorithms, t.Algorithms}
+	}
+
+	if !equalComparableSlice(s.AlgosRes, t.AlgosRes, opt) {
+		diff["AlgosRes"] = []interface{}{s.AlgosRes, t.AlgosRes}
 	}
 
 	if s.Direction != t.Direction {
@@ -83,6 +107,14 @@ func (s Compression) Diff(t Compression, opts ...Options) map[string][]interface
 
 	if !equalComparableSlice(s.Types, t.Types, opt) {
 		diff["Types"] = []interface{}{s.Types, t.Types}
+	}
+
+	if !equalComparableSlice(s.TypesReq, t.TypesReq, opt) {
+		diff["TypesReq"] = []interface{}{s.TypesReq, t.TypesReq}
+	}
+
+	if !equalComparableSlice(s.TypesRes, t.TypesRes, opt) {
+		diff["TypesRes"] = []interface{}{s.TypesRes, t.TypesRes}
 	}
 
 	return diff

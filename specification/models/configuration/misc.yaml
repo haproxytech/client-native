@@ -314,6 +314,26 @@ compression:
       type: string
       enum: [request, response, both]
       x-omitempty: true
+    types-req:
+      type: array
+      x-omitempty: true
+      items:
+        type: string
+    types-res:
+      type: array
+      x-omitempty: true
+      items:
+        type: string
+    algo-req:
+      type: string
+      x-omitempty: true
+      enum: [identity, gzip, deflate, raw-deflate]
+    algos-res:
+      type: array
+      x-omitempty: true
+      items:
+        type: string
+        enum: [identity, gzip, deflate, raw-deflate]
 stats_http_request:
   type: object
   required:

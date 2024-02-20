@@ -9852,7 +9852,25 @@ definitions:
       x-go-name: ReturnHeader
   compression:
       properties:
+          algo-req:
+              enum:
+                  - identity
+                  - gzip
+                  - deflate
+                  - raw-deflate
+              type: string
+              x-omitempty: true
           algorithms:
+              items:
+                  enum:
+                      - identity
+                      - gzip
+                      - deflate
+                      - raw-deflate
+                  type: string
+              type: array
+              x-omitempty: true
+          algos-res:
               items:
                   enum:
                       - identity
@@ -9872,6 +9890,16 @@ definitions:
           offload:
               type: boolean
           types:
+              items:
+                  type: string
+              type: array
+              x-omitempty: true
+          types-req:
+              items:
+                  type: string
+              type: array
+              x-omitempty: true
+          types-res:
               items:
                   type: string
               type: array

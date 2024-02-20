@@ -394,7 +394,19 @@
                     "application/json",
                     "text/plain"
                 ],
-                "direction": "both"
+                "direction": "both",
+                "types-req": [
+                    "text/plain",
+                    "application/json"
+                ],
+                "types-res": [
+                    "text/plain"
+                ],
+                "algo-req": "raw-deflate",
+                "algos-res": [
+                    "raw-deflate",
+                    "identity"
+                ]
             },
             "cookie": {
                 "httponly": true,
@@ -1317,6 +1329,18 @@
                 "offload": true,
                 "types": [
                     "text/plain"
+                ],
+                "types-req": [
+                    "text/plain",
+                    "application/json"
+                ],
+                "types-res": [
+                    "text/plain"
+                ],
+                "algo-req": "raw-deflate",
+                "algos-res": [
+                    "raw-deflate",
+                    "identity"
                 ]
             },
             "contstats": "enabled",

@@ -543,6 +543,10 @@ frontend test
   compression algo identity gzip
   compression type text/plain
   compression offload
+  compression algo-req raw-deflate
+  compression algo-res raw-deflate identity
+  compression type-req text/plain application/json
+  compression type-res text/plain
   clitcpka-cnt 10
   clitcpka-idle 10s
   clitcpka-intvl 10
@@ -695,6 +699,10 @@ backend test
   no option h1-case-adjust-bogus-server
   compression type application/json text/plain
   compression direction both
+  compression algo-req raw-deflate
+  compression algo-res raw-deflate identity
+  compression type-req text/plain application/json
+  compression type-res text/plain
   srvtcpka-cnt 10
   srvtcpka-idle 10s
   srvtcpka-intvl 10

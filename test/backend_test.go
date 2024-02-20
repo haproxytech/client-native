@@ -161,6 +161,18 @@ func TestCreateEditDeleteBackend(t *testing.T) {
 		Compression: &models.Compression{
 			Offload:   true,
 			Direction: "both",
+			TypesReq: []string{
+				"text/html",
+				"text/plain",
+			},
+			TypesRes: []string{
+				"text/plain",
+			},
+			AlgoReq: "deflate",
+			AlgosRes: []string{
+				"deflate",
+				"gzip",
+			},
 		},
 		LogHealthChecks:    "enabled",
 		Checkcache:         "enabled",
