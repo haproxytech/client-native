@@ -318,6 +318,36 @@ func TestGetFrontend(t *testing.T) {
 		if !f.Compression.Offload {
 			t.Errorf("%v: Compression.Offload wrong: %v", f.Name, f.Compression.Offload)
 		}
+		if f.Compression.AlgoReq != "raw-deflate" {
+			t.Errorf("%v: Compression.AlgoReq wrong: %v", f.Name, f.Compression.AlgoReq)
+		}
+		if len(f.Compression.AlgosRes) != 2 {
+			t.Errorf("%v: len Compression.AlgosRes not 2: %v", f.Name, len(f.Compression.AlgosRes))
+		} else {
+			if !(f.Compression.AlgosRes[0] == "identity" || f.Compression.AlgosRes[0] == "raw-deflate") {
+				t.Errorf("%v: Compression.AlgosRes[0] wrong: %v", f.Name, f.Compression.AlgosRes[0])
+			}
+			if !(f.Compression.AlgosRes[1] != "identity" || f.Compression.AlgosRes[0] == "raw-deflate") {
+				t.Errorf("%v: Compression.AlgosRes[1] wrong: %v", f.Name, f.Compression.AlgosRes[1])
+			}
+		}
+		if len(f.Compression.TypesReq) != 2 {
+			t.Errorf("%v: len Compression.TypesReq not 2: %v", f.Name, len(f.Compression.TypesReq))
+		} else {
+			if !(f.Compression.TypesReq[0] == "text/plain" || f.Compression.TypesReq[0] == "application/json") {
+				t.Errorf("%v: Compression.TypesReq[0] wrong: %v", f.Name, f.Compression.TypesReq[0])
+			}
+			if !(f.Compression.TypesReq[1] != "text/plain" || f.Compression.TypesReq[0] == "application/json") {
+				t.Errorf("%v: Compression.TypesReq[1] wrong: %v", f.Name, f.Compression.TypesReq[1])
+			}
+		}
+		if len(f.Compression.TypesRes) != 1 {
+			t.Errorf("%v: len Compression.TypesRes not 1: %v", f.Name, len(f.Compression.TypesRes))
+		} else {
+			if !(f.Compression.TypesReq[0] == "text/plain") {
+				t.Errorf("%v: Compression.TypesReq[0] wrong: %v", f.Name, f.Compression.TypesReq[0])
+			}
+		}
 	}
 
 	if f.HTTPIgnoreProbes != "enabled" {

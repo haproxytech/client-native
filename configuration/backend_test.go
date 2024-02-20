@@ -376,6 +376,36 @@ func TestGetBackend(t *testing.T) {
 		if b.Compression.Direction != "both" {
 			t.Errorf("%v: Compression.Direction not both: %v", b.Name, b.Compression.Direction)
 		}
+		if b.Compression.AlgoReq != "raw-deflate" {
+			t.Errorf("%v: Compression.AlgoReq wrong: %v", b.Name, b.Compression.AlgoReq)
+		}
+		if len(b.Compression.AlgosRes) != 2 {
+			t.Errorf("%v: len Compression.AlgosRes not 2: %v", b.Name, len(b.Compression.AlgosRes))
+		} else {
+			if !(b.Compression.AlgosRes[0] == "identity" || b.Compression.AlgosRes[0] == "raw-deflate") {
+				t.Errorf("%v: Compression.AlgosRes[0] wrong: %v", b.Name, b.Compression.AlgosRes[0])
+			}
+			if !(b.Compression.AlgosRes[1] != "identity" || b.Compression.AlgosRes[0] == "raw-deflate") {
+				t.Errorf("%v: Compression.AlgosRes[1] wrong: %v", b.Name, b.Compression.AlgosRes[1])
+			}
+		}
+		if len(b.Compression.TypesReq) != 2 {
+			t.Errorf("%v: len Compression.TypesReq not 2: %v", b.Name, len(b.Compression.TypesReq))
+		} else {
+			if !(b.Compression.TypesReq[0] == "text/plain" || b.Compression.TypesReq[0] == "application/json") {
+				t.Errorf("%v: Compression.TypesReq[0] wrong: %v", b.Name, b.Compression.TypesReq[0])
+			}
+			if !(b.Compression.TypesReq[1] != "text/plain" || b.Compression.TypesReq[0] == "application/json") {
+				t.Errorf("%v: Compression.TypesReq[1] wrong: %v", b.Name, b.Compression.TypesReq[1])
+			}
+		}
+		if len(b.Compression.TypesRes) != 1 {
+			t.Errorf("%v: len Compression.TypesRes not 1: %v", b.Name, len(b.Compression.TypesRes))
+		} else {
+			if !(b.Compression.TypesReq[0] == "text/plain") {
+				t.Errorf("%v: Compression.TypesReq[0] wrong: %v", b.Name, b.Compression.TypesReq[0])
+			}
+		}
 	}
 	if b.Checkcache != "enabled" {
 		t.Errorf("%v: Checkcache not enabled: %v", b.Name, b.Checkcache)
