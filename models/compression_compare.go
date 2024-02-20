@@ -37,6 +37,10 @@ func (s Compression) Equal(t Compression, opts ...Options) bool {
 		return false
 	}
 
+	if s.Direction != t.Direction {
+		return false
+	}
+
 	if s.Offload != t.Offload {
 		return false
 	}
@@ -67,6 +71,10 @@ func (s Compression) Diff(t Compression, opts ...Options) map[string][]interface
 	diff := make(map[string][]interface{})
 	if !equalComparableSlice(s.Algorithms, t.Algorithms, opt) {
 		diff["Algorithms"] = []interface{}{s.Algorithms, t.Algorithms}
+	}
+
+	if s.Direction != t.Direction {
+		diff["Direction"] = []interface{}{s.Direction, t.Direction}
 	}
 
 	if s.Offload != t.Offload {

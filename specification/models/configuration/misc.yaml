@@ -310,6 +310,10 @@ compression:
         type: string
     offload:
       type: boolean
+    direction:
+      type: string
+      enum: [request, response, both]
+      x-omitempty: true
 stats_http_request:
   type: object
   required:
