@@ -373,6 +373,9 @@ func TestGetBackend(t *testing.T) {
 				t.Errorf("%v: Compression.Types[1] wrong: %v", b.Name, b.Compression.Types[1])
 			}
 		}
+		if b.Compression.Direction != "both" {
+			t.Errorf("%v: Compression.Direction not both: %v", b.Name, b.Compression.Direction)
+		}
 	}
 	if b.Checkcache != "enabled" {
 		t.Errorf("%v: Checkcache not enabled: %v", b.Name, b.Checkcache)
@@ -716,7 +719,8 @@ func TestCreateEditDeleteBackend(t *testing.T) {
 		},
 		AcceptInvalidHTTPResponse: "enabled",
 		Compression: &models.Compression{
-			Offload: true,
+			Offload:   true,
+			Direction: "both",
 		},
 		LogHealthChecks:    "enabled",
 		Checkcache:         "enabled",

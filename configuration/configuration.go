@@ -1172,6 +1172,15 @@ func (s *SectionParser) compression() interface{} {
 		}
 	}
 
+	data, err = s.get("compression direction", false)
+	if err == nil {
+		d, ok := data.(*types.StringC)
+		if ok && d != nil {
+			compressionFound = true
+			compression.Direction = d.Value
+		}
+	}
+
 	if compressionFound {
 		return compression
 	}
@@ -2600,6 +2609,16 @@ func (s *SectionObject) compression(field reflect.Value) error {
 		if err != nil {
 			return err
 		}
+
+		err = s.set("compression direction", nil)
+		if err != nil {
+			// compression direction does not exist on Frontends
+			var setErr error
+			if errors.As(parser_errors.ErrAttributeNotFound, &setErr) {
+				return nil
+			}
+			return err
+		}
 		return nil
 	}
 	compression, ok := field.Elem().Interface().(models.Compression)
@@ -2621,6 +2640,12 @@ func (s *SectionObject) compression(field reflect.Value) error {
 	}
 	if compression.Offload {
 		err = s.set("compression offload", &types.Enabled{})
+		if err != nil {
+			return err
+		}
+	}
+	if len(compression.Direction) > 0 {
+		err = s.set("compression direction", &types.StringC{Value: compression.Direction})
 		if err != nil {
 			return err
 		}
