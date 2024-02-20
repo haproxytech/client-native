@@ -694,6 +694,7 @@ backend test
   no option accept-invalid-http-response
   no option h1-case-adjust-bogus-server
   compression type application/json text/plain
+  compression direction both
   srvtcpka-cnt 10
   srvtcpka-idle 10s
   srvtcpka-intvl 10

@@ -9862,6 +9862,13 @@ definitions:
                   type: string
               type: array
               x-omitempty: true
+          direction:
+              enum:
+                  - request
+                  - response
+                  - both
+              type: string
+              x-omitempty: true
           offload:
               type: boolean
           types:

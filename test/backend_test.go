@@ -159,7 +159,8 @@ func TestCreateEditDeleteBackend(t *testing.T) {
 		},
 		AcceptInvalidHTTPResponse: "enabled",
 		Compression: &models.Compression{
-			Offload: true,
+			Offload:   true,
+			Direction: "both",
 		},
 		LogHealthChecks:    "enabled",
 		Checkcache:         "enabled",

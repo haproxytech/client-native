@@ -39,6 +39,11 @@ type Compression struct {
 	// algorithms
 	Algorithms []string `json:"algorithms,omitempty"`
 
+	// direction
+	// Enum: [request response both]
+	// +kubebuilder:validation:Enum=request;response;both;
+	Direction string `json:"direction,omitempty"`
+
 	// offload
 	Offload bool `json:"offload,omitempty"`
 
@@ -51,6 +56,10 @@ func (m *Compression) Validate(formats strfmt.Registry) error {
 	var res []error
 
 	if err := m.validateAlgorithms(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateDirection(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -91,6 +100,51 @@ func (m *Compression) validateAlgorithms(formats strfmt.Registry) error {
 			return err
 		}
 
+	}
+
+	return nil
+}
+
+var compressionTypeDirectionPropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["request","response","both"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		compressionTypeDirectionPropEnum = append(compressionTypeDirectionPropEnum, v)
+	}
+}
+
+const (
+
+	// CompressionDirectionRequest captures enum value "request"
+	CompressionDirectionRequest string = "request"
+
+	// CompressionDirectionResponse captures enum value "response"
+	CompressionDirectionResponse string = "response"
+
+	// CompressionDirectionBoth captures enum value "both"
+	CompressionDirectionBoth string = "both"
+)
+
+// prop value enum
+func (m *Compression) validateDirectionEnum(path, location string, value string) error {
+	if err := validate.EnumCase(path, location, value, compressionTypeDirectionPropEnum, true); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *Compression) validateDirection(formats strfmt.Registry) error {
+	if swag.IsZero(m.Direction) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateDirectionEnum("direction", "body", m.Direction); err != nil {
+		return err
 	}
 
 	return nil

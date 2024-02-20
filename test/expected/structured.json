@@ -393,7 +393,8 @@
                 "types": [
                     "application/json",
                     "text/plain"
-                ]
+                ],
+                "direction": "both"
             },
             "cookie": {
                 "httponly": true,
