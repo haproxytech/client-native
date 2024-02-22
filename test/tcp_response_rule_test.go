@@ -166,7 +166,8 @@ func TestCreateEditDeleteTCPResponseRule(t *testing.T) {
 	}
 
 	// TestDeleteTCPResponse
-	err = clientTest.DeleteTCPResponseRule(18, "test", "", version)
+	N := int64(20) // number of tcp-response rules in backend "test"
+	err = clientTest.DeleteTCPResponseRule(N, "test", "", version)
 	if err != nil {
 		t.Error(err.Error())
 	} else {
@@ -177,9 +178,9 @@ func TestCreateEditDeleteTCPResponseRule(t *testing.T) {
 		t.Error("Version not incremented")
 	}
 
-	_, _, err = clientTest.GetTCPResponseRule(18, "test", "")
+	_, _, err = clientTest.GetTCPResponseRule(N, "test", "")
 	if err == nil {
-		t.Error("DeleteTCPResponseRule failed, TCP Response Rule 17 still exists")
+		t.Errorf("DeleteTCPResponseRule failed, TCP Response Rule %d still exists", N)
 	}
 
 	err = clientTest.DeleteTCPResponseRule(18, "test_2", "", version)

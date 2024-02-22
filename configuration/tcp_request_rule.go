@@ -300,6 +300,16 @@ func ParseTCPRequestRule(f types.TCPType) (rule *models.TCPRequestRule, err erro
 			rule.Expr = a.Expr.String()
 			rule.Cond = a.Cond
 			rule.CondTest = a.CondTest
+		case *actions.SetFcMark:
+			rule.Action = models.TCPRequestRuleActionSetDashFcDashMark
+			rule.Expr = a.Expr.String()
+			rule.Cond = a.Cond
+			rule.CondTest = a.CondTest
+		case *actions.SetFcTos:
+			rule.Action = models.TCPRequestRuleActionSetDashFcDashTos
+			rule.Expr = a.Expr.String()
+			rule.Cond = a.Cond
+			rule.CondTest = a.CondTest
 		case *tcp_actions.SetSrc:
 			rule.Action = models.TCPRequestRuleActionSetDashSrc
 			rule.Expr = a.Expr.String()
@@ -485,6 +495,26 @@ func ParseTCPRequestRule(f types.TCPType) (rule *models.TCPRequestRule, err erro
 			rule.MarkValue = a.Value
 			rule.Cond = a.Cond
 			rule.CondTest = a.CondTest
+		case *actions.SetBcMark:
+			rule.Action = models.TCPRequestRuleActionSetDashBcDashMark
+			rule.Expr = a.Expr.String()
+			rule.Cond = a.Cond
+			rule.CondTest = a.CondTest
+		case *actions.SetBcTos:
+			rule.Action = models.TCPRequestRuleActionSetDashBcDashTos
+			rule.Expr = a.Expr.String()
+			rule.Cond = a.Cond
+			rule.CondTest = a.CondTest
+		case *actions.SetFcMark:
+			rule.Action = models.TCPRequestRuleActionSetDashFcDashMark
+			rule.Expr = a.Expr.String()
+			rule.Cond = a.Cond
+			rule.CondTest = a.CondTest
+		case *actions.SetFcTos:
+			rule.Action = models.TCPRequestRuleActionSetDashFcDashTos
+			rule.Expr = a.Expr.String()
+			rule.Cond = a.Cond
+			rule.CondTest = a.CondTest
 		case *actions.SetSrcPort:
 			rule.Action = models.TCPRequestRuleActionSetDashSrcDashPort
 			rule.Expr = a.Expr.String()
@@ -580,6 +610,16 @@ func ParseTCPRequestRule(f types.TCPType) (rule *models.TCPRequestRule, err erro
 			rule.Action = models.TCPRequestRuleActionScDashSetDashGpt0
 			rule.ScIncID = a.ID
 			rule.GptValue = a.Expr.String()
+			rule.Cond = a.Cond
+			rule.CondTest = a.CondTest
+		case *actions.SetFcMark:
+			rule.Action = models.TCPRequestRuleActionSetDashFcDashMark
+			rule.Expr = a.Expr.String()
+			rule.Cond = a.Cond
+			rule.CondTest = a.CondTest
+		case *actions.SetFcTos:
+			rule.Action = models.TCPRequestRuleActionSetDashFcDashTos
+			rule.Expr = a.Expr.String()
 			rule.Cond = a.Cond
 			rule.CondTest = a.CondTest
 		case *actions.SetVar:
@@ -803,6 +843,22 @@ func SerializeTCPRequestRule(f models.TCPRequestRule) (rule types.TCPType, err e
 			return &tcp_types.Connection{
 				Action: &actions.SetDst{
 					Expr:     common.Expression{Expr: strings.Split(f.Expr, " ")},
+					Cond:     f.Cond,
+					CondTest: f.CondTest,
+				},
+			}, nil
+		case models.TCPRequestRuleActionSetDashFcDashMark:
+			return &tcp_types.Connection{
+				Action: &actions.SetFcMark{
+					Expr:     common.Expression{Expr: strings.Split(f.Expr+f.MarkValue, " ")},
+					Cond:     f.Cond,
+					CondTest: f.CondTest,
+				},
+			}, nil
+		case models.TCPRequestRuleActionSetDashFcDashTos:
+			return &tcp_types.Connection{
+				Action: &actions.SetFcTos{
+					Expr:     common.Expression{Expr: strings.Split(f.Expr+f.TosValue, " ")},
 					Cond:     f.Cond,
 					CondTest: f.CondTest,
 				},
@@ -1089,6 +1145,38 @@ func SerializeTCPRequestRule(f models.TCPRequestRule) (rule types.TCPType, err e
 					CondTest: f.CondTest,
 				},
 			}, nil
+		case models.TCPRequestRuleActionSetDashBcDashMark:
+			return &tcp_types.Content{
+				Action: &actions.SetBcMark{
+					Expr:     common.Expression{Expr: strings.Split(f.Expr+f.MarkValue, " ")},
+					Cond:     f.Cond,
+					CondTest: f.CondTest,
+				},
+			}, nil
+		case models.TCPRequestRuleActionSetDashBcDashTos:
+			return &tcp_types.Content{
+				Action: &actions.SetBcTos{
+					Expr:     common.Expression{Expr: strings.Split(f.Expr+f.TosValue, " ")},
+					Cond:     f.Cond,
+					CondTest: f.CondTest,
+				},
+			}, nil
+		case models.TCPRequestRuleActionSetDashFcDashMark:
+			return &tcp_types.Content{
+				Action: &actions.SetFcMark{
+					Expr:     common.Expression{Expr: strings.Split(f.Expr+f.MarkValue, " ")},
+					Cond:     f.Cond,
+					CondTest: f.CondTest,
+				},
+			}, nil
+		case models.TCPRequestRuleActionSetDashFcDashTos:
+			return &tcp_types.Content{
+				Action: &actions.SetFcTos{
+					Expr:     common.Expression{Expr: strings.Split(f.Expr+f.TosValue, " ")},
+					Cond:     f.Cond,
+					CondTest: f.CondTest,
+				},
+			}, nil
 		}
 		return nil, NewConfError(ErrValidationError, fmt.Sprintf("unsupported action '%T' in tcp_request_rule", f.Action))
 	case models.TCPRequestRuleTypeSession:
@@ -1239,6 +1327,22 @@ func SerializeTCPRequestRule(f models.TCPRequestRule) (rule types.TCPType, err e
 		case models.TCPRequestRuleActionSilentDashDrop:
 			return &tcp_types.Session{
 				Action: &actions.SilentDrop{
+					Cond:     f.Cond,
+					CondTest: f.CondTest,
+				},
+			}, nil
+		case models.TCPRequestRuleActionSetDashFcDashMark:
+			return &tcp_types.Session{
+				Action: &actions.SetFcMark{
+					Expr:     common.Expression{Expr: strings.Split(f.Expr+f.MarkValue, " ")},
+					Cond:     f.Cond,
+					CondTest: f.CondTest,
+				},
+			}, nil
+		case models.TCPRequestRuleActionSetDashFcDashTos:
+			return &tcp_types.Session{
+				Action: &actions.SetFcTos{
+					Expr:     common.Expression{Expr: strings.Split(f.Expr+f.TosValue, " ")},
 					Cond:     f.Cond,
 					CondTest: f.CondTest,
 				},

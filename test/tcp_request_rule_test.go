@@ -168,7 +168,8 @@ func TestCreateEditDeleteTCPRequestRule(t *testing.T) {
 	}
 
 	// TestDeleteTCPRequest
-	err = clientTest.DeleteTCPRequestRule(33, configuration.FrontendParentName, "test", "", version)
+	N := int64(41) // number of tcp-request rules in frontend "test"
+	err = clientTest.DeleteTCPRequestRule(N, configuration.FrontendParentName, "test", "", version)
 	if err != nil {
 		t.Error(err.Error())
 	} else {
@@ -179,9 +180,9 @@ func TestCreateEditDeleteTCPRequestRule(t *testing.T) {
 		t.Error("Version not incremented")
 	}
 
-	_, _, err = clientTest.GetTCPRequestRule(33, configuration.FrontendParentName, "test", "")
+	_, _, err = clientTest.GetTCPRequestRule(N, configuration.FrontendParentName, "test", "")
 	if err == nil {
-		t.Error("DeleteTCPRequestRule failed, TCP Request Rule 33 still exists")
+		t.Errorf("DeleteTCPRequestRule failed, TCP Request Rule %d still exists", N)
 	}
 
 	err = clientTest.DeleteTCPRequestRule(27, configuration.BackendParentName, "test_2", "", version)
@@ -393,6 +394,24 @@ func TestSerializeTCPRequestRule(t *testing.T) {
 				CondTest:   "limit_exceeded",
 			},
 			expectedResult: "session attach-srv srv8 unless limit_exceeded",
+		},
+		{
+			input: models.TCPRequestRule{
+				Type:     models.TCPRequestRuleTypeContent,
+				Action:   models.TCPRequestRuleActionSetDashBcDashMark,
+				Expr:     "0xffff",
+				Cond:     "if",
+				CondTest: "TRUE",
+			},
+			expectedResult: "content set-bc-mark 0xffff if TRUE",
+		},
+		{
+			input: models.TCPRequestRule{
+				Type:      models.TCPRequestRuleTypeContent,
+				Action:    models.TCPRequestRuleActionSetDashBcDashMark,
+				MarkValue: "123",
+			},
+			expectedResult: "content set-bc-mark 123",
 		},
 	}
 

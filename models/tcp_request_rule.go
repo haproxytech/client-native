@@ -38,8 +38,8 @@ import (
 // swagger:model tcp_request_rule
 type TCPRequestRule struct {
 	// action
-	// Enum: [accept attach-srv capture do-resolve expect-netscaler-cip expect-proxy reject sc-add-gpc sc-inc-gpc sc-inc-gpc0 sc-inc-gpc1 sc-set-gpt0 send-spoe-group set-dst-port set-dst set-priority set-src set-var silent-drop track-sc0 track-sc1 track-sc2 track-sc unset-var use-service lua set-bandwidth-limit set-src-port set-mark set-tos set-var-fmt set-log-level set-nice switch-mode]
-	// +kubebuilder:validation:Enum=accept;attach-srv;capture;do-resolve;expect-netscaler-cip;expect-proxy;reject;sc-add-gpc;sc-inc-gpc;sc-inc-gpc0;sc-inc-gpc1;sc-set-gpt0;send-spoe-group;set-dst-port;set-dst;set-priority;set-src;set-var;silent-drop;track-sc0;track-sc1;track-sc2;track-sc;unset-var;use-service;lua;set-bandwidth-limit;set-src-port;set-mark;set-tos;set-var-fmt;set-log-level;set-nice;switch-mode;
+	// Enum: [accept attach-srv capture do-resolve expect-netscaler-cip expect-proxy reject sc-add-gpc sc-inc-gpc sc-inc-gpc0 sc-inc-gpc1 sc-set-gpt0 send-spoe-group set-dst-port set-dst set-priority set-src set-var silent-drop track-sc0 track-sc1 track-sc2 track-sc unset-var use-service lua set-bandwidth-limit set-src-port set-mark set-tos set-var-fmt set-log-level set-nice switch-mode set-bc-mark set-bc-tos set-fc-mark set-fc-tos]
+	// +kubebuilder:validation:Enum=accept;attach-srv;capture;do-resolve;expect-netscaler-cip;expect-proxy;reject;sc-add-gpc;sc-inc-gpc;sc-inc-gpc0;sc-inc-gpc1;sc-set-gpt0;send-spoe-group;set-dst-port;set-dst;set-priority;set-src;set-var;silent-drop;track-sc0;track-sc1;track-sc2;track-sc;unset-var;use-service;lua;set-bandwidth-limit;set-src-port;set-mark;set-tos;set-var-fmt;set-log-level;set-nice;switch-mode;set-bc-mark;set-bc-tos;set-fc-mark;set-fc-tos;
 	Action string `json:"action,omitempty"`
 
 	// bandwidth limit limit
@@ -249,7 +249,7 @@ var tcpRequestRuleTypeActionPropEnum []interface{}
 
 func init() {
 	var res []string
-	if err := json.Unmarshal([]byte(`["accept","attach-srv","capture","do-resolve","expect-netscaler-cip","expect-proxy","reject","sc-add-gpc","sc-inc-gpc","sc-inc-gpc0","sc-inc-gpc1","sc-set-gpt0","send-spoe-group","set-dst-port","set-dst","set-priority","set-src","set-var","silent-drop","track-sc0","track-sc1","track-sc2","track-sc","unset-var","use-service","lua","set-bandwidth-limit","set-src-port","set-mark","set-tos","set-var-fmt","set-log-level","set-nice","switch-mode"]`), &res); err != nil {
+	if err := json.Unmarshal([]byte(`["accept","attach-srv","capture","do-resolve","expect-netscaler-cip","expect-proxy","reject","sc-add-gpc","sc-inc-gpc","sc-inc-gpc0","sc-inc-gpc1","sc-set-gpt0","send-spoe-group","set-dst-port","set-dst","set-priority","set-src","set-var","silent-drop","track-sc0","track-sc1","track-sc2","track-sc","unset-var","use-service","lua","set-bandwidth-limit","set-src-port","set-mark","set-tos","set-var-fmt","set-log-level","set-nice","switch-mode","set-bc-mark","set-bc-tos","set-fc-mark","set-fc-tos"]`), &res); err != nil {
 		panic(err)
 	}
 	for _, v := range res {
@@ -360,6 +360,18 @@ const (
 
 	// TCPRequestRuleActionSwitchDashMode captures enum value "switch-mode"
 	TCPRequestRuleActionSwitchDashMode string = "switch-mode"
+
+	// TCPRequestRuleActionSetDashBcDashMark captures enum value "set-bc-mark"
+	TCPRequestRuleActionSetDashBcDashMark string = "set-bc-mark"
+
+	// TCPRequestRuleActionSetDashBcDashTos captures enum value "set-bc-tos"
+	TCPRequestRuleActionSetDashBcDashTos string = "set-bc-tos"
+
+	// TCPRequestRuleActionSetDashFcDashMark captures enum value "set-fc-mark"
+	TCPRequestRuleActionSetDashFcDashMark string = "set-fc-mark"
+
+	// TCPRequestRuleActionSetDashFcDashTos captures enum value "set-fc-tos"
+	TCPRequestRuleActionSetDashFcDashTos string = "set-fc-tos"
 )
 
 // prop value enum

@@ -713,6 +713,34 @@ func ParseHTTPRequestRule(f types.Action) (rule *models.HTTPRequestRule, err err
 			Cond:                 v.Cond,
 			CondTest:             v.CondTest,
 		}
+	case *actions.SetBcMark:
+		rule = &models.HTTPRequestRule{
+			Type:     models.HTTPRequestRuleTypeSetDashBcDashMark,
+			Expr:     v.Expr.String(),
+			Cond:     v.Cond,
+			CondTest: v.CondTest,
+		}
+	case *actions.SetBcTos:
+		rule = &models.HTTPRequestRule{
+			Type:     models.HTTPRequestRuleTypeSetDashBcDashTos,
+			Expr:     v.Expr.String(),
+			Cond:     v.Cond,
+			CondTest: v.CondTest,
+		}
+	case *actions.SetFcMark:
+		rule = &models.HTTPRequestRule{
+			Type:     models.HTTPRequestRuleTypeSetDashFcDashMark,
+			Expr:     v.Expr.String(),
+			Cond:     v.Cond,
+			CondTest: v.CondTest,
+		}
+	case *actions.SetFcTos:
+		rule = &models.HTTPRequestRule{
+			Type:     models.HTTPRequestRuleTypeSetDashFcDashTos,
+			Expr:     v.Expr.String(),
+			Cond:     v.Cond,
+			CondTest: v.CondTest,
+		}
 	}
 
 	return rule, err
@@ -1188,6 +1216,30 @@ func SerializeHTTPRequestRule(f models.HTTPRequestRule) (rule types.Action, err 
 			Name:     f.BandwidthLimitName,
 			Limit:    common.Expression{Expr: strings.Split(f.BandwidthLimitLimit, " ")},
 			Period:   common.Expression{Expr: strings.Split(f.BandwidthLimitPeriod, " ")},
+			Cond:     f.Cond,
+			CondTest: f.CondTest,
+		}
+	case "set-bc-mark":
+		rule = &actions.SetBcMark{
+			Expr:     common.Expression{Expr: strings.Split(f.Expr+f.MarkValue, " ")},
+			Cond:     f.Cond,
+			CondTest: f.CondTest,
+		}
+	case "set-bc-tos":
+		rule = &actions.SetBcTos{
+			Expr:     common.Expression{Expr: strings.Split(f.Expr+f.TosValue, " ")},
+			Cond:     f.Cond,
+			CondTest: f.CondTest,
+		}
+	case "set-fc-mark":
+		rule = &actions.SetFcMark{
+			Expr:     common.Expression{Expr: strings.Split(f.Expr+f.MarkValue, " ")},
+			Cond:     f.Cond,
+			CondTest: f.CondTest,
+		}
+	case "set-fc-tos":
+		rule = &actions.SetFcTos{
+			Expr:     common.Expression{Expr: strings.Split(f.Expr+f.TosValue, " ")},
 			Cond:     f.Cond,
 			CondTest: f.CondTest,
 		}

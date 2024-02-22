@@ -534,6 +534,20 @@ func ParseHTTPResponseRule(f types.Action) *models.HTTPResponseRule { //nolint:m
 			Cond:                 v.Cond,
 			CondTest:             v.CondTest,
 		}
+	case *actions.SetFcMark:
+		return &models.HTTPResponseRule{
+			Type:     models.HTTPResponseRuleTypeSetDashFcDashMark,
+			Expr:     v.Expr.String(),
+			Cond:     v.Cond,
+			CondTest: v.CondTest,
+		}
+	case *actions.SetFcTos:
+		return &models.HTTPResponseRule{
+			Type:     models.HTTPResponseRuleTypeSetDashFcDashTos,
+			Expr:     v.Expr.String(),
+			Cond:     v.Cond,
+			CondTest: v.CondTest,
+		}
 	}
 	return nil
 }
@@ -852,6 +866,18 @@ func SerializeHTTPResponseRule(f models.HTTPResponseRule) (rule types.Action, er
 			Name:     f.BandwidthLimitName,
 			Limit:    common.Expression{Expr: strings.Split(f.BandwidthLimitLimit, " ")},
 			Period:   common.Expression{Expr: strings.Split(f.BandwidthLimitPeriod, " ")},
+			Cond:     f.Cond,
+			CondTest: f.CondTest,
+		}
+	case "set-fc-mark":
+		rule = &actions.SetFcMark{
+			Expr:     common.Expression{Expr: strings.Split(f.Expr+f.MarkValue, " ")},
+			Cond:     f.Cond,
+			CondTest: f.CondTest,
+		}
+	case "set-fc-tos":
+		rule = &actions.SetFcTos{
+			Expr:     common.Expression{Expr: strings.Split(f.Expr+f.TosValue, " ")},
 			Cond:     f.Cond,
 			CondTest: f.CondTest,
 		}

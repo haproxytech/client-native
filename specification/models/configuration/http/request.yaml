@@ -42,8 +42,12 @@ http_request_rule:
         - sc-inc-gpc1
         - sc-set-gpt0
         - send-spoe-group
+        - set-bc-mark
+        - set-bc-tos
         - set-dst
         - set-dst-port
+        - set-fc-mark
+        - set-fc-tos
         - set-header
         - set-log-level
         - set-map
@@ -452,7 +456,7 @@ http_request_rule:
       x-display-name: Standard HAProxy expression
       x-dependency:
         type:
-          value: [do-resolve, set-dst, set-dst-port, set-priority-class, set-priority-offset, set-src, set-src-port]
+          value: [do-resolve, set-bc-mark, set-bc-tos, set-dst, set-dst-port, set-fc-mark, set-fc-tos, set-priority-class, set-priority-offset, set-src, set-src-port]
           required: true
     sc_expr:
       type: string

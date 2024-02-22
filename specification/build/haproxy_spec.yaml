@@ -3818,8 +3818,12 @@ definitions:
                       required: true
                       value:
                           - do-resolve
+                          - set-bc-mark
+                          - set-bc-tos
                           - set-dst
                           - set-dst-port
+                          - set-fc-mark
+                          - set-fc-tos
                           - set-priority-class
                           - set-priority-offset
                           - set-src
@@ -4334,8 +4338,12 @@ definitions:
                   - sc-inc-gpc1
                   - sc-set-gpt0
                   - send-spoe-group
+                  - set-bc-mark
+                  - set-bc-tos
                   - set-dst
                   - set-dst-port
+                  - set-fc-mark
+                  - set-fc-tos
                   - set-header
                   - set-log-level
                   - set-map
@@ -4536,6 +4544,15 @@ definitions:
                   type:
                       value: deny
               x-nullable: true
+          expr:
+              type: string
+              x-dependency:
+                  type:
+                      required: true
+                      value:
+                          - set-fc-mark
+                          - set-fc-tos
+              x-display-name: Standard HAProxy expression
           hdr_format:
               type: string
               x-dependency:
@@ -4942,6 +4959,8 @@ definitions:
                   - sc-inc-gpc1
                   - sc-set-gpt0
                   - send-spoe-group
+                  - set-fc-mark
+                  - set-fc-tos
                   - set-header
                   - set-log-level
                   - set-map
@@ -5677,6 +5696,10 @@ definitions:
                   - set-log-level
                   - set-nice
                   - switch-mode
+                  - set-bc-mark
+                  - set-bc-tos
+                  - set-fc-mark
+                  - set-fc-tos
               type: string
               x-dependency:
                   type:
@@ -5776,6 +5799,10 @@ definitions:
                           - set-dst
                           - set-dst-port
                           - set-src-port
+                          - set-bc-mark
+                          - set-bc-tos
+                          - set-fc-mark
+                          - set-fc-tos
                   type:
                       value:
                           - session
@@ -6156,6 +6183,8 @@ definitions:
                   - set-mark
                   - set-nice
                   - set-tos
+                  - set-fc-mark
+                  - set-fc-tos
                   - silent-drop
                   - unset-var
               type: string
@@ -6217,6 +6246,8 @@ definitions:
                       value:
                           - set-src-port
                           - sc-set-gpt0
+                          - set-fc-mark
+                          - set-fc-tos
                   type:
                       value: content
               x-display-name: Standard HAProxy expression

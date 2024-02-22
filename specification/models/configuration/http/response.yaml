@@ -33,6 +33,8 @@ http_response_rule:
         - sc-inc-gpc1
         - sc-set-gpt0
         - send-spoe-group
+        - set-fc-mark
+        - set-fc-tos
         - set-header
         - set-log-level
         - set-map
@@ -68,6 +70,13 @@ http_response_rule:
       x-dependency:
         type:
           value: capture
+          required: true
+    expr:
+      type: string
+      x-display-name: Standard HAProxy expression
+      x-dependency:
+        type:
+          value: [set-fc-mark, set-fc-tos]
           required: true
     redir_type:
       type: string

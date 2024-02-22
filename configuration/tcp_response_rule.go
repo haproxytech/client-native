@@ -187,6 +187,7 @@ func ParseTCPResponseRules(backend string, p parser.Parser) (models.TCPResponseR
 	return tcpResRules, nil
 }
 
+//nolint:maintidx
 func ParseTCPResponseRule(t types.TCPType) (*models.TCPResponseRule, error) {
 	switch v := t.(type) {
 	case *tcp_types.InspectDelay:
@@ -343,6 +344,22 @@ func ParseTCPResponseRule(t types.TCPType) (*models.TCPResponseRule, error) {
 				Type:     models.TCPResponseRuleTypeContent,
 				Action:   models.TCPResponseRuleActionSetDashTos,
 				TosValue: a.Value,
+				Cond:     a.Cond,
+				CondTest: a.CondTest,
+			}, nil
+		case *actions.SetFcMark:
+			return &models.TCPResponseRule{
+				Type:     models.TCPResponseRuleTypeContent,
+				Action:   models.TCPResponseRuleActionSetDashFcDashMark,
+				Expr:     a.Expr.String(),
+				Cond:     a.Cond,
+				CondTest: a.CondTest,
+			}, nil
+		case *actions.SetFcTos:
+			return &models.TCPResponseRule{
+				Type:     models.TCPResponseRuleTypeContent,
+				Action:   models.TCPResponseRuleActionSetDashFcDashTos,
+				Expr:     a.Expr.String(),
 				Cond:     a.Cond,
 				CondTest: a.CondTest,
 			}, nil
@@ -522,6 +539,22 @@ func SerializeTCPResponseRule(t models.TCPResponseRule) (types.TCPType, error) {
 				Action: &actions.UnsetVar{
 					Name:     t.VarName,
 					Scope:    t.VarScope,
+					Cond:     t.Cond,
+					CondTest: t.CondTest,
+				},
+			}, nil
+		case models.TCPResponseRuleActionSetDashFcDashMark:
+			return &tcp_types.Content{
+				Action: &actions.SetFcMark{
+					Expr:     common.Expression{Expr: strings.Split(t.Expr+t.MarkValue, " ")},
+					Cond:     t.Cond,
+					CondTest: t.CondTest,
+				},
+			}, nil
+		case models.TCPResponseRuleActionSetDashFcDashTos:
+			return &tcp_types.Content{
+				Action: &actions.SetFcTos{
+					Expr:     common.Expression{Expr: strings.Split(t.Expr+t.TosValue, " ")},
 					Cond:     t.Cond,
 					CondTest: t.CondTest,
 				},

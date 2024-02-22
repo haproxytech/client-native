@@ -435,6 +435,10 @@ frontend test
   http-request track-sc1 src table tr1 if TRUE
   http-request track-sc2 src table tr2 if TRUE
   http-request track-sc5 src table test if TRUE
+  http-request set-bc-mark 123 if TRUE
+  http-request set-bc-tos 0x22 
+  http-request set-fc-mark hdr(port)
+  http-request set-fc-tos 255 if FALSE
   http-response allow if src 192.168.0.0/16
   http-response set-header X-SSL %[ssl_fc]
   http-response set-var(req.my_var) req.fhdr(user-agent),lower
@@ -520,6 +524,14 @@ frontend test
   tcp-request session attach-srv srv1
   tcp-request session attach-srv srv2 name example.com
   tcp-request session attach-srv srv3 if is_cached
+  tcp-request connection set-fc-mark 0xffffffff
+  tcp-request connection set-fc-tos 0
+  tcp-request session set-fc-mark 0
+  tcp-request session set-fc-tos 0xff
+  tcp-request content set-bc-mark 899 if TRUE
+  tcp-request content set-bc-tos 2 if FALSE
+  tcp-request content set-fc-mark hdr(port) if TRUE
+  tcp-request content set-fc-tos req.hdr_cnt("X-Secret")
   log global
   no log
   log 127.0.0.1:514 local0 notice notice
@@ -662,6 +674,8 @@ backend test
   tcp-response content set-tos 2 if FALSE
   tcp-response content silent-drop if FALSE
   tcp-response content unset-var(req.my_var) if FALSE
+  tcp-response content set-fc-mark 7676 if TRUE
+  tcp-response content set-fc-tos 0xab if FALSE
   option contstats
   timeout check 2s
   timeout tunnel 5s
@@ -740,6 +754,8 @@ backend test
   http-send-name-header X-My-Awesome-Header
   persist rdp-cookie(name)
   source 192.168.1.222 usesrc hdr_ip(hdr,occ)
+  http-response set-fc-mark 123
+  http-response set-fc-tos 1 if TRUE
 
 peers mycluster
   enabled

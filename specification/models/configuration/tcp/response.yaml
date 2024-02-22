@@ -16,7 +16,7 @@ tcp_response_rule:
       x-nullable: false
     action:
       type: string
-      enum: [accept, reject, lua, set-bandwidth-limit, close, sc-add-gpc, sc-inc-gpc, sc-inc-gpc0, sc-inc-gpc1, sc-set-gpt0, send-spoe-group, set-log-level, set-mark, set-nice, set-tos, silent-drop, unset-var]
+      enum: [accept, reject, lua, set-bandwidth-limit, close, sc-add-gpc, sc-inc-gpc, sc-inc-gpc0, sc-inc-gpc1, sc-set-gpt0, send-spoe-group, set-log-level, set-mark, set-nice, set-tos, set-fc-mark, set-fc-tos, silent-drop, unset-var]
       x-nullable: false
       x-dependency:
         type:
@@ -76,7 +76,7 @@ tcp_response_rule:
       x-display-name: Standard HAProxy expression
       x-dependency:
         action:
-          value: [set-src-port, sc-set-gpt0]
+          value: [set-src-port, sc-set-gpt0, set-fc-mark, set-fc-tos]
           required: true
         type:
           value: content

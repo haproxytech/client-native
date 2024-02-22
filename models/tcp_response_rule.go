@@ -38,8 +38,8 @@ import (
 // swagger:model tcp_response_rule
 type TCPResponseRule struct {
 	// action
-	// Enum: [accept reject lua set-bandwidth-limit close sc-add-gpc sc-inc-gpc sc-inc-gpc0 sc-inc-gpc1 sc-set-gpt0 send-spoe-group set-log-level set-mark set-nice set-tos silent-drop unset-var]
-	// +kubebuilder:validation:Enum=accept;reject;lua;set-bandwidth-limit;close;sc-add-gpc;sc-inc-gpc;sc-inc-gpc0;sc-inc-gpc1;sc-set-gpt0;send-spoe-group;set-log-level;set-mark;set-nice;set-tos;silent-drop;unset-var;
+	// Enum: [accept reject lua set-bandwidth-limit close sc-add-gpc sc-inc-gpc sc-inc-gpc0 sc-inc-gpc1 sc-set-gpt0 send-spoe-group set-log-level set-mark set-nice set-tos set-fc-mark set-fc-tos silent-drop unset-var]
+	// +kubebuilder:validation:Enum=accept;reject;lua;set-bandwidth-limit;close;sc-add-gpc;sc-inc-gpc;sc-inc-gpc0;sc-inc-gpc1;sc-set-gpt0;send-spoe-group;set-log-level;set-mark;set-nice;set-tos;set-fc-mark;set-fc-tos;silent-drop;unset-var;
 	Action string `json:"action,omitempty"`
 
 	// bandwidth limit limit
@@ -204,7 +204,7 @@ var tcpResponseRuleTypeActionPropEnum []interface{}
 
 func init() {
 	var res []string
-	if err := json.Unmarshal([]byte(`["accept","reject","lua","set-bandwidth-limit","close","sc-add-gpc","sc-inc-gpc","sc-inc-gpc0","sc-inc-gpc1","sc-set-gpt0","send-spoe-group","set-log-level","set-mark","set-nice","set-tos","silent-drop","unset-var"]`), &res); err != nil {
+	if err := json.Unmarshal([]byte(`["accept","reject","lua","set-bandwidth-limit","close","sc-add-gpc","sc-inc-gpc","sc-inc-gpc0","sc-inc-gpc1","sc-set-gpt0","send-spoe-group","set-log-level","set-mark","set-nice","set-tos","set-fc-mark","set-fc-tos","silent-drop","unset-var"]`), &res); err != nil {
 		panic(err)
 	}
 	for _, v := range res {
@@ -258,6 +258,12 @@ const (
 
 	// TCPResponseRuleActionSetDashTos captures enum value "set-tos"
 	TCPResponseRuleActionSetDashTos string = "set-tos"
+
+	// TCPResponseRuleActionSetDashFcDashMark captures enum value "set-fc-mark"
+	TCPResponseRuleActionSetDashFcDashMark string = "set-fc-mark"
+
+	// TCPResponseRuleActionSetDashFcDashTos captures enum value "set-fc-tos"
+	TCPResponseRuleActionSetDashFcDashTos string = "set-fc-tos"
 
 	// TCPResponseRuleActionSilentDashDrop captures enum value "silent-drop"
 	TCPResponseRuleActionSilentDashDrop string = "silent-drop"

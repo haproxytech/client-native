@@ -845,6 +845,22 @@
                     "type": "content",
                     "var_name": "my_var",
                     "var_scope": "req"
+                },
+                {
+                    "action": "set-fc-mark",
+                    "cond": "if",
+                    "cond_test": "TRUE",
+                    "index": 18,
+                    "type": "content",
+                    "expr": "7676"
+                },
+                {
+                    "action": "set-fc-tos",
+                    "cond": "if",
+                    "cond_test": "FALSE",
+                    "index": 19,
+                    "type": "content",
+                    "expr": "0xab"
                 }
             ],
             "waf_body_rule_list": [
@@ -1982,6 +1998,30 @@
                     "track_sc_stick_counter": 5,
                     "track_sc_table": "test",
                     "type": "track-sc"
+                },
+                {
+                    "index": 47,
+                    "type": "set-bc-mark",
+                    "expr": "123",
+                    "cond": "if",
+                    "cond_test": "TRUE"
+                },
+                {
+                    "index": 48,
+                    "type": "set-bc-tos",
+                    "expr": "0x22"
+                },
+                {
+                    "index": 49,
+                    "type": "set-fc-mark",
+                    "expr": "hdr(port)"
+                },
+                {
+                    "index": 50,
+                    "type": "set-fc-tos",
+                    "expr": "255",
+                    "cond": "if",
+                    "cond_test": "FALSE"
                 }
             ],
             "http_response_rule_list": [
@@ -2538,6 +2578,60 @@
                     "index": 32,
                     "server_name": "srv3",
                     "type": "session"
+                },
+                {
+                    "action": "set-fc-mark",
+                    "index": 33,
+                    "type": "connection",
+                    "expr": "0xffffffff"
+                },
+                {
+                    "action": "set-fc-tos",
+                    "index": 34,
+                    "type": "connection",
+                    "expr": "0"
+                },
+                {
+                    "action": "set-fc-mark",
+                    "index": 35,
+                    "type": "session",
+                    "expr": "0"
+                },
+                {
+                    "action": "set-fc-tos",
+                    "index": 36,
+                    "type": "session",
+                    "expr": "0xff"
+                },
+                {
+                    "action": "set-bc-mark",
+                    "index": 37,
+                    "type": "content",
+                    "expr": "899",
+                    "cond": "if",
+                    "cond_test": "TRUE"
+                },
+                {
+                    "action": "set-bc-tos",
+                    "index": 38,
+                    "type": "content",
+                    "expr": "2",
+                    "cond": "if",
+                    "cond_test": "FALSE"
+                },
+                {
+                    "action": "set-fc-mark",
+                    "index": 39,
+                    "type": "content",
+                    "expr": "hdr(port)",
+                    "cond": "if",
+                    "cond_test": "TRUE"
+                },
+                {
+                    "action": "set-fc-tos",
+                    "index": 40,
+                    "type": "content",
+                    "expr": "req.hdr_cnt(\"X-Secret\")"
                 }
             ],
             "binds": {

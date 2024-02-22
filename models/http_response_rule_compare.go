@@ -90,6 +90,10 @@ func (s HTTPResponseRule) Equal(t HTTPResponseRule, opts ...Options) bool {
 		return false
 	}
 
+	if s.Expr != t.Expr {
+		return false
+	}
+
 	if s.HdrFormat != t.HdrFormat {
 		return false
 	}
@@ -364,6 +368,10 @@ func (s HTTPResponseRule) Diff(t HTTPResponseRule, opts ...Options) map[string][
 
 	if !equalPointers(s.DenyStatus, t.DenyStatus) {
 		diff["DenyStatus"] = []interface{}{ValueOrNil(s.DenyStatus), ValueOrNil(t.DenyStatus)}
+	}
+
+	if s.Expr != t.Expr {
+		diff["Expr"] = []interface{}{s.Expr, t.Expr}
 	}
 
 	if s.HdrFormat != t.HdrFormat {
