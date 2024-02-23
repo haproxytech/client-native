@@ -2910,6 +2910,7 @@ definitions:
               type: integer
               x-nullable: true
           ignore_persist:
+              description: This field is deprecated in favor of ignore_persist_list, and will be removed in a future release
               properties:
                   cond:
                       enum:
@@ -2927,6 +2928,30 @@ definitions:
                   - cond
                   - cond_test
               type: object
+              x-deprecated: true
+          ignore_persist_list:
+              items:
+                  properties:
+                      cond:
+                          enum:
+                              - if
+                              - unless
+                          type: string
+                          x-display-name: Condition
+                      cond_test:
+                          type: string
+                          x-dependency:
+                              cond:
+                                  required: true
+                          x-display-name: Condition Test
+                  required:
+                      - cond
+                      - cond_test
+                  type: object
+                  x-go-name: IgnorePersist
+              type: array
+              x-go-name: IgnorePersistList
+              x-omitempty: true
           independent_streams:
               enum:
                   - enabled
