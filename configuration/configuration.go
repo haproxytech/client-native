@@ -396,8 +396,8 @@ func (s *SectionParser) checkSpecialFields(fieldName string) (match bool, data i
 		return true, s.httpSendNameHeader()
 	case "ForcePersist":
 		return true, s.forcePersist()
-	case "IgnorePersist":
-		return true, s.ignorePersist()
+	case "IgnorePersistList":
+		return true, s.ignorePersistList()
 	case "Source":
 		return true, s.source()
 	case "Originalto":
@@ -1392,19 +1392,27 @@ func (s *SectionParser) forcePersist() interface{} {
 	return nil
 }
 
-func (s *SectionParser) ignorePersist() interface{} {
-	if s.Section == parser.Backends {
-		data, err := s.get("ignore-persist", false)
-		if err != nil {
-			return nil
-		}
-		d := data.(*types.IgnorePersist)
-		return &models.BackendIgnorePersist{
-			Cond:     &d.Cond,
-			CondTest: &d.CondTest,
+func (s *SectionParser) ignorePersistList() interface{} {
+	if s.Section != parser.Backends {
+		return nil
+	}
+	data, err := s.get("ignore-persist", false)
+	if err != nil {
+		return nil
+	}
+	d := data.([]types.IgnorePersist)
+	if len(d) == 0 {
+		return nil
+	}
+
+	items := make([]*models.IgnorePersist, len(d))
+	for i := range d {
+		items[i] = &models.IgnorePersist{
+			Cond:     &d[i].Cond,
+			CondTest: &d[i].CondTest,
 		}
 	}
-	return nil
+	return items
 }
 
 func (s *SectionParser) source() interface{} {
@@ -1629,8 +1637,15 @@ func (s *SectionObject) checkSpecialFields(fieldName string, field reflect.Value
 		return true, s.httpSendNameHeader(field)
 	case "ForcePersist":
 		return true, s.forcePersist(field)
+	case "IgnorePersistList":
+		return true, s.ignorePersistList(field)
 	case "IgnorePersist":
-		return true, s.ignorePersist(field)
+		// "IgnorePersist" field (ignore_persist) is deprecated in favour of "IgnorePersistList" (ignore_persist_list).
+		// Backward compatibility during the sunset period is handled by callers of this library that perform payload
+		// transformation as necessary and remove the deprecated field.
+		// "IgnorePersist" is explicitly caught and ignored here as a safeguard against a runtime panic that can occur
+		// if callers behave unexpectedly. It should be removed at the end of the sunset period along with the field.
+		return true, nil
 	case "Source":
 		return true, s.source(field)
 	case "Originalto":
@@ -2833,18 +2848,23 @@ func (s *SectionObject) forcePersist(field reflect.Value) error {
 	})
 }
 
-func (s *SectionObject) ignorePersist(field reflect.Value) error {
+func (s *SectionObject) ignorePersistList(field reflect.Value) error {
 	if valueIsNil(field) {
 		return s.set("ignore-persist", nil)
 	}
-	opt, ok := field.Elem().Interface().(models.BackendIgnorePersist)
+	data, ok := field.Interface().([]*models.IgnorePersist)
 	if !ok {
 		return misc.CreateTypeAssertError("ignore-persist")
 	}
-	return s.set("ignore-persist", types.IgnorePersist{
-		Cond:     *opt.Cond,
-		CondTest: *opt.CondTest,
-	})
+
+	items := make([]types.IgnorePersist, len(data))
+	for i := range data {
+		items[i] = types.IgnorePersist{
+			Cond:     *data[i].Cond,
+			CondTest: *data[i].CondTest,
+		}
+	}
+	return s.set("ignore-persist", items)
 }
 
 func (s *SectionObject) source(field reflect.Value) error {

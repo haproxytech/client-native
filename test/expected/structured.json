@@ -471,10 +471,16 @@
                 "uri": "/"
             },
             "id": 456,
-            "ignore_persist": {
-                "cond": "if",
-                "cond_test": "acl-name"
-            },
+            "ignore_persist_list": [
+                {
+                    "cond": "if",
+                    "cond_test": "acl-name"
+                },
+                {
+                    "cond": "unless",
+                    "cond_test": "local_dst"
+                }
+            ],
             "independent_streams": "enabled",
             "load_server_state_from_file": "local",
             "log_tag": "bla",
