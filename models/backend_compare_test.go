@@ -207,7 +207,7 @@ func TestBackendDiffFalse(t *testing.T) {
 
 	for _, sample := range samples {
 		result := sample.a.Diff(sample.b)
-		if len(result) != 88 {
+		if len(result) != 89 {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {
@@ -217,7 +217,7 @@ func TestBackendDiffFalse(t *testing.T) {
 			if err != nil {
 				t.Errorf(err.Error())
 			}
-			t.Errorf("Expected Backend to be different in 88 cases, but it is not (%d) %s %s", len(result), a, b)
+			t.Errorf("Expected Backend to be different in 89 cases, but it is not (%d) %s %s", len(result), a, b)
 		}
 	}
 }
@@ -534,6 +534,164 @@ func TestBackendIgnorePersistDiffFalse(t *testing.T) {
 				t.Errorf(err.Error())
 			}
 			t.Errorf("Expected BackendIgnorePersist to be different in 2 cases, but it is not (%d) %s %s", len(result), a, b)
+		}
+	}
+}
+
+func TestIgnorePersistEqual(t *testing.T) {
+	samples := []struct {
+		a, b IgnorePersist
+	}{}
+	for i := 0; i < 2; i++ {
+		var sample IgnorePersist
+		var result IgnorePersist
+		err := faker.FakeData(&sample)
+		if err != nil {
+			t.Errorf(err.Error())
+		}
+		byteJSON, err := json.Marshal(sample)
+		if err != nil {
+			t.Errorf(err.Error())
+		}
+		err = json.Unmarshal(byteJSON, &result)
+		if err != nil {
+			t.Errorf(err.Error())
+		}
+
+		samples = append(samples, struct {
+			a, b IgnorePersist
+		}{sample, result})
+	}
+
+	for _, sample := range samples {
+		result := sample.a.Equal(sample.b)
+		if !result {
+			json := jsoniter.ConfigCompatibleWithStandardLibrary
+			a, err := json.Marshal(&sample.a)
+			if err != nil {
+				t.Errorf(err.Error())
+			}
+			b, err := json.Marshal(&sample.b)
+			if err != nil {
+				t.Errorf(err.Error())
+			}
+			t.Errorf("Expected IgnorePersist to be equal, but it is not %s %s", a, b)
+		}
+	}
+}
+
+func TestIgnorePersistEqualFalse(t *testing.T) {
+	samples := []struct {
+		a, b IgnorePersist
+	}{}
+	for i := 0; i < 2; i++ {
+		var sample IgnorePersist
+		var result IgnorePersist
+		err := faker.FakeData(&sample)
+		if err != nil {
+			t.Errorf(err.Error())
+		}
+		err = faker.FakeData(&result)
+		if err != nil {
+			t.Errorf(err.Error())
+		}
+		samples = append(samples, struct {
+			a, b IgnorePersist
+		}{sample, result})
+	}
+
+	for _, sample := range samples {
+		result := sample.a.Equal(sample.b)
+		if result {
+			json := jsoniter.ConfigCompatibleWithStandardLibrary
+			a, err := json.Marshal(&sample.a)
+			if err != nil {
+				t.Errorf(err.Error())
+			}
+			b, err := json.Marshal(&sample.b)
+			if err != nil {
+				t.Errorf(err.Error())
+			}
+			t.Errorf("Expected IgnorePersist to be different, but it is not %s %s", a, b)
+		}
+	}
+}
+
+func TestIgnorePersistDiff(t *testing.T) {
+	samples := []struct {
+		a, b IgnorePersist
+	}{}
+	for i := 0; i < 2; i++ {
+		var sample IgnorePersist
+		var result IgnorePersist
+		err := faker.FakeData(&sample)
+		if err != nil {
+			t.Errorf(err.Error())
+		}
+		byteJSON, err := json.Marshal(sample)
+		if err != nil {
+			t.Errorf(err.Error())
+		}
+		err = json.Unmarshal(byteJSON, &result)
+		if err != nil {
+			t.Errorf(err.Error())
+		}
+
+		samples = append(samples, struct {
+			a, b IgnorePersist
+		}{sample, result})
+	}
+
+	for _, sample := range samples {
+		result := sample.a.Diff(sample.b)
+		if len(result) != 0 {
+			json := jsoniter.ConfigCompatibleWithStandardLibrary
+			a, err := json.Marshal(&sample.a)
+			if err != nil {
+				t.Errorf(err.Error())
+			}
+			b, err := json.Marshal(&sample.b)
+			if err != nil {
+				t.Errorf(err.Error())
+			}
+			t.Errorf("Expected IgnorePersist to be equal, but it is not %s %s, %v", a, b, result)
+		}
+	}
+}
+
+func TestIgnorePersistDiffFalse(t *testing.T) {
+	samples := []struct {
+		a, b IgnorePersist
+	}{}
+	for i := 0; i < 2; i++ {
+		var sample IgnorePersist
+		var result IgnorePersist
+		err := faker.FakeData(&sample)
+		if err != nil {
+			t.Errorf(err.Error())
+		}
+		err = faker.FakeData(&result)
+		if err != nil {
+			t.Errorf(err.Error())
+		}
+		samples = append(samples, struct {
+			a, b IgnorePersist
+		}{sample, result})
+	}
+
+	for _, sample := range samples {
+		result := sample.a.Diff(sample.b)
+		if len(result) != 2 {
+			json := jsoniter.ConfigCompatibleWithStandardLibrary
+			a, err := json.Marshal(&sample.a)
+			if err != nil {
+				t.Errorf(err.Error())
+			}
+			b, err := json.Marshal(&sample.b)
+			if err != nil {
+				t.Errorf(err.Error())
+			}
+			t.Errorf("Expected IgnorePersist to be different in 2 cases, but it is not (%d) %s %s", len(result), a, b)
 		}
 	}
 }

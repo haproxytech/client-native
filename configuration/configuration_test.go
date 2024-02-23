@@ -726,6 +726,7 @@ backend test
   fullconn 11
   max-keep-alive-queue 101
   ignore-persist if acl-name
+  ignore-persist unless local_dst
   force-persist unless acl-name-2
   retry-on 504 505
   http-send-name-header X-My-Awesome-Header

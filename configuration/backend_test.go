@@ -649,11 +649,16 @@ func TestGetBackend(t *testing.T) {
 		t.Errorf("MaxKeepAliveQueue not 101: %v", *b.MaxKeepAliveQueue)
 	}
 
-	if *b.IgnorePersist.Cond != "if" {
-		t.Errorf("IgnorePersist Cond not if: %v", *b.IgnorePersist.Cond)
-	}
-	if *b.IgnorePersist.CondTest != "acl-name" {
-		t.Errorf("IgnorePersist CondTest not acl-name: %v", *b.IgnorePersist.CondTest)
+	if len(b.IgnorePersistList) != 2 {
+		t.Errorf("IgnorePersistList has %d items, expected 2", len(b.IgnorePersistList))
+	} else if *b.IgnorePersistList[0].Cond != "if" {
+		t.Errorf("IgnorePersistList[0].Cond is %s, expected 'if'", *b.IgnorePersistList[0].Cond)
+	} else if *b.IgnorePersistList[0].CondTest != "acl-name" {
+		t.Errorf("IgnorePersistList[0].CondTest is %s, expected 'acl-name'", *b.IgnorePersistList[0].CondTest)
+	} else if *b.IgnorePersistList[1].Cond != "unless" {
+		t.Errorf("IgnorePersistList[1].Cond is %s, expected 'unless'", *b.IgnorePersistList[1].Cond)
+	} else if *b.IgnorePersistList[1].CondTest != "local_dst" {
+		t.Errorf("IgnorePersistList[1].CondTest is %s, expected 'local_dst'", *b.IgnorePersistList[1].CondTest)
 	}
 
 	if *b.ForcePersist.Cond != "unless" {
@@ -944,6 +949,10 @@ func TestCreateEditDeleteBackend(t *testing.T) {
 			Originalto: &models.Originalto{
 				Enabled: misc.StringP("enabled"),
 				Header:  "X-Client-Dst",
+			},
+			IgnorePersistList: []*models.IgnorePersist{
+				{Cond: misc.StringP("if"), CondTest: misc.StringP("host_www")},
+				{Cond: misc.StringP("unless"), CondTest: misc.StringP("missing_cl")},
 			},
 		},
 		{
@@ -1261,6 +1270,19 @@ func compareBackends(x, y *models.Backend, t *testing.T) bool { //nolint:gocogni
 	case "":
 		x.HTTPConnectionMode = ""
 	}
+
+	if len(x.IgnorePersistList) != len(y.IgnorePersistList) {
+		return false
+	}
+	for i := range x.IgnorePersistList {
+		if *x.IgnorePersistList[i].Cond != *y.IgnorePersistList[i].Cond {
+			return false
+		}
+		if *x.IgnorePersistList[i].CondTest != *y.IgnorePersistList[i].CondTest {
+			return false
+		}
+	}
+	x.IgnorePersistList, y.IgnorePersistList = nil, nil
 
 	return reflect.DeepEqual(x, y)
 }

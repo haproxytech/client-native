@@ -57,6 +57,16 @@ func (s Backend) Equal(t Backend, opts ...Options) bool {
 		}
 	}
 
+	if !CheckSameNilAndLen(s.IgnorePersistList, t.IgnorePersistList, opt) {
+		return false
+	} else {
+		for i := range s.IgnorePersistList {
+			if !s.IgnorePersistList[i].Equal(*t.IgnorePersistList[i], opt) {
+				return false
+			}
+		}
+	}
+
 	if s.Abortonclose != t.Abortonclose {
 		return false
 	}
@@ -848,6 +858,23 @@ func (s Backend) Diff(t Backend, opts ...Options) map[string][]interface{} {
 		}
 		if len(diff2) > 0 {
 			diff["ErrorFilesFromHTTPErrors"] = []interface{}{diff2}
+		}
+	}
+
+	if !CheckSameNilAndLen(s.IgnorePersistList, t.IgnorePersistList, opt) {
+		diff["IgnorePersistList"] = []interface{}{s.IgnorePersistList, t.IgnorePersistList}
+	} else {
+		diff2 := make(map[string][]interface{})
+		for i := range s.IgnorePersistList {
+			if !s.IgnorePersistList[i].Equal(*t.IgnorePersistList[i], opt) {
+				diffSub := s.IgnorePersistList[i].Diff(*t.IgnorePersistList[i], opt)
+				if len(diffSub) > 0 {
+					diff2[strconv.Itoa(i)] = []interface{}{diffSub}
+				}
+			}
+		}
+		if len(diff2) > 0 {
+			diff["IgnorePersistList"] = []interface{}{diff2}
 		}
 	}
 
@@ -1656,6 +1683,43 @@ func (s BackendIgnorePersist) Equal(t BackendIgnorePersist, opts ...Options) boo
 //
 // opts ...Options are ignored in this method
 func (s BackendIgnorePersist) Diff(t BackendIgnorePersist, opts ...Options) map[string][]interface{} {
+	diff := make(map[string][]interface{})
+	if !equalPointers(s.Cond, t.Cond) {
+		diff["Cond"] = []interface{}{ValueOrNil(s.Cond), ValueOrNil(t.Cond)}
+	}
+
+	if !equalPointers(s.CondTest, t.CondTest) {
+		diff["CondTest"] = []interface{}{ValueOrNil(s.CondTest), ValueOrNil(t.CondTest)}
+	}
+
+	return diff
+}
+
+// Equal checks if two structs of type IgnorePersist are equal
+//
+//	var a, b IgnorePersist
+//	equal := a.Equal(b)
+//
+// opts ...Options are ignored in this method
+func (s IgnorePersist) Equal(t IgnorePersist, opts ...Options) bool {
+	if !equalPointers(s.Cond, t.Cond) {
+		return false
+	}
+
+	if !equalPointers(s.CondTest, t.CondTest) {
+		return false
+	}
+
+	return true
+}
+
+// Diff checks if two structs of type IgnorePersist are equal
+//
+//	var a, b IgnorePersist
+//	diff := a.Diff(b)
+//
+// opts ...Options are ignored in this method
+func (s IgnorePersist) Diff(t IgnorePersist, opts ...Options) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if !equalPointers(s.Cond, t.Cond) {
 		diff["Cond"] = []interface{}{ValueOrNil(s.Cond), ValueOrNil(t.Cond)}
