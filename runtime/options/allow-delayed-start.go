@@ -18,15 +18,20 @@ package options
 
 import "time"
 
-type RuntimeOptions struct {
-	MapsDir                 *string
-	MasterSocketData        *masterSocketData
-	Sockets                 map[int]string
-	DoNotCheckRuntimeOnInit bool
-	AllowDelayedStartMax    *time.Duration
-	AllowDelayedStartTick   *time.Duration
+type allowDelayedStart struct {
+	allowDelayedStartMax  time.Duration
+	allowDelayedStartTick time.Duration
 }
 
-type RuntimeOption interface {
-	Set(p *RuntimeOptions) error
+func (d allowDelayedStart) Set(o *RuntimeOptions) error {
+	o.AllowDelayedStartMax = &d.allowDelayedStartMax
+	o.AllowDelayedStartTick = &d.allowDelayedStartTick
+	return nil
+}
+
+func AllowDelayedStart(allowDelayedStartMax, allowDelayedStartTick time.Duration) RuntimeOption {
+	return allowDelayedStart{
+		allowDelayedStartMax:  allowDelayedStartMax,
+		allowDelayedStartTick: allowDelayedStartTick,
+	}
 }

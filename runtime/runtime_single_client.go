@@ -71,9 +71,23 @@ func (s *SingleRuntime) Init(ctx context.Context, socketPath string, worker int,
 	s.process = process
 	go s.handleIncomingJobs(ctx)
 	if !runtimeOptions.DoNotCheckRuntimeOnInit {
-		// check if we have a valid socket
-		if _, err := s.ExecuteRaw("help"); err != nil {
-			return err
+		if runtimeOptions.AllowDelayedStartMax != nil {
+			now := time.Now()
+			var err error
+			for {
+				if _, err = s.ExecuteRaw("help"); err == nil {
+					break
+				}
+				time.Sleep(*runtimeOptions.AllowDelayedStartTick)
+				if time.Since(now) > *runtimeOptions.AllowDelayedStartMax {
+					return fmt.Errorf("cannot connect to runtime API %s within %s: %w", socketPath, *runtimeOptions.AllowDelayedStartMax, err)
+				}
+			}
+		} else {
+			// check if we have a valid socket
+			if _, err := s.ExecuteRaw("help"); err != nil {
+				return err
+			}
 		}
 	}
 	return nil
