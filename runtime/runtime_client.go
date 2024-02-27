@@ -49,7 +49,8 @@ const (
 	maxBufSize = 8192
 )
 
-func (c *client) initWithSockets(ctx context.Context, socketPath map[int]string) error {
+func (c *client) initWithSockets(ctx context.Context, opt options.RuntimeOptions) error {
+	socketPath := opt.Sockets
 	c.runtimes = make([]SingleRuntime, 0)
 	for process, path := range socketPath {
 		runtime := SingleRuntime{}
@@ -63,7 +64,9 @@ func (c *client) initWithSockets(ctx context.Context, socketPath map[int]string)
 	return nil
 }
 
-func (c *client) initWithMasterSocket(ctx context.Context, masterSocketPath string, nbproc int) error {
+func (c *client) initWithMasterSocket(ctx context.Context, opt options.RuntimeOptions) error {
+	masterSocketPath := opt.MasterSocketData.MasterSocketPath
+	nbproc := c.options.MasterSocketData.Nbproc
 	if nbproc == 0 {
 		nbproc = 1
 	}
