@@ -54,7 +54,7 @@ func (c *client) initWithSockets(ctx context.Context, opt options.RuntimeOptions
 	c.runtimes = make([]SingleRuntime, 0)
 	for process, path := range socketPath {
 		runtime := SingleRuntime{}
-		err := runtime.Init(ctx, path, 0, process)
+		err := runtime.Init(ctx, path, 0, process, opt)
 		if err != nil {
 			return err
 		}
@@ -76,7 +76,7 @@ func (c *client) initWithMasterSocket(ctx context.Context, opt options.RuntimeOp
 	c.runtimes = make([]SingleRuntime, nbproc)
 	for i := 1; i <= nbproc; i++ {
 		runtime := SingleRuntime{}
-		err := runtime.Init(ctx, masterSocketPath, i, i)
+		err := runtime.Init(ctx, masterSocketPath, i, i, opt)
 		if err != nil {
 			return err
 		}
