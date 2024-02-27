@@ -161,9 +161,9 @@ func New(ctx context.Context, opt ...options.RuntimeOption) (Runtime, error) {
 	}
 
 	if c.options.MasterSocketData != nil {
-		err = c.initWithMasterSocket(ctx, c.options.MasterSocketData.MasterSocketPath, c.options.MasterSocketData.Nbproc)
+		err = c.initWithMasterSocket(ctx, c.options)
 	} else {
-		err = c.initWithSockets(ctx, c.options.Sockets)
+		err = c.initWithSockets(ctx, c.options)
 	}
 	if err != nil {
 		return nil, err

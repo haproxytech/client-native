@@ -21,6 +21,8 @@ import (
 	"net"
 	"strings"
 	"time"
+
+	"github.com/haproxytech/client-native/v6/runtime/options"
 )
 
 const (
@@ -57,15 +59,22 @@ type SingleRuntime struct {
 // give the path to the master socket path, and non 0 number for workers. Process is for
 // nbproc > 1. In master-worker mode it's the same as the worker number, but when having
 // multiple stats socket lines bound to processes then use the correct process number
-func (s *SingleRuntime) Init(ctx context.Context, socketPath string, worker int, process int) error {
+func (s *SingleRuntime) Init(ctx context.Context, socketPath string, worker int, process int, opt ...options.RuntimeOptions) error {
+	var runtimeOptions options.RuntimeOptions
+	if len(opt) > 0 {
+		runtimeOptions = opt[0]
+	}
+
 	s.socketPath = socketPath
 	s.jobs = make(chan Task)
 	s.worker = worker
 	s.process = process
 	go s.handleIncomingJobs(ctx)
-	// check if we have a valid scket
-	if _, err := s.ExecuteRaw("help"); err != nil {
-		return err
+	if !runtimeOptions.DoNotCheckRuntimeOnInit {
+		// check if we have a valid socket
+		if _, err := s.ExecuteRaw("help"); err != nil {
+			return err
+		}
 	}
 	return nil
 }

@@ -16,13 +16,11 @@ limitations under the License.
 
 package options
 
-type RuntimeOptions struct {
-	MapsDir                 *string
-	MasterSocketData        *masterSocketData
-	Sockets                 map[int]string
-	DoNotCheckRuntimeOnInit bool
+type doNotCheckRuntimeOnInit struct{}
+
+func (d doNotCheckRuntimeOnInit) Set(o *RuntimeOptions) error {
+	o.DoNotCheckRuntimeOnInit = true
+	return nil
 }
 
-type RuntimeOption interface {
-	Set(p *RuntimeOptions) error
-}
+var DoNotCheckRuntimeOnInit = doNotCheckRuntimeOnInit{} //nolint:gochecknoglobals
