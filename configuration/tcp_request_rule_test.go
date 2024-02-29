@@ -30,8 +30,8 @@ func TestGetTCPRequestRules(t *testing.T) { //nolint:gocognit,gocyclo
 		t.Error(err.Error())
 	}
 
-	if len(tRules) != 33 {
-		t.Errorf("%v tcp request rules returned, expected 33", len(tRules))
+	if len(tRules) != 34 {
+		t.Errorf("%v tcp request rules returned, expected 34", len(tRules))
 	}
 
 	if v != version {
@@ -605,8 +605,24 @@ func TestGetTCPRequestRules(t *testing.T) { //nolint:gocognit,gocyclo
 			if r.CondTest != "is_cached" {
 				t.Errorf("%v: CondTest not is_cached: %v", *r.Index, r.CondTest)
 			}
+		case 33:
+			if r.Type != "connection" {
+				t.Errorf("%v: Type not connection: %v", *r.Index, r.Type)
+			}
+			if r.Action != "set-var-fmt" {
+				t.Errorf("%v: Action not set-var-fmt: %v", *r.Index, r.Action)
+			}
+			if r.VarName != "ip_port" {
+				t.Errorf("%v: VarName not ip_port: %v", *r.Index, r.VarName)
+			}
+			if r.VarScope != "txn" {
+				t.Errorf("%v: VarScope not txn: %v", *r.Index, r.VarScope)
+			}
+			if r.VarFormat != "%%[dst]:%%[dst_port]" {
+				t.Errorf("%v: VarFormat not %%[dst]:%%[dst_port]: %v", *r.Index, r.VarFormat)
+			}
 		default:
-			t.Errorf("Expect tcp-request 0-26, %v found", *r.Index)
+			t.Errorf("Expect tcp-request 0-33, %v found", *r.Index)
 		}
 	}
 
@@ -717,7 +733,7 @@ func TestCreateEditDeleteTCPRequestRule(t *testing.T) {
 	}
 
 	// TestDeleteTCPRequest
-	err = clientTest.DeleteTCPRequestRule(33, "frontend", "test", "", version)
+	err = clientTest.DeleteTCPRequestRule(34, "frontend", "test", "", version)
 	if err != nil {
 		t.Error(err.Error())
 	} else {
@@ -728,9 +744,9 @@ func TestCreateEditDeleteTCPRequestRule(t *testing.T) {
 		t.Error("Version not incremented")
 	}
 
-	_, _, err = clientTest.GetTCPRequestRule(33, "frontend", "test", "")
+	_, _, err = clientTest.GetTCPRequestRule(34, "frontend", "test", "")
 	if err == nil {
-		t.Error("DeleteTCPRequestRule failed, TCP Request Rule 33 still exists")
+		t.Error("DeleteTCPRequestRule failed, TCP Request Rule 34 still exists")
 	}
 
 	err = clientTest.DeleteTCPRequestRule(27, "backend", "test_2", "", version)

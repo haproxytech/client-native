@@ -501,6 +501,7 @@ frontend test
   tcp-request session attach-srv srv1
   tcp-request session attach-srv srv2 name example.com
   tcp-request session attach-srv srv3 if is_cached
+  tcp-request connection set-var-fmt(txn.ip_port) %%[dst]:%%[dst_port]
   log global
   no log
   log 127.0.0.1:514 local0 notice notice

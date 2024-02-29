@@ -340,6 +340,13 @@ func ParseTCPRequestRule(f types.TCPType) (rule *models.TCPRequestRule, err erro
 			rule.Expr = a.Expr.String()
 			rule.Cond = a.Cond
 			rule.CondTest = a.CondTest
+		case *actions.SetVarFmt:
+			rule.Action = models.TCPRequestRuleActionSetDashVarDashFmt
+			rule.VarName = a.VarName
+			rule.VarFormat = strings.Join(a.Fmt.Expr, " ")
+			rule.VarScope = a.VarScope
+			rule.Cond = a.Cond
+			rule.CondTest = a.CondTest
 		case *actions.UnsetVar:
 			rule.Action = models.TCPRequestRuleActionUnsetDashVar
 			rule.VarScope = a.Scope
