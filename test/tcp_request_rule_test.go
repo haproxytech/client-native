@@ -168,7 +168,11 @@ func TestCreateEditDeleteTCPRequestRule(t *testing.T) {
 	}
 
 	// TestDeleteTCPRequest
-	N := int64(41) // number of tcp-request rules in frontend "test"
+	_, rules, err := clientTest.GetTCPRequestRules(configuration.FrontendParentName, "test", "")
+	if err != nil {
+		t.Error(err.Error())
+	}
+	N := int64(len(rules)) - 1
 	err = clientTest.DeleteTCPRequestRule(N, configuration.FrontendParentName, "test", "", version)
 	if err != nil {
 		t.Error(err.Error())

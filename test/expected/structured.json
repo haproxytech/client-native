@@ -2632,6 +2632,14 @@
                     "index": 40,
                     "type": "content",
                     "expr": "req.hdr_cnt(\"X-Secret\")"
+                },
+                {
+                    "action": "set-var-fmt",
+                    "index": 41,
+                    "type": "connection",
+                    "var_format": "%%[dst]:%%[dst_port]",
+                    "var_scope": "txn",
+                    "var_name": "ip_port"
                 }
             ],
             "binds": {

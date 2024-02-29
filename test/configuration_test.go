@@ -436,7 +436,7 @@ frontend test
   http-request track-sc2 src table tr2 if TRUE
   http-request track-sc5 src table test if TRUE
   http-request set-bc-mark 123 if TRUE
-  http-request set-bc-tos 0x22 
+  http-request set-bc-tos 0x22
   http-request set-fc-mark hdr(port)
   http-request set-fc-tos 255 if FALSE
   http-response allow if src 192.168.0.0/16
@@ -532,6 +532,7 @@ frontend test
   tcp-request content set-bc-tos 2 if FALSE
   tcp-request content set-fc-mark hdr(port) if TRUE
   tcp-request content set-fc-tos req.hdr_cnt("X-Secret")
+  tcp-request connection set-var-fmt(txn.ip_port) %%[dst]:%%[dst_port]
   log global
   no log
   log 127.0.0.1:514 local0 notice notice
