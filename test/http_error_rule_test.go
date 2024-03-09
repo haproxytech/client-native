@@ -227,7 +227,12 @@ func TestCreateEditDeleteHTTPErrorRule(t *testing.T) {
 		t.Error("deleting http-error rule failed - http-error rule 0 still exists")
 	}
 
-	err = clientTest.DeleteHTTPErrorRule(1, configuration.DefaultsParentName, "", "", version)
+	_, rules, err := clientTest.GetHTTPErrorRules(configuration.DefaultsParentName, "", "")
+	if err != nil {
+		t.Error(err.Error())
+	}
+	N := int64(len(rules)) - 1
+	err = clientTest.DeleteHTTPErrorRule(N, configuration.DefaultsParentName, "", "", version)
 	if err != nil {
 		t.Error(err.Error())
 	} else {
@@ -238,9 +243,9 @@ func TestCreateEditDeleteHTTPErrorRule(t *testing.T) {
 		t.Error("Version not incremented")
 	}
 
-	_, _, err = clientTest.GetHTTPErrorRule(1, configuration.DefaultsParentName, "", "")
+	_, _, err = clientTest.GetHTTPErrorRule(N, configuration.DefaultsParentName, "", "")
 	if err == nil {
-		t.Error("deleting http-error rule failed - http-error rule 1 still exists")
+		t.Errorf("deleting http-error rule failed - http-error rule %d still exists", N)
 	}
 
 	err = clientTest.DeleteHTTPErrorRule(3, configuration.BackendParentName, "test_2", "", version)

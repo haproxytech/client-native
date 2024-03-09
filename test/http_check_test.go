@@ -214,7 +214,12 @@ func TestCreateEditDeleteHTTPCheck(t *testing.T) {
 	}
 
 	// TestDeleteHTTPRequest
-	err = clientTest.DeleteHTTPCheck(14, configuration.BackendParentName, "test", "", version)
+	_, checks, err := clientTest.GetHTTPChecks(configuration.BackendParentName, "test", "")
+	if err != nil {
+		t.Error(err.Error())
+	}
+	N := int64(len(checks)) - 1
+	err = clientTest.DeleteHTTPCheck(N, configuration.BackendParentName, "test", "", version)
 	if err != nil {
 		t.Error(err.Error())
 	} else {
@@ -225,9 +230,9 @@ func TestCreateEditDeleteHTTPCheck(t *testing.T) {
 		t.Error("Version not incremented")
 	}
 
-	_, _, err = clientTest.GetHTTPCheck(14, configuration.BackendParentName, "test", "")
+	_, _, err = clientTest.GetHTTPCheck(N, configuration.BackendParentName, "test", "")
 	if err == nil {
-		t.Error("DeleteHTTPCheck failed, HTTP check 13 still exists")
+		t.Errorf("DeleteHTTPCheck failed, HTTP check %d still exists", N)
 	}
 
 	err = clientTest.DeleteHTTPCheck(5, configuration.BackendParentName, "test_2", "", version)

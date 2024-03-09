@@ -166,7 +166,11 @@ func TestCreateEditDeleteTCPResponseRule(t *testing.T) {
 	}
 
 	// TestDeleteTCPResponse
-	N := int64(20) // number of tcp-response rules in backend "test"
+	_, rules, err := clientTest.GetTCPResponseRules("test", "")
+	if err != nil {
+		t.Error(err.Error())
+	}
+	N := int64(len(rules)) - 1
 	err = clientTest.DeleteTCPResponseRule(N, "test", "", version)
 	if err != nil {
 		t.Error(err.Error())

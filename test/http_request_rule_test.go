@@ -189,7 +189,11 @@ func TestCreateEditDeleteHTTPRequestRule(t *testing.T) {
 	}
 
 	// TestDeleteHTTPRequest
-	N := int64(51) // number of http-request rules on frontend "test"
+	_, rules, err := clientTest.GetHTTPRequestRules(configuration.FrontendParentName, "test", "")
+	if err != nil {
+		t.Error(err.Error())
+	}
+	N := int64(len(rules)) - 1
 	err = clientTest.DeleteHTTPRequestRule(N, configuration.FrontendParentName, "test", "", version)
 	if err != nil {
 		t.Error(err.Error())
