@@ -95,7 +95,15 @@ spoe_message:
       properties:
         name:
           type: string
-          enum: [on-client-session, on-server-session, on-frontend-tcp-request, on-backend-tcp-request, on-tcp-response, on-frontend-http-request, on-backend-http-request, on-http-response]
+          enum:
+            - on-backend-http-request
+            - on-backend-tcp-request
+            - on-client-session
+            - on-frontend-http-request
+            - on-frontend-tcp-request
+            - on-http-response
+            - on-server-session
+            - on-tcp-response
         cond:
           type: string
           x-display-name: Condition

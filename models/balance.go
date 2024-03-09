@@ -36,8 +36,8 @@ import (
 type Balance struct {
 	// algorithm
 	// Required: true
-	// Enum: [roundrobin static-rr leastconn first source uri url_param hdr random rdp-cookie hash]
-	// +kubebuilder:validation:Enum=roundrobin;static-rr;leastconn;first;source;uri;url_param;hdr;random;rdp-cookie;hash;
+	// Enum: [first hash hdr leastconn random rdp-cookie roundrobin source static-rr uri url_param]
+	// +kubebuilder:validation:Enum=first;hash;hdr;leastconn;random;rdp-cookie;roundrobin;source;static-rr;uri;url_param;
 	Algorithm *string `json:"algorithm"`
 
 	// hash expression
@@ -107,7 +107,7 @@ var balanceTypeAlgorithmPropEnum []interface{}
 
 func init() {
 	var res []string
-	if err := json.Unmarshal([]byte(`["roundrobin","static-rr","leastconn","first","source","uri","url_param","hdr","random","rdp-cookie","hash"]`), &res); err != nil {
+	if err := json.Unmarshal([]byte(`["first","hash","hdr","leastconn","random","rdp-cookie","roundrobin","source","static-rr","uri","url_param"]`), &res); err != nil {
 		panic(err)
 	}
 	for _, v := range res {
@@ -117,29 +117,17 @@ func init() {
 
 const (
 
-	// BalanceAlgorithmRoundrobin captures enum value "roundrobin"
-	BalanceAlgorithmRoundrobin string = "roundrobin"
-
-	// BalanceAlgorithmStaticDashRr captures enum value "static-rr"
-	BalanceAlgorithmStaticDashRr string = "static-rr"
-
-	// BalanceAlgorithmLeastconn captures enum value "leastconn"
-	BalanceAlgorithmLeastconn string = "leastconn"
-
 	// BalanceAlgorithmFirst captures enum value "first"
 	BalanceAlgorithmFirst string = "first"
 
-	// BalanceAlgorithmSource captures enum value "source"
-	BalanceAlgorithmSource string = "source"
-
-	// BalanceAlgorithmURI captures enum value "uri"
-	BalanceAlgorithmURI string = "uri"
-
-	// BalanceAlgorithmURLParam captures enum value "url_param"
-	BalanceAlgorithmURLParam string = "url_param"
+	// BalanceAlgorithmHash captures enum value "hash"
+	BalanceAlgorithmHash string = "hash"
 
 	// BalanceAlgorithmHdr captures enum value "hdr"
 	BalanceAlgorithmHdr string = "hdr"
+
+	// BalanceAlgorithmLeastconn captures enum value "leastconn"
+	BalanceAlgorithmLeastconn string = "leastconn"
 
 	// BalanceAlgorithmRandom captures enum value "random"
 	BalanceAlgorithmRandom string = "random"
@@ -147,8 +135,20 @@ const (
 	// BalanceAlgorithmRdpDashCookie captures enum value "rdp-cookie"
 	BalanceAlgorithmRdpDashCookie string = "rdp-cookie"
 
-	// BalanceAlgorithmHash captures enum value "hash"
-	BalanceAlgorithmHash string = "hash"
+	// BalanceAlgorithmRoundrobin captures enum value "roundrobin"
+	BalanceAlgorithmRoundrobin string = "roundrobin"
+
+	// BalanceAlgorithmSource captures enum value "source"
+	BalanceAlgorithmSource string = "source"
+
+	// BalanceAlgorithmStaticDashRr captures enum value "static-rr"
+	BalanceAlgorithmStaticDashRr string = "static-rr"
+
+	// BalanceAlgorithmURI captures enum value "uri"
+	BalanceAlgorithmURI string = "uri"
+
+	// BalanceAlgorithmURLParam captures enum value "url_param"
+	BalanceAlgorithmURLParam string = "url_param"
 )
 
 // prop value enum

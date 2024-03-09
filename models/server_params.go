@@ -1768,7 +1768,7 @@ var serverParamsProxyV2OptionsItemsEnum []interface{}
 
 func init() {
 	var res []string
-	if err := json.Unmarshal([]byte(`["ssl","cert-cn","ssl-cipher","cert-sig","cert-key","authority","crc32c","unique-id"]`), &res); err != nil {
+	if err := json.Unmarshal([]byte(`["authority","cert-cn","cert-key","cert-sig","crc32c","ssl","ssl-cipher","unique-id"]`), &res); err != nil {
 		panic(err)
 	}
 	for _, v := range res {

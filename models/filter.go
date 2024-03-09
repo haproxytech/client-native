@@ -111,8 +111,8 @@ type Filter struct {
 
 	// type
 	// Required: true
-	// Enum: [trace compression spoe cache fcgi-app bwlim-in bwlim-out]
-	// +kubebuilder:validation:Enum=trace;compression;spoe;cache;fcgi-app;bwlim-in;bwlim-out;
+	// Enum: [bwlim-in bwlim-out cache compression fcgi-app spoe trace]
+	// +kubebuilder:validation:Enum=bwlim-in;bwlim-out;cache;compression;fcgi-app;spoe;trace;
 	Type string `json:"type"`
 }
 
@@ -243,7 +243,7 @@ var filterTypeTypePropEnum []interface{}
 
 func init() {
 	var res []string
-	if err := json.Unmarshal([]byte(`["trace","compression","spoe","cache","fcgi-app","bwlim-in","bwlim-out"]`), &res); err != nil {
+	if err := json.Unmarshal([]byte(`["bwlim-in","bwlim-out","cache","compression","fcgi-app","spoe","trace"]`), &res); err != nil {
 		panic(err)
 	}
 	for _, v := range res {
@@ -253,26 +253,26 @@ func init() {
 
 const (
 
-	// FilterTypeTrace captures enum value "trace"
-	FilterTypeTrace string = "trace"
-
-	// FilterTypeCompression captures enum value "compression"
-	FilterTypeCompression string = "compression"
-
-	// FilterTypeSpoe captures enum value "spoe"
-	FilterTypeSpoe string = "spoe"
-
-	// FilterTypeCache captures enum value "cache"
-	FilterTypeCache string = "cache"
-
-	// FilterTypeFCGIDashApp captures enum value "fcgi-app"
-	FilterTypeFCGIDashApp string = "fcgi-app"
-
 	// FilterTypeBwlimDashIn captures enum value "bwlim-in"
 	FilterTypeBwlimDashIn string = "bwlim-in"
 
 	// FilterTypeBwlimDashOut captures enum value "bwlim-out"
 	FilterTypeBwlimDashOut string = "bwlim-out"
+
+	// FilterTypeCache captures enum value "cache"
+	FilterTypeCache string = "cache"
+
+	// FilterTypeCompression captures enum value "compression"
+	FilterTypeCompression string = "compression"
+
+	// FilterTypeFCGIDashApp captures enum value "fcgi-app"
+	FilterTypeFCGIDashApp string = "fcgi-app"
+
+	// FilterTypeSpoe captures enum value "spoe"
+	FilterTypeSpoe string = "spoe"
+
+	// FilterTypeTrace captures enum value "trace"
+	FilterTypeTrace string = "trace"
 )
 
 // prop value enum

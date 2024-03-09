@@ -215,7 +215,15 @@ http_request_rule:
           value: [deny, tarpit]
     normalizer:
       type: string
-      enum: [fragment-encode, fragment-strip, path-merge-slashes, path-strip-dot, path-strip-dotdot, percent-decode-unreserved, percent-to-upercase, query-sort-by-name]
+      enum:
+        - fragment-encode
+        - fragment-strip
+        - path-merge-slashes
+        - path-strip-dot
+        - path-strip-dotdot
+        - percent-decode-unreserved
+        - percent-to-upercase
+        - query-sort-by-name
       x-dependency:
         type:
           value: normalize-uri
@@ -252,7 +260,8 @@ http_request_rule:
       x-display-name: Header Name
       x-dependency:
         type:
-          value: [add-header, replace-header, del-header, set-header, replace-value]
+          value:
+            [add-header, replace-header, del-header, set-header, replace-value]
           required: true
     hdr_match:
       type: string
@@ -452,7 +461,14 @@ http_request_rule:
       x-display-name: Standard HAProxy expression
       x-dependency:
         type:
-          value: [do-resolve, set-dst, set-dst-port, set-priority-class, set-priority-offset, set-src, set-src-port]
+          value:
+            - do-resolve
+            - set-dst
+            - set-dst-port
+            - set-priority-class
+            - set-priority-offset
+            - set-src
+            - set-src-port
           required: true
     sc_expr:
       type: string
@@ -471,7 +487,7 @@ http_request_rule:
           required: true
     mark_value:
       type: string
-      pattern: '^(0x[0-9A-Fa-f]+|[0-9]+)$'
+      pattern: "^(0x[0-9A-Fa-f]+|[0-9]+)$"
       x-display-name: Mark Value
       x-dependency:
         type:
@@ -496,7 +512,7 @@ http_request_rule:
           required: true
     tos_value:
       type: string
-      pattern: '^(0x[0-9A-Fa-f]+|[0-9]+)$'
+      pattern: "^(0x[0-9A-Fa-f]+|[0-9]+)$"
       x-display-name: Tos Value
       x-dependency:
         type:
@@ -504,7 +520,7 @@ http_request_rule:
           required: true
     strict_mode:
       type: string
-      enum: ['on', 'off']
+      enum: ["on", "off"]
       x-dependency:
         type:
           value: strict-mode
@@ -559,7 +575,16 @@ http_request_rule:
       x-nullable: true
     return_content_format:
       type: string
-      enum: [default-errorfiles, errorfile, errorfiles, file, lf-file, string, lf-string]
+      enum:
+        [
+          default-errorfiles,
+          errorfile,
+          errorfiles,
+          file,
+          lf-file,
+          string,
+          lf-string,
+        ]
       x-dependency:
         type:
           value: [deny, tarpit, return]

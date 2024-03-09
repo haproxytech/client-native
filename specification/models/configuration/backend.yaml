@@ -141,7 +141,15 @@ backend:
     adv_check:
       type: string
       x-display-name: Advanced Check
-      enum: [ssl-hello-chk, smtpchk, ldap-check, mysql-check, pgsql-check, tcp-check, redis-check, httpchk]
+      enum:
+        - httpchk
+        - ldap-check
+        - mysql-check
+        - pgsql-check
+        - redis-check
+        - smtpchk
+        - ssl-hello-chk
+        - tcp-check
     smtpchk_params:
       $ref: "#/definitions/smtpchk_params"
       x-dependency:

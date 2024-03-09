@@ -28,7 +28,26 @@ table:
         properties:
           field:
             type: string
-            enum: [server_id, gpc0, gpc0_rate, gpc1, gpc1_rate, gpt0, conn_cnt, conn_cur, conn_rate, sess_cnt, sess_rate, http_req_cnt, http_req_rate, http_err_cnt, http_err_rate, bytes_in_cnt, bytes_in_rate, bytes_out_cnt, bytes_out_rate]
+            enum:
+              - bytes_in_cnt
+              - bytes_in_rate
+              - bytes_out_cnt
+              - bytes_out_rate
+              - conn_cnt
+              - conn_cur
+              - conn_rate
+              - gpc0
+              - gpc0_rate
+              - gpc1
+              - gpc1_rate
+              - gpt0
+              - http_req_cnt
+              - http_req_rate
+              - http_err_cnt
+              - http_err_rate
+              - server_id
+              - sess_cnt
+              - sess_rate
           type:
             type: string
             enum: [rate, counter]
