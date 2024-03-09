@@ -11,7 +11,17 @@ tcp_check:
       x-nullable: true
     action:
       type: string
-      enum: [comment, connect, expect, send, send-lf, send-binary, send-binary-lf, set-var, set-var-fmt, unset-var]
+      enum:
+        - comment
+        - connect
+        - expect
+        - send
+        - send-lf
+        - send-binary
+        - send-binary-lf
+        - set-var
+        - set-var-fmt
+        - unset-var
       x-nullable: false
     log_message:
       type: string

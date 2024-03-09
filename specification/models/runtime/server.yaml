@@ -250,7 +250,15 @@ add_server:
       x-omitempty: true
       items:
         type: string
-        enum: [ssl, cert-cn, ssl-cipher, cert-sig, cert-key, authority, crc32c, unique-id]
+        enum:
+          - authority
+          - cert-cn
+          - cert-key
+          - cert-sig
+          - crc32c
+          - ssl
+          - ssl-cipher
+          - unique-id
     rise:
       type: integer
       x-nullable: true

@@ -198,8 +198,8 @@ type SpoeMessageEvent struct {
 
 	// name
 	// Required: true
-	// Enum: [on-client-session on-server-session on-frontend-tcp-request on-backend-tcp-request on-tcp-response on-frontend-http-request on-backend-http-request on-http-response]
-	// +kubebuilder:validation:Enum=on-client-session;on-server-session;on-frontend-tcp-request;on-backend-tcp-request;on-tcp-response;on-frontend-http-request;on-backend-http-request;on-http-response;
+	// Enum: [on-backend-http-request on-backend-tcp-request on-client-session on-frontend-http-request on-frontend-tcp-request on-http-response on-server-session on-tcp-response]
+	// +kubebuilder:validation:Enum=on-backend-http-request;on-backend-tcp-request;on-client-session;on-frontend-http-request;on-frontend-tcp-request;on-http-response;on-server-session;on-tcp-response;
 	Name *string `json:"name"`
 }
 
@@ -267,7 +267,7 @@ var spoeMessageEventTypeNamePropEnum []interface{}
 
 func init() {
 	var res []string
-	if err := json.Unmarshal([]byte(`["on-client-session","on-server-session","on-frontend-tcp-request","on-backend-tcp-request","on-tcp-response","on-frontend-http-request","on-backend-http-request","on-http-response"]`), &res); err != nil {
+	if err := json.Unmarshal([]byte(`["on-backend-http-request","on-backend-tcp-request","on-client-session","on-frontend-http-request","on-frontend-tcp-request","on-http-response","on-server-session","on-tcp-response"]`), &res); err != nil {
 		panic(err)
 	}
 	for _, v := range res {
@@ -277,29 +277,29 @@ func init() {
 
 const (
 
-	// SpoeMessageEventNameOnDashClientDashSession captures enum value "on-client-session"
-	SpoeMessageEventNameOnDashClientDashSession string = "on-client-session"
-
-	// SpoeMessageEventNameOnDashServerDashSession captures enum value "on-server-session"
-	SpoeMessageEventNameOnDashServerDashSession string = "on-server-session"
-
-	// SpoeMessageEventNameOnDashFrontendDashTCPDashRequest captures enum value "on-frontend-tcp-request"
-	SpoeMessageEventNameOnDashFrontendDashTCPDashRequest string = "on-frontend-tcp-request"
+	// SpoeMessageEventNameOnDashBackendDashHTTPDashRequest captures enum value "on-backend-http-request"
+	SpoeMessageEventNameOnDashBackendDashHTTPDashRequest string = "on-backend-http-request"
 
 	// SpoeMessageEventNameOnDashBackendDashTCPDashRequest captures enum value "on-backend-tcp-request"
 	SpoeMessageEventNameOnDashBackendDashTCPDashRequest string = "on-backend-tcp-request"
 
-	// SpoeMessageEventNameOnDashTCPDashResponse captures enum value "on-tcp-response"
-	SpoeMessageEventNameOnDashTCPDashResponse string = "on-tcp-response"
+	// SpoeMessageEventNameOnDashClientDashSession captures enum value "on-client-session"
+	SpoeMessageEventNameOnDashClientDashSession string = "on-client-session"
 
 	// SpoeMessageEventNameOnDashFrontendDashHTTPDashRequest captures enum value "on-frontend-http-request"
 	SpoeMessageEventNameOnDashFrontendDashHTTPDashRequest string = "on-frontend-http-request"
 
-	// SpoeMessageEventNameOnDashBackendDashHTTPDashRequest captures enum value "on-backend-http-request"
-	SpoeMessageEventNameOnDashBackendDashHTTPDashRequest string = "on-backend-http-request"
+	// SpoeMessageEventNameOnDashFrontendDashTCPDashRequest captures enum value "on-frontend-tcp-request"
+	SpoeMessageEventNameOnDashFrontendDashTCPDashRequest string = "on-frontend-tcp-request"
 
 	// SpoeMessageEventNameOnDashHTTPDashResponse captures enum value "on-http-response"
 	SpoeMessageEventNameOnDashHTTPDashResponse string = "on-http-response"
+
+	// SpoeMessageEventNameOnDashServerDashSession captures enum value "on-server-session"
+	SpoeMessageEventNameOnDashServerDashSession string = "on-server-session"
+
+	// SpoeMessageEventNameOnDashTCPDashResponse captures enum value "on-tcp-response"
+	SpoeMessageEventNameOnDashTCPDashResponse string = "on-tcp-response"
 )
 
 // prop value enum

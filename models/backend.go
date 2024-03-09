@@ -56,8 +56,8 @@ type Backend struct {
 	AcceptInvalidHTTPResponse string `json:"accept_invalid_http_response,omitempty"`
 
 	// adv check
-	// Enum: [ssl-hello-chk smtpchk ldap-check mysql-check pgsql-check tcp-check redis-check httpchk]
-	// +kubebuilder:validation:Enum=ssl-hello-chk;smtpchk;ldap-check;mysql-check;pgsql-check;tcp-check;redis-check;httpchk;
+	// Enum: [httpchk ldap-check mysql-check pgsql-check redis-check smtpchk ssl-hello-chk tcp-check]
+	// +kubebuilder:validation:Enum=httpchk;ldap-check;mysql-check;pgsql-check;redis-check;smtpchk;ssl-hello-chk;tcp-check;
 	AdvCheck string `json:"adv_check,omitempty"`
 
 	// allbackups
@@ -790,7 +790,7 @@ var backendTypeAdvCheckPropEnum []interface{}
 
 func init() {
 	var res []string
-	if err := json.Unmarshal([]byte(`["ssl-hello-chk","smtpchk","ldap-check","mysql-check","pgsql-check","tcp-check","redis-check","httpchk"]`), &res); err != nil {
+	if err := json.Unmarshal([]byte(`["httpchk","ldap-check","mysql-check","pgsql-check","redis-check","smtpchk","ssl-hello-chk","tcp-check"]`), &res); err != nil {
 		panic(err)
 	}
 	for _, v := range res {
@@ -800,11 +800,8 @@ func init() {
 
 const (
 
-	// BackendAdvCheckSslDashHelloDashChk captures enum value "ssl-hello-chk"
-	BackendAdvCheckSslDashHelloDashChk string = "ssl-hello-chk"
-
-	// BackendAdvCheckSmtpchk captures enum value "smtpchk"
-	BackendAdvCheckSmtpchk string = "smtpchk"
+	// BackendAdvCheckHttpchk captures enum value "httpchk"
+	BackendAdvCheckHttpchk string = "httpchk"
 
 	// BackendAdvCheckLdapDashCheck captures enum value "ldap-check"
 	BackendAdvCheckLdapDashCheck string = "ldap-check"
@@ -815,14 +812,17 @@ const (
 	// BackendAdvCheckPgsqlDashCheck captures enum value "pgsql-check"
 	BackendAdvCheckPgsqlDashCheck string = "pgsql-check"
 
-	// BackendAdvCheckTCPDashCheck captures enum value "tcp-check"
-	BackendAdvCheckTCPDashCheck string = "tcp-check"
-
 	// BackendAdvCheckRedisDashCheck captures enum value "redis-check"
 	BackendAdvCheckRedisDashCheck string = "redis-check"
 
-	// BackendAdvCheckHttpchk captures enum value "httpchk"
-	BackendAdvCheckHttpchk string = "httpchk"
+	// BackendAdvCheckSmtpchk captures enum value "smtpchk"
+	BackendAdvCheckSmtpchk string = "smtpchk"
+
+	// BackendAdvCheckSslDashHelloDashChk captures enum value "ssl-hello-chk"
+	BackendAdvCheckSslDashHelloDashChk string = "ssl-hello-chk"
+
+	// BackendAdvCheckTCPDashCheck captures enum value "tcp-check"
+	BackendAdvCheckTCPDashCheck string = "tcp-check"
 )
 
 // prop value enum

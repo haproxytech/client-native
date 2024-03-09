@@ -16,7 +16,45 @@ tcp_request_rule:
       x-nullable: false
     action:
       type: string
-      enum: [accept, attach-srv, capture, do-resolve, expect-netscaler-cip, expect-proxy, reject, sc-add-gpc, sc-inc-gpc, sc-inc-gpc0, sc-inc-gpc1, sc-set-gpt0, send-spoe-group, set-dst-port, set-dst, set-priority, set-src, set-var, silent-drop, track-sc0, track-sc1, track-sc2, track-sc, unset-var, use-service, lua, set-bandwidth-limit, set-src-port, set-mark, set-tos, set-var-fmt, set-log-level, set-nice, switch-mode, set-bc-mark, set-bc-tos, set-fc-mark, set-fc-tos]
+      enum:
+        - accept
+        - attach-srv
+        - capture
+        - do-resolve
+        - expect-netscaler-cip
+        - expect-proxy
+        - lua
+        - reject
+        - sc-add-gpc
+        - sc-inc-gpc
+        - sc-inc-gpc0
+        - sc-inc-gpc1
+        - sc-set-gpt0
+        - set-bandwidth-limit
+        - set-bc-mark
+        - set-bc-tos
+        - set-dst-port
+        - set-dst
+        - set-fc-mark
+        - set-fc-tos
+        - set-log-level
+        - set-mark
+        - set-nice
+        - set-priority
+        - set-src
+        - set-src-port
+        - set-tos
+        - set-var
+        - set-var-fmt
+        - send-spoe-group
+        - silent-drop
+        - switch-mode
+        - track-sc0
+        - track-sc1
+        - track-sc2
+        - track-sc
+        - unset-var
+        - use-service
       x-nullable: false
       x-dependency:
         type:
@@ -228,7 +266,18 @@ tcp_request_rule:
       x-display-name: Standard HAProxy expression
       x-dependency:
         action:
-          value: [do-resolve, set-var, set-src, set-priority, set-dst, set-dst-port, set-src-port, set-bc-mark, set-bc-tos, set-fc-mark, set-fc-tos]
+          value:
+            - do-resolve
+            - set-bc-mark
+            - set-bc-tos
+            - set-dst
+            - set-dst-port
+            - set-fc-mark
+            - set-fc-tos
+            - set-priority
+            - set-src
+            - set-src-port
+            - set-var
           required: true
         type:
           value: [session, connection, content]

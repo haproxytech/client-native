@@ -12,7 +12,14 @@ filter:
       x-nullable: true
     type:
       type: string
-      enum: [trace, compression, spoe, cache, fcgi-app, bwlim-in, bwlim-out]
+      enum:
+        - bwlim-in
+        - bwlim-out
+        - cache
+        - compression
+        - fcgi-app
+        - spoe
+        - trace
       x-nullable: false
     trace_name:
       type: string

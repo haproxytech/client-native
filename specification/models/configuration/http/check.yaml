@@ -11,7 +11,16 @@ http_check:
       x-nullable: true
     type:
       type: string
-      enum: [comment, connect, disable-on-404, expect, send, send-state, set-var, set-var-fmt, unset-var]
+      enum:
+        - comment
+        - connect
+        - disable-on-404
+        - expect
+        - send
+        - send-state
+        - set-var
+        - set-var-fmt
+        - unset-var
       x-nullable: false
     check_comment:
       type: string

@@ -38,8 +38,8 @@ import (
 // swagger:model tcp_request_rule
 type TCPRequestRule struct {
 	// action
-	// Enum: [accept attach-srv capture do-resolve expect-netscaler-cip expect-proxy reject sc-add-gpc sc-inc-gpc sc-inc-gpc0 sc-inc-gpc1 sc-set-gpt0 send-spoe-group set-dst-port set-dst set-priority set-src set-var silent-drop track-sc0 track-sc1 track-sc2 track-sc unset-var use-service lua set-bandwidth-limit set-src-port set-mark set-tos set-var-fmt set-log-level set-nice switch-mode set-bc-mark set-bc-tos set-fc-mark set-fc-tos]
-	// +kubebuilder:validation:Enum=accept;attach-srv;capture;do-resolve;expect-netscaler-cip;expect-proxy;reject;sc-add-gpc;sc-inc-gpc;sc-inc-gpc0;sc-inc-gpc1;sc-set-gpt0;send-spoe-group;set-dst-port;set-dst;set-priority;set-src;set-var;silent-drop;track-sc0;track-sc1;track-sc2;track-sc;unset-var;use-service;lua;set-bandwidth-limit;set-src-port;set-mark;set-tos;set-var-fmt;set-log-level;set-nice;switch-mode;set-bc-mark;set-bc-tos;set-fc-mark;set-fc-tos;
+	// Enum: [accept attach-srv capture do-resolve expect-netscaler-cip expect-proxy lua reject sc-add-gpc sc-inc-gpc sc-inc-gpc0 sc-inc-gpc1 sc-set-gpt0 set-bandwidth-limit set-bc-mark set-bc-tos set-dst-port set-dst set-fc-mark set-fc-tos set-log-level set-mark set-nice set-priority set-src set-src-port set-tos set-var set-var-fmt send-spoe-group silent-drop switch-mode track-sc0 track-sc1 track-sc2 track-sc unset-var use-service]
+	// +kubebuilder:validation:Enum=accept;attach-srv;capture;do-resolve;expect-netscaler-cip;expect-proxy;lua;reject;sc-add-gpc;sc-inc-gpc;sc-inc-gpc0;sc-inc-gpc1;sc-set-gpt0;set-bandwidth-limit;set-bc-mark;set-bc-tos;set-dst-port;set-dst;set-fc-mark;set-fc-tos;set-log-level;set-mark;set-nice;set-priority;set-src;set-src-port;set-tos;set-var;set-var-fmt;send-spoe-group;silent-drop;switch-mode;track-sc0;track-sc1;track-sc2;track-sc;unset-var;use-service;
 	Action string `json:"action,omitempty"`
 
 	// bandwidth limit limit
@@ -249,7 +249,7 @@ var tcpRequestRuleTypeActionPropEnum []interface{}
 
 func init() {
 	var res []string
-	if err := json.Unmarshal([]byte(`["accept","attach-srv","capture","do-resolve","expect-netscaler-cip","expect-proxy","reject","sc-add-gpc","sc-inc-gpc","sc-inc-gpc0","sc-inc-gpc1","sc-set-gpt0","send-spoe-group","set-dst-port","set-dst","set-priority","set-src","set-var","silent-drop","track-sc0","track-sc1","track-sc2","track-sc","unset-var","use-service","lua","set-bandwidth-limit","set-src-port","set-mark","set-tos","set-var-fmt","set-log-level","set-nice","switch-mode","set-bc-mark","set-bc-tos","set-fc-mark","set-fc-tos"]`), &res); err != nil {
+	if err := json.Unmarshal([]byte(`["accept","attach-srv","capture","do-resolve","expect-netscaler-cip","expect-proxy","lua","reject","sc-add-gpc","sc-inc-gpc","sc-inc-gpc0","sc-inc-gpc1","sc-set-gpt0","set-bandwidth-limit","set-bc-mark","set-bc-tos","set-dst-port","set-dst","set-fc-mark","set-fc-tos","set-log-level","set-mark","set-nice","set-priority","set-src","set-src-port","set-tos","set-var","set-var-fmt","send-spoe-group","silent-drop","switch-mode","track-sc0","track-sc1","track-sc2","track-sc","unset-var","use-service"]`), &res); err != nil {
 		panic(err)
 	}
 	for _, v := range res {
@@ -277,6 +277,9 @@ const (
 	// TCPRequestRuleActionExpectDashProxy captures enum value "expect-proxy"
 	TCPRequestRuleActionExpectDashProxy string = "expect-proxy"
 
+	// TCPRequestRuleActionLua captures enum value "lua"
+	TCPRequestRuleActionLua string = "lua"
+
 	// TCPRequestRuleActionReject captures enum value "reject"
 	TCPRequestRuleActionReject string = "reject"
 
@@ -295,8 +298,14 @@ const (
 	// TCPRequestRuleActionScDashSetDashGpt0 captures enum value "sc-set-gpt0"
 	TCPRequestRuleActionScDashSetDashGpt0 string = "sc-set-gpt0"
 
-	// TCPRequestRuleActionSendDashSpoeDashGroup captures enum value "send-spoe-group"
-	TCPRequestRuleActionSendDashSpoeDashGroup string = "send-spoe-group"
+	// TCPRequestRuleActionSetDashBandwidthDashLimit captures enum value "set-bandwidth-limit"
+	TCPRequestRuleActionSetDashBandwidthDashLimit string = "set-bandwidth-limit"
+
+	// TCPRequestRuleActionSetDashBcDashMark captures enum value "set-bc-mark"
+	TCPRequestRuleActionSetDashBcDashMark string = "set-bc-mark"
+
+	// TCPRequestRuleActionSetDashBcDashTos captures enum value "set-bc-tos"
+	TCPRequestRuleActionSetDashBcDashTos string = "set-bc-tos"
 
 	// TCPRequestRuleActionSetDashDstDashPort captures enum value "set-dst-port"
 	TCPRequestRuleActionSetDashDstDashPort string = "set-dst-port"
@@ -304,17 +313,47 @@ const (
 	// TCPRequestRuleActionSetDashDst captures enum value "set-dst"
 	TCPRequestRuleActionSetDashDst string = "set-dst"
 
+	// TCPRequestRuleActionSetDashFcDashMark captures enum value "set-fc-mark"
+	TCPRequestRuleActionSetDashFcDashMark string = "set-fc-mark"
+
+	// TCPRequestRuleActionSetDashFcDashTos captures enum value "set-fc-tos"
+	TCPRequestRuleActionSetDashFcDashTos string = "set-fc-tos"
+
+	// TCPRequestRuleActionSetDashLogDashLevel captures enum value "set-log-level"
+	TCPRequestRuleActionSetDashLogDashLevel string = "set-log-level"
+
+	// TCPRequestRuleActionSetDashMark captures enum value "set-mark"
+	TCPRequestRuleActionSetDashMark string = "set-mark"
+
+	// TCPRequestRuleActionSetDashNice captures enum value "set-nice"
+	TCPRequestRuleActionSetDashNice string = "set-nice"
+
 	// TCPRequestRuleActionSetDashPriority captures enum value "set-priority"
 	TCPRequestRuleActionSetDashPriority string = "set-priority"
 
 	// TCPRequestRuleActionSetDashSrc captures enum value "set-src"
 	TCPRequestRuleActionSetDashSrc string = "set-src"
 
+	// TCPRequestRuleActionSetDashSrcDashPort captures enum value "set-src-port"
+	TCPRequestRuleActionSetDashSrcDashPort string = "set-src-port"
+
+	// TCPRequestRuleActionSetDashTos captures enum value "set-tos"
+	TCPRequestRuleActionSetDashTos string = "set-tos"
+
 	// TCPRequestRuleActionSetDashVar captures enum value "set-var"
 	TCPRequestRuleActionSetDashVar string = "set-var"
 
+	// TCPRequestRuleActionSetDashVarDashFmt captures enum value "set-var-fmt"
+	TCPRequestRuleActionSetDashVarDashFmt string = "set-var-fmt"
+
+	// TCPRequestRuleActionSendDashSpoeDashGroup captures enum value "send-spoe-group"
+	TCPRequestRuleActionSendDashSpoeDashGroup string = "send-spoe-group"
+
 	// TCPRequestRuleActionSilentDashDrop captures enum value "silent-drop"
 	TCPRequestRuleActionSilentDashDrop string = "silent-drop"
+
+	// TCPRequestRuleActionSwitchDashMode captures enum value "switch-mode"
+	TCPRequestRuleActionSwitchDashMode string = "switch-mode"
 
 	// TCPRequestRuleActionTrackDashSc0 captures enum value "track-sc0"
 	TCPRequestRuleActionTrackDashSc0 string = "track-sc0"
@@ -333,45 +372,6 @@ const (
 
 	// TCPRequestRuleActionUseDashService captures enum value "use-service"
 	TCPRequestRuleActionUseDashService string = "use-service"
-
-	// TCPRequestRuleActionLua captures enum value "lua"
-	TCPRequestRuleActionLua string = "lua"
-
-	// TCPRequestRuleActionSetDashBandwidthDashLimit captures enum value "set-bandwidth-limit"
-	TCPRequestRuleActionSetDashBandwidthDashLimit string = "set-bandwidth-limit"
-
-	// TCPRequestRuleActionSetDashSrcDashPort captures enum value "set-src-port"
-	TCPRequestRuleActionSetDashSrcDashPort string = "set-src-port"
-
-	// TCPRequestRuleActionSetDashMark captures enum value "set-mark"
-	TCPRequestRuleActionSetDashMark string = "set-mark"
-
-	// TCPRequestRuleActionSetDashTos captures enum value "set-tos"
-	TCPRequestRuleActionSetDashTos string = "set-tos"
-
-	// TCPRequestRuleActionSetDashVarDashFmt captures enum value "set-var-fmt"
-	TCPRequestRuleActionSetDashVarDashFmt string = "set-var-fmt"
-
-	// TCPRequestRuleActionSetDashLogDashLevel captures enum value "set-log-level"
-	TCPRequestRuleActionSetDashLogDashLevel string = "set-log-level"
-
-	// TCPRequestRuleActionSetDashNice captures enum value "set-nice"
-	TCPRequestRuleActionSetDashNice string = "set-nice"
-
-	// TCPRequestRuleActionSwitchDashMode captures enum value "switch-mode"
-	TCPRequestRuleActionSwitchDashMode string = "switch-mode"
-
-	// TCPRequestRuleActionSetDashBcDashMark captures enum value "set-bc-mark"
-	TCPRequestRuleActionSetDashBcDashMark string = "set-bc-mark"
-
-	// TCPRequestRuleActionSetDashBcDashTos captures enum value "set-bc-tos"
-	TCPRequestRuleActionSetDashBcDashTos string = "set-bc-tos"
-
-	// TCPRequestRuleActionSetDashFcDashMark captures enum value "set-fc-mark"
-	TCPRequestRuleActionSetDashFcDashMark string = "set-fc-mark"
-
-	// TCPRequestRuleActionSetDashFcDashTos captures enum value "set-fc-tos"
-	TCPRequestRuleActionSetDashFcDashTos string = "set-fc-tos"
 )
 
 // prop value enum

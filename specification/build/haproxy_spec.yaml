@@ -732,13 +732,13 @@ definitions:
           proxy-v2-options:
               items:
                   enum:
-                      - ssl
-                      - cert-cn
-                      - ssl-cipher
-                      - cert-sig
-                      - cert-key
                       - authority
+                      - cert-cn
+                      - cert-key
+                      - cert-sig
                       - crc32c
+                      - ssl
+                      - ssl-cipher
                       - unique-id
                   type: string
               type: array
@@ -1966,14 +1966,14 @@ definitions:
               x-display-name: Accept Invalid HTTP Response
           adv_check:
               enum:
-                  - ssl-hello-chk
-                  - smtpchk
+                  - httpchk
                   - ldap-check
                   - mysql-check
                   - pgsql-check
-                  - tcp-check
                   - redis-check
-                  - httpchk
+                  - smtpchk
+                  - ssl-hello-chk
+                  - tcp-check
               type: string
               x-display-name: Advanced Check
           allbackups:
@@ -2780,14 +2780,14 @@ definitions:
               x-display-name: Accept Invalid HTTP Response
           adv_check:
               enum:
-                  - ssl-hello-chk
-                  - smtpchk
+                  - httpchk
                   - ldap-check
                   - mysql-check
                   - pgsql-check
-                  - tcp-check
                   - redis-check
-                  - httpchk
+                  - smtpchk
+                  - ssl-hello-chk
+                  - tcp-check
               type: string
               x-display-name: Advanced Check
           allbackups:
@@ -5668,38 +5668,38 @@ definitions:
                   - do-resolve
                   - expect-netscaler-cip
                   - expect-proxy
+                  - lua
                   - reject
                   - sc-add-gpc
                   - sc-inc-gpc
                   - sc-inc-gpc0
                   - sc-inc-gpc1
                   - sc-set-gpt0
-                  - send-spoe-group
+                  - set-bandwidth-limit
+                  - set-bc-mark
+                  - set-bc-tos
                   - set-dst-port
                   - set-dst
+                  - set-fc-mark
+                  - set-fc-tos
+                  - set-log-level
+                  - set-mark
+                  - set-nice
                   - set-priority
                   - set-src
+                  - set-src-port
+                  - set-tos
                   - set-var
+                  - set-var-fmt
+                  - send-spoe-group
                   - silent-drop
+                  - switch-mode
                   - track-sc0
                   - track-sc1
                   - track-sc2
                   - track-sc
                   - unset-var
                   - use-service
-                  - lua
-                  - set-bandwidth-limit
-                  - set-src-port
-                  - set-mark
-                  - set-tos
-                  - set-var-fmt
-                  - set-log-level
-                  - set-nice
-                  - switch-mode
-                  - set-bc-mark
-                  - set-bc-tos
-                  - set-fc-mark
-                  - set-fc-tos
               type: string
               x-dependency:
                   type:
@@ -5793,16 +5793,16 @@ definitions:
                       required: true
                       value:
                           - do-resolve
-                          - set-var
-                          - set-src
-                          - set-priority
-                          - set-dst
-                          - set-dst-port
-                          - set-src-port
                           - set-bc-mark
                           - set-bc-tos
+                          - set-dst
+                          - set-dst-port
                           - set-fc-mark
                           - set-fc-tos
+                          - set-priority
+                          - set-src
+                          - set-src-port
+                          - set-var
                   type:
                       value:
                           - session
@@ -6169,22 +6169,22 @@ definitions:
           action:
               enum:
                   - accept
-                  - reject
-                  - lua
-                  - set-bandwidth-limit
                   - close
+                  - lua
+                  - reject
                   - sc-add-gpc
                   - sc-inc-gpc
                   - sc-inc-gpc0
                   - sc-inc-gpc1
                   - sc-set-gpt0
                   - send-spoe-group
+                  - set-bandwidth-limit
+                  - set-fc-mark
+                  - set-fc-tos
                   - set-log-level
                   - set-mark
                   - set-nice
                   - set-tos
-                  - set-fc-mark
-                  - set-fc-tos
                   - silent-drop
                   - unset-var
               type: string
@@ -6924,13 +6924,13 @@ definitions:
               x-display-name: Trace Random Parsing
           type:
               enum:
-                  - trace
-                  - compression
-                  - spoe
-                  - cache
-                  - fcgi-app
                   - bwlim-in
                   - bwlim-out
+                  - cache
+                  - compression
+                  - fcgi-app
+                  - spoe
+                  - trace
               type: string
               x-nullable: false
       required:
@@ -8425,13 +8425,13 @@ definitions:
           proxy-v2-options:
               items:
                   enum:
-                      - ssl
-                      - cert-cn
-                      - ssl-cipher
-                      - cert-sig
-                      - cert-key
                       - authority
+                      - cert-cn
+                      - cert-key
+                      - cert-sig
                       - crc32c
+                      - ssl
+                      - ssl-cipher
                       - unique-id
                   type: string
               type: array
@@ -8603,25 +8603,25 @@ definitions:
                   properties:
                       field:
                           enum:
-                              - server_id
+                              - bytes_in_cnt
+                              - bytes_in_rate
+                              - bytes_out_cnt
+                              - bytes_out_rate
+                              - conn_cnt
+                              - conn_cur
+                              - conn_rate
                               - gpc0
                               - gpc0_rate
                               - gpc1
                               - gpc1_rate
                               - gpt0
-                              - conn_cnt
-                              - conn_cur
-                              - conn_rate
-                              - sess_cnt
-                              - sess_rate
                               - http_req_cnt
                               - http_req_rate
                               - http_err_cnt
                               - http_err_rate
-                              - bytes_in_cnt
-                              - bytes_in_rate
-                              - bytes_out_cnt
-                              - bytes_out_rate
+                              - server_id
+                              - sess_cnt
+                              - sess_rate
                           type: string
                       period:
                           type: integer
@@ -9008,17 +9008,17 @@ definitions:
       properties:
           algorithm:
               enum:
-                  - roundrobin
-                  - static-rr
-                  - leastconn
                   - first
-                  - source
-                  - uri
-                  - url_param
+                  - hash
                   - hdr
+                  - leastconn
                   - random
                   - rdp-cookie
-                  - hash
+                  - roundrobin
+                  - source
+                  - static-rr
+                  - uri
+                  - url_param
               type: string
           hash_expression:
               type: string
@@ -9829,14 +9829,14 @@ definitions:
                       x-display-name: Condition Test
                   name:
                       enum:
-                          - on-client-session
-                          - on-server-session
-                          - on-frontend-tcp-request
-                          - on-backend-tcp-request
-                          - on-tcp-response
-                          - on-frontend-http-request
                           - on-backend-http-request
+                          - on-backend-tcp-request
+                          - on-client-session
+                          - on-frontend-http-request
+                          - on-frontend-tcp-request
                           - on-http-response
+                          - on-server-session
+                          - on-tcp-response
                       type: string
               required:
                   - name

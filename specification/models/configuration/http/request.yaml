@@ -219,7 +219,15 @@ http_request_rule:
           value: [deny, tarpit]
     normalizer:
       type: string
-      enum: [fragment-encode, fragment-strip, path-merge-slashes, path-strip-dot, path-strip-dotdot, percent-decode-unreserved, percent-to-upercase, query-sort-by-name]
+      enum:
+        - fragment-encode
+        - fragment-strip
+        - path-merge-slashes
+        - path-strip-dot
+        - path-strip-dotdot
+        - percent-decode-unreserved
+        - percent-to-upercase
+        - query-sort-by-name
       x-dependency:
         type:
           value: normalize-uri
@@ -456,7 +464,18 @@ http_request_rule:
       x-display-name: Standard HAProxy expression
       x-dependency:
         type:
-          value: [do-resolve, set-bc-mark, set-bc-tos, set-dst, set-dst-port, set-fc-mark, set-fc-tos, set-priority-class, set-priority-offset, set-src, set-src-port]
+          value:
+            - do-resolve
+            - set-bc-mark
+            - set-bc-tos
+            - set-dst
+            - set-dst-port
+            - set-fc-mark
+            - set-fc-tos
+            - set-priority-class
+            - set-priority-offset
+            - set-src
+            - set-src-port
           required: true
     sc_expr:
       type: string

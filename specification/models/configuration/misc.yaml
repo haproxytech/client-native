@@ -38,7 +38,18 @@ balance:
   properties:
     algorithm:
       type: string
-      enum: [roundrobin, static-rr, leastconn, first, source, uri, url_param, hdr, random, rdp-cookie, hash]
+      enum:
+        - first
+        - hash
+        - hdr
+        - leastconn
+        - random
+        - rdp-cookie
+        - roundrobin
+        - source
+        - static-rr
+        - uri
+        - url_param
     uri_whole:
       type: boolean
       x-display-name: Uri Whole

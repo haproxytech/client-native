@@ -211,8 +211,8 @@ func (m *StickTable) UnmarshalBinary(b []byte) error {
 // swagger:model StickTableField
 type StickTableField struct {
 	// field
-	// Enum: [server_id gpc0 gpc0_rate gpc1 gpc1_rate gpt0 conn_cnt conn_cur conn_rate sess_cnt sess_rate http_req_cnt http_req_rate http_err_cnt http_err_rate bytes_in_cnt bytes_in_rate bytes_out_cnt bytes_out_rate]
-	// +kubebuilder:validation:Enum=server_id;gpc0;gpc0_rate;gpc1;gpc1_rate;gpt0;conn_cnt;conn_cur;conn_rate;sess_cnt;sess_rate;http_req_cnt;http_req_rate;http_err_cnt;http_err_rate;bytes_in_cnt;bytes_in_rate;bytes_out_cnt;bytes_out_rate;
+	// Enum: [bytes_in_cnt bytes_in_rate bytes_out_cnt bytes_out_rate conn_cnt conn_cur conn_rate gpc0 gpc0_rate gpc1 gpc1_rate gpt0 http_req_cnt http_req_rate http_err_cnt http_err_rate server_id sess_cnt sess_rate]
+	// +kubebuilder:validation:Enum=bytes_in_cnt;bytes_in_rate;bytes_out_cnt;bytes_out_rate;conn_cnt;conn_cur;conn_rate;gpc0;gpc0_rate;gpc1;gpc1_rate;gpt0;http_req_cnt;http_req_rate;http_err_cnt;http_err_rate;server_id;sess_cnt;sess_rate;
 	Field string `json:"field,omitempty"`
 
 	// period
@@ -246,7 +246,7 @@ var stickTableFieldTypeFieldPropEnum []interface{}
 
 func init() {
 	var res []string
-	if err := json.Unmarshal([]byte(`["server_id","gpc0","gpc0_rate","gpc1","gpc1_rate","gpt0","conn_cnt","conn_cur","conn_rate","sess_cnt","sess_rate","http_req_cnt","http_req_rate","http_err_cnt","http_err_rate","bytes_in_cnt","bytes_in_rate","bytes_out_cnt","bytes_out_rate"]`), &res); err != nil {
+	if err := json.Unmarshal([]byte(`["bytes_in_cnt","bytes_in_rate","bytes_out_cnt","bytes_out_rate","conn_cnt","conn_cur","conn_rate","gpc0","gpc0_rate","gpc1","gpc1_rate","gpt0","http_req_cnt","http_req_rate","http_err_cnt","http_err_rate","server_id","sess_cnt","sess_rate"]`), &res); err != nil {
 		panic(err)
 	}
 	for _, v := range res {
@@ -256,8 +256,26 @@ func init() {
 
 const (
 
-	// StickTableFieldFieldServerID captures enum value "server_id"
-	StickTableFieldFieldServerID string = "server_id"
+	// StickTableFieldFieldBytesInCnt captures enum value "bytes_in_cnt"
+	StickTableFieldFieldBytesInCnt string = "bytes_in_cnt"
+
+	// StickTableFieldFieldBytesInRate captures enum value "bytes_in_rate"
+	StickTableFieldFieldBytesInRate string = "bytes_in_rate"
+
+	// StickTableFieldFieldBytesOutCnt captures enum value "bytes_out_cnt"
+	StickTableFieldFieldBytesOutCnt string = "bytes_out_cnt"
+
+	// StickTableFieldFieldBytesOutRate captures enum value "bytes_out_rate"
+	StickTableFieldFieldBytesOutRate string = "bytes_out_rate"
+
+	// StickTableFieldFieldConnCnt captures enum value "conn_cnt"
+	StickTableFieldFieldConnCnt string = "conn_cnt"
+
+	// StickTableFieldFieldConnCur captures enum value "conn_cur"
+	StickTableFieldFieldConnCur string = "conn_cur"
+
+	// StickTableFieldFieldConnRate captures enum value "conn_rate"
+	StickTableFieldFieldConnRate string = "conn_rate"
 
 	// StickTableFieldFieldGpc0 captures enum value "gpc0"
 	StickTableFieldFieldGpc0 string = "gpc0"
@@ -274,21 +292,6 @@ const (
 	// StickTableFieldFieldGpt0 captures enum value "gpt0"
 	StickTableFieldFieldGpt0 string = "gpt0"
 
-	// StickTableFieldFieldConnCnt captures enum value "conn_cnt"
-	StickTableFieldFieldConnCnt string = "conn_cnt"
-
-	// StickTableFieldFieldConnCur captures enum value "conn_cur"
-	StickTableFieldFieldConnCur string = "conn_cur"
-
-	// StickTableFieldFieldConnRate captures enum value "conn_rate"
-	StickTableFieldFieldConnRate string = "conn_rate"
-
-	// StickTableFieldFieldSessCnt captures enum value "sess_cnt"
-	StickTableFieldFieldSessCnt string = "sess_cnt"
-
-	// StickTableFieldFieldSessRate captures enum value "sess_rate"
-	StickTableFieldFieldSessRate string = "sess_rate"
-
 	// StickTableFieldFieldHTTPReqCnt captures enum value "http_req_cnt"
 	StickTableFieldFieldHTTPReqCnt string = "http_req_cnt"
 
@@ -301,17 +304,14 @@ const (
 	// StickTableFieldFieldHTTPErrRate captures enum value "http_err_rate"
 	StickTableFieldFieldHTTPErrRate string = "http_err_rate"
 
-	// StickTableFieldFieldBytesInCnt captures enum value "bytes_in_cnt"
-	StickTableFieldFieldBytesInCnt string = "bytes_in_cnt"
+	// StickTableFieldFieldServerID captures enum value "server_id"
+	StickTableFieldFieldServerID string = "server_id"
 
-	// StickTableFieldFieldBytesInRate captures enum value "bytes_in_rate"
-	StickTableFieldFieldBytesInRate string = "bytes_in_rate"
+	// StickTableFieldFieldSessCnt captures enum value "sess_cnt"
+	StickTableFieldFieldSessCnt string = "sess_cnt"
 
-	// StickTableFieldFieldBytesOutCnt captures enum value "bytes_out_cnt"
-	StickTableFieldFieldBytesOutCnt string = "bytes_out_cnt"
-
-	// StickTableFieldFieldBytesOutRate captures enum value "bytes_out_rate"
-	StickTableFieldFieldBytesOutRate string = "bytes_out_rate"
+	// StickTableFieldFieldSessRate captures enum value "sess_rate"
+	StickTableFieldFieldSessRate string = "sess_rate"
 )
 
 // prop value enum

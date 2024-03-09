@@ -181,7 +181,21 @@ native_stat_stats:
       x-nullable: true
     check_status:
       type: string
-      enum: [UNK, INI, SOCKERR, L4OK, L4TOUT, L4CON, L6OK, L6TOUT, L6RSP, L7OK, L7OKC, L7TOUT, L7RSP, L7STS]
+      enum:
+        - UNK
+        - INI
+        - SOCKERR
+        - L4OK
+        - L4TOUT
+        - L4CON
+        - L6OK
+        - L6TOUT
+        - L6RSP
+        - L7OK
+        - L7OKC
+        - L7TOUT
+        - L7RSP
+        - L7STS
       x-dependency:
         type: server
     check_code:
@@ -288,7 +302,15 @@ native_stat_stats:
         type: [server, backend]
     agent_status:
       type: string
-      enum: [UNK, INI, SOCKERR, L4OK, L4TOUT, L4CON, L7OK, L7STS]
+      enum:
+        - UNK
+        - INI
+        - SOCKERR
+        - L4OK
+        - L4TOUT
+        - L4CON
+        - L7OK
+        - L7STS
       x-dependency:
         type: server
     agent_code:
