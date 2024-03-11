@@ -3975,7 +3975,7 @@ definitions:
                   - path-strip-dot
                   - path-strip-dotdot
                   - percent-decode-unreserved
-                  - percent-to-upercase
+                  - percent-to-uppercase
                   - query-sort-by-name
               type: string
               x-dependency:
@@ -3995,7 +3995,7 @@ definitions:
                   normalizer:
                       value:
                           - percent-decode-unreserved
-                          - percent-to-upercase
+                          - percent-to-uppercase
                   type:
                       value: normalize-uri
           path_fmt:
