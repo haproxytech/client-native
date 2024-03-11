@@ -222,7 +222,7 @@ http_request_rule:
         - path-strip-dot
         - path-strip-dotdot
         - percent-decode-unreserved
-        - percent-to-upercase
+        - percent-to-uppercase
         - query-sort-by-name
       x-dependency:
         type:
@@ -234,7 +234,7 @@ http_request_rule:
         type:
           value: normalize-uri
         normalizer:
-          value: [percent-decode-unreserved, percent-to-upercase]
+          value: [percent-decode-unreserved, percent-to-uppercase]
     normalizer_full:
       type: boolean
       x-dependency:

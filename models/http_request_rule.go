@@ -172,8 +172,8 @@ type HTTPRequestRule struct {
 	NiceValue int64 `json:"nice_value,omitempty"`
 
 	// normalizer
-	// Enum: [fragment-encode fragment-strip path-merge-slashes path-strip-dot path-strip-dotdot percent-decode-unreserved percent-to-upercase query-sort-by-name]
-	// +kubebuilder:validation:Enum=fragment-encode;fragment-strip;path-merge-slashes;path-strip-dot;path-strip-dotdot;percent-decode-unreserved;percent-to-upercase;query-sort-by-name;
+	// Enum: [fragment-encode fragment-strip path-merge-slashes path-strip-dot path-strip-dotdot percent-decode-unreserved percent-to-uppercase query-sort-by-name]
+	// +kubebuilder:validation:Enum=fragment-encode;fragment-strip;path-merge-slashes;path-strip-dot;path-strip-dotdot;percent-decode-unreserved;percent-to-uppercase;query-sort-by-name;
 	Normalizer string `json:"normalizer,omitempty"`
 
 	// normalizer full
@@ -878,7 +878,7 @@ var httpRequestRuleTypeNormalizerPropEnum []interface{}
 
 func init() {
 	var res []string
-	if err := json.Unmarshal([]byte(`["fragment-encode","fragment-strip","path-merge-slashes","path-strip-dot","path-strip-dotdot","percent-decode-unreserved","percent-to-upercase","query-sort-by-name"]`), &res); err != nil {
+	if err := json.Unmarshal([]byte(`["fragment-encode","fragment-strip","path-merge-slashes","path-strip-dot","path-strip-dotdot","percent-decode-unreserved","percent-to-uppercase","query-sort-by-name"]`), &res); err != nil {
 		panic(err)
 	}
 	for _, v := range res {
@@ -906,8 +906,8 @@ const (
 	// HTTPRequestRuleNormalizerPercentDashDecodeDashUnreserved captures enum value "percent-decode-unreserved"
 	HTTPRequestRuleNormalizerPercentDashDecodeDashUnreserved string = "percent-decode-unreserved"
 
-	// HTTPRequestRuleNormalizerPercentDashToDashUpercase captures enum value "percent-to-upercase"
-	HTTPRequestRuleNormalizerPercentDashToDashUpercase string = "percent-to-upercase"
+	// HTTPRequestRuleNormalizerPercentDashToDashUppercase captures enum value "percent-to-uppercase"
+	HTTPRequestRuleNormalizerPercentDashToDashUppercase string = "percent-to-uppercase"
 
 	// HTTPRequestRuleNormalizerQueryDashSortDashByDashName captures enum value "query-sort-by-name"
 	HTTPRequestRuleNormalizerQueryDashSortDashByDashName string = "query-sort-by-name"
