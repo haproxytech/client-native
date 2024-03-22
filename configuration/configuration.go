@@ -949,6 +949,7 @@ func (s *SectionParser) balance() interface{} {
 		b.URIDepth = prm.Depth
 		b.URILen = prm.Len
 		b.URIWhole = prm.Whole
+		b.URIPathOnly = prm.PathOnly
 	case *params.BalanceURLParam:
 		b.URLParam = prm.Param
 		b.URLParamCheckPost = prm.CheckPost
