@@ -107,6 +107,122 @@ aws_one:
         $ref: '#/responses/NotFound'
       'default':
         $ref: '#/responses/DefaultError'
+
+opennebula:
+  get:
+    summary: Return an array of all configured OpenNebula servers
+    description: Returns all configured OpenNebula servers.
+    operationId: getOpenNebulas
+    tags:
+      - ServiceDiscovery
+    responses:
+      '200':
+        description: Successful operation
+        schema:
+          type: object
+          required:
+            - data
+          properties:
+            data:
+              $ref: "#/definitions/opennebulas"
+      'default':
+        $ref: '#/responses/DefaultError'
+  post:
+    summary: Add a new OpenNebula server
+    description: Adds a new OpenNebula server.
+    operationId: createOpenNebula
+    tags:
+      - ServiceDiscovery
+    parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/opennebula'
+    responses:
+      '201':
+        description: OpenNebula created
+        schema:
+          $ref: '#/definitions/opennebula'
+      '409':
+        $ref: '#/responses/AlreadyExists'
+      '400':
+        $ref: '#/responses/BadRequest'
+      'default':
+        $ref: '#/responses/DefaultError'
+opennebula_one:
+  get:
+    summary: Return one OpenNebula server
+    description: Returns one OpenNebula server configuration by it's id.
+    operationId: getOpenNebula
+    tags:
+      - ServiceDiscovery
+    parameters:
+      - name: id
+        in: path
+        description: OpenNebula server id
+        required: true
+        type: string
+    responses:
+      '200':
+        description: Successful operation
+        schema:
+          type: object
+          properties:
+            data:
+              $ref: "#/definitions/opennebula"
+      '404':
+        $ref: '#/responses/NotFound'
+      'default':
+        $ref: '#/responses/DefaultError'
+  put:
+    summary: Replace an OpenNebula server
+    description: Replaces an OpenNebula server configuration by it's id.
+    operationId: replaceOpenNebula
+    tags:
+      - ServiceDiscovery
+    parameters:
+      - name: id
+        in: path
+        description: OpenNebula Index
+        required: true
+        type: string
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/opennebula'
+    responses:
+      '200':
+        description: OpenNebula server replaced
+        schema:
+          $ref: '#/definitions/opennebula'
+      '400':
+        $ref: '#/responses/BadRequest'
+      '404':
+        $ref: '#/responses/NotFound'
+      'default':
+        $ref: '#/responses/DefaultError'
+  delete:
+    summary: Delete an OpenNebula server
+    description: Deletes an OpenNebula server configuration by it's id.
+    operationId: deleteOpenNebula
+    tags:
+      - ServiceDiscovery
+    parameters:
+      - name: id
+        in: path
+        description: OpenNebula server Index
+        required: true
+        type: string
+    responses:
+      '204':
+        description: OpenNebula server deleted
+      '404':
+        $ref: '#/responses/NotFound'
+      'default':
+        $ref: '#/responses/DefaultError'
+
 consul:
   get:
     summary: Return an array of all configured Consul servers
