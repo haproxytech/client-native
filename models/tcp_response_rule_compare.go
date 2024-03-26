@@ -121,6 +121,10 @@ func (s TCPResponseRule) Equal(t TCPResponseRule, opts ...Options) bool {
 		return false
 	}
 
+	if s.VarFormat != t.VarFormat {
+		return false
+	}
+
 	if s.VarName != t.VarName {
 		return false
 	}
@@ -235,6 +239,10 @@ func (s TCPResponseRule) Diff(t TCPResponseRule, opts ...Options) map[string][]i
 
 	if s.Type != t.Type {
 		diff["Type"] = []interface{}{s.Type, t.Type}
+	}
+
+	if s.VarFormat != t.VarFormat {
+		diff["VarFormat"] = []interface{}{s.VarFormat, t.VarFormat}
 	}
 
 	if s.VarName != t.VarName {

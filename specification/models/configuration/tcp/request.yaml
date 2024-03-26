@@ -31,19 +31,20 @@ tcp_request_rule:
         - sc-inc-gpc1
         - sc-set-gpt
         - sc-set-gpt0
+        - send-spoe-group
         - set-bandwidth-limit
         - set-dst-port
         - set-dst
         - set-log-level
         - set-mark
         - set-nice
-        - set-priority
+        - set-priority-class
+        - set-priority-offset
         - set-src
         - set-src-port
         - set-tos
         - set-var
         - set-var-fmt
-        - send-spoe-group
         - silent-drop
         - switch-mode
         - track-sc0
@@ -175,15 +176,6 @@ tcp_request_rule:
         type:
           value: [content]
           required: true
-    priority_type:
-      type: string
-      enum: [class, offset]
-      x-dependency:
-        action:
-          value: set-priority
-          required: true
-        type:
-          value: [content]
     var_name:
       type: string
       pattern: '^[^\s]+$'
@@ -275,7 +267,8 @@ tcp_request_rule:
             - do-resolve
             - set-dst
             - set-dst-port
-            - set-priority
+            - set-priority-class
+            - set-priority-offset
             - set-src
             - set-src-port
             - set-var

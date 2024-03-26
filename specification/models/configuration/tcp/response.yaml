@@ -33,6 +33,8 @@ tcp_response_rule:
         - set-mark
         - set-nice
         - set-tos
+        - set-var
+        - set-var-fmt
         - silent-drop
         - unset-var
       x-nullable: false
@@ -217,6 +219,15 @@ tcp_response_rule:
       x-dependency:
         action:
           value: unset-var
+        type:
+          value: content
+    var_format:
+      type: string
+      x-display-name: Var Format
+      x-dependency:
+        action:
+          value: set-var-fmt
+          required: true
         type:
           value: content
     cond:

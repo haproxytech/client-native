@@ -38,8 +38,8 @@ import (
 // swagger:model tcp_response_rule
 type TCPResponseRule struct {
 	// action
-	// Enum: [accept close lua reject sc-add-gpc sc-inc-gpc sc-inc-gpc0 sc-inc-gpc1 sc-set-gpt sc-set-gpt0 send-spoe-group set-bandwidth-limit set-log-level set-mark set-nice set-tos silent-drop unset-var]
-	// +kubebuilder:validation:Enum=accept;close;lua;reject;sc-add-gpc;sc-inc-gpc;sc-inc-gpc0;sc-inc-gpc1;sc-set-gpt;sc-set-gpt0;send-spoe-group;set-bandwidth-limit;set-log-level;set-mark;set-nice;set-tos;silent-drop;unset-var;
+	// Enum: [accept close lua reject sc-add-gpc sc-inc-gpc sc-inc-gpc0 sc-inc-gpc1 sc-set-gpt sc-set-gpt0 send-spoe-group set-bandwidth-limit set-log-level set-mark set-nice set-tos set-var set-var-fmt silent-drop unset-var]
+	// +kubebuilder:validation:Enum=accept;close;lua;reject;sc-add-gpc;sc-inc-gpc;sc-inc-gpc0;sc-inc-gpc1;sc-set-gpt;sc-set-gpt0;send-spoe-group;set-bandwidth-limit;set-log-level;set-mark;set-nice;set-tos;set-var;set-var-fmt;silent-drop;unset-var;
 	Action string `json:"action,omitempty"`
 
 	// bandwidth limit limit
@@ -128,6 +128,9 @@ type TCPResponseRule struct {
 	// +kubebuilder:validation:Enum=content;inspect-delay;
 	Type string `json:"type"`
 
+	// var format
+	VarFormat string `json:"var_format,omitempty"`
+
 	// var name
 	// Pattern: ^[^\s]+$
 	// +kubebuilder:validation:Pattern=`^[^\s]+$`
@@ -205,7 +208,7 @@ var tcpResponseRuleTypeActionPropEnum []interface{}
 
 func init() {
 	var res []string
-	if err := json.Unmarshal([]byte(`["accept","close","lua","reject","sc-add-gpc","sc-inc-gpc","sc-inc-gpc0","sc-inc-gpc1","sc-set-gpt","sc-set-gpt0","send-spoe-group","set-bandwidth-limit","set-log-level","set-mark","set-nice","set-tos","silent-drop","unset-var"]`), &res); err != nil {
+	if err := json.Unmarshal([]byte(`["accept","close","lua","reject","sc-add-gpc","sc-inc-gpc","sc-inc-gpc0","sc-inc-gpc1","sc-set-gpt","sc-set-gpt0","send-spoe-group","set-bandwidth-limit","set-log-level","set-mark","set-nice","set-tos","set-var","set-var-fmt","silent-drop","unset-var"]`), &res); err != nil {
 		panic(err)
 	}
 	for _, v := range res {
@@ -262,6 +265,12 @@ const (
 
 	// TCPResponseRuleActionSetDashTos captures enum value "set-tos"
 	TCPResponseRuleActionSetDashTos string = "set-tos"
+
+	// TCPResponseRuleActionSetDashVar captures enum value "set-var"
+	TCPResponseRuleActionSetDashVar string = "set-var"
+
+	// TCPResponseRuleActionSetDashVarDashFmt captures enum value "set-var-fmt"
+	TCPResponseRuleActionSetDashVarDashFmt string = "set-var-fmt"
 
 	// TCPResponseRuleActionSilentDashDrop captures enum value "silent-drop"
 	TCPResponseRuleActionSilentDashDrop string = "silent-drop"
