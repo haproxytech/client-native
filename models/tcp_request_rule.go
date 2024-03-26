@@ -39,7 +39,7 @@ import (
 type TCPRequestRule struct {
 
 	// action
-	// Enum: [accept capture do-resolve expect-netscaler-cip expect-proxy reject sc-add-gpc sc-inc-gpc sc-inc-gpc0 sc-inc-gpc1 sc-set-gpt0 send-spoe-group set-dst-port set-dst set-priority set-src set-var silent-drop track-sc0 track-sc1 track-sc2 track-sc unset-var use-service lua set-bandwidth-limit set-src-port set-mark set-tos set-var-fmt set-log-level set-nice switch-mode]
+	// Enum: [accept attach-srv capture do-resolve expect-netscaler-cip expect-proxy lua reject sc-add-gpc sc-inc-gpc sc-inc-gpc0 sc-inc-gpc1 sc-set-gpt0 send-spoe-group set-bandwidth-limit set-bc-mark set-bc-tos set-dst-port set-dst set-fc-mark set-fc-tos set-log-level set-mark set-nice set-priority-class set-priority-offset set-src set-src-port set-tos set-var set-var-fmt silent-drop switch-mode track-sc0 track-sc1 track-sc2 track-sc unset-var use-service]
 	Action string `json:"action,omitempty"`
 
 	// bandwidth limit limit
@@ -94,10 +94,6 @@ type TCPRequestRule struct {
 	// Maximum: 1024
 	// Minimum: -1024
 	NiceValue int64 `json:"nice_value,omitempty"`
-
-	// priority type
-	// Enum: [class offset]
-	PriorityType string `json:"priority_type,omitempty"`
 
 	// resolve protocol
 	// Enum: [ipv4 ipv6]
@@ -199,10 +195,6 @@ func (m *TCPRequestRule) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
-	if err := m.validatePriorityType(formats); err != nil {
-		res = append(res, err)
-	}
-
 	if err := m.validateResolveProtocol(formats); err != nil {
 		res = append(res, err)
 	}
@@ -233,7 +225,7 @@ var tcpRequestRuleTypeActionPropEnum []interface{}
 
 func init() {
 	var res []string
-	if err := json.Unmarshal([]byte(`["accept","capture","do-resolve","expect-netscaler-cip","expect-proxy","reject","sc-add-gpc","sc-inc-gpc","sc-inc-gpc0","sc-inc-gpc1","sc-set-gpt0","send-spoe-group","set-dst-port","set-dst","set-priority","set-src","set-var","silent-drop","track-sc0","track-sc1","track-sc2","track-sc","unset-var","use-service","lua","set-bandwidth-limit","set-src-port","set-mark","set-tos","set-var-fmt","set-log-level","set-nice","switch-mode"]`), &res); err != nil {
+	if err := json.Unmarshal([]byte(`["accept","attach-srv","capture","do-resolve","expect-netscaler-cip","expect-proxy","lua","reject","sc-add-gpc","sc-inc-gpc","sc-inc-gpc0","sc-inc-gpc1","sc-set-gpt0","send-spoe-group","set-bandwidth-limit","set-bc-mark","set-bc-tos","set-dst-port","set-dst","set-fc-mark","set-fc-tos","set-log-level","set-mark","set-nice","set-priority-class","set-priority-offset","set-src","set-src-port","set-tos","set-var","set-var-fmt","silent-drop","switch-mode","track-sc0","track-sc1","track-sc2","track-sc","unset-var","use-service"]`), &res); err != nil {
 		panic(err)
 	}
 	for _, v := range res {
@@ -246,6 +238,9 @@ const (
 	// TCPRequestRuleActionAccept captures enum value "accept"
 	TCPRequestRuleActionAccept string = "accept"
 
+	// TCPRequestRuleActionAttachDashSrv captures enum value "attach-srv"
+	TCPRequestRuleActionAttachDashSrv string = "attach-srv"
+
 	// TCPRequestRuleActionCapture captures enum value "capture"
 	TCPRequestRuleActionCapture string = "capture"
 
@@ -257,6 +252,9 @@ const (
 
 	// TCPRequestRuleActionExpectDashProxy captures enum value "expect-proxy"
 	TCPRequestRuleActionExpectDashProxy string = "expect-proxy"
+
+	// TCPRequestRuleActionLua captures enum value "lua"
+	TCPRequestRuleActionLua string = "lua"
 
 	// TCPRequestRuleActionReject captures enum value "reject"
 	TCPRequestRuleActionReject string = "reject"
@@ -279,23 +277,62 @@ const (
 	// TCPRequestRuleActionSendDashSpoeDashGroup captures enum value "send-spoe-group"
 	TCPRequestRuleActionSendDashSpoeDashGroup string = "send-spoe-group"
 
+	// TCPRequestRuleActionSetDashBandwidthDashLimit captures enum value "set-bandwidth-limit"
+	TCPRequestRuleActionSetDashBandwidthDashLimit string = "set-bandwidth-limit"
+
+	// TCPRequestRuleActionSetDashBcDashMark captures enum value "set-bc-mark"
+	TCPRequestRuleActionSetDashBcDashMark string = "set-bc-mark"
+
+	// TCPRequestRuleActionSetDashBcDashTos captures enum value "set-bc-tos"
+	TCPRequestRuleActionSetDashBcDashTos string = "set-bc-tos"
+
 	// TCPRequestRuleActionSetDashDstDashPort captures enum value "set-dst-port"
 	TCPRequestRuleActionSetDashDstDashPort string = "set-dst-port"
 
 	// TCPRequestRuleActionSetDashDst captures enum value "set-dst"
 	TCPRequestRuleActionSetDashDst string = "set-dst"
 
-	// TCPRequestRuleActionSetDashPriority captures enum value "set-priority"
-	TCPRequestRuleActionSetDashPriority string = "set-priority"
+	// TCPRequestRuleActionSetDashFcDashMark captures enum value "set-fc-mark"
+	TCPRequestRuleActionSetDashFcDashMark string = "set-fc-mark"
+
+	// TCPRequestRuleActionSetDashFcDashTos captures enum value "set-fc-tos"
+	TCPRequestRuleActionSetDashFcDashTos string = "set-fc-tos"
+
+	// TCPRequestRuleActionSetDashLogDashLevel captures enum value "set-log-level"
+	TCPRequestRuleActionSetDashLogDashLevel string = "set-log-level"
+
+	// TCPRequestRuleActionSetDashMark captures enum value "set-mark"
+	TCPRequestRuleActionSetDashMark string = "set-mark"
+
+	// TCPRequestRuleActionSetDashNice captures enum value "set-nice"
+	TCPRequestRuleActionSetDashNice string = "set-nice"
+
+	// TCPRequestRuleActionSetDashPriorityDashClass captures enum value "set-priority-class"
+	TCPRequestRuleActionSetDashPriorityDashClass string = "set-priority-class"
+
+	// TCPRequestRuleActionSetDashPriorityDashOffset captures enum value "set-priority-offset"
+	TCPRequestRuleActionSetDashPriorityDashOffset string = "set-priority-offset"
 
 	// TCPRequestRuleActionSetDashSrc captures enum value "set-src"
 	TCPRequestRuleActionSetDashSrc string = "set-src"
 
+	// TCPRequestRuleActionSetDashSrcDashPort captures enum value "set-src-port"
+	TCPRequestRuleActionSetDashSrcDashPort string = "set-src-port"
+
+	// TCPRequestRuleActionSetDashTos captures enum value "set-tos"
+	TCPRequestRuleActionSetDashTos string = "set-tos"
+
 	// TCPRequestRuleActionSetDashVar captures enum value "set-var"
 	TCPRequestRuleActionSetDashVar string = "set-var"
 
+	// TCPRequestRuleActionSetDashVarDashFmt captures enum value "set-var-fmt"
+	TCPRequestRuleActionSetDashVarDashFmt string = "set-var-fmt"
+
 	// TCPRequestRuleActionSilentDashDrop captures enum value "silent-drop"
 	TCPRequestRuleActionSilentDashDrop string = "silent-drop"
+
+	// TCPRequestRuleActionSwitchDashMode captures enum value "switch-mode"
+	TCPRequestRuleActionSwitchDashMode string = "switch-mode"
 
 	// TCPRequestRuleActionTrackDashSc0 captures enum value "track-sc0"
 	TCPRequestRuleActionTrackDashSc0 string = "track-sc0"
@@ -314,33 +351,6 @@ const (
 
 	// TCPRequestRuleActionUseDashService captures enum value "use-service"
 	TCPRequestRuleActionUseDashService string = "use-service"
-
-	// TCPRequestRuleActionLua captures enum value "lua"
-	TCPRequestRuleActionLua string = "lua"
-
-	// TCPRequestRuleActionSetDashBandwidthDashLimit captures enum value "set-bandwidth-limit"
-	TCPRequestRuleActionSetDashBandwidthDashLimit string = "set-bandwidth-limit"
-
-	// TCPRequestRuleActionSetDashSrcDashPort captures enum value "set-src-port"
-	TCPRequestRuleActionSetDashSrcDashPort string = "set-src-port"
-
-	// TCPRequestRuleActionSetDashMark captures enum value "set-mark"
-	TCPRequestRuleActionSetDashMark string = "set-mark"
-
-	// TCPRequestRuleActionSetDashTos captures enum value "set-tos"
-	TCPRequestRuleActionSetDashTos string = "set-tos"
-
-	// TCPRequestRuleActionSetDashVarDashFmt captures enum value "set-var-fmt"
-	TCPRequestRuleActionSetDashVarDashFmt string = "set-var-fmt"
-
-	// TCPRequestRuleActionSetDashLogDashLevel captures enum value "set-log-level"
-	TCPRequestRuleActionSetDashLogDashLevel string = "set-log-level"
-
-	// TCPRequestRuleActionSetDashNice captures enum value "set-nice"
-	TCPRequestRuleActionSetDashNice string = "set-nice"
-
-	// TCPRequestRuleActionSwitchDashMode captures enum value "switch-mode"
-	TCPRequestRuleActionSwitchDashMode string = "switch-mode"
 )
 
 // prop value enum
@@ -524,48 +534,6 @@ func (m *TCPRequestRule) validateNiceValue(formats strfmt.Registry) error {
 	}
 
 	if err := validate.MaximumInt("nice_value", "body", m.NiceValue, 1024, false); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-var tcpRequestRuleTypePriorityTypePropEnum []interface{}
-
-func init() {
-	var res []string
-	if err := json.Unmarshal([]byte(`["class","offset"]`), &res); err != nil {
-		panic(err)
-	}
-	for _, v := range res {
-		tcpRequestRuleTypePriorityTypePropEnum = append(tcpRequestRuleTypePriorityTypePropEnum, v)
-	}
-}
-
-const (
-
-	// TCPRequestRulePriorityTypeClass captures enum value "class"
-	TCPRequestRulePriorityTypeClass string = "class"
-
-	// TCPRequestRulePriorityTypeOffset captures enum value "offset"
-	TCPRequestRulePriorityTypeOffset string = "offset"
-)
-
-// prop value enum
-func (m *TCPRequestRule) validatePriorityTypeEnum(path, location string, value string) error {
-	if err := validate.EnumCase(path, location, value, tcpRequestRuleTypePriorityTypePropEnum, true); err != nil {
-		return err
-	}
-	return nil
-}
-
-func (m *TCPRequestRule) validatePriorityType(formats strfmt.Registry) error {
-	if swag.IsZero(m.PriorityType) { // not required
-		return nil
-	}
-
-	// value enum
-	if err := m.validatePriorityTypeEnum("priority_type", "body", m.PriorityType); err != nil {
 		return err
 	}
 

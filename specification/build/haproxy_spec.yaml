@@ -5538,10 +5538,12 @@ definitions:
           action:
               enum:
                   - accept
+                  - attach-srv
                   - capture
                   - do-resolve
                   - expect-netscaler-cip
                   - expect-proxy
+                  - lua
                   - reject
                   - sc-add-gpc
                   - sc-inc-gpc
@@ -5549,27 +5551,31 @@ definitions:
                   - sc-inc-gpc1
                   - sc-set-gpt0
                   - send-spoe-group
+                  - set-bandwidth-limit
+                  - set-bc-mark
+                  - set-bc-tos
                   - set-dst-port
                   - set-dst
-                  - set-priority
+                  - set-fc-mark
+                  - set-fc-tos
+                  - set-log-level
+                  - set-mark
+                  - set-nice
+                  - set-priority-class
+                  - set-priority-offset
                   - set-src
+                  - set-src-port
+                  - set-tos
                   - set-var
+                  - set-var-fmt
                   - silent-drop
+                  - switch-mode
                   - track-sc0
                   - track-sc1
                   - track-sc2
                   - track-sc
                   - unset-var
                   - use-service
-                  - lua
-                  - set-bandwidth-limit
-                  - set-src-port
-                  - set-mark
-                  - set-tos
-                  - set-var-fmt
-                  - set-log-level
-                  - set-nice
-                  - switch-mode
               type: string
               x-dependency:
                   type:
@@ -5663,12 +5669,17 @@ definitions:
                       required: true
                       value:
                           - do-resolve
-                          - set-var
-                          - set-src
-                          - set-priority
+                          - set-bc-mark
+                          - set-bc-tos
                           - set-dst
                           - set-dst-port
+                          - set-fc-mark
+                          - set-fc-tos
+                          - set-priority-class
+                          - set-priority-offset
+                          - set-src
                           - set-src-port
+                          - set-var
                   type:
                       value:
                           - session
@@ -5755,18 +5766,6 @@ definitions:
                       value: content
               x-display-name: Nice Value
               x-nullable: false
-          priority_type:
-              enum:
-                  - class
-                  - offset
-              type: string
-              x-dependency:
-                  action:
-                      required: true
-                      value: set-priority
-                  type:
-                      value:
-                          - content
           resolve_protocol:
               enum:
                   - ipv4
@@ -6026,20 +6025,24 @@ definitions:
           action:
               enum:
                   - accept
-                  - reject
-                  - lua
-                  - set-bandwidth-limit
                   - close
+                  - lua
+                  - reject
                   - sc-add-gpc
                   - sc-inc-gpc
                   - sc-inc-gpc0
                   - sc-inc-gpc1
                   - sc-set-gpt0
                   - send-spoe-group
+                  - set-bandwidth-limit
+                  - set-fc-mark
+                  - set-fc-tos
                   - set-log-level
                   - set-mark
                   - set-nice
                   - set-tos
+                  - set-var
+                  - set-var-fmt
                   - silent-drop
                   - unset-var
               type: string
@@ -6254,6 +6257,15 @@ definitions:
                   - inspect-delay
               type: string
               x-nullable: false
+          var_format:
+              type: string
+              x-dependency:
+                  action:
+                      required: true
+                      value: set-var-fmt
+                  type:
+                      value: content
+              x-display-name: Var Format
           var_name:
               pattern: ^[^\s]+$
               type: string

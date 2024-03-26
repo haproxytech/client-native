@@ -187,7 +187,7 @@ func ParseTCPResponseRules(backend string, p parser.Parser) (models.TCPResponseR
 	return tcpResRules, nil
 }
 
-func ParseTCPResponseRule(t types.TCPType) (*models.TCPResponseRule, error) {
+func ParseTCPResponseRule(t types.TCPType) (*models.TCPResponseRule, error) { //nolint:maintidx
 	switch v := t.(type) {
 	case *tcp_types.InspectDelay:
 		return &models.TCPResponseRule{
@@ -353,6 +353,24 @@ func ParseTCPResponseRule(t types.TCPType) (*models.TCPResponseRule, error) {
 				Cond:     a.Cond,
 				CondTest: a.CondTest,
 			}, nil
+		case *actions.SetVar:
+			return &models.TCPResponseRule{
+				Action:   models.TCPResponseRuleActionSetDashVar,
+				VarScope: a.VarScope,
+				VarName:  a.VarName,
+				Expr:     a.Expr.String(),
+				Cond:     a.Cond,
+				CondTest: a.CondTest,
+			}, nil
+		case *actions.SetVarFmt:
+			return &models.TCPResponseRule{
+				Action:    models.TCPResponseRuleActionSetDashVarDashFmt,
+				VarName:   a.VarName,
+				VarFormat: strings.Join(a.Fmt.Expr, " "),
+				VarScope:  a.VarScope,
+				Cond:      a.Cond,
+				CondTest:  a.CondTest,
+			}, nil
 		case *actions.UnsetVar:
 			return &models.TCPResponseRule{
 				Type:     models.TCPResponseRuleTypeContent,
@@ -513,6 +531,26 @@ func SerializeTCPResponseRule(t models.TCPResponseRule) (types.TCPType, error) {
 		case models.TCPResponseRuleActionSilentDashDrop:
 			return &tcp_types.Content{
 				Action: &actions.SilentDrop{
+					Cond:     t.Cond,
+					CondTest: t.CondTest,
+				},
+			}, nil
+		case models.TCPRequestRuleActionSetDashVarDashFmt:
+			return &tcp_types.Content{
+				Action: &actions.SetVarFmt{
+					Fmt:      common.Expression{Expr: strings.Split(t.VarFormat, " ")},
+					VarName:  t.VarName,
+					VarScope: t.VarScope,
+					Cond:     t.Cond,
+					CondTest: t.CondTest,
+				},
+			}, nil
+		case models.TCPRequestRuleActionSetDashVar:
+			return &tcp_types.Content{
+				Action: &actions.SetVar{
+					VarName:  t.VarName,
+					VarScope: t.VarScope,
+					Expr:     common.Expression{Expr: strings.Split(t.Expr, " ")},
 					Cond:     t.Cond,
 					CondTest: t.CondTest,
 				},
