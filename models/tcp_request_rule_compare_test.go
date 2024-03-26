@@ -181,7 +181,7 @@ func TestTCPRequestRuleDiffFalse(t *testing.T) {
 
 	for _, sample := range samples {
 		result := sample.a.Diff(sample.b)
-		if len(result) != 37-1 {
+		if len(result) != 36-1 {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {
@@ -191,7 +191,7 @@ func TestTCPRequestRuleDiffFalse(t *testing.T) {
 			if err != nil {
 				t.Errorf(err.Error())
 			}
-			t.Errorf("Expected TCPRequestRule to be different in 37 cases, but it is not (%d) %s %s", len(result), a, b)
+			t.Errorf("Expected TCPRequestRule to be different in 36 cases, but it is not (%d) %s %s", len(result), a, b)
 		}
 	}
 }

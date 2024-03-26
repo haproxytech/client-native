@@ -38,8 +38,8 @@ import (
 // swagger:model tcp_request_rule
 type TCPRequestRule struct {
 	// action
-	// Enum: [accept attach-srv capture do-resolve expect-netscaler-cip expect-proxy lua reject sc-add-gpc sc-inc-gpc sc-inc-gpc0 sc-inc-gpc1 sc-set-gpt0 set-bandwidth-limit set-bc-mark set-bc-tos set-dst-port set-dst set-fc-mark set-fc-tos set-log-level set-mark set-nice set-priority set-src set-src-port set-tos set-var set-var-fmt send-spoe-group silent-drop switch-mode track-sc0 track-sc1 track-sc2 track-sc unset-var use-service]
-	// +kubebuilder:validation:Enum=accept;attach-srv;capture;do-resolve;expect-netscaler-cip;expect-proxy;lua;reject;sc-add-gpc;sc-inc-gpc;sc-inc-gpc0;sc-inc-gpc1;sc-set-gpt0;set-bandwidth-limit;set-bc-mark;set-bc-tos;set-dst-port;set-dst;set-fc-mark;set-fc-tos;set-log-level;set-mark;set-nice;set-priority;set-src;set-src-port;set-tos;set-var;set-var-fmt;send-spoe-group;silent-drop;switch-mode;track-sc0;track-sc1;track-sc2;track-sc;unset-var;use-service;
+	// Enum: [accept attach-srv capture do-resolve expect-netscaler-cip expect-proxy lua reject sc-add-gpc sc-inc-gpc sc-inc-gpc0 sc-inc-gpc1 sc-set-gpt0 send-spoe-group set-bandwidth-limit set-bc-mark set-bc-tos set-dst-port set-dst set-fc-mark set-fc-tos set-log-level set-mark set-nice set-priority-class set-priority-offset set-src set-src-port set-tos set-var set-var-fmt silent-drop switch-mode track-sc0 track-sc1 track-sc2 track-sc unset-var use-service]
+	// +kubebuilder:validation:Enum=accept;attach-srv;capture;do-resolve;expect-netscaler-cip;expect-proxy;lua;reject;sc-add-gpc;sc-inc-gpc;sc-inc-gpc0;sc-inc-gpc1;sc-set-gpt0;send-spoe-group;set-bandwidth-limit;set-bc-mark;set-bc-tos;set-dst-port;set-dst;set-fc-mark;set-fc-tos;set-log-level;set-mark;set-nice;set-priority-class;set-priority-offset;set-src;set-src-port;set-tos;set-var;set-var-fmt;silent-drop;switch-mode;track-sc0;track-sc1;track-sc2;track-sc;unset-var;use-service;
 	Action string `json:"action,omitempty"`
 
 	// bandwidth limit limit
@@ -101,11 +101,6 @@ type TCPRequestRule struct {
 	// +kubebuilder:validation:Maximum=1024
 	// +kubebuilder:validation:Minimum=-1024
 	NiceValue int64 `json:"nice_value,omitempty"`
-
-	// priority type
-	// Enum: [class offset]
-	// +kubebuilder:validation:Enum=class;offset;
-	PriorityType string `json:"priority_type,omitempty"`
 
 	// resolve protocol
 	// Enum: [ipv4 ipv6]
@@ -215,10 +210,6 @@ func (m *TCPRequestRule) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
-	if err := m.validatePriorityType(formats); err != nil {
-		res = append(res, err)
-	}
-
 	if err := m.validateResolveProtocol(formats); err != nil {
 		res = append(res, err)
 	}
@@ -249,7 +240,7 @@ var tcpRequestRuleTypeActionPropEnum []interface{}
 
 func init() {
 	var res []string
-	if err := json.Unmarshal([]byte(`["accept","attach-srv","capture","do-resolve","expect-netscaler-cip","expect-proxy","lua","reject","sc-add-gpc","sc-inc-gpc","sc-inc-gpc0","sc-inc-gpc1","sc-set-gpt0","set-bandwidth-limit","set-bc-mark","set-bc-tos","set-dst-port","set-dst","set-fc-mark","set-fc-tos","set-log-level","set-mark","set-nice","set-priority","set-src","set-src-port","set-tos","set-var","set-var-fmt","send-spoe-group","silent-drop","switch-mode","track-sc0","track-sc1","track-sc2","track-sc","unset-var","use-service"]`), &res); err != nil {
+	if err := json.Unmarshal([]byte(`["accept","attach-srv","capture","do-resolve","expect-netscaler-cip","expect-proxy","lua","reject","sc-add-gpc","sc-inc-gpc","sc-inc-gpc0","sc-inc-gpc1","sc-set-gpt0","send-spoe-group","set-bandwidth-limit","set-bc-mark","set-bc-tos","set-dst-port","set-dst","set-fc-mark","set-fc-tos","set-log-level","set-mark","set-nice","set-priority-class","set-priority-offset","set-src","set-src-port","set-tos","set-var","set-var-fmt","silent-drop","switch-mode","track-sc0","track-sc1","track-sc2","track-sc","unset-var","use-service"]`), &res); err != nil {
 		panic(err)
 	}
 	for _, v := range res {
@@ -298,6 +289,9 @@ const (
 	// TCPRequestRuleActionScDashSetDashGpt0 captures enum value "sc-set-gpt0"
 	TCPRequestRuleActionScDashSetDashGpt0 string = "sc-set-gpt0"
 
+	// TCPRequestRuleActionSendDashSpoeDashGroup captures enum value "send-spoe-group"
+	TCPRequestRuleActionSendDashSpoeDashGroup string = "send-spoe-group"
+
 	// TCPRequestRuleActionSetDashBandwidthDashLimit captures enum value "set-bandwidth-limit"
 	TCPRequestRuleActionSetDashBandwidthDashLimit string = "set-bandwidth-limit"
 
@@ -328,8 +322,11 @@ const (
 	// TCPRequestRuleActionSetDashNice captures enum value "set-nice"
 	TCPRequestRuleActionSetDashNice string = "set-nice"
 
-	// TCPRequestRuleActionSetDashPriority captures enum value "set-priority"
-	TCPRequestRuleActionSetDashPriority string = "set-priority"
+	// TCPRequestRuleActionSetDashPriorityDashClass captures enum value "set-priority-class"
+	TCPRequestRuleActionSetDashPriorityDashClass string = "set-priority-class"
+
+	// TCPRequestRuleActionSetDashPriorityDashOffset captures enum value "set-priority-offset"
+	TCPRequestRuleActionSetDashPriorityDashOffset string = "set-priority-offset"
 
 	// TCPRequestRuleActionSetDashSrc captures enum value "set-src"
 	TCPRequestRuleActionSetDashSrc string = "set-src"
@@ -345,9 +342,6 @@ const (
 
 	// TCPRequestRuleActionSetDashVarDashFmt captures enum value "set-var-fmt"
 	TCPRequestRuleActionSetDashVarDashFmt string = "set-var-fmt"
-
-	// TCPRequestRuleActionSendDashSpoeDashGroup captures enum value "send-spoe-group"
-	TCPRequestRuleActionSendDashSpoeDashGroup string = "send-spoe-group"
 
 	// TCPRequestRuleActionSilentDashDrop captures enum value "silent-drop"
 	TCPRequestRuleActionSilentDashDrop string = "silent-drop"
@@ -555,48 +549,6 @@ func (m *TCPRequestRule) validateNiceValue(formats strfmt.Registry) error {
 	}
 
 	if err := validate.MaximumInt("nice_value", "body", m.NiceValue, 1024, false); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-var tcpRequestRuleTypePriorityTypePropEnum []interface{}
-
-func init() {
-	var res []string
-	if err := json.Unmarshal([]byte(`["class","offset"]`), &res); err != nil {
-		panic(err)
-	}
-	for _, v := range res {
-		tcpRequestRuleTypePriorityTypePropEnum = append(tcpRequestRuleTypePriorityTypePropEnum, v)
-	}
-}
-
-const (
-
-	// TCPRequestRulePriorityTypeClass captures enum value "class"
-	TCPRequestRulePriorityTypeClass string = "class"
-
-	// TCPRequestRulePriorityTypeOffset captures enum value "offset"
-	TCPRequestRulePriorityTypeOffset string = "offset"
-)
-
-// prop value enum
-func (m *TCPRequestRule) validatePriorityTypeEnum(path, location string, value string) error {
-	if err := validate.EnumCase(path, location, value, tcpRequestRuleTypePriorityTypePropEnum, true); err != nil {
-		return err
-	}
-	return nil
-}
-
-func (m *TCPRequestRule) validatePriorityType(formats strfmt.Registry) error {
-	if swag.IsZero(m.PriorityType) { // not required
-		return nil
-	}
-
-	// value enum
-	if err := m.validatePriorityTypeEnum("priority_type", "body", m.PriorityType); err != nil {
 		return err
 	}
 

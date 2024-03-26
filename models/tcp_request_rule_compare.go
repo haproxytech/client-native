@@ -97,10 +97,6 @@ func (s TCPRequestRule) Equal(t TCPRequestRule, opts ...Options) bool {
 		return false
 	}
 
-	if s.PriorityType != t.PriorityType {
-		return false
-	}
-
 	if s.ResolveProtocol != t.ResolveProtocol {
 		return false
 	}
@@ -263,10 +259,6 @@ func (s TCPRequestRule) Diff(t TCPRequestRule, opts ...Options) map[string][]int
 
 	if s.NiceValue != t.NiceValue {
 		diff["NiceValue"] = []interface{}{s.NiceValue, t.NiceValue}
-	}
-
-	if s.PriorityType != t.PriorityType {
-		diff["PriorityType"] = []interface{}{s.PriorityType, t.PriorityType}
 	}
 
 	if s.ResolveProtocol != t.ResolveProtocol {

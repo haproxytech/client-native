@@ -34,6 +34,8 @@ tcp_response_rule:
         - set-mark
         - set-nice
         - set-tos
+        - set-var
+        - set-var-fmt
         - silent-drop
         - unset-var
       x-nullable: false
@@ -165,7 +167,7 @@ tcp_response_rule:
           value: content
     mark_value:
       type: string
-      pattern: '^(0x[0-9A-Fa-f]+|[0-9]+)$'
+      pattern: "^(0x[0-9A-Fa-f]+|[0-9]+)$"
       x-display-name: Mark Value
       x-dependency:
         action:
@@ -187,7 +189,7 @@ tcp_response_rule:
           value: content
     tos_value:
       type: string
-      pattern: '^(0x[0-9A-Fa-f]+|[0-9]+)$'
+      pattern: "^(0x[0-9A-Fa-f]+|[0-9]+)$"
       x-display-name: Tos Value
       x-dependency:
         action:
@@ -210,6 +212,15 @@ tcp_response_rule:
       x-dependency:
         action:
           value: unset-var
+        type:
+          value: content
+    var_format:
+      type: string
+      x-display-name: Var Format
+      x-dependency:
+        action:
+          value: set-var-fmt
+          required: true
         type:
           value: content
     cond:
