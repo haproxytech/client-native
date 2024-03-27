@@ -38,8 +38,8 @@ import (
 // swagger:model tcp_response_rule
 type TCPResponseRule struct {
 	// action
-	// Enum: [accept close lua reject sc-add-gpc sc-inc-gpc sc-inc-gpc0 sc-inc-gpc1 sc-set-gpt0 send-spoe-group set-bandwidth-limit set-fc-mark set-fc-tos set-log-level set-mark set-nice set-tos set-var set-var-fmt silent-drop unset-var]
-	// +kubebuilder:validation:Enum=accept;close;lua;reject;sc-add-gpc;sc-inc-gpc;sc-inc-gpc0;sc-inc-gpc1;sc-set-gpt0;send-spoe-group;set-bandwidth-limit;set-fc-mark;set-fc-tos;set-log-level;set-mark;set-nice;set-tos;set-var;set-var-fmt;silent-drop;unset-var;
+	// Enum: [accept close lua reject sc-add-gpc sc-inc-gpc sc-inc-gpc0 sc-inc-gpc1 sc-set-gpt sc-set-gpt0 send-spoe-group set-bandwidth-limit set-fc-mark set-fc-tos set-log-level set-mark set-nice set-tos set-var set-var-fmt silent-drop unset-var]
+	// +kubebuilder:validation:Enum=accept;close;lua;reject;sc-add-gpc;sc-inc-gpc;sc-inc-gpc0;sc-inc-gpc1;sc-set-gpt;sc-set-gpt0;send-spoe-group;set-bandwidth-limit;set-fc-mark;set-fc-tos;set-log-level;set-mark;set-nice;set-tos;set-var;set-var-fmt;silent-drop;unset-var;
 	Action string `json:"action,omitempty"`
 
 	// bandwidth limit limit
@@ -207,7 +207,7 @@ var tcpResponseRuleTypeActionPropEnum []interface{}
 
 func init() {
 	var res []string
-	if err := json.Unmarshal([]byte(`["accept","close","lua","reject","sc-add-gpc","sc-inc-gpc","sc-inc-gpc0","sc-inc-gpc1","sc-set-gpt0","send-spoe-group","set-bandwidth-limit","set-fc-mark","set-fc-tos","set-log-level","set-mark","set-nice","set-tos","set-var","set-var-fmt","silent-drop","unset-var"]`), &res); err != nil {
+	if err := json.Unmarshal([]byte(`["accept","close","lua","reject","sc-add-gpc","sc-inc-gpc","sc-inc-gpc0","sc-inc-gpc1","sc-set-gpt","sc-set-gpt0","send-spoe-group","set-bandwidth-limit","set-fc-mark","set-fc-tos","set-log-level","set-mark","set-nice","set-tos","set-var","set-var-fmt","silent-drop","unset-var"]`), &res); err != nil {
 		panic(err)
 	}
 	for _, v := range res {
@@ -240,6 +240,9 @@ const (
 
 	// TCPResponseRuleActionScDashIncDashGpc1 captures enum value "sc-inc-gpc1"
 	TCPResponseRuleActionScDashIncDashGpc1 string = "sc-inc-gpc1"
+
+	// TCPResponseRuleActionScDashSetDashGpt captures enum value "sc-set-gpt"
+	TCPResponseRuleActionScDashSetDashGpt string = "sc-set-gpt"
 
 	// TCPResponseRuleActionScDashSetDashGpt0 captures enum value "sc-set-gpt0"
 	TCPResponseRuleActionScDashSetDashGpt0 string = "sc-set-gpt0"

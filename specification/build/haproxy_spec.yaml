@@ -4160,6 +4160,7 @@ definitions:
                           - sc-inc-gpc
                           - sc-inc-gpc0
                           - sc-inc-gpc1
+                          - sc-set-gpt
                           - sc-set-gpt0
           sc_idx:
               type: integer
@@ -4169,6 +4170,7 @@ definitions:
                       value:
                           - sc-add-gpc
                           - sc-inc-gpc
+                          - sc-set-gpt
           sc_int:
               type: integer
               x-dependency:
@@ -4336,6 +4338,7 @@ definitions:
                   - sc-inc-gpc
                   - sc-inc-gpc0
                   - sc-inc-gpc1
+                  - sc-set-gpt
                   - sc-set-gpt0
                   - send-spoe-group
                   - set-bc-mark
@@ -4784,6 +4787,7 @@ definitions:
                           - sc-inc-gpc
                           - sc-inc-gpc0
                           - sc-inc-gpc1
+                          - sc-set-gpt
                           - sc-set-gpt0
           sc_idx:
               type: integer
@@ -4793,6 +4797,7 @@ definitions:
                       value:
                           - sc-add-gpc
                           - sc-inc-gpc
+                          - sc-set-gpt
           sc_int:
               type: integer
               x-dependency:
@@ -4957,6 +4962,7 @@ definitions:
                   - sc-inc-gpc
                   - sc-inc-gpc0
                   - sc-inc-gpc1
+                  - sc-set-gpt
                   - sc-set-gpt0
                   - send-spoe-group
                   - set-fc-mark
@@ -5188,6 +5194,7 @@ definitions:
                           - sc-inc-gpc
                           - sc-inc-gpc0
                           - sc-inc-gpc1
+                          - sc-set-gpt
                           - sc-set-gpt0
           sc_idx:
               type: integer
@@ -5197,6 +5204,7 @@ definitions:
                       value:
                           - sc-add-gpc
                           - sc-inc-gpc
+                          - sc-set-gpt
           sc_int:
               type: integer
               x-dependency:
@@ -5243,6 +5251,7 @@ definitions:
                   - sc-inc-gpc
                   - sc-inc-gpc0
                   - sc-inc-gpc1
+                  - sc-set-gpt
                   - sc-set-gpt0
                   - set-header
                   - set-log-level
@@ -5674,6 +5683,7 @@ definitions:
                   - sc-inc-gpc
                   - sc-inc-gpc0
                   - sc-inc-gpc1
+                  - sc-set-gpt
                   - sc-set-gpt0
                   - send-spoe-group
                   - set-bandwidth-limit
@@ -5932,7 +5942,8 @@ definitions:
               x-dependency:
                   action:
                       required: true
-                      value: []
+                      value:
+                          - sc-set-gpt
                   type:
                       required: true
                       value:
@@ -5950,6 +5961,7 @@ definitions:
                           - sc-inc-gpc
                           - sc-inc-gpc0
                           - sc-inc-gpc1
+                          - sc-set-gpt
                           - sc-set-gpt0
                   type:
                       required: true
@@ -6166,6 +6178,7 @@ definitions:
                   - sc-inc-gpc
                   - sc-inc-gpc0
                   - sc-inc-gpc1
+                  - sc-set-gpt
                   - sc-set-gpt0
                   - send-spoe-group
                   - set-bandwidth-limit
@@ -6325,6 +6338,7 @@ definitions:
                           - sc-inc-gpc
                           - sc-inc-gpc0
                           - sc-inc-gpc1
+                          - sc-set-gpt
                           - sc-set-gpt0
                   type:
                       value: content
@@ -6335,6 +6349,7 @@ definitions:
                       required: true
                       value:
                           - sc-add-gpc
+                          - sc-set-gpt
                           - sc-inc-gpc
                   type:
                       value: content

@@ -861,6 +861,14 @@
                     "index": 19,
                     "type": "content",
                     "expr": "0xab"
+                },
+                {
+                    "index": 20,
+                    "type": "content",
+                    "action": "sc-set-gpt",
+                    "sc_id": 1,
+                    "sc_idx": 2,
+                    "sc_int": 1234
                 }
             ],
             "waf_body_rule_list": [
@@ -1638,6 +1646,15 @@
                     "type": "unset-var",
                     "var_name": "last_redir",
                     "var_scope": "sess"
+                },
+                {
+                    "index": 16,
+                    "type": "sc-set-gpt",
+                    "sc_id": 1,
+                    "sc_idx": 2,
+                    "sc_expr": "hdr(port)",
+                    "cond": "if",
+                    "cond_test": "FALSE"
                 }
             ],
             "http_error_rule_list": [
@@ -2022,6 +2039,15 @@
                     "expr": "255",
                     "cond": "if",
                     "cond_test": "FALSE"
+                },
+                {
+                    "index": 51,
+                    "type": "sc-set-gpt",
+                    "sc_id": 1,
+                    "sc_idx": 2,
+                    "sc_expr": "hdr(Host),lower",
+                    "cond": "if",
+                    "cond_test": "FALSE"
                 }
             ],
             "http_response_rule_list": [
@@ -2283,6 +2309,15 @@
                     "timeout": "20",
                     "timeout_type": "client",
                     "type": "set-timeout"
+                },
+                {
+                    "index": 35,
+                    "type": "sc-set-gpt",
+                    "sc_id": 1,
+                    "sc_idx": 2,
+                    "sc_int": 1234,
+                    "cond": "if",
+                    "cond_test": "FALSE"
                 }
             ],
             "log_target_list": [
@@ -2640,6 +2675,34 @@
                     "var_format": "%%[dst]:%%[dst_port]",
                     "var_scope": "txn",
                     "var_name": "ip_port"
+                },
+                {
+                    "index": 42,
+                    "type": "connection",
+                    "action": "sc-set-gpt",
+                    "sc_inc_id": "1",
+                    "sc_idx": "2",
+                    "sc_int": 1234,
+                    "cond": "if",
+                    "cond_test": "FALSE"
+                },
+                {
+                    "index": 43,
+                    "type": "content",
+                    "action": "sc-set-gpt",
+                    "sc_inc_id": "1",
+                    "sc_idx": "2",
+                    "expr": "hdr(port)",
+                    "cond": "if",
+                    "cond_test": "FALSE"
+                },
+                {
+                    "index": 44,
+                    "type": "session",
+                    "action": "sc-set-gpt",
+                    "sc_inc_id": "1",
+                    "sc_idx": "2",
+                    "sc_int": 1234
                 }
             ],
             "binds": {
