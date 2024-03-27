@@ -29,8 +29,8 @@ func TestGetTCPResponseRules(t *testing.T) { //nolint:gocognit
 		t.Error(err.Error())
 	}
 
-	if len(tRules) != 18 {
-		t.Errorf("%v tcp response rules returned, expected 17", len(tRules))
+	if len(tRules) != 19 {
+		t.Errorf("%v tcp response rules returned, expected 19", len(tRules))
 	}
 
 	if v != version {
@@ -336,8 +336,18 @@ func TestGetTCPResponseRules(t *testing.T) { //nolint:gocognit
 			if r.CondTest != "FALSE" {
 				t.Errorf("%v: CondTest not FALSE: %v", *r.Index, r.CondTest)
 			}
+		case 18:
+			if r.Action != "sc-set-gpt" {
+				t.Errorf("%v: Action not sc-set-gpt: %v", *r.Index, r.Action)
+			}
+			if r.ScID != 1 {
+				t.Errorf("%v: sc-id not 1: %v", *r.Index, r.ScID)
+			}
+			if r.ScIdx != 2 {
+				t.Errorf("%v: sc-idx not 2: %v", *r.Index, r.ScIdx)
+			}
 		default:
-			t.Errorf("Expect only tcp-response 0 to 17 %v found", *r.Index)
+			t.Errorf("Expect only tcp-response 0 to 18 %v found", *r.Index)
 		}
 	}
 
@@ -448,7 +458,7 @@ func TestCreateEditDeleteTCPResponseRule(t *testing.T) {
 	}
 
 	// TestDeleteTCPResponse
-	err = clientTest.DeleteTCPResponseRule(18, "test", "", version)
+	err = clientTest.DeleteTCPResponseRule(19, "test", "", version)
 	if err != nil {
 		t.Error(err.Error())
 	} else {
@@ -459,9 +469,9 @@ func TestCreateEditDeleteTCPResponseRule(t *testing.T) {
 		t.Error("Version not incremented")
 	}
 
-	_, _, err = clientTest.GetTCPResponseRule(18, "test", "")
+	_, _, err = clientTest.GetTCPResponseRule(19, "test", "")
 	if err == nil {
-		t.Error("DeleteTCPResponseRule failed, TCP Response Rule 17 still exists")
+		t.Error("DeleteTCPResponseRule failed, TCP Response Rule 19 still exists")
 	}
 
 	err = clientTest.DeleteTCPResponseRule(18, "test_2", "", version)

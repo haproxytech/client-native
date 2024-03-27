@@ -29,6 +29,7 @@ tcp_request_rule:
         - sc-inc-gpc
         - sc-inc-gpc0
         - sc-inc-gpc1
+        - sc-set-gpt
         - sc-set-gpt0
         - set-bandwidth-limit
         - set-dst-port
@@ -113,7 +114,7 @@ tcp_request_rule:
       x-display-name: Sticky counter Index
       x-dependency:
         action:
-          value: []
+          value: [sc-set-gpt]
           required: true
         type:
           value: [connection, content, session]
@@ -123,7 +124,7 @@ tcp_request_rule:
       x-display-name: Sticky counter ID
       x-dependency:
         action:
-          value: [sc-add-gpc, sc-inc-gpc, sc-inc-gpc0, sc-inc-gpc1, sc-set-gpt0]
+          value: [sc-add-gpc, sc-inc-gpc, sc-inc-gpc0, sc-inc-gpc1, sc-set-gpt, sc-set-gpt0]
           required: true
         type:
           value: [connection, content, session]

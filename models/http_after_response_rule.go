@@ -120,8 +120,8 @@ type HTTPAfterResponseRule struct {
 
 	// type
 	// Required: true
-	// Enum: [add-header allow del-acl del-header del-map replace-header replace-value sc-add-gpc sc-inc-gpc sc-inc-gpc0 sc-inc-gpc1 sc-set-gpt0 set-header set-log-level set-map set-status set-var strict-mode unset-var]
-	// +kubebuilder:validation:Enum=add-header;allow;del-acl;del-header;del-map;replace-header;replace-value;sc-add-gpc;sc-inc-gpc;sc-inc-gpc0;sc-inc-gpc1;sc-set-gpt0;set-header;set-log-level;set-map;set-status;set-var;strict-mode;unset-var;
+	// Enum: [add-header allow del-acl del-header del-map replace-header replace-value sc-add-gpc sc-inc-gpc sc-inc-gpc0 sc-inc-gpc1 sc-set-gpt sc-set-gpt0 set-header set-log-level set-map set-status set-var strict-mode unset-var]
+	// +kubebuilder:validation:Enum=add-header;allow;del-acl;del-header;del-map;replace-header;replace-value;sc-add-gpc;sc-inc-gpc;sc-inc-gpc0;sc-inc-gpc1;sc-set-gpt;sc-set-gpt0;set-header;set-log-level;set-map;set-status;set-var;strict-mode;unset-var;
 	Type string `json:"type"`
 
 	// var expr
@@ -436,7 +436,7 @@ var httpAfterResponseRuleTypeTypePropEnum []interface{}
 
 func init() {
 	var res []string
-	if err := json.Unmarshal([]byte(`["add-header","allow","del-acl","del-header","del-map","replace-header","replace-value","sc-add-gpc","sc-inc-gpc","sc-inc-gpc0","sc-inc-gpc1","sc-set-gpt0","set-header","set-log-level","set-map","set-status","set-var","strict-mode","unset-var"]`), &res); err != nil {
+	if err := json.Unmarshal([]byte(`["add-header","allow","del-acl","del-header","del-map","replace-header","replace-value","sc-add-gpc","sc-inc-gpc","sc-inc-gpc0","sc-inc-gpc1","sc-set-gpt","sc-set-gpt0","set-header","set-log-level","set-map","set-status","set-var","strict-mode","unset-var"]`), &res); err != nil {
 		panic(err)
 	}
 	for _, v := range res {
@@ -478,6 +478,9 @@ const (
 
 	// HTTPAfterResponseRuleTypeScDashIncDashGpc1 captures enum value "sc-inc-gpc1"
 	HTTPAfterResponseRuleTypeScDashIncDashGpc1 string = "sc-inc-gpc1"
+
+	// HTTPAfterResponseRuleTypeScDashSetDashGpt captures enum value "sc-set-gpt"
+	HTTPAfterResponseRuleTypeScDashSetDashGpt string = "sc-set-gpt"
 
 	// HTTPAfterResponseRuleTypeScDashSetDashGpt0 captures enum value "sc-set-gpt0"
 	HTTPAfterResponseRuleTypeScDashSetDashGpt0 string = "sc-set-gpt0"

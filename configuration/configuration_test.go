@@ -416,6 +416,7 @@ frontend test
   http-request track-sc1 src table tr1 if TRUE
   http-request track-sc2 src table tr2 if TRUE
   http-request track-sc5 src table test if TRUE
+  http-request sc-set-gpt(1,2) hdr(Host),lower if FALSE
   http-response allow if src 192.168.0.0/16
   http-response set-header X-SSL %[ssl_fc]
   http-response set-var(req.my_var) req.fhdr(user-agent),lower
@@ -451,6 +452,7 @@ frontend test
   http-response set-timeout server 20
   http-response set-timeout tunnel 20
   http-response set-timeout client 20
+  http-response sc-set-gpt(1,2) 1234 if FALSE
   http-after-response set-map(map.lst) %[src] %[res.hdr(X-Value)]
   http-after-response del-map(map.lst) %[src] if FALSE
   http-after-response del-acl(map.lst) %[src] if FALSE
@@ -467,6 +469,7 @@ frontend test
   http-after-response set-status 503 reason "SlowDown"
   http-after-response set-var(sess.last_redir) res.hdr(location)
   http-after-response unset-var(sess.last_redir)
+  http-after-response sc-set-gpt(1,2) hdr(port) if FALSE
   http-error status 400 content-type application/json lf-file /var/errors.file
   tcp-request connection accept if TRUE
   tcp-request connection reject if FALSE
@@ -502,6 +505,9 @@ frontend test
   tcp-request session attach-srv srv2 name example.com
   tcp-request session attach-srv srv3 if is_cached
   tcp-request connection set-var-fmt(txn.ip_port) %%[dst]:%%[dst_port]
+  tcp-request connection sc-set-gpt(1,2) 1234 if FALSE
+  tcp-request content sc-set-gpt(1,2) hdr(port) if FALSE
+  tcp-request session sc-set-gpt(1,2) 1234
   log global
   no log
   log 127.0.0.1:514 local0 notice notice
@@ -644,6 +650,7 @@ backend test
   tcp-response content set-tos 2 if FALSE
   tcp-response content silent-drop if FALSE
   tcp-response content unset-var(req.my_var) if FALSE
+  tcp-response content sc-set-gpt(1,2) 1234
   option contstats
   timeout check 2s
   timeout tunnel 5s

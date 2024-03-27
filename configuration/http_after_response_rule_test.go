@@ -29,7 +29,7 @@ func TestGetHTTPAfterResponseRules(t *testing.T) {
 		t.Error(err.Error())
 	}
 
-	if expected := 16; len(hRules) != expected {
+	if expected := 17; len(hRules) != expected {
 		t.Errorf("%v http after response rules returned, expected %d", len(hRules), expected)
 	}
 
@@ -265,6 +265,22 @@ func TestGetHTTPAfterResponseRules(t *testing.T) {
 			}
 			if scope := "sess"; r.VarScope != scope {
 				t.Errorf("%v: VarName not %s: %v", *r.Index, scope, r.VarScope)
+			}
+		case 16:
+			if actionType := "sc-set-gpt"; r.Type != actionType {
+				t.Errorf("%v: Type not %s: %v", *r.Index, actionType, r.Type)
+			}
+			if scID := 1; r.ScID != int64(scID) {
+				t.Errorf("%v: sc-id not %d: %v", *r.Index, scID, r.ScID)
+			}
+			if scIdx := 2; r.ScIdx != int64(scIdx) {
+				t.Errorf("%v: sc-idx not %d: %v", *r.Index, scIdx, r.ScIdx)
+			}
+			if cond := "if"; r.Cond != cond {
+				t.Errorf("%v: cond not %s: %v", *r.Index, cond, r.Cond)
+			}
+			if condTest := "FALSE"; r.CondTest != condTest {
+				t.Errorf("%v: condtest not %s: %v", *r.Index, condTest, r.CondTest)
 			}
 		}
 	}

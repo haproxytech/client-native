@@ -30,8 +30,8 @@ func TestGetHTTPRequestRules(t *testing.T) { //nolint:gocognit,gocyclo
 		t.Error(err.Error())
 	}
 
-	if len(hRules) != 47 {
-		t.Errorf("%v http request rules returned, expected 47", len(hRules))
+	if len(hRules) != 48 {
+		t.Errorf("%v http request rules returned, expected 48", len(hRules))
 	}
 
 	if v != version {
@@ -735,8 +735,18 @@ func TestGetHTTPRequestRules(t *testing.T) { //nolint:gocognit,gocyclo
 			if r.CondTest != "TRUE" {
 				t.Errorf("%v: CondTest not TRUE: %v", *r.Index, r.CondTest)
 			}
+		case 47:
+			if r.Type != "sc-set-gpt" {
+				t.Errorf("%v: Type not sc-set-gpt: %v", *r.Index, r.Type)
+			}
+			if r.ScID != 1 {
+				t.Errorf("%v: sc-id not 1: %v", *r.Index, r.ScID)
+			}
+			if r.ScIdx != 2 {
+				t.Errorf("%v: sc-idx not 2: %v", *r.Index, r.ScIdx)
+			}
 		default:
-			t.Errorf("Expect only http-request 0 to 46, %v found", *r.Index)
+			t.Errorf("Expect only http-request 0 to 47, %v found", *r.Index)
 		}
 	}
 
@@ -898,7 +908,7 @@ func TestCreateEditDeleteHTTPRequestRule(t *testing.T) {
 	}
 
 	// TestDeleteHTTPRequest
-	err = clientTest.DeleteHTTPRequestRule(47, "frontend", "test", "", version)
+	err = clientTest.DeleteHTTPRequestRule(48, "frontend", "test", "", version)
 	if err != nil {
 		t.Error(err.Error())
 	} else {
@@ -909,9 +919,9 @@ func TestCreateEditDeleteHTTPRequestRule(t *testing.T) {
 		t.Error("Version not incremented")
 	}
 
-	_, _, err = clientTest.GetHTTPRequestRule(47, "frontend", "test", "")
+	_, _, err = clientTest.GetHTTPRequestRule(48, "frontend", "test", "")
 	if err == nil {
-		t.Error("DeleteHTTPRequestRule failed, HTTP Request Rule 47 still exists")
+		t.Error("DeleteHTTPRequestRule failed, HTTP Request Rule 48 still exists")
 	}
 
 	err = clientTest.DeleteHTTPRequestRule(2, "backend", "test_2", "", version)

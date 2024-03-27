@@ -31,6 +31,7 @@ http_response_rule:
         - sc-inc-gpc
         - sc-inc-gpc0
         - sc-inc-gpc1
+        - sc-set-gpt
         - sc-set-gpt0
         - send-spoe-group
         - set-header
@@ -245,13 +246,13 @@ http_response_rule:
       type: integer
       x-dependency:
         type:
-          value: [sc-add-gpc, sc-inc-gpc, sc-inc-gpc0, sc-inc-gpc1, sc-set-gpt0]
+          value: [sc-add-gpc, sc-inc-gpc, sc-inc-gpc0, sc-inc-gpc1, sc-set-gpt, sc-set-gpt0]
           required: true
     sc_idx:
       type: integer
       x-dependency:
         type:
-          value: [sc-add-gpc, sc-inc-gpc]
+          value: [sc-add-gpc, sc-inc-gpc, sc-set-gpt]
           required: true
     sc_expr:
       type: string
