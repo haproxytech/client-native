@@ -43,13 +43,13 @@ type SingleSpoe struct {
 }
 
 type Params struct {
-	SpoeDir                string
 	UseValidation          *bool
 	PersistentTransactions *bool
 	SkipFailedTransactions *bool
+	SpoeDir                string
 	TransactionDir         string
-	BackupsNumber          int
 	ConfigurationFile      string
+	BackupsNumber          int
 }
 
 // newSingleSpoe returns Spoe with default options

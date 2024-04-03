@@ -11,9 +11,12 @@ import (
 )
 
 type Field struct {
+	SubType      *Field
 	Name         string
 	Type         string
 	TypeInFile   string
+	MapKeyType   string
+	MapItemType  string
 	IsBasicType  bool
 	IsComparable bool
 	IsEmbedded   bool
@@ -22,7 +25,6 @@ type Field struct {
 	HasEqualOpt  bool
 	IsArray      bool
 	IsMap        bool
-	SubType      *Field
 }
 
 type generateEqualAndDiffOptions struct {
@@ -30,16 +32,16 @@ type generateEqualAndDiffOptions struct {
 	FileTest          *os.File
 	CurrType          *ast.TypeSpec
 	PackageName       string
-	Fields            []Field
 	Name              string
 	Type              string
+	Mode              string
+	Fields            []Field
 	IsPointer         bool
 	NeedsOptions      bool
 	NeedsOptionsIndex bool
 	IsBasicType       bool
 	IsComplex         bool
 	IsComparable      bool
-	Mode              string
 }
 
 func toTitle(s string) string {
@@ -110,8 +112,12 @@ func hasEqualOpt(typeName string) bool {
 }
 
 type getTypeStringResponse struct {
+	StructType   *ast.StructType
+	SubType      *getTypeStringResponse
 	Name         string
 	TypeName     string
+	MapKeyType   string
+	MapItemType  string
 	IsBasicType  bool
 	IsComplex    bool
 	IsComparable bool
@@ -120,8 +126,6 @@ type getTypeStringResponse struct {
 	HasEqualOpt  bool
 	IsArray      bool
 	IsMap        bool
-	StructType   *ast.StructType
-	SubType      *getTypeStringResponse
 }
 
 func getTypeString(expr ast.Expr, imports map[string]string) getTypeStringResponse {

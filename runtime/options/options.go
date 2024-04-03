@@ -22,9 +22,9 @@ type RuntimeOptions struct {
 	MapsDir                 *string
 	MasterSocketData        *masterSocketData
 	Sockets                 map[int]string
-	DoNotCheckRuntimeOnInit bool
 	AllowDelayedStartMax    *time.Duration
 	AllowDelayedStartTick   *time.Duration
+	DoNotCheckRuntimeOnInit bool
 }
 
 type RuntimeOption interface {

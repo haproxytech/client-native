@@ -36,8 +36,8 @@ type socketType string
 
 // TaskResponse ...
 type TaskResponse struct {
-	result string
 	err    error
+	result string
 }
 
 // Task has command to execute on runtime api, and response channel for result

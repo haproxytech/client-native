@@ -12,9 +12,9 @@ import (
 // HAProxyMock - Mock HAProxy Server for testing the socket communication
 type HAProxyMock struct {
 	net.Listener
-	running   bool
 	responses map[string]string
 	t         *testing.T
+	running   bool
 }
 
 // NewHAProxyMock - create new haproxy mock
