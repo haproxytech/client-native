@@ -22,11 +22,11 @@ import (
 )
 
 type HAProxyVersion struct {
+	Commit  string
+	Version string
 	Major   int
 	Minor   int
 	Patch   int
-	Commit  string
-	Version string
 }
 
 func (v *HAProxyVersion) ParseHAProxyVersion(version string) error {
