@@ -38,9 +38,15 @@ import (
 
 // ClientParams is just a placeholder for all client options
 type ClientParams struct {
-	ConfigurationFile         string
-	Haproxy                   string
-	TransactionDir            string
+	ConfigurationFile string
+	Haproxy           string
+	TransactionDir    string
+
+	// ValidateCmd allows specifying a custom script to validate the transaction file.
+	// The injected environment variable DATAPLANEAPI_TRANSACTION_FILE must be used to get the location of the file.
+	ValidateCmd               string
+	ValidateConfigFilesBefore []string
+	ValidateConfigFilesAfter  []string
 	BackupsNumber             int
 	UseValidation             bool
 	PersistentTransactions    bool
@@ -48,12 +54,6 @@ type ClientParams struct {
 	MasterWorker              bool
 	SkipFailedTransactions    bool
 	UseMd5Hash                bool
-
-	// ValidateCmd allows specifying a custom script to validate the transaction file.
-	// The injected environment variable DATAPLANEAPI_TRANSACTION_FILE must be used to get the location of the file.
-	ValidateCmd               string
-	ValidateConfigFilesBefore []string
-	ValidateConfigFilesAfter  []string
 }
 
 // Client configuration client
@@ -63,10 +63,10 @@ type ClientParams struct {
 // transaction files on StartTransaction, and deletes on CommitTransaction. We save
 // data to file on every change for persistence.
 type client struct {
-	Transaction
+	parser   parser.Parser
 	parsers  map[string]parser.Parser
 	services map[string]*Service
-	parser   parser.Parser
+	Transaction
 	clientMu sync.Mutex
 }
 
@@ -240,9 +240,9 @@ func NewParseSection(section parser.Section, pName string, p parser.Parser) *Sec
 // SectionParser is used set fields of a section based on the provided parser
 type SectionParser struct {
 	Object  interface{}
+	Parser  parser.Parser
 	Section parser.Section
 	Name    string
-	Parser  parser.Parser
 }
 
 // Parse parses the sections fields and sets their values with the data from the parser
@@ -1409,9 +1409,9 @@ func (s *SectionParser) originalto() interface{} {
 // SectionObject represents a configuration section
 type SectionObject struct {
 	Object  interface{}
+	Parser  parser.Parser
 	Section parser.Section
 	Name    string
-	Parser  parser.Parser
 	// In the context of the deprecation of the fields:
 	//	 HTTPKeepAlive, HTTPServerClose and Httpclose.
 	// This flag is used to set a priority on HTTPConnectionMode field over

@@ -17,23 +17,23 @@ limitations under the License.
 package options
 
 type ConfigurationOptions struct {
-	ConfigurationFile               string
-	Haproxy                         string
-	TransactionDir                  string
-	BackupsDir                      string
+	ConfigurationFile string
+	Haproxy           string
+	TransactionDir    string
+	BackupsDir        string
+
+	// ValidateCmd allows specifying a custom script to validate the transaction file.
+	// The injected environment variable DATAPLANEAPI_TRANSACTION_FILE must be used to get the location of the file.
+	ValidateCmd                     string
+	ValidateConfigFilesBefore       []string
+	ValidateConfigFilesAfter        []string
+	BackupsNumber                   int
 	PersistentTransactions          bool
 	SkipFailedTransactions          bool
-	BackupsNumber                   int
 	UseModelsValidation             bool
 	SkipConfigurationFileValidation bool // opposite of previously available ValidateConfigurationFile
 	MasterWorker                    bool
 	UseMd5Hash                      bool
-
-	// ValidateCmd allows specifying a custom script to validate the transaction file.
-	// The injected environment variable DATAPLANEAPI_TRANSACTION_FILE must be used to get the location of the file.
-	ValidateCmd               string
-	ValidateConfigFilesBefore []string
-	ValidateConfigFilesAfter  []string
 }
 
 type ConfigurationOption interface {
