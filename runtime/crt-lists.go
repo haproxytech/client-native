@@ -18,10 +18,10 @@ type CrtList struct {
 type CrtListEntries []*CrtListEntry
 
 type CrtListEntry struct {
-	LineNumber    int
 	File          string
 	SSLBindConfig string
 	SNIFilter     []string
+	LineNumber    int
 }
 
 // ShowCrtLists returns CrtList files description from runtime
