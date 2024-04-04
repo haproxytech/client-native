@@ -14,7 +14,7 @@
 
 ARG HAPROXY_VERSION=2.7
 ARG DOCKER_URL=haproxytech
-ARG GO_VERSION=1.21
+ARG GO_VERSION=1.22
 
 FROM golang:${GO_VERSION}-alpine as go_image
 
