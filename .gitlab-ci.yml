@@ -1,8 +1,8 @@
 ---
 variables:
   DOCKER_HOST: tcp://docker:2375
-  GO_VERSION: "1.21"
-  DOCKER_VERSION: "24.0"
+  GO_VERSION: "1.22"
+  DOCKER_VERSION: "24.0.6"
 stages:
   - check-commit
   - generate
@@ -133,7 +133,7 @@ test:
   stage: e2e
   needs: ["build"]
   image:
-    name: $CI_REGISTRY_GO/docker:stable-go$GO_VERSION
+    name: $CI_REGISTRY_GO/docker:$DOCKER_VERSION-go$GO_VERSION
     entrypoint: [""]
   services:
     - name: $CI_REGISTRY_GO/docker:$DOCKER_VERSION-dind
