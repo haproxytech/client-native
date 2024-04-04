@@ -1,4 +1,8 @@
 ---
+variables:
+  DOCKER_HOST: tcp://docker:2375
+  GO_VERSION: "1.22"
+  DOCKER_VERSION: "24.0.6"
 stages:
   - check-commit
   - generate
@@ -6,23 +10,20 @@ stages:
   - lint
   - test
   - e2e
-variables:
-  DOCKER_HOST: tcp://docker:2375
-
 build-specification:
   stage: build
   needs: []
   image:
-    name: $CI_REGISTRY_GO/golang:1.19
+    name: $CI_REGISTRY_GO/golang:$GO_VERSION
     entrypoint: [""]
   tags:
     - go
   script:
     - go run specification/build/build.go -file specification/haproxy-spec.yaml > specification/build/haproxy_spec_to_compare.yaml
     - diff -u specification/build/haproxy_spec_to_compare.yaml specification/build/haproxy_spec.yaml
-  only:
-    - merge_requests
-    - branches
+  rules:
+    - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
+    - if: $CI_PIPELINE_SOURCE == 'push'
 
 yaml-lint:
   stage: lint
@@ -37,43 +38,31 @@ yaml-lint:
     - /bin/sh -c "yamllint -f colored ."
     - chmod +x ./specification/scripts/lint-yaml.sh
     - /bin/sh -c ./specification/scripts/lint-yaml.sh
-  only:
-    - merge_requests
-    - branches
-
-.go-cache:
-  variables:
-    GOPATH: $CI_PROJECT_DIR/.go
-  image:
-    name: $CI_REGISTRY_GO/golang:1.19
-    entrypoint: [""]
-  before_script:
-    - mkdir -p .go
-  cache:
-    paths:
-      - .go/pkg/mod/
+  rules:
+    - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
+    - if: $CI_PIPELINE_SOURCE == 'push'
 
 generate:
   stage: generate
   image:
-    name: $CI_REGISTRY_GO/docker:stable-go1.19
+    name: $CI_REGISTRY_GO/docker:$DOCKER_VERSION-go$GO_VERSION
     entrypoint: [""]
   services:
-    - name: $CI_REGISTRY_GO/docker:18.09.7-dind
+    - name: $CI_REGISTRY_GO/docker:$DOCKER_VERSION-dind
       alias: docker
   tags:
     - go
   before_script:
+    - rm -rf models/*
     - make models
   script:
     - test -z "$(git diff 2> /dev/null)" || exit "Models are not generated, issue \`make models\` and commit the result"
     - test -z "$(git ls-files --others --exclude-standard 2> /dev/null)" || exit "Models generation created untracked files, cannot proceed"
-  only:
-    - merge_requests
-    - branches
+  rules:
+    - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
+    - if: $CI_PIPELINE_SOURCE == 'push'
 
 build:
-  extends: .go-cache
   stage: build
   needs: []
   tags:
@@ -82,38 +71,38 @@ build:
     - mkdir -p .go
   script:
     - go build
-  only:
-    - merge_requests
-    - branches
+  rules:
+    - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
+    - if: $CI_PIPELINE_SOURCE == 'push'
 
 tidy:
   stage: lint
   needs: ["build"]
   image:
-    name: $CI_REGISTRY_GO/golang:1.19
+    name: $CI_REGISTRY_GO/golang:$GO_VERSION
     entrypoint: [""]
   tags:
     - go
   script:
     - go mod tidy
     - test -z "$(git diff 2> /dev/null)" || exit 'Go modules not tidied, issue \`go mod tidy\` and commit the result'
-  only:
-    - merge_requests
-    - branches
+  rules:
+    - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
+    - if: $CI_PIPELINE_SOURCE == 'push'
 
-golangci-lint:
+lint:
   stage: lint
-  needs: ["generate", "build"]
+  needs: ["build"]
   image:
-    name: $CI_REGISTRY_GO/lint:1.46.2
+    name: $CI_REGISTRY_GO/golang:$GO_VERSION
     entrypoint: [""]
   tags:
     - go
   script:
-    - golangci-lint run --timeout 5m --color always --max-issues-per-linter 0 --max-same-issues 0
-  only:
-    - merge_requests
-    - branches
+    - make lint
+  rules:
+    - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
+    - if: $CI_PIPELINE_SOURCE == 'push'
 
 lint-commit-msg:
   stage: lint
@@ -125,63 +114,52 @@ lint-commit-msg:
     - go
   script:
     - /check
-  only:
-    - merge_requests
+  rules:
+    - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
 
 test:
-  extends: .go-cache
   stage: test
-  needs: ["generate", "build"]
+  needs: ["build"]
   image:
-    name: $CI_REGISTRY_GO/golang:1.19
+    name: $CI_REGISTRY_GO/golang:$GO_VERSION
     entrypoint: [""]
   tags:
     - go
   script:
     - go test ./...
-  only:
-    - merge_requests
-    - branches
-
+  rules:
+    - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
+    - if: $CI_PIPELINE_SOURCE == 'push'
 .e2e:
   stage: e2e
-  needs: ["test"]
-  extends: .go-cache
+  needs: ["build"]
   image:
-    name: $CI_REGISTRY_GO/docker:stable
+    name: $CI_REGISTRY_GO/docker:$DOCKER_VERSION-go$GO_VERSION
     entrypoint: [""]
   services:
-    - name: $CI_REGISTRY_GO/docker:18.09.7-dind
+    - name: $CI_REGISTRY_GO/docker:$DOCKER_VERSION-dind
       alias: docker
   tags:
     - go
+  rules:
+    - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
+    - if: $CI_PIPELINE_SOURCE == 'push'
   before_script:
     - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY_GO
-    - docker pull $CI_REGISTRY_GO/client-native:$HAPROXY_VERSION
-    - docker image tag $CI_REGISTRY_GO/client-native:$HAPROXY_VERSION test_env:$HAPROXY_VERSION
-    - docker build --file ./e2e/Dockerfile --build-arg HAPROXY_VERSION=$HAPROXY_VERSION --build-arg DOCKER_URL=$CI_REGISTRY_GO --tag client-native-test:$HAPROXY_VERSION .
+    - docker pull -q $CI_REGISTRY_GO/golang:$GO_VERSION-alpine
+    - docker image tag $CI_REGISTRY_GO/golang:$GO_VERSION-alpine golang:$GO_VERSION-alpine
+    - docker pull -q $CI_REGISTRY_GO/haproxy-alpine:$HAPROXY_VERSION
+    - docker image tag $CI_REGISTRY_GO/haproxy-alpine:$HAPROXY_VERSION haproxytech/haproxy-alpine:$HAPROXY_VERSION
   script:
-    - docker run client-native-test:$HAPROXY_VERSION
-  only:
-    - merge_requests
-    - branches
-
+    - DOCKER_HAPROXY_VERSION=$HAPROXY_VERSION make e2e-docker
 HAProxy-2.2:
   extends: .e2e
   variables:
     HAPROXY_VERSION: "2.2"
-HAProxy-2.3:
-  extends: .e2e
-  variables:
-    HAPROXY_VERSION: "2.3"
 HAProxy-2.4:
   extends: .e2e
   variables:
     HAPROXY_VERSION: "2.4"
-HAProxy-2.5:
-  extends: .e2e
-  variables:
-    HAPROXY_VERSION: "2.5"
 HAProxy-2.6:
   extends: .e2e
   variables:

@@ -1,6 +1,8 @@
 PROJECT_PATH=${PWD}
 DOCKER_HAPROXY_VERSION?=2.7
 SWAGGER_VERSION=v0.30.2
+GO_VERSION:=${shell go mod edit -json | jq -r .Go}
+GOLANGCI_LINT_VERSION=1.55.2
 
 .PHONY: test
 test:
@@ -8,12 +10,13 @@ test:
 
 .PHONY: e2e
 e2e:
-	go test -tags integration ./...
+	go install github.com/oktalz/gotest@latest
+	gotest -t integration
 
 .PHONY: e2e-docker
 e2e-docker:
-	docker build -f e2e/Dockerfile --build-arg HAPROXY_VERSION=${DOCKER_HAPROXY_VERSION} -t client-native-test:${DOCKER_HAPROXY_VERSION} .
-	docker run --rm -it client-native-test:${DOCKER_HAPROXY_VERSION}
+	docker build -f e2e/Dockerfile --build-arg GO_VERSION=${GO_VERSION} --build-arg HAPROXY_VERSION=${DOCKER_HAPROXY_VERSION} -t client-native-test:${DOCKER_HAPROXY_VERSION} .
+	docker run --rm -t client-native-test:${DOCKER_HAPROXY_VERSION}
 
 .PHONY: spec
 spec:
@@ -29,9 +32,12 @@ swagger-check:
 
 .PHONY: lint
 lint:
-	docker run --rm -v $(PROJECT_PATH):/data cytopia/yamllint .
-	docker run --rm ghcr.io/haproxytech/go-linter:1.46.2 --version
-	docker run --rm -v ${PROJECT_PATH}:/app -w /app ghcr.io/haproxytech/go-linter:1.46.2 --timeout 5m --color always --max-issues-per-linter 0 --max-same-issues 0
+	cd bin;GOLANGCI_LINT_VERSION=${GOLANGCI_LINT_VERSION} sh lint-check.sh
+	bin/golangci-lint run --timeout 5m --color always --max-issues-per-linter 0 --max-same-issues 0
+
+.PHONY: lint-yaml
+lint-yaml:
+	docker run --rm -v $(pwd):/data cytopia/yamllint .
 
 .PHONY: gofumpt
 gofumpt:
