@@ -150,6 +150,9 @@ type Backend struct {
 	// +kubebuilder:validation:Enum=enabled;disabled;
 	H1CaseAdjustBogusServer string `json:"h1_case_adjust_bogus_server,omitempty"`
 
+	// hash balance factor
+	HashBalanceFactor *int64 `json:"hash_balance_factor,omitempty"`
+
 	// hash type
 	HashType *HashType `json:"hash_type,omitempty"`
 

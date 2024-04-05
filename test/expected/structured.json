@@ -457,6 +457,7 @@
                 "method": "consistent",
                 "modifier": "avalanche"
             },
+           "hash_balance_factor": 150,
             "http-check": {
                 "index": 0,
                 "type": "connect"
@@ -2963,6 +2964,7 @@
                 "algorithm": "roundrobin"
             },
             "bind_process": "1-4",
+            "hash_balance_factor": 150,
             "maxconn": 2000,
             "mode": "http",
             "name": "test_defaults"

@@ -365,6 +365,10 @@ func (s Defaults) Equal(t Defaults, opts ...Options) bool {
 		return false
 	}
 
+	if !equalPointers(s.HashBalanceFactor, t.HashBalanceFactor) {
+		return false
+	}
+
 	if s.HashType == nil || t.HashType == nil {
 		if s.HashType != nil || t.HashType != nil {
 			if opt.NilSameAsEmpty {
@@ -1179,6 +1183,10 @@ func (s Defaults) Diff(t Defaults, opts ...Options) map[string][]interface{} {
 
 	if s.H1CaseAdjustBogusServer != t.H1CaseAdjustBogusServer {
 		diff["H1CaseAdjustBogusServer"] = []interface{}{s.H1CaseAdjustBogusServer, t.H1CaseAdjustBogusServer}
+	}
+
+	if !equalPointers(s.HashBalanceFactor, t.HashBalanceFactor) {
+		diff["HashBalanceFactor"] = []interface{}{ValueOrNil(s.HashBalanceFactor), ValueOrNil(t.HashBalanceFactor)}
 	}
 
 	if s.HashType == nil || t.HashType == nil {

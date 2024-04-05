@@ -254,6 +254,7 @@ defaults test_defaults
   mode http
   bind-process 1-4
   balance roundrobin
+  hash-balance-factor 150
 
 defaults test_defaults_2 from test_defaults
   option srvtcpka
@@ -637,6 +638,7 @@ backend test
   balance roundrobin
   bind-process all
   hash-type consistent sdbm avalanche
+  hash-balance-factor 150
   log-tag bla
   option http-keep-alive
   option forwardfor header X-Forwarded-For

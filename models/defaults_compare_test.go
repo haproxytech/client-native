@@ -95,6 +95,7 @@ func TestDefaultsEqualFalse(t *testing.T) {
 		result.Disabled = !sample.Disabled
 		result.Enabled = !sample.Enabled
 		result.Fullconn = Ptr(*sample.Fullconn + 1)
+		result.HashBalanceFactor = Ptr(*sample.HashBalanceFactor + 1)
 		result.HTTPKeepAliveTimeout = Ptr(*sample.HTTPKeepAliveTimeout + 1)
 		result.HTTPRequestTimeout = Ptr(*sample.HTTPRequestTimeout + 1)
 		result.Httplog = !sample.Httplog
@@ -201,6 +202,7 @@ func TestDefaultsDiffFalse(t *testing.T) {
 		result.Disabled = !sample.Disabled
 		result.Enabled = !sample.Enabled
 		result.Fullconn = Ptr(*sample.Fullconn + 1)
+		result.HashBalanceFactor = Ptr(*sample.HashBalanceFactor + 1)
 		result.HTTPKeepAliveTimeout = Ptr(*sample.HTTPKeepAliveTimeout + 1)
 		result.HTTPRequestTimeout = Ptr(*sample.HTTPRequestTimeout + 1)
 		result.Httplog = !sample.Httplog
@@ -223,7 +225,7 @@ func TestDefaultsDiffFalse(t *testing.T) {
 
 	for _, sample := range samples {
 		result := sample.a.Diff(sample.b)
-		if len(result) != 107 {
+		if len(result) != 108 {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {
@@ -233,7 +235,7 @@ func TestDefaultsDiffFalse(t *testing.T) {
 			if err != nil {
 				t.Errorf(err.Error())
 			}
-			t.Errorf("Expected Defaults to be different in 107 cases, but it is not (%d) %s %s", len(result), a, b)
+			t.Errorf("Expected Defaults to be different in 108 cases, but it is not (%d) %s %s", len(result), a, b)
 		}
 	}
 }
