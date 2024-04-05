@@ -260,6 +260,13 @@ func TestGetBackends(t *testing.T) { //nolint:gocognit,gocyclo
 			t.Errorf("EmailAlert.Mailers is not localmailer1: %v", *b.EmailAlert.Mailers)
 		}
 
+		if b.Name == "test" && (b.HashBalanceFactor == nil) {
+			t.Errorf("%v: HashBalanceFactor is nil", b.Name)
+		} else {
+			if b.Name == "test" && *b.HashBalanceFactor != 150 {
+				t.Errorf("%v: HashBalanceFactor not 150: %v", b.Name, *b.HashBalanceFactor)
+			}
+		}
 	}
 }
 
