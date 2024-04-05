@@ -2132,6 +2132,9 @@ definitions:
                   - disabled
               type: string
               x-display-name: H1 Adjust Bogus Server
+          hash_balance_factor:
+              type: integer
+              x-nullable: true
           hash_type:
               $ref: '#/definitions/hash_type'
           http-buffer-request:
@@ -2912,6 +2915,9 @@ definitions:
                   mode:
                       value: http
               x-display-name: H1 Adjust Bogus Server
+          hash_balance_factor:
+              type: integer
+              x-nullable: true
           hash_type:
               $ref: '#/definitions/hash_type'
           http-buffer-request:

@@ -17,6 +17,9 @@ defaults:
       $ref: "#/definitions/balance"
     hash_type:
       $ref: "#/definitions/hash_type"
+    hash_balance_factor:
+      type: integer
+      x-nullable: true
     persist_rule:
       $ref: "#/definitions/persist_rule"
     maxconn:

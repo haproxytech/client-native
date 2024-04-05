@@ -266,6 +266,14 @@ func TestGetBackends(t *testing.T) { //nolint:gocognit,gocyclo
 		if b.Name == "test2" && b.DefaultServer.LogBufsize != nil {
 			t.Errorf("%v: DefaultServer.LogBufsize should be nil: %v", b.Name, b.DefaultServer.LogBufsize)
 		}
+
+		if b.Name == "test" && (b.HashBalanceFactor == nil) {
+			t.Errorf("%v: HashBalanceFactor is nil", b.Name)
+		} else {
+			if b.Name == "test" && *b.HashBalanceFactor != 150 {
+				t.Errorf("%v: HashBalanceFactor not 150: %v", b.Name, *b.HashBalanceFactor)
+			}
+		}
 	}
 }
 

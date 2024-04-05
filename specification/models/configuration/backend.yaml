@@ -19,6 +19,9 @@ backend:
       $ref: "#/definitions/persist_rule"
     hash_type:
       $ref: "#/definitions/hash_type"
+    hash_balance_factor:
+      type: integer
+      x-nullable: true
     http-check:
       $ref: "#/definitions/http_check"
     bind_process:
