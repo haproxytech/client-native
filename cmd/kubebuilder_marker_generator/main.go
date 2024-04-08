@@ -80,6 +80,12 @@ func generate(fileName string) error { //nolint:gocognit,unparam
 								if strings.HasPrefix(comment, "// Format: ") {
 									addSimpleMarker(field, fileName, comment, "Format", "raw")
 								}
+								if strings.HasPrefix(comment, "// Required: true") {
+									if len(comments) == 2 && comments[0] == "// index" {
+										field.Decorations().Before = dst.NewLine
+										field.Decorations().Start.Append("// +kubebuilder:validation:Optional")
+									}
+								}
 
 							}
 							// if len(field.Names) > 0 {

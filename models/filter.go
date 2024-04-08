@@ -64,6 +64,7 @@ type Filter struct {
 
 	// index
 	// Required: true
+	// +kubebuilder:validation:Optional
 	Index *int64 `json:"index"`
 
 	// A sample expression rule.
