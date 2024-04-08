@@ -47,6 +47,7 @@ type ServerSwitchingRule struct {
 
 	// index
 	// Required: true
+	// +kubebuilder:validation:Optional
 	Index *int64 `json:"index"`
 
 	// target server
