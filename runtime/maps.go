@@ -247,7 +247,7 @@ func (s *SingleRuntime) PrepareMap(name string) (version string, err error) {
 	}
 	parts := strings.Split(response, ":")
 	if len(parts) < 3 {
-		return "", fmt.Errorf("%s %w", err.Error(), native_errors.ErrGeneral)
+		return "", fmt.Errorf("%s %w", "parsing error", native_errors.ErrGeneral)
 	}
 	version = strings.TrimSpace(parts[2])
 	if _, err = strconv.ParseInt(version, 10, 64); err == nil {
