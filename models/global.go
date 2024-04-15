@@ -387,9 +387,6 @@ type Global struct {
 	// tune options
 	TuneOptions *GlobalTuneOptions `json:"tune_options,omitempty"`
 
-	// tune ssl default dh param
-	TuneSslDefaultDhParam int64 `json:"tune_ssl_default_dh_param,omitempty"`
-
 	// uid
 	UID int64 `json:"uid,omitempty"`
 

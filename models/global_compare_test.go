@@ -129,7 +129,6 @@ func TestGlobalEqualFalse(t *testing.T) {
 		result.StatsTimeout = Ptr(*sample.StatsTimeout + 1)
 		result.StrictLimits = !sample.StrictLimits
 		result.ThreadGroups = sample.ThreadGroups + 1
-		result.TuneSslDefaultDhParam = sample.TuneSslDefaultDhParam + 1
 		result.UID = sample.UID + 1
 		result.Ulimitn = sample.Ulimitn + 1
 		result.ZeroWarning = !sample.ZeroWarning
@@ -258,7 +257,6 @@ func TestGlobalDiffFalse(t *testing.T) {
 		result.StatsTimeout = Ptr(*sample.StatsTimeout + 1)
 		result.StrictLimits = !sample.StrictLimits
 		result.ThreadGroups = sample.ThreadGroups + 1
-		result.TuneSslDefaultDhParam = sample.TuneSslDefaultDhParam + 1
 		result.UID = sample.UID + 1
 		result.Ulimitn = sample.Ulimitn + 1
 		result.ZeroWarning = !sample.ZeroWarning
@@ -269,7 +267,7 @@ func TestGlobalDiffFalse(t *testing.T) {
 
 	for _, sample := range samples {
 		result := sample.a.Diff(sample.b)
-		if len(result) != 112 {
+		if len(result) != 111 {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {
@@ -279,7 +277,7 @@ func TestGlobalDiffFalse(t *testing.T) {
 			if err != nil {
 				t.Errorf(err.Error())
 			}
-			t.Errorf("Expected Global to be different in 112 cases, but it is not (%d) %s %s", len(result), a, b)
+			t.Errorf("Expected Global to be different in 111 cases, but it is not (%d) %s %s", len(result), a, b)
 		}
 	}
 }

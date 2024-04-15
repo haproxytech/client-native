@@ -79,7 +79,6 @@ func TestPutGlobal(t *testing.T) {
 		SslDefaultBindOptions:  "ssl-min-ver TLSv1.0 no-tls-tickets",
 		SslDefaultServerCurves: "secp384r1",
 		StatsTimeout:           &tOut,
-		TuneSslDefaultDhParam:  1024,
 		ExternalCheck:          false,
 		LuaPrependPath: []*models.LuaPrependPath{
 			{

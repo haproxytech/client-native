@@ -215,36 +215,6 @@ func TestSerializeHTTPResponseRule(t *testing.T) {
 			},
 			expectedResult: "track-sc3 src table tr0 if TRUE",
 		},
-		{
-			input: models.HTTPResponseRule{
-				Type:          models.HTTPResponseRuleTypeTrackDashSc0,
-				Cond:          "if",
-				CondTest:      "TRUE",
-				TrackSc0Key:   "src",
-				TrackSc0Table: "tr0",
-			},
-			expectedResult: "track-sc0 src table tr0 if TRUE",
-		},
-		{
-			input: models.HTTPResponseRule{
-				Type:          models.HTTPResponseRuleTypeTrackDashSc1,
-				Cond:          "if",
-				CondTest:      "TRUE",
-				TrackSc1Key:   "src",
-				TrackSc1Table: "tr1",
-			},
-			expectedResult: "track-sc1 src table tr1 if TRUE",
-		},
-		{
-			input: models.HTTPResponseRule{
-				Type:          models.HTTPResponseRuleTypeTrackDashSc2,
-				Cond:          "if",
-				CondTest:      "TRUE",
-				TrackSc2Key:   "src",
-				TrackSc2Table: "tr2",
-			},
-			expectedResult: "track-sc2 src table tr2 if TRUE",
-		},
 	}
 
 	for _, testCase := range testCases {

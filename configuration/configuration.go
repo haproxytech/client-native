@@ -1478,11 +1478,6 @@ type SectionObject struct {
 	Parser  parser.Parser
 	Section parser.Section
 	Name    string
-	// In the context of the deprecation of the fields:
-	//	 HTTPKeepAlive, HTTPServerClose and Httpclose.
-	// This flag is used to set a priority on HTTPConnectionMode field over
-	// the deprecated ones.
-	httpConnectionModeFlag bool
 }
 
 // CreateEditSection creates or updates a section in the parser based on the provided object
@@ -1493,7 +1488,6 @@ func CreateEditSection(object interface{}, section parser.Section, pName string,
 		Name:    pName,
 		Parser:  p,
 	}
-	so.setHTTPConnectionModeFlag()
 	return so.CreateEditSection()
 }
 
@@ -1596,11 +1590,6 @@ func (s *SectionObject) checkSpecialFields(fieldName string, field reflect.Value
 	case "DefaultBackend":
 		return true, s.defaultBackend(field)
 	case "HTTPConnectionMode":
-		// if HTTPConnectionMode is not set, skip HTTPConnectionMode
-		// Write only options (Httpclose, HTTPKeepAlive, HTTPServerClose)
-		if !s.httpConnectionModeFlag {
-			return true, nil
-		}
 		return true, s.httpConnectionMode(field)
 	case "HTTPReuse":
 		return true, s.httpReuse(field)
@@ -1671,70 +1660,8 @@ func (s *SectionObject) checkTimeouts(fieldName string, field reflect.Value) (ma
 	return false, nil
 }
 
-// setHTTPConnectionModeFlag set the httpConnectionModeFlag flag if:
-//
-//	HTTPConnectionMode is present, false otherwise.
-//
-// This check is needed due to the deprecation of deprecated options:
-//
-//	HTTPKeepAlive, HTTPServerClose and Httpclose.
-func (s *SectionObject) setHTTPConnectionModeFlag() {
-	objValue := reflect.ValueOf(s.Object)
-	if objValue.Kind() == reflect.Ptr {
-		objValue = reflect.ValueOf(s.Object).Elem()
-	}
-
-	deprecatedFieldPresent := false
-	atLeastOneDeprecatedFieldNotEmpty := false
-	httpConnectionModePresentSet := false
-	for i := 0; i < objValue.NumField(); i++ {
-		typeField := objValue.Type().Field(i)
-		field := objValue.FieldByName(typeField.Name)
-		if typeField.Name == "HTTPConnectionMode" && !valueIsNil(field) {
-			httpConnectionModePresentSet = true
-		}
-		if typeField.Name == "HTTPKeepAlive" || typeField.Name == "HTTPServerClose" || typeField.Name == "Httpclose" {
-			deprecatedFieldPresent = true
-			if !valueIsNil(field) {
-				atLeastOneDeprecatedFieldNotEmpty = true
-			}
-		}
-	}
-	// Backend
-	if deprecatedFieldPresent {
-		// if HTTPConnectionMode is present is not empty => has priority
-		if httpConnectionModePresentSet {
-			s.httpConnectionModeFlag = true
-			return
-		}
-
-		s.httpConnectionModeFlag = !atLeastOneDeprecatedFieldNotEmpty
-		return
-	}
-	// For Default and Frontend,
-	//	HTTPKeepAlive, HTTPServerClose and Httpclose do not exist in the Object
-	// We are always using HTTPConnectionMode
-	s.httpConnectionModeFlag = true
-}
-
-// isHTTPConnectionModeDeprecatedField returns, in regards to the deprecation of HTTPConectionMode option fields:
-//
-//	HTTPKeepAlive, HTTPServerClose and Httpclose.
-//
-// - true if it's a deprecated field, false otherwise
-func isHTTPConnectionModeDeprecatedField(fieldName string) bool {
-	if fieldName == "HTTPKeepAlive" || fieldName == "HTTPServerClose" || fieldName == "Httpclose" {
-		return true
-	}
-	return false
-}
-
 func (s *SectionObject) checkOptions(fieldName string, field reflect.Value) (match bool, err error) {
 	if pName := fmt.Sprintf("option %s", misc.DashCase(fieldName)); s.Parser.HasParser(s.Section, pName) {
-		// Skip this field if it's a deprecated one and HTTPConnectionMode is present
-		if isHTTPConnectionModeDeprecatedField(fieldName) && s.httpConnectionModeFlag {
-			return true, nil
-		}
 		if valueIsNil(field) {
 			if err := s.set(pName, nil); err != nil {
 				return true, err

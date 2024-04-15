@@ -235,36 +235,6 @@ type HTTPResponseRule struct {
 	// +kubebuilder:validation:Pattern=`^(0x[0-9A-Fa-f]+|[0-9]+)$`
 	TosValue string `json:"tos_value,omitempty"`
 
-	// track sc0 key
-	// Pattern: ^[^\s]+$
-	// +kubebuilder:validation:Pattern=`^[^\s]+$`
-	TrackSc0Key string `json:"track-sc0-key,omitempty"`
-
-	// track sc0 table
-	// Pattern: ^[^\s]+$
-	// +kubebuilder:validation:Pattern=`^[^\s]+$`
-	TrackSc0Table string `json:"track-sc0-table,omitempty"`
-
-	// track sc1 key
-	// Pattern: ^[^\s]+$
-	// +kubebuilder:validation:Pattern=`^[^\s]+$`
-	TrackSc1Key string `json:"track-sc1-key,omitempty"`
-
-	// track sc1 table
-	// Pattern: ^[^\s]+$
-	// +kubebuilder:validation:Pattern=`^[^\s]+$`
-	TrackSc1Table string `json:"track-sc1-table,omitempty"`
-
-	// track sc2 key
-	// Pattern: ^[^\s]+$
-	// +kubebuilder:validation:Pattern=`^[^\s]+$`
-	TrackSc2Key string `json:"track-sc2-key,omitempty"`
-
-	// track sc2 table
-	// Pattern: ^[^\s]+$
-	// +kubebuilder:validation:Pattern=`^[^\s]+$`
-	TrackSc2Table string `json:"track-sc2-table,omitempty"`
-
 	// track sc key
 	// Pattern: ^[^\s]+$
 	// +kubebuilder:validation:Pattern=`^[^\s]+$`
@@ -412,30 +382,6 @@ func (m *HTTPResponseRule) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateTosValue(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateTrackSc0Key(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateTrackSc0Table(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateTrackSc1Key(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateTrackSc1Table(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateTrackSc2Key(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateTrackSc2Table(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -1041,78 +987,6 @@ func (m *HTTPResponseRule) validateTosValue(formats strfmt.Registry) error {
 	}
 
 	if err := validate.Pattern("tos_value", "body", m.TosValue, `^(0x[0-9A-Fa-f]+|[0-9]+)$`); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func (m *HTTPResponseRule) validateTrackSc0Key(formats strfmt.Registry) error {
-	if swag.IsZero(m.TrackSc0Key) { // not required
-		return nil
-	}
-
-	if err := validate.Pattern("track-sc0-key", "body", m.TrackSc0Key, `^[^\s]+$`); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func (m *HTTPResponseRule) validateTrackSc0Table(formats strfmt.Registry) error {
-	if swag.IsZero(m.TrackSc0Table) { // not required
-		return nil
-	}
-
-	if err := validate.Pattern("track-sc0-table", "body", m.TrackSc0Table, `^[^\s]+$`); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func (m *HTTPResponseRule) validateTrackSc1Key(formats strfmt.Registry) error {
-	if swag.IsZero(m.TrackSc1Key) { // not required
-		return nil
-	}
-
-	if err := validate.Pattern("track-sc1-key", "body", m.TrackSc1Key, `^[^\s]+$`); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func (m *HTTPResponseRule) validateTrackSc1Table(formats strfmt.Registry) error {
-	if swag.IsZero(m.TrackSc1Table) { // not required
-		return nil
-	}
-
-	if err := validate.Pattern("track-sc1-table", "body", m.TrackSc1Table, `^[^\s]+$`); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func (m *HTTPResponseRule) validateTrackSc2Key(formats strfmt.Registry) error {
-	if swag.IsZero(m.TrackSc2Key) { // not required
-		return nil
-	}
-
-	if err := validate.Pattern("track-sc2-key", "body", m.TrackSc2Key, `^[^\s]+$`); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func (m *HTTPResponseRule) validateTrackSc2Table(formats strfmt.Registry) error {
-	if swag.IsZero(m.TrackSc2Table) { // not required
-		return nil
-	}
-
-	if err := validate.Pattern("track-sc2-table", "body", m.TrackSc2Table, `^[^\s]+$`); err != nil {
 		return err
 	}
 

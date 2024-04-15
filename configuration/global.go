@@ -1141,12 +1141,6 @@ func ParseGlobalSection(p parser.Parser) (*models.Global, error) { //nolint:goco
 		return nil, err
 	}
 
-	// deprecated option
-	dhParam := int64(0)
-	if tuneOptions != nil {
-		dhParam = tuneOptions.SslDefaultDhParam
-	}
-
 	global := &models.Global{
 		Anonkey:                           anonkey,
 		PresetEnvs:                        presetEnvs,
@@ -1197,7 +1191,6 @@ func ParseGlobalSection(p parser.Parser) (*models.Global, error) { //nolint:goco
 		SslProviderPath:                   sslProviderPath,
 		SslSkipSelfIssuedCa:               sslSkipSelfIssuedCa,
 		TuneOptions:                       tuneOptions,
-		TuneSslDefaultDhParam:             dhParam,
 		ExternalCheck:                     externalCheck,
 		LuaLoads:                          luaLoads,
 		LuaPrependPath:                    luaPrependPath,
@@ -2267,15 +2260,6 @@ func SerializeGlobalSection(p parser.Parser, data *models.Global) error { //noli
 		return err
 	}
 
-	// deprecated option
-	if data.TuneSslDefaultDhParam != 0 {
-		if data.TuneOptions != nil && data.TuneOptions.SslDefaultDhParam == 0 {
-			data.TuneOptions.SslDefaultDhParam = data.TuneSslDefaultDhParam
-		}
-		if data.TuneOptions == nil {
-			data.TuneOptions = &models.GlobalTuneOptions{SslDefaultDhParam: data.TuneSslDefaultDhParam}
-		}
-	}
 	return serializeTuneOptions(p, data.TuneOptions)
 }
 

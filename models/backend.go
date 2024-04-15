@@ -161,23 +161,10 @@ type Backend struct {
 	// +kubebuilder:validation:Enum=enabled;disabled;
 	HTTPBufferRequest string `json:"http-buffer-request,omitempty"`
 
-	// http check
-	HTTPCheck *HTTPCheck `json:"http-check,omitempty"`
-
-	// http keep alive
-	// Enum: [enabled disabled]
-	// +kubebuilder:validation:Enum=enabled;disabled;
-	HTTPKeepAlive string `json:"http-keep-alive,omitempty"`
-
 	// http no delay
 	// Enum: [enabled disabled]
 	// +kubebuilder:validation:Enum=enabled;disabled;
 	HTTPNoDelay string `json:"http-no-delay,omitempty"`
-
-	// http server close
-	// Enum: [enabled disabled]
-	// +kubebuilder:validation:Enum=enabled;disabled;
-	HTTPServerClose string `json:"http-server-close,omitempty"`
 
 	// http use htx
 	// Pattern: ^[^\s]+$
@@ -222,11 +209,6 @@ type Backend struct {
 
 	// httpchk params
 	HttpchkParams *HttpchkParams `json:"httpchk_params,omitempty"`
-
-	// httpclose
-	// Enum: [enabled disabled]
-	// +kubebuilder:validation:Enum=enabled;disabled;
-	Httpclose string `json:"httpclose,omitempty"`
 
 	// id
 	ID *int64 `json:"id,omitempty"`
@@ -491,19 +473,7 @@ func (m *Backend) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
-	if err := m.validateHTTPCheck(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateHTTPKeepAlive(formats); err != nil {
-		res = append(res, err)
-	}
-
 	if err := m.validateHTTPNoDelay(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateHTTPServerClose(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -532,10 +502,6 @@ func (m *Backend) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateHttpchkParams(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateHttpclose(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -1309,67 +1275,6 @@ func (m *Backend) validateHTTPBufferRequest(formats strfmt.Registry) error {
 	return nil
 }
 
-func (m *Backend) validateHTTPCheck(formats strfmt.Registry) error {
-	if swag.IsZero(m.HTTPCheck) { // not required
-		return nil
-	}
-
-	if m.HTTPCheck != nil {
-		if err := m.HTTPCheck.Validate(formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
-				return ve.ValidateName("http-check")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
-				return ce.ValidateName("http-check")
-			}
-			return err
-		}
-	}
-
-	return nil
-}
-
-var backendTypeHTTPKeepAlivePropEnum []interface{}
-
-func init() {
-	var res []string
-	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
-		panic(err)
-	}
-	for _, v := range res {
-		backendTypeHTTPKeepAlivePropEnum = append(backendTypeHTTPKeepAlivePropEnum, v)
-	}
-}
-
-const (
-
-	// BackendHTTPKeepAliveEnabled captures enum value "enabled"
-	BackendHTTPKeepAliveEnabled string = "enabled"
-
-	// BackendHTTPKeepAliveDisabled captures enum value "disabled"
-	BackendHTTPKeepAliveDisabled string = "disabled"
-)
-
-// prop value enum
-func (m *Backend) validateHTTPKeepAliveEnum(path, location string, value string) error {
-	if err := validate.EnumCase(path, location, value, backendTypeHTTPKeepAlivePropEnum, true); err != nil {
-		return err
-	}
-	return nil
-}
-
-func (m *Backend) validateHTTPKeepAlive(formats strfmt.Registry) error {
-	if swag.IsZero(m.HTTPKeepAlive) { // not required
-		return nil
-	}
-
-	// value enum
-	if err := m.validateHTTPKeepAliveEnum("http-keep-alive", "body", m.HTTPKeepAlive); err != nil {
-		return err
-	}
-
-	return nil
-}
-
 var backendTypeHTTPNoDelayPropEnum []interface{}
 
 func init() {
@@ -1406,48 +1311,6 @@ func (m *Backend) validateHTTPNoDelay(formats strfmt.Registry) error {
 
 	// value enum
 	if err := m.validateHTTPNoDelayEnum("http-no-delay", "body", m.HTTPNoDelay); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-var backendTypeHTTPServerClosePropEnum []interface{}
-
-func init() {
-	var res []string
-	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
-		panic(err)
-	}
-	for _, v := range res {
-		backendTypeHTTPServerClosePropEnum = append(backendTypeHTTPServerClosePropEnum, v)
-	}
-}
-
-const (
-
-	// BackendHTTPServerCloseEnabled captures enum value "enabled"
-	BackendHTTPServerCloseEnabled string = "enabled"
-
-	// BackendHTTPServerCloseDisabled captures enum value "disabled"
-	BackendHTTPServerCloseDisabled string = "disabled"
-)
-
-// prop value enum
-func (m *Backend) validateHTTPServerCloseEnum(path, location string, value string) error {
-	if err := validate.EnumCase(path, location, value, backendTypeHTTPServerClosePropEnum, true); err != nil {
-		return err
-	}
-	return nil
-}
-
-func (m *Backend) validateHTTPServerClose(formats strfmt.Registry) error {
-	if swag.IsZero(m.HTTPServerClose) { // not required
-		return nil
-	}
-
-	// value enum
-	if err := m.validateHTTPServerCloseEnum("http-server-close", "body", m.HTTPServerClose); err != nil {
 		return err
 	}
 
@@ -1736,48 +1599,6 @@ func (m *Backend) validateHttpchkParams(formats strfmt.Registry) error {
 			}
 			return err
 		}
-	}
-
-	return nil
-}
-
-var backendTypeHttpclosePropEnum []interface{}
-
-func init() {
-	var res []string
-	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
-		panic(err)
-	}
-	for _, v := range res {
-		backendTypeHttpclosePropEnum = append(backendTypeHttpclosePropEnum, v)
-	}
-}
-
-const (
-
-	// BackendHttpcloseEnabled captures enum value "enabled"
-	BackendHttpcloseEnabled string = "enabled"
-
-	// BackendHttpcloseDisabled captures enum value "disabled"
-	BackendHttpcloseDisabled string = "disabled"
-)
-
-// prop value enum
-func (m *Backend) validateHttpcloseEnum(path, location string, value string) error {
-	if err := validate.EnumCase(path, location, value, backendTypeHttpclosePropEnum, true); err != nil {
-		return err
-	}
-	return nil
-}
-
-func (m *Backend) validateHttpclose(formats strfmt.Registry) error {
-	if swag.IsZero(m.Httpclose) { // not required
-		return nil
-	}
-
-	// value enum
-	if err := m.validateHttpcloseEnum("httpclose", "body", m.Httpclose); err != nil {
-		return err
 	}
 
 	return nil
@@ -2686,10 +2507,6 @@ func (m *Backend) ContextValidate(ctx context.Context, formats strfmt.Registry) 
 		res = append(res, err)
 	}
 
-	if err := m.contextValidateHTTPCheck(ctx, formats); err != nil {
-		res = append(res, err)
-	}
-
 	if err := m.contextValidateHttpchkParams(ctx, formats); err != nil {
 		res = append(res, err)
 	}
@@ -2932,22 +2749,6 @@ func (m *Backend) contextValidateHashType(ctx context.Context, formats strfmt.Re
 				return ve.ValidateName("hash_type")
 			} else if ce, ok := err.(*errors.CompositeError); ok {
 				return ce.ValidateName("hash_type")
-			}
-			return err
-		}
-	}
-
-	return nil
-}
-
-func (m *Backend) contextValidateHTTPCheck(ctx context.Context, formats strfmt.Registry) error {
-
-	if m.HTTPCheck != nil {
-		if err := m.HTTPCheck.ContextValidate(ctx, formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
-				return ve.ValidateName("http-check")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
-				return ce.ValidateName("http-check")
 			}
 			return err
 		}

@@ -1905,10 +1905,6 @@ definitions:
                       type: integer
                       x-display-name: Zlib Window Size
               type: object
-          tune_ssl_default_dh_param:
-              type: integer
-              x-deprecated: true
-              x-display-name: SSL Default DH Parameter Size
           uid:
               type: integer
               x-display-name: UID
@@ -2923,18 +2919,6 @@ definitions:
                   mode:
                       value: http
               x-display-name: HTTP bufferrequest
-          http-check:
-              $ref: '#/definitions/http_check'
-          http-keep-alive:
-              enum:
-                  - enabled
-                  - disabled
-              type: string
-              x-dependency:
-                  mode:
-                      value: http
-              x-deprecated: true
-              x-display-name: HTTP keep-alive
           http-no-delay:
               enum:
                   - enabled
@@ -2944,16 +2928,6 @@ definitions:
                   mode:
                       value: http
               x-display-name: HTTP low interactive delays
-          http-server-close:
-              enum:
-                  - enabled
-                  - disabled
-              type: string
-              x-dependency:
-                  mode:
-                      value: http
-              x-deprecated: true
-              x-display-name: HTTP server close
           http-use-htx:
               enum:
                   - enabled
@@ -3029,16 +3003,6 @@ definitions:
                       value: httpchk
                   mode:
                       value: http
-          httpclose:
-              enum:
-                  - enabled
-                  - disabled
-              type: string
-              x-dependency:
-                  mode:
-                      value: http
-              x-deprecated: true
-              x-display-name: HTTP connection closing
           id:
               type: integer
               x-nullable: true
@@ -4242,57 +4206,6 @@ definitions:
                       required: true
                       value: set-tos
               x-display-name: Tos Value
-          track-sc0-key:
-              pattern: ^[^\s]+$
-              type: string
-              x-dependency:
-                  type:
-                      required: true
-                      value: track-sc0
-              x-deprecated: true
-              x-display-name: track-sc0 Key
-          track-sc0-table:
-              pattern: ^[^\s]+$
-              type: string
-              x-dependency:
-                  type:
-                      value: track-sc0
-              x-deprecated: true
-              x-display-name: track-sc0 Table
-          track-sc1-key:
-              pattern: ^[^\s]+$
-              type: string
-              x-dependency:
-                  type:
-                      required: true
-                      value: track-sc1
-              x-deprecated: true
-              x-display-name: track-sc1 Key
-          track-sc1-table:
-              pattern: ^[^\s]+$
-              type: string
-              x-dependency:
-                  type:
-                      value: track-sc1
-              x-deprecated: true
-              x-display-name: track-sc1 Table
-          track-sc2-key:
-              pattern: ^[^\s]+$
-              type: string
-              x-dependency:
-                  type:
-                      required: true
-                      value: track-sc2
-              x-deprecated: true
-              x-display-name: track-sc2 Key
-          track-sc2-table:
-              pattern: ^[^\s]+$
-              type: string
-              x-dependency:
-                  type:
-                      value: track-sc2
-              x-deprecated: true
-              x-display-name: track-sc2 Table
           track_sc_key:
               pattern: ^[^\s]+$
               type: string
@@ -4875,57 +4788,6 @@ definitions:
                       required: true
                       value: set-tos
               x-display-name: Tos Value
-          track-sc0-key:
-              pattern: ^[^\s]+$
-              type: string
-              x-dependency:
-                  type:
-                      required: true
-                      value: track-sc0
-              x-deprecated: true
-              x-display-name: track-sc0 Key
-          track-sc0-table:
-              pattern: ^[^\s]+$
-              type: string
-              x-dependency:
-                  type:
-                      value: track-sc0
-              x-deprecated: true
-              x-display-name: track-sc0 Table
-          track-sc1-key:
-              pattern: ^[^\s]+$
-              type: string
-              x-dependency:
-                  type:
-                      required: true
-                      value: track-sc1
-              x-deprecated: true
-              x-display-name: track-sc1 Key
-          track-sc1-table:
-              pattern: ^[^\s]+$
-              type: string
-              x-dependency:
-                  type:
-                      value: track-sc1
-              x-deprecated: true
-              x-display-name: track-sc1 Table
-          track-sc2-key:
-              pattern: ^[^\s]+$
-              type: string
-              x-dependency:
-                  type:
-                      required: true
-                      value: track-sc2
-              x-deprecated: true
-              x-display-name: track-sc2 Key
-          track-sc2-table:
-              pattern: ^[^\s]+$
-              type: string
-              x-dependency:
-                  type:
-                      value: track-sc2
-              x-deprecated: true
-              x-display-name: track-sc2 Table
           track_sc_key:
               pattern: ^[^\s]+$
               type: string
@@ -9627,20 +9489,6 @@ definitions:
                   - linear
                   - exponential
               type: string
-          service-blacklist:
-              description: deprecated, use service_denylist
-              items:
-                  pattern: ^[^\s]+$
-                  type: string
-              type: array
-              x-omitempty: true
-          service-whitelist:
-              description: deprecated, use service_allowlist
-              items:
-                  pattern: ^[^\s]+$
-                  type: string
-              type: array
-              x-omitempty: true
           service_allowlist:
               items:
                   pattern: ^[^\s]+$

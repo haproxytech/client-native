@@ -119,20 +119,6 @@ consul:
       type: integer
       minimum: 1
       description: Duration in seconds in-between data pulling requests to the consul server
-    service-whitelist:
-      type: array
-      x-omitempty: true
-      items:
-        type: string
-        pattern: '^[^\s]+$'
-      description: "deprecated, use service_allowlist"
-    service-blacklist:
-      type: array
-      x-omitempty: true
-      items:
-        type: string
-        pattern: '^[^\s]+$'
-      description: "deprecated, use service_denylist"
     service_allowlist:
       type: array
       x-omitempty: true

@@ -582,10 +582,6 @@ global:
           type: string
           enum: [enabled, disabled]
           x-display-name: Edge-triggered polling mode
-    tune_ssl_default_dh_param:
-      type: integer
-      x-display-name: SSL Default DH Parameter Size
-      x-deprecated: true
     ssl_default_bind_options:
       type: string
       x-display-name: SSL Default Bind Options

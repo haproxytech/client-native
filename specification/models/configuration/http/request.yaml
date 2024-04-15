@@ -100,57 +100,6 @@ http_request_rule:
       x-dependency:
         type:
           value: capture
-    track-sc0-key:
-      x-deprecated: true
-      type: string
-      pattern: '^[^\s]+$'
-      x-display-name: track-sc0 Key
-      x-dependency:
-        type:
-          value: track-sc0
-          required: true
-    track-sc0-table:
-      x-deprecated: true
-      type: string
-      pattern: '^[^\s]+$'
-      x-display-name: track-sc0 Table
-      x-dependency:
-        type:
-          value: track-sc0
-    track-sc1-key:
-      x-deprecated: true
-      type: string
-      pattern: '^[^\s]+$'
-      x-display-name: track-sc1 Key
-      x-dependency:
-        type:
-          value: track-sc1
-          required: true
-    track-sc1-table:
-      x-deprecated: true
-      type: string
-      pattern: '^[^\s]+$'
-      x-display-name: track-sc1 Table
-      x-dependency:
-        type:
-          value: track-sc1
-    track-sc2-key:
-      x-deprecated: true
-      type: string
-      pattern: '^[^\s]+$'
-      x-display-name: track-sc2 Key
-      x-dependency:
-        type:
-          value: track-sc2
-          required: true
-    track-sc2-table:
-      x-deprecated: true
-      type: string
-      pattern: '^[^\s]+$'
-      x-display-name: track-sc2 Table
-      x-dependency:
-        type:
-          value: track-sc2
     track_sc_key:
       type: string
       pattern: '^[^\s]+$'

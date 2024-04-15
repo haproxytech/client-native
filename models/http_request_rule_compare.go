@@ -274,30 +274,6 @@ func (s HTTPRequestRule) Equal(t HTTPRequestRule, opts ...Options) bool {
 		return false
 	}
 
-	if s.TrackSc0Key != t.TrackSc0Key {
-		return false
-	}
-
-	if s.TrackSc0Table != t.TrackSc0Table {
-		return false
-	}
-
-	if s.TrackSc1Key != t.TrackSc1Key {
-		return false
-	}
-
-	if s.TrackSc1Table != t.TrackSc1Table {
-		return false
-	}
-
-	if s.TrackSc2Key != t.TrackSc2Key {
-		return false
-	}
-
-	if s.TrackSc2Table != t.TrackSc2Table {
-		return false
-	}
-
 	if s.TrackScKey != t.TrackScKey {
 		return false
 	}
@@ -608,30 +584,6 @@ func (s HTTPRequestRule) Diff(t HTTPRequestRule, opts ...Options) map[string][]i
 
 	if s.TosValue != t.TosValue {
 		diff["TosValue"] = []interface{}{s.TosValue, t.TosValue}
-	}
-
-	if s.TrackSc0Key != t.TrackSc0Key {
-		diff["TrackSc0Key"] = []interface{}{s.TrackSc0Key, t.TrackSc0Key}
-	}
-
-	if s.TrackSc0Table != t.TrackSc0Table {
-		diff["TrackSc0Table"] = []interface{}{s.TrackSc0Table, t.TrackSc0Table}
-	}
-
-	if s.TrackSc1Key != t.TrackSc1Key {
-		diff["TrackSc1Key"] = []interface{}{s.TrackSc1Key, t.TrackSc1Key}
-	}
-
-	if s.TrackSc1Table != t.TrackSc1Table {
-		diff["TrackSc1Table"] = []interface{}{s.TrackSc1Table, t.TrackSc1Table}
-	}
-
-	if s.TrackSc2Key != t.TrackSc2Key {
-		diff["TrackSc2Key"] = []interface{}{s.TrackSc2Key, t.TrackSc2Key}
-	}
-
-	if s.TrackSc2Table != t.TrackSc2Table {
-		diff["TrackSc2Table"] = []interface{}{s.TrackSc2Table, t.TrackSc2Table}
 	}
 
 	if s.TrackScKey != t.TrackScKey {

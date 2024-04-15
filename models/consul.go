@@ -108,12 +108,6 @@ type Consul struct {
 	// +kubebuilder:validation:Enum=linear;exponential;
 	ServerSlotsGrowthType *string `json:"server_slots_growth_type,omitempty"`
 
-	// deprecated, use service_denylist
-	ServiceBlacklist []string `json:"service-blacklist,omitempty"`
-
-	// deprecated, use service_allowlist
-	ServiceWhitelist []string `json:"service-whitelist,omitempty"`
-
 	// service allowlist
 	ServiceAllowlist []string `json:"service_allowlist,omitempty"`
 
@@ -162,14 +156,6 @@ func (m *Consul) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateServerSlotsGrowthType(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateServiceBlacklist(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateServiceWhitelist(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -382,38 +368,6 @@ func (m *Consul) validateServerSlotsGrowthType(formats strfmt.Registry) error {
 	// value enum
 	if err := m.validateServerSlotsGrowthTypeEnum("server_slots_growth_type", "body", *m.ServerSlotsGrowthType); err != nil {
 		return err
-	}
-
-	return nil
-}
-
-func (m *Consul) validateServiceBlacklist(formats strfmt.Registry) error {
-	if swag.IsZero(m.ServiceBlacklist) { // not required
-		return nil
-	}
-
-	for i := 0; i < len(m.ServiceBlacklist); i++ {
-
-		if err := validate.Pattern("service-blacklist"+"."+strconv.Itoa(i), "body", m.ServiceBlacklist[i], `^[^\s]+$`); err != nil {
-			return err
-		}
-
-	}
-
-	return nil
-}
-
-func (m *Consul) validateServiceWhitelist(formats strfmt.Registry) error {
-	if swag.IsZero(m.ServiceWhitelist) { // not required
-		return nil
-	}
-
-	for i := 0; i < len(m.ServiceWhitelist); i++ {
-
-		if err := validate.Pattern("service-whitelist"+"."+strconv.Itoa(i), "body", m.ServiceWhitelist[i], `^[^\s]+$`); err != nil {
-			return err
-		}
-
 	}
 
 	return nil

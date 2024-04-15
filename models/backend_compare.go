@@ -357,37 +357,7 @@ func (s Backend) Equal(t Backend, opts ...Options) bool {
 		return false
 	}
 
-	if s.HTTPCheck == nil || t.HTTPCheck == nil {
-		if s.HTTPCheck != nil || t.HTTPCheck != nil {
-			if opt.NilSameAsEmpty {
-				empty := &HTTPCheck{}
-				if s.HTTPCheck == nil {
-					if !(t.HTTPCheck.Equal(*empty)) {
-						return false
-					}
-				}
-				if t.HTTPCheck == nil {
-					if !(s.HTTPCheck.Equal(*empty)) {
-						return false
-					}
-				}
-			} else {
-				return false
-			}
-		}
-	} else if !s.HTTPCheck.Equal(*t.HTTPCheck, opt) {
-		return false
-	}
-
-	if s.HTTPKeepAlive != t.HTTPKeepAlive {
-		return false
-	}
-
 	if s.HTTPNoDelay != t.HTTPNoDelay {
-		return false
-	}
-
-	if s.HTTPServerClose != t.HTTPServerClose {
 		return false
 	}
 
@@ -446,10 +416,6 @@ func (s Backend) Equal(t Backend, opts ...Options) bool {
 			}
 		}
 	} else if !s.HttpchkParams.Equal(*t.HttpchkParams, opt) {
-		return false
-	}
-
-	if s.Httpclose != t.Httpclose {
 		return false
 	}
 
@@ -1151,38 +1117,8 @@ func (s Backend) Diff(t Backend, opts ...Options) map[string][]interface{} {
 		diff["HTTPBufferRequest"] = []interface{}{s.HTTPBufferRequest, t.HTTPBufferRequest}
 	}
 
-	if s.HTTPCheck == nil || t.HTTPCheck == nil {
-		if s.HTTPCheck != nil || t.HTTPCheck != nil {
-			if opt.NilSameAsEmpty {
-				empty := &HTTPCheck{}
-				if s.HTTPCheck == nil {
-					if !(t.HTTPCheck.Equal(*empty)) {
-						diff["HTTPCheck"] = []interface{}{ValueOrNil(s.HTTPCheck), ValueOrNil(t.HTTPCheck)}
-					}
-				}
-				if t.HTTPCheck == nil {
-					if !(s.HTTPCheck.Equal(*empty)) {
-						diff["HTTPCheck"] = []interface{}{ValueOrNil(s.HTTPCheck), ValueOrNil(t.HTTPCheck)}
-					}
-				}
-			} else {
-				diff["HTTPCheck"] = []interface{}{ValueOrNil(s.HTTPCheck), ValueOrNil(t.HTTPCheck)}
-			}
-		}
-	} else if !s.HTTPCheck.Equal(*t.HTTPCheck, opt) {
-		diff["HTTPCheck"] = []interface{}{ValueOrNil(s.HTTPCheck), ValueOrNil(t.HTTPCheck)}
-	}
-
-	if s.HTTPKeepAlive != t.HTTPKeepAlive {
-		diff["HTTPKeepAlive"] = []interface{}{s.HTTPKeepAlive, t.HTTPKeepAlive}
-	}
-
 	if s.HTTPNoDelay != t.HTTPNoDelay {
 		diff["HTTPNoDelay"] = []interface{}{s.HTTPNoDelay, t.HTTPNoDelay}
-	}
-
-	if s.HTTPServerClose != t.HTTPServerClose {
-		diff["HTTPServerClose"] = []interface{}{s.HTTPServerClose, t.HTTPServerClose}
 	}
 
 	if s.HTTPUseHtx != t.HTTPUseHtx {
@@ -1241,10 +1177,6 @@ func (s Backend) Diff(t Backend, opts ...Options) map[string][]interface{} {
 		}
 	} else if !s.HttpchkParams.Equal(*t.HttpchkParams, opt) {
 		diff["HttpchkParams"] = []interface{}{ValueOrNil(s.HttpchkParams), ValueOrNil(t.HttpchkParams)}
-	}
-
-	if s.Httpclose != t.Httpclose {
-		diff["Httpclose"] = []interface{}{s.Httpclose, t.Httpclose}
 	}
 
 	if !equalPointers(s.ID, t.ID) {

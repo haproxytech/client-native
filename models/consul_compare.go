@@ -93,14 +93,6 @@ func (s Consul) Equal(t Consul, opts ...Options) bool {
 		return false
 	}
 
-	if !equalComparableSlice(s.ServiceBlacklist, t.ServiceBlacklist, opt) {
-		return false
-	}
-
-	if !equalComparableSlice(s.ServiceWhitelist, t.ServiceWhitelist, opt) {
-		return false
-	}
-
 	if !equalComparableSlice(s.ServiceAllowlist, t.ServiceAllowlist, opt) {
 		return false
 	}
@@ -195,14 +187,6 @@ func (s Consul) Diff(t Consul, opts ...Options) map[string][]interface{} {
 
 	if !equalPointers(s.ServerSlotsGrowthType, t.ServerSlotsGrowthType) {
 		diff["ServerSlotsGrowthType"] = []interface{}{ValueOrNil(s.ServerSlotsGrowthType), ValueOrNil(t.ServerSlotsGrowthType)}
-	}
-
-	if !equalComparableSlice(s.ServiceBlacklist, t.ServiceBlacklist, opt) {
-		diff["ServiceBlacklist"] = []interface{}{s.ServiceBlacklist, t.ServiceBlacklist}
-	}
-
-	if !equalComparableSlice(s.ServiceWhitelist, t.ServiceWhitelist, opt) {
-		diff["ServiceWhitelist"] = []interface{}{s.ServiceWhitelist, t.ServiceWhitelist}
 	}
 
 	if !equalComparableSlice(s.ServiceAllowlist, t.ServiceAllowlist, opt) {

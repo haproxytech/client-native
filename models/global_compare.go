@@ -613,10 +613,6 @@ func (s Global) Equal(t Global, opts ...Options) bool {
 		return false
 	}
 
-	if s.TuneSslDefaultDhParam != t.TuneSslDefaultDhParam {
-		return false
-	}
-
 	if s.UID != t.UID {
 		return false
 	}
@@ -1330,10 +1326,6 @@ func (s Global) Diff(t Global, opts ...Options) map[string][]interface{} {
 		}
 	} else if !s.TuneOptions.Equal(*t.TuneOptions, opt) {
 		diff["TuneOptions"] = []interface{}{ValueOrNil(s.TuneOptions), ValueOrNil(t.TuneOptions)}
-	}
-
-	if s.TuneSslDefaultDhParam != t.TuneSslDefaultDhParam {
-		diff["TuneSslDefaultDhParam"] = []interface{}{s.TuneSslDefaultDhParam, t.TuneSslDefaultDhParam}
 	}
 
 	if s.UID != t.UID {

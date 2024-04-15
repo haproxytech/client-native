@@ -840,33 +840,6 @@ func SerializeHTTPResponseRule(f models.HTTPResponseRule) (rule types.Action, er
 			Cond:     f.Cond,
 			CondTest: f.CondTest,
 		}
-	case "track-sc0":
-		rule = &actions.TrackSc{
-			Type:         actions.TrackScType,
-			StickCounter: 0,
-			Key:          f.TrackSc0Key,
-			Table:        f.TrackSc0Table,
-			Cond:         f.Cond,
-			CondTest:     f.CondTest,
-		}
-	case "track-sc1":
-		rule = &actions.TrackSc{
-			Type:         actions.TrackScType,
-			StickCounter: 1,
-			Key:          f.TrackSc1Key,
-			Table:        f.TrackSc1Table,
-			Cond:         f.Cond,
-			CondTest:     f.CondTest,
-		}
-	case "track-sc2":
-		rule = &actions.TrackSc{
-			Type:         actions.TrackScType,
-			StickCounter: 2,
-			Key:          f.TrackSc2Key,
-			Table:        f.TrackSc2Table,
-			Cond:         f.Cond,
-			CondTest:     f.CondTest,
-		}
 	case "track-sc":
 		if f.TrackScStickCounter == nil {
 			return nil, NewConfError(ErrValidationError, "track_sc_stick_counter must be set")
