@@ -26,7 +26,7 @@ import (
 
 // GetInfo fetches HAProxy info from runtime API
 func (s *SingleRuntime) GetInfo() models.ProcessInfo {
-	dataStr, err := s.ExecuteRaw("show info typed")
+	dataStr, err := s.ExecuteWithResponse("show info typed")
 	data := models.ProcessInfo{RuntimeAPI: s.socketPath}
 	if err != nil {
 		data.Error = err.Error()

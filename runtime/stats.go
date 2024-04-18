@@ -33,7 +33,7 @@ func (s *SingleRuntime) GetStats() *models.NativeStatsCollection {
 		rAPI = s.socketPath
 	}
 	result := &models.NativeStatsCollection{RuntimeAPI: rAPI}
-	rawdata, err := s.ExecuteRaw("show stat")
+	rawdata, err := s.ExecuteWithResponse("show stat")
 	if err != nil {
 		result.Error = err.Error()
 		return result
@@ -47,22 +47,27 @@ func (s *SingleRuntime) GetStats() *models.NativeStatsCollection {
 		if len(line) < len(keys) {
 			continue
 		}
+		oneLineData := &models.NativeStat{}
 		for index, key := range keys {
 			if len(line[index]) > 0 {
 				data[key] = line[index]
 			}
+			if key == "type" {
+				switch line[index] {
+				case "0", "1":
+					oneLineData.Name = line[0]
+					oneLineData.Type = strings.ToLower(line[1])
+				case "2":
+					oneLineData.Name = line[1]
+					oneLineData.Type = "server"
+					oneLineData.BackendName = line[0]
+				case "3":
+					// we ignore listener
+				default:
+					// add logging when available fmt.Printf("unexpected stat type: %s", line[32])
+				}
+			}
 		}
-		oneLineData := &models.NativeStat{}
-		switch line[32] { // 32. type [LFBS]: (0=frontend, 1=backend, 2=server, 3=socket/listener)
-		case "0", "1":
-			oneLineData.Name = line[0]
-			oneLineData.Type = strings.ToLower(line[1])
-		case "2":
-			oneLineData.Name = line[1]
-			oneLineData.Type = "server"
-			oneLineData.BackendName = line[0]
-		}
-
 		var st models.NativeStatStats
 		decoder, err := mapstructure.NewDecoder(&mapstructure.DecoderConfig{
 			Result:           &st,
