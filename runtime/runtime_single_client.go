@@ -132,7 +132,7 @@ func (s *SingleRuntime) readFromSocket(command string, socket socketType) (strin
 	case statsSocket:
 		fullCommand = fmt.Sprintf("set severity-output number;%s\n", command)
 		if s.worker > 0 {
-			fullCommand = fmt.Sprintf("@%v set severity-output number;@%v %s;quit\n", s.worker, s.worker, command)
+			fullCommand = fmt.Sprintf("set severity-output number;@%v %s;quit\n", s.worker, command)
 		}
 	case masterSocket:
 		fullCommand = fmt.Sprintf("%s;quit", command)
@@ -160,6 +160,7 @@ func (s *SingleRuntime) readFromSocket(command string, socket socketType) (strin
 
 	result := strings.TrimSuffix(data.String(), "\n> ")
 	result = strings.TrimSuffix(result, "\n")
+	result = strings.TrimSpace(result)
 	return result, nil //nolint:nilerr
 }
 
@@ -175,10 +176,10 @@ func (s *SingleRuntime) Execute(command string) error {
 	if err != nil {
 		return fmt.Errorf("%w [%s]", err, command)
 	}
-	if len(rawdata) > 5 {
-		switch rawdata[1:5] {
+	if len(rawdata) > 4 {
+		switch rawdata[0:4] {
 		case "[3]:", "[2]:", "[1]:", "[0]:":
-			return fmt.Errorf("[%c] %s [%s]", rawdata[2], rawdata[5:], command)
+			return fmt.Errorf("[%c] %s [%s]", rawdata[1], rawdata[4:], command)
 		}
 	}
 	return nil
@@ -189,16 +190,13 @@ func (s *SingleRuntime) ExecuteWithResponse(command string) (string, error) {
 	if err != nil {
 		return "", fmt.Errorf("%w [%s]", err, command)
 	}
-	if len(rawdata) > 5 {
-		switch rawdata[1:5] {
+	if len(rawdata) > 4 {
+		switch rawdata[0:4] {
 		case "[3]:", "[2]:", "[1]:", "[0]:":
-			return "", fmt.Errorf("[%c] %s [%s]", rawdata[2], rawdata[5:], command)
+			return "", fmt.Errorf("[%c] %s [%s]", rawdata[1], rawdata[4:], command)
 		}
 	}
-	if len(rawdata) > 1 {
-		return rawdata[1:], nil
-	}
-	return "", nil
+	return rawdata, nil
 }
 
 func (s *SingleRuntime) ExecuteMaster(command string) (string, error) {
