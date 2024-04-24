@@ -2872,6 +2872,7 @@ definitions:
               type: string
               x-display-name: External Check Path
           force_persist:
+              description: This field is deprecated in favor of force_persist_list, and will be removed in a future release
               properties:
                   cond:
                       enum:
@@ -2889,6 +2890,30 @@ definitions:
                   - cond
                   - cond_test
               type: object
+              x-deprecated: true
+          force_persist_list:
+              items:
+                  properties:
+                      cond:
+                          enum:
+                              - if
+                              - unless
+                          type: string
+                          x-display-name: Condition
+                      cond_test:
+                          type: string
+                          x-dependency:
+                              cond:
+                                  required: true
+                          x-display-name: Condition Test
+                  required:
+                      - cond
+                      - cond_test
+                  type: object
+                  x-go-name: ForcePersist
+              type: array
+              x-go-name: ForcePersistList
+              x-omitempty: true
           forwardfor:
               $ref: '#/definitions/forwardfor'
               x-dependency:

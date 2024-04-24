@@ -352,6 +352,8 @@ backend:
       x-nullable: true
     force_persist:
       type: object
+      description: This field is deprecated in favor of force_persist_list, and will be removed in a future release
+      x-deprecated: true
       required:
         - cond
         - cond_test
@@ -366,6 +368,27 @@ backend:
           x-dependency:
             cond:
               required: true
+    force_persist_list:
+      type: array
+      x-omitempty: true
+      x-go-name: ForcePersistList
+      items:
+        type: object
+        x-go-name: ForcePersist
+        required:
+          - cond
+          - cond_test
+        properties:
+          cond:
+            type: string
+            x-display-name: Condition
+            enum: [if, unless]
+          cond_test:
+            type: string
+            x-display-name: Condition Test
+            x-dependency:
+              cond:
+                required: true
     ignore_persist:
       type: object
       description: This field is deprecated in favor of ignore_persist_list, and will be removed in a future release
