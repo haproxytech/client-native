@@ -651,12 +651,18 @@ func TestGetBackend(t *testing.T) {
 		t.Errorf("IgnorePersistList[1].CondTest is %s, expected 'local_dst'", *b.IgnorePersistList[1].CondTest)
 	}
 
-	if *b.ForcePersist.Cond != "unless" {
-		t.Errorf("ForcePersist Cond not if: %v", *b.ForcePersist.Cond)
+	if len(b.ForcePersistList) != 2 {
+		t.Errorf("ForcePersistList has %d items, expected 2", len(b.ForcePersistList))
+	} else if *b.ForcePersistList[0].Cond != "unless" {
+		t.Errorf("ForcePersistList[0].Cond is %s, expected 'unless'", *b.ForcePersistList[0].Cond)
+	} else if *b.ForcePersistList[0].CondTest != "acl-name-2" {
+		t.Errorf("ForcePersistList[0].CondTest is %s, expected 'acl-name-2'", *b.ForcePersistList[0].CondTest)
+	} else if *b.ForcePersistList[1].Cond != "if" {
+		t.Errorf("ForcePersistList[1].Cond is %s, expected 'if'", *b.ForcePersistList[1].Cond)
+	} else if *b.ForcePersistList[1].CondTest != "acl-name-3" {
+		t.Errorf("ForcePersistList[1].CondTest is %s, expected 'acl-name-3'", *b.ForcePersistList[1].CondTest)
 	}
-	if *b.ForcePersist.CondTest != "acl-name-2" {
-		t.Errorf("ForcePersist CondTest not acl-name-2: %v", *b.ForcePersist.CondTest)
-	}
+
 	if b.RetryOn != "504 505" {
 		t.Errorf("RetryOn CondTest not 504 505: %v", b.RetryOn)
 	}
@@ -938,6 +944,10 @@ func TestCreateEditDeleteBackend(t *testing.T) {
 			Originalto: &models.Originalto{
 				Enabled: misc.StringP("enabled"),
 				Header:  "X-Client-Dst",
+			},
+			ForcePersistList: []*models.ForcePersist{
+				{Cond: misc.StringP("unless"), CondTest: misc.StringP("invalid_src")},
+				{Cond: misc.StringP("if"), CondTest: misc.StringP("auth_ok")},
 			},
 			IgnorePersistList: []*models.IgnorePersist{
 				{Cond: misc.StringP("if"), CondTest: misc.StringP("host_www")},
@@ -1259,6 +1269,19 @@ func compareBackends(x, y *models.Backend, t *testing.T) bool { //nolint:gocogni
 	case "":
 		x.HTTPConnectionMode = ""
 	}
+
+	if len(x.ForcePersistList) != len(y.ForcePersistList) {
+		return false
+	}
+	for i := range x.ForcePersistList {
+		if *x.ForcePersistList[i].Cond != *y.ForcePersistList[i].Cond {
+			return false
+		}
+		if *x.ForcePersistList[i].CondTest != *y.ForcePersistList[i].CondTest {
+			return false
+		}
+	}
+	x.ForcePersistList, y.ForcePersistList = nil, nil
 
 	if len(x.IgnorePersistList) != len(y.IgnorePersistList) {
 		return false

@@ -380,8 +380,8 @@ func (s *SectionParser) checkSpecialFields(fieldName string) (match bool, data i
 		return true, s.defaultBind()
 	case "HTTPSendNameHeader":
 		return true, s.httpSendNameHeader()
-	case "ForcePersist":
-		return true, s.forcePersist()
+	case "ForcePersistList":
+		return true, s.forcePersistList()
 	case "IgnorePersistList":
 		return true, s.ignorePersistList()
 	case "Source":
@@ -1356,19 +1356,27 @@ func (s *SectionParser) httpSendNameHeader() interface{} {
 	return nil
 }
 
-func (s *SectionParser) forcePersist() interface{} {
-	if s.Section == parser.Backends {
-		data, err := s.get("force-persist", false)
-		if err != nil {
-			return nil
-		}
-		d := data.(*types.ForcePersist)
-		return &models.BackendForcePersist{
-			Cond:     &d.Cond,
-			CondTest: &d.CondTest,
+func (s *SectionParser) forcePersistList() interface{} {
+	if s.Section != parser.Backends {
+		return nil
+	}
+	data, err := s.get("force-persist", false)
+	if err != nil {
+		return nil
+	}
+	d := data.([]types.ForcePersist)
+	if len(d) == 0 {
+		return nil
+	}
+
+	items := make([]*models.ForcePersist, len(d))
+	for i := range d {
+		items[i] = &models.ForcePersist{
+			Cond:     &d[i].Cond,
+			CondTest: &d[i].CondTest,
 		}
 	}
-	return nil
+	return items
 }
 
 func (s *SectionParser) ignorePersistList() interface{} {
@@ -1625,8 +1633,15 @@ func (s *SectionObject) checkSpecialFields(fieldName string, field reflect.Value
 		return true, s.defaultBind(field)
 	case "HTTPSendNameHeader":
 		return true, s.httpSendNameHeader(field)
+	case "ForcePersistList":
+		return true, s.forcePersistList(field)
 	case "ForcePersist":
-		return true, s.forcePersist(field)
+		// "ForcePersist" field (force_persist) is deprecated in favour of "ForcePersistList" (force_persist_list).
+		// Backward compatibility during the sunset period is handled by callers of this library that perform payload
+		// transformation as necessary and remove the deprecated field.
+		// "ForcePersist" is explicitly caught and ignored here as a safeguard against a runtime panic that can occur
+		// if callers behave unexpectedly. It should be removed at the end of the sunset period along with the field.
+		return true, nil
 	case "IgnorePersistList":
 		return true, s.ignorePersistList(field)
 	case "IgnorePersist":
@@ -2880,18 +2895,23 @@ func (s *SectionObject) httpSendNameHeader(field reflect.Value) error {
 	return s.set("http-send-name-header", types.HTTPSendNameHeader{Name: v})
 }
 
-func (s *SectionObject) forcePersist(field reflect.Value) error {
+func (s *SectionObject) forcePersistList(field reflect.Value) error {
 	if valueIsNil(field) {
 		return s.set("force-persist", nil)
 	}
-	opt, ok := field.Elem().Interface().(models.BackendForcePersist)
+	data, ok := field.Interface().([]*models.ForcePersist)
 	if !ok {
 		return misc.CreateTypeAssertError("force-persist")
 	}
-	return s.set("force-persist", types.ForcePersist{
-		Cond:     *opt.Cond,
-		CondTest: *opt.CondTest,
-	})
+
+	items := make([]types.ForcePersist, len(data))
+	for i := range data {
+		items[i] = types.ForcePersist{
+			Cond:     *data[i].Cond,
+			CondTest: *data[i].CondTest,
+		}
+	}
+	return s.set("force-persist", items)
 }
 
 func (s *SectionObject) ignorePersistList(field reflect.Value) error {
