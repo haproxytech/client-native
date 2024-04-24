@@ -22,7 +22,6 @@ import (
 	"testing"
 
 	"github.com/google/go-cmp/cmp"
-	"github.com/google/go-cmp/cmp/cmpopts"
 	"github.com/stretchr/testify/require"
 
 	"github.com/haproxytech/client-native/v6/configuration"
@@ -375,6 +374,10 @@ func TestCreateEditDeleteBackend(t *testing.T) {
 				Except:  "127.0.0.1",
 				Header:  "X-Client-Dst",
 			},
+			ForcePersistList: []*models.ForcePersist{
+				{Cond: misc.StringP("unless"), CondTest: misc.StringP("invalid_src")},
+				{Cond: misc.StringP("if"), CondTest: misc.StringP("auth_ok")},
+			},
 			IgnorePersistList: []*models.IgnorePersist{
 				{Cond: misc.StringP("if"), CondTest: misc.StringP("host_www")},
 				{Cond: misc.StringP("unless"), CondTest: misc.StringP("missing_cl")},
@@ -595,6 +598,19 @@ func compareBackends(x, y *models.Backend, t *testing.T) bool { //nolint:gocogni
 
 	x.Originalto = nil
 	y.Originalto = nil
+
+	if len(x.ForcePersistList) != len(y.ForcePersistList) {
+		return false
+	}
+	for i := range x.ForcePersistList {
+		if *x.ForcePersistList[i].Cond != *y.ForcePersistList[i].Cond {
+			return false
+		}
+		if *x.ForcePersistList[i].CondTest != *y.ForcePersistList[i].CondTest {
+			return false
+		}
+	}
+	x.ForcePersistList, y.ForcePersistList = nil, nil
 
 	if len(x.IgnorePersistList) != len(y.IgnorePersistList) {
 		return false

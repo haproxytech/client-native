@@ -57,6 +57,16 @@ func (s Backend) Equal(t Backend, opts ...Options) bool {
 		}
 	}
 
+	if !CheckSameNilAndLen(s.ForcePersistList, t.ForcePersistList, opt) {
+		return false
+	} else {
+		for i := range s.ForcePersistList {
+			if !s.ForcePersistList[i].Equal(*t.ForcePersistList[i], opt) {
+				return false
+			}
+		}
+	}
+
 	if !CheckSameNilAndLen(s.IgnorePersistList, t.IgnorePersistList, opt) {
 		return false
 	} else {
@@ -827,6 +837,23 @@ func (s Backend) Diff(t Backend, opts ...Options) map[string][]interface{} {
 		}
 	}
 
+	if !CheckSameNilAndLen(s.ForcePersistList, t.ForcePersistList, opt) {
+		diff["ForcePersistList"] = []interface{}{s.ForcePersistList, t.ForcePersistList}
+	} else {
+		diff2 := make(map[string][]interface{})
+		for i := range s.ForcePersistList {
+			if !s.ForcePersistList[i].Equal(*t.ForcePersistList[i], opt) {
+				diffSub := s.ForcePersistList[i].Diff(*t.ForcePersistList[i], opt)
+				if len(diffSub) > 0 {
+					diff2[strconv.Itoa(i)] = []interface{}{diffSub}
+				}
+			}
+		}
+		if len(diff2) > 0 {
+			diff["ForcePersistList"] = []interface{}{diff2}
+		}
+	}
+
 	if !CheckSameNilAndLen(s.IgnorePersistList, t.IgnorePersistList, opt) {
 		diff["IgnorePersistList"] = []interface{}{s.IgnorePersistList, t.IgnorePersistList}
 	} else {
@@ -1578,6 +1605,43 @@ func (s BackendForcePersist) Equal(t BackendForcePersist, opts ...Options) bool 
 //
 // opts ...Options are ignored in this method
 func (s BackendForcePersist) Diff(t BackendForcePersist, opts ...Options) map[string][]interface{} {
+	diff := make(map[string][]interface{})
+	if !equalPointers(s.Cond, t.Cond) {
+		diff["Cond"] = []interface{}{ValueOrNil(s.Cond), ValueOrNil(t.Cond)}
+	}
+
+	if !equalPointers(s.CondTest, t.CondTest) {
+		diff["CondTest"] = []interface{}{ValueOrNil(s.CondTest), ValueOrNil(t.CondTest)}
+	}
+
+	return diff
+}
+
+// Equal checks if two structs of type ForcePersist are equal
+//
+//	var a, b ForcePersist
+//	equal := a.Equal(b)
+//
+// opts ...Options are ignored in this method
+func (s ForcePersist) Equal(t ForcePersist, opts ...Options) bool {
+	if !equalPointers(s.Cond, t.Cond) {
+		return false
+	}
+
+	if !equalPointers(s.CondTest, t.CondTest) {
+		return false
+	}
+
+	return true
+}
+
+// Diff checks if two structs of type ForcePersist are equal
+//
+//	var a, b ForcePersist
+//	diff := a.Diff(b)
+//
+// opts ...Options are ignored in this method
+func (s ForcePersist) Diff(t ForcePersist, opts ...Options) map[string][]interface{} {
 	diff := make(map[string][]interface{})
 	if !equalPointers(s.Cond, t.Cond) {
 		diff["Cond"] = []interface{}{ValueOrNil(s.Cond), ValueOrNil(t.Cond)}

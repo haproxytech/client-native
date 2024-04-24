@@ -45,6 +45,9 @@ type Backend struct {
 	// error files from HTTP errors
 	ErrorFilesFromHTTPErrors []*Errorfiles `json:"errorfiles_from_http_errors,omitempty"`
 
+	// force persist list
+	ForcePersistList []*ForcePersist `json:"force_persist_list,omitempty"`
+
 	// ignore persist list
 	IgnorePersistList []*IgnorePersist `json:"ignore_persist_list,omitempty"`
 
@@ -384,6 +387,10 @@ func (m *Backend) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
+	if err := m.validateForcePersistList(formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.validateIgnorePersistList(formats); err != nil {
 		res = append(res, err)
 	}
@@ -668,6 +675,32 @@ func (m *Backend) validateErrorFilesFromHTTPErrors(formats strfmt.Registry) erro
 					return ve.ValidateName("errorfiles_from_http_errors" + "." + strconv.Itoa(i))
 				} else if ce, ok := err.(*errors.CompositeError); ok {
 					return ce.ValidateName("errorfiles_from_http_errors" + "." + strconv.Itoa(i))
+				}
+				return err
+			}
+		}
+
+	}
+
+	return nil
+}
+
+func (m *Backend) validateForcePersistList(formats strfmt.Registry) error {
+	if swag.IsZero(m.ForcePersistList) { // not required
+		return nil
+	}
+
+	for i := 0; i < len(m.ForcePersistList); i++ {
+		if swag.IsZero(m.ForcePersistList[i]) { // not required
+			continue
+		}
+
+		if m.ForcePersistList[i] != nil {
+			if err := m.ForcePersistList[i].Validate(formats); err != nil {
+				if ve, ok := err.(*errors.Validation); ok {
+					return ve.ValidateName("force_persist_list" + "." + strconv.Itoa(i))
+				} else if ce, ok := err.(*errors.CompositeError); ok {
+					return ce.ValidateName("force_persist_list" + "." + strconv.Itoa(i))
 				}
 				return err
 			}
@@ -2500,6 +2533,10 @@ func (m *Backend) ContextValidate(ctx context.Context, formats strfmt.Registry) 
 		res = append(res, err)
 	}
 
+	if err := m.contextValidateForcePersistList(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.contextValidateIgnorePersistList(ctx, formats); err != nil {
 		res = append(res, err)
 	}
@@ -2624,6 +2661,26 @@ func (m *Backend) contextValidateErrorFilesFromHTTPErrors(ctx context.Context, f
 					return ve.ValidateName("errorfiles_from_http_errors" + "." + strconv.Itoa(i))
 				} else if ce, ok := err.(*errors.CompositeError); ok {
 					return ce.ValidateName("errorfiles_from_http_errors" + "." + strconv.Itoa(i))
+				}
+				return err
+			}
+		}
+
+	}
+
+	return nil
+}
+
+func (m *Backend) contextValidateForcePersistList(ctx context.Context, formats strfmt.Registry) error {
+
+	for i := 0; i < len(m.ForcePersistList); i++ {
+
+		if m.ForcePersistList[i] != nil {
+			if err := m.ForcePersistList[i].ContextValidate(ctx, formats); err != nil {
+				if ve, ok := err.(*errors.Validation); ok {
+					return ve.ValidateName("force_persist_list" + "." + strconv.Itoa(i))
+				} else if ce, ok := err.(*errors.CompositeError); ok {
+					return ce.ValidateName("force_persist_list" + "." + strconv.Itoa(i))
 				}
 				return err
 			}
@@ -3008,7 +3065,7 @@ func (m *Backend) UnmarshalBinary(b []byte) error {
 	return nil
 }
 
-// BackendForcePersist backend force persist
+// BackendForcePersist This field is deprecated in favor of force_persist_list, and will be removed in a future release
 //
 // swagger:model BackendForcePersist
 type BackendForcePersist struct {
@@ -3109,6 +3166,114 @@ func (m *BackendForcePersist) MarshalBinary() ([]byte, error) {
 // UnmarshalBinary interface implementation
 func (m *BackendForcePersist) UnmarshalBinary(b []byte) error {
 	var res BackendForcePersist
+	if err := swag.ReadJSON(b, &res); err != nil {
+		return err
+	}
+	*m = res
+	return nil
+}
+
+// ForcePersist force persist
+//
+// swagger:model ForcePersist
+type ForcePersist struct {
+	// cond
+	// Required: true
+	// Enum: [if unless]
+	// +kubebuilder:validation:Enum=if;unless;
+	Cond *string `json:"cond"`
+
+	// cond test
+	// Required: true
+	CondTest *string `json:"cond_test"`
+}
+
+// Validate validates this force persist
+func (m *ForcePersist) Validate(formats strfmt.Registry) error {
+	var res []error
+
+	if err := m.validateCond(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateCondTest(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if len(res) > 0 {
+		return errors.CompositeValidationError(res...)
+	}
+	return nil
+}
+
+var forcePersistTypeCondPropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["if","unless"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		forcePersistTypeCondPropEnum = append(forcePersistTypeCondPropEnum, v)
+	}
+}
+
+const (
+
+	// ForcePersistCondIf captures enum value "if"
+	ForcePersistCondIf string = "if"
+
+	// ForcePersistCondUnless captures enum value "unless"
+	ForcePersistCondUnless string = "unless"
+)
+
+// prop value enum
+func (m *ForcePersist) validateCondEnum(path, location string, value string) error {
+	if err := validate.EnumCase(path, location, value, forcePersistTypeCondPropEnum, true); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *ForcePersist) validateCond(formats strfmt.Registry) error {
+
+	if err := validate.Required("cond", "body", m.Cond); err != nil {
+		return err
+	}
+
+	// value enum
+	if err := m.validateCondEnum("cond", "body", *m.Cond); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *ForcePersist) validateCondTest(formats strfmt.Registry) error {
+
+	if err := validate.Required("cond_test", "body", m.CondTest); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+// ContextValidate validates this force persist based on context it is used
+func (m *ForcePersist) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+	return nil
+}
+
+// MarshalBinary interface implementation
+func (m *ForcePersist) MarshalBinary() ([]byte, error) {
+	if m == nil {
+		return nil, nil
+	}
+	return swag.WriteJSON(m)
+}
+
+// UnmarshalBinary interface implementation
+func (m *ForcePersist) UnmarshalBinary(b []byte) error {
+	var res ForcePersist
 	if err := swag.ReadJSON(b, &res); err != nil {
 		return err
 	}

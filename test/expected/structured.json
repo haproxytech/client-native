@@ -442,10 +442,16 @@
             },
             "external_check": "enabled",
             "external_check_command": "/bin/false",
-            "force_persist": {
-                "cond": "unless",
-                "cond_test": "acl-name-2"
-            },
+            "force_persist_list": [
+                {
+                    "cond": "unless",
+                    "cond_test": "acl-name-2"
+                },
+                {
+                    "cond": "if",
+                    "cond_test": "acl-name-3"
+                }
+            ],
             "forwardfor": {
                 "enabled": "enabled",
                 "header": "X-Forwarded-For"
