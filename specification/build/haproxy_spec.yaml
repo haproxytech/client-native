@@ -2418,9 +2418,6 @@ definitions:
               x-display-name: Unique ID format
           unique_id_header:
               type: string
-              x-dependency:
-                  unique_id_format:
-                      required: true
               x-display-name: Unique ID header
       title: Defaults
       type: object
@@ -2746,9 +2743,6 @@ definitions:
               x-display-name: Unique ID format
           unique_id_header:
               type: string
-              x-dependency:
-                  unique_id_format:
-                      required: true
               x-display-name: Unique ID header
       required:
           - name
