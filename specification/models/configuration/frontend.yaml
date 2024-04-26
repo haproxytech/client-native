@@ -143,9 +143,6 @@ frontend:
     unique_id_header:
       type: string
       x-display-name: Unique ID header
-      x-dependency:
-        unique_id_format:
-          required: true
     accept_invalid_http_request:
       type: string
       enum: [enabled, disabled]
