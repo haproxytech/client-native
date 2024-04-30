@@ -5061,6 +5061,27 @@ definitions:
                       value:
                           - del-acl
               x-display-name: ACK Key Format
+          capture_id:
+              type: integer
+              x-dependency:
+                  type:
+                      value: capture
+              x-display-name: Capture SlotID
+              x-nullable: true
+          capture_len:
+              type: integer
+              x-dependency:
+                  type:
+                      required: true
+                      value: capture
+              x-display-name: Capture Len
+          capture_sample:
+              pattern: ^[^\s]+$
+              type: string
+              x-dependency:
+                  type:
+                      value: capture
+              x-display-name: Capture Sample
           cond:
               enum:
                   - if
@@ -5229,6 +5250,7 @@ definitions:
               enum:
                   - add-header
                   - allow
+                  - capture
                   - del-acl
                   - del-header
                   - del-map
@@ -5245,6 +5267,7 @@ definitions:
                   - set-map
                   - set-status
                   - set-var
+                  - set-var-fmt
                   - strict-mode
                   - unset-var
               type: string
@@ -5256,6 +5279,13 @@ definitions:
                       required: true
                       value: set-var
               x-display-name: Var Expression
+          var_format:
+              type: string
+              x-dependency:
+                  type:
+                      required: true
+                      value: set-var-fmt
+              x-display-name: Var Format
           var_name:
               pattern: ^[^\s]+$
               type: string
@@ -5264,6 +5294,7 @@ definitions:
                       required: true
                       value:
                           - set-var
+                          - set-var-fmt
                           - unset-var
           var_scope:
               pattern: ^[^\s]+$
@@ -5273,6 +5304,7 @@ definitions:
                       required: true
                       value:
                           - set-var
+                          - set-var-fmt
                           - unset-var
       required:
           - index
@@ -6102,6 +6134,7 @@ definitions:
                       value: set-var-fmt
                   type:
                       value:
+                          - session
                           - connection
                           - content
               x-display-name: Var Format
