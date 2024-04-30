@@ -15,6 +15,7 @@ http_after_response_rule:
       enum:
         - add-header
         - allow
+        - capture
         - del-acl
         - del-header
         - del-map
@@ -31,15 +32,38 @@ http_after_response_rule:
         - set-map
         - set-status
         - set-var
+        - set-var-fmt
         - strict-mode
         - unset-var
       x-nullable: false
+    capture_sample:
+      pattern: '^[^\s]+$'
+      x-display-name: Capture Sample
+      type: string
+      x-dependency:
+        type:
+          value: capture
+    capture_len:
+      type: integer
+      x-display-name: Capture Len
+      x-dependency:
+        type:
+          value: capture
+          required: true
+    capture_id:
+      type: integer
+      x-nullable: true
+      x-display-name: Capture SlotID
+      x-dependency:
+        type:
+          value: capture
     hdr_name:
       type: string
       x-display-name: Header Name
       x-dependency:
         type:
-          value: [add-header, replace-header, del-header, set-header, replace-value]
+          value:
+            [add-header, replace-header, del-header, set-header, replace-value]
           required: true
     hdr_match:
       type: string
@@ -73,14 +97,14 @@ http_after_response_rule:
       pattern: '^[^\s]+$'
       x-dependency:
         type:
-          value: [set-var, unset-var]
+          value: [set-var, set-var-fmt, unset-var]
           required: true
     var_scope:
       type: string
       pattern: '^[^\s]+$'
       x-dependency:
         type:
-          value: [set-var, unset-var]
+          value: [set-var, set-var-fmt, unset-var]
           required: true
     var_expr:
       type: string
@@ -88,6 +112,13 @@ http_after_response_rule:
       x-dependency:
         type:
           value: set-var
+          required: true
+    var_format:
+      type: string
+      x-display-name: Var Format
+      x-dependency:
+        type:
+          value: set-var-fmt
           required: true
     status:
       type: integer
@@ -105,7 +136,7 @@ http_after_response_rule:
           value: set-status
     strict_mode:
       type: string
-      enum: ['on', 'off']
+      enum: ["on", "off"]
       x-dependency:
         type:
           value: strict-mode
@@ -152,7 +183,15 @@ http_after_response_rule:
       type: integer
       x-dependency:
         type:
-          value: [sc-add-gpc, sc-inc-gpc, sc-inc-gpc0, sc-inc-gpc1, sc-set-gpt, sc-set-gpt0]
+          value:
+            [
+              sc-add-gpc,
+              sc-inc-gpc,
+              sc-inc-gpc0,
+              sc-inc-gpc1,
+              sc-set-gpt,
+              sc-set-gpt0,
+            ]
           required: true
     sc_idx:
       type: integer

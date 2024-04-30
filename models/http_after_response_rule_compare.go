@@ -41,6 +41,18 @@ func (s HTTPAfterResponseRule) Equal(t HTTPAfterResponseRule, opts ...Options) b
 		return false
 	}
 
+	if !equalPointers(s.CaptureID, t.CaptureID) {
+		return false
+	}
+
+	if s.CaptureLen != t.CaptureLen {
+		return false
+	}
+
+	if s.CaptureSample != t.CaptureSample {
+		return false
+	}
+
 	if s.Cond != t.Cond {
 		return false
 	}
@@ -121,6 +133,10 @@ func (s HTTPAfterResponseRule) Equal(t HTTPAfterResponseRule, opts ...Options) b
 		return false
 	}
 
+	if s.VarFormat != t.VarFormat {
+		return false
+	}
+
 	if s.VarName != t.VarName {
 		return false
 	}
@@ -155,6 +171,18 @@ func (s HTTPAfterResponseRule) Diff(t HTTPAfterResponseRule, opts ...Options) ma
 
 	if s.ACLKeyfmt != t.ACLKeyfmt {
 		diff["ACLKeyfmt"] = []interface{}{s.ACLKeyfmt, t.ACLKeyfmt}
+	}
+
+	if !equalPointers(s.CaptureID, t.CaptureID) {
+		diff["CaptureID"] = []interface{}{ValueOrNil(s.CaptureID), ValueOrNil(t.CaptureID)}
+	}
+
+	if s.CaptureLen != t.CaptureLen {
+		diff["CaptureLen"] = []interface{}{s.CaptureLen, t.CaptureLen}
+	}
+
+	if s.CaptureSample != t.CaptureSample {
+		diff["CaptureSample"] = []interface{}{s.CaptureSample, t.CaptureSample}
 	}
 
 	if s.Cond != t.Cond {
@@ -235,6 +263,10 @@ func (s HTTPAfterResponseRule) Diff(t HTTPAfterResponseRule, opts ...Options) ma
 
 	if s.VarExpr != t.VarExpr {
 		diff["VarExpr"] = []interface{}{s.VarExpr, t.VarExpr}
+	}
+
+	if s.VarFormat != t.VarFormat {
+		diff["VarFormat"] = []interface{}{s.VarFormat, t.VarFormat}
 	}
 
 	if s.VarName != t.VarName {
