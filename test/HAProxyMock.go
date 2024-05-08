@@ -3,7 +3,6 @@ package test
 import (
 	"bufio"
 	"io"
-	"io/ioutil"
 	"net"
 	"os"
 	"testing"
@@ -86,7 +85,7 @@ func (haproxy *HAProxyMock) handleConnection(conn net.Conn) {
 }
 
 func socket() string {
-	f, err := ioutil.TempFile("", "haproxy-sock")
+	f, err := os.CreateTemp("", "haproxy-sock")
 	if err != nil {
 		panic(err)
 	}
