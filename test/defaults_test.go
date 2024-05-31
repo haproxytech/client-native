@@ -26,7 +26,6 @@ func TestPushDefaults(t *testing.T) {
 	statsRealm := "Haproxy Stats"
 	d := &models.Defaults{
 		Clitcpka:       "disabled",
-		BindProcess:    "1-4",
 		DefaultBackend: "test2",
 		ErrorFiles: []*models.Errorfile{
 			{
@@ -228,7 +227,6 @@ func TestEditCreateDeleteDefaultsSection(t *testing.T) {
 	d := &models.Defaults{
 		Name:           "created",
 		Clitcpka:       "disabled",
-		BindProcess:    "1-4",
 		DefaultBackend: "test2",
 	}
 	err := clientTest.CreateDefaultsSection(d, "", version)
@@ -275,7 +273,6 @@ func TestEditCreateDeleteDefaultsSection(t *testing.T) {
 		From:           "unnamed_defaults_1",
 		Name:           "created",
 		Clitcpka:       "enabled",
-		BindProcess:    "1-4",
 		DefaultBackend: "test2",
 	}
 	err = clientTest.EditDefaultsSection("created", d, "", version)

@@ -16,15 +16,20 @@ limitations under the License.
 
 package options
 
-func Socket(socket string) RuntimeOption {
-	return Sockets(map[int]string{
-		0: socket,
-	})
+type socket struct {
+	path string
+}
+
+func Socket(path string) RuntimeOption {
+	return socket{path}
 }
 
 // SocketDefault uses /var/run/haproxy.sock as socket path
 func SocketDefault() RuntimeOption {
-	return Sockets(map[int]string{
-		0: "/var/run/haproxy.sock",
-	})
+	return Socket("/var/run/haproxy.sock")
+}
+
+func (u socket) Set(p *RuntimeOptions) error {
+	p.Socket = u.path
+	return nil
 }

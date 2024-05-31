@@ -83,7 +83,6 @@ func TestStickTableEqualFalse(t *testing.T) {
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		result.Process = Ptr(*sample.Process + 1)
 		result.Size = Ptr(*sample.Size + 1)
 		result.Used = Ptr(*sample.Used + 1)
 		samples = append(samples, struct {
@@ -165,7 +164,6 @@ func TestStickTableDiffFalse(t *testing.T) {
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		result.Process = Ptr(*sample.Process + 1)
 		result.Size = Ptr(*sample.Size + 1)
 		result.Used = Ptr(*sample.Used + 1)
 		samples = append(samples, struct {
@@ -175,7 +173,7 @@ func TestStickTableDiffFalse(t *testing.T) {
 
 	for _, sample := range samples {
 		result := sample.a.Diff(sample.b)
-		if len(result) != 6 {
+		if len(result) != 5 {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {
@@ -185,7 +183,7 @@ func TestStickTableDiffFalse(t *testing.T) {
 			if err != nil {
 				t.Errorf(err.Error())
 			}
-			t.Errorf("Expected StickTable to be different in 6 cases, but it is not (%d) %s %s", len(result), a, b)
+			t.Errorf("Expected StickTable to be different in 5 cases, but it is not (%d) %s %s", len(result), a, b)
 		}
 	}
 }

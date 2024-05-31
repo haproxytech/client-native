@@ -103,10 +103,6 @@ func (s Defaults) Equal(t Defaults, opts ...Options) bool {
 		return false
 	}
 
-	if s.BindProcess != t.BindProcess {
-		return false
-	}
-
 	if !equalPointers(s.CheckTimeout, t.CheckTimeout) {
 		return false
 	}
@@ -921,10 +917,6 @@ func (s Defaults) Diff(t Defaults, opts ...Options) map[string][]interface{} {
 		}
 	} else if !s.Balance.Equal(*t.Balance, opt) {
 		diff["Balance"] = []interface{}{ValueOrNil(s.Balance), ValueOrNil(t.Balance)}
-	}
-
-	if s.BindProcess != t.BindProcess {
-		diff["BindProcess"] = []interface{}{s.BindProcess, t.BindProcess}
 	}
 
 	if !equalPointers(s.CheckTimeout, t.CheckTimeout) {

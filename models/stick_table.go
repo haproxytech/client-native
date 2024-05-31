@@ -44,9 +44,6 @@ type StickTable struct {
 	// name
 	Name string `json:"name,omitempty"`
 
-	// Process number if master-worker mode
-	Process *int64 `json:"process,omitempty"`
-
 	// size
 	Size *int64 `json:"size,omitempty"`
 

@@ -31,7 +31,6 @@ const testConf = `
 global
 	daemon
 	default-path origin /some/path
-	nbproc 4
 	maxconn 2000
 	external-check
   ca-base /etc/ssl/certs
@@ -252,7 +251,6 @@ defaults test_defaults
   maxconn 2000
   backlog 1024
   mode http
-  bind-process 1-4
   balance roundrobin
   hash-balance-factor 150
 
@@ -264,7 +262,6 @@ defaults
   maxconn 2000
   backlog 1024
   mode http
-  bind-process 1-4
   balance roundrobin
   option tcpka
   option srvtcpka
@@ -357,7 +354,6 @@ frontend test
   bind [2a01:c9c0:a3:8::3]:80 name ipv6 thread 1/1-1
   bind 192.168.1.1:80 name test-quic quic-socket connection thread 1/1
   bind 192.168.1.1:80 name testnbcon thread 1/all nbconn 6
-  bind-process odd
   option httplog
   option dontlognull
   option contstats
@@ -591,7 +587,6 @@ frontend test
 
 frontend test_2 from test_defaults
   mode http
-  bind-process even
   option httplog
   option dontlognull
   option contstats
@@ -636,7 +631,6 @@ frontend test_2 from test_defaults
 backend test
   mode http
   balance roundrobin
-  bind-process all
   hash-type consistent sdbm avalanche
   hash-balance-factor 150
   log-tag bla
@@ -895,7 +889,6 @@ http-errors website-2
 backend test_2 from test_defaults_2
   mode http
   balance roundrobin
-  bind-process all
   hash-type consistent sdbm avalanche
   log-tag bla
   option http-keep-alive

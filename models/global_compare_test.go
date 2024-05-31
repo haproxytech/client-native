@@ -109,7 +109,6 @@ func TestGlobalEqualFalse(t *testing.T) {
 		result.Maxsslrate = sample.Maxsslrate + 1
 		result.Maxzlibmem = sample.Maxzlibmem + 1
 		result.MworkerMaxReloads = Ptr(*sample.MworkerMaxReloads + 1)
-		result.Nbproc = sample.Nbproc + 1
 		result.Nbthread = sample.Nbthread + 1
 		result.NoQuic = !sample.NoQuic
 		result.Noepoll = !sample.Noepoll
@@ -237,7 +236,6 @@ func TestGlobalDiffFalse(t *testing.T) {
 		result.Maxsslrate = sample.Maxsslrate + 1
 		result.Maxzlibmem = sample.Maxzlibmem + 1
 		result.MworkerMaxReloads = Ptr(*sample.MworkerMaxReloads + 1)
-		result.Nbproc = sample.Nbproc + 1
 		result.Nbthread = sample.Nbthread + 1
 		result.NoQuic = !sample.NoQuic
 		result.Noepoll = !sample.Noepoll
@@ -267,7 +265,7 @@ func TestGlobalDiffFalse(t *testing.T) {
 
 	for _, sample := range samples {
 		result := sample.a.Diff(sample.b)
-		if len(result) != 111 {
+		if len(result) != 110 {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {
@@ -277,7 +275,7 @@ func TestGlobalDiffFalse(t *testing.T) {
 			if err != nil {
 				t.Errorf(err.Error())
 			}
-			t.Errorf("Expected Global to be different in 111 cases, but it is not (%d) %s %s", len(result), a, b)
+			t.Errorf("Expected Global to be different in 110 cases, but it is not (%d) %s %s", len(result), a, b)
 		}
 	}
 }

@@ -189,7 +189,6 @@
         "modsecurity-deny-blocking-io": true,
         "module-path": "/tmp/modules/path",
         "mworker_max_reloads": 5,
-        "nbproc": 4,
         "nbthread": 128,
         "no-quic": true,
         "node": "node",
@@ -386,7 +385,6 @@
             "balance": {
                 "algorithm": "roundrobin"
             },
-            "bind_process": "all",
             "check_timeout": 2000,
             "checkcache": "enabled",
             "compression": {
@@ -982,7 +980,6 @@
             "balance": {
                 "algorithm": "roundrobin"
             },
-            "bind_process": "all",
             "check_timeout": 2000,
             "checkcache": "disabled",
             "cookie": {
@@ -1351,7 +1348,6 @@
             ],
             "accept_invalid_http_request": "disabled",
             "backlog": 2048,
-            "bind_process": "odd",
             "client_fin_timeout": 1000,
             "client_timeout": 4000,
             "clitcpka": "enabled",
@@ -2765,7 +2761,6 @@
         },
         "test_2": {
             "backlog": 2048,
-            "bind_process": "even",
             "client_timeout": 4000,
             "clitcpka": "enabled",
             "clitcpka_cnt": 10,
@@ -2975,7 +2970,6 @@
             "balance": {
                 "algorithm": "roundrobin"
             },
-            "bind_process": "1-4",
             "hash_balance_factor": 150,
             "maxconn": 2000,
             "mode": "http",
@@ -3008,7 +3002,6 @@
             "balance": {
                 "algorithm": "roundrobin"
             },
-            "bind_process": "1-4",
             "check_timeout": 2000,
             "checkcache": "disabled",
             "client_fin_timeout": 1000,

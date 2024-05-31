@@ -183,9 +183,6 @@ bind_params:
       type: string
     prefer_client_ciphers:
       type: boolean
-    process:
-      type: string
-      pattern: '^[^\s]+$'
     proto:
       type: string
       x-display-name: Protocol name

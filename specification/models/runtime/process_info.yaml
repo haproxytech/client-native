@@ -1,13 +1,9 @@
 ---
-process_infos:
+process_info:
   title: HAProxy Information
   description: General HAProxy process information
-  type: array
-  x-omitempty: true
-  items:
-    $ref: '#/definitions/process_info'
-process_info:
   type: object
+  x-omitempty: true
   properties:
     runtimeAPI:
       type: string

@@ -225,7 +225,7 @@ func TestDefaultsDiffFalse(t *testing.T) {
 
 	for _, sample := range samples {
 		result := sample.a.Diff(sample.b)
-		if len(result) != 108 {
+		if len(result) != 107 {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {
@@ -235,7 +235,7 @@ func TestDefaultsDiffFalse(t *testing.T) {
 			if err != nil {
 				t.Errorf(err.Error())
 			}
-			t.Errorf("Expected Defaults to be different in 108 cases, but it is not (%d) %s %s", len(result), a, b)
+			t.Errorf("Expected Defaults to be different in 107 cases, but it is not (%d) %s %s", len(result), a, b)
 		}
 	}
 }

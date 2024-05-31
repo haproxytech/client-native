@@ -75,7 +75,6 @@ backend test
 	mode tcp
 	option tcp-check
 	balance roundrobin
-	bind-process all
 
 	tcp-check connect
 	tcp-check comment GET\ phase

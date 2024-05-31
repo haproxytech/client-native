@@ -18,7 +18,7 @@
 package models
 
 import (
-	"fmt"
+	"strconv"
 )
 
 // Equal checks if two structs of type NativeStats are equal
@@ -37,23 +37,24 @@ import (
 func (s NativeStats) Equal(t NativeStats, opts ...Options) bool {
 	opt := getOptions(opts...)
 
-	if !opt.NilSameAsEmpty {
-		if s == nil && t != nil {
-			return false
-		}
-		if t == nil && s != nil {
-			return false
-		}
-	}
-	if len(s) != len(t) {
+	if s.Error != t.Error {
 		return false
 	}
-	for i, v := range s {
-		if !v.Equal(*t[i], opt) {
-			return false
-		}
 
+	if s.RuntimeAPI != t.RuntimeAPI {
+		return false
 	}
+
+	if !CheckSameNilAndLen(s.Stats, t.Stats, opt) {
+		return false
+	} else {
+		for i := range s.Stats {
+			if !s.Stats[i].Equal(*t.Stats[i], opt) {
+				return false
+			}
+		}
+	}
+
 	return true
 }
 
@@ -74,25 +75,30 @@ func (s NativeStats) Diff(t NativeStats, opts ...Options) map[string][]interface
 	opt := getOptions(opts...)
 
 	diff := make(map[string][]interface{})
-	if !opt.NilSameAsEmpty {
-		if s == nil && t != nil {
-			diff["Diff"] = []interface{}{s, t}
-			return diff
-		}
-		if t == nil && s != nil {
-			diff["Diff"] = []interface{}{s, t}
-			return diff
-		}
+	if s.Error != t.Error {
+		diff["Error"] = []interface{}{s.Error, t.Error}
 	}
-	if len(s) != len(t) {
-		diff["Diff"] = []interface{}{s, t}
-		return diff
-	}
-	for i, v := range s {
-		if !v.Equal(*t[i], opt) {
-			diff[fmt.Sprintf("Diff[%d]", i)] = []interface{}{v, t[i]}
-		}
 
+	if s.RuntimeAPI != t.RuntimeAPI {
+		diff["RuntimeAPI"] = []interface{}{s.RuntimeAPI, t.RuntimeAPI}
 	}
+
+	if !CheckSameNilAndLen(s.Stats, t.Stats, opt) {
+		diff["Stats"] = []interface{}{s.Stats, t.Stats}
+	} else {
+		diff2 := make(map[string][]interface{})
+		for i := range s.Stats {
+			if !s.Stats[i].Equal(*t.Stats[i], opt) {
+				diffSub := s.Stats[i].Diff(*t.Stats[i], opt)
+				if len(diffSub) > 0 {
+					diff2[strconv.Itoa(i)] = []interface{}{diffSub}
+				}
+			}
+		}
+		if len(diff2) > 0 {
+			diff["Stats"] = []interface{}{diff2}
+		}
+	}
+
 	return diff
 }

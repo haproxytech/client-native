@@ -65,10 +65,6 @@ func (s Frontend) Equal(t Frontend, opts ...Options) bool {
 		return false
 	}
 
-	if s.BindProcess != t.BindProcess {
-		return false
-	}
-
 	if s.Clflog != t.Clflog {
 		return false
 	}
@@ -535,10 +531,6 @@ func (s Frontend) Diff(t Frontend, opts ...Options) map[string][]interface{} {
 
 	if !equalPointers(s.Backlog, t.Backlog) {
 		diff["Backlog"] = []interface{}{ValueOrNil(s.Backlog), ValueOrNil(t.Backlog)}
-	}
-
-	if s.BindProcess != t.BindProcess {
-		diff["BindProcess"] = []interface{}{s.BindProcess, t.BindProcess}
 	}
 
 	if s.Clflog != t.Clflog {

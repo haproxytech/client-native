@@ -212,10 +212,6 @@ func (s BindParams) Equal(t BindParams, opts ...Options) bool {
 		return false
 	}
 
-	if s.Process != t.Process {
-		return false
-	}
-
 	if s.Proto != t.Proto {
 		return false
 	}
@@ -501,10 +497,6 @@ func (s BindParams) Diff(t BindParams, opts ...Options) map[string][]interface{}
 
 	if s.PreferClientCiphers != t.PreferClientCiphers {
 		diff["PreferClientCiphers"] = []interface{}{s.PreferClientCiphers, t.PreferClientCiphers}
-	}
-
-	if s.Process != t.Process {
-		diff["Process"] = []interface{}{s.Process, t.Process}
 	}
 
 	if s.Proto != t.Proto {

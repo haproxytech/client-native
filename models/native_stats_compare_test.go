@@ -26,13 +26,13 @@ import (
 	jsoniter "github.com/json-iterator/go"
 )
 
-func TestNativeStatsCollectionEqual(t *testing.T) {
+func TestNativeStatsEqual(t *testing.T) {
 	samples := []struct {
-		a, b NativeStatsCollection
+		a, b NativeStats
 	}{}
 	for i := 0; i < 2; i++ {
-		var sample NativeStatsCollection
-		var result NativeStatsCollection
+		var sample NativeStats
+		var result NativeStats
 		err := faker.FakeData(&sample)
 		if err != nil {
 			t.Errorf(err.Error())
@@ -47,7 +47,7 @@ func TestNativeStatsCollectionEqual(t *testing.T) {
 		}
 
 		samples = append(samples, struct {
-			a, b NativeStatsCollection
+			a, b NativeStats
 		}{sample, result})
 	}
 
@@ -63,18 +63,18 @@ func TestNativeStatsCollectionEqual(t *testing.T) {
 			if err != nil {
 				t.Errorf(err.Error())
 			}
-			t.Errorf("Expected NativeStatsCollection to be equal, but it is not %s %s", a, b)
+			t.Errorf("Expected NativeStats to be equal, but it is not %s %s", a, b)
 		}
 	}
 }
 
-func TestNativeStatsCollectionEqualFalse(t *testing.T) {
+func TestNativeStatsEqualFalse(t *testing.T) {
 	samples := []struct {
-		a, b NativeStatsCollection
+		a, b NativeStats
 	}{}
 	for i := 0; i < 2; i++ {
-		var sample NativeStatsCollection
-		var result NativeStatsCollection
+		var sample NativeStats
+		var result NativeStats
 		err := faker.FakeData(&sample)
 		if err != nil {
 			t.Errorf(err.Error())
@@ -84,7 +84,7 @@ func TestNativeStatsCollectionEqualFalse(t *testing.T) {
 			t.Errorf(err.Error())
 		}
 		samples = append(samples, struct {
-			a, b NativeStatsCollection
+			a, b NativeStats
 		}{sample, result})
 	}
 
@@ -100,18 +100,18 @@ func TestNativeStatsCollectionEqualFalse(t *testing.T) {
 			if err != nil {
 				t.Errorf(err.Error())
 			}
-			t.Errorf("Expected NativeStatsCollection to be different, but it is not %s %s", a, b)
+			t.Errorf("Expected NativeStats to be different, but it is not %s %s", a, b)
 		}
 	}
 }
 
-func TestNativeStatsCollectionDiff(t *testing.T) {
+func TestNativeStatsDiff(t *testing.T) {
 	samples := []struct {
-		a, b NativeStatsCollection
+		a, b NativeStats
 	}{}
 	for i := 0; i < 2; i++ {
-		var sample NativeStatsCollection
-		var result NativeStatsCollection
+		var sample NativeStats
+		var result NativeStats
 		err := faker.FakeData(&sample)
 		if err != nil {
 			t.Errorf(err.Error())
@@ -126,7 +126,7 @@ func TestNativeStatsCollectionDiff(t *testing.T) {
 		}
 
 		samples = append(samples, struct {
-			a, b NativeStatsCollection
+			a, b NativeStats
 		}{sample, result})
 	}
 
@@ -142,18 +142,18 @@ func TestNativeStatsCollectionDiff(t *testing.T) {
 			if err != nil {
 				t.Errorf(err.Error())
 			}
-			t.Errorf("Expected NativeStatsCollection to be equal, but it is not %s %s, %v", a, b, result)
+			t.Errorf("Expected NativeStats to be equal, but it is not %s %s, %v", a, b, result)
 		}
 	}
 }
 
-func TestNativeStatsCollectionDiffFalse(t *testing.T) {
+func TestNativeStatsDiffFalse(t *testing.T) {
 	samples := []struct {
-		a, b NativeStatsCollection
+		a, b NativeStats
 	}{}
 	for i := 0; i < 2; i++ {
-		var sample NativeStatsCollection
-		var result NativeStatsCollection
+		var sample NativeStats
+		var result NativeStats
 		err := faker.FakeData(&sample)
 		if err != nil {
 			t.Errorf(err.Error())
@@ -163,7 +163,7 @@ func TestNativeStatsCollectionDiffFalse(t *testing.T) {
 			t.Errorf(err.Error())
 		}
 		samples = append(samples, struct {
-			a, b NativeStatsCollection
+			a, b NativeStats
 		}{sample, result})
 	}
 
@@ -179,7 +179,7 @@ func TestNativeStatsCollectionDiffFalse(t *testing.T) {
 			if err != nil {
 				t.Errorf(err.Error())
 			}
-			t.Errorf("Expected NativeStatsCollection to be different in 3 cases, but it is not (%d) %s %s", len(result), a, b)
+			t.Errorf("Expected NativeStats to be different in 3 cases, but it is not (%d) %s %s", len(result), a, b)
 		}
 	}
 }

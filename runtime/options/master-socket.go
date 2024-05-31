@@ -18,7 +18,6 @@ package options
 
 type masterSocketData struct {
 	MasterSocketPath string
-	Nbproc           int
 }
 
 func (u masterSocketData) Set(p *RuntimeOptions) error {
@@ -26,9 +25,8 @@ func (u masterSocketData) Set(p *RuntimeOptions) error {
 	return nil
 }
 
-func MasterSocket(masterSocketPath string, nbproc int) RuntimeOption {
+func MasterSocket(masterSocketPath string) RuntimeOption {
 	return masterSocketData{
 		MasterSocketPath: masterSocketPath,
-		Nbproc:           nbproc,
 	}
 }

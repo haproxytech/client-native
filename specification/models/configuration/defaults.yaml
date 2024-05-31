@@ -64,9 +64,6 @@ defaults:
           value: httpchk
     http-check:
       $ref: "#/definitions/http_check"
-    bind_process:
-      type: string
-      pattern: '^[^\s]+$'
     disable_h2_upgrade:
       type: string
       enum: [enabled, disabled]

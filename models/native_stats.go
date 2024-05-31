@@ -34,28 +34,24 @@ import (
 // # HAProxy stats array
 //
 // swagger:model native_stats
-type NativeStats []*NativeStatsCollection
+type NativeStats struct {
+
+	// error
+	Error string `json:"error,omitempty"`
+
+	// runtime API
+	RuntimeAPI string `json:"runtimeAPI,omitempty"`
+
+	// stats
+	Stats []*NativeStat `json:"stats,omitempty"`
+}
 
 // Validate validates this native stats
-func (m NativeStats) Validate(formats strfmt.Registry) error {
+func (m *NativeStats) Validate(formats strfmt.Registry) error {
 	var res []error
 
-	for i := 0; i < len(m); i++ {
-		if swag.IsZero(m[i]) { // not required
-			continue
-		}
-
-		if m[i] != nil {
-			if err := m[i].Validate(formats); err != nil {
-				if ve, ok := err.(*errors.Validation); ok {
-					return ve.ValidateName(strconv.Itoa(i))
-				} else if ce, ok := err.(*errors.CompositeError); ok {
-					return ce.ValidateName(strconv.Itoa(i))
-				}
-				return err
-			}
-		}
-
+	if err := m.validateStats(formats); err != nil {
+		res = append(res, err)
 	}
 
 	if len(res) > 0 {
@@ -64,18 +60,22 @@ func (m NativeStats) Validate(formats strfmt.Registry) error {
 	return nil
 }
 
-// ContextValidate validate this native stats based on the context it is used
-func (m NativeStats) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
-	var res []error
+func (m *NativeStats) validateStats(formats strfmt.Registry) error {
+	if swag.IsZero(m.Stats) { // not required
+		return nil
+	}
 
-	for i := 0; i < len(m); i++ {
+	for i := 0; i < len(m.Stats); i++ {
+		if swag.IsZero(m.Stats[i]) { // not required
+			continue
+		}
 
-		if m[i] != nil {
-			if err := m[i].ContextValidate(ctx, formats); err != nil {
+		if m.Stats[i] != nil {
+			if err := m.Stats[i].Validate(formats); err != nil {
 				if ve, ok := err.(*errors.Validation); ok {
-					return ve.ValidateName(strconv.Itoa(i))
+					return ve.ValidateName("stats" + "." + strconv.Itoa(i))
 				} else if ce, ok := err.(*errors.CompositeError); ok {
-					return ce.ValidateName(strconv.Itoa(i))
+					return ce.ValidateName("stats" + "." + strconv.Itoa(i))
 				}
 				return err
 			}
@@ -83,8 +83,57 @@ func (m NativeStats) ContextValidate(ctx context.Context, formats strfmt.Registr
 
 	}
 
+	return nil
+}
+
+// ContextValidate validate this native stats based on the context it is used
+func (m *NativeStats) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+	var res []error
+
+	if err := m.contextValidateStats(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
 	if len(res) > 0 {
 		return errors.CompositeValidationError(res...)
 	}
+	return nil
+}
+
+func (m *NativeStats) contextValidateStats(ctx context.Context, formats strfmt.Registry) error {
+
+	for i := 0; i < len(m.Stats); i++ {
+
+		if m.Stats[i] != nil {
+			if err := m.Stats[i].ContextValidate(ctx, formats); err != nil {
+				if ve, ok := err.(*errors.Validation); ok {
+					return ve.ValidateName("stats" + "." + strconv.Itoa(i))
+				} else if ce, ok := err.(*errors.CompositeError); ok {
+					return ce.ValidateName("stats" + "." + strconv.Itoa(i))
+				}
+				return err
+			}
+		}
+
+	}
+
+	return nil
+}
+
+// MarshalBinary interface implementation
+func (m *NativeStats) MarshalBinary() ([]byte, error) {
+	if m == nil {
+		return nil, nil
+	}
+	return swag.WriteJSON(m)
+}
+
+// UnmarshalBinary interface implementation
+func (m *NativeStats) UnmarshalBinary(b []byte) error {
+	var res NativeStats
+	if err := swag.ReadJSON(b, &res); err != nil {
+		return err
+	}
+	*m = res
 	return nil
 }

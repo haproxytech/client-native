@@ -22,9 +22,6 @@ backend:
     hash_balance_factor:
       type: integer
       x-nullable: true
-    bind_process:
-      type: string
-      pattern: '^[^\s]+$'
     mode:
       type: string
       enum: [http, tcp, log]

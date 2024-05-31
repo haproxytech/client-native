@@ -25,14 +25,14 @@ import (
 )
 
 // GetStats fetches HAProxy stats from runtime API
-func (s *SingleRuntime) GetStats() *models.NativeStatsCollection {
+func (s *SingleRuntime) GetStats() models.NativeStats {
 	rAPI := ""
-	if s.worker != 0 {
-		rAPI = fmt.Sprintf("%s@%v", s.socketPath, s.worker)
+	if s.masterWorkerMode {
+		rAPI = fmt.Sprintf("%s@%v", s.socketPath, 1)
 	} else {
 		rAPI = s.socketPath
 	}
-	result := &models.NativeStatsCollection{RuntimeAPI: rAPI}
+	result := models.NativeStats{RuntimeAPI: rAPI}
 	rawdata, err := s.ExecuteWithResponse("show stat")
 	if err != nil {
 		result.Error = err.Error()

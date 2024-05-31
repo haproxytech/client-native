@@ -324,8 +324,6 @@ func (s *SectionParser) checkSpecialFields(fieldName string) (match bool, data i
 		return true, s.balance()
 	case "PersistRule":
 		return true, s.persistRule()
-	case "BindProcess":
-		return true, s.bindProcess()
 	case "Cookie":
 		return true, s.cookie()
 	case "HashType":
@@ -914,15 +912,6 @@ func (s *SectionParser) cookie() interface{} {
 		Type:     d.Type,
 		Secure:   d.Secure,
 	}
-}
-
-func (s *SectionParser) bindProcess() interface{} {
-	data, err := s.get("bind-process", false)
-	if err != nil {
-		return nil
-	}
-	d := data.(*types.BindProcess)
-	return d.Process
 }
 
 func (s *SectionParser) persistRule() interface{} {
@@ -1575,8 +1564,6 @@ func (s *SectionObject) checkSpecialFields(fieldName string, field reflect.Value
 		return true, s.balance(field)
 	case "PersistRule":
 		return true, s.persistRule(field)
-	case "BindProcess":
-		return true, s.bindProcess(field)
 	case "Cookie":
 		return true, s.cookie(field)
 	case "HashType":
@@ -2266,22 +2253,6 @@ func (s *SectionObject) cookie(field reflect.Value) error {
 			Secure:   d.Secure,
 		}
 		if err := s.set("cookie", &data); err != nil {
-			return err
-		}
-	}
-	return nil
-}
-
-func (s *SectionObject) bindProcess(field reflect.Value) error {
-	if s.Section == parser.Defaults || s.Section == parser.Frontends || s.Section == parser.Backends {
-		if valueIsNil(field) {
-			return s.set("bind-process", nil)
-		}
-		b := field.String()
-		d := &types.BindProcess{
-			Process: b,
-		}
-		if err := s.set("bind-process", d); err != nil {
 			return err
 		}
 	}

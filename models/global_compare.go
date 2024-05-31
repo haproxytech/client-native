@@ -403,10 +403,6 @@ func (s Global) Equal(t Global, opts ...Options) bool {
 		return false
 	}
 
-	if s.Nbproc != t.Nbproc {
-		return false
-	}
-
 	if s.Nbthread != t.Nbthread {
 		return false
 	}
@@ -1116,10 +1112,6 @@ func (s Global) Diff(t Global, opts ...Options) map[string][]interface{} {
 
 	if !equalPointers(s.MworkerMaxReloads, t.MworkerMaxReloads) {
 		diff["MworkerMaxReloads"] = []interface{}{ValueOrNil(s.MworkerMaxReloads), ValueOrNil(t.MworkerMaxReloads)}
-	}
-
-	if s.Nbproc != t.Nbproc {
-		diff["Nbproc"] = []interface{}{s.Nbproc, t.Nbproc}
 	}
 
 	if s.Nbthread != t.Nbthread {

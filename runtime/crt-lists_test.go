@@ -13,9 +13,8 @@ func TestSingleRuntime_ShowCrtLists(t *testing.T) {
 	defer haProxy.Stop()
 
 	type fields struct {
-		socketPath string
-		worker     int
-		process    int
+		socketPath       string
+		masterWorkerMode bool
 	}
 	tests := []struct {
 		name           string
@@ -53,7 +52,7 @@ func TestSingleRuntime_ShowCrtLists(t *testing.T) {
 			s := &SingleRuntime{}
 			ctx, cancel := context.WithTimeout(context.Background(), time.Duration(time.Second))
 			defer cancel()
-			err := s.Init(ctx, tt.fields.socketPath, tt.fields.process, tt.fields.worker)
+			err := s.Init(ctx, tt.fields.socketPath, tt.fields.masterWorkerMode)
 			if err != nil {
 				t.Errorf("SingleRuntime.Init() error = %v", err)
 				return
@@ -78,9 +77,8 @@ func TestSingleRuntime_GetCrtList(t *testing.T) {
 	defer haProxy.Stop()
 
 	type fields struct {
-		socketPath string
-		worker     int
-		process    int
+		socketPath       string
+		masterWorkerMode bool
 	}
 	type args struct {
 		file string
@@ -140,7 +138,7 @@ func TestSingleRuntime_GetCrtList(t *testing.T) {
 			s := &SingleRuntime{}
 			ctx, cancel := context.WithTimeout(context.Background(), time.Duration(time.Second))
 			defer cancel()
-			err := s.Init(ctx, tt.fields.socketPath, tt.fields.process, tt.fields.worker)
+			err := s.Init(ctx, tt.fields.socketPath, tt.fields.masterWorkerMode)
 			if err != nil {
 				t.Errorf("SingleRuntime.Init() error = %v", err)
 				return
@@ -163,10 +161,9 @@ func TestSingleRuntime_ShowCrtListEntries(t *testing.T) {
 	defer haProxy.Stop()
 
 	type fields struct {
-		jobs       chan Task
-		socketPath string
-		worker     int
-		process    int
+		jobs             chan Task
+		socketPath       string
+		masterWorkerMode bool
 	}
 	type args struct {
 		file string
@@ -241,7 +238,7 @@ func TestSingleRuntime_ShowCrtListEntries(t *testing.T) {
 			s := &SingleRuntime{}
 			ctx, cancel := context.WithTimeout(context.Background(), time.Duration(time.Second))
 			defer cancel()
-			err := s.Init(ctx, tt.fields.socketPath, tt.fields.process, tt.fields.worker)
+			err := s.Init(ctx, tt.fields.socketPath, tt.fields.masterWorkerMode)
 			if err != nil {
 				t.Errorf("SingleRuntime.Init() error = %v", err)
 				return
@@ -266,10 +263,9 @@ func TestSingleRuntime_AddCrtListEntry(t *testing.T) {
 	defer haProxy.Stop()
 
 	type fields struct {
-		jobs       chan Task
-		socketPath string
-		worker     int
-		process    int
+		jobs             chan Task
+		socketPath       string
+		masterWorkerMode bool
 	}
 	type args struct {
 		crtList string
@@ -344,7 +340,7 @@ func TestSingleRuntime_AddCrtListEntry(t *testing.T) {
 			s := &SingleRuntime{}
 			ctx, cancel := context.WithTimeout(context.Background(), time.Duration(time.Second))
 			defer cancel()
-			err := s.Init(ctx, tt.fields.socketPath, tt.fields.process, tt.fields.worker)
+			err := s.Init(ctx, tt.fields.socketPath, tt.fields.masterWorkerMode)
 			if err != nil {
 				t.Errorf("SingleRuntime.Init() error = %v", err)
 				return
@@ -362,10 +358,9 @@ func TestSingleRuntime_DeleteCrtListEntry(t *testing.T) {
 	defer haProxy.Stop()
 
 	type fields struct {
-		jobs       chan Task
-		socketPath string
-		worker     int
-		process    int
+		jobs             chan Task
+		socketPath       string
+		masterWorkerMode bool
 	}
 	type args struct {
 		crtList    string
@@ -414,7 +409,7 @@ func TestSingleRuntime_DeleteCrtListEntry(t *testing.T) {
 			s := &SingleRuntime{}
 			ctx, cancel := context.WithTimeout(context.Background(), time.Duration(time.Second))
 			defer cancel()
-			err := s.Init(ctx, tt.fields.socketPath, tt.fields.process, tt.fields.worker)
+			err := s.Init(ctx, tt.fields.socketPath, tt.fields.masterWorkerMode)
 			if err != nil {
 				t.Errorf("SingleRuntime.Init() error = %v", err)
 				return

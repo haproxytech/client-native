@@ -117,8 +117,7 @@ func (s *SingleRuntime) parseStickTable(output string) *models.StickTable {
 	if !strings.HasPrefix(output, "# table:") {
 		return nil
 	}
-	proc := int64(s.process)
-	stkTable := &models.StickTable{Process: &proc}
+	stkTable := &models.StickTable{}
 
 	stkStrings := strings.Split(output, ",")
 

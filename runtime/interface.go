@@ -103,13 +103,13 @@ type ACLs interface {
 
 type Tables interface {
 	// SetTableEntry create or update a stick-table entry in the table.
-	SetTableEntry(table, key string, dataType models.StickTableEntry, process int) error
-	// Show tables show tables from runtime API and return it structured, if process is 0, return for all processes
-	ShowTables(process int) (models.StickTables, error)
-	// GetTableEntries returns all entries for specified table in the given process with filters and a key
-	GetTableEntries(name string, process int, filter []string, key string) (models.StickTableEntries, error)
-	// Show table show tables {name} from runtime API associated with process id and return it structured
-	ShowTable(name string, process int) (*models.StickTable, error)
+	SetTableEntry(table, key string, dataType models.StickTableEntry) error
+	// Show tables show tables from runtime API and return it structured
+	ShowTables() (models.StickTables, error)
+	// GetTableEntries returns all entries for specified table with filters and a key
+	GetTableEntries(name string, filter []string, key string) (models.StickTableEntries, error)
+	// Show table show tables {name} from runtime API and return it structured
+	ShowTable(name string) (*models.StickTable, error)
 }
 
 type Frontend interface {
@@ -121,7 +121,7 @@ type Info interface {
 	// GetStats returns stats from the socket
 	GetStats() models.NativeStats
 	// GetInfo returns info from the socket
-	GetInfo() (models.ProcessInfos, error)
+	GetInfo() (models.ProcessInfo, error)
 	// GetVersion() returns running HAProxy version
 	GetVersion() (HAProxyVersion, error)
 }
@@ -132,8 +132,8 @@ type Manage interface {
 }
 
 type Raw interface {
-	// ExecuteRaw does not process response, just returns its values for all processes
-	ExecuteRaw(command string) ([]string, error)
+	// ExecuteRaw does not process response, just returns its value
+	ExecuteRaw(command string) (string, error)
 }
 
 type Runtime interface {

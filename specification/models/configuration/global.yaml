@@ -86,9 +86,6 @@ global:
       type: string
       pattern: '^[^\s]+$'
       x-display-name: Local instance's peer name.
-    nbproc:
-      type: integer
-      x-display-name: Number of Processes
     nbthread:
       type: integer
       x-display-name: Number of Threads

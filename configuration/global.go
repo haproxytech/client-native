@@ -352,16 +352,6 @@ func ParseGlobalSection(p parser.Parser) (*models.Global, error) { //nolint:goco
 		mConn = maxConn.Value
 	}
 
-	var nbproc int64
-	data, err = p.Get(parser.Global, parser.GlobalSectionName, "nbproc")
-	if err == nil {
-		nbProcParser, ok := data.(*types.Int64C)
-		if !ok {
-			return nil, misc.CreateTypeAssertError("nbproc")
-		}
-		nbproc = nbProcParser.Value
-	}
-
 	var nbthread int64
 	data, err = p.Get(parser.Global, parser.GlobalSectionName, "nbthread")
 	if err == nil {
@@ -1163,7 +1153,6 @@ func ParseGlobalSection(p parser.Parser) (*models.Global, error) { //nolint:goco
 		DefaultPath:                       defaultPath,
 		MasterWorker:                      masterWorker,
 		Maxconn:                           mConn,
-		Nbproc:                            nbproc,
 		Nbthread:                          nbthread,
 		Pidfile:                           pidfile,
 		RuntimeAPIs:                       rAPIs,
@@ -1414,16 +1403,6 @@ func SerializeGlobalSection(p parser.Parser, data *models.Global) error { //noli
 		pMaxConn = nil
 	}
 	if err := p.Set(parser.Global, parser.GlobalSectionName, "maxconn", pMaxConn); err != nil {
-		return err
-	}
-
-	pNbProc := &types.Int64C{
-		Value: data.Nbproc,
-	}
-	if data.Nbproc == 0 {
-		pNbProc = nil
-	}
-	if err := p.Set(parser.Global, parser.GlobalSectionName, "nbproc", pNbProc); err != nil {
 		return err
 	}
 

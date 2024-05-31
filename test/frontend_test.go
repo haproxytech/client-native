@@ -117,7 +117,6 @@ func TestCreateEditDeleteFrontend(t *testing.T) {
 		Httplog:                  true,
 		HTTPConnectionMode:       "http-keep-alive",
 		HTTPKeepAliveTimeout:     &tOut,
-		BindProcess:              "4",
 		Logasap:                  "disabled",
 		UniqueIDFormat:           "%{+X}o_%fi:%fp_%Ts_%rt:%pid",
 		UniqueIDHeader:           "X-Unique-Id",
@@ -193,7 +192,6 @@ func TestCreateEditDeleteFrontend(t *testing.T) {
 		Backlog:            misc.Int64P(1024),
 		Clflog:             true,
 		HTTPConnectionMode: "httpclose",
-		BindProcess:        "3",
 		MonitorURI:         "/healthz",
 		MonitorFail: &models.MonitorFail{
 			Cond:     misc.StringP("if"),

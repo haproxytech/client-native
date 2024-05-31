@@ -12,6 +12,6 @@ process_info:
       '200':
         description: Success
         schema:
-          $ref: '#/definitions/process_infos'
+          $ref: '#/definitions/process_info'
       'default':
         $ref: '#/responses/DefaultError'

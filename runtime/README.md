@@ -13,8 +13,7 @@ import (
 )
 
 func main() {
-	nbproc := 8
-	ms := runtime_options.MasterSocket("/var/run/haproxy-mw.sock", nbproc)
+	ms := runtime_options.MasterSocket("/var/run/haproxy-mw.sock")
 	client, err = runtime_api.New(ctx, ms)
 	if err != nil {
 		return nil, fmt.Errorf("error setting up runtime client: %s", err.Error())

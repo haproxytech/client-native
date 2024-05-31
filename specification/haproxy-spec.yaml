@@ -304,8 +304,6 @@ definitions:
     $ref: "models/stats.yaml#/native"
   native_stat_stats:
     $ref: "models/stats.yaml#/native_stat_stats"
-  native_stats_collection:
-    $ref: "models/stats.yaml#/native_stats_collection"
   stats_options:
     $ref: "models/configuration/misc.yaml#/stats_options"
   stats_http_request:
@@ -322,8 +320,6 @@ definitions:
     type: array
     items:
       $ref: '#/definitions/endpoint'
-  process_infos:
-    $ref: "models/runtime/process_info.yaml#/process_infos"
   process_info:
     $ref: "models/runtime/process_info.yaml#/process_info"
   process_info_item:

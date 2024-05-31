@@ -12,11 +12,6 @@ stick_table_entries:
         description: Stick table name
         required: true
         type: string
-      - name: process
-        in: query
-        description: Process number if master-worker mode, if not only first process is returned
-        required: true
-        type: integer
       - name: stick_table_entry
         in: body
         description: Stick table entry
@@ -47,11 +42,6 @@ stick_table_entries:
         description: Stick table name
         required: true
         type: string
-      - name: process
-        in: query
-        description: Process number if master-worker mode, if not only first process is returned
-        required: true
-        type: integer
       - name: filter
         in: query
         description: A list of filters in format data.<type> <operator> <value> separated by comma

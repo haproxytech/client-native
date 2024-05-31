@@ -51,10 +51,6 @@ func (s StickTable) Equal(t StickTable, opts ...Options) bool {
 		return false
 	}
 
-	if !equalPointers(s.Process, t.Process) {
-		return false
-	}
-
 	if !equalPointers(s.Size, t.Size) {
 		return false
 	}
@@ -106,10 +102,6 @@ func (s StickTable) Diff(t StickTable, opts ...Options) map[string][]interface{}
 
 	if s.Name != t.Name {
 		diff["Name"] = []interface{}{s.Name, t.Name}
-	}
-
-	if !equalPointers(s.Process, t.Process) {
-		diff["Process"] = []interface{}{ValueOrNil(s.Process), ValueOrNil(t.Process)}
 	}
 
 	if !equalPointers(s.Size, t.Size) {

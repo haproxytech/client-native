@@ -6,11 +6,6 @@ stick_tables:
     operationId: getStickTables
     tags:
       - StickTable
-    parameters:
-      - name: process
-        in: query
-        description: Process number if master-worker mode, if not all processes are returned
-        type: integer
     responses:
       '200':
         description: Successful operation
@@ -31,11 +26,6 @@ stick_tables_one:
         description: Stick table name
         required: true
         type: string
-      - name: process
-        in: query
-        description: Process number if master-worker mode, if not only first process is returned
-        required: true
-        type: integer
     responses:
       '200':
         description: Successful operation

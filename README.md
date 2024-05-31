@@ -36,8 +36,7 @@ if err != nil {
 
 // runtime
 // import runtime_options "github.com/haproxytech/client-native/v6/runtime/options"
-nbproc := 8
-ms := runtime_options.MasterSocket(masterSocket, nbproc)
+ms := runtime_options.MasterSocket(masterSocket)
 runtimeClient, err = runtime_api.New(ctx, ms)
 if err != nil {
     return nil, fmt.Errorf("error setting up runtime client: %s", err.Error())

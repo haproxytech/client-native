@@ -186,11 +186,6 @@ type BindParams struct {
 	// prefer client ciphers
 	PreferClientCiphers bool `json:"prefer_client_ciphers,omitempty"`
 
-	// process
-	// Pattern: ^[^\s]+$
-	// +kubebuilder:validation:Pattern=`^[^\s]+$`
-	Process string `json:"process,omitempty"`
-
 	// proto
 	Proto string `json:"proto,omitempty"`
 
@@ -289,10 +284,6 @@ func (m *BindParams) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateName(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateProcess(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -397,18 +388,6 @@ func (m *BindParams) validateName(formats strfmt.Registry) error {
 	}
 
 	if err := validate.Pattern("name", "body", m.Name, `^[^\s]+$`); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func (m *BindParams) validateProcess(formats strfmt.Registry) error {
-	if swag.IsZero(m.Process) { // not required
-		return nil
-	}
-
-	if err := validate.Pattern("process", "body", m.Process, `^[^\s]+$`); err != nil {
 		return err
 	}
 

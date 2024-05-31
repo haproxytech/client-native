@@ -28,7 +28,9 @@ import (
 	"github.com/go-openapi/swag"
 )
 
-// ProcessInfo process info
+// ProcessInfo HAProxy Information
+//
+// # General HAProxy process information
 //
 // swagger:model process_info
 type ProcessInfo struct {

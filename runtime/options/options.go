@@ -21,7 +21,7 @@ import "time"
 type RuntimeOptions struct {
 	MapsDir                 *string
 	MasterSocketData        *masterSocketData
-	Sockets                 map[int]string
+	Socket                  string
 	AllowDelayedStartMax    *time.Duration
 	AllowDelayedStartTick   *time.Duration
 	DoNotCheckRuntimeOnInit bool

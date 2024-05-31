@@ -387,9 +387,6 @@ definitions:
               type: string
           prefer_client_ciphers:
               type: boolean
-          process:
-              pattern: ^[^\s]+$
-              type: string
           proto:
               type: string
               x-display-name: Protocol name
@@ -1299,9 +1296,6 @@ definitions:
               type: integer
               x-display-name: The number of times a worker can survive a reload
               x-nullable: true
-          nbproc:
-              type: integer
-              x-display-name: Number of Processes
           nbthread:
               type: integer
               x-display-name: Number of Threads
@@ -1984,9 +1978,6 @@ definitions:
               x-nullable: true
           balance:
               $ref: '#/definitions/balance'
-          bind_process:
-              pattern: ^[^\s]+$
-              type: string
           check_timeout:
               type: integer
               x-nullable: true
@@ -2437,9 +2428,6 @@ definitions:
               type: integer
               x-display-name: Backlog
               x-nullable: true
-          bind_process:
-              pattern: ^[^\s]+$
-              type: string
           clflog:
               type: boolean
               x-dependency:
@@ -2791,9 +2779,6 @@ definitions:
               x-display-name: All Backups
           balance:
               $ref: '#/definitions/balance'
-          bind_process:
-              pattern: ^[^\s]+$
-              type: string
           check_timeout:
               type: integer
               x-nullable: true
@@ -7132,10 +7117,18 @@ definitions:
       $ref: '#/definitions/acl'
   native_stats:
       description: HAProxy stats array
-      items:
-          $ref: '#/definitions/native_stats_collection'
+      properties:
+          error:
+              type: string
+          runtimeAPI:
+              type: string
+          stats:
+              items:
+                  $ref: '#/definitions/native_stat'
+              type: array
+              x-omitempty: true
       title: Stats Array
-      type: array
+      type: object
       x-omitempty: true
   native_stat:
       description: Current stats for one object.
@@ -7633,20 +7626,6 @@ definitions:
                       - backend
               x-nullable: true
       type: object
-  native_stats_collection:
-      description: Stats from one runtime API
-      properties:
-          error:
-              type: string
-          runtimeAPI:
-              type: string
-          stats:
-              items:
-                  $ref: '#/definitions/native_stat'
-              type: array
-              x-omitempty: true
-      title: Stats collection
-      type: object
   stats_options:
       properties:
           stats_admin:
@@ -7793,14 +7772,8 @@ definitions:
     type: array
     items:
       $ref: '#/definitions/endpoint'
-  process_infos:
-      description: General HAProxy process information
-      items:
-          $ref: '#/definitions/process_info'
-      title: HAProxy Information
-      type: array
-      x-omitempty: true
   process_info:
+      description: General HAProxy process information
       properties:
           error:
               type: string
@@ -7808,7 +7781,9 @@ definitions:
               $ref: '#/definitions/process_info_item'
           runtimeAPI:
               type: string
+      title: HAProxy Information
       type: object
+      x-omitempty: true
   process_info_item:
       properties:
           active_peers:
@@ -8600,10 +8575,6 @@ definitions:
               x-omitempty: true
           name:
               type: string
-          process:
-              description: Process number if master-worker mode
-              type: integer
-              x-nullable: true
           size:
               type: integer
               x-nullable: true
@@ -18068,7 +18039,7 @@ paths:
               "200":
                   description: Success
                   schema:
-                      $ref: '#/definitions/process_infos'
+                      $ref: '#/definitions/process_info'
               default:
                   $ref: '#/responses/DefaultError'
           summary: Return HAProxy process information
@@ -18214,11 +18185,6 @@ paths:
       get:
           description: Returns an array of all stick tables.
           operationId: getStickTables
-          parameters:
-              - description: Process number if master-worker mode, if not all processes are returned
-                in: query
-                name: process
-                type: integer
           responses:
               "200":
                   description: Successful operation
@@ -18239,11 +18205,6 @@ paths:
                 name: name
                 required: true
                 type: string
-              - description: Process number if master-worker mode, if not only first process is returned
-                in: query
-                name: process
-                required: true
-                type: integer
           responses:
               "200":
                   description: Successful operation
@@ -18266,11 +18227,6 @@ paths:
                 name: stick_table
                 required: true
                 type: string
-              - description: Process number if master-worker mode, if not only first process is returned
-                in: query
-                name: process
-                required: true
-                type: integer
               - description: A list of filters in format data.<type> <operator> <value> separated by comma
                 in: query
                 name: filter
@@ -18306,11 +18262,6 @@ paths:
                 name: stick_table
                 required: true
                 type: string
-              - description: Process number if master-worker mode, if not only first process is returned
-                in: query
-                name: process
-                required: true
-                type: integer
               - description: Stick table entry
                 in: body
                 name: stick_table_entry

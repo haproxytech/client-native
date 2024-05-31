@@ -17,6 +17,7 @@ package runtime
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"net"
 	"strings"
@@ -49,17 +50,17 @@ type Task struct {
 
 // SingleRuntime handles one runtime API
 type SingleRuntime struct {
-	jobs       chan Task
-	socketPath string
-	worker     int
-	process    int
+	jobs             chan Task
+	socketPath       string
+	masterWorkerMode bool
 }
 
-// Init must be given path to runtime socket and worker number. If in master-worker mode,
-// give the path to the master socket path, and non 0 number for workers. Process is for
-// nbproc > 1. In master-worker mode it's the same as the worker number, but when having
-// multiple stats socket lines bound to processes then use the correct process number
-func (s *SingleRuntime) Init(ctx context.Context, socketPath string, worker int, process int, opt ...options.RuntimeOptions) error {
+func (s SingleRuntime) IsValid() bool {
+	return s.socketPath != ""
+}
+
+// Init must be given path to runtime socket and a flag to indicate if it's in master-worker mode.
+func (s *SingleRuntime) Init(ctx context.Context, socketPath string, masterWorkerMode bool, opt ...options.RuntimeOptions) error {
 	var runtimeOptions options.RuntimeOptions
 	if len(opt) > 0 {
 		runtimeOptions = opt[0]
@@ -67,8 +68,7 @@ func (s *SingleRuntime) Init(ctx context.Context, socketPath string, worker int,
 
 	s.socketPath = socketPath
 	s.jobs = make(chan Task)
-	s.worker = worker
-	s.process = process
+	s.masterWorkerMode = masterWorkerMode
 	go s.handleIncomingJobs(ctx)
 	if !runtimeOptions.DoNotCheckRuntimeOnInit {
 		if runtimeOptions.AllowDelayedStartMax != nil {
@@ -131,8 +131,8 @@ func (s *SingleRuntime) readFromSocket(command string, socket socketType) (strin
 	switch socket {
 	case statsSocket:
 		fullCommand = fmt.Sprintf("set severity-output number;%s\n", command)
-		if s.worker > 0 {
-			fullCommand = fmt.Sprintf("set severity-output number;@%v %s;quit\n", s.worker, command)
+		if s.masterWorkerMode {
+			fullCommand = fmt.Sprintf("set severity-output number;@%v %s;quit\n", 1, command)
 		}
 	case masterSocket:
 		fullCommand = fmt.Sprintf("%s;quit", command)
@@ -145,7 +145,7 @@ func (s *SingleRuntime) readFromSocket(command string, socket socketType) (strin
 	// return "", nil
 
 	if api == nil {
-		return "", fmt.Errorf("no connection")
+		return "", errors.New("no connection")
 	}
 	bufferSize := 1024
 	buf := make([]byte, bufferSize)

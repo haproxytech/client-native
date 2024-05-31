@@ -229,9 +229,6 @@ type Global struct {
 	// +kubebuilder:validation:Minimum=0
 	MworkerMaxReloads *int64 `json:"mworker_max_reloads,omitempty"`
 
-	// nbproc
-	Nbproc int64 `json:"nbproc,omitempty"`
-
 	// nbthread
 	Nbthread int64 `json:"nbthread,omitempty"`
 

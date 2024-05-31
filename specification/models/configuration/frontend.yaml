@@ -26,9 +26,6 @@ frontend:
       type: string
       enum: [enabled, disabled]
       x-display-name: Log ASAP
-    bind_process:
-      type: string
-      pattern: '^[^\s]+$'
     clflog:
       type: boolean
       x-display-name: CLF Log

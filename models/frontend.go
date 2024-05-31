@@ -53,11 +53,6 @@ type Frontend struct {
 	// backlog
 	Backlog *int64 `json:"backlog,omitempty"`
 
-	// bind process
-	// Pattern: ^[^\s]+$
-	// +kubebuilder:validation:Pattern=`^[^\s]+$`
-	BindProcess string `json:"bind_process,omitempty"`
-
 	// clflog
 	Clflog bool `json:"clflog,omitempty"`
 
@@ -319,10 +314,6 @@ func (m *Frontend) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
-	if err := m.validateBindProcess(formats); err != nil {
-		res = append(res, err)
-	}
-
 	if err := m.validateClitcpka(formats); err != nil {
 		res = append(res, err)
 	}
@@ -577,18 +568,6 @@ func (m *Frontend) validateAcceptInvalidHTTPRequest(formats strfmt.Registry) err
 
 	// value enum
 	if err := m.validateAcceptInvalidHTTPRequestEnum("accept_invalid_http_request", "body", m.AcceptInvalidHTTPRequest); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func (m *Frontend) validateBindProcess(formats strfmt.Registry) error {
-	if swag.IsZero(m.BindProcess) { // not required
-		return nil
-	}
-
-	if err := validate.Pattern("bind_process", "body", m.BindProcess, `^[^\s]+$`); err != nil {
 		return err
 	}
 
