@@ -962,3 +962,11 @@ func (c *client) CommitACL(version, name string) error {
 
 	return nil
 }
+
+func (c *client) SocketPath() string {
+	return c.runtime.socketPath
+}
+
+func (c *client) IsStatsSocket() bool {
+	return !c.runtime.masterWorkerMode
+}

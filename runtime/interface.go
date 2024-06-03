@@ -145,6 +145,8 @@ type Runtime interface {
 	ACLs
 	Tables
 	Raw
+	SocketPath() string
+	IsStatsSocket() bool
 }
 
 func New(ctx context.Context, opt ...options.RuntimeOption) (Runtime, error) {
