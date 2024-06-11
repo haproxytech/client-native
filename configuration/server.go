@@ -40,8 +40,9 @@ type Server interface {
 	GetServerSwitchingRules(backend string, transactionID string) (int64, models.ServerSwitchingRules, error)
 	GetServerSwitchingRule(id int64, backend string, transactionID string) (int64, *models.ServerSwitchingRule, error)
 	DeleteServerSwitchingRule(id int64, backend string, transactionID string, version int64) error
-	CreateServerSwitchingRule(backend string, data *models.ServerSwitchingRule, transactionID string, version int64) error
+	CreateServerSwitchingRule(id int64, backend string, data *models.ServerSwitchingRule, transactionID string, version int64) error
 	EditServerSwitchingRule(id int64, backend string, data *models.ServerSwitchingRule, transactionID string, version int64) error
+	ReplaceServerSwitchingRules(backend string, data models.ServerSwitchingRules, transactionID string, version int64) error
 }
 
 // GetServers returns configuration version and an array of

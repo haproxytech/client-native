@@ -3884,9 +3884,6 @@ definitions:
                       required: true
                       value: early-hint
               x-display-name: Hint Name
-          index:
-              type: integer
-              x-nullable: true
           log_level:
               enum:
                   - emerg
@@ -4390,7 +4387,6 @@ definitions:
                       value: wait-for-body
               x-nullable: true
       required:
-          - index
           - type
       title: HTTP Request Rule
       type: object
@@ -4544,9 +4540,6 @@ definitions:
                           - set-header
                           - replace-value
               x-display-name: Header Name
-          index:
-              type: integer
-              x-nullable: true
           log_level:
               enum:
                   - emerg
@@ -4934,7 +4927,6 @@ definitions:
                       value: wait-for-body
               x-nullable: true
       required:
-          - index
           - type
       title: HTTP Response Rule
       type: object
@@ -4952,7 +4944,6 @@ definitions:
           cond_test: '{ src 192.168.0.0/16 }'
           hdr_format: max-age=31536000
           hdr_name: Strict-Transport-Security
-          index: 0
           type: set-header
       properties:
           acl_file:
@@ -5048,9 +5039,6 @@ definitions:
                           - set-header
                           - replace-value
               x-display-name: Header Name
-          index:
-              type: integer
-              x-nullable: true
           log_level:
               enum:
                   - emerg
@@ -5218,7 +5206,6 @@ definitions:
                           - set-var-fmt
                           - unset-var
       required:
-          - index
           - type
       title: HTTP after Response Rule
       type: object
@@ -5236,9 +5223,6 @@ definitions:
           status: 425
           type: status
       properties:
-          index:
-              type: integer
-              x-nullable: true
           return_content:
               type: string
               x-dependency:
@@ -5315,7 +5299,6 @@ definitions:
               type: string
               x-nullable: false
       required:
-          - index
           - type
           - status
       title: HTTP Error Rule
@@ -5393,9 +5376,6 @@ definitions:
                       value: send
               x-go-name: CheckHeaders
               x-omitempty: true
-          index:
-              type: integer
-              x-nullable: true
           linger:
               type: boolean
               x-dependency:
@@ -5581,7 +5561,6 @@ definitions:
                   type:
                       value: connect
       required:
-          - index
           - type
       title: HTTP Check
       type: object
@@ -5764,9 +5743,6 @@ definitions:
                           - content
                           - session
               x-display-name: Sticky counter value
-          index:
-              type: integer
-              x-nullable: true
           log_level:
               enum:
                   - emerg
@@ -6080,7 +6056,6 @@ definitions:
                           - content
               x-display-name: Variable scope
       required:
-          - index
           - type
       title: TCP Request Rule
       type: object
@@ -6187,9 +6162,6 @@ definitions:
                   type:
                       value: content
               x-display-name: Standard HAProxy expression
-          index:
-              type: integer
-              x-nullable: true
           log_level:
               enum:
                   - emerg
@@ -6367,7 +6339,6 @@ definitions:
                   type:
                       value: content
       required:
-          - index
           - type
       title: TCP Response Rule
       type: object
@@ -6466,9 +6437,6 @@ definitions:
                   action:
                       required: true
                       value: send-binary
-          index:
-              type: integer
-              x-nullable: true
           linger:
               type: boolean
               x-dependency:
@@ -6617,7 +6585,6 @@ definitions:
                   action:
                       value: connect
       required:
-          - index
           - action
       title: TCP Check
       type: object
@@ -6651,9 +6618,6 @@ definitions:
                   freeFormat: true
                   operation: getACLs
                   property: acl_name
-          index:
-              type: integer
-              x-nullable: true
           name:
               pattern: ^[^\s]+$
               type: string
@@ -6663,7 +6627,6 @@ definitions:
                   property: name
               x-nullable: false
       required:
-          - index
           - name
       title: Backend Switching Rule
       type: object
@@ -6679,7 +6642,6 @@ definitions:
       example:
           cond: if
           cond_test: '{ req_ssl_sni -i www.example.com }'
-          index: 0
           target_server: www
       properties:
           cond:
@@ -6698,9 +6660,6 @@ definitions:
                   freeFormat: true
                   operation: getACLs
                   property: acl_name
-          index:
-              type: integer
-              x-nullable: true
           target_server:
               pattern: ^[^\s]+$
               type: string
@@ -6709,7 +6668,6 @@ definitions:
                   property: name
               x-nullable: false
       required:
-          - index
           - target_server
       title: Server Switching Rule
       type: object
@@ -6723,7 +6681,6 @@ definitions:
       additionalProperties: false
       description: HAProxy filters
       example:
-          index: 0
           trace_name: name
           trace_rnd_parsing: true
           type: trace
@@ -6779,9 +6736,6 @@ definitions:
                       value:
                           - bwlim-in
                           - bwlim-out
-          index:
-              type: integer
-              x-nullable: true
           key:
               description: |-
                   A sample expression rule.
@@ -6881,7 +6835,6 @@ definitions:
               type: string
               x-nullable: false
       required:
-          - index
           - type
       title: Filter
       type: object
@@ -6895,7 +6848,6 @@ definitions:
       additionalProperties: false
       description: Define a pattern used to create an entry in a stickiness table or matching condition or associate a user to a server.
       example:
-          index: 0
           pattern: src
           type: match
       properties:
@@ -6915,9 +6867,6 @@ definitions:
                   freeFormat: true
                   operation: getACLs
                   property: acl_name
-          index:
-              type: integer
-              x-nullable: true
           pattern:
               pattern: ^[^\s]+$
               type: string
@@ -6934,7 +6883,6 @@ definitions:
               type: string
               x-nullable: false
       required:
-          - index
           - type
           - pattern
       title: Stick Rule
@@ -7011,9 +6959,6 @@ definitions:
                       value: false
           global:
               type: boolean
-          index:
-              type: integer
-              x-nullable: true
           length:
               type: integer
               x-dependency:
@@ -7073,8 +7018,6 @@ definitions:
                       value: false
                   sample_range:
                       required: true
-      required:
-          - index
       title: Log Target
       type: object
   log_targets:
@@ -7098,14 +7041,10 @@ definitions:
               pattern: ^[^\s]+$
               type: string
               x-nullable: false
-          index:
-              type: integer
-              x-nullable: true
           value:
               type: string
               x-nullable: false
       required:
-          - index
           - acl_name
           - criterion
       title: ACL Lines
@@ -9235,9 +9174,6 @@ definitions:
       type: object
   capture:
       properties:
-          index:
-              type: integer
-              x-nullable: true
           length:
               type: integer
               x-nullable: false
@@ -9248,7 +9184,6 @@ definitions:
               type: string
               x-nullable: false
       required:
-          - index
           - type
           - length
       title: Declare Capture
@@ -14262,6 +14197,7 @@ paths:
               - description: Parent name
                 in: query
                 name: parent_name
+                required: true
                 type: string
               - description: Parent type
                 enum:
@@ -14286,13 +14222,14 @@ paths:
           summary: Return an array of HTTP checks
           tags:
               - HTTPCheck
-      post:
-          description: Adds a new HTTP check of the specified type in the specified parent.
-          operationId: createHTTPCheck
+      put:
+          description: Replaces a whole list of HTTP checks with the list given in parameter
+          operationId: replaceHTTPChecks
           parameters:
               - description: Parent name
                 in: query
                 name: parent_name
+                required: true
                 type: string
               - description: Parent type
                 enum:
@@ -14306,15 +14243,15 @@ paths:
                 name: data
                 required: true
                 schema:
-                  $ref: '#/definitions/http_check'
+                  $ref: '#/definitions/http_checks'
               - $ref: '#/parameters/transaction_id'
               - $ref: '#/parameters/version'
               - $ref: '#/parameters/force_reload'
           responses:
-              "201":
-                  description: HTTP check created
+              "200":
+                  description: All HTTP checks lines replaced
                   schema:
-                      $ref: '#/definitions/http_check'
+                      $ref: '#/definitions/http_checks'
               "202":
                   description: Configuration change accepted and reload requested
                   headers:
@@ -14322,14 +14259,12 @@ paths:
                           description: ID of the requested reload
                           type: string
                   schema:
-                      $ref: '#/definitions/http_check'
+                      $ref: '#/definitions/http_checks'
               "400":
                   $ref: '#/responses/BadRequest'
-              "409":
-                  $ref: '#/responses/AlreadyExists'
               default:
                   $ref: '#/responses/DefaultError'
-          summary: Add a new HTTP check
+          summary: Replace an HTTP checks list
           tags:
               - HTTPCheck
   /services/haproxy/configuration/http_checks/{index}:
@@ -14385,6 +14320,7 @@ paths:
               - description: Parent name
                 in: query
                 name: parent_name
+                required: true
                 type: string
               - description: Parent type
                 enum:
@@ -14409,6 +14345,57 @@ paths:
               default:
                   $ref: '#/responses/DefaultError'
           summary: Return one HTTP check
+          tags:
+              - HTTPCheck
+      post:
+          description: Adds a new HTTP check of the specified type in the specified parent.
+          operationId: createHTTPCheck
+          parameters:
+              - description: HTTP check Index
+                in: path
+                name: index
+                required: true
+                type: integer
+              - description: Parent name
+                in: query
+                name: parent_name
+                type: string
+              - description: Parent type
+                enum:
+                  - backend
+                  - defaults
+                in: query
+                name: parent_type
+                required: true
+                type: string
+              - in: body
+                name: data
+                required: true
+                schema:
+                  $ref: '#/definitions/http_check'
+              - $ref: '#/parameters/transaction_id'
+              - $ref: '#/parameters/version'
+              - $ref: '#/parameters/force_reload'
+          responses:
+              "201":
+                  description: HTTP check created
+                  schema:
+                      $ref: '#/definitions/http_check'
+              "202":
+                  description: Configuration change accepted and reload requested
+                  headers:
+                      Reload-ID:
+                          description: ID of the requested reload
+                          type: string
+                  schema:
+                      $ref: '#/definitions/http_check'
+              "400":
+                  $ref: '#/responses/BadRequest'
+              "409":
+                  $ref: '#/responses/AlreadyExists'
+              default:
+                  $ref: '#/responses/DefaultError'
+          summary: Add a new HTTP check
           tags:
               - HTTPCheck
       put:
@@ -14495,9 +14482,9 @@ paths:
           summary: Return an array of all HTTP Request Rules
           tags:
               - HTTPRequestRule
-      post:
-          description: Adds a new HTTP Request Rule of the specified type in the specified parent.
-          operationId: createHTTPRequestRule
+      put:
+          description: Replaces a whole list of HTTP Request Rules with the list given in parameter
+          operationId: replaceHTTPRequestRules
           parameters:
               - description: Parent name
                 in: query
@@ -14516,15 +14503,15 @@ paths:
                 name: data
                 required: true
                 schema:
-                  $ref: '#/definitions/http_request_rule'
+                  $ref: '#/definitions/http_request_rules'
               - $ref: '#/parameters/transaction_id'
               - $ref: '#/parameters/version'
               - $ref: '#/parameters/force_reload'
           responses:
-              "201":
-                  description: HTTP Request Rule created
+              "200":
+                  description: All HTTP Request Rule lines replaced
                   schema:
-                      $ref: '#/definitions/http_request_rule'
+                      $ref: '#/definitions/http_request_rules'
               "202":
                   description: Configuration change accepted and reload requested
                   headers:
@@ -14532,14 +14519,12 @@ paths:
                           description: ID of the requested reload
                           type: string
                   schema:
-                      $ref: '#/definitions/http_request_rule'
+                      $ref: '#/definitions/http_request_rules'
               "400":
                   $ref: '#/responses/BadRequest'
-              "409":
-                  $ref: '#/responses/AlreadyExists'
               default:
                   $ref: '#/responses/DefaultError'
-          summary: Add a new HTTP Request Rule
+          summary: Replace an HTTP Request Rule list
           tags:
               - HTTPRequestRule
   /services/haproxy/configuration/http_request_rules/{index}:
@@ -14621,6 +14606,58 @@ paths:
               default:
                   $ref: '#/responses/DefaultError'
           summary: Return one HTTP Request Rule
+          tags:
+              - HTTPRequestRule
+      post:
+          description: Adds a new HTTP Request Rule of the specified type in the specified parent.
+          operationId: createHTTPRequestRule
+          parameters:
+              - description: HTTP Request Rule Index
+                in: path
+                name: index
+                required: true
+                type: integer
+              - description: Parent name
+                in: query
+                name: parent_name
+                required: true
+                type: string
+              - description: Parent type
+                enum:
+                  - frontend
+                  - backend
+                in: query
+                name: parent_type
+                required: true
+                type: string
+              - in: body
+                name: data
+                required: true
+                schema:
+                  $ref: '#/definitions/http_request_rule'
+              - $ref: '#/parameters/transaction_id'
+              - $ref: '#/parameters/version'
+              - $ref: '#/parameters/force_reload'
+          responses:
+              "201":
+                  description: HTTP Request Rule created
+                  schema:
+                      $ref: '#/definitions/http_request_rule'
+              "202":
+                  description: Configuration change accepted and reload requested
+                  headers:
+                      Reload-ID:
+                          description: ID of the requested reload
+                          type: string
+                  schema:
+                      $ref: '#/definitions/http_request_rule'
+              "400":
+                  $ref: '#/responses/BadRequest'
+              "409":
+                  $ref: '#/responses/AlreadyExists'
+              default:
+                  $ref: '#/responses/DefaultError'
+          summary: Add a new HTTP Request Rule
           tags:
               - HTTPRequestRule
       put:
@@ -14708,9 +14745,9 @@ paths:
           summary: Return an array of all HTTP Response Rules
           tags:
               - HTTPResponseRule
-      post:
-          description: Adds a new HTTP Response Rule of the specified type in the specified parent.
-          operationId: createHTTPResponseRule
+      put:
+          description: Replaces a whole list of HTTP Response Rules with the list given in parameter
+          operationId: replaceHTTPResponseRules
           parameters:
               - description: Parent name
                 in: query
@@ -14729,15 +14766,15 @@ paths:
                 name: data
                 required: true
                 schema:
-                  $ref: '#/definitions/http_response_rule'
+                  $ref: '#/definitions/http_response_rules'
               - $ref: '#/parameters/transaction_id'
               - $ref: '#/parameters/version'
               - $ref: '#/parameters/force_reload'
           responses:
-              "201":
-                  description: HTTP Response Rule created
+              "200":
+                  description: All HTTP Response Rule lines replaced
                   schema:
-                      $ref: '#/definitions/http_response_rule'
+                      $ref: '#/definitions/http_response_rules'
               "202":
                   description: Configuration change accepted and reload requested
                   headers:
@@ -14745,14 +14782,12 @@ paths:
                           description: ID of the requested reload
                           type: string
                   schema:
-                      $ref: '#/definitions/http_response_rule'
+                      $ref: '#/definitions/http_response_rules'
               "400":
                   $ref: '#/responses/BadRequest'
-              "409":
-                  $ref: '#/responses/AlreadyExists'
               default:
                   $ref: '#/responses/DefaultError'
-          summary: Add a new HTTP Response Rule
+          summary: Replace an HTTP Response Rule list
           tags:
               - HTTPResponseRule
   /services/haproxy/configuration/http_response_rules/{index}:
@@ -14834,6 +14869,58 @@ paths:
               default:
                   $ref: '#/responses/DefaultError'
           summary: Return one HTTP Response Rule
+          tags:
+              - HTTPResponseRule
+      post:
+          description: Adds a new HTTP Response Rule of the specified type in the specified parent.
+          operationId: createHTTPResponseRule
+          parameters:
+              - description: HTTP Response Rule Index
+                in: path
+                name: index
+                required: true
+                type: integer
+              - description: Parent name
+                in: query
+                name: parent_name
+                required: true
+                type: string
+              - description: Parent type
+                enum:
+                  - frontend
+                  - backend
+                in: query
+                name: parent_type
+                required: true
+                type: string
+              - in: body
+                name: data
+                required: true
+                schema:
+                  $ref: '#/definitions/http_response_rule'
+              - $ref: '#/parameters/transaction_id'
+              - $ref: '#/parameters/version'
+              - $ref: '#/parameters/force_reload'
+          responses:
+              "201":
+                  description: HTTP Response Rule created
+                  schema:
+                      $ref: '#/definitions/http_response_rule'
+              "202":
+                  description: Configuration change accepted and reload requested
+                  headers:
+                      Reload-ID:
+                          description: ID of the requested reload
+                          type: string
+                  schema:
+                      $ref: '#/definitions/http_response_rule'
+              "400":
+                  $ref: '#/responses/BadRequest'
+              "409":
+                  $ref: '#/responses/AlreadyExists'
+              default:
+                  $ref: '#/responses/DefaultError'
+          summary: Add a new HTTP Response Rule
           tags:
               - HTTPResponseRule
       put:
@@ -14921,9 +15008,9 @@ paths:
           summary: Return an array of all HTTP After Response Rules
           tags:
               - HTTPAfterResponseRule
-      post:
-          description: Adds a new HTTP After Response Rule of the specified type in the specified parent.
-          operationId: createHTTPAfterResponseRule
+      put:
+          description: Replaces a whole list of HTTP After Response Rules with the list given in parameter
+          operationId: replaceHTTPAfterResponseRules
           parameters:
               - description: Parent name
                 in: query
@@ -14942,15 +15029,15 @@ paths:
                 name: data
                 required: true
                 schema:
-                  $ref: '#/definitions/http_after_response_rule'
+                  $ref: '#/definitions/http_after_response_rules'
               - $ref: '#/parameters/transaction_id'
               - $ref: '#/parameters/version'
               - $ref: '#/parameters/force_reload'
           responses:
-              "201":
-                  description: HTTP Response Rule created
+              "200":
+                  description: All TTP After Response Rules lines replaced
                   schema:
-                      $ref: '#/definitions/http_after_response_rule'
+                      $ref: '#/definitions/http_after_response_rules'
               "202":
                   description: Configuration change accepted and reload requested
                   headers:
@@ -14958,14 +15045,12 @@ paths:
                           description: ID of the requested reload
                           type: string
                   schema:
-                      $ref: '#/definitions/http_after_response_rule'
+                      $ref: '#/definitions/http_after_response_rules'
               "400":
                   $ref: '#/responses/BadRequest'
-              "409":
-                  $ref: '#/responses/AlreadyExists'
               default:
                   $ref: '#/responses/DefaultError'
-          summary: Add a new HTTP After Response Rule
+          summary: Replace an HTTP After Response Rules list
           tags:
               - HTTPAfterResponseRule
   /services/haproxy/configuration/http_after_response_rules/{index}:
@@ -15049,6 +15134,58 @@ paths:
           summary: Return one HTTP After Response Rule
           tags:
               - HTTPAfterResponseRule
+      post:
+          description: Adds a new HTTP After Response Rule of the specified type in the specified parent.
+          operationId: createHTTPAfterResponseRule
+          parameters:
+              - description: HTTP After Response Rule Index
+                in: path
+                name: index
+                required: true
+                type: integer
+              - description: Parent name
+                in: query
+                name: parent_name
+                required: true
+                type: string
+              - description: Parent type
+                enum:
+                  - frontend
+                  - backend
+                in: query
+                name: parent_type
+                required: true
+                type: string
+              - in: body
+                name: data
+                required: true
+                schema:
+                  $ref: '#/definitions/http_after_response_rule'
+              - $ref: '#/parameters/transaction_id'
+              - $ref: '#/parameters/version'
+              - $ref: '#/parameters/force_reload'
+          responses:
+              "201":
+                  description: HTTP Response Rule created
+                  schema:
+                      $ref: '#/definitions/http_after_response_rule'
+              "202":
+                  description: Configuration change accepted and reload requested
+                  headers:
+                      Reload-ID:
+                          description: ID of the requested reload
+                          type: string
+                  schema:
+                      $ref: '#/definitions/http_after_response_rule'
+              "400":
+                  $ref: '#/responses/BadRequest'
+              "409":
+                  $ref: '#/responses/AlreadyExists'
+              default:
+                  $ref: '#/responses/DefaultError'
+          summary: Add a new HTTP After Response Rule
+          tags:
+              - HTTPAfterResponseRule
       put:
           description: Replaces a HTTP After Response Rule configuration by it's index in the specified parent.
           operationId: replaceHTTPAfterResponseRule
@@ -15109,6 +15246,7 @@ paths:
               - description: Parent name
                 in: query
                 name: parent_name
+                required: true
                 type: string
               - description: Parent type
                 enum:
@@ -15134,13 +15272,14 @@ paths:
           summary: Return an array of all HTTP Error Rules
           tags:
               - HTTPErrorRule
-      post:
-          description: Adds a new HTTP Error Rule of the specified type in the specified parent.
-          operationId: createHTTPErrorRule
+      put:
+          description: Replaces a whole list of HTTP Error Rules with the list given in parameter
+          operationId: replaceHTTPErrorRules
           parameters:
               - description: Parent name
                 in: query
                 name: parent_name
+                required: true
                 type: string
               - description: Parent type
                 enum:
@@ -15155,15 +15294,15 @@ paths:
                 name: data
                 required: true
                 schema:
-                  $ref: '#/definitions/http_error_rule'
+                  $ref: '#/definitions/http_error_rules'
               - $ref: '#/parameters/transaction_id'
               - $ref: '#/parameters/version'
               - $ref: '#/parameters/force_reload'
           responses:
-              "201":
-                  description: HTTP Error Rule created
+              "200":
+                  description: All HTTP Error Rules lines replaced
                   schema:
-                      $ref: '#/definitions/http_error_rule'
+                      $ref: '#/definitions/http_error_rules'
               "202":
                   description: Configuration change accepted and reload requested
                   headers:
@@ -15171,14 +15310,12 @@ paths:
                           description: ID of the requested reload
                           type: string
                   schema:
-                      $ref: '#/definitions/http_error_rule'
+                      $ref: '#/definitions/http_error_rules'
               "400":
                   $ref: '#/responses/BadRequest'
-              "409":
-                  $ref: '#/responses/AlreadyExists'
               default:
                   $ref: '#/responses/DefaultError'
-          summary: Add a new HTTP Error Rule
+          summary: Replace an HTTP Error Rules list
           tags:
               - HTTPErrorRule
   /services/haproxy/configuration/http_error_rules/{index}:
@@ -15194,6 +15331,7 @@ paths:
               - description: Parent name
                 in: query
                 name: parent_name
+                required: true
                 type: string
               - description: Parent type
                 enum:
@@ -15235,6 +15373,7 @@ paths:
               - description: Parent name
                 in: query
                 name: parent_name
+                required: true
                 type: string
               - description: Parent type
                 enum:
@@ -15262,6 +15401,59 @@ paths:
           summary: Return one HTTP Error Rule
           tags:
               - HTTPErrorRule
+      post:
+          description: Adds a new HTTP Error Rule of the specified type in the specified parent.
+          operationId: createHTTPErrorRule
+          parameters:
+              - description: HTTP Error Rule Index
+                in: path
+                name: index
+                required: true
+                type: integer
+              - description: Parent name
+                in: query
+                name: parent_name
+                required: true
+                type: string
+              - description: Parent type
+                enum:
+                  - frontend
+                  - backend
+                  - defaults
+                in: query
+                name: parent_type
+                required: true
+                type: string
+              - in: body
+                name: data
+                required: true
+                schema:
+                  $ref: '#/definitions/http_error_rule'
+              - $ref: '#/parameters/transaction_id'
+              - $ref: '#/parameters/version'
+              - $ref: '#/parameters/force_reload'
+          responses:
+              "201":
+                  description: HTTP Error Rule created
+                  schema:
+                      $ref: '#/definitions/http_error_rule'
+              "202":
+                  description: Configuration change accepted and reload requested
+                  headers:
+                      Reload-ID:
+                          description: ID of the requested reload
+                          type: string
+                  schema:
+                      $ref: '#/definitions/http_error_rule'
+              "400":
+                  $ref: '#/responses/BadRequest'
+              "409":
+                  $ref: '#/responses/AlreadyExists'
+              default:
+                  $ref: '#/responses/DefaultError'
+          summary: Add a new HTTP Error Rule
+          tags:
+              - HTTPErrorRule
       put:
           description: Replaces a HTTP Error Rule configuration by its index in the specified parent.
           operationId: replaceHTTPErrorRule
@@ -15274,6 +15466,7 @@ paths:
               - description: Parent name
                 in: query
                 name: parent_name
+                required: true
                 type: string
               - description: Parent type
                 enum:
@@ -15495,6 +15688,7 @@ paths:
               - description: Parent name
                 in: query
                 name: parent_name
+                required: true
                 type: string
               - description: Parent type
                 enum:
@@ -15519,13 +15713,14 @@ paths:
           summary: Return an array of TCP checks
           tags:
               - TCPCheck
-      post:
-          description: Adds a new TCP check of the specified type in the specified parent.
-          operationId: createTCPCheck
+      put:
+          description: Replaces a whole list of TCP Checks with the list given in parameter
+          operationId: replaceTCPChecks
           parameters:
               - description: Parent name
                 in: query
                 name: parent_name
+                required: true
                 type: string
               - description: Parent type
                 enum:
@@ -15539,15 +15734,15 @@ paths:
                 name: data
                 required: true
                 schema:
-                  $ref: '#/definitions/tcp_check'
+                  $ref: '#/definitions/tcp_checks'
               - $ref: '#/parameters/transaction_id'
               - $ref: '#/parameters/version'
               - $ref: '#/parameters/force_reload'
           responses:
-              "201":
-                  description: TCP check created
+              "200":
+                  description: All TCP Check lines replaced
                   schema:
-                      $ref: '#/definitions/tcp_check'
+                      $ref: '#/definitions/tcp_checks'
               "202":
                   description: Configuration change accepted and reload requested
                   headers:
@@ -15555,14 +15750,12 @@ paths:
                           description: ID of the requested reload
                           type: string
                   schema:
-                      $ref: '#/definitions/tcp_check'
+                      $ref: '#/definitions/tcp_checks'
               "400":
                   $ref: '#/responses/BadRequest'
-              "409":
-                  $ref: '#/responses/AlreadyExists'
               default:
                   $ref: '#/responses/DefaultError'
-          summary: Add a new TCP check
+          summary: Replace an TCP Check list
           tags:
               - TCPCheck
   /services/haproxy/configuration/tcp_checks/{index}:
@@ -15578,6 +15771,7 @@ paths:
               - description: Parent name
                 in: query
                 name: parent_name
+                required: true
                 type: string
               - description: Parent type
                 enum:
@@ -15618,6 +15812,7 @@ paths:
               - description: Parent name
                 in: query
                 name: parent_name
+                required: true
                 type: string
               - description: Parent type
                 enum:
@@ -15644,6 +15839,58 @@ paths:
           summary: Return one TCP check
           tags:
               - TCPCheck
+      post:
+          description: Adds a new TCP check of the specified type in the specified parent.
+          operationId: createTCPCheck
+          parameters:
+              - description: TCP check Index
+                in: path
+                name: index
+                required: true
+                type: integer
+              - description: Parent name
+                in: query
+                name: parent_name
+                required: true
+                type: string
+              - description: Parent type
+                enum:
+                  - backend
+                  - defaults
+                in: query
+                name: parent_type
+                required: true
+                type: string
+              - in: body
+                name: data
+                required: true
+                schema:
+                  $ref: '#/definitions/tcp_check'
+              - $ref: '#/parameters/transaction_id'
+              - $ref: '#/parameters/version'
+              - $ref: '#/parameters/force_reload'
+          responses:
+              "201":
+                  description: TCP check created
+                  schema:
+                      $ref: '#/definitions/tcp_check'
+              "202":
+                  description: Configuration change accepted and reload requested
+                  headers:
+                      Reload-ID:
+                          description: ID of the requested reload
+                          type: string
+                  schema:
+                      $ref: '#/definitions/tcp_check'
+              "400":
+                  $ref: '#/responses/BadRequest'
+              "409":
+                  $ref: '#/responses/AlreadyExists'
+              default:
+                  $ref: '#/responses/DefaultError'
+          summary: Add a new TCP check
+          tags:
+              - TCPCheck
       put:
           description: Replaces a TCP Check configuration by it's index in the specified parent.
           operationId: replaceTCPCheck
@@ -15656,6 +15903,7 @@ paths:
               - description: Parent name
                 in: query
                 name: parent_name
+                required: true
                 type: string
               - description: Parent type
                 enum:
@@ -15728,9 +15976,9 @@ paths:
           summary: Return an array of all TCP Request Rules
           tags:
               - TCPRequestRule
-      post:
-          description: Adds a new TCP Request Rule of the specified type in the specified parent.
-          operationId: createTCPRequestRule
+      put:
+          description: Replaces a whole list of TCP Request Rules with the list given in parameter
+          operationId: replaceTCPRequestRules
           parameters:
               - description: Parent name
                 in: query
@@ -15749,15 +15997,15 @@ paths:
                 name: data
                 required: true
                 schema:
-                  $ref: '#/definitions/tcp_request_rule'
+                  $ref: '#/definitions/tcp_request_rules'
               - $ref: '#/parameters/transaction_id'
               - $ref: '#/parameters/version'
               - $ref: '#/parameters/force_reload'
           responses:
-              "201":
-                  description: TCP Request Rule created
+              "200":
+                  description: All TCP Request Rule lines replaced
                   schema:
-                      $ref: '#/definitions/tcp_request_rule'
+                      $ref: '#/definitions/tcp_request_rules'
               "202":
                   description: Configuration change accepted and reload requested
                   headers:
@@ -15765,14 +16013,12 @@ paths:
                           description: ID of the requested reload
                           type: string
                   schema:
-                      $ref: '#/definitions/tcp_request_rule'
+                      $ref: '#/definitions/tcp_request_rules'
               "400":
                   $ref: '#/responses/BadRequest'
-              "409":
-                  $ref: '#/responses/AlreadyExists'
               default:
                   $ref: '#/responses/DefaultError'
-          summary: Add a new TCP Request Rule
+          summary: Replace an TCP Request Rule list
           tags:
               - TCPRequestRule
   /services/haproxy/configuration/tcp_request_rules/{index}:
@@ -15856,6 +16102,58 @@ paths:
           summary: Return one TCP Request Rule
           tags:
               - TCPRequestRule
+      post:
+          description: Adds a new TCP Request Rule of the specified type in the specified parent.
+          operationId: createTCPRequestRule
+          parameters:
+              - description: TCP Request Rule Index
+                in: path
+                name: index
+                required: true
+                type: integer
+              - description: Parent name
+                in: query
+                name: parent_name
+                required: true
+                type: string
+              - description: Parent type
+                enum:
+                  - frontend
+                  - backend
+                in: query
+                name: parent_type
+                required: true
+                type: string
+              - in: body
+                name: data
+                required: true
+                schema:
+                  $ref: '#/definitions/tcp_request_rule'
+              - $ref: '#/parameters/transaction_id'
+              - $ref: '#/parameters/version'
+              - $ref: '#/parameters/force_reload'
+          responses:
+              "201":
+                  description: TCP Request Rule created
+                  schema:
+                      $ref: '#/definitions/tcp_request_rule'
+              "202":
+                  description: Configuration change accepted and reload requested
+                  headers:
+                      Reload-ID:
+                          description: ID of the requested reload
+                          type: string
+                  schema:
+                      $ref: '#/definitions/tcp_request_rule'
+              "400":
+                  $ref: '#/responses/BadRequest'
+              "409":
+                  $ref: '#/responses/AlreadyExists'
+              default:
+                  $ref: '#/responses/DefaultError'
+          summary: Add a new TCP Request Rule
+          tags:
+              - TCPRequestRule
       put:
           description: Replaces a TCP Request Rule configuration by it's index in the specified parent.
           operationId: replaceTCPRequestRule
@@ -15933,9 +16231,9 @@ paths:
           summary: Return an array of all TCP Response Rules
           tags:
               - TCPResponseRule
-      post:
-          description: Adds a new TCP Response Rule of the specified type in the specified backend.
-          operationId: createTCPResponseRule
+      put:
+          description: Replaces a whole list of TCP Response Rules with the list given in parameter
+          operationId: replaceTCPResponseRules
           parameters:
               - description: Parent backend name
                 in: query
@@ -15946,15 +16244,15 @@ paths:
                 name: data
                 required: true
                 schema:
-                  $ref: '#/definitions/tcp_response_rule'
+                  $ref: '#/definitions/tcp_response_rules'
               - $ref: '#/parameters/transaction_id'
               - $ref: '#/parameters/version'
               - $ref: '#/parameters/force_reload'
           responses:
-              "201":
-                  description: TCP Response Rule created
+              "200":
+                  description: All TCP Response Rule lines replaced
                   schema:
-                      $ref: '#/definitions/tcp_response_rule'
+                      $ref: '#/definitions/tcp_response_rules'
               "202":
                   description: Configuration change accepted and reload requested
                   headers:
@@ -15962,14 +16260,12 @@ paths:
                           description: ID of the requested reload
                           type: string
                   schema:
-                      $ref: '#/definitions/tcp_response_rule'
+                      $ref: '#/definitions/tcp_response_rules'
               "400":
                   $ref: '#/responses/BadRequest'
-              "409":
-                  $ref: '#/responses/AlreadyExists'
               default:
                   $ref: '#/responses/DefaultError'
-          summary: Add a new TCP Response Rule
+          summary: Replace a TCP Response Rule list
           tags:
               - TCPResponseRule
   /services/haproxy/configuration/tcp_response_rules/{index}:
@@ -16035,6 +16331,50 @@ paths:
               default:
                   $ref: '#/responses/DefaultError'
           summary: Return one TCP Response Rule
+          tags:
+              - TCPResponseRule
+      post:
+          description: Adds a new TCP Response Rule of the specified type in the specified backend.
+          operationId: createTCPResponseRule
+          parameters:
+              - description: TCP Response Rule Index
+                in: path
+                name: index
+                required: true
+                type: integer
+              - description: Parent backend name
+                in: query
+                name: backend
+                required: true
+                type: string
+              - in: body
+                name: data
+                required: true
+                schema:
+                  $ref: '#/definitions/tcp_response_rule'
+              - $ref: '#/parameters/transaction_id'
+              - $ref: '#/parameters/version'
+              - $ref: '#/parameters/force_reload'
+          responses:
+              "201":
+                  description: TCP Response Rule created
+                  schema:
+                      $ref: '#/definitions/tcp_response_rule'
+              "202":
+                  description: Configuration change accepted and reload requested
+                  headers:
+                      Reload-ID:
+                          description: ID of the requested reload
+                          type: string
+                  schema:
+                      $ref: '#/definitions/tcp_response_rule'
+              "400":
+                  $ref: '#/responses/BadRequest'
+              "409":
+                  $ref: '#/responses/AlreadyExists'
+              default:
+                  $ref: '#/responses/DefaultError'
+          summary: Add a new TCP Response Rule
           tags:
               - TCPResponseRule
       put:
@@ -16106,9 +16446,9 @@ paths:
           summary: Return an array of all Backend Switching Rules
           tags:
               - BackendSwitchingRule
-      post:
-          description: Adds a new Backend Switching Rule of the specified type in the specified frontend.
-          operationId: createBackendSwitchingRule
+      put:
+          description: Replaces a whole list of Backend Switching Rules with the list given in parameter
+          operationId: replaceBackendSwitchingRules
           parameters:
               - description: Frontend name
                 in: query
@@ -16119,15 +16459,15 @@ paths:
                 name: data
                 required: true
                 schema:
-                  $ref: '#/definitions/backend_switching_rule'
+                  $ref: '#/definitions/backend_switching_rules'
               - $ref: '#/parameters/transaction_id'
               - $ref: '#/parameters/version'
               - $ref: '#/parameters/force_reload'
           responses:
-              "201":
-                  description: Backend Switching Rule created
+              "200":
+                  description: All Backend Switching Rule lines replaced
                   schema:
-                      $ref: '#/definitions/backend_switching_rule'
+                      $ref: '#/definitions/backend_switching_rules'
               "202":
                   description: Configuration change accepted and reload requested
                   headers:
@@ -16135,14 +16475,12 @@ paths:
                           description: ID of the requested reload
                           type: string
                   schema:
-                      $ref: '#/definitions/backend_switching_rule'
+                      $ref: '#/definitions/backend_switching_rules'
               "400":
                   $ref: '#/responses/BadRequest'
-              "409":
-                  $ref: '#/responses/AlreadyExists'
               default:
                   $ref: '#/responses/DefaultError'
-          summary: Add a new Backend Switching Rule
+          summary: Replace an Backend Switching Rule list
           tags:
               - BackendSwitchingRule
   /services/haproxy/configuration/backend_switching_rules/{index}:
@@ -16208,6 +16546,50 @@ paths:
               default:
                   $ref: '#/responses/DefaultError'
           summary: Return one Backend Switching Rule
+          tags:
+              - BackendSwitchingRule
+      post:
+          description: Adds a new Backend Switching Rule of the specified type in the specified frontend.
+          operationId: createBackendSwitchingRule
+          parameters:
+              - description: Switching Rule Index
+                in: path
+                name: index
+                required: true
+                type: integer
+              - description: Frontend name
+                in: query
+                name: frontend
+                required: true
+                type: string
+              - in: body
+                name: data
+                required: true
+                schema:
+                  $ref: '#/definitions/backend_switching_rule'
+              - $ref: '#/parameters/transaction_id'
+              - $ref: '#/parameters/version'
+              - $ref: '#/parameters/force_reload'
+          responses:
+              "201":
+                  description: Backend Switching Rule created
+                  schema:
+                      $ref: '#/definitions/backend_switching_rule'
+              "202":
+                  description: Configuration change accepted and reload requested
+                  headers:
+                      Reload-ID:
+                          description: ID of the requested reload
+                          type: string
+                  schema:
+                      $ref: '#/definitions/backend_switching_rule'
+              "400":
+                  $ref: '#/responses/BadRequest'
+              "409":
+                  $ref: '#/responses/AlreadyExists'
+              default:
+                  $ref: '#/responses/DefaultError'
+          summary: Add a new Backend Switching Rule
           tags:
               - BackendSwitchingRule
       put:
@@ -16279,9 +16661,9 @@ paths:
           summary: Return an array of all Server Switching Rules
           tags:
               - ServerSwitchingRule
-      post:
-          description: Adds a new Server Switching Rule of the specified type in the specified backend.
-          operationId: createServerSwitchingRule
+      put:
+          description: Replaces a whole list of Server Switching Rules with the list given in parameter
+          operationId: replaceServerSwitchingRules
           parameters:
               - description: Backend name
                 in: query
@@ -16292,15 +16674,15 @@ paths:
                 name: data
                 required: true
                 schema:
-                  $ref: '#/definitions/server_switching_rule'
+                  $ref: '#/definitions/server_switching_rules'
               - $ref: '#/parameters/transaction_id'
               - $ref: '#/parameters/version'
               - $ref: '#/parameters/force_reload'
           responses:
-              "201":
-                  description: Server Switching Rule created
+              "200":
+                  description: All Server Switching Rule lines replaced
                   schema:
-                      $ref: '#/definitions/server_switching_rule'
+                      $ref: '#/definitions/server_switching_rules'
               "202":
                   description: Configuration change accepted and reload requested
                   headers:
@@ -16308,14 +16690,12 @@ paths:
                           description: ID of the requested reload
                           type: string
                   schema:
-                      $ref: '#/definitions/server_switching_rule'
+                      $ref: '#/definitions/server_switching_rules'
               "400":
                   $ref: '#/responses/BadRequest'
-              "409":
-                  $ref: '#/responses/AlreadyExists'
               default:
                   $ref: '#/responses/DefaultError'
-          summary: Add a new Server Switching Rule
+          summary: Replace an Server Switching Rule list
           tags:
               - ServerSwitchingRule
   /services/haproxy/configuration/server_switching_rules/{index}:
@@ -16381,6 +16761,50 @@ paths:
               default:
                   $ref: '#/responses/DefaultError'
           summary: Return one Server Switching Rule
+          tags:
+              - ServerSwitchingRule
+      post:
+          description: Adds a new Server Switching Rule of the specified type in the specified backend.
+          operationId: createServerSwitchingRule
+          parameters:
+              - description: Switching Rule Index
+                in: path
+                name: index
+                required: true
+                type: integer
+              - description: Backend name
+                in: query
+                name: backend
+                required: true
+                type: string
+              - in: body
+                name: data
+                required: true
+                schema:
+                  $ref: '#/definitions/server_switching_rule'
+              - $ref: '#/parameters/transaction_id'
+              - $ref: '#/parameters/version'
+              - $ref: '#/parameters/force_reload'
+          responses:
+              "201":
+                  description: Server Switching Rule created
+                  schema:
+                      $ref: '#/definitions/server_switching_rule'
+              "202":
+                  description: Configuration change accepted and reload requested
+                  headers:
+                      Reload-ID:
+                          description: ID of the requested reload
+                          type: string
+                  schema:
+                      $ref: '#/definitions/server_switching_rule'
+              "400":
+                  $ref: '#/responses/BadRequest'
+              "409":
+                  $ref: '#/responses/AlreadyExists'
+              default:
+                  $ref: '#/responses/DefaultError'
+          summary: Add a new Server Switching Rule
           tags:
               - ServerSwitchingRule
       put:
@@ -16460,9 +16884,9 @@ paths:
           summary: Return an array of all Filters
           tags:
               - Filter
-      post:
-          description: Adds a new Filter of the specified type in the specified parent.
-          operationId: createFilter
+      put:
+          description: Replaces a whole list of Filters with the list given in parameter
+          operationId: replaceFilters
           parameters:
               - description: Parent name
                 in: query
@@ -16481,15 +16905,15 @@ paths:
                 name: data
                 required: true
                 schema:
-                  $ref: '#/definitions/filter'
+                  $ref: '#/definitions/filters'
               - $ref: '#/parameters/transaction_id'
               - $ref: '#/parameters/version'
               - $ref: '#/parameters/force_reload'
           responses:
-              "201":
-                  description: Filter created
+              "200":
+                  description: All Filter lines replaced
                   schema:
-                      $ref: '#/definitions/filter'
+                      $ref: '#/definitions/filters'
               "202":
                   description: Configuration change accepted and reload requested
                   headers:
@@ -16497,14 +16921,12 @@ paths:
                           description: ID of the requested reload
                           type: string
                   schema:
-                      $ref: '#/definitions/filter'
+                      $ref: '#/definitions/filters'
               "400":
                   $ref: '#/responses/BadRequest'
-              "409":
-                  $ref: '#/responses/AlreadyExists'
               default:
                   $ref: '#/responses/DefaultError'
-          summary: Add a new Filter
+          summary: Replace a Filter list
           tags:
               - Filter
   /services/haproxy/configuration/filters/{index}:
@@ -16588,6 +17010,58 @@ paths:
           summary: Return one Filter
           tags:
               - Filter
+      post:
+          description: Adds a new Filter of the specified type in the specified parent.
+          operationId: createFilter
+          parameters:
+              - description: Filter Index
+                in: path
+                name: index
+                required: true
+                type: integer
+              - description: Parent name
+                in: query
+                name: parent_name
+                required: true
+                type: string
+              - description: Parent type
+                enum:
+                  - frontend
+                  - backend
+                in: query
+                name: parent_type
+                required: true
+                type: string
+              - in: body
+                name: data
+                required: true
+                schema:
+                  $ref: '#/definitions/filter'
+              - $ref: '#/parameters/transaction_id'
+              - $ref: '#/parameters/version'
+              - $ref: '#/parameters/force_reload'
+          responses:
+              "201":
+                  description: Filter created
+                  schema:
+                      $ref: '#/definitions/filter'
+              "202":
+                  description: Configuration change accepted and reload requested
+                  headers:
+                      Reload-ID:
+                          description: ID of the requested reload
+                          type: string
+                  schema:
+                      $ref: '#/definitions/filter'
+              "400":
+                  $ref: '#/responses/BadRequest'
+              "409":
+                  $ref: '#/responses/AlreadyExists'
+              default:
+                  $ref: '#/responses/DefaultError'
+          summary: Add a new Filter
+          tags:
+              - Filter
       put:
           description: Replaces a Filter configuration by it's index in the specified parent.
           operationId: replaceFilter
@@ -16665,9 +17139,9 @@ paths:
           summary: Return an array of all Stick Rules
           tags:
               - StickRule
-      post:
-          description: Adds a new Stick Rule of the specified type in the specified backend.
-          operationId: createStickRule
+      put:
+          description: Replaces a whole list of Stick Rules with the list given in parameter
+          operationId: replaceStickRules
           parameters:
               - description: Backend name
                 in: query
@@ -16678,15 +17152,15 @@ paths:
                 name: data
                 required: true
                 schema:
-                  $ref: '#/definitions/stick_rule'
+                  $ref: '#/definitions/stick_rules'
               - $ref: '#/parameters/transaction_id'
               - $ref: '#/parameters/version'
               - $ref: '#/parameters/force_reload'
           responses:
-              "201":
-                  description: Stick Rule created
+              "200":
+                  description: All Stick Rule lines replaced
                   schema:
-                      $ref: '#/definitions/stick_rule'
+                      $ref: '#/definitions/stick_rules'
               "202":
                   description: Configuration change accepted and reload requested
                   headers:
@@ -16694,14 +17168,12 @@ paths:
                           description: ID of the requested reload
                           type: string
                   schema:
-                      $ref: '#/definitions/stick_rule'
+                      $ref: '#/definitions/stick_rules'
               "400":
                   $ref: '#/responses/BadRequest'
-              "409":
-                  $ref: '#/responses/AlreadyExists'
               default:
                   $ref: '#/responses/DefaultError'
-          summary: Add a new Stick Rule
+          summary: Replace a Stick Rule list
           tags:
               - StickRule
   /services/haproxy/configuration/stick_rules/{index}:
@@ -16767,6 +17239,50 @@ paths:
               default:
                   $ref: '#/responses/DefaultError'
           summary: Return one Stick Rule
+          tags:
+              - StickRule
+      post:
+          description: Adds a new Stick Rule of the specified type in the specified backend.
+          operationId: createStickRule
+          parameters:
+              - description: Stick Rule Index
+                in: path
+                name: index
+                required: true
+                type: integer
+              - description: Backend name
+                in: query
+                name: backend
+                required: true
+                type: string
+              - in: body
+                name: data
+                required: true
+                schema:
+                  $ref: '#/definitions/stick_rule'
+              - $ref: '#/parameters/transaction_id'
+              - $ref: '#/parameters/version'
+              - $ref: '#/parameters/force_reload'
+          responses:
+              "201":
+                  description: Stick Rule created
+                  schema:
+                      $ref: '#/definitions/stick_rule'
+              "202":
+                  description: Configuration change accepted and reload requested
+                  headers:
+                      Reload-ID:
+                          description: ID of the requested reload
+                          type: string
+                  schema:
+                      $ref: '#/definitions/stick_rule'
+              "400":
+                  $ref: '#/responses/BadRequest'
+              "409":
+                  $ref: '#/responses/AlreadyExists'
+              default:
+                  $ref: '#/responses/DefaultError'
+          summary: Add a new Stick Rule
           tags:
               - StickRule
       put:
@@ -16849,9 +17365,9 @@ paths:
           summary: Return an array of all Log Targets
           tags:
               - LogTarget
-      post:
-          description: Adds a new Log Target of the specified type in the specified parent.
-          operationId: createLogTarget
+      put:
+          description: Replaces a whole list of Log Targets with the list given in parameter
+          operationId: replaceLogTargets
           parameters:
               - description: Parent name
                 in: query
@@ -16873,15 +17389,15 @@ paths:
                 name: data
                 required: true
                 schema:
-                  $ref: '#/definitions/log_target'
+                  $ref: '#/definitions/log_targets'
               - $ref: '#/parameters/transaction_id'
               - $ref: '#/parameters/version'
               - $ref: '#/parameters/force_reload'
           responses:
-              "201":
-                  description: Log Target created
+              "200":
+                  description: All Log Target lines replaced
                   schema:
-                      $ref: '#/definitions/log_target'
+                      $ref: '#/definitions/log_targets'
               "202":
                   description: Configuration change accepted and reload requested
                   headers:
@@ -16889,14 +17405,12 @@ paths:
                           description: ID of the requested reload
                           type: string
                   schema:
-                      $ref: '#/definitions/log_target'
+                      $ref: '#/definitions/log_targets'
               "400":
                   $ref: '#/responses/BadRequest'
-              "409":
-                  $ref: '#/responses/AlreadyExists'
               default:
                   $ref: '#/responses/DefaultError'
-          summary: Add a new Log Target
+          summary: Replace a Log Target list
           tags:
               - LogTarget
   /services/haproxy/configuration/log_targets/{index}:
@@ -16984,6 +17498,61 @@ paths:
               default:
                   $ref: '#/responses/DefaultError'
           summary: Return one Log Target
+          tags:
+              - LogTarget
+      post:
+          description: Adds a new Log Target of the specified type in the specified parent.
+          operationId: createLogTarget
+          parameters:
+              - description: Log Target Index
+                in: path
+                name: index
+                required: true
+                type: integer
+              - description: Parent name
+                in: query
+                name: parent_name
+                type: string
+              - description: Parent type
+                enum:
+                  - frontend
+                  - backend
+                  - defaults
+                  - global
+                  - log_forward
+                  - peers
+                in: query
+                name: parent_type
+                required: true
+                type: string
+              - in: body
+                name: data
+                required: true
+                schema:
+                  $ref: '#/definitions/log_target'
+              - $ref: '#/parameters/transaction_id'
+              - $ref: '#/parameters/version'
+              - $ref: '#/parameters/force_reload'
+          responses:
+              "201":
+                  description: Log Target created
+                  schema:
+                      $ref: '#/definitions/log_target'
+              "202":
+                  description: Configuration change accepted and reload requested
+                  headers:
+                      Reload-ID:
+                          description: ID of the requested reload
+                          type: string
+                  schema:
+                      $ref: '#/definitions/log_target'
+              "400":
+                  $ref: '#/responses/BadRequest'
+              "409":
+                  $ref: '#/responses/AlreadyExists'
+              default:
+                  $ref: '#/responses/DefaultError'
+          summary: Add a new Log Target
           tags:
               - LogTarget
       put:
@@ -17079,9 +17648,9 @@ paths:
           summary: Return an array of all ACL lines
           tags:
               - ACL
-      post:
-          description: Adds a new ACL line of the specified type in the specified parent.
-          operationId: createAcl
+      put:
+          description: Replaces a whole list of ACLs with the list given in parameter
+          operationId: replaceAcls
           parameters:
               - description: Parent name
                 in: query
@@ -17100,15 +17669,15 @@ paths:
                 name: data
                 required: true
                 schema:
-                  $ref: '#/definitions/acl'
+                  $ref: '#/definitions/acls'
               - $ref: '#/parameters/transaction_id'
               - $ref: '#/parameters/version'
               - $ref: '#/parameters/force_reload'
           responses:
-              "201":
-                  description: ACL line created
+              "200":
+                  description: All ACL lines replaced
                   schema:
-                      $ref: '#/definitions/acl'
+                      $ref: '#/definitions/acls'
               "202":
                   description: Configuration change accepted and reload requested
                   headers:
@@ -17116,14 +17685,12 @@ paths:
                           description: ID of the requested reload
                           type: string
                   schema:
-                      $ref: '#/definitions/acl'
+                      $ref: '#/definitions/acls'
               "400":
                   $ref: '#/responses/BadRequest'
-              "409":
-                  $ref: '#/responses/AlreadyExists'
               default:
                   $ref: '#/responses/DefaultError'
-          summary: Add a new ACL line
+          summary: Replace an ACL list
           tags:
               - ACL
   /services/haproxy/configuration/acls/{index}:
@@ -17205,6 +17772,58 @@ paths:
               default:
                   $ref: '#/responses/DefaultError'
           summary: Return one ACL line
+          tags:
+              - ACL
+      post:
+          description: Adds a new ACL line of the specified type in the specified parent.
+          operationId: createAcl
+          parameters:
+              - description: ACL line Index
+                in: path
+                name: index
+                required: true
+                type: integer
+              - description: Parent name
+                in: query
+                name: parent_name
+                required: true
+                type: string
+              - description: Parent type
+                enum:
+                  - frontend
+                  - backend
+                in: query
+                name: parent_type
+                required: true
+                type: string
+              - in: body
+                name: data
+                required: true
+                schema:
+                  $ref: '#/definitions/acl'
+              - $ref: '#/parameters/transaction_id'
+              - $ref: '#/parameters/version'
+              - $ref: '#/parameters/force_reload'
+          responses:
+              "201":
+                  description: ACL line created
+                  schema:
+                      $ref: '#/definitions/acl'
+              "202":
+                  description: Configuration change accepted and reload requested
+                  headers:
+                      Reload-ID:
+                          description: ID of the requested reload
+                          type: string
+                  schema:
+                      $ref: '#/definitions/acl'
+              "400":
+                  $ref: '#/responses/BadRequest'
+              "409":
+                  $ref: '#/responses/AlreadyExists'
+              default:
+                  $ref: '#/responses/DefaultError'
+          summary: Add a new ACL line
           tags:
               - ACL
       put:
@@ -19747,9 +20366,9 @@ paths:
           summary: Return an array of declare captures
           tags:
               - DeclareCapture
-      post:
-          description: Adds a new declare capture in the specified frontend in the configuration file.
-          operationId: createDeclareCapture
+      put:
+          description: Replaces a whole list of declare capture with the list given in parameter
+          operationId: replaceDeclareCaptures
           parameters:
               - description: Parent frontend name
                 in: query
@@ -19760,15 +20379,15 @@ paths:
                 name: data
                 required: true
                 schema:
-                  $ref: '#/definitions/capture'
+                  $ref: '#/definitions/captures'
               - $ref: '#/parameters/transaction_id'
               - $ref: '#/parameters/version'
               - $ref: '#/parameters/force_reload'
           responses:
-              "201":
-                  description: Declare capture created
+              "200":
+                  description: All Declare capture lines replaced
                   schema:
-                      $ref: '#/definitions/capture'
+                      $ref: '#/definitions/captures'
               "202":
                   description: Configuration change accepted and reload requested
                   headers:
@@ -19776,14 +20395,12 @@ paths:
                           description: ID of the requested reload
                           type: string
                   schema:
-                      $ref: '#/definitions/capture'
+                      $ref: '#/definitions/captures'
               "400":
                   $ref: '#/responses/BadRequest'
-              "409":
-                  $ref: '#/responses/AlreadyExists'
               default:
                   $ref: '#/responses/DefaultError'
-          summary: Add a new declare capture
+          summary: Replace a declare capture list
           tags:
               - DeclareCapture
   /services/haproxy/configuration/captures/{index}:
@@ -19849,6 +20466,50 @@ paths:
               default:
                   $ref: '#/responses/DefaultError'
           summary: Return one declare capture
+          tags:
+              - DeclareCapture
+      post:
+          description: Adds a new declare capture in the specified frontend in the configuration file.
+          operationId: createDeclareCapture
+          parameters:
+              - description: Declare Capture Index
+                in: path
+                name: index
+                required: true
+                type: integer
+              - description: Parent frontend name
+                in: query
+                name: frontend
+                required: true
+                type: string
+              - in: body
+                name: data
+                required: true
+                schema:
+                  $ref: '#/definitions/capture'
+              - $ref: '#/parameters/transaction_id'
+              - $ref: '#/parameters/version'
+              - $ref: '#/parameters/force_reload'
+          responses:
+              "201":
+                  description: Declare capture created
+                  schema:
+                      $ref: '#/definitions/capture'
+              "202":
+                  description: Configuration change accepted and reload requested
+                  headers:
+                      Reload-ID:
+                          description: ID of the requested reload
+                          type: string
+                  schema:
+                      $ref: '#/definitions/capture'
+              "400":
+                  $ref: '#/responses/BadRequest'
+              "409":
+                  $ref: '#/responses/AlreadyExists'
+              default:
+                  $ref: '#/responses/DefaultError'
+          summary: Add a new declare capture
           tags:
               - DeclareCapture
       put:

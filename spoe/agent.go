@@ -266,8 +266,7 @@ func (c *SingleSpoe) GetAgent(scope, name, transactionID string) (int64, *models
 		return v, nil, err
 	}
 	if logs, ok := data.([]types.Log); ok {
-		for i, l := range logs {
-			indx := int64(i)
+		for _, l := range logs {
 			d := &models.LogTarget{
 				Address:  l.Address,
 				Facility: l.Facility,
@@ -277,7 +276,6 @@ func (c *SingleSpoe) GetAgent(scope, name, transactionID string) (int64, *models
 				Level:    l.Level,
 				Minlevel: l.MinLevel,
 				Nolog:    l.NoLog,
-				Index:    &indx,
 			}
 			agent.Log = append(agent.Log, d)
 		}

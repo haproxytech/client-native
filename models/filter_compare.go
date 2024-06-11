@@ -19,20 +19,11 @@ package models
 
 // Equal checks if two structs of type Filter are equal
 //
-// By default empty maps and slices are equal to nil:
-//
 //	var a, b Filter
 //	equal := a.Equal(b)
 //
-// For more advanced use case you can configure these options (default values are shown):
-//
-//	var a, b Filter
-//	equal := a.Equal(b,Options{
-//		SkipIndex: true,
-//	})
+// opts ...Options are ignored in this method
 func (s Filter) Equal(t Filter, opts ...Options) bool {
-	opt := getOptions(opts...)
-
 	if s.AppName != t.AppName {
 		return false
 	}
@@ -50,10 +41,6 @@ func (s Filter) Equal(t Filter, opts ...Options) bool {
 	}
 
 	if s.DefaultPeriod != t.DefaultPeriod {
-		return false
-	}
-
-	if !opt.SkipIndex && !equalPointers(s.Index, t.Index) {
 		return false
 	}
 
@@ -106,20 +93,11 @@ func (s Filter) Equal(t Filter, opts ...Options) bool {
 
 // Diff checks if two structs of type Filter are equal
 //
-// By default empty maps and slices are equal to nil:
-//
 //	var a, b Filter
 //	diff := a.Diff(b)
 //
-// For more advanced use case you can configure these options (default values are shown):
-//
-//	var a, b Filter
-//	diff := a.Diff(b,Options{
-//		SkipIndex: true,
-//	})
+// opts ...Options are ignored in this method
 func (s Filter) Diff(t Filter, opts ...Options) map[string][]interface{} {
-	opt := getOptions(opts...)
-
 	diff := make(map[string][]interface{})
 	if s.AppName != t.AppName {
 		diff["AppName"] = []interface{}{s.AppName, t.AppName}
@@ -139,10 +117,6 @@ func (s Filter) Diff(t Filter, opts ...Options) map[string][]interface{} {
 
 	if s.DefaultPeriod != t.DefaultPeriod {
 		diff["DefaultPeriod"] = []interface{}{s.DefaultPeriod, t.DefaultPeriod}
-	}
-
-	if !opt.SkipIndex && !equalPointers(s.Index, t.Index) {
-		diff["Index"] = []interface{}{ValueOrNil(s.Index), ValueOrNil(t.Index)}
 	}
 
 	if s.Key != t.Key {

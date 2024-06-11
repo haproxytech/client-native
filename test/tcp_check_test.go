@@ -32,8 +32,8 @@ func tcpCheckExpectation() map[string]models.TCPChecks {
 	res := StructuredToTCPCheckMap()
 	// Add individual entries
 	for k, vs := range res {
-		for _, v := range vs {
-			key := fmt.Sprintf("%s/%d", k, *v.Index)
+		for i, v := range vs {
+			key := fmt.Sprintf("%s/%d", k, i)
 			res[key] = models.TCPChecks{v}
 		}
 	}
@@ -396,13 +396,10 @@ func checkTCPChecks(t *testing.T, got map[string]models.TCPChecks) {
 		want, ok := exp[k]
 		require.True(t, ok, "k=%s", k)
 		require.Equal(t, len(want), len(v), "k=%s", k)
-		for _, g := range v {
-			for _, w := range want {
-				if *g.Index == *w.Index {
-					require.True(t, g.Equal(*w), "k=%s - diff %v", k, cmp.Diff(*g, *w))
-					break
-				}
-			}
+		i := 0
+		for _, w := range want {
+			require.True(t, v[i].Equal(*w), "k=%s - diff %v", k, cmp.Diff(*v[i], *w))
+			i++
 		}
 	}
 }

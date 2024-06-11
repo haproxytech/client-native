@@ -30,8 +30,8 @@ func serverSwitchingRuleExpectation() map[string]models.ServerSwitchingRules {
 	res := StructuredToServerSwitchingRuleMap()
 	// Add individual entries
 	for k, vs := range res {
-		for _, v := range vs {
-			key := fmt.Sprintf("%s/%d", k, *v.Index)
+		for i, v := range vs {
+			key := fmt.Sprintf("%s/%d", k, i)
 			res[key] = models.ServerSwitchingRules{v}
 		}
 	}
@@ -65,13 +65,10 @@ func checkServerSwitchingRules(t *testing.T, got map[string]models.ServerSwitchi
 		want, ok := exp[k]
 		require.True(t, ok, "k=%s", k)
 		require.Equal(t, len(want), len(v), "k=%s", k)
-		for _, g := range v {
-			for _, w := range want {
-				if *g.Index == *w.Index {
-					require.True(t, g.Equal(*w), "k=%s - diff %v", k, cmp.Diff(*g, *w))
-					break
-				}
-			}
+		i := 0
+		for _, w := range want {
+			require.True(t, v[i].Equal(*w), "k=%s - diff %v", k, cmp.Diff(*v[i], *w))
+			i++
 		}
 	}
 }
@@ -105,13 +102,12 @@ func TestCreateEditDeleteServerSwitchingRule(t *testing.T) {
 	id := int64(2)
 	// TestCreateServerSwitchingRule
 	sr := &models.ServerSwitchingRule{
-		Index:        &id,
 		TargetServer: "webserv2",
 		Cond:         "unless",
 		CondTest:     "TRUE",
 	}
 
-	err := clientTest.CreateServerSwitchingRule("test", sr, "", version)
+	err := clientTest.CreateServerSwitchingRule(id, "test", sr, "", version)
 	if err != nil {
 		t.Error(err.Error())
 	} else {
@@ -135,7 +131,6 @@ func TestCreateEditDeleteServerSwitchingRule(t *testing.T) {
 
 	// TestServerSwitchingRule
 	sr = &models.ServerSwitchingRule{
-		Index:        &id,
 		TargetServer: "webserv2",
 		Cond:         "if",
 		CondTest:     "TRUE",

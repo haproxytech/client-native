@@ -83,7 +83,6 @@ func TestACLEqualFalse(t *testing.T) {
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		result.Index = Ptr(*sample.Index + 1)
 		samples = append(samples, struct {
 			a, b ACL
 		}{sample, result})
@@ -163,7 +162,6 @@ func TestACLDiffFalse(t *testing.T) {
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		result.Index = Ptr(*sample.Index + 1)
 		samples = append(samples, struct {
 			a, b ACL
 		}{sample, result})
@@ -171,7 +169,7 @@ func TestACLDiffFalse(t *testing.T) {
 
 	for _, sample := range samples {
 		result := sample.a.Diff(sample.b)
-		if len(result) != 4-1 {
+		if len(result) != 3 {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {
@@ -181,7 +179,7 @@ func TestACLDiffFalse(t *testing.T) {
 			if err != nil {
 				t.Errorf(err.Error())
 			}
-			t.Errorf("Expected ACL to be different in 4 cases, but it is not (%d) %s %s", len(result), a, b)
+			t.Errorf("Expected ACL to be different in 3 cases, but it is not (%d) %s %s", len(result), a, b)
 		}
 	}
 }

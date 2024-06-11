@@ -35,8 +35,8 @@ func aclExpectation() map[string]models.Acls {
 	res := StructuredToACLMap()
 	// Add individual entries
 	for k, vs := range res {
-		for _, v := range vs {
-			key := fmt.Sprintf("%s/%d", k, *v.Index)
+		for i, v := range vs {
+			key := fmt.Sprintf("%s/%d", k, i)
 			keyName := fmt.Sprintf("%s/%s", k, v.ACLName)
 			if _, ok := res[keyName]; !ok {
 				res[keyName] = models.Acls{}
@@ -180,13 +180,10 @@ func checksACLs(t *testing.T, got map[string]models.Acls) {
 		want, ok := exp[k]
 		require.True(t, ok, "k=%s", k)
 		require.Equal(t, len(want), len(v), "k=%s", k)
-		for _, g := range v {
-			for _, w := range want {
-				if *g.Index == *w.Index {
-					require.True(t, g.Equal(*w), "k=%s - diff %v", k, cmp.Diff(*g, *w))
-					break
-				}
-			}
+		i := 0
+		for _, w := range want {
+			require.True(t, v[i].Equal(*w), "k=%s - diff %v", k, cmp.Diff(*v[i], *w))
+			i++
 		}
 	}
 }
@@ -196,13 +193,12 @@ func TestCreateEditDeleteACL(t *testing.T) {
 
 	// TestCreateACL
 	r := &models.ACL{
-		Index:     &id,
 		ACLName:   "site_dead",
 		Criterion: "nbsrv(dynamic)",
 		Value:     "lt 2",
 	}
 
-	err := clientTest.CreateACL(configuration.FrontendParentName, "test", r, "", version)
+	err := clientTest.CreateACL(id, configuration.FrontendParentName, "test", r, "", version)
 	if err != nil {
 		t.Error(err.Error())
 	} else {
@@ -226,7 +222,6 @@ func TestCreateEditDeleteACL(t *testing.T) {
 
 	// TestEditACL
 	r = &models.ACL{
-		Index:     &id,
 		ACLName:   "site_dead",
 		Criterion: "nbsrv(static)",
 		Value:     "lt 4",

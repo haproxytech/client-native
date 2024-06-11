@@ -4,12 +4,8 @@ backend_switching_rule:
   description: HAProxy backend switching rule configuration (corresponds to use_backend directive)
   type: object
   required:
-    - index
     - name
   properties:
-    index:
-      type: integer
-      x-nullable: true
     name:
       type: string
       pattern: '^[^\s]+$'
@@ -43,12 +39,8 @@ server_switching_rule:
   description: HAProxy server switching rule configuration (corresponds to use-server directive)
   type: object
   required:
-    - index
     - target_server
   properties:
-    index:
-      type: integer
-      x-nullable: true
     target_server:
       type: string
       pattern: '^[^\s]+$'
@@ -72,7 +64,6 @@ server_switching_rule:
           required: true
   additionalProperties: false
   example:
-    index: 0
     target_server: www
     cond: if
     cond_test: "{ req_ssl_sni -i www.example.com }"

@@ -39,8 +39,9 @@ type TCPRequestRule interface {
 	GetTCPRequestRules(parentType, parentName string, transactionID string) (int64, models.TCPRequestRules, error)
 	GetTCPRequestRule(id int64, parentType, parentName string, transactionID string) (int64, *models.TCPRequestRule, error)
 	DeleteTCPRequestRule(id int64, parentType string, parentName string, transactionID string, version int64) error
-	CreateTCPRequestRule(parentType string, parentName string, data *models.TCPRequestRule, transactionID string, version int64) error
+	CreateTCPRequestRule(id int64, parentType string, parentName string, data *models.TCPRequestRule, transactionID string, version int64) error
 	EditTCPRequestRule(id int64, parentType string, parentName string, data *models.TCPRequestRule, transactionID string, version int64) error
+	ReplaceTCPRequestRules(parentType string, parentName string, data models.TCPRequestRules, transactionID string, version int64) error
 }
 
 // GetTCPRequestRules returns configuration version and an array of
@@ -94,7 +95,6 @@ func (c *client) GetTCPRequestRule(id int64, parentType, parentName string, tran
 		return v, nil, err
 	}
 
-	tcpRule.Index = &id
 	return v, tcpRule, nil
 }
 
@@ -121,7 +121,7 @@ func (c *client) DeleteTCPRequestRule(id int64, parentType string, parentName st
 
 // CreateTCPRequestRule creates a tcp request rule in configuration. One of version or transactionID is
 // mandatory. Returns error on fail, nil on success.
-func (c *client) CreateTCPRequestRule(parentType string, parentName string, data *models.TCPRequestRule, transactionID string, version int64) error {
+func (c *client) CreateTCPRequestRule(id int64, parentType string, parentName string, data *models.TCPRequestRule, transactionID string, version int64) error {
 	if c.UseModelsValidation {
 		validationErr := data.Validate(strfmt.Default)
 		if validationErr != nil {
@@ -146,8 +146,8 @@ func (c *client) CreateTCPRequestRule(parentType string, parentName string, data
 		return err
 	}
 
-	if err := p.Insert(section, parentName, "tcp-request", s, int(*data.Index)); err != nil {
-		return c.HandleError(strconv.FormatInt(*data.Index, 10), parentType, parentName, t, transactionID == "", err)
+	if err := p.Insert(section, parentName, "tcp-request", s, int(id)); err != nil {
+		return c.HandleError(strconv.FormatInt(id, 10), parentType, parentName, t, transactionID == "", err)
 	}
 
 	return c.SaveData(p, t, transactionID == "")
@@ -192,6 +192,55 @@ func (c *client) EditTCPRequestRule(id int64, parentType string, parentName stri
 	return c.SaveData(p, t, transactionID == "")
 }
 
+// ReplaceTCPRequestRules replaces all TCP Request Rule lines in configuration for a parentType/parentName.
+// One of version or transactionID is mandatory.
+// Returns error on fail, nil on success.
+//
+//nolint:dupl
+func (c *client) ReplaceTCPRequestRules(parentType string, parentName string, data models.TCPRequestRules, transactionID string, version int64) error {
+	if c.UseModelsValidation {
+		validationErr := data.Validate(strfmt.Default)
+		if validationErr != nil {
+			return NewConfError(ErrValidationError, validationErr.Error())
+		}
+	}
+	p, t, err := c.loadDataForChange(transactionID, version)
+	if err != nil {
+		return err
+	}
+
+	var section parser.Section
+	if parentType == BackendParentName {
+		section = parser.Backends
+	} else if parentType == FrontendParentName {
+		section = parser.Frontends
+	}
+
+	tcpRequestRules, err := ParseTCPRequestRules(parentType, parentName, p)
+	if err != nil {
+		return c.HandleError("", parentType, parentName, "", false, err)
+	}
+
+	for i := range tcpRequestRules {
+		// Always delete index 0
+		if err := p.Delete(section, parentName, "tcp-request", 0); err != nil {
+			return c.HandleError(strconv.FormatInt(int64(i), 10), parentType, parentName, t, transactionID == "", err)
+		}
+	}
+
+	for i, newTCPRequestRule := range data {
+		s, err := SerializeTCPRequestRule(*newTCPRequestRule)
+		if err != nil {
+			return err
+		}
+		if err := p.Insert(section, parentName, "tcp-request", s, i); err != nil {
+			return c.HandleError(strconv.FormatInt(int64(i), 10), parentType, parentName, t, transactionID == "", err)
+		}
+	}
+
+	return c.SaveData(p, t, transactionID == "")
+}
+
 func ParseTCPRequestRules(t, pName string, p parser.Parser) (models.TCPRequestRules, error) {
 	section := parser.Global
 	if t == FrontendParentName {
@@ -213,11 +262,9 @@ func ParseTCPRequestRules(t, pName string, p parser.Parser) (models.TCPRequestRu
 	if !ok {
 		return nil, misc.CreateTypeAssertError("tcp request")
 	}
-	for i, r := range rules {
-		id := int64(i)
+	for _, r := range rules {
 		tcpReqRule, err := ParseTCPRequestRule(r)
 		if err == nil {
-			tcpReqRule.Index = &id
 			tcpReqRules = append(tcpReqRules, tcpReqRule)
 		}
 	}

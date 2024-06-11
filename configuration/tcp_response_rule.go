@@ -37,8 +37,9 @@ type TCPResponseRule interface {
 	GetTCPResponseRules(backend string, transactionID string) (int64, models.TCPResponseRules, error)
 	GetTCPResponseRule(id int64, backend string, transactionID string) (int64, *models.TCPResponseRule, error)
 	DeleteTCPResponseRule(id int64, backend string, transactionID string, version int64) error
-	CreateTCPResponseRule(backend string, data *models.TCPResponseRule, transactionID string, version int64) error
+	CreateTCPResponseRule(id int64, backend string, data *models.TCPResponseRule, transactionID string, version int64) error
 	EditTCPResponseRule(id int64, backend string, data *models.TCPResponseRule, transactionID string, version int64) error
+	ReplaceTCPResponseRules(backend string, data models.TCPResponseRules, transactionID string, version int64) error
 }
 
 // GetTCPResponseRules returns configuration version and an array of
@@ -84,7 +85,6 @@ func (c *client) GetTCPResponseRule(id int64, backend string, transactionID stri
 	if parseErr != nil {
 		return 0, nil, parseErr
 	}
-	tcpRule.Index = &id
 
 	return v, tcpRule, nil
 }
@@ -106,7 +106,7 @@ func (c *client) DeleteTCPResponseRule(id int64, backend string, transactionID s
 
 // CreateTCPResponseRule creates a tcp response rule in configuration. One of version or transactionID is
 // mandatory. Returns error on fail, nil on success.
-func (c *client) CreateTCPResponseRule(backend string, data *models.TCPResponseRule, transactionID string, version int64) error {
+func (c *client) CreateTCPResponseRule(id int64, backend string, data *models.TCPResponseRule, transactionID string, version int64) error {
 	if c.UseModelsValidation {
 		validationErr := data.Validate(strfmt.Default)
 		if validationErr != nil {
@@ -122,8 +122,8 @@ func (c *client) CreateTCPResponseRule(backend string, data *models.TCPResponseR
 	if serializeErr != nil {
 		return serializeErr
 	}
-	if err := p.Insert(parser.Backends, backend, "tcp-response", tcpRule, int(*data.Index)); err != nil {
-		return c.HandleError(strconv.FormatInt(*data.Index, 10), BackendParentName, backend, t, transactionID == "", err)
+	if err := p.Insert(parser.Backends, backend, "tcp-response", tcpRule, int(id)); err != nil {
+		return c.HandleError(strconv.FormatInt(id, 10), BackendParentName, backend, t, transactionID == "", err)
 	}
 
 	return c.SaveData(p, t, transactionID == "")
@@ -144,7 +144,7 @@ func (c *client) EditTCPResponseRule(id int64, backend string, data *models.TCPR
 	}
 
 	if _, err := p.GetOne(parser.Backends, backend, "tcp-response", int(id)); err != nil {
-		return c.HandleError(strconv.FormatInt(*data.Index, 10), BackendParentName, backend, t, transactionID == "", err)
+		return c.HandleError(strconv.FormatInt(id, 10), BackendParentName, backend, t, transactionID == "", err)
 	}
 
 	tcpRule, serializeErr := SerializeTCPResponseRule(*data)
@@ -152,7 +152,47 @@ func (c *client) EditTCPResponseRule(id int64, backend string, data *models.TCPR
 		return serializeErr
 	}
 	if err := p.Set(parser.Backends, backend, "tcp-response", tcpRule, int(id)); err != nil {
-		return c.HandleError(strconv.FormatInt(*data.Index, 10), BackendParentName, backend, t, transactionID == "", err)
+		return c.HandleError(strconv.FormatInt(id, 10), BackendParentName, backend, t, transactionID == "", err)
+	}
+
+	return c.SaveData(p, t, transactionID == "")
+}
+
+// ReplaceTCPResponseRules replaces all TCP Response Rule lines in configuration for a parentType/parentName.
+// One of version or transactionID is mandatory.
+// Returns error on fail, nil on success.
+func (c *client) ReplaceTCPResponseRules(backend string, data models.TCPResponseRules, transactionID string, version int64) error {
+	if c.UseModelsValidation {
+		validationErr := data.Validate(strfmt.Default)
+		if validationErr != nil {
+			return NewConfError(ErrValidationError, validationErr.Error())
+		}
+	}
+	p, t, err := c.loadDataForChange(transactionID, version)
+	if err != nil {
+		return err
+	}
+
+	tcpResponseRules, err := ParseTCPResponseRules(backend, p)
+	if err != nil {
+		return c.HandleError("", BackendParentName, backend, "", false, err)
+	}
+
+	for i := range tcpResponseRules {
+		// Always delete index 0
+		if err := p.Delete(BackendParentName, backend, "tcp-response", 0); err != nil {
+			return c.HandleError(strconv.FormatInt(int64(i), 10), BackendParentName, backend, t, transactionID == "", err)
+		}
+	}
+
+	for i, newTCPResponseRule := range data {
+		s, err := SerializeTCPResponseRule(*newTCPResponseRule)
+		if err != nil {
+			return err
+		}
+		if err := p.Insert(BackendParentName, backend, "tcp-response", s, i); err != nil {
+			return c.HandleError(strconv.FormatInt(int64(i), 10), BackendParentName, backend, t, transactionID == "", err)
+		}
 	}
 
 	return c.SaveData(p, t, transactionID == "")
@@ -173,14 +213,12 @@ func ParseTCPResponseRules(backend string, p parser.Parser) (models.TCPResponseR
 	if !ok {
 		return nil, misc.CreateTypeAssertError("tcp response")
 	}
-	for i, tRule := range tRules {
-		id := int64(i)
+	for _, tRule := range tRules {
 		tcpResRule, parseErr := ParseTCPResponseRule(tRule)
 		if parseErr != nil {
 			return nil, parseErr
 		}
 		if tcpResRule != nil {
-			tcpResRule.Index = &id
 			tcpResRules = append(tcpResRules, tcpResRule)
 		}
 	}

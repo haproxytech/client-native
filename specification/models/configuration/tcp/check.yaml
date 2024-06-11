@@ -3,12 +3,8 @@ tcp_check:
   title: TCP Check
   type: object
   required:
-    - index
     - action
   properties:
-    index:
-      type: integer
-      x-nullable: true
     action:
       type: string
       enum:

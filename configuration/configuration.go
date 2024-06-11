@@ -1011,7 +1011,6 @@ func (s *SectionParser) httpCheck() interface{} {
 			if err != nil {
 				continue
 			}
-			httpCheck.Index = misc.Int64P(0)
 			return httpCheck
 		}
 	}

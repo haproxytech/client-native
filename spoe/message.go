@@ -79,13 +79,11 @@ func (c *SingleSpoe) GetMessage(scope, name, transactionID string) (int64, *mode
 		return v, nil, err
 	}
 	if acls, ok := data.([]types.ACL); ok {
-		for i, a := range acls {
-			indx := int64(i)
+		for _, a := range acls {
 			acl := &models.ACL{
 				ACLName:   a.Name,
 				Value:     a.Value,
 				Criterion: a.Criterion,
-				Index:     &indx,
 			}
 			message.ACL = append(message.ACL, acl)
 		}

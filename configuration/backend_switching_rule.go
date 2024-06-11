@@ -13,6 +13,7 @@
 // limitations under the License.
 //
 
+//nolint:dupl
 package configuration
 
 import (
@@ -68,7 +69,6 @@ func (c *client) GetBackendSwitchingRule(id int64, frontend string, transactionI
 	}
 
 	bckRule := ParseBackendSwitchingRule(data.(types.UseBackend))
-	bckRule.Index = &id
 
 	return v, bckRule, nil
 }
@@ -90,7 +90,7 @@ func (c *client) DeleteBackendSwitchingRule(id int64, frontend string, transacti
 
 // CreateBackendSwitchingRule creates a backend switching rule in configuration. One of version or transactionID is
 // mandatory. Returns error on fail, nil on success.
-func (c *client) CreateBackendSwitchingRule(frontend string, data *models.BackendSwitchingRule, transactionID string, version int64) error {
+func (c *client) CreateBackendSwitchingRule(id int64, frontend string, data *models.BackendSwitchingRule, transactionID string, version int64) error {
 	if c.UseModelsValidation {
 		validationErr := data.Validate(strfmt.Default)
 		if validationErr != nil {
@@ -103,8 +103,8 @@ func (c *client) CreateBackendSwitchingRule(frontend string, data *models.Backen
 		return err
 	}
 
-	if err := p.Insert(parser.Frontends, frontend, "use_backend", SerializeBackendSwitchingRule(*data), int(*data.Index)); err != nil {
-		return c.HandleError(strconv.FormatInt(*data.Index, 10), FrontendParentName, frontend, t, transactionID == "", err)
+	if err := p.Insert(parser.Frontends, frontend, "use_backend", SerializeBackendSwitchingRule(*data), int(id)); err != nil {
+		return c.HandleError(strconv.FormatInt(id, 10), FrontendParentName, frontend, t, transactionID == "", err)
 	}
 
 	return c.SaveData(p, t, transactionID == "")
@@ -135,6 +135,42 @@ func (c *client) EditBackendSwitchingRule(id int64, frontend string, data *model
 	return c.SaveData(p, t, transactionID == "")
 }
 
+// ReplaceBackendSwitchingRules replaces all ACL lines in configuration for a frontend.
+// One of version or transactionID is mandatory.
+// Returns error on fail, nil on success.
+func (c *client) ReplaceBackendSwitchingRules(frontend string, data models.BackendSwitchingRules, transactionID string, version int64) error {
+	if c.UseModelsValidation {
+		validationErr := data.Validate(strfmt.Default)
+		if validationErr != nil {
+			return NewConfError(ErrValidationError, validationErr.Error())
+		}
+	}
+	p, t, err := c.loadDataForChange(transactionID, version)
+	if err != nil {
+		return err
+	}
+
+	bsRules, err := ParseBackendSwitchingRules(frontend, p)
+	if err != nil {
+		return c.HandleError("", FrontendParentName, frontend, "", false, err)
+	}
+
+	for i := range bsRules {
+		// Always delete index 0
+		if err := p.Delete(parser.Frontends, frontend, "use_backend", 0); err != nil {
+			return c.HandleError(strconv.FormatInt(int64(i), 10), FrontendParentName, frontend, t, transactionID == "", err)
+		}
+	}
+
+	for i, newbrRule := range data {
+		if err := p.Insert(parser.Frontends, frontend, "use_backend", SerializeBackendSwitchingRule(*newbrRule), i); err != nil {
+			return c.HandleError(strconv.FormatInt(int64(i), 10), FrontendParentName, frontend, t, transactionID == "", err)
+		}
+	}
+
+	return c.SaveData(p, t, transactionID == "")
+}
+
 func ParseBackendSwitchingRules(frontend string, p parser.Parser) (models.BackendSwitchingRules, error) {
 	br := models.BackendSwitchingRules{}
 
@@ -150,11 +186,9 @@ func ParseBackendSwitchingRules(frontend string, p parser.Parser) (models.Backen
 	if !ok {
 		return nil, misc.CreateTypeAssertError("[]types.DeclareCapture")
 	}
-	for i, bRule := range bRules {
-		id := int64(i)
+	for _, bRule := range bRules {
 		b := ParseBackendSwitchingRule(bRule)
 		if b != nil {
-			b.Index = &id
 			br = append(br, b)
 		}
 	}

@@ -24,10 +24,10 @@ stick_rules:
           $ref: "#/definitions/stick_rules"
       'default':
         $ref: '#/responses/DefaultError'
-  post:
-    summary: Add a new Stick Rule
-    description: Adds a new Stick Rule of the specified type in the specified backend.
-    operationId: createStickRule
+  put:
+    summary: Replace a Stick Rule list
+    description: Replaces a whole list of Stick Rules with the list given in parameter
+    operationId: replaceStickRules
     tags:
       - StickRule
     parameters:
@@ -40,7 +40,7 @@ stick_rules:
         in: body
         required: true
         schema:
-          $ref: '#/definitions/stick_rule'
+          $ref: '#/definitions/stick_rules'
       - $ref: "#/parameters/transaction_id"
       - $ref: "#/parameters/version"
       - $ref: "#/parameters/force_reload"
@@ -52,13 +52,11 @@ stick_rules:
             description: ID of the requested reload
             type: string
         schema:
-          $ref: "#/definitions/stick_rule"
-      '201':
-        description: Stick Rule created
+          $ref: "#/definitions/stick_rules"
+      '200':
+        description: All Stick Rule lines replaced
         schema:
-          $ref: '#/definitions/stick_rule'
-      '409':
-        $ref: '#/responses/AlreadyExists'
+          $ref: '#/definitions/stick_rules'
       '400':
         $ref: '#/responses/BadRequest'
       'default':
@@ -170,5 +168,49 @@ stick_rules_one:
         description: Stick Rule deleted
       '404':
         $ref: '#/responses/NotFound'
+      'default':
+        $ref: '#/responses/DefaultError'
+  post:
+    summary: Add a new Stick Rule
+    description: Adds a new Stick Rule of the specified type in the specified backend.
+    operationId: createStickRule
+    tags:
+      - StickRule
+    parameters:
+      - name: index
+        in: path
+        description: Stick Rule Index
+        required: true
+        type: integer
+      - name: backend
+        in: query
+        description: Backend name
+        required: true
+        type: string
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/stick_rule'
+      - $ref: "#/parameters/transaction_id"
+      - $ref: "#/parameters/version"
+      - $ref: "#/parameters/force_reload"
+    responses:
+      '202':
+        description: Configuration change accepted and reload requested
+        headers:
+          Reload-ID:
+            description: ID of the requested reload
+            type: string
+        schema:
+          $ref: "#/definitions/stick_rule"
+      '201':
+        description: Stick Rule created
+        schema:
+          $ref: '#/definitions/stick_rule'
+      '409':
+        $ref: '#/responses/AlreadyExists'
+      '400':
+        $ref: '#/responses/BadRequest'
       'default':
         $ref: '#/responses/DefaultError'

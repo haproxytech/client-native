@@ -24,14 +24,15 @@ import (
 // Equal checks if two structs of type HTTPResponseRule are equal
 //
 // By default empty maps and slices are equal to nil:
-//  var a, b HTTPResponseRule
-//  equal := a.Equal(b)
+//
+//	var a, b HTTPResponseRule
+//	equal := a.Equal(b)
+//
 // For more advanced use case you can configure these options (default values are shown):
-//  var a, b HTTPResponseRule
-//  equal := a.Equal(b,Options{
-//  	NilSameAsEmpty: true,
-
-//		SkipIndex: true,
+//
+//	var a, b HTTPResponseRule
+//	equal := a.Equal(b,Options{
+//		NilSameAsEmpty: true,
 //	})
 func (s HTTPResponseRule) Equal(t HTTPResponseRule, opts ...Options) bool {
 	opt := getOptions(opts...)
@@ -107,10 +108,6 @@ func (s HTTPResponseRule) Equal(t HTTPResponseRule, opts ...Options) bool {
 	}
 
 	if s.HdrName != t.HdrName {
-		return false
-	}
-
-	if !opt.SkipIndex && !equalPointers(s.Index, t.Index) {
 		return false
 	}
 
@@ -272,14 +269,15 @@ func (s HTTPResponseRule) Equal(t HTTPResponseRule, opts ...Options) bool {
 // Diff checks if two structs of type HTTPResponseRule are equal
 //
 // By default empty maps and slices are equal to nil:
-//  var a, b HTTPResponseRule
-//  diff := a.Diff(b)
+//
+//	var a, b HTTPResponseRule
+//	diff := a.Diff(b)
+//
 // For more advanced use case you can configure these options (default values are shown):
-//  var a, b HTTPResponseRule
-//  diff := a.Diff(b,Options{
-//  	NilSameAsEmpty: true,
-
-//		SkipIndex: true,
+//
+//	var a, b HTTPResponseRule
+//	diff := a.Diff(b,Options{
+//		NilSameAsEmpty: true,
 //	})
 func (s HTTPResponseRule) Diff(t HTTPResponseRule, opts ...Options) map[string][]interface{} {
 	opt := getOptions(opts...)
@@ -364,10 +362,6 @@ func (s HTTPResponseRule) Diff(t HTTPResponseRule, opts ...Options) map[string][
 
 	if s.HdrName != t.HdrName {
 		diff["HdrName"] = []interface{}{s.HdrName, t.HdrName}
-	}
-
-	if !opt.SkipIndex && !equalPointers(s.Index, t.Index) {
-		diff["Index"] = []interface{}{ValueOrNil(s.Index), ValueOrNil(t.Index)}
 	}
 
 	if s.LogLevel != t.LogLevel {

@@ -33,8 +33,8 @@ func hTTPResponseRuleExpectation() map[string]models.HTTPResponseRules {
 	res := StructuredToHTTPResponseRuleMap()
 	// Add individual entries
 	for k, vs := range res {
-		for _, v := range vs {
-			key := fmt.Sprintf("%s/%d", k, *v.Index)
+		for i, v := range vs {
+			key := fmt.Sprintf("%s/%d", k, i)
 			res[key] = models.HTTPResponseRules{v}
 		}
 	}
@@ -68,13 +68,10 @@ func checkHTTPResponseRules(t *testing.T, got map[string]models.HTTPResponseRule
 		want, ok := exp[k]
 		require.True(t, ok, "k=%s", k)
 		require.Equal(t, len(want), len(v), "k=%s", k)
-		for _, g := range v {
-			for _, w := range want {
-				if *g.Index == *w.Index {
-					require.True(t, g.Equal(*w), "k=%s - diff %v", k, cmp.Diff(*g, *w))
-					break
-				}
-			}
+		i := 0
+		for _, w := range want {
+			require.True(t, v[i].Equal(*w), "k=%s - diff %v", k, cmp.Diff(*v[i], *w))
+			i++
 		}
 	}
 }
@@ -114,12 +111,11 @@ func TestCreateEditDeleteHTTPResponseRule(t *testing.T) {
 	id := int64(1)
 	// TestCreateHTTPResponseRule
 	r := &models.HTTPResponseRule{
-		Index:    &id,
 		Type:     "set-log-level",
 		LogLevel: "alert",
 	}
 
-	err := clientTest.CreateHTTPResponseRule(configuration.FrontendParentName, "test", r, "", version)
+	err := clientTest.CreateHTTPResponseRule(id, configuration.FrontendParentName, "test", r, "", version)
 	if err != nil {
 		t.Error(err.Error())
 	} else {
@@ -143,7 +139,6 @@ func TestCreateEditDeleteHTTPResponseRule(t *testing.T) {
 
 	// TestEditHTTPResponseRule
 	r = &models.HTTPResponseRule{
-		Index:    &id,
 		Type:     "set-log-level",
 		LogLevel: "warning",
 	}

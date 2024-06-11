@@ -85,7 +85,6 @@ func TestTCPCheckEqualFalse(t *testing.T) {
 		}
 		result.Default = !sample.Default
 		result.ExclamationMark = !sample.ExclamationMark
-		result.Index = Ptr(*sample.Index + 1)
 		result.Linger = !sample.Linger
 		result.MinRecv = sample.MinRecv + 1
 		result.Port = Ptr(*sample.Port + 1)
@@ -173,7 +172,6 @@ func TestTCPCheckDiffFalse(t *testing.T) {
 		}
 		result.Default = !sample.Default
 		result.ExclamationMark = !sample.ExclamationMark
-		result.Index = Ptr(*sample.Index + 1)
 		result.Linger = !sample.Linger
 		result.MinRecv = sample.MinRecv + 1
 		result.Port = Ptr(*sample.Port + 1)
@@ -187,7 +185,7 @@ func TestTCPCheckDiffFalse(t *testing.T) {
 
 	for _, sample := range samples {
 		result := sample.a.Diff(sample.b)
-		if len(result) != 33-1 {
+		if len(result) != 32 {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {
@@ -197,7 +195,7 @@ func TestTCPCheckDiffFalse(t *testing.T) {
 			if err != nil {
 				t.Errorf(err.Error())
 			}
-			t.Errorf("Expected TCPCheck to be different in 33 cases, but it is not (%d) %s %s", len(result), a, b)
+			t.Errorf("Expected TCPCheck to be different in 32 cases, but it is not (%d) %s %s", len(result), a, b)
 		}
 	}
 }

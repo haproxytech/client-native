@@ -34,10 +34,6 @@ import (
 //
 // swagger:model capture
 type Capture struct {
-	// index
-	// Required: true
-	// +kubebuilder:validation:Optional
-	Index *int64 `json:"index"`
 
 	// length
 	// Required: true
@@ -54,10 +50,6 @@ type Capture struct {
 func (m *Capture) Validate(formats strfmt.Registry) error {
 	var res []error
 
-	if err := m.validateIndex(formats); err != nil {
-		res = append(res, err)
-	}
-
 	if err := m.validateLength(formats); err != nil {
 		res = append(res, err)
 	}
@@ -69,15 +61,6 @@ func (m *Capture) Validate(formats strfmt.Registry) error {
 	if len(res) > 0 {
 		return errors.CompositeValidationError(res...)
 	}
-	return nil
-}
-
-func (m *Capture) validateIndex(formats strfmt.Registry) error {
-
-	if err := validate.Required("index", "body", m.Index); err != nil {
-		return err
-	}
-
 	return nil
 }
 

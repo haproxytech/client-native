@@ -83,7 +83,6 @@ func TestTCPResponseRuleEqualFalse(t *testing.T) {
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		result.Index = Ptr(*sample.Index + 1)
 		result.NiceValue = sample.NiceValue + 1
 		result.ScID = sample.ScID + 1
 		result.ScIdx = sample.ScIdx + 1
@@ -168,7 +167,6 @@ func TestTCPResponseRuleDiffFalse(t *testing.T) {
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		result.Index = Ptr(*sample.Index + 1)
 		result.NiceValue = sample.NiceValue + 1
 		result.ScID = sample.ScID + 1
 		result.ScIdx = sample.ScIdx + 1
@@ -181,7 +179,7 @@ func TestTCPResponseRuleDiffFalse(t *testing.T) {
 
 	for _, sample := range samples {
 		result := sample.a.Diff(sample.b)
-		if len(result) != 25-1 {
+		if len(result) != 24 {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {
@@ -191,7 +189,7 @@ func TestTCPResponseRuleDiffFalse(t *testing.T) {
 			if err != nil {
 				t.Errorf(err.Error())
 			}
-			t.Errorf("Expected TCPResponseRule to be different in 25 cases, but it is not (%d) %s %s", len(result), a, b)
+			t.Errorf("Expected TCPResponseRule to be different in 24 cases, but it is not (%d) %s %s", len(result), a, b)
 		}
 	}
 }

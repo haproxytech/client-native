@@ -4,12 +4,8 @@ filter:
   description: HAProxy filters
   type: object
   required:
-    - index
     - type
   properties:
-    index:
-      type: integer
-      x-nullable: true
     type:
       type: string
       enum:
@@ -147,7 +143,6 @@ filter:
           required: true
   additionalProperties: false
   example:
-    index: 0
     type: trace
     trace_name: name
     trace_rnd_parsing: true

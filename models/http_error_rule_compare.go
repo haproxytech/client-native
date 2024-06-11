@@ -24,14 +24,15 @@ import (
 // Equal checks if two structs of type HTTPErrorRule are equal
 //
 // By default empty maps and slices are equal to nil:
-//  var a, b HTTPErrorRule
-//  equal := a.Equal(b)
+//
+//	var a, b HTTPErrorRule
+//	equal := a.Equal(b)
+//
 // For more advanced use case you can configure these options (default values are shown):
-//  var a, b HTTPErrorRule
-//  equal := a.Equal(b,Options{
-//  	NilSameAsEmpty: true,
-
-//		SkipIndex: true,
+//
+//	var a, b HTTPErrorRule
+//	equal := a.Equal(b,Options{
+//		NilSameAsEmpty: true,
 //	})
 func (s HTTPErrorRule) Equal(t HTTPErrorRule, opts ...Options) bool {
 	opt := getOptions(opts...)
@@ -44,10 +45,6 @@ func (s HTTPErrorRule) Equal(t HTTPErrorRule, opts ...Options) bool {
 				return false
 			}
 		}
-	}
-
-	if !opt.SkipIndex && !equalPointers(s.Index, t.Index) {
-		return false
 	}
 
 	if s.ReturnContent != t.ReturnContent {
@@ -76,14 +73,15 @@ func (s HTTPErrorRule) Equal(t HTTPErrorRule, opts ...Options) bool {
 // Diff checks if two structs of type HTTPErrorRule are equal
 //
 // By default empty maps and slices are equal to nil:
-//  var a, b HTTPErrorRule
-//  diff := a.Diff(b)
+//
+//	var a, b HTTPErrorRule
+//	diff := a.Diff(b)
+//
 // For more advanced use case you can configure these options (default values are shown):
-//  var a, b HTTPErrorRule
-//  diff := a.Diff(b,Options{
-//  	NilSameAsEmpty: true,
-
-//		SkipIndex: true,
+//
+//	var a, b HTTPErrorRule
+//	diff := a.Diff(b,Options{
+//		NilSameAsEmpty: true,
 //	})
 func (s HTTPErrorRule) Diff(t HTTPErrorRule, opts ...Options) map[string][]interface{} {
 	opt := getOptions(opts...)
@@ -104,10 +102,6 @@ func (s HTTPErrorRule) Diff(t HTTPErrorRule, opts ...Options) map[string][]inter
 		if len(diff2) > 0 {
 			diff["ReturnHeaders"] = []interface{}{diff2}
 		}
-	}
-
-	if !opt.SkipIndex && !equalPointers(s.Index, t.Index) {
-		diff["Index"] = []interface{}{ValueOrNil(s.Index), ValueOrNil(t.Index)}
 	}
 
 	if s.ReturnContent != t.ReturnContent {

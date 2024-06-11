@@ -3,12 +3,7 @@ log_target:
   title: Log Target
   description: Per-instance logging of events and traffic.
   type: object
-  required:
-    - index
   properties:
-    index:
-      type: integer
-      x-nullable: true
     global:
       type: boolean
     nolog:

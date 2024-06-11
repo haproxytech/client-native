@@ -37,8 +37,9 @@ type HTTPCheck interface {
 	GetHTTPChecks(parentType, parentName string, transactionID string) (int64, models.HTTPChecks, error)
 	GetHTTPCheck(id int64, parentType string, parentName string, transactionID string) (int64, *models.HTTPCheck, error)
 	DeleteHTTPCheck(id int64, parentType string, parentName string, transactionID string, version int64) error
-	CreateHTTPCheck(parentType string, parentName string, data *models.HTTPCheck, transactionID string, version int64) error
+	CreateHTTPCheck(id int64, parentType string, parentName string, data *models.HTTPCheck, transactionID string, version int64) error
 	EditHTTPCheck(id int64, parentType string, parentName string, data *models.HTTPCheck, transactionID string, version int64) error
+	ReplaceHTTPChecks(parentType string, parentName string, data models.HTTPChecks, transactionID string, version int64) error
 }
 
 // GetHTTPChecks returns configuration version and an array of configured http-checks in the specified parent.
@@ -93,7 +94,6 @@ func (c *client) GetHTTPCheck(id int64, parentType string, parentName string, tr
 	if err != nil {
 		return v, nil, err
 	}
-	httpCheck.Index = &id
 	return v, httpCheck, nil
 }
 
@@ -124,7 +124,7 @@ func (c *client) DeleteHTTPCheck(id int64, parentType string, parentName string,
 
 // CreateHTTPCheck creates a http check in the configuration. One of version or transationID is mandatory.
 // Returns error on fail, nil on success.
-func (c *client) CreateHTTPCheck(parentType string, parentName string, data *models.HTTPCheck, transactionID string, version int64) error {
+func (c *client) CreateHTTPCheck(id int64, parentType string, parentName string, data *models.HTTPCheck, transactionID string, version int64) error {
 	if c.UseModelsValidation {
 		validationErr := data.Validate(strfmt.Default)
 		if validationErr != nil {
@@ -152,8 +152,8 @@ func (c *client) CreateHTTPCheck(parentType string, parentName string, data *mod
 		return err
 	}
 
-	if err := p.Insert(section, parentName, "http-check", check, int(*data.Index)); err != nil {
-		return c.HandleError(strconv.FormatInt(*data.Index, 10), parentType, parentName, t, transactionID == "", err)
+	if err := p.Insert(section, parentName, "http-check", check, int(id)); err != nil {
+		return c.HandleError(strconv.FormatInt(id, 10), parentType, parentName, t, transactionID == "", err)
 	}
 	return c.SaveData(p, t, transactionID == "")
 }
@@ -196,6 +196,56 @@ func (c *client) EditHTTPCheck(id int64, parentType string, parentName string, d
 	return c.SaveData(p, t, transactionID == "")
 }
 
+// ReplaceHTTPChecks replaces all HTTP check lines in configuration for a parentType/parentName.
+// One of version or transactionID is mandatory.
+// Returns error on fail, nil on success.
+func (c *client) ReplaceHTTPChecks(parentType string, parentName string, data models.HTTPChecks, transactionID string, version int64) error {
+	if c.UseModelsValidation {
+		validationErr := data.Validate(strfmt.Default)
+		if validationErr != nil {
+			return NewConfError(ErrValidationError, validationErr.Error())
+		}
+	}
+	p, t, err := c.loadDataForChange(transactionID, version)
+	if err != nil {
+		return err
+	}
+
+	httpChecks, err := ParseHTTPChecks(parentType, parentName, p)
+	if err != nil {
+		return c.HandleError("", parentType, parentName, "", false, err)
+	}
+
+	var section parser.Section
+	if parentType == BackendParentName {
+		section = parser.Backends
+	} else if parentType == DefaultsParentName {
+		section = parser.Defaults
+		if parentName == "" {
+			parentName = parser.DefaultSectionName
+		}
+	}
+
+	for i := range httpChecks {
+		// Always delete index 0
+		if err := p.Delete(section, parentName, "http-check", 0); err != nil {
+			return c.HandleError(strconv.FormatInt(int64(i), 10), parentType, parentName, t, transactionID == "", err)
+		}
+	}
+
+	for i, newHTTPCheck := range data {
+		s, err := SerializeHTTPCheck(*newHTTPCheck)
+		if err != nil {
+			return err
+		}
+		if err := p.Insert(section, parentName, "http-check", s, i); err != nil {
+			return c.HandleError(strconv.FormatInt(int64(i), 10), parentType, parentName, t, transactionID == "", err)
+		}
+	}
+
+	return c.SaveData(p, t, transactionID == "")
+}
+
 func ParseHTTPChecks(t, pName string, p parser.Parser) (models.HTTPChecks, error) {
 	var section parser.Section
 	switch t {
@@ -222,11 +272,9 @@ func ParseHTTPChecks(t, pName string, p parser.Parser) (models.HTTPChecks, error
 	if !ok {
 		return nil, misc.CreateTypeAssertError("http-check")
 	}
-	for i, c := range items {
-		id := int64(i)
+	for _, c := range items {
 		check, err := ParseHTTPCheck(c)
 		if err == nil {
-			check.Index = &id
 			checks = append(checks, check)
 		}
 	}

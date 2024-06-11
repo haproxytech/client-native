@@ -83,7 +83,6 @@ func TestCaptureEqualFalse(t *testing.T) {
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		result.Index = Ptr(*sample.Index + 1)
 		result.Length = sample.Length + 1
 		samples = append(samples, struct {
 			a, b Capture
@@ -164,7 +163,6 @@ func TestCaptureDiffFalse(t *testing.T) {
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		result.Index = Ptr(*sample.Index + 1)
 		result.Length = sample.Length + 1
 		samples = append(samples, struct {
 			a, b Capture
@@ -173,7 +171,7 @@ func TestCaptureDiffFalse(t *testing.T) {
 
 	for _, sample := range samples {
 		result := sample.a.Diff(sample.b)
-		if len(result) != 3-1 {
+		if len(result) != 2 {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {
@@ -183,7 +181,7 @@ func TestCaptureDiffFalse(t *testing.T) {
 			if err != nil {
 				t.Errorf(err.Error())
 			}
-			t.Errorf("Expected Capture to be different in 3 cases, but it is not (%d) %s %s", len(result), a, b)
+			t.Errorf("Expected Capture to be different in 2 cases, but it is not (%d) %s %s", len(result), a, b)
 		}
 	}
 }

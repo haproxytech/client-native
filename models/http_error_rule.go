@@ -42,11 +42,6 @@ type HTTPErrorRule struct {
 	// return headers
 	ReturnHeaders []*ReturnHeader `json:"return_hdrs,omitempty"`
 
-	// index
-	// Required: true
-	// +kubebuilder:validation:Optional
-	Index *int64 `json:"index"`
-
 	// return content
 	ReturnContent string `json:"return_content,omitempty"`
 
@@ -76,10 +71,6 @@ func (m *HTTPErrorRule) Validate(formats strfmt.Registry) error {
 	var res []error
 
 	if err := m.validateReturnHeaders(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateIndex(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -122,15 +113,6 @@ func (m *HTTPErrorRule) validateReturnHeaders(formats strfmt.Registry) error {
 			}
 		}
 
-	}
-
-	return nil
-}
-
-func (m *HTTPErrorRule) validateIndex(formats strfmt.Registry) error {
-
-	if err := validate.Required("index", "body", m.Index); err != nil {
-		return err
 	}
 
 	return nil

@@ -45,11 +45,6 @@ type BackendSwitchingRule struct {
 	// cond test
 	CondTest string `json:"cond_test,omitempty"`
 
-	// index
-	// Required: true
-	// +kubebuilder:validation:Optional
-	Index *int64 `json:"index"`
-
 	// name
 	// Required: true
 	// Pattern: ^[^\s]+$
@@ -62,10 +57,6 @@ func (m *BackendSwitchingRule) Validate(formats strfmt.Registry) error {
 	var res []error
 
 	if err := m.validateCond(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateIndex(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -115,15 +106,6 @@ func (m *BackendSwitchingRule) validateCond(formats strfmt.Registry) error {
 
 	// value enum
 	if err := m.validateCondEnum("cond", "body", m.Cond); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func (m *BackendSwitchingRule) validateIndex(formats strfmt.Registry) error {
-
-	if err := validate.Required("index", "body", m.Index); err != nil {
 		return err
 	}
 

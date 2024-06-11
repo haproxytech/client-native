@@ -581,12 +581,11 @@ func (c *client) createBckFrontendRels(name string, b *models.SiteFarm, edit boo
 		} else {
 			i := int64(0)
 			uf := &models.BackendSwitchingRule{
-				Index:    &i,
 				Name:     b.Name,
 				Cond:     b.Cond,
 				CondTest: b.CondTest,
 			}
-			err = c.CreateBackendSwitchingRule(name, uf, t, 0)
+			err = c.CreateBackendSwitchingRule(i, name, uf, t, 0)
 			if err != nil {
 				res = append(res, err)
 			}

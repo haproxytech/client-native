@@ -30,10 +30,10 @@ http_after_response_rules:
           $ref: "#/definitions/http_after_response_rules"
       'default':
         $ref: '#/responses/DefaultError'
-  post:
-    summary: Add a new HTTP After Response Rule
-    description: Adds a new HTTP After Response Rule of the specified type in the specified parent.
-    operationId: createHTTPAfterResponseRule
+  put:
+    summary: Replace an HTTP After Response Rules list
+    description: Replaces a whole list of HTTP After Response Rules with the list given in parameter
+    operationId: replaceHTTPAfterResponseRules
     tags:
       - HTTPAfterResponseRule
     parameters:
@@ -52,7 +52,7 @@ http_after_response_rules:
         in: body
         required: true
         schema:
-          $ref: '#/definitions/http_after_response_rule'
+          $ref: '#/definitions/http_after_response_rules'
       - $ref: "#/parameters/transaction_id"
       - $ref: "#/parameters/version"
       - $ref: "#/parameters/force_reload"
@@ -64,13 +64,11 @@ http_after_response_rules:
             description: ID of the requested reload
             type: string
         schema:
-          $ref: "#/definitions/http_after_response_rule"
-      '201':
-        description: HTTP Response Rule created
+          $ref: "#/definitions/http_after_response_rules"
+      '200':
+        description: All TTP After Response Rules lines replaced
         schema:
-          $ref: '#/definitions/http_after_response_rule'
-      '409':
-        $ref: '#/responses/AlreadyExists'
+          $ref: '#/definitions/http_after_response_rules'
       '400':
         $ref: '#/responses/BadRequest'
       'default':
@@ -200,5 +198,55 @@ http_after_response_rules_one:
         description: HTTP After Response Rule deleted
       '404':
         $ref: '#/responses/NotFound'
+      'default':
+        $ref: '#/responses/DefaultError'
+  post:
+    summary: Add a new HTTP After Response Rule
+    description: Adds a new HTTP After Response Rule of the specified type in the specified parent.
+    operationId: createHTTPAfterResponseRule
+    tags:
+      - HTTPAfterResponseRule
+    parameters:
+      - name: index
+        in: path
+        description: HTTP After Response Rule Index
+        required: true
+        type: integer
+      - name: parent_name
+        in: query
+        description: Parent name
+        required: true
+        type: string
+      - name: parent_type
+        in: query
+        description: Parent type
+        required: true
+        type: string
+        enum: [frontend, backend]
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/http_after_response_rule'
+      - $ref: "#/parameters/transaction_id"
+      - $ref: "#/parameters/version"
+      - $ref: "#/parameters/force_reload"
+    responses:
+      '202':
+        description: Configuration change accepted and reload requested
+        headers:
+          Reload-ID:
+            description: ID of the requested reload
+            type: string
+        schema:
+          $ref: "#/definitions/http_after_response_rule"
+      '201':
+        description: HTTP Response Rule created
+        schema:
+          $ref: '#/definitions/http_after_response_rule'
+      '409':
+        $ref: '#/responses/AlreadyExists'
+      '400':
+        $ref: '#/responses/BadRequest'
       'default':
         $ref: '#/responses/DefaultError'

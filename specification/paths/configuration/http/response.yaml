@@ -30,10 +30,10 @@ http_response_rules:
           $ref: "#/definitions/http_response_rules"
       'default':
         $ref: '#/responses/DefaultError'
-  post:
-    summary: Add a new HTTP Response Rule
-    description: Adds a new HTTP Response Rule of the specified type in the specified parent.
-    operationId: createHTTPResponseRule
+  put:
+    summary: Replace an HTTP Response Rule list
+    description: Replaces a whole list of HTTP Response Rules with the list given in parameter
+    operationId: replaceHTTPResponseRules
     tags:
       - HTTPResponseRule
     parameters:
@@ -52,7 +52,7 @@ http_response_rules:
         in: body
         required: true
         schema:
-          $ref: '#/definitions/http_response_rule'
+          $ref: '#/definitions/http_response_rules'
       - $ref: "#/parameters/transaction_id"
       - $ref: "#/parameters/version"
       - $ref: "#/parameters/force_reload"
@@ -64,13 +64,11 @@ http_response_rules:
             description: ID of the requested reload
             type: string
         schema:
-          $ref: "#/definitions/http_response_rule"
-      '201':
-        description: HTTP Response Rule created
+          $ref: "#/definitions/http_response_rules"
+      '200':
+        description: All HTTP Response Rule lines replaced
         schema:
-          $ref: '#/definitions/http_response_rule'
-      '409':
-        $ref: '#/responses/AlreadyExists'
+          $ref: '#/definitions/http_response_rules'
       '400':
         $ref: '#/responses/BadRequest'
       'default':
@@ -200,5 +198,55 @@ http_response_rules_one:
         description: HTTP Response Rule deleted
       '404':
         $ref: '#/responses/NotFound'
+      'default':
+        $ref: '#/responses/DefaultError'
+  post:
+    summary: Add a new HTTP Response Rule
+    description: Adds a new HTTP Response Rule of the specified type in the specified parent.
+    operationId: createHTTPResponseRule
+    tags:
+      - HTTPResponseRule
+    parameters:
+      - name: index
+        in: path
+        description: HTTP Response Rule Index
+        required: true
+        type: integer
+      - name: parent_name
+        in: query
+        description: Parent name
+        required: true
+        type: string
+      - name: parent_type
+        in: query
+        description: Parent type
+        required: true
+        type: string
+        enum: [frontend, backend]
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/http_response_rule'
+      - $ref: "#/parameters/transaction_id"
+      - $ref: "#/parameters/version"
+      - $ref: "#/parameters/force_reload"
+    responses:
+      '202':
+        description: Configuration change accepted and reload requested
+        headers:
+          Reload-ID:
+            description: ID of the requested reload
+            type: string
+        schema:
+          $ref: "#/definitions/http_response_rule"
+      '201':
+        description: HTTP Response Rule created
+        schema:
+          $ref: '#/definitions/http_response_rule'
+      '409':
+        $ref: '#/responses/AlreadyExists'
+      '400':
+        $ref: '#/responses/BadRequest'
       'default':
         $ref: '#/responses/DefaultError'

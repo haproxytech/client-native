@@ -32,8 +32,9 @@ type ACL interface {
 	GetACLs(parentType, parentName string, transactionID string, aclName ...string) (int64, models.Acls, error)
 	GetACL(id int64, parentType, parentName string, transactionID string) (int64, *models.ACL, error)
 	DeleteACL(id int64, parentType string, parentName string, transactionID string, version int64) error
-	CreateACL(parentType string, parentName string, data *models.ACL, transactionID string, version int64) error
+	CreateACL(id int64, parentType string, parentName string, data *models.ACL, transactionID string, version int64) error
 	EditACL(id int64, parentType string, parentName string, data *models.ACL, transactionID string, version int64) error
+	ReplaceAcls(parentType string, parentName string, data models.Acls, transactionID string, version int64) error
 }
 
 // GetACLs returns configuration version and an array of
@@ -86,7 +87,6 @@ func (c *client) GetACL(id int64, parentType, parentName string, transactionID s
 	}
 
 	acl := ParseACL(data.(types.ACL))
-	acl.Index = &id
 
 	return v, acl, nil
 }
@@ -113,7 +113,7 @@ func (c *client) DeleteACL(id int64, parentType string, parentName string, trans
 
 // CreateACL creates a ACL line in configuration. One of version or transactionID is
 // mandatory. Returns error on fail, nil on success.
-func (c *client) CreateACL(parentType string, parentName string, data *models.ACL, transactionID string, version int64) error {
+func (c *client) CreateACL(id int64, parentType string, parentName string, data *models.ACL, transactionID string, version int64) error {
 	if c.UseModelsValidation {
 		validationErr := data.Validate(strfmt.Default)
 		if validationErr != nil {
@@ -131,8 +131,8 @@ func (c *client) CreateACL(parentType string, parentName string, data *models.AC
 		return err
 	}
 
-	if err := p.Insert(section, parentName, "acl", SerializeACL(*data), int(*data.Index)); err != nil {
-		return c.HandleError(strconv.FormatInt(*data.Index, 10), parentType, parentName, t, transactionID == "", err)
+	if err := p.Insert(section, parentName, "acl", SerializeACL(*data), int(id)); err != nil {
+		return c.HandleError(strconv.FormatInt(id, 10), parentType, parentName, t, transactionID == "", err)
 	}
 
 	return c.SaveData(p, t, transactionID == "")
@@ -181,6 +181,47 @@ func (c *client) EditACL(id int64, parentType string, parentName string, data *m
 	return c.SaveData(p, t, transactionID == "")
 }
 
+// ReplaceAcls replaces all ACL lines in configuration for a parentType/parentName.
+// One of version or transactionID is mandatory.
+// Returns error on fail, nil on success.
+func (c *client) ReplaceAcls(parentType string, parentName string, data models.Acls, transactionID string, version int64) error {
+	if c.UseModelsValidation {
+		validationErr := data.Validate(strfmt.Default)
+		if validationErr != nil {
+			return NewConfError(ErrValidationError, validationErr.Error())
+		}
+	}
+	p, t, err := c.loadDataForChange(transactionID, version)
+	if err != nil {
+		return err
+	}
+
+	section, err := c.getACLParserFromParent(parentType)
+	if err != nil {
+		return err
+	}
+
+	acls, err := ParseACLs(section, parentName, p)
+	if err != nil {
+		return c.HandleError("", parentType, parentName, "", false, err)
+	}
+
+	for i := range acls {
+		// Always delete index 0
+		if err := p.Delete(section, parentName, "acl", 0); err != nil {
+			return c.HandleError(strconv.FormatInt(int64(i), 10), parentType, parentName, t, transactionID == "", err)
+		}
+	}
+
+	for i, newACL := range data {
+		if err := p.Insert(section, parentName, "acl", SerializeACL(*newACL), i); err != nil {
+			return c.HandleError(strconv.FormatInt(int64(i), 10), parentType, parentName, t, transactionID == "", err)
+		}
+	}
+
+	return c.SaveData(p, t, transactionID == "")
+}
+
 func ParseACLs(section parser.Section, name string, p parser.Parser, aclName ...string) (models.Acls, error) {
 	acls := models.Acls{}
 	data, err := p.Get(section, name, "acl", false)
@@ -193,14 +234,12 @@ func ParseACLs(section parser.Section, name string, p parser.Parser, aclName ...
 
 	aclLines, ok := data.([]types.ACL)
 	if !ok {
-		return nil, fmt.Errorf("type assert error []types.ACL")
+		return nil, errors.New("type assert error []types.ACL")
 	}
 	lACL := len(aclName)
-	for i, r := range aclLines {
-		id := int64(i)
+	for _, r := range aclLines {
 		acl := ParseACL(r)
 		if acl != nil {
-			acl.Index = &id
 			if lACL > 0 && aclName[0] == acl.ACLName {
 				acls = append(acls, acl)
 			} else if lACL == 0 {

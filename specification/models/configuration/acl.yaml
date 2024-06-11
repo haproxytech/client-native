@@ -7,13 +7,9 @@ acl:
     from the request, the response or any environmental status.
   type: object
   required:
-    - index
     - acl_name
     - criterion
   properties:
-    index:
-      type: integer
-      x-nullable: true
     acl_name:
       type: string
       pattern: '^[^\s]+$'

@@ -10,6 +10,7 @@ tcp_checks:
       - name: parent_name
         in: query
         description: Parent name
+        required: true
         type: string
       - name: parent_type
         in: query
@@ -29,16 +30,17 @@ tcp_checks:
           $ref: "#/definitions/tcp_checks"
       'default':
         $ref: '#/responses/DefaultError'
-  post:
-    summary: Add a new TCP check
-    description: Adds a new TCP check of the specified type in the specified parent.
-    operationId: createTCPCheck
+  put:
+    summary: Replace an TCP Check list
+    description: Replaces a whole list of TCP Checks with the list given in parameter
+    operationId: replaceTCPChecks
     tags:
       - TCPCheck
     parameters:
       - name: parent_name
         in: query
         description: Parent name
+        required: true
         type: string
       - name: parent_type
         in: query
@@ -50,7 +52,7 @@ tcp_checks:
         in: body
         required: true
         schema:
-          $ref: '#/definitions/tcp_check'
+          $ref: '#/definitions/tcp_checks'
       - $ref: "#/parameters/transaction_id"
       - $ref: "#/parameters/version"
       - $ref: "#/parameters/force_reload"
@@ -62,13 +64,11 @@ tcp_checks:
             description: ID of the requested reload
             type: string
         schema:
-          $ref: "#/definitions/tcp_check"
-      '201':
-        description: TCP check created
+          $ref: "#/definitions/tcp_checks"
+      '200':
+        description: All TCP Check lines replaced
         schema:
-          $ref: '#/definitions/tcp_check'
-      '409':
-        $ref: '#/responses/AlreadyExists'
+          $ref: '#/definitions/tcp_checks'
       '400':
         $ref: '#/responses/BadRequest'
       'default':
@@ -89,6 +89,7 @@ tcp_checks_one:
       - name: parent_name
         in: query
         description: Parent name
+        required: true
         type: string
       - name: parent_type
         in: query
@@ -125,6 +126,7 @@ tcp_checks_one:
       - name: parent_name
         in: query
         description: Parent name
+        required: true
         type: string
       - name: parent_type
         in: query
@@ -174,6 +176,7 @@ tcp_checks_one:
       - name: parent_name
         in: query
         description: Parent name
+        required: true
         type: string
       - name: parent_type
         in: query
@@ -195,5 +198,55 @@ tcp_checks_one:
         description: TCP check deleted
       '404':
         $ref: '#/responses/NotFound'
+      'default':
+        $ref: '#/responses/DefaultError'
+  post:
+    summary: Add a new TCP check
+    description: Adds a new TCP check of the specified type in the specified parent.
+    operationId: createTCPCheck
+    tags:
+      - TCPCheck
+    parameters:
+      - name: index
+        in: path
+        description: TCP check Index
+        required: true
+        type: integer
+      - name: parent_name
+        in: query
+        description: Parent name
+        required: true
+        type: string
+      - name: parent_type
+        in: query
+        description: Parent type
+        required: true
+        type: string
+        enum: [backend, defaults]
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/tcp_check'
+      - $ref: "#/parameters/transaction_id"
+      - $ref: "#/parameters/version"
+      - $ref: "#/parameters/force_reload"
+    responses:
+      '202':
+        description: Configuration change accepted and reload requested
+        headers:
+          Reload-ID:
+            description: ID of the requested reload
+            type: string
+        schema:
+          $ref: "#/definitions/tcp_check"
+      '201':
+        description: TCP check created
+        schema:
+          $ref: '#/definitions/tcp_check'
+      '409':
+        $ref: '#/responses/AlreadyExists'
+      '400':
+        $ref: '#/responses/BadRequest'
       'default':
         $ref: '#/responses/DefaultError'

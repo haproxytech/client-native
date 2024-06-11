@@ -332,14 +332,12 @@
             {
                 "address": "127.0.0.1:10001",
                 "facility": "local0",
-                "index": 0,
                 "sample_range": "1",
                 "sample_size": 4
             },
             {
                 "address": "127.0.0.1:10002",
                 "facility": "local0",
-                "index": 1,
                 "sample_range": "2",
                 "sample_size": 4
             }
@@ -463,7 +461,6 @@
             },
            "hash_balance_factor": 150,
             "http-check": {
-                "index": 0,
                 "type": "connect"
             },
             "http-keep-alive": "enabled",
@@ -555,7 +552,6 @@
             "use_fcgi_app": "app-name",
             "http_check_list": [
                 {
-                    "index": 0,
                     "type": "connect"
                 },
                 {
@@ -565,95 +561,80 @@
                             "name": "host"
                         }
                     ],
-                    "index": 1,
                     "method": "GET",
                     "type": "send",
                     "uri": "/",
                     "version": "HTTP/1.1"
                 },
                 {
-                    "index": 2,
                     "match": "status",
                     "pattern": "200-399",
                     "type": "expect"
                 },
                 {
-                    "index": 3,
                     "port": 443,
                     "sni": "haproxy.1wt.eu",
                     "ssl": true,
                     "type": "connect"
                 },
                 {
-                    "index": 4,
                     "match": "status",
                     "pattern": "200,201,300-310",
                     "type": "expect"
                 },
                 {
-                    "index": 5,
                     "match": "header",
                     "pattern": "name \"set-cookie\" value -m beg \"sessid=\"",
                     "type": "expect"
                 },
                 {
                     "exclamation_mark": true,
-                    "index": 6,
                     "match": "string",
                     "pattern": "SQL\\ Error",
                     "type": "expect"
                 },
                 {
                     "exclamation_mark": true,
-                    "index": 7,
                     "match": "rstatus",
                     "pattern": "^5",
                     "type": "expect"
                 },
                 {
-                    "index": 8,
                     "match": "rstring",
                     "pattern": "\u003c!--tag:[0-9a-f]*--\u003e\u003c/html\u003e",
                     "type": "expect"
                 },
                 {
-                    "index": 9,
                     "type": "unset-var",
                     "var_name": "port",
                     "var_scope": "check"
                 },
                 {
-                    "index": 10,
                     "type": "set-var",
                     "var_expr": "int(1234)",
                     "var_name": "port",
                     "var_scope": "check"
                 },
                 {
-                    "index": 11,
                     "type": "set-var-fmt",
                     "var_expr": "int(1234)",
                     "var_name": "port",
                     "var_scope": "check"
                 },
                 {
-                    "index": 12,
                     "type": "send-state"
                 },
                 {
-                    "index": 13,
                     "type": "disable-on-404"
                 }
             ],
             "http_request_rule_list": [
                 {
                     "expr": "hdr(x-dst)",
-                    "index": 0,
                     "type": "set-dst"
                 },
                 {
                     "expr": "int(4000)",
-                    "index": 1,
                     "type": "set-dst-port"
                 }
             ],
@@ -661,42 +642,35 @@
                 {
                     "cond": "if",
                     "cond_test": "TRUE",
-                    "index": 0,
                     "target_server": "webserv"
                 },
                 {
                     "cond": "unless",
                     "cond_test": "TRUE",
-                    "index": 1,
                     "target_server": "webserv2"
                 }
             ],
             "stick_rule_list": [
                 {
-                    "index": 0,
                     "pattern": "src",
                     "table": "test",
                     "type": "store-request"
                 },
                 {
-                    "index": 1,
                     "pattern": "src",
                     "table": "test",
                     "type": "match"
                 },
                 {
-                    "index": 2,
                     "pattern": "src",
                     "table": "test",
                     "type": "on"
                 },
                 {
-                    "index": 3,
                     "pattern": "src",
                     "type": "store-response"
                 },
                 {
-                    "index": 4,
                     "pattern": "src_port",
                     "table": "test_port",
                     "type": "store-response"
@@ -704,7 +678,6 @@
                 {
                     "cond": "if",
                     "cond_test": "TRUE",
-                    "index": 5,
                     "pattern": "src",
                     "table": "test",
                     "type": "store-response"
@@ -715,21 +688,18 @@
                     "action": "accept",
                     "cond": "if",
                     "cond_test": "TRUE",
-                    "index": 0,
                     "type": "content"
                 },
                 {
                     "action": "reject",
                     "cond": "if",
                     "cond_test": "FALSE",
-                    "index": 1,
                     "type": "content"
                 },
                 {
                     "action": "lua",
                     "cond": "if",
                     "cond_test": "FALSE",
-                    "index": 2,
                     "lua_action": "foo",
                     "lua_params": "param1 param2",
                     "type": "content"
@@ -739,7 +709,6 @@
                     "bandwidth_limit_limit": "1m",
                     "bandwidth_limit_name": "my-limit",
                     "bandwidth_limit_period": "10s",
-                    "index": 3,
                     "type": "content"
                 },
                 {
@@ -747,7 +716,6 @@
                     "bandwidth_limit_limit": "2m",
                     "bandwidth_limit_name": "my-limit-reverse",
                     "bandwidth_limit_period": "20s",
-                    "index": 4,
                     "type": "content"
                 },
                 {
@@ -756,21 +724,18 @@
                     "bandwidth_limit_name": "my-limit-cond",
                     "cond": "if",
                     "cond_test": "FALSE",
-                    "index": 5,
                     "type": "content"
                 },
                 {
                     "action": "close",
                     "cond": "if",
                     "cond_test": "FALSE",
-                    "index": 6,
                     "type": "content"
                 },
                 {
                     "action": "sc-add-gpc",
                     "cond": "if",
                     "cond_test": "FALSE",
-                    "index": 7,
                     "sc_id": 1,
                     "sc_int": 1,
                     "type": "content"
@@ -779,7 +744,6 @@
                     "action": "sc-inc-gpc0",
                     "cond": "if",
                     "cond_test": "FALSE",
-                    "index": 8,
                     "sc_id": 1,
                     "type": "content"
                 },
@@ -787,7 +751,6 @@
                     "action": "sc-inc-gpc1",
                     "cond": "if",
                     "cond_test": "FALSE",
-                    "index": 9,
                     "sc_id": 2,
                     "type": "content"
                 },
@@ -796,7 +759,6 @@
                     "cond": "if",
                     "cond_test": "FALSE",
                     "expr": "hdr(Host),lower",
-                    "index": 10,
                     "sc_id": 3,
                     "type": "content"
                 },
@@ -804,7 +766,6 @@
                     "action": "send-spoe-group",
                     "cond": "if",
                     "cond_test": "FALSE",
-                    "index": 11,
                     "spoe_engine": "engine",
                     "spoe_group": "group",
                     "type": "content"
@@ -813,7 +774,6 @@
                     "action": "set-log-level",
                     "cond": "if",
                     "cond_test": "FALSE",
-                    "index": 12,
                     "log_level": "silent",
                     "type": "content"
                 },
@@ -821,7 +781,6 @@
                     "action": "set-mark",
                     "cond": "if",
                     "cond_test": "FALSE",
-                    "index": 13,
                     "mark_value": "0x1Ab",
                     "type": "content"
                 },
@@ -829,7 +788,6 @@
                     "action": "set-nice",
                     "cond": "if",
                     "cond_test": "FALSE",
-                    "index": 14,
                     "nice_value": 1,
                     "type": "content"
                 },
@@ -837,7 +795,6 @@
                     "action": "set-tos",
                     "cond": "if",
                     "cond_test": "FALSE",
-                    "index": 15,
                     "tos_value": "2",
                     "type": "content"
                 },
@@ -845,14 +802,12 @@
                     "action": "silent-drop",
                     "cond": "if",
                     "cond_test": "FALSE",
-                    "index": 16,
                     "type": "content"
                 },
                 {
                     "action": "unset-var",
                     "cond": "if",
                     "cond_test": "FALSE",
-                    "index": 17,
                     "type": "content",
                     "var_name": "my_var",
                     "var_scope": "req"
@@ -861,7 +816,6 @@
                     "action": "set-fc-mark",
                     "cond": "if",
                     "cond_test": "TRUE",
-                    "index": 18,
                     "type": "content",
                     "expr": "7676"
                 },
@@ -869,29 +823,15 @@
                     "action": "set-fc-tos",
                     "cond": "if",
                     "cond_test": "FALSE",
-                    "index": 19,
                     "type": "content",
                     "expr": "0xab"
                 },
                 {
-                    "index": 20,
                     "type": "content",
                     "action": "sc-set-gpt",
                     "sc_id": 1,
                     "sc_idx": 2,
                     "sc_int": 1234
-                }
-            ],
-            "waf_body_rule_list": [
-                {
-                    "index": 0,
-                    "type": "allow"
-                },
-                {
-                    "cond": "if",
-                    "cond_test": "{ var(txn.myip) -m ip 127.0.0.0/8 10.0.0.0/8 }",
-                    "index": 1,
-                    "type": "deny"
                 }
             ],
             "server_templates": {
@@ -1013,7 +953,6 @@
                 "modifier": "avalanche"
             },
             "http-check": {
-                "index": 0,
                 "match": "rstatus",
                 "pattern": "some-pattern",
                 "type": "expect"
@@ -1086,7 +1025,6 @@
             "tunnel_timeout": 5000,
             "http_check_list": [
                 {
-                    "index": 0,
                     "match": "rstatus",
                     "pattern": "some-pattern",
                     "type": "expect"
@@ -1100,7 +1038,6 @@
                             "name": "Some-Header"
                         }
                     ],
-                    "index": 0,
                     "return_content": "\"My content\"",
                     "return_content_format": "string",
                     "return_content_type": "\"text/plain\"",
@@ -1118,7 +1055,6 @@
                             "name": "Some-Header"
                         }
                     ],
-                    "index": 1,
                     "return_content": "\"My content\"",
                     "return_content_format": "string",
                     "return_content_type": "application/json",
@@ -1217,19 +1153,16 @@
                 {
                     "acl_name": "invalid_src",
                     "criterion": "src",
-                    "index": 0,
                     "value": "0.0.0.0/7 224.0.0.0/3"
                 },
                 {
                     "acl_name": "invalid_src",
                     "criterion": "src_port",
-                    "index": 1,
                     "value": "0:1023"
                 },
                 {
                     "acl_name": "local_dst",
                     "criterion": "hdr(host)",
-                    "index": 2,
                     "value": "-i localhost"
                 }
             ]
@@ -1312,19 +1245,16 @@
                 {
                     "acl_name": "invalid_src",
                     "criterion": "src",
-                    "index": 0,
                     "value": "0.0.0.0/7 224.0.0.0/3"
                 },
                 {
                     "acl_name": "invalid_src",
                     "criterion": "src_port",
-                    "index": 1,
                     "value": "0:1023"
                 },
                 {
                     "acl_name": "local_dst",
                     "criterion": "hdr(host)",
-                    "index": 2,
                     "value": "-i localhost"
                 }
             ]
@@ -1457,49 +1387,41 @@
                 {
                     "acl_name": "invalid_src",
                     "criterion": "src",
-                    "index": 0,
                     "value": "0.0.0.0/7 224.0.0.0/3"
                 },
                 {
                     "acl_name": "invalid_src",
                     "criterion": "src_port",
-                    "index": 1,
                     "value": "0:1023"
                 },
                 {
                     "acl_name": "local_dst",
                     "criterion": "hdr(host)",
-                    "index": 2,
                     "value": "-i localhost"
                 },
                 {
                     "acl_name": "waf_wafTest_drop",
-                    "criterion": "var(txn.wafTest.drop),bool",
-                    "index": 3
+                    "criterion": "var(txn.wafTest.drop),bool"
                 }
             ],
             "backend_switching_rule_list": [
                 {
                     "cond": "if",
                     "cond_test": "TRUE",
-                    "index": 0,
                     "name": "test_2"
                 },
                 {
-                    "index": 1,
                     "name": "%[req.cookie(foo)]"
                 }
             ],
             "capture_list": [
                 {
-                    "index": 0,
                     "length": 1,
                     "type": "request"
                 }
             ],
             "filter_list": [
                 {
-                    "index": 0,
                     "rule-files": null,
                     "trace_hexdump": true,
                     "trace_name": "BEFORE-HTTP-COMP",
@@ -1507,12 +1429,10 @@
                     "type": "trace"
                 },
                 {
-                    "index": 1,
                     "rule-files": null,
                     "type": "compression"
                 },
                 {
-                    "index": 2,
                     "rule-files": null,
                     "trace_name": "AFTER-HTTP-COMP",
                     "trace_rnd_forwarding": true,
@@ -1520,7 +1440,6 @@
                 },
                 {
                     "app_name": "my-app",
-                    "index": 3,
                     "rule-files": null,
                     "type": "fcgi-app"
                 },
@@ -1528,14 +1447,12 @@
                     "bandwidth_limit_name": "in",
                     "default_limit": 1024,
                     "default_period": 1000,
-                    "index": 4,
                     "min_size": 1048576,
                     "rule-files": null,
                     "type": "bwlim-in"
                 },
                 {
                     "bandwidth_limit_name": "out",
-                    "index": 5,
                     "key": "name(arg1)",
                     "limit": 1024,
                     "min_size": 32,
@@ -1546,7 +1463,6 @@
             ],
             "http_after_response_rule_list": [
                 {
-                    "index": 0,
                     "map_file": "map.lst",
                     "map_keyfmt": "%[src]",
                     "map_valuefmt": "%[res.hdr(X-Value)]",
@@ -1555,7 +1471,6 @@
                 {
                     "cond": "if",
                     "cond_test": "FALSE",
-                    "index": 1,
                     "map_file": "map.lst",
                     "map_keyfmt": "%[src]",
                     "type": "del-map"
@@ -1565,39 +1480,33 @@
                     "acl_keyfmt": "%[src]",
                     "cond": "if",
                     "cond_test": "FALSE",
-                    "index": 2,
                     "type": "del-acl"
                 },
                 {
                     "cond": "if",
                     "cond_test": "FALSE",
-                    "index": 3,
                     "sc_id": 1,
                     "type": "sc-add-gpc"
                 },
                 {
                     "cond": "if",
                     "cond_test": "FALSE",
-                    "index": 4,
                     "sc_id": 1,
                     "type": "sc-inc-gpc"
                 },
                 {
                     "cond": "if",
                     "cond_test": "FALSE",
-                    "index": 5,
                     "type": "sc-inc-gpc0"
                 },
                 {
                     "cond": "if",
                     "cond_test": "FALSE",
-                    "index": 6,
                     "type": "sc-inc-gpc1"
                 },
                 {
                     "cond": "if",
                     "cond_test": "FALSE",
-                    "index": 7,
                     "sc_expr": "hdr(Host),lower",
                     "sc_id": 1,
                     "type": "sc-set-gpt0"
@@ -1605,7 +1514,6 @@
                 {
                     "cond": "if",
                     "cond_test": "FALSE",
-                    "index": 8,
                     "sc_id": 1,
                     "sc_int": 20,
                     "type": "sc-set-gpt0"
@@ -1613,13 +1521,11 @@
                 {
                     "hdr_format": "\"max-age=31536000\"",
                     "hdr_name": "Strict-Transport-Security",
-                    "index": 9,
                     "type": "set-header"
                 },
                 {
                     "cond": "if",
                     "cond_test": "FALSE",
-                    "index": 10,
                     "log_level": "silent",
                     "type": "set-log-level"
                 },
@@ -1627,37 +1533,31 @@
                     "hdr_format": "\\1;ip=%bi;\\2",
                     "hdr_match": "(C=[^;]*);(.*)",
                     "hdr_name": "Set-Cookie",
-                    "index": 11,
                     "type": "replace-header"
                 },
                 {
                     "hdr_format": "private",
                     "hdr_match": "^public$",
                     "hdr_name": "Cache-control",
-                    "index": 12,
                     "type": "replace-value"
                 },
                 {
-                    "index": 13,
                     "status": 503,
                     "status_reason": "\"SlowDown\"",
                     "type": "set-status"
                 },
                 {
-                    "index": 14,
                     "type": "set-var",
                     "var_expr": "res.hdr(location)",
                     "var_name": "last_redir",
                     "var_scope": "sess"
                 },
                 {
-                    "index": 15,
                     "type": "unset-var",
                     "var_name": "last_redir",
                     "var_scope": "sess"
                 },
                 {
-                    "index": 16,
                     "type": "sc-set-gpt",
                     "sc_id": 1,
                     "sc_idx": 2,
@@ -1668,7 +1568,6 @@
             ],
             "http_error_rule_list": [
                 {
-                    "index": 0,
                     "return_content": "/var/errors.file",
                     "return_content_format": "lf-file",
                     "return_content_type": "application/json",
@@ -1680,24 +1579,20 @@
                 {
                     "cond": "if",
                     "cond_test": "src 192.168.0.0/16",
-                    "index": 0,
                     "type": "allow"
                 },
                 {
                     "hdr_format": "%[ssl_fc]",
                     "hdr_name": "X-SSL",
-                    "index": 1,
                     "type": "set-header"
                 },
                 {
-                    "index": 2,
                     "type": "set-var",
                     "var_expr": "req.fhdr(user-agent),lower",
                     "var_name": "my_var",
                     "var_scope": "req"
                 },
                 {
-                    "index": 3,
                     "map_file": "map.lst",
                     "map_keyfmt": "%[src]",
                     "map_valuefmt": "%[req.hdr(X-Value)]",
@@ -1706,7 +1601,6 @@
                 {
                     "cond": "if",
                     "cond_test": "FALSE",
-                    "index": 4,
                     "map_file": "map.lst",
                     "map_keyfmt": "%[src]",
                     "type": "del-map"
@@ -1716,20 +1610,17 @@
                     "acl_keyfmt": "%[src]",
                     "cond": "if",
                     "cond_test": "FALSE",
-                    "index": 5,
                     "type": "del-acl"
                 },
                 {
                     "cache_name": "cache-name",
                     "cond": "if",
                     "cond_test": "FALSE",
-                    "index": 6,
                     "type": "cache-use"
                 },
                 {
                     "cond": "if",
                     "cond_test": "FALSE",
-                    "index": 7,
                     "type": "disable-l7-retry"
                 },
                 {
@@ -1737,13 +1628,11 @@
                     "cond_test": "FALSE",
                     "hint_format": "%[src]",
                     "hint_name": "hint-name",
-                    "index": 8,
                     "type": "early-hint"
                 },
                 {
                     "cond": "if",
                     "cond_test": "FALSE",
-                    "index": 9,
                     "type": "replace-uri",
                     "uri-fmt": "https://1",
                     "uri-match": "^http://(.*)"
@@ -1751,7 +1640,6 @@
                 {
                     "cond": "if",
                     "cond_test": "FALSE",
-                    "index": 10,
                     "sc_id": 1,
                     "sc_int": 1,
                     "type": "sc-add-gpc"
@@ -1759,25 +1647,21 @@
                 {
                     "cond": "if",
                     "cond_test": "FALSE",
-                    "index": 11,
                     "sc_id": 1,
                     "type": "sc-inc-gpc"
                 },
                 {
                     "cond": "if",
                     "cond_test": "FALSE",
-                    "index": 12,
                     "type": "sc-inc-gpc0"
                 },
                 {
                     "cond": "if",
                     "cond_test": "FALSE",
-                    "index": 13,
                     "type": "sc-inc-gpc1"
                 },
                 {
                     "expr": "hdr(Host),lower",
-                    "index": 14,
                     "protocol": "ipv4",
                     "resolvers": "mydns",
                     "type": "do-resolve",
@@ -1786,7 +1670,6 @@
                 {
                     "cond": "if",
                     "cond_test": "FALSE",
-                    "index": 15,
                     "sc_expr": "hdr(Host),lower",
                     "sc_id": 1,
                     "type": "sc-set-gpt0"
@@ -1794,7 +1677,6 @@
                 {
                     "cond": "if",
                     "cond_test": "FALSE",
-                    "index": 16,
                     "sc_id": 1,
                     "sc_int": 20,
                     "type": "sc-set-gpt0"
@@ -1802,21 +1684,18 @@
                 {
                     "cond": "if",
                     "cond_test": "FALSE",
-                    "index": 17,
                     "mark_value": "20",
                     "type": "set-mark"
                 },
                 {
                     "cond": "if",
                     "cond_test": "FALSE",
-                    "index": 18,
                     "nice_value": 20,
                     "type": "set-nice"
                 },
                 {
                     "cond": "if",
                     "cond_test": "FALSE",
-                    "index": 19,
                     "method_fmt": "POST",
                     "type": "set-method"
                 },
@@ -1824,53 +1703,45 @@
                     "cond": "if",
                     "cond_test": "FALSE",
                     "expr": "req.hdr(class)",
-                    "index": 20,
                     "type": "set-priority-class"
                 },
                 {
                     "cond": "if",
                     "cond_test": "FALSE",
                     "expr": "req.hdr(offset)",
-                    "index": 21,
                     "type": "set-priority-offset"
                 },
                 {
                     "cond": "if",
                     "cond_test": "FALSE",
                     "expr": "req.hdr(src)",
-                    "index": 22,
                     "type": "set-src"
                 },
                 {
                     "cond": "if",
                     "cond_test": "FALSE",
                     "expr": "req.hdr(port)",
-                    "index": 23,
                     "type": "set-src-port"
                 },
                 {
                     "cond": "if",
                     "cond_test": "FALSE",
-                    "index": 24,
                     "type": "wait-for-handshake"
                 },
                 {
                     "cond": "if",
                     "cond_test": "FALSE",
-                    "index": 25,
                     "tos_value": "0",
                     "type": "set-tos"
                 },
                 {
                     "cond": "if",
                     "cond_test": "FALSE",
-                    "index": 26,
                     "type": "silent-drop"
                 },
                 {
                     "cond": "if",
                     "cond_test": "FALSE",
-                    "index": 27,
                     "type": "unset-var",
                     "var_name": "my_var",
                     "var_scope": "req"
@@ -1878,14 +1749,12 @@
                 {
                     "cond": "if",
                     "cond_test": "FALSE",
-                    "index": 28,
                     "strict_mode": "on",
                     "type": "strict-mode"
                 },
                 {
                     "cond": "if",
                     "cond_test": "FALSE",
-                    "index": 29,
                     "lua_action": "foo",
                     "lua_params": "param1 param2",
                     "type": "lua"
@@ -1893,7 +1762,6 @@
                 {
                     "cond": "if",
                     "cond_test": "FALSE",
-                    "index": 30,
                     "service_name": "svrs",
                     "type": "use-service"
                 },
@@ -1906,7 +1774,6 @@
                     ],
                     "cond": "if",
                     "cond_test": "FALSE",
-                    "index": 31,
                     "return_content": "\"My content\"",
                     "return_content_format": "string",
                     "return_content_type": "\"text/plain\"",
@@ -1916,13 +1783,11 @@
                 {
                     "cond": "if",
                     "cond_test": "!{ ssl_fc }",
-                    "index": 32,
                     "redir_type": "scheme",
                     "redir_value": "https",
                     "type": "redirect"
                 },
                 {
-                    "index": 33,
                     "redir_code": 302,
                     "redir_type": "location",
                     "redir_value": "https://%[hdr(host),field(1,:)]:443%[capture.req.uri]",
@@ -1931,38 +1796,32 @@
                 {
                     "cond": "unless",
                     "cond_test": "src 192.168.0.0/16",
-                    "index": 34,
                     "return_content_type": "",
                     "type": "deny"
                 },
                 {
                     "deny_status": 400,
-                    "index": 35,
                     "return_content": "/var/errors.file",
                     "return_content_format": "lf-file",
                     "return_content_type": "application/json",
                     "type": "deny"
                 },
                 {
-                    "index": 36,
                     "type": "wait-for-body",
                     "wait_at_least": 102400,
                     "wait_time": 20000
                 },
                 {
-                    "index": 37,
                     "timeout": "20",
                     "timeout_type": "server",
                     "type": "set-timeout"
                 },
                 {
-                    "index": 38,
                     "timeout": "20",
                     "timeout_type": "tunnel",
                     "type": "set-timeout"
                 },
                 {
-                    "index": 39,
                     "timeout": "20",
                     "timeout_type": "client",
                     "type": "set-timeout"
@@ -1971,14 +1830,12 @@
                     "bandwidth_limit_limit": "1m",
                     "bandwidth_limit_name": "my-limit",
                     "bandwidth_limit_period": "10s",
-                    "index": 40,
                     "type": "set-bandwidth-limit"
                 },
                 {
                     "bandwidth_limit_limit": "2m",
                     "bandwidth_limit_name": "my-limit-reverse",
                     "bandwidth_limit_period": "20s",
-                    "index": 41,
                     "type": "set-bandwidth-limit"
                 },
                 {
@@ -1986,13 +1843,11 @@
                     "bandwidth_limit_name": "my-limit-cond",
                     "cond": "if",
                     "cond_test": "FALSE",
-                    "index": 42,
                     "type": "set-bandwidth-limit"
                 },
                 {
                     "cond": "if",
                     "cond_test": "TRUE",
-                    "index": 43,
                     "track_sc_key": "src",
                     "track_sc_stick_counter": 0,
                     "track_sc_table": "tr0",
@@ -2001,7 +1856,6 @@
                 {
                     "cond": "if",
                     "cond_test": "TRUE",
-                    "index": 44,
                     "track_sc_key": "src",
                     "track_sc_stick_counter": 1,
                     "track_sc_table": "tr1",
@@ -2010,7 +1864,6 @@
                 {
                     "cond": "if",
                     "cond_test": "TRUE",
-                    "index": 45,
                     "track_sc_key": "src",
                     "track_sc_stick_counter": 2,
                     "track_sc_table": "tr2",
@@ -2019,38 +1872,32 @@
                 {
                     "cond": "if",
                     "cond_test": "TRUE",
-                    "index": 46,
                     "track_sc_key": "src",
                     "track_sc_stick_counter": 5,
                     "track_sc_table": "test",
                     "type": "track-sc"
                 },
                 {
-                    "index": 47,
                     "type": "set-bc-mark",
                     "expr": "123",
                     "cond": "if",
                     "cond_test": "TRUE"
                 },
                 {
-                    "index": 48,
                     "type": "set-bc-tos",
                     "expr": "0x22"
                 },
                 {
-                    "index": 49,
                     "type": "set-fc-mark",
                     "expr": "hdr(port)"
                 },
                 {
-                    "index": 50,
                     "type": "set-fc-tos",
                     "expr": "255",
                     "cond": "if",
                     "cond_test": "FALSE"
                 },
                 {
-                    "index": 51,
                     "type": "sc-set-gpt",
                     "sc_id": 1,
                     "sc_idx": 2,
@@ -2063,24 +1910,20 @@
                 {
                     "cond": "if",
                     "cond_test": "src 192.168.0.0/16",
-                    "index": 0,
                     "type": "allow"
                 },
                 {
                     "hdr_format": "%[ssl_fc]",
                     "hdr_name": "X-SSL",
-                    "index": 1,
                     "type": "set-header"
                 },
                 {
-                    "index": 2,
                     "type": "set-var",
                     "var_expr": "req.fhdr(user-agent),lower",
                     "var_name": "my_var",
                     "var_scope": "req"
                 },
                 {
-                    "index": 3,
                     "map_file": "map.lst",
                     "map_keyfmt": "%[src]",
                     "map_valuefmt": "%[res.hdr(X-Value)]",
@@ -2089,7 +1932,6 @@
                 {
                     "cond": "if",
                     "cond_test": "FALSE",
-                    "index": 4,
                     "map_file": "map.lst",
                     "map_keyfmt": "%[src]",
                     "type": "del-map"
@@ -2099,20 +1941,17 @@
                     "acl_keyfmt": "%[src]",
                     "cond": "if",
                     "cond_test": "FALSE",
-                    "index": 5,
                     "type": "del-acl"
                 },
                 {
                     "cache_name": "cache-name",
                     "cond": "if",
                     "cond_test": "FALSE",
-                    "index": 6,
                     "type": "cache-store"
                 },
                 {
                     "cond": "if",
                     "cond_test": "FALSE",
-                    "index": 7,
                     "sc_id": 1,
                     "sc_int": 1,
                     "type": "sc-add-gpc"
@@ -2120,26 +1959,22 @@
                 {
                     "cond": "if",
                     "cond_test": "FALSE",
-                    "index": 8,
                     "sc_id": 1,
                     "type": "sc-inc-gpc"
                 },
                 {
                     "cond": "if",
                     "cond_test": "FALSE",
-                    "index": 9,
                     "type": "sc-inc-gpc0"
                 },
                 {
                     "cond": "if",
                     "cond_test": "FALSE",
-                    "index": 10,
                     "type": "sc-inc-gpc1"
                 },
                 {
                     "cond": "if",
                     "cond_test": "FALSE",
-                    "index": 11,
                     "sc_expr": "hdr(Host),lower",
                     "sc_id": 1,
                     "type": "sc-set-gpt0"
@@ -2147,7 +1982,6 @@
                 {
                     "cond": "if",
                     "cond_test": "FALSE",
-                    "index": 12,
                     "sc_id": 1,
                     "sc_int": 20,
                     "type": "sc-set-gpt0"
@@ -2155,34 +1989,29 @@
                 {
                     "cond": "if",
                     "cond_test": "FALSE",
-                    "index": 13,
                     "mark_value": "20",
                     "type": "set-mark"
                 },
                 {
                     "cond": "if",
                     "cond_test": "FALSE",
-                    "index": 14,
                     "nice_value": 20,
                     "type": "set-nice"
                 },
                 {
                     "cond": "if",
                     "cond_test": "FALSE",
-                    "index": 15,
                     "tos_value": "0",
                     "type": "set-tos"
                 },
                 {
                     "cond": "if",
                     "cond_test": "FALSE",
-                    "index": 16,
                     "type": "silent-drop"
                 },
                 {
                     "cond": "if",
                     "cond_test": "FALSE",
-                    "index": 17,
                     "type": "unset-var",
                     "var_name": "my_var",
                     "var_scope": "req"
@@ -2190,7 +2019,6 @@
                 {
                     "cond": "if",
                     "cond_test": "FALSE",
-                    "index": 18,
                     "track_sc_key": "src",
                     "track_sc_stick_counter": 0,
                     "track_sc_table": "tr0",
@@ -2199,7 +2027,6 @@
                 {
                     "cond": "if",
                     "cond_test": "FALSE",
-                    "index": 19,
                     "track_sc_key": "src",
                     "track_sc_stick_counter": 1,
                     "track_sc_table": "tr1",
@@ -2208,7 +2035,6 @@
                 {
                     "cond": "if",
                     "cond_test": "FALSE",
-                    "index": 20,
                     "track_sc_key": "src",
                     "track_sc_stick_counter": 2,
                     "track_sc_table": "tr2",
@@ -2217,28 +2043,24 @@
                 {
                     "cond": "if",
                     "cond_test": "FALSE",
-                    "index": 21,
                     "strict_mode": "on",
                     "type": "strict-mode"
                 },
                 {
                     "cond": "if",
                     "cond_test": "FALSE",
-                    "index": 22,
                     "lua_action": "foo",
                     "lua_params": "param1 param2",
                     "type": "lua"
                 },
                 {
                     "deny_status": 400,
-                    "index": 23,
                     "return_content": "/var/errors.file",
                     "return_content_format": "lf-file",
                     "return_content_type": "application/json",
                     "type": "deny"
                 },
                 {
-                    "index": 24,
                     "type": "wait-for-body",
                     "wait_at_least": 102400,
                     "wait_time": 20000
@@ -2247,14 +2069,12 @@
                     "bandwidth_limit_limit": "1m",
                     "bandwidth_limit_name": "my-limit",
                     "bandwidth_limit_period": "10s",
-                    "index": 25,
                     "type": "set-bandwidth-limit"
                 },
                 {
                     "bandwidth_limit_limit": "2m",
                     "bandwidth_limit_name": "my-limit-reverse",
                     "bandwidth_limit_period": "20s",
-                    "index": 26,
                     "type": "set-bandwidth-limit"
                 },
                 {
@@ -2262,13 +2082,11 @@
                     "bandwidth_limit_name": "my-limit-cond",
                     "cond": "if",
                     "cond_test": "FALSE",
-                    "index": 27,
                     "type": "set-bandwidth-limit"
                 },
                 {
                     "cond": "if",
                     "cond_test": "TRUE",
-                    "index": 28,
                     "track_sc_key": "src",
                     "track_sc_stick_counter": 0,
                     "track_sc_table": "tr0",
@@ -2277,7 +2095,6 @@
                 {
                     "cond": "if",
                     "cond_test": "TRUE",
-                    "index": 29,
                     "track_sc_key": "src",
                     "track_sc_stick_counter": 1,
                     "track_sc_table": "tr1",
@@ -2286,7 +2103,6 @@
                 {
                     "cond": "if",
                     "cond_test": "TRUE",
-                    "index": 30,
                     "track_sc_key": "src",
                     "track_sc_stick_counter": 2,
                     "track_sc_table": "tr2",
@@ -2295,32 +2111,27 @@
                 {
                     "cond": "if",
                     "cond_test": "TRUE",
-                    "index": 31,
                     "track_sc_key": "src",
                     "track_sc_stick_counter": 5,
                     "track_sc_table": "test",
                     "type": "track-sc"
                 },
                 {
-                    "index": 32,
                     "timeout": "20",
                     "timeout_type": "server",
                     "type": "set-timeout"
                 },
                 {
-                    "index": 33,
                     "timeout": "20",
                     "timeout_type": "tunnel",
                     "type": "set-timeout"
                 },
                 {
-                    "index": 34,
                     "timeout": "20",
                     "timeout_type": "client",
                     "type": "set-timeout"
                 },
                 {
-                    "index": 35,
                     "type": "sc-set-gpt",
                     "sc_id": 1,
                     "sc_idx": 2,
@@ -2331,17 +2142,14 @@
             ],
             "log_target_list": [
                 {
-                    "global": true,
-                    "index": 0
+                    "global": true
                 },
                 {
-                    "index": 1,
                     "nolog": true
                 },
                 {
                     "address": "127.0.0.1:514",
                     "facility": "local0",
-                    "index": 2,
                     "level": "notice",
                     "minlevel": "notice"
                 }
@@ -2351,47 +2159,40 @@
                     "action": "accept",
                     "cond": "if",
                     "cond_test": "TRUE",
-                    "index": 0,
                     "type": "connection"
                 },
                 {
                     "action": "reject",
                     "cond": "if",
                     "cond_test": "FALSE",
-                    "index": 1,
                     "type": "connection"
                 },
                 {
                     "action": "accept",
                     "cond": "if",
                     "cond_test": "TRUE",
-                    "index": 2,
                     "type": "content"
                 },
                 {
                     "action": "reject",
                     "cond": "if",
                     "cond_test": "FALSE",
-                    "index": 3,
                     "type": "content"
                 },
                 {
                     "action": "silent-drop",
-                    "index": 4,
                     "type": "connection"
                 },
                 {
                     "action": "silent-drop",
                     "cond": "if",
                     "cond_test": "TRUE",
-                    "index": 5,
                     "type": "connection"
                 },
                 {
                     "action": "lua",
                     "cond": "if",
                     "cond_test": "FALSE",
-                    "index": 6,
                     "lua_action": "foo",
                     "lua_params": "param1 param2",
                     "type": "connection"
@@ -2400,7 +2201,6 @@
                     "action": "sc-add-gpc",
                     "cond": "if",
                     "cond_test": "FALSE",
-                    "index": 7,
                     "sc_idx": "0",
                     "sc_inc_id": "1",
                     "sc_int": 1,
@@ -2410,7 +2210,6 @@
                     "action": "lua",
                     "cond": "if",
                     "cond_test": "FALSE",
-                    "index": 8,
                     "lua_action": "foo",
                     "lua_params": "param1 param2",
                     "type": "content"
@@ -2419,7 +2218,6 @@
                     "action": "sc-add-gpc",
                     "cond": "if",
                     "cond_test": "FALSE",
-                    "index": 9,
                     "sc_idx": "0",
                     "sc_inc_id": "1",
                     "sc_int": 1,
@@ -2430,7 +2228,6 @@
                     "bandwidth_limit_limit": "1m",
                     "bandwidth_limit_name": "my-limit",
                     "bandwidth_limit_period": "10s",
-                    "index": 10,
                     "type": "content"
                 },
                 {
@@ -2438,7 +2235,6 @@
                     "bandwidth_limit_limit": "2m",
                     "bandwidth_limit_name": "my-limit-reverse",
                     "bandwidth_limit_period": "20s",
-                    "index": 11,
                     "type": "content"
                 },
                 {
@@ -2447,14 +2243,12 @@
                     "bandwidth_limit_name": "my-limit-cond",
                     "cond": "if",
                     "cond_test": "FALSE",
-                    "index": 12,
                     "type": "content"
                 },
                 {
                     "action": "set-mark",
                     "cond": "if",
                     "cond_test": "FALSE",
-                    "index": 13,
                     "mark_value": "0x1Ab",
                     "type": "connection"
                 },
@@ -2463,14 +2257,12 @@
                     "cond": "if",
                     "cond_test": "FALSE",
                     "expr": "hdr(port)",
-                    "index": 14,
                     "type": "connection"
                 },
                 {
                     "action": "set-tos",
                     "cond": "if",
                     "cond_test": "FALSE",
-                    "index": 15,
                     "tos_value": "1",
                     "type": "connection"
                 },
@@ -2478,7 +2270,6 @@
                     "action": "set-log-level",
                     "cond": "if",
                     "cond_test": "FALSE",
-                    "index": 16,
                     "log_level": "silent",
                     "type": "content"
                 },
@@ -2486,7 +2277,6 @@
                     "action": "set-mark",
                     "cond": "if",
                     "cond_test": "FALSE",
-                    "index": 17,
                     "mark_value": "0x1Ac",
                     "type": "content"
                 },
@@ -2494,7 +2284,6 @@
                     "action": "set-nice",
                     "cond": "if",
                     "cond_test": "FALSE",
-                    "index": 18,
                     "nice_value": 2,
                     "type": "content"
                 },
@@ -2503,14 +2292,12 @@
                     "cond": "if",
                     "cond_test": "FALSE",
                     "expr": "hdr(port)",
-                    "index": 19,
                     "type": "content"
                 },
                 {
                     "action": "set-tos",
                     "cond": "if",
                     "cond_test": "FALSE",
-                    "index": 20,
                     "tos_value": "3",
                     "type": "content"
                 },
@@ -2518,7 +2305,6 @@
                     "action": "set-var-fmt",
                     "cond": "if",
                     "cond_test": "FALSE",
-                    "index": 21,
                     "type": "content",
                     "var_format": "ssl_c_s_tn",
                     "var_name": "tn",
@@ -2528,7 +2314,6 @@
                     "action": "switch-mode",
                     "cond": "if",
                     "cond_test": "FALSE",
-                    "index": 22,
                     "switch_mode_proto": "my-proto",
                     "type": "content"
                 },
@@ -2536,7 +2321,6 @@
                     "action": "sc-add-gpc",
                     "cond": "if",
                     "cond_test": "FALSE",
-                    "index": 23,
                     "sc_idx": "0",
                     "sc_inc_id": "1",
                     "sc_int": 1,
@@ -2546,7 +2330,6 @@
                     "action": "track-sc",
                     "cond": "if",
                     "cond_test": "TRUE",
-                    "index": 24,
                     "track_key": "src",
                     "track_stick_counter": 0,
                     "track_table": "tr0",
@@ -2556,7 +2339,6 @@
                     "action": "track-sc",
                     "cond": "if",
                     "cond_test": "TRUE",
-                    "index": 25,
                     "track_key": "src",
                     "track_stick_counter": 0,
                     "track_table": "tr0",
@@ -2566,7 +2348,6 @@
                     "action": "track-sc",
                     "cond": "if",
                     "cond_test": "TRUE",
-                    "index": 26,
                     "track_key": "src",
                     "track_stick_counter": 0,
                     "track_table": "tr0",
@@ -2576,7 +2357,6 @@
                     "action": "track-sc",
                     "cond": "if",
                     "cond_test": "TRUE",
-                    "index": 27,
                     "track_key": "src",
                     "track_stick_counter": 5,
                     "track_table": "test",
@@ -2586,7 +2366,6 @@
                     "action": "track-sc",
                     "cond": "if",
                     "cond_test": "TRUE",
-                    "index": 28,
                     "track_key": "src",
                     "track_stick_counter": 5,
                     "track_table": "test",
@@ -2596,7 +2375,6 @@
                     "action": "track-sc",
                     "cond": "if",
                     "cond_test": "TRUE",
-                    "index": 29,
                     "track_key": "src",
                     "track_stick_counter": 5,
                     "track_table": "test",
@@ -2604,14 +2382,12 @@
                 },
                 {
                     "action": "attach-srv",
-                    "index": 30,
                     "server_name": "srv1",
                     "type": "session"
                 },
                 {
                     "action": "attach-srv",
                     "expr": "example.com",
-                    "index": 31,
                     "server_name": "srv2",
                     "type": "session"
                 },
@@ -2619,37 +2395,31 @@
                     "action": "attach-srv",
                     "cond": "if",
                     "cond_test": "is_cached",
-                    "index": 32,
                     "server_name": "srv3",
                     "type": "session"
                 },
                 {
                     "action": "set-fc-mark",
-                    "index": 33,
                     "type": "connection",
                     "expr": "0xffffffff"
                 },
                 {
                     "action": "set-fc-tos",
-                    "index": 34,
                     "type": "connection",
                     "expr": "0"
                 },
                 {
                     "action": "set-fc-mark",
-                    "index": 35,
                     "type": "session",
                     "expr": "0"
                 },
                 {
                     "action": "set-fc-tos",
-                    "index": 36,
                     "type": "session",
                     "expr": "0xff"
                 },
                 {
                     "action": "set-bc-mark",
-                    "index": 37,
                     "type": "content",
                     "expr": "899",
                     "cond": "if",
@@ -2657,7 +2427,6 @@
                 },
                 {
                     "action": "set-bc-tos",
-                    "index": 38,
                     "type": "content",
                     "expr": "2",
                     "cond": "if",
@@ -2665,7 +2434,6 @@
                 },
                 {
                     "action": "set-fc-mark",
-                    "index": 39,
                     "type": "content",
                     "expr": "hdr(port)",
                     "cond": "if",
@@ -2673,20 +2441,17 @@
                 },
                 {
                     "action": "set-fc-tos",
-                    "index": 40,
                     "type": "content",
                     "expr": "req.hdr_cnt(\"X-Secret\")"
                 },
                 {
                     "action": "set-var-fmt",
-                    "index": 41,
                     "type": "connection",
                     "var_format": "%%[dst]:%%[dst_port]",
                     "var_scope": "txn",
                     "var_name": "ip_port"
                 },
                 {
-                    "index": 42,
                     "type": "connection",
                     "action": "sc-set-gpt",
                     "sc_inc_id": "1",
@@ -2696,7 +2461,6 @@
                     "cond_test": "FALSE"
                 },
                 {
-                    "index": 43,
                     "type": "content",
                     "action": "sc-set-gpt",
                     "sc_inc_id": "1",
@@ -2706,7 +2470,6 @@
                     "cond_test": "FALSE"
                 },
                 {
-                    "index": 44,
                     "type": "session",
                     "action": "sc-set-gpt",
                     "sc_inc_id": "1",
@@ -2820,13 +2583,11 @@
                 {
                     "capture_len": 10,
                     "capture_sample": "req.cook_cnt(FirstVisit),bool",
-                    "index": 0,
                     "type": "capture"
                 },
                 {
                     "capture_id": 0,
                     "capture_sample": "req.cook_cnt(FirstVisit),bool",
-                    "index": 1,
                     "type": "capture"
                 }
             ],
@@ -2834,7 +2595,6 @@
                 {
                     "capture_id": 0,
                     "capture_sample": "res.header",
-                    "index": 0,
                     "type": "capture"
                 }
             ],
@@ -2892,39 +2652,33 @@
             "timeout_client": 10000,
             "log_target_list": [
                 {
-                    "global": true,
-                    "index": 0
+                    "global": true
                 },
                 {
                     "address": "ring@myring",
-                    "facility": "local0",
-                    "index": 1
+                    "facility": "local0"
                 },
                 {
                     "address": "127.0.0.1:10001",
                     "facility": "local0",
-                    "index": 2,
                     "sample_range": "1",
                     "sample_size": 4
                 },
                 {
                     "address": "127.0.0.1:10002",
                     "facility": "local0",
-                    "index": 3,
                     "sample_range": "2",
                     "sample_size": 4
                 },
                 {
                     "address": "127.0.0.1:10003",
                     "facility": "local0",
-                    "index": 4,
                     "sample_range": "3",
                     "sample_size": 4
                 },
                 {
                     "address": "127.0.0.1:10004",
                     "facility": "local0",
-                    "index": 5,
                     "sample_range": "4",
                     "sample_size": 4
                 }
@@ -3042,7 +2796,6 @@
             "h1_case_adjust_bogus_client": "enabled",
             "h1_case_adjust_bogus_server": "enabled",
             "http-check": {
-                "index": 0,
                 "type": "send-state"
             },
             "http-use-htx": "enabled",
@@ -3116,17 +2869,14 @@
             "transparent": "enabled",
             "http_check_list": [
                 {
-                    "index": 0,
                     "type": "send-state"
                 },
                 {
-                    "index": 1,
                     "type": "disable-on-404"
                 }
             ],
             "http_error_rule_list": [
                 {
-                    "index": 0,
                     "return_content": "/test/503",
                     "return_content_format": "file",
                     "return_content_type": "\"application/json\"",
@@ -3134,7 +2884,6 @@
                     "type": "status"
                 },
                 {
-                    "index": 1,
                     "return_content": "/test/429",
                     "return_content_format": "file",
                     "return_content_type": "application/json",
@@ -3145,8 +2894,7 @@
             "tcp_check_rule_list": [
                 {
                     "action": "send",
-                    "data": "GET\\ /\\ HTTP/2.0\\r\\n",
-                    "index": 0
+                    "data": "GET\\ /\\ HTTP/2.0\\r\\n"
                 }
             ]
         }

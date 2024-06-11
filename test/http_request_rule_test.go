@@ -33,8 +33,8 @@ func hTTPRequestRuleExpectation() map[string]models.HTTPRequestRules {
 	res := StructuredToHTTPRequestRuleMap()
 	// Add individual entries
 	for k, vs := range res {
-		for _, v := range vs {
-			key := fmt.Sprintf("%s/%d", k, *v.Index)
+		for i, v := range vs {
+			key := fmt.Sprintf("%s/%d", k, i)
 			res[key] = models.HTTPRequestRules{v}
 		}
 	}
@@ -74,13 +74,10 @@ func checkHTTPRequestRules(t *testing.T, got map[string]models.HTTPRequestRules)
 		want, ok := exp[k]
 		require.True(t, ok, "k=%s", k)
 		require.Equal(t, len(want), len(v), "k=%s", k)
-		for _, g := range v {
-			for _, w := range want {
-				if *g.Index == *w.Index {
-					require.True(t, g.Equal(*w), "k=%s - diff %v", k, cmp.Diff(*g, *w))
-					break
-				}
-			}
+		i := 0
+		for _, w := range want {
+			require.True(t, v[i].Equal(*w), "k=%s - diff %v", k, cmp.Diff(*v[i], *w))
+			i++
 		}
 	}
 }
@@ -128,14 +125,13 @@ func TestCreateEditDeleteHTTPRequestRule(t *testing.T) {
 	// TestCreateHTTPRequestRule
 	var redirCode int64 = 301
 	r := &models.HTTPRequestRule{
-		Index:      &id,
 		Type:       "redirect",
 		RedirCode:  &redirCode,
 		RedirValue: "http://www.%[hdr(host)]%[capture.req.uri]",
 		RedirType:  "location",
 	}
 
-	err := clientTest.CreateHTTPRequestRule(configuration.FrontendParentName, "test", r, "", version)
+	err := clientTest.CreateHTTPRequestRule(id, configuration.FrontendParentName, "test", r, "", version)
 	if err != nil {
 		t.Error(err.Error())
 	} else {
@@ -159,7 +155,6 @@ func TestCreateEditDeleteHTTPRequestRule(t *testing.T) {
 
 	// TestEditHTTPRequestRule
 	r = &models.HTTPRequestRule{
-		Index:      &id,
 		Type:       "redirect",
 		RedirCode:  &redirCode,
 		RedirValue: "http://www1.%[hdr(host)]%[capture.req.uri]",

@@ -76,11 +76,6 @@ type TCPCheck struct {
 	// hex string
 	HexString string `json:"hex_string,omitempty"`
 
-	// index
-	// Required: true
-	// +kubebuilder:validation:Optional
-	Index *int64 `json:"index"`
-
 	// linger
 	Linger bool `json:"linger,omitempty"`
 
@@ -178,10 +173,6 @@ func (m *TCPCheck) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateErrorStatus(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateIndex(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -351,15 +342,6 @@ func (m *TCPCheck) validateErrorStatus(formats strfmt.Registry) error {
 
 	// value enum
 	if err := m.validateErrorStatusEnum("error_status", "body", m.ErrorStatus); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func (m *TCPCheck) validateIndex(formats strfmt.Registry) error {
-
-	if err := validate.Required("index", "body", m.Index); err != nil {
 		return err
 	}
 

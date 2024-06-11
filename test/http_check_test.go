@@ -32,8 +32,8 @@ func hTTPCheckExpectation() map[string]models.HTTPChecks {
 	res := StructuredToHTTPCheckMap()
 	// Add individual entries
 	for k, vs := range res {
-		for _, v := range vs {
-			key := fmt.Sprintf("%s/%d", k, *v.Index)
+		for i, v := range vs {
+			key := fmt.Sprintf("%s/%d", k, i)
 			res[key] = models.HTTPChecks{v}
 		}
 	}
@@ -57,7 +57,7 @@ func TestGetHTTPChecks(t *testing.T) { //nolint:gocognit,gocyclo
 		t.Errorf("Version %v returned, expected %v", v, version)
 	}
 
-	_, checks, err = clientTest.GetHTTPChecks(configuration.DefaultsParentName, "", "")
+	_, checks, err = clientTest.GetHTTPChecks(configuration.DefaultsParentName, "unnamed_defaults_1", "")
 	if err != nil {
 		t.Error(err.Error())
 	}
@@ -78,13 +78,10 @@ func checkHttpChecks(t *testing.T, got map[string]models.HTTPChecks) {
 		want, ok := exp[k]
 		require.True(t, ok, "k=%s", k)
 		require.Equal(t, len(want), len(v), "k=%s", k)
-		for _, g := range v {
-			for _, w := range want {
-				if *g.Index == *w.Index {
-					require.True(t, g.Equal(*w), "k=%s - diff %v", k, cmp.Diff(*g, *w))
-					break
-				}
-			}
+		i := 0
+		for _, w := range want {
+			require.True(t, v[i].Equal(*w), "k=%s - diff %v", k, cmp.Diff(*v[i], *w))
+			i++
 		}
 	}
 }
@@ -111,7 +108,7 @@ func TestGetHTTPCheck(t *testing.T) {
 		t.Error("Should throw error, non existent HTTP Request Rule")
 	}
 
-	_, check, err = clientTest.GetHTTPCheck(0, configuration.DefaultsParentName, "", "")
+	_, check, err = clientTest.GetHTTPCheck(0, configuration.DefaultsParentName, "unnamed_defaults_1", "")
 	if err != nil {
 		t.Error(err.Error())
 	}
@@ -124,7 +121,6 @@ func TestCreateEditDeleteHTTPCheck(t *testing.T) {
 
 	// TestCreateHTTPCheck
 	r := &models.HTTPCheck{
-		Index:        &id,
 		Type:         "send",
 		Method:       "GET",
 		Version:      "HTTP/1.1",
@@ -132,7 +128,7 @@ func TestCreateEditDeleteHTTPCheck(t *testing.T) {
 		CheckHeaders: []*models.ReturnHeader{},
 	}
 
-	err := clientTest.CreateHTTPCheck(configuration.BackendParentName, "test", r, "", version)
+	err := clientTest.CreateHTTPCheck(id, configuration.BackendParentName, "test", r, "", version)
 	if err != nil {
 		t.Error(err.Error())
 	} else {
@@ -168,7 +164,6 @@ func TestCreateEditDeleteHTTPCheck(t *testing.T) {
 
 	// TestEditHTTPRequestRule
 	r = &models.HTTPCheck{
-		Index:   &id,
 		Type:    "send",
 		Method:  "GET",
 		Version: "HTTP/1.1",

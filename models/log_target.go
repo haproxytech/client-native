@@ -54,11 +54,6 @@ type LogTarget struct {
 	// global
 	Global bool `json:"global,omitempty"`
 
-	// index
-	// Required: true
-	// +kubebuilder:validation:Optional
-	Index *int64 `json:"index"`
-
 	// length
 	Length int64 `json:"length,omitempty"`
 
@@ -95,10 +90,6 @@ func (m *LogTarget) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateFormat(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateIndex(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -290,15 +281,6 @@ func (m *LogTarget) validateFormat(formats strfmt.Registry) error {
 
 	// value enum
 	if err := m.validateFormatEnum("format", "body", m.Format); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func (m *LogTarget) validateIndex(formats strfmt.Registry) error {
-
-	if err := validate.Required("index", "body", m.Index); err != nil {
 		return err
 	}
 

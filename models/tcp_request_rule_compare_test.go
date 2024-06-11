@@ -84,7 +84,6 @@ func TestTCPRequestRuleEqualFalse(t *testing.T) {
 			t.Errorf(err.Error())
 		}
 		result.CaptureLen = sample.CaptureLen + 1
-		result.Index = Ptr(*sample.Index + 1)
 		result.NiceValue = sample.NiceValue + 1
 		result.ScInt = Ptr(*sample.ScInt + 1)
 		result.Timeout = Ptr(*sample.Timeout + 1)
@@ -169,7 +168,6 @@ func TestTCPRequestRuleDiffFalse(t *testing.T) {
 			t.Errorf(err.Error())
 		}
 		result.CaptureLen = sample.CaptureLen + 1
-		result.Index = Ptr(*sample.Index + 1)
 		result.NiceValue = sample.NiceValue + 1
 		result.ScInt = Ptr(*sample.ScInt + 1)
 		result.Timeout = Ptr(*sample.Timeout + 1)
@@ -181,7 +179,7 @@ func TestTCPRequestRuleDiffFalse(t *testing.T) {
 
 	for _, sample := range samples {
 		result := sample.a.Diff(sample.b)
-		if len(result) != 36-1 {
+		if len(result) != 35 {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {
@@ -191,7 +189,7 @@ func TestTCPRequestRuleDiffFalse(t *testing.T) {
 			if err != nil {
 				t.Errorf(err.Error())
 			}
-			t.Errorf("Expected TCPRequestRule to be different in 36 cases, but it is not (%d) %s %s", len(result), a, b)
+			t.Errorf("Expected TCPRequestRule to be different in 35 cases, but it is not (%d) %s %s", len(result), a, b)
 		}
 	}
 }

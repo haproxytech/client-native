@@ -33,8 +33,9 @@ type Backend interface {
 	GetBackendSwitchingRules(frontend string, transactionID string) (int64, models.BackendSwitchingRules, error)
 	GetBackendSwitchingRule(id int64, frontend string, transactionID string) (int64, *models.BackendSwitchingRule, error)
 	DeleteBackendSwitchingRule(id int64, frontend string, transactionID string, version int64) error
-	CreateBackendSwitchingRule(frontend string, data *models.BackendSwitchingRule, transactionID string, version int64) error
+	CreateBackendSwitchingRule(id int64, frontend string, data *models.BackendSwitchingRule, transactionID string, version int64) error
 	EditBackendSwitchingRule(id int64, frontend string, data *models.BackendSwitchingRule, transactionID string, version int64) error
+	ReplaceBackendSwitchingRules(frontend string, data models.BackendSwitchingRules, transactionID string, version int64) error
 }
 
 // GetBackends returns configuration version and an array of

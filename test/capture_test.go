@@ -21,9 +21,7 @@ import (
 	"os"
 	"testing"
 
-	"github.com/google/go-cmp/cmp"
 	"github.com/haproxytech/client-native/v6/models"
-	"github.com/stretchr/testify/require"
 )
 
 func captureExpectation() map[string]models.Captures {
@@ -31,8 +29,8 @@ func captureExpectation() map[string]models.Captures {
 	res := StructuredToCaptureMap()
 	// Add individual entries
 	for k, vs := range res {
-		for _, v := range vs {
-			key := fmt.Sprintf("%s/%d", k, *v.Index)
+		for i, v := range vs {
+			key := fmt.Sprintf("%s/%d", k, i)
 			res[key] = models.Captures{v}
 		}
 	}
@@ -166,7 +164,6 @@ frontend test_delete
 			// replace tests
 			index := int64(0)
 			edited := models.Capture{
-				Index:  &index,
 				Type:   "request",
 				Length: 12345,
 			}
@@ -176,7 +173,6 @@ frontend test_delete
 
 			index = int64(1)
 			edited = models.Capture{
-				Index:  &index,
 				Type:   "response",
 				Length: 12345,
 			}
@@ -187,20 +183,18 @@ frontend test_delete
 			// add tests
 			index = int64(0)
 			add := models.Capture{
-				Index:  &index,
 				Type:   "request",
 				Length: 1,
 			}
-			if c.CreateDeclareCapture("test_add", &add, "", 3) != nil {
+			if c.CreateDeclareCapture(index, "test_add", &add, "", 3) != nil {
 				t.Errorf("Adding a new declare capture request failed")
 			}
 
 			add = models.Capture{
-				Index:  &index,
 				Type:   "response",
 				Length: 2,
 			}
-			if c.CreateDeclareCapture("test_add", &add, "", 4) != nil {
+			if c.CreateDeclareCapture(index, "test_add", &add, "", 4) != nil {
 				t.Errorf("Adding a new declare capture response failed")
 			}
 			// delete tests
@@ -211,23 +205,5 @@ frontend test_delete
 				t.Errorf("Deleting an existing declare capture failed")
 			}
 		})
-	}
-}
-
-// check based on configuration_test.go
-func checkCaptures(t *testing.T, got map[string]models.Captures) {
-	exp := captureExpectation()
-	for k, v := range got {
-		want, ok := exp[k]
-		require.True(t, ok, "k=%s", k)
-		require.Equal(t, len(want), len(v), "k=%s", k)
-		for _, g := range v {
-			for _, w := range want {
-				if *g.Index == *w.Index {
-					require.True(t, g.Equal(*w), "k=%s - diff %v", k, cmp.Diff(*g, *w))
-					break
-				}
-			}
-		}
 	}
 }

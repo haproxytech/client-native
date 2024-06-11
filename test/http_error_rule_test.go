@@ -49,7 +49,7 @@ func TestGetHTTPErrorRules(t *testing.T) { //nolint:gocognit,gocyclo
 	}
 	mr["frontend/test"] = checks
 
-	_, checks, err = clientTest.GetHTTPErrorRules(configuration.DefaultsParentName, "", "")
+	_, checks, err = clientTest.GetHTTPErrorRules(configuration.DefaultsParentName, "unnamed_defaults_1", "")
 	if err != nil {
 		t.Error(err.Error())
 	}
@@ -70,13 +70,10 @@ func checkErrorRules(t *testing.T, got map[string]models.HTTPErrorRules) {
 		want, ok := exp[k]
 		require.True(t, ok, "k=%s", k)
 		require.Equal(t, len(want), len(v), "k=%s", k)
-		for _, g := range v {
-			for _, w := range want {
-				if *g.Index == *w.Index {
-					require.True(t, g.Equal(*w), "k=%s - diff %v", k, cmp.Diff(*g, *w))
-					break
-				}
-			}
+		i := 0
+		for _, w := range want {
+			require.True(t, v[i].Equal(*w), "k=%s - diff %v", k, cmp.Diff(*v[i], *w))
+			i++
 		}
 	}
 }
@@ -91,14 +88,11 @@ func TestGetHTTPErrorRule(t *testing.T) {
 		t.Errorf("Version %v returned, expected %v", v, version)
 	}
 
-	if *check.Index != 0 {
-		t.Errorf("http-error rule index not 0: %v", *check.Index)
-	}
 	if check.Type != "status" {
-		t.Errorf("%v: Action not status: %v", *check.Index, check.Type)
+		t.Errorf("%v: Action not status: %v", 0, check.Type)
 	}
 	if check.Status != 200 {
-		t.Errorf("%v: Status not 200: %v", *check.Index, check.Type)
+		t.Errorf("%v: Status not 200: %v", 0, check.Type)
 	}
 	_, err = check.MarshalBinary()
 	if err != nil {
@@ -110,25 +104,21 @@ func TestGetHTTPErrorRule(t *testing.T) {
 		t.Error("no http-error rules in backend section named test - expected an error")
 	}
 
-	_, check, err = clientTest.GetHTTPErrorRule(1, configuration.DefaultsParentName, "", "")
+	_, check, err = clientTest.GetHTTPErrorRule(1, configuration.DefaultsParentName, "unnamed_defaults_1", "")
 	if err != nil {
 		t.Error(err.Error())
 	}
-	if *check.Index != 1 {
-		t.Errorf("http-error rule index not 1: %v", *check.Index)
-	}
 	if check.Type != "status" {
-		t.Errorf("%v: Action not status: %v", *check.Index, check.Type)
+		t.Errorf("%v: Action not status: %v", 1, check.Type)
 	}
 	if check.Status != 429 {
-		t.Errorf("%v: Status not 429: %v", *check.Index, check.Type)
+		t.Errorf("%v: Status not 429: %v", 1, check.Type)
 	}
 }
 
 func TestCreateEditDeleteHTTPErrorRule(t *testing.T) {
 	id := int64(1)
 	r := &models.HTTPErrorRule{
-		Index:               &id,
 		Type:                "status",
 		Status:              429,
 		ReturnContentType:   misc.StringP("application/json"),
@@ -143,7 +133,7 @@ func TestCreateEditDeleteHTTPErrorRule(t *testing.T) {
 	}
 
 	// TestCreateHTTPErrorRule
-	err := clientTest.CreateHTTPErrorRule(configuration.BackendParentName, "test_2", r, "", version)
+	err := clientTest.CreateHTTPErrorRule(id, configuration.BackendParentName, "test_2", r, "", version)
 	if err != nil {
 		t.Error(err.Error())
 	} else {
@@ -227,12 +217,12 @@ func TestCreateEditDeleteHTTPErrorRule(t *testing.T) {
 		t.Error("deleting http-error rule failed - http-error rule 0 still exists")
 	}
 
-	_, rules, err := clientTest.GetHTTPErrorRules(configuration.DefaultsParentName, "", "")
+	_, rules, err := clientTest.GetHTTPErrorRules(configuration.DefaultsParentName, "unnamed_defaults_1", "")
 	if err != nil {
 		t.Error(err.Error())
 	}
 	N := int64(len(rules)) - 1
-	err = clientTest.DeleteHTTPErrorRule(N, configuration.DefaultsParentName, "", "", version)
+	err = clientTest.DeleteHTTPErrorRule(N, configuration.DefaultsParentName, "unnamed_defaults_1", "", version)
 	if err != nil {
 		t.Error(err.Error())
 	} else {
@@ -243,7 +233,7 @@ func TestCreateEditDeleteHTTPErrorRule(t *testing.T) {
 		t.Error("Version not incremented")
 	}
 
-	_, _, err = clientTest.GetHTTPErrorRule(N, configuration.DefaultsParentName, "", "")
+	_, _, err = clientTest.GetHTTPErrorRule(N, configuration.DefaultsParentName, "unnamed_defaults_1", "")
 	if err == nil {
 		t.Errorf("deleting http-error rule failed - http-error rule %d still exists", N)
 	}

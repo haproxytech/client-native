@@ -4,12 +4,8 @@ tcp_response_rule:
   description: HAProxy TCP Response Rule configuration (corresponds to tcp-response)
   type: object
   required:
-    - index
     - type
   properties:
-    index:
-      type: integer
-      x-nullable: true
     type:
       type: string
       enum: [content, inspect-delay]

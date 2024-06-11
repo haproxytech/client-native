@@ -4,12 +4,8 @@ http_response_rule:
   description: HAProxy HTTP response rule configuration (corresponds to http-response directives)
   type: object
   required:
-    - index
     - type
   properties:
-    index:
-      type: integer
-      x-nullable: true
     type:
       type: string
       enum:

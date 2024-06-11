@@ -104,11 +104,6 @@ type HTTPResponseRule struct {
 	// hdr name
 	HdrName string `json:"hdr_name,omitempty"`
 
-	// index
-	// Required: true
-	// +kubebuilder:validation:Optional
-	Index *int64 `json:"index"`
-
 	// log level
 	// Enum: [emerg alert crit err warning notice info debug silent]
 	// +kubebuilder:validation:Enum=emerg;alert;crit;err;warning;notice;info;debug;silent;
@@ -306,10 +301,6 @@ func (m *HTTPResponseRule) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateDenyStatus(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateIndex(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -537,15 +528,6 @@ func (m *HTTPResponseRule) validateDenyStatus(formats strfmt.Registry) error {
 	}
 
 	if err := validate.MaximumInt("deny_status", "body", *m.DenyStatus, 599, false); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func (m *HTTPResponseRule) validateIndex(formats strfmt.Registry) error {
-
-	if err := validate.Required("index", "body", m.Index); err != nil {
 		return err
 	}
 

@@ -36,8 +36,9 @@ type HTTPRequestRule interface {
 	GetHTTPRequestRules(parentType, parentName string, transactionID string) (int64, models.HTTPRequestRules, error)
 	GetHTTPRequestRule(id int64, parentType, parentName string, transactionID string) (int64, *models.HTTPRequestRule, error)
 	DeleteHTTPRequestRule(id int64, parentType string, parentName string, transactionID string, version int64) error
-	CreateHTTPRequestRule(parentType string, parentName string, data *models.HTTPRequestRule, transactionID string, version int64) error
+	CreateHTTPRequestRule(id int64, parentType string, parentName string, data *models.HTTPRequestRule, transactionID string, version int64) error
 	EditHTTPRequestRule(id int64, parentType string, parentName string, data *models.HTTPRequestRule, transactionID string, version int64) error
+	ReplaceHTTPRequestRules(parentType string, parentName string, data models.HTTPRequestRules, transactionID string, version int64) error
 }
 
 // GetHTTPRequestRules returns configuration version and an array of
@@ -90,7 +91,6 @@ func (c *client) GetHTTPRequestRule(id int64, parentType, parentName string, tra
 	if err != nil {
 		return v, nil, err
 	}
-	httpRule.Index = &id
 
 	return v, httpRule, nil
 }
@@ -119,7 +119,7 @@ func (c *client) DeleteHTTPRequestRule(id int64, parentType string, parentName s
 
 // CreateHTTPRequestRule creates a http request rule in configuration. One of version or transactionID is
 // mandatory. Returns error on fail, nil on success.
-func (c *client) CreateHTTPRequestRule(parentType string, parentName string, data *models.HTTPRequestRule, transactionID string, version int64) error {
+func (c *client) CreateHTTPRequestRule(id int64, parentType string, parentName string, data *models.HTTPRequestRule, transactionID string, version int64) error {
 	if c.UseModelsValidation {
 		validationErr := data.Validate(strfmt.Default)
 		if validationErr != nil {
@@ -144,8 +144,8 @@ func (c *client) CreateHTTPRequestRule(parentType string, parentName string, dat
 		return err
 	}
 
-	if err := p.Insert(section, parentName, "http-request", s, int(*data.Index)); err != nil {
-		return c.HandleError(strconv.FormatInt(*data.Index, 10), parentType, parentName, t, transactionID == "", err)
+	if err := p.Insert(section, parentName, "http-request", s, int(id)); err != nil {
+		return c.HandleError(strconv.FormatInt(id, 10), parentType, parentName, t, transactionID == "", err)
 	}
 
 	return c.SaveData(p, t, transactionID == "")
@@ -190,6 +190,55 @@ func (c *client) EditHTTPRequestRule(id int64, parentType string, parentName str
 	return c.SaveData(p, t, transactionID == "")
 }
 
+// ReplaceHTTPRequestRules replaces all HTTP Request Rule lines in configuration for a parentType/parentName.
+// One of version or transactionID is mandatory.
+// Returns error on fail, nil on success.
+//
+//nolint:dupl
+func (c *client) ReplaceHTTPRequestRules(parentType string, parentName string, data models.HTTPRequestRules, transactionID string, version int64) error {
+	if c.UseModelsValidation {
+		validationErr := data.Validate(strfmt.Default)
+		if validationErr != nil {
+			return NewConfError(ErrValidationError, validationErr.Error())
+		}
+	}
+	p, t, err := c.loadDataForChange(transactionID, version)
+	if err != nil {
+		return err
+	}
+
+	var section parser.Section
+	if parentType == BackendParentName {
+		section = parser.Backends
+	} else if parentType == FrontendParentName {
+		section = parser.Frontends
+	}
+
+	httpRequestRules, err := ParseHTTPRequestRules(parentType, parentName, p)
+	if err != nil {
+		return c.HandleError("", parentType, parentName, "", false, err)
+	}
+
+	for i := range httpRequestRules {
+		// Always delete index 0
+		if err := p.Delete(section, parentName, "http-request", 0); err != nil {
+			return c.HandleError(strconv.FormatInt(int64(i), 10), parentType, parentName, t, transactionID == "", err)
+		}
+	}
+
+	for i, newHTTPRequestRule := range data {
+		s, err := SerializeHTTPRequestRule(*newHTTPRequestRule)
+		if err != nil {
+			return err
+		}
+		if err := p.Insert(section, parentName, "http-request", s, i); err != nil {
+			return c.HandleError(strconv.FormatInt(int64(i), 10), parentType, parentName, t, transactionID == "", err)
+		}
+	}
+
+	return c.SaveData(p, t, transactionID == "")
+}
+
 func ParseHTTPRequestRules(t, pName string, p parser.Parser) (models.HTTPRequestRules, error) {
 	section := parser.Global
 	if t == FrontendParentName {
@@ -211,11 +260,9 @@ func ParseHTTPRequestRules(t, pName string, p parser.Parser) (models.HTTPRequest
 	if !ok {
 		return nil, misc.CreateTypeAssertError("http request")
 	}
-	for i, r := range rules {
-		id := int64(i)
+	for _, r := range rules {
 		httpReqRule, err := ParseHTTPRequestRule(r)
 		if err == nil {
-			httpReqRule.Index = &id
 			httpReqRules = append(httpReqRules, httpReqRule)
 		}
 	}

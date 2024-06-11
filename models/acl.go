@@ -49,11 +49,6 @@ type ACL struct {
 	// +kubebuilder:validation:Pattern=`^[^\s]+$`
 	Criterion string `json:"criterion"`
 
-	// index
-	// Required: true
-	// +kubebuilder:validation:Optional
-	Index *int64 `json:"index"`
-
 	// value
 	Value string `json:"value,omitempty"`
 }
@@ -67,10 +62,6 @@ func (m *ACL) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateCriterion(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateIndex(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -100,15 +91,6 @@ func (m *ACL) validateCriterion(formats strfmt.Registry) error {
 	}
 
 	if err := validate.Pattern("criterion", "body", m.Criterion, `^[^\s]+$`); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func (m *ACL) validateIndex(formats strfmt.Registry) error {
-
-	if err := validate.Required("index", "body", m.Index); err != nil {
 		return err
 	}
 

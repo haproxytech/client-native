@@ -33,7 +33,7 @@ import (
 // Filter Filter
 //
 // HAProxy filters
-// Example: {"index":0,"trace_name":"name","trace_rnd_parsing":true,"type":"trace"}
+// Example: {"trace_name":"name","trace_rnd_parsing":true,"type":"trace"}
 //
 // swagger:model filter
 type Filter struct {
@@ -61,11 +61,6 @@ type Filter struct {
 	// It can be specified for per-stream bandwidth limitation filters only.
 	// It follows the HAProxy time format and is expressed in milliseconds.
 	DefaultPeriod int64 `json:"default_period,omitempty"`
-
-	// index
-	// Required: true
-	// +kubebuilder:validation:Optional
-	Index *int64 `json:"index"`
 
 	// A sample expression rule.
 	// It describes what elements will be analyzed, extracted, combined, and used to select which table entry to update the counters.
@@ -133,10 +128,6 @@ func (m *Filter) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
-	if err := m.validateIndex(formats); err != nil {
-		res = append(res, err)
-	}
-
 	if err := m.validateSpoeConfig(formats); err != nil {
 		res = append(res, err)
 	}
@@ -189,15 +180,6 @@ func (m *Filter) validateCacheName(formats strfmt.Registry) error {
 	}
 
 	if err := validate.Pattern("cache_name", "body", m.CacheName, `^[^\s]+$`); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func (m *Filter) validateIndex(formats strfmt.Registry) error {
-
-	if err := validate.Required("index", "body", m.Index); err != nil {
 		return err
 	}
 

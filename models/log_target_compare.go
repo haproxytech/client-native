@@ -19,20 +19,11 @@ package models
 
 // Equal checks if two structs of type LogTarget are equal
 //
-// By default empty maps and slices are equal to nil:
-//
 //	var a, b LogTarget
 //	equal := a.Equal(b)
 //
-// For more advanced use case you can configure these options (default values are shown):
-//
-//	var a, b LogTarget
-//	equal := a.Equal(b,Options{
-//		SkipIndex: true,
-//	})
+// opts ...Options are ignored in this method
 func (s LogTarget) Equal(t LogTarget, opts ...Options) bool {
-	opt := getOptions(opts...)
-
 	if s.Address != t.Address {
 		return false
 	}
@@ -46,10 +37,6 @@ func (s LogTarget) Equal(t LogTarget, opts ...Options) bool {
 	}
 
 	if s.Global != t.Global {
-		return false
-	}
-
-	if !opt.SkipIndex && !equalPointers(s.Index, t.Index) {
 		return false
 	}
 
@@ -82,20 +69,11 @@ func (s LogTarget) Equal(t LogTarget, opts ...Options) bool {
 
 // Diff checks if two structs of type LogTarget are equal
 //
-// By default empty maps and slices are equal to nil:
-//
 //	var a, b LogTarget
 //	diff := a.Diff(b)
 //
-// For more advanced use case you can configure these options (default values are shown):
-//
-//	var a, b LogTarget
-//	diff := a.Diff(b,Options{
-//		SkipIndex: true,
-//	})
+// opts ...Options are ignored in this method
 func (s LogTarget) Diff(t LogTarget, opts ...Options) map[string][]interface{} {
-	opt := getOptions(opts...)
-
 	diff := make(map[string][]interface{})
 	if s.Address != t.Address {
 		diff["Address"] = []interface{}{s.Address, t.Address}
@@ -111,10 +89,6 @@ func (s LogTarget) Diff(t LogTarget, opts ...Options) map[string][]interface{} {
 
 	if s.Global != t.Global {
 		diff["Global"] = []interface{}{s.Global, t.Global}
-	}
-
-	if !opt.SkipIndex && !equalPointers(s.Index, t.Index) {
-		diff["Index"] = []interface{}{ValueOrNil(s.Index), ValueOrNil(t.Index)}
 	}
 
 	if s.Length != t.Length {

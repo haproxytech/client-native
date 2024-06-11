@@ -32,8 +32,9 @@ type StickRule interface {
 	GetStickRules(backend string, transactionID string) (int64, models.StickRules, error)
 	GetStickRule(id int64, backend string, transactionID string) (int64, *models.StickRule, error)
 	DeleteStickRule(id int64, backend string, transactionID string, version int64) error
-	CreateStickRule(backend string, data *models.StickRule, transactionID string, version int64) error
+	CreateStickRule(id int64, backend string, data *models.StickRule, transactionID string, version int64) error
 	EditStickRule(id int64, backend string, data *models.StickRule, transactionID string, version int64) error
+	ReplaceStickRules(backend string, data models.StickRules, transactionID string, version int64) error
 }
 
 // GetStickRules returns configuration version and an array of
@@ -76,7 +77,6 @@ func (c *client) GetStickRule(id int64, backend string, transactionID string) (i
 	}
 
 	sRule := ParseStickRule(data.(types.Stick))
-	sRule.Index = &id
 
 	return v, sRule, nil
 }
@@ -98,7 +98,7 @@ func (c *client) DeleteStickRule(id int64, backend string, transactionID string,
 
 // CreateStickRule creates a stick rule in configuration. One of version or transactionID is
 // mandatory. Returns error on fail, nil on success.
-func (c *client) CreateStickRule(backend string, data *models.StickRule, transactionID string, version int64) error {
+func (c *client) CreateStickRule(id int64, backend string, data *models.StickRule, transactionID string, version int64) error {
 	if c.UseModelsValidation {
 		validationErr := data.Validate(strfmt.Default)
 		if validationErr != nil {
@@ -110,8 +110,8 @@ func (c *client) CreateStickRule(backend string, data *models.StickRule, transac
 		return err
 	}
 
-	if err := p.Insert(parser.Backends, backend, "stick", SerializeStickRule(*data), int(*data.Index)); err != nil {
-		return c.HandleError(strconv.FormatInt(*data.Index, 10), BackendParentName, backend, t, transactionID == "", err)
+	if err := p.Insert(parser.Backends, backend, "stick", SerializeStickRule(*data), int(id)); err != nil {
+		return c.HandleError(strconv.FormatInt(id, 10), BackendParentName, backend, t, transactionID == "", err)
 	}
 
 	return c.SaveData(p, t, transactionID == "")
@@ -132,11 +132,47 @@ func (c *client) EditStickRule(id int64, backend string, data *models.StickRule,
 	}
 
 	if _, err := p.GetOne(parser.Backends, backend, "stick", int(id)); err != nil {
-		return c.HandleError(strconv.FormatInt(*data.Index, 10), BackendParentName, backend, t, transactionID == "", err)
+		return c.HandleError(strconv.FormatInt(id, 10), BackendParentName, backend, t, transactionID == "", err)
 	}
 
 	if err := p.Set(parser.Backends, backend, "stick", SerializeStickRule(*data), int(id)); err != nil {
-		return c.HandleError(strconv.FormatInt(*data.Index, 10), BackendParentName, backend, t, transactionID == "", err)
+		return c.HandleError(strconv.FormatInt(id, 10), BackendParentName, backend, t, transactionID == "", err)
+	}
+
+	return c.SaveData(p, t, transactionID == "")
+}
+
+// ReplaceStickRules replaces all Stick rule lines in configuration for a backend.
+// One of version or transactionID is mandatory.
+// Returns error on fail, nil on success.
+func (c *client) ReplaceStickRules(backend string, data models.StickRules, transactionID string, version int64) error {
+	if c.UseModelsValidation {
+		validationErr := data.Validate(strfmt.Default)
+		if validationErr != nil {
+			return NewConfError(ErrValidationError, validationErr.Error())
+		}
+	}
+	p, t, err := c.loadDataForChange(transactionID, version)
+	if err != nil {
+		return err
+	}
+
+	stickRules, err := ParseStickRules(backend, p)
+	if err != nil {
+		return c.HandleError("", BackendParentName, backend, "", false, err)
+	}
+
+	for i := range stickRules {
+		// Always delete index 0
+		if err := p.Delete(parser.Backends, backend, "stick", 0); err != nil {
+			return c.HandleError(strconv.FormatInt(int64(i), 10), BackendParentName, backend, t, transactionID == "", err)
+		}
+	}
+
+	for i, newStickRule := range data {
+		if err := p.Insert(parser.Backends, backend, "stick", SerializeStickRule(*newStickRule), i); err != nil {
+			return c.HandleError(strconv.FormatInt(int64(i), 10), BackendParentName, backend, t, transactionID == "", err)
+		}
 	}
 
 	return c.SaveData(p, t, transactionID == "")
@@ -157,11 +193,9 @@ func ParseStickRules(backend string, p parser.Parser) (models.StickRules, error)
 	if !ok {
 		return nil, misc.CreateTypeAssertError("stick rules")
 	}
-	for i, sRule := range sRules {
-		id := int64(i)
+	for _, sRule := range sRules {
 		s := ParseStickRule(sRule)
 		if s != nil {
-			s.Index = &id
 			sr = append(sr, s)
 		}
 	}

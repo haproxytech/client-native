@@ -13,6 +13,7 @@
 // limitations under the License.
 //
 
+//nolint:dupl
 package configuration
 
 import (
@@ -68,7 +69,6 @@ func (c *client) GetServerSwitchingRule(id int64, backend string, transactionID 
 	}
 
 	srvRule := ParseServerSwitchingRule(data.(types.UseServer))
-	srvRule.Index = &id
 
 	return v, srvRule, nil
 }
@@ -90,7 +90,7 @@ func (c *client) DeleteServerSwitchingRule(id int64, backend string, transaction
 
 // CreateServerSwitchingRule creates a server switching rule in configuration. One of version or transactionID is
 // mandatory. Returns error on fail, nil on success.
-func (c *client) CreateServerSwitchingRule(backend string, data *models.ServerSwitchingRule, transactionID string, version int64) error {
+func (c *client) CreateServerSwitchingRule(id int64, backend string, data *models.ServerSwitchingRule, transactionID string, version int64) error {
 	if c.UseModelsValidation {
 		validationErr := data.Validate(strfmt.Default)
 		if validationErr != nil {
@@ -102,8 +102,8 @@ func (c *client) CreateServerSwitchingRule(backend string, data *models.ServerSw
 		return err
 	}
 
-	if err := p.Insert(parser.Backends, backend, "use-server", SerializeServerSwitchingRule(*data), int(*data.Index)); err != nil {
-		return c.HandleError(strconv.FormatInt(*data.Index, 10), BackendParentName, backend, t, transactionID == "", err)
+	if err := p.Insert(parser.Backends, backend, "use-server", SerializeServerSwitchingRule(*data), int(id)); err != nil {
+		return c.HandleError(strconv.FormatInt(id, 10), BackendParentName, backend, t, transactionID == "", err)
 	}
 
 	return c.SaveData(p, t, transactionID == "")
@@ -124,11 +124,47 @@ func (c *client) EditServerSwitchingRule(id int64, backend string, data *models.
 	}
 
 	if _, err := p.GetOne(parser.Backends, backend, "use-server", int(id)); err != nil {
-		return c.HandleError(strconv.FormatInt(*data.Index, 10), BackendParentName, backend, t, transactionID == "", err)
+		return c.HandleError(strconv.FormatInt(id, 10), BackendParentName, backend, t, transactionID == "", err)
 	}
 
 	if err := p.Set(parser.Backends, backend, "use-server", SerializeServerSwitchingRule(*data), int(id)); err != nil {
-		return c.HandleError(strconv.FormatInt(*data.Index, 10), BackendParentName, backend, t, transactionID == "", err)
+		return c.HandleError(strconv.FormatInt(id, 10), BackendParentName, backend, t, transactionID == "", err)
+	}
+
+	return c.SaveData(p, t, transactionID == "")
+}
+
+// ReplaceServerSwitchingRules replaces all ACL lines in configuration for a backend.
+// One of version or transactionID is mandatory.
+// Returns error on fail, nil on success.
+func (c *client) ReplaceServerSwitchingRules(backend string, data models.ServerSwitchingRules, transactionID string, version int64) error {
+	if c.UseModelsValidation {
+		validationErr := data.Validate(strfmt.Default)
+		if validationErr != nil {
+			return NewConfError(ErrValidationError, validationErr.Error())
+		}
+	}
+	p, t, err := c.loadDataForChange(transactionID, version)
+	if err != nil {
+		return err
+	}
+
+	ssRules, err := ParseServerSwitchingRules(backend, p)
+	if err != nil {
+		return c.HandleError("", BackendParentName, backend, "", false, err)
+	}
+
+	for i := range ssRules {
+		// Always delete index 0
+		if err := p.Delete(parser.Backends, backend, "use-server", 0); err != nil {
+			return c.HandleError(strconv.FormatInt(int64(i), 10), BackendParentName, backend, t, transactionID == "", err)
+		}
+	}
+
+	for i, newssRule := range data {
+		if err := p.Insert(parser.Backends, backend, "use-server", SerializeServerSwitchingRule(*newssRule), i); err != nil {
+			return c.HandleError(strconv.FormatInt(int64(i), 10), BackendParentName, backend, t, transactionID == "", err)
+		}
 	}
 
 	return c.SaveData(p, t, transactionID == "")
@@ -149,11 +185,9 @@ func ParseServerSwitchingRules(backend string, p parser.Parser) (models.ServerSw
 	if !ok {
 		return nil, misc.CreateTypeAssertError("use-server")
 	}
-	for i, sRule := range sRules {
-		id := int64(i)
+	for _, sRule := range sRules {
 		s := ParseServerSwitchingRule(sRule)
 		if s != nil {
-			s.Index = &id
 			sr = append(sr, s)
 		}
 	}

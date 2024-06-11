@@ -31,8 +31,8 @@ func bsrExpectation() map[string]models.BackendSwitchingRules {
 	res := StructuredToBackendSwitchingRuleMap()
 	// Add individual entries
 	for k, vs := range res {
-		for _, v := range vs {
-			key := fmt.Sprintf("%s/%d", k, *v.Index)
+		for i, v := range vs {
+			key := fmt.Sprintf("%s/%d", k, i)
 			res[key] = models.BackendSwitchingRules{v}
 		}
 	}
@@ -67,13 +67,10 @@ func checkBackendSwitchingRules(t *testing.T, got map[string]models.BackendSwitc
 		want, ok := exp[k]
 		require.True(t, ok, "k=%s", k)
 		require.Equal(t, len(want), len(v), "k=%s", k)
-		for _, g := range v {
-			for _, w := range want {
-				if *g.Index == *w.Index {
-					require.True(t, g.Equal(*w), "k=%s - diff %v", k, cmp.Diff(*g, *w))
-					break
-				}
-			}
+		i := 0
+		for _, w := range want {
+			require.True(t, v[i].Equal(*w), "k=%s - diff %v", k, cmp.Diff(*v[i], *w))
+			i++
 		}
 	}
 }
@@ -108,13 +105,12 @@ func TestCreateEditDeleteBackendSwitchingRule(t *testing.T) {
 	// TestCreateBackendSwitchingRule
 	id := int64(2)
 	br := &models.BackendSwitchingRule{
-		Index:    &id,
 		Name:     "test",
 		Cond:     "unless",
 		CondTest: "TRUE",
 	}
 
-	err := clientTest.CreateBackendSwitchingRule("test", br, "", version)
+	err := clientTest.CreateBackendSwitchingRule(id, "test", br, "", version)
 	if err != nil {
 		t.Error(err.Error())
 	} else {
@@ -138,8 +134,7 @@ func TestCreateEditDeleteBackendSwitchingRule(t *testing.T) {
 
 	// TestBackendSwitchingRule
 	br = &models.BackendSwitchingRule{
-		Index: &id,
-		Name:  "%[req.cookie(foo)]",
+		Name: "%[req.cookie(foo)]",
 	}
 
 	err = clientTest.EditBackendSwitchingRule(2, "test", br, "", version)

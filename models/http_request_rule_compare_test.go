@@ -86,7 +86,6 @@ func TestHTTPRequestRuleEqualFalse(t *testing.T) {
 		result.CaptureID = Ptr(*sample.CaptureID + 1)
 		result.CaptureLen = sample.CaptureLen + 1
 		result.DenyStatus = Ptr(*sample.DenyStatus + 1)
-		result.Index = Ptr(*sample.Index + 1)
 		result.NiceValue = sample.NiceValue + 1
 		result.NormalizerFull = !sample.NormalizerFull
 		result.NormalizerStrict = !sample.NormalizerStrict
@@ -180,7 +179,6 @@ func TestHTTPRequestRuleDiffFalse(t *testing.T) {
 		result.CaptureID = Ptr(*sample.CaptureID + 1)
 		result.CaptureLen = sample.CaptureLen + 1
 		result.DenyStatus = Ptr(*sample.DenyStatus + 1)
-		result.Index = Ptr(*sample.Index + 1)
 		result.NiceValue = sample.NiceValue + 1
 		result.NormalizerFull = !sample.NormalizerFull
 		result.NormalizerStrict = !sample.NormalizerStrict
@@ -199,7 +197,7 @@ func TestHTTPRequestRuleDiffFalse(t *testing.T) {
 
 	for _, sample := range samples {
 		result := sample.a.Diff(sample.b)
-		if len(result) != 70-1 {
+		if len(result) != 69 {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {
@@ -209,7 +207,7 @@ func TestHTTPRequestRuleDiffFalse(t *testing.T) {
 			if err != nil {
 				t.Errorf(err.Error())
 			}
-			t.Errorf("Expected HTTPRequestRule to be different in 70 cases, but it is not (%d) %s %s", len(result), a, b)
+			t.Errorf("Expected HTTPRequestRule to be different in 69 cases, but it is not (%d) %s %s", len(result), a, b)
 		}
 	}
 }

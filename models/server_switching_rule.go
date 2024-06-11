@@ -33,7 +33,7 @@ import (
 // ServerSwitchingRule Server Switching Rule
 //
 // HAProxy server switching rule configuration (corresponds to use-server directive)
-// Example: {"cond":"if","cond_test":"{ req_ssl_sni -i www.example.com }","index":0,"target_server":"www"}
+// Example: {"cond":"if","cond_test":"{ req_ssl_sni -i www.example.com }","target_server":"www"}
 //
 // swagger:model server_switching_rule
 type ServerSwitchingRule struct {
@@ -44,11 +44,6 @@ type ServerSwitchingRule struct {
 
 	// cond test
 	CondTest string `json:"cond_test,omitempty"`
-
-	// index
-	// Required: true
-	// +kubebuilder:validation:Optional
-	Index *int64 `json:"index"`
 
 	// target server
 	// Required: true
@@ -62,10 +57,6 @@ func (m *ServerSwitchingRule) Validate(formats strfmt.Registry) error {
 	var res []error
 
 	if err := m.validateCond(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateIndex(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -115,15 +106,6 @@ func (m *ServerSwitchingRule) validateCond(formats strfmt.Registry) error {
 
 	// value enum
 	if err := m.validateCondEnum("cond", "body", m.Cond); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func (m *ServerSwitchingRule) validateIndex(formats strfmt.Registry) error {
-
-	if err := validate.Required("index", "body", m.Index); err != nil {
 		return err
 	}
 

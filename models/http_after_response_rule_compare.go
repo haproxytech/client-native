@@ -19,20 +19,11 @@ package models
 
 // Equal checks if two structs of type HTTPAfterResponseRule are equal
 //
-// By default empty maps and slices are equal to nil:
-//
 //	var a, b HTTPAfterResponseRule
 //	equal := a.Equal(b)
 //
-// For more advanced use case you can configure these options (default values are shown):
-//
-//	var a, b HTTPAfterResponseRule
-//	equal := a.Equal(b,Options{
-//		SkipIndex: true,
-//	})
+// opts ...Options are ignored in this method
 func (s HTTPAfterResponseRule) Equal(t HTTPAfterResponseRule, opts ...Options) bool {
-	opt := getOptions(opts...)
-
 	if s.ACLFile != t.ACLFile {
 		return false
 	}
@@ -74,10 +65,6 @@ func (s HTTPAfterResponseRule) Equal(t HTTPAfterResponseRule, opts ...Options) b
 	}
 
 	if s.HdrName != t.HdrName {
-		return false
-	}
-
-	if !opt.SkipIndex && !equalPointers(s.Index, t.Index) {
 		return false
 	}
 
@@ -150,20 +137,11 @@ func (s HTTPAfterResponseRule) Equal(t HTTPAfterResponseRule, opts ...Options) b
 
 // Diff checks if two structs of type HTTPAfterResponseRule are equal
 //
-// By default empty maps and slices are equal to nil:
-//
 //	var a, b HTTPAfterResponseRule
 //	diff := a.Diff(b)
 //
-// For more advanced use case you can configure these options (default values are shown):
-//
-//	var a, b HTTPAfterResponseRule
-//	diff := a.Diff(b,Options{
-//		SkipIndex: true,
-//	})
+// opts ...Options are ignored in this method
 func (s HTTPAfterResponseRule) Diff(t HTTPAfterResponseRule, opts ...Options) map[string][]interface{} {
-	opt := getOptions(opts...)
-
 	diff := make(map[string][]interface{})
 	if s.ACLFile != t.ACLFile {
 		diff["ACLFile"] = []interface{}{s.ACLFile, t.ACLFile}
@@ -207,10 +185,6 @@ func (s HTTPAfterResponseRule) Diff(t HTTPAfterResponseRule, opts ...Options) ma
 
 	if s.HdrName != t.HdrName {
 		diff["HdrName"] = []interface{}{s.HdrName, t.HdrName}
-	}
-
-	if !opt.SkipIndex && !equalPointers(s.Index, t.Index) {
-		diff["Index"] = []interface{}{ValueOrNil(s.Index), ValueOrNil(t.Index)}
 	}
 
 	if s.LogLevel != t.LogLevel {

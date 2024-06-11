@@ -4,13 +4,9 @@ http_error_rule:
   description: HAProxy HTTP error rule configuration (corresponds to http-error directives)
   type: object
   required:
-    - index
     - type
     - status
   properties:
-    index:
-      type: integer
-      x-nullable: true
     type:
       type: string
       enum:

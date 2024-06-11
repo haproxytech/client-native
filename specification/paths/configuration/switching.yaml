@@ -24,10 +24,10 @@ backend_switching_rules:
           $ref: "#/definitions/backend_switching_rules"
       'default':
         $ref: '#/responses/DefaultError'
-  post:
-    summary: Add a new Backend Switching Rule
-    description: Adds a new Backend Switching Rule of the specified type in the specified frontend.
-    operationId: createBackendSwitchingRule
+  put:
+    summary: Replace an Backend Switching Rule list
+    description: Replaces a whole list of Backend Switching Rules with the list given in parameter
+    operationId: replaceBackendSwitchingRules
     tags:
       - BackendSwitchingRule
     parameters:
@@ -40,7 +40,7 @@ backend_switching_rules:
         in: body
         required: true
         schema:
-          $ref: '#/definitions/backend_switching_rule'
+          $ref: '#/definitions/backend_switching_rules'
       - $ref: "#/parameters/transaction_id"
       - $ref: "#/parameters/version"
       - $ref: "#/parameters/force_reload"
@@ -52,13 +52,11 @@ backend_switching_rules:
             description: ID of the requested reload
             type: string
         schema:
-          $ref: "#/definitions/backend_switching_rule"
-      '201':
-        description: Backend Switching Rule created
+          $ref: "#/definitions/backend_switching_rules"
+      '200':
+        description: All Backend Switching Rule lines replaced
         schema:
-          $ref: '#/definitions/backend_switching_rule'
-      '409':
-        $ref: '#/responses/AlreadyExists'
+          $ref: '#/definitions/backend_switching_rules'
       '400':
         $ref: '#/responses/BadRequest'
       'default':
@@ -172,6 +170,50 @@ backend_switching_rules_one:
         $ref: '#/responses/NotFound'
       'default':
         $ref: '#/responses/DefaultError'
+  post:
+    summary: Add a new Backend Switching Rule
+    description: Adds a new Backend Switching Rule of the specified type in the specified frontend.
+    operationId: createBackendSwitchingRule
+    tags:
+      - BackendSwitchingRule
+    parameters:
+      - name: index
+        in: path
+        description: Switching Rule Index
+        required: true
+        type: integer
+      - name: frontend
+        in: query
+        description: Frontend name
+        required: true
+        type: string
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/backend_switching_rule'
+      - $ref: "#/parameters/transaction_id"
+      - $ref: "#/parameters/version"
+      - $ref: "#/parameters/force_reload"
+    responses:
+      '202':
+        description: Configuration change accepted and reload requested
+        headers:
+          Reload-ID:
+            description: ID of the requested reload
+            type: string
+        schema:
+          $ref: "#/definitions/backend_switching_rule"
+      '201':
+        description: Backend Switching Rule created
+        schema:
+          $ref: '#/definitions/backend_switching_rule'
+      '409':
+        $ref: '#/responses/AlreadyExists'
+      '400':
+        $ref: '#/responses/BadRequest'
+      'default':
+        $ref: '#/responses/DefaultError'
 server_switching_rules:
   get:
     summary: Return an array of all Server Switching Rules
@@ -197,10 +239,10 @@ server_switching_rules:
           $ref: "#/definitions/server_switching_rules"
       'default':
         $ref: '#/responses/DefaultError'
-  post:
-    summary: Add a new Server Switching Rule
-    description: Adds a new Server Switching Rule of the specified type in the specified backend.
-    operationId: createServerSwitchingRule
+  put:
+    summary: Replace an Server Switching Rule list
+    description: Replaces a whole list of Server Switching Rules with the list given in parameter
+    operationId: replaceServerSwitchingRules
     tags:
       - ServerSwitchingRule
     parameters:
@@ -213,7 +255,7 @@ server_switching_rules:
         in: body
         required: true
         schema:
-          $ref: '#/definitions/server_switching_rule'
+          $ref: '#/definitions/server_switching_rules'
       - $ref: "#/parameters/transaction_id"
       - $ref: "#/parameters/version"
       - $ref: "#/parameters/force_reload"
@@ -225,13 +267,11 @@ server_switching_rules:
             description: ID of the requested reload
             type: string
         schema:
-          $ref: "#/definitions/server_switching_rule"
-      '201':
-        description: Server Switching Rule created
+          $ref: "#/definitions/server_switching_rules"
+      '200':
+        description: All Server Switching Rule lines replaced
         schema:
-          $ref: '#/definitions/server_switching_rule'
-      '409':
-        $ref: '#/responses/AlreadyExists'
+          $ref: '#/definitions/server_switching_rules'
       '400':
         $ref: '#/responses/BadRequest'
       'default':
@@ -343,5 +383,49 @@ server_switching_rules_one:
         description: Server Switching Rule deleted
       '404':
         $ref: '#/responses/NotFound'
+      'default':
+        $ref: '#/responses/DefaultError'
+  post:
+    summary: Add a new Server Switching Rule
+    description: Adds a new Server Switching Rule of the specified type in the specified backend.
+    operationId: createServerSwitchingRule
+    tags:
+      - ServerSwitchingRule
+    parameters:
+      - name: index
+        in: path
+        description: Switching Rule Index
+        required: true
+        type: integer
+      - name: backend
+        in: query
+        description: Backend name
+        required: true
+        type: string
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/server_switching_rule'
+      - $ref: "#/parameters/transaction_id"
+      - $ref: "#/parameters/version"
+      - $ref: "#/parameters/force_reload"
+    responses:
+      '202':
+        description: Configuration change accepted and reload requested
+        headers:
+          Reload-ID:
+            description: ID of the requested reload
+            type: string
+        schema:
+          $ref: "#/definitions/server_switching_rule"
+      '201':
+        description: Server Switching Rule created
+        schema:
+          $ref: '#/definitions/server_switching_rule'
+      '409':
+        $ref: '#/responses/AlreadyExists'
+      '400':
+        $ref: '#/responses/BadRequest'
       'default':
         $ref: '#/responses/DefaultError'

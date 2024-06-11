@@ -85,7 +85,6 @@ func TestHTTPCheckEqualFalse(t *testing.T) {
 		}
 		result.Default = !sample.Default
 		result.ExclamationMark = !sample.ExclamationMark
-		result.Index = Ptr(*sample.Index + 1)
 		result.Linger = !sample.Linger
 		result.MinRecv = Ptr(*sample.MinRecv + 1)
 		result.Port = Ptr(*sample.Port + 1)
@@ -173,7 +172,6 @@ func TestHTTPCheckDiffFalse(t *testing.T) {
 		}
 		result.Default = !sample.Default
 		result.ExclamationMark = !sample.ExclamationMark
-		result.Index = Ptr(*sample.Index + 1)
 		result.Linger = !sample.Linger
 		result.MinRecv = Ptr(*sample.MinRecv + 1)
 		result.Port = Ptr(*sample.Port + 1)
@@ -187,7 +185,7 @@ func TestHTTPCheckDiffFalse(t *testing.T) {
 
 	for _, sample := range samples {
 		result := sample.a.Diff(sample.b)
-		if len(result) != 35-1 {
+		if len(result) != 34 {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {
@@ -197,7 +195,7 @@ func TestHTTPCheckDiffFalse(t *testing.T) {
 			if err != nil {
 				t.Errorf(err.Error())
 			}
-			t.Errorf("Expected HTTPCheck to be different in 35 cases, but it is not (%d) %s %s", len(result), a, b)
+			t.Errorf("Expected HTTPCheck to be different in 34 cases, but it is not (%d) %s %s", len(result), a, b)
 		}
 	}
 }

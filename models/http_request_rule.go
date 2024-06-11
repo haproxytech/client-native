@@ -122,11 +122,6 @@ type HTTPRequestRule struct {
 	// +kubebuilder:validation:Pattern=`^[^\s]+$`
 	HintName string `json:"hint_name,omitempty"`
 
-	// index
-	// Required: true
-	// +kubebuilder:validation:Optional
-	Index *int64 `json:"index"`
-
 	// log level
 	// Enum: [emerg alert crit err warning notice info debug silent]
 	// +kubebuilder:validation:Enum=emerg;alert;crit;err;warning;notice;info;debug;silent;
@@ -372,10 +367,6 @@ func (m *HTTPRequestRule) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateHintName(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateIndex(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -655,15 +646,6 @@ func (m *HTTPRequestRule) validateHintName(formats strfmt.Registry) error {
 	}
 
 	if err := validate.Pattern("hint_name", "body", m.HintName, `^[^\s]+$`); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func (m *HTTPRequestRule) validateIndex(formats strfmt.Registry) error {
-
-	if err := validate.Required("index", "body", m.Index); err != nil {
 		return err
 	}
 

@@ -4,12 +4,8 @@ tcp_request_rule:
   description: HAProxy TCP Request Rule configuration (corresponds to tcp-request)
   type: object
   required:
-    - index
     - type
   properties:
-    index:
-      type: integer
-      x-nullable: true
     type:
       type: string
       enum: [connection, content, inspect-delay, session]

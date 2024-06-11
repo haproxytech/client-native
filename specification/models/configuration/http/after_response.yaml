@@ -4,12 +4,8 @@ http_after_response_rule:
   description: HAProxy HTTP after response rule configuration (corresponds to http-after-response directives)
   type: object
   required:
-    - index
     - type
   properties:
-    index:
-      type: integer
-      x-nullable: true
     type:
       type: string
       enum:
@@ -230,7 +226,6 @@ http_after_response_rule:
           required: true
   additionalProperties: false
   example:
-    index: 0
     type: set-header
     hdr_name: Strict-Transport-Security
     hdr_format: max-age=31536000

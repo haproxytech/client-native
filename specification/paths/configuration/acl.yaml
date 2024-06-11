@@ -34,10 +34,10 @@ acls:
           $ref: "#/definitions/acls"
       'default':
         $ref: '#/responses/DefaultError'
-  post:
-    summary: Add a new ACL line
-    description: Adds a new ACL line of the specified type in the specified parent.
-    operationId: createAcl
+  put:
+    summary: Replace an ACL list
+    description: Replaces a whole list of ACLs with the list given in parameter
+    operationId: replaceAcls
     tags:
       - ACL
     parameters:
@@ -56,7 +56,7 @@ acls:
         in: body
         required: true
         schema:
-          $ref: '#/definitions/acl'
+          $ref: '#/definitions/acls'
       - $ref: "#/parameters/transaction_id"
       - $ref: "#/parameters/version"
       - $ref: "#/parameters/force_reload"
@@ -68,13 +68,11 @@ acls:
             description: ID of the requested reload
             type: string
         schema:
-          $ref: "#/definitions/acl"
-      '201':
-        description: ACL line created
+          $ref: "#/definitions/acls"
+      '200':
+        description: All ACL lines replaced
         schema:
-          $ref: '#/definitions/acl'
-      '409':
-        $ref: '#/responses/AlreadyExists'
+          $ref: '#/definitions/acls'
       '400':
         $ref: '#/responses/BadRequest'
       'default':
@@ -204,5 +202,55 @@ acls_one:
         description: ACL line deleted
       '404':
         $ref: '#/responses/NotFound'
+      'default':
+        $ref: '#/responses/DefaultError'
+  post:
+    summary: Add a new ACL line
+    description: Adds a new ACL line of the specified type in the specified parent.
+    operationId: createAcl
+    tags:
+      - ACL
+    parameters:
+      - name: index
+        in: path
+        description: ACL line Index
+        required: true
+        type: integer
+      - name: parent_name
+        in: query
+        description: Parent name
+        required: true
+        type: string
+      - name: parent_type
+        in: query
+        description: Parent type
+        required: true
+        type: string
+        enum: [frontend, backend]
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/acl'
+      - $ref: "#/parameters/transaction_id"
+      - $ref: "#/parameters/version"
+      - $ref: "#/parameters/force_reload"
+    responses:
+      '202':
+        description: Configuration change accepted and reload requested
+        headers:
+          Reload-ID:
+            description: ID of the requested reload
+            type: string
+        schema:
+          $ref: "#/definitions/acl"
+      '201':
+        description: ACL line created
+        schema:
+          $ref: '#/definitions/acl'
+      '409':
+        $ref: '#/responses/AlreadyExists'
+      '400':
+        $ref: '#/responses/BadRequest'
       'default':
         $ref: '#/responses/DefaultError'

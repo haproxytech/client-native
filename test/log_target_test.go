@@ -31,8 +31,8 @@ func logTargetExpectation() map[string]models.LogTargets {
 	res := StructuredToLogTargetMap()
 	// Add individual entries
 	for k, vs := range res {
-		for _, v := range vs {
-			key := fmt.Sprintf("%s/%d", k, *v.Index)
+		for i, v := range vs {
+			key := fmt.Sprintf("%s/%d", k, i)
 			res[key] = models.LogTargets{v}
 		}
 	}
@@ -68,13 +68,10 @@ func checkLogTargets(t *testing.T, got map[string]models.LogTargets) {
 		want, ok := exp[k]
 		require.True(t, ok, "k=%s", k)
 		require.Equal(t, len(want), len(v), "k=%s", k)
-		for _, g := range v {
-			for _, w := range want {
-				if *g.Index == *w.Index {
-					require.True(t, g.Equal(*w), "k=%s - diff %v", k, cmp.Diff(*g, *w))
-					break
-				}
-			}
+		i := 0
+		for _, w := range want {
+			require.True(t, v[i].Equal(*w), "k=%s - diff %v", k, cmp.Diff(*v[i], *w))
+			i++
 		}
 	}
 }
@@ -120,21 +117,20 @@ func TestCreateEditDeleteLogTarget(t *testing.T) {
 
 	// TestCreateLogTarget
 	r := &models.LogTarget{
-		Index:    &id,
 		Address:  "stdout",
 		Format:   "raw",
 		Facility: "daemon",
 		Level:    "notice",
 	}
 
-	err := clientTest.CreateLogTarget(configuration.FrontendParentName, "test", r, "", version)
+	err := clientTest.CreateLogTarget(id, configuration.FrontendParentName, "test", r, "", version)
 	if err != nil {
 		t.Error(err.Error())
 	} else {
 		version++
 	}
 
-	v, ondiskR, err := clientTest.GetLogTarget(3, configuration.FrontendParentName, "test", "")
+	v, ondiskR, err := clientTest.GetLogTarget(id, configuration.FrontendParentName, "test", "")
 	if err != nil {
 		t.Error(err.Error())
 	}
@@ -151,7 +147,6 @@ func TestCreateEditDeleteLogTarget(t *testing.T) {
 
 	// TestEditLogTarget
 	r = &models.LogTarget{
-		Index:    &id,
 		Address:  "stdout",
 		Format:   "rfc3164",
 		Facility: "local1",

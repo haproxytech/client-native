@@ -24,14 +24,15 @@ import (
 // Equal checks if two structs of type HTTPCheck are equal
 //
 // By default empty maps and slices are equal to nil:
-//  var a, b HTTPCheck
-//  equal := a.Equal(b)
+//
+//	var a, b HTTPCheck
+//	equal := a.Equal(b)
+//
 // For more advanced use case you can configure these options (default values are shown):
-//  var a, b HTTPCheck
-//  equal := a.Equal(b,Options{
-//  	NilSameAsEmpty: true,
-
-//		SkipIndex: true,
+//
+//	var a, b HTTPCheck
+//	equal := a.Equal(b,Options{
+//		NilSameAsEmpty: true,
 //	})
 func (s HTTPCheck) Equal(t HTTPCheck, opts ...Options) bool {
 	opt := getOptions(opts...)
@@ -75,10 +76,6 @@ func (s HTTPCheck) Equal(t HTTPCheck, opts ...Options) bool {
 	}
 
 	if s.ExclamationMark != t.ExclamationMark {
-		return false
-	}
-
-	if !opt.SkipIndex && !equalPointers(s.Index, t.Index) {
 		return false
 	}
 
@@ -188,14 +185,15 @@ func (s HTTPCheck) Equal(t HTTPCheck, opts ...Options) bool {
 // Diff checks if two structs of type HTTPCheck are equal
 //
 // By default empty maps and slices are equal to nil:
-//  var a, b HTTPCheck
-//  diff := a.Diff(b)
+//
+//	var a, b HTTPCheck
+//	diff := a.Diff(b)
+//
 // For more advanced use case you can configure these options (default values are shown):
-//  var a, b HTTPCheck
-//  diff := a.Diff(b,Options{
-//  	NilSameAsEmpty: true,
-
-//		SkipIndex: true,
+//
+//	var a, b HTTPCheck
+//	diff := a.Diff(b,Options{
+//		NilSameAsEmpty: true,
 //	})
 func (s HTTPCheck) Diff(t HTTPCheck, opts ...Options) map[string][]interface{} {
 	opt := getOptions(opts...)
@@ -248,10 +246,6 @@ func (s HTTPCheck) Diff(t HTTPCheck, opts ...Options) map[string][]interface{} {
 
 	if s.ExclamationMark != t.ExclamationMark {
 		diff["ExclamationMark"] = []interface{}{s.ExclamationMark, t.ExclamationMark}
-	}
-
-	if !opt.SkipIndex && !equalPointers(s.Index, t.Index) {
-		diff["Index"] = []interface{}{ValueOrNil(s.Index), ValueOrNil(t.Index)}
 	}
 
 	if s.Linger != t.Linger {

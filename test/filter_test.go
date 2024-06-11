@@ -32,8 +32,8 @@ func filterExpectation() map[string]models.Filters {
 	res := StructuredToFilterMap()
 	// Add individual entries
 	for k, vs := range res {
-		for _, v := range vs {
-			key := fmt.Sprintf("%s/%d", k, *v.Index)
+		for i, v := range vs {
+			key := fmt.Sprintf("%s/%d", k, i)
 			res[key] = models.Filters{v}
 		}
 	}
@@ -67,13 +67,10 @@ func checkFilters(t *testing.T, got map[string]models.Filters) {
 		want, ok := exp[k]
 		require.True(t, ok, "k=%s", k)
 		require.Equal(t, len(want), len(v), "k=%s", k)
-		for _, g := range v {
-			for _, w := range want {
-				if *g.Index == *w.Index {
-					require.True(t, g.Equal(*w), "k=%s - diff %v", k, cmp.Diff(*g, *w))
-					break
-				}
-			}
+		i := 0
+		for _, w := range want {
+			require.True(t, v[i].Equal(*w), "k=%s - diff %v", k, cmp.Diff(*v[i], *w))
+			i++
 		}
 	}
 }
@@ -106,13 +103,12 @@ func TestCreateEditDeleteFilter(t *testing.T) {
 	// TestCreateFilter
 	id := int64(1)
 	f := &models.Filter{
-		Index:      &id,
 		Type:       "spoe",
 		SpoeEngine: "test",
 		SpoeConfig: "test.cfg",
 	}
 
-	err := clientTest.CreateFilter(configuration.FrontendParentName, "test", f, "", version)
+	err := clientTest.CreateFilter(id, configuration.FrontendParentName, "test", f, "", version)
 	if err != nil {
 		t.Error(err.Error())
 	} else {
@@ -136,7 +132,6 @@ func TestCreateEditDeleteFilter(t *testing.T) {
 
 	// TestEditFilter
 	f = &models.Filter{
-		Index:      &id,
 		Type:       "spoe",
 		SpoeConfig: "bla.cfg",
 		SpoeEngine: "bla",

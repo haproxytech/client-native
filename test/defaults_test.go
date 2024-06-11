@@ -61,8 +61,7 @@ func TestPushDefaults(t *testing.T) {
 		Logasap:              "disabled",
 		Allbackups:           "enabled",
 		HTTPCheck: &models.HTTPCheck{
-			Index: misc.Int64P(0),
-			Type:  "send-state",
+			Type: "send-state",
 		},
 		AcceptInvalidHTTPRequest:  "disabled",
 		AcceptInvalidHTTPResponse: "disabled",

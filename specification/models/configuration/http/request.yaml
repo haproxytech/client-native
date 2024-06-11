@@ -4,12 +4,8 @@ http_request_rule:
   description: HAProxy HTTP request rule configuration (corresponds to http-request directives)
   type: object
   required:
-    - index
     - type
   properties:
-    index:
-      type: integer
-      x-nullable: true
     type:
       type: string
       enum:

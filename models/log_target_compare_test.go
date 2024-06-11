@@ -84,7 +84,6 @@ func TestLogTargetEqualFalse(t *testing.T) {
 			t.Errorf(err.Error())
 		}
 		result.Global = !sample.Global
-		result.Index = Ptr(*sample.Index + 1)
 		result.Length = sample.Length + 1
 		result.Nolog = !sample.Nolog
 		result.SampleSize = sample.SampleSize + 1
@@ -168,7 +167,6 @@ func TestLogTargetDiffFalse(t *testing.T) {
 			t.Errorf(err.Error())
 		}
 		result.Global = !sample.Global
-		result.Index = Ptr(*sample.Index + 1)
 		result.Length = sample.Length + 1
 		result.Nolog = !sample.Nolog
 		result.SampleSize = sample.SampleSize + 1
@@ -179,7 +177,7 @@ func TestLogTargetDiffFalse(t *testing.T) {
 
 	for _, sample := range samples {
 		result := sample.a.Diff(sample.b)
-		if len(result) != 11-1 {
+		if len(result) != 10 {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {
@@ -189,7 +187,7 @@ func TestLogTargetDiffFalse(t *testing.T) {
 			if err != nil {
 				t.Errorf(err.Error())
 			}
-			t.Errorf("Expected LogTarget to be different in 11 cases, but it is not (%d) %s %s", len(result), a, b)
+			t.Errorf("Expected LogTarget to be different in 10 cases, but it is not (%d) %s %s", len(result), a, b)
 		}
 	}
 }

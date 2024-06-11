@@ -85,7 +85,6 @@ func TestHTTPAfterResponseRuleEqualFalse(t *testing.T) {
 		}
 		result.CaptureID = Ptr(*sample.CaptureID + 1)
 		result.CaptureLen = sample.CaptureLen + 1
-		result.Index = Ptr(*sample.Index + 1)
 		result.ScID = sample.ScID + 1
 		result.ScIdx = sample.ScIdx + 1
 		result.ScInt = Ptr(*sample.ScInt + 1)
@@ -171,7 +170,6 @@ func TestHTTPAfterResponseRuleDiffFalse(t *testing.T) {
 		}
 		result.CaptureID = Ptr(*sample.CaptureID + 1)
 		result.CaptureLen = sample.CaptureLen + 1
-		result.Index = Ptr(*sample.Index + 1)
 		result.ScID = sample.ScID + 1
 		result.ScIdx = sample.ScIdx + 1
 		result.ScInt = Ptr(*sample.ScInt + 1)
@@ -183,7 +181,7 @@ func TestHTTPAfterResponseRuleDiffFalse(t *testing.T) {
 
 	for _, sample := range samples {
 		result := sample.a.Diff(sample.b)
-		if len(result) != 28-1 {
+		if len(result) != 27 {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {
@@ -193,7 +191,7 @@ func TestHTTPAfterResponseRuleDiffFalse(t *testing.T) {
 			if err != nil {
 				t.Errorf(err.Error())
 			}
-			t.Errorf("Expected HTTPAfterResponseRule to be different in 28 cases, but it is not (%d) %s %s", len(result), a, b)
+			t.Errorf("Expected HTTPAfterResponseRule to be different in 27 cases, but it is not (%d) %s %s", len(result), a, b)
 		}
 	}
 }

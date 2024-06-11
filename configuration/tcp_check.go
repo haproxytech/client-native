@@ -37,8 +37,9 @@ type TCPCheck interface {
 	GetTCPChecks(parentType, parentName string, transactionID string) (int64, models.TCPChecks, error)
 	GetTCPCheck(id int64, parentType string, parentName string, transactionID string) (int64, *models.TCPCheck, error)
 	DeleteTCPCheck(id int64, parentType string, parentName string, transactionID string, version int64) error
-	CreateTCPCheck(parentType string, parentName string, data *models.TCPCheck, transactionID string, version int64) error
+	CreateTCPCheck(id int64, parentType string, parentName string, data *models.TCPCheck, transactionID string, version int64) error
 	EditTCPCheck(id int64, parentType string, parentName string, data *models.TCPCheck, transactionID string, version int64) error
+	ReplaceTCPChecks(parentType string, parentName string, data models.TCPChecks, transactionID string, version int64) error
 }
 
 // GetTCPChecks returns configuration version and an array of configured tcp-checks in the specified parent.
@@ -93,7 +94,6 @@ func (c *client) GetTCPCheck(id int64, parentType string, parentName string, tra
 	if err != nil {
 		return v, nil, err
 	}
-	tcpCheck.Index = &id
 	return v, tcpCheck, nil
 }
 
@@ -124,7 +124,7 @@ func (c *client) DeleteTCPCheck(id int64, parentType string, parentName string, 
 
 // CreateTCPCheck creates a tcp check in the configuration. One of version or transationID is mandatory.
 // Returns error on fail, nil on success.
-func (c *client) CreateTCPCheck(parentType string, parentName string, data *models.TCPCheck, transactionID string, version int64) error {
+func (c *client) CreateTCPCheck(id int64, parentType string, parentName string, data *models.TCPCheck, transactionID string, version int64) error {
 	if c.UseModelsValidation {
 		validationErr := data.Validate(strfmt.Default)
 		if validationErr != nil {
@@ -152,8 +152,8 @@ func (c *client) CreateTCPCheck(parentType string, parentName string, data *mode
 		return err
 	}
 
-	if err := p.Insert(section, parentName, "tcp-check", s, int(*data.Index)); err != nil {
-		return c.HandleError(strconv.FormatInt(*data.Index, 10), parentType, parentName, t, transactionID == "", err)
+	if err := p.Insert(section, parentName, "tcp-check", s, int(id)); err != nil {
+		return c.HandleError(strconv.FormatInt(id, 10), parentType, parentName, t, transactionID == "", err)
 	}
 	return c.SaveData(p, t, transactionID == "")
 }
@@ -196,6 +196,56 @@ func (c *client) EditTCPCheck(id int64, parentType string, parentName string, da
 	return c.SaveData(p, t, transactionID == "")
 }
 
+// ReplaceTCPChecks replaces all TCP Check lines in configuration for a parentType/parentName.
+// One of version or transactionID is mandatory.
+// Returns error on fail, nil on success.
+func (c *client) ReplaceTCPChecks(parentType string, parentName string, data models.TCPChecks, transactionID string, version int64) error {
+	if c.UseModelsValidation {
+		validationErr := data.Validate(strfmt.Default)
+		if validationErr != nil {
+			return NewConfError(ErrValidationError, validationErr.Error())
+		}
+	}
+	p, t, err := c.loadDataForChange(transactionID, version)
+	if err != nil {
+		return err
+	}
+
+	checks, err := ParseTCPChecks(parentType, parentName, p)
+	if err != nil {
+		return c.HandleError("", parentType, parentName, "", false, err)
+	}
+
+	var section parser.Section
+	if parentType == BackendParentName {
+		section = parser.Backends
+	} else if parentType == DefaultsParentName {
+		section = parser.Defaults
+		if parentName == "" {
+			parentName = parser.DefaultSectionName
+		}
+	}
+
+	for i := range checks {
+		// Always delete index 0
+		if err := p.Delete(section, parentName, "tcp-check", 0); err != nil {
+			return c.HandleError(strconv.FormatInt(int64(i), 10), parentType, parentName, t, transactionID == "", err)
+		}
+	}
+
+	for i, httpCheck := range data {
+		s, err := SerializeTCPCheck(*httpCheck)
+		if err != nil {
+			return err
+		}
+		if err := p.Insert(section, parentName, "tcp-check", s, i); err != nil {
+			return c.HandleError(strconv.FormatInt(int64(i), 10), parentType, parentName, t, transactionID == "", err)
+		}
+	}
+
+	return c.SaveData(p, t, transactionID == "")
+}
+
 func ParseTCPChecks(t, pName string, p parser.Parser) (models.TCPChecks, error) {
 	var section parser.Section
 	switch t {
@@ -222,11 +272,9 @@ func ParseTCPChecks(t, pName string, p parser.Parser) (models.TCPChecks, error) 
 	if !ok {
 		return nil, misc.CreateTypeAssertError("tcp-check")
 	}
-	for i, c := range items {
-		id := int64(i)
+	for _, c := range items {
 		check, err := ParseTCPCheck(c)
 		if err == nil {
-			check.Index = &id
 			checks = append(checks, check)
 		}
 	}

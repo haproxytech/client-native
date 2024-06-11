@@ -3,12 +3,8 @@ http_check:
   title: HTTP Check
   type: object
   required:
-    - index
     - type
   properties:
-    index:
-      type: integer
-      x-nullable: true
     type:
       type: string
       enum:

@@ -33,7 +33,7 @@ import (
 // HTTPAfterResponseRule HTTP after Response Rule
 //
 // HAProxy HTTP after response rule configuration (corresponds to http-after-response directives)
-// Example: {"cond":"unless","cond_test":"{ src 192.168.0.0/16 }","hdr_format":"max-age=31536000","hdr_name":"Strict-Transport-Security","index":0,"type":"set-header"}
+// Example: {"cond":"unless","cond_test":"{ src 192.168.0.0/16 }","hdr_format":"max-age=31536000","hdr_name":"Strict-Transport-Security","type":"set-header"}
 //
 // swagger:model http_after_response_rule
 type HTTPAfterResponseRule struct {
@@ -77,11 +77,6 @@ type HTTPAfterResponseRule struct {
 
 	// hdr name
 	HdrName string `json:"hdr_name,omitempty"`
-
-	// index
-	// Required: true
-	// +kubebuilder:validation:Optional
-	Index *int64 `json:"index"`
 
 	// log level
 	// Enum: [emerg alert crit err warning notice info debug silent]
@@ -170,10 +165,6 @@ func (m *HTTPAfterResponseRule) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateCond(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateIndex(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -291,15 +282,6 @@ func (m *HTTPAfterResponseRule) validateCond(formats strfmt.Registry) error {
 
 	// value enum
 	if err := m.validateCondEnum("cond", "body", m.Cond); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func (m *HTTPAfterResponseRule) validateIndex(formats strfmt.Registry) error {
-
-	if err := validate.Required("index", "body", m.Index); err != nil {
 		return err
 	}
 

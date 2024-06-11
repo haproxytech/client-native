@@ -83,7 +83,6 @@ func TestStickRuleEqualFalse(t *testing.T) {
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		result.Index = Ptr(*sample.Index + 1)
 		samples = append(samples, struct {
 			a, b StickRule
 		}{sample, result})
@@ -163,7 +162,6 @@ func TestStickRuleDiffFalse(t *testing.T) {
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		result.Index = Ptr(*sample.Index + 1)
 		samples = append(samples, struct {
 			a, b StickRule
 		}{sample, result})
@@ -171,7 +169,7 @@ func TestStickRuleDiffFalse(t *testing.T) {
 
 	for _, sample := range samples {
 		result := sample.a.Diff(sample.b)
-		if len(result) != 6-1 {
+		if len(result) != 5 {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {
@@ -181,7 +179,7 @@ func TestStickRuleDiffFalse(t *testing.T) {
 			if err != nil {
 				t.Errorf(err.Error())
 			}
-			t.Errorf("Expected StickRule to be different in 6 cases, but it is not (%d) %s %s", len(result), a, b)
+			t.Errorf("Expected StickRule to be different in 5 cases, but it is not (%d) %s %s", len(result), a, b)
 		}
 	}
 }

@@ -22,7 +22,6 @@ import (
 
 	"github.com/google/go-cmp/cmp"
 	"github.com/haproxytech/client-native/v6/configuration"
-	"github.com/haproxytech/client-native/v6/misc"
 	"github.com/haproxytech/client-native/v6/models"
 	"github.com/stretchr/testify/require"
 )
@@ -61,13 +60,10 @@ func checkHTTPAfterResponseRules(t *testing.T, got map[string]models.HTTPAfterRe
 		want, ok := exp[k]
 		require.True(t, ok, "k=%s", k)
 		require.Equal(t, len(want), len(v), "k=%s", k)
-		for _, g := range v {
-			for _, w := range want {
-				if *g.Index == *w.Index {
-					require.True(t, g.Equal(*w), "k=%s - diff %v", k, cmp.Diff(*g, *w))
-					break
-				}
-			}
+		i := 0
+		for _, w := range want {
+			require.True(t, v[i].Equal(*w), "k=%s - diff %v", k, cmp.Diff(*v[i], *w))
+			i++
 		}
 	}
 }
@@ -84,11 +80,10 @@ func TestCreateHTTPAfterResponseRule(t *testing.T) {
 	}
 
 	har := &models.HTTPAfterResponseRule{
-		Index:      misc.Int64P(0),
 		StrictMode: "on",
 		Type:       "strict-mode",
 	}
-	if err = clientTest.CreateHTTPAfterResponseRule(configuration.BackendParentName, "test", har, tx.ID, 0); err != nil {
+	if err = clientTest.CreateHTTPAfterResponseRule(0, configuration.BackendParentName, "test", har, tx.ID, 0); err != nil {
 		t.Error(err.Error())
 	}
 
