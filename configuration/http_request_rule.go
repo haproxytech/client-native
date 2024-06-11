@@ -17,7 +17,6 @@ package configuration
 
 import (
 	"errors"
-	"fmt"
 	"strconv"
 	"strings"
 
@@ -1207,12 +1206,17 @@ func SerializeHTTPRequestRule(f models.HTTPRequestRule) (rule types.Action, err 
 			CondTest: f.CondTest,
 		}
 	case "wait-for-body":
-		rule = &http_actions.WaitForBody{
-			Time:     fmt.Sprintf("%v", f.WaitTime),
-			AtLeast:  fmt.Sprintf("%v", f.WaitAtLeast),
+		r := &http_actions.WaitForBody{
 			Cond:     f.Cond,
 			CondTest: f.CondTest,
 		}
+		if f.WaitTime != nil {
+			r.Time = strconv.FormatInt(*f.WaitTime, 10)
+		}
+		if f.WaitAtLeast != nil {
+			r.AtLeast = strconv.FormatInt(*f.WaitAtLeast, 10)
+		}
+		rule = r
 	case "wait-for-handshake":
 		rule = &http_actions.WaitForHandshake{
 			Cond:     f.Cond,
