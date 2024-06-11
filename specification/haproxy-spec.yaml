@@ -50,6 +50,40 @@ definitions:
     type: array
     items:
       $ref: "#/definitions/site"
+  environment_options:
+    $ref: "models/configuration/global.yaml#/environment_options"
+  performance_options:
+    $ref: "models/configuration/global.yaml#/performance_options"
+  ssl_options:
+    $ref: "models/configuration/global.yaml#/ssl_options"
+  tune_options:
+    $ref: "models/configuration/global.yaml#/tune_options"
+  tune_quic_options:
+    $ref: "models/configuration/global.yaml#/tune_quic_options"
+  tune_vars_options:
+    $ref: "models/configuration/global.yaml#/tune_vars_options"
+  tune_zlib_options:
+    $ref: "models/configuration/global.yaml#/tune_zlib_options"
+  tune_ssl_options:
+    $ref: "models/configuration/global.yaml#/tune_ssl_options"
+  tune_lua_options:
+    $ref: "models/configuration/global.yaml#/tune_lua_options"
+  tune_buffer_options:
+    $ref: "models/configuration/global.yaml#/tune_buffer_options"
+  debug_options:
+    $ref: "models/configuration/global.yaml#/debug_options"
+  http_client_options:
+    $ref: "models/configuration/global.yaml#/http_client_options"
+  ocsp_update_options:
+    $ref: "models/configuration/global.yaml#/ocsp_update_options"
+  lua_options:
+    $ref: "models/configuration/global.yaml#/lua_options"
+  wurfl_options:
+    $ref: "models/configuration/global.yaml#/wurfl_options"
+  device_atlas_options:
+    $ref: "models/configuration/global.yaml#/device_atlas_options"
+  fifty_one_degrees_options:
+    $ref: "models/configuration/global.yaml#/fifty_one_degrees_options"
   global:
     $ref: "models/configuration/global.yaml#/global"
   global_base:

@@ -57,31 +57,11 @@ func (s GlobalBase) Equal(t GlobalBase, opts ...Options) bool {
 		}
 	}
 
-	if !CheckSameNilAndLen(s.PresetEnvs, t.PresetEnvs, opt) {
-		return false
-	} else {
-		for i := range s.PresetEnvs {
-			if !s.PresetEnvs[i].Equal(*t.PresetEnvs[i], opt) {
-				return false
-			}
-		}
-	}
-
 	if !CheckSameNilAndLen(s.RuntimeAPIs, t.RuntimeAPIs, opt) {
 		return false
 	} else {
 		for i := range s.RuntimeAPIs {
 			if !s.RuntimeAPIs[i].Equal(*t.RuntimeAPIs[i], opt) {
-				return false
-			}
-		}
-	}
-
-	if !CheckSameNilAndLen(s.SetEnvs, t.SetEnvs, opt) {
-		return false
-	} else {
-		for i := range s.SetEnvs {
-			if !s.SetEnvs[i].Equal(*t.SetEnvs[i], opt) {
 				return false
 			}
 		}
@@ -107,16 +87,6 @@ func (s GlobalBase) Equal(t GlobalBase, opts ...Options) bool {
 		}
 	}
 
-	if !CheckSameNilAndLen(s.SslEngines, t.SslEngines, opt) {
-		return false
-	} else {
-		for i := range s.SslEngines {
-			if !s.SslEngines[i].Equal(*t.SslEngines[i], opt) {
-				return false
-			}
-		}
-	}
-
 	if !CheckSameNilAndLen(s.ThreadGroupLines, t.ThreadGroupLines, opt) {
 		return false
 	} else {
@@ -125,18 +95,6 @@ func (s GlobalBase) Equal(t GlobalBase, opts ...Options) bool {
 				return false
 			}
 		}
-	}
-
-	if !equalPointers(s.Anonkey, t.Anonkey) {
-		return false
-	}
-
-	if s.BusyPolling != t.BusyPolling {
-		return false
-	}
-
-	if s.CaBase != t.CaBase {
-		return false
 	}
 
 	if s.Chroot != t.Chroot {
@@ -151,11 +109,29 @@ func (s GlobalBase) Equal(t GlobalBase, opts ...Options) bool {
 		return false
 	}
 
-	if s.CrtBase != t.CrtBase {
+	if s.Daemon != t.Daemon {
 		return false
 	}
 
-	if s.Daemon != t.Daemon {
+	if s.DebugOptions == nil || t.DebugOptions == nil {
+		if s.DebugOptions != nil || t.DebugOptions != nil {
+			if opt.NilSameAsEmpty {
+				empty := &DebugOptions{}
+				if s.DebugOptions == nil {
+					if !(t.DebugOptions.Equal(*empty)) {
+						return false
+					}
+				}
+				if t.DebugOptions == nil {
+					if !(s.DebugOptions.Equal(*empty)) {
+						return false
+					}
+				}
+			} else {
+				return false
+			}
+		}
+	} else if !s.DebugOptions.Equal(*t.DebugOptions, opt) {
 		return false
 	}
 
@@ -188,7 +164,7 @@ func (s GlobalBase) Equal(t GlobalBase, opts ...Options) bool {
 	if s.DeviceAtlasOptions == nil || t.DeviceAtlasOptions == nil {
 		if s.DeviceAtlasOptions != nil || t.DeviceAtlasOptions != nil {
 			if opt.NilSameAsEmpty {
-				empty := &GlobalDeviceAtlasOptions{}
+				empty := &DeviceAtlasOptions{}
 				if s.DeviceAtlasOptions == nil {
 					if !(t.DeviceAtlasOptions.Equal(*empty)) {
 						return false
@@ -207,6 +183,28 @@ func (s GlobalBase) Equal(t GlobalBase, opts ...Options) bool {
 		return false
 	}
 
+	if s.EnvironmentOptions == nil || t.EnvironmentOptions == nil {
+		if s.EnvironmentOptions != nil || t.EnvironmentOptions != nil {
+			if opt.NilSameAsEmpty {
+				empty := &EnvironmentOptions{}
+				if s.EnvironmentOptions == nil {
+					if !(t.EnvironmentOptions.Equal(*empty)) {
+						return false
+					}
+				}
+				if t.EnvironmentOptions == nil {
+					if !(s.EnvironmentOptions.Equal(*empty)) {
+						return false
+					}
+				}
+			} else {
+				return false
+			}
+		}
+	} else if !s.EnvironmentOptions.Equal(*t.EnvironmentOptions, opt) {
+		return false
+	}
+
 	if s.ExposeExperimentalDirectives != t.ExposeExperimentalDirectives {
 		return false
 	}
@@ -218,7 +216,7 @@ func (s GlobalBase) Equal(t GlobalBase, opts ...Options) bool {
 	if s.FiftyOneDegreesOptions == nil || t.FiftyOneDegreesOptions == nil {
 		if s.FiftyOneDegreesOptions != nil || t.FiftyOneDegreesOptions != nil {
 			if opt.NilSameAsEmpty {
-				empty := &GlobalFiftyOneDegreesOptions{}
+				empty := &FiftyOneDegreesOptions{}
 				if s.FiftyOneDegreesOptions == nil {
 					if !(t.FiftyOneDegreesOptions.Equal(*empty)) {
 						return false
@@ -283,6 +281,28 @@ func (s GlobalBase) Equal(t GlobalBase, opts ...Options) bool {
 		return false
 	}
 
+	if s.HTTPClientOptions == nil || t.HTTPClientOptions == nil {
+		if s.HTTPClientOptions != nil || t.HTTPClientOptions != nil {
+			if opt.NilSameAsEmpty {
+				empty := &HTTPClientOptions{}
+				if s.HTTPClientOptions == nil {
+					if !(t.HTTPClientOptions.Equal(*empty)) {
+						return false
+					}
+				}
+				if t.HTTPClientOptions == nil {
+					if !(s.HTTPClientOptions.Equal(*empty)) {
+						return false
+					}
+				}
+			} else {
+				return false
+			}
+		}
+	} else if !s.HTTPClientOptions.Equal(*t.HTTPClientOptions, opt) {
+		return false
+	}
+
 	if !CheckSameNilAndLen(s.HTTPErrCodes, t.HTTPErrCodes, opt) {
 		return false
 	} else {
@@ -303,43 +323,11 @@ func (s GlobalBase) Equal(t GlobalBase, opts ...Options) bool {
 		}
 	}
 
-	if s.HttpclientResolversDisabled != t.HttpclientResolversDisabled {
-		return false
-	}
-
-	if s.HttpclientResolversID != t.HttpclientResolversID {
-		return false
-	}
-
-	if s.HttpclientResolversPrefer != t.HttpclientResolversPrefer {
-		return false
-	}
-
-	if s.HttpclientRetries != t.HttpclientRetries {
-		return false
-	}
-
-	if s.HttpclientSslCaFile != t.HttpclientSslCaFile {
-		return false
-	}
-
-	if !equalPointers(s.HttpclientSslVerify, t.HttpclientSslVerify) {
-		return false
-	}
-
-	if !equalPointers(s.HttpclientTimeoutConnect, t.HttpclientTimeoutConnect) {
-		return false
-	}
-
 	if s.InsecureForkWanted != t.InsecureForkWanted {
 		return false
 	}
 
 	if s.InsecureSetuidWanted != t.InsecureSetuidWanted {
-		return false
-	}
-
-	if s.IssuersChainPath != t.IssuersChainPath {
 		return false
 	}
 
@@ -373,71 +361,29 @@ func (s GlobalBase) Equal(t GlobalBase, opts ...Options) bool {
 		return false
 	}
 
-	if s.LuaLoadPerThread != t.LuaLoadPerThread {
-		return false
-	}
-
-	if !CheckSameNilAndLen(s.LuaLoads, t.LuaLoads, opt) {
-		return false
-	} else {
-		for i := range s.LuaLoads {
-			if !s.LuaLoads[i].Equal(*t.LuaLoads[i], opt) {
+	if s.LuaOptions == nil || t.LuaOptions == nil {
+		if s.LuaOptions != nil || t.LuaOptions != nil {
+			if opt.NilSameAsEmpty {
+				empty := &LuaOptions{}
+				if s.LuaOptions == nil {
+					if !(t.LuaOptions.Equal(*empty)) {
+						return false
+					}
+				}
+				if t.LuaOptions == nil {
+					if !(s.LuaOptions.Equal(*empty)) {
+						return false
+					}
+				}
+			} else {
 				return false
 			}
 		}
-	}
-
-	if !CheckSameNilAndLen(s.LuaPrependPath, t.LuaPrependPath, opt) {
+	} else if !s.LuaOptions.Equal(*t.LuaOptions, opt) {
 		return false
-	} else {
-		for i := range s.LuaPrependPath {
-			if !s.LuaPrependPath[i].Equal(*t.LuaPrependPath[i], opt) {
-				return false
-			}
-		}
 	}
 
 	if s.MasterWorker != t.MasterWorker {
-		return false
-	}
-
-	if !equalPointers(s.MaxSpreadChecks, t.MaxSpreadChecks) {
-		return false
-	}
-
-	if s.Maxcompcpuusage != t.Maxcompcpuusage {
-		return false
-	}
-
-	if s.Maxcomprate != t.Maxcomprate {
-		return false
-	}
-
-	if s.Maxconn != t.Maxconn {
-		return false
-	}
-
-	if s.Maxconnrate != t.Maxconnrate {
-		return false
-	}
-
-	if s.Maxpipes != t.Maxpipes {
-		return false
-	}
-
-	if s.Maxsessrate != t.Maxsessrate {
-		return false
-	}
-
-	if s.Maxsslconn != t.Maxsslconn {
-		return false
-	}
-
-	if s.Maxsslrate != t.Maxsslrate {
-		return false
-	}
-
-	if s.Maxzlibmem != t.Maxzlibmem {
 		return false
 	}
 
@@ -457,49 +403,21 @@ func (s GlobalBase) Equal(t GlobalBase, opts ...Options) bool {
 		return false
 	}
 
-	if s.Noepoll != t.Noepoll {
-		return false
-	}
-
-	if s.Noevports != t.Noevports {
-		return false
-	}
-
-	if s.Nogetaddrinfo != t.Nogetaddrinfo {
-		return false
-	}
-
-	if s.Nokqueue != t.Nokqueue {
-		return false
-	}
-
-	if s.Nopoll != t.Nopoll {
-		return false
-	}
-
-	if s.Noreuseport != t.Noreuseport {
-		return false
-	}
-
-	if s.Nosplice != t.Nosplice {
-		return false
-	}
-
 	if s.NumaCPUMapping != t.NumaCPUMapping {
 		return false
 	}
 
-	if s.OcspUpdate == nil || t.OcspUpdate == nil {
-		if s.OcspUpdate != nil || t.OcspUpdate != nil {
+	if s.OcspUpdateOptions == nil || t.OcspUpdateOptions == nil {
+		if s.OcspUpdateOptions != nil || t.OcspUpdateOptions != nil {
 			if opt.NilSameAsEmpty {
-				empty := &GlobalOcspUpdate{}
-				if s.OcspUpdate == nil {
-					if !(t.OcspUpdate.Equal(*empty)) {
+				empty := &OcspUpdateOptions{}
+				if s.OcspUpdateOptions == nil {
+					if !(t.OcspUpdateOptions.Equal(*empty)) {
 						return false
 					}
 				}
-				if t.OcspUpdate == nil {
-					if !(s.OcspUpdate.Equal(*empty)) {
+				if t.OcspUpdateOptions == nil {
+					if !(s.OcspUpdateOptions.Equal(*empty)) {
 						return false
 					}
 				}
@@ -507,7 +425,29 @@ func (s GlobalBase) Equal(t GlobalBase, opts ...Options) bool {
 				return false
 			}
 		}
-	} else if !s.OcspUpdate.Equal(*t.OcspUpdate, opt) {
+	} else if !s.OcspUpdateOptions.Equal(*t.OcspUpdateOptions, opt) {
+		return false
+	}
+
+	if s.PerformanceOptions == nil || t.PerformanceOptions == nil {
+		if s.PerformanceOptions != nil || t.PerformanceOptions != nil {
+			if opt.NilSameAsEmpty {
+				empty := &PerformanceOptions{}
+				if s.PerformanceOptions == nil {
+					if !(t.PerformanceOptions.Equal(*empty)) {
+						return false
+					}
+				}
+				if t.PerformanceOptions == nil {
+					if !(s.PerformanceOptions.Equal(*empty)) {
+						return false
+					}
+				}
+			} else {
+				return false
+			}
+		}
+	} else if !s.PerformanceOptions.Equal(*t.PerformanceOptions, opt) {
 		return false
 	}
 
@@ -523,30 +463,6 @@ func (s GlobalBase) Equal(t GlobalBase, opts ...Options) bool {
 		return false
 	}
 
-	if s.ProfilingMemory != t.ProfilingMemory {
-		return false
-	}
-
-	if s.ProfilingTasks != t.ProfilingTasks {
-		return false
-	}
-
-	if s.Quiet != t.Quiet {
-		return false
-	}
-
-	if s.Resetenv != t.Resetenv {
-		return false
-	}
-
-	if s.ServerStateBase != t.ServerStateBase {
-		return false
-	}
-
-	if s.ServerStateFile != t.ServerStateFile {
-		return false
-	}
-
 	if s.SetDumpable != t.SetDumpable {
 		return false
 	}
@@ -555,91 +471,25 @@ func (s GlobalBase) Equal(t GlobalBase, opts ...Options) bool {
 		return false
 	}
 
-	if s.SpreadChecks != t.SpreadChecks {
-		return false
-	}
-
-	if s.SslDefaultBindCiphers != t.SslDefaultBindCiphers {
-		return false
-	}
-
-	if s.SslDefaultBindCiphersuites != t.SslDefaultBindCiphersuites {
-		return false
-	}
-
-	if s.SslDefaultBindClientSigalgs != t.SslDefaultBindClientSigalgs {
-		return false
-	}
-
-	if s.SslDefaultBindCurves != t.SslDefaultBindCurves {
-		return false
-	}
-
-	if s.SslDefaultBindOptions != t.SslDefaultBindOptions {
-		return false
-	}
-
-	if s.SslDefaultBindSigalgs != t.SslDefaultBindSigalgs {
-		return false
-	}
-
-	if s.SslDefaultServerCiphers != t.SslDefaultServerCiphers {
-		return false
-	}
-
-	if s.SslDefaultServerCiphersuites != t.SslDefaultServerCiphersuites {
-		return false
-	}
-
-	if s.SslDefaultServerClientSigalgs != t.SslDefaultServerClientSigalgs {
-		return false
-	}
-
-	if s.SslDefaultServerCurves != t.SslDefaultServerCurves {
-		return false
-	}
-
-	if s.SslDefaultServerOptions != t.SslDefaultServerOptions {
-		return false
-	}
-
-	if s.SslDefaultServerSigalgs != t.SslDefaultServerSigalgs {
-		return false
-	}
-
-	if s.SslDhParamFile != t.SslDhParamFile {
-		return false
-	}
-
-	if s.SslLoadExtraFiles != t.SslLoadExtraFiles {
-		return false
-	}
-
-	if s.SslModeAsync != t.SslModeAsync {
-		return false
-	}
-
-	if s.SslPropquery != t.SslPropquery {
-		return false
-	}
-
-	if s.SslProvider != t.SslProvider {
-		return false
-	}
-
-	if s.SslProviderPath != t.SslProviderPath {
-		return false
-	}
-
-	if !equalPointers(s.SslSecurityLevel, t.SslSecurityLevel) {
-		return false
-	}
-
-	if s.SslServerVerify != t.SslServerVerify {
-		return false
-	}
-
-	if s.SslSkipSelfIssuedCa != t.SslSkipSelfIssuedCa {
+	if s.SslOptions == nil || t.SslOptions == nil {
+		if s.SslOptions != nil || t.SslOptions != nil {
+			if opt.NilSameAsEmpty {
+				empty := &SslOptions{}
+				if s.SslOptions == nil {
+					if !(t.SslOptions.Equal(*empty)) {
+						return false
+					}
+				}
+				if t.SslOptions == nil {
+					if !(s.SslOptions.Equal(*empty)) {
+						return false
+					}
+				}
+			} else {
+				return false
+			}
+		}
+	} else if !s.SslOptions.Equal(*t.SslOptions, opt) {
 		return false
 	}
 
@@ -659,14 +509,54 @@ func (s GlobalBase) Equal(t GlobalBase, opts ...Options) bool {
 		return false
 	}
 
-	if !equalPointers(s.ThreadHardLimit, t.ThreadHardLimit) {
+	if s.TuneBufferOptions == nil || t.TuneBufferOptions == nil {
+		if s.TuneBufferOptions != nil || t.TuneBufferOptions != nil {
+			if opt.NilSameAsEmpty {
+				empty := &TuneBufferOptions{}
+				if s.TuneBufferOptions == nil {
+					if !(t.TuneBufferOptions.Equal(*empty)) {
+						return false
+					}
+				}
+				if t.TuneBufferOptions == nil {
+					if !(s.TuneBufferOptions.Equal(*empty)) {
+						return false
+					}
+				}
+			} else {
+				return false
+			}
+		}
+	} else if !s.TuneBufferOptions.Equal(*t.TuneBufferOptions, opt) {
+		return false
+	}
+
+	if s.TuneLuaOptions == nil || t.TuneLuaOptions == nil {
+		if s.TuneLuaOptions != nil || t.TuneLuaOptions != nil {
+			if opt.NilSameAsEmpty {
+				empty := &TuneLuaOptions{}
+				if s.TuneLuaOptions == nil {
+					if !(t.TuneLuaOptions.Equal(*empty)) {
+						return false
+					}
+				}
+				if t.TuneLuaOptions == nil {
+					if !(s.TuneLuaOptions.Equal(*empty)) {
+						return false
+					}
+				}
+			} else {
+				return false
+			}
+		}
+	} else if !s.TuneLuaOptions.Equal(*t.TuneLuaOptions, opt) {
 		return false
 	}
 
 	if s.TuneOptions == nil || t.TuneOptions == nil {
 		if s.TuneOptions != nil || t.TuneOptions != nil {
 			if opt.NilSameAsEmpty {
-				empty := &GlobalTuneOptions{}
+				empty := &TuneOptions{}
 				if s.TuneOptions == nil {
 					if !(t.TuneOptions.Equal(*empty)) {
 						return false
@@ -685,15 +575,99 @@ func (s GlobalBase) Equal(t GlobalBase, opts ...Options) bool {
 		return false
 	}
 
+	if s.TuneQuicOptions == nil || t.TuneQuicOptions == nil {
+		if s.TuneQuicOptions != nil || t.TuneQuicOptions != nil {
+			if opt.NilSameAsEmpty {
+				empty := &TuneQuicOptions{}
+				if s.TuneQuicOptions == nil {
+					if !(t.TuneQuicOptions.Equal(*empty)) {
+						return false
+					}
+				}
+				if t.TuneQuicOptions == nil {
+					if !(s.TuneQuicOptions.Equal(*empty)) {
+						return false
+					}
+				}
+			} else {
+				return false
+			}
+		}
+	} else if !s.TuneQuicOptions.Equal(*t.TuneQuicOptions, opt) {
+		return false
+	}
+
+	if s.TuneSslOptions == nil || t.TuneSslOptions == nil {
+		if s.TuneSslOptions != nil || t.TuneSslOptions != nil {
+			if opt.NilSameAsEmpty {
+				empty := &TuneSslOptions{}
+				if s.TuneSslOptions == nil {
+					if !(t.TuneSslOptions.Equal(*empty)) {
+						return false
+					}
+				}
+				if t.TuneSslOptions == nil {
+					if !(s.TuneSslOptions.Equal(*empty)) {
+						return false
+					}
+				}
+			} else {
+				return false
+			}
+		}
+	} else if !s.TuneSslOptions.Equal(*t.TuneSslOptions, opt) {
+		return false
+	}
+
+	if s.TuneVarsOptions == nil || t.TuneVarsOptions == nil {
+		if s.TuneVarsOptions != nil || t.TuneVarsOptions != nil {
+			if opt.NilSameAsEmpty {
+				empty := &TuneVarsOptions{}
+				if s.TuneVarsOptions == nil {
+					if !(t.TuneVarsOptions.Equal(*empty)) {
+						return false
+					}
+				}
+				if t.TuneVarsOptions == nil {
+					if !(s.TuneVarsOptions.Equal(*empty)) {
+						return false
+					}
+				}
+			} else {
+				return false
+			}
+		}
+	} else if !s.TuneVarsOptions.Equal(*t.TuneVarsOptions, opt) {
+		return false
+	}
+
+	if s.TuneZlibOptions == nil || t.TuneZlibOptions == nil {
+		if s.TuneZlibOptions != nil || t.TuneZlibOptions != nil {
+			if opt.NilSameAsEmpty {
+				empty := &TuneZlibOptions{}
+				if s.TuneZlibOptions == nil {
+					if !(t.TuneZlibOptions.Equal(*empty)) {
+						return false
+					}
+				}
+				if t.TuneZlibOptions == nil {
+					if !(s.TuneZlibOptions.Equal(*empty)) {
+						return false
+					}
+				}
+			} else {
+				return false
+			}
+		}
+	} else if !s.TuneZlibOptions.Equal(*t.TuneZlibOptions, opt) {
+		return false
+	}
+
 	if s.UID != t.UID {
 		return false
 	}
 
 	if s.Ulimitn != t.Ulimitn {
-		return false
-	}
-
-	if s.Unsetenv != t.Unsetenv {
 		return false
 	}
 
@@ -704,7 +678,7 @@ func (s GlobalBase) Equal(t GlobalBase, opts ...Options) bool {
 	if s.WurflOptions == nil || t.WurflOptions == nil {
 		if s.WurflOptions != nil || t.WurflOptions != nil {
 			if opt.NilSameAsEmpty {
-				empty := &GlobalWurflOptions{}
+				empty := &WurflOptions{}
 				if s.WurflOptions == nil {
 					if !(t.WurflOptions.Equal(*empty)) {
 						return false
@@ -720,10 +694,6 @@ func (s GlobalBase) Equal(t GlobalBase, opts ...Options) bool {
 			}
 		}
 	} else if !s.WurflOptions.Equal(*t.WurflOptions, opt) {
-		return false
-	}
-
-	if s.ZeroWarning != t.ZeroWarning {
 		return false
 	}
 
@@ -781,23 +751,6 @@ func (s GlobalBase) Diff(t GlobalBase, opts ...Options) map[string][]interface{}
 		}
 	}
 
-	if !CheckSameNilAndLen(s.PresetEnvs, t.PresetEnvs, opt) {
-		diff["PresetEnvs"] = []interface{}{s.PresetEnvs, t.PresetEnvs}
-	} else {
-		diff2 := make(map[string][]interface{})
-		for i := range s.PresetEnvs {
-			if !s.PresetEnvs[i].Equal(*t.PresetEnvs[i], opt) {
-				diffSub := s.PresetEnvs[i].Diff(*t.PresetEnvs[i], opt)
-				if len(diffSub) > 0 {
-					diff2[strconv.Itoa(i)] = []interface{}{diffSub}
-				}
-			}
-		}
-		if len(diff2) > 0 {
-			diff["PresetEnvs"] = []interface{}{diff2}
-		}
-	}
-
 	if !CheckSameNilAndLen(s.RuntimeAPIs, t.RuntimeAPIs, opt) {
 		diff["RuntimeAPIs"] = []interface{}{s.RuntimeAPIs, t.RuntimeAPIs}
 	} else {
@@ -812,23 +765,6 @@ func (s GlobalBase) Diff(t GlobalBase, opts ...Options) map[string][]interface{}
 		}
 		if len(diff2) > 0 {
 			diff["RuntimeAPIs"] = []interface{}{diff2}
-		}
-	}
-
-	if !CheckSameNilAndLen(s.SetEnvs, t.SetEnvs, opt) {
-		diff["SetEnvs"] = []interface{}{s.SetEnvs, t.SetEnvs}
-	} else {
-		diff2 := make(map[string][]interface{})
-		for i := range s.SetEnvs {
-			if !s.SetEnvs[i].Equal(*t.SetEnvs[i], opt) {
-				diffSub := s.SetEnvs[i].Diff(*t.SetEnvs[i], opt)
-				if len(diffSub) > 0 {
-					diff2[strconv.Itoa(i)] = []interface{}{diffSub}
-				}
-			}
-		}
-		if len(diff2) > 0 {
-			diff["SetEnvs"] = []interface{}{diff2}
 		}
 	}
 
@@ -866,23 +802,6 @@ func (s GlobalBase) Diff(t GlobalBase, opts ...Options) map[string][]interface{}
 		}
 	}
 
-	if !CheckSameNilAndLen(s.SslEngines, t.SslEngines, opt) {
-		diff["SslEngines"] = []interface{}{s.SslEngines, t.SslEngines}
-	} else {
-		diff2 := make(map[string][]interface{})
-		for i := range s.SslEngines {
-			if !s.SslEngines[i].Equal(*t.SslEngines[i], opt) {
-				diffSub := s.SslEngines[i].Diff(*t.SslEngines[i], opt)
-				if len(diffSub) > 0 {
-					diff2[strconv.Itoa(i)] = []interface{}{diffSub}
-				}
-			}
-		}
-		if len(diff2) > 0 {
-			diff["SslEngines"] = []interface{}{diff2}
-		}
-	}
-
 	if !CheckSameNilAndLen(s.ThreadGroupLines, t.ThreadGroupLines, opt) {
 		diff["ThreadGroupLines"] = []interface{}{s.ThreadGroupLines, t.ThreadGroupLines}
 	} else {
@@ -900,18 +819,6 @@ func (s GlobalBase) Diff(t GlobalBase, opts ...Options) map[string][]interface{}
 		}
 	}
 
-	if !equalPointers(s.Anonkey, t.Anonkey) {
-		diff["Anonkey"] = []interface{}{ValueOrNil(s.Anonkey), ValueOrNil(t.Anonkey)}
-	}
-
-	if s.BusyPolling != t.BusyPolling {
-		diff["BusyPolling"] = []interface{}{s.BusyPolling, t.BusyPolling}
-	}
-
-	if s.CaBase != t.CaBase {
-		diff["CaBase"] = []interface{}{s.CaBase, t.CaBase}
-	}
-
 	if s.Chroot != t.Chroot {
 		diff["Chroot"] = []interface{}{s.Chroot, t.Chroot}
 	}
@@ -924,12 +831,30 @@ func (s GlobalBase) Diff(t GlobalBase, opts ...Options) map[string][]interface{}
 		diff["ClusterSecret"] = []interface{}{s.ClusterSecret, t.ClusterSecret}
 	}
 
-	if s.CrtBase != t.CrtBase {
-		diff["CrtBase"] = []interface{}{s.CrtBase, t.CrtBase}
-	}
-
 	if s.Daemon != t.Daemon {
 		diff["Daemon"] = []interface{}{s.Daemon, t.Daemon}
+	}
+
+	if s.DebugOptions == nil || t.DebugOptions == nil {
+		if s.DebugOptions != nil || t.DebugOptions != nil {
+			if opt.NilSameAsEmpty {
+				empty := &DebugOptions{}
+				if s.DebugOptions == nil {
+					if !(t.DebugOptions.Equal(*empty)) {
+						diff["DebugOptions"] = []interface{}{ValueOrNil(s.DebugOptions), ValueOrNil(t.DebugOptions)}
+					}
+				}
+				if t.DebugOptions == nil {
+					if !(s.DebugOptions.Equal(*empty)) {
+						diff["DebugOptions"] = []interface{}{ValueOrNil(s.DebugOptions), ValueOrNil(t.DebugOptions)}
+					}
+				}
+			} else {
+				diff["DebugOptions"] = []interface{}{ValueOrNil(s.DebugOptions), ValueOrNil(t.DebugOptions)}
+			}
+		}
+	} else if !s.DebugOptions.Equal(*t.DebugOptions, opt) {
+		diff["DebugOptions"] = []interface{}{ValueOrNil(s.DebugOptions), ValueOrNil(t.DebugOptions)}
 	}
 
 	if s.DefaultPath == nil || t.DefaultPath == nil {
@@ -961,7 +886,7 @@ func (s GlobalBase) Diff(t GlobalBase, opts ...Options) map[string][]interface{}
 	if s.DeviceAtlasOptions == nil || t.DeviceAtlasOptions == nil {
 		if s.DeviceAtlasOptions != nil || t.DeviceAtlasOptions != nil {
 			if opt.NilSameAsEmpty {
-				empty := &GlobalDeviceAtlasOptions{}
+				empty := &DeviceAtlasOptions{}
 				if s.DeviceAtlasOptions == nil {
 					if !(t.DeviceAtlasOptions.Equal(*empty)) {
 						diff["DeviceAtlasOptions"] = []interface{}{ValueOrNil(s.DeviceAtlasOptions), ValueOrNil(t.DeviceAtlasOptions)}
@@ -980,6 +905,28 @@ func (s GlobalBase) Diff(t GlobalBase, opts ...Options) map[string][]interface{}
 		diff["DeviceAtlasOptions"] = []interface{}{ValueOrNil(s.DeviceAtlasOptions), ValueOrNil(t.DeviceAtlasOptions)}
 	}
 
+	if s.EnvironmentOptions == nil || t.EnvironmentOptions == nil {
+		if s.EnvironmentOptions != nil || t.EnvironmentOptions != nil {
+			if opt.NilSameAsEmpty {
+				empty := &EnvironmentOptions{}
+				if s.EnvironmentOptions == nil {
+					if !(t.EnvironmentOptions.Equal(*empty)) {
+						diff["EnvironmentOptions"] = []interface{}{ValueOrNil(s.EnvironmentOptions), ValueOrNil(t.EnvironmentOptions)}
+					}
+				}
+				if t.EnvironmentOptions == nil {
+					if !(s.EnvironmentOptions.Equal(*empty)) {
+						diff["EnvironmentOptions"] = []interface{}{ValueOrNil(s.EnvironmentOptions), ValueOrNil(t.EnvironmentOptions)}
+					}
+				}
+			} else {
+				diff["EnvironmentOptions"] = []interface{}{ValueOrNil(s.EnvironmentOptions), ValueOrNil(t.EnvironmentOptions)}
+			}
+		}
+	} else if !s.EnvironmentOptions.Equal(*t.EnvironmentOptions, opt) {
+		diff["EnvironmentOptions"] = []interface{}{ValueOrNil(s.EnvironmentOptions), ValueOrNil(t.EnvironmentOptions)}
+	}
+
 	if s.ExposeExperimentalDirectives != t.ExposeExperimentalDirectives {
 		diff["ExposeExperimentalDirectives"] = []interface{}{s.ExposeExperimentalDirectives, t.ExposeExperimentalDirectives}
 	}
@@ -991,7 +938,7 @@ func (s GlobalBase) Diff(t GlobalBase, opts ...Options) map[string][]interface{}
 	if s.FiftyOneDegreesOptions == nil || t.FiftyOneDegreesOptions == nil {
 		if s.FiftyOneDegreesOptions != nil || t.FiftyOneDegreesOptions != nil {
 			if opt.NilSameAsEmpty {
-				empty := &GlobalFiftyOneDegreesOptions{}
+				empty := &FiftyOneDegreesOptions{}
 				if s.FiftyOneDegreesOptions == nil {
 					if !(t.FiftyOneDegreesOptions.Equal(*empty)) {
 						diff["FiftyOneDegreesOptions"] = []interface{}{ValueOrNil(s.FiftyOneDegreesOptions), ValueOrNil(t.FiftyOneDegreesOptions)}
@@ -1056,6 +1003,28 @@ func (s GlobalBase) Diff(t GlobalBase, opts ...Options) map[string][]interface{}
 		diff["Harden"] = []interface{}{ValueOrNil(s.Harden), ValueOrNil(t.Harden)}
 	}
 
+	if s.HTTPClientOptions == nil || t.HTTPClientOptions == nil {
+		if s.HTTPClientOptions != nil || t.HTTPClientOptions != nil {
+			if opt.NilSameAsEmpty {
+				empty := &HTTPClientOptions{}
+				if s.HTTPClientOptions == nil {
+					if !(t.HTTPClientOptions.Equal(*empty)) {
+						diff["HTTPClientOptions"] = []interface{}{ValueOrNil(s.HTTPClientOptions), ValueOrNil(t.HTTPClientOptions)}
+					}
+				}
+				if t.HTTPClientOptions == nil {
+					if !(s.HTTPClientOptions.Equal(*empty)) {
+						diff["HTTPClientOptions"] = []interface{}{ValueOrNil(s.HTTPClientOptions), ValueOrNil(t.HTTPClientOptions)}
+					}
+				}
+			} else {
+				diff["HTTPClientOptions"] = []interface{}{ValueOrNil(s.HTTPClientOptions), ValueOrNil(t.HTTPClientOptions)}
+			}
+		}
+	} else if !s.HTTPClientOptions.Equal(*t.HTTPClientOptions, opt) {
+		diff["HTTPClientOptions"] = []interface{}{ValueOrNil(s.HTTPClientOptions), ValueOrNil(t.HTTPClientOptions)}
+	}
+
 	if !CheckSameNilAndLen(s.HTTPErrCodes, t.HTTPErrCodes, opt) {
 		diff["HTTPErrCodes"] = []interface{}{s.HTTPErrCodes, t.HTTPErrCodes}
 	} else {
@@ -1090,44 +1059,12 @@ func (s GlobalBase) Diff(t GlobalBase, opts ...Options) map[string][]interface{}
 		}
 	}
 
-	if s.HttpclientResolversDisabled != t.HttpclientResolversDisabled {
-		diff["HttpclientResolversDisabled"] = []interface{}{s.HttpclientResolversDisabled, t.HttpclientResolversDisabled}
-	}
-
-	if s.HttpclientResolversID != t.HttpclientResolversID {
-		diff["HttpclientResolversID"] = []interface{}{s.HttpclientResolversID, t.HttpclientResolversID}
-	}
-
-	if s.HttpclientResolversPrefer != t.HttpclientResolversPrefer {
-		diff["HttpclientResolversPrefer"] = []interface{}{s.HttpclientResolversPrefer, t.HttpclientResolversPrefer}
-	}
-
-	if s.HttpclientRetries != t.HttpclientRetries {
-		diff["HttpclientRetries"] = []interface{}{s.HttpclientRetries, t.HttpclientRetries}
-	}
-
-	if s.HttpclientSslCaFile != t.HttpclientSslCaFile {
-		diff["HttpclientSslCaFile"] = []interface{}{s.HttpclientSslCaFile, t.HttpclientSslCaFile}
-	}
-
-	if !equalPointers(s.HttpclientSslVerify, t.HttpclientSslVerify) {
-		diff["HttpclientSslVerify"] = []interface{}{ValueOrNil(s.HttpclientSslVerify), ValueOrNil(t.HttpclientSslVerify)}
-	}
-
-	if !equalPointers(s.HttpclientTimeoutConnect, t.HttpclientTimeoutConnect) {
-		diff["HttpclientTimeoutConnect"] = []interface{}{ValueOrNil(s.HttpclientTimeoutConnect), ValueOrNil(t.HttpclientTimeoutConnect)}
-	}
-
 	if s.InsecureForkWanted != t.InsecureForkWanted {
 		diff["InsecureForkWanted"] = []interface{}{s.InsecureForkWanted, t.InsecureForkWanted}
 	}
 
 	if s.InsecureSetuidWanted != t.InsecureSetuidWanted {
 		diff["InsecureSetuidWanted"] = []interface{}{s.InsecureSetuidWanted, t.InsecureSetuidWanted}
-	}
-
-	if s.IssuersChainPath != t.IssuersChainPath {
-		diff["IssuersChainPath"] = []interface{}{s.IssuersChainPath, t.IssuersChainPath}
 	}
 
 	if s.LimitedQuic != t.LimitedQuic {
@@ -1160,86 +1097,30 @@ func (s GlobalBase) Diff(t GlobalBase, opts ...Options) map[string][]interface{}
 		diff["LogSendHostname"] = []interface{}{ValueOrNil(s.LogSendHostname), ValueOrNil(t.LogSendHostname)}
 	}
 
-	if s.LuaLoadPerThread != t.LuaLoadPerThread {
-		diff["LuaLoadPerThread"] = []interface{}{s.LuaLoadPerThread, t.LuaLoadPerThread}
-	}
-
-	if !CheckSameNilAndLen(s.LuaLoads, t.LuaLoads, opt) {
-		diff["LuaLoads"] = []interface{}{s.LuaLoads, t.LuaLoads}
-	} else {
-		diff2 := make(map[string][]interface{})
-		for i := range s.LuaLoads {
-			if !s.LuaLoads[i].Equal(*t.LuaLoads[i], opt) {
-				diffSub := s.LuaLoads[i].Diff(*t.LuaLoads[i], opt)
-				if len(diffSub) > 0 {
-					diff2[strconv.Itoa(i)] = []interface{}{diffSub}
+	if s.LuaOptions == nil || t.LuaOptions == nil {
+		if s.LuaOptions != nil || t.LuaOptions != nil {
+			if opt.NilSameAsEmpty {
+				empty := &LuaOptions{}
+				if s.LuaOptions == nil {
+					if !(t.LuaOptions.Equal(*empty)) {
+						diff["LuaOptions"] = []interface{}{ValueOrNil(s.LuaOptions), ValueOrNil(t.LuaOptions)}
+					}
 				}
+				if t.LuaOptions == nil {
+					if !(s.LuaOptions.Equal(*empty)) {
+						diff["LuaOptions"] = []interface{}{ValueOrNil(s.LuaOptions), ValueOrNil(t.LuaOptions)}
+					}
+				}
+			} else {
+				diff["LuaOptions"] = []interface{}{ValueOrNil(s.LuaOptions), ValueOrNil(t.LuaOptions)}
 			}
 		}
-		if len(diff2) > 0 {
-			diff["LuaLoads"] = []interface{}{diff2}
-		}
-	}
-
-	if !CheckSameNilAndLen(s.LuaPrependPath, t.LuaPrependPath, opt) {
-		diff["LuaPrependPath"] = []interface{}{s.LuaPrependPath, t.LuaPrependPath}
-	} else {
-		diff2 := make(map[string][]interface{})
-		for i := range s.LuaPrependPath {
-			if !s.LuaPrependPath[i].Equal(*t.LuaPrependPath[i], opt) {
-				diffSub := s.LuaPrependPath[i].Diff(*t.LuaPrependPath[i], opt)
-				if len(diffSub) > 0 {
-					diff2[strconv.Itoa(i)] = []interface{}{diffSub}
-				}
-			}
-		}
-		if len(diff2) > 0 {
-			diff["LuaPrependPath"] = []interface{}{diff2}
-		}
+	} else if !s.LuaOptions.Equal(*t.LuaOptions, opt) {
+		diff["LuaOptions"] = []interface{}{ValueOrNil(s.LuaOptions), ValueOrNil(t.LuaOptions)}
 	}
 
 	if s.MasterWorker != t.MasterWorker {
 		diff["MasterWorker"] = []interface{}{s.MasterWorker, t.MasterWorker}
-	}
-
-	if !equalPointers(s.MaxSpreadChecks, t.MaxSpreadChecks) {
-		diff["MaxSpreadChecks"] = []interface{}{ValueOrNil(s.MaxSpreadChecks), ValueOrNil(t.MaxSpreadChecks)}
-	}
-
-	if s.Maxcompcpuusage != t.Maxcompcpuusage {
-		diff["Maxcompcpuusage"] = []interface{}{s.Maxcompcpuusage, t.Maxcompcpuusage}
-	}
-
-	if s.Maxcomprate != t.Maxcomprate {
-		diff["Maxcomprate"] = []interface{}{s.Maxcomprate, t.Maxcomprate}
-	}
-
-	if s.Maxconn != t.Maxconn {
-		diff["Maxconn"] = []interface{}{s.Maxconn, t.Maxconn}
-	}
-
-	if s.Maxconnrate != t.Maxconnrate {
-		diff["Maxconnrate"] = []interface{}{s.Maxconnrate, t.Maxconnrate}
-	}
-
-	if s.Maxpipes != t.Maxpipes {
-		diff["Maxpipes"] = []interface{}{s.Maxpipes, t.Maxpipes}
-	}
-
-	if s.Maxsessrate != t.Maxsessrate {
-		diff["Maxsessrate"] = []interface{}{s.Maxsessrate, t.Maxsessrate}
-	}
-
-	if s.Maxsslconn != t.Maxsslconn {
-		diff["Maxsslconn"] = []interface{}{s.Maxsslconn, t.Maxsslconn}
-	}
-
-	if s.Maxsslrate != t.Maxsslrate {
-		diff["Maxsslrate"] = []interface{}{s.Maxsslrate, t.Maxsslrate}
-	}
-
-	if s.Maxzlibmem != t.Maxzlibmem {
-		diff["Maxzlibmem"] = []interface{}{s.Maxzlibmem, t.Maxzlibmem}
 	}
 
 	if !equalPointers(s.MworkerMaxReloads, t.MworkerMaxReloads) {
@@ -1258,58 +1139,52 @@ func (s GlobalBase) Diff(t GlobalBase, opts ...Options) map[string][]interface{}
 		diff["Node"] = []interface{}{s.Node, t.Node}
 	}
 
-	if s.Noepoll != t.Noepoll {
-		diff["Noepoll"] = []interface{}{s.Noepoll, t.Noepoll}
-	}
-
-	if s.Noevports != t.Noevports {
-		diff["Noevports"] = []interface{}{s.Noevports, t.Noevports}
-	}
-
-	if s.Nogetaddrinfo != t.Nogetaddrinfo {
-		diff["Nogetaddrinfo"] = []interface{}{s.Nogetaddrinfo, t.Nogetaddrinfo}
-	}
-
-	if s.Nokqueue != t.Nokqueue {
-		diff["Nokqueue"] = []interface{}{s.Nokqueue, t.Nokqueue}
-	}
-
-	if s.Nopoll != t.Nopoll {
-		diff["Nopoll"] = []interface{}{s.Nopoll, t.Nopoll}
-	}
-
-	if s.Noreuseport != t.Noreuseport {
-		diff["Noreuseport"] = []interface{}{s.Noreuseport, t.Noreuseport}
-	}
-
-	if s.Nosplice != t.Nosplice {
-		diff["Nosplice"] = []interface{}{s.Nosplice, t.Nosplice}
-	}
-
 	if s.NumaCPUMapping != t.NumaCPUMapping {
 		diff["NumaCPUMapping"] = []interface{}{s.NumaCPUMapping, t.NumaCPUMapping}
 	}
 
-	if s.OcspUpdate == nil || t.OcspUpdate == nil {
-		if s.OcspUpdate != nil || t.OcspUpdate != nil {
+	if s.OcspUpdateOptions == nil || t.OcspUpdateOptions == nil {
+		if s.OcspUpdateOptions != nil || t.OcspUpdateOptions != nil {
 			if opt.NilSameAsEmpty {
-				empty := &GlobalOcspUpdate{}
-				if s.OcspUpdate == nil {
-					if !(t.OcspUpdate.Equal(*empty)) {
-						diff["OcspUpdate"] = []interface{}{ValueOrNil(s.OcspUpdate), ValueOrNil(t.OcspUpdate)}
+				empty := &OcspUpdateOptions{}
+				if s.OcspUpdateOptions == nil {
+					if !(t.OcspUpdateOptions.Equal(*empty)) {
+						diff["OcspUpdateOptions"] = []interface{}{ValueOrNil(s.OcspUpdateOptions), ValueOrNil(t.OcspUpdateOptions)}
 					}
 				}
-				if t.OcspUpdate == nil {
-					if !(s.OcspUpdate.Equal(*empty)) {
-						diff["OcspUpdate"] = []interface{}{ValueOrNil(s.OcspUpdate), ValueOrNil(t.OcspUpdate)}
+				if t.OcspUpdateOptions == nil {
+					if !(s.OcspUpdateOptions.Equal(*empty)) {
+						diff["OcspUpdateOptions"] = []interface{}{ValueOrNil(s.OcspUpdateOptions), ValueOrNil(t.OcspUpdateOptions)}
 					}
 				}
 			} else {
-				diff["OcspUpdate"] = []interface{}{ValueOrNil(s.OcspUpdate), ValueOrNil(t.OcspUpdate)}
+				diff["OcspUpdateOptions"] = []interface{}{ValueOrNil(s.OcspUpdateOptions), ValueOrNil(t.OcspUpdateOptions)}
 			}
 		}
-	} else if !s.OcspUpdate.Equal(*t.OcspUpdate, opt) {
-		diff["OcspUpdate"] = []interface{}{ValueOrNil(s.OcspUpdate), ValueOrNil(t.OcspUpdate)}
+	} else if !s.OcspUpdateOptions.Equal(*t.OcspUpdateOptions, opt) {
+		diff["OcspUpdateOptions"] = []interface{}{ValueOrNil(s.OcspUpdateOptions), ValueOrNil(t.OcspUpdateOptions)}
+	}
+
+	if s.PerformanceOptions == nil || t.PerformanceOptions == nil {
+		if s.PerformanceOptions != nil || t.PerformanceOptions != nil {
+			if opt.NilSameAsEmpty {
+				empty := &PerformanceOptions{}
+				if s.PerformanceOptions == nil {
+					if !(t.PerformanceOptions.Equal(*empty)) {
+						diff["PerformanceOptions"] = []interface{}{ValueOrNil(s.PerformanceOptions), ValueOrNil(t.PerformanceOptions)}
+					}
+				}
+				if t.PerformanceOptions == nil {
+					if !(s.PerformanceOptions.Equal(*empty)) {
+						diff["PerformanceOptions"] = []interface{}{ValueOrNil(s.PerformanceOptions), ValueOrNil(t.PerformanceOptions)}
+					}
+				}
+			} else {
+				diff["PerformanceOptions"] = []interface{}{ValueOrNil(s.PerformanceOptions), ValueOrNil(t.PerformanceOptions)}
+			}
+		}
+	} else if !s.PerformanceOptions.Equal(*t.PerformanceOptions, opt) {
+		diff["PerformanceOptions"] = []interface{}{ValueOrNil(s.PerformanceOptions), ValueOrNil(t.PerformanceOptions)}
 	}
 
 	if s.Pidfile != t.Pidfile {
@@ -1324,30 +1199,6 @@ func (s GlobalBase) Diff(t GlobalBase, opts ...Options) map[string][]interface{}
 		diff["PreallocFd"] = []interface{}{s.PreallocFd, t.PreallocFd}
 	}
 
-	if s.ProfilingMemory != t.ProfilingMemory {
-		diff["ProfilingMemory"] = []interface{}{s.ProfilingMemory, t.ProfilingMemory}
-	}
-
-	if s.ProfilingTasks != t.ProfilingTasks {
-		diff["ProfilingTasks"] = []interface{}{s.ProfilingTasks, t.ProfilingTasks}
-	}
-
-	if s.Quiet != t.Quiet {
-		diff["Quiet"] = []interface{}{s.Quiet, t.Quiet}
-	}
-
-	if s.Resetenv != t.Resetenv {
-		diff["Resetenv"] = []interface{}{s.Resetenv, t.Resetenv}
-	}
-
-	if s.ServerStateBase != t.ServerStateBase {
-		diff["ServerStateBase"] = []interface{}{s.ServerStateBase, t.ServerStateBase}
-	}
-
-	if s.ServerStateFile != t.ServerStateFile {
-		diff["ServerStateFile"] = []interface{}{s.ServerStateFile, t.ServerStateFile}
-	}
-
 	if s.SetDumpable != t.SetDumpable {
 		diff["SetDumpable"] = []interface{}{s.SetDumpable, t.SetDumpable}
 	}
@@ -1356,92 +1207,26 @@ func (s GlobalBase) Diff(t GlobalBase, opts ...Options) map[string][]interface{}
 		diff["Setcap"] = []interface{}{s.Setcap, t.Setcap}
 	}
 
-	if s.SpreadChecks != t.SpreadChecks {
-		diff["SpreadChecks"] = []interface{}{s.SpreadChecks, t.SpreadChecks}
-	}
-
-	if s.SslDefaultBindCiphers != t.SslDefaultBindCiphers {
-		diff["SslDefaultBindCiphers"] = []interface{}{s.SslDefaultBindCiphers, t.SslDefaultBindCiphers}
-	}
-
-	if s.SslDefaultBindCiphersuites != t.SslDefaultBindCiphersuites {
-		diff["SslDefaultBindCiphersuites"] = []interface{}{s.SslDefaultBindCiphersuites, t.SslDefaultBindCiphersuites}
-	}
-
-	if s.SslDefaultBindClientSigalgs != t.SslDefaultBindClientSigalgs {
-		diff["SslDefaultBindClientSigalgs"] = []interface{}{s.SslDefaultBindClientSigalgs, t.SslDefaultBindClientSigalgs}
-	}
-
-	if s.SslDefaultBindCurves != t.SslDefaultBindCurves {
-		diff["SslDefaultBindCurves"] = []interface{}{s.SslDefaultBindCurves, t.SslDefaultBindCurves}
-	}
-
-	if s.SslDefaultBindOptions != t.SslDefaultBindOptions {
-		diff["SslDefaultBindOptions"] = []interface{}{s.SslDefaultBindOptions, t.SslDefaultBindOptions}
-	}
-
-	if s.SslDefaultBindSigalgs != t.SslDefaultBindSigalgs {
-		diff["SslDefaultBindSigalgs"] = []interface{}{s.SslDefaultBindSigalgs, t.SslDefaultBindSigalgs}
-	}
-
-	if s.SslDefaultServerCiphers != t.SslDefaultServerCiphers {
-		diff["SslDefaultServerCiphers"] = []interface{}{s.SslDefaultServerCiphers, t.SslDefaultServerCiphers}
-	}
-
-	if s.SslDefaultServerCiphersuites != t.SslDefaultServerCiphersuites {
-		diff["SslDefaultServerCiphersuites"] = []interface{}{s.SslDefaultServerCiphersuites, t.SslDefaultServerCiphersuites}
-	}
-
-	if s.SslDefaultServerClientSigalgs != t.SslDefaultServerClientSigalgs {
-		diff["SslDefaultServerClientSigalgs"] = []interface{}{s.SslDefaultServerClientSigalgs, t.SslDefaultServerClientSigalgs}
-	}
-
-	if s.SslDefaultServerCurves != t.SslDefaultServerCurves {
-		diff["SslDefaultServerCurves"] = []interface{}{s.SslDefaultServerCurves, t.SslDefaultServerCurves}
-	}
-
-	if s.SslDefaultServerOptions != t.SslDefaultServerOptions {
-		diff["SslDefaultServerOptions"] = []interface{}{s.SslDefaultServerOptions, t.SslDefaultServerOptions}
-	}
-
-	if s.SslDefaultServerSigalgs != t.SslDefaultServerSigalgs {
-		diff["SslDefaultServerSigalgs"] = []interface{}{s.SslDefaultServerSigalgs, t.SslDefaultServerSigalgs}
-	}
-
-	if s.SslDhParamFile != t.SslDhParamFile {
-		diff["SslDhParamFile"] = []interface{}{s.SslDhParamFile, t.SslDhParamFile}
-	}
-
-	if s.SslLoadExtraFiles != t.SslLoadExtraFiles {
-		diff["SslLoadExtraFiles"] = []interface{}{s.SslLoadExtraFiles, t.SslLoadExtraFiles}
-	}
-
-	if s.SslModeAsync != t.SslModeAsync {
-		diff["SslModeAsync"] = []interface{}{s.SslModeAsync, t.SslModeAsync}
-	}
-
-	if s.SslPropquery != t.SslPropquery {
-		diff["SslPropquery"] = []interface{}{s.SslPropquery, t.SslPropquery}
-	}
-
-	if s.SslProvider != t.SslProvider {
-		diff["SslProvider"] = []interface{}{s.SslProvider, t.SslProvider}
-	}
-
-	if s.SslProviderPath != t.SslProviderPath {
-		diff["SslProviderPath"] = []interface{}{s.SslProviderPath, t.SslProviderPath}
-	}
-
-	if !equalPointers(s.SslSecurityLevel, t.SslSecurityLevel) {
-		diff["SslSecurityLevel"] = []interface{}{ValueOrNil(s.SslSecurityLevel), ValueOrNil(t.SslSecurityLevel)}
-	}
-
-	if s.SslServerVerify != t.SslServerVerify {
-		diff["SslServerVerify"] = []interface{}{s.SslServerVerify, t.SslServerVerify}
-	}
-
-	if s.SslSkipSelfIssuedCa != t.SslSkipSelfIssuedCa {
-		diff["SslSkipSelfIssuedCa"] = []interface{}{s.SslSkipSelfIssuedCa, t.SslSkipSelfIssuedCa}
+	if s.SslOptions == nil || t.SslOptions == nil {
+		if s.SslOptions != nil || t.SslOptions != nil {
+			if opt.NilSameAsEmpty {
+				empty := &SslOptions{}
+				if s.SslOptions == nil {
+					if !(t.SslOptions.Equal(*empty)) {
+						diff["SslOptions"] = []interface{}{ValueOrNil(s.SslOptions), ValueOrNil(t.SslOptions)}
+					}
+				}
+				if t.SslOptions == nil {
+					if !(s.SslOptions.Equal(*empty)) {
+						diff["SslOptions"] = []interface{}{ValueOrNil(s.SslOptions), ValueOrNil(t.SslOptions)}
+					}
+				}
+			} else {
+				diff["SslOptions"] = []interface{}{ValueOrNil(s.SslOptions), ValueOrNil(t.SslOptions)}
+			}
+		}
+	} else if !s.SslOptions.Equal(*t.SslOptions, opt) {
+		diff["SslOptions"] = []interface{}{ValueOrNil(s.SslOptions), ValueOrNil(t.SslOptions)}
 	}
 
 	if !equalPointers(s.StatsMaxconn, t.StatsMaxconn) {
@@ -1460,14 +1245,54 @@ func (s GlobalBase) Diff(t GlobalBase, opts ...Options) map[string][]interface{}
 		diff["ThreadGroups"] = []interface{}{s.ThreadGroups, t.ThreadGroups}
 	}
 
-	if !equalPointers(s.ThreadHardLimit, t.ThreadHardLimit) {
-		diff["ThreadHardLimit"] = []interface{}{ValueOrNil(s.ThreadHardLimit), ValueOrNil(t.ThreadHardLimit)}
+	if s.TuneBufferOptions == nil || t.TuneBufferOptions == nil {
+		if s.TuneBufferOptions != nil || t.TuneBufferOptions != nil {
+			if opt.NilSameAsEmpty {
+				empty := &TuneBufferOptions{}
+				if s.TuneBufferOptions == nil {
+					if !(t.TuneBufferOptions.Equal(*empty)) {
+						diff["TuneBufferOptions"] = []interface{}{ValueOrNil(s.TuneBufferOptions), ValueOrNil(t.TuneBufferOptions)}
+					}
+				}
+				if t.TuneBufferOptions == nil {
+					if !(s.TuneBufferOptions.Equal(*empty)) {
+						diff["TuneBufferOptions"] = []interface{}{ValueOrNil(s.TuneBufferOptions), ValueOrNil(t.TuneBufferOptions)}
+					}
+				}
+			} else {
+				diff["TuneBufferOptions"] = []interface{}{ValueOrNil(s.TuneBufferOptions), ValueOrNil(t.TuneBufferOptions)}
+			}
+		}
+	} else if !s.TuneBufferOptions.Equal(*t.TuneBufferOptions, opt) {
+		diff["TuneBufferOptions"] = []interface{}{ValueOrNil(s.TuneBufferOptions), ValueOrNil(t.TuneBufferOptions)}
+	}
+
+	if s.TuneLuaOptions == nil || t.TuneLuaOptions == nil {
+		if s.TuneLuaOptions != nil || t.TuneLuaOptions != nil {
+			if opt.NilSameAsEmpty {
+				empty := &TuneLuaOptions{}
+				if s.TuneLuaOptions == nil {
+					if !(t.TuneLuaOptions.Equal(*empty)) {
+						diff["TuneLuaOptions"] = []interface{}{ValueOrNil(s.TuneLuaOptions), ValueOrNil(t.TuneLuaOptions)}
+					}
+				}
+				if t.TuneLuaOptions == nil {
+					if !(s.TuneLuaOptions.Equal(*empty)) {
+						diff["TuneLuaOptions"] = []interface{}{ValueOrNil(s.TuneLuaOptions), ValueOrNil(t.TuneLuaOptions)}
+					}
+				}
+			} else {
+				diff["TuneLuaOptions"] = []interface{}{ValueOrNil(s.TuneLuaOptions), ValueOrNil(t.TuneLuaOptions)}
+			}
+		}
+	} else if !s.TuneLuaOptions.Equal(*t.TuneLuaOptions, opt) {
+		diff["TuneLuaOptions"] = []interface{}{ValueOrNil(s.TuneLuaOptions), ValueOrNil(t.TuneLuaOptions)}
 	}
 
 	if s.TuneOptions == nil || t.TuneOptions == nil {
 		if s.TuneOptions != nil || t.TuneOptions != nil {
 			if opt.NilSameAsEmpty {
-				empty := &GlobalTuneOptions{}
+				empty := &TuneOptions{}
 				if s.TuneOptions == nil {
 					if !(t.TuneOptions.Equal(*empty)) {
 						diff["TuneOptions"] = []interface{}{ValueOrNil(s.TuneOptions), ValueOrNil(t.TuneOptions)}
@@ -1486,16 +1311,100 @@ func (s GlobalBase) Diff(t GlobalBase, opts ...Options) map[string][]interface{}
 		diff["TuneOptions"] = []interface{}{ValueOrNil(s.TuneOptions), ValueOrNil(t.TuneOptions)}
 	}
 
+	if s.TuneQuicOptions == nil || t.TuneQuicOptions == nil {
+		if s.TuneQuicOptions != nil || t.TuneQuicOptions != nil {
+			if opt.NilSameAsEmpty {
+				empty := &TuneQuicOptions{}
+				if s.TuneQuicOptions == nil {
+					if !(t.TuneQuicOptions.Equal(*empty)) {
+						diff["TuneQuicOptions"] = []interface{}{ValueOrNil(s.TuneQuicOptions), ValueOrNil(t.TuneQuicOptions)}
+					}
+				}
+				if t.TuneQuicOptions == nil {
+					if !(s.TuneQuicOptions.Equal(*empty)) {
+						diff["TuneQuicOptions"] = []interface{}{ValueOrNil(s.TuneQuicOptions), ValueOrNil(t.TuneQuicOptions)}
+					}
+				}
+			} else {
+				diff["TuneQuicOptions"] = []interface{}{ValueOrNil(s.TuneQuicOptions), ValueOrNil(t.TuneQuicOptions)}
+			}
+		}
+	} else if !s.TuneQuicOptions.Equal(*t.TuneQuicOptions, opt) {
+		diff["TuneQuicOptions"] = []interface{}{ValueOrNil(s.TuneQuicOptions), ValueOrNil(t.TuneQuicOptions)}
+	}
+
+	if s.TuneSslOptions == nil || t.TuneSslOptions == nil {
+		if s.TuneSslOptions != nil || t.TuneSslOptions != nil {
+			if opt.NilSameAsEmpty {
+				empty := &TuneSslOptions{}
+				if s.TuneSslOptions == nil {
+					if !(t.TuneSslOptions.Equal(*empty)) {
+						diff["TuneSslOptions"] = []interface{}{ValueOrNil(s.TuneSslOptions), ValueOrNil(t.TuneSslOptions)}
+					}
+				}
+				if t.TuneSslOptions == nil {
+					if !(s.TuneSslOptions.Equal(*empty)) {
+						diff["TuneSslOptions"] = []interface{}{ValueOrNil(s.TuneSslOptions), ValueOrNil(t.TuneSslOptions)}
+					}
+				}
+			} else {
+				diff["TuneSslOptions"] = []interface{}{ValueOrNil(s.TuneSslOptions), ValueOrNil(t.TuneSslOptions)}
+			}
+		}
+	} else if !s.TuneSslOptions.Equal(*t.TuneSslOptions, opt) {
+		diff["TuneSslOptions"] = []interface{}{ValueOrNil(s.TuneSslOptions), ValueOrNil(t.TuneSslOptions)}
+	}
+
+	if s.TuneVarsOptions == nil || t.TuneVarsOptions == nil {
+		if s.TuneVarsOptions != nil || t.TuneVarsOptions != nil {
+			if opt.NilSameAsEmpty {
+				empty := &TuneVarsOptions{}
+				if s.TuneVarsOptions == nil {
+					if !(t.TuneVarsOptions.Equal(*empty)) {
+						diff["TuneVarsOptions"] = []interface{}{ValueOrNil(s.TuneVarsOptions), ValueOrNil(t.TuneVarsOptions)}
+					}
+				}
+				if t.TuneVarsOptions == nil {
+					if !(s.TuneVarsOptions.Equal(*empty)) {
+						diff["TuneVarsOptions"] = []interface{}{ValueOrNil(s.TuneVarsOptions), ValueOrNil(t.TuneVarsOptions)}
+					}
+				}
+			} else {
+				diff["TuneVarsOptions"] = []interface{}{ValueOrNil(s.TuneVarsOptions), ValueOrNil(t.TuneVarsOptions)}
+			}
+		}
+	} else if !s.TuneVarsOptions.Equal(*t.TuneVarsOptions, opt) {
+		diff["TuneVarsOptions"] = []interface{}{ValueOrNil(s.TuneVarsOptions), ValueOrNil(t.TuneVarsOptions)}
+	}
+
+	if s.TuneZlibOptions == nil || t.TuneZlibOptions == nil {
+		if s.TuneZlibOptions != nil || t.TuneZlibOptions != nil {
+			if opt.NilSameAsEmpty {
+				empty := &TuneZlibOptions{}
+				if s.TuneZlibOptions == nil {
+					if !(t.TuneZlibOptions.Equal(*empty)) {
+						diff["TuneZlibOptions"] = []interface{}{ValueOrNil(s.TuneZlibOptions), ValueOrNil(t.TuneZlibOptions)}
+					}
+				}
+				if t.TuneZlibOptions == nil {
+					if !(s.TuneZlibOptions.Equal(*empty)) {
+						diff["TuneZlibOptions"] = []interface{}{ValueOrNil(s.TuneZlibOptions), ValueOrNil(t.TuneZlibOptions)}
+					}
+				}
+			} else {
+				diff["TuneZlibOptions"] = []interface{}{ValueOrNil(s.TuneZlibOptions), ValueOrNil(t.TuneZlibOptions)}
+			}
+		}
+	} else if !s.TuneZlibOptions.Equal(*t.TuneZlibOptions, opt) {
+		diff["TuneZlibOptions"] = []interface{}{ValueOrNil(s.TuneZlibOptions), ValueOrNil(t.TuneZlibOptions)}
+	}
+
 	if s.UID != t.UID {
 		diff["UID"] = []interface{}{s.UID, t.UID}
 	}
 
 	if s.Ulimitn != t.Ulimitn {
 		diff["Ulimitn"] = []interface{}{s.Ulimitn, t.Ulimitn}
-	}
-
-	if s.Unsetenv != t.Unsetenv {
-		diff["Unsetenv"] = []interface{}{s.Unsetenv, t.Unsetenv}
 	}
 
 	if s.User != t.User {
@@ -1505,7 +1414,7 @@ func (s GlobalBase) Diff(t GlobalBase, opts ...Options) map[string][]interface{}
 	if s.WurflOptions == nil || t.WurflOptions == nil {
 		if s.WurflOptions != nil || t.WurflOptions != nil {
 			if opt.NilSameAsEmpty {
-				empty := &GlobalWurflOptions{}
+				empty := &WurflOptions{}
 				if s.WurflOptions == nil {
 					if !(t.WurflOptions.Equal(*empty)) {
 						diff["WurflOptions"] = []interface{}{ValueOrNil(s.WurflOptions), ValueOrNil(t.WurflOptions)}
@@ -1522,10 +1431,6 @@ func (s GlobalBase) Diff(t GlobalBase, opts ...Options) map[string][]interface{}
 		}
 	} else if !s.WurflOptions.Equal(*t.WurflOptions, opt) {
 		diff["WurflOptions"] = []interface{}{ValueOrNil(s.WurflOptions), ValueOrNil(t.WurflOptions)}
-	}
-
-	if s.ZeroWarning != t.ZeroWarning {
-		diff["ZeroWarning"] = []interface{}{s.ZeroWarning, t.ZeroWarning}
 	}
 
 	return diff
@@ -1600,112 +1505,6 @@ func (s GlobalDefaultPath) Diff(t GlobalDefaultPath, opts ...Options) map[string
 
 	if s.Type != t.Type {
 		diff["Type"] = []interface{}{s.Type, t.Type}
-	}
-
-	return diff
-}
-
-// Equal checks if two structs of type GlobalDeviceAtlasOptions are equal
-//
-//	var a, b GlobalDeviceAtlasOptions
-//	equal := a.Equal(b)
-//
-// opts ...Options are ignored in this method
-func (s GlobalDeviceAtlasOptions) Equal(t GlobalDeviceAtlasOptions, opts ...Options) bool {
-	if s.JSONFile != t.JSONFile {
-		return false
-	}
-
-	if s.LogLevel != t.LogLevel {
-		return false
-	}
-
-	if s.PropertiesCookie != t.PropertiesCookie {
-		return false
-	}
-
-	if s.Separator != t.Separator {
-		return false
-	}
-
-	return true
-}
-
-// Diff checks if two structs of type GlobalDeviceAtlasOptions are equal
-//
-//	var a, b GlobalDeviceAtlasOptions
-//	diff := a.Diff(b)
-//
-// opts ...Options are ignored in this method
-func (s GlobalDeviceAtlasOptions) Diff(t GlobalDeviceAtlasOptions, opts ...Options) map[string][]interface{} {
-	diff := make(map[string][]interface{})
-	if s.JSONFile != t.JSONFile {
-		diff["JSONFile"] = []interface{}{s.JSONFile, t.JSONFile}
-	}
-
-	if s.LogLevel != t.LogLevel {
-		diff["LogLevel"] = []interface{}{s.LogLevel, t.LogLevel}
-	}
-
-	if s.PropertiesCookie != t.PropertiesCookie {
-		diff["PropertiesCookie"] = []interface{}{s.PropertiesCookie, t.PropertiesCookie}
-	}
-
-	if s.Separator != t.Separator {
-		diff["Separator"] = []interface{}{s.Separator, t.Separator}
-	}
-
-	return diff
-}
-
-// Equal checks if two structs of type GlobalFiftyOneDegreesOptions are equal
-//
-//	var a, b GlobalFiftyOneDegreesOptions
-//	equal := a.Equal(b)
-//
-// opts ...Options are ignored in this method
-func (s GlobalFiftyOneDegreesOptions) Equal(t GlobalFiftyOneDegreesOptions, opts ...Options) bool {
-	if s.CacheSize != t.CacheSize {
-		return false
-	}
-
-	if s.DataFile != t.DataFile {
-		return false
-	}
-
-	if s.PropertyNameList != t.PropertyNameList {
-		return false
-	}
-
-	if s.PropertySeparator != t.PropertySeparator {
-		return false
-	}
-
-	return true
-}
-
-// Diff checks if two structs of type GlobalFiftyOneDegreesOptions are equal
-//
-//	var a, b GlobalFiftyOneDegreesOptions
-//	diff := a.Diff(b)
-//
-// opts ...Options are ignored in this method
-func (s GlobalFiftyOneDegreesOptions) Diff(t GlobalFiftyOneDegreesOptions, opts ...Options) map[string][]interface{} {
-	diff := make(map[string][]interface{})
-	if s.CacheSize != t.CacheSize {
-		diff["CacheSize"] = []interface{}{s.CacheSize, t.CacheSize}
-	}
-
-	if s.DataFile != t.DataFile {
-		diff["DataFile"] = []interface{}{s.DataFile, t.DataFile}
-	}
-
-	if s.PropertyNameList != t.PropertyNameList {
-		diff["PropertyNameList"] = []interface{}{s.PropertyNameList, t.PropertyNameList}
-	}
-
-	if s.PropertySeparator != t.PropertySeparator {
-		diff["PropertySeparator"] = []interface{}{s.PropertySeparator, t.PropertySeparator}
 	}
 
 	return diff
@@ -1906,261 +1705,6 @@ func (s GlobalLogSendHostname) Diff(t GlobalLogSendHostname, opts ...Options) ma
 	return diff
 }
 
-// Equal checks if two structs of type LuaLoad are equal
-//
-//	var a, b LuaLoad
-//	equal := a.Equal(b)
-//
-// opts ...Options are ignored in this method
-func (s LuaLoad) Equal(t LuaLoad, opts ...Options) bool {
-	if !equalPointers(s.File, t.File) {
-		return false
-	}
-
-	return true
-}
-
-// Diff checks if two structs of type LuaLoad are equal
-//
-//	var a, b LuaLoad
-//	diff := a.Diff(b)
-//
-// opts ...Options are ignored in this method
-func (s LuaLoad) Diff(t LuaLoad, opts ...Options) map[string][]interface{} {
-	diff := make(map[string][]interface{})
-	if !equalPointers(s.File, t.File) {
-		diff["File"] = []interface{}{ValueOrNil(s.File), ValueOrNil(t.File)}
-	}
-
-	return diff
-}
-
-// Equal checks if two structs of type LuaPrependPath are equal
-//
-//	var a, b LuaPrependPath
-//	equal := a.Equal(b)
-//
-// opts ...Options are ignored in this method
-func (s LuaPrependPath) Equal(t LuaPrependPath, opts ...Options) bool {
-	if !equalPointers(s.Path, t.Path) {
-		return false
-	}
-
-	if s.Type != t.Type {
-		return false
-	}
-
-	return true
-}
-
-// Diff checks if two structs of type LuaPrependPath are equal
-//
-//	var a, b LuaPrependPath
-//	diff := a.Diff(b)
-//
-// opts ...Options are ignored in this method
-func (s LuaPrependPath) Diff(t LuaPrependPath, opts ...Options) map[string][]interface{} {
-	diff := make(map[string][]interface{})
-	if !equalPointers(s.Path, t.Path) {
-		diff["Path"] = []interface{}{ValueOrNil(s.Path), ValueOrNil(t.Path)}
-	}
-
-	if s.Type != t.Type {
-		diff["Type"] = []interface{}{s.Type, t.Type}
-	}
-
-	return diff
-}
-
-// Equal checks if two structs of type GlobalOcspUpdate are equal
-//
-// By default empty maps and slices are equal to nil:
-//
-//	var a, b GlobalOcspUpdate
-//	equal := a.Equal(b)
-//
-// For more advanced use case you can configure these options (default values are shown):
-//
-//	var a, b GlobalOcspUpdate
-//	equal := a.Equal(b,Options{
-//		NilSameAsEmpty: true,
-//	})
-func (s GlobalOcspUpdate) Equal(t GlobalOcspUpdate, opts ...Options) bool {
-	opt := getOptions(opts...)
-
-	if !equalPointers(s.Disable, t.Disable) {
-		return false
-	}
-
-	if s.Httpproxy == nil || t.Httpproxy == nil {
-		if s.Httpproxy != nil || t.Httpproxy != nil {
-			if opt.NilSameAsEmpty {
-				empty := &GlobalOcspUpdateHttpproxy{}
-				if s.Httpproxy == nil {
-					if !(t.Httpproxy.Equal(*empty)) {
-						return false
-					}
-				}
-				if t.Httpproxy == nil {
-					if !(s.Httpproxy.Equal(*empty)) {
-						return false
-					}
-				}
-			} else {
-				return false
-			}
-		}
-	} else if !s.Httpproxy.Equal(*t.Httpproxy, opt) {
-		return false
-	}
-
-	if !equalPointers(s.Maxdelay, t.Maxdelay) {
-		return false
-	}
-
-	if !equalPointers(s.Mindelay, t.Mindelay) {
-		return false
-	}
-
-	if s.Mode != t.Mode {
-		return false
-	}
-
-	return true
-}
-
-// Diff checks if two structs of type GlobalOcspUpdate are equal
-//
-// By default empty maps and slices are equal to nil:
-//
-//	var a, b GlobalOcspUpdate
-//	diff := a.Diff(b)
-//
-// For more advanced use case you can configure these options (default values are shown):
-//
-//	var a, b GlobalOcspUpdate
-//	diff := a.Diff(b,Options{
-//		NilSameAsEmpty: true,
-//	})
-func (s GlobalOcspUpdate) Diff(t GlobalOcspUpdate, opts ...Options) map[string][]interface{} {
-	opt := getOptions(opts...)
-
-	diff := make(map[string][]interface{})
-	if !equalPointers(s.Disable, t.Disable) {
-		diff["Disable"] = []interface{}{ValueOrNil(s.Disable), ValueOrNil(t.Disable)}
-	}
-
-	if s.Httpproxy == nil || t.Httpproxy == nil {
-		if s.Httpproxy != nil || t.Httpproxy != nil {
-			if opt.NilSameAsEmpty {
-				empty := &GlobalOcspUpdateHttpproxy{}
-				if s.Httpproxy == nil {
-					if !(t.Httpproxy.Equal(*empty)) {
-						diff["Httpproxy"] = []interface{}{ValueOrNil(s.Httpproxy), ValueOrNil(t.Httpproxy)}
-					}
-				}
-				if t.Httpproxy == nil {
-					if !(s.Httpproxy.Equal(*empty)) {
-						diff["Httpproxy"] = []interface{}{ValueOrNil(s.Httpproxy), ValueOrNil(t.Httpproxy)}
-					}
-				}
-			} else {
-				diff["Httpproxy"] = []interface{}{ValueOrNil(s.Httpproxy), ValueOrNil(t.Httpproxy)}
-			}
-		}
-	} else if !s.Httpproxy.Equal(*t.Httpproxy, opt) {
-		diff["Httpproxy"] = []interface{}{ValueOrNil(s.Httpproxy), ValueOrNil(t.Httpproxy)}
-	}
-
-	if !equalPointers(s.Maxdelay, t.Maxdelay) {
-		diff["Maxdelay"] = []interface{}{ValueOrNil(s.Maxdelay), ValueOrNil(t.Maxdelay)}
-	}
-
-	if !equalPointers(s.Mindelay, t.Mindelay) {
-		diff["Mindelay"] = []interface{}{ValueOrNil(s.Mindelay), ValueOrNil(t.Mindelay)}
-	}
-
-	if s.Mode != t.Mode {
-		diff["Mode"] = []interface{}{s.Mode, t.Mode}
-	}
-
-	return diff
-}
-
-// Equal checks if two structs of type GlobalOcspUpdateHttpproxy are equal
-//
-//	var a, b GlobalOcspUpdateHttpproxy
-//	equal := a.Equal(b)
-//
-// opts ...Options are ignored in this method
-func (s GlobalOcspUpdateHttpproxy) Equal(t GlobalOcspUpdateHttpproxy, opts ...Options) bool {
-	if s.Address != t.Address {
-		return false
-	}
-
-	if !equalPointers(s.Port, t.Port) {
-		return false
-	}
-
-	return true
-}
-
-// Diff checks if two structs of type GlobalOcspUpdateHttpproxy are equal
-//
-//	var a, b GlobalOcspUpdateHttpproxy
-//	diff := a.Diff(b)
-//
-// opts ...Options are ignored in this method
-func (s GlobalOcspUpdateHttpproxy) Diff(t GlobalOcspUpdateHttpproxy, opts ...Options) map[string][]interface{} {
-	diff := make(map[string][]interface{})
-	if s.Address != t.Address {
-		diff["Address"] = []interface{}{s.Address, t.Address}
-	}
-
-	if !equalPointers(s.Port, t.Port) {
-		diff["Port"] = []interface{}{ValueOrNil(s.Port), ValueOrNil(t.Port)}
-	}
-
-	return diff
-}
-
-// Equal checks if two structs of type PresetEnv are equal
-//
-//	var a, b PresetEnv
-//	equal := a.Equal(b)
-//
-// opts ...Options are ignored in this method
-func (s PresetEnv) Equal(t PresetEnv, opts ...Options) bool {
-	if !equalPointers(s.Name, t.Name) {
-		return false
-	}
-
-	if !equalPointers(s.Value, t.Value) {
-		return false
-	}
-
-	return true
-}
-
-// Diff checks if two structs of type PresetEnv are equal
-//
-//	var a, b PresetEnv
-//	diff := a.Diff(b)
-//
-// opts ...Options are ignored in this method
-func (s PresetEnv) Diff(t PresetEnv, opts ...Options) map[string][]interface{} {
-	diff := make(map[string][]interface{})
-	if !equalPointers(s.Name, t.Name) {
-		diff["Name"] = []interface{}{ValueOrNil(s.Name), ValueOrNil(t.Name)}
-	}
-
-	if !equalPointers(s.Value, t.Value) {
-		diff["Value"] = []interface{}{ValueOrNil(s.Value), ValueOrNil(t.Value)}
-	}
-
-	return diff
-}
-
 // Equal checks if two structs of type RuntimeAPI are equal
 //
 // By default empty maps and slices are equal to nil:
@@ -2291,80 +1835,6 @@ func (s SetVar) Diff(t SetVar, opts ...Options) map[string][]interface{} {
 	return diff
 }
 
-// Equal checks if two structs of type SetEnv are equal
-//
-//	var a, b SetEnv
-//	equal := a.Equal(b)
-//
-// opts ...Options are ignored in this method
-func (s SetEnv) Equal(t SetEnv, opts ...Options) bool {
-	if !equalPointers(s.Name, t.Name) {
-		return false
-	}
-
-	if !equalPointers(s.Value, t.Value) {
-		return false
-	}
-
-	return true
-}
-
-// Diff checks if two structs of type SetEnv are equal
-//
-//	var a, b SetEnv
-//	diff := a.Diff(b)
-//
-// opts ...Options are ignored in this method
-func (s SetEnv) Diff(t SetEnv, opts ...Options) map[string][]interface{} {
-	diff := make(map[string][]interface{})
-	if !equalPointers(s.Name, t.Name) {
-		diff["Name"] = []interface{}{ValueOrNil(s.Name), ValueOrNil(t.Name)}
-	}
-
-	if !equalPointers(s.Value, t.Value) {
-		diff["Value"] = []interface{}{ValueOrNil(s.Value), ValueOrNil(t.Value)}
-	}
-
-	return diff
-}
-
-// Equal checks if two structs of type SslEngine are equal
-//
-//	var a, b SslEngine
-//	equal := a.Equal(b)
-//
-// opts ...Options are ignored in this method
-func (s SslEngine) Equal(t SslEngine, opts ...Options) bool {
-	if !equalPointers(s.Algorithms, t.Algorithms) {
-		return false
-	}
-
-	if !equalPointers(s.Name, t.Name) {
-		return false
-	}
-
-	return true
-}
-
-// Diff checks if two structs of type SslEngine are equal
-//
-//	var a, b SslEngine
-//	diff := a.Diff(b)
-//
-// opts ...Options are ignored in this method
-func (s SslEngine) Diff(t SslEngine, opts ...Options) map[string][]interface{} {
-	diff := make(map[string][]interface{})
-	if !equalPointers(s.Algorithms, t.Algorithms) {
-		diff["Algorithms"] = []interface{}{ValueOrNil(s.Algorithms), ValueOrNil(t.Algorithms)}
-	}
-
-	if !equalPointers(s.Name, t.Name) {
-		diff["Name"] = []interface{}{ValueOrNil(s.Name), ValueOrNil(t.Name)}
-	}
-
-	return diff
-}
-
 // Equal checks if two structs of type ThreadGroup are equal
 //
 //	var a, b ThreadGroup
@@ -2397,784 +1867,6 @@ func (s ThreadGroup) Diff(t ThreadGroup, opts ...Options) map[string][]interface
 
 	if !equalPointers(s.NumOrRange, t.NumOrRange) {
 		diff["NumOrRange"] = []interface{}{ValueOrNil(s.NumOrRange), ValueOrNil(t.NumOrRange)}
-	}
-
-	return diff
-}
-
-// Equal checks if two structs of type GlobalTuneOptions are equal
-//
-//	var a, b GlobalTuneOptions
-//	equal := a.Equal(b)
-//
-// opts ...Options are ignored in this method
-func (s GlobalTuneOptions) Equal(t GlobalTuneOptions, opts ...Options) bool {
-	if s.AppletZeroCopyForwarding != t.AppletZeroCopyForwarding {
-		return false
-	}
-
-	if !equalPointers(s.BuffersLimit, t.BuffersLimit) {
-		return false
-	}
-
-	if s.BuffersReserve != t.BuffersReserve {
-		return false
-	}
-
-	if s.Bufsize != t.Bufsize {
-		return false
-	}
-
-	if s.CompMaxlevel != t.CompMaxlevel {
-		return false
-	}
-
-	if s.DisableZeroCopyForwarding != t.DisableZeroCopyForwarding {
-		return false
-	}
-
-	if s.EventsMaxEventsAtOnce != t.EventsMaxEventsAtOnce {
-		return false
-	}
-
-	if s.FailAlloc != t.FailAlloc {
-		return false
-	}
-
-	if s.FdEdgeTriggered != t.FdEdgeTriggered {
-		return false
-	}
-
-	if s.H1ZeroCopyFwdRecv != t.H1ZeroCopyFwdRecv {
-		return false
-	}
-
-	if s.H1ZeroCopyFwdSend != t.H1ZeroCopyFwdSend {
-		return false
-	}
-
-	if !equalPointers(s.H2BeGlitchesThreshold, t.H2BeGlitchesThreshold) {
-		return false
-	}
-
-	if s.H2BeInitialWindowSize != t.H2BeInitialWindowSize {
-		return false
-	}
-
-	if s.H2BeMaxConcurrentStreams != t.H2BeMaxConcurrentStreams {
-		return false
-	}
-
-	if !equalPointers(s.H2FeGlitchesThreshold, t.H2FeGlitchesThreshold) {
-		return false
-	}
-
-	if s.H2FeInitialWindowSize != t.H2FeInitialWindowSize {
-		return false
-	}
-
-	if s.H2FeMaxConcurrentStreams != t.H2FeMaxConcurrentStreams {
-		return false
-	}
-
-	if !equalPointers(s.H2FeMaxTotalStreams, t.H2FeMaxTotalStreams) {
-		return false
-	}
-
-	if s.H2HeaderTableSize != t.H2HeaderTableSize {
-		return false
-	}
-
-	if !equalPointers(s.H2InitialWindowSize, t.H2InitialWindowSize) {
-		return false
-	}
-
-	if s.H2MaxConcurrentStreams != t.H2MaxConcurrentStreams {
-		return false
-	}
-
-	if s.H2MaxFrameSize != t.H2MaxFrameSize {
-		return false
-	}
-
-	if s.H2ZeroCopyFwdSend != t.H2ZeroCopyFwdSend {
-		return false
-	}
-
-	if s.HTTPCookielen != t.HTTPCookielen {
-		return false
-	}
-
-	if s.HTTPLogurilen != t.HTTPLogurilen {
-		return false
-	}
-
-	if s.HTTPMaxhdr != t.HTTPMaxhdr {
-		return false
-	}
-
-	if s.IdlePoolShared != t.IdlePoolShared {
-		return false
-	}
-
-	if !equalPointers(s.Idletimer, t.Idletimer) {
-		return false
-	}
-
-	if s.ListenerDefaultShards != t.ListenerDefaultShards {
-		return false
-	}
-
-	if s.ListenerMultiQueue != t.ListenerMultiQueue {
-		return false
-	}
-
-	if !equalPointers(s.LuaBurstTimeout, t.LuaBurstTimeout) {
-		return false
-	}
-
-	if s.LuaForcedYield != t.LuaForcedYield {
-		return false
-	}
-
-	if s.LuaLogLoggers != t.LuaLogLoggers {
-		return false
-	}
-
-	if s.LuaLogStderr != t.LuaLogStderr {
-		return false
-	}
-
-	if !equalPointers(s.LuaMaxmem, t.LuaMaxmem) {
-		return false
-	}
-
-	if !equalPointers(s.LuaServiceTimeout, t.LuaServiceTimeout) {
-		return false
-	}
-
-	if !equalPointers(s.LuaSessionTimeout, t.LuaSessionTimeout) {
-		return false
-	}
-
-	if !equalPointers(s.LuaTaskTimeout, t.LuaTaskTimeout) {
-		return false
-	}
-
-	if !equalPointers(s.MaxChecksPerThread, t.MaxChecksPerThread) {
-		return false
-	}
-
-	if s.Maxaccept != t.Maxaccept {
-		return false
-	}
-
-	if s.Maxpollevents != t.Maxpollevents {
-		return false
-	}
-
-	if s.Maxrewrite != t.Maxrewrite {
-		return false
-	}
-
-	if !equalPointers(s.MemoryHotSize, t.MemoryHotSize) {
-		return false
-	}
-
-	if !equalPointers(s.PatternCacheSize, t.PatternCacheSize) {
-		return false
-	}
-
-	if s.PeersMaxUpdatesAtOnce != t.PeersMaxUpdatesAtOnce {
-		return false
-	}
-
-	if s.Pipesize != t.Pipesize {
-		return false
-	}
-
-	if s.PoolHighFdRatio != t.PoolHighFdRatio {
-		return false
-	}
-
-	if s.PoolLowFdRatio != t.PoolLowFdRatio {
-		return false
-	}
-
-	if s.PtZeroCopyForwarding != t.PtZeroCopyForwarding {
-		return false
-	}
-
-	if !equalPointers(s.QuicFrontendConnTxBuffersLimit, t.QuicFrontendConnTxBuffersLimit) {
-		return false
-	}
-
-	if !equalPointers(s.QuicFrontendMaxIdleTimeout, t.QuicFrontendMaxIdleTimeout) {
-		return false
-	}
-
-	if !equalPointers(s.QuicFrontendMaxStreamsBidi, t.QuicFrontendMaxStreamsBidi) {
-		return false
-	}
-
-	if !equalPointers(s.QuicMaxFrameLoss, t.QuicMaxFrameLoss) {
-		return false
-	}
-
-	if !equalPointers(s.QuicReorderRatio, t.QuicReorderRatio) {
-		return false
-	}
-
-	if !equalPointers(s.QuicRetryThreshold, t.QuicRetryThreshold) {
-		return false
-	}
-
-	if s.QuicSocketOwner != t.QuicSocketOwner {
-		return false
-	}
-
-	if s.QuicZeroCopyFwdSend != t.QuicZeroCopyFwdSend {
-		return false
-	}
-
-	if !equalPointers(s.RcvbufBackend, t.RcvbufBackend) {
-		return false
-	}
-
-	if !equalPointers(s.RcvbufClient, t.RcvbufClient) {
-		return false
-	}
-
-	if !equalPointers(s.RcvbufFrontend, t.RcvbufFrontend) {
-		return false
-	}
-
-	if !equalPointers(s.RcvbufServer, t.RcvbufServer) {
-		return false
-	}
-
-	if s.RecvEnough != t.RecvEnough {
-		return false
-	}
-
-	if !equalPointers(s.RingQueues, t.RingQueues) {
-		return false
-	}
-
-	if s.RunqueueDepth != t.RunqueueDepth {
-		return false
-	}
-
-	if s.SchedLowLatency != t.SchedLowLatency {
-		return false
-	}
-
-	if !equalPointers(s.SndbufBackend, t.SndbufBackend) {
-		return false
-	}
-
-	if !equalPointers(s.SndbufClient, t.SndbufClient) {
-		return false
-	}
-
-	if !equalPointers(s.SndbufFrontend, t.SndbufFrontend) {
-		return false
-	}
-
-	if !equalPointers(s.SndbufServer, t.SndbufServer) {
-		return false
-	}
-
-	if !equalPointers(s.SslCachesize, t.SslCachesize) {
-		return false
-	}
-
-	if !equalPointers(s.SslCaptureBufferSize, t.SslCaptureBufferSize) {
-		return false
-	}
-
-	if s.SslCtxCacheSize != t.SslCtxCacheSize {
-		return false
-	}
-
-	if s.SslDefaultDhParam != t.SslDefaultDhParam {
-		return false
-	}
-
-	if s.SslForcePrivateCache != t.SslForcePrivateCache {
-		return false
-	}
-
-	if s.SslKeylog != t.SslKeylog {
-		return false
-	}
-
-	if !equalPointers(s.SslLifetime, t.SslLifetime) {
-		return false
-	}
-
-	if !equalPointers(s.SslMaxrecord, t.SslMaxrecord) {
-		return false
-	}
-
-	if !equalPointers(s.SslOcspUpdateMaxDelay, t.SslOcspUpdateMaxDelay) {
-		return false
-	}
-
-	if !equalPointers(s.SslOcspUpdateMinDelay, t.SslOcspUpdateMinDelay) {
-		return false
-	}
-
-	if !equalPointers(s.StickCounters, t.StickCounters) {
-		return false
-	}
-
-	if !equalPointers(s.VarsGlobalMaxSize, t.VarsGlobalMaxSize) {
-		return false
-	}
-
-	if !equalPointers(s.VarsProcMaxSize, t.VarsProcMaxSize) {
-		return false
-	}
-
-	if !equalPointers(s.VarsReqresMaxSize, t.VarsReqresMaxSize) {
-		return false
-	}
-
-	if !equalPointers(s.VarsSessMaxSize, t.VarsSessMaxSize) {
-		return false
-	}
-
-	if !equalPointers(s.VarsTxnMaxSize, t.VarsTxnMaxSize) {
-		return false
-	}
-
-	if s.ZlibMemlevel != t.ZlibMemlevel {
-		return false
-	}
-
-	if s.ZlibWindowsize != t.ZlibWindowsize {
-		return false
-	}
-
-	return true
-}
-
-// Diff checks if two structs of type GlobalTuneOptions are equal
-//
-//	var a, b GlobalTuneOptions
-//	diff := a.Diff(b)
-//
-// opts ...Options are ignored in this method
-func (s GlobalTuneOptions) Diff(t GlobalTuneOptions, opts ...Options) map[string][]interface{} {
-	diff := make(map[string][]interface{})
-	if s.AppletZeroCopyForwarding != t.AppletZeroCopyForwarding {
-		diff["AppletZeroCopyForwarding"] = []interface{}{s.AppletZeroCopyForwarding, t.AppletZeroCopyForwarding}
-	}
-
-	if !equalPointers(s.BuffersLimit, t.BuffersLimit) {
-		diff["BuffersLimit"] = []interface{}{ValueOrNil(s.BuffersLimit), ValueOrNil(t.BuffersLimit)}
-	}
-
-	if s.BuffersReserve != t.BuffersReserve {
-		diff["BuffersReserve"] = []interface{}{s.BuffersReserve, t.BuffersReserve}
-	}
-
-	if s.Bufsize != t.Bufsize {
-		diff["Bufsize"] = []interface{}{s.Bufsize, t.Bufsize}
-	}
-
-	if s.CompMaxlevel != t.CompMaxlevel {
-		diff["CompMaxlevel"] = []interface{}{s.CompMaxlevel, t.CompMaxlevel}
-	}
-
-	if s.DisableZeroCopyForwarding != t.DisableZeroCopyForwarding {
-		diff["DisableZeroCopyForwarding"] = []interface{}{s.DisableZeroCopyForwarding, t.DisableZeroCopyForwarding}
-	}
-
-	if s.EventsMaxEventsAtOnce != t.EventsMaxEventsAtOnce {
-		diff["EventsMaxEventsAtOnce"] = []interface{}{s.EventsMaxEventsAtOnce, t.EventsMaxEventsAtOnce}
-	}
-
-	if s.FailAlloc != t.FailAlloc {
-		diff["FailAlloc"] = []interface{}{s.FailAlloc, t.FailAlloc}
-	}
-
-	if s.FdEdgeTriggered != t.FdEdgeTriggered {
-		diff["FdEdgeTriggered"] = []interface{}{s.FdEdgeTriggered, t.FdEdgeTriggered}
-	}
-
-	if s.H1ZeroCopyFwdRecv != t.H1ZeroCopyFwdRecv {
-		diff["H1ZeroCopyFwdRecv"] = []interface{}{s.H1ZeroCopyFwdRecv, t.H1ZeroCopyFwdRecv}
-	}
-
-	if s.H1ZeroCopyFwdSend != t.H1ZeroCopyFwdSend {
-		diff["H1ZeroCopyFwdSend"] = []interface{}{s.H1ZeroCopyFwdSend, t.H1ZeroCopyFwdSend}
-	}
-
-	if !equalPointers(s.H2BeGlitchesThreshold, t.H2BeGlitchesThreshold) {
-		diff["H2BeGlitchesThreshold"] = []interface{}{ValueOrNil(s.H2BeGlitchesThreshold), ValueOrNil(t.H2BeGlitchesThreshold)}
-	}
-
-	if s.H2BeInitialWindowSize != t.H2BeInitialWindowSize {
-		diff["H2BeInitialWindowSize"] = []interface{}{s.H2BeInitialWindowSize, t.H2BeInitialWindowSize}
-	}
-
-	if s.H2BeMaxConcurrentStreams != t.H2BeMaxConcurrentStreams {
-		diff["H2BeMaxConcurrentStreams"] = []interface{}{s.H2BeMaxConcurrentStreams, t.H2BeMaxConcurrentStreams}
-	}
-
-	if !equalPointers(s.H2FeGlitchesThreshold, t.H2FeGlitchesThreshold) {
-		diff["H2FeGlitchesThreshold"] = []interface{}{ValueOrNil(s.H2FeGlitchesThreshold), ValueOrNil(t.H2FeGlitchesThreshold)}
-	}
-
-	if s.H2FeInitialWindowSize != t.H2FeInitialWindowSize {
-		diff["H2FeInitialWindowSize"] = []interface{}{s.H2FeInitialWindowSize, t.H2FeInitialWindowSize}
-	}
-
-	if s.H2FeMaxConcurrentStreams != t.H2FeMaxConcurrentStreams {
-		diff["H2FeMaxConcurrentStreams"] = []interface{}{s.H2FeMaxConcurrentStreams, t.H2FeMaxConcurrentStreams}
-	}
-
-	if !equalPointers(s.H2FeMaxTotalStreams, t.H2FeMaxTotalStreams) {
-		diff["H2FeMaxTotalStreams"] = []interface{}{ValueOrNil(s.H2FeMaxTotalStreams), ValueOrNil(t.H2FeMaxTotalStreams)}
-	}
-
-	if s.H2HeaderTableSize != t.H2HeaderTableSize {
-		diff["H2HeaderTableSize"] = []interface{}{s.H2HeaderTableSize, t.H2HeaderTableSize}
-	}
-
-	if !equalPointers(s.H2InitialWindowSize, t.H2InitialWindowSize) {
-		diff["H2InitialWindowSize"] = []interface{}{ValueOrNil(s.H2InitialWindowSize), ValueOrNil(t.H2InitialWindowSize)}
-	}
-
-	if s.H2MaxConcurrentStreams != t.H2MaxConcurrentStreams {
-		diff["H2MaxConcurrentStreams"] = []interface{}{s.H2MaxConcurrentStreams, t.H2MaxConcurrentStreams}
-	}
-
-	if s.H2MaxFrameSize != t.H2MaxFrameSize {
-		diff["H2MaxFrameSize"] = []interface{}{s.H2MaxFrameSize, t.H2MaxFrameSize}
-	}
-
-	if s.H2ZeroCopyFwdSend != t.H2ZeroCopyFwdSend {
-		diff["H2ZeroCopyFwdSend"] = []interface{}{s.H2ZeroCopyFwdSend, t.H2ZeroCopyFwdSend}
-	}
-
-	if s.HTTPCookielen != t.HTTPCookielen {
-		diff["HTTPCookielen"] = []interface{}{s.HTTPCookielen, t.HTTPCookielen}
-	}
-
-	if s.HTTPLogurilen != t.HTTPLogurilen {
-		diff["HTTPLogurilen"] = []interface{}{s.HTTPLogurilen, t.HTTPLogurilen}
-	}
-
-	if s.HTTPMaxhdr != t.HTTPMaxhdr {
-		diff["HTTPMaxhdr"] = []interface{}{s.HTTPMaxhdr, t.HTTPMaxhdr}
-	}
-
-	if s.IdlePoolShared != t.IdlePoolShared {
-		diff["IdlePoolShared"] = []interface{}{s.IdlePoolShared, t.IdlePoolShared}
-	}
-
-	if !equalPointers(s.Idletimer, t.Idletimer) {
-		diff["Idletimer"] = []interface{}{ValueOrNil(s.Idletimer), ValueOrNil(t.Idletimer)}
-	}
-
-	if s.ListenerDefaultShards != t.ListenerDefaultShards {
-		diff["ListenerDefaultShards"] = []interface{}{s.ListenerDefaultShards, t.ListenerDefaultShards}
-	}
-
-	if s.ListenerMultiQueue != t.ListenerMultiQueue {
-		diff["ListenerMultiQueue"] = []interface{}{s.ListenerMultiQueue, t.ListenerMultiQueue}
-	}
-
-	if !equalPointers(s.LuaBurstTimeout, t.LuaBurstTimeout) {
-		diff["LuaBurstTimeout"] = []interface{}{ValueOrNil(s.LuaBurstTimeout), ValueOrNil(t.LuaBurstTimeout)}
-	}
-
-	if s.LuaForcedYield != t.LuaForcedYield {
-		diff["LuaForcedYield"] = []interface{}{s.LuaForcedYield, t.LuaForcedYield}
-	}
-
-	if s.LuaLogLoggers != t.LuaLogLoggers {
-		diff["LuaLogLoggers"] = []interface{}{s.LuaLogLoggers, t.LuaLogLoggers}
-	}
-
-	if s.LuaLogStderr != t.LuaLogStderr {
-		diff["LuaLogStderr"] = []interface{}{s.LuaLogStderr, t.LuaLogStderr}
-	}
-
-	if !equalPointers(s.LuaMaxmem, t.LuaMaxmem) {
-		diff["LuaMaxmem"] = []interface{}{ValueOrNil(s.LuaMaxmem), ValueOrNil(t.LuaMaxmem)}
-	}
-
-	if !equalPointers(s.LuaServiceTimeout, t.LuaServiceTimeout) {
-		diff["LuaServiceTimeout"] = []interface{}{ValueOrNil(s.LuaServiceTimeout), ValueOrNil(t.LuaServiceTimeout)}
-	}
-
-	if !equalPointers(s.LuaSessionTimeout, t.LuaSessionTimeout) {
-		diff["LuaSessionTimeout"] = []interface{}{ValueOrNil(s.LuaSessionTimeout), ValueOrNil(t.LuaSessionTimeout)}
-	}
-
-	if !equalPointers(s.LuaTaskTimeout, t.LuaTaskTimeout) {
-		diff["LuaTaskTimeout"] = []interface{}{ValueOrNil(s.LuaTaskTimeout), ValueOrNil(t.LuaTaskTimeout)}
-	}
-
-	if !equalPointers(s.MaxChecksPerThread, t.MaxChecksPerThread) {
-		diff["MaxChecksPerThread"] = []interface{}{ValueOrNil(s.MaxChecksPerThread), ValueOrNil(t.MaxChecksPerThread)}
-	}
-
-	if s.Maxaccept != t.Maxaccept {
-		diff["Maxaccept"] = []interface{}{s.Maxaccept, t.Maxaccept}
-	}
-
-	if s.Maxpollevents != t.Maxpollevents {
-		diff["Maxpollevents"] = []interface{}{s.Maxpollevents, t.Maxpollevents}
-	}
-
-	if s.Maxrewrite != t.Maxrewrite {
-		diff["Maxrewrite"] = []interface{}{s.Maxrewrite, t.Maxrewrite}
-	}
-
-	if !equalPointers(s.MemoryHotSize, t.MemoryHotSize) {
-		diff["MemoryHotSize"] = []interface{}{ValueOrNil(s.MemoryHotSize), ValueOrNil(t.MemoryHotSize)}
-	}
-
-	if !equalPointers(s.PatternCacheSize, t.PatternCacheSize) {
-		diff["PatternCacheSize"] = []interface{}{ValueOrNil(s.PatternCacheSize), ValueOrNil(t.PatternCacheSize)}
-	}
-
-	if s.PeersMaxUpdatesAtOnce != t.PeersMaxUpdatesAtOnce {
-		diff["PeersMaxUpdatesAtOnce"] = []interface{}{s.PeersMaxUpdatesAtOnce, t.PeersMaxUpdatesAtOnce}
-	}
-
-	if s.Pipesize != t.Pipesize {
-		diff["Pipesize"] = []interface{}{s.Pipesize, t.Pipesize}
-	}
-
-	if s.PoolHighFdRatio != t.PoolHighFdRatio {
-		diff["PoolHighFdRatio"] = []interface{}{s.PoolHighFdRatio, t.PoolHighFdRatio}
-	}
-
-	if s.PoolLowFdRatio != t.PoolLowFdRatio {
-		diff["PoolLowFdRatio"] = []interface{}{s.PoolLowFdRatio, t.PoolLowFdRatio}
-	}
-
-	if s.PtZeroCopyForwarding != t.PtZeroCopyForwarding {
-		diff["PtZeroCopyForwarding"] = []interface{}{s.PtZeroCopyForwarding, t.PtZeroCopyForwarding}
-	}
-
-	if !equalPointers(s.QuicFrontendConnTxBuffersLimit, t.QuicFrontendConnTxBuffersLimit) {
-		diff["QuicFrontendConnTxBuffersLimit"] = []interface{}{ValueOrNil(s.QuicFrontendConnTxBuffersLimit), ValueOrNil(t.QuicFrontendConnTxBuffersLimit)}
-	}
-
-	if !equalPointers(s.QuicFrontendMaxIdleTimeout, t.QuicFrontendMaxIdleTimeout) {
-		diff["QuicFrontendMaxIdleTimeout"] = []interface{}{ValueOrNil(s.QuicFrontendMaxIdleTimeout), ValueOrNil(t.QuicFrontendMaxIdleTimeout)}
-	}
-
-	if !equalPointers(s.QuicFrontendMaxStreamsBidi, t.QuicFrontendMaxStreamsBidi) {
-		diff["QuicFrontendMaxStreamsBidi"] = []interface{}{ValueOrNil(s.QuicFrontendMaxStreamsBidi), ValueOrNil(t.QuicFrontendMaxStreamsBidi)}
-	}
-
-	if !equalPointers(s.QuicMaxFrameLoss, t.QuicMaxFrameLoss) {
-		diff["QuicMaxFrameLoss"] = []interface{}{ValueOrNil(s.QuicMaxFrameLoss), ValueOrNil(t.QuicMaxFrameLoss)}
-	}
-
-	if !equalPointers(s.QuicReorderRatio, t.QuicReorderRatio) {
-		diff["QuicReorderRatio"] = []interface{}{ValueOrNil(s.QuicReorderRatio), ValueOrNil(t.QuicReorderRatio)}
-	}
-
-	if !equalPointers(s.QuicRetryThreshold, t.QuicRetryThreshold) {
-		diff["QuicRetryThreshold"] = []interface{}{ValueOrNil(s.QuicRetryThreshold), ValueOrNil(t.QuicRetryThreshold)}
-	}
-
-	if s.QuicSocketOwner != t.QuicSocketOwner {
-		diff["QuicSocketOwner"] = []interface{}{s.QuicSocketOwner, t.QuicSocketOwner}
-	}
-
-	if s.QuicZeroCopyFwdSend != t.QuicZeroCopyFwdSend {
-		diff["QuicZeroCopyFwdSend"] = []interface{}{s.QuicZeroCopyFwdSend, t.QuicZeroCopyFwdSend}
-	}
-
-	if !equalPointers(s.RcvbufBackend, t.RcvbufBackend) {
-		diff["RcvbufBackend"] = []interface{}{ValueOrNil(s.RcvbufBackend), ValueOrNil(t.RcvbufBackend)}
-	}
-
-	if !equalPointers(s.RcvbufClient, t.RcvbufClient) {
-		diff["RcvbufClient"] = []interface{}{ValueOrNil(s.RcvbufClient), ValueOrNil(t.RcvbufClient)}
-	}
-
-	if !equalPointers(s.RcvbufFrontend, t.RcvbufFrontend) {
-		diff["RcvbufFrontend"] = []interface{}{ValueOrNil(s.RcvbufFrontend), ValueOrNil(t.RcvbufFrontend)}
-	}
-
-	if !equalPointers(s.RcvbufServer, t.RcvbufServer) {
-		diff["RcvbufServer"] = []interface{}{ValueOrNil(s.RcvbufServer), ValueOrNil(t.RcvbufServer)}
-	}
-
-	if s.RecvEnough != t.RecvEnough {
-		diff["RecvEnough"] = []interface{}{s.RecvEnough, t.RecvEnough}
-	}
-
-	if !equalPointers(s.RingQueues, t.RingQueues) {
-		diff["RingQueues"] = []interface{}{ValueOrNil(s.RingQueues), ValueOrNil(t.RingQueues)}
-	}
-
-	if s.RunqueueDepth != t.RunqueueDepth {
-		diff["RunqueueDepth"] = []interface{}{s.RunqueueDepth, t.RunqueueDepth}
-	}
-
-	if s.SchedLowLatency != t.SchedLowLatency {
-		diff["SchedLowLatency"] = []interface{}{s.SchedLowLatency, t.SchedLowLatency}
-	}
-
-	if !equalPointers(s.SndbufBackend, t.SndbufBackend) {
-		diff["SndbufBackend"] = []interface{}{ValueOrNil(s.SndbufBackend), ValueOrNil(t.SndbufBackend)}
-	}
-
-	if !equalPointers(s.SndbufClient, t.SndbufClient) {
-		diff["SndbufClient"] = []interface{}{ValueOrNil(s.SndbufClient), ValueOrNil(t.SndbufClient)}
-	}
-
-	if !equalPointers(s.SndbufFrontend, t.SndbufFrontend) {
-		diff["SndbufFrontend"] = []interface{}{ValueOrNil(s.SndbufFrontend), ValueOrNil(t.SndbufFrontend)}
-	}
-
-	if !equalPointers(s.SndbufServer, t.SndbufServer) {
-		diff["SndbufServer"] = []interface{}{ValueOrNil(s.SndbufServer), ValueOrNil(t.SndbufServer)}
-	}
-
-	if !equalPointers(s.SslCachesize, t.SslCachesize) {
-		diff["SslCachesize"] = []interface{}{ValueOrNil(s.SslCachesize), ValueOrNil(t.SslCachesize)}
-	}
-
-	if !equalPointers(s.SslCaptureBufferSize, t.SslCaptureBufferSize) {
-		diff["SslCaptureBufferSize"] = []interface{}{ValueOrNil(s.SslCaptureBufferSize), ValueOrNil(t.SslCaptureBufferSize)}
-	}
-
-	if s.SslCtxCacheSize != t.SslCtxCacheSize {
-		diff["SslCtxCacheSize"] = []interface{}{s.SslCtxCacheSize, t.SslCtxCacheSize}
-	}
-
-	if s.SslDefaultDhParam != t.SslDefaultDhParam {
-		diff["SslDefaultDhParam"] = []interface{}{s.SslDefaultDhParam, t.SslDefaultDhParam}
-	}
-
-	if s.SslForcePrivateCache != t.SslForcePrivateCache {
-		diff["SslForcePrivateCache"] = []interface{}{s.SslForcePrivateCache, t.SslForcePrivateCache}
-	}
-
-	if s.SslKeylog != t.SslKeylog {
-		diff["SslKeylog"] = []interface{}{s.SslKeylog, t.SslKeylog}
-	}
-
-	if !equalPointers(s.SslLifetime, t.SslLifetime) {
-		diff["SslLifetime"] = []interface{}{ValueOrNil(s.SslLifetime), ValueOrNil(t.SslLifetime)}
-	}
-
-	if !equalPointers(s.SslMaxrecord, t.SslMaxrecord) {
-		diff["SslMaxrecord"] = []interface{}{ValueOrNil(s.SslMaxrecord), ValueOrNil(t.SslMaxrecord)}
-	}
-
-	if !equalPointers(s.SslOcspUpdateMaxDelay, t.SslOcspUpdateMaxDelay) {
-		diff["SslOcspUpdateMaxDelay"] = []interface{}{ValueOrNil(s.SslOcspUpdateMaxDelay), ValueOrNil(t.SslOcspUpdateMaxDelay)}
-	}
-
-	if !equalPointers(s.SslOcspUpdateMinDelay, t.SslOcspUpdateMinDelay) {
-		diff["SslOcspUpdateMinDelay"] = []interface{}{ValueOrNil(s.SslOcspUpdateMinDelay), ValueOrNil(t.SslOcspUpdateMinDelay)}
-	}
-
-	if !equalPointers(s.StickCounters, t.StickCounters) {
-		diff["StickCounters"] = []interface{}{ValueOrNil(s.StickCounters), ValueOrNil(t.StickCounters)}
-	}
-
-	if !equalPointers(s.VarsGlobalMaxSize, t.VarsGlobalMaxSize) {
-		diff["VarsGlobalMaxSize"] = []interface{}{ValueOrNil(s.VarsGlobalMaxSize), ValueOrNil(t.VarsGlobalMaxSize)}
-	}
-
-	if !equalPointers(s.VarsProcMaxSize, t.VarsProcMaxSize) {
-		diff["VarsProcMaxSize"] = []interface{}{ValueOrNil(s.VarsProcMaxSize), ValueOrNil(t.VarsProcMaxSize)}
-	}
-
-	if !equalPointers(s.VarsReqresMaxSize, t.VarsReqresMaxSize) {
-		diff["VarsReqresMaxSize"] = []interface{}{ValueOrNil(s.VarsReqresMaxSize), ValueOrNil(t.VarsReqresMaxSize)}
-	}
-
-	if !equalPointers(s.VarsSessMaxSize, t.VarsSessMaxSize) {
-		diff["VarsSessMaxSize"] = []interface{}{ValueOrNil(s.VarsSessMaxSize), ValueOrNil(t.VarsSessMaxSize)}
-	}
-
-	if !equalPointers(s.VarsTxnMaxSize, t.VarsTxnMaxSize) {
-		diff["VarsTxnMaxSize"] = []interface{}{ValueOrNil(s.VarsTxnMaxSize), ValueOrNil(t.VarsTxnMaxSize)}
-	}
-
-	if s.ZlibMemlevel != t.ZlibMemlevel {
-		diff["ZlibMemlevel"] = []interface{}{s.ZlibMemlevel, t.ZlibMemlevel}
-	}
-
-	if s.ZlibWindowsize != t.ZlibWindowsize {
-		diff["ZlibWindowsize"] = []interface{}{s.ZlibWindowsize, t.ZlibWindowsize}
-	}
-
-	return diff
-}
-
-// Equal checks if two structs of type GlobalWurflOptions are equal
-//
-//	var a, b GlobalWurflOptions
-//	equal := a.Equal(b)
-//
-// opts ...Options are ignored in this method
-func (s GlobalWurflOptions) Equal(t GlobalWurflOptions, opts ...Options) bool {
-	if s.CacheSize != t.CacheSize {
-		return false
-	}
-
-	if s.DataFile != t.DataFile {
-		return false
-	}
-
-	if s.InformationList != t.InformationList {
-		return false
-	}
-
-	if s.InformationListSeparator != t.InformationListSeparator {
-		return false
-	}
-
-	if s.PatchFile != t.PatchFile {
-		return false
-	}
-
-	return true
-}
-
-// Diff checks if two structs of type GlobalWurflOptions are equal
-//
-//	var a, b GlobalWurflOptions
-//	diff := a.Diff(b)
-//
-// opts ...Options are ignored in this method
-func (s GlobalWurflOptions) Diff(t GlobalWurflOptions, opts ...Options) map[string][]interface{} {
-	diff := make(map[string][]interface{})
-	if s.CacheSize != t.CacheSize {
-		diff["CacheSize"] = []interface{}{s.CacheSize, t.CacheSize}
-	}
-
-	if s.DataFile != t.DataFile {
-		diff["DataFile"] = []interface{}{s.DataFile, t.DataFile}
-	}
-
-	if s.InformationList != t.InformationList {
-		diff["InformationList"] = []interface{}{s.InformationList, t.InformationList}
-	}
-
-	if s.InformationListSeparator != t.InformationListSeparator {
-		diff["InformationListSeparator"] = []interface{}{s.InformationListSeparator, t.InformationListSeparator}
-	}
-
-	if s.PatchFile != t.PatchFile {
-		diff["PatchFile"] = []interface{}{s.PatchFile, t.PatchFile}
 	}
 
 	return diff

@@ -26,8 +26,8 @@ import (
 	parser_errors "github.com/haproxytech/client-native/v6/config-parser/errors"
 	"github.com/haproxytech/client-native/v6/config-parser/params"
 	"github.com/haproxytech/client-native/v6/config-parser/types"
-
 	"github.com/haproxytech/client-native/v6/configuration/options"
+
 	"github.com/haproxytech/client-native/v6/misc"
 	"github.com/haproxytech/client-native/v6/models"
 )
@@ -79,316 +79,9 @@ func (c *client) PushGlobalConfiguration(data *models.Global, transactionID stri
 	return c.SaveData(p, t, transactionID == "")
 }
 
-func ParseGlobalSection(p parser.Parser) (*models.Global, error) { //nolint:gocognit,gocyclo,cyclop,maintidx
-	var anonkey *int64
-	data, err := p.Get(parser.Global, parser.GlobalSectionName, "anonkey")
-	if err == nil {
-		anonkeyParser, ok := data.(*types.Int64C)
-		if !ok {
-			return nil, misc.CreateTypeAssertError("anonkey")
-		}
-		anonkey = &anonkeyParser.Value
-	}
-
-	var clusterSecret string
-	data, err = p.Get(parser.Global, parser.GlobalSectionName, "cluster-secret")
-	if err == nil {
-		csParser, ok := data.(*types.StringC)
-		if !ok {
-			return nil, misc.CreateTypeAssertError("cluster-secret")
-		}
-		clusterSecret = csParser.Value
-	}
-
-	var chroot string
-	data, err = p.Get(parser.Global, parser.GlobalSectionName, "chroot")
-	if err == nil {
-		chrootParser, ok := data.(*types.StringC)
-		if !ok {
-			return nil, misc.CreateTypeAssertError("chroot")
-		}
-		chroot = chrootParser.Value
-	}
-
-	var caBase string
-	data, err = p.Get(parser.Global, parser.GlobalSectionName, "ca-base")
-	if err == nil {
-		caBaseParser, ok := data.(*types.StringC)
-		if !ok {
-			return nil, misc.CreateTypeAssertError("ca-base")
-		}
-		caBase = caBaseParser.Value
-	}
-
-	var crtBase string
-	data, err = p.Get(parser.Global, parser.GlobalSectionName, "crt-base")
-	if err == nil {
-		crtBaseParser, ok := data.(*types.StringC)
-		if !ok {
-			return nil, misc.CreateTypeAssertError("crt-base")
-		}
-		crtBase = crtBaseParser.Value
-	}
-
-	var srvStateBase string
-	data, err = p.Get(parser.Global, parser.GlobalSectionName, "server-state-base")
-	if err == nil {
-		srvStateBase = data.(*types.StringC).Value
-	}
-
-	var srvStateFile string
-	data, err = p.Get(parser.Global, parser.GlobalSectionName, "server-state-file")
-	if err == nil {
-		srvStateFile = data.(*types.StringC).Value
-	}
-
-	var hardStop *int64
-	data, err = p.Get(parser.Global, parser.GlobalSectionName, "hard-stop-after")
-	if err == nil {
-		hardStopParser, ok := data.(*types.StringC)
-		if !ok {
-			return nil, misc.CreateTypeAssertError("hard-stop-after")
-		}
-		hardStop = misc.ParseTimeout(hardStopParser.Value)
-	}
-
-	var localPeer string
-	data, err = p.Get(parser.Global, parser.GlobalSectionName, "localpeer")
-	if err == nil {
-		userParser, ok := data.(*types.StringC)
-		if !ok {
-			return nil, misc.CreateTypeAssertError("localpeer")
-		}
-		localPeer = userParser.Value
-	}
-
-	var uid int64
-	data, err = p.Get(parser.Global, parser.GlobalSectionName, "uid")
-	if err == nil {
-		uidParser, ok := data.(*types.Int64C)
-		if !ok {
-			return nil, misc.CreateTypeAssertError("uid")
-		}
-		uid = uidParser.Value
-	}
-
-	var user string
-	data, err = p.Get(parser.Global, parser.GlobalSectionName, "user")
-	if err == nil {
-		userParser, ok := data.(*types.StringC)
-		if !ok {
-			return nil, misc.CreateTypeAssertError("user")
-		}
-		user = userParser.Value
-	}
-
-	var node string
-	data, err = p.Get(parser.Global, parser.GlobalSectionName, "node")
-	if err == nil {
-		nodeParser, ok := data.(*types.StringC)
-		if !ok {
-			return nil, misc.CreateTypeAssertError("node")
-		}
-		node = nodeParser.Value
-	}
-
-	var description string
-	data, err = p.Get(parser.Global, parser.GlobalSectionName, "description")
-	if err == nil {
-		descriptionParser, ok := data.(*types.StringC)
-		if !ok {
-			return nil, misc.CreateTypeAssertError("description")
-		}
-		description = descriptionParser.Value
-	}
-
-	_, err = p.Get(parser.Global, parser.GlobalSectionName, "expose-experimental-directives")
-	exposeExperimentalDirectives := true
-	if errors.Is(err, parser_errors.ErrFetch) {
-		exposeExperimentalDirectives = false
-	}
-
-	var grace *int64
-	data, err = p.Get(parser.Global, parser.GlobalSectionName, "grace")
-	if err == nil {
-		graceParser, ok := data.(*types.StringC)
-		if !ok {
-			return nil, misc.CreateTypeAssertError("grace")
-		}
-		grace = misc.ParseTimeout(graceParser.Value)
-	}
-
-	_, err = p.Get(parser.Global, parser.GlobalSectionName, "insecure-fork-wanted")
-	insecureForkWanted := true
-	if errors.Is(err, parser_errors.ErrFetch) {
-		insecureForkWanted = false
-	}
-
-	_, err = p.Get(parser.Global, parser.GlobalSectionName, "insecure-setuid-wanted")
-	insecureSetuidWanted := true
-	if errors.Is(err, parser_errors.ErrFetch) {
-		insecureSetuidWanted = false
-	}
-
-	var issuersChainPath string
-	data, err = p.Get(parser.Global, parser.GlobalSectionName, "issuers-chain-path")
-	if err == nil {
-		issuersChainPathParser, ok := data.(*types.StringC)
-		if !ok {
-			return nil, misc.CreateTypeAssertError("issuers-chain-path")
-		}
-		issuersChainPath = issuersChainPathParser.Value
-	}
-
-	_, err = p.Get(parser.Global, parser.GlobalSectionName, "h2-workaround-bogus-websocket-clients")
-	h2WorkaroundBogusWebsocketClients := true
-	if errors.Is(err, parser_errors.ErrFetch) {
-		h2WorkaroundBogusWebsocketClients = false
-	}
-
-	var luaLoadPerThread string
-	data, err = p.Get(parser.Global, parser.GlobalSectionName, "lua-load-per-thread")
-	if err == nil {
-		luaLoadPerThreadParser, ok := data.(*types.StringC)
-		if !ok {
-			return nil, misc.CreateTypeAssertError("lua-load-per-thread")
-		}
-		luaLoadPerThread = luaLoadPerThreadParser.Value
-	}
-
-	var mworkerMaxReloads *int64
-	data, err = p.Get(parser.Global, parser.GlobalSectionName, "mworker-max-reloads")
-	if errors.Is(err, parser_errors.ErrFetch) {
-		mworkerMaxReloads = nil
-	} else {
-		mworkerMaxReloadsParser, ok := data.(*types.Int64C)
-		if !ok {
-			return nil, misc.CreateTypeAssertError("mworker-max-reloads")
-		}
-		mworkerMaxReloads = &mworkerMaxReloadsParser.Value
-	}
-
-	var numaCPUMapping string
-	data, err = p.Get(parser.Global, parser.GlobalSectionName, "numa-cpu-mapping")
-	if err == nil {
-		numaCPUMappingParser, ok := data.(*types.NumaCPUMapping)
-		if !ok {
-			return nil, misc.CreateTypeAssertError("numa-cpu-mapping")
-		}
-		if numaCPUMappingParser.NoOption {
-			numaCPUMapping = "disabled"
-		} else {
-			numaCPUMapping = "enabled"
-		}
-	}
-
-	_, err = p.Get(parser.Global, parser.GlobalSectionName, "pp2-never-send-local")
-	pp2NeverSendLocal := true
-	if errors.Is(err, parser_errors.ErrFetch) {
-		pp2NeverSendLocal = false
-	}
-
-	var ulimitn int64
-	data, err = p.Get(parser.Global, parser.GlobalSectionName, "ulimit-n")
-	if err == nil {
-		ulimitnParser, ok := data.(*types.Int64C)
-		if !ok {
-			return nil, misc.CreateTypeAssertError("ulimit-n")
-		}
-		ulimitn = ulimitnParser.Value
-	}
-
-	_, err = p.Get(parser.Global, parser.GlobalSectionName, "set-dumpable")
-	setDumpable := true
-	if errors.Is(err, parser_errors.ErrFetch) {
-		setDumpable = false
-	}
-
-	_, err = p.Get(parser.Global, parser.GlobalSectionName, "strict-limits")
-	strictLimits := true
-	if errors.Is(err, parser_errors.ErrFetch) {
-		strictLimits = false
-	}
-
-	var gid int64
-	data, err = p.Get(parser.Global, parser.GlobalSectionName, "gid")
-	if err == nil {
-		gidParser, ok := data.(*types.Int64C)
-		if !ok {
-			return nil, misc.CreateTypeAssertError("gid")
-		}
-		gid = gidParser.Value
-	}
-
-	var group string
-	data, err = p.Get(parser.Global, parser.GlobalSectionName, "group")
-	if err == nil {
-		groupParser, ok := data.(*types.StringC)
-		if !ok {
-			return nil, misc.CreateTypeAssertError("group")
-		}
-		group = groupParser.Value
-	}
-
-	var daemon string
-	_, err = p.Get(parser.Global, parser.GlobalSectionName, "daemon")
-	if !errors.Is(err, parser_errors.ErrFetch) {
-		daemon = "enabled"
-	}
-
-	var masterWorker bool
-	_, err = p.Get(parser.Global, parser.GlobalSectionName, "master-worker")
-	if !errors.Is(err, parser_errors.ErrFetch) {
-		masterWorker = true
-	}
-
-	var mConn int64
-	data, err = p.Get(parser.Global, parser.GlobalSectionName, "maxconn")
-	if err == nil {
-		maxConn, ok := data.(*types.Int64C)
-		if !ok {
-			return nil, misc.CreateTypeAssertError("maxconn")
-		}
-		mConn = maxConn.Value
-	}
-
-	var nbthread int64
-	data, err = p.Get(parser.Global, parser.GlobalSectionName, "nbthread")
-	if err == nil {
-		nbthreadParser, ok := data.(*types.Int64C)
-		if !ok {
-			return nil, misc.CreateTypeAssertError("nbthread")
-		}
-		nbthread = nbthreadParser.Value
-	}
-
-	var pidfile string
-	data, err = p.Get(parser.Global, parser.GlobalSectionName, "pidfile")
-	if err == nil {
-		pidfileParser, ok := data.(*types.StringC)
-		if !ok {
-			return nil, misc.CreateTypeAssertError("pidfile")
-		}
-		pidfile = pidfileParser.Value
-	}
-
-	var rAPIs []*models.RuntimeAPI
-	data, err = p.Get(parser.Global, parser.GlobalSectionName, "stats socket")
-	if err == nil {
-		sockets, ok := data.([]types.Socket)
-		if !ok {
-			return nil, misc.CreateTypeAssertError("stats socket")
-		}
-		for _, s := range sockets {
-			p := s.Path
-			rAPI := &models.RuntimeAPI{Address: &p}
-			rAPI.BindParams = parseBindParams(s.Params)
-			rAPIs = append(rAPIs, rAPI)
-		}
-	}
-
+func parseCPUMaps(p parser.Parser) ([]*models.CPUMap, error) {
 	var cpuMaps []*models.CPUMap
-	data, err = p.Get(parser.Global, parser.GlobalSectionName, "cpu-map")
+	data, err := p.Get(parser.Global, parser.GlobalSectionName, "cpu-map")
 	if err == nil {
 		cMaps, ok := data.([]types.CPUMap)
 		if !ok {
@@ -403,289 +96,16 @@ func ParseGlobalSection(p parser.Parser) (*models.Global, error) { //nolint:goco
 			cpuMaps = append(cpuMaps, cpuMap)
 		}
 	}
+	return cpuMaps, nil
+}
 
-	var statsTimeout *int64
-	data, err = p.Get(parser.Global, parser.GlobalSectionName, "stats timeout")
-	if errors.Is(err, parser_errors.ErrFetch) {
-		statsTimeout = nil
-	} else {
-		statsTimeoutParser, ok := data.(*types.StringC)
-		if !ok {
-			return nil, misc.CreateTypeAssertError("stats timeout")
-		}
-		statsTimeout = misc.ParseTimeout(statsTimeoutParser.Value)
-	}
-
-	httpClientResolversDisabled, err := parseOnOffOption(p, "httpclient.resolvers.disabled")
-	if err != nil {
-		return nil, err
-	}
-
-	httpClientResolversID, err := parseStringOption(p, "httpclient.resolvers.id")
-	if err != nil {
-		return nil, err
-	}
-
-	var httpClientResolversPrefer string
-	data, err = p.Get(parser.Global, parser.GlobalSectionName, "httpclient.resolvers.prefer")
-	if err == nil {
-		httpClientResolversPreferParser, ok := data.(*types.HTTPClientResolversPrefer)
-		if !ok {
-			return nil, misc.CreateTypeAssertError("httpclient.resolvers.prefer")
-		}
-		httpClientResolversPrefer = httpClientResolversPreferParser.Type
-	}
-
-	httpClientRetries, err := parseInt64Option(p, "httpclient.retries")
-	if err != nil {
-		return nil, err
-	}
-
-	httpClientSSLCaFile, err := parseStringOption(p, "httpclient.ssl.ca-file")
-	if err != nil {
-		return nil, err
-	}
-
-	var httpClientSSLVerify *string
-	data, err = p.Get(parser.Global, parser.GlobalSectionName, "httpclient.ssl.verify")
-	if err == nil {
-		httpClientSSLVerifyParser, ok := data.(*types.HTTPClientSSLVerify)
-		if !ok {
-			return nil, misc.CreateTypeAssertError("httpclient.ssl.verify")
-		}
-		httpClientSSLVerify = &httpClientSSLVerifyParser.Type
-	}
-
-	httpClientTimeoutConnectStr, err := parseStringOption(p, "httpclient.timeout.connect")
-	if err != nil {
-		return nil, err
-	}
-	httpClientTimeoutConnect := misc.ParseTimeout(httpClientTimeoutConnectStr)
-
-	preallocFD, err := parseBoolOption(p, "prealloc-fd")
-	if err != nil {
-		return nil, err
-	}
-
-	var sslBindCiphers string
-	data, err = p.Get(parser.Global, parser.GlobalSectionName, "ssl-default-bind-ciphers")
-	if err == nil {
-		sslBindCiphersParser, ok := data.(*types.StringC)
-		if !ok {
-			return nil, misc.CreateTypeAssertError("ssl-default-bind-ciphers")
-		}
-		sslBindCiphers = sslBindCiphersParser.Value
-	}
-
-	var sslBindCiphersuites string
-	data, err = p.Get(parser.Global, parser.GlobalSectionName, "ssl-default-bind-ciphersuites")
-	if err == nil {
-		sslBindCiphersuitesParser, ok := data.(*types.StringC)
-		if !ok {
-			return nil, misc.CreateTypeAssertError("ssl-default-bind-ciphersuites")
-		}
-		sslBindCiphersuites = sslBindCiphersuitesParser.Value
-	}
-
-	var sslDefaultBindCurves string
-	data, err = p.Get(parser.Global, parser.GlobalSectionName, "ssl-default-bind-curves")
-	if err == nil {
-		sslDefaultBindCurvesParser, ok := data.(*types.StringC)
-		if !ok {
-			return nil, misc.CreateTypeAssertError("ssl-default-bind-curves")
-		}
-		sslDefaultBindCurves = sslDefaultBindCurvesParser.Value
-	}
-
-	var sslDefaultServerCurves string
-	data, err = p.Get(parser.Global, parser.GlobalSectionName, "ssl-default-server-curves")
-	if err == nil {
-		sslDefaultServerCurvesParser, ok := data.(*types.StringC)
-		if !ok {
-			return nil, misc.CreateTypeAssertError("ssl-default-server-curves")
-		}
-		sslDefaultServerCurves = sslDefaultServerCurvesParser.Value
-	}
-
-	_, err = p.Get(parser.Global, parser.GlobalSectionName, "ssl-skip-self-issued-ca")
-	sslSkipSelfIssuedCa := true
-	if errors.Is(err, parser_errors.ErrFetch) {
-		sslSkipSelfIssuedCa = false
-	}
-
-	var sslBindOptions string
-	data, err = p.Get(parser.Global, parser.GlobalSectionName, "ssl-default-bind-options")
-	if err == nil {
-		sslBindOptionsParser, ok := data.(*types.StringC)
-		if !ok {
-			return nil, misc.CreateTypeAssertError("ssl-default-bind-options")
-		}
-		sslBindOptions = sslBindOptionsParser.Value
-	}
-
-	var sslBindSigalgs string
-	data, err = p.Get(parser.Global, parser.GlobalSectionName, "ssl-default-bind-sigalgs")
-	if err == nil {
-		sslBindSigalgsParser, ok := data.(*types.StringC)
-		if !ok {
-			return nil, misc.CreateTypeAssertError("ssl-default-bind-sigalgs")
-		}
-		sslBindSigalgs = sslBindSigalgsParser.Value
-	}
-
-	var sslBindClientSigalgs string
-	data, err = p.Get(parser.Global, parser.GlobalSectionName, "ssl-default-bind-client-sigalgs")
-	if err == nil {
-		sslBindClientSigalgsParser, ok := data.(*types.StringC)
-		if !ok {
-			return nil, misc.CreateTypeAssertError("ssl-default-bind-client-sigalgs")
-		}
-		sslBindClientSigalgs = sslBindClientSigalgsParser.Value
-	}
-
-	var sslServerSigalgs string
-	data, err = p.Get(parser.Global, parser.GlobalSectionName, "ssl-default-server-sigalgs")
-	if err == nil {
-		sslServerSigalgsParser, ok := data.(*types.StringC)
-		if !ok {
-			return nil, misc.CreateTypeAssertError("ssl-default-server-sigalgs")
-		}
-		sslServerSigalgs = sslServerSigalgsParser.Value
-	}
-
-	var sslServerClientSigalgs string
-	data, err = p.Get(parser.Global, parser.GlobalSectionName, "ssl-default-server-client-sigalgs")
-	if err == nil {
-		sslServerClientSigalgsParser, ok := data.(*types.StringC)
-		if !ok {
-			return nil, misc.CreateTypeAssertError("ssl-default-server-client-sigalgs")
-		}
-		sslServerClientSigalgs = sslServerClientSigalgsParser.Value
-	}
-
-	var sslDefaultServerCiphers string
-	data, err = p.Get(parser.Global, parser.GlobalSectionName, "ssl-default-server-ciphers")
-	if err == nil {
-		sslDefaultServerCiphersParser, ok := data.(*types.StringC)
-		if !ok {
-			return nil, misc.CreateTypeAssertError("ssl-default-server-ciphers")
-		}
-		sslDefaultServerCiphers = sslDefaultServerCiphersParser.Value
-	}
-
-	var sslServerCiphersuites string
-	data, err = p.Get(parser.Global, parser.GlobalSectionName, "ssl-default-server-ciphersuites")
-	if err == nil {
-		sslServerCiphersuitesParser, ok := data.(*types.StringC)
-		if !ok {
-			return nil, misc.CreateTypeAssertError("ssl-default-server-ciphersuites")
-		}
-		sslServerCiphersuites = sslServerCiphersuitesParser.Value
-	}
-
-	var sslServerOptions string
-	data, err = p.Get(parser.Global, parser.GlobalSectionName, "ssl-default-server-options")
-	if err == nil {
-		sslServerOptionsParser, ok := data.(*types.StringC)
-		if !ok {
-			return nil, misc.CreateTypeAssertError("ssl-default-server-options")
-		}
-		sslServerOptions = sslServerOptionsParser.Value
-	}
-
-	var sslModeAsync string
-	data, _ = p.Get(parser.Global, parser.GlobalSectionName, "ssl-mode-async")
-	if _, ok := data.(*types.SslModeAsync); ok {
-		sslModeAsync = "enabled"
-	}
-
-	var sslDhParamFile string
-	data, err = p.Get(parser.Global, parser.GlobalSectionName, "ssl-dh-param-file")
-	if err == nil {
-		sslDhParamFileParser, ok := data.(*types.StringC)
-		if !ok {
-			return nil, misc.CreateTypeAssertError("ssl-dh-param-file")
-		}
-		sslDhParamFile = sslDhParamFileParser.Value
-	}
-
-	sslPropquery, err := parseStringOption(p, "ssl-propquery")
-	if err != nil {
-		return nil, err
-	}
-
-	sslProvider, err := parseStringOption(p, "ssl-provider")
-	if err != nil {
-		return nil, err
-	}
-
-	sslProviderPath, err := parseStringOption(p, "ssl-provider-path")
-	if err != nil {
-		return nil, err
-	}
-
-	var sslServerVerify string
-	data, err = p.Get(parser.Global, parser.GlobalSectionName, "ssl-server-verify")
-	if err == nil {
-		sslServerVerifyParser, ok := data.(*types.StringC)
-		if !ok {
-			return nil, misc.CreateTypeAssertError("ssl-server-verify")
-		}
-		sslServerVerify = sslServerVerifyParser.Value
-	}
-
-	_, err = p.Get(parser.Global, parser.GlobalSectionName, "external-check")
-	externalCheck := true
-	if errors.Is(err, parser_errors.ErrFetch) {
-		externalCheck = false
-	}
-
-	var luaPrependPath []*models.LuaPrependPath
-	data, err = p.Get(parser.Global, parser.GlobalSectionName, "lua-prepend-path")
-	if err == nil {
-		lpp, ok := data.([]types.LuaPrependPath)
-		if !ok {
-			return nil, misc.CreateTypeAssertError("lua-prepend-path")
-		}
-		for _, l := range lpp {
-			path := l.Path
-			luaPrependPath = append(luaPrependPath, &models.LuaPrependPath{Path: &path, Type: l.Type})
-		}
-	}
-
-	var luaLoads []*models.LuaLoad
-	data, err = p.Get(parser.Global, parser.GlobalSectionName, "lua-load")
-	if err == nil {
-		luas, ok := data.([]types.LuaLoad)
-		if !ok {
-			return nil, misc.CreateTypeAssertError("lua-load")
-		}
-		for _, l := range luas {
-			file := l.File
-			luaLoads = append(luaLoads, &models.LuaLoad{File: &file})
-		}
-	}
-
-	var globalLogSendHostName *models.GlobalLogSendHostname
-	data, err = p.Get(parser.Global, parser.GlobalSectionName, "log-send-hostname")
-	if err == nil {
-		logSendHostName := "enabled"
-		logSendHostNameParser, ok := data.(*types.StringC)
-		if !ok {
-			return nil, misc.CreateTypeAssertError("log-send-hostname")
-		}
-		globalLogSendHostName = &models.GlobalLogSendHostname{
-			Enabled: &logSendHostName,
-			Param:   logSendHostNameParser.Value,
-		}
-	}
-
+func parseH1CaseAdjusts(p parser.Parser) ([]*models.H1CaseAdjust, error) {
 	var h1CaseAdjusts []*models.H1CaseAdjust
-	data, err = p.Get(parser.Global, parser.GlobalSectionName, "h1-case-adjust")
+	data, err := p.Get(parser.Global, parser.GlobalSectionName, "h1-case-adjust")
 	if err == nil {
 		cases, ok := data.([]types.H1CaseAdjust)
 		if !ok {
-			return nil, misc.CreateTypeAssertError("h1-case-adjust")
+			return h1CaseAdjusts, misc.CreateTypeAssertError("h1-case-adjust")
 		}
 		for _, c := range cases {
 			from := c.From
@@ -693,320 +113,30 @@ func ParseGlobalSection(p parser.Parser) (*models.Global, error) { //nolint:goco
 			h1CaseAdjusts = append(h1CaseAdjusts, &models.H1CaseAdjust{From: &from, To: &to})
 		}
 	}
+	return h1CaseAdjusts, nil
+}
 
-	var h1CaseAdjustFile string
-	data, err = p.Get(parser.Global, parser.GlobalSectionName, "h1-case-adjust-file")
+func parseRuntimeAPIs(p parser.Parser) ([]*models.RuntimeAPI, error) {
+	var rAPIs []*models.RuntimeAPI
+	data, err := p.Get(parser.Global, parser.GlobalSectionName, "stats socket")
 	if err == nil {
-		caseFileParser, ok := data.(*types.StringC)
+		sockets, ok := data.([]types.Socket)
 		if !ok {
-			return nil, misc.CreateTypeAssertError("h1-case-adjust-file")
+			return nil, misc.CreateTypeAssertError("stats socket")
 		}
-		h1CaseAdjustFile = caseFileParser.Value
-	}
-
-	var busyPolling bool
-	_, err = p.Get(parser.Global, parser.GlobalSectionName, "busy-polling")
-	if !errors.Is(err, parser_errors.ErrFetch) {
-		busyPolling = true
-	}
-
-	maxSpreadChecksStr, err := parseStringOption(p, "max-spread-checks")
-	if err != nil {
-		return nil, err
-	}
-	maxSpreadChecks := misc.ParseTimeout(maxSpreadChecksStr)
-
-	closeSpreadTimeStr, err := parseStringOption(p, "close-spread-time")
-	if err != nil {
-		return nil, err
-	}
-	closeSpreadTime := misc.ParseTimeout(closeSpreadTimeStr)
-
-	var maxconnrate int64
-	data, err = p.Get(parser.Global, parser.GlobalSectionName, "maxconnrate")
-	if err == nil {
-		maxconnrateParser, ok := data.(*types.Int64C)
-		if !ok {
-			return nil, misc.CreateTypeAssertError("maxconnrate")
-		}
-		maxconnrate = maxconnrateParser.Value
-	}
-
-	var maxcomprate int64
-	data, err = p.Get(parser.Global, parser.GlobalSectionName, "maxcomprate")
-	if err == nil {
-		maxcomprateParser, ok := data.(*types.Int64C)
-		if !ok {
-			return nil, misc.CreateTypeAssertError("maxcomprate")
-		}
-		maxcomprate = maxcomprateParser.Value
-	}
-
-	var maxcompcpuusage int64
-	data, err = p.Get(parser.Global, parser.GlobalSectionName, "maxcompcpuusage")
-	if err == nil {
-		maxcompcpuusageParser, ok := data.(*types.Int64C)
-		if !ok {
-			return nil, misc.CreateTypeAssertError("maxcompcpuusage")
-		}
-		maxcompcpuusage = maxcompcpuusageParser.Value
-	}
-
-	var maxpipes int64
-	data, err = p.Get(parser.Global, parser.GlobalSectionName, "maxpipes")
-	if err == nil {
-		maxpipesParser, ok := data.(*types.Int64C)
-		if !ok {
-			return nil, misc.CreateTypeAssertError("maxpipes")
-		}
-		maxpipes = maxpipesParser.Value
-	}
-
-	var maxsessrate int64
-	data, err = p.Get(parser.Global, parser.GlobalSectionName, "maxsessrate")
-	if err == nil {
-		maxsessrateParser, ok := data.(*types.Int64C)
-		if !ok {
-			return nil, misc.CreateTypeAssertError("maxsessrate")
-		}
-		maxsessrate = maxsessrateParser.Value
-	}
-
-	var maxsslconn int64
-	data, err = p.Get(parser.Global, parser.GlobalSectionName, "maxsslconn")
-	if err == nil {
-		maxsslconnParser, ok := data.(*types.Int64C)
-		if !ok {
-			return nil, misc.CreateTypeAssertError("maxsslconn")
-		}
-		maxsslconn = maxsslconnParser.Value
-	}
-
-	var maxsslrate int64
-	data, err = p.Get(parser.Global, parser.GlobalSectionName, "maxsslrate")
-	if err == nil {
-		maxsslrateParser, ok := data.(*types.Int64C)
-		if !ok {
-			return nil, misc.CreateTypeAssertError("maxsslrate")
-		}
-		maxsslrate = maxsslrateParser.Value
-	}
-
-	var maxzlibmem int64
-	data, err = p.Get(parser.Global, parser.GlobalSectionName, "maxzlibmem")
-	if err == nil {
-		maxzlibmemParser, ok := data.(*types.Int64C)
-		if !ok {
-			return nil, misc.CreateTypeAssertError("maxzlibmem")
-		}
-		maxzlibmem = maxzlibmemParser.Value
-	}
-
-	var noQuic bool
-	_, err = p.Get(parser.Global, parser.GlobalSectionName, "no-quic")
-	if !errors.Is(err, parser_errors.ErrFetch) {
-		noQuic = true
-	}
-
-	var noepoll bool
-	_, err = p.Get(parser.Global, parser.GlobalSectionName, "noepoll")
-	if !errors.Is(err, parser_errors.ErrFetch) {
-		noepoll = true
-	}
-
-	var nokqueue bool
-	_, err = p.Get(parser.Global, parser.GlobalSectionName, "nokqueue")
-	if !errors.Is(err, parser_errors.ErrFetch) {
-		nokqueue = true
-	}
-
-	var noevports bool
-	_, err = p.Get(parser.Global, parser.GlobalSectionName, "noevports")
-	if !errors.Is(err, parser_errors.ErrFetch) {
-		noevports = true
-	}
-
-	var nopoll bool
-	_, err = p.Get(parser.Global, parser.GlobalSectionName, "nopoll")
-	if !errors.Is(err, parser_errors.ErrFetch) {
-		nopoll = true
-	}
-
-	var nosplice bool
-	_, err = p.Get(parser.Global, parser.GlobalSectionName, "nosplice")
-	if !errors.Is(err, parser_errors.ErrFetch) {
-		nosplice = true
-	}
-
-	var nogetaddrinfo bool
-	_, err = p.Get(parser.Global, parser.GlobalSectionName, "nogetaddrinfo")
-	if !errors.Is(err, parser_errors.ErrFetch) {
-		nogetaddrinfo = true
-	}
-
-	var noreuseport bool
-	_, err = p.Get(parser.Global, parser.GlobalSectionName, "noreuseport")
-	if !errors.Is(err, parser_errors.ErrFetch) {
-		noreuseport = true
-	}
-
-	profilingTasks, err := parseAutoOnOffOption(p, "profiling.tasks")
-	if err != nil {
-		return nil, err
-	}
-
-	profilingMemory, err := parseOnOffOption(p, "profiling.memory")
-	if err != nil {
-		return nil, err
-	}
-
-	var spreadChecks int64
-	data, err = p.Get(parser.Global, parser.GlobalSectionName, "spread-checks")
-	if err == nil {
-		spreadChecksParser, ok := data.(*types.Int64C)
-		if !ok {
-			return nil, misc.CreateTypeAssertError("spread-checks")
-		}
-		spreadChecks = spreadChecksParser.Value
-	}
-
-	var threadGroups int64
-	data, err = p.Get(parser.Global, parser.GlobalSectionName, "thread-groups")
-	if err == nil {
-		threadGroupsParser, ok := data.(*types.Int64C)
-		if !ok {
-			return nil, misc.CreateTypeAssertError("thread-groups")
-		}
-		threadGroups = threadGroupsParser.Value
-	}
-
-	var statsMaxconn *int64
-	data, err = p.Get(parser.Global, parser.GlobalSectionName, "stats maxconn")
-	if errors.Is(err, parser_errors.ErrFetch) {
-		statsMaxconn = nil
-	} else {
-		statsMaxconnParser, ok := data.(*types.Int64C)
-		if !ok {
-			return nil, misc.CreateTypeAssertError("stats maxconn")
-		}
-		statsMaxconn = &statsMaxconnParser.Value
-	}
-
-	var SSLLoadExtraFiles string
-	data, err = p.Get(parser.Global, parser.GlobalSectionName, "ssl-load-extra-files")
-	if err == nil {
-		SSLLoadExtraFilesParser, ok := data.(*types.StringC)
-		if !ok {
-			return nil, misc.CreateTypeAssertError("ssl-load-extra-files")
-		}
-		SSLLoadExtraFiles = SSLLoadExtraFilesParser.Value
-	}
-
-	var threadGroupLines []*models.ThreadGroup
-	data, err = p.Get(parser.Global, parser.GlobalSectionName, "thread-group")
-	if err == nil {
-		items, ok := data.([]types.ThreadGroup)
-		if !ok {
-			return nil, misc.CreateTypeAssertError("thread-group")
-		}
-		for _, item := range items {
-			g := item.Group
-			nor := item.NumOrRange
-			threadGroupLines = append(threadGroupLines, &models.ThreadGroup{
-				Group:      &g,
-				NumOrRange: &nor,
-			})
+		for _, s := range sockets {
+			p := s.Path
+			rAPI := &models.RuntimeAPI{Address: &p}
+			rAPI.BindParams = parseBindParams(s.Params)
+			rAPIs = append(rAPIs, rAPI)
 		}
 	}
+	return rAPIs, nil
+}
 
-	var sslEngines []*models.SslEngine
-	data, err = p.Get(parser.Global, parser.GlobalSectionName, "ssl-engine")
-	if err == nil {
-		items, ok := data.([]types.SslEngine)
-		if !ok {
-			return nil, misc.CreateTypeAssertError("ssl-engine")
-		}
-		for _, item := range items {
-			name := item.Name
-			algo := strings.Join(item.Algorithms, ",")
-			sslEngines = append(sslEngines, &models.SslEngine{
-				Name:       &name,
-				Algorithms: &algo,
-			})
-		}
-	}
-
-	wurflOptions := models.GlobalWurflOptions{}
-
-	var wurflDataFile string
-	data, err = p.Get(parser.Global, parser.GlobalSectionName, "wurfl-data-file")
-	if err == nil {
-		wurflDataFileParser, ok := data.(*types.StringC)
-		if !ok {
-			return nil, misc.CreateTypeAssertError("wurfl-data-file")
-		}
-		wurflDataFile = wurflDataFileParser.Value
-		wurflOptions.DataFile = wurflDataFile
-	}
-
-	var wurflInformationList string
-	data, err = p.Get(parser.Global, parser.GlobalSectionName, "wurfl-information-list")
-	if err == nil {
-		wurflInformationListParser, ok := data.(*types.StringC)
-		if !ok {
-			return nil, misc.CreateTypeAssertError("wurfl-information-list")
-		}
-		wurflInformationList = wurflInformationListParser.Value
-		wurflOptions.InformationList = wurflInformationList
-	}
-
-	var wurflInformationListSeparator string
-	data, err = p.Get(parser.Global, parser.GlobalSectionName, "wurfl-information-list-separator")
-	if err == nil {
-		wurflInformationListSeparatorParser, ok := data.(*types.StringC)
-		if !ok {
-			return nil, misc.CreateTypeAssertError("wurfl-information-list-separator")
-		}
-		wurflInformationListSeparator = wurflInformationListSeparatorParser.Value
-		wurflOptions.InformationListSeparator = wurflInformationListSeparator
-	}
-
-	var wurflPatchFile string
-	data, err = p.Get(parser.Global, parser.GlobalSectionName, "wurfl-patch-file")
-	if err == nil {
-		wurflPatchFileParser, ok := data.(*types.StringC)
-		if !ok {
-			return nil, misc.CreateTypeAssertError("wurfl-patch-file")
-		}
-		wurflPatchFile = wurflPatchFileParser.Value
-		wurflOptions.PatchFile = wurflPatchFile
-	}
-
-	var wurflCacheSize int64
-	data, err = p.Get(parser.Global, parser.GlobalSectionName, "wurfl-cache-size")
-	if err == nil {
-		wurflCacheSizeParser, ok := data.(*types.Int64C)
-		if !ok {
-			return nil, misc.CreateTypeAssertError("wurfl-cache-size")
-		}
-		wurflCacheSize = wurflCacheSizeParser.Value
-		wurflOptions.CacheSize = wurflCacheSize
-	}
-
-	_, err = p.Get(parser.Global, parser.GlobalSectionName, "quiet")
-	quiet := true
-	if errors.Is(err, parser_errors.ErrFetch) {
-		quiet = false
-	}
-
-	_, err = p.Get(parser.Global, parser.GlobalSectionName, "zero-warning")
-	zeroWarning := true
-	if errors.Is(err, parser_errors.ErrFetch) {
-		zeroWarning = false
-	}
-
+func parseSetVars(p parser.Parser) ([]*models.SetVar, error) {
 	var setVars []*models.SetVar
-	data, err = p.Get(parser.Global, parser.GlobalSectionName, "set-var")
+	data, err := p.Get(parser.Global, parser.GlobalSectionName, "set-var")
 	if err == nil {
 		vars, ok := data.([]types.SetVar)
 		if !ok {
@@ -1022,9 +152,12 @@ func ParseGlobalSection(p parser.Parser) (*models.Global, error) { //nolint:goco
 			setVars = append(setVars, setVar)
 		}
 	}
+	return setVars, nil
+}
 
+func parseSetVarFmts(p parser.Parser) ([]*models.SetVarFmt, error) {
 	var setVarFormats []*models.SetVarFmt
-	data, err = p.Get(parser.Global, parser.GlobalSectionName, "set-var-fmt")
+	data, err := p.Get(parser.Global, parser.GlobalSectionName, "set-var-fmt")
 	if err == nil {
 		formats, ok := data.([]types.SetVarFmt)
 		if !ok {
@@ -1041,8 +174,673 @@ func ParseGlobalSection(p parser.Parser) (*models.Global, error) { //nolint:goco
 		}
 	}
 
+	return setVarFormats, nil
+}
+
+func parseThreadGroupLines(p parser.Parser) ([]*models.ThreadGroup, error) {
+	var threadGroupLines []*models.ThreadGroup
+	data, err := p.Get(parser.Global, parser.GlobalSectionName, "thread-group")
+	if err == nil {
+		items, ok := data.([]types.ThreadGroup)
+		if !ok {
+			return nil, misc.CreateTypeAssertError("thread-group")
+		}
+		for _, item := range items {
+			g := item.Group
+			nor := item.NumOrRange
+			threadGroupLines = append(threadGroupLines, &models.ThreadGroup{
+				Group:      &g,
+				NumOrRange: &nor,
+			})
+		}
+	}
+	return threadGroupLines, nil
+}
+
+func parseDefaultPath(p parser.Parser) (*models.GlobalDefaultPath, error) {
+	var defaultPath *models.GlobalDefaultPath
+	data, err := p.Get(parser.Global, parser.GlobalSectionName, "default-path")
+	if err == nil {
+		defaultPathParser, ok := data.(*types.DefaultPath)
+		if !ok {
+			return nil, misc.CreateTypeAssertError("default-path")
+		}
+		defaultPath = &models.GlobalDefaultPath{
+			Type: defaultPathParser.Type,
+			Path: defaultPathParser.Path,
+		}
+	}
+	return defaultPath, nil
+}
+
+func parseLuaOptions(p parser.Parser) (*models.LuaOptions, error) {
+	options := &models.LuaOptions{}
+	isEmpty := true
+
+	luaLoadPerThread, err := parseStringOption(p, "lua-load-per-thread")
+	if err != nil {
+		return nil, err
+	}
+	if luaLoadPerThread != "" {
+		isEmpty = false
+		options.LoadPerThread = luaLoadPerThread
+	}
+
+	var luaPrependPath []*models.LuaPrependPath
+	cpLuaPrependPath, err := p.Get(parser.Global, parser.GlobalSectionName, "lua-prepend-path")
+	if err == nil {
+		lpp, ok := cpLuaPrependPath.([]types.LuaPrependPath)
+		if !ok {
+			return nil, misc.CreateTypeAssertError("lua-prepend-path")
+		}
+		for _, l := range lpp {
+			path := l.Path
+			luaPrependPath = append(luaPrependPath, &models.LuaPrependPath{Path: &path, Type: l.Type})
+		}
+	}
+	if luaPrependPath != nil {
+		options.PrependPath = luaPrependPath
+		isEmpty = false
+	}
+
+	var luaLoads []*models.LuaLoad
+	cpLuaLoads, err := p.Get(parser.Global, parser.GlobalSectionName, "lua-load")
+	if err == nil {
+		luas, ok := cpLuaLoads.([]types.LuaLoad)
+		if !ok {
+			return nil, misc.CreateTypeAssertError("lua-load")
+		}
+		for _, l := range luas {
+			file := l.File
+			luaLoads = append(luaLoads, &models.LuaLoad{File: &file})
+		}
+	}
+	if luaLoads != nil {
+		options.Loads = luaLoads
+		isEmpty = false
+	}
+
+	if isEmpty {
+		return nil, nil //nolint:nilnil
+	}
+	return options, nil
+}
+
+func parseOcspUpdateOptions(p parser.Parser) (*models.OcspUpdateOptions, error) {
+	options := &models.OcspUpdateOptions{}
+	isEmpty := true
+	ocspUpdateDisable, err := parseOnOffOption(p, "ocsp-update.disable")
+	if err != nil {
+		return nil, err
+	}
+	switch ocspUpdateDisable {
+	case "disabled":
+		isEmpty = false
+		options.Disable = misc.BoolP(false)
+	case "enabled":
+		isEmpty = false
+		options.Disable = misc.BoolP(true)
+	default:
+		options.Disable = nil
+	}
+
+	minDelayP, err := parseInt64POption(p, "ocsp-update.mindelay")
+	if err != nil {
+		return nil, err
+	}
+	if minDelayP != nil {
+		isEmpty = false
+		options.Mindelay = minDelayP
+	}
+
+	maxDelayP, err := parseInt64POption(p, "ocsp-update.maxdelay")
+	if err != nil {
+		return nil, err
+	}
+	if maxDelayP != nil {
+		isEmpty = false
+		options.Maxdelay = maxDelayP
+	}
+
+	addressPort, err := parseStringOption(p, "ocsp-update.httpproxy")
+	if err != nil {
+		return nil, err
+	}
+	address, port := ParseAddress(addressPort)
+	if address != "" {
+		isEmpty = false
+		options.Httpproxy = &models.OcspUpdateOptionsHttpproxy{}
+		options.Httpproxy.Address = address
+		options.Httpproxy.Port = port
+	}
+
+	mode, err := parseOnOffOption(p, "ocsp-update.mode")
+	if err != nil {
+		return nil, err
+	}
+	if mode != "" {
+		isEmpty = false
+		options.Mode = mode
+	}
+
+	if isEmpty {
+		return nil, nil //nolint:nilnil
+	}
+
+	return options, nil
+}
+
+func parsePerformanceOptions(p parser.Parser) (*models.PerformanceOptions, error) { //nolint:gocognit,gocyclo,cyclop,maintidx
+	options := &models.PerformanceOptions{}
+	isEmpty := true
+	busyPolling, err := parseBoolOption(p, "busy-polling")
+	if err != nil {
+		return nil, err
+	}
+	if busyPolling {
+		isEmpty = false
+		options.BusyPolling = busyPolling
+	}
+
+	maxSpreadChecks, err := parseTimeoutOption(p, "max-spread-checks")
+	if err != nil {
+		return nil, err
+	}
+	if maxSpreadChecks != nil {
+		isEmpty = false
+		options.MaxSpreadChecks = maxSpreadChecks
+	}
+
+	maxcompcpuusage, err := parseInt64Option(p, "maxcompcpuusage")
+	if err != nil {
+		return nil, err
+	}
+	if maxcompcpuusage != 0 {
+		isEmpty = false
+		options.Maxcompcpuusage = maxcompcpuusage
+	}
+
+	maxconnrate, err := parseInt64Option(p, "maxconnrate")
+	if err != nil {
+		return nil, err
+	}
+	if maxconnrate != 0 {
+		isEmpty = false
+		options.Maxconnrate = maxconnrate
+	}
+
+	maxcomprate, err := parseInt64Option(p, "maxcomprate")
+	if err != nil {
+		return nil, err
+	}
+	if maxcomprate != 0 {
+		isEmpty = false
+		options.Maxcomprate = maxcomprate
+	}
+
+	maxpipes, err := parseInt64Option(p, "maxpipes")
+	if err != nil {
+		return nil, err
+	}
+	if maxpipes != 0 {
+		isEmpty = false
+		options.Maxpipes = maxpipes
+	}
+
+	maxsessrate, err := parseInt64Option(p, "maxsessrate")
+	if err != nil {
+		return nil, err
+	}
+	if maxsessrate != 0 {
+		isEmpty = false
+		options.Maxsessrate = maxsessrate
+	}
+
+	maxconn, err := parseInt64Option(p, "maxconn")
+	if err != nil {
+		return nil, err
+	}
+	if maxconn != 0 {
+		isEmpty = false
+		options.Maxconn = maxconn
+	}
+
+	maxzlibmem, err := parseInt64Option(p, "maxzlibmem")
+	if err != nil {
+		return nil, err
+	}
+	if maxzlibmem != 0 {
+		isEmpty = false
+		options.Maxzlibmem = maxzlibmem
+	}
+
+	noepoll, err := parseBoolOption(p, "noepoll")
+	if err != nil {
+		return nil, err
+	}
+	if noepoll {
+		isEmpty = false
+		options.Noepoll = noepoll
+	}
+
+	nokqueue, err := parseBoolOption(p, "nokqueue")
+	if err != nil {
+		return nil, err
+	}
+	if nokqueue {
+		isEmpty = false
+		options.Nokqueue = nokqueue
+	}
+
+	noevports, err := parseBoolOption(p, "noevports")
+	if err != nil {
+		return nil, err
+	}
+	if noevports {
+		isEmpty = false
+		options.Noevports = noevports
+	}
+
+	nopoll, err := parseBoolOption(p, "nopoll")
+	if err != nil {
+		return nil, err
+	}
+	if nopoll {
+		isEmpty = false
+		options.Nopoll = nopoll
+	}
+
+	nosplice, err := parseBoolOption(p, "nosplice")
+	if err != nil {
+		return nil, err
+	}
+	if nosplice {
+		isEmpty = false
+		options.Nosplice = nosplice
+	}
+
+	nogetaddrinfo, err := parseBoolOption(p, "nogetaddrinfo")
+	if err != nil {
+		return nil, err
+	}
+	if nogetaddrinfo {
+		isEmpty = false
+		options.Nogetaddrinfo = nogetaddrinfo
+	}
+
+	noreuseport, err := parseBoolOption(p, "noreuseport")
+	if err != nil {
+		return nil, err
+	}
+	if noreuseport {
+		isEmpty = false
+		options.Noreuseport = noreuseport
+	}
+
+	profilingTasks, err := parseAutoOnOffOption(p, "profiling.tasks")
+	if err != nil {
+		return nil, err
+	}
+	if profilingTasks != "" {
+		isEmpty = false
+		options.ProfilingTasks = profilingTasks
+	}
+
+	profilingMemory, err := parseOnOffOption(p, "profiling.memory")
+	if err != nil {
+		return nil, err
+	}
+	if profilingMemory != "" {
+		isEmpty = false
+		options.ProfilingMemory = profilingMemory
+	}
+
+	srvStateBase, err := parseStringOption(p, "server-state-base")
+	if err != nil {
+		return nil, err
+	}
+	if srvStateBase != "" {
+		isEmpty = false
+		options.ServerStateBase = srvStateBase
+	}
+
+	srvStateFile, err := parseStringOption(p, "server-state-file")
+	if err != nil {
+		return nil, err
+	}
+	if srvStateFile != "" {
+		isEmpty = false
+		options.ServerStateFile = srvStateFile
+	}
+
+	spreadChecks, err := parseInt64Option(p, "spread-checks")
+	if err != nil {
+		return nil, err
+	}
+	if spreadChecks != 0 {
+		isEmpty = false
+		options.SpreadChecks = spreadChecks
+	}
+
+	threadHardLimit, err := parseInt64POption(p, "thread-hard-limit")
+	if err != nil {
+		return nil, err
+	}
+	if threadHardLimit != nil {
+		isEmpty = false
+		options.ThreadHardLimit = threadHardLimit
+	}
+
+	if isEmpty {
+		return nil, nil //nolint:nilnil
+	}
+
+	return options, nil
+}
+
+func parseSSLOptions(p parser.Parser) (*models.SslOptions, error) { //nolint:gocognit,gocyclo,cyclop,maintidx
+	options := &models.SslOptions{}
+	isEmpty := true
+	var sslEngines []*models.SslEngine
+	data, err := p.Get(parser.Global, parser.GlobalSectionName, "ssl-engine")
+	if err == nil {
+		items, ok := data.([]types.SslEngine)
+		if !ok {
+			return nil, misc.CreateTypeAssertError("ssl-engine")
+		}
+		for _, item := range items {
+			name := item.Name
+			algo := strings.Join(item.Algorithms, ",")
+			sslEngines = append(sslEngines, &models.SslEngine{
+				Name:       &name,
+				Algorithms: &algo,
+			})
+		}
+	}
+	if sslEngines != nil {
+		isEmpty = false
+		options.SslEngines = sslEngines
+	}
+
+	caBase, err := parseStringOption(p, "ca-base")
+	if err != nil {
+		return nil, err
+	}
+	if caBase != "" {
+		isEmpty = false
+		options.CaBase = caBase
+	}
+
+	crtBase, err := parseStringOption(p, "crt-base")
+	if err != nil {
+		return nil, err
+	}
+	if crtBase != "" {
+		isEmpty = false
+		options.CrtBase = crtBase
+	}
+
+	sslBindCiphers, err := parseStringOption(p, "ssl-default-bind-ciphers")
+	if err != nil {
+		return nil, err
+	}
+	if sslBindCiphers != "" {
+		isEmpty = false
+		options.DefaultBindCiphers = sslBindCiphers
+	}
+
+	sslBindCiphersuites, err := parseStringOption(p, "ssl-default-bind-ciphersuites")
+	if err != nil {
+		return nil, err
+	}
+	if sslBindCiphersuites != "" {
+		isEmpty = false
+		options.DefaultBindCiphersuites = sslBindCiphersuites
+	}
+
+	sslDefaultBindCurves, err := parseStringOption(p, "ssl-default-bind-curves")
+	if err != nil {
+		return nil, err
+	}
+	if sslDefaultBindCurves != "" {
+		isEmpty = false
+		options.DefaultBindCurves = sslDefaultBindCurves
+	}
+
+	sslDefaultServerCurves, err := parseStringOption(p, "ssl-default-server-curves")
+	if err != nil {
+		return nil, err
+	}
+	if sslDefaultServerCurves != "" {
+		isEmpty = false
+		options.DefaultServerCurves = sslDefaultServerCurves
+	}
+
+	sslSkipSelfIssuedCa, err := parseBoolOption(p, "ssl-skip-self-issued-ca")
+	if err != nil {
+		return nil, err
+	}
+	if sslSkipSelfIssuedCa {
+		isEmpty = false
+		options.SkipSelfIssuedCa = sslSkipSelfIssuedCa
+	}
+
+	sslBindOptions, err := parseStringOption(p, "ssl-default-bind-options")
+	if err != nil {
+		return nil, err
+	}
+	if sslBindOptions != "" {
+		isEmpty = false
+		options.DefaultBindOptions = sslBindOptions
+	}
+
+	sslBindSigalgs, err := parseStringOption(p, "ssl-default-bind-sigalgs")
+	if err != nil {
+		return nil, err
+	}
+	if sslBindSigalgs != "" {
+		isEmpty = false
+		options.DefaultBindSigalgs = sslBindSigalgs
+	}
+
+	sslBindClientSigalgs, err := parseStringOption(p, "ssl-default-bind-client-sigalgs")
+	if err != nil {
+		return nil, err
+	}
+	if sslBindClientSigalgs != "" {
+		isEmpty = false
+		options.DefaultBindClientSigalgs = sslBindClientSigalgs
+	}
+
+	sslServerSigalgs, err := parseStringOption(p, "ssl-default-server-sigalgs")
+	if err != nil {
+		return nil, err
+	}
+	if sslServerSigalgs != "" {
+		isEmpty = false
+		options.DefaultServerSigalgs = sslServerSigalgs
+	}
+
+	sslServerClientSigalgs, err := parseStringOption(p, "ssl-default-server-client-sigalgs")
+	if err != nil {
+		return nil, err
+	}
+	if sslServerClientSigalgs != "" {
+		isEmpty = false
+		options.DefaultServerClientSigalgs = sslServerClientSigalgs
+	}
+
+	sslDefaultServerCiphers, err := parseStringOption(p, "ssl-default-server-ciphers")
+	if err != nil {
+		return nil, err
+	}
+	if sslDefaultServerCiphers != "" {
+		isEmpty = false
+		options.DefaultServerCiphers = sslDefaultServerCiphers
+	}
+
+	sslServerCiphersuites, err := parseStringOption(p, "ssl-default-server-ciphersuites")
+	if err != nil {
+		return nil, err
+	}
+	if sslServerCiphersuites != "" {
+		isEmpty = false
+		options.DefaultServerCiphersuites = sslServerCiphersuites
+	}
+
+	sslServerOptions, err := parseStringOption(p, "ssl-default-server-options")
+	if err != nil {
+		return nil, err
+	}
+	if sslServerOptions != "" {
+		isEmpty = false
+		options.DefaultServerOptions = sslServerOptions
+	}
+
+	data, _ = p.Get(parser.Global, parser.GlobalSectionName, "ssl-mode-async")
+	if _, ok := data.(*types.SslModeAsync); ok {
+		isEmpty = false
+		options.ModeAsync = "enabled"
+	}
+
+	sslDhParamFile, err := parseStringOption(p, "ssl-dh-param-file")
+	if err != nil {
+		return nil, err
+	}
+	if sslDhParamFile != "" {
+		isEmpty = false
+		options.DhParamFile = sslDhParamFile
+	}
+
+	sslPropquery, err := parseStringOption(p, "ssl-propquery")
+	if err != nil {
+		return nil, err
+	}
+	if sslPropquery != "" {
+		isEmpty = false
+		options.Propquery = sslPropquery
+	}
+
+	sslProvider, err := parseStringOption(p, "ssl-provider")
+	if err != nil {
+		return nil, err
+	}
+	if sslProvider != "" {
+		isEmpty = false
+		options.Provider = sslProvider
+	}
+
+	sslProviderPath, err := parseStringOption(p, "ssl-provider-path")
+	if err != nil {
+		return nil, err
+	}
+	if sslProviderPath != "" {
+		isEmpty = false
+		options.ProviderPath = sslProviderPath
+	}
+
+	sslServerVerify, err := parseStringOption(p, "ssl-server-verify")
+	if err != nil {
+		return nil, err
+	}
+	if sslServerVerify != "" {
+		isEmpty = false
+		options.ServerVerify = sslServerVerify
+	}
+
+	issuersChainPath, err := parseStringOption(p, "issuers-chain-path")
+	if err != nil {
+		return nil, err
+	}
+	if issuersChainPath != "" {
+		isEmpty = false
+		options.IssuersChainPath = issuersChainPath
+	}
+
+	sslLoadExtraFiles, err := parseStringOption(p, "ssl-load-extra-files")
+	if err != nil {
+		return nil, err
+	}
+	if sslLoadExtraFiles != "" {
+		isEmpty = false
+		options.LoadExtraFiles = sslLoadExtraFiles
+	}
+
+	maxsslconn, err := parseInt64Option(p, "maxsslconn")
+	if err != nil {
+		return nil, err
+	}
+	if maxsslconn != 0 {
+		isEmpty = false
+		options.Maxsslconn = maxsslconn
+	}
+
+	maxsslrate, err := parseInt64Option(p, "maxsslrate")
+	if err != nil {
+		return nil, err
+	}
+	if maxsslrate != 0 {
+		isEmpty = false
+		options.Maxsslrate = maxsslrate
+	}
+
+	sslSecurityLevel, err := parseInt64POption(p, "ssl-security-level")
+	if err != nil {
+		return nil, err
+	}
+	if sslSecurityLevel != nil {
+		isEmpty = false
+		options.SecurityLevel = sslSecurityLevel
+	}
+
+	if isEmpty {
+		return nil, nil //nolint:nilnil
+	}
+	return options, nil
+}
+
+func parseDebugOptions(p parser.Parser) (*models.DebugOptions, error) {
+	options := &models.DebugOptions{}
+	isEmpty := true
+
+	anonkey, err := parseInt64POption(p, "anonkey")
+	if err != nil {
+		return nil, err
+	}
+	if anonkey != nil {
+		isEmpty = false
+		options.Anonkey = anonkey
+	}
+
+	quiet, err := parseBoolOption(p, "quiet")
+	if err != nil {
+		return nil, err
+	}
+	if quiet {
+		isEmpty = false
+		options.Quiet = quiet
+	}
+
+	zeroWarning, err := parseBoolOption(p, "zero-warning")
+	if err != nil {
+		return nil, err
+	}
+	if zeroWarning {
+		isEmpty = false
+		options.ZeroWarning = zeroWarning
+	}
+
+	if isEmpty {
+		return nil, nil //nolint:nilnil
+	}
+	return options, nil
+}
+
+func parseEnvironmentOptions(p parser.Parser) (*models.EnvironmentOptions, error) {
+	options := &models.EnvironmentOptions{}
+	isEmpty := true
 	var presetEnvs []*models.PresetEnv
-	data, err = p.Get(parser.Global, parser.GlobalSectionName, "presetenv")
+	data, err := p.Get(parser.Global, parser.GlobalSectionName, "presetenv")
 	if err == nil {
 		envs, ok := data.([]types.StringKeyValueC)
 		if !ok {
@@ -1055,6 +853,10 @@ func ParseGlobalSection(p parser.Parser) (*models.Global, error) { //nolint:goco
 			}
 			presetEnvs = append(presetEnvs, env)
 		}
+	}
+	if presetEnvs != nil {
+		isEmpty = false
+		options.PresetEnvs = presetEnvs
 	}
 
 	var setEnvs []*models.SetEnv
@@ -1073,6 +875,10 @@ func ParseGlobalSection(p parser.Parser) (*models.Global, error) { //nolint:goco
 			setEnvs = append(setEnvs, env)
 		}
 	}
+	if setEnvs != nil {
+		isEmpty = false
+		options.SetEnvs = setEnvs
+	}
 
 	var resetEnv string
 	data, err = p.Get(parser.Global, parser.GlobalSectionName, "resetenv")
@@ -1084,6 +890,10 @@ func ParseGlobalSection(p parser.Parser) (*models.Global, error) { //nolint:goco
 		if len(resetEnvParser.Value) > 0 {
 			resetEnv = strings.Join(resetEnvParser.Value, " ")
 		}
+	}
+	if resetEnv != "" {
+		isEmpty = false
+		options.Resetenv = resetEnv
 	}
 
 	var unsetEnv string
@@ -1097,76 +907,1289 @@ func ParseGlobalSection(p parser.Parser) (*models.Global, error) { //nolint:goco
 			unsetEnv = strings.Join(unsetEnvParser.Value, " ")
 		}
 	}
+	if unsetEnv != "" {
+		isEmpty = false
+		options.Unsetenv = unsetEnv
+	}
 
-	tuneOptions, err := parseTuneOptions(p)
+	if isEmpty {
+		return nil, nil //nolint:nilnil
+	}
+	return options, nil
+}
+
+func parseDeviceAtlasOptions(p parser.Parser) (*models.DeviceAtlasOptions, error) {
+	options := &models.DeviceAtlasOptions{}
+	isEmpty := true
+	var option string
+	var err error
+
+	option, err = parseStringOption(p, "deviceatlas-json-file")
 	if err != nil {
 		return nil, err
 	}
+	if option != "" {
+		isEmpty = false
+		options.JSONFile = option
+	}
+
+	option, err = parseStringOption(p, "deviceatlas-log-level")
+	if err != nil {
+		return nil, err
+	}
+	if option != "" {
+		isEmpty = false
+		options.LogLevel = option
+	}
+
+	option, err = parseStringOption(p, "deviceatlas-separator")
+	if err != nil {
+		return nil, err
+	}
+	if option != "" {
+		isEmpty = false
+		options.Separator = option
+	}
+
+	option, err = parseStringOption(p, "deviceatlas-properties-cookie")
+	if err != nil {
+		return nil, err
+	}
+	if option != "" {
+		isEmpty = false
+		options.PropertiesCookie = option
+	}
+
+	if isEmpty {
+		return nil, nil //nolint:nilnil
+	}
+	return options, nil
+}
+
+func parseFiftyOneDegreesOptions(p parser.Parser) (*models.FiftyOneDegreesOptions, error) {
+	options := &models.FiftyOneDegreesOptions{}
+	isEmpty := true
+	var option string
+	var optionInt int64
+	var err error
+
+	option, err = parseStringOption(p, "51degrees-data-file")
+	if err != nil {
+		return nil, err
+	}
+	if option != "" {
+		isEmpty = false
+		options.DataFile = option
+	}
+
+	option, err = parseStringOption(p, "51degrees-property-name-list")
+	if err != nil {
+		return nil, err
+	}
+	if option != "" {
+		isEmpty = false
+		options.PropertyNameList = option
+	}
+
+	option, err = parseStringOption(p, "51degrees-property-separator")
+	if err != nil {
+		return nil, err
+	}
+	if option != "" {
+		isEmpty = false
+		options.PropertySeparator = option
+	}
+
+	optionInt, err = parseInt64Option(p, "51degrees-cache-size")
+	if err != nil {
+		return nil, err
+	}
+	if option != "" {
+		isEmpty = false
+		options.CacheSize = optionInt
+	}
+
+	if isEmpty {
+		return nil, nil //nolint:nilnil
+	}
+	return options, nil
+}
+
+func parseHardenOptions(p parser.Parser) (*models.GlobalHarden, error) {
+	options := &models.GlobalHarden{}
+	hardenRejectPrivilgedPortQuic, err := parseOnOffOption(p, "harden.reject-privileged-ports.quic")
+	if err != nil {
+		return nil, err
+	}
+	hardenRejectPrivilgedPortTCP, err := parseOnOffOption(p, "harden.reject-privileged-ports.tcp")
+	if err != nil {
+		return nil, err
+	}
+	if hardenRejectPrivilgedPortQuic != "" || hardenRejectPrivilgedPortTCP != "" {
+		options.RejectPrivilegedPorts = &models.GlobalHardenRejectPrivilegedPorts{}
+		options.RejectPrivilegedPorts.Quic = hardenRejectPrivilgedPortQuic
+		options.RejectPrivilegedPorts.TCP = hardenRejectPrivilgedPortTCP
+	} else {
+		return nil, nil //nolint:nilnil
+	}
+	return options, nil
+}
+
+func parseHTTPClientOptions(p parser.Parser) (*models.HTTPClientOptions, error) {
+	options := &models.HTTPClientOptions{}
+	isEmpty := true
+
+	httpClientResolversDisabled, err := parseOnOffOption(p, "httpclient.resolvers.disabled")
+	if err != nil {
+		return nil, err
+	}
+	if httpClientResolversDisabled != "" {
+		isEmpty = false
+		options.ResolversDisabled = httpClientResolversDisabled
+	}
+
+	httpClientResolversID, err := parseStringOption(p, "httpclient.resolvers.id")
+	if err != nil {
+		return nil, err
+	}
+	if httpClientResolversID != "" {
+		isEmpty = false
+		options.ResolversID = httpClientResolversID
+	}
+
+	data, err := p.Get(parser.Global, parser.GlobalSectionName, "httpclient.resolvers.prefer")
+	if err == nil {
+		resolverPreferParser, ok := data.(*types.HTTPClientResolversPrefer)
+		if !ok {
+			return nil, misc.CreateTypeAssertError("httpclient.resolvers.prefer")
+		}
+		if resolverPreferParser != nil {
+			isEmpty = false
+			options.ResolversPrefer = resolverPreferParser.Type
+		}
+	}
+
+	httpClientRetries, err := parseInt64Option(p, "httpclient.retries")
+	if err != nil {
+		return nil, err
+	}
+	if httpClientRetries != 0 {
+		isEmpty = false
+		options.Retries = httpClientRetries
+	}
+
+	httpClientSSLCaFile, err := parseStringOption(p, "httpclient.ssl.ca-file")
+	if err != nil {
+		return nil, err
+	}
+	if httpClientSSLCaFile != "" {
+		isEmpty = false
+		options.SslCaFile = httpClientSSLCaFile
+	}
+
+	var httpClientSSLVerify *string
+	data, err = p.Get(parser.Global, parser.GlobalSectionName, "httpclient.ssl.verify")
+	if err == nil {
+		httpClientSSLVerifyParser, ok := data.(*types.HTTPClientSSLVerify)
+		if !ok {
+			return nil, misc.CreateTypeAssertError("httpclient.ssl.verify")
+		}
+		httpClientSSLVerify = &httpClientSSLVerifyParser.Type
+	}
+	if httpClientSSLVerify != nil {
+		isEmpty = false
+		options.SslVerify = httpClientSSLVerify
+	}
+
+	httpClientTimeoutConnect, err := parseTimeoutOption(p, "httpclient.timeout.connect")
+	if err != nil {
+		return nil, err
+	}
+	if httpClientTimeoutConnect != nil {
+		isEmpty = false
+		options.TimeoutConnect = httpClientTimeoutConnect
+	}
+
+	if isEmpty {
+		return nil, nil //nolint:nilnil
+	}
+	return options, nil
+}
+
+func parseWurflOptions(p parser.Parser) (*models.WurflOptions, error) {
+	options := &models.WurflOptions{}
+	isEmpty := true
+	wurflDataFile, err := parseStringOption(p, "wurfl-data-file")
+	if err != nil {
+		return nil, err
+	}
+	if wurflDataFile != "" {
+		isEmpty = false
+		options.DataFile = wurflDataFile
+	}
+
+	wurflInformationList, err := parseStringOption(p, "wurfl-information-list")
+	if err != nil {
+		return nil, err
+	}
+	if wurflInformationList != "" {
+		isEmpty = false
+		options.InformationList = wurflInformationList
+	}
+
+	wurflInformationListSeparator, err := parseStringOption(p, "wurfl-information-list-separator")
+	if err != nil {
+		return nil, err
+	}
+	if wurflInformationListSeparator != "" {
+		isEmpty = false
+		options.InformationListSeparator = wurflInformationListSeparator
+	}
+
+	wurflPatchFile, err := parseStringOption(p, "wurfl-patch-file")
+	if err != nil {
+		return nil, err
+	}
+	if wurflPatchFile != "" {
+		isEmpty = false
+		options.PatchFile = wurflPatchFile
+	}
+
+	wurflCacheSize, err := parseInt64Option(p, "wurfl-cache-size")
+	if err != nil {
+		return nil, err
+	}
+	if wurflCacheSize != 0 {
+		isEmpty = false
+		options.CacheSize = wurflCacheSize
+	}
+
+	if isEmpty {
+		return nil, nil //nolint:nilnil
+	}
+	return options, nil
+}
+
+func parseTuneOptions(p parser.Parser) (*models.TuneOptions, error) { //nolint:gocognit, gocyclo, cyclop,maintidx
+	options := &models.TuneOptions{}
+	isEmpty := true
+	var intOption int64
+	var intPOption *int64
+	var boolOption bool
+	var strOption string
+	var err error
+
+	strOption, err = parseOnOffOption(p, "tune.applet.zero-copy-forwarding")
+	if err != nil {
+		return nil, err
+	}
+	if strOption != "" {
+		isEmpty = false
+		options.AppletZeroCopyForwarding = strOption
+	}
+
+	intOption, err = parseInt64Option(p, "tune.comp.maxlevel")
+	if err != nil {
+		return nil, err
+	}
+	if intOption != 0 {
+		isEmpty = false
+		options.CompMaxlevel = intOption
+	}
+
+	boolOption, err = parseBoolOption(p, "tune.disable-zero-copy-forwarding")
+	if err != nil {
+		return nil, err
+	}
+	if boolOption {
+		isEmpty = false
+		options.DisableZeroCopyForwarding = boolOption
+	}
+
+	intOption, err = parseInt64Option(p, "tune.events.max-events-at-once")
+	if err != nil {
+		return nil, err
+	}
+	if intOption != 0 {
+		isEmpty = false
+		options.EventsMaxEventsAtOnce = intOption
+	}
+
+	boolOption, err = parseBoolOption(p, "tune.fail-alloc")
+	if err != nil {
+		return nil, err
+	}
+	if boolOption {
+		isEmpty = false
+		options.FailAlloc = boolOption
+	}
+
+	intOption, err = parseInt64Option(p, "tune.h2.header-table-size")
+	if err != nil {
+		return nil, err
+	}
+	if intOption != 0 {
+		isEmpty = false
+		options.H2HeaderTableSize = intOption
+	}
+
+	intPOption, err = parseInt64POption(p, "tune.h2.initial-window-size")
+	if err != nil {
+		return nil, err
+	}
+	if intPOption != nil {
+		isEmpty = false
+		options.H2InitialWindowSize = intPOption
+	}
+
+	intOption, err = parseInt64Option(p, "tune.h2.max-concurrent-streams")
+	if err != nil {
+		return nil, err
+	}
+	if intOption != 0 {
+		isEmpty = false
+		options.H2MaxConcurrentStreams = intOption
+	}
+
+	intOption, err = parseInt64Option(p, "tune.h2.max-frame-size")
+	if err != nil {
+		return nil, err
+	}
+	if intOption != 0 {
+		isEmpty = false
+		options.H2MaxFrameSize = intOption
+	}
+
+	intOption, err = parseInt64Option(p, "tune.http.cookielen")
+	if err != nil {
+		return nil, err
+	}
+	if intOption != 0 {
+		isEmpty = false
+		options.HTTPCookielen = intOption
+	}
+
+	intOption, err = parseInt64Option(p, "tune.http.logurilen")
+	if err != nil {
+		return nil, err
+	}
+	if intOption != 0 {
+		isEmpty = false
+		options.HTTPLogurilen = intOption
+	}
+
+	intOption, err = parseInt64Option(p, "tune.http.maxhdr")
+	if err != nil {
+		return nil, err
+	}
+	if intOption != 0 {
+		isEmpty = false
+		options.HTTPMaxhdr = intOption
+	}
+
+	strOption, err = parseOnOffOption(p, "tune.idle-pool.shared")
+	if err != nil {
+		return nil, err
+	}
+	if strOption != "" {
+		isEmpty = false
+		options.IdlePoolShared = strOption
+	}
+
+	intPOption, err = parseTimeoutOption(p, "tune.idletimer")
+	if err != nil {
+		return nil, err
+	}
+	if intPOption != nil {
+		isEmpty = false
+		options.Idletimer = intPOption
+	}
+
+	strOption, err = parseListenerDefaultShards(p, "tune.listener.default-shards")
+	if err != nil {
+		return nil, err
+	}
+	if strOption != "" {
+		isEmpty = false
+		options.ListenerDefaultShards = strOption
+	}
+
+	strOption, err = parseOnOffOption(p, "tune.listener.multi-queue")
+	if err != nil {
+		return nil, err
+	}
+	if strOption != "" {
+		isEmpty = false
+		options.ListenerMultiQueue = strOption
+	}
+
+	intPOption, err = parseInt64POption(p, "tune.max-checks-per-thread")
+	if err != nil {
+		return nil, err
+	}
+	if intPOption != nil {
+		isEmpty = false
+		options.MaxChecksPerThread = intPOption
+	}
+
+	intOption, err = parseInt64Option(p, "tune.maxaccept")
+	if err != nil {
+		return nil, err
+	}
+	if intOption != 0 {
+		isEmpty = false
+		options.Maxaccept = intOption
+	}
+
+	intOption, err = parseInt64Option(p, "tune.maxpollevents")
+	if err != nil {
+		return nil, err
+	}
+	if intOption != 0 {
+		isEmpty = false
+		options.Maxpollevents = intOption
+	}
+
+	intOption, err = parseInt64Option(p, "tune.maxrewrite")
+	if err != nil {
+		return nil, err
+	}
+	if intOption != 0 {
+		isEmpty = false
+		options.Maxrewrite = intOption
+	}
+
+	intPOption, err = parseInt64POption(p, "tune.memory.hot-size")
+	if err != nil {
+		return nil, err
+	}
+	if intPOption != nil {
+		isEmpty = false
+		options.MemoryHotSize = intPOption
+	}
+
+	intPOption, err = parseInt64POption(p, "tune.pattern.cache-size")
+	if err != nil {
+		return nil, err
+	}
+	if intPOption != nil {
+		isEmpty = false
+		options.PatternCacheSize = intPOption
+	}
+
+	intOption, err = parseInt64Option(p, "tune.peers.max-updates-at-once")
+	if err != nil {
+		return nil, err
+	}
+	if intOption != 0 {
+		isEmpty = false
+		options.PeersMaxUpdatesAtOnce = intOption
+	}
+
+	intOption, err = parseInt64Option(p, "tune.pool-high-fd-ratio")
+	if err != nil {
+		return nil, err
+	}
+	if intOption != 0 {
+		isEmpty = false
+		options.PoolHighFdRatio = intOption
+	}
+
+	intOption, err = parseInt64Option(p, "tune.pool-low-fd-ratio")
+	if err != nil {
+		return nil, err
+	}
+	if intOption != 0 {
+		isEmpty = false
+		options.PoolLowFdRatio = intOption
+	}
+
+	intPOption, err = parseInt64POption(p, "tune.ring.queues")
+	if err != nil {
+		return nil, err
+	}
+	if intPOption != nil {
+		isEmpty = false
+		options.RingQueues = intPOption
+	}
+
+	intOption, err = parseInt64Option(p, "tune.runqueue-depth")
+	if err != nil {
+		return nil, err
+	}
+	if intOption != 0 {
+		isEmpty = false
+		options.RunqueueDepth = intOption
+	}
+
+	strOption, err = parseOnOffOption(p, "tune.sched.low-latency")
+	if err != nil {
+		return nil, err
+	}
+	if strOption != "" {
+		isEmpty = false
+		options.SchedLowLatency = strOption
+	}
+
+	intPOption, err = parseInt64POption(p, "tune.stick-counters")
+	if err != nil {
+		return nil, err
+	}
+	if intPOption != nil {
+		isEmpty = false
+		options.StickCounters = intPOption
+	}
+
+	strOption, err = parseOnOffOption(p, "tune.fd.edge-triggered")
+	if err != nil {
+		return nil, err
+	}
+	if strOption != "" {
+		isEmpty = false
+		options.FdEdgeTriggered = strOption
+	}
+
+	strOption, err = parseOnOffOption(p, "tune.h1.zero-copy-fwd-recv")
+	if err != nil {
+		return nil, err
+	}
+	if strOption != "" {
+		isEmpty = false
+		options.H1ZeroCopyFwdRecv = strOption
+	}
+
+	strOption, err = parseOnOffOption(p, "tune.h1.zero-copy-fwd-send")
+	if err != nil {
+		return nil, err
+	}
+	if strOption != "" {
+		isEmpty = false
+		options.H1ZeroCopyFwdSend = strOption
+	}
+
+	intPOption, err = parseInt64POption(p, "tune.h2.be.glitches-threshold")
+	if err != nil {
+		return nil, err
+	}
+	if intPOption != nil {
+		isEmpty = false
+		options.H2BeGlitchesThreshold = intPOption
+	}
+
+	intOption, err = parseInt64Option(p, "tune.h2.be.initial-window-size")
+	if err != nil {
+		return nil, err
+	}
+	if intOption != 0 {
+		isEmpty = false
+		options.H2BeInitialWindowSize = intOption
+	}
+
+	intOption, err = parseInt64Option(p, "tune.h2.be.max-concurrent-streams")
+	if err != nil {
+		return nil, err
+	}
+	if intOption != 0 {
+		isEmpty = false
+		options.H2BeMaxConcurrentStreams = intOption
+	}
+
+	intPOption, err = parseInt64POption(p, "tune.h2.fe.glitches-threshold")
+	if err != nil {
+		return nil, err
+	}
+	if intPOption != nil {
+		isEmpty = false
+		options.H2FeGlitchesThreshold = intPOption
+	}
+
+	intOption, err = parseInt64Option(p, "tune.h2.fe.initial-window-size")
+	if err != nil {
+		return nil, err
+	}
+	if intOption != 0 {
+		isEmpty = false
+		options.H2FeInitialWindowSize = intOption
+	}
+
+	intOption, err = parseInt64Option(p, "tune.h2.fe.max-concurrent-streams")
+	if err != nil {
+		return nil, err
+	}
+	if intOption != 0 {
+		isEmpty = false
+		options.H2FeMaxConcurrentStreams = intOption
+	}
+
+	intPOption, err = parseInt64POption(p, "tune.h2.fe.max-total-streams")
+	if err != nil {
+		return nil, err
+	}
+	if intPOption != nil {
+		isEmpty = false
+		options.H2FeMaxTotalStreams = intPOption
+	}
+
+	strOption, err = parseOnOffOption(p, "tune.h2.zero-copy-fwd-send")
+	if err != nil {
+		return nil, err
+	}
+	if strOption != "" {
+		isEmpty = false
+		options.H2ZeroCopyFwdSend = strOption
+	}
+
+	strOption, err = parseOnOffOption(p, "tune.pt.zero-copy-forwarding")
+	if err != nil {
+		return nil, err
+	}
+	if strOption != "" {
+		isEmpty = false
+		options.PtZeroCopyForwarding = strOption
+	}
+
+	if isEmpty {
+		return nil, nil //nolint:nilnil
+	}
+	return options, nil
+}
+
+func parseTuneBufferOptions(p parser.Parser) (*models.TuneBufferOptions, error) {
+	options := &models.TuneBufferOptions{}
+	isEmpty := true
+
+	intPOption, err := parseInt64POption(p, "tune.buffers.limit")
+	if err != nil {
+		return nil, err
+	}
+	if intPOption != nil {
+		isEmpty = false
+		options.BuffersLimit = intPOption
+	}
+
+	intOption, err := parseInt64Option(p, "tune.buffers.reserve")
+	if err != nil {
+		return nil, err
+	}
+	if intOption != 0 {
+		isEmpty = false
+		options.BuffersReserve = intOption
+	}
+
+	intOption, err = parseInt64Option(p, "tune.bufsize")
+	if err != nil {
+		return nil, err
+	}
+	if intOption != 0 {
+		isEmpty = false
+		options.Bufsize = intOption
+	}
+
+	intOption, err = parseInt64Option(p, "tune.pipesize")
+	if err != nil {
+		return nil, err
+	}
+	if intOption != 0 {
+		isEmpty = false
+		options.Pipesize = intOption
+	}
+
+	intPOption, err = parseInt64POption(p, "tune.rcvbuf.backend")
+	if err != nil {
+		return nil, err
+	}
+	if intPOption != nil {
+		isEmpty = false
+		options.RcvbufBackend = intPOption
+	}
+
+	intPOption, err = parseInt64POption(p, "tune.rcvbuf.client")
+	if err != nil {
+		return nil, err
+	}
+	if intPOption != nil {
+		isEmpty = false
+		options.RcvbufClient = intPOption
+	}
+
+	intPOption, err = parseInt64POption(p, "tune.rcvbuf.frontend")
+	if err != nil {
+		return nil, err
+	}
+	if intPOption != nil {
+		isEmpty = false
+		options.RcvbufFrontend = intPOption
+	}
+
+	intPOption, err = parseInt64POption(p, "tune.rcvbuf.server")
+	if err != nil {
+		return nil, err
+	}
+	if intPOption != nil {
+		isEmpty = false
+		options.RcvbufServer = intPOption
+	}
+
+	intOption, err = parseInt64Option(p, "tune.recv_enough")
+	if err != nil {
+		return nil, err
+	}
+	if intOption != 0 {
+		isEmpty = false
+		options.RecvEnough = intOption
+	}
+
+	intPOption, err = parseInt64POption(p, "tune.sndbuf.backend")
+	if err != nil {
+		return nil, err
+	}
+	if intPOption != nil {
+		isEmpty = false
+		options.SndbufBackend = intPOption
+	}
+
+	intPOption, err = parseInt64POption(p, "tune.sndbuf.client")
+	if err != nil {
+		return nil, err
+	}
+	if intPOption != nil {
+		isEmpty = false
+		options.SndbufClient = intPOption
+	}
+
+	intPOption, err = parseInt64POption(p, "tune.sndbuf.frontend")
+	if err != nil {
+		return nil, err
+	}
+	if intPOption != nil {
+		isEmpty = false
+		options.SndbufFrontend = intPOption
+	}
+
+	intPOption, err = parseInt64POption(p, "tune.sndbuf.server")
+	if err != nil {
+		return nil, err
+	}
+	if intPOption != nil {
+		isEmpty = false
+		options.SndbufServer = intPOption
+	}
+
+	if isEmpty {
+		return nil, nil //nolint:nilnil
+	}
+	return options, nil
+}
+
+func parseTuneLuaOptions(p parser.Parser) (*models.TuneLuaOptions, error) {
+	var intOption int64
+	var intPOption *int64
+	var err error
+	options := &models.TuneLuaOptions{}
+	isEmpty := true
+	intOption, err = parseInt64Option(p, "tune.lua.forced-yield")
+	if err != nil {
+		return nil, err
+	}
+	if intOption != 0 {
+		options.ForcedYield = intOption
+		isEmpty = false
+	}
+
+	intPOption, err = parseInt64POption(p, "tune.lua.maxmem")
+	if err != nil {
+		return nil, err
+	}
+	if intPOption != nil {
+		options.Maxmem = intPOption
+		isEmpty = false
+	}
+
+	strOption, err := parseOnOffOption(p, "tune.lua.log.loggers")
+	if err != nil {
+		return nil, err
+	}
+	if strOption != "" {
+		options.LogLoggers = strOption
+		isEmpty = false
+	}
+
+	strOption, err = parseAutoOnOffOption(p, "tune.lua.log.stderr")
+	if err != nil {
+		return nil, err
+	}
+	if strOption != "" {
+		options.LogStderr = strOption
+		isEmpty = false
+	}
+
+	intPOption, err = parseTimeoutOption(p, "tune.lua.session-timeout")
+	if err != nil {
+		return nil, err
+	}
+	if intPOption != nil {
+		options.SessionTimeout = intPOption
+		isEmpty = false
+	}
+
+	intPOption, err = parseTimeoutOption(p, "tune.lua.burst-timeout")
+	if err != nil {
+		return nil, err
+	}
+	if intPOption != nil {
+		options.BurstTimeout = intPOption
+		isEmpty = false
+	}
+
+	intPOption, err = parseTimeoutOption(p, "tune.lua.task-timeout")
+	if err != nil {
+		return nil, err
+	}
+	if intPOption != nil {
+		options.TaskTimeout = intPOption
+		isEmpty = false
+	}
+
+	intPOption, err = parseTimeoutOption(p, "tune.lua.service-timeout")
+	if err != nil {
+		return nil, err
+	}
+	if intPOption != nil {
+		options.ServiceTimeout = intPOption
+		isEmpty = false
+	}
+
+	if isEmpty {
+		return nil, nil //nolint:nilnil
+	}
+
+	return options, nil
+}
+
+func parseTuneQuicOptions(p parser.Parser) (*models.TuneQuicOptions, error) {
+	options := &models.TuneQuicOptions{}
+	isEmpty := true
+	intPOption, err := parseInt64POption(p, "tune.quic.frontend.conn-tx-buffers.limit")
+	if err != nil {
+		return nil, err
+	}
+	if intPOption != nil {
+		isEmpty = false
+		options.FrontendConnTxBuffersLimit = intPOption
+	}
+
+	intPOption, err = parseTimeoutOption(p, "tune.quic.frontend.max-idle-timeout")
+	if err != nil {
+		return nil, err
+	}
+	if intPOption != nil {
+		isEmpty = false
+		options.FrontendMaxIdleTimeout = intPOption
+	}
+
+	intPOption, err = parseInt64POption(p, "tune.quic.frontend.max-streams-bidi")
+	if err != nil {
+		return nil, err
+	}
+	if intPOption != nil {
+		isEmpty = false
+		options.FrontendMaxStreamsBidi = intPOption
+	}
+
+	intPOption, err = parseInt64POption(p, "tune.quic.max-frame-loss")
+	if err != nil {
+		return nil, err
+	}
+	if intPOption != nil {
+		isEmpty = false
+		options.MaxFrameLoss = intPOption
+	}
+
+	intPOption, err = parseInt64POption(p, "tune.quic.reorder-ratio")
+	if err != nil {
+		return nil, err
+	}
+	if intPOption != nil {
+		isEmpty = false
+		options.ReorderRatio = intPOption
+	}
+
+	intPOption, err = parseInt64POption(p, "tune.quic.retry-threshold")
+	if err != nil {
+		return nil, err
+	}
+	if intPOption != nil {
+		isEmpty = false
+		options.RetryThreshold = intPOption
+	}
+
+	so, err := p.Get(parser.Global, parser.GlobalSectionName, "tune.quic.socket-owner")
+	if err == nil {
+		value, ok := so.(*types.QuicSocketOwner)
+		if !ok {
+			return nil, misc.CreateTypeAssertError("tune.quic.socket-owner")
+		}
+		if value != nil && value.Owner != "" {
+			isEmpty = false
+			options.SocketOwner = value.Owner
+		}
+	}
+
+	strOption, err := parseOnOffOption(p, "tune.quic.zero-copy-fwd-send")
+	if err != nil {
+		return nil, err
+	}
+	if strOption != "" {
+		isEmpty = false
+		options.ZeroCopyFwdSend = strOption
+	}
+
+	if isEmpty {
+		return nil, nil //nolint:nilnil
+	}
+	return options, nil
+}
+
+func parseTuneSSLOptions(p parser.Parser) (*models.TuneSslOptions, error) {
+	options := &models.TuneSslOptions{}
+	isEmpty := true
+	intPOption, err := parseInt64POption(p, "tune.ssl.cachesize")
+	if err != nil {
+		return nil, err
+	}
+	if intPOption != nil {
+		isEmpty = false
+		options.Cachesize = intPOption
+	}
+
+	boolOption, err := parseBoolOption(p, "tune.ssl.force-private-cache")
+	if err != nil {
+		return nil, err
+	}
+	if boolOption {
+		isEmpty = false
+		options.ForcePrivateCache = boolOption
+	}
+
+	strOption, err := parseOnOffOption(p, "tune.ssl.keylog")
+	if err != nil {
+		return nil, err
+	}
+	if strOption != "" {
+		isEmpty = false
+		options.Keylog = strOption
+	}
+
+	intPOption, err = parseTimeoutOption(p, "tune.ssl.lifetime")
+	if err != nil {
+		return nil, err
+	}
+	if intPOption != nil {
+		isEmpty = false
+		options.Lifetime = intPOption
+	}
+
+	intPOption, err = parseInt64POption(p, "tune.ssl.maxrecord")
+	if err != nil {
+		return nil, err
+	}
+	if intPOption != nil {
+		isEmpty = false
+		options.Maxrecord = intPOption
+	}
+
+	intOption, err := parseInt64Option(p, "tune.ssl.default-dh-param")
+	if err != nil {
+		return nil, err
+	}
+	if intOption != 0 {
+		isEmpty = false
+		options.DefaultDhParam = intOption
+	}
+
+	intOption, err = parseInt64Option(p, "tune.ssl.ssl-ctx-cache-size")
+	if err != nil {
+		return nil, err
+	}
+	if intOption != 0 {
+		isEmpty = false
+		options.CtxCacheSize = intOption
+	}
+
+	intPOption, err = parseInt64POption(p, "tune.ssl.capture-buffer-size")
+	if err != nil {
+		return nil, err
+	}
+	if intPOption != nil {
+		isEmpty = false
+		options.CaptureBufferSize = intPOption
+	}
+
+	intPOption, err = parseInt64POption(p, "tune.ssl.ocsp-update.maxdelay")
+	if err != nil {
+		return nil, err
+	}
+	if intPOption != nil {
+		isEmpty = false
+		options.OcspUpdateMaxDelay = intPOption
+	}
+
+	intPOption, err = parseInt64POption(p, "tune.ssl.ocsp-update.mindelay")
+	if err != nil {
+		return nil, err
+	}
+	if intPOption != nil {
+		isEmpty = false
+		options.OcspUpdateMinDelay = intPOption
+	}
+
+	if isEmpty {
+		return nil, nil //nolint:nilnil
+	}
+	return options, nil
+}
+
+func parseTuneVarsOptions(p parser.Parser) (*models.TuneVarsOptions, error) {
+	options := &models.TuneVarsOptions{}
+	isEmpty := true
+	intPOption, err := parseSizeOption(p, "tune.vars.global-max-size")
+	if err != nil {
+		return nil, err
+	}
+	if intPOption != nil {
+		isEmpty = false
+		options.GlobalMaxSize = intPOption
+	}
+
+	intPOption, err = parseSizeOption(p, "tune.vars.proc-max-size")
+	if err != nil {
+		return nil, err
+	}
+	if intPOption != nil {
+		isEmpty = false
+		options.ProcMaxSize = intPOption
+	}
+
+	intPOption, err = parseSizeOption(p, "tune.vars.reqres-max-size")
+	if err != nil {
+		return nil, err
+	}
+	if intPOption != nil {
+		isEmpty = false
+		options.ReqresMaxSize = intPOption
+	}
+
+	intPOption, err = parseSizeOption(p, "tune.vars.sess-max-size")
+	if err != nil {
+		return nil, err
+	}
+	if intPOption != nil {
+		isEmpty = false
+		options.SessMaxSize = intPOption
+	}
+
+	intPOption, err = parseSizeOption(p, "tune.vars.txn-max-size")
+	if err != nil {
+		return nil, err
+	}
+	if intPOption != nil {
+		isEmpty = false
+		options.TxnMaxSize = intPOption
+	}
+
+	if isEmpty {
+		return nil, nil //nolint:nilnil
+	}
+	return options, nil
+}
+
+func parseTuneZlibOptions(p parser.Parser) (*models.TuneZlibOptions, error) {
+	options := &models.TuneZlibOptions{}
+	isEmpty := true
+	intOption, err := parseInt64Option(p, "tune.zlib.memlevel")
+	if err != nil {
+		return nil, err
+	}
+	if intOption != 0 {
+		isEmpty = false
+		options.Memlevel = intOption
+	}
+
+	intOption, err = parseInt64Option(p, "tune.zlib.windowsize")
+	if err != nil {
+		return nil, err
+	}
+	if intOption != 0 {
+		isEmpty = false
+		options.Windowsize = intOption
+	}
+
+	if isEmpty {
+		return nil, nil //nolint:nilnil
+	}
+	return options, nil
+}
+
+func ParseGlobalSection(p parser.Parser) (*models.Global, error) { //nolint:gocognit,gocyclo,cyclop,maintidx
+	global := &models.Global{}
+	cpuMaps, err := parseCPUMaps(p)
+	if err != nil {
+		return nil, err
+	}
+	global.CPUMaps = cpuMaps
+
+	h1CaseAdjusts, err := parseH1CaseAdjusts(p)
+	if err != nil {
+		return nil, err
+	}
+	global.H1CaseAdjusts = h1CaseAdjusts
+
+	runtimeAPIs, err := parseRuntimeAPIs(p)
+	if err != nil {
+		return nil, err
+	}
+	global.RuntimeAPIs = runtimeAPIs
+
+	setVars, err := parseSetVars(p)
+	if err != nil {
+		return nil, err
+	}
+	global.SetVars = setVars
+
+	setVarFmts, err := parseSetVarFmts(p)
+	if err != nil {
+		return nil, err
+	}
+	global.SetVarFmts = setVarFmts
+
+	threadGroupLines, err := parseThreadGroupLines(p)
+	if err != nil {
+		return nil, err
+	}
+	global.ThreadGroupLines = threadGroupLines
+
+	chroot, err := parseStringOption(p, "chroot")
+	if err != nil {
+		return nil, err
+	}
+	global.Chroot = chroot
+
+	closeSpreadTime, err := parseTimeoutOption(p, "close-spread-time")
+	if err != nil {
+		return nil, err
+	}
+	global.CloseSpreadTime = closeSpreadTime
+
+	clusterSecret, err := parseStringOption(p, "cluster-secret")
+	if err != nil {
+		return nil, err
+	}
+	global.ClusterSecret = clusterSecret
+
+	daemon, err := parseBoolOption(p, "daemon")
+	if err != nil {
+		return nil, err
+	}
+	global.Daemon = daemon
+
+	debugOptions, err := parseDebugOptions(p)
+	if err != nil {
+		return nil, err
+	}
+	global.DebugOptions = debugOptions
+
+	defaultPath, err := parseDefaultPath(p)
+	if err != nil {
+		return nil, err
+	}
+	global.DefaultPath = defaultPath
+
+	description, err := parseStringOption(p, "description")
+	if err != nil {
+		return nil, err
+	}
+	global.Description = description
 
 	deviceAtlasOptions, err := parseDeviceAtlasOptions(p)
 	if err != nil {
 		return nil, err
 	}
+	global.DeviceAtlasOptions = deviceAtlasOptions
+
+	envOptions, err := parseEnvironmentOptions(p)
+	if err != nil {
+		return nil, err
+	}
+	global.EnvironmentOptions = envOptions
+
+	exposeExperimentalDirectives, err := parseBoolOption(p, "expose-experimental-directives")
+	if err != nil {
+		return nil, err
+	}
+	global.ExposeExperimentalDirectives = exposeExperimentalDirectives
+
+	externalCheck, err := parseBoolOption(p, "external-check")
+	if err != nil {
+		return nil, err
+	}
+	global.ExternalCheck = externalCheck
 
 	fiftyOneDegreesOptions, err := parseFiftyOneDegreesOptions(p)
 	if err != nil {
 		return nil, err
 	}
+	global.FiftyOneDegreesOptions = fiftyOneDegreesOptions
 
-	var defaultPath *models.GlobalDefaultPath
-	data, err = p.Get(parser.Global, parser.GlobalSectionName, "default-path")
-	if err == nil {
-		defaultPathParser, ok := data.(*types.DefaultPath)
-		if !ok {
-			return nil, misc.CreateTypeAssertError("default-path")
-		}
-		defaultPath = &models.GlobalDefaultPath{
-			Type: defaultPathParser.Type,
-			Path: defaultPathParser.Path,
-		}
-	}
-
-	setcap, err := parseStringOption(p, "setcap")
+	gid, err := parseInt64Option(p, "gid")
 	if err != nil {
 		return nil, err
 	}
+	global.Gid = gid
 
-	limitedQuic, err := parseBoolOption(p, "limited-quic")
+	grace, err := parseTimeoutOption(p, "grace")
 	if err != nil {
 		return nil, err
 	}
+	global.Grace = grace
+
+	group, err := parseStringOption(p, "group")
+	if err != nil {
+		return nil, err
+	}
+	global.Group = group
+
+	h1CaseAdjustFile, err := parseStringOption(p, "h1-case-adjust-file")
+	if err != nil {
+		return nil, err
+	}
+	global.H1CaseAdjustFile = h1CaseAdjustFile
+
+	h2WorkaroundBogusWebsocketClients, err := parseBoolOption(p, "h2-workaround-bogus-websocket-clients")
+	if err != nil {
+		return nil, err
+	}
+	global.H2WorkaroundBogusWebsocketClients = h2WorkaroundBogusWebsocketClients
+
+	hardStop, err := parseTimeoutOption(p, "hard-stop-after")
+	if err != nil {
+		return nil, err
+	}
+	global.HardStopAfter = hardStop
 
 	harden, err := parseHardenOptions(p)
 	if err != nil {
 		return nil, err
 	}
+	global.Harden = harden
 
-	var threadHardLimit *int64
-	data, err = p.Get(parser.Global, parser.GlobalSectionName, "thread-hard-limit")
-	if errors.Is(err, parser_errors.ErrFetch) {
-		threadHardLimit = nil
-	} else {
-		threadHardLimitParser, ok := data.(*types.Int64C)
-		if !ok {
-			return nil, misc.CreateTypeAssertError("thread-hard-limit")
-		}
-		threadHardLimit = &threadHardLimitParser.Value
+	httpClientOptions, err := parseHTTPClientOptions(p)
+	if err != nil {
+		return nil, err
 	}
-
-	var sslSecurityLevel *int64
-	data, err = p.Get(parser.Global, parser.GlobalSectionName, "ssl-security-level")
-	if errors.Is(err, parser_errors.ErrFetch) {
-		sslSecurityLevel = nil
-	} else {
-		sslSecurityLevelParser, ok := data.(*types.Int64C)
-		if !ok {
-			return nil, misc.CreateTypeAssertError("ssl-security-level")
-		}
-		sslSecurityLevel = &sslSecurityLevelParser.Value
-	}
+	global.HTTPClientOptions = httpClientOptions
 
 	var errCodes []*models.HTTPCodes
-	data, err = p.Get(parser.Global, parser.GlobalSectionName, "http-err-codes")
+	data, err := p.Get(parser.Global, parser.GlobalSectionName, "http-err-codes")
 	if err == nil {
 		errCodesParser, ok := data.([]types.HTTPErrCodes)
 		if !ok {
@@ -1179,6 +2202,7 @@ func ParseGlobalSection(p parser.Parser) (*models.Global, error) { //nolint:goco
 			errCodes = append(errCodes, errCode)
 		}
 	}
+	global.HTTPErrCodes = errCodes
 
 	var failCodes []*models.HTTPCodes
 	data, err = p.Get(parser.Global, parser.GlobalSectionName, "http-fail-codes")
@@ -1194,339 +2218,643 @@ func ParseGlobalSection(p parser.Parser) (*models.Global, error) { //nolint:goco
 			failCodes = append(failCodes, failCode)
 		}
 	}
+	global.HTTPFailCodes = failCodes
+
+	insecureForkWanted, err := parseBoolOption(p, "insecure-fork-wanted")
+	if err != nil {
+		return nil, err
+	}
+	global.InsecureForkWanted = insecureForkWanted
+
+	insecureSetUIDWanted, err := parseBoolOption(p, "insecure-setuid-wanted")
+	if err != nil {
+		return nil, err
+	}
+	global.InsecureSetuidWanted = insecureSetUIDWanted
+
+	limitedQuic, err := parseBoolOption(p, "limited-quic")
+	if err != nil {
+		return nil, err
+	}
+	global.LimitedQuic = limitedQuic
+
+	localPeer, err := parseStringOption(p, "localpeer")
+	if err != nil {
+		return nil, err
+	}
+	global.Localpeer = localPeer
+
+	var globalLogSendHostName *models.GlobalLogSendHostname
+	data, err = p.Get(parser.Global, parser.GlobalSectionName, "log-send-hostname")
+	if err == nil {
+		logSendHostName := "enabled"
+		logSendHostNameParser, ok := data.(*types.StringC)
+		if !ok {
+			return nil, misc.CreateTypeAssertError("log-send-hostname")
+		}
+		globalLogSendHostName = &models.GlobalLogSendHostname{
+			Enabled: &logSendHostName,
+			Param:   logSendHostNameParser.Value,
+		}
+	}
+	global.LogSendHostname = globalLogSendHostName
+
+	luaOptions, err := parseLuaOptions(p)
+	if err != nil {
+		return nil, err
+	}
+	global.LuaOptions = luaOptions
+
+	masterWorker, err := parseBoolOption(p, "master-worker")
+	if err != nil {
+		return nil, err
+	}
+	global.MasterWorker = masterWorker
+
+	mworkerMaxReloads, err := parseInt64POption(p, "mworker-max-reloads")
+	if err != nil {
+		return nil, err
+	}
+	global.MworkerMaxReloads = mworkerMaxReloads
+
+	nbthread, err := parseInt64Option(p, "nbthread")
+	if err != nil {
+		return nil, err
+	}
+	global.Nbthread = nbthread
+
+	noQuic, err := parseBoolOption(p, "no-quic")
+	if err != nil {
+		return nil, err
+	}
+	global.NoQuic = noQuic
+
+	node, err := parseStringOption(p, "node")
+	if err != nil {
+		return nil, err
+	}
+	global.Node = node
+
+	var numaCPUMapping string
+	data, err = p.Get(parser.Global, parser.GlobalSectionName, "numa-cpu-mapping")
+	if err == nil {
+		numaCPUMappingParser, ok := data.(*types.NumaCPUMapping)
+		if !ok {
+			return nil, misc.CreateTypeAssertError("numa-cpu-mapping")
+		}
+		if numaCPUMappingParser.NoOption {
+			numaCPUMapping = "disabled"
+		} else {
+			numaCPUMapping = "enabled"
+		}
+	}
+	global.NumaCPUMapping = numaCPUMapping
 
 	ocspUpdate, err := parseOcspUpdateOptions(p)
 	if err != nil {
 		return nil, err
 	}
+	global.OcspUpdateOptions = ocspUpdate
 
-	global := &models.Global{
-		GlobalBase: models.GlobalBase{
-			Anonkey:                           anonkey,
-			PresetEnvs:                        presetEnvs,
-			SetEnvs:                           setEnvs,
-			Resetenv:                          resetEnv,
-			Unsetenv:                          unsetEnv,
-			UID:                               uid,
-			User:                              user,
-			Gid:                               gid,
-			Group:                             group,
-			ClusterSecret:                     clusterSecret,
-			Chroot:                            chroot,
-			Localpeer:                         localPeer,
-			CaBase:                            caBase,
-			CrtBase:                           crtBase,
-			ServerStateBase:                   srvStateBase,
-			ServerStateFile:                   srvStateFile,
-			HardStopAfter:                     hardStop,
-			Daemon:                            daemon,
-			DefaultPath:                       defaultPath,
-			MasterWorker:                      masterWorker,
-			Maxconn:                           mConn,
-			Nbthread:                          nbthread,
-			Pidfile:                           pidfile,
-			RuntimeAPIs:                       rAPIs,
-			StatsTimeout:                      statsTimeout,
-			CPUMaps:                           cpuMaps,
-			HttpclientResolversDisabled:       httpClientResolversDisabled,
-			HttpclientResolversID:             httpClientResolversID,
-			HttpclientResolversPrefer:         httpClientResolversPrefer,
-			HttpclientRetries:                 httpClientRetries,
-			HttpclientSslCaFile:               httpClientSSLCaFile,
-			HttpclientSslVerify:               httpClientSSLVerify,
-			HttpclientTimeoutConnect:          httpClientTimeoutConnect,
-			PreallocFd:                        preallocFD,
-			SslDefaultBindCiphers:             sslBindCiphers,
-			SslDefaultBindCiphersuites:        sslBindCiphersuites,
-			SslDefaultBindCurves:              sslDefaultBindCurves,
-			SslDefaultServerCurves:            sslDefaultServerCurves,
-			SslDefaultBindOptions:             sslBindOptions,
-			SslDefaultServerCiphers:           sslDefaultServerCiphers,
-			SslDefaultServerCiphersuites:      sslServerCiphersuites,
-			SslDefaultServerOptions:           sslServerOptions,
-			SslModeAsync:                      sslModeAsync,
-			SslPropquery:                      sslPropquery,
-			SslProvider:                       sslProvider,
-			SslProviderPath:                   sslProviderPath,
-			SslSkipSelfIssuedCa:               sslSkipSelfIssuedCa,
-			TuneOptions:                       tuneOptions,
-			ExternalCheck:                     externalCheck,
-			LuaLoads:                          luaLoads,
-			LuaPrependPath:                    luaPrependPath,
-			LogSendHostname:                   globalLogSendHostName,
-			H1CaseAdjusts:                     h1CaseAdjusts,
-			H1CaseAdjustFile:                  h1CaseAdjustFile,
-			BusyPolling:                       busyPolling,
-			MaxSpreadChecks:                   maxSpreadChecks,
-			CloseSpreadTime:                   closeSpreadTime,
-			Maxconnrate:                       maxconnrate,
-			Maxcomprate:                       maxcomprate,
-			Maxcompcpuusage:                   maxcompcpuusage,
-			Maxpipes:                          maxpipes,
-			Maxsessrate:                       maxsessrate,
-			Maxsslconn:                        maxsslconn,
-			Maxsslrate:                        maxsslrate,
-			Maxzlibmem:                        maxzlibmem,
-			NoQuic:                            noQuic,
-			Noepoll:                           noepoll,
-			Nokqueue:                          nokqueue,
-			Noevports:                         noevports,
-			Nopoll:                            nopoll,
-			Nosplice:                          nosplice,
-			Nogetaddrinfo:                     nogetaddrinfo,
-			Noreuseport:                       noreuseport,
-			ProfilingTasks:                    profilingTasks,
-			ProfilingMemory:                   profilingMemory,
-			SpreadChecks:                      spreadChecks,
-			ThreadGroups:                      threadGroups,
-			StatsMaxconn:                      statsMaxconn,
-			SslLoadExtraFiles:                 SSLLoadExtraFiles,
-			ThreadGroupLines:                  threadGroupLines,
-			Node:                              node,
-			Description:                       description,
-			ExposeExperimentalDirectives:      exposeExperimentalDirectives,
-			Grace:                             grace,
-			InsecureForkWanted:                insecureForkWanted,
-			InsecureSetuidWanted:              insecureSetuidWanted,
-			IssuersChainPath:                  issuersChainPath,
-			H2WorkaroundBogusWebsocketClients: h2WorkaroundBogusWebsocketClients,
-			LuaLoadPerThread:                  luaLoadPerThread,
-			MworkerMaxReloads:                 mworkerMaxReloads,
-			NumaCPUMapping:                    numaCPUMapping,
-			Pp2NeverSendLocal:                 pp2NeverSendLocal,
-			Ulimitn:                           ulimitn,
-			SetDumpable:                       setDumpable,
-			StrictLimits:                      strictLimits,
-			WurflOptions:                      &wurflOptions,
-			DeviceAtlasOptions:                deviceAtlasOptions,
-			FiftyOneDegreesOptions:            fiftyOneDegreesOptions,
-			Quiet:                             quiet,
-			ZeroWarning:                       zeroWarning,
-			SslEngines:                        sslEngines,
-			SslDhParamFile:                    sslDhParamFile,
-			SslServerVerify:                   sslServerVerify,
-			SetVars:                           setVars,
-			SetVarFmts:                        setVarFormats,
-			SslDefaultBindSigalgs:             sslBindSigalgs,
-			SslDefaultBindClientSigalgs:       sslBindClientSigalgs,
-			SslDefaultServerSigalgs:           sslServerSigalgs,
-			SslDefaultServerClientSigalgs:     sslServerClientSigalgs,
-			Setcap:                            setcap,
-			LimitedQuic:                       limitedQuic,
-			Harden:                            harden,
-			ThreadHardLimit:                   threadHardLimit,
-			SslSecurityLevel:                  sslSecurityLevel,
-			HTTPErrCodes:                      errCodes,
-			HTTPFailCodes:                     failCodes,
-			OcspUpdate:                        ocspUpdate,
-		},
+	performanceOptions, err := parsePerformanceOptions(p)
+	if err != nil {
+		return nil, err
 	}
+	global.PerformanceOptions = performanceOptions
+
+	pidfile, err := parseStringOption(p, "pidfile")
+	if err != nil {
+		return nil, err
+	}
+	global.Pidfile = pidfile
+
+	pp2NeverSendLocal, err := parseBoolOption(p, "pp2-never-send-local")
+	if err != nil {
+		return nil, err
+	}
+	global.Pp2NeverSendLocal = pp2NeverSendLocal
+
+	preallocFD, err := parseBoolOption(p, "prealloc-fd")
+	if err != nil {
+		return nil, err
+	}
+	global.PreallocFd = preallocFD
+
+	setDumpable, err := parseBoolOption(p, "set-dumpable")
+	if err != nil {
+		return nil, err
+	}
+	global.SetDumpable = setDumpable
+
+	setcap, err := parseStringOption(p, "setcap")
+	if err != nil {
+		return nil, err
+	}
+	global.Setcap = setcap
+
+	sslOptions, err := parseSSLOptions(p)
+	if err != nil {
+		return nil, err
+	}
+	global.SslOptions = sslOptions
+
+	statsMaxconn, err := parseInt64POption(p, "stats maxconn")
+	if err != nil {
+		return nil, err
+	}
+	global.StatsMaxconn = statsMaxconn
+
+	statsTimeout, err := parseTimeoutOption(p, "stats timeout")
+	if err != nil {
+		return nil, err
+	}
+	global.StatsTimeout = statsTimeout
+
+	strictLimits, err := parseBoolOption(p, "strict-limits")
+	if err != nil {
+		return nil, err
+	}
+	global.StrictLimits = strictLimits
+
+	threadGroups, err := parseInt64Option(p, "thread-groups")
+	if err != nil {
+		return nil, err
+	}
+	global.ThreadGroups = threadGroups
+
+	tuneBufferOptions, err := parseTuneBufferOptions(p)
+	if err != nil {
+		return nil, err
+	}
+	global.TuneBufferOptions = tuneBufferOptions
+
+	tuneLuaOptions, err := parseTuneLuaOptions(p)
+	if err != nil {
+		return nil, err
+	}
+	global.TuneLuaOptions = tuneLuaOptions
+
+	tuneOptions, err := parseTuneOptions(p)
+	if err != nil {
+		return nil, err
+	}
+	global.TuneOptions = tuneOptions
+
+	tuneQuicOptions, err := parseTuneQuicOptions(p)
+	if err != nil {
+		return nil, err
+	}
+	global.TuneQuicOptions = tuneQuicOptions
+
+	tuneSSLOptions, err := parseTuneSSLOptions(p)
+	if err != nil {
+		return nil, err
+	}
+	global.TuneSslOptions = tuneSSLOptions
+
+	tuneVarsOptions, err := parseTuneVarsOptions(p)
+	if err != nil {
+		return nil, err
+	}
+	global.TuneVarsOptions = tuneVarsOptions
+
+	tuneZlibOptions, err := parseTuneZlibOptions(p)
+	if err != nil {
+		return nil, err
+	}
+	global.TuneZlibOptions = tuneZlibOptions
+
+	uid, err := parseInt64Option(p, "uid")
+	if err != nil {
+		return nil, err
+	}
+	global.UID = uid
+
+	user, err := parseStringOption(p, "user")
+	if err != nil {
+		return nil, err
+	}
+	global.User = user
+
+	ulimitn, err := parseInt64Option(p, "ulimit-n")
+	if err != nil {
+		return nil, err
+	}
+	global.Ulimitn = ulimitn
+
+	wurflOptions, err := parseWurflOptions(p)
+	if err != nil {
+		return nil, err
+	}
+	global.WurflOptions = wurflOptions
 
 	return global, nil
 }
 
+func serializeDebugOptions(p parser.Parser, options *models.DebugOptions) error {
+	if options == nil {
+		options = &models.DebugOptions{}
+	}
+
+	if err := serializeInt64POption(p, "anonkey", options.Anonkey); err != nil {
+		return err
+	}
+	if err := serializeBoolOption(p, "quiet", options.Quiet); err != nil {
+		return err
+	}
+	return serializeBoolOption(p, "zero-warning", options.ZeroWarning)
+}
+
+func serializeDeviceAtlasOptions(p parser.Parser, options *models.DeviceAtlasOptions) error {
+	if options == nil {
+		options = &models.DeviceAtlasOptions{}
+	}
+	if err := serializeStringOption(p, "deviceatlas-json-file", options.JSONFile); err != nil {
+		return err
+	}
+	if err := serializeStringOption(p, "deviceatlas-log-level", options.LogLevel); err != nil {
+		return err
+	}
+	if err := serializeStringOption(p, "deviceatlas-separator", options.Separator); err != nil {
+		return err
+	}
+	return serializeStringOption(p, "deviceatlas-properties-cookie", options.PropertiesCookie)
+}
+
+func serializeEnvironmentOptions(p parser.Parser, options *models.EnvironmentOptions) error {
+	if options == nil {
+		options = &models.EnvironmentOptions{}
+	}
+	presetEnvs := []types.StringKeyValueC{}
+	if options.PresetEnvs != nil && len(options.PresetEnvs) > 0 {
+		for _, presetEnv := range options.PresetEnvs {
+			if presetEnv != nil {
+				env := types.StringKeyValueC{
+					Key:   *presetEnv.Name,
+					Value: *presetEnv.Value,
+				}
+				presetEnvs = append(presetEnvs, env)
+			}
+		}
+	}
+	if err := p.Set(parser.Global, parser.GlobalSectionName, "presetenv", presetEnvs); err != nil {
+		return err
+	}
+
+	setEnvs := []types.StringKeyValueC{}
+	if options.SetEnvs != nil && len(options.SetEnvs) > 0 {
+		for _, presetEnv := range options.SetEnvs {
+			if presetEnv != nil {
+				env := types.StringKeyValueC{
+					Key:   *presetEnv.Name,
+					Value: *presetEnv.Value,
+				}
+				setEnvs = append(setEnvs, env)
+			}
+		}
+	}
+	if err := p.Set(parser.Global, parser.GlobalSectionName, "setenv", setEnvs); err != nil {
+		return err
+	}
+
+	resetenv := &types.StringSliceC{}
+	if options.Resetenv == "" {
+		resetenv = nil
+	} else {
+		resetenv.Value = strings.Split(options.Resetenv, " ")
+	}
+	if err := p.Set(parser.Global, parser.GlobalSectionName, "resetenv", resetenv); err != nil {
+		return err
+	}
+
+	unsetenv := &types.StringSliceC{}
+	if options.Unsetenv == "" {
+		unsetenv = nil
+	} else {
+		unsetenv.Value = strings.Split(options.Unsetenv, " ")
+	}
+	if err := p.Set(parser.Global, parser.GlobalSectionName, "unsetenv", unsetenv); err != nil {
+		return err
+	}
+	return nil
+}
+
+func serializeHardenOptions(p parser.Parser, options *models.GlobalHarden) error {
+	rppQuic := ""
+	rppTCP := ""
+	if options != nil {
+		if options.RejectPrivilegedPorts != nil {
+			rppQuic = options.RejectPrivilegedPorts.Quic
+			rppTCP = options.RejectPrivilegedPorts.TCP
+		}
+	}
+
+	if err := serializeOnOffOption(p, "harden.reject-privileged-ports.quic", rppQuic); err != nil {
+		return err
+	}
+	return serializeOnOffOption(p, "harden.reject-privileged-ports.tcp", rppTCP)
+}
+
+func serializeHTTPClientOptions(p parser.Parser, options *models.HTTPClientOptions, configOptions *options.ConfigurationOptions) error {
+	if options == nil {
+		options = &models.HTTPClientOptions{}
+	}
+
+	if err := serializeOnOffOption(p, "httpclient.resolvers.disabled", options.ResolversDisabled); err != nil {
+		return err
+	}
+
+	if err := serializeStringOption(p, "httpclient.resolvers.id", options.ResolversID); err != nil {
+		return err
+	}
+
+	pHTTPClientResolversPrefer := &types.HTTPClientResolversPrefer{
+		Type: options.ResolversPrefer,
+	}
+	if options.ResolversPrefer == "" {
+		pHTTPClientResolversPrefer = nil
+	}
+	if err := p.Set(parser.Global, parser.GlobalSectionName, "httpclient.resolvers.prefer", pHTTPClientResolversPrefer); err != nil {
+		return err
+	}
+
+	if err := serializeStringOption(p, "httpclient.ssl.ca-file", options.SslCaFile); err != nil {
+		return err
+	}
+
+	if err := serializeInt64Option(p, "httpclient.retries", options.Retries); err != nil {
+		return err
+	}
+
+	var pHTTPClientSSLCaFile *types.HTTPClientSSLVerify
+	if options.SslVerify != nil {
+		pHTTPClientSSLCaFile = &types.HTTPClientSSLVerify{
+			Type: *options.SslVerify,
+		}
+	}
+	if err := p.Set(parser.Global, parser.GlobalSectionName, "httpclient.ssl.verify", pHTTPClientSSLCaFile); err != nil {
+		return err
+	}
+
+	return serializeTimeoutOption(p, "httpclient.timeout.connect", options.TimeoutConnect, configOptions)
+}
+
+func serializeSSLOptions(p parser.Parser, options *models.SslOptions) error { //nolint:gocognit
+	if options == nil {
+		options = &models.SslOptions{}
+	}
+
+	sslEngines := []types.SslEngine{}
+	if options.SslEngines != nil && len(options.SslEngines) > 0 {
+		for _, sslEngine := range options.SslEngines {
+			if sslEngine != nil {
+				se := types.SslEngine{
+					Name:       *sslEngine.Name,
+					Algorithms: strings.Split(*sslEngine.Algorithms, ","),
+				}
+				sslEngines = append(sslEngines, se)
+			}
+		}
+	}
+	if err := p.Set(parser.Global, parser.GlobalSectionName, "ssl-engine", sslEngines); err != nil {
+		return err
+	}
+
+	if err := serializeStringOption(p, "ca-base", options.CaBase); err != nil {
+		return err
+	}
+
+	if err := serializeStringOption(p, "crt-base", options.CrtBase); err != nil {
+		return err
+	}
+
+	if err := serializeStringOption(p, "ssl-default-bind-ciphers", options.DefaultBindCiphers); err != nil {
+		return err
+	}
+
+	if err := serializeStringOption(p, "ssl-default-bind-ciphersuites", options.DefaultBindCiphersuites); err != nil {
+		return err
+	}
+
+	if err := serializeStringOption(p, "ssl-default-bind-client-sigalgs", options.DefaultBindClientSigalgs); err != nil {
+		return err
+	}
+
+	if err := serializeStringOption(p, "ssl-default-bind-curves", options.DefaultBindCurves); err != nil {
+		return err
+	}
+
+	if err := serializeStringOption(p, "ssl-default-bind-options", options.DefaultBindOptions); err != nil {
+		return err
+	}
+
+	if err := serializeStringOption(p, "ssl-default-bind-sigalgs", options.DefaultBindSigalgs); err != nil {
+		return err
+	}
+
+	if err := serializeStringOption(p, "ssl-default-server-ciphers", options.DefaultServerCiphers); err != nil {
+		return err
+	}
+
+	if err := serializeStringOption(p, "ssl-default-server-ciphersuites", options.DefaultServerCiphersuites); err != nil {
+		return err
+	}
+
+	if err := serializeStringOption(p, "ssl-default-server-client-sigalgs", options.DefaultServerClientSigalgs); err != nil {
+		return err
+	}
+
+	if err := serializeStringOption(p, "ssl-default-server-curves", options.DefaultServerCurves); err != nil {
+		return err
+	}
+
+	if err := serializeStringOption(p, "ssl-default-server-options", options.DefaultServerOptions); err != nil {
+		return err
+	}
+
+	if err := serializeStringOption(p, "ssl-default-server-sigalgs", options.DefaultServerSigalgs); err != nil {
+		return err
+	}
+
+	if err := serializeStringOption(p, "ssl-dh-param-file", options.DhParamFile); err != nil {
+		return err
+	}
+
+	if err := serializeStringOption(p, "issuers-chain-path", options.IssuersChainPath); err != nil {
+		return err
+	}
+
+	if err := serializeStringOption(p, "ssl-load-extra-files", options.LoadExtraFiles); err != nil {
+		return err
+	}
+
+	if err := serializeInt64Option(p, "maxsslconn", options.Maxsslconn); err != nil {
+		return err
+	}
+
+	if err := serializeInt64Option(p, "maxsslrate", options.Maxsslrate); err != nil {
+		return err
+	}
+
+	sslModeAsync := &types.SslModeAsync{}
+	if options.ModeAsync != "enabled" {
+		sslModeAsync = nil
+	}
+	if err := p.Set(parser.Global, parser.GlobalSectionName, "ssl-mode-async", sslModeAsync); err != nil {
+		return err
+	}
+
+	if err := serializeStringOption(p, "ssl-propquery", options.Propquery); err != nil {
+		return err
+	}
+
+	if err := serializeStringOption(p, "ssl-provider", options.Provider); err != nil {
+		return err
+	}
+
+	if err := serializeStringOption(p, "ssl-provider-path", options.ProviderPath); err != nil {
+		return err
+	}
+
+	if err := serializeStringOption(p, "ssl-server-verify", options.ServerVerify); err != nil {
+		return err
+	}
+
+	if err := serializeBoolOption(p, "ssl-skip-self-issued-ca", options.SkipSelfIssuedCa); err != nil {
+		return err
+	}
+
+	return serializeInt64POption(p, "ssl-security-level", options.SecurityLevel)
+}
+
+func serializePerformanceOptions(p parser.Parser, options *models.PerformanceOptions, configOptions *options.ConfigurationOptions) error {
+	if options == nil {
+		options = &models.PerformanceOptions{}
+	}
+
+	if err := serializeBoolOption(p, "busy-polling", options.BusyPolling); err != nil {
+		return err
+	}
+
+	if err := serializeTimeoutOption(p, "max-spread-checks", options.MaxSpreadChecks, configOptions); err != nil {
+		return err
+	}
+
+	if err := serializeInt64Option(p, "maxcomprate", options.Maxcomprate); err != nil {
+		return err
+	}
+
+	if err := serializeInt64Option(p, "maxcompcpuusage", options.Maxcompcpuusage); err != nil {
+		return err
+	}
+
+	if err := serializeInt64Option(p, "maxconn", options.Maxconn); err != nil {
+		return err
+	}
+
+	if err := serializeInt64Option(p, "maxconnrate", options.Maxconnrate); err != nil {
+		return err
+	}
+
+	if err := serializeInt64Option(p, "maxpipes", options.Maxpipes); err != nil {
+		return err
+	}
+
+	if err := serializeInt64Option(p, "maxsessrate", options.Maxsessrate); err != nil {
+		return err
+	}
+
+	if err := serializeInt64Option(p, "maxconn", options.Maxconn); err != nil {
+		return err
+	}
+
+	if err := serializeInt64Option(p, "maxzlibmem", options.Maxzlibmem); err != nil {
+		return err
+	}
+
+	if err := serializeBoolOption(p, "noepoll", options.Noepoll); err != nil {
+		return err
+	}
+
+	if err := serializeBoolOption(p, "noevports", options.Noevports); err != nil {
+		return err
+	}
+
+	if err := serializeBoolOption(p, "nogetaddrinfo", options.Nogetaddrinfo); err != nil {
+		return err
+	}
+
+	if err := serializeBoolOption(p, "nopoll", options.Nopoll); err != nil {
+		return err
+	}
+
+	if err := serializeBoolOption(p, "noreuseport", options.Noreuseport); err != nil {
+		return err
+	}
+
+	if err := serializeBoolOption(p, "nosplice", options.Nosplice); err != nil {
+		return err
+	}
+
+	if err := serializeBoolOption(p, "nokqueue", options.Nokqueue); err != nil {
+		return err
+	}
+
+	if err := serializeAutoOnOffOption(p, "profiling.tasks", options.ProfilingTasks); err != nil {
+		return err
+	}
+
+	if err := serializeOnOffOption(p, "profiling.memory", options.ProfilingMemory); err != nil {
+		return err
+	}
+
+	if err := serializeStringOption(p, "server-state-file", options.ServerStateFile); err != nil {
+		return err
+	}
+
+	if err := serializeStringOption(p, "server-state-base", options.ServerStateBase); err != nil {
+		return err
+	}
+
+	if err := serializeInt64Option(p, "spread-checks", options.SpreadChecks); err != nil {
+		return err
+	}
+
+	return serializeInt64POption(p, "thread-hard-limit", options.ThreadHardLimit)
+}
+
+func serializeLuaOptions(p parser.Parser, options *models.LuaOptions) error {
+	if options == nil {
+		options = &models.LuaOptions{}
+	}
+
+	if err := serializeStringOption(p, "lua-load-per-thread", options.LoadPerThread); err != nil {
+		return err
+	}
+
+	luaLoads := []types.LuaLoad{}
+	for _, lua := range options.Loads {
+		ll := types.LuaLoad{
+			File: *lua.File,
+		}
+		luaLoads = append(luaLoads, ll)
+	}
+	if err := p.Set(parser.Global, parser.GlobalSectionName, "lua-load", luaLoads); err != nil {
+		return err
+	}
+
+	luaPrependPath := []types.LuaPrependPath{}
+	for _, l := range options.PrependPath {
+		lpp := types.LuaPrependPath{
+			Path: *l.Path,
+			Type: l.Type,
+		}
+		luaPrependPath = append(luaPrependPath, lpp)
+	}
+	return p.Set(parser.Global, parser.GlobalSectionName, "lua-prepend-path", luaPrependPath)
+}
+
 func SerializeGlobalSection(p parser.Parser, data *models.Global, opt *options.ConfigurationOptions) error { //nolint:gocognit,gocyclo,cyclop,maintidx
-	var pAnonkey *types.Int64C
-	if data.Anonkey == nil {
-		pAnonkey = nil
-	} else {
-		pAnonkey = &types.Int64C{
-			Value: *data.Anonkey,
-		}
-	}
-	if err := p.Set(parser.Global, parser.GlobalSectionName, "anonkey", pAnonkey); err != nil {
-		return err
-	}
-
-	pClusterSecret := &types.StringC{
-		Value: data.ClusterSecret,
-	}
-	if data.ClusterSecret == "" {
-		pClusterSecret = nil
-	}
-	if err := p.Set(parser.Global, parser.GlobalSectionName, "cluster-secret", pClusterSecret); err != nil {
-		return err
-	}
-
-	pChroot := &types.StringC{
-		Value: data.Chroot,
-	}
-	if data.Chroot == "" {
-		pChroot = nil
-	}
-	if err := p.Set(parser.Global, parser.GlobalSectionName, "chroot", pChroot); err != nil {
-		return err
-	}
-
-	pCaBase := &types.StringC{
-		Value: data.CaBase,
-	}
-	if data.CaBase == "" {
-		pCaBase = nil
-	}
-	if err := p.Set(parser.Global, parser.GlobalSectionName, "ca-base", pCaBase); err != nil {
-		return err
-	}
-
-	pCrtBase := &types.StringC{
-		Value: data.CrtBase,
-	}
-	if data.CrtBase == "" {
-		pCrtBase = nil
-	}
-	if err := p.Set(parser.Global, parser.GlobalSectionName, "crt-base", pCrtBase); err != nil {
-		return err
-	}
-
-	pLocalPeer := &types.StringC{
-		Value: data.Localpeer,
-	}
-	if data.Localpeer == "" {
-		pLocalPeer = nil
-	}
-	if err := p.Set(parser.Global, parser.GlobalSectionName, "localpeer", pLocalPeer); err != nil {
-		return err
-	}
-
-	pSrvStateBase := &types.StringC{
-		Value: data.ServerStateBase,
-	}
-	if data.ServerStateBase == "" {
-		pSrvStateBase = nil
-	}
-	if err := p.Set(parser.Global, parser.GlobalSectionName, "server-state-base", pSrvStateBase); err != nil {
-		return err
-	}
-
-	pSrvStateFile := &types.StringC{
-		Value: data.ServerStateFile,
-	}
-	if data.ServerStateFile == "" {
-		pSrvStateFile = nil
-	}
-	if err := p.Set(parser.Global, parser.GlobalSectionName, "server-state-file", pSrvStateFile); err != nil {
-		return err
-	}
-
-	var pHardStop *types.StringC
-	if data.HardStopAfter != nil {
-		pHardStop = &types.StringC{
-			Value: misc.SerializeTime(*data.HardStopAfter, opt.PreferredTimeSuffix),
-		}
-	}
-	if err := p.Set(parser.Global, parser.GlobalSectionName, "hard-stop-after", pHardStop); err != nil {
-		return err
-	}
-
-	pUID := &types.Int64C{
-		Value: data.UID,
-	}
-	if data.UID == 0 {
-		pUID = nil
-	}
-	if err := p.Set(parser.Global, parser.GlobalSectionName, "uid", pUID); err != nil {
-		return err
-	}
-
-	pUser := &types.StringC{
-		Value: data.User,
-	}
-	if data.User == "" {
-		pUser = nil
-	}
-	if err := p.Set(parser.Global, parser.GlobalSectionName, "user", pUser); err != nil {
-		return err
-	}
-
-	pGID := &types.Int64C{
-		Value: data.Gid,
-	}
-	if data.Gid == 0 {
-		pGID = nil
-	}
-	if err := p.Set(parser.Global, parser.GlobalSectionName, "gid", pGID); err != nil {
-		return err
-	}
-
-	pGroup := &types.StringC{
-		Value: data.Group,
-	}
-	if data.Group == "" {
-		pGroup = nil
-	}
-	if err := p.Set(parser.Global, parser.GlobalSectionName, "group", pGroup); err != nil {
-		return err
-	}
-
-	pDaemon := &types.Enabled{}
-	if data.Daemon != "enabled" {
-		pDaemon = nil
-	}
-	if err := p.Set(parser.Global, parser.GlobalSectionName, "daemon", pDaemon); err != nil {
-		return err
-	}
-
-	pMasterWorker := &types.Enabled{}
-	if !data.MasterWorker {
-		pMasterWorker = nil
-	}
-	if err := p.Set(parser.Global, parser.GlobalSectionName, "master-worker", pMasterWorker); err != nil {
-		return err
-	}
-
-	pMaxConn := &types.Int64C{
-		Value: data.Maxconn,
-	}
-	if data.Maxconn == 0 {
-		pMaxConn = nil
-	}
-	if err := p.Set(parser.Global, parser.GlobalSectionName, "maxconn", pMaxConn); err != nil {
-		return err
-	}
-
-	pNbthread := &types.Int64C{
-		Value: data.Nbthread,
-	}
-	if data.Nbthread == 0 {
-		pNbthread = nil
-	}
-	if err := p.Set(parser.Global, parser.GlobalSectionName, "nbthread", pNbthread); err != nil {
-		return err
-	}
-
-	pPidfile := &types.StringC{
-		Value: data.Pidfile,
-	}
-	if data.Pidfile == "" {
-		pPidfile = nil
-	}
-	if err := p.Set(parser.Global, parser.GlobalSectionName, "pidfile", pPidfile); err != nil {
-		return err
-	}
-
-	sockets := []types.Socket{}
-	for _, rAPI := range data.RuntimeAPIs {
-		socket := types.Socket{
-			Path:   *rAPI.Address,
-			Params: []params.BindOption{},
-		}
-		socket.Params = serializeBindParams(rAPI.BindParams, "")
-		sockets = append(sockets, socket)
-	}
-	if err := p.Set(parser.Global, parser.GlobalSectionName, "stats socket", sockets); err != nil {
-		return err
-	}
-
-	var statsTimeout *types.StringC
-	if data.StatsTimeout != nil {
-		statsTimeout = &types.StringC{Value: misc.SerializeTime(*data.StatsTimeout, opt.PreferredTimeSuffix)}
-	} else {
-		statsTimeout = nil
-	}
-	if err := p.Set(parser.Global, parser.GlobalSectionName, "stats timeout", statsTimeout); err != nil {
-		return err
-	}
-
 	cpuMaps := []types.CPUMap{}
 	for _, cpuMap := range data.CPUMaps {
 		cm := types.CPUMap{
@@ -1536,440 +2864,6 @@ func SerializeGlobalSection(p parser.Parser, data *models.Global, opt *options.C
 		cpuMaps = append(cpuMaps, cm)
 	}
 	if err := p.Set(parser.Global, parser.GlobalSectionName, "cpu-map", cpuMaps); err != nil {
-		return err
-	}
-
-	if err := serializeOnOffOption(p, "httpclient.resolvers.disabled", data.HttpclientResolversDisabled); err != nil {
-		return err
-	}
-
-	if err := serializeStringOption(p, "httpclient.resolvers.id", data.HttpclientResolversID); err != nil {
-		return err
-	}
-
-	pHTTPClientResolversPrefer := &types.HTTPClientResolversPrefer{
-		Type: data.HttpclientResolversPrefer,
-	}
-	if data.HttpclientResolversPrefer == "" {
-		pHTTPClientResolversPrefer = nil
-	}
-	if err := p.Set(parser.Global, parser.GlobalSectionName, "httpclient.resolvers.prefer", pHTTPClientResolversPrefer); err != nil {
-		return err
-	}
-
-	if err := serializeStringOption(p, "httpclient.ssl.ca-file", data.HttpclientSslCaFile); err != nil {
-		return err
-	}
-
-	if err := serializeInt64Option(p, "httpclient.retries", data.HttpclientRetries); err != nil {
-		return err
-	}
-
-	var pHTTPClientSSLCaFile *types.HTTPClientSSLVerify
-	if data.HttpclientSslVerify != nil {
-		pHTTPClientSSLCaFile = &types.HTTPClientSSLVerify{
-			Type: *data.HttpclientSslVerify,
-		}
-	}
-	if err := p.Set(parser.Global, parser.GlobalSectionName, "httpclient.ssl.verify", pHTTPClientSSLCaFile); err != nil {
-		return err
-	}
-
-	if err := serializeTimeoutOption(p, "httpclient.timeout.connect", data.HttpclientTimeoutConnect, opt); err != nil {
-		return err
-	}
-
-	if err := serializeBoolOption(p, "prealloc-fd", data.PreallocFd); err != nil {
-		return err
-	}
-
-	pSSLBindCiphers := &types.StringC{
-		Value: data.SslDefaultBindCiphers,
-	}
-	if data.SslDefaultBindCiphers == "" {
-		pSSLBindCiphers = nil
-	}
-	if err := p.Set(parser.Global, parser.GlobalSectionName, "ssl-default-bind-ciphers", pSSLBindCiphers); err != nil {
-		return err
-	}
-
-	pSSLBindCiphersuites := &types.StringC{
-		Value: data.SslDefaultBindCiphersuites,
-	}
-	if data.SslDefaultBindCiphersuites == "" {
-		pSSLBindCiphersuites = nil
-	}
-	if err := p.Set(parser.Global, parser.GlobalSectionName, "ssl-default-bind-ciphersuites", pSSLBindCiphersuites); err != nil {
-		return err
-	}
-
-	pSSLDefaultBindCurves := &types.StringC{
-		Value: data.SslDefaultBindCurves,
-	}
-	if data.SslDefaultBindCurves == "" {
-		pSSLDefaultBindCurves = nil
-	}
-	if err := p.Set(parser.Global, parser.GlobalSectionName, "ssl-default-bind-curves", pSSLDefaultBindCurves); err != nil {
-		return err
-	}
-
-	pSSLDefaultServerCurves := &types.StringC{
-		Value: data.SslDefaultServerCurves,
-	}
-	if data.SslDefaultServerCurves == "" {
-		pSSLDefaultServerCurves = nil
-	}
-	if err := p.Set(parser.Global, parser.GlobalSectionName, "ssl-default-server-curves", pSSLDefaultServerCurves); err != nil {
-		return err
-	}
-
-	pSslSkipSelfIssuedCa := &types.Enabled{}
-	if !data.SslSkipSelfIssuedCa {
-		pSslSkipSelfIssuedCa = nil
-	}
-	if err := p.Set(parser.Global, parser.GlobalSectionName, "ssl-skip-self-issued-ca", pSslSkipSelfIssuedCa); err != nil {
-		return err
-	}
-
-	pSSLBindOptions := &types.StringC{
-		Value: data.SslDefaultBindOptions,
-	}
-	if data.SslDefaultBindOptions == "" {
-		pSSLBindOptions = nil
-	}
-	if err := p.Set(parser.Global, parser.GlobalSectionName, "ssl-default-bind-options", pSSLBindOptions); err != nil {
-		return err
-	}
-
-	pSSLBindSigalgs := &types.StringC{
-		Value: data.SslDefaultBindSigalgs,
-	}
-	if data.SslDefaultBindSigalgs == "" {
-		pSSLBindSigalgs = nil
-	}
-	if err := p.Set(parser.Global, parser.GlobalSectionName, "ssl-default-bind-sigalgs", pSSLBindSigalgs); err != nil {
-		return err
-	}
-
-	pSSLBindClientSigalgs := &types.StringC{
-		Value: data.SslDefaultBindClientSigalgs,
-	}
-	if data.SslDefaultBindClientSigalgs == "" {
-		pSSLBindClientSigalgs = nil
-	}
-	if err := p.Set(parser.Global, parser.GlobalSectionName, "ssl-default-bind-client-sigalgs", pSSLBindClientSigalgs); err != nil {
-		return err
-	}
-
-	pSSLServerSigalgs := &types.StringC{
-		Value: data.SslDefaultServerSigalgs,
-	}
-	if data.SslDefaultServerSigalgs == "" {
-		pSSLServerSigalgs = nil
-	}
-	if err := p.Set(parser.Global, parser.GlobalSectionName, "ssl-default-server-sigalgs", pSSLServerSigalgs); err != nil {
-		return err
-	}
-
-	pSSLServerClientSigalgs := &types.StringC{
-		Value: data.SslDefaultServerClientSigalgs,
-	}
-	if data.SslDefaultServerClientSigalgs == "" {
-		pSSLServerClientSigalgs = nil
-	}
-	if err := p.Set(parser.Global, parser.GlobalSectionName, "ssl-default-server-client-sigalgs", pSSLServerClientSigalgs); err != nil {
-		return err
-	}
-
-	pSSLDefaultServerCiphers := &types.StringC{
-		Value: data.SslDefaultServerCiphers,
-	}
-	if data.SslDefaultServerCiphers == "" {
-		pSSLDefaultServerCiphers = nil
-	}
-	if err := p.Set(parser.Global, parser.GlobalSectionName, "ssl-default-server-ciphers", pSSLDefaultServerCiphers); err != nil {
-		return err
-	}
-
-	pSSLServerCiphersuites := &types.StringC{
-		Value: data.SslDefaultServerCiphersuites,
-	}
-	if data.SslDefaultServerCiphersuites == "" {
-		pSSLServerCiphersuites = nil
-	}
-	if err := p.Set(parser.Global, parser.GlobalSectionName, "ssl-default-server-ciphersuites", pSSLServerCiphersuites); err != nil {
-		return err
-	}
-
-	pSSLServerOptions := &types.StringC{
-		Value: data.SslDefaultServerOptions,
-	}
-	if data.SslDefaultServerOptions == "" {
-		pSSLServerOptions = nil
-	}
-	if err := p.Set(parser.Global, parser.GlobalSectionName, "ssl-default-server-options", pSSLServerOptions); err != nil {
-		return err
-	}
-
-	pSSLDhParamFile := &types.StringC{
-		Value: data.SslDhParamFile,
-	}
-	if data.SslDhParamFile == "" {
-		pSSLDhParamFile = nil
-	}
-	if err := p.Set(parser.Global, parser.GlobalSectionName, "ssl-dh-param-file", pSSLDhParamFile); err != nil {
-		return err
-	}
-
-	pSSLServerVerify := &types.StringC{
-		Value: data.SslServerVerify,
-	}
-	if data.SslServerVerify == "" {
-		pSSLServerVerify = nil
-	}
-	if err := p.Set(parser.Global, parser.GlobalSectionName, "ssl-server-verify", pSSLServerVerify); err != nil {
-		return err
-	}
-
-	sslModeAsync := &types.SslModeAsync{}
-	if data.SslModeAsync != "enabled" {
-		sslModeAsync = nil
-	}
-	if err := p.Set(parser.Global, parser.GlobalSectionName, "ssl-mode-async", sslModeAsync); err != nil {
-		return err
-	}
-
-	if err := serializeStringOption(p, "ssl-propquery", data.SslPropquery); err != nil {
-		return err
-	}
-
-	if err := serializeStringOption(p, "ssl-provider", data.SslProvider); err != nil {
-		return err
-	}
-
-	if err := serializeStringOption(p, "ssl-provider-path", data.SslProviderPath); err != nil {
-		return err
-	}
-
-	luaPrependPath := []types.LuaPrependPath{}
-	for _, l := range data.LuaPrependPath {
-		lpp := types.LuaPrependPath{
-			Path: *l.Path,
-			Type: l.Type,
-		}
-		luaPrependPath = append(luaPrependPath, lpp)
-	}
-
-	if err := p.Set(parser.Global, parser.GlobalSectionName, "lua-prepend-path", luaPrependPath); err != nil {
-		return err
-	}
-
-	luaLoads := []types.LuaLoad{}
-	for _, lua := range data.LuaLoads {
-		ll := types.LuaLoad{
-			File: *lua.File,
-		}
-		luaLoads = append(luaLoads, ll)
-	}
-
-	if err := p.Set(parser.Global, parser.GlobalSectionName, "lua-load", luaLoads); err != nil {
-		return err
-	}
-
-	logSendHostName := &types.StringC{}
-	if data.LogSendHostname == nil || *data.LogSendHostname.Enabled == "disabled" {
-		logSendHostName = nil
-	} else {
-		logSendHostName.Value = data.LogSendHostname.Param
-	}
-
-	if err := p.Set(parser.Global, parser.GlobalSectionName, "log-send-hostname", logSendHostName); err != nil {
-		return err
-	}
-
-	pExternalCheck := &types.Enabled{}
-	if !data.ExternalCheck {
-		pExternalCheck = nil
-	}
-	if err := p.Set(parser.Global, parser.GlobalSectionName, "external-check", pExternalCheck); err != nil {
-		return err
-	}
-
-	busyPolling := &types.Enabled{}
-	if !data.BusyPolling {
-		busyPolling = nil
-	}
-	if err := p.Set(parser.Global, parser.GlobalSectionName, "busy-polling", busyPolling); err != nil {
-		return err
-	}
-
-	if err := serializeTimeoutOption(p, "max-spread-checks", data.MaxSpreadChecks, opt); err != nil {
-		return err
-	}
-
-	if err := serializeTimeoutOption(p, "close-spread-time", data.CloseSpreadTime, opt); err != nil {
-		return err
-	}
-
-	maxconnrate := &types.Int64C{
-		Value: data.Maxconnrate,
-	}
-	if data.Maxconnrate == 0 {
-		maxconnrate = nil
-	}
-	if err := p.Set(parser.Global, parser.GlobalSectionName, "maxconnrate", maxconnrate); err != nil {
-		return err
-	}
-
-	maxcomprate := &types.Int64C{
-		Value: data.Maxcomprate,
-	}
-	if data.Maxcomprate == 0 {
-		maxcomprate = nil
-	}
-	if err := p.Set(parser.Global, parser.GlobalSectionName, "maxcomprate", maxcomprate); err != nil {
-		return err
-	}
-
-	maxcompcpuusage := &types.Int64C{
-		Value: data.Maxcompcpuusage,
-	}
-	if data.Maxcompcpuusage == 0 {
-		maxcompcpuusage = nil
-	}
-	if err := p.Set(parser.Global, parser.GlobalSectionName, "maxcompcpuusage", maxcompcpuusage); err != nil {
-		return err
-	}
-
-	maxpipes := &types.Int64C{
-		Value: data.Maxpipes,
-	}
-	if data.Maxpipes == 0 {
-		maxpipes = nil
-	}
-	if err := p.Set(parser.Global, parser.GlobalSectionName, "maxpipes", maxpipes); err != nil {
-		return err
-	}
-
-	maxsessrate := &types.Int64C{
-		Value: data.Maxsessrate,
-	}
-	if data.Maxsessrate == 0 {
-		maxsessrate = nil
-	}
-	if err := p.Set(parser.Global, parser.GlobalSectionName, "maxsessrate", maxsessrate); err != nil {
-		return err
-	}
-
-	maxsslconn := &types.Int64C{
-		Value: data.Maxsslconn,
-	}
-	if data.Maxsslconn == 0 {
-		maxsslconn = nil
-	}
-	if err := p.Set(parser.Global, parser.GlobalSectionName, "maxsslconn", maxsslconn); err != nil {
-		return err
-	}
-
-	maxsslrate := &types.Int64C{
-		Value: data.Maxsslrate,
-	}
-	if data.Maxsslrate == 0 {
-		maxsslrate = nil
-	}
-	if err := p.Set(parser.Global, parser.GlobalSectionName, "maxsslrate", maxsslrate); err != nil {
-		return err
-	}
-
-	maxzlibmem := &types.Int64C{
-		Value: data.Maxzlibmem,
-	}
-	if data.Maxzlibmem == 0 {
-		maxzlibmem = nil
-	}
-	if err := p.Set(parser.Global, parser.GlobalSectionName, "maxzlibmem", maxzlibmem); err != nil {
-		return err
-	}
-
-	noQuic := &types.Enabled{}
-	if !data.NoQuic {
-		noQuic = nil
-	}
-	if err := p.Set(parser.Global, parser.GlobalSectionName, "no-quic", noQuic); err != nil {
-		return err
-	}
-
-	noepoll := &types.Enabled{}
-	if !data.Noepoll {
-		noepoll = nil
-	}
-	if err := p.Set(parser.Global, parser.GlobalSectionName, "noepoll", noepoll); err != nil {
-		return err
-	}
-
-	nokqueue := &types.Enabled{}
-	if !data.Nokqueue {
-		nokqueue = nil
-	}
-	if err := p.Set(parser.Global, parser.GlobalSectionName, "nokqueue", nokqueue); err != nil {
-		return err
-	}
-
-	noevports := &types.Enabled{}
-	if !data.Noevports {
-		noevports = nil
-	}
-	if err := p.Set(parser.Global, parser.GlobalSectionName, "noevports", noevports); err != nil {
-		return err
-	}
-
-	nopoll := &types.Enabled{}
-	if !data.Nopoll {
-		nopoll = nil
-	}
-	if err := p.Set(parser.Global, parser.GlobalSectionName, "nopoll", nopoll); err != nil {
-		return err
-	}
-
-	nosplice := &types.Enabled{}
-	if !data.Nosplice {
-		nosplice = nil
-	}
-	if err := p.Set(parser.Global, parser.GlobalSectionName, "nosplice", nosplice); err != nil {
-		return err
-	}
-
-	nogetaddrinfo := &types.Enabled{}
-	if !data.Nogetaddrinfo {
-		nogetaddrinfo = nil
-	}
-	if err := p.Set(parser.Global, parser.GlobalSectionName, "nogetaddrinfo", nogetaddrinfo); err != nil {
-		return err
-	}
-
-	noreuseport := &types.Enabled{}
-	if !data.Noreuseport {
-		noreuseport = nil
-	}
-	if err := p.Set(parser.Global, parser.GlobalSectionName, "noreuseport", noreuseport); err != nil {
-		return err
-	}
-
-	if err := serializeAutoOnOffOption(p, "profiling.tasks", data.ProfilingTasks); err != nil {
-		return err
-	}
-
-	if err := serializeOnOffOption(p, "profiling.memory", data.ProfilingMemory); err != nil {
-		return err
-	}
-
-	spreadChecks := &types.Int64C{
-		Value: data.SpreadChecks,
-	}
-	if data.SpreadChecks == 0 {
-		spreadChecks = nil
-	}
-	if err := p.Set(parser.Global, parser.GlobalSectionName, "spread-checks", spreadChecks); err != nil {
 		return err
 	}
 
@@ -1986,219 +2880,16 @@ func SerializeGlobalSection(p parser.Parser, data *models.Global, opt *options.C
 		return err
 	}
 
-	pH1CaseAdjustFile := &types.StringC{Value: data.H1CaseAdjustFile}
-	if data.H1CaseAdjustFile == "" {
-		pH1CaseAdjustFile = nil
-	}
-	if err := p.Set(parser.Global, parser.GlobalSectionName, "h1-case-adjust-file", pH1CaseAdjustFile); err != nil {
-		return err
-	}
-
-	node := &types.StringC{Value: data.Node}
-	if data.Node == "" {
-		node = nil
-	}
-	if err := p.Set(parser.Global, parser.GlobalSectionName, "node", node); err != nil {
-		return err
-	}
-
-	description := &types.StringC{Value: data.Description}
-	if data.Description == "" {
-		description = nil
-	}
-	if err := p.Set(parser.Global, parser.GlobalSectionName, "description", description); err != nil {
-		return err
-	}
-
-	exposeExperimentalDirectives := &types.Enabled{}
-	if !data.ExposeExperimentalDirectives {
-		exposeExperimentalDirectives = nil
-	}
-	if err := p.Set(parser.Global, parser.GlobalSectionName, "expose-experimental-directives", exposeExperimentalDirectives); err != nil {
-		return err
-	}
-
-	var grace *types.StringC
-	if data.Grace != nil {
-		grace = &types.StringC{Value: misc.SerializeTime(*data.Grace, opt.PreferredTimeSuffix)}
-	} else {
-		grace = nil
-	}
-	if err := p.Set(parser.Global, parser.GlobalSectionName, "grace", grace); err != nil {
-		return err
-	}
-
-	insecureForkWanted := &types.Enabled{}
-	if !data.InsecureForkWanted {
-		insecureForkWanted = nil
-	}
-	if err := p.Set(parser.Global, parser.GlobalSectionName, "insecure-fork-wanted", insecureForkWanted); err != nil {
-		return err
-	}
-
-	insecureSetuidWanted := &types.Enabled{}
-	if !data.InsecureForkWanted {
-		insecureSetuidWanted = nil
-	}
-	if err := p.Set(parser.Global, parser.GlobalSectionName, "insecure-setuid-wanted", insecureSetuidWanted); err != nil {
-		return err
-	}
-
-	issuersChainPath := &types.StringC{Value: data.IssuersChainPath}
-	if data.IssuersChainPath == "" {
-		issuersChainPath = nil
-	}
-	if err := p.Set(parser.Global, parser.GlobalSectionName, "issuers-chain-path", issuersChainPath); err != nil {
-		return err
-	}
-
-	workaround := &types.Enabled{}
-	if !data.H2WorkaroundBogusWebsocketClients {
-		workaround = nil
-	}
-	if err := p.Set(parser.Global, parser.GlobalSectionName, "h2-workaround-bogus-websocket-clients", workaround); err != nil {
-		return err
-	}
-
-	luaLoadPerThread := &types.StringC{Value: data.LuaLoadPerThread}
-	if data.LuaLoadPerThread == "" {
-		luaLoadPerThread = nil
-	}
-	if err := p.Set(parser.Global, parser.GlobalSectionName, "lua-load-per-thread", luaLoadPerThread); err != nil {
-		return err
-	}
-
-	var mworkerMaxReloads *types.Int64C
-	if data.MworkerMaxReloads == nil {
-		mworkerMaxReloads = nil
-	} else {
-		mworkerMaxReloads = &types.Int64C{
-			Value: *data.MworkerMaxReloads,
+	sockets := []types.Socket{}
+	for _, rAPI := range data.RuntimeAPIs {
+		socket := types.Socket{
+			Path:   *rAPI.Address,
+			Params: []params.BindOption{},
 		}
+		socket.Params = serializeBindParams(rAPI.BindParams, "")
+		sockets = append(sockets, socket)
 	}
-	if err := p.Set(parser.Global, parser.GlobalSectionName, "mworker-max-reloads", mworkerMaxReloads); err != nil {
-		return err
-	}
-
-	numaCPUMapping := &types.NumaCPUMapping{}
-	if data.NumaCPUMapping == "" {
-		numaCPUMapping = nil
-	} else if data.NumaCPUMapping == "disabled" {
-		numaCPUMapping.NoOption = true
-	}
-	if err := p.Set(parser.Global, parser.GlobalSectionName, "numa-cpu-mapping", numaCPUMapping); err != nil {
-		return err
-	}
-
-	neverSendLocal := &types.Enabled{}
-	if !data.Pp2NeverSendLocal {
-		neverSendLocal = nil
-	}
-	if err := p.Set(parser.Global, parser.GlobalSectionName, "pp2-never-send-local", neverSendLocal); err != nil {
-		return err
-	}
-
-	ulimitN := &types.Int64C{
-		Value: data.Ulimitn,
-	}
-	if data.Ulimitn == 0 {
-		ulimitN = nil
-	}
-	if err := p.Set(parser.Global, parser.GlobalSectionName, "ulimit-n", ulimitN); err != nil {
-		return err
-	}
-
-	setDumpable := &types.Enabled{}
-	if !data.SetDumpable {
-		setDumpable = nil
-	}
-	if err := p.Set(parser.Global, parser.GlobalSectionName, "set-dumpable", setDumpable); err != nil {
-		return err
-	}
-
-	strictLimits := &types.Enabled{}
-	if !data.StrictLimits {
-		strictLimits = nil
-	}
-	if err := p.Set(parser.Global, parser.GlobalSectionName, "strict-limits", strictLimits); err != nil {
-		return err
-	}
-
-	threadGroups := &types.Int64C{
-		Value: data.ThreadGroups,
-	}
-	if data.ThreadGroups == 0 {
-		threadGroups = nil
-	}
-	if err := p.Set(parser.Global, parser.GlobalSectionName, "thread-groups", threadGroups); err != nil {
-		return err
-	}
-
-	var statsMaxconn *types.Int64C
-	if data.StatsMaxconn == nil {
-		statsMaxconn = nil
-	} else {
-		statsMaxconn = &types.Int64C{
-			Value: *data.StatsMaxconn,
-		}
-	}
-	if err := p.Set(parser.Global, parser.GlobalSectionName, "stats maxconn", statsMaxconn); err != nil {
-		return err
-	}
-
-	SSLLoadExtraFiles := &types.StringC{Value: data.SslLoadExtraFiles}
-	if data.SslLoadExtraFiles == "" {
-		SSLLoadExtraFiles = nil
-	}
-	if err := p.Set(parser.Global, parser.GlobalSectionName, "ssl-load-extra-files", SSLLoadExtraFiles); err != nil {
-		return err
-	}
-
-	quiet := &types.Enabled{}
-	if !data.Quiet {
-		quiet = nil
-	}
-	if err := p.Set(parser.Global, parser.GlobalSectionName, "quiet", quiet); err != nil {
-		return err
-	}
-
-	zeroWarning := &types.Enabled{}
-	if !data.ZeroWarning {
-		zeroWarning = nil
-	}
-	if err := p.Set(parser.Global, parser.GlobalSectionName, "zero-warning", zeroWarning); err != nil {
-		return err
-	}
-
-	threadGroupLines := []types.ThreadGroup{}
-	if data.ThreadGroupLines != nil && len(data.ThreadGroupLines) > 0 {
-		for _, threadGroupLine := range data.ThreadGroupLines {
-			if threadGroupLine != nil {
-				tgl := types.ThreadGroup{
-					Group:      *threadGroupLine.Group,
-					NumOrRange: *threadGroupLine.NumOrRange,
-				}
-				threadGroupLines = append(threadGroupLines, tgl)
-			}
-		}
-	}
-	if err := p.Set(parser.Global, parser.GlobalSectionName, "thread-group", threadGroupLines); err != nil {
-		return err
-	}
-
-	sslEngines := []types.SslEngine{}
-	if data.SslEngines != nil && len(data.SslEngines) > 0 {
-		for _, sslEngine := range data.SslEngines {
-			if sslEngine != nil {
-				se := types.SslEngine{
-					Name:       *sslEngine.Name,
-					Algorithms: strings.Split(*sslEngine.Algorithms, ","),
-				}
-				sslEngines = append(sslEngines, se)
-			}
-		}
-	}
-	if err := p.Set(parser.Global, parser.GlobalSectionName, "ssl-engine", sslEngines); err != nil {
+	if err := p.Set(parser.Global, parser.GlobalSectionName, "stats socket", sockets); err != nil {
 		return err
 	}
 
@@ -2234,63 +2925,47 @@ func SerializeGlobalSection(p parser.Parser, data *models.Global, opt *options.C
 		return err
 	}
 
-	presetEnvs := []types.StringKeyValueC{}
-	if data.PresetEnvs != nil && len(data.PresetEnvs) > 0 {
-		for _, presetEnv := range data.PresetEnvs {
-			if presetEnv != nil {
-				env := types.StringKeyValueC{
-					Key:   *presetEnv.Name,
-					Value: *presetEnv.Value,
+	threadGroupLines := []types.ThreadGroup{}
+	if data.ThreadGroupLines != nil && len(data.ThreadGroupLines) > 0 {
+		for _, threadGroupLine := range data.ThreadGroupLines {
+			if threadGroupLine != nil {
+				tgl := types.ThreadGroup{
+					Group:      *threadGroupLine.Group,
+					NumOrRange: *threadGroupLine.NumOrRange,
 				}
-				presetEnvs = append(presetEnvs, env)
+				threadGroupLines = append(threadGroupLines, tgl)
 			}
 		}
 	}
-	if err := p.Set(parser.Global, parser.GlobalSectionName, "presetenv", presetEnvs); err != nil {
+	if err := p.Set(parser.Global, parser.GlobalSectionName, "thread-group", threadGroupLines); err != nil {
 		return err
 	}
 
-	setEnvs := []types.StringKeyValueC{}
-	if data.SetEnvs != nil && len(data.SetEnvs) > 0 {
-		for _, presetEnv := range data.SetEnvs {
-			if presetEnv != nil {
-				env := types.StringKeyValueC{
-					Key:   *presetEnv.Name,
-					Value: *presetEnv.Value,
-				}
-				setEnvs = append(setEnvs, env)
-			}
-		}
-	}
-	if err := p.Set(parser.Global, parser.GlobalSectionName, "setenv", setEnvs); err != nil {
+	if err := serializeStringOption(p, "chroot", data.Chroot); err != nil {
 		return err
 	}
 
-	resetenv := &types.StringSliceC{}
-	if data.Resetenv == "" {
-		resetenv = nil
-	} else {
-		resetenv.Value = strings.Split(data.Resetenv, " ")
-	}
-	if err := p.Set(parser.Global, parser.GlobalSectionName, "resetenv", resetenv); err != nil {
+	if err := serializeTimeoutOption(p, "close-spread-time", data.CloseSpreadTime, opt); err != nil {
 		return err
 	}
 
-	unsetenv := &types.StringSliceC{}
-	if data.Unsetenv == "" {
-		unsetenv = nil
-	} else {
-		unsetenv.Value = strings.Split(data.Unsetenv, " ")
-	}
-	if err := p.Set(parser.Global, parser.GlobalSectionName, "unsetenv", unsetenv); err != nil {
+	if err := serializeStringOption(p, "cluster-secret", data.ClusterSecret); err != nil {
 		return err
 	}
 
-	if data.WurflOptions == nil {
-		data.WurflOptions = &models.GlobalWurflOptions{}
+	if err := serializeBoolOption(p, "daemon", data.Daemon); err != nil {
+		return err
 	}
 
-	if err := serializeWurflOptions(p, data.WurflOptions); err != nil {
+	if err := serializeDebugOptions(p, data.DebugOptions); err != nil {
+		return err
+	}
+
+	if err := serializeDefaultPath(p, data.DefaultPath); err != nil {
+		return err
+	}
+
+	if err := serializeStringOption(p, "description", data.Description); err != nil {
 		return err
 	}
 
@@ -2298,26 +2973,43 @@ func SerializeGlobalSection(p parser.Parser, data *models.Global, opt *options.C
 		return err
 	}
 
+	if err := serializeEnvironmentOptions(p, data.EnvironmentOptions); err != nil {
+		return err
+	}
+
+	if err := serializeBoolOption(p, "expose-experimental-directives", data.ExposeExperimentalDirectives); err != nil {
+		return err
+	}
+
+	if err := serializeBoolOption(p, "external-check", data.ExternalCheck); err != nil {
+		return err
+	}
+
 	if err := serializeFiftyOneDegreesOptions(p, data.FiftyOneDegreesOptions); err != nil {
 		return err
 	}
 
-	defaultPath := &types.DefaultPath{}
-	if data.DefaultPath != nil {
-		defaultPath.Type = data.DefaultPath.Type
-		defaultPath.Path = data.DefaultPath.Path
-	} else {
-		defaultPath = nil
-	}
-	if err := p.Set(parser.Global, parser.GlobalSectionName, "default-path", defaultPath); err != nil {
+	if err := serializeInt64Option(p, "gid", data.Gid); err != nil {
 		return err
 	}
 
-	if err := serializeStringOption(p, "setcap", data.Setcap); err != nil {
+	if err := serializeTimeoutOption(p, "grace", data.Grace, opt); err != nil {
 		return err
 	}
 
-	if err := serializeBoolOption(p, "limited-quic", data.LimitedQuic); err != nil {
+	if err := serializeStringOption(p, "group", data.Group); err != nil {
+		return err
+	}
+
+	if err := serializeStringOption(p, "h1-case-adjust-file", data.H1CaseAdjustFile); err != nil {
+		return err
+	}
+
+	if err := serializeBoolOption(p, "h2-workaround-bogus-websocket-clients", data.H2WorkaroundBogusWebsocketClients); err != nil {
+		return err
+	}
+
+	if err := serializeTimeoutOption(p, "hard-stop-after", data.HardStopAfter, opt); err != nil {
 		return err
 	}
 
@@ -2325,27 +3017,7 @@ func SerializeGlobalSection(p parser.Parser, data *models.Global, opt *options.C
 		return err
 	}
 
-	var threadHardLimit *types.Int64C
-	if data.ThreadHardLimit == nil {
-		threadHardLimit = nil
-	} else {
-		threadHardLimit = &types.Int64C{
-			Value: *data.ThreadHardLimit,
-		}
-	}
-	if err := p.Set(parser.Global, parser.GlobalSectionName, "thread-hard-limit", threadHardLimit); err != nil {
-		return err
-	}
-
-	var sslSecurityLevel *types.Int64C
-	if data.SslSecurityLevel == nil {
-		sslSecurityLevel = nil
-	} else {
-		sslSecurityLevel = &types.Int64C{
-			Value: *data.SslSecurityLevel,
-		}
-	}
-	if err := p.Set(parser.Global, parser.GlobalSectionName, "ssl-security-level", sslSecurityLevel); err != nil {
+	if err := serializeHTTPClientOptions(p, data.HTTPClientOptions, opt); err != nil {
 		return err
 	}
 
@@ -2383,32 +3055,171 @@ func SerializeGlobalSection(p parser.Parser, data *models.Global, opt *options.C
 		return err
 	}
 
-	if err := serializeOcspUpdateOptions(p, data.OcspUpdate); err != nil {
+	if err := serializeBoolOption(p, "insecure-fork-wanted", data.InsecureForkWanted); err != nil {
 		return err
 	}
 
-	return serializeTuneOptions(p, data.TuneOptions, opt)
-}
-
-func serializeHardenOptions(p parser.Parser, options *models.GlobalHarden) error {
-	rppQuic := ""
-	rppTCP := ""
-	if options != nil {
-		if options.RejectPrivilegedPorts != nil {
-			rppQuic = options.RejectPrivilegedPorts.Quic
-			rppTCP = options.RejectPrivilegedPorts.TCP
-		}
-	}
-
-	if err := serializeOnOffOption(p, "harden.reject-privileged-ports.quic", rppQuic); err != nil {
+	if err := serializeBoolOption(p, "insecure-setuid-wanted", data.InsecureSetuidWanted); err != nil {
 		return err
 	}
-	return serializeOnOffOption(p, "harden.reject-privileged-ports.tcp", rppTCP)
+
+	if err := serializeBoolOption(p, "limited-quic", data.LimitedQuic); err != nil {
+		return err
+	}
+
+	if err := serializeStringOption(p, "localpeer", data.Localpeer); err != nil {
+		return err
+	}
+
+	logSendHostName := &types.StringC{}
+	if data.LogSendHostname == nil || *data.LogSendHostname.Enabled == "disabled" {
+		logSendHostName = nil
+	} else {
+		logSendHostName.Value = data.LogSendHostname.Param
+	}
+	if err := p.Set(parser.Global, parser.GlobalSectionName, "log-send-hostname", logSendHostName); err != nil {
+		return err
+	}
+
+	if err := serializeLuaOptions(p, data.LuaOptions); err != nil {
+		return err
+	}
+
+	if err := serializeBoolOption(p, "master-worker", data.MasterWorker); err != nil {
+		return err
+	}
+
+	if err := serializeInt64POption(p, "mworker-max-reloads", data.MworkerMaxReloads); err != nil {
+		return err
+	}
+
+	if err := serializeInt64Option(p, "nbthread", data.Nbthread); err != nil {
+		return err
+	}
+
+	if err := serializeBoolOption(p, "no-quic", data.NoQuic); err != nil {
+		return err
+	}
+
+	if err := serializeStringOption(p, "node", data.Node); err != nil {
+		return err
+	}
+
+	numaCPUMapping := &types.NumaCPUMapping{}
+	if data.NumaCPUMapping == "" {
+		numaCPUMapping = nil
+	} else if data.NumaCPUMapping == "disabled" {
+		numaCPUMapping.NoOption = true
+	}
+	if err := p.Set(parser.Global, parser.GlobalSectionName, "numa-cpu-mapping", numaCPUMapping); err != nil {
+		return err
+	}
+
+	if err := serializeOcspUpdateOptions(p, data.OcspUpdateOptions); err != nil {
+		return err
+	}
+
+	if err := serializePerformanceOptions(p, data.PerformanceOptions, opt); err != nil {
+		return err
+	}
+
+	if err := serializeStringOption(p, "pidfile", data.Pidfile); err != nil {
+		return err
+	}
+
+	if err := serializeBoolOption(p, "pp2-never-send-local", data.Pp2NeverSendLocal); err != nil {
+		return err
+	}
+
+	if err := serializeBoolOption(p, "prealloc-fd", data.PreallocFd); err != nil {
+		return err
+	}
+
+	if err := serializeBoolOption(p, "set-dumpable", data.SetDumpable); err != nil {
+		return err
+	}
+
+	if err := serializeStringOption(p, "setcap", data.Setcap); err != nil {
+		return err
+	}
+
+	if err := serializeSSLOptions(p, data.SslOptions); err != nil {
+		return err
+	}
+
+	if err := serializeInt64POption(p, "stats maxconn", data.StatsMaxconn); err != nil {
+		return err
+	}
+
+	if err := serializeTimeoutOption(p, "stats timeout", data.StatsTimeout, opt); err != nil {
+		return err
+	}
+
+	if err := serializeBoolOption(p, "strict-limits", data.StrictLimits); err != nil {
+		return err
+	}
+
+	if err := serializeInt64Option(p, "thread-groups", data.ThreadGroups); err != nil {
+		return err
+	}
+
+	if err := serializeTuneBufferOptions(p, data.TuneBufferOptions); err != nil {
+		return err
+	}
+
+	if err := serializeTuneLuaOptions(p, data.TuneLuaOptions, opt); err != nil {
+		return err
+	}
+
+	if err := serializeTuneOptions(p, data.TuneOptions, opt); err != nil {
+		return err
+	}
+
+	if err := serializeTuneQuicOptions(p, data.TuneQuicOptions, opt); err != nil {
+		return err
+	}
+
+	if err := serializeTuneSSLOptions(p, data.TuneSslOptions, opt); err != nil {
+		return err
+	}
+
+	if err := serializeTuneVarsOptions(p, data.TuneVarsOptions); err != nil {
+		return err
+	}
+
+	if err := serializeTuneZlibOptions(p, data.TuneZlibOptions); err != nil {
+		return err
+	}
+
+	if err := serializeInt64Option(p, "uid", data.UID); err != nil {
+		return err
+	}
+
+	if err := serializeInt64Option(p, "ulimit-n", data.Ulimitn); err != nil {
+		return err
+	}
+
+	if err := serializeStringOption(p, "user", data.User); err != nil {
+		return err
+	}
+
+	return serializeWurflOptions(p, data.WurflOptions)
 }
 
-func serializeOcspUpdateOptions(p parser.Parser, options *models.GlobalOcspUpdate) error {
+func serializeDefaultPath(p parser.Parser, data *models.GlobalDefaultPath) error {
+	dp := &types.DefaultPath{}
+	if data != nil {
+		dp.Type = data.Type
+		dp.Path = data.Path
+	} else {
+		dp = nil
+	}
+	return p.Set(parser.Global, parser.GlobalSectionName, "default-path", dp)
+}
+
+func serializeOcspUpdateOptions(p parser.Parser, options *models.OcspUpdateOptions) error {
 	if options == nil {
-		return nil
+		options = &models.OcspUpdateOptions{}
 	}
 	disable := ""
 	if options.Disable != nil {
@@ -2449,9 +3260,9 @@ func serializeOcspUpdateOptions(p parser.Parser, options *models.GlobalOcspUpdat
 	return serializeOnOffOption(p, "ocsp-update.mode", options.Mode)
 }
 
-func serializeWurflOptions(p parser.Parser, options *models.GlobalWurflOptions) error {
+func serializeWurflOptions(p parser.Parser, options *models.WurflOptions) error {
 	if options == nil {
-		return nil
+		options = &models.WurflOptions{}
 	}
 	if err := serializeStringOption(p, "wurfl-data-file", options.DataFile); err != nil {
 		return err
@@ -2468,25 +3279,9 @@ func serializeWurflOptions(p parser.Parser, options *models.GlobalWurflOptions) 
 	return serializeInt64Option(p, "wurfl-cache-size", options.CacheSize)
 }
 
-func serializeDeviceAtlasOptions(p parser.Parser, options *models.GlobalDeviceAtlasOptions) error {
+func serializeFiftyOneDegreesOptions(p parser.Parser, options *models.FiftyOneDegreesOptions) error {
 	if options == nil {
-		return nil
-	}
-	if err := serializeStringOption(p, "deviceatlas-json-file", options.JSONFile); err != nil {
-		return err
-	}
-	if err := serializeStringOption(p, "deviceatlas-log-level", options.LogLevel); err != nil {
-		return err
-	}
-	if err := serializeStringOption(p, "deviceatlas-separator", options.Separator); err != nil {
-		return err
-	}
-	return serializeStringOption(p, "deviceatlas-properties-cookie", options.PropertiesCookie)
-}
-
-func serializeFiftyOneDegreesOptions(p parser.Parser, options *models.GlobalFiftyOneDegreesOptions) error {
-	if options == nil {
-		return nil
+		options = &models.FiftyOneDegreesOptions{}
 	}
 	if err := serializeStringOption(p, "51degrees-data-file", options.DataFile); err != nil {
 		return err
@@ -2500,12 +3295,9 @@ func serializeFiftyOneDegreesOptions(p parser.Parser, options *models.GlobalFift
 	return serializeInt64Option(p, "51degrees-cache-size", options.CacheSize)
 }
 
-func serializeTuneOptions(p parser.Parser, options *models.GlobalTuneOptions, opt *options.ConfigurationOptions) error { //nolint:gocognit,gocyclo,cyclop,maintidx
+func serializeTuneBufferOptions(p parser.Parser, options *models.TuneBufferOptions) error {
 	if options == nil {
-		return nil
-	}
-	if err := serializeOnOffOption(p, "tune.applet.zero-copy-forwarding", options.AppletZeroCopyForwarding); err != nil {
-		return err
+		options = &models.TuneBufferOptions{}
 	}
 	if err := serializeInt64POption(p, "tune.buffers.limit", options.BuffersLimit); err != nil {
 		return err
@@ -2514,6 +3306,166 @@ func serializeTuneOptions(p parser.Parser, options *models.GlobalTuneOptions, op
 		return err
 	}
 	if err := serializeInt64Option(p, "tune.bufsize", options.Bufsize); err != nil {
+		return err
+	}
+	if err := serializeInt64Option(p, "tune.pipesize", options.Pipesize); err != nil {
+		return err
+	}
+	if err := serializeInt64POption(p, "tune.rcvbuf.backend", options.RcvbufBackend); err != nil {
+		return err
+	}
+	if err := serializeInt64POption(p, "tune.rcvbuf.client", options.RcvbufClient); err != nil {
+		return err
+	}
+	if err := serializeInt64POption(p, "tune.rcvbuf.frontend", options.RcvbufFrontend); err != nil {
+		return err
+	}
+	if err := serializeInt64POption(p, "tune.rcvbuf.server", options.RcvbufServer); err != nil {
+		return err
+	}
+	if err := serializeInt64Option(p, "tune.recv_enough", options.RecvEnough); err != nil {
+		return err
+	}
+	if err := serializeInt64POption(p, "tune.sndbuf.backend", options.SndbufBackend); err != nil {
+		return err
+	}
+	if err := serializeInt64POption(p, "tune.sndbuf.client", options.SndbufClient); err != nil {
+		return err
+	}
+	if err := serializeInt64POption(p, "tune.sndbuf.frontend", options.SndbufFrontend); err != nil {
+		return err
+	}
+	return serializeInt64POption(p, "tune.sndbuf.server", options.SndbufServer)
+}
+
+func serializeTuneLuaOptions(p parser.Parser, options *models.TuneLuaOptions, configOptions *options.ConfigurationOptions) error {
+	if options == nil {
+		options = &models.TuneLuaOptions{}
+	}
+	if err := serializeTimeoutOption(p, "tune.lua.burst-timeout", options.BurstTimeout, configOptions); err != nil {
+		return err
+	}
+	if err := serializeInt64Option(p, "tune.lua.forced-yield", options.ForcedYield); err != nil {
+		return err
+	}
+	if err := serializeOnOffOption(p, "tune.lua.log.loggers", options.LogLoggers); err != nil {
+		return err
+	}
+	if err := serializeAutoOnOffOption(p, "tune.lua.log.stderr", options.LogStderr); err != nil {
+		return err
+	}
+	if err := serializeInt64POption(p, "tune.lua.maxmem", options.Maxmem); err != nil {
+		return err
+	}
+	if err := serializeTimeoutOption(p, "tune.lua.service-timeout", options.ServiceTimeout, configOptions); err != nil {
+		return err
+	}
+	if err := serializeTimeoutOption(p, "tune.lua.session-timeout", options.SessionTimeout, configOptions); err != nil {
+		return err
+	}
+	return serializeTimeoutOption(p, "tune.lua.task-timeout", options.TaskTimeout, configOptions)
+}
+
+func serializeTuneQuicOptions(p parser.Parser, options *models.TuneQuicOptions, configOptions *options.ConfigurationOptions) error {
+	if options == nil {
+		options = &models.TuneQuicOptions{}
+	}
+	if err := serializeInt64POption(p, "tune.quic.frontend.conn-tx-buffers.limit", options.FrontendConnTxBuffersLimit); err != nil {
+		return err
+	}
+	if err := serializeTimeoutOption(p, "tune.quic.frontend.max-idle-timeout", options.FrontendMaxIdleTimeout, configOptions); err != nil {
+		return err
+	}
+	if err := serializeInt64POption(p, "tune.quic.frontend.max-streams-bidi", options.FrontendMaxStreamsBidi); err != nil {
+		return err
+	}
+	if err := serializeInt64POption(p, "tune.quic.max-frame-loss", options.MaxFrameLoss); err != nil {
+		return err
+	}
+	if err := serializeInt64POption(p, "tune.quic.reorder-ratio", options.ReorderRatio); err != nil {
+		return err
+	}
+	if err := serializeInt64POption(p, "tune.quic.retry-threshold", options.RetryThreshold); err != nil {
+		return err
+	}
+	value := &types.QuicSocketOwner{Owner: options.SocketOwner}
+	if options.SocketOwner == "" {
+		value = nil
+	}
+	if err := p.Set(parser.Global, parser.GlobalSectionName, "tune.quic.socket-owner", value); err != nil {
+		return err
+	}
+	return serializeOnOffOption(p, "tune.quic.zero-copy-fwd-send", options.ZeroCopyFwdSend)
+}
+
+func serializeTuneSSLOptions(p parser.Parser, options *models.TuneSslOptions, configOptions *options.ConfigurationOptions) error {
+	if options == nil {
+		options = &models.TuneSslOptions{}
+	}
+	if err := serializeInt64POption(p, "tune.ssl.cachesize", options.Cachesize); err != nil {
+		return err
+	}
+	if err := serializeInt64POption(p, "tune.ssl.capture-buffer-size", options.CaptureBufferSize); err != nil {
+		return err
+	}
+	if err := serializeInt64Option(p, "tune.ssl.ssl-ctx-cache-size", options.CtxCacheSize); err != nil {
+		return err
+	}
+	if err := serializeInt64Option(p, "tune.ssl.default-dh-param", options.DefaultDhParam); err != nil {
+		return err
+	}
+	if err := serializeBoolOption(p, "tune.ssl.force-private-cache", options.ForcePrivateCache); err != nil {
+		return err
+	}
+	if err := serializeOnOffOption(p, "tune.ssl.keylog", options.Keylog); err != nil {
+		return err
+	}
+	if err := serializeTimeoutOption(p, "tune.ssl.lifetime", options.Lifetime, configOptions); err != nil {
+		return err
+	}
+	if err := serializeInt64POption(p, "tune.ssl.maxrecord", options.Maxrecord); err != nil {
+		return err
+	}
+	if err := serializeInt64POption(p, "tune.ssl.ocsp-update.maxdelay", options.OcspUpdateMaxDelay); err != nil {
+		return err
+	}
+	return serializeInt64POption(p, "tune.ssl.ocsp-update.mindelay", options.OcspUpdateMinDelay)
+}
+
+func serializeTuneVarsOptions(p parser.Parser, options *models.TuneVarsOptions) error {
+	if options == nil {
+		options = &models.TuneVarsOptions{}
+	}
+	if err := serializeSizeOption(p, "tune.vars.global-max-size", options.GlobalMaxSize); err != nil {
+		return err
+	}
+	if err := serializeSizeOption(p, "tune.vars.proc-max-size", options.ProcMaxSize); err != nil {
+		return err
+	}
+	if err := serializeSizeOption(p, "tune.vars.reqres-max-size", options.ReqresMaxSize); err != nil {
+		return err
+	}
+	if err := serializeSizeOption(p, "tune.vars.sess-max-size", options.SessMaxSize); err != nil {
+		return err
+	}
+	return serializeSizeOption(p, "tune.vars.txn-max-size", options.TxnMaxSize)
+}
+
+func serializeTuneZlibOptions(p parser.Parser, options *models.TuneZlibOptions) error {
+	if options == nil {
+		options = &models.TuneZlibOptions{}
+	}
+	if err := serializeInt64Option(p, "tune.zlib.memlevel", options.Memlevel); err != nil {
+		return err
+	}
+	return serializeInt64Option(p, "tune.zlib.windowsize", options.Windowsize)
+}
+
+func serializeTuneOptions(p parser.Parser, options *models.TuneOptions, configOptions *options.ConfigurationOptions) error { //nolint:gocognit
+	if options == nil {
+		options = &models.TuneOptions{}
+	}
+	if err := serializeOnOffOption(p, "tune.applet.zero-copy-forwarding", options.AppletZeroCopyForwarding); err != nil {
 		return err
 	}
 	if err := serializeInt64Option(p, "tune.comp.maxlevel", options.CompMaxlevel); err != nil {
@@ -2552,37 +3504,13 @@ func serializeTuneOptions(p parser.Parser, options *models.GlobalTuneOptions, op
 	if err := serializeOnOffOption(p, "tune.idle-pool.shared", options.IdlePoolShared); err != nil {
 		return err
 	}
-	if err := serializeTimeoutOption(p, "tune.idletimer", options.Idletimer, opt); err != nil {
+	if err := serializeTimeoutOption(p, "tune.idletimer", options.Idletimer, configOptions); err != nil {
 		return err
 	}
 	if err := serializeListenerDefaultShards(p, "tune.listener.default-shards", options.ListenerDefaultShards); err != nil {
 		return err
 	}
 	if err := serializeOnOffOption(p, "tune.listener.multi-queue", options.ListenerMultiQueue); err != nil {
-		return err
-	}
-	if err := serializeInt64Option(p, "tune.lua.forced-yield", options.LuaForcedYield); err != nil {
-		return err
-	}
-	if err := serializeOnOffOption(p, "tune.lua.log.loggers", options.LuaLogLoggers); err != nil {
-		return err
-	}
-	if err := serializeAutoOnOffOption(p, "tune.lua.log.stderr", options.LuaLogStderr); err != nil {
-		return err
-	}
-	if err := serializeInt64POption(p, "tune.lua.maxmem", options.LuaMaxmem); err != nil {
-		return err
-	}
-	if err := serializeTimeoutOption(p, "tune.lua.session-timeout", options.LuaSessionTimeout, opt); err != nil {
-		return err
-	}
-	if err := serializeTimeoutOption(p, "tune.lua.burst-timeout", options.LuaBurstTimeout, opt); err != nil {
-		return err
-	}
-	if err := serializeTimeoutOption(p, "tune.lua.task-timeout", options.LuaTaskTimeout, opt); err != nil {
-		return err
-	}
-	if err := serializeTimeoutOption(p, "tune.lua.service-timeout", options.LuaServiceTimeout, opt); err != nil {
 		return err
 	}
 	if err := serializeInt64POption(p, "tune.max-checks-per-thread", options.MaxChecksPerThread); err != nil {
@@ -2606,28 +3534,10 @@ func serializeTuneOptions(p parser.Parser, options *models.GlobalTuneOptions, op
 	if err := serializeInt64Option(p, "tune.peers.max-updates-at-once", options.PeersMaxUpdatesAtOnce); err != nil {
 		return err
 	}
-	if err := serializeInt64Option(p, "tune.pipesize", options.Pipesize); err != nil {
-		return err
-	}
 	if err := serializeInt64Option(p, "tune.pool-high-fd-ratio", options.PoolHighFdRatio); err != nil {
 		return err
 	}
 	if err := serializeInt64Option(p, "tune.pool-low-fd-ratio", options.PoolLowFdRatio); err != nil {
-		return err
-	}
-	if err := serializeInt64POption(p, "tune.rcvbuf.backend", options.RcvbufBackend); err != nil {
-		return err
-	}
-	if err := serializeInt64POption(p, "tune.rcvbuf.client", options.RcvbufClient); err != nil {
-		return err
-	}
-	if err := serializeInt64POption(p, "tune.rcvbuf.frontend", options.RcvbufFrontend); err != nil {
-		return err
-	}
-	if err := serializeInt64POption(p, "tune.rcvbuf.server", options.RcvbufServer); err != nil {
-		return err
-	}
-	if err := serializeInt64Option(p, "tune.recv_enough", options.RecvEnough); err != nil {
 		return err
 	}
 	if err := serializeInt64POption(p, "tune.ring.queues", options.RingQueues); err != nil {
@@ -2639,86 +3549,7 @@ func serializeTuneOptions(p parser.Parser, options *models.GlobalTuneOptions, op
 	if err := serializeOnOffOption(p, "tune.sched.low-latency", options.SchedLowLatency); err != nil {
 		return err
 	}
-	if err := serializeInt64POption(p, "tune.sndbuf.backend", options.SndbufBackend); err != nil {
-		return err
-	}
-	if err := serializeInt64POption(p, "tune.sndbuf.client", options.SndbufClient); err != nil {
-		return err
-	}
-	if err := serializeInt64POption(p, "tune.sndbuf.frontend", options.SndbufFrontend); err != nil {
-		return err
-	}
-	if err := serializeInt64POption(p, "tune.sndbuf.server", options.SndbufServer); err != nil {
-		return err
-	}
-	if err := serializeInt64POption(p, "tune.ssl.cachesize", options.SslCachesize); err != nil {
-		return err
-	}
-	if err := serializeBoolOption(p, "tune.ssl.force-private-cache", options.SslForcePrivateCache); err != nil {
-		return err
-	}
-	if err := serializeOnOffOption(p, "tune.ssl.keylog", options.SslKeylog); err != nil {
-		return err
-	}
-	if err := serializeTimeoutOption(p, "tune.ssl.lifetime", options.SslLifetime, opt); err != nil {
-		return err
-	}
-	if err := serializeInt64POption(p, "tune.ssl.maxrecord", options.SslMaxrecord); err != nil {
-		return err
-	}
-	if err := serializeInt64Option(p, "tune.ssl.default-dh-param", options.SslDefaultDhParam); err != nil {
-		return err
-	}
-	if err := serializeInt64Option(p, "tune.ssl.ssl-ctx-cache-size", options.SslCtxCacheSize); err != nil {
-		return err
-	}
-	if err := serializeInt64POption(p, "tune.ssl.capture-buffer-size", options.SslCaptureBufferSize); err != nil {
-		return err
-	}
-	if err := serializeSizeOption(p, "tune.vars.global-max-size", options.VarsGlobalMaxSize); err != nil {
-		return err
-	}
-	if err := serializeSizeOption(p, "tune.vars.proc-max-size", options.VarsProcMaxSize); err != nil {
-		return err
-	}
-	if err := serializeSizeOption(p, "tune.vars.reqres-max-size", options.VarsReqresMaxSize); err != nil {
-		return err
-	}
-	if err := serializeSizeOption(p, "tune.vars.sess-max-size", options.VarsSessMaxSize); err != nil {
-		return err
-	}
-	if err := serializeSizeOption(p, "tune.vars.txn-max-size", options.VarsTxnMaxSize); err != nil {
-		return err
-	}
-	if err := serializeInt64POption(p, "tune.quic.frontend.conn-tx-buffers.limit", options.QuicFrontendConnTxBuffersLimit); err != nil {
-		return err
-	}
-	if err := serializeTimeoutOption(p, "tune.quic.frontend.max-idle-timeout", options.QuicFrontendMaxIdleTimeout, opt); err != nil {
-		return err
-	}
-	if err := serializeInt64POption(p, "tune.quic.frontend.max-streams-bidi", options.QuicFrontendMaxStreamsBidi); err != nil {
-		return err
-	}
-	if err := serializeInt64POption(p, "tune.quic.max-frame-loss", options.QuicMaxFrameLoss); err != nil {
-		return err
-	}
-	if err := serializeInt64POption(p, "tune.quic.reorder-ratio", options.QuicReorderRatio); err != nil {
-		return err
-	}
-	if err := serializeInt64POption(p, "tune.quic.retry-threshold", options.QuicRetryThreshold); err != nil {
-		return err
-	}
-	value := &types.QuicSocketOwner{Owner: options.QuicSocketOwner}
-	if options.QuicSocketOwner == "" {
-		value = nil
-	}
-	if err := p.Set(parser.Global, parser.GlobalSectionName, "tune.quic.socket-owner", value); err != nil {
-		return err
-	}
-	if err := serializeOnOffOption(p, "tune.quic.zero-copy-fwd-send", options.QuicZeroCopyFwdSend); err != nil {
-		return err
-	}
-	if err := serializeInt64Option(p, "tune.zlib.memlevel", options.ZlibMemlevel); err != nil {
+	if err := serializeInt64POption(p, "tune.stick-counters", options.StickCounters); err != nil {
 		return err
 	}
 	if err := serializeOnOffOption(p, "tune.fd.edge-triggered", options.FdEdgeTriggered); err != nil {
@@ -2754,10 +3585,7 @@ func serializeTuneOptions(p parser.Parser, options *models.GlobalTuneOptions, op
 	if err := serializeOnOffOption(p, "tune.h2.zero-copy-fwd-send", options.H2ZeroCopyFwdSend); err != nil {
 		return err
 	}
-	if err := serializeOnOffOption(p, "tune.pt.zero-copy-forwarding", options.PtZeroCopyForwarding); err != nil {
-		return err
-	}
-	return serializeInt64Option(p, "tune.zlib.windowsize", options.ZlibWindowsize)
+	return serializeOnOffOption(p, "tune.pt.zero-copy-forwarding", options.PtZeroCopyForwarding)
 }
 
 func serializeTimeoutOption(p parser.Parser, option string, data *int64, opt *options.ConfigurationOptions) error {
@@ -2819,12 +3647,12 @@ func serializeAutoOnOffOption(p parser.Parser, option, data string) error {
 func serializeListenerDefaultShards(p parser.Parser, option, data string) error {
 	var value *types.StringC
 	switch data {
-	case models.GlobalTuneOptionsListenerDefaultShardsByDashProcess:
-		value = &types.StringC{Value: models.GlobalTuneOptionsListenerDefaultShardsByDashProcess}
-	case models.GlobalTuneOptionsListenerDefaultShardsByDashThread:
-		value = &types.StringC{Value: models.GlobalTuneOptionsListenerDefaultShardsByDashThread}
-	case models.GlobalTuneOptionsListenerDefaultShardsByDashGroup:
-		value = &types.StringC{Value: models.GlobalTuneOptionsListenerDefaultShardsByDashGroup}
+	case models.TuneOptionsListenerDefaultShardsByDashProcess:
+		value = &types.StringC{Value: models.TuneOptionsListenerDefaultShardsByDashProcess}
+	case models.TuneOptionsListenerDefaultShardsByDashThread:
+		value = &types.StringC{Value: models.TuneOptionsListenerDefaultShardsByDashThread}
+	case models.TuneOptionsListenerDefaultShardsByDashGroup:
+		value = &types.StringC{Value: models.TuneOptionsListenerDefaultShardsByDashGroup}
 	default:
 		value = nil
 	}
@@ -2861,672 +3689,6 @@ func serializeInt64POption(p parser.Parser, option string, data *int64) error {
 	return p.Set(parser.Global, parser.GlobalSectionName, option, value)
 }
 
-func parseDeviceAtlasOptions(p parser.Parser) (*models.GlobalDeviceAtlasOptions, error) {
-	options := &models.GlobalDeviceAtlasOptions{}
-	var option string
-	var err error
-
-	option, err = parseStringOption(p, "deviceatlas-json-file")
-	if err != nil {
-		return nil, err
-	}
-	options.JSONFile = option
-
-	option, err = parseStringOption(p, "deviceatlas-log-level")
-	if err != nil {
-		return nil, err
-	}
-	options.LogLevel = option
-
-	option, err = parseStringOption(p, "deviceatlas-separator")
-	if err != nil {
-		return nil, err
-	}
-	options.Separator = option
-
-	option, err = parseStringOption(p, "deviceatlas-properties-cookie")
-	if err != nil {
-		return nil, err
-	}
-	options.PropertiesCookie = option
-
-	return options, nil
-}
-
-func parseFiftyOneDegreesOptions(p parser.Parser) (*models.GlobalFiftyOneDegreesOptions, error) {
-	options := &models.GlobalFiftyOneDegreesOptions{}
-	var option string
-	var optionInt int64
-	var err error
-
-	option, err = parseStringOption(p, "51degrees-data-file")
-	if err != nil {
-		return nil, err
-	}
-	options.DataFile = option
-
-	option, err = parseStringOption(p, "51degrees-property-name-list")
-	if err != nil {
-		return nil, err
-	}
-	options.PropertyNameList = option
-
-	option, err = parseStringOption(p, "51degrees-property-separator")
-	if err != nil {
-		return nil, err
-	}
-	options.PropertySeparator = option
-
-	optionInt, err = parseInt64Option(p, "51degrees-cache-size")
-	if err != nil {
-		return nil, err
-	}
-	options.CacheSize = optionInt
-
-	return options, nil
-}
-
-func parseOcspUpdateOptions(p parser.Parser) (*models.GlobalOcspUpdate, error) {
-	options := &models.GlobalOcspUpdate{}
-	ocspUpdateDisable, err := parseOnOffOption(p, "ocsp-update.disable")
-	if err != nil {
-		return nil, err
-	}
-	switch ocspUpdateDisable {
-	case "disabled":
-		options.Disable = misc.BoolP(false)
-	case "enabled":
-		options.Disable = misc.BoolP(true)
-	default:
-		options.Disable = nil
-	}
-
-	minDelayP, err := parseInt64POption(p, "ocsp-update.mindelay")
-	if err != nil {
-		return nil, err
-	}
-	options.Mindelay = minDelayP
-
-	maxDelayP, err := parseInt64POption(p, "ocsp-update.maxdelay")
-	if err != nil {
-		return nil, err
-	}
-	options.Maxdelay = maxDelayP
-
-	addressPort, err := parseStringOption(p, "ocsp-update.httpproxy")
-	if err != nil {
-		return nil, err
-	}
-	address, port := ParseAddress(addressPort)
-	if address != "" {
-		options.Httpproxy = &models.GlobalOcspUpdateHttpproxy{}
-		options.Httpproxy.Address = address
-		options.Httpproxy.Port = port
-	}
-
-	mode, err := parseOnOffOption(p, "ocsp-update.mode")
-	if err != nil {
-		return nil, err
-	}
-	options.Mode = mode
-
-	return options, nil
-}
-
-func parseHardenOptions(p parser.Parser) (*models.GlobalHarden, error) {
-	options := &models.GlobalHarden{}
-	hardenRejectPrivilgedPortQuic, err := parseOnOffOption(p, "harden.reject-privileged-ports.quic")
-	if err != nil {
-		return nil, err
-	}
-	hardenRejectPrivilgedPortTCP, err := parseOnOffOption(p, "harden.reject-privileged-ports.tcp")
-	if err != nil {
-		return nil, err
-	}
-	if hardenRejectPrivilgedPortQuic != "" || hardenRejectPrivilgedPortTCP != "" {
-		options.RejectPrivilegedPorts = &models.GlobalHardenRejectPrivilegedPorts{}
-		options.RejectPrivilegedPorts.Quic = hardenRejectPrivilgedPortQuic
-		options.RejectPrivilegedPorts.TCP = hardenRejectPrivilgedPortTCP
-	}
-	return options, nil
-}
-
-func parseTuneOptions(p parser.Parser) (*models.GlobalTuneOptions, error) { //nolint:gocognit, gocyclo, cyclop,maintidx
-	options := &models.GlobalTuneOptions{}
-	var intOption int64
-	var intPOption *int64
-	var boolOption bool
-	var strOption string
-	var err error
-
-	strOption, err = parseOnOffOption(p, "tune.applet.zero-copy-forwarding")
-	if err != nil {
-		return nil, err
-	}
-	options.AppletZeroCopyForwarding = strOption
-
-	intPOption, err = parseInt64POption(p, "tune.buffers.limit")
-	if err != nil {
-		return nil, err
-	}
-	options.BuffersLimit = intPOption
-
-	intOption, err = parseInt64Option(p, "tune.buffers.reserve")
-	if err != nil {
-		return nil, err
-	}
-	options.BuffersReserve = intOption
-
-	intOption, err = parseInt64Option(p, "tune.bufsize")
-	if err != nil {
-		return nil, err
-	}
-	options.Bufsize = intOption
-
-	intOption, err = parseInt64Option(p, "tune.comp.maxlevel")
-	if err != nil {
-		return nil, err
-	}
-	options.CompMaxlevel = intOption
-
-	boolOption, err = parseBoolOption(p, "tune.disable-zero-copy-forwarding")
-	if err != nil {
-		return nil, err
-	}
-	options.DisableZeroCopyForwarding = boolOption
-
-	intOption, err = parseInt64Option(p, "tune.events.max-events-at-once")
-	if err != nil {
-		return nil, err
-	}
-	options.EventsMaxEventsAtOnce = intOption
-
-	boolOption, err = parseBoolOption(p, "tune.fail-alloc")
-	if err != nil {
-		return nil, err
-	}
-	options.FailAlloc = boolOption
-
-	intOption, err = parseInt64Option(p, "tune.h2.header-table-size")
-	if err != nil {
-		return nil, err
-	}
-	options.H2HeaderTableSize = intOption
-
-	intPOption, err = parseInt64POption(p, "tune.h2.initial-window-size")
-	if err != nil {
-		return nil, err
-	}
-	options.H2InitialWindowSize = intPOption
-
-	intOption, err = parseInt64Option(p, "tune.h2.max-concurrent-streams")
-	if err != nil {
-		return nil, err
-	}
-	options.H2MaxConcurrentStreams = intOption
-
-	intOption, err = parseInt64Option(p, "tune.h2.max-frame-size")
-	if err != nil {
-		return nil, err
-	}
-	options.H2MaxFrameSize = intOption
-
-	intOption, err = parseInt64Option(p, "tune.http.cookielen")
-	if err != nil {
-		return nil, err
-	}
-	options.HTTPCookielen = intOption
-
-	intOption, err = parseInt64Option(p, "tune.http.logurilen")
-	if err != nil {
-		return nil, err
-	}
-	options.HTTPLogurilen = intOption
-
-	intOption, err = parseInt64Option(p, "tune.http.maxhdr")
-	if err != nil {
-		return nil, err
-	}
-	options.HTTPMaxhdr = intOption
-
-	strOption, err = parseOnOffOption(p, "tune.idle-pool.shared")
-	if err != nil {
-		return nil, err
-	}
-	options.IdlePoolShared = strOption
-
-	strOption, err = parseStringOption(p, "tune.idletimer")
-	if err != nil {
-		return nil, err
-	}
-	options.Idletimer = misc.ParseTimeout(strOption)
-
-	strOption, err = parseListenerDefaultShards(p, "tune.listener.default-shards")
-	if err != nil {
-		return nil, err
-	}
-	options.ListenerDefaultShards = strOption
-
-	strOption, err = parseOnOffOption(p, "tune.listener.multi-queue")
-	if err != nil {
-		return nil, err
-	}
-	options.ListenerMultiQueue = strOption
-
-	intOption, err = parseInt64Option(p, "tune.lua.forced-yield")
-	if err != nil {
-		return nil, err
-	}
-	options.LuaForcedYield = intOption
-
-	intPOption, err = parseInt64POption(p, "tune.lua.maxmem")
-	if err != nil {
-		return nil, err
-	}
-	options.LuaMaxmem = intPOption
-
-	strOption, err = parseOnOffOption(p, "tune.lua.log.loggers")
-	if err != nil {
-		return nil, err
-	}
-	options.LuaLogLoggers = strOption
-
-	strOption, err = parseAutoOnOffOption(p, "tune.lua.log.stderr")
-	if err != nil {
-		return nil, err
-	}
-	options.LuaLogStderr = strOption
-
-	strOption, err = parseStringOption(p, "tune.lua.session-timeout")
-	if err != nil {
-		return nil, err
-	}
-	options.LuaSessionTimeout = misc.ParseTimeout(strOption)
-
-	strOption, err = parseStringOption(p, "tune.lua.burst-timeout")
-	if err != nil {
-		return nil, err
-	}
-	options.LuaBurstTimeout = misc.ParseTimeout(strOption)
-
-	strOption, err = parseStringOption(p, "tune.lua.task-timeout")
-	if err != nil {
-		return nil, err
-	}
-	options.LuaTaskTimeout = misc.ParseTimeout(strOption)
-
-	strOption, err = parseStringOption(p, "tune.lua.service-timeout")
-	if err != nil {
-		return nil, err
-	}
-	options.LuaServiceTimeout = misc.ParseTimeout(strOption)
-
-	intPOption, err = parseInt64POption(p, "tune.max-checks-per-thread")
-	if err != nil {
-		return nil, err
-	}
-	options.MaxChecksPerThread = intPOption
-
-	intOption, err = parseInt64Option(p, "tune.maxaccept")
-	if err != nil {
-		return nil, err
-	}
-	options.Maxaccept = intOption
-
-	intOption, err = parseInt64Option(p, "tune.maxpollevents")
-	if err != nil {
-		return nil, err
-	}
-	options.Maxpollevents = intOption
-
-	intOption, err = parseInt64Option(p, "tune.maxrewrite")
-	if err != nil {
-		return nil, err
-	}
-	options.Maxrewrite = intOption
-
-	intPOption, err = parseInt64POption(p, "tune.memory.hot-size")
-	if err != nil {
-		return nil, err
-	}
-	options.MemoryHotSize = intPOption
-
-	intPOption, err = parseInt64POption(p, "tune.pattern.cache-size")
-	if err != nil {
-		return nil, err
-	}
-	options.PatternCacheSize = intPOption
-
-	intOption, err = parseInt64Option(p, "tune.peers.max-updates-at-once")
-	if err != nil {
-		return nil, err
-	}
-	options.PeersMaxUpdatesAtOnce = intOption
-
-	intOption, err = parseInt64Option(p, "tune.pipesize")
-	if err != nil {
-		return nil, err
-	}
-	options.Pipesize = intOption
-
-	intOption, err = parseInt64Option(p, "tune.pool-high-fd-ratio")
-	if err != nil {
-		return nil, err
-	}
-	options.PoolHighFdRatio = intOption
-
-	intOption, err = parseInt64Option(p, "tune.pool-low-fd-ratio")
-	if err != nil {
-		return nil, err
-	}
-	options.PoolLowFdRatio = intOption
-
-	intPOption, err = parseInt64POption(p, "tune.rcvbuf.backend")
-	if err != nil {
-		return nil, err
-	}
-	options.RcvbufBackend = intPOption
-
-	intPOption, err = parseInt64POption(p, "tune.rcvbuf.client")
-	if err != nil {
-		return nil, err
-	}
-	options.RcvbufClient = intPOption
-
-	intPOption, err = parseInt64POption(p, "tune.rcvbuf.frontend")
-	if err != nil {
-		return nil, err
-	}
-	options.RcvbufFrontend = intPOption
-
-	intPOption, err = parseInt64POption(p, "tune.rcvbuf.server")
-	if err != nil {
-		return nil, err
-	}
-	options.RcvbufServer = intPOption
-
-	intOption, err = parseInt64Option(p, "tune.recv_enough")
-	if err != nil {
-		return nil, err
-	}
-	options.RecvEnough = intOption
-
-	intPOption, err = parseInt64POption(p, "tune.ring.queues")
-	if err != nil {
-		return nil, err
-	}
-	options.RingQueues = intPOption
-
-	intOption, err = parseInt64Option(p, "tune.runqueue-depth")
-	if err != nil {
-		return nil, err
-	}
-	options.RunqueueDepth = intOption
-
-	strOption, err = parseOnOffOption(p, "tune.sched.low-latency")
-	if err != nil {
-		return nil, err
-	}
-	options.SchedLowLatency = strOption
-
-	intPOption, err = parseInt64POption(p, "tune.sndbuf.backend")
-	if err != nil {
-		return nil, err
-	}
-	options.SndbufBackend = intPOption
-
-	intPOption, err = parseInt64POption(p, "tune.sndbuf.client")
-	if err != nil {
-		return nil, err
-	}
-	options.SndbufClient = intPOption
-
-	intPOption, err = parseInt64POption(p, "tune.sndbuf.frontend")
-	if err != nil {
-		return nil, err
-	}
-	options.SndbufFrontend = intPOption
-
-	intPOption, err = parseInt64POption(p, "tune.sndbuf.server")
-	if err != nil {
-		return nil, err
-	}
-	options.SndbufServer = intPOption
-
-	intPOption, err = parseInt64POption(p, "tune.ssl.cachesize")
-	if err != nil {
-		return nil, err
-	}
-	options.SslCachesize = intPOption
-
-	boolOption, err = parseBoolOption(p, "tune.ssl.force-private-cache")
-	if err != nil {
-		return nil, err
-	}
-	options.SslForcePrivateCache = boolOption
-
-	strOption, err = parseOnOffOption(p, "tune.ssl.keylog")
-	if err != nil {
-		return nil, err
-	}
-	options.SslKeylog = strOption
-
-	strOption, err = parseStringOption(p, "tune.ssl.lifetime")
-	if err != nil {
-		return nil, err
-	}
-	options.SslLifetime = misc.ParseTimeout(strOption)
-
-	intPOption, err = parseInt64POption(p, "tune.ssl.maxrecord")
-	if err != nil {
-		return nil, err
-	}
-	options.SslMaxrecord = intPOption
-
-	intOption, err = parseInt64Option(p, "tune.ssl.default-dh-param")
-	if err != nil {
-		return nil, err
-	}
-	options.SslDefaultDhParam = intOption
-
-	intOption, err = parseInt64Option(p, "tune.ssl.ssl-ctx-cache-size")
-	if err != nil {
-		return nil, err
-	}
-	options.SslCtxCacheSize = intOption
-
-	intPOption, err = parseInt64POption(p, "tune.ssl.capture-buffer-size")
-	if err != nil {
-		return nil, err
-	}
-	options.SslCaptureBufferSize = intPOption
-
-	intPOption, err = parseInt64POption(p, "tune.ssl.ocsp-update.maxdelay")
-	if err != nil {
-		return nil, err
-	}
-	options.SslOcspUpdateMaxDelay = intPOption
-
-	intPOption, err = parseInt64POption(p, "tune.ssl.ocsp-update.mindelay")
-	if err != nil {
-		return nil, err
-	}
-	options.SslOcspUpdateMinDelay = intPOption
-
-	intPOption, err = parseInt64POption(p, "tune.stick-counters")
-	if err != nil {
-		return nil, err
-	}
-	options.StickCounters = intPOption
-
-	strOption, err = parseStringOption(p, "tune.vars.global-max-size")
-	if err != nil {
-		return nil, err
-	}
-	options.VarsGlobalMaxSize = misc.ParseSize(strOption)
-
-	strOption, err = parseStringOption(p, "tune.vars.proc-max-size")
-	if err != nil {
-		return nil, err
-	}
-	options.VarsProcMaxSize = misc.ParseSize(strOption)
-
-	strOption, err = parseStringOption(p, "tune.vars.reqres-max-size")
-	if err != nil {
-		return nil, err
-	}
-	options.VarsReqresMaxSize = misc.ParseSize(strOption)
-
-	strOption, err = parseStringOption(p, "tune.vars.sess-max-size")
-	if err != nil {
-		return nil, err
-	}
-	options.VarsSessMaxSize = misc.ParseSize(strOption)
-
-	strOption, err = parseStringOption(p, "tune.vars.txn-max-size")
-	if err != nil {
-		return nil, err
-	}
-	options.VarsTxnMaxSize = misc.ParseSize(strOption)
-
-	intPOption, err = parseInt64POption(p, "tune.quic.frontend.conn-tx-buffers.limit")
-	if err != nil {
-		return nil, err
-	}
-	options.QuicFrontendConnTxBuffersLimit = intPOption
-
-	strOption, err = parseStringOption(p, "tune.quic.frontend.max-idle-timeout")
-	if err != nil {
-		return nil, err
-	}
-	options.QuicFrontendMaxIdleTimeout = misc.ParseTimeout(strOption)
-
-	intPOption, err = parseInt64POption(p, "tune.quic.frontend.max-streams-bidi")
-	if err != nil {
-		return nil, err
-	}
-	options.QuicFrontendMaxStreamsBidi = intPOption
-
-	intPOption, err = parseInt64POption(p, "tune.quic.max-frame-loss")
-	if err != nil {
-		return nil, err
-	}
-	options.QuicMaxFrameLoss = intPOption
-
-	intPOption, err = parseInt64POption(p, "tune.quic.reorder-ratio")
-	if err != nil {
-		return nil, err
-	}
-	options.QuicReorderRatio = intPOption
-
-	intPOption, err = parseInt64POption(p, "tune.quic.retry-threshold")
-	if err != nil {
-		return nil, err
-	}
-	options.QuicRetryThreshold = intPOption
-
-	so, err := p.Get(parser.Global, parser.GlobalSectionName, "tune.quic.socket-owner")
-	if err == nil {
-		value, ok := so.(*types.QuicSocketOwner)
-		if !ok {
-			return nil, misc.CreateTypeAssertError("tune.quic.socket-owner")
-		}
-		options.QuicSocketOwner = value.Owner
-	}
-
-	strOption, err = parseOnOffOption(p, "tune.quic.zero-copy-fwd-send")
-	if err != nil {
-		return nil, err
-	}
-	options.QuicZeroCopyFwdSend = strOption
-
-	intOption, err = parseInt64Option(p, "tune.zlib.memlevel")
-	if err != nil {
-		return nil, err
-	}
-	options.ZlibMemlevel = intOption
-
-	intOption, err = parseInt64Option(p, "tune.zlib.windowsize")
-	if err != nil {
-		return nil, err
-	}
-	options.ZlibWindowsize = intOption
-
-	strOption, err = parseOnOffOption(p, "tune.fd.edge-triggered")
-	if err != nil {
-		return nil, err
-	}
-	options.FdEdgeTriggered = strOption
-
-	strOption, err = parseOnOffOption(p, "tune.h1.zero-copy-fwd-recv")
-	if err != nil {
-		return nil, err
-	}
-	options.H1ZeroCopyFwdRecv = strOption
-
-	strOption, err = parseOnOffOption(p, "tune.h1.zero-copy-fwd-send")
-	if err != nil {
-		return nil, err
-	}
-	options.H1ZeroCopyFwdSend = strOption
-
-	intPOption, err = parseInt64POption(p, "tune.h2.be.glitches-threshold")
-	if err != nil {
-		return nil, err
-	}
-	options.H2BeGlitchesThreshold = intPOption
-
-	intOption, err = parseInt64Option(p, "tune.h2.be.initial-window-size")
-	if err != nil {
-		return nil, err
-	}
-	options.H2BeInitialWindowSize = intOption
-
-	intOption, err = parseInt64Option(p, "tune.h2.be.max-concurrent-streams")
-	if err != nil {
-		return nil, err
-	}
-	options.H2BeMaxConcurrentStreams = intOption
-
-	intPOption, err = parseInt64POption(p, "tune.h2.fe.glitches-threshold")
-	if err != nil {
-		return nil, err
-	}
-	options.H2FeGlitchesThreshold = intPOption
-
-	intOption, err = parseInt64Option(p, "tune.h2.fe.initial-window-size")
-	if err != nil {
-		return nil, err
-	}
-	options.H2FeInitialWindowSize = intOption
-
-	intOption, err = parseInt64Option(p, "tune.h2.fe.max-concurrent-streams")
-	if err != nil {
-		return nil, err
-	}
-	options.H2FeMaxConcurrentStreams = intOption
-
-	intPOption, err = parseInt64POption(p, "tune.h2.fe.max-total-streams")
-	if err != nil {
-		return nil, err
-	}
-	options.H2FeMaxTotalStreams = intPOption
-
-	strOption, err = parseOnOffOption(p, "tune.h2.zero-copy-fwd-send")
-	if err != nil {
-		return nil, err
-	}
-	options.H2ZeroCopyFwdSend = strOption
-
-	strOption, err = parseOnOffOption(p, "tune.pt.zero-copy-forwarding")
-	if err != nil {
-		return nil, err
-	}
-	options.PtZeroCopyForwarding = strOption
-
-	return options, nil
-}
-
 func parseStringOption(p parser.Parser, option string) (string, error) {
 	data, err := p.Get(parser.Global, parser.GlobalSectionName, option)
 	if err == nil {
@@ -3557,7 +3719,36 @@ func parseInt64Option(p parser.Parser, option string) (int64, error) {
 	return 0, err
 }
 
-//nolint:nilnil
+func parseTimeoutOption(p parser.Parser, option string) (*int64, error) {
+	data, err := p.Get(parser.Global, parser.GlobalSectionName, option)
+	if err == nil {
+		value, ok := data.(*types.StringC)
+		if !ok {
+			return nil, misc.CreateTypeAssertError(option)
+		}
+		return misc.ParseTimeout(value.Value), nil
+	}
+	if errors.Is(err, parser_errors.ErrFetch) {
+		return nil, nil //nolint:nilnil
+	}
+	return nil, err
+}
+
+func parseSizeOption(p parser.Parser, option string) (*int64, error) {
+	data, err := p.Get(parser.Global, parser.GlobalSectionName, option)
+	if err == nil {
+		value, ok := data.(*types.StringC)
+		if !ok {
+			return nil, misc.CreateTypeAssertError(option)
+		}
+		return misc.ParseSize(value.Value), nil
+	}
+	if errors.Is(err, parser_errors.ErrFetch) {
+		return nil, nil //nolint:nilnil
+	}
+	return nil, err
+}
+
 func parseInt64POption(p parser.Parser, option string) (*int64, error) {
 	data, err := p.Get(parser.Global, parser.GlobalSectionName, option)
 	if err == nil {
@@ -3568,7 +3759,7 @@ func parseInt64POption(p parser.Parser, option string) (*int64, error) {
 		return misc.Int64P(int(value.Value)), nil
 	}
 	if errors.Is(err, parser_errors.ErrFetch) {
-		return nil, nil
+		return nil, nil //nolint:nilnil
 	}
 	return nil, err
 }
@@ -3638,12 +3829,12 @@ func parseListenerDefaultShards(p parser.Parser, option string) (string, error) 
 			return "", misc.CreateTypeAssertError(option)
 		}
 		switch value.Value {
-		case models.GlobalTuneOptionsListenerDefaultShardsByDashProcess:
-			return models.GlobalTuneOptionsListenerDefaultShardsByDashProcess, nil
-		case models.GlobalTuneOptionsListenerDefaultShardsByDashThread:
-			return models.GlobalTuneOptionsListenerDefaultShardsByDashThread, nil
-		case models.GlobalTuneOptionsListenerDefaultShardsByDashGroup:
-			return models.GlobalTuneOptionsListenerDefaultShardsByDashGroup, nil
+		case models.TuneOptionsListenerDefaultShardsByDashProcess:
+			return models.TuneOptionsListenerDefaultShardsByDashProcess, nil
+		case models.TuneOptionsListenerDefaultShardsByDashThread:
+			return models.TuneOptionsListenerDefaultShardsByDashThread, nil
+		case models.TuneOptionsListenerDefaultShardsByDashGroup:
+			return models.TuneOptionsListenerDefaultShardsByDashGroup, nil
 		default:
 			return "", fmt.Errorf("unsupported value for %s: %s", option, value.Value)
 		}

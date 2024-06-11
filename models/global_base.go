@@ -44,14 +44,8 @@ type GlobalBase struct {
 	// h1 case adjusts
 	H1CaseAdjusts []*H1CaseAdjust `json:"h1_case_adjust,omitempty"`
 
-	// preset envs
-	PresetEnvs []*PresetEnv `json:"presetenv,omitempty"`
-
 	// runtime a p is
 	RuntimeAPIs []*RuntimeAPI `json:"runtime_apis,omitempty"`
-
-	// set envs
-	SetEnvs []*SetEnv `json:"setenv,omitempty"`
 
 	// set var fmts
 	SetVarFmts []*SetVarFmt `json:"set_var_fmt,omitempty"`
@@ -59,24 +53,8 @@ type GlobalBase struct {
 	// set vars
 	SetVars []*SetVar `json:"set_var,omitempty"`
 
-	// ssl engines
-	SslEngines []*SslEngine `json:"ssl_engines,omitempty"`
-
 	// thread group lines
 	ThreadGroupLines []*ThreadGroup `json:"thread_group_lines,omitempty"`
-
-	// anonkey
-	// Maximum: 4.294967295e+09
-	// Minimum: 0
-	// +kubebuilder:validation:Maximum=4.294967295e+09
-	// +kubebuilder:validation:Minimum=0
-	Anonkey *int64 `json:"anonkey,omitempty"`
-
-	// busy polling
-	BusyPolling bool `json:"busy_polling,omitempty"`
-
-	// ca base
-	CaBase string `json:"ca_base,omitempty"`
 
 	// chroot
 	// Pattern: ^[^\s]+$
@@ -91,13 +69,11 @@ type GlobalBase struct {
 	// cluster secret
 	ClusterSecret string `json:"cluster_secret,omitempty"`
 
-	// crt base
-	CrtBase string `json:"crt_base,omitempty"`
-
 	// daemon
-	// Enum: [enabled disabled]
-	// +kubebuilder:validation:Enum=enabled;disabled;
-	Daemon string `json:"daemon,omitempty"`
+	Daemon bool `json:"daemon,omitempty"`
+
+	// debug options
+	DebugOptions *DebugOptions `json:"debug_options,omitempty"`
 
 	// default path
 	DefaultPath *GlobalDefaultPath `json:"default_path,omitempty"`
@@ -106,7 +82,10 @@ type GlobalBase struct {
 	Description string `json:"description,omitempty"`
 
 	// device atlas options
-	DeviceAtlasOptions *GlobalDeviceAtlasOptions `json:"device_atlas_options,omitempty"`
+	DeviceAtlasOptions *DeviceAtlasOptions `json:"device_atlas_options,omitempty"`
+
+	// environment options
+	EnvironmentOptions *EnvironmentOptions `json:"environment_options,omitempty"`
 
 	// expose experimental directives
 	ExposeExperimentalDirectives bool `json:"expose_experimental_directives,omitempty"`
@@ -115,7 +94,7 @@ type GlobalBase struct {
 	ExternalCheck bool `json:"external_check,omitempty"`
 
 	// fifty one degrees options
-	FiftyOneDegreesOptions *GlobalFiftyOneDegreesOptions `json:"fifty_one_degrees_options,omitempty"`
+	FiftyOneDegreesOptions *FiftyOneDegreesOptions `json:"fifty_one_degrees_options,omitempty"`
 
 	// gid
 	Gid int64 `json:"gid,omitempty"`
@@ -144,49 +123,20 @@ type GlobalBase struct {
 	// harden
 	Harden *GlobalHarden `json:"harden,omitempty"`
 
+	// http client options
+	HTTPClientOptions *HTTPClientOptions `json:"http_client_options,omitempty"`
+
 	// http err codes
 	HTTPErrCodes []*HTTPCodes `json:"http_err_codes,omitempty"`
 
 	// http fail codes
 	HTTPFailCodes []*HTTPCodes `json:"http_fail_codes,omitempty"`
 
-	// httpclient resolvers disabled
-	// Enum: [enabled disabled]
-	// +kubebuilder:validation:Enum=enabled;disabled;
-	HttpclientResolversDisabled string `json:"httpclient_resolvers_disabled,omitempty"`
-
-	// httpclient resolvers id
-	HttpclientResolversID string `json:"httpclient_resolvers_id,omitempty"`
-
-	// httpclient resolvers prefer
-	// Enum: [ipv4 ipv6]
-	// +kubebuilder:validation:Enum=ipv4;ipv6;
-	HttpclientResolversPrefer string `json:"httpclient_resolvers_prefer,omitempty"`
-
-	// httpclient retries
-	HttpclientRetries int64 `json:"httpclient_retries,omitempty"`
-
-	// httpclient ssl ca file
-	HttpclientSslCaFile string `json:"httpclient_ssl_ca_file,omitempty"`
-
-	// httpclient ssl verify
-	// Enum: [ none required]
-	// +kubebuilder:validation:Enum="";none;required;
-	HttpclientSslVerify *string `json:"httpclient_ssl_verify,omitempty"`
-
-	// httpclient timeout connect
-	// Minimum: 0
-	// +kubebuilder:validation:Minimum=0
-	HttpclientTimeoutConnect *int64 `json:"httpclient_timeout_connect,omitempty"`
-
 	// insecure fork wanted
 	InsecureForkWanted bool `json:"insecure_fork_wanted,omitempty"`
 
 	// insecure setuid wanted
 	InsecureSetuidWanted bool `json:"insecure_setuid_wanted,omitempty"`
-
-	// issuers chain path
-	IssuersChainPath string `json:"issuers_chain_path,omitempty"`
 
 	// limited quic
 	LimitedQuic bool `json:"limited_quic,omitempty"`
@@ -199,49 +149,11 @@ type GlobalBase struct {
 	// log send hostname
 	LogSendHostname *GlobalLogSendHostname `json:"log_send_hostname,omitempty"`
 
-	// lua load per thread
-	LuaLoadPerThread string `json:"lua_load_per_thread,omitempty"`
-
-	// lua loads
-	LuaLoads []*LuaLoad `json:"lua_loads,omitempty"`
-
-	// lua prepend path
-	LuaPrependPath []*LuaPrependPath `json:"lua_prepend_path,omitempty"`
+	// lua options
+	LuaOptions *LuaOptions `json:"lua_options,omitempty"`
 
 	// master worker
 	MasterWorker bool `json:"master-worker,omitempty"`
-
-	// max spread checks
-	// Minimum: 0
-	// +kubebuilder:validation:Minimum=0
-	MaxSpreadChecks *int64 `json:"max_spread_checks,omitempty"`
-
-	// maxcompcpuusage
-	Maxcompcpuusage int64 `json:"maxcompcpuusage,omitempty"`
-
-	// maxcomprate
-	Maxcomprate int64 `json:"maxcomprate,omitempty"`
-
-	// maxconn
-	Maxconn int64 `json:"maxconn,omitempty"`
-
-	// maxconnrate
-	Maxconnrate int64 `json:"maxconnrate,omitempty"`
-
-	// maxpipes
-	Maxpipes int64 `json:"maxpipes,omitempty"`
-
-	// maxsessrate
-	Maxsessrate int64 `json:"maxsessrate,omitempty"`
-
-	// maxsslconn
-	Maxsslconn int64 `json:"maxsslconn,omitempty"`
-
-	// maxsslrate
-	Maxsslrate int64 `json:"maxsslrate,omitempty"`
-
-	// maxzlibmem
-	Maxzlibmem int64 `json:"maxzlibmem,omitempty"`
 
 	// mworker max reloads
 	// Minimum: 0
@@ -252,39 +164,21 @@ type GlobalBase struct {
 	Nbthread int64 `json:"nbthread,omitempty"`
 
 	// no quic
-	NoQuic bool `json:"no-quic,omitempty"`
+	NoQuic bool `json:"no_quic,omitempty"`
 
 	// node
 	Node string `json:"node,omitempty"`
-
-	// noepoll
-	Noepoll bool `json:"noepoll,omitempty"`
-
-	// noevports
-	Noevports bool `json:"noevports,omitempty"`
-
-	// nogetaddrinfo
-	Nogetaddrinfo bool `json:"nogetaddrinfo,omitempty"`
-
-	// nokqueue
-	Nokqueue bool `json:"nokqueue,omitempty"`
-
-	// nopoll
-	Nopoll bool `json:"nopoll,omitempty"`
-
-	// noreuseport
-	Noreuseport bool `json:"noreuseport,omitempty"`
-
-	// nosplice
-	Nosplice bool `json:"nosplice,omitempty"`
 
 	// numa cpu mapping
 	// Enum: [enabled disabled]
 	// +kubebuilder:validation:Enum=enabled;disabled;
 	NumaCPUMapping string `json:"numa_cpu_mapping,omitempty"`
 
-	// ocsp update
-	OcspUpdate *GlobalOcspUpdate `json:"ocsp_update,omitempty"`
+	// ocsp update options
+	OcspUpdateOptions *OcspUpdateOptions `json:"ocsp_update_options,omitempty"`
+
+	// performance options
+	PerformanceOptions *PerformanceOptions `json:"performance_options,omitempty"`
 
 	// pidfile
 	Pidfile string `json:"pidfile,omitempty"`
@@ -293,33 +187,7 @@ type GlobalBase struct {
 	Pp2NeverSendLocal bool `json:"pp2_never_send_local,omitempty"`
 
 	// prealloc fd
-	PreallocFd bool `json:"prealloc-fd,omitempty"`
-
-	// profiling memory
-	// Enum: [enabled disabled]
-	// +kubebuilder:validation:Enum=enabled;disabled;
-	ProfilingMemory string `json:"profiling_memory,omitempty"`
-
-	// profiling tasks
-	// Enum: [auto enabled disabled]
-	// +kubebuilder:validation:Enum=auto;enabled;disabled;
-	ProfilingTasks string `json:"profiling_tasks,omitempty"`
-
-	// quiet
-	Quiet bool `json:"quiet,omitempty"`
-
-	// resetenv
-	Resetenv string `json:"resetenv,omitempty"`
-
-	// server state base
-	// Pattern: ^[^\s]+$
-	// +kubebuilder:validation:Pattern=`^[^\s]+$`
-	ServerStateBase string `json:"server_state_base,omitempty"`
-
-	// server state file
-	// Pattern: ^[^\s]+$
-	// +kubebuilder:validation:Pattern=`^[^\s]+$`
-	ServerStateFile string `json:"server_state_file,omitempty"`
+	PreallocFd bool `json:"prealloc_fd,omitempty"`
 
 	// set dumpable
 	SetDumpable bool `json:"set_dumpable,omitempty"`
@@ -329,79 +197,8 @@ type GlobalBase struct {
 	// +kubebuilder:validation:Pattern=`^[^\s]+$`
 	Setcap string `json:"setcap,omitempty"`
 
-	// spread checks
-	SpreadChecks int64 `json:"spread_checks,omitempty"`
-
-	// ssl default bind ciphers
-	SslDefaultBindCiphers string `json:"ssl_default_bind_ciphers,omitempty"`
-
-	// ssl default bind ciphersuites
-	SslDefaultBindCiphersuites string `json:"ssl_default_bind_ciphersuites,omitempty"`
-
-	// ssl default bind client sigalgs
-	SslDefaultBindClientSigalgs string `json:"ssl_default_bind_client_sigalgs,omitempty"`
-
-	// ssl default bind curves
-	SslDefaultBindCurves string `json:"ssl_default_bind_curves,omitempty"`
-
-	// ssl default bind options
-	SslDefaultBindOptions string `json:"ssl_default_bind_options,omitempty"`
-
-	// ssl default bind sigalgs
-	SslDefaultBindSigalgs string `json:"ssl_default_bind_sigalgs,omitempty"`
-
-	// ssl default server ciphers
-	SslDefaultServerCiphers string `json:"ssl_default_server_ciphers,omitempty"`
-
-	// ssl default server ciphersuites
-	SslDefaultServerCiphersuites string `json:"ssl_default_server_ciphersuites,omitempty"`
-
-	// ssl default server client sigalgs
-	SslDefaultServerClientSigalgs string `json:"ssl_default_server_client_sigalgs,omitempty"`
-
-	// ssl default server curves
-	SslDefaultServerCurves string `json:"ssl_default_server_curves,omitempty"`
-
-	// ssl default server options
-	SslDefaultServerOptions string `json:"ssl_default_server_options,omitempty"`
-
-	// ssl default server sigalgs
-	SslDefaultServerSigalgs string `json:"ssl_default_server_sigalgs,omitempty"`
-
-	// ssl dh param file
-	SslDhParamFile string `json:"ssl_dh_param_file,omitempty"`
-
-	// ssl load extra files
-	SslLoadExtraFiles string `json:"ssl_load_extra_files,omitempty"`
-
-	// ssl mode async
-	// Enum: [enabled disabled]
-	// +kubebuilder:validation:Enum=enabled;disabled;
-	SslModeAsync string `json:"ssl_mode_async,omitempty"`
-
-	// ssl propquery
-	SslPropquery string `json:"ssl_propquery,omitempty"`
-
-	// ssl provider
-	SslProvider string `json:"ssl_provider,omitempty"`
-
-	// ssl provider path
-	SslProviderPath string `json:"ssl_provider_path,omitempty"`
-
-	// ssl security level
-	// Maximum: 5
-	// Minimum: 0
-	// +kubebuilder:validation:Maximum=5
-	// +kubebuilder:validation:Minimum=0
-	SslSecurityLevel *int64 `json:"ssl_security_level,omitempty"`
-
-	// ssl server verify
-	// Enum: [none required]
-	// +kubebuilder:validation:Enum=none;required;
-	SslServerVerify string `json:"ssl_server_verify,omitempty"`
-
-	// ssl skip self issued ca
-	SslSkipSelfIssuedCa bool `json:"ssl_skip_self_issued_ca,omitempty"`
+	// ssl options
+	SslOptions *SslOptions `json:"ssl_options,omitempty"`
 
 	// stats maxconn
 	StatsMaxconn *int64 `json:"stats_maxconn,omitempty"`
@@ -417,11 +214,26 @@ type GlobalBase struct {
 	// thread groups
 	ThreadGroups int64 `json:"thread_groups,omitempty"`
 
-	// thread hard limit
-	ThreadHardLimit *int64 `json:"thread_hard_limit,omitempty"`
+	// tune buffer options
+	TuneBufferOptions *TuneBufferOptions `json:"tune_buffer_options,omitempty"`
+
+	// tune lua options
+	TuneLuaOptions *TuneLuaOptions `json:"tune_lua_options,omitempty"`
 
 	// tune options
-	TuneOptions *GlobalTuneOptions `json:"tune_options,omitempty"`
+	TuneOptions *TuneOptions `json:"tune_options,omitempty"`
+
+	// tune quic options
+	TuneQuicOptions *TuneQuicOptions `json:"tune_quic_options,omitempty"`
+
+	// tune ssl options
+	TuneSslOptions *TuneSslOptions `json:"tune_ssl_options,omitempty"`
+
+	// tune vars options
+	TuneVarsOptions *TuneVarsOptions `json:"tune_vars_options,omitempty"`
+
+	// tune zlib options
+	TuneZlibOptions *TuneZlibOptions `json:"tune_zlib_options,omitempty"`
 
 	// uid
 	UID int64 `json:"uid,omitempty"`
@@ -429,19 +241,13 @@ type GlobalBase struct {
 	// ulimit n
 	Ulimitn int64 `json:"ulimit_n,omitempty"`
 
-	// unsetenv
-	Unsetenv string `json:"unsetenv,omitempty"`
-
 	// user
 	// Pattern: ^[^\s]+$
 	// +kubebuilder:validation:Pattern=`^[^\s]+$`
 	User string `json:"user,omitempty"`
 
 	// wurfl options
-	WurflOptions *GlobalWurflOptions `json:"wurfl_options,omitempty"`
-
-	// zero warning
-	ZeroWarning bool `json:"zero_warning,omitempty"`
+	WurflOptions *WurflOptions `json:"wurfl_options,omitempty"`
 }
 
 // Validate validates this global base
@@ -456,15 +262,7 @@ func (m *GlobalBase) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
-	if err := m.validatePresetEnvs(formats); err != nil {
-		res = append(res, err)
-	}
-
 	if err := m.validateRuntimeAPIs(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateSetEnvs(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -476,15 +274,7 @@ func (m *GlobalBase) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
-	if err := m.validateSslEngines(formats); err != nil {
-		res = append(res, err)
-	}
-
 	if err := m.validateThreadGroupLines(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateAnonkey(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -496,7 +286,7 @@ func (m *GlobalBase) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
-	if err := m.validateDaemon(formats); err != nil {
+	if err := m.validateDebugOptions(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -505,6 +295,10 @@ func (m *GlobalBase) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateDeviceAtlasOptions(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateEnvironmentOptions(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -528,27 +322,15 @@ func (m *GlobalBase) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
+	if err := m.validateHTTPClientOptions(formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.validateHTTPErrCodes(formats); err != nil {
 		res = append(res, err)
 	}
 
 	if err := m.validateHTTPFailCodes(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateHttpclientResolversDisabled(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateHttpclientResolversPrefer(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateHttpclientSslVerify(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateHttpclientTimeoutConnect(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -560,15 +342,7 @@ func (m *GlobalBase) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
-	if err := m.validateLuaLoads(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateLuaPrependPath(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateMaxSpreadChecks(formats); err != nil {
+	if err := m.validateLuaOptions(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -580,23 +354,11 @@ func (m *GlobalBase) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
-	if err := m.validateOcspUpdate(formats); err != nil {
+	if err := m.validateOcspUpdateOptions(formats); err != nil {
 		res = append(res, err)
 	}
 
-	if err := m.validateProfilingMemory(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateProfilingTasks(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateServerStateBase(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateServerStateFile(formats); err != nil {
+	if err := m.validatePerformanceOptions(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -604,15 +366,7 @@ func (m *GlobalBase) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
-	if err := m.validateSslModeAsync(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateSslSecurityLevel(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateSslServerVerify(formats); err != nil {
+	if err := m.validateSslOptions(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -620,7 +374,31 @@ func (m *GlobalBase) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
+	if err := m.validateTuneBufferOptions(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateTuneLuaOptions(formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.validateTuneOptions(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateTuneQuicOptions(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateTuneSslOptions(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateTuneVarsOptions(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateTuneZlibOptions(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -690,32 +468,6 @@ func (m *GlobalBase) validateH1CaseAdjusts(formats strfmt.Registry) error {
 	return nil
 }
 
-func (m *GlobalBase) validatePresetEnvs(formats strfmt.Registry) error {
-	if swag.IsZero(m.PresetEnvs) { // not required
-		return nil
-	}
-
-	for i := 0; i < len(m.PresetEnvs); i++ {
-		if swag.IsZero(m.PresetEnvs[i]) { // not required
-			continue
-		}
-
-		if m.PresetEnvs[i] != nil {
-			if err := m.PresetEnvs[i].Validate(formats); err != nil {
-				if ve, ok := err.(*errors.Validation); ok {
-					return ve.ValidateName("presetenv" + "." + strconv.Itoa(i))
-				} else if ce, ok := err.(*errors.CompositeError); ok {
-					return ce.ValidateName("presetenv" + "." + strconv.Itoa(i))
-				}
-				return err
-			}
-		}
-
-	}
-
-	return nil
-}
-
 func (m *GlobalBase) validateRuntimeAPIs(formats strfmt.Registry) error {
 	if swag.IsZero(m.RuntimeAPIs) { // not required
 		return nil
@@ -732,32 +484,6 @@ func (m *GlobalBase) validateRuntimeAPIs(formats strfmt.Registry) error {
 					return ve.ValidateName("runtime_apis" + "." + strconv.Itoa(i))
 				} else if ce, ok := err.(*errors.CompositeError); ok {
 					return ce.ValidateName("runtime_apis" + "." + strconv.Itoa(i))
-				}
-				return err
-			}
-		}
-
-	}
-
-	return nil
-}
-
-func (m *GlobalBase) validateSetEnvs(formats strfmt.Registry) error {
-	if swag.IsZero(m.SetEnvs) { // not required
-		return nil
-	}
-
-	for i := 0; i < len(m.SetEnvs); i++ {
-		if swag.IsZero(m.SetEnvs[i]) { // not required
-			continue
-		}
-
-		if m.SetEnvs[i] != nil {
-			if err := m.SetEnvs[i].Validate(formats); err != nil {
-				if ve, ok := err.(*errors.Validation); ok {
-					return ve.ValidateName("setenv" + "." + strconv.Itoa(i))
-				} else if ce, ok := err.(*errors.CompositeError); ok {
-					return ce.ValidateName("setenv" + "." + strconv.Itoa(i))
 				}
 				return err
 			}
@@ -820,32 +546,6 @@ func (m *GlobalBase) validateSetVars(formats strfmt.Registry) error {
 	return nil
 }
 
-func (m *GlobalBase) validateSslEngines(formats strfmt.Registry) error {
-	if swag.IsZero(m.SslEngines) { // not required
-		return nil
-	}
-
-	for i := 0; i < len(m.SslEngines); i++ {
-		if swag.IsZero(m.SslEngines[i]) { // not required
-			continue
-		}
-
-		if m.SslEngines[i] != nil {
-			if err := m.SslEngines[i].Validate(formats); err != nil {
-				if ve, ok := err.(*errors.Validation); ok {
-					return ve.ValidateName("ssl_engines" + "." + strconv.Itoa(i))
-				} else if ce, ok := err.(*errors.CompositeError); ok {
-					return ce.ValidateName("ssl_engines" + "." + strconv.Itoa(i))
-				}
-				return err
-			}
-		}
-
-	}
-
-	return nil
-}
-
 func (m *GlobalBase) validateThreadGroupLines(formats strfmt.Registry) error {
 	if swag.IsZero(m.ThreadGroupLines) { // not required
 		return nil
@@ -867,22 +567,6 @@ func (m *GlobalBase) validateThreadGroupLines(formats strfmt.Registry) error {
 			}
 		}
 
-	}
-
-	return nil
-}
-
-func (m *GlobalBase) validateAnonkey(formats strfmt.Registry) error {
-	if swag.IsZero(m.Anonkey) { // not required
-		return nil
-	}
-
-	if err := validate.MinimumInt("anonkey", "body", *m.Anonkey, 0, false); err != nil {
-		return err
-	}
-
-	if err := validate.MaximumInt("anonkey", "body", *m.Anonkey, 4.294967295e+09, false); err != nil {
-		return err
 	}
 
 	return nil
@@ -912,43 +596,20 @@ func (m *GlobalBase) validateCloseSpreadTime(formats strfmt.Registry) error {
 	return nil
 }
 
-var globalBaseTypeDaemonPropEnum []interface{}
-
-func init() {
-	var res []string
-	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
-		panic(err)
-	}
-	for _, v := range res {
-		globalBaseTypeDaemonPropEnum = append(globalBaseTypeDaemonPropEnum, v)
-	}
-}
-
-const (
-
-	// GlobalBaseDaemonEnabled captures enum value "enabled"
-	GlobalBaseDaemonEnabled string = "enabled"
-
-	// GlobalBaseDaemonDisabled captures enum value "disabled"
-	GlobalBaseDaemonDisabled string = "disabled"
-)
-
-// prop value enum
-func (m *GlobalBase) validateDaemonEnum(path, location string, value string) error {
-	if err := validate.EnumCase(path, location, value, globalBaseTypeDaemonPropEnum, true); err != nil {
-		return err
-	}
-	return nil
-}
-
-func (m *GlobalBase) validateDaemon(formats strfmt.Registry) error {
-	if swag.IsZero(m.Daemon) { // not required
+func (m *GlobalBase) validateDebugOptions(formats strfmt.Registry) error {
+	if swag.IsZero(m.DebugOptions) { // not required
 		return nil
 	}
 
-	// value enum
-	if err := m.validateDaemonEnum("daemon", "body", m.Daemon); err != nil {
-		return err
+	if m.DebugOptions != nil {
+		if err := m.DebugOptions.Validate(formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("debug_options")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("debug_options")
+			}
+			return err
+		}
 	}
 
 	return nil
@@ -984,6 +645,25 @@ func (m *GlobalBase) validateDeviceAtlasOptions(formats strfmt.Registry) error {
 				return ve.ValidateName("device_atlas_options")
 			} else if ce, ok := err.(*errors.CompositeError); ok {
 				return ce.ValidateName("device_atlas_options")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (m *GlobalBase) validateEnvironmentOptions(formats strfmt.Registry) error {
+	if swag.IsZero(m.EnvironmentOptions) { // not required
+		return nil
+	}
+
+	if m.EnvironmentOptions != nil {
+		if err := m.EnvironmentOptions.Validate(formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("environment_options")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("environment_options")
 			}
 			return err
 		}
@@ -1066,6 +746,25 @@ func (m *GlobalBase) validateHarden(formats strfmt.Registry) error {
 	return nil
 }
 
+func (m *GlobalBase) validateHTTPClientOptions(formats strfmt.Registry) error {
+	if swag.IsZero(m.HTTPClientOptions) { // not required
+		return nil
+	}
+
+	if m.HTTPClientOptions != nil {
+		if err := m.HTTPClientOptions.Validate(formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("http_client_options")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("http_client_options")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
 func (m *GlobalBase) validateHTTPErrCodes(formats strfmt.Registry) error {
 	if swag.IsZero(m.HTTPErrCodes) { // not required
 		return nil
@@ -1118,147 +817,6 @@ func (m *GlobalBase) validateHTTPFailCodes(formats strfmt.Registry) error {
 	return nil
 }
 
-var globalBaseTypeHttpclientResolversDisabledPropEnum []interface{}
-
-func init() {
-	var res []string
-	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
-		panic(err)
-	}
-	for _, v := range res {
-		globalBaseTypeHttpclientResolversDisabledPropEnum = append(globalBaseTypeHttpclientResolversDisabledPropEnum, v)
-	}
-}
-
-const (
-
-	// GlobalBaseHttpclientResolversDisabledEnabled captures enum value "enabled"
-	GlobalBaseHttpclientResolversDisabledEnabled string = "enabled"
-
-	// GlobalBaseHttpclientResolversDisabledDisabled captures enum value "disabled"
-	GlobalBaseHttpclientResolversDisabledDisabled string = "disabled"
-)
-
-// prop value enum
-func (m *GlobalBase) validateHttpclientResolversDisabledEnum(path, location string, value string) error {
-	if err := validate.EnumCase(path, location, value, globalBaseTypeHttpclientResolversDisabledPropEnum, true); err != nil {
-		return err
-	}
-	return nil
-}
-
-func (m *GlobalBase) validateHttpclientResolversDisabled(formats strfmt.Registry) error {
-	if swag.IsZero(m.HttpclientResolversDisabled) { // not required
-		return nil
-	}
-
-	// value enum
-	if err := m.validateHttpclientResolversDisabledEnum("httpclient_resolvers_disabled", "body", m.HttpclientResolversDisabled); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-var globalBaseTypeHttpclientResolversPreferPropEnum []interface{}
-
-func init() {
-	var res []string
-	if err := json.Unmarshal([]byte(`["ipv4","ipv6"]`), &res); err != nil {
-		panic(err)
-	}
-	for _, v := range res {
-		globalBaseTypeHttpclientResolversPreferPropEnum = append(globalBaseTypeHttpclientResolversPreferPropEnum, v)
-	}
-}
-
-const (
-
-	// GlobalBaseHttpclientResolversPreferIPV4 captures enum value "ipv4"
-	GlobalBaseHttpclientResolversPreferIPV4 string = "ipv4"
-
-	// GlobalBaseHttpclientResolversPreferIPV6 captures enum value "ipv6"
-	GlobalBaseHttpclientResolversPreferIPV6 string = "ipv6"
-)
-
-// prop value enum
-func (m *GlobalBase) validateHttpclientResolversPreferEnum(path, location string, value string) error {
-	if err := validate.EnumCase(path, location, value, globalBaseTypeHttpclientResolversPreferPropEnum, true); err != nil {
-		return err
-	}
-	return nil
-}
-
-func (m *GlobalBase) validateHttpclientResolversPrefer(formats strfmt.Registry) error {
-	if swag.IsZero(m.HttpclientResolversPrefer) { // not required
-		return nil
-	}
-
-	// value enum
-	if err := m.validateHttpclientResolversPreferEnum("httpclient_resolvers_prefer", "body", m.HttpclientResolversPrefer); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-var globalBaseTypeHttpclientSslVerifyPropEnum []interface{}
-
-func init() {
-	var res []string
-	if err := json.Unmarshal([]byte(`["","none","required"]`), &res); err != nil {
-		panic(err)
-	}
-	for _, v := range res {
-		globalBaseTypeHttpclientSslVerifyPropEnum = append(globalBaseTypeHttpclientSslVerifyPropEnum, v)
-	}
-}
-
-const (
-
-	// GlobalBaseHttpclientSslVerifyEmpty captures enum value ""
-	GlobalBaseHttpclientSslVerifyEmpty string = ""
-
-	// GlobalBaseHttpclientSslVerifyNone captures enum value "none"
-	GlobalBaseHttpclientSslVerifyNone string = "none"
-
-	// GlobalBaseHttpclientSslVerifyRequired captures enum value "required"
-	GlobalBaseHttpclientSslVerifyRequired string = "required"
-)
-
-// prop value enum
-func (m *GlobalBase) validateHttpclientSslVerifyEnum(path, location string, value string) error {
-	if err := validate.EnumCase(path, location, value, globalBaseTypeHttpclientSslVerifyPropEnum, true); err != nil {
-		return err
-	}
-	return nil
-}
-
-func (m *GlobalBase) validateHttpclientSslVerify(formats strfmt.Registry) error {
-	if swag.IsZero(m.HttpclientSslVerify) { // not required
-		return nil
-	}
-
-	// value enum
-	if err := m.validateHttpclientSslVerifyEnum("httpclient_ssl_verify", "body", *m.HttpclientSslVerify); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func (m *GlobalBase) validateHttpclientTimeoutConnect(formats strfmt.Registry) error {
-	if swag.IsZero(m.HttpclientTimeoutConnect) { // not required
-		return nil
-	}
-
-	if err := validate.MinimumInt("httpclient_timeout_connect", "body", *m.HttpclientTimeoutConnect, 0, false); err != nil {
-		return err
-	}
-
-	return nil
-}
-
 func (m *GlobalBase) validateLocalpeer(formats strfmt.Registry) error {
 	if swag.IsZero(m.Localpeer) { // not required
 		return nil
@@ -1290,65 +848,20 @@ func (m *GlobalBase) validateLogSendHostname(formats strfmt.Registry) error {
 	return nil
 }
 
-func (m *GlobalBase) validateLuaLoads(formats strfmt.Registry) error {
-	if swag.IsZero(m.LuaLoads) { // not required
+func (m *GlobalBase) validateLuaOptions(formats strfmt.Registry) error {
+	if swag.IsZero(m.LuaOptions) { // not required
 		return nil
 	}
 
-	for i := 0; i < len(m.LuaLoads); i++ {
-		if swag.IsZero(m.LuaLoads[i]) { // not required
-			continue
-		}
-
-		if m.LuaLoads[i] != nil {
-			if err := m.LuaLoads[i].Validate(formats); err != nil {
-				if ve, ok := err.(*errors.Validation); ok {
-					return ve.ValidateName("lua_loads" + "." + strconv.Itoa(i))
-				} else if ce, ok := err.(*errors.CompositeError); ok {
-					return ce.ValidateName("lua_loads" + "." + strconv.Itoa(i))
-				}
-				return err
+	if m.LuaOptions != nil {
+		if err := m.LuaOptions.Validate(formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("lua_options")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("lua_options")
 			}
+			return err
 		}
-
-	}
-
-	return nil
-}
-
-func (m *GlobalBase) validateLuaPrependPath(formats strfmt.Registry) error {
-	if swag.IsZero(m.LuaPrependPath) { // not required
-		return nil
-	}
-
-	for i := 0; i < len(m.LuaPrependPath); i++ {
-		if swag.IsZero(m.LuaPrependPath[i]) { // not required
-			continue
-		}
-
-		if m.LuaPrependPath[i] != nil {
-			if err := m.LuaPrependPath[i].Validate(formats); err != nil {
-				if ve, ok := err.(*errors.Validation); ok {
-					return ve.ValidateName("lua_prepend_path" + "." + strconv.Itoa(i))
-				} else if ce, ok := err.(*errors.CompositeError); ok {
-					return ce.ValidateName("lua_prepend_path" + "." + strconv.Itoa(i))
-				}
-				return err
-			}
-		}
-
-	}
-
-	return nil
-}
-
-func (m *GlobalBase) validateMaxSpreadChecks(formats strfmt.Registry) error {
-	if swag.IsZero(m.MaxSpreadChecks) { // not required
-		return nil
-	}
-
-	if err := validate.MinimumInt("max_spread_checks", "body", *m.MaxSpreadChecks, 0, false); err != nil {
-		return err
 	}
 
 	return nil
@@ -1408,17 +921,17 @@ func (m *GlobalBase) validateNumaCPUMapping(formats strfmt.Registry) error {
 	return nil
 }
 
-func (m *GlobalBase) validateOcspUpdate(formats strfmt.Registry) error {
-	if swag.IsZero(m.OcspUpdate) { // not required
+func (m *GlobalBase) validateOcspUpdateOptions(formats strfmt.Registry) error {
+	if swag.IsZero(m.OcspUpdateOptions) { // not required
 		return nil
 	}
 
-	if m.OcspUpdate != nil {
-		if err := m.OcspUpdate.Validate(formats); err != nil {
+	if m.OcspUpdateOptions != nil {
+		if err := m.OcspUpdateOptions.Validate(formats); err != nil {
 			if ve, ok := err.(*errors.Validation); ok {
-				return ve.ValidateName("ocsp_update")
+				return ve.ValidateName("ocsp_update_options")
 			} else if ce, ok := err.(*errors.CompositeError); ok {
-				return ce.ValidateName("ocsp_update")
+				return ce.ValidateName("ocsp_update_options")
 			}
 			return err
 		}
@@ -1427,112 +940,20 @@ func (m *GlobalBase) validateOcspUpdate(formats strfmt.Registry) error {
 	return nil
 }
 
-var globalBaseTypeProfilingMemoryPropEnum []interface{}
-
-func init() {
-	var res []string
-	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
-		panic(err)
-	}
-	for _, v := range res {
-		globalBaseTypeProfilingMemoryPropEnum = append(globalBaseTypeProfilingMemoryPropEnum, v)
-	}
-}
-
-const (
-
-	// GlobalBaseProfilingMemoryEnabled captures enum value "enabled"
-	GlobalBaseProfilingMemoryEnabled string = "enabled"
-
-	// GlobalBaseProfilingMemoryDisabled captures enum value "disabled"
-	GlobalBaseProfilingMemoryDisabled string = "disabled"
-)
-
-// prop value enum
-func (m *GlobalBase) validateProfilingMemoryEnum(path, location string, value string) error {
-	if err := validate.EnumCase(path, location, value, globalBaseTypeProfilingMemoryPropEnum, true); err != nil {
-		return err
-	}
-	return nil
-}
-
-func (m *GlobalBase) validateProfilingMemory(formats strfmt.Registry) error {
-	if swag.IsZero(m.ProfilingMemory) { // not required
+func (m *GlobalBase) validatePerformanceOptions(formats strfmt.Registry) error {
+	if swag.IsZero(m.PerformanceOptions) { // not required
 		return nil
 	}
 
-	// value enum
-	if err := m.validateProfilingMemoryEnum("profiling_memory", "body", m.ProfilingMemory); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-var globalBaseTypeProfilingTasksPropEnum []interface{}
-
-func init() {
-	var res []string
-	if err := json.Unmarshal([]byte(`["auto","enabled","disabled"]`), &res); err != nil {
-		panic(err)
-	}
-	for _, v := range res {
-		globalBaseTypeProfilingTasksPropEnum = append(globalBaseTypeProfilingTasksPropEnum, v)
-	}
-}
-
-const (
-
-	// GlobalBaseProfilingTasksAuto captures enum value "auto"
-	GlobalBaseProfilingTasksAuto string = "auto"
-
-	// GlobalBaseProfilingTasksEnabled captures enum value "enabled"
-	GlobalBaseProfilingTasksEnabled string = "enabled"
-
-	// GlobalBaseProfilingTasksDisabled captures enum value "disabled"
-	GlobalBaseProfilingTasksDisabled string = "disabled"
-)
-
-// prop value enum
-func (m *GlobalBase) validateProfilingTasksEnum(path, location string, value string) error {
-	if err := validate.EnumCase(path, location, value, globalBaseTypeProfilingTasksPropEnum, true); err != nil {
-		return err
-	}
-	return nil
-}
-
-func (m *GlobalBase) validateProfilingTasks(formats strfmt.Registry) error {
-	if swag.IsZero(m.ProfilingTasks) { // not required
-		return nil
-	}
-
-	// value enum
-	if err := m.validateProfilingTasksEnum("profiling_tasks", "body", m.ProfilingTasks); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func (m *GlobalBase) validateServerStateBase(formats strfmt.Registry) error {
-	if swag.IsZero(m.ServerStateBase) { // not required
-		return nil
-	}
-
-	if err := validate.Pattern("server_state_base", "body", m.ServerStateBase, `^[^\s]+$`); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func (m *GlobalBase) validateServerStateFile(formats strfmt.Registry) error {
-	if swag.IsZero(m.ServerStateFile) { // not required
-		return nil
-	}
-
-	if err := validate.Pattern("server_state_file", "body", m.ServerStateFile, `^[^\s]+$`); err != nil {
-		return err
+	if m.PerformanceOptions != nil {
+		if err := m.PerformanceOptions.Validate(formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("performance_options")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("performance_options")
+			}
+			return err
+		}
 	}
 
 	return nil
@@ -1550,101 +971,20 @@ func (m *GlobalBase) validateSetcap(formats strfmt.Registry) error {
 	return nil
 }
 
-var globalBaseTypeSslModeAsyncPropEnum []interface{}
-
-func init() {
-	var res []string
-	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
-		panic(err)
-	}
-	for _, v := range res {
-		globalBaseTypeSslModeAsyncPropEnum = append(globalBaseTypeSslModeAsyncPropEnum, v)
-	}
-}
-
-const (
-
-	// GlobalBaseSslModeAsyncEnabled captures enum value "enabled"
-	GlobalBaseSslModeAsyncEnabled string = "enabled"
-
-	// GlobalBaseSslModeAsyncDisabled captures enum value "disabled"
-	GlobalBaseSslModeAsyncDisabled string = "disabled"
-)
-
-// prop value enum
-func (m *GlobalBase) validateSslModeAsyncEnum(path, location string, value string) error {
-	if err := validate.EnumCase(path, location, value, globalBaseTypeSslModeAsyncPropEnum, true); err != nil {
-		return err
-	}
-	return nil
-}
-
-func (m *GlobalBase) validateSslModeAsync(formats strfmt.Registry) error {
-	if swag.IsZero(m.SslModeAsync) { // not required
+func (m *GlobalBase) validateSslOptions(formats strfmt.Registry) error {
+	if swag.IsZero(m.SslOptions) { // not required
 		return nil
 	}
 
-	// value enum
-	if err := m.validateSslModeAsyncEnum("ssl_mode_async", "body", m.SslModeAsync); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func (m *GlobalBase) validateSslSecurityLevel(formats strfmt.Registry) error {
-	if swag.IsZero(m.SslSecurityLevel) { // not required
-		return nil
-	}
-
-	if err := validate.MinimumInt("ssl_security_level", "body", *m.SslSecurityLevel, 0, false); err != nil {
-		return err
-	}
-
-	if err := validate.MaximumInt("ssl_security_level", "body", *m.SslSecurityLevel, 5, false); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-var globalBaseTypeSslServerVerifyPropEnum []interface{}
-
-func init() {
-	var res []string
-	if err := json.Unmarshal([]byte(`["none","required"]`), &res); err != nil {
-		panic(err)
-	}
-	for _, v := range res {
-		globalBaseTypeSslServerVerifyPropEnum = append(globalBaseTypeSslServerVerifyPropEnum, v)
-	}
-}
-
-const (
-
-	// GlobalBaseSslServerVerifyNone captures enum value "none"
-	GlobalBaseSslServerVerifyNone string = "none"
-
-	// GlobalBaseSslServerVerifyRequired captures enum value "required"
-	GlobalBaseSslServerVerifyRequired string = "required"
-)
-
-// prop value enum
-func (m *GlobalBase) validateSslServerVerifyEnum(path, location string, value string) error {
-	if err := validate.EnumCase(path, location, value, globalBaseTypeSslServerVerifyPropEnum, true); err != nil {
-		return err
-	}
-	return nil
-}
-
-func (m *GlobalBase) validateSslServerVerify(formats strfmt.Registry) error {
-	if swag.IsZero(m.SslServerVerify) { // not required
-		return nil
-	}
-
-	// value enum
-	if err := m.validateSslServerVerifyEnum("ssl_server_verify", "body", m.SslServerVerify); err != nil {
-		return err
+	if m.SslOptions != nil {
+		if err := m.SslOptions.Validate(formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("ssl_options")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("ssl_options")
+			}
+			return err
+		}
 	}
 
 	return nil
@@ -1662,6 +1002,44 @@ func (m *GlobalBase) validateStatsTimeout(formats strfmt.Registry) error {
 	return nil
 }
 
+func (m *GlobalBase) validateTuneBufferOptions(formats strfmt.Registry) error {
+	if swag.IsZero(m.TuneBufferOptions) { // not required
+		return nil
+	}
+
+	if m.TuneBufferOptions != nil {
+		if err := m.TuneBufferOptions.Validate(formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("tune_buffer_options")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("tune_buffer_options")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (m *GlobalBase) validateTuneLuaOptions(formats strfmt.Registry) error {
+	if swag.IsZero(m.TuneLuaOptions) { // not required
+		return nil
+	}
+
+	if m.TuneLuaOptions != nil {
+		if err := m.TuneLuaOptions.Validate(formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("tune_lua_options")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("tune_lua_options")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
 func (m *GlobalBase) validateTuneOptions(formats strfmt.Registry) error {
 	if swag.IsZero(m.TuneOptions) { // not required
 		return nil
@@ -1673,6 +1051,82 @@ func (m *GlobalBase) validateTuneOptions(formats strfmt.Registry) error {
 				return ve.ValidateName("tune_options")
 			} else if ce, ok := err.(*errors.CompositeError); ok {
 				return ce.ValidateName("tune_options")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (m *GlobalBase) validateTuneQuicOptions(formats strfmt.Registry) error {
+	if swag.IsZero(m.TuneQuicOptions) { // not required
+		return nil
+	}
+
+	if m.TuneQuicOptions != nil {
+		if err := m.TuneQuicOptions.Validate(formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("tune_quic_options")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("tune_quic_options")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (m *GlobalBase) validateTuneSslOptions(formats strfmt.Registry) error {
+	if swag.IsZero(m.TuneSslOptions) { // not required
+		return nil
+	}
+
+	if m.TuneSslOptions != nil {
+		if err := m.TuneSslOptions.Validate(formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("tune_ssl_options")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("tune_ssl_options")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (m *GlobalBase) validateTuneVarsOptions(formats strfmt.Registry) error {
+	if swag.IsZero(m.TuneVarsOptions) { // not required
+		return nil
+	}
+
+	if m.TuneVarsOptions != nil {
+		if err := m.TuneVarsOptions.Validate(formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("tune_vars_options")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("tune_vars_options")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (m *GlobalBase) validateTuneZlibOptions(formats strfmt.Registry) error {
+	if swag.IsZero(m.TuneZlibOptions) { // not required
+		return nil
+	}
+
+	if m.TuneZlibOptions != nil {
+		if err := m.TuneZlibOptions.Validate(formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("tune_zlib_options")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("tune_zlib_options")
 			}
 			return err
 		}
@@ -1724,15 +1178,7 @@ func (m *GlobalBase) ContextValidate(ctx context.Context, formats strfmt.Registr
 		res = append(res, err)
 	}
 
-	if err := m.contextValidatePresetEnvs(ctx, formats); err != nil {
-		res = append(res, err)
-	}
-
 	if err := m.contextValidateRuntimeAPIs(ctx, formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.contextValidateSetEnvs(ctx, formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -1744,11 +1190,11 @@ func (m *GlobalBase) ContextValidate(ctx context.Context, formats strfmt.Registr
 		res = append(res, err)
 	}
 
-	if err := m.contextValidateSslEngines(ctx, formats); err != nil {
+	if err := m.contextValidateThreadGroupLines(ctx, formats); err != nil {
 		res = append(res, err)
 	}
 
-	if err := m.contextValidateThreadGroupLines(ctx, formats); err != nil {
+	if err := m.contextValidateDebugOptions(ctx, formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -1760,11 +1206,19 @@ func (m *GlobalBase) ContextValidate(ctx context.Context, formats strfmt.Registr
 		res = append(res, err)
 	}
 
+	if err := m.contextValidateEnvironmentOptions(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.contextValidateFiftyOneDegreesOptions(ctx, formats); err != nil {
 		res = append(res, err)
 	}
 
 	if err := m.contextValidateHarden(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.contextValidateHTTPClientOptions(ctx, formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -1780,19 +1234,47 @@ func (m *GlobalBase) ContextValidate(ctx context.Context, formats strfmt.Registr
 		res = append(res, err)
 	}
 
-	if err := m.contextValidateLuaLoads(ctx, formats); err != nil {
+	if err := m.contextValidateLuaOptions(ctx, formats); err != nil {
 		res = append(res, err)
 	}
 
-	if err := m.contextValidateLuaPrependPath(ctx, formats); err != nil {
+	if err := m.contextValidateOcspUpdateOptions(ctx, formats); err != nil {
 		res = append(res, err)
 	}
 
-	if err := m.contextValidateOcspUpdate(ctx, formats); err != nil {
+	if err := m.contextValidatePerformanceOptions(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.contextValidateSslOptions(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.contextValidateTuneBufferOptions(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.contextValidateTuneLuaOptions(ctx, formats); err != nil {
 		res = append(res, err)
 	}
 
 	if err := m.contextValidateTuneOptions(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.contextValidateTuneQuicOptions(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.contextValidateTuneSslOptions(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.contextValidateTuneVarsOptions(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.contextValidateTuneZlibOptions(ctx, formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -1846,26 +1328,6 @@ func (m *GlobalBase) contextValidateH1CaseAdjusts(ctx context.Context, formats s
 	return nil
 }
 
-func (m *GlobalBase) contextValidatePresetEnvs(ctx context.Context, formats strfmt.Registry) error {
-
-	for i := 0; i < len(m.PresetEnvs); i++ {
-
-		if m.PresetEnvs[i] != nil {
-			if err := m.PresetEnvs[i].ContextValidate(ctx, formats); err != nil {
-				if ve, ok := err.(*errors.Validation); ok {
-					return ve.ValidateName("presetenv" + "." + strconv.Itoa(i))
-				} else if ce, ok := err.(*errors.CompositeError); ok {
-					return ce.ValidateName("presetenv" + "." + strconv.Itoa(i))
-				}
-				return err
-			}
-		}
-
-	}
-
-	return nil
-}
-
 func (m *GlobalBase) contextValidateRuntimeAPIs(ctx context.Context, formats strfmt.Registry) error {
 
 	for i := 0; i < len(m.RuntimeAPIs); i++ {
@@ -1876,26 +1338,6 @@ func (m *GlobalBase) contextValidateRuntimeAPIs(ctx context.Context, formats str
 					return ve.ValidateName("runtime_apis" + "." + strconv.Itoa(i))
 				} else if ce, ok := err.(*errors.CompositeError); ok {
 					return ce.ValidateName("runtime_apis" + "." + strconv.Itoa(i))
-				}
-				return err
-			}
-		}
-
-	}
-
-	return nil
-}
-
-func (m *GlobalBase) contextValidateSetEnvs(ctx context.Context, formats strfmt.Registry) error {
-
-	for i := 0; i < len(m.SetEnvs); i++ {
-
-		if m.SetEnvs[i] != nil {
-			if err := m.SetEnvs[i].ContextValidate(ctx, formats); err != nil {
-				if ve, ok := err.(*errors.Validation); ok {
-					return ve.ValidateName("setenv" + "." + strconv.Itoa(i))
-				} else if ce, ok := err.(*errors.CompositeError); ok {
-					return ce.ValidateName("setenv" + "." + strconv.Itoa(i))
 				}
 				return err
 			}
@@ -1946,26 +1388,6 @@ func (m *GlobalBase) contextValidateSetVars(ctx context.Context, formats strfmt.
 	return nil
 }
 
-func (m *GlobalBase) contextValidateSslEngines(ctx context.Context, formats strfmt.Registry) error {
-
-	for i := 0; i < len(m.SslEngines); i++ {
-
-		if m.SslEngines[i] != nil {
-			if err := m.SslEngines[i].ContextValidate(ctx, formats); err != nil {
-				if ve, ok := err.(*errors.Validation); ok {
-					return ve.ValidateName("ssl_engines" + "." + strconv.Itoa(i))
-				} else if ce, ok := err.(*errors.CompositeError); ok {
-					return ce.ValidateName("ssl_engines" + "." + strconv.Itoa(i))
-				}
-				return err
-			}
-		}
-
-	}
-
-	return nil
-}
-
 func (m *GlobalBase) contextValidateThreadGroupLines(ctx context.Context, formats strfmt.Registry) error {
 
 	for i := 0; i < len(m.ThreadGroupLines); i++ {
@@ -1981,6 +1403,22 @@ func (m *GlobalBase) contextValidateThreadGroupLines(ctx context.Context, format
 			}
 		}
 
+	}
+
+	return nil
+}
+
+func (m *GlobalBase) contextValidateDebugOptions(ctx context.Context, formats strfmt.Registry) error {
+
+	if m.DebugOptions != nil {
+		if err := m.DebugOptions.ContextValidate(ctx, formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("debug_options")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("debug_options")
+			}
+			return err
+		}
 	}
 
 	return nil
@@ -2018,6 +1456,22 @@ func (m *GlobalBase) contextValidateDeviceAtlasOptions(ctx context.Context, form
 	return nil
 }
 
+func (m *GlobalBase) contextValidateEnvironmentOptions(ctx context.Context, formats strfmt.Registry) error {
+
+	if m.EnvironmentOptions != nil {
+		if err := m.EnvironmentOptions.ContextValidate(ctx, formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("environment_options")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("environment_options")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
 func (m *GlobalBase) contextValidateFiftyOneDegreesOptions(ctx context.Context, formats strfmt.Registry) error {
 
 	if m.FiftyOneDegreesOptions != nil {
@@ -2042,6 +1496,22 @@ func (m *GlobalBase) contextValidateHarden(ctx context.Context, formats strfmt.R
 				return ve.ValidateName("harden")
 			} else if ce, ok := err.(*errors.CompositeError); ok {
 				return ce.ValidateName("harden")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (m *GlobalBase) contextValidateHTTPClientOptions(ctx context.Context, formats strfmt.Registry) error {
+
+	if m.HTTPClientOptions != nil {
+		if err := m.HTTPClientOptions.ContextValidate(ctx, formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("http_client_options")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("http_client_options")
 			}
 			return err
 		}
@@ -2106,54 +1576,94 @@ func (m *GlobalBase) contextValidateLogSendHostname(ctx context.Context, formats
 	return nil
 }
 
-func (m *GlobalBase) contextValidateLuaLoads(ctx context.Context, formats strfmt.Registry) error {
+func (m *GlobalBase) contextValidateLuaOptions(ctx context.Context, formats strfmt.Registry) error {
 
-	for i := 0; i < len(m.LuaLoads); i++ {
-
-		if m.LuaLoads[i] != nil {
-			if err := m.LuaLoads[i].ContextValidate(ctx, formats); err != nil {
-				if ve, ok := err.(*errors.Validation); ok {
-					return ve.ValidateName("lua_loads" + "." + strconv.Itoa(i))
-				} else if ce, ok := err.(*errors.CompositeError); ok {
-					return ce.ValidateName("lua_loads" + "." + strconv.Itoa(i))
-				}
-				return err
-			}
-		}
-
-	}
-
-	return nil
-}
-
-func (m *GlobalBase) contextValidateLuaPrependPath(ctx context.Context, formats strfmt.Registry) error {
-
-	for i := 0; i < len(m.LuaPrependPath); i++ {
-
-		if m.LuaPrependPath[i] != nil {
-			if err := m.LuaPrependPath[i].ContextValidate(ctx, formats); err != nil {
-				if ve, ok := err.(*errors.Validation); ok {
-					return ve.ValidateName("lua_prepend_path" + "." + strconv.Itoa(i))
-				} else if ce, ok := err.(*errors.CompositeError); ok {
-					return ce.ValidateName("lua_prepend_path" + "." + strconv.Itoa(i))
-				}
-				return err
-			}
-		}
-
-	}
-
-	return nil
-}
-
-func (m *GlobalBase) contextValidateOcspUpdate(ctx context.Context, formats strfmt.Registry) error {
-
-	if m.OcspUpdate != nil {
-		if err := m.OcspUpdate.ContextValidate(ctx, formats); err != nil {
+	if m.LuaOptions != nil {
+		if err := m.LuaOptions.ContextValidate(ctx, formats); err != nil {
 			if ve, ok := err.(*errors.Validation); ok {
-				return ve.ValidateName("ocsp_update")
+				return ve.ValidateName("lua_options")
 			} else if ce, ok := err.(*errors.CompositeError); ok {
-				return ce.ValidateName("ocsp_update")
+				return ce.ValidateName("lua_options")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (m *GlobalBase) contextValidateOcspUpdateOptions(ctx context.Context, formats strfmt.Registry) error {
+
+	if m.OcspUpdateOptions != nil {
+		if err := m.OcspUpdateOptions.ContextValidate(ctx, formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("ocsp_update_options")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("ocsp_update_options")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (m *GlobalBase) contextValidatePerformanceOptions(ctx context.Context, formats strfmt.Registry) error {
+
+	if m.PerformanceOptions != nil {
+		if err := m.PerformanceOptions.ContextValidate(ctx, formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("performance_options")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("performance_options")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (m *GlobalBase) contextValidateSslOptions(ctx context.Context, formats strfmt.Registry) error {
+
+	if m.SslOptions != nil {
+		if err := m.SslOptions.ContextValidate(ctx, formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("ssl_options")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("ssl_options")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (m *GlobalBase) contextValidateTuneBufferOptions(ctx context.Context, formats strfmt.Registry) error {
+
+	if m.TuneBufferOptions != nil {
+		if err := m.TuneBufferOptions.ContextValidate(ctx, formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("tune_buffer_options")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("tune_buffer_options")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (m *GlobalBase) contextValidateTuneLuaOptions(ctx context.Context, formats strfmt.Registry) error {
+
+	if m.TuneLuaOptions != nil {
+		if err := m.TuneLuaOptions.ContextValidate(ctx, formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("tune_lua_options")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("tune_lua_options")
 			}
 			return err
 		}
@@ -2170,6 +1680,70 @@ func (m *GlobalBase) contextValidateTuneOptions(ctx context.Context, formats str
 				return ve.ValidateName("tune_options")
 			} else if ce, ok := err.(*errors.CompositeError); ok {
 				return ce.ValidateName("tune_options")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (m *GlobalBase) contextValidateTuneQuicOptions(ctx context.Context, formats strfmt.Registry) error {
+
+	if m.TuneQuicOptions != nil {
+		if err := m.TuneQuicOptions.ContextValidate(ctx, formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("tune_quic_options")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("tune_quic_options")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (m *GlobalBase) contextValidateTuneSslOptions(ctx context.Context, formats strfmt.Registry) error {
+
+	if m.TuneSslOptions != nil {
+		if err := m.TuneSslOptions.ContextValidate(ctx, formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("tune_ssl_options")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("tune_ssl_options")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (m *GlobalBase) contextValidateTuneVarsOptions(ctx context.Context, formats strfmt.Registry) error {
+
+	if m.TuneVarsOptions != nil {
+		if err := m.TuneVarsOptions.ContextValidate(ctx, formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("tune_vars_options")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("tune_vars_options")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (m *GlobalBase) contextValidateTuneZlibOptions(ctx context.Context, formats strfmt.Registry) error {
+
+	if m.TuneZlibOptions != nil {
+		if err := m.TuneZlibOptions.ContextValidate(ctx, formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("tune_zlib_options")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("tune_zlib_options")
 			}
 			return err
 		}
@@ -2396,98 +1970,6 @@ func (m *GlobalDefaultPath) MarshalBinary() ([]byte, error) {
 // UnmarshalBinary interface implementation
 func (m *GlobalDefaultPath) UnmarshalBinary(b []byte) error {
 	var res GlobalDefaultPath
-	if err := swag.ReadJSON(b, &res); err != nil {
-		return err
-	}
-	*m = res
-	return nil
-}
-
-// GlobalDeviceAtlasOptions global device atlas options
-//
-// swagger:model GlobalDeviceAtlasOptions
-type GlobalDeviceAtlasOptions struct {
-
-	// json file
-	JSONFile string `json:"json_file,omitempty"`
-
-	// log level
-	LogLevel string `json:"log_level,omitempty"`
-
-	// properties cookie
-	PropertiesCookie string `json:"properties_cookie,omitempty"`
-
-	// separator
-	Separator string `json:"separator,omitempty"`
-}
-
-// Validate validates this global device atlas options
-func (m *GlobalDeviceAtlasOptions) Validate(formats strfmt.Registry) error {
-	return nil
-}
-
-// ContextValidate validates this global device atlas options based on context it is used
-func (m *GlobalDeviceAtlasOptions) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
-	return nil
-}
-
-// MarshalBinary interface implementation
-func (m *GlobalDeviceAtlasOptions) MarshalBinary() ([]byte, error) {
-	if m == nil {
-		return nil, nil
-	}
-	return swag.WriteJSON(m)
-}
-
-// UnmarshalBinary interface implementation
-func (m *GlobalDeviceAtlasOptions) UnmarshalBinary(b []byte) error {
-	var res GlobalDeviceAtlasOptions
-	if err := swag.ReadJSON(b, &res); err != nil {
-		return err
-	}
-	*m = res
-	return nil
-}
-
-// GlobalFiftyOneDegreesOptions global fifty one degrees options
-//
-// swagger:model GlobalFiftyOneDegreesOptions
-type GlobalFiftyOneDegreesOptions struct {
-
-	// cache size
-	CacheSize int64 `json:"cache_size,omitempty"`
-
-	// data file
-	DataFile string `json:"data_file,omitempty"`
-
-	// property name list
-	PropertyNameList string `json:"property_name_list,omitempty"`
-
-	// property separator
-	PropertySeparator string `json:"property_separator,omitempty"`
-}
-
-// Validate validates this global fifty one degrees options
-func (m *GlobalFiftyOneDegreesOptions) Validate(formats strfmt.Registry) error {
-	return nil
-}
-
-// ContextValidate validates this global fifty one degrees options based on context it is used
-func (m *GlobalFiftyOneDegreesOptions) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
-	return nil
-}
-
-// MarshalBinary interface implementation
-func (m *GlobalFiftyOneDegreesOptions) MarshalBinary() ([]byte, error) {
-	if m == nil {
-		return nil, nil
-	}
-	return swag.WriteJSON(m)
-}
-
-// UnmarshalBinary interface implementation
-func (m *GlobalFiftyOneDegreesOptions) UnmarshalBinary(b []byte) error {
-	var res GlobalFiftyOneDegreesOptions
 	if err := swag.ReadJSON(b, &res); err != nil {
 		return err
 	}
@@ -2910,490 +2392,6 @@ func (m *GlobalLogSendHostname) UnmarshalBinary(b []byte) error {
 	return nil
 }
 
-// LuaLoad lua load
-//
-// swagger:model LuaLoad
-type LuaLoad struct {
-	// file
-	// Required: true
-	// Pattern: ^[^\s]+$
-	// +kubebuilder:validation:Pattern=`^[^\s]+$`
-	File *string `json:"file"`
-}
-
-// Validate validates this lua load
-func (m *LuaLoad) Validate(formats strfmt.Registry) error {
-	var res []error
-
-	if err := m.validateFile(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if len(res) > 0 {
-		return errors.CompositeValidationError(res...)
-	}
-	return nil
-}
-
-func (m *LuaLoad) validateFile(formats strfmt.Registry) error {
-
-	if err := validate.Required("file", "body", m.File); err != nil {
-		return err
-	}
-
-	if err := validate.Pattern("file", "body", *m.File, `^[^\s]+$`); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-// ContextValidate validates this lua load based on context it is used
-func (m *LuaLoad) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
-	return nil
-}
-
-// MarshalBinary interface implementation
-func (m *LuaLoad) MarshalBinary() ([]byte, error) {
-	if m == nil {
-		return nil, nil
-	}
-	return swag.WriteJSON(m)
-}
-
-// UnmarshalBinary interface implementation
-func (m *LuaLoad) UnmarshalBinary(b []byte) error {
-	var res LuaLoad
-	if err := swag.ReadJSON(b, &res); err != nil {
-		return err
-	}
-	*m = res
-	return nil
-}
-
-// LuaPrependPath lua prepend path
-//
-// swagger:model LuaPrependPath
-type LuaPrependPath struct {
-	// path
-	// Required: true
-	// Pattern: ^[^\s]+$
-	// +kubebuilder:validation:Pattern=`^[^\s]+$`
-	Path *string `json:"path"`
-
-	// type
-	// Enum: [path cpath]
-	// +kubebuilder:validation:Enum=path;cpath;
-	Type string `json:"type,omitempty"`
-}
-
-// Validate validates this lua prepend path
-func (m *LuaPrependPath) Validate(formats strfmt.Registry) error {
-	var res []error
-
-	if err := m.validatePath(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateType(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if len(res) > 0 {
-		return errors.CompositeValidationError(res...)
-	}
-	return nil
-}
-
-func (m *LuaPrependPath) validatePath(formats strfmt.Registry) error {
-
-	if err := validate.Required("path", "body", m.Path); err != nil {
-		return err
-	}
-
-	if err := validate.Pattern("path", "body", *m.Path, `^[^\s]+$`); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-var luaPrependPathTypeTypePropEnum []interface{}
-
-func init() {
-	var res []string
-	if err := json.Unmarshal([]byte(`["path","cpath"]`), &res); err != nil {
-		panic(err)
-	}
-	for _, v := range res {
-		luaPrependPathTypeTypePropEnum = append(luaPrependPathTypeTypePropEnum, v)
-	}
-}
-
-const (
-
-	// LuaPrependPathTypePath captures enum value "path"
-	LuaPrependPathTypePath string = "path"
-
-	// LuaPrependPathTypeCpath captures enum value "cpath"
-	LuaPrependPathTypeCpath string = "cpath"
-)
-
-// prop value enum
-func (m *LuaPrependPath) validateTypeEnum(path, location string, value string) error {
-	if err := validate.EnumCase(path, location, value, luaPrependPathTypeTypePropEnum, true); err != nil {
-		return err
-	}
-	return nil
-}
-
-func (m *LuaPrependPath) validateType(formats strfmt.Registry) error {
-	if swag.IsZero(m.Type) { // not required
-		return nil
-	}
-
-	// value enum
-	if err := m.validateTypeEnum("type", "body", m.Type); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-// ContextValidate validates this lua prepend path based on context it is used
-func (m *LuaPrependPath) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
-	return nil
-}
-
-// MarshalBinary interface implementation
-func (m *LuaPrependPath) MarshalBinary() ([]byte, error) {
-	if m == nil {
-		return nil, nil
-	}
-	return swag.WriteJSON(m)
-}
-
-// UnmarshalBinary interface implementation
-func (m *LuaPrependPath) UnmarshalBinary(b []byte) error {
-	var res LuaPrependPath
-	if err := swag.ReadJSON(b, &res); err != nil {
-		return err
-	}
-	*m = res
-	return nil
-}
-
-// GlobalOcspUpdate global ocsp update
-//
-// swagger:model GlobalOcspUpdate
-type GlobalOcspUpdate struct {
-
-	// disable
-	Disable *bool `json:"disable,omitempty"`
-
-	// httpproxy
-	Httpproxy *GlobalOcspUpdateHttpproxy `json:"httpproxy,omitempty"`
-
-	// Sets the maximum interval between two automatic updates of the same OCSP response.This time is expressed in seconds
-	Maxdelay *int64 `json:"maxdelay,omitempty"`
-
-	// Sets the minimum interval between two automatic updates of the same OCSP response. This time is expressed in seconds
-	Mindelay *int64 `json:"mindelay,omitempty"`
-
-	// mode
-	// Enum: [enabled disabled]
-	// +kubebuilder:validation:Enum=enabled;disabled;
-	Mode string `json:"mode,omitempty"`
-}
-
-// Validate validates this global ocsp update
-func (m *GlobalOcspUpdate) Validate(formats strfmt.Registry) error {
-	var res []error
-
-	if err := m.validateHttpproxy(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateMode(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if len(res) > 0 {
-		return errors.CompositeValidationError(res...)
-	}
-	return nil
-}
-
-func (m *GlobalOcspUpdate) validateHttpproxy(formats strfmt.Registry) error {
-	if swag.IsZero(m.Httpproxy) { // not required
-		return nil
-	}
-
-	if m.Httpproxy != nil {
-		if err := m.Httpproxy.Validate(formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
-				return ve.ValidateName("ocsp_update" + "." + "httpproxy")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
-				return ce.ValidateName("ocsp_update" + "." + "httpproxy")
-			}
-			return err
-		}
-	}
-
-	return nil
-}
-
-var globalOcspUpdateTypeModePropEnum []interface{}
-
-func init() {
-	var res []string
-	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
-		panic(err)
-	}
-	for _, v := range res {
-		globalOcspUpdateTypeModePropEnum = append(globalOcspUpdateTypeModePropEnum, v)
-	}
-}
-
-const (
-
-	// GlobalOcspUpdateModeEnabled captures enum value "enabled"
-	GlobalOcspUpdateModeEnabled string = "enabled"
-
-	// GlobalOcspUpdateModeDisabled captures enum value "disabled"
-	GlobalOcspUpdateModeDisabled string = "disabled"
-)
-
-// prop value enum
-func (m *GlobalOcspUpdate) validateModeEnum(path, location string, value string) error {
-	if err := validate.EnumCase(path, location, value, globalOcspUpdateTypeModePropEnum, true); err != nil {
-		return err
-	}
-	return nil
-}
-
-func (m *GlobalOcspUpdate) validateMode(formats strfmt.Registry) error {
-	if swag.IsZero(m.Mode) { // not required
-		return nil
-	}
-
-	// value enum
-	if err := m.validateModeEnum("ocsp_update"+"."+"mode", "body", m.Mode); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-// ContextValidate validate this global ocsp update based on the context it is used
-func (m *GlobalOcspUpdate) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
-	var res []error
-
-	if err := m.contextValidateHttpproxy(ctx, formats); err != nil {
-		res = append(res, err)
-	}
-
-	if len(res) > 0 {
-		return errors.CompositeValidationError(res...)
-	}
-	return nil
-}
-
-func (m *GlobalOcspUpdate) contextValidateHttpproxy(ctx context.Context, formats strfmt.Registry) error {
-
-	if m.Httpproxy != nil {
-		if err := m.Httpproxy.ContextValidate(ctx, formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
-				return ve.ValidateName("ocsp_update" + "." + "httpproxy")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
-				return ce.ValidateName("ocsp_update" + "." + "httpproxy")
-			}
-			return err
-		}
-	}
-
-	return nil
-}
-
-// MarshalBinary interface implementation
-func (m *GlobalOcspUpdate) MarshalBinary() ([]byte, error) {
-	if m == nil {
-		return nil, nil
-	}
-	return swag.WriteJSON(m)
-}
-
-// UnmarshalBinary interface implementation
-func (m *GlobalOcspUpdate) UnmarshalBinary(b []byte) error {
-	var res GlobalOcspUpdate
-	if err := swag.ReadJSON(b, &res); err != nil {
-		return err
-	}
-	*m = res
-	return nil
-}
-
-// GlobalOcspUpdateHttpproxy global ocsp update httpproxy
-//
-// swagger:model GlobalOcspUpdateHttpproxy
-type GlobalOcspUpdateHttpproxy struct {
-	// address
-	// Example: 127.0.0.1
-	// Pattern: ^[^\s]+$
-	// +kubebuilder:validation:Pattern=`^[^\s]+$`
-	Address string `json:"address,omitempty"`
-
-	// port
-	// Example: 80
-	// Maximum: 65535
-	// Minimum: 1
-	// +kubebuilder:validation:Maximum=65535
-	// +kubebuilder:validation:Minimum=1
-	Port *int64 `json:"port,omitempty"`
-}
-
-// Validate validates this global ocsp update httpproxy
-func (m *GlobalOcspUpdateHttpproxy) Validate(formats strfmt.Registry) error {
-	var res []error
-
-	if err := m.validateAddress(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validatePort(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if len(res) > 0 {
-		return errors.CompositeValidationError(res...)
-	}
-	return nil
-}
-
-func (m *GlobalOcspUpdateHttpproxy) validateAddress(formats strfmt.Registry) error {
-	if swag.IsZero(m.Address) { // not required
-		return nil
-	}
-
-	if err := validate.Pattern("ocsp_update"+"."+"httpproxy"+"."+"address", "body", m.Address, `^[^\s]+$`); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func (m *GlobalOcspUpdateHttpproxy) validatePort(formats strfmt.Registry) error {
-	if swag.IsZero(m.Port) { // not required
-		return nil
-	}
-
-	if err := validate.MinimumInt("ocsp_update"+"."+"httpproxy"+"."+"port", "body", *m.Port, 1, false); err != nil {
-		return err
-	}
-
-	if err := validate.MaximumInt("ocsp_update"+"."+"httpproxy"+"."+"port", "body", *m.Port, 65535, false); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-// ContextValidate validates this global ocsp update httpproxy based on context it is used
-func (m *GlobalOcspUpdateHttpproxy) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
-	return nil
-}
-
-// MarshalBinary interface implementation
-func (m *GlobalOcspUpdateHttpproxy) MarshalBinary() ([]byte, error) {
-	if m == nil {
-		return nil, nil
-	}
-	return swag.WriteJSON(m)
-}
-
-// UnmarshalBinary interface implementation
-func (m *GlobalOcspUpdateHttpproxy) UnmarshalBinary(b []byte) error {
-	var res GlobalOcspUpdateHttpproxy
-	if err := swag.ReadJSON(b, &res); err != nil {
-		return err
-	}
-	*m = res
-	return nil
-}
-
-// PresetEnv preset env
-//
-// swagger:model PresetEnv
-type PresetEnv struct {
-
-	// name
-	// Required: true
-	Name *string `json:"name"`
-
-	// value
-	// Required: true
-	Value *string `json:"value"`
-}
-
-// Validate validates this preset env
-func (m *PresetEnv) Validate(formats strfmt.Registry) error {
-	var res []error
-
-	if err := m.validateName(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateValue(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if len(res) > 0 {
-		return errors.CompositeValidationError(res...)
-	}
-	return nil
-}
-
-func (m *PresetEnv) validateName(formats strfmt.Registry) error {
-
-	if err := validate.Required("name", "body", m.Name); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func (m *PresetEnv) validateValue(formats strfmt.Registry) error {
-
-	if err := validate.Required("value", "body", m.Value); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-// ContextValidate validates this preset env based on context it is used
-func (m *PresetEnv) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
-	return nil
-}
-
-// MarshalBinary interface implementation
-func (m *PresetEnv) MarshalBinary() ([]byte, error) {
-	if m == nil {
-		return nil, nil
-	}
-	return swag.WriteJSON(m)
-}
-
-// UnmarshalBinary interface implementation
-func (m *PresetEnv) UnmarshalBinary(b []byte) error {
-	var res PresetEnv
-	if err := swag.ReadJSON(b, &res); err != nil {
-		return err
-	}
-	*m = res
-	return nil
-}
-
 // RuntimeAPI runtime API
 //
 // swagger:model RuntimeAPI
@@ -3663,138 +2661,6 @@ func (m *SetVar) UnmarshalBinary(b []byte) error {
 	return nil
 }
 
-// SetEnv set env
-//
-// swagger:model SetEnv
-type SetEnv struct {
-
-	// name
-	// Required: true
-	Name *string `json:"name"`
-
-	// value
-	// Required: true
-	Value *string `json:"value"`
-}
-
-// Validate validates this set env
-func (m *SetEnv) Validate(formats strfmt.Registry) error {
-	var res []error
-
-	if err := m.validateName(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateValue(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if len(res) > 0 {
-		return errors.CompositeValidationError(res...)
-	}
-	return nil
-}
-
-func (m *SetEnv) validateName(formats strfmt.Registry) error {
-
-	if err := validate.Required("name", "body", m.Name); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func (m *SetEnv) validateValue(formats strfmt.Registry) error {
-
-	if err := validate.Required("value", "body", m.Value); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-// ContextValidate validates this set env based on context it is used
-func (m *SetEnv) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
-	return nil
-}
-
-// MarshalBinary interface implementation
-func (m *SetEnv) MarshalBinary() ([]byte, error) {
-	if m == nil {
-		return nil, nil
-	}
-	return swag.WriteJSON(m)
-}
-
-// UnmarshalBinary interface implementation
-func (m *SetEnv) UnmarshalBinary(b []byte) error {
-	var res SetEnv
-	if err := swag.ReadJSON(b, &res); err != nil {
-		return err
-	}
-	*m = res
-	return nil
-}
-
-// SslEngine ssl engine
-//
-// swagger:model SslEngine
-type SslEngine struct {
-
-	// algorithms
-	Algorithms *string `json:"algorithms,omitempty"`
-
-	// name
-	// Required: true
-	Name *string `json:"name"`
-}
-
-// Validate validates this ssl engine
-func (m *SslEngine) Validate(formats strfmt.Registry) error {
-	var res []error
-
-	if err := m.validateName(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if len(res) > 0 {
-		return errors.CompositeValidationError(res...)
-	}
-	return nil
-}
-
-func (m *SslEngine) validateName(formats strfmt.Registry) error {
-
-	if err := validate.Required("name", "body", m.Name); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-// ContextValidate validates this ssl engine based on context it is used
-func (m *SslEngine) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
-	return nil
-}
-
-// MarshalBinary interface implementation
-func (m *SslEngine) MarshalBinary() ([]byte, error) {
-	if m == nil {
-		return nil, nil
-	}
-	return swag.WriteJSON(m)
-}
-
-// UnmarshalBinary interface implementation
-func (m *SslEngine) UnmarshalBinary(b []byte) error {
-	var res SslEngine
-	if err := swag.ReadJSON(b, &res); err != nil {
-		return err
-	}
-	*m = res
-	return nil
-}
-
 // ThreadGroup thread group
 //
 // swagger:model ThreadGroup
@@ -3861,1368 +2727,6 @@ func (m *ThreadGroup) MarshalBinary() ([]byte, error) {
 // UnmarshalBinary interface implementation
 func (m *ThreadGroup) UnmarshalBinary(b []byte) error {
 	var res ThreadGroup
-	if err := swag.ReadJSON(b, &res); err != nil {
-		return err
-	}
-	*m = res
-	return nil
-}
-
-// GlobalTuneOptions global tune options
-//
-// swagger:model GlobalTuneOptions
-type GlobalTuneOptions struct {
-	// applet zero copy forwarding
-	// Enum: [enabled disabled]
-	// +kubebuilder:validation:Enum=enabled;disabled;
-	AppletZeroCopyForwarding string `json:"applet_zero_copy_forwarding,omitempty"`
-
-	// buffers limit
-	BuffersLimit *int64 `json:"buffers_limit,omitempty"`
-
-	// buffers reserve
-	// Minimum: 2
-	// +kubebuilder:validation:Minimum=2
-	BuffersReserve int64 `json:"buffers_reserve,omitempty"`
-
-	// bufsize
-	Bufsize int64 `json:"bufsize,omitempty"`
-
-	// comp maxlevel
-	CompMaxlevel int64 `json:"comp_maxlevel,omitempty"`
-
-	// disable zero copy forwarding
-	DisableZeroCopyForwarding bool `json:"disable_zero_copy_forwarding,omitempty"`
-
-	// events max events at once
-	// Maximum: 10000
-	// Minimum: 1
-	// +kubebuilder:validation:Maximum=10000
-	// +kubebuilder:validation:Minimum=1
-	EventsMaxEventsAtOnce int64 `json:"events_max_events_at_once,omitempty"`
-
-	// fail alloc
-	FailAlloc bool `json:"fail_alloc,omitempty"`
-
-	// fd edge triggered
-	// Enum: [enabled disabled]
-	// +kubebuilder:validation:Enum=enabled;disabled;
-	FdEdgeTriggered string `json:"fd_edge_triggered,omitempty"`
-
-	// h1 zero copy fwd recv
-	// Enum: [enabled disabled]
-	// +kubebuilder:validation:Enum=enabled;disabled;
-	H1ZeroCopyFwdRecv string `json:"h1_zero_copy_fwd_recv,omitempty"`
-
-	// h1 zero copy fwd send
-	// Enum: [enabled disabled]
-	// +kubebuilder:validation:Enum=enabled;disabled;
-	H1ZeroCopyFwdSend string `json:"h1_zero_copy_fwd_send,omitempty"`
-
-	// h2 be glitches threshold
-	H2BeGlitchesThreshold *int64 `json:"h2_be_glitches_threshold,omitempty"`
-
-	// h2 be initial window size
-	H2BeInitialWindowSize int64 `json:"h2_be_initial_window_size,omitempty"`
-
-	// h2 be max concurrent streams
-	H2BeMaxConcurrentStreams int64 `json:"h2_be_max_concurrent_streams,omitempty"`
-
-	// h2 fe glitches threshold
-	H2FeGlitchesThreshold *int64 `json:"h2_fe_glitches_threshold,omitempty"`
-
-	// h2 fe initial window size
-	H2FeInitialWindowSize int64 `json:"h2_fe_initial_window_size,omitempty"`
-
-	// h2 fe max concurrent streams
-	H2FeMaxConcurrentStreams int64 `json:"h2_fe_max_concurrent_streams,omitempty"`
-
-	// h2 fe max total streams
-	H2FeMaxTotalStreams *int64 `json:"h2_fe_max_total_streams,omitempty"`
-
-	// h2 header table size
-	// Maximum: 65535
-	// +kubebuilder:validation:Maximum=65535
-	H2HeaderTableSize int64 `json:"h2_header_table_size,omitempty"`
-
-	// h2 initial window size
-	H2InitialWindowSize *int64 `json:"h2_initial_window_size,omitempty"`
-
-	// h2 max concurrent streams
-	H2MaxConcurrentStreams int64 `json:"h2_max_concurrent_streams,omitempty"`
-
-	// h2 max frame size
-	H2MaxFrameSize int64 `json:"h2_max_frame_size,omitempty"`
-
-	// h2 zero copy fwd send
-	// Enum: [enabled disabled]
-	// +kubebuilder:validation:Enum=enabled;disabled;
-	H2ZeroCopyFwdSend string `json:"h2_zero_copy_fwd_send,omitempty"`
-
-	// http cookielen
-	HTTPCookielen int64 `json:"http_cookielen,omitempty"`
-
-	// http logurilen
-	HTTPLogurilen int64 `json:"http_logurilen,omitempty"`
-
-	// http maxhdr
-	// Maximum: 32767
-	// Minimum: 1
-	// +kubebuilder:validation:Maximum=32767
-	// +kubebuilder:validation:Minimum=1
-	HTTPMaxhdr int64 `json:"http_maxhdr,omitempty"`
-
-	// idle pool shared
-	// Enum: [enabled disabled]
-	// +kubebuilder:validation:Enum=enabled;disabled;
-	IdlePoolShared string `json:"idle_pool_shared,omitempty"`
-
-	// idletimer
-	// Maximum: 65535
-	// Minimum: 0
-	// +kubebuilder:validation:Maximum=65535
-	// +kubebuilder:validation:Minimum=0
-	Idletimer *int64 `json:"idletimer,omitempty"`
-
-	// listener default shards
-	// Enum: [by-process by-thread by-group]
-	// +kubebuilder:validation:Enum=by-process;by-thread;by-group;
-	ListenerDefaultShards string `json:"listener_default_shards,omitempty"`
-
-	// listener multi queue
-	// Enum: [enabled disabled]
-	// +kubebuilder:validation:Enum=enabled;disabled;
-	ListenerMultiQueue string `json:"listener_multi_queue,omitempty"`
-
-	// lua burst timeout
-	// Minimum: 0
-	// +kubebuilder:validation:Minimum=0
-	LuaBurstTimeout *int64 `json:"lua_burst_timeout,omitempty"`
-
-	// lua forced yield
-	LuaForcedYield int64 `json:"lua_forced_yield,omitempty"`
-
-	// lua log loggers
-	// Enum: [enabled disabled]
-	// +kubebuilder:validation:Enum=enabled;disabled;
-	LuaLogLoggers string `json:"lua_log_loggers,omitempty"`
-
-	// lua log stderr
-	// Enum: [auto enabled disabled]
-	// +kubebuilder:validation:Enum=auto;enabled;disabled;
-	LuaLogStderr string `json:"lua_log_stderr,omitempty"`
-
-	// lua maxmem
-	LuaMaxmem *int64 `json:"lua_maxmem,omitempty"`
-
-	// lua service timeout
-	// Minimum: 0
-	// +kubebuilder:validation:Minimum=0
-	LuaServiceTimeout *int64 `json:"lua_service_timeout,omitempty"`
-
-	// lua session timeout
-	// Minimum: 0
-	// +kubebuilder:validation:Minimum=0
-	LuaSessionTimeout *int64 `json:"lua_session_timeout,omitempty"`
-
-	// lua task timeout
-	// Minimum: 0
-	// +kubebuilder:validation:Minimum=0
-	LuaTaskTimeout *int64 `json:"lua_task_timeout,omitempty"`
-
-	// max checks per thread
-	MaxChecksPerThread *int64 `json:"max_checks_per_thread,omitempty"`
-
-	// maxaccept
-	Maxaccept int64 `json:"maxaccept,omitempty"`
-
-	// maxpollevents
-	Maxpollevents int64 `json:"maxpollevents,omitempty"`
-
-	// maxrewrite
-	Maxrewrite int64 `json:"maxrewrite,omitempty"`
-
-	// memory hot size
-	MemoryHotSize *int64 `json:"memory_hot_size,omitempty"`
-
-	// pattern cache size
-	PatternCacheSize *int64 `json:"pattern_cache_size,omitempty"`
-
-	// peers max updates at once
-	PeersMaxUpdatesAtOnce int64 `json:"peers_max_updates_at_once,omitempty"`
-
-	// pipesize
-	Pipesize int64 `json:"pipesize,omitempty"`
-
-	// pool high fd ratio
-	PoolHighFdRatio int64 `json:"pool_high_fd_ratio,omitempty"`
-
-	// pool low fd ratio
-	PoolLowFdRatio int64 `json:"pool_low_fd_ratio,omitempty"`
-
-	// pt zero copy forwarding
-	// Enum: [enabled disabled]
-	// +kubebuilder:validation:Enum=enabled;disabled;
-	PtZeroCopyForwarding string `json:"pt_zero_copy_forwarding,omitempty"`
-
-	// quic frontend conn tx buffers limit
-	QuicFrontendConnTxBuffersLimit *int64 `json:"quic_frontend_conn_tx_buffers_limit,omitempty"`
-
-	// quic frontend max idle timeout
-	// Minimum: 0
-	// +kubebuilder:validation:Minimum=0
-	QuicFrontendMaxIdleTimeout *int64 `json:"quic_frontend_max_idle_timeout,omitempty"`
-
-	// quic frontend max streams bidi
-	QuicFrontendMaxStreamsBidi *int64 `json:"quic_frontend_max_streams_bidi,omitempty"`
-
-	// quic max frame loss
-	QuicMaxFrameLoss *int64 `json:"quic_max_frame_loss,omitempty"`
-
-	// quic reorder ratio
-	// Maximum: 100
-	// Minimum: 0
-	// +kubebuilder:validation:Maximum=100
-	// +kubebuilder:validation:Minimum=0
-	QuicReorderRatio *int64 `json:"quic_reorder_ratio,omitempty"`
-
-	// quic retry threshold
-	QuicRetryThreshold *int64 `json:"quic_retry_threshold,omitempty"`
-
-	// quic socket owner
-	// Enum: [listener connection]
-	// +kubebuilder:validation:Enum=listener;connection;
-	QuicSocketOwner string `json:"quic_socket_owner,omitempty"`
-
-	// quic zero copy fwd send
-	// Enum: [enabled disabled]
-	// +kubebuilder:validation:Enum=enabled;disabled;
-	QuicZeroCopyFwdSend string `json:"quic_zero_copy_fwd_send,omitempty"`
-
-	// rcvbuf backend
-	RcvbufBackend *int64 `json:"rcvbuf_backend,omitempty"`
-
-	// rcvbuf client
-	RcvbufClient *int64 `json:"rcvbuf_client,omitempty"`
-
-	// rcvbuf frontend
-	RcvbufFrontend *int64 `json:"rcvbuf_frontend,omitempty"`
-
-	// rcvbuf server
-	RcvbufServer *int64 `json:"rcvbuf_server,omitempty"`
-
-	// recv enough
-	RecvEnough int64 `json:"recv_enough,omitempty"`
-
-	// ring queues
-	RingQueues *int64 `json:"ring_queues,omitempty"`
-
-	// runqueue depth
-	RunqueueDepth int64 `json:"runqueue_depth,omitempty"`
-
-	// sched low latency
-	// Enum: [enabled disabled]
-	// +kubebuilder:validation:Enum=enabled;disabled;
-	SchedLowLatency string `json:"sched_low_latency,omitempty"`
-
-	// sndbuf backend
-	SndbufBackend *int64 `json:"sndbuf_backend,omitempty"`
-
-	// sndbuf client
-	SndbufClient *int64 `json:"sndbuf_client,omitempty"`
-
-	// sndbuf frontend
-	SndbufFrontend *int64 `json:"sndbuf_frontend,omitempty"`
-
-	// sndbuf server
-	SndbufServer *int64 `json:"sndbuf_server,omitempty"`
-
-	// ssl cachesize
-	SslCachesize *int64 `json:"ssl_cachesize,omitempty"`
-
-	// ssl capture buffer size
-	SslCaptureBufferSize *int64 `json:"ssl_capture_buffer_size,omitempty"`
-
-	// ssl ctx cache size
-	SslCtxCacheSize int64 `json:"ssl_ctx_cache_size,omitempty"`
-
-	// ssl default dh param
-	SslDefaultDhParam int64 `json:"ssl_default_dh_param,omitempty"`
-
-	// ssl force private cache
-	SslForcePrivateCache bool `json:"ssl_force_private_cache,omitempty"`
-
-	// ssl keylog
-	// Enum: [enabled disabled]
-	// +kubebuilder:validation:Enum=enabled;disabled;
-	SslKeylog string `json:"ssl_keylog,omitempty"`
-
-	// ssl lifetime
-	// Minimum: 0
-	// +kubebuilder:validation:Minimum=0
-	SslLifetime *int64 `json:"ssl_lifetime,omitempty"`
-
-	// ssl maxrecord
-	SslMaxrecord *int64 `json:"ssl_maxrecord,omitempty"`
-
-	// This field is deprecated in favor of ocsp-update.maxdelay
-	SslOcspUpdateMaxDelay *int64 `json:"ssl_ocsp_update_max_delay,omitempty"`
-
-	// This field is deprecated in favor of ocsp-update.mindelay
-	SslOcspUpdateMinDelay *int64 `json:"ssl_ocsp_update_min_delay,omitempty"`
-
-	// stick counters
-	StickCounters *int64 `json:"stick_counters,omitempty"`
-
-	// vars global max size
-	VarsGlobalMaxSize *int64 `json:"vars_global_max_size,omitempty"`
-
-	// vars proc max size
-	VarsProcMaxSize *int64 `json:"vars_proc_max_size,omitempty"`
-
-	// vars reqres max size
-	VarsReqresMaxSize *int64 `json:"vars_reqres_max_size,omitempty"`
-
-	// vars sess max size
-	VarsSessMaxSize *int64 `json:"vars_sess_max_size,omitempty"`
-
-	// vars txn max size
-	VarsTxnMaxSize *int64 `json:"vars_txn_max_size,omitempty"`
-
-	// zlib memlevel
-	// Maximum: 9
-	// Minimum: 1
-	// +kubebuilder:validation:Maximum=9
-	// +kubebuilder:validation:Minimum=1
-	ZlibMemlevel int64 `json:"zlib_memlevel,omitempty"`
-
-	// zlib windowsize
-	// Maximum: 15
-	// Minimum: 8
-	// +kubebuilder:validation:Maximum=15
-	// +kubebuilder:validation:Minimum=8
-	ZlibWindowsize int64 `json:"zlib_windowsize,omitempty"`
-}
-
-// Validate validates this global tune options
-func (m *GlobalTuneOptions) Validate(formats strfmt.Registry) error {
-	var res []error
-
-	if err := m.validateAppletZeroCopyForwarding(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateBuffersReserve(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateEventsMaxEventsAtOnce(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateFdEdgeTriggered(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateH1ZeroCopyFwdRecv(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateH1ZeroCopyFwdSend(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateH2HeaderTableSize(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateH2ZeroCopyFwdSend(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateHTTPMaxhdr(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateIdlePoolShared(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateIdletimer(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateListenerDefaultShards(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateListenerMultiQueue(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateLuaBurstTimeout(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateLuaLogLoggers(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateLuaLogStderr(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateLuaServiceTimeout(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateLuaSessionTimeout(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateLuaTaskTimeout(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validatePtZeroCopyForwarding(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateQuicFrontendMaxIdleTimeout(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateQuicReorderRatio(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateQuicSocketOwner(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateQuicZeroCopyFwdSend(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateSchedLowLatency(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateSslKeylog(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateSslLifetime(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateZlibMemlevel(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateZlibWindowsize(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if len(res) > 0 {
-		return errors.CompositeValidationError(res...)
-	}
-	return nil
-}
-
-var globalTuneOptionsTypeAppletZeroCopyForwardingPropEnum []interface{}
-
-func init() {
-	var res []string
-	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
-		panic(err)
-	}
-	for _, v := range res {
-		globalTuneOptionsTypeAppletZeroCopyForwardingPropEnum = append(globalTuneOptionsTypeAppletZeroCopyForwardingPropEnum, v)
-	}
-}
-
-const (
-
-	// GlobalTuneOptionsAppletZeroCopyForwardingEnabled captures enum value "enabled"
-	GlobalTuneOptionsAppletZeroCopyForwardingEnabled string = "enabled"
-
-	// GlobalTuneOptionsAppletZeroCopyForwardingDisabled captures enum value "disabled"
-	GlobalTuneOptionsAppletZeroCopyForwardingDisabled string = "disabled"
-)
-
-// prop value enum
-func (m *GlobalTuneOptions) validateAppletZeroCopyForwardingEnum(path, location string, value string) error {
-	if err := validate.EnumCase(path, location, value, globalTuneOptionsTypeAppletZeroCopyForwardingPropEnum, true); err != nil {
-		return err
-	}
-	return nil
-}
-
-func (m *GlobalTuneOptions) validateAppletZeroCopyForwarding(formats strfmt.Registry) error {
-	if swag.IsZero(m.AppletZeroCopyForwarding) { // not required
-		return nil
-	}
-
-	// value enum
-	if err := m.validateAppletZeroCopyForwardingEnum("tune_options"+"."+"applet_zero_copy_forwarding", "body", m.AppletZeroCopyForwarding); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func (m *GlobalTuneOptions) validateBuffersReserve(formats strfmt.Registry) error {
-	if swag.IsZero(m.BuffersReserve) { // not required
-		return nil
-	}
-
-	if err := validate.MinimumInt("tune_options"+"."+"buffers_reserve", "body", m.BuffersReserve, 2, false); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func (m *GlobalTuneOptions) validateEventsMaxEventsAtOnce(formats strfmt.Registry) error {
-	if swag.IsZero(m.EventsMaxEventsAtOnce) { // not required
-		return nil
-	}
-
-	if err := validate.MinimumInt("tune_options"+"."+"events_max_events_at_once", "body", m.EventsMaxEventsAtOnce, 1, false); err != nil {
-		return err
-	}
-
-	if err := validate.MaximumInt("tune_options"+"."+"events_max_events_at_once", "body", m.EventsMaxEventsAtOnce, 10000, false); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-var globalTuneOptionsTypeFdEdgeTriggeredPropEnum []interface{}
-
-func init() {
-	var res []string
-	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
-		panic(err)
-	}
-	for _, v := range res {
-		globalTuneOptionsTypeFdEdgeTriggeredPropEnum = append(globalTuneOptionsTypeFdEdgeTriggeredPropEnum, v)
-	}
-}
-
-const (
-
-	// GlobalTuneOptionsFdEdgeTriggeredEnabled captures enum value "enabled"
-	GlobalTuneOptionsFdEdgeTriggeredEnabled string = "enabled"
-
-	// GlobalTuneOptionsFdEdgeTriggeredDisabled captures enum value "disabled"
-	GlobalTuneOptionsFdEdgeTriggeredDisabled string = "disabled"
-)
-
-// prop value enum
-func (m *GlobalTuneOptions) validateFdEdgeTriggeredEnum(path, location string, value string) error {
-	if err := validate.EnumCase(path, location, value, globalTuneOptionsTypeFdEdgeTriggeredPropEnum, true); err != nil {
-		return err
-	}
-	return nil
-}
-
-func (m *GlobalTuneOptions) validateFdEdgeTriggered(formats strfmt.Registry) error {
-	if swag.IsZero(m.FdEdgeTriggered) { // not required
-		return nil
-	}
-
-	// value enum
-	if err := m.validateFdEdgeTriggeredEnum("tune_options"+"."+"fd_edge_triggered", "body", m.FdEdgeTriggered); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-var globalTuneOptionsTypeH1ZeroCopyFwdRecvPropEnum []interface{}
-
-func init() {
-	var res []string
-	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
-		panic(err)
-	}
-	for _, v := range res {
-		globalTuneOptionsTypeH1ZeroCopyFwdRecvPropEnum = append(globalTuneOptionsTypeH1ZeroCopyFwdRecvPropEnum, v)
-	}
-}
-
-const (
-
-	// GlobalTuneOptionsH1ZeroCopyFwdRecvEnabled captures enum value "enabled"
-	GlobalTuneOptionsH1ZeroCopyFwdRecvEnabled string = "enabled"
-
-	// GlobalTuneOptionsH1ZeroCopyFwdRecvDisabled captures enum value "disabled"
-	GlobalTuneOptionsH1ZeroCopyFwdRecvDisabled string = "disabled"
-)
-
-// prop value enum
-func (m *GlobalTuneOptions) validateH1ZeroCopyFwdRecvEnum(path, location string, value string) error {
-	if err := validate.EnumCase(path, location, value, globalTuneOptionsTypeH1ZeroCopyFwdRecvPropEnum, true); err != nil {
-		return err
-	}
-	return nil
-}
-
-func (m *GlobalTuneOptions) validateH1ZeroCopyFwdRecv(formats strfmt.Registry) error {
-	if swag.IsZero(m.H1ZeroCopyFwdRecv) { // not required
-		return nil
-	}
-
-	// value enum
-	if err := m.validateH1ZeroCopyFwdRecvEnum("tune_options"+"."+"h1_zero_copy_fwd_recv", "body", m.H1ZeroCopyFwdRecv); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-var globalTuneOptionsTypeH1ZeroCopyFwdSendPropEnum []interface{}
-
-func init() {
-	var res []string
-	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
-		panic(err)
-	}
-	for _, v := range res {
-		globalTuneOptionsTypeH1ZeroCopyFwdSendPropEnum = append(globalTuneOptionsTypeH1ZeroCopyFwdSendPropEnum, v)
-	}
-}
-
-const (
-
-	// GlobalTuneOptionsH1ZeroCopyFwdSendEnabled captures enum value "enabled"
-	GlobalTuneOptionsH1ZeroCopyFwdSendEnabled string = "enabled"
-
-	// GlobalTuneOptionsH1ZeroCopyFwdSendDisabled captures enum value "disabled"
-	GlobalTuneOptionsH1ZeroCopyFwdSendDisabled string = "disabled"
-)
-
-// prop value enum
-func (m *GlobalTuneOptions) validateH1ZeroCopyFwdSendEnum(path, location string, value string) error {
-	if err := validate.EnumCase(path, location, value, globalTuneOptionsTypeH1ZeroCopyFwdSendPropEnum, true); err != nil {
-		return err
-	}
-	return nil
-}
-
-func (m *GlobalTuneOptions) validateH1ZeroCopyFwdSend(formats strfmt.Registry) error {
-	if swag.IsZero(m.H1ZeroCopyFwdSend) { // not required
-		return nil
-	}
-
-	// value enum
-	if err := m.validateH1ZeroCopyFwdSendEnum("tune_options"+"."+"h1_zero_copy_fwd_send", "body", m.H1ZeroCopyFwdSend); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func (m *GlobalTuneOptions) validateH2HeaderTableSize(formats strfmt.Registry) error {
-	if swag.IsZero(m.H2HeaderTableSize) { // not required
-		return nil
-	}
-
-	if err := validate.MaximumInt("tune_options"+"."+"h2_header_table_size", "body", m.H2HeaderTableSize, 65535, false); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-var globalTuneOptionsTypeH2ZeroCopyFwdSendPropEnum []interface{}
-
-func init() {
-	var res []string
-	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
-		panic(err)
-	}
-	for _, v := range res {
-		globalTuneOptionsTypeH2ZeroCopyFwdSendPropEnum = append(globalTuneOptionsTypeH2ZeroCopyFwdSendPropEnum, v)
-	}
-}
-
-const (
-
-	// GlobalTuneOptionsH2ZeroCopyFwdSendEnabled captures enum value "enabled"
-	GlobalTuneOptionsH2ZeroCopyFwdSendEnabled string = "enabled"
-
-	// GlobalTuneOptionsH2ZeroCopyFwdSendDisabled captures enum value "disabled"
-	GlobalTuneOptionsH2ZeroCopyFwdSendDisabled string = "disabled"
-)
-
-// prop value enum
-func (m *GlobalTuneOptions) validateH2ZeroCopyFwdSendEnum(path, location string, value string) error {
-	if err := validate.EnumCase(path, location, value, globalTuneOptionsTypeH2ZeroCopyFwdSendPropEnum, true); err != nil {
-		return err
-	}
-	return nil
-}
-
-func (m *GlobalTuneOptions) validateH2ZeroCopyFwdSend(formats strfmt.Registry) error {
-	if swag.IsZero(m.H2ZeroCopyFwdSend) { // not required
-		return nil
-	}
-
-	// value enum
-	if err := m.validateH2ZeroCopyFwdSendEnum("tune_options"+"."+"h2_zero_copy_fwd_send", "body", m.H2ZeroCopyFwdSend); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func (m *GlobalTuneOptions) validateHTTPMaxhdr(formats strfmt.Registry) error {
-	if swag.IsZero(m.HTTPMaxhdr) { // not required
-		return nil
-	}
-
-	if err := validate.MinimumInt("tune_options"+"."+"http_maxhdr", "body", m.HTTPMaxhdr, 1, false); err != nil {
-		return err
-	}
-
-	if err := validate.MaximumInt("tune_options"+"."+"http_maxhdr", "body", m.HTTPMaxhdr, 32767, false); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-var globalTuneOptionsTypeIdlePoolSharedPropEnum []interface{}
-
-func init() {
-	var res []string
-	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
-		panic(err)
-	}
-	for _, v := range res {
-		globalTuneOptionsTypeIdlePoolSharedPropEnum = append(globalTuneOptionsTypeIdlePoolSharedPropEnum, v)
-	}
-}
-
-const (
-
-	// GlobalTuneOptionsIdlePoolSharedEnabled captures enum value "enabled"
-	GlobalTuneOptionsIdlePoolSharedEnabled string = "enabled"
-
-	// GlobalTuneOptionsIdlePoolSharedDisabled captures enum value "disabled"
-	GlobalTuneOptionsIdlePoolSharedDisabled string = "disabled"
-)
-
-// prop value enum
-func (m *GlobalTuneOptions) validateIdlePoolSharedEnum(path, location string, value string) error {
-	if err := validate.EnumCase(path, location, value, globalTuneOptionsTypeIdlePoolSharedPropEnum, true); err != nil {
-		return err
-	}
-	return nil
-}
-
-func (m *GlobalTuneOptions) validateIdlePoolShared(formats strfmt.Registry) error {
-	if swag.IsZero(m.IdlePoolShared) { // not required
-		return nil
-	}
-
-	// value enum
-	if err := m.validateIdlePoolSharedEnum("tune_options"+"."+"idle_pool_shared", "body", m.IdlePoolShared); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func (m *GlobalTuneOptions) validateIdletimer(formats strfmt.Registry) error {
-	if swag.IsZero(m.Idletimer) { // not required
-		return nil
-	}
-
-	if err := validate.MinimumInt("tune_options"+"."+"idletimer", "body", *m.Idletimer, 0, false); err != nil {
-		return err
-	}
-
-	if err := validate.MaximumInt("tune_options"+"."+"idletimer", "body", *m.Idletimer, 65535, false); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-var globalTuneOptionsTypeListenerDefaultShardsPropEnum []interface{}
-
-func init() {
-	var res []string
-	if err := json.Unmarshal([]byte(`["by-process","by-thread","by-group"]`), &res); err != nil {
-		panic(err)
-	}
-	for _, v := range res {
-		globalTuneOptionsTypeListenerDefaultShardsPropEnum = append(globalTuneOptionsTypeListenerDefaultShardsPropEnum, v)
-	}
-}
-
-const (
-
-	// GlobalTuneOptionsListenerDefaultShardsByDashProcess captures enum value "by-process"
-	GlobalTuneOptionsListenerDefaultShardsByDashProcess string = "by-process"
-
-	// GlobalTuneOptionsListenerDefaultShardsByDashThread captures enum value "by-thread"
-	GlobalTuneOptionsListenerDefaultShardsByDashThread string = "by-thread"
-
-	// GlobalTuneOptionsListenerDefaultShardsByDashGroup captures enum value "by-group"
-	GlobalTuneOptionsListenerDefaultShardsByDashGroup string = "by-group"
-)
-
-// prop value enum
-func (m *GlobalTuneOptions) validateListenerDefaultShardsEnum(path, location string, value string) error {
-	if err := validate.EnumCase(path, location, value, globalTuneOptionsTypeListenerDefaultShardsPropEnum, true); err != nil {
-		return err
-	}
-	return nil
-}
-
-func (m *GlobalTuneOptions) validateListenerDefaultShards(formats strfmt.Registry) error {
-	if swag.IsZero(m.ListenerDefaultShards) { // not required
-		return nil
-	}
-
-	// value enum
-	if err := m.validateListenerDefaultShardsEnum("tune_options"+"."+"listener_default_shards", "body", m.ListenerDefaultShards); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-var globalTuneOptionsTypeListenerMultiQueuePropEnum []interface{}
-
-func init() {
-	var res []string
-	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
-		panic(err)
-	}
-	for _, v := range res {
-		globalTuneOptionsTypeListenerMultiQueuePropEnum = append(globalTuneOptionsTypeListenerMultiQueuePropEnum, v)
-	}
-}
-
-const (
-
-	// GlobalTuneOptionsListenerMultiQueueEnabled captures enum value "enabled"
-	GlobalTuneOptionsListenerMultiQueueEnabled string = "enabled"
-
-	// GlobalTuneOptionsListenerMultiQueueDisabled captures enum value "disabled"
-	GlobalTuneOptionsListenerMultiQueueDisabled string = "disabled"
-)
-
-// prop value enum
-func (m *GlobalTuneOptions) validateListenerMultiQueueEnum(path, location string, value string) error {
-	if err := validate.EnumCase(path, location, value, globalTuneOptionsTypeListenerMultiQueuePropEnum, true); err != nil {
-		return err
-	}
-	return nil
-}
-
-func (m *GlobalTuneOptions) validateListenerMultiQueue(formats strfmt.Registry) error {
-	if swag.IsZero(m.ListenerMultiQueue) { // not required
-		return nil
-	}
-
-	// value enum
-	if err := m.validateListenerMultiQueueEnum("tune_options"+"."+"listener_multi_queue", "body", m.ListenerMultiQueue); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func (m *GlobalTuneOptions) validateLuaBurstTimeout(formats strfmt.Registry) error {
-	if swag.IsZero(m.LuaBurstTimeout) { // not required
-		return nil
-	}
-
-	if err := validate.MinimumInt("tune_options"+"."+"lua_burst_timeout", "body", *m.LuaBurstTimeout, 0, false); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-var globalTuneOptionsTypeLuaLogLoggersPropEnum []interface{}
-
-func init() {
-	var res []string
-	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
-		panic(err)
-	}
-	for _, v := range res {
-		globalTuneOptionsTypeLuaLogLoggersPropEnum = append(globalTuneOptionsTypeLuaLogLoggersPropEnum, v)
-	}
-}
-
-const (
-
-	// GlobalTuneOptionsLuaLogLoggersEnabled captures enum value "enabled"
-	GlobalTuneOptionsLuaLogLoggersEnabled string = "enabled"
-
-	// GlobalTuneOptionsLuaLogLoggersDisabled captures enum value "disabled"
-	GlobalTuneOptionsLuaLogLoggersDisabled string = "disabled"
-)
-
-// prop value enum
-func (m *GlobalTuneOptions) validateLuaLogLoggersEnum(path, location string, value string) error {
-	if err := validate.EnumCase(path, location, value, globalTuneOptionsTypeLuaLogLoggersPropEnum, true); err != nil {
-		return err
-	}
-	return nil
-}
-
-func (m *GlobalTuneOptions) validateLuaLogLoggers(formats strfmt.Registry) error {
-	if swag.IsZero(m.LuaLogLoggers) { // not required
-		return nil
-	}
-
-	// value enum
-	if err := m.validateLuaLogLoggersEnum("tune_options"+"."+"lua_log_loggers", "body", m.LuaLogLoggers); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-var globalTuneOptionsTypeLuaLogStderrPropEnum []interface{}
-
-func init() {
-	var res []string
-	if err := json.Unmarshal([]byte(`["auto","enabled","disabled"]`), &res); err != nil {
-		panic(err)
-	}
-	for _, v := range res {
-		globalTuneOptionsTypeLuaLogStderrPropEnum = append(globalTuneOptionsTypeLuaLogStderrPropEnum, v)
-	}
-}
-
-const (
-
-	// GlobalTuneOptionsLuaLogStderrAuto captures enum value "auto"
-	GlobalTuneOptionsLuaLogStderrAuto string = "auto"
-
-	// GlobalTuneOptionsLuaLogStderrEnabled captures enum value "enabled"
-	GlobalTuneOptionsLuaLogStderrEnabled string = "enabled"
-
-	// GlobalTuneOptionsLuaLogStderrDisabled captures enum value "disabled"
-	GlobalTuneOptionsLuaLogStderrDisabled string = "disabled"
-)
-
-// prop value enum
-func (m *GlobalTuneOptions) validateLuaLogStderrEnum(path, location string, value string) error {
-	if err := validate.EnumCase(path, location, value, globalTuneOptionsTypeLuaLogStderrPropEnum, true); err != nil {
-		return err
-	}
-	return nil
-}
-
-func (m *GlobalTuneOptions) validateLuaLogStderr(formats strfmt.Registry) error {
-	if swag.IsZero(m.LuaLogStderr) { // not required
-		return nil
-	}
-
-	// value enum
-	if err := m.validateLuaLogStderrEnum("tune_options"+"."+"lua_log_stderr", "body", m.LuaLogStderr); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func (m *GlobalTuneOptions) validateLuaServiceTimeout(formats strfmt.Registry) error {
-	if swag.IsZero(m.LuaServiceTimeout) { // not required
-		return nil
-	}
-
-	if err := validate.MinimumInt("tune_options"+"."+"lua_service_timeout", "body", *m.LuaServiceTimeout, 0, false); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func (m *GlobalTuneOptions) validateLuaSessionTimeout(formats strfmt.Registry) error {
-	if swag.IsZero(m.LuaSessionTimeout) { // not required
-		return nil
-	}
-
-	if err := validate.MinimumInt("tune_options"+"."+"lua_session_timeout", "body", *m.LuaSessionTimeout, 0, false); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func (m *GlobalTuneOptions) validateLuaTaskTimeout(formats strfmt.Registry) error {
-	if swag.IsZero(m.LuaTaskTimeout) { // not required
-		return nil
-	}
-
-	if err := validate.MinimumInt("tune_options"+"."+"lua_task_timeout", "body", *m.LuaTaskTimeout, 0, false); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-var globalTuneOptionsTypePtZeroCopyForwardingPropEnum []interface{}
-
-func init() {
-	var res []string
-	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
-		panic(err)
-	}
-	for _, v := range res {
-		globalTuneOptionsTypePtZeroCopyForwardingPropEnum = append(globalTuneOptionsTypePtZeroCopyForwardingPropEnum, v)
-	}
-}
-
-const (
-
-	// GlobalTuneOptionsPtZeroCopyForwardingEnabled captures enum value "enabled"
-	GlobalTuneOptionsPtZeroCopyForwardingEnabled string = "enabled"
-
-	// GlobalTuneOptionsPtZeroCopyForwardingDisabled captures enum value "disabled"
-	GlobalTuneOptionsPtZeroCopyForwardingDisabled string = "disabled"
-)
-
-// prop value enum
-func (m *GlobalTuneOptions) validatePtZeroCopyForwardingEnum(path, location string, value string) error {
-	if err := validate.EnumCase(path, location, value, globalTuneOptionsTypePtZeroCopyForwardingPropEnum, true); err != nil {
-		return err
-	}
-	return nil
-}
-
-func (m *GlobalTuneOptions) validatePtZeroCopyForwarding(formats strfmt.Registry) error {
-	if swag.IsZero(m.PtZeroCopyForwarding) { // not required
-		return nil
-	}
-
-	// value enum
-	if err := m.validatePtZeroCopyForwardingEnum("tune_options"+"."+"pt_zero_copy_forwarding", "body", m.PtZeroCopyForwarding); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func (m *GlobalTuneOptions) validateQuicFrontendMaxIdleTimeout(formats strfmt.Registry) error {
-	if swag.IsZero(m.QuicFrontendMaxIdleTimeout) { // not required
-		return nil
-	}
-
-	if err := validate.MinimumInt("tune_options"+"."+"quic_frontend_max_idle_timeout", "body", *m.QuicFrontendMaxIdleTimeout, 0, false); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func (m *GlobalTuneOptions) validateQuicReorderRatio(formats strfmt.Registry) error {
-	if swag.IsZero(m.QuicReorderRatio) { // not required
-		return nil
-	}
-
-	if err := validate.MinimumInt("tune_options"+"."+"quic_reorder_ratio", "body", *m.QuicReorderRatio, 0, false); err != nil {
-		return err
-	}
-
-	if err := validate.MaximumInt("tune_options"+"."+"quic_reorder_ratio", "body", *m.QuicReorderRatio, 100, false); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-var globalTuneOptionsTypeQuicSocketOwnerPropEnum []interface{}
-
-func init() {
-	var res []string
-	if err := json.Unmarshal([]byte(`["listener","connection"]`), &res); err != nil {
-		panic(err)
-	}
-	for _, v := range res {
-		globalTuneOptionsTypeQuicSocketOwnerPropEnum = append(globalTuneOptionsTypeQuicSocketOwnerPropEnum, v)
-	}
-}
-
-const (
-
-	// GlobalTuneOptionsQuicSocketOwnerListener captures enum value "listener"
-	GlobalTuneOptionsQuicSocketOwnerListener string = "listener"
-
-	// GlobalTuneOptionsQuicSocketOwnerConnection captures enum value "connection"
-	GlobalTuneOptionsQuicSocketOwnerConnection string = "connection"
-)
-
-// prop value enum
-func (m *GlobalTuneOptions) validateQuicSocketOwnerEnum(path, location string, value string) error {
-	if err := validate.EnumCase(path, location, value, globalTuneOptionsTypeQuicSocketOwnerPropEnum, true); err != nil {
-		return err
-	}
-	return nil
-}
-
-func (m *GlobalTuneOptions) validateQuicSocketOwner(formats strfmt.Registry) error {
-	if swag.IsZero(m.QuicSocketOwner) { // not required
-		return nil
-	}
-
-	// value enum
-	if err := m.validateQuicSocketOwnerEnum("tune_options"+"."+"quic_socket_owner", "body", m.QuicSocketOwner); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-var globalTuneOptionsTypeQuicZeroCopyFwdSendPropEnum []interface{}
-
-func init() {
-	var res []string
-	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
-		panic(err)
-	}
-	for _, v := range res {
-		globalTuneOptionsTypeQuicZeroCopyFwdSendPropEnum = append(globalTuneOptionsTypeQuicZeroCopyFwdSendPropEnum, v)
-	}
-}
-
-const (
-
-	// GlobalTuneOptionsQuicZeroCopyFwdSendEnabled captures enum value "enabled"
-	GlobalTuneOptionsQuicZeroCopyFwdSendEnabled string = "enabled"
-
-	// GlobalTuneOptionsQuicZeroCopyFwdSendDisabled captures enum value "disabled"
-	GlobalTuneOptionsQuicZeroCopyFwdSendDisabled string = "disabled"
-)
-
-// prop value enum
-func (m *GlobalTuneOptions) validateQuicZeroCopyFwdSendEnum(path, location string, value string) error {
-	if err := validate.EnumCase(path, location, value, globalTuneOptionsTypeQuicZeroCopyFwdSendPropEnum, true); err != nil {
-		return err
-	}
-	return nil
-}
-
-func (m *GlobalTuneOptions) validateQuicZeroCopyFwdSend(formats strfmt.Registry) error {
-	if swag.IsZero(m.QuicZeroCopyFwdSend) { // not required
-		return nil
-	}
-
-	// value enum
-	if err := m.validateQuicZeroCopyFwdSendEnum("tune_options"+"."+"quic_zero_copy_fwd_send", "body", m.QuicZeroCopyFwdSend); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-var globalTuneOptionsTypeSchedLowLatencyPropEnum []interface{}
-
-func init() {
-	var res []string
-	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
-		panic(err)
-	}
-	for _, v := range res {
-		globalTuneOptionsTypeSchedLowLatencyPropEnum = append(globalTuneOptionsTypeSchedLowLatencyPropEnum, v)
-	}
-}
-
-const (
-
-	// GlobalTuneOptionsSchedLowLatencyEnabled captures enum value "enabled"
-	GlobalTuneOptionsSchedLowLatencyEnabled string = "enabled"
-
-	// GlobalTuneOptionsSchedLowLatencyDisabled captures enum value "disabled"
-	GlobalTuneOptionsSchedLowLatencyDisabled string = "disabled"
-)
-
-// prop value enum
-func (m *GlobalTuneOptions) validateSchedLowLatencyEnum(path, location string, value string) error {
-	if err := validate.EnumCase(path, location, value, globalTuneOptionsTypeSchedLowLatencyPropEnum, true); err != nil {
-		return err
-	}
-	return nil
-}
-
-func (m *GlobalTuneOptions) validateSchedLowLatency(formats strfmt.Registry) error {
-	if swag.IsZero(m.SchedLowLatency) { // not required
-		return nil
-	}
-
-	// value enum
-	if err := m.validateSchedLowLatencyEnum("tune_options"+"."+"sched_low_latency", "body", m.SchedLowLatency); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-var globalTuneOptionsTypeSslKeylogPropEnum []interface{}
-
-func init() {
-	var res []string
-	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
-		panic(err)
-	}
-	for _, v := range res {
-		globalTuneOptionsTypeSslKeylogPropEnum = append(globalTuneOptionsTypeSslKeylogPropEnum, v)
-	}
-}
-
-const (
-
-	// GlobalTuneOptionsSslKeylogEnabled captures enum value "enabled"
-	GlobalTuneOptionsSslKeylogEnabled string = "enabled"
-
-	// GlobalTuneOptionsSslKeylogDisabled captures enum value "disabled"
-	GlobalTuneOptionsSslKeylogDisabled string = "disabled"
-)
-
-// prop value enum
-func (m *GlobalTuneOptions) validateSslKeylogEnum(path, location string, value string) error {
-	if err := validate.EnumCase(path, location, value, globalTuneOptionsTypeSslKeylogPropEnum, true); err != nil {
-		return err
-	}
-	return nil
-}
-
-func (m *GlobalTuneOptions) validateSslKeylog(formats strfmt.Registry) error {
-	if swag.IsZero(m.SslKeylog) { // not required
-		return nil
-	}
-
-	// value enum
-	if err := m.validateSslKeylogEnum("tune_options"+"."+"ssl_keylog", "body", m.SslKeylog); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func (m *GlobalTuneOptions) validateSslLifetime(formats strfmt.Registry) error {
-	if swag.IsZero(m.SslLifetime) { // not required
-		return nil
-	}
-
-	if err := validate.MinimumInt("tune_options"+"."+"ssl_lifetime", "body", *m.SslLifetime, 0, false); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func (m *GlobalTuneOptions) validateZlibMemlevel(formats strfmt.Registry) error {
-	if swag.IsZero(m.ZlibMemlevel) { // not required
-		return nil
-	}
-
-	if err := validate.MinimumInt("tune_options"+"."+"zlib_memlevel", "body", m.ZlibMemlevel, 1, false); err != nil {
-		return err
-	}
-
-	if err := validate.MaximumInt("tune_options"+"."+"zlib_memlevel", "body", m.ZlibMemlevel, 9, false); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func (m *GlobalTuneOptions) validateZlibWindowsize(formats strfmt.Registry) error {
-	if swag.IsZero(m.ZlibWindowsize) { // not required
-		return nil
-	}
-
-	if err := validate.MinimumInt("tune_options"+"."+"zlib_windowsize", "body", m.ZlibWindowsize, 8, false); err != nil {
-		return err
-	}
-
-	if err := validate.MaximumInt("tune_options"+"."+"zlib_windowsize", "body", m.ZlibWindowsize, 15, false); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-// ContextValidate validates this global tune options based on context it is used
-func (m *GlobalTuneOptions) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
-	return nil
-}
-
-// MarshalBinary interface implementation
-func (m *GlobalTuneOptions) MarshalBinary() ([]byte, error) {
-	if m == nil {
-		return nil, nil
-	}
-	return swag.WriteJSON(m)
-}
-
-// UnmarshalBinary interface implementation
-func (m *GlobalTuneOptions) UnmarshalBinary(b []byte) error {
-	var res GlobalTuneOptions
-	if err := swag.ReadJSON(b, &res); err != nil {
-		return err
-	}
-	*m = res
-	return nil
-}
-
-// GlobalWurflOptions global wurfl options
-//
-// swagger:model GlobalWurflOptions
-type GlobalWurflOptions struct {
-
-	// cache size
-	CacheSize int64 `json:"cache_size,omitempty"`
-
-	// data file
-	DataFile string `json:"data_file,omitempty"`
-
-	// information list
-	InformationList string `json:"information_list,omitempty"`
-
-	// information list separator
-	InformationListSeparator string `json:"information_list_separator,omitempty"`
-
-	// patch file
-	PatchFile string `json:"patch_file,omitempty"`
-}
-
-// Validate validates this global wurfl options
-func (m *GlobalWurflOptions) Validate(formats strfmt.Registry) error {
-	return nil
-}
-
-// ContextValidate validates this global wurfl options based on context it is used
-func (m *GlobalWurflOptions) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
-	return nil
-}
-
-// MarshalBinary interface implementation
-func (m *GlobalWurflOptions) MarshalBinary() ([]byte, error) {
-	if m == nil {
-		return nil, nil
-	}
-	return swag.WriteJSON(m)
-}
-
-// UnmarshalBinary interface implementation
-func (m *GlobalWurflOptions) UnmarshalBinary(b []byte) error {
-	var res GlobalWurflOptions
 	if err := swag.ReadJSON(b, &res); err != nil {
 		return err
 	}
