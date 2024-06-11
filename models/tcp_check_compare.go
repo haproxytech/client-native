@@ -72,10 +72,6 @@ func (s TCPCheck) Equal(t TCPCheck, opts ...Options) bool {
 		return false
 	}
 
-	if s.LogMessage != t.LogMessage {
-		return false
-	}
-
 	if s.Match != t.Match {
 		return false
 	}
@@ -209,10 +205,6 @@ func (s TCPCheck) Diff(t TCPCheck, opts ...Options) map[string][]interface{} {
 
 	if s.Linger != t.Linger {
 		diff["Linger"] = []interface{}{s.Linger, t.Linger}
-	}
-
-	if s.LogMessage != t.LogMessage {
-		diff["LogMessage"] = []interface{}{s.LogMessage, t.LogMessage}
 	}
 
 	if s.Match != t.Match {

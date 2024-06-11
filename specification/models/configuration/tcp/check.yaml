@@ -19,12 +19,6 @@ tcp_check:
         - set-var-fmt
         - unset-var
       x-nullable: false
-    log_message:
-      type: string
-      x-dependency:
-        action:
-          value: comment
-          required: true
     check_comment:
       type: string
       x-nullable: false

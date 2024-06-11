@@ -79,9 +79,6 @@ type TCPCheck struct {
 	// linger
 	Linger bool `json:"linger,omitempty"`
 
-	// log message
-	LogMessage string `json:"log_message,omitempty"`
-
 	// match
 	// Pattern: ^[^\s]+$
 	// Enum: [string rstring string-lf binary rbinary binary-lf]

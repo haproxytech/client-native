@@ -285,8 +285,8 @@ func ParseTCPCheck(f types.Action) (check *models.TCPCheck, err error) {
 	switch v := f.(type) {
 	case *tcp_actions.CheckComment:
 		check = &models.TCPCheck{
-			Action:     models.TCPCheckActionComment,
-			LogMessage: v.LogMessage,
+			Action:       models.TCPCheckActionComment,
+			CheckComment: v.LogMessage,
 		}
 	case *actions.CheckConnect:
 		check = &models.TCPCheck{
@@ -373,7 +373,7 @@ func SerializeTCPCheck(f models.TCPCheck) (action types.Action, err error) { //n
 	switch f.Action {
 	case models.TCPCheckActionComment:
 		return &tcp_actions.CheckComment{
-			LogMessage: f.LogMessage,
+			LogMessage: f.CheckComment,
 		}, nil
 	case models.TCPCheckActionConnect:
 		return &actions.CheckConnect{

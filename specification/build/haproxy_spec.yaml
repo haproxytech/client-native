@@ -6442,12 +6442,6 @@ definitions:
               x-dependency:
                   action:
                       value: connect
-          log_message:
-              type: string
-              x-dependency:
-                  action:
-                      required: true
-                      value: comment
           match:
               enum:
                   - string
