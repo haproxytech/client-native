@@ -2090,7 +2090,7 @@ func (s GlobalTuneOptions) Equal(t GlobalTuneOptions, opts ...Options) bool {
 		return false
 	}
 
-	if s.LuaMaxmem != t.LuaMaxmem {
+	if !equalPointers(s.LuaMaxmem, t.LuaMaxmem) {
 		return false
 	}
 
@@ -2421,8 +2421,8 @@ func (s GlobalTuneOptions) Diff(t GlobalTuneOptions, opts ...Options) map[string
 		diff["LuaLogStderr"] = []interface{}{s.LuaLogStderr, t.LuaLogStderr}
 	}
 
-	if s.LuaMaxmem != t.LuaMaxmem {
-		diff["LuaMaxmem"] = []interface{}{s.LuaMaxmem, t.LuaMaxmem}
+	if !equalPointers(s.LuaMaxmem, t.LuaMaxmem) {
+		diff["LuaMaxmem"] = []interface{}{ValueOrNil(s.LuaMaxmem), ValueOrNil(t.LuaMaxmem)}
 	}
 
 	if !equalPointers(s.LuaServiceTimeout, t.LuaServiceTimeout) {

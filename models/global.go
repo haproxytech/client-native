@@ -3135,7 +3135,7 @@ type GlobalTuneOptions struct {
 	LuaLogStderr string `json:"lua_log_stderr,omitempty"`
 
 	// lua maxmem
-	LuaMaxmem bool `json:"lua_maxmem,omitempty"`
+	LuaMaxmem *int64 `json:"lua_maxmem,omitempty"`
 
 	// lua service timeout
 	LuaServiceTimeout *int64 `json:"lua_service_timeout,omitempty"`

@@ -2360,7 +2360,7 @@ func serializeTuneOptions(p parser.Parser, options *models.GlobalTuneOptions) er
 	if err := serializeAutoOnOffOption(p, "tune.lua.log.stderr", options.LuaLogStderr); err != nil {
 		return err
 	}
-	if err := serializeBoolOption(p, "tune.lua.maxmem", options.LuaMaxmem); err != nil {
+	if err := serializeInt64POption(p, "tune.lua.maxmem", options.LuaMaxmem); err != nil {
 		return err
 	}
 	if err := serializeTimeoutSizeOption(p, "tune.lua.session-timeout", options.LuaSessionTimeout); err != nil {
@@ -2810,11 +2810,11 @@ func parseTuneOptions(p parser.Parser) (*models.GlobalTuneOptions, error) { //no
 	}
 	options.LuaForcedYield = intOption
 
-	boolOption, err = parseBoolOption(p, "tune.lua.maxmem")
+	intPOption, err = parseInt64POption(p, "tune.lua.maxmem")
 	if err != nil {
 		return nil, err
 	}
-	options.LuaMaxmem = boolOption
+	options.LuaMaxmem = intPOption
 
 	strOption, err = parseOnOffOption(p, "tune.lua.log.loggers")
 	if err != nil {

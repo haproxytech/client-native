@@ -74,7 +74,7 @@ global
   tune.lua.forced-yield 23
   tune.lua.log.loggers on
   tune.lua.log.stderr auto
-  tune.lua.maxmem
+  tune.lua.maxmem 65536
   tune.lua.session-timeout 25
   tune.lua.task-timeout 26
   tune.lua.service-timeout 27

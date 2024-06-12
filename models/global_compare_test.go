@@ -2730,7 +2730,7 @@ func TestGlobalTuneOptionsEqualFalse(t *testing.T) {
 		result.Idletimer = Ptr(*sample.Idletimer + 1)
 		result.LuaBurstTimeout = Ptr(*sample.LuaBurstTimeout + 1)
 		result.LuaForcedYield = sample.LuaForcedYield + 1
-		result.LuaMaxmem = !sample.LuaMaxmem
+		result.LuaMaxmem = Ptr(*sample.LuaMaxmem + 1)
 		result.LuaServiceTimeout = Ptr(*sample.LuaServiceTimeout + 1)
 		result.LuaSessionTimeout = Ptr(*sample.LuaSessionTimeout + 1)
 		result.LuaTaskTimeout = Ptr(*sample.LuaTaskTimeout + 1)
@@ -2876,7 +2876,7 @@ func TestGlobalTuneOptionsDiffFalse(t *testing.T) {
 		result.Idletimer = Ptr(*sample.Idletimer + 1)
 		result.LuaBurstTimeout = Ptr(*sample.LuaBurstTimeout + 1)
 		result.LuaForcedYield = sample.LuaForcedYield + 1
-		result.LuaMaxmem = !sample.LuaMaxmem
+		result.LuaMaxmem = Ptr(*sample.LuaMaxmem + 1)
 		result.LuaServiceTimeout = Ptr(*sample.LuaServiceTimeout + 1)
 		result.LuaSessionTimeout = Ptr(*sample.LuaSessionTimeout + 1)
 		result.LuaTaskTimeout = Ptr(*sample.LuaTaskTimeout + 1)

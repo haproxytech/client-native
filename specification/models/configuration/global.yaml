@@ -383,8 +383,9 @@ global:
           enum: ["auto", "enabled", "disabled"]
           x-display-name: Send Lua Logs to stderr
         lua_maxmem:
-          type: boolean
+          type: integer
           x-display-name: Lua Maximum Memory Usage
+          x-nullable: true
         lua_session_timeout:
           type: integer
           x-display-name: Lua Session Timeout

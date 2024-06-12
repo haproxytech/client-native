@@ -1702,8 +1702,9 @@ definitions:
                       type: string
                       x-display-name: Send Lua Logs to stderr
                   lua_maxmem:
-                      type: boolean
+                      type: integer
                       x-display-name: Lua Maximum Memory Usage
+                      x-nullable: true
                   lua_service_timeout:
                       type: integer
                       x-display-name: Lua Service timeout

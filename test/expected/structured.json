@@ -264,7 +264,7 @@
             "lua_forced_yield": 23,
             "lua_log_loggers": "enabled",
             "lua_log_stderr": "auto",
-            "lua_maxmem": true,
+            "lua_maxmem": 65536,
             "lua_service_timeout": 27,
             "lua_session_timeout": 25,
             "lua_task_timeout": 26,
