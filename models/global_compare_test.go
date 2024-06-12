@@ -2716,10 +2716,13 @@ func TestGlobalTuneOptionsEqualFalse(t *testing.T) {
 		result.DisableZeroCopyForwarding = !sample.DisableZeroCopyForwarding
 		result.EventsMaxEventsAtOnce = sample.EventsMaxEventsAtOnce + 1
 		result.FailAlloc = !sample.FailAlloc
+		result.H2BeGlitchesThreshold = Ptr(*sample.H2BeGlitchesThreshold + 1)
 		result.H2BeInitialWindowSize = sample.H2BeInitialWindowSize + 1
 		result.H2BeMaxConcurrentStreams = sample.H2BeMaxConcurrentStreams + 1
+		result.H2FeGlitchesThreshold = Ptr(*sample.H2FeGlitchesThreshold + 1)
 		result.H2FeInitialWindowSize = sample.H2FeInitialWindowSize + 1
 		result.H2FeMaxConcurrentStreams = sample.H2FeMaxConcurrentStreams + 1
+		result.H2FeMaxTotalStreams = Ptr(*sample.H2FeMaxTotalStreams + 1)
 		result.H2HeaderTableSize = sample.H2HeaderTableSize + 1
 		result.H2InitialWindowSize = Ptr(*sample.H2InitialWindowSize + 1)
 		result.H2MaxConcurrentStreams = sample.H2MaxConcurrentStreams + 1
@@ -2748,12 +2751,14 @@ func TestGlobalTuneOptionsEqualFalse(t *testing.T) {
 		result.QuicFrontendMaxIdleTimeout = Ptr(*sample.QuicFrontendMaxIdleTimeout + 1)
 		result.QuicFrontendMaxStreamsBidi = Ptr(*sample.QuicFrontendMaxStreamsBidi + 1)
 		result.QuicMaxFrameLoss = Ptr(*sample.QuicMaxFrameLoss + 1)
+		result.QuicReorderRatio = Ptr(*sample.QuicReorderRatio + 1)
 		result.QuicRetryThreshold = Ptr(*sample.QuicRetryThreshold + 1)
 		result.RcvbufBackend = Ptr(*sample.RcvbufBackend + 1)
 		result.RcvbufClient = Ptr(*sample.RcvbufClient + 1)
 		result.RcvbufFrontend = Ptr(*sample.RcvbufFrontend + 1)
 		result.RcvbufServer = Ptr(*sample.RcvbufServer + 1)
 		result.RecvEnough = sample.RecvEnough + 1
+		result.RingQueues = Ptr(*sample.RingQueues + 1)
 		result.RunqueueDepth = sample.RunqueueDepth + 1
 		result.SndbufBackend = Ptr(*sample.SndbufBackend + 1)
 		result.SndbufClient = Ptr(*sample.SndbufClient + 1)
@@ -2862,10 +2867,13 @@ func TestGlobalTuneOptionsDiffFalse(t *testing.T) {
 		result.DisableZeroCopyForwarding = !sample.DisableZeroCopyForwarding
 		result.EventsMaxEventsAtOnce = sample.EventsMaxEventsAtOnce + 1
 		result.FailAlloc = !sample.FailAlloc
+		result.H2BeGlitchesThreshold = Ptr(*sample.H2BeGlitchesThreshold + 1)
 		result.H2BeInitialWindowSize = sample.H2BeInitialWindowSize + 1
 		result.H2BeMaxConcurrentStreams = sample.H2BeMaxConcurrentStreams + 1
+		result.H2FeGlitchesThreshold = Ptr(*sample.H2FeGlitchesThreshold + 1)
 		result.H2FeInitialWindowSize = sample.H2FeInitialWindowSize + 1
 		result.H2FeMaxConcurrentStreams = sample.H2FeMaxConcurrentStreams + 1
+		result.H2FeMaxTotalStreams = Ptr(*sample.H2FeMaxTotalStreams + 1)
 		result.H2HeaderTableSize = sample.H2HeaderTableSize + 1
 		result.H2InitialWindowSize = Ptr(*sample.H2InitialWindowSize + 1)
 		result.H2MaxConcurrentStreams = sample.H2MaxConcurrentStreams + 1
@@ -2894,12 +2902,14 @@ func TestGlobalTuneOptionsDiffFalse(t *testing.T) {
 		result.QuicFrontendMaxIdleTimeout = Ptr(*sample.QuicFrontendMaxIdleTimeout + 1)
 		result.QuicFrontendMaxStreamsBidi = Ptr(*sample.QuicFrontendMaxStreamsBidi + 1)
 		result.QuicMaxFrameLoss = Ptr(*sample.QuicMaxFrameLoss + 1)
+		result.QuicReorderRatio = Ptr(*sample.QuicReorderRatio + 1)
 		result.QuicRetryThreshold = Ptr(*sample.QuicRetryThreshold + 1)
 		result.RcvbufBackend = Ptr(*sample.RcvbufBackend + 1)
 		result.RcvbufClient = Ptr(*sample.RcvbufClient + 1)
 		result.RcvbufFrontend = Ptr(*sample.RcvbufFrontend + 1)
 		result.RcvbufServer = Ptr(*sample.RcvbufServer + 1)
 		result.RecvEnough = sample.RecvEnough + 1
+		result.RingQueues = Ptr(*sample.RingQueues + 1)
 		result.RunqueueDepth = sample.RunqueueDepth + 1
 		result.SndbufBackend = Ptr(*sample.SndbufBackend + 1)
 		result.SndbufClient = Ptr(*sample.SndbufClient + 1)
@@ -2929,7 +2939,7 @@ func TestGlobalTuneOptionsDiffFalse(t *testing.T) {
 
 	for _, sample := range samples {
 		result := sample.a.Diff(sample.b)
-		if len(result) != 80 {
+		if len(result) != 87 {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {
@@ -2939,7 +2949,7 @@ func TestGlobalTuneOptionsDiffFalse(t *testing.T) {
 			if err != nil {
 				t.Errorf(err.Error())
 			}
-			t.Errorf("Expected GlobalTuneOptions to be different in 80 cases, but it is not (%d) %s %s", len(result), a, b)
+			t.Errorf("Expected GlobalTuneOptions to be different in 87 cases, but it is not (%d) %s %s", len(result), a, b)
 		}
 	}
 }

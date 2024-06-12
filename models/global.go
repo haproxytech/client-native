@@ -3009,6 +3009,10 @@ func (m *ThreadGroup) UnmarshalBinary(b []byte) error {
 //
 // swagger:model GlobalTuneOptions
 type GlobalTuneOptions struct {
+	// applet zero copy forwarding
+	// Enum: [enabled disabled]
+	// +kubebuilder:validation:Enum=enabled;disabled;
+	AppletZeroCopyForwarding string `json:"applet_zero_copy_forwarding,omitempty"`
 
 	// buffers limit
 	BuffersLimit *int64 `json:"buffers_limit,omitempty"`
@@ -3052,17 +3056,26 @@ type GlobalTuneOptions struct {
 	// +kubebuilder:validation:Enum=enabled;disabled;
 	H1ZeroCopyFwdSend string `json:"h1_zero_copy_fwd_send,omitempty"`
 
+	// h2 be glitches threshold
+	H2BeGlitchesThreshold *int64 `json:"h2_be_glitches_threshold,omitempty"`
+
 	// h2 be initial window size
 	H2BeInitialWindowSize int64 `json:"h2_be_initial_window_size,omitempty"`
 
 	// h2 be max concurrent streams
 	H2BeMaxConcurrentStreams int64 `json:"h2_be_max_concurrent_streams,omitempty"`
 
+	// h2 fe glitches threshold
+	H2FeGlitchesThreshold *int64 `json:"h2_fe_glitches_threshold,omitempty"`
+
 	// h2 fe initial window size
 	H2FeInitialWindowSize int64 `json:"h2_fe_initial_window_size,omitempty"`
 
 	// h2 fe max concurrent streams
 	H2FeMaxConcurrentStreams int64 `json:"h2_fe_max_concurrent_streams,omitempty"`
+
+	// h2 fe max total streams
+	H2FeMaxTotalStreams *int64 `json:"h2_fe_max_total_streams,omitempty"`
 
 	// h2 header table size
 	// Maximum: 65535
@@ -3193,6 +3206,13 @@ type GlobalTuneOptions struct {
 	// quic max frame loss
 	QuicMaxFrameLoss *int64 `json:"quic_max_frame_loss,omitempty"`
 
+	// quic reorder ratio
+	// Maximum: 100
+	// Minimum: 0
+	// +kubebuilder:validation:Maximum=100
+	// +kubebuilder:validation:Minimum=0
+	QuicReorderRatio *int64 `json:"quic_reorder_ratio,omitempty"`
+
 	// quic retry threshold
 	QuicRetryThreshold *int64 `json:"quic_retry_threshold,omitempty"`
 
@@ -3200,6 +3220,11 @@ type GlobalTuneOptions struct {
 	// Enum: [listener connection]
 	// +kubebuilder:validation:Enum=listener;connection;
 	QuicSocketOwner string `json:"quic_socket_owner,omitempty"`
+
+	// quic zero copy fwd send
+	// Enum: [enabled disabled]
+	// +kubebuilder:validation:Enum=enabled;disabled;
+	QuicZeroCopyFwdSend string `json:"quic_zero_copy_fwd_send,omitempty"`
 
 	// rcvbuf backend
 	RcvbufBackend *int64 `json:"rcvbuf_backend,omitempty"`
@@ -3215,6 +3240,9 @@ type GlobalTuneOptions struct {
 
 	// recv enough
 	RecvEnough int64 `json:"recv_enough,omitempty"`
+
+	// ring queues
+	RingQueues *int64 `json:"ring_queues,omitempty"`
 
 	// runqueue depth
 	RunqueueDepth int64 `json:"runqueue_depth,omitempty"`
@@ -3305,6 +3333,10 @@ type GlobalTuneOptions struct {
 func (m *GlobalTuneOptions) Validate(formats strfmt.Registry) error {
 	var res []error
 
+	if err := m.validateAppletZeroCopyForwarding(formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.validateBuffersReserve(formats); err != nil {
 		res = append(res, err)
 	}
@@ -3365,7 +3397,15 @@ func (m *GlobalTuneOptions) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
+	if err := m.validateQuicReorderRatio(formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.validateQuicSocketOwner(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateQuicZeroCopyFwdSend(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -3388,6 +3428,48 @@ func (m *GlobalTuneOptions) Validate(formats strfmt.Registry) error {
 	if len(res) > 0 {
 		return errors.CompositeValidationError(res...)
 	}
+	return nil
+}
+
+var globalTuneOptionsTypeAppletZeroCopyForwardingPropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		globalTuneOptionsTypeAppletZeroCopyForwardingPropEnum = append(globalTuneOptionsTypeAppletZeroCopyForwardingPropEnum, v)
+	}
+}
+
+const (
+
+	// GlobalTuneOptionsAppletZeroCopyForwardingEnabled captures enum value "enabled"
+	GlobalTuneOptionsAppletZeroCopyForwardingEnabled string = "enabled"
+
+	// GlobalTuneOptionsAppletZeroCopyForwardingDisabled captures enum value "disabled"
+	GlobalTuneOptionsAppletZeroCopyForwardingDisabled string = "disabled"
+)
+
+// prop value enum
+func (m *GlobalTuneOptions) validateAppletZeroCopyForwardingEnum(path, location string, value string) error {
+	if err := validate.EnumCase(path, location, value, globalTuneOptionsTypeAppletZeroCopyForwardingPropEnum, true); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *GlobalTuneOptions) validateAppletZeroCopyForwarding(formats strfmt.Registry) error {
+	if swag.IsZero(m.AppletZeroCopyForwarding) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateAppletZeroCopyForwardingEnum("tune_options"+"."+"applet_zero_copy_forwarding", "body", m.AppletZeroCopyForwarding); err != nil {
+		return err
+	}
+
 	return nil
 }
 
@@ -3889,6 +3971,22 @@ func (m *GlobalTuneOptions) validatePtZeroCopyForwarding(formats strfmt.Registry
 	return nil
 }
 
+func (m *GlobalTuneOptions) validateQuicReorderRatio(formats strfmt.Registry) error {
+	if swag.IsZero(m.QuicReorderRatio) { // not required
+		return nil
+	}
+
+	if err := validate.MinimumInt("tune_options"+"."+"quic_reorder_ratio", "body", *m.QuicReorderRatio, 0, false); err != nil {
+		return err
+	}
+
+	if err := validate.MaximumInt("tune_options"+"."+"quic_reorder_ratio", "body", *m.QuicReorderRatio, 100, false); err != nil {
+		return err
+	}
+
+	return nil
+}
+
 var globalTuneOptionsTypeQuicSocketOwnerPropEnum []interface{}
 
 func init() {
@@ -3925,6 +4023,48 @@ func (m *GlobalTuneOptions) validateQuicSocketOwner(formats strfmt.Registry) err
 
 	// value enum
 	if err := m.validateQuicSocketOwnerEnum("tune_options"+"."+"quic_socket_owner", "body", m.QuicSocketOwner); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+var globalTuneOptionsTypeQuicZeroCopyFwdSendPropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		globalTuneOptionsTypeQuicZeroCopyFwdSendPropEnum = append(globalTuneOptionsTypeQuicZeroCopyFwdSendPropEnum, v)
+	}
+}
+
+const (
+
+	// GlobalTuneOptionsQuicZeroCopyFwdSendEnabled captures enum value "enabled"
+	GlobalTuneOptionsQuicZeroCopyFwdSendEnabled string = "enabled"
+
+	// GlobalTuneOptionsQuicZeroCopyFwdSendDisabled captures enum value "disabled"
+	GlobalTuneOptionsQuicZeroCopyFwdSendDisabled string = "disabled"
+)
+
+// prop value enum
+func (m *GlobalTuneOptions) validateQuicZeroCopyFwdSendEnum(path, location string, value string) error {
+	if err := validate.EnumCase(path, location, value, globalTuneOptionsTypeQuicZeroCopyFwdSendPropEnum, true); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *GlobalTuneOptions) validateQuicZeroCopyFwdSend(formats strfmt.Registry) error {
+	if swag.IsZero(m.QuicZeroCopyFwdSend) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateQuicZeroCopyFwdSendEnum("tune_options"+"."+"quic_zero_copy_fwd_send", "body", m.QuicZeroCopyFwdSend); err != nil {
 		return err
 	}
 

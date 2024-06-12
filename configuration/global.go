@@ -2297,6 +2297,9 @@ func serializeTuneOptions(p parser.Parser, options *models.GlobalTuneOptions) er
 	if options == nil {
 		return nil
 	}
+	if err := serializeOnOffOption(p, "tune.applet.zero-copy-forwarding", options.AppletZeroCopyForwarding); err != nil {
+		return err
+	}
 	if err := serializeInt64POption(p, "tune.buffers.limit", options.BuffersLimit); err != nil {
 		return err
 	}
@@ -2420,6 +2423,9 @@ func serializeTuneOptions(p parser.Parser, options *models.GlobalTuneOptions) er
 	if err := serializeInt64Option(p, "tune.recv_enough", options.RecvEnough); err != nil {
 		return err
 	}
+	if err := serializeInt64POption(p, "tune.ring.queues", options.RingQueues); err != nil {
+		return err
+	}
 	if err := serializeInt64Option(p, "tune.runqueue-depth", options.RunqueueDepth); err != nil {
 		return err
 	}
@@ -2489,6 +2495,9 @@ func serializeTuneOptions(p parser.Parser, options *models.GlobalTuneOptions) er
 	if err := serializeInt64POption(p, "tune.quic.max-frame-loss", options.QuicMaxFrameLoss); err != nil {
 		return err
 	}
+	if err := serializeInt64POption(p, "tune.quic.reorder-ratio", options.QuicReorderRatio); err != nil {
+		return err
+	}
 	if err := serializeInt64POption(p, "tune.quic.retry-threshold", options.QuicRetryThreshold); err != nil {
 		return err
 	}
@@ -2497,6 +2506,9 @@ func serializeTuneOptions(p parser.Parser, options *models.GlobalTuneOptions) er
 		value = nil
 	}
 	if err := p.Set(parser.Global, parser.GlobalSectionName, "tune.quic.socket-owner", value); err != nil {
+		return err
+	}
+	if err := serializeOnOffOption(p, "tune.quic.zero-copy-fwd-send", options.QuicZeroCopyFwdSend); err != nil {
 		return err
 	}
 	if err := serializeInt64Option(p, "tune.zlib.memlevel", options.ZlibMemlevel); err != nil {
@@ -2511,16 +2523,25 @@ func serializeTuneOptions(p parser.Parser, options *models.GlobalTuneOptions) er
 	if err := serializeOnOffOption(p, "tune.h1.zero-copy-fwd-send", options.H1ZeroCopyFwdSend); err != nil {
 		return err
 	}
+	if err := serializeInt64POption(p, "tune.h2.be.glitches-threshold", options.H2BeGlitchesThreshold); err != nil {
+		return err
+	}
 	if err := serializeInt64Option(p, "tune.h2.be.initial-window-size", options.H2BeInitialWindowSize); err != nil {
 		return err
 	}
 	if err := serializeInt64Option(p, "tune.h2.be.max-concurrent-streams", options.H2BeMaxConcurrentStreams); err != nil {
 		return err
 	}
+	if err := serializeInt64POption(p, "tune.h2.fe.glitches-threshold", options.H2FeGlitchesThreshold); err != nil {
+		return err
+	}
 	if err := serializeInt64Option(p, "tune.h2.fe.initial-window-size", options.H2FeInitialWindowSize); err != nil {
 		return err
 	}
 	if err := serializeInt64Option(p, "tune.h2.fe.max-concurrent-streams", options.H2FeMaxConcurrentStreams); err != nil {
+		return err
+	}
+	if err := serializeInt64POption(p, "tune.h2.fe.max-total-streams", options.H2FeMaxTotalStreams); err != nil {
 		return err
 	}
 	if err := serializeOnOffOption(p, "tune.h2.zero-copy-fwd-send", options.H2ZeroCopyFwdSend); err != nil {
@@ -2695,6 +2716,12 @@ func parseTuneOptions(p parser.Parser) (*models.GlobalTuneOptions, error) { //no
 	var boolOption bool
 	var strOption string
 	var err error
+
+	strOption, err = parseOnOffOption(p, "tune.applet.zero-copy-forwarding")
+	if err != nil {
+		return nil, err
+	}
+	options.AppletZeroCopyForwarding = strOption
 
 	intPOption, err = parseInt64POption(p, "tune.buffers.limit")
 	if err != nil {
@@ -2942,6 +2969,12 @@ func parseTuneOptions(p parser.Parser) (*models.GlobalTuneOptions, error) { //no
 	}
 	options.RecvEnough = intOption
 
+	intPOption, err = parseInt64POption(p, "tune.ring.queues")
+	if err != nil {
+		return nil, err
+	}
+	options.RingQueues = intPOption
+
 	intOption, err = parseInt64Option(p, "tune.runqueue-depth")
 	if err != nil {
 		return nil, err
@@ -3098,6 +3131,12 @@ func parseTuneOptions(p parser.Parser) (*models.GlobalTuneOptions, error) { //no
 	}
 	options.QuicMaxFrameLoss = intPOption
 
+	intPOption, err = parseInt64POption(p, "tune.quic.reorder-ratio")
+	if err != nil {
+		return nil, err
+	}
+	options.QuicReorderRatio = intPOption
+
 	intPOption, err = parseInt64POption(p, "tune.quic.retry-threshold")
 	if err != nil {
 		return nil, err
@@ -3112,6 +3151,12 @@ func parseTuneOptions(p parser.Parser) (*models.GlobalTuneOptions, error) { //no
 		}
 		options.QuicSocketOwner = value.Owner
 	}
+
+	strOption, err = parseOnOffOption(p, "tune.quic.zero-copy-fwd-send")
+	if err != nil {
+		return nil, err
+	}
+	options.QuicZeroCopyFwdSend = strOption
 
 	intOption, err = parseInt64Option(p, "tune.zlib.memlevel")
 	if err != nil {
@@ -3143,6 +3188,12 @@ func parseTuneOptions(p parser.Parser) (*models.GlobalTuneOptions, error) { //no
 	}
 	options.H1ZeroCopyFwdSend = strOption
 
+	intPOption, err = parseInt64POption(p, "tune.h2.be.glitches-threshold")
+	if err != nil {
+		return nil, err
+	}
+	options.H2BeGlitchesThreshold = intPOption
+
 	intOption, err = parseInt64Option(p, "tune.h2.be.initial-window-size")
 	if err != nil {
 		return nil, err
@@ -3155,6 +3206,12 @@ func parseTuneOptions(p parser.Parser) (*models.GlobalTuneOptions, error) { //no
 	}
 	options.H2BeMaxConcurrentStreams = intOption
 
+	intPOption, err = parseInt64POption(p, "tune.h2.fe.glitches-threshold")
+	if err != nil {
+		return nil, err
+	}
+	options.H2FeGlitchesThreshold = intPOption
+
 	intOption, err = parseInt64Option(p, "tune.h2.fe.initial-window-size")
 	if err != nil {
 		return nil, err
@@ -3166,6 +3223,12 @@ func parseTuneOptions(p parser.Parser) (*models.GlobalTuneOptions, error) { //no
 		return nil, err
 	}
 	options.H2FeMaxConcurrentStreams = intOption
+
+	intPOption, err = parseInt64POption(p, "tune.h2.fe.max-total-streams")
+	if err != nil {
+		return nil, err
+	}
+	options.H2FeMaxTotalStreams = intPOption
 
 	strOption, err = parseOnOffOption(p, "tune.h2.zero-copy-fwd-send")
 	if err != nil {

@@ -1970,6 +1970,10 @@ func (s ThreadGroup) Diff(t ThreadGroup, opts ...Options) map[string][]interface
 //
 // opts ...Options are ignored in this method
 func (s GlobalTuneOptions) Equal(t GlobalTuneOptions, opts ...Options) bool {
+	if s.AppletZeroCopyForwarding != t.AppletZeroCopyForwarding {
+		return false
+	}
+
 	if !equalPointers(s.BuffersLimit, t.BuffersLimit) {
 		return false
 	}
@@ -2010,6 +2014,10 @@ func (s GlobalTuneOptions) Equal(t GlobalTuneOptions, opts ...Options) bool {
 		return false
 	}
 
+	if !equalPointers(s.H2BeGlitchesThreshold, t.H2BeGlitchesThreshold) {
+		return false
+	}
+
 	if s.H2BeInitialWindowSize != t.H2BeInitialWindowSize {
 		return false
 	}
@@ -2018,11 +2026,19 @@ func (s GlobalTuneOptions) Equal(t GlobalTuneOptions, opts ...Options) bool {
 		return false
 	}
 
+	if !equalPointers(s.H2FeGlitchesThreshold, t.H2FeGlitchesThreshold) {
+		return false
+	}
+
 	if s.H2FeInitialWindowSize != t.H2FeInitialWindowSize {
 		return false
 	}
 
 	if s.H2FeMaxConcurrentStreams != t.H2FeMaxConcurrentStreams {
+		return false
+	}
+
+	if !equalPointers(s.H2FeMaxTotalStreams, t.H2FeMaxTotalStreams) {
 		return false
 	}
 
@@ -2166,11 +2182,19 @@ func (s GlobalTuneOptions) Equal(t GlobalTuneOptions, opts ...Options) bool {
 		return false
 	}
 
+	if !equalPointers(s.QuicReorderRatio, t.QuicReorderRatio) {
+		return false
+	}
+
 	if !equalPointers(s.QuicRetryThreshold, t.QuicRetryThreshold) {
 		return false
 	}
 
 	if s.QuicSocketOwner != t.QuicSocketOwner {
+		return false
+	}
+
+	if s.QuicZeroCopyFwdSend != t.QuicZeroCopyFwdSend {
 		return false
 	}
 
@@ -2191,6 +2215,10 @@ func (s GlobalTuneOptions) Equal(t GlobalTuneOptions, opts ...Options) bool {
 	}
 
 	if s.RecvEnough != t.RecvEnough {
+		return false
+	}
+
+	if !equalPointers(s.RingQueues, t.RingQueues) {
 		return false
 	}
 
@@ -2301,6 +2329,10 @@ func (s GlobalTuneOptions) Equal(t GlobalTuneOptions, opts ...Options) bool {
 // opts ...Options are ignored in this method
 func (s GlobalTuneOptions) Diff(t GlobalTuneOptions, opts ...Options) map[string][]interface{} {
 	diff := make(map[string][]interface{})
+	if s.AppletZeroCopyForwarding != t.AppletZeroCopyForwarding {
+		diff["AppletZeroCopyForwarding"] = []interface{}{s.AppletZeroCopyForwarding, t.AppletZeroCopyForwarding}
+	}
+
 	if !equalPointers(s.BuffersLimit, t.BuffersLimit) {
 		diff["BuffersLimit"] = []interface{}{ValueOrNil(s.BuffersLimit), ValueOrNil(t.BuffersLimit)}
 	}
@@ -2341,6 +2373,10 @@ func (s GlobalTuneOptions) Diff(t GlobalTuneOptions, opts ...Options) map[string
 		diff["H1ZeroCopyFwdSend"] = []interface{}{s.H1ZeroCopyFwdSend, t.H1ZeroCopyFwdSend}
 	}
 
+	if !equalPointers(s.H2BeGlitchesThreshold, t.H2BeGlitchesThreshold) {
+		diff["H2BeGlitchesThreshold"] = []interface{}{ValueOrNil(s.H2BeGlitchesThreshold), ValueOrNil(t.H2BeGlitchesThreshold)}
+	}
+
 	if s.H2BeInitialWindowSize != t.H2BeInitialWindowSize {
 		diff["H2BeInitialWindowSize"] = []interface{}{s.H2BeInitialWindowSize, t.H2BeInitialWindowSize}
 	}
@@ -2349,12 +2385,20 @@ func (s GlobalTuneOptions) Diff(t GlobalTuneOptions, opts ...Options) map[string
 		diff["H2BeMaxConcurrentStreams"] = []interface{}{s.H2BeMaxConcurrentStreams, t.H2BeMaxConcurrentStreams}
 	}
 
+	if !equalPointers(s.H2FeGlitchesThreshold, t.H2FeGlitchesThreshold) {
+		diff["H2FeGlitchesThreshold"] = []interface{}{ValueOrNil(s.H2FeGlitchesThreshold), ValueOrNil(t.H2FeGlitchesThreshold)}
+	}
+
 	if s.H2FeInitialWindowSize != t.H2FeInitialWindowSize {
 		diff["H2FeInitialWindowSize"] = []interface{}{s.H2FeInitialWindowSize, t.H2FeInitialWindowSize}
 	}
 
 	if s.H2FeMaxConcurrentStreams != t.H2FeMaxConcurrentStreams {
 		diff["H2FeMaxConcurrentStreams"] = []interface{}{s.H2FeMaxConcurrentStreams, t.H2FeMaxConcurrentStreams}
+	}
+
+	if !equalPointers(s.H2FeMaxTotalStreams, t.H2FeMaxTotalStreams) {
+		diff["H2FeMaxTotalStreams"] = []interface{}{ValueOrNil(s.H2FeMaxTotalStreams), ValueOrNil(t.H2FeMaxTotalStreams)}
 	}
 
 	if s.H2HeaderTableSize != t.H2HeaderTableSize {
@@ -2497,12 +2541,20 @@ func (s GlobalTuneOptions) Diff(t GlobalTuneOptions, opts ...Options) map[string
 		diff["QuicMaxFrameLoss"] = []interface{}{ValueOrNil(s.QuicMaxFrameLoss), ValueOrNil(t.QuicMaxFrameLoss)}
 	}
 
+	if !equalPointers(s.QuicReorderRatio, t.QuicReorderRatio) {
+		diff["QuicReorderRatio"] = []interface{}{ValueOrNil(s.QuicReorderRatio), ValueOrNil(t.QuicReorderRatio)}
+	}
+
 	if !equalPointers(s.QuicRetryThreshold, t.QuicRetryThreshold) {
 		diff["QuicRetryThreshold"] = []interface{}{ValueOrNil(s.QuicRetryThreshold), ValueOrNil(t.QuicRetryThreshold)}
 	}
 
 	if s.QuicSocketOwner != t.QuicSocketOwner {
 		diff["QuicSocketOwner"] = []interface{}{s.QuicSocketOwner, t.QuicSocketOwner}
+	}
+
+	if s.QuicZeroCopyFwdSend != t.QuicZeroCopyFwdSend {
+		diff["QuicZeroCopyFwdSend"] = []interface{}{s.QuicZeroCopyFwdSend, t.QuicZeroCopyFwdSend}
 	}
 
 	if !equalPointers(s.RcvbufBackend, t.RcvbufBackend) {
@@ -2523,6 +2575,10 @@ func (s GlobalTuneOptions) Diff(t GlobalTuneOptions, opts ...Options) map[string
 
 	if s.RecvEnough != t.RecvEnough {
 		diff["RecvEnough"] = []interface{}{s.RecvEnough, t.RecvEnough}
+	}
+
+	if !equalPointers(s.RingQueues, t.RingQueues) {
+		diff["RingQueues"] = []interface{}{ValueOrNil(s.RingQueues), ValueOrNil(t.RingQueues)}
 	}
 
 	if s.RunqueueDepth != t.RunqueueDepth {

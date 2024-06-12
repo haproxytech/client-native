@@ -49,6 +49,7 @@ global
   gid 1
   profiling.memory on
   ssl-mode-async
+  tune.applet.zero-copy-forwarding off
   tune.buffers.limit 11
   tune.buffers.reserve 12
   tune.bufsize 13
@@ -92,6 +93,7 @@ global
   tune.rcvbuf.frontend 2048
   tune.rcvbuf.server 36
   tune.recv_enough 37
+  tune.ring.queues 8
   tune.runqueue-depth 38
   tune.sched.low-latency on
   tune.sndbuf.backend 1024
@@ -118,8 +120,10 @@ global
   tune.quic.frontend.max-idle-timeout 10000
   tune.quic.frontend.max-streams-bidi 100
   tune.quic.max-frame-loss 5
+  tune.quic.reorder-ratio 75
   tune.quic.retry-threshold 5
   tune.quic.socket-owner connection
+  tune.quic.zero-copy-fwd-send on
   tune.zlib.memlevel 54
   tune.zlib.windowsize 55
   tune.memory.hot-size 56
@@ -219,10 +223,13 @@ global
   unsetenv third fourth
   anonkey 25
   tune.peers.max-updates-at-once 200
+  tune.h2.be.glitches-threshold 16
   tune.h2.be.initial-window-size 201
   tune.h2.be.max-concurrent-streams 202
+  tune.h2.fe.glitches-threshold 8
   tune.h2.fe.initial-window-size 203
   tune.h2.fe.max-concurrent-streams 204
+  tune.h2.fe.max-total-streams 8192
   tune.lua.burst-timeout 205
   ssl-default-bind-sigalgs RSA+SHA256
   ssl-default-bind-client-sigalgs ECDSA+SHA256:RSA+SHA256
