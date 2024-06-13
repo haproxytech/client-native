@@ -78,11 +78,9 @@ func (c *client) GetTCPRequestRule(id int64, parentType, parentName string, tran
 		return 0, nil, err
 	}
 
-	var section parser.Section
-	if parentType == BackendParentName {
-		section = parser.Backends
-	} else if parentType == FrontendParentName {
-		section = parser.Frontends
+	section, parentName, err := getParserFromParent("tcp-request", parentType, parentName)
+	if err != nil {
+		return v, nil, err
 	}
 
 	data, err := p.GetOne(section, parentName, "tcp-request", int(id))
@@ -105,13 +103,10 @@ func (c *client) DeleteTCPRequestRule(id int64, parentType string, parentName st
 	if err != nil {
 		return err
 	}
-	var section parser.Section
-	if parentType == BackendParentName {
-		section = parser.Backends
-	} else if parentType == FrontendParentName {
-		section = parser.Frontends
+	section, parentName, err := getParserFromParent("tcp-request", parentType, parentName)
+	if err != nil {
+		return err
 	}
-
 	if err := p.Delete(section, parentName, "tcp-request", int(id)); err != nil {
 		return c.HandleError(strconv.FormatInt(id, 10), parentType, parentName, t, transactionID == "", err)
 	}
@@ -134,11 +129,9 @@ func (c *client) CreateTCPRequestRule(id int64, parentType string, parentName st
 		return err
 	}
 
-	var section parser.Section
-	if parentType == BackendParentName {
-		section = parser.Backends
-	} else if parentType == FrontendParentName {
-		section = parser.Frontends
+	section, parentName, err := getParserFromParent("tcp-request", parentType, parentName)
+	if err != nil {
+		return err
 	}
 
 	s, err := SerializeTCPRequestRule(*data)
@@ -155,8 +148,6 @@ func (c *client) CreateTCPRequestRule(id int64, parentType string, parentName st
 
 // EditTCPRequestRule edits a tcp request rule in configuration. One of version or transactionID is
 // mandatory. Returns error on fail, nil on success.
-//
-//nolint:dupl
 func (c *client) EditTCPRequestRule(id int64, parentType string, parentName string, data *models.TCPRequestRule, transactionID string, version int64) error {
 	if c.UseModelsValidation {
 		validationErr := data.Validate(strfmt.Default)
@@ -168,12 +159,9 @@ func (c *client) EditTCPRequestRule(id int64, parentType string, parentName stri
 	if err != nil {
 		return err
 	}
-
-	var section parser.Section
-	if parentType == BackendParentName {
-		section = parser.Backends
-	} else if parentType == FrontendParentName {
-		section = parser.Frontends
+	section, parentName, err := getParserFromParent("tcp-request", parentType, parentName)
+	if err != nil {
+		return err
 	}
 
 	if _, err = p.GetOne(section, parentName, "tcp-request", int(id)); err != nil {
@@ -209,11 +197,9 @@ func (c *client) ReplaceTCPRequestRules(parentType string, parentName string, da
 		return err
 	}
 
-	var section parser.Section
-	if parentType == BackendParentName {
-		section = parser.Backends
-	} else if parentType == FrontendParentName {
-		section = parser.Frontends
+	section, parentName, err := getParserFromParent("tcp-request", parentType, parentName)
+	if err != nil {
+		return err
 	}
 
 	tcpRequestRules, err := ParseTCPRequestRules(parentType, parentName, p)
@@ -242,11 +228,9 @@ func (c *client) ReplaceTCPRequestRules(parentType string, parentName string, da
 }
 
 func ParseTCPRequestRules(t, pName string, p parser.Parser) (models.TCPRequestRules, error) {
-	section := parser.Global
-	if t == FrontendParentName {
-		section = parser.Frontends
-	} else if t == BackendParentName {
-		section = parser.Backends
+	section, pName, err := getParserFromParent("tcp-request", t, pName)
+	if err != nil {
+		return nil, err
 	}
 
 	tcpReqRules := models.TCPRequestRules{}

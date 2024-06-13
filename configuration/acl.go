@@ -17,7 +17,6 @@ package configuration
 
 import (
 	"errors"
-	"fmt"
 	"strconv"
 
 	"github.com/go-openapi/strfmt"
@@ -50,7 +49,7 @@ func (c *client) GetACLs(parentType, parentName string, transactionID string, ac
 		return 0, nil, err
 	}
 
-	section, err := c.getACLParserFromParent(parentType)
+	section, parentName, err := getParserFromParent("acl", parentType, parentName)
 	if err != nil {
 		return 0, nil, err
 	}
@@ -76,9 +75,9 @@ func (c *client) GetACL(id int64, parentType, parentName string, transactionID s
 		return 0, nil, err
 	}
 
-	section, err := c.getACLParserFromParent(parentType)
+	section, parentName, err := getParserFromParent("acl", parentType, parentName)
 	if err != nil {
-		return 0, nil, err
+		return v, nil, err
 	}
 
 	data, err := p.GetOne(section, parentName, "acl", int(id))
@@ -99,7 +98,7 @@ func (c *client) DeleteACL(id int64, parentType string, parentName string, trans
 		return err
 	}
 
-	section, err := c.getACLParserFromParent(parentType)
+	section, parentName, err := getParserFromParent("acl", parentType, parentName)
 	if err != nil {
 		return err
 	}
@@ -126,7 +125,7 @@ func (c *client) CreateACL(id int64, parentType string, parentName string, data 
 		return err
 	}
 
-	section, err := c.getACLParserFromParent(parentType)
+	section, parentName, err := getParserFromParent("acl", parentType, parentName)
 	if err != nil {
 		return err
 	}
@@ -136,19 +135,6 @@ func (c *client) CreateACL(id int64, parentType string, parentName string, data 
 	}
 
 	return c.SaveData(p, t, transactionID == "")
-}
-
-func (c *client) getACLParserFromParent(parent string) (parser.Section, error) {
-	switch parent {
-	case BackendParentName:
-		return parser.Backends, nil
-	case FrontendParentName:
-		return parser.Frontends, nil
-	case FCGIAppParentName:
-		return parser.FCGIApp, nil
-	default:
-		return "", fmt.Errorf("unsupported parent: %s", parent)
-	}
 }
 
 // EditACL edits a ACL line in configuration. One of version or transactionID is
@@ -165,7 +151,7 @@ func (c *client) EditACL(id int64, parentType string, parentName string, data *m
 		return err
 	}
 
-	section, err := c.getACLParserFromParent(parentType)
+	section, parentName, err := getParserFromParent("acl", parentType, parentName)
 	if err != nil {
 		return err
 	}
@@ -196,7 +182,7 @@ func (c *client) ReplaceAcls(parentType string, parentName string, data models.A
 		return err
 	}
 
-	section, err := c.getACLParserFromParent(parentType)
+	section, parentName, err := getParserFromParent("acl", parentType, parentName)
 	if err != nil {
 		return err
 	}

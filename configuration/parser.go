@@ -15,7 +15,11 @@
 
 package configuration
 
-import parser "github.com/haproxytech/config-parser/v5"
+import (
+	"fmt"
+
+	parser "github.com/haproxytech/config-parser/v5"
+)
 
 type Parser interface {
 	Parser() parser.Parser
@@ -28,4 +32,43 @@ type Parser interface {
 	IncrementVersion() error
 	LoadData(filename string) error
 	Save(transactionFile, transactionID string) error
+}
+
+func getParserFromParent(attribute, parentType, parentName string) (parser.Section, string, error) {
+	switch attribute {
+	case "http-request", "http-response", "http-after-response", "tcp-request":
+		switch parentType {
+		case BackendParentName:
+			return parser.Backends, parentName, nil
+		case FrontendParentName:
+			return parser.Frontends, parentName, nil
+		case DefaultsParentName:
+			if parentName == "" {
+				parentName = parser.DefaultSectionName
+			}
+			return parser.Defaults, parentName, nil
+
+		default:
+			return "", "", fmt.Errorf("unsupported parent: %s", parentType)
+		}
+	case "acl":
+		switch parentType {
+		case BackendParentName:
+			return parser.Backends, parentName, nil
+		case FrontendParentName:
+			return parser.Frontends, parentName, nil
+		case FCGIAppParentName:
+			return parser.FCGIApp, parentName, nil
+		case DefaultsParentName:
+			if parentName == "" {
+				parentName = parser.DefaultSectionName
+			}
+			return parser.Defaults, parentName, nil
+
+		default:
+			return "", "", fmt.Errorf("unsupported parent: %s", parentType)
+		}
+	}
+
+	return "", "", fmt.Errorf("unsupported attribute: %s", attribute)
 }

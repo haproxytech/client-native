@@ -51,6 +51,12 @@ func TestGetHTTPAfterResponseRules(t *testing.T) {
 	}
 	mrules["backend/test_2"] = hRules
 
+	_, hRules, err = clientTest.GetHTTPAfterResponseRules(configuration.DefaultsParentName, "test_defaults", "")
+	if err != nil {
+		t.Error(err.Error())
+	}
+	mrules["defaults/test_defaults"] = hRules
+
 	checkHTTPAfterResponseRules(t, mrules)
 }
 

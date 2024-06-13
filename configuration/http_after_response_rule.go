@@ -17,7 +17,6 @@ package configuration
 
 import (
 	goerrors "errors"
-	"fmt"
 	"strconv"
 	"strings"
 
@@ -76,9 +75,9 @@ func (c *client) GetHTTPAfterResponseRule(id int64, parentType, parentName strin
 		return 0, nil, err
 	}
 
-	section, err := getHTTPResponseRuleParserFromParent(parentType)
+	section, parentName, err := getParserFromParent("http-after-response", parentType, parentName)
 	if err != nil {
-		return 0, nil, err
+		return v, nil, err
 	}
 
 	data, err := p.GetOne(section, parentName, "http-after-response", int(id))
@@ -102,7 +101,7 @@ func (c *client) DeleteHTTPAfterResponseRule(id int64, parentType string, parent
 		return err
 	}
 
-	section, err := getHTTPResponseRuleParserFromParent(parentType)
+	section, parentName, err := getParserFromParent("http-after-response", parentType, parentName)
 	if err != nil {
 		return err
 	}
@@ -128,7 +127,7 @@ func (c *client) CreateHTTPAfterResponseRule(id int64, parentType string, parent
 		return err
 	}
 
-	section, err := getHTTPResponseRuleParserFromParent(parentType)
+	section, parentName, err := getParserFromParent("http-after-response", parentType, parentName)
 	if err != nil {
 		return err
 	}
@@ -159,7 +158,7 @@ func (c *client) EditHTTPAfterResponseRule(id int64, parentType string, parentNa
 		return err
 	}
 
-	section, err := getHTTPResponseRuleParserFromParent(parentType)
+	section, parentName, err := getParserFromParent("http-after-response", t, parentName)
 	if err != nil {
 		return err
 	}
@@ -182,6 +181,8 @@ func (c *client) EditHTTPAfterResponseRule(id int64, parentType string, parentNa
 // ReplaceHTTPAfterResponseRules replaces all HTTP Response Rules lines in configuration for a parentType/parentName.
 // One of version or transactionID is mandatory.
 // Returns error on fail, nil on success.
+//
+//nolint:dupl
 func (c *client) ReplaceHTTPAfterResponseRules(parentType string, parentName string, data models.HTTPAfterResponseRules, transactionID string, version int64) error {
 	if c.UseModelsValidation {
 		validationErr := data.Validate(strfmt.Default)
@@ -194,7 +195,7 @@ func (c *client) ReplaceHTTPAfterResponseRules(parentType string, parentName str
 		return err
 	}
 
-	section, err := getHTTPResponseRuleParserFromParent(parentType)
+	section, parentName, err := getParserFromParent("http-after-response", t, parentName)
 	if err != nil {
 		return err
 	}
@@ -225,19 +226,8 @@ func (c *client) ReplaceHTTPAfterResponseRules(parentType string, parentName str
 	return c.SaveData(p, t, transactionID == "")
 }
 
-func getHTTPResponseRuleParserFromParent(parent string) (parser.Section, error) {
-	switch parent {
-	case BackendParentName:
-		return parser.Backends, nil
-	case FrontendParentName:
-		return parser.Frontends, nil
-	default:
-		return "", fmt.Errorf("unsupported parent: %s", parent)
-	}
-}
-
 func ParseHTTPAfterRules(t, pName string, p parser.Parser) (models.HTTPAfterResponseRules, error) {
-	section, err := getHTTPResponseRuleParserFromParent(t)
+	section, pName, err := getParserFromParent("http-after-response", t, pName)
 	if err != nil {
 		return nil, err
 	}

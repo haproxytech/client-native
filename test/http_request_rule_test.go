@@ -116,6 +116,9 @@ func TestGetHTTPRequestRule(t *testing.T) {
 	}
 	m["frontend/test_2/1"] = models.HTTPRequestRules{r}
 
+	_, r, err = clientTest.GetHTTPRequestRule(0, configuration.DefaultsParentName, "test_defaults", "")
+	m["defaults/test_defaults/0"] = models.HTTPRequestRules{r}
+
 	checkHTTPRequestRules(t, m)
 }
 

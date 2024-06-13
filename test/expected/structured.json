@@ -2727,6 +2727,78 @@
     },
     "defaults": {
         "test_defaults": {
+            "acl_list": [
+                {
+                    "acl_name": "invalid_src",
+                    "criterion": "src",
+                    "value": "0.0.0.0/7 224.0.0.0/3"
+                },
+                {
+                    "acl_name": "invalid_src",
+                    "criterion": "src_port",
+                    "value": "0:1023"
+                },
+                {
+                    "acl_name": "local_dst",
+                    "criterion": "hdr(host)",
+                    "value": "-i localhost"
+                }
+            ],
+            "http_request_rule_list": [
+                {
+                    "cond": "if",
+                    "cond_test": "src 192.168.0.0/16",
+                    "type": "allow"
+                }
+            ],
+            "tcp_request_rule_list": [
+                {
+                    "action": "accept",
+                    "cond": "if",
+                    "cond_test": "TRUE",
+                    "type": "connection"
+                },
+                {
+                    "action": "reject",
+                    "cond": "if",
+                    "cond_test": "FALSE",
+                    "type": "connection"
+                }
+            ],
+            "http_response_rule_list": [
+                {
+                    "cond": "if",
+                    "cond_test": "src 192.168.0.0/16",
+                    "type": "allow"
+                },
+                {
+                    "hdr_format": "%[ssl_fc]",
+                    "hdr_name": "X-SSL",
+                    "type": "set-header"
+                }
+            ],
+            "http_after_response_rule_list": [
+                {
+                    "map_file": "map.lst",
+                    "map_keyfmt": "%[src]",
+                    "map_valuefmt": "%[res.hdr(X-Value)]",
+                    "type": "set-map"
+                },
+                {
+                    "cond": "if",
+                    "cond_test": "FALSE",
+                    "map_file": "map.lst",
+                    "map_keyfmt": "%[src]",
+                    "type": "del-map"
+                },
+                {
+                    "acl_file": "map.lst",
+                    "acl_keyfmt": "%[src]",
+                    "cond": "if",
+                    "cond_test": "FALSE",
+                    "type": "del-acl"
+                }
+            ],
             "backlog": 1024,
             "balance": {
                 "algorithm": "roundrobin"

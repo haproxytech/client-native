@@ -58,6 +58,12 @@ func TestGetTCPRequestRules(t *testing.T) { //nolint:gocognit,gocyclo
 	}
 	mrules["backend/test_2"] = tRules
 
+	_, tRules, err = clientTest.GetTCPRequestRules(configuration.DefaultsParentName, "test_defaults", "")
+	if err != nil {
+		t.Error(err.Error())
+	}
+	mrules["defaults/test_defaults"] = tRules
+
 	checkTCPRequestRules(t, mrules)
 }
 

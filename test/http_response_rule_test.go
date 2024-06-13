@@ -59,6 +59,12 @@ func TestGetHTTPResponseRules(t *testing.T) { //nolint:gocognit,gocyclo
 	}
 	mrules["backend/test_2"] = hRules
 
+	_, hRules, err = clientTest.GetHTTPResponseRules(configuration.DefaultsParentName, "test_defaults", "")
+	if err != nil {
+		t.Error(err.Error())
+	}
+	mrules["defaults/test_defaults"] = hRules
+
 	checkHTTPResponseRules(t, mrules)
 }
 

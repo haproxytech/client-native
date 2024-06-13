@@ -227,6 +227,7 @@ func StructuredToCacheMap() map[string]models.Caches {
 func StructuredToACLMap() map[string]models.Acls {
 	res := make(map[string]models.Acls)
 	resources := make(map[string][]models.ACL)
+	_ = expectedChildResources[models.Defaults, models.ACL](resources, "defaults", "name", "acl_list")
 	_ = expectedChildResources[models.Frontend, models.ACL](resources, "frontends", "name", "acl_list")
 	_ = expectedChildResources[models.Backend, models.ACL](resources, "backends", "name", "acl_list")
 	_ = expectedChildResources[models.FCGIApp, models.ACL](resources, "fcgi_apps", "name", "acl_list")
@@ -328,6 +329,7 @@ func StructuredToHTTPAfterResponseRuleMap() map[string]models.HTTPAfterResponseR
 	resources := make(map[string][]models.HTTPAfterResponseRule)
 	_ = expectedChildResources[models.Frontend, models.HTTPAfterResponseRule](resources, "frontends", "name", "http_after_response_rule_list")
 	_ = expectedChildResources[models.Backend, models.HTTPAfterResponseRule](resources, "backends", "name", "http_after_response_rule_list")
+	_ = expectedChildResources[models.Defaults, models.HTTPAfterResponseRule](resources, "defaults", "name", "http_after_response_rule_list")
 	for k, v := range resources {
 		res[k] = toSliceOfPtrs(v)
 	}
@@ -371,6 +373,7 @@ func StructuredToHTTPRequestRuleMap() map[string]models.HTTPRequestRules {
 	resources := make(map[string][]models.HTTPRequestRule)
 	_ = expectedChildResources[models.Backend, models.HTTPRequestRule](resources, "backends", "name", "http_request_rule_list")
 	_ = expectedChildResources[models.Frontend, models.HTTPRequestRule](resources, "frontends", "name", "http_request_rule_list")
+	_ = expectedChildResources[models.Defaults, models.HTTPRequestRule](resources, "defaults", "name", "http_request_rule_list")
 	for k, v := range resources {
 		res[k] = toSliceOfPtrs(v)
 	}
@@ -382,6 +385,7 @@ func StructuredToHTTPResponseRuleMap() map[string]models.HTTPResponseRules {
 	resources := make(map[string][]models.HTTPResponseRule)
 	_ = expectedChildResources[models.Backend, models.HTTPResponseRule](resources, "backends", "name", "http_response_rule_list")
 	_ = expectedChildResources[models.Frontend, models.HTTPResponseRule](resources, "frontends", "name", "http_response_rule_list")
+	_ = expectedChildResources[models.Defaults, models.HTTPResponseRule](resources, "defaults", "name", "http_response_rule_list")
 	for k, v := range resources {
 		res[k] = toSliceOfPtrs(v)
 	}
@@ -534,6 +538,8 @@ func StructuredToTCPRequestRuleMap() map[string]models.TCPRequestRules {
 	resources := make(map[string][]models.TCPRequestRule)
 	_ = expectedChildResources[models.Backend, models.TCPRequestRule](resources, "backends", "name", "tcp_request_rule_list")
 	_ = expectedChildResources[models.Frontend](resources, "frontends", "name", "tcp_request_rule_list")
+	_ = expectedChildResources[models.Defaults](resources, "defaults", "name", "tcp_request_rule_list")
+
 	for k, v := range resources {
 		res[k] = toSliceOfPtrs(v)
 	}

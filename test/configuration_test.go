@@ -255,6 +255,17 @@ global
   log 127.0.0.1:10002 sample 2:4 local0
 
 defaults test_defaults
+  acl invalid_src  src          0.0.0.0/7 224.0.0.0/3
+  acl invalid_src  src_port     0:1023
+  acl local_dst    hdr(host) -i localhost
+  http-request allow if src 192.168.0.0/16
+  tcp-request connection accept if TRUE
+  tcp-request connection reject if FALSE
+  http-response allow if src 192.168.0.0/16
+  http-response set-header X-SSL %[ssl_fc]
+  http-after-response set-map(map.lst) %[src] %[res.hdr(X-Value)]
+  http-after-response del-map(map.lst) %[src] if FALSE
+  http-after-response del-acl(map.lst) %[src] if FALSE
   maxconn 2000
   backlog 1024
   mode http
@@ -265,7 +276,7 @@ defaults test_defaults_2 from test_defaults
   option srvtcpka
   option clitcpka
 
-defaults
+defaults unnamed_defaults_1
   maxconn 2000
   backlog 1024
   mode http

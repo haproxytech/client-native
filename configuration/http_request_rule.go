@@ -75,11 +75,9 @@ func (c *client) GetHTTPRequestRule(id int64, parentType, parentName string, tra
 		return 0, nil, err
 	}
 
-	var section parser.Section
-	if parentType == BackendParentName {
-		section = parser.Backends
-	} else if parentType == FrontendParentName {
-		section = parser.Frontends
+	section, parentName, err := getParserFromParent("http-request", parentType, parentName)
+	if err != nil {
+		return 0, nil, err
 	}
 
 	data, err := p.GetOne(section, parentName, "http-request", int(id))
@@ -103,11 +101,9 @@ func (c *client) DeleteHTTPRequestRule(id int64, parentType string, parentName s
 		return err
 	}
 
-	var section parser.Section
-	if parentType == BackendParentName {
-		section = parser.Backends
-	} else if parentType == FrontendParentName {
-		section = parser.Frontends
+	section, parentName, err := getParserFromParent("http-request", parentType, parentName)
+	if err != nil {
+		return err
 	}
 
 	if err := p.Delete(section, parentName, "http-request", int(id)); err != nil {
@@ -132,11 +128,9 @@ func (c *client) CreateHTTPRequestRule(id int64, parentType string, parentName s
 		return err
 	}
 
-	var section parser.Section
-	if parentType == BackendParentName {
-		section = parser.Backends
-	} else if parentType == FrontendParentName {
-		section = parser.Frontends
+	section, parentName, err := getParserFromParent("http-request", parentType, parentName)
+	if err != nil {
+		return err
 	}
 
 	s, err := SerializeHTTPRequestRule(*data)
@@ -153,8 +147,6 @@ func (c *client) CreateHTTPRequestRule(id int64, parentType string, parentName s
 
 // EditHTTPRequestRule edits a http request rule in configuration. One of version or transactionID is
 // mandatory. Returns error on fail, nil on success.
-//
-//nolint:dupl
 func (c *client) EditHTTPRequestRule(id int64, parentType string, parentName string, data *models.HTTPRequestRule, transactionID string, version int64) error {
 	if c.UseModelsValidation {
 		validationErr := data.Validate(strfmt.Default)
@@ -167,11 +159,9 @@ func (c *client) EditHTTPRequestRule(id int64, parentType string, parentName str
 		return err
 	}
 
-	var section parser.Section
-	if parentType == BackendParentName {
-		section = parser.Backends
-	} else if parentType == FrontendParentName {
-		section = parser.Frontends
+	section, parentName, err := getParserFromParent("http-request", parentType, parentName)
+	if err != nil {
+		return err
 	}
 
 	if _, err = p.GetOne(section, parentName, "http-request", int(id)); err != nil {
@@ -207,11 +197,9 @@ func (c *client) ReplaceHTTPRequestRules(parentType string, parentName string, d
 		return err
 	}
 
-	var section parser.Section
-	if parentType == BackendParentName {
-		section = parser.Backends
-	} else if parentType == FrontendParentName {
-		section = parser.Frontends
+	section, parentName, err := getParserFromParent("http-request", parentType, parentName)
+	if err != nil {
+		return err
 	}
 
 	httpRequestRules, err := ParseHTTPRequestRules(parentType, parentName, p)
@@ -240,11 +228,9 @@ func (c *client) ReplaceHTTPRequestRules(parentType string, parentName string, d
 }
 
 func ParseHTTPRequestRules(t, pName string, p parser.Parser) (models.HTTPRequestRules, error) {
-	section := parser.Global
-	if t == FrontendParentName {
-		section = parser.Frontends
-	} else if t == BackendParentName {
-		section = parser.Backends
+	section, pName, err := getParserFromParent("http-request", t, pName)
+	if err != nil {
+		return nil, err
 	}
 
 	httpReqRules := models.HTTPRequestRules{}

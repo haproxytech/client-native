@@ -147,12 +147,16 @@ func TestGetACL(t *testing.T) {
 	}
 
 	macl["frontend/test/0"] = []*models.ACL{acl}
-	checksACLs(t, macl)
 
 	_, err = acl.MarshalBinary()
 	if err != nil {
 		t.Error(err.Error())
 	}
+
+	_, acl, err = clientTest.GetACL(0, configuration.DefaultsParentName, "test_defaults", "")
+	macl["defaults/test_defaults/0"] = []*models.ACL{acl}
+
+	checksACLs(t, macl)
 
 	_, _, err = clientTest.GetACL(3, configuration.BackendParentName, "test_2", "")
 	if err == nil {
