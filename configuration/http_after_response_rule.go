@@ -158,7 +158,7 @@ func (c *client) EditHTTPAfterResponseRule(id int64, parentType string, parentNa
 		return err
 	}
 
-	section, parentName, err := getParserFromParent("http-after-response", t, parentName)
+	section, parentName, err := getParserFromParent("http-after-response", parentType, parentName)
 	if err != nil {
 		return err
 	}
@@ -195,7 +195,7 @@ func (c *client) ReplaceHTTPAfterResponseRules(parentType string, parentName str
 		return err
 	}
 
-	section, parentName, err := getParserFromParent("http-after-response", t, parentName)
+	section, parentName, err := getParserFromParent("http-after-response", parentType, parentName)
 	if err != nil {
 		return err
 	}
