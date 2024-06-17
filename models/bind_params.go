@@ -118,6 +118,11 @@ type BindParams struct {
 	// group
 	Group string `json:"group,omitempty"`
 
+	// guid prefix
+	// Pattern: ^[A-Za-z0-9-_.:]+$
+	// +kubebuilder:validation:Pattern=`^[A-Za-z0-9-_.:]+$`
+	GUIDPrefix string `json:"guid_prefix,omitempty"`
+
 	// id
 	ID string `json:"id,omitempty"`
 
@@ -279,6 +284,10 @@ func (m *BindParams) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
+	if err := m.validateGUIDPrefix(formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.validateLevel(formats); err != nil {
 		res = append(res, err)
 	}
@@ -331,6 +340,18 @@ func (m *BindParams) validateAlpn(formats strfmt.Registry) error {
 	}
 
 	if err := validate.Pattern("alpn", "body", m.Alpn, `^[^\s]+$`); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *BindParams) validateGUIDPrefix(formats strfmt.Registry) error {
+	if swag.IsZero(m.GUIDPrefix) { // not required
+		return nil
+	}
+
+	if err := validate.Pattern("guid_prefix", "body", m.GUIDPrefix, `^[A-Za-z0-9-_.:]+$`); err != nil {
 		return err
 	}
 

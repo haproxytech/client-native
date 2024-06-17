@@ -146,6 +146,11 @@ type Backend struct {
 	// fullconn
 	Fullconn *int64 `json:"fullconn,omitempty"`
 
+	// guid
+	// Pattern: ^[A-Za-z0-9-_.:]+$
+	// +kubebuilder:validation:Pattern=`^[A-Za-z0-9-_.:]+$`
+	GUID string `json:"guid,omitempty"`
+
 	// h1 case adjust bogus server
 	// Enum: [enabled disabled]
 	// +kubebuilder:validation:Enum=enabled;disabled;
@@ -463,6 +468,10 @@ func (m *Backend) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateFrom(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateGUID(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -1211,6 +1220,18 @@ func (m *Backend) validateFrom(formats strfmt.Registry) error {
 	}
 
 	if err := validate.Pattern("from", "body", m.From, `^[A-Za-z0-9-_.:]+$`); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *Backend) validateGUID(formats strfmt.Registry) error {
+	if swag.IsZero(m.GUID) { // not required
+		return nil
+	}
+
+	if err := validate.Pattern("guid", "body", m.GUID, `^[A-Za-z0-9-_.:]+$`); err != nil {
 		return err
 	}
 

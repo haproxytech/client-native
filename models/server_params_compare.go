@@ -153,6 +153,10 @@ func (s ServerParams) Equal(t ServerParams, opts ...Options) bool {
 		return false
 	}
 
+	if s.GUID != t.GUID {
+		return false
+	}
+
 	if s.HealthCheckAddress != t.HealthCheckAddress {
 		return false
 	}
@@ -549,6 +553,10 @@ func (s ServerParams) Diff(t ServerParams, opts ...Options) map[string][]interfa
 
 	if s.ForceTlsv13 != t.ForceTlsv13 {
 		diff["ForceTlsv13"] = []interface{}{s.ForceTlsv13, t.ForceTlsv13}
+	}
+
+	if s.GUID != t.GUID {
+		diff["GUID"] = []interface{}{s.GUID, t.GUID}
 	}
 
 	if s.HealthCheckAddress != t.HealthCheckAddress {

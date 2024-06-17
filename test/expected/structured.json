@@ -476,6 +476,7 @@
                 "header": "X-Forwarded-For"
             },
             "fullconn": 11,
+            "guid": "guid-example",
             "h1_case_adjust_bogus_server": "disabled",
             "hash_type": {
                 "function": "sdbm",
@@ -1353,6 +1354,7 @@
             },
             "fingerprint": true,
             "fingerprint_ssl": true,
+            "guid": "guid-example",
             "h1_case_adjust_bogus_client": "disabled",
             "http_connection_mode": "httpclose",
             "http_ignore_probes": "enabled",
@@ -2524,6 +2526,7 @@
                 "webserv": {
                     "ca_verify_file": "ca.pem",
                     "client_sigalgs": "ECDSA+SHA256:RSA+SHA256",
+                    "guid_prefix": "guid-example",
                     "name": "webserv",
                     "nice": 789,
                     "sigalgs": "RSA+SHA256",

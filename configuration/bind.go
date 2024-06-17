@@ -333,6 +333,8 @@ func parseBindParams(bindOptions []params.BindOption) (b models.BindParams) { //
 				b.Group = v.Value
 			case "id":
 				b.ID = v.Value
+			case "guid-prefix":
+				b.GUIDPrefix = v.Value
 			case "interface":
 				b.Interface = v.Value
 			case "level":
@@ -512,6 +514,9 @@ func serializeBindParams(b models.BindParams, path string) (options []params.Bin
 	}
 	if b.Group != "" {
 		options = append(options, &params.BindOptionValue{Name: "group", Value: b.Group})
+	}
+	if b.GUIDPrefix != "" {
+		options = append(options, &params.BindOptionValue{Name: "guid-prefix", Value: b.GUIDPrefix})
 	}
 	if b.ID != "" {
 		options = append(options, &params.BindOptionValue{Name: "id", Value: b.ID})

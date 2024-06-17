@@ -105,6 +105,9 @@ bind_params:
     group:
       type: string
       x-display-name: Group name
+    guid_prefix:
+      type: string
+      pattern: '^[A-Za-z0-9-_.:]+$'
     id:
       type: string
       x-display-name: Socket ID

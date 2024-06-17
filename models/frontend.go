@@ -133,6 +133,11 @@ type Frontend struct {
 	// +kubebuilder:validation:Pattern=`^[A-Za-z0-9-_.:]+$`
 	From string `json:"from,omitempty"`
 
+	// guid
+	// Pattern: ^[A-Za-z0-9-_.:]+$
+	// +kubebuilder:validation:Pattern=`^[A-Za-z0-9-_.:]+$`
+	GUID string `json:"guid,omitempty"`
+
 	// h1 case adjust bogus client
 	// Enum: [enabled disabled]
 	// +kubebuilder:validation:Enum=enabled;disabled;
@@ -359,6 +364,10 @@ func (m *Frontend) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateFrom(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateGUID(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -894,6 +903,18 @@ func (m *Frontend) validateFrom(formats strfmt.Registry) error {
 	}
 
 	if err := validate.Pattern("from", "body", m.From, `^[A-Za-z0-9-_.:]+$`); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *Frontend) validateGUID(formats strfmt.Registry) error {
+	if swag.IsZero(m.GUID) { // not required
+		return nil
+	}
+
+	if err := validate.Pattern("guid", "body", m.GUID, `^[A-Za-z0-9-_.:]+$`); err != nil {
 		return err
 	}
 

@@ -163,6 +163,11 @@ type ServerParams struct {
 	// +kubebuilder:validation:Enum=enabled;disabled;
 	ForceTlsv13 string `json:"force_tlsv13,omitempty"`
 
+	// guid
+	// Pattern: ^[A-Za-z0-9-_.:]+$
+	// +kubebuilder:validation:Pattern=`^[A-Za-z0-9-_.:]+$`
+	GUID string `json:"guid,omitempty"`
+
 	// health check address
 	// Pattern: ^[^\s]+$
 	// +kubebuilder:validation:Pattern=`^[^\s]+$`
@@ -493,6 +498,10 @@ func (m *ServerParams) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateForceTlsv13(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateGUID(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -1202,6 +1211,18 @@ func (m *ServerParams) validateForceTlsv13(formats strfmt.Registry) error {
 
 	// value enum
 	if err := m.validateForceTlsv13Enum("force_tlsv13", "body", m.ForceTlsv13); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *ServerParams) validateGUID(formats strfmt.Registry) error {
+	if swag.IsZero(m.GUID) { // not required
+		return nil
+	}
+
+	if err := validate.Pattern("guid", "body", m.GUID, `^[A-Za-z0-9-_.:]+$`); err != nil {
 		return err
 	}
 

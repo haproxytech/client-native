@@ -168,6 +168,9 @@ frontend:
       type: integer
       x-nullable: true
       x-display-name: Clitcpka Intvl
+    guid:
+      type: string
+      pattern: '^[A-Za-z0-9-_.:]+$'
     http_ignore_probes:
       type: string
       enum: [enabled, disabled]

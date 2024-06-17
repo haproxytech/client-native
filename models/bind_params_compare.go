@@ -132,6 +132,10 @@ func (s BindParams) Equal(t BindParams, opts ...Options) bool {
 		return false
 	}
 
+	if s.GUIDPrefix != t.GUIDPrefix {
+		return false
+	}
+
 	if s.ID != t.ID {
 		return false
 	}
@@ -417,6 +421,10 @@ func (s BindParams) Diff(t BindParams, opts ...Options) map[string][]interface{}
 
 	if s.Group != t.Group {
 		diff["Group"] = []interface{}{s.Group, t.Group}
+	}
+
+	if s.GUIDPrefix != t.GUIDPrefix {
+		diff["GUIDPrefix"] = []interface{}{s.GUIDPrefix, t.GUIDPrefix}
 	}
 
 	if s.ID != t.ID {

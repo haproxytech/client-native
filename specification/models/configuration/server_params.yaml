@@ -127,6 +127,9 @@ server_params:
     force_tlsv13:
       type: string
       enum: [enabled, disabled]
+    guid:
+      type: string
+      pattern: '^[A-Za-z0-9-_.:]+$'
     init-addr:
       pattern: ^[^\s]+$
       type: string

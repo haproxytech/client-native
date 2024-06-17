@@ -358,6 +358,8 @@ func parseServerParams(serverOptions []params.ServerOption, serverParams *models
 				}
 			case "fall":
 				serverParams.Fall = misc.ParseTimeout(v.Value)
+			case "guid":
+				serverParams.GUID = v.Value
 			case "init-addr":
 				serverParams.InitAddr = &v.Value
 			case "inter":
@@ -696,6 +698,9 @@ func serializeServerParams(s models.ServerParams) (options []params.ServerOption
 	}
 	if s.ErrorLimit != 0 {
 		options = append(options, &params.ServerOptionValue{Name: "error-limit", Value: strconv.FormatInt(s.ErrorLimit, 10)})
+	}
+	if s.GUID != "" {
+		options = append(options, &params.ServerOptionValue{Name: "guid", Value: s.GUID})
 	}
 	if s.Fall != nil {
 		options = append(options, &params.ServerOptionValue{Name: "fall", Value: strconv.FormatInt(*s.Fall, 10)})

@@ -399,6 +399,9 @@ backend:
             x-dependency:
               cond:
                 required: true
+    guid:
+      type: string
+      pattern: '^[A-Za-z0-9-_.:]+$'
     http_send_name_header:
       type: string
       x-nullable: true

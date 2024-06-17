@@ -373,7 +373,7 @@ defaults unnamed_defaults_1
 frontend test
   mode http
   backlog 2048
-  bind 192.168.1.1:80 name webserv thread all sigalgs RSA+SHA256 client-sigalgs ECDSA+SHA256:RSA+SHA256 ca-verify-file ca.pem nice 789
+  bind 192.168.1.1:80 name webserv thread all sigalgs RSA+SHA256 client-sigalgs ECDSA+SHA256:RSA+SHA256 ca-verify-file ca.pem nice 789 guid-prefix guid-example
   bind 192.168.1.1:8080 name webserv2 thread 1/all
   bind 192.168.1.2:8080 name webserv3 thread 1/1
   bind [2a01:c9c0:a3:8::3]:80 name ipv6 thread 1/1-1
@@ -609,6 +609,7 @@ frontend test
   errorloc302 404 http://www.myawesomesite.com/not_found
   errorloc303 404 http://www.myawesomesite.com/not_found
   error-log-format %T\ %t\ Some\ Text
+  guid guid-example
 
 frontend test_2 from test_defaults
   mode http
@@ -787,6 +788,7 @@ backend test
   source 192.168.1.222 usesrc hdr_ip(hdr,occ)
   http-response set-fc-mark 123
   http-response set-fc-tos 1 if TRUE
+  guid guid-example
 
 peers mycluster
   enabled

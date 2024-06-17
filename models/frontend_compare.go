@@ -243,6 +243,10 @@ func (s Frontend) Equal(t Frontend, opts ...Options) bool {
 		return false
 	}
 
+	if s.GUID != t.GUID {
+		return false
+	}
+
 	if s.H1CaseAdjustBogusClient != t.H1CaseAdjustBogusClient {
 		return false
 	}
@@ -709,6 +713,10 @@ func (s Frontend) Diff(t Frontend, opts ...Options) map[string][]interface{} {
 
 	if s.From != t.From {
 		diff["From"] = []interface{}{s.From, t.From}
+	}
+
+	if s.GUID != t.GUID {
+		diff["GUID"] = []interface{}{s.GUID, t.GUID}
 	}
 
 	if s.H1CaseAdjustBogusClient != t.H1CaseAdjustBogusClient {

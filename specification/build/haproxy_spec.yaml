@@ -311,6 +311,9 @@ definitions:
           group:
               type: string
               x-display-name: Group name
+          guid_prefix:
+              pattern: ^[A-Za-z0-9-_.:]+$
+              type: string
           id:
               type: string
               x-display-name: Socket ID
@@ -611,6 +614,9 @@ definitions:
               enum:
                   - enabled
                   - disabled
+              type: string
+          guid:
+              pattern: ^[A-Za-z0-9-_.:]+$
               type: string
           health_check_address:
               pattern: ^[^\s]+$
@@ -2603,6 +2609,9 @@ definitions:
           from:
               pattern: ^[A-Za-z0-9-_.:]+$
               type: string
+          guid:
+              pattern: ^[A-Za-z0-9-_.:]+$
+              type: string
           h1_case_adjust_bogus_client:
               enum:
                   - enabled
@@ -2977,6 +2986,9 @@ definitions:
           fullconn:
               type: integer
               x-nullable: true
+          guid:
+              pattern: ^[A-Za-z0-9-_.:]+$
+              type: string
           h1_case_adjust_bogus_server:
               enum:
                   - enabled

@@ -339,6 +339,10 @@ func (s Backend) Equal(t Backend, opts ...Options) bool {
 		return false
 	}
 
+	if s.GUID != t.GUID {
+		return false
+	}
+
 	if s.H1CaseAdjustBogusServer != t.H1CaseAdjustBogusServer {
 		return false
 	}
@@ -1127,6 +1131,10 @@ func (s Backend) Diff(t Backend, opts ...Options) map[string][]interface{} {
 
 	if !equalPointers(s.Fullconn, t.Fullconn) {
 		diff["Fullconn"] = []interface{}{ValueOrNil(s.Fullconn), ValueOrNil(t.Fullconn)}
+	}
+
+	if s.GUID != t.GUID {
+		diff["GUID"] = []interface{}{s.GUID, t.GUID}
 	}
 
 	if s.H1CaseAdjustBogusServer != t.H1CaseAdjustBogusServer {
