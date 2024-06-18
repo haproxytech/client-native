@@ -1168,6 +1168,34 @@ definitions:
               type: integer
               x-display-name: Hard Stop After
               x-nullable: true
+          harden:
+              properties:
+                  reject_privileged_ports:
+                      properties:
+                          quic:
+                              enum:
+                                  - enabled
+                                  - disabled
+                              type: string
+                          tcp:
+                              enum:
+                                  - enabled
+                                  - disabled
+                              type: string
+                      type: object
+              type: object
+          http_err_codes:
+              items:
+                  $ref: '#/definitions/http_codes'
+              type: array
+              x-display-name: Replace, reduce or extend the list of status codes that define an error
+              x-omitempty: true
+          http_fail_codes:
+              items:
+                  $ref: '#/definitions/http_codes'
+              type: array
+              x-display-name: Replace, reduce or extend the list of status codes that define a failure
+              x-omitempty: true
           httpclient_resolvers_disabled:
               enum:
                   - enabled
@@ -1356,11 +1384,17 @@ definitions:
               x-display-name: Preset environment variables
               x-go-name: PresetEnvs
               x-omitempty: true
+          profiling_memory:
+              enum:
+                  - enabled
+                  - disabled
+              type: string
+              x-display-name: Enable or disables per-function memory profiling
           profiling_tasks:
               enum:
                   - auto
-                  - "on"
-                  - "off"
+                  - enabled
+                  - disabled
               type: string
               x-display-name: Enable or disables per-task CPU profiling
           quiet:
@@ -1530,6 +1564,11 @@ definitions:
           ssl_provider_path:
               type: string
               x-display-name: SSL Provider Path
+          ssl_security_level:
+              maximum: 5
+              minimum: 0
+              type: integer
+              x-nullable: true
           ssl_server_verify:
               enum:
                   - none
@@ -1569,6 +1608,9 @@ definitions:
           thread_groups:
               type: integer
               x-display-name: Number of Thread Groups
+          thread_hard_limit:
+              type: integer
+              x-nullable: true
           tune_options:
               properties:
                   applet_zero_copy_forwarding:
@@ -9964,6 +10006,16 @@ definitions:
     type: array
     items:
       $ref: '#/definitions/table'
+  http_codes:
+      properties:
+          value:
+              pattern: ^[a-zA-Z0-9 +\-,]+$
+              type: string
+              x-display-name: Value
+      required:
+          - value
+      type: object
+      x-go-name: HTTPCodes
 responses:
   BadRequest:
     description: Bad request

@@ -47,7 +47,6 @@ global
   limited-quic
   uid 1
   gid 1
-  profiling.memory on
   ssl-mode-async
   tune.applet.zero-copy-forwarding off
   tune.buffers.limit 11
@@ -253,6 +252,14 @@ global
   fingerprint_ssl_bufsize 56
   log 127.0.0.1:10001 sample 1:4 local0
   log 127.0.0.1:10002 sample 2:4 local0
+  harden.reject-privileged-ports.tcp on
+  profiling.tasks enabled
+  thread-hard-limit 77
+  ssl-security-level 3
+  http-err-codes 400,402-444,446-480,490 -450 +500
+  http-err-codes +501,505
+  http-fail-codes 400,402-444,446-480,490 -450 +500
+  http-fail-codes +501,505
 
 defaults test_defaults
   acl invalid_src  src          0.0.0.0/7 224.0.0.0/3

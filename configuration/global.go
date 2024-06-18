@@ -855,6 +855,11 @@ func ParseGlobalSection(p parser.Parser) (*models.Global, error) { //nolint:goco
 		return nil, err
 	}
 
+	profilingMemory, err := parseOnOffOption(p, "profiling.memory")
+	if err != nil {
+		return nil, err
+	}
+
 	var spreadChecks int64
 	data, err = p.Get(parser.Global, parser.GlobalSectionName, "spread-checks")
 	if err == nil {
@@ -1131,6 +1136,65 @@ func ParseGlobalSection(p parser.Parser) (*models.Global, error) { //nolint:goco
 		return nil, err
 	}
 
+	harden, err := parseHardenOptions(p)
+	if err != nil {
+		return nil, err
+	}
+
+	var threadHardLimit *int64
+	data, err = p.Get(parser.Global, parser.GlobalSectionName, "thread-hard-limit")
+	if errors.Is(err, parser_errors.ErrFetch) {
+		threadHardLimit = nil
+	} else {
+		threadHardLimitParser, ok := data.(*types.Int64C)
+		if !ok {
+			return nil, misc.CreateTypeAssertError("thread-hard-limit")
+		}
+		threadHardLimit = &threadHardLimitParser.Value
+	}
+
+	var sslSecurityLevel *int64
+	data, err = p.Get(parser.Global, parser.GlobalSectionName, "ssl-security-level")
+	if errors.Is(err, parser_errors.ErrFetch) {
+		sslSecurityLevel = nil
+	} else {
+		sslSecurityLevelParser, ok := data.(*types.Int64C)
+		if !ok {
+			return nil, misc.CreateTypeAssertError("ssl-security-level")
+		}
+		sslSecurityLevel = &sslSecurityLevelParser.Value
+	}
+
+	var errCodes []*models.HTTPCodes
+	data, err = p.Get(parser.Global, parser.GlobalSectionName, "http-err-codes")
+	if err == nil {
+		errCodesParser, ok := data.([]types.HTTPErrCodes)
+		if !ok {
+			return nil, misc.CreateTypeAssertError("http-err-codes")
+		}
+		for _, e := range errCodesParser {
+			errCode := &models.HTTPCodes{
+				Value: misc.Ptr(e.Value),
+			}
+			errCodes = append(errCodes, errCode)
+		}
+	}
+
+	var failCodes []*models.HTTPCodes
+	data, err = p.Get(parser.Global, parser.GlobalSectionName, "http-fail-codes")
+	if err == nil {
+		failCodesParser, ok := data.([]types.HTTPFailCodes)
+		if !ok {
+			return nil, misc.CreateTypeAssertError("http-fail-codes")
+		}
+		for _, f := range failCodesParser {
+			failCode := &models.HTTPCodes{
+				Value: misc.Ptr(f.Value),
+			}
+			failCodes = append(failCodes, failCode)
+		}
+	}
+
 	global := &models.Global{
 		Anonkey:                           anonkey,
 		PresetEnvs:                        presetEnvs,
@@ -1206,6 +1270,7 @@ func ParseGlobalSection(p parser.Parser) (*models.Global, error) { //nolint:goco
 		Nogetaddrinfo:                     nogetaddrinfo,
 		Noreuseport:                       noreuseport,
 		ProfilingTasks:                    profilingTasks,
+		ProfilingMemory:                   profilingMemory,
 		SpreadChecks:                      spreadChecks,
 		ThreadGroups:                      threadGroups,
 		StatsMaxconn:                      statsMaxconn,
@@ -1242,6 +1307,11 @@ func ParseGlobalSection(p parser.Parser) (*models.Global, error) { //nolint:goco
 		SslDefaultServerClientSigalgs:     sslServerClientSigalgs,
 		Setcap:                            setcap,
 		LimitedQuic:                       limitedQuic,
+		Harden:                            harden,
+		ThreadHardLimit:                   threadHardLimit,
+		SslSecurityLevel:                  sslSecurityLevel,
+		HTTPErrCodes:                      errCodes,
+		HTTPFailCodes:                     failCodes,
 	}
 
 	return global, nil
@@ -1881,6 +1951,10 @@ func SerializeGlobalSection(p parser.Parser, data *models.Global) error { //noli
 		return err
 	}
 
+	if err := serializeOnOffOption(p, "profiling.memory", data.ProfilingMemory); err != nil {
+		return err
+	}
+
 	spreadChecks := &types.Int64C{
 		Value: data.SpreadChecks,
 	}
@@ -2239,7 +2313,85 @@ func SerializeGlobalSection(p parser.Parser, data *models.Global) error { //noli
 		return err
 	}
 
+	if err := serializeHardenOptions(p, data.Harden); err != nil {
+		return err
+	}
+
+	var threadHardLimit *types.Int64C
+	if data.ThreadHardLimit == nil {
+		threadHardLimit = nil
+	} else {
+		threadHardLimit = &types.Int64C{
+			Value: *data.ThreadHardLimit,
+		}
+	}
+	if err := p.Set(parser.Global, parser.GlobalSectionName, "thread-hard-limit", threadHardLimit); err != nil {
+		return err
+	}
+
+	var sslSecurityLevel *types.Int64C
+	if data.SslSecurityLevel == nil {
+		sslSecurityLevel = nil
+	} else {
+		sslSecurityLevel = &types.Int64C{
+			Value: *data.SslSecurityLevel,
+		}
+	}
+	if err := p.Set(parser.Global, parser.GlobalSectionName, "ssl-security-level", sslSecurityLevel); err != nil {
+		return err
+	}
+
+	httpErrCodes := []types.HTTPErrCodes{}
+	if data.HTTPErrCodes != nil && len(data.HTTPErrCodes) > 0 {
+		for _, errCodes := range data.HTTPErrCodes {
+			if errCodes != nil {
+				errCode := types.HTTPErrCodes{
+					StringC: types.StringC{
+						Value: *errCodes.Value,
+					},
+				}
+				httpErrCodes = append(httpErrCodes, errCode)
+			}
+		}
+	}
+	if err := p.Set(parser.Global, parser.GlobalSectionName, "http-err-codes", httpErrCodes); err != nil {
+		return err
+	}
+
+	httpFailCodes := []types.HTTPFailCodes{}
+	if data.HTTPFailCodes != nil && len(data.HTTPFailCodes) > 0 {
+		for _, failCodes := range data.HTTPFailCodes {
+			if failCodes != nil {
+				failCode := types.HTTPFailCodes{
+					StringC: types.StringC{
+						Value: *failCodes.Value,
+					},
+				}
+				httpFailCodes = append(httpFailCodes, failCode)
+			}
+		}
+	}
+	if err := p.Set(parser.Global, parser.GlobalSectionName, "http-fail-codes", httpFailCodes); err != nil {
+		return err
+	}
+
 	return serializeTuneOptions(p, data.TuneOptions)
+}
+
+func serializeHardenOptions(p parser.Parser, options *models.GlobalHarden) error {
+	rppQuic := ""
+	rppTCP := ""
+	if options != nil {
+		if options.RejectPrivilegedPorts != nil {
+			rppQuic = options.RejectPrivilegedPorts.Quic
+			rppTCP = options.RejectPrivilegedPorts.TCP
+		}
+	}
+
+	if err := serializeOnOffOption(p, "harden.reject-privileged-ports.quic", rppQuic); err != nil {
+		return err
+	}
+	return serializeOnOffOption(p, "harden.reject-privileged-ports.tcp", rppTCP)
 }
 
 func serializeWurflOptions(p parser.Parser, options *models.GlobalWurflOptions) error {
@@ -2706,6 +2858,24 @@ func parseFiftyOneDegreesOptions(p parser.Parser) (*models.GlobalFiftyOneDegrees
 	}
 	options.CacheSize = optionInt
 
+	return options, nil
+}
+
+func parseHardenOptions(p parser.Parser) (*models.GlobalHarden, error) {
+	options := &models.GlobalHarden{}
+	hardenRejectPrivilgedPortQuic, err := parseOnOffOption(p, "harden.reject-privileged-ports.quic")
+	if err != nil {
+		return nil, err
+	}
+	hardenRejectPrivilgedPortTCP, err := parseOnOffOption(p, "harden.reject-privileged-ports.tcp")
+	if err != nil {
+		return nil, err
+	}
+	if hardenRejectPrivilgedPortQuic != "" || hardenRejectPrivilgedPortTCP != "" {
+		options.RejectPrivilegedPorts = &models.GlobalHardenRejectPrivilegedPorts{}
+		options.RejectPrivilegedPorts.Quic = hardenRejectPrivilgedPortQuic
+		options.RejectPrivilegedPorts.TCP = hardenRejectPrivilgedPortTCP
+	}
 	return options, nil
 }
 

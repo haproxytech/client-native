@@ -167,8 +167,12 @@ global:
       x-display-name: Disable the use of SO_REUSEPORT
     profiling_tasks:
       type: string
-      enum: ["auto", "on", "off"]
+      enum: ["auto", "enabled", "disabled"]
       x-display-name: Enable or disables per-task CPU profiling
+    profiling_memory:
+      type: string
+      enum: ["enabled", "disabled"]
+      x-display-name: Enable or disables per-function memory profiling
     spread_checks:
       type: integer
       x-display-name: Add some randomness in the check interval
@@ -881,4 +885,36 @@ global:
       pattern: '^[^\s]+$'
       x-omitempty: true
       x-display-name: OS Capabilities
+    harden:
+      type: object
+      properties:
+        reject_privileged_ports:
+          type: object
+          properties:
+            tcp:
+              type: string
+              enum: ["enabled", "disabled"]
+            quic:
+              type: string
+              enum: ["enabled", "disabled"]
+    thread_hard_limit:
+      type: integer
+      x-nullable: true
+    ssl_security_level:
+      type: integer
+      minimum: 0
+      maximum: 5
+      x-nullable: true
+    http_err_codes:
+      type: array
+      x-display-name: Replace, reduce or extend the list of status codes that define an error
+      x-omitempty: true
+      items:
+        $ref: "#/definitions/http_codes"
+    http_fail_codes:
+      type: array
+      x-display-name: Replace, reduce or extend the list of status codes that define a failure
+      x-omitempty: true
+      items:
+        $ref: "#/definitions/http_codes"
   additionalProperties: false

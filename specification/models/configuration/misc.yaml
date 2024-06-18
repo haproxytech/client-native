@@ -390,3 +390,13 @@ originalto:
     header:
       type: string
       pattern: '^[^\s]+$'
+http_codes:
+  type: object
+  x-go-name: HTTPCodes
+  required:
+    - value
+  properties:
+    value:
+      type: string
+      x-display-name: Value
+      pattern: '^[a-zA-Z0-9 +\-,]+$'

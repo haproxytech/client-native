@@ -135,6 +135,15 @@ type Global struct {
 	// hard stop after
 	HardStopAfter *int64 `json:"hard_stop_after,omitempty"`
 
+	// harden
+	Harden *GlobalHarden `json:"harden,omitempty"`
+
+	// http err codes
+	HTTPErrCodes []*HTTPCodes `json:"http_err_codes,omitempty"`
+
+	// http fail codes
+	HTTPFailCodes []*HTTPCodes `json:"http_fail_codes,omitempty"`
+
 	// httpclient resolvers disabled
 	// Enum: [enabled disabled]
 	// +kubebuilder:validation:Enum=enabled;disabled;
@@ -273,9 +282,14 @@ type Global struct {
 	// prealloc fd
 	PreallocFd bool `json:"prealloc-fd,omitempty"`
 
+	// profiling memory
+	// Enum: [enabled disabled]
+	// +kubebuilder:validation:Enum=enabled;disabled;
+	ProfilingMemory string `json:"profiling_memory,omitempty"`
+
 	// profiling tasks
-	// Enum: [auto on off]
-	// +kubebuilder:validation:Enum=auto;on;off;
+	// Enum: [auto enabled disabled]
+	// +kubebuilder:validation:Enum=auto;enabled;disabled;
 	ProfilingTasks string `json:"profiling_tasks,omitempty"`
 
 	// quiet
@@ -361,6 +375,13 @@ type Global struct {
 	// ssl provider path
 	SslProviderPath string `json:"ssl_provider_path,omitempty"`
 
+	// ssl security level
+	// Maximum: 5
+	// Minimum: 0
+	// +kubebuilder:validation:Maximum=5
+	// +kubebuilder:validation:Minimum=0
+	SslSecurityLevel *int64 `json:"ssl_security_level,omitempty"`
+
 	// ssl server verify
 	// Enum: [none required]
 	// +kubebuilder:validation:Enum=none;required;
@@ -380,6 +401,9 @@ type Global struct {
 
 	// thread groups
 	ThreadGroups int64 `json:"thread_groups,omitempty"`
+
+	// thread hard limit
+	ThreadHardLimit *int64 `json:"thread_hard_limit,omitempty"`
 
 	// tune options
 	TuneOptions *GlobalTuneOptions `json:"tune_options,omitempty"`
@@ -473,6 +497,18 @@ func (m *Global) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
+	if err := m.validateHarden(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateHTTPErrCodes(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateHTTPFailCodes(formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.validateHttpclientResolversDisabled(formats); err != nil {
 		res = append(res, err)
 	}
@@ -509,6 +545,10 @@ func (m *Global) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
+	if err := m.validateProfilingMemory(formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.validateProfilingTasks(formats); err != nil {
 		res = append(res, err)
 	}
@@ -526,6 +566,10 @@ func (m *Global) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateSslModeAsync(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateSslSecurityLevel(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -924,6 +968,77 @@ func (m *Global) validateGroup(formats strfmt.Registry) error {
 	return nil
 }
 
+func (m *Global) validateHarden(formats strfmt.Registry) error {
+	if swag.IsZero(m.Harden) { // not required
+		return nil
+	}
+
+	if m.Harden != nil {
+		if err := m.Harden.Validate(formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("harden")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("harden")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (m *Global) validateHTTPErrCodes(formats strfmt.Registry) error {
+	if swag.IsZero(m.HTTPErrCodes) { // not required
+		return nil
+	}
+
+	for i := 0; i < len(m.HTTPErrCodes); i++ {
+		if swag.IsZero(m.HTTPErrCodes[i]) { // not required
+			continue
+		}
+
+		if m.HTTPErrCodes[i] != nil {
+			if err := m.HTTPErrCodes[i].Validate(formats); err != nil {
+				if ve, ok := err.(*errors.Validation); ok {
+					return ve.ValidateName("http_err_codes" + "." + strconv.Itoa(i))
+				} else if ce, ok := err.(*errors.CompositeError); ok {
+					return ce.ValidateName("http_err_codes" + "." + strconv.Itoa(i))
+				}
+				return err
+			}
+		}
+
+	}
+
+	return nil
+}
+
+func (m *Global) validateHTTPFailCodes(formats strfmt.Registry) error {
+	if swag.IsZero(m.HTTPFailCodes) { // not required
+		return nil
+	}
+
+	for i := 0; i < len(m.HTTPFailCodes); i++ {
+		if swag.IsZero(m.HTTPFailCodes[i]) { // not required
+			continue
+		}
+
+		if m.HTTPFailCodes[i] != nil {
+			if err := m.HTTPFailCodes[i].Validate(formats); err != nil {
+				if ve, ok := err.(*errors.Validation); ok {
+					return ve.ValidateName("http_fail_codes" + "." + strconv.Itoa(i))
+				} else if ce, ok := err.(*errors.CompositeError); ok {
+					return ce.ValidateName("http_fail_codes" + "." + strconv.Itoa(i))
+				}
+				return err
+			}
+		}
+
+	}
+
+	return nil
+}
+
 var globalTypeHttpclientResolversDisabledPropEnum []interface{}
 
 func init() {
@@ -1190,11 +1305,53 @@ func (m *Global) validateNumaCPUMapping(formats strfmt.Registry) error {
 	return nil
 }
 
+var globalTypeProfilingMemoryPropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		globalTypeProfilingMemoryPropEnum = append(globalTypeProfilingMemoryPropEnum, v)
+	}
+}
+
+const (
+
+	// GlobalProfilingMemoryEnabled captures enum value "enabled"
+	GlobalProfilingMemoryEnabled string = "enabled"
+
+	// GlobalProfilingMemoryDisabled captures enum value "disabled"
+	GlobalProfilingMemoryDisabled string = "disabled"
+)
+
+// prop value enum
+func (m *Global) validateProfilingMemoryEnum(path, location string, value string) error {
+	if err := validate.EnumCase(path, location, value, globalTypeProfilingMemoryPropEnum, true); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *Global) validateProfilingMemory(formats strfmt.Registry) error {
+	if swag.IsZero(m.ProfilingMemory) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateProfilingMemoryEnum("profiling_memory", "body", m.ProfilingMemory); err != nil {
+		return err
+	}
+
+	return nil
+}
+
 var globalTypeProfilingTasksPropEnum []interface{}
 
 func init() {
 	var res []string
-	if err := json.Unmarshal([]byte(`["auto","on","off"]`), &res); err != nil {
+	if err := json.Unmarshal([]byte(`["auto","enabled","disabled"]`), &res); err != nil {
 		panic(err)
 	}
 	for _, v := range res {
@@ -1207,11 +1364,11 @@ const (
 	// GlobalProfilingTasksAuto captures enum value "auto"
 	GlobalProfilingTasksAuto string = "auto"
 
-	// GlobalProfilingTasksOn captures enum value "on"
-	GlobalProfilingTasksOn string = "on"
+	// GlobalProfilingTasksEnabled captures enum value "enabled"
+	GlobalProfilingTasksEnabled string = "enabled"
 
-	// GlobalProfilingTasksOff captures enum value "off"
-	GlobalProfilingTasksOff string = "off"
+	// GlobalProfilingTasksDisabled captures enum value "disabled"
+	GlobalProfilingTasksDisabled string = "disabled"
 )
 
 // prop value enum
@@ -1307,6 +1464,22 @@ func (m *Global) validateSslModeAsync(formats strfmt.Registry) error {
 
 	// value enum
 	if err := m.validateSslModeAsyncEnum("ssl_mode_async", "body", m.SslModeAsync); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *Global) validateSslSecurityLevel(formats strfmt.Registry) error {
+	if swag.IsZero(m.SslSecurityLevel) { // not required
+		return nil
+	}
+
+	if err := validate.MinimumInt("ssl_security_level", "body", *m.SslSecurityLevel, 0, false); err != nil {
+		return err
+	}
+
+	if err := validate.MaximumInt("ssl_security_level", "body", *m.SslSecurityLevel, 5, false); err != nil {
 		return err
 	}
 
@@ -1454,6 +1627,18 @@ func (m *Global) ContextValidate(ctx context.Context, formats strfmt.Registry) e
 	}
 
 	if err := m.contextValidateFiftyOneDegreesOptions(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.contextValidateHarden(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.contextValidateHTTPErrCodes(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.contextValidateHTTPFailCodes(ctx, formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -1706,6 +1891,62 @@ func (m *Global) contextValidateFiftyOneDegreesOptions(ctx context.Context, form
 			}
 			return err
 		}
+	}
+
+	return nil
+}
+
+func (m *Global) contextValidateHarden(ctx context.Context, formats strfmt.Registry) error {
+
+	if m.Harden != nil {
+		if err := m.Harden.ContextValidate(ctx, formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("harden")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("harden")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (m *Global) contextValidateHTTPErrCodes(ctx context.Context, formats strfmt.Registry) error {
+
+	for i := 0; i < len(m.HTTPErrCodes); i++ {
+
+		if m.HTTPErrCodes[i] != nil {
+			if err := m.HTTPErrCodes[i].ContextValidate(ctx, formats); err != nil {
+				if ve, ok := err.(*errors.Validation); ok {
+					return ve.ValidateName("http_err_codes" + "." + strconv.Itoa(i))
+				} else if ce, ok := err.(*errors.CompositeError); ok {
+					return ce.ValidateName("http_err_codes" + "." + strconv.Itoa(i))
+				}
+				return err
+			}
+		}
+
+	}
+
+	return nil
+}
+
+func (m *Global) contextValidateHTTPFailCodes(ctx context.Context, formats strfmt.Registry) error {
+
+	for i := 0; i < len(m.HTTPFailCodes); i++ {
+
+		if m.HTTPFailCodes[i] != nil {
+			if err := m.HTTPFailCodes[i].ContextValidate(ctx, formats); err != nil {
+				if ve, ok := err.(*errors.Validation); ok {
+					return ve.ValidateName("http_fail_codes" + "." + strconv.Itoa(i))
+				} else if ce, ok := err.(*errors.CompositeError); ok {
+					return ce.ValidateName("http_fail_codes" + "." + strconv.Itoa(i))
+				}
+				return err
+			}
+		}
+
 	}
 
 	return nil
@@ -2166,6 +2407,236 @@ func (m *H1CaseAdjust) MarshalBinary() ([]byte, error) {
 // UnmarshalBinary interface implementation
 func (m *H1CaseAdjust) UnmarshalBinary(b []byte) error {
 	var res H1CaseAdjust
+	if err := swag.ReadJSON(b, &res); err != nil {
+		return err
+	}
+	*m = res
+	return nil
+}
+
+// GlobalHarden global harden
+//
+// swagger:model GlobalHarden
+type GlobalHarden struct {
+
+	// reject privileged ports
+	RejectPrivilegedPorts *GlobalHardenRejectPrivilegedPorts `json:"reject_privileged_ports,omitempty"`
+}
+
+// Validate validates this global harden
+func (m *GlobalHarden) Validate(formats strfmt.Registry) error {
+	var res []error
+
+	if err := m.validateRejectPrivilegedPorts(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if len(res) > 0 {
+		return errors.CompositeValidationError(res...)
+	}
+	return nil
+}
+
+func (m *GlobalHarden) validateRejectPrivilegedPorts(formats strfmt.Registry) error {
+	if swag.IsZero(m.RejectPrivilegedPorts) { // not required
+		return nil
+	}
+
+	if m.RejectPrivilegedPorts != nil {
+		if err := m.RejectPrivilegedPorts.Validate(formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("harden" + "." + "reject_privileged_ports")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("harden" + "." + "reject_privileged_ports")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
+// ContextValidate validate this global harden based on the context it is used
+func (m *GlobalHarden) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+	var res []error
+
+	if err := m.contextValidateRejectPrivilegedPorts(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if len(res) > 0 {
+		return errors.CompositeValidationError(res...)
+	}
+	return nil
+}
+
+func (m *GlobalHarden) contextValidateRejectPrivilegedPorts(ctx context.Context, formats strfmt.Registry) error {
+
+	if m.RejectPrivilegedPorts != nil {
+		if err := m.RejectPrivilegedPorts.ContextValidate(ctx, formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("harden" + "." + "reject_privileged_ports")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("harden" + "." + "reject_privileged_ports")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
+// MarshalBinary interface implementation
+func (m *GlobalHarden) MarshalBinary() ([]byte, error) {
+	if m == nil {
+		return nil, nil
+	}
+	return swag.WriteJSON(m)
+}
+
+// UnmarshalBinary interface implementation
+func (m *GlobalHarden) UnmarshalBinary(b []byte) error {
+	var res GlobalHarden
+	if err := swag.ReadJSON(b, &res); err != nil {
+		return err
+	}
+	*m = res
+	return nil
+}
+
+// GlobalHardenRejectPrivilegedPorts global harden reject privileged ports
+//
+// swagger:model GlobalHardenRejectPrivilegedPorts
+type GlobalHardenRejectPrivilegedPorts struct {
+	// quic
+	// Enum: [enabled disabled]
+	// +kubebuilder:validation:Enum=enabled;disabled;
+	Quic string `json:"quic,omitempty"`
+
+	// tcp
+	// Enum: [enabled disabled]
+	// +kubebuilder:validation:Enum=enabled;disabled;
+	TCP string `json:"tcp,omitempty"`
+}
+
+// Validate validates this global harden reject privileged ports
+func (m *GlobalHardenRejectPrivilegedPorts) Validate(formats strfmt.Registry) error {
+	var res []error
+
+	if err := m.validateQuic(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateTCP(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if len(res) > 0 {
+		return errors.CompositeValidationError(res...)
+	}
+	return nil
+}
+
+var globalHardenRejectPrivilegedPortsTypeQuicPropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		globalHardenRejectPrivilegedPortsTypeQuicPropEnum = append(globalHardenRejectPrivilegedPortsTypeQuicPropEnum, v)
+	}
+}
+
+const (
+
+	// GlobalHardenRejectPrivilegedPortsQuicEnabled captures enum value "enabled"
+	GlobalHardenRejectPrivilegedPortsQuicEnabled string = "enabled"
+
+	// GlobalHardenRejectPrivilegedPortsQuicDisabled captures enum value "disabled"
+	GlobalHardenRejectPrivilegedPortsQuicDisabled string = "disabled"
+)
+
+// prop value enum
+func (m *GlobalHardenRejectPrivilegedPorts) validateQuicEnum(path, location string, value string) error {
+	if err := validate.EnumCase(path, location, value, globalHardenRejectPrivilegedPortsTypeQuicPropEnum, true); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *GlobalHardenRejectPrivilegedPorts) validateQuic(formats strfmt.Registry) error {
+	if swag.IsZero(m.Quic) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateQuicEnum("harden"+"."+"reject_privileged_ports"+"."+"quic", "body", m.Quic); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+var globalHardenRejectPrivilegedPortsTypeTCPPropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		globalHardenRejectPrivilegedPortsTypeTCPPropEnum = append(globalHardenRejectPrivilegedPortsTypeTCPPropEnum, v)
+	}
+}
+
+const (
+
+	// GlobalHardenRejectPrivilegedPortsTCPEnabled captures enum value "enabled"
+	GlobalHardenRejectPrivilegedPortsTCPEnabled string = "enabled"
+
+	// GlobalHardenRejectPrivilegedPortsTCPDisabled captures enum value "disabled"
+	GlobalHardenRejectPrivilegedPortsTCPDisabled string = "disabled"
+)
+
+// prop value enum
+func (m *GlobalHardenRejectPrivilegedPorts) validateTCPEnum(path, location string, value string) error {
+	if err := validate.EnumCase(path, location, value, globalHardenRejectPrivilegedPortsTypeTCPPropEnum, true); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *GlobalHardenRejectPrivilegedPorts) validateTCP(formats strfmt.Registry) error {
+	if swag.IsZero(m.TCP) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateTCPEnum("harden"+"."+"reject_privileged_ports"+"."+"tcp", "body", m.TCP); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+// ContextValidate validates this global harden reject privileged ports based on context it is used
+func (m *GlobalHardenRejectPrivilegedPorts) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+	return nil
+}
+
+// MarshalBinary interface implementation
+func (m *GlobalHardenRejectPrivilegedPorts) MarshalBinary() ([]byte, error) {
+	if m == nil {
+		return nil, nil
+	}
+	return swag.WriteJSON(m)
+}
+
+// UnmarshalBinary interface implementation
+func (m *GlobalHardenRejectPrivilegedPorts) UnmarshalBinary(b []byte) error {
+	var res GlobalHardenRejectPrivilegedPorts
 	if err := swag.ReadJSON(b, &res); err != nil {
 		return err
 	}

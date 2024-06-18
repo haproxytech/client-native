@@ -571,6 +571,8 @@ definitions:
     type: array
     items:
       $ref: '#/definitions/table'
+  http_codes:
+    $ref: "models/configuration/misc.yaml#/http_codes"
 responses:
   BadRequest:
     description: Bad request

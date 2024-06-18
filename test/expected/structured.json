@@ -348,6 +348,22 @@
                 "sample_range": "2",
                 "sample_size": 4
             }
+        ],
+        "profiling.tasks": "enabled",
+        "harden": {
+            "reject_privileged_ports": {
+                "tcp": "enabled"
+            }
+        },
+        "thread_hard_limit": 77,
+        "ssl_security_level": 3,
+        "http_err_codes": [
+            {"value": "400,402-444,446-480,490 -450 +500"},
+            {"value": "+501,505"}
+        ],
+        "http_fail_codes": [
+            {"value": "400,402-444,446-480,490 -450 +500"},
+            {"value": "+501,505"}
         ]
     },
     "backends": {

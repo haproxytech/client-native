@@ -144,6 +144,15 @@ func TestPutGlobal(t *testing.T) {
 		SslProviderPath:               "providers/",
 		Setcap:                        "none",
 		LimitedQuic:                   true,
+		ProfilingMemory:               "enabled",
+		Harden: &models.GlobalHarden{
+			RejectPrivilegedPorts: &models.GlobalHardenRejectPrivilegedPorts{
+				Quic: "enabled",
+			},
+		},
+		ThreadHardLimit:  misc.Int64P(100),
+		SslSecurityLevel: misc.Int64P(2),
+		HTTPErrCodes:     []*models.HTTPCodes{{Value: misc.StringP("100-150 -123 +599")}},
 	}
 
 	err := clientTest.PushGlobalConfiguration(g, "", version)

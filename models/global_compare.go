@@ -261,6 +261,48 @@ func (s Global) Equal(t Global, opts ...Options) bool {
 		return false
 	}
 
+	if s.Harden == nil || t.Harden == nil {
+		if s.Harden != nil || t.Harden != nil {
+			if opt.NilSameAsEmpty {
+				empty := &GlobalHarden{}
+				if s.Harden == nil {
+					if !(t.Harden.Equal(*empty)) {
+						return false
+					}
+				}
+				if t.Harden == nil {
+					if !(s.Harden.Equal(*empty)) {
+						return false
+					}
+				}
+			} else {
+				return false
+			}
+		}
+	} else if !s.Harden.Equal(*t.Harden, opt) {
+		return false
+	}
+
+	if !CheckSameNilAndLen(s.HTTPErrCodes, t.HTTPErrCodes, opt) {
+		return false
+	} else {
+		for i := range s.HTTPErrCodes {
+			if !s.HTTPErrCodes[i].Equal(*t.HTTPErrCodes[i], opt) {
+				return false
+			}
+		}
+	}
+
+	if !CheckSameNilAndLen(s.HTTPFailCodes, t.HTTPFailCodes, opt) {
+		return false
+	} else {
+		for i := range s.HTTPFailCodes {
+			if !s.HTTPFailCodes[i].Equal(*t.HTTPFailCodes[i], opt) {
+				return false
+			}
+		}
+	}
+
 	if s.HttpclientResolversDisabled != t.HttpclientResolversDisabled {
 		return false
 	}
@@ -459,6 +501,10 @@ func (s Global) Equal(t Global, opts ...Options) bool {
 		return false
 	}
 
+	if s.ProfilingMemory != t.ProfilingMemory {
+		return false
+	}
+
 	if s.ProfilingTasks != t.ProfilingTasks {
 		return false
 	}
@@ -563,6 +609,10 @@ func (s Global) Equal(t Global, opts ...Options) bool {
 		return false
 	}
 
+	if !equalPointers(s.SslSecurityLevel, t.SslSecurityLevel) {
+		return false
+	}
+
 	if s.SslServerVerify != t.SslServerVerify {
 		return false
 	}
@@ -584,6 +634,10 @@ func (s Global) Equal(t Global, opts ...Options) bool {
 	}
 
 	if s.ThreadGroups != t.ThreadGroups {
+		return false
+	}
+
+	if !equalPointers(s.ThreadHardLimit, t.ThreadHardLimit) {
 		return false
 	}
 
@@ -958,6 +1012,62 @@ func (s Global) Diff(t Global, opts ...Options) map[string][]interface{} {
 		diff["HardStopAfter"] = []interface{}{ValueOrNil(s.HardStopAfter), ValueOrNil(t.HardStopAfter)}
 	}
 
+	if s.Harden == nil || t.Harden == nil {
+		if s.Harden != nil || t.Harden != nil {
+			if opt.NilSameAsEmpty {
+				empty := &GlobalHarden{}
+				if s.Harden == nil {
+					if !(t.Harden.Equal(*empty)) {
+						diff["Harden"] = []interface{}{ValueOrNil(s.Harden), ValueOrNil(t.Harden)}
+					}
+				}
+				if t.Harden == nil {
+					if !(s.Harden.Equal(*empty)) {
+						diff["Harden"] = []interface{}{ValueOrNil(s.Harden), ValueOrNil(t.Harden)}
+					}
+				}
+			} else {
+				diff["Harden"] = []interface{}{ValueOrNil(s.Harden), ValueOrNil(t.Harden)}
+			}
+		}
+	} else if !s.Harden.Equal(*t.Harden, opt) {
+		diff["Harden"] = []interface{}{ValueOrNil(s.Harden), ValueOrNil(t.Harden)}
+	}
+
+	if !CheckSameNilAndLen(s.HTTPErrCodes, t.HTTPErrCodes, opt) {
+		diff["HTTPErrCodes"] = []interface{}{s.HTTPErrCodes, t.HTTPErrCodes}
+	} else {
+		diff2 := make(map[string][]interface{})
+		for i := range s.HTTPErrCodes {
+			if !s.HTTPErrCodes[i].Equal(*t.HTTPErrCodes[i], opt) {
+				diffSub := s.HTTPErrCodes[i].Diff(*t.HTTPErrCodes[i], opt)
+				if len(diffSub) > 0 {
+					diff2[strconv.Itoa(i)] = []interface{}{diffSub}
+				}
+			}
+		}
+		if len(diff2) > 0 {
+			diff["HTTPErrCodes"] = []interface{}{diff2}
+		}
+	}
+
+	if !CheckSameNilAndLen(s.HTTPFailCodes, t.HTTPFailCodes, opt) {
+		diff["HTTPFailCodes"] = []interface{}{s.HTTPFailCodes, t.HTTPFailCodes}
+	} else {
+		diff2 := make(map[string][]interface{})
+		for i := range s.HTTPFailCodes {
+			if !s.HTTPFailCodes[i].Equal(*t.HTTPFailCodes[i], opt) {
+				diffSub := s.HTTPFailCodes[i].Diff(*t.HTTPFailCodes[i], opt)
+				if len(diffSub) > 0 {
+					diff2[strconv.Itoa(i)] = []interface{}{diffSub}
+				}
+			}
+		}
+		if len(diff2) > 0 {
+			diff["HTTPFailCodes"] = []interface{}{diff2}
+		}
+	}
+
 	if s.HttpclientResolversDisabled != t.HttpclientResolversDisabled {
 		diff["HttpclientResolversDisabled"] = []interface{}{s.HttpclientResolversDisabled, t.HttpclientResolversDisabled}
 	}
@@ -1170,6 +1280,10 @@ func (s Global) Diff(t Global, opts ...Options) map[string][]interface{} {
 		diff["PreallocFd"] = []interface{}{s.PreallocFd, t.PreallocFd}
 	}
 
+	if s.ProfilingMemory != t.ProfilingMemory {
+		diff["ProfilingMemory"] = []interface{}{s.ProfilingMemory, t.ProfilingMemory}
+	}
+
 	if s.ProfilingTasks != t.ProfilingTasks {
 		diff["ProfilingTasks"] = []interface{}{s.ProfilingTasks, t.ProfilingTasks}
 	}
@@ -1274,6 +1388,10 @@ func (s Global) Diff(t Global, opts ...Options) map[string][]interface{} {
 		diff["SslProviderPath"] = []interface{}{s.SslProviderPath, t.SslProviderPath}
 	}
 
+	if !equalPointers(s.SslSecurityLevel, t.SslSecurityLevel) {
+		diff["SslSecurityLevel"] = []interface{}{ValueOrNil(s.SslSecurityLevel), ValueOrNil(t.SslSecurityLevel)}
+	}
+
 	if s.SslServerVerify != t.SslServerVerify {
 		diff["SslServerVerify"] = []interface{}{s.SslServerVerify, t.SslServerVerify}
 	}
@@ -1296,6 +1414,10 @@ func (s Global) Diff(t Global, opts ...Options) map[string][]interface{} {
 
 	if s.ThreadGroups != t.ThreadGroups {
 		diff["ThreadGroups"] = []interface{}{s.ThreadGroups, t.ThreadGroups}
+	}
+
+	if !equalPointers(s.ThreadHardLimit, t.ThreadHardLimit) {
+		diff["ThreadHardLimit"] = []interface{}{ValueOrNil(s.ThreadHardLimit), ValueOrNil(t.ThreadHardLimit)}
 	}
 
 	if s.TuneOptions == nil || t.TuneOptions == nil {
@@ -1577,6 +1699,127 @@ func (s H1CaseAdjust) Diff(t H1CaseAdjust, opts ...Options) map[string][]interfa
 
 	if !equalPointers(s.To, t.To) {
 		diff["To"] = []interface{}{ValueOrNil(s.To), ValueOrNil(t.To)}
+	}
+
+	return diff
+}
+
+// Equal checks if two structs of type GlobalHarden are equal
+//
+// By default empty maps and slices are equal to nil:
+//
+//	var a, b GlobalHarden
+//	equal := a.Equal(b)
+//
+// For more advanced use case you can configure these options (default values are shown):
+//
+//	var a, b GlobalHarden
+//	equal := a.Equal(b,Options{
+//		NilSameAsEmpty: true,
+//	})
+func (s GlobalHarden) Equal(t GlobalHarden, opts ...Options) bool {
+	opt := getOptions(opts...)
+
+	if s.RejectPrivilegedPorts == nil || t.RejectPrivilegedPorts == nil {
+		if s.RejectPrivilegedPorts != nil || t.RejectPrivilegedPorts != nil {
+			if opt.NilSameAsEmpty {
+				empty := &GlobalHardenRejectPrivilegedPorts{}
+				if s.RejectPrivilegedPorts == nil {
+					if !(t.RejectPrivilegedPorts.Equal(*empty)) {
+						return false
+					}
+				}
+				if t.RejectPrivilegedPorts == nil {
+					if !(s.RejectPrivilegedPorts.Equal(*empty)) {
+						return false
+					}
+				}
+			} else {
+				return false
+			}
+		}
+	} else if !s.RejectPrivilegedPorts.Equal(*t.RejectPrivilegedPorts, opt) {
+		return false
+	}
+
+	return true
+}
+
+// Diff checks if two structs of type GlobalHarden are equal
+//
+// By default empty maps and slices are equal to nil:
+//
+//	var a, b GlobalHarden
+//	diff := a.Diff(b)
+//
+// For more advanced use case you can configure these options (default values are shown):
+//
+//	var a, b GlobalHarden
+//	diff := a.Diff(b,Options{
+//		NilSameAsEmpty: true,
+//	})
+func (s GlobalHarden) Diff(t GlobalHarden, opts ...Options) map[string][]interface{} {
+	opt := getOptions(opts...)
+
+	diff := make(map[string][]interface{})
+
+	if s.RejectPrivilegedPorts == nil || t.RejectPrivilegedPorts == nil {
+		if s.RejectPrivilegedPorts != nil || t.RejectPrivilegedPorts != nil {
+			if opt.NilSameAsEmpty {
+				empty := &GlobalHardenRejectPrivilegedPorts{}
+				if s.RejectPrivilegedPorts == nil {
+					if !(t.RejectPrivilegedPorts.Equal(*empty)) {
+						diff["RejectPrivilegedPorts"] = []interface{}{ValueOrNil(s.RejectPrivilegedPorts), ValueOrNil(t.RejectPrivilegedPorts)}
+					}
+				}
+				if t.RejectPrivilegedPorts == nil {
+					if !(s.RejectPrivilegedPorts.Equal(*empty)) {
+						diff["RejectPrivilegedPorts"] = []interface{}{ValueOrNil(s.RejectPrivilegedPorts), ValueOrNil(t.RejectPrivilegedPorts)}
+					}
+				}
+			} else {
+				diff["RejectPrivilegedPorts"] = []interface{}{ValueOrNil(s.RejectPrivilegedPorts), ValueOrNil(t.RejectPrivilegedPorts)}
+			}
+		}
+	} else if !s.RejectPrivilegedPorts.Equal(*t.RejectPrivilegedPorts, opt) {
+		diff["RejectPrivilegedPorts"] = []interface{}{ValueOrNil(s.RejectPrivilegedPorts), ValueOrNil(t.RejectPrivilegedPorts)}
+	}
+
+	return diff
+}
+
+// Equal checks if two structs of type GlobalHardenRejectPrivilegedPorts are equal
+//
+//	var a, b GlobalHardenRejectPrivilegedPorts
+//	equal := a.Equal(b)
+//
+// opts ...Options are ignored in this method
+func (s GlobalHardenRejectPrivilegedPorts) Equal(t GlobalHardenRejectPrivilegedPorts, opts ...Options) bool {
+	if s.Quic != t.Quic {
+		return false
+	}
+
+	if s.TCP != t.TCP {
+		return false
+	}
+
+	return true
+}
+
+// Diff checks if two structs of type GlobalHardenRejectPrivilegedPorts are equal
+//
+//	var a, b GlobalHardenRejectPrivilegedPorts
+//	diff := a.Diff(b)
+//
+// opts ...Options are ignored in this method
+func (s GlobalHardenRejectPrivilegedPorts) Diff(t GlobalHardenRejectPrivilegedPorts, opts ...Options) map[string][]interface{} {
+	diff := make(map[string][]interface{})
+	if s.Quic != t.Quic {
+		diff["Quic"] = []interface{}{s.Quic, t.Quic}
+	}
+
+	if s.TCP != t.TCP {
+		diff["TCP"] = []interface{}{s.TCP, t.TCP}
 	}
 
 	return diff

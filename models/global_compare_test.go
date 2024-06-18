@@ -123,11 +123,13 @@ func TestGlobalEqualFalse(t *testing.T) {
 		result.Quiet = !sample.Quiet
 		result.SetDumpable = !sample.SetDumpable
 		result.SpreadChecks = sample.SpreadChecks + 1
+		result.SslSecurityLevel = Ptr(*sample.SslSecurityLevel + 1)
 		result.SslSkipSelfIssuedCa = !sample.SslSkipSelfIssuedCa
 		result.StatsMaxconn = Ptr(*sample.StatsMaxconn + 1)
 		result.StatsTimeout = Ptr(*sample.StatsTimeout + 1)
 		result.StrictLimits = !sample.StrictLimits
 		result.ThreadGroups = sample.ThreadGroups + 1
+		result.ThreadHardLimit = Ptr(*sample.ThreadHardLimit + 1)
 		result.UID = sample.UID + 1
 		result.Ulimitn = sample.Ulimitn + 1
 		result.ZeroWarning = !sample.ZeroWarning
@@ -250,11 +252,13 @@ func TestGlobalDiffFalse(t *testing.T) {
 		result.Quiet = !sample.Quiet
 		result.SetDumpable = !sample.SetDumpable
 		result.SpreadChecks = sample.SpreadChecks + 1
+		result.SslSecurityLevel = Ptr(*sample.SslSecurityLevel + 1)
 		result.SslSkipSelfIssuedCa = !sample.SslSkipSelfIssuedCa
 		result.StatsMaxconn = Ptr(*sample.StatsMaxconn + 1)
 		result.StatsTimeout = Ptr(*sample.StatsTimeout + 1)
 		result.StrictLimits = !sample.StrictLimits
 		result.ThreadGroups = sample.ThreadGroups + 1
+		result.ThreadHardLimit = Ptr(*sample.ThreadHardLimit + 1)
 		result.UID = sample.UID + 1
 		result.Ulimitn = sample.Ulimitn + 1
 		result.ZeroWarning = !sample.ZeroWarning
@@ -265,7 +269,7 @@ func TestGlobalDiffFalse(t *testing.T) {
 
 	for _, sample := range samples {
 		result := sample.a.Diff(sample.b)
-		if len(result) != 110 {
+		if len(result) != 116 {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {
@@ -275,7 +279,7 @@ func TestGlobalDiffFalse(t *testing.T) {
 			if err != nil {
 				t.Errorf(err.Error())
 			}
-			t.Errorf("Expected Global to be different in 110 cases, but it is not (%d) %s %s", len(result), a, b)
+			t.Errorf("Expected Global to be different in 116 cases, but it is not (%d) %s %s", len(result), a, b)
 		}
 	}
 }
@@ -1068,6 +1072,322 @@ func TestH1CaseAdjustDiffFalse(t *testing.T) {
 				t.Errorf(err.Error())
 			}
 			t.Errorf("Expected H1CaseAdjust to be different in 2 cases, but it is not (%d) %s %s", len(result), a, b)
+		}
+	}
+}
+
+func TestGlobalHardenEqual(t *testing.T) {
+	samples := []struct {
+		a, b GlobalHarden
+	}{}
+	for i := 0; i < 2; i++ {
+		var sample GlobalHarden
+		var result GlobalHarden
+		err := faker.FakeData(&sample)
+		if err != nil {
+			t.Errorf(err.Error())
+		}
+		byteJSON, err := json.Marshal(sample)
+		if err != nil {
+			t.Errorf(err.Error())
+		}
+		err = json.Unmarshal(byteJSON, &result)
+		if err != nil {
+			t.Errorf(err.Error())
+		}
+
+		samples = append(samples, struct {
+			a, b GlobalHarden
+		}{sample, result})
+	}
+
+	for _, sample := range samples {
+		result := sample.a.Equal(sample.b)
+		if !result {
+			json := jsoniter.ConfigCompatibleWithStandardLibrary
+			a, err := json.Marshal(&sample.a)
+			if err != nil {
+				t.Errorf(err.Error())
+			}
+			b, err := json.Marshal(&sample.b)
+			if err != nil {
+				t.Errorf(err.Error())
+			}
+			t.Errorf("Expected GlobalHarden to be equal, but it is not %s %s", a, b)
+		}
+	}
+}
+
+func TestGlobalHardenEqualFalse(t *testing.T) {
+	samples := []struct {
+		a, b GlobalHarden
+	}{}
+	for i := 0; i < 2; i++ {
+		var sample GlobalHarden
+		var result GlobalHarden
+		err := faker.FakeData(&sample)
+		if err != nil {
+			t.Errorf(err.Error())
+		}
+		err = faker.FakeData(&result)
+		if err != nil {
+			t.Errorf(err.Error())
+		}
+		samples = append(samples, struct {
+			a, b GlobalHarden
+		}{sample, result})
+	}
+
+	for _, sample := range samples {
+		result := sample.a.Equal(sample.b)
+		if result {
+			json := jsoniter.ConfigCompatibleWithStandardLibrary
+			a, err := json.Marshal(&sample.a)
+			if err != nil {
+				t.Errorf(err.Error())
+			}
+			b, err := json.Marshal(&sample.b)
+			if err != nil {
+				t.Errorf(err.Error())
+			}
+			t.Errorf("Expected GlobalHarden to be different, but it is not %s %s", a, b)
+		}
+	}
+}
+
+func TestGlobalHardenDiff(t *testing.T) {
+	samples := []struct {
+		a, b GlobalHarden
+	}{}
+	for i := 0; i < 2; i++ {
+		var sample GlobalHarden
+		var result GlobalHarden
+		err := faker.FakeData(&sample)
+		if err != nil {
+			t.Errorf(err.Error())
+		}
+		byteJSON, err := json.Marshal(sample)
+		if err != nil {
+			t.Errorf(err.Error())
+		}
+		err = json.Unmarshal(byteJSON, &result)
+		if err != nil {
+			t.Errorf(err.Error())
+		}
+
+		samples = append(samples, struct {
+			a, b GlobalHarden
+		}{sample, result})
+	}
+
+	for _, sample := range samples {
+		result := sample.a.Diff(sample.b)
+		if len(result) != 0 {
+			json := jsoniter.ConfigCompatibleWithStandardLibrary
+			a, err := json.Marshal(&sample.a)
+			if err != nil {
+				t.Errorf(err.Error())
+			}
+			b, err := json.Marshal(&sample.b)
+			if err != nil {
+				t.Errorf(err.Error())
+			}
+			t.Errorf("Expected GlobalHarden to be equal, but it is not %s %s, %v", a, b, result)
+		}
+	}
+}
+
+func TestGlobalHardenDiffFalse(t *testing.T) {
+	samples := []struct {
+		a, b GlobalHarden
+	}{}
+	for i := 0; i < 2; i++ {
+		var sample GlobalHarden
+		var result GlobalHarden
+		err := faker.FakeData(&sample)
+		if err != nil {
+			t.Errorf(err.Error())
+		}
+		err = faker.FakeData(&result)
+		if err != nil {
+			t.Errorf(err.Error())
+		}
+		samples = append(samples, struct {
+			a, b GlobalHarden
+		}{sample, result})
+	}
+
+	for _, sample := range samples {
+		result := sample.a.Diff(sample.b)
+		if len(result) != 1 {
+			json := jsoniter.ConfigCompatibleWithStandardLibrary
+			a, err := json.Marshal(&sample.a)
+			if err != nil {
+				t.Errorf(err.Error())
+			}
+			b, err := json.Marshal(&sample.b)
+			if err != nil {
+				t.Errorf(err.Error())
+			}
+			t.Errorf("Expected GlobalHarden to be different in 1 cases, but it is not (%d) %s %s", len(result), a, b)
+		}
+	}
+}
+
+func TestGlobalHardenRejectPrivilegedPortsEqual(t *testing.T) {
+	samples := []struct {
+		a, b GlobalHardenRejectPrivilegedPorts
+	}{}
+	for i := 0; i < 2; i++ {
+		var sample GlobalHardenRejectPrivilegedPorts
+		var result GlobalHardenRejectPrivilegedPorts
+		err := faker.FakeData(&sample)
+		if err != nil {
+			t.Errorf(err.Error())
+		}
+		byteJSON, err := json.Marshal(sample)
+		if err != nil {
+			t.Errorf(err.Error())
+		}
+		err = json.Unmarshal(byteJSON, &result)
+		if err != nil {
+			t.Errorf(err.Error())
+		}
+
+		samples = append(samples, struct {
+			a, b GlobalHardenRejectPrivilegedPorts
+		}{sample, result})
+	}
+
+	for _, sample := range samples {
+		result := sample.a.Equal(sample.b)
+		if !result {
+			json := jsoniter.ConfigCompatibleWithStandardLibrary
+			a, err := json.Marshal(&sample.a)
+			if err != nil {
+				t.Errorf(err.Error())
+			}
+			b, err := json.Marshal(&sample.b)
+			if err != nil {
+				t.Errorf(err.Error())
+			}
+			t.Errorf("Expected GlobalHardenRejectPrivilegedPorts to be equal, but it is not %s %s", a, b)
+		}
+	}
+}
+
+func TestGlobalHardenRejectPrivilegedPortsEqualFalse(t *testing.T) {
+	samples := []struct {
+		a, b GlobalHardenRejectPrivilegedPorts
+	}{}
+	for i := 0; i < 2; i++ {
+		var sample GlobalHardenRejectPrivilegedPorts
+		var result GlobalHardenRejectPrivilegedPorts
+		err := faker.FakeData(&sample)
+		if err != nil {
+			t.Errorf(err.Error())
+		}
+		err = faker.FakeData(&result)
+		if err != nil {
+			t.Errorf(err.Error())
+		}
+		samples = append(samples, struct {
+			a, b GlobalHardenRejectPrivilegedPorts
+		}{sample, result})
+	}
+
+	for _, sample := range samples {
+		result := sample.a.Equal(sample.b)
+		if result {
+			json := jsoniter.ConfigCompatibleWithStandardLibrary
+			a, err := json.Marshal(&sample.a)
+			if err != nil {
+				t.Errorf(err.Error())
+			}
+			b, err := json.Marshal(&sample.b)
+			if err != nil {
+				t.Errorf(err.Error())
+			}
+			t.Errorf("Expected GlobalHardenRejectPrivilegedPorts to be different, but it is not %s %s", a, b)
+		}
+	}
+}
+
+func TestGlobalHardenRejectPrivilegedPortsDiff(t *testing.T) {
+	samples := []struct {
+		a, b GlobalHardenRejectPrivilegedPorts
+	}{}
+	for i := 0; i < 2; i++ {
+		var sample GlobalHardenRejectPrivilegedPorts
+		var result GlobalHardenRejectPrivilegedPorts
+		err := faker.FakeData(&sample)
+		if err != nil {
+			t.Errorf(err.Error())
+		}
+		byteJSON, err := json.Marshal(sample)
+		if err != nil {
+			t.Errorf(err.Error())
+		}
+		err = json.Unmarshal(byteJSON, &result)
+		if err != nil {
+			t.Errorf(err.Error())
+		}
+
+		samples = append(samples, struct {
+			a, b GlobalHardenRejectPrivilegedPorts
+		}{sample, result})
+	}
+
+	for _, sample := range samples {
+		result := sample.a.Diff(sample.b)
+		if len(result) != 0 {
+			json := jsoniter.ConfigCompatibleWithStandardLibrary
+			a, err := json.Marshal(&sample.a)
+			if err != nil {
+				t.Errorf(err.Error())
+			}
+			b, err := json.Marshal(&sample.b)
+			if err != nil {
+				t.Errorf(err.Error())
+			}
+			t.Errorf("Expected GlobalHardenRejectPrivilegedPorts to be equal, but it is not %s %s, %v", a, b, result)
+		}
+	}
+}
+
+func TestGlobalHardenRejectPrivilegedPortsDiffFalse(t *testing.T) {
+	samples := []struct {
+		a, b GlobalHardenRejectPrivilegedPorts
+	}{}
+	for i := 0; i < 2; i++ {
+		var sample GlobalHardenRejectPrivilegedPorts
+		var result GlobalHardenRejectPrivilegedPorts
+		err := faker.FakeData(&sample)
+		if err != nil {
+			t.Errorf(err.Error())
+		}
+		err = faker.FakeData(&result)
+		if err != nil {
+			t.Errorf(err.Error())
+		}
+		samples = append(samples, struct {
+			a, b GlobalHardenRejectPrivilegedPorts
+		}{sample, result})
+	}
+
+	for _, sample := range samples {
+		result := sample.a.Diff(sample.b)
+		if len(result) != 2 {
+			json := jsoniter.ConfigCompatibleWithStandardLibrary
+			a, err := json.Marshal(&sample.a)
+			if err != nil {
+				t.Errorf(err.Error())
+			}
+			b, err := json.Marshal(&sample.b)
+			if err != nil {
+				t.Errorf(err.Error())
+			}
+			t.Errorf("Expected GlobalHardenRejectPrivilegedPorts to be different in 2 cases, but it is not (%d) %s %s", len(result), a, b)
 		}
 	}
 }
