@@ -573,6 +573,21 @@ definitions:
       $ref: '#/definitions/table'
   http_codes:
     $ref: "models/configuration/misc.yaml#/http_codes"
+  crt_store:
+    $ref: "models/configuration/crt_store.yaml#/crt_store"
+  crt_stores:
+    description: List of Certificate Stores
+    type: array
+    items:
+      $ref: "#/definitions/crt_store"
+  crt_load:
+    $ref: "models/configuration/crt_store.yaml#/crt_load"
+  crt_loads:
+    description: List of certificates to load from a Certificate Store
+    type: array
+    items:
+      $ref: "#/definitions/crt_load"
+    x-omitempty: true
 responses:
   BadRequest:
     description: Bad request
@@ -731,6 +746,8 @@ tags:
   - name: FCGIApp
   - name: ProcessManager
   - name: Table
+  - name: CrtStore
+  - name: CrtLoad
 security:
   - basic_auth: []
 paths:
@@ -934,6 +951,14 @@ paths:
     $ref: "paths/configuration/resolver.yaml#/nameservers_one"
   /services/haproxy/configuration/raw:
     $ref: "paths/configuration/raw.yaml#/configuration"
+  /services/haproxy/configuration/crt_stores:
+    $ref: "paths/configuration/crt_store.yaml#/crt_stores"
+  /services/haproxy/configuration/crt_stores/{name}:
+    $ref: "paths/configuration/crt_store.yaml#/crt_store"
+  /services/haproxy/configuration/crt_loads:
+    $ref: "paths/configuration/crt_store.yaml#/crt_loads"
+  /services/haproxy/configuration/crt_loads/{certificate}:
+    $ref: "paths/configuration/crt_store.yaml#/crt_load"
   /services/haproxy/runtime:
     $ref: "paths/general.yaml#/runtime"
   /services/haproxy/runtime/acls:

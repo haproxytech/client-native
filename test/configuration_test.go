@@ -903,6 +903,10 @@ mailers localmailer1
   mailer smtp2 10.0.10.2:514
   timeout mail 15s
 
+crt-store cert-bunker1
+  crt-base /secure/certs
+  key-base /secure/keys
+
 http-errors website-1
   errorfile 400 /etc/haproxy/errorfiles/site1/400.http
   errorfile 404 /etc/haproxy/errorfiles/site1/404.http

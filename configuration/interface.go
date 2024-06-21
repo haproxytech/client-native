@@ -36,6 +36,8 @@ type Configuration interface {
 	Bind
 	Cache
 	Capture
+	CrtLoad
+	CrtStore
 	Defaults
 	DgramBind
 	FCGIApp

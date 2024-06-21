@@ -99,6 +99,8 @@ func expectedChildResources[P, T any](res map[string][]T, parentKey, parentNameK
 			pkey = configuration.RingParentName
 		case "defaults":
 			pkey = configuration.DefaultsParentName
+		case "crt_stores":
+			pkey = configuration.CrtStoreParentName
 		}
 		key := fmt.Sprintf("%s/%s", pkey, pname)
 		if pname == "dynamic_update_rule_list" {
@@ -429,6 +431,15 @@ func StructuredToMailerEntryMap() map[string]models.MailerEntries {
 func StructuredToMailersSectionMap() map[string]models.MailersSections {
 	resources, _ := expectedResources[models.MailersSection]("mailers_sections")
 	res := make(map[string]models.MailersSections)
+	keyRoot := ""
+	t := toResMap(keyRoot, resources)
+	res[keyRoot] = t[keyRoot]
+	return res
+}
+
+func StructuredToCrtStoreMap() map[string]models.CrtStores {
+	resources, _ := expectedResources[models.CrtStore]("crt_stores")
+	res := make(map[string]models.CrtStores)
 	keyRoot := ""
 	t := toResMap(keyRoot, resources)
 	res[keyRoot] = t[keyRoot]

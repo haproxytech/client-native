@@ -46,6 +46,7 @@ const (
 	GlobalParentName     = "global"
 	FCGIAppParentName    = "fcgi-app"
 	ResolverParentName   = "resolvers"
+	CrtStoreParentName   = "crt-store"
 )
 
 // ClientParams is just a placeholder for all client options

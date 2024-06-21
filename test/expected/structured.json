@@ -2750,6 +2750,13 @@
             }
         }
     },
+    "crt_stores": {
+        "cert-bunker1": {
+            "name": "cert-bunker1",
+            "crt_base": "/secure/certs",
+            "key_base": "/secure/keys"
+        }
+    },
     "defaults": {
         "test_defaults": {
             "acl_list": [

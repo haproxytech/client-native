@@ -1,0 +1,51 @@
+---
+crt_store:
+  title: Certificate Store
+  description: Storage mechanism to load and store certificates used in the configuration
+  type: object
+  required:
+    - name
+  properties:
+    name:
+      type: string
+      pattern: '^[A-Za-z0-9-_]+$'
+      x-nullable: false
+    crt_base:
+      type: string
+      description: Default directory to fetch SSL certificates from
+    key_base:
+      type: string
+      description: Default directory to fetch SSL private keys from
+    loads:
+      $ref: "#/definitions/crt_loads"
+  additionalProperties: false
+crt_load:
+  title: Certificate load action
+  description: Loads a certificate from a store with options
+  type: object
+  required:
+    - certificate
+  properties:
+    certificate:
+      type: string
+      description: Certificate filename
+      x-nullable: false
+    alias:
+      type: string
+      description: Certificate alias
+    key:
+      type: string
+      description: Private key filename
+    ocsp:
+      type: string
+      description: OCSP response filename
+    issuer:
+      type: string
+      description: OCSP issuer filename
+    sctl:
+      type: string
+      description: Signed Certificate Timestamp List filename
+    ocsp_update:
+      type: string
+      enum: [enabled, disabled]
+      description: Automatic OCSP response update

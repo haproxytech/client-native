@@ -10040,6 +10040,69 @@ definitions:
           - value
       type: object
       x-go-name: HTTPCodes
+  crt_store:
+      additionalProperties: false
+      description: Storage mechanism to load and store certificates used in the configuration
+      properties:
+          crt_base:
+              description: Default directory to fetch SSL certificates from
+              type: string
+          key_base:
+              description: Default directory to fetch SSL private keys from
+              type: string
+          loads:
+              $ref: '#/definitions/crt_loads'
+          name:
+              pattern: ^[A-Za-z0-9-_]+$
+              type: string
+              x-nullable: false
+      required:
+          - name
+      title: Certificate Store
+      type: object
+  crt_stores:
+    description: List of Certificate Stores
+    type: array
+    items:
+      $ref: "#/definitions/crt_store"
+  crt_load:
+      description: Loads a certificate from a store with options
+      properties:
+          alias:
+              description: Certificate alias
+              type: string
+          certificate:
+              description: Certificate filename
+              type: string
+              x-nullable: false
+          issuer:
+              description: OCSP issuer filename
+              type: string
+          key:
+              description: Private key filename
+              type: string
+          ocsp:
+              description: OCSP response filename
+              type: string
+          ocsp_update:
+              description: Automatic OCSP response update
+              enum:
+                  - enabled
+                  - disabled
+              type: string
+          sctl:
+              description: Signed Certificate Timestamp List filename
+              type: string
+      required:
+          - certificate
+      title: Certificate load action
+      type: object
+  crt_loads:
+    description: List of certificates to load from a Certificate Store
+    type: array
+    items:
+      $ref: "#/definitions/crt_load"
+    x-omitempty: true
 responses:
   BadRequest:
     description: Bad request
@@ -10132,6 +10195,8 @@ tags:
 - name: Cluster
 - name: Configuration
   description: Raw HAProxy configuration management (advanced mode)
+- name: CrtLoad
+- name: CrtStore
 - name: DeclareCapture
 - name: Defaults
   description: Managing defaults configuration (advanced mode)
@@ -18562,6 +18627,327 @@ paths:
           summary: Push new haproxy configuration
           tags:
               - Configuration
+  /services/haproxy/configuration/crt_stores:
+      get:
+          description: Returns an array of all the configured crt_store sections in HAProxy
+          operationId: getCrtStores
+          parameters:
+              - $ref: '#/parameters/transaction_id'
+          responses:
+              "200":
+                  description: Successful operation
+                  headers:
+                      Configuration-Version:
+                          description: Configuration file version
+                          type: string
+                  schema:
+                      $ref: '#/definitions/crt_stores'
+              default:
+                  $ref: '#/responses/DefaultError'
+          summary: Return all the Certificate Stores
+          tags:
+              - CrtStore
+      post:
+          description: Creates a new crt_store section
+          operationId: createCrtStore
+          parameters:
+              - in: body
+                name: data
+                required: true
+                schema:
+                  $ref: '#/definitions/crt_store'
+              - $ref: '#/parameters/transaction_id'
+              - $ref: '#/parameters/version'
+              - $ref: '#/parameters/force_reload'
+          responses:
+              "201":
+                  description: Certificate Store created
+                  schema:
+                      $ref: '#/definitions/crt_store'
+              "202":
+                  description: Configuration change accepted and reload requested
+                  headers:
+                      Reload-ID:
+                          description: ID of the requested reload
+                          type: string
+                  schema:
+                      $ref: '#/definitions/crt_store'
+              "400":
+                  $ref: '#/responses/BadRequest'
+              "409":
+                  $ref: '#/responses/AlreadyExists'
+              default:
+                  $ref: '#/responses/DefaultError'
+          summary: Add a new Certificate Store
+          tags:
+              - CrtStore
+  /services/haproxy/configuration/crt_stores/{name}:
+      delete:
+          description: Deletes a crt_store section from the configuration
+          operationId: deleteCrtStore
+          parameters:
+              - description: crt_store name
+                in: path
+                name: name
+                required: true
+                type: string
+              - $ref: '#/parameters/transaction_id'
+              - $ref: '#/parameters/version'
+              - $ref: '#/parameters/force_reload'
+          responses:
+              "202":
+                  description: Configuration change accepted and reload requested
+                  headers:
+                      Reload-ID:
+                          description: ID of the requested reload
+                          type: string
+              "204":
+                  description: crt_store deleted
+              "404":
+                  $ref: '#/responses/NotFound'
+              default:
+                  $ref: '#/responses/DefaultError'
+          summary: Delete a Certificate Store
+          tags:
+              - CrtStore
+      get:
+          description: Returns crt_store section by its name
+          operationId: getCrtStore
+          parameters:
+              - description: crt_store name
+                in: path
+                name: name
+                required: true
+                type: string
+              - $ref: '#/parameters/transaction_id'
+          responses:
+              "200":
+                  description: Successful operation
+                  headers:
+                      Configuration-Version:
+                          description: Configuration file version
+                          type: string
+                  schema:
+                      $ref: '#/definitions/crt_store'
+              "404":
+                  $ref: '#/responses/NotFound'
+              default:
+                  $ref: '#/responses/DefaultError'
+          summary: Return a Certificate Store
+          tags:
+              - CrtStore
+      put:
+          description: Modifies a crt_store's configuration by its name
+          operationId: editCrtStore
+          parameters:
+              - description: crt_store name
+                in: path
+                name: name
+                required: true
+                type: string
+              - in: body
+                name: data
+                required: true
+                schema:
+                  $ref: '#/definitions/crt_store'
+              - $ref: '#/parameters/transaction_id'
+              - $ref: '#/parameters/version'
+              - $ref: '#/parameters/force_reload'
+          responses:
+              "200":
+                  description: crt_store configuration updated
+                  schema:
+                      $ref: '#/definitions/crt_store'
+              "202":
+                  description: Configuration change accepted and reload requested
+                  headers:
+                      Reload-ID:
+                          description: ID of the requested reload
+                          type: string
+                  schema:
+                      $ref: '#/definitions/crt_store'
+              "400":
+                  $ref: '#/responses/BadRequest'
+              "404":
+                  $ref: '#/responses/NotFound'
+              default:
+                  $ref: '#/responses/DefaultError'
+          summary: Modify a Certificate Store
+          tags:
+              - CrtStore
+  /services/haproxy/configuration/crt_loads:
+      get:
+          description: Returns the list of loaded certificates from the specified crt_store
+          operationId: getCrtLoads
+          parameters:
+              - description: Parent crt_store name
+                in: query
+                name: crt_store
+                required: true
+                type: string
+              - $ref: '#/parameters/transaction_id'
+          responses:
+              "200":
+                  description: Successful operation
+                  headers:
+                      Configuration-Version:
+                          description: Configuration file version
+                          type: string
+                  schema:
+                      $ref: '#/definitions/crt_loads'
+              default:
+                  $ref: '#/responses/DefaultError'
+          summary: Return an array of loaded certificates
+          tags:
+              - CrtLoad
+      post:
+          description: Adds a new load entry to the specified crt_store section in the configuration
+          operationId: createCrtLoad
+          parameters:
+              - description: Parent crt_store section name
+                in: query
+                name: crt_store
+                required: true
+                type: string
+              - in: body
+                name: data
+                required: true
+                schema:
+                  $ref: '#/definitions/crt_load'
+              - $ref: '#/parameters/transaction_id'
+              - $ref: '#/parameters/version'
+              - $ref: '#/parameters/force_reload'
+          responses:
+              "201":
+                  description: Certificate load entry created
+                  schema:
+                      $ref: '#/definitions/crt_load'
+              "202":
+                  description: Configuration change accepted and reload requested
+                  headers:
+                      Reload-ID:
+                          description: ID of the requested reload
+                          type: string
+                  schema:
+                      $ref: '#/definitions/crt_load'
+              "400":
+                  $ref: '#/responses/BadRequest'
+              "409":
+                  $ref: '#/responses/AlreadyExists'
+              default:
+                  $ref: '#/responses/DefaultError'
+          summary: Add a new certificate to load
+          tags:
+              - CrtLoad
+  /services/haproxy/configuration/crt_loads/{certificate}:
+      delete:
+          description: Deletes a load entry by its certificate name in the specified crt_store section
+          operationId: deleteCrtLoad
+          parameters:
+              - description: Certificate filename
+                in: path
+                name: certificate
+                required: true
+                type: string
+              - description: Parent crt_store section name
+                in: query
+                name: crt_store
+                required: true
+                type: string
+              - $ref: '#/parameters/transaction_id'
+              - $ref: '#/parameters/version'
+              - $ref: '#/parameters/force_reload'
+          responses:
+              "202":
+                  description: Configuration change accepted and reload requested
+                  headers:
+                      Reload-ID:
+                          description: ID of the requested reload
+                          type: string
+              "204":
+                  description: Certificate load entry deleted
+              "404":
+                  $ref: '#/responses/NotFound'
+              default:
+                  $ref: '#/responses/DefaultError'
+          summary: Delete a certificate load entry
+          tags:
+              - CrtLoad
+      get:
+          description: Returns one load entry by its certificate name in the specified crt_store
+          operationId: getCrtLoad
+          parameters:
+              - description: Certificate filename
+                in: path
+                name: certificate
+                required: true
+                type: string
+              - description: Parent crt_store name
+                in: query
+                name: crt_store
+                required: true
+                type: string
+              - $ref: '#/parameters/transaction_id'
+          responses:
+              "200":
+                  description: Successful operation
+                  headers:
+                      Configuration-Version:
+                          description: Configuration file version
+                          type: string
+                  schema:
+                      $ref: '#/definitions/crt_load'
+              "404":
+                  $ref: '#/responses/NotFound'
+              default:
+                  $ref: '#/responses/DefaultError'
+          summary: Return one certificate load entry
+          tags:
+              - CrtLoad
+      put:
+          description: Replaces a load entry by its certificate name in the specified crt_store section
+          operationId: replaceCrtLoad
+          parameters:
+              - description: Certificate filename
+                in: path
+                name: certificate
+                required: true
+                type: string
+              - description: Parent crt_store section name
+                in: query
+                name: crt_store
+                required: true
+                type: string
+              - in: body
+                name: data
+                required: true
+                schema:
+                  $ref: '#/definitions/crt_load'
+              - $ref: '#/parameters/transaction_id'
+              - $ref: '#/parameters/version'
+              - $ref: '#/parameters/force_reload'
+          responses:
+              "200":
+                  description: Certificate load entry replaced
+                  schema:
+                      $ref: '#/definitions/crt_load'
+              "202":
+                  description: Configuration change accepted and reload requested
+                  headers:
+                      Reload-ID:
+                          description: ID of the requested reload
+                          type: string
+                  schema:
+                      $ref: '#/definitions/crt_load'
+              "400":
+                  $ref: '#/responses/BadRequest'
+              "404":
+                  $ref: '#/responses/NotFound'
+              default:
+                  $ref: '#/responses/DefaultError'
+          summary: Replace a certificate load entry
+          tags:
+              - CrtLoad
   /services/haproxy/runtime:
       get:
           description: Returns a list of endpoints to be used for advanced runtime settings of HAProxy objects.

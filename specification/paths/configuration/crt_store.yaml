@@ -1,0 +1,325 @@
+---
+crt_stores:
+  get:
+    summary: Return all the Certificate Stores
+    description: Returns an array of all the configured crt_store sections in HAProxy
+    operationId: getCrtStores
+    parameters:
+      - $ref: "#/parameters/transaction_id"
+    tags:
+      - CrtStore
+    responses:
+      '200':
+        description: Successful operation
+        headers:
+          Configuration-Version:
+            description: Configuration file version
+            type: string
+        schema:
+          $ref: "#/definitions/crt_stores"
+      'default':
+        $ref: "#/responses/DefaultError"
+  post:
+    summary: Add a new Certificate Store
+    description: Creates a new crt_store section
+    operationId: createCrtStore
+    parameters:
+      - name: data
+        required: true
+        in: body
+        schema:
+          $ref: "#/definitions/crt_store"
+      - $ref: "#/parameters/transaction_id"
+      - $ref: "#/parameters/version"
+      - $ref: "#/parameters/force_reload"
+    tags:
+      - CrtStore
+    responses:
+      '202':
+        description: Configuration change accepted and reload requested
+        headers:
+          Reload-ID:
+            description: ID of the requested reload
+            type: string
+        schema:
+          $ref: "#/definitions/crt_store"
+      '201':
+        description: Certificate Store created
+        schema:
+          $ref: "#/definitions/crt_store"
+      '409':
+        $ref: '#/responses/AlreadyExists'
+      '400':
+        $ref: '#/responses/BadRequest'
+      'default':
+        $ref: '#/responses/DefaultError'
+
+crt_store:
+  get:
+    summary: Return a Certificate Store
+    description: Returns crt_store section by its name
+    operationId: getCrtStore
+    tags:
+      - CrtStore
+    parameters:
+      - name: name
+        in: path
+        description: crt_store name
+        required: true
+        type: string
+      - $ref: "#/parameters/transaction_id"
+    responses:
+      '200':
+        description: Successful operation
+        headers:
+          Configuration-Version:
+            description: Configuration file version
+            type: string
+        schema:
+          $ref: "#/definitions/crt_store"
+      '404':
+        $ref: '#/responses/NotFound'
+      'default':
+        $ref: '#/responses/DefaultError'
+  put:
+    summary: Modify a Certificate Store
+    description: Modifies a crt_store's configuration by its name
+    operationId: editCrtStore
+    tags:
+      - CrtStore
+    parameters:
+      - name: name
+        in: path
+        description: crt_store name
+        required: true
+        type: string
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/crt_store'
+      - $ref: "#/parameters/transaction_id"
+      - $ref: "#/parameters/version"
+      - $ref: "#/parameters/force_reload"
+    responses:
+      '202':
+        description: Configuration change accepted and reload requested
+        headers:
+          Reload-ID:
+            description: ID of the requested reload
+            type: string
+        schema:
+          $ref: "#/definitions/crt_store"
+      '200':
+        description: crt_store configuration updated
+        schema:
+          $ref: "#/definitions/crt_store"
+      '400':
+        $ref: '#/responses/BadRequest'
+      '404':
+        $ref: '#/responses/NotFound'
+      'default':
+        $ref: '#/responses/DefaultError'
+  delete:
+    summary: Delete a Certificate Store
+    description: Deletes a crt_store section from the configuration
+    operationId: deleteCrtStore
+    tags:
+      - CrtStore
+    parameters:
+      - name: name
+        in: path
+        description: crt_store name
+        required: true
+        type: string
+      - $ref: "#/parameters/transaction_id"
+      - $ref: "#/parameters/version"
+      - $ref: "#/parameters/force_reload"
+    responses:
+      '202':
+        description: Configuration change accepted and reload requested
+        headers:
+          Reload-ID:
+            description: ID of the requested reload
+            type: string
+      '204':
+        description: crt_store deleted
+      '404':
+        $ref: '#/responses/NotFound'
+      'default':
+        $ref: '#/responses/DefaultError'
+
+crt_loads:
+  get:
+    summary: Return an array of loaded certificates
+    description: Returns the list of loaded certificates from the specified crt_store
+    operationId: getCrtLoads
+    tags:
+      - CrtLoad
+    parameters:
+      - name: crt_store
+        in: query
+        description: Parent crt_store name
+        required: true
+        type: string
+      - $ref: "#/parameters/transaction_id"
+    responses:
+      '200':
+        description: Successful operation
+        headers:
+          Configuration-Version:
+            description: Configuration file version
+            type: string
+        schema:
+          $ref: "#/definitions/crt_loads"
+      'default':
+        $ref: '#/responses/DefaultError'
+  post:
+    summary: Add a new certificate to load
+    description: Adds a new load entry to the specified crt_store section in the configuration
+    operationId: createCrtLoad
+    tags:
+      - CrtLoad
+    parameters:
+      - name: crt_store
+        in: query
+        description: Parent crt_store section name
+        required: true
+        type: string
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/crt_load'
+      - $ref: "#/parameters/transaction_id"
+      - $ref: "#/parameters/version"
+      - $ref: "#/parameters/force_reload"
+    responses:
+      '202':
+        description: Configuration change accepted and reload requested
+        headers:
+          Reload-ID:
+            description: ID of the requested reload
+            type: string
+        schema:
+          $ref: "#/definitions/crt_load"
+      '201':
+        description: Certificate load entry created
+        schema:
+          $ref: "#/definitions/crt_load"
+      '409':
+        $ref: '#/responses/AlreadyExists'
+      '400':
+        $ref: '#/responses/BadRequest'
+      'default':
+        $ref: '#/responses/DefaultError'
+
+crt_load:
+  get:
+    summary: Return one certificate load entry
+    description: Returns one load entry by its certificate name in the specified crt_store
+    operationId: getCrtLoad
+    tags:
+      - CrtLoad
+    parameters:
+      - name: certificate
+        in: path
+        description: Certificate filename
+        required: true
+        type: string
+      - name: crt_store
+        in: query
+        description: Parent crt_store name
+        required: true
+        type: string
+      - $ref: "#/parameters/transaction_id"
+    responses:
+      '200':
+        description: Successful operation
+        headers:
+          Configuration-Version:
+            description: Configuration file version
+            type: string
+        schema:
+          $ref: "#/definitions/crt_load"
+      '404':
+        $ref: '#/responses/NotFound'
+      'default':
+        $ref: '#/responses/DefaultError'
+  put:
+    summary: Replace a certificate load entry
+    description: Replaces a load entry by its certificate name in the specified crt_store section
+    operationId: replaceCrtLoad
+    tags:
+      - CrtLoad
+    parameters:
+      - name: certificate
+        in: path
+        description: Certificate filename
+        required: true
+        type: string
+      - name: crt_store
+        in: query
+        description: Parent crt_store section name
+        required: true
+        type: string
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/crt_load'
+      - $ref: "#/parameters/transaction_id"
+      - $ref: "#/parameters/version"
+      - $ref: "#/parameters/force_reload"
+    responses:
+      '202':
+        description: Configuration change accepted and reload requested
+        headers:
+          Reload-ID:
+            description: ID of the requested reload
+            type: string
+        schema:
+          $ref: "#/definitions/crt_load"
+      '200':
+        description: Certificate load entry replaced
+        schema:
+          $ref: "#/definitions/crt_load"
+      '400':
+        $ref: '#/responses/BadRequest'
+      '404':
+        $ref: '#/responses/NotFound'
+      'default':
+        $ref: '#/responses/DefaultError'
+  delete:
+    summary: Delete a certificate load entry
+    description: Deletes a load entry by its certificate name in the specified crt_store section
+    operationId: deleteCrtLoad
+    tags:
+      - CrtLoad
+    parameters:
+      - name: certificate
+        in: path
+        description: Certificate filename
+        required: true
+        type: string
+      - name: crt_store
+        in: query
+        description: Parent crt_store section name
+        required: true
+        type: string
+      - $ref: "#/parameters/transaction_id"
+      - $ref: "#/parameters/version"
+      - $ref: "#/parameters/force_reload"
+    responses:
+      '202':
+        description: Configuration change accepted and reload requested
+        headers:
+          Reload-ID:
+            description: ID of the requested reload
+            type: string
+      '204':
+        description: Certificate load entry deleted
+      '404':
+        $ref: '#/responses/NotFound'
+      'default':
+        $ref: '#/responses/DefaultError'
