@@ -480,6 +480,10 @@ func parseServerParams(serverOptions []params.ServerOption, serverParams *models
 				}
 			case "ws":
 				serverParams.Ws = v.Value
+			case "pool-conn-name":
+				serverParams.PoolConnName = v.Value
+			case "hash-key":
+				serverParams.HashKey = v.Value
 			}
 		case *params.ServerOptionIDValue:
 			if v.Name == "set-proxy-v2-tlv-fmt" {
@@ -836,6 +840,12 @@ func serializeServerParams(s models.ServerParams) (options []params.ServerOption
 	}
 	if s.Ws != "" {
 		options = append(options, &params.ServerOptionValue{Name: "ws", Value: s.Ws})
+	}
+	if s.PoolConnName != "" {
+		options = append(options, &params.ServerOptionValue{Name: "pool-conn-name", Value: s.PoolConnName})
+	}
+	if s.HashKey != "" {
+		options = append(options, &params.ServerOptionValue{Name: "hash-key", Value: s.HashKey})
 	}
 	return options
 }

@@ -157,6 +157,10 @@ func (s ServerParams) Equal(t ServerParams, opts ...Options) bool {
 		return false
 	}
 
+	if s.HashKey != t.HashKey {
+		return false
+	}
+
 	if s.HealthCheckAddress != t.HealthCheckAddress {
 		return false
 	}
@@ -246,6 +250,10 @@ func (s ServerParams) Equal(t ServerParams, opts ...Options) bool {
 	}
 
 	if s.OnMarkedUp != t.OnMarkedUp {
+		return false
+	}
+
+	if s.PoolConnName != t.PoolConnName {
 		return false
 	}
 
@@ -559,6 +567,10 @@ func (s ServerParams) Diff(t ServerParams, opts ...Options) map[string][]interfa
 		diff["GUID"] = []interface{}{s.GUID, t.GUID}
 	}
 
+	if s.HashKey != t.HashKey {
+		diff["HashKey"] = []interface{}{s.HashKey, t.HashKey}
+	}
+
 	if s.HealthCheckAddress != t.HealthCheckAddress {
 		diff["HealthCheckAddress"] = []interface{}{s.HealthCheckAddress, t.HealthCheckAddress}
 	}
@@ -649,6 +661,10 @@ func (s ServerParams) Diff(t ServerParams, opts ...Options) map[string][]interfa
 
 	if s.OnMarkedUp != t.OnMarkedUp {
 		diff["OnMarkedUp"] = []interface{}{s.OnMarkedUp, t.OnMarkedUp}
+	}
+
+	if s.PoolConnName != t.PoolConnName {
+		diff["PoolConnName"] = []interface{}{s.PoolConnName, t.PoolConnName}
 	}
 
 	if !equalPointers(s.PoolLowConn, t.PoolLowConn) {

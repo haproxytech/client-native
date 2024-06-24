@@ -935,7 +935,9 @@
                     "ws": "h1",
                     "address": "192.168.1.1",
                     "name": "webserv2",
-                    "port": 9300
+                    "port": 9300,
+                    "pool_conn_name": "apoolconnname",
+                    "hash_key": "akey"
                 }
             }
         },
@@ -2532,7 +2534,11 @@
                     "sigalgs": "RSA+SHA256",
                     "thread": "all",
                     "address": "192.168.1.1",
-                    "port": 80
+                    "port": 80,
+                    "default_crt_list": [
+                        "foobar.pem.rsa",
+                        "foobar.pem.ecdsa"
+                    ]
                 },
                 "webserv2": {
                     "name": "webserv2",

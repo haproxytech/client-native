@@ -80,6 +80,12 @@ bind_params:
       x-dependency:
         ssl:
           value: true
+    default_crt_list:
+      type: array
+      x-omitempty: true
+      items:
+        type: string
+        pattern: '^[^\s]+$'
     defer_accept:
       type: boolean
     expose_fd_listeners:

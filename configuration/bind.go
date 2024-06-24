@@ -324,6 +324,11 @@ func parseBindParams(bindOptions []params.BindOption) (b models.BindParams) { //
 				b.CrtIgnoreErr = v.Value
 			case "crt-list":
 				b.CrtList = v.Value
+			case "default-crt":
+				if b.DefaultCrtList == nil {
+					b.DefaultCrtList = []string{}
+				}
+				b.DefaultCrtList = append(b.DefaultCrtList, v.Value)
 			case "gid":
 				gid, err := strconv.ParseInt(v.Value, 10, 64)
 				if err == nil {
@@ -484,6 +489,11 @@ func serializeBindParams(b models.BindParams, path string) (options []params.Bin
 	}
 	if b.CrtList != "" {
 		options = append(options, &params.BindOptionValue{Name: "crt-list", Value: b.CrtList})
+	}
+	if b.DefaultCrtList != nil {
+		for _, dc := range b.DefaultCrtList {
+			options = append(options, &params.BindOptionValue{Name: "default-crt", Value: dc})
+		}
 	}
 	if b.DeferAccept {
 		options = append(options, &params.BindOptionWord{Name: "defer-accept"})

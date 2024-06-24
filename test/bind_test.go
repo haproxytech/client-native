@@ -128,6 +128,7 @@ func TestCreateEditDeleteBind(t *testing.T) {
 			Nice:           123,
 			QuicSocket:     "listener",
 			Nbconn:         12,
+			DefaultCrtList: []string{"foobar2.pem.rsa", "foobar2.pem.ecdsa"},
 		},
 	}
 

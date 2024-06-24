@@ -168,6 +168,11 @@ type ServerParams struct {
 	// +kubebuilder:validation:Pattern=`^[A-Za-z0-9-_.:]+$`
 	GUID string `json:"guid,omitempty"`
 
+	// hash key
+	// Pattern: ^[^\s]+$
+	// +kubebuilder:validation:Pattern=`^[^\s]+$`
+	HashKey string `json:"hash_key,omitempty"`
+
 	// health check address
 	// Pattern: ^[^\s]+$
 	// +kubebuilder:validation:Pattern=`^[^\s]+$`
@@ -268,6 +273,11 @@ type ServerParams struct {
 	// Enum: [shutdown-backup-sessions]
 	// +kubebuilder:validation:Enum=shutdown-backup-sessions;
 	OnMarkedUp string `json:"on-marked-up,omitempty"`
+
+	// pool conn name
+	// Pattern: ^[^\s]+$
+	// +kubebuilder:validation:Pattern=`^[^\s]+$`
+	PoolConnName string `json:"pool_conn_name,omitempty"`
 
 	// pool low conn
 	PoolLowConn *int64 `json:"pool_low_conn,omitempty"`
@@ -505,6 +515,10 @@ func (m *ServerParams) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
+	if err := m.validateHashKey(formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.validateHealthCheckAddress(formats); err != nil {
 		res = append(res, err)
 	}
@@ -562,6 +576,10 @@ func (m *ServerParams) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateOnMarkedUp(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validatePoolConnName(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -1229,6 +1247,18 @@ func (m *ServerParams) validateGUID(formats strfmt.Registry) error {
 	return nil
 }
 
+func (m *ServerParams) validateHashKey(formats strfmt.Registry) error {
+	if swag.IsZero(m.HashKey) { // not required
+		return nil
+	}
+
+	if err := validate.Pattern("hash_key", "body", m.HashKey, `^[^\s]+$`); err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func (m *ServerParams) validateHealthCheckAddress(formats strfmt.Registry) error {
 	if swag.IsZero(m.HealthCheckAddress) { // not required
 		return nil
@@ -1767,6 +1797,18 @@ func (m *ServerParams) validateOnMarkedUp(formats strfmt.Registry) error {
 
 	// value enum
 	if err := m.validateOnMarkedUpEnum("on-marked-up", "body", m.OnMarkedUp); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *ServerParams) validatePoolConnName(formats strfmt.Registry) error {
+	if swag.IsZero(m.PoolConnName) { // not required
+		return nil
+	}
+
+	if err := validate.Pattern("pool_conn_name", "body", m.PoolConnName, `^[^\s]+$`); err != nil {
 		return err
 	}
 

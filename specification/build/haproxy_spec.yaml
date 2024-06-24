@@ -281,6 +281,12 @@ definitions:
               x-dependency:
                   ssl:
                       value: true
+          default_crt_list:
+              items:
+                  pattern: ^[^\s]+$
+                  type: string
+              type: array
+              x-omitempty: true
           defer_accept:
               type: boolean
           ecdhe:
@@ -618,6 +624,9 @@ definitions:
           guid:
               pattern: ^[A-Za-z0-9-_.:]+$
               type: string
+          hash_key:
+              pattern: ^[^\s]+$
+              type: string
           health_check_address:
               pattern: ^[^\s]+$
               type: string
@@ -719,6 +728,9 @@ definitions:
           on-marked-up:
               enum:
                   - shutdown-backup-sessions
+              type: string
+          pool_conn_name:
+              pattern: ^[^\s]+$
               type: string
           pool_low_conn:
               type: integer

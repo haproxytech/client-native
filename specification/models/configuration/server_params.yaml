@@ -130,6 +130,9 @@ server_params:
     guid:
       type: string
       pattern: '^[A-Za-z0-9-_.:]+$'
+    hash_key:
+      type: string
+      pattern: '^[^\s]+$'
     init-addr:
       pattern: ^[^\s]+$
       type: string
@@ -203,6 +206,9 @@ server_params:
     on-marked-up:
       type: string
       enum: [shutdown-backup-sessions]
+    pool_conn_name:
+      type: string
+      pattern: '^[^\s]+$'
     pool_low_conn:
       type: integer
       x-nullable: true

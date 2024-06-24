@@ -23,6 +23,7 @@ package models
 import (
 	"context"
 	"encoding/json"
+	"strconv"
 
 	"github.com/go-openapi/errors"
 	"github.com/go-openapi/strfmt"
@@ -84,6 +85,9 @@ type BindParams struct {
 
 	// curves
 	Curves string `json:"curves,omitempty"`
+
+	// default crt list
+	DefaultCrtList []string `json:"default_crt_list,omitempty"`
 
 	// defer accept
 	DeferAccept bool `json:"defer_accept,omitempty"`
@@ -284,6 +288,10 @@ func (m *BindParams) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
+	if err := m.validateDefaultCrtList(formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.validateGUIDPrefix(formats); err != nil {
 		res = append(res, err)
 	}
@@ -341,6 +349,22 @@ func (m *BindParams) validateAlpn(formats strfmt.Registry) error {
 
 	if err := validate.Pattern("alpn", "body", m.Alpn, `^[^\s]+$`); err != nil {
 		return err
+	}
+
+	return nil
+}
+
+func (m *BindParams) validateDefaultCrtList(formats strfmt.Registry) error {
+	if swag.IsZero(m.DefaultCrtList) { // not required
+		return nil
+	}
+
+	for i := 0; i < len(m.DefaultCrtList); i++ {
+
+		if err := validate.Pattern("default_crt_list"+"."+strconv.Itoa(i), "body", m.DefaultCrtList[i], `^[^\s]+$`); err != nil {
+			return err
+		}
+
 	}
 
 	return nil

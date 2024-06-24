@@ -19,11 +19,20 @@ package models
 
 // Equal checks if two structs of type BindParams are equal
 //
+// By default empty maps and slices are equal to nil:
+//
 //	var a, b BindParams
 //	equal := a.Equal(b)
 //
-// opts ...Options are ignored in this method
+// For more advanced use case you can configure these options (default values are shown):
+//
+//	var a, b BindParams
+//	equal := a.Equal(b,Options{
+//		NilSameAsEmpty: true,
+//	})
 func (s BindParams) Equal(t BindParams, opts ...Options) bool {
+	opt := getOptions(opts...)
+
 	if s.AcceptNetscalerCip != t.AcceptNetscalerCip {
 		return false
 	}
@@ -85,6 +94,10 @@ func (s BindParams) Equal(t BindParams, opts ...Options) bool {
 	}
 
 	if s.Curves != t.Curves {
+		return false
+	}
+
+	if !equalComparableSlice(s.DefaultCrtList, t.DefaultCrtList, opt) {
 		return false
 	}
 
@@ -309,11 +322,20 @@ func (s BindParams) Equal(t BindParams, opts ...Options) bool {
 
 // Diff checks if two structs of type BindParams are equal
 //
+// By default empty maps and slices are equal to nil:
+//
 //	var a, b BindParams
 //	diff := a.Diff(b)
 //
-// opts ...Options are ignored in this method
+// For more advanced use case you can configure these options (default values are shown):
+//
+//	var a, b BindParams
+//	diff := a.Diff(b,Options{
+//		NilSameAsEmpty: true,
+//	})
 func (s BindParams) Diff(t BindParams, opts ...Options) map[string][]interface{} {
+	opt := getOptions(opts...)
+
 	diff := make(map[string][]interface{})
 	if s.AcceptNetscalerCip != t.AcceptNetscalerCip {
 		diff["AcceptNetscalerCip"] = []interface{}{s.AcceptNetscalerCip, t.AcceptNetscalerCip}
@@ -377,6 +399,10 @@ func (s BindParams) Diff(t BindParams, opts ...Options) map[string][]interface{}
 
 	if s.Curves != t.Curves {
 		diff["Curves"] = []interface{}{s.Curves, t.Curves}
+	}
+
+	if !equalComparableSlice(s.DefaultCrtList, t.DefaultCrtList, opt) {
+		diff["DefaultCrtList"] = []interface{}{s.DefaultCrtList, t.DefaultCrtList}
 	}
 
 	if s.DeferAccept != t.DeferAccept {
