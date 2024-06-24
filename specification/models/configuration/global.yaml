@@ -538,10 +538,14 @@ global:
           type: integer
           x-display-name: SSL Maximum Interval Between Two Automatic Updates of the same OCSP Response
           x-nullable: true
+          x-deprecated: true
+          description: This field is deprecated in favor of ocsp-update.maxdelay
         ssl_ocsp_update_min_delay:
           type: integer
           x-display-name: SSL Minimum Interval Between Two Automatic Updates of the same OCSP Response
           x-nullable: true
+          x-deprecated: true
+          description: This field is deprecated in favor of ocsp-update.mindelay
         stick_counters:
           type: integer
           x-display-name: Number of stick-counters
@@ -917,4 +921,41 @@ global:
       x-omitempty: true
       items:
         $ref: "#/definitions/http_codes"
+    ocsp_update:
+      type: object
+      properties:
+        mode:
+          type: string
+          enum: [enabled, disabled]
+          x-display-name: OCSP Update Mode
+        disable:
+          type: boolean
+          x-nullable: true
+          default: false
+          x-display-name: Disable OCSP Update
+        maxdelay:
+          type: integer
+          x-nullable: true
+          description: Sets the maximum interval between two automatic updates of the same OCSP response.This time is expressed in seconds
+          x-display-name: OCSP Update Maximum Delay
+        mindelay:
+          type: integer
+          x-nullable: true
+          description: Sets the minimum interval between two automatic updates of the same OCSP response. This time is expressed in seconds
+          x-display-name: OCSP Update Minimum Delay
+        httpproxy:
+          type: object
+          x-omitempty: true
+          x-display-name: OCSP Update HTTP Proxy
+          properties:
+            address:
+              type: string
+              pattern: '^[^\s]+$'
+              example: 127.0.0.1
+            port:
+              maximum: 65535
+              minimum: 1
+              type: integer
+              x-nullable: true
+              example: 80
   additionalProperties: false

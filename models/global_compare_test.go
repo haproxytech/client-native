@@ -269,7 +269,7 @@ func TestGlobalDiffFalse(t *testing.T) {
 
 	for _, sample := range samples {
 		result := sample.a.Diff(sample.b)
-		if len(result) != 116 {
+		if len(result) != 117 {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {
@@ -279,7 +279,7 @@ func TestGlobalDiffFalse(t *testing.T) {
 			if err != nil {
 				t.Errorf(err.Error())
 			}
-			t.Errorf("Expected Global to be different in 116 cases, but it is not (%d) %s %s", len(result), a, b)
+			t.Errorf("Expected Global to be different in 117 cases, but it is not (%d) %s %s", len(result), a, b)
 		}
 	}
 }
@@ -1862,6 +1862,330 @@ func TestLuaPrependPathDiffFalse(t *testing.T) {
 				t.Errorf(err.Error())
 			}
 			t.Errorf("Expected LuaPrependPath to be different in 2 cases, but it is not (%d) %s %s", len(result), a, b)
+		}
+	}
+}
+
+func TestGlobalOcspUpdateEqual(t *testing.T) {
+	samples := []struct {
+		a, b GlobalOcspUpdate
+	}{}
+	for i := 0; i < 2; i++ {
+		var sample GlobalOcspUpdate
+		var result GlobalOcspUpdate
+		err := faker.FakeData(&sample)
+		if err != nil {
+			t.Errorf(err.Error())
+		}
+		byteJSON, err := json.Marshal(sample)
+		if err != nil {
+			t.Errorf(err.Error())
+		}
+		err = json.Unmarshal(byteJSON, &result)
+		if err != nil {
+			t.Errorf(err.Error())
+		}
+
+		samples = append(samples, struct {
+			a, b GlobalOcspUpdate
+		}{sample, result})
+	}
+
+	for _, sample := range samples {
+		result := sample.a.Equal(sample.b)
+		if !result {
+			json := jsoniter.ConfigCompatibleWithStandardLibrary
+			a, err := json.Marshal(&sample.a)
+			if err != nil {
+				t.Errorf(err.Error())
+			}
+			b, err := json.Marshal(&sample.b)
+			if err != nil {
+				t.Errorf(err.Error())
+			}
+			t.Errorf("Expected GlobalOcspUpdate to be equal, but it is not %s %s", a, b)
+		}
+	}
+}
+
+func TestGlobalOcspUpdateEqualFalse(t *testing.T) {
+	samples := []struct {
+		a, b GlobalOcspUpdate
+	}{}
+	for i := 0; i < 2; i++ {
+		var sample GlobalOcspUpdate
+		var result GlobalOcspUpdate
+		err := faker.FakeData(&sample)
+		if err != nil {
+			t.Errorf(err.Error())
+		}
+		err = faker.FakeData(&result)
+		if err != nil {
+			t.Errorf(err.Error())
+		}
+		result.Disable = Ptr(!*sample.Disable)
+		result.Maxdelay = Ptr(*sample.Maxdelay + 1)
+		result.Mindelay = Ptr(*sample.Mindelay + 1)
+		samples = append(samples, struct {
+			a, b GlobalOcspUpdate
+		}{sample, result})
+	}
+
+	for _, sample := range samples {
+		result := sample.a.Equal(sample.b)
+		if result {
+			json := jsoniter.ConfigCompatibleWithStandardLibrary
+			a, err := json.Marshal(&sample.a)
+			if err != nil {
+				t.Errorf(err.Error())
+			}
+			b, err := json.Marshal(&sample.b)
+			if err != nil {
+				t.Errorf(err.Error())
+			}
+			t.Errorf("Expected GlobalOcspUpdate to be different, but it is not %s %s", a, b)
+		}
+	}
+}
+
+func TestGlobalOcspUpdateDiff(t *testing.T) {
+	samples := []struct {
+		a, b GlobalOcspUpdate
+	}{}
+	for i := 0; i < 2; i++ {
+		var sample GlobalOcspUpdate
+		var result GlobalOcspUpdate
+		err := faker.FakeData(&sample)
+		if err != nil {
+			t.Errorf(err.Error())
+		}
+		byteJSON, err := json.Marshal(sample)
+		if err != nil {
+			t.Errorf(err.Error())
+		}
+		err = json.Unmarshal(byteJSON, &result)
+		if err != nil {
+			t.Errorf(err.Error())
+		}
+
+		samples = append(samples, struct {
+			a, b GlobalOcspUpdate
+		}{sample, result})
+	}
+
+	for _, sample := range samples {
+		result := sample.a.Diff(sample.b)
+		if len(result) != 0 {
+			json := jsoniter.ConfigCompatibleWithStandardLibrary
+			a, err := json.Marshal(&sample.a)
+			if err != nil {
+				t.Errorf(err.Error())
+			}
+			b, err := json.Marshal(&sample.b)
+			if err != nil {
+				t.Errorf(err.Error())
+			}
+			t.Errorf("Expected GlobalOcspUpdate to be equal, but it is not %s %s, %v", a, b, result)
+		}
+	}
+}
+
+func TestGlobalOcspUpdateDiffFalse(t *testing.T) {
+	samples := []struct {
+		a, b GlobalOcspUpdate
+	}{}
+	for i := 0; i < 2; i++ {
+		var sample GlobalOcspUpdate
+		var result GlobalOcspUpdate
+		err := faker.FakeData(&sample)
+		if err != nil {
+			t.Errorf(err.Error())
+		}
+		err = faker.FakeData(&result)
+		if err != nil {
+			t.Errorf(err.Error())
+		}
+		result.Disable = Ptr(!*sample.Disable)
+		result.Maxdelay = Ptr(*sample.Maxdelay + 1)
+		result.Mindelay = Ptr(*sample.Mindelay + 1)
+		samples = append(samples, struct {
+			a, b GlobalOcspUpdate
+		}{sample, result})
+	}
+
+	for _, sample := range samples {
+		result := sample.a.Diff(sample.b)
+		if len(result) != 5 {
+			json := jsoniter.ConfigCompatibleWithStandardLibrary
+			a, err := json.Marshal(&sample.a)
+			if err != nil {
+				t.Errorf(err.Error())
+			}
+			b, err := json.Marshal(&sample.b)
+			if err != nil {
+				t.Errorf(err.Error())
+			}
+			t.Errorf("Expected GlobalOcspUpdate to be different in 5 cases, but it is not (%d) %s %s", len(result), a, b)
+		}
+	}
+}
+
+func TestGlobalOcspUpdateHttpproxyEqual(t *testing.T) {
+	samples := []struct {
+		a, b GlobalOcspUpdateHttpproxy
+	}{}
+	for i := 0; i < 2; i++ {
+		var sample GlobalOcspUpdateHttpproxy
+		var result GlobalOcspUpdateHttpproxy
+		err := faker.FakeData(&sample)
+		if err != nil {
+			t.Errorf(err.Error())
+		}
+		byteJSON, err := json.Marshal(sample)
+		if err != nil {
+			t.Errorf(err.Error())
+		}
+		err = json.Unmarshal(byteJSON, &result)
+		if err != nil {
+			t.Errorf(err.Error())
+		}
+
+		samples = append(samples, struct {
+			a, b GlobalOcspUpdateHttpproxy
+		}{sample, result})
+	}
+
+	for _, sample := range samples {
+		result := sample.a.Equal(sample.b)
+		if !result {
+			json := jsoniter.ConfigCompatibleWithStandardLibrary
+			a, err := json.Marshal(&sample.a)
+			if err != nil {
+				t.Errorf(err.Error())
+			}
+			b, err := json.Marshal(&sample.b)
+			if err != nil {
+				t.Errorf(err.Error())
+			}
+			t.Errorf("Expected GlobalOcspUpdateHttpproxy to be equal, but it is not %s %s", a, b)
+		}
+	}
+}
+
+func TestGlobalOcspUpdateHttpproxyEqualFalse(t *testing.T) {
+	samples := []struct {
+		a, b GlobalOcspUpdateHttpproxy
+	}{}
+	for i := 0; i < 2; i++ {
+		var sample GlobalOcspUpdateHttpproxy
+		var result GlobalOcspUpdateHttpproxy
+		err := faker.FakeData(&sample)
+		if err != nil {
+			t.Errorf(err.Error())
+		}
+		err = faker.FakeData(&result)
+		if err != nil {
+			t.Errorf(err.Error())
+		}
+		result.Port = Ptr(*sample.Port + 1)
+		samples = append(samples, struct {
+			a, b GlobalOcspUpdateHttpproxy
+		}{sample, result})
+	}
+
+	for _, sample := range samples {
+		result := sample.a.Equal(sample.b)
+		if result {
+			json := jsoniter.ConfigCompatibleWithStandardLibrary
+			a, err := json.Marshal(&sample.a)
+			if err != nil {
+				t.Errorf(err.Error())
+			}
+			b, err := json.Marshal(&sample.b)
+			if err != nil {
+				t.Errorf(err.Error())
+			}
+			t.Errorf("Expected GlobalOcspUpdateHttpproxy to be different, but it is not %s %s", a, b)
+		}
+	}
+}
+
+func TestGlobalOcspUpdateHttpproxyDiff(t *testing.T) {
+	samples := []struct {
+		a, b GlobalOcspUpdateHttpproxy
+	}{}
+	for i := 0; i < 2; i++ {
+		var sample GlobalOcspUpdateHttpproxy
+		var result GlobalOcspUpdateHttpproxy
+		err := faker.FakeData(&sample)
+		if err != nil {
+			t.Errorf(err.Error())
+		}
+		byteJSON, err := json.Marshal(sample)
+		if err != nil {
+			t.Errorf(err.Error())
+		}
+		err = json.Unmarshal(byteJSON, &result)
+		if err != nil {
+			t.Errorf(err.Error())
+		}
+
+		samples = append(samples, struct {
+			a, b GlobalOcspUpdateHttpproxy
+		}{sample, result})
+	}
+
+	for _, sample := range samples {
+		result := sample.a.Diff(sample.b)
+		if len(result) != 0 {
+			json := jsoniter.ConfigCompatibleWithStandardLibrary
+			a, err := json.Marshal(&sample.a)
+			if err != nil {
+				t.Errorf(err.Error())
+			}
+			b, err := json.Marshal(&sample.b)
+			if err != nil {
+				t.Errorf(err.Error())
+			}
+			t.Errorf("Expected GlobalOcspUpdateHttpproxy to be equal, but it is not %s %s, %v", a, b, result)
+		}
+	}
+}
+
+func TestGlobalOcspUpdateHttpproxyDiffFalse(t *testing.T) {
+	samples := []struct {
+		a, b GlobalOcspUpdateHttpproxy
+	}{}
+	for i := 0; i < 2; i++ {
+		var sample GlobalOcspUpdateHttpproxy
+		var result GlobalOcspUpdateHttpproxy
+		err := faker.FakeData(&sample)
+		if err != nil {
+			t.Errorf(err.Error())
+		}
+		err = faker.FakeData(&result)
+		if err != nil {
+			t.Errorf(err.Error())
+		}
+		result.Port = Ptr(*sample.Port + 1)
+		samples = append(samples, struct {
+			a, b GlobalOcspUpdateHttpproxy
+		}{sample, result})
+	}
+
+	for _, sample := range samples {
+		result := sample.a.Diff(sample.b)
+		if len(result) != 2 {
+			json := jsoniter.ConfigCompatibleWithStandardLibrary
+			a, err := json.Marshal(&sample.a)
+			if err != nil {
+				t.Errorf(err.Error())
+			}
+			b, err := json.Marshal(&sample.b)
+			if err != nil {
+				t.Errorf(err.Error())
+			}
+			t.Errorf("Expected GlobalOcspUpdateHttpproxy to be different in 2 cases, but it is not (%d) %s %s", len(result), a, b)
 		}
 	}
 }

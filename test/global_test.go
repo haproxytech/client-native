@@ -153,6 +153,7 @@ func TestPutGlobal(t *testing.T) {
 		ThreadHardLimit:  misc.Int64P(100),
 		SslSecurityLevel: misc.Int64P(2),
 		HTTPErrCodes:     []*models.HTTPCodes{{Value: misc.StringP("100-150 -123 +599")}},
+		OcspUpdate:       &models.GlobalOcspUpdate{},
 	}
 
 	err := clientTest.PushGlobalConfiguration(g, "", version)

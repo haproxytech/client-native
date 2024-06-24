@@ -273,6 +273,9 @@ type Global struct {
 	// +kubebuilder:validation:Enum=enabled;disabled;
 	NumaCPUMapping string `json:"numa_cpu_mapping,omitempty"`
 
+	// ocsp update
+	OcspUpdate *GlobalOcspUpdate `json:"ocsp_update,omitempty"`
+
 	// pidfile
 	Pidfile string `json:"pidfile,omitempty"`
 
@@ -542,6 +545,10 @@ func (m *Global) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateNumaCPUMapping(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateOcspUpdate(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -1305,6 +1312,25 @@ func (m *Global) validateNumaCPUMapping(formats strfmt.Registry) error {
 	return nil
 }
 
+func (m *Global) validateOcspUpdate(formats strfmt.Registry) error {
+	if swag.IsZero(m.OcspUpdate) { // not required
+		return nil
+	}
+
+	if m.OcspUpdate != nil {
+		if err := m.OcspUpdate.Validate(formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("ocsp_update")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("ocsp_update")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
 var globalTypeProfilingMemoryPropEnum []interface{}
 
 func init() {
@@ -1651,6 +1677,10 @@ func (m *Global) ContextValidate(ctx context.Context, formats strfmt.Registry) e
 	}
 
 	if err := m.contextValidateLuaPrependPath(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.contextValidateOcspUpdate(ctx, formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -2003,6 +2033,22 @@ func (m *Global) contextValidateLuaPrependPath(ctx context.Context, formats strf
 			}
 		}
 
+	}
+
+	return nil
+}
+
+func (m *Global) contextValidateOcspUpdate(ctx context.Context, formats strfmt.Registry) error {
+
+	if m.OcspUpdate != nil {
+		if err := m.OcspUpdate.ContextValidate(ctx, formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("ocsp_update")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("ocsp_update")
+			}
+			return err
+		}
 	}
 
 	return nil
@@ -2929,6 +2975,244 @@ func (m *LuaPrependPath) UnmarshalBinary(b []byte) error {
 	return nil
 }
 
+// GlobalOcspUpdate global ocsp update
+//
+// swagger:model GlobalOcspUpdate
+type GlobalOcspUpdate struct {
+
+	// disable
+	Disable *bool `json:"disable,omitempty"`
+
+	// httpproxy
+	Httpproxy *GlobalOcspUpdateHttpproxy `json:"httpproxy,omitempty"`
+
+	// Sets the maximum interval between two automatic updates of the same OCSP response.This time is expressed in seconds
+	Maxdelay *int64 `json:"maxdelay,omitempty"`
+
+	// Sets the minimum interval between two automatic updates of the same OCSP response. This time is expressed in seconds
+	Mindelay *int64 `json:"mindelay,omitempty"`
+
+	// mode
+	// Enum: [enabled disabled]
+	// +kubebuilder:validation:Enum=enabled;disabled;
+	Mode string `json:"mode,omitempty"`
+}
+
+// Validate validates this global ocsp update
+func (m *GlobalOcspUpdate) Validate(formats strfmt.Registry) error {
+	var res []error
+
+	if err := m.validateHttpproxy(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateMode(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if len(res) > 0 {
+		return errors.CompositeValidationError(res...)
+	}
+	return nil
+}
+
+func (m *GlobalOcspUpdate) validateHttpproxy(formats strfmt.Registry) error {
+	if swag.IsZero(m.Httpproxy) { // not required
+		return nil
+	}
+
+	if m.Httpproxy != nil {
+		if err := m.Httpproxy.Validate(formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("ocsp_update" + "." + "httpproxy")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("ocsp_update" + "." + "httpproxy")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
+var globalOcspUpdateTypeModePropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		globalOcspUpdateTypeModePropEnum = append(globalOcspUpdateTypeModePropEnum, v)
+	}
+}
+
+const (
+
+	// GlobalOcspUpdateModeEnabled captures enum value "enabled"
+	GlobalOcspUpdateModeEnabled string = "enabled"
+
+	// GlobalOcspUpdateModeDisabled captures enum value "disabled"
+	GlobalOcspUpdateModeDisabled string = "disabled"
+)
+
+// prop value enum
+func (m *GlobalOcspUpdate) validateModeEnum(path, location string, value string) error {
+	if err := validate.EnumCase(path, location, value, globalOcspUpdateTypeModePropEnum, true); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *GlobalOcspUpdate) validateMode(formats strfmt.Registry) error {
+	if swag.IsZero(m.Mode) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateModeEnum("ocsp_update"+"."+"mode", "body", m.Mode); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+// ContextValidate validate this global ocsp update based on the context it is used
+func (m *GlobalOcspUpdate) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+	var res []error
+
+	if err := m.contextValidateHttpproxy(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if len(res) > 0 {
+		return errors.CompositeValidationError(res...)
+	}
+	return nil
+}
+
+func (m *GlobalOcspUpdate) contextValidateHttpproxy(ctx context.Context, formats strfmt.Registry) error {
+
+	if m.Httpproxy != nil {
+		if err := m.Httpproxy.ContextValidate(ctx, formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("ocsp_update" + "." + "httpproxy")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("ocsp_update" + "." + "httpproxy")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
+// MarshalBinary interface implementation
+func (m *GlobalOcspUpdate) MarshalBinary() ([]byte, error) {
+	if m == nil {
+		return nil, nil
+	}
+	return swag.WriteJSON(m)
+}
+
+// UnmarshalBinary interface implementation
+func (m *GlobalOcspUpdate) UnmarshalBinary(b []byte) error {
+	var res GlobalOcspUpdate
+	if err := swag.ReadJSON(b, &res); err != nil {
+		return err
+	}
+	*m = res
+	return nil
+}
+
+// GlobalOcspUpdateHttpproxy global ocsp update httpproxy
+//
+// swagger:model GlobalOcspUpdateHttpproxy
+type GlobalOcspUpdateHttpproxy struct {
+	// address
+	// Example: 127.0.0.1
+	// Pattern: ^[^\s]+$
+	// +kubebuilder:validation:Pattern=`^[^\s]+$`
+	Address string `json:"address,omitempty"`
+
+	// port
+	// Example: 80
+	// Maximum: 65535
+	// Minimum: 1
+	// +kubebuilder:validation:Maximum=65535
+	// +kubebuilder:validation:Minimum=1
+	Port *int64 `json:"port,omitempty"`
+}
+
+// Validate validates this global ocsp update httpproxy
+func (m *GlobalOcspUpdateHttpproxy) Validate(formats strfmt.Registry) error {
+	var res []error
+
+	if err := m.validateAddress(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validatePort(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if len(res) > 0 {
+		return errors.CompositeValidationError(res...)
+	}
+	return nil
+}
+
+func (m *GlobalOcspUpdateHttpproxy) validateAddress(formats strfmt.Registry) error {
+	if swag.IsZero(m.Address) { // not required
+		return nil
+	}
+
+	if err := validate.Pattern("ocsp_update"+"."+"httpproxy"+"."+"address", "body", m.Address, `^[^\s]+$`); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *GlobalOcspUpdateHttpproxy) validatePort(formats strfmt.Registry) error {
+	if swag.IsZero(m.Port) { // not required
+		return nil
+	}
+
+	if err := validate.MinimumInt("ocsp_update"+"."+"httpproxy"+"."+"port", "body", *m.Port, 1, false); err != nil {
+		return err
+	}
+
+	if err := validate.MaximumInt("ocsp_update"+"."+"httpproxy"+"."+"port", "body", *m.Port, 65535, false); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+// ContextValidate validates this global ocsp update httpproxy based on context it is used
+func (m *GlobalOcspUpdateHttpproxy) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+	return nil
+}
+
+// MarshalBinary interface implementation
+func (m *GlobalOcspUpdateHttpproxy) MarshalBinary() ([]byte, error) {
+	if m == nil {
+		return nil, nil
+	}
+	return swag.WriteJSON(m)
+}
+
+// UnmarshalBinary interface implementation
+func (m *GlobalOcspUpdateHttpproxy) UnmarshalBinary(b []byte) error {
+	var res GlobalOcspUpdateHttpproxy
+	if err := swag.ReadJSON(b, &res); err != nil {
+		return err
+	}
+	*m = res
+	return nil
+}
+
 // PresetEnv preset env
 //
 // swagger:model PresetEnv
@@ -3761,10 +4045,10 @@ type GlobalTuneOptions struct {
 	// ssl maxrecord
 	SslMaxrecord *int64 `json:"ssl_maxrecord,omitempty"`
 
-	// ssl ocsp update max delay
+	// This field is deprecated in favor of ocsp-update.maxdelay
 	SslOcspUpdateMaxDelay *int64 `json:"ssl_ocsp_update_max_delay,omitempty"`
 
-	// ssl ocsp update min delay
+	// This field is deprecated in favor of ocsp-update.mindelay
 	SslOcspUpdateMinDelay *int64 `json:"ssl_ocsp_update_min_delay,omitempty"`
 
 	// stick counters

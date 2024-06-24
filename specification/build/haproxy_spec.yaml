@@ -1376,6 +1376,45 @@ definitions:
                   - enabled
                   - disabled
               type: string
+          ocsp_update:
+              properties:
+                  disable:
+                      default: false
+                      type: boolean
+                      x-display-name: Disable OCSP Update
+                      x-nullable: true
+                  httpproxy:
+                      properties:
+                          address:
+                              example: 127.0.0.1
+                              pattern: ^[^\s]+$
+                              type: string
+                          port:
+                              example: 80
+                              maximum: 65535
+                              minimum: 1
+                              type: integer
+                              x-nullable: true
+                      type: object
+                      x-display-name: OCSP Update HTTP Proxy
+                      x-omitempty: true
+                  maxdelay:
+                      description: Sets the maximum interval between two automatic updates of the same OCSP response.This time is expressed in seconds
+                      type: integer
+                      x-display-name: OCSP Update Maximum Delay
+                      x-nullable: true
+                  mindelay:
+                      description: Sets the minimum interval between two automatic updates of the same OCSP response. This time is expressed in seconds
+                      type: integer
+                      x-display-name: OCSP Update Minimum Delay
+                      x-nullable: true
+                  mode:
+                      enum:
+                          - enabled
+                          - disabled
+                      type: string
+                      x-display-name: OCSP Update Mode
+              type: object
           pidfile:
               type: string
               x-display-name: PID File
@@ -1952,11 +1991,15 @@ definitions:
                       x-display-name: SSL Maximum Size
                       x-nullable: true
                   ssl_ocsp_update_max_delay:
+                      description: This field is deprecated in favor of ocsp-update.maxdelay
                       type: integer
+                      x-deprecated: true
                       x-display-name: SSL Maximum Interval Between Two Automatic Updates of the same OCSP Response
                       x-nullable: true
                   ssl_ocsp_update_min_delay:
+                      description: This field is deprecated in favor of ocsp-update.mindelay
                       type: integer
+                      x-deprecated: true
                       x-display-name: SSL Minimum Interval Between Two Automatic Updates of the same OCSP Response
                       x-nullable: true
                   stick_counters:

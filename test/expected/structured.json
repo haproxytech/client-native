@@ -364,7 +364,17 @@
         "http_fail_codes": [
             {"value": "400,402-444,446-480,490 -450 +500"},
             {"value": "+501,505"}
-        ]
+        ],
+        "ocsp_update": {
+            "disable": false,
+            "mindelay": 7,
+            "maxdelay": 10,
+            "httpproxy": {
+                "address": "127.0.0.1",
+                "port": 123
+            },
+            "mode": "enabled"
+        }
     },
     "backends": {
         "test": {

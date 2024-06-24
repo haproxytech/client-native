@@ -489,6 +489,28 @@ func (s Global) Equal(t Global, opts ...Options) bool {
 		return false
 	}
 
+	if s.OcspUpdate == nil || t.OcspUpdate == nil {
+		if s.OcspUpdate != nil || t.OcspUpdate != nil {
+			if opt.NilSameAsEmpty {
+				empty := &GlobalOcspUpdate{}
+				if s.OcspUpdate == nil {
+					if !(t.OcspUpdate.Equal(*empty)) {
+						return false
+					}
+				}
+				if t.OcspUpdate == nil {
+					if !(s.OcspUpdate.Equal(*empty)) {
+						return false
+					}
+				}
+			} else {
+				return false
+			}
+		}
+	} else if !s.OcspUpdate.Equal(*t.OcspUpdate, opt) {
+		return false
+	}
+
 	if s.Pidfile != t.Pidfile {
 		return false
 	}
@@ -1268,6 +1290,28 @@ func (s Global) Diff(t Global, opts ...Options) map[string][]interface{} {
 		diff["NumaCPUMapping"] = []interface{}{s.NumaCPUMapping, t.NumaCPUMapping}
 	}
 
+	if s.OcspUpdate == nil || t.OcspUpdate == nil {
+		if s.OcspUpdate != nil || t.OcspUpdate != nil {
+			if opt.NilSameAsEmpty {
+				empty := &GlobalOcspUpdate{}
+				if s.OcspUpdate == nil {
+					if !(t.OcspUpdate.Equal(*empty)) {
+						diff["OcspUpdate"] = []interface{}{ValueOrNil(s.OcspUpdate), ValueOrNil(t.OcspUpdate)}
+					}
+				}
+				if t.OcspUpdate == nil {
+					if !(s.OcspUpdate.Equal(*empty)) {
+						diff["OcspUpdate"] = []interface{}{ValueOrNil(s.OcspUpdate), ValueOrNil(t.OcspUpdate)}
+					}
+				}
+			} else {
+				diff["OcspUpdate"] = []interface{}{ValueOrNil(s.OcspUpdate), ValueOrNil(t.OcspUpdate)}
+			}
+		}
+	} else if !s.OcspUpdate.Equal(*t.OcspUpdate, opt) {
+		diff["OcspUpdate"] = []interface{}{ValueOrNil(s.OcspUpdate), ValueOrNil(t.OcspUpdate)}
+	}
+
 	if s.Pidfile != t.Pidfile {
 		diff["Pidfile"] = []interface{}{s.Pidfile, t.Pidfile}
 	}
@@ -1923,6 +1967,158 @@ func (s LuaPrependPath) Diff(t LuaPrependPath, opts ...Options) map[string][]int
 
 	if s.Type != t.Type {
 		diff["Type"] = []interface{}{s.Type, t.Type}
+	}
+
+	return diff
+}
+
+// Equal checks if two structs of type GlobalOcspUpdate are equal
+//
+// By default empty maps and slices are equal to nil:
+//
+//	var a, b GlobalOcspUpdate
+//	equal := a.Equal(b)
+//
+// For more advanced use case you can configure these options (default values are shown):
+//
+//	var a, b GlobalOcspUpdate
+//	equal := a.Equal(b,Options{
+//		NilSameAsEmpty: true,
+//	})
+func (s GlobalOcspUpdate) Equal(t GlobalOcspUpdate, opts ...Options) bool {
+	opt := getOptions(opts...)
+
+	if !equalPointers(s.Disable, t.Disable) {
+		return false
+	}
+
+	if s.Httpproxy == nil || t.Httpproxy == nil {
+		if s.Httpproxy != nil || t.Httpproxy != nil {
+			if opt.NilSameAsEmpty {
+				empty := &GlobalOcspUpdateHttpproxy{}
+				if s.Httpproxy == nil {
+					if !(t.Httpproxy.Equal(*empty)) {
+						return false
+					}
+				}
+				if t.Httpproxy == nil {
+					if !(s.Httpproxy.Equal(*empty)) {
+						return false
+					}
+				}
+			} else {
+				return false
+			}
+		}
+	} else if !s.Httpproxy.Equal(*t.Httpproxy, opt) {
+		return false
+	}
+
+	if !equalPointers(s.Maxdelay, t.Maxdelay) {
+		return false
+	}
+
+	if !equalPointers(s.Mindelay, t.Mindelay) {
+		return false
+	}
+
+	if s.Mode != t.Mode {
+		return false
+	}
+
+	return true
+}
+
+// Diff checks if two structs of type GlobalOcspUpdate are equal
+//
+// By default empty maps and slices are equal to nil:
+//
+//	var a, b GlobalOcspUpdate
+//	diff := a.Diff(b)
+//
+// For more advanced use case you can configure these options (default values are shown):
+//
+//	var a, b GlobalOcspUpdate
+//	diff := a.Diff(b,Options{
+//		NilSameAsEmpty: true,
+//	})
+func (s GlobalOcspUpdate) Diff(t GlobalOcspUpdate, opts ...Options) map[string][]interface{} {
+	opt := getOptions(opts...)
+
+	diff := make(map[string][]interface{})
+	if !equalPointers(s.Disable, t.Disable) {
+		diff["Disable"] = []interface{}{ValueOrNil(s.Disable), ValueOrNil(t.Disable)}
+	}
+
+	if s.Httpproxy == nil || t.Httpproxy == nil {
+		if s.Httpproxy != nil || t.Httpproxy != nil {
+			if opt.NilSameAsEmpty {
+				empty := &GlobalOcspUpdateHttpproxy{}
+				if s.Httpproxy == nil {
+					if !(t.Httpproxy.Equal(*empty)) {
+						diff["Httpproxy"] = []interface{}{ValueOrNil(s.Httpproxy), ValueOrNil(t.Httpproxy)}
+					}
+				}
+				if t.Httpproxy == nil {
+					if !(s.Httpproxy.Equal(*empty)) {
+						diff["Httpproxy"] = []interface{}{ValueOrNil(s.Httpproxy), ValueOrNil(t.Httpproxy)}
+					}
+				}
+			} else {
+				diff["Httpproxy"] = []interface{}{ValueOrNil(s.Httpproxy), ValueOrNil(t.Httpproxy)}
+			}
+		}
+	} else if !s.Httpproxy.Equal(*t.Httpproxy, opt) {
+		diff["Httpproxy"] = []interface{}{ValueOrNil(s.Httpproxy), ValueOrNil(t.Httpproxy)}
+	}
+
+	if !equalPointers(s.Maxdelay, t.Maxdelay) {
+		diff["Maxdelay"] = []interface{}{ValueOrNil(s.Maxdelay), ValueOrNil(t.Maxdelay)}
+	}
+
+	if !equalPointers(s.Mindelay, t.Mindelay) {
+		diff["Mindelay"] = []interface{}{ValueOrNil(s.Mindelay), ValueOrNil(t.Mindelay)}
+	}
+
+	if s.Mode != t.Mode {
+		diff["Mode"] = []interface{}{s.Mode, t.Mode}
+	}
+
+	return diff
+}
+
+// Equal checks if two structs of type GlobalOcspUpdateHttpproxy are equal
+//
+//	var a, b GlobalOcspUpdateHttpproxy
+//	equal := a.Equal(b)
+//
+// opts ...Options are ignored in this method
+func (s GlobalOcspUpdateHttpproxy) Equal(t GlobalOcspUpdateHttpproxy, opts ...Options) bool {
+	if s.Address != t.Address {
+		return false
+	}
+
+	if !equalPointers(s.Port, t.Port) {
+		return false
+	}
+
+	return true
+}
+
+// Diff checks if two structs of type GlobalOcspUpdateHttpproxy are equal
+//
+//	var a, b GlobalOcspUpdateHttpproxy
+//	diff := a.Diff(b)
+//
+// opts ...Options are ignored in this method
+func (s GlobalOcspUpdateHttpproxy) Diff(t GlobalOcspUpdateHttpproxy, opts ...Options) map[string][]interface{} {
+	diff := make(map[string][]interface{})
+	if s.Address != t.Address {
+		diff["Address"] = []interface{}{s.Address, t.Address}
+	}
+
+	if !equalPointers(s.Port, t.Port) {
+		diff["Port"] = []interface{}{ValueOrNil(s.Port), ValueOrNil(t.Port)}
 	}
 
 	return diff

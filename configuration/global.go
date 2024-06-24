@@ -1195,6 +1195,11 @@ func ParseGlobalSection(p parser.Parser) (*models.Global, error) { //nolint:goco
 		}
 	}
 
+	ocspUpdate, err := parseOcspUpdateOptions(p)
+	if err != nil {
+		return nil, err
+	}
+
 	global := &models.Global{
 		Anonkey:                           anonkey,
 		PresetEnvs:                        presetEnvs,
@@ -1312,6 +1317,7 @@ func ParseGlobalSection(p parser.Parser) (*models.Global, error) { //nolint:goco
 		SslSecurityLevel:                  sslSecurityLevel,
 		HTTPErrCodes:                      errCodes,
 		HTTPFailCodes:                     failCodes,
+		OcspUpdate:                        ocspUpdate,
 	}
 
 	return global, nil
@@ -2375,6 +2381,10 @@ func SerializeGlobalSection(p parser.Parser, data *models.Global) error { //noli
 		return err
 	}
 
+	if err := serializeOcspUpdateOptions(p, data.OcspUpdate); err != nil {
+		return err
+	}
+
 	return serializeTuneOptions(p, data.TuneOptions)
 }
 
@@ -2392,6 +2402,49 @@ func serializeHardenOptions(p parser.Parser, options *models.GlobalHarden) error
 		return err
 	}
 	return serializeOnOffOption(p, "harden.reject-privileged-ports.tcp", rppTCP)
+}
+
+func serializeOcspUpdateOptions(p parser.Parser, options *models.GlobalOcspUpdate) error {
+	if options == nil {
+		return nil
+	}
+	disable := ""
+	if options.Disable != nil {
+		switch *options.Disable {
+		case true:
+			disable = "enabled"
+		case false:
+			disable = "disabled"
+		}
+	}
+	if err := serializeOnOffOption(p, "ocsp-update.disable", disable); err != nil {
+		return err
+	}
+
+	if options.Maxdelay != nil && options.Mindelay != nil && *options.Maxdelay < *options.Mindelay {
+		return errors.New("ocsp-update.maxdelay must be greater than ocsp-update.mindelay")
+	}
+
+	if err := serializeInt64POption(p, "ocsp-update.mindelay", options.Mindelay); err != nil {
+		return err
+	}
+	if err := serializeInt64POption(p, "ocsp-update.maxdelay", options.Maxdelay); err != nil {
+		return err
+	}
+
+	addr := ""
+	if options.Httpproxy != nil {
+		addr = options.Httpproxy.Address
+		if options.Httpproxy.Port != nil {
+			addr = fmt.Sprintf("%s:%d", addr, *options.Httpproxy.Port)
+		}
+
+	}
+	if err := serializeStringOption(p, "ocsp-update.httpproxy", addr); err != nil {
+		return err
+	}
+
+	return serializeOnOffOption(p, "ocsp-update.mode", options.Mode)
 }
 
 func serializeWurflOptions(p parser.Parser, options *models.GlobalWurflOptions) error {
@@ -2857,6 +2910,53 @@ func parseFiftyOneDegreesOptions(p parser.Parser) (*models.GlobalFiftyOneDegrees
 		return nil, err
 	}
 	options.CacheSize = optionInt
+
+	return options, nil
+}
+
+func parseOcspUpdateOptions(p parser.Parser) (*models.GlobalOcspUpdate, error) {
+	options := &models.GlobalOcspUpdate{}
+	ocspUpdateDisable, err := parseOnOffOption(p, "ocsp-update.disable")
+	if err != nil {
+		return nil, err
+	}
+	switch ocspUpdateDisable {
+	case "disabled":
+		options.Disable = misc.BoolP(false)
+	case "enabled":
+		options.Disable = misc.BoolP(true)
+	default:
+		options.Disable = nil
+	}
+
+	minDelayP, err := parseInt64POption(p, "ocsp-update.mindelay")
+	if err != nil {
+		return nil, err
+	}
+	options.Mindelay = minDelayP
+
+	maxDelayP, err := parseInt64POption(p, "ocsp-update.maxdelay")
+	if err != nil {
+		return nil, err
+	}
+	options.Maxdelay = maxDelayP
+
+	addressPort, err := parseStringOption(p, "ocsp-update.httpproxy")
+	if err != nil {
+		return nil, err
+	}
+	address, port := ParseAddress(addressPort)
+	if address != "" {
+		options.Httpproxy = &models.GlobalOcspUpdateHttpproxy{}
+		options.Httpproxy.Address = address
+		options.Httpproxy.Port = port
+	}
+
+	mode, err := parseOnOffOption(p, "ocsp-update.mode")
+	if err != nil {
+		return nil, err
+	}
+	options.Mode = mode
 
 	return options, nil
 }

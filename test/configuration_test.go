@@ -260,6 +260,11 @@ global
   http-err-codes +501,505
   http-fail-codes 400,402-444,446-480,490 -450 +500
   http-fail-codes +501,505
+  ocsp-update.disable off
+  ocsp-update.httpproxy 127.0.0.1:123
+  ocsp-update.maxdelay 10
+  ocsp-update.mindelay 7
+  ocsp-update.mode on
 
 defaults test_defaults
   acl invalid_src  src          0.0.0.0/7 224.0.0.0/3
