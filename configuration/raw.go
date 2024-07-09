@@ -62,13 +62,26 @@ func (c *client) getRawConfiguration(transactionID string, version int64) (int64
 			return 0, 0, "", "", err
 		}
 	}
-	file, err := os.Open(config)
+	ondiskV, ondiskClusterV, ondiskMD5Hash, metaErr := c.getConfigurationMetaData(config)
+	if metaErr != nil {
+		return 0, 0, "", "", metaErr
+	}
+
+	data, err := os.ReadFile(config)
 	if err != nil {
 		return 0, 0, "", "", NewConfError(ErrCannotReadConfFile, err.Error())
 	}
+
+	return ondiskV, ondiskClusterV, ondiskMD5Hash, string(data), nil
+}
+
+func (c *client) getConfigurationMetaData(config string) (int64, int64, string, error) {
+	file, err := os.Open(config)
+	if err != nil {
+		return 0, 0, "", NewConfError(ErrCannotReadConfFile, err.Error())
+	}
 	defer file.Close()
 
-	dataStr := ""
 	ondiskV := int64(0)
 	ondiskClusterV := int64(0)
 	ondiskMD5Hash := ""
@@ -84,13 +97,11 @@ func (c *client) getRawConfiguration(transactionID string, version int64) (int64
 					ondiskV = int64(0)
 				}
 			}
-			dataStr += line + "\n"
 		case strings.HasPrefix(line, "# _md5hash="):
 			w := strings.Split(line, "=")
 			if len(w) == 2 {
 				ondiskMD5Hash = strings.TrimSpace(w[1])
 			}
-			dataStr += line + "\n"
 		case strings.HasPrefix(line, "# _cluster_version="):
 			w := strings.Split(line, "=")
 			if len(w) == 2 {
@@ -99,16 +110,16 @@ func (c *client) getRawConfiguration(transactionID string, version int64) (int64
 					ondiskClusterV = int64(0)
 				}
 			}
-			dataStr += line + "\n"
-		default:
-			dataStr += line + "\n"
+		}
+		if ondiskV != 0 && ondiskMD5Hash != "" && ondiskClusterV != 0 {
+			break
 		}
 	}
 	if err = scanner.Err(); err != nil {
-		return ondiskV, 0, "", "", NewConfError(ErrCannotReadConfFile, err.Error())
+		return ondiskV, 0, "", NewConfError(ErrCannotReadConfFile, err.Error())
 	}
 
-	return ondiskV, ondiskClusterV, ondiskMD5Hash, dataStr, nil
+	return ondiskV, ondiskClusterV, ondiskMD5Hash, nil
 }
 
 // PostRawConfiguration pushes given string to the config file if the version
