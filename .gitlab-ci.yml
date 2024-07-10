@@ -170,34 +170,18 @@ test:
     - docker image tag $CI_REGISTRY_GO/haproxy-alpine:$HAPROXY_VERSION haproxytech/haproxy-alpine:$HAPROXY_VERSION
   script:
     - DOCKER_HAPROXY_VERSION=$HAPROXY_VERSION make e2e-docker
-HAProxy-2.1:
-  extends: .e2e
-  variables:
-    HAPROXY_VERSION: "2.1"
 HAProxy-2.2:
   extends: .e2e
   variables:
     HAPROXY_VERSION: "2.2"
-HAProxy-2.3:
-  extends: .e2e
-  variables:
-    HAPROXY_VERSION: "2.3"
 HAProxy-2.4:
   extends: .e2e
   variables:
     HAPROXY_VERSION: "2.4"
-HAProxy-2.5:
-  extends: .e2e
-  variables:
-    HAPROXY_VERSION: "2.5"
 HAProxy-2.6:
   extends: .e2e
   variables:
     HAPROXY_VERSION: "2.6"
-HAProxy-2.7:
-  extends: .e2e
-  variables:
-    HAPROXY_VERSION: "2.7"
 HAProxy-2.8:
   extends: .e2e
   variables:
