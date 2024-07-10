@@ -163,7 +163,7 @@ func (c *SingleSpoe) CreateMessage(scope string, data *models.SpoeMessage, trans
 
 // EditMessage edits a message in configuration. One of version or transactionID is
 // mandatory. Returns error on fail, nil on success.
-func (c *SingleSpoe) EditMessage(scope string, data *models.SpoeMessage, transactionID string, version int64) error {
+func (c *SingleSpoe) EditMessage(scope string, data *models.SpoeMessage, name string, transactionID string, version int64) error {
 	if c.Transaction.UseModelsValidation {
 		validationErr := data.Validate(strfmt.Default)
 		if validationErr != nil {
@@ -176,9 +176,9 @@ func (c *SingleSpoe) EditMessage(scope string, data *models.SpoeMessage, transac
 		return err
 	}
 
-	if !c.checkSectionExists(scope, parser.SPOEMessage, *data.Name, p) {
-		e := conf.NewConfError(conf.ErrObjectAlreadyExists, fmt.Sprintf("%s %s does not exists", parser.SPOEMessage, *data.Name))
-		return c.Transaction.HandleError(*data.Name, "", "", t, transactionID == "", e)
+	if !c.checkSectionExists(scope, parser.SPOEMessage, name, p) {
+		e := conf.NewConfError(conf.ErrObjectAlreadyExists, fmt.Sprintf("%s %s does not exists", parser.SPOEMessage, name))
+		return c.Transaction.HandleError(name, "", "", t, transactionID == "", e)
 	}
 
 	err = c.createEditMessage(scope, data, t, transactionID, p)
