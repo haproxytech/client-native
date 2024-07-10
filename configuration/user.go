@@ -142,12 +142,12 @@ func (c *client) EditUser(username string, userlist string, data *models.User, t
 	if _, _, err := c.GetUserList(userlist, transactionID); err != nil {
 		return err
 	}
-	user, i := GetUserByUsername(data.Username, userlist, p)
+	user, i := GetUserByUsername(username, userlist, p)
 	if user == nil {
-		return NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("user %s does not exist", data.Username))
+		return NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("user %s does not exist", username))
 	}
 	if err := p.Set(parser.UserList, userlist, "user", SerializeUser(*data), i); err != nil {
-		return c.HandleError(data.Username, "userlist", userlist, t, transactionID == "", err)
+		return c.HandleError(username, "userlist", userlist, t, transactionID == "", err)
 	}
 	if err := c.SaveData(p, t, transactionID == ""); err != nil {
 		return err

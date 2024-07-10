@@ -196,7 +196,7 @@ func ParseDgramBinds(logForward string, p parser.Parser) (models.DgramBinds, err
 	return dBinds, nil
 }
 
-func ParseDgramBind(ondiskDgramBind types.DgramBind) *models.DgramBind { //nolint:gocognit
+func ParseDgramBind(ondiskDgramBind types.DgramBind) *models.DgramBind {
 	b := &models.DgramBind{}
 	if strings.HasPrefix(ondiskDgramBind.Path, "/") {
 		b.Address = ondiskDgramBind.Path

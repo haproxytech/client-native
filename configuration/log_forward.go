@@ -193,9 +193,9 @@ func (c *client) EditLogForward(name string, data *models.LogForward, transactio
 		return err
 	}
 
-	if !c.checkSectionExists(parser.LogForward, data.Name, p) {
-		e := NewConfError(ErrObjectAlreadyExists, fmt.Sprintf("%s %s does not exists", parser.LogForward, data.Name))
-		return c.HandleError(data.Name, "", "", t, transactionID == "", e)
+	if !c.checkSectionExists(parser.LogForward, name, p) {
+		e := NewConfError(ErrObjectAlreadyExists, fmt.Sprintf("%s %s does not exists", parser.LogForward, name))
+		return c.HandleError(name, "", "", t, transactionID == "", e)
 	}
 
 	if err = SerializeLogForwardSection(p, data); err != nil {

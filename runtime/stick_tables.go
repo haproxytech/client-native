@@ -56,9 +56,8 @@ func (s *SingleRuntime) ShowTable(name string) (*models.StickTable, error) {
 		stkT := s.parseStickTable(line)
 		if stkT == nil || stkT.Name != name {
 			continue
-		} else {
-			return stkT, nil
 		}
+		return stkT, nil
 	}
 	return nil, fmt.Errorf("no data for table %s: %w", name, errors.ErrNotFound)
 }

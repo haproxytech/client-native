@@ -211,7 +211,7 @@ func SerializePeerEntry(pe models.PeerEntry) types.Peer {
 		Port: *pe.Port,
 	}
 	if pe.Shard != 0 {
-		peer.Shard = fmt.Sprintf("%d", pe.Shard)
+		peer.Shard = strconv.FormatInt(pe.Shard, 10)
 	}
 	return peer
 }

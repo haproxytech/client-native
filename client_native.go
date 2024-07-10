@@ -48,7 +48,7 @@ type haProxyClient struct {
 func (c *haProxyClient) Configuration() (configuration.Configuration, error) {
 	c.configurationMu.RLock()
 	defer c.configurationMu.RUnlock()
-	if c.configuration == nil { //nolint:typecheck
+	if c.configuration == nil {
 		return nil, fmt.Errorf("configuration: %w", ErrOptionNotAvailable)
 	}
 	return c.configuration, nil
@@ -69,35 +69,35 @@ func (c *haProxyClient) ReplaceRuntime(runtime runtime.Runtime) {
 func (c *haProxyClient) Runtime() (runtime.Runtime, error) {
 	c.runtimeMu.RLock()
 	defer c.runtimeMu.RUnlock()
-	if c.runtime == nil { //nolint:typecheck
+	if c.runtime == nil {
 		return nil, fmt.Errorf("runtime: %w", ErrOptionNotAvailable)
 	}
 	return c.runtime, nil
 }
 
 func (c *haProxyClient) MapStorage() (storage.Storage, error) {
-	if c.mapStorage == nil { //nolint:typecheck
+	if c.mapStorage == nil {
 		return nil, fmt.Errorf("map storage: %w", ErrOptionNotAvailable)
 	}
 	return c.mapStorage, nil
 }
 
 func (c *haProxyClient) SSLCertStorage() (storage.Storage, error) {
-	if c.sslCertStorage == nil { //nolint:typecheck
+	if c.sslCertStorage == nil {
 		return nil, fmt.Errorf("ssl cert storage: %w", ErrOptionNotAvailable)
 	}
 	return c.sslCertStorage, nil
 }
 
 func (c *haProxyClient) GeneralStorage() (storage.Storage, error) {
-	if c.generalStorage == nil { //nolint:typecheck
+	if c.generalStorage == nil {
 		return nil, fmt.Errorf("general files storage: %w", ErrOptionNotAvailable)
 	}
 	return c.generalStorage, nil
 }
 
 func (c *haProxyClient) Spoe() (spoe.Spoe, error) {
-	if c.spoe == nil { //nolint:typecheck
+	if c.spoe == nil {
 		return nil, fmt.Errorf("spoe: %w", ErrOptionNotAvailable)
 	}
 	return c.spoe, nil

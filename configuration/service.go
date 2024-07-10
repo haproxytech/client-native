@@ -148,7 +148,6 @@ func (s *Service) Update(servers []ServiceServer) (bool, error) {
 	}
 	reload = reload || r
 	r, err = s.removeExcessNodes(len(servers))
-
 	if err != nil {
 		return false, err
 	}

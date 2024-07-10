@@ -259,7 +259,7 @@ func TestSingleSpoe_EditMessage(t *testing.T) {
 				t.Errorf("SingleSpoe.EditMessage() error = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
-			if err = ss.EditMessage(tt.scope, tt.data, tt.messageName, "", tt.version); (err != nil) != tt.wantErr {
+			if err = ss.EditMessage(tt.scope, tt.data, "", tt.version); (err != nil) != tt.wantErr {
 				t.Errorf("SingleSpoe.EditMessage() error = %v, wantErr %v", err, tt.wantErr)
 			}
 			_, got, err := ss.GetMessage(tt.scope, tt.messageName, "")

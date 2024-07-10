@@ -2,7 +2,6 @@ package misc
 
 import (
 	"fmt"
-	"io/ioutil"
 	"os"
 	"path/filepath"
 )
@@ -29,7 +28,7 @@ func CheckOrCreateWritableDirectory(dirname string) (string, error) {
 		if !info.IsDir() {
 			return "", fmt.Errorf("specified storage directory %s already exists and is a file, refusing to overwrite", dirname)
 		}
-		f, err := ioutil.TempFile(dirname, ".dataplaneapi")
+		f, err := os.CreateTemp(dirname, ".dataplaneapi")
 		if err != nil {
 			return "", fmt.Errorf("error using storage directory: %w", err)
 		}
@@ -40,7 +39,7 @@ func CheckOrCreateWritableDirectory(dirname string) (string, error) {
 
 // CreateTempDir will create a new temporary dir. If config is provided it will create a file with its content
 func CreateTempDir(config string, createFile bool, extension ...string) (dirname, file string, err error) {
-	dirname, err = ioutil.TempDir("/tmp", "storage")
+	dirname, err = os.MkdirTemp("/tmp", "storage")
 	if err != nil {
 		return "", "", err
 	}
@@ -51,7 +50,7 @@ func CreateTempDir(config string, createFile bool, extension ...string) (dirname
 	if len(extension) > 0 {
 		ext = extension[0]
 	}
-	f, err := ioutil.TempFile(dirname, ext)
+	f, err := os.CreateTemp(dirname, ext)
 	if err != nil {
 		return "", "", err
 	}

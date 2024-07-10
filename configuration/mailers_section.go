@@ -142,9 +142,9 @@ func (c *client) EditMailersSection(name string, data *models.MailersSection, tr
 		return err
 	}
 
-	if !c.checkSectionExists(parser.Mailers, data.Name, p) {
-		e := NewConfError(ErrObjectAlreadyExists, fmt.Sprintf("%s %s does not exists", parser.Mailers, data.Name))
-		return c.HandleError(data.Name, "", "", t, transactionID == "", e)
+	if !c.checkSectionExists(parser.Mailers, name, p) {
+		e := NewConfError(ErrObjectAlreadyExists, fmt.Sprintf("%s %s does not exists", parser.Mailers, name))
+		return c.HandleError(name, "", "", t, transactionID == "", e)
 	}
 
 	if err = SerializeMailersSection(p, data); err != nil {

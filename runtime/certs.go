@@ -26,7 +26,6 @@ func (s *SingleRuntime) ShowCerts() (models.SslCertificates, error) {
 // Sample output format:
 // /etc/ssl/cert-0.pem
 // /etc/ssl/...
-//
 func (s *SingleRuntime) parseCerts(output string) models.SslCertificates {
 	output = strings.TrimSpace(output)
 	if output == "" {

@@ -76,7 +76,7 @@ type Configuration interface {
 	Group
 }
 
-func New(ctx context.Context, opt ...options.ConfigurationOption) (Configuration, error) {
+func New(_ context.Context, opt ...options.ConfigurationOption) (Configuration, error) {
 	c := &client{}
 	var err error
 

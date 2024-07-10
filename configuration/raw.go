@@ -19,7 +19,6 @@ import (
 	"bufio"
 	"bytes"
 	"fmt"
-	"io/ioutil"
 	"os"
 	"os/exec"
 	"strconv"
@@ -46,7 +45,7 @@ func (c *client) GetRawConfigurationWithClusterData(transactionID string, versio
 
 // GetRawConfiguration returns configuration version and a
 // string containing raw config file
-func (c *client) getRawConfiguration(transactionID string, version int64) (int64, int64, string, string, error) { //nolint: gocognit
+func (c *client) getRawConfiguration(transactionID string, version int64) (int64, int64, string, string, error) {
 	config := c.ConfigurationFile
 	var err error
 	if transactionID != "" && version != 0 {
@@ -116,7 +115,7 @@ func (c *client) getRawConfiguration(transactionID string, version int64) (int64
 // matches
 func (c *client) PostRawConfiguration(config *string, version int64, skipVersionCheck bool, onlyValidate ...bool) error {
 	if len(onlyValidate) > 0 && onlyValidate[0] {
-		f, err := ioutil.TempFile("/tmp", "onlyvalidate")
+		f, err := os.CreateTemp("/tmp", "onlyvalidate")
 		if err != nil {
 			return NewConfError(ErrGeneralError, err.Error())
 		}

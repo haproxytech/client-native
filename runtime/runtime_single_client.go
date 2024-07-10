@@ -128,16 +128,16 @@ func (s *SingleRuntime) readFromSocket(command string, socket socketType) (strin
 	buf := make([]byte, bufferSize)
 	var data strings.Builder
 	for {
-		if n, readErr := api.Read(buf); readErr != nil {
+		n, readErr := api.Read(buf)
+		if readErr != nil {
 			break
-		} else {
-			data.Write(buf[0:n])
 		}
+		data.Write(buf[0:n])
 	}
 
 	result := strings.TrimSuffix(data.String(), "\n> ")
 	result = strings.TrimSuffix(result, "\n")
-	return result, nil
+	return result, nil //nolint:nilerr
 }
 
 // ExecuteRaw executes command on runtime API and returns raw result

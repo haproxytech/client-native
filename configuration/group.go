@@ -140,12 +140,12 @@ func (c *client) EditGroup(name string, userlist string, data *models.Group, tra
 	if _, _, err := c.GetUserList(userlist, transactionID); err != nil {
 		return err
 	}
-	group, i := GetGroupByName(data.Name, userlist, p)
+	group, i := GetGroupByName(name, userlist, p)
 	if group == nil {
-		return NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("group %s does not exist", data.Name))
+		return NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("group %s does not exist", name))
 	}
 	if _, err := p.GetOne("userlist", userlist, "group", i); err != nil {
-		return c.HandleError(data.Name, "userlist", userlist, t, transactionID == "", err)
+		return c.HandleError(name, "userlist", userlist, t, transactionID == "", err)
 	}
 	if err := c.SaveData(p, t, transactionID == ""); err != nil {
 		return err

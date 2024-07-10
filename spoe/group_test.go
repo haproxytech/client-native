@@ -238,7 +238,7 @@ func TestSingleSpoe_EditGroup(t *testing.T) {
 				t.Errorf("SingleSpoe.EditGroup() error = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
-			if err = ss.EditGroup(tt.scope, tt.data, tt.groupName, "", tt.version); (err != nil) != tt.wantErr {
+			if err = ss.EditGroup(tt.scope, tt.data, "", tt.version); (err != nil) != tt.wantErr {
 				t.Errorf("SingleSpoe.EditGroup() error = %v, wantErr %v", err, tt.wantErr)
 			}
 			_, got, err := ss.GetGroup(tt.scope, tt.groupName, "")

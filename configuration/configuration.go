@@ -2721,7 +2721,7 @@ func (s *SectionObject) errorloc302(field reflect.Value) error {
 	}
 
 	e := &types.ErrorLoc302{
-		Code: fmt.Sprintf("%d", *errorLoc.Code),
+		Code: strconv.FormatInt(*errorLoc.Code, 10),
 		URL:  *errorLoc.URL,
 	}
 	if err := s.set("errorloc302", e); err != nil {
@@ -2740,7 +2740,7 @@ func (s *SectionObject) errorloc303(field reflect.Value) error {
 	}
 
 	e := &types.ErrorLoc303{
-		Code: fmt.Sprintf("%d", *errorLoc.Code),
+		Code: strconv.FormatInt(*errorLoc.Code, 10),
 		URL:  *errorLoc.URL,
 	}
 	if err := s.set("errorloc303", e); err != nil {

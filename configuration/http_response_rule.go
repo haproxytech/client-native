@@ -527,7 +527,7 @@ func ParseHTTPResponseRule(f types.Action) *models.HTTPResponseRule { //nolint:m
 	return nil
 }
 
-func SerializeHTTPResponseRule(f models.HTTPResponseRule) (rule types.Action, err error) { //nolint:gocyclo,ireturn,cyclop,gocognit,maintidx
+func SerializeHTTPResponseRule(f models.HTTPResponseRule) (rule types.Action, err error) { //nolint:gocyclo,ireturn,cyclop,maintidx
 	switch f.Type {
 	case "add-acl":
 		rule = &http_actions.AddACL{

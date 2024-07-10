@@ -295,9 +295,9 @@ func (c *client) EditFCGIApplication(name string, data *models.FCGIApp, transact
 	}
 
 	if !c.checkSectionExists(parser.FCGIApp, data.Name, p) {
-		e := NewConfError(ErrObjectAlreadyExists, fmt.Sprintf("%s %s does not exists", parser.FCGIApp, data.Name))
+		e := NewConfError(ErrObjectAlreadyExists, fmt.Sprintf("%s %s does not exists", parser.FCGIApp, name))
 
-		return c.HandleError(data.Name, "", "", t, transactionID == "", e)
+		return c.HandleError(name, "", "", t, transactionID == "", e)
 	}
 
 	if err = SerializeFCGIAppSection(p, data); err != nil {

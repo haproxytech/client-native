@@ -163,7 +163,7 @@ func (c *SingleSpoe) CreateMessage(scope string, data *models.SpoeMessage, trans
 
 // EditMessage edits a message in configuration. One of version or transactionID is
 // mandatory. Returns error on fail, nil on success.
-func (c *SingleSpoe) EditMessage(scope string, data *models.SpoeMessage, name, transactionID string, version int64) error {
+func (c *SingleSpoe) EditMessage(scope string, data *models.SpoeMessage, transactionID string, version int64) error {
 	if c.Transaction.UseModelsValidation {
 		validationErr := data.Validate(strfmt.Default)
 		if validationErr != nil {

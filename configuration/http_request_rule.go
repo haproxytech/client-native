@@ -232,7 +232,7 @@ func ParseHTTPRequestRules(t, pName string, p parser.Parser) (models.HTTPRequest
 	return httpReqRules, nil
 }
 
-func ParseHTTPRequestRule(f types.Action) (rule *models.HTTPRequestRule, err error) { //nolint:gocyclo,gocognit,cyclop,maintidx
+func ParseHTTPRequestRule(f types.Action) (rule *models.HTTPRequestRule, err error) { //nolint:gocyclo,cyclop,maintidx
 	switch v := f.(type) {
 	case *http_actions.AddACL:
 		rule = &models.HTTPRequestRule{

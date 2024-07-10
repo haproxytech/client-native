@@ -236,9 +236,9 @@ func (c *client) EditRing(name string, data *models.Ring, transactionID string, 
 		return err
 	}
 
-	if !c.checkSectionExists(parser.Ring, data.Name, p) {
-		e := NewConfError(ErrObjectAlreadyExists, fmt.Sprintf("%s %s does not exists", parser.Ring, data.Name))
-		return c.HandleError(data.Name, "", "", t, transactionID == "", e)
+	if !c.checkSectionExists(parser.Ring, name, p) {
+		e := NewConfError(ErrObjectAlreadyExists, fmt.Sprintf("%s %s does not exists", parser.Ring, name))
+		return c.HandleError(name, "", "", t, transactionID == "", e)
 	}
 
 	if err = SerializeRingSection(p, data); err != nil {
@@ -295,7 +295,7 @@ func SerializeRingSection(p parser.Parser, data *models.Ring) error { //nolint:g
 			return err
 		}
 	} else {
-		d := types.StringC{Value: fmt.Sprint(*data.Size)}
+		d := types.StringC{Value: strconv.FormatInt(*data.Size, 10)}
 		if err = p.Set(parser.Ring, data.Name, "size", d); err != nil {
 			return err
 		}
