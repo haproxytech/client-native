@@ -17,21 +17,39 @@ resolver:
     hold_nx:
       type: integer
       x-nullable: true
+      minimum: 0
+      x-duration: true
+      x-default-unit: ms
     hold_obsolete:
       type: integer
       x-nullable: true
+      minimum: 0
+      x-duration: true
+      x-default-unit: ms
     hold_other:
       type: integer
       x-nullable: true
+      minimum: 0
+      x-duration: true
+      x-default-unit: ms
     hold_refused:
       type: integer
       x-nullable: true
+      minimum: 0
+      x-duration: true
+      x-default-unit: ms
     hold_timeout:
       type: integer
       x-nullable: true
+      minimum: 0
+      x-duration: true
+      x-default-unit: ms
     hold_valid:
       type: integer
       x-nullable: true
+      minimum: 0
+      x-duration: true
+      x-default-unit: ms
     parse-resolv-conf:
       type: boolean
     resolve_retries:
@@ -39,10 +57,16 @@ resolver:
       minimum: 1
     timeout_resolve:
       type: integer
+      minimum: 0
       x-nullable: false
+      x-duration: true
+      x-default-unit: ms
     timeout_retry:
       type: integer
+      minimum: 0
       x-nullable: false
+      x-duration: true
+      x-default-unit: ms
 nameserver:
   title: Nameserver
   description: Nameserver used in Runtime DNS configuration

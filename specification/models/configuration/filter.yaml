@@ -59,6 +59,7 @@ filter:
         The max number of bytes that can be forwarded over the period.
         The value must be specified for per-stream and shared bandwidth limitation filters.
         It follows the HAProxy size format and is expressed in bytes.
+      x-size: true
       x-dependency:
         type:
           value: [bwlim-in, bwlim-out]
@@ -81,6 +82,7 @@ filter:
         The value must be specified for per-stream and shared bandwidth limitation filters.
         It follows the HAProxy size format and is expressed in bytes.
       type: integer
+      x-size: true
       x-dependency:
         type:
           value: [bwlim-in, bwlim-out]
@@ -102,6 +104,8 @@ filter:
         It can be specified for per-stream bandwidth limitation filters only.
         It follows the HAProxy time format and is expressed in milliseconds.
       type: integer
+      x-duration: true
+      x-default-unit: ms
       x-dependency:
         type:
           value: [bwlim-in, bwlim-out]
@@ -114,6 +118,7 @@ filter:
         This value can be specified for per-stream and shared bandwidth limitation filters.
         It follows the HAProxy size format and is expressed in bytes.
       type: integer
+      x-size: true
       x-dependency:
         type:
           value: [bwlim-in, bwlim-out]

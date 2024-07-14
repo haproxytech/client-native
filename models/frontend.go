@@ -57,9 +57,13 @@ type Frontend struct {
 	Clflog bool `json:"clflog,omitempty"`
 
 	// client fin timeout
+	// Minimum: 0
+	// +kubebuilder:validation:Minimum=0
 	ClientFinTimeout *int64 `json:"client_fin_timeout,omitempty"`
 
 	// client timeout
+	// Minimum: 0
+	// +kubebuilder:validation:Minimum=0
 	ClientTimeout *int64 `json:"client_timeout,omitempty"`
 
 	// clitcpka
@@ -164,6 +168,8 @@ type Frontend struct {
 	HTTPIgnoreProbes string `json:"http_ignore_probes,omitempty"`
 
 	// http keep alive timeout
+	// Minimum: 0
+	// +kubebuilder:validation:Minimum=0
 	HTTPKeepAliveTimeout *int64 `json:"http_keep_alive_timeout,omitempty"`
 
 	// http no delay
@@ -172,6 +178,8 @@ type Frontend struct {
 	HTTPNoDelay string `json:"http_no_delay,omitempty"`
 
 	// http request timeout
+	// Minimum: 0
+	// +kubebuilder:validation:Minimum=0
 	HTTPRequestTimeout *int64 `json:"http_request_timeout,omitempty"`
 
 	// http restrict req hdr names
@@ -281,6 +289,8 @@ type Frontend struct {
 	StickTable *ConfigStickTable `json:"stick_table,omitempty"`
 
 	// tarpit timeout
+	// Minimum: 0
+	// +kubebuilder:validation:Minimum=0
 	TarpitTimeout *int64 `json:"tarpit_timeout,omitempty"`
 
 	// tcp smart accept
@@ -316,6 +326,14 @@ func (m *Frontend) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateAcceptInvalidHTTPRequest(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateClientFinTimeout(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateClientTimeout(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -391,7 +409,15 @@ func (m *Frontend) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
+	if err := m.validateHTTPKeepAliveTimeout(formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.validateHTTPNoDelay(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateHTTPRequestTimeout(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -472,6 +498,10 @@ func (m *Frontend) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateStickTable(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateTarpitTimeout(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -577,6 +607,30 @@ func (m *Frontend) validateAcceptInvalidHTTPRequest(formats strfmt.Registry) err
 
 	// value enum
 	if err := m.validateAcceptInvalidHTTPRequestEnum("accept_invalid_http_request", "body", m.AcceptInvalidHTTPRequest); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *Frontend) validateClientFinTimeout(formats strfmt.Registry) error {
+	if swag.IsZero(m.ClientFinTimeout) { // not required
+		return nil
+	}
+
+	if err := validate.MinimumInt("client_fin_timeout", "body", *m.ClientFinTimeout, 0, false); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *Frontend) validateClientTimeout(formats strfmt.Registry) error {
+	if swag.IsZero(m.ClientTimeout) { // not required
+		return nil
+	}
+
+	if err := validate.MinimumInt("client_timeout", "body", *m.ClientTimeout, 0, false); err != nil {
 		return err
 	}
 
@@ -1134,6 +1188,18 @@ func (m *Frontend) validateHTTPIgnoreProbes(formats strfmt.Registry) error {
 	return nil
 }
 
+func (m *Frontend) validateHTTPKeepAliveTimeout(formats strfmt.Registry) error {
+	if swag.IsZero(m.HTTPKeepAliveTimeout) { // not required
+		return nil
+	}
+
+	if err := validate.MinimumInt("http_keep_alive_timeout", "body", *m.HTTPKeepAliveTimeout, 0, false); err != nil {
+		return err
+	}
+
+	return nil
+}
+
 var frontendTypeHTTPNoDelayPropEnum []interface{}
 
 func init() {
@@ -1170,6 +1236,18 @@ func (m *Frontend) validateHTTPNoDelay(formats strfmt.Registry) error {
 
 	// value enum
 	if err := m.validateHTTPNoDelayEnum("http_no_delay", "body", m.HTTPNoDelay); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *Frontend) validateHTTPRequestTimeout(formats strfmt.Registry) error {
+	if swag.IsZero(m.HTTPRequestTimeout) { // not required
+		return nil
+	}
+
+	if err := validate.MinimumInt("http_request_timeout", "body", *m.HTTPRequestTimeout, 0, false); err != nil {
 		return err
 	}
 
@@ -1838,6 +1916,18 @@ func (m *Frontend) validateStickTable(formats strfmt.Registry) error {
 			}
 			return err
 		}
+	}
+
+	return nil
+}
+
+func (m *Frontend) validateTarpitTimeout(formats strfmt.Registry) error {
+	if swag.IsZero(m.TarpitTimeout) { // not required
+		return nil
+	}
+
+	if err := validate.MinimumInt("tarpit_timeout", "body", *m.TarpitTimeout, 0, false); err != nil {
+		return err
 	}
 
 	return nil

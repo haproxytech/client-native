@@ -254,6 +254,8 @@ tcp_request_rule:
     timeout:
       type: integer
       x-nullable: true
+      x-duration: true
+      x-default-unit: ms
       x-dependency:
         type:
           value: inspect-delay

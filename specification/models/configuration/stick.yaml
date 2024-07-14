@@ -48,10 +48,15 @@ stick_table:
       x-nullable: true
     size:
       type: integer
+      minimum: 0
       x-nullable: true
+      x-size: true
     expire:
       type: integer
+      minimum: 0
       x-nullable: true
+      x-duration: true
+      x-default-unit: ms
     nopurge:
       type: boolean
       x-display-name: No Purge

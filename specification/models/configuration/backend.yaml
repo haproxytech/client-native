@@ -112,6 +112,8 @@ backend:
     check_timeout:
       type: integer
       x-nullable: true
+      x-duration: true
+      x-default-unit: ms
     adv_check:
       type: string
       x-display-name: Advanced Check
@@ -153,25 +155,40 @@ backend:
       x-display-name: External Check Command
     queue_timeout:
       type: integer
+      minimum: 0
       x-nullable: true
+      x-duration: true
+      x-default-unit: ms
     connect_timeout:
       type: integer
+      minimum: 0
       x-nullable: true
+      x-duration: true
+      x-default-unit: ms
     http_request_timeout:
       type: integer
+      minimum: 0
       x-nullable: true
+      x-duration: true
+      x-default-unit: ms
       x-dependency:
         mode:
           value: http
     http_keep_alive_timeout:
       type: integer
+      minimum: 0
       x-nullable: true
+      x-duration: true
+      x-default-unit: ms
       x-dependency:
         mode:
           value: http
     tarpit_timeout:
       type: integer
+      minimum: 0
       x-nullable: true
+      x-duration: true
+      x-default-unit: ms
     retries:
       type: integer
       x-nullable: true
@@ -179,13 +196,22 @@ backend:
       $ref: "#/definitions/redispatch"
     server_timeout:
       type: integer
+      minimum: 0
       x-nullable: true
+      x-duration: true
+      x-default-unit: ms
     server_fin_timeout:
       type: integer
+      minimum: 0
       x-nullable: true
+      x-duration: true
+      x-default-unit: ms
     tunnel_timeout:
       type: integer
+      minimum: 0
       x-nullable: true
+      x-duration: true
+      x-default-unit: ms
     httpchk_params:
       $ref: "#/definitions/httpchk_params"
       x-dependency:
@@ -277,10 +303,14 @@ backend:
       type: integer
       x-nullable: true
       x-display-name: Srvtcpka Idle
+      x-duration: true
+      x-default-unit: s
     srvtcpka_intvl:
       type: integer
       x-nullable: true
       x-display-name: Srvtcpka Intvl
+      x-duration: true
+      x-default-unit: s
     email_alert:
       $ref: "#/definitions/email_alert"
     load_server_state_from_file:

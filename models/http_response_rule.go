@@ -269,6 +269,8 @@ type HTTPResponseRule struct {
 	WaitAtLeast *int64 `json:"wait_at_least,omitempty"`
 
 	// wait time
+	// Minimum: 0
+	// +kubebuilder:validation:Minimum=0
 	WaitTime *int64 `json:"wait_time,omitempty"`
 }
 
@@ -393,6 +395,10 @@ func (m *HTTPResponseRule) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateVarScope(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateWaitTime(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -1180,6 +1186,18 @@ func (m *HTTPResponseRule) validateVarScope(formats strfmt.Registry) error {
 	}
 
 	if err := validate.Pattern("var_scope", "body", m.VarScope, `^[^\s]+$`); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *HTTPResponseRule) validateWaitTime(formats strfmt.Registry) error {
+	if swag.IsZero(m.WaitTime) { // not required
+		return nil
+	}
+
+	if err := validate.MinimumInt("wait_time", "body", *m.WaitTime, 0, false); err != nil {
 		return err
 	}
 

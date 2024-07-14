@@ -414,7 +414,10 @@ http_response_rule:
         $ref: "#/definitions/return_header"
     wait_time:
       type: integer
+      minimum: 0
       x-nullable: true
+      x-duration: true
+      x-default-unit: ms
       x-dependency:
         type:
           value: wait-for-body
@@ -422,6 +425,7 @@ http_response_rule:
     wait_at_least:
       type: integer
       x-nullable: true
+      x-size: true
       x-dependency:
         type:
           value: wait-for-body

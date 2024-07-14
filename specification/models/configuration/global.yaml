@@ -25,8 +25,11 @@ global:
       x-display-name: Group
     hard_stop_after:
       type: integer
+      minimum: 0
       x-nullable: true
       x-display-name: Hard Stop After
+      x-duration: true
+      x-default-unit: ms
     uid:
       type: integer
       x-display-name: UID
@@ -45,6 +48,9 @@ global:
       type: integer
       x-display-name: Defines a delay between SIGUSR1 and real soft-stop
       x-nullable: true
+      minimum: 0
+      x-duration: true
+      x-default-unit: ms
     insecure_fork_wanted:
       type: boolean
     insecure_setuid_wanted:
@@ -113,10 +119,16 @@ global:
       type: boolean
     max_spread_checks:
       type: integer
+      minimum: 0
       x-nullable: true
+      x-duration: true
+      x-default-unit: ms
     close_spread_time:
       type: integer
+      minimum: 0
       x-nullable: true
+      x-duration: true
+      x-default-unit: ms
     maxconnrate:
       type: integer
       x-display-name: Maximum per-process number of concurrent connections
@@ -200,8 +212,11 @@ global:
       x-nullable: true
     httpclient_timeout_connect:
       type: integer
+      minimum: 0
       x-display-name: HTTP Client Connect Timeout
       x-nullable: true
+      x-duration: true
+      x-default-unit: ms
     prealloc-fd:
       type: boolean
       x-display-name: Prealloc FD
@@ -383,6 +398,8 @@ global:
           x-nullable: true
           minimum: 0
           maximum: 65535
+          x-duration: true
+          x-default-unit: ms
         listener_default_shards:
           type: string
           enum: [by-process, by-thread, by-group]
@@ -408,20 +425,32 @@ global:
           x-nullable: true
         lua_session_timeout:
           type: integer
+          minimum: 0
           x-display-name: Lua Session Timeout
           x-nullable: true
+          x-duration: true
+          x-default-unit: ms
         lua_burst_timeout:
           type: integer
+          minimum: 0
           x-display-name: Burst execution timeout
           x-nullable: true
+          x-duration: true
+          x-default-unit: ms
         lua_task_timeout:
           type: integer
+          minimum: 0
           x-display-name: Lua Task Timeout
           x-nullable: true
+          x-duration: true
+          x-default-unit: ms
         lua_service_timeout:
           type: integer
+          minimum: 0
           x-display-name: Lua Service timeout
           x-nullable: true
+          x-duration: true
+          x-default-unit: ms
         max_checks_per_thread:
           type: integer
           x-nullable: true
@@ -518,8 +547,11 @@ global:
           x-display-name: SSL Log TLS Keys
         ssl_lifetime:
           type: integer
+          minimum: 0
           x-display-name: SSL Session Lifetime
           x-nullable: true
+          x-duration: true
+          x-default-unit: s
         ssl_maxrecord:
           type: integer
           x-display-name: SSL Maximum Size
@@ -554,30 +586,38 @@ global:
           type: integer
           x-display-name: Variables Global Max Size
           x-nullable: true
+          x-size: false
         vars_proc_max_size:
           type: integer
           x-display-name: Variables Process Max Size
           x-nullable: true
+          x-size: false
         vars_reqres_max_size:
           type: integer
           x-display-name: Variables Request/Response Max Size
           x-nullable: true
+          x-size: false
         vars_sess_max_size:
           type: integer
           x-display-name: Variables Session Max Size
           x-nullable: true
+          x-size: false
         vars_txn_max_size:
           type: integer
           x-display-name: Variables Transaction Max Size
           x-nullable: true
+          x-size: false
         quic_frontend_conn_tx_buffers_limit:
           type: integer
           x-display-name: QUIC Frontend Connection TX Buffer Limit
           x-nullable: true
         quic_frontend_max_idle_timeout:
           type: integer
+          minimum: 0
           x-display-name: QUIC Frontend Max Idle Timeout
           x-nullable: true
+          x-duration: true
+          x-default-unit: ms
         quic_frontend_max_streams_bidi:
           type: integer
           x-display-name: QUIC Max Number of Bidirectional Streams
@@ -712,7 +752,10 @@ global:
                 pattern: '^[^\s]+$'
     stats_timeout:
       type: integer
+      minimum: 0
       x-nullable: true
+      x-duration: true
+      x-default-unit: ms
     lua_loads:
       type: array
       x-omitempty: true
@@ -938,11 +981,15 @@ global:
           x-nullable: true
           description: Sets the maximum interval between two automatic updates of the same OCSP response.This time is expressed in seconds
           x-display-name: OCSP Update Maximum Delay
+          x-duration: false
+          x-default-unit: s
         mindelay:
           type: integer
           x-nullable: true
           description: Sets the minimum interval between two automatic updates of the same OCSP response. This time is expressed in seconds
           x-display-name: OCSP Update Minimum Delay
+          x-duration: false
+          x-default-unit: s
         httpproxy:
           type: object
           x-omitempty: true

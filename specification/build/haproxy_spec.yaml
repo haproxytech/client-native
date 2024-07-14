@@ -504,7 +504,10 @@ definitions:
           agent-port:
             required: true
       agent-inter:
+        minimum: 0
         type: integer
+        x-default-unit: ms
+        x-duration: true
         x-nullable: true
       agent-port:
         maximum: 65535
@@ -584,7 +587,10 @@ definitions:
           ssl:
             value: true
       downinter:
+        minimum: 0
         type: integer
+        x-default-unit: ms
+        x-duration: true
         x-nullable: true
       error_limit:
         type: integer
@@ -594,7 +600,10 @@ definitions:
         x-display-name: Nr. of consecutive failed checks
         x-nullable: true
       fastinter:
+        minimum: 0
         type: integer
+        x-default-unit: ms
+        x-duration: true
         x-nullable: true
       force_sslv3:
         enum:
@@ -640,7 +649,10 @@ definitions:
         type: string
         x-nullable: true
       inter:
+        minimum: 0
         type: integer
+        x-default-unit: ms
+        x-duration: true
         x-nullable: true
       log-bufsize:
         type: integer
@@ -739,7 +751,10 @@ definitions:
         type: integer
         x-nullable: true
       pool_purge_delay:
+        minimum: 0
         type: integer
+        x-default-unit: ms
+        x-duration: true
         x-nullable: true
       proto:
         pattern: ^[^\s]+$
@@ -819,7 +834,10 @@ definitions:
           ssl:
             value: true
       slowstart:
+        minimum: 0
         type: integer
+        x-default-unit: ms
+        x-duration: true
         x-nullable: true
       sni:
         pattern: ^[^\s]+$
@@ -877,7 +895,10 @@ definitions:
           - disabled
         type: string
       tcp_ut:
+        minimum: 0
         type: integer
+        x-default-unit: ms
+        x-duration: true
         x-nullable: true
       tfo:
         enum:
@@ -1064,7 +1085,10 @@ definitions:
         type: string
         x-display-name: Chroot
       close_spread_time:
+        minimum: 0
         type: integer
+        x-default-unit: ms
+        x-duration: true
         x-nullable: true
       cluster_secret:
         type: string
@@ -1156,8 +1180,11 @@ definitions:
         type: integer
         x-display-name: GID
       grace:
+        minimum: 0
         type: integer
+        x-default-unit: ms
         x-display-name: Defines a delay between SIGUSR1 and real soft-stop
+        x-duration: true
         x-nullable: true
       group:
         pattern: ^[^\s]+$
@@ -1183,8 +1210,11 @@ definitions:
       h2_workaround_bogus_websocket_clients:
         type: boolean
       hard_stop_after:
+        minimum: 0
         type: integer
+        x-default-unit: ms
         x-display-name: Hard Stop After
+        x-duration: true
         x-nullable: true
       harden:
         properties:
@@ -1244,8 +1274,11 @@ definitions:
         x-display-name: HTTP Client SSL Verify
         x-nullable: true
       httpclient_timeout_connect:
+        minimum: 0
         type: integer
+        x-default-unit: ms
         x-display-name: HTTP Client Connect Timeout
+        x-duration: true
         x-nullable: true
       insecure_fork_wanted:
         type: boolean
@@ -1308,7 +1341,10 @@ definitions:
         type: boolean
         x-display-name: Master Worker Mode
       max_spread_checks:
+        minimum: 0
         type: integer
+        x-default-unit: ms
+        x-duration: true
         x-nullable: true
       maxcompcpuusage:
         type: integer
@@ -1401,12 +1437,16 @@ definitions:
           maxdelay:
             description: Sets the maximum interval between two automatic updates of the same OCSP response.This time is expressed in seconds
             type: integer
+            x-default-unit: s
             x-display-name: OCSP Update Maximum Delay
+            x-duration: false
             x-nullable: true
           mindelay:
             description: Sets the minimum interval between two automatic updates of the same OCSP response. This time is expressed in seconds
             type: integer
+            x-default-unit: s
             x-display-name: OCSP Update Minimum Delay
+            x-duration: false
             x-nullable: true
           mode:
             enum:
@@ -1640,7 +1680,10 @@ definitions:
         x-display-name: Stats maxconn
         x-nullable: true
       stats_timeout:
+        minimum: 0
         type: integer
+        x-default-unit: ms
+        x-duration: true
         x-nullable: true
       strict_limits:
         type: boolean
@@ -1783,7 +1826,9 @@ definitions:
             maximum: 65535
             minimum: 0
             type: integer
+            x-default-unit: ms
             x-display-name: Idle Stream Duration
+            x-duration: true
             x-nullable: true
           listener_default_shards:
             enum:
@@ -1799,8 +1844,11 @@ definitions:
             type: string
             x-display-name: Listener Multi Queue Accept
           lua_burst_timeout:
+            minimum: 0
             type: integer
+            x-default-unit: ms
             x-display-name: Burst execution timeout
+            x-duration: true
             x-nullable: true
           lua_forced_yield:
             type: integer
@@ -1823,16 +1871,25 @@ definitions:
             x-display-name: Lua Maximum Memory Usage
             x-nullable: true
           lua_service_timeout:
+            minimum: 0
             type: integer
+            x-default-unit: ms
             x-display-name: Lua Service timeout
+            x-duration: true
             x-nullable: true
           lua_session_timeout:
+            minimum: 0
             type: integer
+            x-default-unit: ms
             x-display-name: Lua Session Timeout
+            x-duration: true
             x-nullable: true
           lua_task_timeout:
+            minimum: 0
             type: integer
+            x-default-unit: ms
             x-display-name: Lua Task Timeout
+            x-duration: true
             x-nullable: true
           max_checks_per_thread:
             type: integer
@@ -1878,8 +1935,11 @@ definitions:
             x-display-name: QUIC Frontend Connection TX Buffer Limit
             x-nullable: true
           quic_frontend_max_idle_timeout:
+            minimum: 0
             type: integer
+            x-default-unit: ms
             x-display-name: QUIC Frontend Max Idle Timeout
+            x-duration: true
             x-nullable: true
           quic_frontend_max_streams_bidi:
             type: integer
@@ -1983,8 +2043,11 @@ definitions:
             type: string
             x-display-name: SSL Log TLS Keys
           ssl_lifetime:
+            minimum: 0
             type: integer
+            x-default-unit: s
             x-display-name: SSL Session Lifetime
+            x-duration: true
             x-nullable: true
           ssl_maxrecord:
             type: integer
@@ -2010,22 +2073,27 @@ definitions:
             type: integer
             x-display-name: Variables Global Max Size
             x-nullable: true
+            x-size: false
           vars_proc_max_size:
             type: integer
             x-display-name: Variables Process Max Size
             x-nullable: true
+            x-size: false
           vars_reqres_max_size:
             type: integer
             x-display-name: Variables Request/Response Max Size
             x-nullable: true
+            x-size: false
           vars_sess_max_size:
             type: integer
             x-display-name: Variables Session Max Size
             x-nullable: true
+            x-size: false
           vars_txn_max_size:
             type: integer
             x-display-name: Variables Transaction Max Size
             x-nullable: true
+            x-size: false
           zlib_memlevel:
             maximum: 9
             minimum: 1
@@ -2118,6 +2186,8 @@ definitions:
         $ref: '#/definitions/balance'
       check_timeout:
         type: integer
+        x-default-unit: ms
+        x-duration: true
         x-nullable: true
       checkcache:
         enum:
@@ -2129,10 +2199,16 @@ definitions:
         type: boolean
         x-display-name: CLF Log
       client_fin_timeout:
+        minimum: 0
         type: integer
+        x-default-unit: ms
+        x-duration: true
         x-nullable: true
       client_timeout:
+        minimum: 0
         type: integer
+        x-default-unit: ms
+        x-duration: true
         x-nullable: true
       clitcpka:
         enum:
@@ -2146,16 +2222,23 @@ definitions:
         x-nullable: true
       clitcpka_idle:
         type: integer
+        x-default-unit: s
         x-display-name: Clitcpka Idle
+        x-duration: true
         x-nullable: true
       clitcpka_intvl:
         type: integer
+        x-default-unit: s
         x-display-name: Clitcpka Intvl
+        x-duration: true
         x-nullable: true
       compression:
         $ref: '#/definitions/compression'
       connect_timeout:
+        minimum: 0
         type: integer
+        x-default-unit: ms
+        x-duration: true
         x-nullable: true
       contstats:
         enum:
@@ -2283,7 +2366,10 @@ definitions:
         type: string
         x-display-name: HTTP Ignore Probes
       http_keep_alive_timeout:
+        minimum: 0
         type: integer
+        x-default-unit: ms
+        x-duration: true
         x-nullable: true
       http_no_delay:
         enum:
@@ -2297,7 +2383,10 @@ definitions:
           - disabled
         type: string
       http_request_timeout:
+        minimum: 0
         type: integer
+        x-default-unit: ms
+        x-duration: true
         x-nullable: true
       http_restrict_req_hdr_names:
         enum:
@@ -2432,7 +2521,10 @@ definitions:
         type: string
         x-display-name: Prefer Last Server
       queue_timeout:
+        minimum: 0
         type: integer
+        x-default-unit: ms
+        x-duration: true
         x-nullable: true
       redispatch:
         $ref: '#/definitions/redispatch'
@@ -2443,10 +2535,16 @@ definitions:
         type: string
         x-display-name: Specify when to attempt to automatically retry a failed request
       server_fin_timeout:
+        minimum: 0
         type: integer
+        x-default-unit: ms
+        x-duration: true
         x-nullable: true
       server_timeout:
+        minimum: 0
         type: integer
+        x-default-unit: ms
+        x-duration: true
         x-nullable: true
       smtpchk_params:
         $ref: '#/definitions/smtpchk_params'
@@ -2491,16 +2589,23 @@ definitions:
         x-nullable: true
       srvtcpka_idle:
         type: integer
+        x-default-unit: s
         x-display-name: Srvtcpka Idle
+        x-duration: true
         x-nullable: true
       srvtcpka_intvl:
         type: integer
+        x-default-unit: s
         x-display-name: Srvtcpka Intvl
+        x-duration: true
         x-nullable: true
       stats_options:
         $ref: '#/definitions/stats_options'
       tarpit_timeout:
+        minimum: 0
         type: integer
+        x-default-unit: ms
+        x-duration: true
         x-nullable: true
       tcp_smart_accept:
         enum:
@@ -2530,7 +2635,10 @@ definitions:
         type: string
         x-display-name: Transparent
       tunnel_timeout:
+        minimum: 0
         type: integer
+        x-default-unit: ms
+        x-duration: true
         x-nullable: true
       unique_id_format:
         type: string
@@ -2573,10 +2681,16 @@ definitions:
             value: http
         x-display-name: CLF Log
       client_fin_timeout:
+        minimum: 0
         type: integer
+        x-default-unit: ms
+        x-duration: true
         x-nullable: true
       client_timeout:
+        minimum: 0
         type: integer
+        x-default-unit: ms
+        x-duration: true
         x-nullable: true
       clitcpka:
         enum:
@@ -2593,11 +2707,15 @@ definitions:
         x-nullable: true
       clitcpka_idle:
         type: integer
+        x-default-unit: s
         x-display-name: Clitcpka Idle
+        x-duration: true
         x-nullable: true
       clitcpka_intvl:
         type: integer
+        x-default-unit: s
         x-display-name: Clitcpka Intvl
+        x-duration: true
         x-nullable: true
       compression:
         $ref: '#/definitions/compression'
@@ -2704,10 +2822,13 @@ definitions:
         type: string
         x-display-name: HTTP Ignore Probes
       http_keep_alive_timeout:
+        minimum: 0
         type: integer
+        x-default-unit: ms
         x-dependency:
           mode:
             value: http
+        x-duration: true
         x-nullable: true
       http_no_delay:
         enum:
@@ -2716,10 +2837,13 @@ definitions:
         type: string
         x-display-name: HTTP No Delay
       http_request_timeout:
+        minimum: 0
         type: integer
+        x-default-unit: ms
         x-dependency:
           mode:
             value: http
+        x-duration: true
         x-nullable: true
       http_restrict_req_hdr_names:
         enum:
@@ -2834,7 +2958,10 @@ definitions:
       stick_table:
         $ref: '#/definitions/config_stick_table'
       tarpit_timeout:
+        minimum: 0
         type: integer
+        x-default-unit: ms
+        x-duration: true
         x-nullable: true
       tcp_smart_accept:
         enum:
@@ -2922,6 +3049,8 @@ definitions:
         $ref: '#/definitions/balance'
       check_timeout:
         type: integer
+        x-default-unit: ms
+        x-duration: true
         x-nullable: true
       checkcache:
         enum:
@@ -2932,7 +3061,10 @@ definitions:
       compression:
         $ref: '#/definitions/compression'
       connect_timeout:
+        minimum: 0
         type: integer
+        x-default-unit: ms
+        x-duration: true
         x-nullable: true
       cookie:
         $ref: '#/definitions/cookie'
@@ -3095,10 +3227,13 @@ definitions:
           mode:
             value: http
       http_keep_alive_timeout:
+        minimum: 0
         type: integer
+        x-default-unit: ms
         x-dependency:
           mode:
             value: http
+        x-duration: true
         x-nullable: true
       http_pretend_keepalive:
         enum:
@@ -3118,10 +3253,13 @@ definitions:
             value: http
         x-display-name: HTTP proxy mode
       http_request_timeout:
+        minimum: 0
         type: integer
+        x-default-unit: ms
         x-dependency:
           mode:
             value: http
+        x-duration: true
         x-nullable: true
       http_restrict_req_hdr_names:
         enum:
@@ -3265,7 +3403,10 @@ definitions:
         type: string
         x-display-name: Prefer Last Server
       queue_timeout:
+        minimum: 0
         type: integer
+        x-default-unit: ms
+        x-duration: true
         x-nullable: true
       redispatch:
         $ref: '#/definitions/redispatch'
@@ -3276,13 +3417,19 @@ definitions:
         type: string
         x-display-name: Retry on
       server_fin_timeout:
+        minimum: 0
         type: integer
+        x-default-unit: ms
+        x-duration: true
         x-nullable: true
       server_state_file_name:
         type: string
         x-display-name: Server state file
       server_timeout:
+        minimum: 0
         type: integer
+        x-default-unit: ms
+        x-duration: true
         x-nullable: true
       smtpchk_params:
         $ref: '#/definitions/smtpchk_params'
@@ -3330,18 +3477,25 @@ definitions:
         x-nullable: true
       srvtcpka_idle:
         type: integer
+        x-default-unit: s
         x-display-name: Srvtcpka Idle
+        x-duration: true
         x-nullable: true
       srvtcpka_intvl:
         type: integer
+        x-default-unit: s
         x-display-name: Srvtcpka Intvl
+        x-duration: true
         x-nullable: true
       stats_options:
         $ref: '#/definitions/stats_options'
       stick_table:
         $ref: '#/definitions/config_stick_table'
       tarpit_timeout:
+        minimum: 0
         type: integer
+        x-default-unit: ms
+        x-duration: true
         x-nullable: true
       tcp_smart_connect:
         enum:
@@ -3365,7 +3519,10 @@ definitions:
         type: string
         x-display-name: Transparent
       tunnel_timeout:
+        minimum: 0
         type: integer
+        x-default-unit: ms
+        x-duration: true
         x-nullable: true
       use_fcgi_app:
         type: string
@@ -3408,14 +3565,22 @@ definitions:
         type: string
         x-nullable: false
       size:
+        minimum: 0
         type: integer
         x-display-name: Optional size in bytes for the ring-buffer
         x-nullable: true
+        x-size: true
       timeout_connect:
+        minimum: 0
         type: integer
+        x-default-unit: ms
+        x-duration: true
         x-nullable: true
       timeout_server:
+        minimum: 0
         type: integer
+        x-default-unit: ms
+        x-duration: true
         x-nullable: true
     required:
       - name
@@ -3476,7 +3641,11 @@ definitions:
         type: string
         x-nullable: false
       timeout_client:
+        maximum: 2147483647
+        minimum: 0
         type: integer
+        x-default-unit: ms
+        x-duration: true
         x-nullable: true
     required:
       - name
@@ -3562,7 +3731,9 @@ definitions:
       timeout:
         minimum: 0
         type: integer
+        x-default-unit: ms
         x-display-name: Timeout to send an email in milliseconds
+        x-duration: true
         x-nullable: true
     required:
       - name
@@ -3806,7 +3977,10 @@ definitions:
   config_stick_table:
     properties:
       expire:
+        minimum: 0
         type: integer
+        x-default-unit: ms
+        x-duration: true
         x-nullable: true
       keylen:
         type: integer
@@ -3819,8 +3993,10 @@ definitions:
         pattern: ^[^\s]+$
         type: string
       size:
+        minimum: 0
         type: integer
         x-nullable: true
+        x-size: true
       srvkey:
         enum:
           - addr
@@ -4522,12 +4698,16 @@ definitions:
           type:
             value: wait-for-body
         x-nullable: true
+        x-size: true
       wait_time:
+        minimum: 0
         type: integer
+        x-default-unit: ms
         x-dependency:
           type:
             required: true
             value: wait-for-body
+        x-duration: true
         x-nullable: true
     required:
       - type
@@ -5062,12 +5242,16 @@ definitions:
           type:
             value: wait-for-body
         x-nullable: true
+        x-size: true
       wait_time:
+        minimum: 0
         type: integer
+        x-default-unit: ms
         x-dependency:
           type:
             required: true
             value: wait-for-body
+        x-duration: true
         x-nullable: true
     required:
       - type
@@ -6080,10 +6264,12 @@ definitions:
         x-display-name: Switch Mode Proto
       timeout:
         type: integer
+        x-default-unit: ms
         x-dependency:
           type:
             required: true
             value: inspect-delay
+        x-duration: true
         x-nullable: true
       tos_value:
         pattern: ^(0x[0-9A-Fa-f]+|[0-9]+)$
@@ -6433,10 +6619,12 @@ definitions:
         x-display-name: SPOE Group
       timeout:
         type: integer
+        x-default-unit: ms
         x-dependency:
           type:
             required: true
             value: inspect-delay
+        x-duration: true
         x-nullable: true
       tos_value:
         pattern: ^(0x[0-9A-Fa-f]+|[0-9]+)$
@@ -6859,12 +7047,14 @@ definitions:
             value:
               - bwlim-in
               - bwlim-out
+        x-size: true
       default_period:
         description: |-
           The default time period used to evaluate the bandwidth limitation rate.
           It can be specified for per-stream bandwidth limitation filters only.
           It follows the HAProxy time format and is expressed in milliseconds.
         type: integer
+        x-default-unit: ms
         x-dependency:
           default_limit:
             required: true
@@ -6873,6 +7063,7 @@ definitions:
             value:
               - bwlim-in
               - bwlim-out
+        x-duration: true
       key:
         description: |-
           A sample expression rule.
@@ -6899,6 +7090,7 @@ definitions:
             value:
               - bwlim-in
               - bwlim-out
+        x-size: true
       min_size:
         description: |-
           The optional minimum number of bytes forwarded at a time by a stream excluding the last packet that may be smaller.
@@ -6911,6 +7103,7 @@ definitions:
             value:
               - bwlim-in
               - bwlim-out
+        x-size: true
       spoe_config:
         pattern: ^[^\s]+$
         type: string
@@ -7765,7 +7958,10 @@ definitions:
             value: true
         x-nullable: true
       stats_refresh_delay:
+        minimum: 0
         type: integer
+        x-default-unit: s
+        x-duration: true
         x-nullable: true
       stats_show_desc:
         type: string
@@ -8231,7 +8427,10 @@ definitions:
           agent-port:
             required: true
       agent-inter:
+        minimum: 0
         type: integer
+        x-default-unit: ms
+        x-duration: true
         x-nullable: true
       agent-port:
         maximum: 65535
@@ -8298,7 +8497,10 @@ definitions:
           ssl:
             value: enabled
       downinter:
+        minimum: 0
         type: integer
+        x-default-unit: ms
+        x-duration: true
         x-nullable: true
       error_limit:
         type: integer
@@ -8309,7 +8511,10 @@ definitions:
         x-display-name: Nr. of consecutive failed checks
         x-nullable: true
       fastinter:
+        minimum: 0
         type: integer
+        x-default-unit: ms
+        x-duration: true
         x-nullable: true
       force_sslv3:
         enum:
@@ -8348,7 +8553,10 @@ definitions:
         readOnly: true
         type: string
       inter:
+        minimum: 0
         type: integer
+        x-default-unit: ms
+        x-duration: true
         x-nullable: true
       maintenance:
         enum:
@@ -8429,7 +8637,10 @@ definitions:
         type: integer
         x-nullable: true
       pool_purge_delay:
+        minimum: 0
         type: integer
+        x-default-unit: ms
+        x-duration: true
         x-nullable: true
       port:
         maximum: 65535
@@ -8478,7 +8689,10 @@ definitions:
           - disabled
         type: string
       slowstart:
+        minimum: 0
         type: integer
+        x-default-unit: ms
+        x-duration: true
         x-nullable: true
       sni:
         pattern: ^[^\s]+$
@@ -9343,22 +9557,40 @@ definitions:
         minimum: 512
         type: integer
       hold_nx:
+        minimum: 0
         type: integer
+        x-default-unit: ms
+        x-duration: true
         x-nullable: true
       hold_obsolete:
+        minimum: 0
         type: integer
+        x-default-unit: ms
+        x-duration: true
         x-nullable: true
       hold_other:
+        minimum: 0
         type: integer
+        x-default-unit: ms
+        x-duration: true
         x-nullable: true
       hold_refused:
+        minimum: 0
         type: integer
+        x-default-unit: ms
+        x-duration: true
         x-nullable: true
       hold_timeout:
+        minimum: 0
         type: integer
+        x-default-unit: ms
+        x-duration: true
         x-nullable: true
       hold_valid:
+        minimum: 0
         type: integer
+        x-default-unit: ms
+        x-duration: true
         x-nullable: true
       name:
         pattern: ^[A-Za-z0-9-_.:]+$
@@ -9370,10 +9602,16 @@ definitions:
         minimum: 1
         type: integer
       timeout_resolve:
+        minimum: 0
         type: integer
+        x-default-unit: ms
+        x-duration: true
         x-nullable: false
       timeout_retry:
+        minimum: 0
         type: integer
+        x-default-unit: ms
+        x-duration: true
         x-nullable: false
     required:
       - name
@@ -9420,8 +9658,11 @@ definitions:
     properties:
       max_age:
         type: integer
+        x-default-unit: s
+        x-duration: false
       max_object_size:
         type: integer
+        x-size: false
       max_secondary_entries:
         type: integer
       name:
@@ -9748,8 +9989,12 @@ definitions:
         type: string
       hello_timeout:
         type: integer
+        x-default-unit: ms
+        x-duration: true
       idle_timeout:
         type: integer
+        x-default-unit: ms
+        x-duration: true
       log:
         $ref: '#/definitions/log_targets'
       max-frame-size:
@@ -9783,6 +10028,8 @@ definitions:
         type: string
       processing_timeout:
         type: integer
+        x-default-unit: ms
+        x-duration: true
       register-var-names:
         type: string
       send-frag-payload:
@@ -10045,6 +10292,8 @@ definitions:
       expire:
         pattern: ^\d+(ms|s|m|h|d)?$
         type: string
+        x-default-unit: ms
+        x-duration: true
         x-nullable: true
       name:
         type: string
@@ -10055,6 +10304,7 @@ definitions:
       size:
         pattern: ^\d+(k|K|m|M|g|G)?$
         type: string
+        x-size: true
       store:
         type: string
       type:

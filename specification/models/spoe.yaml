@@ -69,10 +69,16 @@ spoe_agent:
       type: string
     hello_timeout:
       type: integer
+      x-duration: true
+      x-default-unit: ms
     idle_timeout:
       type: integer
+      x-duration: true
+      x-default-unit: ms
     processing_timeout:
       type: integer
+      x-duration: true
+      x-default-unit: ms
     use-backend:
       type: string
 spoe_message:

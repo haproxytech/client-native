@@ -84,6 +84,8 @@ type Global struct {
 	Chroot string `json:"chroot,omitempty"`
 
 	// close spread time
+	// Minimum: 0
+	// +kubebuilder:validation:Minimum=0
 	CloseSpreadTime *int64 `json:"close_spread_time,omitempty"`
 
 	// cluster secret
@@ -119,6 +121,8 @@ type Global struct {
 	Gid int64 `json:"gid,omitempty"`
 
 	// grace
+	// Minimum: 0
+	// +kubebuilder:validation:Minimum=0
 	Grace *int64 `json:"grace,omitempty"`
 
 	// group
@@ -133,6 +137,8 @@ type Global struct {
 	H2WorkaroundBogusWebsocketClients bool `json:"h2_workaround_bogus_websocket_clients,omitempty"`
 
 	// hard stop after
+	// Minimum: 0
+	// +kubebuilder:validation:Minimum=0
 	HardStopAfter *int64 `json:"hard_stop_after,omitempty"`
 
 	// harden
@@ -169,6 +175,8 @@ type Global struct {
 	HttpclientSslVerify *string `json:"httpclient_ssl_verify,omitempty"`
 
 	// httpclient timeout connect
+	// Minimum: 0
+	// +kubebuilder:validation:Minimum=0
 	HttpclientTimeoutConnect *int64 `json:"httpclient_timeout_connect,omitempty"`
 
 	// insecure fork wanted
@@ -204,6 +212,8 @@ type Global struct {
 	MasterWorker bool `json:"master-worker,omitempty"`
 
 	// max spread checks
+	// Minimum: 0
+	// +kubebuilder:validation:Minimum=0
 	MaxSpreadChecks *int64 `json:"max_spread_checks,omitempty"`
 
 	// maxcompcpuusage
@@ -397,6 +407,8 @@ type Global struct {
 	StatsMaxconn *int64 `json:"stats_maxconn,omitempty"`
 
 	// stats timeout
+	// Minimum: 0
+	// +kubebuilder:validation:Minimum=0
 	StatsTimeout *int64 `json:"stats_timeout,omitempty"`
 
 	// strict limits
@@ -480,6 +492,10 @@ func (m *Global) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
+	if err := m.validateCloseSpreadTime(formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.validateDaemon(formats); err != nil {
 		res = append(res, err)
 	}
@@ -496,7 +512,15 @@ func (m *Global) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
+	if err := m.validateGrace(formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.validateGroup(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateHardStopAfter(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -524,6 +548,10 @@ func (m *Global) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
+	if err := m.validateHttpclientTimeoutConnect(formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.validateLocalpeer(formats); err != nil {
 		res = append(res, err)
 	}
@@ -537,6 +565,10 @@ func (m *Global) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateLuaPrependPath(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateMaxSpreadChecks(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -581,6 +613,10 @@ func (m *Global) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateSslServerVerify(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateStatsTimeout(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -864,6 +900,18 @@ func (m *Global) validateChroot(formats strfmt.Registry) error {
 	return nil
 }
 
+func (m *Global) validateCloseSpreadTime(formats strfmt.Registry) error {
+	if swag.IsZero(m.CloseSpreadTime) { // not required
+		return nil
+	}
+
+	if err := validate.MinimumInt("close_spread_time", "body", *m.CloseSpreadTime, 0, false); err != nil {
+		return err
+	}
+
+	return nil
+}
+
 var globalTypeDaemonPropEnum []interface{}
 
 func init() {
@@ -963,12 +1011,36 @@ func (m *Global) validateFiftyOneDegreesOptions(formats strfmt.Registry) error {
 	return nil
 }
 
+func (m *Global) validateGrace(formats strfmt.Registry) error {
+	if swag.IsZero(m.Grace) { // not required
+		return nil
+	}
+
+	if err := validate.MinimumInt("grace", "body", *m.Grace, 0, false); err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func (m *Global) validateGroup(formats strfmt.Registry) error {
 	if swag.IsZero(m.Group) { // not required
 		return nil
 	}
 
 	if err := validate.Pattern("group", "body", m.Group, `^[^\s]+$`); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *Global) validateHardStopAfter(formats strfmt.Registry) error {
+	if swag.IsZero(m.HardStopAfter) { // not required
+		return nil
+	}
+
+	if err := validate.MinimumInt("hard_stop_after", "body", *m.HardStopAfter, 0, false); err != nil {
 		return err
 	}
 
@@ -1175,6 +1247,18 @@ func (m *Global) validateHttpclientSslVerify(formats strfmt.Registry) error {
 	return nil
 }
 
+func (m *Global) validateHttpclientTimeoutConnect(formats strfmt.Registry) error {
+	if swag.IsZero(m.HttpclientTimeoutConnect) { // not required
+		return nil
+	}
+
+	if err := validate.MinimumInt("httpclient_timeout_connect", "body", *m.HttpclientTimeoutConnect, 0, false); err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func (m *Global) validateLocalpeer(formats strfmt.Registry) error {
 	if swag.IsZero(m.Localpeer) { // not required
 		return nil
@@ -1253,6 +1337,18 @@ func (m *Global) validateLuaPrependPath(formats strfmt.Registry) error {
 			}
 		}
 
+	}
+
+	return nil
+}
+
+func (m *Global) validateMaxSpreadChecks(formats strfmt.Registry) error {
+	if swag.IsZero(m.MaxSpreadChecks) { // not required
+		return nil
+	}
+
+	if err := validate.MinimumInt("max_spread_checks", "body", *m.MaxSpreadChecks, 0, false); err != nil {
+		return err
 	}
 
 	return nil
@@ -1548,6 +1644,18 @@ func (m *Global) validateSslServerVerify(formats strfmt.Registry) error {
 
 	// value enum
 	if err := m.validateSslServerVerifyEnum("ssl_server_verify", "body", m.SslServerVerify); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *Global) validateStatsTimeout(formats strfmt.Registry) error {
+	if swag.IsZero(m.StatsTimeout) { // not required
+		return nil
+	}
+
+	if err := validate.MinimumInt("stats_timeout", "body", *m.StatsTimeout, 0, false); err != nil {
 		return err
 	}
 
@@ -3887,6 +3995,8 @@ type GlobalTuneOptions struct {
 	ListenerMultiQueue string `json:"listener_multi_queue,omitempty"`
 
 	// lua burst timeout
+	// Minimum: 0
+	// +kubebuilder:validation:Minimum=0
 	LuaBurstTimeout *int64 `json:"lua_burst_timeout,omitempty"`
 
 	// lua forced yield
@@ -3906,12 +4016,18 @@ type GlobalTuneOptions struct {
 	LuaMaxmem *int64 `json:"lua_maxmem,omitempty"`
 
 	// lua service timeout
+	// Minimum: 0
+	// +kubebuilder:validation:Minimum=0
 	LuaServiceTimeout *int64 `json:"lua_service_timeout,omitempty"`
 
 	// lua session timeout
+	// Minimum: 0
+	// +kubebuilder:validation:Minimum=0
 	LuaSessionTimeout *int64 `json:"lua_session_timeout,omitempty"`
 
 	// lua task timeout
+	// Minimum: 0
+	// +kubebuilder:validation:Minimum=0
 	LuaTaskTimeout *int64 `json:"lua_task_timeout,omitempty"`
 
 	// max checks per thread
@@ -3953,6 +4069,8 @@ type GlobalTuneOptions struct {
 	QuicFrontendConnTxBuffersLimit *int64 `json:"quic_frontend_conn_tx_buffers_limit,omitempty"`
 
 	// quic frontend max idle timeout
+	// Minimum: 0
+	// +kubebuilder:validation:Minimum=0
 	QuicFrontendMaxIdleTimeout *int64 `json:"quic_frontend_max_idle_timeout,omitempty"`
 
 	// quic frontend max streams bidi
@@ -4040,6 +4158,8 @@ type GlobalTuneOptions struct {
 	SslKeylog string `json:"ssl_keylog,omitempty"`
 
 	// ssl lifetime
+	// Minimum: 0
+	// +kubebuilder:validation:Minimum=0
 	SslLifetime *int64 `json:"ssl_lifetime,omitempty"`
 
 	// ssl maxrecord
@@ -4140,6 +4260,10 @@ func (m *GlobalTuneOptions) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
+	if err := m.validateLuaBurstTimeout(formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.validateLuaLogLoggers(formats); err != nil {
 		res = append(res, err)
 	}
@@ -4148,7 +4272,23 @@ func (m *GlobalTuneOptions) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
+	if err := m.validateLuaServiceTimeout(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateLuaSessionTimeout(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateLuaTaskTimeout(formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.validatePtZeroCopyForwarding(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateQuicFrontendMaxIdleTimeout(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -4169,6 +4309,10 @@ func (m *GlobalTuneOptions) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateSslKeylog(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateSslLifetime(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -4597,6 +4741,18 @@ func (m *GlobalTuneOptions) validateListenerMultiQueue(formats strfmt.Registry) 
 	return nil
 }
 
+func (m *GlobalTuneOptions) validateLuaBurstTimeout(formats strfmt.Registry) error {
+	if swag.IsZero(m.LuaBurstTimeout) { // not required
+		return nil
+	}
+
+	if err := validate.MinimumInt("tune_options"+"."+"lua_burst_timeout", "body", *m.LuaBurstTimeout, 0, false); err != nil {
+		return err
+	}
+
+	return nil
+}
+
 var globalTuneOptionsTypeLuaLogLoggersPropEnum []interface{}
 
 func init() {
@@ -4684,6 +4840,42 @@ func (m *GlobalTuneOptions) validateLuaLogStderr(formats strfmt.Registry) error 
 	return nil
 }
 
+func (m *GlobalTuneOptions) validateLuaServiceTimeout(formats strfmt.Registry) error {
+	if swag.IsZero(m.LuaServiceTimeout) { // not required
+		return nil
+	}
+
+	if err := validate.MinimumInt("tune_options"+"."+"lua_service_timeout", "body", *m.LuaServiceTimeout, 0, false); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *GlobalTuneOptions) validateLuaSessionTimeout(formats strfmt.Registry) error {
+	if swag.IsZero(m.LuaSessionTimeout) { // not required
+		return nil
+	}
+
+	if err := validate.MinimumInt("tune_options"+"."+"lua_session_timeout", "body", *m.LuaSessionTimeout, 0, false); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *GlobalTuneOptions) validateLuaTaskTimeout(formats strfmt.Registry) error {
+	if swag.IsZero(m.LuaTaskTimeout) { // not required
+		return nil
+	}
+
+	if err := validate.MinimumInt("tune_options"+"."+"lua_task_timeout", "body", *m.LuaTaskTimeout, 0, false); err != nil {
+		return err
+	}
+
+	return nil
+}
+
 var globalTuneOptionsTypePtZeroCopyForwardingPropEnum []interface{}
 
 func init() {
@@ -4720,6 +4912,18 @@ func (m *GlobalTuneOptions) validatePtZeroCopyForwarding(formats strfmt.Registry
 
 	// value enum
 	if err := m.validatePtZeroCopyForwardingEnum("tune_options"+"."+"pt_zero_copy_forwarding", "body", m.PtZeroCopyForwarding); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *GlobalTuneOptions) validateQuicFrontendMaxIdleTimeout(formats strfmt.Registry) error {
+	if swag.IsZero(m.QuicFrontendMaxIdleTimeout) { // not required
+		return nil
+	}
+
+	if err := validate.MinimumInt("tune_options"+"."+"quic_frontend_max_idle_timeout", "body", *m.QuicFrontendMaxIdleTimeout, 0, false); err != nil {
 		return err
 	}
 
@@ -4904,6 +5108,18 @@ func (m *GlobalTuneOptions) validateSslKeylog(formats strfmt.Registry) error {
 
 	// value enum
 	if err := m.validateSslKeylogEnum("tune_options"+"."+"ssl_keylog", "body", m.SslKeylog); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *GlobalTuneOptions) validateSslLifetime(formats strfmt.Registry) error {
+	if swag.IsZero(m.SslLifetime) { // not required
+		return nil
+	}
+
+	if err := validate.MinimumInt("tune_options"+"."+"ssl_lifetime", "body", *m.SslLifetime, 0, false); err != nil {
 		return err
 	}
 

@@ -46,6 +46,8 @@ type ServerParams struct {
 	AgentCheck string `json:"agent-check,omitempty"`
 
 	// agent inter
+	// Minimum: 0
+	// +kubebuilder:validation:Minimum=0
 	AgentInter *int64 `json:"agent-inter,omitempty"`
 
 	// agent port
@@ -127,6 +129,8 @@ type ServerParams struct {
 	Curves string `json:"curves,omitempty"`
 
 	// downinter
+	// Minimum: 0
+	// +kubebuilder:validation:Minimum=0
 	Downinter *int64 `json:"downinter,omitempty"`
 
 	// error limit
@@ -136,6 +140,8 @@ type ServerParams struct {
 	Fall *int64 `json:"fall,omitempty"`
 
 	// fastinter
+	// Minimum: 0
+	// +kubebuilder:validation:Minimum=0
 	Fastinter *int64 `json:"fastinter,omitempty"`
 
 	// force sslv3
@@ -191,6 +197,8 @@ type ServerParams struct {
 	InitAddr *string `json:"init-addr,omitempty"`
 
 	// inter
+	// Minimum: 0
+	// +kubebuilder:validation:Minimum=0
 	Inter *int64 `json:"inter,omitempty"`
 
 	// log bufsize
@@ -286,6 +294,8 @@ type ServerParams struct {
 	PoolMaxConn *int64 `json:"pool_max_conn,omitempty"`
 
 	// pool purge delay
+	// Minimum: 0
+	// +kubebuilder:validation:Minimum=0
 	PoolPurgeDelay *int64 `json:"pool_purge_delay,omitempty"`
 
 	// proto
@@ -352,6 +362,8 @@ type ServerParams struct {
 	Sigalgs string `json:"sigalgs,omitempty"`
 
 	// slowstart
+	// Minimum: 0
+	// +kubebuilder:validation:Minimum=0
 	Slowstart *int64 `json:"slowstart,omitempty"`
 
 	// sni
@@ -403,6 +415,8 @@ type ServerParams struct {
 	Stick string `json:"stick,omitempty"`
 
 	// tcp ut
+	// Minimum: 0
+	// +kubebuilder:validation:Minimum=0
 	TCPUt *int64 `json:"tcp_ut,omitempty"`
 
 	// tfo
@@ -444,6 +458,10 @@ func (m *ServerParams) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateAgentCheck(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateAgentInter(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -491,6 +509,14 @@ func (m *ServerParams) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
+	if err := m.validateDowninter(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateFastinter(formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.validateForceSslv3(formats); err != nil {
 		res = append(res, err)
 	}
@@ -528,6 +554,10 @@ func (m *ServerParams) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateInitAddr(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateInter(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -583,6 +613,10 @@ func (m *ServerParams) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
+	if err := m.validatePoolPurgeDelay(formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.validateProto(formats); err != nil {
 		res = append(res, err)
 	}
@@ -627,6 +661,10 @@ func (m *ServerParams) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
+	if err := m.validateSlowstart(formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.validateSni(formats); err != nil {
 		res = append(res, err)
 	}
@@ -660,6 +698,10 @@ func (m *ServerParams) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateStick(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateTCPUt(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -733,6 +775,18 @@ func (m *ServerParams) validateAgentCheck(formats strfmt.Registry) error {
 
 	// value enum
 	if err := m.validateAgentCheckEnum("agent-check", "body", m.AgentCheck); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *ServerParams) validateAgentInter(formats strfmt.Registry) error {
+	if swag.IsZero(m.AgentInter) { // not required
+		return nil
+	}
+
+	if err := validate.MinimumInt("agent-inter", "body", *m.AgentInter, 0, false); err != nil {
 		return err
 	}
 
@@ -1025,6 +1079,30 @@ func (m *ServerParams) validateCookie(formats strfmt.Registry) error {
 	return nil
 }
 
+func (m *ServerParams) validateDowninter(formats strfmt.Registry) error {
+	if swag.IsZero(m.Downinter) { // not required
+		return nil
+	}
+
+	if err := validate.MinimumInt("downinter", "body", *m.Downinter, 0, false); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *ServerParams) validateFastinter(formats strfmt.Registry) error {
+	if swag.IsZero(m.Fastinter) { // not required
+		return nil
+	}
+
+	if err := validate.MinimumInt("fastinter", "body", *m.Fastinter, 0, false); err != nil {
+		return err
+	}
+
+	return nil
+}
+
 var serverParamsTypeForceSslv3PropEnum []interface{}
 
 func init() {
@@ -1293,6 +1371,18 @@ func (m *ServerParams) validateInitAddr(formats strfmt.Registry) error {
 	}
 
 	if err := validate.Pattern("init-addr", "body", *m.InitAddr, `^[^\s]+$`); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *ServerParams) validateInter(formats strfmt.Registry) error {
+	if swag.IsZero(m.Inter) { // not required
+		return nil
+	}
+
+	if err := validate.MinimumInt("inter", "body", *m.Inter, 0, false); err != nil {
 		return err
 	}
 
@@ -1815,6 +1905,18 @@ func (m *ServerParams) validatePoolConnName(formats strfmt.Registry) error {
 	return nil
 }
 
+func (m *ServerParams) validatePoolPurgeDelay(formats strfmt.Registry) error {
+	if swag.IsZero(m.PoolPurgeDelay) { // not required
+		return nil
+	}
+
+	if err := validate.MinimumInt("pool_purge_delay", "body", *m.PoolPurgeDelay, 0, false); err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func (m *ServerParams) validateProto(formats strfmt.Registry) error {
 	if swag.IsZero(m.Proto) { // not required
 		return nil
@@ -2128,6 +2230,18 @@ func (m *ServerParams) validateSetProxyV2TlvFmt(formats strfmt.Registry) error {
 	return nil
 }
 
+func (m *ServerParams) validateSlowstart(formats strfmt.Registry) error {
+	if swag.IsZero(m.Slowstart) { // not required
+		return nil
+	}
+
+	if err := validate.MinimumInt("slowstart", "body", *m.Slowstart, 0, false); err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func (m *ServerParams) validateSni(formats strfmt.Registry) error {
 	if swag.IsZero(m.Sni) { // not required
 		return nil
@@ -2398,6 +2512,18 @@ func (m *ServerParams) validateStick(formats strfmt.Registry) error {
 
 	// value enum
 	if err := m.validateStickEnum("stick", "body", m.Stick); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *ServerParams) validateTCPUt(formats strfmt.Registry) error {
+	if swag.IsZero(m.TCPUt) { // not required
+		return nil
+	}
+
+	if err := validate.MinimumInt("tcp_ut", "body", *m.TCPUt, 0, false); err != nil {
 		return err
 	}
 

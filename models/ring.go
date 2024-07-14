@@ -55,12 +55,18 @@ type Ring struct {
 	Name string `json:"name"`
 
 	// size
+	// Minimum: 0
+	// +kubebuilder:validation:Minimum=0
 	Size *int64 `json:"size,omitempty"`
 
 	// timeout connect
+	// Minimum: 0
+	// +kubebuilder:validation:Minimum=0
 	TimeoutConnect *int64 `json:"timeout_connect,omitempty"`
 
 	// timeout server
+	// Minimum: 0
+	// +kubebuilder:validation:Minimum=0
 	TimeoutServer *int64 `json:"timeout_server,omitempty"`
 }
 
@@ -73,6 +79,18 @@ func (m *Ring) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateName(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateSize(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateTimeoutConnect(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateTimeoutServer(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -149,6 +167,42 @@ func (m *Ring) validateName(formats strfmt.Registry) error {
 	}
 
 	if err := validate.Pattern("name", "body", m.Name, `^[A-Za-z0-9-_.:]+$`); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *Ring) validateSize(formats strfmt.Registry) error {
+	if swag.IsZero(m.Size) { // not required
+		return nil
+	}
+
+	if err := validate.MinimumInt("size", "body", *m.Size, 0, false); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *Ring) validateTimeoutConnect(formats strfmt.Registry) error {
+	if swag.IsZero(m.TimeoutConnect) { // not required
+		return nil
+	}
+
+	if err := validate.MinimumInt("timeout_connect", "body", *m.TimeoutConnect, 0, false); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *Ring) validateTimeoutServer(formats strfmt.Registry) error {
+	if swag.IsZero(m.TimeoutServer) { // not required
+		return nil
+	}
+
+	if err := validate.MinimumInt("timeout_server", "body", *m.TimeoutServer, 0, false); err != nil {
 		return err
 	}
 

@@ -71,6 +71,8 @@ type StatsOptions struct {
 	StatsRealmRealm *string `json:"stats_realm_realm,omitempty"`
 
 	// stats refresh delay
+	// Minimum: 0
+	// +kubebuilder:validation:Minimum=0
 	StatsRefreshDelay *int64 `json:"stats_refresh_delay,omitempty"`
 
 	// stats show desc
@@ -110,6 +112,10 @@ func (m *StatsOptions) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateStatsMaxconn(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateStatsRefreshDelay(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -227,6 +233,18 @@ func (m *StatsOptions) validateStatsMaxconn(formats strfmt.Registry) error {
 	}
 
 	if err := validate.MinimumInt("stats_maxconn", "body", m.StatsMaxconn, 1, false); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *StatsOptions) validateStatsRefreshDelay(formats strfmt.Registry) error {
+	if swag.IsZero(m.StatsRefreshDelay) { // not required
+		return nil
+	}
+
+	if err := validate.MinimumInt("stats_refresh_delay", "body", *m.StatsRefreshDelay, 0, false); err != nil {
 		return err
 	}
 

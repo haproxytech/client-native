@@ -23,12 +23,20 @@ ring:
       x-display-name: The maximum length of an event message stored into the ring
     size:
       type: integer
+      minimum: 0
       x-nullable: true
       x-display-name: Optional size in bytes for the ring-buffer
+      x-size: true
     timeout_connect:
       type: integer
+      minimum: 0
       x-nullable: true
+      x-duration: true
+      x-default-unit: ms
     timeout_server:
       type: integer
+      minimum: 0
       x-nullable: true
+      x-duration: true
+      x-default-unit: ms
   additionalProperties: false

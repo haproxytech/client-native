@@ -15,8 +15,11 @@ cache:
       minimum: 1
     max_object_size:
       type: integer
+      x-size: false
     max_age:
       type: integer
+      x-duration: false
+      x-default-unit: s
     process_vary:
       type: boolean
       x-nullable: true

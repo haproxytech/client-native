@@ -6,6 +6,8 @@ table:
       pattern: ^\d+(ms|s|m|h|d)?$
       type: string
       x-nullable: true
+      x-duration: true
+      x-default-unit: ms
     name:
       type: string
       x-nullable: false
@@ -15,6 +17,7 @@ table:
     size:
       type: string
       pattern: ^\d+(k|K|m|M|g|G)?$
+      x-size: true
     store:
       type: string
     type:

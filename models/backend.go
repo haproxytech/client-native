@@ -86,6 +86,8 @@ type Backend struct {
 	Compression *Compression `json:"compression,omitempty"`
 
 	// connect timeout
+	// Minimum: 0
+	// +kubebuilder:validation:Minimum=0
 	ConnectTimeout *int64 `json:"connect_timeout,omitempty"`
 
 	// cookie
@@ -185,6 +187,8 @@ type Backend struct {
 	HTTPConnectionMode string `json:"http_connection_mode,omitempty"`
 
 	// http keep alive timeout
+	// Minimum: 0
+	// +kubebuilder:validation:Minimum=0
 	HTTPKeepAliveTimeout *int64 `json:"http_keep_alive_timeout,omitempty"`
 
 	// http pretend keepalive
@@ -198,6 +202,8 @@ type Backend struct {
 	HTTPProxy string `json:"http_proxy,omitempty"`
 
 	// http request timeout
+	// Minimum: 0
+	// +kubebuilder:validation:Minimum=0
 	HTTPRequestTimeout *int64 `json:"http_request_timeout,omitempty"`
 
 	// http restrict req hdr names
@@ -284,6 +290,8 @@ type Backend struct {
 	PreferLastServer string `json:"prefer_last_server,omitempty"`
 
 	// queue timeout
+	// Minimum: 0
+	// +kubebuilder:validation:Minimum=0
 	QueueTimeout *int64 `json:"queue_timeout,omitempty"`
 
 	// redispatch
@@ -296,12 +304,16 @@ type Backend struct {
 	RetryOn string `json:"retry_on,omitempty"`
 
 	// server fin timeout
+	// Minimum: 0
+	// +kubebuilder:validation:Minimum=0
 	ServerFinTimeout *int64 `json:"server_fin_timeout,omitempty"`
 
 	// server state file name
 	ServerStateFileName string `json:"server_state_file_name,omitempty"`
 
 	// server timeout
+	// Minimum: 0
+	// +kubebuilder:validation:Minimum=0
 	ServerTimeout *int64 `json:"server_timeout,omitempty"`
 
 	// smtpchk params
@@ -351,6 +363,8 @@ type Backend struct {
 	StickTable *ConfigStickTable `json:"stick_table,omitempty"`
 
 	// tarpit timeout
+	// Minimum: 0
+	// +kubebuilder:validation:Minimum=0
 	TarpitTimeout *int64 `json:"tarpit_timeout,omitempty"`
 
 	// tcp smart connect
@@ -369,6 +383,8 @@ type Backend struct {
 	Transparent string `json:"transparent,omitempty"`
 
 	// tunnel timeout
+	// Minimum: 0
+	// +kubebuilder:validation:Minimum=0
 	TunnelTimeout *int64 `json:"tunnel_timeout,omitempty"`
 
 	// use fcgi app
@@ -420,6 +436,10 @@ func (m *Backend) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateCompression(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateConnectTimeout(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -499,11 +519,19 @@ func (m *Backend) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
+	if err := m.validateHTTPKeepAliveTimeout(formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.validateHTTPPretendKeepalive(formats); err != nil {
 		res = append(res, err)
 	}
 
 	if err := m.validateHTTPProxy(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateHTTPRequestTimeout(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -575,7 +603,19 @@ func (m *Backend) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
+	if err := m.validateQueueTimeout(formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.validateRedispatch(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateServerFinTimeout(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateServerTimeout(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -615,6 +655,10 @@ func (m *Backend) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
+	if err := m.validateTarpitTimeout(formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.validateTCPSmartConnect(formats); err != nil {
 		res = append(res, err)
 	}
@@ -624,6 +668,10 @@ func (m *Backend) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateTransparent(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateTunnelTimeout(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -998,6 +1046,18 @@ func (m *Backend) validateCompression(formats strfmt.Registry) error {
 			}
 			return err
 		}
+	}
+
+	return nil
+}
+
+func (m *Backend) validateConnectTimeout(formats strfmt.Registry) error {
+	if swag.IsZero(m.ConnectTimeout) { // not required
+		return nil
+	}
+
+	if err := validate.MinimumInt("connect_timeout", "body", *m.ConnectTimeout, 0, false); err != nil {
+		return err
 	}
 
 	return nil
@@ -1474,6 +1534,18 @@ func (m *Backend) validateHTTPConnectionMode(formats strfmt.Registry) error {
 	return nil
 }
 
+func (m *Backend) validateHTTPKeepAliveTimeout(formats strfmt.Registry) error {
+	if swag.IsZero(m.HTTPKeepAliveTimeout) { // not required
+		return nil
+	}
+
+	if err := validate.MinimumInt("http_keep_alive_timeout", "body", *m.HTTPKeepAliveTimeout, 0, false); err != nil {
+		return err
+	}
+
+	return nil
+}
+
 var backendTypeHTTPPretendKeepalivePropEnum []interface{}
 
 func init() {
@@ -1552,6 +1624,18 @@ func (m *Backend) validateHTTPProxy(formats strfmt.Registry) error {
 
 	// value enum
 	if err := m.validateHTTPProxyEnum("http_proxy", "body", m.HTTPProxy); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *Backend) validateHTTPRequestTimeout(formats strfmt.Registry) error {
+	if swag.IsZero(m.HTTPRequestTimeout) { // not required
+		return nil
+	}
+
+	if err := validate.MinimumInt("http_request_timeout", "body", *m.HTTPRequestTimeout, 0, false); err != nil {
 		return err
 	}
 
@@ -2090,6 +2174,18 @@ func (m *Backend) validatePreferLastServer(formats strfmt.Registry) error {
 	return nil
 }
 
+func (m *Backend) validateQueueTimeout(formats strfmt.Registry) error {
+	if swag.IsZero(m.QueueTimeout) { // not required
+		return nil
+	}
+
+	if err := validate.MinimumInt("queue_timeout", "body", *m.QueueTimeout, 0, false); err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func (m *Backend) validateRedispatch(formats strfmt.Registry) error {
 	if swag.IsZero(m.Redispatch) { // not required
 		return nil
@@ -2104,6 +2200,30 @@ func (m *Backend) validateRedispatch(formats strfmt.Registry) error {
 			}
 			return err
 		}
+	}
+
+	return nil
+}
+
+func (m *Backend) validateServerFinTimeout(formats strfmt.Registry) error {
+	if swag.IsZero(m.ServerFinTimeout) { // not required
+		return nil
+	}
+
+	if err := validate.MinimumInt("server_fin_timeout", "body", *m.ServerFinTimeout, 0, false); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *Backend) validateServerTimeout(formats strfmt.Registry) error {
+	if swag.IsZero(m.ServerTimeout) { // not required
+		return nil
+	}
+
+	if err := validate.MinimumInt("server_timeout", "body", *m.ServerTimeout, 0, false); err != nil {
+		return err
 	}
 
 	return nil
@@ -2395,6 +2515,18 @@ func (m *Backend) validateStickTable(formats strfmt.Registry) error {
 	return nil
 }
 
+func (m *Backend) validateTarpitTimeout(formats strfmt.Registry) error {
+	if swag.IsZero(m.TarpitTimeout) { // not required
+		return nil
+	}
+
+	if err := validate.MinimumInt("tarpit_timeout", "body", *m.TarpitTimeout, 0, false); err != nil {
+		return err
+	}
+
+	return nil
+}
+
 var backendTypeTCPSmartConnectPropEnum []interface{}
 
 func init() {
@@ -2515,6 +2647,18 @@ func (m *Backend) validateTransparent(formats strfmt.Registry) error {
 
 	// value enum
 	if err := m.validateTransparentEnum("transparent", "body", m.Transparent); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *Backend) validateTunnelTimeout(formats strfmt.Registry) error {
+	if swag.IsZero(m.TunnelTimeout) { // not required
+		return nil
+	}
+
+	if err := validate.MinimumInt("tunnel_timeout", "body", *m.TunnelTimeout, 0, false); err != nil {
 		return err
 	}
 

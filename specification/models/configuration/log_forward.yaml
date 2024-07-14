@@ -18,5 +18,9 @@ log_forward:
       x-nullable: true
     timeout_client:
       type: integer
+      minimum: 0
+      maximum: 2147483647
       x-nullable: true
+      x-duration: true
+      x-default-unit: ms
   additionalProperties: false

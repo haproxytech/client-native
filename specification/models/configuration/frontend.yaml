@@ -69,25 +69,40 @@ frontend:
           value: http
     client_timeout:
       type: integer
+      minimum: 0
       x-nullable: true
+      x-duration: true
+      x-default-unit: ms
     client_fin_timeout:
       type: integer
+      minimum: 0
       x-nullable: true
+      x-duration: true
+      x-default-unit: ms
     http_request_timeout:
       type: integer
+      minimum: 0
       x-nullable: true
+      x-duration: true
+      x-default-unit: ms
       x-dependency:
         mode:
           value: http
     http_keep_alive_timeout:
       type: integer
+      minimum: 0
       x-nullable: true
+      x-duration: true
+      x-default-unit: ms
       x-dependency:
         mode:
           value: http
     tarpit_timeout:
       type: integer
+      minimum: 0
       x-nullable: true
+      x-duration: true
+      x-default-unit: ms
     maxconn:
       type: integer
       x-nullable: true
@@ -164,10 +179,14 @@ frontend:
       type: integer
       x-nullable: true
       x-display-name: Clitcpka Idle
+      x-duration: true
+      x-default-unit: s
     clitcpka_intvl:
       type: integer
       x-nullable: true
       x-display-name: Clitcpka Intvl
+      x-duration: true
+      x-default-unit: s
     guid:
       type: string
       pattern: '^[A-Za-z0-9-_.:]+$'

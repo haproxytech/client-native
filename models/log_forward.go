@@ -49,6 +49,10 @@ type LogForward struct {
 	Name string `json:"name"`
 
 	// timeout client
+	// Maximum: 2.147483647e+09
+	// Minimum: 0
+	// +kubebuilder:validation:Maximum=2.147483647e+09
+	// +kubebuilder:validation:Minimum=0
 	TimeoutClient *int64 `json:"timeout_client,omitempty"`
 }
 
@@ -57,6 +61,10 @@ func (m *LogForward) Validate(formats strfmt.Registry) error {
 	var res []error
 
 	if err := m.validateName(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateTimeoutClient(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -73,6 +81,22 @@ func (m *LogForward) validateName(formats strfmt.Registry) error {
 	}
 
 	if err := validate.Pattern("name", "body", m.Name, `^[A-Za-z0-9-_.:]+$`); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *LogForward) validateTimeoutClient(formats strfmt.Registry) error {
+	if swag.IsZero(m.TimeoutClient) { // not required
+		return nil
+	}
+
+	if err := validate.MinimumInt("timeout_client", "body", *m.TimeoutClient, 0, false); err != nil {
+		return err
+	}
+
+	if err := validate.MaximumInt("timeout_client", "body", *m.TimeoutClient, 2.147483647e+09, false); err != nil {
 		return err
 	}
 

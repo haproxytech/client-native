@@ -134,11 +134,16 @@ defaults:
     check_timeout:
       type: integer
       x-nullable: true
+      x-duration: true
+      x-default-unit: ms
     monitor_uri:
       $ref: '#/definitions/monitor_uri'
     connect_timeout:
       type: integer
+      minimum: 0
       x-nullable: true
+      x-duration: true
+      x-default-unit: ms
     contstats:
       type: string
       enum: [enabled]
@@ -150,34 +155,61 @@ defaults:
       pattern: '^[^\s]+$'
     client_timeout:
       type: integer
+      minimum: 0
       x-nullable: true
+      x-duration: true
+      x-default-unit: ms
     client_fin_timeout:
       type: integer
+      minimum: 0
       x-nullable: true
+      x-duration: true
+      x-default-unit: ms
     http_request_timeout:
       type: integer
+      minimum: 0
       x-nullable: true
+      x-duration: true
+      x-default-unit: ms
     http_keep_alive_timeout:
       type: integer
+      minimum: 0
       x-nullable: true
+      x-duration: true
+      x-default-unit: ms
     http_reuse:
       type: string
       enum: [aggressive, always, never, safe]
     server_timeout:
       type: integer
+      minimum: 0
       x-nullable: true
+      x-duration: true
+      x-default-unit: ms
     server_fin_timeout:
       type: integer
+      minimum: 0
       x-nullable: true
+      x-duration: true
+      x-default-unit: ms
     queue_timeout:
       type: integer
+      minimum: 0
       x-nullable: true
+      x-duration: true
+      x-default-unit: ms
     tunnel_timeout:
       type: integer
+      minimum: 0
       x-nullable: true
+      x-duration: true
+      x-default-unit: ms
     tarpit_timeout:
       type: integer
+      minimum: 0
       x-nullable: true
+      x-duration: true
+      x-default-unit: ms
     external_check:
       type: string
       enum: [enabled, disabled]
@@ -254,10 +286,14 @@ defaults:
       type: integer
       x-nullable: true
       x-display-name: Clitcpka Idle
+      x-duration: true
+      x-default-unit: s
     clitcpka_intvl:
       type: integer
       x-nullable: true
       x-display-name: Clitcpka Intvl
+      x-duration: true
+      x-default-unit: s
     checkcache:
       type: string
       enum: [enabled, disabled]
@@ -340,10 +376,14 @@ defaults:
       type: integer
       x-nullable: true
       x-display-name: Srvtcpka Idle
+      x-duration: true
+      x-default-unit: s
     srvtcpka_intvl:
       type: integer
       x-nullable: true
       x-display-name: Srvtcpka Intvl
+      x-duration: true
+      x-default-unit: s
     email_alert:
       $ref: "#/definitions/email_alert"
     enabled:

@@ -67,7 +67,10 @@ add_server:
           required: true
     agent-inter:
       type: integer
+      minimum: 0
       x-nullable: true
+      x-duration: true
+      x-default-unit: ms
     agent-port:
       type: integer
       x-nullable: true
@@ -148,7 +151,10 @@ add_server:
       enum: [enabled, disabled]
     downinter:
       type: integer
+      minimum: 0
       x-nullable: true
+      x-duration: true
+      x-default-unit: ms
     error_limit:
       type: integer
       x-display-name: Healthcheck error limit
@@ -159,7 +165,10 @@ add_server:
       x-nullable: true
     fastinter:
       type: integer
+      minimum: 0
       x-nullable: true
+      x-duration: true
+      x-default-unit: ms
     force_sslv3:
       type: string
       enum: [enabled, disabled]
@@ -177,7 +186,10 @@ add_server:
       enum: [enabled, disabled]
     inter:
       type: integer
+      minimum: 0
       x-nullable: true
+      x-duration: true
+      x-default-unit: ms
     maxconn:
       type: integer
       x-display-name: Max Concurrent Connections
@@ -241,7 +253,10 @@ add_server:
       x-nullable: true
     pool_purge_delay:
       type: integer
+      minimum: 0
       x-nullable: true
+      x-duration: true
+      x-default-unit: ms
     proto:
       type: string
       pattern: '^[^\s]+$'
@@ -276,7 +291,10 @@ add_server:
       enum: [enabled, disabled]
     slowstart:
       type: integer
+      minimum: 0
       x-nullable: true
+      x-duration: true
+      x-default-unit: ms
     sni:
       type: string
       pattern: '^[^\s]+$'

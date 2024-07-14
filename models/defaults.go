@@ -87,9 +87,13 @@ type Defaults struct {
 	Clflog bool `json:"clflog,omitempty"`
 
 	// client fin timeout
+	// Minimum: 0
+	// +kubebuilder:validation:Minimum=0
 	ClientFinTimeout *int64 `json:"client_fin_timeout,omitempty"`
 
 	// client timeout
+	// Minimum: 0
+	// +kubebuilder:validation:Minimum=0
 	ClientTimeout *int64 `json:"client_timeout,omitempty"`
 
 	// clitcpka
@@ -110,6 +114,8 @@ type Defaults struct {
 	Compression *Compression `json:"compression,omitempty"`
 
 	// connect timeout
+	// Minimum: 0
+	// +kubebuilder:validation:Minimum=0
 	ConnectTimeout *int64 `json:"connect_timeout,omitempty"`
 
 	// contstats
@@ -232,6 +238,8 @@ type Defaults struct {
 	HTTPIgnoreProbes string `json:"http_ignore_probes,omitempty"`
 
 	// http keep alive timeout
+	// Minimum: 0
+	// +kubebuilder:validation:Minimum=0
 	HTTPKeepAliveTimeout *int64 `json:"http_keep_alive_timeout,omitempty"`
 
 	// http no delay
@@ -245,6 +253,8 @@ type Defaults struct {
 	HTTPPretendKeepalive string `json:"http_pretend_keepalive,omitempty"`
 
 	// http request timeout
+	// Minimum: 0
+	// +kubebuilder:validation:Minimum=0
 	HTTPRequestTimeout *int64 `json:"http_request_timeout,omitempty"`
 
 	// http restrict req hdr names
@@ -364,6 +374,8 @@ type Defaults struct {
 	PreferLastServer string `json:"prefer_last_server,omitempty"`
 
 	// queue timeout
+	// Minimum: 0
+	// +kubebuilder:validation:Minimum=0
 	QueueTimeout *int64 `json:"queue_timeout,omitempty"`
 
 	// redispatch
@@ -376,9 +388,13 @@ type Defaults struct {
 	RetryOn string `json:"retry_on,omitempty"`
 
 	// server fin timeout
+	// Minimum: 0
+	// +kubebuilder:validation:Minimum=0
 	ServerFinTimeout *int64 `json:"server_fin_timeout,omitempty"`
 
 	// server timeout
+	// Minimum: 0
+	// +kubebuilder:validation:Minimum=0
 	ServerTimeout *int64 `json:"server_timeout,omitempty"`
 
 	// smtpchk params
@@ -425,6 +441,8 @@ type Defaults struct {
 	StatsOptions *StatsOptions `json:"stats_options,omitempty"`
 
 	// tarpit timeout
+	// Minimum: 0
+	// +kubebuilder:validation:Minimum=0
 	TarpitTimeout *int64 `json:"tarpit_timeout,omitempty"`
 
 	// tcp smart accept
@@ -451,6 +469,8 @@ type Defaults struct {
 	Transparent string `json:"transparent,omitempty"`
 
 	// tunnel timeout
+	// Minimum: 0
+	// +kubebuilder:validation:Minimum=0
 	TunnelTimeout *int64 `json:"tunnel_timeout,omitempty"`
 
 	// unique id format
@@ -500,11 +520,23 @@ func (m *Defaults) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
+	if err := m.validateClientFinTimeout(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateClientTimeout(formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.validateClitcpka(formats); err != nil {
 		res = append(res, err)
 	}
 
 	if err := m.validateCompression(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateConnectTimeout(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -604,11 +636,19 @@ func (m *Defaults) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
+	if err := m.validateHTTPKeepAliveTimeout(formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.validateHTTPNoDelay(formats); err != nil {
 		res = append(res, err)
 	}
 
 	if err := m.validateHTTPPretendKeepalive(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateHTTPRequestTimeout(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -700,7 +740,19 @@ func (m *Defaults) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
+	if err := m.validateQueueTimeout(formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.validateRedispatch(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateServerFinTimeout(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateServerTimeout(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -736,6 +788,10 @@ func (m *Defaults) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
+	if err := m.validateTarpitTimeout(formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.validateTCPSmartAccept(formats); err != nil {
 		res = append(res, err)
 	}
@@ -749,6 +805,10 @@ func (m *Defaults) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateTransparent(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateTunnelTimeout(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -1099,6 +1159,30 @@ func (m *Defaults) validateCheckcache(formats strfmt.Registry) error {
 	return nil
 }
 
+func (m *Defaults) validateClientFinTimeout(formats strfmt.Registry) error {
+	if swag.IsZero(m.ClientFinTimeout) { // not required
+		return nil
+	}
+
+	if err := validate.MinimumInt("client_fin_timeout", "body", *m.ClientFinTimeout, 0, false); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *Defaults) validateClientTimeout(formats strfmt.Registry) error {
+	if swag.IsZero(m.ClientTimeout) { // not required
+		return nil
+	}
+
+	if err := validate.MinimumInt("client_timeout", "body", *m.ClientTimeout, 0, false); err != nil {
+		return err
+	}
+
+	return nil
+}
+
 var defaultsTypeClitcpkaPropEnum []interface{}
 
 func init() {
@@ -1155,6 +1239,18 @@ func (m *Defaults) validateCompression(formats strfmt.Registry) error {
 			}
 			return err
 		}
+	}
+
+	return nil
+}
+
+func (m *Defaults) validateConnectTimeout(formats strfmt.Registry) error {
+	if swag.IsZero(m.ConnectTimeout) { // not required
+		return nil
+	}
+
+	if err := validate.MinimumInt("connect_timeout", "body", *m.ConnectTimeout, 0, false); err != nil {
+		return err
 	}
 
 	return nil
@@ -1834,6 +1930,18 @@ func (m *Defaults) validateHTTPIgnoreProbes(formats strfmt.Registry) error {
 	return nil
 }
 
+func (m *Defaults) validateHTTPKeepAliveTimeout(formats strfmt.Registry) error {
+	if swag.IsZero(m.HTTPKeepAliveTimeout) { // not required
+		return nil
+	}
+
+	if err := validate.MinimumInt("http_keep_alive_timeout", "body", *m.HTTPKeepAliveTimeout, 0, false); err != nil {
+		return err
+	}
+
+	return nil
+}
+
 var defaultsTypeHTTPNoDelayPropEnum []interface{}
 
 func init() {
@@ -1912,6 +2020,18 @@ func (m *Defaults) validateHTTPPretendKeepalive(formats strfmt.Registry) error {
 
 	// value enum
 	if err := m.validateHTTPPretendKeepaliveEnum("http_pretend_keepalive", "body", m.HTTPPretendKeepalive); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *Defaults) validateHTTPRequestTimeout(formats strfmt.Registry) error {
+	if swag.IsZero(m.HTTPRequestTimeout) { // not required
+		return nil
+	}
+
+	if err := validate.MinimumInt("http_request_timeout", "body", *m.HTTPRequestTimeout, 0, false); err != nil {
 		return err
 	}
 
@@ -2657,6 +2777,18 @@ func (m *Defaults) validatePreferLastServer(formats strfmt.Registry) error {
 	return nil
 }
 
+func (m *Defaults) validateQueueTimeout(formats strfmt.Registry) error {
+	if swag.IsZero(m.QueueTimeout) { // not required
+		return nil
+	}
+
+	if err := validate.MinimumInt("queue_timeout", "body", *m.QueueTimeout, 0, false); err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func (m *Defaults) validateRedispatch(formats strfmt.Registry) error {
 	if swag.IsZero(m.Redispatch) { // not required
 		return nil
@@ -2671,6 +2803,30 @@ func (m *Defaults) validateRedispatch(formats strfmt.Registry) error {
 			}
 			return err
 		}
+	}
+
+	return nil
+}
+
+func (m *Defaults) validateServerFinTimeout(formats strfmt.Registry) error {
+	if swag.IsZero(m.ServerFinTimeout) { // not required
+		return nil
+	}
+
+	if err := validate.MinimumInt("server_fin_timeout", "body", *m.ServerFinTimeout, 0, false); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *Defaults) validateServerTimeout(formats strfmt.Registry) error {
+	if swag.IsZero(m.ServerTimeout) { // not required
+		return nil
+	}
+
+	if err := validate.MinimumInt("server_timeout", "body", *m.ServerTimeout, 0, false); err != nil {
+		return err
 	}
 
 	return nil
@@ -2943,6 +3099,18 @@ func (m *Defaults) validateStatsOptions(formats strfmt.Registry) error {
 	return nil
 }
 
+func (m *Defaults) validateTarpitTimeout(formats strfmt.Registry) error {
+	if swag.IsZero(m.TarpitTimeout) { // not required
+		return nil
+	}
+
+	if err := validate.MinimumInt("tarpit_timeout", "body", *m.TarpitTimeout, 0, false); err != nil {
+		return err
+	}
+
+	return nil
+}
+
 var defaultsTypeTCPSmartAcceptPropEnum []interface{}
 
 func init() {
@@ -3105,6 +3273,18 @@ func (m *Defaults) validateTransparent(formats strfmt.Registry) error {
 
 	// value enum
 	if err := m.validateTransparentEnum("transparent", "body", m.Transparent); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *Defaults) validateTunnelTimeout(formats strfmt.Registry) error {
+	if swag.IsZero(m.TunnelTimeout) { // not required
+		return nil
+	}
+
+	if err := validate.MinimumInt("tunnel_timeout", "body", *m.TunnelTimeout, 0, false); err != nil {
 		return err
 	}
 

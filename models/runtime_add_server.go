@@ -54,6 +54,8 @@ type RuntimeAddServer struct {
 	AgentCheck string `json:"agent-check,omitempty"`
 
 	// agent inter
+	// Minimum: 0
+	// +kubebuilder:validation:Minimum=0
 	AgentInter *int64 `json:"agent-inter,omitempty"`
 
 	// agent port
@@ -124,6 +126,8 @@ type RuntimeAddServer struct {
 	CrlFile string `json:"crl_file,omitempty"`
 
 	// downinter
+	// Minimum: 0
+	// +kubebuilder:validation:Minimum=0
 	Downinter *int64 `json:"downinter,omitempty"`
 
 	// error limit
@@ -133,6 +137,8 @@ type RuntimeAddServer struct {
 	Fall *int64 `json:"fall,omitempty"`
 
 	// fastinter
+	// Minimum: 0
+	// +kubebuilder:validation:Minimum=0
 	Fastinter *int64 `json:"fastinter,omitempty"`
 
 	// force sslv3
@@ -177,6 +183,8 @@ type RuntimeAddServer struct {
 	ID string `json:"id,omitempty"`
 
 	// inter
+	// Minimum: 0
+	// +kubebuilder:validation:Minimum=0
 	Inter *int64 `json:"inter,omitempty"`
 
 	// maintenance
@@ -252,6 +260,8 @@ type RuntimeAddServer struct {
 	PoolMaxConn *int64 `json:"pool_max_conn,omitempty"`
 
 	// pool purge delay
+	// Minimum: 0
+	// +kubebuilder:validation:Minimum=0
 	PoolPurgeDelay *int64 `json:"pool_purge_delay,omitempty"`
 
 	// port
@@ -294,6 +304,8 @@ type RuntimeAddServer struct {
 	SendProxyV2SslCn string `json:"send_proxy_v2_ssl_cn,omitempty"`
 
 	// slowstart
+	// Minimum: 0
+	// +kubebuilder:validation:Minimum=0
 	Slowstart *int64 `json:"slowstart,omitempty"`
 
 	// sni
@@ -380,6 +392,10 @@ func (m *RuntimeAddServer) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
+	if err := m.validateAgentInter(formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.validateAgentPort(formats); err != nil {
 		res = append(res, err)
 	}
@@ -420,6 +436,14 @@ func (m *RuntimeAddServer) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
+	if err := m.validateDowninter(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateFastinter(formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.validateForceSslv3(formats); err != nil {
 		res = append(res, err)
 	}
@@ -445,6 +469,10 @@ func (m *RuntimeAddServer) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateHealthCheckPort(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateInter(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -488,6 +516,10 @@ func (m *RuntimeAddServer) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
+	if err := m.validatePoolPurgeDelay(formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.validatePort(formats); err != nil {
 		res = append(res, err)
 	}
@@ -513,6 +545,10 @@ func (m *RuntimeAddServer) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateSendProxyV2SslCn(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateSlowstart(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -626,6 +662,18 @@ func (m *RuntimeAddServer) validateAgentCheck(formats strfmt.Registry) error {
 
 	// value enum
 	if err := m.validateAgentCheckEnum("agent-check", "body", m.AgentCheck); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *RuntimeAddServer) validateAgentInter(formats strfmt.Registry) error {
+	if swag.IsZero(m.AgentInter) { // not required
+		return nil
+	}
+
+	if err := validate.MinimumInt("agent-inter", "body", *m.AgentInter, 0, false); err != nil {
 		return err
 	}
 
@@ -906,6 +954,30 @@ func (m *RuntimeAddServer) validateCheckViaSocks4(formats strfmt.Registry) error
 	return nil
 }
 
+func (m *RuntimeAddServer) validateDowninter(formats strfmt.Registry) error {
+	if swag.IsZero(m.Downinter) { // not required
+		return nil
+	}
+
+	if err := validate.MinimumInt("downinter", "body", *m.Downinter, 0, false); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *RuntimeAddServer) validateFastinter(formats strfmt.Registry) error {
+	if swag.IsZero(m.Fastinter) { // not required
+		return nil
+	}
+
+	if err := validate.MinimumInt("fastinter", "body", *m.Fastinter, 0, false); err != nil {
+		return err
+	}
+
+	return nil
+}
+
 var runtimeAddServerTypeForceSslv3PropEnum []interface{}
 
 func init() {
@@ -1138,6 +1210,18 @@ func (m *RuntimeAddServer) validateHealthCheckPort(formats strfmt.Registry) erro
 	}
 
 	if err := validate.MaximumInt("health_check_port", "body", *m.HealthCheckPort, 65535, false); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *RuntimeAddServer) validateInter(formats strfmt.Registry) error {
+	if swag.IsZero(m.Inter) { // not required
+		return nil
+	}
+
+	if err := validate.MinimumInt("inter", "body", *m.Inter, 0, false); err != nil {
 		return err
 	}
 
@@ -1564,6 +1648,18 @@ func (m *RuntimeAddServer) validateOnMarkedUp(formats strfmt.Registry) error {
 	return nil
 }
 
+func (m *RuntimeAddServer) validatePoolPurgeDelay(formats strfmt.Registry) error {
+	if swag.IsZero(m.PoolPurgeDelay) { // not required
+		return nil
+	}
+
+	if err := validate.MinimumInt("pool_purge_delay", "body", *m.PoolPurgeDelay, 0, false); err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func (m *RuntimeAddServer) validatePort(formats strfmt.Registry) error {
 	if swag.IsZero(m.Port) { // not required
 		return nil
@@ -1790,6 +1886,18 @@ func (m *RuntimeAddServer) validateSendProxyV2SslCn(formats strfmt.Registry) err
 
 	// value enum
 	if err := m.validateSendProxyV2SslCnEnum("send_proxy_v2_ssl_cn", "body", m.SendProxyV2SslCn); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *RuntimeAddServer) validateSlowstart(formats strfmt.Registry) error {
+	if swag.IsZero(m.Slowstart) { // not required
+		return nil
+	}
+
+	if err := validate.MinimumInt("slowstart", "body", *m.Slowstart, 0, false); err != nil {
 		return err
 	}
 

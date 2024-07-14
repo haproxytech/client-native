@@ -245,7 +245,10 @@ stats_options:
       minimum: 1
     stats_refresh_delay:
       type: integer
+      minimum: 0
       x-nullable: true
+      x-duration: true
+      x-default-unit: s
     stats_show_desc:
       type: string
       x-nullable: true
