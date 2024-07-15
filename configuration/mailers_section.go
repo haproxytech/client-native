@@ -177,7 +177,7 @@ func SerializeMailersSection(p parser.Parser, data *models.MailersSection) error
 	}
 
 	if data.Timeout != nil {
-		t := types.StringC{Value: fmt.Sprintf("%dms", *data.Timeout)}
+		t := types.StringC{Value: misc.SerializeTime(*data.Timeout)}
 		if err := p.Set(parser.Mailers, data.Name, "timeout mail", t); err != nil {
 			return err
 		}

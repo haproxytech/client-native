@@ -17,7 +17,6 @@ package spoe
 
 import (
 	"fmt"
-	"strconv"
 
 	"github.com/go-openapi/strfmt"
 	parser "github.com/haproxytech/config-parser/v5"
@@ -520,7 +519,7 @@ func (c *SingleSpoe) createEditAgent(scope string, data *models.SpoeAgent, t str
 	}
 
 	if data.HelloTimeout > 0 {
-		d := &types.StringC{Value: strconv.FormatInt(data.HelloTimeout, 10)}
+		d := &types.StringC{Value: misc.SerializeTime(data.HelloTimeout)}
 		if err := p.Set(scope, parser.SPOEAgent, name, "timeout hello", d); err != nil {
 			return c.Transaction.HandleError(d.Value, "", "", t, transactionID == "", err)
 		}
@@ -529,7 +528,7 @@ func (c *SingleSpoe) createEditAgent(scope string, data *models.SpoeAgent, t str
 	}
 
 	if data.IdleTimeout > 0 {
-		d := &types.StringC{Value: strconv.FormatInt(data.IdleTimeout, 10)}
+		d := &types.StringC{Value: misc.SerializeTime(data.IdleTimeout)}
 		if err := p.Set(scope, parser.SPOEAgent, name, "timeout idle", d); err != nil {
 			return c.Transaction.HandleError(d.Value, "", "", t, transactionID == "", err)
 		}
@@ -538,7 +537,7 @@ func (c *SingleSpoe) createEditAgent(scope string, data *models.SpoeAgent, t str
 	}
 
 	if data.ProcessingTimeout > 0 {
-		d := &types.StringC{Value: strconv.FormatInt(data.ProcessingTimeout, 10)}
+		d := &types.StringC{Value: misc.SerializeTime(data.ProcessingTimeout)}
 		if err := p.Set(scope, parser.SPOEAgent, name, "timeout processing", d); err != nil {
 			return c.Transaction.HandleError(d.Value, "", "", t, transactionID == "", err)
 		}

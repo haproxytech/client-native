@@ -17,7 +17,6 @@ package configuration
 
 import (
 	goerrors "errors"
-	"fmt"
 	"strconv"
 	"strings"
 
@@ -895,8 +894,8 @@ func SerializeHTTPResponseRule(f models.HTTPResponseRule) (rule types.Action, er
 		}
 	case "wait-for-body":
 		rule = &http_actions.WaitForBody{
-			Time:     fmt.Sprintf("%v", f.WaitTime),
-			AtLeast:  fmt.Sprintf("%v", f.WaitAtLeast),
+			Time:     misc.SerializeTime(*f.WaitTime),
+			AtLeast:  misc.SerializeSize(*f.WaitAtLeast),
 			Cond:     f.Cond,
 			CondTest: f.CondTest,
 		}

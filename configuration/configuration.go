@@ -1667,7 +1667,7 @@ func (s *SectionObject) checkTimeouts(fieldName string, field reflect.Value) (ma
 				return true, nil
 			}
 			t := &types.SimpleTimeout{}
-			t.Value = strconv.FormatInt(field.Elem().Int(), 10)
+			t.Value = misc.SerializeTime(field.Elem().Int())
 			if err := s.set(pName, t); err != nil {
 				return true, err
 			}
@@ -2115,10 +2115,10 @@ func (s *SectionObject) stickTable(field reflect.Value) error {
 			d.Length = strconv.FormatInt(*st.Keylen, 10)
 		}
 		if st.Expire != nil {
-			d.Expire = strconv.FormatInt(*st.Expire, 10)
+			d.Expire = misc.SerializeTime(*st.Expire)
 		}
 		if st.Size != nil {
-			d.Size = strconv.FormatInt(*st.Size, 10)
+			d.Size = misc.SerializeSize(*st.Size)
 		}
 		if st.Srvkey != nil {
 			d.SrvKey = *st.Srvkey
@@ -2692,7 +2692,8 @@ func (s *SectionObject) clitcpkaIdle(field reflect.Value) error {
 		field = field.Elem()
 	}
 	v := field.Int()
-	return s.set("clitcpka-idle", types.StringC{Value: fmt.Sprintf("%dms", v)})
+	str := misc.SerializeTime(v)
+	return s.set("clitcpka-idle", types.StringC{Value: str})
 }
 
 func (s *SectionObject) clitcpkaIntvl(field reflect.Value) error {
@@ -2703,7 +2704,8 @@ func (s *SectionObject) clitcpkaIntvl(field reflect.Value) error {
 		field = field.Elem()
 	}
 	v := field.Int()
-	return s.set("clitcpka-intvl", types.StringC{Value: fmt.Sprintf("%dms", v)})
+	str := misc.SerializeTime(v)
+	return s.set("clitcpka-intvl", types.StringC{Value: str})
 }
 
 func (s *SectionObject) srvtcpkaIdle(field reflect.Value) error {
@@ -2714,7 +2716,8 @@ func (s *SectionObject) srvtcpkaIdle(field reflect.Value) error {
 		field = field.Elem()
 	}
 	v := field.Int()
-	return s.set("srvtcpka-idle", types.StringC{Value: fmt.Sprintf("%dms", v)})
+	str := misc.SerializeTime(v)
+	return s.set("srvtcpka-idle", types.StringC{Value: str})
 }
 
 func (s *SectionObject) srvtcpkaIntvl(field reflect.Value) error {
@@ -2725,7 +2728,8 @@ func (s *SectionObject) srvtcpkaIntvl(field reflect.Value) error {
 		field = field.Elem()
 	}
 	v := field.Int()
-	return s.set("srvtcpka-intvl", types.StringC{Value: fmt.Sprintf("%dms", v)})
+	str := misc.SerializeTime(v)
+	return s.set("srvtcpka-intvl", types.StringC{Value: str})
 }
 
 func (s *SectionObject) serverStateFileName(field reflect.Value) error {

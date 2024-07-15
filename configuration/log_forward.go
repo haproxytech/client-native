@@ -18,7 +18,6 @@ package configuration
 import (
 	"errors"
 	"fmt"
-	"strconv"
 
 	strfmt "github.com/go-openapi/strfmt"
 	parser "github.com/haproxytech/config-parser/v5"
@@ -232,7 +231,7 @@ func SerializeLogForwardSection(p parser.Parser, data *models.LogForward) error 
 			return err
 		}
 	} else {
-		tc := types.SimpleTimeout{Value: strconv.FormatInt(*data.TimeoutClient, 10)}
+		tc := types.SimpleTimeout{Value: misc.SerializeTime(*data.TimeoutClient)}
 		if err = p.Set(parser.LogForward, data.Name, "timeout client", tc); err != nil {
 			return err
 		}

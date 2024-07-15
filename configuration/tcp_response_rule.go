@@ -677,7 +677,7 @@ func SerializeTCPResponseRule(t models.TCPResponseRule) (types.TCPType, error) {
 	case models.TCPResponseRuleTypeInspectDashDelay:
 		if t.Timeout != nil {
 			return &tcp_types.InspectDelay{
-				Timeout: strconv.FormatInt(*t.Timeout, 10),
+				Timeout: misc.SerializeTime(*t.Timeout),
 			}, nil
 		}
 	}

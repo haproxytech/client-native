@@ -295,7 +295,7 @@ func SerializeResolverSection(p parser.Parser, data *models.Resolver) error { //
 			return err
 		}
 	} else {
-		n := types.StringC{Value: strconv.FormatInt(*data.HoldNx, 10)}
+		n := types.StringC{Value: misc.SerializeTime(*data.HoldNx)}
 		if err = p.Set(parser.Resolvers, data.Name, "hold nx", n); err != nil {
 			return err
 		}
@@ -305,7 +305,7 @@ func SerializeResolverSection(p parser.Parser, data *models.Resolver) error { //
 			return err
 		}
 	} else {
-		n := types.StringC{Value: strconv.FormatInt(*data.HoldObsolete, 10)}
+		n := types.StringC{Value: misc.SerializeTime(*data.HoldObsolete)}
 		if err = p.Set(parser.Resolvers, data.Name, "hold obsolete", n); err != nil {
 			return err
 		}
@@ -315,7 +315,7 @@ func SerializeResolverSection(p parser.Parser, data *models.Resolver) error { //
 			return err
 		}
 	} else {
-		n := types.StringC{Value: strconv.FormatInt(*data.HoldOther, 10)}
+		n := types.StringC{Value: misc.SerializeTime(*data.HoldOther)}
 		if err = p.Set(parser.Resolvers, data.Name, "hold other", n); err != nil {
 			return err
 		}
@@ -325,7 +325,7 @@ func SerializeResolverSection(p parser.Parser, data *models.Resolver) error { //
 			return err
 		}
 	} else {
-		n := types.StringC{Value: strconv.FormatInt(*data.HoldRefused, 10)}
+		n := types.StringC{Value: misc.SerializeTime(*data.HoldRefused)}
 		if err = p.Set(parser.Resolvers, data.Name, "hold refused", n); err != nil {
 			return err
 		}
@@ -335,7 +335,7 @@ func SerializeResolverSection(p parser.Parser, data *models.Resolver) error { //
 			return err
 		}
 	} else {
-		n := types.StringC{Value: strconv.FormatInt(*data.HoldTimeout, 10)}
+		n := types.StringC{Value: misc.SerializeTime(*data.HoldTimeout)}
 		if err = p.Set(parser.Resolvers, data.Name, "hold timeout", n); err != nil {
 			return err
 		}
@@ -345,7 +345,7 @@ func SerializeResolverSection(p parser.Parser, data *models.Resolver) error { //
 			return err
 		}
 	} else {
-		n := types.StringC{Value: strconv.FormatInt(*data.HoldValid, 10)}
+		n := types.StringC{Value: misc.SerializeTime(*data.HoldValid)}
 		if err = p.Set(parser.Resolvers, data.Name, "hold valid", n); err != nil {
 			return err
 		}
@@ -373,7 +373,7 @@ func SerializeResolverSection(p parser.Parser, data *models.Resolver) error { //
 			return err
 		}
 	} else {
-		timeout := types.SimpleTimeout{Value: strconv.FormatInt(data.TimeoutResolve, 10)}
+		timeout := types.SimpleTimeout{Value: misc.SerializeTime(data.TimeoutResolve)}
 		if err = p.Set(parser.Resolvers, data.Name, "timeout resolve", timeout); err != nil {
 			return err
 		}
@@ -383,7 +383,7 @@ func SerializeResolverSection(p parser.Parser, data *models.Resolver) error { //
 			return err
 		}
 	} else {
-		timeout := types.SimpleTimeout{Value: strconv.FormatInt(data.TimeoutRetry, 10)}
+		timeout := types.SimpleTimeout{Value: misc.SerializeTime(data.TimeoutRetry)}
 		if err = p.Set(parser.Resolvers, data.Name, "timeout retry", timeout); err != nil {
 			return err
 		}

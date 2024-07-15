@@ -18,7 +18,6 @@ package configuration
 import (
 	"errors"
 	"fmt"
-	"strconv"
 
 	strfmt "github.com/go-openapi/strfmt"
 	parser "github.com/haproxytech/config-parser/v5"
@@ -285,7 +284,7 @@ func SerializeRingSection(p parser.Parser, data *models.Ring) error { //nolint:g
 			return err
 		}
 	} else {
-		d := types.StringC{Value: strconv.FormatInt(*data.Size, 10)}
+		d := types.StringC{Value: misc.SerializeSize(*data.Size)}
 		if err = p.Set(parser.Ring, data.Name, "size", d); err != nil {
 			return err
 		}
@@ -296,7 +295,7 @@ func SerializeRingSection(p parser.Parser, data *models.Ring) error { //nolint:g
 			return err
 		}
 	} else {
-		tc := types.SimpleTimeout{Value: strconv.FormatInt(*data.TimeoutConnect, 10)}
+		tc := types.SimpleTimeout{Value: misc.SerializeTime(*data.TimeoutConnect)}
 		if err = p.Set(parser.Ring, data.Name, "timeout connect", tc); err != nil {
 			return err
 		}
@@ -307,7 +306,7 @@ func SerializeRingSection(p parser.Parser, data *models.Ring) error { //nolint:g
 			return err
 		}
 	} else {
-		ts := types.SimpleTimeout{Value: strconv.FormatInt(*data.TimeoutServer, 10)}
+		ts := types.SimpleTimeout{Value: misc.SerializeTime(*data.TimeoutServer)}
 		if err = p.Set(parser.Ring, data.Name, "timeout server", ts); err != nil {
 			return err
 		}

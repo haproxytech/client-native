@@ -347,9 +347,9 @@ func SerializeFilter(f models.Filter) types.Filter {
 		return &filters.BandwidthLimit{
 			Attribute:     "bwlim-in",
 			Name:          f.BandwidthLimitName,
-			DefaultLimit:  strconv.FormatInt(f.DefaultLimit, 10),
-			DefaultPeriod: strconv.FormatInt(f.DefaultPeriod, 10),
-			Limit:         strconv.FormatInt(f.Limit, 10),
+			DefaultLimit:  misc.SerializeSize(f.DefaultLimit),
+			DefaultPeriod: misc.SerializeTime(f.DefaultPeriod),
+			Limit:         misc.SerializeSize(f.Limit),
 			Key:           f.Key,
 			Table:         &f.Table,
 		}
@@ -357,9 +357,9 @@ func SerializeFilter(f models.Filter) types.Filter {
 		return &filters.BandwidthLimit{
 			Attribute:     "bwlim-out",
 			Name:          f.BandwidthLimitName,
-			DefaultLimit:  strconv.FormatInt(f.DefaultLimit, 10),
-			DefaultPeriod: strconv.FormatInt(f.DefaultPeriod, 10),
-			Limit:         strconv.FormatInt(f.Limit, 10),
+			DefaultLimit:  misc.SerializeSize(f.DefaultLimit),
+			DefaultPeriod: misc.SerializeTime(f.DefaultPeriod),
+			Limit:         misc.SerializeSize(f.Limit),
 			Key:           f.Key,
 			Table:         &f.Table,
 		}

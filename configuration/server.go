@@ -656,7 +656,7 @@ func serializeServerParams(s models.ServerParams) (options []params.ServerOption
 		options = append(options, &params.ServerOptionValue{Name: "agent-send", Value: s.AgentSend})
 	}
 	if s.AgentInter != nil {
-		options = append(options, &params.ServerOptionValue{Name: "agent-inter", Value: strconv.FormatInt(*s.AgentInter, 10)})
+		options = append(options, &params.ServerOptionValue{Name: "agent-inter", Value: misc.SerializeTime(*s.AgentInter)})
 	}
 	if s.AgentAddr != "" {
 		options = append(options, &params.ServerOptionValue{Name: "agent-addr", Value: s.AgentAddr})
@@ -713,13 +713,13 @@ func serializeServerParams(s models.ServerParams) (options []params.ServerOption
 		options = append(options, &params.ServerOptionValue{Name: "init-addr", Value: *s.InitAddr})
 	}
 	if s.Inter != nil {
-		options = append(options, &params.ServerOptionValue{Name: "inter", Value: strconv.FormatInt(*s.Inter, 10)})
+		options = append(options, &params.ServerOptionValue{Name: "inter", Value: misc.SerializeTime(*s.Inter)})
 	}
 	if s.Fastinter != nil {
-		options = append(options, &params.ServerOptionValue{Name: "fastinter", Value: strconv.FormatInt(*s.Fastinter, 10)})
+		options = append(options, &params.ServerOptionValue{Name: "fastinter", Value: misc.SerializeTime(*s.Fastinter)})
 	}
 	if s.Downinter != nil {
-		options = append(options, &params.ServerOptionValue{Name: "downinter", Value: strconv.FormatInt(*s.Downinter, 10)})
+		options = append(options, &params.ServerOptionValue{Name: "downinter", Value: misc.SerializeTime(*s.Downinter)})
 	}
 	if s.LogBufsize != nil {
 		options = append(options, &params.ServerOptionValue{Name: "log-bufsize", Value: strconv.FormatInt(*s.LogBufsize, 10)})
@@ -764,7 +764,7 @@ func serializeServerParams(s models.ServerParams) (options []params.ServerOption
 		options = append(options, &params.ServerOptionValue{Name: "pool-max-conn", Value: strconv.FormatInt(*s.PoolMaxConn, 10)})
 	}
 	if s.PoolPurgeDelay != nil {
-		options = append(options, &params.ServerOptionValue{Name: "pool-purge-delay", Value: strconv.FormatInt(*s.PoolPurgeDelay, 10)})
+		options = append(options, &params.ServerOptionValue{Name: "pool-purge-delay", Value: misc.SerializeTime(*s.PoolPurgeDelay)})
 	}
 	if s.HealthCheckAddress != "" {
 		options = append(options, &params.ServerOptionValue{Name: "addr", Value: s.HealthCheckAddress})
@@ -803,7 +803,7 @@ func serializeServerParams(s models.ServerParams) (options []params.ServerOption
 		options = append(options, &params.ServerOptionValue{Name: "sigalgs", Value: s.Sigalgs})
 	}
 	if s.Slowstart != nil {
-		options = append(options, &params.ServerOptionValue{Name: "slowstart", Value: strconv.FormatInt(*s.Slowstart, 10)})
+		options = append(options, &params.ServerOptionValue{Name: "slowstart", Value: misc.SerializeTime(*s.Slowstart)})
 	}
 	if s.Sni != "" {
 		options = append(options, &params.ServerOptionValue{Name: "sni", Value: s.Sni})
@@ -824,7 +824,7 @@ func serializeServerParams(s models.ServerParams) (options []params.ServerOption
 		options = append(options, &params.ServerOptionIDValue{Name: "set-proxy-v2-tlv-fmt", ID: *s.SetProxyV2TlvFmt.ID, Value: *s.SetProxyV2TlvFmt.Value})
 	}
 	if s.TCPUt != nil {
-		options = append(options, &params.ServerOptionValue{Name: "tcp-ut", Value: strconv.FormatInt(*s.TCPUt, 10)})
+		options = append(options, &params.ServerOptionValue{Name: "tcp-ut", Value: misc.SerializeTime(*s.TCPUt)})
 	}
 	if s.Track != "" {
 		options = append(options, &params.ServerOptionValue{Name: "track", Value: s.Track})

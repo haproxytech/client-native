@@ -1245,10 +1245,10 @@ func SerializeHTTPRequestRule(f models.HTTPRequestRule) (rule types.Action, err 
 			CondTest: f.CondTest,
 		}
 		if f.WaitTime != nil {
-			r.Time = strconv.FormatInt(*f.WaitTime, 10)
+			r.Time = misc.SerializeTime(*f.WaitTime)
 		}
 		if f.WaitAtLeast != nil {
-			r.AtLeast = strconv.FormatInt(*f.WaitAtLeast, 10)
+			r.AtLeast = misc.SerializeSize(*f.WaitAtLeast)
 		}
 		rule = r
 	case "wait-for-handshake":

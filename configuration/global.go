@@ -18,7 +18,6 @@ package configuration
 import (
 	"errors"
 	"fmt"
-	"strconv"
 	"strings"
 
 	"github.com/go-openapi/strfmt"
@@ -1409,7 +1408,7 @@ func SerializeGlobalSection(p parser.Parser, data *models.Global) error { //noli
 	var pHardStop *types.StringC
 	if data.HardStopAfter != nil {
 		pHardStop = &types.StringC{
-			Value: strconv.FormatInt(*data.HardStopAfter, 10),
+			Value: misc.SerializeTime(*data.HardStopAfter),
 		}
 	}
 	if err := p.Set(parser.Global, parser.GlobalSectionName, "hard-stop-after", pHardStop); err != nil {
@@ -1517,7 +1516,7 @@ func SerializeGlobalSection(p parser.Parser, data *models.Global) error { //noli
 
 	var statsTimeout *types.StringC
 	if data.StatsTimeout != nil {
-		statsTimeout = &types.StringC{Value: strconv.FormatInt(*data.StatsTimeout, 10)}
+		statsTimeout = &types.StringC{Value: misc.SerializeTime(*data.StatsTimeout)}
 	} else {
 		statsTimeout = nil
 	}
@@ -1573,7 +1572,7 @@ func SerializeGlobalSection(p parser.Parser, data *models.Global) error { //noli
 		return err
 	}
 
-	if err := serializeTimeoutSizeOption(p, "httpclient.timeout.connect", data.HttpclientTimeoutConnect); err != nil {
+	if err := serializeTimeoutOption(p, "httpclient.timeout.connect", data.HttpclientTimeoutConnect); err != nil {
 		return err
 	}
 
@@ -1801,11 +1800,11 @@ func SerializeGlobalSection(p parser.Parser, data *models.Global) error { //noli
 		return err
 	}
 
-	if err := serializeTimeoutSizeOption(p, "max-spread-checks", data.MaxSpreadChecks); err != nil {
+	if err := serializeTimeoutOption(p, "max-spread-checks", data.MaxSpreadChecks); err != nil {
 		return err
 	}
 
-	if err := serializeTimeoutSizeOption(p, "close-spread-time", data.CloseSpreadTime); err != nil {
+	if err := serializeTimeoutOption(p, "close-spread-time", data.CloseSpreadTime); err != nil {
 		return err
 	}
 
@@ -2018,7 +2017,7 @@ func SerializeGlobalSection(p parser.Parser, data *models.Global) error { //noli
 
 	var grace *types.StringC
 	if data.Grace != nil {
-		grace = &types.StringC{Value: strconv.FormatInt(*data.Grace, 10)}
+		grace = &types.StringC{Value: misc.SerializeTime(*data.Grace)}
 	} else {
 		grace = nil
 	}
@@ -2550,7 +2549,7 @@ func serializeTuneOptions(p parser.Parser, options *models.GlobalTuneOptions) er
 	if err := serializeOnOffOption(p, "tune.idle-pool.shared", options.IdlePoolShared); err != nil {
 		return err
 	}
-	if err := serializeTimeoutSizeOption(p, "tune.idletimer", options.Idletimer); err != nil {
+	if err := serializeTimeoutOption(p, "tune.idletimer", options.Idletimer); err != nil {
 		return err
 	}
 	if err := serializeListenerDefaultShards(p, "tune.listener.default-shards", options.ListenerDefaultShards); err != nil {
@@ -2571,16 +2570,16 @@ func serializeTuneOptions(p parser.Parser, options *models.GlobalTuneOptions) er
 	if err := serializeInt64POption(p, "tune.lua.maxmem", options.LuaMaxmem); err != nil {
 		return err
 	}
-	if err := serializeTimeoutSizeOption(p, "tune.lua.session-timeout", options.LuaSessionTimeout); err != nil {
+	if err := serializeTimeoutOption(p, "tune.lua.session-timeout", options.LuaSessionTimeout); err != nil {
 		return err
 	}
-	if err := serializeTimeoutSizeOption(p, "tune.lua.burst-timeout", options.LuaBurstTimeout); err != nil {
+	if err := serializeTimeoutOption(p, "tune.lua.burst-timeout", options.LuaBurstTimeout); err != nil {
 		return err
 	}
-	if err := serializeTimeoutSizeOption(p, "tune.lua.task-timeout", options.LuaTaskTimeout); err != nil {
+	if err := serializeTimeoutOption(p, "tune.lua.task-timeout", options.LuaTaskTimeout); err != nil {
 		return err
 	}
-	if err := serializeTimeoutSizeOption(p, "tune.lua.service-timeout", options.LuaServiceTimeout); err != nil {
+	if err := serializeTimeoutOption(p, "tune.lua.service-timeout", options.LuaServiceTimeout); err != nil {
 		return err
 	}
 	if err := serializeInt64POption(p, "tune.max-checks-per-thread", options.MaxChecksPerThread); err != nil {
@@ -2658,7 +2657,7 @@ func serializeTuneOptions(p parser.Parser, options *models.GlobalTuneOptions) er
 	if err := serializeOnOffOption(p, "tune.ssl.keylog", options.SslKeylog); err != nil {
 		return err
 	}
-	if err := serializeTimeoutSizeOption(p, "tune.ssl.lifetime", options.SslLifetime); err != nil {
+	if err := serializeTimeoutOption(p, "tune.ssl.lifetime", options.SslLifetime); err != nil {
 		return err
 	}
 	if err := serializeInt64POption(p, "tune.ssl.maxrecord", options.SslMaxrecord); err != nil {
@@ -2673,25 +2672,25 @@ func serializeTuneOptions(p parser.Parser, options *models.GlobalTuneOptions) er
 	if err := serializeInt64POption(p, "tune.ssl.capture-buffer-size", options.SslCaptureBufferSize); err != nil {
 		return err
 	}
-	if err := serializeTimeoutSizeOption(p, "tune.vars.global-max-size", options.VarsGlobalMaxSize); err != nil {
+	if err := serializeSizeOption(p, "tune.vars.global-max-size", options.VarsGlobalMaxSize); err != nil {
 		return err
 	}
-	if err := serializeTimeoutSizeOption(p, "tune.vars.proc-max-size", options.VarsProcMaxSize); err != nil {
+	if err := serializeSizeOption(p, "tune.vars.proc-max-size", options.VarsProcMaxSize); err != nil {
 		return err
 	}
-	if err := serializeTimeoutSizeOption(p, "tune.vars.reqres-max-size", options.VarsReqresMaxSize); err != nil {
+	if err := serializeSizeOption(p, "tune.vars.reqres-max-size", options.VarsReqresMaxSize); err != nil {
 		return err
 	}
-	if err := serializeTimeoutSizeOption(p, "tune.vars.sess-max-size", options.VarsSessMaxSize); err != nil {
+	if err := serializeSizeOption(p, "tune.vars.sess-max-size", options.VarsSessMaxSize); err != nil {
 		return err
 	}
-	if err := serializeTimeoutSizeOption(p, "tune.vars.txn-max-size", options.VarsTxnMaxSize); err != nil {
+	if err := serializeSizeOption(p, "tune.vars.txn-max-size", options.VarsTxnMaxSize); err != nil {
 		return err
 	}
 	if err := serializeInt64POption(p, "tune.quic.frontend.conn-tx-buffers.limit", options.QuicFrontendConnTxBuffersLimit); err != nil {
 		return err
 	}
-	if err := serializeTimeoutSizeOption(p, "tune.quic.frontend.max-idle-timeout", options.QuicFrontendMaxIdleTimeout); err != nil {
+	if err := serializeTimeoutOption(p, "tune.quic.frontend.max-idle-timeout", options.QuicFrontendMaxIdleTimeout); err != nil {
 		return err
 	}
 	if err := serializeInt64POption(p, "tune.quic.frontend.max-streams-bidi", options.QuicFrontendMaxStreamsBidi); err != nil {
@@ -2758,12 +2757,22 @@ func serializeTuneOptions(p parser.Parser, options *models.GlobalTuneOptions) er
 	return serializeInt64Option(p, "tune.zlib.windowsize", options.ZlibWindowsize)
 }
 
-func serializeTimeoutSizeOption(p parser.Parser, option string, data *int64) error {
+func serializeTimeoutOption(p parser.Parser, option string, data *int64) error {
 	var value *types.StringC
 	if data == nil {
 		value = nil
 	} else {
-		value = &types.StringC{Value: strconv.FormatInt(*data, 10)}
+		value = &types.StringC{Value: misc.SerializeTime(*data)}
+	}
+	return p.Set(parser.Global, parser.GlobalSectionName, option, value)
+}
+
+func serializeSizeOption(p parser.Parser, option string, data *int64) error {
+	var value *types.StringC
+	if data == nil {
+		value = nil
+	} else {
+		value = &types.StringC{Value: misc.SerializeSize(*data)}
 	}
 	return p.Set(parser.Global, parser.GlobalSectionName, option, value)
 }

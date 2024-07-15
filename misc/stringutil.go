@@ -143,50 +143,6 @@ func DashCase(fieldName string) string {
 	return n
 }
 
-// ParseTimeout returns the number of milliseconds in a timeout string.
-func ParseTimeout(tOut string) *int64 {
-	return parseTimeout(tOut, 1)
-}
-
-func ParseTimeoutDefaultSeconds(tOut string) *int64 {
-	return parseTimeout(tOut, 1000)
-}
-
-func parseTimeout(tOut string, defaultMultiplier int64) *int64 {
-	var v int64
-	var err error
-	switch {
-	case strings.HasSuffix(tOut, "us"):
-		v, err = strconv.ParseInt(strings.TrimSuffix(tOut, "us"), 10, 64)
-		if v >= 1000 {
-			v /= 1000
-		} else if v > 0 {
-			v = 1
-		}
-	case strings.HasSuffix(tOut, "ms"):
-		v, err = strconv.ParseInt(strings.TrimSuffix(tOut, "ms"), 10, 64)
-	case strings.HasSuffix(tOut, "s"):
-		v, err = strconv.ParseInt(strings.TrimSuffix(tOut, "s"), 10, 64)
-		v *= 1000
-	case strings.HasSuffix(tOut, "m"):
-		v, err = strconv.ParseInt(strings.TrimSuffix(tOut, "m"), 10, 64)
-		v = v * 1000 * 60
-	case strings.HasSuffix(tOut, "h"):
-		v, err = strconv.ParseInt(strings.TrimSuffix(tOut, "h"), 10, 64)
-		v = v * 1000 * 60 * 60
-	case strings.HasSuffix(tOut, "d"):
-		v, err = strconv.ParseInt(strings.TrimSuffix(tOut, "d"), 10, 64)
-		v = v * 1000 * 60 * 60 * 24
-	default:
-		v, err = strconv.ParseInt(tOut, 10, 64)
-		v *= defaultMultiplier
-	}
-	if err != nil || v < 0 {
-		return nil
-	}
-	return &v
-}
-
 func ParseSize(size string) *int64 {
 	var v int64
 	var err error
@@ -216,6 +172,31 @@ func ParseSize(size string) *int64 {
 		return nil
 	}
 	return &v
+}
+
+// Serialize a number of bytes as per "Size format" in HAProxy.
+func SerializeSize(n int64) string {
+	var str string
+
+	const (
+		g = 1073741824
+		m = 1048576
+		k = 1024
+	)
+
+	// Modulos and divisions are optimized by the compiler.
+	switch {
+	case n >= g && (n%g) == 0:
+		str = strconv.FormatInt(n/g, 10) + "g"
+	case n >= m && (n%m) == 0:
+		str = strconv.FormatInt(n/m, 10) + "m"
+	case n >= k && (n%k) == 0:
+		str = strconv.FormatInt(n/k, 10) + "k"
+	default:
+		str = strconv.FormatInt(n, 10)
+	}
+
+	return str
 }
 
 func StringP(s string) *string {

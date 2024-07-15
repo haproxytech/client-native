@@ -1585,7 +1585,7 @@ func SerializeTCPRequestRule(f models.TCPRequestRule) (rule types.TCPType, err e
 			return nil, NewConfError(ErrValidationError, fmt.Sprintf("unsupported action '%s' in tcp_request_rule", f.Type))
 		}
 		return &tcp_types.InspectDelay{
-			Timeout: strconv.FormatInt(*f.Timeout, 10),
+			Timeout: misc.SerializeTime(*f.Timeout),
 		}, nil
 	}
 	return nil, NewConfError(ErrValidationError, fmt.Sprintf("unsupported action '%s' in tcp_request_rule", f.Type))
