@@ -76,6 +76,7 @@ type Configuration interface {
 	Userlist
 	User
 	Group
+	Structured
 }
 
 func New(ctx context.Context, opt ...options.ConfigurationOption) (Configuration, error) { //nolint:revive

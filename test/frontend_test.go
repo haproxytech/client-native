@@ -69,7 +69,7 @@ func checkFrontends(t *testing.T, got map[string]models.Frontends) {
 		for _, g := range v {
 			for _, w := range want {
 				if g.Name == w.Name {
-					require.True(t, g.Equal(*w), "k=%s - diff %v", k, cmp.Diff(*g, *w))
+					require.True(t, g.FrontendBase.Equal(w.FrontendBase), "k=%s - diff %v", k, cmp.Diff(*g, *w))
 					break
 				}
 			}
@@ -110,51 +110,52 @@ func TestCreateEditDeleteFrontend(t *testing.T) {
 	clitcpkaTimeout := int64(10000)
 	statsRealm := "Haproxy Stats"
 	f := &models.Frontend{
-		From:                     "unnamed_defaults_1",
-		Name:                     "created",
-		Mode:                     "tcp",
-		Maxconn:                  &mConn,
-		Httplog:                  true,
-		HTTPConnectionMode:       "http-keep-alive",
-		HTTPKeepAliveTimeout:     &tOut,
-		Logasap:                  "disabled",
-		UniqueIDFormat:           "%{+X}o_%fi:%fp_%Ts_%rt:%pid",
-		UniqueIDHeader:           "X-Unique-Id",
-		AcceptInvalidHTTPRequest: "enabled",
-		DisableH2Upgrade:         "enabled",
-		ClitcpkaCnt:              &clitcpkaCnt,
-		ClitcpkaIdle:             &clitcpkaTimeout,
-		ClitcpkaIntvl:            &clitcpkaTimeout,
-		HTTPIgnoreProbes:         "enabled",
-		HTTPUseProxyHeader:       "enabled",
-		Httpslog:                 "enabled",
-		IndependentStreams:       "enabled",
-		Nolinger:                 "enabled",
-		Originalto: &models.Originalto{
-			Enabled: misc.StringP("enabled"),
-			Except:  "127.0.0.1",
-			Header:  "X-Client-Dst",
-		},
-		SocketStats:         "enabled",
-		TCPSmartAccept:      "enabled",
-		DontlogNormal:       "enabled",
-		HTTPNoDelay:         "enabled",
-		SpliceAuto:          "enabled",
-		SpliceRequest:       "enabled",
-		SpliceResponse:      "enabled",
-		IdleCloseOnResponse: "enabled",
-		StatsOptions: &models.StatsOptions{
-			StatsShowModules: true,
-			StatsRealm:       true,
-			StatsRealmRealm:  &statsRealm,
-			StatsAuths: []*models.StatsAuth{
-				{User: misc.StringP("user1"), Passwd: misc.StringP("pwd1")},
-				{User: misc.StringP("user2"), Passwd: misc.StringP("pwd2")},
+		FrontendBase: models.FrontendBase{
+			From:                     "unnamed_defaults_1",
+			Name:                     "created",
+			Mode:                     "tcp",
+			Maxconn:                  &mConn,
+			Httplog:                  true,
+			HTTPConnectionMode:       "http-keep-alive",
+			HTTPKeepAliveTimeout:     &tOut,
+			Logasap:                  "disabled",
+			UniqueIDFormat:           "%{+X}o_%fi:%fp_%Ts_%rt:%pid",
+			UniqueIDHeader:           "X-Unique-Id",
+			AcceptInvalidHTTPRequest: "enabled",
+			DisableH2Upgrade:         "enabled",
+			ClitcpkaCnt:              &clitcpkaCnt,
+			ClitcpkaIdle:             &clitcpkaTimeout,
+			ClitcpkaIntvl:            &clitcpkaTimeout,
+			HTTPIgnoreProbes:         "enabled",
+			HTTPUseProxyHeader:       "enabled",
+			Httpslog:                 "enabled",
+			IndependentStreams:       "enabled",
+			Nolinger:                 "enabled",
+			Originalto: &models.Originalto{
+				Enabled: misc.StringP("enabled"),
+				Except:  "127.0.0.1",
+				Header:  "X-Client-Dst",
 			},
+			SocketStats:         "enabled",
+			TCPSmartAccept:      "enabled",
+			DontlogNormal:       "enabled",
+			HTTPNoDelay:         "enabled",
+			SpliceAuto:          "enabled",
+			SpliceRequest:       "enabled",
+			SpliceResponse:      "enabled",
+			IdleCloseOnResponse: "enabled",
+			StatsOptions: &models.StatsOptions{
+				StatsShowModules: true,
+				StatsRealm:       true,
+				StatsRealmRealm:  &statsRealm,
+				StatsAuths: []*models.StatsAuth{
+					{User: misc.StringP("user1"), Passwd: misc.StringP("pwd1")},
+					{User: misc.StringP("user2"), Passwd: misc.StringP("pwd2")},
+				},
+			},
+			Enabled: true,
 		},
-		Enabled: true,
 	}
-
 	err := clientTest.CreateFrontend(f, "", version)
 	if err != nil {
 		t.Error(err.Error())
@@ -186,67 +187,69 @@ func TestCreateEditDeleteFrontend(t *testing.T) {
 	// TestEditFrontend
 	mConn = int64(4000)
 	f = &models.Frontend{
-		Name:               "created",
-		Mode:               "tcp",
-		Maxconn:            &mConn,
-		Backlog:            misc.Int64P(1024),
-		Clflog:             true,
-		HTTPConnectionMode: "httpclose",
-		MonitorURI:         "/healthz",
-		MonitorFail: &models.MonitorFail{
-			Cond:     misc.StringP("if"),
-			CondTest: misc.StringP("site_is_dead"),
-		},
-		Compression: &models.Compression{
-			Offload: true,
-			TypesReq: []string{
-				"text/html",
-				"text/plain",
+		FrontendBase: models.FrontendBase{
+			Name:               "created",
+			Mode:               "tcp",
+			Maxconn:            &mConn,
+			Backlog:            misc.Int64P(1024),
+			Clflog:             true,
+			HTTPConnectionMode: "httpclose",
+			MonitorURI:         "/healthz",
+			MonitorFail: &models.MonitorFail{
+				Cond:     misc.StringP("if"),
+				CondTest: misc.StringP("site_is_dead"),
 			},
-			TypesRes: []string{
-				"text/plain",
+			Compression: &models.Compression{
+				Offload: true,
+				TypesReq: []string{
+					"text/html",
+					"text/plain",
+				},
+				TypesRes: []string{
+					"text/plain",
+				},
+				AlgoReq: "deflate",
+				AlgosRes: []string{
+					"deflate",
+					"gzip",
+				},
 			},
-			AlgoReq: "deflate",
-			AlgosRes: []string{
-				"deflate",
-				"gzip",
+			ClitcpkaCnt:        &clitcpkaCnt,
+			ClitcpkaIdle:       &clitcpkaTimeout,
+			ClitcpkaIntvl:      &clitcpkaTimeout,
+			HTTPIgnoreProbes:   "disabled",
+			HTTPUseProxyHeader: "disabled",
+			Httpslog:           "disabled",
+			IndependentStreams: "disabled",
+			Nolinger:           "disabled",
+			Originalto: &models.Originalto{
+				Enabled: misc.StringP("enabled"),
+				Except:  "127.0.0.1",
+				Header:  "X-Client-Dst",
 			},
-		},
-		ClitcpkaCnt:        &clitcpkaCnt,
-		ClitcpkaIdle:       &clitcpkaTimeout,
-		ClitcpkaIntvl:      &clitcpkaTimeout,
-		HTTPIgnoreProbes:   "disabled",
-		HTTPUseProxyHeader: "disabled",
-		Httpslog:           "disabled",
-		IndependentStreams: "disabled",
-		Nolinger:           "disabled",
-		Originalto: &models.Originalto{
-			Enabled: misc.StringP("enabled"),
-			Except:  "127.0.0.1",
-			Header:  "X-Client-Dst",
-		},
-		SocketStats:         "disabled",
-		TCPSmartAccept:      "disabled",
-		DontlogNormal:       "disabled",
-		HTTPNoDelay:         "disabled",
-		SpliceAuto:          "disabled",
-		SpliceRequest:       "disabled",
-		SpliceResponse:      "disabled",
-		IdleCloseOnResponse: "disabled",
-		StatsOptions: &models.StatsOptions{
-			StatsShowModules: true,
-			StatsRealm:       true,
-			StatsRealmRealm:  &statsRealm,
-			StatsAuths: []*models.StatsAuth{
-				{User: misc.StringP("new_user1"), Passwd: misc.StringP("new_pwd1")},
-				{User: misc.StringP("new_user2"), Passwd: misc.StringP("new_pwd2")},
+			SocketStats:         "disabled",
+			TCPSmartAccept:      "disabled",
+			DontlogNormal:       "disabled",
+			HTTPNoDelay:         "disabled",
+			SpliceAuto:          "disabled",
+			SpliceRequest:       "disabled",
+			SpliceResponse:      "disabled",
+			IdleCloseOnResponse: "disabled",
+			StatsOptions: &models.StatsOptions{
+				StatsShowModules: true,
+				StatsRealm:       true,
+				StatsRealmRealm:  &statsRealm,
+				StatsAuths: []*models.StatsAuth{
+					{User: misc.StringP("new_user1"), Passwd: misc.StringP("new_pwd1")},
+					{User: misc.StringP("new_user2"), Passwd: misc.StringP("new_pwd2")},
+				},
 			},
-		},
-		EmailAlert: &models.EmailAlert{
-			From:    misc.StringP("srv01@example.com"),
-			To:      misc.StringP("problems@example.com"),
-			Level:   "warning",
-			Mailers: misc.StringP("localmailer1"),
+			EmailAlert: &models.EmailAlert{
+				From:    misc.StringP("srv01@example.com"),
+				To:      misc.StringP("problems@example.com"),
+				Level:   "warning",
+				Mailers: misc.StringP("localmailer1"),
+			},
 		},
 	}
 

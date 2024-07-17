@@ -52,8 +52,8 @@ func (c *client) GetFrontends(transactionID string) (int64, models.Frontends, er
 
 	frontends := []*models.Frontend{}
 	for _, name := range fNames {
-		f := &models.Frontend{Name: name}
-		if err := ParseSection(f, parser.Frontends, name, p); err != nil {
+		f := &models.Frontend{FrontendBase: models.FrontendBase{Name: name}}
+		if err := ParseSection(&f.FrontendBase, parser.Frontends, name, p); err != nil {
 			continue
 		}
 		frontends = append(frontends, f)
@@ -79,8 +79,8 @@ func (c *client) GetFrontend(name string, transactionID string) (int64, *models.
 		return v, nil, NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("Frontend %s does not exist", name))
 	}
 
-	frontend := &models.Frontend{Name: name}
-	if err := ParseSection(frontend, parser.Frontends, name, p); err != nil {
+	frontend := &models.Frontend{FrontendBase: models.FrontendBase{Name: name}}
+	if err := ParseSection(&frontend.FrontendBase, parser.Frontends, name, p); err != nil {
 		return v, nil, err
 	}
 
@@ -103,7 +103,7 @@ func (c *client) EditFrontend(name string, data *models.Frontend, transactionID 
 		}
 	}
 
-	return c.editSection(parser.Frontends, name, data, transactionID, version)
+	return c.editSection(parser.Frontends, name, data.FrontendBase, transactionID, version)
 }
 
 // CreateFrontend creates a frontend in configuration. One of version or transactionID is
@@ -116,5 +116,5 @@ func (c *client) CreateFrontend(data *models.Frontend, transactionID string, ver
 		}
 	}
 
-	return c.createSection(parser.Frontends, data.Name, data, transactionID, version)
+	return c.createSection(parser.Frontends, data.Name, data.FrontendBase, transactionID, version)
 }

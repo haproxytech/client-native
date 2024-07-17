@@ -15,7 +15,10 @@
 
 package configuration
 
-import parser "github.com/haproxytech/config-parser/v5"
+import (
+	"github.com/haproxytech/client-native/v6/configuration/options"
+	parser "github.com/haproxytech/config-parser/v5"
+)
 
 type Structured interface {
 	StructuredFrontend
@@ -24,6 +27,7 @@ type Structured interface {
 type StructuredToParserArgs struct {
 	TID                string
 	Parser             *parser.Parser
+	Options            *options.ConfigurationOptions
 	HandleError        func(id, parentType, parentName, transactionID string, implicit bool, err error) error
 	CheckSectionExists func(section parser.Section, sectionName string, p parser.Parser) bool
 }

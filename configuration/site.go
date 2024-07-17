@@ -352,8 +352,8 @@ func (c *client) EditSite(name string, data *models.Site, transactionID string, 
 			if err != nil {
 				res = append(res, err)
 			}
-			frontend := &models.Frontend{Name: name}
-			if err := ParseSection(frontend, parser.Frontends, name, p); err != nil {
+			frontend := &models.Frontend{FrontendBase: models.FrontendBase{Name: name}}
+			if err := ParseSection(&frontend.FrontendBase, parser.Frontends, name, p); err != nil {
 				res = append(res, err)
 			}
 			if frontend.DefaultBackend != "" {
@@ -466,8 +466,8 @@ func (c *client) parseSites(p parser.Parser) (models.Sites, error) {
 }
 
 func (c *client) parseSite(s string, p parser.Parser) *models.Site {
-	frontend := &models.Frontend{Name: s}
-	if err := ParseSection(frontend, parser.Frontends, s, p); err != nil {
+	frontend := &models.Frontend{FrontendBase: models.FrontendBase{Name: s}}
+	if err := ParseSection(&frontend.FrontendBase, parser.Frontends, s, p); err != nil {
 		return nil
 	}
 
@@ -528,7 +528,7 @@ func (c *client) parseFarm(name string, useAs string, cond string, condTest stri
 }
 
 func SerializeServiceToFrontend(service *models.SiteService, name string) *models.Frontend {
-	fr := &models.Frontend{Name: name}
+	fr := &models.Frontend{FrontendBase: models.FrontendBase{Name: name}}
 	if service != nil {
 		fr.Mode = service.Mode
 		fr.Maxconn = service.Maxconn
@@ -598,9 +598,9 @@ func (c *client) createBckFrontendRels(name string, b *models.SiteFarm, edit boo
 }
 
 func (c *client) addDefaultBckToFrontend(fName string, bName string, t string, p parser.Parser) error {
-	frontend := &models.Frontend{Name: fName}
+	frontend := &models.Frontend{FrontendBase: models.FrontendBase{Name: fName}}
 
-	if err := ParseSection(frontend, parser.Frontends, fName, p); err != nil {
+	if err := ParseSection(&frontend.FrontendBase, parser.Frontends, fName, p); err != nil {
 		return err
 	}
 	frontend.DefaultBackend = bName
@@ -608,8 +608,8 @@ func (c *client) addDefaultBckToFrontend(fName string, bName string, t string, p
 }
 
 func (c *client) removeDefaultBckToFrontend(fName string, t string, p parser.Parser) error {
-	frontend := &models.Frontend{Name: fName}
-	if err := ParseSection(frontend, parser.Frontends, fName, p); err != nil {
+	frontend := &models.Frontend{FrontendBase: models.FrontendBase{Name: fName}}
+	if err := ParseSection(&frontend.FrontendBase, parser.Frontends, fName, p); err != nil {
 		return err
 	}
 	frontend.DefaultBackend = ""
@@ -617,8 +617,8 @@ func (c *client) removeDefaultBckToFrontend(fName string, t string, p parser.Par
 }
 
 func (c *client) editService(name string, service *models.SiteService, t string, p parser.Parser) error {
-	frontend := &models.Frontend{Name: name}
-	if err := ParseSection(frontend, parser.Frontends, name, p); err != nil {
+	frontend := &models.Frontend{FrontendBase: models.FrontendBase{Name: name}}
+	if err := ParseSection(&frontend.FrontendBase, parser.Frontends, name, p); err != nil {
 		return err
 	}
 
