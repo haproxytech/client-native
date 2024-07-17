@@ -60,6 +60,8 @@ definitions:
       $ref: '#/definitions/defaults'
   frontend:
     $ref: "models/configuration/frontend.yaml#/frontend"
+  frontend_base:
+    $ref: "models/configuration/frontend.yaml#/frontend_base"
   frontends:
     title: Frontends
     description: HAProxy frontends array
@@ -664,6 +666,13 @@ parameters:
     description: Parent name
     required: true
     type: string
+  full_section:
+    name: full_section
+    in: query
+    description: Indicates if the action affects the specified child resources as well
+    type: boolean
+    required: false
+    default: false
 securityDefinitions:
   basic_auth:
     type: basic

@@ -2655,6 +2655,47 @@ definitions:
     items:
       $ref: '#/definitions/defaults'
   frontend:
+    allOf:
+      - $ref: '#/definitions/frontend_base'
+      - properties:
+          acl_list:
+            $ref: '#/definitions/acls'
+            x-go-name: AclList
+          backend_switching_rule_list:
+            $ref: '#/definitions/backend_switching_rules'
+            x-go-name: BackendSwitchingRuleList
+          binds:
+            additionalProperties:
+              $ref: '#/definitions/bind'
+          capture_list:
+            $ref: '#/definitions/captures'
+            x-go-name: CaptureList
+          filter_list:
+            $ref: '#/definitions/filters'
+            x-go-name: FilterList
+          http_after_response_rule_list:
+            $ref: '#/definitions/http_after_response_rules'
+            x-go-name: HTTPAfterResponseRuleList
+          http_error_rule_list:
+            $ref: '#/definitions/http_error_rules'
+            x-go-name: HTTPErrorRuleList
+          http_request_rule_list:
+            $ref: '#/definitions/http_request_rules'
+            x-go-name: HTTPRequestRuleList
+          http_response_rule_list:
+            $ref: '#/definitions/http_response_rules'
+            x-go-name: HTTPResponseRuleList
+          log_target_list:
+            $ref: '#/definitions/log_targets'
+            x-go-name: LogTargetList
+          tcp_request_rule_list:
+            $ref: '#/definitions/tcp_request_rules'
+            x-go-name: TCPRequestRuleList
+        type: object
+    description: Frontend with all it's children resources
+    type: object
+    x-go-name: Frontend
+  frontend_base:
     additionalProperties: false
     description: HAProxy frontend configuration
     example:
@@ -2992,7 +3033,7 @@ definitions:
         x-display-name: Unique ID header
     required:
       - name
-    title: Frontend
+    title: Frontend Base
     type: object
   frontends:
     title: Frontends
@@ -10477,6 +10518,13 @@ parameters:
     description: Parent name
     required: true
     type: string
+  full_section:
+    name: full_section
+    in: query
+    description: Indicates if the action affects the specified child resources as well
+    type: boolean
+    required: false
+    default: false
 securityDefinitions:
   basic_auth:
     type: basic
@@ -11760,6 +11808,7 @@ paths:
       operationId: getFrontends
       parameters:
         - $ref: '#/parameters/transaction_id'
+        - $ref: '#/parameters/full_section'
       responses:
         "200":
           description: Successful operation
@@ -11786,6 +11835,7 @@ paths:
         - $ref: '#/parameters/transaction_id'
         - $ref: '#/parameters/version'
         - $ref: '#/parameters/force_reload'
+        - $ref: '#/parameters/full_section'
       responses:
         "201":
           description: Frontend created
@@ -11847,6 +11897,7 @@ paths:
           required: true
           type: string
         - $ref: '#/parameters/transaction_id'
+        - $ref: '#/parameters/full_section'
       responses:
         "200":
           description: Successful operation
@@ -11880,6 +11931,7 @@ paths:
         - $ref: '#/parameters/transaction_id'
         - $ref: '#/parameters/version'
         - $ref: '#/parameters/force_reload'
+        - $ref: '#/parameters/full_section'
       responses:
         "200":
           description: Frontend replaced

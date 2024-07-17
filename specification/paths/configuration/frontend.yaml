@@ -6,6 +6,7 @@ frontends:
     operationId: getFrontends
     parameters:
       - $ref: "#/parameters/transaction_id"
+      - $ref: "#/parameters/full_section"
     tags:
       - Frontend
     responses:
@@ -32,6 +33,7 @@ frontends:
       - $ref: "#/parameters/transaction_id"
       - $ref: "#/parameters/version"
       - $ref: "#/parameters/force_reload"
+      - $ref: "#/parameters/full_section"
     tags:
       - Frontend
     responses:
@@ -67,6 +69,7 @@ frontends_one:
         required: true
         type: string
       - $ref: "#/parameters/transaction_id"
+      - $ref: "#/parameters/full_section"
     responses:
       '200':
         description: Successful operation
@@ -100,6 +103,7 @@ frontends_one:
       - $ref: "#/parameters/transaction_id"
       - $ref: "#/parameters/version"
       - $ref: "#/parameters/force_reload"
+      - $ref: "#/parameters/full_section"
     responses:
       '202':
         description: Configuration change accepted and reload requested

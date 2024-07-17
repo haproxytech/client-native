@@ -26,13 +26,13 @@ import (
 	jsoniter "github.com/json-iterator/go"
 )
 
-func TestFrontendEqual(t *testing.T) {
+func TestFrontendBaseEqual(t *testing.T) {
 	samples := []struct {
-		a, b Frontend
+		a, b FrontendBase
 	}{}
 	for i := 0; i < 2; i++ {
-		var sample Frontend
-		var result Frontend
+		var sample FrontendBase
+		var result FrontendBase
 		err := faker.FakeData(&sample)
 		if err != nil {
 			t.Errorf(err.Error())
@@ -47,7 +47,7 @@ func TestFrontendEqual(t *testing.T) {
 		}
 
 		samples = append(samples, struct {
-			a, b Frontend
+			a, b FrontendBase
 		}{sample, result})
 	}
 
@@ -63,18 +63,18 @@ func TestFrontendEqual(t *testing.T) {
 			if err != nil {
 				t.Errorf(err.Error())
 			}
-			t.Errorf("Expected Frontend to be equal, but it is not %s %s", a, b)
+			t.Errorf("Expected FrontendBase to be equal, but it is not %s %s", a, b)
 		}
 	}
 }
 
-func TestFrontendEqualFalse(t *testing.T) {
+func TestFrontendBaseEqualFalse(t *testing.T) {
 	samples := []struct {
-		a, b Frontend
+		a, b FrontendBase
 	}{}
 	for i := 0; i < 2; i++ {
-		var sample Frontend
-		var result Frontend
+		var sample FrontendBase
+		var result FrontendBase
 		err := faker.FakeData(&sample)
 		if err != nil {
 			t.Errorf(err.Error())
@@ -83,8 +83,24 @@ func TestFrontendEqualFalse(t *testing.T) {
 		if err != nil {
 			t.Errorf(err.Error())
 		}
+		result.Backlog = Ptr(*sample.Backlog + 1)
+		result.Clflog = !sample.Clflog
+		result.ClientFinTimeout = Ptr(*sample.ClientFinTimeout + 1)
+		result.ClientTimeout = Ptr(*sample.ClientTimeout + 1)
+		result.ClitcpkaCnt = Ptr(*sample.ClitcpkaCnt + 1)
+		result.ClitcpkaIdle = Ptr(*sample.ClitcpkaIdle + 1)
+		result.ClitcpkaIntvl = Ptr(*sample.ClitcpkaIntvl + 1)
+		result.Disabled = !sample.Disabled
+		result.Enabled = !sample.Enabled
+		result.HTTPKeepAliveTimeout = Ptr(*sample.HTTPKeepAliveTimeout + 1)
+		result.HTTPRequestTimeout = Ptr(*sample.HTTPRequestTimeout + 1)
+		result.Httplog = !sample.Httplog
+		result.ID = Ptr(*sample.ID + 1)
+		result.Maxconn = Ptr(*sample.Maxconn + 1)
+		result.TarpitTimeout = Ptr(*sample.TarpitTimeout + 1)
+		result.Tcplog = !sample.Tcplog
 		samples = append(samples, struct {
-			a, b Frontend
+			a, b FrontendBase
 		}{sample, result})
 	}
 
@@ -100,18 +116,18 @@ func TestFrontendEqualFalse(t *testing.T) {
 			if err != nil {
 				t.Errorf(err.Error())
 			}
-			t.Errorf("Expected Frontend to be different, but it is not %s %s", a, b)
+			t.Errorf("Expected FrontendBase to be different, but it is not %s %s", a, b)
 		}
 	}
 }
 
-func TestFrontendDiff(t *testing.T) {
+func TestFrontendBaseDiff(t *testing.T) {
 	samples := []struct {
-		a, b Frontend
+		a, b FrontendBase
 	}{}
 	for i := 0; i < 2; i++ {
-		var sample Frontend
-		var result Frontend
+		var sample FrontendBase
+		var result FrontendBase
 		err := faker.FakeData(&sample)
 		if err != nil {
 			t.Errorf(err.Error())
@@ -126,7 +142,7 @@ func TestFrontendDiff(t *testing.T) {
 		}
 
 		samples = append(samples, struct {
-			a, b Frontend
+			a, b FrontendBase
 		}{sample, result})
 	}
 
@@ -142,18 +158,18 @@ func TestFrontendDiff(t *testing.T) {
 			if err != nil {
 				t.Errorf(err.Error())
 			}
-			t.Errorf("Expected Frontend to be equal, but it is not %s %s, %v", a, b, result)
+			t.Errorf("Expected FrontendBase to be equal, but it is not %s %s, %v", a, b, result)
 		}
 	}
 }
 
-func TestFrontendDiffFalse(t *testing.T) {
+func TestFrontendBaseDiffFalse(t *testing.T) {
 	samples := []struct {
-		a, b Frontend
+		a, b FrontendBase
 	}{}
 	for i := 0; i < 2; i++ {
-		var sample Frontend
-		var result Frontend
+		var sample FrontendBase
+		var result FrontendBase
 		err := faker.FakeData(&sample)
 		if err != nil {
 			t.Errorf(err.Error())
@@ -162,14 +178,30 @@ func TestFrontendDiffFalse(t *testing.T) {
 		if err != nil {
 			t.Errorf(err.Error())
 		}
+		result.Backlog = Ptr(*sample.Backlog + 1)
+		result.Clflog = !sample.Clflog
+		result.ClientFinTimeout = Ptr(*sample.ClientFinTimeout + 1)
+		result.ClientTimeout = Ptr(*sample.ClientTimeout + 1)
+		result.ClitcpkaCnt = Ptr(*sample.ClitcpkaCnt + 1)
+		result.ClitcpkaIdle = Ptr(*sample.ClitcpkaIdle + 1)
+		result.ClitcpkaIntvl = Ptr(*sample.ClitcpkaIntvl + 1)
+		result.Disabled = !sample.Disabled
+		result.Enabled = !sample.Enabled
+		result.HTTPKeepAliveTimeout = Ptr(*sample.HTTPKeepAliveTimeout + 1)
+		result.HTTPRequestTimeout = Ptr(*sample.HTTPRequestTimeout + 1)
+		result.Httplog = !sample.Httplog
+		result.ID = Ptr(*sample.ID + 1)
+		result.Maxconn = Ptr(*sample.Maxconn + 1)
+		result.TarpitTimeout = Ptr(*sample.TarpitTimeout + 1)
+		result.Tcplog = !sample.Tcplog
 		samples = append(samples, struct {
-			a, b Frontend
+			a, b FrontendBase
 		}{sample, result})
 	}
 
 	for _, sample := range samples {
 		result := sample.a.Diff(sample.b)
-		if len(result) != 12 {
+		if len(result) != 66 {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {
@@ -179,7 +211,7 @@ func TestFrontendDiffFalse(t *testing.T) {
 			if err != nil {
 				t.Errorf(err.Error())
 			}
-			t.Errorf("Expected Frontend to be different in 12 cases, but it is not (%d) %s %s", len(result), a, b)
+			t.Errorf("Expected FrontendBase to be different in 66 cases, but it is not (%d) %s %s", len(result), a, b)
 		}
 	}
 }

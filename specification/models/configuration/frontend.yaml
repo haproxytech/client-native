@@ -1,6 +1,47 @@
 ---
 frontend:
-  title: Frontend
+  type: object
+  description: Frontend with all it's children resources
+  x-go-name: Frontend
+  allOf:
+    - $ref: "#/definitions/frontend_base"
+    - type: object
+      properties:
+        binds:
+          additionalProperties:
+            $ref: "#/definitions/bind"
+        backend_switching_rule_list:
+          $ref: "#/definitions/backend_switching_rules"
+          x-go-name: BackendSwitchingRuleList
+        acl_list:
+          $ref: "#/definitions/acls"
+          x-go-name: AclList
+        capture_list:
+          $ref: "#/definitions/captures"
+          x-go-name: CaptureList
+        filter_list:
+          $ref: "#/definitions/filters"
+          x-go-name: FilterList
+        log_target_list:
+          $ref: "#/definitions/log_targets"
+          x-go-name: LogTargetList
+        http_after_response_rule_list:
+          $ref: "#/definitions/http_after_response_rules"
+          x-go-name: HTTPAfterResponseRuleList
+        http_request_rule_list:
+          $ref: "#/definitions/http_request_rules"
+          x-go-name: HTTPRequestRuleList
+        http_response_rule_list:
+          $ref: "#/definitions/http_response_rules"
+          x-go-name: HTTPResponseRuleList
+        http_error_rule_list:
+          $ref: "#/definitions/http_error_rules"
+          x-go-name: HTTPErrorRuleList
+        tcp_request_rule_list:
+          $ref: "#/definitions/tcp_request_rules"
+          x-go-name: TCPRequestRuleList
+frontend_base:
+  title: Frontend Base
   description: HAProxy frontend configuration
   type: object
   required:
