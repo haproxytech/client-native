@@ -22,8 +22,6 @@ package models
 
 import (
 	"context"
-	"encoding/json"
-	"strconv"
 
 	"github.com/go-openapi/errors"
 	"github.com/go-openapi/strfmt"
@@ -31,647 +29,281 @@ import (
 	"github.com/go-openapi/validate"
 )
 
-// Backend Backend
+// Backend Backend with all it's children resources
 //
-// HAProxy backend configuration
-// Example: {"adv_check":"httpchk","balance":{"algorithm":"roundrobin"},"forwardfor":{"enabled":"enabled"},"httpchk_params":{"method":"GET","uri":"/check","version":"HTTP/1.1"},"mode":"http","name":"test_backend"}
-//
-// swagger:model backend
+// swagger:model Backend
 type Backend struct {
+	BackendBase `json:",inline"`
 
-	// error files
-	ErrorFiles []*Errorfile `json:"error_files,omitempty"`
+	// Acl list
+	ACLList Acls `json:"acl_list,omitempty"`
 
-	// error files from HTTP errors
-	ErrorFilesFromHTTPErrors []*Errorfiles `json:"errorfiles_from_http_errors,omitempty"`
+	// filter list
+	FilterList Filters `json:"filter_list,omitempty"`
 
-	// force persist list
-	ForcePersistList []*ForcePersist `json:"force_persist_list,omitempty"`
+	// HTTP after response rule list
+	HTTPAfterResponseRuleList HTTPAfterResponseRules `json:"http_after_response_rule_list,omitempty"`
 
-	// ignore persist list
-	IgnorePersistList []*IgnorePersist `json:"ignore_persist_list,omitempty"`
+	// HTTP check list
+	HTTPCheckList HTTPChecks `json:"http_check_list,omitempty"`
 
-	// abortonclose
-	// Enum: [enabled disabled]
-	// +kubebuilder:validation:Enum=enabled;disabled;
-	Abortonclose string `json:"abortonclose,omitempty"`
+	// HTTP error rule list
+	HTTPErrorRuleList HTTPErrorRules `json:"http_error_rule_list,omitempty"`
 
-	// accept invalid http response
-	// Enum: [enabled disabled]
-	// +kubebuilder:validation:Enum=enabled;disabled;
-	AcceptInvalidHTTPResponse string `json:"accept_invalid_http_response,omitempty"`
+	// HTTP request rule list
+	HTTPRequestRuleList HTTPRequestRules `json:"http_request_rule_list,omitempty"`
 
-	// adv check
-	// Enum: [httpchk ldap-check mysql-check pgsql-check redis-check smtpchk ssl-hello-chk tcp-check]
-	// +kubebuilder:validation:Enum=httpchk;ldap-check;mysql-check;pgsql-check;redis-check;smtpchk;ssl-hello-chk;tcp-check;
-	AdvCheck string `json:"adv_check,omitempty"`
+	// HTTP response rule list
+	HTTPResponseRuleList HTTPResponseRules `json:"http_response_rule_list,omitempty"`
 
-	// allbackups
-	// Enum: [enabled disabled]
-	// +kubebuilder:validation:Enum=enabled;disabled;
-	Allbackups string `json:"allbackups,omitempty"`
+	// log target list
+	LogTargetList LogTargets `json:"log_target_list,omitempty"`
 
-	// balance
-	Balance *Balance `json:"balance,omitempty"`
+	// server switching rule list
+	ServerSwitchingRuleList ServerSwitchingRules `json:"server_switching_rule_list,omitempty"`
 
-	// check timeout
-	CheckTimeout *int64 `json:"check_timeout,omitempty"`
+	// stick rule list
+	StickRuleList StickRules `json:"stick_rule_list,omitempty"`
 
-	// checkcache
-	// Enum: [enabled disabled]
-	// +kubebuilder:validation:Enum=enabled;disabled;
-	Checkcache string `json:"checkcache,omitempty"`
+	// TCP check rule list
+	TCPCheckRuleList TCPChecks `json:"tcp_check_rule_list,omitempty"`
 
-	// compression
-	Compression *Compression `json:"compression,omitempty"`
+	// TCP request rule list
+	TCPRequestRuleList TCPRequestRules `json:"tcp_request_rule_list,omitempty"`
 
-	// connect timeout
-	// Minimum: 0
-	// +kubebuilder:validation:Minimum=0
-	ConnectTimeout *int64 `json:"connect_timeout,omitempty"`
+	// TCP response rule list
+	TCPResponseRuleList TCPResponseRules `json:"tcp_response_rule_list,omitempty"`
 
-	// cookie
-	Cookie *Cookie `json:"cookie,omitempty"`
+	// server templates
+	ServerTemplates map[string]ServerTemplate `json:"server_templates,omitempty"`
 
-	// default server
-	DefaultServer *DefaultServer `json:"default_server,omitempty"`
-
-	// description
-	Description string `json:"description,omitempty"`
+	// servers
+	Servers map[string]Server `json:"servers,omitempty"`
+}
 
-	// disabled
-	Disabled bool `json:"disabled,omitempty"`
+// UnmarshalJSON unmarshals this object from a JSON structure
+func (m *Backend) UnmarshalJSON(raw []byte) error {
+	// AO0
+	var aO0 BackendBase
+	if err := swag.ReadJSON(raw, &aO0); err != nil {
+		return err
+	}
+	m.BackendBase = aO0
 
-	// dynamic cookie key
-	// Pattern: ^[^\s]+$
-	// +kubebuilder:validation:Pattern=`^[^\s]+$`
-	DynamicCookieKey string `json:"dynamic_cookie_key,omitempty"`
+	// AO1
+	var dataAO1 struct {
+		ACLList Acls `json:"acl_list,omitempty"`
 
-	// email alert
-	EmailAlert *EmailAlert `json:"email_alert,omitempty"`
-
-	// enabled
-	Enabled bool `json:"enabled,omitempty"`
-
-	// errorloc302
-	Errorloc302 *Errorloc `json:"errorloc302,omitempty"`
-
-	// errorloc303
-	Errorloc303 *Errorloc `json:"errorloc303,omitempty"`
-
-	// external check
-	// Enum: [enabled disabled]
-	// +kubebuilder:validation:Enum=enabled;disabled;
-	ExternalCheck string `json:"external_check,omitempty"`
-
-	// external check command
-	// Pattern: ^[^\s]+$
-	// +kubebuilder:validation:Pattern=`^[^\s]+$`
-	ExternalCheckCommand string `json:"external_check_command,omitempty"`
+		FilterList Filters `json:"filter_list,omitempty"`
 
-	// external check path
-	// Pattern: ^[^\s]+$
-	// +kubebuilder:validation:Pattern=`^[^\s]+$`
-	ExternalCheckPath string `json:"external_check_path,omitempty"`
+		HTTPAfterResponseRuleList HTTPAfterResponseRules `json:"http_after_response_rule_list,omitempty"`
 
-	// force persist
-	ForcePersist *BackendForcePersist `json:"force_persist,omitempty"`
-
-	// forwardfor
-	Forwardfor *Forwardfor `json:"forwardfor,omitempty"`
-
-	// from
-	// Pattern: ^[A-Za-z0-9-_.:]+$
-	// +kubebuilder:validation:Pattern=`^[A-Za-z0-9-_.:]+$`
-	From string `json:"from,omitempty"`
-
-	// fullconn
-	Fullconn *int64 `json:"fullconn,omitempty"`
-
-	// guid
-	// Pattern: ^[A-Za-z0-9-_.:]+$
-	// +kubebuilder:validation:Pattern=`^[A-Za-z0-9-_.:]+$`
-	GUID string `json:"guid,omitempty"`
-
-	// h1 case adjust bogus server
-	// Enum: [enabled disabled]
-	// +kubebuilder:validation:Enum=enabled;disabled;
-	H1CaseAdjustBogusServer string `json:"h1_case_adjust_bogus_server,omitempty"`
-
-	// hash balance factor
-	HashBalanceFactor *int64 `json:"hash_balance_factor,omitempty"`
-
-	// hash type
-	HashType *HashType `json:"hash_type,omitempty"`
-
-	// http buffer request
-	// Enum: [enabled disabled]
-	// +kubebuilder:validation:Enum=enabled;disabled;
-	HTTPBufferRequest string `json:"http-buffer-request,omitempty"`
-
-	// http no delay
-	// Enum: [enabled disabled]
-	// +kubebuilder:validation:Enum=enabled;disabled;
-	HTTPNoDelay string `json:"http-no-delay,omitempty"`
-
-	// http use htx
-	// Pattern: ^[^\s]+$
-	// Enum: [enabled disabled]
-	// +kubebuilder:validation:Pattern=`^[^\s]+$`
-	// +kubebuilder:validation:Enum=enabled;disabled;
-	HTTPUseHtx string `json:"http-use-htx,omitempty"`
-
-	// http connection mode
-	// Enum: [httpclose http-server-close http-keep-alive]
-	// +kubebuilder:validation:Enum=httpclose;http-server-close;http-keep-alive;
-	HTTPConnectionMode string `json:"http_connection_mode,omitempty"`
-
-	// http keep alive timeout
-	// Minimum: 0
-	// +kubebuilder:validation:Minimum=0
-	HTTPKeepAliveTimeout *int64 `json:"http_keep_alive_timeout,omitempty"`
-
-	// http pretend keepalive
-	// Enum: [enabled disabled]
-	// +kubebuilder:validation:Enum=enabled;disabled;
-	HTTPPretendKeepalive string `json:"http_pretend_keepalive,omitempty"`
-
-	// http proxy
-	// Enum: [enabled disabled]
-	// +kubebuilder:validation:Enum=enabled;disabled;
-	HTTPProxy string `json:"http_proxy,omitempty"`
-
-	// http request timeout
-	// Minimum: 0
-	// +kubebuilder:validation:Minimum=0
-	HTTPRequestTimeout *int64 `json:"http_request_timeout,omitempty"`
-
-	// http restrict req hdr names
-	// Enum: [preserve delete reject]
-	// +kubebuilder:validation:Enum=preserve;delete;reject;
-	HTTPRestrictReqHdrNames string `json:"http_restrict_req_hdr_names,omitempty"`
-
-	// http reuse
-	// Enum: [aggressive always never safe]
-	// +kubebuilder:validation:Enum=aggressive;always;never;safe;
-	HTTPReuse string `json:"http_reuse,omitempty"`
-
-	// http send name header
-	HTTPSendNameHeader *string `json:"http_send_name_header,omitempty"`
-
-	// httpchk params
-	HttpchkParams *HttpchkParams `json:"httpchk_params,omitempty"`
-
-	// id
-	ID *int64 `json:"id,omitempty"`
-
-	// ignore persist
-	IgnorePersist *BackendIgnorePersist `json:"ignore_persist,omitempty"`
-
-	// independent streams
-	// Enum: [enabled disabled]
-	// +kubebuilder:validation:Enum=enabled;disabled;
-	IndependentStreams string `json:"independent_streams,omitempty"`
-
-	// load server state from file
-	// Enum: [global local none]
-	// +kubebuilder:validation:Enum=global;local;none;
-	LoadServerStateFromFile string `json:"load_server_state_from_file,omitempty"`
-
-	// log health checks
-	// Enum: [enabled disabled]
-	// +kubebuilder:validation:Enum=enabled;disabled;
-	LogHealthChecks string `json:"log_health_checks,omitempty"`
-
-	// log tag
-	// Pattern: ^[^\s]+$
-	// +kubebuilder:validation:Pattern=`^[^\s]+$`
-	LogTag string `json:"log_tag,omitempty"`
-
-	// max keep alive queue
-	MaxKeepAliveQueue *int64 `json:"max_keep_alive_queue,omitempty"`
-
-	// mode
-	// Enum: [http tcp log]
-	// +kubebuilder:validation:Enum=http;tcp;log;
-	Mode string `json:"mode,omitempty"`
-
-	// mysql check params
-	MysqlCheckParams *MysqlCheckParams `json:"mysql_check_params,omitempty"`
-
-	// name
-	// Required: true
-	// Pattern: ^[A-Za-z0-9-_.:]+$
-	// +kubebuilder:validation:Pattern=`^[A-Za-z0-9-_.:]+$`
-	Name string `json:"name"`
-
-	// nolinger
-	// Enum: [enabled disabled]
-	// +kubebuilder:validation:Enum=enabled;disabled;
-	Nolinger string `json:"nolinger,omitempty"`
-
-	// originalto
-	Originalto *Originalto `json:"originalto,omitempty"`
-
-	// persist
-	// Enum: [enabled disabled]
-	// +kubebuilder:validation:Enum=enabled;disabled;
-	Persist string `json:"persist,omitempty"`
-
-	// persist rule
-	PersistRule *PersistRule `json:"persist_rule,omitempty"`
-
-	// pgsql check params
-	PgsqlCheckParams *PgsqlCheckParams `json:"pgsql_check_params,omitempty"`
-
-	// prefer last server
-	// Enum: [enabled disabled]
-	// +kubebuilder:validation:Enum=enabled;disabled;
-	PreferLastServer string `json:"prefer_last_server,omitempty"`
-
-	// queue timeout
-	// Minimum: 0
-	// +kubebuilder:validation:Minimum=0
-	QueueTimeout *int64 `json:"queue_timeout,omitempty"`
-
-	// redispatch
-	Redispatch *Redispatch `json:"redispatch,omitempty"`
-
-	// retries
-	Retries *int64 `json:"retries,omitempty"`
-
-	// retry on
-	RetryOn string `json:"retry_on,omitempty"`
-
-	// server fin timeout
-	// Minimum: 0
-	// +kubebuilder:validation:Minimum=0
-	ServerFinTimeout *int64 `json:"server_fin_timeout,omitempty"`
-
-	// server state file name
-	ServerStateFileName string `json:"server_state_file_name,omitempty"`
-
-	// server timeout
-	// Minimum: 0
-	// +kubebuilder:validation:Minimum=0
-	ServerTimeout *int64 `json:"server_timeout,omitempty"`
-
-	// smtpchk params
-	SmtpchkParams *SmtpchkParams `json:"smtpchk_params,omitempty"`
-
-	// source
-	Source *Source `json:"source,omitempty"`
-
-	// splice auto
-	// Enum: [enabled disabled]
-	// +kubebuilder:validation:Enum=enabled;disabled;
-	SpliceAuto string `json:"splice_auto,omitempty"`
-
-	// splice request
-	// Enum: [enabled disabled]
-	// +kubebuilder:validation:Enum=enabled;disabled;
-	SpliceRequest string `json:"splice_request,omitempty"`
-
-	// splice response
-	// Enum: [enabled disabled]
-	// +kubebuilder:validation:Enum=enabled;disabled;
-	SpliceResponse string `json:"splice_response,omitempty"`
-
-	// spop check
-	// Enum: [enabled disabled]
-	// +kubebuilder:validation:Enum=enabled;disabled;
-	SpopCheck string `json:"spop_check,omitempty"`
-
-	// srvtcpka
-	// Enum: [enabled disabled]
-	// +kubebuilder:validation:Enum=enabled;disabled;
-	Srvtcpka string `json:"srvtcpka,omitempty"`
-
-	// srvtcpka cnt
-	SrvtcpkaCnt *int64 `json:"srvtcpka_cnt,omitempty"`
-
-	// srvtcpka idle
-	SrvtcpkaIdle *int64 `json:"srvtcpka_idle,omitempty"`
-
-	// srvtcpka intvl
-	SrvtcpkaIntvl *int64 `json:"srvtcpka_intvl,omitempty"`
-
-	// stats options
-	StatsOptions *StatsOptions `json:"stats_options,omitempty"`
-
-	// stick table
-	StickTable *ConfigStickTable `json:"stick_table,omitempty"`
-
-	// tarpit timeout
-	// Minimum: 0
-	// +kubebuilder:validation:Minimum=0
-	TarpitTimeout *int64 `json:"tarpit_timeout,omitempty"`
-
-	// tcp smart connect
-	// Enum: [enabled disabled]
-	// +kubebuilder:validation:Enum=enabled;disabled;
-	TCPSmartConnect string `json:"tcp_smart_connect,omitempty"`
-
-	// tcpka
-	// Enum: [enabled disabled]
-	// +kubebuilder:validation:Enum=enabled;disabled;
-	Tcpka string `json:"tcpka,omitempty"`
-
-	// transparent
-	// Enum: [enabled disabled]
-	// +kubebuilder:validation:Enum=enabled;disabled;
-	Transparent string `json:"transparent,omitempty"`
-
-	// tunnel timeout
-	// Minimum: 0
-	// +kubebuilder:validation:Minimum=0
-	TunnelTimeout *int64 `json:"tunnel_timeout,omitempty"`
-
-	// use fcgi app
-	UseFCGIApp string `json:"use_fcgi_app,omitempty"`
+		HTTPCheckList HTTPChecks `json:"http_check_list,omitempty"`
+
+		HTTPErrorRuleList HTTPErrorRules `json:"http_error_rule_list,omitempty"`
+
+		HTTPRequestRuleList HTTPRequestRules `json:"http_request_rule_list,omitempty"`
+
+		HTTPResponseRuleList HTTPResponseRules `json:"http_response_rule_list,omitempty"`
+
+		LogTargetList LogTargets `json:"log_target_list,omitempty"`
+
+		ServerSwitchingRuleList ServerSwitchingRules `json:"server_switching_rule_list,omitempty"`
+
+		StickRuleList StickRules `json:"stick_rule_list,omitempty"`
+
+		TCPCheckRuleList TCPChecks `json:"tcp_check_rule_list,omitempty"`
+
+		TCPRequestRuleList TCPRequestRules `json:"tcp_request_rule_list,omitempty"`
+
+		TCPResponseRuleList TCPResponseRules `json:"tcp_response_rule_list,omitempty"`
+
+		ServerTemplates map[string]ServerTemplate `json:"server_templates,omitempty"`
+
+		Servers map[string]Server `json:"servers,omitempty"`
+	}
+	if err := swag.ReadJSON(raw, &dataAO1); err != nil {
+		return err
+	}
+
+	m.ACLList = dataAO1.ACLList
+
+	m.FilterList = dataAO1.FilterList
+
+	m.HTTPAfterResponseRuleList = dataAO1.HTTPAfterResponseRuleList
+
+	m.HTTPCheckList = dataAO1.HTTPCheckList
+
+	m.HTTPErrorRuleList = dataAO1.HTTPErrorRuleList
+
+	m.HTTPRequestRuleList = dataAO1.HTTPRequestRuleList
+
+	m.HTTPResponseRuleList = dataAO1.HTTPResponseRuleList
+
+	m.LogTargetList = dataAO1.LogTargetList
+
+	m.ServerSwitchingRuleList = dataAO1.ServerSwitchingRuleList
+
+	m.StickRuleList = dataAO1.StickRuleList
+
+	m.TCPCheckRuleList = dataAO1.TCPCheckRuleList
+
+	m.TCPRequestRuleList = dataAO1.TCPRequestRuleList
+
+	m.TCPResponseRuleList = dataAO1.TCPResponseRuleList
+
+	m.ServerTemplates = dataAO1.ServerTemplates
+
+	m.Servers = dataAO1.Servers
+
+	return nil
+}
+
+// MarshalJSON marshals this object to a JSON structure
+func (m Backend) MarshalJSON() ([]byte, error) {
+	_parts := make([][]byte, 0, 2)
+
+	aO0, err := swag.WriteJSON(m.BackendBase)
+	if err != nil {
+		return nil, err
+	}
+	_parts = append(_parts, aO0)
+	var dataAO1 struct {
+		ACLList Acls `json:"acl_list,omitempty"`
+
+		FilterList Filters `json:"filter_list,omitempty"`
+
+		HTTPAfterResponseRuleList HTTPAfterResponseRules `json:"http_after_response_rule_list,omitempty"`
+
+		HTTPCheckList HTTPChecks `json:"http_check_list,omitempty"`
+
+		HTTPErrorRuleList HTTPErrorRules `json:"http_error_rule_list,omitempty"`
+
+		HTTPRequestRuleList HTTPRequestRules `json:"http_request_rule_list,omitempty"`
+
+		HTTPResponseRuleList HTTPResponseRules `json:"http_response_rule_list,omitempty"`
+
+		LogTargetList LogTargets `json:"log_target_list,omitempty"`
+
+		ServerSwitchingRuleList ServerSwitchingRules `json:"server_switching_rule_list,omitempty"`
+
+		StickRuleList StickRules `json:"stick_rule_list,omitempty"`
+
+		TCPCheckRuleList TCPChecks `json:"tcp_check_rule_list,omitempty"`
+
+		TCPRequestRuleList TCPRequestRules `json:"tcp_request_rule_list,omitempty"`
+
+		TCPResponseRuleList TCPResponseRules `json:"tcp_response_rule_list,omitempty"`
+
+		ServerTemplates map[string]ServerTemplate `json:"server_templates,omitempty"`
+
+		Servers map[string]Server `json:"servers,omitempty"`
+	}
+
+	dataAO1.ACLList = m.ACLList
+
+	dataAO1.FilterList = m.FilterList
+
+	dataAO1.HTTPAfterResponseRuleList = m.HTTPAfterResponseRuleList
+
+	dataAO1.HTTPCheckList = m.HTTPCheckList
+
+	dataAO1.HTTPErrorRuleList = m.HTTPErrorRuleList
+
+	dataAO1.HTTPRequestRuleList = m.HTTPRequestRuleList
+
+	dataAO1.HTTPResponseRuleList = m.HTTPResponseRuleList
+
+	dataAO1.LogTargetList = m.LogTargetList
+
+	dataAO1.ServerSwitchingRuleList = m.ServerSwitchingRuleList
+
+	dataAO1.StickRuleList = m.StickRuleList
+
+	dataAO1.TCPCheckRuleList = m.TCPCheckRuleList
+
+	dataAO1.TCPRequestRuleList = m.TCPRequestRuleList
+
+	dataAO1.TCPResponseRuleList = m.TCPResponseRuleList
+
+	dataAO1.ServerTemplates = m.ServerTemplates
+
+	dataAO1.Servers = m.Servers
+
+	jsonDataAO1, errAO1 := swag.WriteJSON(dataAO1)
+	if errAO1 != nil {
+		return nil, errAO1
+	}
+	_parts = append(_parts, jsonDataAO1)
+	return swag.ConcatJSON(_parts...), nil
 }
 
 // Validate validates this backend
 func (m *Backend) Validate(formats strfmt.Registry) error {
 	var res []error
 
-	if err := m.validateErrorFiles(formats); err != nil {
+	// validation for a type composition with BackendBase
+	if err := m.BackendBase.Validate(formats); err != nil {
 		res = append(res, err)
 	}
 
-	if err := m.validateErrorFilesFromHTTPErrors(formats); err != nil {
+	if err := m.validateACLList(formats); err != nil {
 		res = append(res, err)
 	}
 
-	if err := m.validateForcePersistList(formats); err != nil {
+	if err := m.validateFilterList(formats); err != nil {
 		res = append(res, err)
 	}
 
-	if err := m.validateIgnorePersistList(formats); err != nil {
+	if err := m.validateHTTPAfterResponseRuleList(formats); err != nil {
 		res = append(res, err)
 	}
 
-	if err := m.validateAbortonclose(formats); err != nil {
+	if err := m.validateHTTPCheckList(formats); err != nil {
 		res = append(res, err)
 	}
 
-	if err := m.validateAcceptInvalidHTTPResponse(formats); err != nil {
+	if err := m.validateHTTPErrorRuleList(formats); err != nil {
 		res = append(res, err)
 	}
 
-	if err := m.validateAdvCheck(formats); err != nil {
+	if err := m.validateHTTPRequestRuleList(formats); err != nil {
 		res = append(res, err)
 	}
 
-	if err := m.validateAllbackups(formats); err != nil {
+	if err := m.validateHTTPResponseRuleList(formats); err != nil {
 		res = append(res, err)
 	}
 
-	if err := m.validateBalance(formats); err != nil {
+	if err := m.validateLogTargetList(formats); err != nil {
 		res = append(res, err)
 	}
 
-	if err := m.validateCheckcache(formats); err != nil {
+	if err := m.validateServerSwitchingRuleList(formats); err != nil {
 		res = append(res, err)
 	}
 
-	if err := m.validateCompression(formats); err != nil {
+	if err := m.validateStickRuleList(formats); err != nil {
 		res = append(res, err)
 	}
 
-	if err := m.validateConnectTimeout(formats); err != nil {
+	if err := m.validateTCPCheckRuleList(formats); err != nil {
 		res = append(res, err)
 	}
 
-	if err := m.validateCookie(formats); err != nil {
+	if err := m.validateTCPRequestRuleList(formats); err != nil {
 		res = append(res, err)
 	}
 
-	if err := m.validateDefaultServer(formats); err != nil {
+	if err := m.validateTCPResponseRuleList(formats); err != nil {
 		res = append(res, err)
 	}
 
-	if err := m.validateDynamicCookieKey(formats); err != nil {
+	if err := m.validateServerTemplates(formats); err != nil {
 		res = append(res, err)
 	}
 
-	if err := m.validateEmailAlert(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateErrorloc302(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateErrorloc303(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateExternalCheck(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateExternalCheckCommand(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateExternalCheckPath(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateForcePersist(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateForwardfor(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateFrom(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateGUID(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateH1CaseAdjustBogusServer(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateHashType(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateHTTPBufferRequest(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateHTTPNoDelay(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateHTTPUseHtx(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateHTTPConnectionMode(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateHTTPKeepAliveTimeout(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateHTTPPretendKeepalive(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateHTTPProxy(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateHTTPRequestTimeout(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateHTTPRestrictReqHdrNames(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateHTTPReuse(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateHttpchkParams(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateIgnorePersist(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateIndependentStreams(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateLoadServerStateFromFile(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateLogHealthChecks(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateLogTag(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateMode(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateMysqlCheckParams(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateName(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateNolinger(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateOriginalto(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validatePersist(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validatePersistRule(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validatePgsqlCheckParams(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validatePreferLastServer(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateQueueTimeout(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateRedispatch(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateServerFinTimeout(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateServerTimeout(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateSmtpchkParams(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateSource(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateSpliceAuto(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateSpliceRequest(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateSpliceResponse(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateSpopCheck(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateSrvtcpka(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateStatsOptions(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateStickTable(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateTarpitTimeout(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateTCPSmartConnect(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateTcpka(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateTransparent(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateTunnelTimeout(formats); err != nil {
+	if err := m.validateServers(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -681,22 +313,257 @@ func (m *Backend) Validate(formats strfmt.Registry) error {
 	return nil
 }
 
-func (m *Backend) validateErrorFiles(formats strfmt.Registry) error {
-	if swag.IsZero(m.ErrorFiles) { // not required
+func (m *Backend) validateACLList(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.ACLList) { // not required
 		return nil
 	}
 
-	for i := 0; i < len(m.ErrorFiles); i++ {
-		if swag.IsZero(m.ErrorFiles[i]) { // not required
-			continue
+	if err := m.ACLList.Validate(formats); err != nil {
+		if ve, ok := err.(*errors.Validation); ok {
+			return ve.ValidateName("acl_list")
+		} else if ce, ok := err.(*errors.CompositeError); ok {
+			return ce.ValidateName("acl_list")
 		}
+		return err
+	}
 
-		if m.ErrorFiles[i] != nil {
-			if err := m.ErrorFiles[i].Validate(formats); err != nil {
+	return nil
+}
+
+func (m *Backend) validateFilterList(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.FilterList) { // not required
+		return nil
+	}
+
+	if err := m.FilterList.Validate(formats); err != nil {
+		if ve, ok := err.(*errors.Validation); ok {
+			return ve.ValidateName("filter_list")
+		} else if ce, ok := err.(*errors.CompositeError); ok {
+			return ce.ValidateName("filter_list")
+		}
+		return err
+	}
+
+	return nil
+}
+
+func (m *Backend) validateHTTPAfterResponseRuleList(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.HTTPAfterResponseRuleList) { // not required
+		return nil
+	}
+
+	if err := m.HTTPAfterResponseRuleList.Validate(formats); err != nil {
+		if ve, ok := err.(*errors.Validation); ok {
+			return ve.ValidateName("http_after_response_rule_list")
+		} else if ce, ok := err.(*errors.CompositeError); ok {
+			return ce.ValidateName("http_after_response_rule_list")
+		}
+		return err
+	}
+
+	return nil
+}
+
+func (m *Backend) validateHTTPCheckList(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.HTTPCheckList) { // not required
+		return nil
+	}
+
+	if err := m.HTTPCheckList.Validate(formats); err != nil {
+		if ve, ok := err.(*errors.Validation); ok {
+			return ve.ValidateName("http_check_list")
+		} else if ce, ok := err.(*errors.CompositeError); ok {
+			return ce.ValidateName("http_check_list")
+		}
+		return err
+	}
+
+	return nil
+}
+
+func (m *Backend) validateHTTPErrorRuleList(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.HTTPErrorRuleList) { // not required
+		return nil
+	}
+
+	if err := m.HTTPErrorRuleList.Validate(formats); err != nil {
+		if ve, ok := err.(*errors.Validation); ok {
+			return ve.ValidateName("http_error_rule_list")
+		} else if ce, ok := err.(*errors.CompositeError); ok {
+			return ce.ValidateName("http_error_rule_list")
+		}
+		return err
+	}
+
+	return nil
+}
+
+func (m *Backend) validateHTTPRequestRuleList(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.HTTPRequestRuleList) { // not required
+		return nil
+	}
+
+	if err := m.HTTPRequestRuleList.Validate(formats); err != nil {
+		if ve, ok := err.(*errors.Validation); ok {
+			return ve.ValidateName("http_request_rule_list")
+		} else if ce, ok := err.(*errors.CompositeError); ok {
+			return ce.ValidateName("http_request_rule_list")
+		}
+		return err
+	}
+
+	return nil
+}
+
+func (m *Backend) validateHTTPResponseRuleList(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.HTTPResponseRuleList) { // not required
+		return nil
+	}
+
+	if err := m.HTTPResponseRuleList.Validate(formats); err != nil {
+		if ve, ok := err.(*errors.Validation); ok {
+			return ve.ValidateName("http_response_rule_list")
+		} else if ce, ok := err.(*errors.CompositeError); ok {
+			return ce.ValidateName("http_response_rule_list")
+		}
+		return err
+	}
+
+	return nil
+}
+
+func (m *Backend) validateLogTargetList(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.LogTargetList) { // not required
+		return nil
+	}
+
+	if err := m.LogTargetList.Validate(formats); err != nil {
+		if ve, ok := err.(*errors.Validation); ok {
+			return ve.ValidateName("log_target_list")
+		} else if ce, ok := err.(*errors.CompositeError); ok {
+			return ce.ValidateName("log_target_list")
+		}
+		return err
+	}
+
+	return nil
+}
+
+func (m *Backend) validateServerSwitchingRuleList(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.ServerSwitchingRuleList) { // not required
+		return nil
+	}
+
+	if err := m.ServerSwitchingRuleList.Validate(formats); err != nil {
+		if ve, ok := err.(*errors.Validation); ok {
+			return ve.ValidateName("server_switching_rule_list")
+		} else if ce, ok := err.(*errors.CompositeError); ok {
+			return ce.ValidateName("server_switching_rule_list")
+		}
+		return err
+	}
+
+	return nil
+}
+
+func (m *Backend) validateStickRuleList(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.StickRuleList) { // not required
+		return nil
+	}
+
+	if err := m.StickRuleList.Validate(formats); err != nil {
+		if ve, ok := err.(*errors.Validation); ok {
+			return ve.ValidateName("stick_rule_list")
+		} else if ce, ok := err.(*errors.CompositeError); ok {
+			return ce.ValidateName("stick_rule_list")
+		}
+		return err
+	}
+
+	return nil
+}
+
+func (m *Backend) validateTCPCheckRuleList(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.TCPCheckRuleList) { // not required
+		return nil
+	}
+
+	if err := m.TCPCheckRuleList.Validate(formats); err != nil {
+		if ve, ok := err.(*errors.Validation); ok {
+			return ve.ValidateName("tcp_check_rule_list")
+		} else if ce, ok := err.(*errors.CompositeError); ok {
+			return ce.ValidateName("tcp_check_rule_list")
+		}
+		return err
+	}
+
+	return nil
+}
+
+func (m *Backend) validateTCPRequestRuleList(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.TCPRequestRuleList) { // not required
+		return nil
+	}
+
+	if err := m.TCPRequestRuleList.Validate(formats); err != nil {
+		if ve, ok := err.(*errors.Validation); ok {
+			return ve.ValidateName("tcp_request_rule_list")
+		} else if ce, ok := err.(*errors.CompositeError); ok {
+			return ce.ValidateName("tcp_request_rule_list")
+		}
+		return err
+	}
+
+	return nil
+}
+
+func (m *Backend) validateTCPResponseRuleList(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.TCPResponseRuleList) { // not required
+		return nil
+	}
+
+	if err := m.TCPResponseRuleList.Validate(formats); err != nil {
+		if ve, ok := err.(*errors.Validation); ok {
+			return ve.ValidateName("tcp_response_rule_list")
+		} else if ce, ok := err.(*errors.CompositeError); ok {
+			return ce.ValidateName("tcp_response_rule_list")
+		}
+		return err
+	}
+
+	return nil
+}
+
+func (m *Backend) validateServerTemplates(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.ServerTemplates) { // not required
+		return nil
+	}
+
+	for k := range m.ServerTemplates {
+
+		if err := validate.Required("server_templates"+"."+k, "body", m.ServerTemplates[k]); err != nil {
+			return err
+		}
+		if val, ok := m.ServerTemplates[k]; ok {
+			if err := val.Validate(formats); err != nil {
 				if ve, ok := err.(*errors.Validation); ok {
-					return ve.ValidateName("error_files" + "." + strconv.Itoa(i))
+					return ve.ValidateName("server_templates" + "." + k)
 				} else if ce, ok := err.(*errors.CompositeError); ok {
-					return ce.ValidateName("error_files" + "." + strconv.Itoa(i))
+					return ce.ValidateName("server_templates" + "." + k)
 				}
 				return err
 			}
@@ -707,1959 +574,28 @@ func (m *Backend) validateErrorFiles(formats strfmt.Registry) error {
 	return nil
 }
 
-func (m *Backend) validateErrorFilesFromHTTPErrors(formats strfmt.Registry) error {
-	if swag.IsZero(m.ErrorFilesFromHTTPErrors) { // not required
+func (m *Backend) validateServers(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.Servers) { // not required
 		return nil
 	}
 
-	for i := 0; i < len(m.ErrorFilesFromHTTPErrors); i++ {
-		if swag.IsZero(m.ErrorFilesFromHTTPErrors[i]) { // not required
-			continue
-		}
+	for k := range m.Servers {
 
-		if m.ErrorFilesFromHTTPErrors[i] != nil {
-			if err := m.ErrorFilesFromHTTPErrors[i].Validate(formats); err != nil {
+		if err := validate.Required("servers"+"."+k, "body", m.Servers[k]); err != nil {
+			return err
+		}
+		if val, ok := m.Servers[k]; ok {
+			if err := val.Validate(formats); err != nil {
 				if ve, ok := err.(*errors.Validation); ok {
-					return ve.ValidateName("errorfiles_from_http_errors" + "." + strconv.Itoa(i))
+					return ve.ValidateName("servers" + "." + k)
 				} else if ce, ok := err.(*errors.CompositeError); ok {
-					return ce.ValidateName("errorfiles_from_http_errors" + "." + strconv.Itoa(i))
+					return ce.ValidateName("servers" + "." + k)
 				}
 				return err
 			}
 		}
 
-	}
-
-	return nil
-}
-
-func (m *Backend) validateForcePersistList(formats strfmt.Registry) error {
-	if swag.IsZero(m.ForcePersistList) { // not required
-		return nil
-	}
-
-	for i := 0; i < len(m.ForcePersistList); i++ {
-		if swag.IsZero(m.ForcePersistList[i]) { // not required
-			continue
-		}
-
-		if m.ForcePersistList[i] != nil {
-			if err := m.ForcePersistList[i].Validate(formats); err != nil {
-				if ve, ok := err.(*errors.Validation); ok {
-					return ve.ValidateName("force_persist_list" + "." + strconv.Itoa(i))
-				} else if ce, ok := err.(*errors.CompositeError); ok {
-					return ce.ValidateName("force_persist_list" + "." + strconv.Itoa(i))
-				}
-				return err
-			}
-		}
-
-	}
-
-	return nil
-}
-
-func (m *Backend) validateIgnorePersistList(formats strfmt.Registry) error {
-	if swag.IsZero(m.IgnorePersistList) { // not required
-		return nil
-	}
-
-	for i := 0; i < len(m.IgnorePersistList); i++ {
-		if swag.IsZero(m.IgnorePersistList[i]) { // not required
-			continue
-		}
-
-		if m.IgnorePersistList[i] != nil {
-			if err := m.IgnorePersistList[i].Validate(formats); err != nil {
-				if ve, ok := err.(*errors.Validation); ok {
-					return ve.ValidateName("ignore_persist_list" + "." + strconv.Itoa(i))
-				} else if ce, ok := err.(*errors.CompositeError); ok {
-					return ce.ValidateName("ignore_persist_list" + "." + strconv.Itoa(i))
-				}
-				return err
-			}
-		}
-
-	}
-
-	return nil
-}
-
-var backendTypeAbortonclosePropEnum []interface{}
-
-func init() {
-	var res []string
-	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
-		panic(err)
-	}
-	for _, v := range res {
-		backendTypeAbortonclosePropEnum = append(backendTypeAbortonclosePropEnum, v)
-	}
-}
-
-const (
-
-	// BackendAbortoncloseEnabled captures enum value "enabled"
-	BackendAbortoncloseEnabled string = "enabled"
-
-	// BackendAbortoncloseDisabled captures enum value "disabled"
-	BackendAbortoncloseDisabled string = "disabled"
-)
-
-// prop value enum
-func (m *Backend) validateAbortoncloseEnum(path, location string, value string) error {
-	if err := validate.EnumCase(path, location, value, backendTypeAbortonclosePropEnum, true); err != nil {
-		return err
-	}
-	return nil
-}
-
-func (m *Backend) validateAbortonclose(formats strfmt.Registry) error {
-	if swag.IsZero(m.Abortonclose) { // not required
-		return nil
-	}
-
-	// value enum
-	if err := m.validateAbortoncloseEnum("abortonclose", "body", m.Abortonclose); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-var backendTypeAcceptInvalidHTTPResponsePropEnum []interface{}
-
-func init() {
-	var res []string
-	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
-		panic(err)
-	}
-	for _, v := range res {
-		backendTypeAcceptInvalidHTTPResponsePropEnum = append(backendTypeAcceptInvalidHTTPResponsePropEnum, v)
-	}
-}
-
-const (
-
-	// BackendAcceptInvalidHTTPResponseEnabled captures enum value "enabled"
-	BackendAcceptInvalidHTTPResponseEnabled string = "enabled"
-
-	// BackendAcceptInvalidHTTPResponseDisabled captures enum value "disabled"
-	BackendAcceptInvalidHTTPResponseDisabled string = "disabled"
-)
-
-// prop value enum
-func (m *Backend) validateAcceptInvalidHTTPResponseEnum(path, location string, value string) error {
-	if err := validate.EnumCase(path, location, value, backendTypeAcceptInvalidHTTPResponsePropEnum, true); err != nil {
-		return err
-	}
-	return nil
-}
-
-func (m *Backend) validateAcceptInvalidHTTPResponse(formats strfmt.Registry) error {
-	if swag.IsZero(m.AcceptInvalidHTTPResponse) { // not required
-		return nil
-	}
-
-	// value enum
-	if err := m.validateAcceptInvalidHTTPResponseEnum("accept_invalid_http_response", "body", m.AcceptInvalidHTTPResponse); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-var backendTypeAdvCheckPropEnum []interface{}
-
-func init() {
-	var res []string
-	if err := json.Unmarshal([]byte(`["httpchk","ldap-check","mysql-check","pgsql-check","redis-check","smtpchk","ssl-hello-chk","tcp-check"]`), &res); err != nil {
-		panic(err)
-	}
-	for _, v := range res {
-		backendTypeAdvCheckPropEnum = append(backendTypeAdvCheckPropEnum, v)
-	}
-}
-
-const (
-
-	// BackendAdvCheckHttpchk captures enum value "httpchk"
-	BackendAdvCheckHttpchk string = "httpchk"
-
-	// BackendAdvCheckLdapDashCheck captures enum value "ldap-check"
-	BackendAdvCheckLdapDashCheck string = "ldap-check"
-
-	// BackendAdvCheckMysqlDashCheck captures enum value "mysql-check"
-	BackendAdvCheckMysqlDashCheck string = "mysql-check"
-
-	// BackendAdvCheckPgsqlDashCheck captures enum value "pgsql-check"
-	BackendAdvCheckPgsqlDashCheck string = "pgsql-check"
-
-	// BackendAdvCheckRedisDashCheck captures enum value "redis-check"
-	BackendAdvCheckRedisDashCheck string = "redis-check"
-
-	// BackendAdvCheckSmtpchk captures enum value "smtpchk"
-	BackendAdvCheckSmtpchk string = "smtpchk"
-
-	// BackendAdvCheckSslDashHelloDashChk captures enum value "ssl-hello-chk"
-	BackendAdvCheckSslDashHelloDashChk string = "ssl-hello-chk"
-
-	// BackendAdvCheckTCPDashCheck captures enum value "tcp-check"
-	BackendAdvCheckTCPDashCheck string = "tcp-check"
-)
-
-// prop value enum
-func (m *Backend) validateAdvCheckEnum(path, location string, value string) error {
-	if err := validate.EnumCase(path, location, value, backendTypeAdvCheckPropEnum, true); err != nil {
-		return err
-	}
-	return nil
-}
-
-func (m *Backend) validateAdvCheck(formats strfmt.Registry) error {
-	if swag.IsZero(m.AdvCheck) { // not required
-		return nil
-	}
-
-	// value enum
-	if err := m.validateAdvCheckEnum("adv_check", "body", m.AdvCheck); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-var backendTypeAllbackupsPropEnum []interface{}
-
-func init() {
-	var res []string
-	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
-		panic(err)
-	}
-	for _, v := range res {
-		backendTypeAllbackupsPropEnum = append(backendTypeAllbackupsPropEnum, v)
-	}
-}
-
-const (
-
-	// BackendAllbackupsEnabled captures enum value "enabled"
-	BackendAllbackupsEnabled string = "enabled"
-
-	// BackendAllbackupsDisabled captures enum value "disabled"
-	BackendAllbackupsDisabled string = "disabled"
-)
-
-// prop value enum
-func (m *Backend) validateAllbackupsEnum(path, location string, value string) error {
-	if err := validate.EnumCase(path, location, value, backendTypeAllbackupsPropEnum, true); err != nil {
-		return err
-	}
-	return nil
-}
-
-func (m *Backend) validateAllbackups(formats strfmt.Registry) error {
-	if swag.IsZero(m.Allbackups) { // not required
-		return nil
-	}
-
-	// value enum
-	if err := m.validateAllbackupsEnum("allbackups", "body", m.Allbackups); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func (m *Backend) validateBalance(formats strfmt.Registry) error {
-	if swag.IsZero(m.Balance) { // not required
-		return nil
-	}
-
-	if m.Balance != nil {
-		if err := m.Balance.Validate(formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
-				return ve.ValidateName("balance")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
-				return ce.ValidateName("balance")
-			}
-			return err
-		}
-	}
-
-	return nil
-}
-
-var backendTypeCheckcachePropEnum []interface{}
-
-func init() {
-	var res []string
-	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
-		panic(err)
-	}
-	for _, v := range res {
-		backendTypeCheckcachePropEnum = append(backendTypeCheckcachePropEnum, v)
-	}
-}
-
-const (
-
-	// BackendCheckcacheEnabled captures enum value "enabled"
-	BackendCheckcacheEnabled string = "enabled"
-
-	// BackendCheckcacheDisabled captures enum value "disabled"
-	BackendCheckcacheDisabled string = "disabled"
-)
-
-// prop value enum
-func (m *Backend) validateCheckcacheEnum(path, location string, value string) error {
-	if err := validate.EnumCase(path, location, value, backendTypeCheckcachePropEnum, true); err != nil {
-		return err
-	}
-	return nil
-}
-
-func (m *Backend) validateCheckcache(formats strfmt.Registry) error {
-	if swag.IsZero(m.Checkcache) { // not required
-		return nil
-	}
-
-	// value enum
-	if err := m.validateCheckcacheEnum("checkcache", "body", m.Checkcache); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func (m *Backend) validateCompression(formats strfmt.Registry) error {
-	if swag.IsZero(m.Compression) { // not required
-		return nil
-	}
-
-	if m.Compression != nil {
-		if err := m.Compression.Validate(formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
-				return ve.ValidateName("compression")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
-				return ce.ValidateName("compression")
-			}
-			return err
-		}
-	}
-
-	return nil
-}
-
-func (m *Backend) validateConnectTimeout(formats strfmt.Registry) error {
-	if swag.IsZero(m.ConnectTimeout) { // not required
-		return nil
-	}
-
-	if err := validate.MinimumInt("connect_timeout", "body", *m.ConnectTimeout, 0, false); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func (m *Backend) validateCookie(formats strfmt.Registry) error {
-	if swag.IsZero(m.Cookie) { // not required
-		return nil
-	}
-
-	if m.Cookie != nil {
-		if err := m.Cookie.Validate(formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
-				return ve.ValidateName("cookie")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
-				return ce.ValidateName("cookie")
-			}
-			return err
-		}
-	}
-
-	return nil
-}
-
-func (m *Backend) validateDefaultServer(formats strfmt.Registry) error {
-	if swag.IsZero(m.DefaultServer) { // not required
-		return nil
-	}
-
-	if m.DefaultServer != nil {
-		if err := m.DefaultServer.Validate(formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
-				return ve.ValidateName("default_server")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
-				return ce.ValidateName("default_server")
-			}
-			return err
-		}
-	}
-
-	return nil
-}
-
-func (m *Backend) validateDynamicCookieKey(formats strfmt.Registry) error {
-	if swag.IsZero(m.DynamicCookieKey) { // not required
-		return nil
-	}
-
-	if err := validate.Pattern("dynamic_cookie_key", "body", m.DynamicCookieKey, `^[^\s]+$`); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func (m *Backend) validateEmailAlert(formats strfmt.Registry) error {
-	if swag.IsZero(m.EmailAlert) { // not required
-		return nil
-	}
-
-	if m.EmailAlert != nil {
-		if err := m.EmailAlert.Validate(formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
-				return ve.ValidateName("email_alert")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
-				return ce.ValidateName("email_alert")
-			}
-			return err
-		}
-	}
-
-	return nil
-}
-
-func (m *Backend) validateErrorloc302(formats strfmt.Registry) error {
-	if swag.IsZero(m.Errorloc302) { // not required
-		return nil
-	}
-
-	if m.Errorloc302 != nil {
-		if err := m.Errorloc302.Validate(formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
-				return ve.ValidateName("errorloc302")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
-				return ce.ValidateName("errorloc302")
-			}
-			return err
-		}
-	}
-
-	return nil
-}
-
-func (m *Backend) validateErrorloc303(formats strfmt.Registry) error {
-	if swag.IsZero(m.Errorloc303) { // not required
-		return nil
-	}
-
-	if m.Errorloc303 != nil {
-		if err := m.Errorloc303.Validate(formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
-				return ve.ValidateName("errorloc303")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
-				return ce.ValidateName("errorloc303")
-			}
-			return err
-		}
-	}
-
-	return nil
-}
-
-var backendTypeExternalCheckPropEnum []interface{}
-
-func init() {
-	var res []string
-	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
-		panic(err)
-	}
-	for _, v := range res {
-		backendTypeExternalCheckPropEnum = append(backendTypeExternalCheckPropEnum, v)
-	}
-}
-
-const (
-
-	// BackendExternalCheckEnabled captures enum value "enabled"
-	BackendExternalCheckEnabled string = "enabled"
-
-	// BackendExternalCheckDisabled captures enum value "disabled"
-	BackendExternalCheckDisabled string = "disabled"
-)
-
-// prop value enum
-func (m *Backend) validateExternalCheckEnum(path, location string, value string) error {
-	if err := validate.EnumCase(path, location, value, backendTypeExternalCheckPropEnum, true); err != nil {
-		return err
-	}
-	return nil
-}
-
-func (m *Backend) validateExternalCheck(formats strfmt.Registry) error {
-	if swag.IsZero(m.ExternalCheck) { // not required
-		return nil
-	}
-
-	// value enum
-	if err := m.validateExternalCheckEnum("external_check", "body", m.ExternalCheck); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func (m *Backend) validateExternalCheckCommand(formats strfmt.Registry) error {
-	if swag.IsZero(m.ExternalCheckCommand) { // not required
-		return nil
-	}
-
-	if err := validate.Pattern("external_check_command", "body", m.ExternalCheckCommand, `^[^\s]+$`); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func (m *Backend) validateExternalCheckPath(formats strfmt.Registry) error {
-	if swag.IsZero(m.ExternalCheckPath) { // not required
-		return nil
-	}
-
-	if err := validate.Pattern("external_check_path", "body", m.ExternalCheckPath, `^[^\s]+$`); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func (m *Backend) validateForcePersist(formats strfmt.Registry) error {
-	if swag.IsZero(m.ForcePersist) { // not required
-		return nil
-	}
-
-	if m.ForcePersist != nil {
-		if err := m.ForcePersist.Validate(formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
-				return ve.ValidateName("force_persist")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
-				return ce.ValidateName("force_persist")
-			}
-			return err
-		}
-	}
-
-	return nil
-}
-
-func (m *Backend) validateForwardfor(formats strfmt.Registry) error {
-	if swag.IsZero(m.Forwardfor) { // not required
-		return nil
-	}
-
-	if m.Forwardfor != nil {
-		if err := m.Forwardfor.Validate(formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
-				return ve.ValidateName("forwardfor")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
-				return ce.ValidateName("forwardfor")
-			}
-			return err
-		}
-	}
-
-	return nil
-}
-
-func (m *Backend) validateFrom(formats strfmt.Registry) error {
-	if swag.IsZero(m.From) { // not required
-		return nil
-	}
-
-	if err := validate.Pattern("from", "body", m.From, `^[A-Za-z0-9-_.:]+$`); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func (m *Backend) validateGUID(formats strfmt.Registry) error {
-	if swag.IsZero(m.GUID) { // not required
-		return nil
-	}
-
-	if err := validate.Pattern("guid", "body", m.GUID, `^[A-Za-z0-9-_.:]+$`); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-var backendTypeH1CaseAdjustBogusServerPropEnum []interface{}
-
-func init() {
-	var res []string
-	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
-		panic(err)
-	}
-	for _, v := range res {
-		backendTypeH1CaseAdjustBogusServerPropEnum = append(backendTypeH1CaseAdjustBogusServerPropEnum, v)
-	}
-}
-
-const (
-
-	// BackendH1CaseAdjustBogusServerEnabled captures enum value "enabled"
-	BackendH1CaseAdjustBogusServerEnabled string = "enabled"
-
-	// BackendH1CaseAdjustBogusServerDisabled captures enum value "disabled"
-	BackendH1CaseAdjustBogusServerDisabled string = "disabled"
-)
-
-// prop value enum
-func (m *Backend) validateH1CaseAdjustBogusServerEnum(path, location string, value string) error {
-	if err := validate.EnumCase(path, location, value, backendTypeH1CaseAdjustBogusServerPropEnum, true); err != nil {
-		return err
-	}
-	return nil
-}
-
-func (m *Backend) validateH1CaseAdjustBogusServer(formats strfmt.Registry) error {
-	if swag.IsZero(m.H1CaseAdjustBogusServer) { // not required
-		return nil
-	}
-
-	// value enum
-	if err := m.validateH1CaseAdjustBogusServerEnum("h1_case_adjust_bogus_server", "body", m.H1CaseAdjustBogusServer); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func (m *Backend) validateHashType(formats strfmt.Registry) error {
-	if swag.IsZero(m.HashType) { // not required
-		return nil
-	}
-
-	if m.HashType != nil {
-		if err := m.HashType.Validate(formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
-				return ve.ValidateName("hash_type")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
-				return ce.ValidateName("hash_type")
-			}
-			return err
-		}
-	}
-
-	return nil
-}
-
-var backendTypeHTTPBufferRequestPropEnum []interface{}
-
-func init() {
-	var res []string
-	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
-		panic(err)
-	}
-	for _, v := range res {
-		backendTypeHTTPBufferRequestPropEnum = append(backendTypeHTTPBufferRequestPropEnum, v)
-	}
-}
-
-const (
-
-	// BackendHTTPBufferRequestEnabled captures enum value "enabled"
-	BackendHTTPBufferRequestEnabled string = "enabled"
-
-	// BackendHTTPBufferRequestDisabled captures enum value "disabled"
-	BackendHTTPBufferRequestDisabled string = "disabled"
-)
-
-// prop value enum
-func (m *Backend) validateHTTPBufferRequestEnum(path, location string, value string) error {
-	if err := validate.EnumCase(path, location, value, backendTypeHTTPBufferRequestPropEnum, true); err != nil {
-		return err
-	}
-	return nil
-}
-
-func (m *Backend) validateHTTPBufferRequest(formats strfmt.Registry) error {
-	if swag.IsZero(m.HTTPBufferRequest) { // not required
-		return nil
-	}
-
-	// value enum
-	if err := m.validateHTTPBufferRequestEnum("http-buffer-request", "body", m.HTTPBufferRequest); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-var backendTypeHTTPNoDelayPropEnum []interface{}
-
-func init() {
-	var res []string
-	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
-		panic(err)
-	}
-	for _, v := range res {
-		backendTypeHTTPNoDelayPropEnum = append(backendTypeHTTPNoDelayPropEnum, v)
-	}
-}
-
-const (
-
-	// BackendHTTPNoDelayEnabled captures enum value "enabled"
-	BackendHTTPNoDelayEnabled string = "enabled"
-
-	// BackendHTTPNoDelayDisabled captures enum value "disabled"
-	BackendHTTPNoDelayDisabled string = "disabled"
-)
-
-// prop value enum
-func (m *Backend) validateHTTPNoDelayEnum(path, location string, value string) error {
-	if err := validate.EnumCase(path, location, value, backendTypeHTTPNoDelayPropEnum, true); err != nil {
-		return err
-	}
-	return nil
-}
-
-func (m *Backend) validateHTTPNoDelay(formats strfmt.Registry) error {
-	if swag.IsZero(m.HTTPNoDelay) { // not required
-		return nil
-	}
-
-	// value enum
-	if err := m.validateHTTPNoDelayEnum("http-no-delay", "body", m.HTTPNoDelay); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-var backendTypeHTTPUseHtxPropEnum []interface{}
-
-func init() {
-	var res []string
-	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
-		panic(err)
-	}
-	for _, v := range res {
-		backendTypeHTTPUseHtxPropEnum = append(backendTypeHTTPUseHtxPropEnum, v)
-	}
-}
-
-const (
-
-	// BackendHTTPUseHtxEnabled captures enum value "enabled"
-	BackendHTTPUseHtxEnabled string = "enabled"
-
-	// BackendHTTPUseHtxDisabled captures enum value "disabled"
-	BackendHTTPUseHtxDisabled string = "disabled"
-)
-
-// prop value enum
-func (m *Backend) validateHTTPUseHtxEnum(path, location string, value string) error {
-	if err := validate.EnumCase(path, location, value, backendTypeHTTPUseHtxPropEnum, true); err != nil {
-		return err
-	}
-	return nil
-}
-
-func (m *Backend) validateHTTPUseHtx(formats strfmt.Registry) error {
-	if swag.IsZero(m.HTTPUseHtx) { // not required
-		return nil
-	}
-
-	if err := validate.Pattern("http-use-htx", "body", m.HTTPUseHtx, `^[^\s]+$`); err != nil {
-		return err
-	}
-
-	// value enum
-	if err := m.validateHTTPUseHtxEnum("http-use-htx", "body", m.HTTPUseHtx); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-var backendTypeHTTPConnectionModePropEnum []interface{}
-
-func init() {
-	var res []string
-	if err := json.Unmarshal([]byte(`["httpclose","http-server-close","http-keep-alive"]`), &res); err != nil {
-		panic(err)
-	}
-	for _, v := range res {
-		backendTypeHTTPConnectionModePropEnum = append(backendTypeHTTPConnectionModePropEnum, v)
-	}
-}
-
-const (
-
-	// BackendHTTPConnectionModeHttpclose captures enum value "httpclose"
-	BackendHTTPConnectionModeHttpclose string = "httpclose"
-
-	// BackendHTTPConnectionModeHTTPDashServerDashClose captures enum value "http-server-close"
-	BackendHTTPConnectionModeHTTPDashServerDashClose string = "http-server-close"
-
-	// BackendHTTPConnectionModeHTTPDashKeepDashAlive captures enum value "http-keep-alive"
-	BackendHTTPConnectionModeHTTPDashKeepDashAlive string = "http-keep-alive"
-)
-
-// prop value enum
-func (m *Backend) validateHTTPConnectionModeEnum(path, location string, value string) error {
-	if err := validate.EnumCase(path, location, value, backendTypeHTTPConnectionModePropEnum, true); err != nil {
-		return err
-	}
-	return nil
-}
-
-func (m *Backend) validateHTTPConnectionMode(formats strfmt.Registry) error {
-	if swag.IsZero(m.HTTPConnectionMode) { // not required
-		return nil
-	}
-
-	// value enum
-	if err := m.validateHTTPConnectionModeEnum("http_connection_mode", "body", m.HTTPConnectionMode); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func (m *Backend) validateHTTPKeepAliveTimeout(formats strfmt.Registry) error {
-	if swag.IsZero(m.HTTPKeepAliveTimeout) { // not required
-		return nil
-	}
-
-	if err := validate.MinimumInt("http_keep_alive_timeout", "body", *m.HTTPKeepAliveTimeout, 0, false); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-var backendTypeHTTPPretendKeepalivePropEnum []interface{}
-
-func init() {
-	var res []string
-	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
-		panic(err)
-	}
-	for _, v := range res {
-		backendTypeHTTPPretendKeepalivePropEnum = append(backendTypeHTTPPretendKeepalivePropEnum, v)
-	}
-}
-
-const (
-
-	// BackendHTTPPretendKeepaliveEnabled captures enum value "enabled"
-	BackendHTTPPretendKeepaliveEnabled string = "enabled"
-
-	// BackendHTTPPretendKeepaliveDisabled captures enum value "disabled"
-	BackendHTTPPretendKeepaliveDisabled string = "disabled"
-)
-
-// prop value enum
-func (m *Backend) validateHTTPPretendKeepaliveEnum(path, location string, value string) error {
-	if err := validate.EnumCase(path, location, value, backendTypeHTTPPretendKeepalivePropEnum, true); err != nil {
-		return err
-	}
-	return nil
-}
-
-func (m *Backend) validateHTTPPretendKeepalive(formats strfmt.Registry) error {
-	if swag.IsZero(m.HTTPPretendKeepalive) { // not required
-		return nil
-	}
-
-	// value enum
-	if err := m.validateHTTPPretendKeepaliveEnum("http_pretend_keepalive", "body", m.HTTPPretendKeepalive); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-var backendTypeHTTPProxyPropEnum []interface{}
-
-func init() {
-	var res []string
-	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
-		panic(err)
-	}
-	for _, v := range res {
-		backendTypeHTTPProxyPropEnum = append(backendTypeHTTPProxyPropEnum, v)
-	}
-}
-
-const (
-
-	// BackendHTTPProxyEnabled captures enum value "enabled"
-	BackendHTTPProxyEnabled string = "enabled"
-
-	// BackendHTTPProxyDisabled captures enum value "disabled"
-	BackendHTTPProxyDisabled string = "disabled"
-)
-
-// prop value enum
-func (m *Backend) validateHTTPProxyEnum(path, location string, value string) error {
-	if err := validate.EnumCase(path, location, value, backendTypeHTTPProxyPropEnum, true); err != nil {
-		return err
-	}
-	return nil
-}
-
-func (m *Backend) validateHTTPProxy(formats strfmt.Registry) error {
-	if swag.IsZero(m.HTTPProxy) { // not required
-		return nil
-	}
-
-	// value enum
-	if err := m.validateHTTPProxyEnum("http_proxy", "body", m.HTTPProxy); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func (m *Backend) validateHTTPRequestTimeout(formats strfmt.Registry) error {
-	if swag.IsZero(m.HTTPRequestTimeout) { // not required
-		return nil
-	}
-
-	if err := validate.MinimumInt("http_request_timeout", "body", *m.HTTPRequestTimeout, 0, false); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-var backendTypeHTTPRestrictReqHdrNamesPropEnum []interface{}
-
-func init() {
-	var res []string
-	if err := json.Unmarshal([]byte(`["preserve","delete","reject"]`), &res); err != nil {
-		panic(err)
-	}
-	for _, v := range res {
-		backendTypeHTTPRestrictReqHdrNamesPropEnum = append(backendTypeHTTPRestrictReqHdrNamesPropEnum, v)
-	}
-}
-
-const (
-
-	// BackendHTTPRestrictReqHdrNamesPreserve captures enum value "preserve"
-	BackendHTTPRestrictReqHdrNamesPreserve string = "preserve"
-
-	// BackendHTTPRestrictReqHdrNamesDelete captures enum value "delete"
-	BackendHTTPRestrictReqHdrNamesDelete string = "delete"
-
-	// BackendHTTPRestrictReqHdrNamesReject captures enum value "reject"
-	BackendHTTPRestrictReqHdrNamesReject string = "reject"
-)
-
-// prop value enum
-func (m *Backend) validateHTTPRestrictReqHdrNamesEnum(path, location string, value string) error {
-	if err := validate.EnumCase(path, location, value, backendTypeHTTPRestrictReqHdrNamesPropEnum, true); err != nil {
-		return err
-	}
-	return nil
-}
-
-func (m *Backend) validateHTTPRestrictReqHdrNames(formats strfmt.Registry) error {
-	if swag.IsZero(m.HTTPRestrictReqHdrNames) { // not required
-		return nil
-	}
-
-	// value enum
-	if err := m.validateHTTPRestrictReqHdrNamesEnum("http_restrict_req_hdr_names", "body", m.HTTPRestrictReqHdrNames); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-var backendTypeHTTPReusePropEnum []interface{}
-
-func init() {
-	var res []string
-	if err := json.Unmarshal([]byte(`["aggressive","always","never","safe"]`), &res); err != nil {
-		panic(err)
-	}
-	for _, v := range res {
-		backendTypeHTTPReusePropEnum = append(backendTypeHTTPReusePropEnum, v)
-	}
-}
-
-const (
-
-	// BackendHTTPReuseAggressive captures enum value "aggressive"
-	BackendHTTPReuseAggressive string = "aggressive"
-
-	// BackendHTTPReuseAlways captures enum value "always"
-	BackendHTTPReuseAlways string = "always"
-
-	// BackendHTTPReuseNever captures enum value "never"
-	BackendHTTPReuseNever string = "never"
-
-	// BackendHTTPReuseSafe captures enum value "safe"
-	BackendHTTPReuseSafe string = "safe"
-)
-
-// prop value enum
-func (m *Backend) validateHTTPReuseEnum(path, location string, value string) error {
-	if err := validate.EnumCase(path, location, value, backendTypeHTTPReusePropEnum, true); err != nil {
-		return err
-	}
-	return nil
-}
-
-func (m *Backend) validateHTTPReuse(formats strfmt.Registry) error {
-	if swag.IsZero(m.HTTPReuse) { // not required
-		return nil
-	}
-
-	// value enum
-	if err := m.validateHTTPReuseEnum("http_reuse", "body", m.HTTPReuse); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func (m *Backend) validateHttpchkParams(formats strfmt.Registry) error {
-	if swag.IsZero(m.HttpchkParams) { // not required
-		return nil
-	}
-
-	if m.HttpchkParams != nil {
-		if err := m.HttpchkParams.Validate(formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
-				return ve.ValidateName("httpchk_params")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
-				return ce.ValidateName("httpchk_params")
-			}
-			return err
-		}
-	}
-
-	return nil
-}
-
-func (m *Backend) validateIgnorePersist(formats strfmt.Registry) error {
-	if swag.IsZero(m.IgnorePersist) { // not required
-		return nil
-	}
-
-	if m.IgnorePersist != nil {
-		if err := m.IgnorePersist.Validate(formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
-				return ve.ValidateName("ignore_persist")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
-				return ce.ValidateName("ignore_persist")
-			}
-			return err
-		}
-	}
-
-	return nil
-}
-
-var backendTypeIndependentStreamsPropEnum []interface{}
-
-func init() {
-	var res []string
-	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
-		panic(err)
-	}
-	for _, v := range res {
-		backendTypeIndependentStreamsPropEnum = append(backendTypeIndependentStreamsPropEnum, v)
-	}
-}
-
-const (
-
-	// BackendIndependentStreamsEnabled captures enum value "enabled"
-	BackendIndependentStreamsEnabled string = "enabled"
-
-	// BackendIndependentStreamsDisabled captures enum value "disabled"
-	BackendIndependentStreamsDisabled string = "disabled"
-)
-
-// prop value enum
-func (m *Backend) validateIndependentStreamsEnum(path, location string, value string) error {
-	if err := validate.EnumCase(path, location, value, backendTypeIndependentStreamsPropEnum, true); err != nil {
-		return err
-	}
-	return nil
-}
-
-func (m *Backend) validateIndependentStreams(formats strfmt.Registry) error {
-	if swag.IsZero(m.IndependentStreams) { // not required
-		return nil
-	}
-
-	// value enum
-	if err := m.validateIndependentStreamsEnum("independent_streams", "body", m.IndependentStreams); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-var backendTypeLoadServerStateFromFilePropEnum []interface{}
-
-func init() {
-	var res []string
-	if err := json.Unmarshal([]byte(`["global","local","none"]`), &res); err != nil {
-		panic(err)
-	}
-	for _, v := range res {
-		backendTypeLoadServerStateFromFilePropEnum = append(backendTypeLoadServerStateFromFilePropEnum, v)
-	}
-}
-
-const (
-
-	// BackendLoadServerStateFromFileGlobal captures enum value "global"
-	BackendLoadServerStateFromFileGlobal string = "global"
-
-	// BackendLoadServerStateFromFileLocal captures enum value "local"
-	BackendLoadServerStateFromFileLocal string = "local"
-
-	// BackendLoadServerStateFromFileNone captures enum value "none"
-	BackendLoadServerStateFromFileNone string = "none"
-)
-
-// prop value enum
-func (m *Backend) validateLoadServerStateFromFileEnum(path, location string, value string) error {
-	if err := validate.EnumCase(path, location, value, backendTypeLoadServerStateFromFilePropEnum, true); err != nil {
-		return err
-	}
-	return nil
-}
-
-func (m *Backend) validateLoadServerStateFromFile(formats strfmt.Registry) error {
-	if swag.IsZero(m.LoadServerStateFromFile) { // not required
-		return nil
-	}
-
-	// value enum
-	if err := m.validateLoadServerStateFromFileEnum("load_server_state_from_file", "body", m.LoadServerStateFromFile); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-var backendTypeLogHealthChecksPropEnum []interface{}
-
-func init() {
-	var res []string
-	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
-		panic(err)
-	}
-	for _, v := range res {
-		backendTypeLogHealthChecksPropEnum = append(backendTypeLogHealthChecksPropEnum, v)
-	}
-}
-
-const (
-
-	// BackendLogHealthChecksEnabled captures enum value "enabled"
-	BackendLogHealthChecksEnabled string = "enabled"
-
-	// BackendLogHealthChecksDisabled captures enum value "disabled"
-	BackendLogHealthChecksDisabled string = "disabled"
-)
-
-// prop value enum
-func (m *Backend) validateLogHealthChecksEnum(path, location string, value string) error {
-	if err := validate.EnumCase(path, location, value, backendTypeLogHealthChecksPropEnum, true); err != nil {
-		return err
-	}
-	return nil
-}
-
-func (m *Backend) validateLogHealthChecks(formats strfmt.Registry) error {
-	if swag.IsZero(m.LogHealthChecks) { // not required
-		return nil
-	}
-
-	// value enum
-	if err := m.validateLogHealthChecksEnum("log_health_checks", "body", m.LogHealthChecks); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func (m *Backend) validateLogTag(formats strfmt.Registry) error {
-	if swag.IsZero(m.LogTag) { // not required
-		return nil
-	}
-
-	if err := validate.Pattern("log_tag", "body", m.LogTag, `^[^\s]+$`); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-var backendTypeModePropEnum []interface{}
-
-func init() {
-	var res []string
-	if err := json.Unmarshal([]byte(`["http","tcp","log"]`), &res); err != nil {
-		panic(err)
-	}
-	for _, v := range res {
-		backendTypeModePropEnum = append(backendTypeModePropEnum, v)
-	}
-}
-
-const (
-
-	// BackendModeHTTP captures enum value "http"
-	BackendModeHTTP string = "http"
-
-	// BackendModeTCP captures enum value "tcp"
-	BackendModeTCP string = "tcp"
-
-	// BackendModeLog captures enum value "log"
-	BackendModeLog string = "log"
-)
-
-// prop value enum
-func (m *Backend) validateModeEnum(path, location string, value string) error {
-	if err := validate.EnumCase(path, location, value, backendTypeModePropEnum, true); err != nil {
-		return err
-	}
-	return nil
-}
-
-func (m *Backend) validateMode(formats strfmt.Registry) error {
-	if swag.IsZero(m.Mode) { // not required
-		return nil
-	}
-
-	// value enum
-	if err := m.validateModeEnum("mode", "body", m.Mode); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func (m *Backend) validateMysqlCheckParams(formats strfmt.Registry) error {
-	if swag.IsZero(m.MysqlCheckParams) { // not required
-		return nil
-	}
-
-	if m.MysqlCheckParams != nil {
-		if err := m.MysqlCheckParams.Validate(formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
-				return ve.ValidateName("mysql_check_params")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
-				return ce.ValidateName("mysql_check_params")
-			}
-			return err
-		}
-	}
-
-	return nil
-}
-
-func (m *Backend) validateName(formats strfmt.Registry) error {
-
-	if err := validate.RequiredString("name", "body", m.Name); err != nil {
-		return err
-	}
-
-	if err := validate.Pattern("name", "body", m.Name, `^[A-Za-z0-9-_.:]+$`); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-var backendTypeNolingerPropEnum []interface{}
-
-func init() {
-	var res []string
-	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
-		panic(err)
-	}
-	for _, v := range res {
-		backendTypeNolingerPropEnum = append(backendTypeNolingerPropEnum, v)
-	}
-}
-
-const (
-
-	// BackendNolingerEnabled captures enum value "enabled"
-	BackendNolingerEnabled string = "enabled"
-
-	// BackendNolingerDisabled captures enum value "disabled"
-	BackendNolingerDisabled string = "disabled"
-)
-
-// prop value enum
-func (m *Backend) validateNolingerEnum(path, location string, value string) error {
-	if err := validate.EnumCase(path, location, value, backendTypeNolingerPropEnum, true); err != nil {
-		return err
-	}
-	return nil
-}
-
-func (m *Backend) validateNolinger(formats strfmt.Registry) error {
-	if swag.IsZero(m.Nolinger) { // not required
-		return nil
-	}
-
-	// value enum
-	if err := m.validateNolingerEnum("nolinger", "body", m.Nolinger); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func (m *Backend) validateOriginalto(formats strfmt.Registry) error {
-	if swag.IsZero(m.Originalto) { // not required
-		return nil
-	}
-
-	if m.Originalto != nil {
-		if err := m.Originalto.Validate(formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
-				return ve.ValidateName("originalto")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
-				return ce.ValidateName("originalto")
-			}
-			return err
-		}
-	}
-
-	return nil
-}
-
-var backendTypePersistPropEnum []interface{}
-
-func init() {
-	var res []string
-	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
-		panic(err)
-	}
-	for _, v := range res {
-		backendTypePersistPropEnum = append(backendTypePersistPropEnum, v)
-	}
-}
-
-const (
-
-	// BackendPersistEnabled captures enum value "enabled"
-	BackendPersistEnabled string = "enabled"
-
-	// BackendPersistDisabled captures enum value "disabled"
-	BackendPersistDisabled string = "disabled"
-)
-
-// prop value enum
-func (m *Backend) validatePersistEnum(path, location string, value string) error {
-	if err := validate.EnumCase(path, location, value, backendTypePersistPropEnum, true); err != nil {
-		return err
-	}
-	return nil
-}
-
-func (m *Backend) validatePersist(formats strfmt.Registry) error {
-	if swag.IsZero(m.Persist) { // not required
-		return nil
-	}
-
-	// value enum
-	if err := m.validatePersistEnum("persist", "body", m.Persist); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func (m *Backend) validatePersistRule(formats strfmt.Registry) error {
-	if swag.IsZero(m.PersistRule) { // not required
-		return nil
-	}
-
-	if m.PersistRule != nil {
-		if err := m.PersistRule.Validate(formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
-				return ve.ValidateName("persist_rule")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
-				return ce.ValidateName("persist_rule")
-			}
-			return err
-		}
-	}
-
-	return nil
-}
-
-func (m *Backend) validatePgsqlCheckParams(formats strfmt.Registry) error {
-	if swag.IsZero(m.PgsqlCheckParams) { // not required
-		return nil
-	}
-
-	if m.PgsqlCheckParams != nil {
-		if err := m.PgsqlCheckParams.Validate(formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
-				return ve.ValidateName("pgsql_check_params")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
-				return ce.ValidateName("pgsql_check_params")
-			}
-			return err
-		}
-	}
-
-	return nil
-}
-
-var backendTypePreferLastServerPropEnum []interface{}
-
-func init() {
-	var res []string
-	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
-		panic(err)
-	}
-	for _, v := range res {
-		backendTypePreferLastServerPropEnum = append(backendTypePreferLastServerPropEnum, v)
-	}
-}
-
-const (
-
-	// BackendPreferLastServerEnabled captures enum value "enabled"
-	BackendPreferLastServerEnabled string = "enabled"
-
-	// BackendPreferLastServerDisabled captures enum value "disabled"
-	BackendPreferLastServerDisabled string = "disabled"
-)
-
-// prop value enum
-func (m *Backend) validatePreferLastServerEnum(path, location string, value string) error {
-	if err := validate.EnumCase(path, location, value, backendTypePreferLastServerPropEnum, true); err != nil {
-		return err
-	}
-	return nil
-}
-
-func (m *Backend) validatePreferLastServer(formats strfmt.Registry) error {
-	if swag.IsZero(m.PreferLastServer) { // not required
-		return nil
-	}
-
-	// value enum
-	if err := m.validatePreferLastServerEnum("prefer_last_server", "body", m.PreferLastServer); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func (m *Backend) validateQueueTimeout(formats strfmt.Registry) error {
-	if swag.IsZero(m.QueueTimeout) { // not required
-		return nil
-	}
-
-	if err := validate.MinimumInt("queue_timeout", "body", *m.QueueTimeout, 0, false); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func (m *Backend) validateRedispatch(formats strfmt.Registry) error {
-	if swag.IsZero(m.Redispatch) { // not required
-		return nil
-	}
-
-	if m.Redispatch != nil {
-		if err := m.Redispatch.Validate(formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
-				return ve.ValidateName("redispatch")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
-				return ce.ValidateName("redispatch")
-			}
-			return err
-		}
-	}
-
-	return nil
-}
-
-func (m *Backend) validateServerFinTimeout(formats strfmt.Registry) error {
-	if swag.IsZero(m.ServerFinTimeout) { // not required
-		return nil
-	}
-
-	if err := validate.MinimumInt("server_fin_timeout", "body", *m.ServerFinTimeout, 0, false); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func (m *Backend) validateServerTimeout(formats strfmt.Registry) error {
-	if swag.IsZero(m.ServerTimeout) { // not required
-		return nil
-	}
-
-	if err := validate.MinimumInt("server_timeout", "body", *m.ServerTimeout, 0, false); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func (m *Backend) validateSmtpchkParams(formats strfmt.Registry) error {
-	if swag.IsZero(m.SmtpchkParams) { // not required
-		return nil
-	}
-
-	if m.SmtpchkParams != nil {
-		if err := m.SmtpchkParams.Validate(formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
-				return ve.ValidateName("smtpchk_params")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
-				return ce.ValidateName("smtpchk_params")
-			}
-			return err
-		}
-	}
-
-	return nil
-}
-
-func (m *Backend) validateSource(formats strfmt.Registry) error {
-	if swag.IsZero(m.Source) { // not required
-		return nil
-	}
-
-	if m.Source != nil {
-		if err := m.Source.Validate(formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
-				return ve.ValidateName("source")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
-				return ce.ValidateName("source")
-			}
-			return err
-		}
-	}
-
-	return nil
-}
-
-var backendTypeSpliceAutoPropEnum []interface{}
-
-func init() {
-	var res []string
-	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
-		panic(err)
-	}
-	for _, v := range res {
-		backendTypeSpliceAutoPropEnum = append(backendTypeSpliceAutoPropEnum, v)
-	}
-}
-
-const (
-
-	// BackendSpliceAutoEnabled captures enum value "enabled"
-	BackendSpliceAutoEnabled string = "enabled"
-
-	// BackendSpliceAutoDisabled captures enum value "disabled"
-	BackendSpliceAutoDisabled string = "disabled"
-)
-
-// prop value enum
-func (m *Backend) validateSpliceAutoEnum(path, location string, value string) error {
-	if err := validate.EnumCase(path, location, value, backendTypeSpliceAutoPropEnum, true); err != nil {
-		return err
-	}
-	return nil
-}
-
-func (m *Backend) validateSpliceAuto(formats strfmt.Registry) error {
-	if swag.IsZero(m.SpliceAuto) { // not required
-		return nil
-	}
-
-	// value enum
-	if err := m.validateSpliceAutoEnum("splice_auto", "body", m.SpliceAuto); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-var backendTypeSpliceRequestPropEnum []interface{}
-
-func init() {
-	var res []string
-	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
-		panic(err)
-	}
-	for _, v := range res {
-		backendTypeSpliceRequestPropEnum = append(backendTypeSpliceRequestPropEnum, v)
-	}
-}
-
-const (
-
-	// BackendSpliceRequestEnabled captures enum value "enabled"
-	BackendSpliceRequestEnabled string = "enabled"
-
-	// BackendSpliceRequestDisabled captures enum value "disabled"
-	BackendSpliceRequestDisabled string = "disabled"
-)
-
-// prop value enum
-func (m *Backend) validateSpliceRequestEnum(path, location string, value string) error {
-	if err := validate.EnumCase(path, location, value, backendTypeSpliceRequestPropEnum, true); err != nil {
-		return err
-	}
-	return nil
-}
-
-func (m *Backend) validateSpliceRequest(formats strfmt.Registry) error {
-	if swag.IsZero(m.SpliceRequest) { // not required
-		return nil
-	}
-
-	// value enum
-	if err := m.validateSpliceRequestEnum("splice_request", "body", m.SpliceRequest); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-var backendTypeSpliceResponsePropEnum []interface{}
-
-func init() {
-	var res []string
-	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
-		panic(err)
-	}
-	for _, v := range res {
-		backendTypeSpliceResponsePropEnum = append(backendTypeSpliceResponsePropEnum, v)
-	}
-}
-
-const (
-
-	// BackendSpliceResponseEnabled captures enum value "enabled"
-	BackendSpliceResponseEnabled string = "enabled"
-
-	// BackendSpliceResponseDisabled captures enum value "disabled"
-	BackendSpliceResponseDisabled string = "disabled"
-)
-
-// prop value enum
-func (m *Backend) validateSpliceResponseEnum(path, location string, value string) error {
-	if err := validate.EnumCase(path, location, value, backendTypeSpliceResponsePropEnum, true); err != nil {
-		return err
-	}
-	return nil
-}
-
-func (m *Backend) validateSpliceResponse(formats strfmt.Registry) error {
-	if swag.IsZero(m.SpliceResponse) { // not required
-		return nil
-	}
-
-	// value enum
-	if err := m.validateSpliceResponseEnum("splice_response", "body", m.SpliceResponse); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-var backendTypeSpopCheckPropEnum []interface{}
-
-func init() {
-	var res []string
-	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
-		panic(err)
-	}
-	for _, v := range res {
-		backendTypeSpopCheckPropEnum = append(backendTypeSpopCheckPropEnum, v)
-	}
-}
-
-const (
-
-	// BackendSpopCheckEnabled captures enum value "enabled"
-	BackendSpopCheckEnabled string = "enabled"
-
-	// BackendSpopCheckDisabled captures enum value "disabled"
-	BackendSpopCheckDisabled string = "disabled"
-)
-
-// prop value enum
-func (m *Backend) validateSpopCheckEnum(path, location string, value string) error {
-	if err := validate.EnumCase(path, location, value, backendTypeSpopCheckPropEnum, true); err != nil {
-		return err
-	}
-	return nil
-}
-
-func (m *Backend) validateSpopCheck(formats strfmt.Registry) error {
-	if swag.IsZero(m.SpopCheck) { // not required
-		return nil
-	}
-
-	// value enum
-	if err := m.validateSpopCheckEnum("spop_check", "body", m.SpopCheck); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-var backendTypeSrvtcpkaPropEnum []interface{}
-
-func init() {
-	var res []string
-	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
-		panic(err)
-	}
-	for _, v := range res {
-		backendTypeSrvtcpkaPropEnum = append(backendTypeSrvtcpkaPropEnum, v)
-	}
-}
-
-const (
-
-	// BackendSrvtcpkaEnabled captures enum value "enabled"
-	BackendSrvtcpkaEnabled string = "enabled"
-
-	// BackendSrvtcpkaDisabled captures enum value "disabled"
-	BackendSrvtcpkaDisabled string = "disabled"
-)
-
-// prop value enum
-func (m *Backend) validateSrvtcpkaEnum(path, location string, value string) error {
-	if err := validate.EnumCase(path, location, value, backendTypeSrvtcpkaPropEnum, true); err != nil {
-		return err
-	}
-	return nil
-}
-
-func (m *Backend) validateSrvtcpka(formats strfmt.Registry) error {
-	if swag.IsZero(m.Srvtcpka) { // not required
-		return nil
-	}
-
-	// value enum
-	if err := m.validateSrvtcpkaEnum("srvtcpka", "body", m.Srvtcpka); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func (m *Backend) validateStatsOptions(formats strfmt.Registry) error {
-	if swag.IsZero(m.StatsOptions) { // not required
-		return nil
-	}
-
-	if m.StatsOptions != nil {
-		if err := m.StatsOptions.Validate(formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
-				return ve.ValidateName("stats_options")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
-				return ce.ValidateName("stats_options")
-			}
-			return err
-		}
-	}
-
-	return nil
-}
-
-func (m *Backend) validateStickTable(formats strfmt.Registry) error {
-	if swag.IsZero(m.StickTable) { // not required
-		return nil
-	}
-
-	if m.StickTable != nil {
-		if err := m.StickTable.Validate(formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
-				return ve.ValidateName("stick_table")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
-				return ce.ValidateName("stick_table")
-			}
-			return err
-		}
-	}
-
-	return nil
-}
-
-func (m *Backend) validateTarpitTimeout(formats strfmt.Registry) error {
-	if swag.IsZero(m.TarpitTimeout) { // not required
-		return nil
-	}
-
-	if err := validate.MinimumInt("tarpit_timeout", "body", *m.TarpitTimeout, 0, false); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-var backendTypeTCPSmartConnectPropEnum []interface{}
-
-func init() {
-	var res []string
-	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
-		panic(err)
-	}
-	for _, v := range res {
-		backendTypeTCPSmartConnectPropEnum = append(backendTypeTCPSmartConnectPropEnum, v)
-	}
-}
-
-const (
-
-	// BackendTCPSmartConnectEnabled captures enum value "enabled"
-	BackendTCPSmartConnectEnabled string = "enabled"
-
-	// BackendTCPSmartConnectDisabled captures enum value "disabled"
-	BackendTCPSmartConnectDisabled string = "disabled"
-)
-
-// prop value enum
-func (m *Backend) validateTCPSmartConnectEnum(path, location string, value string) error {
-	if err := validate.EnumCase(path, location, value, backendTypeTCPSmartConnectPropEnum, true); err != nil {
-		return err
-	}
-	return nil
-}
-
-func (m *Backend) validateTCPSmartConnect(formats strfmt.Registry) error {
-	if swag.IsZero(m.TCPSmartConnect) { // not required
-		return nil
-	}
-
-	// value enum
-	if err := m.validateTCPSmartConnectEnum("tcp_smart_connect", "body", m.TCPSmartConnect); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-var backendTypeTcpkaPropEnum []interface{}
-
-func init() {
-	var res []string
-	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
-		panic(err)
-	}
-	for _, v := range res {
-		backendTypeTcpkaPropEnum = append(backendTypeTcpkaPropEnum, v)
-	}
-}
-
-const (
-
-	// BackendTcpkaEnabled captures enum value "enabled"
-	BackendTcpkaEnabled string = "enabled"
-
-	// BackendTcpkaDisabled captures enum value "disabled"
-	BackendTcpkaDisabled string = "disabled"
-)
-
-// prop value enum
-func (m *Backend) validateTcpkaEnum(path, location string, value string) error {
-	if err := validate.EnumCase(path, location, value, backendTypeTcpkaPropEnum, true); err != nil {
-		return err
-	}
-	return nil
-}
-
-func (m *Backend) validateTcpka(formats strfmt.Registry) error {
-	if swag.IsZero(m.Tcpka) { // not required
-		return nil
-	}
-
-	// value enum
-	if err := m.validateTcpkaEnum("tcpka", "body", m.Tcpka); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-var backendTypeTransparentPropEnum []interface{}
-
-func init() {
-	var res []string
-	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
-		panic(err)
-	}
-	for _, v := range res {
-		backendTypeTransparentPropEnum = append(backendTypeTransparentPropEnum, v)
-	}
-}
-
-const (
-
-	// BackendTransparentEnabled captures enum value "enabled"
-	BackendTransparentEnabled string = "enabled"
-
-	// BackendTransparentDisabled captures enum value "disabled"
-	BackendTransparentDisabled string = "disabled"
-)
-
-// prop value enum
-func (m *Backend) validateTransparentEnum(path, location string, value string) error {
-	if err := validate.EnumCase(path, location, value, backendTypeTransparentPropEnum, true); err != nil {
-		return err
-	}
-	return nil
-}
-
-func (m *Backend) validateTransparent(formats strfmt.Registry) error {
-	if swag.IsZero(m.Transparent) { // not required
-		return nil
-	}
-
-	// value enum
-	if err := m.validateTransparentEnum("transparent", "body", m.Transparent); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func (m *Backend) validateTunnelTimeout(formats strfmt.Registry) error {
-	if swag.IsZero(m.TunnelTimeout) { // not required
-		return nil
-	}
-
-	if err := validate.MinimumInt("tunnel_timeout", "body", *m.TunnelTimeout, 0, false); err != nil {
-		return err
 	}
 
 	return nil
@@ -2669,103 +605,68 @@ func (m *Backend) validateTunnelTimeout(formats strfmt.Registry) error {
 func (m *Backend) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
 	var res []error
 
-	if err := m.contextValidateErrorFiles(ctx, formats); err != nil {
+	// validation for a type composition with BackendBase
+	if err := m.BackendBase.ContextValidate(ctx, formats); err != nil {
 		res = append(res, err)
 	}
 
-	if err := m.contextValidateErrorFilesFromHTTPErrors(ctx, formats); err != nil {
+	if err := m.contextValidateACLList(ctx, formats); err != nil {
 		res = append(res, err)
 	}
 
-	if err := m.contextValidateForcePersistList(ctx, formats); err != nil {
+	if err := m.contextValidateFilterList(ctx, formats); err != nil {
 		res = append(res, err)
 	}
 
-	if err := m.contextValidateIgnorePersistList(ctx, formats); err != nil {
+	if err := m.contextValidateHTTPAfterResponseRuleList(ctx, formats); err != nil {
 		res = append(res, err)
 	}
 
-	if err := m.contextValidateBalance(ctx, formats); err != nil {
+	if err := m.contextValidateHTTPCheckList(ctx, formats); err != nil {
 		res = append(res, err)
 	}
 
-	if err := m.contextValidateCompression(ctx, formats); err != nil {
+	if err := m.contextValidateHTTPErrorRuleList(ctx, formats); err != nil {
 		res = append(res, err)
 	}
 
-	if err := m.contextValidateCookie(ctx, formats); err != nil {
+	if err := m.contextValidateHTTPRequestRuleList(ctx, formats); err != nil {
 		res = append(res, err)
 	}
 
-	if err := m.contextValidateDefaultServer(ctx, formats); err != nil {
+	if err := m.contextValidateHTTPResponseRuleList(ctx, formats); err != nil {
 		res = append(res, err)
 	}
 
-	if err := m.contextValidateEmailAlert(ctx, formats); err != nil {
+	if err := m.contextValidateLogTargetList(ctx, formats); err != nil {
 		res = append(res, err)
 	}
 
-	if err := m.contextValidateErrorloc302(ctx, formats); err != nil {
+	if err := m.contextValidateServerSwitchingRuleList(ctx, formats); err != nil {
 		res = append(res, err)
 	}
 
-	if err := m.contextValidateErrorloc303(ctx, formats); err != nil {
+	if err := m.contextValidateStickRuleList(ctx, formats); err != nil {
 		res = append(res, err)
 	}
 
-	if err := m.contextValidateForcePersist(ctx, formats); err != nil {
+	if err := m.contextValidateTCPCheckRuleList(ctx, formats); err != nil {
 		res = append(res, err)
 	}
 
-	if err := m.contextValidateForwardfor(ctx, formats); err != nil {
+	if err := m.contextValidateTCPRequestRuleList(ctx, formats); err != nil {
 		res = append(res, err)
 	}
 
-	if err := m.contextValidateHashType(ctx, formats); err != nil {
+	if err := m.contextValidateTCPResponseRuleList(ctx, formats); err != nil {
 		res = append(res, err)
 	}
 
-	if err := m.contextValidateHttpchkParams(ctx, formats); err != nil {
+	if err := m.contextValidateServerTemplates(ctx, formats); err != nil {
 		res = append(res, err)
 	}
 
-	if err := m.contextValidateIgnorePersist(ctx, formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.contextValidateMysqlCheckParams(ctx, formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.contextValidateOriginalto(ctx, formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.contextValidatePersistRule(ctx, formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.contextValidatePgsqlCheckParams(ctx, formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.contextValidateRedispatch(ctx, formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.contextValidateSmtpchkParams(ctx, formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.contextValidateSource(ctx, formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.contextValidateStatsOptions(ctx, formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.contextValidateStickTable(ctx, formats); err != nil {
+	if err := m.contextValidateServers(ctx, formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -2775,17 +676,194 @@ func (m *Backend) ContextValidate(ctx context.Context, formats strfmt.Registry) 
 	return nil
 }
 
-func (m *Backend) contextValidateErrorFiles(ctx context.Context, formats strfmt.Registry) error {
+func (m *Backend) contextValidateACLList(ctx context.Context, formats strfmt.Registry) error {
 
-	for i := 0; i < len(m.ErrorFiles); i++ {
+	if err := m.ACLList.ContextValidate(ctx, formats); err != nil {
+		if ve, ok := err.(*errors.Validation); ok {
+			return ve.ValidateName("acl_list")
+		} else if ce, ok := err.(*errors.CompositeError); ok {
+			return ce.ValidateName("acl_list")
+		}
+		return err
+	}
 
-		if m.ErrorFiles[i] != nil {
-			if err := m.ErrorFiles[i].ContextValidate(ctx, formats); err != nil {
-				if ve, ok := err.(*errors.Validation); ok {
-					return ve.ValidateName("error_files" + "." + strconv.Itoa(i))
-				} else if ce, ok := err.(*errors.CompositeError); ok {
-					return ce.ValidateName("error_files" + "." + strconv.Itoa(i))
-				}
+	return nil
+}
+
+func (m *Backend) contextValidateFilterList(ctx context.Context, formats strfmt.Registry) error {
+
+	if err := m.FilterList.ContextValidate(ctx, formats); err != nil {
+		if ve, ok := err.(*errors.Validation); ok {
+			return ve.ValidateName("filter_list")
+		} else if ce, ok := err.(*errors.CompositeError); ok {
+			return ce.ValidateName("filter_list")
+		}
+		return err
+	}
+
+	return nil
+}
+
+func (m *Backend) contextValidateHTTPAfterResponseRuleList(ctx context.Context, formats strfmt.Registry) error {
+
+	if err := m.HTTPAfterResponseRuleList.ContextValidate(ctx, formats); err != nil {
+		if ve, ok := err.(*errors.Validation); ok {
+			return ve.ValidateName("http_after_response_rule_list")
+		} else if ce, ok := err.(*errors.CompositeError); ok {
+			return ce.ValidateName("http_after_response_rule_list")
+		}
+		return err
+	}
+
+	return nil
+}
+
+func (m *Backend) contextValidateHTTPCheckList(ctx context.Context, formats strfmt.Registry) error {
+
+	if err := m.HTTPCheckList.ContextValidate(ctx, formats); err != nil {
+		if ve, ok := err.(*errors.Validation); ok {
+			return ve.ValidateName("http_check_list")
+		} else if ce, ok := err.(*errors.CompositeError); ok {
+			return ce.ValidateName("http_check_list")
+		}
+		return err
+	}
+
+	return nil
+}
+
+func (m *Backend) contextValidateHTTPErrorRuleList(ctx context.Context, formats strfmt.Registry) error {
+
+	if err := m.HTTPErrorRuleList.ContextValidate(ctx, formats); err != nil {
+		if ve, ok := err.(*errors.Validation); ok {
+			return ve.ValidateName("http_error_rule_list")
+		} else if ce, ok := err.(*errors.CompositeError); ok {
+			return ce.ValidateName("http_error_rule_list")
+		}
+		return err
+	}
+
+	return nil
+}
+
+func (m *Backend) contextValidateHTTPRequestRuleList(ctx context.Context, formats strfmt.Registry) error {
+
+	if err := m.HTTPRequestRuleList.ContextValidate(ctx, formats); err != nil {
+		if ve, ok := err.(*errors.Validation); ok {
+			return ve.ValidateName("http_request_rule_list")
+		} else if ce, ok := err.(*errors.CompositeError); ok {
+			return ce.ValidateName("http_request_rule_list")
+		}
+		return err
+	}
+
+	return nil
+}
+
+func (m *Backend) contextValidateHTTPResponseRuleList(ctx context.Context, formats strfmt.Registry) error {
+
+	if err := m.HTTPResponseRuleList.ContextValidate(ctx, formats); err != nil {
+		if ve, ok := err.(*errors.Validation); ok {
+			return ve.ValidateName("http_response_rule_list")
+		} else if ce, ok := err.(*errors.CompositeError); ok {
+			return ce.ValidateName("http_response_rule_list")
+		}
+		return err
+	}
+
+	return nil
+}
+
+func (m *Backend) contextValidateLogTargetList(ctx context.Context, formats strfmt.Registry) error {
+
+	if err := m.LogTargetList.ContextValidate(ctx, formats); err != nil {
+		if ve, ok := err.(*errors.Validation); ok {
+			return ve.ValidateName("log_target_list")
+		} else if ce, ok := err.(*errors.CompositeError); ok {
+			return ce.ValidateName("log_target_list")
+		}
+		return err
+	}
+
+	return nil
+}
+
+func (m *Backend) contextValidateServerSwitchingRuleList(ctx context.Context, formats strfmt.Registry) error {
+
+	if err := m.ServerSwitchingRuleList.ContextValidate(ctx, formats); err != nil {
+		if ve, ok := err.(*errors.Validation); ok {
+			return ve.ValidateName("server_switching_rule_list")
+		} else if ce, ok := err.(*errors.CompositeError); ok {
+			return ce.ValidateName("server_switching_rule_list")
+		}
+		return err
+	}
+
+	return nil
+}
+
+func (m *Backend) contextValidateStickRuleList(ctx context.Context, formats strfmt.Registry) error {
+
+	if err := m.StickRuleList.ContextValidate(ctx, formats); err != nil {
+		if ve, ok := err.(*errors.Validation); ok {
+			return ve.ValidateName("stick_rule_list")
+		} else if ce, ok := err.(*errors.CompositeError); ok {
+			return ce.ValidateName("stick_rule_list")
+		}
+		return err
+	}
+
+	return nil
+}
+
+func (m *Backend) contextValidateTCPCheckRuleList(ctx context.Context, formats strfmt.Registry) error {
+
+	if err := m.TCPCheckRuleList.ContextValidate(ctx, formats); err != nil {
+		if ve, ok := err.(*errors.Validation); ok {
+			return ve.ValidateName("tcp_check_rule_list")
+		} else if ce, ok := err.(*errors.CompositeError); ok {
+			return ce.ValidateName("tcp_check_rule_list")
+		}
+		return err
+	}
+
+	return nil
+}
+
+func (m *Backend) contextValidateTCPRequestRuleList(ctx context.Context, formats strfmt.Registry) error {
+
+	if err := m.TCPRequestRuleList.ContextValidate(ctx, formats); err != nil {
+		if ve, ok := err.(*errors.Validation); ok {
+			return ve.ValidateName("tcp_request_rule_list")
+		} else if ce, ok := err.(*errors.CompositeError); ok {
+			return ce.ValidateName("tcp_request_rule_list")
+		}
+		return err
+	}
+
+	return nil
+}
+
+func (m *Backend) contextValidateTCPResponseRuleList(ctx context.Context, formats strfmt.Registry) error {
+
+	if err := m.TCPResponseRuleList.ContextValidate(ctx, formats); err != nil {
+		if ve, ok := err.(*errors.Validation); ok {
+			return ve.ValidateName("tcp_response_rule_list")
+		} else if ce, ok := err.(*errors.CompositeError); ok {
+			return ce.ValidateName("tcp_response_rule_list")
+		}
+		return err
+	}
+
+	return nil
+}
+
+func (m *Backend) contextValidateServerTemplates(ctx context.Context, formats strfmt.Registry) error {
+
+	for k := range m.ServerTemplates {
+
+		if val, ok := m.ServerTemplates[k]; ok {
+			if err := val.ContextValidate(ctx, formats); err != nil {
 				return err
 			}
 		}
@@ -2795,397 +873,16 @@ func (m *Backend) contextValidateErrorFiles(ctx context.Context, formats strfmt.
 	return nil
 }
 
-func (m *Backend) contextValidateErrorFilesFromHTTPErrors(ctx context.Context, formats strfmt.Registry) error {
+func (m *Backend) contextValidateServers(ctx context.Context, formats strfmt.Registry) error {
 
-	for i := 0; i < len(m.ErrorFilesFromHTTPErrors); i++ {
+	for k := range m.Servers {
 
-		if m.ErrorFilesFromHTTPErrors[i] != nil {
-			if err := m.ErrorFilesFromHTTPErrors[i].ContextValidate(ctx, formats); err != nil {
-				if ve, ok := err.(*errors.Validation); ok {
-					return ve.ValidateName("errorfiles_from_http_errors" + "." + strconv.Itoa(i))
-				} else if ce, ok := err.(*errors.CompositeError); ok {
-					return ce.ValidateName("errorfiles_from_http_errors" + "." + strconv.Itoa(i))
-				}
+		if val, ok := m.Servers[k]; ok {
+			if err := val.ContextValidate(ctx, formats); err != nil {
 				return err
 			}
 		}
 
-	}
-
-	return nil
-}
-
-func (m *Backend) contextValidateForcePersistList(ctx context.Context, formats strfmt.Registry) error {
-
-	for i := 0; i < len(m.ForcePersistList); i++ {
-
-		if m.ForcePersistList[i] != nil {
-			if err := m.ForcePersistList[i].ContextValidate(ctx, formats); err != nil {
-				if ve, ok := err.(*errors.Validation); ok {
-					return ve.ValidateName("force_persist_list" + "." + strconv.Itoa(i))
-				} else if ce, ok := err.(*errors.CompositeError); ok {
-					return ce.ValidateName("force_persist_list" + "." + strconv.Itoa(i))
-				}
-				return err
-			}
-		}
-
-	}
-
-	return nil
-}
-
-func (m *Backend) contextValidateIgnorePersistList(ctx context.Context, formats strfmt.Registry) error {
-
-	for i := 0; i < len(m.IgnorePersistList); i++ {
-
-		if m.IgnorePersistList[i] != nil {
-			if err := m.IgnorePersistList[i].ContextValidate(ctx, formats); err != nil {
-				if ve, ok := err.(*errors.Validation); ok {
-					return ve.ValidateName("ignore_persist_list" + "." + strconv.Itoa(i))
-				} else if ce, ok := err.(*errors.CompositeError); ok {
-					return ce.ValidateName("ignore_persist_list" + "." + strconv.Itoa(i))
-				}
-				return err
-			}
-		}
-
-	}
-
-	return nil
-}
-
-func (m *Backend) contextValidateBalance(ctx context.Context, formats strfmt.Registry) error {
-
-	if m.Balance != nil {
-		if err := m.Balance.ContextValidate(ctx, formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
-				return ve.ValidateName("balance")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
-				return ce.ValidateName("balance")
-			}
-			return err
-		}
-	}
-
-	return nil
-}
-
-func (m *Backend) contextValidateCompression(ctx context.Context, formats strfmt.Registry) error {
-
-	if m.Compression != nil {
-		if err := m.Compression.ContextValidate(ctx, formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
-				return ve.ValidateName("compression")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
-				return ce.ValidateName("compression")
-			}
-			return err
-		}
-	}
-
-	return nil
-}
-
-func (m *Backend) contextValidateCookie(ctx context.Context, formats strfmt.Registry) error {
-
-	if m.Cookie != nil {
-		if err := m.Cookie.ContextValidate(ctx, formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
-				return ve.ValidateName("cookie")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
-				return ce.ValidateName("cookie")
-			}
-			return err
-		}
-	}
-
-	return nil
-}
-
-func (m *Backend) contextValidateDefaultServer(ctx context.Context, formats strfmt.Registry) error {
-
-	if m.DefaultServer != nil {
-		if err := m.DefaultServer.ContextValidate(ctx, formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
-				return ve.ValidateName("default_server")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
-				return ce.ValidateName("default_server")
-			}
-			return err
-		}
-	}
-
-	return nil
-}
-
-func (m *Backend) contextValidateEmailAlert(ctx context.Context, formats strfmt.Registry) error {
-
-	if m.EmailAlert != nil {
-		if err := m.EmailAlert.ContextValidate(ctx, formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
-				return ve.ValidateName("email_alert")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
-				return ce.ValidateName("email_alert")
-			}
-			return err
-		}
-	}
-
-	return nil
-}
-
-func (m *Backend) contextValidateErrorloc302(ctx context.Context, formats strfmt.Registry) error {
-
-	if m.Errorloc302 != nil {
-		if err := m.Errorloc302.ContextValidate(ctx, formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
-				return ve.ValidateName("errorloc302")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
-				return ce.ValidateName("errorloc302")
-			}
-			return err
-		}
-	}
-
-	return nil
-}
-
-func (m *Backend) contextValidateErrorloc303(ctx context.Context, formats strfmt.Registry) error {
-
-	if m.Errorloc303 != nil {
-		if err := m.Errorloc303.ContextValidate(ctx, formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
-				return ve.ValidateName("errorloc303")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
-				return ce.ValidateName("errorloc303")
-			}
-			return err
-		}
-	}
-
-	return nil
-}
-
-func (m *Backend) contextValidateForcePersist(ctx context.Context, formats strfmt.Registry) error {
-
-	if m.ForcePersist != nil {
-		if err := m.ForcePersist.ContextValidate(ctx, formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
-				return ve.ValidateName("force_persist")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
-				return ce.ValidateName("force_persist")
-			}
-			return err
-		}
-	}
-
-	return nil
-}
-
-func (m *Backend) contextValidateForwardfor(ctx context.Context, formats strfmt.Registry) error {
-
-	if m.Forwardfor != nil {
-		if err := m.Forwardfor.ContextValidate(ctx, formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
-				return ve.ValidateName("forwardfor")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
-				return ce.ValidateName("forwardfor")
-			}
-			return err
-		}
-	}
-
-	return nil
-}
-
-func (m *Backend) contextValidateHashType(ctx context.Context, formats strfmt.Registry) error {
-
-	if m.HashType != nil {
-		if err := m.HashType.ContextValidate(ctx, formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
-				return ve.ValidateName("hash_type")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
-				return ce.ValidateName("hash_type")
-			}
-			return err
-		}
-	}
-
-	return nil
-}
-
-func (m *Backend) contextValidateHttpchkParams(ctx context.Context, formats strfmt.Registry) error {
-
-	if m.HttpchkParams != nil {
-		if err := m.HttpchkParams.ContextValidate(ctx, formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
-				return ve.ValidateName("httpchk_params")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
-				return ce.ValidateName("httpchk_params")
-			}
-			return err
-		}
-	}
-
-	return nil
-}
-
-func (m *Backend) contextValidateIgnorePersist(ctx context.Context, formats strfmt.Registry) error {
-
-	if m.IgnorePersist != nil {
-		if err := m.IgnorePersist.ContextValidate(ctx, formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
-				return ve.ValidateName("ignore_persist")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
-				return ce.ValidateName("ignore_persist")
-			}
-			return err
-		}
-	}
-
-	return nil
-}
-
-func (m *Backend) contextValidateMysqlCheckParams(ctx context.Context, formats strfmt.Registry) error {
-
-	if m.MysqlCheckParams != nil {
-		if err := m.MysqlCheckParams.ContextValidate(ctx, formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
-				return ve.ValidateName("mysql_check_params")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
-				return ce.ValidateName("mysql_check_params")
-			}
-			return err
-		}
-	}
-
-	return nil
-}
-
-func (m *Backend) contextValidateOriginalto(ctx context.Context, formats strfmt.Registry) error {
-
-	if m.Originalto != nil {
-		if err := m.Originalto.ContextValidate(ctx, formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
-				return ve.ValidateName("originalto")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
-				return ce.ValidateName("originalto")
-			}
-			return err
-		}
-	}
-
-	return nil
-}
-
-func (m *Backend) contextValidatePersistRule(ctx context.Context, formats strfmt.Registry) error {
-
-	if m.PersistRule != nil {
-		if err := m.PersistRule.ContextValidate(ctx, formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
-				return ve.ValidateName("persist_rule")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
-				return ce.ValidateName("persist_rule")
-			}
-			return err
-		}
-	}
-
-	return nil
-}
-
-func (m *Backend) contextValidatePgsqlCheckParams(ctx context.Context, formats strfmt.Registry) error {
-
-	if m.PgsqlCheckParams != nil {
-		if err := m.PgsqlCheckParams.ContextValidate(ctx, formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
-				return ve.ValidateName("pgsql_check_params")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
-				return ce.ValidateName("pgsql_check_params")
-			}
-			return err
-		}
-	}
-
-	return nil
-}
-
-func (m *Backend) contextValidateRedispatch(ctx context.Context, formats strfmt.Registry) error {
-
-	if m.Redispatch != nil {
-		if err := m.Redispatch.ContextValidate(ctx, formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
-				return ve.ValidateName("redispatch")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
-				return ce.ValidateName("redispatch")
-			}
-			return err
-		}
-	}
-
-	return nil
-}
-
-func (m *Backend) contextValidateSmtpchkParams(ctx context.Context, formats strfmt.Registry) error {
-
-	if m.SmtpchkParams != nil {
-		if err := m.SmtpchkParams.ContextValidate(ctx, formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
-				return ve.ValidateName("smtpchk_params")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
-				return ce.ValidateName("smtpchk_params")
-			}
-			return err
-		}
-	}
-
-	return nil
-}
-
-func (m *Backend) contextValidateSource(ctx context.Context, formats strfmt.Registry) error {
-
-	if m.Source != nil {
-		if err := m.Source.ContextValidate(ctx, formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
-				return ve.ValidateName("source")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
-				return ce.ValidateName("source")
-			}
-			return err
-		}
-	}
-
-	return nil
-}
-
-func (m *Backend) contextValidateStatsOptions(ctx context.Context, formats strfmt.Registry) error {
-
-	if m.StatsOptions != nil {
-		if err := m.StatsOptions.ContextValidate(ctx, formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
-				return ve.ValidateName("stats_options")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
-				return ce.ValidateName("stats_options")
-			}
-			return err
-		}
-	}
-
-	return nil
-}
-
-func (m *Backend) contextValidateStickTable(ctx context.Context, formats strfmt.Registry) error {
-
-	if m.StickTable != nil {
-		if err := m.StickTable.ContextValidate(ctx, formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
-				return ve.ValidateName("stick_table")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
-				return ce.ValidateName("stick_table")
-			}
-			return err
-		}
 	}
 
 	return nil
@@ -3202,438 +899,6 @@ func (m *Backend) MarshalBinary() ([]byte, error) {
 // UnmarshalBinary interface implementation
 func (m *Backend) UnmarshalBinary(b []byte) error {
 	var res Backend
-	if err := swag.ReadJSON(b, &res); err != nil {
-		return err
-	}
-	*m = res
-	return nil
-}
-
-// BackendForcePersist This field is deprecated in favor of force_persist_list, and will be removed in a future release
-//
-// swagger:model BackendForcePersist
-type BackendForcePersist struct {
-	// cond
-	// Required: true
-	// Enum: [if unless]
-	// +kubebuilder:validation:Enum=if;unless;
-	Cond *string `json:"cond"`
-
-	// cond test
-	// Required: true
-	CondTest *string `json:"cond_test"`
-}
-
-// Validate validates this backend force persist
-func (m *BackendForcePersist) Validate(formats strfmt.Registry) error {
-	var res []error
-
-	if err := m.validateCond(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateCondTest(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if len(res) > 0 {
-		return errors.CompositeValidationError(res...)
-	}
-	return nil
-}
-
-var backendForcePersistTypeCondPropEnum []interface{}
-
-func init() {
-	var res []string
-	if err := json.Unmarshal([]byte(`["if","unless"]`), &res); err != nil {
-		panic(err)
-	}
-	for _, v := range res {
-		backendForcePersistTypeCondPropEnum = append(backendForcePersistTypeCondPropEnum, v)
-	}
-}
-
-const (
-
-	// BackendForcePersistCondIf captures enum value "if"
-	BackendForcePersistCondIf string = "if"
-
-	// BackendForcePersistCondUnless captures enum value "unless"
-	BackendForcePersistCondUnless string = "unless"
-)
-
-// prop value enum
-func (m *BackendForcePersist) validateCondEnum(path, location string, value string) error {
-	if err := validate.EnumCase(path, location, value, backendForcePersistTypeCondPropEnum, true); err != nil {
-		return err
-	}
-	return nil
-}
-
-func (m *BackendForcePersist) validateCond(formats strfmt.Registry) error {
-
-	if err := validate.Required("force_persist"+"."+"cond", "body", m.Cond); err != nil {
-		return err
-	}
-
-	// value enum
-	if err := m.validateCondEnum("force_persist"+"."+"cond", "body", *m.Cond); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func (m *BackendForcePersist) validateCondTest(formats strfmt.Registry) error {
-
-	if err := validate.Required("force_persist"+"."+"cond_test", "body", m.CondTest); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-// ContextValidate validates this backend force persist based on context it is used
-func (m *BackendForcePersist) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
-	return nil
-}
-
-// MarshalBinary interface implementation
-func (m *BackendForcePersist) MarshalBinary() ([]byte, error) {
-	if m == nil {
-		return nil, nil
-	}
-	return swag.WriteJSON(m)
-}
-
-// UnmarshalBinary interface implementation
-func (m *BackendForcePersist) UnmarshalBinary(b []byte) error {
-	var res BackendForcePersist
-	if err := swag.ReadJSON(b, &res); err != nil {
-		return err
-	}
-	*m = res
-	return nil
-}
-
-// ForcePersist force persist
-//
-// swagger:model ForcePersist
-type ForcePersist struct {
-	// cond
-	// Required: true
-	// Enum: [if unless]
-	// +kubebuilder:validation:Enum=if;unless;
-	Cond *string `json:"cond"`
-
-	// cond test
-	// Required: true
-	CondTest *string `json:"cond_test"`
-}
-
-// Validate validates this force persist
-func (m *ForcePersist) Validate(formats strfmt.Registry) error {
-	var res []error
-
-	if err := m.validateCond(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateCondTest(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if len(res) > 0 {
-		return errors.CompositeValidationError(res...)
-	}
-	return nil
-}
-
-var forcePersistTypeCondPropEnum []interface{}
-
-func init() {
-	var res []string
-	if err := json.Unmarshal([]byte(`["if","unless"]`), &res); err != nil {
-		panic(err)
-	}
-	for _, v := range res {
-		forcePersistTypeCondPropEnum = append(forcePersistTypeCondPropEnum, v)
-	}
-}
-
-const (
-
-	// ForcePersistCondIf captures enum value "if"
-	ForcePersistCondIf string = "if"
-
-	// ForcePersistCondUnless captures enum value "unless"
-	ForcePersistCondUnless string = "unless"
-)
-
-// prop value enum
-func (m *ForcePersist) validateCondEnum(path, location string, value string) error {
-	if err := validate.EnumCase(path, location, value, forcePersistTypeCondPropEnum, true); err != nil {
-		return err
-	}
-	return nil
-}
-
-func (m *ForcePersist) validateCond(formats strfmt.Registry) error {
-
-	if err := validate.Required("cond", "body", m.Cond); err != nil {
-		return err
-	}
-
-	// value enum
-	if err := m.validateCondEnum("cond", "body", *m.Cond); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func (m *ForcePersist) validateCondTest(formats strfmt.Registry) error {
-
-	if err := validate.Required("cond_test", "body", m.CondTest); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-// ContextValidate validates this force persist based on context it is used
-func (m *ForcePersist) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
-	return nil
-}
-
-// MarshalBinary interface implementation
-func (m *ForcePersist) MarshalBinary() ([]byte, error) {
-	if m == nil {
-		return nil, nil
-	}
-	return swag.WriteJSON(m)
-}
-
-// UnmarshalBinary interface implementation
-func (m *ForcePersist) UnmarshalBinary(b []byte) error {
-	var res ForcePersist
-	if err := swag.ReadJSON(b, &res); err != nil {
-		return err
-	}
-	*m = res
-	return nil
-}
-
-// BackendIgnorePersist This field is deprecated in favor of ignore_persist_list, and will be removed in a future release
-//
-// swagger:model BackendIgnorePersist
-type BackendIgnorePersist struct {
-	// cond
-	// Required: true
-	// Enum: [if unless]
-	// +kubebuilder:validation:Enum=if;unless;
-	Cond *string `json:"cond"`
-
-	// cond test
-	// Required: true
-	CondTest *string `json:"cond_test"`
-}
-
-// Validate validates this backend ignore persist
-func (m *BackendIgnorePersist) Validate(formats strfmt.Registry) error {
-	var res []error
-
-	if err := m.validateCond(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateCondTest(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if len(res) > 0 {
-		return errors.CompositeValidationError(res...)
-	}
-	return nil
-}
-
-var backendIgnorePersistTypeCondPropEnum []interface{}
-
-func init() {
-	var res []string
-	if err := json.Unmarshal([]byte(`["if","unless"]`), &res); err != nil {
-		panic(err)
-	}
-	for _, v := range res {
-		backendIgnorePersistTypeCondPropEnum = append(backendIgnorePersistTypeCondPropEnum, v)
-	}
-}
-
-const (
-
-	// BackendIgnorePersistCondIf captures enum value "if"
-	BackendIgnorePersistCondIf string = "if"
-
-	// BackendIgnorePersistCondUnless captures enum value "unless"
-	BackendIgnorePersistCondUnless string = "unless"
-)
-
-// prop value enum
-func (m *BackendIgnorePersist) validateCondEnum(path, location string, value string) error {
-	if err := validate.EnumCase(path, location, value, backendIgnorePersistTypeCondPropEnum, true); err != nil {
-		return err
-	}
-	return nil
-}
-
-func (m *BackendIgnorePersist) validateCond(formats strfmt.Registry) error {
-
-	if err := validate.Required("ignore_persist"+"."+"cond", "body", m.Cond); err != nil {
-		return err
-	}
-
-	// value enum
-	if err := m.validateCondEnum("ignore_persist"+"."+"cond", "body", *m.Cond); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func (m *BackendIgnorePersist) validateCondTest(formats strfmt.Registry) error {
-
-	if err := validate.Required("ignore_persist"+"."+"cond_test", "body", m.CondTest); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-// ContextValidate validates this backend ignore persist based on context it is used
-func (m *BackendIgnorePersist) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
-	return nil
-}
-
-// MarshalBinary interface implementation
-func (m *BackendIgnorePersist) MarshalBinary() ([]byte, error) {
-	if m == nil {
-		return nil, nil
-	}
-	return swag.WriteJSON(m)
-}
-
-// UnmarshalBinary interface implementation
-func (m *BackendIgnorePersist) UnmarshalBinary(b []byte) error {
-	var res BackendIgnorePersist
-	if err := swag.ReadJSON(b, &res); err != nil {
-		return err
-	}
-	*m = res
-	return nil
-}
-
-// IgnorePersist ignore persist
-//
-// swagger:model IgnorePersist
-type IgnorePersist struct {
-	// cond
-	// Required: true
-	// Enum: [if unless]
-	// +kubebuilder:validation:Enum=if;unless;
-	Cond *string `json:"cond"`
-
-	// cond test
-	// Required: true
-	CondTest *string `json:"cond_test"`
-}
-
-// Validate validates this ignore persist
-func (m *IgnorePersist) Validate(formats strfmt.Registry) error {
-	var res []error
-
-	if err := m.validateCond(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateCondTest(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if len(res) > 0 {
-		return errors.CompositeValidationError(res...)
-	}
-	return nil
-}
-
-var ignorePersistTypeCondPropEnum []interface{}
-
-func init() {
-	var res []string
-	if err := json.Unmarshal([]byte(`["if","unless"]`), &res); err != nil {
-		panic(err)
-	}
-	for _, v := range res {
-		ignorePersistTypeCondPropEnum = append(ignorePersistTypeCondPropEnum, v)
-	}
-}
-
-const (
-
-	// IgnorePersistCondIf captures enum value "if"
-	IgnorePersistCondIf string = "if"
-
-	// IgnorePersistCondUnless captures enum value "unless"
-	IgnorePersistCondUnless string = "unless"
-)
-
-// prop value enum
-func (m *IgnorePersist) validateCondEnum(path, location string, value string) error {
-	if err := validate.EnumCase(path, location, value, ignorePersistTypeCondPropEnum, true); err != nil {
-		return err
-	}
-	return nil
-}
-
-func (m *IgnorePersist) validateCond(formats strfmt.Registry) error {
-
-	if err := validate.Required("cond", "body", m.Cond); err != nil {
-		return err
-	}
-
-	// value enum
-	if err := m.validateCondEnum("cond", "body", *m.Cond); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func (m *IgnorePersist) validateCondTest(formats strfmt.Registry) error {
-
-	if err := validate.Required("cond_test", "body", m.CondTest); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-// ContextValidate validates this ignore persist based on context it is used
-func (m *IgnorePersist) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
-	return nil
-}
-
-// MarshalBinary interface implementation
-func (m *IgnorePersist) MarshalBinary() ([]byte, error) {
-	if m == nil {
-		return nil, nil
-	}
-	return swag.WriteJSON(m)
-}
-
-// UnmarshalBinary interface implementation
-func (m *IgnorePersist) UnmarshalBinary(b []byte) error {
-	var res IgnorePersist
 	if err := swag.ReadJSON(b, &res); err != nil {
 		return err
 	}

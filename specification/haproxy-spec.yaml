@@ -70,6 +70,8 @@ definitions:
       $ref: '#/definitions/frontend'
   backend:
     $ref: "models/configuration/backend.yaml#/backend"
+  backend_base:
+    $ref: "models/configuration/backend.yaml#/backend_base"
   backends:
     title: Backends
     description: HAProxy backends array

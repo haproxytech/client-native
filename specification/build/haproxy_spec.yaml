@@ -3042,6 +3042,59 @@ definitions:
     items:
       $ref: '#/definitions/frontend'
   backend:
+    allOf:
+      - $ref: '#/definitions/backend_base'
+      - properties:
+          acl_list:
+            $ref: '#/definitions/acls'
+            x-go-name: AclList
+          filter_list:
+            $ref: '#/definitions/filters'
+            x-go-name: FilterList
+          http_after_response_rule_list:
+            $ref: '#/definitions/http_after_response_rules'
+            x-go-name: HTTPAfterResponseRuleList
+          http_check_list:
+            $ref: '#/definitions/http_checks'
+            x-go-name: HTTPCheckList
+          http_error_rule_list:
+            $ref: '#/definitions/http_error_rules'
+            x-go-name: HTTPErrorRuleList
+          http_request_rule_list:
+            $ref: '#/definitions/http_request_rules'
+            x-go-name: HTTPRequestRuleList
+          http_response_rule_list:
+            $ref: '#/definitions/http_response_rules'
+            x-go-name: HTTPResponseRuleList
+          log_target_list:
+            $ref: '#/definitions/log_targets'
+            x-go-name: LogTargetList
+          server_switching_rule_list:
+            $ref: '#/definitions/server_switching_rules'
+            x-go-name: ServerSwitchingRuleList
+          server_templates:
+            additionalProperties:
+              $ref: '#/definitions/server_template'
+          servers:
+            additionalProperties:
+              $ref: '#/definitions/server'
+          stick_rule_list:
+            $ref: '#/definitions/stick_rules'
+            x-go-name: StickRuleList
+          tcp_check_rule_list:
+            $ref: '#/definitions/tcp_checks'
+            x-go-name: TCPCheckRuleList
+          tcp_request_rule_list:
+            $ref: '#/definitions/tcp_request_rules'
+            x-go-name: TCPRequestRuleList
+          tcp_response_rule_list:
+            $ref: '#/definitions/tcp_response_rules'
+            x-go-name: TCPResponseRuleList
+        type: object
+    description: Backend with all it's children resources
+    type: object
+    x-go-name: Backend
+  backend_base:
     additionalProperties: false
     description: HAProxy backend configuration
     example:
@@ -3180,6 +3233,7 @@ definitions:
           - cond_test
         type: object
         x-deprecated: true
+        x-go-name: BackendForcePersist
       force_persist_list:
         items:
           properties:
@@ -3353,6 +3407,7 @@ definitions:
           - cond_test
         type: object
         x-deprecated: true
+        x-go-name: BackendIgnorePersist
       ignore_persist_list:
         items:
           properties:
@@ -3570,7 +3625,7 @@ definitions:
         x-display-name: FastCGI application
     required:
       - name
-    title: Backend
+    title: Backend Base
     type: object
   backends:
     title: Backends
@@ -13452,6 +13507,7 @@ paths:
       operationId: getBackends
       parameters:
         - $ref: '#/parameters/transaction_id'
+        - $ref: '#/parameters/full_section'
       responses:
         "200":
           description: Successful operation
@@ -13478,6 +13534,7 @@ paths:
         - $ref: '#/parameters/transaction_id'
         - $ref: '#/parameters/version'
         - $ref: '#/parameters/force_reload'
+        - $ref: '#/parameters/full_section'
       responses:
         "201":
           description: Backend created
@@ -13539,6 +13596,7 @@ paths:
           required: true
           type: string
         - $ref: '#/parameters/transaction_id'
+        - $ref: '#/parameters/full_section'
       responses:
         "200":
           description: Successful operation
@@ -13572,6 +13630,7 @@ paths:
         - $ref: '#/parameters/transaction_id'
         - $ref: '#/parameters/version'
         - $ref: '#/parameters/force_reload'
+        - $ref: '#/parameters/full_section'
       responses:
         "200":
           description: Backend replaced

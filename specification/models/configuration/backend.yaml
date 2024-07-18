@@ -1,6 +1,59 @@
 ---
 backend:
-  title: Backend
+  type: object
+  description: Backend with all it's children resources
+  x-go-name: Backend
+  allOf:
+    - $ref: "#/definitions/backend_base"
+    - type: object
+      properties:
+        servers:
+          additionalProperties:
+            $ref: "#/definitions/server"
+        server_switching_rule_list:
+          $ref: "#/definitions/server_switching_rules"
+          x-go-name: ServerSwitchingRuleList
+        acl_list:
+          $ref: "#/definitions/acls"
+          x-go-name: AclList
+        filter_list:
+          $ref: "#/definitions/filters"
+          x-go-name: FilterList
+        log_target_list:
+          $ref: "#/definitions/log_targets"
+          x-go-name: LogTargetList
+        http_after_response_rule_list:
+          $ref: "#/definitions/http_after_response_rules"
+          x-go-name: HTTPAfterResponseRuleList
+        http_check_list:
+          $ref: "#/definitions/http_checks"
+          x-go-name: HTTPCheckList
+        http_request_rule_list:
+          $ref: "#/definitions/http_request_rules"
+          x-go-name: HTTPRequestRuleList
+        http_response_rule_list:
+          $ref: "#/definitions/http_response_rules"
+          x-go-name: HTTPResponseRuleList
+        http_error_rule_list:
+          $ref: "#/definitions/http_error_rules"
+          x-go-name: HTTPErrorRuleList
+        tcp_check_rule_list:
+          $ref: "#/definitions/tcp_checks"
+          x-go-name: TCPCheckRuleList
+        tcp_request_rule_list:
+          $ref: "#/definitions/tcp_request_rules"
+          x-go-name: TCPRequestRuleList
+        tcp_response_rule_list:
+          $ref: "#/definitions/tcp_response_rules"
+          x-go-name: TCPResponseRuleList
+        stick_rule_list:
+          $ref: "#/definitions/stick_rules"
+          x-go-name: StickRuleList
+        server_templates:
+          additionalProperties:
+            $ref: "#/definitions/server_template"
+backend_base:
+  title: Backend Base
   description: HAProxy backend configuration
   type: object
   required:
@@ -353,6 +406,7 @@ backend:
       x-nullable: true
     force_persist:
       type: object
+      x-go-name: BackendForcePersist
       description: This field is deprecated in favor of force_persist_list, and will be removed in a future release
       x-deprecated: true
       required:
@@ -392,6 +446,7 @@ backend:
                 required: true
     ignore_persist:
       type: object
+      x-go-name: BackendIgnorePersist
       description: This field is deprecated in favor of ignore_persist_list, and will be removed in a future release
       x-deprecated: true
       required:
