@@ -3,21 +3,11 @@ http_after_response_rules:
   get:
     summary: Return an array of all HTTP After Response Rules
     description: Returns all HTTP After Response Rules that are configured in specified parent.
-    operationId: getHTTPAfterResponseRules
+    operationId: getAllHTTPAfterResponseRule{{ .ParentType }}
     tags:
       - HTTPAfterResponseRule
     parameters:
-      - name: parent_name
-        in: query
-        description: Parent name
-        required: true
-        type: string
-      - name: parent_type
-        in: query
-        description: Parent type
-        required: true
-        type: string
-        enum: [frontend, backend]
+      - $ref: "#/parameters/parent_name"
       - $ref: "#/parameters/transaction_id"
     responses:
       '200':
@@ -33,21 +23,11 @@ http_after_response_rules:
   put:
     summary: Replace an HTTP After Response Rules list
     description: Replaces a whole list of HTTP After Response Rules with the list given in parameter
-    operationId: replaceHTTPAfterResponseRules
+    operationId: replaceAllHTTPAfterResponseRule{{ .ParentType }}
     tags:
       - HTTPAfterResponseRule
     parameters:
-      - name: parent_name
-        in: query
-        description: Parent name
-        required: true
-        type: string
-      - name: parent_type
-        in: query
-        description: Parent type
-        required: true
-        type: string
-        enum: [frontend, backend]
+      - $ref: "#/parameters/parent_name"
       - name: data
         in: body
         required: true
@@ -77,7 +57,7 @@ http_after_response_rules_one:
   get:
     summary: Return one HTTP After Response Rule
     description: Returns one HTTP After Response Rule configuration by it's index in the specified parent.
-    operationId: getHTTPAfterResponseRule
+    operationId: getHTTPAfterResponseRule{{ .ParentType }}
     tags:
       - HTTPAfterResponseRule
     parameters:
@@ -86,17 +66,7 @@ http_after_response_rules_one:
         description: HTTP After Response Rule Index
         required: true
         type: integer
-      - name: parent_name
-        in: query
-        description: Parent name
-        required: true
-        type: string
-      - name: parent_type
-        in: query
-        description: Parent type
-        required: true
-        type: string
-        enum: [frontend, backend]
+      - $ref: "#/parameters/parent_name"
       - $ref: "#/parameters/transaction_id"
     responses:
       '200':
@@ -114,7 +84,7 @@ http_after_response_rules_one:
   put:
     summary: Replace a HTTP After Response Rule
     description: Replaces a HTTP After Response Rule configuration by it's index in the specified parent.
-    operationId: replaceHTTPAfterResponseRule
+    operationId: replaceHTTPAfterResponseRule{{ .ParentType }}
     tags:
       - HTTPAfterResponseRule
     parameters:
@@ -123,17 +93,7 @@ http_after_response_rules_one:
         description: HTTP After Response Rule Index
         required: true
         type: integer
-      - name: parent_name
-        in: query
-        description: Parent name
-        required: true
-        type: string
-      - name: parent_type
-        in: query
-        description: Parent type
-        required: true
-        type: string
-        enum: [frontend, backend]
+      - $ref: "#/parameters/parent_name"
       - name: data
         in: body
         required: true
@@ -164,7 +124,7 @@ http_after_response_rules_one:
   delete:
     summary: Delete a HTTP After Response Rule
     description: Deletes a HTTP After Response Rule configuration by it's index from the specified parent.
-    operationId: deleteHTTPAfterResponseRule
+    operationId: deleteHTTPAfterResponseRule{{ .ParentType }}
     tags:
       - HTTPAfterResponseRule
     parameters:
@@ -173,17 +133,7 @@ http_after_response_rules_one:
         description: HTTP After Response Rule Index
         required: true
         type: integer
-      - name: parent_name
-        in: query
-        description: Parent name
-        required: true
-        type: string
-      - name: parent_type
-        in: query
-        description: Parent type
-        required: true
-        type: string
-        enum: [frontend, backend]
+      - $ref: "#/parameters/parent_name"
       - $ref: "#/parameters/transaction_id"
       - $ref: "#/parameters/version"
       - $ref: "#/parameters/force_reload"
@@ -203,7 +153,7 @@ http_after_response_rules_one:
   post:
     summary: Add a new HTTP After Response Rule
     description: Adds a new HTTP After Response Rule of the specified type in the specified parent.
-    operationId: createHTTPAfterResponseRule
+    operationId: createHTTPAfterResponseRule{{ .ParentType }}
     tags:
       - HTTPAfterResponseRule
     parameters:
@@ -212,17 +162,7 @@ http_after_response_rules_one:
         description: HTTP After Response Rule Index
         required: true
         type: integer
-      - name: parent_name
-        in: query
-        description: Parent name
-        required: true
-        type: string
-      - name: parent_type
-        in: query
-        description: Parent type
-        required: true
-        type: string
-        enum: [frontend, backend]
+      - $ref: "#/parameters/parent_name"
       - name: data
         in: body
         required: true

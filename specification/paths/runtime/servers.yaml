@@ -3,15 +3,11 @@ servers:
   get:
     summary: Return an array of runtime servers' settings
     description: Returns an array of all servers' runtime settings.
-    operationId: getRuntimeServers
+    operationId: getAllRuntimeServer
     tags:
       - Server
     parameters:
-      - name: backend
-        in: query
-        description: Parent backend name
-        required: true
-        type: string
+      - $ref: "#/parameters/parent_name"
     responses:
       '200':
         description: Successful operation
@@ -26,11 +22,7 @@ servers:
     tags:
       - Server
     parameters:
-      - name: backend
-        in: query
-        description: Parent backend name
-        required: true
-        type: string
+      - $ref: "#/parameters/parent_name"
       - name: data
         in: body
         required: true
@@ -62,11 +54,7 @@ servers_one:
         description: Server name
         required: true
         type: string
-      - name: backend
-        in: query
-        description: Parent backend name
-        required: true
-        type: string
+      - $ref: "#/parameters/parent_name"
     responses:
       '200':
         description: Successful operation
@@ -88,11 +76,7 @@ servers_one:
         description: Server name
         required: true
         type: string
-      - name: backend
-        in: query
-        description: Parent backend name
-        required: true
-        type: string
+      - $ref: "#/parameters/parent_name"
       - name: data
         in: body
         required: true
@@ -121,11 +105,7 @@ servers_one:
         description: Server name
         required: true
         type: string
-      - name: backend
-        in: query
-        description: Parent backend name
-        required: true
-        type: string
+      - $ref: "#/parameters/parent_name"
     responses:
       '204':
         description: Server deleted

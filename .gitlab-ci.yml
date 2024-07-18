@@ -19,7 +19,7 @@ build-specification:
   tags:
     - go
   script:
-    - go run specification/build/build.go -file specification/haproxy-spec.yaml > specification/build/haproxy_spec_to_compare.yaml
+    - go run cmd/specification/*.go -file specification/haproxy-spec.yaml > specification/build/haproxy_spec_to_compare.yaml
     - diff -u specification/build/haproxy_spec_to_compare.yaml specification/build/haproxy_spec.yaml
   rules:
     - if: $CI_PIPELINE_SOURCE == 'merge_request_event'

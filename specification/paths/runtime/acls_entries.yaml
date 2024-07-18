@@ -8,11 +8,7 @@ acls_entries_one:
     produces:
       - application/json
     parameters:
-      - name: acl_id
-        in: query
-        description: ACL ID
-        required: true
-        type: string
+      - $ref: "#/parameters/parent_name"
       - name: id
         in: path
         description: File entry ID
@@ -37,11 +33,7 @@ acls_entries_one:
     produces:
       - application/json
     parameters:
-      - name: acl_id
-        in: query
-        description: ACL ID
-        required: true
-        type: string
+      - $ref: "#/parameters/parent_name"
       - name: id
         in: path
         description: File entry ID
@@ -65,11 +57,7 @@ acls_entries:
     produces:
       - application/json
     parameters:
-      - name: acl_id
-        in: query
-        description: ACL ID
-        required: true
-        type: string
+      - $ref: "#/parameters/parent_name"
       - name: data
         in: body
         required: true
@@ -94,11 +82,7 @@ acls_entries:
     produces:
       - application/json
     parameters:
-      - name: acl_id
-        in: query
-        description: ACL ID
-        required: true
-        type: string
+      - $ref: "#/parameters/parent_name"
     responses:
       '200':
         description: Successful operation
@@ -115,11 +99,7 @@ acls_entries:
     description: Adds a new ACL payload.
     operationId: addPayloadRuntimeACL
     parameters:
-      - name: acl_id
-        in: query
-        description: ACL ID
-        required: true
-        type: string
+      - $ref: "#/parameters/parent_name"
       - name: data
         required: true
         in: body

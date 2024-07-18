@@ -2,20 +2,24 @@ package main
 
 import (
 	"bufio"
+	"bytes"
 	"flag"
 	"fmt"
+	"html/template"
 	"os"
 	"path"
 	"path/filepath"
 	"sort"
 	"strings"
 
+	"github.com/go-openapi/swag"
+	"github.com/haproxytech/client-native/v6/configuration/parents"
 	"gopkg.in/yaml.v3"
 )
 
-var cache map[string]interface{}
+var cache map[string]interface{} //nolint:gochecknoglobals
 
-func error(msg string) {
+func errorExit(msg string) {
 	fmt.Fprintf(os.Stderr, "ERROR: %v\n", msg)
 	os.Exit(1)
 }
@@ -39,7 +43,7 @@ func expandRef(refValue string, absPath string, prefix string) string {
 	if !ok {
 		fileHandle, err := os.Open(filePath)
 		if err != nil {
-			error(err.Error())
+			errorExit(err.Error())
 		}
 		defer fileHandle.Close()
 
@@ -51,8 +55,8 @@ func expandRef(refValue string, absPath string, prefix string) string {
 
 		err = yaml.Unmarshal([]byte(value), &m)
 		if err != nil {
-			fmt.Println(refValue)
-			fmt.Println("WARNING: ", err)
+			fmt.Println(refValue)         //nolint:forbidigo
+			fmt.Println("WARNING: ", err) //nolint:forbidigo
 			return refValue
 		}
 		cache[filePath] = m
@@ -61,22 +65,27 @@ func expandRef(refValue string, absPath string, prefix string) string {
 	if m[keyPath[1:]] != nil {
 		retVal = m[keyPath[1:]].(map[string]interface{})
 	} else {
-		fmt.Println(refValue)
-		fmt.Println(keyPath)
-		fmt.Println(m[keyPath[1:]])
+		fmt.Println(refValue)       //nolint:forbidigo
+		fmt.Println(keyPath)        //nolint:forbidigo
+		fmt.Println(m[keyPath[1:]]) //nolint:forbidigo
 	}
 
-	retValByte, err := yaml.Marshal(retVal)
+	buf := bytes.Buffer{}
+	enc := yaml.NewEncoder(&buf)
+	enc.SetIndent(2)
+	// Can set default indent here on the encoder
+	err := enc.Encode(&retVal)
 	if err != nil {
 		warn("Error encoding YAML")
 		return refValue
 	}
-	retValStr := string(retValByte)
+	retValStr := buf.String()
+
 	indentedRetValStr := ""
 	indentedLine := ""
 	for _, line := range strings.Split(retValStr, "\n") {
 		if strings.TrimSpace(line) != "" {
-			indentedLine = prefix + "  " + line + "\n"
+			indentedLine = prefix + "" + line + "\n"
 			indentedRetValStr += indentedLine
 		}
 	}
@@ -84,17 +93,17 @@ func expandRef(refValue string, absPath string, prefix string) string {
 	return indentedRetValStr[:len(indentedRetValStr)-1]
 }
 
-func main() {
+func main() { //nolint:gocognit
 	inputFilePtr := flag.String("file", "", "Source file")
 
 	flag.Parse()
 
 	if *inputFilePtr == "" {
-		error("Input file not specified, please specify")
+		errorExit("Input file not specified, please specify")
 	}
 	// sanity checks
 	if _, err := os.Stat(strings.TrimSpace(*inputFilePtr)); os.IsNotExist(err) {
-		error("File " + *inputFilePtr + " does not exist")
+		errorExit("File " + *inputFilePtr + " does not exist")
 	}
 
 	cache = make(map[string]interface{})
@@ -102,7 +111,7 @@ func main() {
 	absPath := filepath.Dir(*inputFilePtr)
 	fileHandle, err := os.Open(*inputFilePtr)
 	if err != nil {
-		error(err.Error())
+		errorExit(err.Error())
 	}
 	defer fileHandle.Close()
 
@@ -114,7 +123,7 @@ func main() {
 		Description string `yaml:"description,omitempty"`
 	}
 	type tags []tag
-	var ts tags = tags{}
+	ts := tags{}
 	var tagResult strings.Builder
 	for fileScanner.Scan() {
 		line := fileScanner.Text()
@@ -147,7 +156,7 @@ func main() {
 					str := tagResult.String()
 					err = yaml.Unmarshal([]byte(str), &ts)
 					if err != nil {
-						error(err.Error())
+						errorExit(err.Error())
 					}
 					sort.Slice(ts, func(i, j int) bool {
 						return ts[i].Name < ts[j].Name
@@ -156,7 +165,10 @@ func main() {
 					result.WriteString("\n")
 
 					b, _ := yaml.Marshal(&ts)
-					result.WriteString(string(b))
+
+					for _, line := range strings.Split(strings.TrimRight(string(b), "\n"), "\n") {
+						result.WriteString("  " + line + "\n")
+					}
 					result.WriteString("security:")
 					result.WriteString("\n")
 					break
@@ -167,5 +179,31 @@ func main() {
 			result.WriteString("\n")
 		}
 	}
-	fmt.Println(result.String())
+
+	tmplRes := expandChildren(result.String())
+	res := tmplRes.String()
+	res = strings.TrimSuffix(res, "\n")
+
+	fmt.Println(res) //nolint:forbidigo
+}
+
+// to expand models for nested children
+// update:
+// - configuration/parents/constants.go
+// - congiuration/parents/parents.go
+// and specification/haproxy_spec.yaml (template)
+
+func expandChildren(src string) bytes.Buffer {
+	funcMap := template.FuncMap{
+		"parents":  parents.Parents,
+		"toGoName": swag.ToGoName,
+	}
+
+	tmpl := template.Must(template.New("").Funcs(funcMap).Parse(src))
+	var result bytes.Buffer
+	err := tmpl.Execute(&result, nil)
+	if err != nil {
+		errorExit(err.Error())
+	}
+	return result
 }

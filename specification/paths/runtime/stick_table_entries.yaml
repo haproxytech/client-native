@@ -7,11 +7,7 @@ stick_table_entries:
     tags:
       - StickTable
     parameters:
-      - name: stick_table
-        in: query
-        description: Stick table name
-        required: true
-        type: string
+      - $ref: "#/parameters/parent_name"
       - name: stick_table_entry
         in: body
         description: Stick table entry
@@ -37,11 +33,7 @@ stick_table_entries:
     tags:
       - StickTable
     parameters:
-      - name: stick_table
-        in: query
-        description: Stick table name
-        required: true
-        type: string
+      - $ref: "#/parameters/parent_name"
       - name: filter
         in: query
         description: A list of filters in format data.<type> <operator> <value> separated by comma

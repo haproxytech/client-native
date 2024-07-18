@@ -3,21 +3,11 @@ http_error_rules:
   get:
     summary: Return an array of all HTTP Error Rules
     description: Returns all HTTP Error Rules that are configured in the specified parent.
-    operationId: getHTTPErrorRules
+    operationId: getAllHTTPErrorRule{{ .ParentType }}
     tags:
       - HTTPErrorRule
     parameters:
-      - name: parent_name
-        in: query
-        description: Parent name
-        required: true
-        type: string
-      - name: parent_type
-        in: query
-        description: Parent type
-        required: true
-        type: string
-        enum: [frontend, backend, defaults]
+      - $ref: "#/parameters/parent_name"
       - $ref: "#/parameters/transaction_id"
     responses:
       '200':
@@ -33,21 +23,11 @@ http_error_rules:
   put:
     summary: Replace an HTTP Error Rules list
     description: Replaces a whole list of HTTP Error Rules with the list given in parameter
-    operationId: replaceHTTPErrorRules
+    operationId: replaceAllHTTPErrorRule{{ .ParentType }}
     tags:
       - HTTPErrorRule
     parameters:
-      - name: parent_name
-        in: query
-        description: Parent name
-        required: true
-        type: string
-      - name: parent_type
-        in: query
-        description: Parent type
-        required: true
-        type: string
-        enum: [frontend, backend, defaults]
+      - $ref: "#/parameters/parent_name"
       - name: data
         in: body
         required: true
@@ -77,7 +57,7 @@ http_error_rules_one:
   get:
     summary: Return one HTTP Error Rule
     description: Returns one HTTP Error Rule configuration by its index in the specified parent.
-    operationId: getHTTPErrorRule
+    operationId: getHTTPErrorRule{{ .ParentType }}
     tags:
       - HTTPErrorRule
     parameters:
@@ -86,17 +66,7 @@ http_error_rules_one:
         description: HTTP Error Rule Index
         required: true
         type: integer
-      - name: parent_name
-        in: query
-        description: Parent name
-        required: true
-        type: string
-      - name: parent_type
-        in: query
-        description: Parent type
-        required: true
-        type: string
-        enum: [frontend, backend, defaults]
+      - $ref: "#/parameters/parent_name"
       - $ref: "#/parameters/transaction_id"
     responses:
       '200':
@@ -114,7 +84,7 @@ http_error_rules_one:
   put:
     summary: Replace a HTTP Error Rule
     description: Replaces a HTTP Error Rule configuration by its index in the specified parent.
-    operationId: replaceHTTPErrorRule
+    operationId: replaceHTTPErrorRule{{ .ParentType }}
     tags:
       - HTTPErrorRule
     parameters:
@@ -123,17 +93,7 @@ http_error_rules_one:
         description: HTTP Error Rule Index
         required: true
         type: integer
-      - name: parent_name
-        in: query
-        description: Parent name
-        required: true
-        type: string
-      - name: parent_type
-        in: query
-        description: Parent type
-        required: true
-        type: string
-        enum: [frontend, backend, defaults]
+      - $ref: "#/parameters/parent_name"
       - name: data
         in: body
         required: true
@@ -164,7 +124,7 @@ http_error_rules_one:
   delete:
     summary: Delete a HTTP Error Rule
     description: Deletes a HTTP Error Rule configuration by its index from the specified parent.
-    operationId: deleteHTTPErrorRule
+    operationId: deleteHTTPErrorRule{{ .ParentType }}
     tags:
       - HTTPErrorRule
     parameters:
@@ -173,17 +133,7 @@ http_error_rules_one:
         description: HTTP Error Rule Index
         required: true
         type: integer
-      - name: parent_name
-        in: query
-        description: Parent name
-        required: true
-        type: string
-      - name: parent_type
-        in: query
-        description: Parent type
-        required: true
-        type: string
-        enum: [frontend, backend, defaults]
+      - $ref: "#/parameters/parent_name"
       - $ref: "#/parameters/transaction_id"
       - $ref: "#/parameters/version"
       - $ref: "#/parameters/force_reload"
@@ -203,7 +153,7 @@ http_error_rules_one:
   post:
     summary: Add a new HTTP Error Rule
     description: Adds a new HTTP Error Rule of the specified type in the specified parent.
-    operationId: createHTTPErrorRule
+    operationId: createHTTPErrorRule{{ .ParentType }}
     tags:
       - HTTPErrorRule
     parameters:
@@ -212,17 +162,7 @@ http_error_rules_one:
         description: HTTP Error Rule Index
         required: true
         type: integer
-      - name: parent_name
-        in: query
-        description: Parent name
-        required: true
-        type: string
-      - name: parent_type
-        in: query
-        description: Parent type
-        required: true
-        type: string
-        enum: [frontend, backend, defaults]
+      - $ref: "#/parameters/parent_name"
       - name: data
         in: body
         required: true

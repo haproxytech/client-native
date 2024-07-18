@@ -20,7 +20,7 @@ e2e-docker:
 
 .PHONY: spec
 spec:
-	go run specification/build/build.go -file specification/haproxy-spec.yaml > specification/build/haproxy_spec.yaml
+	go run cmd/specification/*.go -file specification/haproxy-spec.yaml > specification/build/haproxy_spec.yaml
 
 .PHONY: models
 models: spec swagger-check
@@ -42,7 +42,7 @@ lint:
 
 .PHONY: lint-yaml
 lint-yaml:
-	docker run --rm -v $(pwd):/data cytopia/yamllint .
+	docker run --rm -v $(PWD):/data cytopia/yamllint .
 
 .PHONY: gofumpt
 gofumpt:

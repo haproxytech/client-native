@@ -3,21 +3,11 @@ acls:
   get:
     summary: Return an array of all ACL lines
     description: Returns all ACL lines that are configured in specified parent.
-    operationId: getAcls
+    operationId: getAllAcl{{ .ParentType }}
     tags:
       - ACL
     parameters:
-      - name: parent_name
-        in: query
-        description: Parent name
-        required: true
-        type: string
-      - name: parent_type
-        in: query
-        description: Parent type
-        required: true
-        type: string
-        enum: [frontend, backend, fcgi-app]
+      - $ref: "#/parameters/parent_name"
       - name: acl_name
         in: query
         description: ACL name
@@ -37,21 +27,11 @@ acls:
   put:
     summary: Replace an ACL list
     description: Replaces a whole list of ACLs with the list given in parameter
-    operationId: replaceAcls
+    operationId: replaceAllAcl{{ .ParentType }}
     tags:
       - ACL
     parameters:
-      - name: parent_name
-        in: query
-        description: Parent name
-        required: true
-        type: string
-      - name: parent_type
-        in: query
-        description: Parent type
-        required: true
-        type: string
-        enum: [frontend, backend]
+      - $ref: "#/parameters/parent_name"
       - name: data
         in: body
         required: true
@@ -81,7 +61,7 @@ acls_one:
   get:
     summary: Return one ACL line
     description: Returns one ACL line configuration by it's index in the specified parent.
-    operationId: getAcl
+    operationId: getAcl{{ .ParentType }}
     tags:
       - ACL
     parameters:
@@ -90,17 +70,7 @@ acls_one:
         description: ACL line Index
         required: true
         type: integer
-      - name: parent_name
-        in: query
-        description: Parent name
-        required: true
-        type: string
-      - name: parent_type
-        in: query
-        description: Parent type
-        required: true
-        type: string
-        enum: [frontend, backend]
+      - $ref: "#/parameters/parent_name"
       - $ref: "#/parameters/transaction_id"
     responses:
       '200':
@@ -118,7 +88,7 @@ acls_one:
   put:
     summary: Replace a ACL line
     description: Replaces a ACL line configuration by it's index in the specified parent.
-    operationId: replaceAcl
+    operationId: replaceAcl{{ .ParentType }}
     tags:
       - ACL
     parameters:
@@ -127,17 +97,7 @@ acls_one:
         description: ACL line Index
         required: true
         type: integer
-      - name: parent_name
-        in: query
-        description: Parent name
-        required: true
-        type: string
-      - name: parent_type
-        in: query
-        description: Parent type
-        required: true
-        type: string
-        enum: [frontend, backend]
+      - $ref: "#/parameters/parent_name"
       - name: data
         in: body
         required: true
@@ -168,7 +128,7 @@ acls_one:
   delete:
     summary: Delete a ACL line
     description: Deletes a ACL line configuration by it's index from the specified parent.
-    operationId: deleteAcl
+    operationId: deleteAcl{{ .ParentType }}
     tags:
       - ACL
     parameters:
@@ -177,17 +137,7 @@ acls_one:
         description: ACL line Index
         required: true
         type: integer
-      - name: parent_name
-        in: query
-        description: Parent name
-        required: true
-        type: string
-      - name: parent_type
-        in: query
-        description: Parent type
-        required: true
-        type: string
-        enum: [frontend, backend]
+      - $ref: "#/parameters/parent_name"
       - $ref: "#/parameters/transaction_id"
       - $ref: "#/parameters/version"
       - $ref: "#/parameters/force_reload"
@@ -207,7 +157,7 @@ acls_one:
   post:
     summary: Add a new ACL line
     description: Adds a new ACL line of the specified type in the specified parent.
-    operationId: createAcl
+    operationId: createAcl{{ .ParentType }}
     tags:
       - ACL
     parameters:
@@ -216,17 +166,7 @@ acls_one:
         description: ACL line Index
         required: true
         type: integer
-      - name: parent_name
-        in: query
-        description: Parent name
-        required: true
-        type: string
-      - name: parent_type
-        in: query
-        description: Parent type
-        required: true
-        type: string
-        enum: [frontend, backend]
+      - $ref: "#/parameters/parent_name"
       - name: data
         in: body
         required: true

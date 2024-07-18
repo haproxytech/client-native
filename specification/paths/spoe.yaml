@@ -92,13 +92,9 @@ spoe_scopes:
   get:
     summary: Return an array of spoe scopes
     description: Returns an array of all configured spoe scopes.
-    operationId: getSpoeScopes
+    operationId: getAllSpoeScope
     parameters:
-      - name: spoe
-        in: query
-        description: Spoe file name
-        required: true
-        type: string
+      - $ref: "#/parameters/parent_name"
       - $ref: "#/parameters/transaction_id"
     tags:
       - Spoe
@@ -118,11 +114,7 @@ spoe_scopes:
     description: Adds a new spoe scope.
     operationId: createSpoeScope
     parameters:
-      - name: spoe
-        in: query
-        description: Spoe file name
-        required: true
-        type: string
+      - $ref: "#/parameters/parent_name"
       - name: data
         required: true
         in: body
@@ -151,11 +143,7 @@ spoe_scopes_one:
     tags:
       - Spoe
     parameters:
-      - name: spoe
-        in: query
-        description: Spoe file name
-        required: true
-        type: string
+      - $ref: "#/parameters/parent_name"
       - name: name
         in: path
         description: Spoe scope
@@ -182,11 +170,7 @@ spoe_scopes_one:
     tags:
       - Spoe
     parameters:
-      - name: spoe
-        in: query
-        description: Spoe file name
-        required: true
-        type: string
+      - $ref: "#/parameters/parent_name"
       - name: name
         in: path
         description: Spoe scope name
@@ -205,16 +189,12 @@ spoe_agents:
   get:
     summary: Return an array of spoe agents in one scope
     description: Returns an array of all configured spoe agents in one scope.
-    operationId: getSpoeAgents
+    operationId: getAllSpoeAgent
     parameters:
-      - name: spoe
-        in: query
-        description: Spoe file name
-        required: true
-        type: string
-      - name: scope
-        in: query
-        description: Spoe scope
+      - $ref: "#/parameters/parent_name"
+      - name: scope_name
+        in: path
+        description: Spoe scope name
         required: true
         type: string
       - $ref: "#/parameters/transaction_id"
@@ -236,14 +216,10 @@ spoe_agents:
     description: Adds a new spoe agent to the spoe scope.
     operationId: createSpoeAgent
     parameters:
-      - name: spoe
-        in: query
-        description: Spoe file name
-        required: true
-        type: string
-      - name: scope
-        in: query
-        description: Spoe scope
+      - $ref: "#/parameters/parent_name"
+      - name: scope_name
+        in: path
+        description: Spoe scope name
         required: true
         type: string
       - name: data
@@ -274,14 +250,10 @@ spoe_agents_one:
     tags:
       - Spoe
     parameters:
-      - name: spoe
-        in: query
-        description: Spoe file name
-        required: true
-        type: string
-      - name: scope
-        in: query
-        description: Spoe scope
+      - $ref: "#/parameters/parent_name"
+      - name: scope_name
+        in: path
+        description: Spoe scope name
         required: true
         type: string
       - name: name
@@ -310,14 +282,10 @@ spoe_agents_one:
     tags:
       - Spoe
     parameters:
-      - name: spoe
-        in: query
-        description: Spoe file name
-        required: true
-        type: string
-      - name: scope
-        in: query
-        description: Spoe scope
+      - $ref: "#/parameters/parent_name"
+      - name: scope_name
+        in: path
+        description: Spoe scope name
         required: true
         type: string
       - name: name
@@ -350,14 +318,10 @@ spoe_agents_one:
     tags:
       - Spoe
     parameters:
-      - name: spoe
-        in: query
-        description: Spoe file name
-        required: true
-        type: string
-      - name: scope
-        in: query
-        description: Spoe scope
+      - $ref: "#/parameters/parent_name"
+      - name: scope_name
+        in: path
+        description: Spoe scope name
         required: true
         type: string
       - name: name
@@ -378,16 +342,12 @@ spoe_messages:
   get:
     summary: Return an array of spoe messages in one scope
     description: Returns an array of all configured spoe messages in one scope.
-    operationId: getSpoeMessages
+    operationId: getAllSpoeMessage
     parameters:
-      - name: spoe
-        in: query
-        description: Spoe file name
-        required: true
-        type: string
-      - name: scope
-        in: query
-        description: Spoe scope
+      - $ref: "#/parameters/parent_name"
+      - name: scope_name
+        in: path
+        description: Spoe scope name
         required: true
         type: string
       - $ref: "#/parameters/transaction_id"
@@ -409,14 +369,10 @@ spoe_messages:
     description: Adds a new spoe message to the spoe scope.
     operationId: createSpoeMessage
     parameters:
-      - name: spoe
-        in: query
-        description: Spoe file name
-        required: true
-        type: string
-      - name: scope
-        in: query
-        description: Spoe scope
+      - $ref: "#/parameters/parent_name"
+      - name: scope_name
+        in: path
+        description: Spoe scope name
         required: true
         type: string
       - name: data
@@ -447,14 +403,10 @@ spoe_messages_one:
     tags:
       - Spoe
     parameters:
-      - name: spoe
-        in: query
-        description: Spoe file name
-        required: true
-        type: string
-      - name: scope
-        in: query
-        description: Spoe scope
+      - $ref: "#/parameters/parent_name"
+      - name: scope_name
+        in: path
+        description: Spoe scope name
         required: true
         type: string
       - name: name
@@ -483,14 +435,10 @@ spoe_messages_one:
     tags:
       - Spoe
     parameters:
-      - name: spoe
-        in: query
-        description: Spoe file name
-        required: true
-        type: string
-      - name: scope
-        in: query
-        description: Spoe scope
+      - $ref: "#/parameters/parent_name"
+      - name: scope_name
+        in: path
+        description: Spoe scope name
         required: true
         type: string
       - name: name
@@ -523,14 +471,10 @@ spoe_messages_one:
     tags:
       - Spoe
     parameters:
-      - name: spoe
-        in: query
-        description: Spoe file name
-        required: true
-        type: string
-      - name: scope
-        in: query
-        description: Spoe scope
+      - $ref: "#/parameters/parent_name"
+      - name: scope_name
+        in: path
+        description: Spoe scope name
         required: true
         type: string
       - name: name
@@ -551,16 +495,12 @@ spoe_groups:
   get:
     summary: Return an array of SPOE groups
     description: Returns an array of all configured SPOE groups in one SPOE scope.
-    operationId: getSpoeGroups
+    operationId: getAllSpoeGroup
     parameters:
-      - name: spoe
-        in: query
-        description: Spoe file name
-        required: true
-        type: string
-      - name: scope
-        in: query
-        description: Spoe scope
+      - $ref: "#/parameters/parent_name"
+      - name: scope_name
+        in: path
+        description: Spoe scope name
         required: true
         type: string
       - $ref: "#/parameters/transaction_id"
@@ -582,14 +522,10 @@ spoe_groups:
     description: Adds a new SPOE groups to the SPOE scope.
     operationId: createSpoeGroup
     parameters:
-      - name: spoe
-        in: query
-        description: Spoe file name
-        required: true
-        type: string
-      - name: scope
-        in: query
-        description: Spoe scope
+      - $ref: "#/parameters/parent_name"
+      - name: scope_name
+        in: path
+        description: Spoe scope name
         required: true
         type: string
       - name: data
@@ -620,14 +556,10 @@ spoe_groups_one:
     tags:
       - Spoe
     parameters:
-      - name: spoe
-        in: query
-        description: Spoe file name
-        required: true
-        type: string
-      - name: scope
-        in: query
-        description: Spoe scope
+      - $ref: "#/parameters/parent_name"
+      - name: scope_name
+        in: path
+        description: Spoe scope name
         required: true
         type: string
       - name: name
@@ -656,14 +588,10 @@ spoe_groups_one:
     tags:
       - Spoe
     parameters:
-      - name: spoe
-        in: query
-        description: Spoe file name
-        required: true
-        type: string
-      - name: scope
-        in: query
-        description: Spoe scope
+      - $ref: "#/parameters/parent_name"
+      - name: scope_name
+        in: path
+        description: Spoe scope name
         required: true
         type: string
       - name: name
@@ -696,14 +624,10 @@ spoe_groups_one:
     tags:
       - Spoe
     parameters:
-      - name: spoe
-        in: query
-        description: Spoe file name
-        required: true
-        type: string
-      - name: scope
-        in: query
-        description: Spoe scope
+      - $ref: "#/parameters/parent_name"
+      - name: scope_name
+        in: path
+        description: Spoe scope name
         required: true
         type: string
       - name: name
@@ -729,11 +653,7 @@ version:
       - Spoe
     parameters:
       - $ref: "#/parameters/transaction_id"
-      - name: spoe
-        in: query
-        description: Spoe file name
-        required: true
-        type: string
+      - $ref: "#/parameters/parent_name"
     responses:
       '200':
         description: SPOE configuration version

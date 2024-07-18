@@ -5,13 +5,10 @@ transactions:
       - SpoeTransactions
     summary: Return list of SPOE configuration transactions.
     description: Returns a list of SPOE configuration transactions. Transactions can be filtered by their status.
-    operationId: getSpoeTransactions
+    operationId: getAllSpoeTransaction
+    # HD same as scopes
     parameters:
-      - name: spoe
-        in: query
-        description: Spoe file name
-        required: true
-        type: string
+      - $ref: "#/parameters/parent_name"
       - name: status
         in: query
         description: Filter by transaction status
@@ -34,11 +31,7 @@ transactions:
     description: Starts a new transaction and returns it's id
     operationId: startSpoeTransaction
     parameters:
-      - name: spoe
-        in: query
-        description: Spoe file name
-        required: true
-        type: string
+      - $ref: "#/parameters/parent_name"
       - name: version
         in: query
         description: Configuration version on which to work on
@@ -73,11 +66,7 @@ transactions_one:
     description: Returns one SPOE configuration transactions.
     operationId: getSpoeTransaction
     parameters:
-      - name: spoe
-        in: query
-        description: Spoe file name
-        required: true
-        type: string
+      - $ref: "#/parameters/parent_name"
       - name: id
         in: path
         description: Transaction id
@@ -99,11 +88,7 @@ transactions_one:
     description: Commit transaction, execute all operations in transaction and return msg
     operationId: commitSpoeTransaction
     parameters:
-      - name: spoe
-        in: query
-        description: Spoe file name
-        required: true
-        type: string
+      - $ref: "#/parameters/parent_name"
       - name: id
         in: path
         description: Transaction id
@@ -136,11 +121,7 @@ transactions_one:
     tags:
       - SpoeTransactions
     parameters:
-      - name: spoe
-        in: query
-        description: Spoe file name
-        required: true
-        type: string
+      - $ref: "#/parameters/parent_name"
       - name: id
         in: path
         description: Transaction id

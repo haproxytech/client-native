@@ -3,23 +3,11 @@ servers:
   get:
     summary: Return an array of servers
     description: Returns an array of all servers that are configured in specified backend.
-    operationId: getServers
+    operationId: getAllServer{{ .ParentType }}
     tags:
       - Server
     parameters:
-      - name: backend
-        in: query
-        description: Parent backend name
-        type: string
-      - name: parent_name
-        in: query
-        description: Parent name
-        type: string
-      - name: parent_type
-        in: query
-        description: Parent type
-        type: string
-        enum: [backend, ring, peers]
+      - $ref: "#/parameters/parent_name"
       - $ref: "#/parameters/transaction_id"
     responses:
       '200':
@@ -35,23 +23,11 @@ servers:
   post:
     summary: Add a new server
     description: Adds a new server in the specified backend in the configuration file.
-    operationId: createServer
+    operationId: createServer{{ .ParentType }}
     tags:
       - Server
     parameters:
-      - name: backend
-        in: query
-        description: Parent backend name
-        type: string
-      - name: parent_name
-        in: query
-        description: Parent name
-        type: string
-      - name: parent_type
-        in: query
-        description: Parent type
-        type: string
-        enum: [backend, ring, peers]
+      - $ref: "#/parameters/parent_name"
       - name: data
         in: body
         required: true
@@ -83,7 +59,7 @@ servers_one:
   get:
     summary: Return one server
     description: Returns one server configuration by it's name in the specified backend.
-    operationId: getServer
+    operationId: getServer{{ .ParentType }}
     tags:
       - Server
     parameters:
@@ -92,19 +68,7 @@ servers_one:
         description: Server name
         required: true
         type: string
-      - name: backend
-        in: query
-        description: Parent backend name
-        type: string
-      - name: parent_name
-        in: query
-        description: Parent name
-        type: string
-      - name: parent_type
-        in: query
-        description: Parent type
-        type: string
-        enum: [backend, ring, peers]
+      - $ref: "#/parameters/parent_name"
       - $ref: "#/parameters/transaction_id"
     responses:
       '200':
@@ -122,7 +86,7 @@ servers_one:
   put:
     summary: Replace a server
     description: Replaces a server configuration by it's name in the specified backend.
-    operationId: replaceServer
+    operationId: replaceServer{{ .ParentType  }}
     tags:
       - Server
     parameters:
@@ -131,19 +95,7 @@ servers_one:
         description: Server name
         required: true
         type: string
-      - name: backend
-        in: query
-        description: Parent backend name
-        type: string
-      - name: parent_name
-        in: query
-        description: Parent name
-        type: string
-      - name: parent_type
-        in: query
-        description: Parent type
-        type: string
-        enum: [backend, ring, peers]
+      - $ref: "#/parameters/parent_name"
       - name: data
         in: body
         required: true
@@ -174,7 +126,7 @@ servers_one:
   delete:
     summary: Delete a server
     description: Deletes a server configuration by it's name in the specified backend.
-    operationId: deleteServer
+    operationId: deleteServer{{ .ParentType }}
     tags:
       - Server
     parameters:
@@ -183,19 +135,7 @@ servers_one:
         description: Server name
         required: true
         type: string
-      - name: backend
-        in: query
-        description: Parent backend name
-        type: string
-      - name: parent_name
-        in: query
-        description: Parent name
-        type: string
-      - name: parent_type
-        in: query
-        description: Parent type
-        type: string
-        enum: [backend, ring, peers]
+      - $ref: "#/parameters/parent_name"
       - $ref: "#/parameters/transaction_id"
       - $ref: "#/parameters/version"
       - $ref: "#/parameters/force_reload"
@@ -208,181 +148,6 @@ servers_one:
             type: string
       '204':
         description: Server deleted
-      '404':
-        $ref: '#/responses/NotFound'
-      'default':
-        $ref: '#/responses/DefaultError'
-server_templates:
-  get:
-    summary: Return an array of server templates
-    description: Returns an array of all server templates that are configured in specified backend.
-    operationId: getServerTemplates
-    tags:
-      - ServerTemplate
-    parameters:
-      - name: backend
-        in: query
-        description: Parent backend name
-        required: true
-        type: string
-      - $ref: "#/parameters/transaction_id"
-    responses:
-      '200':
-        description: Successful operation
-        headers:
-          Configuration-Version:
-            description: Configuration file version
-            type: string
-            x-nullable: false
-        schema:
-          $ref: "#/definitions/server_templates"
-      'default':
-        $ref: '#/responses/DefaultError'
-  post:
-    summary: Add a new server template
-    description: Adds a new server template in the specified backend in the configuration file.
-    operationId: createServerTemplate
-    tags:
-      - ServerTemplate
-    parameters:
-      - name: backend
-        in: query
-        description: Parent backend name
-        required: true
-        type: string
-      - name: data
-        in: body
-        required: true
-        schema:
-          $ref: '#/definitions/server_template'
-      - $ref: "#/parameters/transaction_id"
-      - $ref: "#/parameters/version"
-      - $ref: "#/parameters/force_reload"
-    responses:
-      '202':
-        description: Configuration change accepted and reload requested
-        headers:
-          Reload-ID:
-            description: ID of the requested reload
-            type: string
-        schema:
-          $ref: "#/definitions/server_template"
-      '201':
-        description: Server template created
-        schema:
-          $ref: "#/definitions/server_template"
-      '409':
-        $ref: '#/responses/AlreadyExists'
-      '400':
-        $ref: '#/responses/BadRequest'
-      'default':
-        $ref: '#/responses/DefaultError'
-server_templates_one:
-  get:
-    summary: Return one server template
-    description: Returns one server template configuration by it's prefix in the specified backend.
-    operationId: getServerTemplate
-    tags:
-      - ServerTemplate
-    parameters:
-      - name: prefix
-        in: path
-        description: Server template prefix
-        required: true
-        type: string
-      - name: backend
-        in: query
-        description: Parent backend name
-        required: true
-        type: string
-      - $ref: "#/parameters/transaction_id"
-    responses:
-      '200':
-        description: Successful operation
-        headers:
-          Configuration-Version:
-            description: Configuration file version
-            type: string
-            x-nullable: false
-        schema:
-          $ref: "#/definitions/server_template"
-      '404':
-        $ref: '#/responses/NotFound'
-      'default':
-        $ref: '#/responses/DefaultError'
-  put:
-    summary: Replace a server template
-    description: Replaces a server template configuration by it's prefix in the specified backend.
-    operationId: replaceServerTemplate
-    tags:
-      - ServerTemplate
-    parameters:
-      - name: prefix
-        in: path
-        description: Server template prefix
-        required: true
-        type: string
-      - name: backend
-        in: query
-        description: Parent backend name
-        required: true
-        type: string
-      - name: data
-        in: body
-        required: true
-        schema:
-          $ref: '#/definitions/server_template'
-      - $ref: "#/parameters/transaction_id"
-      - $ref: "#/parameters/version"
-      - $ref: "#/parameters/force_reload"
-    responses:
-      '202':
-        description: Configuration change accepted and reload requested
-        headers:
-          Reload-ID:
-            description: ID of the requested reload
-            type: string
-        schema:
-          $ref: "#/definitions/server_template"
-      '200':
-        description: Server template replaced
-        schema:
-          $ref: "#/definitions/server_template"
-      '400':
-        $ref: '#/responses/BadRequest'
-      '404':
-        $ref: '#/responses/NotFound'
-      'default':
-        $ref: '#/responses/DefaultError'
-  delete:
-    summary: Delete a server template
-    description: Deletes a server template configuration by it's prefix in the specified backend.
-    operationId: deleteServerTemplate
-    tags:
-      - ServerTemplate
-    parameters:
-      - name: prefix
-        in: path
-        description: Server template prefix
-        required: true
-        type: string
-      - name: backend
-        in: query
-        description: Parent backend name
-        required: true
-        type: string
-      - $ref: "#/parameters/transaction_id"
-      - $ref: "#/parameters/version"
-      - $ref: "#/parameters/force_reload"
-    responses:
-      '202':
-        description: Configuration change accepted and reload requested
-        headers:
-          Reload-ID:
-            description: ID of the requested reload
-            type: string
-      '204':
-        description: Server template deleted
       '404':
         $ref: '#/responses/NotFound'
       'default':

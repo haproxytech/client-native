@@ -3,21 +3,11 @@ http_request_rules:
   get:
     summary: Return an array of all HTTP Request Rules
     description: Returns all HTTP Request Rules that are configured in specified parent.
-    operationId: getHTTPRequestRules
+    operationId: getAllHTTPRequestRule{{ .ParentType }}
     tags:
       - HTTPRequestRule
     parameters:
-      - name: parent_name
-        in: query
-        description: Parent name
-        required: true
-        type: string
-      - name: parent_type
-        in: query
-        description: Parent type
-        required: true
-        type: string
-        enum: [frontend, backend]
+      - $ref: "#/parameters/parent_name"
       - $ref: "#/parameters/transaction_id"
     responses:
       '200':
@@ -33,21 +23,11 @@ http_request_rules:
   put:
     summary: Replace an HTTP Request Rule list
     description: Replaces a whole list of HTTP Request Rules with the list given in parameter
-    operationId: replaceHTTPRequestRules
+    operationId: replaceAllHTTPRequestRule{{ .ParentType }}
     tags:
       - HTTPRequestRule
     parameters:
-      - name: parent_name
-        in: query
-        description: Parent name
-        required: true
-        type: string
-      - name: parent_type
-        in: query
-        description: Parent type
-        required: true
-        type: string
-        enum: [frontend, backend]
+      - $ref: "#/parameters/parent_name"
       - name: data
         in: body
         required: true
@@ -77,7 +57,7 @@ http_request_rules_one:
   get:
     summary: Return one HTTP Request Rule
     description: Returns one HTTP Request Rule configuration by it's index in the specified parent.
-    operationId: getHTTPRequestRule
+    operationId: getHTTPRequestRule{{ .ParentType }}
     tags:
       - HTTPRequestRule
     parameters:
@@ -86,17 +66,7 @@ http_request_rules_one:
         description: HTTP Request Rule Index
         required: true
         type: integer
-      - name: parent_name
-        in: query
-        description: Parent name
-        required: true
-        type: string
-      - name: parent_type
-        in: query
-        description: Parent type
-        required: true
-        type: string
-        enum: [frontend, backend]
+      - $ref: "#/parameters/parent_name"
       - $ref: "#/parameters/transaction_id"
     responses:
       '200':
@@ -114,7 +84,7 @@ http_request_rules_one:
   put:
     summary: Replace a HTTP Request Rule
     description: Replaces a HTTP Request Rule configuration by it's index in the specified parent.
-    operationId: replaceHTTPRequestRule
+    operationId: replaceHTTPRequestRule{{ .ParentType }}
     tags:
       - HTTPRequestRule
     parameters:
@@ -123,17 +93,7 @@ http_request_rules_one:
         description: HTTP Request Rule Index
         required: true
         type: integer
-      - name: parent_name
-        in: query
-        description: Parent name
-        required: true
-        type: string
-      - name: parent_type
-        in: query
-        description: Parent type
-        required: true
-        type: string
-        enum: [frontend, backend]
+      - $ref: "#/parameters/parent_name"
       - name: data
         in: body
         required: true
@@ -164,7 +124,7 @@ http_request_rules_one:
   delete:
     summary: Delete a HTTP Request Rule
     description: Deletes a HTTP Request Rule configuration by it's index from the specified parent.
-    operationId: deleteHTTPRequestRule
+    operationId: deleteHTTPRequestRule{{ .ParentType }}
     tags:
       - HTTPRequestRule
     parameters:
@@ -173,17 +133,7 @@ http_request_rules_one:
         description: HTTP Request Rule Index
         required: true
         type: integer
-      - name: parent_name
-        in: query
-        description: Parent name
-        required: true
-        type: string
-      - name: parent_type
-        in: query
-        description: Parent type
-        required: true
-        type: string
-        enum: [frontend, backend]
+      - $ref: "#/parameters/parent_name"
       - $ref: "#/parameters/transaction_id"
       - $ref: "#/parameters/version"
       - $ref: "#/parameters/force_reload"
@@ -203,7 +153,7 @@ http_request_rules_one:
   post:
     summary: Add a new HTTP Request Rule
     description: Adds a new HTTP Request Rule of the specified type in the specified parent.
-    operationId: createHTTPRequestRule
+    operationId: createHTTPRequestRule{{ .ParentType }}
     tags:
       - HTTPRequestRule
     parameters:
@@ -212,17 +162,7 @@ http_request_rules_one:
         description: HTTP Request Rule Index
         required: true
         type: integer
-      - name: parent_name
-        in: query
-        description: Parent name
-        required: true
-        type: string
-      - name: parent_type
-        in: query
-        description: Parent type
-        required: true
-        type: string
-        enum: [frontend, backend]
+      - $ref: "#/parameters/parent_name"
       - name: data
         in: body
         required: true

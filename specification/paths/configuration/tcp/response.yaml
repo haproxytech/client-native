@@ -3,15 +3,11 @@ tcp_response_rules:
   get:
     summary: Return an array of all TCP Response Rules
     description: Returns all TCP Response Rules that are configured in specified backend.
-    operationId: getTCPResponseRules
+    operationId: getAllTCPResponseRule{{ .ParentType }}
     tags:
       - TCPResponseRule
     parameters:
-      - name: backend
-        in: query
-        description: Parent backend name
-        required: true
-        type: string
+      - $ref: "#/parameters/parent_name"
       - $ref: "#/parameters/transaction_id"
     responses:
       '200':
@@ -27,15 +23,11 @@ tcp_response_rules:
   put:
     summary: Replace a TCP Response Rule list
     description: Replaces a whole list of TCP Response Rules with the list given in parameter
-    operationId: replaceTCPResponseRules
+    operationId: replaceAllTCPResponseRule{{ .ParentType }}
     tags:
       - TCPResponseRule
     parameters:
-      - name: backend
-        in: query
-        description: Parent backend name
-        required: true
-        type: string
+      - $ref: "#/parameters/parent_name"
       - name: data
         in: body
         required: true
@@ -65,7 +57,7 @@ tcp_response_rules_one:
   get:
     summary: Return one TCP Response Rule
     description: Returns one TCP Response Rule configuration by it's index in the specified backend.
-    operationId: getTCPResponseRule
+    operationId: getTCPResponseRule{{ .ParentType }}
     tags:
       - TCPResponseRule
     parameters:
@@ -74,11 +66,7 @@ tcp_response_rules_one:
         description: TCP Response Rule Index
         required: true
         type: integer
-      - name: backend
-        in: query
-        description: Parent backend name
-        required: true
-        type: string
+      - $ref: "#/parameters/parent_name"
       - $ref: "#/parameters/transaction_id"
     responses:
       '200':
@@ -96,7 +84,7 @@ tcp_response_rules_one:
   put:
     summary: Replace a TCP Response Rule
     description: Replaces a TCP Response Rule configuration by it's Index in the specified backend.
-    operationId: replaceTCPResponseRule
+    operationId: replaceTCPResponseRule{{ .ParentType }}
     tags:
       - TCPResponseRule
     parameters:
@@ -105,11 +93,7 @@ tcp_response_rules_one:
         description: TCP Response Rule Index
         required: true
         type: integer
-      - name: backend
-        in: query
-        description: Parent backend name
-        required: true
-        type: string
+      - $ref: "#/parameters/parent_name"
       - name: data
         in: body
         required: true
@@ -140,7 +124,7 @@ tcp_response_rules_one:
   delete:
     summary: Delete a TCP Response Rule
     description: Deletes a TCP Response Rule configuration by it's index from the specified backend.
-    operationId: deleteTCPResponseRule
+    operationId: deleteTCPResponseRule{{ .ParentType }}
     tags:
       - TCPResponseRule
     parameters:
@@ -149,11 +133,7 @@ tcp_response_rules_one:
         description: TCP Response Rule Index
         required: true
         type: integer
-      - name: backend
-        in: query
-        description: Parent backend name
-        required: true
-        type: string
+      - $ref: "#/parameters/parent_name"
       - $ref: "#/parameters/transaction_id"
       - $ref: "#/parameters/version"
       - $ref: "#/parameters/force_reload"
@@ -173,7 +153,7 @@ tcp_response_rules_one:
   post:
     summary: Add a new TCP Response Rule
     description: Adds a new TCP Response Rule of the specified type in the specified backend.
-    operationId: createTCPResponseRule
+    operationId: createTCPResponseRule{{ .ParentType }}
     tags:
       - TCPResponseRule
     parameters:
@@ -182,11 +162,7 @@ tcp_response_rules_one:
         description: TCP Response Rule Index
         required: true
         type: integer
-      - name: backend
-        in: query
-        description: Parent backend name
-        required: true
-        type: string
+      - $ref: "#/parameters/parent_name"
       - name: data
         in: body
         required: true

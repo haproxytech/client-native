@@ -7,11 +7,7 @@ stick_rules:
     tags:
       - StickRule
     parameters:
-      - name: backend
-        in: query
-        description: Backend name
-        required: true
-        type: string
+      - $ref: "#/parameters/parent_name"
       - $ref: "#/parameters/transaction_id"
     responses:
       '200':
@@ -31,11 +27,7 @@ stick_rules:
     tags:
       - StickRule
     parameters:
-      - name: backend
-        in: query
-        description: Backend name
-        required: true
-        type: string
+      - $ref: "#/parameters/parent_name"
       - name: data
         in: body
         required: true
@@ -74,11 +66,7 @@ stick_rules_one:
         description: Stick Rule Index
         required: true
         type: integer
-      - name: backend
-        in: query
-        description: Backend name
-        required: true
-        type: string
+      - $ref: "#/parameters/parent_name"
       - $ref: "#/parameters/transaction_id"
     responses:
       '200':
@@ -105,11 +93,7 @@ stick_rules_one:
         description: Stick Rule Index
         required: true
         type: integer
-      - name: backend
-        in: query
-        description: Backend name
-        required: true
-        type: string
+      - $ref: "#/parameters/parent_name"
       - name: data
         in: body
         required: true
@@ -149,11 +133,7 @@ stick_rules_one:
         description: Stick Rule Index
         required: true
         type: integer
-      - name: backend
-        in: query
-        description: Backend name
-        required: true
-        type: string
+      - $ref: "#/parameters/parent_name"
       - $ref: "#/parameters/transaction_id"
       - $ref: "#/parameters/version"
       - $ref: "#/parameters/force_reload"
@@ -182,11 +162,7 @@ stick_rules_one:
         description: Stick Rule Index
         required: true
         type: integer
-      - name: backend
-        in: query
-        description: Backend name
-        required: true
-        type: string
+      - $ref: "#/parameters/parent_name"
       - name: data
         in: body
         required: true

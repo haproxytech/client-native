@@ -3,21 +3,11 @@ tcp_checks:
   get:
     summary: Return an array of TCP checks
     description: Returns all TCP checks that are configured in specified parent.
-    operationId: getTCPChecks
+    operationId: getAllTCPCheck{{ .ParentType }}
     tags:
       - TCPCheck
     parameters:
-      - name: parent_name
-        in: query
-        description: Parent name
-        required: true
-        type: string
-      - name: parent_type
-        in: query
-        description: Parent type
-        required: true
-        type: string
-        enum: [backend, defaults]
+      - $ref: "#/parameters/parent_name"
       - $ref: "#/parameters/transaction_id"
     responses:
       '200':
@@ -33,21 +23,11 @@ tcp_checks:
   put:
     summary: Replace an TCP Check list
     description: Replaces a whole list of TCP Checks with the list given in parameter
-    operationId: replaceTCPChecks
+    operationId: replaceAllTCPCheck{{ .ParentType }}
     tags:
       - TCPCheck
     parameters:
-      - name: parent_name
-        in: query
-        description: Parent name
-        required: true
-        type: string
-      - name: parent_type
-        in: query
-        description: Parent type
-        required: true
-        type: string
-        enum: [backend, defaults]
+      - $ref: "#/parameters/parent_name"
       - name: data
         in: body
         required: true
@@ -77,7 +57,7 @@ tcp_checks_one:
   get:
     summary: Return one TCP check
     description: Returns one TCP check configuration by it's index in the specified parent.
-    operationId: getTCPCheck
+    operationId: getTCPCheck{{ .ParentType }}
     tags:
       - TCPCheck
     parameters:
@@ -86,17 +66,7 @@ tcp_checks_one:
         description: TCP Check Index
         required: true
         type: integer
-      - name: parent_name
-        in: query
-        description: Parent name
-        required: true
-        type: string
-      - name: parent_type
-        in: query
-        description: Parent type
-        required: true
-        type: string
-        enum: [backend, defaults]
+      - $ref: "#/parameters/parent_name"
       - $ref: "#/parameters/transaction_id"
     responses:
       '200':
@@ -114,7 +84,7 @@ tcp_checks_one:
   put:
     summary: Replace a TCP check
     description: Replaces a TCP Check configuration by it's index in the specified parent.
-    operationId: replaceTCPCheck
+    operationId: replaceTCPCheck{{ .ParentType }}
     tags:
       - TCPCheck
     parameters:
@@ -123,17 +93,7 @@ tcp_checks_one:
         description: TCP Check Index
         required: true
         type: integer
-      - name: parent_name
-        in: query
-        description: Parent name
-        required: true
-        type: string
-      - name: parent_type
-        in: query
-        description: Parent type
-        required: true
-        type: string
-        enum: [backend, defaults]
+      - $ref: "#/parameters/parent_name"
       - name: data
         in: body
         required: true
@@ -164,7 +124,7 @@ tcp_checks_one:
   delete:
     summary: Delete a TCP check
     description: Deletes a TCP check configuration by it's index from the specified parent.
-    operationId: deleteTCPCheck
+    operationId: deleteTCPCheck{{ .ParentType }}
     tags:
       - TCPCheck
     parameters:
@@ -173,17 +133,7 @@ tcp_checks_one:
         description: TCP check Index
         required: true
         type: integer
-      - name: parent_name
-        in: query
-        description: Parent name
-        required: true
-        type: string
-      - name: parent_type
-        in: query
-        description: Parent type
-        required: true
-        type: string
-        enum: [backend, defaults]
+      - $ref: "#/parameters/parent_name"
       - $ref: "#/parameters/transaction_id"
       - $ref: "#/parameters/version"
       - $ref: "#/parameters/force_reload"
@@ -203,7 +153,7 @@ tcp_checks_one:
   post:
     summary: Add a new TCP check
     description: Adds a new TCP check of the specified type in the specified parent.
-    operationId: createTCPCheck
+    operationId: createTCPCheck{{ .ParentType }}
     tags:
       - TCPCheck
     parameters:
@@ -212,17 +162,7 @@ tcp_checks_one:
         description: TCP check Index
         required: true
         type: integer
-      - name: parent_name
-        in: query
-        description: Parent name
-        required: true
-        type: string
-      - name: parent_type
-        in: query
-        description: Parent type
-        required: true
-        type: string
-        enum: [backend, defaults]
+      - $ref: "#/parameters/parent_name"
       - name: data
         in: body
         required: true

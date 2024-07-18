@@ -1,11 +1,11 @@
 ---
-tables:
+server_templates:
   get:
-    summary: Return an array of tables
-    description: Returns an array of all tables that are configured in specified peer section.
-    operationId: getTables
+    summary: Return an array of server templates
+    description: Returns an array of all server templates that are configured in specified backend.
+    operationId: getServerTemplates
     tags:
-      - Table
+      - ServerTemplate
     parameters:
       - $ref: "#/parameters/parent_name"
       - $ref: "#/parameters/transaction_id"
@@ -16,23 +16,24 @@ tables:
           Configuration-Version:
             description: Configuration file version
             type: string
+            x-nullable: false
         schema:
-          $ref: "#/definitions/tables"
+          $ref: "#/definitions/server_templates"
       'default':
         $ref: '#/responses/DefaultError'
   post:
-    summary: Add a new table
-    description: Adds a new table in the specified peer section in the configuration file.
-    operationId: createTable
+    summary: Add a new server template
+    description: Adds a new server template in the specified backend in the configuration file.
+    operationId: createServerTemplate
     tags:
-      - Table
+      - ServerTemplate
     parameters:
       - $ref: "#/parameters/parent_name"
       - name: data
         in: body
         required: true
         schema:
-          $ref: '#/definitions/table'
+          $ref: '#/definitions/server_template'
       - $ref: "#/parameters/transaction_id"
       - $ref: "#/parameters/version"
       - $ref: "#/parameters/force_reload"
@@ -44,28 +45,29 @@ tables:
             description: ID of the requested reload
             type: string
         schema:
-          $ref: "#/definitions/table"
+          $ref: "#/definitions/server_template"
       '201':
-        description: Table created
+        description: Server template created
         schema:
-          $ref: "#/definitions/table"
+          $ref: "#/definitions/server_template"
       '409':
         $ref: '#/responses/AlreadyExists'
       '400':
         $ref: '#/responses/BadRequest'
       'default':
         $ref: '#/responses/DefaultError'
-table:
+
+server_templates_one:
   get:
-    summary: Return one table
-    description: Returns one table configuration by it's name in the specified peer section.
-    operationId: getTable
+    summary: Return one server template
+    description: Returns one server template configuration by it's prefix in the specified backend.
+    operationId: getServerTemplate
     tags:
-      - Table
+      - ServerTemplate
     parameters:
-      - name: name
+      - name: prefix
         in: path
-        description: Table name
+        description: Server template prefix
         required: true
         type: string
       - $ref: "#/parameters/parent_name"
@@ -77,22 +79,23 @@ table:
           Configuration-Version:
             description: Configuration file version
             type: string
+            x-nullable: false
         schema:
-          $ref: "#/definitions/table"
+          $ref: "#/definitions/server_template"
       '404':
-        $ref: '#/responses/AlreadyExists'
+        $ref: '#/responses/NotFound'
       'default':
         $ref: '#/responses/DefaultError'
   put:
-    summary: Replace a table
-    description: Replaces a table configuration by it's name in the specified peer section.
-    operationId: replaceTable
+    summary: Replace a server template
+    description: Replaces a server template configuration by it's prefix in the specified backend.
+    operationId: replaceServerTemplate
     tags:
-      - Table
+      - ServerTemplate
     parameters:
-      - name: name
+      - name: prefix
         in: path
-        description: Table name
+        description: Server template prefix
         required: true
         type: string
       - $ref: "#/parameters/parent_name"
@@ -100,7 +103,7 @@ table:
         in: body
         required: true
         schema:
-          $ref: '#/definitions/table'
+          $ref: '#/definitions/server_template'
       - $ref: "#/parameters/transaction_id"
       - $ref: "#/parameters/version"
       - $ref: "#/parameters/force_reload"
@@ -112,11 +115,11 @@ table:
             description: ID of the requested reload
             type: string
         schema:
-          $ref: "#/definitions/table"
+          $ref: "#/definitions/server_template"
       '200':
-        description: Table replaced
+        description: Server template replaced
         schema:
-          $ref: "#/definitions/table"
+          $ref: "#/definitions/server_template"
       '400':
         $ref: '#/responses/BadRequest'
       '404':
@@ -124,15 +127,15 @@ table:
       'default':
         $ref: '#/responses/DefaultError'
   delete:
-    summary: Delete a table
-    description: Deletes a table configuration by it's name in the specified peer section.
-    operationId: deleteTable
+    summary: Delete a server template
+    description: Deletes a server template configuration by it's prefix in the specified backend.
+    operationId: deleteServerTemplate
     tags:
-      - Table
+      - ServerTemplate
     parameters:
-      - name: name
+      - name: prefix
         in: path
-        description: Table name
+        description: Server template prefix
         required: true
         type: string
       - $ref: "#/parameters/parent_name"
@@ -147,7 +150,7 @@ table:
             description: ID of the requested reload
             type: string
       '204':
-        description: Table deleted
+        description: Server template deleted
       '404':
         $ref: '#/responses/NotFound'
       'default':

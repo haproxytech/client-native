@@ -7,11 +7,7 @@ dgram_binds:
     tags:
       - DgramBind
     parameters:
-      - name: log_forward
-        in: query
-        description: Parent log forward name
-        required: true
-        type: string
+      - $ref: "#/parameters/parent_name"
       - $ref: "#/parameters/transaction_id"
     responses:
       '200':
@@ -31,11 +27,7 @@ dgram_binds:
     tags:
       - DgramBind
     parameters:
-      - name: log_forward
-        in: query
-        description: Parent log forward name
-        required: true
-        type: string
+      - $ref: "#/parameters/parent_name"
       - name: data
         in: body
         required: true
@@ -76,11 +68,7 @@ dgram_binds_one:
         description: Bind name
         required: true
         type: string
-      - name: log_forward
-        in: query
-        description: Parent log forward name
-        required: true
-        type: string
+      - $ref: "#/parameters/parent_name"
       - $ref: "#/parameters/transaction_id"
     responses:
       '200':
@@ -107,11 +95,7 @@ dgram_binds_one:
         description: Bind name
         required: true
         type: string
-      - name: log_forward
-        in: query
-        description: Parent log forward name
-        required: true
-        type: string
+      - $ref: "#/parameters/parent_name"
       - name: data
         in: body
         required: true
@@ -151,11 +135,7 @@ dgram_binds_one:
         description: Bind name
         required: true
         type: string
-      - name: log_forward
-        in: query
-        description: Parent log forward name
-        required: true
-        type: string
+      - $ref: "#/parameters/parent_name"
       - $ref: "#/parameters/transaction_id"
       - $ref: "#/parameters/version"
       - $ref: "#/parameters/force_reload"

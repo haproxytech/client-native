@@ -3,21 +3,11 @@ filters:
   get:
     summary: Return an array of all Filters
     description: Returns all Filters that are configured in specified parent.
-    operationId: getFilters
+    operationId: getAllFilter{{ .ParentType }}
     tags:
       - Filter
     parameters:
-      - name: parent_name
-        in: query
-        description: Parent name
-        required: true
-        type: string
-      - name: parent_type
-        in: query
-        description: Parent type
-        required: true
-        type: string
-        enum: [frontend, backend]
+      - $ref: "#/parameters/parent_name"
       - $ref: "#/parameters/transaction_id"
     responses:
       '200':
@@ -33,21 +23,11 @@ filters:
   put:
     summary: Replace a Filter list
     description: Replaces a whole list of Filters with the list given in parameter
-    operationId: replaceFilters
+    operationId: replaceAllFilter{{ .ParentType}}
     tags:
       - Filter
     parameters:
-      - name: parent_name
-        in: query
-        description: Parent name
-        required: true
-        type: string
-      - name: parent_type
-        in: query
-        description: Parent type
-        required: true
-        type: string
-        enum: [frontend, backend]
+      - $ref: "#/parameters/parent_name"
       - name: data
         in: body
         required: true
@@ -77,7 +57,7 @@ filters_one:
   get:
     summary: Return one Filter
     description: Returns one Filter configuration by it's index in the specified parent.
-    operationId: getFilter
+    operationId: getFilter{{ .ParentType }}
     tags:
       - Filter
     parameters:
@@ -86,17 +66,7 @@ filters_one:
         description: Filter Index
         required: true
         type: integer
-      - name: parent_name
-        in: query
-        description: Parent name
-        required: true
-        type: string
-      - name: parent_type
-        in: query
-        description: Parent type
-        required: true
-        type: string
-        enum: [frontend, backend]
+      - $ref: "#/parameters/parent_name"
       - $ref: "#/parameters/transaction_id"
     responses:
       '200':
@@ -114,7 +84,7 @@ filters_one:
   put:
     summary: Replace a Filter
     description: Replaces a Filter configuration by it's index in the specified parent.
-    operationId: replaceFilter
+    operationId: replaceFilter{{ .ParentType }}
     tags:
       - Filter
     parameters:
@@ -123,17 +93,7 @@ filters_one:
         description: Filter Index
         required: true
         type: integer
-      - name: parent_name
-        in: query
-        description: Parent name
-        required: true
-        type: string
-      - name: parent_type
-        in: query
-        description: Parent type
-        required: true
-        type: string
-        enum: [frontend, backend]
+      - $ref: "#/parameters/parent_name"
       - name: data
         in: body
         required: true
@@ -164,7 +124,7 @@ filters_one:
   delete:
     summary: Delete a Filter
     description: Deletes a Filter configuration by it's index from the specified parent.
-    operationId: deleteFilter
+    operationId: deleteFilter{{ .ParentType }}
     tags:
       - Filter
     parameters:
@@ -173,17 +133,7 @@ filters_one:
         description: Filter Index
         required: true
         type: integer
-      - name: parent_name
-        in: query
-        description: Parent name
-        required: true
-        type: string
-      - name: parent_type
-        in: query
-        description: Parent type
-        required: true
-        type: string
-        enum: [frontend, backend]
+      - $ref: "#/parameters/parent_name"
       - $ref: "#/parameters/transaction_id"
       - $ref: "#/parameters/version"
       - $ref: "#/parameters/force_reload"
@@ -203,7 +153,7 @@ filters_one:
   post:
     summary: Add a new Filter
     description: Adds a new Filter of the specified type in the specified parent.
-    operationId: createFilter
+    operationId: createFilter{{ .ParentType }}
     tags:
       - Filter
     parameters:
@@ -212,17 +162,7 @@ filters_one:
         description: Filter Index
         required: true
         type: integer
-      - name: parent_name
-        in: query
-        description: Parent name
-        required: true
-        type: string
-      - name: parent_type
-        in: query
-        description: Parent type
-        required: true
-        type: string
-        enum: [frontend, backend]
+      - $ref: "#/parameters/parent_name"
       - name: data
         in: body
         required: true

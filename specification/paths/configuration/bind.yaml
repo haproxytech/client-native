@@ -3,23 +3,11 @@ binds:
   get:
     summary: Return an array of binds
     description: Returns an array of all binds that are configured in specified frontend.
-    operationId: getBinds
+    operationId: getAllBind{{ .ParentType }}
     tags:
       - Bind
     parameters:
-      - name: frontend
-        in: query
-        description: Parent frontend name
-        type: string
-      - name: parent_name
-        in: query
-        description: Parent name
-        type: string
-      - name: parent_type
-        in: query
-        description: Parent type
-        type: string
-        enum: [frontend, log_forward, peers]
+      - $ref: "#/parameters/parent_name"
       - $ref: "#/parameters/transaction_id"
     responses:
       '200':
@@ -35,23 +23,11 @@ binds:
   post:
     summary: Add a new bind
     description: Adds a new bind in the specified frontend in the configuration file.
-    operationId: createBind
+    operationId: createBind{{ .ParentType }}
     tags:
       - Bind
     parameters:
-      - name: frontend
-        in: query
-        description: Parent frontend name
-        type: string
-      - name: parent_name
-        in: query
-        description: Parent name
-        type: string
-      - name: parent_type
-        in: query
-        description: Parent type
-        type: string
-        enum: [frontend, log_forward, peers]
+      - $ref: "#/parameters/parent_name"
       - name: data
         in: body
         required: true
@@ -83,7 +59,7 @@ binds_one:
   get:
     summary: Return one bind
     description: Returns one bind configuration by it's name in the specified frontend.
-    operationId: getBind
+    operationId: getBind{{ .ParentType }}
     tags:
       - Bind
     parameters:
@@ -92,19 +68,7 @@ binds_one:
         description: Bind name
         required: true
         type: string
-      - name: frontend
-        in: query
-        description: Parent frontend name
-        type: string
-      - name: parent_name
-        in: query
-        description: Parent name
-        type: string
-      - name: parent_type
-        in: query
-        description: Parent type
-        type: string
-        enum: [frontend, log_forward, peers]
+      - $ref: "#/parameters/parent_name"
       - $ref: "#/parameters/transaction_id"
     responses:
       '200':
@@ -122,7 +86,7 @@ binds_one:
   put:
     summary: Replace a bind
     description: Replaces a bind configuration by it's name in the specified frontend.
-    operationId: replaceBind
+    operationId: replaceBind{{ .ParentType }}
     tags:
       - Bind
     parameters:
@@ -131,19 +95,7 @@ binds_one:
         description: Bind name
         required: true
         type: string
-      - name: frontend
-        in: query
-        description: Parent frontend name
-        type: string
-      - name: parent_name
-        in: query
-        description: Parent name
-        type: string
-      - name: parent_type
-        in: query
-        description: Parent type
-        type: string
-        enum: [frontend, log_forward, peers]
+      - $ref: "#/parameters/parent_name"
       - name: data
         in: body
         required: true
@@ -174,7 +126,7 @@ binds_one:
   delete:
     summary: Delete a bind
     description: Deletes a bind configuration by it's name in the specified frontend.
-    operationId: deleteBind
+    operationId: deleteBind{{ .ParentType }}
     tags:
       - Bind
     parameters:
@@ -183,19 +135,7 @@ binds_one:
         description: Bind name
         required: true
         type: string
-      - name: frontend
-        in: query
-        description: Parent frontend name
-        type: string
-      - name: parent_name
-        in: query
-        description: Parent name
-        type: string
-      - name: parent_type
-        in: query
-        description: Parent type
-        type: string
-        enum: [frontend, log_forward, peers]
+      - $ref: "#/parameters/parent_name"
       - $ref: "#/parameters/transaction_id"
       - $ref: "#/parameters/version"
       - $ref: "#/parameters/force_reload"

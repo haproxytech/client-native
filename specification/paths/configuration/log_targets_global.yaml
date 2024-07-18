@@ -1,13 +1,12 @@
 ---
-captures:
+log_targets:
   get:
-    summary: Return an array of declare captures
-    description: Returns an array of all declare capture records that are configured in specified frontend.
-    operationId: getDeclareCaptures
+    summary: Return an array of all Log Targets
+    description: Returns all Log Targets that are configured in specified parent.
+    operationId: getAllLogTargetGlobal
     tags:
-      - DeclareCapture
+      - LogTarget
     parameters:
-      - $ref: "#/parameters/parent_name"
       - $ref: "#/parameters/transaction_id"
     responses:
       '200':
@@ -17,22 +16,21 @@ captures:
             description: Configuration file version
             type: string
         schema:
-          $ref: "#/definitions/captures"
+          $ref: "#/definitions/log_targets"
       'default':
         $ref: '#/responses/DefaultError'
   put:
-    summary: Replace a declare capture list
-    description: Replaces a whole list of declare capture with the list given in parameter
-    operationId: replaceDeclareCaptures
+    summary: Replace a Log Target list
+    description: Replaces a whole list of Log Targets with the list given in parameter
+    operationId: replaceAllLogTargetGlobal
     tags:
-      - DeclareCapture
+      - LogTarget
     parameters:
-      - $ref: "#/parameters/parent_name"
       - name: data
         in: body
         required: true
         schema:
-          $ref: '#/definitions/captures'
+          $ref: '#/definitions/log_targets'
       - $ref: "#/parameters/transaction_id"
       - $ref: "#/parameters/version"
       - $ref: "#/parameters/force_reload"
@@ -44,29 +42,28 @@ captures:
             description: ID of the requested reload
             type: string
         schema:
-          $ref: "#/definitions/captures"
+          $ref: "#/definitions/log_targets"
       '200':
-        description: All Declare capture lines replaced
+        description: All Log Target lines replaced
         schema:
-          $ref: '#/definitions/captures'
+          $ref: '#/definitions/log_targets'
       '400':
         $ref: '#/responses/BadRequest'
       'default':
         $ref: '#/responses/DefaultError'
-captures_one:
+log_targets_one:
   get:
-    summary: Return one declare capture
-    description: Returns one declare capture configuration by it's index in the specified frontend.
-    operationId: getDeclareCapture
+    summary: Return one Log Target
+    description: Returns one Log Target configuration by it's index in the specified parent.
+    operationId: getLogTargetGlobal
     tags:
-      - DeclareCapture
+      - LogTarget
     parameters:
       - name: index
         in: path
-        description: Declare Capture Index
+        description: Log Target Index
         required: true
         type: integer
-      - $ref: "#/parameters/parent_name"
       - $ref: "#/parameters/transaction_id"
     responses:
       '200':
@@ -76,29 +73,28 @@ captures_one:
             description: Configuration file version
             type: string
         schema:
-          $ref: "#/definitions/capture"
+          $ref: "#/definitions/log_target"
       '404':
-        $ref: '#/responses/AlreadyExists'
+        $ref: '#/responses/NotFound'
       'default':
         $ref: '#/responses/DefaultError'
   put:
-    summary: Replace a declare capture
-    description: Replaces a declare capture configuration by it's index in the specified frontend.
-    operationId: replaceDeclareCapture
+    summary: Replace a Log Target
+    description: Replaces a Log Target configuration by it's index in the specified parent.
+    operationId: replaceLogTargetGlobal
     tags:
-      - DeclareCapture
+      - LogTarget
     parameters:
       - name: index
         in: path
-        description: Declare Capture Index
+        description: Log Target Index
         required: true
         type: integer
-      - $ref: "#/parameters/parent_name"
       - name: data
         in: body
         required: true
         schema:
-          $ref: '#/definitions/capture'
+          $ref: '#/definitions/log_target'
       - $ref: "#/parameters/transaction_id"
       - $ref: "#/parameters/version"
       - $ref: "#/parameters/force_reload"
@@ -110,11 +106,11 @@ captures_one:
             description: ID of the requested reload
             type: string
         schema:
-          $ref: "#/definitions/capture"
+          $ref: "#/definitions/log_target"
       '200':
-        description: Declare Capture replaced
+        description: Log Target replaced
         schema:
-          $ref: "#/definitions/capture"
+          $ref: '#/definitions/log_target'
       '400':
         $ref: '#/responses/BadRequest'
       '404':
@@ -122,18 +118,17 @@ captures_one:
       'default':
         $ref: '#/responses/DefaultError'
   delete:
-    summary: Delete a declare capture
-    description: Deletes a declare capture configuration by it's index in the specified frontend.
-    operationId: deleteDeclareCapture
+    summary: Delete a Log Target
+    description: Deletes a Log Target configuration by it's index from the specified parent.
+    operationId: deleteLogTargetGlobal
     tags:
-      - DeclareCapture
+      - LogTarget
     parameters:
       - name: index
         in: path
-        description: Declare Capture Index
+        description: Log Target Index
         required: true
         type: integer
-      - $ref: "#/parameters/parent_name"
       - $ref: "#/parameters/transaction_id"
       - $ref: "#/parameters/version"
       - $ref: "#/parameters/force_reload"
@@ -145,29 +140,28 @@ captures_one:
             description: ID of the requested reload
             type: string
       '204':
-        description: Declare Capture deleted
+        description: Log Target deleted
       '404':
         $ref: '#/responses/NotFound'
       'default':
         $ref: '#/responses/DefaultError'
   post:
-    summary: Add a new declare capture
-    description: Adds a new declare capture in the specified frontend in the configuration file.
-    operationId: createDeclareCapture
+    summary: Add a new Log Target
+    description: Adds a new Log Target of the specified type in the specified parent.
+    operationId: createLogTargetGlobal
     tags:
-      - DeclareCapture
+      - LogTarget
     parameters:
       - name: index
         in: path
-        description: Declare Capture Index
+        description: Log Target Index
         required: true
         type: integer
-      - $ref: "#/parameters/parent_name"
       - name: data
         in: body
         required: true
         schema:
-          $ref: '#/definitions/capture'
+          $ref: '#/definitions/log_target'
       - $ref: "#/parameters/transaction_id"
       - $ref: "#/parameters/version"
       - $ref: "#/parameters/force_reload"
@@ -179,11 +173,11 @@ captures_one:
             description: ID of the requested reload
             type: string
         schema:
-          $ref: "#/definitions/capture"
+          $ref: "#/definitions/log_target"
       '201':
-        description: Declare capture created
+        description: Log Target created
         schema:
-          $ref: "#/definitions/capture"
+          $ref: '#/definitions/log_target'
       '409':
         $ref: '#/responses/AlreadyExists'
       '400':

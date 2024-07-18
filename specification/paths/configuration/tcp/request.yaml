@@ -3,21 +3,11 @@ tcp_request_rules:
   get:
     summary: Return an array of all TCP Request Rules
     description: Returns all TCP Request Rules that are configured in specified parent and parent type.
-    operationId: getTCPRequestRules
+    operationId: getAllTCPRequestRule{{ .ParentType }}
     tags:
       - TCPRequestRule
     parameters:
-      - name: parent_name
-        in: query
-        description: Parent name
-        required: true
-        type: string
-      - name: parent_type
-        in: query
-        description: Parent type
-        required: true
-        type: string
-        enum: [frontend, backend]
+      - $ref: "#/parameters/parent_name"
       - $ref: "#/parameters/transaction_id"
     responses:
       '200':
@@ -33,21 +23,11 @@ tcp_request_rules:
   put:
     summary: Replace an TCP Request Rule list
     description: Replaces a whole list of TCP Request Rules with the list given in parameter
-    operationId: replaceTCPRequestRules
+    operationId: replaceAllTCPRequestRule{{ .ParentType }}
     tags:
       - TCPRequestRule
     parameters:
-      - name: parent_name
-        in: query
-        description: Parent name
-        required: true
-        type: string
-      - name: parent_type
-        in: query
-        description: Parent type
-        required: true
-        type: string
-        enum: [frontend, backend]
+      - $ref: "#/parameters/parent_name"
       - name: data
         in: body
         required: true
@@ -77,7 +57,7 @@ tcp_request_rules_one:
   get:
     summary: Return one TCP Request Rule
     description: Returns one TCP Request Rule configuration by it's index in the specified parent.
-    operationId: getTCPRequestRule
+    operationId: getTCPRequestRule{{ .ParentType }}
     tags:
       - TCPRequestRule
     parameters:
@@ -86,17 +66,7 @@ tcp_request_rules_one:
         description: TCP Request Rule Index
         required: true
         type: integer
-      - name: parent_name
-        in: query
-        description: Parent name
-        required: true
-        type: string
-      - name: parent_type
-        in: query
-        description: Parent type
-        required: true
-        type: string
-        enum: [frontend, backend]
+      - $ref: "#/parameters/parent_name"
       - $ref: "#/parameters/transaction_id"
     responses:
       '200':
@@ -114,7 +84,7 @@ tcp_request_rules_one:
   put:
     summary: Replace a TCP Request Rule
     description: Replaces a TCP Request Rule configuration by it's index in the specified parent.
-    operationId: replaceTCPRequestRule
+    operationId: replaceTCPRequestRule{{ .ParentType }}
     tags:
       - TCPRequestRule
     parameters:
@@ -123,17 +93,7 @@ tcp_request_rules_one:
         description: TCP Request Rule Index
         required: true
         type: integer
-      - name: parent_name
-        in: query
-        description: Parent name
-        required: true
-        type: string
-      - name: parent_type
-        in: query
-        description: Parent type
-        required: true
-        type: string
-        enum: [frontend, backend]
+      - $ref: "#/parameters/parent_name"
       - name: data
         in: body
         required: true
@@ -164,7 +124,7 @@ tcp_request_rules_one:
   delete:
     summary: Delete a TCP Request Rule
     description: Deletes a TCP Request Rule configuration by it's index from the specified parent.
-    operationId: deleteTCPRequestRule
+    operationId: deleteTCPRequestRule{{ .ParentType }}
     tags:
       - TCPRequestRule
     parameters:
@@ -173,17 +133,7 @@ tcp_request_rules_one:
         description: TCP Request Rule Index
         required: true
         type: integer
-      - name: parent_name
-        in: query
-        description: Parent name
-        required: true
-        type: string
-      - name: parent_type
-        in: query
-        description: Parent type
-        required: true
-        type: string
-        enum: [frontend, backend]
+      - $ref: "#/parameters/parent_name"
       - $ref: "#/parameters/transaction_id"
       - $ref: "#/parameters/version"
       - $ref: "#/parameters/force_reload"
@@ -203,7 +153,7 @@ tcp_request_rules_one:
   post:
     summary: Add a new TCP Request Rule
     description: Adds a new TCP Request Rule of the specified type in the specified parent.
-    operationId: createTCPRequestRule
+    operationId: createTCPRequestRule{{ .ParentType }}
     tags:
       - TCPRequestRule
     parameters:
@@ -212,17 +162,7 @@ tcp_request_rules_one:
         description: TCP Request Rule Index
         required: true
         type: integer
-      - name: parent_name
-        in: query
-        description: Parent name
-        required: true
-        type: string
-      - name: parent_type
-        in: query
-        description: Parent type
-        required: true
-        type: string
-        enum: [frontend, backend]
+      - $ref: "#/parameters/parent_name"
       - name: data
         in: body
         required: true

@@ -3,21 +3,11 @@ http_checks:
   get:
     summary: Return an array of HTTP checks
     description: Returns all HTTP checks that are configured in specified parent.
-    operationId: getHTTPChecks
+    operationId: getAllHTTPCheck{{ .ParentType }}
     tags:
       - HTTPCheck
     parameters:
-      - name: parent_name
-        in: query
-        description: Parent name
-        required: true
-        type: string
-      - name: parent_type
-        in: query
-        description: Parent type
-        required: true
-        type: string
-        enum: [backend, defaults]
+      - $ref: "#/parameters/parent_name"
       - $ref: "#/parameters/transaction_id"
     responses:
       '200':
@@ -33,21 +23,11 @@ http_checks:
   put:
     summary: Replace an HTTP checks list
     description: Replaces a whole list of HTTP checks with the list given in parameter
-    operationId: replaceHTTPChecks
+    operationId: replaceAllHTTPCheck{{ .ParentType }}
     tags:
       - HTTPCheck
     parameters:
-      - name: parent_name
-        in: query
-        description: Parent name
-        type: string
-        required: true
-      - name: parent_type
-        in: query
-        description: Parent type
-        required: true
-        type: string
-        enum: [backend, defaults]
+      - $ref: "#/parameters/parent_name"
       - name: data
         in: body
         required: true
@@ -77,7 +57,7 @@ http_checks_one:
   get:
     summary: Return one HTTP check
     description: Returns one HTTP check configuration by it's index in the specified parent.
-    operationId: getHTTPCheck
+    operationId: getHTTPCheck{{ .ParentType }}
     tags:
       - HTTPCheck
     parameters:
@@ -86,17 +66,7 @@ http_checks_one:
         description: HTTP Check Index
         required: true
         type: integer
-      - name: parent_name
-        in: query
-        description: Parent name
-        required: true
-        type: string
-      - name: parent_type
-        in: query
-        description: Parent type
-        required: true
-        type: string
-        enum: [backend, defaults]
+      - $ref: "#/parameters/parent_name"
       - $ref: "#/parameters/transaction_id"
     responses:
       '200':
@@ -114,7 +84,7 @@ http_checks_one:
   put:
     summary: Replace a HTTP check
     description: Replaces a HTTP Check configuration by it's index in the specified parent.
-    operationId: replaceHTTPCheck
+    operationId: replaceHTTPCheck{{ .ParentType }}
     tags:
       - HTTPCheck
     parameters:
@@ -123,16 +93,7 @@ http_checks_one:
         description: HTTP Check Index
         required: true
         type: integer
-      - name: parent_name
-        in: query
-        description: Parent name
-        type: string
-      - name: parent_type
-        in: query
-        description: Parent type
-        required: true
-        type: string
-        enum: [backend, defaults]
+      - $ref: "#/parameters/parent_name"
       - name: data
         in: body
         required: true
@@ -163,7 +124,7 @@ http_checks_one:
   delete:
     summary: Delete a HTTP check
     description: Deletes a HTTP check configuration by it's index from the specified parent.
-    operationId: deleteHTTPCheck
+    operationId: deleteHTTPCheck{{ .ParentType }}
     tags:
       - HTTPCheck
     parameters:
@@ -172,16 +133,7 @@ http_checks_one:
         description: HTTP check Index
         required: true
         type: integer
-      - name: parent_name
-        in: query
-        description: Parent name
-        type: string
-      - name: parent_type
-        in: query
-        description: Parent type
-        required: true
-        type: string
-        enum: [backend, defaults]
+      - $ref: "#/parameters/parent_name"
       - $ref: "#/parameters/transaction_id"
       - $ref: "#/parameters/version"
       - $ref: "#/parameters/force_reload"
@@ -201,7 +153,7 @@ http_checks_one:
   post:
     summary: Add a new HTTP check
     description: Adds a new HTTP check of the specified type in the specified parent.
-    operationId: createHTTPCheck
+    operationId: createHTTPCheck{{ .ParentType }}
     tags:
       - HTTPCheck
     parameters:
@@ -210,16 +162,7 @@ http_checks_one:
         description: HTTP check Index
         required: true
         type: integer
-      - name: parent_name
-        in: query
-        description: Parent name
-        type: string
-      - name: parent_type
-        in: query
-        description: Parent type
-        required: true
-        type: string
-        enum: [backend, defaults]
+      - $ref: "#/parameters/parent_name"
       - name: data
         in: body
         required: true
