@@ -504,9 +504,9 @@ func (c *client) parseSite(s string, p parser.Parser) *models.Site {
 }
 
 func (c *client) parseFarm(name string, useAs string, cond string, condTest string, p parser.Parser) *models.SiteFarm {
-	backend := &models.Backend{Name: name}
+	backend := &models.Backend{BackendBase: models.BackendBase{Name: name}}
 	if c.checkSectionExists(parser.Backends, name, p) {
-		if err := ParseSection(backend, parser.Backends, name, p); err == nil {
+		if err := ParseSection(&backend.BackendBase, parser.Backends, name, p); err == nil {
 			srvs, err := ParseServers(BackendParentName, name, p)
 			if err != nil {
 				srvs = models.Servers{}
@@ -540,10 +540,12 @@ func SerializeServiceToFrontend(service *models.SiteService, name string) *model
 
 func SerializeFarmToBackend(farm *models.SiteFarm) *models.Backend {
 	return &models.Backend{
-		Name:       farm.Name,
-		Mode:       farm.Mode,
-		Forwardfor: farm.Forwardfor,
-		Balance:    farm.Balance,
+		BackendBase: models.BackendBase{
+			Name:       farm.Name,
+			Mode:       farm.Mode,
+			Forwardfor: farm.Forwardfor,
+			Balance:    farm.Balance,
+		},
 	}
 }
 
@@ -630,8 +632,8 @@ func (c *client) editService(name string, service *models.SiteService, t string,
 }
 
 func (c *client) editFarm(name string, farm *models.SiteFarm, t string, p parser.Parser) error {
-	backend := &models.Backend{Name: name}
-	if err := ParseSection(backend, parser.Backends, name, p); err != nil {
+	backend := &models.Backend{BackendBase: models.BackendBase{Name: name}}
+	if err := ParseSection(&backend.BackendBase, parser.Backends, name, p); err != nil {
 		return err
 	}
 

@@ -22,6 +22,7 @@ import (
 
 type Structured interface {
 	StructuredFrontend
+	StructuredBackend
 }
 
 type StructuredToParserArgs struct {

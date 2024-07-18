@@ -278,8 +278,10 @@ func (s *Service) createBackend(from string) (bool, error) {
 	_, _, err := s.client.GetBackend(s.name, s.transactionID)
 	if err != nil {
 		err := s.client.CreateBackend(&models.Backend{
-			From: from,
-			Name: s.name,
+			BackendBase: models.BackendBase{
+				From: from,
+				Name: s.name,
+			},
 		}, s.transactionID, 0)
 		if err != nil {
 			return false, err

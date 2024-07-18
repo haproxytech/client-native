@@ -58,8 +58,8 @@ func (c *client) GetBackends(transactionID string) (int64, models.Backends, erro
 
 	backends := []*models.Backend{}
 	for _, name := range bNames {
-		b := &models.Backend{Name: name}
-		if err := ParseSection(b, parser.Backends, name, p); err != nil {
+		b := &models.Backend{BackendBase: models.BackendBase{Name: name}}
+		if err := ParseSection(&b.BackendBase, parser.Backends, name, p); err != nil {
 			continue
 		}
 		backends = append(backends, b)
@@ -85,8 +85,8 @@ func (c *client) GetBackend(name string, transactionID string) (int64, *models.B
 		return v, nil, NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("Backend %s does not exist", name))
 	}
 
-	backend := &models.Backend{Name: name}
-	if err := ParseSection(backend, parser.Backends, name, p); err != nil {
+	backend := &models.Backend{BackendBase: models.BackendBase{Name: name}}
+	if err := ParseSection(&backend.BackendBase, parser.Backends, name, p); err != nil {
 		return v, nil, err
 	}
 
@@ -108,7 +108,7 @@ func (c *client) CreateBackend(data *models.Backend, transactionID string, versi
 			return NewConfError(ErrValidationError, validationErr.Error())
 		}
 	}
-	return c.createSection(parser.Backends, data.Name, data, transactionID, version)
+	return c.createSection(parser.Backends, data.Name, &data.BackendBase, transactionID, version)
 }
 
 // EditBackend edits a backend in configuration. One of version or transactionID is
@@ -120,5 +120,5 @@ func (c *client) EditBackend(name string, data *models.Backend, transactionID st
 			return NewConfError(ErrValidationError, validationErr.Error())
 		}
 	}
-	return c.editSection(parser.Backends, name, data, transactionID, version)
+	return c.editSection(parser.Backends, name, &data.BackendBase, transactionID, version)
 }

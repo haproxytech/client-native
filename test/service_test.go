@@ -175,7 +175,7 @@ func (s *ServiceInitiationSuite) TestLoadExistingBackend() {
 
 func (s *ServiceInitiationSuite) createExistingService(servers models.Servers) error {
 	err := clientTest.CreateBackend(&models.Backend{
-		Name: s.serviceName,
+		BackendBase: models.BackendBase{Name: s.serviceName},
 	}, s.transactionID, 0)
 	if err != nil {
 		return err
