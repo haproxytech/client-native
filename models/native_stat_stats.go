@@ -185,6 +185,9 @@ type NativeStatStats struct {
 	// intercepted
 	Intercepted *int64 `json:"intercepted,omitempty"`
 
+	// last agt
+	LastAgt *string `json:"last_agt,omitempty"`
+
 	// last chk
 	LastChk *string `json:"last_chk,omitempty"`
 

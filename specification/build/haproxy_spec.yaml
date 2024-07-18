@@ -7356,6 +7356,11 @@ definitions:
                       - frontend
                       - backend
               x-nullable: true
+          last_agt:
+              type: string
+              x-dependency:
+                  type: server
+              x-nullable: true
           last_chk:
               type: string
               x-dependency:
