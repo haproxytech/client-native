@@ -411,6 +411,11 @@ native_stat_stats:
       x-nullable: true
       x-dependency:
         type: server
+    last_agt:
+      type: string
+      x-nullable: true
+      x-dependency:
+        type: server
   example:
     scur: 129
     smax: 2000
