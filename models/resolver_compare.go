@@ -19,57 +19,32 @@ package models
 
 // Equal checks if two structs of type Resolver are equal
 //
+// By default empty maps and slices are equal to nil:
+//
 //	var a, b Resolver
 //	equal := a.Equal(b)
 //
-// opts ...Options are ignored in this method
+// For more advanced use case you can configure these options (default values are shown):
+//
+//	var a, b Resolver
+//	equal := a.Equal(b,Options{
+//		NilSameAsEmpty: true,
+//	})
 func (s Resolver) Equal(t Resolver, opts ...Options) bool {
-	if s.AcceptedPayloadSize != t.AcceptedPayloadSize {
+	opt := getOptions(opts...)
+
+	if !s.ResolverBase.Equal(t.ResolverBase, opt) {
 		return false
 	}
 
-	if !equalPointers(s.HoldNx, t.HoldNx) {
+	if !CheckSameNilAndLenMap[string, Nameserver](s.Nameservers, t.Nameservers, opt) {
 		return false
 	}
 
-	if !equalPointers(s.HoldObsolete, t.HoldObsolete) {
-		return false
-	}
-
-	if !equalPointers(s.HoldOther, t.HoldOther) {
-		return false
-	}
-
-	if !equalPointers(s.HoldRefused, t.HoldRefused) {
-		return false
-	}
-
-	if !equalPointers(s.HoldTimeout, t.HoldTimeout) {
-		return false
-	}
-
-	if !equalPointers(s.HoldValid, t.HoldValid) {
-		return false
-	}
-
-	if s.Name != t.Name {
-		return false
-	}
-
-	if s.ParseResolvConf != t.ParseResolvConf {
-		return false
-	}
-
-	if s.ResolveRetries != t.ResolveRetries {
-		return false
-	}
-
-	if s.TimeoutResolve != t.TimeoutResolve {
-		return false
-	}
-
-	if s.TimeoutRetry != t.TimeoutRetry {
-		return false
+	for k, v := range s.Nameservers {
+		if !t.Nameservers[k].Equal(v, opt) {
+			return false
+		}
 	}
 
 	return true
@@ -77,58 +52,34 @@ func (s Resolver) Equal(t Resolver, opts ...Options) bool {
 
 // Diff checks if two structs of type Resolver are equal
 //
+// By default empty maps and slices are equal to nil:
+//
 //	var a, b Resolver
 //	diff := a.Diff(b)
 //
-// opts ...Options are ignored in this method
+// For more advanced use case you can configure these options (default values are shown):
+//
+//	var a, b Resolver
+//	diff := a.Diff(b,Options{
+//		NilSameAsEmpty: true,
+//	})
 func (s Resolver) Diff(t Resolver, opts ...Options) map[string][]interface{} {
+	opt := getOptions(opts...)
+
 	diff := make(map[string][]interface{})
-	if s.AcceptedPayloadSize != t.AcceptedPayloadSize {
-		diff["AcceptedPayloadSize"] = []interface{}{s.AcceptedPayloadSize, t.AcceptedPayloadSize}
+
+	if !s.ResolverBase.Equal(t.ResolverBase, opt) {
+		diff["ResolverBase"] = []interface{}{s.ResolverBase, t.ResolverBase}
 	}
 
-	if !equalPointers(s.HoldNx, t.HoldNx) {
-		diff["HoldNx"] = []interface{}{ValueOrNil(s.HoldNx), ValueOrNil(t.HoldNx)}
+	if !CheckSameNilAndLenMap[string, Nameserver](s.Nameservers, t.Nameservers, opt) {
+		diff["Nameservers"] = []interface{}{s.Nameservers, t.Nameservers}
 	}
 
-	if !equalPointers(s.HoldObsolete, t.HoldObsolete) {
-		diff["HoldObsolete"] = []interface{}{ValueOrNil(s.HoldObsolete), ValueOrNil(t.HoldObsolete)}
-	}
-
-	if !equalPointers(s.HoldOther, t.HoldOther) {
-		diff["HoldOther"] = []interface{}{ValueOrNil(s.HoldOther), ValueOrNil(t.HoldOther)}
-	}
-
-	if !equalPointers(s.HoldRefused, t.HoldRefused) {
-		diff["HoldRefused"] = []interface{}{ValueOrNil(s.HoldRefused), ValueOrNil(t.HoldRefused)}
-	}
-
-	if !equalPointers(s.HoldTimeout, t.HoldTimeout) {
-		diff["HoldTimeout"] = []interface{}{ValueOrNil(s.HoldTimeout), ValueOrNil(t.HoldTimeout)}
-	}
-
-	if !equalPointers(s.HoldValid, t.HoldValid) {
-		diff["HoldValid"] = []interface{}{ValueOrNil(s.HoldValid), ValueOrNil(t.HoldValid)}
-	}
-
-	if s.Name != t.Name {
-		diff["Name"] = []interface{}{s.Name, t.Name}
-	}
-
-	if s.ParseResolvConf != t.ParseResolvConf {
-		diff["ParseResolvConf"] = []interface{}{s.ParseResolvConf, t.ParseResolvConf}
-	}
-
-	if s.ResolveRetries != t.ResolveRetries {
-		diff["ResolveRetries"] = []interface{}{s.ResolveRetries, t.ResolveRetries}
-	}
-
-	if s.TimeoutResolve != t.TimeoutResolve {
-		diff["TimeoutResolve"] = []interface{}{s.TimeoutResolve, t.TimeoutResolve}
-	}
-
-	if s.TimeoutRetry != t.TimeoutRetry {
-		diff["TimeoutRetry"] = []interface{}{s.TimeoutRetry, t.TimeoutRetry}
+	for k, v := range s.Nameservers {
+		if !t.Nameservers[k].Equal(v, opt) {
+			diff["Nameservers"] = []interface{}{s.Nameservers, t.Nameservers}
+		}
 	}
 
 	return diff

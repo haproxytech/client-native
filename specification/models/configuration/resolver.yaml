@@ -1,6 +1,17 @@
 ---
 resolver:
-  title: Resolver
+  type: object
+  description: Resolver with all it's children resources
+  x-go-name: Resolver
+  allOf:
+    - $ref: "#/definitions/resolver_base"
+    - type: object
+      properties:
+        nameservers:
+          additionalProperties:
+            $ref: "#/definitions/nameserver"
+resolver_base:
+  title: Resolver Base
   description: Runtime DNS configuration
   type: object
   required:

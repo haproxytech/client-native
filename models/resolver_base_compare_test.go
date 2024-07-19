@@ -26,13 +26,13 @@ import (
 	jsoniter "github.com/json-iterator/go"
 )
 
-func TestResolverEqual(t *testing.T) {
+func TestResolverBaseEqual(t *testing.T) {
 	samples := []struct {
-		a, b Resolver
+		a, b ResolverBase
 	}{}
 	for i := 0; i < 2; i++ {
-		var sample Resolver
-		var result Resolver
+		var sample ResolverBase
+		var result ResolverBase
 		err := faker.FakeData(&sample)
 		if err != nil {
 			t.Errorf(err.Error())
@@ -47,7 +47,7 @@ func TestResolverEqual(t *testing.T) {
 		}
 
 		samples = append(samples, struct {
-			a, b Resolver
+			a, b ResolverBase
 		}{sample, result})
 	}
 
@@ -63,18 +63,18 @@ func TestResolverEqual(t *testing.T) {
 			if err != nil {
 				t.Errorf(err.Error())
 			}
-			t.Errorf("Expected Resolver to be equal, but it is not %s %s", a, b)
+			t.Errorf("Expected ResolverBase to be equal, but it is not %s %s", a, b)
 		}
 	}
 }
 
-func TestResolverEqualFalse(t *testing.T) {
+func TestResolverBaseEqualFalse(t *testing.T) {
 	samples := []struct {
-		a, b Resolver
+		a, b ResolverBase
 	}{}
 	for i := 0; i < 2; i++ {
-		var sample Resolver
-		var result Resolver
+		var sample ResolverBase
+		var result ResolverBase
 		err := faker.FakeData(&sample)
 		if err != nil {
 			t.Errorf(err.Error())
@@ -83,8 +83,19 @@ func TestResolverEqualFalse(t *testing.T) {
 		if err != nil {
 			t.Errorf(err.Error())
 		}
+		result.AcceptedPayloadSize = sample.AcceptedPayloadSize + 1
+		result.HoldNx = Ptr(*sample.HoldNx + 1)
+		result.HoldObsolete = Ptr(*sample.HoldObsolete + 1)
+		result.HoldOther = Ptr(*sample.HoldOther + 1)
+		result.HoldRefused = Ptr(*sample.HoldRefused + 1)
+		result.HoldTimeout = Ptr(*sample.HoldTimeout + 1)
+		result.HoldValid = Ptr(*sample.HoldValid + 1)
+		result.ParseResolvConf = !sample.ParseResolvConf
+		result.ResolveRetries = sample.ResolveRetries + 1
+		result.TimeoutResolve = sample.TimeoutResolve + 1
+		result.TimeoutRetry = sample.TimeoutRetry + 1
 		samples = append(samples, struct {
-			a, b Resolver
+			a, b ResolverBase
 		}{sample, result})
 	}
 
@@ -100,18 +111,18 @@ func TestResolverEqualFalse(t *testing.T) {
 			if err != nil {
 				t.Errorf(err.Error())
 			}
-			t.Errorf("Expected Resolver to be different, but it is not %s %s", a, b)
+			t.Errorf("Expected ResolverBase to be different, but it is not %s %s", a, b)
 		}
 	}
 }
 
-func TestResolverDiff(t *testing.T) {
+func TestResolverBaseDiff(t *testing.T) {
 	samples := []struct {
-		a, b Resolver
+		a, b ResolverBase
 	}{}
 	for i := 0; i < 2; i++ {
-		var sample Resolver
-		var result Resolver
+		var sample ResolverBase
+		var result ResolverBase
 		err := faker.FakeData(&sample)
 		if err != nil {
 			t.Errorf(err.Error())
@@ -126,7 +137,7 @@ func TestResolverDiff(t *testing.T) {
 		}
 
 		samples = append(samples, struct {
-			a, b Resolver
+			a, b ResolverBase
 		}{sample, result})
 	}
 
@@ -142,18 +153,18 @@ func TestResolverDiff(t *testing.T) {
 			if err != nil {
 				t.Errorf(err.Error())
 			}
-			t.Errorf("Expected Resolver to be equal, but it is not %s %s, %v", a, b, result)
+			t.Errorf("Expected ResolverBase to be equal, but it is not %s %s, %v", a, b, result)
 		}
 	}
 }
 
-func TestResolverDiffFalse(t *testing.T) {
+func TestResolverBaseDiffFalse(t *testing.T) {
 	samples := []struct {
-		a, b Resolver
+		a, b ResolverBase
 	}{}
 	for i := 0; i < 2; i++ {
-		var sample Resolver
-		var result Resolver
+		var sample ResolverBase
+		var result ResolverBase
 		err := faker.FakeData(&sample)
 		if err != nil {
 			t.Errorf(err.Error())
@@ -162,14 +173,25 @@ func TestResolverDiffFalse(t *testing.T) {
 		if err != nil {
 			t.Errorf(err.Error())
 		}
+		result.AcceptedPayloadSize = sample.AcceptedPayloadSize + 1
+		result.HoldNx = Ptr(*sample.HoldNx + 1)
+		result.HoldObsolete = Ptr(*sample.HoldObsolete + 1)
+		result.HoldOther = Ptr(*sample.HoldOther + 1)
+		result.HoldRefused = Ptr(*sample.HoldRefused + 1)
+		result.HoldTimeout = Ptr(*sample.HoldTimeout + 1)
+		result.HoldValid = Ptr(*sample.HoldValid + 1)
+		result.ParseResolvConf = !sample.ParseResolvConf
+		result.ResolveRetries = sample.ResolveRetries + 1
+		result.TimeoutResolve = sample.TimeoutResolve + 1
+		result.TimeoutRetry = sample.TimeoutRetry + 1
 		samples = append(samples, struct {
-			a, b Resolver
+			a, b ResolverBase
 		}{sample, result})
 	}
 
 	for _, sample := range samples {
 		result := sample.a.Diff(sample.b)
-		if len(result) != 2 {
+		if len(result) != 12 {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {
@@ -179,7 +201,7 @@ func TestResolverDiffFalse(t *testing.T) {
 			if err != nil {
 				t.Errorf(err.Error())
 			}
-			t.Errorf("Expected Resolver to be different in 2 cases, but it is not (%d) %s %s", len(result), a, b)
+			t.Errorf("Expected ResolverBase to be different in 12 cases, but it is not (%d) %s %s", len(result), a, b)
 		}
 	}
 }

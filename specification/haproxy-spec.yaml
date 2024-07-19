@@ -471,6 +471,8 @@ definitions:
       $ref: "#/definitions/capture"
   resolver:
     $ref: "models/configuration/resolver.yaml#/resolver"
+  resolver_base:
+    $ref: "models/configuration/resolver.yaml#/resolver_base"
   resolvers:
     title: Resolvers
     description: HAProxy resolvers array

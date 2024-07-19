@@ -9721,6 +9721,17 @@ definitions:
     items:
       $ref: "#/definitions/capture"
   resolver:
+    allOf:
+      - $ref: '#/definitions/resolver_base'
+      - properties:
+          nameservers:
+            additionalProperties:
+              $ref: '#/definitions/nameserver'
+        type: object
+    description: Resolver with all it's children resources
+    type: object
+    x-go-name: Resolver
+  resolver_base:
     description: Runtime DNS configuration
     properties:
       accepted_payload_size:
@@ -9786,7 +9797,7 @@ definitions:
         x-nullable: false
     required:
       - name
-    title: Resolver
+    title: Resolver Base
     type: object
   resolvers:
     title: Resolvers
@@ -21306,6 +21317,7 @@ paths:
       operationId: getResolvers
       parameters:
         - $ref: '#/parameters/transaction_id'
+        - $ref: '#/parameters/full_section'
       responses:
         "200":
           description: Successful operation
@@ -21332,6 +21344,7 @@ paths:
         - $ref: '#/parameters/transaction_id'
         - $ref: '#/parameters/version'
         - $ref: '#/parameters/force_reload'
+        - $ref: '#/parameters/full_section'
       responses:
         "201":
           description: Resolver created
@@ -21393,6 +21406,7 @@ paths:
           required: true
           type: string
         - $ref: '#/parameters/transaction_id'
+        - $ref: '#/parameters/full_section'
       responses:
         "200":
           description: Successful operation
@@ -21426,6 +21440,7 @@ paths:
         - $ref: '#/parameters/transaction_id'
         - $ref: '#/parameters/version'
         - $ref: '#/parameters/force_reload'
+        - $ref: '#/parameters/full_section'
       responses:
         "200":
           description: Resolver replaced
