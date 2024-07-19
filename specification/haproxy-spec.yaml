@@ -491,6 +491,14 @@ definitions:
     type: array
     items:
       $ref: '#/definitions/awsRegion'
+  opennebula:
+    $ref: "models/service-discovery.yaml#/opennebula"
+  opennebulas:
+    title: OpenNebulas
+    description: OpenNebulas array
+    type: array
+    items:
+      $ref: '#/definitions/opennebula'
   consul:
     $ref: "models/service-discovery.yaml#/consul"
   consuls:
@@ -769,6 +777,10 @@ paths:
     $ref: "paths/service-discovery.yaml#/aws"
   /service_discovery/aws/{id}:
     $ref: "paths/service-discovery.yaml#/aws_one"
+  /service_discovery/opennebula:
+    $ref: "paths/service-discovery.yaml#/opennebula"
+  /service_discovery/opennebula/{id}:
+    $ref: "paths/service-discovery.yaml#/opennebula_one"
   /service_discovery/consul:
     $ref: "paths/service-discovery.yaml#/consul"
   /service_discovery/consul/{id}:
