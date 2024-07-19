@@ -48,7 +48,7 @@ func (c *client) GetDefaultsConfiguration(transactionID string) (int64, *models.
 	}
 
 	d := &models.Defaults{}
-	_ = ParseSection(d, parser.Defaults, parser.DefaultSectionName, p)
+	_ = ParseSection(&d.DefaultsBase, parser.Defaults, parser.DefaultSectionName, p)
 
 	return v, d, nil
 }
@@ -63,7 +63,7 @@ func (c *client) PushDefaultsConfiguration(data *models.Defaults, transactionID 
 		}
 	}
 
-	return c.editSection(parser.Defaults, parser.DefaultSectionName, data, transactionID, version)
+	return c.editSection(parser.Defaults, parser.DefaultSectionName, &data.DefaultsBase, transactionID, version)
 }
 
 // GetDefaultsSections returns configuration version and an array of
@@ -86,8 +86,8 @@ func (c *client) GetDefaultsSections(transactionID string) (int64, models.Defaul
 
 	defaults := []*models.Defaults{}
 	for _, name := range dNames {
-		d := &models.Defaults{Name: name}
-		if err := ParseSection(d, parser.Defaults, name, p); err != nil {
+		d := &models.Defaults{DefaultsBase: models.DefaultsBase{Name: name}}
+		if err := ParseSection(&d.DefaultsBase, parser.Defaults, name, p); err != nil {
 			continue
 		}
 		defaults = append(defaults, d)
@@ -113,8 +113,8 @@ func (c *client) GetDefaultsSection(name string, transactionID string) (int64, *
 		return v, nil, NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("Defaults section %s does not exist", name))
 	}
 
-	defaults := &models.Defaults{Name: name}
-	if err := ParseSection(defaults, parser.Defaults, name, p); err != nil {
+	defaults := &models.Defaults{DefaultsBase: models.DefaultsBase{Name: name}}
+	if err := ParseSection(&defaults.DefaultsBase, parser.Defaults, name, p); err != nil {
 		return v, nil, err
 	}
 
@@ -137,7 +137,7 @@ func (c *client) EditDefaultsSection(name string, data *models.Defaults, transac
 		}
 	}
 
-	return c.editSection(parser.Defaults, name, data, transactionID, version)
+	return c.editSection(parser.Defaults, name, &data.DefaultsBase, transactionID, version)
 }
 
 // CreateDefaultsSection creates a defaults section in configuration. One of version or transactionID is
@@ -150,5 +150,5 @@ func (c *client) CreateDefaultsSection(data *models.Defaults, transactionID stri
 		}
 	}
 
-	return c.createSection(parser.Defaults, data.Name, data, transactionID, version)
+	return c.createSection(parser.Defaults, data.Name, &data.DefaultsBase, transactionID, version)
 }

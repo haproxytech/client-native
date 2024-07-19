@@ -22,6 +22,7 @@ import (
 
 type Structured interface {
 	StructuredGlobal
+	StructuredDefaults
 	StructuredFrontend
 	StructuredBackend
 }
