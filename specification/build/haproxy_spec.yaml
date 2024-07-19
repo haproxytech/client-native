@@ -1067,6 +1067,17 @@ definitions:
     items:
       $ref: "#/definitions/site"
   global:
+    allOf:
+      - $ref: '#/definitions/global_base'
+      - properties:
+          log_target_list:
+            $ref: '#/definitions/log_targets'
+            x-go-name: LogTargetList
+        type: object
+    description: Frontend with all it's children resources
+    type: object
+    x-go-name: Global
+  global_base:
     additionalProperties: false
     description: HAProxy global configuration
     properties:
@@ -1138,6 +1149,7 @@ definitions:
         required:
           - type
         type: object
+        x-go-name: GlobalDefaultPath
       description:
         type: string
         x-display-name: Text that describes the instance
@@ -1156,6 +1168,7 @@ definitions:
             type: string
             x-display-name: Separator
         type: object
+        x-go-name: GlobalDeviceAtlasOptions
       expose_experimental_directives:
         type: boolean
       external_check:
@@ -1176,6 +1189,7 @@ definitions:
             type: string
             x-display-name: Property Separator
         type: object
+        x-go-name: GlobalFiftyOneDegreesOptions
       gid:
         type: integer
         x-display-name: GID
@@ -1231,7 +1245,9 @@ definitions:
                   - disabled
                 type: string
             type: object
+            x-go-name: GlobalHardenRejectPrivilegedPorts
         type: object
+        x-go-name: GlobalHarden
       http_err_codes:
         items:
           $ref: '#/definitions/http_codes'
@@ -1306,6 +1322,7 @@ definitions:
           - enabled
         type: object
         x-display-name: Log Send Hostname
+        x-go-name: GlobalLogSendHostname
       lua_load_per_thread:
         type: string
       lua_loads:
@@ -1433,6 +1450,7 @@ definitions:
                 x-nullable: true
             type: object
             x-display-name: OCSP Update HTTP Proxy
+            x-go-name: GlobalOcspUpdateHttpproxy
             x-omitempty: true
           maxdelay:
             description: Sets the maximum interval between two automatic updates of the same OCSP response.This time is expressed in seconds
@@ -1455,6 +1473,7 @@ definitions:
             type: string
             x-display-name: OCSP Update Mode
         type: object
+        x-go-name: GlobalOcspUpdate
       pidfile:
         type: string
         x-display-name: PID File
@@ -2105,6 +2124,7 @@ definitions:
             type: integer
             x-display-name: Zlib Window Size
         type: object
+        x-go-name: GlobalTuneOptions
       uid:
         type: integer
         x-display-name: UID
@@ -2135,9 +2155,10 @@ definitions:
             type: string
             x-display-name: A list of WURFL patch file paths
         type: object
+        x-go-name: GlobalWurflOptions
       zero_warning:
         type: boolean
-    title: Global
+    title: Global Base
     type: object
   defaults:
     additionalProperties: false
@@ -11663,6 +11684,7 @@ paths:
       operationId: getGlobal
       parameters:
         - $ref: '#/parameters/transaction_id'
+        - $ref: '#/parameters/full_section'
       responses:
         "200":
           description: Successful operation
@@ -11689,6 +11711,7 @@ paths:
         - $ref: '#/parameters/transaction_id'
         - $ref: '#/parameters/version'
         - $ref: '#/parameters/force_reload'
+        - $ref: '#/parameters/full_section'
       responses:
         "200":
           description: Global replaced

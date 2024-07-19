@@ -50,6 +50,8 @@ definitions:
       $ref: "#/definitions/site"
   global:
     $ref: "models/configuration/global.yaml#/global"
+  global_base:
+    $ref: "models/configuration/global.yaml#/global_base"
   defaults:
     $ref: "models/configuration/defaults.yaml#/defaults"
   defaults_sections:

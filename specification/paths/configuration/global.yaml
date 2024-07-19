@@ -6,6 +6,7 @@ global:
     operationId: getGlobal
     parameters:
       - $ref: "#/parameters/transaction_id"
+      - $ref: "#/parameters/full_section"
     tags:
       - Global
     responses:
@@ -32,6 +33,7 @@ global:
       - $ref: "#/parameters/transaction_id"
       - $ref: "#/parameters/version"
       - $ref: "#/parameters/force_reload"
+      - $ref: "#/parameters/full_section"
     tags:
       - Global
     responses:

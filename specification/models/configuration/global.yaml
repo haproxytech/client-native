@@ -1,6 +1,17 @@
 ---
 global:
-  title: Global
+  type: object
+  description: Frontend with all it's children resources
+  x-go-name: Global
+  allOf:
+    - $ref: "#/definitions/global_base"
+    - type: object
+      properties:
+        log_target_list:
+          $ref: "#/definitions/log_targets"
+          x-go-name: LogTargetList
+global_base:
+  title: Global Base
   description: HAProxy global configuration
   type: object
   properties:
@@ -222,6 +233,7 @@ global:
       x-display-name: Prealloc FD
     wurfl_options:
       type: object
+      x-go-name: GlobalWurflOptions
       properties:
         data_file:
           type: string
@@ -268,6 +280,7 @@ global:
             x-display-name: Number or Range
     device_atlas_options:
       type: object
+      x-go-name: GlobalDeviceAtlasOptions
       properties:
         json_file:
           type: string
@@ -283,6 +296,7 @@ global:
           x-display-name: Properties Cookie
     fifty_one_degrees_options:
       type: object
+      x-go-name: GlobalFiftyOneDegreesOptions
       properties:
         data_file:
           type: string
@@ -298,6 +312,7 @@ global:
           x-display-name: Cache Size
     tune_options:
       type: object
+      x-go-name: GlobalTuneOptions
       properties:
         applet_zero_copy_forwarding:
           type: string
@@ -785,6 +800,7 @@ global:
             enum: [path, cpath]
     log_send_hostname:
       type: object
+      x-go-name: GlobalLogSendHostname
       x-display-name: Log Send Hostname
       required:
         - enabled
@@ -914,6 +930,7 @@ global:
       x-display-name: Removes environment variables specified in arguments
     default_path:
       type: object
+      x-go-name: GlobalDefaultPath
       required:
         - type
       properties:
@@ -934,9 +951,11 @@ global:
       x-display-name: OS Capabilities
     harden:
       type: object
+      x-go-name: GlobalHarden
       properties:
         reject_privileged_ports:
           type: object
+          x-go-name: GlobalHardenRejectPrivilegedPorts
           properties:
             tcp:
               type: string
@@ -966,6 +985,7 @@ global:
         $ref: "#/definitions/http_codes"
     ocsp_update:
       type: object
+      x-go-name: GlobalOcspUpdate
       properties:
         mode:
           type: string
@@ -992,6 +1012,7 @@ global:
           x-default-unit: s
         httpproxy:
           type: object
+          x-go-name: GlobalOcspUpdateHttpproxy
           x-omitempty: true
           x-display-name: OCSP Update HTTP Proxy
           properties:
