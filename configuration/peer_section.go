@@ -52,8 +52,8 @@ func (c *client) GetPeerSections(transactionID string) (int64, models.PeerSectio
 
 	peerSections := []*models.PeerSection{}
 	for _, name := range names {
-		peerSection := &models.PeerSection{Name: name}
-		if err := ParseSection(peerSection, parser.Peers, name, p); err != nil {
+		peerSection := &models.PeerSection{PeerSectionBase: models.PeerSectionBase{Name: name}}
+		if err := ParseSection(&peerSection.PeerSectionBase, parser.Peers, name, p); err != nil {
 			continue
 		}
 		peerSections = append(peerSections, peerSection)
@@ -79,8 +79,8 @@ func (c *client) GetPeerSection(name string, transactionID string) (int64, *mode
 		return v, nil, NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("PeerSection %s does not exist", name))
 	}
 
-	peerSection := &models.PeerSection{Name: name}
-	if err := ParseSection(peerSection, parser.Peers, name, p); err != nil {
+	peerSection := &models.PeerSection{PeerSectionBase: models.PeerSectionBase{Name: name}}
+	if err := ParseSection(&peerSection.PeerSectionBase, parser.Peers, name, p); err != nil {
 		return v, nil, err
 	}
 
@@ -103,7 +103,7 @@ func (c *client) CreatePeerSection(data *models.PeerSection, transactionID strin
 		}
 	}
 
-	return c.createSection(parser.Peers, data.Name, data, transactionID, version)
+	return c.createSection(parser.Peers, data.Name, &data.PeerSectionBase, transactionID, version)
 }
 
 // EditPeerSection edits a peer section in configuration. One of version or transactionID is
@@ -116,5 +116,5 @@ func (c *client) EditPeerSection(data *models.PeerSection, transactionID string,
 		}
 	}
 
-	return c.editSection(parser.Peers, data.Name, data, transactionID, version)
+	return c.editSection(parser.Peers, data.Name, &data.PeerSectionBase, transactionID, version)
 }

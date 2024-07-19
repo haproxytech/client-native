@@ -93,7 +93,7 @@ func checkPeerSections(t *testing.T, got map[string]models.PeerSections) {
 		for _, g := range v {
 			for _, w := range want {
 				if g.Name == w.Name {
-					require.True(t, g.Equal(*w), "k=%s - diff %v", k, cmp.Diff(*g, *w))
+					require.True(t, g.PeerSectionBase.Equal(w.PeerSectionBase), "k=%s - diff %v", k, cmp.Diff(*g, *w))
 					break
 				}
 			}
@@ -104,22 +104,24 @@ func checkPeerSections(t *testing.T, got map[string]models.PeerSections) {
 func TestCreateEditDeletePeerSection(t *testing.T) {
 	tOut := int64(5)
 	f := &models.PeerSection{
-		Name:     "testcluster",
-		Disabled: true,
-		DefaultServer: &models.DefaultServer{
-			ServerParams: models.ServerParams{
-				Fall:  &tOut,
-				Inter: &tOut,
+		PeerSectionBase: models.PeerSectionBase{
+			Name:     "testcluster",
+			Disabled: true,
+			DefaultServer: &models.DefaultServer{
+				ServerParams: models.ServerParams{
+					Fall:  &tOut,
+					Inter: &tOut,
+				},
 			},
-		},
-		DefaultBind: &models.DefaultBind{
-			BindParams: models.BindParams{
-				Alpn:           "h2,http/1.1",
-				Ssl:            true,
-				SslCertificate: "/etc/haproxy/cluster.pem",
+			DefaultBind: &models.DefaultBind{
+				BindParams: models.BindParams{
+					Alpn:           "h2,http/1.1",
+					Ssl:            true,
+					SslCertificate: "/etc/haproxy/cluster.pem",
+				},
 			},
+			Shards: 4,
 		},
-		Shards: 4,
 	}
 	err := clientTest.CreatePeerSection(f, "", version)
 	if err != nil {
