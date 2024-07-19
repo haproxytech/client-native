@@ -25,6 +25,7 @@ type Structured interface {
 	StructuredDefaults
 	StructuredFrontend
 	StructuredBackend
+	StructuredUserlist
 }
 
 type StructuredToParserArgs struct {

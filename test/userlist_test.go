@@ -132,11 +132,11 @@ userlist second
 			}
 
 			// add tests
-			add := models.Userlist{Name: "third"}
+			add := models.Userlist{UserlistBase: models.UserlistBase{Name: "third"}}
 			if c.CreateUserList(&add, "", 1) != nil {
 				t.Errorf("Adding a new userlist failed")
 			}
-			add = models.Userlist{Name: "fourth"}
+			add = models.Userlist{UserlistBase: models.UserlistBase{Name: "fourth"}}
 			if c.CreateUserList(&add, "", 2) != nil {
 				t.Errorf("Adding a new userlist failed")
 			}
