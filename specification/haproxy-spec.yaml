@@ -54,6 +54,8 @@ definitions:
     $ref: "models/configuration/global.yaml#/global_base"
   defaults:
     $ref: "models/configuration/defaults.yaml#/defaults"
+  defaults_base:
+    $ref: "models/configuration/defaults.yaml#/defaults_base"
   defaults_sections:
     title: Defaults Sections
     description: HAProxy defaults sections array

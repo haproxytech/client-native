@@ -2161,6 +2161,26 @@ definitions:
     title: Global Base
     type: object
   defaults:
+    allOf:
+      - $ref: '#/definitions/defaults_base'
+      - properties:
+          http_check_list:
+            $ref: '#/definitions/http_checks'
+            x-go-name: HTTPCheckList
+          http_error_rule_list:
+            $ref: '#/definitions/http_error_rules'
+            x-go-name: HTTPErrorRuleList
+          log_target_list:
+            $ref: '#/definitions/log_targets'
+            x-go-name: LogTargetList
+          tcp_check_rule_list:
+            $ref: '#/definitions/tcp_checks'
+            x-go-name: TCPCheckRuleList
+        type: object
+    description: Defaults with all it's children resources
+    type: object
+    x-go-name: Defaults
+  defaults_base:
     additionalProperties: false
     description: HAProxy defaults configuration
     properties:
@@ -2667,7 +2687,7 @@ definitions:
       unique_id_header:
         type: string
         x-display-name: Unique ID header
-    title: Defaults
+    title: Defaults Base
     type: object
   defaults_sections:
     title: Defaults Sections
@@ -11738,6 +11758,7 @@ paths:
       operationId: getDefaultsSections
       parameters:
         - $ref: '#/parameters/transaction_id'
+        - $ref: '#/parameters/full_section'
       responses:
         "200":
           description: Successful operation
@@ -11764,6 +11785,7 @@ paths:
         - $ref: '#/parameters/transaction_id'
         - $ref: '#/parameters/version'
         - $ref: '#/parameters/force_reload'
+        - $ref: '#/parameters/full_section'
       responses:
         "201":
           description: Defaults created
@@ -11799,6 +11821,7 @@ paths:
         - $ref: '#/parameters/transaction_id'
         - $ref: '#/parameters/version'
         - $ref: '#/parameters/force_reload'
+        - $ref: '#/parameters/full_section'
       responses:
         "202":
           description: Configuration change accepted and reload requested
@@ -11825,6 +11848,7 @@ paths:
           required: true
           type: string
         - $ref: '#/parameters/transaction_id'
+        - $ref: '#/parameters/full_section'
       responses:
         "200":
           description: Successful operation
@@ -11858,6 +11882,7 @@ paths:
         - $ref: '#/parameters/transaction_id'
         - $ref: '#/parameters/version'
         - $ref: '#/parameters/force_reload'
+        - $ref: '#/parameters/full_section'
       responses:
         "200":
           description: Defaults section replaced

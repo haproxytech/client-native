@@ -1,6 +1,26 @@
 ---
 defaults:
-  title: Defaults
+  type: object
+  description: Defaults with all it's children resources
+  x-go-name: Defaults
+  allOf:
+    - $ref: "#/definitions/defaults_base"
+    - type: object
+      properties:
+        log_target_list:
+          $ref: "#/definitions/log_targets"
+          x-go-name: LogTargetList
+        http_check_list:
+          $ref: "#/definitions/http_checks"
+          x-go-name: HTTPCheckList
+        http_error_rule_list:
+          $ref: "#/definitions/http_error_rules"
+          x-go-name: HTTPErrorRuleList
+        tcp_check_rule_list:
+          $ref: "#/definitions/tcp_checks"
+          x-go-name: TCPCheckRuleList
+defaults_base:
+  title: Defaults Base
   description: HAProxy defaults configuration
   type: object
   properties:
