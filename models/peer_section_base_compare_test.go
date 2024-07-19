@@ -26,13 +26,13 @@ import (
 	jsoniter "github.com/json-iterator/go"
 )
 
-func TestPeerSectionEqual(t *testing.T) {
+func TestPeerSectionBaseEqual(t *testing.T) {
 	samples := []struct {
-		a, b PeerSection
+		a, b PeerSectionBase
 	}{}
 	for i := 0; i < 2; i++ {
-		var sample PeerSection
-		var result PeerSection
+		var sample PeerSectionBase
+		var result PeerSectionBase
 		err := faker.FakeData(&sample)
 		if err != nil {
 			t.Errorf(err.Error())
@@ -47,7 +47,7 @@ func TestPeerSectionEqual(t *testing.T) {
 		}
 
 		samples = append(samples, struct {
-			a, b PeerSection
+			a, b PeerSectionBase
 		}{sample, result})
 	}
 
@@ -63,18 +63,18 @@ func TestPeerSectionEqual(t *testing.T) {
 			if err != nil {
 				t.Errorf(err.Error())
 			}
-			t.Errorf("Expected PeerSection to be equal, but it is not %s %s", a, b)
+			t.Errorf("Expected PeerSectionBase to be equal, but it is not %s %s", a, b)
 		}
 	}
 }
 
-func TestPeerSectionEqualFalse(t *testing.T) {
+func TestPeerSectionBaseEqualFalse(t *testing.T) {
 	samples := []struct {
-		a, b PeerSection
+		a, b PeerSectionBase
 	}{}
 	for i := 0; i < 2; i++ {
-		var sample PeerSection
-		var result PeerSection
+		var sample PeerSectionBase
+		var result PeerSectionBase
 		err := faker.FakeData(&sample)
 		if err != nil {
 			t.Errorf(err.Error())
@@ -83,8 +83,11 @@ func TestPeerSectionEqualFalse(t *testing.T) {
 		if err != nil {
 			t.Errorf(err.Error())
 		}
+		result.Disabled = !sample.Disabled
+		result.Enabled = !sample.Enabled
+		result.Shards = sample.Shards + 1
 		samples = append(samples, struct {
-			a, b PeerSection
+			a, b PeerSectionBase
 		}{sample, result})
 	}
 
@@ -100,18 +103,18 @@ func TestPeerSectionEqualFalse(t *testing.T) {
 			if err != nil {
 				t.Errorf(err.Error())
 			}
-			t.Errorf("Expected PeerSection to be different, but it is not %s %s", a, b)
+			t.Errorf("Expected PeerSectionBase to be different, but it is not %s %s", a, b)
 		}
 	}
 }
 
-func TestPeerSectionDiff(t *testing.T) {
+func TestPeerSectionBaseDiff(t *testing.T) {
 	samples := []struct {
-		a, b PeerSection
+		a, b PeerSectionBase
 	}{}
 	for i := 0; i < 2; i++ {
-		var sample PeerSection
-		var result PeerSection
+		var sample PeerSectionBase
+		var result PeerSectionBase
 		err := faker.FakeData(&sample)
 		if err != nil {
 			t.Errorf(err.Error())
@@ -126,7 +129,7 @@ func TestPeerSectionDiff(t *testing.T) {
 		}
 
 		samples = append(samples, struct {
-			a, b PeerSection
+			a, b PeerSectionBase
 		}{sample, result})
 	}
 
@@ -142,18 +145,18 @@ func TestPeerSectionDiff(t *testing.T) {
 			if err != nil {
 				t.Errorf(err.Error())
 			}
-			t.Errorf("Expected PeerSection to be equal, but it is not %s %s, %v", a, b, result)
+			t.Errorf("Expected PeerSectionBase to be equal, but it is not %s %s, %v", a, b, result)
 		}
 	}
 }
 
-func TestPeerSectionDiffFalse(t *testing.T) {
+func TestPeerSectionBaseDiffFalse(t *testing.T) {
 	samples := []struct {
-		a, b PeerSection
+		a, b PeerSectionBase
 	}{}
 	for i := 0; i < 2; i++ {
-		var sample PeerSection
-		var result PeerSection
+		var sample PeerSectionBase
+		var result PeerSectionBase
 		err := faker.FakeData(&sample)
 		if err != nil {
 			t.Errorf(err.Error())
@@ -162,14 +165,17 @@ func TestPeerSectionDiffFalse(t *testing.T) {
 		if err != nil {
 			t.Errorf(err.Error())
 		}
+		result.Disabled = !sample.Disabled
+		result.Enabled = !sample.Enabled
+		result.Shards = sample.Shards + 1
 		samples = append(samples, struct {
-			a, b PeerSection
+			a, b PeerSectionBase
 		}{sample, result})
 	}
 
 	for _, sample := range samples {
 		result := sample.a.Diff(sample.b)
-		if len(result) != 5 {
+		if len(result) != 6 {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {
@@ -179,7 +185,7 @@ func TestPeerSectionDiffFalse(t *testing.T) {
 			if err != nil {
 				t.Errorf(err.Error())
 			}
-			t.Errorf("Expected PeerSection to be different in 5 cases, but it is not (%d) %s %s", len(result), a, b)
+			t.Errorf("Expected PeerSectionBase to be different in 6 cases, but it is not (%d) %s %s", len(result), a, b)
 		}
 	}
 }

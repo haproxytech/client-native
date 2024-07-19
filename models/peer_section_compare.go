@@ -33,64 +33,42 @@ package models
 func (s PeerSection) Equal(t PeerSection, opts ...Options) bool {
 	opt := getOptions(opts...)
 
-	if s.DefaultBind == nil || t.DefaultBind == nil {
-		if s.DefaultBind != nil || t.DefaultBind != nil {
-			if opt.NilSameAsEmpty {
-				empty := &DefaultBind{}
-				if s.DefaultBind == nil {
-					if !(t.DefaultBind.Equal(*empty)) {
-						return false
-					}
-				}
-				if t.DefaultBind == nil {
-					if !(s.DefaultBind.Equal(*empty)) {
-						return false
-					}
-				}
-			} else {
-				return false
-			}
+	if !s.PeerSectionBase.Equal(t.PeerSectionBase, opt) {
+		return false
+	}
+
+	if !s.LogTargetList.Equal(t.LogTargetList, opt) {
+		return false
+	}
+
+	if !CheckSameNilAndLenMap[string, Bind](s.Binds, t.Binds, opt) {
+		return false
+	}
+
+	for k, v := range s.Binds {
+		if !t.Binds[k].Equal(v, opt) {
+			return false
 		}
-	} else if !s.DefaultBind.Equal(*t.DefaultBind, opt) {
+	}
+
+	if !CheckSameNilAndLenMap[string, PeerEntry](s.PeerEntries, t.PeerEntries, opt) {
 		return false
 	}
 
-	if s.DefaultServer == nil || t.DefaultServer == nil {
-		if s.DefaultServer != nil || t.DefaultServer != nil {
-			if opt.NilSameAsEmpty {
-				empty := &DefaultServer{}
-				if s.DefaultServer == nil {
-					if !(t.DefaultServer.Equal(*empty)) {
-						return false
-					}
-				}
-				if t.DefaultServer == nil {
-					if !(s.DefaultServer.Equal(*empty)) {
-						return false
-					}
-				}
-			} else {
-				return false
-			}
+	for k, v := range s.PeerEntries {
+		if !t.PeerEntries[k].Equal(v, opt) {
+			return false
 		}
-	} else if !s.DefaultServer.Equal(*t.DefaultServer, opt) {
+	}
+
+	if !CheckSameNilAndLenMap[string, Server](s.Servers, t.Servers, opt) {
 		return false
 	}
 
-	if s.Disabled != t.Disabled {
-		return false
-	}
-
-	if s.Enabled != t.Enabled {
-		return false
-	}
-
-	if s.Name != t.Name {
-		return false
-	}
-
-	if s.Shards != t.Shards {
-		return false
+	for k, v := range s.Servers {
+		if !t.Servers[k].Equal(v, opt) {
+			return false
+		}
 	}
 
 	return true
@@ -114,64 +92,42 @@ func (s PeerSection) Diff(t PeerSection, opts ...Options) map[string][]interface
 
 	diff := make(map[string][]interface{})
 
-	if s.DefaultBind == nil || t.DefaultBind == nil {
-		if s.DefaultBind != nil || t.DefaultBind != nil {
-			if opt.NilSameAsEmpty {
-				empty := &DefaultBind{}
-				if s.DefaultBind == nil {
-					if !(t.DefaultBind.Equal(*empty)) {
-						diff["DefaultBind"] = []interface{}{ValueOrNil(s.DefaultBind), ValueOrNil(t.DefaultBind)}
-					}
-				}
-				if t.DefaultBind == nil {
-					if !(s.DefaultBind.Equal(*empty)) {
-						diff["DefaultBind"] = []interface{}{ValueOrNil(s.DefaultBind), ValueOrNil(t.DefaultBind)}
-					}
-				}
-			} else {
-				diff["DefaultBind"] = []interface{}{ValueOrNil(s.DefaultBind), ValueOrNil(t.DefaultBind)}
-			}
+	if !s.PeerSectionBase.Equal(t.PeerSectionBase, opt) {
+		diff["PeerSectionBase"] = []interface{}{s.PeerSectionBase, t.PeerSectionBase}
+	}
+
+	if !s.LogTargetList.Equal(t.LogTargetList, opt) {
+		diff["LogTargetList"] = []interface{}{s.LogTargetList, t.LogTargetList}
+	}
+
+	if !CheckSameNilAndLenMap[string, Bind](s.Binds, t.Binds, opt) {
+		diff["Binds"] = []interface{}{s.Binds, t.Binds}
+	}
+
+	for k, v := range s.Binds {
+		if !t.Binds[k].Equal(v, opt) {
+			diff["Binds"] = []interface{}{s.Binds, t.Binds}
 		}
-	} else if !s.DefaultBind.Equal(*t.DefaultBind, opt) {
-		diff["DefaultBind"] = []interface{}{ValueOrNil(s.DefaultBind), ValueOrNil(t.DefaultBind)}
 	}
 
-	if s.DefaultServer == nil || t.DefaultServer == nil {
-		if s.DefaultServer != nil || t.DefaultServer != nil {
-			if opt.NilSameAsEmpty {
-				empty := &DefaultServer{}
-				if s.DefaultServer == nil {
-					if !(t.DefaultServer.Equal(*empty)) {
-						diff["DefaultServer"] = []interface{}{ValueOrNil(s.DefaultServer), ValueOrNil(t.DefaultServer)}
-					}
-				}
-				if t.DefaultServer == nil {
-					if !(s.DefaultServer.Equal(*empty)) {
-						diff["DefaultServer"] = []interface{}{ValueOrNil(s.DefaultServer), ValueOrNil(t.DefaultServer)}
-					}
-				}
-			} else {
-				diff["DefaultServer"] = []interface{}{ValueOrNil(s.DefaultServer), ValueOrNil(t.DefaultServer)}
-			}
+	if !CheckSameNilAndLenMap[string, PeerEntry](s.PeerEntries, t.PeerEntries, opt) {
+		diff["PeerEntries"] = []interface{}{s.PeerEntries, t.PeerEntries}
+	}
+
+	for k, v := range s.PeerEntries {
+		if !t.PeerEntries[k].Equal(v, opt) {
+			diff["PeerEntries"] = []interface{}{s.PeerEntries, t.PeerEntries}
 		}
-	} else if !s.DefaultServer.Equal(*t.DefaultServer, opt) {
-		diff["DefaultServer"] = []interface{}{ValueOrNil(s.DefaultServer), ValueOrNil(t.DefaultServer)}
 	}
 
-	if s.Disabled != t.Disabled {
-		diff["Disabled"] = []interface{}{s.Disabled, t.Disabled}
+	if !CheckSameNilAndLenMap[string, Server](s.Servers, t.Servers, opt) {
+		diff["Servers"] = []interface{}{s.Servers, t.Servers}
 	}
 
-	if s.Enabled != t.Enabled {
-		diff["Enabled"] = []interface{}{s.Enabled, t.Enabled}
-	}
-
-	if s.Name != t.Name {
-		diff["Name"] = []interface{}{s.Name, t.Name}
-	}
-
-	if s.Shards != t.Shards {
-		diff["Shards"] = []interface{}{s.Shards, t.Shards}
+	for k, v := range s.Servers {
+		if !t.Servers[k].Equal(v, opt) {
+			diff["Servers"] = []interface{}{s.Servers, t.Servers}
+		}
 	}
 
 	return diff

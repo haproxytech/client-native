@@ -3925,6 +3925,26 @@ definitions:
     items:
       $ref: "#/definitions/mailer_entry"
   peer_section:
+    allOf:
+      - $ref: '#/definitions/peer_section_base'
+      - properties:
+          binds:
+            additionalProperties:
+              $ref: '#/definitions/bind'
+          log_target_list:
+            $ref: '#/definitions/log_targets'
+            x-go-name: LogTargetList
+          peer_entries:
+            additionalProperties:
+              $ref: '#/definitions/peer_entry'
+          servers:
+            additionalProperties:
+              $ref: '#/definitions/server'
+        type: object
+    description: Peer Section with all it's children resources
+    type: object
+    x-go-name: PeerSection
+  peer_section_base:
     additionalProperties: false
     description: HAProxy peer_section configuration
     properties:
@@ -3949,7 +3969,7 @@ definitions:
         type: integer
     required:
       - name
-    title: Peer Section
+    title: Peer Section Base
     type: object
   peer_sections:
     title: Peer_Section
@@ -12846,6 +12866,7 @@ paths:
       operationId: getPeerSections
       parameters:
         - $ref: '#/parameters/transaction_id'
+        - $ref: '#/parameters/full_section'
       responses:
         "200":
           description: Successful operation
@@ -12872,6 +12893,7 @@ paths:
         - $ref: '#/parameters/transaction_id'
         - $ref: '#/parameters/version'
         - $ref: '#/parameters/force_reload'
+        - $ref: '#/parameters/full_section'
       responses:
         "201":
           description: Peer created
@@ -12933,6 +12955,7 @@ paths:
           required: true
           type: string
         - $ref: '#/parameters/transaction_id'
+        - $ref: '#/parameters/full_section'
       responses:
         "200":
           description: Successful operation

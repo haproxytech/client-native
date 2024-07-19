@@ -29,51 +29,116 @@ import (
 	"github.com/go-openapi/validate"
 )
 
-// PeerSection Peer Section
+// PeerSection Peer Section with all it's children resources
 //
-// HAProxy peer_section configuration
-//
-// swagger:model peer_section
+// swagger:model PeerSection
 type PeerSection struct {
+	PeerSectionBase `json:",inline"`
 
-	// default bind
-	DefaultBind *DefaultBind `json:"default_bind,omitempty"`
+	// log target list
+	LogTargetList LogTargets `json:"log_target_list,omitempty"`
 
-	// default server
-	DefaultServer *DefaultServer `json:"default_server,omitempty"`
+	// binds
+	Binds map[string]Bind `json:"binds,omitempty"`
 
-	// disabled
-	Disabled bool `json:"disabled,omitempty"`
+	// peer entries
+	PeerEntries map[string]PeerEntry `json:"peer_entries,omitempty"`
 
-	// enabled
-	Enabled bool `json:"enabled,omitempty"`
+	// servers
+	Servers map[string]Server `json:"servers,omitempty"`
+}
 
-	// name
-	// Required: true
-	// Pattern: ^[A-Za-z0-9-_.:]+$
-	// +kubebuilder:validation:Pattern=`^[A-Za-z0-9-_.:]+$`
-	Name string `json:"name"`
+// UnmarshalJSON unmarshals this object from a JSON structure
+func (m *PeerSection) UnmarshalJSON(raw []byte) error {
+	// AO0
+	var aO0 PeerSectionBase
+	if err := swag.ReadJSON(raw, &aO0); err != nil {
+		return err
+	}
+	m.PeerSectionBase = aO0
 
-	// In some configurations, one would like to distribute the stick-table contents
-	// to some peers in place of sending all the stick-table contents to each peer
-	// declared in the "peers" section. In such cases, "shards" specifies the
-	// number of peer involved in this stick-table contents distribution.
-	Shards int64 `json:"shards,omitempty"`
+	// AO1
+	var dataAO1 struct {
+		LogTargetList LogTargets `json:"log_target_list,omitempty"`
+
+		Binds map[string]Bind `json:"binds,omitempty"`
+
+		PeerEntries map[string]PeerEntry `json:"peer_entries,omitempty"`
+
+		Servers map[string]Server `json:"servers,omitempty"`
+	}
+	if err := swag.ReadJSON(raw, &dataAO1); err != nil {
+		return err
+	}
+
+	m.LogTargetList = dataAO1.LogTargetList
+
+	m.Binds = dataAO1.Binds
+
+	m.PeerEntries = dataAO1.PeerEntries
+
+	m.Servers = dataAO1.Servers
+
+	return nil
+}
+
+// MarshalJSON marshals this object to a JSON structure
+func (m PeerSection) MarshalJSON() ([]byte, error) {
+	_parts := make([][]byte, 0, 2)
+
+	aO0, err := swag.WriteJSON(m.PeerSectionBase)
+	if err != nil {
+		return nil, err
+	}
+	_parts = append(_parts, aO0)
+	var dataAO1 struct {
+		LogTargetList LogTargets `json:"log_target_list,omitempty"`
+
+		Binds map[string]Bind `json:"binds,omitempty"`
+
+		PeerEntries map[string]PeerEntry `json:"peer_entries,omitempty"`
+
+		Servers map[string]Server `json:"servers,omitempty"`
+	}
+
+	dataAO1.LogTargetList = m.LogTargetList
+
+	dataAO1.Binds = m.Binds
+
+	dataAO1.PeerEntries = m.PeerEntries
+
+	dataAO1.Servers = m.Servers
+
+	jsonDataAO1, errAO1 := swag.WriteJSON(dataAO1)
+	if errAO1 != nil {
+		return nil, errAO1
+	}
+	_parts = append(_parts, jsonDataAO1)
+	return swag.ConcatJSON(_parts...), nil
 }
 
 // Validate validates this peer section
 func (m *PeerSection) Validate(formats strfmt.Registry) error {
 	var res []error
 
-	if err := m.validateDefaultBind(formats); err != nil {
+	// validation for a type composition with PeerSectionBase
+	if err := m.PeerSectionBase.Validate(formats); err != nil {
 		res = append(res, err)
 	}
 
-	if err := m.validateDefaultServer(formats); err != nil {
+	if err := m.validateLogTargetList(formats); err != nil {
 		res = append(res, err)
 	}
 
-	if err := m.validateName(formats); err != nil {
+	if err := m.validateBinds(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validatePeerEntries(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateServers(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -83,52 +148,100 @@ func (m *PeerSection) Validate(formats strfmt.Registry) error {
 	return nil
 }
 
-func (m *PeerSection) validateDefaultBind(formats strfmt.Registry) error {
-	if swag.IsZero(m.DefaultBind) { // not required
+func (m *PeerSection) validateLogTargetList(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.LogTargetList) { // not required
 		return nil
 	}
 
-	if m.DefaultBind != nil {
-		if err := m.DefaultBind.Validate(formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
-				return ve.ValidateName("default_bind")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
-				return ce.ValidateName("default_bind")
-			}
-			return err
+	if err := m.LogTargetList.Validate(formats); err != nil {
+		if ve, ok := err.(*errors.Validation); ok {
+			return ve.ValidateName("log_target_list")
+		} else if ce, ok := err.(*errors.CompositeError); ok {
+			return ce.ValidateName("log_target_list")
 		}
+		return err
 	}
 
 	return nil
 }
 
-func (m *PeerSection) validateDefaultServer(formats strfmt.Registry) error {
-	if swag.IsZero(m.DefaultServer) { // not required
+func (m *PeerSection) validateBinds(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.Binds) { // not required
 		return nil
 	}
 
-	if m.DefaultServer != nil {
-		if err := m.DefaultServer.Validate(formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
-				return ve.ValidateName("default_server")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
-				return ce.ValidateName("default_server")
-			}
+	for k := range m.Binds {
+
+		if err := validate.Required("binds"+"."+k, "body", m.Binds[k]); err != nil {
 			return err
 		}
+		if val, ok := m.Binds[k]; ok {
+			if err := val.Validate(formats); err != nil {
+				if ve, ok := err.(*errors.Validation); ok {
+					return ve.ValidateName("binds" + "." + k)
+				} else if ce, ok := err.(*errors.CompositeError); ok {
+					return ce.ValidateName("binds" + "." + k)
+				}
+				return err
+			}
+		}
+
 	}
 
 	return nil
 }
 
-func (m *PeerSection) validateName(formats strfmt.Registry) error {
+func (m *PeerSection) validatePeerEntries(formats strfmt.Registry) error {
 
-	if err := validate.RequiredString("name", "body", m.Name); err != nil {
-		return err
+	if swag.IsZero(m.PeerEntries) { // not required
+		return nil
 	}
 
-	if err := validate.Pattern("name", "body", m.Name, `^[A-Za-z0-9-_.:]+$`); err != nil {
-		return err
+	for k := range m.PeerEntries {
+
+		if err := validate.Required("peer_entries"+"."+k, "body", m.PeerEntries[k]); err != nil {
+			return err
+		}
+		if val, ok := m.PeerEntries[k]; ok {
+			if err := val.Validate(formats); err != nil {
+				if ve, ok := err.(*errors.Validation); ok {
+					return ve.ValidateName("peer_entries" + "." + k)
+				} else if ce, ok := err.(*errors.CompositeError); ok {
+					return ce.ValidateName("peer_entries" + "." + k)
+				}
+				return err
+			}
+		}
+
+	}
+
+	return nil
+}
+
+func (m *PeerSection) validateServers(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.Servers) { // not required
+		return nil
+	}
+
+	for k := range m.Servers {
+
+		if err := validate.Required("servers"+"."+k, "body", m.Servers[k]); err != nil {
+			return err
+		}
+		if val, ok := m.Servers[k]; ok {
+			if err := val.Validate(formats); err != nil {
+				if ve, ok := err.(*errors.Validation); ok {
+					return ve.ValidateName("servers" + "." + k)
+				} else if ce, ok := err.(*errors.CompositeError); ok {
+					return ce.ValidateName("servers" + "." + k)
+				}
+				return err
+			}
+		}
+
 	}
 
 	return nil
@@ -138,11 +251,24 @@ func (m *PeerSection) validateName(formats strfmt.Registry) error {
 func (m *PeerSection) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
 	var res []error
 
-	if err := m.contextValidateDefaultBind(ctx, formats); err != nil {
+	// validation for a type composition with PeerSectionBase
+	if err := m.PeerSectionBase.ContextValidate(ctx, formats); err != nil {
 		res = append(res, err)
 	}
 
-	if err := m.contextValidateDefaultServer(ctx, formats); err != nil {
+	if err := m.contextValidateLogTargetList(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.contextValidateBinds(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.contextValidatePeerEntries(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.contextValidateServers(ctx, formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -152,33 +278,60 @@ func (m *PeerSection) ContextValidate(ctx context.Context, formats strfmt.Regist
 	return nil
 }
 
-func (m *PeerSection) contextValidateDefaultBind(ctx context.Context, formats strfmt.Registry) error {
+func (m *PeerSection) contextValidateLogTargetList(ctx context.Context, formats strfmt.Registry) error {
 
-	if m.DefaultBind != nil {
-		if err := m.DefaultBind.ContextValidate(ctx, formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
-				return ve.ValidateName("default_bind")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
-				return ce.ValidateName("default_bind")
-			}
-			return err
+	if err := m.LogTargetList.ContextValidate(ctx, formats); err != nil {
+		if ve, ok := err.(*errors.Validation); ok {
+			return ve.ValidateName("log_target_list")
+		} else if ce, ok := err.(*errors.CompositeError); ok {
+			return ce.ValidateName("log_target_list")
 		}
+		return err
 	}
 
 	return nil
 }
 
-func (m *PeerSection) contextValidateDefaultServer(ctx context.Context, formats strfmt.Registry) error {
+func (m *PeerSection) contextValidateBinds(ctx context.Context, formats strfmt.Registry) error {
 
-	if m.DefaultServer != nil {
-		if err := m.DefaultServer.ContextValidate(ctx, formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
-				return ve.ValidateName("default_server")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
-				return ce.ValidateName("default_server")
+	for k := range m.Binds {
+
+		if val, ok := m.Binds[k]; ok {
+			if err := val.ContextValidate(ctx, formats); err != nil {
+				return err
 			}
-			return err
 		}
+
+	}
+
+	return nil
+}
+
+func (m *PeerSection) contextValidatePeerEntries(ctx context.Context, formats strfmt.Registry) error {
+
+	for k := range m.PeerEntries {
+
+		if val, ok := m.PeerEntries[k]; ok {
+			if err := val.ContextValidate(ctx, formats); err != nil {
+				return err
+			}
+		}
+
+	}
+
+	return nil
+}
+
+func (m *PeerSection) contextValidateServers(ctx context.Context, formats strfmt.Registry) error {
+
+	for k := range m.Servers {
+
+		if val, ok := m.Servers[k]; ok {
+			if err := val.ContextValidate(ctx, formats); err != nil {
+				return err
+			}
+		}
+
 	}
 
 	return nil

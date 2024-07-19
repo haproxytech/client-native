@@ -1,6 +1,26 @@
 ---
 peer_section:
-  title: Peer Section
+  type: object
+  description: Peer Section with all it's children resources
+  x-go-name: PeerSection
+  allOf:
+    - $ref: "#/definitions/peer_section_base"
+    - type: object
+      properties:
+        peer_entries:
+          additionalProperties:
+            $ref: "#/definitions/peer_entry"
+        binds:
+          additionalProperties:
+            $ref: "#/definitions/bind"
+        log_target_list:
+          $ref: "#/definitions/log_targets"
+          x-go-name: LogTargetList
+        servers:
+          additionalProperties:
+            $ref: "#/definitions/server"
+peer_section_base:
+  title: Peer Section Base
   description: HAProxy peer_section configuration
   type: object
   required:

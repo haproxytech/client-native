@@ -150,6 +150,8 @@ definitions:
       $ref: "#/definitions/mailer_entry"
   peer_section:
     $ref: "models/configuration/peers.yaml#/peer_section"
+  peer_section_base:
+    $ref: "models/configuration/peers.yaml#/peer_section_base"
   peer_sections:
     title: Peer_Section
     description: HAProxy peer_section array

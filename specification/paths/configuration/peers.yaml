@@ -6,6 +6,7 @@ peer_section:
     operationId: getPeerSections
     parameters:
       - $ref: "#/parameters/transaction_id"
+      - $ref: "#/parameters/full_section"
     tags:
       - Peer
     responses:
@@ -32,6 +33,7 @@ peer_section:
       - $ref: "#/parameters/transaction_id"
       - $ref: "#/parameters/version"
       - $ref: "#/parameters/force_reload"
+      - $ref: "#/parameters/full_section"
     tags:
       - Peer
     responses:
@@ -67,6 +69,7 @@ peer_section_one:
         required: true
         type: string
       - $ref: "#/parameters/transaction_id"
+      - $ref: "#/parameters/full_section"
     responses:
       '200':
         description: Successful operation
