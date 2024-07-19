@@ -26,13 +26,13 @@ import (
 	jsoniter "github.com/json-iterator/go"
 )
 
-func TestUserlistEqual(t *testing.T) {
+func TestUserlistBaseEqual(t *testing.T) {
 	samples := []struct {
-		a, b Userlist
+		a, b UserlistBase
 	}{}
 	for i := 0; i < 2; i++ {
-		var sample Userlist
-		var result Userlist
+		var sample UserlistBase
+		var result UserlistBase
 		err := faker.FakeData(&sample)
 		if err != nil {
 			t.Errorf(err.Error())
@@ -47,7 +47,7 @@ func TestUserlistEqual(t *testing.T) {
 		}
 
 		samples = append(samples, struct {
-			a, b Userlist
+			a, b UserlistBase
 		}{sample, result})
 	}
 
@@ -63,18 +63,18 @@ func TestUserlistEqual(t *testing.T) {
 			if err != nil {
 				t.Errorf(err.Error())
 			}
-			t.Errorf("Expected Userlist to be equal, but it is not %s %s", a, b)
+			t.Errorf("Expected UserlistBase to be equal, but it is not %s %s", a, b)
 		}
 	}
 }
 
-func TestUserlistEqualFalse(t *testing.T) {
+func TestUserlistBaseEqualFalse(t *testing.T) {
 	samples := []struct {
-		a, b Userlist
+		a, b UserlistBase
 	}{}
 	for i := 0; i < 2; i++ {
-		var sample Userlist
-		var result Userlist
+		var sample UserlistBase
+		var result UserlistBase
 		err := faker.FakeData(&sample)
 		if err != nil {
 			t.Errorf(err.Error())
@@ -84,7 +84,7 @@ func TestUserlistEqualFalse(t *testing.T) {
 			t.Errorf(err.Error())
 		}
 		samples = append(samples, struct {
-			a, b Userlist
+			a, b UserlistBase
 		}{sample, result})
 	}
 
@@ -100,18 +100,18 @@ func TestUserlistEqualFalse(t *testing.T) {
 			if err != nil {
 				t.Errorf(err.Error())
 			}
-			t.Errorf("Expected Userlist to be different, but it is not %s %s", a, b)
+			t.Errorf("Expected UserlistBase to be different, but it is not %s %s", a, b)
 		}
 	}
 }
 
-func TestUserlistDiff(t *testing.T) {
+func TestUserlistBaseDiff(t *testing.T) {
 	samples := []struct {
-		a, b Userlist
+		a, b UserlistBase
 	}{}
 	for i := 0; i < 2; i++ {
-		var sample Userlist
-		var result Userlist
+		var sample UserlistBase
+		var result UserlistBase
 		err := faker.FakeData(&sample)
 		if err != nil {
 			t.Errorf(err.Error())
@@ -126,7 +126,7 @@ func TestUserlistDiff(t *testing.T) {
 		}
 
 		samples = append(samples, struct {
-			a, b Userlist
+			a, b UserlistBase
 		}{sample, result})
 	}
 
@@ -142,18 +142,18 @@ func TestUserlistDiff(t *testing.T) {
 			if err != nil {
 				t.Errorf(err.Error())
 			}
-			t.Errorf("Expected Userlist to be equal, but it is not %s %s, %v", a, b, result)
+			t.Errorf("Expected UserlistBase to be equal, but it is not %s %s, %v", a, b, result)
 		}
 	}
 }
 
-func TestUserlistDiffFalse(t *testing.T) {
+func TestUserlistBaseDiffFalse(t *testing.T) {
 	samples := []struct {
-		a, b Userlist
+		a, b UserlistBase
 	}{}
 	for i := 0; i < 2; i++ {
-		var sample Userlist
-		var result Userlist
+		var sample UserlistBase
+		var result UserlistBase
 		err := faker.FakeData(&sample)
 		if err != nil {
 			t.Errorf(err.Error())
@@ -163,13 +163,13 @@ func TestUserlistDiffFalse(t *testing.T) {
 			t.Errorf(err.Error())
 		}
 		samples = append(samples, struct {
-			a, b Userlist
+			a, b UserlistBase
 		}{sample, result})
 	}
 
 	for _, sample := range samples {
 		result := sample.a.Diff(sample.b)
-		if len(result) != 3 {
+		if len(result) != 1 {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {
@@ -179,7 +179,7 @@ func TestUserlistDiffFalse(t *testing.T) {
 			if err != nil {
 				t.Errorf(err.Error())
 			}
-			t.Errorf("Expected Userlist to be different in 3 cases, but it is not (%d) %s %s", len(result), a, b)
+			t.Errorf("Expected UserlistBase to be different in 1 cases, but it is not (%d) %s %s", len(result), a, b)
 		}
 	}
 }

@@ -1,6 +1,20 @@
 ---
 userlist:
-  title: Userlist
+  type: object
+  description: Userlist with all it's children resources
+  x-go-name: Userlist
+  allOf:
+    - $ref: "#/definitions/userlist_base"
+    - type: object
+      properties:
+        users:
+          additionalProperties:
+            $ref: "#/definitions/user"
+        groups:
+          additionalProperties:
+            $ref: "#/definitions/group"
+userlist_base:
+  title: Userlist Base
   description: HAProxy configuration of access control
   type: object
   required:

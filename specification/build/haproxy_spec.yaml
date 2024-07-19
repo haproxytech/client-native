@@ -3795,6 +3795,20 @@ definitions:
     items:
       $ref: '#/definitions/log_forward'
   userlist:
+    allOf:
+      - $ref: '#/definitions/userlist_base'
+      - properties:
+          groups:
+            additionalProperties:
+              $ref: '#/definitions/group'
+          users:
+            additionalProperties:
+              $ref: '#/definitions/user'
+        type: object
+    description: Userlist with all it's children resources
+    type: object
+    x-go-name: Userlist
+  userlist_base:
     description: HAProxy configuration of access control
     properties:
       name:
@@ -3803,7 +3817,7 @@ definitions:
         x-nullable: false
     required:
       - name
-    title: Userlist
+    title: Userlist Base
     type: object
   userlists:
     title: Userlists
@@ -12063,6 +12077,7 @@ paths:
       operationId: getUserlists
       parameters:
         - $ref: '#/parameters/transaction_id'
+        - $ref: '#/parameters/full_section'
       responses:
         "200":
           description: Successful operation
@@ -12089,6 +12104,7 @@ paths:
         - $ref: '#/parameters/transaction_id'
         - $ref: '#/parameters/version'
         - $ref: '#/parameters/force_reload'
+        - $ref: '#/parameters/full_section'
       responses:
         "201":
           description: Userlist created
@@ -12150,6 +12166,7 @@ paths:
           required: true
           type: string
         - $ref: '#/parameters/transaction_id'
+        - $ref: '#/parameters/full_section'
       responses:
         "200":
           description: Successful operation

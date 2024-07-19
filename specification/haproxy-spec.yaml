@@ -108,6 +108,8 @@ definitions:
       $ref: '#/definitions/log_forward'
   userlist:
     $ref: "models/configuration/userlist.yaml#/userlist"
+  userlist_base:
+    $ref: "models/configuration/userlist.yaml#/userlist_base"
   userlists:
     title: Userlists
     description: HAProxy userlists array

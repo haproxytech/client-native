@@ -19,13 +19,42 @@ package models
 
 // Equal checks if two structs of type Userlist are equal
 //
+// By default empty maps and slices are equal to nil:
+//
 //	var a, b Userlist
 //	equal := a.Equal(b)
 //
-// opts ...Options are ignored in this method
+// For more advanced use case you can configure these options (default values are shown):
+//
+//	var a, b Userlist
+//	equal := a.Equal(b,Options{
+//		NilSameAsEmpty: true,
+//	})
 func (s Userlist) Equal(t Userlist, opts ...Options) bool {
-	if s.Name != t.Name {
+	opt := getOptions(opts...)
+
+	if !s.UserlistBase.Equal(t.UserlistBase, opt) {
 		return false
+	}
+
+	if !CheckSameNilAndLenMap[string, Group](s.Groups, t.Groups, opt) {
+		return false
+	}
+
+	for k, v := range s.Groups {
+		if !t.Groups[k].Equal(v, opt) {
+			return false
+		}
+	}
+
+	if !CheckSameNilAndLenMap[string, User](s.Users, t.Users, opt) {
+		return false
+	}
+
+	for k, v := range s.Users {
+		if !t.Users[k].Equal(v, opt) {
+			return false
+		}
 	}
 
 	return true
@@ -33,14 +62,44 @@ func (s Userlist) Equal(t Userlist, opts ...Options) bool {
 
 // Diff checks if two structs of type Userlist are equal
 //
+// By default empty maps and slices are equal to nil:
+//
 //	var a, b Userlist
 //	diff := a.Diff(b)
 //
-// opts ...Options are ignored in this method
+// For more advanced use case you can configure these options (default values are shown):
+//
+//	var a, b Userlist
+//	diff := a.Diff(b,Options{
+//		NilSameAsEmpty: true,
+//	})
 func (s Userlist) Diff(t Userlist, opts ...Options) map[string][]interface{} {
+	opt := getOptions(opts...)
+
 	diff := make(map[string][]interface{})
-	if s.Name != t.Name {
-		diff["Name"] = []interface{}{s.Name, t.Name}
+
+	if !s.UserlistBase.Equal(t.UserlistBase, opt) {
+		diff["UserlistBase"] = []interface{}{s.UserlistBase, t.UserlistBase}
+	}
+
+	if !CheckSameNilAndLenMap[string, Group](s.Groups, t.Groups, opt) {
+		diff["Groups"] = []interface{}{s.Groups, t.Groups}
+	}
+
+	for k, v := range s.Groups {
+		if !t.Groups[k].Equal(v, opt) {
+			diff["Groups"] = []interface{}{s.Groups, t.Groups}
+		}
+	}
+
+	if !CheckSameNilAndLenMap[string, User](s.Users, t.Users, opt) {
+		diff["Users"] = []interface{}{s.Users, t.Users}
+	}
+
+	for k, v := range s.Users {
+		if !t.Users[k].Equal(v, opt) {
+			diff["Users"] = []interface{}{s.Users, t.Users}
+		}
 	}
 
 	return diff
