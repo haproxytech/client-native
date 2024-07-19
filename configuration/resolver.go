@@ -85,7 +85,7 @@ func (c *client) GetResolver(name string, transactionID string) (int64, *models.
 		return v, nil, NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("Resolver %s does not exist", name))
 	}
 
-	resolver := &models.Resolver{Name: name}
+	resolver := &models.Resolver{ResolverBase: models.ResolverBase{Name: name}}
 	if err = ParseResolverSection(p, resolver); err != nil {
 		return 0, nil, err
 	}

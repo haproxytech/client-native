@@ -83,7 +83,7 @@ func checkResolvers(t *testing.T, got map[string]models.Resolvers) {
 		for _, g := range v {
 			for _, w := range want {
 				if g.Name == w.Name {
-					require.True(t, g.Equal(*w), "k=%s - diff %v", k, cmp.Diff(*g, *w))
+					require.True(t, g.ResolverBase.Equal(w.ResolverBase), "k=%s - diff %v", k, cmp.Diff(*g, *w))
 					break
 				}
 			}
@@ -93,18 +93,20 @@ func checkResolvers(t *testing.T, got map[string]models.Resolvers) {
 
 func TestCreateEditDeleteResolver(t *testing.T) {
 	f := &models.Resolver{
-		Name:                "created_resolver",
-		AcceptedPayloadSize: 4096,
-		HoldNx:              misc.Int64P(10),
-		HoldObsolete:        misc.Int64P(10),
-		HoldOther:           misc.Int64P(10),
-		HoldRefused:         misc.Int64P(10),
-		HoldTimeout:         misc.Int64P(10),
-		HoldValid:           misc.Int64P(100),
-		ResolveRetries:      10,
-		ParseResolvConf:     true,
-		TimeoutResolve:      10,
-		TimeoutRetry:        10,
+		ResolverBase: models.ResolverBase{
+			Name:                "created_resolver",
+			AcceptedPayloadSize: 4096,
+			HoldNx:              misc.Int64P(10),
+			HoldObsolete:        misc.Int64P(10),
+			HoldOther:           misc.Int64P(10),
+			HoldRefused:         misc.Int64P(10),
+			HoldTimeout:         misc.Int64P(10),
+			HoldValid:           misc.Int64P(100),
+			ResolveRetries:      10,
+			ParseResolvConf:     true,
+			TimeoutResolve:      10,
+			TimeoutRetry:        10,
+		},
 	}
 	err := clientTest.CreateResolver(f, "", version)
 	if err != nil {

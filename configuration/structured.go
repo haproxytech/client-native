@@ -26,6 +26,7 @@ type Structured interface {
 	StructuredFrontend
 	StructuredBackend
 	StructuredPeerSection
+	StructuredResolver
 	StructuredUserlist
 }
 
