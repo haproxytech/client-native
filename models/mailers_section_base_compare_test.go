@@ -26,13 +26,13 @@ import (
 	jsoniter "github.com/json-iterator/go"
 )
 
-func TestMailersSectionEqual(t *testing.T) {
+func TestMailersSectionBaseEqual(t *testing.T) {
 	samples := []struct {
-		a, b MailersSection
+		a, b MailersSectionBase
 	}{}
 	for i := 0; i < 2; i++ {
-		var sample MailersSection
-		var result MailersSection
+		var sample MailersSectionBase
+		var result MailersSectionBase
 		err := faker.FakeData(&sample)
 		if err != nil {
 			t.Errorf(err.Error())
@@ -47,7 +47,7 @@ func TestMailersSectionEqual(t *testing.T) {
 		}
 
 		samples = append(samples, struct {
-			a, b MailersSection
+			a, b MailersSectionBase
 		}{sample, result})
 	}
 
@@ -63,18 +63,18 @@ func TestMailersSectionEqual(t *testing.T) {
 			if err != nil {
 				t.Errorf(err.Error())
 			}
-			t.Errorf("Expected MailersSection to be equal, but it is not %s %s", a, b)
+			t.Errorf("Expected MailersSectionBase to be equal, but it is not %s %s", a, b)
 		}
 	}
 }
 
-func TestMailersSectionEqualFalse(t *testing.T) {
+func TestMailersSectionBaseEqualFalse(t *testing.T) {
 	samples := []struct {
-		a, b MailersSection
+		a, b MailersSectionBase
 	}{}
 	for i := 0; i < 2; i++ {
-		var sample MailersSection
-		var result MailersSection
+		var sample MailersSectionBase
+		var result MailersSectionBase
 		err := faker.FakeData(&sample)
 		if err != nil {
 			t.Errorf(err.Error())
@@ -83,8 +83,9 @@ func TestMailersSectionEqualFalse(t *testing.T) {
 		if err != nil {
 			t.Errorf(err.Error())
 		}
+		result.Timeout = Ptr(*sample.Timeout + 1)
 		samples = append(samples, struct {
-			a, b MailersSection
+			a, b MailersSectionBase
 		}{sample, result})
 	}
 
@@ -100,18 +101,18 @@ func TestMailersSectionEqualFalse(t *testing.T) {
 			if err != nil {
 				t.Errorf(err.Error())
 			}
-			t.Errorf("Expected MailersSection to be different, but it is not %s %s", a, b)
+			t.Errorf("Expected MailersSectionBase to be different, but it is not %s %s", a, b)
 		}
 	}
 }
 
-func TestMailersSectionDiff(t *testing.T) {
+func TestMailersSectionBaseDiff(t *testing.T) {
 	samples := []struct {
-		a, b MailersSection
+		a, b MailersSectionBase
 	}{}
 	for i := 0; i < 2; i++ {
-		var sample MailersSection
-		var result MailersSection
+		var sample MailersSectionBase
+		var result MailersSectionBase
 		err := faker.FakeData(&sample)
 		if err != nil {
 			t.Errorf(err.Error())
@@ -126,7 +127,7 @@ func TestMailersSectionDiff(t *testing.T) {
 		}
 
 		samples = append(samples, struct {
-			a, b MailersSection
+			a, b MailersSectionBase
 		}{sample, result})
 	}
 
@@ -142,18 +143,18 @@ func TestMailersSectionDiff(t *testing.T) {
 			if err != nil {
 				t.Errorf(err.Error())
 			}
-			t.Errorf("Expected MailersSection to be equal, but it is not %s %s, %v", a, b, result)
+			t.Errorf("Expected MailersSectionBase to be equal, but it is not %s %s, %v", a, b, result)
 		}
 	}
 }
 
-func TestMailersSectionDiffFalse(t *testing.T) {
+func TestMailersSectionBaseDiffFalse(t *testing.T) {
 	samples := []struct {
-		a, b MailersSection
+		a, b MailersSectionBase
 	}{}
 	for i := 0; i < 2; i++ {
-		var sample MailersSection
-		var result MailersSection
+		var sample MailersSectionBase
+		var result MailersSectionBase
 		err := faker.FakeData(&sample)
 		if err != nil {
 			t.Errorf(err.Error())
@@ -162,8 +163,9 @@ func TestMailersSectionDiffFalse(t *testing.T) {
 		if err != nil {
 			t.Errorf(err.Error())
 		}
+		result.Timeout = Ptr(*sample.Timeout + 1)
 		samples = append(samples, struct {
-			a, b MailersSection
+			a, b MailersSectionBase
 		}{sample, result})
 	}
 
@@ -179,7 +181,7 @@ func TestMailersSectionDiffFalse(t *testing.T) {
 			if err != nil {
 				t.Errorf(err.Error())
 			}
-			t.Errorf("Expected MailersSection to be different in 2 cases, but it is not (%d) %s %s", len(result), a, b)
+			t.Errorf("Expected MailersSectionBase to be different in 2 cases, but it is not (%d) %s %s", len(result), a, b)
 		}
 	}
 }

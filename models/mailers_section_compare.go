@@ -19,17 +19,32 @@ package models
 
 // Equal checks if two structs of type MailersSection are equal
 //
+// By default empty maps and slices are equal to nil:
+//
 //	var a, b MailersSection
 //	equal := a.Equal(b)
 //
-// opts ...Options are ignored in this method
+// For more advanced use case you can configure these options (default values are shown):
+//
+//	var a, b MailersSection
+//	equal := a.Equal(b,Options{
+//		NilSameAsEmpty: true,
+//	})
 func (s MailersSection) Equal(t MailersSection, opts ...Options) bool {
-	if s.Name != t.Name {
+	opt := getOptions(opts...)
+
+	if !s.MailersSectionBase.Equal(t.MailersSectionBase, opt) {
 		return false
 	}
 
-	if !equalPointers(s.Timeout, t.Timeout) {
+	if !CheckSameNilAndLenMap[string, MailerEntry](s.MailerEntries, t.MailerEntries, opt) {
 		return false
+	}
+
+	for k, v := range s.MailerEntries {
+		if !t.MailerEntries[k].Equal(v, opt) {
+			return false
+		}
 	}
 
 	return true
@@ -37,18 +52,34 @@ func (s MailersSection) Equal(t MailersSection, opts ...Options) bool {
 
 // Diff checks if two structs of type MailersSection are equal
 //
+// By default empty maps and slices are equal to nil:
+//
 //	var a, b MailersSection
 //	diff := a.Diff(b)
 //
-// opts ...Options are ignored in this method
+// For more advanced use case you can configure these options (default values are shown):
+//
+//	var a, b MailersSection
+//	diff := a.Diff(b,Options{
+//		NilSameAsEmpty: true,
+//	})
 func (s MailersSection) Diff(t MailersSection, opts ...Options) map[string][]interface{} {
+	opt := getOptions(opts...)
+
 	diff := make(map[string][]interface{})
-	if s.Name != t.Name {
-		diff["Name"] = []interface{}{s.Name, t.Name}
+
+	if !s.MailersSectionBase.Equal(t.MailersSectionBase, opt) {
+		diff["MailersSectionBase"] = []interface{}{s.MailersSectionBase, t.MailersSectionBase}
 	}
 
-	if !equalPointers(s.Timeout, t.Timeout) {
-		diff["Timeout"] = []interface{}{ValueOrNil(s.Timeout), ValueOrNil(t.Timeout)}
+	if !CheckSameNilAndLenMap[string, MailerEntry](s.MailerEntries, t.MailerEntries, opt) {
+		diff["MailerEntries"] = []interface{}{s.MailerEntries, t.MailerEntries}
+	}
+
+	for k, v := range s.MailerEntries {
+		if !t.MailerEntries[k].Equal(v, opt) {
+			diff["MailerEntries"] = []interface{}{s.MailerEntries, t.MailerEntries}
+		}
 	}
 
 	return diff

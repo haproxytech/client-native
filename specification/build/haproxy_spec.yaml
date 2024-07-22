@@ -3913,6 +3913,17 @@ definitions:
     items:
       $ref: '#/definitions/group'
   mailers_section:
+    allOf:
+      - $ref: '#/definitions/mailers_section_base'
+      - properties:
+          mailer_entries:
+            additionalProperties:
+              $ref: '#/definitions/mailer_entry'
+        type: object
+    description: MailersSection with all it's children resources
+    type: object
+    x-go-name: MailersSection
+  mailers_section_base:
     additionalProperties: false
     description: A list of SMTP servers used by HAProxy to send emails.
     properties:
@@ -3929,7 +3940,7 @@ definitions:
         x-nullable: true
     required:
       - name
-    title: Mailers Section
+    title: Mailers Section Base
     type: object
   mailers_sections:
     title: Mailers Sections
@@ -12597,6 +12608,7 @@ paths:
       operationId: getMailersSections
       parameters:
         - $ref: '#/parameters/transaction_id'
+        - $ref: '#/parameters/full_section'
       responses:
         "200":
           description: Successful operation
@@ -12623,6 +12635,7 @@ paths:
         - $ref: '#/parameters/transaction_id'
         - $ref: '#/parameters/version'
         - $ref: '#/parameters/force_reload'
+        - $ref: '#/parameters/full_section'
       responses:
         "201":
           description: Mailers created
@@ -12684,6 +12697,7 @@ paths:
           required: true
           type: string
         - $ref: '#/parameters/transaction_id'
+        - $ref: '#/parameters/full_section'
       responses:
         "200":
           description: Successful operation
@@ -12717,6 +12731,7 @@ paths:
         - $ref: '#/parameters/transaction_id'
         - $ref: '#/parameters/version'
         - $ref: '#/parameters/force_reload'
+        - $ref: '#/parameters/full_section'
       responses:
         "200":
           description: Mailers configuration updated

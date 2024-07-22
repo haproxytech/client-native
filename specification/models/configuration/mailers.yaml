@@ -1,6 +1,17 @@
 ---
 mailers_section:
-  title: Mailers Section
+  type: object
+  description: MailersSection with all it's children resources
+  x-go-name: MailersSection
+  allOf:
+    - $ref: "#/definitions/mailers_section_base"
+    - type: object
+      properties:
+        mailer_entries:
+          additionalProperties:
+            $ref: "#/definitions/mailer_entry"
+mailers_section_base:
+  title: Mailers Section Base
   description: A list of SMTP servers used by HAProxy to send emails.
   type: object
   required:

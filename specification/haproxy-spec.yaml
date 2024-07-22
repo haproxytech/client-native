@@ -140,6 +140,8 @@ definitions:
       $ref: '#/definitions/group'
   mailers_section:
     $ref: "models/configuration/mailers.yaml#/mailers_section"
+  mailers_section_base:
+    $ref: "models/configuration/mailers.yaml#/mailers_section_base"
   mailers_sections:
     title: Mailers Sections
     description: HAProxy mailers_section array

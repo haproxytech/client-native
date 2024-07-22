@@ -29,33 +29,71 @@ import (
 	"github.com/go-openapi/validate"
 )
 
-// MailersSection Mailers Section
+// MailersSection MailersSection with all it's children resources
 //
-// A list of SMTP servers used by HAProxy to send emails.
-//
-// swagger:model mailers_section
+// swagger:model MailersSection
 type MailersSection struct {
-	// name
-	// Required: true
-	// Pattern: ^[A-Za-z0-9-_]+$
-	// +kubebuilder:validation:Pattern=`^[A-Za-z0-9-_]+$`
-	Name string `json:"name"`
+	MailersSectionBase `json:",inline"`
 
-	// timeout
-	// Minimum: 0
-	// +kubebuilder:validation:Minimum=0
-	Timeout *int64 `json:"timeout,omitempty"`
+	// mailer entries
+	MailerEntries map[string]MailerEntry `json:"mailer_entries,omitempty"`
+}
+
+// UnmarshalJSON unmarshals this object from a JSON structure
+func (m *MailersSection) UnmarshalJSON(raw []byte) error {
+	// AO0
+	var aO0 MailersSectionBase
+	if err := swag.ReadJSON(raw, &aO0); err != nil {
+		return err
+	}
+	m.MailersSectionBase = aO0
+
+	// AO1
+	var dataAO1 struct {
+		MailerEntries map[string]MailerEntry `json:"mailer_entries,omitempty"`
+	}
+	if err := swag.ReadJSON(raw, &dataAO1); err != nil {
+		return err
+	}
+
+	m.MailerEntries = dataAO1.MailerEntries
+
+	return nil
+}
+
+// MarshalJSON marshals this object to a JSON structure
+func (m MailersSection) MarshalJSON() ([]byte, error) {
+	_parts := make([][]byte, 0, 2)
+
+	aO0, err := swag.WriteJSON(m.MailersSectionBase)
+	if err != nil {
+		return nil, err
+	}
+	_parts = append(_parts, aO0)
+	var dataAO1 struct {
+		MailerEntries map[string]MailerEntry `json:"mailer_entries,omitempty"`
+	}
+
+	dataAO1.MailerEntries = m.MailerEntries
+
+	jsonDataAO1, errAO1 := swag.WriteJSON(dataAO1)
+	if errAO1 != nil {
+		return nil, errAO1
+	}
+	_parts = append(_parts, jsonDataAO1)
+	return swag.ConcatJSON(_parts...), nil
 }
 
 // Validate validates this mailers section
 func (m *MailersSection) Validate(formats strfmt.Registry) error {
 	var res []error
 
-	if err := m.validateName(formats); err != nil {
+	// validation for a type composition with MailersSectionBase
+	if err := m.MailersSectionBase.Validate(formats); err != nil {
 		res = append(res, err)
 	}
 
-	if err := m.validateTimeout(formats); err != nil {
+	if err := m.validateMailerEntries(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -65,33 +103,64 @@ func (m *MailersSection) Validate(formats strfmt.Registry) error {
 	return nil
 }
 
-func (m *MailersSection) validateName(formats strfmt.Registry) error {
+func (m *MailersSection) validateMailerEntries(formats strfmt.Registry) error {
 
-	if err := validate.RequiredString("name", "body", m.Name); err != nil {
-		return err
-	}
-
-	if err := validate.Pattern("name", "body", m.Name, `^[A-Za-z0-9-_]+$`); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func (m *MailersSection) validateTimeout(formats strfmt.Registry) error {
-	if swag.IsZero(m.Timeout) { // not required
+	if swag.IsZero(m.MailerEntries) { // not required
 		return nil
 	}
 
-	if err := validate.MinimumInt("timeout", "body", *m.Timeout, 0, false); err != nil {
-		return err
+	for k := range m.MailerEntries {
+
+		if err := validate.Required("mailer_entries"+"."+k, "body", m.MailerEntries[k]); err != nil {
+			return err
+		}
+		if val, ok := m.MailerEntries[k]; ok {
+			if err := val.Validate(formats); err != nil {
+				if ve, ok := err.(*errors.Validation); ok {
+					return ve.ValidateName("mailer_entries" + "." + k)
+				} else if ce, ok := err.(*errors.CompositeError); ok {
+					return ce.ValidateName("mailer_entries" + "." + k)
+				}
+				return err
+			}
+		}
+
 	}
 
 	return nil
 }
 
-// ContextValidate validates this mailers section based on context it is used
+// ContextValidate validate this mailers section based on the context it is used
 func (m *MailersSection) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+	var res []error
+
+	// validation for a type composition with MailersSectionBase
+	if err := m.MailersSectionBase.ContextValidate(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.contextValidateMailerEntries(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if len(res) > 0 {
+		return errors.CompositeValidationError(res...)
+	}
+	return nil
+}
+
+func (m *MailersSection) contextValidateMailerEntries(ctx context.Context, formats strfmt.Registry) error {
+
+	for k := range m.MailerEntries {
+
+		if val, ok := m.MailerEntries[k]; ok {
+			if err := val.ContextValidate(ctx, formats); err != nil {
+				return err
+			}
+		}
+
+	}
+
 	return nil
 }
 
