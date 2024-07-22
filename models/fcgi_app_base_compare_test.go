@@ -26,13 +26,13 @@ import (
 	jsoniter "github.com/json-iterator/go"
 )
 
-func TestFCGIAppEqual(t *testing.T) {
+func TestFCGIAppBaseEqual(t *testing.T) {
 	samples := []struct {
-		a, b FCGIApp
+		a, b FCGIAppBase
 	}{}
 	for i := 0; i < 2; i++ {
-		var sample FCGIApp
-		var result FCGIApp
+		var sample FCGIAppBase
+		var result FCGIAppBase
 		err := faker.FakeData(&sample)
 		if err != nil {
 			t.Errorf(err.Error())
@@ -47,7 +47,7 @@ func TestFCGIAppEqual(t *testing.T) {
 		}
 
 		samples = append(samples, struct {
-			a, b FCGIApp
+			a, b FCGIAppBase
 		}{sample, result})
 	}
 
@@ -63,18 +63,18 @@ func TestFCGIAppEqual(t *testing.T) {
 			if err != nil {
 				t.Errorf(err.Error())
 			}
-			t.Errorf("Expected FCGIApp to be equal, but it is not %s %s", a, b)
+			t.Errorf("Expected FCGIAppBase to be equal, but it is not %s %s", a, b)
 		}
 	}
 }
 
-func TestFCGIAppEqualFalse(t *testing.T) {
+func TestFCGIAppBaseEqualFalse(t *testing.T) {
 	samples := []struct {
-		a, b FCGIApp
+		a, b FCGIAppBase
 	}{}
 	for i := 0; i < 2; i++ {
-		var sample FCGIApp
-		var result FCGIApp
+		var sample FCGIAppBase
+		var result FCGIAppBase
 		err := faker.FakeData(&sample)
 		if err != nil {
 			t.Errorf(err.Error())
@@ -83,8 +83,9 @@ func TestFCGIAppEqualFalse(t *testing.T) {
 		if err != nil {
 			t.Errorf(err.Error())
 		}
+		result.MaxReqs = sample.MaxReqs + 1
 		samples = append(samples, struct {
-			a, b FCGIApp
+			a, b FCGIAppBase
 		}{sample, result})
 	}
 
@@ -100,18 +101,18 @@ func TestFCGIAppEqualFalse(t *testing.T) {
 			if err != nil {
 				t.Errorf(err.Error())
 			}
-			t.Errorf("Expected FCGIApp to be different, but it is not %s %s", a, b)
+			t.Errorf("Expected FCGIAppBase to be different, but it is not %s %s", a, b)
 		}
 	}
 }
 
-func TestFCGIAppDiff(t *testing.T) {
+func TestFCGIAppBaseDiff(t *testing.T) {
 	samples := []struct {
-		a, b FCGIApp
+		a, b FCGIAppBase
 	}{}
 	for i := 0; i < 2; i++ {
-		var sample FCGIApp
-		var result FCGIApp
+		var sample FCGIAppBase
+		var result FCGIAppBase
 		err := faker.FakeData(&sample)
 		if err != nil {
 			t.Errorf(err.Error())
@@ -126,7 +127,7 @@ func TestFCGIAppDiff(t *testing.T) {
 		}
 
 		samples = append(samples, struct {
-			a, b FCGIApp
+			a, b FCGIAppBase
 		}{sample, result})
 	}
 
@@ -142,18 +143,18 @@ func TestFCGIAppDiff(t *testing.T) {
 			if err != nil {
 				t.Errorf(err.Error())
 			}
-			t.Errorf("Expected FCGIApp to be equal, but it is not %s %s, %v", a, b, result)
+			t.Errorf("Expected FCGIAppBase to be equal, but it is not %s %s, %v", a, b, result)
 		}
 	}
 }
 
-func TestFCGIAppDiffFalse(t *testing.T) {
+func TestFCGIAppBaseDiffFalse(t *testing.T) {
 	samples := []struct {
-		a, b FCGIApp
+		a, b FCGIAppBase
 	}{}
 	for i := 0; i < 2; i++ {
-		var sample FCGIApp
-		var result FCGIApp
+		var sample FCGIAppBase
+		var result FCGIAppBase
 		err := faker.FakeData(&sample)
 		if err != nil {
 			t.Errorf(err.Error())
@@ -162,14 +163,15 @@ func TestFCGIAppDiffFalse(t *testing.T) {
 		if err != nil {
 			t.Errorf(err.Error())
 		}
+		result.MaxReqs = sample.MaxReqs + 1
 		samples = append(samples, struct {
-			a, b FCGIApp
+			a, b FCGIAppBase
 		}{sample, result})
 	}
 
 	for _, sample := range samples {
 		result := sample.a.Diff(sample.b)
-		if len(result) != 2 {
+		if len(result) != 11 {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {
@@ -179,7 +181,7 @@ func TestFCGIAppDiffFalse(t *testing.T) {
 			if err != nil {
 				t.Errorf(err.Error())
 			}
-			t.Errorf("Expected FCGIApp to be different in 2 cases, but it is not (%d) %s %s", len(result), a, b)
+			t.Errorf("Expected FCGIAppBase to be different in 11 cases, but it is not (%d) %s %s", len(result), a, b)
 		}
 	}
 }

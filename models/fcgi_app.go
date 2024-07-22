@@ -22,107 +22,77 @@ package models
 
 import (
 	"context"
-	"encoding/json"
-	"strconv"
 
 	"github.com/go-openapi/errors"
 	"github.com/go-openapi/strfmt"
 	"github.com/go-openapi/swag"
-	"github.com/go-openapi/validate"
 )
 
-// FCGIApp FCGI application
+// FCGIApp App with all it's children resources
 //
-// # HAProxy FastCGI application configuration
-//
-// swagger:model fcgiApp
+// swagger:model FCGIApp
 type FCGIApp struct {
+	FCGIAppBase `json:",inline"`
 
-	// Defines the document root on the remote host. The parameter serves to build the default value of FastCGI parameters SCRIPT_FILENAME and PATH_TRANSLATED. It is a mandatory setting.
-	// Required: true
-	Docroot *string `json:"docroot"`
-
-	// Enables or disables the retrieval of variables related to connection management.
-	// Enum: [enabled disabled]
-	// +kubebuilder:validation:Enum=enabled;disabled;
-	GetValues string `json:"get_values,omitempty"`
-
-	// Defines the script name to append after a URI that ends with a slash ("/") to set the default value for the FastCGI parameter SCRIPT_NAME. It is an optional setting.
-	Index string `json:"index,omitempty"`
-
-	// Tells the FastCGI application whether or not to keep the connection open after it sends a response. If disabled, the FastCGI application closes the connection after responding to this request.
-	// Enum: [enabled disabled]
-	// +kubebuilder:validation:Enum=enabled;disabled;
-	KeepConn string `json:"keep_conn,omitempty"`
-
-	// log stderrs
-	LogStderrs []*FCGILogStderr `json:"log_stderrs,omitempty"`
-
-	// Defines the maximum number of concurrent requests this application can accept. If the FastCGI application retrieves the variable FCGI_MAX_REQS during connection establishment, it can override this option. Furthermore, if the application does not do multiplexing, it will ignore this option.
-	// Minimum: 1
-	// +kubebuilder:validation:Minimum=1
-	MaxReqs int64 `json:"max_reqs,omitempty"`
-
-	// Enables or disables the support of connection multiplexing. If the FastCGI application retrieves the variable FCGI_MPXS_CONNS during connection establishment, it can override this option.
-	// Enum: [enabled disabled]
-	// +kubebuilder:validation:Enum=enabled;disabled;
-	MpxsConns string `json:"mpxs_conns,omitempty"`
-
-	// Declares a FastCGI application
-	// Required: true
-	// Pattern: ^[^\s]+$
-	// +kubebuilder:validation:Pattern=`^[^\s]+$`
-	Name string `json:"name"`
-
-	// pass headers
-	PassHeaders []*FCGIPassHeader `json:"pass_headers,omitempty"`
-
-	// Defines a regular expression to extract the script-name and the path-info from the URI.
-	// Thus, <regex> must have two captures: the first to capture the script name, and the second to capture the path- info.
-	// If not defined, it does not perform matching on the URI, and does not fill the FastCGI parameters PATH_INFO and PATH_TRANSLATED.
-	PathInfo string `json:"path_info,omitempty"`
-
-	// set params
-	SetParams []*FCGISetParam `json:"set_params,omitempty"`
+	// Acl list
+	ACLList Acls `json:"acl_list,omitempty"`
 }
 
-// Validate validates this fcgi app
+// UnmarshalJSON unmarshals this object from a JSON structure
+func (m *FCGIApp) UnmarshalJSON(raw []byte) error {
+	// AO0
+	var aO0 FCGIAppBase
+	if err := swag.ReadJSON(raw, &aO0); err != nil {
+		return err
+	}
+	m.FCGIAppBase = aO0
+
+	// AO1
+	var dataAO1 struct {
+		ACLList Acls `json:"acl_list,omitempty"`
+	}
+	if err := swag.ReadJSON(raw, &dataAO1); err != nil {
+		return err
+	}
+
+	m.ACLList = dataAO1.ACLList
+
+	return nil
+}
+
+// MarshalJSON marshals this object to a JSON structure
+func (m FCGIApp) MarshalJSON() ([]byte, error) {
+	_parts := make([][]byte, 0, 2)
+
+	aO0, err := swag.WriteJSON(m.FCGIAppBase)
+	if err != nil {
+		return nil, err
+	}
+	_parts = append(_parts, aO0)
+	var dataAO1 struct {
+		ACLList Acls `json:"acl_list,omitempty"`
+	}
+
+	dataAO1.ACLList = m.ACLList
+
+	jsonDataAO1, errAO1 := swag.WriteJSON(dataAO1)
+	if errAO1 != nil {
+		return nil, errAO1
+	}
+	_parts = append(_parts, jsonDataAO1)
+	return swag.ConcatJSON(_parts...), nil
+}
+
+// Validate validates this FCGI app
 func (m *FCGIApp) Validate(formats strfmt.Registry) error {
 	var res []error
 
-	if err := m.validateDocroot(formats); err != nil {
+	// validation for a type composition with FCGIAppBase
+	if err := m.FCGIAppBase.Validate(formats); err != nil {
 		res = append(res, err)
 	}
 
-	if err := m.validateGetValues(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateKeepConn(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateLogStderrs(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateMaxReqs(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateMpxsConns(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateName(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validatePassHeaders(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateSetParams(formats); err != nil {
+	if err := m.validateACLList(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -132,257 +102,34 @@ func (m *FCGIApp) Validate(formats strfmt.Registry) error {
 	return nil
 }
 
-func (m *FCGIApp) validateDocroot(formats strfmt.Registry) error {
+func (m *FCGIApp) validateACLList(formats strfmt.Registry) error {
 
-	if err := validate.Required("docroot", "body", m.Docroot); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-var fcgiAppTypeGetValuesPropEnum []interface{}
-
-func init() {
-	var res []string
-	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
-		panic(err)
-	}
-	for _, v := range res {
-		fcgiAppTypeGetValuesPropEnum = append(fcgiAppTypeGetValuesPropEnum, v)
-	}
-}
-
-const (
-
-	// FCGIAppGetValuesEnabled captures enum value "enabled"
-	FCGIAppGetValuesEnabled string = "enabled"
-
-	// FCGIAppGetValuesDisabled captures enum value "disabled"
-	FCGIAppGetValuesDisabled string = "disabled"
-)
-
-// prop value enum
-func (m *FCGIApp) validateGetValuesEnum(path, location string, value string) error {
-	if err := validate.EnumCase(path, location, value, fcgiAppTypeGetValuesPropEnum, true); err != nil {
-		return err
-	}
-	return nil
-}
-
-func (m *FCGIApp) validateGetValues(formats strfmt.Registry) error {
-	if swag.IsZero(m.GetValues) { // not required
+	if swag.IsZero(m.ACLList) { // not required
 		return nil
 	}
 
-	// value enum
-	if err := m.validateGetValuesEnum("get_values", "body", m.GetValues); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-var fcgiAppTypeKeepConnPropEnum []interface{}
-
-func init() {
-	var res []string
-	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
-		panic(err)
-	}
-	for _, v := range res {
-		fcgiAppTypeKeepConnPropEnum = append(fcgiAppTypeKeepConnPropEnum, v)
-	}
-}
-
-const (
-
-	// FCGIAppKeepConnEnabled captures enum value "enabled"
-	FCGIAppKeepConnEnabled string = "enabled"
-
-	// FCGIAppKeepConnDisabled captures enum value "disabled"
-	FCGIAppKeepConnDisabled string = "disabled"
-)
-
-// prop value enum
-func (m *FCGIApp) validateKeepConnEnum(path, location string, value string) error {
-	if err := validate.EnumCase(path, location, value, fcgiAppTypeKeepConnPropEnum, true); err != nil {
-		return err
-	}
-	return nil
-}
-
-func (m *FCGIApp) validateKeepConn(formats strfmt.Registry) error {
-	if swag.IsZero(m.KeepConn) { // not required
-		return nil
-	}
-
-	// value enum
-	if err := m.validateKeepConnEnum("keep_conn", "body", m.KeepConn); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func (m *FCGIApp) validateLogStderrs(formats strfmt.Registry) error {
-	if swag.IsZero(m.LogStderrs) { // not required
-		return nil
-	}
-
-	for i := 0; i < len(m.LogStderrs); i++ {
-		if swag.IsZero(m.LogStderrs[i]) { // not required
-			continue
+	if err := m.ACLList.Validate(formats); err != nil {
+		if ve, ok := err.(*errors.Validation); ok {
+			return ve.ValidateName("acl_list")
+		} else if ce, ok := err.(*errors.CompositeError); ok {
+			return ce.ValidateName("acl_list")
 		}
-
-		if m.LogStderrs[i] != nil {
-			if err := m.LogStderrs[i].Validate(formats); err != nil {
-				if ve, ok := err.(*errors.Validation); ok {
-					return ve.ValidateName("log_stderrs" + "." + strconv.Itoa(i))
-				} else if ce, ok := err.(*errors.CompositeError); ok {
-					return ce.ValidateName("log_stderrs" + "." + strconv.Itoa(i))
-				}
-				return err
-			}
-		}
-
-	}
-
-	return nil
-}
-
-func (m *FCGIApp) validateMaxReqs(formats strfmt.Registry) error {
-	if swag.IsZero(m.MaxReqs) { // not required
-		return nil
-	}
-
-	if err := validate.MinimumInt("max_reqs", "body", m.MaxReqs, 1, false); err != nil {
 		return err
 	}
 
 	return nil
 }
 
-var fcgiAppTypeMpxsConnsPropEnum []interface{}
-
-func init() {
-	var res []string
-	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
-		panic(err)
-	}
-	for _, v := range res {
-		fcgiAppTypeMpxsConnsPropEnum = append(fcgiAppTypeMpxsConnsPropEnum, v)
-	}
-}
-
-const (
-
-	// FCGIAppMpxsConnsEnabled captures enum value "enabled"
-	FCGIAppMpxsConnsEnabled string = "enabled"
-
-	// FCGIAppMpxsConnsDisabled captures enum value "disabled"
-	FCGIAppMpxsConnsDisabled string = "disabled"
-)
-
-// prop value enum
-func (m *FCGIApp) validateMpxsConnsEnum(path, location string, value string) error {
-	if err := validate.EnumCase(path, location, value, fcgiAppTypeMpxsConnsPropEnum, true); err != nil {
-		return err
-	}
-	return nil
-}
-
-func (m *FCGIApp) validateMpxsConns(formats strfmt.Registry) error {
-	if swag.IsZero(m.MpxsConns) { // not required
-		return nil
-	}
-
-	// value enum
-	if err := m.validateMpxsConnsEnum("mpxs_conns", "body", m.MpxsConns); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func (m *FCGIApp) validateName(formats strfmt.Registry) error {
-
-	if err := validate.RequiredString("name", "body", m.Name); err != nil {
-		return err
-	}
-
-	if err := validate.Pattern("name", "body", m.Name, `^[^\s]+$`); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func (m *FCGIApp) validatePassHeaders(formats strfmt.Registry) error {
-	if swag.IsZero(m.PassHeaders) { // not required
-		return nil
-	}
-
-	for i := 0; i < len(m.PassHeaders); i++ {
-		if swag.IsZero(m.PassHeaders[i]) { // not required
-			continue
-		}
-
-		if m.PassHeaders[i] != nil {
-			if err := m.PassHeaders[i].Validate(formats); err != nil {
-				if ve, ok := err.(*errors.Validation); ok {
-					return ve.ValidateName("pass_headers" + "." + strconv.Itoa(i))
-				} else if ce, ok := err.(*errors.CompositeError); ok {
-					return ce.ValidateName("pass_headers" + "." + strconv.Itoa(i))
-				}
-				return err
-			}
-		}
-
-	}
-
-	return nil
-}
-
-func (m *FCGIApp) validateSetParams(formats strfmt.Registry) error {
-	if swag.IsZero(m.SetParams) { // not required
-		return nil
-	}
-
-	for i := 0; i < len(m.SetParams); i++ {
-		if swag.IsZero(m.SetParams[i]) { // not required
-			continue
-		}
-
-		if m.SetParams[i] != nil {
-			if err := m.SetParams[i].Validate(formats); err != nil {
-				if ve, ok := err.(*errors.Validation); ok {
-					return ve.ValidateName("set_params" + "." + strconv.Itoa(i))
-				} else if ce, ok := err.(*errors.CompositeError); ok {
-					return ce.ValidateName("set_params" + "." + strconv.Itoa(i))
-				}
-				return err
-			}
-		}
-
-	}
-
-	return nil
-}
-
-// ContextValidate validate this fcgi app based on the context it is used
+// ContextValidate validate this FCGI app based on the context it is used
 func (m *FCGIApp) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
 	var res []error
 
-	if err := m.contextValidateLogStderrs(ctx, formats); err != nil {
+	// validation for a type composition with FCGIAppBase
+	if err := m.FCGIAppBase.ContextValidate(ctx, formats); err != nil {
 		res = append(res, err)
 	}
 
-	if err := m.contextValidatePassHeaders(ctx, formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.contextValidateSetParams(ctx, formats); err != nil {
+	if err := m.contextValidateACLList(ctx, formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -392,61 +139,15 @@ func (m *FCGIApp) ContextValidate(ctx context.Context, formats strfmt.Registry) 
 	return nil
 }
 
-func (m *FCGIApp) contextValidateLogStderrs(ctx context.Context, formats strfmt.Registry) error {
+func (m *FCGIApp) contextValidateACLList(ctx context.Context, formats strfmt.Registry) error {
 
-	for i := 0; i < len(m.LogStderrs); i++ {
-
-		if m.LogStderrs[i] != nil {
-			if err := m.LogStderrs[i].ContextValidate(ctx, formats); err != nil {
-				if ve, ok := err.(*errors.Validation); ok {
-					return ve.ValidateName("log_stderrs" + "." + strconv.Itoa(i))
-				} else if ce, ok := err.(*errors.CompositeError); ok {
-					return ce.ValidateName("log_stderrs" + "." + strconv.Itoa(i))
-				}
-				return err
-			}
+	if err := m.ACLList.ContextValidate(ctx, formats); err != nil {
+		if ve, ok := err.(*errors.Validation); ok {
+			return ve.ValidateName("acl_list")
+		} else if ce, ok := err.(*errors.CompositeError); ok {
+			return ce.ValidateName("acl_list")
 		}
-
-	}
-
-	return nil
-}
-
-func (m *FCGIApp) contextValidatePassHeaders(ctx context.Context, formats strfmt.Registry) error {
-
-	for i := 0; i < len(m.PassHeaders); i++ {
-
-		if m.PassHeaders[i] != nil {
-			if err := m.PassHeaders[i].ContextValidate(ctx, formats); err != nil {
-				if ve, ok := err.(*errors.Validation); ok {
-					return ve.ValidateName("pass_headers" + "." + strconv.Itoa(i))
-				} else if ce, ok := err.(*errors.CompositeError); ok {
-					return ce.ValidateName("pass_headers" + "." + strconv.Itoa(i))
-				}
-				return err
-			}
-		}
-
-	}
-
-	return nil
-}
-
-func (m *FCGIApp) contextValidateSetParams(ctx context.Context, formats strfmt.Registry) error {
-
-	for i := 0; i < len(m.SetParams); i++ {
-
-		if m.SetParams[i] != nil {
-			if err := m.SetParams[i].ContextValidate(ctx, formats); err != nil {
-				if ve, ok := err.(*errors.Validation); ok {
-					return ve.ValidateName("set_params" + "." + strconv.Itoa(i))
-				} else if ce, ok := err.(*errors.CompositeError); ok {
-					return ce.ValidateName("set_params" + "." + strconv.Itoa(i))
-				}
-				return err
-			}
-		}
-
+		return err
 	}
 
 	return nil

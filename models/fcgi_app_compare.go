@@ -17,85 +17,28 @@
 
 package models
 
-import (
-	"strconv"
-)
-
 // Equal checks if two structs of type FCGIApp are equal
 //
 // By default empty maps and slices are equal to nil:
-//  var a, b FCGIApp
-//  equal := a.Equal(b)
+//
+//	var a, b FCGIApp
+//	equal := a.Equal(b)
+//
 // For more advanced use case you can configure these options (default values are shown):
-//  var a, b FCGIApp
-//  equal := a.Equal(b,Options{
-//  	NilSameAsEmpty: true,
-
-//		SkipIndex: true,
+//
+//	var a, b FCGIApp
+//	equal := a.Equal(b,Options{
+//		NilSameAsEmpty: true,
 //	})
 func (s FCGIApp) Equal(t FCGIApp, opts ...Options) bool {
 	opt := getOptions(opts...)
 
-	if !equalPointers(s.Docroot, t.Docroot) {
+	if !s.FCGIAppBase.Equal(t.FCGIAppBase, opt) {
 		return false
 	}
 
-	if s.GetValues != t.GetValues {
+	if !s.ACLList.Equal(t.ACLList, opt) {
 		return false
-	}
-
-	if s.Index != t.Index {
-		return false
-	}
-
-	if s.KeepConn != t.KeepConn {
-		return false
-	}
-
-	if !CheckSameNilAndLen(s.LogStderrs, t.LogStderrs, opt) {
-		return false
-	} else {
-		for i := range s.LogStderrs {
-			if !s.LogStderrs[i].Equal(*t.LogStderrs[i], opt) {
-				return false
-			}
-		}
-	}
-
-	if s.MaxReqs != t.MaxReqs {
-		return false
-	}
-
-	if s.MpxsConns != t.MpxsConns {
-		return false
-	}
-
-	if s.Name != t.Name {
-		return false
-	}
-
-	if !CheckSameNilAndLen(s.PassHeaders, t.PassHeaders, opt) {
-		return false
-	} else {
-		for i := range s.PassHeaders {
-			if !s.PassHeaders[i].Equal(*t.PassHeaders[i], opt) {
-				return false
-			}
-		}
-	}
-
-	if s.PathInfo != t.PathInfo {
-		return false
-	}
-
-	if !CheckSameNilAndLen(s.SetParams, t.SetParams, opt) {
-		return false
-	} else {
-		for i := range s.SetParams {
-			if !s.SetParams[i].Equal(*t.SetParams[i], opt) {
-				return false
-			}
-		}
 	}
 
 	return true
@@ -104,100 +47,27 @@ func (s FCGIApp) Equal(t FCGIApp, opts ...Options) bool {
 // Diff checks if two structs of type FCGIApp are equal
 //
 // By default empty maps and slices are equal to nil:
-//  var a, b FCGIApp
-//  diff := a.Diff(b)
+//
+//	var a, b FCGIApp
+//	diff := a.Diff(b)
+//
 // For more advanced use case you can configure these options (default values are shown):
-//  var a, b FCGIApp
-//  diff := a.Diff(b,Options{
-//  	NilSameAsEmpty: true,
-
-//		SkipIndex: true,
+//
+//	var a, b FCGIApp
+//	diff := a.Diff(b,Options{
+//		NilSameAsEmpty: true,
 //	})
 func (s FCGIApp) Diff(t FCGIApp, opts ...Options) map[string][]interface{} {
 	opt := getOptions(opts...)
 
 	diff := make(map[string][]interface{})
-	if !equalPointers(s.Docroot, t.Docroot) {
-		diff["Docroot"] = []interface{}{ValueOrNil(s.Docroot), ValueOrNil(t.Docroot)}
+
+	if !s.FCGIAppBase.Equal(t.FCGIAppBase, opt) {
+		diff["FCGIAppBase"] = []interface{}{s.FCGIAppBase, t.FCGIAppBase}
 	}
 
-	if s.GetValues != t.GetValues {
-		diff["GetValues"] = []interface{}{s.GetValues, t.GetValues}
-	}
-
-	if s.Index != t.Index {
-		diff["Index"] = []interface{}{s.Index, t.Index}
-	}
-
-	if s.KeepConn != t.KeepConn {
-		diff["KeepConn"] = []interface{}{s.KeepConn, t.KeepConn}
-	}
-
-	if !CheckSameNilAndLen(s.LogStderrs, t.LogStderrs, opt) {
-		diff["LogStderrs"] = []interface{}{s.LogStderrs, t.LogStderrs}
-	} else {
-		diff2 := make(map[string][]interface{})
-		for i := range s.LogStderrs {
-			if !s.LogStderrs[i].Equal(*t.LogStderrs[i], opt) {
-				diffSub := s.LogStderrs[i].Diff(*t.LogStderrs[i], opt)
-				if len(diffSub) > 0 {
-					diff2[strconv.Itoa(i)] = []interface{}{diffSub}
-				}
-			}
-		}
-		if len(diff2) > 0 {
-			diff["LogStderrs"] = []interface{}{diff2}
-		}
-	}
-
-	if s.MaxReqs != t.MaxReqs {
-		diff["MaxReqs"] = []interface{}{s.MaxReqs, t.MaxReqs}
-	}
-
-	if s.MpxsConns != t.MpxsConns {
-		diff["MpxsConns"] = []interface{}{s.MpxsConns, t.MpxsConns}
-	}
-
-	if s.Name != t.Name {
-		diff["Name"] = []interface{}{s.Name, t.Name}
-	}
-
-	if !CheckSameNilAndLen(s.PassHeaders, t.PassHeaders, opt) {
-		diff["PassHeaders"] = []interface{}{s.PassHeaders, t.PassHeaders}
-	} else {
-		diff2 := make(map[string][]interface{})
-		for i := range s.PassHeaders {
-			if !s.PassHeaders[i].Equal(*t.PassHeaders[i], opt) {
-				diffSub := s.PassHeaders[i].Diff(*t.PassHeaders[i], opt)
-				if len(diffSub) > 0 {
-					diff2[strconv.Itoa(i)] = []interface{}{diffSub}
-				}
-			}
-		}
-		if len(diff2) > 0 {
-			diff["PassHeaders"] = []interface{}{diff2}
-		}
-	}
-
-	if s.PathInfo != t.PathInfo {
-		diff["PathInfo"] = []interface{}{s.PathInfo, t.PathInfo}
-	}
-
-	if !CheckSameNilAndLen(s.SetParams, t.SetParams, opt) {
-		diff["SetParams"] = []interface{}{s.SetParams, t.SetParams}
-	} else {
-		diff2 := make(map[string][]interface{})
-		for i := range s.SetParams {
-			if !s.SetParams[i].Equal(*t.SetParams[i], opt) {
-				diffSub := s.SetParams[i].Diff(*t.SetParams[i], opt)
-				if len(diffSub) > 0 {
-					diff2[strconv.Itoa(i)] = []interface{}{diffSub}
-				}
-			}
-		}
-		if len(diff2) > 0 {
-			diff["SetParams"] = []interface{}{diff2}
-		}
+	if !s.ACLList.Equal(t.ACLList, opt) {
+		diff["ACLList"] = []interface{}{s.ACLList, t.ACLList}
 	}
 
 	return diff

@@ -1,6 +1,17 @@
 ---
 app:
-  title: FCGI application
+  type: object
+  description: App with all it's children resources
+  x-go-name: FCGIApp
+  allOf:
+    - $ref: "#/definitions/fcgiAppBase"
+    - type: object
+      properties:
+        acl_list:
+          $ref: "#/definitions/acls"
+          x-go-name: AclList
+app_base:
+  title: FCGI application base
   description: HAProxy FastCGI application configuration
   type: object
   required:
@@ -22,11 +33,13 @@ app:
       type: array
       x-omitempty: true
       items:
+        x-go-name: FCGIAppLogStderr
         $ref: "#/definitions/fcgiLogStderr"
     pass_headers:
       type: array
       x-omitempty: true
       items:
+        x-go-name: FCGIAppLogPassHeader
         $ref: "#/definitions/fcgiPassHeader"
     path_info:
       type: string

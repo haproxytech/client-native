@@ -22,6 +22,8 @@ definitions:
       $ref: "#/definitions/program"
   fcgiApp:
     $ref: "models/configuration/fcgi.yaml#/app"
+  fcgiAppBase:
+    $ref: "models/configuration/fcgi.yaml#/app_base"
   fcgiApps:
     type: array
     items:

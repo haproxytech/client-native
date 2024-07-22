@@ -52,6 +52,17 @@ definitions:
     items:
       $ref: "#/definitions/program"
   fcgiApp:
+    allOf:
+      - $ref: '#/definitions/fcgiAppBase'
+      - properties:
+          acl_list:
+            $ref: '#/definitions/acls'
+            x-go-name: AclList
+        type: object
+    description: App with all it's children resources
+    type: object
+    x-go-name: FCGIApp
+  fcgiAppBase:
     description: HAProxy FastCGI application configuration
     properties:
       docroot:
@@ -75,6 +86,7 @@ definitions:
       log_stderrs:
         items:
           $ref: '#/definitions/fcgiLogStderr'
+          x-go-name: FCGIAppLogStderr
         type: array
         x-omitempty: true
       max_reqs:
@@ -96,6 +108,7 @@ definitions:
       pass_headers:
         items:
           $ref: '#/definitions/fcgiPassHeader'
+          x-go-name: FCGIAppLogPassHeader
         type: array
         x-omitempty: true
       path_info:
@@ -112,7 +125,7 @@ definitions:
     required:
       - name
       - docroot
-    title: FCGI application
+    title: FCGI application base
     type: object
   fcgiApps:
     type: array
@@ -13486,6 +13499,7 @@ paths:
       operationId: getFCGIApps
       parameters:
         - $ref: '#/parameters/transaction_id'
+        - $ref: '#/parameters/full_section'
       responses:
         "200":
           description: Successful operation
@@ -13512,6 +13526,7 @@ paths:
         - $ref: '#/parameters/transaction_id'
         - $ref: '#/parameters/version'
         - $ref: '#/parameters/force_reload'
+        - $ref: '#/parameters/full_section'
       responses:
         "201":
           description: Application created
@@ -13573,6 +13588,7 @@ paths:
           required: true
           type: string
         - $ref: '#/parameters/transaction_id'
+        - $ref: '#/parameters/full_section'
       responses:
         "200":
           description: Successful operation
@@ -13606,6 +13622,7 @@ paths:
         - $ref: '#/parameters/transaction_id'
         - $ref: '#/parameters/version'
         - $ref: '#/parameters/force_reload'
+        - $ref: '#/parameters/full_section'
       responses:
         "200":
           description: Application replaced
