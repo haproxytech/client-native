@@ -29,6 +29,7 @@ type Structured interface {
 	StructuredResolver
 	StructuredUserlist
 	StructuredRing
+	StructuredLogForward
 }
 
 type StructuredToParserArgs struct {

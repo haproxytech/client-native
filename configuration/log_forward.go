@@ -83,7 +83,7 @@ func (c *client) GetLogForward(name string, transactionID string) (int64, *model
 		return v, nil, NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("log forward %s does not exist", name))
 	}
 
-	lf := &models.LogForward{Name: name}
+	lf := &models.LogForward{LogForwardBase: models.LogForwardBase{Name: name}}
 	if err = ParseLogForward(p, lf); err != nil {
 		return 0, nil, err
 	}

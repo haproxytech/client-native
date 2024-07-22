@@ -67,7 +67,7 @@ func checkLogForward(t *testing.T, got map[string]models.LogForwards) {
 		for _, g := range v {
 			for _, w := range want {
 				if g.Name == w.Name {
-					require.True(t, g.Equal(*w), "k=%s - diff %v", k, cmp.Diff(*g, *w))
+					require.True(t, g.LogForwardBase.Equal(w.LogForwardBase), "k=%s - diff %v", k, cmp.Diff(*g, *w))
 					break
 				}
 			}
@@ -106,10 +106,12 @@ func TestCreateEditDeleteLogForward(t *testing.T) {
 	TimeoutClient := int64(5)
 
 	lf := &models.LogForward{
-		Name:          "created_log_forward",
-		Backlog:       &backlog,
-		Maxconn:       &maxconn,
-		TimeoutClient: &TimeoutClient,
+		LogForwardBase: models.LogForwardBase{
+			Name:          "created_log_forward",
+			Backlog:       &backlog,
+			Maxconn:       &maxconn,
+			TimeoutClient: &TimeoutClient,
+		},
 	}
 	err := clientTest.CreateLogForward(lf, "", version)
 	if err != nil {
