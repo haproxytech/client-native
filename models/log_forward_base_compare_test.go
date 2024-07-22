@@ -26,13 +26,13 @@ import (
 	jsoniter "github.com/json-iterator/go"
 )
 
-func TestLogForwardEqual(t *testing.T) {
+func TestLogForwardBaseEqual(t *testing.T) {
 	samples := []struct {
-		a, b LogForward
+		a, b LogForwardBase
 	}{}
 	for i := 0; i < 2; i++ {
-		var sample LogForward
-		var result LogForward
+		var sample LogForwardBase
+		var result LogForwardBase
 		err := faker.FakeData(&sample)
 		if err != nil {
 			t.Errorf(err.Error())
@@ -47,7 +47,7 @@ func TestLogForwardEqual(t *testing.T) {
 		}
 
 		samples = append(samples, struct {
-			a, b LogForward
+			a, b LogForwardBase
 		}{sample, result})
 	}
 
@@ -63,18 +63,18 @@ func TestLogForwardEqual(t *testing.T) {
 			if err != nil {
 				t.Errorf(err.Error())
 			}
-			t.Errorf("Expected LogForward to be equal, but it is not %s %s", a, b)
+			t.Errorf("Expected LogForwardBase to be equal, but it is not %s %s", a, b)
 		}
 	}
 }
 
-func TestLogForwardEqualFalse(t *testing.T) {
+func TestLogForwardBaseEqualFalse(t *testing.T) {
 	samples := []struct {
-		a, b LogForward
+		a, b LogForwardBase
 	}{}
 	for i := 0; i < 2; i++ {
-		var sample LogForward
-		var result LogForward
+		var sample LogForwardBase
+		var result LogForwardBase
 		err := faker.FakeData(&sample)
 		if err != nil {
 			t.Errorf(err.Error())
@@ -83,8 +83,11 @@ func TestLogForwardEqualFalse(t *testing.T) {
 		if err != nil {
 			t.Errorf(err.Error())
 		}
+		result.Backlog = Ptr(*sample.Backlog + 1)
+		result.Maxconn = Ptr(*sample.Maxconn + 1)
+		result.TimeoutClient = Ptr(*sample.TimeoutClient + 1)
 		samples = append(samples, struct {
-			a, b LogForward
+			a, b LogForwardBase
 		}{sample, result})
 	}
 
@@ -100,18 +103,18 @@ func TestLogForwardEqualFalse(t *testing.T) {
 			if err != nil {
 				t.Errorf(err.Error())
 			}
-			t.Errorf("Expected LogForward to be different, but it is not %s %s", a, b)
+			t.Errorf("Expected LogForwardBase to be different, but it is not %s %s", a, b)
 		}
 	}
 }
 
-func TestLogForwardDiff(t *testing.T) {
+func TestLogForwardBaseDiff(t *testing.T) {
 	samples := []struct {
-		a, b LogForward
+		a, b LogForwardBase
 	}{}
 	for i := 0; i < 2; i++ {
-		var sample LogForward
-		var result LogForward
+		var sample LogForwardBase
+		var result LogForwardBase
 		err := faker.FakeData(&sample)
 		if err != nil {
 			t.Errorf(err.Error())
@@ -126,7 +129,7 @@ func TestLogForwardDiff(t *testing.T) {
 		}
 
 		samples = append(samples, struct {
-			a, b LogForward
+			a, b LogForwardBase
 		}{sample, result})
 	}
 
@@ -142,18 +145,18 @@ func TestLogForwardDiff(t *testing.T) {
 			if err != nil {
 				t.Errorf(err.Error())
 			}
-			t.Errorf("Expected LogForward to be equal, but it is not %s %s, %v", a, b, result)
+			t.Errorf("Expected LogForwardBase to be equal, but it is not %s %s, %v", a, b, result)
 		}
 	}
 }
 
-func TestLogForwardDiffFalse(t *testing.T) {
+func TestLogForwardBaseDiffFalse(t *testing.T) {
 	samples := []struct {
-		a, b LogForward
+		a, b LogForwardBase
 	}{}
 	for i := 0; i < 2; i++ {
-		var sample LogForward
-		var result LogForward
+		var sample LogForwardBase
+		var result LogForwardBase
 		err := faker.FakeData(&sample)
 		if err != nil {
 			t.Errorf(err.Error())
@@ -162,8 +165,11 @@ func TestLogForwardDiffFalse(t *testing.T) {
 		if err != nil {
 			t.Errorf(err.Error())
 		}
+		result.Backlog = Ptr(*sample.Backlog + 1)
+		result.Maxconn = Ptr(*sample.Maxconn + 1)
+		result.TimeoutClient = Ptr(*sample.TimeoutClient + 1)
 		samples = append(samples, struct {
-			a, b LogForward
+			a, b LogForwardBase
 		}{sample, result})
 	}
 
@@ -179,7 +185,7 @@ func TestLogForwardDiffFalse(t *testing.T) {
 			if err != nil {
 				t.Errorf(err.Error())
 			}
-			t.Errorf("Expected LogForward to be different in 4 cases, but it is not (%d) %s %s", len(result), a, b)
+			t.Errorf("Expected LogForwardBase to be different in 4 cases, but it is not (%d) %s %s", len(result), a, b)
 		}
 	}
 }

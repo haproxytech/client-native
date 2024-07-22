@@ -3775,6 +3775,23 @@ definitions:
     items:
       $ref: '#/definitions/dgram_bind'
   log_forward:
+    allOf:
+      - $ref: '#/definitions/log_forward_base'
+      - properties:
+          binds:
+            additionalProperties:
+              $ref: '#/definitions/bind'
+          dgram_binds:
+            additionalProperties:
+              $ref: '#/definitions/dgram_bind'
+          log_target_list:
+            $ref: '#/definitions/log_targets'
+            x-go-name: LogTargetList
+        type: object
+    description: LogForward with all it's children resources
+    type: object
+    x-go-name: LogForward
+  log_forward_base:
     additionalProperties: false
     description: HAProxy log forward configuration
     properties:
@@ -14992,6 +15009,7 @@ paths:
       operationId: getLogForwards
       parameters:
         - $ref: '#/parameters/transaction_id'
+        - $ref: '#/parameters/full_section'
       responses:
         "200":
           description: Successful operation
@@ -15018,6 +15036,7 @@ paths:
         - $ref: '#/parameters/transaction_id'
         - $ref: '#/parameters/version'
         - $ref: '#/parameters/force_reload'
+        - $ref: '#/parameters/full_section'
       responses:
         "201":
           description: Log Forward created
@@ -15079,6 +15098,7 @@ paths:
           required: true
           type: string
         - $ref: '#/parameters/transaction_id'
+        - $ref: '#/parameters/full_section'
       responses:
         "200":
           description: Successful operation
@@ -15112,6 +15132,7 @@ paths:
         - $ref: '#/parameters/transaction_id'
         - $ref: '#/parameters/version'
         - $ref: '#/parameters/force_reload'
+        - $ref: '#/parameters/full_section'
       responses:
         "200":
           description: Log Forward replaced

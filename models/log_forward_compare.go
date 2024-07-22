@@ -19,25 +19,46 @@ package models
 
 // Equal checks if two structs of type LogForward are equal
 //
+// By default empty maps and slices are equal to nil:
+//
 //	var a, b LogForward
 //	equal := a.Equal(b)
 //
-// opts ...Options are ignored in this method
+// For more advanced use case you can configure these options (default values are shown):
+//
+//	var a, b LogForward
+//	equal := a.Equal(b,Options{
+//		NilSameAsEmpty: true,
+//	})
 func (s LogForward) Equal(t LogForward, opts ...Options) bool {
-	if !equalPointers(s.Backlog, t.Backlog) {
+	opt := getOptions(opts...)
+
+	if !s.LogForwardBase.Equal(t.LogForwardBase, opt) {
 		return false
 	}
 
-	if !equalPointers(s.Maxconn, t.Maxconn) {
+	if !s.LogTargetList.Equal(t.LogTargetList, opt) {
 		return false
 	}
 
-	if s.Name != t.Name {
+	if !CheckSameNilAndLenMap[string, Bind](s.Binds, t.Binds, opt) {
 		return false
 	}
 
-	if !equalPointers(s.TimeoutClient, t.TimeoutClient) {
+	for k, v := range s.Binds {
+		if !t.Binds[k].Equal(v, opt) {
+			return false
+		}
+	}
+
+	if !CheckSameNilAndLenMap[string, DgramBind](s.DgramBinds, t.DgramBinds, opt) {
 		return false
+	}
+
+	for k, v := range s.DgramBinds {
+		if !t.DgramBinds[k].Equal(v, opt) {
+			return false
+		}
 	}
 
 	return true
@@ -45,26 +66,48 @@ func (s LogForward) Equal(t LogForward, opts ...Options) bool {
 
 // Diff checks if two structs of type LogForward are equal
 //
+// By default empty maps and slices are equal to nil:
+//
 //	var a, b LogForward
 //	diff := a.Diff(b)
 //
-// opts ...Options are ignored in this method
+// For more advanced use case you can configure these options (default values are shown):
+//
+//	var a, b LogForward
+//	diff := a.Diff(b,Options{
+//		NilSameAsEmpty: true,
+//	})
 func (s LogForward) Diff(t LogForward, opts ...Options) map[string][]interface{} {
+	opt := getOptions(opts...)
+
 	diff := make(map[string][]interface{})
-	if !equalPointers(s.Backlog, t.Backlog) {
-		diff["Backlog"] = []interface{}{ValueOrNil(s.Backlog), ValueOrNil(t.Backlog)}
+
+	if !s.LogForwardBase.Equal(t.LogForwardBase, opt) {
+		diff["LogForwardBase"] = []interface{}{s.LogForwardBase, t.LogForwardBase}
 	}
 
-	if !equalPointers(s.Maxconn, t.Maxconn) {
-		diff["Maxconn"] = []interface{}{ValueOrNil(s.Maxconn), ValueOrNil(t.Maxconn)}
+	if !s.LogTargetList.Equal(t.LogTargetList, opt) {
+		diff["LogTargetList"] = []interface{}{s.LogTargetList, t.LogTargetList}
 	}
 
-	if s.Name != t.Name {
-		diff["Name"] = []interface{}{s.Name, t.Name}
+	if !CheckSameNilAndLenMap[string, Bind](s.Binds, t.Binds, opt) {
+		diff["Binds"] = []interface{}{s.Binds, t.Binds}
 	}
 
-	if !equalPointers(s.TimeoutClient, t.TimeoutClient) {
-		diff["TimeoutClient"] = []interface{}{ValueOrNil(s.TimeoutClient), ValueOrNil(t.TimeoutClient)}
+	for k, v := range s.Binds {
+		if !t.Binds[k].Equal(v, opt) {
+			diff["Binds"] = []interface{}{s.Binds, t.Binds}
+		}
+	}
+
+	if !CheckSameNilAndLenMap[string, DgramBind](s.DgramBinds, t.DgramBinds, opt) {
+		diff["DgramBinds"] = []interface{}{s.DgramBinds, t.DgramBinds}
+	}
+
+	for k, v := range s.DgramBinds {
+		if !t.DgramBinds[k].Equal(v, opt) {
+			diff["DgramBinds"] = []interface{}{s.DgramBinds, t.DgramBinds}
+		}
 	}
 
 	return diff

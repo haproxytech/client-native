@@ -102,6 +102,8 @@ definitions:
       $ref: '#/definitions/dgram_bind'
   log_forward:
     $ref: "models/configuration/log_forward.yaml#/log_forward"
+  log_forward_base:
+    $ref: "models/configuration/log_forward.yaml#/log_forward_base"
   log_forwards:
     title: Log Forwards
     description: HAProxy log forwards array
