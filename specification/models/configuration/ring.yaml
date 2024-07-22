@@ -1,6 +1,17 @@
 ---
 ring:
-  title: Ring
+  type: object
+  description: Ring with all it's children resources
+  x-go-name: Ring
+  allOf:
+    - $ref: "#/definitions/ring_base"
+    - type: object
+      properties:
+        servers:
+          additionalProperties:
+            $ref: "#/definitions/server"
+ring_base:
+  title: Ring Base
   description: HAProxy ring configuration
   type: object
   required:

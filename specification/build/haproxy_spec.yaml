@@ -3675,6 +3675,17 @@ definitions:
     items:
       $ref: '#/definitions/backend'
   ring:
+    allOf:
+      - $ref: '#/definitions/ring_base'
+      - properties:
+          servers:
+            additionalProperties:
+              $ref: '#/definitions/server'
+        type: object
+    description: Ring with all it's children resources
+    type: object
+    x-go-name: Ring
+  ring_base:
     additionalProperties: false
     description: HAProxy ring configuration
     properties:
@@ -3721,7 +3732,7 @@ definitions:
         x-nullable: true
     required:
       - name
-    title: Ring
+    title: Ring Base
     type: object
   rings:
     title: Rings
@@ -14217,6 +14228,7 @@ paths:
       operationId: getRings
       parameters:
         - $ref: '#/parameters/transaction_id'
+        - $ref: '#/parameters/full_section'
       responses:
         "200":
           description: Successful operation
@@ -14243,6 +14255,7 @@ paths:
         - $ref: '#/parameters/transaction_id'
         - $ref: '#/parameters/version'
         - $ref: '#/parameters/force_reload'
+        - $ref: '#/parameters/full_section'
       responses:
         "201":
           description: Ring created
@@ -14304,6 +14317,7 @@ paths:
           required: true
           type: string
         - $ref: '#/parameters/transaction_id'
+        - $ref: '#/parameters/full_section'
       responses:
         "200":
           description: Successful operation
@@ -14337,6 +14351,7 @@ paths:
         - $ref: '#/parameters/transaction_id'
         - $ref: '#/parameters/version'
         - $ref: '#/parameters/force_reload'
+        - $ref: '#/parameters/full_section'
       responses:
         "200":
           description: Ring replaced

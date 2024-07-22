@@ -22,7 +22,6 @@ package models
 
 import (
 	"context"
-	"encoding/json"
 
 	"github.com/go-openapi/errors"
 	"github.com/go-openapi/strfmt"
@@ -30,67 +29,71 @@ import (
 	"github.com/go-openapi/validate"
 )
 
-// Ring Ring
+// Ring Ring with all it's children resources
 //
-// # HAProxy ring configuration
-//
-// swagger:model ring
+// swagger:model Ring
 type Ring struct {
+	RingBase `json:",inline"`
 
-	// description
-	Description string `json:"description,omitempty"`
+	// servers
+	Servers map[string]Server `json:"servers,omitempty"`
+}
 
-	// format
-	// Enum: [iso local raw rfc3164 rfc5424 short priority timed]
-	// +kubebuilder:validation:Enum=iso;local;raw;rfc3164;rfc5424;short;priority;timed;
-	Format string `json:"format,omitempty"`
+// UnmarshalJSON unmarshals this object from a JSON structure
+func (m *Ring) UnmarshalJSON(raw []byte) error {
+	// AO0
+	var aO0 RingBase
+	if err := swag.ReadJSON(raw, &aO0); err != nil {
+		return err
+	}
+	m.RingBase = aO0
 
-	// maxlen
-	Maxlen *int64 `json:"maxlen,omitempty"`
+	// AO1
+	var dataAO1 struct {
+		Servers map[string]Server `json:"servers,omitempty"`
+	}
+	if err := swag.ReadJSON(raw, &dataAO1); err != nil {
+		return err
+	}
 
-	// name
-	// Required: true
-	// Pattern: ^[A-Za-z0-9-_.:]+$
-	// +kubebuilder:validation:Pattern=`^[A-Za-z0-9-_.:]+$`
-	Name string `json:"name"`
+	m.Servers = dataAO1.Servers
 
-	// size
-	// Minimum: 0
-	// +kubebuilder:validation:Minimum=0
-	Size *int64 `json:"size,omitempty"`
+	return nil
+}
 
-	// timeout connect
-	// Minimum: 0
-	// +kubebuilder:validation:Minimum=0
-	TimeoutConnect *int64 `json:"timeout_connect,omitempty"`
+// MarshalJSON marshals this object to a JSON structure
+func (m Ring) MarshalJSON() ([]byte, error) {
+	_parts := make([][]byte, 0, 2)
 
-	// timeout server
-	// Minimum: 0
-	// +kubebuilder:validation:Minimum=0
-	TimeoutServer *int64 `json:"timeout_server,omitempty"`
+	aO0, err := swag.WriteJSON(m.RingBase)
+	if err != nil {
+		return nil, err
+	}
+	_parts = append(_parts, aO0)
+	var dataAO1 struct {
+		Servers map[string]Server `json:"servers,omitempty"`
+	}
+
+	dataAO1.Servers = m.Servers
+
+	jsonDataAO1, errAO1 := swag.WriteJSON(dataAO1)
+	if errAO1 != nil {
+		return nil, errAO1
+	}
+	_parts = append(_parts, jsonDataAO1)
+	return swag.ConcatJSON(_parts...), nil
 }
 
 // Validate validates this ring
 func (m *Ring) Validate(formats strfmt.Registry) error {
 	var res []error
 
-	if err := m.validateFormat(formats); err != nil {
+	// validation for a type composition with RingBase
+	if err := m.RingBase.Validate(formats); err != nil {
 		res = append(res, err)
 	}
 
-	if err := m.validateName(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateSize(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateTimeoutConnect(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateTimeoutServer(formats); err != nil {
+	if err := m.validateServers(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -100,117 +103,64 @@ func (m *Ring) Validate(formats strfmt.Registry) error {
 	return nil
 }
 
-var ringTypeFormatPropEnum []interface{}
+func (m *Ring) validateServers(formats strfmt.Registry) error {
 
-func init() {
-	var res []string
-	if err := json.Unmarshal([]byte(`["iso","local","raw","rfc3164","rfc5424","short","priority","timed"]`), &res); err != nil {
-		panic(err)
-	}
-	for _, v := range res {
-		ringTypeFormatPropEnum = append(ringTypeFormatPropEnum, v)
-	}
-}
-
-const (
-
-	// RingFormatIso captures enum value "iso"
-	RingFormatIso string = "iso"
-
-	// RingFormatLocal captures enum value "local"
-	RingFormatLocal string = "local"
-
-	// RingFormatRaw captures enum value "raw"
-	RingFormatRaw string = "raw"
-
-	// RingFormatRfc3164 captures enum value "rfc3164"
-	RingFormatRfc3164 string = "rfc3164"
-
-	// RingFormatRfc5424 captures enum value "rfc5424"
-	RingFormatRfc5424 string = "rfc5424"
-
-	// RingFormatShort captures enum value "short"
-	RingFormatShort string = "short"
-
-	// RingFormatPriority captures enum value "priority"
-	RingFormatPriority string = "priority"
-
-	// RingFormatTimed captures enum value "timed"
-	RingFormatTimed string = "timed"
-)
-
-// prop value enum
-func (m *Ring) validateFormatEnum(path, location string, value string) error {
-	if err := validate.EnumCase(path, location, value, ringTypeFormatPropEnum, true); err != nil {
-		return err
-	}
-	return nil
-}
-
-func (m *Ring) validateFormat(formats strfmt.Registry) error {
-	if swag.IsZero(m.Format) { // not required
+	if swag.IsZero(m.Servers) { // not required
 		return nil
 	}
 
-	// value enum
-	if err := m.validateFormatEnum("format", "body", m.Format); err != nil {
-		return err
+	for k := range m.Servers {
+
+		if err := validate.Required("servers"+"."+k, "body", m.Servers[k]); err != nil {
+			return err
+		}
+		if val, ok := m.Servers[k]; ok {
+			if err := val.Validate(formats); err != nil {
+				if ve, ok := err.(*errors.Validation); ok {
+					return ve.ValidateName("servers" + "." + k)
+				} else if ce, ok := err.(*errors.CompositeError); ok {
+					return ce.ValidateName("servers" + "." + k)
+				}
+				return err
+			}
+		}
+
 	}
 
 	return nil
 }
 
-func (m *Ring) validateName(formats strfmt.Registry) error {
-
-	if err := validate.RequiredString("name", "body", m.Name); err != nil {
-		return err
-	}
-
-	if err := validate.Pattern("name", "body", m.Name, `^[A-Za-z0-9-_.:]+$`); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func (m *Ring) validateSize(formats strfmt.Registry) error {
-	if swag.IsZero(m.Size) { // not required
-		return nil
-	}
-
-	if err := validate.MinimumInt("size", "body", *m.Size, 0, false); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func (m *Ring) validateTimeoutConnect(formats strfmt.Registry) error {
-	if swag.IsZero(m.TimeoutConnect) { // not required
-		return nil
-	}
-
-	if err := validate.MinimumInt("timeout_connect", "body", *m.TimeoutConnect, 0, false); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func (m *Ring) validateTimeoutServer(formats strfmt.Registry) error {
-	if swag.IsZero(m.TimeoutServer) { // not required
-		return nil
-	}
-
-	if err := validate.MinimumInt("timeout_server", "body", *m.TimeoutServer, 0, false); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-// ContextValidate validates this ring based on context it is used
+// ContextValidate validate this ring based on the context it is used
 func (m *Ring) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+	var res []error
+
+	// validation for a type composition with RingBase
+	if err := m.RingBase.ContextValidate(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.contextValidateServers(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if len(res) > 0 {
+		return errors.CompositeValidationError(res...)
+	}
+	return nil
+}
+
+func (m *Ring) contextValidateServers(ctx context.Context, formats strfmt.Registry) error {
+
+	for k := range m.Servers {
+
+		if val, ok := m.Servers[k]; ok {
+			if err := val.ContextValidate(ctx, formats); err != nil {
+				return err
+			}
+		}
+
+	}
+
 	return nil
 }
 

@@ -26,13 +26,13 @@ import (
 	jsoniter "github.com/json-iterator/go"
 )
 
-func TestRingEqual(t *testing.T) {
+func TestRingBaseEqual(t *testing.T) {
 	samples := []struct {
-		a, b Ring
+		a, b RingBase
 	}{}
 	for i := 0; i < 2; i++ {
-		var sample Ring
-		var result Ring
+		var sample RingBase
+		var result RingBase
 		err := faker.FakeData(&sample)
 		if err != nil {
 			t.Errorf(err.Error())
@@ -47,7 +47,7 @@ func TestRingEqual(t *testing.T) {
 		}
 
 		samples = append(samples, struct {
-			a, b Ring
+			a, b RingBase
 		}{sample, result})
 	}
 
@@ -63,18 +63,18 @@ func TestRingEqual(t *testing.T) {
 			if err != nil {
 				t.Errorf(err.Error())
 			}
-			t.Errorf("Expected Ring to be equal, but it is not %s %s", a, b)
+			t.Errorf("Expected RingBase to be equal, but it is not %s %s", a, b)
 		}
 	}
 }
 
-func TestRingEqualFalse(t *testing.T) {
+func TestRingBaseEqualFalse(t *testing.T) {
 	samples := []struct {
-		a, b Ring
+		a, b RingBase
 	}{}
 	for i := 0; i < 2; i++ {
-		var sample Ring
-		var result Ring
+		var sample RingBase
+		var result RingBase
 		err := faker.FakeData(&sample)
 		if err != nil {
 			t.Errorf(err.Error())
@@ -83,8 +83,12 @@ func TestRingEqualFalse(t *testing.T) {
 		if err != nil {
 			t.Errorf(err.Error())
 		}
+		result.Maxlen = Ptr(*sample.Maxlen + 1)
+		result.Size = Ptr(*sample.Size + 1)
+		result.TimeoutConnect = Ptr(*sample.TimeoutConnect + 1)
+		result.TimeoutServer = Ptr(*sample.TimeoutServer + 1)
 		samples = append(samples, struct {
-			a, b Ring
+			a, b RingBase
 		}{sample, result})
 	}
 
@@ -100,18 +104,18 @@ func TestRingEqualFalse(t *testing.T) {
 			if err != nil {
 				t.Errorf(err.Error())
 			}
-			t.Errorf("Expected Ring to be different, but it is not %s %s", a, b)
+			t.Errorf("Expected RingBase to be different, but it is not %s %s", a, b)
 		}
 	}
 }
 
-func TestRingDiff(t *testing.T) {
+func TestRingBaseDiff(t *testing.T) {
 	samples := []struct {
-		a, b Ring
+		a, b RingBase
 	}{}
 	for i := 0; i < 2; i++ {
-		var sample Ring
-		var result Ring
+		var sample RingBase
+		var result RingBase
 		err := faker.FakeData(&sample)
 		if err != nil {
 			t.Errorf(err.Error())
@@ -126,7 +130,7 @@ func TestRingDiff(t *testing.T) {
 		}
 
 		samples = append(samples, struct {
-			a, b Ring
+			a, b RingBase
 		}{sample, result})
 	}
 
@@ -142,18 +146,18 @@ func TestRingDiff(t *testing.T) {
 			if err != nil {
 				t.Errorf(err.Error())
 			}
-			t.Errorf("Expected Ring to be equal, but it is not %s %s, %v", a, b, result)
+			t.Errorf("Expected RingBase to be equal, but it is not %s %s, %v", a, b, result)
 		}
 	}
 }
 
-func TestRingDiffFalse(t *testing.T) {
+func TestRingBaseDiffFalse(t *testing.T) {
 	samples := []struct {
-		a, b Ring
+		a, b RingBase
 	}{}
 	for i := 0; i < 2; i++ {
-		var sample Ring
-		var result Ring
+		var sample RingBase
+		var result RingBase
 		err := faker.FakeData(&sample)
 		if err != nil {
 			t.Errorf(err.Error())
@@ -162,14 +166,18 @@ func TestRingDiffFalse(t *testing.T) {
 		if err != nil {
 			t.Errorf(err.Error())
 		}
+		result.Maxlen = Ptr(*sample.Maxlen + 1)
+		result.Size = Ptr(*sample.Size + 1)
+		result.TimeoutConnect = Ptr(*sample.TimeoutConnect + 1)
+		result.TimeoutServer = Ptr(*sample.TimeoutServer + 1)
 		samples = append(samples, struct {
-			a, b Ring
+			a, b RingBase
 		}{sample, result})
 	}
 
 	for _, sample := range samples {
 		result := sample.a.Diff(sample.b)
-		if len(result) != 2 {
+		if len(result) != 7 {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {
@@ -179,7 +187,7 @@ func TestRingDiffFalse(t *testing.T) {
 			if err != nil {
 				t.Errorf(err.Error())
 			}
-			t.Errorf("Expected Ring to be different in 2 cases, but it is not (%d) %s %s", len(result), a, b)
+			t.Errorf("Expected RingBase to be different in 7 cases, but it is not (%d) %s %s", len(result), a, b)
 		}
 	}
 }
