@@ -81,7 +81,7 @@ func checkRings(t *testing.T, got map[string]models.Rings) {
 		for _, g := range v {
 			for _, w := range want {
 				if g.Name == w.Name {
-					require.True(t, g.Equal(*w), "k=%s - diff %v", k, cmp.Diff(*g, *w))
+					require.True(t, g.RingBase.Equal(w.RingBase), "k=%s - diff %v", k, cmp.Diff(*g, *w))
 					break
 				}
 			}
@@ -96,13 +96,15 @@ func TestCreateEditDeleteRing(t *testing.T) {
 	timeoutServer := int64(10)
 
 	r := &models.Ring{
-		Name:           "created_ring",
-		Description:    "My local buffer 2",
-		Format:         "rfc3164",
-		Maxlen:         &maxlen,
-		Size:           &size,
-		TimeoutConnect: &timeoutConnect,
-		TimeoutServer:  &timeoutServer,
+		RingBase: models.RingBase{
+			Name:           "created_ring",
+			Description:    "My local buffer 2",
+			Format:         "rfc3164",
+			Maxlen:         &maxlen,
+			Size:           &size,
+			TimeoutConnect: &timeoutConnect,
+			TimeoutServer:  &timeoutServer,
+		},
 	}
 	err := clientTest.CreateRing(r, "", version)
 	if err != nil {

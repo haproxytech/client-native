@@ -28,6 +28,7 @@ type Structured interface {
 	StructuredPeerSection
 	StructuredResolver
 	StructuredUserlist
+	StructuredRing
 }
 
 type StructuredToParserArgs struct {

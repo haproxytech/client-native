@@ -83,7 +83,7 @@ func (c *client) GetRing(name string, transactionID string) (int64, *models.Ring
 		return v, nil, NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("ring %s does not exist", name))
 	}
 
-	ring := &models.Ring{Name: name}
+	ring := &models.Ring{RingBase: models.RingBase{Name: name}}
 	if err = ParseRingSection(p, ring); err != nil {
 		return 0, nil, err
 	}
