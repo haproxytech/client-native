@@ -158,7 +158,7 @@ func passHeader(p parser.Parser, name string) ([]*models.FCGIPassHeader, error) 
 
 func ParseFCGIApp(p parser.Parser, name string) (*models.FCGIApp, error) {
 	app := &models.FCGIApp{
-		Name: name,
+		FCGIAppBase: models.FCGIAppBase{Name: name},
 	}
 
 	docRoot, err := genericString(p, name, "docroot")

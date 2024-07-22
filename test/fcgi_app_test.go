@@ -72,7 +72,7 @@ func checkFCGIApp(t *testing.T, got map[string]models.FCGIApps) {
 		for _, g := range v {
 			for _, w := range want {
 				if g.Name == w.Name {
-					require.True(t, g.Equal(*w), "k=%s - diff %v", k, cmp.Diff(*g, *w))
+					require.True(t, g.FCGIAppBase.Equal(w.FCGIAppBase), "k=%s - diff %v", k, cmp.Diff(*g, *w))
 					break
 				}
 			}
@@ -83,56 +83,58 @@ func checkFCGIApp(t *testing.T, got map[string]models.FCGIApps) {
 func TestCreateEditDeleteFCGIApp(t *testing.T) {
 	// Creating an application
 	app := &models.FCGIApp{
-		Docroot:   misc.StringP("/path/to/my/chroot/app"),
-		GetValues: models.FCGIAppGetValuesEnabled,
-		Index:     "index.php",
-		KeepConn:  models.FCGIAppKeepConnEnabled,
-		LogStderrs: []*models.FCGILogStderr{
-			{
-				Address:  "127.0.0.1:514",
-				Facility: "debug",
-			},
-			{
-				Address:  "127.0.0.1:415",
-				Facility: "error",
-				Format:   "fmt",
-				Len:      1024,
-				Level:    "info",
-				Minlevel: "debug",
-				Sample: &models.FCGILogStderrSample{
-					Ranges: misc.StringP("1,2-9"),
-					Size:   misc.Int64P(10),
+		FCGIAppBase: models.FCGIAppBase{
+			Docroot:   misc.StringP("/path/to/my/chroot/app"),
+			GetValues: models.FCGIAppBaseGetValuesEnabled,
+			Index:     "index.php",
+			KeepConn:  models.FCGIAppBaseKeepConnEnabled,
+			LogStderrs: []*models.FCGILogStderr{
+				{
+					Address:  "127.0.0.1:514",
+					Facility: "debug",
+				},
+				{
+					Address:  "127.0.0.1:415",
+					Facility: "error",
+					Format:   "fmt",
+					Len:      1024,
+					Level:    "info",
+					Minlevel: "debug",
+					Sample: &models.FCGILogStderrSample{
+						Ranges: misc.StringP("1,2-9"),
+						Size:   misc.Int64P(10),
+					},
 				},
 			},
-		},
-		MaxReqs:   100,
-		MpxsConns: models.FCGIAppMpxsConnsEnabled,
-		Name:      "created",
-		PassHeaders: []*models.FCGIPassHeader{
-			{
-				Cond:     models.FCGIPassHeaderCondIf,
-				CondTest: "end",
-				Name:     "x-end",
+			MaxReqs:   100,
+			MpxsConns: models.FCGIAppBaseMpxsConnsEnabled,
+			Name:      "created",
+			PassHeaders: []*models.FCGIPassHeader{
+				{
+					Cond:     models.FCGIPassHeaderCondIf,
+					CondTest: "end",
+					Name:     "x-end",
+				},
+				{
+					Cond:     models.FCGIPassHeaderCondUnless,
+					CondTest: "start",
+					Name:     "x-start",
+				},
 			},
-			{
-				Cond:     models.FCGIPassHeaderCondUnless,
-				CondTest: "start",
-				Name:     "x-start",
-			},
-		},
-		PathInfo: `^(/.+\.php)(/.*)?$`,
-		SetParams: []*models.FCGISetParam{
-			{
-				Cond:     models.FCGISetParamCondIf,
-				CondTest: "start",
-				Format:   "fmt",
-				Name:     "start",
-			},
-			{
-				Cond:     models.FCGISetParamCondUnless,
-				CondTest: "end",
-				Format:   "fmt",
-				Name:     "end",
+			PathInfo: `^(/.+\.php)(/.*)?$`,
+			SetParams: []*models.FCGISetParam{
+				{
+					Cond:     models.FCGISetParamCondIf,
+					CondTest: "start",
+					Format:   "fmt",
+					Name:     "start",
+				},
+				{
+					Cond:     models.FCGISetParamCondUnless,
+					CondTest: "end",
+					Format:   "fmt",
+					Name:     "end",
+				},
 			},
 		},
 	}
@@ -147,15 +149,15 @@ func TestCreateEditDeleteFCGIApp(t *testing.T) {
 	assert.Error(t, clientTest.CreateFCGIApplication(app, "", version))
 	// Updating and ensuring data is properly reflected
 	app.Docroot = misc.StringP("/no/more/chroot")
-	app.GetValues = models.FCGIAppGetValuesDisabled
+	app.GetValues = models.FCGIAppBaseGetValuesDisabled
 	app.Index = "old_index.php"
-	app.KeepConn = models.FCGIAppGetValuesDisabled
+	app.KeepConn = models.FCGIAppBaseGetValuesDisabled
 	app.LogStderrs[0].Level = "critical"
 	app.LogStderrs = []*models.FCGILogStderr{
 		app.LogStderrs[0],
 	}
 	app.MaxReqs = 10
-	app.MpxsConns = models.FCGIAppMpxsConnsDisabled
+	app.MpxsConns = models.FCGIAppBaseMpxsConnsDisabled
 	app.PassHeaders[0].Name = "x-middle"
 	app.PassHeaders[0].CondTest = "middle"
 	app.PassHeaders = []*models.FCGIPassHeader{

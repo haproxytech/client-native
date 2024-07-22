@@ -30,6 +30,7 @@ type Structured interface {
 	StructuredUserlist
 	StructuredRing
 	StructuredLogForward
+	StructuredFCGIApp
 }
 
 type StructuredToParserArgs struct {
