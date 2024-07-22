@@ -83,7 +83,7 @@ func (c *client) GetMailersSection(name, transactionID string) (int64, *models.M
 		return v, nil, NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("mailers section '%s' does not exist", name))
 	}
 
-	ms := &models.MailersSection{Name: name}
+	ms := &models.MailersSection{MailersSectionBase: models.MailersSectionBase{Name: name}}
 	if err = ParseMailersSection(p, ms); err != nil {
 		return 0, nil, err
 	}

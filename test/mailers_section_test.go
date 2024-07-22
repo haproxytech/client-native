@@ -90,7 +90,7 @@ func checkMailersSection(t *testing.T, got map[string]models.MailersSections) {
 		for _, g := range v {
 			for _, w := range want {
 				if g.Name == w.Name {
-					require.True(t, g.Equal(*w), "k=%s - diff %v", k, cmp.Diff(*g, *w))
+					require.True(t, g.MailersSectionBase.Equal(w.MailersSectionBase), "k=%s - diff %v", k, cmp.Diff(*g, *w))
 					break
 				}
 			}
@@ -100,8 +100,10 @@ func checkMailersSection(t *testing.T, got map[string]models.MailersSections) {
 
 func TestCreateEditDeleteMailersSection(t *testing.T) {
 	ms := &models.MailersSection{
-		Name:    "newMailer",
-		Timeout: misc.ParseTimeout("30s"),
+		MailersSectionBase: models.MailersSectionBase{
+			Name:    "newMailer",
+			Timeout: misc.ParseTimeout("30s"),
+		},
 	}
 
 	err := clientTest.CreateMailersSection(ms, "", version)
