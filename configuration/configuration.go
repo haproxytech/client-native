@@ -317,8 +317,6 @@ func (s *SectionParser) checkSpecialFields(fieldName string) (match bool, data i
 		return true, s.monitorURI()
 	case "StatsOptions":
 		return true, s.statsOptions()
-	case "HTTPCheck":
-		return true, s.httpCheck()
 	case "Forwardfor":
 		return true, s.forwardfor()
 	case "Redispatch":
@@ -1008,24 +1006,6 @@ func (s *SectionParser) forwardfor() interface{} {
 	return bff
 }
 
-func (s *SectionParser) httpCheck() interface{} {
-	data, err := s.get("http-check", false)
-	if err != nil {
-		return nil
-	}
-	d := data.([]types.Action)
-	if s.Section == parser.Defaults || s.Section == parser.Backends {
-		for _, h := range d {
-			httpCheck, err := ParseHTTPCheck(h)
-			if err != nil {
-				continue
-			}
-			return httpCheck
-		}
-	}
-	return nil
-}
-
 func (s *SectionParser) emailAlert() interface{} {
 	data, err := s.get("email-alert", false)
 	if err != nil {
@@ -1570,8 +1550,6 @@ func (s *SectionObject) checkSpecialFields(fieldName string, field reflect.Value
 		return true, s.monitorFail(field)
 	case "StatsOptions":
 		return true, s.statsOptions(field)
-	case "HTTPCheck":
-		return true, s.httpCheck(field)
 	case "Forwardfor":
 		return true, s.forwardfor(field)
 	case "Redispatch":
@@ -2399,38 +2377,6 @@ func (s *SectionObject) forwardfor(field reflect.Value) error {
 		IfNone: ff.Ifnone,
 	}
 	return s.set("option forwardfor", d)
-}
-
-func (s *SectionObject) httpCheck(field reflect.Value) error {
-	if s.Section == parser.Defaults || s.Section == parser.Backends {
-		hc, ok := field.Interface().(*models.HTTPCheck)
-		if !ok {
-			return misc.CreateTypeAssertError("http-check")
-		}
-
-		if hc == nil {
-			return nil
-		}
-		httpChecks, err := ParseHTTPChecks(string(s.Section), s.Name, s.Parser)
-		if err != nil {
-			return err
-		}
-		if hc != nil {
-			for _, httpCheck := range httpChecks {
-				if reflect.DeepEqual(httpCheck, hc) {
-					return nil
-				}
-			}
-			check, err := SerializeHTTPCheck(*hc)
-			if err != nil {
-				return err
-			}
-			if err = s.Parser.Insert(s.Section, s.Name, "http-check", check, 0); err != nil {
-				return err
-			}
-		}
-	}
-	return nil
 }
 
 func (s *SectionObject) monitorURI(field reflect.Value) error {

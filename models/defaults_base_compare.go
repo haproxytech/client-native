@@ -391,28 +391,6 @@ func (s DefaultsBase) Equal(t DefaultsBase, opts ...Options) bool {
 		return false
 	}
 
-	if s.HTTPCheck == nil || t.HTTPCheck == nil {
-		if s.HTTPCheck != nil || t.HTTPCheck != nil {
-			if opt.NilSameAsEmpty {
-				empty := &HTTPCheck{}
-				if s.HTTPCheck == nil {
-					if !(t.HTTPCheck.Equal(*empty)) {
-						return false
-					}
-				}
-				if t.HTTPCheck == nil {
-					if !(s.HTTPCheck.Equal(*empty)) {
-						return false
-					}
-				}
-			} else {
-				return false
-			}
-		}
-	} else if !s.HTTPCheck.Equal(*t.HTTPCheck, opt) {
-		return false
-	}
-
 	if s.HTTPUseHtx != t.HTTPUseHtx {
 		return false
 	}
@@ -1205,28 +1183,6 @@ func (s DefaultsBase) Diff(t DefaultsBase, opts ...Options) map[string][]interfa
 
 	if s.HTTPBufferRequest != t.HTTPBufferRequest {
 		diff["HTTPBufferRequest"] = []interface{}{s.HTTPBufferRequest, t.HTTPBufferRequest}
-	}
-
-	if s.HTTPCheck == nil || t.HTTPCheck == nil {
-		if s.HTTPCheck != nil || t.HTTPCheck != nil {
-			if opt.NilSameAsEmpty {
-				empty := &HTTPCheck{}
-				if s.HTTPCheck == nil {
-					if !(t.HTTPCheck.Equal(*empty)) {
-						diff["HTTPCheck"] = []interface{}{ValueOrNil(s.HTTPCheck), ValueOrNil(t.HTTPCheck)}
-					}
-				}
-				if t.HTTPCheck == nil {
-					if !(s.HTTPCheck.Equal(*empty)) {
-						diff["HTTPCheck"] = []interface{}{ValueOrNil(s.HTTPCheck), ValueOrNil(t.HTTPCheck)}
-					}
-				}
-			} else {
-				diff["HTTPCheck"] = []interface{}{ValueOrNil(s.HTTPCheck), ValueOrNil(t.HTTPCheck)}
-			}
-		}
-	} else if !s.HTTPCheck.Equal(*t.HTTPCheck, opt) {
-		diff["HTTPCheck"] = []interface{}{ValueOrNil(s.HTTPCheck), ValueOrNil(t.HTTPCheck)}
 	}
 
 	if s.HTTPUseHtx != t.HTTPUseHtx {

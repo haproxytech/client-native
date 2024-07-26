@@ -2399,8 +2399,6 @@ definitions:
           - disabled
         type: string
         x-display-name: HTTP bufferrequest
-      http-check:
-        $ref: '#/definitions/http_check'
       http-use-htx:
         enum:
           - enabled

@@ -219,9 +219,6 @@ type DefaultsBase struct {
 	// +kubebuilder:validation:Enum=enabled;disabled;
 	HTTPBufferRequest string `json:"http-buffer-request,omitempty"`
 
-	// http check
-	HTTPCheck *HTTPCheck `json:"http-check,omitempty"`
-
 	// http use htx
 	// Enum: [enabled disabled]
 	// +kubebuilder:validation:Enum=enabled;disabled;
@@ -617,10 +614,6 @@ func (m *DefaultsBase) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateHTTPBufferRequest(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateHTTPCheck(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -1777,25 +1770,6 @@ func (m *DefaultsBase) validateHTTPBufferRequest(formats strfmt.Registry) error 
 	// value enum
 	if err := m.validateHTTPBufferRequestEnum("http-buffer-request", "body", m.HTTPBufferRequest); err != nil {
 		return err
-	}
-
-	return nil
-}
-
-func (m *DefaultsBase) validateHTTPCheck(formats strfmt.Registry) error {
-	if swag.IsZero(m.HTTPCheck) { // not required
-		return nil
-	}
-
-	if m.HTTPCheck != nil {
-		if err := m.HTTPCheck.Validate(formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
-				return ve.ValidateName("http-check")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
-				return ce.ValidateName("http-check")
-			}
-			return err
-		}
 	}
 
 	return nil
@@ -3339,10 +3313,6 @@ func (m *DefaultsBase) ContextValidate(ctx context.Context, formats strfmt.Regis
 		res = append(res, err)
 	}
 
-	if err := m.contextValidateHTTPCheck(ctx, formats); err != nil {
-		res = append(res, err)
-	}
-
 	if err := m.contextValidateHttpchkParams(ctx, formats); err != nil {
 		res = append(res, err)
 	}
@@ -3565,22 +3535,6 @@ func (m *DefaultsBase) contextValidateHashType(ctx context.Context, formats strf
 				return ve.ValidateName("hash_type")
 			} else if ce, ok := err.(*errors.CompositeError); ok {
 				return ce.ValidateName("hash_type")
-			}
-			return err
-		}
-	}
-
-	return nil
-}
-
-func (m *DefaultsBase) contextValidateHTTPCheck(ctx context.Context, formats strfmt.Registry) error {
-
-	if m.HTTPCheck != nil {
-		if err := m.HTTPCheck.ContextValidate(ctx, formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
-				return ve.ValidateName("http-check")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
-				return ce.ValidateName("http-check")
 			}
 			return err
 		}

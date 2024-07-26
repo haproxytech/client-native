@@ -82,8 +82,6 @@ defaults_base:
       x-dependency:
         adv_check:
           value: httpchk
-    http-check:
-      $ref: "#/definitions/http_check"
     disable_h2_upgrade:
       type: string
       enum: [enabled, disabled]
