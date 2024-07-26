@@ -155,11 +155,8 @@ userlist delete_test
 			if err != nil {
 				t.Error(err.Error())
 			}
-			if users == nil {
-				t.Errorf("Expected an empty result instead of nil")
-			}
-			if len(users) != 0 {
-				t.Errorf("Expected 0 users in the userlist, found %v", len(users))
+			if users != nil {
+				t.Errorf("Expected nil result")
 			}
 
 			_, users, err = c.GetUsers("fake", "")

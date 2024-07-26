@@ -234,7 +234,7 @@ func ParseHTTPRequestRules(t, pName string, p parser.Parser) (models.HTTPRequest
 		return nil, err
 	}
 
-	httpReqRules := models.HTTPRequestRules{}
+	var httpReqRules models.HTTPRequestRules
 	data, err := p.Get(section, pName, "http-request", false)
 	if err != nil {
 		if errors.Is(err, parser_errors.ErrFetch) {

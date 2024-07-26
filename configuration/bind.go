@@ -166,7 +166,7 @@ func (c *client) EditBind(name string, parentType string, parentName string, dat
 }
 
 func ParseBinds(parentType string, parentName string, p parser.Parser) (models.Binds, error) {
-	binds := models.Binds{}
+	var binds models.Binds
 
 	data, err := p.Get(bindSectionType(parentType), parentName, "bind", false)
 	if err != nil {

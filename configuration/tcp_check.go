@@ -260,7 +260,7 @@ func ParseTCPChecks(t, pName string, p parser.Parser) (models.TCPChecks, error) 
 		return nil, NewConfError(ErrValidationError, fmt.Sprintf("unsupported section in tcp_check: %s", t))
 	}
 
-	checks := models.TCPChecks{}
+	var checks models.TCPChecks
 	data, err := p.Get(section, pName, "tcp-check", false)
 	if err != nil {
 		if errors.Is(err, parser_errors.ErrFetch) {

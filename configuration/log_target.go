@@ -213,7 +213,7 @@ func ParseLogTargets(t, pName string, p parser.Parser) (models.LogTargets, error
 	var section parser.Section
 	section, pName = logTargetSectionType(t, pName)
 
-	logTargets := models.LogTargets{}
+	var logTargets models.LogTargets
 	data, err := p.Get(section, pName, "log", false)
 	if err != nil {
 		if errors.Is(err, parser_errors.ErrFetch) {

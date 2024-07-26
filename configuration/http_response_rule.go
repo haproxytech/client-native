@@ -182,7 +182,7 @@ func ParseHTTPResponseRules(t, pName string, p parser.Parser) (models.HTTPRespon
 		return nil, err
 	}
 
-	httpResRules := models.HTTPResponseRules{}
+	var httpResRules models.HTTPResponseRules
 
 	data, err := p.Get(section, pName, "http-response", false)
 	if err != nil {

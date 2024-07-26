@@ -153,7 +153,7 @@ func (c *client) EditMailerEntry(name string, mailersSection string, data *model
 }
 
 func ParseMailerEntries(mailersSection string, p parser.Parser) (models.MailerEntries, error) {
-	mailerEntry := models.MailerEntries{}
+	var mailerEntry models.MailerEntries
 
 	data, err := p.Get(parser.Mailers, mailersSection, "mailer", false)
 	if err != nil {

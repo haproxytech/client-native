@@ -144,11 +144,8 @@ userlist delete_test
 			if err != nil {
 				t.Error(err.Error())
 			}
-			if groups == nil {
-				t.Errorf("Expected an empty result instead of nil")
-			}
-			if len(groups) != 0 {
-				t.Errorf("Expected 0 groups in the userlist, found %v", len(groups))
+			if groups != nil {
+				t.Errorf("Expected nil result")
 			}
 
 			_, groups, err = c.GetGroups("fake", "")

@@ -171,7 +171,7 @@ func (c *client) ReplaceServerSwitchingRules(backend string, data models.ServerS
 }
 
 func ParseServerSwitchingRules(backend string, p parser.Parser) (models.ServerSwitchingRules, error) {
-	sr := models.ServerSwitchingRules{}
+	var sr models.ServerSwitchingRules
 
 	data, err := p.Get(parser.Backends, backend, "use-server", false)
 	if err != nil {

@@ -154,7 +154,7 @@ func (c *client) EditTable(name string, peerSection string, data *models.Table, 
 }
 
 func ParseTables(peerSection string, p parser.Parser) (models.Tables, error) {
-	tables := models.Tables{}
+	var tables models.Tables
 
 	data, err := p.Get(parser.Peers, peerSection, "table", false)
 	if err != nil {

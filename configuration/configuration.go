@@ -896,9 +896,15 @@ func (s *SectionParser) cookie() interface{} {
 	for i, domain := range d.Domain {
 		domains[i] = &models.Domain{Value: domain}
 	}
+	if len(d.Domain) == 0 {
+		domains = nil
+	}
 	attrs := make([]*models.Attr, len(d.Attr))
 	for i, attr := range d.Attr {
 		attrs[i] = &models.Attr{Value: attr}
+	}
+	if len(d.Attr) == 0 {
+		attrs = nil
 	}
 	return &models.Cookie{
 		Attrs:    attrs,
@@ -1388,6 +1394,9 @@ func (s *SectionParser) forcePersistList() interface{} {
 			CondTest: &d[i].CondTest,
 		}
 	}
+	if len(d) == 0 {
+		items = nil
+	}
 	return items
 }
 
@@ -1410,6 +1419,9 @@ func (s *SectionParser) ignorePersistList() interface{} {
 			Cond:     &d[i].Cond,
 			CondTest: &d[i].CondTest,
 		}
+	}
+	if len(d) == 0 {
+		items = nil
 	}
 	return items
 }
@@ -2200,6 +2212,9 @@ func (s *SectionObject) errorFilesFromHTTPErrors(field reflect.Value) error {
 	for i, ef := range efs {
 		errorFiles[i] = types.ErrorFiles{Codes: ef.Codes, Name: ef.Name}
 	}
+	if len(efs) == 0 {
+		errorFiles = nil
+	}
 	return s.set("errorfiles", errorFiles)
 }
 
@@ -2237,9 +2252,15 @@ func (s *SectionObject) cookie(field reflect.Value) error {
 		for i, domain := range d.Domains {
 			domains[i] = domain.Value
 		}
+		if len(d.Domains) == 0 {
+			domains = nil
+		}
 		attrs := make([]string, len(d.Attrs))
 		for i, attr := range d.Attrs {
 			attrs[i] = attr.Value
+		}
+		if len(d.Attrs) == 0 {
+			attrs = nil
 		}
 		data := types.Cookie{
 			Attr:     attrs,
@@ -2844,6 +2865,9 @@ func (s *SectionObject) forcePersistList(field reflect.Value) error {
 			CondTest: *data[i].CondTest,
 		}
 	}
+	if len(data) == 0 {
+		items = nil
+	}
 	return s.set("force-persist", items)
 }
 
@@ -2862,6 +2886,9 @@ func (s *SectionObject) ignorePersistList(field reflect.Value) error {
 			Cond:     *data[i].Cond,
 			CondTest: *data[i].CondTest,
 		}
+	}
+	if len(data) == 0 {
+		items = nil
 	}
 	return s.set("ignore-persist", items)
 }

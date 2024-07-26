@@ -145,7 +145,7 @@ func (c *client) EditGroup(name string, userlist string, data *models.Group, tra
 }
 
 func ParseGroups(userlist string, p parser.Parser) (models.Groups, error) {
-	groups := models.Groups{}
+	var groups models.Groups
 	data, err := p.Get("userlist", userlist, "group", false)
 	if err != nil {
 		if errors.Is(err, parser_errors.ErrFetch) {

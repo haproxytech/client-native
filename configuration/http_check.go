@@ -260,7 +260,7 @@ func ParseHTTPChecks(t, pName string, p parser.Parser) (models.HTTPChecks, error
 		return nil, NewConfError(ErrValidationError, fmt.Sprintf("unsupported section in http_check: %s", t))
 	}
 
-	checks := models.HTTPChecks{}
+	var checks models.HTTPChecks
 	data, err := p.Get(section, pName, "http-check", false)
 	if err != nil {
 		if errors.Is(err, parser_errors.ErrFetch) {

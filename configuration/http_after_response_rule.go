@@ -230,7 +230,7 @@ func ParseHTTPAfterRules(t, pName string, p parser.Parser) (models.HTTPAfterResp
 		return nil, err
 	}
 
-	httpResRules := models.HTTPAfterResponseRules{}
+	var httpResRules models.HTTPAfterResponseRules
 	data, err := p.Get(section, pName, "http-after-response", false)
 	if err != nil {
 		if goerrors.Is(err, parser_errors.ErrFetch) {

@@ -209,7 +209,7 @@ func (c *client) ReplaceAcls(parentType string, parentName string, data models.A
 }
 
 func ParseACLs(section parser.Section, name string, p parser.Parser, aclName ...string) (models.Acls, error) {
-	acls := models.Acls{}
+	var acls models.Acls
 	data, err := p.Get(section, name, "acl", false)
 	if err != nil {
 		if errors.Is(err, parser_errors.ErrFetch) {

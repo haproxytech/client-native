@@ -164,7 +164,7 @@ func (c *client) ReplaceDeclareCaptures(frontend string, data models.Captures, t
 }
 
 func ParseDeclareCaptures(frontend string, p parser.Parser) (models.Captures, error) {
-	captures := models.Captures{}
+	var captures models.Captures
 	data, err := p.Get(FrontendParentName, frontend, "declare capture", false)
 	if err != nil {
 		if errors.Is(err, parser_errors.ErrFetch) {

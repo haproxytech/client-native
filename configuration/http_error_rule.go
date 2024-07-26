@@ -274,7 +274,7 @@ func ParseHTTPErrorRules(t, pName string, p parser.Parser) (models.HTTPErrorRule
 		return nil, NewConfError(ErrValidationError, fmt.Sprintf("unsupported section in http_error: %s", t))
 	}
 
-	httpErrRules := models.HTTPErrorRules{}
+	var httpErrRules models.HTTPErrorRules
 	data, err := p.Get(section, pName, "http-error", false)
 	if err != nil {
 		if goerrors.Is(err, parser_errors.ErrFetch) {

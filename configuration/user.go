@@ -147,7 +147,7 @@ func (c *client) EditUser(username string, userlist string, data *models.User, t
 }
 
 func ParseUsers(userlist string, p parser.Parser) (models.Users, error) {
-	users := models.Users{}
+	var users models.Users
 	data, err := p.Get("userlist", userlist, "user", false)
 	if err != nil {
 		if errors.Is(err, parser_errors.ErrFetch) {

@@ -234,7 +234,7 @@ func ParseTCPRequestRules(t, pName string, p parser.Parser) (models.TCPRequestRu
 		return nil, err
 	}
 
-	tcpReqRules := models.TCPRequestRules{}
+	var tcpReqRules models.TCPRequestRules
 	data, err := p.Get(section, pName, "tcp-request", false)
 	if err != nil {
 		if errors.Is(err, parser_errors.ErrFetch) {

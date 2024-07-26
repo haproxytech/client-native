@@ -156,7 +156,7 @@ func (c *client) EditServerTemplate(prefix string, backend string, data *models.
 }
 
 func ParseServerTemplates(backend string, p parser.Parser) (models.ServerTemplates, error) {
-	templates := models.ServerTemplates{}
+	var templates models.ServerTemplates
 
 	data, err := p.Get(parser.Backends, backend, "server-template", false)
 	if err != nil {

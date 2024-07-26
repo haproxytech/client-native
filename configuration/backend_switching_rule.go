@@ -172,7 +172,7 @@ func (c *client) ReplaceBackendSwitchingRules(frontend string, data models.Backe
 }
 
 func ParseBackendSwitchingRules(frontend string, p parser.Parser) (models.BackendSwitchingRules, error) {
-	br := models.BackendSwitchingRules{}
+	var br models.BackendSwitchingRules
 
 	data, err := p.Get(parser.Frontends, frontend, "use_backend", false)
 	if err != nil {

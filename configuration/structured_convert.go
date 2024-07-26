@@ -22,6 +22,9 @@ import (
 
 //nolint:nilnil
 func namedResourceArrayToMapWithKey[T any](namedResource []*T, key string) (map[string]T, error) {
+	if len(namedResource) == 0 {
+		return nil, nil
+	}
 	res := make(map[string]T)
 	for _, r := range namedResource {
 		name, err := getKey(r, key)

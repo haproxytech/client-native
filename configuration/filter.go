@@ -230,7 +230,7 @@ func ParseFilters(t, pName string, p parser.Parser) (models.Filters, error) {
 		return nil, err
 	}
 
-	f := models.Filters{}
+	var f models.Filters
 	data, err := p.Get(section, pName, "filter", false)
 	if err != nil {
 		if errors.Is(err, parser_errors.ErrFetch) {

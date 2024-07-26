@@ -165,7 +165,7 @@ func (c *client) EditDgramBind(name string, logForward string, data *models.Dgra
 }
 
 func ParseDgramBinds(logForward string, p parser.Parser) (models.DgramBinds, error) {
-	dBinds := models.DgramBinds{}
+	var dBinds models.DgramBinds
 
 	data, err := p.Get(parser.LogForward, logForward, "dgram-bind", false)
 	if err != nil {

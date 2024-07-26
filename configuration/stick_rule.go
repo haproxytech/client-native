@@ -179,7 +179,7 @@ func (c *client) ReplaceStickRules(backend string, data models.StickRules, trans
 }
 
 func ParseStickRules(backend string, p parser.Parser) (models.StickRules, error) {
-	sr := models.StickRules{}
+	var sr models.StickRules
 
 	data, err := p.Get(parser.Backends, backend, "stick", false)
 	if err != nil {

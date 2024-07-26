@@ -164,7 +164,7 @@ func (c *client) EditServer(name string, parentType string, parentName string, d
 }
 
 func ParseServers(parentType string, parentName string, p parser.Parser) (models.Servers, error) {
-	servers := models.Servers{}
+	var servers models.Servers
 
 	data, err := p.Get(sectionType(parentType), parentName, "server", false)
 	if err != nil {

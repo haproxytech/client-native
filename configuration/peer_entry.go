@@ -155,7 +155,7 @@ func (c *client) EditPeerEntry(name string, peerSection string, data *models.Pee
 }
 
 func ParsePeerEntries(peerSection string, p parser.Parser) (models.PeerEntries, error) {
-	peerEntry := models.PeerEntries{}
+	var peerEntry models.PeerEntries
 
 	data, err := p.Get(parser.Peers, peerSection, "peer", false)
 	if err != nil {

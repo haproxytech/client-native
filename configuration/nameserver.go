@@ -156,7 +156,7 @@ func (c *client) EditNameserver(name string, resolverSection string, data *model
 }
 
 func ParseNameservers(resolverSection string, p parser.Parser) (models.Nameservers, error) {
-	nameserver := models.Nameservers{}
+	var nameserver models.Nameservers
 
 	data, err := p.Get(parser.Resolvers, resolverSection, "nameserver", false)
 	if err != nil {

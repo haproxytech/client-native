@@ -200,7 +200,7 @@ func (c *client) ReplaceTCPResponseRules(backend string, data models.TCPResponse
 }
 
 func ParseTCPResponseRules(backend string, p parser.Parser) (models.TCPResponseRules, error) {
-	tcpResRules := models.TCPResponseRules{}
+	var tcpResRules models.TCPResponseRules
 
 	data, err := p.Get(parser.Backends, backend, "tcp-response", false)
 	if err != nil {
