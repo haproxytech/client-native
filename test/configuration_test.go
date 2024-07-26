@@ -123,8 +123,8 @@ global
   tune.quic.retry-threshold 5
   tune.quic.socket-owner connection
   tune.quic.zero-copy-fwd-send on
-  tune.zlib.memlevel 54
-  tune.zlib.windowsize 55
+  tune.zlib.memlevel 8
+  tune.zlib.windowsize 10
   tune.memory.hot-size 56
   busy-polling
   max-spread-checks 1ms
@@ -615,6 +615,7 @@ frontend test
   errorloc303 404 http://www.myawesomesite.com/not_found
   error-log-format %T\ %t\ Some\ Text
   guid guid-example
+  declare capture request len 1
 
 frontend test_2 from test_defaults
   mode http
@@ -1071,4 +1072,19 @@ func prepareClient(path string) (c configuration.Configuration, err error) {
 		return nil, err
 	}
 	return c, nil
+}
+
+func getTestClient() (configuration.Configuration, string, error) {
+	f, err := os.CreateTemp("/tmp", "haproxy-test*.txt")
+	if err != nil {
+		return nil, "", err
+	}
+	if err = prepareTestFile(testConf, f.Name()); err != nil {
+		return nil, "", err
+	}
+	c, err := prepareClient(f.Name())
+	if err != nil {
+		return nil, "", err
+	}
+	return c, f.Name(), nil
 }

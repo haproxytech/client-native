@@ -319,8 +319,8 @@
             "vars_reqres_max_size": 53,
             "vars_sess_max_size": 54,
             "vars_txn_max_size": 55,
-            "zlib_memlevel": 54,
-            "zlib_windowsize": 55
+            "zlib_memlevel": 8,
+            "zlib_windowsize": 10
         },
         "tune_ssl_default_dh_param": 45,
         "uid": 1,
@@ -670,6 +670,18 @@
                 {
                     "expr": "int(4000)",
                     "type": "set-dst-port"
+                }
+            ],
+            "http_response_rule_list": [
+                {
+                    "expr": "123",
+                    "type": "set-fc-mark"
+                },
+                {
+                    "expr": "1",
+                    "type": "set-fc-tos",
+                    "cond": "if",
+                    "cond_test": "TRUE"
                 }
             ],
             "server_switching_rule_list": [

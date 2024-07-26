@@ -51,111 +51,8 @@ func checkGlobal(t *testing.T, global *models.Global) {
 }
 
 func TestPutGlobal(t *testing.T) {
-	tOut := int64(3600)
-	n := "1/1"
-	v := "0"
-	a := "/var/run/haproxy.sock"
-	f := "/etc/foo.lua"
-	luaPrependPath := "/usr/share/haproxy-lua/?/init.lua"
-	enabled := "enabled"
 	g := &models.Global{
-		GlobalBase: models.GlobalBase{
-			Daemon: "enabled",
-			CPUMaps: []*models.CPUMap{
-				{
-					Process: &n,
-					CPUSet:  &v,
-				},
-			},
-			RuntimeAPIs: []*models.RuntimeAPI{
-				{
-					Address: &a,
-					BindParams: models.BindParams{
-						Level: "admin",
-					},
-				},
-			},
-			Maxconn:                1000,
-			SslDefaultBindCiphers:  "test",
-			SslDefaultBindOptions:  "ssl-min-ver TLSv1.0 no-tls-tickets",
-			SslDefaultServerCurves: "secp384r1",
-			StatsTimeout:           &tOut,
-			ExternalCheck:          false,
-			LuaPrependPath: []*models.LuaPrependPath{
-				{
-					Path: &luaPrependPath,
-					Type: "cpath",
-				},
-			},
-			LuaLoads: []*models.LuaLoad{
-				{
-					File: &f,
-				},
-			},
-			LogSendHostname: &models.GlobalLogSendHostname{
-				Enabled: &enabled,
-				Param:   "something",
-			},
-			TuneOptions: &models.GlobalTuneOptions{
-				DisableZeroCopyForwarding:      true,
-				EventsMaxEventsAtOnce:          50,
-				H1ZeroCopyFwdRecv:              "disabled",
-				H1ZeroCopyFwdSend:              "disabled",
-				H2ZeroCopyFwdSend:              "disabled",
-				LuaLogLoggers:                  "disabled",
-				LuaLogStderr:                   "disabled",
-				MaxChecksPerThread:             misc.Int64P(20),
-				PeersMaxUpdatesAtOnce:          100,
-				PtZeroCopyForwarding:           "disabled",
-				QuicFrontendConnTxBuffersLimit: nil,
-				QuicFrontendMaxIdleTimeout:     misc.Int64P(5000),
-				QuicSocketOwner:                "listener",
-				RcvbufBackend:                  misc.Int64P(8192),
-				RcvbufFrontend:                 misc.Int64P(4096),
-				SndbufBackend:                  misc.Int64P(1234),
-				SndbufFrontend:                 misc.Int64P(5678),
-				SslOcspUpdateMaxDelay:          misc.Int64P(48),
-				SslOcspUpdateMinDelay:          misc.Int64P(49),
-				StickCounters:                  misc.Int64P(50),
-			},
-			HttpclientResolversDisabled: "disabled",
-			HttpclientResolversPrefer:   "ipv6",
-			HttpclientResolversID:       "my2",
-			HttpclientRetries:           5,
-			HttpclientSslCaFile:         "my_ca_file.ca",
-			HttpclientTimeoutConnect:    misc.Int64P(5000),
-			HttpclientSslVerify:         misc.StringP(""),
-			UID:                         1234,
-			WurflOptions:                &models.GlobalWurflOptions{},
-			DeviceAtlasOptions:          &models.GlobalDeviceAtlasOptions{},
-			FiftyOneDegreesOptions:      &models.GlobalFiftyOneDegreesOptions{},
-			StatsMaxconn:                misc.Int64P(30),
-			Anonkey:                     misc.Int64P(40),
-			NumaCPUMapping:              "disabled",
-			DefaultPath: &models.GlobalDefaultPath{
-				Type: "origin",
-				Path: "/some/other/path",
-			},
-			NoQuic:                        false,
-			ClusterSecret:                 "",
-			SslDefaultServerSigalgs:       "ECDSA+SHA256",
-			SslDefaultServerClientSigalgs: "ECDSA+SHA256",
-			SslPropquery:                  "foo",
-			SslProvider:                   "my_provider",
-			SslProviderPath:               "providers/",
-			Setcap:                        "none",
-			LimitedQuic:                   true,
-			ProfilingMemory:               "enabled",
-			Harden: &models.GlobalHarden{
-				RejectPrivilegedPorts: &models.GlobalHardenRejectPrivilegedPorts{
-					Quic: "enabled",
-				},
-			},
-			ThreadHardLimit:  misc.Int64P(100),
-			SslSecurityLevel: misc.Int64P(2),
-			HTTPErrCodes:     []*models.HTTPCodes{{Value: misc.StringP("100-150 -123 +599")}},
-			OcspUpdate:       &models.GlobalOcspUpdate{},
-		},
+		GlobalBase: getGlobalBase(),
 	}
 
 	err := clientTest.PushGlobalConfiguration(g, "", version)
@@ -197,5 +94,112 @@ func TestPutGlobal(t *testing.T) {
 
 	if err == nil {
 		t.Error("Should have returned version conflict.")
+	}
+}
+
+func getGlobalBase() models.GlobalBase {
+	tOut := int64(3600)
+	n := "1/1"
+	v := "0"
+	a := "/var/run/haproxy.sock"
+	f := "/etc/foo.lua"
+	luaPrependPath := "/usr/share/haproxy-lua/?/init.lua"
+	enabled := "enabled"
+	return models.GlobalBase{
+		Daemon: "enabled",
+		CPUMaps: []*models.CPUMap{
+			{
+				Process: &n,
+				CPUSet:  &v,
+			},
+		},
+		RuntimeAPIs: []*models.RuntimeAPI{
+			{
+				Address: &a,
+				BindParams: models.BindParams{
+					Level: "admin",
+				},
+			},
+		},
+		Maxconn:                1000,
+		SslDefaultBindCiphers:  "test",
+		SslDefaultBindOptions:  "ssl-min-ver TLSv1.0 no-tls-tickets",
+		SslDefaultServerCurves: "secp384r1",
+		StatsTimeout:           &tOut,
+		ExternalCheck:          false,
+		LuaPrependPath: []*models.LuaPrependPath{
+			{
+				Path: &luaPrependPath,
+				Type: "cpath",
+			},
+		},
+		LuaLoads: []*models.LuaLoad{
+			{
+				File: &f,
+			},
+		},
+		LogSendHostname: &models.GlobalLogSendHostname{
+			Enabled: &enabled,
+			Param:   "something",
+		},
+		TuneOptions: &models.GlobalTuneOptions{
+			DisableZeroCopyForwarding:      true,
+			EventsMaxEventsAtOnce:          50,
+			H1ZeroCopyFwdRecv:              "disabled",
+			H1ZeroCopyFwdSend:              "disabled",
+			H2ZeroCopyFwdSend:              "disabled",
+			LuaLogLoggers:                  "disabled",
+			LuaLogStderr:                   "disabled",
+			MaxChecksPerThread:             misc.Int64P(20),
+			PeersMaxUpdatesAtOnce:          100,
+			PtZeroCopyForwarding:           "disabled",
+			QuicFrontendConnTxBuffersLimit: nil,
+			QuicFrontendMaxIdleTimeout:     misc.Int64P(5000),
+			QuicSocketOwner:                "listener",
+			RcvbufBackend:                  misc.Int64P(8192),
+			RcvbufFrontend:                 misc.Int64P(4096),
+			SndbufBackend:                  misc.Int64P(1234),
+			SndbufFrontend:                 misc.Int64P(5678),
+			SslOcspUpdateMaxDelay:          misc.Int64P(48),
+			SslOcspUpdateMinDelay:          misc.Int64P(49),
+			StickCounters:                  misc.Int64P(50),
+		},
+		HttpclientResolversDisabled: "disabled",
+		HttpclientResolversPrefer:   "ipv6",
+		HttpclientResolversID:       "my2",
+		HttpclientRetries:           5,
+		HttpclientSslCaFile:         "my_ca_file.ca",
+		HttpclientTimeoutConnect:    misc.Int64P(5000),
+		HttpclientSslVerify:         misc.StringP(""),
+		UID:                         1234,
+		WurflOptions:                &models.GlobalWurflOptions{},
+		DeviceAtlasOptions:          &models.GlobalDeviceAtlasOptions{},
+		FiftyOneDegreesOptions:      &models.GlobalFiftyOneDegreesOptions{},
+		StatsMaxconn:                misc.Int64P(30),
+		Anonkey:                     misc.Int64P(40),
+		NumaCPUMapping:              "disabled",
+		DefaultPath: &models.GlobalDefaultPath{
+			Type: "origin",
+			Path: "/some/other/path",
+		},
+		NoQuic:                        false,
+		ClusterSecret:                 "",
+		SslDefaultServerSigalgs:       "ECDSA+SHA256",
+		SslDefaultServerClientSigalgs: "ECDSA+SHA256",
+		SslPropquery:                  "foo",
+		SslProvider:                   "my_provider",
+		SslProviderPath:               "providers/",
+		Setcap:                        "none",
+		LimitedQuic:                   true,
+		ProfilingMemory:               "enabled",
+		Harden: &models.GlobalHarden{
+			RejectPrivilegedPorts: &models.GlobalHardenRejectPrivilegedPorts{
+				Quic: "enabled",
+			},
+		},
+		ThreadHardLimit:  misc.Int64P(100),
+		SslSecurityLevel: misc.Int64P(2),
+		HTTPErrCodes:     []*models.HTTPCodes{{Value: misc.StringP("100-150 -123 +599")}},
+		OcspUpdate:       &models.GlobalOcspUpdate{},
 	}
 }
