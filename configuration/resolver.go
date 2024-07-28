@@ -26,6 +26,7 @@ import (
 	cp_errors "github.com/haproxytech/config-parser/v5/errors"
 	"github.com/haproxytech/config-parser/v5/types"
 
+	"github.com/haproxytech/client-native/v6/configuration/options"
 	"github.com/haproxytech/client-native/v6/misc"
 	"github.com/haproxytech/client-native/v6/models"
 )
@@ -132,7 +133,7 @@ func (c *client) EditResolver(name string, data *models.Resolver, transactionID 
 		return c.HandleError(name, "", "", t, transactionID == "", e)
 	}
 
-	if err = SerializeResolverSection(p, data); err != nil {
+	if err = SerializeResolverSection(p, data, &c.ConfigurationOptions); err != nil {
 		return err
 	}
 
@@ -163,7 +164,7 @@ func (c *client) CreateResolver(data *models.Resolver, transactionID string, ver
 		return c.HandleError(data.Name, "", "", t, transactionID == "", err)
 	}
 
-	if err = SerializeResolverSection(p, data); err != nil {
+	if err = SerializeResolverSection(p, data, &c.ConfigurationOptions); err != nil {
 		return err
 	}
 
@@ -277,7 +278,7 @@ func ParseResolverSection(p parser.Parser, resolver *models.Resolver) error { //
 	return nil
 }
 
-func SerializeResolverSection(p parser.Parser, data *models.Resolver) error { //nolint:gocognit
+func SerializeResolverSection(p parser.Parser, data *models.Resolver, opt *options.ConfigurationOptions) error { //nolint:gocognit
 	var err error
 
 	if data.AcceptedPayloadSize == 0 {
@@ -295,7 +296,7 @@ func SerializeResolverSection(p parser.Parser, data *models.Resolver) error { //
 			return err
 		}
 	} else {
-		n := types.StringC{Value: misc.SerializeTime(*data.HoldNx)}
+		n := types.StringC{Value: misc.SerializeTime(*data.HoldNx, opt.PreferredTimeSuffix)}
 		if err = p.Set(parser.Resolvers, data.Name, "hold nx", n); err != nil {
 			return err
 		}
@@ -305,7 +306,7 @@ func SerializeResolverSection(p parser.Parser, data *models.Resolver) error { //
 			return err
 		}
 	} else {
-		n := types.StringC{Value: misc.SerializeTime(*data.HoldObsolete)}
+		n := types.StringC{Value: misc.SerializeTime(*data.HoldObsolete, opt.PreferredTimeSuffix)}
 		if err = p.Set(parser.Resolvers, data.Name, "hold obsolete", n); err != nil {
 			return err
 		}
@@ -315,7 +316,7 @@ func SerializeResolverSection(p parser.Parser, data *models.Resolver) error { //
 			return err
 		}
 	} else {
-		n := types.StringC{Value: misc.SerializeTime(*data.HoldOther)}
+		n := types.StringC{Value: misc.SerializeTime(*data.HoldOther, opt.PreferredTimeSuffix)}
 		if err = p.Set(parser.Resolvers, data.Name, "hold other", n); err != nil {
 			return err
 		}
@@ -325,7 +326,7 @@ func SerializeResolverSection(p parser.Parser, data *models.Resolver) error { //
 			return err
 		}
 	} else {
-		n := types.StringC{Value: misc.SerializeTime(*data.HoldRefused)}
+		n := types.StringC{Value: misc.SerializeTime(*data.HoldRefused, opt.PreferredTimeSuffix)}
 		if err = p.Set(parser.Resolvers, data.Name, "hold refused", n); err != nil {
 			return err
 		}
@@ -335,7 +336,7 @@ func SerializeResolverSection(p parser.Parser, data *models.Resolver) error { //
 			return err
 		}
 	} else {
-		n := types.StringC{Value: misc.SerializeTime(*data.HoldTimeout)}
+		n := types.StringC{Value: misc.SerializeTime(*data.HoldTimeout, opt.PreferredTimeSuffix)}
 		if err = p.Set(parser.Resolvers, data.Name, "hold timeout", n); err != nil {
 			return err
 		}
@@ -345,7 +346,7 @@ func SerializeResolverSection(p parser.Parser, data *models.Resolver) error { //
 			return err
 		}
 	} else {
-		n := types.StringC{Value: misc.SerializeTime(*data.HoldValid)}
+		n := types.StringC{Value: misc.SerializeTime(*data.HoldValid, opt.PreferredTimeSuffix)}
 		if err = p.Set(parser.Resolvers, data.Name, "hold valid", n); err != nil {
 			return err
 		}
@@ -373,7 +374,7 @@ func SerializeResolverSection(p parser.Parser, data *models.Resolver) error { //
 			return err
 		}
 	} else {
-		timeout := types.SimpleTimeout{Value: misc.SerializeTime(data.TimeoutResolve)}
+		timeout := types.SimpleTimeout{Value: misc.SerializeTime(data.TimeoutResolve, opt.PreferredTimeSuffix)}
 		if err = p.Set(parser.Resolvers, data.Name, "timeout resolve", timeout); err != nil {
 			return err
 		}
@@ -383,7 +384,7 @@ func SerializeResolverSection(p parser.Parser, data *models.Resolver) error { //
 			return err
 		}
 	} else {
-		timeout := types.SimpleTimeout{Value: misc.SerializeTime(data.TimeoutRetry)}
+		timeout := types.SimpleTimeout{Value: misc.SerializeTime(data.TimeoutRetry, opt.PreferredTimeSuffix)}
 		if err = p.Set(parser.Resolvers, data.Name, "timeout retry", timeout); err != nil {
 			return err
 		}

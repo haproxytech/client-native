@@ -28,6 +28,7 @@ import (
 	http_actions "github.com/haproxytech/config-parser/v5/parsers/http/actions"
 	"github.com/haproxytech/config-parser/v5/types"
 
+	"github.com/haproxytech/client-native/v6/configuration/options"
 	"github.com/haproxytech/client-native/v6/misc"
 	"github.com/haproxytech/client-native/v6/models"
 )
@@ -133,7 +134,7 @@ func (c *client) CreateHTTPRequestRule(id int64, parentType string, parentName s
 		return err
 	}
 
-	s, err := SerializeHTTPRequestRule(*data)
+	s, err := SerializeHTTPRequestRule(*data, &c.ConfigurationOptions)
 	if err != nil {
 		return err
 	}
@@ -168,7 +169,7 @@ func (c *client) EditHTTPRequestRule(id int64, parentType string, parentName str
 		return c.HandleError(strconv.FormatInt(id, 10), parentType, parentName, t, transactionID == "", err)
 	}
 
-	s, err := SerializeHTTPRequestRule(*data)
+	s, err := SerializeHTTPRequestRule(*data, &c.ConfigurationOptions)
 	if err != nil {
 		return err
 	}
@@ -215,7 +216,7 @@ func (c *client) ReplaceHTTPRequestRules(parentType string, parentName string, d
 	}
 
 	for i, newHTTPRequestRule := range data {
-		s, err := SerializeHTTPRequestRule(*newHTTPRequestRule)
+		s, err := SerializeHTTPRequestRule(*newHTTPRequestRule, &c.ConfigurationOptions)
 		if err != nil {
 			return err
 		}
@@ -798,7 +799,7 @@ func ParseHTTPRequestRule(f types.Action) (rule *models.HTTPRequestRule, err err
 	return rule, err
 }
 
-func SerializeHTTPRequestRule(f models.HTTPRequestRule) (rule types.Action, err error) { //nolint:gocyclo,gocognit,ireturn,cyclop,maintidx
+func SerializeHTTPRequestRule(f models.HTTPRequestRule, opt *options.ConfigurationOptions) (rule types.Action, err error) { //nolint:gocyclo,gocognit,ireturn,cyclop,maintidx
 	switch f.Type {
 	case "add-acl":
 		rule = &http_actions.AddACL{
@@ -1245,7 +1246,7 @@ func SerializeHTTPRequestRule(f models.HTTPRequestRule) (rule types.Action, err 
 			CondTest: f.CondTest,
 		}
 		if f.WaitTime != nil {
-			r.Time = misc.SerializeTime(*f.WaitTime)
+			r.Time = misc.SerializeTime(*f.WaitTime, opt.PreferredTimeSuffix)
 		}
 		if f.WaitAtLeast != nil {
 			r.AtLeast = misc.SerializeSize(*f.WaitAtLeast)

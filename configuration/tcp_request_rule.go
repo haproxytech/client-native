@@ -31,6 +31,7 @@ import (
 	tcp_types "github.com/haproxytech/config-parser/v5/parsers/tcp/types"
 	"github.com/haproxytech/config-parser/v5/types"
 
+	"github.com/haproxytech/client-native/v6/configuration/options"
 	"github.com/haproxytech/client-native/v6/misc"
 	"github.com/haproxytech/client-native/v6/models"
 )
@@ -134,7 +135,7 @@ func (c *client) CreateTCPRequestRule(id int64, parentType string, parentName st
 		return err
 	}
 
-	s, err := SerializeTCPRequestRule(*data)
+	s, err := SerializeTCPRequestRule(*data, &c.ConfigurationOptions)
 	if err != nil {
 		return err
 	}
@@ -168,7 +169,7 @@ func (c *client) EditTCPRequestRule(id int64, parentType string, parentName stri
 		return c.HandleError(strconv.FormatInt(id, 10), parentType, parentName, t, transactionID == "", err)
 	}
 
-	s, err := SerializeTCPRequestRule(*data)
+	s, err := SerializeTCPRequestRule(*data, &c.ConfigurationOptions)
 	if err != nil {
 		return err
 	}
@@ -215,7 +216,7 @@ func (c *client) ReplaceTCPRequestRules(parentType string, parentName string, da
 	}
 
 	for i, newTCPRequestRule := range data {
-		s, err := SerializeTCPRequestRule(*newTCPRequestRule)
+		s, err := SerializeTCPRequestRule(*newTCPRequestRule, &c.ConfigurationOptions)
 		if err != nil {
 			return err
 		}
@@ -759,7 +760,7 @@ func ParseTCPRequestRule(f types.TCPType) (rule *models.TCPRequestRule, err erro
 	return rule, nil
 }
 
-func SerializeTCPRequestRule(f models.TCPRequestRule) (rule types.TCPType, err error) { //nolint:gocyclo,cyclop,maintidx
+func SerializeTCPRequestRule(f models.TCPRequestRule, opt *options.ConfigurationOptions) (rule types.TCPType, err error) { //nolint:gocyclo,cyclop,maintidx
 	switch f.Type {
 	case models.TCPRequestRuleTypeConnection:
 		switch f.Action {
@@ -1585,7 +1586,7 @@ func SerializeTCPRequestRule(f models.TCPRequestRule) (rule types.TCPType, err e
 			return nil, NewConfError(ErrValidationError, fmt.Sprintf("unsupported action '%s' in tcp_request_rule", f.Type))
 		}
 		return &tcp_types.InspectDelay{
-			Timeout: misc.SerializeTime(*f.Timeout),
+			Timeout: misc.SerializeTime(*f.Timeout, opt.PreferredTimeSuffix),
 		}, nil
 	}
 	return nil, NewConfError(ErrValidationError, fmt.Sprintf("unsupported action '%s' in tcp_request_rule", f.Type))

@@ -29,6 +29,7 @@ import (
 	tcp_types "github.com/haproxytech/config-parser/v5/parsers/tcp/types"
 	"github.com/haproxytech/config-parser/v5/types"
 
+	"github.com/haproxytech/client-native/v6/configuration/options"
 	"github.com/haproxytech/client-native/v6/misc"
 	"github.com/haproxytech/client-native/v6/models"
 )
@@ -118,7 +119,7 @@ func (c *client) CreateTCPResponseRule(id int64, backend string, data *models.TC
 		return err
 	}
 
-	tcpRule, serializeErr := SerializeTCPResponseRule(*data)
+	tcpRule, serializeErr := SerializeTCPResponseRule(*data, &c.ConfigurationOptions)
 	if serializeErr != nil {
 		return serializeErr
 	}
@@ -147,7 +148,7 @@ func (c *client) EditTCPResponseRule(id int64, backend string, data *models.TCPR
 		return c.HandleError(strconv.FormatInt(id, 10), BackendParentName, backend, t, transactionID == "", err)
 	}
 
-	tcpRule, serializeErr := SerializeTCPResponseRule(*data)
+	tcpRule, serializeErr := SerializeTCPResponseRule(*data, &c.ConfigurationOptions)
 	if serializeErr != nil {
 		return serializeErr
 	}
@@ -186,7 +187,7 @@ func (c *client) ReplaceTCPResponseRules(backend string, data models.TCPResponse
 	}
 
 	for i, newTCPResponseRule := range data {
-		s, err := SerializeTCPResponseRule(*newTCPResponseRule)
+		s, err := SerializeTCPResponseRule(*newTCPResponseRule, &c.ConfigurationOptions)
 		if err != nil {
 			return err
 		}
@@ -461,7 +462,7 @@ func ParseTCPResponseRule(t types.TCPType) (*models.TCPResponseRule, error) {
 	return nil, NewConfError(ErrValidationError, "invalid action")
 }
 
-func SerializeTCPResponseRule(t models.TCPResponseRule) (types.TCPType, error) { //nolint:maintidx
+func SerializeTCPResponseRule(t models.TCPResponseRule, opt *options.ConfigurationOptions) (types.TCPType, error) { //nolint:maintidx
 	switch t.Type {
 	case models.TCPResponseRuleTypeContent:
 		switch t.Action {
@@ -677,7 +678,7 @@ func SerializeTCPResponseRule(t models.TCPResponseRule) (types.TCPType, error) {
 	case models.TCPResponseRuleTypeInspectDashDelay:
 		if t.Timeout != nil {
 			return &tcp_types.InspectDelay{
-				Timeout: misc.SerializeTime(*t.Timeout),
+				Timeout: misc.SerializeTime(*t.Timeout, opt.PreferredTimeSuffix),
 			}, nil
 		}
 	}

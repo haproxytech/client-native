@@ -20,6 +20,7 @@ import (
 	"fmt"
 
 	strfmt "github.com/go-openapi/strfmt"
+	"github.com/haproxytech/client-native/v6/configuration/options"
 	"github.com/haproxytech/client-native/v6/misc"
 	"github.com/haproxytech/client-native/v6/models"
 	parser "github.com/haproxytech/config-parser/v5"
@@ -119,7 +120,7 @@ func (c *client) CreateMailersSection(data *models.MailersSection, transactionID
 		return c.HandleError(data.Name, "", "", t, transactionID == "", err)
 	}
 
-	if err = SerializeMailersSection(p, data); err != nil {
+	if err = SerializeMailersSection(p, data, &c.ConfigurationOptions); err != nil {
 		return err
 	}
 
@@ -143,7 +144,7 @@ func (c *client) EditMailersSection(name string, data *models.MailersSection, tr
 		return c.HandleError(data.Name, "", "", t, transactionID == "", e)
 	}
 
-	if err = SerializeMailersSection(p, data); err != nil {
+	if err = SerializeMailersSection(p, data, &c.ConfigurationOptions); err != nil {
 		return err
 	}
 
@@ -171,13 +172,13 @@ func ParseMailersSection(p parser.Parser, ms *models.MailersSection) error {
 	return nil
 }
 
-func SerializeMailersSection(p parser.Parser, data *models.MailersSection) error {
+func SerializeMailersSection(p parser.Parser, data *models.MailersSection, opt *options.ConfigurationOptions) error {
 	if data == nil {
 		return fmt.Errorf("empty mailers section")
 	}
 
 	if data.Timeout != nil {
-		t := types.StringC{Value: misc.SerializeTime(*data.Timeout)}
+		t := types.StringC{Value: misc.SerializeTime(*data.Timeout, opt.PreferredTimeSuffix)}
 		if err := p.Set(parser.Mailers, data.Name, "timeout mail", t); err != nil {
 			return err
 		}

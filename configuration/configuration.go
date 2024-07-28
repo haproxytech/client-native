@@ -32,6 +32,7 @@ import (
 	"github.com/haproxytech/config-parser/v5/types"
 	"github.com/pkg/errors"
 
+	"github.com/haproxytech/client-native/v6/configuration/options"
 	"github.com/haproxytech/client-native/v6/misc"
 	"github.com/haproxytech/client-native/v6/models"
 )
@@ -60,6 +61,7 @@ type ClientParams struct {
 	ValidateCmd               string
 	ValidateConfigFilesBefore []string
 	ValidateConfigFilesAfter  []string
+	PreferredTimeSuffix       string
 	BackupsNumber             int
 	UseValidation             bool
 	PersistentTransactions    bool
@@ -1483,15 +1485,17 @@ type SectionObject struct {
 	Parser  parser.Parser
 	Section parser.Section
 	Name    string
+	Options *options.ConfigurationOptions
 }
 
 // CreateEditSection creates or updates a section in the parser based on the provided object
-func CreateEditSection(object interface{}, section parser.Section, pName string, p parser.Parser) error {
+func CreateEditSection(object interface{}, section parser.Section, pName string, p parser.Parser, opt *options.ConfigurationOptions) error {
 	so := SectionObject{
 		Object:  object,
 		Section: section,
 		Name:    pName,
 		Parser:  p,
+		Options: opt,
 	}
 	return so.CreateEditSection()
 }
@@ -1667,7 +1671,7 @@ func (s *SectionObject) checkTimeouts(fieldName string, field reflect.Value) (ma
 				return true, nil
 			}
 			t := &types.SimpleTimeout{}
-			t.Value = misc.SerializeTime(field.Elem().Int())
+			t.Value = misc.SerializeTime(field.Elem().Int(), s.Options.PreferredTimeSuffix)
 			if err := s.set(pName, t); err != nil {
 				return true, err
 			}
@@ -2115,7 +2119,7 @@ func (s *SectionObject) stickTable(field reflect.Value) error {
 			d.Length = strconv.FormatInt(*st.Keylen, 10)
 		}
 		if st.Expire != nil {
-			d.Expire = misc.SerializeTime(*st.Expire)
+			d.Expire = misc.SerializeTime(*st.Expire, s.Options.PreferredTimeSuffix)
 		}
 		if st.Size != nil {
 			d.Size = misc.SerializeSize(*st.Size)
@@ -2143,7 +2147,7 @@ func (s *SectionObject) defaultServer(field reflect.Value) error {
 			return misc.CreateTypeAssertError("default-server")
 		}
 		dServers := []types.DefaultServer{{}}
-		dServers[0].Params = serializeServerParams(ds.ServerParams)
+		dServers[0].Params = serializeServerParams(ds.ServerParams, s.Options)
 		if err := s.set("default-server", dServers); err != nil {
 			return err
 		}
@@ -2692,7 +2696,7 @@ func (s *SectionObject) clitcpkaIdle(field reflect.Value) error {
 		field = field.Elem()
 	}
 	v := field.Int()
-	str := misc.SerializeTime(v)
+	str := misc.SerializeTime(v, s.Options.PreferredTimeSuffix)
 	return s.set("clitcpka-idle", types.StringC{Value: str})
 }
 
@@ -2704,7 +2708,7 @@ func (s *SectionObject) clitcpkaIntvl(field reflect.Value) error {
 		field = field.Elem()
 	}
 	v := field.Int()
-	str := misc.SerializeTime(v)
+	str := misc.SerializeTime(v, s.Options.PreferredTimeSuffix)
 	return s.set("clitcpka-intvl", types.StringC{Value: str})
 }
 
@@ -2716,7 +2720,7 @@ func (s *SectionObject) srvtcpkaIdle(field reflect.Value) error {
 		field = field.Elem()
 	}
 	v := field.Int()
-	str := misc.SerializeTime(v)
+	str := misc.SerializeTime(v, s.Options.PreferredTimeSuffix)
 	return s.set("srvtcpka-idle", types.StringC{Value: str})
 }
 
@@ -2728,7 +2732,7 @@ func (s *SectionObject) srvtcpkaIntvl(field reflect.Value) error {
 		field = field.Elem()
 	}
 	v := field.Int()
-	str := misc.SerializeTime(v)
+	str := misc.SerializeTime(v, s.Options.PreferredTimeSuffix)
 	return s.set("srvtcpka-intvl", types.StringC{Value: str})
 }
 
@@ -2955,7 +2959,7 @@ func (c *client) editSection(section parser.Section, name string, data interface
 		return c.HandleError(name, "", "", t, transactionID == "", e)
 	}
 
-	if err := CreateEditSection(data, section, name, p); err != nil {
+	if err := CreateEditSection(data, section, name, p, &c.ConfigurationOptions); err != nil {
 		return c.HandleError(name, "", "", t, transactionID == "", err)
 	}
 
@@ -2977,7 +2981,7 @@ func (c *client) createSection(section parser.Section, name string, data interfa
 		return c.HandleError(name, "", "", t, transactionID == "", err)
 	}
 
-	if err := CreateEditSection(data, section, name, p); err != nil {
+	if err := CreateEditSection(data, section, name, p, &c.ConfigurationOptions); err != nil {
 		return c.HandleError(name, "", "", t, transactionID == "", err)
 	}
 

@@ -27,6 +27,7 @@ import (
 	"github.com/haproxytech/config-parser/v5/params"
 	"github.com/haproxytech/config-parser/v5/types"
 
+	"github.com/haproxytech/client-native/v6/configuration/options"
 	"github.com/haproxytech/client-native/v6/misc"
 	"github.com/haproxytech/client-native/v6/models"
 )
@@ -128,7 +129,7 @@ func (c *client) CreateServer(parentType string, parentName string, data *models
 		return c.HandleError(data.Name, parentType, parentName, t, transactionID == "", e)
 	}
 
-	if err := p.Insert(sectionType(parentType), parentName, "server", SerializeServer(*data), -1); err != nil {
+	if err := p.Insert(sectionType(parentType), parentName, "server", SerializeServer(*data, &c.ConfigurationOptions), -1); err != nil {
 		return c.HandleError(data.Name, parentType, parentName, t, transactionID == "", err)
 	}
 
@@ -155,7 +156,7 @@ func (c *client) EditServer(name string, parentType string, parentName string, d
 		return c.HandleError(data.Name, parentType, parentName, t, transactionID == "", e)
 	}
 
-	if err := p.Set(sectionType(parentType), parentName, "server", SerializeServer(*data), i); err != nil {
+	if err := p.Set(sectionType(parentType), parentName, "server", SerializeServer(*data, &c.ConfigurationOptions), i); err != nil {
 		return c.HandleError(data.Name, parentType, parentName, t, transactionID == "", err)
 	}
 
@@ -524,7 +525,7 @@ func ParseServer(ondiskServer types.Server) *models.Server {
 	return s
 }
 
-func serializeServerParams(s models.ServerParams) (options []params.ServerOption) { //nolint:gocognit,gocyclo,cyclop,cyclop,maintidx
+func serializeServerParams(s models.ServerParams, opt *options.ConfigurationOptions) (options []params.ServerOption) { //nolint:gocognit,gocyclo,cyclop,cyclop,maintidx
 	// ServerOptionWord
 	if s.AgentCheck == "enabled" {
 		options = append(options, &params.ServerOptionWord{Name: "agent-check"})
@@ -656,7 +657,7 @@ func serializeServerParams(s models.ServerParams) (options []params.ServerOption
 		options = append(options, &params.ServerOptionValue{Name: "agent-send", Value: s.AgentSend})
 	}
 	if s.AgentInter != nil {
-		options = append(options, &params.ServerOptionValue{Name: "agent-inter", Value: misc.SerializeTime(*s.AgentInter)})
+		options = append(options, &params.ServerOptionValue{Name: "agent-inter", Value: misc.SerializeTime(*s.AgentInter, opt.PreferredTimeSuffix)})
 	}
 	if s.AgentAddr != "" {
 		options = append(options, &params.ServerOptionValue{Name: "agent-addr", Value: s.AgentAddr})
@@ -713,13 +714,13 @@ func serializeServerParams(s models.ServerParams) (options []params.ServerOption
 		options = append(options, &params.ServerOptionValue{Name: "init-addr", Value: *s.InitAddr})
 	}
 	if s.Inter != nil {
-		options = append(options, &params.ServerOptionValue{Name: "inter", Value: misc.SerializeTime(*s.Inter)})
+		options = append(options, &params.ServerOptionValue{Name: "inter", Value: misc.SerializeTime(*s.Inter, opt.PreferredTimeSuffix)})
 	}
 	if s.Fastinter != nil {
-		options = append(options, &params.ServerOptionValue{Name: "fastinter", Value: misc.SerializeTime(*s.Fastinter)})
+		options = append(options, &params.ServerOptionValue{Name: "fastinter", Value: misc.SerializeTime(*s.Fastinter, opt.PreferredTimeSuffix)})
 	}
 	if s.Downinter != nil {
-		options = append(options, &params.ServerOptionValue{Name: "downinter", Value: misc.SerializeTime(*s.Downinter)})
+		options = append(options, &params.ServerOptionValue{Name: "downinter", Value: misc.SerializeTime(*s.Downinter, opt.PreferredTimeSuffix)})
 	}
 	if s.LogBufsize != nil {
 		options = append(options, &params.ServerOptionValue{Name: "log-bufsize", Value: strconv.FormatInt(*s.LogBufsize, 10)})
@@ -764,7 +765,7 @@ func serializeServerParams(s models.ServerParams) (options []params.ServerOption
 		options = append(options, &params.ServerOptionValue{Name: "pool-max-conn", Value: strconv.FormatInt(*s.PoolMaxConn, 10)})
 	}
 	if s.PoolPurgeDelay != nil {
-		options = append(options, &params.ServerOptionValue{Name: "pool-purge-delay", Value: misc.SerializeTime(*s.PoolPurgeDelay)})
+		options = append(options, &params.ServerOptionValue{Name: "pool-purge-delay", Value: misc.SerializeTime(*s.PoolPurgeDelay, opt.PreferredTimeSuffix)})
 	}
 	if s.HealthCheckAddress != "" {
 		options = append(options, &params.ServerOptionValue{Name: "addr", Value: s.HealthCheckAddress})
@@ -803,7 +804,7 @@ func serializeServerParams(s models.ServerParams) (options []params.ServerOption
 		options = append(options, &params.ServerOptionValue{Name: "sigalgs", Value: s.Sigalgs})
 	}
 	if s.Slowstart != nil {
-		options = append(options, &params.ServerOptionValue{Name: "slowstart", Value: misc.SerializeTime(*s.Slowstart)})
+		options = append(options, &params.ServerOptionValue{Name: "slowstart", Value: misc.SerializeTime(*s.Slowstart, opt.PreferredTimeSuffix)})
 	}
 	if s.Sni != "" {
 		options = append(options, &params.ServerOptionValue{Name: "sni", Value: s.Sni})
@@ -824,7 +825,7 @@ func serializeServerParams(s models.ServerParams) (options []params.ServerOption
 		options = append(options, &params.ServerOptionIDValue{Name: "set-proxy-v2-tlv-fmt", ID: *s.SetProxyV2TlvFmt.ID, Value: *s.SetProxyV2TlvFmt.Value})
 	}
 	if s.TCPUt != nil {
-		options = append(options, &params.ServerOptionValue{Name: "tcp-ut", Value: misc.SerializeTime(*s.TCPUt)})
+		options = append(options, &params.ServerOptionValue{Name: "tcp-ut", Value: misc.SerializeTime(*s.TCPUt, opt.PreferredTimeSuffix)})
 	}
 	if s.Track != "" {
 		options = append(options, &params.ServerOptionValue{Name: "track", Value: s.Track})
@@ -850,7 +851,7 @@ func serializeServerParams(s models.ServerParams) (options []params.ServerOption
 	return options
 }
 
-func SerializeServer(s models.Server) types.Server {
+func SerializeServer(s models.Server, opt *options.ConfigurationOptions) types.Server {
 	server := types.Server{
 		Name:   s.Name,
 		Params: []params.ServerOption{},
@@ -860,7 +861,7 @@ func SerializeServer(s models.Server) types.Server {
 	} else {
 		server.Address = misc.SanitizeIPv6Address(s.Address)
 	}
-	server.Params = serializeServerParams(s.ServerParams)
+	server.Params = serializeServerParams(s.ServerParams, opt)
 	if s.ID != nil {
 		server.Params = append(server.Params, &params.ServerOptionValue{Name: "id", Value: strconv.FormatInt(*s.ID, 10)})
 	}

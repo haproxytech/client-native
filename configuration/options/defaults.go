@@ -32,4 +32,7 @@ const (
 
 	// DefaultTransactionDir sane default for path for transactions
 	DefaultTransactionDir = "/etc/haproxy/transactions"
+
+	// DefaultTimeSuffix uses the most appropriate Time unit for serialization
+	DefaultTimeSuffix = "nearest"
 )

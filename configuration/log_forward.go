@@ -24,6 +24,7 @@ import (
 	parsererrors "github.com/haproxytech/config-parser/v5/errors"
 	"github.com/haproxytech/config-parser/v5/types"
 
+	"github.com/haproxytech/client-native/v6/configuration/options"
 	"github.com/haproxytech/client-native/v6/misc"
 	"github.com/haproxytech/client-native/v6/models"
 )
@@ -164,7 +165,7 @@ func (c *client) CreateLogForward(data *models.LogForward, transactionID string,
 		return c.HandleError(data.Name, "", "", t, transactionID == "", err)
 	}
 
-	if err = SerializeLogForwardSection(p, data); err != nil {
+	if err = SerializeLogForwardSection(p, data, &c.ConfigurationOptions); err != nil {
 		return err
 	}
 
@@ -190,14 +191,14 @@ func (c *client) EditLogForward(name string, data *models.LogForward, transactio
 		return c.HandleError(data.Name, "", "", t, transactionID == "", e)
 	}
 
-	if err = SerializeLogForwardSection(p, data); err != nil {
+	if err = SerializeLogForwardSection(p, data, &c.ConfigurationOptions); err != nil {
 		return err
 	}
 
 	return c.SaveData(p, t, transactionID == "")
 }
 
-func SerializeLogForwardSection(p parser.Parser, data *models.LogForward) error {
+func SerializeLogForwardSection(p parser.Parser, data *models.LogForward, opt *options.ConfigurationOptions) error {
 	if data == nil {
 		return fmt.Errorf("empty log forward")
 	}
@@ -231,7 +232,7 @@ func SerializeLogForwardSection(p parser.Parser, data *models.LogForward) error 
 			return err
 		}
 	} else {
-		tc := types.SimpleTimeout{Value: misc.SerializeTime(*data.TimeoutClient)}
+		tc := types.SimpleTimeout{Value: misc.SerializeTime(*data.TimeoutClient, opt.PreferredTimeSuffix)}
 		if err = p.Set(parser.LogForward, data.Name, "timeout client", tc); err != nil {
 			return err
 		}

@@ -28,6 +28,7 @@ import (
 	http_actions "github.com/haproxytech/config-parser/v5/parsers/http/actions"
 	"github.com/haproxytech/config-parser/v5/types"
 
+	"github.com/haproxytech/client-native/v6/configuration/options"
 	"github.com/haproxytech/client-native/v6/misc"
 	"github.com/haproxytech/client-native/v6/models"
 )
@@ -129,7 +130,7 @@ func (c *client) CreateHTTPResponseRule(id int64, parentType string, parentName 
 		return err
 	}
 
-	s, err := SerializeHTTPResponseRule(*data)
+	s, err := SerializeHTTPResponseRule(*data, &c.ConfigurationOptions)
 	if err != nil {
 		return err
 	}
@@ -164,7 +165,7 @@ func (c *client) EditHTTPResponseRule(id int64, parentType string, parentName st
 		return c.HandleError(strconv.FormatInt(id, 10), parentType, parentName, t, transactionID == "", err)
 	}
 
-	s, err := SerializeHTTPResponseRule(*data)
+	s, err := SerializeHTTPResponseRule(*data, &c.ConfigurationOptions)
 	if err != nil {
 		return err
 	}
@@ -239,7 +240,7 @@ func (c *client) ReplaceHTTPResponseRules(parentType string, parentName string, 
 	}
 
 	for i, newHTTPResponseRule := range data {
-		s, err := SerializeHTTPResponseRule(*newHTTPResponseRule)
+		s, err := SerializeHTTPResponseRule(*newHTTPResponseRule, &c.ConfigurationOptions)
 		if err != nil {
 			return err
 		}
@@ -602,7 +603,7 @@ func ParseHTTPResponseRule(f types.Action) *models.HTTPResponseRule { //nolint:m
 	return nil
 }
 
-func SerializeHTTPResponseRule(f models.HTTPResponseRule) (rule types.Action, err error) { //nolint:gocyclo,ireturn,cyclop,maintidx,gocognit
+func SerializeHTTPResponseRule(f models.HTTPResponseRule, opt *options.ConfigurationOptions) (rule types.Action, err error) { //nolint:gocyclo,ireturn,cyclop,maintidx,gocognit
 	switch f.Type {
 	case "add-acl":
 		rule = &http_actions.AddACL{
@@ -894,7 +895,7 @@ func SerializeHTTPResponseRule(f models.HTTPResponseRule) (rule types.Action, er
 		}
 	case "wait-for-body":
 		rule = &http_actions.WaitForBody{
-			Time:     misc.SerializeTime(*f.WaitTime),
+			Time:     misc.SerializeTime(*f.WaitTime, opt.PreferredTimeSuffix),
 			AtLeast:  misc.SerializeSize(*f.WaitAtLeast),
 			Cond:     f.Cond,
 			CondTest: f.CondTest,

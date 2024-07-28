@@ -24,6 +24,7 @@ import (
 	parsererrors "github.com/haproxytech/config-parser/v5/errors"
 	"github.com/haproxytech/config-parser/v5/types"
 
+	"github.com/haproxytech/client-native/v6/configuration/options"
 	"github.com/haproxytech/client-native/v6/misc"
 	"github.com/haproxytech/client-native/v6/models"
 )
@@ -207,7 +208,7 @@ func (c *client) CreateRing(data *models.Ring, transactionID string, version int
 		return c.HandleError(data.Name, "", "", t, transactionID == "", err)
 	}
 
-	if err = SerializeRingSection(p, data); err != nil {
+	if err = SerializeRingSection(p, data, &c.ConfigurationOptions); err != nil {
 		return err
 	}
 
@@ -233,14 +234,14 @@ func (c *client) EditRing(name string, data *models.Ring, transactionID string, 
 		return c.HandleError(data.Name, "", "", t, transactionID == "", e)
 	}
 
-	if err = SerializeRingSection(p, data); err != nil {
+	if err = SerializeRingSection(p, data, &c.ConfigurationOptions); err != nil {
 		return err
 	}
 
 	return c.SaveData(p, t, transactionID == "")
 }
 
-func SerializeRingSection(p parser.Parser, data *models.Ring) error { //nolint:gocognit
+func SerializeRingSection(p parser.Parser, data *models.Ring, opt *options.ConfigurationOptions) error { //nolint:gocognit
 	if data == nil {
 		return fmt.Errorf("empty ring")
 	}
@@ -295,7 +296,7 @@ func SerializeRingSection(p parser.Parser, data *models.Ring) error { //nolint:g
 			return err
 		}
 	} else {
-		tc := types.SimpleTimeout{Value: misc.SerializeTime(*data.TimeoutConnect)}
+		tc := types.SimpleTimeout{Value: misc.SerializeTime(*data.TimeoutConnect, opt.PreferredTimeSuffix)}
 		if err = p.Set(parser.Ring, data.Name, "timeout connect", tc); err != nil {
 			return err
 		}
@@ -306,7 +307,7 @@ func SerializeRingSection(p parser.Parser, data *models.Ring) error { //nolint:g
 			return err
 		}
 	} else {
-		ts := types.SimpleTimeout{Value: misc.SerializeTime(*data.TimeoutServer)}
+		ts := types.SimpleTimeout{Value: misc.SerializeTime(*data.TimeoutServer, opt.PreferredTimeSuffix)}
 		if err = p.Set(parser.Ring, data.Name, "timeout server", ts); err != nil {
 			return err
 		}

@@ -27,6 +27,7 @@ import (
 	"github.com/haproxytech/config-parser/v5/params"
 	"github.com/haproxytech/config-parser/v5/types"
 
+	"github.com/haproxytech/client-native/v6/configuration/options"
 	"github.com/haproxytech/client-native/v6/misc"
 	"github.com/haproxytech/client-native/v6/models"
 )
@@ -72,7 +73,7 @@ func (c *client) PushGlobalConfiguration(data *models.Global, transactionID stri
 		return err
 	}
 
-	if err := SerializeGlobalSection(p, data); err != nil {
+	if err := SerializeGlobalSection(p, data, &c.ConfigurationOptions); err != nil {
 		return err
 	}
 	return c.SaveData(p, t, transactionID == "")
@@ -1322,7 +1323,7 @@ func ParseGlobalSection(p parser.Parser) (*models.Global, error) { //nolint:goco
 	return global, nil
 }
 
-func SerializeGlobalSection(p parser.Parser, data *models.Global) error { //nolint:gocognit,gocyclo,cyclop,maintidx
+func SerializeGlobalSection(p parser.Parser, data *models.Global, opt *options.ConfigurationOptions) error { //nolint:gocognit,gocyclo,cyclop,maintidx
 	var pAnonkey *types.Int64C
 	if data.Anonkey == nil {
 		pAnonkey = nil
@@ -1408,7 +1409,7 @@ func SerializeGlobalSection(p parser.Parser, data *models.Global) error { //noli
 	var pHardStop *types.StringC
 	if data.HardStopAfter != nil {
 		pHardStop = &types.StringC{
-			Value: misc.SerializeTime(*data.HardStopAfter),
+			Value: misc.SerializeTime(*data.HardStopAfter, opt.PreferredTimeSuffix),
 		}
 	}
 	if err := p.Set(parser.Global, parser.GlobalSectionName, "hard-stop-after", pHardStop); err != nil {
@@ -1516,7 +1517,7 @@ func SerializeGlobalSection(p parser.Parser, data *models.Global) error { //noli
 
 	var statsTimeout *types.StringC
 	if data.StatsTimeout != nil {
-		statsTimeout = &types.StringC{Value: misc.SerializeTime(*data.StatsTimeout)}
+		statsTimeout = &types.StringC{Value: misc.SerializeTime(*data.StatsTimeout, opt.PreferredTimeSuffix)}
 	} else {
 		statsTimeout = nil
 	}
@@ -1572,7 +1573,7 @@ func SerializeGlobalSection(p parser.Parser, data *models.Global) error { //noli
 		return err
 	}
 
-	if err := serializeTimeoutOption(p, "httpclient.timeout.connect", data.HttpclientTimeoutConnect); err != nil {
+	if err := serializeTimeoutOption(p, "httpclient.timeout.connect", data.HttpclientTimeoutConnect, opt); err != nil {
 		return err
 	}
 
@@ -1800,11 +1801,11 @@ func SerializeGlobalSection(p parser.Parser, data *models.Global) error { //noli
 		return err
 	}
 
-	if err := serializeTimeoutOption(p, "max-spread-checks", data.MaxSpreadChecks); err != nil {
+	if err := serializeTimeoutOption(p, "max-spread-checks", data.MaxSpreadChecks, opt); err != nil {
 		return err
 	}
 
-	if err := serializeTimeoutOption(p, "close-spread-time", data.CloseSpreadTime); err != nil {
+	if err := serializeTimeoutOption(p, "close-spread-time", data.CloseSpreadTime, opt); err != nil {
 		return err
 	}
 
@@ -2017,7 +2018,7 @@ func SerializeGlobalSection(p parser.Parser, data *models.Global) error { //noli
 
 	var grace *types.StringC
 	if data.Grace != nil {
-		grace = &types.StringC{Value: misc.SerializeTime(*data.Grace)}
+		grace = &types.StringC{Value: misc.SerializeTime(*data.Grace, opt.PreferredTimeSuffix)}
 	} else {
 		grace = nil
 	}
@@ -2384,7 +2385,7 @@ func SerializeGlobalSection(p parser.Parser, data *models.Global) error { //noli
 		return err
 	}
 
-	return serializeTuneOptions(p, data.TuneOptions)
+	return serializeTuneOptions(p, data.TuneOptions, opt)
 }
 
 func serializeHardenOptions(p parser.Parser, options *models.GlobalHarden) error {
@@ -2497,7 +2498,7 @@ func serializeFiftyOneDegreesOptions(p parser.Parser, options *models.GlobalFift
 	return serializeInt64Option(p, "51degrees-cache-size", options.CacheSize)
 }
 
-func serializeTuneOptions(p parser.Parser, options *models.GlobalTuneOptions) error { //nolint:gocognit,gocyclo,cyclop,maintidx
+func serializeTuneOptions(p parser.Parser, options *models.GlobalTuneOptions, opt *options.ConfigurationOptions) error { //nolint:gocognit,gocyclo,cyclop,maintidx
 	if options == nil {
 		return nil
 	}
@@ -2549,7 +2550,7 @@ func serializeTuneOptions(p parser.Parser, options *models.GlobalTuneOptions) er
 	if err := serializeOnOffOption(p, "tune.idle-pool.shared", options.IdlePoolShared); err != nil {
 		return err
 	}
-	if err := serializeTimeoutOption(p, "tune.idletimer", options.Idletimer); err != nil {
+	if err := serializeTimeoutOption(p, "tune.idletimer", options.Idletimer, opt); err != nil {
 		return err
 	}
 	if err := serializeListenerDefaultShards(p, "tune.listener.default-shards", options.ListenerDefaultShards); err != nil {
@@ -2570,16 +2571,16 @@ func serializeTuneOptions(p parser.Parser, options *models.GlobalTuneOptions) er
 	if err := serializeInt64POption(p, "tune.lua.maxmem", options.LuaMaxmem); err != nil {
 		return err
 	}
-	if err := serializeTimeoutOption(p, "tune.lua.session-timeout", options.LuaSessionTimeout); err != nil {
+	if err := serializeTimeoutOption(p, "tune.lua.session-timeout", options.LuaSessionTimeout, opt); err != nil {
 		return err
 	}
-	if err := serializeTimeoutOption(p, "tune.lua.burst-timeout", options.LuaBurstTimeout); err != nil {
+	if err := serializeTimeoutOption(p, "tune.lua.burst-timeout", options.LuaBurstTimeout, opt); err != nil {
 		return err
 	}
-	if err := serializeTimeoutOption(p, "tune.lua.task-timeout", options.LuaTaskTimeout); err != nil {
+	if err := serializeTimeoutOption(p, "tune.lua.task-timeout", options.LuaTaskTimeout, opt); err != nil {
 		return err
 	}
-	if err := serializeTimeoutOption(p, "tune.lua.service-timeout", options.LuaServiceTimeout); err != nil {
+	if err := serializeTimeoutOption(p, "tune.lua.service-timeout", options.LuaServiceTimeout, opt); err != nil {
 		return err
 	}
 	if err := serializeInt64POption(p, "tune.max-checks-per-thread", options.MaxChecksPerThread); err != nil {
@@ -2657,7 +2658,7 @@ func serializeTuneOptions(p parser.Parser, options *models.GlobalTuneOptions) er
 	if err := serializeOnOffOption(p, "tune.ssl.keylog", options.SslKeylog); err != nil {
 		return err
 	}
-	if err := serializeTimeoutOption(p, "tune.ssl.lifetime", options.SslLifetime); err != nil {
+	if err := serializeTimeoutOption(p, "tune.ssl.lifetime", options.SslLifetime, opt); err != nil {
 		return err
 	}
 	if err := serializeInt64POption(p, "tune.ssl.maxrecord", options.SslMaxrecord); err != nil {
@@ -2690,7 +2691,7 @@ func serializeTuneOptions(p parser.Parser, options *models.GlobalTuneOptions) er
 	if err := serializeInt64POption(p, "tune.quic.frontend.conn-tx-buffers.limit", options.QuicFrontendConnTxBuffersLimit); err != nil {
 		return err
 	}
-	if err := serializeTimeoutOption(p, "tune.quic.frontend.max-idle-timeout", options.QuicFrontendMaxIdleTimeout); err != nil {
+	if err := serializeTimeoutOption(p, "tune.quic.frontend.max-idle-timeout", options.QuicFrontendMaxIdleTimeout, opt); err != nil {
 		return err
 	}
 	if err := serializeInt64POption(p, "tune.quic.frontend.max-streams-bidi", options.QuicFrontendMaxStreamsBidi); err != nil {
@@ -2757,12 +2758,12 @@ func serializeTuneOptions(p parser.Parser, options *models.GlobalTuneOptions) er
 	return serializeInt64Option(p, "tune.zlib.windowsize", options.ZlibWindowsize)
 }
 
-func serializeTimeoutOption(p parser.Parser, option string, data *int64) error {
+func serializeTimeoutOption(p parser.Parser, option string, data *int64, opt *options.ConfigurationOptions) error {
 	var value *types.StringC
 	if data == nil {
 		value = nil
 	} else {
-		value = &types.StringC{Value: misc.SerializeTime(*data)}
+		value = &types.StringC{Value: misc.SerializeTime(*data, opt.PreferredTimeSuffix)}
 	}
 	return p.Set(parser.Global, parser.GlobalSectionName, option, value)
 }

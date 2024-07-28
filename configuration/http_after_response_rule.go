@@ -181,8 +181,6 @@ func (c *client) EditHTTPAfterResponseRule(id int64, parentType string, parentNa
 // ReplaceHTTPAfterResponseRules replaces all HTTP Response Rules lines in configuration for a parentType/parentName.
 // One of version or transactionID is mandatory.
 // Returns error on fail, nil on success.
-//
-//nolint:dupl
 func (c *client) ReplaceHTTPAfterResponseRules(parentType string, parentName string, data models.HTTPAfterResponseRules, transactionID string, version int64) error {
 	if c.UseModelsValidation {
 		validationErr := data.Validate(strfmt.Default)

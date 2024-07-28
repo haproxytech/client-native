@@ -519,7 +519,7 @@ func (c *SingleSpoe) createEditAgent(scope string, data *models.SpoeAgent, t str
 	}
 
 	if data.HelloTimeout > 0 {
-		d := &types.StringC{Value: misc.SerializeTime(data.HelloTimeout)}
+		d := &types.StringC{Value: misc.SerializeTime(data.HelloTimeout, c.Transaction.ConfigurationOptions.PreferredTimeSuffix)}
 		if err := p.Set(scope, parser.SPOEAgent, name, "timeout hello", d); err != nil {
 			return c.Transaction.HandleError(d.Value, "", "", t, transactionID == "", err)
 		}
@@ -528,7 +528,7 @@ func (c *SingleSpoe) createEditAgent(scope string, data *models.SpoeAgent, t str
 	}
 
 	if data.IdleTimeout > 0 {
-		d := &types.StringC{Value: misc.SerializeTime(data.IdleTimeout)}
+		d := &types.StringC{Value: misc.SerializeTime(data.IdleTimeout, c.Transaction.ConfigurationOptions.PreferredTimeSuffix)}
 		if err := p.Set(scope, parser.SPOEAgent, name, "timeout idle", d); err != nil {
 			return c.Transaction.HandleError(d.Value, "", "", t, transactionID == "", err)
 		}
@@ -537,7 +537,7 @@ func (c *SingleSpoe) createEditAgent(scope string, data *models.SpoeAgent, t str
 	}
 
 	if data.ProcessingTimeout > 0 {
-		d := &types.StringC{Value: misc.SerializeTime(data.ProcessingTimeout)}
+		d := &types.StringC{Value: misc.SerializeTime(data.ProcessingTimeout, c.Transaction.ConfigurationOptions.PreferredTimeSuffix)}
 		if err := p.Set(scope, parser.SPOEAgent, name, "timeout processing", d); err != nil {
 			return c.Transaction.HandleError(d.Value, "", "", t, transactionID == "", err)
 		}

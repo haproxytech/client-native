@@ -65,6 +65,7 @@ func NewSpoe(params Params) (Spoe, error) {
 		UseValidation:          params.UseValidation,
 		SpoeDir:                params.SpoeDir,
 		SkipFailedTransactions: params.PersistentTransactions,
+		PreferredTimeSuffix:    params.PreferredTimeSuffix,
 	}
 	c.clients = make(map[string]*SingleSpoe)
 	for _, f := range files {

@@ -49,6 +49,7 @@ type Params struct {
 	SpoeDir                string
 	TransactionDir         string
 	ConfigurationFile      string
+	PreferredTimeSuffix    string
 	BackupsNumber          int
 }
 
@@ -79,6 +80,7 @@ func newSingleSpoe(params Params) (*SingleSpoe, error) {
 		UseModelsValidation:    useValidation,
 		PersistentTransactions: persistentTransactions,
 		SkipFailedTransactions: skipFailedTransactions,
+		PreferredTimeSuffix:    params.PreferredTimeSuffix,
 	}
 
 	ss.parsers = make(map[string]*spoe.Parser)

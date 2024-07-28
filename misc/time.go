@@ -23,7 +23,7 @@ import (
 type TimeSuffix string
 
 const (
-	None    TimeSuffix = ""
+	None    TimeSuffix = "none"
 	Milli   TimeSuffix = "ms"
 	Sec     TimeSuffix = "s"
 	Min     TimeSuffix = "m"
@@ -38,8 +38,6 @@ const (
 	hour   = 3600000
 	day    = 86400000
 )
-
-var PreferredTimeSuffix = Nearest //nolint:gochecknoglobals
 
 // ParseTimeout returns the number of milliseconds in a timeout string.
 func ParseTimeout(tOut string) *int64 {
@@ -103,8 +101,8 @@ func parseTimeout(tOut string, defaultMultiplier int64) *int64 {
 }
 
 // Serialize a number of milliseconds as per HAProxy's Time format.
-func SerializeTime(ms int64) string {
-	switch PreferredTimeSuffix {
+func SerializeTime(ms int64, preferredSuffix string) string {
+	switch TimeSuffix(preferredSuffix) {
 	case Nearest:
 		break
 	case Milli:

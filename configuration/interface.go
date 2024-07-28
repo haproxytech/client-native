@@ -107,6 +107,10 @@ func New(ctx context.Context, opt ...options.ConfigurationOption) (Configuration
 		optionsWrapper.Haproxy = options.DefaultHaproxy
 	}
 
+	if optionsWrapper.PreferredTimeSuffix == "" {
+		optionsWrapper.PreferredTimeSuffix = options.DefaultTimeSuffix
+	}
+
 	versionString, err := c.fetchVersion(optionsWrapper.Haproxy)
 	if err != nil {
 		return nil, NewConfError(ErrCannotFindHAProxy, fmt.Sprintf("path to HAProxy binary not valid: %s, err: %s", optionsWrapper.Haproxy, err.Error()))

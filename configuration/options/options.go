@@ -27,6 +27,7 @@ type ConfigurationOptions struct {
 	ValidateCmd                     string
 	ValidateConfigFilesBefore       []string
 	ValidateConfigFilesAfter        []string
+	PreferredTimeSuffix             string
 	BackupsNumber                   int
 	PersistentTransactions          bool
 	SkipFailedTransactions          bool

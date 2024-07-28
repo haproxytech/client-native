@@ -23,6 +23,7 @@ import (
 
 	"github.com/google/go-cmp/cmp"
 	"github.com/haproxytech/client-native/v6/configuration"
+	"github.com/haproxytech/client-native/v6/configuration/options"
 	"github.com/haproxytech/client-native/v6/misc"
 	"github.com/haproxytech/client-native/v6/models"
 	"github.com/stretchr/testify/require"
@@ -220,7 +221,9 @@ func TestSerializeHTTPResponseRule(t *testing.T) {
 
 	for _, testCase := range testCases {
 		t.Run(testCase.expectedResult, func(t *testing.T) {
-			tcpType, err := configuration.SerializeHTTPResponseRule(testCase.input)
+			opt := new(options.ConfigurationOptions)
+			opt.PreferredTimeSuffix = "d"
+			tcpType, err := configuration.SerializeHTTPResponseRule(testCase.input, opt)
 			if err != nil {
 				t.Error(err.Error())
 			}

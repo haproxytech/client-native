@@ -1065,6 +1065,7 @@ func prepareClient(path string) (c configuration.Configuration, err error) {
 		options.UseModelsValidation,
 		options.UsePersistentTransactions,
 		options.TransactionsDir("/tmp/haproxy-test"),
+		options.PreferredTimeSuffix("nearest"),
 	)
 	if err != nil {
 		return nil, err

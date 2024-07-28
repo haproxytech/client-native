@@ -26,6 +26,7 @@ import (
 	"github.com/haproxytech/config-parser/v5/parsers/filters"
 	"github.com/haproxytech/config-parser/v5/types"
 
+	"github.com/haproxytech/client-native/v6/configuration/options"
 	"github.com/haproxytech/client-native/v6/misc"
 	"github.com/haproxytech/client-native/v6/models"
 )
@@ -134,7 +135,7 @@ func (c *client) CreateFilter(id int64, parentType string, parentName string, da
 		section = parser.Frontends
 	}
 
-	if err := p.Insert(section, parentName, "filter", SerializeFilter(*data), int(id)); err != nil {
+	if err := p.Insert(section, parentName, "filter", SerializeFilter(*data, &c.ConfigurationOptions), int(id)); err != nil {
 		return c.HandleError(strconv.FormatInt(id, 10), parentType, parentName, t, transactionID == "", err)
 	}
 
@@ -164,7 +165,7 @@ func (c *client) EditFilter(id int64, parentType string, parentName string, data
 		return c.HandleError(strconv.FormatInt(id, 10), parentType, parentName, t, transactionID == "", err)
 	}
 
-	if err := p.Set(section, parentName, "filter", SerializeFilter(*data), int(id)); err != nil {
+	if err := p.Set(section, parentName, "filter", SerializeFilter(*data, &c.ConfigurationOptions), int(id)); err != nil {
 		return c.HandleError(strconv.FormatInt(id, 10), parentType, parentName, t, transactionID == "", err)
 	}
 
@@ -204,7 +205,7 @@ func (c *client) ReplaceFilters(parentType string, parentName string, data model
 	}
 
 	for i, newFilter := range data {
-		if err := p.Insert(section, parentName, "filter", SerializeFilter(*newFilter), i); err != nil {
+		if err := p.Insert(section, parentName, "filter", SerializeFilter(*newFilter, &c.ConfigurationOptions), i); err != nil {
 			return c.HandleError(strconv.FormatInt(int64(i), 10), parentType, parentName, t, transactionID == "", err)
 		}
 	}
@@ -317,7 +318,7 @@ func ParseFilter(f types.Filter) *models.Filter {
 	return nil
 }
 
-func SerializeFilter(f models.Filter) types.Filter {
+func SerializeFilter(f models.Filter, opt *options.ConfigurationOptions) types.Filter {
 	switch f.Type {
 	case "trace":
 		return &filters.Trace{
@@ -348,7 +349,7 @@ func SerializeFilter(f models.Filter) types.Filter {
 			Attribute:     "bwlim-in",
 			Name:          f.BandwidthLimitName,
 			DefaultLimit:  misc.SerializeSize(f.DefaultLimit),
-			DefaultPeriod: misc.SerializeTime(f.DefaultPeriod),
+			DefaultPeriod: misc.SerializeTime(f.DefaultPeriod, opt.PreferredTimeSuffix),
 			Limit:         misc.SerializeSize(f.Limit),
 			Key:           f.Key,
 			Table:         &f.Table,
@@ -358,7 +359,7 @@ func SerializeFilter(f models.Filter) types.Filter {
 			Attribute:     "bwlim-out",
 			Name:          f.BandwidthLimitName,
 			DefaultLimit:  misc.SerializeSize(f.DefaultLimit),
-			DefaultPeriod: misc.SerializeTime(f.DefaultPeriod),
+			DefaultPeriod: misc.SerializeTime(f.DefaultPeriod, opt.PreferredTimeSuffix),
 			Limit:         misc.SerializeSize(f.Limit),
 			Key:           f.Key,
 			Table:         &f.Table,
