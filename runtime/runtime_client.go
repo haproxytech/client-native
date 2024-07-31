@@ -114,7 +114,7 @@ func (c *client) GetVersion() (HAProxyVersion, error) {
 				return
 			}
 			// Starting with HAProxy 3.0, there is no more "Version:" prefix.
-			if line[0] >= '3' && line[0] <= '9' {
+			if len(line) > 0 && line[0] >= '3' && line[0] <= '9' {
 				err = version.ParseHAProxyVersion(line)
 				if err == nil {
 					c.haproxyVersion = version
