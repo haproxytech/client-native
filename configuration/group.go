@@ -65,7 +65,7 @@ func (c *client) GetGroup(name string, userlist string, transactionID string) (i
 	if err != nil {
 		return 0, nil, err
 	}
-	group, _ := GetGroupByName(name, userlist, p)
+	group, _, err := GetGroupByName(name, userlist, p)
 	if err != nil {
 		return v, nil, c.HandleError(name, "userlist", userlist, "", false, err)
 	}
@@ -79,12 +79,12 @@ func (c *client) DeleteGroup(name string, userlist string, transactionID string,
 	if err != nil {
 		return err
 	}
-	if _, _, err := c.GetUserList(userlist, transactionID); err != nil {
+	if _, _, err = c.GetUserList(userlist, transactionID); err != nil {
 		return err
 	}
-	group, i := GetGroupByName(name, userlist, p)
-	if group == nil {
-		return NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("group %s does not exist", name))
+	_, i, err := GetGroupByName(name, userlist, p)
+	if err != nil {
+		return err
 	}
 	if err := p.Delete("userlist", userlist, "group", i); err != nil {
 		return c.HandleError(name, "userlist", userlist, t, transactionID == "", err)
@@ -105,11 +105,11 @@ func (c *client) CreateGroup(userlist string, data *models.Group, transactionID 
 	if err != nil {
 		return err
 	}
-	if _, _, err := c.GetUserList(userlist, transactionID); err != nil {
+	if _, _, err = c.GetUserList(userlist, transactionID); err != nil {
 		return err
 	}
-	group, _ := GetGroupByName(data.Name, userlist, p)
-	if group != nil {
+	_, _, err = GetGroupByName(data.Name, userlist, p)
+	if err == nil {
 		return NewConfError(ErrObjectAlreadyExists, fmt.Sprintf("group %s already exists", data.Name))
 	}
 	if err := p.Insert("userlist", userlist, "group", SerializeGroup(*data), -1); err != nil {
@@ -131,12 +131,12 @@ func (c *client) EditGroup(name string, userlist string, data *models.Group, tra
 	if err != nil {
 		return err
 	}
-	if _, _, err := c.GetUserList(userlist, transactionID); err != nil {
+	if _, _, err = c.GetUserList(userlist, transactionID); err != nil {
 		return err
 	}
-	group, i := GetGroupByName(data.Name, userlist, p)
-	if group == nil {
-		return NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("group %s does not exist", data.Name))
+	_, i, err := GetGroupByName(data.Name, userlist, p)
+	if err != nil {
+		return err
 	}
 	if _, err := p.GetOne("userlist", userlist, "group", i); err != nil {
 		return c.HandleError(data.Name, "userlist", userlist, t, transactionID == "", err)
@@ -180,15 +180,15 @@ func SerializeGroup(u models.Group) types.Group {
 	}
 }
 
-func GetGroupByName(name string, userlist string, p parser.Parser) (*models.Group, int) {
+func GetGroupByName(name string, userlist string, p parser.Parser) (*models.Group, int, error) {
 	groups, err := ParseGroups(userlist, p)
 	if err != nil {
-		return nil, 0
+		return nil, 0, err
 	}
 	for i, group := range groups {
 		if group.Name == name {
-			return group, i
+			return group, i, nil
 		}
 	}
-	return nil, 0
+	return nil, 0, NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("group %s does not exist", name))
 }
