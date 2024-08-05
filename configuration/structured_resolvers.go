@@ -19,8 +19,8 @@ import (
 	"fmt"
 
 	"github.com/go-openapi/strfmt"
+	parser "github.com/haproxytech/client-native/v6/config-parser"
 	"github.com/haproxytech/client-native/v6/models"
-	parser "github.com/haproxytech/config-parser/v5"
 )
 
 type StructuredResolver interface {

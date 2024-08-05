@@ -1,0 +1,66 @@
+{{- if .ModeOther}}
+package {{ .Dir }}
+{{- else }}
+package parsers
+{{- end }}
+
+import (
+	"github.com/haproxytech/client-native/v6/config-parser/common"
+	"github.com/haproxytech/client-native/v6/config-parser/errors"
+	"github.com/haproxytech/client-native/v6/config-parser/{{ .DataDir }}types"
+)
+
+type {{ .StructName }} struct {
+	Name string
+	// Mode string
+	data        []types.{{ .ParserType }}
+	preComments []string // comments that appear before the actual line
+}
+
+{{- if not .NoInit }}
+
+func (p *{{ .StructName }}) Init() {
+{{- if .ParserMultiple }}
+        p.Name = "{{ .ParserName }}"
+        p.data = []types.{{ .ParserType }}{}
+{{- else }}
+        p.data = nil
+{{- end }}
+		p.preComments = nil
+        // Following line forces compilation to fail:
+        Function not implemented!
+}
+{{- end }}
+
+func (h *{{ .StructName }} ) Parse(line string, parts []string, comment string) (string, error) {
+        return "", &errors.ParseError{Parser: parseErrorLines("{{ .ParserName }}"), Line: line}
+
+        // Following line forces compilation to fail:
+        Function not implemented!
+}
+
+func (h *{{ .StructName }} ) Result() ([]common.ReturnResultLine, error) {
+	if len(h.data) == 0 {
+		return nil, errors.ErrFetch
+	}
+
+	result := make([]common.ReturnResultLine, len(h.data))
+	for index, req := range h.data {
+		result[index] = common.ReturnResultLine{
+			Data:   "{{ .ParserName }}" + req.String(),
+			Comment: req.GetComment(),
+		}
+	}
+	return result, nil
+}
+
+func parseErrorLines(s string) string {
+	var r string
+	parts := strings.Split(s, "-")
+	if len(parts) == 1 {
+		r = strings.Title(parts[0])
+	} else {
+		r = strings.Title(parts[0]) + strings.Title(parts[1])
+	}
+	return r + "Lines"
+}

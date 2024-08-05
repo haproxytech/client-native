@@ -18,9 +18,9 @@ package configuration
 import (
 	"fmt"
 
-	parser "github.com/haproxytech/config-parser/v5"
-	parser_options "github.com/haproxytech/config-parser/v5/options"
-	"github.com/haproxytech/config-parser/v5/types"
+	parser "github.com/haproxytech/client-native/v6/config-parser"
+	parser_options "github.com/haproxytech/client-native/v6/config-parser/options"
+	"github.com/haproxytech/client-native/v6/config-parser/types"
 
 	"github.com/haproxytech/client-native/v6/models"
 )

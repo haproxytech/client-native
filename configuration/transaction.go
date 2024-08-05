@@ -28,10 +28,10 @@ import (
 	"sync"
 
 	"github.com/google/uuid"
-	parser "github.com/haproxytech/config-parser/v5"
-	parser_errors "github.com/haproxytech/config-parser/v5/errors"
-	parser_options "github.com/haproxytech/config-parser/v5/options"
-	spoe "github.com/haproxytech/config-parser/v5/spoe"
+	parser "github.com/haproxytech/client-native/v6/config-parser"
+	parser_errors "github.com/haproxytech/client-native/v6/config-parser/errors"
+	parser_options "github.com/haproxytech/client-native/v6/config-parser/options"
+	spoe "github.com/haproxytech/client-native/v6/config-parser/spoe"
 	shellquote "github.com/kballard/go-shellquote"
 
 	"github.com/haproxytech/client-native/v6/configuration/options"

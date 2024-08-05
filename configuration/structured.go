@@ -16,8 +16,8 @@
 package configuration
 
 import (
+	parser "github.com/haproxytech/client-native/v6/config-parser"
 	"github.com/haproxytech/client-native/v6/configuration/options"
-	parser "github.com/haproxytech/config-parser/v5"
 )
 
 type Structured interface {

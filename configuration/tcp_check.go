@@ -22,12 +22,12 @@ import (
 	"strings"
 
 	strfmt "github.com/go-openapi/strfmt"
-	parser "github.com/haproxytech/config-parser/v5"
-	"github.com/haproxytech/config-parser/v5/common"
-	parser_errors "github.com/haproxytech/config-parser/v5/errors"
-	actions "github.com/haproxytech/config-parser/v5/parsers/actions"
-	tcp_actions "github.com/haproxytech/config-parser/v5/parsers/tcp/actions"
-	"github.com/haproxytech/config-parser/v5/types"
+	parser "github.com/haproxytech/client-native/v6/config-parser"
+	"github.com/haproxytech/client-native/v6/config-parser/common"
+	parser_errors "github.com/haproxytech/client-native/v6/config-parser/errors"
+	actions "github.com/haproxytech/client-native/v6/config-parser/parsers/actions"
+	tcp_actions "github.com/haproxytech/client-native/v6/config-parser/parsers/tcp/actions"
+	"github.com/haproxytech/client-native/v6/config-parser/types"
 
 	"github.com/haproxytech/client-native/v6/misc"
 	"github.com/haproxytech/client-native/v6/models"

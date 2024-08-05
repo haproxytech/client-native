@@ -23,7 +23,7 @@ import (
 	"testing"
 
 	"github.com/google/go-cmp/cmp"
-	parser "github.com/haproxytech/config-parser/v5"
+	parser "github.com/haproxytech/client-native/v6/config-parser"
 	"github.com/stretchr/testify/require"
 
 	"github.com/haproxytech/client-native/v6/configuration"

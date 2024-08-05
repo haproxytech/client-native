@@ -18,12 +18,17 @@ e2e-docker:
 	docker build -f e2e/Dockerfile --build-arg GO_VERSION=${GO_VERSION} --build-arg HAPROXY_VERSION=${DOCKER_HAPROXY_VERSION} -t client-native-test:${DOCKER_HAPROXY_VERSION} .
 	docker run --rm -t client-native-test:${DOCKER_HAPROXY_VERSION}
 
+# config-parser auto-generated types
+.PHONY: gentypes
+gentypes:
+	cd config-parser && go run generate/*.go ${PROJECT_PATH}/config-parser
+
 .PHONY: spec
 spec:
 	go run cmd/specification/*.go -file specification/haproxy-spec.yaml > specification/build/haproxy_spec.yaml
 
 .PHONY: models
-models: spec swagger-check
+models: gentypes spec swagger-check
 	./bin/swagger generate model --additional-initialism=FCGI -f ${PROJECT_PATH}/specification/build/haproxy_spec.yaml -r ${PROJECT_PATH}/specification/copyright.txt -m models -t ${PROJECT_PATH}
 	rm -rf models/*_compare.go
 	rm -rf models/*_compare_test.go
@@ -42,8 +47,9 @@ lint:
 
 .PHONY: lint-yaml
 lint-yaml:
-	docker run --rm -v $(PWD):/data cytopia/yamllint .
+	docker run --rm -v ${PROJECT_PATH}:/data cytopia/yamllint .
 
 .PHONY: gofumpt
 gofumpt:
+	go install mvdan.cc/gofumpt@latest
 	gofumpt -l -w .

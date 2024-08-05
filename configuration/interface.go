@@ -23,8 +23,8 @@ import (
 	"strconv"
 	"strings"
 
-	parser "github.com/haproxytech/config-parser/v5"
-	parser_options "github.com/haproxytech/config-parser/v5/options"
+	parser "github.com/haproxytech/client-native/v6/config-parser"
+	parser_options "github.com/haproxytech/client-native/v6/config-parser/options"
 
 	"github.com/haproxytech/client-native/v6/configuration/options"
 )

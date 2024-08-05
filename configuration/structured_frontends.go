@@ -20,9 +20,9 @@ import (
 	"strconv"
 
 	"github.com/go-openapi/strfmt"
+	parser "github.com/haproxytech/client-native/v6/config-parser"
+	"github.com/haproxytech/client-native/v6/config-parser/types"
 	"github.com/haproxytech/client-native/v6/models"
-	parser "github.com/haproxytech/config-parser/v5"
-	"github.com/haproxytech/config-parser/v5/types"
 )
 
 type StructuredFrontend interface {

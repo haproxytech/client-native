@@ -1,7 +1,7 @@
 package configuration
 
 import (
-	"github.com/haproxytech/config-parser/v5/parsers/http/actions"
+	"github.com/haproxytech/client-native/v6/config-parser/parsers/http/actions"
 
 	"github.com/haproxytech/client-native/v6/misc"
 	"github.com/haproxytech/client-native/v6/models"
