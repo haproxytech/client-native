@@ -58,10 +58,22 @@ func (c *client) InitTransactionParsers() error {
 	return nil
 }
 
+// GetParserTransactionIDs returns parser transactionIDs
+func (c *client) GetParserTransactionIDs() []string {
+	transactionIDs := []string{}
+	c.clientMu.Lock()
+	defer c.clientMu.Unlock()
+	for tID := range c.parsers {
+		transactionIDs = append(transactionIDs, tID)
+	}
+	return transactionIDs
+}
+
 // GetParserTransactions returns parser transactions
 func (c *client) GetParserTransactions() models.Transactions {
 	transactions := models.Transactions{}
-	for tID := range c.parsers {
+	transactionIDs := c.GetParserTransactionIDs()
+	for _, tID := range transactionIDs {
 		v, err := c.GetVersion(tID)
 		if err == nil {
 			t := &models.Transaction{
