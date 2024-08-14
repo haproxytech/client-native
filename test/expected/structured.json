@@ -18,23 +18,92 @@
                 "value": "test.so"
             }
         ],
-        "presetenv": [
-            {
-                "name": "first",
-                "value": "order"
-            }
-        ],
+        "no_quic": true,
+        "performance_options": {
+            "busy_polling": true,
+            "max_spread_checks": 1,
+            "maxcompcpuusage": 4,
+            "maxcomprate": 3,
+            "maxconn": 2000,
+            "maxconnrate": 2,
+            "maxpipes": 5,
+            "maxsessrate": 6,
+            "maxzlibmem": 9,
+            "noepoll": true,
+            "noevports": true,
+            "nogetaddrinfo": true,
+            "nokqueue": true,
+            "nopoll": true,
+            "noreuseport": true,
+            "nosplice": true,
+            "profiling_tasks": "enabled",
+            "server_state_base": "/path",
+            "server_state_file": "serverstatefile",
+            "spread_checks": 10,
+            "thread_hard_limit": 77
+        },
+        "ssl_options": {
+            "engines": [
+                {
+                    "algorithms": "",
+                    "name": "first"
+                },
+                {
+                    "algorithms": "RSA,DSA,DH,EC,RAND",
+                    "name": "second"
+                },
+                {
+                    "algorithms": "CIPHERS,DIGESTS,PKEY,PKEY_CRYPTO,PKEY_ASN1",
+                    "name": "third"
+                }
+            ],
+            "ca_base": "/etc/ssl/certs",
+            "crt_base": "/etc/ssl/private",
+            "default_bind_ciphers": "ECDH+AESGCM:ECDH+CHACHA20",
+            "default_bind_ciphersuites": "TLS_AES_128_GCM_SHA256:TLS_AES_256_GCM_SHA384",
+            "default_bind_client_sigalgs": "ECDSA+SHA256:RSA+SHA256",
+            "default_bind_curves": "X25519:P-256",
+            "default_bind_sigalgs": "RSA+SHA256",
+            "default_server_ciphers": "ECDH+AESGCM:ECDH+CHACHA20:ECDH+AES256:ECDH+AES128:!aNULL:!SHA1:!AESCCM",
+            "default_server_ciphersuites": "TLS_AES_128_GCM_SHA256:TLS_AES_256_GCM_SHA384:TLS_CHACHA20_POLY1305_SHA256",
+            "default_server_client_sigalgs": "ECDSA+SHA256:RSA+SHA256",
+            "default_server_curves": "brainpoolP384r1,brainpoolP512r1",
+            "default_server_options": "ssl-min-ver TLSv1.1 no-tls-tickets",
+            "default_server_sigalgs": "RSA+SHA256",
+            "dh_param_file": "ssl-dh-param-file.txt",
+            "load_extra_files": "bundle",
+            "mode_async": "enabled",
+            "propquery": "provider",
+            "provider": "default",
+            "provider_path": "test",
+            "server_verify": "required",
+            "skip_self_issued_ca": true,
+            "issuers_chain_path": "issuers-chain-path",
+            "maxsslconn": 7,
+            "maxsslrate": 8,
+            "security_level": 3
+        },
+        "environment_options": {
+            "presetenv": [
+                {
+                    "name": "first",
+                    "value": "order"
+                }
+            ],
+            "setenv": [
+                {
+                    "name": "third",
+                    "value": "sister"
+                }
+            ],
+            "resetenv": "first second",
+            "unsetenv": "third fourth"
+        },
         "runtime_apis": [
             {
                 "level": "admin",
                 "mode": "0660",
                 "address": "/var/run/haproxy.sock"
-            }
-        ],
-        "setenv": [
-            {
-                "name": "third",
-                "value": "sister"
             }
         ],
         "set_var_fmt": [
@@ -61,34 +130,22 @@
                 "name": "proc.threshold"
             }
         ],
-        "ssl_engines": [
-            {
-                "algorithms": "",
-                "name": "first"
-            },
-            {
-                "algorithms": "RSA,DSA,DH,EC,RAND",
-                "name": "second"
-            },
-            {
-                "algorithms": "CIPHERS,DIGESTS,PKEY,PKEY_CRYPTO,PKEY_ASN1",
-                "name": "third"
-            }
-        ],
         "thread_group_lines": [
             {
                 "group": "first",
                 "num_or_range": "1-16"
             }
         ],
+        "debug_options": {
+            "anonkey": 25,
+            "quiet": true,
+            "zero_warning": true
+        },
         "anonkey": 25,
-        "busy_polling": true,
-        "ca_base": "/etc/ssl/certs",
         "chroot": "/var/www",
         "close_spread_time": 1000,
         "cluster_secret": "my_secret",
-        "crt_base": "/etc/ssl/private",
-        "daemon": "enabled",
+        "daemon": true,
         "default_path": {
             "path": "/some/path",
             "type": "origin"
@@ -115,41 +172,39 @@
         "h1_case_adjust_file": "/etc/headers.adjust",
         "h2_workaround_bogus_websocket_clients": true,
         "hard_stop_after": 2000,
-        "httpclient_resolvers_disabled": "enabled",
-        "httpclient_resolvers_id": "resolver_1",
-        "httpclient_resolvers_prefer": "ipv4",
-        "httpclient_retries": 3,
-        "httpclient_ssl_ca_file": "my_test_file.ca",
-        "httpclient_ssl_verify": "none",
-        "httpclient_timeout_connect": 2000,
+        "http_client_options": {
+            "resolvers_disabled": "enabled",
+            "resolvers_id": "resolver_1",
+            "resolvers_prefer": "ipv4",
+            "retries": 3,
+            "ssl_ca_file": "my_test_file.ca",
+            "ssl_verify": "none",
+            "timeout_connect": 2000
+        },
         "insecure_fork_wanted": true,
         "insecure_setuid_wanted": true,
-        "issuers_chain_path": "issuers-chain-path",
         "limited_quic": true,
         "localpeer": "test",
-        "lua_load_per_thread": "file.ext",
-        "lua_loads": [
-            {
-                "file": "/etc/foo.lua"
-            },
-            {
-                "file": "/etc/bar.lua"
-            }
-        ],
-        "lua_prepend_path": [
-            {
-                "path": "/usr/share/haproxy-lua/?/init.lua"
-            },
-            {
-                "path": "/usr/share/haproxy-lua/?.lua",
-                "type": "cpath"
-            }
-        ],
-        "max_spread_checks": 1,
-        "maxcompcpuusage": 4,
-        "maxcomprate": 3,
-        "maxconn": 2000,
-        "maxconnrate": 2,
+        "lua_options": {
+            "load_per_thread": "file.ext",
+            "loads": [
+                {
+                    "file": "/etc/foo.lua"
+                },
+                {
+                    "file": "/etc/bar.lua"
+                }
+            ],
+            "prepend_path": [
+                {
+                    "path": "/usr/share/haproxy-lua/?/init.lua"
+                },
+                {
+                    "path": "/usr/share/haproxy-lua/?.lua",
+                    "type": "cpath"
+                }
+            ]
+        },
         "maxmind_cache_size": 200000,
         "maxmind_debug": true,
         "maxmind_load": {
@@ -181,63 +236,23 @@
             "hash": true,
             "log": true
         },
-        "maxpipes": 5,
-        "maxsessrate": 6,
-        "maxsslconn": 7,
-        "maxsslrate": 8,
-        "maxzlibmem": 9,
         "modsecurity-deny-blocking-io": true,
         "module-path": "/tmp/modules/path",
         "mworker_max_reloads": 5,
         "nbthread": 128,
-        "no-quic": true,
         "node": "node",
-        "noepoll": true,
-        "noevports": true,
-        "nogetaddrinfo": true,
-        "nokqueue": true,
-        "nopoll": true,
-        "noreuseport": true,
-        "nosplice": true,
         "numa_cpu_mapping": "enabled",
         "pidfile": "pidfile.text",
         "pp2_never_send_local": true,
-        "prealloc-fd": true,
-        "profiling_tasks": "enabled",
+        "prealloc_fd": true,
         "quiet": true,
-        "resetenv": "first second",
-        "server_state_base": "/path",
-        "server_state_file": "serverstatefile",
         "set_dumpable": true,
         "setcap": "cap_net_raw,cap_net_bind_service",
-        "spread_checks": 10,
-        "ssl_default_bind_ciphers": "ECDH+AESGCM:ECDH+CHACHA20",
-        "ssl_default_bind_ciphersuites": "TLS_AES_128_GCM_SHA256:TLS_AES_256_GCM_SHA384",
-        "ssl_default_bind_client_sigalgs": "ECDSA+SHA256:RSA+SHA256",
-        "ssl_default_bind_curves": "X25519:P-256",
-        "ssl_default_bind_sigalgs": "RSA+SHA256",
-        "ssl_default_server_ciphers": "ECDH+AESGCM:ECDH+CHACHA20:ECDH+AES256:ECDH+AES128:!aNULL:!SHA1:!AESCCM",
-        "ssl_default_server_ciphersuites": "TLS_AES_128_GCM_SHA256:TLS_AES_256_GCM_SHA384:TLS_CHACHA20_POLY1305_SHA256",
-        "ssl_default_server_client_sigalgs": "ECDSA+SHA256:RSA+SHA256",
-        "ssl_default_server_curves": "brainpoolP384r1,brainpoolP512r1",
-        "ssl_default_server_options": "ssl-min-ver TLSv1.1 no-tls-tickets",
-        "ssl_default_server_sigalgs": "RSA+SHA256",
-        "ssl_dh_param_file": "ssl-dh-param-file.txt",
-        "ssl_load_extra_files": "bundle",
-        "ssl_mode_async": "enabled",
-        "ssl_propquery": "provider",
-        "ssl_provider": "default",
-        "ssl_provider_path": "test",
-        "ssl_server_verify": "required",
-        "ssl_skip_self_issued_ca": true,
         "stats_maxconn": 20,
         "strict_limits": true,
         "thread_groups": 1,
         "tune_options": {
             "applet_zero_copy_forwarding": "disabled",
-            "buffers_limit": 11,
-            "buffers_reserve": 12,
-            "bufsize": 13,
             "comp_maxlevel": 14,
             "disable_zero_copy_forwarding": true,
             "events_max_events_at_once": 10,
@@ -264,14 +279,6 @@
             "idletimer": 22,
             "listener_default_shards": "by-process",
             "listener_multi_queue": "enabled",
-            "lua_burst_timeout": 205,
-            "lua_forced_yield": 23,
-            "lua_log_loggers": "enabled",
-            "lua_log_stderr": "auto",
-            "lua_maxmem": 65536,
-            "lua_service_timeout": 27,
-            "lua_session_timeout": 25,
-            "lua_task_timeout": 26,
             "max_checks_per_thread": 0,
             "maxaccept": 28,
             "maxpollevents": 29,
@@ -279,53 +286,17 @@
             "memory_hot_size": 56,
             "pattern_cache_size": 31,
             "peers_max_updates_at_once": 200,
-            "pipesize": 32,
             "pool_high_fd_ratio": 33,
             "pool_low_fd_ratio": 34,
             "pt_zero_copy_forwarding": "enabled",
-            "quic_frontend_conn_tx_buffers_limit": 10,
-            "quic_frontend_max_idle_timeout": 10000,
-            "quic_frontend_max_streams_bidi": 100,
-            "quic_max_frame_loss": 5,
-            "quic_reorder_ratio": 75,
-            "quic_retry_threshold": 5,
-            "quic_socket_owner": "connection",
-            "quic_zero_copy_fwd_send": "enabled",
-            "rcvbuf_backend": 1024,
-            "rcvbuf_client": 35,
-            "rcvbuf_frontend": 2048,
-            "rcvbuf_server": 36,
-            "recv_enough": 37,
             "ring_queues": 8,
             "runqueue_depth": 38,
             "sched_low_latency": "enabled",
-            "sndbuf_backend": 1024,
-            "sndbuf_client": 39,
-            "sndbuf_frontend": 2048,
-            "sndbuf_server": 40,
-            "ssl_cachesize": 41,
-            "ssl_capture_buffer_size": 47,
-            "ssl_ctx_cache_size": 46,
-            "ssl_default_dh_param": 45,
-            "ssl_force_private_cache": true,
-            "ssl_keylog": "enabled",
-            "ssl_lifetime": 43,
-            "ssl_maxrecord": 44,
-            "ssl_ocsp_update_max_delay": 48,
-            "ssl_ocsp_update_min_delay": 49,
-            "stick_counters": 50,
-            "vars_global_max_size": 51,
-            "vars_proc_max_size": 52,
-            "vars_reqres_max_size": 53,
-            "vars_sess_max_size": 54,
-            "vars_txn_max_size": 55,
-            "zlib_memlevel": 8,
-            "zlib_windowsize": 10
+            "stick_counters": 50
         },
         "tune_ssl_default_dh_param": 45,
         "uid": 1,
         "ulimit_n": 10,
-        "unsetenv": "third fourth",
         "user": "thomas",
         "wurfl_options": {
             "cache_size": 64,
@@ -334,7 +305,6 @@
             "information_list_separator": ",",
             "patch_file": "path1,path2"
         },
-        "zero_warning": true,
         "log_target_list": [
             {
                 "address": "127.0.0.1:10001",
@@ -355,17 +325,23 @@
                 "tcp": "enabled"
             }
         },
-        "thread_hard_limit": 77,
-        "ssl_security_level": 3,
         "http_err_codes": [
-            {"value": "400,402-444,446-480,490 -450 +500"},
-            {"value": "+501,505"}
+            {
+                "value": "400,402-444,446-480,490 -450 +500"
+            },
+            {
+                "value": "+501,505"
+            }
         ],
         "http_fail_codes": [
-            {"value": "400,402-444,446-480,490 -450 +500"},
-            {"value": "+501,505"}
+            {
+                "value": "400,402-444,446-480,490 -450 +500"
+            },
+            {
+                "value": "+501,505"
+            }
         ],
-        "ocsp_update": {
+        "ocsp_update_options": {
             "disable": false,
             "mindelay": 7,
             "maxdelay": 10,
@@ -374,6 +350,64 @@
                 "port": 123
             },
             "mode": "enabled"
+        },
+        "tune_buffer_options": {
+            "rcvbuf_backend": 1024,
+            "rcvbuf_client": 35,
+            "rcvbuf_frontend": 2048,
+            "rcvbuf_server": 36,
+            "recv_enough": 37,
+            "sndbuf_backend": 1024,
+            "sndbuf_client": 39,
+            "sndbuf_frontend": 2048,
+            "sndbuf_server": 40,
+            "pipesize": 32,
+            "buffers_limit": 11,
+            "buffers_reserve": 12,
+            "bufsize": 13
+        },
+        "tune_lua_options": {
+            "burst_timeout": 205,
+            "forced_yield": 23,
+            "log_loggers": "enabled",
+            "log_stderr": "auto",
+            "maxmem": 65536,
+            "service_timeout": 27,
+            "session_timeout": 25,
+            "task_timeout": 26
+        },
+        "tune_quic_options": {
+            "frontend_conn_tx_buffers_limit": 10,
+            "frontend_max_idle_timeout": 10000,
+            "frontend_max_streams_bidi": 100,
+            "max_frame_loss": 5,
+            "reorder_ratio": 75,
+            "retry_threshold": 5,
+            "socket_owner": "connection",
+            "zero_copy_fwd_send": "enabled"
+        },
+        "tune_ssl_options": {
+            "cachesize": 41,
+            "capture_buffer_size": 47,
+            "ctx_cache_size": 46,
+            "default_dh_param": 45,
+            "force_private_cache": true,
+            "keylog": "enabled",
+            "lifetime": 43,
+            "maxrecord": 44,
+            "ocsp_update_max_delay": 48,
+            "ocsp_update_min_delay": 49
+        },
+        "tune_vars_options": {
+            "global_max_size": 51,
+            "proc_max_size": 52,
+            "reqres_max_size": 53,
+            "sess_max_size": 54,
+            "txn_max_size": 55
+        },
+        "tune_zlib_options": {
+            "memlevel": 8,
+            "windowsize": 10
         }
     },
     "backends": {
@@ -493,7 +527,7 @@
                 "method": "consistent",
                 "modifier": "avalanche"
             },
-           "hash_balance_factor": 150,
+            "hash_balance_factor": 150,
             "http-check": {
                 "type": "connect"
             },
