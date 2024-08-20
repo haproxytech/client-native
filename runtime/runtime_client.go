@@ -17,6 +17,7 @@ package runtime
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"io"
 	"mime/multipart"
@@ -24,8 +25,6 @@ import (
 	"path/filepath"
 	"strings"
 	"sync"
-
-	"github.com/pkg/errors"
 
 	native_errors "github.com/haproxytech/client-native/v6/errors"
 	"github.com/haproxytech/client-native/v6/misc"
@@ -826,7 +825,7 @@ func (c *client) GetACLFile(id string) (files *models.ACLFile, err error) {
 
 	files, err = c.runtime.GetACL("#" + id)
 	if err != nil {
-		err = errors.Wrap(err, "cannot retrieve ACL file for "+id)
+		err = fmt.Errorf("cannot retrieve ACL file for %s: %w", id, err)
 	}
 
 	return
@@ -840,7 +839,7 @@ func (c *client) GetACLFiles() (files models.ACLFiles, err error) {
 
 	files, err = c.runtime.ShowACLS()
 	if err != nil {
-		err = errors.Wrap(err, "cannot retrieve ACL files")
+		err = fmt.Errorf("cannot retrieve ACL files: %w", err)
 	}
 
 	return
@@ -854,7 +853,7 @@ func (c *client) GetACLFilesEntries(id string) (files models.ACLFilesEntries, er
 
 	files, err = c.runtime.ShowACLFileEntries("#" + id)
 	if err != nil {
-		err = errors.Wrap(err, "cannot retrieve ACL files entries for "+id)
+		err = fmt.Errorf("cannot retrieve ACL files entries for %s: %w", id, err)
 	}
 
 	return
@@ -866,7 +865,7 @@ func (c *client) AddACLFileEntry(id, value string) error {
 		return errors.New("no valid runtime found")
 	}
 	if err := c.runtime.AddACLFileEntry(id, value); err != nil {
-		return errors.Wrap(err, "cannot add ACL files entry for "+id)
+		return fmt.Errorf("cannot add ACL files entry for %s: %w", id, err)
 	}
 
 	return nil
@@ -879,7 +878,7 @@ func (c *client) GetACLFileEntry(id, value string) (fileEntry *models.ACLFileEnt
 	}
 	var fe models.ACLFilesEntries
 	if fe, err = c.runtime.ShowACLFileEntries("#" + id); err != nil {
-		return nil, errors.Wrap(err, "cannot retrieve ACL file entries, cannot list available ACL files")
+		return nil, fmt.Errorf("cannot retrieve ACL file entries, cannot list available ACL files: %w", err)
 	}
 
 	for _, e := range fe {
@@ -890,7 +889,7 @@ func (c *client) GetACLFileEntry(id, value string) (fileEntry *models.ACLFileEnt
 	}
 
 	if fileEntry, err = c.runtime.GetACLFileEntry(id, value); err != nil {
-		err = errors.Wrap(err, "cannot retrieve ACL file entry for "+id)
+		err = fmt.Errorf("cannot retrieve ACL file entry for %s: %w", id, err)
 	}
 
 	return
@@ -902,7 +901,7 @@ func (c *client) DeleteACLFileEntry(id, value string) error {
 		return errors.New("no valid runtime found")
 	}
 	if err := c.runtime.DeleteACLFileEntry(id, value); err != nil {
-		return errors.Wrap(err, "cannot delete ACL files entry for "+id)
+		return fmt.Errorf("cannot delete ACL files entry for %s: %w", id, err)
 	}
 
 	return nil

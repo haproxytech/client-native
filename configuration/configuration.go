@@ -16,6 +16,7 @@
 package configuration
 
 import (
+	"errors"
 	"fmt"
 	"reflect"
 	"strconv"
@@ -30,7 +31,6 @@ import (
 	"github.com/haproxytech/client-native/v6/config-parser/parsers"
 	stats "github.com/haproxytech/client-native/v6/config-parser/parsers/stats/settings"
 	"github.com/haproxytech/client-native/v6/config-parser/types"
-	"github.com/pkg/errors"
 
 	"github.com/haproxytech/client-native/v6/configuration/options"
 	"github.com/haproxytech/client-native/v6/misc"
@@ -1531,7 +1531,7 @@ func (s *SectionObject) setFieldValue(fieldName string, field reflect.Value) err
 		return err
 	}
 
-	return errors.Errorf("Cannot parse option for %s %s: %s", s.Section, s.Name, fieldName)
+	return fmt.Errorf("cannot parse option for %s %s: %s", s.Section, s.Name, fieldName)
 }
 
 func (s *SectionObject) checkParams(fieldName string) (match bool) {
@@ -1703,7 +1703,7 @@ func (s *SectionObject) checkSingleLine(fieldName string, field reflect.Value) (
 		}
 		d := translateToParserData(field)
 		if d == nil {
-			return true, errors.Errorf("Cannot parse type for %s %s: %s", s.Section, s.Name, fieldName)
+			return true, fmt.Errorf("cannot parse type for %s %s: %s", s.Section, s.Name, fieldName)
 		}
 		if err := s.set(pName, d); err != nil {
 			return true, err
@@ -2591,8 +2591,7 @@ func (s *SectionObject) compression(field reflect.Value) error { //nolint:gocogn
 		err = s.set("compression direction", nil)
 		if err != nil {
 			// compression direction does not exist on Frontends
-			var setErr error
-			if errors.As(parser_errors.ErrAttributeNotFound, &setErr) {
+			if errors.Is(err, parser_errors.ErrAttributeNotFound) {
 				return nil
 			}
 			return err
