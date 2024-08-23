@@ -4911,9 +4911,6 @@ definitions:
           - silent-drop
           - strict-mode
           - tarpit
-          - track-sc0
-          - track-sc1
-          - track-sc2
           - track-sc
           - unset-var
           - use-service
@@ -5472,9 +5469,6 @@ definitions:
           - set-var-fmt
           - silent-drop
           - strict-mode
-          - track-sc0
-          - track-sc1
-          - track-sc2
           - track-sc
           - unset-var
           - wait-for-body
@@ -6220,9 +6214,6 @@ definitions:
           - set-var-fmt
           - silent-drop
           - switch-mode
-          - track-sc0
-          - track-sc1
-          - track-sc2
           - track-sc
           - unset-var
           - use-service
@@ -6568,9 +6559,6 @@ definitions:
           action:
             required: true
             value:
-              - track-sc0
-              - track-sc1
-              - track-sc2
               - track-sc
           type:
             value:
@@ -6584,9 +6572,6 @@ definitions:
           action:
             required: false
             value:
-              - track-sc0
-              - track-sc1
-              - track-sc2
               - track-sc
           type:
             value:
@@ -6601,9 +6586,6 @@ definitions:
           action:
             required: false
             value:
-              - track-sc0
-              - track-sc1
-              - track-sc2
               - track-sc
           type:
             value:

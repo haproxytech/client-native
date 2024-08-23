@@ -253,39 +253,6 @@ func TestSerializeTCPRequestRule(t *testing.T) {
 		},
 		{
 			input: models.TCPRequestRule{
-				Type:       models.TCPRequestRuleTypeConnection,
-				Action:     models.TCPRequestRuleActionTrackDashSc0,
-				Cond:       "if",
-				CondTest:   "TRUE",
-				TrackKey:   "src",
-				TrackTable: "tr0",
-			},
-			expectedResult: "connection track-sc0 src table tr0 if TRUE",
-		},
-		{
-			input: models.TCPRequestRule{
-				Type:       models.TCPRequestRuleTypeConnection,
-				Action:     models.TCPRequestRuleActionTrackDashSc1,
-				Cond:       "if",
-				CondTest:   "TRUE",
-				TrackKey:   "src",
-				TrackTable: "tr1",
-			},
-			expectedResult: "connection track-sc1 src table tr1 if TRUE",
-		},
-		{
-			input: models.TCPRequestRule{
-				Type:       models.TCPRequestRuleTypeConnection,
-				Action:     models.TCPRequestRuleActionTrackDashSc2,
-				Cond:       "if",
-				CondTest:   "TRUE",
-				TrackKey:   "src",
-				TrackTable: "tr2",
-			},
-			expectedResult: "connection track-sc2 src table tr2 if TRUE",
-		},
-		{
-			input: models.TCPRequestRule{
 				Type:              models.TCPRequestRuleTypeContent,
 				Action:            models.TCPRequestRuleActionTrackDashSc,
 				Cond:              "if",
@@ -298,39 +265,6 @@ func TestSerializeTCPRequestRule(t *testing.T) {
 		},
 		{
 			input: models.TCPRequestRule{
-				Type:       models.TCPRequestRuleTypeContent,
-				Action:     models.TCPRequestRuleActionTrackDashSc0,
-				Cond:       "if",
-				CondTest:   "TRUE",
-				TrackKey:   "src",
-				TrackTable: "tr0",
-			},
-			expectedResult: "content track-sc0 src table tr0 if TRUE",
-		},
-		{
-			input: models.TCPRequestRule{
-				Type:       models.TCPRequestRuleTypeContent,
-				Action:     models.TCPRequestRuleActionTrackDashSc1,
-				Cond:       "if",
-				CondTest:   "TRUE",
-				TrackKey:   "src",
-				TrackTable: "tr1",
-			},
-			expectedResult: "content track-sc1 src table tr1 if TRUE",
-		},
-		{
-			input: models.TCPRequestRule{
-				Type:       models.TCPRequestRuleTypeContent,
-				Action:     models.TCPRequestRuleActionTrackDashSc2,
-				Cond:       "if",
-				CondTest:   "TRUE",
-				TrackKey:   "src",
-				TrackTable: "tr2",
-			},
-			expectedResult: "content track-sc2 src table tr2 if TRUE",
-		},
-		{
-			input: models.TCPRequestRule{
 				Type:              models.TCPRequestRuleTypeSession,
 				Action:            models.TCPRequestRuleActionTrackDashSc,
 				Cond:              "if",
@@ -340,39 +274,6 @@ func TestSerializeTCPRequestRule(t *testing.T) {
 				TrackStickCounter: misc.Int64P(3),
 			},
 			expectedResult: "session track-sc3 src table tr0 if TRUE",
-		},
-		{
-			input: models.TCPRequestRule{
-				Type:       models.TCPRequestRuleTypeSession,
-				Action:     models.TCPRequestRuleActionTrackDashSc0,
-				Cond:       "if",
-				CondTest:   "TRUE",
-				TrackKey:   "src",
-				TrackTable: "tr0",
-			},
-			expectedResult: "session track-sc0 src table tr0 if TRUE",
-		},
-		{
-			input: models.TCPRequestRule{
-				Type:       models.TCPRequestRuleTypeSession,
-				Action:     models.TCPRequestRuleActionTrackDashSc1,
-				Cond:       "if",
-				CondTest:   "TRUE",
-				TrackKey:   "src",
-				TrackTable: "tr1",
-			},
-			expectedResult: "session track-sc1 src table tr1 if TRUE",
-		},
-		{
-			input: models.TCPRequestRule{
-				Type:       models.TCPRequestRuleTypeSession,
-				Action:     models.TCPRequestRuleActionTrackDashSc2,
-				Cond:       "if",
-				CondTest:   "TRUE",
-				TrackKey:   "src",
-				TrackTable: "tr2",
-			},
-			expectedResult: "session track-sc2 src table tr2 if TRUE",
 		},
 		{
 			input: models.TCPRequestRule{

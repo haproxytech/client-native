@@ -47,9 +47,6 @@ tcp_request_rule:
         - set-var-fmt
         - silent-drop
         - switch-mode
-        - track-sc0
-        - track-sc1
-        - track-sc2
         - track-sc
         - unset-var
         - use-service
@@ -210,7 +207,7 @@ tcp_request_rule:
       x-display-name: Sample expression rule
       x-dependency:
         action:
-          value: [track-sc0, track-sc1, track-sc2, track-sc]
+          value: [track-sc]
           required: true
         type:
           value: [session, connection, content]
@@ -219,7 +216,7 @@ tcp_request_rule:
       x-display-name: Optional table name
       x-dependency:
         action:
-          value: [track-sc0, track-sc1, track-sc2, track-sc]
+          value: [track-sc]
           required: false
         type:
           value: [session, connection, content]
@@ -229,7 +226,7 @@ tcp_request_rule:
       x-nullable: true
       x-dependency:
         action:
-          value: [track-sc0, track-sc1, track-sc2, track-sc]
+          value: [track-sc]
           required: false
         type:
           value: [session, connection, content]
