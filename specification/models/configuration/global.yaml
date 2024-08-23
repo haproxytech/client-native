@@ -118,6 +118,8 @@ global_base:
       type: integer
       x-nullable: true
       x-display-name: Stats maxconn
+    stats_file:
+      type: string
     thread_group_lines:
       type: array
       x-omitempty: true

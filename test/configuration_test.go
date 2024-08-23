@@ -184,6 +184,7 @@ global
   ssl-default-server-options ssl-min-ver TLSv1.1 no-tls-tickets
   thread-groups 1
   thread-group first 1-16
+  stats-file /var/haproxy/my-stats
   stats maxconn 20
   ssl-load-extra-files bundle
   deviceatlas-json-file atlas.json

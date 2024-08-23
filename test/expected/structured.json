@@ -248,6 +248,7 @@
         "quiet": true,
         "set_dumpable": true,
         "setcap": "cap_net_raw,cap_net_bind_service",
+        "stats_file": "/var/haproxy/my-stats",
         "stats_maxconn": 20,
         "strict_limits": true,
         "thread_groups": 1,
