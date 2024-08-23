@@ -493,6 +493,10 @@ func (s GlobalBase) Equal(t GlobalBase, opts ...Options) bool {
 		return false
 	}
 
+	if s.StatsFile != t.StatsFile {
+		return false
+	}
+
 	if !equalPointers(s.StatsMaxconn, t.StatsMaxconn) {
 		return false
 	}
@@ -1227,6 +1231,10 @@ func (s GlobalBase) Diff(t GlobalBase, opts ...Options) map[string][]interface{}
 		}
 	} else if !s.SslOptions.Equal(*t.SslOptions, opt) {
 		diff["SslOptions"] = []interface{}{ValueOrNil(s.SslOptions), ValueOrNil(t.SslOptions)}
+	}
+
+	if s.StatsFile != t.StatsFile {
+		diff["StatsFile"] = []interface{}{s.StatsFile, t.StatsFile}
 	}
 
 	if !equalPointers(s.StatsMaxconn, t.StatsMaxconn) {

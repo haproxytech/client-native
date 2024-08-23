@@ -2171,6 +2171,8 @@ definitions:
         x-omitempty: true
       ssl_options:
         $ref: '#/definitions/ssl_options'
+      stats_file:
+        type: string
       stats_maxconn:
         type: integer
         x-display-name: Stats maxconn

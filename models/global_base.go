@@ -200,6 +200,9 @@ type GlobalBase struct {
 	// ssl options
 	SslOptions *SslOptions `json:"ssl_options,omitempty"`
 
+	// stats file
+	StatsFile string `json:"stats_file,omitempty"`
+
 	// stats maxconn
 	StatsMaxconn *int64 `json:"stats_maxconn,omitempty"`
 

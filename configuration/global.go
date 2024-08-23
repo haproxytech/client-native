@@ -2358,6 +2358,12 @@ func ParseGlobalSection(p parser.Parser) (*models.Global, error) { //nolint:goco
 	}
 	global.SslOptions = sslOptions
 
+	statsFile, err := parseStringOption(p, "stats-file")
+	if err != nil {
+		return nil, err
+	}
+	global.StatsFile = statsFile
+
 	statsMaxconn, err := parseInt64POption(p, "stats maxconn")
 	if err != nil {
 		return nil, err
@@ -3144,6 +3150,10 @@ func SerializeGlobalSection(p parser.Parser, data *models.Global, opt *options.C
 	}
 
 	if err := serializeSSLOptions(p, data.SslOptions); err != nil {
+		return err
+	}
+
+	if err := serializeStringOption(p, "stats-file", data.StatsFile); err != nil {
 		return err
 	}
 

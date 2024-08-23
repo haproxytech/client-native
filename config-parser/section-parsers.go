@@ -375,6 +375,7 @@ func (p *configParser) getGlobalParser() *Parsers { //nolint: maintidx
 	addParser(parser, &sequence, &parsers.LogSendHostName{})
 	addParser(parser, &sequence, &parsers.LuaPrependPath{})
 	addParser(parser, &sequence, &parsers.LuaLoad{})
+	addParser(parser, &sequence, &simple.Word{Name: "stats-file"})
 	addParser(parser, &sequence, &simple.Word{Name: "server-state-file"})
 	addParser(parser, &sequence, &simple.Word{Name: "server-state-base"})
 	addParser(parser, &sequence, &parsers.SslEngine{})
