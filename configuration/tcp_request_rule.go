@@ -801,39 +801,6 @@ func SerializeTCPRequestRule(f models.TCPRequestRule, opt *options.Configuration
 					CondTest: f.CondTest,
 				},
 			}, nil
-		case models.TCPRequestRuleActionTrackDashSc0:
-			return &tcp_types.Connection{
-				Action: &actions.TrackSc{
-					Type:         actions.TrackScType,
-					StickCounter: 0,
-					Key:          f.TrackKey,
-					Table:        f.TrackTable,
-					Cond:         f.Cond,
-					CondTest:     f.CondTest,
-				},
-			}, nil
-		case models.TCPRequestRuleActionTrackDashSc1:
-			return &tcp_types.Connection{
-				Action: &actions.TrackSc{
-					Type:         actions.TrackScType,
-					StickCounter: 1,
-					Key:          f.TrackKey,
-					Table:        f.TrackTable,
-					Cond:         f.Cond,
-					CondTest:     f.CondTest,
-				},
-			}, nil
-		case models.TCPRequestRuleActionTrackDashSc2:
-			return &tcp_types.Connection{
-				Action: &actions.TrackSc{
-					Type:         actions.TrackScType,
-					StickCounter: 2,
-					Key:          f.TrackKey,
-					Table:        f.TrackTable,
-					Cond:         f.Cond,
-					CondTest:     f.CondTest,
-				},
-			}, nil
 		case models.TCPRequestRuleActionTrackDashSc:
 			if f.TrackStickCounter == nil {
 				return nil, NewConfError(ErrValidationError, "track_sc_stick_counter must be set")
@@ -1066,39 +1033,6 @@ func SerializeTCPRequestRule(f models.TCPRequestRule, opt *options.Configuration
 					Expr:     common.Expression{Expr: strings.Split(f.Expr, " ")},
 					Cond:     f.Cond,
 					CondTest: f.CondTest,
-				},
-			}, nil
-		case models.TCPRequestRuleActionTrackDashSc0:
-			return &tcp_types.Content{
-				Action: &actions.TrackSc{
-					Type:         actions.TrackScType,
-					StickCounter: 0,
-					Key:          f.TrackKey,
-					Table:        f.TrackTable,
-					Cond:         f.Cond,
-					CondTest:     f.CondTest,
-				},
-			}, nil
-		case models.TCPRequestRuleActionTrackDashSc1:
-			return &tcp_types.Content{
-				Action: &actions.TrackSc{
-					Type:         actions.TrackScType,
-					StickCounter: 1,
-					Key:          f.TrackKey,
-					Table:        f.TrackTable,
-					Cond:         f.Cond,
-					CondTest:     f.CondTest,
-				},
-			}, nil
-		case models.TCPRequestRuleActionTrackDashSc2:
-			return &tcp_types.Content{
-				Action: &actions.TrackSc{
-					Type:         actions.TrackScType,
-					StickCounter: 2,
-					Key:          f.TrackKey,
-					Table:        f.TrackTable,
-					Cond:         f.Cond,
-					CondTest:     f.CondTest,
 				},
 			}, nil
 		case models.TCPRequestRuleActionTrackDashSc:
@@ -1373,39 +1307,6 @@ func SerializeTCPRequestRule(f models.TCPRequestRule, opt *options.Configuration
 				Action: &actions.Reject{
 					Cond:     f.Cond,
 					CondTest: f.CondTest,
-				},
-			}, nil
-		case models.TCPRequestRuleActionTrackDashSc0:
-			return &tcp_types.Session{
-				Action: &actions.TrackSc{
-					Type:         actions.TrackScType,
-					StickCounter: 0,
-					Key:          f.TrackKey,
-					Table:        f.TrackTable,
-					Cond:         f.Cond,
-					CondTest:     f.CondTest,
-				},
-			}, nil
-		case models.TCPRequestRuleActionTrackDashSc1:
-			return &tcp_types.Session{
-				Action: &actions.TrackSc{
-					Type:         actions.TrackScType,
-					StickCounter: 1,
-					Key:          f.TrackKey,
-					Table:        f.TrackTable,
-					Cond:         f.Cond,
-					CondTest:     f.CondTest,
-				},
-			}, nil
-		case models.TCPRequestRuleActionTrackDashSc2:
-			return &tcp_types.Session{
-				Action: &actions.TrackSc{
-					Type:         actions.TrackScType,
-					StickCounter: 2,
-					Key:          f.TrackKey,
-					Table:        f.TrackTable,
-					Cond:         f.Cond,
-					CondTest:     f.CondTest,
 				},
 			}, nil
 		case models.TCPRequestRuleActionTrackDashSc:

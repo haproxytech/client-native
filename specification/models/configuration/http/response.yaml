@@ -44,9 +44,6 @@ http_response_rule:
         - set-var-fmt
         - silent-drop
         - strict-mode
-        - track-sc0
-        - track-sc1
-        - track-sc2
         - track-sc
         - unset-var
         - wait-for-body
