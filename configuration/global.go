@@ -2164,6 +2164,18 @@ func ParseGlobalSection(p parser.Parser) (*models.Global, error) { //nolint:goco
 	}
 	global.H1CaseAdjustFile = h1CaseAdjustFile
 
+	h1AcceptPayloadWithAnyMethod, err := parseBoolOption(p, "h1-accept-payload-with-any-method")
+	if err != nil {
+		return nil, err
+	}
+	global.H1AcceptPayloadWithAnyMethod = h1AcceptPayloadWithAnyMethod
+
+	h1DoNotCloseOnInsecureTransferEncoding, err := parseBoolOption(p, "h1-do-not-close-on-insecure-transfer-encoding")
+	if err != nil {
+		return nil, err
+	}
+	global.H1DoNotCloseOnInsecureTransferEncoding = h1DoNotCloseOnInsecureTransferEncoding
+
 	h2WorkaroundBogusWebsocketClients, err := parseBoolOption(p, "h2-workaround-bogus-websocket-clients")
 	if err != nil {
 		return nil, err
@@ -3012,6 +3024,14 @@ func SerializeGlobalSection(p parser.Parser, data *models.Global, opt *options.C
 	}
 
 	if err := serializeBoolOption(p, "h2-workaround-bogus-websocket-clients", data.H2WorkaroundBogusWebsocketClients); err != nil {
+		return err
+	}
+
+	if err := serializeBoolOption(p, "h1-accept-payload-with-any-method", data.H1AcceptPayloadWithAnyMethod); err != nil {
+		return err
+	}
+
+	if err := serializeBoolOption(p, "h1-do-not-close-on-insecure-transfer-encoding", data.H1DoNotCloseOnInsecureTransferEncoding); err != nil {
 		return err
 	}
 

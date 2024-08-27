@@ -442,6 +442,8 @@ func (p *configParser) getGlobalParser() *Parsers { //nolint: maintidx
 	addParser(parser, &sequence, &simple.Number{Name: "ocsp-update.mindelay"})
 	addParser(parser, &sequence, &simple.Number{Name: "ocsp-update.maxdelay"})
 	addParser(parser, &sequence, &simple.OnOff{Name: "ocsp-update.mode"})
+	addParser(parser, &sequence, &simple.Enabled{Name: "h1-accept-payload-with-any-method"})
+	addParser(parser, &sequence, &simple.Enabled{Name: "h1-do-not-close-on-insecure-transfer-encoding"})
 	// the ConfigSnippet must be at the end to parsers load order to ensure
 	// the overloading of any option has been declared previously
 	addParser(parser, &sequence, &parsers.ConfigSnippet{})

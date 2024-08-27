@@ -162,6 +162,8 @@ global
   insecure-setuid-wanted
   issuers-chain-path issuers-chain-path
   h2-workaround-bogus-websocket-clients
+  h1-accept-payload-with-any-method
+  h1-do-not-close-on-insecure-transfer-encoding
   lua-load-per-thread file.ext
   mworker-max-reloads 5
   numa-cpu-mapping
