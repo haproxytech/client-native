@@ -111,6 +111,12 @@ func TestGetGlobal(t *testing.T) {
 	if global.H1CaseAdjustFile != "/etc/headers.adjust" {
 		t.Errorf("H1CaseAdjustFile is %v, expected /etc/headers.adjust", global.H1CaseAdjustFile)
 	}
+	if !global.H1AcceptPayloadWithAnyMethod {
+		t.Errorf("H1AcceptPayloadWithAnyMethod is false, expected true")
+	}
+	if !global.H1DoNotCloseOnInsecureTransferEncoding {
+		t.Errorf("H1DoNotCloseOnInsecureTransferEncoding is false, expected true")
+	}
 	if global.UID != 1 {
 		t.Errorf("UID is %v, expected 1", global.UID)
 	}

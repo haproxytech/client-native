@@ -121,8 +121,14 @@ type Global struct {
 	// Pattern: ^[^\s]+$
 	Group string `json:"group,omitempty"`
 
+	// h1 accept payload with any method
+	H1AcceptPayloadWithAnyMethod bool `json:"h1_accept_payload_with_any_method,omitempty"`
+
 	// h1 case adjust file
 	H1CaseAdjustFile string `json:"h1_case_adjust_file,omitempty"`
+
+	// h1 do not close on insecure transfer encoding
+	H1DoNotCloseOnInsecureTransferEncoding bool `json:"h1_do_not_close_on_insecure_transfer_encoding,omitempty"`
 
 	// h2 workaround bogus websocket clients
 	H2WorkaroundBogusWebsocketClients bool `json:"h2_workaround_bogus_websocket_clients,omitempty"`
