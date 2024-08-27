@@ -1148,6 +1148,8 @@ definitions:
               pattern: ^[^\s]+$
               type: string
               x-display-name: Group
+          h1_accept_payload_with_any_method:
+              type: boolean
           h1_case_adjust:
               items:
                   properties:
@@ -1165,6 +1167,8 @@ definitions:
               x-omitempty: true
           h1_case_adjust_file:
               type: string
+          h1_do_not_close_on_insecure_transfer_encoding:
+              type: boolean
           h2_workaround_bogus_websocket_clients:
               type: boolean
           hard_stop_after:
