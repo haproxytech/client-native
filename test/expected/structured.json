@@ -170,6 +170,8 @@
         "grace": 10000,
         "group": "anderson",
         "h1_case_adjust_file": "/etc/headers.adjust",
+        "h1_accept_payload_with_any_method": true,
+        "h1_do_not_close_on_insecure_transfer_encoding": true,
         "h2_workaround_bogus_websocket_clients": true,
         "hard_stop_after": 2000,
         "http_client_options": {

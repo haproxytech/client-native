@@ -247,7 +247,15 @@ func (s GlobalBase) Equal(t GlobalBase, opts ...Options) bool {
 		return false
 	}
 
+	if s.H1AcceptPayloadWithAnyMethod != t.H1AcceptPayloadWithAnyMethod {
+		return false
+	}
+
 	if s.H1CaseAdjustFile != t.H1CaseAdjustFile {
+		return false
+	}
+
+	if s.H1DoNotCloseOnInsecureTransferEncoding != t.H1DoNotCloseOnInsecureTransferEncoding {
 		return false
 	}
 
@@ -973,8 +981,16 @@ func (s GlobalBase) Diff(t GlobalBase, opts ...Options) map[string][]interface{}
 		diff["Group"] = []interface{}{s.Group, t.Group}
 	}
 
+	if s.H1AcceptPayloadWithAnyMethod != t.H1AcceptPayloadWithAnyMethod {
+		diff["H1AcceptPayloadWithAnyMethod"] = []interface{}{s.H1AcceptPayloadWithAnyMethod, t.H1AcceptPayloadWithAnyMethod}
+	}
+
 	if s.H1CaseAdjustFile != t.H1CaseAdjustFile {
 		diff["H1CaseAdjustFile"] = []interface{}{s.H1CaseAdjustFile, t.H1CaseAdjustFile}
+	}
+
+	if s.H1DoNotCloseOnInsecureTransferEncoding != t.H1DoNotCloseOnInsecureTransferEncoding {
+		diff["H1DoNotCloseOnInsecureTransferEncoding"] = []interface{}{s.H1DoNotCloseOnInsecureTransferEncoding, t.H1DoNotCloseOnInsecureTransferEncoding}
 	}
 
 	if s.H2WorkaroundBogusWebsocketClients != t.H2WorkaroundBogusWebsocketClients {

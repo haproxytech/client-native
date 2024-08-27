@@ -89,6 +89,8 @@ func TestGlobalBaseEqualFalse(t *testing.T) {
 		result.ExternalCheck = !sample.ExternalCheck
 		result.Gid = sample.Gid + 1
 		result.Grace = Ptr(*sample.Grace + 1)
+		result.H1AcceptPayloadWithAnyMethod = !sample.H1AcceptPayloadWithAnyMethod
+		result.H1DoNotCloseOnInsecureTransferEncoding = !sample.H1DoNotCloseOnInsecureTransferEncoding
 		result.H2WorkaroundBogusWebsocketClients = !sample.H2WorkaroundBogusWebsocketClients
 		result.HardStopAfter = Ptr(*sample.HardStopAfter + 1)
 		result.InsecureForkWanted = !sample.InsecureForkWanted
@@ -192,6 +194,8 @@ func TestGlobalBaseDiffFalse(t *testing.T) {
 		result.ExternalCheck = !sample.ExternalCheck
 		result.Gid = sample.Gid + 1
 		result.Grace = Ptr(*sample.Grace + 1)
+		result.H1AcceptPayloadWithAnyMethod = !sample.H1AcceptPayloadWithAnyMethod
+		result.H1DoNotCloseOnInsecureTransferEncoding = !sample.H1DoNotCloseOnInsecureTransferEncoding
 		result.H2WorkaroundBogusWebsocketClients = !sample.H2WorkaroundBogusWebsocketClients
 		result.HardStopAfter = Ptr(*sample.HardStopAfter + 1)
 		result.InsecureForkWanted = !sample.InsecureForkWanted
@@ -217,7 +221,7 @@ func TestGlobalBaseDiffFalse(t *testing.T) {
 
 	for _, sample := range samples {
 		result := sample.a.Diff(sample.b)
-		if len(result) != 64 {
+		if len(result) != 66 {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {
@@ -227,7 +231,7 @@ func TestGlobalBaseDiffFalse(t *testing.T) {
 			if err != nil {
 				t.Errorf(err.Error())
 			}
-			t.Errorf("Expected GlobalBase to be different in 64 cases, but it is not (%d) %s %s", len(result), a, b)
+			t.Errorf("Expected GlobalBase to be different in 66 cases, but it is not (%d) %s %s", len(result), a, b)
 		}
 	}
 }

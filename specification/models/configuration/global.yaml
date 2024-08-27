@@ -208,6 +208,10 @@ global_base:
             type: string
     h1_case_adjust_file:
       type: string
+    h1_accept_payload_with_any_method:
+      type: boolean
+    h1_do_not_close_on_insecure_transfer_encoding:
+      type: boolean
     http_err_codes:
       type: array
       x-display-name: Replace, reduce or extend the list of status codes that define an error
