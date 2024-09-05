@@ -1,6 +1,8 @@
 package configuration
 
 import (
+	"encoding/json"
+
 	"github.com/haproxytech/client-native/v6/config-parser/parsers/http/actions"
 
 	"github.com/haproxytech/client-native/v6/misc"
@@ -35,4 +37,28 @@ func modelHdr2ActionHdr(hdrs []*models.ReturnHeader) []*actions.Hdr {
 		headers = append(headers, &hdr)
 	}
 	return headers
+}
+
+func parseMetadata(comment string) map[string]interface{} {
+	if comment == "" {
+		return nil
+	}
+	metadata := make(map[string]interface{})
+	err := json.Unmarshal([]byte(comment), &metadata)
+	if err != nil {
+		metadata["comment"] = comment
+		return metadata
+	}
+	return metadata
+}
+
+func serializeMetadata(metadata map[string]interface{}) (string, error) {
+	if metadata == nil {
+		return "", nil
+	}
+	b, err := json.Marshal(metadata)
+	if err != nil {
+		return "", err
+	}
+	return string(b), nil
 }
