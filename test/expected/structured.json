@@ -977,7 +977,10 @@
                     "address": "192.168.1.1",
                     "id": 1234,
                     "name": "webserv",
-                    "port": 9200
+                    "port": 9200,
+                    "metadata": {
+                        "comment": "my comment"
+                    }
                 },
                 "webserv2": {
                     "cookie": "BLAH",
@@ -996,7 +999,11 @@
                     "name": "webserv2",
                     "port": 9300,
                     "pool_conn_name": "apoolconnname",
-                    "hash_key": "akey"
+                    "hash_key": "akey",
+                    "metadata": {
+                        "comment": "my structured comment",
+                        "id": "my_random_id_for_server"
+                    }
                 }
             }
         },
