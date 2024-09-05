@@ -22,6 +22,7 @@ import (
 	"testing"
 
 	"github.com/go-faker/faker/v4"
+	"github.com/go-faker/faker/v4/pkg/options"
 
 	jsoniter "github.com/json-iterator/go"
 )
@@ -33,7 +34,7 @@ func TestSslOptionsEqual(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample SslOptions
 		var result SslOptions
-		err := faker.FakeData(&sample)
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -75,11 +76,11 @@ func TestSslOptionsEqualFalse(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample SslOptions
 		var result SslOptions
-		err := faker.FakeData(&sample)
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		err = faker.FakeData(&result)
+		err = faker.FakeData(&result, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -116,7 +117,7 @@ func TestSslOptionsDiff(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample SslOptions
 		var result SslOptions
-		err := faker.FakeData(&sample)
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -158,11 +159,11 @@ func TestSslOptionsDiffFalse(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample SslOptions
 		var result SslOptions
-		err := faker.FakeData(&sample)
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		err = faker.FakeData(&result)
+		err = faker.FakeData(&result, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -199,7 +200,7 @@ func TestSslEngineEqual(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample SslEngine
 		var result SslEngine
-		err := faker.FakeData(&sample)
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -241,11 +242,11 @@ func TestSslEngineEqualFalse(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample SslEngine
 		var result SslEngine
-		err := faker.FakeData(&sample)
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		err = faker.FakeData(&result)
+		err = faker.FakeData(&result, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -278,7 +279,7 @@ func TestSslEngineDiff(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample SslEngine
 		var result SslEngine
-		err := faker.FakeData(&sample)
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -320,11 +321,11 @@ func TestSslEngineDiffFalse(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample SslEngine
 		var result SslEngine
-		err := faker.FakeData(&sample)
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		err = faker.FakeData(&result)
+		err = faker.FakeData(&result, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}

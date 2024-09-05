@@ -22,6 +22,7 @@ import (
 	"testing"
 
 	"github.com/go-faker/faker/v4"
+	"github.com/go-faker/faker/v4/pkg/options"
 
 	jsoniter "github.com/json-iterator/go"
 )
@@ -33,7 +34,7 @@ func TestStickTableEqual(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample StickTable
 		var result StickTable
-		err := faker.FakeData(&sample)
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -75,11 +76,11 @@ func TestStickTableEqualFalse(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample StickTable
 		var result StickTable
-		err := faker.FakeData(&sample)
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		err = faker.FakeData(&result)
+		err = faker.FakeData(&result, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -114,7 +115,7 @@ func TestStickTableDiff(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample StickTable
 		var result StickTable
-		err := faker.FakeData(&sample)
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -156,11 +157,11 @@ func TestStickTableDiffFalse(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample StickTable
 		var result StickTable
-		err := faker.FakeData(&sample)
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		err = faker.FakeData(&result)
+		err = faker.FakeData(&result, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -195,7 +196,7 @@ func TestStickTableFieldEqual(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample StickTableField
 		var result StickTableField
-		err := faker.FakeData(&sample)
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -237,11 +238,11 @@ func TestStickTableFieldEqualFalse(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample StickTableField
 		var result StickTableField
-		err := faker.FakeData(&sample)
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		err = faker.FakeData(&result)
+		err = faker.FakeData(&result, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -275,7 +276,7 @@ func TestStickTableFieldDiff(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample StickTableField
 		var result StickTableField
-		err := faker.FakeData(&sample)
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -317,11 +318,11 @@ func TestStickTableFieldDiffFalse(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample StickTableField
 		var result StickTableField
-		err := faker.FakeData(&sample)
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		err = faker.FakeData(&result)
+		err = faker.FakeData(&result, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}

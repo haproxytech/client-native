@@ -22,6 +22,7 @@ import (
 	"testing"
 
 	"github.com/go-faker/faker/v4"
+	"github.com/go-faker/faker/v4/pkg/options"
 
 	jsoniter "github.com/json-iterator/go"
 )
@@ -33,7 +34,7 @@ func TestBackendBaseEqual(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample BackendBase
 		var result BackendBase
-		err := faker.FakeData(&sample)
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -75,11 +76,11 @@ func TestBackendBaseEqualFalse(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample BackendBase
 		var result BackendBase
-		err := faker.FakeData(&sample)
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		err = faker.FakeData(&result)
+		err = faker.FakeData(&result, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -131,7 +132,7 @@ func TestBackendBaseDiff(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample BackendBase
 		var result BackendBase
-		err := faker.FakeData(&sample)
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -173,11 +174,11 @@ func TestBackendBaseDiffFalse(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample BackendBase
 		var result BackendBase
-		err := faker.FakeData(&sample)
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		err = faker.FakeData(&result)
+		err = faker.FakeData(&result, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -229,7 +230,7 @@ func TestBackendForcePersistEqual(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample BackendForcePersist
 		var result BackendForcePersist
-		err := faker.FakeData(&sample)
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -271,11 +272,11 @@ func TestBackendForcePersistEqualFalse(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample BackendForcePersist
 		var result BackendForcePersist
-		err := faker.FakeData(&sample)
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		err = faker.FakeData(&result)
+		err = faker.FakeData(&result, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -308,7 +309,7 @@ func TestBackendForcePersistDiff(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample BackendForcePersist
 		var result BackendForcePersist
-		err := faker.FakeData(&sample)
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -350,11 +351,11 @@ func TestBackendForcePersistDiffFalse(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample BackendForcePersist
 		var result BackendForcePersist
-		err := faker.FakeData(&sample)
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		err = faker.FakeData(&result)
+		err = faker.FakeData(&result, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -387,7 +388,7 @@ func TestForcePersistEqual(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample ForcePersist
 		var result ForcePersist
-		err := faker.FakeData(&sample)
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -429,11 +430,11 @@ func TestForcePersistEqualFalse(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample ForcePersist
 		var result ForcePersist
-		err := faker.FakeData(&sample)
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		err = faker.FakeData(&result)
+		err = faker.FakeData(&result, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -466,7 +467,7 @@ func TestForcePersistDiff(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample ForcePersist
 		var result ForcePersist
-		err := faker.FakeData(&sample)
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -508,11 +509,11 @@ func TestForcePersistDiffFalse(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample ForcePersist
 		var result ForcePersist
-		err := faker.FakeData(&sample)
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		err = faker.FakeData(&result)
+		err = faker.FakeData(&result, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -545,7 +546,7 @@ func TestBackendIgnorePersistEqual(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample BackendIgnorePersist
 		var result BackendIgnorePersist
-		err := faker.FakeData(&sample)
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -587,11 +588,11 @@ func TestBackendIgnorePersistEqualFalse(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample BackendIgnorePersist
 		var result BackendIgnorePersist
-		err := faker.FakeData(&sample)
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		err = faker.FakeData(&result)
+		err = faker.FakeData(&result, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -624,7 +625,7 @@ func TestBackendIgnorePersistDiff(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample BackendIgnorePersist
 		var result BackendIgnorePersist
-		err := faker.FakeData(&sample)
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -666,11 +667,11 @@ func TestBackendIgnorePersistDiffFalse(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample BackendIgnorePersist
 		var result BackendIgnorePersist
-		err := faker.FakeData(&sample)
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		err = faker.FakeData(&result)
+		err = faker.FakeData(&result, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -703,7 +704,7 @@ func TestIgnorePersistEqual(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample IgnorePersist
 		var result IgnorePersist
-		err := faker.FakeData(&sample)
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -745,11 +746,11 @@ func TestIgnorePersistEqualFalse(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample IgnorePersist
 		var result IgnorePersist
-		err := faker.FakeData(&sample)
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		err = faker.FakeData(&result)
+		err = faker.FakeData(&result, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -782,7 +783,7 @@ func TestIgnorePersistDiff(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample IgnorePersist
 		var result IgnorePersist
-		err := faker.FakeData(&sample)
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -824,11 +825,11 @@ func TestIgnorePersistDiffFalse(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample IgnorePersist
 		var result IgnorePersist
-		err := faker.FakeData(&sample)
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		err = faker.FakeData(&result)
+		err = faker.FakeData(&result, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}

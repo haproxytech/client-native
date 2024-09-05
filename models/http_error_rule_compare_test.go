@@ -22,6 +22,7 @@ import (
 	"testing"
 
 	"github.com/go-faker/faker/v4"
+	"github.com/go-faker/faker/v4/pkg/options"
 
 	jsoniter "github.com/json-iterator/go"
 )
@@ -33,7 +34,7 @@ func TestHTTPErrorRuleEqual(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample HTTPErrorRule
 		var result HTTPErrorRule
-		err := faker.FakeData(&sample)
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -75,11 +76,11 @@ func TestHTTPErrorRuleEqualFalse(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample HTTPErrorRule
 		var result HTTPErrorRule
-		err := faker.FakeData(&sample)
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		err = faker.FakeData(&result)
+		err = faker.FakeData(&result, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -113,7 +114,7 @@ func TestHTTPErrorRuleDiff(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample HTTPErrorRule
 		var result HTTPErrorRule
-		err := faker.FakeData(&sample)
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -155,11 +156,11 @@ func TestHTTPErrorRuleDiffFalse(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample HTTPErrorRule
 		var result HTTPErrorRule
-		err := faker.FakeData(&sample)
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		err = faker.FakeData(&result)
+		err = faker.FakeData(&result, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}

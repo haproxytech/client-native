@@ -22,6 +22,7 @@ import (
 	"testing"
 
 	"github.com/go-faker/faker/v4"
+	"github.com/go-faker/faker/v4/pkg/options"
 
 	jsoniter "github.com/json-iterator/go"
 )
@@ -33,7 +34,7 @@ func TestTCPCheckEqual(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample TCPCheck
 		var result TCPCheck
-		err := faker.FakeData(&sample)
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -75,11 +76,11 @@ func TestTCPCheckEqualFalse(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample TCPCheck
 		var result TCPCheck
-		err := faker.FakeData(&sample)
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		err = faker.FakeData(&result)
+		err = faker.FakeData(&result, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -120,7 +121,7 @@ func TestTCPCheckDiff(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample TCPCheck
 		var result TCPCheck
-		err := faker.FakeData(&sample)
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -162,11 +163,11 @@ func TestTCPCheckDiffFalse(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample TCPCheck
 		var result TCPCheck
-		err := faker.FakeData(&sample)
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		err = faker.FakeData(&result)
+		err = faker.FakeData(&result, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}

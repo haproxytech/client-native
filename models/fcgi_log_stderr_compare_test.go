@@ -22,6 +22,7 @@ import (
 	"testing"
 
 	"github.com/go-faker/faker/v4"
+	"github.com/go-faker/faker/v4/pkg/options"
 
 	jsoniter "github.com/json-iterator/go"
 )
@@ -33,7 +34,7 @@ func TestFCGILogStderrEqual(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample FCGILogStderr
 		var result FCGILogStderr
-		err := faker.FakeData(&sample)
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -75,11 +76,11 @@ func TestFCGILogStderrEqualFalse(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample FCGILogStderr
 		var result FCGILogStderr
-		err := faker.FakeData(&sample)
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		err = faker.FakeData(&result)
+		err = faker.FakeData(&result, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -114,7 +115,7 @@ func TestFCGILogStderrDiff(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample FCGILogStderr
 		var result FCGILogStderr
-		err := faker.FakeData(&sample)
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -156,11 +157,11 @@ func TestFCGILogStderrDiffFalse(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample FCGILogStderr
 		var result FCGILogStderr
-		err := faker.FakeData(&sample)
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		err = faker.FakeData(&result)
+		err = faker.FakeData(&result, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -195,7 +196,7 @@ func TestFCGILogStderrSampleEqual(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample FCGILogStderrSample
 		var result FCGILogStderrSample
-		err := faker.FakeData(&sample)
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -237,11 +238,11 @@ func TestFCGILogStderrSampleEqualFalse(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample FCGILogStderrSample
 		var result FCGILogStderrSample
-		err := faker.FakeData(&sample)
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		err = faker.FakeData(&result)
+		err = faker.FakeData(&result, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -275,7 +276,7 @@ func TestFCGILogStderrSampleDiff(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample FCGILogStderrSample
 		var result FCGILogStderrSample
-		err := faker.FakeData(&sample)
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -317,11 +318,11 @@ func TestFCGILogStderrSampleDiffFalse(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample FCGILogStderrSample
 		var result FCGILogStderrSample
-		err := faker.FakeData(&sample)
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		err = faker.FakeData(&result)
+		err = faker.FakeData(&result, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}

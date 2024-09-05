@@ -22,6 +22,7 @@ import (
 	"testing"
 
 	"github.com/go-faker/faker/v4"
+	"github.com/go-faker/faker/v4/pkg/options"
 
 	jsoniter "github.com/json-iterator/go"
 )
@@ -33,7 +34,7 @@ func TestSpoeMessageEqual(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample SpoeMessage
 		var result SpoeMessage
-		err := faker.FakeData(&sample)
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -75,11 +76,11 @@ func TestSpoeMessageEqualFalse(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample SpoeMessage
 		var result SpoeMessage
-		err := faker.FakeData(&sample)
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		err = faker.FakeData(&result)
+		err = faker.FakeData(&result, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -112,7 +113,7 @@ func TestSpoeMessageDiff(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample SpoeMessage
 		var result SpoeMessage
-		err := faker.FakeData(&sample)
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -154,11 +155,11 @@ func TestSpoeMessageDiffFalse(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample SpoeMessage
 		var result SpoeMessage
-		err := faker.FakeData(&sample)
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		err = faker.FakeData(&result)
+		err = faker.FakeData(&result, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -191,7 +192,7 @@ func TestSpoeMessageEventEqual(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample SpoeMessageEvent
 		var result SpoeMessageEvent
-		err := faker.FakeData(&sample)
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -233,11 +234,11 @@ func TestSpoeMessageEventEqualFalse(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample SpoeMessageEvent
 		var result SpoeMessageEvent
-		err := faker.FakeData(&sample)
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		err = faker.FakeData(&result)
+		err = faker.FakeData(&result, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -270,7 +271,7 @@ func TestSpoeMessageEventDiff(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample SpoeMessageEvent
 		var result SpoeMessageEvent
-		err := faker.FakeData(&sample)
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -312,11 +313,11 @@ func TestSpoeMessageEventDiffFalse(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample SpoeMessageEvent
 		var result SpoeMessageEvent
-		err := faker.FakeData(&sample)
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		err = faker.FakeData(&result)
+		err = faker.FakeData(&result, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
