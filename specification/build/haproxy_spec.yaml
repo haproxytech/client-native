@@ -4193,6 +4193,9 @@ definitions:
           id:
             type: integer
             x-nullable: true
+          metadata:
+            additionalProperties:
+              type: object
           name:
             pattern: ^[^\s]+$
             type: string

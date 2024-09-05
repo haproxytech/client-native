@@ -511,6 +511,7 @@ func ParseServer(ondiskServer types.Server) *models.Server {
 	}
 	s.Address = address
 	s.Port = port
+	s.Metadata = parseMetadata(ondiskServer.Comment)
 	for _, p := range ondiskServer.Params {
 		if v, ok := p.(*params.ServerOptionValue); ok {
 			if v.Name == "id" {
@@ -861,6 +862,8 @@ func SerializeServer(s models.Server, opt *options.ConfigurationOptions) types.S
 	} else {
 		server.Address = misc.SanitizeIPv6Address(s.Address)
 	}
+	comment, _ := serializeMetadata(s.Metadata)
+	server.Comment = comment
 	server.Params = serializeServerParams(s.ServerParams, opt)
 	if s.ID != nil {
 		server.Params = append(server.Params, &params.ServerOptionValue{Name: "id", Value: strconv.FormatInt(*s.ID, 10)})

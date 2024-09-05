@@ -17,7 +17,6 @@ package test
 
 import (
 	"fmt"
-	"reflect"
 	"testing"
 
 	"github.com/google/go-cmp/cmp"
@@ -143,6 +142,10 @@ func TestCreateEditDeleteServer(t *testing.T) {
 		Name:    "created",
 		Address: "192.168.2.1",
 		Port:    &port,
+		Metadata: map[string]interface{}{
+			"type": "good type",
+			"id":   "my-id-12",
+		},
 		ServerParams: models.ServerParams{
 			Backup:         "enabled",
 			Check:          "enabled",
@@ -180,12 +183,7 @@ func TestCreateEditDeleteServer(t *testing.T) {
 	if err != nil {
 		t.Error(err.Error())
 	}
-
-	if !reflect.DeepEqual(server, s) {
-		fmt.Printf("Created server: %v\n", server)
-		fmt.Printf("Given server: %v\n", s)
-		t.Error("Created server not equal to given server")
-	}
+	require.True(t, server.Equal(*s), "diff %v", cmp.Diff(server, s))
 
 	if v != version {
 		t.Errorf("Version %v returned, expected %v", v, version)
@@ -226,12 +224,7 @@ func TestCreateEditDeleteServer(t *testing.T) {
 	if err != nil {
 		t.Error(err.Error())
 	}
-
-	if !reflect.DeepEqual(server, s) {
-		fmt.Printf("Edited server: %v\n", server)
-		fmt.Printf("Given server: %v\n", s)
-		t.Error("Edited server not equal to given server")
-	}
+	require.True(t, server.Equal(*s), "diff %v", cmp.Diff(server, s))
 
 	if v != version {
 		t.Errorf("Version %v returned, expected %v", v, version)

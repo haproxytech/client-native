@@ -47,6 +47,9 @@ type Server struct {
 	// id
 	ID *int64 `json:"id,omitempty"`
 
+	// metadata
+	Metadata map[string]interface{} `json:"metadata,omitempty"`
+
 	// name
 	// Required: true
 	// Pattern: ^[^\s]+$
@@ -76,6 +79,8 @@ func (m *Server) UnmarshalJSON(raw []byte) error {
 
 		ID *int64 `json:"id,omitempty"`
 
+		Metadata map[string]interface{} `json:"metadata,omitempty"`
+
 		Name string `json:"name"`
 
 		Port *int64 `json:"port,omitempty"`
@@ -87,6 +92,8 @@ func (m *Server) UnmarshalJSON(raw []byte) error {
 	m.Address = dataAO1.Address
 
 	m.ID = dataAO1.ID
+
+	m.Metadata = dataAO1.Metadata
 
 	m.Name = dataAO1.Name
 
@@ -109,6 +116,8 @@ func (m Server) MarshalJSON() ([]byte, error) {
 
 		ID *int64 `json:"id,omitempty"`
 
+		Metadata map[string]interface{} `json:"metadata,omitempty"`
+
 		Name string `json:"name"`
 
 		Port *int64 `json:"port,omitempty"`
@@ -117,6 +126,8 @@ func (m Server) MarshalJSON() ([]byte, error) {
 	dataAO1.Address = m.Address
 
 	dataAO1.ID = m.ID
+
+	dataAO1.Metadata = m.Metadata
 
 	dataAO1.Name = m.Name
 
