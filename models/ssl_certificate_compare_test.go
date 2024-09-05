@@ -24,6 +24,7 @@ import (
 	"time"
 
 	"github.com/go-faker/faker/v4"
+	"github.com/go-faker/faker/v4/pkg/options"
 	"github.com/go-openapi/strfmt"
 
 	jsoniter "github.com/json-iterator/go"
@@ -36,7 +37,7 @@ func TestSslCertificateEqual(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample SslCertificate
 		var result SslCertificate
-		err := faker.FakeData(&sample)
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -78,11 +79,11 @@ func TestSslCertificateEqualFalse(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample SslCertificate
 		var result SslCertificate
-		err := faker.FakeData(&sample)
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		err = faker.FakeData(&result)
+		err = faker.FakeData(&result, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -118,7 +119,7 @@ func TestSslCertificateDiff(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample SslCertificate
 		var result SslCertificate
-		err := faker.FakeData(&sample)
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -160,11 +161,11 @@ func TestSslCertificateDiffFalse(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample SslCertificate
 		var result SslCertificate
-		err := faker.FakeData(&sample)
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		err = faker.FakeData(&result)
+		err = faker.FakeData(&result, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}

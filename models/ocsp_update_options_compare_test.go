@@ -22,6 +22,7 @@ import (
 	"testing"
 
 	"github.com/go-faker/faker/v4"
+	"github.com/go-faker/faker/v4/pkg/options"
 
 	jsoniter "github.com/json-iterator/go"
 )
@@ -33,7 +34,7 @@ func TestOcspUpdateOptionsEqual(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample OcspUpdateOptions
 		var result OcspUpdateOptions
-		err := faker.FakeData(&sample)
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -75,11 +76,11 @@ func TestOcspUpdateOptionsEqualFalse(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample OcspUpdateOptions
 		var result OcspUpdateOptions
-		err := faker.FakeData(&sample)
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		err = faker.FakeData(&result)
+		err = faker.FakeData(&result, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -115,7 +116,7 @@ func TestOcspUpdateOptionsDiff(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample OcspUpdateOptions
 		var result OcspUpdateOptions
-		err := faker.FakeData(&sample)
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -157,11 +158,11 @@ func TestOcspUpdateOptionsDiffFalse(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample OcspUpdateOptions
 		var result OcspUpdateOptions
-		err := faker.FakeData(&sample)
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		err = faker.FakeData(&result)
+		err = faker.FakeData(&result, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -197,7 +198,7 @@ func TestOcspUpdateOptionsHttpproxyEqual(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample OcspUpdateOptionsHttpproxy
 		var result OcspUpdateOptionsHttpproxy
-		err := faker.FakeData(&sample)
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -239,11 +240,11 @@ func TestOcspUpdateOptionsHttpproxyEqualFalse(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample OcspUpdateOptionsHttpproxy
 		var result OcspUpdateOptionsHttpproxy
-		err := faker.FakeData(&sample)
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		err = faker.FakeData(&result)
+		err = faker.FakeData(&result, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -277,7 +278,7 @@ func TestOcspUpdateOptionsHttpproxyDiff(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample OcspUpdateOptionsHttpproxy
 		var result OcspUpdateOptionsHttpproxy
-		err := faker.FakeData(&sample)
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -319,11 +320,11 @@ func TestOcspUpdateOptionsHttpproxyDiffFalse(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample OcspUpdateOptionsHttpproxy
 		var result OcspUpdateOptionsHttpproxy
-		err := faker.FakeData(&sample)
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		err = faker.FakeData(&result)
+		err = faker.FakeData(&result, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}

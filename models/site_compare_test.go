@@ -22,6 +22,7 @@ import (
 	"testing"
 
 	"github.com/go-faker/faker/v4"
+	"github.com/go-faker/faker/v4/pkg/options"
 
 	jsoniter "github.com/json-iterator/go"
 )
@@ -33,7 +34,7 @@ func TestSiteEqual(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample Site
 		var result Site
-		err := faker.FakeData(&sample)
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -75,11 +76,11 @@ func TestSiteEqualFalse(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample Site
 		var result Site
-		err := faker.FakeData(&sample)
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		err = faker.FakeData(&result)
+		err = faker.FakeData(&result, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -112,7 +113,7 @@ func TestSiteDiff(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample Site
 		var result Site
-		err := faker.FakeData(&sample)
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -154,11 +155,11 @@ func TestSiteDiffFalse(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample Site
 		var result Site
-		err := faker.FakeData(&sample)
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		err = faker.FakeData(&result)
+		err = faker.FakeData(&result, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -191,7 +192,7 @@ func TestSiteFarmEqual(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample SiteFarm
 		var result SiteFarm
-		err := faker.FakeData(&sample)
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -233,11 +234,11 @@ func TestSiteFarmEqualFalse(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample SiteFarm
 		var result SiteFarm
-		err := faker.FakeData(&sample)
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		err = faker.FakeData(&result)
+		err = faker.FakeData(&result, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -270,7 +271,7 @@ func TestSiteFarmDiff(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample SiteFarm
 		var result SiteFarm
-		err := faker.FakeData(&sample)
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -312,11 +313,11 @@ func TestSiteFarmDiffFalse(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample SiteFarm
 		var result SiteFarm
-		err := faker.FakeData(&sample)
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		err = faker.FakeData(&result)
+		err = faker.FakeData(&result, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -349,7 +350,7 @@ func TestSiteServiceEqual(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample SiteService
 		var result SiteService
-		err := faker.FakeData(&sample)
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -391,11 +392,11 @@ func TestSiteServiceEqualFalse(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample SiteService
 		var result SiteService
-		err := faker.FakeData(&sample)
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		err = faker.FakeData(&result)
+		err = faker.FakeData(&result, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -429,7 +430,7 @@ func TestSiteServiceDiff(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample SiteService
 		var result SiteService
-		err := faker.FakeData(&sample)
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -471,11 +472,11 @@ func TestSiteServiceDiffFalse(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample SiteService
 		var result SiteService
-		err := faker.FakeData(&sample)
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		err = faker.FakeData(&result)
+		err = faker.FakeData(&result, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}

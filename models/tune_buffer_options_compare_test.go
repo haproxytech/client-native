@@ -22,6 +22,7 @@ import (
 	"testing"
 
 	"github.com/go-faker/faker/v4"
+	"github.com/go-faker/faker/v4/pkg/options"
 
 	jsoniter "github.com/json-iterator/go"
 )
@@ -33,7 +34,7 @@ func TestTuneBufferOptionsEqual(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample TuneBufferOptions
 		var result TuneBufferOptions
-		err := faker.FakeData(&sample)
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -75,11 +76,11 @@ func TestTuneBufferOptionsEqualFalse(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample TuneBufferOptions
 		var result TuneBufferOptions
-		err := faker.FakeData(&sample)
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		err = faker.FakeData(&result)
+		err = faker.FakeData(&result, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -125,7 +126,7 @@ func TestTuneBufferOptionsDiff(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample TuneBufferOptions
 		var result TuneBufferOptions
-		err := faker.FakeData(&sample)
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -167,11 +168,11 @@ func TestTuneBufferOptionsDiffFalse(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample TuneBufferOptions
 		var result TuneBufferOptions
-		err := faker.FakeData(&sample)
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		err = faker.FakeData(&result)
+		err = faker.FakeData(&result, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}

@@ -22,6 +22,7 @@ import (
 	"testing"
 
 	"github.com/go-faker/faker/v4"
+	"github.com/go-faker/faker/v4/pkg/options"
 
 	jsoniter "github.com/json-iterator/go"
 )
@@ -33,7 +34,7 @@ func TestServerParamsEqual(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample ServerParams
 		var result ServerParams
-		err := faker.FakeData(&sample)
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -75,11 +76,11 @@ func TestServerParamsEqualFalse(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample ServerParams
 		var result ServerParams
-		err := faker.FakeData(&sample)
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		err = faker.FakeData(&result)
+		err = faker.FakeData(&result, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -134,7 +135,7 @@ func TestServerParamsDiff(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample ServerParams
 		var result ServerParams
-		err := faker.FakeData(&sample)
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -176,11 +177,11 @@ func TestServerParamsDiffFalse(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample ServerParams
 		var result ServerParams
-		err := faker.FakeData(&sample)
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		err = faker.FakeData(&result)
+		err = faker.FakeData(&result, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -235,7 +236,7 @@ func TestServerParamsSetProxyV2TlvFmtEqual(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample ServerParamsSetProxyV2TlvFmt
 		var result ServerParamsSetProxyV2TlvFmt
-		err := faker.FakeData(&sample)
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -277,11 +278,11 @@ func TestServerParamsSetProxyV2TlvFmtEqualFalse(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample ServerParamsSetProxyV2TlvFmt
 		var result ServerParamsSetProxyV2TlvFmt
-		err := faker.FakeData(&sample)
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		err = faker.FakeData(&result)
+		err = faker.FakeData(&result, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -314,7 +315,7 @@ func TestServerParamsSetProxyV2TlvFmtDiff(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample ServerParamsSetProxyV2TlvFmt
 		var result ServerParamsSetProxyV2TlvFmt
-		err := faker.FakeData(&sample)
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -356,11 +357,11 @@ func TestServerParamsSetProxyV2TlvFmtDiffFalse(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample ServerParamsSetProxyV2TlvFmt
 		var result ServerParamsSetProxyV2TlvFmt
-		err := faker.FakeData(&sample)
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		err = faker.FakeData(&result)
+		err = faker.FakeData(&result, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}

@@ -24,6 +24,7 @@ import (
 	"time"
 
 	"github.com/go-faker/faker/v4"
+	"github.com/go-faker/faker/v4/pkg/options"
 	"github.com/go-openapi/strfmt"
 
 	jsoniter "github.com/json-iterator/go"
@@ -36,7 +37,7 @@ func TestInfoEqual(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample Info
 		var result Info
-		err := faker.FakeData(&sample)
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -78,11 +79,11 @@ func TestInfoEqualFalse(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample Info
 		var result Info
-		err := faker.FakeData(&sample)
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		err = faker.FakeData(&result)
+		err = faker.FakeData(&result, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -115,7 +116,7 @@ func TestInfoDiff(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample Info
 		var result Info
-		err := faker.FakeData(&sample)
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -157,11 +158,11 @@ func TestInfoDiffFalse(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample Info
 		var result Info
-		err := faker.FakeData(&sample)
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		err = faker.FakeData(&result)
+		err = faker.FakeData(&result, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -194,7 +195,7 @@ func TestInfoAPIEqual(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample InfoAPI
 		var result InfoAPI
-		err := faker.FakeData(&sample)
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -236,11 +237,11 @@ func TestInfoAPIEqualFalse(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample InfoAPI
 		var result InfoAPI
-		err := faker.FakeData(&sample)
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		err = faker.FakeData(&result)
+		err = faker.FakeData(&result, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -274,7 +275,7 @@ func TestInfoAPIDiff(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample InfoAPI
 		var result InfoAPI
-		err := faker.FakeData(&sample)
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -316,11 +317,11 @@ func TestInfoAPIDiffFalse(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample InfoAPI
 		var result InfoAPI
-		err := faker.FakeData(&sample)
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		err = faker.FakeData(&result)
+		err = faker.FakeData(&result, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -354,7 +355,7 @@ func TestInfoSystemEqual(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample InfoSystem
 		var result InfoSystem
-		err := faker.FakeData(&sample)
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -396,11 +397,11 @@ func TestInfoSystemEqualFalse(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample InfoSystem
 		var result InfoSystem
-		err := faker.FakeData(&sample)
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		err = faker.FakeData(&result)
+		err = faker.FakeData(&result, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -435,7 +436,7 @@ func TestInfoSystemDiff(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample InfoSystem
 		var result InfoSystem
-		err := faker.FakeData(&sample)
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -477,11 +478,11 @@ func TestInfoSystemDiffFalse(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample InfoSystem
 		var result InfoSystem
-		err := faker.FakeData(&sample)
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		err = faker.FakeData(&result)
+		err = faker.FakeData(&result, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -516,7 +517,7 @@ func TestInfoSystemCPUInfoEqual(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample InfoSystemCPUInfo
 		var result InfoSystemCPUInfo
-		err := faker.FakeData(&sample)
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -558,11 +559,11 @@ func TestInfoSystemCPUInfoEqualFalse(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample InfoSystemCPUInfo
 		var result InfoSystemCPUInfo
-		err := faker.FakeData(&sample)
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		err = faker.FakeData(&result)
+		err = faker.FakeData(&result, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -596,7 +597,7 @@ func TestInfoSystemCPUInfoDiff(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample InfoSystemCPUInfo
 		var result InfoSystemCPUInfo
-		err := faker.FakeData(&sample)
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -638,11 +639,11 @@ func TestInfoSystemCPUInfoDiffFalse(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample InfoSystemCPUInfo
 		var result InfoSystemCPUInfo
-		err := faker.FakeData(&sample)
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		err = faker.FakeData(&result)
+		err = faker.FakeData(&result, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -676,7 +677,7 @@ func TestInfoSystemMemInfoEqual(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample InfoSystemMemInfo
 		var result InfoSystemMemInfo
-		err := faker.FakeData(&sample)
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -718,11 +719,11 @@ func TestInfoSystemMemInfoEqualFalse(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample InfoSystemMemInfo
 		var result InfoSystemMemInfo
-		err := faker.FakeData(&sample)
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		err = faker.FakeData(&result)
+		err = faker.FakeData(&result, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -758,7 +759,7 @@ func TestInfoSystemMemInfoDiff(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample InfoSystemMemInfo
 		var result InfoSystemMemInfo
-		err := faker.FakeData(&sample)
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -800,11 +801,11 @@ func TestInfoSystemMemInfoDiffFalse(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample InfoSystemMemInfo
 		var result InfoSystemMemInfo
-		err := faker.FakeData(&sample)
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		err = faker.FakeData(&result)
+		err = faker.FakeData(&result, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}

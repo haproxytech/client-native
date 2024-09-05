@@ -22,6 +22,7 @@ import (
 	"testing"
 
 	"github.com/go-faker/faker/v4"
+	"github.com/go-faker/faker/v4/pkg/options"
 
 	jsoniter "github.com/json-iterator/go"
 )
@@ -33,7 +34,7 @@ func TestCookieEqual(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample Cookie
 		var result Cookie
-		err := faker.FakeData(&sample)
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -75,11 +76,11 @@ func TestCookieEqualFalse(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample Cookie
 		var result Cookie
-		err := faker.FakeData(&sample)
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		err = faker.FakeData(&result)
+		err = faker.FakeData(&result, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -121,7 +122,7 @@ func TestCookieDiff(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample Cookie
 		var result Cookie
-		err := faker.FakeData(&sample)
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -163,11 +164,11 @@ func TestCookieDiffFalse(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample Cookie
 		var result Cookie
-		err := faker.FakeData(&sample)
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		err = faker.FakeData(&result)
+		err = faker.FakeData(&result, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -209,7 +210,7 @@ func TestAttrEqual(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample Attr
 		var result Attr
-		err := faker.FakeData(&sample)
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -251,11 +252,11 @@ func TestAttrEqualFalse(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample Attr
 		var result Attr
-		err := faker.FakeData(&sample)
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		err = faker.FakeData(&result)
+		err = faker.FakeData(&result, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -288,7 +289,7 @@ func TestAttrDiff(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample Attr
 		var result Attr
-		err := faker.FakeData(&sample)
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -330,11 +331,11 @@ func TestAttrDiffFalse(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample Attr
 		var result Attr
-		err := faker.FakeData(&sample)
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		err = faker.FakeData(&result)
+		err = faker.FakeData(&result, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -367,7 +368,7 @@ func TestDomainEqual(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample Domain
 		var result Domain
-		err := faker.FakeData(&sample)
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -409,11 +410,11 @@ func TestDomainEqualFalse(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample Domain
 		var result Domain
-		err := faker.FakeData(&sample)
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		err = faker.FakeData(&result)
+		err = faker.FakeData(&result, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -446,7 +447,7 @@ func TestDomainDiff(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample Domain
 		var result Domain
-		err := faker.FakeData(&sample)
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -488,11 +489,11 @@ func TestDomainDiffFalse(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample Domain
 		var result Domain
-		err := faker.FakeData(&sample)
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		err = faker.FakeData(&result)
+		err = faker.FakeData(&result, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
