@@ -22,6 +22,7 @@ import (
 	"testing"
 
 	"github.com/go-faker/faker/v4"
+	"github.com/go-faker/faker/v4/pkg/options"
 
 	jsoniter "github.com/json-iterator/go"
 )
@@ -33,7 +34,7 @@ func TestServerEqual(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample Server
 		var result Server
-		err := faker.FakeData(&sample)
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -75,11 +76,11 @@ func TestServerEqualFalse(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample Server
 		var result Server
-		err := faker.FakeData(&sample)
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		err = faker.FakeData(&result)
+		err = faker.FakeData(&result, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -114,7 +115,7 @@ func TestServerDiff(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample Server
 		var result Server
-		err := faker.FakeData(&sample)
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -156,11 +157,11 @@ func TestServerDiffFalse(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample Server
 		var result Server
-		err := faker.FakeData(&sample)
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		err = faker.FakeData(&result)
+		err = faker.FakeData(&result, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -173,7 +174,7 @@ func TestServerDiffFalse(t *testing.T) {
 
 	for _, sample := range samples {
 		result := sample.a.Diff(sample.b)
-		if len(result) != 6 {
+		if len(result) != 5 {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {
@@ -183,7 +184,7 @@ func TestServerDiffFalse(t *testing.T) {
 			if err != nil {
 				t.Errorf(err.Error())
 			}
-			t.Errorf("Expected Server to be different in 6 cases, but it is not (%d) %s %s", len(result), a, b)
+			t.Errorf("Expected Server to be different in 5 cases, but it is not (%d) %s %s", len(result), a, b)
 		}
 	}
 }

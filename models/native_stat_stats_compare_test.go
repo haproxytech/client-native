@@ -22,6 +22,7 @@ import (
 	"testing"
 
 	"github.com/go-faker/faker/v4"
+	"github.com/go-faker/faker/v4/pkg/options"
 
 	jsoniter "github.com/json-iterator/go"
 )
@@ -33,7 +34,7 @@ func TestNativeStatStatsEqual(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample NativeStatStats
 		var result NativeStatStats
-		err := faker.FakeData(&sample)
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -75,11 +76,11 @@ func TestNativeStatStatsEqualFalse(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample NativeStatStats
 		var result NativeStatStats
-		err := faker.FakeData(&sample)
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		err = faker.FakeData(&result)
+		err = faker.FakeData(&result, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -179,7 +180,7 @@ func TestNativeStatStatsDiff(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample NativeStatStats
 		var result NativeStatStats
-		err := faker.FakeData(&sample)
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -221,11 +222,11 @@ func TestNativeStatStatsDiffFalse(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample NativeStatStats
 		var result NativeStatStats
-		err := faker.FakeData(&sample)
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		err = faker.FakeData(&result)
+		err = faker.FakeData(&result, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}

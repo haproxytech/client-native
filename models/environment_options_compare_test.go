@@ -22,6 +22,7 @@ import (
 	"testing"
 
 	"github.com/go-faker/faker/v4"
+	"github.com/go-faker/faker/v4/pkg/options"
 
 	jsoniter "github.com/json-iterator/go"
 )
@@ -33,7 +34,7 @@ func TestEnvironmentOptionsEqual(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample EnvironmentOptions
 		var result EnvironmentOptions
-		err := faker.FakeData(&sample)
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -75,11 +76,11 @@ func TestEnvironmentOptionsEqualFalse(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample EnvironmentOptions
 		var result EnvironmentOptions
-		err := faker.FakeData(&sample)
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		err = faker.FakeData(&result)
+		err = faker.FakeData(&result, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -112,7 +113,7 @@ func TestEnvironmentOptionsDiff(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample EnvironmentOptions
 		var result EnvironmentOptions
-		err := faker.FakeData(&sample)
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -154,11 +155,11 @@ func TestEnvironmentOptionsDiffFalse(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample EnvironmentOptions
 		var result EnvironmentOptions
-		err := faker.FakeData(&sample)
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		err = faker.FakeData(&result)
+		err = faker.FakeData(&result, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -191,7 +192,7 @@ func TestPresetEnvEqual(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample PresetEnv
 		var result PresetEnv
-		err := faker.FakeData(&sample)
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -233,11 +234,11 @@ func TestPresetEnvEqualFalse(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample PresetEnv
 		var result PresetEnv
-		err := faker.FakeData(&sample)
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		err = faker.FakeData(&result)
+		err = faker.FakeData(&result, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -270,7 +271,7 @@ func TestPresetEnvDiff(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample PresetEnv
 		var result PresetEnv
-		err := faker.FakeData(&sample)
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -312,11 +313,11 @@ func TestPresetEnvDiffFalse(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample PresetEnv
 		var result PresetEnv
-		err := faker.FakeData(&sample)
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		err = faker.FakeData(&result)
+		err = faker.FakeData(&result, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -349,7 +350,7 @@ func TestSetEnvEqual(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample SetEnv
 		var result SetEnv
-		err := faker.FakeData(&sample)
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -391,11 +392,11 @@ func TestSetEnvEqualFalse(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample SetEnv
 		var result SetEnv
-		err := faker.FakeData(&sample)
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		err = faker.FakeData(&result)
+		err = faker.FakeData(&result, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -428,7 +429,7 @@ func TestSetEnvDiff(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample SetEnv
 		var result SetEnv
-		err := faker.FakeData(&sample)
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -470,11 +471,11 @@ func TestSetEnvDiffFalse(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample SetEnv
 		var result SetEnv
-		err := faker.FakeData(&sample)
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		err = faker.FakeData(&result)
+		err = faker.FakeData(&result, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}

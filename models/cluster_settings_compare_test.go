@@ -22,6 +22,7 @@ import (
 	"testing"
 
 	"github.com/go-faker/faker/v4"
+	"github.com/go-faker/faker/v4/pkg/options"
 
 	jsoniter "github.com/json-iterator/go"
 )
@@ -33,7 +34,7 @@ func TestClusterSettingsEqual(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample ClusterSettings
 		var result ClusterSettings
-		err := faker.FakeData(&sample)
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -75,11 +76,11 @@ func TestClusterSettingsEqualFalse(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample ClusterSettings
 		var result ClusterSettings
-		err := faker.FakeData(&sample)
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		err = faker.FakeData(&result)
+		err = faker.FakeData(&result, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -112,7 +113,7 @@ func TestClusterSettingsDiff(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample ClusterSettings
 		var result ClusterSettings
-		err := faker.FakeData(&sample)
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -154,11 +155,11 @@ func TestClusterSettingsDiffFalse(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample ClusterSettings
 		var result ClusterSettings
-		err := faker.FakeData(&sample)
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		err = faker.FakeData(&result)
+		err = faker.FakeData(&result, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -191,7 +192,7 @@ func TestClusterSettingsClusterEqual(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample ClusterSettingsCluster
 		var result ClusterSettingsCluster
-		err := faker.FakeData(&sample)
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -233,11 +234,11 @@ func TestClusterSettingsClusterEqualFalse(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample ClusterSettingsCluster
 		var result ClusterSettingsCluster
-		err := faker.FakeData(&sample)
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		err = faker.FakeData(&result)
+		err = faker.FakeData(&result, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -271,7 +272,7 @@ func TestClusterSettingsClusterDiff(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample ClusterSettingsCluster
 		var result ClusterSettingsCluster
-		err := faker.FakeData(&sample)
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -313,11 +314,11 @@ func TestClusterSettingsClusterDiffFalse(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample ClusterSettingsCluster
 		var result ClusterSettingsCluster
-		err := faker.FakeData(&sample)
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		err = faker.FakeData(&result)
+		err = faker.FakeData(&result, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -351,7 +352,7 @@ func TestClusterLogTargetEqual(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample ClusterLogTarget
 		var result ClusterLogTarget
-		err := faker.FakeData(&sample)
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -393,11 +394,11 @@ func TestClusterLogTargetEqualFalse(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample ClusterLogTarget
 		var result ClusterLogTarget
-		err := faker.FakeData(&sample)
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		err = faker.FakeData(&result)
+		err = faker.FakeData(&result, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -431,7 +432,7 @@ func TestClusterLogTargetDiff(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample ClusterLogTarget
 		var result ClusterLogTarget
-		err := faker.FakeData(&sample)
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -473,11 +474,11 @@ func TestClusterLogTargetDiffFalse(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample ClusterLogTarget
 		var result ClusterLogTarget
-		err := faker.FakeData(&sample)
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		err = faker.FakeData(&result)
+		err = faker.FakeData(&result, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}

@@ -22,6 +22,7 @@ import (
 	"testing"
 
 	"github.com/go-faker/faker/v4"
+	"github.com/go-faker/faker/v4/pkg/options"
 
 	jsoniter "github.com/json-iterator/go"
 )
@@ -33,7 +34,7 @@ func TestLuaOptionsEqual(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample LuaOptions
 		var result LuaOptions
-		err := faker.FakeData(&sample)
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -75,11 +76,11 @@ func TestLuaOptionsEqualFalse(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample LuaOptions
 		var result LuaOptions
-		err := faker.FakeData(&sample)
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		err = faker.FakeData(&result)
+		err = faker.FakeData(&result, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -112,7 +113,7 @@ func TestLuaOptionsDiff(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample LuaOptions
 		var result LuaOptions
-		err := faker.FakeData(&sample)
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -154,11 +155,11 @@ func TestLuaOptionsDiffFalse(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample LuaOptions
 		var result LuaOptions
-		err := faker.FakeData(&sample)
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		err = faker.FakeData(&result)
+		err = faker.FakeData(&result, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -191,7 +192,7 @@ func TestLuaLoadEqual(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample LuaLoad
 		var result LuaLoad
-		err := faker.FakeData(&sample)
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -233,11 +234,11 @@ func TestLuaLoadEqualFalse(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample LuaLoad
 		var result LuaLoad
-		err := faker.FakeData(&sample)
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		err = faker.FakeData(&result)
+		err = faker.FakeData(&result, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -270,7 +271,7 @@ func TestLuaLoadDiff(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample LuaLoad
 		var result LuaLoad
-		err := faker.FakeData(&sample)
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -312,11 +313,11 @@ func TestLuaLoadDiffFalse(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample LuaLoad
 		var result LuaLoad
-		err := faker.FakeData(&sample)
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		err = faker.FakeData(&result)
+		err = faker.FakeData(&result, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -349,7 +350,7 @@ func TestLuaPrependPathEqual(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample LuaPrependPath
 		var result LuaPrependPath
-		err := faker.FakeData(&sample)
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -391,11 +392,11 @@ func TestLuaPrependPathEqualFalse(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample LuaPrependPath
 		var result LuaPrependPath
-		err := faker.FakeData(&sample)
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		err = faker.FakeData(&result)
+		err = faker.FakeData(&result, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -428,7 +429,7 @@ func TestLuaPrependPathDiff(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample LuaPrependPath
 		var result LuaPrependPath
-		err := faker.FakeData(&sample)
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -470,11 +471,11 @@ func TestLuaPrependPathDiffFalse(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample LuaPrependPath
 		var result LuaPrependPath
-		err := faker.FakeData(&sample)
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		err = faker.FakeData(&result)
+		err = faker.FakeData(&result, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}

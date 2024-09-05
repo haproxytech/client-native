@@ -22,6 +22,7 @@ import (
 	"testing"
 
 	"github.com/go-faker/faker/v4"
+	"github.com/go-faker/faker/v4/pkg/options"
 
 	jsoniter "github.com/json-iterator/go"
 )
@@ -33,7 +34,7 @@ func TestEmailAlertEqual(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample EmailAlert
 		var result EmailAlert
-		err := faker.FakeData(&sample)
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -75,11 +76,11 @@ func TestEmailAlertEqualFalse(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample EmailAlert
 		var result EmailAlert
-		err := faker.FakeData(&sample)
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		err = faker.FakeData(&result)
+		err = faker.FakeData(&result, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -112,7 +113,7 @@ func TestEmailAlertDiff(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample EmailAlert
 		var result EmailAlert
-		err := faker.FakeData(&sample)
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -154,11 +155,11 @@ func TestEmailAlertDiffFalse(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample EmailAlert
 		var result EmailAlert
-		err := faker.FakeData(&sample)
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		err = faker.FakeData(&result)
+		err = faker.FakeData(&result, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}

@@ -7,7 +7,7 @@ func Test{{$.Name}}{{.}}(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample {{$.Name}}
 		var result {{$.Name}}
-		err := faker.FakeData(&sample)
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
@@ -62,11 +62,11 @@ func Test{{$.Name}}{{.}}False(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		var sample {{$.Name}}
 		var result {{$.Name}}
-		err := faker.FakeData(&sample)
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		err = faker.FakeData(&result)
+		err = faker.FakeData(&result, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
 		}
