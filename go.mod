@@ -1,6 +1,8 @@
 module github.com/haproxytech/client-native/v5
 
-go 1.22
+go 1.22.0
+
+toolchain go1.22.7
 
 require (
 	github.com/go-faker/faker/v4 v4.4.2
@@ -18,8 +20,8 @@ require (
 	github.com/pkg/errors v0.9.1
 	github.com/sirkon/dst v0.26.4
 	github.com/stretchr/testify v1.9.0
-	golang.org/x/text v0.17.0
-	golang.org/x/tools v0.24.0
+	golang.org/x/text v0.18.0
+	golang.org/x/tools v0.25.0
 )
 
 require (
@@ -39,8 +41,8 @@ require (
 	github.com/oklog/ulid v1.3.1 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 	go.mongodb.org/mongo-driver v1.16.1 // indirect
-	golang.org/x/mod v0.20.0 // indirect
+	golang.org/x/mod v0.21.0 // indirect
 	golang.org/x/sync v0.8.0 // indirect
-	golang.org/x/sys v0.24.0 // indirect
+	golang.org/x/sys v0.25.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
