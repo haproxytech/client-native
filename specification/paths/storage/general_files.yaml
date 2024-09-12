@@ -26,7 +26,7 @@ general_files:
         name: file_upload
         type: file
         description: General use file content
-        x-mimetype: text/plain
+        x-mimetype: application/octet-stream
     tags:
       - Storage
     responses:
@@ -90,7 +90,7 @@ general_files_one:
     produces:
       - application/json
     consumes:
-      - text/plain
+      - multipart/form-data
     tags:
       - Storage
     parameters:
@@ -99,11 +99,11 @@ general_files_one:
         description: General use file storage_name
         required: true
         type: string
-      - name: data
-        in: body
-        required: true
-        schema:
-          type: string
+      - in: formData
+        name: file_upload
+        type: file
+        description: General use file content
+        x-mimetype: application/octet-stream
       - $ref: "#/parameters/skip_reload"
       - $ref: "#/parameters/force_reload"
     responses:

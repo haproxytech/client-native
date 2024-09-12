@@ -21759,7 +21759,7 @@ paths:
         - $ref: '#/parameters/transaction_id'
         - $ref: '#/parameters/version'
       produces:
-        - application/json
+        - text/plain
       responses:
         "200":
           description: Operation successful
@@ -21774,12 +21774,7 @@ paths:
               description: Configuration file version
               type: string
           schema:
-            properties:
-              data:
-                type: string
-            required:
-              - data
-            type: object
+            type: string
         default:
           $ref: '#/responses/DefaultError'
       summary: Return HAProxy configuration
@@ -21822,7 +21817,7 @@ paths:
         - $ref: '#/parameters/version'
         - $ref: '#/parameters/force_reload'
       produces:
-        - application/json
+        - text/plain
       responses:
         "201":
           description: New HAProxy configuration pushed
@@ -23142,7 +23137,7 @@ paths:
           in: formData
           name: file_upload
           type: file
-          x-mimetype: text/plain
+          x-mimetype: application/octet-stream
       responses:
         "201":
           description: General use file created with its contents
@@ -23202,7 +23197,7 @@ paths:
         - Storage
     put:
       consumes:
-        - text/plain
+        - multipart/form-data
       description: Replaces the contents of a managed general use file on disk
       operationId: replaceStorageGeneralFile
       parameters:
@@ -23211,11 +23206,11 @@ paths:
           name: name
           required: true
           type: string
-        - in: body
-          name: data
-          required: true
-          schema:
-            type: string
+        - description: General use file content
+          in: formData
+          name: file_upload
+          type: file
+          x-mimetype: application/octet-stream
         - $ref: '#/parameters/skip_reload'
         - $ref: '#/parameters/force_reload'
       produces:
