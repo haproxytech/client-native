@@ -8,7 +8,7 @@ configuration:
       - $ref: "#/parameters/transaction_id"
       - $ref: "#/parameters/version"
     produces:
-      - application/json
+      - text/plain
     tags:
       - Configuration
     responses:
@@ -25,12 +25,7 @@ configuration:
             description: Configuration file md5 checksum
             type: string
         schema:
-          type: object
-          required:
-            - data
-          properties:
-            data:
-              type: string
+          type: string
       'default':
         $ref: '#/responses/DefaultError'
   post:
@@ -38,7 +33,7 @@ configuration:
     description: Push a new haproxy configuration file in plain text
     operationId: postHAProxyConfiguration
     produces:
-      - application/json
+      - text/plain
     consumes:
       - text/plain
     parameters:
@@ -106,7 +101,6 @@ configuration:
             type: string
         schema:
           type: string
-
       '400':
         $ref: '#/responses/BadRequest'
       'default':
