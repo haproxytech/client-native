@@ -151,6 +151,13 @@ http_response_rule:
         type:
           value: set-log-level
           required: true
+    rst_ttl:
+      type: integer
+      x-display-name: RST TTL
+      x-dependency:
+        type:
+          value: [silent-drop]
+          required: true
     var_name:
       type: string
       pattern: '^[^\s]+$'

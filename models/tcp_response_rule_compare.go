@@ -72,6 +72,10 @@ func (s TCPResponseRule) Equal(t TCPResponseRule, opts ...Options) bool {
 		return false
 	}
 
+	if s.RstTTL != t.RstTTL {
+		return false
+	}
+
 	if s.ScExpr != t.ScExpr {
 		return false
 	}
@@ -177,6 +181,10 @@ func (s TCPResponseRule) Diff(t TCPResponseRule, opts ...Options) map[string][]i
 
 	if s.NiceValue != t.NiceValue {
 		diff["NiceValue"] = []interface{}{s.NiceValue, t.NiceValue}
+	}
+
+	if s.RstTTL != t.RstTTL {
+		diff["RstTTL"] = []interface{}{s.RstTTL, t.RstTTL}
 	}
 
 	if s.ScExpr != t.ScExpr {

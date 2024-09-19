@@ -542,6 +542,7 @@ func ParseHTTPResponseRule(f types.Action) *models.HTTPResponseRule { //nolint:m
 		}
 	case *actions.SilentDrop:
 		return &models.HTTPResponseRule{
+			RstTTL:   v.RstTTL,
 			Type:     "silent-drop",
 			Cond:     v.Cond,
 			CondTest: v.CondTest,
@@ -866,6 +867,7 @@ func SerializeHTTPResponseRule(f models.HTTPResponseRule, opt *options.Configura
 		}
 	case "silent-drop":
 		rule = &actions.SilentDrop{
+			RstTTL:   f.RstTTL,
 			Cond:     f.Cond,
 			CondTest: f.CondTest,
 		}

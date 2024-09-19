@@ -444,6 +444,9 @@ type Action interface {
 //test:fail:http-request set-var-fmt(req.my_var)
 //test:ok:http-request silent-drop
 //test:ok:http-request silent-drop if FALSE
+//test:ok:http-request silent-drop rst-ttl 1
+//test:ok:http-request silent-drop rst-ttl 1 if { src,table_http_req_rate(ratelimits.agg),sub(txn.rate_limit) ge 1000 }
+//test:fail:http-request silent-drop rst-ttl
 //test:ok:http-request strict-mode on
 //test:ok:http-request strict-mode on if FALSE
 //test:fail:http-request strict-mode
@@ -680,11 +683,15 @@ type HTTPRequests struct{}
 //test:fail:http-response set-var-fmt(req.my_var)
 //test:ok:http-response silent-drop
 //test:ok:http-response silent-drop if FALSE
+//test:ok:http-response silent-drop rst-ttl 1
+//test:ok:http-response silent-drop rst-ttl 1 if { src,table_http_req_rate(ratelimits.agg),sub(txn.rate_limit) ge 1000 }
+//test:fail:http-response silent-drop rst-ttl
 //test:ok:http-response unset-var(req.my_var)
 //test:ok:http-response unset-var(req.my_var) if FALSE
 //test:fail:http-response unset-var(req.)
 //test:fail:http-response unset-var(req)
 //test:ok:http-response track-sc0 src if FALSE
+
 //test:ok:http-response track-sc0 src table tr if FALSE
 //test:ok:http-response track-sc0 src
 //test:fail:http-response track-sc0
@@ -997,6 +1004,9 @@ type TCPType interface {
 //test:ok:tcp-request content unset-var(sess.dn)
 //test:ok:tcp-request content silent-drop
 //test:ok:tcp-request content silent-drop if !HTTP
+//test:ok:tcp-request content silent-drop rst-ttl 1
+//test:ok:tcp-request content silent-drop rst-ttl 1 if { src,table_http_req_rate(ratelimits.agg),sub(txn.rate_limit) ge 1000 }
+//test:fail:tcp-request silent-drop rst-ttl
 //test:ok:tcp-request content send-spoe-group engine group
 //test:ok:tcp-request content use-service lua.deny
 //test:ok:tcp-request content use-service lua.deny if !HTTP
@@ -1049,6 +1059,9 @@ type TCPType interface {
 //test:fail:tcp-request connection set-src
 //test:ok:tcp-request connection silent-drop
 //test:ok:tcp-request connection silent-drop if !HTTP
+//test:ok:tcp-request connection silent-drop rst-ttl 1
+//test:ok:tcp-request connection silent-drop rst-ttl 1 if { src,table_http_req_rate(ratelimits.agg),sub(txn.rate_limit) ge 1000 }
+//test:fail:tcp-request connection silent-drop rst-ttl
 //test:ok:tcp-request connection lua.foo
 //test:ok:tcp-request connection lua.foo param if !HTTP
 //test:ok:tcp-request connection lua.foo param param1
@@ -1095,6 +1108,9 @@ type TCPType interface {
 //test:ok:tcp-request session unset-var(sess.dn)
 //test:ok:tcp-request session silent-drop
 //test:ok:tcp-request session silent-drop if !HTTP
+//test:ok:tcp-request session silent-drop rst-ttl 1
+//test:ok:tcp-request session silent-drop rst-ttl 1 if { src,table_http_req_rate(ratelimits.agg),sub(txn.rate_limit) ge 1000 }
+//test:fail:tcp-request session silent-drop rst-ttl
 //test:ok:tcp-request session attach-srv srv1
 //test:ok:tcp-request session attach-srv srv1 name example.com
 //test:ok:tcp-request session attach-srv srv1 name example.com if exceeds_limit

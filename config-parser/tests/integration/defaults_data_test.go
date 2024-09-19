@@ -1613,6 +1613,14 @@ const defaults_httprequestsilentdropifFALSE = `
 defaults test
   http-request silent-drop if FALSE
 `
+const defaults_httprequestsilentdroprstttl1 = `
+defaults test
+  http-request silent-drop rst-ttl 1
+`
+const defaults_httprequestsilentdroprstttl1ifsr = `
+defaults test
+  http-request silent-drop rst-ttl 1 if { src,table_http_req_rate(ratelimits.agg),sub(txn.rate_limit) ge 1000 }
+`
 const defaults_httprequeststrictmodeon = `
 defaults test
   http-request strict-mode on
@@ -2168,6 +2176,14 @@ defaults test
 const defaults_httpresponsesilentdropifFALSE = `
 defaults test
   http-response silent-drop if FALSE
+`
+const defaults_httpresponsesilentdroprstttl1 = `
+defaults test
+  http-response silent-drop rst-ttl 1
+`
+const defaults_httpresponsesilentdroprstttl1ifs = `
+defaults test
+  http-response silent-drop rst-ttl 1 if { src,table_http_req_rate(ratelimits.agg),sub(txn.rate_limit) ge 1000 }
 `
 const defaults_httpresponseunsetvarreqmyvar = `
 defaults test
@@ -2973,6 +2989,14 @@ const defaults_tcprequestcontentsilentdropifHTT = `
 defaults test
   tcp-request content silent-drop if !HTTP
 `
+const defaults_tcprequestcontentsilentdroprsttt = `
+defaults test
+  tcp-request content silent-drop rst-ttl 1
+`
+const defaults_tcprequestcontentsilentdroprsttt_ = `
+defaults test
+  tcp-request content silent-drop rst-ttl 1 if { src,table_http_req_rate(ratelimits.agg),sub(txn.rate_limit) ge 1000 }
+`
 const defaults_tcprequestcontentsendspoegroupen = `
 defaults test
   tcp-request content send-spoe-group engine group
@@ -3161,6 +3185,14 @@ const defaults_tcprequestconnectionsilentdropif = `
 defaults test
   tcp-request connection silent-drop if !HTTP
 `
+const defaults_tcprequestconnectionsilentdroprs = `
+defaults test
+  tcp-request connection silent-drop rst-ttl 1
+`
+const defaults_tcprequestconnectionsilentdroprs_ = `
+defaults test
+  tcp-request connection silent-drop rst-ttl 1 if { src,table_http_req_rate(ratelimits.agg),sub(txn.rate_limit) ge 1000 }
+`
 const defaults_tcprequestconnectionluafoo = `
 defaults test
   tcp-request connection lua.foo
@@ -3328,6 +3360,14 @@ defaults test
 const defaults_tcprequestsessionsilentdropifHTT = `
 defaults test
   tcp-request session silent-drop if !HTTP
+`
+const defaults_tcprequestsessionsilentdroprsttt = `
+defaults test
+  tcp-request session silent-drop rst-ttl 1
+`
+const defaults_tcprequestsessionsilentdroprsttt_ = `
+defaults test
+  tcp-request session silent-drop rst-ttl 1 if { src,table_http_req_rate(ratelimits.agg),sub(txn.rate_limit) ge 1000 }
 `
 const defaults_tcprequestsessionattachsrvsrv1 = `
 defaults test
