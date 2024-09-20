@@ -17,7 +17,7 @@ limitations under the License.
 package stats
 
 import (
-	"fmt"
+	"errors"
 
 	parsers "github.com/haproxytech/client-native/v6/config-parser/parsers"
 )
@@ -28,13 +28,13 @@ type BindProcess struct {
 
 func (m *BindProcess) Parse(parts []string, comment string) error {
 	if len(parts) < 3 {
-		return fmt.Errorf("not enough params")
+		return errors.New("not enough params")
 	}
 
 	m.BindProcess = &parsers.BindProcess{}
 	_, err := m.BindProcess.Parse("", parts[1:], comment)
 	if err != nil {
-		return fmt.Errorf("error parsing bind-process")
+		return errors.New("error parsing bind-process")
 	}
 	return nil
 }

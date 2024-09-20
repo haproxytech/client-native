@@ -16,7 +16,7 @@
 package configuration
 
 import (
-	"fmt"
+	"errors"
 	"reflect"
 )
 
@@ -49,11 +49,11 @@ func getKey(obj interface{}, keyName string) (string, error) {
 		value = value.Elem()
 	}
 	if value.Kind() != reflect.Struct {
-		return "", fmt.Errorf("object is not a struct")
+		return "", errors.New("object is not a struct")
 	}
 	nameField := value.FieldByName(keyName)
 	if !nameField.IsValid() || !nameField.CanInterface() {
-		return "", fmt.Errorf("object does not have an exportable 'Name' field")
+		return "", errors.New("object does not have an exportable 'Name' field")
 	}
 	name := nameField.Interface().(string)
 	return name, nil

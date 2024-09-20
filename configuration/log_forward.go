@@ -200,7 +200,7 @@ func (c *client) EditLogForward(name string, data *models.LogForward, transactio
 
 func SerializeLogForwardSection(p parser.Parser, data *models.LogForward, opt *options.ConfigurationOptions) error {
 	if data == nil {
-		return fmt.Errorf("empty log forward")
+		return errors.New("empty log forward")
 	}
 
 	var err error

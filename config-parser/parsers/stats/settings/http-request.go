@@ -17,6 +17,7 @@ limitations under the License.
 package stats
 
 import (
+	"errors"
 	"fmt"
 	"strings"
 
@@ -32,7 +33,7 @@ type HTTPRequest struct {
 
 func (h *HTTPRequest) Parse(parts []string, comment string) error {
 	if len(parts) < 3 {
-		return fmt.Errorf("not enough params")
+		return errors.New("not enough params")
 	}
 
 	if comment != "" {
@@ -43,7 +44,7 @@ func (h *HTTPRequest) Parse(parts []string, comment string) error {
 	case "allow", "deny":
 		command, condition := common.SplitRequest(parts[2:])
 		if len(command) != 1 {
-			return fmt.Errorf("error parsing http-request")
+			return errors.New("error parsing http-request")
 		}
 		h.Type = command[0]
 		if len(condition) > 1 {
@@ -54,7 +55,7 @@ func (h *HTTPRequest) Parse(parts []string, comment string) error {
 	case "auth":
 		return h.parseAuth(parts)
 	default:
-		return fmt.Errorf("error parsing http-request")
+		return errors.New("error parsing http-request")
 	}
 }
 
@@ -65,11 +66,11 @@ func (h *HTTPRequest) parseAuth(parts []string) error {
 		h.Type = strings.Join(command, " ")
 	case 3:
 		if command[1] != "realm" {
-			return fmt.Errorf("error parsing http-request")
+			return errors.New("error parsing http-request")
 		}
 		h.Type = strings.Join(command, " ")
 	default:
-		return fmt.Errorf("error parsing http-request")
+		return errors.New("error parsing http-request")
 	}
 	if len(condition) > 1 {
 		h.Cond = condition[0]

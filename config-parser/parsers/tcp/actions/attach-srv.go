@@ -17,6 +17,7 @@ limitations under the License.
 package actions
 
 import (
+	stderrors "errors"
 	"fmt"
 	"strings"
 
@@ -41,7 +42,7 @@ func (f *AttachSrv) Parse(parts []string, parserType types.ParserType, comment s
 
 	n := len(parts)
 	if n < 4 {
-		return fmt.Errorf("not enough params")
+		return stderrors.New("not enough params")
 	}
 
 	f.Server = parts[3]
@@ -55,7 +56,7 @@ func (f *AttachSrv) Parse(parts []string, parserType types.ParserType, comment s
 
 	if parts[i] == "name" {
 		if n < 6 {
-			return fmt.Errorf("not enough params")
+			return stderrors.New("not enough params")
 		}
 		expr := common.Expression{}
 		err := expr.Parse([]string{parts[i+1]})

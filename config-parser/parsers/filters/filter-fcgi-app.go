@@ -17,6 +17,7 @@ limitations under the License.
 package filters
 
 import (
+	"errors"
 	"fmt"
 	"strings"
 
@@ -35,7 +36,7 @@ func (f *FcgiApp) Parse(parts []string, comment string) error {
 	case 3:
 		f.Name = parts[2]
 	case 2:
-		return fmt.Errorf("no FastCGI application name")
+		return errors.New("no FastCGI application name")
 	default:
 		return fmt.Errorf("unsupported extra options: %s", strings.Join(parts[2:], " "))
 	}

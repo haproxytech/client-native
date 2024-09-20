@@ -60,13 +60,13 @@ type TuneQuicOptions struct {
 	RetryThreshold *int64 `json:"retry_threshold,omitempty"`
 
 	// socket owner
-	// Enum: [listener connection]
-	// +kubebuilder:validation:Enum=listener;connection;
+	// Enum: ["listener","connection"]
+	// +kubebuilder:validation:Enum="listener","connection";
 	SocketOwner string `json:"socket_owner,omitempty"`
 
 	// zero copy fwd send
-	// Enum: [enabled disabled]
-	// +kubebuilder:validation:Enum=enabled;disabled;
+	// Enum: ["enabled","disabled"]
+	// +kubebuilder:validation:Enum="enabled","disabled";
 	ZeroCopyFwdSend string `json:"zero_copy_fwd_send,omitempty"`
 }
 

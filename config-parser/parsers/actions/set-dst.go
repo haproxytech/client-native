@@ -17,6 +17,7 @@ limitations under the License.
 package actions
 
 import (
+	stderrors "errors"
 	"fmt"
 	"strings"
 
@@ -36,7 +37,7 @@ func (f *SetDst) Parse(parts []string, parserType types.ParserType, comment stri
 		f.Comment = comment
 	}
 	if len(parts) < 3 {
-		return fmt.Errorf("not enough params")
+		return stderrors.New("not enough params")
 	}
 	var command []string
 	switch parserType {
@@ -48,12 +49,12 @@ func (f *SetDst) Parse(parts []string, parserType types.ParserType, comment stri
 	command, condition := common.SplitRequest(command)
 
 	if len(command) == 0 {
-		return fmt.Errorf("not enough params")
+		return stderrors.New("not enough params")
 	}
 	expr := common.Expression{}
 
 	if err := expr.Parse(command); err != nil {
-		return fmt.Errorf("not enough params")
+		return stderrors.New("not enough params")
 	}
 	f.Expr = expr
 	if len(condition) > 1 {
@@ -65,7 +66,7 @@ func (f *SetDst) Parse(parts []string, parserType types.ParserType, comment stri
 
 func (f *SetDst) String() string {
 	if f.Cond == "" {
-		return fmt.Sprintf("set-dst %s", f.Expr.String())
+		return "set-dst " + f.Expr.String()
 	}
 	return fmt.Sprintf("set-dst %s %s %s", f.Expr.String(), f.Cond, f.CondTest)
 }

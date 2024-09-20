@@ -17,6 +17,7 @@ limitations under the License.
 package actions
 
 import (
+	stderrors "errors"
 	"fmt"
 	"strconv"
 	"strings"
@@ -67,7 +68,7 @@ func (f *Status) Parse(parts []string, parserType types.ParserType, comment stri
 
 	// Parsing specific to http-error status directive.
 	if len(parts) < 3 {
-		return fmt.Errorf("not enough params")
+		return stderrors.New("not enough params")
 	}
 	if parts[0] != "http-error" {
 		return fmt.Errorf("unexpected keyword %s", parts[0])
@@ -77,7 +78,7 @@ func (f *Status) Parse(parts []string, parserType types.ParserType, comment stri
 	}
 	code, err := strconv.ParseInt(parts[2], 10, 64)
 	if err != nil {
-		return fmt.Errorf("failed to parse status code")
+		return stderrors.New("failed to parse status code")
 	}
 	if !AllowedErrorStatusCode(code) {
 		return fmt.Errorf("unsupported status code %d", code)
@@ -100,7 +101,7 @@ func (f *Status) Parse(parts []string, parserType types.ParserType, comment stri
 			case "hdr":
 				hdr := Hdr{}
 				if len(command) < i+3 {
-					return fmt.Errorf("failed to parse return hdr")
+					return stderrors.New("failed to parse return hdr")
 				}
 				i++
 				hdr.Name = command[i]

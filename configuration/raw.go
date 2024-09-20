@@ -145,7 +145,7 @@ func (c *client) PostRawConfiguration(config *string, version int64, skipVersion
 		}
 		return nil
 	}
-	t := ""
+	var t string
 	if skipVersionCheck {
 		// Create impicit transaction
 		transaction, err := c.startTransaction(version, skipVersionCheck)
@@ -193,7 +193,7 @@ func (c *client) PostRawConfiguration(config *string, version int64, skipVersion
 	}
 
 	if err := p.LoadData(tFile); err != nil {
-		return NewConfError(ErrCannotReadConfFile, fmt.Sprintf("Cannot read %s", tFile))
+		return NewConfError(ErrCannotReadConfFile, "Cannot read "+tFile)
 	}
 
 	// Do a regular commit of the transaction

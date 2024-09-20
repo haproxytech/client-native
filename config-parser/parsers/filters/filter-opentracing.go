@@ -17,6 +17,7 @@ limitations under the License.
 package filters
 
 import (
+	"errors"
 	"fmt"
 	"strings"
 
@@ -33,7 +34,7 @@ func (o *Opentracing) Parse(parts []string, comment string) error {
 	o.Comment = comment
 
 	if len(parts) < 3 || len(parts)%2 == 1 {
-		return fmt.Errorf("missing required options")
+		return errors.New("missing required options")
 	}
 
 	for index, part := range parts {

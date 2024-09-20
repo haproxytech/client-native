@@ -40,8 +40,8 @@ import (
 // swagger:model fcgiPassHeader
 type FCGIPassHeader struct {
 	// cond
-	// Enum: [if unless]
-	// +kubebuilder:validation:Enum=if;unless;
+	// Enum: ["if","unless"]
+	// +kubebuilder:validation:Enum="if","unless";
 	Cond string `json:"cond,omitempty"`
 
 	// cond test

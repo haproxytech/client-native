@@ -1,8 +1,8 @@
 ---
 variables:
   DOCKER_HOST: tcp://docker:2375
-  GO_VERSION: "1.22"
-  DOCKER_VERSION: "24.0.6"
+  GO_VERSION: "1.23"
+  DOCKER_VERSION: "26.0"
 stages:
   - check-commit
   - generate

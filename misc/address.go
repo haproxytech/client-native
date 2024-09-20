@@ -66,9 +66,9 @@ func ParseBindAddress(path string) (string, string, error) {
 
 		pathSlice := strings.SplitN(path, "@", 2)
 		prefix := ""
-		address := ""
+		var address string
 		if len(pathSlice) > 1 {
-			prefix = fmt.Sprintf("%s@", pathSlice[0])
+			prefix = pathSlice[0] + "@"
 			address = pathSlice[1]
 		} else {
 			address = pathSlice[0]
@@ -99,9 +99,9 @@ func ParseBindAddress(path string) (string, string, error) {
 
 		pathSlice := strings.SplitN(path, "@", 2)
 		prefix := ""
-		address := ""
+		var address string
 		if len(pathSlice) > 1 {
-			prefix = fmt.Sprintf("%s@", pathSlice[0])
+			prefix = pathSlice[0] + "@"
 			address = pathSlice[1]
 		} else {
 			address = pathSlice[0]

@@ -187,7 +187,8 @@ func ParseServers(parentType string, parentName string, p parser.Parser) (models
 	return servers, nil
 }
 
-func ParseAddress(address string) (ipOrAddress string, port *int64) {
+func ParseAddress(address string) (string, *int64) {
+	var port *int64
 	if strings.HasPrefix(address, "[") && strings.ContainsRune(address, ']') { // IPv6 with port [2001:0DB8:0000:0000:0000:0000:1428:57ab]:80
 		split := strings.Split(address, "]")
 		split[0] = strings.TrimPrefix(split[0], "[")
@@ -214,11 +215,11 @@ func ParseAddress(address string) (ipOrAddress string, port *int64) {
 		// This is an imperfect solution, which is why dataplaneapi
 		// adds brackets to IPv6 when it can.
 		idx := strings.LastIndex(address, ":")
-		p, err := strconv.ParseUint(address[idx+1:], 10, 16)
+		p, err := strconv.ParseInt(address[idx+1:], 10, 16)
 		if err != nil {
 			return address, nil
 		}
-		return address[:idx], misc.Int64P(int(p))
+		return address[:idx], &p
 	case c == 0:
 		return address, nil // IPv4 or socket address
 	default:
@@ -526,7 +527,8 @@ func ParseServer(ondiskServer types.Server) *models.Server {
 	return s
 }
 
-func serializeServerParams(s models.ServerParams, opt *options.ConfigurationOptions) (options []params.ServerOption) { //nolint:gocognit,gocyclo,cyclop,cyclop,maintidx
+func serializeServerParams(s models.ServerParams, opt *options.ConfigurationOptions) []params.ServerOption { //nolint:gocognit,gocyclo,cyclop,cyclop,maintidx
+	var options []params.ServerOption
 	// ServerOptionWord
 	if s.AgentCheck == "enabled" {
 		options = append(options, &params.ServerOptionWord{Name: "agent-check"})

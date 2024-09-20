@@ -16,7 +16,7 @@ limitations under the License.
 package extra
 
 import (
-	"fmt"
+	stderrors "errors"
 	"strings"
 
 	"github.com/haproxytech/client-native/v6/config-parser/common"
@@ -45,7 +45,7 @@ func (h *ConfigHash) Get(createIfNotExist bool) (common.ParserData, error) {
 		}
 		return h.data, nil
 	}
-	return nil, fmt.Errorf("no data")
+	return nil, stderrors.New("no data")
 }
 
 // Parse see if we have version, since it is not haproxy keyword, it's in comments

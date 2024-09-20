@@ -21,6 +21,7 @@ import (
 	"crypto/rsa"
 	"crypto/x509"
 	"encoding/pem"
+	"errors"
 	"fmt"
 	"io"
 	"io/fs"
@@ -187,7 +188,7 @@ func (s *storage) Create(name string, readCloser io.ReadCloser) (string, int64, 
 	name = misc.SanitizeFilename(name)
 	if s.fileType == MapsType {
 		if !strings.HasSuffix(name, ".map") {
-			name = fmt.Sprintf("%s.map", name)
+			name += ".map"
 		}
 	}
 	f := filepath.Join(s.dirname, name)
@@ -252,7 +253,7 @@ func readFile(name string) (string, error) {
 func getFile(dirname, name string) (string, int64, error) {
 	name = misc.SanitizeFilename(name)
 	if name == "" {
-		return "", -1, fmt.Errorf("no file name")
+		return "", -1, errors.New("no file name")
 	}
 	f := filepath.Join(dirname, name)
 	finfo, err := os.Stat(f)
@@ -288,6 +289,7 @@ func readDir(dirname string) ([]os.FileInfo, error) {
 		}
 		infos = append(infos, info)
 	}
+
 	return infos, nil
 }
 
@@ -295,7 +297,7 @@ func (s storage) validatePEM(raw []byte) error {
 	crtPool := x509.NewCertPool()
 	ok := crtPool.AppendCertsFromPEM(raw)
 	if !ok {
-		return fmt.Errorf("failed to parse certificate")
+		return errors.New("failed to parse certificate")
 	}
 	// HAProxy requires private and public key in same pem file
 	hasCertificate := false
@@ -316,8 +318,9 @@ func (s storage) validatePEM(raw []byte) error {
 		raw = rest
 	}
 	if !(hasCertificate && hasPrivateKey) {
-		return fmt.Errorf("file should contain both certificate and private key")
+		return errors.New("file should contain both certificate and private key")
 	}
+
 	return nil
 }
 
@@ -330,11 +333,12 @@ func parsePrivateKey(der []byte) (crypto.PrivateKey, error) {
 		case *rsa.PrivateKey, *ecdsa.PrivateKey:
 			return key, nil
 		default:
-			return nil, fmt.Errorf("found unknown private key type in PKCS#8 wrapping")
+			return nil, errors.New("found unknown private key type in PKCS#8 wrapping")
 		}
 	}
 	if key, err := x509.ParseECPrivateKey(der); err == nil {
 		return key, nil
 	}
-	return nil, fmt.Errorf("failed to parse private key")
+
+	return nil, errors.New("failed to parse private key")
 }

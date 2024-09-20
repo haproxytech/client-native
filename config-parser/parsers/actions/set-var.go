@@ -18,6 +18,7 @@ limitations under the License.
 package actions
 
 import (
+	stderrors "errors"
 	"fmt"
 	"strings"
 
@@ -39,7 +40,7 @@ func (f *SetVar) Parse(parts []string, parserType types.ParserType, comment stri
 		f.Comment = comment
 	}
 	if len(parts) < 3 {
-		return fmt.Errorf("not enough params")
+		return stderrors.New("not enough params")
 	}
 	var data string
 	var command []string
@@ -61,7 +62,7 @@ func (f *SetVar) Parse(parts []string, parserType types.ParserType, comment stri
 		expr := common.Expression{}
 		err := expr.Parse(command)
 		if err != nil {
-			return fmt.Errorf("not enough params")
+			return stderrors.New("not enough params")
 		}
 		f.Expr = expr
 	}

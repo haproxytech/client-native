@@ -35,7 +35,7 @@ type Timeout struct {
 func (t *Timeout) Init() {
 	if !strings.HasPrefix(t.Name, "timeout") {
 		t.name = t.Name
-		t.Name = fmt.Sprintf("timeout %s", t.Name)
+		t.Name = "timeout " + t.Name
 	}
 	t.data = nil
 	t.preComments = []string{}
@@ -49,7 +49,7 @@ func (t *Timeout) Parse(line string, parts []string, comment string) (string, er
 		}
 		return "", nil
 	}
-	return "", &errors.ParseError{Parser: fmt.Sprintf("timeout %s", t.name), Line: line}
+	return "", &errors.ParseError{Parser: "timeout " + t.name, Line: line}
 }
 
 func (t *Timeout) Result() ([]common.ReturnResultLine, error) {

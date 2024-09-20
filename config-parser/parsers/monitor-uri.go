@@ -16,7 +16,6 @@ limitations under the License.
 package parsers
 
 import (
-	"fmt"
 	"net/url"
 
 	"github.com/haproxytech/client-native/v6/config-parser/common"
@@ -46,7 +45,7 @@ func (p *MonitorURI) Result() ([]common.ReturnResultLine, error) {
 	}
 	return []common.ReturnResultLine{
 		{
-			Data: fmt.Sprintf("monitor-uri %s", p.data.URI),
+			Data: "monitor-uri " + p.data.URI,
 		},
 	}, nil
 }

@@ -17,6 +17,7 @@ limitations under the License.
 package actions
 
 import (
+	stderrors "errors"
 	"fmt"
 	"strings"
 
@@ -38,7 +39,7 @@ func (f *SendSpoeGroup) Parse(parts []string, parserType types.ParserType, comme
 		f.Comment = comment
 	}
 	if len(parts) < 4 {
-		return fmt.Errorf("not enough params")
+		return stderrors.New("not enough params")
 	}
 	var command []string
 	switch parserType {

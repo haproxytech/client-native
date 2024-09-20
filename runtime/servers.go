@@ -20,6 +20,8 @@ import (
 	"strconv"
 	"strings"
 
+	stderrors "errors"
+
 	"github.com/haproxytech/client-native/v6/errors"
 	"github.com/haproxytech/client-native/v6/misc"
 	"github.com/haproxytech/client-native/v6/models"
@@ -51,7 +53,7 @@ func (s *SingleRuntime) SetServerAddr(backend, server string, ip string, port in
 // SetServerState set state for server
 func (s *SingleRuntime) SetServerState(backend, server string, state string) error {
 	if !ServerStateValid(state) {
-		return fmt.Errorf("bad request")
+		return stderrors.New("bad request")
 	}
 	cmd := fmt.Sprintf("set server %s/%s state %s", backend, server, state)
 	return s.Execute(cmd)
@@ -60,7 +62,7 @@ func (s *SingleRuntime) SetServerState(backend, server string, state string) err
 // SetServerWeight set weight for server
 func (s *SingleRuntime) SetServerWeight(backend, server string, weight string) error {
 	if !ServerWeightValid(weight) {
-		return fmt.Errorf("bad request")
+		return stderrors.New("bad request")
 	}
 	cmd := fmt.Sprintf("set server %s/%s weight %s", backend, server, weight)
 	return s.Execute(cmd)
@@ -69,7 +71,7 @@ func (s *SingleRuntime) SetServerWeight(backend, server string, weight string) e
 // SetServerHealth set health for server
 func (s *SingleRuntime) SetServerHealth(backend, server string, health string) error {
 	if !ServerHealthValid(health) {
-		return fmt.Errorf("bad request")
+		return stderrors.New("bad request")
 	}
 	cmd := fmt.Sprintf("set server %s/%s health %s", backend, server, health)
 	return s.Execute(cmd)
@@ -78,7 +80,7 @@ func (s *SingleRuntime) SetServerHealth(backend, server string, health string) e
 // SetServerCheckPort set health heck port for server
 func (s *SingleRuntime) SetServerCheckPort(backend, server string, port int) error {
 	if !(port > 0 && port <= 65535) {
-		return fmt.Errorf("bad request")
+		return stderrors.New("bad request")
 	}
 	return s.Execute(fmt.Sprintf("set server %s/%s check-port %d", backend, server, port))
 }
@@ -121,7 +123,7 @@ func (s *SingleRuntime) SetServerAgentSend(backend, server string, send string) 
 
 // GetServersState returns servers runtime state
 func (s *SingleRuntime) GetServersState(backend string) (models.RuntimeServers, error) {
-	cmd := fmt.Sprintf("show servers state %s", backend)
+	cmd := "show servers state " + backend
 	result, err := s.ExecuteWithResponse(cmd)
 	if err != nil {
 		return nil, err
@@ -131,7 +133,7 @@ func (s *SingleRuntime) GetServersState(backend string) (models.RuntimeServers, 
 
 // GetServersState returns server runtime state
 func (s *SingleRuntime) GetServerState(backend, server string) (*models.RuntimeServer, error) {
-	cmd := fmt.Sprintf("show servers state %s", backend)
+	cmd := "show servers state " + backend
 	result, err := s.ExecuteWithResponse(cmd)
 	if err != nil {
 		return nil, err
@@ -139,7 +141,7 @@ func (s *SingleRuntime) GetServerState(backend, server string) (*models.RuntimeS
 
 	lines := strings.Split(result, "\n")
 	if strings.TrimSpace(lines[0]) != "1" {
-		return nil, fmt.Errorf("unsupported output format version, supporting format version 1")
+		return nil, stderrors.New("unsupported output format version, supporting format version 1")
 	}
 
 	for _, line := range lines {
@@ -160,7 +162,7 @@ func parseRuntimeServers(output string) (models.RuntimeServers, error) {
 	result := models.RuntimeServers{}
 
 	if strings.TrimSpace(lines[0]) != "1" {
-		return nil, fmt.Errorf("unsupported output format version, supporting format version 1")
+		return nil, stderrors.New("unsupported output format version, supporting format version 1")
 	}
 	for _, line := range lines[1:] {
 		if strings.TrimSpace(line) == "" || strings.HasPrefix(line, "#") || strings.TrimSpace(line) == "1" {

@@ -17,8 +17,6 @@ limitations under the License.
 package parsers
 
 import (
-	"fmt"
-
 	"github.com/haproxytech/client-native/v6/config-parser/common"
 	"github.com/haproxytech/client-native/v6/config-parser/errors"
 	"github.com/haproxytech/client-native/v6/config-parser/types"
@@ -52,7 +50,7 @@ func (p *Mode) Result() ([]common.ReturnResultLine, error) {
 	}
 	return []common.ReturnResultLine{
 		{
-			Data:    fmt.Sprintf("mode %s", p.data.Value),
+			Data:    "mode " + p.data.Value,
 			Comment: p.data.Comment,
 		},
 	}, nil

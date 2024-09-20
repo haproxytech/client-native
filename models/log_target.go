@@ -42,13 +42,13 @@ type LogTarget struct {
 	Address string `json:"address,omitempty"`
 
 	// facility
-	// Enum: [kern user mail daemon auth syslog lpr news uucp cron auth2 ftp ntp audit alert cron2 local0 local1 local2 local3 local4 local5 local6 local7]
-	// +kubebuilder:validation:Enum=kern;user;mail;daemon;auth;syslog;lpr;news;uucp;cron;auth2;ftp;ntp;audit;alert;cron2;local0;local1;local2;local3;local4;local5;local6;local7;
+	// Enum: ["kern","user","mail","daemon","auth","syslog","lpr","news","uucp","cron","auth2","ftp","ntp","audit","alert","cron2","local0","local1","local2","local3","local4","local5","local6","local7"]
+	// +kubebuilder:validation:Enum="kern","user","mail","daemon","auth","syslog","lpr","news","uucp","cron","auth2","ftp","ntp","audit","alert","cron2","local0","local1","local2","local3","local4","local5","local6","local7";
 	Facility string `json:"facility,omitempty"`
 
 	// format
-	// Enum: [local rfc3164 rfc5424 priority short timed iso raw]
-	// +kubebuilder:validation:Enum=local;rfc3164;rfc5424;priority;short;timed;iso;raw;
+	// Enum: ["local","rfc3164","rfc5424","priority","short","timed","iso","raw"]
+	// +kubebuilder:validation:Enum="local","rfc3164","rfc5424","priority","short","timed","iso","raw";
 	Format string `json:"format,omitempty"`
 
 	// global
@@ -58,13 +58,13 @@ type LogTarget struct {
 	Length int64 `json:"length,omitempty"`
 
 	// level
-	// Enum: [emerg alert crit err warning notice info debug]
-	// +kubebuilder:validation:Enum=emerg;alert;crit;err;warning;notice;info;debug;
+	// Enum: ["emerg","alert","crit","err","warning","notice","info","debug"]
+	// +kubebuilder:validation:Enum="emerg","alert","crit","err","warning","notice","info","debug";
 	Level string `json:"level,omitempty"`
 
 	// minlevel
-	// Enum: [emerg alert crit err warning notice info debug]
-	// +kubebuilder:validation:Enum=emerg;alert;crit;err;warning;notice;info;debug;
+	// Enum: ["emerg","alert","crit","err","warning","notice","info","debug"]
+	// +kubebuilder:validation:Enum="emerg","alert","crit","err","warning","notice","info","debug";
 	Minlevel string `json:"minlevel,omitempty"`
 
 	// nolog

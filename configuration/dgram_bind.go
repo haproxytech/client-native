@@ -223,7 +223,6 @@ func ParseDgramBind(ondiskDgramBind types.DgramBind) *models.DgramBind {
 			}
 		case n > 0:
 			b.Address = addSlice[0]
-
 		}
 	}
 	for _, p := range ondiskDgramBind.Params {

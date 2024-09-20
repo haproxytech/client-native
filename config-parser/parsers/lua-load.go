@@ -17,8 +17,6 @@ limitations under the License.
 package parsers
 
 import (
-	"fmt"
-
 	"github.com/haproxytech/client-native/v6/config-parser/common"
 	"github.com/haproxytech/client-native/v6/config-parser/errors"
 	"github.com/haproxytech/client-native/v6/config-parser/types"
@@ -47,7 +45,7 @@ func (l *LuaLoad) Result() ([]common.ReturnResultLine, error) {
 	result := make([]common.ReturnResultLine, len(l.data))
 	for index, data := range l.data {
 		result[index] = common.ReturnResultLine{
-			Data:    fmt.Sprintf("lua-load %s", data.File),
+			Data:    "lua-load " + data.File,
 			Comment: data.Comment,
 		}
 	}

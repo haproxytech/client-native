@@ -18,9 +18,10 @@ limitations under the License.
 package actions
 
 import (
-	"fmt"
 	"strconv"
 	"strings"
+
+	stderrors "errors"
 
 	"github.com/haproxytech/client-native/v6/config-parser/common"
 	"github.com/haproxytech/client-native/v6/config-parser/types"
@@ -51,7 +52,7 @@ func (f *Tarpit) Parse(parts []string, parserType types.ParserType, comment stri
 					i++
 					code, err := strconv.ParseInt(command[i], 10, 64)
 					if err != nil {
-						return fmt.Errorf("failed to parse status code")
+						return stderrors.New("failed to parse status code")
 					}
 					f.Status = &code
 				case "content-type":
@@ -66,7 +67,7 @@ func (f *Tarpit) Parse(parts []string, parserType types.ParserType, comment stri
 				case "hdr":
 					hdr := Hdr{}
 					if len(command) < i+3 {
-						return fmt.Errorf("failed to parse return hdr")
+						return stderrors.New("failed to parse return hdr")
 					}
 					i++
 					hdr.Name = command[i]
@@ -74,7 +75,7 @@ func (f *Tarpit) Parse(parts []string, parserType types.ParserType, comment stri
 					hdr.Fmt = command[i]
 					f.Hdrs = append(f.Hdrs, &hdr)
 				default:
-					return fmt.Errorf("failed to parse hdr")
+					return stderrors.New("failed to parse hdr")
 				}
 			}
 		}
@@ -86,7 +87,7 @@ func (f *Tarpit) Parse(parts []string, parserType types.ParserType, comment stri
 	} else if len(parts) == 2 {
 		return nil
 	}
-	return fmt.Errorf("not enough params")
+	return stderrors.New("not enough params")
 }
 
 func (f *Tarpit) String() string { //nolint:dupl

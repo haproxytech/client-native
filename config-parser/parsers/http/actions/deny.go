@@ -18,7 +18,7 @@ limitations under the License.
 package actions
 
 import (
-	"fmt"
+	stderrors "errors"
 	"strconv"
 	"strings"
 
@@ -51,7 +51,7 @@ func (f *Deny) Parse(parts []string, parserType types.ParserType, comment string
 					i++
 					code, err := strconv.ParseInt(command[i], 10, 64)
 					if err != nil {
-						return fmt.Errorf("failed to parse status code")
+						return stderrors.New("failed to parse status code")
 					}
 					f.Status = &code
 				case "content-type":
@@ -66,7 +66,7 @@ func (f *Deny) Parse(parts []string, parserType types.ParserType, comment string
 				case "hdr":
 					hdr := Hdr{}
 					if len(command) < i+3 {
-						return fmt.Errorf("failed to parse return hdr")
+						return stderrors.New("failed to parse return hdr")
 					}
 					i++
 					hdr.Name = command[i]
@@ -74,7 +74,7 @@ func (f *Deny) Parse(parts []string, parserType types.ParserType, comment string
 					hdr.Fmt = command[i]
 					f.Hdrs = append(f.Hdrs, &hdr)
 				default:
-					return fmt.Errorf("failed to parse hdr")
+					return stderrors.New("failed to parse hdr")
 				}
 			}
 		}
@@ -86,7 +86,7 @@ func (f *Deny) Parse(parts []string, parserType types.ParserType, comment string
 	} else if len(parts) == 2 {
 		return nil
 	}
-	return fmt.Errorf("not enough params")
+	return stderrors.New("not enough params")
 }
 
 func (f *Deny) String() string {

@@ -244,7 +244,7 @@ func SanitizeFilename(name string) string {
 		if name != "" {
 			return fmt.Sprintf("%s.%s", name, ext)
 		}
-		return fmt.Sprintf("_%s", ext)
+		return "_" + ext
 	}
 
 	return name

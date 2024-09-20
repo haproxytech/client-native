@@ -16,6 +16,7 @@
 package spoe
 
 import (
+	"errors"
 	"fmt"
 	"sync"
 
@@ -56,7 +57,7 @@ type Params struct {
 // newSingleSpoe returns Spoe with default options
 func newSingleSpoe(params Params) (*SingleSpoe, error) {
 	if params.ConfigurationFile == "" {
-		return nil, fmt.Errorf("configuration file missing")
+		return nil, errors.New("configuration file missing")
 	}
 	ss := &SingleSpoe{}
 	ss.Transaction = &conf.Transaction{}
@@ -90,7 +91,7 @@ func newSingleSpoe(params Params) (*SingleSpoe, error) {
 
 	ss.Parser = &spoe.Parser{}
 	if err := ss.Parser.LoadData(params.ConfigurationFile); err != nil {
-		return nil, conf.NewConfError(conf.ErrCannotReadConfFile, fmt.Sprintf("cannot read %s", ss.Transaction.ConfigurationFile))
+		return nil, conf.NewConfError(conf.ErrCannotReadConfFile, "cannot read "+ss.Transaction.ConfigurationFile)
 	}
 
 	return ss, nil
@@ -153,12 +154,13 @@ func (c *SingleSpoe) AddParser(transactionID string) error {
 	c.mu.Lock()
 	_, ok := c.parsers[transactionID]
 	c.mu.Unlock()
+
 	if ok {
 		return conf.NewConfError(conf.ErrTransactionAlreadyExists, fmt.Sprintf("transaction %s already exists", transactionID))
 	}
 
 	p := &spoe.Parser{}
-	tFile := ""
+	var tFile string
 	var err error
 	if c.Transaction.PersistentTransactions {
 		tFile, err = c.Transaction.GetTransactionFile(transactionID)
@@ -169,7 +171,7 @@ func (c *SingleSpoe) AddParser(transactionID string) error {
 		tFile = c.Transaction.ConfigurationFile
 	}
 	if err := p.LoadData(tFile); err != nil {
-		return conf.NewConfError(conf.ErrCannotReadConfFile, fmt.Sprintf("cannot read %s", tFile))
+		return conf.NewConfError(conf.ErrCannotReadConfFile, "cannot read "+tFile)
 	}
 	c.mu.Lock()
 	c.parsers[transactionID] = p
@@ -228,7 +230,7 @@ func (c *SingleSpoe) InitTransactionParsers() error {
 			return err
 		}
 		if err := p.LoadData(tFile); err != nil {
-			return conf.NewConfError(conf.ErrCannotReadConfFile, fmt.Sprintf("cannot read %s", tFile))
+			return conf.NewConfError(conf.ErrCannotReadConfFile, "cannot read "+tFile)
 		}
 	}
 	return nil
@@ -240,7 +242,7 @@ func (c *SingleSpoe) IncrementVersion() error {
 	ver.Value++
 
 	if err := c.Parser.Save(c.Transaction.ConfigurationFile); err != nil {
-		return conf.NewConfError(conf.ErrCannotSetVersion, fmt.Sprintf("cannot set version: %s", err.Error()))
+		return conf.NewConfError(conf.ErrCannotSetVersion, "cannot set version: "+err.Error())
 	}
 	return nil
 }
@@ -269,7 +271,7 @@ func (c *SingleSpoe) incrementTransactionVersion(p *spoe.Parser) error {
 func (c *SingleSpoe) LoadData(filename string) error {
 	err := c.Parser.LoadData(filename)
 	if err != nil {
-		return conf.NewConfError(conf.ErrCannotReadConfFile, fmt.Sprintf("cannot read %s", filename))
+		return conf.NewConfError(conf.ErrCannotReadConfFile, "cannot read version: "+err.Error())
 	}
 	return nil
 }
@@ -288,7 +290,7 @@ func (c *SingleSpoe) Save(transactionFile, transactionID string) error {
 func (c *SingleSpoe) GetFailedParserTransactionVersion(transactionID string) (int64, error) {
 	p := &spoe.Parser{}
 	if err := p.LoadData(transactionID); err != nil {
-		return 0, conf.NewConfError(conf.ErrCannotReadConfFile, fmt.Sprintf("cannot read %s", transactionID))
+		return 0, conf.NewConfError(conf.ErrCannotReadConfFile, "cannot read version: "+err.Error())
 	}
 
 	data, _ := p.Get("", parser.Comments, parser.CommentsSectionName, "# _version", false)
@@ -308,15 +310,15 @@ func (c *SingleSpoe) GetVersion(transactionID string) (int64, error) {
 func (c *SingleSpoe) getVersion(transactionID string) (int64, error) {
 	p, err := c.GetParser(transactionID)
 	if err != nil {
-		return 0, conf.NewConfError(conf.ErrCannotReadVersion, fmt.Sprintf("cannot read version: %s", err.Error()))
+		return 0, conf.NewConfError(conf.ErrCannotReadVersion, "cannot read version: "+err.Error())
 	}
 	data, err := p.Get("", parser.Comments, parser.CommentsSectionName, "# _version", true)
 	if err != nil {
-		return 0, conf.NewConfError(conf.ErrCannotReadVersion, fmt.Sprintf("cannot read version: %s", err.Error()))
+		return 0, conf.NewConfError(conf.ErrCannotReadVersion, "cannot read version: "+err.Error())
 	}
 	ver, ok := data.(*types.ConfigVersion)
 	if !ok {
-		return 0, conf.NewConfError(conf.ErrCannotReadVersion, fmt.Sprintf("cannot read version: %s", err.Error()))
+		return 0, conf.NewConfError(conf.ErrCannotReadVersion, "cannot read version: "+err.Error())
 	}
 	return ver.Value, nil
 }

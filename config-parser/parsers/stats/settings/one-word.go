@@ -16,9 +16,7 @@ limitations under the License.
 
 package stats
 
-import (
-	"fmt"
-)
+import "errors"
 
 type OneWord struct {
 	Name    string
@@ -27,7 +25,7 @@ type OneWord struct {
 
 func (o *OneWord) Parse(parts []string, comment string) error {
 	if len(parts) < 2 {
-		return fmt.Errorf("not enough params")
+		return errors.New("not enough params")
 	}
 
 	o.Name = parts[1]

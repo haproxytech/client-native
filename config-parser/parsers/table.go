@@ -104,7 +104,6 @@ func (t *Table) Result() ([]common.ReturnResultLine, error) {
 	}
 	result := make([]common.ReturnResultLine, dataLength)
 	for index, table := range t.data {
-
 		var data strings.Builder
 		data.WriteString("table ")
 		data.WriteString(table.Name)

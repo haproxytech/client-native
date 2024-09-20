@@ -17,7 +17,7 @@ limitations under the License.
 package actions
 
 import (
-	"fmt"
+	stderrors "errors"
 	"strings"
 
 	"github.com/haproxytech/client-native/v6/config-parser/common"
@@ -36,13 +36,13 @@ func (f *SetSrc) Parse(parts []string, parserType types.ParserType, comment stri
 		f.Comment = comment
 	}
 	if len(parts) < 4 {
-		return fmt.Errorf("not enough params")
+		return stderrors.New("not enough params")
 	}
 	expr := common.Expression{}
 
 	err := expr.Parse([]string{parts[3]})
 	if err != nil {
-		return fmt.Errorf("not enough params")
+		return stderrors.New("not enough params")
 	}
 
 	f.Expr = expr

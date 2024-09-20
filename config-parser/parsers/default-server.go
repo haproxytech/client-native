@@ -17,8 +17,6 @@ limitations under the License.
 package parsers
 
 import (
-	"fmt"
-
 	"github.com/haproxytech/client-native/v6/config-parser/common"
 	"github.com/haproxytech/client-native/v6/config-parser/errors"
 	"github.com/haproxytech/client-native/v6/config-parser/params"
@@ -48,7 +46,7 @@ func (h *DefaultServer) Result() ([]common.ReturnResultLine, error) {
 	result := make([]common.ReturnResultLine, len(h.data))
 	for index, req := range h.data {
 		result[index] = common.ReturnResultLine{
-			Data:    fmt.Sprintf("default-server %s", params.ServerOptionsString(req.Params)),
+			Data:    "default-server " + params.ServerOptionsString(req.Params),
 			Comment: req.Comment,
 		}
 	}

@@ -127,7 +127,7 @@ type ServerOptionIDValue struct {
 // Parse ...
 func (b *ServerOptionIDValue) Parse(options []string, currentIndex int) (int, error) {
 	if currentIndex+1 < len(options) {
-		if strings.HasPrefix(options[currentIndex], fmt.Sprintf("%s(", b.Name)) {
+		if strings.HasPrefix(options[currentIndex], b.Name+"(") {
 			words := strings.Split(options[currentIndex], "(")
 			if len(words) != 2 {
 				return 0, &NotEnoughParamsError{}

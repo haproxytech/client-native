@@ -17,6 +17,7 @@ limitations under the License.
 package actions
 
 import (
+	stderrors "errors"
 	"fmt"
 	"strconv"
 	"strings"
@@ -61,7 +62,7 @@ func (f *SetStatus) Parse(parts []string, parserType types.ParserType, comment s
 		}
 		return nil
 	}
-	return fmt.Errorf("not enough params")
+	return stderrors.New("not enough params")
 }
 
 func (f *SetStatus) String() string {

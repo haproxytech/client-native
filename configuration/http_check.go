@@ -17,7 +17,6 @@ package configuration
 
 import (
 	"errors"
-	"fmt"
 	"strconv"
 	"strings"
 
@@ -257,7 +256,7 @@ func ParseHTTPChecks(t, pName string, p parser.Parser) (models.HTTPChecks, error
 	case BackendParentName:
 		section = parser.Backends
 	default:
-		return nil, NewConfError(ErrValidationError, fmt.Sprintf("unsupported section in http_check: %s", t))
+		return nil, NewConfError(ErrValidationError, "unsupported section in http_error: "+t)
 	}
 
 	var checks models.HTTPChecks
@@ -281,7 +280,8 @@ func ParseHTTPChecks(t, pName string, p parser.Parser) (models.HTTPChecks, error
 	return checks, nil
 }
 
-func ParseHTTPCheck(f types.Action) (check *models.HTTPCheck, err error) {
+func ParseHTTPCheck(f types.Action) (*models.HTTPCheck, error) {
+	var check *models.HTTPCheck
 	switch v := f.(type) {
 	case *http_actions.CheckComment:
 		check = &models.HTTPCheck{
@@ -382,7 +382,7 @@ func ParseHTTPCheck(f types.Action) (check *models.HTTPCheck, err error) {
 	return check, nil
 }
 
-func SerializeHTTPCheck(f models.HTTPCheck) (action types.Action, err error) { //nolint:ireturn
+func SerializeHTTPCheck(f models.HTTPCheck) (types.Action, error) { //nolint:ireturn
 	switch f.Type {
 	case models.HTTPCheckTypeComment:
 		return &http_actions.CheckComment{

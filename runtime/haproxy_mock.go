@@ -22,7 +22,7 @@ type HAProxyMock struct {
 }
 
 // NewHAProxyMock - create new haproxy mock
-func NewHAProxyMock(t *testing.T) *HAProxyMock {
+func NewHAProxyMock(t *testing.T) *HAProxyMock { //nolint:thelper
 	haProxyMock := &HAProxyMock{}
 	haProxyMock.t = t
 	l, err := net.Listen("unix", socket())

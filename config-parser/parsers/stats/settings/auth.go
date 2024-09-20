@@ -17,6 +17,7 @@ limitations under the License.
 package stats
 
 import (
+	"errors"
 	"fmt"
 	"strings"
 
@@ -31,7 +32,7 @@ type Auth struct {
 
 func (a *Auth) Parse(parts []string, comment string) error {
 	if len(parts) < 3 {
-		return fmt.Errorf("not enough params")
+		return errors.New("not enough params")
 	}
 
 	if comment != "" {
@@ -39,7 +40,7 @@ func (a *Auth) Parse(parts []string, comment string) error {
 	}
 	split := common.StringSplitIgnoreEmpty(strings.Join(parts[2:], " "), ':')
 	if len(split) < 2 {
-		return fmt.Errorf("wrong format for user & password")
+		return errors.New("wrong format for user & password")
 	}
 	a.User = split[0]
 	a.Password = split[1]

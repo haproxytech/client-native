@@ -17,7 +17,7 @@ limitations under the License.
 package parsers
 
 import (
-	"fmt"
+	stderrors "errors"
 	"strconv"
 	"strings"
 
@@ -41,14 +41,14 @@ func (p *LogStdErr) parse(parts []string) (*types.LogStdErr, error) {
 	getValue := func(part []string, index *int) (string, error) {
 		var value string
 		if *index+1 == len(parts) {
-			return "", fmt.Errorf("missing attribute value")
+			return "", stderrors.New("missing attribute value")
 		}
 
 		value = part[*index+1]
 
 		_, ok := protectedKeywords[value]
 		if ok {
-			return "", fmt.Errorf("missing value for attribute")
+			return "", stderrors.New("missing value for attribute")
 		}
 
 		defer func() {
@@ -73,13 +73,13 @@ func (p *LogStdErr) parse(parts []string) (*types.LogStdErr, error) {
 			sampleData := strings.Split(v, ":")
 
 			if len(sampleData) != 2 || sampleData[0] == "" {
-				return nil, fmt.Errorf("sample size is malformed")
+				return nil, stderrors.New("sample size is malformed")
 			}
 
 			data.SampleRange = sampleData[0]
 
 			if data.SampleSize, err = strconv.ParseInt(sampleData[1], 10, 64); err != nil {
-				return nil, fmt.Errorf("expected integer value")
+				return nil, stderrors.New("expected integer value")
 			}
 		case part == "format":
 			v, err := getValue(parts, &index)
@@ -95,7 +95,7 @@ func (p *LogStdErr) parse(parts []string) (*types.LogStdErr, error) {
 			}
 
 			if data.Length, err = strconv.ParseInt(v, 10, 64); err != nil {
-				return nil, fmt.Errorf("expected integer value")
+				return nil, stderrors.New("expected integer value")
 			}
 		case index == len(parts)-3: // <facility> <level> <minlevel>
 			data.Facility = part

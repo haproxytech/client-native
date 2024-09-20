@@ -17,6 +17,7 @@ limitations under the License.
 package actions
 
 import (
+	stderrors "errors"
 	"fmt"
 	"strings"
 
@@ -42,12 +43,12 @@ func (f *SetBandwidthLimit) Parse(parts []string, parserType types.ParserType, c
 	switch parserType {
 	case types.HTTP:
 		if len(parts) < 3 {
-			return fmt.Errorf("not enough params")
+			return stderrors.New("not enough params")
 		}
 		command = parts[2:]
 	case types.TCP:
 		if len(parts) < 4 {
-			return fmt.Errorf("not enough params")
+			return stderrors.New("not enough params")
 		}
 		command = parts[3:]
 	}
@@ -57,20 +58,20 @@ func (f *SetBandwidthLimit) Parse(parts []string, parserType types.ParserType, c
 	for i := 1; i < len(command); i++ {
 		var expr []string
 		if len(command) < i+2 {
-			return fmt.Errorf("not enough params")
+			return stderrors.New("not enough params")
 		}
 		el := command[i]
 		switch el {
 		case "limit":
 			expr, i = f.parseExpr(command, i+1, "period")
 			if len(expr) == 0 {
-				return fmt.Errorf("not enough params")
+				return stderrors.New("not enough params")
 			}
 			f.Limit.Expr = expr
 		case "period":
 			expr, i = f.parseExpr(command, i+1, "limit")
 			if len(expr) == 0 {
-				return fmt.Errorf("not enough params")
+				return stderrors.New("not enough params")
 			}
 			f.Period.Expr = expr
 		default:

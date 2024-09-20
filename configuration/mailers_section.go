@@ -174,7 +174,7 @@ func ParseMailersSection(p parser.Parser, ms *models.MailersSection) error {
 
 func SerializeMailersSection(p parser.Parser, data *models.MailersSection, opt *options.ConfigurationOptions) error {
 	if data == nil {
-		return fmt.Errorf("empty mailers section")
+		return errors.New("empty mailers section")
 	}
 
 	if data.Timeout != nil {

@@ -36,8 +36,8 @@ import (
 type Originalto struct {
 	// enabled
 	// Required: true
-	// Enum: [enabled]
-	// +kubebuilder:validation:Enum=enabled;
+	// Enum: ["enabled"]
+	// +kubebuilder:validation:Enum="enabled";
 	Enabled *string `json:"enabled"`
 
 	// except

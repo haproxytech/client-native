@@ -17,6 +17,7 @@ limitations under the License.
 package actions
 
 import (
+	stderrors "errors"
 	"fmt"
 	"strings"
 
@@ -46,7 +47,7 @@ func (f *SetHeader) Parse(parts []string, parserType types.ParserType, comment s
 		}
 		return nil
 	}
-	return fmt.Errorf("not enough params")
+	return stderrors.New("not enough params")
 }
 
 func (f *SetHeader) String() string {

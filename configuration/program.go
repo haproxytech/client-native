@@ -150,11 +150,11 @@ func (c *client) EditProgram(name string, data *models.Program, transactionID st
 
 func SerializeProgramSection(p parser.Parser, data *models.Program) error {
 	if data == nil {
-		return fmt.Errorf("empty program")
+		return errors.New("empty program")
 	}
 
 	if data.Command == nil {
-		return fmt.Errorf("command must be set")
+		return errors.New("command must be set")
 	}
 	if err := p.Set(parser.Program, data.Name, "command", types.Command{Args: *data.Command}); err != nil {
 		return err

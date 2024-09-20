@@ -16,6 +16,7 @@
 package spoe
 
 import (
+	"errors"
 	"fmt"
 
 	"github.com/go-openapi/strfmt"
@@ -182,7 +183,7 @@ func (c *SingleSpoe) EditMessage(scope string, data *models.SpoeMessage, name, t
 
 func (c *SingleSpoe) createEditMessage(scope string, data *models.SpoeMessage, t string, transactionID string, p *spoe.Parser) error {
 	if data == nil {
-		return fmt.Errorf("spoe message not initialized")
+		return errors.New("spoe message not initialized")
 	}
 	name := *data.Name
 

@@ -243,7 +243,7 @@ func (c *client) EditRing(name string, data *models.Ring, transactionID string, 
 
 func SerializeRingSection(p parser.Parser, data *models.Ring, opt *options.ConfigurationOptions) error { //nolint:gocognit
 	if data == nil {
-		return fmt.Errorf("empty ring")
+		return errors.New("empty ring")
 	}
 
 	var err error

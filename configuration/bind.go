@@ -219,7 +219,8 @@ func ParseBind(ondiskBind types.Bind) *models.Bind {
 	return b
 }
 
-func parseBindParams(bindOptions []params.BindOption) (b models.BindParams) { //nolint:gocyclo,cyclop,maintidx,gocognit
+func parseBindParams(bindOptions []params.BindOption) models.BindParams { //nolint:gocyclo,cyclop,maintidx,gocognit
+	var b models.BindParams
 	for _, p := range bindOptions {
 		switch v := p.(type) {
 		case *params.BindOptionDoubleWord:
@@ -412,7 +413,8 @@ func SerializeBind(b models.Bind) types.Bind {
 	return bind
 }
 
-func serializeBindParams(b models.BindParams, path string) (options []params.BindOption) { //nolint:gocognit,gocyclo,cyclop,maintidx
+func serializeBindParams(b models.BindParams, path string) []params.BindOption { //nolint:gocognit,gocyclo,cyclop,maintidx
+	var options []params.BindOption
 	if b.Name != "" {
 		options = append(options, &params.BindOptionValue{Name: "name", Value: b.Name})
 	} else if path != "" {

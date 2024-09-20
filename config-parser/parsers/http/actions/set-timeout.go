@@ -17,6 +17,7 @@ limitations under the License.
 package actions
 
 import (
+	stderrors "errors"
 	"fmt"
 	"strings"
 
@@ -52,9 +53,8 @@ func (f *SetTimeout) Parse(parts []string, parserType types.ParserType, comment 
 			f.CondTest = strings.Join(condition[1:], " ")
 		}
 		return nil
-
 	}
-	return fmt.Errorf("not enough params")
+	return stderrors.New("not enough params")
 }
 
 func (f *SetTimeout) String() string {
