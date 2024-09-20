@@ -32,7 +32,7 @@ func main() {
 	}
 }
 
-func generate(fileName string) error { //nolint:gocognit,unparam
+func generate(fileName string) error { //nolint:gocognit
 	f, err := decorator.ParseFile(token.NewFileSet(), fileName, nil, 0)
 	if err != nil {
 		log.Fatal(err)
@@ -86,7 +86,6 @@ func generate(fileName string) error { //nolint:gocognit,unparam
 										field.Decorations().Start.Append("// +kubebuilder:validation:Optional")
 									}
 								}
-
 							}
 							// if len(field.Names) > 0 {
 							// log.Printf("Comments before the field %s: %v\n", field.Names[0].Name, comments)

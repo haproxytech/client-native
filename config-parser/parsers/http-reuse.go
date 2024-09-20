@@ -17,8 +17,6 @@ limitations under the License.
 package parsers
 
 import (
-	"fmt"
-
 	"github.com/haproxytech/client-native/v6/config-parser/common"
 	"github.com/haproxytech/client-native/v6/config-parser/errors"
 	"github.com/haproxytech/client-native/v6/config-parser/types"
@@ -48,7 +46,7 @@ func (p *HTTPReuse) Result() ([]common.ReturnResultLine, error) {
 	}
 	return []common.ReturnResultLine{
 		{
-			Data:    fmt.Sprintf("http-reuse %s", p.data.ShareType),
+			Data:    "http-reuse " + p.data.ShareType,
 			Comment: p.data.Comment,
 		},
 	}, nil

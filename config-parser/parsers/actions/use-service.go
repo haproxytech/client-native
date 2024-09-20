@@ -17,6 +17,7 @@ limitations under the License.
 package actions
 
 import (
+	"errors"
 	"fmt"
 	"strings"
 
@@ -37,7 +38,7 @@ func (us *UseService) Parse(parts []string, parserType types.ParserType, comment
 		us.Comment = comment
 	}
 	if len(parts) < 3 {
-		return fmt.Errorf("not enough params")
+		return errors.New("not enough params")
 	}
 	var data string
 	var command []string

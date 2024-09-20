@@ -17,6 +17,7 @@ limitations under the License.
 package actions
 
 import (
+	stderrors "errors"
 	"fmt"
 	"strings"
 
@@ -42,7 +43,7 @@ func (f *SetMap) Parse(parts []string, parserType types.ParserType, comment stri
 	if len(parts) >= 4 {
 		command, condition := common.SplitRequest(parts[2:])
 		if len(command) < 2 {
-			return fmt.Errorf("not enough params")
+			return stderrors.New("not enough params")
 		}
 		f.KeyFmt = command[0]
 		f.ValueFmt = command[1]
@@ -52,7 +53,7 @@ func (f *SetMap) Parse(parts []string, parserType types.ParserType, comment stri
 		}
 		return nil
 	}
-	return fmt.Errorf("not enough params")
+	return stderrors.New("not enough params")
 }
 
 func (f *SetMap) String() string {

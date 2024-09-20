@@ -17,6 +17,7 @@ limitations under the License.
 package types
 
 import (
+	stderrors "errors"
 	"fmt"
 	"strings"
 
@@ -45,7 +46,7 @@ func (f *Session) Parse(parts []string, comment string) error {
 		f.Comment = comment
 	}
 	if len(parts) < 3 {
-		return fmt.Errorf("not enough params")
+		return stderrors.New("not enough params")
 	}
 	var err error
 	switch parts[2] {

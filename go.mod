@@ -1,6 +1,6 @@
 module github.com/haproxytech/client-native/v6
 
-go 1.22
+go 1.23
 
 require (
 	github.com/go-faker/faker/v4 v4.4.2

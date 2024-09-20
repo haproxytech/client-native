@@ -17,6 +17,7 @@ limitations under the License.
 package actions
 
 import (
+	stderrors "errors"
 	"fmt"
 	"strings"
 
@@ -50,7 +51,7 @@ func (f *Reject) Parse(parts []string, parserType types.ParserType, comment stri
 		return nil
 	}
 	if len(parts) < requiredLen {
-		return fmt.Errorf("not enough params")
+		return stderrors.New("not enough params")
 	}
 	_, condition := common.SplitRequest(command)
 	if len(condition) > 1 {

@@ -17,6 +17,7 @@ limitations under the License.
 package stats
 
 import (
+	"errors"
 	"fmt"
 	"strings"
 
@@ -31,7 +32,7 @@ type Admin struct {
 
 func (a *Admin) Parse(parts []string, comment string) error {
 	if len(parts) < 4 {
-		return fmt.Errorf("not enough params")
+		return errors.New("not enough params")
 	}
 
 	if comment != "" {

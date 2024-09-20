@@ -79,7 +79,7 @@ func (s *SingleRuntime) ShowCertEntry(storageName string) (*models.SslCertEntry,
 	if storageName == "" {
 		return nil, fmt.Errorf("%s %w", "Argument storageName empty", native_errors.ErrGeneral)
 	}
-	cmd := fmt.Sprintf("show ssl cert %s", storageName)
+	cmd := "show ssl cert " + storageName
 	response, err := s.ExecuteWithResponse(cmd)
 	if err != nil {
 		return nil, fmt.Errorf("%s %w", err.Error(), native_errors.ErrNotFound)
@@ -154,7 +154,7 @@ func (s *SingleRuntime) NewCertEntry(storageName string) error {
 	if storageName == "" {
 		return fmt.Errorf("%s %w", "Argument storageName empty", native_errors.ErrGeneral)
 	}
-	cmd := fmt.Sprintf("new ssl cert %s", storageName)
+	cmd := "new ssl cert " + storageName
 	response, err := s.ExecuteWithResponse(cmd)
 	if err != nil {
 		return fmt.Errorf("%s %w", err.Error(), native_errors.ErrGeneral)
@@ -186,7 +186,7 @@ func (s *SingleRuntime) CommitCertEntry(storageName string) error {
 	if storageName == "" {
 		return fmt.Errorf("%s %w", "Argument storageName empty", native_errors.ErrGeneral)
 	}
-	cmd := fmt.Sprintf("commit ssl cert %s", storageName)
+	cmd := "commit ssl cert " + storageName
 	response, err := s.ExecuteWithResponse(cmd)
 	if err != nil {
 		return fmt.Errorf("%s %w", err.Error(), native_errors.ErrGeneral)
@@ -202,7 +202,7 @@ func (s *SingleRuntime) AbortCertEntry(storageName string) error {
 	if storageName == "" {
 		return fmt.Errorf("%s %w", "Argument storageName empty", native_errors.ErrGeneral)
 	}
-	cmd := fmt.Sprintf("abort ssl cert %s", storageName)
+	cmd := "abort ssl cert " + storageName
 	response, err := s.ExecuteWithResponse(cmd)
 	if err != nil {
 		return fmt.Errorf("%s %w", err.Error(), native_errors.ErrGeneral)
@@ -218,7 +218,7 @@ func (s *SingleRuntime) DeleteCertEntry(storageName string) error {
 	if storageName == "" {
 		return fmt.Errorf("%s %w", "Argument storageName empty", native_errors.ErrGeneral)
 	}
-	cmd := fmt.Sprintf("del ssl cert %s", storageName)
+	cmd := "del ssl cert " + storageName
 	response, err := s.ExecuteWithResponse(cmd)
 	if err != nil {
 		return fmt.Errorf("%s %w", err.Error(), native_errors.ErrGeneral)

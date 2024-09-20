@@ -17,8 +17,6 @@ limitations under the License.
 package parsers
 
 import (
-	"fmt"
-
 	"github.com/haproxytech/client-native/v6/config-parser/common"
 	"github.com/haproxytech/client-native/v6/config-parser/errors"
 	"github.com/haproxytech/client-native/v6/config-parser/types"
@@ -46,7 +44,7 @@ func (c *CompressionDirection) Result() ([]common.ReturnResultLine, error) {
 	}
 	return []common.ReturnResultLine{
 		{
-			Data:    fmt.Sprintf("compression direction %s", c.data.Value),
+			Data:    "compression direction " + c.data.Value,
 			Comment: c.data.Comment,
 		},
 	}, nil

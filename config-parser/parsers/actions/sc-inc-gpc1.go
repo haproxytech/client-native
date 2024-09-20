@@ -18,7 +18,7 @@ limitations under the License.
 package actions
 
 import (
-	"fmt"
+	stderrors "errors"
 	"strings"
 
 	"github.com/haproxytech/client-native/v6/config-parser/common"
@@ -57,7 +57,7 @@ func (f *ScIncGpc1) Parse(parts []string, parserType types.ParserType, comment s
 		return nil
 	}
 	if len(parts) < requiredLen {
-		return fmt.Errorf("not enough params")
+		return stderrors.New("not enough params")
 	}
 	_, condition := common.SplitRequest(command)
 	if len(condition) > 1 {

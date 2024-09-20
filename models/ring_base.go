@@ -41,8 +41,8 @@ type RingBase struct {
 	Description string `json:"description,omitempty"`
 
 	// format
-	// Enum: [iso local raw rfc3164 rfc5424 short priority timed]
-	// +kubebuilder:validation:Enum=iso;local;raw;rfc3164;rfc5424;short;priority;timed;
+	// Enum: ["iso","local","raw","rfc3164","rfc5424","short","priority","timed"]
+	// +kubebuilder:validation:Enum="iso","local","raw","rfc3164","rfc5424","short","priority","timed";
 	Format string `json:"format,omitempty"`
 
 	// maxlen

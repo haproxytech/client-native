@@ -17,7 +17,6 @@ limitations under the License.
 package parsers
 
 import (
-	"fmt"
 	"strconv"
 	"strings"
 
@@ -79,7 +78,7 @@ func (p *BindProcess) Result() ([]common.ReturnResultLine, error) {
 
 	return []common.ReturnResultLine{
 		{
-			Data:    fmt.Sprintf("bind-process %s", p.data.Process),
+			Data:    "bind-process " + p.data.Process,
 			Comment: p.data.Comment,
 		},
 	}, nil

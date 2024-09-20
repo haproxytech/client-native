@@ -17,6 +17,7 @@ limitations under the License.
 package actions
 
 import (
+	stderrors "errors"
 	"fmt"
 	"strings"
 
@@ -43,7 +44,7 @@ func (f *WaitForBody) Parse(parts []string, parserType types.ParserType, comment
 		}
 		command, condition := common.SplitRequest(parts[3:])
 		if len(command) < 1 || len(command) == 2 {
-			return fmt.Errorf("not enough params")
+			return stderrors.New("not enough params")
 		}
 		f.Time = command[0]
 		if len(command) > 2 {
@@ -59,7 +60,7 @@ func (f *WaitForBody) Parse(parts []string, parserType types.ParserType, comment
 		}
 		return nil
 	}
-	return fmt.Errorf("not enough params")
+	return stderrors.New("not enough params")
 }
 
 func (f *WaitForBody) String() string {

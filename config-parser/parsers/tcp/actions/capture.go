@@ -17,7 +17,7 @@ limitations under the License.
 package actions
 
 import (
-	"fmt"
+	stderrors "errors"
 	"strconv"
 	"strings"
 
@@ -38,13 +38,13 @@ func (f *Capture) Parse(parts []string, parserType types.ParserType, comment str
 		f.Comment = comment
 	}
 	if len(parts) < 4 {
-		return fmt.Errorf("not enough params")
+		return stderrors.New("not enough params")
 	}
 	expr := common.Expression{}
 
 	err := expr.Parse([]string{parts[3]})
 	if err != nil {
-		return fmt.Errorf("invalid expression")
+		return stderrors.New("invalid expression")
 	}
 
 	f.Expr = expr
@@ -52,7 +52,7 @@ func (f *Capture) Parse(parts []string, parserType types.ParserType, comment str
 	if ln, err := strconv.ParseInt(parts[5], 10, 64); err == nil {
 		f.Len = ln
 	} else {
-		return fmt.Errorf("invalid value for len")
+		return stderrors.New("invalid value for len")
 	}
 	_, condition := common.SplitRequest(parts[5:])
 	if len(condition) > 1 {

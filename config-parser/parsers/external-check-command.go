@@ -17,8 +17,6 @@ limitations under the License.
 package parsers
 
 import (
-	"fmt"
-
 	"github.com/haproxytech/client-native/v6/config-parser/common"
 	"github.com/haproxytech/client-native/v6/config-parser/errors"
 	"github.com/haproxytech/client-native/v6/config-parser/types"
@@ -49,7 +47,7 @@ func (s *ExternalCheckCommand) Result() ([]common.ReturnResultLine, error) {
 	}
 	var data string
 	if s.data.Command != "" {
-		data = fmt.Sprintf("external-check command %s", s.data.Command)
+		data = "external-check command " + s.data.Command
 	}
 	return []common.ReturnResultLine{
 		{

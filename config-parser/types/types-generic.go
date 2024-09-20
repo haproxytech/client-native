@@ -14,7 +14,6 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-//nolint:godot
 package types
 
 // Enabled is used by parsers Daemon, MasterWorker, ExternalCheck, NoSplice, CompressionOffload

@@ -135,7 +135,7 @@ func (c *client) AddParser(transactionID string) error {
 		parserOptions = append(parserOptions, parser_options.NoNamedDefaultsFrom)
 	}
 
-	tFile := ""
+	var tFile string
 	var err error
 	if c.PersistentTransactions {
 		tFile, err = c.GetTransactionFile(transactionID)
@@ -148,7 +148,7 @@ func (c *client) AddParser(transactionID string) error {
 	parserOptions = append(parserOptions, parser_options.Path(tFile))
 	p, err := parser.New(parserOptions...)
 	if err != nil {
-		return NewConfError(ErrCannotReadConfFile, fmt.Sprintf("Cannot read %s", tFile))
+		return NewConfError(ErrCannotReadConfFile, "Cannot read "+tFile)
 	}
 	c.clientMu.Lock()
 	c.parsers[transactionID] = p
@@ -219,7 +219,7 @@ func (c *client) IncrementVersion() error {
 func (c *client) LoadData(filename string) error {
 	err := c.parser.LoadData(filename)
 	if err != nil {
-		return NewConfError(ErrCannotReadConfFile, fmt.Sprintf("cannot read %s", filename))
+		return NewConfError(ErrCannotReadConfFile, "cannot read "+filename)
 	}
 	return nil
 }
@@ -265,7 +265,7 @@ type SectionParser struct {
 // Parse parses the sections fields and sets their values with the data from the parser
 func (s *SectionParser) Parse() error {
 	objValue := reflect.ValueOf(s.Object).Elem()
-	for i := 0; i < objValue.NumField(); i++ {
+	for i := range objValue.NumField() {
 		typeField := objValue.Type().Field(i)
 		field := objValue.FieldByName(typeField.Name)
 		val := s.parseField(typeField.Name)
@@ -305,7 +305,7 @@ func (s *SectionParser) parseField(fieldName string) interface{} {
 	return nil
 }
 
-func (s *SectionParser) checkSpecialFields(fieldName string) (match bool, data interface{}) { //nolint:gocyclo,cyclop
+func (s *SectionParser) checkSpecialFields(fieldName string) (bool, interface{}) { //nolint:gocyclo,cyclop
 	switch fieldName {
 	case "Shards":
 		return true, s.shards()
@@ -406,7 +406,7 @@ func (s *SectionParser) checkSpecialFields(fieldName string) (match bool, data i
 	}
 }
 
-func (s *SectionParser) checkTimeouts(fieldName string) (match bool, data interface{}) {
+func (s *SectionParser) checkTimeouts(fieldName string) (bool, interface{}) {
 	if strings.HasSuffix(fieldName, "Timeout") {
 		if pName := translateTimeout(fieldName); s.Parser.HasParser(s.Section, pName) {
 			data, err := s.get(pName, false)
@@ -420,7 +420,7 @@ func (s *SectionParser) checkTimeouts(fieldName string) (match bool, data interf
 	return false, nil
 }
 
-func (s *SectionParser) checkSingleLine(fieldName string) (match bool, data interface{}) {
+func (s *SectionParser) checkSingleLine(fieldName string) (bool, interface{}) {
 	if pName := misc.DashCase(fieldName); s.Parser.HasParser(s.Section, pName) {
 		data, err := s.get(pName, false)
 		if err != nil {
@@ -431,8 +431,8 @@ func (s *SectionParser) checkSingleLine(fieldName string) (match bool, data inte
 	return false, nil
 }
 
-func (s *SectionParser) checkOptions(fieldName string) (match bool, data interface{}) {
-	if pName := fmt.Sprintf("option %s", misc.DashCase(fieldName)); s.Parser.HasParser(s.Section, pName) {
+func (s *SectionParser) checkOptions(fieldName string) (bool, interface{}) {
+	if pName := "option " + misc.DashCase(fieldName); s.Parser.HasParser(s.Section, pName) {
 		data, err := s.get(pName, false)
 		if err != nil {
 			return true, nil
@@ -442,7 +442,7 @@ func (s *SectionParser) checkOptions(fieldName string) (match bool, data interfa
 	return false, nil
 }
 
-func (s *SectionParser) get(attribute string, createIfNotExists ...bool) (data common.ParserData, err error) {
+func (s *SectionParser) get(attribute string, createIfNotExists ...bool) (common.ParserData, error) {
 	return s.Parser.Get(s.Section, s.Name, attribute, createIfNotExists...)
 }
 
@@ -662,7 +662,7 @@ func (s *SectionParser) advCheck() interface{} {
 	return nil
 }
 
-func (s *SectionParser) getSslChkData() (found bool, data interface{}) {
+func (s *SectionParser) getSslChkData() (bool, interface{}) {
 	data, err := s.get("option ssl-hello-chk", false)
 	if err == nil {
 		d := data.(*types.SimpleOption)
@@ -673,7 +673,7 @@ func (s *SectionParser) getSslChkData() (found bool, data interface{}) {
 	return false, nil
 }
 
-func (s *SectionParser) getSMTPChkData() (found bool, data interface{}) {
+func (s *SectionParser) getSMTPChkData() (bool, interface{}) {
 	data, err := s.get("option smtpchk", false)
 	if err == nil {
 		d := data.(*types.OptionSmtpchk)
@@ -688,7 +688,7 @@ func (s *SectionParser) getSMTPChkData() (found bool, data interface{}) {
 	return false, nil
 }
 
-func (s *SectionParser) getLdapCheckData() (found bool, data interface{}) {
+func (s *SectionParser) getLdapCheckData() (bool, interface{}) {
 	data, err := s.get("option ldap-check", false)
 	if err == nil {
 		d := data.(*types.SimpleOption)
@@ -699,7 +699,7 @@ func (s *SectionParser) getLdapCheckData() (found bool, data interface{}) {
 	return false, nil
 }
 
-func (s *SectionParser) getMysqlCheckData() (found bool, data interface{}) {
+func (s *SectionParser) getMysqlCheckData() (bool, interface{}) {
 	data, err := s.get("option mysql-check", false)
 	if err == nil {
 		d := data.(*types.OptionMysqlCheck)
@@ -714,7 +714,7 @@ func (s *SectionParser) getMysqlCheckData() (found bool, data interface{}) {
 	return false, nil
 }
 
-func (s *SectionParser) getPgsqlCheckData() (found bool, data interface{}) {
+func (s *SectionParser) getPgsqlCheckData() (bool, interface{}) {
 	data, err := s.get("option pgsql-check", false)
 	if err == nil {
 		d := data.(*types.OptionPgsqlCheck)
@@ -728,7 +728,7 @@ func (s *SectionParser) getPgsqlCheckData() (found bool, data interface{}) {
 	return false, nil
 }
 
-func (s *SectionParser) getTCPCheckData() (found bool, data interface{}) {
+func (s *SectionParser) getTCPCheckData() (bool, interface{}) {
 	data, err := s.get("option tcp-check", false)
 	if err == nil {
 		d := data.(*types.SimpleOption)
@@ -739,7 +739,7 @@ func (s *SectionParser) getTCPCheckData() (found bool, data interface{}) {
 	return false, nil
 }
 
-func (s *SectionParser) getRedisCheckData() (found bool, data interface{}) {
+func (s *SectionParser) getRedisCheckData() (bool, interface{}) {
 	data, err := s.get("option redis-check", false)
 	if err == nil {
 		d := data.(*types.SimpleOption)
@@ -750,7 +750,7 @@ func (s *SectionParser) getRedisCheckData() (found bool, data interface{}) {
 	return false, nil
 }
 
-func (s *SectionParser) getHttpchkData() (found bool, data interface{}) {
+func (s *SectionParser) getHttpchkData() (bool, interface{}) {
 	data, err := s.get("option httpchk", false)
 	if err == nil {
 		d := data.(*types.OptionHttpchk)
@@ -1498,7 +1498,7 @@ func (s *SectionObject) CreateEditSection() error {
 	if objValue.Kind() == reflect.Ptr {
 		objValue = reflect.ValueOf(s.Object).Elem()
 	}
-	for i := 0; i < objValue.NumField(); i++ {
+	for i := range objValue.NumField() {
 		typeField := objValue.Type().Field(i)
 		field := objValue.FieldByName(typeField.Name)
 		if typeField.Name != "Name" && typeField.Name != "ID" {
@@ -1534,11 +1534,11 @@ func (s *SectionObject) setFieldValue(fieldName string, field reflect.Value) err
 	return fmt.Errorf("cannot parse option for %s %s: %s", s.Section, s.Name, fieldName)
 }
 
-func (s *SectionObject) checkParams(fieldName string) (match bool) {
+func (s *SectionObject) checkParams(fieldName string) bool {
 	return s.Section != parser.FCGIApp && strings.HasSuffix(fieldName, "Params")
 }
 
-func (s *SectionObject) checkSpecialFields(fieldName string, field reflect.Value) (match bool, err error) { //nolint:gocyclo,cyclop
+func (s *SectionObject) checkSpecialFields(fieldName string, field reflect.Value) (bool, error) { //nolint:gocyclo,cyclop
 	switch fieldName {
 	case "Shard":
 		return true, s.shard(field)
@@ -1651,7 +1651,7 @@ func (s *SectionObject) checkSpecialFields(fieldName string, field reflect.Value
 	}
 }
 
-func (s *SectionObject) checkTimeouts(fieldName string, field reflect.Value) (match bool, err error) {
+func (s *SectionObject) checkTimeouts(fieldName string, field reflect.Value) (bool, error) {
 	if strings.HasSuffix(fieldName, "Timeout") {
 		if pName := translateTimeout(fieldName); s.Parser.HasParser(s.Section, pName) {
 			if valueIsNil(field) {
@@ -1671,8 +1671,8 @@ func (s *SectionObject) checkTimeouts(fieldName string, field reflect.Value) (ma
 	return false, nil
 }
 
-func (s *SectionObject) checkOptions(fieldName string, field reflect.Value) (match bool, err error) {
-	if pName := fmt.Sprintf("option %s", misc.DashCase(fieldName)); s.Parser.HasParser(s.Section, pName) {
+func (s *SectionObject) checkOptions(fieldName string, field reflect.Value) (bool, error) {
+	if pName := "option " + misc.DashCase(fieldName); s.Parser.HasParser(s.Section, pName) {
 		if valueIsNil(field) {
 			if err := s.set(pName, nil); err != nil {
 				return true, err
@@ -1693,7 +1693,7 @@ func (s *SectionObject) checkOptions(fieldName string, field reflect.Value) (mat
 	return false, nil
 }
 
-func (s *SectionObject) checkSingleLine(fieldName string, field reflect.Value) (match bool, err error) {
+func (s *SectionObject) checkSingleLine(fieldName string, field reflect.Value) (bool, error) {
 	if pName := misc.DashCase(fieldName); s.Parser.HasParser(s.Section, pName) {
 		if valueIsNil(field) {
 			if err := s.set(pName, nil); err != nil {
@@ -1828,7 +1828,7 @@ func (s *SectionObject) httpReuse(field reflect.Value) error {
 
 func (s *SectionObject) httpConnectionMode(field reflect.Value) error {
 	for _, opt := range []string{"httpclose", "http-server-close", "http-keep-alive"} {
-		attribute := fmt.Sprintf("option %s", opt)
+		attribute := "option " + opt
 
 		if err := s.set(attribute, nil); err != nil {
 			return err
@@ -2544,7 +2544,7 @@ func (s *SectionObject) statsOptions(field reflect.Value) error {
 	for _, httpRequest := range opt.StatsHTTPRequests {
 		reqType := *httpRequest.Type
 		if reqType == "auth" && httpRequest.Realm != "" {
-			reqType = fmt.Sprintf("auth realm %s", httpRequest.Realm)
+			reqType = "auth realm " + httpRequest.Realm
 		}
 		s := &stats.HTTPRequest{
 			Type:     reqType,
@@ -2600,7 +2600,7 @@ func (s *SectionObject) compression(field reflect.Value) error { //nolint:gocogn
 	}
 	compression, ok := field.Elem().Interface().(models.Compression)
 	if !ok {
-		return fmt.Errorf("error casting compression model")
+		return errors.New("error casting compression model")
 	}
 
 	if len(compression.Algorithms) > 0 {
@@ -3042,5 +3042,5 @@ func parseOption(d interface{}) interface{} {
 
 func translateTimeout(mName string) string {
 	mName = strings.TrimSuffix(mName, "Timeout")
-	return fmt.Sprintf("timeout %s", misc.DashCase(mName))
+	return "timeout " + misc.DashCase(mName)
 }

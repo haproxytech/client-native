@@ -17,7 +17,7 @@ limitations under the License.
 package actions
 
 import (
-	"fmt"
+	stderrors "errors"
 	"strconv"
 	"strings"
 
@@ -40,7 +40,7 @@ func (f *ScSetGpt0) Parse(parts []string, parserType types.ParserType, comment s
 		f.Comment = comment
 	}
 	if len(parts) < 3 {
-		return fmt.Errorf("not enough params")
+		return stderrors.New("not enough params")
 	}
 	var data string
 	var command []string
@@ -65,7 +65,7 @@ func (f *ScSetGpt0) Parse(parts []string, parserType types.ParserType, comment s
 		expr := common.Expression{}
 		err := expr.Parse(command)
 		if err != nil {
-			return fmt.Errorf("not enough params")
+			return stderrors.New("not enough params")
 		}
 		f.Expr = expr
 	}

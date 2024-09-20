@@ -35,8 +35,8 @@ import (
 // swagger:model tune_options
 type TuneOptions struct {
 	// applet zero copy forwarding
-	// Enum: [enabled disabled]
-	// +kubebuilder:validation:Enum=enabled;disabled;
+	// Enum: ["enabled","disabled"]
+	// +kubebuilder:validation:Enum="enabled","disabled";
 	AppletZeroCopyForwarding string `json:"applet_zero_copy_forwarding,omitempty"`
 
 	// comp maxlevel
@@ -56,18 +56,18 @@ type TuneOptions struct {
 	FailAlloc bool `json:"fail_alloc,omitempty"`
 
 	// fd edge triggered
-	// Enum: [enabled disabled]
-	// +kubebuilder:validation:Enum=enabled;disabled;
+	// Enum: ["enabled","disabled"]
+	// +kubebuilder:validation:Enum="enabled","disabled";
 	FdEdgeTriggered string `json:"fd_edge_triggered,omitempty"`
 
 	// h1 zero copy fwd recv
-	// Enum: [enabled disabled]
-	// +kubebuilder:validation:Enum=enabled;disabled;
+	// Enum: ["enabled","disabled"]
+	// +kubebuilder:validation:Enum="enabled","disabled";
 	H1ZeroCopyFwdRecv string `json:"h1_zero_copy_fwd_recv,omitempty"`
 
 	// h1 zero copy fwd send
-	// Enum: [enabled disabled]
-	// +kubebuilder:validation:Enum=enabled;disabled;
+	// Enum: ["enabled","disabled"]
+	// +kubebuilder:validation:Enum="enabled","disabled";
 	H1ZeroCopyFwdSend string `json:"h1_zero_copy_fwd_send,omitempty"`
 
 	// h2 be glitches threshold
@@ -106,8 +106,8 @@ type TuneOptions struct {
 	H2MaxFrameSize int64 `json:"h2_max_frame_size,omitempty"`
 
 	// h2 zero copy fwd send
-	// Enum: [enabled disabled]
-	// +kubebuilder:validation:Enum=enabled;disabled;
+	// Enum: ["enabled","disabled"]
+	// +kubebuilder:validation:Enum="enabled","disabled";
 	H2ZeroCopyFwdSend string `json:"h2_zero_copy_fwd_send,omitempty"`
 
 	// http cookielen
@@ -124,8 +124,8 @@ type TuneOptions struct {
 	HTTPMaxhdr int64 `json:"http_maxhdr,omitempty"`
 
 	// idle pool shared
-	// Enum: [enabled disabled]
-	// +kubebuilder:validation:Enum=enabled;disabled;
+	// Enum: ["enabled","disabled"]
+	// +kubebuilder:validation:Enum="enabled","disabled";
 	IdlePoolShared string `json:"idle_pool_shared,omitempty"`
 
 	// idletimer
@@ -136,13 +136,13 @@ type TuneOptions struct {
 	Idletimer *int64 `json:"idletimer,omitempty"`
 
 	// listener default shards
-	// Enum: [by-process by-thread by-group]
-	// +kubebuilder:validation:Enum=by-process;by-thread;by-group;
+	// Enum: ["by-process","by-thread","by-group"]
+	// +kubebuilder:validation:Enum="by-process","by-thread","by-group";
 	ListenerDefaultShards string `json:"listener_default_shards,omitempty"`
 
 	// listener multi queue
-	// Enum: [enabled disabled]
-	// +kubebuilder:validation:Enum=enabled;disabled;
+	// Enum: ["enabled","disabled"]
+	// +kubebuilder:validation:Enum="enabled","disabled";
 	ListenerMultiQueue string `json:"listener_multi_queue,omitempty"`
 
 	// max checks per thread
@@ -173,8 +173,8 @@ type TuneOptions struct {
 	PoolLowFdRatio int64 `json:"pool_low_fd_ratio,omitempty"`
 
 	// pt zero copy forwarding
-	// Enum: [enabled disabled]
-	// +kubebuilder:validation:Enum=enabled;disabled;
+	// Enum: ["enabled","disabled"]
+	// +kubebuilder:validation:Enum="enabled","disabled";
 	PtZeroCopyForwarding string `json:"pt_zero_copy_forwarding,omitempty"`
 
 	// ring queues
@@ -184,8 +184,8 @@ type TuneOptions struct {
 	RunqueueDepth int64 `json:"runqueue_depth,omitempty"`
 
 	// sched low latency
-	// Enum: [enabled disabled]
-	// +kubebuilder:validation:Enum=enabled;disabled;
+	// Enum: ["enabled","disabled"]
+	// +kubebuilder:validation:Enum="enabled","disabled";
 	SchedLowLatency string `json:"sched_low_latency,omitempty"`
 
 	// stick counters

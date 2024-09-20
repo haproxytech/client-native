@@ -107,7 +107,7 @@ func (s *SingleRuntime) GetMap(name string) (*models.Map, error) {
 
 // ClearMap removes all map entries from the map file.
 func (s *SingleRuntime) ClearMap(name string) error {
-	cmd := fmt.Sprintf("clear map %s", name)
+	cmd := "clear map " + name
 	if err := s.Execute(cmd); err != nil {
 		return fmt.Errorf("%s %w", err.Error(), native_errors.ErrNotFound)
 	}
@@ -125,7 +125,7 @@ func (s *SingleRuntime) ClearMapVersioned(name, version string) error {
 
 // ShowMapEntries returns one map runtime entries
 func (s *SingleRuntime) ShowMapEntries(name string) (models.MapEntries, error) {
-	cmd := fmt.Sprintf("show map %s", name)
+	cmd := "show map " + name
 	response, err := s.ExecuteWithResponse(cmd)
 	if err != nil {
 		return nil, fmt.Errorf("%s %w", err.Error(), native_errors.ErrNotFound)
@@ -239,8 +239,8 @@ func (s *SingleRuntime) AddMapPayload(name, payload string) error {
 	return nil
 }
 
-func (s *SingleRuntime) PrepareMap(name string) (version string, err error) {
-	cmd := fmt.Sprintf("prepare map %s", name)
+func (s *SingleRuntime) PrepareMap(name string) (string, error) {
+	cmd := "prepare map " + name
 	response, err := s.ExecuteWithResponse(cmd)
 	if err != nil {
 		return "", fmt.Errorf("%s %w", err.Error(), native_errors.ErrGeneral)
@@ -249,7 +249,7 @@ func (s *SingleRuntime) PrepareMap(name string) (version string, err error) {
 	if len(parts) < 3 {
 		return "", fmt.Errorf("%s %w", "parsing error", native_errors.ErrGeneral)
 	}
-	version = strings.TrimSpace(parts[2])
+	version := strings.TrimSpace(parts[2])
 	if _, err = strconv.ParseInt(version, 10, 64); err == nil {
 		return version, nil
 	}

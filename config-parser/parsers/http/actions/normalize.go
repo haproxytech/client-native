@@ -17,6 +17,7 @@ limitations under the License.
 package actions
 
 import (
+	stderrors "errors"
 	"fmt"
 	"strings"
 
@@ -67,7 +68,7 @@ func (f *NormalizeURI) Parse(parts []string, parserType types.ParserType, commen
 		}
 	}
 
-	return fmt.Errorf("not enough params")
+	return stderrors.New("not enough params")
 }
 
 func (f *NormalizeURI) String() string {

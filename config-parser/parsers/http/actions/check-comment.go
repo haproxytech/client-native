@@ -17,7 +17,7 @@ limitations under the License.
 package actions
 
 import (
-	"fmt"
+	stderrors "errors"
 
 	"github.com/haproxytech/client-native/v6/config-parser/types"
 )
@@ -34,7 +34,7 @@ func (c *CheckComment) Parse(parts []string, parserType types.ParserType, commen
 	}
 
 	if len(parts) < 3 {
-		return fmt.Errorf("not enough params")
+		return stderrors.New("not enough params")
 	}
 
 	c.LogMessage = parts[2]

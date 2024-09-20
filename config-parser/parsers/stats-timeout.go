@@ -17,8 +17,6 @@ limitations under the License.
 package parsers
 
 import (
-	"fmt"
-
 	"github.com/haproxytech/client-native/v6/config-parser/common"
 	"github.com/haproxytech/client-native/v6/config-parser/errors"
 	"github.com/haproxytech/client-native/v6/config-parser/types"
@@ -49,7 +47,7 @@ func (s *StatsTimeout) Result() ([]common.ReturnResultLine, error) {
 	}
 	return []common.ReturnResultLine{
 		{
-			Data:    fmt.Sprintf("stats timeout %s", s.data.Value),
+			Data:    "stats timeout " + s.data.Value,
 			Comment: s.data.Comment,
 		},
 	}, nil

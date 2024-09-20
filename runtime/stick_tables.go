@@ -64,7 +64,7 @@ func (s *SingleRuntime) ShowTable(name string) (*models.StickTable, error) {
 
 // GetTableEntries returns Stick Tables entries
 func (s *SingleRuntime) GetTableEntries(name string, filter []string, key string) (models.StickTableEntries, error) {
-	cmd := fmt.Sprintf("show table %s", name)
+	cmd := "show table " + name
 
 	// use only first filter here
 	if len(filter) > 0 {

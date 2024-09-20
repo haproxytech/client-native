@@ -286,7 +286,7 @@ func (t *Transaction) checkTransactionFile(transactionID string) error {
 		w, _ := shellquote.Split(t.ValidateCmd)
 		name = w[0]
 		args = w[1:]
-		envs = append(envs, fmt.Sprintf("DATAPLANEAPI_TRANSACTION_FILE=%s", transactionFile))
+		envs = append(envs, "DATAPLANEAPI_TRANSACTION_FILE="+transactionFile)
 	case t.MasterWorker:
 		name = t.Haproxy
 		args = []string{"-W", "-f", transactionFile, "-c"}
@@ -314,7 +314,7 @@ func (t *Transaction) checkTransactionFile(transactionID string) error {
 
 func (t *Transaction) CheckTransactionOrVersion(transactionID string, version int64) (string, error) {
 	// start an implicit transaction if transaction is not already given
-	tID := ""
+	var tID string
 	if transactionID != "" && version != 0 {
 		return "", NewConfError(ErrBothVersionTransaction, "")
 	}
@@ -337,7 +337,6 @@ func (t *Transaction) CheckTransactionOrVersion(transactionID string, version in
 			return "", err
 		}
 		tID = transaction.ID
-
 	}
 	return tID, nil
 }
@@ -388,13 +387,13 @@ func (t *Transaction) parseHAProxyCheckError(output []byte, id string) string { 
 
 // MarkTransactionOutdated is marking the transaction by ID as outdated due to a newer commit,
 // moving it to the `outdated` folder, as well cleaning from the current parsers.
-func (t *Transaction) MarkTransactionOutdated(transactionID string) (err error) {
+func (t *Transaction) MarkTransactionOutdated(transactionID string) error {
 	t.mu.Lock()
 	defer t.mu.Unlock()
 
 	// retrieving current version
 	var version int64
-	version, err = t.TransactionClient.GetVersion("")
+	version, err := t.TransactionClient.GetVersion("")
 	if err != nil {
 		return err
 	}
@@ -680,7 +679,7 @@ func (t *Transaction) getFailedTransactionVersion(transactionID string) (int64, 
 		parser_options.Path(fPath),
 	)
 	if err != nil {
-		return 0, NewConfError(ErrCannotReadConfFile, fmt.Sprintf("cannot read %s", fPath))
+		return 0, NewConfError(ErrCannotReadConfFile, "cannot read "+fPath)
 	}
 
 	ver, err := t.TransactionClient.GetFailedParserTransactionVersion(transactionID)

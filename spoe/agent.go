@@ -16,6 +16,7 @@
 package spoe
 
 import (
+	"errors"
 	"fmt"
 
 	"github.com/go-openapi/strfmt"
@@ -350,7 +351,7 @@ func (c *SingleSpoe) EditAgent(scope string, data *models.SpoeAgent, transaction
 
 func (c *SingleSpoe) createEditAgent(scope string, data *models.SpoeAgent, t string, transactionID string, p *spoe.Parser) error { //nolint:gocognit,gocyclo,cyclop,maintidx
 	if data == nil {
-		return fmt.Errorf("spoe agent not initialized")
+		return errors.New("spoe agent not initialized")
 	}
 	name := *data.Name
 

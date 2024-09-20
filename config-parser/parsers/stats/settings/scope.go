@@ -17,6 +17,7 @@ limitations under the License.
 package stats
 
 import (
+	"errors"
 	"fmt"
 )
 
@@ -27,7 +28,7 @@ type Scope struct {
 
 func (s *Scope) Parse(parts []string, comment string) error {
 	if len(parts) < 3 {
-		return fmt.Errorf("not enough params")
+		return errors.New("not enough params")
 	}
 
 	if comment != "" {

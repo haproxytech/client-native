@@ -46,8 +46,8 @@ type FrontendBase struct {
 	ErrorFilesFromHTTPErrors []*Errorfiles `json:"errorfiles_from_http_errors,omitempty"`
 
 	// accept invalid http request
-	// Enum: [enabled disabled]
-	// +kubebuilder:validation:Enum=enabled;disabled;
+	// Enum: ["enabled","disabled"]
+	// +kubebuilder:validation:Enum="enabled","disabled";
 	AcceptInvalidHTTPRequest string `json:"accept_invalid_http_request,omitempty"`
 
 	// backlog
@@ -67,8 +67,8 @@ type FrontendBase struct {
 	ClientTimeout *int64 `json:"client_timeout,omitempty"`
 
 	// clitcpka
-	// Enum: [enabled disabled]
-	// +kubebuilder:validation:Enum=enabled;disabled;
+	// Enum: ["enabled","disabled"]
+	// +kubebuilder:validation:Enum="enabled","disabled";
 	Clitcpka string `json:"clitcpka,omitempty"`
 
 	// clitcpka cnt
@@ -84,8 +84,8 @@ type FrontendBase struct {
 	Compression *Compression `json:"compression,omitempty"`
 
 	// contstats
-	// Enum: [enabled]
-	// +kubebuilder:validation:Enum=enabled;
+	// Enum: ["enabled"]
+	// +kubebuilder:validation:Enum="enabled";
 	Contstats string `json:"contstats,omitempty"`
 
 	// default backend
@@ -97,21 +97,21 @@ type FrontendBase struct {
 	Description string `json:"description,omitempty"`
 
 	// disable h2 upgrade
-	// Enum: [enabled disabled]
-	// +kubebuilder:validation:Enum=enabled;disabled;
+	// Enum: ["enabled","disabled"]
+	// +kubebuilder:validation:Enum="enabled","disabled";
 	DisableH2Upgrade string `json:"disable_h2_upgrade,omitempty"`
 
 	// disabled
 	Disabled bool `json:"disabled,omitempty"`
 
 	// dontlog normal
-	// Enum: [enabled disabled]
-	// +kubebuilder:validation:Enum=enabled;disabled;
+	// Enum: ["enabled","disabled"]
+	// +kubebuilder:validation:Enum="enabled","disabled";
 	DontlogNormal string `json:"dontlog_normal,omitempty"`
 
 	// dontlognull
-	// Enum: [enabled disabled]
-	// +kubebuilder:validation:Enum=enabled;disabled;
+	// Enum: ["enabled","disabled"]
+	// +kubebuilder:validation:Enum="enabled","disabled";
 	Dontlognull string `json:"dontlognull,omitempty"`
 
 	// email alert
@@ -143,28 +143,28 @@ type FrontendBase struct {
 	GUID string `json:"guid,omitempty"`
 
 	// h1 case adjust bogus client
-	// Enum: [enabled disabled]
-	// +kubebuilder:validation:Enum=enabled;disabled;
+	// Enum: ["enabled","disabled"]
+	// +kubebuilder:validation:Enum="enabled","disabled";
 	H1CaseAdjustBogusClient string `json:"h1_case_adjust_bogus_client,omitempty"`
 
 	// http buffer request
-	// Enum: [enabled disabled]
-	// +kubebuilder:validation:Enum=enabled;disabled;
+	// Enum: ["enabled","disabled"]
+	// +kubebuilder:validation:Enum="enabled","disabled";
 	HTTPBufferRequest string `json:"http-buffer-request,omitempty"`
 
 	// http use htx
-	// Enum: [enabled disabled]
-	// +kubebuilder:validation:Enum=enabled;disabled;
+	// Enum: ["enabled","disabled"]
+	// +kubebuilder:validation:Enum="enabled","disabled";
 	HTTPUseHtx string `json:"http-use-htx,omitempty"`
 
 	// http connection mode
-	// Enum: [httpclose http-server-close http-keep-alive]
-	// +kubebuilder:validation:Enum=httpclose;http-server-close;http-keep-alive;
+	// Enum: ["httpclose","http-server-close","http-keep-alive"]
+	// +kubebuilder:validation:Enum="httpclose","http-server-close","http-keep-alive";
 	HTTPConnectionMode string `json:"http_connection_mode,omitempty"`
 
 	// http ignore probes
-	// Enum: [enabled disabled]
-	// +kubebuilder:validation:Enum=enabled;disabled;
+	// Enum: ["enabled","disabled"]
+	// +kubebuilder:validation:Enum="enabled","disabled";
 	HTTPIgnoreProbes string `json:"http_ignore_probes,omitempty"`
 
 	// http keep alive timeout
@@ -173,8 +173,8 @@ type FrontendBase struct {
 	HTTPKeepAliveTimeout *int64 `json:"http_keep_alive_timeout,omitempty"`
 
 	// http no delay
-	// Enum: [enabled disabled]
-	// +kubebuilder:validation:Enum=enabled;disabled;
+	// Enum: ["enabled","disabled"]
+	// +kubebuilder:validation:Enum="enabled","disabled";
 	HTTPNoDelay string `json:"http_no_delay,omitempty"`
 
 	// http request timeout
@@ -183,34 +183,34 @@ type FrontendBase struct {
 	HTTPRequestTimeout *int64 `json:"http_request_timeout,omitempty"`
 
 	// http restrict req hdr names
-	// Enum: [preserve delete reject]
-	// +kubebuilder:validation:Enum=preserve;delete;reject;
+	// Enum: ["preserve","delete","reject"]
+	// +kubebuilder:validation:Enum="preserve","delete","reject";
 	HTTPRestrictReqHdrNames string `json:"http_restrict_req_hdr_names,omitempty"`
 
 	// http use proxy header
-	// Enum: [enabled disabled]
-	// +kubebuilder:validation:Enum=enabled;disabled;
+	// Enum: ["enabled","disabled"]
+	// +kubebuilder:validation:Enum="enabled","disabled";
 	HTTPUseProxyHeader string `json:"http_use_proxy_header,omitempty"`
 
 	// httplog
 	Httplog bool `json:"httplog,omitempty"`
 
 	// httpslog
-	// Enum: [enabled disabled]
-	// +kubebuilder:validation:Enum=enabled;disabled;
+	// Enum: ["enabled","disabled"]
+	// +kubebuilder:validation:Enum="enabled","disabled";
 	Httpslog string `json:"httpslog,omitempty"`
 
 	// id
 	ID *int64 `json:"id,omitempty"`
 
 	// idle close on response
-	// Enum: [enabled disabled]
-	// +kubebuilder:validation:Enum=enabled;disabled;
+	// Enum: ["enabled","disabled"]
+	// +kubebuilder:validation:Enum="enabled","disabled";
 	IdleCloseOnResponse string `json:"idle_close_on_response,omitempty"`
 
 	// independent streams
-	// Enum: [enabled disabled]
-	// +kubebuilder:validation:Enum=enabled;disabled;
+	// Enum: ["enabled","disabled"]
+	// +kubebuilder:validation:Enum="enabled","disabled";
 	IndependentStreams string `json:"independent_streams,omitempty"`
 
 	// log format
@@ -220,8 +220,8 @@ type FrontendBase struct {
 	LogFormatSd string `json:"log_format_sd,omitempty"`
 
 	// log separate errors
-	// Enum: [enabled disabled]
-	// +kubebuilder:validation:Enum=enabled;disabled;
+	// Enum: ["enabled","disabled"]
+	// +kubebuilder:validation:Enum="enabled","disabled";
 	LogSeparateErrors string `json:"log_separate_errors,omitempty"`
 
 	// log tag
@@ -230,16 +230,16 @@ type FrontendBase struct {
 	LogTag string `json:"log_tag,omitempty"`
 
 	// logasap
-	// Enum: [enabled disabled]
-	// +kubebuilder:validation:Enum=enabled;disabled;
+	// Enum: ["enabled","disabled"]
+	// +kubebuilder:validation:Enum="enabled","disabled";
 	Logasap string `json:"logasap,omitempty"`
 
 	// maxconn
 	Maxconn *int64 `json:"maxconn,omitempty"`
 
 	// mode
-	// Enum: [http tcp]
-	// +kubebuilder:validation:Enum=http;tcp;
+	// Enum: ["http","tcp"]
+	// +kubebuilder:validation:Enum="http","tcp";
 	Mode string `json:"mode,omitempty"`
 
 	// monitor fail
@@ -255,31 +255,31 @@ type FrontendBase struct {
 	Name string `json:"name"`
 
 	// nolinger
-	// Enum: [enabled disabled]
-	// +kubebuilder:validation:Enum=enabled;disabled;
+	// Enum: ["enabled","disabled"]
+	// +kubebuilder:validation:Enum="enabled","disabled";
 	Nolinger string `json:"nolinger,omitempty"`
 
 	// originalto
 	Originalto *Originalto `json:"originalto,omitempty"`
 
 	// socket stats
-	// Enum: [enabled disabled]
-	// +kubebuilder:validation:Enum=enabled;disabled;
+	// Enum: ["enabled","disabled"]
+	// +kubebuilder:validation:Enum="enabled","disabled";
 	SocketStats string `json:"socket_stats,omitempty"`
 
 	// splice auto
-	// Enum: [enabled disabled]
-	// +kubebuilder:validation:Enum=enabled;disabled;
+	// Enum: ["enabled","disabled"]
+	// +kubebuilder:validation:Enum="enabled","disabled";
 	SpliceAuto string `json:"splice_auto,omitempty"`
 
 	// splice request
-	// Enum: [enabled disabled]
-	// +kubebuilder:validation:Enum=enabled;disabled;
+	// Enum: ["enabled","disabled"]
+	// +kubebuilder:validation:Enum="enabled","disabled";
 	SpliceRequest string `json:"splice_request,omitempty"`
 
 	// splice response
-	// Enum: [enabled disabled]
-	// +kubebuilder:validation:Enum=enabled;disabled;
+	// Enum: ["enabled","disabled"]
+	// +kubebuilder:validation:Enum="enabled","disabled";
 	SpliceResponse string `json:"splice_response,omitempty"`
 
 	// stats options
@@ -294,13 +294,13 @@ type FrontendBase struct {
 	TarpitTimeout *int64 `json:"tarpit_timeout,omitempty"`
 
 	// tcp smart accept
-	// Enum: [enabled disabled]
-	// +kubebuilder:validation:Enum=enabled;disabled;
+	// Enum: ["enabled","disabled"]
+	// +kubebuilder:validation:Enum="enabled","disabled";
 	TCPSmartAccept string `json:"tcp_smart_accept,omitempty"`
 
 	// tcpka
-	// Enum: [enabled disabled]
-	// +kubebuilder:validation:Enum=enabled;disabled;
+	// Enum: ["enabled","disabled"]
+	// +kubebuilder:validation:Enum="enabled","disabled";
 	Tcpka string `json:"tcpka,omitempty"`
 
 	// tcplog
@@ -2080,6 +2080,11 @@ func (m *FrontendBase) contextValidateErrorFiles(ctx context.Context, formats st
 	for i := 0; i < len(m.ErrorFiles); i++ {
 
 		if m.ErrorFiles[i] != nil {
+
+			if swag.IsZero(m.ErrorFiles[i]) { // not required
+				return nil
+			}
+
 			if err := m.ErrorFiles[i].ContextValidate(ctx, formats); err != nil {
 				if ve, ok := err.(*errors.Validation); ok {
 					return ve.ValidateName("error_files" + "." + strconv.Itoa(i))
@@ -2100,6 +2105,11 @@ func (m *FrontendBase) contextValidateErrorFilesFromHTTPErrors(ctx context.Conte
 	for i := 0; i < len(m.ErrorFilesFromHTTPErrors); i++ {
 
 		if m.ErrorFilesFromHTTPErrors[i] != nil {
+
+			if swag.IsZero(m.ErrorFilesFromHTTPErrors[i]) { // not required
+				return nil
+			}
+
 			if err := m.ErrorFilesFromHTTPErrors[i].ContextValidate(ctx, formats); err != nil {
 				if ve, ok := err.(*errors.Validation); ok {
 					return ve.ValidateName("errorfiles_from_http_errors" + "." + strconv.Itoa(i))
@@ -2118,6 +2128,11 @@ func (m *FrontendBase) contextValidateErrorFilesFromHTTPErrors(ctx context.Conte
 func (m *FrontendBase) contextValidateCompression(ctx context.Context, formats strfmt.Registry) error {
 
 	if m.Compression != nil {
+
+		if swag.IsZero(m.Compression) { // not required
+			return nil
+		}
+
 		if err := m.Compression.ContextValidate(ctx, formats); err != nil {
 			if ve, ok := err.(*errors.Validation); ok {
 				return ve.ValidateName("compression")
@@ -2134,6 +2149,11 @@ func (m *FrontendBase) contextValidateCompression(ctx context.Context, formats s
 func (m *FrontendBase) contextValidateEmailAlert(ctx context.Context, formats strfmt.Registry) error {
 
 	if m.EmailAlert != nil {
+
+		if swag.IsZero(m.EmailAlert) { // not required
+			return nil
+		}
+
 		if err := m.EmailAlert.ContextValidate(ctx, formats); err != nil {
 			if ve, ok := err.(*errors.Validation); ok {
 				return ve.ValidateName("email_alert")
@@ -2150,6 +2170,11 @@ func (m *FrontendBase) contextValidateEmailAlert(ctx context.Context, formats st
 func (m *FrontendBase) contextValidateErrorloc302(ctx context.Context, formats strfmt.Registry) error {
 
 	if m.Errorloc302 != nil {
+
+		if swag.IsZero(m.Errorloc302) { // not required
+			return nil
+		}
+
 		if err := m.Errorloc302.ContextValidate(ctx, formats); err != nil {
 			if ve, ok := err.(*errors.Validation); ok {
 				return ve.ValidateName("errorloc302")
@@ -2166,6 +2191,11 @@ func (m *FrontendBase) contextValidateErrorloc302(ctx context.Context, formats s
 func (m *FrontendBase) contextValidateErrorloc303(ctx context.Context, formats strfmt.Registry) error {
 
 	if m.Errorloc303 != nil {
+
+		if swag.IsZero(m.Errorloc303) { // not required
+			return nil
+		}
+
 		if err := m.Errorloc303.ContextValidate(ctx, formats); err != nil {
 			if ve, ok := err.(*errors.Validation); ok {
 				return ve.ValidateName("errorloc303")
@@ -2182,6 +2212,11 @@ func (m *FrontendBase) contextValidateErrorloc303(ctx context.Context, formats s
 func (m *FrontendBase) contextValidateForwardfor(ctx context.Context, formats strfmt.Registry) error {
 
 	if m.Forwardfor != nil {
+
+		if swag.IsZero(m.Forwardfor) { // not required
+			return nil
+		}
+
 		if err := m.Forwardfor.ContextValidate(ctx, formats); err != nil {
 			if ve, ok := err.(*errors.Validation); ok {
 				return ve.ValidateName("forwardfor")
@@ -2198,6 +2233,11 @@ func (m *FrontendBase) contextValidateForwardfor(ctx context.Context, formats st
 func (m *FrontendBase) contextValidateMonitorFail(ctx context.Context, formats strfmt.Registry) error {
 
 	if m.MonitorFail != nil {
+
+		if swag.IsZero(m.MonitorFail) { // not required
+			return nil
+		}
+
 		if err := m.MonitorFail.ContextValidate(ctx, formats); err != nil {
 			if ve, ok := err.(*errors.Validation); ok {
 				return ve.ValidateName("monitor_fail")
@@ -2212,6 +2252,10 @@ func (m *FrontendBase) contextValidateMonitorFail(ctx context.Context, formats s
 }
 
 func (m *FrontendBase) contextValidateMonitorURI(ctx context.Context, formats strfmt.Registry) error {
+
+	if swag.IsZero(m.MonitorURI) { // not required
+		return nil
+	}
 
 	if err := m.MonitorURI.ContextValidate(ctx, formats); err != nil {
 		if ve, ok := err.(*errors.Validation); ok {
@@ -2228,6 +2272,11 @@ func (m *FrontendBase) contextValidateMonitorURI(ctx context.Context, formats st
 func (m *FrontendBase) contextValidateOriginalto(ctx context.Context, formats strfmt.Registry) error {
 
 	if m.Originalto != nil {
+
+		if swag.IsZero(m.Originalto) { // not required
+			return nil
+		}
+
 		if err := m.Originalto.ContextValidate(ctx, formats); err != nil {
 			if ve, ok := err.(*errors.Validation); ok {
 				return ve.ValidateName("originalto")
@@ -2244,6 +2293,11 @@ func (m *FrontendBase) contextValidateOriginalto(ctx context.Context, formats st
 func (m *FrontendBase) contextValidateStatsOptions(ctx context.Context, formats strfmt.Registry) error {
 
 	if m.StatsOptions != nil {
+
+		if swag.IsZero(m.StatsOptions) { // not required
+			return nil
+		}
+
 		if err := m.StatsOptions.ContextValidate(ctx, formats); err != nil {
 			if ve, ok := err.(*errors.Validation); ok {
 				return ve.ValidateName("stats_options")
@@ -2260,6 +2314,11 @@ func (m *FrontendBase) contextValidateStatsOptions(ctx context.Context, formats 
 func (m *FrontendBase) contextValidateStickTable(ctx context.Context, formats strfmt.Registry) error {
 
 	if m.StickTable != nil {
+
+		if swag.IsZero(m.StickTable) { // not required
+			return nil
+		}
+
 		if err := m.StickTable.ContextValidate(ctx, formats); err != nil {
 			if ve, ok := err.(*errors.Validation); ok {
 				return ve.ValidateName("stick_table")

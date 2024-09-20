@@ -93,7 +93,7 @@ func sortByFrom(index int, sections []Section) {
 		return
 	}
 	// we check if from is before, if it is, its ok
-	for i := 0; i < index; i++ {
+	for i := range index {
 		if sections[i].Name == sections[index].From {
 			sortByFrom(index+1, sections)
 			return

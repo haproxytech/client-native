@@ -44,7 +44,7 @@ type ClientResponse struct {
 	HAProxyVersion string
 }
 
-func GetClient(t *testing.T) (*ClientResponse, error) {
+func GetClient(t *testing.T) (*ClientResponse, error) { //nolint:thelper
 	cmd := exec.Command("haproxy", "-v")
 
 	var out bytes.Buffer
@@ -79,7 +79,7 @@ func GetClient(t *testing.T) (*ClientResponse, error) {
 
 	cmd = exec.Command("haproxy", "-f", "haproxy.cfg")
 	cmd.Env = os.Environ()
-	cmd.Env = append(cmd.Env, fmt.Sprintf("SOCK_PATH=%s", socketPath))
+	cmd.Env = append(cmd.Env, "SOCK_PATH="+socketPath)
 
 	if err = cmd.Start(); err != nil {
 		return nil, err

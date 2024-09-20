@@ -36,8 +36,8 @@ import (
 type TCPCheck struct {
 	// action
 	// Required: true
-	// Enum: [comment connect expect send send-lf send-binary send-binary-lf set-var set-var-fmt unset-var]
-	// +kubebuilder:validation:Enum=comment;connect;expect;send;send-lf;send-binary;send-binary-lf;set-var;set-var-fmt;unset-var;
+	// Enum: ["comment","connect","expect","send","send-lf","send-binary","send-binary-lf","set-var","set-var-fmt","unset-var"]
+	// +kubebuilder:validation:Enum="comment","connect","expect","send","send-lf","send-binary","send-binary-lf","set-var","set-var-fmt","unset-var";
 	Action string `json:"action"`
 
 	// addr
@@ -60,8 +60,8 @@ type TCPCheck struct {
 	Default bool `json:"default,omitempty"`
 
 	// error status
-	// Enum: [L7OKC L7RSP L7STS L6RSP L4CON]
-	// +kubebuilder:validation:Enum=L7OKC;L7RSP;L7STS;L6RSP;L4CON;
+	// Enum: ["L7OKC","L7RSP","L7STS","L6RSP","L4CON"]
+	// +kubebuilder:validation:Enum="L7OKC","L7RSP","L7STS","L6RSP","L4CON";
 	ErrorStatus string `json:"error_status,omitempty"`
 
 	// exclamation mark
@@ -81,17 +81,17 @@ type TCPCheck struct {
 
 	// match
 	// Pattern: ^[^\s]+$
-	// Enum: [string rstring string-lf binary rbinary binary-lf]
+	// Enum: ["string","rstring","string-lf","binary","rbinary","binary-lf"]
 	// +kubebuilder:validation:Pattern=`^[^\s]+$`
-	// +kubebuilder:validation:Enum=string;rstring;string-lf;binary;rbinary;binary-lf;
+	// +kubebuilder:validation:Enum="string","rstring","string-lf","binary","rbinary","binary-lf";
 	Match string `json:"match,omitempty"`
 
 	// min recv
 	MinRecv int64 `json:"min_recv,omitempty"`
 
 	// ok status
-	// Enum: [L7OK L7OKC L6OK L4OK]
-	// +kubebuilder:validation:Enum=L7OK;L7OKC;L6OK;L4OK;
+	// Enum: ["L7OK","L7OKC","L6OK","L4OK"]
+	// +kubebuilder:validation:Enum="L7OK","L7OKC","L6OK","L4OK";
 	OkStatus string `json:"ok_status,omitempty"`
 
 	// on error
@@ -129,8 +129,8 @@ type TCPCheck struct {
 	StatusCode string `json:"status-code,omitempty"`
 
 	// tout status
-	// Enum: [L7TOUT L6TOUT L4TOUT]
-	// +kubebuilder:validation:Enum=L7TOUT;L6TOUT;L4TOUT;
+	// Enum: ["L7TOUT","L6TOUT","L4TOUT"]
+	// +kubebuilder:validation:Enum="L7TOUT","L6TOUT","L4TOUT";
 	ToutStatus string `json:"tout_status,omitempty"`
 
 	// var expr

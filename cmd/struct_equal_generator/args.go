@@ -2,6 +2,7 @@ package main
 
 import (
 	_ "embed"
+	"errors"
 	"fmt"
 	"io/fs"
 	"log"
@@ -29,7 +30,7 @@ func (a *Args) Parse() error { //nolint:gocognit
 		switch {
 		case val == "-l":
 			if i+1 >= len(os.Args) {
-				return fmt.Errorf("missing licence file after -l")
+				return errors.New("missing licence file after -l")
 			}
 			a.LicencePath = os.Args[i+1]
 			i++

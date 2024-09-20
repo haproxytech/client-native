@@ -16,8 +16,6 @@
 package configuration
 
 import (
-	"fmt"
-
 	parser "github.com/haproxytech/client-native/v6/config-parser"
 	parser_options "github.com/haproxytech/client-native/v6/config-parser/options"
 	"github.com/haproxytech/client-native/v6/config-parser/types"
@@ -52,7 +50,7 @@ func (c *client) InitTransactionParsers() error {
 			return err
 		}
 		if err := p.LoadData(tFile); err != nil {
-			return NewConfError(ErrCannotReadConfFile, fmt.Sprintf("Cannot read %s", tFile))
+			return NewConfError(ErrCannotReadConfFile, "cannot read "+tFile)
 		}
 	}
 	return nil
@@ -78,7 +76,7 @@ func (c *client) GetParserTransactions() models.Transactions {
 func (c *client) GetFailedParserTransactionVersion(transactionID string) (int64, error) {
 	p, err := parser.New(parser_options.Path(transactionID))
 	if err != nil {
-		return 0, NewConfError(ErrCannotReadConfFile, fmt.Sprintf("cannot read %s", transactionID))
+		return 0, NewConfError(ErrCannotReadConfFile, "cannot read "+transactionID)
 	}
 
 	data, _ := p.Get(parser.Comments, parser.CommentsSectionName, "# _version", false)

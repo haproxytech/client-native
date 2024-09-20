@@ -17,8 +17,6 @@ limitations under the License.
 package parsers
 
 import (
-	"fmt"
-
 	"github.com/haproxytech/client-native/v6/config-parser/common"
 	"github.com/haproxytech/client-native/v6/config-parser/errors"
 	"github.com/haproxytech/client-native/v6/config-parser/types"
@@ -49,7 +47,7 @@ func (s *UseFcgiApp) Result() ([]common.ReturnResultLine, error) {
 	}
 	return []common.ReturnResultLine{
 		{
-			Data:    fmt.Sprintf("use-fcgi-app %s", s.data.Name),
+			Data:    "use-fcgi-app " + s.data.Name,
 			Comment: s.data.Comment,
 		},
 	}, nil

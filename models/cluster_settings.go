@@ -45,14 +45,14 @@ type ClusterSettings struct {
 	Cluster *ClusterSettingsCluster `json:"cluster,omitempty"`
 
 	// mode
-	// Enum: [single cluster]
-	// +kubebuilder:validation:Enum=single;cluster;
+	// Enum: ["single","cluster"]
+	// +kubebuilder:validation:Enum="single","cluster";
 	Mode string `json:"mode,omitempty"`
 
 	// status
 	// Read Only: true
-	// Enum: [active unreachable waiting_approval]
-	// +kubebuilder:validation:Enum=active;unreachable;waiting_approval;
+	// Enum: ["active","unreachable","waiting_approval"]
+	// +kubebuilder:validation:Enum="active","unreachable","waiting_approval";
 	Status string `json:"status,omitempty"`
 }
 
@@ -205,6 +205,11 @@ func (m *ClusterSettings) ContextValidate(ctx context.Context, formats strfmt.Re
 func (m *ClusterSettings) contextValidateCluster(ctx context.Context, formats strfmt.Registry) error {
 
 	if m.Cluster != nil {
+
+		if swag.IsZero(m.Cluster) { // not required
+			return nil
+		}
+
 		if err := m.Cluster.ContextValidate(ctx, formats); err != nil {
 			if ve, ok := err.(*errors.Validation); ok {
 				return ve.ValidateName("cluster")
@@ -398,6 +403,11 @@ func (m *ClusterSettingsCluster) contextValidateClusterLogTargets(ctx context.Co
 	for i := 0; i < len(m.ClusterLogTargets); i++ {
 
 		if m.ClusterLogTargets[i] != nil {
+
+			if swag.IsZero(m.ClusterLogTargets[i]) { // not required
+				return nil
+			}
+
 			if err := m.ClusterLogTargets[i].ContextValidate(ctx, formats); err != nil {
 				if ve, ok := err.(*errors.Validation); ok {
 					return ve.ValidateName("cluster" + "." + "log_targets" + "." + strconv.Itoa(i))
@@ -498,8 +508,8 @@ type ClusterLogTarget struct {
 
 	// protocol
 	// Required: true
-	// Enum: [tcp udp]
-	// +kubebuilder:validation:Enum=tcp;udp;
+	// Enum: ["tcp","udp"]
+	// +kubebuilder:validation:Enum="tcp","udp";
 	Protocol *string `json:"protocol"`
 }
 

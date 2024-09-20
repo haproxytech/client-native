@@ -17,7 +17,7 @@ limitations under the License.
 package actions
 
 import (
-	"fmt"
+	stderrors "errors"
 
 	"github.com/haproxytech/client-native/v6/config-parser/types"
 )
@@ -33,7 +33,7 @@ func (c *CheckDisableOn404) Parse(parts []string, parserType types.ParserType, c
 	}
 
 	if len(parts) > 2 {
-		return fmt.Errorf("too many params")
+		return stderrors.New("too many params")
 	}
 
 	return nil

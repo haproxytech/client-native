@@ -66,9 +66,9 @@ func (l *User) Result() ([]common.ReturnResultLine, error) {
 		pwd := ""
 		if user.Password != "" {
 			if user.IsInsecure {
-				pwd = fmt.Sprintf(" insecure-password %s", user.Password)
+				pwd = " insecure-password " + user.Password
 			} else {
-				pwd = fmt.Sprintf(" password %s", user.Password)
+				pwd = " password " + user.Password
 			}
 		}
 		groups := ""

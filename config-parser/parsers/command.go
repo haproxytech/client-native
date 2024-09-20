@@ -17,7 +17,6 @@ limitations under the License.
 package parsers
 
 import (
-	"fmt"
 	"strings"
 
 	"github.com/haproxytech/client-native/v6/config-parser/common"
@@ -36,7 +35,7 @@ func (p *Command) Parse(line string, parts []string, comment string) (string, er
 	}
 
 	if parts[0] != "command" {
-		return "", &errors.ParseError{Parser: "Command", Line: line, Message: fmt.Sprintf("expected command, got %s", parts[0])}
+		return "", &errors.ParseError{Parser: "Command", Line: line, Message: "expected command, got " + parts[0]}
 	}
 
 	p.data = &types.Command{

@@ -17,8 +17,6 @@ limitations under the License.
 package parsers
 
 import (
-	"fmt"
-
 	"github.com/haproxytech/client-native/v6/config-parser/common"
 	"github.com/haproxytech/client-native/v6/config-parser/errors"
 	"github.com/haproxytech/client-native/v6/config-parser/types"
@@ -47,7 +45,7 @@ func (p *QuicSocketOwner) Result() ([]common.ReturnResultLine, error) {
 	if p.data == nil || len(p.data.Owner) == 0 {
 		return nil, errors.ErrFetch
 	}
-	data := fmt.Sprintf("tune.quic.socket-owner %s", p.data.Owner)
+	data := "tune.quic.socket-owner " + p.data.Owner
 	return []common.ReturnResultLine{
 		{
 			Data: data,

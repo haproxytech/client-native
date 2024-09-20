@@ -271,7 +271,7 @@ func ParseHTTPErrorRules(t, pName string, p parser.Parser) (models.HTTPErrorRule
 	case BackendParentName:
 		section = parser.Backends
 	default:
-		return nil, NewConfError(ErrValidationError, fmt.Sprintf("unsupported section in http_error: %s", t))
+		return nil, NewConfError(ErrValidationError, "unsupported section in http_error: "+t)
 	}
 
 	var httpErrRules models.HTTPErrorRules
@@ -312,7 +312,7 @@ func ParseHTTPErrorRule(f types.Action) *models.HTTPErrorRule {
 	}
 }
 
-func SerializeHTTPErrorRule(f models.HTTPErrorRule) (rule types.Action, err error) { //nolint:ireturn
+func SerializeHTTPErrorRule(f models.HTTPErrorRule) (types.Action, error) { //nolint:ireturn
 	if f.Type != "status" {
 		return nil, NewConfError(ErrValidationError, fmt.Sprintf("unsupported action %s in http_error", f.Type))
 	}
@@ -321,7 +321,7 @@ func SerializeHTTPErrorRule(f models.HTTPErrorRule) (rule types.Action, err erro
 	if f.ReturnContentType != nil {
 		contentType = *f.ReturnContentType
 	}
-	rule = &http_actions.Status{
+	rule := &http_actions.Status{
 		Status:        &f.Status,
 		ContentType:   contentType,
 		ContentFormat: f.ReturnContentFormat,

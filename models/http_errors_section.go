@@ -126,6 +126,11 @@ func (m *HTTPErrorsSection) contextValidateErrorFiles(ctx context.Context, forma
 	for i := 0; i < len(m.ErrorFiles); i++ {
 
 		if m.ErrorFiles[i] != nil {
+
+			if swag.IsZero(m.ErrorFiles[i]) { // not required
+				return nil
+			}
+
 			if err := m.ErrorFiles[i].ContextValidate(ctx, formats); err != nil {
 				if ve, ok := err.(*errors.Validation); ok {
 					return ve.ValidateName("error_files" + "." + strconv.Itoa(i))

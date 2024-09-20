@@ -97,7 +97,7 @@ func (s *SingleRuntime) ShowACLFileEntries(storageName string) (models.ACLFilesE
 	if storageName == "" {
 		return nil, fmt.Errorf("%s %w", "Argument file empty", native_errors.ErrGeneral)
 	}
-	cmd := fmt.Sprintf("show acl %s", storageName)
+	cmd := "show acl " + storageName
 	response, err := s.ExecuteWithResponse(cmd)
 	if err != nil {
 		return nil, fmt.Errorf("%s %w", err.Error(), native_errors.ErrNotFound)
@@ -166,8 +166,8 @@ func (s *SingleRuntime) AddACLFileEntry(aclID, value string) error {
 	return nil
 }
 
-func (s *SingleRuntime) PrepareACL(aclID string) (version string, err error) {
-	cmd := fmt.Sprintf("prepare acl %s", aclID)
+func (s *SingleRuntime) PrepareACL(aclID string) (string, error) {
+	cmd := "prepare acl " + aclID
 	response, err := s.ExecuteWithResponse(cmd)
 	if err != nil {
 		return "", fmt.Errorf("%s %w", err.Error(), native_errors.ErrGeneral)
@@ -176,7 +176,7 @@ func (s *SingleRuntime) PrepareACL(aclID string) (version string, err error) {
 	if len(parts) < 3 {
 		return "", fmt.Errorf("not enough parts in response: %s %w", response, native_errors.ErrGeneral)
 	}
-	version = strings.TrimSpace(parts[2])
+	version := strings.TrimSpace(parts[2])
 	if _, err = strconv.ParseInt(version, 10, 64); err == nil {
 		return version, nil
 	}

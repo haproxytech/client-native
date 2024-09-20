@@ -159,6 +159,11 @@ func (m *Site) contextValidateFarms(ctx context.Context, formats strfmt.Registry
 	for i := 0; i < len(m.Farms); i++ {
 
 		if m.Farms[i] != nil {
+
+			if swag.IsZero(m.Farms[i]) { // not required
+				return nil
+			}
+
 			if err := m.Farms[i].ContextValidate(ctx, formats); err != nil {
 				if ve, ok := err.(*errors.Validation); ok {
 					return ve.ValidateName("farms" + "." + strconv.Itoa(i))
@@ -177,6 +182,11 @@ func (m *Site) contextValidateFarms(ctx context.Context, formats strfmt.Registry
 func (m *Site) contextValidateService(ctx context.Context, formats strfmt.Registry) error {
 
 	if m.Service != nil {
+
+		if swag.IsZero(m.Service) { // not required
+			return nil
+		}
+
 		if err := m.Service.ContextValidate(ctx, formats); err != nil {
 			if ve, ok := err.(*errors.Validation); ok {
 				return ve.ValidateName("service")
@@ -217,8 +227,8 @@ type SiteFarm struct {
 	Balance *Balance `json:"balance,omitempty"`
 
 	// cond
-	// Enum: [if unless]
-	// +kubebuilder:validation:Enum=if;unless;
+	// Enum: ["if","unless"]
+	// +kubebuilder:validation:Enum="if","unless";
 	Cond string `json:"cond,omitempty"`
 
 	// cond test
@@ -228,8 +238,8 @@ type SiteFarm struct {
 	Forwardfor *Forwardfor `json:"forwardfor,omitempty"`
 
 	// mode
-	// Enum: [http tcp]
-	// +kubebuilder:validation:Enum=http;tcp;
+	// Enum: ["http","tcp"]
+	// +kubebuilder:validation:Enum="http","tcp";
 	Mode string `json:"mode,omitempty"`
 
 	// name
@@ -243,8 +253,8 @@ type SiteFarm struct {
 
 	// use as
 	// Required: true
-	// Enum: [default conditional]
-	// +kubebuilder:validation:Enum=default;conditional;
+	// Enum: ["default","conditional"]
+	// +kubebuilder:validation:Enum="default","conditional";
 	UseAs string `json:"use_as"`
 }
 
@@ -515,6 +525,11 @@ func (m *SiteFarm) ContextValidate(ctx context.Context, formats strfmt.Registry)
 func (m *SiteFarm) contextValidateBalance(ctx context.Context, formats strfmt.Registry) error {
 
 	if m.Balance != nil {
+
+		if swag.IsZero(m.Balance) { // not required
+			return nil
+		}
+
 		if err := m.Balance.ContextValidate(ctx, formats); err != nil {
 			if ve, ok := err.(*errors.Validation); ok {
 				return ve.ValidateName("balance")
@@ -531,6 +546,11 @@ func (m *SiteFarm) contextValidateBalance(ctx context.Context, formats strfmt.Re
 func (m *SiteFarm) contextValidateForwardfor(ctx context.Context, formats strfmt.Registry) error {
 
 	if m.Forwardfor != nil {
+
+		if swag.IsZero(m.Forwardfor) { // not required
+			return nil
+		}
+
 		if err := m.Forwardfor.ContextValidate(ctx, formats); err != nil {
 			if ve, ok := err.(*errors.Validation); ok {
 				return ve.ValidateName("forwardfor")
@@ -549,6 +569,11 @@ func (m *SiteFarm) contextValidateServers(ctx context.Context, formats strfmt.Re
 	for i := 0; i < len(m.Servers); i++ {
 
 		if m.Servers[i] != nil {
+
+			if swag.IsZero(m.Servers[i]) { // not required
+				return nil
+			}
+
 			if err := m.Servers[i].ContextValidate(ctx, formats); err != nil {
 				if ve, ok := err.(*errors.Validation); ok {
 					return ve.ValidateName("servers" + "." + strconv.Itoa(i))
@@ -587,8 +612,8 @@ func (m *SiteFarm) UnmarshalBinary(b []byte) error {
 // swagger:model SiteService
 type SiteService struct {
 	// http connection mode
-	// Enum: [http-tunnel httpclose forced-close http-server-close http-keep-alive]
-	// +kubebuilder:validation:Enum=http-tunnel;httpclose;forced-close;http-server-close;http-keep-alive;
+	// Enum: ["http-tunnel","httpclose","forced-close","http-server-close","http-keep-alive"]
+	// +kubebuilder:validation:Enum="http-tunnel","httpclose","forced-close","http-server-close","http-keep-alive";
 	HTTPConnectionMode string `json:"http_connection_mode,omitempty"`
 
 	// listeners
@@ -598,8 +623,8 @@ type SiteService struct {
 	Maxconn *int64 `json:"maxconn,omitempty"`
 
 	// mode
-	// Enum: [http tcp]
-	// +kubebuilder:validation:Enum=http;tcp;
+	// Enum: ["http","tcp"]
+	// +kubebuilder:validation:Enum="http","tcp";
 	Mode string `json:"mode,omitempty"`
 }
 
@@ -763,6 +788,11 @@ func (m *SiteService) contextValidateListeners(ctx context.Context, formats strf
 	for i := 0; i < len(m.Listeners); i++ {
 
 		if m.Listeners[i] != nil {
+
+			if swag.IsZero(m.Listeners[i]) { // not required
+				return nil
+			}
+
 			if err := m.Listeners[i].ContextValidate(ctx, formats); err != nil {
 				if ve, ok := err.(*errors.Validation); ok {
 					return ve.ValidateName("service" + "." + "listeners" + "." + strconv.Itoa(i))

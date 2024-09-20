@@ -51,8 +51,8 @@ type TuneSslOptions struct {
 	ForcePrivateCache bool `json:"force_private_cache,omitempty"`
 
 	// keylog
-	// Enum: [enabled disabled]
-	// +kubebuilder:validation:Enum=enabled;disabled;
+	// Enum: ["enabled","disabled"]
+	// +kubebuilder:validation:Enum="enabled","disabled";
 	Keylog string `json:"keylog,omitempty"`
 
 	// lifetime

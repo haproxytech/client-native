@@ -17,6 +17,7 @@ limitations under the License.
 package actions
 
 import (
+	stderrors "errors"
 	"fmt"
 	"strings"
 
@@ -44,7 +45,7 @@ func (f *SwitchMode) Parse(parts []string, parserType types.ParserType, comment 
 		}
 		f.Proto = command[5]
 	default:
-		return fmt.Errorf("not enough params")
+		return stderrors.New("not enough params")
 	}
 	if command[3] != "http" {
 		return fmt.Errorf("invalid param %s", command[3])

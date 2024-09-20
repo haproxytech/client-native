@@ -46,8 +46,8 @@ type HTTPErrorRule struct {
 	ReturnContent string `json:"return_content,omitempty"`
 
 	// return content format
-	// Enum: [default-errorfiles errorfile errorfiles file lf-file string lf-string]
-	// +kubebuilder:validation:Enum=default-errorfiles;errorfile;errorfiles;file;lf-file;string;lf-string;
+	// Enum: ["default-errorfiles","errorfile","errorfiles","file","lf-file","string","lf-string"]
+	// +kubebuilder:validation:Enum="default-errorfiles","errorfile","errorfiles","file","lf-file","string","lf-string";
 	ReturnContentFormat string `json:"return_content_format,omitempty"`
 
 	// return content type
@@ -55,14 +55,14 @@ type HTTPErrorRule struct {
 
 	// status
 	// Required: true
-	// Enum: [200 400 401 403 404 405 407 408 410 413 425 429 500 501 502 503 504]
-	// +kubebuilder:validation:Enum=200;400;401;403;404;405;407;408;410;413;425;429;500;501;502;503;504;
+	// Enum: [200,400,401,403,404,405,407,408,410,413,425,429,500,501,502,503,504]
+	// +kubebuilder:validation:Enum=200,400,401,403,404,405,407,408,410,413,425,429,500,501,502,503,504;
 	Status int64 `json:"status"`
 
 	// type
 	// Required: true
-	// Enum: [status]
-	// +kubebuilder:validation:Enum=status;
+	// Enum: ["status"]
+	// +kubebuilder:validation:Enum="status";
 	Type string `json:"type"`
 }
 
@@ -268,6 +268,11 @@ func (m *HTTPErrorRule) contextValidateReturnHeaders(ctx context.Context, format
 	for i := 0; i < len(m.ReturnHeaders); i++ {
 
 		if m.ReturnHeaders[i] != nil {
+
+			if swag.IsZero(m.ReturnHeaders[i]) { // not required
+				return nil
+			}
+
 			if err := m.ReturnHeaders[i].ContextValidate(ctx, formats); err != nil {
 				if ve, ok := err.(*errors.Validation); ok {
 					return ve.ValidateName("return_hdrs" + "." + strconv.Itoa(i))

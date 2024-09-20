@@ -17,7 +17,7 @@ limitations under the License.
 package parsers
 
 import (
-	"fmt"
+	stderrors "errors"
 	"strings"
 
 	"github.com/haproxytech/client-native/v6/config-parser/common"
@@ -36,7 +36,7 @@ func (p *SetVar) parse(line string, parts []string, comment string) (*types.SetV
 	}
 	expr := common.Expression{}
 	if expr.Parse(parts[2:]) != nil {
-		return nil, fmt.Errorf("not enough params")
+		return nil, stderrors.New("not enough params")
 	}
 	data := &types.SetVar{
 		Name:    parts[1],
