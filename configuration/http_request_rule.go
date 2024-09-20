@@ -703,6 +703,7 @@ func ParseHTTPRequestRule(f types.Action) (*models.HTTPRequestRule, error) { //n
 		}
 	case *actions.SilentDrop:
 		rule = &models.HTTPRequestRule{
+			RstTTL:   v.RstTTL,
 			Type:     "silent-drop",
 			Cond:     v.Cond,
 			CondTest: v.CondTest,
@@ -1203,6 +1204,7 @@ func SerializeHTTPRequestRule(f models.HTTPRequestRule, opt *options.Configurati
 		}
 	case "silent-drop":
 		rule = &actions.SilentDrop{
+			RstTTL:   f.RstTTL,
 			Cond:     f.Cond,
 			CondTest: f.CondTest,
 		}

@@ -18,13 +18,16 @@ package actions
 
 import (
 	stderrors "errors"
+	"strconv"
 	"strings"
 
 	"github.com/haproxytech/client-native/v6/config-parser/common"
+	"github.com/haproxytech/client-native/v6/config-parser/errors"
 	"github.com/haproxytech/client-native/v6/config-parser/types"
 )
 
 type SilentDrop struct {
+	RstTTL   int64
 	Cond     string
 	CondTest string
 	Comment  string
@@ -44,10 +47,20 @@ func (f *SilentDrop) Parse(parts []string, parserType types.ParserType, comment 
 	case types.TCP:
 		command = parts[3:]
 	}
-	_, condition := common.SplitRequest(command)
+	command, condition := common.SplitRequest(command)
 	if len(condition) > 1 {
 		f.Cond = condition[0]
 		f.CondTest = strings.Join(condition[1:], " ")
+	}
+	if len(command) > 0 && command[0] == "rst-ttl" {
+		if len(command) <= 1 {
+			return stderrors.New("missing rst-ttl value")
+		}
+		rstTTL, err := strconv.ParseInt(command[1], 10, 64)
+		if err != nil {
+			return &errors.ParseError{Parser: "SilentDrop", Message: err.Error()}
+		}
+		f.RstTTL = rstTTL
 	}
 	return nil
 }
@@ -55,6 +68,10 @@ func (f *SilentDrop) Parse(parts []string, parserType types.ParserType, comment 
 func (f *SilentDrop) String() string {
 	var result strings.Builder
 	result.WriteString("silent-drop")
+	if f.RstTTL > 0 {
+		result.WriteString(" rst-ttl ")
+		result.WriteString(strconv.FormatInt(f.RstTTL, 10))
+	}
 	if f.Cond != "" {
 		result.WriteString(" ")
 		result.WriteString(f.Cond)
