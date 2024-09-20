@@ -17,6 +17,7 @@ limitations under the License.
 package filters
 
 import (
+	"errors"
 	"fmt"
 	"strings"
 
@@ -40,9 +41,9 @@ func (b *BandwidthLimit) Parse(parts []string, comment string) error {
 
 	switch {
 	case len(parts) < 7 || len(parts[1:])%2 == 1:
-		return fmt.Errorf("missing required options")
+		return errors.New("missing required options")
 	case len(parts) > 11:
-		return fmt.Errorf("unsupported extra options")
+		return errors.New("unsupported extra options")
 	}
 
 	for index, part := range parts {
@@ -64,9 +65,9 @@ func (b *BandwidthLimit) Parse(parts []string, comment string) error {
 
 	switch {
 	case len(b.Limit) > 0 && len(b.Key) == 0:
-		return fmt.Errorf("missing required key options")
+		return errors.New("missing required key options")
 	case len(b.Key) > 0 && len(b.Limit) == 0:
-		return fmt.Errorf("missing required key limit")
+		return errors.New("missing required key limit")
 	}
 
 	return nil

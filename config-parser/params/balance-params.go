@@ -42,7 +42,6 @@ func (b *BalanceURI) String() string {
 func (b *BalanceURI) Parse(parts []string) (BalanceParams, error) {
 	var err error
 	if len(parts) > 0 {
-
 		for i := 0; i < len(parts); i++ {
 			arg := parts[i]
 
@@ -98,7 +97,6 @@ func (u *BalanceURLParam) String() string {
 func (u *BalanceURLParam) Parse(parts []string) (BalanceParams, error) {
 	var err error
 	if len(parts) > 0 {
-
 		for index := 1; index < len(parts); index++ {
 			arg := parts[index]
 

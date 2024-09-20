@@ -17,8 +17,6 @@ limitations under the License.
 package parsers
 
 import (
-	"fmt"
-
 	"github.com/haproxytech/client-native/v6/config-parser/common"
 	"github.com/haproxytech/client-native/v6/config-parser/errors"
 	"github.com/haproxytech/client-native/v6/config-parser/types"
@@ -49,7 +47,7 @@ func (o *OptionHTTPRestrictReqHdrNames) Result() ([]common.ReturnResultLine, err
 	}
 	return []common.ReturnResultLine{
 		{
-			Data:    fmt.Sprintf("option http-restrict-req-hdr-names %s", o.data.Policy),
+			Data:    "option http-restrict-req-hdr-names " + o.data.Policy,
 			Comment: o.data.Comment,
 		},
 	}, nil

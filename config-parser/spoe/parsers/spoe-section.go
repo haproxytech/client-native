@@ -17,7 +17,7 @@ limitations under the License.
 package parsers
 
 import (
-	"fmt"
+	stderrors "errors"
 
 	"github.com/haproxytech/client-native/v6/config-parser/common"
 	"github.com/haproxytech/client-native/v6/config-parser/errors"
@@ -51,5 +51,5 @@ func (s *SPOESection) Parse(line string, parts []string, comment string) (string
 }
 
 func (s *SPOESection) Result() ([]common.ReturnResultLine, error) {
-	return nil, fmt.Errorf("not valid")
+	return nil, stderrors.New("not valid")
 }

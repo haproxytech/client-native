@@ -1,7 +1,5 @@
 ---
 linters-settings:
-  govet:
-    check-shadowing: true
   golint:
     min-confidence: 0
   gocyclo:
@@ -21,59 +19,34 @@ linters-settings:
 linters:
   enable-all: true
   disable:
-    - golint  # deprecated, replaced with revive
-    - interfacer  # deprecated
-    - maligned  # deprecated
-    - wrapcheck
-    - nlreturn
-    - gomnd
-    - goerr113
-    - exhaustivestruct
+    - mnd
+    - err113
     - wsl
-    - whitespace
-    - lll
-    - scopelint
-    - nestif
-    - funlen
-    - paralleltest
+    - wrapcheck
     - godot
     - varnamelen
+    - nlreturn
     - ireturn
-    - ifshort
-    - thelper
-    - wastedassign
-    - goconst
-    - gci
-    - exhaustruct
-    - nonamedreturns
     - interfacebloat
+    - gomnd
+    - forcetypeassert
+    - exhaustruct
     - dupword
-    - forcetypeassert  # tmp needs to be on
-    - ifshort  # deprecated
-    - structcheck  # deprecated
-    - deadcode  # deprecated
-    - nosnakecase  # deprecated
-    - varcheck  # deprecated
-    - rowserrcheck  # deprecated
-    - sqlclosecheck  # deprecated
-    - wastedassign  # deprecated
-    - golint  # deprecated
-    - interfacer  # deprecated
-    - maligned  # deprecated
+    - nestif
+    - lll
     - depguard
+    - funlen
+    - gci
+    - goconst
+    - execinquery
+    - exportloopref
 
 issues:
+  exclude-files:
+    - ".*_test\\.go$"
+  exclude-dirs:
+    - test
   exclude:
-    # bugs of typecheck linter
-    - "undeclared name: `shellquote`"
-    - "github.com/kballard/go-shellquote\" imported but not used"
-    - "github.com/haproxytech/client-native/v6/config-parser/types\" imported but not used"
     - "unused-parameter: parameter 'comment' seems to be unused"
     - "unused-parameter: parameter 'parts' seems to be unused"
     - "unused-parameter: parameter 'parserType' seems to be unused"
-
-run:
-  skip-dirs:
-    - test
-  skip-files:
-    - ".*_test\\.go$"

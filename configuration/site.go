@@ -533,7 +533,6 @@ func SerializeServiceToFrontend(service *models.SiteService, name string) *model
 		fr.Mode = service.Mode
 		fr.Maxconn = service.Maxconn
 		fr.HTTPConnectionMode = service.HTTPConnectionMode
-
 	}
 	return fr
 }

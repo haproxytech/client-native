@@ -83,7 +83,7 @@ func (s *SingleRuntime) GetCrtList(file string) (*CrtList, error) {
 
 // ShowCrtListEntries returns one CrtList runtime entries
 func (s *SingleRuntime) ShowCrtListEntries(file string) (CrtListEntries, error) {
-	cmd := fmt.Sprintf("show ssl crt-list -n %s", file)
+	cmd := "show ssl crt-list -n " + file
 	response, err := s.ExecuteWithResponse(cmd)
 	if err != nil {
 		return nil, fmt.Errorf("%s %w", err.Error(), native_errors.ErrNotFound)

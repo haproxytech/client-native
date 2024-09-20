@@ -537,7 +537,7 @@ func (c *client) ClearMap(name string, forceDelete bool) error {
 			if os.IsNotExist(err) {
 				return native_errors.ErrNotFound
 			}
-			return fmt.Errorf(strings.Join([]string{err.Error(), native_errors.ErrNotFound.Error()}, " "))
+			return fmt.Errorf("%s %s", err.Error(), native_errors.ErrNotFound.Error())
 		}
 	}
 
@@ -561,7 +561,7 @@ func (c *client) ClearMapVersioned(name, version string, forceDelete bool) error
 			if os.IsNotExist(err) {
 				return native_errors.ErrNotFound
 			}
-			return fmt.Errorf(strings.Join([]string{err.Error(), native_errors.ErrNotFound.Error()}, " "))
+			return fmt.Errorf("%s %s", err.Error(), native_errors.ErrNotFound.Error())
 		}
 	}
 
@@ -627,10 +627,12 @@ func (c *client) AddMapPayload(name, payload string) error {
 	return nil
 }
 
-func parseMapPayload(entries models.MapEntries, maxBufSize int) (exceededSize bool, payload []string) {
+func parseMapPayload(entries models.MapEntries, maxBufSize int) (bool, []string) {
 	prevKV := ""
 	currKV := ""
 	data := ""
+	var payload []string
+	var exceededSize bool
 	for _, d := range entries {
 		if prevKV != "" {
 			data += prevKV
@@ -683,7 +685,7 @@ func (c *client) AddMapPayloadVersioned(name string, entries models.MapEntries) 
 		if err != nil {
 			return fmt.Errorf("%s %w", c.runtime.socketPath, err)
 		}
-		for i := 0; i < len(payload); i++ {
+		for i := range payload {
 			err = c.runtime.AddMapPayloadVersioned(version, name, payload[i])
 			if err != nil {
 				return fmt.Errorf("%s %w", c.runtime.socketPath, err)
@@ -732,15 +734,15 @@ func (c *client) AddMapEntryVersioned(version, name, key, value string) error {
 	return nil
 }
 
-func (c *client) PrepareMap(name string) (version string, err error) {
+func (c *client) PrepareMap(name string) (string, error) {
 	if !c.runtime.IsValid() {
 		return "", errors.New("no valid runtime found")
 	}
-	name, err = c.GetMapsPath(name)
+	name, err := c.GetMapsPath(name)
 	if err != nil {
 		return "", fmt.Errorf("%s %w", c.runtime.socketPath, err)
 	}
-	version, err = c.runtime.PrepareMap(name)
+	version, err := c.runtime.PrepareMap(name)
 	if err != nil {
 		return "", fmt.Errorf("%s %w", c.runtime.socketPath, err)
 	}
@@ -818,45 +820,45 @@ func (c *client) ParseMapEntriesFromFile(inputFile io.Reader, hasID bool) models
 }
 
 // GetACLFile returns a the ACL file by its ID
-func (c *client) GetACLFile(id string) (files *models.ACLFile, err error) {
+func (c *client) GetACLFile(id string) (*models.ACLFile, error) {
 	if !c.runtime.IsValid() {
 		return nil, errors.New("no valid runtime found")
 	}
 
-	files, err = c.runtime.GetACL("#" + id)
+	files, err := c.runtime.GetACL("#" + id)
 	if err != nil {
 		err = fmt.Errorf("cannot retrieve ACL file for %s: %w", id, err)
 	}
 
-	return
+	return files, err
 }
 
 // GetACLFiles returns all the ACL files
-func (c *client) GetACLFiles() (files models.ACLFiles, err error) {
+func (c *client) GetACLFiles() (models.ACLFiles, error) {
 	if !c.runtime.IsValid() {
 		return nil, errors.New("no valid runtime found")
 	}
 
-	files, err = c.runtime.ShowACLS()
+	files, err := c.runtime.ShowACLS()
 	if err != nil {
 		err = fmt.Errorf("cannot retrieve ACL files: %w", err)
 	}
 
-	return
+	return files, err
 }
 
 // GetACLFilesEntries returns all the files entries for the ACL file ID
-func (c *client) GetACLFilesEntries(id string) (files models.ACLFilesEntries, err error) {
+func (c *client) GetACLFilesEntries(id string) (models.ACLFilesEntries, error) {
 	if !c.runtime.IsValid() {
 		return nil, errors.New("no valid runtime found")
 	}
 
-	files, err = c.runtime.ShowACLFileEntries("#" + id)
+	files, err := c.runtime.ShowACLFileEntries("#" + id)
 	if err != nil {
 		err = fmt.Errorf("cannot retrieve ACL files entries for %s: %w", id, err)
 	}
 
-	return
+	return files, err
 }
 
 // AddACLFileEntry adds the value for the specified ACL file entry based on its ID
@@ -872,12 +874,12 @@ func (c *client) AddACLFileEntry(id, value string) error {
 }
 
 // GetACLFileEntry returns the specified file entry based on value and ACL file ID
-func (c *client) GetACLFileEntry(id, value string) (fileEntry *models.ACLFileEntry, err error) {
+func (c *client) GetACLFileEntry(id, value string) (*models.ACLFileEntry, error) {
 	if !c.runtime.IsValid() {
 		return nil, errors.New("no valid runtime found")
 	}
-	var fe models.ACLFilesEntries
-	if fe, err = c.runtime.ShowACLFileEntries("#" + id); err != nil {
+	fe, err := c.runtime.ShowACLFileEntries("#" + id)
+	if err != nil {
 		return nil, fmt.Errorf("cannot retrieve ACL file entries, cannot list available ACL files: %w", err)
 	}
 
@@ -888,11 +890,12 @@ func (c *client) GetACLFileEntry(id, value string) (fileEntry *models.ACLFileEnt
 		}
 	}
 
-	if fileEntry, err = c.runtime.GetACLFileEntry(id, value); err != nil {
+	fileEntry, err := c.runtime.GetACLFileEntry(id, value)
+	if err != nil {
 		err = fmt.Errorf("cannot retrieve ACL file entry for %s: %w", id, err)
 	}
 
-	return
+	return fileEntry, err
 }
 
 // DeleteACLFileEntry deletes the value for the specified ACL file entry based on its ID
@@ -935,11 +938,11 @@ func (c *client) AddACLAtomic(aclID string, entries models.ACLFilesEntries) erro
 	return nil
 }
 
-func (c *client) PrepareACL(name string) (version string, err error) {
+func (c *client) PrepareACL(name string) (string, error) {
 	if !c.runtime.IsValid() {
 		return "", errors.New("no valid runtime found")
 	}
-	version, err = c.runtime.PrepareACL(name)
+	version, err := c.runtime.PrepareACL(name)
 	if err != nil {
 		return "", fmt.Errorf("%s %w", c.runtime.socketPath, err)
 	}

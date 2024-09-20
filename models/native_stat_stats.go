@@ -61,8 +61,8 @@ type NativeStatStats struct {
 	AgentRise *int64 `json:"agent_rise,omitempty"`
 
 	// agent status
-	// Enum: [UNK INI SOCKERR L4OK L4TOUT L4CON L7OK L7STS]
-	// +kubebuilder:validation:Enum=UNK;INI;SOCKERR;L4OK;L4TOUT;L4CON;L7OK;L7STS;
+	// Enum: ["UNK","INI","SOCKERR","L4OK","L4TOUT","L4CON","L7OK","L7STS"]
+	// +kubebuilder:validation:Enum="UNK","INI","SOCKERR","L4OK","L4TOUT","L4CON","L7OK","L7STS";
 	AgentStatus string `json:"agent_status,omitempty"`
 
 	// algo
@@ -96,8 +96,8 @@ type NativeStatStats struct {
 	CheckRise *int64 `json:"check_rise,omitempty"`
 
 	// check status
-	// Enum: [UNK INI SOCKERR L4OK L4TOUT L4CON L6OK L6TOUT L6RSP L7OK L7OKC L7TOUT L7RSP L7STS]
-	// +kubebuilder:validation:Enum=UNK;INI;SOCKERR;L4OK;L4TOUT;L4CON;L6OK;L6TOUT;L6RSP;L7OK;L7OKC;L7TOUT;L7RSP;L7STS;
+	// Enum: ["UNK","INI","SOCKERR","L4OK","L4TOUT","L4CON","L6OK","L6TOUT","L6RSP","L7OK","L7OKC","L7TOUT","L7RSP","L7STS"]
+	// +kubebuilder:validation:Enum="UNK","INI","SOCKERR","L4OK","L4TOUT","L4CON","L6OK","L6TOUT","L6RSP","L7OK","L7OKC","L7TOUT","L7RSP","L7STS";
 	CheckStatus string `json:"check_status,omitempty"`
 
 	// chkdown
@@ -203,8 +203,8 @@ type NativeStatStats struct {
 	Lbtot *int64 `json:"lbtot,omitempty"`
 
 	// mode
-	// Enum: [tcp http health unknown]
-	// +kubebuilder:validation:Enum=tcp;http;health;unknown;
+	// Enum: ["tcp","http","health","unknown"]
+	// +kubebuilder:validation:Enum="tcp","http","health","unknown";
 	Mode string `json:"mode,omitempty"`
 
 	// pid
@@ -259,8 +259,8 @@ type NativeStatStats struct {
 	SrvAbrt *int64 `json:"srv_abrt,omitempty"`
 
 	// status
-	// Enum: [UP DOWN NOLB MAINT no check]
-	// +kubebuilder:validation:Enum=UP;DOWN;NOLB;MAINT;no;check;
+	// Enum: ["UP","DOWN","NOLB","MAINT","no check"]
+	// +kubebuilder:validation:Enum="UP","DOWN","NOLB","MAINT","no;check";
 	Status string `json:"status,omitempty"`
 
 	// stot

@@ -135,7 +135,7 @@ func (s *SingleRuntime) readFromSocket(command string, socket socketType) (strin
 			fullCommand = fmt.Sprintf("set severity-output number;@%v %s;quit\n", 1, command)
 		}
 	case masterSocket:
-		fullCommand = fmt.Sprintf("%s;quit", command)
+		fullCommand = command + ";quit"
 	}
 
 	_, err = api.Write([]byte(fullCommand))
@@ -161,7 +161,7 @@ func (s *SingleRuntime) readFromSocket(command string, socket socketType) (strin
 	result := strings.TrimSuffix(data.String(), "\n> ")
 	result = strings.TrimSuffix(result, "\n")
 	result = strings.TrimSpace(result)
-	return result, nil //nolint:nilerr
+	return result, nil
 }
 
 // ExecuteRaw executes command on runtime API and returns raw result

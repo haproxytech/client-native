@@ -17,7 +17,6 @@ limitations under the License.
 package parsers
 
 import (
-	"fmt"
 	"strings"
 
 	"github.com/haproxytech/client-native/v6/config-parser/common"
@@ -50,7 +49,7 @@ func (p *UniqueIDFormat) Result() ([]common.ReturnResultLine, error) {
 	}
 	return []common.ReturnResultLine{
 		{
-			Data:    fmt.Sprintf("unique-id-format %s", p.data.LogFormat),
+			Data:    "unique-id-format " + p.data.LogFormat,
 			Comment: p.data.Comment,
 		},
 	}, nil

@@ -17,7 +17,7 @@ limitations under the License.
 package actions
 
 import (
-	"fmt"
+	stderrors "errors"
 	"strconv"
 	"strings"
 
@@ -50,13 +50,13 @@ func (f *TrackSc) Parse(parts []string, parserType types.ParserType, comment str
 	switch parserType {
 	case types.HTTP:
 		if len(parts) < 3 {
-			return fmt.Errorf("not enough params")
+			return stderrors.New("not enough params")
 		}
 		data = parts[1]
 		command = parts[2:]
 	case types.TCP:
 		if len(parts) < 4 {
-			return fmt.Errorf("not enough params")
+			return stderrors.New("not enough params")
 		}
 		data = parts[2]
 		command = parts[3:]
@@ -66,7 +66,7 @@ func (f *TrackSc) Parse(parts []string, parserType types.ParserType, comment str
 	counterS := strings.TrimPrefix(data, string(TrackScType))
 	counter, err := strconv.ParseInt(counterS, 10, 64)
 	if err != nil {
-		return fmt.Errorf("failed to parse stick-counter")
+		return stderrors.New("failed to parse stick-counter")
 	}
 	f.StickCounter = counter
 
@@ -81,12 +81,12 @@ func (f *TrackSc) parseCommand(command []string) error {
 	}
 
 	if len(command) < 3 {
-		return fmt.Errorf("not enough params")
+		return stderrors.New("not enough params")
 	}
 	command, condition := common.SplitRequest(command)
 	if len(command) > 1 && command[1] == "table" {
 		if len(command) < 3 {
-			return fmt.Errorf("not enough params")
+			return stderrors.New("not enough params")
 		}
 		f.Key = command[0]
 		f.Table = command[2]

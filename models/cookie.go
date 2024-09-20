@@ -76,8 +76,8 @@ type Cookie struct {
 	Secure bool `json:"secure,omitempty"`
 
 	// type
-	// Enum: [rewrite insert prefix]
-	// +kubebuilder:validation:Enum=rewrite;insert;prefix;
+	// Enum: ["rewrite","insert","prefix"]
+	// +kubebuilder:validation:Enum="rewrite","insert","prefix";
 	Type string `json:"type,omitempty"`
 }
 
@@ -240,6 +240,11 @@ func (m *Cookie) contextValidateAttrs(ctx context.Context, formats strfmt.Regist
 	for i := 0; i < len(m.Attrs); i++ {
 
 		if m.Attrs[i] != nil {
+
+			if swag.IsZero(m.Attrs[i]) { // not required
+				return nil
+			}
+
 			if err := m.Attrs[i].ContextValidate(ctx, formats); err != nil {
 				if ve, ok := err.(*errors.Validation); ok {
 					return ve.ValidateName("attr" + "." + strconv.Itoa(i))
@@ -260,6 +265,11 @@ func (m *Cookie) contextValidateDomains(ctx context.Context, formats strfmt.Regi
 	for i := 0; i < len(m.Domains); i++ {
 
 		if m.Domains[i] != nil {
+
+			if swag.IsZero(m.Domains[i]) { // not required
+				return nil
+			}
+
 			if err := m.Domains[i].ContextValidate(ctx, formats); err != nil {
 				if ve, ok := err.(*errors.Validation); ok {
 					return ve.ValidateName("domain" + "." + strconv.Itoa(i))

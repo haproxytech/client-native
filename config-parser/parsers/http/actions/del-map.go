@@ -17,6 +17,7 @@ limitations under the License.
 package actions
 
 import (
+	stderrors "errors"
 	"fmt"
 	"strings"
 
@@ -41,7 +42,7 @@ func (f *DelMap) Parse(parts []string, parserType types.ParserType, comment stri
 	if len(parts) >= 3 {
 		command, condition := common.SplitRequest(parts[2:])
 		if len(command) == 0 {
-			return fmt.Errorf("not enough params")
+			return stderrors.New("not enough params")
 		}
 		f.KeyFmt = command[0]
 		if len(condition) > 1 {
@@ -50,7 +51,7 @@ func (f *DelMap) Parse(parts []string, parserType types.ParserType, comment stri
 		}
 		return nil
 	}
-	return fmt.Errorf("not enough params")
+	return stderrors.New("not enough params")
 }
 
 func (f *DelMap) String() string {

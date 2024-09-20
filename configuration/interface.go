@@ -17,6 +17,7 @@ package configuration
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"os/exec"
 	"path/filepath"
@@ -143,7 +144,7 @@ func New(ctx context.Context, opt ...options.ConfigurationOption) (Configuration
 
 	p, err := parser.New(parserOptions...)
 	if err != nil {
-		return nil, NewConfError(ErrCannotReadConfFile, fmt.Sprintf("Cannot read %s", c.ConfigurationFile))
+		return nil, NewConfError(ErrCannotReadConfFile, "Cannot read "+c.ConfigurationFile)
 	}
 
 	c.parser = p
@@ -165,30 +166,30 @@ func (c *client) fetchVersion(haproxy string) (string, error) {
 
 func getVersionNumbers(version string) (int64, int64, int64, error) {
 	if !strings.HasPrefix(version, "HAProxy version ") {
-		return 0, 0, 0, fmt.Errorf("not a haproxy version string")
+		return 0, 0, 0, errors.New("not a haproxy version string")
 	}
 	version = version[strings.Index(version, "HAProxy version ")+len("HAProxy version "):]
 	versionSlice := strings.SplitN(version, "-", 2)
 	if len(versionSlice) != 2 {
-		return 0, 0, 0, fmt.Errorf("not a haproxy version string")
+		return 0, 0, 0, errors.New("not a haproxy version string")
 	}
 
 	versionInts := strings.SplitN(versionSlice[0], ".", 3)
 	if len(versionInts) != 3 {
-		return 0, 0, 0, fmt.Errorf("not a haproxy version string")
+		return 0, 0, 0, errors.New("not a haproxy version string")
 	}
 
 	major, err := strconv.ParseInt(versionInts[0], 10, 64)
 	if err != nil {
-		return 0, 0, 0, fmt.Errorf("not a haproxy version string")
+		return 0, 0, 0, errors.New("not a haproxy version string")
 	}
 	minor, err := strconv.ParseInt(versionInts[1], 10, 64)
 	if err != nil {
-		return 0, 0, 0, fmt.Errorf("not a haproxy version string")
+		return 0, 0, 0, errors.New("not a haproxy version string")
 	}
 	patch, err := strconv.ParseInt(versionInts[2], 10, 64)
 	if err != nil {
-		return 0, 0, 0, fmt.Errorf("not a haproxy version string")
+		return 0, 0, 0, errors.New("not a haproxy version string")
 	}
 	return major, minor, patch, nil
 }

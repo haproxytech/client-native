@@ -17,6 +17,7 @@ limitations under the License.
 package actions
 
 import (
+	stderrors "errors"
 	"fmt"
 	"strings"
 
@@ -45,7 +46,7 @@ func (f *Allow) Parse(parts []string, parserType types.ParserType, comment strin
 	} else if len(parts) == 2 {
 		return nil
 	}
-	return fmt.Errorf("not enough params")
+	return stderrors.New("not enough params")
 }
 
 func (f *Allow) String() string {
@@ -53,7 +54,7 @@ func (f *Allow) String() string {
 	if f.Cond != "" {
 		condition = fmt.Sprintf(" %s %s", f.Cond, f.CondTest)
 	}
-	return fmt.Sprintf("allow%s", condition)
+	return "allow" + condition
 }
 
 func (f *Allow) GetComment() string {

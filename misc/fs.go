@@ -1,6 +1,7 @@
 package misc
 
 import (
+	"errors"
 	"fmt"
 	"os"
 	"path/filepath"
@@ -8,7 +9,7 @@ import (
 
 func CheckOrCreateWritableDirectory(dirname string) (string, error) {
 	if dirname == "" {
-		return dirname, fmt.Errorf("no storage dir or empty dirname specified")
+		return dirname, errors.New("no storage dir or empty dirname specified")
 	}
 
 	dirname = filepath.Clean(dirname)
@@ -38,8 +39,8 @@ func CheckOrCreateWritableDirectory(dirname string) (string, error) {
 }
 
 // CreateTempDir will create a new temporary dir. If config is provided it will create a file with its content
-func CreateTempDir(config string, createFile bool, extension ...string) (dirname, file string, err error) {
-	dirname, err = os.MkdirTemp("/tmp", "storage")
+func CreateTempDir(config string, createFile bool, extension ...string) (string, string, error) {
+	dirname, err := os.MkdirTemp("/tmp", "storage")
 	if err != nil {
 		return "", "", err
 	}

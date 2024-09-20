@@ -17,6 +17,7 @@ limitations under the License.
 package actions
 
 import (
+	stderrors "errors"
 	"fmt"
 	"strings"
 
@@ -66,7 +67,7 @@ func (f *Redirect) Parse(parts []string, parserType types.ParserType, comment st
 			}
 		}
 		if index != len(command) {
-			return fmt.Errorf("extra params not processed")
+			return stderrors.New("extra params not processed")
 		}
 
 		if len(condition) > 1 {
@@ -76,7 +77,7 @@ func (f *Redirect) Parse(parts []string, parserType types.ParserType, comment st
 
 		return nil
 	}
-	return fmt.Errorf("not enough params")
+	return stderrors.New("not enough params")
 }
 
 func (f *Redirect) String() string {

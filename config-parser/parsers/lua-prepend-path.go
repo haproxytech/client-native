@@ -51,7 +51,7 @@ func (l *LuaPrependPath) Result() ([]common.ReturnResultLine, error) {
 	for index, data := range l.data {
 		typ := ""
 		if data.Type != "" {
-			typ = fmt.Sprintf(" %s", data.Type)
+			typ = " " + data.Type
 		}
 		result[index] = common.ReturnResultLine{
 			Data:    fmt.Sprintf("lua-prepend-path %s%s", data.Path, typ),

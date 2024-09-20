@@ -26,7 +26,7 @@ func main() {
 	}
 }
 
-func generate(fileName string) error { //nolint:gocognit,unparam
+func generate(fileName string) error { //nolint:gocognit
 	f, err := decorator.ParseFile(token.NewFileSet(), fileName, nil, 0)
 	if err != nil {
 		log.Fatal(err)

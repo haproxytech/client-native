@@ -17,7 +17,7 @@ limitations under the License.
 package filters
 
 import (
-	"fmt"
+	"errors"
 	"strings"
 
 	"github.com/haproxytech/client-native/v6/config-parser/common"
@@ -35,7 +35,7 @@ func (f *Cache) Parse(parts []string, comment string) error {
 	if len(parts) > 2 {
 		f.Name = parts[2]
 	} else {
-		return fmt.Errorf("no cache name")
+		return errors.New("no cache name")
 	}
 	return nil
 }

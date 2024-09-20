@@ -1,8 +1,6 @@
 package parsers
 
 import (
-	"fmt"
-
 	"github.com/haproxytech/client-native/v6/config-parser/common"
 	"github.com/haproxytech/client-native/v6/config-parser/errors"
 	"github.com/haproxytech/client-native/v6/config-parser/types"
@@ -41,7 +39,7 @@ func (p *HTTPClientSSLVerify) Result() ([]common.ReturnResultLine, error) {
 	}
 	data := "httpclient.ssl.verify"
 	if len(p.data.Type) > 0 {
-		data = fmt.Sprintf("httpclient.ssl.verify %s", p.data.Type)
+		data = "httpclient.ssl.verify " + p.data.Type
 	}
 	return []common.ReturnResultLine{
 		{

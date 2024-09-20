@@ -153,6 +153,11 @@ func (m *SpoeMessage) contextValidateACL(ctx context.Context, formats strfmt.Reg
 func (m *SpoeMessage) contextValidateEvent(ctx context.Context, formats strfmt.Registry) error {
 
 	if m.Event != nil {
+
+		if swag.IsZero(m.Event) { // not required
+			return nil
+		}
+
 		if err := m.Event.ContextValidate(ctx, formats); err != nil {
 			if ve, ok := err.(*errors.Validation); ok {
 				return ve.ValidateName("event")
@@ -189,8 +194,8 @@ func (m *SpoeMessage) UnmarshalBinary(b []byte) error {
 // swagger:model SpoeMessageEvent
 type SpoeMessageEvent struct {
 	// cond
-	// Enum: [if unless]
-	// +kubebuilder:validation:Enum=if;unless;
+	// Enum: ["if","unless"]
+	// +kubebuilder:validation:Enum="if","unless";
 	Cond string `json:"cond,omitempty"`
 
 	// cond test
@@ -198,8 +203,8 @@ type SpoeMessageEvent struct {
 
 	// name
 	// Required: true
-	// Enum: [on-backend-http-request on-backend-tcp-request on-client-session on-frontend-http-request on-frontend-tcp-request on-http-response on-server-session on-tcp-response]
-	// +kubebuilder:validation:Enum=on-backend-http-request;on-backend-tcp-request;on-client-session;on-frontend-http-request;on-frontend-tcp-request;on-http-response;on-server-session;on-tcp-response;
+	// Enum: ["on-backend-http-request","on-backend-tcp-request","on-client-session","on-frontend-http-request","on-frontend-tcp-request","on-http-response","on-server-session","on-tcp-response"]
+	// +kubebuilder:validation:Enum="on-backend-http-request","on-backend-tcp-request","on-client-session","on-frontend-http-request","on-frontend-tcp-request","on-http-response","on-server-session","on-tcp-response";
 	Name *string `json:"name"`
 }
 

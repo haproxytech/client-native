@@ -59,8 +59,8 @@ type HTTPAfterResponseRule struct {
 	CaptureSample string `json:"capture_sample,omitempty"`
 
 	// cond
-	// Enum: [if unless]
-	// +kubebuilder:validation:Enum=if;unless;
+	// Enum: ["if","unless"]
+	// +kubebuilder:validation:Enum="if","unless";
 	Cond string `json:"cond,omitempty"`
 
 	// cond test
@@ -79,8 +79,8 @@ type HTTPAfterResponseRule struct {
 	HdrName string `json:"hdr_name,omitempty"`
 
 	// log level
-	// Enum: [emerg alert crit err warning notice info debug silent]
-	// +kubebuilder:validation:Enum=emerg;alert;crit;err;warning;notice;info;debug;silent;
+	// Enum: ["emerg","alert","crit","err","warning","notice","info","debug","silent"]
+	// +kubebuilder:validation:Enum="emerg","alert","crit","err","warning","notice","info","debug","silent";
 	LogLevel string `json:"log_level,omitempty"`
 
 	// map file
@@ -121,14 +121,14 @@ type HTTPAfterResponseRule struct {
 	StatusReason string `json:"status_reason,omitempty"`
 
 	// strict mode
-	// Enum: [on off]
-	// +kubebuilder:validation:Enum=on;off;
+	// Enum: ["on","off"]
+	// +kubebuilder:validation:Enum="on","off";
 	StrictMode string `json:"strict_mode,omitempty"`
 
 	// type
 	// Required: true
-	// Enum: [add-header allow capture del-acl del-header del-map replace-header replace-value sc-add-gpc sc-inc-gpc sc-inc-gpc0 sc-inc-gpc1 sc-set-gpt sc-set-gpt0 set-header set-log-level set-map set-status set-var set-var-fmt strict-mode unset-var]
-	// +kubebuilder:validation:Enum=add-header;allow;capture;del-acl;del-header;del-map;replace-header;replace-value;sc-add-gpc;sc-inc-gpc;sc-inc-gpc0;sc-inc-gpc1;sc-set-gpt;sc-set-gpt0;set-header;set-log-level;set-map;set-status;set-var;set-var-fmt;strict-mode;unset-var;
+	// Enum: ["add-header","allow","capture","del-acl","del-header","del-map","replace-header","replace-value","sc-add-gpc","sc-inc-gpc","sc-inc-gpc0","sc-inc-gpc1","sc-set-gpt","sc-set-gpt0","set-header","set-log-level","set-map","set-status","set-var","set-var-fmt","strict-mode","unset-var"]
+	// +kubebuilder:validation:Enum="add-header","allow","capture","del-acl","del-header","del-map","replace-header","replace-value","sc-add-gpc","sc-inc-gpc","sc-inc-gpc0","sc-inc-gpc1","sc-set-gpt","sc-set-gpt0","set-header","set-log-level","set-map","set-status","set-var","set-var-fmt","strict-mode","unset-var";
 	Type string `json:"type"`
 
 	// var expr

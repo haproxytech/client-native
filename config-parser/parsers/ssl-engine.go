@@ -53,7 +53,6 @@ func (s *SslEngine) Result() ([]common.ReturnResultLine, error) {
 
 	result := make([]common.ReturnResultLine, len(s.data))
 	for index, data := range s.data {
-
 		var sb strings.Builder
 		sb.WriteString("ssl-engine")
 		sb.WriteString(" ")

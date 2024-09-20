@@ -121,6 +121,11 @@ func (m *Info) ContextValidate(ctx context.Context, formats strfmt.Registry) err
 func (m *Info) contextValidateAPI(ctx context.Context, formats strfmt.Registry) error {
 
 	if m.API != nil {
+
+		if swag.IsZero(m.API) { // not required
+			return nil
+		}
+
 		if err := m.API.ContextValidate(ctx, formats); err != nil {
 			if ve, ok := err.(*errors.Validation); ok {
 				return ve.ValidateName("api")
@@ -137,6 +142,11 @@ func (m *Info) contextValidateAPI(ctx context.Context, formats strfmt.Registry) 
 func (m *Info) contextValidateSystem(ctx context.Context, formats strfmt.Registry) error {
 
 	if m.System != nil {
+
+		if swag.IsZero(m.System) { // not required
+			return nil
+		}
+
 		if err := m.System.ContextValidate(ctx, formats); err != nil {
 			if ve, ok := err.(*errors.Validation); ok {
 				return ve.ValidateName("system")
@@ -331,6 +341,11 @@ func (m *InfoSystem) ContextValidate(ctx context.Context, formats strfmt.Registr
 func (m *InfoSystem) contextValidateCPUInfo(ctx context.Context, formats strfmt.Registry) error {
 
 	if m.CPUInfo != nil {
+
+		if swag.IsZero(m.CPUInfo) { // not required
+			return nil
+		}
+
 		if err := m.CPUInfo.ContextValidate(ctx, formats); err != nil {
 			if ve, ok := err.(*errors.Validation); ok {
 				return ve.ValidateName("system" + "." + "cpu_info")
@@ -347,6 +362,11 @@ func (m *InfoSystem) contextValidateCPUInfo(ctx context.Context, formats strfmt.
 func (m *InfoSystem) contextValidateMemInfo(ctx context.Context, formats strfmt.Registry) error {
 
 	if m.MemInfo != nil {
+
+		if swag.IsZero(m.MemInfo) { // not required
+			return nil
+		}
+
 		if err := m.MemInfo.ContextValidate(ctx, formats); err != nil {
 			if ve, ok := err.(*errors.Validation); ok {
 				return ve.ValidateName("system" + "." + "mem_info")

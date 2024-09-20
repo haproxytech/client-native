@@ -20,6 +20,7 @@ import (
 	"crypto/sha256"
 	"crypto/x509"
 	"encoding/pem"
+	"errors"
 	"fmt"
 	"strings"
 	"time"
@@ -145,7 +146,7 @@ func formatFingerprint(fingerprint []byte) string {
 // findLeafCertificate returns the first leaf certificate in the chain.
 func findLeafCertificate(certs []*x509.Certificate) (*x509.Certificate, error) {
 	if len(certs) == 0 {
-		return nil, fmt.Errorf("empty certificate chain")
+		return nil, errors.New("empty certificate chain")
 	}
 	// Create a map to check if a certificate is someone else's issuer
 	isIssuer := make(map[string]bool)
@@ -160,7 +161,7 @@ func findLeafCertificate(certs []*x509.Certificate) (*x509.Certificate, error) {
 		}
 	}
 
-	return nil, fmt.Errorf("no leaf certificate found")
+	return nil, errors.New("no leaf certificate found")
 }
 
 // Transform a dirty *certsInfo into a clean *CertificatesInfo for the API.

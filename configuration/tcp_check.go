@@ -17,7 +17,6 @@ package configuration
 
 import (
 	"errors"
-	"fmt"
 	"strconv"
 	"strings"
 
@@ -257,7 +256,7 @@ func ParseTCPChecks(t, pName string, p parser.Parser) (models.TCPChecks, error) 
 	case BackendParentName:
 		section = parser.Backends
 	default:
-		return nil, NewConfError(ErrValidationError, fmt.Sprintf("unsupported section in tcp_check: %s", t))
+		return nil, NewConfError(ErrValidationError, "unsupported section in tcp_check: "+t)
 	}
 
 	var checks models.TCPChecks
@@ -281,15 +280,15 @@ func ParseTCPChecks(t, pName string, p parser.Parser) (models.TCPChecks, error) 
 	return checks, nil
 }
 
-func ParseTCPCheck(f types.Action) (check *models.TCPCheck, err error) {
+func ParseTCPCheck(f types.Action) (*models.TCPCheck, error) {
 	switch v := f.(type) {
 	case *tcp_actions.CheckComment:
-		check = &models.TCPCheck{
+		return &models.TCPCheck{
 			Action:       models.TCPCheckActionComment,
 			CheckComment: v.LogMessage,
-		}
+		}, nil
 	case *actions.CheckConnect:
-		check = &models.TCPCheck{
+		return &models.TCPCheck{
 			Action:       models.TCPCheckActionConnect,
 			PortString:   v.Port,
 			Addr:         v.Addr,
@@ -302,9 +301,9 @@ func ParseTCPCheck(f types.Action) (check *models.TCPCheck, err error) {
 			ViaSocks4:    v.ViaSOCKS4,
 			Ssl:          v.SSL,
 			Linger:       v.Linger,
-		}
+		}, nil
 	case *actions.CheckExpect:
-		check = &models.TCPCheck{
+		check := &models.TCPCheck{
 			Action:          models.TCPCheckActionExpect,
 			CheckComment:    v.CheckComment,
 			OkStatus:        v.OKStatus,
@@ -320,56 +319,57 @@ func ParseTCPCheck(f types.Action) (check *models.TCPCheck, err error) {
 		if v.MinRecv != nil {
 			check.MinRecv = *v.MinRecv
 		}
+		return check, nil
 	case *tcp_actions.CheckSend:
-		check = &models.TCPCheck{
+		return &models.TCPCheck{
 			Action:       models.TCPCheckActionSend,
 			Data:         v.Data,
 			CheckComment: v.CheckComment,
-		}
+		}, nil
 	case *tcp_actions.CheckSendLf:
-		check = &models.TCPCheck{
+		return &models.TCPCheck{
 			Action:       models.TCPCheckActionSendDashLf,
 			Fmt:          v.Fmt,
 			CheckComment: v.CheckComment,
-		}
+		}, nil
 	case *tcp_actions.CheckSendBinary:
-		check = &models.TCPCheck{
+		return &models.TCPCheck{
 			Action:       models.TCPCheckActionSendDashBinary,
 			HexString:    v.HexString,
 			CheckComment: v.CheckComment,
-		}
+		}, nil
 	case *tcp_actions.CheckSendBinaryLf:
-		check = &models.TCPCheck{
+		return &models.TCPCheck{
 			Action:       models.TCPCheckActionSendDashBinaryDashLf,
 			HexFmt:       v.HexFmt,
 			CheckComment: v.CheckComment,
-		}
+		}, nil
 	case *actions.SetVarCheck:
-		check = &models.TCPCheck{
+		return &models.TCPCheck{
 			Action:   models.TCPCheckActionSetDashVar,
 			VarScope: v.VarScope,
 			VarName:  v.VarName,
 			VarExpr:  strings.Join(v.Expr.Expr, " "),
-		}
+		}, nil
 	case *actions.SetVarFmtCheck:
-		check = &models.TCPCheck{
+		return &models.TCPCheck{
 			Action:   models.TCPCheckActionSetDashVarDashFmt,
 			VarScope: v.VarScope,
 			VarName:  v.VarName,
 			VarFmt:   strings.Join(v.Format.Expr, " "),
-		}
+		}, nil
 	case *actions.UnsetVarCheck:
-		check = &models.TCPCheck{
+		return &models.TCPCheck{
 			Action:   models.TCPCheckActionUnsetDashVar,
 			VarScope: v.Scope,
 			VarName:  v.Name,
-		}
+		}, nil
 	}
 
-	return check, nil
+	return nil, nil //nolint:nilnil
 }
 
-func SerializeTCPCheck(f models.TCPCheck) (action types.Action, err error) { //nolint:ireturn
+func SerializeTCPCheck(f models.TCPCheck) (types.Action, error) { //nolint:ireturn
 	switch f.Action {
 	case models.TCPCheckActionComment:
 		return &tcp_actions.CheckComment{

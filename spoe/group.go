@@ -16,6 +16,7 @@
 package spoe
 
 import (
+	"errors"
 	"fmt"
 
 	"github.com/go-openapi/strfmt"
@@ -153,7 +154,7 @@ func (c *SingleSpoe) EditGroup(scope string, data *models.SpoeGroup, name, trans
 
 func (c *SingleSpoe) createEditGroup(scope string, data *models.SpoeGroup, t string, transactionID string, p *spoe.Parser) error {
 	if data == nil {
-		return fmt.Errorf("spoe group not initialized")
+		return errors.New("spoe group not initialized")
 	}
 	name := *data.Name
 

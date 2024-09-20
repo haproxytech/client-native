@@ -17,7 +17,7 @@ limitations under the License.
 package actions
 
 import (
-	"fmt"
+	stderrors "errors"
 	"strings"
 
 	"github.com/haproxytech/client-native/v6/config-parser/parsers/actions"
@@ -36,7 +36,7 @@ func (c *CheckSendBinary) Parse(parts []string, parserType types.ParserType, com
 		c.Comment = comment
 	}
 	if len(parts) < 3 {
-		return fmt.Errorf("not enough params")
+		return stderrors.New("not enough params")
 	}
 	c.HexString = parts[2]
 	for i := 3; i < len(parts); i++ {

@@ -1,8 +1,6 @@
 package parsers
 
 import (
-	"fmt"
-
 	"github.com/haproxytech/client-native/v6/config-parser/common"
 	"github.com/haproxytech/client-native/v6/config-parser/errors"
 	"github.com/haproxytech/client-native/v6/config-parser/types"
@@ -31,7 +29,7 @@ func (p *HTTPClientResolversPrefer) Result() ([]common.ReturnResultLine, error) 
 	if p.data == nil || len(p.data.Type) == 0 {
 		return nil, errors.ErrFetch
 	}
-	data := fmt.Sprintf("httpclient.resolvers.prefer %s", p.data.Type)
+	data := "httpclient.resolvers.prefer " + p.data.Type
 	return []common.ReturnResultLine{
 		{
 			Data: data,

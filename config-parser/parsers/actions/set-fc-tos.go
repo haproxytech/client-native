@@ -17,6 +17,7 @@ limitations under the License.
 package actions
 
 import (
+	stderrors "errors"
 	"fmt"
 	"math"
 	"strconv"
@@ -38,7 +39,7 @@ func (f *SetFcTos) Parse(parts []string, parserType types.ParserType, comment st
 		f.Comment = comment
 	}
 	if len(parts) < 3 {
-		return fmt.Errorf("not enough params")
+		return stderrors.New("not enough params")
 	}
 	var command []string
 	switch parserType {
@@ -56,7 +57,7 @@ func (f *SetFcTos) Parse(parts []string, parserType types.ParserType, comment st
 		expr := common.Expression{}
 		err := expr.Parse(command)
 		if err != nil {
-			return fmt.Errorf("not enough params")
+			return stderrors.New("not enough params")
 		}
 		f.Expr = expr
 	}
@@ -78,7 +79,7 @@ func (f *SetFcTos) GetComment() string {
 // Test if the given string is an unsigned integer between zero and "max".
 // The number can be in decimal or hexadecimal (0x).
 // If the parsing failed, assume the string was an Expr and return true.
-func validateUnsignedNumber(text string, max int64) bool {
+func validateUnsignedNumber(text string, maximum int64) bool {
 	var n int64
 	var err error
 	if strings.HasPrefix(text, "0x") {
@@ -90,5 +91,5 @@ func validateUnsignedNumber(text string, max int64) bool {
 		// Assume it was an expression, not a number.
 		return true
 	}
-	return n >= 0 && n <= max
+	return n >= 0 && n <= maximum
 }

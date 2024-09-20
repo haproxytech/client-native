@@ -17,6 +17,7 @@ limitations under the License.
 package actions
 
 import (
+	stderrors "errors"
 	"fmt"
 	"strings"
 
@@ -44,7 +45,7 @@ func (f *DelHeader) Parse(parts []string, parserType types.ParserType, comment s
 		if len(command) > 1 && command[0] == "-m" {
 			f.Method = command[1]
 		} else if len(command) > 0 {
-			return fmt.Errorf("unknown params after name")
+			return stderrors.New("unknown params after name")
 		}
 		if len(condition) > 1 {
 			f.Cond = condition[0]
@@ -52,7 +53,7 @@ func (f *DelHeader) Parse(parts []string, parserType types.ParserType, comment s
 		}
 		return nil
 	}
-	return fmt.Errorf("not enough params")
+	return stderrors.New("not enough params")
 }
 
 func (f *DelHeader) String() string {
@@ -61,7 +62,7 @@ func (f *DelHeader) String() string {
 	sb.WriteString("del-header ")
 	sb.WriteString(f.Name)
 	if f.Method != "" {
-		sb.WriteString(fmt.Sprintf(" -m %s", f.Method))
+		sb.WriteString(" -m " + f.Method)
 	}
 	if f.Cond != "" {
 		sb.WriteString(fmt.Sprintf(" %s %s", f.Cond, f.CondTest))

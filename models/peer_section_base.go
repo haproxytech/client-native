@@ -155,6 +155,11 @@ func (m *PeerSectionBase) ContextValidate(ctx context.Context, formats strfmt.Re
 func (m *PeerSectionBase) contextValidateDefaultBind(ctx context.Context, formats strfmt.Registry) error {
 
 	if m.DefaultBind != nil {
+
+		if swag.IsZero(m.DefaultBind) { // not required
+			return nil
+		}
+
 		if err := m.DefaultBind.ContextValidate(ctx, formats); err != nil {
 			if ve, ok := err.(*errors.Validation); ok {
 				return ve.ValidateName("default_bind")
@@ -171,6 +176,11 @@ func (m *PeerSectionBase) contextValidateDefaultBind(ctx context.Context, format
 func (m *PeerSectionBase) contextValidateDefaultServer(ctx context.Context, formats strfmt.Registry) error {
 
 	if m.DefaultServer != nil {
+
+		if swag.IsZero(m.DefaultServer) { // not required
+			return nil
+		}
+
 		if err := m.DefaultServer.ContextValidate(ctx, formats); err != nil {
 			if ve, ok := err.(*errors.Validation); ok {
 				return ve.ValidateName("default_server")

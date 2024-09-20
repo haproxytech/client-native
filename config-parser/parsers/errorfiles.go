@@ -66,9 +66,8 @@ func (e *ErrorFiles) Result() ([]common.ReturnResultLine, error) {
 	}
 	result := make([]common.ReturnResultLine, len(e.data))
 	for index, data := range e.data {
-
 		result[index] = common.ReturnResultLine{
-			Data:    fmt.Sprintf("errorfiles %s", data.Name),
+			Data:    "errorfiles " + data.Name,
 			Comment: data.Comment,
 		}
 		if len(data.Codes) > 0 {

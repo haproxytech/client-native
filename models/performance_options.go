@@ -86,13 +86,13 @@ type PerformanceOptions struct {
 	Nosplice bool `json:"nosplice,omitempty"`
 
 	// profiling memory
-	// Enum: [enabled disabled]
-	// +kubebuilder:validation:Enum=enabled;disabled;
+	// Enum: ["enabled","disabled"]
+	// +kubebuilder:validation:Enum="enabled","disabled";
 	ProfilingMemory string `json:"profiling_memory,omitempty"`
 
 	// profiling tasks
-	// Enum: [auto enabled disabled]
-	// +kubebuilder:validation:Enum=auto;enabled;disabled;
+	// Enum: ["auto","enabled","disabled"]
+	// +kubebuilder:validation:Enum="auto","enabled","disabled";
 	ProfilingTasks string `json:"profiling_tasks,omitempty"`
 
 	// server state base

@@ -18,6 +18,7 @@ limitations under the License.
 package actions
 
 import (
+	stderrors "errors"
 	"fmt"
 	"math"
 	"strings"
@@ -38,7 +39,7 @@ func (f *SetBcMark) Parse(parts []string, parserType types.ParserType, comment s
 		f.Comment = comment
 	}
 	if len(parts) < 3 {
-		return fmt.Errorf("not enough params")
+		return stderrors.New("not enough params")
 	}
 	var command []string
 	switch parserType {
@@ -56,7 +57,7 @@ func (f *SetBcMark) Parse(parts []string, parserType types.ParserType, comment s
 		expr := common.Expression{}
 		err := expr.Parse(command)
 		if err != nil {
-			return fmt.Errorf("not enough params")
+			return stderrors.New("not enough params")
 		}
 		f.Expr = expr
 	}

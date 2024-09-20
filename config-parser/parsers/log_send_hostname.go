@@ -17,8 +17,6 @@ limitations under the License.
 package parsers
 
 import (
-	"fmt"
-
 	"github.com/haproxytech/client-native/v6/config-parser/common"
 	"github.com/haproxytech/client-native/v6/config-parser/errors"
 	"github.com/haproxytech/client-native/v6/config-parser/types"
@@ -48,7 +46,7 @@ func (p *LogSendHostName) Result() ([]common.ReturnResultLine, error) {
 	}
 	data := "log-send-hostname"
 	if p.data.Value != "" {
-		data = fmt.Sprintf("log-send-hostname %s", p.data.Value)
+		data = "log-send-hostname " + p.data.Value
 	}
 	return []common.ReturnResultLine{
 		{

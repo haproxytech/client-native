@@ -17,7 +17,7 @@ limitations under the License.
 package actions
 
 import (
-	"fmt"
+	stderrors "errors"
 	"strconv"
 	"strings"
 
@@ -52,7 +52,7 @@ func (c *CheckExpect) Parse(parts []string, parserType types.ParserType, comment
 	}
 
 	if len(parts) < 3 {
-		return fmt.Errorf("not enough params")
+		return stderrors.New("not enough params")
 	}
 
 	var i int

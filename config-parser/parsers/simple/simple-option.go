@@ -35,7 +35,7 @@ type Option struct {
 func (o *Option) Init() {
 	if !strings.HasPrefix(o.Name, "option") {
 		o.name = o.Name
-		o.Name = fmt.Sprintf("option %s", o.Name)
+		o.Name = "option " + o.Name
 	}
 	o.data = nil
 	o.preComments = nil
@@ -55,7 +55,7 @@ func (o *Option) Parse(line string, parts []string, comment string) (string, err
 		}
 		return "", nil
 	}
-	return "", &errors.ParseError{Parser: fmt.Sprintf("option %s", o.name), Line: line}
+	return "", &errors.ParseError{Parser: "option " + o.name, Line: line}
 }
 
 func (o *Option) Result() ([]common.ReturnResultLine, error) {

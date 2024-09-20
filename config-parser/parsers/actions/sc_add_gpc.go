@@ -17,7 +17,7 @@ limitations under the License.
 package actions
 
 import (
-	"fmt"
+	stderrors "errors"
 	"strconv"
 	"strings"
 
@@ -58,7 +58,7 @@ func (f *ScAddGpc) Parse(parts []string, parserType types.ParserType, comment st
 	idIdxValues := strings.SplitN(idIdx, ",", 2)
 	f.Idx, f.ID = idIdxValues[0], idIdxValues[1]
 	if len(parts) < minLen {
-		return fmt.Errorf("not enough params")
+		return stderrors.New("not enough params")
 	}
 	command, condition := common.SplitRequest(command)
 	if len(command) < 1 {
@@ -71,7 +71,7 @@ func (f *ScAddGpc) Parse(parts []string, parserType types.ParserType, comment st
 		expr := common.Expression{}
 		err := expr.Parse(command)
 		if err != nil {
-			return fmt.Errorf("not enough params")
+			return stderrors.New("not enough params")
 		}
 		f.Expr = expr
 	}

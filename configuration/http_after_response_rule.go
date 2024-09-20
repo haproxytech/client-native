@@ -211,7 +211,6 @@ func (c *client) ReplaceHTTPAfterResponseRules(parentType string, parentName str
 	}
 
 	for i, newHarRule := range data {
-
 		s, err := SerializeHTTPAfterRule(*newHarRule)
 		if err != nil {
 			return err
@@ -469,7 +468,8 @@ func ParseHTTPAfterRule(f types.Action) (*models.HTTPAfterResponseRule, error) {
 	return nil, nil //nolint:nilnil
 }
 
-func SerializeHTTPAfterRule(f models.HTTPAfterResponseRule) (rule types.Action, err error) { //nolint:ireturn
+func SerializeHTTPAfterRule(f models.HTTPAfterResponseRule) (types.Action, error) { //nolint:ireturn
+	var rule types.Action
 	switch f.Type {
 	case "add-header":
 		rule = &http_actions.AddHeader{
@@ -625,5 +625,5 @@ func SerializeHTTPAfterRule(f models.HTTPAfterResponseRule) (rule types.Action, 
 			CondTest: f.CondTest,
 		}
 	}
-	return rule, err
+	return rule, nil
 }

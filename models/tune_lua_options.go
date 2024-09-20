@@ -43,13 +43,13 @@ type TuneLuaOptions struct {
 	ForcedYield int64 `json:"forced_yield,omitempty"`
 
 	// log loggers
-	// Enum: [enabled disabled]
-	// +kubebuilder:validation:Enum=enabled;disabled;
+	// Enum: ["enabled","disabled"]
+	// +kubebuilder:validation:Enum="enabled","disabled";
 	LogLoggers string `json:"log_loggers,omitempty"`
 
 	// log stderr
-	// Enum: [auto enabled disabled]
-	// +kubebuilder:validation:Enum=auto;enabled;disabled;
+	// Enum: ["auto","enabled","disabled"]
+	// +kubebuilder:validation:Enum="auto","enabled","disabled";
 	LogStderr string `json:"log_stderr,omitempty"`
 
 	// maxmem
