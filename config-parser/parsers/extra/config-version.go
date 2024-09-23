@@ -57,6 +57,11 @@ func (p *ConfigVersion) Parse(line string, parts []string, comment string) (stri
 		if len(data) < 2 {
 			return "", &errors.ParseError{Parser: "ConfigVersion", Line: line}
 		}
+
+		if p.data != nil {
+			return "", &errors.ParseError{Parser: "ConfigVersion", Line: line}
+		}
+
 		if version, err := strconv.ParseInt(data[1], 10, 64); err == nil {
 			p.data = &types.ConfigVersion{
 				Value: version,

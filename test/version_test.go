@@ -18,6 +18,9 @@ package test
 import (
 	"io/ioutil"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 func generateConfig(config string) (string, error) {
@@ -30,6 +33,34 @@ func generateConfig(config string) (string, error) {
 		return "", err
 	}
 	return f.Name(), nil
+}
+
+func TestClient_PostRawConfiguration(t *testing.T) {
+	fVersion, err := generateConfig("")
+	require.NoError(t, err, "generateConfig")
+
+	t.Cleanup(func() {
+		assert.NoError(t, deleteTestFile(fVersion), "clean-up")
+	})
+
+	c, err := prepareClient(fVersion)
+	require.NoError(t, err, "prepareClient")
+
+	v, vErr := c.GetVersion("")
+	assert.Equal(t, int64(1), v, "initialized configuration must be 1")
+	// The user is providing a raw configuration with a wrong version such as metadata:
+	// this must be ignored and removed by Client Native
+	configWithVersion := `# _version=123
+global
+	daemon`
+
+	err = c.PostRawConfiguration(&configWithVersion, 1, false)
+	require.NoError(t, err, "PostRawConfiguration")
+
+	v, vErr = c.GetVersion("")
+	require.NoError(t, vErr, "GetVersion")
+
+	assert.Equal(t, int64(2), v, "123 should be dropped, and version bumped")
 }
 
 func TestClient_GetConfigurationVersion(t *testing.T) {
