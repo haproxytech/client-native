@@ -372,6 +372,7 @@ func ParseTCPResponseRule(t types.TCPType) (*models.TCPResponseRule, error) {
 			return &models.TCPResponseRule{
 				Type:     models.TCPResponseRuleTypeContent,
 				Action:   models.TCPResponseRuleActionSilentDashDrop,
+				RstTTL:   a.RstTTL,
 				Cond:     a.Cond,
 				CondTest: a.CondTest,
 			}, nil
@@ -570,6 +571,7 @@ func SerializeTCPResponseRule(t models.TCPResponseRule) (types.TCPType, error) {
 		case models.TCPResponseRuleActionSilentDashDrop:
 			return &tcp_types.Content{
 				Action: &actions.SilentDrop{
+					RstTTL:   t.RstTTL,
 					Cond:     t.Cond,
 					CondTest: t.CondTest,
 				},

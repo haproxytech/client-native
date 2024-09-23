@@ -230,6 +230,10 @@ func (s HTTPRequestRule) Equal(t HTTPRequestRule, opts ...Options) bool {
 		return false
 	}
 
+	if s.RstTTL != t.RstTTL {
+		return false
+	}
+
 	if s.ScExpr != t.ScExpr {
 		return false
 	}
@@ -564,6 +568,10 @@ func (s HTTPRequestRule) Diff(t HTTPRequestRule, opts ...Options) map[string][]i
 
 	if !equalPointers(s.ReturnStatusCode, t.ReturnStatusCode) {
 		diff["ReturnStatusCode"] = []interface{}{ValueOrNil(s.ReturnStatusCode), ValueOrNil(t.ReturnStatusCode)}
+	}
+
+	if s.RstTTL != t.RstTTL {
+		diff["RstTTL"] = []interface{}{s.RstTTL, t.RstTTL}
 	}
 
 	if s.ScExpr != t.ScExpr {

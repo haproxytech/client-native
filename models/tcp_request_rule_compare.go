@@ -109,6 +109,10 @@ func (s TCPRequestRule) Equal(t TCPRequestRule, opts ...Options) bool {
 		return false
 	}
 
+	if s.RstTTL != t.RstTTL {
+		return false
+	}
+
 	if s.ScIdx != t.ScIdx {
 		return false
 	}
@@ -271,6 +275,10 @@ func (s TCPRequestRule) Diff(t TCPRequestRule, opts ...Options) map[string][]int
 
 	if s.ResolveVar != t.ResolveVar {
 		diff["ResolveVar"] = []interface{}{s.ResolveVar, t.ResolveVar}
+	}
+
+	if s.RstTTL != t.RstTTL {
+		diff["RstTTL"] = []interface{}{s.RstTTL, t.RstTTL}
 	}
 
 	if s.ScIdx != t.ScIdx {

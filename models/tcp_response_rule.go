@@ -92,6 +92,9 @@ type TCPResponseRule struct {
 	// +kubebuilder:validation:Minimum=-1024
 	NiceValue int64 `json:"nice_value,omitempty"`
 
+	// rst ttl
+	RstTTL int64 `json:"rst_ttl,omitempty"`
+
 	// sc expr
 	ScExpr string `json:"sc_expr,omitempty"`
 
