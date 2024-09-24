@@ -210,6 +210,9 @@ type HTTPRequestRule struct {
 	// Minimum: 200
 	ReturnStatusCode *int64 `json:"return_status_code,omitempty"`
 
+	// rst ttl
+	RstTTL int64 `json:"rst_ttl,omitempty"`
+
 	// sc expr
 	ScExpr string `json:"sc_expr,omitempty"`
 

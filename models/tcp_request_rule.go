@@ -105,6 +105,9 @@ type TCPRequestRule struct {
 	// resolve var
 	ResolveVar string `json:"resolve_var,omitempty"`
 
+	// rst ttl
+	RstTTL int64 `json:"rst_ttl,omitempty"`
+
 	// sc idx
 	ScIdx string `json:"sc_idx,omitempty"`
 
