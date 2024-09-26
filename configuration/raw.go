@@ -180,7 +180,7 @@ func (c *client) PostRawConfiguration(config *string, version int64, skipVersion
 
 	w := bufio.NewWriter(tmp)
 	if !skipVersionCheck {
-		_, _ = w.WriteString(fmt.Sprintf("# _version=%v\n%v", version, c.dropVersionFromRaw(*config)))
+		_, _ = w.WriteString(fmt.Sprintf("# _version=%d\n%s", version, c.dropVersionFromRaw(*config)))
 	} else {
 		_, _ = w.WriteString(*config)
 	}
@@ -206,7 +206,7 @@ func (c *client) PostRawConfiguration(config *string, version int64, skipVersion
 
 // dropVersionFromRaw is used when force pushing a raw configuration with version check:
 // if the provided user input has already a version metadata it must be withdrawn.
-func (c *client) dropVersionFromRaw(input string) *string {
+func (c *client) dropVersionFromRaw(input string) string {
 	scanner := bufio.NewScanner(strings.NewReader(input))
 
 	var sanitized strings.Builder
@@ -222,9 +222,7 @@ func (c *client) dropVersionFromRaw(input string) *string {
 		sanitized.WriteByte('\n')
 	}
 
-	str := sanitized.String()
-
-	return &str
+	return sanitized.String()
 }
 
 func (c *client) validateConfigFile(confFile string) error {
