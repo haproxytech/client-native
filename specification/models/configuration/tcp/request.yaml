@@ -62,7 +62,7 @@ tcp_request_rule:
           value: [connection, content, session]
           required: true
     capture_sample:
-      pattern: '^[^\s]+$'
+      pattern: '^(?:[A-Za-z]+\("([A-Za-z\s]+)"\)|[A-Za-z]+)'
       x-display-name: Capture Sample
       type: string
       x-dependency:

@@ -27,6 +27,7 @@ import (
 
 func TestRequeststcp(t *testing.T) {
 	tests := map[string]bool{
+		`tcp-request content capture str("DNS resolution failure") len 32 unless dns_successful`: true,
 		"tcp-request content accept":                                                   true,
 		"tcp-request content accept if !HTTP":                                          true,
 		"tcp-request content reject":                                                   true,

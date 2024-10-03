@@ -1553,6 +1553,10 @@ const frontend_httprequestcapturereqcookcntFirs = `
 frontend test
   http-request capture req.cook_cnt(FirstVisit),bool len 10
 `
+const frontend_httprequestcapturestrDNSresoluti = `
+frontend test
+  http-request capture str("DNS resolution failure") len 32 unless dns_successful
+`
 const frontend_httprequestaddheaderAuthorizatio = `
 frontend test
   http-request add-header Authorization Basic\ eC1oYXByb3h5LXJlY3J1aXRzOlBlb3BsZSB3aG8gZGVjb2RlIG1lc3NhZ2VzIG9mdGVuIGxvdmUgd29ya2luZyBhdCBIQVByb3h5LiBEbyBub3QgYmUgc2h5LCBjb250YWN0IHVz
@@ -2924,6 +2928,10 @@ frontend test
 const frontend_tcprequestcontentswitchmodehttpp = `
 frontend test
   tcp-request content switch-mode http proto my-proto
+`
+const frontend_tcprequestcontentcapturestrDNSre = `
+frontend test
+  tcp-request content capture str("DNS resolution failure") len 32 unless dns_successful
 `
 const frontend_tcpresponsecontentluafoo = `
 frontend test
