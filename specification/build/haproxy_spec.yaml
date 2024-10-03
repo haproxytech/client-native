@@ -4386,7 +4386,7 @@ definitions:
             value: capture
         x-display-name: Capture Len
       capture_sample:
-        pattern: ^[^\s]+$
+        pattern: ^(?:[A-Za-z]+\("([A-Za-z\s]+)"\)|[A-Za-z]+)
         type: string
         x-dependency:
           type:
@@ -5603,7 +5603,7 @@ definitions:
             value: capture
         x-display-name: Capture Len
       capture_sample:
-        pattern: ^[^\s]+$
+        pattern: ^(?:[A-Za-z]+\("([A-Za-z\s]+)"\)|[A-Za-z]+)
         type: string
         x-dependency:
           type:
@@ -6288,7 +6288,7 @@ definitions:
               - content
         x-display-name: Capture Length
       capture_sample:
-        pattern: ^[^\s]+$
+        pattern: ^(?:[A-Za-z]+\("([A-Za-z\s]+)"\)|[A-Za-z]+)
         type: string
         x-dependency:
           action:

@@ -271,6 +271,7 @@ type Action interface {
 //test:fail:http-request
 //test:fail:http-request capture req.cook_cnt(FirstVisit),bool strlen 10
 //test:frontend-ok:http-request capture req.cook_cnt(FirstVisit),bool len 10
+//test:frontend-ok:http-request capture str("DNS resolution failure") len 32 unless dns_successful
 //test:ok:http-request set-map(map.lst) %[src] %[req.hdr(X-Value)] if value
 //test:ok:http-request set-map(map.lst) %[src] %[req.hdr(X-Value)]
 //test:fail:http-request set-map(map.lst) %[src]
@@ -958,6 +959,7 @@ type TCPType interface {
 //test:ok:tcp-request content reject if !HTTP
 //test:ok:tcp-request content capture req.payload(0,6) len 6
 //test:ok:tcp-request content capture req.payload(0,6) len 6 if !HTTP
+//test:frontend-ok:tcp-request content capture str("DNS resolution failure") len 32 unless dns_successful
 //test:ok:tcp-request content do-resolve(txn.myip,mydns,ipv6) capture.req.hdr(0),lower
 //test:ok:tcp-request content do-resolve(txn.myip,mydns) capture.req.hdr(0),lower
 //test:ok:tcp-request content set-priority-class int(1)

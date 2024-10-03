@@ -2267,6 +2267,7 @@ frontend test
   http-request set-fc-mark 0
   http-request set-fc-tos 0xff if TRUE
   http-request capture req.cook_cnt(FirstVisit),bool len 10
+  http-request capture str("DNS resolution failure") len 32 unless dns_successful
   http-request add-header Authorization Basic\ eC1oYXByb3h5LXJlY3J1aXRzOlBlb3BsZSB3aG8gZGVjb2RlIG1lc3NhZ2VzIG9mdGVuIGxvdmUgd29ya2luZyBhdCBIQVByb3h5LiBEbyBub3QgYmUgc2h5LCBjb250YWN0IHVz
   http-request add-header Authorisation "Basic eC1oYXByb3h5LXJlY3J1aXRzOlBlb3BsZSB3aG8gZGVjb2RlIG1lc3NhZ2VzIG9mdGVuIGxvdmUgd29ya2luZyBhdCBIQVByb3h5LiBEbyBub3QgYmUgc2h5LCBjb250YWN0IHVz"
   http-request return status 200 content-type "text/plain" string "My content" if { var(txn.myip) -m found }
@@ -2620,6 +2621,7 @@ frontend test
   tcp-request content set-bc-tos 0xff if some_check
   tcp-request content set-fc-mark 0xffffffff
   tcp-request content set-fc-tos 100
+  tcp-request content capture str("DNS resolution failure") len 32 unless dns_successful
   tcp-response content lua.foo
   tcp-response content lua.foo param if !HTTP
   tcp-response content lua.foo param param1
@@ -4374,6 +4376,8 @@ var configTests = []configTest{{`  command spoa-mirror --runtime 0 --mirror-url 
 `, 3},
 	{`  http-request capture req.cook_cnt(FirstVisit),bool len 10
 `, 1},
+	{`  http-request capture str("DNS resolution failure") len 32 unless dns_successful
+`, 1},
 	{`  http-response set-map(map.lst) %[src] %[res.hdr(X-Value)] if value
 `, 3},
 	{`  http-response set-map(map.lst) %[src] %[res.hdr(X-Value)]
@@ -5120,6 +5124,8 @@ var configTests = []configTest{{`  command spoa-mirror --runtime 0 --mirror-url 
 `, 3},
 	{`  tcp-request content set-fc-tos 100
 `, 3},
+	{`  tcp-request content capture str("DNS resolution failure") len 32 unless dns_successful
+`, 1},
 	{`  tcp-response content lua.foo
 `, 2},
 	{`  tcp-response content lua.foo param if !HTTP
