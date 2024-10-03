@@ -37,7 +37,7 @@ http_after_response_rule:
         - unset-var
       x-nullable: false
     capture_sample:
-      pattern: '^[^\s]+$'
+      pattern: '^(?:[A-Za-z]+\("([A-Za-z\s]+)"\)|[A-Za-z]+)'
       x-display-name: Capture Sample
       type: string
       x-dependency:

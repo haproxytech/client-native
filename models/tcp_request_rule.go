@@ -55,8 +55,8 @@ type TCPRequestRule struct {
 	CaptureLen int64 `json:"capture_len,omitempty"`
 
 	// capture sample
-	// Pattern: ^[^\s]+$
-	// +kubebuilder:validation:Pattern=`^[^\s]+$`
+	// Pattern: ^(?:[A-Za-z]+\("([A-Za-z\s]+)"\)|[A-Za-z]+)
+	// +kubebuilder:validation:Pattern=`^(?:[A-Za-z]+\("([A-Za-z\s]+)"\)|[A-Za-z]+)`
 	CaptureSample string `json:"capture_sample,omitempty"`
 
 	// cond
@@ -389,7 +389,7 @@ func (m *TCPRequestRule) validateCaptureSample(formats strfmt.Registry) error {
 		return nil
 	}
 
-	if err := validate.Pattern("capture_sample", "body", m.CaptureSample, `^[^\s]+$`); err != nil {
+	if err := validate.Pattern("capture_sample", "body", m.CaptureSample, `^(?:[A-Za-z]+\("([A-Za-z\s]+)"\)|[A-Za-z]+)`); err != nil {
 		return err
 	}
 
