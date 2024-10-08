@@ -16,10 +16,10 @@
 package runtime
 
 import (
-	"context"
 	"fmt"
 	"net"
 	"strings"
+	"sync"
 	"time"
 )
 
@@ -32,23 +32,10 @@ const (
 
 type socketType string
 
-// TaskResponse ...
-type TaskResponse struct {
-	err    error
-	result string
-}
-
-// Task has command to execute on runtime api, and response channel for result
-type Task struct {
-	command  string
-	response chan TaskResponse
-	socket   socketType
-}
-
 // SingleRuntime handles one runtime API
 type SingleRuntime struct {
-	jobs       chan Task
 	socketPath string
+	mtx        sync.RWMutex
 	worker     int
 	process    int
 }
@@ -57,12 +44,10 @@ type SingleRuntime struct {
 // give the path to the master socket path, and non 0 number for workers. Process is for
 // nbproc > 1. In master-worker mode it's the same as the worker number, but when having
 // multiple stats socket lines bound to processes then use the correct process number
-func (s *SingleRuntime) Init(ctx context.Context, socketPath string, worker int, process int) error {
+func (s *SingleRuntime) Init(socketPath string, worker int, process int) error {
 	s.socketPath = socketPath
-	s.jobs = make(chan Task)
 	s.worker = worker
 	s.process = process
-	go s.handleIncomingJobs(ctx)
 	// check if we have a valid scket
 	if _, err := s.ExecuteRaw("help"); err != nil {
 		return err
@@ -70,26 +55,9 @@ func (s *SingleRuntime) Init(ctx context.Context, socketPath string, worker int,
 	return nil
 }
 
-func (s *SingleRuntime) handleIncomingJobs(ctx context.Context) {
-	for {
-		select {
-		case job, ok := <-s.jobs:
-			if !ok {
-				return
-			}
-			result, err := s.readFromSocket(job.command, job.socket)
-			if err != nil {
-				job.response <- TaskResponse{err: err}
-			} else {
-				job.response <- TaskResponse{result: result}
-			}
-		case <-ctx.Done():
-			return
-		}
-	}
-}
-
 func (s *SingleRuntime) readFromSocket(command string, socket socketType) (string, error) {
+	s.mtx.Lock()
+	defer s.mtx.Unlock()
 	var api net.Conn
 	var err error
 
@@ -182,17 +150,10 @@ func (s *SingleRuntime) ExecuteMaster(command string) (string, error) {
 }
 
 func (s *SingleRuntime) executeRaw(command string, retry int, socket socketType) (string, error) {
-	response := make(chan TaskResponse)
-	task := Task{
-		command:  command,
-		response: response,
-		socket:   socket,
-	}
-	s.jobs <- task
-	rsp := <-response
-	if rsp.err != nil && retry > 0 {
+	result, err := s.readFromSocket(command, socket)
+	if err != nil && retry > 0 {
 		retry--
 		return s.executeRaw(command, retry, socket)
 	}
-	return rsp.result, rsp.err
+	return result, err
 }

@@ -147,7 +147,7 @@ type Runtime interface {
 	Raw
 }
 
-func New(ctx context.Context, opt ...options.RuntimeOption) (Runtime, error) {
+func New(_ context.Context, opt ...options.RuntimeOption) (Runtime, error) {
 	c := &client{
 		options: options.RuntimeOptions{},
 	}
@@ -161,9 +161,9 @@ func New(ctx context.Context, opt ...options.RuntimeOption) (Runtime, error) {
 	}
 
 	if c.options.MasterSocketData != nil {
-		err = c.initWithMasterSocket(ctx, c.options.MasterSocketData.MasterSocketPath, c.options.MasterSocketData.Nbproc)
+		err = c.initWithMasterSocket(c.options.MasterSocketData.MasterSocketPath, c.options.MasterSocketData.Nbproc)
 	} else {
-		err = c.initWithSockets(ctx, c.options.Sockets)
+		err = c.initWithSockets(c.options.Sockets)
 	}
 	if err != nil {
 		return nil, err

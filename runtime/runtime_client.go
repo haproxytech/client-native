@@ -16,7 +16,6 @@
 package runtime
 
 import (
-	"context"
 	"fmt"
 	"io"
 	"mime/multipart"
@@ -38,7 +37,7 @@ import (
 type client struct {
 	haproxyVersion *HAProxyVersion
 	options        options.RuntimeOptions
-	runtimes       []SingleRuntime
+	runtimes       []*SingleRuntime
 }
 
 const (
@@ -49,11 +48,11 @@ const (
 	maxBufSize = 8192
 )
 
-func (c *client) initWithSockets(ctx context.Context, socketPath map[int]string) error {
-	c.runtimes = make([]SingleRuntime, 0)
+func (c *client) initWithSockets(socketPath map[int]string) error {
+	c.runtimes = make([]*SingleRuntime, 0)
 	for process, path := range socketPath {
-		runtime := SingleRuntime{}
-		err := runtime.Init(ctx, path, 0, process)
+		runtime := &SingleRuntime{}
+		err := runtime.Init(path, 0, process)
 		if err != nil {
 			return err
 		}
@@ -63,17 +62,17 @@ func (c *client) initWithSockets(ctx context.Context, socketPath map[int]string)
 	return nil
 }
 
-func (c *client) initWithMasterSocket(ctx context.Context, masterSocketPath string, nbproc int) error {
+func (c *client) initWithMasterSocket(masterSocketPath string, nbproc int) error {
 	if nbproc == 0 {
 		nbproc = 1
 	}
 	if masterSocketPath == "" {
 		return fmt.Errorf("master socket not configured")
 	}
-	c.runtimes = make([]SingleRuntime, nbproc)
+	c.runtimes = make([]*SingleRuntime, nbproc)
 	for i := 1; i <= nbproc; i++ {
-		runtime := SingleRuntime{}
-		err := runtime.Init(ctx, masterSocketPath, i, i)
+		runtime := &SingleRuntime{}
+		err := runtime.Init(masterSocketPath, i, i)
 		if err != nil {
 			return err
 		}

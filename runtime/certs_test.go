@@ -1,7 +1,6 @@
 package runtime
 
 import (
-	"context"
 	"reflect"
 	"testing"
 	"time"
@@ -57,9 +56,7 @@ func TestSingleRuntime_ShowCerts(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			haProxy.SetResponses(&tt.socketResponse)
 			s := &SingleRuntime{}
-			ctx, cancel := context.WithTimeout(context.Background(), time.Duration(time.Second))
-			defer cancel()
-			err := s.Init(ctx, tt.fields.socketPath, tt.fields.process, tt.fields.worker)
+			err := s.Init(tt.fields.socketPath, tt.fields.process, tt.fields.worker)
 			if err != nil {
 				t.Errorf("SingleRuntime.Init() error = %v", err)
 				return
@@ -148,9 +145,7 @@ func TestSingleRuntime_GetCert(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			haProxy.SetResponses(&tt.socketResponse)
 			s := &SingleRuntime{}
-			ctx, cancel := context.WithTimeout(context.Background(), time.Duration(time.Second))
-			defer cancel()
-			err := s.Init(ctx, tt.fields.socketPath, tt.fields.process, tt.fields.worker)
+			err := s.Init(tt.fields.socketPath, tt.fields.process, tt.fields.worker)
 			if err != nil {
 				t.Errorf("SingleRuntime.Init() error = %v", err)
 				return
@@ -234,9 +229,7 @@ func TestSingleRuntime_ShowCertEntry(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			haProxy.SetResponses(&tt.socketResponse)
 			s := &SingleRuntime{}
-			ctx, cancel := context.WithTimeout(context.Background(), time.Duration(time.Second))
-			defer cancel()
-			err := s.Init(ctx, tt.fields.socketPath, tt.fields.process, tt.fields.worker)
+			err := s.Init(tt.fields.socketPath, tt.fields.process, tt.fields.worker)
 			if err != nil {
 				t.Errorf("SingleRuntime.Init() error = %v", err)
 				return
@@ -259,7 +252,6 @@ func TestSingleRuntime_NewCertEntry(t *testing.T) {
 	defer haProxy.Stop()
 
 	type fields struct {
-		jobs       chan Task
 		socketPath string
 		worker     int
 		process    int
@@ -312,9 +304,7 @@ func TestSingleRuntime_NewCertEntry(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			haProxy.SetResponses(&tt.socketResponse)
 			s := &SingleRuntime{}
-			ctx, cancel := context.WithTimeout(context.Background(), time.Duration(time.Second))
-			defer cancel()
-			err := s.Init(ctx, tt.fields.socketPath, tt.fields.process, tt.fields.worker)
+			err := s.Init(tt.fields.socketPath, tt.fields.process, tt.fields.worker)
 			if err != nil {
 				t.Errorf("SingleRuntime.Init() error = %v", err)
 				return
@@ -332,7 +322,6 @@ func TestSingleRuntime_SetCertEntry(t *testing.T) {
 	defer haProxy.Stop()
 
 	type fields struct {
-		jobs       chan Task
 		socketPath string
 		worker     int
 		process    int
@@ -401,9 +390,7 @@ func TestSingleRuntime_SetCertEntry(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			haProxy.SetResponses(&tt.socketResponse)
 			s := &SingleRuntime{}
-			ctx, cancel := context.WithTimeout(context.Background(), time.Duration(time.Second))
-			defer cancel()
-			err := s.Init(ctx, tt.fields.socketPath, tt.fields.process, tt.fields.worker)
+			err := s.Init(tt.fields.socketPath, tt.fields.process, tt.fields.worker)
 			if err != nil {
 				t.Errorf("SingleRuntime.Init() error = %v", err)
 				return
@@ -421,7 +408,6 @@ func TestSingleRuntime_CommitCertEntry(t *testing.T) {
 	defer haProxy.Stop()
 
 	type fields struct {
-		jobs       chan Task
 		socketPath string
 		worker     int
 		process    int
@@ -476,9 +462,7 @@ func TestSingleRuntime_CommitCertEntry(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			haProxy.SetResponses(&tt.socketResponse)
 			s := &SingleRuntime{}
-			ctx, cancel := context.WithTimeout(context.Background(), time.Duration(time.Second))
-			defer cancel()
-			err := s.Init(ctx, tt.fields.socketPath, tt.fields.process, tt.fields.worker)
+			err := s.Init(tt.fields.socketPath, tt.fields.process, tt.fields.worker)
 			if err != nil {
 				t.Errorf("SingleRuntime.Init() error = %v", err)
 				return
@@ -496,7 +480,6 @@ func TestSingleRuntime_AbortCertEntry(t *testing.T) {
 	defer haProxy.Stop()
 
 	type fields struct {
-		jobs       chan Task
 		socketPath string
 		worker     int
 		process    int
@@ -549,9 +532,7 @@ func TestSingleRuntime_AbortCertEntry(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			haProxy.SetResponses(&tt.socketResponse)
 			s := &SingleRuntime{}
-			ctx, cancel := context.WithTimeout(context.Background(), time.Duration(time.Second))
-			defer cancel()
-			err := s.Init(ctx, tt.fields.socketPath, tt.fields.process, tt.fields.worker)
+			err := s.Init(tt.fields.socketPath, tt.fields.process, tt.fields.worker)
 			if err != nil {
 				t.Errorf("SingleRuntime.Init() error = %v", err)
 				return
@@ -569,7 +550,6 @@ func TestSingleRuntime_DeleteCertEntry(t *testing.T) {
 	defer haProxy.Stop()
 
 	type fields struct {
-		jobs       chan Task
 		socketPath string
 		worker     int
 		process    int
@@ -622,9 +602,7 @@ func TestSingleRuntime_DeleteCertEntry(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			haProxy.SetResponses(&tt.socketResponse)
 			s := &SingleRuntime{}
-			ctx, cancel := context.WithTimeout(context.Background(), time.Duration(time.Second))
-			defer cancel()
-			err := s.Init(ctx, tt.fields.socketPath, tt.fields.process, tt.fields.worker)
+			err := s.Init(tt.fields.socketPath, tt.fields.process, tt.fields.worker)
 			if err != nil {
 				t.Errorf("SingleRuntime.Init() error = %v", err)
 				return
