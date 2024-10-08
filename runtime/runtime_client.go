@@ -16,7 +16,6 @@
 package runtime
 
 import (
-	"context"
 	"errors"
 	"fmt"
 	"io"
@@ -36,7 +35,7 @@ import (
 type client struct {
 	haproxyVersion *HAProxyVersion
 	options        options.RuntimeOptions
-	runtime        SingleRuntime
+	runtime        *SingleRuntime
 }
 
 const (
@@ -47,12 +46,12 @@ const (
 	maxBufSize = 8192
 )
 
-func (c *client) initWithSockets(ctx context.Context, opt options.RuntimeOptions) error {
+func (c *client) initWithSockets(opt options.RuntimeOptions) error {
 	socketPath := opt.Socket
 
-	runtime := SingleRuntime{}
+	runtime := &SingleRuntime{}
 	masterWorkerMode := false
-	err := runtime.Init(ctx, socketPath, masterWorkerMode, opt)
+	err := runtime.Init(socketPath, masterWorkerMode, opt)
 	if err != nil {
 		return err
 	}
@@ -61,15 +60,15 @@ func (c *client) initWithSockets(ctx context.Context, opt options.RuntimeOptions
 	return nil
 }
 
-func (c *client) initWithMasterSocket(ctx context.Context, opt options.RuntimeOptions) error {
+func (c *client) initWithMasterSocket(opt options.RuntimeOptions) error {
 	masterSocketPath := opt.MasterSocketData.MasterSocketPath
 
 	if masterSocketPath == "" {
 		return errors.New("master socket not configured")
 	}
-	runtime := SingleRuntime{}
+	runtime := &SingleRuntime{}
 	masterWorkerMode := true
-	err := runtime.Init(ctx, masterSocketPath, masterWorkerMode, opt)
+	err := runtime.Init(masterSocketPath, masterWorkerMode, opt)
 	if err != nil {
 		return err
 	}
