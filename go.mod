@@ -2,8 +2,6 @@ module github.com/haproxytech/client-native/v5
 
 go 1.22.0
 
-toolchain go1.22.7
-
 require (
 	github.com/go-faker/faker/v4 v4.5.0
 	github.com/go-openapi/errors v0.22.0
