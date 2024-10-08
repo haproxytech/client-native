@@ -16,11 +16,11 @@
 package runtime
 
 import (
-	"context"
 	"errors"
 	"fmt"
 	"net"
 	"strings"
+	"sync"
 	"time"
 
 	"github.com/haproxytech/client-native/v6/runtime/options"
@@ -35,41 +35,26 @@ const (
 
 type socketType string
 
-// TaskResponse ...
-type TaskResponse struct {
-	err    error
-	result string
-}
-
-// Task has command to execute on runtime api, and response channel for result
-type Task struct {
-	command  string
-	response chan TaskResponse
-	socket   socketType
-}
-
 // SingleRuntime handles one runtime API
 type SingleRuntime struct {
-	jobs             chan Task
 	socketPath       string
 	masterWorkerMode bool
+	mtx              sync.RWMutex
 }
 
-func (s SingleRuntime) IsValid() bool {
+func (s *SingleRuntime) IsValid() bool {
 	return s.socketPath != ""
 }
 
 // Init must be given path to runtime socket and a flag to indicate if it's in master-worker mode.
-func (s *SingleRuntime) Init(ctx context.Context, socketPath string, masterWorkerMode bool, opt ...options.RuntimeOptions) error {
+func (s *SingleRuntime) Init(socketPath string, masterWorkerMode bool, opt ...options.RuntimeOptions) error {
 	var runtimeOptions options.RuntimeOptions
 	if len(opt) > 0 {
 		runtimeOptions = opt[0]
 	}
 
 	s.socketPath = socketPath
-	s.jobs = make(chan Task)
 	s.masterWorkerMode = masterWorkerMode
-	go s.handleIncomingJobs(ctx)
 	if !runtimeOptions.DoNotCheckRuntimeOnInit {
 		if runtimeOptions.AllowDelayedStartMax != nil {
 			now := time.Now()
@@ -93,26 +78,9 @@ func (s *SingleRuntime) Init(ctx context.Context, socketPath string, masterWorke
 	return nil
 }
 
-func (s *SingleRuntime) handleIncomingJobs(ctx context.Context) {
-	for {
-		select {
-		case job, ok := <-s.jobs:
-			if !ok {
-				return
-			}
-			result, err := s.readFromSocket(job.command, job.socket)
-			if err != nil {
-				job.response <- TaskResponse{err: err}
-			} else {
-				job.response <- TaskResponse{result: result}
-			}
-		case <-ctx.Done():
-			return
-		}
-	}
-}
-
 func (s *SingleRuntime) readFromSocket(command string, socket socketType) (string, error) {
+	s.mtx.Lock()
+	defer s.mtx.Unlock()
 	var api net.Conn
 	var err error
 
@@ -205,17 +173,10 @@ func (s *SingleRuntime) ExecuteMaster(command string) (string, error) {
 }
 
 func (s *SingleRuntime) executeRaw(command string, retry int, socket socketType) (string, error) {
-	response := make(chan TaskResponse)
-	task := Task{
-		command:  command,
-		response: response,
-		socket:   socket,
-	}
-	s.jobs <- task
-	rsp := <-response
-	if rsp.err != nil && retry > 0 {
+	result, err := s.readFromSocket(command, socket)
+	if err != nil && retry > 0 {
 		retry--
 		return s.executeRaw(command, retry, socket)
 	}
-	return rsp.result, rsp.err
+	return result, err
 }
