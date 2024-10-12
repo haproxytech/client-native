@@ -61,6 +61,7 @@ var allowedErrorCodes = map[int64]struct{}{ //nolint:gochecknoglobals
 	403: {},
 	404: {},
 	405: {},
+	407: {},
 	408: {},
 	410: {},
 	413: {},
