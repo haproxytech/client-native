@@ -3106,6 +3106,36 @@
                     "port": 1023,
                     "shard": 1
                 }
+            },
+            "tables": {
+                "t1": {
+                    "expire": "5m",
+                    "name":    "t1",
+                    "no_purge": true,
+                    "size":    "200k",
+                    "store":   "gpc0,conn_rate(30s)",
+                    "type":    "string",
+                    "type_len": 1000
+                },
+                "t2": {
+                    "expire": "5m",
+                    "name":    "t2",
+                    "no_purge": true,
+                    "size":    "200k",
+                    "store":   "gpc0,gpc1,conn_rate(30s)",
+                    "type":    "string",
+                    "type_len": 1000
+                },
+                "t9": {
+                    "expire": "5m",
+                    "name":    "t9",
+                    "no_purge": true,
+                    "size":    "200k",
+                    "store":   "gpc0,conn_rate(30s)",
+                    "type":    "string",
+                    "type_len": 1000,
+                    "write_to": "t2"
+                }
             }
         }
     },

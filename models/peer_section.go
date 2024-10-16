@@ -46,6 +46,9 @@ type PeerSection struct {
 
 	// servers
 	Servers map[string]Server `json:"servers,omitempty"`
+
+	// tables
+	Tables map[string]Table `json:"tables,omitempty"`
 }
 
 // UnmarshalJSON unmarshals this object from a JSON structure
@@ -66,6 +69,8 @@ func (m *PeerSection) UnmarshalJSON(raw []byte) error {
 		PeerEntries map[string]PeerEntry `json:"peer_entries,omitempty"`
 
 		Servers map[string]Server `json:"servers,omitempty"`
+
+		Tables map[string]Table `json:"tables,omitempty"`
 	}
 	if err := swag.ReadJSON(raw, &dataAO1); err != nil {
 		return err
@@ -78,6 +83,8 @@ func (m *PeerSection) UnmarshalJSON(raw []byte) error {
 	m.PeerEntries = dataAO1.PeerEntries
 
 	m.Servers = dataAO1.Servers
+
+	m.Tables = dataAO1.Tables
 
 	return nil
 }
@@ -99,6 +106,8 @@ func (m PeerSection) MarshalJSON() ([]byte, error) {
 		PeerEntries map[string]PeerEntry `json:"peer_entries,omitempty"`
 
 		Servers map[string]Server `json:"servers,omitempty"`
+
+		Tables map[string]Table `json:"tables,omitempty"`
 	}
 
 	dataAO1.LogTargetList = m.LogTargetList
@@ -108,6 +117,8 @@ func (m PeerSection) MarshalJSON() ([]byte, error) {
 	dataAO1.PeerEntries = m.PeerEntries
 
 	dataAO1.Servers = m.Servers
+
+	dataAO1.Tables = m.Tables
 
 	jsonDataAO1, errAO1 := swag.WriteJSON(dataAO1)
 	if errAO1 != nil {
@@ -139,6 +150,10 @@ func (m *PeerSection) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateServers(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateTables(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -247,6 +262,33 @@ func (m *PeerSection) validateServers(formats strfmt.Registry) error {
 	return nil
 }
 
+func (m *PeerSection) validateTables(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.Tables) { // not required
+		return nil
+	}
+
+	for k := range m.Tables {
+
+		if err := validate.Required("tables"+"."+k, "body", m.Tables[k]); err != nil {
+			return err
+		}
+		if val, ok := m.Tables[k]; ok {
+			if err := val.Validate(formats); err != nil {
+				if ve, ok := err.(*errors.Validation); ok {
+					return ve.ValidateName("tables" + "." + k)
+				} else if ce, ok := err.(*errors.CompositeError); ok {
+					return ce.ValidateName("tables" + "." + k)
+				}
+				return err
+			}
+		}
+
+	}
+
+	return nil
+}
+
 // ContextValidate validate this peer section based on the context it is used
 func (m *PeerSection) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
 	var res []error
@@ -269,6 +311,10 @@ func (m *PeerSection) ContextValidate(ctx context.Context, formats strfmt.Regist
 	}
 
 	if err := m.contextValidateServers(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.contextValidateTables(ctx, formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -327,6 +373,21 @@ func (m *PeerSection) contextValidateServers(ctx context.Context, formats strfmt
 	for k := range m.Servers {
 
 		if val, ok := m.Servers[k]; ok {
+			if err := val.ContextValidate(ctx, formats); err != nil {
+				return err
+			}
+		}
+
+	}
+
+	return nil
+}
+
+func (m *PeerSection) contextValidateTables(ctx context.Context, formats strfmt.Registry) error {
+
+	for k := range m.Tables {
+
+		if val, ok := m.Tables[k]; ok {
 			if err := val.ContextValidate(ctx, formats); err != nil {
 				return err
 			}

@@ -4054,6 +4054,9 @@ definitions:
           servers:
             additionalProperties:
               $ref: '#/definitions/server'
+          tables:
+            additionalProperties:
+              $ref: '#/definitions/table'
         type: object
     description: Peer Section with all it's children resources
     type: object
