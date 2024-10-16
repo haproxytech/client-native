@@ -200,6 +200,17 @@ func parsePeerSection(name string, p parser.Parser) (*models.PeerSection, error)
 		return nil, errsa
 	}
 	ps.Servers = serversa
+
+	// tables
+	tables, err := ParseTables(name, p)
+	if err != nil {
+		return nil, err
+	}
+	tablesa, errsa := namedResourceArrayToMap(tables)
+	if errsa != nil {
+		return nil, errsa
+	}
+	ps.Tables = tablesa
 	return ps, nil
 }
 
@@ -231,6 +242,11 @@ func serializePeerSection(a StructuredToParserArgs, ps *models.PeerSection) erro
 	for i, log := range ps.LogTargetList {
 		if err = p.Insert(parser.Peers, ps.Name, "log", SerializeLogTarget(*log), i); err != nil {
 			return a.HandleError(strconv.FormatInt(int64(i), 10), PeersParentName, ps.Name, a.TID, a.TID == "", err)
+		}
+	}
+	for _, table := range ps.Tables {
+		if err = p.Insert(parser.Peers, ps.Name, "table", SerializeTable(table), -1); err != nil {
+			return a.HandleError(table.Name, PeersParentName, ps.Name, a.TID, a.TID == "", err)
 		}
 	}
 	return nil

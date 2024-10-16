@@ -19,6 +19,9 @@ peer_section:
         servers:
           additionalProperties:
             $ref: "#/definitions/server"
+        tables:
+          additionalProperties:
+            $ref: "#/definitions/table"
 peer_section_base:
   title: Peer Section Base
   description: HAProxy peer_section configuration

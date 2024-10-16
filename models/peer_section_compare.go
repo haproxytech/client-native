@@ -71,6 +71,16 @@ func (s PeerSection) Equal(t PeerSection, opts ...Options) bool {
 		}
 	}
 
+	if !CheckSameNilAndLenMap[string, Table](s.Tables, t.Tables, opt) {
+		return false
+	}
+
+	for k, v := range s.Tables {
+		if !t.Tables[k].Equal(v, opt) {
+			return false
+		}
+	}
+
 	return true
 }
 
@@ -127,6 +137,16 @@ func (s PeerSection) Diff(t PeerSection, opts ...Options) map[string][]interface
 	for k, v := range s.Servers {
 		if !t.Servers[k].Equal(v, opt) {
 			diff["Servers"] = []interface{}{s.Servers, t.Servers}
+		}
+	}
+
+	if !CheckSameNilAndLenMap[string, Table](s.Tables, t.Tables, opt) {
+		diff["Tables"] = []interface{}{s.Tables, t.Tables}
+	}
+
+	for k, v := range s.Tables {
+		if !t.Tables[k].Equal(v, opt) {
+			diff["Tables"] = []interface{}{s.Tables, t.Tables}
 		}
 	}
 
