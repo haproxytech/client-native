@@ -8,6 +8,10 @@ GOLANGCI_LINT_VERSION=1.61.0
 test:
 	go test ./...
 
+.PHONY: test-equal
+test-equal:
+	go test -tags equal ./...
+
 .PHONY: e2e
 e2e:
 	go install github.com/oktalz/gotest@latest

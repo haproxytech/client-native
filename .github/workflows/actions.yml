@@ -149,6 +149,21 @@ jobs:
     - name: Test
       run: |
         go test -race -v ./...
+  go-test-equal:
+    name: Test equal
+    needs: ["tidy","build"]
+    runs-on: ubuntu-latest
+    steps:
+    - name: Check out code
+      uses: actions/checkout@v3
+    - name: Set up Go
+      uses: actions/setup-go@v3
+      with:
+        go-version-file: 'go.mod'
+      id: go
+    - name: Test
+      run: |
+        go test -tags equal -race -v ./...
   e2e:
     name: e2e on HAProxy
     needs: ["go-test"]
