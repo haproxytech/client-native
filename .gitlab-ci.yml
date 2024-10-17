@@ -148,6 +148,20 @@ test:
   rules:
     - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
     - if: $CI_PIPELINE_SOURCE == 'push'
+
+test-equal:
+  stage: test
+  needs: ["build"]
+  image:
+    name: $CI_REGISTRY_GO/golang:$GO_VERSION
+    entrypoint: [""]
+  tags:
+    - go
+  script:
+    - gotest -v -t equal
+  rules:
+    - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
+    - if: $CI_PIPELINE_SOURCE == 'push'
 .e2e:
   stage: e2e
   needs: ["build"]

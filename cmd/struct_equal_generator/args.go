@@ -13,9 +13,9 @@ import (
 )
 
 type Args struct {
-	Licence     string
+	License     string
 	Directory   string
-	LicencePath string
+	LicensePath string
 	Selector    string
 	Files       []string
 }
@@ -32,18 +32,18 @@ func (a *Args) Parse() error { //nolint:gocognit
 			if i+1 >= len(os.Args) {
 				return errors.New("missing licence file after -l")
 			}
-			a.LicencePath = os.Args[i+1]
+			a.LicensePath = os.Args[i+1]
 			i++
 		case strings.HasPrefix(val, "--licence="):
-			a.LicencePath = strings.TrimPrefix(val, "--licence=")
+			a.LicensePath = strings.TrimPrefix(val, "--licence=")
 		default:
 			selector = val
 		}
 	}
 
-	if a.LicencePath != "" {
+	if a.LicensePath != "" {
 		var licence []byte
-		licence, err = os.ReadFile(a.LicencePath)
+		licence, err = os.ReadFile(a.LicensePath)
 		if err != nil {
 			return err
 		}
@@ -54,7 +54,7 @@ func (a *Args) Parse() error { //nolint:gocognit
 			s.WriteString(line)
 			s.WriteString("\n")
 		}
-		a.Licence = s.String()
+		a.License = s.String()
 	}
 	isDirectory := false
 	file, err := os.Open(selector)

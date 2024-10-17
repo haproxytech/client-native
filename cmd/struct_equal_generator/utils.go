@@ -28,7 +28,7 @@ func createUtilsFile(packageName string, args Args) error {
 
 	err = tmpl.Execute(file, map[string]interface{}{
 		"Package": packageName,
-		"Licence": args.Licence,
+		"License": args.License,
 	})
 	if err != nil {
 		return err

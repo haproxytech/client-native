@@ -112,7 +112,7 @@ func generate(fileName string, args Args) (string, error) { //nolint:gocognit,ma
 
 	err = tmpl.Execute(file, map[string]interface{}{
 		"Package": node.Name.String(),
-		"Licence": args.Licence,
+		"License": args.License,
 	})
 	if err != nil {
 		return packageName, err
@@ -127,8 +127,12 @@ func generate(fileName string, args Args) (string, error) { //nolint:gocognit,ma
 
 	err = tmpl2.Execute(fileTest, map[string]interface{}{
 		"Package": node.Name.String(),
-		"Licence": args.Licence,
+		"License": args.License,
 	})
+	if err != nil {
+		return packageName, err
+	}
+	_, err = fileTest.WriteString("//go:build equal\n")
 	if err != nil {
 		return packageName, err
 	}
