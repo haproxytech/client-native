@@ -1198,3 +1198,71 @@ func (c *client) CommitACL(version, name string) error {
 	}
 	return nil
 }
+
+func (c *client) NewCertEntry(filename string) error {
+	if len(c.runtimes) == 0 {
+		return fmt.Errorf("no valid runtimes found")
+	}
+	var lastErr error
+	for _, runtime := range c.runtimes {
+		err := runtime.NewCertEntry(filename)
+		if err != nil {
+			lastErr = err
+		}
+	}
+	if lastErr != nil {
+		return lastErr
+	}
+	return nil
+}
+
+func (c *client) SetCertEntry(filename string, payload string) error {
+	if len(c.runtimes) == 0 {
+		return fmt.Errorf("no valid runtimes found")
+	}
+	var lastErr error
+	for _, runtime := range c.runtimes {
+		err := runtime.SetCertEntry(filename, payload)
+		if err != nil {
+			lastErr = err
+		}
+	}
+	if lastErr != nil {
+		return lastErr
+	}
+	return nil
+}
+
+func (c *client) CommitCertEntry(filename string) error {
+	if len(c.runtimes) == 0 {
+		return fmt.Errorf("no valid runtimes found")
+	}
+	var lastErr error
+	for _, runtime := range c.runtimes {
+		err := runtime.CommitCertEntry(filename)
+		if err != nil {
+			lastErr = err
+		}
+	}
+	if lastErr != nil {
+		return lastErr
+	}
+	return nil
+}
+
+func (c *client) AddCrtListEntry(crtList string, entry CrtListEntry) error {
+	if len(c.runtimes) == 0 {
+		return fmt.Errorf("no valid runtimes found")
+	}
+	var lastErr error
+	for _, runtime := range c.runtimes {
+		err := runtime.AddCrtListEntry(crtList, entry)
+		if err != nil {
+			lastErr = err
+		}
+	}
+	if lastErr != nil {
+		return lastErr
+	}
+	return nil
+}
