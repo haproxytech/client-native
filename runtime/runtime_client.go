@@ -1250,6 +1250,23 @@ func (c *client) CommitCertEntry(filename string) error {
 	return nil
 }
 
+func (c *client) AbortCertEntry(filename string) error {
+	if len(c.runtimes) == 0 {
+		return fmt.Errorf("no valid runtimes found")
+	}
+	var lastErr error
+	for _, runtime := range c.runtimes {
+		err := runtime.AbortCertEntry(filename)
+		if err != nil {
+			lastErr = err
+		}
+	}
+	if lastErr != nil {
+		return lastErr
+	}
+	return nil
+}
+
 func (c *client) AddCrtListEntry(crtList string, entry CrtListEntry) error {
 	if len(c.runtimes) == 0 {
 		return fmt.Errorf("no valid runtimes found")
