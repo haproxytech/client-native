@@ -979,3 +979,48 @@ func (c *client) SocketPath() string {
 func (c *client) IsStatsSocket() bool {
 	return !c.runtime.masterWorkerMode
 }
+
+func (c *client) NewCertEntry(filename string) error {
+	if !c.runtime.IsValid() {
+		return errors.New("no valid runtime found")
+	}
+	if err := c.runtime.NewCertEntry(filename); err != nil {
+		return fmt.Errorf("%s %w", c.runtime.socketPath, err)
+	}
+
+	return nil
+}
+
+func (c *client) SetCertEntry(filename string, payload string) error {
+	if !c.runtime.IsValid() {
+		return errors.New("no valid runtime found")
+	}
+	if err := c.runtime.SetCertEntry(filename, payload); err != nil {
+		return fmt.Errorf("%s %w", c.runtime.socketPath, err)
+	}
+
+	return nil
+}
+
+func (c *client) CommitCertEntry(filename string) error {
+	if !c.runtime.IsValid() {
+		return errors.New("no valid runtime found")
+	}
+	if err := c.runtime.CommitCertEntry(filename); err != nil {
+		return fmt.Errorf("%s %w", c.runtime.socketPath, err)
+	}
+
+	return nil
+}
+
+func (c *client) AddCrtListEntry(crtList string, entry CrtListEntry) error {
+	if !c.runtime.IsValid() {
+		return errors.New("no valid runtime found")
+	}
+
+	if err := c.runtime.AddCrtListEntry(crtList, entry); err != nil {
+		return fmt.Errorf("%s %w", c.runtime.socketPath, err)
+	}
+
+	return nil
+}
