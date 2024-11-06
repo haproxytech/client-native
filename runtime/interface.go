@@ -140,6 +140,7 @@ type Cert interface {
 	NewCertEntry(filename string) error
 	SetCertEntry(filename, payload string) error
 	CommitCertEntry(filename string) error
+	AbortCertEntry(filename string) error
 	AddCrtListEntry(crtList string, entry CrtListEntry) error
 }
 
