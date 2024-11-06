@@ -1013,6 +1013,17 @@ func (c *client) CommitCertEntry(filename string) error {
 	return nil
 }
 
+func (c *client) AbortCertEntry(filename string) error {
+	if !c.runtime.IsValid() {
+		return errors.New("no valid runtime found")
+	}
+	if err := c.runtime.AbortCertEntry(filename); err != nil {
+		return fmt.Errorf("%s %w", c.runtime.socketPath, err)
+	}
+
+	return nil
+}
+
 func (c *client) AddCrtListEntry(crtList string, entry CrtListEntry) error {
 	if !c.runtime.IsValid() {
 		return errors.New("no valid runtime found")
