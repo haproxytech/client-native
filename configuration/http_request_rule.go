@@ -336,6 +336,10 @@ func ParseHTTPRequestRule(f types.Action) (*models.HTTPRequestRule, error) { //n
 			CondTest:  v.CondTest,
 		}
 	case *http_actions.Deny:
+		var returnContentTypePtr *string
+		if v.ContentType != "" {
+			returnContentTypePtr = &v.ContentType
+		}
 		rule = &models.HTTPRequestRule{
 			Type:                "deny",
 			Cond:                v.Cond,
@@ -343,7 +347,7 @@ func ParseHTTPRequestRule(f types.Action) (*models.HTTPRequestRule, error) { //n
 			ReturnHeaders:       actionHdr2ModelHdr(v.Hdrs),
 			ReturnContent:       v.Content,
 			ReturnContentFormat: v.ContentFormat,
-			ReturnContentType:   &v.ContentType,
+			ReturnContentType:   returnContentTypePtr,
 			DenyStatus:          v.Status,
 		}
 	case *http_actions.DisableL7Retry:
@@ -454,13 +458,17 @@ func ParseHTTPRequestRule(f types.Action) (*models.HTTPRequestRule, error) { //n
 			CondTest:  v.CondTest,
 		}
 	case *http_actions.Return:
+		var returnContentTypePtr *string
+		if v.ContentType != "" {
+			returnContentTypePtr = &v.ContentType
+		}
 		rule = &models.HTTPRequestRule{
 			Cond:                v.Cond,
 			CondTest:            v.CondTest,
 			ReturnHeaders:       actionHdr2ModelHdr(v.Hdrs),
 			ReturnContent:       v.Content,
 			ReturnContentFormat: v.ContentFormat,
-			ReturnContentType:   &v.ContentType,
+			ReturnContentType:   returnContentTypePtr,
 			ReturnStatusCode:    v.Status,
 			Type:                "return",
 		}

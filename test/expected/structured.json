@@ -1889,7 +1889,6 @@
                 {
                     "cond": "unless",
                     "cond_test": "src 192.168.0.0/16",
-                    "return_content_type": "",
                     "type": "deny"
                 },
                 {
