@@ -852,17 +852,11 @@ func SerializeServer(s models.Server) types.Server {
 }
 
 func GetServerByName(name string, parentType string, parentName string, p parser.Parser) (*models.Server, int) {
-	servers, err := ParseServers(parentType, parentName, p)
+	server, i, err := FindServers(parentType, parentName, name, p)
 	if err != nil {
-		return nil, 0
+		return nil, i
 	}
-
-	for i, s := range servers {
-		if s.Name == name {
-			return s, i
-		}
-	}
-	return nil, 0
+	return server, i
 }
 
 func sectionType(parentType string) parser.Section {
@@ -876,4 +870,27 @@ func sectionType(parentType string) parser.Section {
 		sectionType = parser.Peers
 	}
 	return sectionType
+}
+
+func FindServers(parentType string, parentName string, serverName string, p parser.Parser) (*models.Server, int, error) {
+	data, err := p.Get(sectionType(parentType), parentName, "server", false)
+	if err != nil {
+		if errors.Is(err, parser_errors.ErrFetch) {
+			return nil, 0, nil
+		}
+		return nil, 0, err
+	}
+
+	ondiskServers, ok := data.([]types.Server)
+	if !ok {
+		return nil, 0, misc.CreateTypeAssertError("server")
+	}
+
+	for i, ondiskServer := range ondiskServers {
+		if ondiskServer.Name == serverName {
+			return ParseServer(ondiskServer), i, nil
+		}
+	}
+
+	return nil, 0, nil
 }
