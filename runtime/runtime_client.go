@@ -22,22 +22,20 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
-	"sync"
 
 	"github.com/google/go-cmp/cmp"
-	"github.com/pkg/errors"
-
 	native_errors "github.com/haproxytech/client-native/v5/errors"
 	"github.com/haproxytech/client-native/v5/misc"
 	"github.com/haproxytech/client-native/v5/models"
 	"github.com/haproxytech/client-native/v5/runtime/options"
+	"github.com/pkg/errors"
+	"golang.org/x/sync/singleflight"
 )
 
 // Client handles multiple HAProxy clients
 type client struct {
-	haproxyVersion *HAProxyVersion
-	options        options.RuntimeOptions
-	runtimes       []*SingleRuntime
+	options  options.RuntimeOptions
+	runtimes []*SingleRuntime
 }
 
 const (
@@ -104,44 +102,53 @@ func (c *client) GetInfo() (models.ProcessInfos, error) {
 	return result, nil
 }
 
-var versionSync sync.Once //nolint:gochecknoglobals
+var (
+	haproxyVersion *HAProxyVersion        //nolint:gochecknoglobals
+	versionKey     = "version"            //nolint:gochecknoglobals
+	versionSfg     = singleflight.Group{} //nolint:gochecknoglobals
+)
 
 // GetVersion returns info from the socket
 func (c *client) GetVersion() (HAProxyVersion, error) {
 	var err error
-	versionSync.Do(func() {
+	if haproxyVersion != nil {
+		return *haproxyVersion, nil
+	}
+	_, err, _ = versionSfg.Do(versionKey, func() (interface{}, error) {
 		version := &HAProxyVersion{}
 		for _, runtime := range c.runtimes {
 			var response string
 			response, err = runtime.ExecuteRaw("show info")
 			if err != nil {
-				return
+				return HAProxyVersion{}, err
 			}
 			for _, line := range strings.Split(response, "\n") {
 				if strings.HasPrefix(line, "Version: ") {
 					err = version.ParseHAProxyVersion(strings.TrimPrefix(line, "Version: "))
 					if err != nil {
-						return
+						return HAProxyVersion{}, err
 					}
-					c.haproxyVersion = version
-					return
+					haproxyVersion = version
+					return haproxyVersion, nil
 				}
 			}
 		}
-		err = fmt.Errorf("version data not found")
+		err = errors.New("version data not found")
+		return HAProxyVersion{}, err // it's dereferenced in IsVersionBiggerOrEqual
 	})
 	if err != nil {
 		return HAProxyVersion{}, err
 	}
 
-	if c.haproxyVersion == nil {
-		return HAProxyVersion{}, fmt.Errorf("version data not found")
+	if haproxyVersion == nil {
+		return HAProxyVersion{}, errors.New("version data not found")
 	}
-	return *c.haproxyVersion, err
+
+	return *haproxyVersion, err
 }
 
 func (c *client) IsVersionBiggerOrEqual(minimumVersion *HAProxyVersion) bool {
-	return IsBiggerOrEqual(minimumVersion, c.haproxyVersion)
+	return IsBiggerOrEqual(minimumVersion, haproxyVersion)
 }
 
 // Reloads HAProxy's configuration file. Similar to SIGUSR2. Returns the startup logs.
@@ -152,7 +159,7 @@ func (c *client) Reload() (string, error) {
 		return "", fmt.Errorf("cannot reload: not connected to a master socket")
 	}
 	if !c.IsVersionBiggerOrEqual(&HAProxyVersion{Major: 2, Minor: 7}) {
-		return "", fmt.Errorf("cannot reload: requires HAProxy 2.7 or later")
+		return "", fmt.Errorf("cannot reload: requires HAProxy 2.7 or later but current version is %v", haproxyVersion)
 	}
 
 	for _, runtime := range c.runtimes {
@@ -229,7 +236,7 @@ func (c *client) AddServer(backend, name, attributes string) error {
 		return fmt.Errorf("no valid runtimes found")
 	}
 	if !c.IsVersionBiggerOrEqual(&HAProxyVersion{Major: 2, Minor: 6}) {
-		return fmt.Errorf("this operation requires HAProxy 2.6 or later")
+		return fmt.Errorf("this operation requires HAProxy 2.6 or later but current version is %v", haproxyVersion)
 	}
 	for _, runtime := range c.runtimes {
 		err := runtime.AddServer(backend, name, attributes)
