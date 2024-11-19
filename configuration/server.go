@@ -37,6 +37,7 @@ type Server interface {
 	DeleteServer(name string, parentType string, parentName string, transactionID string, version int64) error
 	CreateServer(parentType string, parentName string, data *models.Server, transactionID string, version int64) error
 	EditServer(name string, parentType string, parentName string, data *models.Server, transactionID string, version int64) error
+	CreateOrEditServer(parentType string, parentName string, data *models.Server, transactionID string, version int64) error
 	GetServerSwitchingRules(backend string, transactionID string) (int64, models.ServerSwitchingRules, error)
 	GetServerSwitchingRule(id int64, backend string, transactionID string) (int64, *models.ServerSwitchingRule, error)
 	DeleteServerSwitchingRule(id int64, backend string, transactionID string, version int64) error
@@ -155,6 +156,33 @@ func (c *client) EditServer(name string, parentType string, parentName string, d
 	}
 
 	if err := p.Set(sectionType(parentType), parentName, "server", SerializeServer(*data), i); err != nil {
+		return c.HandleError(data.Name, parentType, parentName, t, transactionID == "", err)
+	}
+
+	return c.SaveData(p, t, transactionID == "")
+}
+
+func (c *client) CreateOrEditServer(parentType string, parentName string, data *models.Server, transactionID string, version int64) error {
+	if c.UseModelsValidation {
+		validationErr := data.Validate(strfmt.Default)
+		if validationErr != nil {
+			return NewConfError(ErrValidationError, validationErr.Error())
+		}
+	}
+	p, t, err := c.loadDataForChange(transactionID, version)
+	if err != nil {
+		return err
+	}
+
+	server, i := GetServerByName(data.Name, parentType, parentName, p)
+	// Edition func by default
+	f := p.Set
+	if server == nil {
+		i = -1
+		// If server does not exist then Create func
+		f = p.Insert
+	}
+	if err := f(sectionType(parentType), parentName, "server", SerializeServer(*data), i); err != nil {
 		return c.HandleError(data.Name, parentType, parentName, t, transactionID == "", err)
 	}
 
