@@ -131,6 +131,10 @@ type Info interface {
 type Manage interface {
 	// Reloads HAProxy's configuration file. Similar to SIGUSR2. Returns the startup logs.
 	Reload() (string, error)
+	// Clears max counters
+	ClearCounters() error
+	// Clears counters
+	ClearAllCounters() error
 }
 
 type Raw interface {

@@ -79,6 +79,16 @@ func (c *client) initWithMasterSocket(opt options.RuntimeOptions) error {
 	return nil
 }
 
+// ClearCounters resets max counts from socket
+func (c *client) ClearCounters() error {
+	return c.runtime.ClearCounters()
+}
+
+// ClearAllCounters resets all counters from socket
+func (c *client) ClearAllCounters() error {
+	return c.runtime.ClearAllCounters()
+}
+
 // GetStats returns stats from the socket
 func (c *client) GetStats() models.NativeStats {
 	if !c.runtime.IsValid() {
