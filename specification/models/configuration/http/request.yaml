@@ -71,6 +71,7 @@ http_request_rule:
         - wait-for-body
         - wait-for-handshake
         - set-bandwidth-limit
+        - set-retries
       x-nullable: false
     capture_sample:
       pattern: '^(?:[A-Za-z]+\("([A-Za-z\s]+)"\)|[A-Za-z]+)'
@@ -435,6 +436,7 @@ http_request_rule:
             - set-priority-offset
             - set-src
             - set-src-port
+            - set-retries
           required: true
     sc_expr:
       type: string

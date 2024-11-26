@@ -204,6 +204,8 @@ func TestRequestshttp(t *testing.T) {
 		"http-request set-bc-tos 10":                                                                                         true,
 		"http-request set-fc-mark 0":                                                                                         true,
 		"http-request set-fc-tos 0xff if TRUE":                                                                               true,
+		"http-request set-retries 3":                                                                                         true,
+		"http-request set-retries var(txn.retries) if TRUE":                                                                  true,
 		`http-request add-header Authorization Basic\ eC1oYXByb3h5LXJlY3J1aXRzOlBlb3BsZSB3aG8gZGVjb2RlIG1lc3NhZ2VzIG9mdGVuIGxvdmUgd29ya2luZyBhdCBIQVByb3h5LiBEbyBub3QgYmUgc2h5LCBjb250YWN0IHVz`:  true,
 		`http-request add-header Authorisation "Basic eC1oYXByb3h5LXJlY3J1aXRzOlBlb3BsZSB3aG8gZGVjb2RlIG1lc3NhZ2VzIG9mdGVuIGxvdmUgd29ya2luZyBhdCBIQVByb3h5LiBEbyBub3QgYmUgc2h5LCBjb250YWN0IHVz"`: true,
 		`http-request return status 200 content-type "text/plain" string "My content" if { var(txn.myip) -m found }`:                                                                             true,

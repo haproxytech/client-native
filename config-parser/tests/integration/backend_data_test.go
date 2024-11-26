@@ -2601,6 +2601,14 @@ const backend_httprequestsetfctos0xffifTRUE = `
 backend test
   http-request set-fc-tos 0xff if TRUE
 `
+const backend_httprequestsetretries3 = `
+backend test
+  http-request set-retries 3
+`
+const backend_httprequestsetretriesvartxnretri = `
+backend test
+  http-request set-retries var(txn.retries) if TRUE
+`
 const backend_httprequestaddheaderAuthorizatio = `
 backend test
   http-request add-header Authorization Basic\ eC1oYXByb3h5LXJlY3J1aXRzOlBlb3BsZSB3aG8gZGVjb2RlIG1lc3NhZ2VzIG9mdGVuIGxvdmUgd29ya2luZyBhdCBIQVByb3h5LiBEbyBub3QgYmUgc2h5LCBjb250YWN0IHVz
@@ -3768,6 +3776,14 @@ backend test
 const backend_tcprequestcontentluafooparampara = `
 backend test
   tcp-request content lua.foo param param1
+`
+const backend_tcprequestcontentsetretries3 = `
+backend test
+  tcp-request content set-retries 3
+`
+const backend_tcprequestcontentsetretriesvartx = `
+backend test
+  tcp-request content set-retries var(txn.retries) if TRUE
 `
 const backend_tcprequestconnectionaccept = `
 backend test

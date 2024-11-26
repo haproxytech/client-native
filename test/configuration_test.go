@@ -470,6 +470,8 @@ frontend test
   http-request set-fc-mark hdr(port)
   http-request set-fc-tos 255 if FALSE
   http-request sc-set-gpt(1,2) hdr(Host),lower if FALSE
+  http-request set-retries 3
+  http-request set-retries var(txn.retries) if TRUE
   http-response allow if src 192.168.0.0/16
   http-response set-header X-SSL %[ssl_fc]
   http-response set-var(req.my_var) req.fhdr(user-agent),lower
@@ -569,6 +571,8 @@ frontend test
   tcp-request connection sc-set-gpt(1,2) 1234 if FALSE
   tcp-request content sc-set-gpt(1,2) hdr(port) if FALSE
   tcp-request session sc-set-gpt(1,2) 1234
+  tcp-request content set-retries 3
+  tcp-request content set-retries var(txn.retries) if TRUE
   log global
   no log
   log 127.0.0.1:514 local0 notice notice

@@ -4438,6 +4438,7 @@ definitions:
               - set-priority-offset
               - set-src
               - set-src-port
+              - set-retries
         x-display-name: Standard HAProxy expression
       hdr_format:
         type: string
@@ -4937,6 +4938,7 @@ definitions:
           - wait-for-body
           - wait-for-handshake
           - set-bandwidth-limit
+          - set-retries
         type: string
         x-nullable: false
       uri-fmt:
@@ -6245,6 +6247,7 @@ definitions:
           - track-sc
           - unset-var
           - use-service
+          - set-retries
         type: string
         x-dependency:
           type:
@@ -6349,6 +6352,7 @@ definitions:
               - set-src
               - set-src-port
               - set-var
+              - set-retries
           type:
             value:
               - session

@@ -553,6 +553,8 @@ type Action interface {
 //test:ok:http-request set-bc-tos 10
 //test:ok:http-request set-fc-mark 0
 //test:ok:http-request set-fc-tos 0xff if TRUE
+//test:ok:http-request set-retries 3
+//test:ok:http-request set-retries var(txn.retries) if TRUE
 type HTTPRequests struct{}
 
 //name:http-response
@@ -1015,6 +1017,8 @@ type TCPType interface {
 //test:ok:tcp-request content lua.foo
 //test:ok:tcp-request content lua.foo param if !HTTP
 //test:ok:tcp-request content lua.foo param param1
+//test:ok:tcp-request content set-retries 3
+//test:ok:tcp-request content set-retries var(txn.retries) if TRUE
 //test:ok:tcp-request connection accept
 //test:ok:tcp-request connection accept if !HTTP
 //test:ok:tcp-request connection reject

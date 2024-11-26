@@ -1581,6 +1581,14 @@ const frontend_httprequestsetfctos0xffifTRUE = `
 frontend test
   http-request set-fc-tos 0xff if TRUE
 `
+const frontend_httprequestsetretries3 = `
+frontend test
+  http-request set-retries 3
+`
+const frontend_httprequestsetretriesvartxnretri = `
+frontend test
+  http-request set-retries var(txn.retries) if TRUE
+`
 const frontend_httprequestcapturereqcookcntFirs = `
 frontend test
   http-request capture req.cook_cnt(FirstVisit),bool len 10
@@ -2512,6 +2520,14 @@ frontend test
 const frontend_tcprequestcontentluafooparampara = `
 frontend test
   tcp-request content lua.foo param param1
+`
+const frontend_tcprequestcontentsetretries3 = `
+frontend test
+  tcp-request content set-retries 3
+`
+const frontend_tcprequestcontentsetretriesvartx = `
+frontend test
+  tcp-request content set-retries var(txn.retries) if TRUE
 `
 const frontend_tcprequestconnectionaccept = `
 frontend test

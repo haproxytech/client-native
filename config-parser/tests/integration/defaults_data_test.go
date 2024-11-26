@@ -1853,6 +1853,14 @@ const defaults_httprequestsetfctos0xffifTRUE = `
 defaults test
   http-request set-fc-tos 0xff if TRUE
 `
+const defaults_httprequestsetretries3 = `
+defaults test
+  http-request set-retries 3
+`
+const defaults_httprequestsetretriesvartxnretri = `
+defaults test
+  http-request set-retries var(txn.retries) if TRUE
+`
 const defaults_httprequestaddheaderAuthorizatio = `
 defaults test
   http-request add-header Authorization Basic\ eC1oYXByb3h5LXJlY3J1aXRzOlBlb3BsZSB3aG8gZGVjb2RlIG1lc3NhZ2VzIG9mdGVuIGxvdmUgd29ya2luZyBhdCBIQVByb3h5LiBEbyBub3QgYmUgc2h5LCBjb250YWN0IHVz
@@ -3020,6 +3028,14 @@ defaults test
 const defaults_tcprequestcontentluafooparampara = `
 defaults test
   tcp-request content lua.foo param param1
+`
+const defaults_tcprequestcontentsetretries3 = `
+defaults test
+  tcp-request content set-retries 3
+`
+const defaults_tcprequestcontentsetretriesvartx = `
+defaults test
+  tcp-request content set-retries var(txn.retries) if TRUE
 `
 const defaults_tcprequestconnectionaccept = `
 defaults test

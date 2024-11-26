@@ -1996,6 +1996,16 @@
                     "sc_expr": "hdr(Host),lower",
                     "cond": "if",
                     "cond_test": "FALSE"
+                },
+                {
+                    "type": "set-retries",
+                    "expr": "3"
+                },
+                {
+                    "type": "set-retries",
+                    "expr": "var(txn.retries)",
+                    "cond": "if",
+                    "cond_test": "TRUE"
                 }
             ],
             "http_response_rule_list": [
@@ -2567,6 +2577,18 @@
                     "sc_inc_id": "1",
                     "sc_idx": "2",
                     "sc_int": 1234
+                },
+                {
+                    "type": "content",
+                    "action": "set-retries",
+                    "expr": "3"
+                },
+                {
+                    "type": "content",
+                    "action": "set-retries",
+                    "expr": "var(txn.retries)",
+                    "cond": "if",
+                    "cond_test": "TRUE"
                 }
             ],
             "binds": {

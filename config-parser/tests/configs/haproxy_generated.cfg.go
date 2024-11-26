@@ -603,6 +603,8 @@ backend test
   http-request set-bc-tos 10
   http-request set-fc-mark 0
   http-request set-fc-tos 0xff if TRUE
+  http-request set-retries 3
+  http-request set-retries var(txn.retries) if TRUE
   http-request add-header Authorization Basic\ eC1oYXByb3h5LXJlY3J1aXRzOlBlb3BsZSB3aG8gZGVjb2RlIG1lc3NhZ2VzIG9mdGVuIGxvdmUgd29ya2luZyBhdCBIQVByb3h5LiBEbyBub3QgYmUgc2h5LCBjb250YWN0IHVz
   http-request add-header Authorisation "Basic eC1oYXByb3h5LXJlY3J1aXRzOlBlb3BsZSB3aG8gZGVjb2RlIG1lc3NhZ2VzIG9mdGVuIGxvdmUgd29ya2luZyBhdCBIQVByb3h5LiBEbyBub3QgYmUgc2h5LCBjb250YWN0IHVz"
   http-request return status 200 content-type "text/plain" string "My content" if { var(txn.myip) -m found }
@@ -895,6 +897,8 @@ backend test
   tcp-request content lua.foo
   tcp-request content lua.foo param if !HTTP
   tcp-request content lua.foo param param1
+  tcp-request content set-retries 3
+  tcp-request content set-retries var(txn.retries) if TRUE
   tcp-request connection accept
   tcp-request connection accept if !HTTP
   tcp-request connection reject
@@ -1461,6 +1465,8 @@ defaults test
   http-request set-bc-tos 10
   http-request set-fc-mark 0
   http-request set-fc-tos 0xff if TRUE
+  http-request set-retries 3
+  http-request set-retries var(txn.retries) if TRUE
   http-request add-header Authorization Basic\ eC1oYXByb3h5LXJlY3J1aXRzOlBlb3BsZSB3aG8gZGVjb2RlIG1lc3NhZ2VzIG9mdGVuIGxvdmUgd29ya2luZyBhdCBIQVByb3h5LiBEbyBub3QgYmUgc2h5LCBjb250YWN0IHVz
   http-request add-header Authorisation "Basic eC1oYXByb3h5LXJlY3J1aXRzOlBlb3BsZSB3aG8gZGVjb2RlIG1lc3NhZ2VzIG9mdGVuIGxvdmUgd29ya2luZyBhdCBIQVByb3h5LiBEbyBub3QgYmUgc2h5LCBjb250YWN0IHVz"
   http-request return status 200 content-type "text/plain" string "My content" if { var(txn.myip) -m found }
@@ -1753,6 +1759,8 @@ defaults test
   tcp-request content lua.foo
   tcp-request content lua.foo param if !HTTP
   tcp-request content lua.foo param param1
+  tcp-request content set-retries 3
+  tcp-request content set-retries var(txn.retries) if TRUE
   tcp-request connection accept
   tcp-request connection accept if !HTTP
   tcp-request connection reject
@@ -2266,6 +2274,8 @@ frontend test
   http-request set-bc-tos 10
   http-request set-fc-mark 0
   http-request set-fc-tos 0xff if TRUE
+  http-request set-retries 3
+  http-request set-retries var(txn.retries) if TRUE
   http-request capture req.cook_cnt(FirstVisit),bool len 10
   http-request capture str("DNS resolution failure") len 32 unless dns_successful
   http-request add-header Authorization Basic\ eC1oYXByb3h5LXJlY3J1aXRzOlBlb3BsZSB3aG8gZGVjb2RlIG1lc3NhZ2VzIG9mdGVuIGxvdmUgd29ya2luZyBhdCBIQVByb3h5LiBEbyBub3QgYmUgc2h5LCBjb250YWN0IHVz
@@ -2499,6 +2509,8 @@ frontend test
   tcp-request content lua.foo
   tcp-request content lua.foo param if !HTTP
   tcp-request content lua.foo param param1
+  tcp-request content set-retries 3
+  tcp-request content set-retries var(txn.retries) if TRUE
   tcp-request connection accept
   tcp-request connection accept if !HTTP
   tcp-request connection reject
@@ -4374,6 +4386,10 @@ var configTests = []configTest{{`  command spoa-mirror --runtime 0 --mirror-url 
 `, 3},
 	{`  http-request set-fc-tos 0xff if TRUE
 `, 3},
+	{`  http-request set-retries 3
+`, 3},
+	{`  http-request set-retries var(txn.retries) if TRUE
+`, 3},
 	{`  http-request capture req.cook_cnt(FirstVisit),bool len 10
 `, 1},
 	{`  http-request capture str("DNS resolution failure") len 32 unless dns_successful
@@ -4879,6 +4895,10 @@ var configTests = []configTest{{`  command spoa-mirror --runtime 0 --mirror-url 
 	{`  tcp-request content lua.foo param if !HTTP
 `, 3},
 	{`  tcp-request content lua.foo param param1
+`, 3},
+	{`  tcp-request content set-retries 3
+`, 3},
+	{`  tcp-request content set-retries var(txn.retries) if TRUE
 `, 3},
 	{`  tcp-request connection accept
 `, 3},

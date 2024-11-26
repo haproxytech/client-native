@@ -50,6 +50,7 @@ tcp_request_rule:
         - track-sc
         - unset-var
         - use-service
+        - set-retries
       x-nullable: false
       x-dependency:
         type:
@@ -275,6 +276,7 @@ tcp_request_rule:
             - set-src
             - set-src-port
             - set-var
+            - set-retries
           required: true
         type:
           value: [session, connection, content]

@@ -621,6 +621,11 @@ func ParseTCPRequestRule(f types.TCPType) (*models.TCPRequestRule, error) { //no
 			rule.SwitchModeProto = a.Proto
 			rule.Cond = a.Cond
 			rule.CondTest = a.CondTest
+		case *actions.SetRetries:
+			rule.Action = models.TCPRequestRuleActionSetDashRetries
+			rule.Expr = a.Expr.String()
+			rule.Cond = a.Cond
+			rule.CondTest = a.CondTest
 		default:
 			return nil, NewConfError(ErrValidationError, fmt.Sprintf("unsupported action '%s' in tcp_request_rule", a))
 		}
@@ -1284,6 +1289,14 @@ func SerializeTCPRequestRule(f models.TCPRequestRule, opt *options.Configuration
 			return &tcp_types.Content{
 				Action: &actions.SetFcTos{
 					Expr:     common.Expression{Expr: strings.Split(f.Expr+f.TosValue, " ")},
+					Cond:     f.Cond,
+					CondTest: f.CondTest,
+				},
+			}, nil
+		case models.TCPRequestRuleActionSetDashRetries:
+			return &tcp_types.Content{
+				Action: &actions.SetRetries{
+					Expr:     common.Expression{Expr: strings.Split(f.Expr, " ")},
 					Cond:     f.Cond,
 					CondTest: f.CondTest,
 				},
