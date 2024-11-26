@@ -458,6 +458,13 @@ func ParseTCPResponseRule(t types.TCPType) (*models.TCPResponseRule, error) {
 				Cond:     a.Cond,
 				CondTest: a.CondTest,
 			}, nil
+		case *actions.DoLog:
+			return &models.TCPResponseRule{
+				Type:     models.TCPResponseRuleTypeContent,
+				Action:   models.TCPResponseRuleActionDoDashLog,
+				Cond:     a.Cond,
+				CondTest: a.CondTest,
+			}, nil
 		}
 	}
 	return nil, NewConfError(ErrValidationError, "invalid action")
@@ -672,6 +679,13 @@ func SerializeTCPResponseRule(t models.TCPResponseRule, opt *options.Configurati
 			return &tcp_types.Content{
 				Action: &actions.SetFcTos{
 					Expr:     common.Expression{Expr: strings.Split(t.Expr+t.TosValue, " ")},
+					Cond:     t.Cond,
+					CondTest: t.CondTest,
+				},
+			}, nil
+		case models.TCPResponseRuleActionDoDashLog:
+			return &tcp_types.Content{
+				Action: &actions.DoLog{
 					Cond:     t.Cond,
 					CondTest: t.CondTest,
 				},

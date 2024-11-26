@@ -54,6 +54,8 @@ func TestResponsestcp(t *testing.T) {
 		"tcp-response content sc-inc-gpc1(2) if is-error":                       true,
 		"tcp-response content set-fc-mark 123456":                               true,
 		"tcp-response content set-fc-tos 0x02":                                  true,
+		"tcp-response content do-log":                                           true,
+		"tcp-response content do-log if TRUE":                                   true,
 		"tcp-response":                                                          false,
 		"tcp-response content lua.":                                             false,
 		"tcp-response content lua. param":                                       false,

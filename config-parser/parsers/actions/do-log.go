@@ -26,13 +26,13 @@ import (
 	"github.com/haproxytech/client-native/v6/config-parser/types"
 )
 
-type Reject struct {
+type DoLog struct {
 	Cond     string
 	CondTest string
 	Comment  string
 }
 
-func (f *Reject) Parse(parts []string, parserType types.ParserType, comment string) error {
+func (f *DoLog) Parse(parts []string, parserType types.ParserType, comment string) error {
 	if comment != "" {
 		f.Comment = comment
 	}
@@ -62,13 +62,13 @@ func (f *Reject) Parse(parts []string, parserType types.ParserType, comment stri
 	return nil
 }
 
-func (f *Reject) String() string {
+func (f *DoLog) String() string {
 	if f.Cond != "" {
-		return fmt.Sprintf("reject %s %s", f.Cond, f.CondTest)
+		return fmt.Sprintf("do-log %s %s", f.Cond, f.CondTest)
 	}
-	return "reject"
+	return "do-log"
 }
 
-func (f *Reject) GetComment() string {
+func (f *DoLog) GetComment() string {
 	return f.Comment
 }

@@ -1589,6 +1589,14 @@ const frontend_httprequestsetretriesvartxnretri = `
 frontend test
   http-request set-retries var(txn.retries) if TRUE
 `
+const frontend_httprequestdolog = `
+frontend test
+  http-request do-log
+`
+const frontend_httprequestdologifFALSE = `
+frontend test
+  http-request do-log if FALSE
+`
 const frontend_httprequestcapturereqcookcntFirs = `
 frontend test
   http-request capture req.cook_cnt(FirstVisit),bool len 10
@@ -2037,6 +2045,14 @@ const frontend_httpresponsesetfctos200 = `
 frontend test
   http-response set-fc-tos 200
 `
+const frontend_httpresponsedolog = `
+frontend test
+  http-response do-log
+`
+const frontend_httpresponsedologifFALSE = `
+frontend test
+  http-response do-log if FALSE
+`
 const frontend_httpresponsecapturereshdrServeri = `
 frontend test
   http-response capture res.hdr(Server) id 0
@@ -2256,6 +2272,14 @@ frontend test
 const frontend_httpafterresponsescsetgpt01hdrHo_ = `
 frontend test
   http-after-response sc-set-gpt0(1) hdr(Host),lower if FALSE
+`
+const frontend_httpafterresponsedolog = `
+frontend test
+  http-after-response do-log
+`
+const frontend_httpafterresponsedologifFALSE = `
+frontend test
+  http-after-response do-log if FALSE
 `
 const frontend_httperrorstatus400 = `
 frontend test
@@ -3017,6 +3041,30 @@ const frontend_tcprequestcontentsetfctos100 = `
 frontend test
   tcp-request content set-fc-tos 100
 `
+const frontend_tcprequestcontentdolog = `
+frontend test
+  tcp-request content do-log
+`
+const frontend_tcprequestcontentdologifTRUE = `
+frontend test
+  tcp-request content do-log if TRUE
+`
+const frontend_tcprequestconnectiondolog = `
+frontend test
+  tcp-request connection do-log
+`
+const frontend_tcprequestconnectiondologifTRUE = `
+frontend test
+  tcp-request connection do-log if TRUE
+`
+const frontend_tcprequestsessiondolog = `
+frontend test
+  tcp-request session do-log
+`
+const frontend_tcprequestsessiondologifTRUE = `
+frontend test
+  tcp-request session do-log if TRUE
+`
 const frontend_tcprequestcontentcapturestrDNSre = `
 frontend test
   tcp-request content capture str("DNS resolution failure") len 32 unless dns_successful
@@ -3128,6 +3176,14 @@ frontend test
 const frontend_tcpresponsecontentsetfctos0x02 = `
 frontend test
   tcp-response content set-fc-tos 0x02
+`
+const frontend_tcpresponsecontentdolog = `
+frontend test
+  tcp-response content do-log
+`
+const frontend_tcpresponsecontentdologifTRUE = `
+frontend test
+  tcp-response content do-log if TRUE
 `
 const frontend_redirectprefixhttpwwwbarcomcode3 = `
 frontend test

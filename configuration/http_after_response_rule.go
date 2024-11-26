@@ -251,7 +251,7 @@ func ParseHTTPAfterRules(t, pName string, p parser.Parser) (models.HTTPAfterResp
 	return httpResRules, nil
 }
 
-func ParseHTTPAfterRule(f types.Action) (*models.HTTPAfterResponseRule, error) { //nolint:maintidx,gocognit
+func ParseHTTPAfterRule(f types.Action) (*models.HTTPAfterResponseRule, error) { //nolint:maintidx,gocognit,gocyclo,cyclop
 	switch v := f.(type) {
 	case *http_actions.AddHeader:
 		return &models.HTTPAfterResponseRule{
@@ -464,6 +464,12 @@ func ParseHTTPAfterRule(f types.Action) (*models.HTTPAfterResponseRule, error) {
 			Cond:     v.Cond,
 			CondTest: v.CondTest,
 		}, nil
+	case *actions.DoLog:
+		return &models.HTTPAfterResponseRule{
+			Type:     "do-log",
+			Cond:     v.Cond,
+			CondTest: v.CondTest,
+		}, nil
 	}
 	return nil, nil //nolint:nilnil
 }
@@ -621,6 +627,11 @@ func SerializeHTTPAfterRule(f models.HTTPAfterResponseRule) (types.Action, error
 		rule = &actions.UnsetVar{
 			Name:     f.VarName,
 			Scope:    f.VarScope,
+			Cond:     f.Cond,
+			CondTest: f.CondTest,
+		}
+	case "do-log":
+		rule = &actions.DoLog{
 			Cond:     f.Cond,
 			CondTest: f.CondTest,
 		}

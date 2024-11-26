@@ -125,6 +125,8 @@ func TestResponseshttp(t *testing.T) {
 		"http-response set-bandwidth-limit my-limit limit 1m":                                                                       true,
 		"http-response set-fc-mark 2000":                                                                                            true,
 		"http-response set-fc-tos 200":                                                                                              true,
+		"http-response do-log":                                                                                                      true,
+		"http-response do-log if FALSE":                                                                                             true,
 		`http-response return status 200 content-type "text/plain" string "My content" if { var(txn.myip) -m found }`:               true,
 		`http-response return status 200 content-type "text/plain" string "My content" unless { var(txn.myip) -m found }`:                          true,
 		`http-response return content-type "text/plain" string "My content" if { var(txn.myip) -m found }`:                                         true,

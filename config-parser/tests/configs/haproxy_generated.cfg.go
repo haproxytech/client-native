@@ -605,6 +605,8 @@ backend test
   http-request set-fc-tos 0xff if TRUE
   http-request set-retries 3
   http-request set-retries var(txn.retries) if TRUE
+  http-request do-log
+  http-request do-log if FALSE
   http-request add-header Authorization Basic\ eC1oYXByb3h5LXJlY3J1aXRzOlBlb3BsZSB3aG8gZGVjb2RlIG1lc3NhZ2VzIG9mdGVuIGxvdmUgd29ya2luZyBhdCBIQVByb3h5LiBEbyBub3QgYmUgc2h5LCBjb250YWN0IHVz
   http-request add-header Authorisation "Basic eC1oYXByb3h5LXJlY3J1aXRzOlBlb3BsZSB3aG8gZGVjb2RlIG1lc3NhZ2VzIG9mdGVuIGxvdmUgd29ya2luZyBhdCBIQVByb3h5LiBEbyBub3QgYmUgc2h5LCBjb250YWN0IHVz"
   http-request return status 200 content-type "text/plain" string "My content" if { var(txn.myip) -m found }
@@ -715,6 +717,8 @@ backend test
   http-response set-bandwidth-limit my-limit limit 1m
   http-response set-fc-mark 2000
   http-response set-fc-tos 200
+  http-response do-log
+  http-response do-log if FALSE
   http-response return status 200 content-type "text/plain" string "My content" if { var(txn.myip) -m found }
   http-response return status 200 content-type "text/plain" string "My content" unless { var(txn.myip) -m found }
   http-response return content-type "text/plain" string "My content" if { var(txn.myip) -m found }
@@ -769,6 +773,8 @@ backend test
   http-after-response sc-set-gpt0(1) hdr(Host),lower
   http-after-response sc-set-gpt0(1) 10
   http-after-response sc-set-gpt0(1) hdr(Host),lower if FALSE
+  http-after-response do-log
+  http-after-response do-log if FALSE
   http-error status 400
   http-error status 400 default-errorfiles
   http-error status 400 errorfile /my/fancy/errorfile
@@ -1021,6 +1027,12 @@ backend test
   tcp-request content set-bc-tos 0xff if some_check
   tcp-request content set-fc-mark 0xffffffff
   tcp-request content set-fc-tos 100
+  tcp-request content do-log
+  tcp-request content do-log if TRUE
+  tcp-request connection do-log
+  tcp-request connection do-log if TRUE
+  tcp-request session do-log
+  tcp-request session do-log if TRUE
   tcp-response content lua.foo
   tcp-response content lua.foo param if !HTTP
   tcp-response content lua.foo param param1
@@ -1048,6 +1060,8 @@ backend test
   tcp-response content sc-inc-gpc1(2) if is-error
   tcp-response content set-fc-mark 123456
   tcp-response content set-fc-tos 0x02
+  tcp-response content do-log
+  tcp-response content do-log if TRUE
   redirect prefix http://www.bar.com code 301 if { hdr(host) -i foo.com }
   stats auth admin1:AdMiN123
   stats enable
@@ -1467,6 +1481,8 @@ defaults test
   http-request set-fc-tos 0xff if TRUE
   http-request set-retries 3
   http-request set-retries var(txn.retries) if TRUE
+  http-request do-log
+  http-request do-log if FALSE
   http-request add-header Authorization Basic\ eC1oYXByb3h5LXJlY3J1aXRzOlBlb3BsZSB3aG8gZGVjb2RlIG1lc3NhZ2VzIG9mdGVuIGxvdmUgd29ya2luZyBhdCBIQVByb3h5LiBEbyBub3QgYmUgc2h5LCBjb250YWN0IHVz
   http-request add-header Authorisation "Basic eC1oYXByb3h5LXJlY3J1aXRzOlBlb3BsZSB3aG8gZGVjb2RlIG1lc3NhZ2VzIG9mdGVuIGxvdmUgd29ya2luZyBhdCBIQVByb3h5LiBEbyBub3QgYmUgc2h5LCBjb250YWN0IHVz"
   http-request return status 200 content-type "text/plain" string "My content" if { var(txn.myip) -m found }
@@ -1577,6 +1593,8 @@ defaults test
   http-response set-bandwidth-limit my-limit limit 1m
   http-response set-fc-mark 2000
   http-response set-fc-tos 200
+  http-response do-log
+  http-response do-log if FALSE
   http-response return status 200 content-type "text/plain" string "My content" if { var(txn.myip) -m found }
   http-response return status 200 content-type "text/plain" string "My content" unless { var(txn.myip) -m found }
   http-response return content-type "text/plain" string "My content" if { var(txn.myip) -m found }
@@ -1631,6 +1649,8 @@ defaults test
   http-after-response sc-set-gpt0(1) hdr(Host),lower
   http-after-response sc-set-gpt0(1) 10
   http-after-response sc-set-gpt0(1) hdr(Host),lower if FALSE
+  http-after-response do-log
+  http-after-response do-log if FALSE
   http-error status 400
   http-error status 400 default-errorfiles
   http-error status 400 errorfile /my/fancy/errorfile
@@ -1883,6 +1903,12 @@ defaults test
   tcp-request content set-bc-tos 0xff if some_check
   tcp-request content set-fc-mark 0xffffffff
   tcp-request content set-fc-tos 100
+  tcp-request content do-log
+  tcp-request content do-log if TRUE
+  tcp-request connection do-log
+  tcp-request connection do-log if TRUE
+  tcp-request session do-log
+  tcp-request session do-log if TRUE
   stats auth admin1:AdMiN123
   stats enable
   stats hide-version
@@ -2276,6 +2302,8 @@ frontend test
   http-request set-fc-tos 0xff if TRUE
   http-request set-retries 3
   http-request set-retries var(txn.retries) if TRUE
+  http-request do-log
+  http-request do-log if FALSE
   http-request capture req.cook_cnt(FirstVisit),bool len 10
   http-request capture str("DNS resolution failure") len 32 unless dns_successful
   http-request add-header Authorization Basic\ eC1oYXByb3h5LXJlY3J1aXRzOlBlb3BsZSB3aG8gZGVjb2RlIG1lc3NhZ2VzIG9mdGVuIGxvdmUgd29ya2luZyBhdCBIQVByb3h5LiBEbyBub3QgYmUgc2h5LCBjb250YWN0IHVz
@@ -2388,6 +2416,8 @@ frontend test
   http-response set-bandwidth-limit my-limit limit 1m
   http-response set-fc-mark 2000
   http-response set-fc-tos 200
+  http-response do-log
+  http-response do-log if FALSE
   http-response capture res.hdr(Server) id 0
   http-response return status 200 content-type "text/plain" string "My content" if { var(txn.myip) -m found }
   http-response return status 200 content-type "text/plain" string "My content" unless { var(txn.myip) -m found }
@@ -2443,6 +2473,8 @@ frontend test
   http-after-response sc-set-gpt0(1) hdr(Host),lower
   http-after-response sc-set-gpt0(1) 10
   http-after-response sc-set-gpt0(1) hdr(Host),lower if FALSE
+  http-after-response do-log
+  http-after-response do-log if FALSE
   http-error status 400
   http-error status 400 default-errorfiles
   http-error status 400 errorfile /my/fancy/errorfile
@@ -2633,6 +2665,12 @@ frontend test
   tcp-request content set-bc-tos 0xff if some_check
   tcp-request content set-fc-mark 0xffffffff
   tcp-request content set-fc-tos 100
+  tcp-request content do-log
+  tcp-request content do-log if TRUE
+  tcp-request connection do-log
+  tcp-request connection do-log if TRUE
+  tcp-request session do-log
+  tcp-request session do-log if TRUE
   tcp-request content capture str("DNS resolution failure") len 32 unless dns_successful
   tcp-response content lua.foo
   tcp-response content lua.foo param if !HTTP
@@ -2661,6 +2699,8 @@ frontend test
   tcp-response content sc-inc-gpc1(2) if is-error
   tcp-response content set-fc-mark 123456
   tcp-response content set-fc-tos 0x02
+  tcp-response content do-log
+  tcp-response content do-log if TRUE
   redirect prefix http://www.bar.com code 301 if { hdr(host) -i foo.com }
   stats auth admin1:AdMiN123
   stats enable
@@ -4390,6 +4430,10 @@ var configTests = []configTest{{`  command spoa-mirror --runtime 0 --mirror-url 
 `, 3},
 	{`  http-request set-retries var(txn.retries) if TRUE
 `, 3},
+	{`  http-request do-log
+`, 3},
+	{`  http-request do-log if FALSE
+`, 3},
 	{`  http-request capture req.cook_cnt(FirstVisit),bool len 10
 `, 1},
 	{`  http-request capture str("DNS resolution failure") len 32 unless dns_successful
@@ -4588,6 +4632,10 @@ var configTests = []configTest{{`  command spoa-mirror --runtime 0 --mirror-url 
 `, 3},
 	{`  http-response set-fc-tos 200
 `, 3},
+	{`  http-response do-log
+`, 3},
+	{`  http-response do-log if FALSE
+`, 3},
 	{`  http-response capture res.hdr(Server) id 0
 `, 1},
 	{`  http-after-response allow
@@ -4677,6 +4725,10 @@ var configTests = []configTest{{`  command spoa-mirror --runtime 0 --mirror-url 
 	{`  http-after-response sc-set-gpt0(1) 10
 `, 3},
 	{`  http-after-response sc-set-gpt0(1) hdr(Host),lower if FALSE
+`, 3},
+	{`  http-after-response do-log
+`, 3},
+	{`  http-after-response do-log if FALSE
 `, 3},
 	{`  http-error status 400
 `, 3},
@@ -5144,6 +5196,18 @@ var configTests = []configTest{{`  command spoa-mirror --runtime 0 --mirror-url 
 `, 3},
 	{`  tcp-request content set-fc-tos 100
 `, 3},
+	{`  tcp-request content do-log
+`, 3},
+	{`  tcp-request content do-log if TRUE
+`, 3},
+	{`  tcp-request connection do-log
+`, 3},
+	{`  tcp-request connection do-log if TRUE
+`, 3},
+	{`  tcp-request session do-log
+`, 3},
+	{`  tcp-request session do-log if TRUE
+`, 3},
 	{`  tcp-request content capture str("DNS resolution failure") len 32 unless dns_successful
 `, 1},
 	{`  tcp-response content lua.foo
@@ -5199,6 +5263,10 @@ var configTests = []configTest{{`  command spoa-mirror --runtime 0 --mirror-url 
 	{`  tcp-response content set-fc-mark 123456
 `, 2},
 	{`  tcp-response content set-fc-tos 0x02
+`, 2},
+	{`  tcp-response content do-log
+`, 2},
+	{`  tcp-response content do-log if TRUE
 `, 2},
 	{`  redirect prefix http://www.bar.com code 301 if { hdr(host) -i foo.com }
 `, 2},

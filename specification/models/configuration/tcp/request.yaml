@@ -51,6 +51,7 @@ tcp_request_rule:
         - unset-var
         - use-service
         - set-retries
+        - do-log
       x-nullable: false
       x-dependency:
         type:

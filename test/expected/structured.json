@@ -927,6 +927,16 @@
                     "sc_id": 1,
                     "sc_idx": 2,
                     "sc_int": 1234
+                },
+                {
+                    "type": "content",
+                    "action": "do-log"
+                },
+                {
+                    "type": "content",
+                    "action": "do-log",
+                    "cond": "if",
+                    "cond_test": "FALSE"
                 }
             ],
             "server_templates": {
@@ -1672,6 +1682,14 @@
                     "sc_expr": "hdr(port)",
                     "cond": "if",
                     "cond_test": "FALSE"
+                },
+                {
+                    "type": "do-log"
+                },
+                {
+                    "type": "do-log",
+                    "cond": "if",
+                    "cond_test": "FALSE"
                 }
             ],
             "http_error_rule_list": [
@@ -2021,6 +2039,14 @@
                     "expr": "var(txn.retries)",
                     "cond": "if",
                     "cond_test": "TRUE"
+                },
+                {
+                    "type": "do-log"
+                },
+                {
+                    "type": "do-log",
+                    "cond": "if",
+                    "cond_test": "FALSE"
                 }
             ],
             "http_response_rule_list": [
@@ -2253,6 +2279,14 @@
                     "sc_id": 1,
                     "sc_idx": 2,
                     "sc_int": 1234,
+                    "cond": "if",
+                    "cond_test": "FALSE"
+                },
+                {
+                    "type": "do-log"
+                },
+                {
+                    "type": "do-log",
                     "cond": "if",
                     "cond_test": "FALSE"
                 }
@@ -2604,6 +2638,36 @@
                     "expr": "var(txn.retries)",
                     "cond": "if",
                     "cond_test": "TRUE"
+                },
+                {
+                    "type": "connection",
+                    "action": "do-log"
+                },
+                {
+                    "type": "connection",
+                    "action": "do-log",
+                    "cond": "if",
+                    "cond_test": "FALSE"
+                },
+                {
+                    "type": "session",
+                    "action": "do-log"
+                },
+                {
+                    "type": "session",
+                    "action": "do-log",
+                    "cond": "if",
+                    "cond_test": "FALSE"
+                },
+                {
+                    "type": "content",
+                    "action": "do-log"
+                },
+                {
+                    "type": "content",
+                    "action": "do-log",
+                    "cond": "if",
+                    "cond_test": "FALSE"
                 }
             ],
             "binds": {

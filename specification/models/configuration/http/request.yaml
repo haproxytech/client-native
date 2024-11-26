@@ -72,6 +72,7 @@ http_request_rule:
         - wait-for-handshake
         - set-bandwidth-limit
         - set-retries
+        - do-log
       x-nullable: false
     capture_sample:
       pattern: '^(?:[A-Za-z]+\("([A-Za-z\s]+)"\)|[A-Za-z]+)'

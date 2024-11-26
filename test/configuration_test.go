@@ -483,6 +483,8 @@ frontend test
   http-request sc-set-gpt(1,2) hdr(Host),lower if FALSE
   http-request set-retries 3
   http-request set-retries var(txn.retries) if TRUE
+  http-request do-log
+  http-request do-log if FALSE
   http-response allow if src 192.168.0.0/16
   http-response set-header X-SSL %[ssl_fc]
   http-response set-var(req.my_var) req.fhdr(user-agent),lower
@@ -519,6 +521,8 @@ frontend test
   http-response set-timeout tunnel 20
   http-response set-timeout client 20
   http-response sc-set-gpt(1,2) 1234 if FALSE
+  http-response do-log
+  http-response do-log if FALSE
   http-after-response set-map(map.lst) %[src] %[res.hdr(X-Value)]
   http-after-response del-map(map.lst) %[src] if FALSE
   http-after-response del-acl(map.lst) %[src] if FALSE
@@ -536,6 +540,8 @@ frontend test
   http-after-response set-var(sess.last_redir) res.hdr(location)
   http-after-response unset-var(sess.last_redir)
   http-after-response sc-set-gpt(1,2) hdr(port) if FALSE
+  http-after-response do-log
+  http-after-response do-log if FALSE
   http-error status 400 content-type application/json lf-file /var/errors.file
   tcp-request connection accept if TRUE
   tcp-request connection reject if FALSE
@@ -584,6 +590,12 @@ frontend test
   tcp-request session sc-set-gpt(1,2) 1234
   tcp-request content set-retries 3
   tcp-request content set-retries var(txn.retries) if TRUE
+  tcp-request connection do-log
+  tcp-request connection do-log if FALSE
+  tcp-request session do-log
+  tcp-request session do-log if FALSE
+  tcp-request content do-log
+  tcp-request content do-log if FALSE
   log global
   no log
   log 127.0.0.1:514 local0 notice notice
@@ -731,6 +743,8 @@ backend test
   tcp-response content set-fc-mark 7676 if TRUE
   tcp-response content set-fc-tos 0xab if FALSE
   tcp-response content sc-set-gpt(1,2) 1234
+  tcp-response content do-log
+  tcp-response content do-log if FALSE
   option contstats
   timeout check 2s
   timeout tunnel 5s

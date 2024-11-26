@@ -412,6 +412,10 @@ func ParseTCPRequestRule(f types.TCPType) (*models.TCPRequestRule, error) { //no
 			rule.VarName = a.Name
 			rule.Cond = a.Cond
 			rule.CondTest = a.CondTest
+		case *actions.DoLog:
+			rule.Action = models.TCPRequestRuleActionDoDashLog
+			rule.Cond = a.Cond
+			rule.CondTest = a.CondTest
 		default:
 			return nil, NewConfError(ErrValidationError, fmt.Sprintf("unsupported action '%s' in tcp_request_rule", a))
 		}
@@ -626,6 +630,10 @@ func ParseTCPRequestRule(f types.TCPType) (*models.TCPRequestRule, error) { //no
 			rule.Expr = a.Expr.String()
 			rule.Cond = a.Cond
 			rule.CondTest = a.CondTest
+		case *actions.DoLog:
+			rule.Action = models.TCPRequestRuleActionDoDashLog
+			rule.Cond = a.Cond
+			rule.CondTest = a.CondTest
 		default:
 			return nil, NewConfError(ErrValidationError, fmt.Sprintf("unsupported action '%s' in tcp_request_rule", a))
 		}
@@ -758,6 +766,10 @@ func ParseTCPRequestRule(f types.TCPType) (*models.TCPRequestRule, error) { //no
 		case *actions.SilentDrop:
 			rule.Action = models.TCPRequestRuleActionSilentDashDrop
 			rule.RstTTL = a.RstTTL
+			rule.Cond = a.Cond
+			rule.CondTest = a.CondTest
+		case *actions.DoLog:
+			rule.Action = models.TCPRequestRuleActionDoDashLog
 			rule.Cond = a.Cond
 			rule.CondTest = a.CondTest
 		default:
@@ -987,6 +999,13 @@ func SerializeTCPRequestRule(f models.TCPRequestRule, opt *options.Configuration
 			return &tcp_types.Connection{
 				Action: &actions.SetFcTos{
 					Expr:     common.Expression{Expr: strings.Split(f.Expr+f.TosValue, " ")},
+					Cond:     f.Cond,
+					CondTest: f.CondTest,
+				},
+			}, nil
+		case models.TCPRequestRuleActionDoDashLog:
+			return &tcp_types.Connection{
+				Action: &actions.DoLog{
 					Cond:     f.Cond,
 					CondTest: f.CondTest,
 				},
@@ -1301,6 +1320,13 @@ func SerializeTCPRequestRule(f models.TCPRequestRule, opt *options.Configuration
 					CondTest: f.CondTest,
 				},
 			}, nil
+		case models.TCPRequestRuleActionDoDashLog:
+			return &tcp_types.Content{
+				Action: &actions.DoLog{
+					Cond:     f.Cond,
+					CondTest: f.CondTest,
+				},
+			}, nil
 		}
 		return nil, NewConfError(ErrValidationError, fmt.Sprintf("unsupported action '%s' in tcp_request_rule", f.Action))
 	case models.TCPRequestRuleTypeSession:
@@ -1496,6 +1522,13 @@ func SerializeTCPRequestRule(f models.TCPRequestRule, opt *options.Configuration
 			return &tcp_types.Session{
 				Action: &actions.SetFcTos{
 					Expr:     common.Expression{Expr: strings.Split(f.Expr+f.TosValue, " ")},
+					Cond:     f.Cond,
+					CondTest: f.CondTest,
+				},
+			}, nil
+		case models.TCPRequestRuleActionDoDashLog:
+			return &tcp_types.Session{
+				Action: &actions.DoLog{
 					Cond:     f.Cond,
 					CondTest: f.CondTest,
 				},

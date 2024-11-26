@@ -76,6 +76,8 @@ func (h *AfterResponses) Parse(line string, parts []string, comment string) (str
 		err = h.ParseHTTPRequest(&actions.SetStatus{}, parts, comment)
 	case action == "strict-mode":
 		err = h.ParseHTTPRequest(&actions.StrictMode{}, parts, comment)
+	case action == "do-log":
+		err = h.ParseHTTPRequest(&parsersActions.DoLog{}, parts, comment)
 	case strings.HasPrefix(action, "unset-var("):
 		err = h.ParseHTTPRequest(&parsersActions.UnsetVar{}, parts, comment)
 	case strings.HasPrefix(action, "set-var("):

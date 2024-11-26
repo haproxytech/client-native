@@ -35,6 +35,7 @@ tcp_response_rule:
         - set-var-fmt
         - silent-drop
         - unset-var
+        - do-log
       x-nullable: false
       x-dependency:
         type:

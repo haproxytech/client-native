@@ -48,6 +48,7 @@ http_response_rule:
         - unset-var
         - wait-for-body
         - set-bandwidth-limit
+        - do-log
       x-nullable: false
     capture_sample:
       type: string

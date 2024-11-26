@@ -600,6 +600,12 @@ func ParseHTTPResponseRule(f types.Action) *models.HTTPResponseRule { //nolint:m
 			Cond:     v.Cond,
 			CondTest: v.CondTest,
 		}
+	case *actions.DoLog:
+		return &models.HTTPResponseRule{
+			Type:     models.HTTPResponseRuleTypeDoDashLog,
+			Cond:     v.Cond,
+			CondTest: v.CondTest,
+		}
 	}
 	return nil
 }
@@ -920,6 +926,11 @@ func SerializeHTTPResponseRule(f models.HTTPResponseRule, opt *options.Configura
 	case "set-fc-tos":
 		rule = &actions.SetFcTos{
 			Expr:     common.Expression{Expr: strings.Split(f.Expr+f.TosValue, " ")},
+			Cond:     f.Cond,
+			CondTest: f.CondTest,
+		}
+	case "do-log":
+		rule = &actions.DoLog{
 			Cond:     f.Cond,
 			CondTest: f.CondTest,
 		}

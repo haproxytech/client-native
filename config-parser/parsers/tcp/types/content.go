@@ -96,6 +96,8 @@ func (f *Content) Parse(parts []string, comment string) error {
 		err = f.ParseAction(&actions.SetFcTos{}, parts)
 	case "set-retries":
 		err = f.ParseAction(&actions.SetRetries{}, parts)
+	case "do-log":
+		err = f.ParseAction(&actions.DoLog{}, parts)
 	default:
 		switch {
 		case strings.HasPrefix(parts[2], "track-sc"):

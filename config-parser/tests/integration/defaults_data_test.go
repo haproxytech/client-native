@@ -1861,6 +1861,14 @@ const defaults_httprequestsetretriesvartxnretri = `
 defaults test
   http-request set-retries var(txn.retries) if TRUE
 `
+const defaults_httprequestdolog = `
+defaults test
+  http-request do-log
+`
+const defaults_httprequestdologifFALSE = `
+defaults test
+  http-request do-log if FALSE
+`
 const defaults_httprequestaddheaderAuthorizatio = `
 defaults test
   http-request add-header Authorization Basic\ eC1oYXByb3h5LXJlY3J1aXRzOlBlb3BsZSB3aG8gZGVjb2RlIG1lc3NhZ2VzIG9mdGVuIGxvdmUgd29ya2luZyBhdCBIQVByb3h5LiBEbyBub3QgYmUgc2h5LCBjb250YWN0IHVz
@@ -2301,6 +2309,14 @@ const defaults_httpresponsesetfctos200 = `
 defaults test
   http-response set-fc-tos 200
 `
+const defaults_httpresponsedolog = `
+defaults test
+  http-response do-log
+`
+const defaults_httpresponsedologifFALSE = `
+defaults test
+  http-response do-log if FALSE
+`
 const defaults_httpresponsereturnstatus200conte = `
 defaults test
   http-response return status 200 content-type "text/plain" string "My content" if { var(txn.myip) -m found }
@@ -2516,6 +2532,14 @@ defaults test
 const defaults_httpafterresponsescsetgpt01hdrHo_ = `
 defaults test
   http-after-response sc-set-gpt0(1) hdr(Host),lower if FALSE
+`
+const defaults_httpafterresponsedolog = `
+defaults test
+  http-after-response do-log
+`
+const defaults_httpafterresponsedologifFALSE = `
+defaults test
+  http-after-response do-log if FALSE
 `
 const defaults_httperrorstatus400 = `
 defaults test
@@ -3524,6 +3548,30 @@ defaults test
 const defaults_tcprequestcontentsetfctos100 = `
 defaults test
   tcp-request content set-fc-tos 100
+`
+const defaults_tcprequestcontentdolog = `
+defaults test
+  tcp-request content do-log
+`
+const defaults_tcprequestcontentdologifTRUE = `
+defaults test
+  tcp-request content do-log if TRUE
+`
+const defaults_tcprequestconnectiondolog = `
+defaults test
+  tcp-request connection do-log
+`
+const defaults_tcprequestconnectiondologifTRUE = `
+defaults test
+  tcp-request connection do-log if TRUE
+`
+const defaults_tcprequestsessiondolog = `
+defaults test
+  tcp-request session do-log
+`
+const defaults_tcprequestsessiondologifTRUE = `
+defaults test
+  tcp-request session do-log if TRUE
 `
 const defaults_statsauthadmin1AdMiN123 = `
 defaults test

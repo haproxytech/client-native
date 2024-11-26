@@ -2609,6 +2609,14 @@ const backend_httprequestsetretriesvartxnretri = `
 backend test
   http-request set-retries var(txn.retries) if TRUE
 `
+const backend_httprequestdolog = `
+backend test
+  http-request do-log
+`
+const backend_httprequestdologifFALSE = `
+backend test
+  http-request do-log if FALSE
+`
 const backend_httprequestaddheaderAuthorizatio = `
 backend test
   http-request add-header Authorization Basic\ eC1oYXByb3h5LXJlY3J1aXRzOlBlb3BsZSB3aG8gZGVjb2RlIG1lc3NhZ2VzIG9mdGVuIGxvdmUgd29ya2luZyBhdCBIQVByb3h5LiBEbyBub3QgYmUgc2h5LCBjb250YWN0IHVz
@@ -3049,6 +3057,14 @@ const backend_httpresponsesetfctos200 = `
 backend test
   http-response set-fc-tos 200
 `
+const backend_httpresponsedolog = `
+backend test
+  http-response do-log
+`
+const backend_httpresponsedologifFALSE = `
+backend test
+  http-response do-log if FALSE
+`
 const backend_httpresponsereturnstatus200conte = `
 backend test
   http-response return status 200 content-type "text/plain" string "My content" if { var(txn.myip) -m found }
@@ -3264,6 +3280,14 @@ backend test
 const backend_httpafterresponsescsetgpt01hdrHo_ = `
 backend test
   http-after-response sc-set-gpt0(1) hdr(Host),lower if FALSE
+`
+const backend_httpafterresponsedolog = `
+backend test
+  http-after-response do-log
+`
+const backend_httpafterresponsedologifFALSE = `
+backend test
+  http-after-response do-log if FALSE
 `
 const backend_httperrorstatus400 = `
 backend test
@@ -4273,6 +4297,30 @@ const backend_tcprequestcontentsetfctos100 = `
 backend test
   tcp-request content set-fc-tos 100
 `
+const backend_tcprequestcontentdolog = `
+backend test
+  tcp-request content do-log
+`
+const backend_tcprequestcontentdologifTRUE = `
+backend test
+  tcp-request content do-log if TRUE
+`
+const backend_tcprequestconnectiondolog = `
+backend test
+  tcp-request connection do-log
+`
+const backend_tcprequestconnectiondologifTRUE = `
+backend test
+  tcp-request connection do-log if TRUE
+`
+const backend_tcprequestsessiondolog = `
+backend test
+  tcp-request session do-log
+`
+const backend_tcprequestsessiondologifTRUE = `
+backend test
+  tcp-request session do-log if TRUE
+`
 const backend_tcpresponsecontentluafoo = `
 backend test
   tcp-response content lua.foo
@@ -4380,6 +4428,14 @@ backend test
 const backend_tcpresponsecontentsetfctos0x02 = `
 backend test
   tcp-response content set-fc-tos 0x02
+`
+const backend_tcpresponsecontentdolog = `
+backend test
+  tcp-response content do-log
+`
+const backend_tcpresponsecontentdologifTRUE = `
+backend test
+  tcp-response content do-log if TRUE
 `
 const backend_redirectprefixhttpwwwbarcomcode3 = `
 backend test

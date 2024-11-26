@@ -812,6 +812,12 @@ func ParseHTTPRequestRule(f types.Action) (*models.HTTPRequestRule, error) { //n
 			Cond:     v.Cond,
 			CondTest: v.CondTest,
 		}
+	case *actions.DoLog:
+		rule = &models.HTTPRequestRule{
+			Type:     models.HTTPRequestRuleTypeDoDashLog,
+			Cond:     v.Cond,
+			CondTest: v.CondTest,
+		}
 	}
 
 	return rule, nil
@@ -1312,6 +1318,11 @@ func SerializeHTTPRequestRule(f models.HTTPRequestRule, opt *options.Configurati
 	case "set-retries":
 		rule = &actions.SetRetries{
 			Expr:     common.Expression{Expr: strings.Split(f.Expr, " ")},
+			Cond:     f.Cond,
+			CondTest: f.CondTest,
+		}
+	case "do-log":
+		rule = &actions.DoLog{
 			Cond:     f.Cond,
 			CondTest: f.CondTest,
 		}

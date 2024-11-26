@@ -127,8 +127,8 @@ type HTTPAfterResponseRule struct {
 
 	// type
 	// Required: true
-	// Enum: ["add-header","allow","capture","del-acl","del-header","del-map","replace-header","replace-value","sc-add-gpc","sc-inc-gpc","sc-inc-gpc0","sc-inc-gpc1","sc-set-gpt","sc-set-gpt0","set-header","set-log-level","set-map","set-status","set-var","set-var-fmt","strict-mode","unset-var"]
-	// +kubebuilder:validation:Enum="add-header","allow","capture","del-acl","del-header","del-map","replace-header","replace-value","sc-add-gpc","sc-inc-gpc","sc-inc-gpc0","sc-inc-gpc1","sc-set-gpt","sc-set-gpt0","set-header","set-log-level","set-map","set-status","set-var","set-var-fmt","strict-mode","unset-var";
+	// Enum: ["add-header","allow","capture","del-acl","del-header","del-map","replace-header","replace-value","sc-add-gpc","sc-inc-gpc","sc-inc-gpc0","sc-inc-gpc1","sc-set-gpt","sc-set-gpt0","set-header","set-log-level","set-map","set-status","set-var","set-var-fmt","strict-mode","unset-var","do-log"]
+	// +kubebuilder:validation:Enum="add-header","allow","capture","del-acl","del-header","del-map","replace-header","replace-value","sc-add-gpc","sc-inc-gpc","sc-inc-gpc0","sc-inc-gpc1","sc-set-gpt","sc-set-gpt0","set-header","set-log-level","set-map","set-status","set-var","set-var-fmt","strict-mode","unset-var","do-log";
 	Type string `json:"type"`
 
 	// var expr
@@ -449,7 +449,7 @@ var httpAfterResponseRuleTypeTypePropEnum []interface{}
 
 func init() {
 	var res []string
-	if err := json.Unmarshal([]byte(`["add-header","allow","capture","del-acl","del-header","del-map","replace-header","replace-value","sc-add-gpc","sc-inc-gpc","sc-inc-gpc0","sc-inc-gpc1","sc-set-gpt","sc-set-gpt0","set-header","set-log-level","set-map","set-status","set-var","set-var-fmt","strict-mode","unset-var"]`), &res); err != nil {
+	if err := json.Unmarshal([]byte(`["add-header","allow","capture","del-acl","del-header","del-map","replace-header","replace-value","sc-add-gpc","sc-inc-gpc","sc-inc-gpc0","sc-inc-gpc1","sc-set-gpt","sc-set-gpt0","set-header","set-log-level","set-map","set-status","set-var","set-var-fmt","strict-mode","unset-var","do-log"]`), &res); err != nil {
 		panic(err)
 	}
 	for _, v := range res {
@@ -524,6 +524,9 @@ const (
 
 	// HTTPAfterResponseRuleTypeUnsetDashVar captures enum value "unset-var"
 	HTTPAfterResponseRuleTypeUnsetDashVar string = "unset-var"
+
+	// HTTPAfterResponseRuleTypeDoDashLog captures enum value "do-log"
+	HTTPAfterResponseRuleTypeDoDashLog string = "do-log"
 )
 
 // prop value enum

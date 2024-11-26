@@ -47,7 +47,7 @@ func (h *Responses) ParseHTTPResponse(response types.Action, parts []string, com
 	return nil
 }
 
-func (h *Responses) Parse(line string, parts []string, comment string) (string, error) { //nolint:cyclop
+func (h *Responses) Parse(line string, parts []string, comment string) (string, error) { //nolint:cyclop,gocyclo
 	if len(parts) >= 2 && parts[0] == "http-response" {
 		var err error
 		switch parts[1] {
@@ -99,6 +99,8 @@ func (h *Responses) Parse(line string, parts []string, comment string) (string, 
 			err = h.ParseHTTPResponse(&actions.SetFcMark{}, parts, comment)
 		case "set-fc-tos":
 			err = h.ParseHTTPResponse(&actions.SetFcTos{}, parts, comment)
+		case "do-log":
+			err = h.ParseHTTPResponse(&actions.DoLog{}, parts, comment)
 		default:
 			switch {
 			case strings.HasPrefix(parts[1], "track-sc"):

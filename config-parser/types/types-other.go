@@ -555,6 +555,8 @@ type Action interface {
 //test:ok:http-request set-fc-tos 0xff if TRUE
 //test:ok:http-request set-retries 3
 //test:ok:http-request set-retries var(txn.retries) if TRUE
+//test:ok:http-request do-log
+//test:ok:http-request do-log if FALSE
 type HTTPRequests struct{}
 
 //name:http-response
@@ -735,6 +737,8 @@ type HTTPRequests struct{}
 //test:fail:http-response set-bandwidth-limit my-limit limit period 10s
 //test:ok:http-response set-fc-mark 2000
 //test:ok:http-response set-fc-tos 200
+//test:ok:http-response do-log
+//test:ok:http-response do-log if FALSE
 type HTTPResponses struct{}
 
 //name:http-after-response
@@ -815,6 +819,8 @@ type HTTPResponses struct{}
 //test:fail:http-after-response sc-set-gpt0(1)
 //test:fail:http-after-response sc-set-gpt0
 //test:fail:http-after-response sc-set-gpt0(1) if FALSE
+//test:ok:http-after-response do-log
+//test:ok:http-after-response do-log if FALSE
 type HTTPAfterResponse struct{}
 
 //name:http-error
@@ -1205,6 +1211,12 @@ type TCPType interface {
 //test:ok:tcp-request content set-bc-tos 0xff if some_check
 //test:ok:tcp-request content set-fc-mark 0xffffffff
 //test:ok:tcp-request content set-fc-tos 100
+//test:ok:tcp-request content do-log
+//test:ok:tcp-request content do-log if TRUE
+//test:ok:tcp-request connection do-log
+//test:ok:tcp-request connection do-log if TRUE
+//test:ok:tcp-request session do-log
+//test:ok:tcp-request session do-log if TRUE
 type TCPRequests struct{}
 
 //name:tcp-response
@@ -1261,6 +1273,8 @@ type TCPRequests struct{}
 //test:ok:tcp-response content sc-inc-gpc1(2) if is-error
 //test:ok:tcp-response content set-fc-mark 123456
 //test:ok:tcp-response content set-fc-tos 0x02
+//test:ok:tcp-response content do-log
+//test:ok:tcp-response content do-log if TRUE
 type TCPResponses struct{}
 
 //name:redirect

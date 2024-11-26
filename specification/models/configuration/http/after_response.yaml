@@ -31,6 +31,7 @@ http_after_response_rule:
         - set-var-fmt
         - strict-mode
         - unset-var
+        - do-log
       x-nullable: false
     capture_sample:
       pattern: '^(?:[A-Za-z]+\("([A-Za-z\s]+)"\)|[A-Za-z]+)'

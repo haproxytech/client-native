@@ -74,6 +74,8 @@ func (f *Session) Parse(parts []string, comment string) error {
 		err = f.ParseAction(&actions.SetSrcPort{}, parts)
 	case "set-tos":
 		err = f.ParseAction(&actions.SetTos{}, parts)
+	case "do-log":
+		err = f.ParseAction(&actions.DoLog{}, parts)
 	default:
 		switch {
 		case strings.HasPrefix(parts[2], "track-sc"):

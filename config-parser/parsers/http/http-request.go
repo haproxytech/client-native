@@ -147,6 +147,8 @@ func (h *Requests) Parse(line string, parts []string, comment string) (string, e
 			err = h.ParseHTTPRequest(&actions.SetFcTos{}, parts, comment)
 		case "set-retries":
 			err = h.ParseHTTPRequest(&actions.SetRetries{}, parts, comment)
+		case "do-log":
+			err = h.ParseHTTPRequest(&actions.DoLog{}, parts, comment)
 		default:
 			switch {
 			case strings.HasPrefix(parts[1], "track-sc"):
