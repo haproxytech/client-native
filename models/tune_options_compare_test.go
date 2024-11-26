@@ -85,16 +85,19 @@ func TestTuneOptionsEqualFalse(t *testing.T) {
 			t.Errorf(err.Error())
 		}
 		result.CompMaxlevel = sample.CompMaxlevel + 1
+		result.DisableFastForward = !sample.DisableFastForward
 		result.DisableZeroCopyForwarding = !sample.DisableZeroCopyForwarding
 		result.EventsMaxEventsAtOnce = sample.EventsMaxEventsAtOnce + 1
 		result.FailAlloc = !sample.FailAlloc
 		result.H2BeGlitchesThreshold = Ptr(*sample.H2BeGlitchesThreshold + 1)
 		result.H2BeInitialWindowSize = sample.H2BeInitialWindowSize + 1
 		result.H2BeMaxConcurrentStreams = sample.H2BeMaxConcurrentStreams + 1
+		result.H2BeRxbuf = Ptr(*sample.H2BeRxbuf + 1)
 		result.H2FeGlitchesThreshold = Ptr(*sample.H2FeGlitchesThreshold + 1)
 		result.H2FeInitialWindowSize = sample.H2FeInitialWindowSize + 1
 		result.H2FeMaxConcurrentStreams = sample.H2FeMaxConcurrentStreams + 1
 		result.H2FeMaxTotalStreams = Ptr(*sample.H2FeMaxTotalStreams + 1)
+		result.H2FeRxbuf = Ptr(*sample.H2FeRxbuf + 1)
 		result.H2HeaderTableSize = sample.H2HeaderTableSize + 1
 		result.H2InitialWindowSize = Ptr(*sample.H2InitialWindowSize + 1)
 		result.H2MaxConcurrentStreams = sample.H2MaxConcurrentStreams + 1
@@ -112,6 +115,8 @@ func TestTuneOptionsEqualFalse(t *testing.T) {
 		result.PeersMaxUpdatesAtOnce = sample.PeersMaxUpdatesAtOnce + 1
 		result.PoolHighFdRatio = sample.PoolHighFdRatio + 1
 		result.PoolLowFdRatio = sample.PoolLowFdRatio + 1
+		result.ReniceRuntime = Ptr(*sample.ReniceRuntime + 1)
+		result.ReniceStartup = Ptr(*sample.ReniceStartup + 1)
 		result.RingQueues = Ptr(*sample.RingQueues + 1)
 		result.RunqueueDepth = sample.RunqueueDepth + 1
 		result.StickCounters = Ptr(*sample.StickCounters + 1)
@@ -195,16 +200,19 @@ func TestTuneOptionsDiffFalse(t *testing.T) {
 			t.Errorf(err.Error())
 		}
 		result.CompMaxlevel = sample.CompMaxlevel + 1
+		result.DisableFastForward = !sample.DisableFastForward
 		result.DisableZeroCopyForwarding = !sample.DisableZeroCopyForwarding
 		result.EventsMaxEventsAtOnce = sample.EventsMaxEventsAtOnce + 1
 		result.FailAlloc = !sample.FailAlloc
 		result.H2BeGlitchesThreshold = Ptr(*sample.H2BeGlitchesThreshold + 1)
 		result.H2BeInitialWindowSize = sample.H2BeInitialWindowSize + 1
 		result.H2BeMaxConcurrentStreams = sample.H2BeMaxConcurrentStreams + 1
+		result.H2BeRxbuf = Ptr(*sample.H2BeRxbuf + 1)
 		result.H2FeGlitchesThreshold = Ptr(*sample.H2FeGlitchesThreshold + 1)
 		result.H2FeInitialWindowSize = sample.H2FeInitialWindowSize + 1
 		result.H2FeMaxConcurrentStreams = sample.H2FeMaxConcurrentStreams + 1
 		result.H2FeMaxTotalStreams = Ptr(*sample.H2FeMaxTotalStreams + 1)
+		result.H2FeRxbuf = Ptr(*sample.H2FeRxbuf + 1)
 		result.H2HeaderTableSize = sample.H2HeaderTableSize + 1
 		result.H2InitialWindowSize = Ptr(*sample.H2InitialWindowSize + 1)
 		result.H2MaxConcurrentStreams = sample.H2MaxConcurrentStreams + 1
@@ -222,6 +230,8 @@ func TestTuneOptionsDiffFalse(t *testing.T) {
 		result.PeersMaxUpdatesAtOnce = sample.PeersMaxUpdatesAtOnce + 1
 		result.PoolHighFdRatio = sample.PoolHighFdRatio + 1
 		result.PoolLowFdRatio = sample.PoolLowFdRatio + 1
+		result.ReniceRuntime = Ptr(*sample.ReniceRuntime + 1)
+		result.ReniceStartup = Ptr(*sample.ReniceStartup + 1)
 		result.RingQueues = Ptr(*sample.RingQueues + 1)
 		result.RunqueueDepth = sample.RunqueueDepth + 1
 		result.StickCounters = Ptr(*sample.StickCounters + 1)
@@ -232,7 +242,7 @@ func TestTuneOptionsDiffFalse(t *testing.T) {
 
 	for _, sample := range samples {
 		result := sample.a.Diff(sample.b)
-		if len(result) != 41 {
+		if len(result) != 46 {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {
@@ -242,7 +252,7 @@ func TestTuneOptionsDiffFalse(t *testing.T) {
 			if err != nil {
 				t.Errorf(err.Error())
 			}
-			t.Errorf("Expected TuneOptions to be different in 41 cases, but it is not (%d) %s %s", len(result), a, b)
+			t.Errorf("Expected TuneOptions to be different in 46 cases, but it is not (%d) %s %s", len(result), a, b)
 		}
 	}
 }

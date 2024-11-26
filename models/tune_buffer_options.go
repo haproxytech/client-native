@@ -45,6 +45,11 @@ type TuneBufferOptions struct {
 	// bufsize
 	Bufsize int64 `json:"bufsize,omitempty"`
 
+	// bufsize small
+	// Minimum: 1
+	// +kubebuilder:validation:Minimum=1
+	BufsizeSmall *int64 `json:"bufsize_small,omitempty"`
+
 	// pipesize
 	Pipesize int64 `json:"pipesize,omitempty"`
 
@@ -84,6 +89,10 @@ func (m *TuneBufferOptions) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
+	if err := m.validateBufsizeSmall(formats); err != nil {
+		res = append(res, err)
+	}
+
 	if len(res) > 0 {
 		return errors.CompositeValidationError(res...)
 	}
@@ -96,6 +105,18 @@ func (m *TuneBufferOptions) validateBuffersReserve(formats strfmt.Registry) erro
 	}
 
 	if err := validate.MinimumInt("buffers_reserve", "body", m.BuffersReserve, 2, false); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *TuneBufferOptions) validateBufsizeSmall(formats strfmt.Registry) error {
+	if swag.IsZero(m.BufsizeSmall) { // not required
+		return nil
+	}
+
+	if err := validate.MinimumInt("bufsize_small", "body", *m.BufsizeSmall, 1, false); err != nil {
 		return err
 	}
 

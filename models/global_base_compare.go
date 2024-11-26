@@ -205,6 +205,10 @@ func (s GlobalBase) Equal(t GlobalBase, opts ...Options) bool {
 		return false
 	}
 
+	if s.ExposeDeprecatedDirectives != t.ExposeDeprecatedDirectives {
+		return false
+	}
+
 	if s.ExposeExperimentalDirectives != t.ExposeExperimentalDirectives {
 		return false
 	}
@@ -232,6 +236,10 @@ func (s GlobalBase) Equal(t GlobalBase, opts ...Options) bool {
 			}
 		}
 	} else if !s.FiftyOneDegreesOptions.Equal(*t.FiftyOneDegreesOptions, opt) {
+		return false
+	}
+
+	if !equalPointers(s.ForceCfgParserPause, t.ForceCfgParserPause) {
 		return false
 	}
 
@@ -687,6 +695,10 @@ func (s GlobalBase) Equal(t GlobalBase, opts ...Options) bool {
 		return false
 	}
 
+	if !equalPointers(s.WarnBlockedTrafficAfter, t.WarnBlockedTrafficAfter) {
+		return false
+	}
+
 	if s.WurflOptions == nil || t.WurflOptions == nil {
 		if s.WurflOptions != nil || t.WurflOptions != nil {
 			if opt.NilSameAsEmpty {
@@ -939,6 +951,10 @@ func (s GlobalBase) Diff(t GlobalBase, opts ...Options) map[string][]interface{}
 		diff["EnvironmentOptions"] = []interface{}{ValueOrNil(s.EnvironmentOptions), ValueOrNil(t.EnvironmentOptions)}
 	}
 
+	if s.ExposeDeprecatedDirectives != t.ExposeDeprecatedDirectives {
+		diff["ExposeDeprecatedDirectives"] = []interface{}{s.ExposeDeprecatedDirectives, t.ExposeDeprecatedDirectives}
+	}
+
 	if s.ExposeExperimentalDirectives != t.ExposeExperimentalDirectives {
 		diff["ExposeExperimentalDirectives"] = []interface{}{s.ExposeExperimentalDirectives, t.ExposeExperimentalDirectives}
 	}
@@ -967,6 +983,10 @@ func (s GlobalBase) Diff(t GlobalBase, opts ...Options) map[string][]interface{}
 		}
 	} else if !s.FiftyOneDegreesOptions.Equal(*t.FiftyOneDegreesOptions, opt) {
 		diff["FiftyOneDegreesOptions"] = []interface{}{ValueOrNil(s.FiftyOneDegreesOptions), ValueOrNil(t.FiftyOneDegreesOptions)}
+	}
+
+	if !equalPointers(s.ForceCfgParserPause, t.ForceCfgParserPause) {
+		diff["ForceCfgParserPause"] = []interface{}{ValueOrNil(s.ForceCfgParserPause), ValueOrNil(t.ForceCfgParserPause)}
 	}
 
 	if s.Gid != t.Gid {
@@ -1433,6 +1453,10 @@ func (s GlobalBase) Diff(t GlobalBase, opts ...Options) map[string][]interface{}
 
 	if s.User != t.User {
 		diff["User"] = []interface{}{s.User, t.User}
+	}
+
+	if !equalPointers(s.WarnBlockedTrafficAfter, t.WarnBlockedTrafficAfter) {
+		diff["WarnBlockedTrafficAfter"] = []interface{}{ValueOrNil(s.WarnBlockedTrafficAfter), ValueOrNil(t.WarnBlockedTrafficAfter)}
 	}
 
 	if s.WurflOptions == nil || t.WurflOptions == nil {

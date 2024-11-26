@@ -87,6 +87,9 @@ type GlobalBase struct {
 	// environment options
 	EnvironmentOptions *EnvironmentOptions `json:"environment_options,omitempty"`
 
+	// expose deprecated directives
+	ExposeDeprecatedDirectives bool `json:"expose_deprecated_directives,omitempty"`
+
 	// expose experimental directives
 	ExposeExperimentalDirectives bool `json:"expose_experimental_directives,omitempty"`
 
@@ -95,6 +98,11 @@ type GlobalBase struct {
 
 	// fifty one degrees options
 	FiftyOneDegreesOptions *FiftyOneDegreesOptions `json:"fifty_one_degrees_options,omitempty"`
+
+	// force cfg parser pause
+	// Minimum: 0
+	// +kubebuilder:validation:Minimum=0
+	ForceCfgParserPause *int64 `json:"force_cfg_parser_pause,omitempty"`
 
 	// gid
 	Gid int64 `json:"gid,omitempty"`
@@ -255,6 +263,11 @@ type GlobalBase struct {
 	// +kubebuilder:validation:Pattern=`^[^\s]+$`
 	User string `json:"user,omitempty"`
 
+	// warn blocked traffic after
+	// Minimum: 1
+	// +kubebuilder:validation:Minimum=1
+	WarnBlockedTrafficAfter *int64 `json:"warn_blocked_traffic_after,omitempty"`
+
 	// wurfl options
 	WurflOptions *WurflOptions `json:"wurfl_options,omitempty"`
 }
@@ -312,6 +325,10 @@ func (m *GlobalBase) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateFiftyOneDegreesOptions(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateForceCfgParserPause(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -412,6 +429,10 @@ func (m *GlobalBase) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateUser(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateWarnBlockedTrafficAfter(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -695,6 +716,18 @@ func (m *GlobalBase) validateFiftyOneDegreesOptions(formats strfmt.Registry) err
 			}
 			return err
 		}
+	}
+
+	return nil
+}
+
+func (m *GlobalBase) validateForceCfgParserPause(formats strfmt.Registry) error {
+	if swag.IsZero(m.ForceCfgParserPause) { // not required
+		return nil
+	}
+
+	if err := validate.MinimumInt("force_cfg_parser_pause", "body", *m.ForceCfgParserPause, 0, false); err != nil {
+		return err
 	}
 
 	return nil
@@ -1150,6 +1183,18 @@ func (m *GlobalBase) validateUser(formats strfmt.Registry) error {
 	}
 
 	if err := validate.Pattern("user", "body", m.User, `^[^\s]+$`); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *GlobalBase) validateWarnBlockedTrafficAfter(formats strfmt.Registry) error {
+	if swag.IsZero(m.WarnBlockedTrafficAfter) { // not required
+		return nil
+	}
+
+	if err := validate.MinimumInt("warn_blocked_traffic_after", "body", *m.WarnBlockedTrafficAfter, 1, false); err != nil {
 		return err
 	}
 

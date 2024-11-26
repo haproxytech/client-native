@@ -36,6 +36,10 @@ func (s TuneBufferOptions) Equal(t TuneBufferOptions, opts ...Options) bool {
 		return false
 	}
 
+	if !equalPointers(s.BufsizeSmall, t.BufsizeSmall) {
+		return false
+	}
+
 	if s.Pipesize != t.Pipesize {
 		return false
 	}
@@ -97,6 +101,10 @@ func (s TuneBufferOptions) Diff(t TuneBufferOptions, opts ...Options) map[string
 
 	if s.Bufsize != t.Bufsize {
 		diff["Bufsize"] = []interface{}{s.Bufsize, t.Bufsize}
+	}
+
+	if !equalPointers(s.BufsizeSmall, t.BufsizeSmall) {
+		diff["BufsizeSmall"] = []interface{}{ValueOrNil(s.BufsizeSmall), ValueOrNil(t.BufsizeSmall)}
 	}
 
 	if s.Pipesize != t.Pipesize {

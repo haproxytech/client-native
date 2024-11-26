@@ -32,6 +32,10 @@ func (s TuneOptions) Equal(t TuneOptions, opts ...Options) bool {
 		return false
 	}
 
+	if s.DisableFastForward != t.DisableFastForward {
+		return false
+	}
+
 	if s.DisableZeroCopyForwarding != t.DisableZeroCopyForwarding {
 		return false
 	}
@@ -68,6 +72,10 @@ func (s TuneOptions) Equal(t TuneOptions, opts ...Options) bool {
 		return false
 	}
 
+	if !equalPointers(s.H2BeRxbuf, t.H2BeRxbuf) {
+		return false
+	}
+
 	if !equalPointers(s.H2FeGlitchesThreshold, t.H2FeGlitchesThreshold) {
 		return false
 	}
@@ -81,6 +89,10 @@ func (s TuneOptions) Equal(t TuneOptions, opts ...Options) bool {
 	}
 
 	if !equalPointers(s.H2FeMaxTotalStreams, t.H2FeMaxTotalStreams) {
+		return false
+	}
+
+	if !equalPointers(s.H2FeRxbuf, t.H2FeRxbuf) {
 		return false
 	}
 
@@ -172,6 +184,14 @@ func (s TuneOptions) Equal(t TuneOptions, opts ...Options) bool {
 		return false
 	}
 
+	if !equalPointers(s.ReniceRuntime, t.ReniceRuntime) {
+		return false
+	}
+
+	if !equalPointers(s.ReniceStartup, t.ReniceStartup) {
+		return false
+	}
+
 	if !equalPointers(s.RingQueues, t.RingQueues) {
 		return false
 	}
@@ -205,6 +225,10 @@ func (s TuneOptions) Diff(t TuneOptions, opts ...Options) map[string][]interface
 
 	if s.CompMaxlevel != t.CompMaxlevel {
 		diff["CompMaxlevel"] = []interface{}{s.CompMaxlevel, t.CompMaxlevel}
+	}
+
+	if s.DisableFastForward != t.DisableFastForward {
+		diff["DisableFastForward"] = []interface{}{s.DisableFastForward, t.DisableFastForward}
 	}
 
 	if s.DisableZeroCopyForwarding != t.DisableZeroCopyForwarding {
@@ -243,6 +267,10 @@ func (s TuneOptions) Diff(t TuneOptions, opts ...Options) map[string][]interface
 		diff["H2BeMaxConcurrentStreams"] = []interface{}{s.H2BeMaxConcurrentStreams, t.H2BeMaxConcurrentStreams}
 	}
 
+	if !equalPointers(s.H2BeRxbuf, t.H2BeRxbuf) {
+		diff["H2BeRxbuf"] = []interface{}{ValueOrNil(s.H2BeRxbuf), ValueOrNil(t.H2BeRxbuf)}
+	}
+
 	if !equalPointers(s.H2FeGlitchesThreshold, t.H2FeGlitchesThreshold) {
 		diff["H2FeGlitchesThreshold"] = []interface{}{ValueOrNil(s.H2FeGlitchesThreshold), ValueOrNil(t.H2FeGlitchesThreshold)}
 	}
@@ -257,6 +285,10 @@ func (s TuneOptions) Diff(t TuneOptions, opts ...Options) map[string][]interface
 
 	if !equalPointers(s.H2FeMaxTotalStreams, t.H2FeMaxTotalStreams) {
 		diff["H2FeMaxTotalStreams"] = []interface{}{ValueOrNil(s.H2FeMaxTotalStreams), ValueOrNil(t.H2FeMaxTotalStreams)}
+	}
+
+	if !equalPointers(s.H2FeRxbuf, t.H2FeRxbuf) {
+		diff["H2FeRxbuf"] = []interface{}{ValueOrNil(s.H2FeRxbuf), ValueOrNil(t.H2FeRxbuf)}
 	}
 
 	if s.H2HeaderTableSize != t.H2HeaderTableSize {
@@ -345,6 +377,14 @@ func (s TuneOptions) Diff(t TuneOptions, opts ...Options) map[string][]interface
 
 	if s.PtZeroCopyForwarding != t.PtZeroCopyForwarding {
 		diff["PtZeroCopyForwarding"] = []interface{}{s.PtZeroCopyForwarding, t.PtZeroCopyForwarding}
+	}
+
+	if !equalPointers(s.ReniceRuntime, t.ReniceRuntime) {
+		diff["ReniceRuntime"] = []interface{}{ValueOrNil(s.ReniceRuntime), ValueOrNil(t.ReniceRuntime)}
+	}
+
+	if !equalPointers(s.ReniceStartup, t.ReniceStartup) {
+		diff["ReniceStartup"] = []interface{}{ValueOrNil(s.ReniceStartup), ValueOrNil(t.ReniceStartup)}
 	}
 
 	if !equalPointers(s.RingQueues, t.RingQueues) {

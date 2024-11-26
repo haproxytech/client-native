@@ -157,6 +157,7 @@
             "properties_cookie": "chocolate",
             "separator": "-"
         },
+        "expose_deprecated_directives": true,
         "expose_experimental_directives": true,
         "external_check": true,
         "fifty_one_degrees_options": {
@@ -166,6 +167,7 @@
             "property_separator": "/"
         },
         "fingerprint_ssl_bufsize": 56,
+        "force_cfg_parser_pause": 1000,
         "gid": 1,
         "grace": 10000,
         "group": "anderson",
@@ -257,6 +259,7 @@
         "tune_options": {
             "applet_zero_copy_forwarding": "disabled",
             "comp_maxlevel": 14,
+            "disable_fast_forward": true,
             "disable_zero_copy_forwarding": true,
             "events_max_events_at_once": 10,
             "fail_alloc": true,
@@ -266,9 +269,11 @@
             "h2_be_glitches_threshold": 16,
             "h2_be_initial_window_size": 201,
             "h2_be_max_concurrent_streams": 202,
+            "h2_be_rxbuf": 16384,
             "h2_fe_glitches_threshold": 8,
             "h2_fe_initial_window_size": 203,
             "h2_fe_max_concurrent_streams": 204,
+            "h2_fe_rxbuf": 8192,
             "h2_fe_max_total_streams": 8192,
             "h2_header_table_size": 15,
             "h2_initial_window_size": 16,
@@ -292,6 +297,8 @@
             "pool_high_fd_ratio": 33,
             "pool_low_fd_ratio": 34,
             "pt_zero_copy_forwarding": "enabled",
+            "renice_runtime": -10,
+            "renice_startup": 5,
             "ring_queues": 8,
             "runqueue_depth": 38,
             "sched_low_latency": "enabled",
@@ -301,6 +308,7 @@
         "uid": 1,
         "ulimit_n": 10,
         "user": "thomas",
+        "warn_blocked_traffic_after": 50,
         "wurfl_options": {
             "cache_size": 64,
             "data_file": "path",
@@ -367,7 +375,8 @@
             "pipesize": 32,
             "buffers_limit": 11,
             "buffers_reserve": 12,
-            "bufsize": 13
+            "bufsize": 13,
+            "bufsize_small": 8192
         },
         "tune_lua_options": {
             "burst_timeout": 205,

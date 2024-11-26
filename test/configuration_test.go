@@ -52,7 +52,9 @@ global
   tune.buffers.limit 11
   tune.buffers.reserve 12
   tune.bufsize 13
+  tune.bufsize.small 8k
   tune.comp.maxlevel 14
+  tune.disable-fast-forward
   tune.disable-zero-copy-forwarding
   tune.events.max-events-at-once 10
   tune.fail-alloc
@@ -126,6 +128,8 @@ global
   tune.zlib.memlevel 8
   tune.zlib.windowsize 10
   tune.memory.hot-size 56
+  tune.renice.runtime -10
+  tune.renice.startup 5
   busy-polling
   max-spread-checks 1ms
   close-spread-time 1s
@@ -157,7 +161,9 @@ global
   ssl-skip-self-issued-ca
   node node
   description description
+  expose-deprecated-directives
   expose-experimental-directives
+  force-cfg-parser-pause 1s
   insecure-fork-wanted
   insecure-setuid-wanted
   issuers-chain-path issuers-chain-path
@@ -228,10 +234,12 @@ global
   tune.h2.be.glitches-threshold 16
   tune.h2.be.initial-window-size 201
   tune.h2.be.max-concurrent-streams 202
+  tune.h2.be.rxbuf 16k
   tune.h2.fe.glitches-threshold 8
   tune.h2.fe.initial-window-size 203
   tune.h2.fe.max-concurrent-streams 204
   tune.h2.fe.max-total-streams 8192
+  tune.h2.fe.rxbuf 8k
   tune.lua.burst-timeout 205
   ssl-default-bind-sigalgs RSA+SHA256
   ssl-default-bind-client-sigalgs ECDSA+SHA256:RSA+SHA256
@@ -268,6 +276,7 @@ global
   ocsp-update.maxdelay 10
   ocsp-update.mindelay 7
   ocsp-update.mode on
+  warn-blocked-traffic-after 50ms
 
 defaults test_defaults
   acl invalid_src  src          0.0.0.0/7 224.0.0.0/3

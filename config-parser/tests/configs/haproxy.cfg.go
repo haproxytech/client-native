@@ -39,16 +39,22 @@ global
   tune.buffers.limit 30
   tune.buffers.reserve 3
   tune.bufsize 32768
+  tune.bufsize.small 16k
   tune.disable-zero-copy-forwarding
+  tune.disable-fast-forward
   tune.events.max-events-at-once 150
   tune.h1.zero-copy-fwd-recv on
   tune.h1.zero-copy-fwd-send on
   tune.h2.be.glitches-threshold 16
+  tune.h2.be.rxbuf 8k
   tune.h2.fe.glitches-threshold 24
   tune.h2.fe.max-total-streams 1048576
+  tune.h2.fe.rxbuf 32k
   tune.h2.zero-copy-fwd-send on
   tune.lua.maxmem 65536
   tune.pt.zero-copy-forwarding on
+  tune.renice.runtime -10
+  tune.renice.startup 8
   tune.ring.queues 8
   tune.ssl.default-dh-param 2048
   tune.quic.reorder-ratio 75
@@ -57,6 +63,9 @@ global
   ssl-default-bind-ciphers ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-AES256-GCM-SHA384:DHE-RSA-AES128-GCM-SHA256:DHE-DSS-AES128-GCM-SHA256:kEDH+AESGCM:ECDHE-RSA-AES128-SHA256:ECDHE-ECDSA-AES128-SHA256:ECDHE-RSA-AES128-SHA:ECDHE-ECDSA-AES128-SHA:ECDHE-RSA-AES256-SHA384:ECDHE-ECDSA-AES256-SHA384:ECDHE-RSA-AES256-SHA:ECDHE-ECDSA-AES256-SHA:DHE-RSA-AES128-SHA256:DHE-RSA-AES128-SHA:DHE-DSS-AES128-SHA256:DHE-RSA-AES256-SHA256:DHE-DSS-AES256-SHA:DHE-RSA-AES256-SHA:!aNULL:!eNULL:!EXPORT:!DES:!RC4:!3DES:!MD5:!PSK
   ssl-load-extra-del-ext
   log 127.0.0.1:514 local0 notice
+  expose-deprecated-directives
+  force-cfg-parser-pause 1s
+  warn-blocked-traffic-after 50ms
   # random comment before snippet
   ###_config-snippet_### BEGIN
   tune.ssl.default-dh-param 2048

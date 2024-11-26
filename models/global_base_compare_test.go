@@ -86,8 +86,10 @@ func TestGlobalBaseEqualFalse(t *testing.T) {
 		}
 		result.CloseSpreadTime = Ptr(*sample.CloseSpreadTime + 1)
 		result.Daemon = !sample.Daemon
+		result.ExposeDeprecatedDirectives = !sample.ExposeDeprecatedDirectives
 		result.ExposeExperimentalDirectives = !sample.ExposeExperimentalDirectives
 		result.ExternalCheck = !sample.ExternalCheck
+		result.ForceCfgParserPause = Ptr(*sample.ForceCfgParserPause + 1)
 		result.Gid = sample.Gid + 1
 		result.Grace = Ptr(*sample.Grace + 1)
 		result.H1AcceptPayloadWithAnyMethod = !sample.H1AcceptPayloadWithAnyMethod
@@ -110,6 +112,7 @@ func TestGlobalBaseEqualFalse(t *testing.T) {
 		result.ThreadGroups = sample.ThreadGroups + 1
 		result.UID = sample.UID + 1
 		result.Ulimitn = sample.Ulimitn + 1
+		result.WarnBlockedTrafficAfter = Ptr(*sample.WarnBlockedTrafficAfter + 1)
 		samples = append(samples, struct {
 			a, b GlobalBase
 		}{sample, result})
@@ -191,8 +194,10 @@ func TestGlobalBaseDiffFalse(t *testing.T) {
 		}
 		result.CloseSpreadTime = Ptr(*sample.CloseSpreadTime + 1)
 		result.Daemon = !sample.Daemon
+		result.ExposeDeprecatedDirectives = !sample.ExposeDeprecatedDirectives
 		result.ExposeExperimentalDirectives = !sample.ExposeExperimentalDirectives
 		result.ExternalCheck = !sample.ExternalCheck
+		result.ForceCfgParserPause = Ptr(*sample.ForceCfgParserPause + 1)
 		result.Gid = sample.Gid + 1
 		result.Grace = Ptr(*sample.Grace + 1)
 		result.H1AcceptPayloadWithAnyMethod = !sample.H1AcceptPayloadWithAnyMethod
@@ -215,6 +220,7 @@ func TestGlobalBaseDiffFalse(t *testing.T) {
 		result.ThreadGroups = sample.ThreadGroups + 1
 		result.UID = sample.UID + 1
 		result.Ulimitn = sample.Ulimitn + 1
+		result.WarnBlockedTrafficAfter = Ptr(*sample.WarnBlockedTrafficAfter + 1)
 		samples = append(samples, struct {
 			a, b GlobalBase
 		}{sample, result})
@@ -222,7 +228,7 @@ func TestGlobalBaseDiffFalse(t *testing.T) {
 
 	for _, sample := range samples {
 		result := sample.a.Diff(sample.b)
-		if len(result) != 66 {
+		if len(result) != 69 {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {
@@ -232,7 +238,7 @@ func TestGlobalBaseDiffFalse(t *testing.T) {
 			if err != nil {
 				t.Errorf(err.Error())
 			}
-			t.Errorf("Expected GlobalBase to be different in 66 cases, but it is not (%d) %s %s", len(result), a, b)
+			t.Errorf("Expected GlobalBase to be different in 69 cases, but it is not (%d) %s %s", len(result), a, b)
 		}
 	}
 }

@@ -42,6 +42,9 @@ type TuneOptions struct {
 	// comp maxlevel
 	CompMaxlevel int64 `json:"comp_maxlevel,omitempty"`
 
+	// disable fast forward
+	DisableFastForward bool `json:"disable_fast_forward,omitempty"`
+
 	// disable zero copy forwarding
 	DisableZeroCopyForwarding bool `json:"disable_zero_copy_forwarding,omitempty"`
 
@@ -79,6 +82,9 @@ type TuneOptions struct {
 	// h2 be max concurrent streams
 	H2BeMaxConcurrentStreams int64 `json:"h2_be_max_concurrent_streams,omitempty"`
 
+	// h2 be rxbuf
+	H2BeRxbuf *int64 `json:"h2_be_rxbuf,omitempty"`
+
 	// h2 fe glitches threshold
 	H2FeGlitchesThreshold *int64 `json:"h2_fe_glitches_threshold,omitempty"`
 
@@ -90,6 +96,9 @@ type TuneOptions struct {
 
 	// h2 fe max total streams
 	H2FeMaxTotalStreams *int64 `json:"h2_fe_max_total_streams,omitempty"`
+
+	// h2 fe rxbuf
+	H2FeRxbuf *int64 `json:"h2_fe_rxbuf,omitempty"`
 
 	// h2 header table size
 	// Maximum: 65535
@@ -177,6 +186,20 @@ type TuneOptions struct {
 	// +kubebuilder:validation:Enum="enabled","disabled";
 	PtZeroCopyForwarding string `json:"pt_zero_copy_forwarding,omitempty"`
 
+	// renice runtime
+	// Maximum: 19
+	// Minimum: -20
+	// +kubebuilder:validation:Maximum=19
+	// +kubebuilder:validation:Minimum=-20
+	ReniceRuntime *int64 `json:"renice_runtime,omitempty"`
+
+	// renice startup
+	// Maximum: 19
+	// Minimum: -20
+	// +kubebuilder:validation:Maximum=19
+	// +kubebuilder:validation:Minimum=-20
+	ReniceStartup *int64 `json:"renice_startup,omitempty"`
+
 	// ring queues
 	RingQueues *int64 `json:"ring_queues,omitempty"`
 
@@ -245,6 +268,14 @@ func (m *TuneOptions) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validatePtZeroCopyForwarding(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateReniceRuntime(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateReniceStartup(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -693,6 +724,38 @@ func (m *TuneOptions) validatePtZeroCopyForwarding(formats strfmt.Registry) erro
 
 	// value enum
 	if err := m.validatePtZeroCopyForwardingEnum("pt_zero_copy_forwarding", "body", m.PtZeroCopyForwarding); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *TuneOptions) validateReniceRuntime(formats strfmt.Registry) error {
+	if swag.IsZero(m.ReniceRuntime) { // not required
+		return nil
+	}
+
+	if err := validate.MinimumInt("renice_runtime", "body", *m.ReniceRuntime, -20, false); err != nil {
+		return err
+	}
+
+	if err := validate.MaximumInt("renice_runtime", "body", *m.ReniceRuntime, 19, false); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *TuneOptions) validateReniceStartup(formats strfmt.Registry) error {
+	if swag.IsZero(m.ReniceStartup) { // not required
+		return nil
+	}
+
+	if err := validate.MinimumInt("renice_startup", "body", *m.ReniceStartup, -20, false); err != nil {
+		return err
+	}
+
+	if err := validate.MaximumInt("renice_startup", "body", *m.ReniceStartup, 19, false); err != nil {
 		return err
 	}
 

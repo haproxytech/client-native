@@ -1197,6 +1197,15 @@ func parseTuneOptions(p parser.Parser) (*models.TuneOptions, error) { //nolint:g
 		options.CompMaxlevel = intOption
 	}
 
+	boolOption, err = parseBoolOption(p, "tune.disable-fast-forward")
+	if err != nil {
+		return nil, err
+	}
+	if boolOption {
+		isEmpty = false
+		options.DisableFastForward = boolOption
+	}
+
 	boolOption, err = parseBoolOption(p, "tune.disable-zero-copy-forwarding")
 	if err != nil {
 		return nil, err
@@ -1494,6 +1503,15 @@ func parseTuneOptions(p parser.Parser) (*models.TuneOptions, error) { //nolint:g
 		options.H2BeMaxConcurrentStreams = intOption
 	}
 
+	intPOption, err = parseSizeOption(p, "tune.h2.be.rxbuf")
+	if err != nil {
+		return nil, err
+	}
+	if intPOption != nil {
+		isEmpty = false
+		options.H2BeRxbuf = intPOption
+	}
+
 	intPOption, err = parseInt64POption(p, "tune.h2.fe.glitches-threshold")
 	if err != nil {
 		return nil, err
@@ -1530,6 +1548,15 @@ func parseTuneOptions(p parser.Parser) (*models.TuneOptions, error) { //nolint:g
 		options.H2FeMaxTotalStreams = intPOption
 	}
 
+	intPOption, err = parseSizeOption(p, "tune.h2.fe.rxbuf")
+	if err != nil {
+		return nil, err
+	}
+	if intPOption != nil {
+		isEmpty = false
+		options.H2FeRxbuf = intPOption
+	}
+
 	strOption, err = parseOnOffOption(p, "tune.h2.zero-copy-fwd-send")
 	if err != nil {
 		return nil, err
@@ -1546,6 +1573,24 @@ func parseTuneOptions(p parser.Parser) (*models.TuneOptions, error) { //nolint:g
 	if strOption != "" {
 		isEmpty = false
 		options.PtZeroCopyForwarding = strOption
+	}
+
+	intPOption, err = parseInt64POption(p, "tune.renice.runtime")
+	if err != nil {
+		return nil, err
+	}
+	if intPOption != nil {
+		isEmpty = false
+		options.ReniceRuntime = intPOption
+	}
+
+	intPOption, err = parseInt64POption(p, "tune.renice.startup")
+	if err != nil {
+		return nil, err
+	}
+	if intPOption != nil {
+		isEmpty = false
+		options.ReniceStartup = intPOption
 	}
 
 	if isEmpty {
@@ -1583,6 +1628,15 @@ func parseTuneBufferOptions(p parser.Parser) (*models.TuneBufferOptions, error) 
 	if intOption != 0 {
 		isEmpty = false
 		options.Bufsize = intOption
+	}
+
+	intPOption, err = parseSizeOption(p, "tune.bufsize.small")
+	if err != nil {
+		return nil, err
+	}
+	if intPOption != nil {
+		isEmpty = false
+		options.BufsizeSmall = intPOption
 	}
 
 	intOption, err = parseInt64Option(p, "tune.pipesize")
@@ -2122,6 +2176,12 @@ func ParseGlobalSection(p parser.Parser) (*models.Global, error) { //nolint:goco
 	}
 	global.EnvironmentOptions = envOptions
 
+	exposeDeprecatedDirectives, err := parseBoolOption(p, "expose-deprecated-directives")
+	if err != nil {
+		return nil, err
+	}
+	global.ExposeDeprecatedDirectives = exposeDeprecatedDirectives
+
 	exposeExperimentalDirectives, err := parseBoolOption(p, "expose-experimental-directives")
 	if err != nil {
 		return nil, err
@@ -2139,6 +2199,11 @@ func ParseGlobalSection(p parser.Parser) (*models.Global, error) { //nolint:goco
 		return nil, err
 	}
 	global.FiftyOneDegreesOptions = fiftyOneDegreesOptions
+
+	global.ForceCfgParserPause, err = parseTimeoutOption(p, "force-cfg-parser-pause")
+	if err != nil {
+		return nil, err
+	}
 
 	gid, err := parseInt64Option(p, "gid")
 	if err != nil {
@@ -2459,6 +2524,11 @@ func ParseGlobalSection(p parser.Parser) (*models.Global, error) { //nolint:goco
 		return nil, err
 	}
 	global.Ulimitn = ulimitn
+
+	global.WarnBlockedTrafficAfter, err = parseTimeoutOption(p, "warn-blocked-traffic-after")
+	if err != nil {
+		return nil, err
+	}
 
 	wurflOptions, err := parseWurflOptions(p)
 	if err != nil {
@@ -2995,6 +3065,10 @@ func SerializeGlobalSection(p parser.Parser, data *models.Global, opt *options.C
 		return err
 	}
 
+	if err := serializeBoolOption(p, "expose-deprecated-directives", data.ExposeDeprecatedDirectives); err != nil {
+		return err
+	}
+
 	if err := serializeBoolOption(p, "expose-experimental-directives", data.ExposeExperimentalDirectives); err != nil {
 		return err
 	}
@@ -3004,6 +3078,10 @@ func SerializeGlobalSection(p parser.Parser, data *models.Global, opt *options.C
 	}
 
 	if err := serializeFiftyOneDegreesOptions(p, data.FiftyOneDegreesOptions); err != nil {
+		return err
+	}
+
+	if err := serializeTimeoutOption(p, "force-cfg-parser-pause", data.ForceCfgParserPause, opt); err != nil {
 		return err
 	}
 
@@ -3233,6 +3311,10 @@ func SerializeGlobalSection(p parser.Parser, data *models.Global, opt *options.C
 		return err
 	}
 
+	if err := serializeTimeoutOption(p, "warn-blocked-traffic-after", data.WarnBlockedTrafficAfter, opt); err != nil {
+		return err
+	}
+
 	return serializeWurflOptions(p, data.WurflOptions)
 }
 
@@ -3335,6 +3417,9 @@ func serializeTuneBufferOptions(p parser.Parser, options *models.TuneBufferOptio
 		return err
 	}
 	if err := serializeInt64Option(p, "tune.bufsize", options.Bufsize); err != nil {
+		return err
+	}
+	if err := serializeSizeOption(p, "tune.bufsize.small", options.BufsizeSmall); err != nil {
 		return err
 	}
 	if err := serializeInt64Option(p, "tune.pipesize", options.Pipesize); err != nil {
@@ -3490,7 +3575,7 @@ func serializeTuneZlibOptions(p parser.Parser, options *models.TuneZlibOptions) 
 	return serializeInt64Option(p, "tune.zlib.windowsize", options.Windowsize)
 }
 
-func serializeTuneOptions(p parser.Parser, options *models.TuneOptions, configOptions *options.ConfigurationOptions) error { //nolint:gocognit
+func serializeTuneOptions(p parser.Parser, options *models.TuneOptions, configOptions *options.ConfigurationOptions) error { //nolint:gocognit,gocyclo,cyclop
 	if options == nil {
 		options = &models.TuneOptions{}
 	}
@@ -3498,6 +3583,9 @@ func serializeTuneOptions(p parser.Parser, options *models.TuneOptions, configOp
 		return err
 	}
 	if err := serializeInt64Option(p, "tune.comp.maxlevel", options.CompMaxlevel); err != nil {
+		return err
+	}
+	if err := serializeBoolOption(p, "tune.disable-fast-forward", options.DisableFastForward); err != nil {
 		return err
 	}
 	if err := serializeBoolOption(p, "tune.disable-zero-copy-forwarding", options.DisableZeroCopyForwarding); err != nil {
@@ -3599,6 +3687,9 @@ func serializeTuneOptions(p parser.Parser, options *models.TuneOptions, configOp
 	if err := serializeInt64Option(p, "tune.h2.be.max-concurrent-streams", options.H2BeMaxConcurrentStreams); err != nil {
 		return err
 	}
+	if err := serializeSizeOption(p, "tune.h2.be.rxbuf", options.H2BeRxbuf); err != nil {
+		return err
+	}
 	if err := serializeInt64POption(p, "tune.h2.fe.glitches-threshold", options.H2FeGlitchesThreshold); err != nil {
 		return err
 	}
@@ -3611,10 +3702,22 @@ func serializeTuneOptions(p parser.Parser, options *models.TuneOptions, configOp
 	if err := serializeInt64POption(p, "tune.h2.fe.max-total-streams", options.H2FeMaxTotalStreams); err != nil {
 		return err
 	}
+	if err := serializeSizeOption(p, "tune.h2.fe.rxbuf", options.H2FeRxbuf); err != nil {
+		return err
+	}
 	if err := serializeOnOffOption(p, "tune.h2.zero-copy-fwd-send", options.H2ZeroCopyFwdSend); err != nil {
 		return err
 	}
-	return serializeOnOffOption(p, "tune.pt.zero-copy-forwarding", options.PtZeroCopyForwarding)
+	if err := serializeOnOffOption(p, "tune.pt.zero-copy-forwarding", options.PtZeroCopyForwarding); err != nil {
+		return err
+	}
+	if err := serializeInt64POption(p, "tune.renice.runtime", options.ReniceRuntime); err != nil {
+		return err
+	}
+	if err := serializeInt64POption(p, "tune.renice.startup", options.ReniceStartup); err != nil {
+		return err
+	}
+	return nil
 }
 
 func serializeTimeoutOption(p parser.Parser, option string, data *int64, opt *options.ConfigurationOptions) error {

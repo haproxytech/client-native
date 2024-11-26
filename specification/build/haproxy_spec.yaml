@@ -1320,6 +1320,9 @@ definitions:
       comp_maxlevel:
         type: integer
         x-display-name: Maximum Compression Level
+      disable_fast_forward:
+        type: boolean
+        x-display-name: Disable fast-forwarding
       disable_zero_copy_forwarding:
         type: boolean
         x-display-name: Disable zero-copy forwarding
@@ -1358,6 +1361,11 @@ definitions:
       h2_be_max_concurrent_streams:
         type: integer
         x-display-name: Maximum number of concurrent streams per outgoing connection
+      h2_be_rxbuf:
+        type: integer
+        x-display-name: HTTP/2 receive buffer size for outgoing connections
+        x-nullable: true
+        x-size: true
       h2_fe_glitches_threshold:
         type: integer
         x-display-name: Automatically kill a frontend connection past a number of glitches
@@ -1372,6 +1380,11 @@ definitions:
         type: integer
         x-display-name: Maximum number of total streams processed per incoming HTTP/2 connection
         x-nullable: true
+      h2_fe_rxbuf:
+        type: integer
+        x-display-name: HTTP/2 receive buffer size for incoming connections
+        x-nullable: true
+        x-size: true
       h2_header_table_size:
         maximum: 65535
         type: integer
@@ -1466,6 +1479,18 @@ definitions:
           - disabled
         type: string
         x-display-name: enable or disable the zero-copy forwarding of data for the pass-through multiplexer
+      renice_runtime:
+        maximum: 19
+        minimum: -20
+        type: integer
+        x-display-name: Scheduling priority applied after the configuration parsing
+        x-nullable: true
+      renice_startup:
+        maximum: 19
+        minimum: -20
+        type: integer
+        x-display-name: Scheduling priority applied before the rest of the configuration
+        x-nullable: true
       ring_queues:
         type: integer
         x-display-name: Number of write queues in front of ring buffers
@@ -1679,6 +1704,12 @@ definitions:
       bufsize:
         type: integer
         x-display-name: Buffer Size
+      bufsize_small:
+        minimum: 1
+        type: integer
+        x-display-name: Size of small buffers (for memory-restrained situations)
+        x-nullable: true
+        x-size: true
       pipesize:
         type: integer
         x-display-name: Pipe Buffer Size
@@ -1971,6 +2002,8 @@ definitions:
         $ref: '#/definitions/device_atlas_options'
       environment_options:
         $ref: '#/definitions/environment_options'
+      expose_deprecated_directives:
+        type: boolean
       expose_experimental_directives:
         type: boolean
       external_check:
@@ -1978,6 +2011,13 @@ definitions:
         x-display-name: External Check
       fifty_one_degrees_options:
         $ref: '#/definitions/fifty_one_degrees_options'
+      force_cfg_parser_pause:
+        minimum: 0
+        type: integer
+        x-default-unit: ms
+        x-display-name: Pause the configuration parser to simulate long reloads
+        x-duration: true
+        x-nullable: true
       gid:
         type: integer
         x-display-name: GID
@@ -2233,6 +2273,13 @@ definitions:
         pattern: ^[^\s]+$
         type: string
         x-display-name: User
+      warn_blocked_traffic_after:
+        minimum: 1
+        type: integer
+        x-default-unit: ms
+        x-display-name: Delay after which a stuck task triggers a warning
+        x-duration: true
+        x-nullable: true
       wurfl_options:
         $ref: '#/definitions/wurfl_options'
     title: Global Base
