@@ -299,6 +299,19 @@ func (c *client) SetServerHealth(backend, server string, health string) error {
 	return nil
 }
 
+// EnableServerHealth enable health check for server
+func (c *client) EnableServerHealth(backend, server string) error {
+	if !c.runtime.IsValid() {
+		return errors.New("no valid runtime found")
+	}
+	err := c.runtime.EnableServerHealth(backend, server)
+	if err != nil {
+		return fmt.Errorf("%s %w", c.runtime.socketPath, err)
+	}
+
+	return nil
+}
+
 // EnableAgentCheck enable agent check for server
 func (c *client) EnableAgentCheck(backend, server string) error {
 	if !c.runtime.IsValid() {

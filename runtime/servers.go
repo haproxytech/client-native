@@ -77,6 +77,12 @@ func (s *SingleRuntime) SetServerHealth(backend, server string, health string) e
 	return s.Execute(cmd)
 }
 
+// EnableServerHealth enable health check for server
+func (s *SingleRuntime) EnableServerHealth(backend, server string) error {
+	cmd := fmt.Sprintf("enable health %s/%s", backend, server)
+	return s.Execute(cmd)
+}
+
 // SetServerCheckPort set health heck port for server
 func (s *SingleRuntime) SetServerCheckPort(backend, server string, port int) error {
 	if !(port > 0 && port <= 65535) {

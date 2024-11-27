@@ -200,7 +200,7 @@ func SerializeServerTemplate(s models.ServerTemplate, opt *options.Configuration
 	if s.Port != nil {
 		template.Port = *s.Port
 	}
-	template.Params = serializeServerParams(s.ServerParams, opt)
+	template.Params = SerializeServerParams(s.ServerParams, opt)
 	return template
 }
 
