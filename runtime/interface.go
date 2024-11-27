@@ -71,6 +71,8 @@ type Servers interface {
 	SetServerWeight(backend, server string, weight string) error
 	// SetServerHealth set health for server
 	SetServerHealth(backend, server string, health string) error
+	// EnableServerHealth
+	EnableServerHealth(backend, server string) error
 	// EnableAgentCheck enable agent check for server
 	EnableAgentCheck(backend, server string) error
 	// DisableAgentCheck disable agent check for server

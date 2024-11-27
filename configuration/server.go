@@ -274,6 +274,8 @@ func parseServerParams(serverOptions []params.ServerOption, serverParams *models
 				serverParams.Check = "disabled"
 			case "check-send-proxy":
 				serverParams.CheckSendProxy = "enabled"
+			case "no-check-send-proxy":
+				serverParams.CheckSendProxy = "disabled"
 			case "check-ssl":
 				serverParams.CheckSsl = "enabled"
 			case "no-check-ssl":
@@ -545,7 +547,7 @@ func ParseServer(ondiskServer types.Server) *models.Server {
 	return s
 }
 
-func serializeServerParams(s models.ServerParams) (options []params.ServerOption) { //nolint:gocognit,gocyclo,cyclop,cyclop,maintidx
+func SerializeServerParams(s models.ServerParams) (options []params.ServerOption) { //nolint:gocognit,gocyclo,cyclop,cyclop,maintidx
 	// ServerOptionWord
 	if s.AgentCheck == "enabled" {
 		options = append(options, &params.ServerOptionWord{Name: "agent-check"})
@@ -872,7 +874,7 @@ func SerializeServer(s models.Server) types.Server {
 	} else {
 		server.Address = misc.SanitizeIPv6Address(s.Address)
 	}
-	server.Params = serializeServerParams(s.ServerParams)
+	server.Params = SerializeServerParams(s.ServerParams)
 	if s.ID != nil {
 		server.Params = append(server.Params, &params.ServerOptionValue{Name: "id", Value: strconv.FormatInt(*s.ID, 10)})
 	}

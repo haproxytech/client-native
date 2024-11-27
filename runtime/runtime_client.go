@@ -320,6 +320,20 @@ func (c *client) SetServerHealth(backend, server string, health string) error {
 	return nil
 }
 
+// EnableServerHealth enable health check for server
+func (c *client) EnableServerHealth(backend, server string) error {
+	if len(c.runtimes) == 0 {
+		return fmt.Errorf("no valid runtimes found")
+	}
+	for _, runtime := range c.runtimes {
+		err := runtime.EnableServerHealth(backend, server)
+		if err != nil {
+			return fmt.Errorf("%s %w", runtime.socketPath, err)
+		}
+	}
+	return nil
+}
+
 // EnableAgentCheck enable agent check for server
 func (c *client) EnableAgentCheck(backend, server string) error {
 	for _, runtime := range c.runtimes {

@@ -2217,7 +2217,7 @@ func (s *SectionObject) defaultServer(field reflect.Value) error {
 			return misc.CreateTypeAssertError("default-server")
 		}
 		dServers := []types.DefaultServer{{}}
-		dServers[0].Params = serializeServerParams(ds.ServerParams)
+		dServers[0].Params = SerializeServerParams(ds.ServerParams)
 		if err := s.set("default-server", dServers); err != nil {
 			return err
 		}

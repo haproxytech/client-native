@@ -175,6 +175,7 @@ var serverOptionFactoryMethods = map[string]func() ServerOption{ //nolint:gochec
 	"no-agent-check":          func() ServerOption { return &ServerOptionWord{Name: "no-agent-check"} },
 	"no-backup":               func() ServerOption { return &ServerOptionWord{Name: "no-backup"} },
 	"no-check":                func() ServerOption { return &ServerOptionWord{Name: "no-check"} },
+	"no-check-send-proxy":     func() ServerOption { return &ServerOptionWord{Name: "no-check-send-proxy"} },
 	"no-check-ssl":            func() ServerOption { return &ServerOptionWord{Name: "no-check-ssl"} },
 	"no-send-proxy":           func() ServerOption { return &ServerOptionWord{Name: "no-send-proxy"} },
 	"no-send-proxy-v2":        func() ServerOption { return &ServerOptionWord{Name: "no-send-proxy-v2"} },

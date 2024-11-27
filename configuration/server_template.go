@@ -199,7 +199,7 @@ func SerializeServerTemplate(s models.ServerTemplate) types.ServerTemplate {
 	if s.Port != nil {
 		template.Port = *s.Port
 	}
-	template.Params = serializeServerParams(s.ServerParams)
+	template.Params = SerializeServerParams(s.ServerParams)
 	return template
 }
 
