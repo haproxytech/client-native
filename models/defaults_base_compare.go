@@ -69,6 +69,14 @@ func (s DefaultsBase) Equal(t DefaultsBase, opts ...Options) bool {
 		return false
 	}
 
+	if s.AcceptUnsafeViolationsInHTTPRequest != t.AcceptUnsafeViolationsInHTTPRequest {
+		return false
+	}
+
+	if s.AcceptUnsafeViolationsInHTTPResponse != t.AcceptUnsafeViolationsInHTTPResponse {
+		return false
+	}
+
 	if s.AdvCheck != t.AdvCheck {
 		return false
 	}
@@ -861,6 +869,14 @@ func (s DefaultsBase) Diff(t DefaultsBase, opts ...Options) map[string][]interfa
 
 	if s.AcceptInvalidHTTPResponse != t.AcceptInvalidHTTPResponse {
 		diff["AcceptInvalidHTTPResponse"] = []interface{}{s.AcceptInvalidHTTPResponse, t.AcceptInvalidHTTPResponse}
+	}
+
+	if s.AcceptUnsafeViolationsInHTTPRequest != t.AcceptUnsafeViolationsInHTTPRequest {
+		diff["AcceptUnsafeViolationsInHTTPRequest"] = []interface{}{s.AcceptUnsafeViolationsInHTTPRequest, t.AcceptUnsafeViolationsInHTTPRequest}
+	}
+
+	if s.AcceptUnsafeViolationsInHTTPResponse != t.AcceptUnsafeViolationsInHTTPResponse {
+		diff["AcceptUnsafeViolationsInHTTPResponse"] = []interface{}{s.AcceptUnsafeViolationsInHTTPResponse, t.AcceptUnsafeViolationsInHTTPResponse}
 	}
 
 	if s.AdvCheck != t.AdvCheck {

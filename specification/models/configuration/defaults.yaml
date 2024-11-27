@@ -284,6 +284,14 @@ defaults_base:
       type: string
       enum: [enabled, disabled]
       x-display-name: Accept Invalid HTTP Response
+    accept_unsafe_violations_in_http_request:
+      type: string
+      enum: [enabled, disabled]
+      x-display-name: Accept Unsafe Violations in HTTP Request
+    accept_unsafe_violations_in_http_response:
+      type: string
+      enum: [enabled, disabled]
+      x-display-name: Accept Unsafe Violations in HTTP Response
     h1_case_adjust_bogus_client:
       type: string
       enum: [enabled, disabled]

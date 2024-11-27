@@ -360,6 +360,8 @@ defaults unnamed_defaults_1
   http-error status 429 content-type application/json file /test/429
   option accept-invalid-http-request
   option accept-invalid-http-response
+  option accept-unsafe-violations-in-http-request
+  option accept-unsafe-violations-in-http-response
   option h1-case-adjust-bogus-client
   option h1-case-adjust-bogus-server
   compression offload
@@ -601,6 +603,7 @@ frontend test
   unique-id-format %{+X}o%ci:%cp_%fi:%fp_%Ts_%rt:%pid
   unique-id-header X-Unique-ID
   no option accept-invalid-http-request
+  no option accept-unsafe-violations-in-http-request
   no option h1-case-adjust-bogus-client
   compression algo identity gzip
   compression type text/plain
@@ -762,6 +765,7 @@ backend test
   server-template website 10-100 google.com:443 check no-backup
   server-template test 5 test.com check backup
   no option accept-invalid-http-response
+  no option accept-unsafe-violations-in-http-response
   no option h1-case-adjust-bogus-server
   compression type application/json text/plain
   compression direction both

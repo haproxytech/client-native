@@ -61,6 +61,11 @@ type BackendBase struct {
 	// +kubebuilder:validation:Enum="enabled","disabled";
 	AcceptInvalidHTTPResponse string `json:"accept_invalid_http_response,omitempty"`
 
+	// accept unsafe violations in http response
+	// Enum: ["enabled","disabled"]
+	// +kubebuilder:validation:Enum="enabled","disabled";
+	AcceptUnsafeViolationsInHTTPResponse string `json:"accept_unsafe_violations_in_http_response,omitempty"`
+
 	// adv check
 	// Enum: ["httpchk","ldap-check","mysql-check","pgsql-check","redis-check","smtpchk","ssl-hello-chk","tcp-check"]
 	// +kubebuilder:validation:Enum="httpchk","ldap-check","mysql-check","pgsql-check","redis-check","smtpchk","ssl-hello-chk","tcp-check";
@@ -416,6 +421,10 @@ func (m *BackendBase) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateAcceptInvalidHTTPResponse(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateAcceptUnsafeViolationsInHTTPResponse(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -863,6 +872,48 @@ func (m *BackendBase) validateAcceptInvalidHTTPResponse(formats strfmt.Registry)
 
 	// value enum
 	if err := m.validateAcceptInvalidHTTPResponseEnum("accept_invalid_http_response", "body", m.AcceptInvalidHTTPResponse); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+var backendBaseTypeAcceptUnsafeViolationsInHTTPResponsePropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		backendBaseTypeAcceptUnsafeViolationsInHTTPResponsePropEnum = append(backendBaseTypeAcceptUnsafeViolationsInHTTPResponsePropEnum, v)
+	}
+}
+
+const (
+
+	// BackendBaseAcceptUnsafeViolationsInHTTPResponseEnabled captures enum value "enabled"
+	BackendBaseAcceptUnsafeViolationsInHTTPResponseEnabled string = "enabled"
+
+	// BackendBaseAcceptUnsafeViolationsInHTTPResponseDisabled captures enum value "disabled"
+	BackendBaseAcceptUnsafeViolationsInHTTPResponseDisabled string = "disabled"
+)
+
+// prop value enum
+func (m *BackendBase) validateAcceptUnsafeViolationsInHTTPResponseEnum(path, location string, value string) error {
+	if err := validate.EnumCase(path, location, value, backendBaseTypeAcceptUnsafeViolationsInHTTPResponsePropEnum, true); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *BackendBase) validateAcceptUnsafeViolationsInHTTPResponse(formats strfmt.Registry) error {
+	if swag.IsZero(m.AcceptUnsafeViolationsInHTTPResponse) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateAcceptUnsafeViolationsInHTTPResponseEnum("accept_unsafe_violations_in_http_response", "body", m.AcceptUnsafeViolationsInHTTPResponse); err != nil {
 		return err
 	}
 

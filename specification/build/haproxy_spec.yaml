@@ -2325,6 +2325,18 @@ definitions:
           - disabled
         type: string
         x-display-name: Accept Invalid HTTP Response
+      accept_unsafe_violations_in_http_request:
+        enum:
+          - enabled
+          - disabled
+        type: string
+        x-display-name: Accept Unsafe Violations in HTTP Request
+      accept_unsafe_violations_in_http_response:
+        enum:
+          - enabled
+          - disabled
+        type: string
+        x-display-name: Accept Unsafe Violations in HTTP Response
       adv_check:
         enum:
           - httpchk
@@ -2874,6 +2886,12 @@ definitions:
           - disabled
         type: string
         x-display-name: Accept Invalid HTTP Request
+      accept_unsafe_violations_in_http_request:
+        enum:
+          - enabled
+          - disabled
+        type: string
+        x-display-name: Accept Unsafe Violations in HTTP Request
       backlog:
         type: integer
         x-display-name: Backlog
@@ -3284,6 +3302,12 @@ definitions:
           - disabled
         type: string
         x-display-name: Accept Invalid HTTP Response
+      accept_unsafe_violations_in_http_response:
+        enum:
+          - enabled
+          - disabled
+        type: string
+        x-display-name: Accept Unsafe Violations in HTTP Response
       adv_check:
         enum:
           - httpchk

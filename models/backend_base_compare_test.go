@@ -208,7 +208,7 @@ func TestBackendBaseDiffFalse(t *testing.T) {
 
 	for _, sample := range samples {
 		result := sample.a.Diff(sample.b)
-		if len(result) != 86 {
+		if len(result) != 87 {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {
@@ -218,7 +218,7 @@ func TestBackendBaseDiffFalse(t *testing.T) {
 			if err != nil {
 				t.Errorf(err.Error())
 			}
-			t.Errorf("Expected BackendBase to be different in 86 cases, but it is not (%d) %s %s", len(result), a, b)
+			t.Errorf("Expected BackendBase to be different in 87 cases, but it is not (%d) %s %s", len(result), a, b)
 		}
 	}
 }

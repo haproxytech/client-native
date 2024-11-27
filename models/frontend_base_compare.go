@@ -61,6 +61,10 @@ func (s FrontendBase) Equal(t FrontendBase, opts ...Options) bool {
 		return false
 	}
 
+	if s.AcceptUnsafeViolationsInHTTPRequest != t.AcceptUnsafeViolationsInHTTPRequest {
+		return false
+	}
+
 	if !equalPointers(s.Backlog, t.Backlog) {
 		return false
 	}
@@ -531,6 +535,10 @@ func (s FrontendBase) Diff(t FrontendBase, opts ...Options) map[string][]interfa
 
 	if s.AcceptInvalidHTTPRequest != t.AcceptInvalidHTTPRequest {
 		diff["AcceptInvalidHTTPRequest"] = []interface{}{s.AcceptInvalidHTTPRequest, t.AcceptInvalidHTTPRequest}
+	}
+
+	if s.AcceptUnsafeViolationsInHTTPRequest != t.AcceptUnsafeViolationsInHTTPRequest {
+		diff["AcceptUnsafeViolationsInHTTPRequest"] = []interface{}{s.AcceptUnsafeViolationsInHTTPRequest, t.AcceptUnsafeViolationsInHTTPRequest}
 	}
 
 	if !equalPointers(s.Backlog, t.Backlog) {

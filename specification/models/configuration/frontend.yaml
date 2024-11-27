@@ -200,6 +200,10 @@ frontend_base:
       type: string
       enum: [enabled, disabled]
       x-display-name: Accept Invalid HTTP Request
+    accept_unsafe_violations_in_http_request:
+      type: string
+      enum: [enabled, disabled]
+      x-display-name: Accept Unsafe Violations in HTTP Request
     h1_case_adjust_bogus_client:
       type: string
       enum: [enabled, disabled]

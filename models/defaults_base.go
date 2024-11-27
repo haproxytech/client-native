@@ -59,6 +59,16 @@ type DefaultsBase struct {
 	// +kubebuilder:validation:Enum="enabled","disabled";
 	AcceptInvalidHTTPResponse string `json:"accept_invalid_http_response,omitempty"`
 
+	// accept unsafe violations in http request
+	// Enum: ["enabled","disabled"]
+	// +kubebuilder:validation:Enum="enabled","disabled";
+	AcceptUnsafeViolationsInHTTPRequest string `json:"accept_unsafe_violations_in_http_request,omitempty"`
+
+	// accept unsafe violations in http response
+	// Enum: ["enabled","disabled"]
+	// +kubebuilder:validation:Enum="enabled","disabled";
+	AcceptUnsafeViolationsInHTTPResponse string `json:"accept_unsafe_violations_in_http_response,omitempty"`
+
 	// adv check
 	// Enum: ["httpchk","ldap-check","mysql-check","pgsql-check","redis-check","smtpchk","ssl-hello-chk","tcp-check"]
 	// +kubebuilder:validation:Enum="httpchk","ldap-check","mysql-check","pgsql-check","redis-check","smtpchk","ssl-hello-chk","tcp-check";
@@ -498,6 +508,14 @@ func (m *DefaultsBase) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateAcceptInvalidHTTPResponse(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateAcceptUnsafeViolationsInHTTPRequest(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateAcceptUnsafeViolationsInHTTPResponse(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -983,6 +1001,90 @@ func (m *DefaultsBase) validateAcceptInvalidHTTPResponse(formats strfmt.Registry
 
 	// value enum
 	if err := m.validateAcceptInvalidHTTPResponseEnum("accept_invalid_http_response", "body", m.AcceptInvalidHTTPResponse); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+var defaultsBaseTypeAcceptUnsafeViolationsInHTTPRequestPropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		defaultsBaseTypeAcceptUnsafeViolationsInHTTPRequestPropEnum = append(defaultsBaseTypeAcceptUnsafeViolationsInHTTPRequestPropEnum, v)
+	}
+}
+
+const (
+
+	// DefaultsBaseAcceptUnsafeViolationsInHTTPRequestEnabled captures enum value "enabled"
+	DefaultsBaseAcceptUnsafeViolationsInHTTPRequestEnabled string = "enabled"
+
+	// DefaultsBaseAcceptUnsafeViolationsInHTTPRequestDisabled captures enum value "disabled"
+	DefaultsBaseAcceptUnsafeViolationsInHTTPRequestDisabled string = "disabled"
+)
+
+// prop value enum
+func (m *DefaultsBase) validateAcceptUnsafeViolationsInHTTPRequestEnum(path, location string, value string) error {
+	if err := validate.EnumCase(path, location, value, defaultsBaseTypeAcceptUnsafeViolationsInHTTPRequestPropEnum, true); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *DefaultsBase) validateAcceptUnsafeViolationsInHTTPRequest(formats strfmt.Registry) error {
+	if swag.IsZero(m.AcceptUnsafeViolationsInHTTPRequest) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateAcceptUnsafeViolationsInHTTPRequestEnum("accept_unsafe_violations_in_http_request", "body", m.AcceptUnsafeViolationsInHTTPRequest); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+var defaultsBaseTypeAcceptUnsafeViolationsInHTTPResponsePropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		defaultsBaseTypeAcceptUnsafeViolationsInHTTPResponsePropEnum = append(defaultsBaseTypeAcceptUnsafeViolationsInHTTPResponsePropEnum, v)
+	}
+}
+
+const (
+
+	// DefaultsBaseAcceptUnsafeViolationsInHTTPResponseEnabled captures enum value "enabled"
+	DefaultsBaseAcceptUnsafeViolationsInHTTPResponseEnabled string = "enabled"
+
+	// DefaultsBaseAcceptUnsafeViolationsInHTTPResponseDisabled captures enum value "disabled"
+	DefaultsBaseAcceptUnsafeViolationsInHTTPResponseDisabled string = "disabled"
+)
+
+// prop value enum
+func (m *DefaultsBase) validateAcceptUnsafeViolationsInHTTPResponseEnum(path, location string, value string) error {
+	if err := validate.EnumCase(path, location, value, defaultsBaseTypeAcceptUnsafeViolationsInHTTPResponsePropEnum, true); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *DefaultsBase) validateAcceptUnsafeViolationsInHTTPResponse(formats strfmt.Registry) error {
+	if swag.IsZero(m.AcceptUnsafeViolationsInHTTPResponse) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateAcceptUnsafeViolationsInHTTPResponseEnum("accept_unsafe_violations_in_http_response", "body", m.AcceptUnsafeViolationsInHTTPResponse); err != nil {
 		return err
 	}
 

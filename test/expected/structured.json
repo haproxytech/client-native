@@ -458,6 +458,7 @@
                 }
             ],
             "accept_invalid_http_response": "disabled",
+            "accept_unsafe_violations_in_http_response": "disabled",
             "adv_check": "httpchk",
             "balance": {
                 "algorithm": "roundrobin"
@@ -1378,6 +1379,7 @@
                 }
             ],
             "accept_invalid_http_request": "disabled",
+            "accept_unsafe_violations_in_http_request": "disabled",
             "backlog": 2048,
             "client_fin_timeout": 1000,
             "client_timeout": 4000,
@@ -2959,6 +2961,8 @@
             ],
             "accept_invalid_http_request": "enabled",
             "accept_invalid_http_response": "enabled",
+            "accept_unsafe_violations_in_http_request": "enabled",
+            "accept_unsafe_violations_in_http_response": "enabled",
             "backlog": 1024,
             "balance": {
                 "algorithm": "roundrobin"

@@ -85,6 +85,10 @@ func (s BackendBase) Equal(t BackendBase, opts ...Options) bool {
 		return false
 	}
 
+	if s.AcceptUnsafeViolationsInHTTPResponse != t.AcceptUnsafeViolationsInHTTPResponse {
+		return false
+	}
+
 	if s.AdvCheck != t.AdvCheck {
 		return false
 	}
@@ -877,6 +881,10 @@ func (s BackendBase) Diff(t BackendBase, opts ...Options) map[string][]interface
 
 	if s.AcceptInvalidHTTPResponse != t.AcceptInvalidHTTPResponse {
 		diff["AcceptInvalidHTTPResponse"] = []interface{}{s.AcceptInvalidHTTPResponse, t.AcceptInvalidHTTPResponse}
+	}
+
+	if s.AcceptUnsafeViolationsInHTTPResponse != t.AcceptUnsafeViolationsInHTTPResponse {
+		diff["AcceptUnsafeViolationsInHTTPResponse"] = []interface{}{s.AcceptUnsafeViolationsInHTTPResponse, t.AcceptUnsafeViolationsInHTTPResponse}
 	}
 
 	if s.AdvCheck != t.AdvCheck {

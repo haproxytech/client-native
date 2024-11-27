@@ -144,7 +144,8 @@ func TestCreateEditDeleteStructuredBackend(t *testing.T) {
 				Hello:  "HELO",
 				Domain: "example.com",
 			},
-			AcceptInvalidHTTPResponse: "enabled",
+			AcceptInvalidHTTPResponse:            "enabled",
+			AcceptUnsafeViolationsInHTTPResponse: "enabled",
 			Compression: &models.Compression{
 				Offload:   true,
 				Direction: "both",
