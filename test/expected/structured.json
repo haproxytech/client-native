@@ -2966,6 +2966,12 @@
             "key_base": "/secure/keys"
         }
     },
+    "traces": {
+        "entries": [
+            {"trace": "h1 sink buf1 level developer verbosity complete start now"},
+            {"trace": "h2 sink buf2 level developer verbosity complete start now"}
+        ]
+    },
     "defaults": {
         "test_defaults": {
             "acl_list": [

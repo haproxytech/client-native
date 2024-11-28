@@ -32,6 +32,7 @@ type Structured interface {
 	StructuredLogForward
 	StructuredFCGIApp
 	StructuredMailersSection
+	StructuredTraces
 }
 
 type StructuredToParserArgs struct {

@@ -10989,6 +10989,31 @@ definitions:
     items:
       $ref: "#/definitions/crt_load"
     x-omitempty: true
+  traces:
+    additionalProperties: false
+    description: Trace events configuration
+    properties:
+      entries:
+        $ref: '#/definitions/trace_entries'
+    type: object
+    x-go-name: Traces
+  trace_entry:
+    description: Configure a trace event
+    properties:
+      trace:
+        description: Trace parameters
+        minLength: 1
+        type: string
+        x-nullable: false
+    required:
+      - trace
+    title: Trace event
+    type: object
+  trace_entries:
+    description: list of entries in a traces section
+    type: array
+    items:
+      $ref: "#/definitions/trace_entry"
 responses:
   BadRequest:
     description: Bad request
@@ -11154,6 +11179,7 @@ tags:
   - name: TCPRequestRule
   - name: TCPResponseRule
   - name: Table
+  - name: Traces
   - name: Transactions
     description: |
       Managing transactions. Configuration changes can be grouped in the transaction. You start the
@@ -22867,6 +22893,184 @@ paths:
       summary: Replace a certificate load entry
       tags:
         - CrtLoad
+  /services/haproxy/configuration/traces:
+    delete:
+      description: Delete the whole traces section.
+      operationId: deleteTraces
+      parameters:
+        - $ref: '#/parameters/transaction_id'
+        - $ref: '#/parameters/version'
+        - $ref: '#/parameters/force_reload'
+      responses:
+        "202":
+          description: Configuration change accepted and reload requested
+          headers:
+            Reload-ID:
+              description: ID of the requested reload
+              type: string
+        "204":
+          description: Traces section deleted
+        "404":
+          $ref: '#/responses/NotFound'
+        default:
+          $ref: '#/responses/DefaultError'
+      summary: Delete the traces section
+      tags:
+        - Traces
+    get:
+      description: Return the traces section contents.
+      operationId: getTraces
+      parameters:
+        - $ref: '#/parameters/transaction_id'
+        - $ref: '#/parameters/full_section'
+      responses:
+        "200":
+          description: Successful operation
+          headers:
+            Configuration-Version:
+              description: Configuration file version
+              type: string
+          schema:
+            $ref: '#/definitions/traces'
+        "404":
+          $ref: '#/responses/NotFound'
+        default:
+          $ref: '#/responses/DefaultError'
+      summary: Return the traces section contents
+      tags:
+        - Traces
+    post:
+      description: Create the traces section.
+      operationId: createTraces
+      parameters:
+        - in: body
+          name: data
+          required: true
+          schema:
+            $ref: '#/definitions/traces'
+        - $ref: '#/parameters/transaction_id'
+        - $ref: '#/parameters/version'
+        - $ref: '#/parameters/force_reload'
+      responses:
+        "201":
+          description: Traces section created
+          schema:
+            $ref: '#/definitions/traces'
+        "202":
+          description: Configuration change accepted and reload requested
+          headers:
+            Reload-ID:
+              description: ID of the requested reload
+              type: string
+          schema:
+            $ref: '#/definitions/traces'
+        "400":
+          $ref: '#/responses/BadRequest'
+        "409":
+          $ref: '#/responses/AlreadyExists'
+        default:
+          $ref: '#/responses/DefaultError'
+      summary: Create the traces section
+      tags:
+        - Traces
+    put:
+      description: Replace the traces section contents
+      operationId: replaceTraces
+      parameters:
+        - in: body
+          name: data
+          required: true
+          schema:
+            $ref: '#/definitions/traces'
+        - $ref: '#/parameters/transaction_id'
+        - $ref: '#/parameters/version'
+        - $ref: '#/parameters/force_reload'
+        - $ref: '#/parameters/full_section'
+      responses:
+        "200":
+          description: Traces replaced
+          schema:
+            $ref: '#/definitions/traces'
+        "202":
+          description: Configuration change accepted and reload requested
+          headers:
+            Reload-ID:
+              description: ID of the requested reload
+              type: string
+          schema:
+            $ref: '#/definitions/traces'
+        "400":
+          $ref: '#/responses/BadRequest'
+        "404":
+          $ref: '#/responses/NotFound'
+        default:
+          $ref: '#/responses/DefaultError'
+      summary: Replace traces
+      tags:
+        - Traces
+  /services/haproxy/configuration/traces/entries:
+    delete:
+      description: Deletes a trace entry from the traces section.
+      operationId: deleteTraceEntry
+      parameters:
+        - in: body
+          name: data
+          required: true
+          schema:
+            $ref: '#/definitions/trace_entry'
+        - $ref: '#/parameters/transaction_id'
+        - $ref: '#/parameters/version'
+        - $ref: '#/parameters/force_reload'
+      responses:
+        "202":
+          description: Configuration change accepted and reload requested
+          headers:
+            Reload-ID:
+              description: ID of the requested reload
+              type: string
+        "204":
+          description: Trace entry deleted
+        "404":
+          $ref: '#/responses/NotFound'
+        default:
+          $ref: '#/responses/DefaultError'
+      summary: Delete a trace entry
+      tags:
+        - Traces
+    post:
+      description: Adds a new trace entry into the traces section. The traces section will be created if needed.
+      operationId: createTraceEntry
+      parameters:
+        - in: body
+          name: data
+          required: true
+          schema:
+            $ref: '#/definitions/trace_entry'
+        - $ref: '#/parameters/transaction_id'
+        - $ref: '#/parameters/version'
+        - $ref: '#/parameters/force_reload'
+      responses:
+        "201":
+          description: Trace entry added
+          schema:
+            $ref: '#/definitions/trace_entry'
+        "202":
+          description: Configuration change accepted and reload requested
+          headers:
+            Reload-ID:
+              description: ID of the requested reload
+              type: string
+          schema:
+            $ref: '#/definitions/trace_entry'
+        "400":
+          $ref: '#/responses/BadRequest'
+        "409":
+          $ref: '#/responses/AlreadyExists'
+        default:
+          $ref: '#/responses/DefaultError'
+      summary: Add a new trace entry
+      tags:
+        - Traces
   /services/haproxy/runtime:
     get:
       description: Returns a list of endpoints to be used for advanced runtime settings of HAProxy objects.

@@ -1,0 +1,21 @@
+---
+traces:
+  type: object
+  description: Trace events configuration
+  x-go-name: Traces
+  properties:
+    entries:
+      $ref: "#/definitions/trace_entries"
+  additionalProperties: false
+trace_entry:
+  title: Trace event
+  description: Configure a trace event
+  type: object
+  required:
+    - trace
+  properties:
+    trace:
+      type: string
+      description: Trace parameters
+      minLength: 1
+      x-nullable: false

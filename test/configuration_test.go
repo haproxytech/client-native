@@ -965,6 +965,10 @@ crt-store cert-bunker1
   crt-base /secure/certs
   key-base /secure/keys
 
+traces
+  trace h1 sink buf1 level developer verbosity complete start now
+  trace h2 sink buf2 level developer verbosity complete start now
+
 http-errors website-1
   errorfile 400 /etc/haproxy/errorfiles/site1/400.http
   errorfile 404 /etc/haproxy/errorfiles/site1/404.http

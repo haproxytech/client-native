@@ -41,7 +41,7 @@ func (p *configParser) String() string {
 	p.writeParsers("", p.Parsers[Comments][CommentsSectionName], &result, false)
 	p.writeParsers("global", p.Parsers[Global][GlobalSectionName], &result, true)
 
-	sections := []Section{Defaults, UserList, Peers, Mailers, Resolvers, Cache, Ring, LogForward, HTTPErrors, CrtStore, Frontends, Backends, Listen, Program, FCGIApp}
+	sections := []Section{Defaults, UserList, Peers, Mailers, Resolvers, Cache, Ring, Traces, LogForward, HTTPErrors, CrtStore, Frontends, Backends, Listen, Program, FCGIApp}
 
 	for _, section := range sections {
 		var sortedSections []string

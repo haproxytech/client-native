@@ -1,0 +1,180 @@
+---
+traces:
+  get:
+    summary: Return the traces section contents
+    description: Return the traces section contents.
+    operationId: getTraces
+    parameters:
+      - $ref: "#/parameters/transaction_id"
+      - $ref: "#/parameters/full_section"
+    tags:
+      - Traces
+    responses:
+      '200':
+        description: Successful operation
+        headers:
+          Configuration-Version:
+            description: Configuration file version
+            type: string
+        schema:
+          $ref: "#/definitions/traces"
+      '404':
+        $ref: "#/responses/NotFound"
+      'default':
+        $ref: '#/responses/DefaultError'
+  post:
+    summary: Create the traces section
+    description: Create the traces section.
+    operationId: createTraces
+    tags:
+      - Traces
+    parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/traces'
+      - $ref: "#/parameters/transaction_id"
+      - $ref: "#/parameters/version"
+      - $ref: "#/parameters/force_reload"
+    responses:
+      '202':
+        description: Configuration change accepted and reload requested
+        headers:
+          Reload-ID:
+            description: ID of the requested reload
+            type: string
+        schema:
+          $ref: "#/definitions/traces"
+      '201':
+        description: Traces section created
+        schema:
+          $ref: "#/definitions/traces"
+      '409':
+        $ref: '#/responses/AlreadyExists'
+      '400':
+        $ref: '#/responses/BadRequest'
+      'default':
+        $ref: '#/responses/DefaultError'
+  put:
+    summary: Replace traces
+    description: Replace the traces section contents
+    operationId: replaceTraces
+    parameters:
+      - name: data
+        required: true
+        in: body
+        schema:
+          $ref: "#/definitions/traces"
+      - $ref: "#/parameters/transaction_id"
+      - $ref: "#/parameters/version"
+      - $ref: "#/parameters/force_reload"
+      - $ref: "#/parameters/full_section"
+    tags:
+      - Traces
+    responses:
+      '202':
+        description: Configuration change accepted and reload requested
+        headers:
+          Reload-ID:
+            description: ID of the requested reload
+            type: string
+        schema:
+          $ref: "#/definitions/traces"
+      '200':
+        description: Traces replaced
+        schema:
+          $ref: "#/definitions/traces"
+      '400':
+        $ref: '#/responses/BadRequest'
+      '404':
+        $ref: '#/responses/NotFound'
+      'default':
+        $ref: '#/responses/DefaultError'
+  delete:
+    summary: Delete the traces section
+    description: Delete the whole traces section.
+    operationId: deleteTraces
+    tags:
+      - Traces
+    parameters:
+      - $ref: "#/parameters/transaction_id"
+      - $ref: "#/parameters/version"
+      - $ref: "#/parameters/force_reload"
+    responses:
+      '202':
+        description: Configuration change accepted and reload requested
+        headers:
+          Reload-ID:
+            description: ID of the requested reload
+            type: string
+      '204':
+        description: Traces section deleted
+      '404':
+        $ref: '#/responses/NotFound'
+      'default':
+        $ref: '#/responses/DefaultError'
+
+trace_entries:
+  post:
+    summary: Add a new trace entry
+    description: Adds a new trace entry into the traces section. The traces section will be created if needed.
+    operationId: createTraceEntry
+    tags:
+      - Traces
+    parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/trace_entry'
+      - $ref: "#/parameters/transaction_id"
+      - $ref: "#/parameters/version"
+      - $ref: "#/parameters/force_reload"
+    responses:
+      '202':
+        description: Configuration change accepted and reload requested
+        headers:
+          Reload-ID:
+            description: ID of the requested reload
+            type: string
+        schema:
+          $ref: "#/definitions/trace_entry"
+      '201':
+        description: Trace entry added
+        schema:
+          $ref: "#/definitions/trace_entry"
+      '409':
+        $ref: '#/responses/AlreadyExists'
+      '400':
+        $ref: '#/responses/BadRequest'
+      'default':
+        $ref: '#/responses/DefaultError'
+  delete:
+    summary: Delete a trace entry
+    description: Deletes a trace entry from the traces section.
+    operationId: deleteTraceEntry
+    tags:
+      - Traces
+    parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/trace_entry'
+      - $ref: "#/parameters/transaction_id"
+      - $ref: "#/parameters/version"
+      - $ref: "#/parameters/force_reload"
+    responses:
+      '202':
+        description: Configuration change accepted and reload requested
+        headers:
+          Reload-ID:
+            description: ID of the requested reload
+            type: string
+      '204':
+        description: Trace entry deleted
+      '404':
+        $ref: '#/responses/NotFound'
+      'default':
+        $ref: '#/responses/DefaultError'

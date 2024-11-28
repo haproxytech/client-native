@@ -1656,3 +1656,13 @@ type LoadCert struct {
 	Comment     string
 	OcspUpdate  *bool
 }
+
+//sections:traces
+//name:trace
+//is:multiple
+//test:ok:trace h1 sink buf1 level developer verbosity complete start now
+//test:fail:trace
+type Trace struct {
+	Params  []string
+	Comment string
+}

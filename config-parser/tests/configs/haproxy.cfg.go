@@ -181,6 +181,10 @@ cache foobar
   total-max-size 4
   max-age 240
 
+traces
+  trace h1 sink buf1 level developer verbosity complete start now
+  trace h2 sink buf2 level developer verbosity complete start now
+
 crt-store tpm2
   crt-base /c
   key-base /k

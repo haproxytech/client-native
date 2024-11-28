@@ -2915,6 +2915,9 @@ resolvers test
   nameserver dns1 10.0.0.1:53
   nameserver dns1 10.0.0.1:53 # comment
 
+traces test
+  trace h1 sink buf1 level developer verbosity complete start now
+
 userlist test
   group G1 users tiger,scott
   group G1
@@ -4091,6 +4094,8 @@ var configTests = []configTest{{`  command spoa-mirror --runtime 0 --mirror-url 
 	{`  load crt foo.pem alias foo.com key foo.priv.key ocsp foo.ocsp.der issuer foo.issuer.pem sctl foo.sctl ocsp-update on
 `, 1},
 	{`  load crt foo.pem alias foo.com key foo.priv.key ocsp foo.ocsp.der issuer foo.issuer.pem sctl foo.sctl ocsp-update off
+`, 1},
+	{`  trace h1 sink buf1 level developer verbosity complete start now
 `, 1},
 	{`  http-request set-map(map.lst) %[src] %[req.hdr(X-Value)] if value
 `, 3},

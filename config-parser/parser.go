@@ -47,6 +47,7 @@ const (
 	LogForward Section = "log-forward"
 	FCGIApp    Section = "fcgi-app"
 	CrtStore   Section = "crt-store"
+	Traces     Section = "traces"
 	// spoe sections
 	SPOEAgent   Section = "spoe-agent"
 	SPOEGroup   Section = "spoe-group"
@@ -56,6 +57,7 @@ const (
 const (
 	CommentsSectionName = "data"
 	GlobalSectionName   = "data"
+	TracesSectionName   = ""
 )
 
 var DefaultSectionName = "" //nolint:gochecknoglobals

@@ -652,6 +652,15 @@ definitions:
     items:
       $ref: "#/definitions/crt_load"
     x-omitempty: true
+  traces:
+    $ref: "models/configuration/traces.yaml#/traces"
+  trace_entry:
+    $ref: "models/configuration/traces.yaml#/trace_entry"
+  trace_entries:
+    description: list of entries in a traces section
+    type: array
+    items:
+      $ref: "#/definitions/trace_entry"
 responses:
   BadRequest:
     description: Bad request
@@ -825,6 +834,7 @@ tags:
   - name: Table
   - name: CrtStore
   - name: CrtLoad
+  - name: Traces
 security:
   - basic_auth: []
 paths:
@@ -1100,6 +1110,10 @@ paths:
     $ref: "paths/configuration/crt_store.yaml#/crt_loads"
   /services/haproxy/configuration/crt_loads/{certificate}:
     $ref: "paths/configuration/crt_store.yaml#/crt_load"
+  /services/haproxy/configuration/traces:
+    $ref: "paths/configuration/traces.yaml#/traces"
+  /services/haproxy/configuration/traces/entries:
+    $ref: "paths/configuration/traces.yaml#/trace_entries"
   /services/haproxy/runtime:
     $ref: "paths/general.yaml#/runtime"
   /services/haproxy/runtime/acls:

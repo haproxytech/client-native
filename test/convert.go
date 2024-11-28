@@ -57,7 +57,7 @@ func expectedResources[T any](elementKey string) (map[string]T, error) {
 	var elems map[string]T
 	err = json.Unmarshal(j, &elems)
 	if err != nil {
-		// Case Defaults, Globals
+		// Case Defaults, Globals, Traces
 		var elem T
 		err = json.Unmarshal(j, &elem)
 		if err != nil {
@@ -273,6 +273,11 @@ func StructuredToCaptureMap() map[string]models.Captures {
 
 func StructuredToGlobalMap() models.Global {
 	resources, _ := expectedResources[models.Global]("global")
+	return resources[""]
+}
+
+func StructuredToTracesMap() models.Traces {
+	resources, _ := expectedResources[models.Traces]("traces")
 	return resources[""]
 }
 

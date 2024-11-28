@@ -71,6 +71,7 @@ type Configuration interface {
 	TCPCheck
 	TCPRequestRule
 	TCPResponseRule
+	Traces
 	Transactions
 	QUICInitialRule
 	TransactionHandling

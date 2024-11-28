@@ -285,7 +285,7 @@ func (c *ConfigFile) StringFiles(baseFolder string) {
 			}
 			usedNiceNames[niceName] = struct{}{}
 			sectionName := " test"
-			if sectionType == "global" {
+			if sectionType == "global" || sectionType == "traces" {
 				sectionName = ""
 			}
 			oneTest := "const " + niceName + " = `\n" + sectionType + sectionName + "\n" + "  " + line + "\n`" + "\n"

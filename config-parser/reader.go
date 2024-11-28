@@ -352,6 +352,15 @@ func (p *configParser) ProcessLine(line string, parts []string, comment string, 
 					if p.Options.Log {
 						p.Options.Logger.Tracef("%scrt-store section %s active", p.Options.LogPrefix, data.Name)
 					}
+				case "traces":
+					if config.Traces == nil {
+						config.Traces = p.getTracesParser()
+						p.Parsers[Traces][TracesSectionName] = config.Traces
+						if p.Options.Log {
+							p.Options.Logger.Tracef("%straces section active", p.Options.LogPrefix)
+						}
+					}
+					config.Active = config.Traces
 				case "snippet_beg":
 					config.Previous = config.Active
 					config.Active = &Parsers{
