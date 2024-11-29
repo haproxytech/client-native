@@ -273,6 +273,10 @@ func (s BindParams) Equal(t BindParams, opts ...Options) bool {
 		return false
 	}
 
+	if s.Sslv3 != t.Sslv3 {
+		return false
+	}
+
 	if s.StrictSni != t.StrictSni {
 		return false
 	}
@@ -290,6 +294,22 @@ func (s BindParams) Equal(t BindParams, opts ...Options) bool {
 	}
 
 	if s.TLSTicketKeys != t.TLSTicketKeys {
+		return false
+	}
+
+	if s.Tlsv10 != t.Tlsv10 {
+		return false
+	}
+
+	if s.Tlsv11 != t.Tlsv11 {
+		return false
+	}
+
+	if s.Tlsv12 != t.Tlsv12 {
+		return false
+	}
+
+	if s.Tlsv13 != t.Tlsv13 {
 		return false
 	}
 
@@ -577,6 +597,10 @@ func (s BindParams) Diff(t BindParams, opts ...Options) map[string][]interface{}
 		diff["SslMinVer"] = []interface{}{s.SslMinVer, t.SslMinVer}
 	}
 
+	if s.Sslv3 != t.Sslv3 {
+		diff["Sslv3"] = []interface{}{s.Sslv3, t.Sslv3}
+	}
+
 	if s.StrictSni != t.StrictSni {
 		diff["StrictSni"] = []interface{}{s.StrictSni, t.StrictSni}
 	}
@@ -595,6 +619,22 @@ func (s BindParams) Diff(t BindParams, opts ...Options) map[string][]interface{}
 
 	if s.TLSTicketKeys != t.TLSTicketKeys {
 		diff["TLSTicketKeys"] = []interface{}{s.TLSTicketKeys, t.TLSTicketKeys}
+	}
+
+	if s.Tlsv10 != t.Tlsv10 {
+		diff["Tlsv10"] = []interface{}{s.Tlsv10, t.Tlsv10}
+	}
+
+	if s.Tlsv11 != t.Tlsv11 {
+		diff["Tlsv11"] = []interface{}{s.Tlsv11, t.Tlsv11}
+	}
+
+	if s.Tlsv12 != t.Tlsv12 {
+		diff["Tlsv12"] = []interface{}{s.Tlsv12, t.Tlsv12}
+	}
+
+	if s.Tlsv13 != t.Tlsv13 {
+		diff["Tlsv13"] = []interface{}{s.Tlsv13, t.Tlsv13}
 	}
 
 	if s.Transparent != t.Transparent {

@@ -310,15 +310,25 @@ definitions:
       expose_fd_listeners:
         type: boolean
       force_sslv3:
+        description: This field is deprecated in favor of sslv3, and will be removed in a future release
         type: boolean
+        x-deprecated: true
       force_tlsv10:
+        description: This field is deprecated in favor of tlsv10, and will be removed in a future release
         type: boolean
+        x-deprecated: true
       force_tlsv11:
+        description: This field is deprecated in favor of tlsv11, and will be removed in a future release
         type: boolean
+        x-deprecated: true
       force_tlsv12:
+        description: This field is deprecated in favor of tlsv12, and will be removed in a future release
         type: boolean
+        x-deprecated: true
       force_tlsv13:
+        description: This field is deprecated in favor of tlsv13, and will be removed in a future release
         type: boolean
+        x-deprecated: true
       generate_certificates:
         type: boolean
         x-dependency:
@@ -376,35 +386,45 @@ definitions:
           ssl:
             value: true
       no_sslv3:
+        description: This field is deprecated in favor of sslv3, and will be removed in a future release
         type: boolean
         x-dependency:
           ssl:
             value: true
+        x-deprecated: true
       no_tls_tickets:
         type: boolean
         x-dependency:
           ssl:
             value: true
       no_tlsv10:
+        description: This field is deprecated in favor of tlsv10, and will be removed in a future release
         type: boolean
         x-dependency:
           ssl:
             value: true
+        x-deprecated: true
       no_tlsv11:
+        description: This field is deprecated in favor of tlsv11, and will be removed in a future release
         type: boolean
         x-dependency:
           ssl:
             value: true
+        x-deprecated: true
       no_tlsv12:
+        description: This field is deprecated in favor of tlsv12, and will be removed in a future release
         type: boolean
         x-dependency:
           ssl:
             value: true
+        x-deprecated: true
       no_tlsv13:
+        description: This field is deprecated in favor of tlsv13, and will be removed in a future release
         type: boolean
         x-dependency:
           ssl:
             value: true
+        x-deprecated: true
       npn:
         type: string
       prefer_client_ciphers:
@@ -468,6 +488,14 @@ definitions:
           - TLSv1.2
           - TLSv1.3
         type: string
+      sslv3:
+        enum:
+          - enabled
+          - disabled
+        type: string
+        x-dependency:
+          ssl:
+            value: true
       strict_sni:
         type: boolean
         x-dependency:
@@ -482,6 +510,38 @@ definitions:
         type: string
       tls_ticket_keys:
         type: string
+      tlsv10:
+        enum:
+          - enabled
+          - disabled
+        type: string
+        x-dependency:
+          ssl:
+            value: true
+      tlsv11:
+        enum:
+          - enabled
+          - disabled
+        type: string
+        x-dependency:
+          ssl:
+            value: true
+      tlsv12:
+        enum:
+          - enabled
+          - disabled
+        type: string
+        x-dependency:
+          ssl:
+            value: true
+      tlsv13:
+        enum:
+          - enabled
+          - disabled
+        type: string
+        x-dependency:
+          ssl:
+            value: true
       transparent:
         type: boolean
       uid:
@@ -619,30 +679,40 @@ definitions:
         x-duration: true
         x-nullable: true
       force_sslv3:
+        description: This field is deprecated in favor of sslv3, and will be removed in a future release
         enum:
           - enabled
           - disabled
         type: string
+        x-deprecated: true
       force_tlsv10:
+        description: This field is deprecated in favor of tlsv10, and will be removed in a future release
         enum:
           - enabled
           - disabled
         type: string
+        x-deprecated: true
       force_tlsv11:
+        description: This field is deprecated in favor of tlsv11, and will be removed in a future release
         enum:
           - enabled
           - disabled
         type: string
+        x-deprecated: true
       force_tlsv12:
+        description: This field is deprecated in favor of tlsv12, and will be removed in a future release
         enum:
           - enabled
           - disabled
         type: string
+        x-deprecated: true
       force_tlsv13:
+        description: This field is deprecated in favor of tlsv13, and will be removed in a future release
         enum:
           - enabled
           - disabled
         type: string
+        x-deprecated: true
       guid:
         pattern: ^[A-Za-z0-9-_.:]+$
         type: string
@@ -697,30 +767,40 @@ definitions:
       namespace:
         type: string
       no_sslv3:
+        description: This field is deprecated in favor of sslv3, and will be removed in a future release
         enum:
           - enabled
           - disabled
         type: string
+        x-deprecated: true
       no_tlsv10:
+        description: This field is deprecated in favor of tlsv10, and will be removed in a future release
         enum:
           - enabled
           - disabled
         type: string
+        x-deprecated: true
       no_tlsv11:
+        description: This field is deprecated in favor of tlsv11, and will be removed in a future release
         enum:
           - enabled
           - disabled
         type: string
+        x-deprecated: true
       no_tlsv12:
+        description: This field is deprecated in favor of tlsv12, and will be removed in a future release
         enum:
           - enabled
           - disabled
         type: string
+        x-deprecated: true
       no_tlsv13:
+        description: This field is deprecated in favor of force_tlsv13, and will be removed in a future release
         enum:
           - enabled
           - disabled
         type: string
+        x-deprecated: true
       no_verifyhost:
         enum:
           - enabled
@@ -902,6 +982,11 @@ definitions:
           - enabled
           - disabled
         type: string
+      sslv3:
+        enum:
+          - enabled
+          - disabled
+        type: string
       stick:
         enum:
           - enabled
@@ -926,6 +1011,26 @@ definitions:
         x-dependency:
           ssl:
             value: enabled
+      tlsv10:
+        enum:
+          - enabled
+          - disabled
+        type: string
+      tlsv11:
+        enum:
+          - enabled
+          - disabled
+        type: string
+      tlsv12:
+        enum:
+          - enabled
+          - disabled
+        type: string
+      tlsv13:
+        enum:
+          - enabled
+          - disabled
+        type: string
       track:
         type: string
       verify:

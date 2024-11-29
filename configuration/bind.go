@@ -242,31 +242,41 @@ func parseBindParams(bindOptions []params.BindOption) models.BindParams { //noli
 			case "defer-accept":
 				b.DeferAccept = true
 			case "force-sslv3":
+				b.Sslv3 = "enabled"
 				b.ForceSslv3 = true
+			case "no-sslv3":
+				b.Sslv3 = "disabled"
+				b.NoSslv3 = true
 			case "force-tlsv10":
+				b.Tlsv10 = "enabled"
 				b.ForceTlsv10 = true
+			case "no-tlsv10":
+				b.Tlsv10 = "disabled"
+				b.NoTlsv10 = true
 			case "force-tlsv11":
+				b.Tlsv11 = "enabled"
 				b.ForceTlsv11 = true
+			case "no-tlsv11":
+				b.Tlsv11 = "disabled"
+				b.NoTlsv11 = true
 			case "force-tlsv12":
+				b.Tlsv12 = "enabled"
 				b.ForceTlsv12 = true
+			case "no-tlsv12":
+				b.Tlsv12 = "disabled"
+				b.NoTlsv12 = true
 			case "force-tlsv13":
+				b.Tlsv13 = "enabled"
 				b.ForceTlsv13 = true
+			case "no-tlsv13":
+				b.Tlsv13 = "disabled"
+				b.NoTlsv13 = true
 			case "generate-certificates":
 				b.GenerateCertificates = true
 			case "no-ca-names":
 				b.NoCaNames = true
-			case "no-sslv3":
-				b.NoSslv3 = true
 			case "no-tls-tickets":
 				b.NoTLSTickets = true
-			case "no-tlsv10":
-				b.NoTlsv10 = true
-			case "no-tlsv11":
-				b.NoTlsv11 = true
-			case "no-tlsv12":
-				b.NoTlsv12 = true
-			case "no-tlsv13":
-				b.NoTlsv13 = true
 			case "prefer-client-ciphers":
 				b.PreferClientCiphers = true
 			case "strict-sni":
@@ -503,20 +513,45 @@ func serializeBindParams(b models.BindParams, path string) []params.BindOption {
 	if b.ExposeFdListeners {
 		options = append(options, &params.ServerOptionDoubleWord{Name: "expose-fd", Value: "listeners"})
 	}
-	if b.ForceSslv3 {
+	if b.Sslv3 == "enabled" ||
+		b.ForceSslv3 {
 		options = append(options, &params.ServerOptionWord{Name: "force-sslv3"})
 	}
-	if b.ForceTlsv10 {
+	if b.Sslv3 == "disabled" ||
+		b.NoSslv3 {
+		options = append(options, &params.ServerOptionWord{Name: "no-sslv3"})
+	}
+	if b.Tlsv10 == "enabled" ||
+		b.ForceTlsv10 {
 		options = append(options, &params.ServerOptionWord{Name: "force-tlsv10"})
 	}
-	if b.ForceTlsv11 {
+	if b.Tlsv10 == "disabled" ||
+		b.NoTlsv10 {
+		options = append(options, &params.ServerOptionWord{Name: "no-tlsv10"})
+	}
+	if b.Tlsv11 == "enabled" ||
+		b.ForceTlsv11 {
 		options = append(options, &params.ServerOptionWord{Name: "force-tlsv11"})
 	}
-	if b.ForceTlsv12 {
+	if b.Tlsv11 == "disabled" ||
+		b.NoTlsv11 {
+		options = append(options, &params.ServerOptionWord{Name: "no-tlsv11"})
+	}
+	if b.Tlsv12 == "enabled" ||
+		b.ForceTlsv12 {
 		options = append(options, &params.ServerOptionWord{Name: "force-tlsv12"})
 	}
-	if b.ForceTlsv13 {
+	if b.Tlsv12 == "disabled" ||
+		b.NoTlsv12 {
+		options = append(options, &params.ServerOptionWord{Name: "no-tlsv12"})
+	}
+	if b.Tlsv13 == "enabled" ||
+		b.ForceTlsv13 {
 		options = append(options, &params.ServerOptionWord{Name: "force-tlsv13"})
+	}
+	if b.Tlsv13 == "disabled" ||
+		b.NoTlsv13 {
+		options = append(options, &params.ServerOptionWord{Name: "no-tlsv13"})
 	}
 	if b.GenerateCertificates {
 		options = append(options, &params.ServerOptionWord{Name: "generate-certificates"})
@@ -560,23 +595,8 @@ func serializeBindParams(b models.BindParams, path string) []params.BindOption {
 	if b.NoCaNames {
 		options = append(options, &params.ServerOptionWord{Name: "no-ca-names"})
 	}
-	if b.NoSslv3 {
-		options = append(options, &params.ServerOptionWord{Name: "no-sslv3"})
-	}
 	if b.NoTLSTickets {
 		options = append(options, &params.ServerOptionWord{Name: "no-tls-tickets"})
-	}
-	if b.NoTlsv10 {
-		options = append(options, &params.ServerOptionWord{Name: "no-tlsv10"})
-	}
-	if b.NoTlsv11 {
-		options = append(options, &params.ServerOptionWord{Name: "no-tlsv11"})
-	}
-	if b.NoTlsv12 {
-		options = append(options, &params.ServerOptionWord{Name: "no-tlsv12"})
-	}
-	if b.NoTlsv13 {
-		options = append(options, &params.ServerOptionWord{Name: "no-tlsv13"})
 	}
 	if b.Npn != "" {
 		options = append(options, &params.BindOptionValue{Name: "npn", Value: b.Npn})

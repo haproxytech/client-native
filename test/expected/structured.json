@@ -497,7 +497,9 @@
                 "log-bufsize": 6,
                 "pool_low_conn": 128,
                 "rise": 4000,
-                "ws": "auto"
+                "ws": "auto",
+                "sslv3": "enabled",
+                "force_sslv3": "enabled"
             },
             "description": "this is a backend description",
             "email_alert": {
@@ -1035,7 +1037,9 @@
                 "health_check_port": 8888,
                 "inter": 5000,
                 "rise": 4000,
-                "slowstart": 6000
+                "slowstart": 6000,
+                "tlsv10": "disabled",
+                "force_tlsv10": "disabled"
             },
             "email_alert": {
                 "from": "prod01@example.com",
@@ -2607,7 +2611,9 @@
                     "name": "ipv6",
                     "thread": "1/1-1",
                     "address": "2a01:c9c0:a3:8::3",
-                    "port": 80
+                    "port": 80,
+                    "force_sslv3": true,
+                    "sslv3": "enabled"
                 },
                 "test-quic": {
                     "name": "test-quic",
@@ -2642,13 +2648,17 @@
                     "name": "webserv2",
                     "thread": "1/all",
                     "address": "192.168.1.1",
-                    "port": 8080
+                    "port": 8080,
+                    "force_tlsv10": true,
+                    "tlsv10": "enabled"
                 },
                 "webserv3": {
                     "name": "webserv3",
                     "thread": "1/1",
                     "address": "192.168.1.2",
-                    "port": 8080
+                    "port": 8080,
+                    "no_tlsv10": true,
+                    "tlsv10": "disabled"
                 }
             }
         },

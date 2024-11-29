@@ -69,6 +69,9 @@ func (s *ServerParams) prepareForRuntimeDoNotSendDisabledFields() {
 	if s.SslReuse == "disabled" {
 		s.SslReuse = ""
 	}
+	if s.Sslv3 == "disabled" {
+		s.Sslv3 = ""
+	}
 	if s.Stick == "disabled" {
 		s.Stick = ""
 	}
@@ -77,6 +80,18 @@ func (s *ServerParams) prepareForRuntimeDoNotSendDisabledFields() {
 	}
 	if s.TLSTickets == "disabled" {
 		s.TLSTickets = ""
+	}
+	if s.Tlsv10 == "disabled" {
+		s.Tlsv10 = ""
+	}
+	if s.Tlsv11 == "disabled" {
+		s.Tlsv11 = ""
+	}
+	if s.Tlsv12 == "disabled" {
+		s.Tlsv12 = ""
+	}
+	if s.Tlsv13 == "disabled" {
+		s.Tlsv13 = ""
 	}
 }
 

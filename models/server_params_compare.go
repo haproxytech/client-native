@@ -387,6 +387,10 @@ func (s ServerParams) Equal(t ServerParams, opts ...Options) bool {
 		return false
 	}
 
+	if s.Sslv3 != t.Sslv3 {
+		return false
+	}
+
 	if s.Stick != t.Stick {
 		return false
 	}
@@ -400,6 +404,22 @@ func (s ServerParams) Equal(t ServerParams, opts ...Options) bool {
 	}
 
 	if s.TLSTickets != t.TLSTickets {
+		return false
+	}
+
+	if s.Tlsv10 != t.Tlsv10 {
+		return false
+	}
+
+	if s.Tlsv11 != t.Tlsv11 {
+		return false
+	}
+
+	if s.Tlsv12 != t.Tlsv12 {
+		return false
+	}
+
+	if s.Tlsv13 != t.Tlsv13 {
 		return false
 	}
 
@@ -797,6 +817,10 @@ func (s ServerParams) Diff(t ServerParams, opts ...Options) map[string][]interfa
 		diff["SslReuse"] = []interface{}{s.SslReuse, t.SslReuse}
 	}
 
+	if s.Sslv3 != t.Sslv3 {
+		diff["Sslv3"] = []interface{}{s.Sslv3, t.Sslv3}
+	}
+
 	if s.Stick != t.Stick {
 		diff["Stick"] = []interface{}{s.Stick, t.Stick}
 	}
@@ -811,6 +835,22 @@ func (s ServerParams) Diff(t ServerParams, opts ...Options) map[string][]interfa
 
 	if s.TLSTickets != t.TLSTickets {
 		diff["TLSTickets"] = []interface{}{s.TLSTickets, t.TLSTickets}
+	}
+
+	if s.Tlsv10 != t.Tlsv10 {
+		diff["Tlsv10"] = []interface{}{s.Tlsv10, t.Tlsv10}
+	}
+
+	if s.Tlsv11 != t.Tlsv11 {
+		diff["Tlsv11"] = []interface{}{s.Tlsv11, t.Tlsv11}
+	}
+
+	if s.Tlsv12 != t.Tlsv12 {
+		diff["Tlsv12"] = []interface{}{s.Tlsv12, t.Tlsv12}
+	}
+
+	if s.Tlsv13 != t.Tlsv13 {
+		diff["Tlsv13"] = []interface{}{s.Tlsv13, t.Tlsv13}
 	}
 
 	if s.Track != t.Track {

@@ -290,24 +290,35 @@ func parseServerParams(serverOptions []params.ServerOption, serverParams *models
 			case "enabled":
 				serverParams.Maintenance = "disabled"
 			case "force-sslv3":
+				serverParams.Sslv3 = "enabled"
 				serverParams.ForceSslv3 = "enabled"
-			case "force-tlsv10":
-				serverParams.ForceTlsv10 = "enabled"
 			case "no-sslv3":
-				serverParams.NoSslv3 = "enabled"
+				serverParams.Sslv3 = "disabled"
+				serverParams.ForceSslv3 = "disabled"
+				serverParams.NoSslv3 = "enabled" // deprecated kept for backward compatibility
+			case "force-tlsv10":
+				serverParams.Tlsv10 = "enabled"
+				serverParams.ForceTlsv10 = "enabled"
 			case "no-tlsv10":
+				serverParams.Tlsv10 = "disabled"
 				serverParams.ForceTlsv10 = "disabled"
 			case "force-tlsv11":
+				serverParams.Tlsv11 = "enabled"
 				serverParams.ForceTlsv11 = "enabled"
 			case "no-tlsv11":
+				serverParams.Tlsv11 = "disabled"
 				serverParams.ForceTlsv11 = "disabled"
 			case "force-tlsv12":
+				serverParams.Tlsv12 = "enabled"
 				serverParams.ForceTlsv12 = "enabled"
 			case "no-tlsv12":
+				serverParams.Tlsv12 = "disabled"
 				serverParams.ForceTlsv12 = "disabled"
 			case "force-tlsv13":
+				serverParams.Tlsv13 = "enabled"
 				serverParams.ForceTlsv13 = "enabled"
 			case "no-tlsv13":
+				serverParams.Tlsv13 = "disabled"
 				serverParams.ForceTlsv13 = "disabled"
 			case "send-proxy":
 				serverParams.SendProxy = "enabled"
@@ -345,6 +356,8 @@ func parseServerParams(serverOptions []params.ServerOption, serverParams *models
 				serverParams.Stick = "enabled"
 			case "non-stick":
 				serverParams.Stick = "disabled"
+			case "no-verifyhost":
+				serverParams.NoVerifyhost = "enabled"
 			}
 		case *params.ServerOptionValue:
 			switch v.Name {
@@ -596,11 +609,25 @@ func SerializeServerParams(s models.ServerParams, opt *options.ConfigurationOpti
 	if s.CheckViaSocks4 == "enabled" {
 		options = append(options, &params.ServerOptionWord{Name: "check-via-socks4"})
 	}
+	if s.Sslv3 == "enabled" {
+		options = append(options, &params.ServerOptionWord{Name: "force-sslv3"})
+	}
+	if s.Sslv3 == "disabled" ||
+		s.NoSslv3 == "enabled" { // deprecated, keeping the behavior, for backward compatibility. Can be removed when field is removed
+		options = append(options, &params.ServerOptionWord{Name: "no-sslv3"})
+	}
 	if s.ForceSslv3 == "enabled" {
 		options = append(options, &params.ServerOptionWord{Name: "force-sslv3"})
 	}
-	if s.NoSslv3 == "enabled" {
+	if s.ForceSslv3 == "disabled" ||
+		s.NoSslv3 == "enabled" { // deprecated, keeping the behavior, for backward compatibility. Can be removed when field is removed
 		options = append(options, &params.ServerOptionWord{Name: "no-sslv3"})
+	}
+	if s.Tlsv10 == "enabled" {
+		options = append(options, &params.ServerOptionWord{Name: "force-tlsv10"})
+	}
+	if s.Tlsv10 == "disabled" {
+		options = append(options, &params.ServerOptionWord{Name: "no-tlsv10"})
 	}
 	if s.ForceTlsv10 == "enabled" {
 		options = append(options, &params.ServerOptionWord{Name: "force-tlsv10"})
@@ -608,17 +635,35 @@ func SerializeServerParams(s models.ServerParams, opt *options.ConfigurationOpti
 	if s.ForceTlsv10 == "disabled" {
 		options = append(options, &params.ServerOptionWord{Name: "no-tlsv10"})
 	}
+	if s.Tlsv11 == "enabled" {
+		options = append(options, &params.ServerOptionWord{Name: "force-tlsv11"})
+	}
+	if s.Tlsv11 == "disabled" {
+		options = append(options, &params.ServerOptionWord{Name: "no-tlsv11"})
+	}
 	if s.ForceTlsv11 == "enabled" {
 		options = append(options, &params.ServerOptionWord{Name: "force-tlsv11"})
 	}
 	if s.ForceTlsv11 == "disabled" {
 		options = append(options, &params.ServerOptionWord{Name: "no-tlsv11"})
 	}
+	if s.Tlsv12 == "enabled" {
+		options = append(options, &params.ServerOptionWord{Name: "force-tlsv12"})
+	}
+	if s.Tlsv12 == "disabled" {
+		options = append(options, &params.ServerOptionWord{Name: "no-tlsv12"})
+	}
 	if s.ForceTlsv12 == "enabled" {
 		options = append(options, &params.ServerOptionWord{Name: "force-tlsv12"})
 	}
 	if s.ForceTlsv12 == "disabled" {
 		options = append(options, &params.ServerOptionWord{Name: "no-tlsv12"})
+	}
+	if s.Tlsv13 == "enabled" {
+		options = append(options, &params.ServerOptionWord{Name: "force-tlsv13"})
+	}
+	if s.Tlsv13 == "disabled" {
+		options = append(options, &params.ServerOptionWord{Name: "no-tlsv13"})
 	}
 	if s.ForceTlsv13 == "enabled" {
 		options = append(options, &params.ServerOptionWord{Name: "force-tlsv13"})
@@ -868,6 +913,9 @@ func SerializeServerParams(s models.ServerParams, opt *options.ConfigurationOpti
 	}
 	if s.Verifyhost != "" {
 		options = append(options, &params.ServerOptionValue{Name: "verifyhost", Value: s.Verifyhost})
+	}
+	if s.NoVerifyhost == "enabled" {
+		options = append(options, &params.ServerOptionWord{Name: "no-verifyhost"})
 	}
 	if s.Weight != nil {
 		options = append(options, &params.ServerOptionValue{Name: "weight", Value: strconv.FormatInt(*s.Weight, 10)})

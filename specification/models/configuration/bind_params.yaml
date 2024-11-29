@@ -90,16 +90,91 @@ bind_params:
       type: boolean
     expose_fd_listeners:
       type: boolean
+    sslv3:
+      type: string
+      enum: [enabled, disabled]
+      x-dependency:
+        ssl:
+          value: true
     force_sslv3:
+      description: This field is deprecated in favor of sslv3, and will be removed in a future release
       type: boolean
+      x-deprecated: true
+    no_sslv3:
+      description: This field is deprecated in favor of sslv3, and will be removed in a future release
+      type: boolean
+      x-dependency:
+        ssl:
+          value: true
+      x-deprecated: true
+    tlsv10:
+      type: string
+      enum: [enabled, disabled]
+      x-dependency:
+        ssl:
+          value: true
     force_tlsv10:
+      description: This field is deprecated in favor of tlsv10, and will be removed in a future release
       type: boolean
+      x-deprecated: true
+    no_tlsv10:
+      description: This field is deprecated in favor of tlsv10, and will be removed in a future release
+      type: boolean
+      x-dependency:
+        ssl:
+          value: true
+      x-deprecated: true
+    tlsv11:
+      type: string
+      enum: [enabled, disabled]
+      x-dependency:
+        ssl:
+          value: true
     force_tlsv11:
+      description: This field is deprecated in favor of tlsv11, and will be removed in a future release
       type: boolean
+      x-deprecated: true
+    no_tlsv11:
+      description: This field is deprecated in favor of tlsv11, and will be removed in a future release
+      type: boolean
+      x-dependency:
+        ssl:
+          value: true
+      x-deprecated: true
+    tlsv12:
+      type: string
+      enum: [enabled, disabled]
+      x-dependency:
+        ssl:
+          value: true
+    no_tlsv12:
+      description: This field is deprecated in favor of tlsv12, and will be removed in a future release
+      type: boolean
+      x-dependency:
+        ssl:
+          value: true
+      x-deprecated: true
     force_tlsv12:
+      description: This field is deprecated in favor of tlsv12, and will be removed in a future release
       type: boolean
+      x-deprecated: true
+    tlsv13:
+      type: string
+      enum: [enabled, disabled]
+      x-dependency:
+        ssl:
+          value: true
     force_tlsv13:
+      description: This field is deprecated in favor of tlsv13, and will be removed in a future release
       type: boolean
+      x-deprecated: true
+    no_tlsv13:
+      description: This field is deprecated in favor of tlsv13, and will be removed in a future release
+      type: boolean
+      x-dependency:
+        ssl:
+          value: true
+      x-deprecated: true
     generate_certificates:
       type: boolean
       x-dependency:
@@ -158,32 +233,7 @@ bind_params:
       x-dependency:
         ssl:
           value: true
-    no_sslv3:
-      type: boolean
-      x-dependency:
-        ssl:
-          value: true
     no_tls_tickets:
-      type: boolean
-      x-dependency:
-        ssl:
-          value: true
-    no_tlsv10:
-      type: boolean
-      x-dependency:
-        ssl:
-          value: true
-    no_tlsv11:
-      type: boolean
-      x-dependency:
-        ssl:
-          value: true
-    no_tlsv12:
-      type: boolean
-      x-dependency:
-        ssl:
-          value: true
-    no_tlsv13:
       type: boolean
       x-dependency:
         ssl:

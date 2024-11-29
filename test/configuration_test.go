@@ -393,9 +393,9 @@ frontend test
   mode http
   backlog 2048
   bind 192.168.1.1:80 name webserv thread all sigalgs RSA+SHA256 client-sigalgs ECDSA+SHA256:RSA+SHA256 ca-verify-file ca.pem nice 789 guid-prefix guid-example default-crt foobar.pem.rsa default-crt foobar.pem.ecdsa
-  bind 192.168.1.1:8080 name webserv2 thread 1/all
-  bind 192.168.1.2:8080 name webserv3 thread 1/1
-  bind [2a01:c9c0:a3:8::3]:80 name ipv6 thread 1/1-1
+  bind 192.168.1.1:8080 name webserv2 thread 1/all force-tlsv10
+  bind 192.168.1.2:8080 name webserv3 thread 1/1 no-tlsv10
+  bind [2a01:c9c0:a3:8::3]:80 name ipv6 thread 1/1-1 force-sslv3
   bind 192.168.1.1:80 name test-quic quic-socket connection thread 1/1
   bind 192.168.1.1:80 name testnbcon thread 1/all nbconn 6
   option httplog
@@ -703,7 +703,7 @@ backend test
   option splice-request
   option splice-response
   option http-restrict-req-hdr-names preserve
-  default-server fall 2s rise 4s inter 5s port 8888 ws auto pool-low-conn 128 log-bufsize 6
+  default-server fall 2s rise 4s inter 5s port 8888 ws auto pool-low-conn 128 log-bufsize 6 force-sslv3
   stick store-request src table test
   stick match src table test
   stick on src table test
@@ -965,7 +965,7 @@ backend test_2 from test_defaults_2
   no option splice-auto
   no option splice-request
   no option splice-response
-  default-server fall 2s rise 4s inter 5s port 8888 slowstart 6000
+  default-server fall 2s rise 4s inter 5s port 8888 slowstart 6000 no-tlsv10
   option contstats
   timeout check 2s
   timeout tunnel 5s

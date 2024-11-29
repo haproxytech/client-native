@@ -144,27 +144,27 @@ type ServerParams struct {
 	// +kubebuilder:validation:Minimum=0
 	Fastinter *int64 `json:"fastinter,omitempty"`
 
-	// force sslv3
+	// This field is deprecated in favor of sslv3, and will be removed in a future release
 	// Enum: ["enabled","disabled"]
 	// +kubebuilder:validation:Enum="enabled","disabled";
 	ForceSslv3 string `json:"force_sslv3,omitempty"`
 
-	// force tlsv10
+	// This field is deprecated in favor of tlsv10, and will be removed in a future release
 	// Enum: ["enabled","disabled"]
 	// +kubebuilder:validation:Enum="enabled","disabled";
 	ForceTlsv10 string `json:"force_tlsv10,omitempty"`
 
-	// force tlsv11
+	// This field is deprecated in favor of tlsv11, and will be removed in a future release
 	// Enum: ["enabled","disabled"]
 	// +kubebuilder:validation:Enum="enabled","disabled";
 	ForceTlsv11 string `json:"force_tlsv11,omitempty"`
 
-	// force tlsv12
+	// This field is deprecated in favor of tlsv12, and will be removed in a future release
 	// Enum: ["enabled","disabled"]
 	// +kubebuilder:validation:Enum="enabled","disabled";
 	ForceTlsv12 string `json:"force_tlsv12,omitempty"`
 
-	// force tlsv13
+	// This field is deprecated in favor of tlsv13, and will be removed in a future release
 	// Enum: ["enabled","disabled"]
 	// +kubebuilder:validation:Enum="enabled","disabled";
 	ForceTlsv13 string `json:"force_tlsv13,omitempty"`
@@ -229,27 +229,27 @@ type ServerParams struct {
 	// namespace
 	Namespace string `json:"namespace,omitempty"`
 
-	// no sslv3
+	// This field is deprecated in favor of sslv3, and will be removed in a future release
 	// Enum: ["enabled","disabled"]
 	// +kubebuilder:validation:Enum="enabled","disabled";
 	NoSslv3 string `json:"no_sslv3,omitempty"`
 
-	// no tlsv10
+	// This field is deprecated in favor of tlsv10, and will be removed in a future release
 	// Enum: ["enabled","disabled"]
 	// +kubebuilder:validation:Enum="enabled","disabled";
 	NoTlsv10 string `json:"no_tlsv10,omitempty"`
 
-	// no tlsv11
+	// This field is deprecated in favor of tlsv11, and will be removed in a future release
 	// Enum: ["enabled","disabled"]
 	// +kubebuilder:validation:Enum="enabled","disabled";
 	NoTlsv11 string `json:"no_tlsv11,omitempty"`
 
-	// no tlsv12
+	// This field is deprecated in favor of tlsv12, and will be removed in a future release
 	// Enum: ["enabled","disabled"]
 	// +kubebuilder:validation:Enum="enabled","disabled";
 	NoTlsv12 string `json:"no_tlsv12,omitempty"`
 
-	// no tlsv13
+	// This field is deprecated in favor of force_tlsv13, and will be removed in a future release
 	// Enum: ["enabled","disabled"]
 	// +kubebuilder:validation:Enum="enabled","disabled";
 	NoTlsv13 string `json:"no_tlsv13,omitempty"`
@@ -409,6 +409,11 @@ type ServerParams struct {
 	// +kubebuilder:validation:Enum="enabled","disabled";
 	SslReuse string `json:"ssl_reuse,omitempty"`
 
+	// sslv3
+	// Enum: ["enabled","disabled"]
+	// +kubebuilder:validation:Enum="enabled","disabled";
+	Sslv3 string `json:"sslv3,omitempty"`
+
 	// stick
 	// Enum: ["enabled","disabled"]
 	// +kubebuilder:validation:Enum="enabled","disabled";
@@ -428,6 +433,26 @@ type ServerParams struct {
 	// Enum: ["enabled","disabled"]
 	// +kubebuilder:validation:Enum="enabled","disabled";
 	TLSTickets string `json:"tls_tickets,omitempty"`
+
+	// tlsv10
+	// Enum: ["enabled","disabled"]
+	// +kubebuilder:validation:Enum="enabled","disabled";
+	Tlsv10 string `json:"tlsv10,omitempty"`
+
+	// tlsv11
+	// Enum: ["enabled","disabled"]
+	// +kubebuilder:validation:Enum="enabled","disabled";
+	Tlsv11 string `json:"tlsv11,omitempty"`
+
+	// tlsv12
+	// Enum: ["enabled","disabled"]
+	// +kubebuilder:validation:Enum="enabled","disabled";
+	Tlsv12 string `json:"tlsv12,omitempty"`
+
+	// tlsv13
+	// Enum: ["enabled","disabled"]
+	// +kubebuilder:validation:Enum="enabled","disabled";
+	Tlsv13 string `json:"tlsv13,omitempty"`
 
 	// track
 	Track string `json:"track,omitempty"`
@@ -697,6 +722,10 @@ func (m *ServerParams) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
+	if err := m.validateSslv3(formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.validateStick(formats); err != nil {
 		res = append(res, err)
 	}
@@ -710,6 +739,22 @@ func (m *ServerParams) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateTLSTickets(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateTlsv10(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateTlsv11(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateTlsv12(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateTlsv13(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -2476,6 +2521,48 @@ func (m *ServerParams) validateSslReuse(formats strfmt.Registry) error {
 	return nil
 }
 
+var serverParamsTypeSslv3PropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		serverParamsTypeSslv3PropEnum = append(serverParamsTypeSslv3PropEnum, v)
+	}
+}
+
+const (
+
+	// ServerParamsSslv3Enabled captures enum value "enabled"
+	ServerParamsSslv3Enabled string = "enabled"
+
+	// ServerParamsSslv3Disabled captures enum value "disabled"
+	ServerParamsSslv3Disabled string = "disabled"
+)
+
+// prop value enum
+func (m *ServerParams) validateSslv3Enum(path, location string, value string) error {
+	if err := validate.EnumCase(path, location, value, serverParamsTypeSslv3PropEnum, true); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *ServerParams) validateSslv3(formats strfmt.Registry) error {
+	if swag.IsZero(m.Sslv3) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateSslv3Enum("sslv3", "body", m.Sslv3); err != nil {
+		return err
+	}
+
+	return nil
+}
+
 var serverParamsTypeStickPropEnum []interface{}
 
 func init() {
@@ -2608,6 +2695,174 @@ func (m *ServerParams) validateTLSTickets(formats strfmt.Registry) error {
 
 	// value enum
 	if err := m.validateTLSTicketsEnum("tls_tickets", "body", m.TLSTickets); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+var serverParamsTypeTlsv10PropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		serverParamsTypeTlsv10PropEnum = append(serverParamsTypeTlsv10PropEnum, v)
+	}
+}
+
+const (
+
+	// ServerParamsTlsv10Enabled captures enum value "enabled"
+	ServerParamsTlsv10Enabled string = "enabled"
+
+	// ServerParamsTlsv10Disabled captures enum value "disabled"
+	ServerParamsTlsv10Disabled string = "disabled"
+)
+
+// prop value enum
+func (m *ServerParams) validateTlsv10Enum(path, location string, value string) error {
+	if err := validate.EnumCase(path, location, value, serverParamsTypeTlsv10PropEnum, true); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *ServerParams) validateTlsv10(formats strfmt.Registry) error {
+	if swag.IsZero(m.Tlsv10) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateTlsv10Enum("tlsv10", "body", m.Tlsv10); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+var serverParamsTypeTlsv11PropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		serverParamsTypeTlsv11PropEnum = append(serverParamsTypeTlsv11PropEnum, v)
+	}
+}
+
+const (
+
+	// ServerParamsTlsv11Enabled captures enum value "enabled"
+	ServerParamsTlsv11Enabled string = "enabled"
+
+	// ServerParamsTlsv11Disabled captures enum value "disabled"
+	ServerParamsTlsv11Disabled string = "disabled"
+)
+
+// prop value enum
+func (m *ServerParams) validateTlsv11Enum(path, location string, value string) error {
+	if err := validate.EnumCase(path, location, value, serverParamsTypeTlsv11PropEnum, true); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *ServerParams) validateTlsv11(formats strfmt.Registry) error {
+	if swag.IsZero(m.Tlsv11) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateTlsv11Enum("tlsv11", "body", m.Tlsv11); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+var serverParamsTypeTlsv12PropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		serverParamsTypeTlsv12PropEnum = append(serverParamsTypeTlsv12PropEnum, v)
+	}
+}
+
+const (
+
+	// ServerParamsTlsv12Enabled captures enum value "enabled"
+	ServerParamsTlsv12Enabled string = "enabled"
+
+	// ServerParamsTlsv12Disabled captures enum value "disabled"
+	ServerParamsTlsv12Disabled string = "disabled"
+)
+
+// prop value enum
+func (m *ServerParams) validateTlsv12Enum(path, location string, value string) error {
+	if err := validate.EnumCase(path, location, value, serverParamsTypeTlsv12PropEnum, true); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *ServerParams) validateTlsv12(formats strfmt.Registry) error {
+	if swag.IsZero(m.Tlsv12) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateTlsv12Enum("tlsv12", "body", m.Tlsv12); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+var serverParamsTypeTlsv13PropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		serverParamsTypeTlsv13PropEnum = append(serverParamsTypeTlsv13PropEnum, v)
+	}
+}
+
+const (
+
+	// ServerParamsTlsv13Enabled captures enum value "enabled"
+	ServerParamsTlsv13Enabled string = "enabled"
+
+	// ServerParamsTlsv13Disabled captures enum value "disabled"
+	ServerParamsTlsv13Disabled string = "disabled"
+)
+
+// prop value enum
+func (m *ServerParams) validateTlsv13Enum(path, location string, value string) error {
+	if err := validate.EnumCase(path, location, value, serverParamsTypeTlsv13PropEnum, true); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *ServerParams) validateTlsv13(formats strfmt.Registry) error {
+	if swag.IsZero(m.Tlsv13) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateTlsv13Enum("tlsv13", "body", m.Tlsv13); err != nil {
 		return err
 	}
 
