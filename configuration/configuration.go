@@ -401,6 +401,8 @@ func (s *SectionParser) checkSpecialFields(fieldName string) (bool, interface{})
 		return true, s.source()
 	case "Originalto":
 		return true, s.originalto()
+	case "LogSteps":
+		return true, s.logSteps()
 	default:
 		return false, nil
 	}
@@ -1471,6 +1473,18 @@ func (s *SectionParser) originalto() interface{} {
 	return originalto
 }
 
+func (s *SectionParser) logSteps() interface{} {
+	if s.Section == parser.Frontends || s.Section == parser.Defaults {
+		data, err := s.get("log-steps", false)
+		if err != nil {
+			return nil
+		}
+		d := data.(*types.StringC)
+		return strings.Split(d.Value, ",")
+	}
+	return nil
+}
+
 // SectionObject represents a configuration section
 type SectionObject struct {
 	Object  interface{}
@@ -1646,6 +1660,8 @@ func (s *SectionObject) checkSpecialFields(fieldName string, field reflect.Value
 		return true, s.source(field)
 	case "Originalto":
 		return true, s.originalto(field)
+	case "LogSteps":
+		return true, s.logSteps(field)
 	default:
 		return false, nil
 	}
@@ -2900,6 +2916,24 @@ func (s *SectionObject) originalto(field reflect.Value) error {
 		Header: originalto.Header,
 	}
 	return s.set("option originalto", d)
+}
+
+func (s *SectionObject) logSteps(field reflect.Value) error {
+	if !(s.Section == parser.Defaults || s.Section == parser.Frontends) {
+		return nil
+	}
+	if valueIsNil(field) {
+		return s.set("log-steps", nil)
+	}
+	logSteps, ok := field.Interface().([]string)
+	if !ok {
+		return misc.CreateTypeAssertError("log-steps")
+	}
+	d := strings.Join(logSteps, ",")
+	if len(d) == 0 {
+		return s.set("log-steps", nil)
+	}
+	return s.set("log-steps", d)
 }
 
 func (c *client) deleteSection(section parser.Section, name string, transactionID string, version int64) error {

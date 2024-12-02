@@ -87,6 +87,13 @@ frontend_base:
     log_tag:
       type: string
       pattern: '^[A-Za-z0-9-_.:]+$'
+    log_steps:
+      type: array
+      x-omitempty: true
+      x-go-name: LogSteps
+      items:
+        type: string
+        enum: [accept, request, connect, response, close, error, any]
     log_separate_errors:
       type: string
       enum: [enabled, disabled]

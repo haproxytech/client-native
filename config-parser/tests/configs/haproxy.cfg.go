@@ -84,6 +84,7 @@ defaults A
   maxconn 2000
   log global
   log 127.0.0.1:514 local0 notice
+  log-steps accept,close
   log-format '%ci:%cp [%tr] %ft %b/%s %TR/%Tw/%Tc/%Tr/%Ta %ST %B %CC %CS %tsc %ac/%fc/%bc/%sc/%rc %sq/%bq %hr %hs "%HM %[var(txn.base)] %HV"'
   option redispatch
   option dontlognull
@@ -276,6 +277,7 @@ frontend xyz5 from A
   bind 192.168.1.1:80 name webserv
   bind 192.168.1.1:8080 name webserv2
   log-tag bla
+  log-steps any
   log global
   option httpclose
   option dontlognull

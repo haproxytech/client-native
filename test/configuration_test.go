@@ -299,6 +299,7 @@ defaults test_defaults
 defaults test_defaults_2 from test_defaults
   option srvtcpka
   option clitcpka
+  log-steps request,response
 
 defaults unnamed_defaults_1
   maxconn 2000
@@ -600,6 +601,7 @@ frontend test
   no log
   log 127.0.0.1:514 local0 notice notice
   log-tag bla
+  log-steps any
   option httpclose
   timeout http-request 2s
   timeout http-keep-alive 3s

@@ -45,6 +45,9 @@ type FrontendBase struct {
 	// error files from HTTP errors
 	ErrorFilesFromHTTPErrors []*Errorfiles `json:"errorfiles_from_http_errors,omitempty"`
 
+	// log steps
+	LogSteps []string `json:"log_steps,omitempty"`
+
 	// accept invalid http request
 	// Enum: ["enabled","disabled"]
 	// +kubebuilder:validation:Enum="enabled","disabled";
@@ -330,6 +333,10 @@ func (m *FrontendBase) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
+	if err := m.validateLogSteps(formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.validateAcceptInvalidHTTPRequest(formats); err != nil {
 		res = append(res, err)
 	}
@@ -573,6 +580,42 @@ func (m *FrontendBase) validateErrorFilesFromHTTPErrors(formats strfmt.Registry)
 				}
 				return err
 			}
+		}
+
+	}
+
+	return nil
+}
+
+var frontendBaseLogStepsItemsEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["accept","request","connect","response","close","error","any"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		frontendBaseLogStepsItemsEnum = append(frontendBaseLogStepsItemsEnum, v)
+	}
+}
+
+func (m *FrontendBase) validateLogStepsItemsEnum(path, location string, value string) error {
+	if err := validate.EnumCase(path, location, value, frontendBaseLogStepsItemsEnum, true); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *FrontendBase) validateLogSteps(formats strfmt.Registry) error {
+	if swag.IsZero(m.LogSteps) { // not required
+		return nil
+	}
+
+	for i := 0; i < len(m.LogSteps); i++ {
+
+		// value enum
+		if err := m.validateLogStepsItemsEnum("log_steps"+"."+strconv.Itoa(i), "body", m.LogSteps[i]); err != nil {
+			return err
 		}
 
 	}

@@ -2740,6 +2740,20 @@ definitions:
           - enabled
           - disabled
         type: string
+      log_steps:
+        items:
+          enum:
+            - accept
+            - request
+            - connect
+            - response
+            - close
+            - error
+            - any
+          type: string
+        type: array
+        x-go-name: LogSteps
+        x-omitempty: true
       log_tag:
         pattern: ^[^\s]+$
         type: string
@@ -3222,6 +3236,20 @@ definitions:
           - enabled
           - disabled
         type: string
+      log_steps:
+        items:
+          enum:
+            - accept
+            - request
+            - connect
+            - response
+            - close
+            - error
+            - any
+          type: string
+        type: array
+        x-go-name: LogSteps
+        x-omitempty: true
       log_tag:
         pattern: ^[A-Za-z0-9-_.:]+$
         type: string

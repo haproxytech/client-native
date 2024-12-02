@@ -57,6 +57,10 @@ func (s DefaultsBase) Equal(t DefaultsBase, opts ...Options) bool {
 		}
 	}
 
+	if !equalComparableSlice(s.LogSteps, t.LogSteps, opt) {
+		return false
+	}
+
 	if s.Abortonclose != t.Abortonclose {
 		return false
 	}
@@ -857,6 +861,10 @@ func (s DefaultsBase) Diff(t DefaultsBase, opts ...Options) map[string][]interfa
 		if len(diff2) > 0 {
 			diff["ErrorFilesFromHTTPErrors"] = []interface{}{diff2}
 		}
+	}
+
+	if !equalComparableSlice(s.LogSteps, t.LogSteps, opt) {
+		diff["LogSteps"] = []interface{}{s.LogSteps, t.LogSteps}
 	}
 
 	if s.Abortonclose != t.Abortonclose {

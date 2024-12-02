@@ -1463,6 +1463,7 @@
             "independent_streams": "enabled",
             "log_separate_errors": "enabled",
             "log_tag": "bla",
+            "log_steps": ["any"],
             "maxconn": 2000,
             "mode": "http",
             "monitor_fail": {
@@ -3015,6 +3016,7 @@
         "test_defaults_2": {
             "clitcpka": "enabled",
             "from": "test_defaults",
+            "log_steps": ["request", "response"],
             "name": "test_defaults_2",
             "srvtcpka": "enabled"
         },
