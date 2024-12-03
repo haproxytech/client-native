@@ -42,7 +42,7 @@ func (f *SetPriorityOffset) Parse(parts []string, parserType types.ParserType, c
 	}
 	var command []string
 	switch parserType {
-	case types.HTTP:
+	case types.HTTP, types.QUIC:
 		command = parts[2:]
 	case types.TCP:
 		command = parts[3:]

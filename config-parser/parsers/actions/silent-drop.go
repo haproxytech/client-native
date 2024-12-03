@@ -42,7 +42,7 @@ func (f *SilentDrop) Parse(parts []string, parserType types.ParserType, comment 
 	}
 	var command []string
 	switch parserType {
-	case types.HTTP:
+	case types.HTTP, types.QUIC:
 		command = parts[2:]
 	case types.TCP:
 		command = parts[3:]

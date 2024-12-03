@@ -3645,3 +3645,35 @@ const defaults_statsbindprocess14 = `
 defaults test
   stats bind-process 1-4
 `
+const defaults_quicinitialreject = `
+defaults test
+  quic-initial reject
+`
+const defaults_quicinitialrejectifTRUE = `
+defaults test
+  quic-initial reject if TRUE
+`
+const defaults_quicinitialaccept = `
+defaults test
+  quic-initial accept
+`
+const defaults_quicinitialacceptifTRUE = `
+defaults test
+  quic-initial accept if TRUE
+`
+const defaults_quicinitialsendretry = `
+defaults test
+  quic-initial send-retry
+`
+const defaults_quicinitialsendretryifTRUE = `
+defaults test
+  quic-initial send-retry if TRUE
+`
+const defaults_quicinitialdgramdrop = `
+defaults test
+  quic-initial dgram-drop
+`
+const defaults_quicinitialdgramdropifTRUE = `
+defaults test
+  quic-initial dgram-drop if TRUE
+`

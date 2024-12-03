@@ -1927,6 +1927,14 @@ defaults test
   stats bind-process even
   stats bind-process 1 2 3 4
   stats bind-process 1-4
+  quic-initial reject
+  quic-initial reject if TRUE
+  quic-initial accept
+  quic-initial accept if TRUE
+  quic-initial send-retry
+  quic-initial send-retry if TRUE
+  quic-initial dgram-drop
+  quic-initial dgram-drop if TRUE
 
 fcgi-app test
   set-param name fmt if acl
@@ -2721,6 +2729,14 @@ frontend test
   stats bind-process 1 2 3 4
   stats bind-process 1-4
   stats admin if LOCALHOST
+  quic-initial reject
+  quic-initial reject if TRUE
+  quic-initial accept
+  quic-initial accept if TRUE
+  quic-initial send-retry
+  quic-initial send-retry if TRUE
+  quic-initial dgram-drop
+  quic-initial dgram-drop if TRUE
 
 log-forward test
   dgram-bind :80,:443
@@ -5318,4 +5334,20 @@ var configTests = []configTest{{`  command spoa-mirror --runtime 0 --mirror-url 
 `, 1},
 	{`  stats http-request allow
 `, 1},
+	{`  quic-initial reject
+`, 2},
+	{`  quic-initial reject if TRUE
+`, 2},
+	{`  quic-initial accept
+`, 2},
+	{`  quic-initial accept if TRUE
+`, 2},
+	{`  quic-initial send-retry
+`, 2},
+	{`  quic-initial send-retry if TRUE
+`, 2},
+	{`  quic-initial dgram-drop
+`, 2},
+	{`  quic-initial dgram-drop if TRUE
+`, 2},
 }

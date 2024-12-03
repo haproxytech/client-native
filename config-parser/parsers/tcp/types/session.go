@@ -51,7 +51,7 @@ func (f *Session) Parse(parts []string, comment string) error {
 	var err error
 	switch parts[2] {
 	case "accept":
-		err = f.ParseAction(&tcpActions.Accept{}, parts)
+		err = f.ParseAction(&actions.Accept{}, parts)
 	case "attach-srv":
 		err = f.ParseAction(&tcpActions.AttachSrv{}, parts)
 	case "reject":

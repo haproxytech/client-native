@@ -14,7 +14,6 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-//nolint:dupl
 package actions
 
 import (
@@ -22,60 +21,45 @@ import (
 	"strings"
 
 	"github.com/haproxytech/client-native/v6/config-parser/common"
-	"github.com/haproxytech/client-native/v6/config-parser/errors"
 	"github.com/haproxytech/client-native/v6/config-parser/types"
 )
 
-type SetRetries struct {
-	Expr     common.Expression
+type SendRetry struct {
 	Cond     string
 	CondTest string
 	Comment  string
 }
 
-func (f *SetRetries) Parse(parts []string, parserType types.ParserType, comment string) error {
+func (f *SendRetry) Parse(parts []string, parserType types.ParserType, comment string) error {
 	if comment != "" {
 		f.Comment = comment
 	}
-	if len(parts) < 3 {
-		return stderrors.New("not enough params")
+	if len(parts) >= 4 {
+		_, condition := common.SplitRequest(parts[2:]) // 2 not 3 !
+		if len(condition) > 1 {
+			f.Cond = condition[0]
+			f.CondTest = strings.Join(condition[1:], " ")
+		}
+		return nil
+	} else if len(parts) == 2 {
+		return nil
 	}
-	var command []string
-	switch parserType {
-	case types.HTTP, types.QUIC:
-		command = parts[2:]
-	case types.TCP:
-		command = parts[3:]
-	}
-	command, condition := common.SplitRequest(command)
-	if len(command) == 0 {
-		return errors.ErrInvalidData
-	}
-	expr := common.Expression{}
-	if expr.Parse(command) != nil {
-		return stderrors.New("not enough params")
-	}
-	f.Expr = expr
-	if len(condition) > 1 {
-		f.Cond = condition[0]
-		f.CondTest = strings.Join(condition[1:], " ")
-	}
-	return nil
+	return stderrors.New("not enough params")
 }
 
-func (f *SetRetries) String() string {
-	var result strings.Builder
-	result.WriteString("set-retries ")
-	result.WriteString(f.Expr.String())
+func (f *SendRetry) String() string {
 	if f.Cond != "" {
+		var result strings.Builder
+		result.WriteString("send-retry")
 		result.WriteString(" ")
 		result.WriteString(f.Cond)
 		result.WriteString(" ")
 		result.WriteString(f.CondTest)
+		return result.String()
 	}
-	return result.String()
+	return "send-retry"
 }
 
-func (f *SetRetries) GetComment() string {
+func (f *SendRetry) GetComment() string {
 	return f.Comment
 }

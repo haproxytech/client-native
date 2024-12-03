@@ -251,6 +251,7 @@ type ParserType int
 const (
 	HTTP ParserType = iota
 	TCP
+	QUIC
 )
 
 type Action interface {
@@ -1344,3 +1345,22 @@ type StatsSettings interface {
 //test:fail:stats http-request none
 //test:fail:stats http-request realm HAProxy\\ Statistics
 type Stats struct{}
+
+//name:quic-initial
+//sections:frontend,defaults
+//struct:name:Initial
+//dir:quic
+//is:multiple
+//parser:type:Action
+//is:interface
+//no:parse
+//no:init
+//test:ok:quic-initial reject
+//test:ok:quic-initial reject if TRUE
+//test:ok:quic-initial accept
+//test:ok:quic-initial accept if TRUE
+//test:ok:quic-initial send-retry
+//test:ok:quic-initial send-retry if TRUE
+//test:ok:quic-initial dgram-drop
+//test:ok:quic-initial dgram-drop if TRUE
+type QuicInitial struct{}

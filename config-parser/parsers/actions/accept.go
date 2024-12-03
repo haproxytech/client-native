@@ -17,6 +17,7 @@ limitations under the License.
 package actions
 
 import (
+	stderrors "errors"
 	"strings"
 
 	"github.com/haproxytech/client-native/v6/config-parser/common"
@@ -29,11 +30,29 @@ type Accept struct {
 	Comment  string
 }
 
-func (f *Accept) Parse(command []string, parserType types.ParserType, comment string) error {
-	if f.Comment != "" {
+func (f *Accept) Parse(parts []string, parserType types.ParserType, comment string) error {
+	if comment != "" {
 		f.Comment = comment
 	}
-	_, condition := common.SplitRequest(command[2:])
+	var command []string
+	var minLen, requiredLen int
+	switch parserType {
+	case types.HTTP, types.QUIC:
+		command = parts[1:]
+		minLen = 2
+		requiredLen = 4
+	case types.TCP:
+		command = parts[2:]
+		minLen = 3
+		requiredLen = 5
+	}
+	if len(parts) == minLen {
+		return nil
+	}
+	if len(parts) < requiredLen {
+		return stderrors.New("not enough params")
+	}
+	_, condition := common.SplitRequest(command)
 	if len(condition) > 1 {
 		f.Cond = condition[0]
 		f.CondTest = strings.Join(condition[1:], " ")
@@ -42,15 +61,16 @@ func (f *Accept) Parse(command []string, parserType types.ParserType, comment st
 }
 
 func (f *Accept) String() string {
-	var result strings.Builder
-	result.WriteString("accept")
 	if f.Cond != "" {
+		var result strings.Builder
+		result.WriteString("accept")
 		result.WriteString(" ")
 		result.WriteString(f.Cond)
 		result.WriteString(" ")
 		result.WriteString(f.CondTest)
+		return result.String()
 	}
-	return result.String()
+	return "accept"
 }
 
 func (f *Accept) GetComment() string {

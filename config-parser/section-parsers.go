@@ -21,6 +21,7 @@ import (
 	"github.com/haproxytech/client-native/v6/config-parser/parsers/extra"
 	"github.com/haproxytech/client-native/v6/config-parser/parsers/filters"
 	"github.com/haproxytech/client-native/v6/config-parser/parsers/http"
+	"github.com/haproxytech/client-native/v6/config-parser/parsers/quic"
 	"github.com/haproxytech/client-native/v6/config-parser/parsers/simple"
 	"github.com/haproxytech/client-native/v6/config-parser/parsers/stats"
 	"github.com/haproxytech/client-native/v6/config-parser/parsers/tcp"
@@ -209,6 +210,7 @@ func (p *configParser) getDefaultParser() *Parsers {
 	addParser(parser, &sequence, &tcp.Requests{Mode: "defaults"})
 	addParser(parser, &sequence, &http.Responses{Mode: "defaults"})
 	addParser(parser, &sequence, &http.AfterResponses{})
+	addParser(parser, &sequence, &quic.Initial{})
 	// the ConfigSnippet must be at the end to parsers load order to ensure
 	// the overloading of any option has been declared previously
 	addParser(parser, &sequence, &parsers.ConfigSnippet{})
@@ -556,6 +558,7 @@ func (p *configParser) getFrontendParser() *Parsers {
 	addParser(parser, &sequence, &parsers.DeclareCapture{})
 	addParser(parser, &sequence, &simple.Number{Name: "rate-limit sessions"})
 	addParser(parser, &sequence, &simple.Word{Name: "guid"})
+	addParser(parser, &sequence, &quic.Initial{})
 	return p.createParsers(parser, sequence)
 }
 
@@ -841,6 +844,7 @@ func (p *configParser) getListenParser() *Parsers {
 		addParser(parser, &sequence, &parsers.Persist{})
 		addParser(parser, &sequence, &simple.Number{Name: "rate-limit sessions"})
 		addParser(parser, &sequence, &simple.Word{Name: "guid"})
+		addParser(parser, &sequence, &quic.Initial{})
 	}
 	return p.createParsers(parser, sequence)
 }

@@ -40,7 +40,7 @@ func (f *ScIncGpc1) Parse(parts []string, parserType types.ParserType, comment s
 	var command []string
 	var minLen, requiredLen int
 	switch parserType {
-	case types.HTTP:
+	case types.HTTP, types.QUIC:
 		data = parts[1]
 		command = parts[2:]
 		minLen = 2

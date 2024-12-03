@@ -271,7 +271,7 @@ func ParseTCPRequestRule(f types.TCPType) (*models.TCPRequestRule, error) { //no
 		}
 
 		switch a := v.Action.(type) {
-		case *tcp_actions.Accept:
+		case *actions.Accept:
 			rule.Action = models.TCPRequestRuleActionAccept
 			rule.Cond = a.Cond
 			rule.CondTest = a.CondTest
@@ -427,7 +427,7 @@ func ParseTCPRequestRule(f types.TCPType) (*models.TCPRequestRule, error) { //no
 		}
 
 		switch a := v.Action.(type) {
-		case *tcp_actions.Accept:
+		case *actions.Accept:
 			rule.Action = models.TCPRequestRuleActionAccept
 			rule.Cond = a.Cond
 			rule.CondTest = a.CondTest
@@ -642,7 +642,7 @@ func ParseTCPRequestRule(f types.TCPType) (*models.TCPRequestRule, error) { //no
 			Type: models.TCPRequestRuleTypeSession,
 		}
 		switch a := v.Action.(type) {
-		case *tcp_actions.Accept:
+		case *actions.Accept:
 			rule.Action = models.TCPRequestRuleActionAccept
 			rule.Cond = a.Cond
 			rule.CondTest = a.CondTest
@@ -787,7 +787,7 @@ func SerializeTCPRequestRule(f models.TCPRequestRule, opt *options.Configuration
 		switch f.Action {
 		case models.TCPRequestRuleActionAccept:
 			return &tcp_types.Connection{
-				Action: &tcp_actions.Accept{
+				Action: &actions.Accept{
 					Cond:     f.Cond,
 					CondTest: f.CondTest,
 				},
@@ -1016,7 +1016,7 @@ func SerializeTCPRequestRule(f models.TCPRequestRule, opt *options.Configuration
 		switch f.Action {
 		case models.TCPRequestRuleActionAccept:
 			return &tcp_types.Content{
-				Action: &tcp_actions.Accept{
+				Action: &actions.Accept{
 					Cond:     f.Cond,
 					CondTest: f.CondTest,
 				},
@@ -1333,7 +1333,7 @@ func SerializeTCPRequestRule(f models.TCPRequestRule, opt *options.Configuration
 		switch f.Action {
 		case models.TCPRequestRuleActionAccept:
 			return &tcp_types.Session{
-				Action: &tcp_actions.Accept{
+				Action: &actions.Accept{
 					Cond:     f.Cond,
 					CondTest: f.CondTest,
 				},

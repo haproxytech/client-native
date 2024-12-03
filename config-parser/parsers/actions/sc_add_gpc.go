@@ -44,7 +44,7 @@ func (f *ScAddGpc) Parse(parts []string, parserType types.ParserType, comment st
 	var command []string
 	var minLen int
 	switch parserType {
-	case types.HTTP:
+	case types.HTTP, types.QUIC:
 		data = parts[1]
 		command = parts[2:]
 		minLen = 3

@@ -39,7 +39,7 @@ func (f *Reject) Parse(parts []string, parserType types.ParserType, comment stri
 	var command []string
 	var minLen, requiredLen int
 	switch parserType {
-	case types.HTTP:
+	case types.HTTP, types.QUIC:
 		command = parts[1:]
 		minLen = 2
 		requiredLen = 4

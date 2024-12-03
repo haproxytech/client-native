@@ -48,7 +48,7 @@ func (f *TrackSc) Parse(parts []string, parserType types.ParserType, comment str
 	var data string
 	var command []string
 	switch parserType {
-	case types.HTTP:
+	case types.HTTP, types.QUIC:
 		if len(parts) < 3 {
 			return stderrors.New("not enough params")
 		}

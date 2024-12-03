@@ -43,7 +43,7 @@ func (f *Lua) Parse(parts []string, parserType types.ParserType, comment string)
 	var data string
 	var command []string
 	switch parserType {
-	case types.HTTP:
+	case types.HTTP, types.QUIC:
 		data = parts[1]
 		command = parts[2:]
 	case types.TCP:

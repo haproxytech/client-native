@@ -236,7 +236,7 @@ func ParseTCPResponseRule(t types.TCPType) (*models.TCPResponseRule, error) {
 		}, nil
 	case *tcp_types.Content:
 		switch a := v.Action.(type) {
-		case *tcp_actions.Accept:
+		case *actions.Accept:
 			return &models.TCPResponseRule{
 				Type:     models.TCPResponseRuleTypeContent,
 				Action:   models.TCPRequestRuleActionAccept,
@@ -476,7 +476,7 @@ func SerializeTCPResponseRule(t models.TCPResponseRule, opt *options.Configurati
 		switch t.Action {
 		case models.TCPResponseRuleActionAccept:
 			return &tcp_types.Content{
-				Action: &tcp_actions.Accept{
+				Action: &actions.Accept{
 					Cond:     t.Cond,
 					CondTest: t.CondTest,
 				},

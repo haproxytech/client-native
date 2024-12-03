@@ -43,7 +43,7 @@ func (us *UseService) Parse(parts []string, parserType types.ParserType, comment
 	var data string
 	var command []string
 	switch parserType {
-	case types.HTTP:
+	case types.HTTP, types.QUIC:
 		data = parts[2]
 		command = parts[3:]
 	case types.TCP:

@@ -3265,3 +3265,35 @@ const frontend_statsadminifLOCALHOST = `
 frontend test
   stats admin if LOCALHOST
 `
+const frontend_quicinitialreject = `
+frontend test
+  quic-initial reject
+`
+const frontend_quicinitialrejectifTRUE = `
+frontend test
+  quic-initial reject if TRUE
+`
+const frontend_quicinitialaccept = `
+frontend test
+  quic-initial accept
+`
+const frontend_quicinitialacceptifTRUE = `
+frontend test
+  quic-initial accept if TRUE
+`
+const frontend_quicinitialsendretry = `
+frontend test
+  quic-initial send-retry
+`
+const frontend_quicinitialsendretryifTRUE = `
+frontend test
+  quic-initial send-retry if TRUE
+`
+const frontend_quicinitialdgramdrop = `
+frontend test
+  quic-initial dgram-drop
+`
+const frontend_quicinitialdgramdropifTRUE = `
+frontend test
+  quic-initial dgram-drop if TRUE
+`

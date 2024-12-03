@@ -41,7 +41,7 @@ func (f *SetBandwidthLimit) Parse(parts []string, parserType types.ParserType, c
 
 	var command []string
 	switch parserType {
-	case types.HTTP:
+	case types.HTTP, types.QUIC:
 		if len(parts) < 3 {
 			return stderrors.New("not enough params")
 		}

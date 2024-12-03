@@ -41,7 +41,7 @@ func (f *SetDst) Parse(parts []string, parserType types.ParserType, comment stri
 	}
 	var command []string
 	switch parserType {
-	case types.HTTP:
+	case types.HTTP, types.QUIC:
 		command = parts[2:]
 	case types.TCP:
 		command = parts[3:]
