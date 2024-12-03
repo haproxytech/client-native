@@ -56,6 +56,14 @@ func (s StickTableEntry) Equal(t StickTableEntry, opts ...Options) bool {
 		return false
 	}
 
+	if !equalPointers(s.GlitchCnt, t.GlitchCnt) {
+		return false
+	}
+
+	if !equalPointers(s.GlitchRate, t.GlitchRate) {
+		return false
+	}
+
 	if !equalPointers(s.Gpc0, t.Gpc0) {
 		return false
 	}
@@ -157,6 +165,14 @@ func (s StickTableEntry) Diff(t StickTableEntry, opts ...Options) map[string][]i
 
 	if !equalPointers(s.Exp, t.Exp) {
 		diff["Exp"] = []interface{}{ValueOrNil(s.Exp), ValueOrNil(t.Exp)}
+	}
+
+	if !equalPointers(s.GlitchCnt, t.GlitchCnt) {
+		diff["GlitchCnt"] = []interface{}{ValueOrNil(s.GlitchCnt), ValueOrNil(t.GlitchCnt)}
+	}
+
+	if !equalPointers(s.GlitchRate, t.GlitchRate) {
+		diff["GlitchRate"] = []interface{}{ValueOrNil(s.GlitchRate), ValueOrNil(t.GlitchRate)}
 	}
 
 	if !equalPointers(s.Gpc0, t.Gpc0) {

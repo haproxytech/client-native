@@ -94,6 +94,8 @@ func TestStickTableEntryEqualFalse(t *testing.T) {
 		result.ConnCur = Ptr(*sample.ConnCur + 1)
 		result.ConnRate = Ptr(*sample.ConnRate + 1)
 		result.Exp = Ptr(*sample.Exp + 1)
+		result.GlitchCnt = Ptr(*sample.GlitchCnt + 1)
+		result.GlitchRate = Ptr(*sample.GlitchRate + 1)
 		result.Gpc0 = Ptr(*sample.Gpc0 + 1)
 		result.Gpc0Rate = Ptr(*sample.Gpc0Rate + 1)
 		result.Gpc1 = Ptr(*sample.Gpc1 + 1)
@@ -194,6 +196,8 @@ func TestStickTableEntryDiffFalse(t *testing.T) {
 		result.ConnCur = Ptr(*sample.ConnCur + 1)
 		result.ConnRate = Ptr(*sample.ConnRate + 1)
 		result.Exp = Ptr(*sample.Exp + 1)
+		result.GlitchCnt = Ptr(*sample.GlitchCnt + 1)
+		result.GlitchRate = Ptr(*sample.GlitchRate + 1)
 		result.Gpc0 = Ptr(*sample.Gpc0 + 1)
 		result.Gpc0Rate = Ptr(*sample.Gpc0Rate + 1)
 		result.Gpc1 = Ptr(*sample.Gpc1 + 1)
@@ -214,7 +218,7 @@ func TestStickTableEntryDiffFalse(t *testing.T) {
 
 	for _, sample := range samples {
 		result := sample.a.Diff(sample.b)
-		if len(result) != 23 {
+		if len(result) != 25 {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {
@@ -224,7 +228,7 @@ func TestStickTableEntryDiffFalse(t *testing.T) {
 			if err != nil {
 				t.Errorf(err.Error())
 			}
-			t.Errorf("Expected StickTableEntry to be different in 23 cases, but it is not (%d) %s %s", len(result), a, b)
+			t.Errorf("Expected StickTableEntry to be different in 25 cases, but it is not (%d) %s %s", len(result), a, b)
 		}
 	}
 }

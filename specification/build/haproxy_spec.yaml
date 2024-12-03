@@ -9447,6 +9447,8 @@ definitions:
                 - server_id
                 - sess_cnt
                 - sess_rate
+                - glitch_rate
+                - glitch_cnt
               type: string
             period:
               type: integer
@@ -9511,6 +9513,12 @@ definitions:
         type: integer
         x-nullable: true
       exp:
+        type: integer
+        x-nullable: true
+      glitch_cnt:
+        type: integer
+        x-nullable: true
+      glitch_rate:
         type: integer
         x-nullable: true
       gpc0:

@@ -238,6 +238,16 @@ func parseStickTableEntry(output string) *models.StickTableEntry { //nolint:goco
 			if err == nil {
 				entry.BytesOutRate = &bytesOutRate
 			}
+		case key == "glitch_cnt":
+			glitchCnt, err := strconv.ParseInt(strings.TrimSpace(v), 10, 64)
+			if err == nil {
+				entry.GlitchCnt = &glitchCnt
+			}
+		case strings.HasPrefix(key, "glitch_rate("):
+			glitchRate, err := strconv.ParseInt(strings.TrimSpace(v), 10, 64)
+			if err == nil {
+				entry.GlitchRate = &glitchRate
+			}
 		case key == "use":
 			entry.Use = strings.TrimSpace(v) == "1"
 		case key == "exp":
