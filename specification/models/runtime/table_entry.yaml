@@ -70,3 +70,9 @@ table_entry:
       x-nullable: true
     use:
       type: boolean
+    glitch_cnt:
+      type: integer
+      x-nullable: true
+    glitch_rate:
+      type: integer
+      x-nullable: true

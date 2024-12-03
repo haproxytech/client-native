@@ -44,6 +44,8 @@ table:
               - server_id
               - sess_cnt
               - sess_rate
+              - glitch_rate
+              - glitch_cnt
           type:
             type: string
             enum: [rate, counter]

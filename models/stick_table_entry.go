@@ -58,6 +58,12 @@ type StickTableEntry struct {
 	// exp
 	Exp *int64 `json:"exp,omitempty"`
 
+	// glitch cnt
+	GlitchCnt *int64 `json:"glitch_cnt,omitempty"`
+
+	// glitch rate
+	GlitchRate *int64 `json:"glitch_rate,omitempty"`
+
 	// gpc0
 	Gpc0 *int64 `json:"gpc0,omitempty"`
 
