@@ -43,6 +43,9 @@ type Defaults struct {
 	// log target list
 	LogTargetList LogTargets `json:"log_target_list,omitempty"`
 
+	// q UI c initial rule list
+	QUICInitialRuleList QUICInitialRules `json:"quic_initial_rule_list,omitempty"`
+
 	// TCP check rule list
 	TCPCheckRuleList TCPChecks `json:"tcp_check_rule_list,omitempty"`
 }
@@ -64,6 +67,8 @@ func (m *Defaults) UnmarshalJSON(raw []byte) error {
 
 		LogTargetList LogTargets `json:"log_target_list,omitempty"`
 
+		QUICInitialRuleList QUICInitialRules `json:"quic_initial_rule_list,omitempty"`
+
 		TCPCheckRuleList TCPChecks `json:"tcp_check_rule_list,omitempty"`
 	}
 	if err := swag.ReadJSON(raw, &dataAO1); err != nil {
@@ -75,6 +80,8 @@ func (m *Defaults) UnmarshalJSON(raw []byte) error {
 	m.HTTPErrorRuleList = dataAO1.HTTPErrorRuleList
 
 	m.LogTargetList = dataAO1.LogTargetList
+
+	m.QUICInitialRuleList = dataAO1.QUICInitialRuleList
 
 	m.TCPCheckRuleList = dataAO1.TCPCheckRuleList
 
@@ -97,6 +104,8 @@ func (m Defaults) MarshalJSON() ([]byte, error) {
 
 		LogTargetList LogTargets `json:"log_target_list,omitempty"`
 
+		QUICInitialRuleList QUICInitialRules `json:"quic_initial_rule_list,omitempty"`
+
 		TCPCheckRuleList TCPChecks `json:"tcp_check_rule_list,omitempty"`
 	}
 
@@ -105,6 +114,8 @@ func (m Defaults) MarshalJSON() ([]byte, error) {
 	dataAO1.HTTPErrorRuleList = m.HTTPErrorRuleList
 
 	dataAO1.LogTargetList = m.LogTargetList
+
+	dataAO1.QUICInitialRuleList = m.QUICInitialRuleList
 
 	dataAO1.TCPCheckRuleList = m.TCPCheckRuleList
 
@@ -134,6 +145,10 @@ func (m *Defaults) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateLogTargetList(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateQUICInitialRuleList(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -201,6 +216,24 @@ func (m *Defaults) validateLogTargetList(formats strfmt.Registry) error {
 	return nil
 }
 
+func (m *Defaults) validateQUICInitialRuleList(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.QUICInitialRuleList) { // not required
+		return nil
+	}
+
+	if err := m.QUICInitialRuleList.Validate(formats); err != nil {
+		if ve, ok := err.(*errors.Validation); ok {
+			return ve.ValidateName("quic_initial_rule_list")
+		} else if ce, ok := err.(*errors.CompositeError); ok {
+			return ce.ValidateName("quic_initial_rule_list")
+		}
+		return err
+	}
+
+	return nil
+}
+
 func (m *Defaults) validateTCPCheckRuleList(formats strfmt.Registry) error {
 
 	if swag.IsZero(m.TCPCheckRuleList) { // not required
@@ -237,6 +270,10 @@ func (m *Defaults) ContextValidate(ctx context.Context, formats strfmt.Registry)
 	}
 
 	if err := m.contextValidateLogTargetList(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.contextValidateQUICInitialRuleList(ctx, formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -285,6 +322,20 @@ func (m *Defaults) contextValidateLogTargetList(ctx context.Context, formats str
 			return ve.ValidateName("log_target_list")
 		} else if ce, ok := err.(*errors.CompositeError); ok {
 			return ce.ValidateName("log_target_list")
+		}
+		return err
+	}
+
+	return nil
+}
+
+func (m *Defaults) contextValidateQUICInitialRuleList(ctx context.Context, formats strfmt.Registry) error {
+
+	if err := m.QUICInitialRuleList.ContextValidate(ctx, formats); err != nil {
+		if ve, ok := err.(*errors.Validation); ok {
+			return ve.ValidateName("quic_initial_rule_list")
+		} else if ce, ok := err.(*errors.CompositeError); ok {
+			return ce.ValidateName("quic_initial_rule_list")
 		}
 		return err
 	}

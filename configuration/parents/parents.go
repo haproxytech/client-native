@@ -71,6 +71,11 @@ func Parents(childType string) []Parent {
 		return []Parent{
 			{PathParentType: "backends", ParentType: "Backend", IsGenericParent: true},
 		}
+	case QUICInitialRuleType:
+		return []Parent{
+			{PathParentType: "frontends", ParentType: "Frontend", IsGenericParent: true},
+			{PathParentType: "defaults", ParentType: "Defaults", GenericParentType: "Frontend"},
+		}
 	case ACLChildType:
 		return []Parent{
 			{PathParentType: "backends", ParentType: "Backend", IsGenericParent: true},

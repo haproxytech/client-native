@@ -27,13 +27,13 @@ import (
 	jsoniter "github.com/json-iterator/go"
 )
 
-func TestDefaultsEqual(t *testing.T) {
+func TestQUICInitialRuleEqual(t *testing.T) {
 	samples := []struct {
-		a, b Defaults
+		a, b QUICInitialRule
 	}{}
 	for i := 0; i < 2; i++ {
-		var sample Defaults
-		var result Defaults
+		var sample QUICInitialRule
+		var result QUICInitialRule
 		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
@@ -48,7 +48,7 @@ func TestDefaultsEqual(t *testing.T) {
 		}
 
 		samples = append(samples, struct {
-			a, b Defaults
+			a, b QUICInitialRule
 		}{sample, result})
 	}
 
@@ -64,18 +64,18 @@ func TestDefaultsEqual(t *testing.T) {
 			if err != nil {
 				t.Errorf(err.Error())
 			}
-			t.Errorf("Expected Defaults to be equal, but it is not %s %s", a, b)
+			t.Errorf("Expected QUICInitialRule to be equal, but it is not %s %s", a, b)
 		}
 	}
 }
 
-func TestDefaultsEqualFalse(t *testing.T) {
+func TestQUICInitialRuleEqualFalse(t *testing.T) {
 	samples := []struct {
-		a, b Defaults
+		a, b QUICInitialRule
 	}{}
 	for i := 0; i < 2; i++ {
-		var sample Defaults
-		var result Defaults
+		var sample QUICInitialRule
+		var result QUICInitialRule
 		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
@@ -85,7 +85,7 @@ func TestDefaultsEqualFalse(t *testing.T) {
 			t.Errorf(err.Error())
 		}
 		samples = append(samples, struct {
-			a, b Defaults
+			a, b QUICInitialRule
 		}{sample, result})
 	}
 
@@ -101,18 +101,18 @@ func TestDefaultsEqualFalse(t *testing.T) {
 			if err != nil {
 				t.Errorf(err.Error())
 			}
-			t.Errorf("Expected Defaults to be different, but it is not %s %s", a, b)
+			t.Errorf("Expected QUICInitialRule to be different, but it is not %s %s", a, b)
 		}
 	}
 }
 
-func TestDefaultsDiff(t *testing.T) {
+func TestQUICInitialRuleDiff(t *testing.T) {
 	samples := []struct {
-		a, b Defaults
+		a, b QUICInitialRule
 	}{}
 	for i := 0; i < 2; i++ {
-		var sample Defaults
-		var result Defaults
+		var sample QUICInitialRule
+		var result QUICInitialRule
 		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
@@ -127,7 +127,7 @@ func TestDefaultsDiff(t *testing.T) {
 		}
 
 		samples = append(samples, struct {
-			a, b Defaults
+			a, b QUICInitialRule
 		}{sample, result})
 	}
 
@@ -143,18 +143,18 @@ func TestDefaultsDiff(t *testing.T) {
 			if err != nil {
 				t.Errorf(err.Error())
 			}
-			t.Errorf("Expected Defaults to be equal, but it is not %s %s, %v", a, b, result)
+			t.Errorf("Expected QUICInitialRule to be equal, but it is not %s %s, %v", a, b, result)
 		}
 	}
 }
 
-func TestDefaultsDiffFalse(t *testing.T) {
+func TestQUICInitialRuleDiffFalse(t *testing.T) {
 	samples := []struct {
-		a, b Defaults
+		a, b QUICInitialRule
 	}{}
 	for i := 0; i < 2; i++ {
-		var sample Defaults
-		var result Defaults
+		var sample QUICInitialRule
+		var result QUICInitialRule
 		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
@@ -164,13 +164,13 @@ func TestDefaultsDiffFalse(t *testing.T) {
 			t.Errorf(err.Error())
 		}
 		samples = append(samples, struct {
-			a, b Defaults
+			a, b QUICInitialRule
 		}{sample, result})
 	}
 
 	for _, sample := range samples {
 		result := sample.a.Diff(sample.b)
-		if len(result) != 6 {
+		if len(result) != 3 {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {
@@ -180,7 +180,7 @@ func TestDefaultsDiffFalse(t *testing.T) {
 			if err != nil {
 				t.Errorf(err.Error())
 			}
-			t.Errorf("Expected Defaults to be different in 6 cases, but it is not (%d) %s %s", len(result), a, b)
+			t.Errorf("Expected QUICInitialRule to be different in 3 cases, but it is not (%d) %s %s", len(result), a, b)
 		}
 	}
 }

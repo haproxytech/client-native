@@ -304,6 +304,14 @@ definitions:
     type: array
     items:
       $ref: '#/definitions/tcp_check'
+  quic_initial_rule:
+    $ref: "models/configuration/quic/initial.yaml#/quic_initial_rule"
+  quic_initial_rules:
+    title: QUIC Initials Array
+    x-go-name: QUICInitialRules
+    type: array
+    items:
+      $ref: '#/definitions/quic_initial_rule'
   backend_switching_rule:
     $ref: "models/configuration/switching.yaml#/backend_switching_rule"
   backend_switching_rules:
@@ -993,6 +1001,14 @@ paths:
   {{ range parents "http_error_rule" -}}
   /services/haproxy/configuration/{{ .PathParentType }}/{parent_name}/http_error_rules/{index}:
     $ref: "paths/configuration/http/error.yaml#/http_error_rules_one"
+  {{ end -}}
+  {{ range parents "quic_initial_rule" -}}
+  /services/haproxy/configuration/{{ .PathParentType }}/{parent_name}/quic_initial_rules:
+    $ref: "paths/configuration/quic/initial.yaml#/quic_initial_rules"
+  {{ end -}}
+  {{ range parents "quic_initial_rule" -}}
+  /services/haproxy/configuration/{{ .PathParentType }}/{parent_name}/quic_initial_rules/{index}:
+    $ref: "paths/configuration/quic/initial.yaml#/quic_initial_rules_one"
   {{ end -}}
   /services/haproxy/configuration/peers/{parent_name}/tables:
     $ref: "paths/configuration/table.yaml#/tables"

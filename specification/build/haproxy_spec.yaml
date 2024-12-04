@@ -2402,6 +2402,9 @@ definitions:
           log_target_list:
             $ref: '#/definitions/log_targets'
             x-go-name: LogTargetList
+          quic_initial_rule_list:
+            $ref: '#/definitions/quic_initial_rules'
+            x-go-name: QUICInitialRuleList
           tcp_check_rule_list:
             $ref: '#/definitions/tcp_checks'
             x-go-name: TCPCheckRuleList
@@ -2982,6 +2985,9 @@ definitions:
           log_target_list:
             $ref: '#/definitions/log_targets'
             x-go-name: LogTargetList
+          quic_initial_rule_list:
+            $ref: '#/definitions/quic_initial_rules'
+            x-go-name: QUICInitialRuleList
           tcp_request_rule_list:
             $ref: '#/definitions/tcp_request_rules'
             x-go-name: TCPRequestRuleList
@@ -7436,6 +7442,47 @@ definitions:
     type: array
     items:
       $ref: '#/definitions/tcp_check'
+  quic_initial_rule:
+    additionalProperties: false
+    description: QUIC Initial configuration
+    example:
+      type: reject
+    properties:
+      cond:
+        enum:
+          - if
+          - unless
+        type: string
+        x-display-name: Condition
+      cond_test:
+        type: string
+        x-dependency:
+          cond:
+            required: true
+        x-display-name: Condition Test
+        x-dynamic-enum:
+          freeFormat: true
+          operation: getACLs
+          property: acl_name
+      type:
+        enum:
+          - reject
+          - accept
+          - send-retry
+          - dgram-drop
+        type: string
+        x-nullable: false
+    required:
+      - type
+    title: QUIC Initial
+    type: object
+    x-go-name: QUICInitialRule
+  quic_initial_rules:
+    title: QUIC Initials Array
+    x-go-name: QUICInitialRules
+    type: array
+    items:
+      $ref: '#/definitions/quic_initial_rule'
   backend_switching_rule:
     additionalProperties: false
     description: HAProxy backend switching rule configuration (corresponds to use_backend directive)
@@ -17738,6 +17785,388 @@ paths:
       summary: Replace a HTTP Error Rule
       tags:
         - HTTPErrorRule
+  /services/haproxy/configuration/frontends/{parent_name}/quic_initial_rules:
+    get:
+      description: Returns all QUIC Initial rules that are configured in specified parent.
+      operationId: getAllQUICInitialRuleFrontend
+      parameters:
+        - $ref: '#/parameters/parent_name'
+        - $ref: '#/parameters/transaction_id'
+      responses:
+        "200":
+          description: Successful operation
+          headers:
+            Configuration-Version:
+              description: Configuration file version
+              type: string
+          schema:
+            $ref: '#/definitions/quic_initial_rules'
+        default:
+          $ref: '#/responses/DefaultError'
+      summary: Return an array of all QUIC Initial rules
+      tags:
+        - QUICInitialRule
+    put:
+      description: Replaces a whole list of QUIC Initial rules with the list given in parameter
+      operationId: replaceAllQUICInitialRuleFrontend
+      parameters:
+        - $ref: '#/parameters/parent_name'
+        - in: body
+          name: data
+          required: true
+          schema:
+            $ref: '#/definitions/quic_initial_rules'
+        - $ref: '#/parameters/transaction_id'
+        - $ref: '#/parameters/version'
+        - $ref: '#/parameters/force_reload'
+      responses:
+        "200":
+          description: All TTP After Response Rules lines replaced
+          schema:
+            $ref: '#/definitions/quic_initial_rules'
+        "202":
+          description: Configuration change accepted and reload requested
+          headers:
+            Reload-ID:
+              description: ID of the requested reload
+              type: string
+          schema:
+            $ref: '#/definitions/quic_initial_rules'
+        "400":
+          $ref: '#/responses/BadRequest'
+        default:
+          $ref: '#/responses/DefaultError'
+      summary: Replace an QUIC Initial rules list
+      tags:
+        - QUICInitialRule
+  /services/haproxy/configuration/defaults/{parent_name}/quic_initial_rules:
+    get:
+      description: Returns all QUIC Initial rules that are configured in specified parent.
+      operationId: getAllQUICInitialRuleDefaults
+      parameters:
+        - $ref: '#/parameters/parent_name'
+        - $ref: '#/parameters/transaction_id'
+      responses:
+        "200":
+          description: Successful operation
+          headers:
+            Configuration-Version:
+              description: Configuration file version
+              type: string
+          schema:
+            $ref: '#/definitions/quic_initial_rules'
+        default:
+          $ref: '#/responses/DefaultError'
+      summary: Return an array of all QUIC Initial rules
+      tags:
+        - QUICInitialRule
+    put:
+      description: Replaces a whole list of QUIC Initial rules with the list given in parameter
+      operationId: replaceAllQUICInitialRuleDefaults
+      parameters:
+        - $ref: '#/parameters/parent_name'
+        - in: body
+          name: data
+          required: true
+          schema:
+            $ref: '#/definitions/quic_initial_rules'
+        - $ref: '#/parameters/transaction_id'
+        - $ref: '#/parameters/version'
+        - $ref: '#/parameters/force_reload'
+      responses:
+        "200":
+          description: All TTP After Response Rules lines replaced
+          schema:
+            $ref: '#/definitions/quic_initial_rules'
+        "202":
+          description: Configuration change accepted and reload requested
+          headers:
+            Reload-ID:
+              description: ID of the requested reload
+              type: string
+          schema:
+            $ref: '#/definitions/quic_initial_rules'
+        "400":
+          $ref: '#/responses/BadRequest'
+        default:
+          $ref: '#/responses/DefaultError'
+      summary: Replace an QUIC Initial rules list
+      tags:
+        - QUICInitialRule
+  /services/haproxy/configuration/frontends/{parent_name}/quic_initial_rules/{index}:
+    delete:
+      description: Deletes a QUIC Initial Rule configuration by it's index from the specified parent.
+      operationId: deleteQUICInitialRuleFrontend
+      parameters:
+        - description: QUIC Initial Rule Index
+          in: path
+          name: index
+          required: true
+          type: integer
+        - $ref: '#/parameters/parent_name'
+        - $ref: '#/parameters/transaction_id'
+        - $ref: '#/parameters/version'
+        - $ref: '#/parameters/force_reload'
+      responses:
+        "202":
+          description: Configuration change accepted and reload requested
+          headers:
+            Reload-ID:
+              description: ID of the requested reload
+              type: string
+        "204":
+          description: QUIC Initial Rule deleted
+        "404":
+          $ref: '#/responses/NotFound'
+        default:
+          $ref: '#/responses/DefaultError'
+      summary: Delete a QUIC Initial Rule
+      tags:
+        - QUICInitialRule
+    get:
+      description: Returns one QUIC Initial Rule configuration by it's index in the specified parent.
+      operationId: getQUICInitialRuleFrontend
+      parameters:
+        - description: QUIC Initial Rule Index
+          in: path
+          name: index
+          required: true
+          type: integer
+        - $ref: '#/parameters/parent_name'
+        - $ref: '#/parameters/transaction_id'
+      responses:
+        "200":
+          description: Successful operation
+          headers:
+            Configuration-Version:
+              description: Configuration file version
+              type: string
+          schema:
+            $ref: '#/definitions/quic_initial_rule'
+        "404":
+          $ref: '#/responses/NotFound'
+        default:
+          $ref: '#/responses/DefaultError'
+      summary: Return one QUIC Initial Rule
+      tags:
+        - QUICInitialRule
+    post:
+      description: Adds a new QUIC Initial Rule of the specified type in the specified parent.
+      operationId: createQUICInitialRuleFrontend
+      parameters:
+        - description: QUIC Initial Rule Index
+          in: path
+          name: index
+          required: true
+          type: integer
+        - $ref: '#/parameters/parent_name'
+        - in: body
+          name: data
+          required: true
+          schema:
+            $ref: '#/definitions/quic_initial_rule'
+        - $ref: '#/parameters/transaction_id'
+        - $ref: '#/parameters/version'
+        - $ref: '#/parameters/force_reload'
+      responses:
+        "201":
+          description: HTTP Response Rule created
+          schema:
+            $ref: '#/definitions/quic_initial_rule'
+        "202":
+          description: Configuration change accepted and reload requested
+          headers:
+            Reload-ID:
+              description: ID of the requested reload
+              type: string
+          schema:
+            $ref: '#/definitions/quic_initial_rule'
+        "400":
+          $ref: '#/responses/BadRequest'
+        "409":
+          $ref: '#/responses/AlreadyExists'
+        default:
+          $ref: '#/responses/DefaultError'
+      summary: Add a new QUIC Initial Rule
+      tags:
+        - QUICInitialRule
+    put:
+      description: Replaces a QUIC Initial Rule configuration by it's index in the specified parent.
+      operationId: replaceQUICInitialRuleFrontend
+      parameters:
+        - description: QUIC Initial Rule Index
+          in: path
+          name: index
+          required: true
+          type: integer
+        - $ref: '#/parameters/parent_name'
+        - in: body
+          name: data
+          required: true
+          schema:
+            $ref: '#/definitions/quic_initial_rule'
+        - $ref: '#/parameters/transaction_id'
+        - $ref: '#/parameters/version'
+        - $ref: '#/parameters/force_reload'
+      responses:
+        "200":
+          description: QUIC Initial Rule replaced
+          schema:
+            $ref: '#/definitions/quic_initial_rule'
+        "202":
+          description: Configuration change accepted and reload requested
+          headers:
+            Reload-ID:
+              description: ID of the requested reload
+              type: string
+          schema:
+            $ref: '#/definitions/quic_initial_rule'
+        "400":
+          $ref: '#/responses/BadRequest'
+        "404":
+          $ref: '#/responses/NotFound'
+        default:
+          $ref: '#/responses/DefaultError'
+      summary: Replace a QUIC Initial Rule
+      tags:
+        - QUICInitialRule
+  /services/haproxy/configuration/defaults/{parent_name}/quic_initial_rules/{index}:
+    delete:
+      description: Deletes a QUIC Initial Rule configuration by it's index from the specified parent.
+      operationId: deleteQUICInitialRuleDefaults
+      parameters:
+        - description: QUIC Initial Rule Index
+          in: path
+          name: index
+          required: true
+          type: integer
+        - $ref: '#/parameters/parent_name'
+        - $ref: '#/parameters/transaction_id'
+        - $ref: '#/parameters/version'
+        - $ref: '#/parameters/force_reload'
+      responses:
+        "202":
+          description: Configuration change accepted and reload requested
+          headers:
+            Reload-ID:
+              description: ID of the requested reload
+              type: string
+        "204":
+          description: QUIC Initial Rule deleted
+        "404":
+          $ref: '#/responses/NotFound'
+        default:
+          $ref: '#/responses/DefaultError'
+      summary: Delete a QUIC Initial Rule
+      tags:
+        - QUICInitialRule
+    get:
+      description: Returns one QUIC Initial Rule configuration by it's index in the specified parent.
+      operationId: getQUICInitialRuleDefaults
+      parameters:
+        - description: QUIC Initial Rule Index
+          in: path
+          name: index
+          required: true
+          type: integer
+        - $ref: '#/parameters/parent_name'
+        - $ref: '#/parameters/transaction_id'
+      responses:
+        "200":
+          description: Successful operation
+          headers:
+            Configuration-Version:
+              description: Configuration file version
+              type: string
+          schema:
+            $ref: '#/definitions/quic_initial_rule'
+        "404":
+          $ref: '#/responses/NotFound'
+        default:
+          $ref: '#/responses/DefaultError'
+      summary: Return one QUIC Initial Rule
+      tags:
+        - QUICInitialRule
+    post:
+      description: Adds a new QUIC Initial Rule of the specified type in the specified parent.
+      operationId: createQUICInitialRuleDefaults
+      parameters:
+        - description: QUIC Initial Rule Index
+          in: path
+          name: index
+          required: true
+          type: integer
+        - $ref: '#/parameters/parent_name'
+        - in: body
+          name: data
+          required: true
+          schema:
+            $ref: '#/definitions/quic_initial_rule'
+        - $ref: '#/parameters/transaction_id'
+        - $ref: '#/parameters/version'
+        - $ref: '#/parameters/force_reload'
+      responses:
+        "201":
+          description: HTTP Response Rule created
+          schema:
+            $ref: '#/definitions/quic_initial_rule'
+        "202":
+          description: Configuration change accepted and reload requested
+          headers:
+            Reload-ID:
+              description: ID of the requested reload
+              type: string
+          schema:
+            $ref: '#/definitions/quic_initial_rule'
+        "400":
+          $ref: '#/responses/BadRequest'
+        "409":
+          $ref: '#/responses/AlreadyExists'
+        default:
+          $ref: '#/responses/DefaultError'
+      summary: Add a new QUIC Initial Rule
+      tags:
+        - QUICInitialRule
+    put:
+      description: Replaces a QUIC Initial Rule configuration by it's index in the specified parent.
+      operationId: replaceQUICInitialRuleDefaults
+      parameters:
+        - description: QUIC Initial Rule Index
+          in: path
+          name: index
+          required: true
+          type: integer
+        - $ref: '#/parameters/parent_name'
+        - in: body
+          name: data
+          required: true
+          schema:
+            $ref: '#/definitions/quic_initial_rule'
+        - $ref: '#/parameters/transaction_id'
+        - $ref: '#/parameters/version'
+        - $ref: '#/parameters/force_reload'
+      responses:
+        "200":
+          description: QUIC Initial Rule replaced
+          schema:
+            $ref: '#/definitions/quic_initial_rule'
+        "202":
+          description: Configuration change accepted and reload requested
+          headers:
+            Reload-ID:
+              description: ID of the requested reload
+              type: string
+          schema:
+            $ref: '#/definitions/quic_initial_rule'
+        "400":
+          $ref: '#/responses/BadRequest'
+        "404":
+          $ref: '#/responses/NotFound'
+        default:
+          $ref: '#/responses/DefaultError'
+      summary: Replace a QUIC Initial Rule
+      tags:
+        - QUICInitialRule
   /services/haproxy/configuration/peers/{parent_name}/tables:
     get:
       description: Returns an array of all tables that are configured in specified peer section.

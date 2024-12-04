@@ -25,6 +25,7 @@ const (
 	TCPCheckChildType              = "tcp_check"
 	TCPRequestRuleChildType        = "tcp_request_rule"
 	TCPResponseRuleChildType       = "tcp_response_rule"
+	QUICInitialRuleType            = "quic_initial_rule"
 	ACLChildType                   = "acl"
 	BindChildType                  = "bind"
 	FilterChildType                = "filter"

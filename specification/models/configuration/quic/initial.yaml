@@ -1,0 +1,35 @@
+---
+quic_initial_rule:
+  title: QUIC Initial 
+  description: QUIC Initial configuration
+  type: object
+  x-go-name: QUICInitialRule
+  required:
+    - type
+  properties:
+    type:
+      type: string
+      enum:
+        - reject
+        - accept
+        - send-retry
+        - dgram-drop
+      x-nullable: false
+    cond:
+      type: string
+      x-display-name: Condition
+      enum: [if, unless]
+    cond_test:
+      type: string
+      x-display-name: Condition Test
+      x-dynamic-enum:
+        operation: getACLs
+        property: acl_name
+        freeFormat: true
+      x-dependency:
+        cond:
+          required: true
+  additionalProperties: false
+  example:
+    type: reject
+

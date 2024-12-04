@@ -73,6 +73,10 @@ func (s Frontend) Equal(t Frontend, opts ...Options) bool {
 		return false
 	}
 
+	if !s.QUICInitialRuleList.Equal(t.QUICInitialRuleList, opt) {
+		return false
+	}
+
 	if !s.TCPRequestRuleList.Equal(t.TCPRequestRuleList, opt) {
 		return false
 	}
@@ -146,6 +150,10 @@ func (s Frontend) Diff(t Frontend, opts ...Options) map[string][]interface{} {
 
 	if !s.LogTargetList.Equal(t.LogTargetList, opt) {
 		diff["LogTargetList"] = []interface{}{s.LogTargetList, t.LogTargetList}
+	}
+
+	if !s.QUICInitialRuleList.Equal(t.QUICInitialRuleList, opt) {
+		diff["QUICInitialRuleList"] = []interface{}{s.QUICInitialRuleList, t.QUICInitialRuleList}
 	}
 
 	if !s.TCPRequestRuleList.Equal(t.TCPRequestRuleList, opt) {

@@ -62,6 +62,9 @@ type Frontend struct {
 	// log target list
 	LogTargetList LogTargets `json:"log_target_list,omitempty"`
 
+	// q UI c initial rule list
+	QUICInitialRuleList QUICInitialRules `json:"quic_initial_rule_list,omitempty"`
+
 	// TCP request rule list
 	TCPRequestRuleList TCPRequestRules `json:"tcp_request_rule_list,omitempty"`
 
@@ -98,6 +101,8 @@ func (m *Frontend) UnmarshalJSON(raw []byte) error {
 
 		LogTargetList LogTargets `json:"log_target_list,omitempty"`
 
+		QUICInitialRuleList QUICInitialRules `json:"quic_initial_rule_list,omitempty"`
+
 		TCPRequestRuleList TCPRequestRules `json:"tcp_request_rule_list,omitempty"`
 
 		Binds map[string]Bind `json:"binds,omitempty"`
@@ -123,6 +128,8 @@ func (m *Frontend) UnmarshalJSON(raw []byte) error {
 	m.HTTPResponseRuleList = dataAO1.HTTPResponseRuleList
 
 	m.LogTargetList = dataAO1.LogTargetList
+
+	m.QUICInitialRuleList = dataAO1.QUICInitialRuleList
 
 	m.TCPRequestRuleList = dataAO1.TCPRequestRuleList
 
@@ -159,6 +166,8 @@ func (m Frontend) MarshalJSON() ([]byte, error) {
 
 		LogTargetList LogTargets `json:"log_target_list,omitempty"`
 
+		QUICInitialRuleList QUICInitialRules `json:"quic_initial_rule_list,omitempty"`
+
 		TCPRequestRuleList TCPRequestRules `json:"tcp_request_rule_list,omitempty"`
 
 		Binds map[string]Bind `json:"binds,omitempty"`
@@ -181,6 +190,8 @@ func (m Frontend) MarshalJSON() ([]byte, error) {
 	dataAO1.HTTPResponseRuleList = m.HTTPResponseRuleList
 
 	dataAO1.LogTargetList = m.LogTargetList
+
+	dataAO1.QUICInitialRuleList = m.QUICInitialRuleList
 
 	dataAO1.TCPRequestRuleList = m.TCPRequestRuleList
 
@@ -236,6 +247,10 @@ func (m *Frontend) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateLogTargetList(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateQUICInitialRuleList(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -415,6 +430,24 @@ func (m *Frontend) validateLogTargetList(formats strfmt.Registry) error {
 	return nil
 }
 
+func (m *Frontend) validateQUICInitialRuleList(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.QUICInitialRuleList) { // not required
+		return nil
+	}
+
+	if err := m.QUICInitialRuleList.Validate(formats); err != nil {
+		if ve, ok := err.(*errors.Validation); ok {
+			return ve.ValidateName("quic_initial_rule_list")
+		} else if ce, ok := err.(*errors.CompositeError); ok {
+			return ce.ValidateName("quic_initial_rule_list")
+		}
+		return err
+	}
+
+	return nil
+}
+
 func (m *Frontend) validateTCPRequestRuleList(formats strfmt.Registry) error {
 
 	if swag.IsZero(m.TCPRequestRuleList) { // not required
@@ -502,6 +535,10 @@ func (m *Frontend) ContextValidate(ctx context.Context, formats strfmt.Registry)
 	}
 
 	if err := m.contextValidateLogTargetList(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.contextValidateQUICInitialRuleList(ctx, formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -638,6 +675,20 @@ func (m *Frontend) contextValidateLogTargetList(ctx context.Context, formats str
 			return ve.ValidateName("log_target_list")
 		} else if ce, ok := err.(*errors.CompositeError); ok {
 			return ce.ValidateName("log_target_list")
+		}
+		return err
+	}
+
+	return nil
+}
+
+func (m *Frontend) contextValidateQUICInitialRuleList(ctx context.Context, formats strfmt.Registry) error {
+
+	if err := m.QUICInitialRuleList.ContextValidate(ctx, formats); err != nil {
+		if ve, ok := err.(*errors.Validation); ok {
+			return ve.ValidateName("quic_initial_rule_list")
+		} else if ce, ok := err.(*errors.CompositeError); ok {
+			return ce.ValidateName("quic_initial_rule_list")
 		}
 		return err
 	}

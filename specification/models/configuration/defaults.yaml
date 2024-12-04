@@ -19,6 +19,9 @@ defaults:
         tcp_check_rule_list:
           $ref: "#/definitions/tcp_checks"
           x-go-name: TCPCheckRuleList
+        quic_initial_rule_list:
+          $ref: "#/definitions/quic_initial_rules"
+          x-go-name: QUICInitialRuleList
 defaults_base:
   title: Defaults Base
   description: HAProxy defaults configuration
