@@ -72,6 +72,7 @@ type Configuration interface {
 	TCPRequestRule
 	TCPResponseRule
 	Transactions
+	QUICInitialRule
 	TransactionHandling
 	Version
 	Userlist

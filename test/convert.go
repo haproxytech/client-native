@@ -394,6 +394,17 @@ func StructuredToHTTPResponseRuleMap() map[string]models.HTTPResponseRules {
 	return res
 }
 
+func StructuredToQUICInitialRuleMap() map[string]models.QUICInitialRules {
+	res := make(map[string]models.QUICInitialRules)
+	resources := make(map[string][]models.QUICInitialRule)
+	_ = expectedChildResources[models.Backend, models.QUICInitialRule](resources, "frontends", "name", "quic_initial_rule_list")
+	_ = expectedChildResources[models.Defaults, models.QUICInitialRule](resources, "defaults", "name", "quic_initial_rule_list")
+	for k, v := range resources {
+		res[k] = toSliceOfPtrs(v)
+	}
+	return res
+}
+
 func StructuredToLogForwardMap() map[string]models.LogForwards {
 	resources, _ := expectedResources[models.LogForward]("log_forwards")
 	res := make(map[string]models.LogForwards)

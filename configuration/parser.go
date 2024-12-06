@@ -36,7 +36,7 @@ type Parser interface {
 
 func getParserFromParent(attribute, parentType, parentName string) (parser.Section, string, error) {
 	switch attribute {
-	case "http-request", "http-response", "http-after-response", "tcp-request":
+	case "http-request", "http-response", "http-after-response", "tcp-request", "quic-initial":
 		switch parentType {
 		case BackendParentName:
 			return parser.Backends, parentName, nil

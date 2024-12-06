@@ -290,6 +290,14 @@ defaults test_defaults
   http-after-response set-map(map.lst) %[src] %[res.hdr(X-Value)]
   http-after-response del-map(map.lst) %[src] if FALSE
   http-after-response del-acl(map.lst) %[src] if FALSE
+  quic-initial reject
+  quic-initial reject if TRUE
+  quic-initial accept
+  quic-initial accept if TRUE
+  quic-initial send-retry
+  quic-initial send-retry if TRUE
+  quic-initial dgram-drop
+  quic-initial dgram-drop if TRUE
   maxconn 2000
   backlog 1024
   mode http
@@ -597,6 +605,14 @@ frontend test
   tcp-request session do-log if FALSE
   tcp-request content do-log
   tcp-request content do-log if FALSE
+  quic-initial reject
+  quic-initial reject if TRUE
+  quic-initial accept
+  quic-initial accept if TRUE
+  quic-initial send-retry
+  quic-initial send-retry if TRUE
+  quic-initial dgram-drop
+  quic-initial dgram-drop if TRUE
   log global
   no log
   log 127.0.0.1:514 local0 notice notice

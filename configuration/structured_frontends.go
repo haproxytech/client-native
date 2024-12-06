@@ -244,6 +244,13 @@ func parseFrontendsSection(name string, p parser.Parser) (*models.Frontend, erro
 	}
 	f.TCPRequestRuleList = tcpRequestRules
 
+	// quic initial rules
+	quicInitialRules, err := ParseQUICInitialRules(FrontendParentName, name, p)
+	if err != nil {
+		return nil, err
+	}
+	f.QUICInitialRuleList = quicInitialRules
+
 	return f, nil
 }
 
@@ -335,6 +342,16 @@ func serializeFrontendSection(a StructuredToParserArgs, f *models.Frontend) erro
 			return err
 		}
 		if err = p.Insert(parser.Frontends, f.Name, "tcp-request", s, i); err != nil {
+			return a.HandleError(strconv.FormatInt(int64(i), 10), FrontendParentName, f.Name, a.TID, a.TID == "", err)
+		}
+	}
+	for i, rule := range f.QUICInitialRuleList {
+		var s types.Action
+		s, err = SerializeQUICInitialRule(*rule)
+		if err != nil {
+			return err
+		}
+		if err = p.Insert(parser.Frontends, f.Name, "quic-initial", s, i); err != nil {
 			return a.HandleError(strconv.FormatInt(int64(i), 10), FrontendParentName, f.Name, a.TID, a.TID == "", err)
 		}
 	}

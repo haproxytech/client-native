@@ -245,6 +245,11 @@ func parseDefaultsSection(name string, p parser.Parser) (*models.Defaults, error
 		return nil, err
 	}
 	d.LogTargetList = lt
+	qi, err := ParseQUICInitialRules(DefaultsParentName, name, p)
+	if err != nil {
+		return nil, err
+	}
+	d.QUICInitialRuleList = qi
 
 	return d, nil
 }
@@ -294,6 +299,16 @@ func serializeDefaultsSection(a StructuredToParserArgs, d *models.Defaults) erro
 			return err
 		}
 		if err = p.Insert(parser.Defaults, d.Name, "tcp-check", s, i); err != nil {
+			return a.HandleError(strconv.FormatInt(int64(i), 10), DefaultsParentName, "", a.TID, a.TID == "", err)
+		}
+	}
+	for i, quicInitial := range d.QUICInitialRuleList {
+		var s types.Action
+		s, err = SerializeQUICInitialRule(*quicInitial)
+		if err != nil {
+			return err
+		}
+		if err = p.Insert(parser.Defaults, d.Name, "quic-initial", s, i); err != nil {
 			return a.HandleError(strconv.FormatInt(int64(i), 10), DefaultsParentName, "", a.TID, a.TID == "", err)
 		}
 	}

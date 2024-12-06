@@ -2671,6 +2671,40 @@
                     "cond_test": "FALSE"
                 }
             ],
+            "quic_initial_rule_list" : [
+                {
+                    "type": "reject"
+                },
+                {
+                    "type": "reject",
+                    "cond": "if",
+                    "cond_test": "TRUE"
+                },
+                {
+                    "type": "accept"
+                },
+                {
+                    "type": "accept",
+                    "cond": "if",
+                    "cond_test": "TRUE"
+                },
+                {
+                    "type": "send-retry"
+                },
+                {
+                    "type": "send-retry",
+                    "cond": "if",
+                    "cond_test": "TRUE"
+                },
+                {
+                    "type": "dgram-drop"
+                },
+                {
+                    "type": "dgram-drop",
+                    "cond": "if",
+                    "cond_test": "TRUE"
+                }
+            ],
             "binds": {
                 "ipv6": {
                     "name": "ipv6",
@@ -3002,6 +3036,40 @@
                     "cond": "if",
                     "cond_test": "FALSE",
                     "type": "del-acl"
+                }
+            ],
+            "quic_initial_rule_list" : [
+                {
+                    "type": "reject"
+                },
+                {
+                    "type": "reject",
+                    "cond": "if",
+                    "cond_test": "TRUE"
+                },
+                {
+                    "type": "accept"
+                },
+                {
+                    "type": "accept",
+                    "cond": "if",
+                    "cond_test": "TRUE"
+                },
+                {
+                    "type": "send-retry"
+                },
+                {
+                    "type": "send-retry",
+                    "cond": "if",
+                    "cond_test": "TRUE"
+                },
+                {
+                    "type": "dgram-drop"
+                },
+                {
+                    "type": "dgram-drop",
+                    "cond": "if",
+                    "cond_test": "TRUE"
                 }
             ],
             "backlog": 1024,
