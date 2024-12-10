@@ -681,6 +681,7 @@ func TestWholeConfigsSectionsDefaults(t *testing.T) {
 		{"defaults_optionhttpchkOPTIONSHTTP11rnHost", defaults_optionhttpchkOPTIONSHTTP11rnHost},
 		{"defaults_optionhttpchkmethoduri", defaults_optionhttpchkmethoduri},
 		{"defaults_optionhttpchkmethoduriversion", defaults_optionhttpchkmethoduriversion},
+		{"defaults_optionhttpchkmethoduriversionhos", defaults_optionhttpchkmethoduriversionhos},
 		{"defaults_optionhttpchkuri", defaults_optionhttpchkuri},
 		{"defaults_optionhttprestrictreqhdrnamesdel", defaults_optionhttprestrictreqhdrnamesdel},
 		{"defaults_optionhttprestrictreqhdrnamespre", defaults_optionhttprestrictreqhdrnamespre},

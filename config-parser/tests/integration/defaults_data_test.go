@@ -1033,6 +1033,10 @@ const defaults_optionhttpchkmethoduriversion = `
 defaults test
   option httpchk <method> <uri> <version>
 `
+const defaults_optionhttpchkmethoduriversionhos = `
+defaults test
+  option httpchk <method> <uri> <version> <host>
+`
 const defaults_uniqueidformatXocicpfifpTsrtpid = `
 defaults test
   unique-id-format %{+X}o_%ci:%cp_%fi:%fp_%Ts_%rt:%pid

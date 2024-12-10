@@ -717,7 +717,7 @@ backend test
   log-tag bla
   option http-keep-alive
   option forwardfor header X-Forwarded-For
-  option httpchk HEAD /
+  option httpchk HEAD / HTTP/1.1 www
   option tcpka
   option srvtcpka
   option checkcache

@@ -761,6 +761,7 @@ func (s *SectionParser) getHttpchkData() (bool, interface{}) {
 				Method:  d.Method,
 				URI:     d.URI,
 				Version: d.Version,
+				Host:    d.Host,
 			})
 			return true, "httpchk"
 		}
@@ -2093,6 +2094,7 @@ func (s *SectionObject) getHTTPChkData() (common.ParserData, error) {
 		Method:   params.Method,
 		Version:  params.Version,
 		URI:      params.URI,
+		Host:     params.Host,
 	}, nil
 }
 

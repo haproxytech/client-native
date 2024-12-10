@@ -552,7 +552,9 @@
             "http_send_name_header": "X-My-Awesome-Header",
             "httpchk_params": {
                 "method": "HEAD",
-                "uri": "/"
+                "uri": "/",
+                "version": "HTTP/1.1",
+                "host": "www"
             },
             "id": 456,
             "ignore_persist_list": [

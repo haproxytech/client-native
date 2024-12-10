@@ -24,6 +24,10 @@ package models
 //
 // opts ...Options are ignored in this method
 func (s HttpchkParams) Equal(t HttpchkParams, opts ...Options) bool {
+	if s.Host != t.Host {
+		return false
+	}
+
 	if s.Method != t.Method {
 		return false
 	}
@@ -47,6 +51,10 @@ func (s HttpchkParams) Equal(t HttpchkParams, opts ...Options) bool {
 // opts ...Options are ignored in this method
 func (s HttpchkParams) Diff(t HttpchkParams, opts ...Options) map[string][]interface{} {
 	diff := make(map[string][]interface{})
+	if s.Host != t.Host {
+		diff["Host"] = []interface{}{s.Host, t.Host}
+	}
+
 	if s.Method != t.Method {
 		diff["Method"] = []interface{}{s.Method, t.Method}
 	}

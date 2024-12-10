@@ -139,6 +139,8 @@ httpchk_params:
       pattern: '^[^ ]*$'
     version:
       type: string
+    host:
+      type: string
 redispatch:
   type: object
   required:

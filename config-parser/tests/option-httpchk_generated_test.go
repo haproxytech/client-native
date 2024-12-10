@@ -31,6 +31,7 @@ func TestOptionHttpchk(t *testing.T) {
 		"option httpchk <uri>":                               true,
 		"option httpchk <method> <uri>":                      true,
 		"option httpchk <method> <uri> <version>":            true,
+		"option httpchk <method> <uri> <version> <host>":     true,
 		"---":     false,
 		"--- ---": false,
 	}

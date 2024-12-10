@@ -694,6 +694,7 @@ func TestWholeConfigsSectionsBackend(t *testing.T) {
 		{"backend_optionhttpchkOPTIONSHTTP11rnHost", backend_optionhttpchkOPTIONSHTTP11rnHost},
 		{"backend_optionhttpchkmethoduri", backend_optionhttpchkmethoduri},
 		{"backend_optionhttpchkmethoduriversion", backend_optionhttpchkmethoduriversion},
+		{"backend_optionhttpchkmethoduriversionhos", backend_optionhttpchkmethoduriversionhos},
 		{"backend_optionhttpchkuri", backend_optionhttpchkuri},
 		{"backend_optionhttprestrictreqhdrnamesdel", backend_optionhttprestrictreqhdrnamesdel},
 		{"backend_optionhttprestrictreqhdrnamespre", backend_optionhttprestrictreqhdrnamespre},

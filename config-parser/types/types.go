@@ -782,11 +782,13 @@ type OptionForwardFor struct {
 //test:ok:option httpchk <uri>
 //test:ok:option httpchk <method> <uri>
 //test:ok:option httpchk <method> <uri> <version>
+//test:ok:option httpchk <method> <uri> <version> <host>
 type OptionHttpchk struct {
 	NoOption bool
 	Method   string
 	URI      string
 	Version  string
+	Host     string
 	Comment  string
 }
 

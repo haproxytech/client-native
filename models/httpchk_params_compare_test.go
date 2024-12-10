@@ -170,7 +170,7 @@ func TestHttpchkParamsDiffFalse(t *testing.T) {
 
 	for _, sample := range samples {
 		result := sample.a.Diff(sample.b)
-		if len(result) != 3 {
+		if len(result) != 4 {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {
@@ -180,7 +180,7 @@ func TestHttpchkParamsDiffFalse(t *testing.T) {
 			if err != nil {
 				t.Errorf(err.Error())
 			}
-			t.Errorf("Expected HttpchkParams to be different in 3 cases, but it is not (%d) %s %s", len(result), a, b)
+			t.Errorf("Expected HttpchkParams to be different in 4 cases, but it is not (%d) %s %s", len(result), a, b)
 		}
 	}
 }

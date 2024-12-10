@@ -59,13 +59,16 @@ func (s *OptionHttpchk) Parse(line string, parts []string, comment string) (stri
 				Version: parts[4],
 				Comment: comment,
 			}
-		default: // > 5
+		case 6:
 			s.data = &types.OptionHttpchk{
 				Method:  parts[2],
 				URI:     parts[3],
-				Version: strings.Join(parts[4:], " "),
+				Version: parts[4],
+				Host:    parts[5],
 				Comment: comment,
 			}
+		default: // > 6
+			return "", &errors.ParseError{Parser: "option httpchk", Line: line}
 		}
 		return "", nil
 	}
@@ -89,6 +92,10 @@ func (s *OptionHttpchk) Result() ([]common.ReturnResultLine, error) {
 	if s.data.Version != "" {
 		sb.WriteString(" ")
 		sb.WriteString(s.data.Version)
+	}
+	if s.data.Host != "" {
+		sb.WriteString(" ")
+		sb.WriteString(s.data.Host)
 	}
 	return []common.ReturnResultLine{
 		{

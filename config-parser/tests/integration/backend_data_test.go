@@ -1057,6 +1057,10 @@ const backend_optionhttpchkmethoduriversion = `
 backend test
   option httpchk <method> <uri> <version>
 `
+const backend_optionhttpchkmethoduriversionhos = `
+backend test
+  option httpchk <method> <uri> <version> <host>
+`
 const backend_optionmysqlcheck = `
 backend test
   option mysql-check

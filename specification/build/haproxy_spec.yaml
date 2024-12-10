@@ -9963,6 +9963,8 @@ definitions:
     title: Default Server
   httpchk_params:
     properties:
+      host:
+        type: string
       method:
         enum:
           - HEAD
