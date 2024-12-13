@@ -304,10 +304,26 @@ bind_params:
       example: none
     quic-cc-algo:
       type: string
-      enum: [cubic, newreno]
+      enum: [cubic, newreno, bbr, nocc]
     quic-force-retry:
       type: boolean
     quic-socket:
       type: string
       enum: [connection, listener]
+    quic_cc_algo_max_window:
+      type: integer
+      minimum: 10
+      maximum: 4194304
+      x-nullable: true
+      x-size: true
+      x-default-unit: k
+      x-dependency:
+        quic-cc-algo:
+    quic_cc_algo_burst_size:
+      type: integer
+      minimum: 0
+      maximum: 1024
+      x-nullable: true
+      x-dependency:
+        quic-cc-algo:
   additionalProperties: false

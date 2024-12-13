@@ -109,6 +109,8 @@ func TestBindParamsEqualFalse(t *testing.T) {
 		result.NoTlsv13 = !sample.NoTlsv13
 		result.PreferClientCiphers = !sample.PreferClientCiphers
 		result.QuicForceRetry = !sample.QuicForceRetry
+		result.QuicCcAlgoBurstSize = Ptr(*sample.QuicCcAlgoBurstSize + 1)
+		result.QuicCcAlgoMaxWindow = Ptr(*sample.QuicCcAlgoMaxWindow + 1)
 		result.Ssl = !sample.Ssl
 		result.StrictSni = !sample.StrictSni
 		result.TCPUserTimeout = Ptr(*sample.TCPUserTimeout + 1)
@@ -220,6 +222,8 @@ func TestBindParamsDiffFalse(t *testing.T) {
 		result.NoTlsv13 = !sample.NoTlsv13
 		result.PreferClientCiphers = !sample.PreferClientCiphers
 		result.QuicForceRetry = !sample.QuicForceRetry
+		result.QuicCcAlgoBurstSize = Ptr(*sample.QuicCcAlgoBurstSize + 1)
+		result.QuicCcAlgoMaxWindow = Ptr(*sample.QuicCcAlgoMaxWindow + 1)
 		result.Ssl = !sample.Ssl
 		result.StrictSni = !sample.StrictSni
 		result.TCPUserTimeout = Ptr(*sample.TCPUserTimeout + 1)
@@ -234,7 +238,7 @@ func TestBindParamsDiffFalse(t *testing.T) {
 
 	for _, sample := range samples {
 		result := sample.a.Diff(sample.b)
-		if len(result) != 76 {
+		if len(result) != 78 {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {
@@ -244,7 +248,7 @@ func TestBindParamsDiffFalse(t *testing.T) {
 			if err != nil {
 				t.Errorf(err.Error())
 			}
-			t.Errorf("Expected BindParams to be different in 76 cases, but it is not (%d) %s %s", len(result), a, b)
+			t.Errorf("Expected BindParams to be different in 78 cases, but it is not (%d) %s %s", len(result), a, b)
 		}
 	}
 }

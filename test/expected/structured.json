@@ -2760,6 +2760,29 @@
                     "port": 8080,
                     "no_tlsv10": true,
                     "tlsv10": "disabled"
+                },
+                "test-quic-algo": {
+                    "name": "test-quic-algo",
+                    "thread": "1/1",
+                    "address": "192.168.1.1",
+                    "port": 80,
+                    "quic-cc-algo": "newreno"
+                },
+                "test-quic-algo2": {
+                    "name": "test-quic-algo2",
+                    "thread": "1/1",
+                    "address": "192.168.1.1",
+                    "port": 80,
+                    "quic-cc-algo": "bbr",
+                    "quic_cc_algo_max_window": 480
+                },
+                "test-quic-algo3": {
+                    "name": "test-quic-algo3",
+                    "thread": "1/1",
+                    "address": "192.168.1.1",
+                    "port": 80,
+                    "quic-cc-algo": "nocc",
+                    "quic_cc_algo_burst_size": 12
                 }
             }
         },

@@ -17,6 +17,7 @@ limitations under the License.
 package params
 
 import (
+	"errors"
 	"fmt"
 	"slices"
 	"strings"
@@ -101,9 +102,6 @@ type BindOptionValueValidation struct {
 
 //nolint:gochecknoglobals
 var bindOptionValuesValidation = map[string]BindOptionValueValidation{
-	"quic-cc-algo": {
-		AllowedValues: []string{"cubic", "newreno"},
-	},
 	"quic-socket": {
 		AllowedValues: []string{"connection", "listener"},
 	},
@@ -140,6 +138,101 @@ func (b *BindOptionValue) String() string {
 		return ""
 	}
 	return fmt.Sprintf("%s %s", b.Name, b.Value)
+}
+
+// BindOptionValue ...
+type BindOptionParams struct {
+	Name   string
+	Value  string
+	Params []string
+}
+
+// BindOptionParamsValidation ...
+type BindOptionParamsValidation struct {
+	AllowedValues []string
+}
+
+//nolint:gochecknoglobals
+var bindOptionParamsValidation = map[string]BindOptionParamsValidation{
+	"quic-cc-algo": {
+		AllowedValues: []string{"cubic", "newreno", "bbr", "nocc"},
+	},
+}
+
+// Parse ...
+func (b *BindOptionParams) Parse(options []string, currentIndex int) (int, error) {
+	if currentIndex+1 < len(options) {
+		name := options[currentIndex]
+		if name == b.Name {
+			value, params, err := b.splitParams(options[currentIndex+1])
+			if err != nil {
+				return 0, err
+			}
+			b.Value = value
+			b.Params = params
+			if err = b.validateAllowedValues(); err != nil {
+				return 0, err
+			}
+			return 2, nil
+		}
+		return 0, &NotFoundError{Have: name, Want: b.Name}
+	}
+	return 0, &NotEnoughParamsError{}
+}
+
+func (b *BindOptionParams) validateAllowedValues() error {
+	if optionValuesValidation, ok := bindOptionParamsValidation[b.Name]; ok {
+		if !slices.Contains(optionValuesValidation.AllowedValues, b.Value) {
+			return &NotAllowedValuesError{
+				Have: b.Value,
+				Want: optionValuesValidation.AllowedValues,
+			}
+		}
+	}
+	return nil
+}
+
+func (b *BindOptionParams) splitParams(value string) (string, []string, error) {
+	if !strings.HasSuffix(value, ")") {
+		return value, nil, nil
+	}
+
+	value = strings.TrimSuffix(value, ")")
+	parts := strings.Split(value, "(")
+	if len(parts) != 2 {
+		return "", nil, &NotEnoughParamsError{}
+	}
+
+	if len(parts[1]) == 0 {
+		return "", nil, &NotEnoughParamsError{}
+	}
+
+	params := strings.Split(parts[1], ",")
+	return parts[0], params, nil
+}
+
+// Valid ...
+func (b *BindOptionParams) Valid() bool {
+	return b.Value != ""
+}
+
+// String ...
+func (b *BindOptionParams) String() string {
+	if b.Name == "" || b.Value == "" {
+		return ""
+	}
+
+	var result strings.Builder
+	result.WriteString(b.Name)
+	result.WriteString(" ")
+	result.WriteString(b.Value)
+	if len(b.Params) > 0 {
+		result.WriteString("(")
+		result.WriteString(strings.Join(b.Params, ","))
+		result.WriteString(")")
+	}
+
+	return result.String()
 }
 
 func getBindOptions() []BindOption {
@@ -214,11 +307,12 @@ func getBindOptions() []BindOption {
 		&BindOptionValue{Name: "uid"},
 		&BindOptionValue{Name: "user"},
 		&BindOptionValue{Name: "verify"},
-		&BindOptionValue{Name: "quic-cc-algo"},
 		&BindOptionValue{Name: "quic-socket"},
 		&BindOptionValue{Name: "nbconn"},
 		&BindOptionValue{Name: "guid-prefix"},
 		&BindOptionValue{Name: "default-crt"},
+
+		&BindOptionParams{Name: "quic-cc-algo"},
 	}
 }
 
@@ -226,6 +320,7 @@ func getBindOptions() []BindOption {
 func ParseBindOptions(options []string) ([]BindOption, error) {
 	result := []BindOption{}
 	currentIndex := 0
+	var notFoundError *NotFoundError
 	for currentIndex < len(options) {
 		found := false
 		for _, parser := range getBindOptions() {
@@ -233,7 +328,8 @@ func ParseBindOptions(options []string) ([]BindOption, error) {
 				result = append(result, parser)
 				found = true
 				currentIndex += size
-			} else if err.Error() == "error: values not allowed" {
+				break
+			} else if !errors.As(err, &notFoundError) {
 				return nil, err
 			}
 		}

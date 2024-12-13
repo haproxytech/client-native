@@ -52,12 +52,13 @@ func TestGetSites(t *testing.T) { //nolint:gocognit,gocyclo
 			if s.Service.HTTPConnectionMode != "httpclose" {
 				t.Errorf("%v: HTTPConnectionMode not httpclose: %v", s.Name, s.Service.HTTPConnectionMode)
 			}
-			if len(s.Service.Listeners) != 6 {
+			if len(s.Service.Listeners) != 9 {
 				t.Errorf("%v: Got %v listeners, expected 6", s.Name, len(s.Service.Listeners))
 			}
 			for _, l := range s.Service.Listeners {
-				if l.Name != "webserv" && l.Name != "webserv2" && l.Name != "webserv3" && l.Name != "ipv6" && l.Name != "test-quic" && l.Name != "testnbcon" {
-					t.Errorf("Expected only webserv or webserv2 or webserv3 listeners, %v found", l.Name)
+				if l.Name != "webserv" && l.Name != "webserv2" && l.Name != "webserv3" && l.Name != "ipv6" && l.Name != "test-quic" && l.Name != "testnbcon" &&
+					l.Name != "test-quic-algo" && l.Name != "test-quic-algo2" && l.Name != "test-quic-algo3" {
+					t.Errorf("Unexpected listener, %v found", l.Name)
 				}
 				if l.Address != "192.168.1.1" && l.Address != "192.168.1.2" && l.Address != "2a01:c9c0:a3:8::3" {
 					t.Errorf("%v: Address not 192.168.1.1 or 192.168.1.2 or 2a01:c9c0:a3:8::3: %v", l.Name, l.Address)
@@ -201,11 +202,12 @@ func TestGetSite(t *testing.T) { //nolint:gocognit,gocyclo
 	if s.Service.HTTPConnectionMode != "httpclose" {
 		t.Errorf("%v: HTTPConnectionMode not httpclose: %v", s.Name, s.Service.HTTPConnectionMode)
 	}
-	if len(s.Service.Listeners) != 6 {
+	if len(s.Service.Listeners) != 9 {
 		t.Errorf("%v: Got %v listeners, expected 6", s.Name, len(s.Service.Listeners))
 	}
 	for _, l := range s.Service.Listeners {
-		if l.Name != "webserv" && l.Name != "webserv2" && l.Name != "webserv3" && l.Name != "ipv6" && l.Name != "test-quic" && l.Name != "testnbcon" {
+		if l.Name != "webserv" && l.Name != "webserv2" && l.Name != "webserv3" && l.Name != "ipv6" && l.Name != "test-quic" && l.Name != "testnbcon" &&
+			l.Name != "test-quic-algo" && l.Name != "test-quic-algo2" && l.Name != "test-quic-algo3" {
 			t.Errorf("Expected only webserv or webserv2 or webserv3 listeners, %v found", l.Name)
 		}
 		if l.Address != "192.168.1.1" && l.Address != "192.168.1.2" && l.Address != "2a01:c9c0:a3:8::3" {

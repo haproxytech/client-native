@@ -436,6 +436,8 @@ definitions:
         enum:
           - cubic
           - newreno
+          - bbr
+          - nocc
         type: string
       quic-force-retry:
         type: boolean
@@ -444,6 +446,22 @@ definitions:
           - connection
           - listener
         type: string
+      quic_cc_algo_burst_size:
+        maximum: 1024
+        minimum: 0
+        type: integer
+        x-dependency:
+          quic-cc-algo: null
+        x-nullable: true
+      quic_cc_algo_max_window:
+        maximum: 4194304
+        minimum: 10
+        type: integer
+        x-default-unit: k
+        x-dependency:
+          quic-cc-algo: null
+        x-nullable: true
+        x-size: true
       severity_output:
         enum:
           - none

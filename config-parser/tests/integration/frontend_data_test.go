@@ -545,6 +545,14 @@ const frontend_bind443quicccalgonewreno = `
 frontend test
   bind :443 quic-cc-algo newreno
 `
+const frontend_bind443quicccalgobbr1m = `
+frontend test
+  bind :443 quic-cc-algo bbr(1m)
+`
+const frontend_bind443quicccalgonocc12 = `
+frontend test
+  bind :443 quic-cc-algo nocc(,12)
+`
 const frontend_bind443quicforceretry = `
 frontend test
   bind :443 quic-force-retry

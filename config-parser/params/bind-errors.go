@@ -36,7 +36,7 @@ func (e *NotFoundError) Error() string {
 	return fmt.Sprintf("error: have [%s] want [%s]", e.Have, e.Want)
 }
 
-// ParseError struct for creating parse errors
+// NotEnoughParamsError struct for creating parse errors
 type NotEnoughParamsError struct{}
 
 func (e *NotEnoughParamsError) Error() string {

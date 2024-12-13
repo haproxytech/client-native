@@ -250,7 +250,10 @@ type ACL struct {
 //test:ok:bind :443 verify required
 //test:ok:bind :443 quic-cc-algo cubic
 //test:ok:bind :443 quic-cc-algo newreno
+//test:ok:bind :443 quic-cc-algo bbr(1m)
+//test:ok:bind :443 quic-cc-algo nocc(,12)
 //test:fail:bind :443 quic-cc-algo something
+//test:fail:bind :443 quic-cc-algo nocc()
 //test:ok:bind :443 quic-force-retry
 //test:ok:bind :443 quic-socket connection
 //test:ok:bind :443 quic-socket listener

@@ -48,7 +48,7 @@ func TestGetBinds(t *testing.T) {
 		t.Error(err.Error())
 	}
 
-	if len(binds) != 6 {
+	if len(binds) != 9 {
 		t.Errorf("%v binds returned, expected 6", len(binds))
 	}
 

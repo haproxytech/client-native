@@ -2082,6 +2082,8 @@ frontend test
   bind :443 verify required
   bind :443 quic-cc-algo cubic
   bind :443 quic-cc-algo newreno
+  bind :443 quic-cc-algo bbr(1m)
+  bind :443 quic-cc-algo nocc(,12)
   bind :443 quic-force-retry
   bind :443 quic-socket connection
   bind :443 quic-socket listener
@@ -3214,6 +3216,10 @@ var configTests = []configTest{{`  command spoa-mirror --runtime 0 --mirror-url 
 	{`  bind :443 quic-cc-algo cubic
 `, 1},
 	{`  bind :443 quic-cc-algo newreno
+`, 1},
+	{`  bind :443 quic-cc-algo bbr(1m)
+`, 1},
+	{`  bind :443 quic-cc-algo nocc(,12)
 `, 1},
 	{`  bind :443 quic-force-retry
 `, 1},

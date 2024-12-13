@@ -245,6 +245,14 @@ func (s BindParams) Equal(t BindParams, opts ...Options) bool {
 		return false
 	}
 
+	if !equalPointers(s.QuicCcAlgoBurstSize, t.QuicCcAlgoBurstSize) {
+		return false
+	}
+
+	if !equalPointers(s.QuicCcAlgoMaxWindow, t.QuicCcAlgoMaxWindow) {
+		return false
+	}
+
 	if s.SeverityOutput != t.SeverityOutput {
 		return false
 	}
@@ -567,6 +575,14 @@ func (s BindParams) Diff(t BindParams, opts ...Options) map[string][]interface{}
 
 	if s.QuicSocket != t.QuicSocket {
 		diff["QuicSocket"] = []interface{}{s.QuicSocket, t.QuicSocket}
+	}
+
+	if !equalPointers(s.QuicCcAlgoBurstSize, t.QuicCcAlgoBurstSize) {
+		diff["QuicCcAlgoBurstSize"] = []interface{}{ValueOrNil(s.QuicCcAlgoBurstSize), ValueOrNil(t.QuicCcAlgoBurstSize)}
+	}
+
+	if !equalPointers(s.QuicCcAlgoMaxWindow, t.QuicCcAlgoMaxWindow) {
+		diff["QuicCcAlgoMaxWindow"] = []interface{}{ValueOrNil(s.QuicCcAlgoMaxWindow), ValueOrNil(t.QuicCcAlgoMaxWindow)}
 	}
 
 	if s.SeverityOutput != t.SeverityOutput {

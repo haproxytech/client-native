@@ -199,8 +199,8 @@ type BindParams struct {
 	Proto string `json:"proto,omitempty"`
 
 	// quic cc algo
-	// Enum: ["cubic","newreno"]
-	// +kubebuilder:validation:Enum="cubic","newreno";
+	// Enum: ["cubic","newreno","bbr","nocc"]
+	// +kubebuilder:validation:Enum="cubic","newreno","bbr","nocc";
 	QuicCcAlgo string `json:"quic-cc-algo,omitempty"`
 
 	// quic force retry
@@ -210,6 +210,20 @@ type BindParams struct {
 	// Enum: ["connection","listener"]
 	// +kubebuilder:validation:Enum="connection","listener";
 	QuicSocket string `json:"quic-socket,omitempty"`
+
+	// quic cc algo burst size
+	// Maximum: 1024
+	// Minimum: 0
+	// +kubebuilder:validation:Maximum=1024
+	// +kubebuilder:validation:Minimum=0
+	QuicCcAlgoBurstSize *int64 `json:"quic_cc_algo_burst_size,omitempty"`
+
+	// quic cc algo max window
+	// Maximum: 4.194304e+06
+	// Minimum: 10
+	// +kubebuilder:validation:Maximum=4.194304e+06
+	// +kubebuilder:validation:Minimum=10
+	QuicCcAlgoMaxWindow *int64 `json:"quic_cc_algo_max_window,omitempty"`
 
 	// severity output
 	// Example: none
@@ -334,6 +348,14 @@ func (m *BindParams) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateQuicSocket(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateQuicCcAlgoBurstSize(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateQuicCcAlgoMaxWindow(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -488,7 +510,7 @@ var bindParamsTypeQuicCcAlgoPropEnum []interface{}
 
 func init() {
 	var res []string
-	if err := json.Unmarshal([]byte(`["cubic","newreno"]`), &res); err != nil {
+	if err := json.Unmarshal([]byte(`["cubic","newreno","bbr","nocc"]`), &res); err != nil {
 		panic(err)
 	}
 	for _, v := range res {
@@ -503,6 +525,12 @@ const (
 
 	// BindParamsQuicCcAlgoNewreno captures enum value "newreno"
 	BindParamsQuicCcAlgoNewreno string = "newreno"
+
+	// BindParamsQuicCcAlgoBbr captures enum value "bbr"
+	BindParamsQuicCcAlgoBbr string = "bbr"
+
+	// BindParamsQuicCcAlgoNocc captures enum value "nocc"
+	BindParamsQuicCcAlgoNocc string = "nocc"
 )
 
 // prop value enum
@@ -562,6 +590,38 @@ func (m *BindParams) validateQuicSocket(formats strfmt.Registry) error {
 
 	// value enum
 	if err := m.validateQuicSocketEnum("quic-socket", "body", m.QuicSocket); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *BindParams) validateQuicCcAlgoBurstSize(formats strfmt.Registry) error {
+	if swag.IsZero(m.QuicCcAlgoBurstSize) { // not required
+		return nil
+	}
+
+	if err := validate.MinimumInt("quic_cc_algo_burst_size", "body", *m.QuicCcAlgoBurstSize, 0, false); err != nil {
+		return err
+	}
+
+	if err := validate.MaximumInt("quic_cc_algo_burst_size", "body", *m.QuicCcAlgoBurstSize, 1024, false); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *BindParams) validateQuicCcAlgoMaxWindow(formats strfmt.Registry) error {
+	if swag.IsZero(m.QuicCcAlgoMaxWindow) { // not required
+		return nil
+	}
+
+	if err := validate.MinimumInt("quic_cc_algo_max_window", "body", *m.QuicCcAlgoMaxWindow, 10, false); err != nil {
+		return err
+	}
+
+	if err := validate.MaximumInt("quic_cc_algo_max_window", "body", *m.QuicCcAlgoMaxWindow, 4.194304e+06, false); err != nil {
 		return err
 	}
 

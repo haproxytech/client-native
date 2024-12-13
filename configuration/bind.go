@@ -396,10 +396,24 @@ func parseBindParams(bindOptions []params.BindOption) models.BindParams { //noli
 				b.UID = v.Value
 			case "user":
 				b.User = v.Value
-			case "quic-cc-algo":
-				b.QuicCcAlgo = v.Value
 			case "quic-socket":
 				b.QuicSocket = v.Value
+			}
+		case *params.BindOptionParams:
+			if v.Name == "quic-cc-algo" {
+				b.QuicCcAlgo = v.Value
+				switch len(v.Params) {
+				case 1:
+					b.QuicCcAlgoMaxWindow = misc.Ptr(*misc.ParseSize(v.Params[0]) / 1024)
+				case 2:
+					if len(v.Params[0]) > 0 {
+						b.QuicCcAlgoMaxWindow = misc.Ptr(*misc.ParseSize(v.Params[0]) / 1024)
+					}
+					n, err := strconv.ParseInt(v.Params[1], 10, 64)
+					if err == nil {
+						b.QuicCcAlgoBurstSize = &n
+					}
+				}
 			}
 		}
 	}
@@ -638,7 +652,18 @@ func serializeBindParams(b models.BindParams, path string) []params.BindOption {
 		options = append(options, &params.BindOptionValue{Name: "user", Value: b.User})
 	}
 	if b.QuicCcAlgo != "" {
-		options = append(options, &params.BindOptionValue{Name: "quic-cc-algo", Value: b.QuicCcAlgo})
+		var p []string
+		if b.QuicCcAlgoMaxWindow != nil {
+			p = append(p, misc.SerializeSize(*b.QuicCcAlgoMaxWindow*1024))
+		}
+		if b.QuicCcAlgoBurstSize != nil {
+			if len(p) == 0 {
+				p = append(p, "")
+			}
+			p = append(p, strconv.FormatInt(*b.QuicCcAlgoBurstSize, 10))
+		}
+
+		options = append(options, &params.BindOptionParams{Name: "quic-cc-algo", Value: b.QuicCcAlgo, Params: p})
 	}
 	if b.QuicForceRetry {
 		options = append(options, &params.BindOptionWord{Name: "quic-force-retry"})
