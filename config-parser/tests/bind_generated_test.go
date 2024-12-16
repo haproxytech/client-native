@@ -157,6 +157,7 @@ func TestBind(t *testing.T) {
 		"bind :443 quic-cc-algo something": false,
 		"bind :443 quic-cc-algo nocc()":    false,
 		"bind :443 quic-socket something":  false,
+		"bind :443 user":                   false,
 		"---":                              false,
 		"--- ---":                          false,
 	}

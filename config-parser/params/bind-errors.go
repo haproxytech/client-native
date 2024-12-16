@@ -33,6 +33,9 @@ type NotFoundError struct {
 }
 
 func (e *NotFoundError) Error() string {
+	if e.Want == "" {
+		return fmt.Sprintf("error: have [%s] ", e.Have)
+	}
 	return fmt.Sprintf("error: have [%s] want [%s]", e.Have, e.Want)
 }
 

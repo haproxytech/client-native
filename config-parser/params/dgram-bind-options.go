@@ -27,13 +27,18 @@ type DgramBindOption interface {
 	String() string
 }
 
-func getDgramBindOptions() []DgramBindOption {
-	return []DgramBindOption{
-		&BindOptionWord{Name: "transparent"},
-		&BindOptionValue{Name: "interface"},
-		&BindOptionValue{Name: "namespace"},
-		&BindOptionValue{Name: "name"},
+var dgramBindOptionFactoryMethods = map[string]func() DgramBindOption{ //nolint:gochecknoglobals
+	"transparent": func() DgramBindOption { return &BindOptionWord{Name: "transparent"} },
+	"interface":   func() DgramBindOption { return &BindOptionValue{Name: "interface"} },
+	"namespace":   func() DgramBindOption { return &BindOptionValue{Name: "namespace"} },
+	"name":        func() DgramBindOption { return &BindOptionValue{Name: "name"} },
+}
+
+func getDgramBindOption(option string) DgramBindOption {
+	if factoryMethod, found := dgramBindOptionFactoryMethods[option]; found {
+		return factoryMethod()
 	}
+	return nil
 }
 
 // Parse ...
@@ -41,16 +46,15 @@ func ParseDgramBindOptions(options []string) []DgramBindOption {
 	result := []DgramBindOption{}
 	currentIndex := 0
 	for currentIndex < len(options) {
-		found := false
-		for _, parser := range getDgramBindOptions() {
-			if size, err := parser.Parse(options, currentIndex); err == nil {
-				result = append(result, parser)
-				found = true
-				currentIndex += size
-			}
-		}
-		if !found {
+		dgramBindOption := getDgramBindOption(options[currentIndex])
+		if dgramBindOption == nil {
 			currentIndex++
+			continue
+		}
+		size, err := dgramBindOption.Parse(options, currentIndex)
+		if err == nil {
+			result = append(result, dgramBindOption)
+			currentIndex += size
 		}
 	}
 	return result

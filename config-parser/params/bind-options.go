@@ -17,7 +17,6 @@ limitations under the License.
 package params
 
 import (
-	"errors"
 	"fmt"
 	"slices"
 	"strings"
@@ -36,14 +35,8 @@ type BindOptionWord struct {
 }
 
 // Parse ...
-func (b *BindOptionWord) Parse(options []string, currentIndex int) (int, error) {
-	if currentIndex < len(options) {
-		if options[currentIndex] == b.Name {
-			return 1, nil
-		}
-		return 0, &NotFoundError{Have: options[currentIndex], Want: b.Name}
-	}
-	return 0, &NotEnoughParamsError{}
+func (b *BindOptionWord) Parse(_ []string, _ int) (int, error) {
+	return 1, nil
 }
 
 // Valid ...
@@ -235,107 +228,108 @@ func (b *BindOptionParams) String() string {
 	return result.String()
 }
 
-func getBindOptions() []BindOption {
-	return []BindOption{
-		&BindOptionWord{Name: "accept-proxy"},
-		&BindOptionWord{Name: "allow-0rtt"},
-		&BindOptionWord{Name: "defer-accept"},
-		&BindOptionWord{Name: "force-sslv3"},
-		&BindOptionWord{Name: "force-tlsv10"},
-		&BindOptionWord{Name: "force-tlsv11"},
-		&BindOptionWord{Name: "force-tlsv12"},
-		&BindOptionWord{Name: "force-tlsv13"},
-		&BindOptionWord{Name: "generate-certificates"},
-		&BindOptionWord{Name: "no-alpn"},
-		&BindOptionWord{Name: "no-ca-names"},
-		&BindOptionWord{Name: "no-sslv3"},
-		&BindOptionWord{Name: "no-tls-tickets"},
-		&BindOptionWord{Name: "no-tlsv10"},
-		&BindOptionWord{Name: "no-tlsv11"},
-		&BindOptionWord{Name: "no-tlsv12"},
-		&BindOptionWord{Name: "no-tlsv13"},
-		&BindOptionWord{Name: "prefer-client-ciphers"},
-		&BindOptionWord{Name: "ssl"},
-		&BindOptionWord{Name: "strict-sni"},
-		&BindOptionWord{Name: "tfo"},
-		&BindOptionWord{Name: "transparent"},
-		&BindOptionWord{Name: "v4v6"},
-		&BindOptionWord{Name: "v6only"},
-		&BindOptionWord{Name: "quic-force-retry"},
-
-		&BindOptionDoubleWord{Name: "expose-fd", Value: "listeners"},
-
-		&BindOptionValue{Name: "accept-netscaler-cip"},
-		&BindOptionValue{Name: "alpn"},
-		&BindOptionValue{Name: "backlog"},
-		&BindOptionValue{Name: "curves"},
-		&BindOptionValue{Name: "ecdhe"},
-		&BindOptionValue{Name: "ca-file"},
-		&BindOptionValue{Name: "ca-ignore-err"},
-		&BindOptionValue{Name: "ca-sign-file"},
-		&BindOptionValue{Name: "ca-sign-pass"},
-		&BindOptionValue{Name: "ca-verify-file"},
-		&BindOptionValue{Name: "ciphers"},
-		&BindOptionValue{Name: "ciphersuites"},
-		&BindOptionValue{Name: "client-sigalgs"},
-		&BindOptionValue{Name: "crl-file"},
-		&BindOptionValue{Name: "crt"},
-		&BindOptionValue{Name: "crt-ignore-err"},
-		&BindOptionValue{Name: "crt-list"},
-		&BindOptionValue{Name: "gid"},
-		&BindOptionValue{Name: "group"},
-		&BindOptionValue{Name: "id"},
-		&BindOptionValue{Name: "interface"},
-		&BindOptionValue{Name: "level"},
-		&BindOptionValue{Name: "severity-output"},
-		&BindOptionValue{Name: "maxconn"},
-		&BindOptionValue{Name: "mode"},
-		&BindOptionValue{Name: "mss"},
-		&BindOptionValue{Name: "name"},
-		&BindOptionValue{Name: "namespace"},
-		&BindOptionValue{Name: "nice"},
-		&BindOptionValue{Name: "npn"},
-		&BindOptionValue{Name: "ocsp-update"},
-		&BindOptionValue{Name: "process"},
-		&BindOptionValue{Name: "proto"},
-		&BindOptionValue{Name: "sigalgs"},
-		&BindOptionValue{Name: "ssl-max-ver"},
-		&BindOptionValue{Name: "ssl-min-ver"},
-		&BindOptionValue{Name: "tcp-ut"},
-		&BindOptionValue{Name: "thread"},
-		&BindOptionValue{Name: "tls-ticket-keys"},
-		&BindOptionValue{Name: "uid"},
-		&BindOptionValue{Name: "user"},
-		&BindOptionValue{Name: "verify"},
-		&BindOptionValue{Name: "quic-socket"},
-		&BindOptionValue{Name: "nbconn"},
-		&BindOptionValue{Name: "guid-prefix"},
-		&BindOptionValue{Name: "default-crt"},
-
-		&BindOptionParams{Name: "quic-cc-algo"},
+func getBindOption(option string) BindOption {
+	if factoryMethod, found := bindOptionFactoryMethods[option]; found {
+		return factoryMethod()
 	}
+	return nil
+}
+
+var bindOptionFactoryMethods = map[string]func() BindOption{ //nolint:gochecknoglobals
+	"accept-proxy":          func() BindOption { return &BindOptionWord{Name: "accept-proxy"} },
+	"allow-0rtt":            func() BindOption { return &BindOptionWord{Name: "allow-0rtt"} },
+	"defer-accept":          func() BindOption { return &BindOptionWord{Name: "defer-accept"} },
+	"force-sslv3":           func() BindOption { return &BindOptionWord{Name: "force-sslv3"} },
+	"force-tlsv10":          func() BindOption { return &BindOptionWord{Name: "force-tlsv10"} },
+	"force-tlsv11":          func() BindOption { return &BindOptionWord{Name: "force-tlsv11"} },
+	"force-tlsv12":          func() BindOption { return &BindOptionWord{Name: "force-tlsv12"} },
+	"force-tlsv13":          func() BindOption { return &BindOptionWord{Name: "force-tlsv13"} },
+	"generate-certificates": func() BindOption { return &BindOptionWord{Name: "generate-certificates"} },
+	"no-alpn":               func() BindOption { return &BindOptionWord{Name: "no-alpn"} },
+	"no-ca-names":           func() BindOption { return &BindOptionWord{Name: "no-ca-names"} },
+	"no-sslv3":              func() BindOption { return &BindOptionWord{Name: "no-sslv3"} },
+	"no-tls-tickets":        func() BindOption { return &BindOptionWord{Name: "no-tls-tickets"} },
+	"no-tlsv10":             func() BindOption { return &BindOptionWord{Name: "no-tlsv10"} },
+	"no-tlsv11":             func() BindOption { return &BindOptionWord{Name: "no-tlsv11"} },
+	"no-tlsv12":             func() BindOption { return &BindOptionWord{Name: "no-tlsv12"} },
+	"no-tlsv13":             func() BindOption { return &BindOptionWord{Name: "no-tlsv13"} },
+	"prefer-client-ciphers": func() BindOption { return &BindOptionWord{Name: "prefer-client-ciphers"} },
+	"ssl":                   func() BindOption { return &BindOptionWord{Name: "ssl"} },
+	"strict-sni":            func() BindOption { return &BindOptionWord{Name: "strict-sni"} },
+	"tfo":                   func() BindOption { return &BindOptionWord{Name: "tfo"} },
+	"transparent":           func() BindOption { return &BindOptionWord{Name: "transparent"} },
+	"v4v6":                  func() BindOption { return &BindOptionWord{Name: "v4v6"} },
+	"v6only":                func() BindOption { return &BindOptionWord{Name: "v6only"} },
+	"quic-force-retry":      func() BindOption { return &BindOptionWord{Name: "quic-force-retry"} },
+
+	"expose-fd": func() BindOption { return &BindOptionDoubleWord{Name: "expose-fd", Value: "listeners"} },
+
+	"accept-netscaler-cip": func() BindOption { return &BindOptionValue{Name: "accept-netscaler-cip"} },
+	"alpn":                 func() BindOption { return &BindOptionValue{Name: "alpn"} },
+	"backlog":              func() BindOption { return &BindOptionValue{Name: "backlog"} },
+	"curves":               func() BindOption { return &BindOptionValue{Name: "curves"} },
+	"ecdhe":                func() BindOption { return &BindOptionValue{Name: "ecdhe"} },
+	"ca-file":              func() BindOption { return &BindOptionValue{Name: "ca-file"} },
+	"ca-ignore-err":        func() BindOption { return &BindOptionValue{Name: "ca-ignore-err"} },
+	"ca-sign-file":         func() BindOption { return &BindOptionValue{Name: "ca-sign-file"} },
+	"ca-sign-pass":         func() BindOption { return &BindOptionValue{Name: "ca-sign-pass"} },
+	"ca-verify-file":       func() BindOption { return &BindOptionValue{Name: "ca-verify-file"} },
+	"ciphers":              func() BindOption { return &BindOptionValue{Name: "ciphers"} },
+	"ciphersuites":         func() BindOption { return &BindOptionValue{Name: "ciphersuites"} },
+	"client-sigalgs":       func() BindOption { return &BindOptionValue{Name: "client-sigalgs"} },
+	"crl-file":             func() BindOption { return &BindOptionValue{Name: "crl-file"} },
+	"crt":                  func() BindOption { return &BindOptionValue{Name: "crt"} },
+	"crt-ignore-err":       func() BindOption { return &BindOptionValue{Name: "crt-ignore-err"} },
+	"crt-list":             func() BindOption { return &BindOptionValue{Name: "crt-list"} },
+	"gid":                  func() BindOption { return &BindOptionValue{Name: "gid"} },
+	"group":                func() BindOption { return &BindOptionValue{Name: "group"} },
+	"id":                   func() BindOption { return &BindOptionValue{Name: "id"} },
+	"interface":            func() BindOption { return &BindOptionValue{Name: "interface"} },
+	"level":                func() BindOption { return &BindOptionValue{Name: "level"} },
+	"severity-output":      func() BindOption { return &BindOptionValue{Name: "severity-output"} },
+	"maxconn":              func() BindOption { return &BindOptionValue{Name: "maxconn"} },
+	"mode":                 func() BindOption { return &BindOptionValue{Name: "mode"} },
+	"mss":                  func() BindOption { return &BindOptionValue{Name: "mss"} },
+	"name":                 func() BindOption { return &BindOptionValue{Name: "name"} },
+	"namespace":            func() BindOption { return &BindOptionValue{Name: "namespace"} },
+	"nice":                 func() BindOption { return &BindOptionValue{Name: "nice"} },
+	"npn":                  func() BindOption { return &BindOptionValue{Name: "npn"} },
+	"ocsp-update":          func() BindOption { return &BindOptionValue{Name: "ocsp-update"} },
+	"process":              func() BindOption { return &BindOptionValue{Name: "process"} },
+	"proto":                func() BindOption { return &BindOptionValue{Name: "proto"} },
+	"sigalgs":              func() BindOption { return &BindOptionValue{Name: "sigalgs"} },
+	"ssl-max-ver":          func() BindOption { return &BindOptionValue{Name: "ssl-max-ver"} },
+	"ssl-min-ver":          func() BindOption { return &BindOptionValue{Name: "ssl-min-ver"} },
+	"tcp-ut":               func() BindOption { return &BindOptionValue{Name: "tcp-ut"} },
+	"thread":               func() BindOption { return &BindOptionValue{Name: "thread"} },
+	"tls-ticket-keys":      func() BindOption { return &BindOptionValue{Name: "tls-ticket-keys"} },
+	"uid":                  func() BindOption { return &BindOptionValue{Name: "uid"} },
+	"user":                 func() BindOption { return &BindOptionValue{Name: "user"} },
+	"verify":               func() BindOption { return &BindOptionValue{Name: "verify"} },
+	"quic-socket":          func() BindOption { return &BindOptionValue{Name: "quic-socket"} },
+	"nbconn":               func() BindOption { return &BindOptionValue{Name: "nbconn"} },
+	"guid-prefix":          func() BindOption { return &BindOptionValue{Name: "guid-prefix"} },
+	"default-crt":          func() BindOption { return &BindOptionValue{Name: "default-crt"} },
+
+	"quic-cc-algo": func() BindOption { return &BindOptionParams{Name: "quic-cc-algo"} },
 }
 
 // Parse ...
 func ParseBindOptions(options []string) ([]BindOption, error) {
 	result := []BindOption{}
 	currentIndex := 0
-	var notFoundError *NotFoundError
 	for currentIndex < len(options) {
-		found := false
-		for _, parser := range getBindOptions() {
-			if size, err := parser.Parse(options, currentIndex); err == nil {
-				result = append(result, parser)
-				found = true
-				currentIndex += size
-				break
-			} else if !errors.As(err, &notFoundError) {
-				return nil, err
-			}
-		}
-		if !found {
+		bindOption := getBindOption(options[currentIndex])
+		if bindOption == nil {
 			currentIndex++
+			continue
 		}
+		size, err := bindOption.Parse(options, currentIndex)
+		if err != nil {
+			return nil, err
+		}
+		result = append(result, bindOption)
+		currentIndex += size
 	}
 	return result, nil
 }
