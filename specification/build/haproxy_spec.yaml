@@ -3293,8 +3293,7 @@ definitions:
         type: string
         x-dependency:
           cookie:
-            dynamic:
-              value: true
+            dynamic.value: true
       email_alert:
         $ref: '#/definitions/email_alert'
       enabled:

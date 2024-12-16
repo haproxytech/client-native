@@ -158,8 +158,7 @@ backend_base:
       pattern: '^[^\s]+$'
       x-dependency:
         cookie:
-          dynamic:
-            value: true
+          dynamic.value: true
     default_server:
       $ref: "#/definitions/default_server"
     check_timeout:
