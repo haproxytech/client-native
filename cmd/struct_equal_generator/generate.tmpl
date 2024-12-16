@@ -151,7 +151,7 @@ func (s {{.Data.Name}}) {{.Name}}(t {{.Data.Name}}, opts ...Options) {{- if eq $
 						}
 					{{- else }}
 						{{- if HasPrefix .SubType.Type "*" }}
-							if !equalPointers(s.{{.Name}}, t.{{.Name}}) {
+							if !equalPointers(s.{{.Name}}[i], t.{{.Name}}[i]) {
 								{{- if eq $topLevel.Name "Equal" }}
 									return false
 								{{- else if eq $topLevel.Name "Diff" }}
