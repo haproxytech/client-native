@@ -1599,7 +1599,7 @@ func parseTuneOptions(p parser.Parser) (*models.TuneOptions, error) { //nolint:g
 	return options, nil
 }
 
-func parseTuneBufferOptions(p parser.Parser) (*models.TuneBufferOptions, error) {
+func parseTuneBufferOptions(p parser.Parser) (*models.TuneBufferOptions, error) { //nolint:gocognit
 	options := &models.TuneBufferOptions{}
 	isEmpty := true
 
@@ -1621,13 +1621,13 @@ func parseTuneBufferOptions(p parser.Parser) (*models.TuneBufferOptions, error) 
 		options.BuffersReserve = intOption
 	}
 
-	intOption, err = parseInt64Option(p, "tune.bufsize")
+	intPOption, err = parseSizeOption(p, "tune.bufsize")
 	if err != nil {
 		return nil, err
 	}
-	if intOption != 0 {
+	if intPOption != nil && *intPOption != 0 {
 		isEmpty = false
-		options.Bufsize = intOption
+		options.Bufsize = *intPOption
 	}
 
 	intPOption, err = parseSizeOption(p, "tune.bufsize.small")
@@ -1639,16 +1639,16 @@ func parseTuneBufferOptions(p parser.Parser) (*models.TuneBufferOptions, error) 
 		options.BufsizeSmall = intPOption
 	}
 
-	intOption, err = parseInt64Option(p, "tune.pipesize")
+	intPOption, err = parseSizeOption(p, "tune.pipesize")
 	if err != nil {
 		return nil, err
 	}
-	if intOption != 0 {
+	if intPOption != nil && *intPOption != 0 {
 		isEmpty = false
-		options.Pipesize = intOption
+		options.Pipesize = *intPOption
 	}
 
-	intPOption, err = parseInt64POption(p, "tune.rcvbuf.backend")
+	intPOption, err = parseSizeOption(p, "tune.rcvbuf.backend")
 	if err != nil {
 		return nil, err
 	}
@@ -1657,7 +1657,7 @@ func parseTuneBufferOptions(p parser.Parser) (*models.TuneBufferOptions, error) 
 		options.RcvbufBackend = intPOption
 	}
 
-	intPOption, err = parseInt64POption(p, "tune.rcvbuf.client")
+	intPOption, err = parseSizeOption(p, "tune.rcvbuf.client")
 	if err != nil {
 		return nil, err
 	}
@@ -1666,7 +1666,7 @@ func parseTuneBufferOptions(p parser.Parser) (*models.TuneBufferOptions, error) 
 		options.RcvbufClient = intPOption
 	}
 
-	intPOption, err = parseInt64POption(p, "tune.rcvbuf.frontend")
+	intPOption, err = parseSizeOption(p, "tune.rcvbuf.frontend")
 	if err != nil {
 		return nil, err
 	}
@@ -1675,7 +1675,7 @@ func parseTuneBufferOptions(p parser.Parser) (*models.TuneBufferOptions, error) 
 		options.RcvbufFrontend = intPOption
 	}
 
-	intPOption, err = parseInt64POption(p, "tune.rcvbuf.server")
+	intPOption, err = parseSizeOption(p, "tune.rcvbuf.server")
 	if err != nil {
 		return nil, err
 	}
@@ -1684,16 +1684,16 @@ func parseTuneBufferOptions(p parser.Parser) (*models.TuneBufferOptions, error) 
 		options.RcvbufServer = intPOption
 	}
 
-	intOption, err = parseInt64Option(p, "tune.recv_enough")
+	intPOption, err = parseSizeOption(p, "tune.recv_enough")
 	if err != nil {
 		return nil, err
 	}
-	if intOption != 0 {
+	if intPOption != nil && *intPOption != 0 {
 		isEmpty = false
-		options.RecvEnough = intOption
+		options.RecvEnough = *intPOption
 	}
 
-	intPOption, err = parseInt64POption(p, "tune.sndbuf.backend")
+	intPOption, err = parseSizeOption(p, "tune.sndbuf.backend")
 	if err != nil {
 		return nil, err
 	}
@@ -1702,7 +1702,7 @@ func parseTuneBufferOptions(p parser.Parser) (*models.TuneBufferOptions, error) 
 		options.SndbufBackend = intPOption
 	}
 
-	intPOption, err = parseInt64POption(p, "tune.sndbuf.client")
+	intPOption, err = parseSizeOption(p, "tune.sndbuf.client")
 	if err != nil {
 		return nil, err
 	}
@@ -1711,7 +1711,7 @@ func parseTuneBufferOptions(p parser.Parser) (*models.TuneBufferOptions, error) 
 		options.SndbufClient = intPOption
 	}
 
-	intPOption, err = parseInt64POption(p, "tune.sndbuf.frontend")
+	intPOption, err = parseSizeOption(p, "tune.sndbuf.frontend")
 	if err != nil {
 		return nil, err
 	}
@@ -1720,7 +1720,7 @@ func parseTuneBufferOptions(p parser.Parser) (*models.TuneBufferOptions, error) 
 		options.SndbufFrontend = intPOption
 	}
 
-	intPOption, err = parseInt64POption(p, "tune.sndbuf.server")
+	intPOption, err = parseSizeOption(p, "tune.sndbuf.server")
 	if err != nil {
 		return nil, err
 	}
@@ -3416,40 +3416,40 @@ func serializeTuneBufferOptions(p parser.Parser, options *models.TuneBufferOptio
 	if err := serializeInt64Option(p, "tune.buffers.reserve", options.BuffersReserve); err != nil {
 		return err
 	}
-	if err := serializeInt64Option(p, "tune.bufsize", options.Bufsize); err != nil {
+	if err := serializeSizeOption(p, "tune.bufsize", &options.Bufsize); err != nil {
 		return err
 	}
 	if err := serializeSizeOption(p, "tune.bufsize.small", options.BufsizeSmall); err != nil {
 		return err
 	}
-	if err := serializeInt64Option(p, "tune.pipesize", options.Pipesize); err != nil {
+	if err := serializeSizeOption(p, "tune.pipesize", &options.Pipesize); err != nil {
 		return err
 	}
-	if err := serializeInt64POption(p, "tune.rcvbuf.backend", options.RcvbufBackend); err != nil {
+	if err := serializeSizeOption(p, "tune.rcvbuf.backend", options.RcvbufBackend); err != nil {
 		return err
 	}
-	if err := serializeInt64POption(p, "tune.rcvbuf.client", options.RcvbufClient); err != nil {
+	if err := serializeSizeOption(p, "tune.rcvbuf.client", options.RcvbufClient); err != nil {
 		return err
 	}
-	if err := serializeInt64POption(p, "tune.rcvbuf.frontend", options.RcvbufFrontend); err != nil {
+	if err := serializeSizeOption(p, "tune.rcvbuf.frontend", options.RcvbufFrontend); err != nil {
 		return err
 	}
-	if err := serializeInt64POption(p, "tune.rcvbuf.server", options.RcvbufServer); err != nil {
+	if err := serializeSizeOption(p, "tune.rcvbuf.server", options.RcvbufServer); err != nil {
 		return err
 	}
-	if err := serializeInt64Option(p, "tune.recv_enough", options.RecvEnough); err != nil {
+	if err := serializeSizeOption(p, "tune.recv_enough", &options.RecvEnough); err != nil {
 		return err
 	}
-	if err := serializeInt64POption(p, "tune.sndbuf.backend", options.SndbufBackend); err != nil {
+	if err := serializeSizeOption(p, "tune.sndbuf.backend", options.SndbufBackend); err != nil {
 		return err
 	}
-	if err := serializeInt64POption(p, "tune.sndbuf.client", options.SndbufClient); err != nil {
+	if err := serializeSizeOption(p, "tune.sndbuf.client", options.SndbufClient); err != nil {
 		return err
 	}
-	if err := serializeInt64POption(p, "tune.sndbuf.frontend", options.SndbufFrontend); err != nil {
+	if err := serializeSizeOption(p, "tune.sndbuf.frontend", options.SndbufFrontend); err != nil {
 		return err
 	}
-	return serializeInt64POption(p, "tune.sndbuf.server", options.SndbufServer)
+	return serializeSizeOption(p, "tune.sndbuf.server", options.SndbufServer)
 }
 
 func serializeTuneLuaOptions(p parser.Parser, options *models.TuneLuaOptions, configOptions *options.ConfigurationOptions) error {
