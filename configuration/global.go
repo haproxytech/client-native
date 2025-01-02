@@ -3732,7 +3732,7 @@ func serializeTimeoutOption(p parser.Parser, option string, data *int64, opt *op
 
 func serializeSizeOption(p parser.Parser, option string, data *int64) error {
 	var value *types.StringC
-	if data == nil {
+	if data == nil || *data == 0 {
 		value = nil
 	} else {
 		value = &types.StringC{Value: misc.SerializeSize(*data)}
