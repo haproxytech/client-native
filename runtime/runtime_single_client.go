@@ -43,7 +43,7 @@ type SingleRuntime struct {
 }
 
 func (s *SingleRuntime) IsValid() bool {
-	return s.socketPath != ""
+	return s != nil && s.socketPath != ""
 }
 
 // Init must be given path to runtime socket and a flag to indicate if it's in master-worker mode.
