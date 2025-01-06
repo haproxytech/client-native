@@ -25,7 +25,7 @@ func SanitizeIPv6Address(addr string) string {
 	switch {
 	case strings.HasPrefix(addr, "ipv6@"),
 		strings.HasPrefix(addr, "udp6@"),
-		strings.HasPrefix(addr, "quicv6@"):
+		strings.HasPrefix(addr, "quic6@"):
 		addrSlice := strings.SplitN(addr, "@", 2)
 		if strings.HasPrefix(addrSlice[1], "[") {
 			return addr
@@ -60,7 +60,7 @@ func ParseBindAddress(path string) (string, string, error) {
 	// ipv6 address and port is mandatory
 	case strings.HasPrefix(path, "ipv6@"),
 		strings.HasPrefix(path, "udp6@"),
-		strings.HasPrefix(path, "quicv6@"),
+		strings.HasPrefix(path, "quic6@"),
 		strings.HasPrefix(path, "["),
 		strings.Count(path, ":") > 1:
 
