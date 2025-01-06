@@ -79,12 +79,18 @@ func (c *client) initWithMasterSocket(opt options.RuntimeOptions) error {
 
 // GetStats returns stats from the socket
 func (c *client) GetStats() models.NativeStats {
+	if !c.runtime.IsValid() {
+		return models.NativeStats{}
+	}
 	result := c.runtime.GetStats()
 	return result
 }
 
 // GetInfo returns info from the socket
 func (c *client) GetInfo() (models.ProcessInfo, error) {
+	if !c.runtime.IsValid() {
+		return models.ProcessInfo{}, errors.New("no valid runtime found")
+	}
 	result := c.runtime.GetInfo()
 	return result, nil
 }
@@ -104,6 +110,9 @@ func (c *client) GetVersion() (HAProxyVersion, error) {
 	_, err, _ = versionSfg.Do(versionKey, func() (interface{}, error) {
 		version := &HAProxyVersion{}
 		var response string
+		if !c.runtime.IsValid() {
+			return HAProxyVersion{}, errors.New("no valid runtime found")
+		}
 		response, err = c.runtime.ExecuteRaw("show info")
 		if err != nil {
 			return HAProxyVersion{}, err
@@ -155,6 +164,9 @@ func (c *client) Reload() (string, error) {
 		return "", fmt.Errorf("cannot reload: requires HAProxy 2.7 or later but current version is %v", haproxyVersion)
 	}
 
+	if !c.runtime.IsValid() {
+		return "", errors.New("cannot reload: no valid runtime found")
+	}
 	output, err := c.runtime.ExecuteMaster("reload")
 	if err != nil {
 		return "", fmt.Errorf("cannot reload: %w", err)
