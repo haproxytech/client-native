@@ -1004,7 +1004,7 @@ func parseFiftyOneDegreesOptions(p parser.Parser) (*models.FiftyOneDegreesOption
 	if err != nil {
 		return nil, err
 	}
-	if option != "" {
+	if optionInt != 0 {
 		isEmpty = false
 		options.CacheSize = optionInt
 	}
