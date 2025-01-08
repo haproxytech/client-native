@@ -36,7 +36,11 @@ func (h *ServerTemplate) parse(line string, parts []string, comment string) (*ty
 		data.Fqdn = parts[3]
 	}
 	if len(parts) >= 4 {
-		data.Params = params.ParseServerOptions(parts[4:])
+		sp, err := params.ParseServerOptions(parts[4:])
+		if err != nil {
+			return nil, err
+		}
+		data.Params = sp
 	}
 	return data, nil
 }

@@ -1063,6 +1063,7 @@ type Peer struct {
 //test:ok:server name 127.0.0.1 log-bufsize 10
 //test:ok:server name 127.0.0.1 guid guid-example
 //test:fail:server
+//test:fail:server name 127.0.0.1 log-bufsize
 type Server struct {
 	Name    string
 	Address string

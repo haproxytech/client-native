@@ -32,10 +32,14 @@ type Server struct {
 
 func (h *Server) parse(line string, parts []string, comment string) (*types.Server, error) {
 	if len(parts) >= 3 {
+		sp, err := params.ParseServerOptions(parts[3:])
+		if err != nil {
+			return nil, err
+		}
 		data := &types.Server{
 			Name:    parts[1],
 			Address: parts[2],
-			Params:  params.ParseServerOptions(parts[3:]),
+			Params:  sp,
 			Comment: comment,
 		}
 		return data, nil

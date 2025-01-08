@@ -281,21 +281,22 @@ func getServerOption(option string) ServerOption {
 }
 
 // Parse ...
-func ParseServerOptions(options []string) []ServerOption {
+func ParseServerOptions(options []string) ([]ServerOption, error) {
 	result := []ServerOption{}
 	currentIndex := 0
 	for currentIndex < len(options) {
 		serverOption := getServerOption(options[currentIndex])
 		if serverOption == nil {
-			currentIndex++
-			continue
+			return nil, &NotFoundError{Have: options[currentIndex]}
 		}
-		if size, err := serverOption.Parse(options, currentIndex); err == nil {
-			result = append(result, serverOption)
-			currentIndex += size
+		size, err := serverOption.Parse(options, currentIndex)
+		if err != nil {
+			return nil, err
 		}
+		result = append(result, serverOption)
+		currentIndex += size
 	}
-	return result
+	return result, nil
 }
 
 func ServerOptionsString(options []ServerOption) string {

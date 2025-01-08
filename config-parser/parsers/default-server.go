@@ -30,8 +30,12 @@ type DefaultServer struct {
 
 func (h *DefaultServer) parse(line string, parts []string, comment string) (*types.DefaultServer, error) {
 	if len(parts) >= 2 {
+		sp, err := params.ParseServerOptions(parts[1:])
+		if err != nil {
+			return nil, err
+		}
 		data := &types.DefaultServer{
-			Params:  params.ParseServerOptions(parts[1:]),
+			Params:  sp,
 			Comment: comment,
 		}
 		return data, nil
