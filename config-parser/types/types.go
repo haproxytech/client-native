@@ -263,6 +263,8 @@ type ACL struct {
 //test:ok:bind :443 guid-prefix guid-example
 //test:ok:bind :443 default-crt foobar.pem.rsa default-crt foobar.pem.ecdsa
 //test:fail:bind :443 user
+//test:fail:bind :443 user mode 600
+//test:fail:bind :443 user mode 600 accept-proxy
 type Bind struct {
 	Path    string // can be address:port or socket path
 	Params  []params.BindOption

@@ -321,8 +321,7 @@ func ParseBindOptions(options []string) ([]BindOption, error) {
 	for currentIndex < len(options) {
 		bindOption := getBindOption(options[currentIndex])
 		if bindOption == nil {
-			currentIndex++
-			continue
+			return nil, &NotFoundError{Have: options[currentIndex]}
 		}
 		size, err := bindOption.Parse(options, currentIndex)
 		if err != nil {
