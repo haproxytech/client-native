@@ -42,7 +42,7 @@ func getDgramBindOption(option string) DgramBindOption {
 }
 
 // Parse ...
-func ParseDgramBindOptions(options []string) []DgramBindOption {
+func ParseDgramBindOptions(options []string) ([]DgramBindOption, error) {
 	result := []DgramBindOption{}
 	currentIndex := 0
 	for currentIndex < len(options) {
@@ -52,12 +52,13 @@ func ParseDgramBindOptions(options []string) []DgramBindOption {
 			continue
 		}
 		size, err := dgramBindOption.Parse(options, currentIndex)
-		if err == nil {
-			result = append(result, dgramBindOption)
-			currentIndex += size
+		if err != nil {
+			return nil, err
 		}
+		result = append(result, dgramBindOption)
+		currentIndex += size
 	}
-	return result
+	return result, nil
 }
 
 func DgramBindOptionsString(options []DgramBindOption) string {

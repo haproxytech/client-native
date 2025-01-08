@@ -282,6 +282,7 @@ type Bind struct {
 //test:ok:dgram-bind :443 interface pppoe-wan
 //test:ok:dgram-bind :443 namespace example
 //test:ok:dgram-bind :443 transparent
+//test:fail:dgram-bind :443 interface
 type DgramBind struct {
 	Path    string // can be address:port or socket path
 	Params  []params.DgramBindOption

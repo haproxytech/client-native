@@ -35,6 +35,7 @@ func TestDgramBind(t *testing.T) {
 		"dgram-bind :443 namespace example":        true,
 		"dgram-bind :443 transparent":              true,
 		"dgram-bind":                               false,
+		"dgram-bind :443 interface":                false,
 		"---":                                      false,
 		"--- ---":                                  false,
 	}

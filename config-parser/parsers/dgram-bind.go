@@ -37,7 +37,11 @@ func (h *DgramBind) parse(line string, parts []string, comment string) (*types.D
 			Comment: comment,
 		}
 		if len(parts) > 2 {
-			data.Params = params.ParseDgramBindOptions(parts[2:])
+			pr, err := params.ParseDgramBindOptions(parts[2:])
+			if err != nil {
+				return nil, err
+			}
+			data.Params = pr
 		}
 		return data, nil
 	}
