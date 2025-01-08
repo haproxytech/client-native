@@ -42,7 +42,7 @@ func (b *BalanceURI) String() string {
 func (b *BalanceURI) Parse(parts []string) (BalanceParams, error) {
 	var err error
 	if len(parts) > 0 {
-		for i := 0; i < len(parts); i++ {
+		for i := 1; i < len(parts); i++ {
 			arg := parts[i]
 
 			switch arg {
@@ -51,19 +51,23 @@ func (b *BalanceURI) Parse(parts []string) (BalanceParams, error) {
 			case "whole":
 				b.Whole = true
 			case "len":
-				if i+1 < len(parts) {
-					i++
-					if b.Len, err = strconv.ParseInt(parts[i], 10, 64); err != nil {
-						return nil, &errors.ParseError{Parser: "Balance", Message: err.Error()}
-					}
+				if i+1 >= len(parts) {
+					return nil, errors.ErrInvalidData
+				}
+				i++
+				if b.Len, err = strconv.ParseInt(parts[i], 10, 64); err != nil {
+					return nil, &errors.ParseError{Parser: "Balance", Message: err.Error()}
 				}
 			case "depth":
-				if i+1 < len(parts) {
-					i++
-					if b.Depth, err = strconv.ParseInt(parts[i], 10, 64); err != nil {
-						return nil, &errors.ParseError{Parser: "Balance", Message: err.Error()}
-					}
+				if i+1 >= len(parts) {
+					return nil, errors.ErrInvalidData
 				}
+				i++
+				if b.Depth, err = strconv.ParseInt(parts[i], 10, 64); err != nil {
+					return nil, &errors.ParseError{Parser: "Balance", Message: err.Error()}
+				}
+			default:
+				return nil, errors.ErrInvalidData
 			}
 		}
 		return b, nil
@@ -102,23 +106,27 @@ func (u *BalanceURLParam) Parse(parts []string) (BalanceParams, error) {
 
 			switch arg {
 			case "check_post":
-				if index+1 < len(parts) {
-					index++
-					if u.CheckPost, err = strconv.ParseInt(parts[index], 10, 64); err != nil {
-						return nil, &errors.ParseError{Parser: "Balance", Message: err.Error()}
-					}
+				if index+1 >= len(parts) {
+					return nil, errors.ErrInvalidData
+				}
+				index++
+				if u.CheckPost, err = strconv.ParseInt(parts[index], 10, 64); err != nil {
+					return nil, &errors.ParseError{Parser: "Balance", Message: err.Error()}
 				}
 			case "max_wait":
-				if index+1 < len(parts) {
-					index++
-					if u.MaxWait, err = strconv.ParseInt(parts[index], 10, 64); err != nil {
-						return nil, &errors.ParseError{Parser: "Balance", Message: err.Error()}
-					}
+				if index+1 >= len(parts) {
+					return nil, errors.ErrInvalidData
+				}
+				index++
+				if u.MaxWait, err = strconv.ParseInt(parts[index], 10, 64); err != nil {
+					return nil, &errors.ParseError{Parser: "Balance", Message: err.Error()}
 				}
 			default:
 				if index == 1 {
 					u.Param = arg
+					continue
 				}
+				return nil, errors.ErrInvalidData
 			}
 		}
 		return u, nil

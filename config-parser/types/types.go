@@ -334,6 +334,12 @@ type BindProcess struct {
 //test:fail:balance uri depth notInteger
 //test:fail:balance url_param check_post notInteger
 //test:fail:balance hash
+//test:fail:balance uri len
+//test:fail:balance uri depth
+//test:fail:balance url_param check_post
+//test:fail:balance url_param max_wait
+//test:fail:balance uri invalid_param
+//test:fail:balance url_param session_id invalid_param
 type Balance struct {
 	Algorithm string
 	Params    params.BalanceParams

@@ -54,8 +54,14 @@ func TestBalance(t *testing.T) {
 		"balance uri depth notInteger":                            false,
 		"balance url_param check_post notInteger":                 false,
 		"balance hash":                                            false,
-		"---":                                                     false,
-		"--- ---":                                                 false,
+		"balance uri len":                                         false,
+		"balance uri depth":                                       false,
+		"balance url_param check_post":                            false,
+		"balance url_param max_wait":                              false,
+		"balance uri invalid_param":                               false,
+		"balance url_param session_id invalid_param":              false,
+		"---":     false,
+		"--- ---": false,
 	}
 	parser := &parsers.Balance{}
 	for command, shouldPass := range tests {
