@@ -265,16 +265,23 @@ var serverOptionFactoryMethods = map[string]func() ServerOption{ //nolint:gochec
 	"pool-low-conn":           func() ServerOption { return &ServerOptionValue{Name: "pool-low-conn"} },
 	"ws":                      func() ServerOption { return &ServerOptionValue{Name: "ws"} },
 	"log-bufsize":             func() ServerOption { return &ServerOptionValue{Name: "log-bufsize"} },
-	"set-proxy-v2-tlv-fmt":    func() ServerOption { return &ServerOptionIDValue{Name: "set-proxy-v2-tlv-fmt"} },
 	"guid":                    func() ServerOption { return &ServerOptionValue{Name: "guid"} },
 	"pool-conn-name":          func() ServerOption { return &ServerOptionValue{Name: "pool-conn-name"} },
 	"hash-key":                func() ServerOption { return &ServerOptionValue{Name: "hash-key"} },
 }
 
+var serverParamOptionFactoryMethods = map[string]func() ServerOption{ //nolint:gochecknoglobals
+	"set-proxy-v2-tlv-fmt": func() ServerOption { return &ServerOptionIDValue{Name: "set-proxy-v2-tlv-fmt"} },
+}
+
 func getServerOption(option string) ServerOption {
+	if factoryMethod, found := serverOptionFactoryMethods[option]; found {
+		return factoryMethod()
+	}
+
 	option = strings.Split(option, "(")[0]
 
-	if factoryMethod, found := serverOptionFactoryMethods[option]; found {
+	if factoryMethod, found := serverParamOptionFactoryMethods[option]; found {
 		return factoryMethod()
 	}
 	return nil
