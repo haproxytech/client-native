@@ -275,7 +275,7 @@ type LuaPrependPath struct {
 
 	// type
 	// Enum: ["path","cpath"]
-	// +kubebuilder:validation:Enum="path","cpath";
+	// +kubebuilder:validation:Enum=path;cpath;
 	Type string `json:"type,omitempty"`
 }
 

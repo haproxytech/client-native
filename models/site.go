@@ -228,7 +228,7 @@ type SiteFarm struct {
 
 	// cond
 	// Enum: ["if","unless"]
-	// +kubebuilder:validation:Enum="if","unless";
+	// +kubebuilder:validation:Enum=if;unless;
 	Cond string `json:"cond,omitempty"`
 
 	// cond test
@@ -239,7 +239,7 @@ type SiteFarm struct {
 
 	// mode
 	// Enum: ["http","tcp"]
-	// +kubebuilder:validation:Enum="http","tcp";
+	// +kubebuilder:validation:Enum=http;tcp;
 	Mode string `json:"mode,omitempty"`
 
 	// name
@@ -254,7 +254,7 @@ type SiteFarm struct {
 	// use as
 	// Required: true
 	// Enum: ["default","conditional"]
-	// +kubebuilder:validation:Enum="default","conditional";
+	// +kubebuilder:validation:Enum=default;conditional;
 	UseAs string `json:"use_as"`
 }
 
@@ -613,7 +613,7 @@ func (m *SiteFarm) UnmarshalBinary(b []byte) error {
 type SiteService struct {
 	// http connection mode
 	// Enum: ["http-tunnel","httpclose","forced-close","http-server-close","http-keep-alive"]
-	// +kubebuilder:validation:Enum="http-tunnel","httpclose","forced-close","http-server-close","http-keep-alive";
+	// +kubebuilder:validation:Enum=http-tunnel;httpclose;forced-close;http-server-close;http-keep-alive;
 	HTTPConnectionMode string `json:"http_connection_mode,omitempty"`
 
 	// listeners
@@ -624,7 +624,7 @@ type SiteService struct {
 
 	// mode
 	// Enum: ["http","tcp"]
-	// +kubebuilder:validation:Enum="http","tcp";
+	// +kubebuilder:validation:Enum=http;tcp;
 	Mode string `json:"mode,omitempty"`
 }
 

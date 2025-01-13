@@ -37,7 +37,7 @@ import (
 type Compression struct {
 	// algo req
 	// Enum: ["identity","gzip","deflate","raw-deflate"]
-	// +kubebuilder:validation:Enum="identity","gzip","deflate","raw-deflate";
+	// +kubebuilder:validation:Enum=identity;gzip;deflate;raw-deflate;
 	AlgoReq string `json:"algo-req,omitempty"`
 
 	// algorithms
@@ -48,7 +48,7 @@ type Compression struct {
 
 	// direction
 	// Enum: ["request","response","both"]
-	// +kubebuilder:validation:Enum="request","response","both";
+	// +kubebuilder:validation:Enum=request;response;both;
 	Direction string `json:"direction,omitempty"`
 
 	// offload

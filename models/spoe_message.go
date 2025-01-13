@@ -195,7 +195,7 @@ func (m *SpoeMessage) UnmarshalBinary(b []byte) error {
 type SpoeMessageEvent struct {
 	// cond
 	// Enum: ["if","unless"]
-	// +kubebuilder:validation:Enum="if","unless";
+	// +kubebuilder:validation:Enum=if;unless;
 	Cond string `json:"cond,omitempty"`
 
 	// cond test
@@ -204,7 +204,7 @@ type SpoeMessageEvent struct {
 	// name
 	// Required: true
 	// Enum: ["on-backend-http-request","on-backend-tcp-request","on-client-session","on-frontend-http-request","on-frontend-tcp-request","on-http-response","on-server-session","on-tcp-response"]
-	// +kubebuilder:validation:Enum="on-backend-http-request","on-backend-tcp-request","on-client-session","on-frontend-http-request","on-frontend-tcp-request","on-http-response","on-server-session","on-tcp-response";
+	// +kubebuilder:validation:Enum=on-backend-http-request;on-backend-tcp-request;on-client-session;on-frontend-http-request;on-frontend-tcp-request;on-http-response;on-server-session;on-tcp-response;
 	Name *string `json:"name"`
 }
 

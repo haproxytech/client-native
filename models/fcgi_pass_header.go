@@ -41,7 +41,7 @@ import (
 type FCGIPassHeader struct {
 	// cond
 	// Enum: ["if","unless"]
-	// +kubebuilder:validation:Enum="if","unless";
+	// +kubebuilder:validation:Enum=if;unless;
 	Cond string `json:"cond,omitempty"`
 
 	// cond test

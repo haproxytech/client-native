@@ -36,7 +36,7 @@ import (
 type HttpchkParams struct {
 	// method
 	// Enum: ["HEAD","PUT","POST","GET","TRACE","PATCH","DELETE","CONNECT","OPTIONS"]
-	// +kubebuilder:validation:Enum="HEAD","PUT","POST","GET","TRACE","PATCH","DELETE","CONNECT","OPTIONS";
+	// +kubebuilder:validation:Enum=HEAD;PUT;POST;GET;TRACE;PATCH;DELETE;CONNECT;OPTIONS;
 	Method string `json:"method,omitempty"`
 
 	// uri

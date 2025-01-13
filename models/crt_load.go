@@ -55,7 +55,7 @@ type CrtLoad struct {
 
 	// Automatic OCSP response update
 	// Enum: ["enabled","disabled"]
-	// +kubebuilder:validation:Enum="enabled","disabled";
+	// +kubebuilder:validation:Enum=enabled;disabled;
 	OcspUpdate string `json:"ocsp_update,omitempty"`
 
 	// Signed Certificate Timestamp List filename

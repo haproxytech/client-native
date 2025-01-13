@@ -177,7 +177,7 @@ type GlobalBase struct {
 
 	// numa cpu mapping
 	// Enum: ["enabled","disabled"]
-	// +kubebuilder:validation:Enum="enabled","disabled";
+	// +kubebuilder:validation:Enum=enabled;disabled;
 	NumaCPUMapping string `json:"numa_cpu_mapping,omitempty"`
 
 	// ocsp update options
@@ -2020,7 +2020,7 @@ type GlobalDefaultPath struct {
 	// type
 	// Required: true
 	// Enum: ["current","config","parent","origin"]
-	// +kubebuilder:validation:Enum="current","config","parent","origin";
+	// +kubebuilder:validation:Enum=current;config;parent;origin;
 	Type string `json:"type"`
 }
 
@@ -2300,12 +2300,12 @@ func (m *GlobalHarden) UnmarshalBinary(b []byte) error {
 type GlobalHardenRejectPrivilegedPorts struct {
 	// quic
 	// Enum: ["enabled","disabled"]
-	// +kubebuilder:validation:Enum="enabled","disabled";
+	// +kubebuilder:validation:Enum=enabled;disabled;
 	Quic string `json:"quic,omitempty"`
 
 	// tcp
 	// Enum: ["enabled","disabled"]
-	// +kubebuilder:validation:Enum="enabled","disabled";
+	// +kubebuilder:validation:Enum=enabled;disabled;
 	TCP string `json:"tcp,omitempty"`
 }
 
@@ -2441,7 +2441,7 @@ type GlobalLogSendHostname struct {
 	// enabled
 	// Required: true
 	// Enum: ["enabled","disabled"]
-	// +kubebuilder:validation:Enum="enabled","disabled";
+	// +kubebuilder:validation:Enum=enabled;disabled;
 	Enabled *string `json:"enabled"`
 
 	// param

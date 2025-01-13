@@ -49,7 +49,7 @@ type StickTable struct {
 
 	// type
 	// Enum: ["ip","ipv6","integer","string","binary"]
-	// +kubebuilder:validation:Enum="ip","ipv6","integer","string","binary";
+	// +kubebuilder:validation:Enum=ip;ipv6;integer;string;binary;
 	Type string `json:"type,omitempty"`
 
 	// used
@@ -214,7 +214,7 @@ func (m *StickTable) UnmarshalBinary(b []byte) error {
 type StickTableField struct {
 	// field
 	// Enum: ["bytes_in_cnt","bytes_in_rate","bytes_out_cnt","bytes_out_rate","conn_cnt","conn_cur","conn_rate","gpc0","gpc0_rate","gpc1","gpc1_rate","gpt0","http_req_cnt","http_req_rate","http_err_cnt","http_err_rate","server_id","sess_cnt","sess_rate"]
-	// +kubebuilder:validation:Enum="bytes_in_cnt","bytes_in_rate","bytes_out_cnt","bytes_out_rate","conn_cnt","conn_cur","conn_rate","gpc0","gpc0_rate","gpc1","gpc1_rate","gpt0","http_req_cnt","http_req_rate","http_err_cnt","http_err_rate","server_id","sess_cnt","sess_rate";
+	// +kubebuilder:validation:Enum=bytes_in_cnt;bytes_in_rate;bytes_out_cnt;bytes_out_rate;conn_cnt;conn_cur;conn_rate;gpc0;gpc0_rate;gpc1;gpc1_rate;gpt0;http_req_cnt;http_req_rate;http_err_cnt;http_err_rate;server_id;sess_cnt;sess_rate;
 	Field string `json:"field,omitempty"`
 
 	// period
@@ -222,7 +222,7 @@ type StickTableField struct {
 
 	// type
 	// Enum: ["rate","counter"]
-	// +kubebuilder:validation:Enum="rate","counter";
+	// +kubebuilder:validation:Enum=rate;counter;
 	Type string `json:"type,omitempty"`
 }
 

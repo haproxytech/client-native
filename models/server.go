@@ -47,7 +47,8 @@ type Server struct {
 	// id
 	ID *int64 `json:"id,omitempty"`
 
-	// metadata
+	// +kubebuilder:pruning:PreserveUnknownFields
+	// +kubebuilder:validation:Schemaless
 	Metadata map[string]interface{} `json:"metadata,omitempty"`
 
 	// name
