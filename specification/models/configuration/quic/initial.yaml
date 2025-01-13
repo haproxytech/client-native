@@ -1,6 +1,6 @@
 ---
 quic_initial_rule:
-  title: QUIC Initial 
+  title: QUIC Initial
   description: QUIC Initial configuration
   type: object
   x-go-name: QUICInitialRule
@@ -32,4 +32,3 @@ quic_initial_rule:
   additionalProperties: false
   example:
     type: reject
-
