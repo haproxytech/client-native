@@ -44,7 +44,7 @@ type EmailAlert struct {
 
 	// level
 	// Enum: ["emerg","alert","crit","err","warning","notice","info","debug"]
-	// +kubebuilder:validation:Enum="emerg","alert","crit","err","warning","notice","info","debug";
+	// +kubebuilder:validation:Enum=emerg;alert;crit;err;warning;notice;info;debug;
 	Level string `json:"level,omitempty"`
 
 	// mailers

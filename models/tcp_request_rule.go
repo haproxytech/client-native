@@ -39,7 +39,7 @@ import (
 type TCPRequestRule struct {
 	// action
 	// Enum: ["accept","attach-srv","capture","do-resolve","expect-netscaler-cip","expect-proxy","lua","reject","sc-add-gpc","sc-inc-gpc","sc-inc-gpc0","sc-inc-gpc1","sc-set-gpt","sc-set-gpt0","send-spoe-group","set-bandwidth-limit","set-bc-mark","set-bc-tos","set-dst-port","set-dst","set-fc-mark","set-fc-tos","set-log-level","set-mark","set-nice","set-priority-class","set-priority-offset","set-src","set-src-port","set-tos","set-var","set-var-fmt","silent-drop","switch-mode","track-sc","unset-var","use-service","set-retries","do-log"]
-	// +kubebuilder:validation:Enum="accept","attach-srv","capture","do-resolve","expect-netscaler-cip","expect-proxy","lua","reject","sc-add-gpc","sc-inc-gpc","sc-inc-gpc0","sc-inc-gpc1","sc-set-gpt","sc-set-gpt0","send-spoe-group","set-bandwidth-limit","set-bc-mark","set-bc-tos","set-dst-port","set-dst","set-fc-mark","set-fc-tos","set-log-level","set-mark","set-nice","set-priority-class","set-priority-offset","set-src","set-src-port","set-tos","set-var","set-var-fmt","silent-drop","switch-mode","track-sc","unset-var","use-service","set-retries","do-log";
+	// +kubebuilder:validation:Enum=accept;attach-srv;capture;do-resolve;expect-netscaler-cip;expect-proxy;lua;reject;sc-add-gpc;sc-inc-gpc;sc-inc-gpc0;sc-inc-gpc1;sc-set-gpt;sc-set-gpt0;send-spoe-group;set-bandwidth-limit;set-bc-mark;set-bc-tos;set-dst-port;set-dst;set-fc-mark;set-fc-tos;set-log-level;set-mark;set-nice;set-priority-class;set-priority-offset;set-src;set-src-port;set-tos;set-var;set-var-fmt;silent-drop;switch-mode;track-sc;unset-var;use-service;set-retries;do-log;
 	Action string `json:"action,omitempty"`
 
 	// bandwidth limit limit
@@ -61,7 +61,7 @@ type TCPRequestRule struct {
 
 	// cond
 	// Enum: ["if","unless"]
-	// +kubebuilder:validation:Enum="if","unless";
+	// +kubebuilder:validation:Enum=if;unless;
 	Cond string `json:"cond,omitempty"`
 
 	// cond test
@@ -75,7 +75,7 @@ type TCPRequestRule struct {
 
 	// log level
 	// Enum: ["emerg","alert","crit","err","warning","notice","info","debug","silent"]
-	// +kubebuilder:validation:Enum="emerg","alert","crit","err","warning","notice","info","debug","silent";
+	// +kubebuilder:validation:Enum=emerg;alert;crit;err;warning;notice;info;debug;silent;
 	LogLevel string `json:"log_level,omitempty"`
 
 	// lua action
@@ -100,7 +100,7 @@ type TCPRequestRule struct {
 
 	// resolve protocol
 	// Enum: ["ipv4","ipv6"]
-	// +kubebuilder:validation:Enum="ipv4","ipv6";
+	// +kubebuilder:validation:Enum=ipv4;ipv6;
 	ResolveProtocol string `json:"resolve_protocol,omitempty"`
 
 	// resolve resolvers
@@ -156,7 +156,7 @@ type TCPRequestRule struct {
 	// type
 	// Required: true
 	// Enum: ["connection","content","inspect-delay","session"]
-	// +kubebuilder:validation:Enum="connection","content","inspect-delay","session";
+	// +kubebuilder:validation:Enum=connection;content;inspect-delay;session;
 	Type string `json:"type"`
 
 	// var format

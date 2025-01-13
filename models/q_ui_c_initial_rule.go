@@ -39,7 +39,7 @@ import (
 type QUICInitialRule struct {
 	// cond
 	// Enum: ["if","unless"]
-	// +kubebuilder:validation:Enum="if","unless";
+	// +kubebuilder:validation:Enum=if;unless;
 	Cond string `json:"cond,omitempty"`
 
 	// cond test
@@ -48,7 +48,7 @@ type QUICInitialRule struct {
 	// type
 	// Required: true
 	// Enum: ["reject","accept","send-retry","dgram-drop"]
-	// +kubebuilder:validation:Enum="reject","accept","send-retry","dgram-drop";
+	// +kubebuilder:validation:Enum=reject;accept;send-retry;dgram-drop;
 	Type string `json:"type"`
 }
 

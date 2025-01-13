@@ -37,7 +37,7 @@ type Forwardfor struct {
 	// enabled
 	// Required: true
 	// Enum: ["enabled"]
-	// +kubebuilder:validation:Enum="enabled";
+	// +kubebuilder:validation:Enum=enabled;
 	Enabled *string `json:"enabled"`
 
 	// except

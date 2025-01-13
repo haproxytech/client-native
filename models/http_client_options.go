@@ -36,7 +36,7 @@ import (
 type HTTPClientOptions struct {
 	// resolvers disabled
 	// Enum: ["enabled","disabled"]
-	// +kubebuilder:validation:Enum="enabled","disabled";
+	// +kubebuilder:validation:Enum=enabled;disabled;
 	ResolversDisabled string `json:"resolvers_disabled,omitempty"`
 
 	// resolvers id
@@ -44,7 +44,7 @@ type HTTPClientOptions struct {
 
 	// resolvers prefer
 	// Enum: ["ipv4","ipv6"]
-	// +kubebuilder:validation:Enum="ipv4","ipv6";
+	// +kubebuilder:validation:Enum=ipv4;ipv6;
 	ResolversPrefer string `json:"resolvers_prefer,omitempty"`
 
 	// retries
@@ -55,7 +55,7 @@ type HTTPClientOptions struct {
 
 	// ssl verify
 	// Enum: ["","none","required"]
-	// +kubebuilder:validation:Enum="","none","required";
+	// +kubebuilder:validation:Enum="";none;required;
 	SslVerify *string `json:"ssl_verify,omitempty"`
 
 	// timeout connect

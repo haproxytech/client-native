@@ -52,7 +52,7 @@ type TuneSslOptions struct {
 
 	// keylog
 	// Enum: ["enabled","disabled"]
-	// +kubebuilder:validation:Enum="enabled","disabled";
+	// +kubebuilder:validation:Enum=enabled;disabled;
 	Keylog string `json:"keylog,omitempty"`
 
 	// lifetime

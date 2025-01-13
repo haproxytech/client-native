@@ -77,7 +77,7 @@ type Cookie struct {
 
 	// type
 	// Enum: ["rewrite","insert","prefix"]
-	// +kubebuilder:validation:Enum="rewrite","insert","prefix";
+	// +kubebuilder:validation:Enum=rewrite;insert;prefix;
 	Type string `json:"type,omitempty"`
 }
 

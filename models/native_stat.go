@@ -48,7 +48,7 @@ type NativeStat struct {
 
 	// type
 	// Enum: ["backend","server","frontend"]
-	// +kubebuilder:validation:Enum="backend","server","frontend";
+	// +kubebuilder:validation:Enum=backend;server;frontend;
 	Type string `json:"type,omitempty"`
 }
 

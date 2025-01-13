@@ -49,37 +49,37 @@ type DefaultsBase struct {
 
 	// abortonclose
 	// Enum: ["enabled","disabled"]
-	// +kubebuilder:validation:Enum="enabled","disabled";
+	// +kubebuilder:validation:Enum=enabled;disabled;
 	Abortonclose string `json:"abortonclose,omitempty"`
 
 	// accept invalid http request
 	// Enum: ["enabled","disabled"]
-	// +kubebuilder:validation:Enum="enabled","disabled";
+	// +kubebuilder:validation:Enum=enabled;disabled;
 	AcceptInvalidHTTPRequest string `json:"accept_invalid_http_request,omitempty"`
 
 	// accept invalid http response
 	// Enum: ["enabled","disabled"]
-	// +kubebuilder:validation:Enum="enabled","disabled";
+	// +kubebuilder:validation:Enum=enabled;disabled;
 	AcceptInvalidHTTPResponse string `json:"accept_invalid_http_response,omitempty"`
 
 	// accept unsafe violations in http request
 	// Enum: ["enabled","disabled"]
-	// +kubebuilder:validation:Enum="enabled","disabled";
+	// +kubebuilder:validation:Enum=enabled;disabled;
 	AcceptUnsafeViolationsInHTTPRequest string `json:"accept_unsafe_violations_in_http_request,omitempty"`
 
 	// accept unsafe violations in http response
 	// Enum: ["enabled","disabled"]
-	// +kubebuilder:validation:Enum="enabled","disabled";
+	// +kubebuilder:validation:Enum=enabled;disabled;
 	AcceptUnsafeViolationsInHTTPResponse string `json:"accept_unsafe_violations_in_http_response,omitempty"`
 
 	// adv check
 	// Enum: ["httpchk","ldap-check","mysql-check","pgsql-check","redis-check","smtpchk","ssl-hello-chk","tcp-check"]
-	// +kubebuilder:validation:Enum="httpchk","ldap-check","mysql-check","pgsql-check","redis-check","smtpchk","ssl-hello-chk","tcp-check";
+	// +kubebuilder:validation:Enum=httpchk;ldap-check;mysql-check;pgsql-check;redis-check;smtpchk;ssl-hello-chk;tcp-check;
 	AdvCheck string `json:"adv_check,omitempty"`
 
 	// allbackups
 	// Enum: ["enabled","disabled"]
-	// +kubebuilder:validation:Enum="enabled","disabled";
+	// +kubebuilder:validation:Enum=enabled;disabled;
 	Allbackups string `json:"allbackups,omitempty"`
 
 	// backlog
@@ -93,7 +93,7 @@ type DefaultsBase struct {
 
 	// checkcache
 	// Enum: ["enabled","disabled"]
-	// +kubebuilder:validation:Enum="enabled","disabled";
+	// +kubebuilder:validation:Enum=enabled;disabled;
 	Checkcache string `json:"checkcache,omitempty"`
 
 	// clflog
@@ -111,7 +111,7 @@ type DefaultsBase struct {
 
 	// clitcpka
 	// Enum: ["enabled","disabled"]
-	// +kubebuilder:validation:Enum="enabled","disabled";
+	// +kubebuilder:validation:Enum=enabled;disabled;
 	Clitcpka string `json:"clitcpka,omitempty"`
 
 	// clitcpka cnt
@@ -133,7 +133,7 @@ type DefaultsBase struct {
 
 	// contstats
 	// Enum: ["enabled"]
-	// +kubebuilder:validation:Enum="enabled";
+	// +kubebuilder:validation:Enum=enabled;
 	Contstats string `json:"contstats,omitempty"`
 
 	// cookie
@@ -149,7 +149,7 @@ type DefaultsBase struct {
 
 	// disable h2 upgrade
 	// Enum: ["enabled","disabled"]
-	// +kubebuilder:validation:Enum="enabled","disabled";
+	// +kubebuilder:validation:Enum=enabled;disabled;
 	DisableH2Upgrade string `json:"disable_h2_upgrade,omitempty"`
 
 	// disabled
@@ -157,12 +157,12 @@ type DefaultsBase struct {
 
 	// dontlog normal
 	// Enum: ["enabled","disabled"]
-	// +kubebuilder:validation:Enum="enabled","disabled";
+	// +kubebuilder:validation:Enum=enabled;disabled;
 	DontlogNormal string `json:"dontlog_normal,omitempty"`
 
 	// dontlognull
 	// Enum: ["enabled","disabled"]
-	// +kubebuilder:validation:Enum="enabled","disabled";
+	// +kubebuilder:validation:Enum=enabled;disabled;
 	Dontlognull string `json:"dontlognull,omitempty"`
 
 	// dynamic cookie key
@@ -187,7 +187,7 @@ type DefaultsBase struct {
 
 	// external check
 	// Enum: ["enabled","disabled"]
-	// +kubebuilder:validation:Enum="enabled","disabled";
+	// +kubebuilder:validation:Enum=enabled;disabled;
 	ExternalCheck string `json:"external_check,omitempty"`
 
 	// external check command
@@ -213,12 +213,12 @@ type DefaultsBase struct {
 
 	// h1 case adjust bogus client
 	// Enum: ["enabled","disabled"]
-	// +kubebuilder:validation:Enum="enabled","disabled";
+	// +kubebuilder:validation:Enum=enabled;disabled;
 	H1CaseAdjustBogusClient string `json:"h1_case_adjust_bogus_client,omitempty"`
 
 	// h1 case adjust bogus server
 	// Enum: ["enabled","disabled"]
-	// +kubebuilder:validation:Enum="enabled","disabled";
+	// +kubebuilder:validation:Enum=enabled;disabled;
 	H1CaseAdjustBogusServer string `json:"h1_case_adjust_bogus_server,omitempty"`
 
 	// hash balance factor
@@ -229,22 +229,22 @@ type DefaultsBase struct {
 
 	// http buffer request
 	// Enum: ["enabled","disabled"]
-	// +kubebuilder:validation:Enum="enabled","disabled";
+	// +kubebuilder:validation:Enum=enabled;disabled;
 	HTTPBufferRequest string `json:"http-buffer-request,omitempty"`
 
 	// http use htx
 	// Enum: ["enabled","disabled"]
-	// +kubebuilder:validation:Enum="enabled","disabled";
+	// +kubebuilder:validation:Enum=enabled;disabled;
 	HTTPUseHtx string `json:"http-use-htx,omitempty"`
 
 	// http connection mode
 	// Enum: ["httpclose","http-server-close","http-keep-alive"]
-	// +kubebuilder:validation:Enum="httpclose","http-server-close","http-keep-alive";
+	// +kubebuilder:validation:Enum=httpclose;http-server-close;http-keep-alive;
 	HTTPConnectionMode string `json:"http_connection_mode,omitempty"`
 
 	// http ignore probes
 	// Enum: ["enabled","disabled"]
-	// +kubebuilder:validation:Enum="enabled","disabled";
+	// +kubebuilder:validation:Enum=enabled;disabled;
 	HTTPIgnoreProbes string `json:"http_ignore_probes,omitempty"`
 
 	// http keep alive timeout
@@ -254,12 +254,12 @@ type DefaultsBase struct {
 
 	// http no delay
 	// Enum: ["enabled","disabled"]
-	// +kubebuilder:validation:Enum="enabled","disabled";
+	// +kubebuilder:validation:Enum=enabled;disabled;
 	HTTPNoDelay string `json:"http_no_delay,omitempty"`
 
 	// http pretend keepalive
 	// Enum: ["enabled","disabled"]
-	// +kubebuilder:validation:Enum="enabled","disabled";
+	// +kubebuilder:validation:Enum=enabled;disabled;
 	HTTPPretendKeepalive string `json:"http_pretend_keepalive,omitempty"`
 
 	// http request timeout
@@ -269,12 +269,12 @@ type DefaultsBase struct {
 
 	// http restrict req hdr names
 	// Enum: ["preserve","delete","reject"]
-	// +kubebuilder:validation:Enum="preserve","delete","reject";
+	// +kubebuilder:validation:Enum=preserve;delete;reject;
 	HTTPRestrictReqHdrNames string `json:"http_restrict_req_hdr_names,omitempty"`
 
 	// http reuse
 	// Enum: ["aggressive","always","never","safe"]
-	// +kubebuilder:validation:Enum="aggressive","always","never","safe";
+	// +kubebuilder:validation:Enum=aggressive;always;never;safe;
 	HTTPReuse string `json:"http_reuse,omitempty"`
 
 	// http send name header
@@ -282,7 +282,7 @@ type DefaultsBase struct {
 
 	// http use proxy header
 	// Enum: ["enabled","disabled"]
-	// +kubebuilder:validation:Enum="enabled","disabled";
+	// +kubebuilder:validation:Enum=enabled;disabled;
 	HTTPUseProxyHeader string `json:"http_use_proxy_header,omitempty"`
 
 	// httpchk params
@@ -293,22 +293,22 @@ type DefaultsBase struct {
 
 	// httpslog
 	// Enum: ["enabled","disabled"]
-	// +kubebuilder:validation:Enum="enabled","disabled";
+	// +kubebuilder:validation:Enum=enabled;disabled;
 	Httpslog string `json:"httpslog,omitempty"`
 
 	// idle close on response
 	// Enum: ["enabled","disabled"]
-	// +kubebuilder:validation:Enum="enabled","disabled";
+	// +kubebuilder:validation:Enum=enabled;disabled;
 	IdleCloseOnResponse string `json:"idle_close_on_response,omitempty"`
 
 	// independent streams
 	// Enum: ["enabled","disabled"]
-	// +kubebuilder:validation:Enum="enabled","disabled";
+	// +kubebuilder:validation:Enum=enabled;disabled;
 	IndependentStreams string `json:"independent_streams,omitempty"`
 
 	// load server state from file
 	// Enum: ["global","local","none"]
-	// +kubebuilder:validation:Enum="global","local","none";
+	// +kubebuilder:validation:Enum=global;local;none;
 	LoadServerStateFromFile string `json:"load_server_state_from_file,omitempty"`
 
 	// log format
@@ -319,12 +319,12 @@ type DefaultsBase struct {
 
 	// log health checks
 	// Enum: ["enabled","disabled"]
-	// +kubebuilder:validation:Enum="enabled","disabled";
+	// +kubebuilder:validation:Enum=enabled;disabled;
 	LogHealthChecks string `json:"log_health_checks,omitempty"`
 
 	// log separate errors
 	// Enum: ["enabled","disabled"]
-	// +kubebuilder:validation:Enum="enabled","disabled";
+	// +kubebuilder:validation:Enum=enabled;disabled;
 	LogSeparateErrors string `json:"log_separate_errors,omitempty"`
 
 	// log tag
@@ -334,7 +334,7 @@ type DefaultsBase struct {
 
 	// logasap
 	// Enum: ["enabled","disabled"]
-	// +kubebuilder:validation:Enum="enabled","disabled";
+	// +kubebuilder:validation:Enum=enabled;disabled;
 	Logasap string `json:"logasap,omitempty"`
 
 	// max keep alive queue
@@ -345,7 +345,7 @@ type DefaultsBase struct {
 
 	// mode
 	// Enum: ["tcp","http","log"]
-	// +kubebuilder:validation:Enum="tcp","http","log";
+	// +kubebuilder:validation:Enum=tcp;http;log;
 	Mode string `json:"mode,omitempty"`
 
 	// monitor uri
@@ -361,7 +361,7 @@ type DefaultsBase struct {
 
 	// nolinger
 	// Enum: ["enabled","disabled"]
-	// +kubebuilder:validation:Enum="enabled","disabled";
+	// +kubebuilder:validation:Enum=enabled;disabled;
 	Nolinger string `json:"nolinger,omitempty"`
 
 	// originalto
@@ -369,7 +369,7 @@ type DefaultsBase struct {
 
 	// persist
 	// Enum: ["enabled","disabled"]
-	// +kubebuilder:validation:Enum="enabled","disabled";
+	// +kubebuilder:validation:Enum=enabled;disabled;
 	Persist string `json:"persist,omitempty"`
 
 	// persist rule
@@ -380,7 +380,7 @@ type DefaultsBase struct {
 
 	// prefer last server
 	// Enum: ["enabled","disabled"]
-	// +kubebuilder:validation:Enum="enabled","disabled";
+	// +kubebuilder:validation:Enum=enabled;disabled;
 	PreferLastServer string `json:"prefer_last_server,omitempty"`
 
 	// queue timeout
@@ -412,7 +412,7 @@ type DefaultsBase struct {
 
 	// socket stats
 	// Enum: ["enabled","disabled"]
-	// +kubebuilder:validation:Enum="enabled","disabled";
+	// +kubebuilder:validation:Enum=enabled;disabled;
 	SocketStats string `json:"socket_stats,omitempty"`
 
 	// source
@@ -420,22 +420,22 @@ type DefaultsBase struct {
 
 	// splice auto
 	// Enum: ["enabled","disabled"]
-	// +kubebuilder:validation:Enum="enabled","disabled";
+	// +kubebuilder:validation:Enum=enabled;disabled;
 	SpliceAuto string `json:"splice_auto,omitempty"`
 
 	// splice request
 	// Enum: ["enabled","disabled"]
-	// +kubebuilder:validation:Enum="enabled","disabled";
+	// +kubebuilder:validation:Enum=enabled;disabled;
 	SpliceRequest string `json:"splice_request,omitempty"`
 
 	// splice response
 	// Enum: ["enabled","disabled"]
-	// +kubebuilder:validation:Enum="enabled","disabled";
+	// +kubebuilder:validation:Enum=enabled;disabled;
 	SpliceResponse string `json:"splice_response,omitempty"`
 
 	// srvtcpka
 	// Enum: ["enabled","disabled"]
-	// +kubebuilder:validation:Enum="enabled","disabled";
+	// +kubebuilder:validation:Enum=enabled;disabled;
 	Srvtcpka string `json:"srvtcpka,omitempty"`
 
 	// srvtcpka cnt
@@ -457,17 +457,17 @@ type DefaultsBase struct {
 
 	// tcp smart accept
 	// Enum: ["enabled","disabled"]
-	// +kubebuilder:validation:Enum="enabled","disabled";
+	// +kubebuilder:validation:Enum=enabled;disabled;
 	TCPSmartAccept string `json:"tcp_smart_accept,omitempty"`
 
 	// tcp smart connect
 	// Enum: ["enabled","disabled"]
-	// +kubebuilder:validation:Enum="enabled","disabled";
+	// +kubebuilder:validation:Enum=enabled;disabled;
 	TCPSmartConnect string `json:"tcp_smart_connect,omitempty"`
 
 	// tcpka
 	// Enum: ["enabled","disabled"]
-	// +kubebuilder:validation:Enum="enabled","disabled";
+	// +kubebuilder:validation:Enum=enabled;disabled;
 	Tcpka string `json:"tcpka,omitempty"`
 
 	// tcplog
@@ -475,7 +475,7 @@ type DefaultsBase struct {
 
 	// transparent
 	// Enum: ["enabled","disabled"]
-	// +kubebuilder:validation:Enum="enabled","disabled";
+	// +kubebuilder:validation:Enum=enabled;disabled;
 	Transparent string `json:"transparent,omitempty"`
 
 	// tunnel timeout

@@ -98,7 +98,7 @@ type SslOptions struct {
 
 	// mode async
 	// Enum: ["enabled","disabled"]
-	// +kubebuilder:validation:Enum="enabled","disabled";
+	// +kubebuilder:validation:Enum=enabled;disabled;
 	ModeAsync string `json:"mode_async,omitempty"`
 
 	// propquery
@@ -119,7 +119,7 @@ type SslOptions struct {
 
 	// server verify
 	// Enum: ["none","required"]
-	// +kubebuilder:validation:Enum="none","required";
+	// +kubebuilder:validation:Enum=none;required;
 	ServerVerify string `json:"server_verify,omitempty"`
 
 	// skip self issued ca

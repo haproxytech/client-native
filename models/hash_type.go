@@ -36,17 +36,17 @@ import (
 type HashType struct {
 	// function
 	// Enum: ["sdbm","djb2","wt6","crc32","none"]
-	// +kubebuilder:validation:Enum="sdbm","djb2","wt6","crc32","none";
+	// +kubebuilder:validation:Enum=sdbm;djb2;wt6;crc32;none;
 	Function string `json:"function,omitempty"`
 
 	// method
 	// Enum: ["map-based","consistent"]
-	// +kubebuilder:validation:Enum="map-based","consistent";
+	// +kubebuilder:validation:Enum=map-based;consistent;
 	Method string `json:"method,omitempty"`
 
 	// modifier
 	// Enum: ["avalanche"]
-	// +kubebuilder:validation:Enum="avalanche";
+	// +kubebuilder:validation:Enum=avalanche;
 	Modifier string `json:"modifier,omitempty"`
 }
 

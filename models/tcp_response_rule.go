@@ -39,7 +39,7 @@ import (
 type TCPResponseRule struct {
 	// action
 	// Enum: ["accept","close","lua","reject","sc-add-gpc","sc-inc-gpc","sc-inc-gpc0","sc-inc-gpc1","sc-set-gpt","sc-set-gpt0","send-spoe-group","set-bandwidth-limit","set-fc-mark","set-fc-tos","set-log-level","set-mark","set-nice","set-tos","set-var","set-var-fmt","silent-drop","unset-var","do-log"]
-	// +kubebuilder:validation:Enum="accept","close","lua","reject","sc-add-gpc","sc-inc-gpc","sc-inc-gpc0","sc-inc-gpc1","sc-set-gpt","sc-set-gpt0","send-spoe-group","set-bandwidth-limit","set-fc-mark","set-fc-tos","set-log-level","set-mark","set-nice","set-tos","set-var","set-var-fmt","silent-drop","unset-var","do-log";
+	// +kubebuilder:validation:Enum=accept;close;lua;reject;sc-add-gpc;sc-inc-gpc;sc-inc-gpc0;sc-inc-gpc1;sc-set-gpt;sc-set-gpt0;send-spoe-group;set-bandwidth-limit;set-fc-mark;set-fc-tos;set-log-level;set-mark;set-nice;set-tos;set-var;set-var-fmt;silent-drop;unset-var;do-log;
 	Action string `json:"action,omitempty"`
 
 	// bandwidth limit limit
@@ -53,7 +53,7 @@ type TCPResponseRule struct {
 
 	// cond
 	// Enum: ["if","unless"]
-	// +kubebuilder:validation:Enum="if","unless";
+	// +kubebuilder:validation:Enum=if;unless;
 	Cond string `json:"cond,omitempty"`
 
 	// cond test
@@ -64,7 +64,7 @@ type TCPResponseRule struct {
 
 	// log level
 	// Enum: ["emerg","alert","crit","err","warning","notice","info","debug","silent"]
-	// +kubebuilder:validation:Enum="emerg","alert","crit","err","warning","notice","info","debug","silent";
+	// +kubebuilder:validation:Enum=emerg;alert;crit;err;warning;notice;info;debug;silent;
 	LogLevel string `json:"log_level,omitempty"`
 
 	// lua action
@@ -123,7 +123,7 @@ type TCPResponseRule struct {
 	// type
 	// Required: true
 	// Enum: ["content","inspect-delay"]
-	// +kubebuilder:validation:Enum="content","inspect-delay";
+	// +kubebuilder:validation:Enum=content;inspect-delay;
 	Type string `json:"type"`
 
 	// var format

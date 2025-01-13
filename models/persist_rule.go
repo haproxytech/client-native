@@ -42,7 +42,7 @@ type PersistRule struct {
 	// type
 	// Required: true
 	// Enum: ["rdp-cookie"]
-	// +kubebuilder:validation:Enum="rdp-cookie";
+	// +kubebuilder:validation:Enum=rdp-cookie;
 	Type *string `json:"type"`
 }
 

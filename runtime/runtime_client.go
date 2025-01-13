@@ -50,11 +50,13 @@ func (c *client) initWithSockets(opt options.RuntimeOptions) error {
 
 	runtime := &SingleRuntime{}
 	masterWorkerMode := false
-	err := runtime.Init(socketPath, masterWorkerMode, opt)
-	if err != nil {
-		return err
+	if socketPath != "" {
+		err := runtime.Init(socketPath, masterWorkerMode, opt)
+		if err != nil {
+			return err
+		}
+		c.runtime = runtime
 	}
-	c.runtime = runtime
 	_, _ = c.GetVersion()
 	return nil
 }

@@ -36,7 +36,7 @@ import (
 type MysqlCheckParams struct {
 	// client version
 	// Enum: ["pre-41","post-41"]
-	// +kubebuilder:validation:Enum="pre-41","post-41";
+	// +kubebuilder:validation:Enum=pre-41;post-41;
 	ClientVersion string `json:"client_version,omitempty"`
 
 	// username
