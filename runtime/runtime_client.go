@@ -1080,3 +1080,27 @@ func (c *client) AddCrtListEntry(crtList string, entry CrtListEntry) error {
 
 	return nil
 }
+
+func (c *client) DeleteCrtListEntry(crtList, filename string, lineNumber *int64) error {
+	if !c.runtime.IsValid() {
+		return errors.New("no valid runtime found")
+	}
+
+	if err := c.runtime.DeleteCrtListEntry(crtList, filename, lineNumber); err != nil {
+		return fmt.Errorf("%s %w", c.runtime.socketPath, err)
+	}
+
+	return nil
+}
+
+func (c *client) DeleteCertEntry(filename string) error {
+	if !c.runtime.IsValid() {
+		return errors.New("no valid runtime found")
+	}
+
+	if err := c.runtime.DeleteCertEntry(filename); err != nil {
+		return fmt.Errorf("%s %w", c.runtime.socketPath, err)
+	}
+
+	return nil
+}
