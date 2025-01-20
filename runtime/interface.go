@@ -144,6 +144,8 @@ type Cert interface {
 	CommitCertEntry(filename string) error
 	AbortCertEntry(filename string) error
 	AddCrtListEntry(crtList string, entry CrtListEntry) error
+	DeleteCrtListEntry(crtList, filename string, lineNumber *int64) error
+	DeleteCertEntry(filename string) error
 }
 
 type Runtime interface {

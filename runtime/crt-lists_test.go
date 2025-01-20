@@ -3,6 +3,8 @@ package runtime
 import (
 	"reflect"
 	"testing"
+
+	"github.com/haproxytech/client-native/v5/misc"
 )
 
 func TestSingleRuntime_ShowCrtLists(t *testing.T) {
@@ -399,7 +401,7 @@ func TestSingleRuntime_DeleteCrtListEntry(t *testing.T) {
 				t.Errorf("SingleRuntime.Init() error = %v", err)
 				return
 			}
-			if err := s.DeleteCrtListEntry(tt.args.crtList, tt.args.certFile, tt.args.lineNumber); (err != nil) != tt.wantErr {
+			if err := s.DeleteCrtListEntry(tt.args.crtList, tt.args.certFile, misc.Int64P(tt.args.lineNumber)); (err != nil) != tt.wantErr {
 				t.Errorf("SingleRuntime.DeleteCrtListEntry() error = %v, wantErr %v", err, tt.wantErr)
 			}
 		})
