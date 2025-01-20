@@ -1304,3 +1304,37 @@ func (c *client) AddCrtListEntry(crtList string, entry CrtListEntry) error {
 	}
 	return nil
 }
+
+func (c *client) DeleteCrtListEntry(crtList, filename string, lineNumber *int64) error {
+	if len(c.runtimes) == 0 {
+		return fmt.Errorf("no valid runtimes found")
+	}
+	var lastErr error
+	for _, runtime := range c.runtimes {
+		err := runtime.DeleteCrtListEntry(crtList, filename, lineNumber)
+		if err != nil {
+			lastErr = err
+		}
+	}
+	if lastErr != nil {
+		return lastErr
+	}
+	return nil
+}
+
+func (c *client) DeleteCertEntry(filename string) error {
+	if len(c.runtimes) == 0 {
+		return fmt.Errorf("no valid runtimes found")
+	}
+	var lastErr error
+	for _, runtime := range c.runtimes {
+		err := runtime.DeleteCertEntry(filename)
+		if err != nil {
+			lastErr = err
+		}
+	}
+	if lastErr != nil {
+		return lastErr
+	}
+	return nil
+}

@@ -160,8 +160,12 @@ func (s *SingleRuntime) AddCrtListEntry(crtList string, entry CrtListEntry) erro
 }
 
 // DeleteCrtListEntry deletes all the CrtList entries from the CrtList by its id
-func (s *SingleRuntime) DeleteCrtListEntry(crtList, certFile string, lineNumber int) error {
-	cmd := fmt.Sprintf("del ssl crt-list %s %s:%v", crtList, certFile, lineNumber)
+func (s *SingleRuntime) DeleteCrtListEntry(crtList, certFile string, lineNumber *int64) error {
+	lineNumberPart := ""
+	if lineNumber != nil {
+		lineNumberPart = fmt.Sprintf(":%v", *lineNumber)
+	}
+	cmd := fmt.Sprintf("del ssl crt-list %s %s%s", crtList, certFile, lineNumberPart)
 	response, err := s.ExecuteWithResponse(cmd)
 	if err != nil {
 		return fmt.Errorf("%s %w", err.Error(), native_errors.ErrNotFound)
