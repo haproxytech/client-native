@@ -196,6 +196,11 @@ type ServerParams struct {
 	// +kubebuilder:validation:Pattern=`^[^\s]+$`
 	InitAddr *string `json:"init-addr,omitempty"`
 
+	// init state
+	// Enum: ["fully-up","up","down","fully-down"]
+	// +kubebuilder:validation:Enum=fully-up;up;down;fully-down;
+	InitState string `json:"init-state,omitempty"`
+
 	// inter
 	// Minimum: 0
 	// +kubebuilder:validation:Minimum=0
@@ -579,6 +584,10 @@ func (m *ServerParams) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateInitAddr(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateInitState(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -1416,6 +1425,54 @@ func (m *ServerParams) validateInitAddr(formats strfmt.Registry) error {
 	}
 
 	if err := validate.Pattern("init-addr", "body", *m.InitAddr, `^[^\s]+$`); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+var serverParamsTypeInitStatePropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["fully-up","up","down","fully-down"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		serverParamsTypeInitStatePropEnum = append(serverParamsTypeInitStatePropEnum, v)
+	}
+}
+
+const (
+
+	// ServerParamsInitStateFullyDashUp captures enum value "fully-up"
+	ServerParamsInitStateFullyDashUp string = "fully-up"
+
+	// ServerParamsInitStateUp captures enum value "up"
+	ServerParamsInitStateUp string = "up"
+
+	// ServerParamsInitStateDown captures enum value "down"
+	ServerParamsInitStateDown string = "down"
+
+	// ServerParamsInitStateFullyDashDown captures enum value "fully-down"
+	ServerParamsInitStateFullyDashDown string = "fully-down"
+)
+
+// prop value enum
+func (m *ServerParams) validateInitStateEnum(path, location string, value string) error {
+	if err := validate.EnumCase(path, location, value, serverParamsTypeInitStatePropEnum, true); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *ServerParams) validateInitState(formats strfmt.Registry) error {
+	if swag.IsZero(m.InitState) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateInitStateEnum("init-state", "body", m.InitState); err != nil {
 		return err
 	}
 

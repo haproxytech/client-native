@@ -962,6 +962,8 @@ type Peer struct {
 //test:ok:server name 127.0.0.1 force-tlsv13
 //test:ok:server name 127.0.0.1 init-addr last,libc,none
 //test:ok:server name 127.0.0.1 init-addr last,libc,none,127.0.0.1
+//test:ok:server name 127.0.0.1 init-state up
+//test:ok:server name 127.0.0.1 init-state down
 //test:ok:server name 127.0.0.1 inter 1500ms
 //test:ok:server name 127.0.0.1 fastinter 2500ms
 //test:ok:server name 127.0.0.1 fastinter unknown

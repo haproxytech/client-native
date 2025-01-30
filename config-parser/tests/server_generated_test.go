@@ -68,6 +68,8 @@ func TestServer(t *testing.T) {
 		"server name 127.0.0.1 force-tlsv13":                              true,
 		"server name 127.0.0.1 init-addr last,libc,none":                  true,
 		"server name 127.0.0.1 init-addr last,libc,none,127.0.0.1":        true,
+		"server name 127.0.0.1 init-state up":                             true,
+		"server name 127.0.0.1 init-state down":                           true,
 		"server name 127.0.0.1 inter 1500ms":                              true,
 		"server name 127.0.0.1 fastinter 2500ms":                          true,
 		"server name 127.0.0.1 fastinter unknown":                         true,

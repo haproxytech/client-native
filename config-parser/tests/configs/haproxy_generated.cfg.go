@@ -302,6 +302,8 @@ backend test
   server name 127.0.0.1 force-tlsv13
   server name 127.0.0.1 init-addr last,libc,none
   server name 127.0.0.1 init-addr last,libc,none,127.0.0.1
+  server name 127.0.0.1 init-state up
+  server name 127.0.0.1 init-state down
   server name 127.0.0.1 inter 1500ms
   server name 127.0.0.1 fastinter 2500ms
   server name 127.0.0.1 fastinter unknown
@@ -3726,6 +3728,10 @@ var configTests = []configTest{{`  command spoa-mirror --runtime 0 --mirror-url 
 	{`  server name 127.0.0.1 init-addr last,libc,none
 `, 1},
 	{`  server name 127.0.0.1 init-addr last,libc,none,127.0.0.1
+`, 1},
+	{`  server name 127.0.0.1 init-state up
+`, 1},
+	{`  server name 127.0.0.1 init-state down
 `, 1},
 	{`  server name 127.0.0.1 inter 1500ms
 `, 1},

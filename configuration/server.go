@@ -407,6 +407,8 @@ func parseServerParams(serverOptions []params.ServerOption, serverParams *models
 				serverParams.GUID = v.Value
 			case "init-addr":
 				serverParams.InitAddr = &v.Value
+			case "init-state":
+				serverParams.InitState = v.Value
 			case "inter":
 				serverParams.Inter = misc.ParseTimeout(v.Value)
 			case "fastinter":
@@ -790,6 +792,9 @@ func SerializeServerParams(s models.ServerParams, opt *options.ConfigurationOpti
 	}
 	if s.InitAddr != nil {
 		options = append(options, &params.ServerOptionValue{Name: "init-addr", Value: *s.InitAddr})
+	}
+	if s.InitState != "" {
+		options = append(options, &params.ServerOptionValue{Name: "init-state", Value: s.InitState})
 	}
 	if s.Inter != nil {
 		options = append(options, &params.ServerOptionValue{Name: "inter", Value: misc.SerializeTime(*s.Inter, opt.PreferredTimeSuffix)})

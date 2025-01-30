@@ -749,6 +749,13 @@ definitions:
         pattern: ^[^\s]+$
         type: string
         x-nullable: true
+      init-state:
+        enum:
+          - fully-up
+          - up
+          - down
+          - fully-down
+        type: string
       inter:
         minimum: 0
         type: integer

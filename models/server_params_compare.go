@@ -173,6 +173,10 @@ func (s ServerParams) Equal(t ServerParams, opts ...Options) bool {
 		return false
 	}
 
+	if s.InitState != t.InitState {
+		return false
+	}
+
 	if !equalPointers(s.Inter, t.Inter) {
 		return false
 	}
@@ -601,6 +605,10 @@ func (s ServerParams) Diff(t ServerParams, opts ...Options) map[string][]interfa
 
 	if !equalPointers(s.InitAddr, t.InitAddr) {
 		diff["InitAddr"] = []interface{}{ValueOrNil(s.InitAddr), ValueOrNil(t.InitAddr)}
+	}
+
+	if s.InitState != t.InitState {
+		diff["InitState"] = []interface{}{s.InitState, t.InitState}
 	}
 
 	if !equalPointers(s.Inter, t.Inter) {

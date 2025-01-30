@@ -190,6 +190,9 @@ server_params:
       pattern: ^[^\s]+$
       type: string
       x-nullable: true
+    init-state:
+      type: string
+      enum: [fully-up, up, down, fully-down]
     inter:
       type: integer
       minimum: 0

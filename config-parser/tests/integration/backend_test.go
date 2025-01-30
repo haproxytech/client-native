@@ -769,6 +769,8 @@ func TestWholeConfigsSectionsBackend(t *testing.T) {
 		{"backend_servername127001guidguidexample", backend_servername127001guidguidexample},
 		{"backend_servername127001initaddrlastlibc", backend_servername127001initaddrlastlibc},
 		{"backend_servername127001initaddrlastlibc_", backend_servername127001initaddrlastlibc_},
+		{"backend_servername127001initstatedown", backend_servername127001initstatedown},
+		{"backend_servername127001initstateup", backend_servername127001initstateup},
 		{"backend_servername127001inter1500ms", backend_servername127001inter1500ms},
 		{"backend_servername127001logbufsize10", backend_servername127001logbufsize10},
 		{"backend_servername127001logprotolegacy", backend_servername127001logprotolegacy},

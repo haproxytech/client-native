@@ -1305,6 +1305,14 @@ const backend_servername127001initaddrlastlibc_ = `
 backend test
   server name 127.0.0.1 init-addr last,libc,none,127.0.0.1
 `
+const backend_servername127001initstateup = `
+backend test
+  server name 127.0.0.1 init-state up
+`
+const backend_servername127001initstatedown = `
+backend test
+  server name 127.0.0.1 init-state down
+`
 const backend_servername127001inter1500ms = `
 backend test
   server name 127.0.0.1 inter 1500ms
