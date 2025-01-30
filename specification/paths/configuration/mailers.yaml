@@ -1,6 +1,7 @@
 ---
 mailers_section:
   get:
+    deprecated: true
     summary: Return an array of mailers sections
     description: Returns an array of all the configured mailers in HAProxy
     operationId: getMailersSections
@@ -21,6 +22,7 @@ mailers_section:
       'default':
         $ref: "#/responses/DefaultError"
   post:
+    deprecated: true
     summary: Add a new Mailers section
     description: Creates a new empty Mailers section
     operationId: createMailersSection
@@ -57,6 +59,7 @@ mailers_section:
         $ref: '#/responses/DefaultError'
 mailers_section_one:
   get:
+    deprecated: true
     summary: Return a Mailers section
     description: Returns one mailers configuration by it's name.
     operationId: getMailersSection
@@ -84,6 +87,7 @@ mailers_section_one:
       'default':
         $ref: '#/responses/DefaultError'
   put:
+    deprecated: true
     summary: Modify a Mailers section
     description: Modifies a mailers configuration by it's name.
     operationId: editMailersSection
@@ -124,6 +128,7 @@ mailers_section_one:
       'default':
         $ref: '#/responses/DefaultError'
   delete:
+    deprecated: true
     summary: Delete a Mailers section
     description: Deletes a mailers from the configuration by it's name.
     operationId: deleteMailersSection
@@ -153,6 +158,7 @@ mailers_section_one:
         $ref: '#/responses/DefaultError'
 mailer_entries:
   get:
+    deprecated: true
     summary: Return an array of mailer_entries
     description: Returns an array of all the mailer_entries configured in the specified mailers section.
     operationId: getMailerEntries
@@ -177,6 +183,7 @@ mailer_entries:
       'default':
         $ref: '#/responses/DefaultError'
   post:
+    deprecated: true
     summary: Add a new mailer_entry
     description: Adds a new mailer entry to the specified mailers section in the configuration file.
     operationId: createMailerEntry
@@ -218,6 +225,7 @@ mailer_entries:
 
 mailer_entries_one:
   get:
+    deprecated: true
     summary: Return one mailer_entry
     description: Returns one mailer_entry configuration by it's name in the specified mailers section.
     operationId: getMailerEntry
@@ -249,6 +257,7 @@ mailer_entries_one:
       'default':
         $ref: '#/responses/DefaultError'
   put:
+    deprecated: true
     summary: Replace a mailer_entry
     description: Replaces a mailer entry configuration by it's name in the specified mailers section.
     operationId: replaceMailerEntry
@@ -293,6 +302,7 @@ mailer_entries_one:
       'default':
         $ref: '#/responses/DefaultError'
   delete:
+    deprecated: true
     summary: Delete a mailer_entry
     description: Deletes a mailer entry configuration by it's name in the specified mailers section.
     operationId: deleteMailerEntry

@@ -13017,6 +13017,7 @@ paths:
         - Group
   /services/haproxy/configuration/mailers_section:
     get:
+      deprecated: true
       description: Returns an array of all the configured mailers in HAProxy
       operationId: getMailersSections
       parameters:
@@ -13037,6 +13038,7 @@ paths:
       tags:
         - Mailers
     post:
+      deprecated: true
       description: Creates a new empty Mailers section
       operationId: createMailersSection
       parameters:
@@ -13073,6 +13075,7 @@ paths:
         - Mailers
   /services/haproxy/configuration/mailers_section/{name}:
     delete:
+      deprecated: true
       description: Deletes a mailers from the configuration by it's name.
       operationId: deleteMailersSection
       parameters:
@@ -13101,6 +13104,7 @@ paths:
       tags:
         - Mailers
     get:
+      deprecated: true
       description: Returns one mailers configuration by it's name.
       operationId: getMailersSection
       parameters:
@@ -13128,6 +13132,7 @@ paths:
       tags:
         - Mailers
     put:
+      deprecated: true
       description: Modifies a mailers configuration by it's name.
       operationId: editMailersSection
       parameters:
@@ -13169,6 +13174,7 @@ paths:
         - Mailers
   /services/haproxy/configuration/mailer_entries:
     get:
+      deprecated: true
       description: Returns an array of all the mailer_entries configured in the specified mailers section.
       operationId: getMailerEntries
       parameters:
@@ -13193,6 +13199,7 @@ paths:
       tags:
         - MailerEntry
     post:
+      deprecated: true
       description: Adds a new mailer entry to the specified mailers section in the configuration file.
       operationId: createMailerEntry
       parameters:
@@ -13233,6 +13240,7 @@ paths:
         - MailerEntry
   /services/haproxy/configuration/mailer_entries/{name}:
     delete:
+      deprecated: true
       description: Deletes a mailer entry configuration by it's name in the specified mailers section.
       operationId: deleteMailerEntry
       parameters:
@@ -13266,6 +13274,7 @@ paths:
       tags:
         - MailerEntry
     get:
+      deprecated: true
       description: Returns one mailer_entry configuration by it's name in the specified mailers section.
       operationId: getMailerEntry
       parameters:
@@ -13297,6 +13306,7 @@ paths:
       tags:
         - MailerEntry
     put:
+      deprecated: true
       description: Replaces a mailer entry configuration by it's name in the specified mailers section.
       operationId: replaceMailerEntry
       parameters:
@@ -13775,6 +13785,7 @@ paths:
         - HTTPErrors
   /services/haproxy/configuration/programs:
     get:
+      deprecated: true
       description: Returns an array of all configured programs in the process-manager configuration file.
       operationId: getPrograms
       parameters:
@@ -13794,6 +13805,7 @@ paths:
       tags:
         - ProcessManager
     post:
+      deprecated: true
       description: Adds a new program to the process-manager configuration file.
       operationId: createProgram
       parameters:
@@ -13829,6 +13841,7 @@ paths:
         - ProcessManager
   /services/haproxy/configuration/programs/{name}:
     delete:
+      deprecated: true
       description: Deletes a program from the process-manager configuration file by its name.
       operationId: deleteProgram
       parameters:
@@ -13857,6 +13870,7 @@ paths:
       tags:
         - ProcessManager
     get:
+      deprecated: true
       description: Returns one program by its name from the process-manager configuration file.
       operationId: getProgram
       parameters:
@@ -13883,6 +13897,7 @@ paths:
       tags:
         - ProcessManager
     put:
+      deprecated: true
       description: Replaces a program from the process-manager configuration by its name.
       operationId: replaceProgram
       parameters:

@@ -1,6 +1,7 @@
 ---
 programs:
   get:
+    deprecated: true
     summary: Return an array of programs
     description: Returns an array of all configured programs in the process-manager configuration file.
     operationId: getPrograms
@@ -20,6 +21,7 @@ programs:
       'default':
         $ref: '#/responses/DefaultError'
   post:
+    deprecated: true
     summary: Add a program
     description: Adds a new program to the process-manager configuration file.
     operationId: createProgram
@@ -56,6 +58,7 @@ programs:
 
 programs_one:
   get:
+    deprecated: true
     summary: Return a program
     description: Returns one program by its name from the process-manager configuration file.
     operationId: getProgram
@@ -82,6 +85,7 @@ programs_one:
       'default':
         $ref: '#/responses/DefaultError'
   put:
+    deprecated: true
     summary: Replace a program
     description: Replaces a program from the process-manager configuration by its name.
     operationId: replaceProgram
@@ -121,6 +125,7 @@ programs_one:
       'default':
         $ref: '#/responses/DefaultError'
   delete:
+    deprecated: true
     summary: Delete a program
     description: Deletes a program from the process-manager configuration file by its name.
     operationId: deleteProgram
