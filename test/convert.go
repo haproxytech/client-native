@@ -85,6 +85,8 @@ func expectedChildResources[P, T any](res map[string][]T, parentKey, parentNameK
 			pkey = configuration.BackendParentName
 		case "fcgi_apps":
 			pkey = configuration.FCGIAppParentName
+		case "log_profiles":
+			pkey = configuration.LogProfileParentName
 		case "log_forwards":
 			pkey = configuration.LogForwardParentName
 		case "userlists":
@@ -601,5 +603,14 @@ func StructuredToUserMap() map[string]models.Users {
 	for k, v := range resources {
 		res[k] = toSliceOfPtrs(v)
 	}
+	return res
+}
+
+func StructuredToLogProfileMap() map[string]models.LogProfiles {
+	resources, _ := expectedResources[models.LogProfile]("log_profiles")
+	res := make(map[string]models.LogProfiles)
+	keyRoot := ""
+	t := toResMap(keyRoot, resources)
+	res[keyRoot] = t[keyRoot]
 	return res
 }

@@ -245,6 +245,7 @@ func ParseLogTarget(l types.Log) *models.LogTarget {
 		Level:       l.Level,
 		Minlevel:    l.MinLevel,
 		Nolog:       l.NoLog,
+		Profile:     l.Profile,
 		SampleRange: l.SampleRange,
 		SampleSize:  l.SampleSize,
 	}
@@ -260,6 +261,7 @@ func SerializeLogTarget(l models.LogTarget) types.Log {
 		Level:       l.Level,
 		MinLevel:    l.Minlevel,
 		NoLog:       l.Nolog,
+		Profile:     l.Profile,
 		SampleRange: l.SampleRange,
 		SampleSize:  l.SampleSize,
 	}

@@ -7932,6 +7932,8 @@ definitions:
             value: false
       nolog:
         type: boolean
+      profile:
+        type: string
       sample_range:
         type: string
         x-dependency:
@@ -11047,6 +11049,72 @@ definitions:
     type: array
     items:
       $ref: "#/definitions/trace_entry"
+  log_profile:
+    description: Defines a logging profile for one or more steps.
+    properties:
+      log_tag:
+        description: Override syslog log tag set by other "log-tag" directives.
+        type: string
+      name:
+        description: Name of the logging profile.
+        minLength: 1
+        type: string
+        x-nullable: false
+      steps:
+        $ref: '#/definitions/log_profile_steps'
+    required:
+      - name
+    title: Log Profile
+    type: object
+  log_profiles:
+    description: List of Logging Profiles
+    type: array
+    items:
+      $ref: "#/definitions/log_profile"
+  log_profile_step:
+    description: Defines what to log for a given step.
+    properties:
+      drop:
+        description: If enabled, no log shall be emitted for the given step.
+        enum:
+          - enabled
+          - disabled
+        type: string
+      format:
+        description: Override "log-format" or "error-log-format" strings depending on the step.
+        type: string
+      sd:
+        description: Override the "log-format-sd" string.
+        type: string
+      step:
+        description: Logging step name.
+        enum:
+          - accept
+          - any
+          - close
+          - connect
+          - error
+          - request
+          - response
+          - http-req
+          - http-res
+          - http-after-res
+          - quic-init
+          - tcp-req-conn
+          - tcp-req-cont
+          - tcp-req-sess
+        type: string
+        x-nullable: false
+    required:
+      - step
+    title: Log Profile Step
+    type: object
+  log_profile_steps:
+    type: array
+    items:
+      $ref: "#/definitions/log_profile_step"
+    description: List of steps where to override the logging.
+    x-omitempty: true
 responses:
   BadRequest:
     description: Bad request
@@ -11173,6 +11241,7 @@ tags:
   - name: HTTPResponseRule
   - name: Information
   - name: LogForward
+  - name: LogProfile
   - name: LogTarget
   - name: MailerEntry
   - name: Mailers
@@ -23137,6 +23206,154 @@ paths:
       summary: Add a new trace entry
       tags:
         - Traces
+  /services/haproxy/configuration/log_profiles:
+    get:
+      description: Returns an array of all the configured log_profile sections in HAProxy
+      operationId: getLogProfiles
+      parameters:
+        - $ref: '#/parameters/transaction_id'
+      responses:
+        "200":
+          description: Successful operation
+          headers:
+            Configuration-Version:
+              description: Configuration file version
+              type: string
+          schema:
+            $ref: '#/definitions/log_profiles'
+        default:
+          $ref: '#/responses/DefaultError'
+      summary: Return all the Log Profiles
+      tags:
+        - LogProfile
+    post:
+      description: Creates a new log_profile section
+      operationId: createLogProfile
+      parameters:
+        - in: body
+          name: data
+          required: true
+          schema:
+            $ref: '#/definitions/log_profile'
+        - $ref: '#/parameters/transaction_id'
+        - $ref: '#/parameters/version'
+        - $ref: '#/parameters/force_reload'
+      responses:
+        "201":
+          description: Log Profile created
+          schema:
+            $ref: '#/definitions/log_profile'
+        "202":
+          description: Configuration change accepted and reload requested
+          headers:
+            Reload-ID:
+              description: ID of the requested reload
+              type: string
+          schema:
+            $ref: '#/definitions/log_profile'
+        "400":
+          $ref: '#/responses/BadRequest'
+        "409":
+          $ref: '#/responses/AlreadyExists'
+        default:
+          $ref: '#/responses/DefaultError'
+      summary: Add a new Log Profile
+      tags:
+        - LogProfile
+  /services/haproxy/configuration/log_profiles/{name}:
+    delete:
+      description: Deletes a log_profile section from the configuration
+      operationId: deleteLogProfile
+      parameters:
+        - description: log_profile name
+          in: path
+          name: name
+          required: true
+          type: string
+        - $ref: '#/parameters/transaction_id'
+        - $ref: '#/parameters/version'
+        - $ref: '#/parameters/force_reload'
+      responses:
+        "202":
+          description: Configuration change accepted and reload requested
+          headers:
+            Reload-ID:
+              description: ID of the requested reload
+              type: string
+        "204":
+          description: log_profile deleted
+        "404":
+          $ref: '#/responses/NotFound'
+        default:
+          $ref: '#/responses/DefaultError'
+      summary: Delete a Log Profile
+      tags:
+        - LogProfile
+    get:
+      description: Find a log_profile section by its name
+      operationId: getLogProfile
+      parameters:
+        - description: log_profile name
+          in: path
+          name: name
+          required: true
+          type: string
+        - $ref: '#/parameters/transaction_id'
+      responses:
+        "200":
+          description: Successful operation
+          headers:
+            Configuration-Version:
+              description: Configuration file version
+              type: string
+          schema:
+            $ref: '#/definitions/log_profile'
+        "404":
+          $ref: '#/responses/NotFound'
+        default:
+          $ref: '#/responses/DefaultError'
+      summary: Return a Log Profile
+      tags:
+        - LogProfile
+    put:
+      description: Modifies a log_profile's configuration by its name
+      operationId: editLogProfile
+      parameters:
+        - description: log_profile name
+          in: path
+          name: name
+          required: true
+          type: string
+        - in: body
+          name: data
+          required: true
+          schema:
+            $ref: '#/definitions/log_profile'
+        - $ref: '#/parameters/transaction_id'
+        - $ref: '#/parameters/version'
+        - $ref: '#/parameters/force_reload'
+      responses:
+        "200":
+          description: log_profile configuration updated
+          schema:
+            $ref: '#/definitions/log_profile'
+        "202":
+          description: Configuration change accepted and reload requested
+          headers:
+            Reload-ID:
+              description: ID of the requested reload
+              type: string
+          schema:
+            $ref: '#/definitions/log_profile'
+        "400":
+          $ref: '#/responses/BadRequest'
+        "404":
+          $ref: '#/responses/NotFound'
+        default:
+          $ref: '#/responses/DefaultError'
+      summary: Modify a Log Profile
+      tags:
+        - LogProfile
   /services/haproxy/runtime:
     get:
       description: Returns a list of endpoints to be used for advanced runtime settings of HAProxy objects.

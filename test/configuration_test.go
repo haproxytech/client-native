@@ -959,6 +959,12 @@ log-forward sylog-loadb
   log 127.0.0.1:10003 sample 3:4 local0
   log 127.0.0.1:10004 sample 4:4 local0
 
+log-profile logp1
+  log-tag tag1
+  on connect drop
+  on error format "%ci: error" sd "%a %b sd"
+  on any sd "custom sd"
+
 mailers localmailer1
   mailer smtp1 10.0.10.1:514
   mailer smtp2 10.0.10.2:514

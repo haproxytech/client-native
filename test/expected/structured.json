@@ -2967,6 +2967,29 @@
             }
         }
     },
+    "log_profiles": {
+        "logp1": {
+            "name": "logp1",
+            "log_tag": "tag1",
+            "steps": [
+                {
+                    "step": "connect",
+                    "drop": "enabled"
+                },
+                {
+                    "step": "error",
+                    "drop": "disabled",
+                    "format": "%ci: error",
+                    "sd": "%a %b sd"
+                },
+                {
+                    "step": "any",
+                    "drop": "disabled",
+                    "sd": "custom sd"
+                }
+            ]
+        }
+    },
     "mailers_sections": {
         "localmailer1": {
             "name": "localmailer1",

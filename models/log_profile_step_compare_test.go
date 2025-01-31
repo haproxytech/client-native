@@ -29,13 +29,13 @@ import (
 	jsoniter "github.com/json-iterator/go"
 )
 
-func TestLogTargetEqual(t *testing.T) {
+func TestLogProfileStepEqual(t *testing.T) {
 	samples := []struct {
-		a, b LogTarget
+		a, b LogProfileStep
 	}{}
 	for i := 0; i < 2; i++ {
-		var sample LogTarget
-		var result LogTarget
+		var sample LogProfileStep
+		var result LogProfileStep
 		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
@@ -50,7 +50,7 @@ func TestLogTargetEqual(t *testing.T) {
 		}
 
 		samples = append(samples, struct {
-			a, b LogTarget
+			a, b LogProfileStep
 		}{sample, result})
 	}
 
@@ -66,18 +66,18 @@ func TestLogTargetEqual(t *testing.T) {
 			if err != nil {
 				t.Errorf(err.Error())
 			}
-			t.Errorf("Expected LogTarget to be equal, but it is not %s %s", a, b)
+			t.Errorf("Expected LogProfileStep to be equal, but it is not %s %s", a, b)
 		}
 	}
 }
 
-func TestLogTargetEqualFalse(t *testing.T) {
+func TestLogProfileStepEqualFalse(t *testing.T) {
 	samples := []struct {
-		a, b LogTarget
+		a, b LogProfileStep
 	}{}
 	for i := 0; i < 2; i++ {
-		var sample LogTarget
-		var result LogTarget
+		var sample LogProfileStep
+		var result LogProfileStep
 		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
@@ -86,12 +86,8 @@ func TestLogTargetEqualFalse(t *testing.T) {
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		result.Global = !sample.Global
-		result.Length = sample.Length + 1
-		result.Nolog = !sample.Nolog
-		result.SampleSize = sample.SampleSize + 1
 		samples = append(samples, struct {
-			a, b LogTarget
+			a, b LogProfileStep
 		}{sample, result})
 	}
 
@@ -107,18 +103,18 @@ func TestLogTargetEqualFalse(t *testing.T) {
 			if err != nil {
 				t.Errorf(err.Error())
 			}
-			t.Errorf("Expected LogTarget to be different, but it is not %s %s", a, b)
+			t.Errorf("Expected LogProfileStep to be different, but it is not %s %s", a, b)
 		}
 	}
 }
 
-func TestLogTargetDiff(t *testing.T) {
+func TestLogProfileStepDiff(t *testing.T) {
 	samples := []struct {
-		a, b LogTarget
+		a, b LogProfileStep
 	}{}
 	for i := 0; i < 2; i++ {
-		var sample LogTarget
-		var result LogTarget
+		var sample LogProfileStep
+		var result LogProfileStep
 		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
@@ -133,7 +129,7 @@ func TestLogTargetDiff(t *testing.T) {
 		}
 
 		samples = append(samples, struct {
-			a, b LogTarget
+			a, b LogProfileStep
 		}{sample, result})
 	}
 
@@ -149,18 +145,18 @@ func TestLogTargetDiff(t *testing.T) {
 			if err != nil {
 				t.Errorf(err.Error())
 			}
-			t.Errorf("Expected LogTarget to be equal, but it is not %s %s, %v", a, b, result)
+			t.Errorf("Expected LogProfileStep to be equal, but it is not %s %s, %v", a, b, result)
 		}
 	}
 }
 
-func TestLogTargetDiffFalse(t *testing.T) {
+func TestLogProfileStepDiffFalse(t *testing.T) {
 	samples := []struct {
-		a, b LogTarget
+		a, b LogProfileStep
 	}{}
 	for i := 0; i < 2; i++ {
-		var sample LogTarget
-		var result LogTarget
+		var sample LogProfileStep
+		var result LogProfileStep
 		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Errorf(err.Error())
@@ -169,18 +165,14 @@ func TestLogTargetDiffFalse(t *testing.T) {
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		result.Global = !sample.Global
-		result.Length = sample.Length + 1
-		result.Nolog = !sample.Nolog
-		result.SampleSize = sample.SampleSize + 1
 		samples = append(samples, struct {
-			a, b LogTarget
+			a, b LogProfileStep
 		}{sample, result})
 	}
 
 	for _, sample := range samples {
 		result := sample.a.Diff(sample.b)
-		if len(result) != 11 {
+		if len(result) != 4 {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {
@@ -190,7 +182,7 @@ func TestLogTargetDiffFalse(t *testing.T) {
 			if err != nil {
 				t.Errorf(err.Error())
 			}
-			t.Errorf("Expected LogTarget to be different in 11 cases, but it is not (%d) %s %s", len(result), a, b)
+			t.Errorf("Expected LogProfileStep to be different in 4 cases, but it is not (%d) %s %s", len(result), a, b)
 		}
 	}
 }

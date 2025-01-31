@@ -56,6 +56,10 @@ func (s LogTarget) Equal(t LogTarget, opts ...Options) bool {
 		return false
 	}
 
+	if s.Profile != t.Profile {
+		return false
+	}
+
 	if s.SampleRange != t.SampleRange {
 		return false
 	}
@@ -105,6 +109,10 @@ func (s LogTarget) Diff(t LogTarget, opts ...Options) map[string][]interface{} {
 
 	if s.Nolog != t.Nolog {
 		diff["Nolog"] = []interface{}{s.Nolog, t.Nolog}
+	}
+
+	if s.Profile != t.Profile {
+		diff["Profile"] = []interface{}{s.Profile, t.Profile}
 	}
 
 	if s.SampleRange != t.SampleRange {

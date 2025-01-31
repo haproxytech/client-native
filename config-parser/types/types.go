@@ -726,6 +726,7 @@ type HTTPCheckV2 struct {
 //test:ok:log stdout format short daemon # send log to systemd
 //test:ok:log stdout format raw daemon # send everything to stdout
 //test:ok:log stderr format raw daemon notice # send important events to stderr
+//test:ok:log stderr format raw profile myprof daemon notice
 //test:ok:log 127.0.0.1:514 local0 notice # only send important events
 //test:ok:log 127.0.0.1:514 local0 notice notice # same but limit output level
 //test:ok:log 127.0.0.1:1515 len 8192 format rfc5424 local2 info
@@ -749,6 +750,7 @@ type Log struct {
 	Format      string
 	SampleRange string
 	SampleSize  int64
+	Profile     string
 	Facility    string
 	Level       string
 	MinLevel    string
@@ -1680,5 +1682,27 @@ type LoadCert struct {
 //test:fail:trace
 type Trace struct {
 	Params  []string
+	Comment string
+}
+
+//sections:log-profile
+//name:on-log-step
+//no:name
+//no:parse
+//is:multiple
+//test:quote_ok:on error format "%ci: error"
+//test:quote_ok:on error format "%ci: error" sd "%a %b sd"
+//test:ok:on connect drop
+//test:quote_ok:on any sd "custom sd"
+//test:quote_fail:on connect drop format "%ci: connect" sd "something"
+//test:fail:on any sd
+//test:fail:on any
+//test:fail:on
+//test:fail:on lol
+type OnLogStep struct {
+	Step    string
+	Drop    bool
+	Format  string
+	Sd      string
 	Comment string
 }

@@ -568,6 +568,7 @@ func TestWholeConfigsSectionsFrontend(t *testing.T) {
 		{"frontend_log127001514local0noticeonlysend", frontend_log127001514local0noticeonlysend},
 		{"frontend_logglobal", frontend_logglobal},
 		{"frontend_logstderrformatrawdaemonnoticese", frontend_logstderrformatrawdaemonnoticese},
+		{"frontend_logstderrformatrawprofilemyprofd", frontend_logstderrformatrawprofilemyprofd},
 		{"frontend_logstdoutformatrawdaemonsendever", frontend_logstdoutformatrawdaemonsendever},
 		{"frontend_logstdoutformatshortdaemonsendlo", frontend_logstdoutformatshortdaemonsendlo},
 		{"frontend_monitorfailifnodb01nodb02", frontend_monitorfailifnodb01nodb02},

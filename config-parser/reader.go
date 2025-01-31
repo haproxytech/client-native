@@ -361,6 +361,16 @@ func (p *configParser) ProcessLine(line string, parts []string, comment string, 
 						}
 					}
 					config.Active = config.Traces
+				case "log-profile":
+					parserSectionName := parser.(*extra.Section) //nolint:forcetypeassert
+					rawData, _ := parserSectionName.Get(false)
+					data := rawData.(*types.Section) //nolint:forcetypeassert
+					config.LogProfile = p.getLogProfileParser()
+					p.Parsers[LogProfile][data.Name] = config.LogProfile
+					config.Active = config.LogProfile
+					if p.Options.Log {
+						p.Options.Logger.Tracef("%slog-profile section %s active", p.Options.LogPrefix, data.Name)
+					}
 				case "snippet_beg":
 					config.Previous = config.Active
 					config.Active = &Parsers{

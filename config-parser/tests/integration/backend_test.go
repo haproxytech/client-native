@@ -680,6 +680,7 @@ func TestWholeConfigsSectionsBackend(t *testing.T) {
 		{"backend_log127001514local0noticeonlysend", backend_log127001514local0noticeonlysend},
 		{"backend_logglobal", backend_logglobal},
 		{"backend_logstderrformatrawdaemonnoticese", backend_logstderrformatrawdaemonnoticese},
+		{"backend_logstderrformatrawprofilemyprofd", backend_logstderrformatrawprofilemyprofd},
 		{"backend_logstdoutformatrawdaemonsendever", backend_logstdoutformatrawdaemonsendever},
 		{"backend_logstdoutformatshortdaemonsendlo", backend_logstdoutformatshortdaemonsendlo},
 		{"backend_nolog", backend_nolog},

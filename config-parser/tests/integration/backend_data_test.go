@@ -985,6 +985,10 @@ const backend_logstderrformatrawdaemonnoticese = `
 backend test
   log stderr format raw daemon notice # send important events to stderr
 `
+const backend_logstderrformatrawprofilemyprofd = `
+backend test
+  log stderr format raw profile myprof daemon notice
+`
 const backend_log127001514local0noticeonlysend = `
 backend test
   log 127.0.0.1:514 local0 notice # only send important events

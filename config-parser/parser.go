@@ -48,6 +48,7 @@ const (
 	FCGIApp    Section = "fcgi-app"
 	CrtStore   Section = "crt-store"
 	Traces     Section = "traces"
+	LogProfile Section = "log-profile"
 	// spoe sections
 	SPOEAgent   Section = "spoe-agent"
 	SPOEGroup   Section = "spoe-group"

@@ -57,6 +57,7 @@ func (l *Log) Init() {
 	l.preComments = []string{}
 }
 
+//nolint:gocognit
 func (l *Log) parse(line string, parts []string, comment string) (*types.Log, error) {
 	if len(parts) > 1 && parts[1] == "global" {
 		return &types.Log{
@@ -111,6 +112,14 @@ func (l *Log) parse(line string, parts []string, comment string) (*types.Log, er
 		} else {
 			return log, &errors.ParseError{Parser: "Log", Line: line}
 		}
+		currIndex++
+	}
+	if currIndex < len(parts) && parts[currIndex] == "profile" {
+		currIndex++
+		if currIndex >= len(parts) {
+			return log, &errors.ParseError{Parser: "Log", Line: line}
+		}
+		log.Profile = parts[currIndex]
 		currIndex++
 	}
 	// we must have facility
@@ -200,6 +209,10 @@ func (l *Log) Result() ([]common.ReturnResultLine, error) {
 			sb.WriteString(log.SampleRange)
 			sb.WriteString(":")
 			sb.WriteString(strconv.FormatInt(log.SampleSize, 10))
+		}
+		if log.Profile != "" {
+			sb.WriteString(" profile ")
+			sb.WriteString(log.Profile)
 		}
 		sb.WriteString(" ")
 		sb.WriteString(log.Facility)

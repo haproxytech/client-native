@@ -701,6 +701,10 @@ const frontend_logstderrformatrawdaemonnoticese = `
 frontend test
   log stderr format raw daemon notice # send important events to stderr
 `
+const frontend_logstderrformatrawprofilemyprofd = `
+frontend test
+  log stderr format raw profile myprof daemon notice
+`
 const frontend_log127001514local0noticeonlysend = `
 frontend test
   log 127.0.0.1:514 local0 notice # only send important events

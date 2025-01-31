@@ -46,6 +46,7 @@ type ConfiguredParsers struct {
 	FCGIApp               *Parsers
 	CrtStore              *Parsers
 	Traces                *Parsers
+	LogProfile            *Parsers
 	// spoe parsers
 	SPOEAgent   *Parsers
 	SPOEGroup   *Parsers
@@ -97,4 +98,5 @@ func (p *configParser) initParserMaps() {
 	p.Parsers[FCGIApp] = map[string]*Parsers{}
 	p.Parsers[CrtStore] = map[string]*Parsers{}
 	p.Parsers[Traces] = map[string]*Parsers{}
+	p.Parsers[LogProfile] = map[string]*Parsers{}
 }

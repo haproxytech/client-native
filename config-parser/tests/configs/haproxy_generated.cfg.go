@@ -245,6 +245,7 @@ backend test
   log stdout format short daemon # send log to systemd
   log stdout format raw daemon # send everything to stdout
   log stderr format raw daemon notice # send important events to stderr
+  log stderr format raw profile myprof daemon notice
   log 127.0.0.1:514 local0 notice # only send important events
   log 127.0.0.1:514 local0 notice notice # same but limit output level
   log 127.0.0.1:1515 len 8192 format rfc5424 local2 info
@@ -1289,6 +1290,7 @@ defaults test
   log stdout format short daemon # send log to systemd
   log stdout format raw daemon # send everything to stdout
   log stderr format raw daemon notice # send important events to stderr
+  log stderr format raw profile myprof daemon notice
   log 127.0.0.1:514 local0 notice # only send important events
   log 127.0.0.1:514 local0 notice notice # same but limit output level
   log 127.0.0.1:1515 len 8192 format rfc5424 local2 info
@@ -2115,6 +2117,7 @@ frontend test
   log stdout format short daemon # send log to systemd
   log stdout format raw daemon # send everything to stdout
   log stderr format raw daemon notice # send important events to stderr
+  log stderr format raw profile myprof daemon notice
   log 127.0.0.1:514 local0 notice # only send important events
   log 127.0.0.1:514 local0 notice notice # same but limit output level
   log 127.0.0.1:1515 len 8192 format rfc5424 local2 info
@@ -2750,6 +2753,12 @@ log-forward test
   dgram-bind :443 interface pppoe-wan
   dgram-bind :443 namespace example
   dgram-bind :443 transparent
+
+log-profile test
+  on connect drop
+  on error format "%ci: error"
+  on error format "%ci: error" sd "%a %b sd"
+  on any sd "custom sd"
 
 mailers test
   mailer smtp1 192.168.0.1:587
@@ -3605,6 +3614,8 @@ var configTests = []configTest{{`  command spoa-mirror --runtime 0 --mirror-url 
 `, 3},
 	{`  log stderr format raw daemon notice # send important events to stderr
 `, 3},
+	{`  log stderr format raw profile myprof daemon notice
+`, 3},
 	{`  log 127.0.0.1:514 local0 notice # only send important events
 `, 3},
 	{`  log 127.0.0.1:514 local0 notice notice # same but limit output level
@@ -4108,6 +4119,8 @@ var configTests = []configTest{{`  command spoa-mirror --runtime 0 --mirror-url 
 	{`  load crt foo.pem alias foo.com key foo.priv.key ocsp foo.ocsp.der issuer foo.issuer.pem sctl foo.sctl ocsp-update off
 `, 1},
 	{`  trace h1 sink buf1 level developer verbosity complete start now
+`, 1},
+	{`  on connect drop
 `, 1},
 	{`  http-request set-map(map.lst) %[src] %[req.hdr(X-Value)] if value
 `, 3},

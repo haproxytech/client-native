@@ -674,6 +674,7 @@ func TestWholeConfigsSectionsDefaults(t *testing.T) {
 		{"defaults_log127001514local0noticeonlysend", defaults_log127001514local0noticeonlysend},
 		{"defaults_logglobal", defaults_logglobal},
 		{"defaults_logstderrformatrawdaemonnoticese", defaults_logstderrformatrawdaemonnoticese},
+		{"defaults_logstderrformatrawprofilemyprofd", defaults_logstderrformatrawprofilemyprofd},
 		{"defaults_logstdoutformatrawdaemonsendever", defaults_logstdoutformatrawdaemonsendever},
 		{"defaults_logstdoutformatshortdaemonsendlo", defaults_logstdoutformatshortdaemonsendlo},
 		{"defaults_monitorurihaproxytest", defaults_monitorurihaproxytest},

@@ -51,6 +51,7 @@ func (p *configParser) createParsers(parser map[string]ParserInterface, sequence
 	addParser(parser, &sequence, &extra.Section{Name: "fcgi-app"})
 	addParser(parser, &sequence, &extra.Section{Name: "crt-store"})
 	addParser(parser, &sequence, &extra.Section{Name: "traces"})
+	addParser(parser, &sequence, &extra.Section{Name: "log-profile"})
 	if !p.Options.DisableUnProcessed {
 		addParser(parser, &sequence, &extra.UnProcessed{})
 	}
@@ -984,5 +985,13 @@ func (p *configParser) getTracesParser() *Parsers {
 	parser := map[string]ParserInterface{}
 	sequence := []Section{}
 	addParser(parser, &sequence, &parsers.Trace{})
+	return p.createParsers(parser, sequence)
+}
+
+func (p *configParser) getLogProfileParser() *Parsers {
+	parser := map[string]ParserInterface{}
+	sequence := []Section{}
+	addParser(parser, &sequence, &simple.Word{Name: "log-tag"})
+	addParser(parser, &sequence, &parsers.OnLogStep{})
 	return p.createParsers(parser, sequence)
 }

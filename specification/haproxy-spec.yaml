@@ -661,6 +661,21 @@ definitions:
     type: array
     items:
       $ref: "#/definitions/trace_entry"
+  log_profile:
+    $ref: "models/configuration/log_profile.yaml#/log_profile"
+  log_profiles:
+    description: List of Logging Profiles
+    type: array
+    items:
+      $ref: "#/definitions/log_profile"
+  log_profile_step:
+    $ref: "models/configuration/log_profile.yaml#/log_profile_step"
+  log_profile_steps:
+    type: array
+    items:
+      $ref: "#/definitions/log_profile_step"
+    description: List of steps where to override the logging.
+    x-omitempty: true
 responses:
   BadRequest:
     description: Bad request
@@ -835,6 +850,7 @@ tags:
   - name: CrtStore
   - name: CrtLoad
   - name: Traces
+  - name: LogProfile
 security:
   - basic_auth: []
 paths:
@@ -1114,6 +1130,10 @@ paths:
     $ref: "paths/configuration/traces.yaml#/traces"
   /services/haproxy/configuration/traces/entries:
     $ref: "paths/configuration/traces.yaml#/trace_entries"
+  /services/haproxy/configuration/log_profiles:
+    $ref: "paths/configuration/log_profile.yaml#/log_profiles"
+  /services/haproxy/configuration/log_profiles/{name}:
+    $ref: "paths/configuration/log_profile.yaml#/log_profiles_one"
   /services/haproxy/runtime:
     $ref: "paths/general.yaml#/runtime"
   /services/haproxy/runtime/acls:

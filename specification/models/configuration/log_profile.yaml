@@ -1,0 +1,54 @@
+---
+log_profile:
+  title: Log Profile
+  description: Defines a logging profile for one or more steps.
+  type: object
+  required:
+    - name
+  properties:
+    name:
+      type: string
+      minLength: 1
+      description: Name of the logging profile.
+      x-nullable: false
+    log_tag:
+      type: string
+      description: Override syslog log tag set by other "log-tag" directives.
+    steps:
+      $ref: "#/definitions/log_profile_steps"
+log_profile_step:
+  title: Log Profile Step
+  description: Defines what to log for a given step. 
+  type: object
+  required:
+    - step
+  properties:
+    step:
+      type: string
+      enum:
+        - accept
+        - any
+        - close
+        - connect
+        - error
+        - request
+        - response
+        - http-req
+        - http-res
+        - http-after-res
+        - quic-init
+        - tcp-req-conn
+        - tcp-req-cont
+        - tcp-req-sess
+      x-nullable: false
+      description: Logging step name.
+    drop:
+      type: string
+      enum: [enabled, disabled]
+      description: If enabled, no log shall be emitted for the given step.
+    format:
+      type: string
+      description: Override "log-format" or "error-log-format" strings depending on the step.
+    sd:
+      type: string
+      description: Override the "log-format-sd" string.

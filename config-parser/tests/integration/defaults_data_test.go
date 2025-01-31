@@ -985,6 +985,10 @@ const defaults_logstderrformatrawdaemonnoticese = `
 defaults test
   log stderr format raw daemon notice # send important events to stderr
 `
+const defaults_logstderrformatrawprofilemyprofd = `
+defaults test
+  log stderr format raw profile myprof daemon notice
+`
 const defaults_log127001514local0noticeonlysend = `
 defaults test
   log 127.0.0.1:514 local0 notice # only send important events

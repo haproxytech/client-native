@@ -25,33 +25,21 @@ import (
 	"github.com/haproxytech/client-native/v6/config-parser/parsers"
 )
 
-func TestLog(t *testing.T) {
+func TestOnLogStep(t *testing.T) {
 	tests := map[string]bool{
-		"log global": true,
-		"no log":     true,
-		"log stdout format short daemon # send log to systemd":                  true,
-		"log stdout format raw daemon # send everything to stdout":              true,
-		"log stderr format raw daemon notice # send important events to stderr": true,
-		"log stderr format raw profile myprof daemon notice":                    true,
-		"log 127.0.0.1:514 local0 notice # only send important events":          true,
-		"log 127.0.0.1:514 local0 notice notice # same but limit output level":  true,
-		"log 127.0.0.1:1515 len 8192 format rfc5424 local2 info":                true,
-		"log 127.0.0.1:1515 sample 1:2 local0":                                  true,
-		"log 127.0.0.1:1515 len 8192 format rfc5424 sample 1,2-5:6 local2 info": true,
-		"log 127.0.0.1:1515 format rfc5424 sample 1,2-5:6 local2 info":          true,
-		"log 127.0.0.1:1515 format rfc5424 sample 1-5:6 local2":                 true,
-		"log 127.0.0.1:1515 sample 1:6 local2":                                  true,
-		"log":                                                                   false,
-		"log 0 len 0":                                                           false,
-		"log 127.0.0.1:1515 len foo format rfc5424 local2 info":                 false,
-		"log 127.0.0.1:1515 sample test local2":                                 false,
-		"log 127.0.0.1:1515 sample :3 local2":                                   false,
-		"log 127.0.0.1:1515 sample 1:test local2":                               false,
-		"log sample 1:1": false,
-		"---":            false,
-		"--- ---":        false,
+		"on connect drop":                            true,
+		`on error format "%ci: error"`:               true,
+		`on error format "%ci: error" sd "%a %b sd"`: true,
+		`on any sd "custom sd"`:                      true,
+		"on any sd":                                  false,
+		"on any":                                     false,
+		"on":                                         false,
+		"on lol":                                     false,
+		"---":                                        false,
+		"--- ---":                                    false,
+		`on connect drop format "%ci: connect" sd "something"`: false,
 	}
-	parser := &parsers.Log{}
+	parser := &parsers.OnLogStep{}
 	for command, shouldPass := range tests {
 		t.Run(command, func(t *testing.T) {
 			line := strings.TrimSpace(command)

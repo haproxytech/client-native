@@ -70,6 +70,9 @@ type LogTarget struct {
 	// nolog
 	Nolog bool `json:"nolog,omitempty"`
 
+	// profile
+	Profile string `json:"profile,omitempty"`
+
 	// sample range
 	SampleRange string `json:"sample_range,omitempty"`
 

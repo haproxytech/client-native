@@ -49,6 +49,7 @@ const (
 	ResolverParentName   = "resolvers"
 	CrtStoreParentName   = "crt-store"
 	TracesParentName     = "traces"
+	LogProfileParentName = "log-profile"
 )
 
 // ClientParams is just a placeholder for all client options
