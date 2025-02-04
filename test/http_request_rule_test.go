@@ -232,6 +232,15 @@ func TestSerializeHTTPRequestRule(t *testing.T) {
 			},
 			expectedResult: "track-sc3 src table tr0 if TRUE",
 		},
+		{
+			input: models.HTTPRequestRule{
+				Type:     "set-uri",
+				Cond:     "if",
+				CondTest: "{ path_beg /metrics }",
+				URIFmt:   "%[url,regsub(^/metrics/,/,)]",
+			},
+			expectedResult: "set-uri %[url,regsub(^/metrics/,/,)] if { path_beg /metrics }",
+		},
 	}
 
 	for _, testCase := range testCases {

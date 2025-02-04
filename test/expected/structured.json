@@ -721,6 +721,12 @@
                 {
                     "expr": "int(4000)",
                     "type": "set-dst-port"
+                },
+                {
+                    "type": "set-uri",
+                    "uri-fmt": "%[url,regsub(^/metrics/,/,)]",
+                    "cond": "if",
+                    "cond_test": "{ path_beg /metrics }"
                 }
             ],
             "http_response_rule_list": [

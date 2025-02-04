@@ -678,10 +678,10 @@ func ParseHTTPRequestRule(f types.Action) (*models.HTTPRequestRule, error) { //n
 		}
 	case *http_actions.SetURI:
 		rule = &models.HTTPRequestRule{
-			Type:      "set-uri",
-			HdrFormat: v.Fmt,
-			Cond:      v.Cond,
-			CondTest:  v.CondTest,
+			Type:     "set-uri",
+			URIFmt:   v.Fmt,
+			Cond:     v.Cond,
+			CondTest: v.CondTest,
 		}
 	case *actions.SetVar:
 		rule = &models.HTTPRequestRule{
@@ -1196,7 +1196,7 @@ func SerializeHTTPRequestRule(f models.HTTPRequestRule, opt *options.Configurati
 		}
 	case "set-uri":
 		rule = &http_actions.SetURI{
-			Fmt:      f.HdrFormat,
+			Fmt:      f.URIFmt,
 			Cond:     f.Cond,
 			CondTest: f.CondTest,
 		}

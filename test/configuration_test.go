@@ -781,6 +781,7 @@ backend test
   server webserv2 192.168.1.1:9300 maxconn 1000 ssl weight 10 inter 2s cookie BLAH slowstart 6000 proxy-v2-options authority,crc32c ws h1 pool-low-conn 128 hash-key akey pool-conn-name apoolconnname # {"comment": "my structured comment", "id": "my_random_id_for_server"}
   http-request set-dst hdr(x-dst)
   http-request set-dst-port int(4000)
+  http-request set-uri %[url,regsub(^/metrics/,/,)] if { path_beg /metrics }
   http-check connect
   http-check send meth GET uri / ver HTTP/1.1 hdr host haproxy.1wt.eu
   http-check expect status 200-399
