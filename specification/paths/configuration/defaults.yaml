@@ -20,7 +20,43 @@ defaults:
           $ref: "#/definitions/defaults_sections"
       'default':
         $ref: '#/responses/DefaultError'
+  post:
+    summary: Add a defaults section
+    description: Adds a new defaults section to the configuration file.
+    operationId: addDefaultsSection
+    parameters:
+      - name: data
+        required: true
+        in: body
+        schema:
+          $ref: "#/definitions/defaults"
+      - $ref: "#/parameters/transaction_id"
+      - $ref: "#/parameters/version"
+      - $ref: "#/parameters/force_reload"
+      - $ref: "#/parameters/full_section"
+    tags:
+      - Defaults
+    responses:
+      '202':
+        description: Configuration change accepted and reload requested
+        headers:
+          Reload-ID:
+            description: ID of the requested reload
+            type: string
+        schema:
+          $ref: "#/definitions/defaults"
+      '201':
+        description: Defaults created
+        schema:
+          $ref: "#/definitions/defaults"
+      '409':
+        $ref: '#/responses/AlreadyExists'
+      '400':
+        $ref: '#/responses/BadRequest'
+      'default':
+        $ref: '#/responses/DefaultError'
   put:
+    deprecated: true
     summary: Add a defaults section
     description: Adds a new defaults section to the configuration file.
     operationId: createDefaultsSection
