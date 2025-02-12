@@ -525,50 +525,50 @@ func serializeBindParams(b models.BindParams, path string) []params.BindOption {
 		options = append(options, &params.BindOptionWord{Name: "defer-accept"})
 	}
 	if b.ExposeFdListeners {
-		options = append(options, &params.ServerOptionDoubleWord{Name: "expose-fd", Value: "listeners"})
+		options = append(options, &params.BindOptionDoubleWord{Name: "expose-fd", Value: "listeners"})
 	}
 	if b.Sslv3 == "enabled" ||
 		b.ForceSslv3 {
-		options = append(options, &params.ServerOptionWord{Name: "force-sslv3"})
+		options = append(options, &params.BindOptionWord{Name: "force-sslv3"})
 	}
 	if b.Sslv3 == "disabled" ||
 		b.NoSslv3 {
-		options = append(options, &params.ServerOptionWord{Name: "no-sslv3"})
+		options = append(options, &params.BindOptionWord{Name: "no-sslv3"})
 	}
 	if b.Tlsv10 == "enabled" ||
 		b.ForceTlsv10 {
-		options = append(options, &params.ServerOptionWord{Name: "force-tlsv10"})
+		options = append(options, &params.BindOptionWord{Name: "force-tlsv10"})
 	}
 	if b.Tlsv10 == "disabled" ||
 		b.NoTlsv10 {
-		options = append(options, &params.ServerOptionWord{Name: "no-tlsv10"})
+		options = append(options, &params.BindOptionWord{Name: "no-tlsv10"})
 	}
 	if b.Tlsv11 == "enabled" ||
 		b.ForceTlsv11 {
-		options = append(options, &params.ServerOptionWord{Name: "force-tlsv11"})
+		options = append(options, &params.BindOptionWord{Name: "force-tlsv11"})
 	}
 	if b.Tlsv11 == "disabled" ||
 		b.NoTlsv11 {
-		options = append(options, &params.ServerOptionWord{Name: "no-tlsv11"})
+		options = append(options, &params.BindOptionWord{Name: "no-tlsv11"})
 	}
 	if b.Tlsv12 == "enabled" ||
 		b.ForceTlsv12 {
-		options = append(options, &params.ServerOptionWord{Name: "force-tlsv12"})
+		options = append(options, &params.BindOptionWord{Name: "force-tlsv12"})
 	}
 	if b.Tlsv12 == "disabled" ||
 		b.NoTlsv12 {
-		options = append(options, &params.ServerOptionWord{Name: "no-tlsv12"})
+		options = append(options, &params.BindOptionWord{Name: "no-tlsv12"})
 	}
 	if b.Tlsv13 == "enabled" ||
 		b.ForceTlsv13 {
-		options = append(options, &params.ServerOptionWord{Name: "force-tlsv13"})
+		options = append(options, &params.BindOptionWord{Name: "force-tlsv13"})
 	}
 	if b.Tlsv13 == "disabled" ||
 		b.NoTlsv13 {
-		options = append(options, &params.ServerOptionWord{Name: "no-tlsv13"})
+		options = append(options, &params.BindOptionWord{Name: "no-tlsv13"})
 	}
 	if b.GenerateCertificates {
-		options = append(options, &params.ServerOptionWord{Name: "generate-certificates"})
+		options = append(options, &params.BindOptionWord{Name: "generate-certificates"})
 	}
 	if b.Gid != 0 {
 		options = append(options, &params.BindOptionValue{Name: "gid", Value: strconv.FormatInt(b.Gid, 10)})
@@ -607,16 +607,16 @@ func serializeBindParams(b models.BindParams, path string) []params.BindOption {
 		options = append(options, &params.BindOptionValue{Name: "nbconn", Value: strconv.FormatInt(b.Nbconn, 10)})
 	}
 	if b.NoCaNames {
-		options = append(options, &params.ServerOptionWord{Name: "no-ca-names"})
+		options = append(options, &params.BindOptionWord{Name: "no-ca-names"})
 	}
 	if b.NoTLSTickets {
-		options = append(options, &params.ServerOptionWord{Name: "no-tls-tickets"})
+		options = append(options, &params.BindOptionWord{Name: "no-tls-tickets"})
 	}
 	if b.Npn != "" {
 		options = append(options, &params.BindOptionValue{Name: "npn", Value: b.Npn})
 	}
 	if b.PreferClientCiphers {
-		options = append(options, &params.ServerOptionWord{Name: "prefer-client-ciphers"})
+		options = append(options, &params.BindOptionWord{Name: "prefer-client-ciphers"})
 	}
 	if b.Proto != "" {
 		options = append(options, &params.BindOptionValue{Name: "proto", Value: b.Proto})
@@ -631,10 +631,10 @@ func serializeBindParams(b models.BindParams, path string) []params.BindOption {
 		options = append(options, &params.BindOptionValue{Name: "ssl-min-ver", Value: b.SslMinVer})
 	}
 	if b.StrictSni {
-		options = append(options, &params.ServerOptionWord{Name: "strict-sni"})
+		options = append(options, &params.BindOptionWord{Name: "strict-sni"})
 	}
 	if b.Tfo {
-		options = append(options, &params.ServerOptionWord{Name: "tfo"})
+		options = append(options, &params.BindOptionWord{Name: "tfo"})
 	}
 	if b.Thread != "" {
 		options = append(options, &params.BindOptionValue{Name: "thread", Value: b.Thread})
