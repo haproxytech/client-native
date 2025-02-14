@@ -218,6 +218,10 @@ func TestCreateEditDeleteBackend(t *testing.T) {
 				{Name: "test_errors_all"},
 			},
 			Disabled: true,
+			Redispatch: &models.Redispatch{
+				Enabled:  misc.StringP("enabled"),
+				Interval: 0,
+			},
 		},
 	}
 
@@ -232,6 +236,9 @@ func TestCreateEditDeleteBackend(t *testing.T) {
 	if err != nil {
 		t.Error(err.Error())
 	}
+
+	// A redispatch with a zero interval is automatically removed from configuration.
+	b.Redispatch = nil
 
 	var givenJSONB []byte
 	givenJSONB, err = b.MarshalBinary()
