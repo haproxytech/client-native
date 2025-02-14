@@ -2356,6 +2356,9 @@ func (s *SectionObject) redispatch(field reflect.Value) error {
 		if *br.Enabled == "disabled" {
 			d.NoOption = true
 		}
+		if br.Interval == 0 {
+			d = nil
+		}
 		if err := s.set("option redispatch", d); err != nil {
 			return err
 		}
