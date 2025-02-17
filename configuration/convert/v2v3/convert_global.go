@@ -43,91 +43,93 @@ func GlobalV2ToV3(v2g *v2.Global) (*v3.GlobalBase, error) { //nolint:maintidx
 	}
 
 	// TuneQuicOptions
-	tuneQuicOptions := &v3.TuneQuicOptions{
-		FrontendConnTxBuffersLimit: v2g.TuneOptions.QuicFrontendConnTxBuffersLimit,
-		FrontendMaxIdleTimeout:     v2g.TuneOptions.QuicFrontendMaxIdleTimeout,
-		FrontendMaxStreamsBidi:     v2g.TuneOptions.QuicFrontendMaxStreamsBidi,
-		MaxFrameLoss:               v2g.TuneOptions.QuicMaxFrameLoss,
-		RetryThreshold:             v2g.TuneOptions.QuicRetryThreshold,
-		SocketOwner:                v2g.TuneOptions.QuicSocketOwner,
-		// ReorderRatio: not present in v2
-		// ZeroCopyFwdSend: not present in v2
-	}
-	if !tuneQuicOptions.Equal(v3.TuneQuicOptions{}) {
-		v3g.TuneQuicOptions = tuneQuicOptions
-	}
+	if v2g.TuneOptions != nil {
+		tuneQuicOptions := &v3.TuneQuicOptions{
+			FrontendConnTxBuffersLimit: v2g.TuneOptions.QuicFrontendConnTxBuffersLimit,
+			FrontendMaxIdleTimeout:     v2g.TuneOptions.QuicFrontendMaxIdleTimeout,
+			FrontendMaxStreamsBidi:     v2g.TuneOptions.QuicFrontendMaxStreamsBidi,
+			MaxFrameLoss:               v2g.TuneOptions.QuicMaxFrameLoss,
+			RetryThreshold:             v2g.TuneOptions.QuicRetryThreshold,
+			SocketOwner:                v2g.TuneOptions.QuicSocketOwner,
+			// ReorderRatio: not present in v2
+			// ZeroCopyFwdSend: not present in v2
+		}
+		if !tuneQuicOptions.Equal(v3.TuneQuicOptions{}) {
+			v3g.TuneQuicOptions = tuneQuicOptions
+		}
 
-	// TuneVarsOptions
-	tuneVarsOptions := &v3.TuneVarsOptions{
-		GlobalMaxSize: v2g.TuneOptions.VarsGlobalMaxSize,
-		ProcMaxSize:   v2g.TuneOptions.VarsProcMaxSize,
-		ReqresMaxSize: v2g.TuneOptions.VarsReqresMaxSize,
-		SessMaxSize:   v2g.TuneOptions.VarsSessMaxSize,
-		TxnMaxSize:    v2g.TuneOptions.VarsTxnMaxSize,
-	}
-	if !tuneVarsOptions.Equal(v3.TuneVarsOptions{}) {
-		v3g.TuneVarsOptions = tuneVarsOptions
-	}
+		// TuneVarsOptions
+		tuneVarsOptions := &v3.TuneVarsOptions{
+			GlobalMaxSize: v2g.TuneOptions.VarsGlobalMaxSize,
+			ProcMaxSize:   v2g.TuneOptions.VarsProcMaxSize,
+			ReqresMaxSize: v2g.TuneOptions.VarsReqresMaxSize,
+			SessMaxSize:   v2g.TuneOptions.VarsSessMaxSize,
+			TxnMaxSize:    v2g.TuneOptions.VarsTxnMaxSize,
+		}
+		if !tuneVarsOptions.Equal(v3.TuneVarsOptions{}) {
+			v3g.TuneVarsOptions = tuneVarsOptions
+		}
 
-	// TuneZlibOptions
-	tuneZlibOptions := &v3.TuneZlibOptions{
-		Memlevel:   v2g.TuneOptions.ZlibMemlevel,
-		Windowsize: v2g.TuneOptions.ZlibWindowsize,
-	}
-	if !tuneZlibOptions.Equal(v3.TuneZlibOptions{}) {
-		v3g.TuneZlibOptions = tuneZlibOptions
-	}
+		// TuneZlibOptions
+		tuneZlibOptions := &v3.TuneZlibOptions{
+			Memlevel:   v2g.TuneOptions.ZlibMemlevel,
+			Windowsize: v2g.TuneOptions.ZlibWindowsize,
+		}
+		if !tuneZlibOptions.Equal(v3.TuneZlibOptions{}) {
+			v3g.TuneZlibOptions = tuneZlibOptions
+		}
 
-	// TuneSslOptions
-	tuneSslOptions := &v3.TuneSslOptions{
-		Cachesize:          v2g.TuneOptions.SslCachesize,
-		CtxCacheSize:       v2g.TuneOptions.SslCtxCacheSize,
-		CaptureBufferSize:  v2g.TuneOptions.SslCaptureBufferSize,
-		DefaultDhParam:     v2g.TuneOptions.SslDefaultDhParam,
-		ForcePrivateCache:  v2g.TuneOptions.SslForcePrivateCache,
-		Keylog:             v2g.TuneOptions.SslKeylog,
-		Lifetime:           v2g.TuneOptions.SslLifetime,
-		Maxrecord:          v2g.TuneOptions.SslMaxrecord,
-		OcspUpdateMaxDelay: v2g.TuneOptions.SslOcspUpdateMaxDelay,
-		OcspUpdateMinDelay: v2g.TuneOptions.SslOcspUpdateMinDelay,
-	}
-	if !tuneSslOptions.Equal(v3.TuneSslOptions{}) {
-		v3g.TuneSslOptions = tuneSslOptions
-	}
+		// TuneSslOptions
+		tuneSslOptions := &v3.TuneSslOptions{
+			Cachesize:          v2g.TuneOptions.SslCachesize,
+			CtxCacheSize:       v2g.TuneOptions.SslCtxCacheSize,
+			CaptureBufferSize:  v2g.TuneOptions.SslCaptureBufferSize,
+			DefaultDhParam:     v2g.TuneOptions.SslDefaultDhParam,
+			ForcePrivateCache:  v2g.TuneOptions.SslForcePrivateCache,
+			Keylog:             v2g.TuneOptions.SslKeylog,
+			Lifetime:           v2g.TuneOptions.SslLifetime,
+			Maxrecord:          v2g.TuneOptions.SslMaxrecord,
+			OcspUpdateMaxDelay: v2g.TuneOptions.SslOcspUpdateMaxDelay,
+			OcspUpdateMinDelay: v2g.TuneOptions.SslOcspUpdateMinDelay,
+		}
+		if !tuneSslOptions.Equal(v3.TuneSslOptions{}) {
+			v3g.TuneSslOptions = tuneSslOptions
+		}
 
-	// TuneLuaOptions
-	tuneLuaOptions := &v3.TuneLuaOptions{
-		BurstTimeout: v2g.TuneOptions.LuaBurstTimeout,
-		ForcedYield:  v2g.TuneOptions.LuaForcedYield,
-		LogLoggers:   v2g.TuneOptions.LuaLogLoggers,
-		LogStderr:    v2g.TuneOptions.LuaLogStderr,
-		// Maxmem:         was a boolean
-		ServiceTimeout: v2g.TuneOptions.LuaServiceTimeout,
-		SessionTimeout: v2g.TuneOptions.LuaSessionTimeout,
-		TaskTimeout:    v2g.TuneOptions.LuaTaskTimeout,
-	}
-	if !tuneLuaOptions.Equal(v3.TuneLuaOptions{}) {
-		v3g.TuneLuaOptions = tuneLuaOptions
-	}
+		// TuneLuaOptions
+		tuneLuaOptions := &v3.TuneLuaOptions{
+			BurstTimeout: v2g.TuneOptions.LuaBurstTimeout,
+			ForcedYield:  v2g.TuneOptions.LuaForcedYield,
+			LogLoggers:   v2g.TuneOptions.LuaLogLoggers,
+			LogStderr:    v2g.TuneOptions.LuaLogStderr,
+			// Maxmem:         was a boolean
+			ServiceTimeout: v2g.TuneOptions.LuaServiceTimeout,
+			SessionTimeout: v2g.TuneOptions.LuaSessionTimeout,
+			TaskTimeout:    v2g.TuneOptions.LuaTaskTimeout,
+		}
+		if !tuneLuaOptions.Equal(v3.TuneLuaOptions{}) {
+			v3g.TuneLuaOptions = tuneLuaOptions
+		}
 
-	// TuneBufOptions
-	tuneBufferOptions := &v3.TuneBufferOptions{
-		BuffersLimit:   v2g.TuneOptions.BuffersLimit,
-		BuffersReserve: v2g.TuneOptions.BuffersReserve,
-		Bufsize:        v2g.TuneOptions.Bufsize,
-		Pipesize:       v2g.TuneOptions.Pipesize,
-		RcvbufBackend:  v2g.TuneOptions.RcvbufBackend,
-		RcvbufClient:   v2g.TuneOptions.RcvbufClient,
-		RcvbufFrontend: v2g.TuneOptions.RcvbufFrontend,
-		RcvbufServer:   v2g.TuneOptions.RcvbufServer,
-		RecvEnough:     v2g.TuneOptions.RecvEnough,
-		SndbufBackend:  v2g.TuneOptions.SndbufBackend,
-		SndbufClient:   v2g.TuneOptions.SndbufClient,
-		SndbufFrontend: v2g.TuneOptions.SndbufFrontend,
-		SndbufServer:   v2g.TuneOptions.SndbufServer,
-	}
-	if !tuneBufferOptions.Equal(v3.TuneBufferOptions{}) {
-		v3g.TuneBufferOptions = tuneBufferOptions
+		// TuneBufOptions
+		tuneBufferOptions := &v3.TuneBufferOptions{
+			BuffersLimit:   v2g.TuneOptions.BuffersLimit,
+			BuffersReserve: v2g.TuneOptions.BuffersReserve,
+			Bufsize:        v2g.TuneOptions.Bufsize,
+			Pipesize:       v2g.TuneOptions.Pipesize,
+			RcvbufBackend:  v2g.TuneOptions.RcvbufBackend,
+			RcvbufClient:   v2g.TuneOptions.RcvbufClient,
+			RcvbufFrontend: v2g.TuneOptions.RcvbufFrontend,
+			RcvbufServer:   v2g.TuneOptions.RcvbufServer,
+			RecvEnough:     v2g.TuneOptions.RecvEnough,
+			SndbufBackend:  v2g.TuneOptions.SndbufBackend,
+			SndbufClient:   v2g.TuneOptions.SndbufClient,
+			SndbufFrontend: v2g.TuneOptions.SndbufFrontend,
+			SndbufServer:   v2g.TuneOptions.SndbufServer,
+		}
+		if !tuneBufferOptions.Equal(v3.TuneBufferOptions{}) {
+			v3g.TuneBufferOptions = tuneBufferOptions
+		}
 	}
 
 	// SslOptions
