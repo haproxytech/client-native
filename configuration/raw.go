@@ -226,25 +226,22 @@ func (c *client) dropVersionFromRaw(input string) string {
 }
 
 func (c *client) validateConfigFile(confFile string) error {
-	// #nosec G204
-	cmd := exec.Command(c.Haproxy)
-	cmd.Args = append(cmd.Args, "-c")
+	var stderr bytes.Buffer
 
-	if confFile != "" {
-		cmd.Args = append(cmd.Args, "-f")
-		cmd.Args = append(cmd.Args, confFile)
-	} else {
-		cmd.Args = append(cmd.Args, "-f")
-		cmd.Args = append(cmd.Args, c.ConfigurationFile)
+	if len(confFile) == 0 {
+		confFile = c.ConfigurationFile
 	}
 
-	var stdout, stderr bytes.Buffer
-	cmd.Stdout = &stdout
+	// #nosec G204
+	cmd := exec.Command(c.Haproxy, "-c", "-f", confFile)
 	cmd.Stderr = &stderr
-
 	err := cmd.Run()
 	if err != nil {
-		return NewConfError(ErrValidationError, err.Error())
+		output := stderr.String()
+		if len(output) == 0 {
+			output = "(no output)"
+		}
+		return NewConfError(ErrValidationError, fmt.Sprintf("%v: %s", err, output))
 	}
 	return nil
 }
