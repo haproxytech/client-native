@@ -16,12 +16,10 @@
 package configuration
 
 import (
-	"bytes"
 	"errors"
 	"fmt"
 	"io/fs"
 	"os"
-	"os/exec"
 	"path/filepath"
 	"strconv"
 	"strings"
@@ -32,7 +30,6 @@ import (
 	parser_errors "github.com/haproxytech/client-native/v6/config-parser/errors"
 	parser_options "github.com/haproxytech/client-native/v6/config-parser/options"
 	spoe "github.com/haproxytech/client-native/v6/config-parser/spoe"
-	shellquote "github.com/kballard/go-shellquote"
 
 	"github.com/haproxytech/client-native/v6/configuration/options"
 	"github.com/haproxytech/client-native/v6/models"
@@ -222,39 +219,6 @@ func (t *Transaction) backupCfgAndCleanup(version int64) {
 	os.Remove(backupToDel)
 }
 
-func addConfigFilesToArgs(args []string, clientParams options.ConfigurationOptions) []string {
-	result := []string{}
-	for _, file := range clientParams.ValidateConfigFilesBefore {
-		result = append(result, "-f", file)
-	}
-	result = append(result, args...)
-
-	for _, file := range clientParams.ValidateConfigFilesAfter {
-		result = append(result, "-f", file)
-	}
-	return result
-}
-
-// Returns a copy of envs without the unwanted environment variables.
-func removeFromEnv(envs []string, unwanted ...string) []string {
-	newEnv := make([]string, 0, len(envs))
-
-	for _, v := range envs {
-		skip := false
-		for _, bad := range unwanted {
-			if strings.HasPrefix(v, bad+"=") {
-				skip = true
-				break
-			}
-		}
-		if !skip {
-			newEnv = append(newEnv, v)
-		}
-	}
-
-	return newEnv
-}
-
 func (t *Transaction) checkTransactionFile(transactionID string) error {
 	// check only against HAProxy file
 	_, ok := t.TransactionClient.(*client)
@@ -274,42 +238,7 @@ func (t *Transaction) checkTransactionFile(transactionID string) error {
 		return err
 	}
 
-	var name string
-	var args []string
-
-	// Inherit the environment but filter out a few unwanted variables.
-	envs := removeFromEnv(os.Environ(), "HAPROXY_STARTUPLOGS_FD",
-		"HAPROXY_MWORKER_WAIT_ONLY", "HAPROXY_PROCESSES")
-
-	switch {
-	case len(t.ValidateCmd) > 0:
-		w, _ := shellquote.Split(t.ValidateCmd)
-		name = w[0]
-		args = w[1:]
-		envs = append(envs, "DATAPLANEAPI_TRANSACTION_FILE="+transactionFile)
-	case t.MasterWorker:
-		name = t.Haproxy
-		args = []string{"-W", "-f", transactionFile, "-c"}
-		args = addConfigFilesToArgs(args, t.ConfigurationOptions)
-	default:
-		name = t.Haproxy
-		args = []string{"-f", transactionFile, "-c"}
-		args = addConfigFilesToArgs(args, t.ConfigurationOptions)
-	}
-
-	// #nosec G204
-	cmd := exec.Command(name, args...)
-	cmd.Env = envs
-	var stdout, stderr bytes.Buffer
-	cmd.Stdout = &stdout
-	cmd.Stderr = &stderr
-
-	err = cmd.Run()
-	if err != nil {
-		errStr := fmt.Sprintf("%s: %s", err.Error(), t.parseHAProxyCheckError(stderr.Bytes(), transactionID))
-		return NewConfError(ErrValidationError, errStr)
-	}
-	return nil
+	return checkHaproxyConfiguration(t.ConfigurationOptions, transactionFile, transactionID)
 }
 
 func (t *Transaction) CheckTransactionOrVersion(transactionID string, version int64) (string, error) {
@@ -339,50 +268,6 @@ func (t *Transaction) CheckTransactionOrVersion(transactionID string, version in
 		tID = transaction.ID
 	}
 	return tID, nil
-}
-
-func (t *Transaction) parseHAProxyCheckError(output []byte, id string) string { //nolint:gocognit
-	oStr := string(output)
-	var b strings.Builder
-	b.WriteString(fmt.Sprintf("err transactionId=%s \n", id))
-
-	for _, lineWhole := range strings.Split(oStr, "\n") {
-		line := strings.TrimSpace(lineWhole)
-		if strings.HasPrefix(line, "[ALERT]") {
-			if strings.HasSuffix(line, "fatal errors found in configuration.") {
-				continue
-			}
-			if strings.Contains(line, "error(s) found in configuration file : ") {
-				continue
-			}
-
-			parts := strings.Split(line, " : ")
-			if len(parts) > 2 && strings.HasPrefix(strings.TrimSpace(parts[1]), "parsing [") {
-				fParts := strings.Split(strings.TrimSpace(parts[1]), ":")
-				var msgB strings.Builder
-				for i := 2; i < len(parts); i++ {
-					msgB.WriteString(parts[i])
-					msgB.WriteString(" ")
-				}
-				if len(fParts) > 1 {
-					lNo, err := strconv.ParseInt(strings.TrimSuffix(fParts[1], "]"), 10, 64)
-					if err == nil {
-						b.WriteString(fmt.Sprintf("line=%d msg=\"%s\"\n", lNo, strings.TrimSpace(msgB.String())))
-					} else {
-						b.WriteString(fmt.Sprintf("msg=\"%s\"\n", strings.TrimSpace(msgB.String())))
-					}
-				}
-			} else if len(parts) > 1 {
-				var msgB strings.Builder
-				for i := 1; i < len(parts); i++ {
-					msgB.WriteString(parts[i])
-					msgB.WriteString(" ")
-				}
-				b.WriteString(fmt.Sprintf("msg=\"%s\"\n", strings.TrimSpace(msgB.String())))
-			}
-		}
-	}
-	return strings.TrimSuffix(b.String(), "\n")
 }
 
 // MarkTransactionOutdated is marking the transaction by ID as outdated due to a newer commit,
