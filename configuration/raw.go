@@ -20,7 +20,6 @@ import (
 	"bytes"
 	"fmt"
 	"os"
-	"os/exec"
 	"strconv"
 	"strings"
 )
@@ -139,11 +138,7 @@ func (c *client) PostRawConfiguration(config *string, version int64, skipVersion
 		if err != nil {
 			return NewConfError(ErrGeneralError, err.Error())
 		}
-		err = c.validateConfigFile(f.Name())
-		if err != nil {
-			return err
-		}
-		return nil
+		return checkHaproxyConfiguration(c.ConfigurationOptions, f.Name())
 	}
 	var t string
 	if skipVersionCheck {
@@ -223,25 +218,4 @@ func (c *client) dropVersionFromRaw(input string) string {
 	}
 
 	return sanitized.String()
-}
-
-func (c *client) validateConfigFile(confFile string) error {
-	var stderr bytes.Buffer
-
-	if len(confFile) == 0 {
-		confFile = c.ConfigurationFile
-	}
-
-	// #nosec G204
-	cmd := exec.Command(c.Haproxy, "-c", "-f", confFile)
-	cmd.Stderr = &stderr
-	err := cmd.Run()
-	if err != nil {
-		output := stderr.String()
-		if len(output) == 0 {
-			output = "(no output)"
-		}
-		return NewConfError(ErrValidationError, fmt.Sprintf("%v: %s", err, output))
-	}
-	return nil
 }
