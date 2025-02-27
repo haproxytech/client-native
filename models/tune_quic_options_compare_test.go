@@ -38,15 +38,15 @@ func TestTuneQuicOptionsEqual(t *testing.T) {
 		var result TuneQuicOptions
 		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err)
 		}
 		byteJSON, err := json.Marshal(sample)
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err)
 		}
 		err = json.Unmarshal(byteJSON, &result)
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err)
 		}
 
 		samples = append(samples, struct {
@@ -60,11 +60,11 @@ func TestTuneQuicOptionsEqual(t *testing.T) {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Error(err)
 			}
 			b, err := json.Marshal(&sample.b)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Error(err)
 			}
 			t.Errorf("Expected TuneQuicOptions to be equal, but it is not %s %s", a, b)
 		}
@@ -80,11 +80,11 @@ func TestTuneQuicOptionsEqualFalse(t *testing.T) {
 		var result TuneQuicOptions
 		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err)
 		}
 		err = faker.FakeData(&result, options.WithIgnoreInterface(true))
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err)
 		}
 		result.FrontendConnTxBuffersLimit = Ptr(*sample.FrontendConnTxBuffersLimit + 1)
 		result.FrontendMaxIdleTimeout = Ptr(*sample.FrontendMaxIdleTimeout + 1)
@@ -103,11 +103,11 @@ func TestTuneQuicOptionsEqualFalse(t *testing.T) {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Error(err)
 			}
 			b, err := json.Marshal(&sample.b)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Error(err)
 			}
 			t.Errorf("Expected TuneQuicOptions to be different, but it is not %s %s", a, b)
 		}
@@ -123,15 +123,15 @@ func TestTuneQuicOptionsDiff(t *testing.T) {
 		var result TuneQuicOptions
 		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err)
 		}
 		byteJSON, err := json.Marshal(sample)
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err)
 		}
 		err = json.Unmarshal(byteJSON, &result)
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err)
 		}
 
 		samples = append(samples, struct {
@@ -145,11 +145,11 @@ func TestTuneQuicOptionsDiff(t *testing.T) {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Error(err)
 			}
 			b, err := json.Marshal(&sample.b)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Error(err)
 			}
 			t.Errorf("Expected TuneQuicOptions to be equal, but it is not %s %s, %v", a, b, result)
 		}
@@ -165,11 +165,11 @@ func TestTuneQuicOptionsDiffFalse(t *testing.T) {
 		var result TuneQuicOptions
 		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err)
 		}
 		err = faker.FakeData(&result, options.WithIgnoreInterface(true))
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err)
 		}
 		result.FrontendConnTxBuffersLimit = Ptr(*sample.FrontendConnTxBuffersLimit + 1)
 		result.FrontendMaxIdleTimeout = Ptr(*sample.FrontendMaxIdleTimeout + 1)
@@ -188,11 +188,11 @@ func TestTuneQuicOptionsDiffFalse(t *testing.T) {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Error(err)
 			}
 			b, err := json.Marshal(&sample.b)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Error(err)
 			}
 			t.Errorf("Expected TuneQuicOptions to be different in 8 cases, but it is not (%d) %s %s", len(result), a, b)
 		}

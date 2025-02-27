@@ -39,7 +39,7 @@ func TestWholeConfigs(t *testing.T) {
 			buffer.WriteString(config.Config)
 			p, err := parser.New(options.Reader(&buffer))
 			if err != nil {
-				t.Fatalf(err.Error())
+				t.Fatal(err.Error())
 			}
 			result := p.String()
 			if result != config.Config {
@@ -65,7 +65,7 @@ func TestWholeConfigsFail(t *testing.T) {
 			buffer.WriteString(config.Config)
 			p, err := parser.New(options.Reader(&buffer))
 			if err != nil {
-				t.Fatalf(err.Error())
+				t.Fatal(err.Error())
 			}
 			result := p.String()
 			if result == config.Config {
@@ -95,7 +95,7 @@ func TestGeneratedConfig(t *testing.T) {
 	buffer.WriteString(generatedConfig)
 	p, err := parser.New(options.DisableUnProcessed, options.Reader(&buffer))
 	if err != nil {
-		t.Fatalf(err.Error())
+		t.Fatal(err.Error())
 	}
 	result := p.String()
 	for _, configLine := range configTests {
@@ -111,11 +111,11 @@ func TestHashConfig(t *testing.T) {
 	buffer.WriteString(configBasicHash)
 	p, err := parser.New(options.UseMd5Hash, options.Reader(&buffer))
 	if err != nil {
-		t.Fatalf(err.Error())
+		t.Fatal(err.Error())
 	}
 	result, err := p.StringWithHash()
 	if err != nil {
-		t.Fatalf(err.Error())
+		t.Fatal(err.Error())
 	}
 	if result != configBasicHash {
 		compare(t, configBasicHash, result)
@@ -128,7 +128,7 @@ func TestConfigUseV2HTTPCheck(t *testing.T) {
 	buffer.WriteString(configBasicUseV2HTTPCheck)
 	p, err := parser.New(options.UseV2HTTPCheck, options.Reader(&buffer))
 	if err != nil {
-		t.Fatalf(err.Error())
+		t.Fatal(err.Error())
 	}
 	result := p.String() //nolint:ifshort
 	if result != configBasicUseV2HTTPCheck {
@@ -142,7 +142,7 @@ func TestListenSectionParsers(t *testing.T) {
 	buffer.WriteString(configFull)
 	p, err := parser.New(options.UseListenSectionParsers, options.Reader(&buffer))
 	if err != nil {
-		t.Fatalf(err.Error())
+		t.Fatal(err.Error())
 	}
 
 	result := p.String() //nolint:ifshort

@@ -32,11 +32,11 @@ func TestParseFecthResultLines(t *testing.T) { //nolint:gocognit
 		t.Run(config.Name, func(t *testing.T) {
 			p, err := parser.New(options.String(config.Config))
 			if err != nil {
-				t.Fatalf(err.Error())
+				t.Fatal(err.Error())
 			}
 			lines, err := p.GetResult(parser.Frontends, "http", "bind")
 			if err != nil {
-				t.Fatalf(err.Error())
+				t.Fatal(err.Error())
 			}
 			if lines[0].Data != "bind 0.0.0.0:80 name bind_1" {
 				t.Fatalf("Unexpected line: %s", lines[0].Data)

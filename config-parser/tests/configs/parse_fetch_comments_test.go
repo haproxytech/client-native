@@ -33,7 +33,7 @@ func TestParseFecthCommentLines(t *testing.T) { //nolint:gocognit
 		t.Run(config.Name, func(t *testing.T) {
 			p, err := parser.New(options.String(config.Config))
 			if err != nil {
-				t.Fatalf(err.Error())
+				t.Fatal(err.Error())
 			}
 			result := p.String()
 			if result != config.Config {
@@ -87,7 +87,7 @@ func TestParseFecthCommentLinesWrite(t *testing.T) {
 		t.Run(config.Name, func(t *testing.T) {
 			p, err := parser.New(options.String(config.Config))
 			if err != nil {
-				t.Fatalf(err.Error())
+				t.Fatal(err.Error())
 			}
 			result := p.String()
 			// fmt.Println(config.Config)
@@ -131,7 +131,7 @@ func TestParseFetchCommentInline(t *testing.T) {
 		t.Run(config.Name, func(t *testing.T) {
 			p, err := parser.New(options.String(config.Config))
 			if err != nil {
-				t.Fatalf(err.Error())
+				t.Fatal(err.Error())
 			}
 			result := p.String()
 			if result != config.Config {
@@ -141,7 +141,7 @@ func TestParseFetchCommentInline(t *testing.T) {
 
 			rawData, err := p.Get(parser.Frontends, "http", "mode")
 			if err != nil {
-				t.Fatalf(err.Error())
+				t.Fatal(err.Error())
 			}
 			mode, ok := rawData.(*types.StringC)
 			if !ok {
@@ -153,7 +153,7 @@ func TestParseFetchCommentInline(t *testing.T) {
 
 			rawData, err = p.Get(parser.Frontends, "http", "bind")
 			if err != nil {
-				t.Fatalf(err.Error())
+				t.Fatal(err.Error())
 			}
 			bindList, ok := rawData.([]types.Bind)
 			if !ok {
@@ -180,7 +180,7 @@ func TestParseFirstComments(t *testing.T) {
 		t.Run(config.Name, func(t *testing.T) {
 			p, err := parser.New(options.String(config.Config))
 			if err != nil {
-				t.Fatalf(err.Error())
+				t.Fatal(err.Error())
 			}
 			result := p.String()
 			if result != config.Config {
@@ -190,7 +190,7 @@ func TestParseFirstComments(t *testing.T) {
 
 			comments, err := p.Get(parser.Comments, parser.CommentsSectionName, "#")
 			if err != nil {
-				t.Fatalf(err.Error())
+				t.Fatal(err.Error())
 			}
 			data, ok := comments.([]types.Comments)
 			if !ok {

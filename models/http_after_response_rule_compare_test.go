@@ -38,15 +38,15 @@ func TestHTTPAfterResponseRuleEqual(t *testing.T) {
 		var result HTTPAfterResponseRule
 		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err)
 		}
 		byteJSON, err := json.Marshal(sample)
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err)
 		}
 		err = json.Unmarshal(byteJSON, &result)
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err)
 		}
 
 		samples = append(samples, struct {
@@ -60,11 +60,11 @@ func TestHTTPAfterResponseRuleEqual(t *testing.T) {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Error(err)
 			}
 			b, err := json.Marshal(&sample.b)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Error(err)
 			}
 			t.Errorf("Expected HTTPAfterResponseRule to be equal, but it is not %s %s", a, b)
 		}
@@ -80,11 +80,11 @@ func TestHTTPAfterResponseRuleEqualFalse(t *testing.T) {
 		var result HTTPAfterResponseRule
 		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err)
 		}
 		err = faker.FakeData(&result, options.WithIgnoreInterface(true))
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err)
 		}
 		result.CaptureID = Ptr(*sample.CaptureID + 1)
 		result.CaptureLen = sample.CaptureLen + 1
@@ -103,11 +103,11 @@ func TestHTTPAfterResponseRuleEqualFalse(t *testing.T) {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Error(err)
 			}
 			b, err := json.Marshal(&sample.b)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Error(err)
 			}
 			t.Errorf("Expected HTTPAfterResponseRule to be different, but it is not %s %s", a, b)
 		}
@@ -123,15 +123,15 @@ func TestHTTPAfterResponseRuleDiff(t *testing.T) {
 		var result HTTPAfterResponseRule
 		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err)
 		}
 		byteJSON, err := json.Marshal(sample)
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err)
 		}
 		err = json.Unmarshal(byteJSON, &result)
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err)
 		}
 
 		samples = append(samples, struct {
@@ -145,11 +145,11 @@ func TestHTTPAfterResponseRuleDiff(t *testing.T) {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Error(err)
 			}
 			b, err := json.Marshal(&sample.b)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Error(err)
 			}
 			t.Errorf("Expected HTTPAfterResponseRule to be equal, but it is not %s %s, %v", a, b, result)
 		}
@@ -165,11 +165,11 @@ func TestHTTPAfterResponseRuleDiffFalse(t *testing.T) {
 		var result HTTPAfterResponseRule
 		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err)
 		}
 		err = faker.FakeData(&result, options.WithIgnoreInterface(true))
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err)
 		}
 		result.CaptureID = Ptr(*sample.CaptureID + 1)
 		result.CaptureLen = sample.CaptureLen + 1
@@ -188,11 +188,11 @@ func TestHTTPAfterResponseRuleDiffFalse(t *testing.T) {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Error(err)
 			}
 			b, err := json.Marshal(&sample.b)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Error(err)
 			}
 			t.Errorf("Expected HTTPAfterResponseRule to be different in 27 cases, but it is not (%d) %s %s", len(result), a, b)
 		}

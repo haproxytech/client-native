@@ -31,12 +31,12 @@ func TestHTTPRequestSetPath(t *testing.T) {
 
 	err := ProcessLine(line, parser)
 	if err != nil {
-		t.Errorf(err.Error())
+		t.Error(err)
 	}
 
 	result, err := parser.Result()
 	if err != nil {
-		t.Errorf(err.Error())
+		t.Error(err)
 	}
 
 	var returnLine string
@@ -48,7 +48,7 @@ func TestHTTPRequestSetPath(t *testing.T) {
 	}
 
 	if line != returnLine {
-		t.Errorf(fmt.Sprintf("error: has [%s] expects [%s]", returnLine, line))
+		t.Errorf("error: has [%s] expects [%s]", returnLine, line)
 	}
 }
 
@@ -60,12 +60,12 @@ func TestHTTPRequestSetPathFail(t *testing.T) {
 	err := ProcessLine(line, parser)
 
 	if err == nil {
-		t.Errorf(fmt.Sprintf("error: did not throw error for line [%s]", line))
+		t.Errorf("error: did not throw error for line [%s]", line)
 	}
 
 	_, err = parser.Result()
 	if err == nil {
-		t.Errorf(fmt.Sprintf("error: did not throw error on result for line [%s]", line))
+		t.Errorf("error: did not throw error on result for line [%s]", line)
 	}
 }
 
@@ -76,12 +76,12 @@ func TestHTTPRequestConnectionTrackSc0(t *testing.T) {
 
 	err := ProcessLine(line, parser)
 	if err != nil {
-		t.Errorf(err.Error())
+		t.Error(err)
 	}
 
 	result, err := parser.Result()
 	if err != nil {
-		t.Errorf(err.Error())
+		t.Error(err)
 	}
 
 	var returnLine string
@@ -93,7 +93,7 @@ func TestHTTPRequestConnectionTrackSc0(t *testing.T) {
 	}
 
 	if line != returnLine {
-		t.Errorf(fmt.Sprintf("error: has [%s] expects [%s]", returnLine, line))
+		t.Errorf("error: has [%s] expects [%s]", returnLine, line)
 	}
 }
 
@@ -104,12 +104,12 @@ func TestHTTPRequestConnectionTrackSc0WithCondition(t *testing.T) {
 
 	err := ProcessLine(line, parser)
 	if err != nil {
-		t.Errorf(err.Error())
+		t.Error(err)
 	}
 
 	result, err := parser.Result()
 	if err != nil {
-		t.Errorf(err.Error())
+		t.Error(err)
 	}
 
 	var returnLine string
@@ -121,6 +121,6 @@ func TestHTTPRequestConnectionTrackSc0WithCondition(t *testing.T) {
 	}
 
 	if line != returnLine {
-		t.Errorf(fmt.Sprintf("error: has [%s] expects [%s]", returnLine, line))
+		t.Errorf("error: has [%s] expects [%s]", returnLine, line)
 	}
 }

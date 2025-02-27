@@ -23,7 +23,7 @@ import (
 )
 
 // BindOption ...
-type BindOption interface {
+type BindOption interface { //nolint:iface
 	Parse(options []string, currentIndex int) (int, error)
 	Valid() bool
 	String() string
