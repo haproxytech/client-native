@@ -36,7 +36,7 @@ func TestDefaultsConfigsNoFromFlag(t *testing.T) {
 			buffer.WriteString(config.Config)
 			p, err := parser.New(options.Reader(&buffer), options.NoNamedDefaultsFrom)
 			if err != nil {
-				t.Fatalf(err.Error())
+				t.Fatal(err.Error())
 			}
 			result := p.String()
 			if result != config.Result {

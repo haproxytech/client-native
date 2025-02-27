@@ -41,7 +41,7 @@ func TestDefaultsConfigs(t *testing.T) {
 			buffer.WriteString(config.Config)
 			p, err := parser.New(options.Reader(&buffer))
 			if err != nil {
-				t.Fatalf(err.Error())
+				t.Fatal(err.Error())
 			}
 			result := p.String()
 			if result != config.Config {
@@ -65,7 +65,7 @@ func TestDefaultsConfigsSetDef(t *testing.T) {
 			buffer.WriteString(config.Config)
 			p, err := parser.New(options.Reader(&buffer))
 			if err != nil {
-				t.Fatalf(err.Error())
+				t.Fatal(err.Error())
 			}
 			err = p.SectionsDefaultsFromSet(parser.Defaults, "???", "nonexisting")
 			if !errors.Is(err, parserErrors.ErrSectionMissing) {
@@ -96,7 +96,7 @@ func TestDefaultsConfigsSetCircular(t *testing.T) {
 			buffer.WriteString(config.Config)
 			p, err := parser.New(options.Reader(&buffer))
 			if err != nil {
-				t.Fatalf(err.Error())
+				t.Fatal(err.Error())
 			}
 			err = p.SectionsDefaultsFromSet(parser.Defaults, "A", "withName")
 			if err != nil {

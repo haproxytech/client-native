@@ -21,7 +21,7 @@ import (
 )
 
 // DgramBindOption ...
-type DgramBindOption interface {
+type DgramBindOption interface { //nolint:iface
 	Parse(options []string, currentIndex int) (int, error)
 	Valid() bool
 	String() string

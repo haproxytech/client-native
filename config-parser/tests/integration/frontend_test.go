@@ -832,7 +832,7 @@ func TestWholeConfigsSectionsFrontend(t *testing.T) {
 			buffer.WriteString(config.Config)
 			p, err := parser.New(options.Reader(&buffer))
 			if err != nil {
-				t.Fatalf(err.Error())
+				t.Fatal(err.Error())
 			}
 			result := p.String()
 			if result != config.Config {
@@ -842,7 +842,7 @@ func TestWholeConfigsSectionsFrontend(t *testing.T) {
 				t.Error("======== RESULT ===========")
 				t.Error(result)
 				t.Error("===========================")
-				t.Fatalf("configurations does not match")
+				t.Fatal("configurations does not match")
 			}
 		})
 	}

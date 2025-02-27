@@ -938,7 +938,7 @@ type HTTPCheck struct{}
 //test:fail:tcp-check unset-var(txn.from) if x
 type TCPCheck struct{}
 
-type TCPType interface {
+type TCPType interface { //nolint:iface
 	Parse(parts []string, comment string) error
 	String() string
 	GetComment() string
@@ -1271,7 +1271,7 @@ type TCPResponses struct{}
 //test:ok:redirect prefix http://www.bar.com code 301 if { hdr(host) -i foo.com }
 type Redirect struct{}
 
-type StatsSettings interface {
+type StatsSettings interface { //nolint:iface
 	Parse(parts []string, comment string) error
 	String() string
 	GetComment() string

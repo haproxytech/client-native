@@ -18,11 +18,11 @@ package params
 
 import "fmt"
 
-type ErrParseBindOption interface {
+type ErrParseBindOption interface { //nolint:iface
 	Error() string
 }
 
-type ErrParseServerOption interface {
+type ErrParseServerOption interface { //nolint:iface
 	Error() string
 }
 

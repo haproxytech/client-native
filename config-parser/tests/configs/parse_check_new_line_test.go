@@ -32,7 +32,7 @@ func TestParseCheckNewLineOnEnd(t *testing.T) {
 		t.Run(config.Name, func(t *testing.T) {
 			p, err := parser.New(options.String(config.Config))
 			if err != nil {
-				t.Fatalf(err.Error())
+				t.Fatal(err.Error())
 			}
 			result := p.String()
 			if result != config.Config+"\n" {

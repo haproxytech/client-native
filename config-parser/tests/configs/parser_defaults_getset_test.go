@@ -35,7 +35,7 @@ func TestDefaultsConfigsGet(t *testing.T) { //nolint:gocognit
 			buffer.WriteString(config.Config)
 			p, err := parser.New(options.Reader(&buffer))
 			if err != nil {
-				t.Fatalf(err.Error())
+				t.Fatal(err.Error())
 			}
 			name, err := p.SectionsDefaultsFromGet(parser.Defaults, "A")
 			if err != nil {
@@ -106,7 +106,7 @@ func TestDefaultsConfigsSet(t *testing.T) { //nolint:gocognit
 			buffer.WriteString(config.Config)
 			p, err := parser.New(options.Reader(&buffer))
 			if err != nil {
-				t.Fatalf(err.Error())
+				t.Fatal(err.Error())
 			}
 
 			err = p.SectionsDefaultsFromSet(parser.Frontends, "http1", "B")

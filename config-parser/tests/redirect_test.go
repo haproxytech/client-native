@@ -48,12 +48,12 @@ func TestRedirect(t *testing.T) {
 		parser.Init()
 		err := ProcessLine(line, parser)
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err)
 		}
 
 		result, err := parser.Result()
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err)
 		}
 
 		var actual string
@@ -65,7 +65,7 @@ func TestRedirect(t *testing.T) {
 		}
 
 		if expected != actual {
-			t.Errorf(fmt.Sprintf("error: has [%s] expects [%s]", actual, expected))
+			t.Errorf("error: has [%s] expects [%s]", actual, expected)
 		}
 	}
 }

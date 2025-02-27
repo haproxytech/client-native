@@ -38,13 +38,13 @@ func TestOptionPgsqlCheckRegression(t *testing.T) {
 
 		err := ProcessLine(line, parser)
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err)
 			return
 		}
 
 		result, err := parser.Result()
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err)
 			return
 		}
 
@@ -56,7 +56,7 @@ func TestOptionPgsqlCheckRegression(t *testing.T) {
 		}
 
 		if line != actual {
-			t.Errorf(fmt.Sprintf("error: has [%s] expects [%s]", actual, expected))
+			t.Errorf("error: has [%s] expects [%s]", actual, expected)
 		}
 	}
 }

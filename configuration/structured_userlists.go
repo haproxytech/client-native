@@ -125,7 +125,7 @@ func parseUserlistsSection(name string, p parser.Parser) (*models.Userlist, erro
 	}
 	userlista, errula := namedResourceArrayToMapWithKey(userlist, "Username")
 	if errula != nil {
-		return nil, err
+		return nil, errula
 	}
 	u := &models.Userlist{
 		Users:        userlista,
@@ -139,7 +139,7 @@ func parseUserlistsSection(name string, p parser.Parser) (*models.Userlist, erro
 	}
 	groupsa, errga := namedResourceArrayToMap(groups)
 	if errga != nil {
-		return nil, err
+		return nil, errga
 	}
 	u.Groups = groupsa
 

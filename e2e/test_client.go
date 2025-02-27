@@ -88,7 +88,7 @@ func GetClient(t *testing.T) (*ClientResponse, error) { //nolint:thelper
 	}
 
 	HAProxyCFG := "haproxy.cfg"
-	confClient, err := configuration.New(context.Background(),
+	confClient, err := configuration.New(t.Context(),
 		configuration_options.ConfigurationFile(HAProxyCFG),
 		// options.UsePersistentTransactions,
 		configuration_options.TransactionsDir(os.TempDir()),
@@ -118,13 +118,13 @@ func GetClient(t *testing.T) (*ClientResponse, error) { //nolint:thelper
 	end := time.Now()
 	t.Logf("%s done", end.Format("15:04:05.000"))
 
-	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+	ctx, cancel := context.WithTimeout(t.Context(), time.Second)
 	defer cancel()
 	runtimeClient, err := runtime.New(ctx, runtime_options.Socket(socketPath))
 	if err != nil {
 		return nil, err
 	}
-	nativeAPI, err := clientnative.New(context.Background(),
+	nativeAPI, err := clientnative.New(t.Context(),
 		options.Configuration(confClient),
 		options.Runtime(runtimeClient),
 	)
