@@ -38,15 +38,15 @@ func TestLuaOptionsEqual(t *testing.T) {
 		var result LuaOptions
 		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err)
 		}
 		byteJSON, err := json.Marshal(sample)
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err)
 		}
 		err = json.Unmarshal(byteJSON, &result)
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err)
 		}
 
 		samples = append(samples, struct {
@@ -60,11 +60,11 @@ func TestLuaOptionsEqual(t *testing.T) {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Error(err)
 			}
 			b, err := json.Marshal(&sample.b)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Error(err)
 			}
 			t.Errorf("Expected LuaOptions to be equal, but it is not %s %s", a, b)
 		}
@@ -80,11 +80,11 @@ func TestLuaOptionsEqualFalse(t *testing.T) {
 		var result LuaOptions
 		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err)
 		}
 		err = faker.FakeData(&result, options.WithIgnoreInterface(true))
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err)
 		}
 		samples = append(samples, struct {
 			a, b LuaOptions
@@ -97,11 +97,11 @@ func TestLuaOptionsEqualFalse(t *testing.T) {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Error(err)
 			}
 			b, err := json.Marshal(&sample.b)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Error(err)
 			}
 			t.Errorf("Expected LuaOptions to be different, but it is not %s %s", a, b)
 		}
@@ -117,15 +117,15 @@ func TestLuaOptionsDiff(t *testing.T) {
 		var result LuaOptions
 		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err)
 		}
 		byteJSON, err := json.Marshal(sample)
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err)
 		}
 		err = json.Unmarshal(byteJSON, &result)
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err)
 		}
 
 		samples = append(samples, struct {
@@ -139,11 +139,11 @@ func TestLuaOptionsDiff(t *testing.T) {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Error(err)
 			}
 			b, err := json.Marshal(&sample.b)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Error(err)
 			}
 			t.Errorf("Expected LuaOptions to be equal, but it is not %s %s, %v", a, b, result)
 		}
@@ -159,11 +159,11 @@ func TestLuaOptionsDiffFalse(t *testing.T) {
 		var result LuaOptions
 		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err)
 		}
 		err = faker.FakeData(&result, options.WithIgnoreInterface(true))
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err)
 		}
 		samples = append(samples, struct {
 			a, b LuaOptions
@@ -176,11 +176,11 @@ func TestLuaOptionsDiffFalse(t *testing.T) {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Error(err)
 			}
 			b, err := json.Marshal(&sample.b)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Error(err)
 			}
 			t.Errorf("Expected LuaOptions to be different in 3 cases, but it is not (%d) %s %s", len(result), a, b)
 		}
@@ -196,15 +196,15 @@ func TestLuaLoadEqual(t *testing.T) {
 		var result LuaLoad
 		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err)
 		}
 		byteJSON, err := json.Marshal(sample)
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err)
 		}
 		err = json.Unmarshal(byteJSON, &result)
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err)
 		}
 
 		samples = append(samples, struct {
@@ -218,11 +218,11 @@ func TestLuaLoadEqual(t *testing.T) {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Error(err)
 			}
 			b, err := json.Marshal(&sample.b)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Error(err)
 			}
 			t.Errorf("Expected LuaLoad to be equal, but it is not %s %s", a, b)
 		}
@@ -238,11 +238,11 @@ func TestLuaLoadEqualFalse(t *testing.T) {
 		var result LuaLoad
 		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err)
 		}
 		err = faker.FakeData(&result, options.WithIgnoreInterface(true))
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err)
 		}
 		samples = append(samples, struct {
 			a, b LuaLoad
@@ -255,11 +255,11 @@ func TestLuaLoadEqualFalse(t *testing.T) {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Error(err)
 			}
 			b, err := json.Marshal(&sample.b)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Error(err)
 			}
 			t.Errorf("Expected LuaLoad to be different, but it is not %s %s", a, b)
 		}
@@ -275,15 +275,15 @@ func TestLuaLoadDiff(t *testing.T) {
 		var result LuaLoad
 		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err)
 		}
 		byteJSON, err := json.Marshal(sample)
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err)
 		}
 		err = json.Unmarshal(byteJSON, &result)
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err)
 		}
 
 		samples = append(samples, struct {
@@ -297,11 +297,11 @@ func TestLuaLoadDiff(t *testing.T) {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Error(err)
 			}
 			b, err := json.Marshal(&sample.b)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Error(err)
 			}
 			t.Errorf("Expected LuaLoad to be equal, but it is not %s %s, %v", a, b, result)
 		}
@@ -317,11 +317,11 @@ func TestLuaLoadDiffFalse(t *testing.T) {
 		var result LuaLoad
 		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err)
 		}
 		err = faker.FakeData(&result, options.WithIgnoreInterface(true))
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err)
 		}
 		samples = append(samples, struct {
 			a, b LuaLoad
@@ -334,11 +334,11 @@ func TestLuaLoadDiffFalse(t *testing.T) {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Error(err)
 			}
 			b, err := json.Marshal(&sample.b)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Error(err)
 			}
 			t.Errorf("Expected LuaLoad to be different in 1 cases, but it is not (%d) %s %s", len(result), a, b)
 		}
@@ -354,15 +354,15 @@ func TestLuaPrependPathEqual(t *testing.T) {
 		var result LuaPrependPath
 		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err)
 		}
 		byteJSON, err := json.Marshal(sample)
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err)
 		}
 		err = json.Unmarshal(byteJSON, &result)
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err)
 		}
 
 		samples = append(samples, struct {
@@ -376,11 +376,11 @@ func TestLuaPrependPathEqual(t *testing.T) {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Error(err)
 			}
 			b, err := json.Marshal(&sample.b)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Error(err)
 			}
 			t.Errorf("Expected LuaPrependPath to be equal, but it is not %s %s", a, b)
 		}
@@ -396,11 +396,11 @@ func TestLuaPrependPathEqualFalse(t *testing.T) {
 		var result LuaPrependPath
 		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err)
 		}
 		err = faker.FakeData(&result, options.WithIgnoreInterface(true))
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err)
 		}
 		samples = append(samples, struct {
 			a, b LuaPrependPath
@@ -413,11 +413,11 @@ func TestLuaPrependPathEqualFalse(t *testing.T) {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Error(err)
 			}
 			b, err := json.Marshal(&sample.b)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Error(err)
 			}
 			t.Errorf("Expected LuaPrependPath to be different, but it is not %s %s", a, b)
 		}
@@ -433,15 +433,15 @@ func TestLuaPrependPathDiff(t *testing.T) {
 		var result LuaPrependPath
 		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err)
 		}
 		byteJSON, err := json.Marshal(sample)
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err)
 		}
 		err = json.Unmarshal(byteJSON, &result)
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err)
 		}
 
 		samples = append(samples, struct {
@@ -455,11 +455,11 @@ func TestLuaPrependPathDiff(t *testing.T) {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Error(err)
 			}
 			b, err := json.Marshal(&sample.b)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Error(err)
 			}
 			t.Errorf("Expected LuaPrependPath to be equal, but it is not %s %s, %v", a, b, result)
 		}
@@ -475,11 +475,11 @@ func TestLuaPrependPathDiffFalse(t *testing.T) {
 		var result LuaPrependPath
 		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err)
 		}
 		err = faker.FakeData(&result, options.WithIgnoreInterface(true))
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err)
 		}
 		samples = append(samples, struct {
 			a, b LuaPrependPath
@@ -492,11 +492,11 @@ func TestLuaPrependPathDiffFalse(t *testing.T) {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Error(err)
 			}
 			b, err := json.Marshal(&sample.b)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Error(err)
 			}
 			t.Errorf("Expected LuaPrependPath to be different in 2 cases, but it is not (%d) %s %s", len(result), a, b)
 		}

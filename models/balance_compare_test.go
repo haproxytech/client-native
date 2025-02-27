@@ -38,15 +38,15 @@ func TestBalanceEqual(t *testing.T) {
 		var result Balance
 		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err)
 		}
 		byteJSON, err := json.Marshal(sample)
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err)
 		}
 		err = json.Unmarshal(byteJSON, &result)
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err)
 		}
 
 		samples = append(samples, struct {
@@ -60,11 +60,11 @@ func TestBalanceEqual(t *testing.T) {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Error(err)
 			}
 			b, err := json.Marshal(&sample.b)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Error(err)
 			}
 			t.Errorf("Expected Balance to be equal, but it is not %s %s", a, b)
 		}
@@ -80,11 +80,11 @@ func TestBalanceEqualFalse(t *testing.T) {
 		var result Balance
 		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err)
 		}
 		err = faker.FakeData(&result, options.WithIgnoreInterface(true))
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err)
 		}
 		result.HdrUseDomainOnly = !sample.HdrUseDomainOnly
 		result.RandomDraws = sample.RandomDraws + 1
@@ -105,11 +105,11 @@ func TestBalanceEqualFalse(t *testing.T) {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Error(err)
 			}
 			b, err := json.Marshal(&sample.b)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Error(err)
 			}
 			t.Errorf("Expected Balance to be different, but it is not %s %s", a, b)
 		}
@@ -125,15 +125,15 @@ func TestBalanceDiff(t *testing.T) {
 		var result Balance
 		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err)
 		}
 		byteJSON, err := json.Marshal(sample)
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err)
 		}
 		err = json.Unmarshal(byteJSON, &result)
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err)
 		}
 
 		samples = append(samples, struct {
@@ -147,11 +147,11 @@ func TestBalanceDiff(t *testing.T) {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Error(err)
 			}
 			b, err := json.Marshal(&sample.b)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Error(err)
 			}
 			t.Errorf("Expected Balance to be equal, but it is not %s %s, %v", a, b, result)
 		}
@@ -167,11 +167,11 @@ func TestBalanceDiffFalse(t *testing.T) {
 		var result Balance
 		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err)
 		}
 		err = faker.FakeData(&result, options.WithIgnoreInterface(true))
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err)
 		}
 		result.HdrUseDomainOnly = !sample.HdrUseDomainOnly
 		result.RandomDraws = sample.RandomDraws + 1
@@ -192,11 +192,11 @@ func TestBalanceDiffFalse(t *testing.T) {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Error(err)
 			}
 			b, err := json.Marshal(&sample.b)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Error(err)
 			}
 			t.Errorf("Expected Balance to be different in 13 cases, but it is not (%d) %s %s", len(result), a, b)
 		}

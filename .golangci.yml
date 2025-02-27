@@ -28,7 +28,6 @@ linters:
     - nlreturn
     - ireturn
     - interfacebloat
-    - gomnd
     - forcetypeassert
     - exhaustruct
     - dupword
@@ -38,8 +37,8 @@ linters:
     - funlen
     - gci
     - goconst
-    - execinquery
-    - exportloopref
+    - recvcheck
+    - tenv #deprecated
 
 issues:
   exclude-files:

@@ -38,15 +38,15 @@ func TestGlobalBaseEqual(t *testing.T) {
 		var result GlobalBase
 		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err)
 		}
 		byteJSON, err := json.Marshal(sample)
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err)
 		}
 		err = json.Unmarshal(byteJSON, &result)
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err)
 		}
 
 		samples = append(samples, struct {
@@ -60,11 +60,11 @@ func TestGlobalBaseEqual(t *testing.T) {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Error(err)
 			}
 			b, err := json.Marshal(&sample.b)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Error(err)
 			}
 			t.Errorf("Expected GlobalBase to be equal, but it is not %s %s", a, b)
 		}
@@ -80,11 +80,11 @@ func TestGlobalBaseEqualFalse(t *testing.T) {
 		var result GlobalBase
 		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err)
 		}
 		err = faker.FakeData(&result, options.WithIgnoreInterface(true))
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err)
 		}
 		result.CloseSpreadTime = Ptr(*sample.CloseSpreadTime + 1)
 		result.Daemon = !sample.Daemon
@@ -126,11 +126,11 @@ func TestGlobalBaseEqualFalse(t *testing.T) {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Error(err)
 			}
 			b, err := json.Marshal(&sample.b)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Error(err)
 			}
 			t.Errorf("Expected GlobalBase to be different, but it is not %s %s", a, b)
 		}
@@ -146,15 +146,15 @@ func TestGlobalBaseDiff(t *testing.T) {
 		var result GlobalBase
 		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err)
 		}
 		byteJSON, err := json.Marshal(sample)
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err)
 		}
 		err = json.Unmarshal(byteJSON, &result)
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err)
 		}
 
 		samples = append(samples, struct {
@@ -168,11 +168,11 @@ func TestGlobalBaseDiff(t *testing.T) {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Error(err)
 			}
 			b, err := json.Marshal(&sample.b)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Error(err)
 			}
 			t.Errorf("Expected GlobalBase to be equal, but it is not %s %s, %v", a, b, result)
 		}
@@ -188,11 +188,11 @@ func TestGlobalBaseDiffFalse(t *testing.T) {
 		var result GlobalBase
 		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err)
 		}
 		err = faker.FakeData(&result, options.WithIgnoreInterface(true))
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err)
 		}
 		result.CloseSpreadTime = Ptr(*sample.CloseSpreadTime + 1)
 		result.Daemon = !sample.Daemon
@@ -234,11 +234,11 @@ func TestGlobalBaseDiffFalse(t *testing.T) {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Error(err)
 			}
 			b, err := json.Marshal(&sample.b)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Error(err)
 			}
 			t.Errorf("Expected GlobalBase to be different in 69 cases, but it is not (%d) %s %s", len(result), a, b)
 		}
@@ -254,15 +254,15 @@ func TestCPUMapEqual(t *testing.T) {
 		var result CPUMap
 		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err)
 		}
 		byteJSON, err := json.Marshal(sample)
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err)
 		}
 		err = json.Unmarshal(byteJSON, &result)
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err)
 		}
 
 		samples = append(samples, struct {
@@ -276,11 +276,11 @@ func TestCPUMapEqual(t *testing.T) {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Error(err)
 			}
 			b, err := json.Marshal(&sample.b)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Error(err)
 			}
 			t.Errorf("Expected CPUMap to be equal, but it is not %s %s", a, b)
 		}
@@ -296,11 +296,11 @@ func TestCPUMapEqualFalse(t *testing.T) {
 		var result CPUMap
 		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err)
 		}
 		err = faker.FakeData(&result, options.WithIgnoreInterface(true))
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err)
 		}
 		samples = append(samples, struct {
 			a, b CPUMap
@@ -313,11 +313,11 @@ func TestCPUMapEqualFalse(t *testing.T) {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Error(err)
 			}
 			b, err := json.Marshal(&sample.b)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Error(err)
 			}
 			t.Errorf("Expected CPUMap to be different, but it is not %s %s", a, b)
 		}
@@ -333,15 +333,15 @@ func TestCPUMapDiff(t *testing.T) {
 		var result CPUMap
 		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err)
 		}
 		byteJSON, err := json.Marshal(sample)
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err)
 		}
 		err = json.Unmarshal(byteJSON, &result)
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err)
 		}
 
 		samples = append(samples, struct {
@@ -355,11 +355,11 @@ func TestCPUMapDiff(t *testing.T) {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Error(err)
 			}
 			b, err := json.Marshal(&sample.b)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Error(err)
 			}
 			t.Errorf("Expected CPUMap to be equal, but it is not %s %s, %v", a, b, result)
 		}
@@ -375,11 +375,11 @@ func TestCPUMapDiffFalse(t *testing.T) {
 		var result CPUMap
 		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err)
 		}
 		err = faker.FakeData(&result, options.WithIgnoreInterface(true))
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err)
 		}
 		samples = append(samples, struct {
 			a, b CPUMap
@@ -392,11 +392,11 @@ func TestCPUMapDiffFalse(t *testing.T) {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Error(err)
 			}
 			b, err := json.Marshal(&sample.b)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Error(err)
 			}
 			t.Errorf("Expected CPUMap to be different in 2 cases, but it is not (%d) %s %s", len(result), a, b)
 		}
@@ -412,15 +412,15 @@ func TestGlobalDefaultPathEqual(t *testing.T) {
 		var result GlobalDefaultPath
 		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err)
 		}
 		byteJSON, err := json.Marshal(sample)
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err)
 		}
 		err = json.Unmarshal(byteJSON, &result)
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err)
 		}
 
 		samples = append(samples, struct {
@@ -434,11 +434,11 @@ func TestGlobalDefaultPathEqual(t *testing.T) {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Error(err)
 			}
 			b, err := json.Marshal(&sample.b)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Error(err)
 			}
 			t.Errorf("Expected GlobalDefaultPath to be equal, but it is not %s %s", a, b)
 		}
@@ -454,11 +454,11 @@ func TestGlobalDefaultPathEqualFalse(t *testing.T) {
 		var result GlobalDefaultPath
 		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err)
 		}
 		err = faker.FakeData(&result, options.WithIgnoreInterface(true))
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err)
 		}
 		samples = append(samples, struct {
 			a, b GlobalDefaultPath
@@ -471,11 +471,11 @@ func TestGlobalDefaultPathEqualFalse(t *testing.T) {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Error(err)
 			}
 			b, err := json.Marshal(&sample.b)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Error(err)
 			}
 			t.Errorf("Expected GlobalDefaultPath to be different, but it is not %s %s", a, b)
 		}
@@ -491,15 +491,15 @@ func TestGlobalDefaultPathDiff(t *testing.T) {
 		var result GlobalDefaultPath
 		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err)
 		}
 		byteJSON, err := json.Marshal(sample)
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err)
 		}
 		err = json.Unmarshal(byteJSON, &result)
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err)
 		}
 
 		samples = append(samples, struct {
@@ -513,11 +513,11 @@ func TestGlobalDefaultPathDiff(t *testing.T) {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Error(err)
 			}
 			b, err := json.Marshal(&sample.b)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Error(err)
 			}
 			t.Errorf("Expected GlobalDefaultPath to be equal, but it is not %s %s, %v", a, b, result)
 		}
@@ -533,11 +533,11 @@ func TestGlobalDefaultPathDiffFalse(t *testing.T) {
 		var result GlobalDefaultPath
 		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err)
 		}
 		err = faker.FakeData(&result, options.WithIgnoreInterface(true))
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err)
 		}
 		samples = append(samples, struct {
 			a, b GlobalDefaultPath
@@ -550,11 +550,11 @@ func TestGlobalDefaultPathDiffFalse(t *testing.T) {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Error(err)
 			}
 			b, err := json.Marshal(&sample.b)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Error(err)
 			}
 			t.Errorf("Expected GlobalDefaultPath to be different in 2 cases, but it is not (%d) %s %s", len(result), a, b)
 		}
@@ -570,15 +570,15 @@ func TestH1CaseAdjustEqual(t *testing.T) {
 		var result H1CaseAdjust
 		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err)
 		}
 		byteJSON, err := json.Marshal(sample)
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err)
 		}
 		err = json.Unmarshal(byteJSON, &result)
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err)
 		}
 
 		samples = append(samples, struct {
@@ -592,11 +592,11 @@ func TestH1CaseAdjustEqual(t *testing.T) {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Error(err)
 			}
 			b, err := json.Marshal(&sample.b)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Error(err)
 			}
 			t.Errorf("Expected H1CaseAdjust to be equal, but it is not %s %s", a, b)
 		}
@@ -612,11 +612,11 @@ func TestH1CaseAdjustEqualFalse(t *testing.T) {
 		var result H1CaseAdjust
 		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err)
 		}
 		err = faker.FakeData(&result, options.WithIgnoreInterface(true))
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err)
 		}
 		samples = append(samples, struct {
 			a, b H1CaseAdjust
@@ -629,11 +629,11 @@ func TestH1CaseAdjustEqualFalse(t *testing.T) {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Error(err)
 			}
 			b, err := json.Marshal(&sample.b)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Error(err)
 			}
 			t.Errorf("Expected H1CaseAdjust to be different, but it is not %s %s", a, b)
 		}
@@ -649,15 +649,15 @@ func TestH1CaseAdjustDiff(t *testing.T) {
 		var result H1CaseAdjust
 		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err)
 		}
 		byteJSON, err := json.Marshal(sample)
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err)
 		}
 		err = json.Unmarshal(byteJSON, &result)
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err)
 		}
 
 		samples = append(samples, struct {
@@ -671,11 +671,11 @@ func TestH1CaseAdjustDiff(t *testing.T) {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Error(err)
 			}
 			b, err := json.Marshal(&sample.b)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Error(err)
 			}
 			t.Errorf("Expected H1CaseAdjust to be equal, but it is not %s %s, %v", a, b, result)
 		}
@@ -691,11 +691,11 @@ func TestH1CaseAdjustDiffFalse(t *testing.T) {
 		var result H1CaseAdjust
 		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err)
 		}
 		err = faker.FakeData(&result, options.WithIgnoreInterface(true))
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err)
 		}
 		samples = append(samples, struct {
 			a, b H1CaseAdjust
@@ -708,11 +708,11 @@ func TestH1CaseAdjustDiffFalse(t *testing.T) {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Error(err)
 			}
 			b, err := json.Marshal(&sample.b)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Error(err)
 			}
 			t.Errorf("Expected H1CaseAdjust to be different in 2 cases, but it is not (%d) %s %s", len(result), a, b)
 		}
@@ -728,15 +728,15 @@ func TestGlobalHardenEqual(t *testing.T) {
 		var result GlobalHarden
 		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err)
 		}
 		byteJSON, err := json.Marshal(sample)
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err)
 		}
 		err = json.Unmarshal(byteJSON, &result)
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err)
 		}
 
 		samples = append(samples, struct {
@@ -750,11 +750,11 @@ func TestGlobalHardenEqual(t *testing.T) {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Error(err)
 			}
 			b, err := json.Marshal(&sample.b)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Error(err)
 			}
 			t.Errorf("Expected GlobalHarden to be equal, but it is not %s %s", a, b)
 		}
@@ -770,11 +770,11 @@ func TestGlobalHardenEqualFalse(t *testing.T) {
 		var result GlobalHarden
 		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err)
 		}
 		err = faker.FakeData(&result, options.WithIgnoreInterface(true))
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err)
 		}
 		samples = append(samples, struct {
 			a, b GlobalHarden
@@ -787,11 +787,11 @@ func TestGlobalHardenEqualFalse(t *testing.T) {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Error(err)
 			}
 			b, err := json.Marshal(&sample.b)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Error(err)
 			}
 			t.Errorf("Expected GlobalHarden to be different, but it is not %s %s", a, b)
 		}
@@ -807,15 +807,15 @@ func TestGlobalHardenDiff(t *testing.T) {
 		var result GlobalHarden
 		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err)
 		}
 		byteJSON, err := json.Marshal(sample)
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err)
 		}
 		err = json.Unmarshal(byteJSON, &result)
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err)
 		}
 
 		samples = append(samples, struct {
@@ -829,11 +829,11 @@ func TestGlobalHardenDiff(t *testing.T) {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Error(err)
 			}
 			b, err := json.Marshal(&sample.b)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Error(err)
 			}
 			t.Errorf("Expected GlobalHarden to be equal, but it is not %s %s, %v", a, b, result)
 		}
@@ -849,11 +849,11 @@ func TestGlobalHardenDiffFalse(t *testing.T) {
 		var result GlobalHarden
 		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err)
 		}
 		err = faker.FakeData(&result, options.WithIgnoreInterface(true))
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err)
 		}
 		samples = append(samples, struct {
 			a, b GlobalHarden
@@ -866,11 +866,11 @@ func TestGlobalHardenDiffFalse(t *testing.T) {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Error(err)
 			}
 			b, err := json.Marshal(&sample.b)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Error(err)
 			}
 			t.Errorf("Expected GlobalHarden to be different in 1 cases, but it is not (%d) %s %s", len(result), a, b)
 		}
@@ -886,15 +886,15 @@ func TestGlobalHardenRejectPrivilegedPortsEqual(t *testing.T) {
 		var result GlobalHardenRejectPrivilegedPorts
 		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err)
 		}
 		byteJSON, err := json.Marshal(sample)
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err)
 		}
 		err = json.Unmarshal(byteJSON, &result)
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err)
 		}
 
 		samples = append(samples, struct {
@@ -908,11 +908,11 @@ func TestGlobalHardenRejectPrivilegedPortsEqual(t *testing.T) {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Error(err)
 			}
 			b, err := json.Marshal(&sample.b)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Error(err)
 			}
 			t.Errorf("Expected GlobalHardenRejectPrivilegedPorts to be equal, but it is not %s %s", a, b)
 		}
@@ -928,11 +928,11 @@ func TestGlobalHardenRejectPrivilegedPortsEqualFalse(t *testing.T) {
 		var result GlobalHardenRejectPrivilegedPorts
 		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err)
 		}
 		err = faker.FakeData(&result, options.WithIgnoreInterface(true))
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err)
 		}
 		samples = append(samples, struct {
 			a, b GlobalHardenRejectPrivilegedPorts
@@ -945,11 +945,11 @@ func TestGlobalHardenRejectPrivilegedPortsEqualFalse(t *testing.T) {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Error(err)
 			}
 			b, err := json.Marshal(&sample.b)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Error(err)
 			}
 			t.Errorf("Expected GlobalHardenRejectPrivilegedPorts to be different, but it is not %s %s", a, b)
 		}
@@ -965,15 +965,15 @@ func TestGlobalHardenRejectPrivilegedPortsDiff(t *testing.T) {
 		var result GlobalHardenRejectPrivilegedPorts
 		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err)
 		}
 		byteJSON, err := json.Marshal(sample)
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err)
 		}
 		err = json.Unmarshal(byteJSON, &result)
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err)
 		}
 
 		samples = append(samples, struct {
@@ -987,11 +987,11 @@ func TestGlobalHardenRejectPrivilegedPortsDiff(t *testing.T) {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Error(err)
 			}
 			b, err := json.Marshal(&sample.b)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Error(err)
 			}
 			t.Errorf("Expected GlobalHardenRejectPrivilegedPorts to be equal, but it is not %s %s, %v", a, b, result)
 		}
@@ -1007,11 +1007,11 @@ func TestGlobalHardenRejectPrivilegedPortsDiffFalse(t *testing.T) {
 		var result GlobalHardenRejectPrivilegedPorts
 		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err)
 		}
 		err = faker.FakeData(&result, options.WithIgnoreInterface(true))
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err)
 		}
 		samples = append(samples, struct {
 			a, b GlobalHardenRejectPrivilegedPorts
@@ -1024,11 +1024,11 @@ func TestGlobalHardenRejectPrivilegedPortsDiffFalse(t *testing.T) {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Error(err)
 			}
 			b, err := json.Marshal(&sample.b)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Error(err)
 			}
 			t.Errorf("Expected GlobalHardenRejectPrivilegedPorts to be different in 2 cases, but it is not (%d) %s %s", len(result), a, b)
 		}
@@ -1044,15 +1044,15 @@ func TestGlobalLogSendHostnameEqual(t *testing.T) {
 		var result GlobalLogSendHostname
 		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err)
 		}
 		byteJSON, err := json.Marshal(sample)
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err)
 		}
 		err = json.Unmarshal(byteJSON, &result)
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err)
 		}
 
 		samples = append(samples, struct {
@@ -1066,11 +1066,11 @@ func TestGlobalLogSendHostnameEqual(t *testing.T) {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Error(err)
 			}
 			b, err := json.Marshal(&sample.b)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Error(err)
 			}
 			t.Errorf("Expected GlobalLogSendHostname to be equal, but it is not %s %s", a, b)
 		}
@@ -1086,11 +1086,11 @@ func TestGlobalLogSendHostnameEqualFalse(t *testing.T) {
 		var result GlobalLogSendHostname
 		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err)
 		}
 		err = faker.FakeData(&result, options.WithIgnoreInterface(true))
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err)
 		}
 		samples = append(samples, struct {
 			a, b GlobalLogSendHostname
@@ -1103,11 +1103,11 @@ func TestGlobalLogSendHostnameEqualFalse(t *testing.T) {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Error(err)
 			}
 			b, err := json.Marshal(&sample.b)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Error(err)
 			}
 			t.Errorf("Expected GlobalLogSendHostname to be different, but it is not %s %s", a, b)
 		}
@@ -1123,15 +1123,15 @@ func TestGlobalLogSendHostnameDiff(t *testing.T) {
 		var result GlobalLogSendHostname
 		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err)
 		}
 		byteJSON, err := json.Marshal(sample)
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err)
 		}
 		err = json.Unmarshal(byteJSON, &result)
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err)
 		}
 
 		samples = append(samples, struct {
@@ -1145,11 +1145,11 @@ func TestGlobalLogSendHostnameDiff(t *testing.T) {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Error(err)
 			}
 			b, err := json.Marshal(&sample.b)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Error(err)
 			}
 			t.Errorf("Expected GlobalLogSendHostname to be equal, but it is not %s %s, %v", a, b, result)
 		}
@@ -1165,11 +1165,11 @@ func TestGlobalLogSendHostnameDiffFalse(t *testing.T) {
 		var result GlobalLogSendHostname
 		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err)
 		}
 		err = faker.FakeData(&result, options.WithIgnoreInterface(true))
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err)
 		}
 		samples = append(samples, struct {
 			a, b GlobalLogSendHostname
@@ -1182,11 +1182,11 @@ func TestGlobalLogSendHostnameDiffFalse(t *testing.T) {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Error(err)
 			}
 			b, err := json.Marshal(&sample.b)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Error(err)
 			}
 			t.Errorf("Expected GlobalLogSendHostname to be different in 2 cases, but it is not (%d) %s %s", len(result), a, b)
 		}
@@ -1202,15 +1202,15 @@ func TestRuntimeAPIEqual(t *testing.T) {
 		var result RuntimeAPI
 		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err)
 		}
 		byteJSON, err := json.Marshal(sample)
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err)
 		}
 		err = json.Unmarshal(byteJSON, &result)
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err)
 		}
 
 		samples = append(samples, struct {
@@ -1224,11 +1224,11 @@ func TestRuntimeAPIEqual(t *testing.T) {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Error(err)
 			}
 			b, err := json.Marshal(&sample.b)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Error(err)
 			}
 			t.Errorf("Expected RuntimeAPI to be equal, but it is not %s %s", a, b)
 		}
@@ -1244,11 +1244,11 @@ func TestRuntimeAPIEqualFalse(t *testing.T) {
 		var result RuntimeAPI
 		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err)
 		}
 		err = faker.FakeData(&result, options.WithIgnoreInterface(true))
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err)
 		}
 		samples = append(samples, struct {
 			a, b RuntimeAPI
@@ -1261,11 +1261,11 @@ func TestRuntimeAPIEqualFalse(t *testing.T) {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Error(err)
 			}
 			b, err := json.Marshal(&sample.b)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Error(err)
 			}
 			t.Errorf("Expected RuntimeAPI to be different, but it is not %s %s", a, b)
 		}
@@ -1281,15 +1281,15 @@ func TestRuntimeAPIDiff(t *testing.T) {
 		var result RuntimeAPI
 		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err)
 		}
 		byteJSON, err := json.Marshal(sample)
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err)
 		}
 		err = json.Unmarshal(byteJSON, &result)
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err)
 		}
 
 		samples = append(samples, struct {
@@ -1303,11 +1303,11 @@ func TestRuntimeAPIDiff(t *testing.T) {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Error(err)
 			}
 			b, err := json.Marshal(&sample.b)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Error(err)
 			}
 			t.Errorf("Expected RuntimeAPI to be equal, but it is not %s %s, %v", a, b, result)
 		}
@@ -1323,11 +1323,11 @@ func TestRuntimeAPIDiffFalse(t *testing.T) {
 		var result RuntimeAPI
 		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err)
 		}
 		err = faker.FakeData(&result, options.WithIgnoreInterface(true))
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err)
 		}
 		samples = append(samples, struct {
 			a, b RuntimeAPI
@@ -1340,11 +1340,11 @@ func TestRuntimeAPIDiffFalse(t *testing.T) {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Error(err)
 			}
 			b, err := json.Marshal(&sample.b)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Error(err)
 			}
 			t.Errorf("Expected RuntimeAPI to be different in 2 cases, but it is not (%d) %s %s", len(result), a, b)
 		}
@@ -1360,15 +1360,15 @@ func TestSetVarFmtEqual(t *testing.T) {
 		var result SetVarFmt
 		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err)
 		}
 		byteJSON, err := json.Marshal(sample)
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err)
 		}
 		err = json.Unmarshal(byteJSON, &result)
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err)
 		}
 
 		samples = append(samples, struct {
@@ -1382,11 +1382,11 @@ func TestSetVarFmtEqual(t *testing.T) {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Error(err)
 			}
 			b, err := json.Marshal(&sample.b)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Error(err)
 			}
 			t.Errorf("Expected SetVarFmt to be equal, but it is not %s %s", a, b)
 		}
@@ -1402,11 +1402,11 @@ func TestSetVarFmtEqualFalse(t *testing.T) {
 		var result SetVarFmt
 		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err)
 		}
 		err = faker.FakeData(&result, options.WithIgnoreInterface(true))
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err)
 		}
 		samples = append(samples, struct {
 			a, b SetVarFmt
@@ -1419,11 +1419,11 @@ func TestSetVarFmtEqualFalse(t *testing.T) {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Error(err)
 			}
 			b, err := json.Marshal(&sample.b)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Error(err)
 			}
 			t.Errorf("Expected SetVarFmt to be different, but it is not %s %s", a, b)
 		}
@@ -1439,15 +1439,15 @@ func TestSetVarFmtDiff(t *testing.T) {
 		var result SetVarFmt
 		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err)
 		}
 		byteJSON, err := json.Marshal(sample)
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err)
 		}
 		err = json.Unmarshal(byteJSON, &result)
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err)
 		}
 
 		samples = append(samples, struct {
@@ -1461,11 +1461,11 @@ func TestSetVarFmtDiff(t *testing.T) {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Error(err)
 			}
 			b, err := json.Marshal(&sample.b)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Error(err)
 			}
 			t.Errorf("Expected SetVarFmt to be equal, but it is not %s %s, %v", a, b, result)
 		}
@@ -1481,11 +1481,11 @@ func TestSetVarFmtDiffFalse(t *testing.T) {
 		var result SetVarFmt
 		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err)
 		}
 		err = faker.FakeData(&result, options.WithIgnoreInterface(true))
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err)
 		}
 		samples = append(samples, struct {
 			a, b SetVarFmt
@@ -1498,11 +1498,11 @@ func TestSetVarFmtDiffFalse(t *testing.T) {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Error(err)
 			}
 			b, err := json.Marshal(&sample.b)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Error(err)
 			}
 			t.Errorf("Expected SetVarFmt to be different in 2 cases, but it is not (%d) %s %s", len(result), a, b)
 		}
@@ -1518,15 +1518,15 @@ func TestSetVarEqual(t *testing.T) {
 		var result SetVar
 		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err)
 		}
 		byteJSON, err := json.Marshal(sample)
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err)
 		}
 		err = json.Unmarshal(byteJSON, &result)
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err)
 		}
 
 		samples = append(samples, struct {
@@ -1540,11 +1540,11 @@ func TestSetVarEqual(t *testing.T) {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Error(err)
 			}
 			b, err := json.Marshal(&sample.b)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Error(err)
 			}
 			t.Errorf("Expected SetVar to be equal, but it is not %s %s", a, b)
 		}
@@ -1560,11 +1560,11 @@ func TestSetVarEqualFalse(t *testing.T) {
 		var result SetVar
 		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err)
 		}
 		err = faker.FakeData(&result, options.WithIgnoreInterface(true))
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err)
 		}
 		samples = append(samples, struct {
 			a, b SetVar
@@ -1577,11 +1577,11 @@ func TestSetVarEqualFalse(t *testing.T) {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Error(err)
 			}
 			b, err := json.Marshal(&sample.b)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Error(err)
 			}
 			t.Errorf("Expected SetVar to be different, but it is not %s %s", a, b)
 		}
@@ -1597,15 +1597,15 @@ func TestSetVarDiff(t *testing.T) {
 		var result SetVar
 		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err)
 		}
 		byteJSON, err := json.Marshal(sample)
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err)
 		}
 		err = json.Unmarshal(byteJSON, &result)
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err)
 		}
 
 		samples = append(samples, struct {
@@ -1619,11 +1619,11 @@ func TestSetVarDiff(t *testing.T) {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Error(err)
 			}
 			b, err := json.Marshal(&sample.b)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Error(err)
 			}
 			t.Errorf("Expected SetVar to be equal, but it is not %s %s, %v", a, b, result)
 		}
@@ -1639,11 +1639,11 @@ func TestSetVarDiffFalse(t *testing.T) {
 		var result SetVar
 		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err)
 		}
 		err = faker.FakeData(&result, options.WithIgnoreInterface(true))
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err)
 		}
 		samples = append(samples, struct {
 			a, b SetVar
@@ -1656,11 +1656,11 @@ func TestSetVarDiffFalse(t *testing.T) {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Error(err)
 			}
 			b, err := json.Marshal(&sample.b)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Error(err)
 			}
 			t.Errorf("Expected SetVar to be different in 2 cases, but it is not (%d) %s %s", len(result), a, b)
 		}
@@ -1676,15 +1676,15 @@ func TestThreadGroupEqual(t *testing.T) {
 		var result ThreadGroup
 		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err)
 		}
 		byteJSON, err := json.Marshal(sample)
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err)
 		}
 		err = json.Unmarshal(byteJSON, &result)
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err)
 		}
 
 		samples = append(samples, struct {
@@ -1698,11 +1698,11 @@ func TestThreadGroupEqual(t *testing.T) {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Error(err)
 			}
 			b, err := json.Marshal(&sample.b)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Error(err)
 			}
 			t.Errorf("Expected ThreadGroup to be equal, but it is not %s %s", a, b)
 		}
@@ -1718,11 +1718,11 @@ func TestThreadGroupEqualFalse(t *testing.T) {
 		var result ThreadGroup
 		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err)
 		}
 		err = faker.FakeData(&result, options.WithIgnoreInterface(true))
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err)
 		}
 		samples = append(samples, struct {
 			a, b ThreadGroup
@@ -1735,11 +1735,11 @@ func TestThreadGroupEqualFalse(t *testing.T) {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Error(err)
 			}
 			b, err := json.Marshal(&sample.b)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Error(err)
 			}
 			t.Errorf("Expected ThreadGroup to be different, but it is not %s %s", a, b)
 		}
@@ -1755,15 +1755,15 @@ func TestThreadGroupDiff(t *testing.T) {
 		var result ThreadGroup
 		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err)
 		}
 		byteJSON, err := json.Marshal(sample)
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err)
 		}
 		err = json.Unmarshal(byteJSON, &result)
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err)
 		}
 
 		samples = append(samples, struct {
@@ -1777,11 +1777,11 @@ func TestThreadGroupDiff(t *testing.T) {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Error(err)
 			}
 			b, err := json.Marshal(&sample.b)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Error(err)
 			}
 			t.Errorf("Expected ThreadGroup to be equal, but it is not %s %s, %v", a, b, result)
 		}
@@ -1797,11 +1797,11 @@ func TestThreadGroupDiffFalse(t *testing.T) {
 		var result ThreadGroup
 		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err)
 		}
 		err = faker.FakeData(&result, options.WithIgnoreInterface(true))
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err)
 		}
 		samples = append(samples, struct {
 			a, b ThreadGroup
@@ -1814,11 +1814,11 @@ func TestThreadGroupDiffFalse(t *testing.T) {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Error(err)
 			}
 			b, err := json.Marshal(&sample.b)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Error(err)
 			}
 			t.Errorf("Expected ThreadGroup to be different in 2 cases, but it is not (%d) %s %s", len(result), a, b)
 		}

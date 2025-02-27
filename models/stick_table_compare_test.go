@@ -38,15 +38,15 @@ func TestStickTableEqual(t *testing.T) {
 		var result StickTable
 		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err)
 		}
 		byteJSON, err := json.Marshal(sample)
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err)
 		}
 		err = json.Unmarshal(byteJSON, &result)
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err)
 		}
 
 		samples = append(samples, struct {
@@ -60,11 +60,11 @@ func TestStickTableEqual(t *testing.T) {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Error(err)
 			}
 			b, err := json.Marshal(&sample.b)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Error(err)
 			}
 			t.Errorf("Expected StickTable to be equal, but it is not %s %s", a, b)
 		}
@@ -80,11 +80,11 @@ func TestStickTableEqualFalse(t *testing.T) {
 		var result StickTable
 		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err)
 		}
 		err = faker.FakeData(&result, options.WithIgnoreInterface(true))
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err)
 		}
 		result.Size = Ptr(*sample.Size + 1)
 		result.Used = Ptr(*sample.Used + 1)
@@ -99,11 +99,11 @@ func TestStickTableEqualFalse(t *testing.T) {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Error(err)
 			}
 			b, err := json.Marshal(&sample.b)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Error(err)
 			}
 			t.Errorf("Expected StickTable to be different, but it is not %s %s", a, b)
 		}
@@ -119,15 +119,15 @@ func TestStickTableDiff(t *testing.T) {
 		var result StickTable
 		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err)
 		}
 		byteJSON, err := json.Marshal(sample)
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err)
 		}
 		err = json.Unmarshal(byteJSON, &result)
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err)
 		}
 
 		samples = append(samples, struct {
@@ -141,11 +141,11 @@ func TestStickTableDiff(t *testing.T) {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Error(err)
 			}
 			b, err := json.Marshal(&sample.b)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Error(err)
 			}
 			t.Errorf("Expected StickTable to be equal, but it is not %s %s, %v", a, b, result)
 		}
@@ -161,11 +161,11 @@ func TestStickTableDiffFalse(t *testing.T) {
 		var result StickTable
 		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err)
 		}
 		err = faker.FakeData(&result, options.WithIgnoreInterface(true))
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err)
 		}
 		result.Size = Ptr(*sample.Size + 1)
 		result.Used = Ptr(*sample.Used + 1)
@@ -180,11 +180,11 @@ func TestStickTableDiffFalse(t *testing.T) {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Error(err)
 			}
 			b, err := json.Marshal(&sample.b)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Error(err)
 			}
 			t.Errorf("Expected StickTable to be different in 5 cases, but it is not (%d) %s %s", len(result), a, b)
 		}
@@ -200,15 +200,15 @@ func TestStickTableFieldEqual(t *testing.T) {
 		var result StickTableField
 		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err)
 		}
 		byteJSON, err := json.Marshal(sample)
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err)
 		}
 		err = json.Unmarshal(byteJSON, &result)
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err)
 		}
 
 		samples = append(samples, struct {
@@ -222,11 +222,11 @@ func TestStickTableFieldEqual(t *testing.T) {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Error(err)
 			}
 			b, err := json.Marshal(&sample.b)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Error(err)
 			}
 			t.Errorf("Expected StickTableField to be equal, but it is not %s %s", a, b)
 		}
@@ -242,11 +242,11 @@ func TestStickTableFieldEqualFalse(t *testing.T) {
 		var result StickTableField
 		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err)
 		}
 		err = faker.FakeData(&result, options.WithIgnoreInterface(true))
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err)
 		}
 		result.Period = sample.Period + 1
 		samples = append(samples, struct {
@@ -260,11 +260,11 @@ func TestStickTableFieldEqualFalse(t *testing.T) {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Error(err)
 			}
 			b, err := json.Marshal(&sample.b)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Error(err)
 			}
 			t.Errorf("Expected StickTableField to be different, but it is not %s %s", a, b)
 		}
@@ -280,15 +280,15 @@ func TestStickTableFieldDiff(t *testing.T) {
 		var result StickTableField
 		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err)
 		}
 		byteJSON, err := json.Marshal(sample)
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err)
 		}
 		err = json.Unmarshal(byteJSON, &result)
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err)
 		}
 
 		samples = append(samples, struct {
@@ -302,11 +302,11 @@ func TestStickTableFieldDiff(t *testing.T) {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Error(err)
 			}
 			b, err := json.Marshal(&sample.b)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Error(err)
 			}
 			t.Errorf("Expected StickTableField to be equal, but it is not %s %s, %v", a, b, result)
 		}
@@ -322,11 +322,11 @@ func TestStickTableFieldDiffFalse(t *testing.T) {
 		var result StickTableField
 		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err)
 		}
 		err = faker.FakeData(&result, options.WithIgnoreInterface(true))
 		if err != nil {
-			t.Errorf(err.Error())
+			t.Error(err)
 		}
 		result.Period = sample.Period + 1
 		samples = append(samples, struct {
@@ -340,11 +340,11 @@ func TestStickTableFieldDiffFalse(t *testing.T) {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Error(err)
 			}
 			b, err := json.Marshal(&sample.b)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Error(err)
 			}
 			t.Errorf("Expected StickTableField to be different in 3 cases, but it is not (%d) %s %s", len(result), a, b)
 		}

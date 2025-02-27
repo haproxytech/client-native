@@ -59,12 +59,12 @@ func TestOptionOriginalTo(t *testing.T) {
 			}
 			if shouldPass {
 				if err != nil {
-					t.Errorf(err.Error())
+					t.Error(err)
 					return
 				}
 				result, err := parser.Result()
 				if err != nil {
-					t.Errorf(err.Error())
+					t.Error(err)
 					return
 				}
 				var returnLine string
@@ -74,15 +74,15 @@ func TestOptionOriginalTo(t *testing.T) {
 					returnLine = fmt.Sprintf("%s # %s", result[0].Data, result[0].Comment)
 				}
 				if command != returnLine {
-					t.Errorf(fmt.Sprintf("error: has [%s] expects [%s]", returnLine, command))
+					t.Errorf("error: has [%s] expects [%s]", returnLine, command)
 				}
 			} else {
 				if err == nil {
-					t.Errorf(fmt.Sprintf("error: did not throw error for line [%s]", line))
+					t.Errorf("error: did not throw error for line [%s]", line)
 				}
 				_, parseErr := parser.Result()
 				if parseErr == nil {
-					t.Errorf(fmt.Sprintf("error: did not throw error on result for line [%s]", line))
+					t.Errorf("error: did not throw error on result for line [%s]", line)
 				}
 			}
 		})

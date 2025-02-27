@@ -32,11 +32,11 @@ func TestEmpty(t *testing.T) {
 		t.Run(config.Name, func(t *testing.T) {
 			p, err := parser.New()
 			if err != nil {
-				t.Fatalf(err.Error())
+				t.Fatal(err.Error())
 			}
 			err = p.Process(strings.NewReader(config.Config))
 			if err != nil {
-				t.Fatalf(err.Error())
+				t.Fatal(err.Error())
 			}
 			result := p.String()
 			if result != config.Config {
