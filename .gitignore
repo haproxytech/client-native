@@ -3,3 +3,4 @@ cmd/
 .idea/
 bin/golangci-lint
 bin/swagger
+.envrc

@@ -393,6 +393,7 @@ frontend test
   http-request track-sc1 src table tr1 if TRUE
   http-request track-sc2 src table tr2 if TRUE
   http-request track-sc5 src table test if TRUE
+  http-request set-var-fmt(txn.from) %[src]:%[src_port]
   http-response allow if src 192.168.0.0/16
   http-response set-header X-SSL %[ssl_fc]
   http-response set-var(req.my_var) req.fhdr(user-agent),lower
