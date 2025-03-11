@@ -4424,6 +4424,7 @@ definitions:
                   - set-tos
                   - set-uri
                   - set-var
+                  - set-var-fmt
                   - silent-drop
                   - strict-mode
                   - tarpit
