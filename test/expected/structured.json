@@ -1686,6 +1686,12 @@
                     "var_scope": "req"
                 },
                 {
+                    "type": "set-var-fmt",
+                    "var_format": "%[src]:%[src_port]",
+                    "var_name": "from",
+                    "var_scope": "txn"
+                },
+                {
                     "map_file": "map.lst",
                     "map_keyfmt": "%[src]",
                     "map_valuefmt": "%[req.hdr(X-Value)]",

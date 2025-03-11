@@ -421,6 +421,7 @@ frontend test
   http-request allow if src 192.168.0.0/16
   http-request set-header X-SSL %[ssl_fc]
   http-request set-var(req.my_var) req.fhdr(user-agent),lower
+  http-request set-var-fmt(txn.from) %[src]:%[src_port]
   http-request set-map(map.lst) %[src] %[req.hdr(X-Value)]
   http-request del-map(map.lst) %[src] if FALSE
   http-request del-acl(map.lst) %[src] if FALSE
