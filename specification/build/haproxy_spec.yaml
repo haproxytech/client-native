@@ -23050,6 +23050,7 @@ paths:
           name: file_upload
           type: file
           x-mimetype: text/plain
+        - $ref: '#/parameters/skip_reload'
         - $ref: '#/parameters/force_reload'
       responses:
         "201":
