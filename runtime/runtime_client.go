@@ -170,7 +170,9 @@ func (c *client) Reload() (string, error) {
 		parts := strings.SplitN(output, "\n--\n", 2)
 		if len(parts) == 1 {
 			// No startup logs. This happens when HAProxy is compiled without USE_SHM_OPEN.
-			status = output[:len(output)-1]
+			if len(output) > 0 {
+				status = output[:len(output)-1]
+			}
 		} else {
 			status, logs = parts[0], parts[1]
 		}
