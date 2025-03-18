@@ -27,6 +27,7 @@ ssl_certificates:
         type: file
         description: The SSL certificate to upload
         x-mimetype: text/plain
+      - $ref: "#/parameters/skip_reload"
       - $ref: "#/parameters/force_reload"
     tags:
       - Storage
