@@ -1,0 +1,15 @@
+ssl_crt_list_file:
+  title: SSL CRT List File
+  description: A file referencing one or more certificates with their configuration.
+  type: object
+  properties:
+    file:
+      type: string
+    storage_name:
+      type: string
+    description:
+      type: string
+    size:
+      type: integer
+      x-nullable: true
+      description: File size in bytes.

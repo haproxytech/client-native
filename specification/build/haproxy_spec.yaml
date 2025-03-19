@@ -9872,6 +9872,27 @@ definitions:
     type: array
     items:
       $ref: "#/definitions/ssl_certificate"
+  ssl_crt_list_file:
+    description: A file referencing one or more certificates with their configuration.
+    properties:
+      description:
+        type: string
+      file:
+        type: string
+      size:
+        description: File size in bytes.
+        type: integer
+        x-nullable: true
+      storage_name:
+        type: string
+    title: SSL CRT List File
+    type: object
+  ssl_crt_list_files:
+    title: List of SSL certificate list files
+    description: List of SSL certificate list files (crt-list)
+    type: array
+    items:
+      $ref: "#/definitions/ssl_crt_list_file"
   ssl_ca_file:
     description: A file containing one or more SSL/TLS certificates and keys
     properties:
@@ -9965,7 +9986,7 @@ definitions:
     title: SSL Certificate ID
     type: object
   ssl_crt_list:
-    description: SSL Crt List
+    description: SSL Crt List file
     properties:
       file:
         type: string
@@ -24516,7 +24537,8 @@ paths:
         - SSLRuntime
   /services/haproxy/runtime/ssl_crt_lists:
     get:
-      description: Returns CrtList files description from runtime
+      description: Returns an array of crt-list file descriptions from runtime.
+      operationId: getAllCrtLists
       produces:
         - application/json
       responses:
@@ -24526,14 +24548,47 @@ paths:
             $ref: '#/definitions/ssl_crt_lists'
         default:
           $ref: '#/responses/DefaultError'
-      summary: Returns CrtList files description from runtime
+      summary: Get the list of all crt-list files
       tags:
         - SSLRuntime
-  /services/haproxy/runtime/ssl_crt_lists/cert_entries:
-    get:
-      description: Returns one CrtList runtime entries
+  /services/haproxy/runtime/ssl_crt_lists/entries:
+    delete:
+      description: Deletes a single entry from the given crt-list using the runtime socket.
+      operationId: deleteCrtListEntry
       parameters:
-        - description: SSL crt list file
+        - description: SSL crt list name
+          in: query
+          name: name
+          required: true
+          type: string
+        - description: SSL cert entry name
+          in: query
+          name: cert_file
+          required: true
+          type: string
+        - description: The line number where the entry is located, in case several entries share the same certificate.
+          in: query
+          minimum: 1
+          name: line_number
+          type: integer
+          x-nullable: true
+      responses:
+        "204":
+          description: Successful operation
+        "400":
+          $ref: '#/responses/BadRequest'
+        "404":
+          $ref: '#/responses/NotFound'
+        default:
+          $ref: '#/responses/DefaultError'
+      summary: Delete an entry from a crt-list
+      tags:
+        - SSLRuntime
+    get:
+      description: Returns an array of entries present inside the given crt-list file. Their index can be used to delete them.
+      operationId: getAllCrtListEntries
+      parameters:
+        - description: SSL crt-list filename
           in: query
           name: name
           required: true
@@ -24547,63 +24602,14 @@ paths:
             $ref: '#/definitions/ssl_crt_list_entries'
         default:
           $ref: '#/responses/DefaultError'
-      summary: Returns one CrtList runtime entries
-      tags:
-        - SSLRuntime
-  /services/haproxy/runtime/ssl_crt_lists/cert_entry:
-    delete:
-      description: Deletes an entry from CrtList file
-      parameters:
-        - description: SSL crt list name
-          in: query
-          name: name
-          required: true
-          type: string
-        - description: SSL cert entry name
-          in: query
-          name: cert_file
-          required: true
-          type: string
-        - description: The line number in the crt list
-          in: query
-          minimum: 0
-          name: line_number
-          required: true
-          type: integer
-      responses:
-        "204":
-          description: Successful operation
-        "400":
-          $ref: '#/responses/BadRequest'
-        default:
-          $ref: '#/responses/DefaultError'
-      summary: Deletes an entry from CrtList file
-      tags:
-        - SSLRuntime
-    get:
-      description: Returns one structured runtime CrtList file
-      parameters:
-        - description: SSL crt list file
-          in: query
-          name: name
-          required: true
-          type: string
-      produces:
-        - application/json
-      responses:
-        "200":
-          description: Successful operation
-          schema:
-            $ref: '#/definitions/ssl_crt_list'
-        default:
-          $ref: '#/responses/DefaultError'
-      summary: Returns one structured runtime CrtList file
+      summary: Get all the entries inside a crt-list
       tags:
         - SSLRuntime
     post:
-      description: Adds an entry into the CrtList file
+      description: Appends an entry to the given crt-list using the runtime socket.
+      operationId: addCrtListEntry
       parameters:
-        - description: SSL crt list name
+        - description: SSL crt-list filename
           in: query
           name: name
           required: true
@@ -24624,7 +24630,7 @@ paths:
           $ref: '#/responses/AlreadyExists'
         default:
           $ref: '#/responses/DefaultError'
-      summary: Adds an entry into the CrtList file
+      summary: Add an entry into a crt-list
       tags:
         - SSLRuntime
   /services/haproxy/runtime/stick_tables:
@@ -25256,6 +25262,250 @@ paths:
         default:
           $ref: '#/responses/DefaultError'
       summary: Replace SSL certificates on disk
+      tags:
+        - Storage
+  /services/haproxy/storage/ssl_crt_lists:
+    get:
+      description: Returns all available certificate lists on disk.
+      operationId: getAllStorageSSLCrtListFiles
+      responses:
+        "200":
+          description: Successful operation
+          schema:
+            $ref: '#/definitions/ssl_crt_list_files'
+        "404":
+          $ref: '#/responses/NotFound'
+        default:
+          $ref: '#/responses/DefaultError'
+      summary: Return all available certificate lists on disk
+      tags:
+        - Storage
+    post:
+      consumes:
+        - multipart/form-data
+      description: Creates a certificate list.
+      operationId: createStorageSSLCrtListFile
+      parameters:
+        - description: The certificate list to upload
+          in: formData
+          name: file_upload
+          type: file
+          x-mimetype: text/plain
+        - $ref: '#/parameters/force_reload'
+      responses:
+        "201":
+          description: Certificate list created
+          schema:
+            $ref: '#/definitions/ssl_crt_list_file'
+        "202":
+          description: Certificate list created requested
+          headers:
+            Reload-ID:
+              description: ID of the requested reload
+              type: string
+          schema:
+            $ref: '#/definitions/ssl_crt_list_file'
+        "400":
+          $ref: '#/responses/BadRequest'
+        "409":
+          $ref: '#/responses/AlreadyExists'
+        default:
+          $ref: '#/responses/DefaultError'
+      summary: Create a certificate list
+      tags:
+        - Storage
+  /services/haproxy/storage/ssl_crt_lists/{name}:
+    delete:
+      description: Deletes a certificate list from disk.
+      operationId: deleteStorageSSLCrtListFile
+      parameters:
+        - description: Certificate list name
+          in: path
+          name: name
+          required: true
+          type: string
+        - $ref: '#/parameters/skip_reload'
+        - $ref: '#/parameters/force_reload'
+      responses:
+        "202":
+          description: Certificate list deleted and reload requested
+          headers:
+            Reload-ID:
+              description: ID of the requested reload
+              type: string
+        "204":
+          description: Certificate list deleted
+        "404":
+          $ref: '#/responses/NotFound'
+        default:
+          $ref: '#/responses/DefaultError'
+      summary: Delete a certificate list from disk
+      tags:
+        - Storage
+    get:
+      description: Returns one certificate list from disk.
+      operationId: getOneStorageSSLCrtListFile
+      parameters:
+        - description: Certificate list name
+          in: path
+          name: name
+          required: true
+          type: string
+      produces:
+        - application/octet-stream
+      responses:
+        "200":
+          description: Successful operation
+          schema:
+            type: file
+        "404":
+          $ref: '#/responses/NotFound'
+        default:
+          $ref: '#/responses/DefaultError'
+      summary: Return one certificate list from disk
+      tags:
+        - Storage
+    put:
+      consumes:
+        - text/plain
+      description: Replaces a certificate list on disk.
+      operationId: replaceStorageSSLCrtListFile
+      parameters:
+        - description: Certificate list name
+          in: path
+          name: name
+          required: true
+          type: string
+        - in: body
+          name: data
+          required: true
+          schema:
+            type: string
+        - $ref: '#/parameters/skip_reload'
+        - $ref: '#/parameters/force_reload'
+      produces:
+        - application/json
+      responses:
+        "200":
+          description: Certificate list replaced
+          schema:
+            $ref: '#/definitions/ssl_crt_list_file'
+        "202":
+          description: Certificate list replaced and reload requested
+          headers:
+            Reload-ID:
+              description: ID of the requested reload
+              type: string
+          schema:
+            $ref: '#/definitions/ssl_crt_list_file'
+        "400":
+          $ref: '#/responses/BadRequest'
+        "404":
+          $ref: '#/responses/NotFound'
+        default:
+          $ref: '#/responses/DefaultError'
+      summary: Replace a certificate lists on disk
+      tags:
+        - Storage
+  /services/haproxy/storage/ssl_crt_lists/{name}/entries:
+    delete:
+      description: Deletes an entry from a certificate list.
+      operationId: DeleteStorageSSLCrtListEntry
+      parameters:
+        - description: SSL crt list name
+          in: path
+          name: name
+          required: true
+          type: string
+        - description: SSL certificate filename
+          in: query
+          name: certificate
+          required: true
+          type: string
+        - description: The line number in the crt-list
+          in: query
+          minimum: 0
+          name: line_number
+          required: true
+          type: integer
+        - $ref: '#/parameters/force_reload'
+      responses:
+        "202":
+          description: Configuration change accepted and reload requested
+          headers:
+            Reload-ID:
+              description: ID of the requested reload
+              type: string
+        "204":
+          description: Successful operation
+        "400":
+          $ref: '#/responses/BadRequest'
+        "404":
+          $ref: '#/responses/NotFound'
+        default:
+          $ref: '#/responses/DefaultError'
+      summary: Deletes an entry from CrtList file
+      tags:
+        - Storage
+    get:
+      description: Returns all the entries in a certificate list.
+      operationId: GetStorageSSLCrtListEntries
+      parameters:
+        - description: SSL crt-list file
+          in: path
+          name: name
+          required: true
+          type: string
+      produces:
+        - application/json
+      responses:
+        "200":
+          description: Successful operation
+          schema:
+            $ref: '#/definitions/ssl_crt_list_entries'
+        "404":
+          $ref: '#/responses/NotFound'
+        default:
+          $ref: '#/responses/DefaultError'
+      summary: Returns all the entries in a CrtList
+      tags:
+        - Storage
+    post:
+      description: Creates a new entry in a certificate list.
+      operationId: CreateStorageSSLCrtListEntry
+      parameters:
+        - description: SSL crt-list file
+          in: path
+          name: name
+          required: true
+          type: string
+        - description: SSL crt-list entry
+          in: body
+          name: data
+          required: true
+          schema:
+            $ref: '#/definitions/ssl_crt_list_entry'
+        - $ref: '#/parameters/force_reload'
+      produces:
+        - application/json
+      responses:
+        "201":
+          description: New entry added
+          schema:
+            $ref: '#/definitions/ssl_crt_list_entry'
+        "202":
+          description: Configuration change accepted and reload requested
+          headers:
+            Reload-ID:
+              description: ID of the requested reload
+              type: string
+        "400":
+          $ref: '#/responses/BadRequest'
+        "409":
+          $ref: '#/responses/AlreadyExists'
+        default:
+          $ref: '#/responses/DefaultError'
+      summary: Creates a new entry in a CrtList
       tags:
         - Storage
   /services/haproxy/storage/general:

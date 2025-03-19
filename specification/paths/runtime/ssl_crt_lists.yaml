@@ -2,8 +2,9 @@ ssl_crt_lists:
   get:
     tags:
       - SSLRuntime
-    summary: Returns CrtList files description from runtime
-    description: Returns CrtList files description from runtime
+    summary: Get the list of all crt-list files
+    description: Returns an array of crt-list file descriptions from runtime.
+    operationId: getAllCrtLists
     produces:
       - application/json
     responses:
@@ -17,10 +18,11 @@ ssl_crt_list_entries:
   get:
     tags:
       - SSLRuntime
-    summary: Returns one CrtList runtime entries
-    description: Returns one CrtList runtime entries
+    summary: Get all the entries inside a crt-list
+    description: Returns an array of entries present inside the given crt-list file. Their index can be used to delete them.
+    operationId: getAllCrtListEntries
     parameters:
-      - description: SSL crt list file
+      - description: SSL crt-list filename
         in: query
         name: name
         required: true
@@ -34,34 +36,14 @@ ssl_crt_list_entries:
           $ref: '#/definitions/ssl_crt_list_entries'
       default:
         $ref: '#/responses/DefaultError'
-ssl_crt_list_entry_one:
-  get:
-    tags:
-      - SSLRuntime
-    summary: Returns one structured runtime CrtList file
-    description: Returns one structured runtime CrtList file
-    parameters:
-      - description: SSL crt list file
-        in: query
-        name: name
-        required: true
-        type: string
-    produces:
-      - application/json
-    responses:
-      "200":
-        description: Successful operation
-        schema:
-          $ref: '#/definitions/ssl_crt_list'
-      default:
-        $ref: '#/responses/DefaultError'
   post:
     tags:
       - SSLRuntime
-    summary: Adds an entry into the CrtList file
-    description: Adds an entry into the CrtList file
+    summary: Add an entry into a crt-list
+    description: Appends an entry to the given crt-list using the runtime socket.
+    operationId: addCrtListEntry
     parameters:
-      - description: SSL crt list name
+      - description: SSL crt-list filename
         in: query
         name: name
         required: true
@@ -85,8 +67,9 @@ ssl_crt_list_entry_one:
   delete:
     tags:
       - SSLRuntime
-    summary: Deletes an entry from CrtList file
-    description: Deletes an entry from CrtList file
+    summary: Delete an entry from a crt-list
+    description: Deletes a single entry from the given crt-list using the runtime socket.
+    operationId: deleteCrtListEntry
     parameters:
       - description: SSL crt list name
         in: query
@@ -98,16 +81,18 @@ ssl_crt_list_entry_one:
         name: cert_file
         required: true
         type: string
-      - description: The line number in the crt list
+      - description: The line number where the entry is located, in case several entries share the same certificate.
         in: query
         name: line_number
-        required: true
         type: integer
-        minimum: 0
+        minimum: 1
+        x-nullable: true
     responses:
       "204":
         description: Successful operation
       "400":
         $ref: '#/responses/BadRequest'
+      "404":
+        $ref: '#/responses/NotFound'
       default:
         $ref: '#/responses/DefaultError'

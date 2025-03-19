@@ -1,0 +1,246 @@
+---
+ssl_crt_list_files:
+  get:
+    summary: Return all available certificate lists on disk
+    description: Returns all available certificate lists on disk.
+    operationId: getAllStorageSSLCrtListFiles
+    tags:
+      - Storage
+    responses:
+      '200':
+        description: Successful operation
+        schema:
+          $ref: "#/definitions/ssl_crt_list_files"
+      '404':
+        $ref: '#/responses/NotFound'
+      'default':
+        $ref: '#/responses/DefaultError'
+  post:
+    summary: Create a certificate list
+    description: Creates a certificate list.
+    operationId: createStorageSSLCrtListFile
+    consumes:
+      - multipart/form-data
+    parameters:
+      - in: formData
+        name: file_upload
+        type: file
+        description: The certificate list to upload
+        x-mimetype: text/plain
+      - $ref: "#/parameters/force_reload"
+    tags:
+      - Storage
+    responses:
+      '201':
+        description: Certificate list created
+        schema:
+          $ref: "#/definitions/ssl_crt_list_file"
+      '202':
+        description: Certificate list created requested
+        headers:
+          Reload-ID:
+            description: ID of the requested reload
+            type: string
+        schema:
+          $ref: "#/definitions/ssl_crt_list_file"
+      '409':
+        $ref: '#/responses/AlreadyExists'
+      '400':
+        $ref: '#/responses/BadRequest'
+      'default':
+        $ref: '#/responses/DefaultError'
+ssl_crt_list_files_one:
+  get:
+    summary: Return one certificate list from disk
+    description: Returns one certificate list from disk.
+    operationId: getOneStorageSSLCrtListFile
+    tags:
+      - Storage
+    parameters:
+      - name: name
+        in: path
+        description: Certificate list name
+        required: true
+        type: string
+    produces:
+      - application/octet-stream
+    responses:
+      '200':
+        description: Successful operation
+        schema:
+          type: file
+      '404':
+        $ref: '#/responses/NotFound'
+      'default':
+        $ref: '#/responses/DefaultError'
+  delete:
+    summary: Delete a certificate list from disk
+    description: Deletes a certificate list from disk.
+    operationId: deleteStorageSSLCrtListFile
+    tags:
+      - Storage
+    parameters:
+      - name: name
+        in: path
+        description: Certificate list name
+        required: true
+        type: string
+      - $ref: "#/parameters/skip_reload"
+      - $ref: "#/parameters/force_reload"
+    responses:
+      '202':
+        description: Certificate list deleted and reload requested
+        headers:
+          Reload-ID:
+            description: ID of the requested reload
+            type: string
+      '204':
+        description: Certificate list deleted
+      '404':
+        $ref: '#/responses/NotFound'
+      'default':
+        $ref: '#/responses/DefaultError'
+  put:
+    summary: Replace a certificate lists on disk
+    description: Replaces a certificate list on disk.
+    operationId: replaceStorageSSLCrtListFile
+    produces:
+      - application/json
+    consumes:
+      - text/plain
+    tags:
+      - Storage
+    parameters:
+      - name: name
+        in: path
+        description: Certificate list name
+        required: true
+        type: string
+      - name: data
+        in: body
+        required: true
+        schema:
+          type: string
+      - $ref: "#/parameters/skip_reload"
+      - $ref: "#/parameters/force_reload"
+    responses:
+      '200':
+        description: Certificate list replaced
+        schema:
+          $ref: "#/definitions/ssl_crt_list_file"
+      '202':
+        description: Certificate list replaced and reload requested
+        headers:
+          Reload-ID:
+            description: ID of the requested reload
+            type: string
+        schema:
+          $ref: "#/definitions/ssl_crt_list_file"
+      '400':
+        $ref: '#/responses/BadRequest'
+      '404':
+        $ref: '#/responses/NotFound'
+      'default':
+        $ref: '#/responses/DefaultError'
+
+ssl_crt_list_entries:
+  get:
+    tags:
+      - Storage
+    summary: Returns all the entries in a CrtList
+    description: Returns all the entries in a certificate list.
+    operationId: GetStorageSSLCrtListEntries
+    parameters:
+      - description: SSL crt-list file
+        in: path
+        name: name
+        required: true
+        type: string
+    produces:
+      - application/json
+    responses:
+      "200":
+        description: Successful operation
+        schema:
+          $ref: '#/definitions/ssl_crt_list_entries'
+      '404':
+        $ref: '#/responses/NotFound'
+      default:
+        $ref: '#/responses/DefaultError'
+  post:
+    tags:
+      - Storage
+    summary: Creates a new entry in a CrtList
+    description: Creates a new entry in a certificate list.
+    operationId: CreateStorageSSLCrtListEntry
+    parameters:
+      - in: path
+        description: SSL crt-list file
+        name: name
+        required: true
+        type: string
+      - in: body
+        description: SSL crt-list entry
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/ssl_crt_list_entry'
+      - $ref: "#/parameters/force_reload"
+    produces:
+      - application/json
+    responses:
+      "201":
+        description: New entry added
+        schema:
+          $ref: '#/definitions/ssl_crt_list_entry'
+      "202":
+        description: Configuration change accepted and reload requested
+        headers:
+          Reload-ID:
+            description: ID of the requested reload
+            type: string
+      "400":
+        $ref: '#/responses/BadRequest'
+      "409":
+        $ref: '#/responses/AlreadyExists'
+      default:
+        $ref: '#/responses/DefaultError'
+  delete:
+    tags:
+      - Storage
+    summary: Deletes an entry from CrtList file
+    description: Deletes an entry from a certificate list.
+    operationId: DeleteStorageSSLCrtListEntry
+    parameters:
+      - description: SSL crt list name
+        in: path
+        name: name
+        required: true
+        type: string
+      - description: SSL certificate filename
+        in: query
+        name: certificate
+        required: true
+        type: string
+      - description: The line number in the crt-list
+        in: query
+        name: line_number
+        required: true
+        type: integer
+        minimum: 0
+      - $ref: "#/parameters/force_reload"
+    responses:
+      '202':
+        description: Configuration change accepted and reload requested
+        headers:
+          Reload-ID:
+            description: ID of the requested reload
+            type: string
+      '204':
+        description: Successful operation
+      '400':
+        $ref: '#/responses/BadRequest'
+      '404':
+        $ref: '#/responses/NotFound'
+      default:
+        $ref: '#/responses/DefaultError'

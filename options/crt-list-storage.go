@@ -1,5 +1,5 @@
 /*
-Copyright 2022 HAProxy Technologies
+Copyright 2025 HAProxy Technologies
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -16,23 +16,19 @@ limitations under the License.
 
 package options
 
-import (
-	"github.com/haproxytech/client-native/v6/configuration"
-	"github.com/haproxytech/client-native/v6/runtime"
-	"github.com/haproxytech/client-native/v6/spoe"
-	"github.com/haproxytech/client-native/v6/storage"
-)
+import "github.com/haproxytech/client-native/v6/storage"
 
-type Options struct {
-	Configuration  configuration.Configuration
-	Runtime        runtime.Runtime
-	MapStorage     storage.Storage
-	SSLCertStorage storage.Storage
-	CrtListStorage storage.Storage
-	GeneralStorage storage.Storage
-	Spoe           spoe.Spoe
+type sslCrtListStore struct {
+	storage storage.Storage
 }
 
-type Option interface {
-	Set(p *Options) error
+func (o sslCrtListStore) Set(p *Options) error {
+	p.CrtListStorage = o.storage
+	return nil
+}
+
+func CrtListStorage(store storage.Storage) Option {
+	return sslCrtListStore{
+		storage: store,
+	}
 }

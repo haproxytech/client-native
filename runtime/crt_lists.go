@@ -2,7 +2,6 @@ package runtime
 
 import (
 	"fmt"
-	"regexp"
 	"strconv"
 	"strings"
 
@@ -70,7 +69,7 @@ func (s *SingleRuntime) ShowCrtListEntries(file string) (models.SslCrtListEntrie
 	if err != nil {
 		return nil, fmt.Errorf("%s %w", err.Error(), native_errors.ErrNotFound)
 	}
-	return parseCrtListEntries(response)
+	return ParseCrtListEntries(response)
 }
 
 // ParseCrtListEntries parses array of entries in one CrtList file
@@ -78,14 +77,14 @@ func (s *SingleRuntime) ShowCrtListEntries(file string) (models.SslCrtListEntrie
 // /etc/ssl/cert-0.pem !*.crt-test.platform.domain.com !connectivitynotification.platform.domain.com !connectivitytunnel.platform.domain.com !authentication.cert.another.domain.com !*.authentication.cert.another.domain.com
 // /etc/ssl/cert-1.pem [verify optional ca-file /etc/ssl/ca-file-1.pem] *.crt-test.platform.domain.com !connectivitynotification.platform.domain.com !connectivitytunnel.platform.domain.com !authentication.cert.another.domain.com !*.authentication.cert.another.domain.com
 // /etc/ssl/cert-2.pem [verify required ca-file /etc/ssl/ca-file-2.pem]
-func parseCrtListEntries(output string) (models.SslCrtListEntries, error) {
+func ParseCrtListEntries(output string) (models.SslCrtListEntries, error) {
 	output = strings.TrimSpace(output)
 	if output == "" || strings.HasPrefix(output, "didn't find the specified filename") {
 		return nil, native_errors.ErrNotFound
 	}
-	ce := models.SslCrtListEntries{}
 
-	lines := strings.Split(strings.TrimSpace(output), "\n")
+	lines := strings.Split(output, "\n")
+	ce := make(models.SslCrtListEntries, 0, len(lines))
 	for _, line := range lines {
 		entry := parseCrtListEntry(line)
 		if entry != nil {
@@ -102,24 +101,59 @@ func parseCrtListEntries(output string) (models.SslCrtListEntries, error) {
 // certW.pem                   *.domain.tld !secure.domain.tld
 // certS.pem [curves X25519:P-256 ciphers ECDHE-ECDSA-AES256-GCM-SHA384] secure.domain.tld
 func parseCrtListEntry(line string) *models.SslCrtListEntry {
-	if line == "" || strings.HasPrefix(strings.TrimSpace(line), "#") {
+	line = strings.TrimSpace(line)
+	if len(line) == 0 || line[0] == '#' {
 		return nil
 	}
 
-	c := &models.SslCrtListEntry{}
-	re := regexp.MustCompile(`(\S+)(?:\s\[(.*)\])?(?:\s(.*))?`)
-	matches := re.FindStringSubmatch(line)
-	if matches != nil {
-		split := strings.Split(matches[1], ":")
-		lineNumber, _ := strconv.ParseInt(split[1], 0, 64)
-		c.LineNumber = lineNumber
-		c.File = split[0]
-		//nolint:gocritic
-		c.SSLBindConfig = strings.Replace(matches[2], "\u0000", "", -1)
-		c.SNIFilter = strings.Fields(matches[3])
+	// The first word is the certificate with its line number.
+	parts := strings.SplitN(line, " ", 2)
+	if len(parts) == 0 {
+		return nil
+	}
+	entry := models.SslCrtListEntry{}
+	certLine := strings.Split(parts[0], ":")
+	if len(certLine) > 2 || len(certLine) == 0 {
+		return nil
+	}
+	entry.File = certLine[0]
+	if len(certLine) == 2 {
+		lineno, err := strconv.ParseInt(certLine[1], 10, 64)
+		if err != nil || lineno < 1 {
+			return nil
+		}
+		entry.LineNumber = lineno
 	}
 
-	return c
+	if len(parts) == 1 {
+		return &entry
+	}
+
+	rest := parts[1]
+
+	// The next optional part is the SSL bind config.
+	if len(rest) > 0 && rest[0] == '[' {
+		end := strings.IndexByte(rest, ']')
+		if end == -1 {
+			return nil // should never happen
+		}
+		if end > 1 {
+			entry.SSLBindConfig = rest[1:end]
+		}
+		if len(rest) > end {
+			rest = rest[end+1:]
+		} else {
+			return &entry
+		}
+	}
+
+	// The last optional part are the SNI filters.
+	entry.SNIFilter = strings.Split(strings.TrimSpace(rest), " ")
+	if len(entry.SNIFilter) == 1 && entry.SNIFilter[0] == "" {
+		entry.SNIFilter = []string{}
+	}
+
+	return &entry
 }
 
 // AddCrtListEntry adds an entry into the CrtList file
@@ -152,9 +186,7 @@ func (s *SingleRuntime) AddCrtListEntry(crtList string, entry models.SslCrtListE
 		sb.WriteByte(' ')
 		sb.WriteString(strings.Join(entry.SNIFilter, " "))
 	}
-	if extended {
-		sb.WriteByte('\n')
-	}
+	sb.WriteByte('\n')
 
 	response, err := s.ExecuteWithResponse(sb.String())
 	if err != nil {
@@ -168,11 +200,11 @@ func (s *SingleRuntime) AddCrtListEntry(crtList string, entry models.SslCrtListE
 
 // DeleteCrtListEntry deletes all the CrtList entries from the CrtList by its id
 func (s *SingleRuntime) DeleteCrtListEntry(crtList, certFile string, lineNumber *int64) error {
-	lineNumberPart := ""
+	lineno := ""
 	if lineNumber != nil {
-		lineNumberPart = fmt.Sprintf(":%v", *lineNumber)
+		lineno = fmt.Sprintf(":%d", *lineNumber)
 	}
-	cmd := fmt.Sprintf("del ssl crt-list %s %s%s", crtList, certFile, lineNumberPart)
+	cmd := fmt.Sprintf("del ssl crt-list %s %s%s", crtList, certFile, lineno)
 	response, err := s.ExecuteWithResponse(cmd)
 	if err != nil {
 		return fmt.Errorf("%s %w", err.Error(), native_errors.ErrNotFound)

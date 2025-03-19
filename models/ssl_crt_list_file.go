@@ -27,29 +27,38 @@ import (
 	"github.com/go-openapi/swag"
 )
 
-// SslCrtList SSL Crt List
+// SslCrtListFile SSL CRT List File
 //
-// # SSL Crt List file
+// A file referencing one or more certificates with their configuration.
 //
-// swagger:model ssl_crt_list
-type SslCrtList struct {
+// swagger:model ssl_crt_list_file
+type SslCrtListFile struct {
+
+	// description
+	Description string `json:"description,omitempty"`
 
 	// file
 	File string `json:"file,omitempty"`
+
+	// File size in bytes.
+	Size *int64 `json:"size,omitempty"`
+
+	// storage name
+	StorageName string `json:"storage_name,omitempty"`
 }
 
-// Validate validates this ssl crt list
-func (m *SslCrtList) Validate(formats strfmt.Registry) error {
+// Validate validates this ssl crt list file
+func (m *SslCrtListFile) Validate(formats strfmt.Registry) error {
 	return nil
 }
 
-// ContextValidate validates this ssl crt list based on context it is used
-func (m *SslCrtList) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+// ContextValidate validates this ssl crt list file based on context it is used
+func (m *SslCrtListFile) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
 	return nil
 }
 
 // MarshalBinary interface implementation
-func (m *SslCrtList) MarshalBinary() ([]byte, error) {
+func (m *SslCrtListFile) MarshalBinary() ([]byte, error) {
 	if m == nil {
 		return nil, nil
 	}
@@ -57,8 +66,8 @@ func (m *SslCrtList) MarshalBinary() ([]byte, error) {
 }
 
 // UnmarshalBinary interface implementation
-func (m *SslCrtList) UnmarshalBinary(b []byte) error {
-	var res SslCrtList
+func (m *SslCrtListFile) UnmarshalBinary(b []byte) error {
+	var res SslCrtListFile
 	if err := swag.ReadJSON(b, &res); err != nil {
 		return err
 	}

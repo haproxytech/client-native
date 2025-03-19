@@ -244,7 +244,7 @@ func TestSingleRuntime_ShowCrtListEntries(t *testing.T) {
 			}
 			for i := range got {
 				if !reflect.DeepEqual(got[i], tt.want[i]) {
-					t.Errorf("SingleRuntime.ShowCrtListEntries() = %v, want %v", got[i], tt.want[i])
+					t.Errorf("SingleRuntime.ShowCrtListEntries() = %#v, want %#v", got[i], tt.want[i])
 				}
 			}
 		})

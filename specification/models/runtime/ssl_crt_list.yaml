@@ -1,6 +1,6 @@
 ssl_crt_list:
   title: SSL Crt List
-  description: SSL Crt List
+  description: SSL Crt List file
   type: object
   properties:
     file:

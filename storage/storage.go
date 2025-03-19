@@ -41,6 +41,7 @@ const (
 	GeneralType          FileType = "general"
 	MapsType             FileType = "maps"
 	SSLType              FileType = "certs"
+	CrtListType          FileType = "crt-list"
 	SpoeType             FileType = "spoe"
 	SpoeTransactionsType FileType = "spoe-transactions"
 	BackupsType          FileType = "backups"
@@ -69,7 +70,7 @@ func New(dirname string, fileType FileType) (Storage, error) {
 		return nil, err
 	}
 	switch fileType { //nolint:exhaustive
-	case MapsType, SSLType, GeneralType, BackupsType:
+	case MapsType, SSLType, CrtListType, GeneralType, BackupsType:
 		return &storage{
 			dirname:  dirname,
 			fileType: fileType,
@@ -99,6 +100,10 @@ func (s *storage) GetAll() ([]string, error) {
 				noErrors = noErrors && false
 			}
 			if noErrors {
+				files = append(files, file)
+			}
+		case CrtListType:
+			if strings.HasSuffix(file, ".txt") {
 				files = append(files, file)
 			}
 		case MapsType, GeneralType:
@@ -174,6 +179,11 @@ func (s storage) Replace(name string, config string) (string, error) {
 		if err != nil {
 			return "", err
 		}
+	case CrtListType:
+		if len(config) > 0 && config[len(config)-1] != '\n' {
+			// A newline is required at the end of a crt-list.
+			config += "\n"
+		}
 	case MapsType:
 	}
 
@@ -199,7 +209,7 @@ func (s *storage) Create(name string, readCloser io.ReadCloser) (string, int64, 
 	switch s.fileType { //nolint:exhaustive
 	case SSLType:
 		return s.createSSL(f, readCloser)
-	case MapsType, GeneralType:
+	case MapsType, GeneralType, CrtListType:
 		return s.createFile(f, readCloser)
 	}
 	return f, -1, nil
@@ -226,6 +236,12 @@ func (s *storage) createFile(name string, readCloser io.ReadCloser) (string, int
 	if err != nil {
 		return "", -1, err
 	}
+	if s.fileType == CrtListType {
+		// A newline is required at the end of a crt-list.
+		if b[len(b)-1] != '\n' {
+			b = append(b, '\n')
+		}
+	}
 	err = renameio.WriteFile(name, b, 0o644)
 	if err != nil {
 		return "", -1, err
@@ -235,7 +251,7 @@ func (s *storage) createFile(name string, readCloser io.ReadCloser) (string, int
 
 func (s *storage) remove(name string) error {
 	switch s.fileType { //nolint:exhaustive
-	case SSLType, MapsType, GeneralType:
+	case SSLType, CrtListType, MapsType, GeneralType:
 		return remove(name)
 	}
 

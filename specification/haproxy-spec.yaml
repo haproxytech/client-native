@@ -466,6 +466,14 @@ definitions:
     type: array
     items:
       $ref: "#/definitions/ssl_certificate"
+  ssl_crt_list_file:
+    $ref: "models/storage/ssl_crt_list_file.yaml#/ssl_crt_list_file"
+  ssl_crt_list_files:
+    title: List of SSL certificate list files
+    description: List of SSL certificate list files (crt-list)
+    type: array
+    items:
+      $ref: "#/definitions/ssl_crt_list_file"
   ssl_ca_file:
     $ref: "models/storage/ssl_ca_file.yaml#/ssl_ca_file"
   ssl_ca_files:
@@ -1220,10 +1228,8 @@ paths:
     $ref: "paths/runtime/ssl_crl_files.yaml#/ssl_crl_files_one"
   /services/haproxy/runtime/ssl_crt_lists:
     $ref: "paths/runtime/ssl_crt_lists.yaml#/ssl_crt_lists"
-  /services/haproxy/runtime/ssl_crt_lists/cert_entries:
+  /services/haproxy/runtime/ssl_crt_lists/entries:
     $ref: "paths/runtime/ssl_crt_lists.yaml#/ssl_crt_list_entries"
-  /services/haproxy/runtime/ssl_crt_lists/cert_entry:
-    $ref: "paths/runtime/ssl_crt_lists.yaml#/ssl_crt_list_entry_one"
   /services/haproxy/runtime/stick_tables:
     $ref: "paths/runtime/stick_tables.yaml#/stick_tables"
   /services/haproxy/runtime/stick_tables/{name}:
@@ -1250,6 +1256,12 @@ paths:
     $ref: "paths/storage/ssl_certificates.yaml#/ssl_certificates"
   /services/haproxy/storage/ssl_certificates/{name}:
     $ref: "paths/storage/ssl_certificates.yaml#/ssl_certificates_one"
+  /services/haproxy/storage/ssl_crt_lists:
+    $ref: "paths/storage/ssl_crt_lists.yaml#/ssl_crt_list_files"
+  /services/haproxy/storage/ssl_crt_lists/{name}:
+    $ref: "paths/storage/ssl_crt_lists.yaml#/ssl_crt_list_files_one"
+  /services/haproxy/storage/ssl_crt_lists/{name}/entries:
+    $ref: "paths/storage/ssl_crt_lists.yaml#/ssl_crt_list_entries"
   /services/haproxy/storage/general:
     $ref: "paths/storage/general_files.yaml#/general_files"
   /services/haproxy/storage/general/{name}:
