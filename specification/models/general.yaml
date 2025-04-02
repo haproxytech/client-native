@@ -50,10 +50,13 @@ info:
           properties:
             total_memory:
               type: integer
+              format: int64
             free_memory:
               type: integer
+              format: int64
             dataplaneapi_memory:
               type: integer
+              format: int64
         time:
           type: integer
           description: Current time in milliseconds since Epoch.
