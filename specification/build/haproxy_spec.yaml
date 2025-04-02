@@ -8955,10 +8955,13 @@ definitions:
           mem_info:
             properties:
               dataplaneapi_memory:
+                format: int64
                 type: integer
               free_memory:
+                format: int64
                 type: integer
               total_memory:
+                format: int64
                 type: integer
             type: object
           os_string:
