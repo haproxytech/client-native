@@ -561,6 +561,7 @@ func (p *configParser) getFrontendParser() *Parsers {
 	addParser(parser, &sequence, &simple.Number{Name: "rate-limit sessions"})
 	addParser(parser, &sequence, &simple.Word{Name: "guid"})
 	addParser(parser, &sequence, &quic.Initial{})
+	addParser(parser, &sequence, &parsers.SSLFrontUse{})
 	return p.createParsers(parser, sequence)
 }
 
@@ -847,6 +848,7 @@ func (p *configParser) getListenParser() *Parsers {
 		addParser(parser, &sequence, &simple.Number{Name: "rate-limit sessions"})
 		addParser(parser, &sequence, &simple.Word{Name: "guid"})
 		addParser(parser, &sequence, &quic.Initial{})
+		addParser(parser, &sequence, &parsers.SSLFrontUse{})
 	}
 	return p.createParsers(parser, sequence)
 }

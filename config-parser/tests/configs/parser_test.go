@@ -17,6 +17,7 @@ package configs //nolint:testpackage
 
 import (
 	"bytes"
+	"os"
 	"strings"
 	"testing"
 
@@ -101,6 +102,7 @@ func TestGeneratedConfig(t *testing.T) {
 	for _, configLine := range configTests {
 		count := strings.Count(result, configLine.Line)
 		if count != configLine.Count {
+			_ = os.WriteFile("/tmp/HAGEN.cfg", []byte(result), 0644)
 			t.Fatalf("line '%s' found %d times, expected %d times", configLine.Line, count, configLine.Count)
 		}
 	}

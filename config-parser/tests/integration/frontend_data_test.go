@@ -893,6 +893,18 @@ const frontend_optionoriginaltoexcept127001comm = `
 frontend test
   option originalto except 127.0.0.1 # comment
 `
+const frontend_sslfusecrttestfoobarpem = `
+frontend test
+  ssl-f-use crt test.foobar.pem
+`
+const frontend_sslfusecrttest2foobarcrtkeytest2 = `
+frontend test
+  ssl-f-use crt test2.foobar.crt key test2.foobar.key ocsp test2.foobar.ocsp ocsp-update on
+`
+const frontend_sslfusecrtfoobarpemrsasigalgsRSA = `
+frontend test
+  ssl-f-use crt foobar.pem.rsa sigalgs "RSA-PSS+SHA256"
+`
 const frontend_httprequestsetmapmaplstsrcreqhdr = `
 frontend test
   http-request set-map(map.lst) %[src] %[req.hdr(X-Value)] if value

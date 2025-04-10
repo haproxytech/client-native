@@ -101,6 +101,10 @@ func Parents(childType string) []Parent {
 			{PathParentType: "peers", ParentType: "Peer", GenericParentType: "Backend"},
 			{PathParentType: "log_forwards", ParentType: "LogForward", GenericParentType: "Backend"},
 		}
+	case SSLFrontUseChildType:
+		return []Parent{
+			{PathParentType: "frontends", ParentType: "Frontend", IsGenericParent: true},
+		}
 	}
 	return nil
 }

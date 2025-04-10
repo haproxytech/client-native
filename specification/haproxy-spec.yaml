@@ -676,6 +676,14 @@ definitions:
       $ref: "#/definitions/log_profile_step"
     description: List of steps where to override the logging.
     x-omitempty: true
+  ssl_front_use:
+    $ref: "models/configuration/ssl_front_use.yaml#/ssl_front_use"
+  ssl_front_uses:
+    type: array
+    items:
+      $ref: "#/definitions/ssl_front_use"
+    x-omitempty: true
+    x-go-name: SSLFrontUses
 responses:
   BadRequest:
     description: Bad request
@@ -1208,3 +1216,7 @@ paths:
     $ref: "paths/configuration/capture.yaml#/captures"
   /services/haproxy/configuration/frontends/{parent_name}/captures/{index}:
     $ref: "paths/configuration/capture.yaml#/captures_one"
+  /services/haproxy/configuration/frontends/{parent_name}/ssl_front_uses:
+    $ref: "paths/configuration/ssl_front_use.yaml#/ssl_front_uses"
+  /services/haproxy/configuration/frontends/{parent_name}/ssl_front_uses/{index}:
+    $ref: "paths/configuration/ssl_front_use.yaml#/ssl_front_uses_one"

@@ -251,6 +251,13 @@ func parseFrontendsSection(name string, p parser.Parser) (*models.Frontend, erro
 	}
 	f.QUICInitialRuleList = quicInitialRules
 
+	// ssl-f-use rules
+	sslFuses, err := ParseSSLFrontUses(FrontendParentName, name, p)
+	if err != nil {
+		return nil, err
+	}
+	f.SSLFrontUses = sslFuses
+
 	return f, nil
 }
 
@@ -352,6 +359,12 @@ func serializeFrontendSection(a StructuredToParserArgs, f *models.Frontend) erro
 			return err
 		}
 		if err = p.Insert(parser.Frontends, f.Name, "quic-initial", s, i); err != nil {
+			return a.HandleError(strconv.FormatInt(int64(i), 10), FrontendParentName, f.Name, a.TID, a.TID == "", err)
+		}
+	}
+	for i, use := range f.SSLFrontUses {
+		u := SerializeSSLFrontUse(*use)
+		if err = p.Insert(parser.Frontends, f.Name, "ssl-f-use", u, i); err != nil {
 			return a.HandleError(strconv.FormatInt(int64(i), 10), FrontendParentName, f.Name, a.TID, a.TID == "", err)
 		}
 	}

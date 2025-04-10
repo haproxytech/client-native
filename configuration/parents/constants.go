@@ -30,6 +30,7 @@ const (
 	BindChildType                  = "bind"
 	FilterChildType                = "filter"
 	LogTargetChildType             = "log_target"
+	SSLFrontUseChildType           = "ssl_front_use"
 )
 
 type CnParentType string

@@ -66,6 +66,7 @@ type Configuration interface {
 	Server
 	ServerTemplate
 	Site
+	SSLFrontUse
 	StickRule
 	ServiceI
 	Table

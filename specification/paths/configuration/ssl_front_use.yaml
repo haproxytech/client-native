@@ -1,0 +1,154 @@
+---
+ssl_front_uses:
+  get:
+    summary: Return an array of SSLFrontUses
+    description: Returns an array of all SSLFrontUses that are configured in specified frontend.
+    operationId: getAllSSLFrontUses
+    tags:
+      - SSLFrontUse
+    parameters:
+      - $ref: "#/parameters/parent_name"
+      - $ref: "#/parameters/transaction_id"
+    responses:
+      '200':
+        description: Successful operation
+        headers:
+          Configuration-Version:
+            description: Configuration file version
+            type: string
+        schema:
+          $ref: "#/definitions/ssl_front_uses"
+      'default':
+        $ref: '#/responses/DefaultError'
+  post:
+    summary: Add a new SSLFrontUse
+    description: Adds a new SSLFrontUse in the specified frontend in the configuration file.
+    operationId: createSSLFrontUse
+    tags:
+      - SSLFrontUse
+    parameters:
+      - $ref: "#/parameters/parent_name"
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/ssl_front_use'
+      - $ref: "#/parameters/transaction_id"
+      - $ref: "#/parameters/version"
+      - $ref: "#/parameters/force_reload"
+    responses:
+      '202':
+        description: Configuration change accepted and reload requested
+        headers:
+          Reload-ID:
+            description: ID of the requested reload
+            type: string
+        schema:
+          $ref: "#/definitions/ssl_front_use"
+      '201':
+        description: SSLFrontUse created
+        schema:
+          $ref: "#/definitions/ssl_front_use"
+      '409':
+        $ref: '#/responses/AlreadyExists'
+      '400':
+        $ref: '#/responses/BadRequest'
+      'default':
+        $ref: '#/responses/DefaultError'
+ssl_front_uses_one:
+  get:
+    summary: Return one SSLFrontUse
+    description: Returns one SSLFrontUse configuration by its index in the specified frontend.
+    operationId: getSSLFrontUse
+    tags:
+      - SSLFrontUse
+    parameters:
+      - name: index
+        in: path
+        description: SSLFrontUse index (zero-based)
+        required: true
+        type: integer
+      - $ref: "#/parameters/parent_name"
+      - $ref: "#/parameters/transaction_id"
+    responses:
+      '200':
+        description: Successful operation
+        headers:
+          Configuration-Version:
+            description: Configuration file version
+            type: string
+        schema:
+          $ref: "#/definitions/ssl_front_use"
+      '404':
+        $ref: '#/responses/AlreadyExists'
+      'default':
+        $ref: '#/responses/DefaultError'
+  put:
+    summary: Replace an SSLFrontUse
+    description: Replaces an SSLFrontUse configuration by its index in the specified frontend.
+    operationId: replaceSSLFrontUse
+    tags:
+      - SSLFrontUse
+    parameters:
+      - name: index
+        in: path
+        description: SSLFrontUse index (zero-based)
+        required: true
+        type: integer
+      - $ref: "#/parameters/parent_name"
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/ssl_front_use'
+      - $ref: "#/parameters/transaction_id"
+      - $ref: "#/parameters/version"
+      - $ref: "#/parameters/force_reload"
+    responses:
+      '202':
+        description: Configuration change accepted and reload requested
+        headers:
+          Reload-ID:
+            description: ID of the requested reload
+            type: string
+        schema:
+          $ref: "#/definitions/ssl_front_use"
+      '200':
+        description: SSLFrontUse replaced
+        schema:
+          $ref: "#/definitions/ssl_front_use"
+      '400':
+        $ref: '#/responses/BadRequest'
+      '404':
+        $ref: '#/responses/NotFound'
+      'default':
+        $ref: '#/responses/DefaultError'
+  delete:
+    summary: Delete an SSLFrontUse
+    description: Deletes an SSLFrontUse configuration by its index in the specified frontend.
+    operationId: deleteSSLFrontUse
+    tags:
+      - SSLFrontUse
+    parameters:
+      - name: index
+        in: path
+        description: SSLFrontUse index (zero-based)
+        required: true
+        type: integer
+      - $ref: "#/parameters/parent_name"
+      - $ref: "#/parameters/transaction_id"
+      - $ref: "#/parameters/version"
+      - $ref: "#/parameters/force_reload"
+    responses:
+      '202':
+        description: Configuration change accepted and reload requested
+        headers:
+          Reload-ID:
+            description: ID of the requested reload
+            type: string
+      '204':
+        description: SSLFrontUse deleted
+      '404':
+        $ref: '#/responses/NotFound'
+      'default':
+        $ref: '#/responses/DefaultError'

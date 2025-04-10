@@ -43,6 +43,9 @@ frontend:
         quic_initial_rule_list:
           $ref: "#/definitions/quic_initial_rules"
           x-go-name: QUICInitialRuleList
+        ssl_front_use_list:
+          $ref: "#/definitions/ssl_front_uses"
+          x-go-name: SSLFrontUses
 frontend_base:
   title: Frontend Base
   description: HAProxy frontend configuration

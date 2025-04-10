@@ -65,6 +65,9 @@ type Frontend struct {
 	// q UI c initial rule list
 	QUICInitialRuleList QUICInitialRules `json:"quic_initial_rule_list,omitempty"`
 
+	// s s l front uses
+	SSLFrontUses SSLFrontUses `json:"ssl_front_use_list,omitempty"`
+
 	// TCP request rule list
 	TCPRequestRuleList TCPRequestRules `json:"tcp_request_rule_list,omitempty"`
 
@@ -103,6 +106,8 @@ func (m *Frontend) UnmarshalJSON(raw []byte) error {
 
 		QUICInitialRuleList QUICInitialRules `json:"quic_initial_rule_list,omitempty"`
 
+		SSLFrontUses SSLFrontUses `json:"ssl_front_use_list,omitempty"`
+
 		TCPRequestRuleList TCPRequestRules `json:"tcp_request_rule_list,omitempty"`
 
 		Binds map[string]Bind `json:"binds,omitempty"`
@@ -130,6 +135,8 @@ func (m *Frontend) UnmarshalJSON(raw []byte) error {
 	m.LogTargetList = dataAO1.LogTargetList
 
 	m.QUICInitialRuleList = dataAO1.QUICInitialRuleList
+
+	m.SSLFrontUses = dataAO1.SSLFrontUses
 
 	m.TCPRequestRuleList = dataAO1.TCPRequestRuleList
 
@@ -168,6 +175,8 @@ func (m Frontend) MarshalJSON() ([]byte, error) {
 
 		QUICInitialRuleList QUICInitialRules `json:"quic_initial_rule_list,omitempty"`
 
+		SSLFrontUses SSLFrontUses `json:"ssl_front_use_list,omitempty"`
+
 		TCPRequestRuleList TCPRequestRules `json:"tcp_request_rule_list,omitempty"`
 
 		Binds map[string]Bind `json:"binds,omitempty"`
@@ -192,6 +201,8 @@ func (m Frontend) MarshalJSON() ([]byte, error) {
 	dataAO1.LogTargetList = m.LogTargetList
 
 	dataAO1.QUICInitialRuleList = m.QUICInitialRuleList
+
+	dataAO1.SSLFrontUses = m.SSLFrontUses
 
 	dataAO1.TCPRequestRuleList = m.TCPRequestRuleList
 
@@ -251,6 +262,10 @@ func (m *Frontend) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateQUICInitialRuleList(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateSSLFrontUses(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -448,6 +463,24 @@ func (m *Frontend) validateQUICInitialRuleList(formats strfmt.Registry) error {
 	return nil
 }
 
+func (m *Frontend) validateSSLFrontUses(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.SSLFrontUses) { // not required
+		return nil
+	}
+
+	if err := m.SSLFrontUses.Validate(formats); err != nil {
+		if ve, ok := err.(*errors.Validation); ok {
+			return ve.ValidateName("ssl_front_use_list")
+		} else if ce, ok := err.(*errors.CompositeError); ok {
+			return ce.ValidateName("ssl_front_use_list")
+		}
+		return err
+	}
+
+	return nil
+}
+
 func (m *Frontend) validateTCPRequestRuleList(formats strfmt.Registry) error {
 
 	if swag.IsZero(m.TCPRequestRuleList) { // not required
@@ -539,6 +572,10 @@ func (m *Frontend) ContextValidate(ctx context.Context, formats strfmt.Registry)
 	}
 
 	if err := m.contextValidateQUICInitialRuleList(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.contextValidateSSLFrontUses(ctx, formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -689,6 +726,20 @@ func (m *Frontend) contextValidateQUICInitialRuleList(ctx context.Context, forma
 			return ve.ValidateName("quic_initial_rule_list")
 		} else if ce, ok := err.(*errors.CompositeError); ok {
 			return ce.ValidateName("quic_initial_rule_list")
+		}
+		return err
+	}
+
+	return nil
+}
+
+func (m *Frontend) contextValidateSSLFrontUses(ctx context.Context, formats strfmt.Registry) error {
+
+	if err := m.SSLFrontUses.ContextValidate(ctx, formats); err != nil {
+		if ve, ok := err.(*errors.Validation); ok {
+			return ve.ValidateName("ssl_front_use_list")
+		} else if ce, ok := err.(*errors.CompositeError); ok {
+			return ce.ValidateName("ssl_front_use_list")
 		}
 		return err
 	}

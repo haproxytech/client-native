@@ -3024,6 +3024,9 @@ definitions:
           quic_initial_rule_list:
             $ref: '#/definitions/quic_initial_rules'
             x-go-name: QUICInitialRuleList
+          ssl_front_use_list:
+            $ref: '#/definitions/ssl_front_uses'
+            x-go-name: SSLFrontUses
           tcp_request_rule_list:
             $ref: '#/definitions/tcp_request_rules'
             x-go-name: TCPRequestRuleList
@@ -11116,6 +11119,92 @@ definitions:
       $ref: "#/definitions/log_profile_step"
     description: List of steps where to override the logging.
     x-omitempty: true
+  ssl_front_use:
+    description: Assign a certificate to the current frontend
+    properties:
+      allow_0rtt:
+        type: boolean
+      alpn:
+        type: string
+        x-display-name: ALPN Protocols
+      ca_file:
+        type: string
+      certificate:
+        description: Certificate filename
+        pattern: ^[^\s]+$
+        type: string
+        x-nullable: false
+      ciphers:
+        type: string
+      ciphersuites:
+        type: string
+      client_sigalgs:
+        type: string
+      crl_file:
+        type: string
+      curves:
+        type: string
+      ecdhe:
+        type: string
+      issuer:
+        description: OCSP issuer filename
+        type: string
+      key:
+        description: Private key filename
+        type: string
+      no_alpn:
+        type: boolean
+      no_ca_names:
+        type: boolean
+      npn:
+        type: string
+      ocsp:
+        description: OCSP response filename
+        type: string
+      ocsp_update:
+        description: Automatic OCSP response update
+        enum:
+          - enabled
+          - disabled
+        type: string
+      sctl:
+        description: Signed Certificate Timestamp List filename
+        type: string
+      sigalgs:
+        type: string
+      ssl_max_ver:
+        enum:
+          - SSLv3
+          - TLSv1.0
+          - TLSv1.1
+          - TLSv1.2
+          - TLSv1.3
+        type: string
+      ssl_min_ver:
+        enum:
+          - SSLv3
+          - TLSv1.0
+          - TLSv1.1
+          - TLSv1.2
+          - TLSv1.3
+        type: string
+      verify:
+        enum:
+          - none
+          - optional
+          - required
+        type: string
+    required:
+      - certificate
+    title: SSL Frontend Use certificate
+    type: object
+    x-go-name: SSLFrontUse
+  ssl_front_uses:
+    type: array
+    items:
+      $ref: "#/definitions/ssl_front_use"
+    x-omitempty: true
+    x-go-name: SSLFrontUses
 responses:
   BadRequest:
     description: Bad request
@@ -25318,3 +25407,156 @@ paths:
       summary: Replace a declare capture
       tags:
         - DeclareCapture
+  /services/haproxy/configuration/frontends/{parent_name}/ssl_front_uses:
+    get:
+      description: Returns an array of all SSLFrontUses that are configured in specified frontend.
+      operationId: getAllSSLFrontUses
+      parameters:
+        - $ref: '#/parameters/parent_name'
+        - $ref: '#/parameters/transaction_id'
+      responses:
+        "200":
+          description: Successful operation
+          headers:
+            Configuration-Version:
+              description: Configuration file version
+              type: string
+          schema:
+            $ref: '#/definitions/ssl_front_uses'
+        default:
+          $ref: '#/responses/DefaultError'
+      summary: Return an array of SSLFrontUses
+      tags:
+        - SSLFrontUse
+    post:
+      description: Adds a new SSLFrontUse in the specified frontend in the configuration file.
+      operationId: createSSLFrontUse
+      parameters:
+        - $ref: '#/parameters/parent_name'
+        - in: body
+          name: data
+          required: true
+          schema:
+            $ref: '#/definitions/ssl_front_use'
+        - $ref: '#/parameters/transaction_id'
+        - $ref: '#/parameters/version'
+        - $ref: '#/parameters/force_reload'
+      responses:
+        "201":
+          description: SSLFrontUse created
+          schema:
+            $ref: '#/definitions/ssl_front_use'
+        "202":
+          description: Configuration change accepted and reload requested
+          headers:
+            Reload-ID:
+              description: ID of the requested reload
+              type: string
+          schema:
+            $ref: '#/definitions/ssl_front_use'
+        "400":
+          $ref: '#/responses/BadRequest'
+        "409":
+          $ref: '#/responses/AlreadyExists'
+        default:
+          $ref: '#/responses/DefaultError'
+      summary: Add a new SSLFrontUse
+      tags:
+        - SSLFrontUse
+  /services/haproxy/configuration/frontends/{parent_name}/ssl_front_uses/{index}:
+    delete:
+      description: Deletes an SSLFrontUse configuration by its index in the specified frontend.
+      operationId: deleteSSLFrontUse
+      parameters:
+        - description: SSLFrontUse index (zero-based)
+          in: path
+          name: index
+          required: true
+          type: integer
+        - $ref: '#/parameters/parent_name'
+        - $ref: '#/parameters/transaction_id'
+        - $ref: '#/parameters/version'
+        - $ref: '#/parameters/force_reload'
+      responses:
+        "202":
+          description: Configuration change accepted and reload requested
+          headers:
+            Reload-ID:
+              description: ID of the requested reload
+              type: string
+        "204":
+          description: SSLFrontUse deleted
+        "404":
+          $ref: '#/responses/NotFound'
+        default:
+          $ref: '#/responses/DefaultError'
+      summary: Delete an SSLFrontUse
+      tags:
+        - SSLFrontUse
+    get:
+      description: Returns one SSLFrontUse configuration by its index in the specified frontend.
+      operationId: getSSLFrontUse
+      parameters:
+        - description: SSLFrontUse index (zero-based)
+          in: path
+          name: index
+          required: true
+          type: integer
+        - $ref: '#/parameters/parent_name'
+        - $ref: '#/parameters/transaction_id'
+      responses:
+        "200":
+          description: Successful operation
+          headers:
+            Configuration-Version:
+              description: Configuration file version
+              type: string
+          schema:
+            $ref: '#/definitions/ssl_front_use'
+        "404":
+          $ref: '#/responses/AlreadyExists'
+        default:
+          $ref: '#/responses/DefaultError'
+      summary: Return one SSLFrontUse
+      tags:
+        - SSLFrontUse
+    put:
+      description: Replaces an SSLFrontUse configuration by its index in the specified frontend.
+      operationId: replaceSSLFrontUse
+      parameters:
+        - description: SSLFrontUse index (zero-based)
+          in: path
+          name: index
+          required: true
+          type: integer
+        - $ref: '#/parameters/parent_name'
+        - in: body
+          name: data
+          required: true
+          schema:
+            $ref: '#/definitions/ssl_front_use'
+        - $ref: '#/parameters/transaction_id'
+        - $ref: '#/parameters/version'
+        - $ref: '#/parameters/force_reload'
+      responses:
+        "200":
+          description: SSLFrontUse replaced
+          schema:
+            $ref: '#/definitions/ssl_front_use'
+        "202":
+          description: Configuration change accepted and reload requested
+          headers:
+            Reload-ID:
+              description: ID of the requested reload
+              type: string
+          schema:
+            $ref: '#/definitions/ssl_front_use'
+        "400":
+          $ref: '#/responses/BadRequest'
+        "404":
+          $ref: '#/responses/NotFound'
+        default:
+          $ref: '#/responses/DefaultError'
+      summary: Replace an SSLFrontUse
+      tags:
+        - SSLFrontUse

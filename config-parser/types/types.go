@@ -1706,3 +1706,19 @@ type OnLogStep struct {
 	Sd      string
 	Comment string
 }
+
+//sections:frontend
+//name:ssl-f-use
+//is:multiple
+//test:quote_ok:ssl-f-use crt foobar.pem.rsa sigalgs "RSA-PSS+SHA256"
+//test:ok:ssl-f-use crt test.foobar.pem
+//test:ok:ssl-f-use crt test2.foobar.crt key test2.foobar.key ocsp test2.foobar.ocsp ocsp-update on
+//test:fail:ssl-f-use
+//test:fail:ssl-f-use crt
+//test:fail:ssl-f-use crt test.pem off
+//test:fail:ssl-f-use crt test.pem key
+//test:fail:ssl-f-use crt test.pem ocsp-update enable
+type SSLFrontUse struct {
+	Params  []params.SSLBindOption
+	Comment string
+}

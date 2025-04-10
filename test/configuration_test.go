@@ -669,6 +669,8 @@ frontend test
   error-log-format %T\ %t\ Some\ Text
   guid guid-example
   declare capture request len 1
+  ssl-f-use crt foobar.pem.rsa sigalgs "RSA-PSS+SHA256"
+  ssl-f-use crt test2.foobar.crt key test2.foobar.key ocsp test2.foobar.ocsp ocsp-update on
 
 frontend test_2 from test_defaults
   mode http

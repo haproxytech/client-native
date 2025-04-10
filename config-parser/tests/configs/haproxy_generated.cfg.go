@@ -2140,6 +2140,9 @@ frontend test
   declare capture response len 2
   option http-restrict-req-hdr-names preserve
   option originalto
+  ssl-f-use crt test.foobar.pem
+  ssl-f-use crt test2.foobar.crt key test2.foobar.key ocsp test2.foobar.ocsp ocsp-update on
+  ssl-f-use crt foobar.pem.rsa sigalgs "RSA-PSS+SHA256"
   http-request set-map(map.lst) %[src] %[req.hdr(X-Value)] if value
   http-request set-map(map.lst) %[src] %[req.hdr(X-Value)]
   http-request add-acl(map.lst) [src]
@@ -4121,6 +4124,10 @@ var configTests = []configTest{{`  command spoa-mirror --runtime 0 --mirror-url 
 	{`  trace h1 sink buf1 level developer verbosity complete start now
 `, 1},
 	{`  on connect drop
+`, 1},
+	{`  ssl-f-use crt test.foobar.pem
+`, 1},
+	{`  ssl-f-use crt test2.foobar.crt key test2.foobar.key ocsp test2.foobar.ocsp ocsp-update on
 `, 1},
 	{`  http-request set-map(map.lst) %[src] %[req.hdr(X-Value)] if value
 `, 3},

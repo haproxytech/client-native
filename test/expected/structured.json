@@ -2799,7 +2799,19 @@
                     "quic-cc-algo": "nocc",
                     "quic_cc_algo_burst_size": 12
                 }
-            }
+            },
+            "ssl_front_use_list": [
+                {
+                    "certificate": "foobar.pem.rsa",
+                    "sigalgs": "\"RSA-PSS+SHA256\""
+                },
+                {
+                    "certificate": "test2.foobar.crt",
+                    "key": "test2.foobar.key",
+                    "ocsp": "test2.foobar.ocsp",
+                    "ocsp_update": "enabled"
+                }
+            ]
         },
         "test_2": {
             "backlog": 2048,

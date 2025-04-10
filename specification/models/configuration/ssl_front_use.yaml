@@ -1,0 +1,68 @@
+---
+ssl_front_use:
+  title: SSL Frontend Use certificate
+  description: Assign a certificate to the current frontend
+  type: object # sslbindconf
+  x-go-name: SSLFrontUse
+  required:
+    - certificate
+  properties:
+    # bind ssl options
+    allow_0rtt:
+      type: boolean
+    alpn:
+      type: string
+      x-display-name: ALPN Protocols
+    ca_file:
+      type: string
+    ciphers:
+      type: string
+    ciphersuites:
+      type: string
+    client_sigalgs:
+      type: string
+    crl_file:
+      type: string
+    curves:
+      type: string
+    ecdhe:
+      type: string
+    no_alpn:
+      type: boolean
+    no_ca_names:
+      type: boolean
+    npn:
+      type: string
+    sigalgs:
+      type: string
+    ssl_max_ver:
+      type: string
+      enum: [SSLv3, TLSv1.0, TLSv1.1, TLSv1.2, TLSv1.3]
+    ssl_min_ver:
+      type: string
+      enum: [SSLv3, TLSv1.0, TLSv1.1, TLSv1.2, TLSv1.3]
+    verify:
+      type: string
+      enum: [none, optional, required]
+    # crt-store load options
+    certificate:
+      type: string
+      description: Certificate filename
+      x-nullable: false
+      pattern: '^[^\s]+$'
+    key:
+      type: string
+      description: Private key filename
+    ocsp:
+      type: string
+      description: OCSP response filename
+    issuer:
+      type: string
+      description: OCSP issuer filename
+    sctl:
+      type: string
+      description: Signed Certificate Timestamp List filename
+    ocsp_update:
+      type: string
+      enum: [enabled, disabled]
+      description: Automatic OCSP response update

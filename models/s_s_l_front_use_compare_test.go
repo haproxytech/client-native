@@ -29,13 +29,13 @@ import (
 	jsoniter "github.com/json-iterator/go"
 )
 
-func TestFrontendEqual(t *testing.T) {
+func TestSSLFrontUseEqual(t *testing.T) {
 	samples := []struct {
-		a, b Frontend
+		a, b SSLFrontUse
 	}{}
 	for i := 0; i < 2; i++ {
-		var sample Frontend
-		var result Frontend
+		var sample SSLFrontUse
+		var result SSLFrontUse
 		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Error(err)
@@ -50,7 +50,7 @@ func TestFrontendEqual(t *testing.T) {
 		}
 
 		samples = append(samples, struct {
-			a, b Frontend
+			a, b SSLFrontUse
 		}{sample, result})
 	}
 
@@ -66,18 +66,18 @@ func TestFrontendEqual(t *testing.T) {
 			if err != nil {
 				t.Error(err)
 			}
-			t.Errorf("Expected Frontend to be equal, but it is not %s %s", a, b)
+			t.Errorf("Expected SSLFrontUse to be equal, but it is not %s %s", a, b)
 		}
 	}
 }
 
-func TestFrontendEqualFalse(t *testing.T) {
+func TestSSLFrontUseEqualFalse(t *testing.T) {
 	samples := []struct {
-		a, b Frontend
+		a, b SSLFrontUse
 	}{}
 	for i := 0; i < 2; i++ {
-		var sample Frontend
-		var result Frontend
+		var sample SSLFrontUse
+		var result SSLFrontUse
 		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Error(err)
@@ -86,8 +86,11 @@ func TestFrontendEqualFalse(t *testing.T) {
 		if err != nil {
 			t.Error(err)
 		}
+		result.Allow0rtt = !sample.Allow0rtt
+		result.NoAlpn = !sample.NoAlpn
+		result.NoCaNames = !sample.NoCaNames
 		samples = append(samples, struct {
-			a, b Frontend
+			a, b SSLFrontUse
 		}{sample, result})
 	}
 
@@ -103,18 +106,18 @@ func TestFrontendEqualFalse(t *testing.T) {
 			if err != nil {
 				t.Error(err)
 			}
-			t.Errorf("Expected Frontend to be different, but it is not %s %s", a, b)
+			t.Errorf("Expected SSLFrontUse to be different, but it is not %s %s", a, b)
 		}
 	}
 }
 
-func TestFrontendDiff(t *testing.T) {
+func TestSSLFrontUseDiff(t *testing.T) {
 	samples := []struct {
-		a, b Frontend
+		a, b SSLFrontUse
 	}{}
 	for i := 0; i < 2; i++ {
-		var sample Frontend
-		var result Frontend
+		var sample SSLFrontUse
+		var result SSLFrontUse
 		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Error(err)
@@ -129,7 +132,7 @@ func TestFrontendDiff(t *testing.T) {
 		}
 
 		samples = append(samples, struct {
-			a, b Frontend
+			a, b SSLFrontUse
 		}{sample, result})
 	}
 
@@ -145,18 +148,18 @@ func TestFrontendDiff(t *testing.T) {
 			if err != nil {
 				t.Error(err)
 			}
-			t.Errorf("Expected Frontend to be equal, but it is not %s %s, %v", a, b, result)
+			t.Errorf("Expected SSLFrontUse to be equal, but it is not %s %s, %v", a, b, result)
 		}
 	}
 }
 
-func TestFrontendDiffFalse(t *testing.T) {
+func TestSSLFrontUseDiffFalse(t *testing.T) {
 	samples := []struct {
-		a, b Frontend
+		a, b SSLFrontUse
 	}{}
 	for i := 0; i < 2; i++ {
-		var sample Frontend
-		var result Frontend
+		var sample SSLFrontUse
+		var result SSLFrontUse
 		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
 		if err != nil {
 			t.Error(err)
@@ -165,14 +168,17 @@ func TestFrontendDiffFalse(t *testing.T) {
 		if err != nil {
 			t.Error(err)
 		}
+		result.Allow0rtt = !sample.Allow0rtt
+		result.NoAlpn = !sample.NoAlpn
+		result.NoCaNames = !sample.NoCaNames
 		samples = append(samples, struct {
-			a, b Frontend
+			a, b SSLFrontUse
 		}{sample, result})
 	}
 
 	for _, sample := range samples {
 		result := sample.a.Diff(sample.b)
-		if len(result) != 14 {
+		if len(result) != 22 {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {
@@ -182,7 +188,7 @@ func TestFrontendDiffFalse(t *testing.T) {
 			if err != nil {
 				t.Error(err)
 			}
-			t.Errorf("Expected Frontend to be different in 14 cases, but it is not (%d) %s %s", len(result), a, b)
+			t.Errorf("Expected SSLFrontUse to be different in 22 cases, but it is not (%d) %s %s", len(result), a, b)
 		}
 	}
 }
