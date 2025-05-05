@@ -73,6 +73,9 @@ type Parser interface {
 	GetResult(sectionType Section, sectionName string, attribute string) ([]common.ReturnResultLine, error)
 	GetPreComments(sectionType Section, sectionName string, attribute string) ([]string, error)
 	GetOne(sectionType Section, sectionName string, attribute string, index ...int) (common.ParserData, error)
+	SectionGet(sectionType Section, sectionName string) (common.ParserData, error)
+	SectionCommentSet(sectionType Section, sectionName, comment string) error
+	SectionExists(sectionType Section, sectionName string) bool
 	SectionsGet(sectionType Section) ([]string, error)
 	SectionsDelete(sectionType Section, sectionName string) error
 	SectionsCreate(sectionType Section, sectionName string) error

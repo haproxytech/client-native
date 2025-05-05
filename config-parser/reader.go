@@ -186,6 +186,7 @@ func (p *configParser) ProcessLine(line string, parts []string, comment string, 
 					if data.FromDefaults != "" {
 						config.Defaults.DefaultSectionName = data.FromDefaults
 					}
+					config.Defaults.Section = *data
 					p.Parsers[Defaults][data.Name] = config.Defaults
 					config.Active = config.Defaults
 					if p.Options.Log {
@@ -207,6 +208,7 @@ func (p *configParser) ProcessLine(line string, parts []string, comment string, 
 					} else {
 						config.Frontend.DefaultSectionName = p.lastDefaultsSectionName
 					}
+					config.Frontend.Section = *data
 					p.Parsers[Frontends][data.Name] = config.Frontend
 					config.Active = config.Frontend
 					if p.Options.Log {
@@ -222,6 +224,7 @@ func (p *configParser) ProcessLine(line string, parts []string, comment string, 
 					} else {
 						config.Backend.DefaultSectionName = p.lastDefaultsSectionName
 					}
+					config.Backend.Section = *data
 					p.Parsers[Backends][data.Name] = config.Backend
 					config.Active = config.Backend
 					if p.Options.Log {
@@ -237,6 +240,7 @@ func (p *configParser) ProcessLine(line string, parts []string, comment string, 
 					} else {
 						config.Listen.DefaultSectionName = p.lastDefaultsSectionName
 					}
+					config.Listen.Section = *data
 					p.Parsers[Listen][data.Name] = config.Listen
 					config.Active = config.Listen
 					if p.Options.Log {
@@ -247,6 +251,7 @@ func (p *configParser) ProcessLine(line string, parts []string, comment string, 
 					rawData, _ := parserSectionName.Get(false)
 					data := rawData.(*types.Section) //nolint:forcetypeassert
 					config.Resolver = p.getResolverParser()
+					config.Resolver.Section = *data
 					p.Parsers[Resolvers][data.Name] = config.Resolver
 					config.Active = config.Resolver
 					if p.Options.Log {
@@ -257,6 +262,7 @@ func (p *configParser) ProcessLine(line string, parts []string, comment string, 
 					rawData, _ := parserSectionName.Get(false)
 					data := rawData.(*types.Section) //nolint:forcetypeassert
 					config.Userlist = p.getUserlistParser()
+					config.Userlist.Section = *data
 					p.Parsers[UserList][data.Name] = config.Userlist
 					config.Active = config.Userlist
 					if p.Options.Log {
@@ -267,6 +273,7 @@ func (p *configParser) ProcessLine(line string, parts []string, comment string, 
 					rawData, _ := parserSectionName.Get(false)
 					data := rawData.(*types.Section) //nolint:forcetypeassert
 					config.FCGIApp = p.getFcgiAppParser()
+					config.FCGIApp.Section = *data
 					p.Parsers[FCGIApp][data.Name] = config.FCGIApp
 					config.Active = config.FCGIApp
 					if p.Options.Log {
@@ -277,6 +284,7 @@ func (p *configParser) ProcessLine(line string, parts []string, comment string, 
 					rawData, _ := parserSectionName.Get(false)
 					data := rawData.(*types.Section) //nolint:forcetypeassert
 					config.Peers = p.getPeersParser()
+					config.Peers.Section = *data
 					p.Parsers[Peers][data.Name] = config.Peers
 					config.Active = config.Peers
 					if p.Options.Log {
@@ -287,6 +295,7 @@ func (p *configParser) ProcessLine(line string, parts []string, comment string, 
 					rawData, _ := parserSectionName.Get(false)
 					data := rawData.(*types.Section) //nolint:forcetypeassert
 					config.Mailers = p.getMailersParser()
+					config.Mailers.Section = *data
 					p.Parsers[Mailers][data.Name] = config.Mailers
 					config.Active = config.Mailers
 					if p.Options.Log {
@@ -297,6 +306,7 @@ func (p *configParser) ProcessLine(line string, parts []string, comment string, 
 					rawData, _ := parserSectionName.Get(false)
 					data := rawData.(*types.Section) //nolint:forcetypeassert
 					config.Cache = p.getCacheParser()
+					config.Cache.Section = *data
 					p.Parsers[Cache][data.Name] = config.Cache
 					config.Active = config.Cache
 					if p.Options.Log {
@@ -307,6 +317,7 @@ func (p *configParser) ProcessLine(line string, parts []string, comment string, 
 					rawData, _ := parserSectionName.Get(false)
 					data := rawData.(*types.Section) //nolint:forcetypeassert
 					config.Program = p.getProgramParser()
+					config.Program.Section = *data
 					p.Parsers[Program][data.Name] = config.Program
 					config.Active = config.Program
 					if p.Options.Log {
@@ -317,6 +328,7 @@ func (p *configParser) ProcessLine(line string, parts []string, comment string, 
 					rawData, _ := parserSectionName.Get(false)
 					data := rawData.(*types.Section) //nolint:forcetypeassert
 					config.HTTPErrors = p.getHTTPErrorsParser()
+					config.HTTPErrors.Section = *data
 					p.Parsers[HTTPErrors][data.Name] = config.HTTPErrors
 					config.Active = config.HTTPErrors
 					if p.Options.Log {
@@ -327,6 +339,7 @@ func (p *configParser) ProcessLine(line string, parts []string, comment string, 
 					rawData, _ := parserSectionName.Get(false)
 					data := rawData.(*types.Section) //nolint:forcetypeassert
 					config.Ring = p.getRingParser()
+					config.Ring.Section = *data
 					p.Parsers[Ring][data.Name] = config.Ring
 					config.Active = config.Ring
 					if p.Options.Log {
@@ -337,6 +350,7 @@ func (p *configParser) ProcessLine(line string, parts []string, comment string, 
 					rawData, _ := parserSectionName.Get(false)
 					data := rawData.(*types.Section) //nolint:forcetypeassert
 					config.LogForward = p.getLogForwardParser()
+					config.LogForward.Section = *data
 					p.Parsers[LogForward][data.Name] = config.LogForward
 					config.Active = config.LogForward
 					if p.Options.Log {
@@ -347,6 +361,7 @@ func (p *configParser) ProcessLine(line string, parts []string, comment string, 
 					rawData, _ := parserSectionName.Get(false)
 					data := rawData.(*types.Section) //nolint:forcetypeassert
 					config.CrtStore = p.getCrtStoreParser()
+					config.CrtStore.Section = *data
 					p.Parsers[CrtStore][data.Name] = config.CrtStore
 					config.Active = config.CrtStore
 					if p.Options.Log {
@@ -354,7 +369,11 @@ func (p *configParser) ProcessLine(line string, parts []string, comment string, 
 					}
 				case "traces":
 					if config.Traces == nil {
+						parserSectionName := parser.(*extra.Section) //nolint:forcetypeassert
+						rawData, _ := parserSectionName.Get(false)
+						data := rawData.(*types.Section) //nolint:forcetypeassert
 						config.Traces = p.getTracesParser()
+						config.Traces.Section = *data
 						p.Parsers[Traces][TracesSectionName] = config.Traces
 						if p.Options.Log {
 							p.Options.Logger.Tracef("%straces section active", p.Options.LogPrefix)
@@ -366,6 +385,7 @@ func (p *configParser) ProcessLine(line string, parts []string, comment string, 
 					rawData, _ := parserSectionName.Get(false)
 					data := rawData.(*types.Section) //nolint:forcetypeassert
 					config.LogProfile = p.getLogProfileParser()
+					config.LogProfile.Section = *data
 					p.Parsers[LogProfile][data.Name] = config.LogProfile
 					config.Active = config.LogProfile
 					if p.Options.Log {

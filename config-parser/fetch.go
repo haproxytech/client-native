@@ -118,6 +118,47 @@ func (p *configParser) SectionsGet(sectionType Section) ([]string, error) {
 	return result, nil
 }
 
+func (p *configParser) SectionGet(sectionType Section, sectionName string) (common.ParserData, error) {
+	p.lock()
+	defer p.unLock()
+	st, ok := p.Parsers[sectionType]
+	if !ok {
+		return nil, errors.ErrSectionMissing
+	}
+	sectionParser, ok := st[sectionName]
+	if !ok {
+		return nil, errors.ErrSectionMissing
+	}
+
+	return sectionParser.Section, nil
+}
+
+func (p *configParser) SectionExists(sectionType Section, sectionName string) bool {
+	p.lock()
+	defer p.unLock()
+	st, ok := p.Parsers[sectionType]
+	if !ok {
+		return false
+	}
+	_, ok = st[sectionName]
+	return ok
+}
+
+func (p *configParser) SectionCommentSet(sectionType Section, sectionName, comment string) error {
+	p.lock()
+	defer p.unLock()
+	st, ok := p.Parsers[sectionType]
+	if !ok {
+		return errors.ErrSectionMissing
+	}
+	section, ok := st[sectionName]
+	if !ok {
+		return errors.ErrSectionMissing
+	}
+	section.Section.Comment = comment
+	return nil
+}
+
 // SectionsDelete deletes one section of sectionType
 func (p *configParser) SectionsDelete(sectionType Section, sectionName string) error {
 	p.lock()

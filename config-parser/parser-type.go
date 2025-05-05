@@ -19,6 +19,7 @@ package parser
 import (
 	"github.com/haproxytech/client-native/v6/config-parser/common"
 	"github.com/haproxytech/client-native/v6/config-parser/errors"
+	"github.com/haproxytech/client-native/v6/config-parser/types"
 )
 
 type ParserInterface interface { //nolint:revive
@@ -38,6 +39,7 @@ type ParserInterface interface { //nolint:revive
 
 type Parsers struct {
 	Parsers            map[string]ParserInterface
+	Section            types.Section
 	ParserSequence     []Section
 	PreComments        []string
 	PostComments       []string
