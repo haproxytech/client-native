@@ -39,6 +39,10 @@ type User struct {
 	// groups
 	Groups string `json:"groups,omitempty"`
 
+	// +kubebuilder:pruning:PreserveUnknownFields
+	// +kubebuilder:validation:Schemaless
+	Metadata map[string]interface{} `json:"metadata,omitempty"`
+
 	// password
 	// Required: true
 	Password string `json:"password"`

@@ -45,6 +45,10 @@ type QUICInitialRule struct {
 	// cond test
 	CondTest string `json:"cond_test,omitempty"`
 
+	// +kubebuilder:pruning:PreserveUnknownFields
+	// +kubebuilder:validation:Schemaless
+	Metadata map[string]interface{} `json:"metadata,omitempty"`
+
 	// type
 	// Required: true
 	// Enum: ["reject","accept","send-retry","dgram-drop"]

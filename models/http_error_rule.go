@@ -42,6 +42,10 @@ type HTTPErrorRule struct {
 	// return headers
 	ReturnHeaders []*ReturnHeader `json:"return_hdrs,omitempty"`
 
+	// +kubebuilder:pruning:PreserveUnknownFields
+	// +kubebuilder:validation:Schemaless
+	Metadata map[string]interface{} `json:"metadata,omitempty"`
+
 	// return content
 	ReturnContent string `json:"return_content,omitempty"`
 

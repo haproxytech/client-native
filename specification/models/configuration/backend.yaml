@@ -503,6 +503,9 @@ backend_base:
       x-display-name: Retry on
     source:
       $ref: "#/definitions/source"
+    metadata:
+      additionalProperties:
+        type: object
   additionalProperties: false
   example:
     name: test_backend

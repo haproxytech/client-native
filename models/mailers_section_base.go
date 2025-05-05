@@ -35,6 +35,10 @@ import (
 //
 // swagger:model mailers_section_base
 type MailersSectionBase struct {
+	// +kubebuilder:pruning:PreserveUnknownFields
+	// +kubebuilder:validation:Schemaless
+	Metadata map[string]interface{} `json:"metadata,omitempty"`
+
 	// name
 	// Required: true
 	// Pattern: ^[A-Za-z0-9-_]+$

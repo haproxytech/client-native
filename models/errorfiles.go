@@ -39,6 +39,10 @@ type Errorfiles struct {
 	// codes
 	Codes []int64 `json:"codes,omitempty"`
 
+	// +kubebuilder:pruning:PreserveUnknownFields
+	// +kubebuilder:validation:Schemaless
+	Metadata map[string]interface{} `json:"metadata,omitempty"`
+
 	// name
 	Name string `json:"name,omitempty"`
 }

@@ -27,3 +27,6 @@ dgram_bind:
       type: string
     transparent:
       type: boolean
+    metadata:
+      additionalProperties:
+        type: object

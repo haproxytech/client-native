@@ -256,6 +256,10 @@ type BackendBase struct {
 	// max keep alive queue
 	MaxKeepAliveQueue *int64 `json:"max_keep_alive_queue,omitempty"`
 
+	// +kubebuilder:pruning:PreserveUnknownFields
+	// +kubebuilder:validation:Schemaless
+	Metadata map[string]interface{} `json:"metadata,omitempty"`
+
 	// mode
 	// Enum: ["http","tcp","log"]
 	// +kubebuilder:validation:Enum=http;tcp;log;

@@ -18,6 +18,7 @@
 package models
 
 import (
+	"reflect"
 	"strconv"
 )
 
@@ -487,6 +488,16 @@ func (s BackendBase) Equal(t BackendBase, opts ...Options) bool {
 
 	if !equalPointers(s.MaxKeepAliveQueue, t.MaxKeepAliveQueue) {
 		return false
+	}
+
+	if !CheckSameNilAndLenMap[string](s.Metadata, t.Metadata, opt) {
+		return false
+	}
+
+	for k, v := range s.Metadata {
+		if !reflect.DeepEqual(t.Metadata[k], v) {
+			return false
+		}
 	}
 
 	if s.Mode != t.Mode {
@@ -1285,6 +1296,16 @@ func (s BackendBase) Diff(t BackendBase, opts ...Options) map[string][]interface
 
 	if !equalPointers(s.MaxKeepAliveQueue, t.MaxKeepAliveQueue) {
 		diff["MaxKeepAliveQueue"] = []interface{}{ValueOrNil(s.MaxKeepAliveQueue), ValueOrNil(t.MaxKeepAliveQueue)}
+	}
+
+	if !CheckSameNilAndLenMap[string](s.Metadata, t.Metadata, opt) {
+		diff["Metadata"] = []interface{}{s.Metadata, t.Metadata}
+	}
+
+	for k, v := range s.Metadata {
+		if !reflect.DeepEqual(t.Metadata[k], v) {
+			diff["Metadata"] = []interface{}{s.Metadata, t.Metadata}
+		}
 	}
 
 	if s.Mode != t.Mode {

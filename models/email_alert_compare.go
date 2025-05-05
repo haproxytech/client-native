@@ -17,13 +17,24 @@
 
 package models
 
+import "reflect"
+
 // Equal checks if two structs of type EmailAlert are equal
+//
+// By default empty maps and slices are equal to nil:
 //
 //	var a, b EmailAlert
 //	equal := a.Equal(b)
 //
-// opts ...Options are ignored in this method
+// For more advanced use case you can configure these options (default values are shown):
+//
+//	var a, b EmailAlert
+//	equal := a.Equal(b,Options{
+//		NilSameAsEmpty: true,
+//	})
 func (s EmailAlert) Equal(t EmailAlert, opts ...Options) bool {
+	opt := getOptions(opts...)
+
 	if !equalPointers(s.From, t.From) {
 		return false
 	}
@@ -34,6 +45,16 @@ func (s EmailAlert) Equal(t EmailAlert, opts ...Options) bool {
 
 	if !equalPointers(s.Mailers, t.Mailers) {
 		return false
+	}
+
+	if !CheckSameNilAndLenMap[string](s.Metadata, t.Metadata, opt) {
+		return false
+	}
+
+	for k, v := range s.Metadata {
+		if !reflect.DeepEqual(t.Metadata[k], v) {
+			return false
+		}
 	}
 
 	if s.Myhostname != t.Myhostname {
@@ -49,11 +70,20 @@ func (s EmailAlert) Equal(t EmailAlert, opts ...Options) bool {
 
 // Diff checks if two structs of type EmailAlert are equal
 //
+// By default empty maps and slices are equal to nil:
+//
 //	var a, b EmailAlert
 //	diff := a.Diff(b)
 //
-// opts ...Options are ignored in this method
+// For more advanced use case you can configure these options (default values are shown):
+//
+//	var a, b EmailAlert
+//	diff := a.Diff(b,Options{
+//		NilSameAsEmpty: true,
+//	})
 func (s EmailAlert) Diff(t EmailAlert, opts ...Options) map[string][]interface{} {
+	opt := getOptions(opts...)
+
 	diff := make(map[string][]interface{})
 	if !equalPointers(s.From, t.From) {
 		diff["From"] = []interface{}{ValueOrNil(s.From), ValueOrNil(t.From)}
@@ -65,6 +95,16 @@ func (s EmailAlert) Diff(t EmailAlert, opts ...Options) map[string][]interface{}
 
 	if !equalPointers(s.Mailers, t.Mailers) {
 		diff["Mailers"] = []interface{}{ValueOrNil(s.Mailers), ValueOrNil(t.Mailers)}
+	}
+
+	if !CheckSameNilAndLenMap[string](s.Metadata, t.Metadata, opt) {
+		diff["Metadata"] = []interface{}{s.Metadata, t.Metadata}
+	}
+
+	for k, v := range s.Metadata {
+		if !reflect.DeepEqual(t.Metadata[k], v) {
+			diff["Metadata"] = []interface{}{s.Metadata, t.Metadata}
+		}
 	}
 
 	if s.Myhostname != t.Myhostname {

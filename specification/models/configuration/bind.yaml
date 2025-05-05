@@ -22,9 +22,17 @@ bind:
           type: integer
           x-nullable: true
           example: 81
+        metadata:
+          additionalProperties:
+            type: object
       additionalProperties: false
 default_bind:
   title: Default Bind
   description: HAProxy default bind configuration
   allOf:
     - $ref: '#/definitions/bind_params'
+    - type: object
+      properties:
+        metadata:
+          additionalProperties:
+            type: object

@@ -19,3 +19,6 @@ trace_entry:
       description: Trace parameters
       minLength: 1
       x-nullable: false
+    metadata:
+      additionalProperties:
+        type: object

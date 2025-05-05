@@ -608,6 +608,9 @@ http_request_rule:
       x-dependency:
         type:
           value: set-bandwidth-limit
+    metadata:
+      additionalProperties:
+        type: object
   additionalProperties: false
   example:
     index: 0

@@ -78,6 +78,9 @@ resolver_base:
       x-nullable: false
       x-duration: true
       x-default-unit: ms
+    metadata:
+      additionalProperties:
+        type: object
 nameserver:
   title: Nameserver
   description: Nameserver used in Runtime DNS configuration
@@ -98,6 +101,9 @@ nameserver:
       x-nullable: true
       minimum: 1
       maximum: 65535
+    metadata:
+      additionalProperties:
+        type: object
   example:
     name: ns1
     address: 10.0.0.1

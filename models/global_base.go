@@ -169,6 +169,10 @@ type GlobalBase struct {
 	// master worker
 	MasterWorker bool `json:"master-worker,omitempty"`
 
+	// +kubebuilder:pruning:PreserveUnknownFields
+	// +kubebuilder:validation:Schemaless
+	Metadata map[string]interface{} `json:"metadata,omitempty"`
+
 	// mworker max reloads
 	// Minimum: 0
 	// +kubebuilder:validation:Minimum=0

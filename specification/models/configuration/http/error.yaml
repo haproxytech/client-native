@@ -48,6 +48,9 @@ http_error_rule:
           value: [file, lf-file, string, lf-string]
       items:
         $ref: "#/definitions/return_header"
+    metadata:
+      additionalProperties:
+        type: object
   additionalProperties: false
   example:
     index: 0

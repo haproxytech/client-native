@@ -146,6 +146,9 @@ filter:
         type:
           value: cache
           required: true
+    metadata:
+      additionalProperties:
+        type: object
   additionalProperties: false
   example:
     type: trace

@@ -17,6 +17,8 @@
 
 package models
 
+import "reflect"
+
 // Equal checks if two structs of type LogProfile are equal
 //
 // By default empty maps and slices are equal to nil:
@@ -35,6 +37,16 @@ func (s LogProfile) Equal(t LogProfile, opts ...Options) bool {
 
 	if s.LogTag != t.LogTag {
 		return false
+	}
+
+	if !CheckSameNilAndLenMap[string](s.Metadata, t.Metadata, opt) {
+		return false
+	}
+
+	for k, v := range s.Metadata {
+		if !reflect.DeepEqual(t.Metadata[k], v) {
+			return false
+		}
 	}
 
 	if s.Name != t.Name {
@@ -67,6 +79,16 @@ func (s LogProfile) Diff(t LogProfile, opts ...Options) map[string][]interface{}
 	diff := make(map[string][]interface{})
 	if s.LogTag != t.LogTag {
 		diff["LogTag"] = []interface{}{s.LogTag, t.LogTag}
+	}
+
+	if !CheckSameNilAndLenMap[string](s.Metadata, t.Metadata, opt) {
+		diff["Metadata"] = []interface{}{s.Metadata, t.Metadata}
+	}
+
+	for k, v := range s.Metadata {
+		if !reflect.DeepEqual(t.Metadata[k], v) {
+			diff["Metadata"] = []interface{}{s.Metadata, t.Metadata}
+		}
 	}
 
 	if s.Name != t.Name {

@@ -42,6 +42,10 @@ type LogForwardBase struct {
 	// maxconn
 	Maxconn *int64 `json:"maxconn,omitempty"`
 
+	// +kubebuilder:pruning:PreserveUnknownFields
+	// +kubebuilder:validation:Schemaless
+	Metadata map[string]interface{} `json:"metadata,omitempty"`
+
 	// name
 	// Required: true
 	// Pattern: ^[A-Za-z0-9-_.:]+$

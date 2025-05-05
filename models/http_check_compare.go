@@ -18,6 +18,7 @@
 package models
 
 import (
+	"reflect"
 	"strconv"
 )
 
@@ -85,6 +86,16 @@ func (s HTTPCheck) Equal(t HTTPCheck, opts ...Options) bool {
 
 	if s.Match != t.Match {
 		return false
+	}
+
+	if !CheckSameNilAndLenMap[string](s.Metadata, t.Metadata, opt) {
+		return false
+	}
+
+	for k, v := range s.Metadata {
+		if !reflect.DeepEqual(t.Metadata[k], v) {
+			return false
+		}
 	}
 
 	if s.Method != t.Method {
@@ -254,6 +265,16 @@ func (s HTTPCheck) Diff(t HTTPCheck, opts ...Options) map[string][]interface{} {
 
 	if s.Match != t.Match {
 		diff["Match"] = []interface{}{s.Match, t.Match}
+	}
+
+	if !CheckSameNilAndLenMap[string](s.Metadata, t.Metadata, opt) {
+		diff["Metadata"] = []interface{}{s.Metadata, t.Metadata}
+	}
+
+	for k, v := range s.Metadata {
+		if !reflect.DeepEqual(t.Metadata[k], v) {
+			diff["Metadata"] = []interface{}{s.Metadata, t.Metadata}
+		}
 	}
 
 	if s.Method != t.Method {

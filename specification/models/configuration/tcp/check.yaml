@@ -201,3 +201,6 @@ tcp_check:
         action:
           value: expect
           required: true
+    metadata:
+      additionalProperties:
+        type: object

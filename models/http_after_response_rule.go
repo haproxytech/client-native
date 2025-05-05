@@ -98,6 +98,10 @@ type HTTPAfterResponseRule struct {
 	// +kubebuilder:validation:Pattern=`^[^\s]+$`
 	MapValuefmt string `json:"map_valuefmt,omitempty"`
 
+	// +kubebuilder:pruning:PreserveUnknownFields
+	// +kubebuilder:validation:Schemaless
+	Metadata map[string]interface{} `json:"metadata,omitempty"`
+
 	// sc expr
 	ScExpr string `json:"sc_expr,omitempty"`
 

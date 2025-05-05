@@ -32,6 +32,9 @@ stick_rule:
       x-dependency:
         cond:
           required: true
+    metadata:
+      additionalProperties:
+        type: object
   additionalProperties: false
   example:
     type: match
@@ -74,3 +77,6 @@ stick_table:
       type: string
       pattern: '^[^\s]+$'
       x-nullable: true
+    metadata:
+      additionalProperties:
+        type: object

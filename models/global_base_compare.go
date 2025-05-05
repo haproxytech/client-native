@@ -18,6 +18,7 @@
 package models
 
 import (
+	"reflect"
 	"strconv"
 )
 
@@ -401,6 +402,16 @@ func (s GlobalBase) Equal(t GlobalBase, opts ...Options) bool {
 
 	if s.MasterWorker != t.MasterWorker {
 		return false
+	}
+
+	if !CheckSameNilAndLenMap[string](s.Metadata, t.Metadata, opt) {
+		return false
+	}
+
+	for k, v := range s.Metadata {
+		if !reflect.DeepEqual(t.Metadata[k], v) {
+			return false
+		}
 	}
 
 	if !equalPointers(s.MworkerMaxReloads, t.MworkerMaxReloads) {
@@ -1161,6 +1172,16 @@ func (s GlobalBase) Diff(t GlobalBase, opts ...Options) map[string][]interface{}
 
 	if s.MasterWorker != t.MasterWorker {
 		diff["MasterWorker"] = []interface{}{s.MasterWorker, t.MasterWorker}
+	}
+
+	if !CheckSameNilAndLenMap[string](s.Metadata, t.Metadata, opt) {
+		diff["Metadata"] = []interface{}{s.Metadata, t.Metadata}
+	}
+
+	for k, v := range s.Metadata {
+		if !reflect.DeepEqual(t.Metadata[k], v) {
+			diff["Metadata"] = []interface{}{s.Metadata, t.Metadata}
+		}
 	}
 
 	if !equalPointers(s.MworkerMaxReloads, t.MworkerMaxReloads) {

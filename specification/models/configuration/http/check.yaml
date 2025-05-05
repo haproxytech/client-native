@@ -215,3 +215,6 @@ http_check:
         type:
           value: [set-var]
           required: true
+    metadata:
+      additionalProperties:
+        type: object

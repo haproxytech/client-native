@@ -18,6 +18,9 @@ crt_store:
       description: Default directory to fetch SSL private keys from
     loads:
       $ref: "#/definitions/crt_loads"
+    metadata:
+      additionalProperties:
+        type: object
   additionalProperties: false
 crt_load:
   title: Certificate load action
@@ -49,3 +52,6 @@ crt_load:
       type: string
       enum: [enabled, disabled]
       description: Automatic OCSP response update
+    metadata:
+      additionalProperties:
+        type: object

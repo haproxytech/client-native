@@ -18,6 +18,7 @@
 package models
 
 import (
+	"reflect"
 	"strconv"
 )
 
@@ -44,6 +45,16 @@ func (s HTTPErrorsSection) Equal(t HTTPErrorsSection, opts ...Options) bool {
 			if !s.ErrorFiles[i].Equal(*t.ErrorFiles[i], opt) {
 				return false
 			}
+		}
+	}
+
+	if !CheckSameNilAndLenMap[string](s.Metadata, t.Metadata, opt) {
+		return false
+	}
+
+	for k, v := range s.Metadata {
+		if !reflect.DeepEqual(t.Metadata[k], v) {
+			return false
 		}
 	}
 
@@ -85,6 +96,16 @@ func (s HTTPErrorsSection) Diff(t HTTPErrorsSection, opts ...Options) map[string
 		}
 		if len(diff2) > 0 {
 			diff["ErrorFiles"] = []interface{}{diff2}
+		}
+	}
+
+	if !CheckSameNilAndLenMap[string](s.Metadata, t.Metadata, opt) {
+		diff["Metadata"] = []interface{}{s.Metadata, t.Metadata}
+	}
+
+	for k, v := range s.Metadata {
+		if !reflect.DeepEqual(t.Metadata[k], v) {
+			diff["Metadata"] = []interface{}{s.Metadata, t.Metadata}
 		}
 	}
 

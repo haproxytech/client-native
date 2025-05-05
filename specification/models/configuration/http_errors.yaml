@@ -16,6 +16,9 @@ http_errors_section:
       x-go-name: ErrorFiles
       items:
         $ref: "#/definitions/errorfile"
+    metadata:
+      additionalProperties:
+        type: object
   additionalProperties: false
   example:
     name: website-1

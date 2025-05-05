@@ -39,6 +39,10 @@ type LogProfile struct {
 	// Override syslog log tag set by other "log-tag" directives.
 	LogTag string `json:"log_tag,omitempty"`
 
+	// +kubebuilder:pruning:PreserveUnknownFields
+	// +kubebuilder:validation:Schemaless
+	Metadata map[string]interface{} `json:"metadata,omitempty"`
+
 	// Name of the logging profile.
 	// Required: true
 	// Min Length: 1

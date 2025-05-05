@@ -43,6 +43,10 @@ type Bind struct {
 	// +kubebuilder:validation:Pattern=`^[^\s]+$`
 	Address string `json:"address,omitempty"`
 
+	// +kubebuilder:pruning:PreserveUnknownFields
+	// +kubebuilder:validation:Schemaless
+	Metadata map[string]interface{} `json:"metadata,omitempty"`
+
 	// port
 	// Example: 80
 	// Maximum: 65535
@@ -73,6 +77,8 @@ func (m *Bind) UnmarshalJSON(raw []byte) error {
 	var dataAO1 struct {
 		Address string `json:"address,omitempty"`
 
+		Metadata map[string]interface{} `json:"metadata,omitempty"`
+
 		Port *int64 `json:"port,omitempty"`
 
 		PortRangeEnd *int64 `json:"port-range-end,omitempty"`
@@ -82,6 +88,8 @@ func (m *Bind) UnmarshalJSON(raw []byte) error {
 	}
 
 	m.Address = dataAO1.Address
+
+	m.Metadata = dataAO1.Metadata
 
 	m.Port = dataAO1.Port
 
@@ -102,12 +110,16 @@ func (m Bind) MarshalJSON() ([]byte, error) {
 	var dataAO1 struct {
 		Address string `json:"address,omitempty"`
 
+		Metadata map[string]interface{} `json:"metadata,omitempty"`
+
 		Port *int64 `json:"port,omitempty"`
 
 		PortRangeEnd *int64 `json:"port-range-end,omitempty"`
 	}
 
 	dataAO1.Address = m.Address
+
+	dataAO1.Metadata = m.Metadata
 
 	dataAO1.Port = m.Port
 

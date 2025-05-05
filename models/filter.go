@@ -72,6 +72,10 @@ type Filter struct {
 	// It follows the HAProxy size format and is expressed in bytes.
 	Limit int64 `json:"limit,omitempty"`
 
+	// +kubebuilder:pruning:PreserveUnknownFields
+	// +kubebuilder:validation:Schemaless
+	Metadata map[string]interface{} `json:"metadata,omitempty"`
+
 	// The optional minimum number of bytes forwarded at a time by a stream excluding the last packet that may be smaller.
 	// This value can be specified for per-stream and shared bandwidth limitation filters.
 	// It follows the HAProxy size format and is expressed in bytes.

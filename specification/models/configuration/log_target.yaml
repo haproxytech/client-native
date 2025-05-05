@@ -79,4 +79,7 @@ log_target:
           value: false
         level:
           required: false
+    metadata:
+      additionalProperties:
+        type: object
   additionalProperties: false

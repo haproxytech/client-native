@@ -13,3 +13,6 @@ capture:
     length:
       type: integer
       x-nullable: false
+    metadata:
+      additionalProperties:
+        type: object

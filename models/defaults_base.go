@@ -343,6 +343,10 @@ type DefaultsBase struct {
 	// maxconn
 	Maxconn *int64 `json:"maxconn,omitempty"`
 
+	// +kubebuilder:pruning:PreserveUnknownFields
+	// +kubebuilder:validation:Schemaless
+	Metadata map[string]interface{} `json:"metadata,omitempty"`
+
 	// mode
 	// Enum: ["tcp","http","log"]
 	// +kubebuilder:validation:Enum=tcp;http;log;

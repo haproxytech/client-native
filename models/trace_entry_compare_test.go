@@ -172,7 +172,7 @@ func TestTraceEntryDiffFalse(t *testing.T) {
 
 	for _, sample := range samples {
 		result := sample.a.Diff(sample.b)
-		if len(result) != 1 {
+		if len(result) != 2 {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {
@@ -182,7 +182,7 @@ func TestTraceEntryDiffFalse(t *testing.T) {
 			if err != nil {
 				t.Error(err)
 			}
-			t.Errorf("Expected TraceEntry to be different in 1 cases, but it is not (%d) %s %s", len(result), a, b)
+			t.Errorf("Expected TraceEntry to be different in 2 cases, but it is not (%d) %s %s", len(result), a, b)
 		}
 	}
 }

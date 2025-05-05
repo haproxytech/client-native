@@ -18,6 +18,7 @@
 package models
 
 import (
+	"reflect"
 	"strconv"
 )
 
@@ -337,6 +338,16 @@ func (s FrontendBase) Equal(t FrontendBase, opts ...Options) bool {
 
 	if !equalPointers(s.Maxconn, t.Maxconn) {
 		return false
+	}
+
+	if !CheckSameNilAndLenMap[string](s.Metadata, t.Metadata, opt) {
+		return false
+	}
+
+	for k, v := range s.Metadata {
+		if !reflect.DeepEqual(t.Metadata[k], v) {
+			return false
+		}
 	}
 
 	if s.Mode != t.Mode {
@@ -817,6 +828,16 @@ func (s FrontendBase) Diff(t FrontendBase, opts ...Options) map[string][]interfa
 
 	if !equalPointers(s.Maxconn, t.Maxconn) {
 		diff["Maxconn"] = []interface{}{ValueOrNil(s.Maxconn), ValueOrNil(t.Maxconn)}
+	}
+
+	if !CheckSameNilAndLenMap[string](s.Metadata, t.Metadata, opt) {
+		diff["Metadata"] = []interface{}{s.Metadata, t.Metadata}
+	}
+
+	for k, v := range s.Metadata {
+		if !reflect.DeepEqual(t.Metadata[k], v) {
+			diff["Metadata"] = []interface{}{s.Metadata, t.Metadata}
+		}
 	}
 
 	if s.Mode != t.Mode {

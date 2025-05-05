@@ -21,4 +21,7 @@ acl:
     value:
       type: string
       x-nullable: false
+    metadata:
+      additionalProperties:
+        type: object
   additionalProperties: false

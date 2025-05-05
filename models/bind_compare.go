@@ -17,6 +17,8 @@
 
 package models
 
+import "reflect"
+
 // Equal checks if two structs of type Bind are equal
 //
 // By default empty maps and slices are equal to nil:
@@ -39,6 +41,16 @@ func (s Bind) Equal(t Bind, opts ...Options) bool {
 
 	if s.Address != t.Address {
 		return false
+	}
+
+	if !CheckSameNilAndLenMap[string](s.Metadata, t.Metadata, opt) {
+		return false
+	}
+
+	for k, v := range s.Metadata {
+		if !reflect.DeepEqual(t.Metadata[k], v) {
+			return false
+		}
 	}
 
 	if !equalPointers(s.Port, t.Port) {
@@ -76,6 +88,16 @@ func (s Bind) Diff(t Bind, opts ...Options) map[string][]interface{} {
 
 	if s.Address != t.Address {
 		diff["Address"] = []interface{}{s.Address, t.Address}
+	}
+
+	if !CheckSameNilAndLenMap[string](s.Metadata, t.Metadata, opt) {
+		diff["Metadata"] = []interface{}{s.Metadata, t.Metadata}
+	}
+
+	for k, v := range s.Metadata {
+		if !reflect.DeepEqual(t.Metadata[k], v) {
+			diff["Metadata"] = []interface{}{s.Metadata, t.Metadata}
+		}
 	}
 
 	if !equalPointers(s.Port, t.Port) {

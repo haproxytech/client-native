@@ -86,6 +86,10 @@ type TCPCheck struct {
 	// +kubebuilder:validation:Enum=string;rstring;string-lf;binary;rbinary;binary-lf;
 	Match string `json:"match,omitempty"`
 
+	// +kubebuilder:pruning:PreserveUnknownFields
+	// +kubebuilder:validation:Schemaless
+	Metadata map[string]interface{} `json:"metadata,omitempty"`
+
 	// min recv
 	MinRecv int64 `json:"min_recv,omitempty"`
 

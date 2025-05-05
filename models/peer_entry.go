@@ -41,6 +41,10 @@ type PeerEntry struct {
 	// +kubebuilder:validation:Pattern=`^[^\s]+$`
 	Address *string `json:"address"`
 
+	// +kubebuilder:pruning:PreserveUnknownFields
+	// +kubebuilder:validation:Schemaless
+	Metadata map[string]interface{} `json:"metadata,omitempty"`
+
 	// name
 	// Required: true
 	// Pattern: ^[A-Za-z0-9-_.:]+$

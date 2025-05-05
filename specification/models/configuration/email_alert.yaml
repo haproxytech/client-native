@@ -24,3 +24,6 @@ email_alert:
     to:
       type: string
       pattern: '^\S+@\S+$'
+    metadata:
+      additionalProperties:
+        type: object

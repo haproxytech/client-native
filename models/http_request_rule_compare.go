@@ -18,6 +18,7 @@
 package models
 
 import (
+	"reflect"
 	"strconv"
 )
 
@@ -153,6 +154,16 @@ func (s HTTPRequestRule) Equal(t HTTPRequestRule, opts ...Options) bool {
 
 	if s.MarkValue != t.MarkValue {
 		return false
+	}
+
+	if !CheckSameNilAndLenMap[string](s.Metadata, t.Metadata, opt) {
+		return false
+	}
+
+	for k, v := range s.Metadata {
+		if !reflect.DeepEqual(t.Metadata[k], v) {
+			return false
+		}
 	}
 
 	if s.MethodFmt != t.MethodFmt {
@@ -466,6 +477,16 @@ func (s HTTPRequestRule) Diff(t HTTPRequestRule, opts ...Options) map[string][]i
 
 	if s.MarkValue != t.MarkValue {
 		diff["MarkValue"] = []interface{}{s.MarkValue, t.MarkValue}
+	}
+
+	if !CheckSameNilAndLenMap[string](s.Metadata, t.Metadata, opt) {
+		diff["Metadata"] = []interface{}{s.Metadata, t.Metadata}
+	}
+
+	for k, v := range s.Metadata {
+		if !reflect.DeepEqual(t.Metadata[k], v) {
+			diff["Metadata"] = []interface{}{s.Metadata, t.Metadata}
+		}
 	}
 
 	if s.MethodFmt != t.MethodFmt {

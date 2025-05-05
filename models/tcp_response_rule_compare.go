@@ -17,13 +17,24 @@
 
 package models
 
+import "reflect"
+
 // Equal checks if two structs of type TCPResponseRule are equal
+//
+// By default empty maps and slices are equal to nil:
 //
 //	var a, b TCPResponseRule
 //	equal := a.Equal(b)
 //
-// opts ...Options are ignored in this method
+// For more advanced use case you can configure these options (default values are shown):
+//
+//	var a, b TCPResponseRule
+//	equal := a.Equal(b,Options{
+//		NilSameAsEmpty: true,
+//	})
 func (s TCPResponseRule) Equal(t TCPResponseRule, opts ...Options) bool {
+	opt := getOptions(opts...)
+
 	if s.Action != t.Action {
 		return false
 	}
@@ -66,6 +77,16 @@ func (s TCPResponseRule) Equal(t TCPResponseRule, opts ...Options) bool {
 
 	if s.MarkValue != t.MarkValue {
 		return false
+	}
+
+	if !CheckSameNilAndLenMap[string](s.Metadata, t.Metadata, opt) {
+		return false
+	}
+
+	for k, v := range s.Metadata {
+		if !reflect.DeepEqual(t.Metadata[k], v) {
+			return false
+		}
 	}
 
 	if s.NiceValue != t.NiceValue {
@@ -129,11 +150,20 @@ func (s TCPResponseRule) Equal(t TCPResponseRule, opts ...Options) bool {
 
 // Diff checks if two structs of type TCPResponseRule are equal
 //
+// By default empty maps and slices are equal to nil:
+//
 //	var a, b TCPResponseRule
 //	diff := a.Diff(b)
 //
-// opts ...Options are ignored in this method
+// For more advanced use case you can configure these options (default values are shown):
+//
+//	var a, b TCPResponseRule
+//	diff := a.Diff(b,Options{
+//		NilSameAsEmpty: true,
+//	})
 func (s TCPResponseRule) Diff(t TCPResponseRule, opts ...Options) map[string][]interface{} {
+	opt := getOptions(opts...)
+
 	diff := make(map[string][]interface{})
 	if s.Action != t.Action {
 		diff["Action"] = []interface{}{s.Action, t.Action}
@@ -177,6 +207,16 @@ func (s TCPResponseRule) Diff(t TCPResponseRule, opts ...Options) map[string][]i
 
 	if s.MarkValue != t.MarkValue {
 		diff["MarkValue"] = []interface{}{s.MarkValue, t.MarkValue}
+	}
+
+	if !CheckSameNilAndLenMap[string](s.Metadata, t.Metadata, opt) {
+		diff["Metadata"] = []interface{}{s.Metadata, t.Metadata}
+	}
+
+	for k, v := range s.Metadata {
+		if !reflect.DeepEqual(t.Metadata[k], v) {
+			diff["Metadata"] = []interface{}{s.Metadata, t.Metadata}
+		}
 	}
 
 	if s.NiceValue != t.NiceValue {

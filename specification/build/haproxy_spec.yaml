@@ -29,6 +29,9 @@ definitions:
       group:
         description: The group to run the command as, if different than the HAProxy group.
         type: string
+      metadata:
+        additionalProperties:
+          type: object
       name:
         pattern: ^[A-Za-z0-9-_.:]+$
         type: string
@@ -94,6 +97,9 @@ definitions:
         description: Defines the maximum number of concurrent requests this application can accept. If the FastCGI application retrieves the variable FCGI_MAX_REQS during connection establishment, it can override this option. Furthermore, if the application does not do multiplexing, it will ignore this option.
         minimum: 1
         type: integer
+      metadata:
+        additionalProperties:
+          type: object
       mpxs_conns:
         description: Enables or disables the support of connection multiplexing. If the FastCGI application retrieves the variable FCGI_MPXS_CONNS during connection establishment, it can override this option.
         enum:
@@ -2265,6 +2271,9 @@ definitions:
       master-worker:
         type: boolean
         x-display-name: Master Worker Mode
+      metadata:
+        additionalProperties:
+          type: object
       mworker_max_reloads:
         minimum: 0
         type: integer
@@ -2810,6 +2819,9 @@ definitions:
         type: integer
         x-display-name: Max Connections
         x-nullable: true
+      metadata:
+        additionalProperties:
+          type: object
       mode:
         enum:
           - tcp
@@ -3308,6 +3320,9 @@ definitions:
         type: integer
         x-display-name: Max Connections
         x-nullable: true
+      metadata:
+        additionalProperties:
+          type: object
       mode:
         enum:
           - http
@@ -3820,6 +3835,9 @@ definitions:
         type: integer
         x-display-name: Maximum keep alive queue
         x-nullable: true
+      metadata:
+        additionalProperties:
+          type: object
       mode:
         enum:
           - http
@@ -4031,6 +4049,9 @@ definitions:
         type: integer
         x-display-name: The maximum length of an event message stored into the ring
         x-nullable: true
+      metadata:
+        additionalProperties:
+          type: object
       name:
         pattern: ^[A-Za-z0-9-_.:]+$
         type: string
@@ -4071,6 +4092,9 @@ definitions:
         type: string
       interface:
         type: string
+      metadata:
+        additionalProperties:
+          type: object
       name:
         pattern: ^[^\s]+$
         type: string
@@ -4124,6 +4148,9 @@ definitions:
       maxconn:
         type: integer
         x-nullable: true
+      metadata:
+        additionalProperties:
+          type: object
       name:
         pattern: ^[A-Za-z0-9-_.:]+$
         type: string
@@ -4162,6 +4189,9 @@ definitions:
   userlist_base:
     description: HAProxy configuration of access control
     properties:
+      metadata:
+        additionalProperties:
+          type: object
       name:
         pattern: ^[A-Za-z0-9-_.:]+$
         type: string
@@ -4182,6 +4212,9 @@ definitions:
       groups:
         type: string
         x-nullable: false
+      metadata:
+        additionalProperties:
+          type: object
       password:
         type: string
         x-nullable: false
@@ -4205,6 +4238,9 @@ definitions:
   group:
     description: HAProxy userlist group
     properties:
+      metadata:
+        additionalProperties:
+          type: object
       name:
         pattern: ^[A-Za-z0-9-_.:]+$
         type: string
@@ -4237,6 +4273,9 @@ definitions:
     additionalProperties: false
     description: A list of SMTP servers used by HAProxy to send emails.
     properties:
+      metadata:
+        additionalProperties:
+          type: object
       name:
         pattern: ^[A-Za-z0-9-_]+$
         type: string
@@ -4265,6 +4304,9 @@ definitions:
         pattern: ^\S+$
         type: string
         x-nullable: false
+      metadata:
+        additionalProperties:
+          type: object
       name:
         pattern: ^[A-Za-z0-9-_]+$
         type: string
@@ -4321,6 +4363,9 @@ definitions:
         type: boolean
       enabled:
         type: boolean
+      metadata:
+        additionalProperties:
+          type: object
       name:
         pattern: ^[A-Za-z0-9-_.:]+$
         type: string
@@ -4348,6 +4393,9 @@ definitions:
       address:
         pattern: ^[^\s]+$
         type: string
+      metadata:
+        additionalProperties:
+          type: object
       name:
         pattern: ^[A-Za-z0-9-_.:]+$
         type: string
@@ -4387,6 +4435,9 @@ definitions:
           $ref: '#/definitions/errorfile'
         type: array
         x-go-name: ErrorFiles
+      metadata:
+        additionalProperties:
+          type: object
       name:
         pattern: ^[A-Za-z0-9-_]+$
         type: string
@@ -4411,6 +4462,9 @@ definitions:
             example: 127.0.0.1
             pattern: ^[^\s]+$
             type: string
+          metadata:
+            additionalProperties:
+              type: object
           port:
             example: 80
             maximum: 65535
@@ -4483,6 +4537,9 @@ definitions:
           id:
             type: integer
             x-nullable: true
+          metadata:
+            additionalProperties:
+              type: object
           num_or_range:
             type: string
             x-nullable: false
@@ -4525,6 +4582,9 @@ definitions:
         type: integer
         x-display-name: Key Length
         x-nullable: true
+      metadata:
+        additionalProperties:
+          type: object
       nopurge:
         type: boolean
         x-display-name: No Purge
@@ -4806,6 +4866,9 @@ definitions:
             required: true
             value: set-mark
         x-display-name: Mark Value
+      metadata:
+        additionalProperties:
+          type: object
       method_fmt:
         pattern: ^[^\s]+$
         type: string
@@ -5474,6 +5537,9 @@ definitions:
             required: true
             value: set-mark
         x-display-name: Mark Value
+      metadata:
+        additionalProperties:
+          type: object
       nice_value:
         maximum: 1024
         minimum: -1024
@@ -5963,6 +6029,9 @@ definitions:
             required: true
             value: set-map
         x-display-name: Map Value Format
+      metadata:
+        additionalProperties:
+          type: object
       sc_expr:
         type: string
         x-dependency:
@@ -6105,6 +6174,9 @@ definitions:
       status: 425
       type: status
     properties:
+      metadata:
+        additionalProperties:
+          type: object
       return_content:
         type: string
         x-dependency:
@@ -6278,6 +6350,9 @@ definitions:
             required: true
             value: expect
         x-display-name: Expect Match
+      metadata:
+        additionalProperties:
+          type: object
       method:
         enum:
           - HEAD
@@ -6677,6 +6752,9 @@ definitions:
               - connection
               - content
         x-display-name: Mark Value
+      metadata:
+        additionalProperties:
+          type: object
       nice_value:
         maximum: 1024
         minimum: -1024
@@ -7092,6 +7170,9 @@ definitions:
           type:
             value: content
         x-display-name: Mark Value
+      metadata:
+        additionalProperties:
+          type: object
       nice_value:
         maximum: 1024
         minimum: -1024
@@ -7351,6 +7432,9 @@ definitions:
             required: true
             value: expect
         x-display-name: Expect Match
+      metadata:
+        additionalProperties:
+          type: object
       min_recv:
         type: integer
         x-dependency:
@@ -7503,6 +7587,9 @@ definitions:
           freeFormat: true
           operation: getACLs
           property: acl_name
+      metadata:
+        additionalProperties:
+          type: object
       type:
         enum:
           - reject
@@ -7547,6 +7634,9 @@ definitions:
           freeFormat: true
           operation: getACLs
           property: acl_name
+      metadata:
+        additionalProperties:
+          type: object
       name:
         pattern: ^[^\s]+$
         type: string
@@ -7589,6 +7679,9 @@ definitions:
           freeFormat: true
           operation: getACLs
           property: acl_name
+      metadata:
+        additionalProperties:
+          type: object
       target_server:
         pattern: ^[^\s]+$
         type: string
@@ -7695,6 +7788,9 @@ definitions:
               - bwlim-in
               - bwlim-out
         x-size: true
+      metadata:
+        additionalProperties:
+          type: object
       min_size:
         description: |-
           The optional minimum number of bytes forwarded at a time by a stream excluding the last packet that may be smaller.
@@ -7801,6 +7897,9 @@ definitions:
           freeFormat: true
           operation: getACLs
           property: acl_name
+      metadata:
+        additionalProperties:
+          type: object
       pattern:
         pattern: ^[^\s]+$
         type: string
@@ -7916,6 +8015,9 @@ definitions:
             value: false
           nolog:
             value: false
+      metadata:
+        additionalProperties:
+          type: object
       minlevel:
         enum:
           - emerg
@@ -7977,6 +8079,9 @@ definitions:
         pattern: ^[^\s]+$
         type: string
         x-nullable: false
+      metadata:
+        additionalProperties:
+          type: object
       value:
         type: string
         x-nullable: false
@@ -10087,6 +10192,9 @@ definitions:
           type: integer
         type: array
         x-omitempty: true
+      metadata:
+        additionalProperties:
+          type: object
       name:
         type: string
     type: object
@@ -10149,6 +10257,9 @@ definitions:
       length:
         type: integer
         x-nullable: false
+      metadata:
+        additionalProperties:
+          type: object
       type:
         enum:
           - request
@@ -10219,6 +10330,9 @@ definitions:
         x-default-unit: ms
         x-duration: true
         x-nullable: true
+      metadata:
+        additionalProperties:
+          type: object
       name:
         pattern: ^[A-Za-z0-9-_.:]+$
         type: string
@@ -10260,6 +10374,9 @@ definitions:
       address:
         pattern: ^[^\s]+$
         type: string
+      metadata:
+        additionalProperties:
+          type: object
       name:
         pattern: ^[A-Za-z0-9-_.:]+$
         type: string
@@ -10292,6 +10409,9 @@ definitions:
         x-size: false
       max_secondary_entries:
         type: integer
+      metadata:
+        additionalProperties:
+          type: object
       name:
         pattern: ^[A-Za-z0-9-_.:]+$
         type: string
@@ -10864,6 +10984,9 @@ definitions:
         x-dynamic-enum:
           operation: getMailersSections
           property: name
+      metadata:
+        additionalProperties:
+          type: object
       myhostname:
         type: string
       to:
@@ -10903,6 +11026,9 @@ definitions:
           - 503
           - 504
         type: integer
+      metadata:
+        additionalProperties:
+          type: object
       url:
         type: string
     required:
@@ -10912,6 +11038,11 @@ definitions:
   default_bind:
     allOf:
       - $ref: '#/definitions/bind_params'
+      - properties:
+          metadata:
+            additionalProperties:
+              type: object
+        type: object
     description: HAProxy default bind configuration
     title: Default Bind
   table:
@@ -10922,6 +11053,9 @@ definitions:
         x-default-unit: ms
         x-duration: true
         x-nullable: true
+      metadata:
+        additionalProperties:
+          type: object
       name:
         type: string
         x-nullable: false
@@ -10977,6 +11111,9 @@ definitions:
         type: string
       loads:
         $ref: '#/definitions/crt_loads'
+      metadata:
+        additionalProperties:
+          type: object
       name:
         pattern: ^[A-Za-z0-9-_]+$
         type: string
@@ -11006,6 +11143,9 @@ definitions:
       key:
         description: Private key filename
         type: string
+      metadata:
+        additionalProperties:
+          type: object
       ocsp:
         description: OCSP response filename
         type: string
@@ -11039,6 +11179,9 @@ definitions:
   trace_entry:
     description: Configure a trace event
     properties:
+      metadata:
+        additionalProperties:
+          type: object
       trace:
         description: Trace parameters
         minLength: 1
@@ -11059,6 +11202,9 @@ definitions:
       log_tag:
         description: Override syslog log tag set by other "log-tag" directives.
         type: string
+      metadata:
+        additionalProperties:
+          type: object
       name:
         description: Name of the logging profile.
         minLength: 1
@@ -11087,6 +11233,9 @@ definitions:
       format:
         description: Override "log-format" or "error-log-format" strings depending on the step.
         type: string
+      metadata:
+        additionalProperties:
+          type: object
       sd:
         description: Override the "log-format-sd" string.
         type: string

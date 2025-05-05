@@ -17,6 +17,8 @@
 
 package models
 
+import "reflect"
+
 // Equal checks if two structs of type CrtStore are equal
 //
 // By default empty maps and slices are equal to nil:
@@ -43,6 +45,16 @@ func (s CrtStore) Equal(t CrtStore, opts ...Options) bool {
 
 	if !s.Loads.Equal(t.Loads, opt) {
 		return false
+	}
+
+	if !CheckSameNilAndLenMap[string](s.Metadata, t.Metadata, opt) {
+		return false
+	}
+
+	for k, v := range s.Metadata {
+		if !reflect.DeepEqual(t.Metadata[k], v) {
+			return false
+		}
 	}
 
 	if s.Name != t.Name {
@@ -79,6 +91,16 @@ func (s CrtStore) Diff(t CrtStore, opts ...Options) map[string][]interface{} {
 
 	if !s.Loads.Equal(t.Loads, opt) {
 		diff["Loads"] = []interface{}{s.Loads, t.Loads}
+	}
+
+	if !CheckSameNilAndLenMap[string](s.Metadata, t.Metadata, opt) {
+		diff["Metadata"] = []interface{}{s.Metadata, t.Metadata}
+	}
+
+	for k, v := range s.Metadata {
+		if !reflect.DeepEqual(t.Metadata[k], v) {
+			diff["Metadata"] = []interface{}{s.Metadata, t.Metadata}
+		}
 	}
 
 	if s.Name != t.Name {

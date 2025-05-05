@@ -42,6 +42,10 @@ type HTTPErrorsSection struct {
 	// Required: true
 	ErrorFiles []*Errorfile `json:"error_files"`
 
+	// +kubebuilder:pruning:PreserveUnknownFields
+	// +kubebuilder:validation:Schemaless
+	Metadata map[string]interface{} `json:"metadata,omitempty"`
+
 	// name
 	// Required: true
 	// Pattern: ^[A-Za-z0-9-_]+$

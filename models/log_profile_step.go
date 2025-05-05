@@ -44,6 +44,10 @@ type LogProfileStep struct {
 	// Override "log-format" or "error-log-format" strings depending on the step.
 	Format string `json:"format,omitempty"`
 
+	// +kubebuilder:pruning:PreserveUnknownFields
+	// +kubebuilder:validation:Schemaless
+	Metadata map[string]interface{} `json:"metadata,omitempty"`
+
 	// Override the "log-format-sd" string.
 	Sd string `json:"sd,omitempty"`
 

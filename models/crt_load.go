@@ -50,6 +50,10 @@ type CrtLoad struct {
 	// Private key filename
 	Key string `json:"key,omitempty"`
 
+	// +kubebuilder:pruning:PreserveUnknownFields
+	// +kubebuilder:validation:Schemaless
+	Metadata map[string]interface{} `json:"metadata,omitempty"`
+
 	// OCSP response filename
 	Ocsp string `json:"ocsp,omitempty"`
 

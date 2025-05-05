@@ -335,6 +335,9 @@ frontend_base:
       $ref: "#/definitions/errorloc"
     error_log_format:
       type: string
+    metadata:
+      additionalProperties:
+        type: object
   additionalProperties: false
   example:
     name: test_frontend

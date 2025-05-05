@@ -45,6 +45,10 @@ type Cache struct {
 	// max secondary entries
 	MaxSecondaryEntries int64 `json:"max_secondary_entries,omitempty"`
 
+	// +kubebuilder:pruning:PreserveUnknownFields
+	// +kubebuilder:validation:Schemaless
+	Metadata map[string]interface{} `json:"metadata,omitempty"`
+
 	// name
 	// Required: true
 	// Pattern: ^[A-Za-z0-9-_.:]+$

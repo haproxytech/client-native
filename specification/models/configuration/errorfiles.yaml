@@ -10,3 +10,6 @@ errorfiles:
       items:
         type: integer
         enum: [200, 400, 401, 403, 404, 405, 407, 408, 410, 413, 425, 429, 500, 501, 502, 503, 504]
+    metadata:
+      additionalProperties:
+        type: object

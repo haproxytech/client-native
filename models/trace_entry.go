@@ -35,6 +35,9 @@ import (
 //
 // swagger:model trace_entry
 type TraceEntry struct {
+	// +kubebuilder:pruning:PreserveUnknownFields
+	// +kubebuilder:validation:Schemaless
+	Metadata map[string]interface{} `json:"metadata,omitempty"`
 
 	// Trace parameters
 	// Required: true

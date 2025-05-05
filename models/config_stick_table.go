@@ -42,6 +42,10 @@ type ConfigStickTable struct {
 	// keylen
 	Keylen *int64 `json:"keylen,omitempty"`
 
+	// +kubebuilder:pruning:PreserveUnknownFields
+	// +kubebuilder:validation:Schemaless
+	Metadata map[string]interface{} `json:"metadata,omitempty"`
+
 	// nopurge
 	Nopurge bool `json:"nopurge,omitempty"`
 

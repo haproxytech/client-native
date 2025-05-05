@@ -24,6 +24,9 @@ userlist_base:
       type: string
       pattern: '^[A-Za-z0-9-_.:]+$'
       x-nullable: false
+    metadata:
+      additionalProperties:
+        type: object
 group:
   title: Group
   description: HAProxy userlist group
@@ -38,6 +41,9 @@ group:
     users:
       type: string
       x-nullable: false
+    metadata:
+      additionalProperties:
+        type: object
 user:
   title: User
   description: HAProxy userlist user
@@ -58,3 +64,6 @@ user:
     groups:
       type: string
       x-nullable: false
+    metadata:
+      additionalProperties:
+        type: object

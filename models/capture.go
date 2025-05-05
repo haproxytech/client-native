@@ -39,6 +39,10 @@ type Capture struct {
 	// Required: true
 	Length int64 `json:"length"`
 
+	// +kubebuilder:pruning:PreserveUnknownFields
+	// +kubebuilder:validation:Schemaless
+	Metadata map[string]interface{} `json:"metadata,omitempty"`
+
 	// type
 	// Required: true
 	// Enum: ["request","response"]

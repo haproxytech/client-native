@@ -48,6 +48,9 @@ peer_section_base:
         to some peers in place of sending all the stick-table contents to each peer
         declared in the "peers" section. In such cases, "shards" specifies the
         number of peer involved in this stick-table contents distribution.
+    metadata:
+      additionalProperties:
+        type: object
   additionalProperties: false
 peer_entry:
   title: Peer Entry
@@ -72,3 +75,6 @@ peer_entry:
       maximum: 65535
     shard:
       type: integer
+    metadata:
+      additionalProperties:
+        type: object

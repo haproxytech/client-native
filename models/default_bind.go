@@ -35,6 +35,10 @@ import (
 // swagger:model default_bind
 type DefaultBind struct {
 	BindParams `json:",inline"`
+
+	// +kubebuilder:pruning:PreserveUnknownFields
+	// +kubebuilder:validation:Schemaless
+	Metadata map[string]interface{} `json:"metadata,omitempty"`
 }
 
 // UnmarshalJSON unmarshals this object from a JSON structure
@@ -46,18 +50,39 @@ func (m *DefaultBind) UnmarshalJSON(raw []byte) error {
 	}
 	m.BindParams = aO0
 
+	// AO1
+	var dataAO1 struct {
+		Metadata map[string]interface{} `json:"metadata,omitempty"`
+	}
+	if err := swag.ReadJSON(raw, &dataAO1); err != nil {
+		return err
+	}
+
+	m.Metadata = dataAO1.Metadata
+
 	return nil
 }
 
 // MarshalJSON marshals this object to a JSON structure
 func (m DefaultBind) MarshalJSON() ([]byte, error) {
-	_parts := make([][]byte, 0, 1)
+	_parts := make([][]byte, 0, 2)
 
 	aO0, err := swag.WriteJSON(m.BindParams)
 	if err != nil {
 		return nil, err
 	}
 	_parts = append(_parts, aO0)
+	var dataAO1 struct {
+		Metadata map[string]interface{} `json:"metadata,omitempty"`
+	}
+
+	dataAO1.Metadata = m.Metadata
+
+	jsonDataAO1, errAO1 := swag.WriteJSON(dataAO1)
+	if errAO1 != nil {
+		return nil, errAO1
+	}
+	_parts = append(_parts, jsonDataAO1)
 	return swag.ConcatJSON(_parts...), nil
 }
 

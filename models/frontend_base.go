@@ -245,6 +245,10 @@ type FrontendBase struct {
 	// maxconn
 	Maxconn *int64 `json:"maxconn,omitempty"`
 
+	// +kubebuilder:pruning:PreserveUnknownFields
+	// +kubebuilder:validation:Schemaless
+	Metadata map[string]interface{} `json:"metadata,omitempty"`
+
 	// mode
 	// Enum: ["http","tcp"]
 	// +kubebuilder:validation:Enum=http;tcp;

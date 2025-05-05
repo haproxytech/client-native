@@ -257,6 +257,9 @@ tcp_response_rule:
           required: true
         type:
           value: content
+    metadata:
+      additionalProperties:
+        type: object
   additionalProperties: false
   example:
     index: 0

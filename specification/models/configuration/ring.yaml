@@ -50,4 +50,7 @@ ring_base:
       x-nullable: true
       x-duration: true
       x-default-unit: ms
+    metadata:
+      additionalProperties:
+        type: object
   additionalProperties: false

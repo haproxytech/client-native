@@ -400,6 +400,9 @@ tcp_request_rule:
         type:
           value: [connection, content, session]
           required: true
+    metadata:
+      additionalProperties:
+        type: object
   additionalProperties: false
   example:
     index: 0

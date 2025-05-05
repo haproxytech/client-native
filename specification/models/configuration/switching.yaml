@@ -28,6 +28,9 @@ backend_switching_rule:
       x-dependency:
         cond:
           required: true
+    metadata:
+      additionalProperties:
+        type: object
   additionalProperties: false
   example:
     index: 0
@@ -62,6 +65,9 @@ server_switching_rule:
       x-dependency:
         cond:
           required: true
+    metadata:
+      additionalProperties:
+        type: object
   additionalProperties: false
   example:
     target_server: www

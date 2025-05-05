@@ -34,3 +34,6 @@ table:
     write_to:
       type: string
       x-nullable: true
+    metadata:
+      additionalProperties:
+        type: object

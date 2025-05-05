@@ -25,3 +25,6 @@ cache:
       x-nullable: true
     max_secondary_entries:
       type: integer
+    metadata:
+      additionalProperties:
+        type: object

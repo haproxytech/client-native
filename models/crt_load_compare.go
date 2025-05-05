@@ -17,13 +17,24 @@
 
 package models
 
+import "reflect"
+
 // Equal checks if two structs of type CrtLoad are equal
+//
+// By default empty maps and slices are equal to nil:
 //
 //	var a, b CrtLoad
 //	equal := a.Equal(b)
 //
-// opts ...Options are ignored in this method
+// For more advanced use case you can configure these options (default values are shown):
+//
+//	var a, b CrtLoad
+//	equal := a.Equal(b,Options{
+//		NilSameAsEmpty: true,
+//	})
 func (s CrtLoad) Equal(t CrtLoad, opts ...Options) bool {
+	opt := getOptions(opts...)
+
 	if s.Alias != t.Alias {
 		return false
 	}
@@ -38,6 +49,16 @@ func (s CrtLoad) Equal(t CrtLoad, opts ...Options) bool {
 
 	if s.Key != t.Key {
 		return false
+	}
+
+	if !CheckSameNilAndLenMap[string](s.Metadata, t.Metadata, opt) {
+		return false
+	}
+
+	for k, v := range s.Metadata {
+		if !reflect.DeepEqual(t.Metadata[k], v) {
+			return false
+		}
 	}
 
 	if s.Ocsp != t.Ocsp {
@@ -57,11 +78,20 @@ func (s CrtLoad) Equal(t CrtLoad, opts ...Options) bool {
 
 // Diff checks if two structs of type CrtLoad are equal
 //
+// By default empty maps and slices are equal to nil:
+//
 //	var a, b CrtLoad
 //	diff := a.Diff(b)
 //
-// opts ...Options are ignored in this method
+// For more advanced use case you can configure these options (default values are shown):
+//
+//	var a, b CrtLoad
+//	diff := a.Diff(b,Options{
+//		NilSameAsEmpty: true,
+//	})
 func (s CrtLoad) Diff(t CrtLoad, opts ...Options) map[string][]interface{} {
+	opt := getOptions(opts...)
+
 	diff := make(map[string][]interface{})
 	if s.Alias != t.Alias {
 		diff["Alias"] = []interface{}{s.Alias, t.Alias}
@@ -77,6 +107,16 @@ func (s CrtLoad) Diff(t CrtLoad, opts ...Options) map[string][]interface{} {
 
 	if s.Key != t.Key {
 		diff["Key"] = []interface{}{s.Key, t.Key}
+	}
+
+	if !CheckSameNilAndLenMap[string](s.Metadata, t.Metadata, opt) {
+		diff["Metadata"] = []interface{}{s.Metadata, t.Metadata}
+	}
+
+	for k, v := range s.Metadata {
+		if !reflect.DeepEqual(t.Metadata[k], v) {
+			diff["Metadata"] = []interface{}{s.Metadata, t.Metadata}
+		}
 	}
 
 	if s.Ocsp != t.Ocsp {

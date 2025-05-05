@@ -17,13 +17,24 @@
 
 package models
 
+import "reflect"
+
 // Equal checks if two structs of type Cache are equal
+//
+// By default empty maps and slices are equal to nil:
 //
 //	var a, b Cache
 //	equal := a.Equal(b)
 //
-// opts ...Options are ignored in this method
+// For more advanced use case you can configure these options (default values are shown):
+//
+//	var a, b Cache
+//	equal := a.Equal(b,Options{
+//		NilSameAsEmpty: true,
+//	})
 func (s Cache) Equal(t Cache, opts ...Options) bool {
+	opt := getOptions(opts...)
+
 	if s.MaxAge != t.MaxAge {
 		return false
 	}
@@ -34,6 +45,16 @@ func (s Cache) Equal(t Cache, opts ...Options) bool {
 
 	if s.MaxSecondaryEntries != t.MaxSecondaryEntries {
 		return false
+	}
+
+	if !CheckSameNilAndLenMap[string](s.Metadata, t.Metadata, opt) {
+		return false
+	}
+
+	for k, v := range s.Metadata {
+		if !reflect.DeepEqual(t.Metadata[k], v) {
+			return false
+		}
 	}
 
 	if !equalPointers(s.Name, t.Name) {
@@ -53,11 +74,20 @@ func (s Cache) Equal(t Cache, opts ...Options) bool {
 
 // Diff checks if two structs of type Cache are equal
 //
+// By default empty maps and slices are equal to nil:
+//
 //	var a, b Cache
 //	diff := a.Diff(b)
 //
-// opts ...Options are ignored in this method
+// For more advanced use case you can configure these options (default values are shown):
+//
+//	var a, b Cache
+//	diff := a.Diff(b,Options{
+//		NilSameAsEmpty: true,
+//	})
 func (s Cache) Diff(t Cache, opts ...Options) map[string][]interface{} {
+	opt := getOptions(opts...)
+
 	diff := make(map[string][]interface{})
 	if s.MaxAge != t.MaxAge {
 		diff["MaxAge"] = []interface{}{s.MaxAge, t.MaxAge}
@@ -69,6 +99,16 @@ func (s Cache) Diff(t Cache, opts ...Options) map[string][]interface{} {
 
 	if s.MaxSecondaryEntries != t.MaxSecondaryEntries {
 		diff["MaxSecondaryEntries"] = []interface{}{s.MaxSecondaryEntries, t.MaxSecondaryEntries}
+	}
+
+	if !CheckSameNilAndLenMap[string](s.Metadata, t.Metadata, opt) {
+		diff["Metadata"] = []interface{}{s.Metadata, t.Metadata}
+	}
+
+	for k, v := range s.Metadata {
+		if !reflect.DeepEqual(t.Metadata[k], v) {
+			diff["Metadata"] = []interface{}{s.Metadata, t.Metadata}
+		}
 	}
 
 	if !equalPointers(s.Name, t.Name) {

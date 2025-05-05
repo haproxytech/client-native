@@ -45,6 +45,10 @@ type ServerTemplate struct {
 	// id
 	ID *int64 `json:"id,omitempty"`
 
+	// +kubebuilder:pruning:PreserveUnknownFields
+	// +kubebuilder:validation:Schemaless
+	Metadata map[string]interface{} `json:"metadata,omitempty"`
+
 	// num or range
 	// Required: true
 	NumOrRange string `json:"num_or_range"`
@@ -78,6 +82,8 @@ func (m *ServerTemplate) UnmarshalJSON(raw []byte) error {
 
 		ID *int64 `json:"id,omitempty"`
 
+		Metadata map[string]interface{} `json:"metadata,omitempty"`
+
 		NumOrRange string `json:"num_or_range"`
 
 		Port *int64 `json:"port,omitempty"`
@@ -91,6 +97,8 @@ func (m *ServerTemplate) UnmarshalJSON(raw []byte) error {
 	m.Fqdn = dataAO1.Fqdn
 
 	m.ID = dataAO1.ID
+
+	m.Metadata = dataAO1.Metadata
 
 	m.NumOrRange = dataAO1.NumOrRange
 
@@ -115,6 +123,8 @@ func (m ServerTemplate) MarshalJSON() ([]byte, error) {
 
 		ID *int64 `json:"id,omitempty"`
 
+		Metadata map[string]interface{} `json:"metadata,omitempty"`
+
 		NumOrRange string `json:"num_or_range"`
 
 		Port *int64 `json:"port,omitempty"`
@@ -125,6 +135,8 @@ func (m ServerTemplate) MarshalJSON() ([]byte, error) {
 	dataAO1.Fqdn = m.Fqdn
 
 	dataAO1.ID = m.ID
+
+	dataAO1.Metadata = m.Metadata
 
 	dataAO1.NumOrRange = m.NumOrRange
 

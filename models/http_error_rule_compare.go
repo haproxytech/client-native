@@ -18,6 +18,7 @@
 package models
 
 import (
+	"reflect"
 	"strconv"
 )
 
@@ -44,6 +45,16 @@ func (s HTTPErrorRule) Equal(t HTTPErrorRule, opts ...Options) bool {
 			if !s.ReturnHeaders[i].Equal(*t.ReturnHeaders[i], opt) {
 				return false
 			}
+		}
+	}
+
+	if !CheckSameNilAndLenMap[string](s.Metadata, t.Metadata, opt) {
+		return false
+	}
+
+	for k, v := range s.Metadata {
+		if !reflect.DeepEqual(t.Metadata[k], v) {
+			return false
 		}
 	}
 
@@ -101,6 +112,16 @@ func (s HTTPErrorRule) Diff(t HTTPErrorRule, opts ...Options) map[string][]inter
 		}
 		if len(diff2) > 0 {
 			diff["ReturnHeaders"] = []interface{}{diff2}
+		}
+	}
+
+	if !CheckSameNilAndLenMap[string](s.Metadata, t.Metadata, opt) {
+		diff["Metadata"] = []interface{}{s.Metadata, t.Metadata}
+	}
+
+	for k, v := range s.Metadata {
+		if !reflect.DeepEqual(t.Metadata[k], v) {
+			diff["Metadata"] = []interface{}{s.Metadata, t.Metadata}
 		}
 	}
 

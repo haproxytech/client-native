@@ -17,6 +17,8 @@
 
 package models
 
+import "reflect"
+
 // Equal checks if two structs of type PeerSectionBase are equal
 //
 // By default empty maps and slices are equal to nil:
@@ -83,6 +85,16 @@ func (s PeerSectionBase) Equal(t PeerSectionBase, opts ...Options) bool {
 
 	if s.Enabled != t.Enabled {
 		return false
+	}
+
+	if !CheckSameNilAndLenMap[string](s.Metadata, t.Metadata, opt) {
+		return false
+	}
+
+	for k, v := range s.Metadata {
+		if !reflect.DeepEqual(t.Metadata[k], v) {
+			return false
+		}
 	}
 
 	if s.Name != t.Name {
@@ -164,6 +176,16 @@ func (s PeerSectionBase) Diff(t PeerSectionBase, opts ...Options) map[string][]i
 
 	if s.Enabled != t.Enabled {
 		diff["Enabled"] = []interface{}{s.Enabled, t.Enabled}
+	}
+
+	if !CheckSameNilAndLenMap[string](s.Metadata, t.Metadata, opt) {
+		diff["Metadata"] = []interface{}{s.Metadata, t.Metadata}
+	}
+
+	for k, v := range s.Metadata {
+		if !reflect.DeepEqual(t.Metadata[k], v) {
+			diff["Metadata"] = []interface{}{s.Metadata, t.Metadata}
+		}
 	}
 
 	if s.Name != t.Name {

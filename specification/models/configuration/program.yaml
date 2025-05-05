@@ -24,6 +24,9 @@ program:
       type: string
       enum: [enabled, disabled]
       description: HAProxy stops and recreates child programs at reload.
+    metadata:
+      additionalProperties:
+        type: object
   example:
     name: mirror
     command: spoa-mirror --runtime 0 --mirror-url http://test.local

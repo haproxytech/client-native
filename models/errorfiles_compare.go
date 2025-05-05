@@ -17,6 +17,8 @@
 
 package models
 
+import "reflect"
+
 // Equal checks if two structs of type Errorfiles are equal
 //
 // By default empty maps and slices are equal to nil:
@@ -35,6 +37,16 @@ func (s Errorfiles) Equal(t Errorfiles, opts ...Options) bool {
 
 	if !equalComparableSlice(s.Codes, t.Codes, opt) {
 		return false
+	}
+
+	if !CheckSameNilAndLenMap[string](s.Metadata, t.Metadata, opt) {
+		return false
+	}
+
+	for k, v := range s.Metadata {
+		if !reflect.DeepEqual(t.Metadata[k], v) {
+			return false
+		}
 	}
 
 	if s.Name != t.Name {
@@ -63,6 +75,16 @@ func (s Errorfiles) Diff(t Errorfiles, opts ...Options) map[string][]interface{}
 	diff := make(map[string][]interface{})
 	if !equalComparableSlice(s.Codes, t.Codes, opt) {
 		diff["Codes"] = []interface{}{s.Codes, t.Codes}
+	}
+
+	if !CheckSameNilAndLenMap[string](s.Metadata, t.Metadata, opt) {
+		diff["Metadata"] = []interface{}{s.Metadata, t.Metadata}
+	}
+
+	for k, v := range s.Metadata {
+		if !reflect.DeepEqual(t.Metadata[k], v) {
+			diff["Metadata"] = []interface{}{s.Metadata, t.Metadata}
+		}
 	}
 
 	if s.Name != t.Name {

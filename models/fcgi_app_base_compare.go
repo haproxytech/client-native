@@ -18,6 +18,7 @@
 package models
 
 import (
+	"reflect"
 	"strconv"
 )
 
@@ -64,6 +65,16 @@ func (s FCGIAppBase) Equal(t FCGIAppBase, opts ...Options) bool {
 
 	if s.MaxReqs != t.MaxReqs {
 		return false
+	}
+
+	if !CheckSameNilAndLenMap[string](s.Metadata, t.Metadata, opt) {
+		return false
+	}
+
+	for k, v := range s.Metadata {
+		if !reflect.DeepEqual(t.Metadata[k], v) {
+			return false
+		}
 	}
 
 	if s.MpxsConns != t.MpxsConns {
@@ -152,6 +163,16 @@ func (s FCGIAppBase) Diff(t FCGIAppBase, opts ...Options) map[string][]interface
 
 	if s.MaxReqs != t.MaxReqs {
 		diff["MaxReqs"] = []interface{}{s.MaxReqs, t.MaxReqs}
+	}
+
+	if !CheckSameNilAndLenMap[string](s.Metadata, t.Metadata, opt) {
+		diff["Metadata"] = []interface{}{s.Metadata, t.Metadata}
+	}
+
+	for k, v := range s.Metadata {
+		if !reflect.DeepEqual(t.Metadata[k], v) {
+			diff["Metadata"] = []interface{}{s.Metadata, t.Metadata}
+		}
 	}
 
 	if s.MpxsConns != t.MpxsConns {

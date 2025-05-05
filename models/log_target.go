@@ -62,6 +62,10 @@ type LogTarget struct {
 	// +kubebuilder:validation:Enum=emerg;alert;crit;err;warning;notice;info;debug;
 	Level string `json:"level,omitempty"`
 
+	// +kubebuilder:pruning:PreserveUnknownFields
+	// +kubebuilder:validation:Schemaless
+	Metadata map[string]interface{} `json:"metadata,omitempty"`
+
 	// minlevel
 	// Enum: ["emerg","alert","crit","err","warning","notice","info","debug"]
 	// +kubebuilder:validation:Enum=emerg;alert;crit;err;warning;notice;info;debug;

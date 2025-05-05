@@ -45,6 +45,10 @@ type Program struct {
 	// The group to run the command as, if different than the HAProxy group.
 	Group string `json:"group,omitempty"`
 
+	// +kubebuilder:pruning:PreserveUnknownFields
+	// +kubebuilder:validation:Schemaless
+	Metadata map[string]interface{} `json:"metadata,omitempty"`
+
 	// name
 	// Required: true
 	// Pattern: ^[A-Za-z0-9-_.:]+$

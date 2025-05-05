@@ -29,6 +29,9 @@ quic_initial_rule:
       x-dependency:
         cond:
           required: true
+    metadata:
+      additionalProperties:
+        type: object
   additionalProperties: false
   example:
     type: reject

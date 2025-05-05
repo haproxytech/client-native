@@ -28,6 +28,9 @@ mailers_section_base:
       x-display-name: Timeout to send an email in milliseconds
       x-duration: true
       x-default-unit: ms
+    metadata:
+      additionalProperties:
+        type: object
   additionalProperties: false
 mailer_entry:
   title: Mailer Entry
@@ -51,3 +54,6 @@ mailer_entry:
       minimum: 1
       maximum: 65535
       x-nullable: false
+    metadata:
+      additionalProperties:
+        type: object

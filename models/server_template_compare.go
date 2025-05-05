@@ -17,6 +17,8 @@
 
 package models
 
+import "reflect"
+
 // Equal checks if two structs of type ServerTemplate are equal
 //
 // By default empty maps and slices are equal to nil:
@@ -43,6 +45,16 @@ func (s ServerTemplate) Equal(t ServerTemplate, opts ...Options) bool {
 
 	if !equalPointers(s.ID, t.ID) {
 		return false
+	}
+
+	if !CheckSameNilAndLenMap[string](s.Metadata, t.Metadata, opt) {
+		return false
+	}
+
+	for k, v := range s.Metadata {
+		if !reflect.DeepEqual(t.Metadata[k], v) {
+			return false
+		}
 	}
 
 	if s.NumOrRange != t.NumOrRange {
@@ -88,6 +100,16 @@ func (s ServerTemplate) Diff(t ServerTemplate, opts ...Options) map[string][]int
 
 	if !equalPointers(s.ID, t.ID) {
 		diff["ID"] = []interface{}{ValueOrNil(s.ID), ValueOrNil(t.ID)}
+	}
+
+	if !CheckSameNilAndLenMap[string](s.Metadata, t.Metadata, opt) {
+		diff["Metadata"] = []interface{}{s.Metadata, t.Metadata}
+	}
+
+	for k, v := range s.Metadata {
+		if !reflect.DeepEqual(t.Metadata[k], v) {
+			diff["Metadata"] = []interface{}{s.Metadata, t.Metadata}
+		}
 	}
 
 	if s.NumOrRange != t.NumOrRange {

@@ -17,19 +17,40 @@
 
 package models
 
+import "reflect"
+
 // Equal checks if two structs of type ConfigStickTable are equal
+//
+// By default empty maps and slices are equal to nil:
 //
 //	var a, b ConfigStickTable
 //	equal := a.Equal(b)
 //
-// opts ...Options are ignored in this method
+// For more advanced use case you can configure these options (default values are shown):
+//
+//	var a, b ConfigStickTable
+//	equal := a.Equal(b,Options{
+//		NilSameAsEmpty: true,
+//	})
 func (s ConfigStickTable) Equal(t ConfigStickTable, opts ...Options) bool {
+	opt := getOptions(opts...)
+
 	if !equalPointers(s.Expire, t.Expire) {
 		return false
 	}
 
 	if !equalPointers(s.Keylen, t.Keylen) {
 		return false
+	}
+
+	if !CheckSameNilAndLenMap[string](s.Metadata, t.Metadata, opt) {
+		return false
+	}
+
+	for k, v := range s.Metadata {
+		if !reflect.DeepEqual(t.Metadata[k], v) {
+			return false
+		}
 	}
 
 	if s.Nopurge != t.Nopurge {
@@ -65,11 +86,20 @@ func (s ConfigStickTable) Equal(t ConfigStickTable, opts ...Options) bool {
 
 // Diff checks if two structs of type ConfigStickTable are equal
 //
+// By default empty maps and slices are equal to nil:
+//
 //	var a, b ConfigStickTable
 //	diff := a.Diff(b)
 //
-// opts ...Options are ignored in this method
+// For more advanced use case you can configure these options (default values are shown):
+//
+//	var a, b ConfigStickTable
+//	diff := a.Diff(b,Options{
+//		NilSameAsEmpty: true,
+//	})
 func (s ConfigStickTable) Diff(t ConfigStickTable, opts ...Options) map[string][]interface{} {
+	opt := getOptions(opts...)
+
 	diff := make(map[string][]interface{})
 	if !equalPointers(s.Expire, t.Expire) {
 		diff["Expire"] = []interface{}{ValueOrNil(s.Expire), ValueOrNil(t.Expire)}
@@ -77,6 +107,16 @@ func (s ConfigStickTable) Diff(t ConfigStickTable, opts ...Options) map[string][
 
 	if !equalPointers(s.Keylen, t.Keylen) {
 		diff["Keylen"] = []interface{}{ValueOrNil(s.Keylen), ValueOrNil(t.Keylen)}
+	}
+
+	if !CheckSameNilAndLenMap[string](s.Metadata, t.Metadata, opt) {
+		diff["Metadata"] = []interface{}{s.Metadata, t.Metadata}
+	}
+
+	for k, v := range s.Metadata {
+		if !reflect.DeepEqual(t.Metadata[k], v) {
+			diff["Metadata"] = []interface{}{s.Metadata, t.Metadata}
+		}
 	}
 
 	if s.Nopurge != t.Nopurge {

@@ -16,9 +16,12 @@ log_profile:
       description: Override syslog log tag set by other "log-tag" directives.
     steps:
       $ref: "#/definitions/log_profile_steps"
+    metadata:
+      additionalProperties:
+        type: object
 log_profile_step:
   title: Log Profile Step
-  description: Defines what to log for a given step. 
+  description: Defines what to log for a given step.
   type: object
   required:
     - step
@@ -52,3 +55,6 @@ log_profile_step:
     sd:
       type: string
       description: Override the "log-format-sd" string.
+    metadata:
+      additionalProperties:
+        type: object

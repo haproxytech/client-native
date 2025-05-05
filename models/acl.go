@@ -49,6 +49,10 @@ type ACL struct {
 	// +kubebuilder:validation:Pattern=`^[^\s]+$`
 	Criterion string `json:"criterion"`
 
+	// +kubebuilder:pruning:PreserveUnknownFields
+	// +kubebuilder:validation:Schemaless
+	Metadata map[string]interface{} `json:"metadata,omitempty"`
+
 	// value
 	Value string `json:"value,omitempty"`
 }

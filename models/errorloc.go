@@ -40,6 +40,10 @@ type Errorloc struct {
 	// +kubebuilder:validation:Enum=200;400;401;403;404;405;407;408;410;413;425;429;500;501;502;503;504;
 	Code *int64 `json:"code"`
 
+	// +kubebuilder:pruning:PreserveUnknownFields
+	// +kubebuilder:validation:Schemaless
+	Metadata map[string]interface{} `json:"metadata,omitempty"`
+
 	// url
 	// Required: true
 	URL *string `json:"url"`

@@ -466,6 +466,9 @@ http_response_rule:
       x-dependency:
         cond:
           required: true
+    metadata:
+      additionalProperties:
+        type: object
   additionalProperties: false
   example:
     index: 0

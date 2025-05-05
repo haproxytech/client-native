@@ -45,6 +45,10 @@ type ServerSwitchingRule struct {
 	// cond test
 	CondTest string `json:"cond_test,omitempty"`
 
+	// +kubebuilder:pruning:PreserveUnknownFields
+	// +kubebuilder:validation:Schemaless
+	Metadata map[string]interface{} `json:"metadata,omitempty"`
+
 	// target server
 	// Required: true
 	// Pattern: ^[^\s]+$

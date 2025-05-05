@@ -17,13 +17,24 @@
 
 package models
 
+import "reflect"
+
 // Equal checks if two structs of type LogTarget are equal
+//
+// By default empty maps and slices are equal to nil:
 //
 //	var a, b LogTarget
 //	equal := a.Equal(b)
 //
-// opts ...Options are ignored in this method
+// For more advanced use case you can configure these options (default values are shown):
+//
+//	var a, b LogTarget
+//	equal := a.Equal(b,Options{
+//		NilSameAsEmpty: true,
+//	})
 func (s LogTarget) Equal(t LogTarget, opts ...Options) bool {
+	opt := getOptions(opts...)
+
 	if s.Address != t.Address {
 		return false
 	}
@@ -46,6 +57,16 @@ func (s LogTarget) Equal(t LogTarget, opts ...Options) bool {
 
 	if s.Level != t.Level {
 		return false
+	}
+
+	if !CheckSameNilAndLenMap[string](s.Metadata, t.Metadata, opt) {
+		return false
+	}
+
+	for k, v := range s.Metadata {
+		if !reflect.DeepEqual(t.Metadata[k], v) {
+			return false
+		}
 	}
 
 	if s.Minlevel != t.Minlevel {
@@ -73,11 +94,20 @@ func (s LogTarget) Equal(t LogTarget, opts ...Options) bool {
 
 // Diff checks if two structs of type LogTarget are equal
 //
+// By default empty maps and slices are equal to nil:
+//
 //	var a, b LogTarget
 //	diff := a.Diff(b)
 //
-// opts ...Options are ignored in this method
+// For more advanced use case you can configure these options (default values are shown):
+//
+//	var a, b LogTarget
+//	diff := a.Diff(b,Options{
+//		NilSameAsEmpty: true,
+//	})
 func (s LogTarget) Diff(t LogTarget, opts ...Options) map[string][]interface{} {
+	opt := getOptions(opts...)
+
 	diff := make(map[string][]interface{})
 	if s.Address != t.Address {
 		diff["Address"] = []interface{}{s.Address, t.Address}
@@ -101,6 +131,16 @@ func (s LogTarget) Diff(t LogTarget, opts ...Options) map[string][]interface{} {
 
 	if s.Level != t.Level {
 		diff["Level"] = []interface{}{s.Level, t.Level}
+	}
+
+	if !CheckSameNilAndLenMap[string](s.Metadata, t.Metadata, opt) {
+		diff["Metadata"] = []interface{}{s.Metadata, t.Metadata}
+	}
+
+	for k, v := range s.Metadata {
+		if !reflect.DeepEqual(t.Metadata[k], v) {
+			diff["Metadata"] = []interface{}{s.Metadata, t.Metadata}
+		}
 	}
 
 	if s.Minlevel != t.Minlevel {

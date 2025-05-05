@@ -345,6 +345,9 @@ global_base:
       $ref: "#/definitions/device_atlas_options"
     fifty_one_degrees_options:
       $ref: "#/definitions/fifty_one_degrees_options"
+    metadata:
+      additionalProperties:
+        type: object
   additionalProperties: false
 http_client_options:
   type: object

@@ -51,6 +51,10 @@ type EmailAlert struct {
 	// Required: true
 	Mailers *string `json:"mailers"`
 
+	// +kubebuilder:pruning:PreserveUnknownFields
+	// +kubebuilder:validation:Schemaless
+	Metadata map[string]interface{} `json:"metadata,omitempty"`
+
 	// myhostname
 	Myhostname string `json:"myhostname,omitempty"`
 
