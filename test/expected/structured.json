@@ -3164,6 +3164,9 @@
             "hash_balance_factor": 150,
             "maxconn": 2000,
             "mode": "http",
+            "metadata": {
+                "comment": "testing_defaults"
+            },
             "name": "test_defaults"
         },
         "test_defaults_2": {

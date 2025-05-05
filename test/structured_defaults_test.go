@@ -155,7 +155,7 @@ func TestPushStructuredDefaults(t *testing.T) {
 	ver, defaults, err := clientTest.GetStructuredDefaultsConfiguration("")
 	require.NoError(t, err)
 
-	//assert.EqualValues(t, d, defaults)
+	// assert.EqualValues(t, d, defaults)
 	require.True(t, defaults.Equal(*d), "k=%s - diff %v", "defaults", cmp.Diff(*defaults, *d))
 
 	if ver != version {
@@ -175,13 +175,12 @@ func TestGetStructuredDefaultsSections(t *testing.T) {
 	defer os.Remove(filename)
 	version := int64(1)
 
-	m := make(map[string][]*models.Defaults)
+	m := make(map[string]*models.Defaults)
 	v, defaults, err := clientTest.GetStructuredDefaultsSections("")
 	require.NoError(t, err)
 
 	for _, v := range defaults {
-		d := *v
-		m[d.Name] = []*models.Defaults{&d}
+		m[v.Name] = v
 	}
 
 	require.Equal(t, 3, len(defaults), "%v defaults returned, expected 2", len(defaults))
@@ -190,23 +189,14 @@ func TestGetStructuredDefaultsSections(t *testing.T) {
 	checkNamedStructuredDefaults(t, m)
 }
 
-func checkNamedStructuredDefaults(t *testing.T, got map[string][]*models.Defaults) {
+func checkNamedStructuredDefaults(t *testing.T, got map[string]*models.Defaults) {
 	exp := namedDefaultsExpectation()
 	for k, v := range got {
-		want, ok := exp[k]
+		w, ok := exp[k]
 		require.True(t, ok, "k=%s", k)
-		require.Equal(t, len(want), len(v), "k=%s", k)
-		for _, g := range v {
-			for _, w := range want {
-				if g.Name == w.Name {
-					// This is due to the fact the unnamed defaults is modified here in TestEditCreateDeleteDefaultsSection
-					// So value is not equal to what was in configuration_test.go is the test runs after the edit one.
-					if g.Name != "unnamed_defaults_1" {
-						require.True(t, g.Equal(*w), "k=%s - diff %v", k, cmp.Diff(*g, *w))
-						break
-					}
-				}
-			}
+		if v.Name != "unnamed_defaults_1" {
+			require.True(t, v.Equal(*w), "k=%s - diff %v", k, cmp.Diff(*v, *w))
+			break
 		}
 	}
 }
@@ -217,13 +207,13 @@ func TestGetStructuredDefaultsSection(t *testing.T) {
 	defer os.Remove(filename)
 	version := int64(1)
 
-	m := make(map[string][]*models.Defaults)
+	m := make(map[string]*models.Defaults)
 
 	v, d, err := clientTest.GetStructuredDefaultsSection("test_defaults", "")
 	require.NoError(t, err)
 	require.Equal(t, version, v, "Version %v returned, expected %v", v, version)
 
-	m["test_defaults"] = append(m[""], d)
+	m["test_defaults"] = d
 	checkNamedStructuredDefaults(t, m)
 }
 
@@ -239,7 +229,8 @@ func TestEditCreateDeleteStructuredDefaultsSection(t *testing.T) {
 			Name:           "created",
 			Clitcpka:       "disabled",
 			DefaultBackend: "test2",
-		}}
+		},
+	}
 	err = clientTest.CreateStructuredDefaultsSection(d, "", version)
 	require.NoError(t, err)
 	version++
@@ -258,7 +249,8 @@ func TestEditCreateDeleteStructuredDefaultsSection(t *testing.T) {
 			Name:           "created",
 			Clitcpka:       "enabled",
 			DefaultBackend: "test2",
-		}}
+		},
+	}
 	err = clientTest.EditStructuredDefaultsSection("created", d, "", version)
 	require.NoError(t, err)
 	version++
@@ -284,5 +276,4 @@ func TestEditCreateDeleteStructuredDefaultsSection(t *testing.T) {
 
 	err = clientTest.DeleteDefaultsSection("i_dont_exist", "", version)
 	require.Error(t, err, "Should throw error, non existent defaults section")
-
 }

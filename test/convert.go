@@ -283,12 +283,11 @@ func StructuredToTracesMap() models.Traces {
 	return resources[""]
 }
 
-func StructuredToDefaultsMap() map[string][]*models.Defaults {
+func StructuredToDefaultsMap() map[string]*models.Defaults {
 	resources, _ := expectedResources[models.Defaults]("defaults")
-	res := make(map[string][]*models.Defaults)
+	res := make(map[string]*models.Defaults)
 	for _, v := range resources {
-		currentv := v
-		res[v.Name] = append(res[v.Name], &currentv)
+		res[v.Name] = &v
 	}
 	return res
 }

@@ -11,7 +11,7 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func namedDefaultsExpectation() map[string][]*models.Defaults {
+func namedDefaultsExpectation() map[string]*models.Defaults {
 	initStructuredExpected()
 	res := StructuredToDefaultsMap()
 	return res
@@ -26,6 +26,9 @@ func TestPushDefaults(t *testing.T) {
 	statsRealm := "Haproxy Stats"
 	d := &models.Defaults{
 		DefaultsBase: models.DefaultsBase{
+			Metadata: map[string]interface{}{
+				"comment": "my_comment",
+			},
 			Clitcpka:       "disabled",
 			DefaultBackend: "test2",
 			ErrorFiles: []*models.Errorfile{
@@ -121,13 +124,11 @@ func TestPushDefaults(t *testing.T) {
 	}
 
 	err := clientTest.PushDefaultsConfiguration(d, "", version)
-
 	if err != nil {
 		t.Error(err.Error())
 	} else {
 		version++
 	}
-
 	ver, defaults, err := clientTest.GetDefaultsConfiguration("")
 	if err != nil {
 		t.Error(err.Error())
@@ -156,22 +157,20 @@ func TestPushDefaults(t *testing.T) {
 	}
 
 	err = clientTest.PushDefaultsConfiguration(d, "", 1055)
-
 	if err == nil {
 		t.Error("Should have returned version conflict.")
 	}
 }
 
 func TestGetDefaultsSections(t *testing.T) {
-	m := make(map[string][]*models.Defaults)
+	m := make(map[string]*models.Defaults)
 	v, defaults, err := clientTest.GetDefaultsSections("")
 	if err != nil {
 		t.Error(err.Error())
 	}
 
 	for _, v := range defaults {
-		d := *v
-		m[d.Name] = []*models.Defaults{&d}
+		m[v.Name] = v
 	}
 
 	if len(defaults) != 3 {
@@ -185,29 +184,22 @@ func TestGetDefaultsSections(t *testing.T) {
 	checkNamedDefaults(t, m)
 }
 
-func checkNamedDefaults(t *testing.T, got map[string][]*models.Defaults) {
+func checkNamedDefaults(t *testing.T, got map[string]*models.Defaults) {
 	exp := namedDefaultsExpectation()
 	for k, v := range got {
-		want, ok := exp[k]
+		w, ok := exp[k]
 		require.True(t, ok, "k=%s", k)
-		require.Equal(t, len(want), len(v), "k=%s", k)
-		for _, g := range v {
-			for _, w := range want {
-				if g.Name == w.Name {
-					// This is due to the fact the unnamed defaults is modified here in TestEditCreateDeleteDefaultsSection
-					// So value is not equal to what was in configuration_test.go is the test runs after the edit one.
-					if g.Name != "unnamed_defaults_1" {
-						require.True(t, g.DefaultsBase.Equal(w.DefaultsBase), "k=%s - diff %v", k, cmp.Diff(*g, *w))
-						break
-					}
-				}
-			}
+		// This is due to the fact the unnamed defaults is modified here in TestEditCreateDeleteDefaultsSection
+		// So value is not equal to what was in configuration_test.go is the test runs after the edit one.
+		if v.Name != "unnamed_defaults_1" {
+			require.True(t, v.DefaultsBase.Equal(w.DefaultsBase), "k=%s - diff %v", k, cmp.Diff(v.DefaultsBase, w.DefaultsBase))
+			break
 		}
 	}
 }
 
 func TestGetDefaultsSection(t *testing.T) {
-	m := make(map[string][]*models.Defaults)
+	m := make(map[string]*models.Defaults)
 
 	v, d, err := clientTest.GetDefaultsSection("test_defaults", "")
 	if err != nil {
@@ -217,7 +209,7 @@ func TestGetDefaultsSection(t *testing.T) {
 	if v != version {
 		t.Errorf("Version %v returned, expected %v", v, version)
 	}
-	m["test_defaults"] = append(m[""], d)
+	m["test_defaults"] = d
 
 	checkNamedDefaults(t, m)
 }
@@ -229,7 +221,8 @@ func TestEditCreateDeleteDefaultsSection(t *testing.T) {
 			Name:           "created",
 			Clitcpka:       "disabled",
 			DefaultBackend: "test2",
-		}}
+		},
+	}
 	err := clientTest.CreateDefaultsSection(d, "", version)
 	if err != nil {
 		t.Error(err.Error())
@@ -276,7 +269,8 @@ func TestEditCreateDeleteDefaultsSection(t *testing.T) {
 			Name:           "created",
 			Clitcpka:       "enabled",
 			DefaultBackend: "test2",
-		}}
+		},
+	}
 	err = clientTest.EditDefaultsSection("created", d, "", version)
 	if err != nil {
 		t.Error(err.Error())

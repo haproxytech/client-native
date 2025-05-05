@@ -278,7 +278,7 @@ global
   ocsp-update.mode on
   warn-blocked-traffic-after 50ms
 
-defaults test_defaults
+defaults test_defaults # testing_defaults
   acl invalid_src  src          0.0.0.0/7 224.0.0.0/3
   acl invalid_src  src_port     0:1023
   acl local_dst    hdr(host) -i localhost
