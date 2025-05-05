@@ -70,7 +70,7 @@ func (c *client) GetStructuredDefaultsSection(name string, transactionID string)
 		return 0, nil, err
 	}
 
-	if !c.checkSectionExists(parser.Defaults, name, p) {
+	if !p.SectionExists(parser.Defaults, name) {
 		return v, nil, NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("Defaults %s does not exist", name))
 	}
 
@@ -113,7 +113,7 @@ func (c *client) PushStructuredDefaultsConfiguration(data *models.Defaults, tran
 		return err
 	}
 
-	if !c.checkSectionExists(parser.Defaults, parser.DefaultSectionName, p) {
+	if !p.SectionExists(parser.Defaults, parser.DefaultSectionName) {
 		e := NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("%s %s does not exist", parser.Defaults, parser.DefaultSectionName))
 		return c.HandleError(parser.DefaultSectionName, "", "", t, transactionID == "", e)
 	}
@@ -124,11 +124,10 @@ func (c *client) PushStructuredDefaultsConfiguration(data *models.Defaults, tran
 
 	data.Name = parser.DefaultSectionName
 	if err = serializeDefaultsSection(StructuredToParserArgs{
-		TID:                transactionID,
-		Parser:             &p,
-		Options:            &c.ConfigurationOptions,
-		HandleError:        c.HandleError,
-		CheckSectionExists: c.checkSectionExists,
+		TID:         transactionID,
+		Parser:      &p,
+		Options:     &c.ConfigurationOptions,
+		HandleError: c.HandleError,
 	}, data); err != nil {
 		return err
 	}
@@ -150,7 +149,7 @@ func (c *client) EditStructuredDefaultsSection(name string, data *models.Default
 		return err
 	}
 
-	if !c.checkSectionExists(parser.Defaults, name, p) {
+	if !p.SectionExists(parser.Defaults, name) {
 		e := NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("%s %s does not exist", parser.Defaults, name))
 		return c.HandleError(name, "", "", t, transactionID == "", e)
 	}
@@ -160,11 +159,10 @@ func (c *client) EditStructuredDefaultsSection(name string, data *models.Default
 	}
 
 	if err = serializeDefaultsSection(StructuredToParserArgs{
-		TID:                transactionID,
-		Parser:             &p,
-		Options:            &c.ConfigurationOptions,
-		HandleError:        c.HandleError,
-		CheckSectionExists: c.checkSectionExists,
+		TID:         transactionID,
+		Parser:      &p,
+		Options:     &c.ConfigurationOptions,
+		HandleError: c.HandleError,
 	}, data); err != nil {
 		return err
 	}
@@ -186,17 +184,16 @@ func (c *client) CreateStructuredDefaultsSection(data *models.Defaults, transact
 		return err
 	}
 
-	if c.checkSectionExists(parser.Defaults, data.Name, p) {
+	if p.SectionExists(parser.Defaults, data.Name) {
 		e := NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("%s %s already exist", parser.Defaults, data.Name))
 		return c.HandleError(data.Name, "", "", t, transactionID == "", e)
 	}
 
 	if err = serializeDefaultsSection(StructuredToParserArgs{
-		TID:                transactionID,
-		Parser:             &p,
-		Options:            &c.ConfigurationOptions,
-		HandleError:        c.HandleError,
-		CheckSectionExists: c.checkSectionExists,
+		TID:         transactionID,
+		Parser:      &p,
+		Options:     &c.ConfigurationOptions,
+		HandleError: c.HandleError,
 	}, data); err != nil {
 		return err
 	}

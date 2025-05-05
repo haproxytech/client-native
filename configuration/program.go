@@ -76,7 +76,7 @@ func (c *client) GetProgram(name string, transactionID string) (int64, *models.P
 		return 0, nil, err
 	}
 
-	if !c.checkSectionExists(parser.Program, name, p) {
+	if !p.SectionExists(parser.Program, name) {
 		return v, nil, NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("Program %s does not exist", name))
 	}
 
@@ -105,7 +105,7 @@ func (c *client) CreateProgram(data *models.Program, transactionID string, versi
 		return err
 	}
 
-	if c.checkSectionExists(parser.Program, data.Name, p) {
+	if p.SectionExists(parser.Program, data.Name) {
 		e := NewConfError(ErrObjectAlreadyExists, fmt.Sprintf("%s %s already exists", parser.Program, data.Name))
 
 		return c.HandleError(data.Name, "", "", t, transactionID == "", e)
@@ -135,7 +135,7 @@ func (c *client) EditProgram(name string, data *models.Program, transactionID st
 		return err
 	}
 
-	if !c.checkSectionExists(parser.Program, name, p) {
+	if !p.SectionExists(parser.Program, name) {
 		e := NewConfError(ErrObjectAlreadyExists, fmt.Sprintf("%s %s does not exists", parser.Program, data.Name))
 
 		return c.HandleError(data.Name, "", "", t, transactionID == "", e)
@@ -151,6 +151,16 @@ func (c *client) EditProgram(name string, data *models.Program, transactionID st
 func SerializeProgramSection(p parser.Parser, data *models.Program) error {
 	if data == nil {
 		return errors.New("empty program")
+	}
+
+	if data.Metadata != nil {
+		comment, err := serializeMetadata(data.Metadata)
+		if err != nil {
+			return err
+		}
+		if err := p.SectionCommentSet(parser.Program, data.Name, comment); err != nil {
+			return err
+		}
 	}
 
 	if data.Command == nil {
@@ -182,6 +192,13 @@ func SerializeProgramSection(p parser.Parser, data *models.Program) error {
 func ParseProgram(p parser.Parser, name string) (*models.Program, error) {
 	program := models.Program{
 		Name: name,
+	}
+
+	if data, err := p.SectionGet(parser.Program, name); err == nil {
+		d, ok := data.(types.Section)
+		if ok {
+			program.Metadata = parseMetadata(d.Comment)
+		}
 	}
 
 	data, err := p.Get(parser.Program, name, "command")

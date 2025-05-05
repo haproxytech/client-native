@@ -191,15 +191,17 @@ func ParseNameserver(p types.Nameserver) *models.Nameserver {
 			return nil
 		}
 		return &models.Nameserver{
-			Address: &ip,
-			Port:    &port,
-			Name:    p.Name,
+			Address:  &ip,
+			Port:     &port,
+			Name:     p.Name,
+			Metadata: parseMetadata(p.Comment),
 		}
 	}
 	return &models.Nameserver{
-		Address: &ip,
-		Port:    nil,
-		Name:    p.Name,
+		Address:  &ip,
+		Port:     nil,
+		Name:     p.Name,
+		Metadata: parseMetadata(p.Comment),
 	}
 }
 
@@ -211,9 +213,14 @@ func SerializeNameserver(pe models.Nameserver) types.Nameserver {
 	if pe.Port != nil {
 		addr = fmt.Sprintf("%s:%d", addr, *pe.Port)
 	}
+	comment, err := serializeMetadata(pe.Metadata)
+	if err != nil {
+		comment = ""
+	}
 	return types.Nameserver{
 		Address: addr,
 		Name:    pe.Name,
+		Comment: comment,
 	}
 }
 

@@ -159,6 +159,10 @@ func SerializeCrtLoad(load *models.CrtLoad) *types.LoadCert {
 		Ocsp:        load.Ocsp,
 		Sctl:        load.Sctl,
 	}
+	comment, err := serializeMetadata(load.Metadata)
+	if err == nil {
+		t.Comment = comment
+	}
 	if load.OcspUpdate != "" {
 		t.OcspUpdate = new(bool)
 		if load.OcspUpdate == models.CrtLoadOcspUpdateEnabled {

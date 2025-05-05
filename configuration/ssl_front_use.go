@@ -215,11 +215,18 @@ func ParseSSLFrontUse(ondisk types.SSLFrontUse) *models.SSLFrontUse {
 		}
 	}
 
+	u.Metadata = parseMetadata(ondisk.Comment)
 	return &u
 }
 
 func SerializeSSLFrontUse(m models.SSLFrontUse) types.SSLFrontUse {
 	u := types.SSLFrontUse{}
+	comment, err := serializeMetadata(m.Metadata)
+	if err != nil {
+		comment = ""
+	}
+	u.Comment = comment
+
 	options := make([]params.SSLBindOption, 0, 8)
 
 	if m.Certificate != "" {

@@ -161,6 +161,13 @@ func ParseFCGIApp(p parser.Parser, name string) (*models.FCGIApp, error) {
 		FCGIAppBase: models.FCGIAppBase{Name: name},
 	}
 
+	if data, err := p.SectionGet(parser.FCGIApp, name); err == nil {
+		d, ok := data.(types.Section)
+		if ok {
+			app.Metadata = parseMetadata(d.Comment)
+		}
+	}
+
 	docRoot, err := genericString(p, name, "docroot")
 	if err != nil {
 		docRoot = &types.StringC{}
@@ -261,7 +268,7 @@ func (c *client) GetFCGIApplication(name string, transactionID string) (int64, *
 		return 0, nil, err
 	}
 
-	if !c.checkSectionExists(parser.FCGIApp, name, p) {
+	if !p.SectionExists(parser.FCGIApp, name) {
 		return v, nil, NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("FCGI application %s does not exist", name))
 	}
 
@@ -290,7 +297,7 @@ func (c *client) EditFCGIApplication(name string, data *models.FCGIApp, transact
 		return err
 	}
 
-	if !c.checkSectionExists(parser.FCGIApp, data.Name, p) {
+	if !p.SectionExists(parser.FCGIApp, data.Name) {
 		e := NewConfError(ErrObjectAlreadyExists, fmt.Sprintf("%s %s does not exists", parser.FCGIApp, data.Name))
 
 		return c.HandleError(data.Name, "", "", t, transactionID == "", e)
@@ -316,7 +323,7 @@ func (c *client) CreateFCGIApplication(data *models.FCGIApp, transactionID strin
 		return err
 	}
 
-	if c.checkSectionExists(parser.FCGIApp, data.Name, p) {
+	if p.SectionExists(parser.FCGIApp, data.Name) {
 		e := NewConfError(ErrObjectAlreadyExists, fmt.Sprintf("%s %s already exists", parser.FCGIApp, data.Name))
 		return c.HandleError(data.Name, "", "", t, transactionID == "", e)
 	}
@@ -338,6 +345,15 @@ func SerializeFCGIAppSection(p parser.Parser, data *models.FCGIApp) error {
 		return errors.New("empty FCGI app")
 	}
 
+	if data.Metadata != nil {
+		comment, err := serializeMetadata(data.Metadata)
+		if err != nil {
+			return err
+		}
+		if err := p.SectionCommentSet(parser.FCGIApp, data.Name, comment); err != nil {
+			return err
+		}
+	}
 	if data.Docroot == nil && len(*data.Docroot) == 0 {
 		return errors.New("missing required docroot")
 	} else if err := p.Set(parser.FCGIApp, data.Name, "docroot", types.StringC{Value: *data.Docroot}); err != nil {

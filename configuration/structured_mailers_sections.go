@@ -43,7 +43,7 @@ func (c *client) GetStructuredMailersSection(name string, transactionID string) 
 		return 0, nil, err
 	}
 
-	if !c.checkSectionExists(parser.Mailers, name, p) {
+	if !p.SectionExists(parser.Mailers, name) {
 		return v, nil, NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("MailersSection %s does not exist", name))
 	}
 
@@ -86,7 +86,7 @@ func (c *client) EditStructuredMailersSection(name string, data *models.MailersS
 		return err
 	}
 
-	if !c.checkSectionExists(parser.Mailers, name, p) {
+	if !p.SectionExists(parser.Mailers, name) {
 		e := NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("%s %s does not exist", parser.Mailers, name))
 		return c.HandleError(name, "", "", t, transactionID == "", e)
 	}
@@ -96,11 +96,10 @@ func (c *client) EditStructuredMailersSection(name string, data *models.MailersS
 	}
 
 	if err = serializeMailersSectionSection(StructuredToParserArgs{
-		TID:                transactionID,
-		Parser:             &p,
-		Options:            &c.ConfigurationOptions,
-		HandleError:        c.HandleError,
-		CheckSectionExists: c.checkSectionExists,
+		TID:         transactionID,
+		Parser:      &p,
+		Options:     &c.ConfigurationOptions,
+		HandleError: c.HandleError,
 	}, data); err != nil {
 		return err
 	}
@@ -122,17 +121,16 @@ func (c *client) CreateStructuredMailersSection(data *models.MailersSection, tra
 		return err
 	}
 
-	if c.checkSectionExists(parser.Mailers, data.Name, p) {
+	if p.SectionExists(parser.Mailers, data.Name) {
 		e := NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("%s %s already exist", parser.Mailers, data.Name))
 		return c.HandleError(data.Name, "", "", t, transactionID == "", e)
 	}
 
 	if err = serializeMailersSectionSection(StructuredToParserArgs{
-		TID:                transactionID,
-		Parser:             &p,
-		Options:            &c.ConfigurationOptions,
-		HandleError:        c.HandleError,
-		CheckSectionExists: c.checkSectionExists,
+		TID:         transactionID,
+		Parser:      &p,
+		Options:     &c.ConfigurationOptions,
+		HandleError: c.HandleError,
 	}, data); err != nil {
 		return err
 	}

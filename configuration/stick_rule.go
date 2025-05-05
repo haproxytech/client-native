@@ -209,16 +209,21 @@ func ParseStickRule(s types.Stick) *models.StickRule {
 		Pattern:  s.Pattern,
 		Cond:     s.Cond,
 		CondTest: s.CondTest,
+		Metadata: parseMetadata(s.Comment),
 	}
 }
 
 func SerializeStickRule(sRule models.StickRule) types.Stick {
-	sr := types.Stick{
+	comment, err := serializeMetadata(sRule.Metadata)
+	if err != nil {
+		comment = ""
+	}
+	return types.Stick{
 		Type:     sRule.Type,
 		Table:    sRule.Table,
 		Pattern:  sRule.Pattern,
 		Cond:     sRule.Cond,
 		CondTest: sRule.CondTest,
+		Comment:  comment,
 	}
-	return sr
 }

@@ -185,17 +185,23 @@ func ParseServerTemplate(ondiskServerTemplate types.ServerTemplate) *models.Serv
 		NumOrRange: ondiskServerTemplate.NumOrRange,
 		Fqdn:       ondiskServerTemplate.Fqdn,
 		Port:       &ondiskServerTemplate.Port,
+		Metadata:   parseMetadata(ondiskServerTemplate.Comment),
 	}
 	parseServerParams(ondiskServerTemplate.Params, &template.ServerParams)
 	return template
 }
 
 func SerializeServerTemplate(s models.ServerTemplate, opt *options.ConfigurationOptions) types.ServerTemplate {
+	comment, err := serializeMetadata(s.Metadata)
+	if err != nil {
+		comment = ""
+	}
 	template := types.ServerTemplate{
 		Prefix:     s.Prefix,
 		NumOrRange: s.NumOrRange,
 		Fqdn:       s.Fqdn,
 		Params:     []params.ServerOption{},
+		Comment:    comment,
 	}
 	if s.Port != nil {
 		template.Port = *s.Port

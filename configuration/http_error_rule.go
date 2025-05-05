@@ -306,6 +306,7 @@ func ParseHTTPErrorRule(f types.Action) *models.HTTPErrorRule {
 			ReturnContent:       v.Content,
 			ReturnContentFormat: v.ContentFormat,
 			ReturnContentType:   &v.ContentType,
+			Metadata:            parseMetadata(v.Comment),
 		}
 	default:
 		return nil
@@ -321,12 +322,17 @@ func SerializeHTTPErrorRule(f models.HTTPErrorRule) (types.Action, error) { //no
 	if f.ReturnContentType != nil {
 		contentType = *f.ReturnContentType
 	}
+	comment, err := serializeMetadata(f.Metadata)
+	if err != nil {
+		comment = ""
+	}
 	rule := &http_actions.Status{
 		Status:        &f.Status,
 		ContentType:   contentType,
 		ContentFormat: f.ReturnContentFormat,
 		Content:       f.ReturnContent,
 		Hdrs:          modelHdr2ActionHdr(f.ReturnHeaders),
+		Comment:       comment,
 	}
 
 	if !http_actions.AllowedErrorStatusCode(f.Status) {

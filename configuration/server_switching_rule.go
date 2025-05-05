@@ -199,13 +199,19 @@ func ParseServerSwitchingRule(us types.UseServer) *models.ServerSwitchingRule {
 		TargetServer: us.Name,
 		Cond:         us.Cond,
 		CondTest:     us.CondTest,
+		Metadata:     parseMetadata(us.Comment),
 	}
 }
 
 func SerializeServerSwitchingRule(sRule models.ServerSwitchingRule) types.UseServer {
+	comment, err := serializeMetadata(sRule.Metadata)
+	if err != nil {
+		comment = ""
+	}
 	return types.UseServer{
 		Name:     sRule.TargetServer,
 		Cond:     sRule.Cond,
 		CondTest: sRule.CondTest,
+		Comment:  comment,
 	}
 }

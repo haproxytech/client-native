@@ -43,7 +43,7 @@ func (c *client) GetStructuredRing(name string, transactionID string) (int64, *m
 		return 0, nil, err
 	}
 
-	if !c.checkSectionExists(parser.Ring, name, p) {
+	if !p.SectionExists(parser.Ring, name) {
 		return v, nil, NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("Ring %s does not exist", name))
 	}
 
@@ -86,7 +86,7 @@ func (c *client) EditStructuredRing(name string, data *models.Ring, transactionI
 		return err
 	}
 
-	if !c.checkSectionExists(parser.Ring, name, p) {
+	if !p.SectionExists(parser.Ring, name) {
 		e := NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("%s %s does not exist", parser.Ring, name))
 		return c.HandleError(name, "", "", t, transactionID == "", e)
 	}
@@ -96,11 +96,10 @@ func (c *client) EditStructuredRing(name string, data *models.Ring, transactionI
 	}
 
 	if err = serializeRingSection(StructuredToParserArgs{
-		TID:                transactionID,
-		Parser:             &p,
-		Options:            &c.ConfigurationOptions,
-		HandleError:        c.HandleError,
-		CheckSectionExists: c.checkSectionExists,
+		TID:         transactionID,
+		Parser:      &p,
+		Options:     &c.ConfigurationOptions,
+		HandleError: c.HandleError,
 	}, data); err != nil {
 		return err
 	}
@@ -122,17 +121,16 @@ func (c *client) CreateStructuredRing(data *models.Ring, transactionID string, v
 		return err
 	}
 
-	if c.checkSectionExists(parser.Ring, data.Name, p) {
+	if p.SectionExists(parser.Ring, data.Name) {
 		e := NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("%s %s already exist", parser.Ring, data.Name))
 		return c.HandleError(data.Name, "", "", t, transactionID == "", e)
 	}
 
 	if err = serializeRingSection(StructuredToParserArgs{
-		TID:                transactionID,
-		Parser:             &p,
-		Options:            &c.ConfigurationOptions,
-		HandleError:        c.HandleError,
-		CheckSectionExists: c.checkSectionExists,
+		TID:         transactionID,
+		Parser:      &p,
+		Options:     &c.ConfigurationOptions,
+		HandleError: c.HandleError,
 	}, data); err != nil {
 		return err
 	}

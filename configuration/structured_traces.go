@@ -56,7 +56,7 @@ func (c *client) PushStructuredTraces(data *models.Traces, transactionID string,
 	}
 
 	// Delete the existing section.
-	if c.checkSectionExists(parser.Traces, parser.TracesSectionName, p) {
+	if p.SectionExists(parser.Traces, parser.TracesSectionName) {
 		if err = p.SectionsDelete(parser.Traces, parser.TracesSectionName); err != nil {
 			return c.HandleError(TracesParentName, "", "", t, transactionID == "", err)
 		}
@@ -67,11 +67,10 @@ func (c *client) PushStructuredTraces(data *models.Traces, transactionID string,
 	}
 
 	if err = serializeStructuredTraces(StructuredToParserArgs{
-		TID:                transactionID,
-		Parser:             &p,
-		Options:            &c.ConfigurationOptions,
-		HandleError:        c.HandleError,
-		CheckSectionExists: c.checkSectionExists,
+		TID:         transactionID,
+		Parser:      &p,
+		Options:     &c.ConfigurationOptions,
+		HandleError: c.HandleError,
 	}, data); err != nil {
 		return err
 	}

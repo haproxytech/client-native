@@ -266,6 +266,7 @@ func ParseHTTPRequestRule(f types.Action) (*models.HTTPRequestRule, error) { //n
 			ACLKeyfmt: v.KeyFmt,
 			Cond:      v.Cond,
 			CondTest:  v.CondTest,
+			Metadata:  parseMetadata(v.Comment),
 		}
 	case *http_actions.AddHeader:
 		rule = &models.HTTPRequestRule{
@@ -274,12 +275,14 @@ func ParseHTTPRequestRule(f types.Action) (*models.HTTPRequestRule, error) { //n
 			HdrFormat: v.Fmt,
 			Cond:      v.Cond,
 			CondTest:  v.CondTest,
+			Metadata:  parseMetadata(v.Comment),
 		}
 	case *http_actions.Allow:
 		rule = &models.HTTPRequestRule{
 			Type:     "allow",
 			Cond:     v.Cond,
 			CondTest: v.CondTest,
+			Metadata: parseMetadata(v.Comment),
 		}
 	case *http_actions.Auth:
 		rule = &models.HTTPRequestRule{
@@ -287,6 +290,7 @@ func ParseHTTPRequestRule(f types.Action) (*models.HTTPRequestRule, error) { //n
 			AuthRealm: v.Realm,
 			Cond:      v.Cond,
 			CondTest:  v.CondTest,
+			Metadata:  parseMetadata(v.Comment),
 		}
 	case *http_actions.CacheUse:
 		rule = &models.HTTPRequestRule{
@@ -294,6 +298,7 @@ func ParseHTTPRequestRule(f types.Action) (*models.HTTPRequestRule, error) { //n
 			CacheName: v.Name,
 			Cond:      v.Cond,
 			CondTest:  v.CondTest,
+			Metadata:  parseMetadata(v.Comment),
 		}
 	case *http_actions.Capture:
 		if (v.SlotID == nil && v.Len == nil) || (v.SlotID != nil && v.Len != nil) {
@@ -304,6 +309,7 @@ func ParseHTTPRequestRule(f types.Action) (*models.HTTPRequestRule, error) { //n
 			CaptureSample: v.Sample,
 			Cond:          v.Cond,
 			CondTest:      v.CondTest,
+			Metadata:      parseMetadata(v.Comment),
 		}
 		if v.SlotID != nil {
 			rule.CaptureID = v.SlotID
@@ -318,6 +324,7 @@ func ParseHTTPRequestRule(f types.Action) (*models.HTTPRequestRule, error) { //n
 			ACLKeyfmt: v.KeyFmt,
 			Cond:      v.Cond,
 			CondTest:  v.CondTest,
+			Metadata:  parseMetadata(v.Comment),
 		}
 	case *http_actions.DelHeader:
 		rule = &models.HTTPRequestRule{
@@ -326,6 +333,7 @@ func ParseHTTPRequestRule(f types.Action) (*models.HTTPRequestRule, error) { //n
 			HdrMethod: v.Method,
 			Cond:      v.Cond,
 			CondTest:  v.CondTest,
+			Metadata:  parseMetadata(v.Comment),
 		}
 	case *http_actions.DelMap:
 		rule = &models.HTTPRequestRule{
@@ -334,6 +342,7 @@ func ParseHTTPRequestRule(f types.Action) (*models.HTTPRequestRule, error) { //n
 			MapKeyfmt: v.KeyFmt,
 			Cond:      v.Cond,
 			CondTest:  v.CondTest,
+			Metadata:  parseMetadata(v.Comment),
 		}
 	case *http_actions.Deny:
 		var returnContentTypePtr *string
@@ -349,12 +358,14 @@ func ParseHTTPRequestRule(f types.Action) (*models.HTTPRequestRule, error) { //n
 			ReturnContentFormat: v.ContentFormat,
 			ReturnContentType:   returnContentTypePtr,
 			DenyStatus:          v.Status,
+			Metadata:            parseMetadata(v.Comment),
 		}
 	case *http_actions.DisableL7Retry:
 		rule = &models.HTTPRequestRule{
 			Type:     "disable-l7-retry",
 			Cond:     v.Cond,
 			CondTest: v.CondTest,
+			Metadata: parseMetadata(v.Comment),
 		}
 	case *actions.DoResolve:
 		rule = &models.HTTPRequestRule{
@@ -365,6 +376,7 @@ func ParseHTTPRequestRule(f types.Action) (*models.HTTPRequestRule, error) { //n
 			Expr:      v.Expr.String(),
 			Cond:      v.Cond,
 			CondTest:  v.CondTest,
+			Metadata:  parseMetadata(v.Comment),
 		}
 	case *http_actions.EarlyHint:
 		rule = &models.HTTPRequestRule{
@@ -373,6 +385,7 @@ func ParseHTTPRequestRule(f types.Action) (*models.HTTPRequestRule, error) { //n
 			HintFormat: v.Fmt,
 			Cond:       v.Cond,
 			CondTest:   v.CondTest,
+			Metadata:   parseMetadata(v.Comment),
 		}
 	case *actions.Lua:
 		rule = &models.HTTPRequestRule{
@@ -381,6 +394,7 @@ func ParseHTTPRequestRule(f types.Action) (*models.HTTPRequestRule, error) { //n
 			LuaParams: v.Params,
 			Cond:      v.Cond,
 			CondTest:  v.CondTest,
+			Metadata:  parseMetadata(v.Comment),
 		}
 	case *http_actions.NormalizeURI:
 		rule = &models.HTTPRequestRule{
@@ -390,6 +404,7 @@ func ParseHTTPRequestRule(f types.Action) (*models.HTTPRequestRule, error) { //n
 			NormalizerStrict: v.Strict,
 			Cond:             v.Cond,
 			CondTest:         v.CondTest,
+			Metadata:         parseMetadata(v.Comment),
 		}
 	case *http_actions.Redirect:
 		var codePtr *int64
@@ -408,12 +423,14 @@ func ParseHTTPRequestRule(f types.Action) (*models.HTTPRequestRule, error) { //n
 			Cond:        v.Cond,
 			CondTest:    v.CondTest,
 			RedirCode:   codePtr,
+			Metadata:    parseMetadata(v.Comment),
 		}
 	case *actions.Reject:
 		rule = &models.HTTPRequestRule{
 			Type:     models.HTTPRequestRuleTypeReject,
 			Cond:     v.Cond,
 			CondTest: v.CondTest,
+			Metadata: parseMetadata(v.Comment),
 		}
 	case *http_actions.ReplaceHeader:
 		rule = &models.HTTPRequestRule{
@@ -423,6 +440,7 @@ func ParseHTTPRequestRule(f types.Action) (*models.HTTPRequestRule, error) { //n
 			HdrMatch:  v.MatchRegex,
 			Cond:      v.Cond,
 			CondTest:  v.CondTest,
+			Metadata:  parseMetadata(v.Comment),
 		}
 	case *http_actions.ReplacePath:
 		rule = &models.HTTPRequestRule{
@@ -431,6 +449,7 @@ func ParseHTTPRequestRule(f types.Action) (*models.HTTPRequestRule, error) { //n
 			PathFmt:   v.ReplaceFmt,
 			Cond:      v.Cond,
 			CondTest:  v.CondTest,
+			Metadata:  parseMetadata(v.Comment),
 		}
 	case *http_actions.ReplacePathQ:
 		rule = &models.HTTPRequestRule{
@@ -439,6 +458,7 @@ func ParseHTTPRequestRule(f types.Action) (*models.HTTPRequestRule, error) { //n
 			PathFmt:   v.ReplaceFmt,
 			Cond:      v.Cond,
 			CondTest:  v.CondTest,
+			Metadata:  parseMetadata(v.Comment),
 		}
 	case *http_actions.ReplaceURI:
 		rule = &models.HTTPRequestRule{
@@ -447,6 +467,7 @@ func ParseHTTPRequestRule(f types.Action) (*models.HTTPRequestRule, error) { //n
 			URIFmt:   v.ReplaceFmt,
 			Cond:     v.Cond,
 			CondTest: v.CondTest,
+			Metadata: parseMetadata(v.Comment),
 		}
 	case *http_actions.ReplaceValue:
 		rule = &models.HTTPRequestRule{
@@ -456,6 +477,7 @@ func ParseHTTPRequestRule(f types.Action) (*models.HTTPRequestRule, error) { //n
 			HdrFormat: v.ReplaceFmt,
 			Cond:      v.Cond,
 			CondTest:  v.CondTest,
+			Metadata:  parseMetadata(v.Comment),
 		}
 	case *http_actions.Return:
 		var returnContentTypePtr *string
@@ -471,6 +493,7 @@ func ParseHTTPRequestRule(f types.Action) (*models.HTTPRequestRule, error) { //n
 			ReturnContentType:   returnContentTypePtr,
 			ReturnStatusCode:    v.Status,
 			Type:                "return",
+			Metadata:            parseMetadata(v.Comment),
 		}
 	case *actions.ScAddGpc:
 		if v.Int == nil && len(v.Expr.Expr) == 0 {
@@ -489,6 +512,7 @@ func ParseHTTPRequestRule(f types.Action) (*models.HTTPRequestRule, error) { //n
 			ScInt:    v.Int,
 			Cond:     v.Cond,
 			CondTest: v.CondTest,
+			Metadata: parseMetadata(v.Comment),
 		}
 	case *actions.ScIncGpc:
 		ID, _ := strconv.ParseInt(v.ID, 10, 64)
@@ -499,6 +523,7 @@ func ParseHTTPRequestRule(f types.Action) (*models.HTTPRequestRule, error) { //n
 			ScIdx:    Idx,
 			Cond:     v.Cond,
 			CondTest: v.CondTest,
+			Metadata: parseMetadata(v.Comment),
 		}
 	case *actions.ScIncGpc0:
 		ID, _ := strconv.ParseInt(v.ID, 10, 64)
@@ -507,6 +532,7 @@ func ParseHTTPRequestRule(f types.Action) (*models.HTTPRequestRule, error) { //n
 			ScID:     ID,
 			Cond:     v.Cond,
 			CondTest: v.CondTest,
+			Metadata: parseMetadata(v.Comment),
 		}
 	case *actions.ScIncGpc1:
 		ID, _ := strconv.ParseInt(v.ID, 10, 64)
@@ -515,6 +541,7 @@ func ParseHTTPRequestRule(f types.Action) (*models.HTTPRequestRule, error) { //n
 			ScID:     ID,
 			Cond:     v.Cond,
 			CondTest: v.CondTest,
+			Metadata: parseMetadata(v.Comment),
 		}
 	case *actions.ScSetGpt:
 		if v.Int == nil && len(v.Expr.Expr) == 0 {
@@ -535,6 +562,7 @@ func ParseHTTPRequestRule(f types.Action) (*models.HTTPRequestRule, error) { //n
 			ScInt:    v.Int,
 			Cond:     v.Cond,
 			CondTest: v.CondTest,
+			Metadata: parseMetadata(v.Comment),
 		}
 	case *actions.ScSetGpt0:
 		if v.Int == nil && len(v.Expr.Expr) == 0 {
@@ -551,6 +579,7 @@ func ParseHTTPRequestRule(f types.Action) (*models.HTTPRequestRule, error) { //n
 			ScInt:    v.Int,
 			Cond:     v.Cond,
 			CondTest: v.CondTest,
+			Metadata: parseMetadata(v.Comment),
 		}
 	case *actions.SetDst:
 		rule = &models.HTTPRequestRule{
@@ -558,6 +587,7 @@ func ParseHTTPRequestRule(f types.Action) (*models.HTTPRequestRule, error) { //n
 			Expr:     v.Expr.String(),
 			Cond:     v.Cond,
 			CondTest: v.CondTest,
+			Metadata: parseMetadata(v.Comment),
 		}
 	case *actions.SetDstPort:
 		rule = &models.HTTPRequestRule{
@@ -565,6 +595,7 @@ func ParseHTTPRequestRule(f types.Action) (*models.HTTPRequestRule, error) { //n
 			Expr:     v.Expr.String(),
 			Cond:     v.Cond,
 			CondTest: v.CondTest,
+			Metadata: parseMetadata(v.Comment),
 		}
 	case *http_actions.SetHeader:
 		rule = &models.HTTPRequestRule{
@@ -573,6 +604,7 @@ func ParseHTTPRequestRule(f types.Action) (*models.HTTPRequestRule, error) { //n
 			HdrFormat: v.Fmt,
 			Cond:      v.Cond,
 			CondTest:  v.CondTest,
+			Metadata:  parseMetadata(v.Comment),
 		}
 	case *actions.SetLogLevel:
 		rule = &models.HTTPRequestRule{
@@ -580,6 +612,7 @@ func ParseHTTPRequestRule(f types.Action) (*models.HTTPRequestRule, error) { //n
 			LogLevel: v.Level,
 			Cond:     v.Cond,
 			CondTest: v.CondTest,
+			Metadata: parseMetadata(v.Comment),
 		}
 	case *http_actions.SetMap:
 		rule = &models.HTTPRequestRule{
@@ -589,6 +622,7 @@ func ParseHTTPRequestRule(f types.Action) (*models.HTTPRequestRule, error) { //n
 			MapValuefmt: v.ValueFmt,
 			Cond:        v.Cond,
 			CondTest:    v.CondTest,
+			Metadata:    parseMetadata(v.Comment),
 		}
 	case *actions.SetMark:
 		rule = &models.HTTPRequestRule{
@@ -596,6 +630,7 @@ func ParseHTTPRequestRule(f types.Action) (*models.HTTPRequestRule, error) { //n
 			MarkValue: v.Value,
 			Cond:      v.Cond,
 			CondTest:  v.CondTest,
+			Metadata:  parseMetadata(v.Comment),
 		}
 	case *http_actions.SetMethod:
 		rule = &models.HTTPRequestRule{
@@ -603,6 +638,7 @@ func ParseHTTPRequestRule(f types.Action) (*models.HTTPRequestRule, error) { //n
 			MethodFmt: v.Fmt,
 			Cond:      v.Cond,
 			CondTest:  v.CondTest,
+			Metadata:  parseMetadata(v.Comment),
 		}
 	case *actions.SetNice:
 		nice, _ := strconv.ParseInt(v.Value, 10, 64)
@@ -611,6 +647,7 @@ func ParseHTTPRequestRule(f types.Action) (*models.HTTPRequestRule, error) { //n
 			NiceValue: nice,
 			Cond:      v.Cond,
 			CondTest:  v.CondTest,
+			Metadata:  parseMetadata(v.Comment),
 		}
 	case *http_actions.SetPath:
 		rule = &models.HTTPRequestRule{
@@ -618,6 +655,7 @@ func ParseHTTPRequestRule(f types.Action) (*models.HTTPRequestRule, error) { //n
 			PathFmt:  v.Fmt,
 			Cond:     v.Cond,
 			CondTest: v.CondTest,
+			Metadata: parseMetadata(v.Comment),
 		}
 	case *http_actions.SetPathQ:
 		rule = &models.HTTPRequestRule{
@@ -625,6 +663,7 @@ func ParseHTTPRequestRule(f types.Action) (*models.HTTPRequestRule, error) { //n
 			PathFmt:  v.Fmt,
 			Cond:     v.Cond,
 			CondTest: v.CondTest,
+			Metadata: parseMetadata(v.Comment),
 		}
 	case *actions.SetPriorityClass:
 		rule = &models.HTTPRequestRule{
@@ -632,6 +671,7 @@ func ParseHTTPRequestRule(f types.Action) (*models.HTTPRequestRule, error) { //n
 			Expr:     strings.Join(v.Expr.Expr, " "),
 			Cond:     v.Cond,
 			CondTest: v.CondTest,
+			Metadata: parseMetadata(v.Comment),
 		}
 	case *actions.SetPriorityOffset:
 		rule = &models.HTTPRequestRule{
@@ -639,6 +679,7 @@ func ParseHTTPRequestRule(f types.Action) (*models.HTTPRequestRule, error) { //n
 			Expr:     strings.Join(v.Expr.Expr, " "),
 			Cond:     v.Cond,
 			CondTest: v.CondTest,
+			Metadata: parseMetadata(v.Comment),
 		}
 	case *http_actions.SetQuery:
 		rule = &models.HTTPRequestRule{
@@ -646,6 +687,7 @@ func ParseHTTPRequestRule(f types.Action) (*models.HTTPRequestRule, error) { //n
 			HdrFormat: v.Fmt,
 			Cond:      v.Cond,
 			CondTest:  v.CondTest,
+			Metadata:  parseMetadata(v.Comment),
 		}
 	case *http_actions.SetSrc:
 		rule = &models.HTTPRequestRule{
@@ -653,6 +695,7 @@ func ParseHTTPRequestRule(f types.Action) (*models.HTTPRequestRule, error) { //n
 			Expr:     v.Expr.String(),
 			Cond:     v.Cond,
 			CondTest: v.CondTest,
+			Metadata: parseMetadata(v.Comment),
 		}
 	case *actions.SetSrcPort:
 		rule = &models.HTTPRequestRule{
@@ -660,6 +703,7 @@ func ParseHTTPRequestRule(f types.Action) (*models.HTTPRequestRule, error) { //n
 			Expr:     v.Expr.String(),
 			Cond:     v.Cond,
 			CondTest: v.CondTest,
+			Metadata: parseMetadata(v.Comment),
 		}
 	case *http_actions.SetTimeout:
 		rule = &models.HTTPRequestRule{
@@ -668,6 +712,7 @@ func ParseHTTPRequestRule(f types.Action) (*models.HTTPRequestRule, error) { //n
 			TimeoutType: v.Type,
 			Cond:        v.Cond,
 			CondTest:    v.CondTest,
+			Metadata:    parseMetadata(v.Comment),
 		}
 	case *actions.SetTos:
 		rule = &models.HTTPRequestRule{
@@ -675,6 +720,7 @@ func ParseHTTPRequestRule(f types.Action) (*models.HTTPRequestRule, error) { //n
 			TosValue: v.Value,
 			Cond:     v.Cond,
 			CondTest: v.CondTest,
+			Metadata: parseMetadata(v.Comment),
 		}
 	case *http_actions.SetURI:
 		rule = &models.HTTPRequestRule{
@@ -682,6 +728,7 @@ func ParseHTTPRequestRule(f types.Action) (*models.HTTPRequestRule, error) { //n
 			URIFmt:   v.Fmt,
 			Cond:     v.Cond,
 			CondTest: v.CondTest,
+			Metadata: parseMetadata(v.Comment),
 		}
 	case *actions.SetVar:
 		rule = &models.HTTPRequestRule{
@@ -691,6 +738,7 @@ func ParseHTTPRequestRule(f types.Action) (*models.HTTPRequestRule, error) { //n
 			VarScope: v.VarScope,
 			Cond:     v.Cond,
 			CondTest: v.CondTest,
+			Metadata: parseMetadata(v.Comment),
 		}
 	case *actions.SetVarFmt:
 		rule = &models.HTTPRequestRule{
@@ -700,6 +748,7 @@ func ParseHTTPRequestRule(f types.Action) (*models.HTTPRequestRule, error) { //n
 			VarScope:  v.VarScope,
 			Cond:      v.Cond,
 			CondTest:  v.CondTest,
+			Metadata:  parseMetadata(v.Comment),
 		}
 	case *actions.SendSpoeGroup:
 		rule = &models.HTTPRequestRule{
@@ -708,6 +757,7 @@ func ParseHTTPRequestRule(f types.Action) (*models.HTTPRequestRule, error) { //n
 			SpoeGroup:  v.Group,
 			Cond:       v.Cond,
 			CondTest:   v.CondTest,
+			Metadata:   parseMetadata(v.Comment),
 		}
 	case *actions.SilentDrop:
 		rule = &models.HTTPRequestRule{
@@ -715,6 +765,7 @@ func ParseHTTPRequestRule(f types.Action) (*models.HTTPRequestRule, error) { //n
 			Type:     "silent-drop",
 			Cond:     v.Cond,
 			CondTest: v.CondTest,
+			Metadata: parseMetadata(v.Comment),
 		}
 	case *http_actions.StrictMode:
 		rule = &models.HTTPRequestRule{
@@ -722,6 +773,7 @@ func ParseHTTPRequestRule(f types.Action) (*models.HTTPRequestRule, error) { //n
 			StrictMode: v.Mode,
 			Cond:       v.Cond,
 			CondTest:   v.CondTest,
+			Metadata:   parseMetadata(v.Comment),
 		}
 	case *http_actions.Tarpit:
 		rule = &models.HTTPRequestRule{
@@ -729,6 +781,7 @@ func ParseHTTPRequestRule(f types.Action) (*models.HTTPRequestRule, error) { //n
 			Cond:       v.Cond,
 			CondTest:   v.CondTest,
 			DenyStatus: v.Status,
+			Metadata:   parseMetadata(v.Comment),
 		}
 	case *actions.TrackSc:
 		rule = &models.HTTPRequestRule{
@@ -738,6 +791,7 @@ func ParseHTTPRequestRule(f types.Action) (*models.HTTPRequestRule, error) { //n
 			Cond:                v.Cond,
 			CondTest:            v.CondTest,
 			TrackScStickCounter: &v.StickCounter,
+			Metadata:            parseMetadata(v.Comment),
 		}
 	case *actions.UnsetVar:
 		rule = &models.HTTPRequestRule{
@@ -746,6 +800,7 @@ func ParseHTTPRequestRule(f types.Action) (*models.HTTPRequestRule, error) { //n
 			VarScope: v.Scope,
 			Cond:     v.Cond,
 			CondTest: v.CondTest,
+			Metadata: parseMetadata(v.Comment),
 		}
 	case *actions.UseService:
 		rule = &models.HTTPRequestRule{
@@ -753,6 +808,7 @@ func ParseHTTPRequestRule(f types.Action) (*models.HTTPRequestRule, error) { //n
 			ServiceName: v.Name,
 			Cond:        v.Cond,
 			CondTest:    v.CondTest,
+			Metadata:    parseMetadata(v.Comment),
 		}
 	case *http_actions.WaitForBody:
 		rule = &models.HTTPRequestRule{
@@ -761,12 +817,14 @@ func ParseHTTPRequestRule(f types.Action) (*models.HTTPRequestRule, error) { //n
 			WaitAtLeast: misc.ParseSize(v.AtLeast),
 			Cond:        v.Cond,
 			CondTest:    v.CondTest,
+			Metadata:    parseMetadata(v.Comment),
 		}
 	case *http_actions.WaitForHandshake:
 		rule = &models.HTTPRequestRule{
 			Type:     "wait-for-handshake",
 			Cond:     v.Cond,
 			CondTest: v.CondTest,
+			Metadata: parseMetadata(v.Comment),
 		}
 	case *actions.SetBandwidthLimit:
 		rule = &models.HTTPRequestRule{
@@ -776,6 +834,7 @@ func ParseHTTPRequestRule(f types.Action) (*models.HTTPRequestRule, error) { //n
 			BandwidthLimitPeriod: v.Period.String(),
 			Cond:                 v.Cond,
 			CondTest:             v.CondTest,
+			Metadata:             parseMetadata(v.Comment),
 		}
 	case *actions.SetBcMark:
 		rule = &models.HTTPRequestRule{
@@ -783,6 +842,7 @@ func ParseHTTPRequestRule(f types.Action) (*models.HTTPRequestRule, error) { //n
 			Expr:     v.Expr.String(),
 			Cond:     v.Cond,
 			CondTest: v.CondTest,
+			Metadata: parseMetadata(v.Comment),
 		}
 	case *actions.SetBcTos:
 		rule = &models.HTTPRequestRule{
@@ -790,6 +850,7 @@ func ParseHTTPRequestRule(f types.Action) (*models.HTTPRequestRule, error) { //n
 			Expr:     v.Expr.String(),
 			Cond:     v.Cond,
 			CondTest: v.CondTest,
+			Metadata: parseMetadata(v.Comment),
 		}
 	case *actions.SetFcMark:
 		rule = &models.HTTPRequestRule{
@@ -797,6 +858,7 @@ func ParseHTTPRequestRule(f types.Action) (*models.HTTPRequestRule, error) { //n
 			Expr:     v.Expr.String(),
 			Cond:     v.Cond,
 			CondTest: v.CondTest,
+			Metadata: parseMetadata(v.Comment),
 		}
 	case *actions.SetFcTos:
 		rule = &models.HTTPRequestRule{
@@ -804,6 +866,7 @@ func ParseHTTPRequestRule(f types.Action) (*models.HTTPRequestRule, error) { //n
 			Expr:     v.Expr.String(),
 			Cond:     v.Cond,
 			CondTest: v.CondTest,
+			Metadata: parseMetadata(v.Comment),
 		}
 	case *actions.SetRetries:
 		rule = &models.HTTPRequestRule{
@@ -811,12 +874,14 @@ func ParseHTTPRequestRule(f types.Action) (*models.HTTPRequestRule, error) { //n
 			Expr:     v.Expr.String(),
 			Cond:     v.Cond,
 			CondTest: v.CondTest,
+			Metadata: parseMetadata(v.Comment),
 		}
 	case *actions.DoLog:
 		rule = &models.HTTPRequestRule{
 			Type:     models.HTTPRequestRuleTypeDoDashLog,
 			Cond:     v.Cond,
 			CondTest: v.CondTest,
+			Metadata: parseMetadata(v.Comment),
 		}
 	}
 
@@ -824,6 +889,10 @@ func ParseHTTPRequestRule(f types.Action) (*models.HTTPRequestRule, error) { //n
 }
 
 func SerializeHTTPRequestRule(f models.HTTPRequestRule, opt *options.ConfigurationOptions) (types.Action, error) { //nolint:gocyclo,gocognit,ireturn,cyclop,maintidx
+	comment, err := serializeMetadata(f.Metadata)
+	if err != nil {
+		return nil, err
+	}
 	var rule types.Action
 	switch f.Type {
 	case "add-acl":
@@ -832,6 +901,7 @@ func SerializeHTTPRequestRule(f models.HTTPRequestRule, opt *options.Configurati
 			KeyFmt:   f.ACLKeyfmt,
 			Cond:     f.Cond,
 			CondTest: f.CondTest,
+			Comment:  comment,
 		}
 	case "add-header":
 		rule = &http_actions.AddHeader{
@@ -839,23 +909,27 @@ func SerializeHTTPRequestRule(f models.HTTPRequestRule, opt *options.Configurati
 			Fmt:      f.HdrFormat,
 			Cond:     f.Cond,
 			CondTest: f.CondTest,
+			Comment:  comment,
 		}
 	case "allow":
 		rule = &http_actions.Allow{
 			Cond:     f.Cond,
 			CondTest: f.CondTest,
+			Comment:  comment,
 		}
 	case "auth":
 		rule = &http_actions.Auth{
 			Realm:    f.AuthRealm,
 			Cond:     f.Cond,
 			CondTest: f.CondTest,
+			Comment:  comment,
 		}
 	case "cache-use":
 		rule = &http_actions.CacheUse{
 			Name:     f.CacheName,
 			Cond:     f.Cond,
 			CondTest: f.CondTest,
+			Comment:  comment,
 		}
 	case "capture":
 		if f.CaptureLen > 0 && f.CaptureID != nil {
@@ -868,6 +942,7 @@ func SerializeHTTPRequestRule(f models.HTTPRequestRule, opt *options.Configurati
 			Sample:   f.CaptureSample,
 			Cond:     f.Cond,
 			CondTest: f.CondTest,
+			Comment:  comment,
 		}
 		if f.CaptureLen > 0 {
 			r.Len = &f.CaptureLen
@@ -881,13 +956,15 @@ func SerializeHTTPRequestRule(f models.HTTPRequestRule, opt *options.Configurati
 			KeyFmt:   f.ACLKeyfmt,
 			Cond:     f.Cond,
 			CondTest: f.CondTest,
+			Comment:  comment,
 		}
 	case "del-header":
 		rule = &http_actions.DelHeader{
 			Name:     f.HdrName,
+			Method:   f.HdrMethod,
 			Cond:     f.Cond,
 			CondTest: f.CondTest,
-			Method:   f.HdrMethod,
+			Comment:  comment,
 		}
 	case "del-map":
 		rule = &http_actions.DelMap{
@@ -895,6 +972,7 @@ func SerializeHTTPRequestRule(f models.HTTPRequestRule, opt *options.Configurati
 			KeyFmt:   f.MapKeyfmt,
 			Cond:     f.Cond,
 			CondTest: f.CondTest,
+			Comment:  comment,
 		}
 	case "deny":
 		contentType := ""
@@ -909,6 +987,7 @@ func SerializeHTTPRequestRule(f models.HTTPRequestRule, opt *options.Configurati
 			Hdrs:          modelHdr2ActionHdr(f.ReturnHeaders),
 			Cond:          f.Cond,
 			CondTest:      f.CondTest,
+			Comment:       comment,
 		}
 		if !http_actions.IsPayload(f.ReturnContentFormat) && f.DenyStatus != nil {
 			if ok := http_actions.AllowedErrorCode(*f.DenyStatus); !ok {
@@ -919,6 +998,7 @@ func SerializeHTTPRequestRule(f models.HTTPRequestRule, opt *options.Configurati
 		rule = &http_actions.DisableL7Retry{
 			Cond:     f.Cond,
 			CondTest: f.CondTest,
+			Comment:  comment,
 		}
 	case "do-resolve":
 		rule = &actions.DoResolve{
@@ -928,6 +1008,7 @@ func SerializeHTTPRequestRule(f models.HTTPRequestRule, opt *options.Configurati
 			Expr:      common.Expression{Expr: strings.Split(f.Expr, " ")},
 			Cond:      f.Cond,
 			CondTest:  f.CondTest,
+			Comment:   comment,
 		}
 	case "early-hint":
 		rule = &http_actions.EarlyHint{
@@ -935,6 +1016,7 @@ func SerializeHTTPRequestRule(f models.HTTPRequestRule, opt *options.Configurati
 			Fmt:      f.HintFormat,
 			Cond:     f.Cond,
 			CondTest: f.CondTest,
+			Comment:  comment,
 		}
 	case "lua":
 		rule = &actions.Lua{
@@ -942,6 +1024,7 @@ func SerializeHTTPRequestRule(f models.HTTPRequestRule, opt *options.Configurati
 			Params:   f.LuaParams,
 			Cond:     f.Cond,
 			CondTest: f.CondTest,
+			Comment:  comment,
 		}
 	case "normalize-uri":
 		rule = &http_actions.NormalizeURI{
@@ -950,6 +1033,7 @@ func SerializeHTTPRequestRule(f models.HTTPRequestRule, opt *options.Configurati
 			Full:       f.NormalizerFull,
 			Cond:       f.Cond,
 			CondTest:   f.CondTest,
+			Comment:    comment,
 		}
 	case "redirect":
 		code := ""
@@ -963,11 +1047,13 @@ func SerializeHTTPRequestRule(f models.HTTPRequestRule, opt *options.Configurati
 			Option:   f.RedirOption,
 			Cond:     f.Cond,
 			CondTest: f.CondTest,
+			Comment:  comment,
 		}
 	case "reject":
 		rule = &actions.Reject{
 			Cond:     f.Cond,
 			CondTest: f.CondTest,
+			Comment:  comment,
 		}
 	case "replace-header":
 		rule = &http_actions.ReplaceHeader{
@@ -976,6 +1062,7 @@ func SerializeHTTPRequestRule(f models.HTTPRequestRule, opt *options.Configurati
 			MatchRegex: f.HdrMatch,
 			Cond:       f.Cond,
 			CondTest:   f.CondTest,
+			Comment:    comment,
 		}
 	case "replace-path":
 		rule = &http_actions.ReplacePath{
@@ -983,6 +1070,7 @@ func SerializeHTTPRequestRule(f models.HTTPRequestRule, opt *options.Configurati
 			ReplaceFmt: f.PathFmt,
 			Cond:       f.Cond,
 			CondTest:   f.CondTest,
+			Comment:    comment,
 		}
 	case "replace-pathq":
 		rule = &http_actions.ReplacePathQ{
@@ -990,6 +1078,7 @@ func SerializeHTTPRequestRule(f models.HTTPRequestRule, opt *options.Configurati
 			ReplaceFmt: f.PathFmt,
 			Cond:       f.Cond,
 			CondTest:   f.CondTest,
+			Comment:    comment,
 		}
 	case "replace-uri":
 		rule = &http_actions.ReplaceURI{
@@ -997,6 +1086,7 @@ func SerializeHTTPRequestRule(f models.HTTPRequestRule, opt *options.Configurati
 			MatchRegex: f.URIMatch,
 			Cond:       f.Cond,
 			CondTest:   f.CondTest,
+			Comment:    comment,
 		}
 	case "replace-value":
 		rule = &http_actions.ReplaceValue{
@@ -1005,6 +1095,7 @@ func SerializeHTTPRequestRule(f models.HTTPRequestRule, opt *options.Configurati
 			MatchRegex: f.HdrMatch,
 			Cond:       f.Cond,
 			CondTest:   f.CondTest,
+			Comment:    comment,
 		}
 	case "return":
 		contentType := ""
@@ -1019,6 +1110,7 @@ func SerializeHTTPRequestRule(f models.HTTPRequestRule, opt *options.Configurati
 			Hdrs:          modelHdr2ActionHdr(f.ReturnHeaders),
 			Cond:          f.Cond,
 			CondTest:      f.CondTest,
+			Comment:       comment,
 		}
 		if !http_actions.IsPayload(f.ReturnContentFormat) && f.ReturnStatusCode != nil {
 			if ok := http_actions.AllowedErrorCode(*f.ReturnStatusCode); !ok {
@@ -1026,19 +1118,12 @@ func SerializeHTTPRequestRule(f models.HTTPRequestRule, opt *options.Configurati
 			}
 		}
 	case "sc-add-gpc":
-		if len(f.ScExpr) > 0 && f.ScInt != nil {
-			return nil, NewConfError(ErrValidationError, "sc-add-gpc int and expr are exclusive")
-		}
-		if len(f.ScExpr) == 0 && f.ScInt == nil {
-			return nil, NewConfError(ErrValidationError, "sc-add-gpc int or expr has to be set")
-		}
 		rule = &actions.ScAddGpc{
 			ID:       strconv.FormatInt(f.ScID, 10),
 			Idx:      strconv.FormatInt(f.ScIdx, 10),
-			Int:      f.ScInt,
-			Expr:     common.Expression{Expr: strings.Split(f.ScExpr, " ")},
 			Cond:     f.Cond,
 			CondTest: f.CondTest,
+			Comment:  comment,
 		}
 	case "sc-inc-gpc":
 		rule = &actions.ScAddGpc{
@@ -1046,18 +1131,21 @@ func SerializeHTTPRequestRule(f models.HTTPRequestRule, opt *options.Configurati
 			Idx:      strconv.FormatInt(f.ScIdx, 10),
 			Cond:     f.Cond,
 			CondTest: f.CondTest,
+			Comment:  comment,
 		}
 	case "sc-inc-gpc0":
 		rule = &actions.ScIncGpc0{
 			ID:       strconv.FormatInt(f.ScID, 10),
 			Cond:     f.Cond,
 			CondTest: f.CondTest,
+			Comment:  comment,
 		}
 	case "sc-inc-gpc1":
 		rule = &actions.ScIncGpc1{
 			ID:       strconv.FormatInt(f.ScID, 10),
 			Cond:     f.Cond,
 			CondTest: f.CondTest,
+			Comment:  comment,
 		}
 	case "sc-set-gpt":
 		if len(f.ScExpr) > 0 && f.ScInt != nil {
@@ -1073,6 +1161,7 @@ func SerializeHTTPRequestRule(f models.HTTPRequestRule, opt *options.Configurati
 			Expr:     common.Expression{Expr: strings.Split(f.ScExpr, " ")},
 			Cond:     f.Cond,
 			CondTest: f.CondTest,
+			Comment:  comment,
 		}
 	case "sc-set-gpt0":
 		if len(f.ScExpr) > 0 && f.ScInt != nil {
@@ -1087,18 +1176,21 @@ func SerializeHTTPRequestRule(f models.HTTPRequestRule, opt *options.Configurati
 			Expr:     common.Expression{Expr: strings.Split(f.ScExpr, " ")},
 			Cond:     f.Cond,
 			CondTest: f.CondTest,
+			Comment:  comment,
 		}
 	case "set-dst":
 		rule = &actions.SetDst{
 			Expr:     common.Expression{Expr: strings.Split(f.Expr, " ")},
 			Cond:     f.Cond,
 			CondTest: f.CondTest,
+			Comment:  comment,
 		}
 	case "set-dst-port":
 		rule = &actions.SetDstPort{
 			Expr:     common.Expression{Expr: strings.Split(f.Expr, " ")},
 			Cond:     f.Cond,
 			CondTest: f.CondTest,
+			Comment:  comment,
 		}
 	case "set-header":
 		rule = &http_actions.SetHeader{
@@ -1106,12 +1198,14 @@ func SerializeHTTPRequestRule(f models.HTTPRequestRule, opt *options.Configurati
 			Fmt:      f.HdrFormat,
 			Cond:     f.Cond,
 			CondTest: f.CondTest,
+			Comment:  comment,
 		}
 	case "set-log-level":
 		rule = &actions.SetLogLevel{
 			Level:    f.LogLevel,
 			Cond:     f.Cond,
 			CondTest: f.CondTest,
+			Comment:  comment,
 		}
 	case "set-map":
 		rule = &http_actions.SetMap{
@@ -1120,6 +1214,7 @@ func SerializeHTTPRequestRule(f models.HTTPRequestRule, opt *options.Configurati
 			ValueFmt: f.MapValuefmt,
 			Cond:     f.Cond,
 			CondTest: f.CondTest,
+			Comment:  comment,
 		}
 	case "set-mark":
 		rule = &actions.SetMark{
@@ -1132,54 +1227,63 @@ func SerializeHTTPRequestRule(f models.HTTPRequestRule, opt *options.Configurati
 			Fmt:      f.MethodFmt,
 			Cond:     f.Cond,
 			CondTest: f.CondTest,
+			Comment:  comment,
 		}
 	case "set-nice":
 		rule = &actions.SetNice{
 			Value:    strconv.FormatInt(f.NiceValue, 10),
 			Cond:     f.Cond,
 			CondTest: f.CondTest,
+			Comment:  comment,
 		}
 	case "set-path":
 		rule = &http_actions.SetPath{
 			Fmt:      f.PathFmt,
 			Cond:     f.Cond,
 			CondTest: f.CondTest,
+			Comment:  comment,
 		}
 	case "set-pathq":
 		rule = &http_actions.SetPathQ{
 			Fmt:      f.PathFmt,
 			Cond:     f.Cond,
 			CondTest: f.CondTest,
+			Comment:  comment,
 		}
 	case "set-priority-class":
 		rule = &actions.SetPriorityClass{
 			Expr:     common.Expression{Expr: strings.Split(f.Expr, " ")},
 			Cond:     f.Cond,
 			CondTest: f.CondTest,
+			Comment:  comment,
 		}
 	case "set-priority-offset":
 		rule = &actions.SetPriorityOffset{
 			Expr:     common.Expression{Expr: strings.Split(f.Expr, " ")},
 			Cond:     f.Cond,
 			CondTest: f.CondTest,
+			Comment:  comment,
 		}
 	case "set-query":
 		rule = &http_actions.SetQuery{
 			Fmt:      f.HdrFormat,
 			Cond:     f.Cond,
 			CondTest: f.CondTest,
+			Comment:  comment,
 		}
 	case "set-src":
 		rule = &http_actions.SetSrc{
 			Expr:     common.Expression{Expr: strings.Split(f.Expr, " ")},
 			Cond:     f.Cond,
 			CondTest: f.CondTest,
+			Comment:  comment,
 		}
 	case "set-src-port":
 		rule = &actions.SetSrcPort{
 			Expr:     common.Expression{Expr: strings.Split(f.Expr, " ")},
 			Cond:     f.Cond,
 			CondTest: f.CondTest,
+			Comment:  comment,
 		}
 	case "set-timeout":
 		rule = &http_actions.SetTimeout{
@@ -1187,18 +1291,21 @@ func SerializeHTTPRequestRule(f models.HTTPRequestRule, opt *options.Configurati
 			Type:     f.TimeoutType,
 			Cond:     f.Cond,
 			CondTest: f.CondTest,
+			Comment:  comment,
 		}
 	case "set-tos":
 		rule = &actions.SetTos{
 			Value:    f.TosValue,
 			Cond:     f.Cond,
 			CondTest: f.CondTest,
+			Comment:  comment,
 		}
 	case "set-uri":
 		rule = &http_actions.SetURI{
 			Fmt:      f.URIFmt,
 			Cond:     f.Cond,
 			CondTest: f.CondTest,
+			Comment:  comment,
 		}
 	case "set-var":
 		rule = &actions.SetVar{
@@ -1207,6 +1314,7 @@ func SerializeHTTPRequestRule(f models.HTTPRequestRule, opt *options.Configurati
 			VarScope: f.VarScope,
 			Cond:     f.Cond,
 			CondTest: f.CondTest,
+			Comment:  comment,
 		}
 	case "set-var-fmt":
 		rule = &actions.SetVarFmt{
@@ -1215,6 +1323,7 @@ func SerializeHTTPRequestRule(f models.HTTPRequestRule, opt *options.Configurati
 			VarScope: f.VarScope,
 			Cond:     f.Cond,
 			CondTest: f.CondTest,
+			Comment:  comment,
 		}
 	case "send-spoe-group":
 		rule = &actions.SendSpoeGroup{
@@ -1222,24 +1331,28 @@ func SerializeHTTPRequestRule(f models.HTTPRequestRule, opt *options.Configurati
 			Group:    f.SpoeGroup,
 			Cond:     f.Cond,
 			CondTest: f.CondTest,
+			Comment:  comment,
 		}
 	case "silent-drop":
 		rule = &actions.SilentDrop{
 			RstTTL:   f.RstTTL,
 			Cond:     f.Cond,
 			CondTest: f.CondTest,
+			Comment:  comment,
 		}
 	case "strict-mode":
 		rule = &http_actions.StrictMode{
 			Mode:     f.StrictMode,
 			Cond:     f.Cond,
 			CondTest: f.CondTest,
+			Comment:  comment,
 		}
 	case "tarpit":
 		rule = &http_actions.Tarpit{
 			Status:   f.DenyStatus,
 			Cond:     f.Cond,
 			CondTest: f.CondTest,
+			Comment:  comment,
 		}
 	case "track-sc":
 		if f.TrackScStickCounter == nil {
@@ -1252,6 +1365,7 @@ func SerializeHTTPRequestRule(f models.HTTPRequestRule, opt *options.Configurati
 			Table:        f.TrackScTable,
 			Cond:         f.Cond,
 			CondTest:     f.CondTest,
+			Comment:      comment,
 		}
 	case "unset-var":
 		rule = &actions.UnsetVar{
@@ -1259,17 +1373,20 @@ func SerializeHTTPRequestRule(f models.HTTPRequestRule, opt *options.Configurati
 			Scope:    f.VarScope,
 			Cond:     f.Cond,
 			CondTest: f.CondTest,
+			Comment:  comment,
 		}
 	case "use-service":
 		rule = &actions.UseService{
 			Name:     f.ServiceName,
 			Cond:     f.Cond,
 			CondTest: f.CondTest,
+			Comment:  comment,
 		}
 	case "wait-for-body":
 		r := &http_actions.WaitForBody{
 			Cond:     f.Cond,
 			CondTest: f.CondTest,
+			Comment:  comment,
 		}
 		if f.WaitTime != nil {
 			r.Time = misc.SerializeTime(*f.WaitTime, opt.PreferredTimeSuffix)
@@ -1282,6 +1399,7 @@ func SerializeHTTPRequestRule(f models.HTTPRequestRule, opt *options.Configurati
 		rule = &http_actions.WaitForHandshake{
 			Cond:     f.Cond,
 			CondTest: f.CondTest,
+			Comment:  comment,
 		}
 	case "set-bandwidth-limit":
 		rule = &actions.SetBandwidthLimit{
@@ -1290,43 +1408,49 @@ func SerializeHTTPRequestRule(f models.HTTPRequestRule, opt *options.Configurati
 			Period:   common.Expression{Expr: strings.Split(f.BandwidthLimitPeriod, " ")},
 			Cond:     f.Cond,
 			CondTest: f.CondTest,
+			Comment:  comment,
 		}
 	case "set-bc-mark":
 		rule = &actions.SetBcMark{
 			Expr:     common.Expression{Expr: strings.Split(f.Expr+f.MarkValue, " ")},
 			Cond:     f.Cond,
 			CondTest: f.CondTest,
+			Comment:  comment,
 		}
 	case "set-bc-tos":
 		rule = &actions.SetBcTos{
 			Expr:     common.Expression{Expr: strings.Split(f.Expr+f.TosValue, " ")},
 			Cond:     f.Cond,
 			CondTest: f.CondTest,
+			Comment:  comment,
 		}
 	case "set-fc-mark":
 		rule = &actions.SetFcMark{
 			Expr:     common.Expression{Expr: strings.Split(f.Expr+f.MarkValue, " ")},
 			Cond:     f.Cond,
 			CondTest: f.CondTest,
+			Comment:  comment,
 		}
 	case "set-fc-tos":
 		rule = &actions.SetFcTos{
 			Expr:     common.Expression{Expr: strings.Split(f.Expr+f.TosValue, " ")},
 			Cond:     f.Cond,
 			CondTest: f.CondTest,
+			Comment:  comment,
 		}
 	case "set-retries":
 		rule = &actions.SetRetries{
 			Expr:     common.Expression{Expr: strings.Split(f.Expr, " ")},
 			Cond:     f.Cond,
 			CondTest: f.CondTest,
+			Comment:  comment,
 		}
 	case "do-log":
 		rule = &actions.DoLog{
 			Cond:     f.Cond,
 			CondTest: f.CondTest,
+			Comment:  comment,
 		}
 	}
-
 	return rule, nil
 }

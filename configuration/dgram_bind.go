@@ -245,6 +245,7 @@ func ParseDgramBind(ondiskDgramBind types.DgramBind) *models.DgramBind {
 	if b.Name == "" {
 		b.Name = ondiskDgramBind.Path
 	}
+	b.Metadata = parseMetadata(ondiskDgramBind.Comment)
 	return b
 }
 
@@ -278,6 +279,11 @@ func SerializeDgramBind(b models.DgramBind) types.DgramBind {
 
 	if b.Namespace != "" {
 		dBind.Params = append(dBind.Params, &params.BindOptionValue{Name: "namespace", Value: b.Namespace})
+	}
+
+	comment, err := serializeMetadata(b.Metadata)
+	if err == nil {
+		dBind.Comment = comment
 	}
 
 	return dBind

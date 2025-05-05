@@ -11174,6 +11174,9 @@ definitions:
     properties:
       entries:
         $ref: '#/definitions/trace_entries'
+      metadata:
+        additionalProperties:
+          type: object
     type: object
     x-go-name: Traces
   trace_entry:
@@ -11301,6 +11304,9 @@ definitions:
       key:
         description: Private key filename
         type: string
+      metadata:
+        additionalProperties:
+          type: object
       no_alpn:
         type: boolean
       no_ca_names:

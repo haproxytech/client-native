@@ -79,7 +79,7 @@ func (c *client) GetLogForward(name string, transactionID string) (int64, *model
 		return 0, nil, err
 	}
 
-	if !c.checkSectionExists(parser.LogForward, name, p) {
+	if !p.SectionExists(parser.LogForward, name) {
 		return v, nil, NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("log forward %s does not exist", name))
 	}
 
@@ -91,6 +91,13 @@ func (c *client) GetLogForward(name string, transactionID string) (int64, *model
 }
 
 func ParseLogForward(p parser.Parser, lf *models.LogForward) error {
+	if data, err := p.SectionGet(parser.LogForward, lf.Name); err == nil {
+		d, ok := data.(types.Section)
+		if ok {
+			lf.Metadata = parseMetadata(d.Comment)
+		}
+	}
+
 	backlog, err := p.Get(parser.LogForward, lf.Name, "backlog", false)
 	if err != nil && !errors.Is(err, parsererrors.ErrFetch) {
 		return err
@@ -156,7 +163,7 @@ func (c *client) CreateLogForward(data *models.LogForward, transactionID string,
 		return err
 	}
 
-	if c.checkSectionExists(parser.LogForward, data.Name, p) {
+	if p.SectionExists(parser.LogForward, data.Name) {
 		e := NewConfError(ErrObjectAlreadyExists, fmt.Sprintf("%s %s already exists", parser.LogForward, data.Name))
 		return c.HandleError(data.Name, "", "", t, transactionID == "", e)
 	}
@@ -186,7 +193,7 @@ func (c *client) EditLogForward(name string, data *models.LogForward, transactio
 		return err
 	}
 
-	if !c.checkSectionExists(parser.LogForward, data.Name, p) {
+	if !p.SectionExists(parser.LogForward, data.Name) {
 		e := NewConfError(ErrObjectAlreadyExists, fmt.Sprintf("%s %s does not exists", parser.LogForward, data.Name))
 		return c.HandleError(data.Name, "", "", t, transactionID == "", e)
 	}
@@ -204,7 +211,15 @@ func SerializeLogForwardSection(p parser.Parser, data *models.LogForward, opt *o
 	}
 
 	var err error
-
+	if data.Metadata != nil {
+		comment, err := serializeMetadata(data.Metadata)
+		if err != nil {
+			return err
+		}
+		if err := p.SectionCommentSet(parser.LogForward, data.Name, comment); err != nil {
+			return err
+		}
+	}
 	if data.Backlog == nil {
 		if err = p.Set(parser.LogForward, data.Name, "backlog", nil); err != nil {
 			return err

@@ -37,9 +37,8 @@ type Structured interface {
 }
 
 type StructuredToParserArgs struct {
-	TID                string
-	Parser             *parser.Parser
-	Options            *options.ConfigurationOptions
-	HandleError        func(id, parentType, parentName, transactionID string, implicit bool, err error) error
-	CheckSectionExists func(section parser.Section, sectionName string, p parser.Parser) bool
+	TID         string
+	Parser      *parser.Parser
+	Options     *options.ConfigurationOptions
+	HandleError func(id, parentType, parentName, transactionID string, implicit bool, err error) error
 }

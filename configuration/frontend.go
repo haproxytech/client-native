@@ -75,7 +75,7 @@ func (c *client) GetFrontend(name string, transactionID string) (int64, *models.
 		return 0, nil, err
 	}
 
-	if !c.checkSectionExists(parser.Frontends, name, p) {
+	if !p.SectionExists(parser.Frontends, name) {
 		return v, nil, NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("Frontend %s does not exist", name))
 	}
 

@@ -109,7 +109,7 @@ func (c *client) GetDefaultsSection(name string, transactionID string) (int64, *
 		return 0, nil, err
 	}
 
-	if !c.checkSectionExists(parser.Defaults, name, p) {
+	if !p.SectionExists(parser.Defaults, name) {
 		return v, nil, NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("Defaults section %s does not exist", name))
 	}
 

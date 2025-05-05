@@ -69,7 +69,7 @@ func (c *client) GetSite(name string, transactionID string) (int64, *models.Site
 		return 0, nil, err
 	}
 
-	if !c.checkSectionExists(parser.Frontends, name, p) {
+	if !p.SectionExists(parser.Frontends, name) {
 		return v, nil, NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("Site %s does not exist", name))
 	}
 
@@ -505,7 +505,7 @@ func (c *client) parseSite(s string, p parser.Parser) *models.Site {
 
 func (c *client) parseFarm(name string, useAs string, cond string, condTest string, p parser.Parser) *models.SiteFarm {
 	backend := &models.Backend{BackendBase: models.BackendBase{Name: name}}
-	if c.checkSectionExists(parser.Backends, name, p) {
+	if p.SectionExists(parser.Backends, name) {
 		if err := ParseSection(&backend.BackendBase, parser.Backends, name, p); err == nil {
 			srvs, err := ParseServers(BackendParentName, name, p)
 			if err != nil {

@@ -79,7 +79,7 @@ func (c *client) GetCache(name string, transactionID string) (int64, *models.Cac
 		return 0, nil, err
 	}
 
-	if !c.checkSectionExists(parser.Cache, name, p) {
+	if !p.SectionExists(parser.Cache, name) {
 		return v, nil, NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("Cache %s does not exist", name))
 	}
 
@@ -99,7 +99,7 @@ func (c *client) DeleteCache(name string, transactionID string, version int64) e
 		return err
 	}
 
-	if !c.checkSectionExists(parser.Cache, name, p) {
+	if !p.SectionExists(parser.Cache, name) {
 		e := NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("%s %s does not exist", parser.Cache, name))
 		return c.HandleError(name, "", "", t, transactionID == "", e)
 	}
@@ -126,7 +126,7 @@ func (c *client) EditCache(name string, data *models.Cache, transactionID string
 		return err
 	}
 
-	if !c.checkSectionExists(parser.Cache, name, p) {
+	if !p.SectionExists(parser.Cache, name) {
 		e := NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("%s %s does not exist", parser.Cache, name))
 		return c.HandleError(name, "", "", t, transactionID == "", e)
 	}
@@ -153,7 +153,7 @@ func (c *client) CreateCache(data *models.Cache, transactionID string, version i
 		return err
 	}
 
-	if c.checkSectionExists(parser.Cache, *data.Name, p) {
+	if p.SectionExists(parser.Cache, *data.Name) {
 		e := NewConfError(ErrObjectAlreadyExists, fmt.Sprintf("%s %s already exists", parser.Cache, *data.Name))
 		return c.HandleError(*data.Name, "", "", t, transactionID == "", e)
 	}
@@ -173,6 +173,13 @@ func ParseCacheSection(p parser.Parser, cache *models.Cache) error {
 	var err error
 	var data common.ParserData
 	name := *cache.Name
+
+	if data, err := p.SectionGet(parser.Cache, name); err == nil {
+		d, ok := data.(*types.Section)
+		if ok && d != nil {
+			cache.Metadata = parseMetadata(d.Comment)
+		}
+	}
 
 	if data, err = p.Get(parser.Cache, name, "total-max-size", false); err == nil {
 		d, ok := data.(*types.Int64C)
@@ -214,6 +221,15 @@ func ParseCacheSection(p parser.Parser, cache *models.Cache) error {
 func SerializeCacheSection(p parser.Parser, data *models.Cache) error {
 	var err error
 
+	if data.Metadata != nil {
+		comment, err := serializeMetadata(data.Metadata)
+		if err != nil {
+			return err
+		}
+		if err := p.SectionCommentSet(parser.Cache, *data.Name, comment); err != nil {
+			return err
+		}
+	}
 	if data.TotalMaxSize == 0 {
 		if err = p.Set(parser.Cache, *data.Name, "total-max-size", nil); err != nil {
 			return err

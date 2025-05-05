@@ -75,7 +75,7 @@ func (c *client) GetPeerSection(name string, transactionID string) (int64, *mode
 		return 0, nil, err
 	}
 
-	if !c.checkSectionExists(parser.Peers, name, p) {
+	if !p.SectionExists(parser.Peers, name) {
 		return v, nil, NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("PeerSection %s does not exist", name))
 	}
 

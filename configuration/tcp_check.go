@@ -24,7 +24,7 @@ import (
 	parser "github.com/haproxytech/client-native/v6/config-parser"
 	"github.com/haproxytech/client-native/v6/config-parser/common"
 	parser_errors "github.com/haproxytech/client-native/v6/config-parser/errors"
-	actions "github.com/haproxytech/client-native/v6/config-parser/parsers/actions"
+	"github.com/haproxytech/client-native/v6/config-parser/parsers/actions"
 	tcp_actions "github.com/haproxytech/client-native/v6/config-parser/parsers/tcp/actions"
 	"github.com/haproxytech/client-native/v6/config-parser/types"
 
@@ -286,6 +286,7 @@ func ParseTCPCheck(f types.Action) (*models.TCPCheck, error) {
 		return &models.TCPCheck{
 			Action:       models.TCPCheckActionComment,
 			CheckComment: v.LogMessage,
+			Metadata:     parseMetadata(v.Comment),
 		}, nil
 	case *actions.CheckConnect:
 		return &models.TCPCheck{
@@ -301,6 +302,7 @@ func ParseTCPCheck(f types.Action) (*models.TCPCheck, error) {
 			ViaSocks4:    v.ViaSOCKS4,
 			Ssl:          v.SSL,
 			Linger:       v.Linger,
+			Metadata:     parseMetadata(v.Comment),
 		}, nil
 	case *actions.CheckExpect:
 		check := &models.TCPCheck{
@@ -315,6 +317,7 @@ func ParseTCPCheck(f types.Action) (*models.TCPCheck, error) {
 			ExclamationMark: v.ExclamationMark,
 			Match:           v.Match,
 			Pattern:         v.Pattern,
+			Metadata:        parseMetadata(v.Comment),
 		}
 		if v.MinRecv != nil {
 			check.MinRecv = *v.MinRecv
@@ -325,24 +328,28 @@ func ParseTCPCheck(f types.Action) (*models.TCPCheck, error) {
 			Action:       models.TCPCheckActionSend,
 			Data:         v.Data,
 			CheckComment: v.CheckComment,
+			Metadata:     parseMetadata(v.Comment),
 		}, nil
 	case *tcp_actions.CheckSendLf:
 		return &models.TCPCheck{
 			Action:       models.TCPCheckActionSendDashLf,
 			Fmt:          v.Fmt,
 			CheckComment: v.CheckComment,
+			Metadata:     parseMetadata(v.Comment),
 		}, nil
 	case *tcp_actions.CheckSendBinary:
 		return &models.TCPCheck{
 			Action:       models.TCPCheckActionSendDashBinary,
 			HexString:    v.HexString,
 			CheckComment: v.CheckComment,
+			Metadata:     parseMetadata(v.Comment),
 		}, nil
 	case *tcp_actions.CheckSendBinaryLf:
 		return &models.TCPCheck{
 			Action:       models.TCPCheckActionSendDashBinaryDashLf,
 			HexFmt:       v.HexFmt,
 			CheckComment: v.CheckComment,
+			Metadata:     parseMetadata(v.Comment),
 		}, nil
 	case *actions.SetVarCheck:
 		return &models.TCPCheck{
@@ -350,6 +357,7 @@ func ParseTCPCheck(f types.Action) (*models.TCPCheck, error) {
 			VarScope: v.VarScope,
 			VarName:  v.VarName,
 			VarExpr:  strings.Join(v.Expr.Expr, " "),
+			Metadata: parseMetadata(v.Comment),
 		}, nil
 	case *actions.SetVarFmtCheck:
 		return &models.TCPCheck{
@@ -357,12 +365,14 @@ func ParseTCPCheck(f types.Action) (*models.TCPCheck, error) {
 			VarScope: v.VarScope,
 			VarName:  v.VarName,
 			VarFmt:   strings.Join(v.Format.Expr, " "),
+			Metadata: parseMetadata(v.Comment),
 		}, nil
 	case *actions.UnsetVarCheck:
 		return &models.TCPCheck{
 			Action:   models.TCPCheckActionUnsetDashVar,
 			VarScope: v.Scope,
 			VarName:  v.Name,
+			Metadata: parseMetadata(v.Comment),
 		}, nil
 	}
 
@@ -370,10 +380,15 @@ func ParseTCPCheck(f types.Action) (*models.TCPCheck, error) {
 }
 
 func SerializeTCPCheck(f models.TCPCheck) (types.Action, error) { //nolint:ireturn
+	comment, err := serializeMetadata(f.Metadata)
+	if err != nil {
+		comment = ""
+	}
 	switch f.Action {
 	case models.TCPCheckActionComment:
 		return &tcp_actions.CheckComment{
 			LogMessage: f.CheckComment,
+			Comment:    comment,
 		}, nil
 	case models.TCPCheckActionConnect:
 		return &actions.CheckConnect{
@@ -388,6 +403,7 @@ func SerializeTCPCheck(f models.TCPCheck) (types.Action, error) { //nolint:iretu
 			ViaSOCKS4:    f.ViaSocks4,
 			SSL:          f.Ssl,
 			Linger:       f.Linger,
+			Comment:      comment,
 		}, nil
 	case models.TCPCheckActionExpect:
 		action := &actions.CheckExpect{
@@ -401,6 +417,7 @@ func SerializeTCPCheck(f models.TCPCheck) (types.Action, error) { //nolint:iretu
 			StatusCode:      f.StatusCode,
 			ExclamationMark: f.ExclamationMark,
 			Pattern:         f.Pattern,
+			Comment:         comment,
 		}
 		if f.MinRecv > 0 {
 			action.MinRecv = &f.MinRecv
@@ -410,38 +427,45 @@ func SerializeTCPCheck(f models.TCPCheck) (types.Action, error) { //nolint:iretu
 		return &tcp_actions.CheckSend{
 			Data:         f.Data,
 			CheckComment: f.CheckComment,
+			Comment:      comment,
 		}, nil
 	case models.TCPCheckActionSendDashLf:
 		return &tcp_actions.CheckSendLf{
 			Fmt:          f.Fmt,
 			CheckComment: f.CheckComment,
+			Comment:      comment,
 		}, nil
 	case models.TCPCheckActionSendDashBinary:
 		return &tcp_actions.CheckSendBinary{
 			HexString:    f.HexString,
 			CheckComment: f.CheckComment,
+			Comment:      comment,
 		}, nil
 	case models.TCPCheckActionSendDashBinaryDashLf:
 		return &tcp_actions.CheckSendBinaryLf{
 			HexFmt:       f.HexFmt,
 			CheckComment: f.CheckComment,
+			Comment:      comment,
 		}, nil
 	case models.TCPCheckActionSetDashVar:
 		return &actions.SetVarCheck{
 			VarScope: f.VarScope,
 			VarName:  f.VarName,
 			Expr:     common.Expression{Expr: strings.Split(f.VarExpr, " ")},
+			Comment:  comment,
 		}, nil
 	case models.TCPCheckActionSetDashVarDashFmt:
 		return &actions.SetVarFmtCheck{
 			VarScope: f.VarScope,
 			VarName:  f.VarName,
 			Format:   common.Expression{Expr: strings.Split(f.VarFmt, " ")},
+			Comment:  comment,
 		}, nil
 	case models.TCPCheckActionUnsetDashVar:
 		return &actions.UnsetVarCheck{
-			Scope: f.VarScope,
-			Name:  f.VarName,
+			Scope:   f.VarScope,
+			Name:    f.VarName,
+			Comment: comment,
 		}, nil
 	}
 

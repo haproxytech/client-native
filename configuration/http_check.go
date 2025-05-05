@@ -287,6 +287,7 @@ func ParseHTTPCheck(f types.Action) (*models.HTTPCheck, error) {
 		check = &models.HTTPCheck{
 			Type:         models.HTTPCheckTypeComment,
 			CheckComment: v.LogMessage,
+			Metadata:     parseMetadata(v.Comment),
 		}
 	case *actions.CheckConnect:
 		check = &models.HTTPCheck{
@@ -301,6 +302,7 @@ func ParseHTTPCheck(f types.Action) (*models.HTTPCheck, error) {
 			ViaSocks4:    v.ViaSOCKS4,
 			Ssl:          v.SSL,
 			Linger:       v.Linger,
+			Metadata:     parseMetadata(v.Comment),
 		}
 		if v.Port != "" {
 			portInt, err := strconv.ParseInt(v.Port, 10, 64)
@@ -323,13 +325,15 @@ func ParseHTTPCheck(f types.Action) (*models.HTTPCheck, error) {
 			ExclamationMark: v.ExclamationMark,
 			Match:           v.Match,
 			Pattern:         v.Pattern,
+			Metadata:        parseMetadata(v.Comment),
 		}
 		if v.MinRecv != nil {
 			check.MinRecv = v.MinRecv
 		}
 	case *http_actions.CheckDisableOn404:
 		check = &models.HTTPCheck{
-			Type: models.HTTPCheckTypeDisableDashOnDash404,
+			Type:     models.HTTPCheckTypeDisableDashOnDash404,
+			Metadata: parseMetadata(v.Comment),
 		}
 	case *http_actions.CheckSend:
 		check = &models.HTTPCheck{
@@ -341,6 +345,7 @@ func ParseHTTPCheck(f types.Action) (*models.HTTPCheck, error) {
 			Body:          v.Body,
 			BodyLogFormat: v.BodyLogFormat,
 			CheckComment:  v.CheckComment,
+			Metadata:      parseMetadata(v.Comment),
 		}
 		headers := []*models.ReturnHeader{}
 		for _, h := range v.Header {
@@ -355,7 +360,8 @@ func ParseHTTPCheck(f types.Action) (*models.HTTPCheck, error) {
 		check.CheckHeaders = headers
 	case *http_actions.CheckSendState:
 		check = &models.HTTPCheck{
-			Type: models.HTTPCheckTypeSendDashState,
+			Type:     models.HTTPCheckTypeSendDashState,
+			Metadata: parseMetadata(v.Comment),
 		}
 	case *actions.SetVarCheck:
 		check = &models.HTTPCheck{
@@ -363,6 +369,7 @@ func ParseHTTPCheck(f types.Action) (*models.HTTPCheck, error) {
 			VarScope: v.VarScope,
 			VarName:  v.VarName,
 			VarExpr:  strings.Join(v.Expr.Expr, " "),
+			Metadata: parseMetadata(v.Comment),
 		}
 	case *actions.SetVarFmtCheck:
 		check = &models.HTTPCheck{
@@ -370,12 +377,14 @@ func ParseHTTPCheck(f types.Action) (*models.HTTPCheck, error) {
 			VarScope: v.VarScope,
 			VarName:  v.VarName,
 			VarExpr:  strings.Join(v.Format.Expr, " "),
+			Metadata: parseMetadata(v.Comment),
 		}
 	case *actions.UnsetVarCheck:
 		check = &models.HTTPCheck{
 			Type:     models.HTTPCheckTypeUnsetDashVar,
 			VarScope: v.Scope,
 			VarName:  v.Name,
+			Metadata: parseMetadata(v.Comment),
 		}
 	}
 
@@ -383,10 +392,15 @@ func ParseHTTPCheck(f types.Action) (*models.HTTPCheck, error) {
 }
 
 func SerializeHTTPCheck(f models.HTTPCheck) (types.Action, error) { //nolint:ireturn
+	comment, err := serializeMetadata(f.Metadata)
+	if err != nil {
+		comment = ""
+	}
 	switch f.Type {
 	case models.HTTPCheckTypeComment:
 		return &http_actions.CheckComment{
 			LogMessage: f.CheckComment,
+			Comment:    comment,
 		}, nil
 	case models.HTTPCheckTypeConnect:
 		port := f.PortString
@@ -405,6 +419,7 @@ func SerializeHTTPCheck(f models.HTTPCheck) (types.Action, error) { //nolint:ire
 			ViaSOCKS4:    f.ViaSocks4,
 			SSL:          f.Ssl,
 			Linger:       f.Linger,
+			Comment:      comment,
 		}, nil
 	case models.HTTPCheckTypeExpect:
 		return &actions.CheckExpect{
@@ -419,9 +434,12 @@ func SerializeHTTPCheck(f models.HTTPCheck) (types.Action, error) { //nolint:ire
 			StatusCode:      f.StatusCode,
 			ExclamationMark: f.ExclamationMark,
 			Pattern:         f.Pattern,
+			Comment:         comment,
 		}, nil
 	case models.HTTPCheckTypeDisableDashOnDash404:
-		return &http_actions.CheckDisableOn404{}, nil
+		return &http_actions.CheckDisableOn404{
+			Comment: comment,
+		}, nil
 	case models.HTTPCheckTypeSend:
 		action := &http_actions.CheckSend{
 			Method:        f.Method,
@@ -431,6 +449,7 @@ func SerializeHTTPCheck(f models.HTTPCheck) (types.Action, error) { //nolint:ire
 			Body:          f.Body,
 			BodyLogFormat: f.BodyLogFormat,
 			CheckComment:  f.CheckComment,
+			Comment:       comment,
 		}
 		headers := []http_actions.CheckSendHeader{}
 		for _, h := range f.CheckHeaders {
@@ -446,23 +465,28 @@ func SerializeHTTPCheck(f models.HTTPCheck) (types.Action, error) { //nolint:ire
 		action.Header = headers
 		return action, nil
 	case models.HTTPCheckTypeSendDashState:
-		return &http_actions.CheckSendState{}, nil
+		return &http_actions.CheckSendState{
+			Comment: comment,
+		}, nil
 	case models.HTTPCheckTypeSetDashVar:
 		return &actions.SetVarCheck{
 			VarScope: f.VarScope,
 			VarName:  f.VarName,
 			Expr:     common.Expression{Expr: strings.Split(f.VarExpr, " ")},
+			Comment:  comment,
 		}, nil
 	case models.HTTPCheckTypeSetDashVarDashFmt:
 		return &actions.SetVarFmtCheck{
 			VarScope: f.VarScope,
 			VarName:  f.VarName,
-			Format:   common.Expression{Expr: strings.Split(f.VarFormat, " ")},
+			Format:   common.Expression{Expr: strings.Split(f.VarExpr, " ")},
+			Comment:  comment,
 		}, nil
 	case models.HTTPCheckTypeUnsetDashVar:
 		return &actions.UnsetVarCheck{
-			Scope: f.VarScope,
-			Name:  f.VarName,
+			Scope:   f.VarScope,
+			Name:    f.VarName,
+			Comment: comment,
 		}, nil
 	}
 

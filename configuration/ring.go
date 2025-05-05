@@ -79,7 +79,7 @@ func (c *client) GetRing(name string, transactionID string) (int64, *models.Ring
 		return 0, nil, err
 	}
 
-	if !c.checkSectionExists(parser.Ring, name, p) {
+	if !p.SectionExists(parser.Ring, name) {
 		return v, nil, NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("ring %s does not exist", name))
 	}
 
@@ -91,6 +91,12 @@ func (c *client) GetRing(name string, transactionID string) (int64, *models.Ring
 }
 
 func ParseRingSection(p parser.Parser, ring *models.Ring) error { //nolint:gocognit
+	if data, err := p.SectionGet(parser.Ring, ring.Name); err == nil {
+		d, ok := data.(types.Section)
+		if ok {
+			ring.Metadata = parseMetadata(d.Comment)
+		}
+	}
 	description, err := p.Get(parser.Ring, ring.Name, "description", false)
 	if err != nil && !errors.Is(err, parsererrors.ErrFetch) {
 		return err
@@ -199,7 +205,7 @@ func (c *client) CreateRing(data *models.Ring, transactionID string, version int
 		return err
 	}
 
-	if c.checkSectionExists(parser.Ring, data.Name, p) {
+	if p.SectionExists(parser.Ring, data.Name) {
 		e := NewConfError(ErrObjectAlreadyExists, fmt.Sprintf("%s %s already exists", parser.Ring, data.Name))
 		return c.HandleError(data.Name, "", "", t, transactionID == "", e)
 	}
@@ -229,7 +235,7 @@ func (c *client) EditRing(name string, data *models.Ring, transactionID string, 
 		return err
 	}
 
-	if !c.checkSectionExists(parser.Ring, data.Name, p) {
+	if !p.SectionExists(parser.Ring, data.Name) {
 		e := NewConfError(ErrObjectAlreadyExists, fmt.Sprintf("%s %s does not exists", parser.Ring, data.Name))
 		return c.HandleError(data.Name, "", "", t, transactionID == "", e)
 	}
@@ -245,7 +251,15 @@ func SerializeRingSection(p parser.Parser, data *models.Ring, opt *options.Confi
 	if data == nil {
 		return errors.New("empty ring")
 	}
-
+	if data.Metadata != nil {
+		comment, err := serializeMetadata(data.Metadata)
+		if err != nil {
+			return err
+		}
+		if err := p.SectionCommentSet(parser.Ring, data.Name, comment); err != nil {
+			return err
+		}
+	}
 	var err error
 	if data.Description == "" {
 		if err = p.Set(parser.Ring, data.Name, "description", nil); err != nil {

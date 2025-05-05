@@ -200,13 +200,19 @@ func ParseBackendSwitchingRule(ub types.UseBackend) *models.BackendSwitchingRule
 		Name:     ub.Name,
 		Cond:     ub.Cond,
 		CondTest: ub.CondTest,
+		Metadata: parseMetadata(ub.Comment),
 	}
 }
 
 func SerializeBackendSwitchingRule(bRule models.BackendSwitchingRule) types.UseBackend {
+	comment, err := serializeMetadata(bRule.Metadata)
+	if err != nil {
+		comment = ""
+	}
 	return types.UseBackend{
 		Name:     bRule.Name,
 		Cond:     bRule.Cond,
 		CondTest: bRule.CondTest,
+		Comment:  comment,
 	}
 }

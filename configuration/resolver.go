@@ -81,7 +81,7 @@ func (c *client) GetResolver(name string, transactionID string) (int64, *models.
 		return 0, nil, err
 	}
 
-	if !c.checkSectionExists(parser.Resolvers, name, p) {
+	if !p.SectionExists(parser.Resolvers, name) {
 		return v, nil, NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("Resolver %s does not exist", name))
 	}
 
@@ -101,7 +101,7 @@ func (c *client) DeleteResolver(name string, transactionID string, version int64
 		return err
 	}
 
-	if !c.checkSectionExists(parser.Resolvers, name, p) {
+	if !p.SectionExists(parser.Resolvers, name) {
 		e := NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("%s %s does not exist", parser.Resolvers, name))
 		return c.HandleError(name, "", "", t, transactionID == "", e)
 	}
@@ -128,7 +128,7 @@ func (c *client) EditResolver(name string, data *models.Resolver, transactionID 
 		return err
 	}
 
-	if !c.checkSectionExists(parser.Resolvers, name, p) {
+	if !p.SectionExists(parser.Resolvers, name) {
 		e := NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("%s %s does not exist", parser.Resolvers, name))
 		return c.HandleError(name, "", "", t, transactionID == "", e)
 	}
@@ -155,7 +155,7 @@ func (c *client) CreateResolver(data *models.Resolver, transactionID string, ver
 		return err
 	}
 
-	if c.checkSectionExists(parser.Resolvers, data.Name, p) {
+	if p.SectionExists(parser.Resolvers, data.Name) {
 		e := NewConfError(ErrObjectAlreadyExists, fmt.Sprintf("%s %s already exists", parser.Resolvers, data.Name))
 		return c.HandleError(data.Name, "", "", t, transactionID == "", e)
 	}
@@ -176,6 +176,12 @@ func ParseResolverSection(p parser.Parser, resolver *models.Resolver) error { //
 	var data common.ParserData
 	name := resolver.Name
 
+	if data, err = p.SectionGet(parser.Resolvers, name); err == nil {
+		d, ok := data.(types.Section)
+		if ok {
+			resolver.Metadata = parseMetadata(d.Comment)
+		}
+	}
 	if data, err = p.Get(parser.Resolvers, name, "accepted_payload_size", false); err == nil {
 		d, ok := data.(*types.StringC)
 		if ok && d != nil {
@@ -281,6 +287,15 @@ func ParseResolverSection(p parser.Parser, resolver *models.Resolver) error { //
 func SerializeResolverSection(p parser.Parser, data *models.Resolver, opt *options.ConfigurationOptions) error { //nolint:gocognit
 	var err error
 
+	if data.Metadata != nil {
+		comment, err := serializeMetadata(data.Metadata)
+		if err != nil {
+			return err
+		}
+		if err := p.SectionCommentSet(parser.Resolvers, data.Name, comment); err != nil {
+			return err
+		}
+	}
 	if data.AcceptedPayloadSize == 0 {
 		if err = p.Set(parser.Resolvers, data.Name, "accepted_payload_size", nil); err != nil {
 			return err

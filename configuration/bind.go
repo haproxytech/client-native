@@ -212,6 +212,7 @@ func ParseBind(ondiskBind types.Bind) *models.Bind {
 			}
 		}
 	}
+	b.Metadata = parseMetadata(ondiskBind.Comment)
 	b.BindParams = parseBindParams(ondiskBind.Params)
 	if b.Name == "" {
 		b.Name = ondiskBind.Path
@@ -432,6 +433,10 @@ func SerializeBind(b models.Bind) types.Bind {
 		bind.Path = fmt.Sprintf("%s:%v", misc.SanitizeIPv6Address(b.Address), portOrRange)
 	} else {
 		bind.Path = b.Address
+	}
+	comment, err := serializeMetadata(b.Metadata)
+	if err == nil {
+		bind.Comment = comment
 	}
 	bind.Params = serializeBindParams(b.BindParams, bind.Path)
 	return bind

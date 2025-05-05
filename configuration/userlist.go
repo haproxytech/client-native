@@ -20,6 +20,7 @@ import (
 
 	strfmt "github.com/go-openapi/strfmt"
 	parser "github.com/haproxytech/client-native/v6/config-parser"
+	"github.com/haproxytech/client-native/v6/config-parser/types"
 
 	"github.com/haproxytech/client-native/v6/models"
 )
@@ -48,7 +49,14 @@ func (c *client) GetUserLists(transactionID string) (int64, models.Userlists, er
 	}
 	userlists := []*models.Userlist{}
 	for _, name := range names {
-		userlists = append(userlists, &models.Userlist{UserlistBase: models.UserlistBase{Name: name}})
+		userlist := &models.Userlist{UserlistBase: models.UserlistBase{Name: name}}
+		if data, err := p.SectionGet(parser.Traces, parser.TracesSectionName); err == nil {
+			d, ok := data.(types.Section)
+			if ok {
+				userlist.Metadata = parseMetadata(d.Comment)
+			}
+		}
+		userlists = append(userlists, userlist)
 	}
 	return v, userlists, nil
 }
@@ -64,10 +72,18 @@ func (c *client) GetUserList(name string, transactionID string) (int64, *models.
 	if err != nil {
 		return 0, nil, err
 	}
-	if !c.checkSectionExists(parser.UserList, name, p) {
+	if !p.SectionExists(parser.UserList, name) {
 		return v, nil, NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("userlist %s does not exist", name))
 	}
-	return v, &models.Userlist{UserlistBase: models.UserlistBase{Name: name}}, nil
+	userlist := &models.Userlist{UserlistBase: models.UserlistBase{Name: name}}
+
+	if data, err := p.SectionGet(parser.Traces, parser.TracesSectionName); err == nil {
+		d, ok := data.(types.Section)
+		if ok {
+			userlist.Metadata = parseMetadata(d.Comment)
+		}
+	}
+	return v, userlist, nil
 }
 
 // DeleteUserList deletes a userlist in configuration. One of version or transactionID is mandatory.

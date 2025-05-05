@@ -79,7 +79,7 @@ func (c *client) GetMailersSection(name, transactionID string) (int64, *models.M
 		return 0, nil, err
 	}
 
-	if !c.checkSectionExists(parser.Mailers, name, p) {
+	if !p.SectionExists(parser.Mailers, name) {
 		return v, nil, NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("mailers section '%s' does not exist", name))
 	}
 
@@ -111,7 +111,7 @@ func (c *client) CreateMailersSection(data *models.MailersSection, transactionID
 		return err
 	}
 
-	if c.checkSectionExists(parser.Mailers, data.Name, p) {
+	if p.SectionExists(parser.Mailers, data.Name) {
 		e := NewConfError(ErrObjectAlreadyExists, fmt.Sprintf("%s %s already exists", parser.Mailers, data.Name))
 		return c.HandleError(data.Name, "", "", t, transactionID == "", e)
 	}
@@ -139,7 +139,7 @@ func (c *client) EditMailersSection(name string, data *models.MailersSection, tr
 		return err
 	}
 
-	if !c.checkSectionExists(parser.Mailers, data.Name, p) {
+	if !p.SectionExists(parser.Mailers, data.Name) {
 		e := NewConfError(ErrObjectAlreadyExists, fmt.Sprintf("%s %s does not exists", parser.Mailers, data.Name))
 		return c.HandleError(data.Name, "", "", t, transactionID == "", e)
 	}
@@ -152,6 +152,12 @@ func (c *client) EditMailersSection(name string, data *models.MailersSection, tr
 }
 
 func ParseMailersSection(p parser.Parser, ms *models.MailersSection) error {
+	if data, err := p.SectionGet(parser.Mailers, ms.Name); err == nil {
+		d, ok := data.(types.Section)
+		if ok {
+			ms.Metadata = parseMetadata(d.Comment)
+		}
+	}
 	// Get the optional "timeout mail" attribute
 	timeout, err := p.Get(parser.Mailers, ms.Name, "timeout mail", false)
 	if err != nil {
@@ -175,6 +181,15 @@ func ParseMailersSection(p parser.Parser, ms *models.MailersSection) error {
 func SerializeMailersSection(p parser.Parser, data *models.MailersSection, opt *options.ConfigurationOptions) error {
 	if data == nil {
 		return errors.New("empty mailers section")
+	}
+	if data.Metadata != nil {
+		comment, err := serializeMetadata(data.Metadata)
+		if err != nil {
+			return err
+		}
+		if err := p.SectionCommentSet(parser.Mailers, data.Name, comment); err != nil {
+			return err
+		}
 	}
 
 	if data.Timeout != nil {

@@ -309,6 +309,8 @@ func (s *SectionParser) parseField(fieldName string) interface{} {
 
 func (s *SectionParser) checkSpecialFields(fieldName string) (bool, interface{}) { //nolint:gocyclo,cyclop
 	switch fieldName {
+	case "Metadata":
+		return true, s.metadata()
 	case "Shards":
 		return true, s.shards()
 	case "From":
@@ -408,6 +410,16 @@ func (s *SectionParser) checkSpecialFields(fieldName string) (bool, interface{})
 	default:
 		return false, nil
 	}
+}
+
+func (s *SectionParser) metadata() any {
+	sectionData, err := s.Parser.SectionGet(s.Section, s.Name)
+	if err != nil {
+		return nil
+	}
+
+	d := sectionData.(types.Section)
+	return parseMetadata(d.Comment)
 }
 
 func (s *SectionParser) checkTimeouts(fieldName string) (bool, interface{}) {
@@ -1557,6 +1569,8 @@ func (s *SectionObject) checkParams(fieldName string) bool {
 
 func (s *SectionObject) checkSpecialFields(fieldName string, field reflect.Value) (bool, error) { //nolint:gocyclo,cyclop
 	switch fieldName {
+	case "Metadata":
+		return true, s.metadata(field)
 	case "Shard":
 		return true, s.shard(field)
 	case "From":
@@ -1668,6 +1682,31 @@ func (s *SectionObject) checkSpecialFields(fieldName string, field reflect.Value
 	default:
 		return false, nil
 	}
+}
+
+func (s *SectionObject) metadata(field reflect.Value) error {
+	if valueIsNil(field) {
+		return s.Parser.SectionCommentSet(s.Section, s.Name, "")
+	}
+	// Check if key type is string
+	if field.Type().Key().Kind() != reflect.String {
+		return misc.CreateTypeAssertError("metadata")
+	}
+
+	// Convert to map[string]any
+	metadata := make(map[string]any)
+	iter := field.MapRange()
+	for iter.Next() {
+		key := iter.Key().String()
+		valueVal := iter.Value().Interface()
+		metadata[key] = valueVal
+	}
+
+	comment, err := serializeMetadata(metadata)
+	if err != nil {
+		return err
+	}
+	return s.Parser.SectionCommentSet(s.Section, s.Name, comment)
 }
 
 func (s *SectionObject) checkTimeouts(fieldName string, field reflect.Value) (bool, error) {
@@ -2949,7 +2988,7 @@ func (c *client) deleteSection(section parser.Section, name string, transactionI
 		return err
 	}
 
-	if !c.checkSectionExists(section, name, p) {
+	if !p.SectionExists(section, name) {
 		e := NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("%s %s does not exist", section, name))
 		return c.HandleError(name, "", "", t, transactionID == "", e)
 	}
@@ -2967,7 +3006,7 @@ func (c *client) editSection(section parser.Section, name string, data interface
 		return err
 	}
 
-	if !c.checkSectionExists(section, name, p) {
+	if !p.SectionExists(section, name) {
 		e := NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("%s %s does not exist", section, name))
 		return c.HandleError(name, "", "", t, transactionID == "", e)
 	}
@@ -2985,7 +3024,7 @@ func (c *client) createSection(section parser.Section, name string, data interfa
 		return err
 	}
 
-	if c.checkSectionExists(section, name, p) {
+	if p.SectionExists(section, name) {
 		e := NewConfError(ErrObjectAlreadyExists, fmt.Sprintf("%s %s already exists", section, name))
 		return c.HandleError(name, "", "", t, transactionID == "", e)
 	}
@@ -2999,18 +3038,6 @@ func (c *client) createSection(section parser.Section, name string, data interfa
 	}
 
 	return c.SaveData(p, t, transactionID == "")
-}
-
-func (c *client) checkSectionExists(section parser.Section, sectionName string, p parser.Parser) bool {
-	sections, err := p.SectionsGet(section)
-	if err != nil {
-		return false
-	}
-
-	if misc.StringInSlice(sectionName, sections) {
-		return true
-	}
-	return false
 }
 
 func (c *client) loadDataForChange(transactionID string, version int64) (parser.Parser, string, error) {
@@ -3041,8 +3068,8 @@ func valueIsNil(v reflect.Value) bool {
 		return v.String() == ""
 	case reflect.Bool:
 		return !v.Bool()
-	case reflect.Ptr:
-		return !v.Elem().IsValid()
+	case reflect.Ptr, reflect.Map, reflect.Slice, reflect.Interface, reflect.Chan, reflect.Func:
+		return v.IsNil()
 	default:
 		return false
 	}

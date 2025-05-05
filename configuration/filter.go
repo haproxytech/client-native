@@ -258,6 +258,7 @@ func ParseFilter(f types.Filter) *models.Filter {
 		filter := &models.Filter{
 			BandwidthLimitName: v.Name,
 			Type:               v.Attribute,
+			Metadata:           parseMetadata(v.Comment),
 		}
 		if len(v.Limit) > 0 && len(v.Key) > 0 {
 			filter.Key = v.Key
@@ -288,8 +289,9 @@ func ParseFilter(f types.Filter) *models.Filter {
 		return filter
 	case *filters.FcgiApp:
 		return &models.Filter{
-			Type:    FCGIAppParentName,
-			AppName: v.Name,
+			Type:     FCGIAppParentName,
+			AppName:  v.Name,
+			Metadata: parseMetadata(v.Comment),
 		}
 	case *filters.Trace:
 		return &models.Filter{
@@ -298,27 +300,36 @@ func ParseFilter(f types.Filter) *models.Filter {
 			TraceHexdump:       v.Hexdump,
 			TraceRndForwarding: v.RandomForwarding,
 			TraceRndParsing:    v.RandomParsing,
+			Metadata:           parseMetadata(v.Comment),
 		}
 	case *filters.Compression:
 		return &models.Filter{
-			Type: "compression",
+			Type:     "compression",
+			Metadata: parseMetadata(v.Comment),
 		}
 	case *filters.Spoe:
 		return &models.Filter{
 			Type:       "spoe",
 			SpoeConfig: v.Config,
 			SpoeEngine: v.Engine,
+			Metadata:   parseMetadata(v.Comment),
 		}
 	case *filters.Cache:
 		return &models.Filter{
 			Type:      "cache",
 			CacheName: v.Name,
+			Metadata:  parseMetadata(v.Comment),
 		}
 	}
 	return nil
 }
 
 func SerializeFilter(f models.Filter, opt *options.ConfigurationOptions) types.Filter {
+	comment, err := serializeMetadata(f.Metadata)
+	if err != nil {
+		comment = ""
+	}
+
 	switch f.Type {
 	case "trace":
 		return &filters.Trace{
@@ -326,23 +337,28 @@ func SerializeFilter(f models.Filter, opt *options.ConfigurationOptions) types.F
 			Hexdump:          f.TraceHexdump,
 			RandomForwarding: f.TraceRndForwarding,
 			RandomParsing:    f.TraceRndParsing,
+			Comment:          comment,
 		}
 	case "compression":
 		return &filters.Compression{
 			Enabled: true,
+			Comment: comment,
 		}
 	case "spoe":
 		return &filters.Spoe{
-			Config: f.SpoeConfig,
-			Engine: f.SpoeEngine,
+			Config:  f.SpoeConfig,
+			Engine:  f.SpoeEngine,
+			Comment: comment,
 		}
 	case "cache":
 		return &filters.Cache{
-			Name: f.CacheName,
+			Name:    f.CacheName,
+			Comment: comment,
 		}
 	case "fcgi-app":
 		return &filters.FcgiApp{
-			Name: f.AppName,
+			Name:    f.AppName,
+			Comment: comment,
 		}
 	case "bwlim-in":
 		return &filters.BandwidthLimit{
@@ -353,6 +369,7 @@ func SerializeFilter(f models.Filter, opt *options.ConfigurationOptions) types.F
 			Limit:         misc.SerializeSize(f.Limit),
 			Key:           f.Key,
 			Table:         &f.Table,
+			Comment:       comment,
 		}
 	case "bwlim-out":
 		return &filters.BandwidthLimit{
@@ -363,6 +380,7 @@ func SerializeFilter(f models.Filter, opt *options.ConfigurationOptions) types.F
 			Limit:         misc.SerializeSize(f.Limit),
 			Key:           f.Key,
 			Table:         &f.Table,
+			Comment:       comment,
 		}
 	}
 	return nil

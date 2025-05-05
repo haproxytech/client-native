@@ -70,7 +70,7 @@ func (c *client) CreateTraces(data *models.Traces, transactionID string, version
 		return c.HandleError(TracesParentName, "", "", t, transactionID == "", err)
 	}
 
-	if c.checkSectionExists(parser.Traces, parser.TracesSectionName, p) {
+	if p.SectionExists(parser.Traces, parser.TracesSectionName) {
 		e := NewConfError(ErrObjectAlreadyExists, fmt.Sprintf("%s section already exists", parser.Traces))
 		return c.HandleError(TracesParentName, "", "", t, transactionID == "", e)
 	}
@@ -99,7 +99,7 @@ func (c *client) EditTraces(data *models.Traces, transactionID string, version i
 	}
 
 	// Delete the existing section.
-	if c.checkSectionExists(parser.Traces, parser.TracesSectionName, p) {
+	if p.SectionExists(parser.Traces, parser.TracesSectionName) {
 		if err = p.SectionsDelete(parser.Traces, parser.TracesSectionName); err != nil {
 			return c.HandleError(TracesParentName, "", "", t, transactionID == "", err)
 		}
@@ -168,7 +168,7 @@ func (c *client) DeleteTraceEntry(data *models.TraceEntry, transactionID string,
 		return err
 	}
 
-	if !c.checkSectionExists(parser.Traces, parser.TracesSectionName, p) {
+	if !p.SectionExists(parser.Traces, parser.TracesSectionName) {
 		e := NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("%s section does not exists", parser.Traces))
 		return c.HandleError(TracesParentName, "", "", t, transactionID == "", e)
 	}
@@ -196,6 +196,13 @@ func (c *client) DeleteTraceEntry(data *models.TraceEntry, transactionID string,
 func ParseTraces(p parser.Parser) (*models.Traces, error) {
 	traces := new(models.Traces)
 
+	if data, err := p.SectionGet(parser.Traces, parser.TracesSectionName); err == nil {
+		d, ok := data.(types.Section)
+		if ok {
+			traces.Metadata = parseMetadata(d.Comment)
+		}
+	}
+
 	traceEntries, err := p.Get(parser.Traces, parser.TracesSectionName, "trace", false)
 	if err != nil {
 		if errors.Is(err, parser_errors.ErrFetch) {
@@ -214,7 +221,7 @@ func ParseTraces(p parser.Parser) (*models.Traces, error) {
 
 	traces.Entries = make(models.TraceEntries, len(entries))
 	for i, t := range entries {
-		traces.Entries[i] = &models.TraceEntry{Trace: strings.Join(t.Params, " ")}
+		traces.Entries[i] = &models.TraceEntry{Trace: strings.Join(t.Params, " "), Metadata: parseMetadata(t.Comment)}
 	}
 
 	return traces, nil
@@ -223,6 +230,16 @@ func ParseTraces(p parser.Parser) (*models.Traces, error) {
 func SerializeTraces(p parser.Parser, traces *models.Traces) error {
 	if traces == nil {
 		return fmt.Errorf("empty %s section", TracesParentName)
+	}
+
+	if traces.Metadata != nil {
+		comment, err := serializeMetadata(traces.Metadata)
+		if err != nil {
+			return err
+		}
+		if err := p.SectionCommentSet(parser.Traces, parser.TracesSectionName, comment); err != nil {
+			return err
+		}
 	}
 
 	for i, t := range traces.Entries {
@@ -239,6 +256,7 @@ func convertTraceEntry(entry *models.TraceEntry) types.Trace {
 	result := types.Trace{}
 	if entry != nil {
 		result.Params = common.StringSplitIgnoreEmpty(entry.Trace, ' ', '	')
+		result.Comment, _ = serializeMetadata(entry.Metadata)
 	}
 	return result
 }

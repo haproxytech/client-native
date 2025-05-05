@@ -41,7 +41,7 @@ func (c *client) GetStructuredLogProfile(name string, transactionID string) (int
 		return 0, nil, err
 	}
 
-	if !c.checkSectionExists(parser.LogProfile, name, p) {
+	if !p.SectionExists(parser.LogProfile, name) {
 		return v, nil, NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("LogProfile %s does not exist", name))
 	}
 
@@ -82,7 +82,7 @@ func (c *client) EditStructuredLogProfile(name string, data *models.LogProfile, 
 		return err
 	}
 
-	if !c.checkSectionExists(parser.LogProfile, name, p) {
+	if !p.SectionExists(parser.LogProfile, name) {
 		e := NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("%s %s does not exist", parser.LogProfile, name))
 		return c.HandleError(name, "", "", t, transactionID == "", e)
 	}
@@ -92,11 +92,10 @@ func (c *client) EditStructuredLogProfile(name string, data *models.LogProfile, 
 	}
 
 	if err = serializeLogProfileSection(StructuredToParserArgs{
-		TID:                transactionID,
-		Parser:             &p,
-		Options:            &c.ConfigurationOptions,
-		HandleError:        c.HandleError,
-		CheckSectionExists: c.checkSectionExists,
+		TID:         transactionID,
+		Parser:      &p,
+		Options:     &c.ConfigurationOptions,
+		HandleError: c.HandleError,
 	}, data); err != nil {
 		return err
 	}
@@ -116,17 +115,16 @@ func (c *client) CreateStructuredLogProfile(data *models.LogProfile, transaction
 		return err
 	}
 
-	if c.checkSectionExists(parser.LogProfile, data.Name, p) {
+	if p.SectionExists(parser.LogProfile, data.Name) {
 		e := NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("%s %s already exist", parser.LogProfile, data.Name))
 		return c.HandleError(data.Name, "", "", t, transactionID == "", e)
 	}
 
 	if err = serializeLogProfileSection(StructuredToParserArgs{
-		TID:                transactionID,
-		Parser:             &p,
-		Options:            &c.ConfigurationOptions,
-		HandleError:        c.HandleError,
-		CheckSectionExists: c.checkSectionExists,
+		TID:         transactionID,
+		Parser:      &p,
+		Options:     &c.ConfigurationOptions,
+		HandleError: c.HandleError,
 	}, data); err != nil {
 		return err
 	}

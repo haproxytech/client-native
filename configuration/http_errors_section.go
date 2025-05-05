@@ -75,7 +75,7 @@ func (c *client) GetHTTPErrorsSection(name, transactionID string) (int64, *model
 		return 0, nil, err
 	}
 
-	if !c.checkSectionExists(parser.HTTPErrors, name, p) {
+	if !p.SectionExists(parser.HTTPErrors, name) {
 		return v, nil, NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("HTTPErrorsSection %s does not exist", name))
 	}
 
@@ -106,7 +106,7 @@ func (c *client) CreateHTTPErrorsSection(data *models.HTTPErrorsSection, transac
 		return err
 	}
 
-	if c.checkSectionExists(parser.HTTPErrors, data.Name, p) {
+	if p.SectionExists(parser.HTTPErrors, data.Name) {
 		e := NewConfError(ErrObjectAlreadyExists, fmt.Sprintf("%s %s already exists", parser.HTTPErrors, data.Name))
 
 		return c.HandleError(data.Name, "", "", t, transactionID == "", e)
@@ -137,7 +137,7 @@ func (c *client) EditHTTPErrorsSection(name string, data *models.HTTPErrorsSecti
 		return err
 	}
 
-	if !c.checkSectionExists(parser.HTTPErrors, name, p) {
+	if !p.SectionExists(parser.HTTPErrors, name) {
 		e := NewConfError(ErrObjectAlreadyExists, fmt.Sprintf("%s %s does not exists", parser.HTTPErrors, data.Name))
 		return c.HandleError(data.Name, "", "", t, transactionID == "", e)
 	}
@@ -163,6 +163,16 @@ func SerializeHTTPErrorsSection(p parser.Parser, data *models.HTTPErrorsSection)
 		return errors.New("empty http-errors section")
 	}
 
+	if data.Metadata != nil {
+		comment, err := serializeMetadata(data.Metadata)
+		if err != nil {
+			return err
+		}
+		if err := p.SectionCommentSet(parser.HTTPErrors, data.Name, comment); err != nil {
+			return err
+		}
+	}
+
 	for _, ef := range data.ErrorFiles {
 		if err := p.Set(parser.HTTPErrors, data.Name, "errorfile", types.ErrorFile{Code: strconv.Itoa(int(ef.Code)), File: ef.File}); err != nil {
 			return err
@@ -176,6 +186,13 @@ func SerializeHTTPErrorsSection(p parser.Parser, data *models.HTTPErrorsSection)
 func ParseHTTPErrorsSection(p parser.Parser, name string) (*models.HTTPErrorsSection, error) {
 	section := models.HTTPErrorsSection{
 		Name: name,
+	}
+
+	if data, err := p.SectionGet(parser.HTTPErrors, name); err == nil {
+		d, ok := data.(types.Section)
+		if ok {
+			section.Metadata = parseMetadata(d.Comment)
+		}
 	}
 
 	// Parse errorfile entries for the section with the given name.

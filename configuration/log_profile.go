@@ -76,7 +76,7 @@ func (c *client) GetLogProfile(name, transactionID string) (int64, *models.LogPr
 		return 0, nil, err
 	}
 
-	if !c.checkSectionExists(parser.LogProfile, name, p) {
+	if !p.SectionExists(parser.LogProfile, name) {
 		return v, nil, NewConfError(ErrObjectDoesNotExist,
 			fmt.Sprintf("%s section '%s' does not exist", LogProfileParentName, name))
 	}
@@ -106,7 +106,7 @@ func (c *client) CreateLogProfile(data *models.LogProfile, transactionID string,
 		return c.HandleError(data.Name, "", "", t, transactionID == "", err)
 	}
 
-	if c.checkSectionExists(parser.LogProfile, data.Name, p) {
+	if p.SectionExists(parser.LogProfile, data.Name) {
 		e := NewConfError(ErrObjectAlreadyExists, fmt.Sprintf("%s %s already exists", parser.LogProfile, data.Name))
 		return c.HandleError(data.Name, "", "", t, transactionID == "", e)
 	}
@@ -134,7 +134,7 @@ func (c *client) EditLogProfile(name string, data *models.LogProfile, transactio
 		return err
 	}
 
-	if !c.checkSectionExists(parser.LogProfile, data.Name, p) {
+	if !p.SectionExists(parser.LogProfile, data.Name) {
 		e := NewConfError(ErrObjectAlreadyExists, fmt.Sprintf("%s %s does not exists", parser.LogProfile, data.Name))
 		return c.HandleError(data.Name, "", "", t, transactionID == "", e)
 	}
@@ -149,6 +149,12 @@ func (c *client) EditLogProfile(name string, data *models.LogProfile, transactio
 func ParseLogProfile(p parser.Parser, name string) (*models.LogProfile, error) {
 	lp := &models.LogProfile{Name: name}
 
+	if data, err := p.SectionGet(parser.LogProfile, name); err == nil {
+		d, ok := data.(types.Section)
+		if ok {
+			lp.Metadata = parseMetadata(d.Comment)
+		}
+	}
 	// get optional log-tag
 	logTag, err := p.Get(parser.LogProfile, name, "log-tag", false)
 	if err != nil {
@@ -180,10 +186,11 @@ func ParseLogProfile(p parser.Parser, name string) (*models.LogProfile, error) {
 
 	for i, s := range tsteps {
 		step := &models.LogProfileStep{
-			Step:   s.Step,
-			Drop:   models.LogProfileStepDropDisabled,
-			Format: strings.Trim(s.Format, `"`),
-			Sd:     strings.Trim(s.Sd, `"`),
+			Step:     s.Step,
+			Drop:     models.LogProfileStepDropDisabled,
+			Format:   strings.Trim(s.Format, `"`),
+			Sd:       strings.Trim(s.Sd, `"`),
+			Metadata: parseMetadata(s.Comment),
 		}
 		if s.Drop {
 			step.Drop = models.LogProfileStepDropEnabled
@@ -200,7 +207,15 @@ func SerializeLogProfile(p parser.Parser, lp *models.LogProfile) error {
 	if lp == nil {
 		return fmt.Errorf("empty %s section", LogProfileParentName)
 	}
-
+	if lp.Metadata != nil {
+		comment, err := serializeMetadata(lp.Metadata)
+		if err != nil {
+			return err
+		}
+		if err := p.SectionCommentSet(parser.LogForward, lp.Name, comment); err != nil {
+			return err
+		}
+	}
 	logTag := types.StringC{Value: lp.LogTag}
 	if err := p.Set(parser.LogProfile, lp.Name, "log-tag", logTag); err != nil {
 		return err
@@ -228,10 +243,16 @@ func SerializeLogProfileStep(step *models.LogProfileStep) *types.OnLogStep {
 		return s
 	}
 
+	comment, err := serializeMetadata(step.Metadata)
+	if err != nil {
+		comment = ""
+	}
+
 	return &types.OnLogStep{
-		Step:   step.Step,
-		Drop:   step.Drop == models.LogProfileStepDropEnabled,
-		Format: q(step.Format),
-		Sd:     q(step.Sd),
+		Step:    step.Step,
+		Drop:    step.Drop == models.LogProfileStepDropEnabled,
+		Format:  q(step.Format),
+		Sd:      q(step.Sd),
+		Comment: comment,
 	}
 }

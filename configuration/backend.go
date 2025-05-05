@@ -81,7 +81,7 @@ func (c *client) GetBackend(name string, transactionID string) (int64, *models.B
 		return 0, nil, err
 	}
 
-	if !c.checkSectionExists(parser.Backends, name, p) {
+	if !p.SectionExists(parser.Backends, name) {
 		return v, nil, NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("Backend %s does not exist", name))
 	}
 

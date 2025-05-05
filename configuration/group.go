@@ -163,8 +163,9 @@ func ParseGroups(userlist string, p parser.Parser) (models.Groups, error) {
 
 func ParseGroup(u types.Group) *models.Group {
 	return &models.Group{
-		Name:  u.Name,
-		Users: strings.Join(u.Users, ","),
+		Name:     u.Name,
+		Users:    strings.Join(u.Users, ","),
+		Metadata: parseMetadata(u.Comment),
 	}
 }
 
@@ -174,9 +175,14 @@ func SerializeGroup(u models.Group) types.Group {
 		users = strings.Split(u.Users, ",")
 	}
 
+	comment, err := serializeMetadata(u.Metadata)
+	if err != nil {
+		comment = ""
+	}
 	return types.Group{
-		Name:  u.Name,
-		Users: users,
+		Name:    u.Name,
+		Users:   users,
+		Comment: comment,
 	}
 }
 

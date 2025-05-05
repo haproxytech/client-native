@@ -17,6 +17,8 @@
 
 package models
 
+import "reflect"
+
 // Equal checks if two structs of type Traces are equal
 //
 // By default empty maps and slices are equal to nil:
@@ -35,6 +37,16 @@ func (s Traces) Equal(t Traces, opts ...Options) bool {
 
 	if !s.Entries.Equal(t.Entries, opt) {
 		return false
+	}
+
+	if !CheckSameNilAndLenMap[string](s.Metadata, t.Metadata, opt) {
+		return false
+	}
+
+	for k, v := range s.Metadata {
+		if !reflect.DeepEqual(t.Metadata[k], v) {
+			return false
+		}
 	}
 
 	return true
@@ -60,6 +72,16 @@ func (s Traces) Diff(t Traces, opts ...Options) map[string][]interface{} {
 
 	if !s.Entries.Equal(t.Entries, opt) {
 		diff["Entries"] = []interface{}{s.Entries, t.Entries}
+	}
+
+	if !CheckSameNilAndLenMap[string](s.Metadata, t.Metadata, opt) {
+		diff["Metadata"] = []interface{}{s.Metadata, t.Metadata}
+	}
+
+	for k, v := range s.Metadata {
+		if !reflect.DeepEqual(t.Metadata[k], v) {
+			diff["Metadata"] = []interface{}{s.Metadata, t.Metadata}
+		}
 	}
 
 	return diff

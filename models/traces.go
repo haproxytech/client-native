@@ -35,6 +35,10 @@ type Traces struct {
 
 	// entries
 	Entries TraceEntries `json:"entries,omitempty"`
+
+	// +kubebuilder:pruning:PreserveUnknownFields
+	// +kubebuilder:validation:Schemaless
+	Metadata map[string]interface{} `json:"metadata,omitempty"`
 }
 
 // Validate validates this traces

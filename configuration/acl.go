@@ -241,13 +241,19 @@ func ParseACL(f types.ACL) *models.ACL {
 		ACLName:   f.Name,
 		Criterion: f.Criterion,
 		Value:     f.Value,
+		Metadata:  parseMetadata(f.Comment),
 	}
 }
 
 func SerializeACL(f models.ACL) types.ACL {
+	comment, err := serializeMetadata(f.Metadata)
+	if err != nil {
+		comment = ""
+	}
 	return types.ACL{
 		Name:      f.ACLName,
 		Criterion: f.Criterion,
 		Value:     f.Value,
+		Comment:   comment,
 	}
 }

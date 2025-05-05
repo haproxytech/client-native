@@ -42,7 +42,7 @@ func (c *client) GetStructuredUserList(name string, transactionID string) (int64
 		return 0, nil, err
 	}
 
-	if !c.checkSectionExists(parser.UserList, name, p) {
+	if !p.SectionExists(parser.UserList, name) {
 		return v, nil, NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("Userlist %s does not exist", name))
 	}
 
@@ -85,17 +85,16 @@ func (c *client) CreateStructuredUserList(data *models.Userlist, transactionID s
 		return err
 	}
 
-	if c.checkSectionExists(parser.UserList, data.Name, p) {
+	if p.SectionExists(parser.UserList, data.Name) {
 		e := NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("%s %s already exist", parser.UserList, data.Name))
 		return c.HandleError(data.Name, "", "", t, transactionID == "", e)
 	}
 
 	if err = serializeUserlistSection(StructuredToParserArgs{
-		TID:                transactionID,
-		Parser:             &p,
-		Options:            &c.ConfigurationOptions,
-		HandleError:        c.HandleError,
-		CheckSectionExists: c.checkSectionExists,
+		TID:         transactionID,
+		Parser:      &p,
+		Options:     &c.ConfigurationOptions,
+		HandleError: c.HandleError,
 	}, data); err != nil {
 		return err
 	}

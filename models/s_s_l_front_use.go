@@ -76,6 +76,10 @@ type SSLFrontUse struct {
 	// Private key filename
 	Key string `json:"key,omitempty"`
 
+	// +kubebuilder:pruning:PreserveUnknownFields
+	// +kubebuilder:validation:Schemaless
+	Metadata map[string]interface{} `json:"metadata,omitempty"`
+
 	// no alpn
 	NoAlpn bool `json:"no_alpn,omitempty"`
 

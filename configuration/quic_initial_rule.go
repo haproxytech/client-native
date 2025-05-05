@@ -258,51 +258,63 @@ func ParseQUICInitialRule(f types.Action) (*models.QUICInitialRule, error) {
 			Type:     "accept",
 			Cond:     v.Cond,
 			CondTest: v.CondTest,
+			Metadata: parseMetadata(v.Comment),
 		}, nil
 	case *actions.Reject:
 		return &models.QUICInitialRule{
 			Type:     "reject",
 			Cond:     v.Cond,
 			CondTest: v.CondTest,
+			Metadata: parseMetadata(v.Comment),
 		}, nil
 	case *quic_actions.DgramDrop:
 		return &models.QUICInitialRule{
 			Type:     "dgram-drop",
 			Cond:     v.Cond,
 			CondTest: v.CondTest,
+			Metadata: parseMetadata(v.Comment),
 		}, nil
 	case *quic_actions.SendRetry:
 		return &models.QUICInitialRule{
 			Type:     "send-retry",
 			Cond:     v.Cond,
 			CondTest: v.CondTest,
+			Metadata: parseMetadata(v.Comment),
 		}, nil
 	}
 	return nil, nil //nolint:nilnil
 }
 
 func SerializeQUICInitialRule(f models.QUICInitialRule) (types.Action, error) {
+	comment, err := serializeMetadata(f.Metadata)
+	if err != nil {
+		return nil, err
+	}
 	var rule types.Action
 	switch f.Type {
 	case "accept":
 		rule = &actions.Accept{
 			Cond:     f.Cond,
 			CondTest: f.CondTest,
+			Comment:  comment,
 		}
 	case "reject":
 		rule = &actions.Reject{
 			Cond:     f.Cond,
 			CondTest: f.CondTest,
+			Comment:  comment,
 		}
 	case "dgram-drop":
 		rule = &quic_actions.DgramDrop{
 			Cond:     f.Cond,
 			CondTest: f.CondTest,
+			Comment:  comment,
 		}
 	case "send-retry":
 		rule = &quic_actions.SendRetry{
 			Cond:     f.Cond,
 			CondTest: f.CondTest,
+			Comment:  comment,
 		}
 	}
 	return rule, nil

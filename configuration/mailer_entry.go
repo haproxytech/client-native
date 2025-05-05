@@ -179,17 +179,23 @@ func ParseMailerEntries(mailersSection string, p parser.Parser) (models.MailerEn
 
 func ParseMailerEntry(m types.Mailer) *models.MailerEntry {
 	return &models.MailerEntry{
-		Name:    m.Name,
-		Address: m.IP,
-		Port:    m.Port,
+		Name:     m.Name,
+		Address:  m.IP,
+		Port:     m.Port,
+		Metadata: parseMetadata(m.Comment),
 	}
 }
 
 func SerializeMailerEntry(me models.MailerEntry) types.Mailer {
+	comment, err := serializeMetadata(me.Metadata)
+	if err != nil {
+		comment = ""
+	}
 	return types.Mailer{
-		Name: me.Name,
-		IP:   me.Address,
-		Port: me.Port,
+		Name:    me.Name,
+		IP:      me.Address,
+		Port:    me.Port,
+		Comment: comment,
 	}
 }
 

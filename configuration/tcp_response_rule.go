@@ -231,8 +231,9 @@ func ParseTCPResponseRule(t types.TCPType) (*models.TCPResponseRule, error) {
 	switch v := t.(type) {
 	case *tcp_types.InspectDelay:
 		return &models.TCPResponseRule{
-			Type:    models.TCPResponseRuleTypeInspectDashDelay,
-			Timeout: misc.ParseTimeout(v.Timeout),
+			Type:     models.TCPResponseRuleTypeInspectDashDelay,
+			Timeout:  misc.ParseTimeout(v.Timeout),
+			Metadata: parseMetadata(v.Comment),
 		}, nil
 	case *tcp_types.Content:
 		switch a := v.Action.(type) {
@@ -242,6 +243,7 @@ func ParseTCPResponseRule(t types.TCPType) (*models.TCPResponseRule, error) {
 				Action:   models.TCPRequestRuleActionAccept,
 				Cond:     a.Cond,
 				CondTest: a.CondTest,
+				Metadata: parseMetadata(v.Comment),
 			}, nil
 		case *actions.Reject:
 			return &models.TCPResponseRule{
@@ -249,6 +251,7 @@ func ParseTCPResponseRule(t types.TCPType) (*models.TCPResponseRule, error) {
 				Action:   models.TCPRequestRuleActionReject,
 				Cond:     a.Cond,
 				CondTest: a.CondTest,
+				Metadata: parseMetadata(v.Comment),
 			}, nil
 		case *actions.Lua:
 			return &models.TCPResponseRule{
@@ -258,6 +261,7 @@ func ParseTCPResponseRule(t types.TCPType) (*models.TCPResponseRule, error) {
 				LuaParams: a.Params,
 				Cond:      a.Cond,
 				CondTest:  a.CondTest,
+				Metadata:  parseMetadata(v.Comment),
 			}, nil
 		case *actions.SetBandwidthLimit:
 			return &models.TCPResponseRule{
@@ -268,6 +272,7 @@ func ParseTCPResponseRule(t types.TCPType) (*models.TCPResponseRule, error) {
 				BandwidthLimitPeriod: a.Period.String(),
 				Cond:                 a.Cond,
 				CondTest:             a.CondTest,
+				Metadata:             parseMetadata(v.Comment),
 			}, nil
 		case *tcp_actions.Close:
 			return &models.TCPResponseRule{
@@ -275,6 +280,7 @@ func ParseTCPResponseRule(t types.TCPType) (*models.TCPResponseRule, error) {
 				Action:   models.TCPResponseRuleActionClose,
 				Cond:     a.Cond,
 				CondTest: a.CondTest,
+				Metadata: parseMetadata(v.Comment),
 			}, nil
 		case *actions.ScAddGpc:
 			if a.Int == nil && len(a.Expr.Expr) == 0 {
@@ -294,6 +300,7 @@ func ParseTCPResponseRule(t types.TCPType) (*models.TCPResponseRule, error) {
 				ScInt:    a.Int,
 				Cond:     a.Cond,
 				CondTest: a.CondTest,
+				Metadata: parseMetadata(v.Comment),
 			}, nil
 		case *actions.ScIncGpc:
 			ID, _ := strconv.ParseInt(a.ID, 10, 64)
@@ -305,6 +312,7 @@ func ParseTCPResponseRule(t types.TCPType) (*models.TCPResponseRule, error) {
 				ScIdx:    Idx,
 				Cond:     a.Cond,
 				CondTest: a.CondTest,
+				Metadata: parseMetadata(v.Comment),
 			}, nil
 		case *actions.ScIncGpc0:
 			ID, _ := strconv.ParseInt(a.ID, 10, 64)
@@ -314,6 +322,7 @@ func ParseTCPResponseRule(t types.TCPType) (*models.TCPResponseRule, error) {
 				ScID:     ID,
 				Cond:     a.Cond,
 				CondTest: a.CondTest,
+				Metadata: parseMetadata(v.Comment),
 			}, nil
 		case *actions.ScIncGpc1:
 			ID, _ := strconv.ParseInt(a.ID, 10, 64)
@@ -323,6 +332,7 @@ func ParseTCPResponseRule(t types.TCPType) (*models.TCPResponseRule, error) {
 				ScID:     ID,
 				Cond:     a.Cond,
 				CondTest: a.CondTest,
+				Metadata: parseMetadata(v.Comment),
 			}, nil
 		case *actions.ScSetGpt:
 			if a.Int == nil && len(a.Expr.Expr) == 0 {
@@ -344,6 +354,7 @@ func ParseTCPResponseRule(t types.TCPType) (*models.TCPResponseRule, error) {
 				ScInt:    a.Int,
 				Cond:     a.Cond,
 				CondTest: a.CondTest,
+				Metadata: parseMetadata(v.Comment),
 			}, nil
 		case *actions.ScSetGpt0:
 			if a.Int == nil && len(a.Expr.Expr) == 0 {
@@ -361,6 +372,7 @@ func ParseTCPResponseRule(t types.TCPType) (*models.TCPResponseRule, error) {
 				ScInt:    a.Int,
 				Cond:     a.Cond,
 				CondTest: a.CondTest,
+				Metadata: parseMetadata(v.Comment),
 			}, nil
 		case *actions.SendSpoeGroup:
 			return &models.TCPResponseRule{
@@ -370,6 +382,7 @@ func ParseTCPResponseRule(t types.TCPType) (*models.TCPResponseRule, error) {
 				SpoeGroup:  a.Group,
 				Cond:       a.Cond,
 				CondTest:   a.CondTest,
+				Metadata:   parseMetadata(v.Comment),
 			}, nil
 		case *actions.SetLogLevel:
 			return &models.TCPResponseRule{
@@ -378,6 +391,7 @@ func ParseTCPResponseRule(t types.TCPType) (*models.TCPResponseRule, error) {
 				LogLevel: a.Level,
 				Cond:     a.Cond,
 				CondTest: a.CondTest,
+				Metadata: parseMetadata(v.Comment),
 			}, nil
 		case *actions.SetMark:
 			return &models.TCPResponseRule{
@@ -386,6 +400,7 @@ func ParseTCPResponseRule(t types.TCPType) (*models.TCPResponseRule, error) {
 				MarkValue: a.Value,
 				Cond:      a.Cond,
 				CondTest:  a.CondTest,
+				Metadata:  parseMetadata(v.Comment),
 			}, nil
 		case *actions.SetNice:
 			nice, err := strconv.ParseInt(a.Value, 10, 64)
@@ -398,6 +413,7 @@ func ParseTCPResponseRule(t types.TCPType) (*models.TCPResponseRule, error) {
 				NiceValue: nice,
 				Cond:      a.Cond,
 				CondTest:  a.CondTest,
+				Metadata:  parseMetadata(v.Comment),
 			}, nil
 		case *actions.SetTos:
 			return &models.TCPResponseRule{
@@ -406,6 +422,7 @@ func ParseTCPResponseRule(t types.TCPType) (*models.TCPResponseRule, error) {
 				TosValue: a.Value,
 				Cond:     a.Cond,
 				CondTest: a.CondTest,
+				Metadata: parseMetadata(v.Comment),
 			}, nil
 		case *actions.SetFcMark:
 			return &models.TCPResponseRule{
@@ -414,6 +431,7 @@ func ParseTCPResponseRule(t types.TCPType) (*models.TCPResponseRule, error) {
 				Expr:     a.Expr.String(),
 				Cond:     a.Cond,
 				CondTest: a.CondTest,
+				Metadata: parseMetadata(v.Comment),
 			}, nil
 		case *actions.SetFcTos:
 			return &models.TCPResponseRule{
@@ -422,6 +440,7 @@ func ParseTCPResponseRule(t types.TCPType) (*models.TCPResponseRule, error) {
 				Expr:     a.Expr.String(),
 				Cond:     a.Cond,
 				CondTest: a.CondTest,
+				Metadata: parseMetadata(v.Comment),
 			}, nil
 		case *actions.SilentDrop:
 			return &models.TCPResponseRule{
@@ -430,6 +449,7 @@ func ParseTCPResponseRule(t types.TCPType) (*models.TCPResponseRule, error) {
 				RstTTL:   a.RstTTL,
 				Cond:     a.Cond,
 				CondTest: a.CondTest,
+				Metadata: parseMetadata(v.Comment),
 			}, nil
 		case *actions.SetVar:
 			return &models.TCPResponseRule{
@@ -439,6 +459,7 @@ func ParseTCPResponseRule(t types.TCPType) (*models.TCPResponseRule, error) {
 				Expr:     a.Expr.String(),
 				Cond:     a.Cond,
 				CondTest: a.CondTest,
+				Metadata: parseMetadata(v.Comment),
 			}, nil
 		case *actions.SetVarFmt:
 			return &models.TCPResponseRule{
@@ -448,6 +469,7 @@ func ParseTCPResponseRule(t types.TCPType) (*models.TCPResponseRule, error) {
 				VarScope:  a.VarScope,
 				Cond:      a.Cond,
 				CondTest:  a.CondTest,
+				Metadata:  parseMetadata(v.Comment),
 			}, nil
 		case *actions.UnsetVar:
 			return &models.TCPResponseRule{
@@ -457,6 +479,7 @@ func ParseTCPResponseRule(t types.TCPType) (*models.TCPResponseRule, error) {
 				VarScope: a.Scope,
 				Cond:     a.Cond,
 				CondTest: a.CondTest,
+				Metadata: parseMetadata(v.Comment),
 			}, nil
 		case *actions.DoLog:
 			return &models.TCPResponseRule{
@@ -464,6 +487,7 @@ func ParseTCPResponseRule(t types.TCPType) (*models.TCPResponseRule, error) {
 				Action:   models.TCPResponseRuleActionDoDashLog,
 				Cond:     a.Cond,
 				CondTest: a.CondTest,
+				Metadata: parseMetadata(v.Comment),
 			}, nil
 		}
 	}
@@ -471,6 +495,10 @@ func ParseTCPResponseRule(t types.TCPType) (*models.TCPResponseRule, error) {
 }
 
 func SerializeTCPResponseRule(t models.TCPResponseRule, opt *options.ConfigurationOptions) (types.TCPType, error) { //nolint:maintidx
+	comment, err := serializeMetadata(t.Metadata)
+	if err != nil {
+		comment = ""
+	}
 	switch t.Type {
 	case models.TCPResponseRuleTypeContent:
 		switch t.Action {
@@ -480,6 +508,7 @@ func SerializeTCPResponseRule(t models.TCPResponseRule, opt *options.Configurati
 					Cond:     t.Cond,
 					CondTest: t.CondTest,
 				},
+				Comment: comment,
 			}, nil
 		case models.TCPResponseRuleActionReject:
 			return &tcp_types.Content{
@@ -487,6 +516,7 @@ func SerializeTCPResponseRule(t models.TCPResponseRule, opt *options.Configurati
 					Cond:     t.Cond,
 					CondTest: t.CondTest,
 				},
+				Comment: comment,
 			}, nil
 		case models.TCPResponseRuleActionLua:
 			return &tcp_types.Content{
@@ -496,6 +526,7 @@ func SerializeTCPResponseRule(t models.TCPResponseRule, opt *options.Configurati
 					Cond:     t.Cond,
 					CondTest: t.CondTest,
 				},
+				Comment: comment,
 			}, nil
 		case models.TCPRequestRuleActionSetDashBandwidthDashLimit:
 			return &tcp_types.Content{
@@ -506,6 +537,7 @@ func SerializeTCPResponseRule(t models.TCPResponseRule, opt *options.Configurati
 					Cond:     t.Cond,
 					CondTest: t.CondTest,
 				},
+				Comment: comment,
 			}, nil
 		case models.TCPResponseRuleActionClose:
 			return &tcp_types.Content{
@@ -513,6 +545,7 @@ func SerializeTCPResponseRule(t models.TCPResponseRule, opt *options.Configurati
 					Cond:     t.Cond,
 					CondTest: t.CondTest,
 				},
+				Comment: comment,
 			}, nil
 		case models.TCPResponseRuleActionScDashAddDashGpc:
 			if len(t.Expr) > 0 && t.ScInt != nil {
@@ -530,6 +563,7 @@ func SerializeTCPResponseRule(t models.TCPResponseRule, opt *options.Configurati
 					Cond:     t.Cond,
 					CondTest: t.CondTest,
 				},
+				Comment: comment,
 			}, nil
 		case models.TCPResponseRuleActionScDashIncDashGpc:
 			return &tcp_types.Content{
@@ -539,6 +573,7 @@ func SerializeTCPResponseRule(t models.TCPResponseRule, opt *options.Configurati
 					Cond:     t.Cond,
 					CondTest: t.CondTest,
 				},
+				Comment: comment,
 			}, nil
 		case models.TCPResponseRuleActionScDashIncDashGpc0:
 			return &tcp_types.Content{
@@ -547,6 +582,7 @@ func SerializeTCPResponseRule(t models.TCPResponseRule, opt *options.Configurati
 					Cond:     t.Cond,
 					CondTest: t.CondTest,
 				},
+				Comment: comment,
 			}, nil
 		case models.TCPResponseRuleActionScDashIncDashGpc1:
 			return &tcp_types.Content{
@@ -555,6 +591,7 @@ func SerializeTCPResponseRule(t models.TCPResponseRule, opt *options.Configurati
 					Cond:     t.Cond,
 					CondTest: t.CondTest,
 				},
+				Comment: comment,
 			}, nil
 		case models.TCPResponseRuleActionScDashSetDashGpt:
 			if len(t.Expr) > 0 && t.ScInt != nil {
@@ -572,6 +609,7 @@ func SerializeTCPResponseRule(t models.TCPResponseRule, opt *options.Configurati
 					Cond:     t.Cond,
 					CondTest: t.CondTest,
 				},
+				Comment: comment,
 			}, nil
 		case models.TCPResponseRuleActionScDashSetDashGpt0:
 			if len(t.Expr) > 0 && t.ScInt != nil {
@@ -588,6 +626,7 @@ func SerializeTCPResponseRule(t models.TCPResponseRule, opt *options.Configurati
 					Cond:     t.Cond,
 					CondTest: t.CondTest,
 				},
+				Comment: comment,
 			}, nil
 		case models.TCPResponseRuleActionSendDashSpoeDashGroup:
 			return &tcp_types.Content{
@@ -597,6 +636,7 @@ func SerializeTCPResponseRule(t models.TCPResponseRule, opt *options.Configurati
 					Cond:     t.Cond,
 					CondTest: t.CondTest,
 				},
+				Comment: comment,
 			}, nil
 		case models.TCPResponseRuleActionSetDashLogDashLevel:
 			return &tcp_types.Content{
@@ -605,6 +645,7 @@ func SerializeTCPResponseRule(t models.TCPResponseRule, opt *options.Configurati
 					Cond:     t.Cond,
 					CondTest: t.CondTest,
 				},
+				Comment: comment,
 			}, nil
 		case models.TCPResponseRuleActionSetDashMark:
 			return &tcp_types.Content{
@@ -613,6 +654,7 @@ func SerializeTCPResponseRule(t models.TCPResponseRule, opt *options.Configurati
 					Cond:     t.Cond,
 					CondTest: t.CondTest,
 				},
+				Comment: comment,
 			}, nil
 		case models.TCPResponseRuleActionSetDashNice:
 			return &tcp_types.Content{
@@ -621,6 +663,7 @@ func SerializeTCPResponseRule(t models.TCPResponseRule, opt *options.Configurati
 					Cond:     t.Cond,
 					CondTest: t.CondTest,
 				},
+				Comment: comment,
 			}, nil
 		case models.TCPResponseRuleActionSetDashTos:
 			return &tcp_types.Content{
@@ -629,6 +672,7 @@ func SerializeTCPResponseRule(t models.TCPResponseRule, opt *options.Configurati
 					Cond:     t.Cond,
 					CondTest: t.CondTest,
 				},
+				Comment: comment,
 			}, nil
 		case models.TCPResponseRuleActionSilentDashDrop:
 			return &tcp_types.Content{
@@ -637,6 +681,7 @@ func SerializeTCPResponseRule(t models.TCPResponseRule, opt *options.Configurati
 					Cond:     t.Cond,
 					CondTest: t.CondTest,
 				},
+				Comment: comment,
 			}, nil
 		case models.TCPRequestRuleActionSetDashVarDashFmt:
 			return &tcp_types.Content{
@@ -647,6 +692,7 @@ func SerializeTCPResponseRule(t models.TCPResponseRule, opt *options.Configurati
 					Cond:     t.Cond,
 					CondTest: t.CondTest,
 				},
+				Comment: comment,
 			}, nil
 		case models.TCPRequestRuleActionSetDashVar:
 			return &tcp_types.Content{
@@ -657,6 +703,7 @@ func SerializeTCPResponseRule(t models.TCPResponseRule, opt *options.Configurati
 					Cond:     t.Cond,
 					CondTest: t.CondTest,
 				},
+				Comment: comment,
 			}, nil
 		case models.TCPResponseRuleActionUnsetDashVar:
 			return &tcp_types.Content{
@@ -666,6 +713,7 @@ func SerializeTCPResponseRule(t models.TCPResponseRule, opt *options.Configurati
 					Cond:     t.Cond,
 					CondTest: t.CondTest,
 				},
+				Comment: comment,
 			}, nil
 		case models.TCPResponseRuleActionSetDashFcDashMark:
 			return &tcp_types.Content{
@@ -674,6 +722,7 @@ func SerializeTCPResponseRule(t models.TCPResponseRule, opt *options.Configurati
 					Cond:     t.Cond,
 					CondTest: t.CondTest,
 				},
+				Comment: comment,
 			}, nil
 		case models.TCPResponseRuleActionSetDashFcDashTos:
 			return &tcp_types.Content{
@@ -682,6 +731,7 @@ func SerializeTCPResponseRule(t models.TCPResponseRule, opt *options.Configurati
 					Cond:     t.Cond,
 					CondTest: t.CondTest,
 				},
+				Comment: comment,
 			}, nil
 		case models.TCPResponseRuleActionDoDashLog:
 			return &tcp_types.Content{
@@ -689,12 +739,14 @@ func SerializeTCPResponseRule(t models.TCPResponseRule, opt *options.Configurati
 					Cond:     t.Cond,
 					CondTest: t.CondTest,
 				},
+				Comment: comment,
 			}, nil
 		}
 	case models.TCPResponseRuleTypeInspectDashDelay:
 		if t.Timeout != nil {
 			return &tcp_types.InspectDelay{
 				Timeout: misc.SerializeTime(*t.Timeout, opt.PreferredTimeSuffix),
+				Comment: comment,
 			}, nil
 		}
 	}

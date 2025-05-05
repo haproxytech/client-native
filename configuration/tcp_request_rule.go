@@ -261,13 +261,15 @@ func ParseTCPRequestRule(f types.TCPType) (*models.TCPRequestRule, error) { //no
 	switch v := f.(type) {
 	case *tcp_types.InspectDelay:
 		return &models.TCPRequestRule{
-			Type:    models.TCPRequestRuleTypeInspectDashDelay,
-			Timeout: misc.ParseTimeout(v.Timeout),
+			Type:     models.TCPRequestRuleTypeInspectDashDelay,
+			Timeout:  misc.ParseTimeout(v.Timeout),
+			Metadata: parseMetadata(v.Comment),
 		}, nil
 
 	case *tcp_types.Connection:
 		rule = &models.TCPRequestRule{
-			Type: models.TCPRequestRuleTypeConnection,
+			Type:     models.TCPRequestRuleTypeConnection,
+			Metadata: parseMetadata(v.Comment),
 		}
 
 		switch a := v.Action.(type) {
@@ -423,7 +425,8 @@ func ParseTCPRequestRule(f types.TCPType) (*models.TCPRequestRule, error) { //no
 		return rule, nil
 	case *tcp_types.Content:
 		rule = &models.TCPRequestRule{
-			Type: models.TCPRequestRuleTypeContent,
+			Type:     models.TCPRequestRuleTypeContent,
+			Metadata: parseMetadata(v.Comment),
 		}
 
 		switch a := v.Action.(type) {
@@ -639,7 +642,8 @@ func ParseTCPRequestRule(f types.TCPType) (*models.TCPRequestRule, error) { //no
 		}
 	case *tcp_types.Session:
 		rule = &models.TCPRequestRule{
-			Type: models.TCPRequestRuleTypeSession,
+			Type:     models.TCPRequestRuleTypeSession,
+			Metadata: parseMetadata(v.Comment),
 		}
 		switch a := v.Action.(type) {
 		case *actions.Accept:
@@ -782,6 +786,10 @@ func ParseTCPRequestRule(f types.TCPType) (*models.TCPRequestRule, error) { //no
 }
 
 func SerializeTCPRequestRule(f models.TCPRequestRule, opt *options.ConfigurationOptions) (types.TCPType, error) { //nolint:gocyclo,cyclop,maintidx
+	comment, err := serializeMetadata(f.Metadata)
+	if err != nil {
+		comment = ""
+	}
 	switch f.Type {
 	case models.TCPRequestRuleTypeConnection:
 		switch f.Action {
@@ -791,6 +799,7 @@ func SerializeTCPRequestRule(f models.TCPRequestRule, opt *options.Configuration
 					Cond:     f.Cond,
 					CondTest: f.CondTest,
 				},
+				Comment: comment,
 			}, nil
 		case models.TCPRequestRuleActionReject:
 			return &tcp_types.Connection{
@@ -798,6 +807,7 @@ func SerializeTCPRequestRule(f models.TCPRequestRule, opt *options.Configuration
 					Cond:     f.Cond,
 					CondTest: f.CondTest,
 				},
+				Comment: comment,
 			}, nil
 		case models.TCPRequestRuleActionExpectDashProxy:
 			return &tcp_types.Connection{
@@ -805,6 +815,7 @@ func SerializeTCPRequestRule(f models.TCPRequestRule, opt *options.Configuration
 					Cond:     f.Cond,
 					CondTest: f.CondTest,
 				},
+				Comment: comment,
 			}, nil
 		case models.TCPRequestRuleActionExpectDashNetscalerDashCip:
 			return &tcp_types.Connection{
@@ -821,6 +832,7 @@ func SerializeTCPRequestRule(f models.TCPRequestRule, opt *options.Configuration
 					Cond:     f.Cond,
 					CondTest: f.CondTest,
 				},
+				Comment: comment,
 			}, nil
 		case models.TCPRequestRuleActionTrackDashSc:
 			if f.TrackStickCounter == nil {
@@ -835,6 +847,7 @@ func SerializeTCPRequestRule(f models.TCPRequestRule, opt *options.Configuration
 					Cond:         f.Cond,
 					CondTest:     f.CondTest,
 				},
+				Comment: comment,
 			}, nil
 		case models.TCPRequestRuleActionScDashAddDashGpc:
 			return &tcp_types.Connection{
@@ -846,6 +859,7 @@ func SerializeTCPRequestRule(f models.TCPRequestRule, opt *options.Configuration
 					Cond:     f.Cond,
 					CondTest: f.CondTest,
 				},
+				Comment: comment,
 			}, nil
 		case models.TCPRequestRuleActionScDashIncDashGpc:
 			return &tcp_types.Connection{
@@ -855,6 +869,7 @@ func SerializeTCPRequestRule(f models.TCPRequestRule, opt *options.Configuration
 					Cond:     f.Cond,
 					CondTest: f.CondTest,
 				},
+				Comment: comment,
 			}, nil
 		case models.TCPRequestRuleActionScDashIncDashGpc0:
 			return &tcp_types.Connection{
@@ -863,6 +878,7 @@ func SerializeTCPRequestRule(f models.TCPRequestRule, opt *options.Configuration
 					Cond:     f.Cond,
 					CondTest: f.CondTest,
 				},
+				Comment: comment,
 			}, nil
 		case models.TCPRequestRuleActionScDashIncDashGpc1:
 			return &tcp_types.Connection{
@@ -871,6 +887,7 @@ func SerializeTCPRequestRule(f models.TCPRequestRule, opt *options.Configuration
 					Cond:     f.Cond,
 					CondTest: f.CondTest,
 				},
+				Comment: comment,
 			}, nil
 		case models.TCPRequestRuleActionScDashSetDashGpt:
 			idx, _ := strconv.ParseInt(f.ScIdx, 10, 64)
@@ -883,6 +900,7 @@ func SerializeTCPRequestRule(f models.TCPRequestRule, opt *options.Configuration
 					Cond:     f.Cond,
 					CondTest: f.CondTest,
 				},
+				Comment: comment,
 			}, nil
 		case models.TCPRequestRuleActionScDashSetDashGpt0:
 			return &tcp_types.Connection{
@@ -892,6 +910,7 @@ func SerializeTCPRequestRule(f models.TCPRequestRule, opt *options.Configuration
 					Cond:     f.Cond,
 					CondTest: f.CondTest,
 				},
+				Comment: comment,
 			}, nil
 		case models.TCPRequestRuleActionSilentDashDrop:
 			return &tcp_types.Connection{
@@ -900,6 +919,7 @@ func SerializeTCPRequestRule(f models.TCPRequestRule, opt *options.Configuration
 					Cond:     f.Cond,
 					CondTest: f.CondTest,
 				},
+				Comment: comment,
 			}, nil
 		case models.TCPRequestRuleActionLua:
 			return &tcp_types.Connection{
@@ -909,6 +929,7 @@ func SerializeTCPRequestRule(f models.TCPRequestRule, opt *options.Configuration
 					Cond:     f.Cond,
 					CondTest: f.CondTest,
 				},
+				Comment: comment,
 			}, nil
 		case models.TCPRequestRuleActionSetDashMark:
 			return &tcp_types.Connection{
@@ -917,6 +938,7 @@ func SerializeTCPRequestRule(f models.TCPRequestRule, opt *options.Configuration
 					Cond:     f.Cond,
 					CondTest: f.CondTest,
 				},
+				Comment: comment,
 			}, nil
 		case models.TCPRequestRuleActionSetDashSrcDashPort:
 			return &tcp_types.Connection{
@@ -925,6 +947,7 @@ func SerializeTCPRequestRule(f models.TCPRequestRule, opt *options.Configuration
 					Cond:     f.Cond,
 					CondTest: f.CondTest,
 				},
+				Comment: comment,
 			}, nil
 		case models.TCPRequestRuleActionSetDashTos:
 			return &tcp_types.Connection{
@@ -933,6 +956,7 @@ func SerializeTCPRequestRule(f models.TCPRequestRule, opt *options.Configuration
 					Cond:     f.Cond,
 					CondTest: f.CondTest,
 				},
+				Comment: comment,
 			}, nil
 		case models.TCPRequestRuleActionSetDashVar:
 			return &tcp_types.Connection{
@@ -943,6 +967,7 @@ func SerializeTCPRequestRule(f models.TCPRequestRule, opt *options.Configuration
 					Cond:     f.Cond,
 					CondTest: f.CondTest,
 				},
+				Comment: comment,
 			}, nil
 		case models.TCPRequestRuleActionUnsetDashVar:
 			return &tcp_types.Connection{
@@ -952,6 +977,7 @@ func SerializeTCPRequestRule(f models.TCPRequestRule, opt *options.Configuration
 					Cond:     f.Cond,
 					CondTest: f.CondTest,
 				},
+				Comment: comment,
 			}, nil
 		case models.TCPRequestRuleActionSetDashVarDashFmt:
 			return &tcp_types.Connection{
@@ -962,6 +988,7 @@ func SerializeTCPRequestRule(f models.TCPRequestRule, opt *options.Configuration
 					Cond:     f.Cond,
 					CondTest: f.CondTest,
 				},
+				Comment: comment,
 			}, nil
 		case models.TCPRequestRuleActionSetDashSrc:
 			return &tcp_types.Connection{
@@ -970,6 +997,7 @@ func SerializeTCPRequestRule(f models.TCPRequestRule, opt *options.Configuration
 					Cond:     f.Cond,
 					CondTest: f.CondTest,
 				},
+				Comment: comment,
 			}, nil
 		case models.TCPRequestRuleActionSetDashDst:
 			return &tcp_types.Connection{
@@ -978,6 +1006,7 @@ func SerializeTCPRequestRule(f models.TCPRequestRule, opt *options.Configuration
 					Cond:     f.Cond,
 					CondTest: f.CondTest,
 				},
+				Comment: comment,
 			}, nil
 		case models.TCPRequestRuleActionSetDashDstDashPort:
 			return &tcp_types.Connection{
@@ -986,6 +1015,7 @@ func SerializeTCPRequestRule(f models.TCPRequestRule, opt *options.Configuration
 					Cond:     f.Cond,
 					CondTest: f.CondTest,
 				},
+				Comment: comment,
 			}, nil
 		case models.TCPRequestRuleActionSetDashFcDashMark:
 			return &tcp_types.Connection{
@@ -994,6 +1024,7 @@ func SerializeTCPRequestRule(f models.TCPRequestRule, opt *options.Configuration
 					Cond:     f.Cond,
 					CondTest: f.CondTest,
 				},
+				Comment: comment,
 			}, nil
 		case models.TCPRequestRuleActionSetDashFcDashTos:
 			return &tcp_types.Connection{
@@ -1002,6 +1033,7 @@ func SerializeTCPRequestRule(f models.TCPRequestRule, opt *options.Configuration
 					Cond:     f.Cond,
 					CondTest: f.CondTest,
 				},
+				Comment: comment,
 			}, nil
 		case models.TCPRequestRuleActionDoDashLog:
 			return &tcp_types.Connection{
@@ -1009,6 +1041,7 @@ func SerializeTCPRequestRule(f models.TCPRequestRule, opt *options.Configuration
 					Cond:     f.Cond,
 					CondTest: f.CondTest,
 				},
+				Comment: comment,
 			}, nil
 		}
 		return nil, NewConfError(ErrValidationError, fmt.Sprintf("unsupported action '%s' in tcp_request_rule", f.Action))
@@ -1020,6 +1053,7 @@ func SerializeTCPRequestRule(f models.TCPRequestRule, opt *options.Configuration
 					Cond:     f.Cond,
 					CondTest: f.CondTest,
 				},
+				Comment: comment,
 			}, nil
 		case models.TCPRequestRuleActionDoDashResolve:
 			return &tcp_types.Content{
@@ -1031,6 +1065,7 @@ func SerializeTCPRequestRule(f models.TCPRequestRule, opt *options.Configuration
 					Cond:      f.Cond,
 					CondTest:  f.CondTest,
 				},
+				Comment: comment,
 			}, nil
 		case models.TCPRequestRuleActionReject:
 			return &tcp_types.Content{
@@ -1038,6 +1073,7 @@ func SerializeTCPRequestRule(f models.TCPRequestRule, opt *options.Configuration
 					Cond:     f.Cond,
 					CondTest: f.CondTest,
 				},
+				Comment: comment,
 			}, nil
 		case models.TCPRequestRuleActionCapture:
 			return &tcp_types.Content{
@@ -1047,6 +1083,7 @@ func SerializeTCPRequestRule(f models.TCPRequestRule, opt *options.Configuration
 					Cond:     f.Cond,
 					CondTest: f.CondTest,
 				},
+				Comment: comment,
 			}, nil
 		case models.TCPRequestRuleActionSetDashPriorityDashClass:
 			return &tcp_types.Content{
@@ -1055,6 +1092,7 @@ func SerializeTCPRequestRule(f models.TCPRequestRule, opt *options.Configuration
 					Cond:     f.Cond,
 					CondTest: f.CondTest,
 				},
+				Comment: comment,
 			}, nil
 		case models.TCPRequestRuleActionSetDashPriorityDashOffset:
 			return &tcp_types.Content{
@@ -1063,6 +1101,7 @@ func SerializeTCPRequestRule(f models.TCPRequestRule, opt *options.Configuration
 					Cond:     f.Cond,
 					CondTest: f.CondTest,
 				},
+				Comment: comment,
 			}, nil
 		case models.TCPRequestRuleActionTrackDashSc:
 			if f.TrackStickCounter == nil {
@@ -1077,6 +1116,7 @@ func SerializeTCPRequestRule(f models.TCPRequestRule, opt *options.Configuration
 					Cond:         f.Cond,
 					CondTest:     f.CondTest,
 				},
+				Comment: comment,
 			}, nil
 		case models.TCPRequestRuleActionScDashAddDashGpc:
 			return &tcp_types.Content{
@@ -1088,6 +1128,7 @@ func SerializeTCPRequestRule(f models.TCPRequestRule, opt *options.Configuration
 					Cond:     f.Cond,
 					CondTest: f.CondTest,
 				},
+				Comment: comment,
 			}, nil
 		case models.TCPRequestRuleActionScDashIncDashGpc:
 			return &tcp_types.Content{
@@ -1097,6 +1138,7 @@ func SerializeTCPRequestRule(f models.TCPRequestRule, opt *options.Configuration
 					Cond:     f.Cond,
 					CondTest: f.CondTest,
 				},
+				Comment: comment,
 			}, nil
 		case models.TCPRequestRuleActionScDashIncDashGpc0:
 			return &tcp_types.Content{
@@ -1105,6 +1147,7 @@ func SerializeTCPRequestRule(f models.TCPRequestRule, opt *options.Configuration
 					Cond:     f.Cond,
 					CondTest: f.CondTest,
 				},
+				Comment: comment,
 			}, nil
 		case models.TCPRequestRuleActionScDashIncDashGpc1:
 			return &tcp_types.Content{
@@ -1113,6 +1156,7 @@ func SerializeTCPRequestRule(f models.TCPRequestRule, opt *options.Configuration
 					Cond:     f.Cond,
 					CondTest: f.CondTest,
 				},
+				Comment: comment,
 			}, nil
 		case models.TCPRequestRuleActionScDashSetDashGpt:
 			idx, _ := strconv.ParseInt(f.ScIdx, 10, 64)
@@ -1125,6 +1169,7 @@ func SerializeTCPRequestRule(f models.TCPRequestRule, opt *options.Configuration
 					Cond:     f.Cond,
 					CondTest: f.CondTest,
 				},
+				Comment: comment,
 			}, nil
 		case models.TCPRequestRuleActionScDashSetDashGpt0:
 			return &tcp_types.Content{
@@ -1134,6 +1179,7 @@ func SerializeTCPRequestRule(f models.TCPRequestRule, opt *options.Configuration
 					Cond:     f.Cond,
 					CondTest: f.CondTest,
 				},
+				Comment: comment,
 			}, nil
 		case models.TCPRequestRuleActionSetDashDst:
 			return &tcp_types.Content{
@@ -1142,6 +1188,7 @@ func SerializeTCPRequestRule(f models.TCPRequestRule, opt *options.Configuration
 					Cond:     f.Cond,
 					CondTest: f.CondTest,
 				},
+				Comment: comment,
 			}, nil
 		case models.TCPRequestRuleActionSetDashDstDashPort:
 			return &tcp_types.Content{
@@ -1150,6 +1197,7 @@ func SerializeTCPRequestRule(f models.TCPRequestRule, opt *options.Configuration
 					Cond:     f.Cond,
 					CondTest: f.CondTest,
 				},
+				Comment: comment,
 			}, nil
 		case models.TCPRequestRuleActionSetDashSrc:
 			return &tcp_types.Content{
@@ -1158,6 +1206,7 @@ func SerializeTCPRequestRule(f models.TCPRequestRule, opt *options.Configuration
 					Cond:     f.Cond,
 					CondTest: f.CondTest,
 				},
+				Comment: comment,
 			}, nil
 		case models.TCPRequestRuleActionSetDashVar:
 			return &tcp_types.Content{
@@ -1168,6 +1217,7 @@ func SerializeTCPRequestRule(f models.TCPRequestRule, opt *options.Configuration
 					Cond:     f.Cond,
 					CondTest: f.CondTest,
 				},
+				Comment: comment,
 			}, nil
 		case models.TCPRequestRuleActionUnsetDashVar:
 			return &tcp_types.Content{
@@ -1177,6 +1227,7 @@ func SerializeTCPRequestRule(f models.TCPRequestRule, opt *options.Configuration
 					Cond:     f.Cond,
 					CondTest: f.CondTest,
 				},
+				Comment: comment,
 			}, nil
 		case models.TCPRequestRuleActionSilentDashDrop:
 			return &tcp_types.Content{
@@ -1185,6 +1236,7 @@ func SerializeTCPRequestRule(f models.TCPRequestRule, opt *options.Configuration
 					Cond:     f.Cond,
 					CondTest: f.CondTest,
 				},
+				Comment: comment,
 			}, nil
 		case models.TCPRequestRuleActionSendDashSpoeDashGroup:
 			return &tcp_types.Content{
@@ -1194,6 +1246,7 @@ func SerializeTCPRequestRule(f models.TCPRequestRule, opt *options.Configuration
 					Cond:     f.Cond,
 					CondTest: f.CondTest,
 				},
+				Comment: comment,
 			}, nil
 		case models.TCPRequestRuleActionUseDashService:
 			return &tcp_types.Content{
@@ -1202,6 +1255,7 @@ func SerializeTCPRequestRule(f models.TCPRequestRule, opt *options.Configuration
 					Cond:     f.Cond,
 					CondTest: f.CondTest,
 				},
+				Comment: comment,
 			}, nil
 		case models.TCPRequestRuleActionLua:
 			return &tcp_types.Content{
@@ -1211,6 +1265,7 @@ func SerializeTCPRequestRule(f models.TCPRequestRule, opt *options.Configuration
 					Cond:     f.Cond,
 					CondTest: f.CondTest,
 				},
+				Comment: comment,
 			}, nil
 		case models.TCPRequestRuleActionSetDashBandwidthDashLimit:
 			return &tcp_types.Content{
@@ -1221,6 +1276,7 @@ func SerializeTCPRequestRule(f models.TCPRequestRule, opt *options.Configuration
 					Cond:     f.Cond,
 					CondTest: f.CondTest,
 				},
+				Comment: comment,
 			}, nil
 		case models.TCPRequestRuleActionSetDashMark:
 			return &tcp_types.Content{
@@ -1229,6 +1285,7 @@ func SerializeTCPRequestRule(f models.TCPRequestRule, opt *options.Configuration
 					Cond:     f.Cond,
 					CondTest: f.CondTest,
 				},
+				Comment: comment,
 			}, nil
 		case models.TCPRequestRuleActionSetDashSrcDashPort:
 			return &tcp_types.Content{
@@ -1237,6 +1294,7 @@ func SerializeTCPRequestRule(f models.TCPRequestRule, opt *options.Configuration
 					Cond:     f.Cond,
 					CondTest: f.CondTest,
 				},
+				Comment: comment,
 			}, nil
 		case models.TCPRequestRuleActionSetDashTos:
 			return &tcp_types.Content{
@@ -1245,6 +1303,7 @@ func SerializeTCPRequestRule(f models.TCPRequestRule, opt *options.Configuration
 					Cond:     f.Cond,
 					CondTest: f.CondTest,
 				},
+				Comment: comment,
 			}, nil
 		case models.TCPRequestRuleActionSetDashVarDashFmt:
 			return &tcp_types.Content{
@@ -1255,6 +1314,7 @@ func SerializeTCPRequestRule(f models.TCPRequestRule, opt *options.Configuration
 					Cond:     f.Cond,
 					CondTest: f.CondTest,
 				},
+				Comment: comment,
 			}, nil
 		case models.TCPRequestRuleActionSetDashNice:
 			return &tcp_types.Content{
@@ -1263,6 +1323,7 @@ func SerializeTCPRequestRule(f models.TCPRequestRule, opt *options.Configuration
 					Cond:     f.Cond,
 					CondTest: f.CondTest,
 				},
+				Comment: comment,
 			}, nil
 		case models.TCPRequestRuleActionSetDashLogDashLevel:
 			return &tcp_types.Content{
@@ -1271,6 +1332,7 @@ func SerializeTCPRequestRule(f models.TCPRequestRule, opt *options.Configuration
 					Cond:     f.Cond,
 					CondTest: f.CondTest,
 				},
+				Comment: comment,
 			}, nil
 		case models.TCPRequestRuleActionSwitchDashMode:
 			return &tcp_types.Content{
@@ -1279,6 +1341,7 @@ func SerializeTCPRequestRule(f models.TCPRequestRule, opt *options.Configuration
 					Cond:     f.Cond,
 					CondTest: f.CondTest,
 				},
+				Comment: comment,
 			}, nil
 		case models.TCPRequestRuleActionSetDashBcDashMark:
 			return &tcp_types.Content{
@@ -1287,6 +1350,7 @@ func SerializeTCPRequestRule(f models.TCPRequestRule, opt *options.Configuration
 					Cond:     f.Cond,
 					CondTest: f.CondTest,
 				},
+				Comment: comment,
 			}, nil
 		case models.TCPRequestRuleActionSetDashBcDashTos:
 			return &tcp_types.Content{
@@ -1295,6 +1359,7 @@ func SerializeTCPRequestRule(f models.TCPRequestRule, opt *options.Configuration
 					Cond:     f.Cond,
 					CondTest: f.CondTest,
 				},
+				Comment: comment,
 			}, nil
 		case models.TCPRequestRuleActionSetDashFcDashMark:
 			return &tcp_types.Content{
@@ -1303,6 +1368,7 @@ func SerializeTCPRequestRule(f models.TCPRequestRule, opt *options.Configuration
 					Cond:     f.Cond,
 					CondTest: f.CondTest,
 				},
+				Comment: comment,
 			}, nil
 		case models.TCPRequestRuleActionSetDashFcDashTos:
 			return &tcp_types.Content{
@@ -1311,6 +1377,7 @@ func SerializeTCPRequestRule(f models.TCPRequestRule, opt *options.Configuration
 					Cond:     f.Cond,
 					CondTest: f.CondTest,
 				},
+				Comment: comment,
 			}, nil
 		case models.TCPRequestRuleActionSetDashRetries:
 			return &tcp_types.Content{
@@ -1319,6 +1386,7 @@ func SerializeTCPRequestRule(f models.TCPRequestRule, opt *options.Configuration
 					Cond:     f.Cond,
 					CondTest: f.CondTest,
 				},
+				Comment: comment,
 			}, nil
 		case models.TCPRequestRuleActionDoDashLog:
 			return &tcp_types.Content{
@@ -1326,6 +1394,7 @@ func SerializeTCPRequestRule(f models.TCPRequestRule, opt *options.Configuration
 					Cond:     f.Cond,
 					CondTest: f.CondTest,
 				},
+				Comment: comment,
 			}, nil
 		}
 		return nil, NewConfError(ErrValidationError, fmt.Sprintf("unsupported action '%s' in tcp_request_rule", f.Action))
@@ -1337,6 +1406,7 @@ func SerializeTCPRequestRule(f models.TCPRequestRule, opt *options.Configuration
 					Cond:     f.Cond,
 					CondTest: f.CondTest,
 				},
+				Comment: comment,
 			}, nil
 		case models.TCPRequestRuleActionAttachDashSrv:
 			return &tcp_types.Session{
@@ -1346,6 +1416,7 @@ func SerializeTCPRequestRule(f models.TCPRequestRule, opt *options.Configuration
 					Cond:     f.Cond,
 					CondTest: f.CondTest,
 				},
+				Comment: comment,
 			}, nil
 		case models.TCPRequestRuleActionReject:
 			return &tcp_types.Session{
@@ -1353,6 +1424,7 @@ func SerializeTCPRequestRule(f models.TCPRequestRule, opt *options.Configuration
 					Cond:     f.Cond,
 					CondTest: f.CondTest,
 				},
+				Comment: comment,
 			}, nil
 		case models.TCPRequestRuleActionTrackDashSc:
 			if f.TrackStickCounter == nil {
@@ -1367,6 +1439,7 @@ func SerializeTCPRequestRule(f models.TCPRequestRule, opt *options.Configuration
 					Cond:         f.Cond,
 					CondTest:     f.CondTest,
 				},
+				Comment: comment,
 			}, nil
 		case models.TCPRequestRuleActionScDashAddDashGpc:
 			return &tcp_types.Connection{
@@ -1378,6 +1451,7 @@ func SerializeTCPRequestRule(f models.TCPRequestRule, opt *options.Configuration
 					Cond:     f.Cond,
 					CondTest: f.CondTest,
 				},
+				Comment: comment,
 			}, nil
 		case models.TCPRequestRuleActionScDashIncDashGpc:
 			return &tcp_types.Connection{
@@ -1387,6 +1461,7 @@ func SerializeTCPRequestRule(f models.TCPRequestRule, opt *options.Configuration
 					Cond:     f.Cond,
 					CondTest: f.CondTest,
 				},
+				Comment: comment,
 			}, nil
 		case models.TCPRequestRuleActionScDashIncDashGpc0:
 			return &tcp_types.Session{
@@ -1395,6 +1470,7 @@ func SerializeTCPRequestRule(f models.TCPRequestRule, opt *options.Configuration
 					Cond:     f.Cond,
 					CondTest: f.CondTest,
 				},
+				Comment: comment,
 			}, nil
 		case models.TCPRequestRuleActionScDashIncDashGpc1:
 			return &tcp_types.Session{
@@ -1403,6 +1479,7 @@ func SerializeTCPRequestRule(f models.TCPRequestRule, opt *options.Configuration
 					Cond:     f.Cond,
 					CondTest: f.CondTest,
 				},
+				Comment: comment,
 			}, nil
 		case models.TCPRequestRuleActionScDashSetDashGpt:
 			idx, _ := strconv.ParseInt(f.ScIdx, 10, 64)
@@ -1415,6 +1492,7 @@ func SerializeTCPRequestRule(f models.TCPRequestRule, opt *options.Configuration
 					Cond:     f.Cond,
 					CondTest: f.CondTest,
 				},
+				Comment: comment,
 			}, nil
 		case models.TCPRequestRuleActionScDashSetDashGpt0:
 			return &tcp_types.Session{
@@ -1424,6 +1502,7 @@ func SerializeTCPRequestRule(f models.TCPRequestRule, opt *options.Configuration
 					Cond:     f.Cond,
 					CondTest: f.CondTest,
 				},
+				Comment: comment,
 			}, nil
 		case models.TCPRequestRuleActionSetDashDst:
 			return &tcp_types.Session{
@@ -1432,6 +1511,7 @@ func SerializeTCPRequestRule(f models.TCPRequestRule, opt *options.Configuration
 					Cond:     f.Cond,
 					CondTest: f.CondTest,
 				},
+				Comment: comment,
 			}, nil
 		case models.TCPRequestRuleActionSetDashDstDashPort:
 			return &tcp_types.Session{
@@ -1440,6 +1520,7 @@ func SerializeTCPRequestRule(f models.TCPRequestRule, opt *options.Configuration
 					Cond:     f.Cond,
 					CondTest: f.CondTest,
 				},
+				Comment: comment,
 			}, nil
 		case models.TCPRequestRuleActionSetDashSrc:
 			return &tcp_types.Session{
@@ -1448,6 +1529,7 @@ func SerializeTCPRequestRule(f models.TCPRequestRule, opt *options.Configuration
 					Cond:     f.Cond,
 					CondTest: f.CondTest,
 				},
+				Comment: comment,
 			}, nil
 		case models.TCPRequestRuleActionSetDashSrcDashPort:
 			return &tcp_types.Session{
@@ -1456,6 +1538,7 @@ func SerializeTCPRequestRule(f models.TCPRequestRule, opt *options.Configuration
 					Cond:     f.Cond,
 					CondTest: f.CondTest,
 				},
+				Comment: comment,
 			}, nil
 		case models.TCPRequestRuleActionSetDashMark:
 			return &tcp_types.Session{
@@ -1464,6 +1547,7 @@ func SerializeTCPRequestRule(f models.TCPRequestRule, opt *options.Configuration
 					Cond:     f.Cond,
 					CondTest: f.CondTest,
 				},
+				Comment: comment,
 			}, nil
 		case models.TCPRequestRuleActionSetDashTos:
 			return &tcp_types.Session{
@@ -1472,6 +1556,7 @@ func SerializeTCPRequestRule(f models.TCPRequestRule, opt *options.Configuration
 					Cond:     f.Cond,
 					CondTest: f.CondTest,
 				},
+				Comment: comment,
 			}, nil
 		case models.TCPRequestRuleActionSetDashVar:
 			return &tcp_types.Session{
@@ -1482,6 +1567,7 @@ func SerializeTCPRequestRule(f models.TCPRequestRule, opt *options.Configuration
 					Cond:     f.Cond,
 					CondTest: f.CondTest,
 				},
+				Comment: comment,
 			}, nil
 		case models.TCPRequestRuleActionUnsetDashVar:
 			return &tcp_types.Session{
@@ -1491,6 +1577,7 @@ func SerializeTCPRequestRule(f models.TCPRequestRule, opt *options.Configuration
 					Cond:     f.Cond,
 					CondTest: f.CondTest,
 				},
+				Comment: comment,
 			}, nil
 		case models.TCPRequestRuleActionSetDashVarDashFmt:
 			return &tcp_types.Session{
@@ -1501,6 +1588,7 @@ func SerializeTCPRequestRule(f models.TCPRequestRule, opt *options.Configuration
 					Cond:     f.Cond,
 					CondTest: f.CondTest,
 				},
+				Comment: comment,
 			}, nil
 		case models.TCPRequestRuleActionSilentDashDrop:
 			return &tcp_types.Session{
@@ -1509,6 +1597,7 @@ func SerializeTCPRequestRule(f models.TCPRequestRule, opt *options.Configuration
 					Cond:     f.Cond,
 					CondTest: f.CondTest,
 				},
+				Comment: comment,
 			}, nil
 		case models.TCPRequestRuleActionSetDashFcDashMark:
 			return &tcp_types.Session{
@@ -1517,6 +1606,7 @@ func SerializeTCPRequestRule(f models.TCPRequestRule, opt *options.Configuration
 					Cond:     f.Cond,
 					CondTest: f.CondTest,
 				},
+				Comment: comment,
 			}, nil
 		case models.TCPRequestRuleActionSetDashFcDashTos:
 			return &tcp_types.Session{
@@ -1525,6 +1615,7 @@ func SerializeTCPRequestRule(f models.TCPRequestRule, opt *options.Configuration
 					Cond:     f.Cond,
 					CondTest: f.CondTest,
 				},
+				Comment: comment,
 			}, nil
 		case models.TCPRequestRuleActionDoDashLog:
 			return &tcp_types.Session{
@@ -1532,6 +1623,7 @@ func SerializeTCPRequestRule(f models.TCPRequestRule, opt *options.Configuration
 					Cond:     f.Cond,
 					CondTest: f.CondTest,
 				},
+				Comment: comment,
 			}, nil
 		}
 		return nil, NewConfError(ErrValidationError, fmt.Sprintf("unsupported action '%s' in tcp_request_rule", f.Action))
@@ -1541,6 +1633,7 @@ func SerializeTCPRequestRule(f models.TCPRequestRule, opt *options.Configuration
 		}
 		return &tcp_types.InspectDelay{
 			Timeout: misc.SerializeTime(*f.Timeout, opt.PreferredTimeSuffix),
+			Comment: comment,
 		}, nil
 	}
 	return nil, NewConfError(ErrValidationError, fmt.Sprintf("unsupported action '%s' in tcp_request_rule", f.Type))

@@ -262,12 +262,14 @@ func ParseHTTPAfterRule(f types.Action) (*models.HTTPAfterResponseRule, error) {
 			HdrFormat: v.Fmt,
 			Cond:      v.Cond,
 			CondTest:  v.CondTest,
+			Metadata:  parseMetadata(v.Comment),
 		}, nil
 	case *http_actions.Allow:
 		return &models.HTTPAfterResponseRule{
 			Type:     "allow",
 			Cond:     v.Cond,
 			CondTest: v.CondTest,
+			Metadata: parseMetadata(v.Comment),
 		}, nil
 	case *http_actions.Capture:
 		if (v.SlotID == nil && v.Len == nil) || (v.SlotID != nil && v.Len != nil) {
@@ -278,6 +280,7 @@ func ParseHTTPAfterRule(f types.Action) (*models.HTTPAfterResponseRule, error) {
 			CaptureSample: v.Sample,
 			Cond:          v.Cond,
 			CondTest:      v.CondTest,
+			Metadata:      parseMetadata(v.Comment),
 		}
 		if v.SlotID != nil {
 			rule.CaptureID = v.SlotID
@@ -293,6 +296,7 @@ func ParseHTTPAfterRule(f types.Action) (*models.HTTPAfterResponseRule, error) {
 			ACLKeyfmt: v.KeyFmt,
 			Cond:      v.Cond,
 			CondTest:  v.CondTest,
+			Metadata:  parseMetadata(v.Comment),
 		}, nil
 	case *http_actions.DelHeader:
 		return &models.HTTPAfterResponseRule{
@@ -301,6 +305,7 @@ func ParseHTTPAfterRule(f types.Action) (*models.HTTPAfterResponseRule, error) {
 			Cond:      v.Cond,
 			CondTest:  v.CondTest,
 			HdrMethod: v.Method,
+			Metadata:  parseMetadata(v.Comment),
 		}, nil
 	case *http_actions.DelMap:
 		return &models.HTTPAfterResponseRule{
@@ -309,6 +314,7 @@ func ParseHTTPAfterRule(f types.Action) (*models.HTTPAfterResponseRule, error) {
 			MapKeyfmt: v.KeyFmt,
 			Cond:      v.Cond,
 			CondTest:  v.CondTest,
+			Metadata:  parseMetadata(v.Comment),
 		}, nil
 	case *http_actions.ReplaceHeader:
 		return &models.HTTPAfterResponseRule{
@@ -318,6 +324,7 @@ func ParseHTTPAfterRule(f types.Action) (*models.HTTPAfterResponseRule, error) {
 			HdrMatch:  v.MatchRegex,
 			Cond:      v.Cond,
 			CondTest:  v.CondTest,
+			Metadata:  parseMetadata(v.Comment),
 		}, nil
 	case *http_actions.ReplaceValue:
 		return &models.HTTPAfterResponseRule{
@@ -327,6 +334,7 @@ func ParseHTTPAfterRule(f types.Action) (*models.HTTPAfterResponseRule, error) {
 			HdrMatch:  v.MatchRegex,
 			Cond:      v.Cond,
 			CondTest:  v.CondTest,
+			Metadata:  parseMetadata(v.Comment),
 		}, nil
 	case *actions.ScAddGpc:
 		if v.Int == nil && len(v.Expr.Expr) == 0 {
@@ -343,6 +351,7 @@ func ParseHTTPAfterRule(f types.Action) (*models.HTTPAfterResponseRule, error) {
 			ScIdx:    Idx,
 			Cond:     v.Cond,
 			CondTest: v.CondTest,
+			Metadata: parseMetadata(v.Comment),
 		}, nil
 	case *actions.ScIncGpc:
 		ID, _ := strconv.ParseInt(v.ID, 10, 64)
@@ -353,6 +362,7 @@ func ParseHTTPAfterRule(f types.Action) (*models.HTTPAfterResponseRule, error) {
 			ScIdx:    Idx,
 			Cond:     v.Cond,
 			CondTest: v.CondTest,
+			Metadata: parseMetadata(v.Comment),
 		}, nil
 	case *actions.ScIncGpc0:
 		ID, _ := strconv.ParseInt(v.ID, 10, 64)
@@ -361,6 +371,7 @@ func ParseHTTPAfterRule(f types.Action) (*models.HTTPAfterResponseRule, error) {
 			ScID:     ID,
 			Cond:     v.Cond,
 			CondTest: v.CondTest,
+			Metadata: parseMetadata(v.Comment),
 		}, nil
 	case *actions.ScIncGpc1:
 		ID, _ := strconv.ParseInt(v.ID, 10, 64)
@@ -369,6 +380,7 @@ func ParseHTTPAfterRule(f types.Action) (*models.HTTPAfterResponseRule, error) {
 			ScID:     ID,
 			Cond:     v.Cond,
 			CondTest: v.CondTest,
+			Metadata: parseMetadata(v.Comment),
 		}, nil
 	case *actions.ScSetGpt:
 		if v.Int == nil && len(v.Expr.Expr) == 0 {
@@ -389,6 +401,7 @@ func ParseHTTPAfterRule(f types.Action) (*models.HTTPAfterResponseRule, error) {
 			ScInt:    v.Int,
 			Cond:     v.Cond,
 			CondTest: v.CondTest,
+			Metadata: parseMetadata(v.Comment),
 		}, nil
 	case *actions.ScSetGpt0:
 		if v.Int == nil && len(v.Expr.Expr) == 0 {
@@ -405,6 +418,7 @@ func ParseHTTPAfterRule(f types.Action) (*models.HTTPAfterResponseRule, error) {
 			ScInt:    v.Int,
 			Cond:     v.Cond,
 			CondTest: v.CondTest,
+			Metadata: parseMetadata(v.Comment),
 		}, nil
 	case *http_actions.SetHeader:
 		return &models.HTTPAfterResponseRule{
@@ -413,6 +427,7 @@ func ParseHTTPAfterRule(f types.Action) (*models.HTTPAfterResponseRule, error) {
 			HdrFormat: v.Fmt,
 			Cond:      v.Cond,
 			CondTest:  v.CondTest,
+			Metadata:  parseMetadata(v.Comment),
 		}, nil
 	case *actions.SetLogLevel:
 		return &models.HTTPAfterResponseRule{
@@ -420,6 +435,7 @@ func ParseHTTPAfterRule(f types.Action) (*models.HTTPAfterResponseRule, error) {
 			LogLevel: v.Level,
 			Cond:     v.Cond,
 			CondTest: v.CondTest,
+			Metadata: parseMetadata(v.Comment),
 		}, nil
 	case *http_actions.SetMap:
 		return &models.HTTPAfterResponseRule{
@@ -429,6 +445,7 @@ func ParseHTTPAfterRule(f types.Action) (*models.HTTPAfterResponseRule, error) {
 			MapValuefmt: v.ValueFmt,
 			Cond:        v.Cond,
 			CondTest:    v.CondTest,
+			Metadata:    parseMetadata(v.Comment),
 		}, nil
 	case *http_actions.SetStatus:
 		status, _ := strconv.ParseInt(v.Status, 10, 64)
@@ -437,6 +454,7 @@ func ParseHTTPAfterRule(f types.Action) (*models.HTTPAfterResponseRule, error) {
 			StatusReason: v.Reason,
 			Cond:         v.Cond,
 			CondTest:     v.CondTest,
+			Metadata:     parseMetadata(v.Comment),
 		}
 		if status != 0 {
 			r.Status = status
@@ -450,6 +468,7 @@ func ParseHTTPAfterRule(f types.Action) (*models.HTTPAfterResponseRule, error) {
 			VarScope: v.VarScope,
 			Cond:     v.Cond,
 			CondTest: v.CondTest,
+			Metadata: parseMetadata(v.Comment),
 		}, nil
 	case *http_actions.StrictMode:
 		return &models.HTTPAfterResponseRule{
@@ -457,6 +476,7 @@ func ParseHTTPAfterRule(f types.Action) (*models.HTTPAfterResponseRule, error) {
 			StrictMode: v.Mode,
 			Cond:       v.Cond,
 			CondTest:   v.CondTest,
+			Metadata:   parseMetadata(v.Comment),
 		}, nil
 	case *actions.UnsetVar:
 		return &models.HTTPAfterResponseRule{
@@ -465,18 +485,24 @@ func ParseHTTPAfterRule(f types.Action) (*models.HTTPAfterResponseRule, error) {
 			VarScope: v.Scope,
 			Cond:     v.Cond,
 			CondTest: v.CondTest,
+			Metadata: parseMetadata(v.Comment),
 		}, nil
 	case *actions.DoLog:
 		return &models.HTTPAfterResponseRule{
 			Type:     "do-log",
 			Cond:     v.Cond,
 			CondTest: v.CondTest,
+			Metadata: parseMetadata(v.Comment),
 		}, nil
 	}
 	return nil, nil //nolint:nilnil
 }
 
 func SerializeHTTPAfterRule(f models.HTTPAfterResponseRule) (types.Action, error) { //nolint:ireturn
+	comment, err := serializeMetadata(f.Metadata)
+	if err != nil {
+		return nil, err
+	}
 	var rule types.Action
 	switch f.Type {
 	case "add-header":
@@ -485,11 +511,13 @@ func SerializeHTTPAfterRule(f models.HTTPAfterResponseRule) (types.Action, error
 			Fmt:      f.HdrFormat,
 			Cond:     f.Cond,
 			CondTest: f.CondTest,
+			Comment:  comment,
 		}
 	case "allow":
 		rule = &http_actions.Allow{
 			Cond:     f.Cond,
 			CondTest: f.CondTest,
+			Comment:  comment,
 		}
 	case "del-acl":
 		rule = &http_actions.DelACL{
@@ -497,6 +525,7 @@ func SerializeHTTPAfterRule(f models.HTTPAfterResponseRule) (types.Action, error
 			KeyFmt:   f.ACLKeyfmt,
 			Cond:     f.Cond,
 			CondTest: f.CondTest,
+			Comment:  comment,
 		}
 	case "del-header":
 		rule = &http_actions.DelHeader{
@@ -504,6 +533,7 @@ func SerializeHTTPAfterRule(f models.HTTPAfterResponseRule) (types.Action, error
 			Method:   f.HdrMethod,
 			Cond:     f.Cond,
 			CondTest: f.CondTest,
+			Comment:  comment,
 		}
 	case "del-map":
 		rule = &http_actions.DelMap{
@@ -511,6 +541,7 @@ func SerializeHTTPAfterRule(f models.HTTPAfterResponseRule) (types.Action, error
 			KeyFmt:   f.MapKeyfmt,
 			Cond:     f.Cond,
 			CondTest: f.CondTest,
+			Comment:  comment,
 		}
 	case "replace-header":
 		rule = &http_actions.ReplaceHeader{
@@ -519,6 +550,7 @@ func SerializeHTTPAfterRule(f models.HTTPAfterResponseRule) (types.Action, error
 			MatchRegex: f.HdrMatch,
 			Cond:       f.Cond,
 			CondTest:   f.CondTest,
+			Comment:    comment,
 		}
 	case "replace-value":
 		rule = &http_actions.ReplaceValue{
@@ -527,6 +559,7 @@ func SerializeHTTPAfterRule(f models.HTTPAfterResponseRule) (types.Action, error
 			MatchRegex: f.HdrMatch,
 			Cond:       f.Cond,
 			CondTest:   f.CondTest,
+			Comment:    comment,
 		}
 	case "sc-add-gpc":
 		rule = &actions.ScAddGpc{
@@ -534,6 +567,7 @@ func SerializeHTTPAfterRule(f models.HTTPAfterResponseRule) (types.Action, error
 			Idx:      strconv.FormatInt(f.ScIdx, 10),
 			Cond:     f.Cond,
 			CondTest: f.CondTest,
+			Comment:  comment,
 		}
 	case "sc-inc-gpc":
 		rule = &actions.ScIncGpc{
@@ -541,18 +575,21 @@ func SerializeHTTPAfterRule(f models.HTTPAfterResponseRule) (types.Action, error
 			Idx:      strconv.FormatInt(f.ScIdx, 10),
 			Cond:     f.Cond,
 			CondTest: f.CondTest,
+			Comment:  comment,
 		}
 	case "sc-inc-gpc0":
 		rule = &actions.ScIncGpc0{
 			ID:       strconv.FormatInt(f.ScID, 10),
 			Cond:     f.Cond,
 			CondTest: f.CondTest,
+			Comment:  comment,
 		}
 	case "sc-inc-gpc1":
 		rule = &actions.ScIncGpc1{
 			ID:       strconv.FormatInt(f.ScID, 10),
 			Cond:     f.Cond,
 			CondTest: f.CondTest,
+			Comment:  comment,
 		}
 	case "sc-set-gpt":
 		if len(f.ScExpr) > 0 && f.ScInt != nil {
@@ -568,6 +605,7 @@ func SerializeHTTPAfterRule(f models.HTTPAfterResponseRule) (types.Action, error
 			Expr:     common.Expression{Expr: strings.Split(f.ScExpr, " ")},
 			Cond:     f.Cond,
 			CondTest: f.CondTest,
+			Comment:  comment,
 		}
 	case "sc-set-gpt0":
 		if len(f.ScExpr) > 0 && f.ScInt != nil {
@@ -582,6 +620,7 @@ func SerializeHTTPAfterRule(f models.HTTPAfterResponseRule) (types.Action, error
 			Expr:     common.Expression{Expr: strings.Split(f.ScExpr, " ")},
 			Cond:     f.Cond,
 			CondTest: f.CondTest,
+			Comment:  comment,
 		}
 	case "set-header":
 		rule = &http_actions.SetHeader{
@@ -589,12 +628,14 @@ func SerializeHTTPAfterRule(f models.HTTPAfterResponseRule) (types.Action, error
 			Fmt:      f.HdrFormat,
 			Cond:     f.Cond,
 			CondTest: f.CondTest,
+			Comment:  comment,
 		}
 	case "set-log-level":
 		rule = &actions.SetLogLevel{
 			Level:    f.LogLevel,
 			Cond:     f.Cond,
 			CondTest: f.CondTest,
+			Comment:  comment,
 		}
 	case "set-map":
 		rule = &http_actions.SetMap{
@@ -603,6 +644,7 @@ func SerializeHTTPAfterRule(f models.HTTPAfterResponseRule) (types.Action, error
 			ValueFmt: f.MapValuefmt,
 			Cond:     f.Cond,
 			CondTest: f.CondTest,
+			Comment:  comment,
 		}
 	case "set-status":
 		rule = &http_actions.SetStatus{
@@ -610,6 +652,7 @@ func SerializeHTTPAfterRule(f models.HTTPAfterResponseRule) (types.Action, error
 			Reason:   f.StatusReason,
 			Cond:     f.Cond,
 			CondTest: f.CondTest,
+			Comment:  comment,
 		}
 	case "set-var":
 		rule = &actions.SetVar{
@@ -618,12 +661,14 @@ func SerializeHTTPAfterRule(f models.HTTPAfterResponseRule) (types.Action, error
 			VarScope: f.VarScope,
 			Cond:     f.Cond,
 			CondTest: f.CondTest,
+			Comment:  comment,
 		}
 	case "strict-mode":
 		rule = &http_actions.StrictMode{
 			Mode:     f.StrictMode,
 			Cond:     f.Cond,
 			CondTest: f.CondTest,
+			Comment:  comment,
 		}
 	case "unset-var":
 		rule = &actions.UnsetVar{
@@ -631,11 +676,13 @@ func SerializeHTTPAfterRule(f models.HTTPAfterResponseRule) (types.Action, error
 			Scope:    f.VarScope,
 			Cond:     f.Cond,
 			CondTest: f.CondTest,
+			Comment:  comment,
 		}
 	case "do-log":
 		rule = &actions.DoLog{
 			Cond:     f.Cond,
 			CondTest: f.CondTest,
+			Comment:  comment,
 		}
 	}
 	return rule, nil

@@ -66,3 +66,6 @@ ssl_front_use:
       type: string
       enum: [enabled, disabled]
       description: Automatic OCSP response update
+    metadata:
+      additionalProperties:
+        type: object

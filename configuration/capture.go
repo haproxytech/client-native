@@ -185,14 +185,20 @@ func ParseDeclareCaptures(frontend string, p parser.Parser) (models.Captures, er
 
 func ParseDeclareCapture(f types.DeclareCapture) *models.Capture {
 	return &models.Capture{
-		Type:   f.Type,
-		Length: f.Length,
+		Type:     f.Type,
+		Length:   f.Length,
+		Metadata: parseMetadata(f.Comment),
 	}
 }
 
 func SerializeDeclareCapture(f models.Capture) types.DeclareCapture {
+	comment, err := serializeMetadata(f.Metadata)
+	if err != nil {
+		comment = ""
+	}
 	return types.DeclareCapture{
-		Type:   f.Type,
-		Length: f.Length,
+		Type:    f.Type,
+		Length:  f.Length,
+		Comment: comment,
 	}
 }

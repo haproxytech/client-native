@@ -44,7 +44,7 @@ func (c *client) GetStructuredPeerSection(name string, transactionID string) (in
 		return 0, nil, err
 	}
 
-	if !c.checkSectionExists(parser.Peers, name, p) {
+	if !p.SectionExists(parser.Peers, name) {
 		return v, nil, NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("PeerSection %s does not exist", name))
 	}
 
@@ -87,7 +87,7 @@ func (c *client) EditStructuredPeerSection(data *models.PeerSection, transaction
 		return err
 	}
 
-	if !c.checkSectionExists(parser.Peers, data.Name, p) {
+	if !p.SectionExists(parser.Peers, data.Name) {
 		e := NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("%s %s does not exist", parser.Peers, data.Name))
 		return c.HandleError(data.Name, "", "", t, transactionID == "", e)
 	}
@@ -97,11 +97,10 @@ func (c *client) EditStructuredPeerSection(data *models.PeerSection, transaction
 	}
 
 	if err = serializePeerSection(StructuredToParserArgs{
-		TID:                transactionID,
-		Parser:             &p,
-		Options:            &c.ConfigurationOptions,
-		HandleError:        c.HandleError,
-		CheckSectionExists: c.checkSectionExists,
+		TID:         transactionID,
+		Parser:      &p,
+		Options:     &c.ConfigurationOptions,
+		HandleError: c.HandleError,
 	}, data); err != nil {
 		return err
 	}
@@ -123,17 +122,16 @@ func (c *client) CreateStructuredPeerSection(data *models.PeerSection, transacti
 		return err
 	}
 
-	if c.checkSectionExists(parser.Peers, data.Name, p) {
+	if p.SectionExists(parser.Peers, data.Name) {
 		e := NewConfError(ErrObjectDoesNotExist, fmt.Sprintf("%s %s already exist", parser.Peers, data.Name))
 		return c.HandleError(data.Name, "", "", t, transactionID == "", e)
 	}
 
 	if err = serializePeerSection(StructuredToParserArgs{
-		TID:                transactionID,
-		Parser:             &p,
-		Options:            &c.ConfigurationOptions,
-		HandleError:        c.HandleError,
-		CheckSectionExists: c.checkSectionExists,
+		TID:         transactionID,
+		Parser:      &p,
+		Options:     &c.ConfigurationOptions,
+		HandleError: c.HandleError,
 	}, data); err != nil {
 		return err
 	}
