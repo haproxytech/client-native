@@ -3416,7 +3416,7 @@ func serializeTuneBufferOptions(p parser.Parser, options *models.TuneBufferOptio
 	if err := serializeInt64Option(p, "tune.buffers.reserve", options.BuffersReserve); err != nil {
 		return err
 	}
-	if err := serializeSizeOption(p, "tune.bufsize", &options.Bufsize); err != nil {
+	if err := serializeInt64Option(p, "tune.bufsize", options.Bufsize); err != nil {
 		return err
 	}
 	if err := serializeSizeOption(p, "tune.bufsize.small", options.BufsizeSmall); err != nil {
