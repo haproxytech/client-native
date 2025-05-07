@@ -715,7 +715,7 @@ frontend test_2 from test_defaults
   stats show-modules
   stats realm HAProxy\\ Statistics
 
-backend test
+backend test # my comment
   mode http
   balance roundrobin
   hash-type consistent sdbm avalanche
@@ -740,13 +740,13 @@ backend test
   option splice-response
   option http-restrict-req-hdr-names preserve
   default-server fall 2s rise 4s inter 5s port 8888 ws auto pool-low-conn 128 log-bufsize 6 force-sslv3
-  stick store-request src table test
+  stick store-request src table test # my comment
   stick match src table test
   stick on src table test
   stick store-response src
   stick store-response src_port table test_port
   stick store-response src table test if TRUE
-  tcp-response content accept if TRUE
+  tcp-response content accept if TRUE # my comment
   tcp-response content reject if FALSE
   tcp-response content lua.foo param1 param2 if FALSE
   tcp-response content set-bandwidth-limit my-limit limit 1m period 10s
@@ -778,14 +778,14 @@ backend test
   cookie BLA rewrite httponly nocache
   option external-check
   external-check command /bin/false
-  use-server webserv if TRUE
+  use-server webserv if TRUE # my comment
   use-server webserv2 unless TRUE
   server webserv 192.168.1.1:9200 maxconn 1000 ssl weight 10 inter 2s cookie BLAH slowstart 6000 proxy-v2-options authority,crc32c ws h1 pool-low-conn 128 id 1234 pool-purge-delay 10s tcp-ut 2s curves secp384r1 client-sigalgs ECDSA+SHA256:RSA+SHA256 sigalgs ECDSA+SHA256 log-bufsize 10 set-proxy-v2-tlv-fmt(0x20) %[fc_pp_tlv(0x20)] init-state fully-up # my comment
   server webserv2 192.168.1.1:9300 maxconn 1000 ssl weight 10 inter 2s cookie BLAH slowstart 6000 proxy-v2-options authority,crc32c ws h1 pool-low-conn 128 hash-key akey pool-conn-name apoolconnname # {"comment": "my structured comment", "id": "my_random_id_for_server"}
-  http-request set-dst hdr(x-dst)
+  http-request set-dst hdr(x-dst) # my comment
   http-request set-dst-port int(4000)
   http-request set-uri %[url,regsub(^/metrics/,/,)] if { path_beg /metrics }
-  http-check connect
+  http-check connect # my comment
   http-check send meth GET uri / ver HTTP/1.1 hdr host haproxy.1wt.eu
   http-check expect status 200-399
   http-check connect port 443 ssl sni haproxy.1wt.eu
@@ -799,7 +799,7 @@ backend test
   http-check set-var-fmt(check.port) int(1234)
   http-check send-state
   http-check disable-on-404
-  server-template srv 1-3 google.com:80 check
+  server-template srv 1-3 google.com:80 check # my comment
   server-template site 1-10 google.com:8080 check backup
   server-template website 10-100 google.com:443 check no-backup
   server-template test 5 test.com check backup
@@ -851,7 +851,7 @@ backend test
   http-send-name-header X-My-Awesome-Header
   persist rdp-cookie(name)
   source 192.168.1.222 usesrc hdr_ip(hdr,occ)
-  http-response set-fc-mark 123
+  http-response set-fc-mark 123 # my comment
   http-response set-fc-tos 1 if TRUE
   guid guid-example
 
@@ -992,7 +992,7 @@ http-errors website-2
   errorfile 404 /etc/haproxy/errorfiles/site2/404.http
   errorfile 501 /etc/haproxy/errorfiles/site2/501.http
 
-backend test_2 from test_defaults_2
+backend test_2 from test_defaults_2 # {"comment": "my comment"}
   mode http
   balance roundrobin
   hash-type consistent sdbm avalanche
@@ -1022,7 +1022,7 @@ backend test_2 from test_defaults_2
   cookie BLA rewrite httponly nocache
   stick-table type ip size 100k expire 1h peers mycluster write-to t99 store http_req_rate(10s)
   http-check expect rstatus some-pattern
-  http-error status 200 content-type "text/plain" string "My content" hdr Some-Header value
+  http-error status 200 content-type "text/plain" string "My content" hdr Some-Header value # {"comment": "my comment", "id": 123}
   http-error status 503 content-type application/json string "My content" hdr Additional-Header value1 hdr Some-Header value
   srvtcpka-cnt 10
   srvtcpka-idle 10s

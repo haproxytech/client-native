@@ -53,14 +53,14 @@ func generateEqualAndDiff(opt generateEqualAndDiffOptions) error {
 }
 
 func generateCompareTests(opt generateEqualAndDiffOptions) error {
-	var metadataIndex int
+	metadataIndex := -1
 	for i, f := range opt.Fields {
 		if f.Name == "Metadata" {
 			metadataIndex = i
 			break
 		}
 	}
-	if metadataIndex > 0 {
+	if metadataIndex > -1 {
 		opt.Fields = append(opt.Fields[:metadataIndex], opt.Fields[metadataIndex+1:]...)
 	}
 	if opt.Mode == "array" {
