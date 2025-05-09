@@ -185,7 +185,6 @@ func (s storage) Replace(name string, config string) (string, error) {
 }
 
 func (s *storage) Create(name string, readCloser io.ReadCloser) (string, int64, error) {
-	name = misc.SanitizeFilename(name)
 	if s.fileType == MapsType {
 		if !strings.HasSuffix(name, ".map") {
 			name += ".map"
