@@ -35,6 +35,14 @@ import "reflect"
 func (s CrtLoad) Equal(t CrtLoad, opts ...Options) bool {
 	opt := getOptions(opts...)
 
+	if !equalComparableSlice(s.Domains, t.Domains, opt) {
+		return false
+	}
+
+	if s.Acme != t.Acme {
+		return false
+	}
+
 	if s.Alias != t.Alias {
 		return false
 	}
@@ -93,6 +101,14 @@ func (s CrtLoad) Diff(t CrtLoad, opts ...Options) map[string][]interface{} {
 	opt := getOptions(opts...)
 
 	diff := make(map[string][]interface{})
+	if !equalComparableSlice(s.Domains, t.Domains, opt) {
+		diff["Domains"] = []interface{}{s.Domains, t.Domains}
+	}
+
+	if s.Acme != t.Acme {
+		diff["Acme"] = []interface{}{s.Acme, t.Acme}
+	}
+
 	if s.Alias != t.Alias {
 		diff["Alias"] = []interface{}{s.Alias, t.Alias}
 	}

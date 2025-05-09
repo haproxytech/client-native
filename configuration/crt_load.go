@@ -16,6 +16,8 @@
 package configuration
 
 import (
+	"strings"
+
 	strfmt "github.com/go-openapi/strfmt"
 	parser "github.com/haproxytech/client-native/v6/config-parser"
 	parser_errors "github.com/haproxytech/client-native/v6/config-parser/errors"
@@ -152,8 +154,10 @@ func (c *client) EditCrtLoad(certificate, crtStore string, data *models.CrtLoad,
 
 func SerializeCrtLoad(load *models.CrtLoad) *types.LoadCert {
 	t := &types.LoadCert{
+		Acme:        load.Acme,
 		Alias:       load.Alias,
 		Certificate: load.Certificate,
+		Domains:     strings.Join(load.Domains, ","),
 		Key:         load.Key,
 		Issuer:      load.Issuer,
 		Ocsp:        load.Ocsp,

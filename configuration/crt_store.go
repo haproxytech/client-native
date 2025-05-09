@@ -18,6 +18,7 @@ package configuration
 import (
 	"errors"
 	"fmt"
+	"strings"
 
 	strfmt "github.com/go-openapi/strfmt"
 	parser "github.com/haproxytech/client-native/v6/config-parser"
@@ -197,9 +198,15 @@ func ParseCrtStore(p parser.Parser, name string) (*models.CrtStore, error) {
 	}
 	store.Loads = make(models.CrtLoads, len(tloads))
 	for i, l := range tloads {
+		domains := strings.Split(l.Domains, ",")
+		if len(domains) == 1 && domains[0] == "" {
+			domains = nil
+		}
 		mload := &models.CrtLoad{
+			Acme:        l.Acme,
 			Alias:       l.Alias,
 			Certificate: l.Certificate,
+			Domains:     domains,
 			Issuer:      l.Issuer,
 			Key:         l.Key,
 			Ocsp:        l.Ocsp,

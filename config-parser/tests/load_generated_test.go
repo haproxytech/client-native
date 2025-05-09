@@ -35,6 +35,7 @@ func TestLoadCert(t *testing.T) {
 		"load crt foo.pem alias foo.com key foo.priv.key ocsp foo.ocsp.der issuer foo.issuer.pem sctl foo.sctl":                 true,
 		"load crt foo.pem alias foo.com key foo.priv.key ocsp foo.ocsp.der issuer foo.issuer.pem sctl foo.sctl ocsp-update on":  true,
 		"load crt foo.pem alias foo.com key foo.priv.key ocsp foo.ocsp.der issuer foo.issuer.pem sctl foo.sctl ocsp-update off": true,
+		"load crt foo.pem acme LE domains example.com,example.org":                                                              true,
 		"load alias foo.com key foo.priv.key":                                                                                   false,
 		"load crt foo.pem alias foo.com key foo.priv.key ocsp foo.ocsp.der issuer foo.issuer.pem ocsp-update lol":               false,
 		"---":     false,

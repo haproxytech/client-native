@@ -1662,11 +1662,14 @@ type HTTPFailCodes struct {
 //test:ok:load crt foo.pem alias foo.com key foo.priv.key ocsp foo.ocsp.der issuer foo.issuer.pem sctl foo.sctl
 //test:ok:load crt foo.pem alias foo.com key foo.priv.key ocsp foo.ocsp.der issuer foo.issuer.pem sctl foo.sctl ocsp-update on
 //test:ok:load crt foo.pem alias foo.com key foo.priv.key ocsp foo.ocsp.der issuer foo.issuer.pem sctl foo.sctl ocsp-update off
+//test:ok:load crt foo.pem acme LE domains example.com,example.org
 //test:fail:load alias foo.com key foo.priv.key
 //test:fail:load crt foo.pem alias foo.com key foo.priv.key ocsp foo.ocsp.der issuer foo.issuer.pem ocsp-update lol
 type LoadCert struct {
 	Certificate string
+	Acme        string
 	Alias       string
+	Domains     string
 	Key         string
 	Ocsp        string
 	Issuer      string

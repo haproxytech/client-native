@@ -37,6 +37,12 @@ import (
 // swagger:model crt_load
 type CrtLoad struct {
 
+	// List of domains used to generate the certificate with ACME
+	Domains []string `json:"domains,omitempty"`
+
+	// ACME section name to use
+	Acme string `json:"acme,omitempty"`
+
 	// Certificate alias
 	Alias string `json:"alias,omitempty"`
 

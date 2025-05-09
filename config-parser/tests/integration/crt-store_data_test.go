@@ -49,3 +49,7 @@ const crtstore_loadcrtfoopemaliasfoocomkeyfoopr_____ = `
 crt-store test
   load crt foo.pem alias foo.com key foo.priv.key ocsp foo.ocsp.der issuer foo.issuer.pem sctl foo.sctl ocsp-update off
 `
+const crtstore_loadcrtfoopemacmeLEdomainsexampl = `
+crt-store test
+  load crt foo.pem acme LE domains example.com,example.org
+`

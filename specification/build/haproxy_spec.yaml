@@ -11377,6 +11377,9 @@ definitions:
   crt_load:
     description: Loads a certificate from a store with options
     properties:
+      acme:
+        description: ACME section name to use
+        type: string
       alias:
         description: Certificate alias
         type: string
@@ -11384,6 +11387,13 @@ definitions:
         description: Certificate filename
         type: string
         x-nullable: false
+      domains:
+        description: List of domains used to generate the certificate with ACME
+        items:
+          type: string
+        type: array
+        x-go-name: Domains
+        x-omitempty: true
       issuer:
         description: OCSP issuer filename
         type: string

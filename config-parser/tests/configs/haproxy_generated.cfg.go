@@ -1114,6 +1114,7 @@ crt-store test
   load crt foo.pem alias foo.com key foo.priv.key ocsp foo.ocsp.der issuer foo.issuer.pem sctl foo.sctl
   load crt foo.pem alias foo.com key foo.priv.key ocsp foo.ocsp.der issuer foo.issuer.pem sctl foo.sctl ocsp-update on
   load crt foo.pem alias foo.com key foo.priv.key ocsp foo.ocsp.der issuer foo.issuer.pem sctl foo.sctl ocsp-update off
+  load crt foo.pem acme LE domains example.com,example.org
 
 defaults test
   acl url_stats path_beg /stats
@@ -4156,6 +4157,8 @@ var configTests = []configTest{{`  command spoa-mirror --runtime 0 --mirror-url 
 	{`  load crt foo.pem alias foo.com key foo.priv.key ocsp foo.ocsp.der issuer foo.issuer.pem sctl foo.sctl ocsp-update on
 `, 1},
 	{`  load crt foo.pem alias foo.com key foo.priv.key ocsp foo.ocsp.der issuer foo.issuer.pem sctl foo.sctl ocsp-update off
+`, 1},
+	{`  load crt foo.pem acme LE domains example.com,example.org
 `, 1},
 	{`  trace h1 sink buf1 level developer verbosity complete start now
 `, 1},

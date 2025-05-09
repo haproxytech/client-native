@@ -33,9 +33,19 @@ crt_load:
       type: string
       description: Certificate filename
       x-nullable: false
+    acme:
+      type: string
+      description: ACME section name to use
     alias:
       type: string
       description: Certificate alias
+    domains:
+      type: array
+      items:
+        type: string
+      description: List of domains used to generate the certificate with ACME
+      x-omitempty: true
+      x-go-name: Domains
     key:
       type: string
       description: Private key filename

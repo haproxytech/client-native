@@ -48,8 +48,12 @@ func (p *LoadCert) parse(line string, parts []string, comment string) (*types.Lo
 		switch element {
 		case "crt":
 			CheckParsePair(parts, &i, &load.Certificate)
+		case "acme":
+			CheckParsePair(parts, &i, &load.Acme)
 		case "alias":
 			CheckParsePair(parts, &i, &load.Alias)
+		case "domains":
+			CheckParsePair(parts, &i, &load.Domains)
 		case "key":
 			CheckParsePair(parts, &i, &load.Key)
 		case "ocsp":
@@ -60,6 +64,9 @@ func (p *LoadCert) parse(line string, parts []string, comment string) (*types.Lo
 			CheckParsePair(parts, &i, &load.Sctl)
 		case "ocsp-update":
 			i++
+			if i >= len(parts) {
+				return nil, p.parseError(line)
+			}
 			load.OcspUpdate = new(bool)
 			if parts[i] == "on" {
 				*load.OcspUpdate = true
@@ -90,7 +97,9 @@ func (p *LoadCert) Result() ([]common.ReturnResultLine, error) {
 		sb.Reset()
 		sb.WriteString("load")
 		CheckWritePair(sb, "crt", load.Certificate)
+		CheckWritePair(sb, "acme", load.Acme)
 		CheckWritePair(sb, "alias", load.Alias)
+		CheckWritePair(sb, "domains", load.Domains)
 		CheckWritePair(sb, "key", load.Key)
 		CheckWritePair(sb, "ocsp", load.Ocsp)
 		CheckWritePair(sb, "issuer", load.Issuer)
