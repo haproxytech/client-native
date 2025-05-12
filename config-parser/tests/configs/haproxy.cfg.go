@@ -66,6 +66,7 @@ global
   expose-deprecated-directives
   force-cfg-parser-pause 1s
   warn-blocked-traffic-after 50ms
+  dns-accept-family ipv4,ipv6
   # random comment before snippet
   ###_config-snippet_### BEGIN
   tune.ssl.default-dh-param 2048

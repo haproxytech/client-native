@@ -311,6 +311,10 @@ global_base:
             quic:
               type: string
               enum: ["enabled", "disabled"]
+    dns_accept_family:
+      pattern: ^[^\s]+$
+      type: string
+      x-display-name: DNS accept family
     environment_options:
       $ref: "#/definitions/environment_options"
     performance_options:

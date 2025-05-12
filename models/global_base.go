@@ -84,6 +84,11 @@ type GlobalBase struct {
 	// device atlas options
 	DeviceAtlasOptions *DeviceAtlasOptions `json:"device_atlas_options,omitempty"`
 
+	// dns accept family
+	// Pattern: ^[^\s]+$
+	// +kubebuilder:validation:Pattern=`^[^\s]+$`
+	DNSAcceptFamily string `json:"dns_accept_family,omitempty"`
+
 	// environment options
 	EnvironmentOptions *EnvironmentOptions `json:"environment_options,omitempty"`
 
@@ -321,6 +326,10 @@ func (m *GlobalBase) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateDeviceAtlasOptions(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateDNSAcceptFamily(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -682,6 +691,18 @@ func (m *GlobalBase) validateDeviceAtlasOptions(formats strfmt.Registry) error {
 			}
 			return err
 		}
+	}
+
+	return nil
+}
+
+func (m *GlobalBase) validateDNSAcceptFamily(formats strfmt.Registry) error {
+	if swag.IsZero(m.DNSAcceptFamily) { // not required
+		return nil
+	}
+
+	if err := validate.Pattern("dns_accept_family", "body", m.DNSAcceptFamily, `^[^\s]+$`); err != nil {
+		return err
 	}
 
 	return nil

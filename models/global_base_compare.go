@@ -184,6 +184,10 @@ func (s GlobalBase) Equal(t GlobalBase, opts ...Options) bool {
 		return false
 	}
 
+	if s.DNSAcceptFamily != t.DNSAcceptFamily {
+		return false
+	}
+
 	if s.EnvironmentOptions == nil || t.EnvironmentOptions == nil {
 		if s.EnvironmentOptions != nil || t.EnvironmentOptions != nil {
 			if opt.NilSameAsEmpty {
@@ -938,6 +942,10 @@ func (s GlobalBase) Diff(t GlobalBase, opts ...Options) map[string][]interface{}
 		}
 	} else if !s.DeviceAtlasOptions.Equal(*t.DeviceAtlasOptions, opt) {
 		diff["DeviceAtlasOptions"] = []interface{}{ValueOrNil(s.DeviceAtlasOptions), ValueOrNil(t.DeviceAtlasOptions)}
+	}
+
+	if s.DNSAcceptFamily != t.DNSAcceptFamily {
+		diff["DNSAcceptFamily"] = []interface{}{s.DNSAcceptFamily, t.DNSAcceptFamily}
 	}
 
 	if s.EnvironmentOptions == nil || t.EnvironmentOptions == nil {

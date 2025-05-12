@@ -460,6 +460,7 @@ func (p *configParser) getGlobalParser() *Parsers { //nolint: maintidx
 	addParser(parser, &sequence, &simple.Enabled{Name: "expose-deprecated-directives"})
 	addParser(parser, &sequence, &simple.Time{Name: "force-cfg-parser-pause"})
 	addParser(parser, &sequence, &simple.Time{Name: "warn-blocked-traffic-after"})
+	addParser(parser, &sequence, &simple.Word{Name: "dns-accept-family"})
 	// the ConfigSnippet must be at the end to parsers load order to ensure
 	// the overloading of any option has been declared previously
 	addParser(parser, &sequence, &parsers.ConfigSnippet{})

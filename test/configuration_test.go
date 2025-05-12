@@ -276,6 +276,7 @@ global
   ocsp-update.maxdelay 10
   ocsp-update.mindelay 7
   ocsp-update.mode on
+  dns-accept-family ipv4,ipv6
   warn-blocked-traffic-after 50ms
 
 defaults test_defaults # testing_defaults

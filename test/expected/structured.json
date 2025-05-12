@@ -157,6 +157,7 @@
             "properties_cookie": "chocolate",
             "separator": "-"
         },
+        "dns_accept_family": "ipv4,ipv6",
         "expose_deprecated_directives": true,
         "expose_experimental_directives": true,
         "external_check": true,

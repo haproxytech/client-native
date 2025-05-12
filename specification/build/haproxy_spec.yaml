@@ -2147,6 +2147,10 @@ definitions:
         x-display-name: Text that describes the instance
       device_atlas_options:
         $ref: '#/definitions/device_atlas_options'
+      dns_accept_family:
+        pattern: ^[^\s]+$
+        type: string
+        x-display-name: DNS accept family
       environment_options:
         $ref: '#/definitions/environment_options'
       expose_deprecated_directives:
