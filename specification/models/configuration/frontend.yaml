@@ -121,6 +121,10 @@ frontend_base:
       x-dependency:
         mode:
           value: http
+    http-drop-response-trailers:
+      type: string
+      enum: [ enabled, disabled ]
+      x-display-name: Drop HTTP Response Trailers
     client_timeout:
       type: integer
       minimum: 0

@@ -264,6 +264,10 @@ func (s FrontendBase) Equal(t FrontendBase, opts ...Options) bool {
 		return false
 	}
 
+	if s.HTTPDropResponseTrailers != t.HTTPDropResponseTrailers {
+		return false
+	}
+
 	if s.HTTPUseHtx != t.HTTPUseHtx {
 		return false
 	}
@@ -752,6 +756,10 @@ func (s FrontendBase) Diff(t FrontendBase, opts ...Options) map[string][]interfa
 
 	if s.HTTPBufferRequest != t.HTTPBufferRequest {
 		diff["HTTPBufferRequest"] = []interface{}{s.HTTPBufferRequest, t.HTTPBufferRequest}
+	}
+
+	if s.HTTPDropResponseTrailers != t.HTTPDropResponseTrailers {
+		diff["HTTPDropResponseTrailers"] = []interface{}{s.HTTPDropResponseTrailers, t.HTTPDropResponseTrailers}
 	}
 
 	if s.HTTPUseHtx != t.HTTPUseHtx {

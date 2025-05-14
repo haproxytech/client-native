@@ -295,6 +295,7 @@ defaults test_defaults # testing_defaults
   http-after-response del-map(map.lst) %[src] if FALSE
   http-after-response del-acl(map.lst) %[src] if FALSE
   no option http-drop-request-trailers
+  no option http-drop-response-trailers
   quic-initial reject
   quic-initial reject if TRUE
   quic-initial accept
@@ -434,6 +435,7 @@ frontend test
   option splice-response
   option idle-close-on-response
   option http-restrict-req-hdr-names delete
+  option http-drop-response-trailers
   acl invalid_src  src          0.0.0.0/7 224.0.0.0/3
   acl invalid_src  src_port     0:1023
   acl local_dst    hdr(host) -i localhost

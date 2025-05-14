@@ -1492,6 +1492,7 @@
             "guid": "guid-example",
             "h1_case_adjust_bogus_client": "disabled",
             "http_connection_mode": "httpclose",
+            "http-drop-response-trailers": "enabled",
             "http_ignore_probes": "enabled",
             "http_keep_alive_timeout": 3000,
             "http_no_delay": "enabled",
@@ -3102,6 +3103,7 @@
                 }
             ],
             "http-drop-request-trailers": "disabled",
+            "http-drop-response-trailers": "disabled",
             "http_request_rule_list": [
                 {
                     "cond": "if",
