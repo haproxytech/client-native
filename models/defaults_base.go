@@ -232,6 +232,11 @@ type DefaultsBase struct {
 	// +kubebuilder:validation:Enum=enabled;disabled;
 	HTTPBufferRequest string `json:"http-buffer-request,omitempty"`
 
+	// http drop request trailers
+	// Enum: ["enabled","disabled"]
+	// +kubebuilder:validation:Enum=enabled;disabled;
+	HTTPDropRequestTrailers string `json:"http-drop-request-trailers,omitempty"`
+
 	// http use htx
 	// Enum: ["enabled","disabled"]
 	// +kubebuilder:validation:Enum=enabled;disabled;
@@ -643,6 +648,10 @@ func (m *DefaultsBase) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateHTTPBufferRequest(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateHTTPDropRequestTrailers(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -1918,6 +1927,48 @@ func (m *DefaultsBase) validateHTTPBufferRequest(formats strfmt.Registry) error 
 
 	// value enum
 	if err := m.validateHTTPBufferRequestEnum("http-buffer-request", "body", m.HTTPBufferRequest); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+var defaultsBaseTypeHTTPDropRequestTrailersPropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		defaultsBaseTypeHTTPDropRequestTrailersPropEnum = append(defaultsBaseTypeHTTPDropRequestTrailersPropEnum, v)
+	}
+}
+
+const (
+
+	// DefaultsBaseHTTPDropRequestTrailersEnabled captures enum value "enabled"
+	DefaultsBaseHTTPDropRequestTrailersEnabled string = "enabled"
+
+	// DefaultsBaseHTTPDropRequestTrailersDisabled captures enum value "disabled"
+	DefaultsBaseHTTPDropRequestTrailersDisabled string = "disabled"
+)
+
+// prop value enum
+func (m *DefaultsBase) validateHTTPDropRequestTrailersEnum(path, location string, value string) error {
+	if err := validate.EnumCase(path, location, value, defaultsBaseTypeHTTPDropRequestTrailersPropEnum, true); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *DefaultsBase) validateHTTPDropRequestTrailers(formats strfmt.Registry) error {
+	if swag.IsZero(m.HTTPDropRequestTrailers) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateHTTPDropRequestTrailersEnum("http-drop-request-trailers", "body", m.HTTPDropRequestTrailers); err != nil {
 		return err
 	}
 

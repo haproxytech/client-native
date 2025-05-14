@@ -89,6 +89,7 @@ defaults A
   log-format '%ci:%cp [%tr] %ft %b/%s %TR/%Tw/%Tc/%Tr/%Ta %ST %B %CC %CS %tsc %ac/%fc/%bc/%sc/%rc %sq/%bq %hr %hs "%HM %[var(txn.base)] %HV"'
   option redispatch
   option dontlognull
+  no option http-drop-request-trailers
   option http-server-close
   option http-keep-alive
   no option checkcache
@@ -323,6 +324,7 @@ frontend xyz5 from A
 
 backend default_backend from A
   mode http
+  no option http-drop-request-trailers
   option checkcache
   option independent-streams
   option nolinger

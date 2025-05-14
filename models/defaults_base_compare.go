@@ -404,6 +404,10 @@ func (s DefaultsBase) Equal(t DefaultsBase, opts ...Options) bool {
 		return false
 	}
 
+	if s.HTTPDropRequestTrailers != t.HTTPDropRequestTrailers {
+		return false
+	}
+
 	if s.HTTPUseHtx != t.HTTPUseHtx {
 		return false
 	}
@@ -1218,6 +1222,10 @@ func (s DefaultsBase) Diff(t DefaultsBase, opts ...Options) map[string][]interfa
 
 	if s.HTTPBufferRequest != t.HTTPBufferRequest {
 		diff["HTTPBufferRequest"] = []interface{}{s.HTTPBufferRequest, t.HTTPBufferRequest}
+	}
+
+	if s.HTTPDropRequestTrailers != t.HTTPDropRequestTrailers {
+		diff["HTTPDropRequestTrailers"] = []interface{}{s.HTTPDropRequestTrailers, t.HTTPDropRequestTrailers}
 	}
 
 	if s.HTTPUseHtx != t.HTTPUseHtx {

@@ -547,6 +547,7 @@
             "http-check": {
                 "type": "connect"
             },
+            "http-drop-request-trailers": "enabled",
             "http-keep-alive": "enabled",
             "http_connection_mode": "http-keep-alive",
             "http_restrict_req_hdr_names": "preserve",
@@ -3100,6 +3101,7 @@
                     "value": "-i localhost"
                 }
             ],
+            "http-drop-request-trailers": "disabled",
             "http_request_rule_list": [
                 {
                     "cond": "if",

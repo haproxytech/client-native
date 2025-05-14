@@ -2697,6 +2697,12 @@ definitions:
           - disabled
         type: string
         x-display-name: HTTP bufferrequest
+      http-drop-request-trailers:
+        enum:
+          - enabled
+          - disabled
+        type: string
+        x-display-name: Drop HTTP Request Trailers
       http-use-htx:
         enum:
           - enabled
@@ -3695,6 +3701,12 @@ definitions:
           mode:
             value: http
         x-display-name: HTTP bufferrequest
+      http-drop-request-trailers:
+        enum:
+          - enabled
+          - disabled
+        type: string
+        x-display-name: Drop HTTP Request Trailers
       http-no-delay:
         enum:
           - enabled

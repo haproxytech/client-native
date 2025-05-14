@@ -382,6 +382,10 @@ func (s BackendBase) Equal(t BackendBase, opts ...Options) bool {
 		return false
 	}
 
+	if s.HTTPDropRequestTrailers != t.HTTPDropRequestTrailers {
+		return false
+	}
+
 	if s.HTTPNoDelay != t.HTTPNoDelay {
 		return false
 	}
@@ -1188,6 +1192,10 @@ func (s BackendBase) Diff(t BackendBase, opts ...Options) map[string][]interface
 
 	if s.HTTPBufferRequest != t.HTTPBufferRequest {
 		diff["HTTPBufferRequest"] = []interface{}{s.HTTPBufferRequest, t.HTTPBufferRequest}
+	}
+
+	if s.HTTPDropRequestTrailers != t.HTTPDropRequestTrailers {
+		diff["HTTPDropRequestTrailers"] = []interface{}{s.HTTPDropRequestTrailers, t.HTTPDropRequestTrailers}
 	}
 
 	if s.HTTPNoDelay != t.HTTPNoDelay {

@@ -294,6 +294,7 @@ defaults test_defaults # testing_defaults
   http-after-response set-map(map.lst) %[src] %[res.hdr(X-Value)]
   http-after-response del-map(map.lst) %[src] if FALSE
   http-after-response del-acl(map.lst) %[src] if FALSE
+  no option http-drop-request-trailers
   quic-initial reject
   quic-initial reject if TRUE
   quic-initial accept
@@ -743,6 +744,7 @@ backend test # my comment
   option splice-request
   option splice-response
   option http-restrict-req-hdr-names preserve
+  option http-drop-request-trailers
   default-server fall 2s rise 4s inter 5s port 8888 ws auto pool-low-conn 128 log-bufsize 6 force-sslv3
   stick store-request src table test # my comment
   stick match src table test
