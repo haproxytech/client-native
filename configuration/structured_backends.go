@@ -268,7 +268,7 @@ func parseBackendsSection(name string, p parser.Parser) (*models.Backend, error)
 	b.TCPRequestRuleList = tcpRules
 
 	// tcp response rules
-	tcpRespRules, err := ParseTCPResponseRules(name, p)
+	tcpRespRules, err := ParseTCPResponseRules(BackendParentName, name, p)
 	if err != nil {
 		return nil, err
 	}

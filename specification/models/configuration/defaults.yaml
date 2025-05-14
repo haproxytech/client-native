@@ -7,9 +7,21 @@ defaults:
     - $ref: "#/definitions/defaults_base"
     - type: object
       properties:
+        acl_list:
+          $ref: "#/definitions/acls"
+          x-go-name: AclList
         log_target_list:
           $ref: "#/definitions/log_targets"
           x-go-name: LogTargetList
+        http_after_response_rule_list:
+          $ref: "#/definitions/http_after_response_rules"
+          x-go-name: HTTPAfterResponseRuleList
+        http_request_rule_list:
+          $ref: "#/definitions/http_request_rules"
+          x-go-name: HTTPRequestRuleList
+        http_response_rule_list:
+          $ref: "#/definitions/http_response_rules"
+          x-go-name: HTTPResponseRuleList
         http_check_list:
           $ref: "#/definitions/http_checks"
           x-go-name: HTTPCheckList
@@ -19,6 +31,12 @@ defaults:
         tcp_check_rule_list:
           $ref: "#/definitions/tcp_checks"
           x-go-name: TCPCheckRuleList
+        tcp_request_rule_list:
+          $ref: "#/definitions/tcp_request_rules"
+          x-go-name: TCPRequestRuleList
+        tcp_response_rule_list:
+          $ref: "#/definitions/tcp_response_rules"
+          x-go-name: TCPResponseRuleList
         quic_initial_rule_list:
           $ref: "#/definitions/quic_initial_rules"
           x-go-name: QUICInitialRuleList

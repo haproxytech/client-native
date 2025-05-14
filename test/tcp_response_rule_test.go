@@ -21,6 +21,7 @@ import (
 	"testing"
 
 	"github.com/google/go-cmp/cmp"
+	"github.com/haproxytech/client-native/v6/configuration"
 	"github.com/haproxytech/client-native/v6/models"
 	"github.com/stretchr/testify/require"
 )
@@ -40,7 +41,7 @@ func tcpResponseRuleExpectation() map[string]models.TCPResponseRules {
 
 func TestGetTCPResponseRules(t *testing.T) { //nolint:gocognit
 	mrules := make(map[string]models.TCPResponseRules)
-	v, tRules, err := clientTest.GetTCPResponseRules("test", "")
+	v, tRules, err := clientTest.GetTCPResponseRules(configuration.BackendParentName, "test", "")
 	if err != nil {
 		t.Error(err.Error())
 	}
@@ -50,7 +51,7 @@ func TestGetTCPResponseRules(t *testing.T) { //nolint:gocognit
 		t.Errorf("Version %v returned, expected %v", v, version)
 	}
 
-	_, tRules, err = clientTest.GetTCPResponseRules("test_2", "")
+	_, tRules, err = clientTest.GetTCPResponseRules(configuration.BackendParentName, "test_2", "")
 	if err != nil {
 		t.Error(err.Error())
 	}
@@ -76,7 +77,7 @@ func checkTCPResponseRules(t *testing.T, got map[string]models.TCPResponseRules)
 func TestGetTCPResponseRule(t *testing.T) {
 	m := make(map[string]models.TCPResponseRules)
 
-	v, r, err := clientTest.GetTCPResponseRule(0, "test", "")
+	v, r, err := clientTest.GetTCPResponseRule(0, configuration.BackendParentName, "test", "")
 	if err != nil {
 		t.Error(err.Error())
 	}
@@ -93,7 +94,7 @@ func TestGetTCPResponseRule(t *testing.T) {
 		t.Error(err.Error())
 	}
 
-	_, _, err = clientTest.GetTCPResponseRule(3, "test_2", "")
+	_, _, err = clientTest.GetTCPResponseRule(3, configuration.BackendParentName, "test_2", "")
 	if err == nil {
 		t.Error("Should throw error, non existent TCP Response Rule")
 	}
@@ -108,14 +109,14 @@ func TestCreateEditDeleteTCPResponseRule(t *testing.T) {
 		Timeout: &tOut,
 	}
 
-	err := clientTest.CreateTCPResponseRule(id, "test", r, "", version)
+	err := clientTest.CreateTCPResponseRule(id, configuration.BackendParentName, "test", r, "", version)
 	if err != nil {
 		t.Error(err.Error())
 	} else {
 		version++
 	}
 
-	v, ondiskR, err := clientTest.GetTCPResponseRule(2, "test", "")
+	v, ondiskR, err := clientTest.GetTCPResponseRule(2, configuration.BackendParentName, "test", "")
 	if err != nil {
 		t.Error(err.Error())
 	}
@@ -138,14 +139,14 @@ func TestCreateEditDeleteTCPResponseRule(t *testing.T) {
 		CondTest: "FALSE",
 	}
 
-	err = clientTest.EditTCPResponseRule(2, "test", r, "", version)
+	err = clientTest.EditTCPResponseRule(2, configuration.BackendParentName, "test", r, "", version)
 	if err != nil {
 		t.Error(err.Error())
 	} else {
 		version++
 	}
 
-	v, ondiskR, err = clientTest.GetTCPResponseRule(2, "test", "")
+	v, ondiskR, err = clientTest.GetTCPResponseRule(2, configuration.BackendParentName, "test", "")
 	if err != nil {
 		t.Error(err.Error())
 	}
@@ -161,12 +162,12 @@ func TestCreateEditDeleteTCPResponseRule(t *testing.T) {
 	}
 
 	// TestDeleteTCPResponse
-	_, rules, err := clientTest.GetTCPResponseRules("test", "")
+	_, rules, err := clientTest.GetTCPResponseRules(configuration.BackendParentName, "test", "")
 	if err != nil {
 		t.Error(err.Error())
 	}
 	N := int64(len(rules)) - 1
-	err = clientTest.DeleteTCPResponseRule(N, "test", "", version)
+	err = clientTest.DeleteTCPResponseRule(N, configuration.BackendParentName, "test", "", version)
 	if err != nil {
 		t.Error(err.Error())
 	} else {
@@ -177,12 +178,12 @@ func TestCreateEditDeleteTCPResponseRule(t *testing.T) {
 		t.Error("Version not incremented")
 	}
 
-	_, _, err = clientTest.GetTCPResponseRule(N, "test", "")
+	_, _, err = clientTest.GetTCPResponseRule(N, configuration.BackendParentName, "test", "")
 	if err == nil {
 		t.Errorf("DeleteTCPResponseRule failed, TCP Response Rule %d still exists", N)
 	}
 
-	err = clientTest.DeleteTCPResponseRule(18, "test_2", "", version)
+	err = clientTest.DeleteTCPResponseRule(18, configuration.BackendParentName, "test_2", "", version)
 	if err == nil {
 		t.Error("Should throw error, non existent TCP Response Rule")
 		version++

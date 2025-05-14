@@ -210,6 +210,7 @@ func (p *configParser) getDefaultParser() *Parsers {
 	addParser(parser, &sequence, &simple.Number{Name: "hash-balance-factor"})
 	addParser(parser, &sequence, &http.Requests{Mode: "defaults"})
 	addParser(parser, &sequence, &tcp.Requests{Mode: "defaults"})
+	addParser(parser, &sequence, &tcp.Responses{Mode: "defaults"})
 	addParser(parser, &sequence, &http.Responses{Mode: "defaults"})
 	addParser(parser, &sequence, &http.AfterResponses{})
 	addParser(parser, &sequence, &quic.Initial{})

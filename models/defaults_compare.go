@@ -37,11 +37,27 @@ func (s Defaults) Equal(t Defaults, opts ...Options) bool {
 		return false
 	}
 
+	if !s.ACLList.Equal(t.ACLList, opt) {
+		return false
+	}
+
+	if !s.HTTPAfterResponseRuleList.Equal(t.HTTPAfterResponseRuleList, opt) {
+		return false
+	}
+
 	if !s.HTTPCheckList.Equal(t.HTTPCheckList, opt) {
 		return false
 	}
 
 	if !s.HTTPErrorRuleList.Equal(t.HTTPErrorRuleList, opt) {
+		return false
+	}
+
+	if !s.HTTPRequestRuleList.Equal(t.HTTPRequestRuleList, opt) {
+		return false
+	}
+
+	if !s.HTTPResponseRuleList.Equal(t.HTTPResponseRuleList, opt) {
 		return false
 	}
 
@@ -54,6 +70,14 @@ func (s Defaults) Equal(t Defaults, opts ...Options) bool {
 	}
 
 	if !s.TCPCheckRuleList.Equal(t.TCPCheckRuleList, opt) {
+		return false
+	}
+
+	if !s.TCPRequestRuleList.Equal(t.TCPRequestRuleList, opt) {
+		return false
+	}
+
+	if !s.TCPResponseRuleList.Equal(t.TCPResponseRuleList, opt) {
 		return false
 	}
 
@@ -82,12 +106,28 @@ func (s Defaults) Diff(t Defaults, opts ...Options) map[string][]interface{} {
 		diff["DefaultsBase"] = []interface{}{s.DefaultsBase, t.DefaultsBase}
 	}
 
+	if !s.ACLList.Equal(t.ACLList, opt) {
+		diff["ACLList"] = []interface{}{s.ACLList, t.ACLList}
+	}
+
+	if !s.HTTPAfterResponseRuleList.Equal(t.HTTPAfterResponseRuleList, opt) {
+		diff["HTTPAfterResponseRuleList"] = []interface{}{s.HTTPAfterResponseRuleList, t.HTTPAfterResponseRuleList}
+	}
+
 	if !s.HTTPCheckList.Equal(t.HTTPCheckList, opt) {
 		diff["HTTPCheckList"] = []interface{}{s.HTTPCheckList, t.HTTPCheckList}
 	}
 
 	if !s.HTTPErrorRuleList.Equal(t.HTTPErrorRuleList, opt) {
 		diff["HTTPErrorRuleList"] = []interface{}{s.HTTPErrorRuleList, t.HTTPErrorRuleList}
+	}
+
+	if !s.HTTPRequestRuleList.Equal(t.HTTPRequestRuleList, opt) {
+		diff["HTTPRequestRuleList"] = []interface{}{s.HTTPRequestRuleList, t.HTTPRequestRuleList}
+	}
+
+	if !s.HTTPResponseRuleList.Equal(t.HTTPResponseRuleList, opt) {
+		diff["HTTPResponseRuleList"] = []interface{}{s.HTTPResponseRuleList, t.HTTPResponseRuleList}
 	}
 
 	if !s.LogTargetList.Equal(t.LogTargetList, opt) {
@@ -100,6 +140,14 @@ func (s Defaults) Diff(t Defaults, opts ...Options) map[string][]interface{} {
 
 	if !s.TCPCheckRuleList.Equal(t.TCPCheckRuleList, opt) {
 		diff["TCPCheckRuleList"] = []interface{}{s.TCPCheckRuleList, t.TCPCheckRuleList}
+	}
+
+	if !s.TCPRequestRuleList.Equal(t.TCPRequestRuleList, opt) {
+		diff["TCPRequestRuleList"] = []interface{}{s.TCPRequestRuleList, t.TCPRequestRuleList}
+	}
+
+	if !s.TCPResponseRuleList.Equal(t.TCPResponseRuleList, opt) {
+		diff["TCPResponseRuleList"] = []interface{}{s.TCPResponseRuleList, t.TCPResponseRuleList}
 	}
 
 	return diff

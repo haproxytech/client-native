@@ -2442,12 +2442,24 @@ definitions:
     allOf:
       - $ref: '#/definitions/defaults_base'
       - properties:
+          acl_list:
+            $ref: '#/definitions/acls'
+            x-go-name: AclList
+          http_after_response_rule_list:
+            $ref: '#/definitions/http_after_response_rules'
+            x-go-name: HTTPAfterResponseRuleList
           http_check_list:
             $ref: '#/definitions/http_checks'
             x-go-name: HTTPCheckList
           http_error_rule_list:
             $ref: '#/definitions/http_error_rules'
             x-go-name: HTTPErrorRuleList
+          http_request_rule_list:
+            $ref: '#/definitions/http_request_rules'
+            x-go-name: HTTPRequestRuleList
+          http_response_rule_list:
+            $ref: '#/definitions/http_response_rules'
+            x-go-name: HTTPResponseRuleList
           log_target_list:
             $ref: '#/definitions/log_targets'
             x-go-name: LogTargetList
@@ -2457,6 +2469,12 @@ definitions:
           tcp_check_rule_list:
             $ref: '#/definitions/tcp_checks'
             x-go-name: TCPCheckRuleList
+          tcp_request_rule_list:
+            $ref: '#/definitions/tcp_request_rules'
+            x-go-name: TCPRequestRuleList
+          tcp_response_rule_list:
+            $ref: '#/definitions/tcp_response_rules'
+            x-go-name: TCPResponseRuleList
         type: object
     description: Defaults with all it's children resources
     type: object
@@ -16811,6 +16829,60 @@ paths:
       summary: Replace an HTTP Request Rule list
       tags:
         - HTTPRequestRule
+  /services/haproxy/configuration/defaults/{parent_name}/http_request_rules:
+    get:
+      description: Returns all HTTP Request Rules that are configured in specified parent.
+      operationId: getAllHTTPRequestRuleDefaults
+      parameters:
+        - $ref: '#/parameters/parent_name'
+        - $ref: '#/parameters/transaction_id'
+      responses:
+        "200":
+          description: Successful operation
+          headers:
+            Configuration-Version:
+              description: Configuration file version
+              type: string
+          schema:
+            $ref: '#/definitions/http_request_rules'
+        default:
+          $ref: '#/responses/DefaultError'
+      summary: Return an array of all HTTP Request Rules
+      tags:
+        - HTTPRequestRule
+    put:
+      description: Replaces a whole list of HTTP Request Rules with the list given in parameter
+      operationId: replaceAllHTTPRequestRuleDefaults
+      parameters:
+        - $ref: '#/parameters/parent_name'
+        - in: body
+          name: data
+          required: true
+          schema:
+            $ref: '#/definitions/http_request_rules'
+        - $ref: '#/parameters/transaction_id'
+        - $ref: '#/parameters/version'
+        - $ref: '#/parameters/force_reload'
+      responses:
+        "200":
+          description: All HTTP Request Rule lines replaced
+          schema:
+            $ref: '#/definitions/http_request_rules'
+        "202":
+          description: Configuration change accepted and reload requested
+          headers:
+            Reload-ID:
+              description: ID of the requested reload
+              type: string
+          schema:
+            $ref: '#/definitions/http_request_rules'
+        "400":
+          $ref: '#/responses/BadRequest'
+        default:
+          $ref: '#/responses/DefaultError'
+      summary: Replace an HTTP Request Rule list
+      tags:
+        - HTTPRequestRule
   /services/haproxy/configuration/backends/{parent_name}/http_request_rules/{index}:
     delete:
       description: Deletes a HTTP Request Rule configuration by it's index from the specified parent.
@@ -17085,6 +17157,143 @@ paths:
       summary: Replace a HTTP Request Rule
       tags:
         - HTTPRequestRule
+  /services/haproxy/configuration/defaults/{parent_name}/http_request_rules/{index}:
+    delete:
+      description: Deletes a HTTP Request Rule configuration by it's index from the specified parent.
+      operationId: deleteHTTPRequestRuleDefaults
+      parameters:
+        - description: HTTP Request Rule Index
+          in: path
+          name: index
+          required: true
+          type: integer
+        - $ref: '#/parameters/parent_name'
+        - $ref: '#/parameters/transaction_id'
+        - $ref: '#/parameters/version'
+        - $ref: '#/parameters/force_reload'
+      responses:
+        "202":
+          description: Configuration change accepted and reload requested
+          headers:
+            Reload-ID:
+              description: ID of the requested reload
+              type: string
+        "204":
+          description: HTTP Request Rule deleted
+        "404":
+          $ref: '#/responses/NotFound'
+        default:
+          $ref: '#/responses/DefaultError'
+      summary: Delete a HTTP Request Rule
+      tags:
+        - HTTPRequestRule
+    get:
+      description: Returns one HTTP Request Rule configuration by it's index in the specified parent.
+      operationId: getHTTPRequestRuleDefaults
+      parameters:
+        - description: HTTP Request Rule Index
+          in: path
+          name: index
+          required: true
+          type: integer
+        - $ref: '#/parameters/parent_name'
+        - $ref: '#/parameters/transaction_id'
+      responses:
+        "200":
+          description: Successful operation
+          headers:
+            Configuration-Version:
+              description: Configuration file version
+              type: string
+          schema:
+            $ref: '#/definitions/http_request_rule'
+        "404":
+          $ref: '#/responses/NotFound'
+        default:
+          $ref: '#/responses/DefaultError'
+      summary: Return one HTTP Request Rule
+      tags:
+        - HTTPRequestRule
+    post:
+      description: Adds a new HTTP Request Rule of the specified type in the specified parent.
+      operationId: createHTTPRequestRuleDefaults
+      parameters:
+        - description: HTTP Request Rule Index
+          in: path
+          name: index
+          required: true
+          type: integer
+        - $ref: '#/parameters/parent_name'
+        - in: body
+          name: data
+          required: true
+          schema:
+            $ref: '#/definitions/http_request_rule'
+        - $ref: '#/parameters/transaction_id'
+        - $ref: '#/parameters/version'
+        - $ref: '#/parameters/force_reload'
+      responses:
+        "201":
+          description: HTTP Request Rule created
+          schema:
+            $ref: '#/definitions/http_request_rule'
+        "202":
+          description: Configuration change accepted and reload requested
+          headers:
+            Reload-ID:
+              description: ID of the requested reload
+              type: string
+          schema:
+            $ref: '#/definitions/http_request_rule'
+        "400":
+          $ref: '#/responses/BadRequest'
+        "409":
+          $ref: '#/responses/AlreadyExists'
+        default:
+          $ref: '#/responses/DefaultError'
+      summary: Add a new HTTP Request Rule
+      tags:
+        - HTTPRequestRule
+    put:
+      description: Replaces a HTTP Request Rule configuration by it's index in the specified parent.
+      operationId: replaceHTTPRequestRuleDefaults
+      parameters:
+        - description: HTTP Request Rule Index
+          in: path
+          name: index
+          required: true
+          type: integer
+        - $ref: '#/parameters/parent_name'
+        - in: body
+          name: data
+          required: true
+          schema:
+            $ref: '#/definitions/http_request_rule'
+        - $ref: '#/parameters/transaction_id'
+        - $ref: '#/parameters/version'
+        - $ref: '#/parameters/force_reload'
+      responses:
+        "200":
+          description: HTTP Request Rule replaced
+          schema:
+            $ref: '#/definitions/http_request_rule'
+        "202":
+          description: Configuration change accepted and reload requested
+          headers:
+            Reload-ID:
+              description: ID of the requested reload
+              type: string
+          schema:
+            $ref: '#/definitions/http_request_rule'
+        "400":
+          $ref: '#/responses/BadRequest'
+        "404":
+          $ref: '#/responses/NotFound'
+        default:
+          $ref: '#/responses/DefaultError'
+      summary: Replace a HTTP Request Rule
+      tags:
+        - HTTPRequestRule
   /services/haproxy/configuration/backends/{parent_name}/http_response_rules:
     get:
       description: Returns all HTTP Response Rules that are configured in specified parent.
@@ -17163,6 +17372,60 @@ paths:
     put:
       description: Replaces a whole list of HTTP Response Rules with the list given in parameter
       operationId: replaceAllHTTPResponseRuleFrontend
+      parameters:
+        - $ref: '#/parameters/parent_name'
+        - in: body
+          name: data
+          required: true
+          schema:
+            $ref: '#/definitions/http_response_rules'
+        - $ref: '#/parameters/transaction_id'
+        - $ref: '#/parameters/version'
+        - $ref: '#/parameters/force_reload'
+      responses:
+        "200":
+          description: All HTTP Response Rule lines replaced
+          schema:
+            $ref: '#/definitions/http_response_rules'
+        "202":
+          description: Configuration change accepted and reload requested
+          headers:
+            Reload-ID:
+              description: ID of the requested reload
+              type: string
+          schema:
+            $ref: '#/definitions/http_response_rules'
+        "400":
+          $ref: '#/responses/BadRequest'
+        default:
+          $ref: '#/responses/DefaultError'
+      summary: Replace an HTTP Response Rule list
+      tags:
+        - HTTPResponseRule
+  /services/haproxy/configuration/defaults/{parent_name}/http_response_rules:
+    get:
+      description: Returns all HTTP Response Rules that are configured in specified parent.
+      operationId: getAllHTTPResponseRuleDefaults
+      parameters:
+        - $ref: '#/parameters/parent_name'
+        - $ref: '#/parameters/transaction_id'
+      responses:
+        "200":
+          description: Successful operation
+          headers:
+            Configuration-Version:
+              description: Configuration file version
+              type: string
+          schema:
+            $ref: '#/definitions/http_response_rules'
+        default:
+          $ref: '#/responses/DefaultError'
+      summary: Return an array of all HTTP Response Rules
+      tags:
+        - HTTPResponseRule
+    put:
+      description: Replaces a whole list of HTTP Response Rules with the list given in parameter
+      operationId: replaceAllHTTPResponseRuleDefaults
       parameters:
         - $ref: '#/parameters/parent_name'
         - in: body
@@ -17467,6 +17730,143 @@ paths:
       summary: Replace a HTTP Response Rule
       tags:
         - HTTPResponseRule
+  /services/haproxy/configuration/defaults/{parent_name}/http_response_rules/{index}:
+    delete:
+      description: Deletes a HTTP Response Rule configuration by it's index from the specified parent.
+      operationId: deleteHTTPResponseRuleDefaults
+      parameters:
+        - description: HTTP Response Rule Index
+          in: path
+          name: index
+          required: true
+          type: integer
+        - $ref: '#/parameters/parent_name'
+        - $ref: '#/parameters/transaction_id'
+        - $ref: '#/parameters/version'
+        - $ref: '#/parameters/force_reload'
+      responses:
+        "202":
+          description: Configuration change accepted and reload requested
+          headers:
+            Reload-ID:
+              description: ID of the requested reload
+              type: string
+        "204":
+          description: HTTP Response Rule deleted
+        "404":
+          $ref: '#/responses/NotFound'
+        default:
+          $ref: '#/responses/DefaultError'
+      summary: Delete a HTTP Response Rule
+      tags:
+        - HTTPResponseRule
+    get:
+      description: Returns one HTTP Response Rule configuration by it's index in the specified parent.
+      operationId: getHTTPResponseRuleDefaults
+      parameters:
+        - description: HTTP Response Rule Index
+          in: path
+          name: index
+          required: true
+          type: integer
+        - $ref: '#/parameters/parent_name'
+        - $ref: '#/parameters/transaction_id'
+      responses:
+        "200":
+          description: Successful operation
+          headers:
+            Configuration-Version:
+              description: Configuration file version
+              type: string
+          schema:
+            $ref: '#/definitions/http_response_rule'
+        "404":
+          $ref: '#/responses/NotFound'
+        default:
+          $ref: '#/responses/DefaultError'
+      summary: Return one HTTP Response Rule
+      tags:
+        - HTTPResponseRule
+    post:
+      description: Adds a new HTTP Response Rule of the specified type in the specified parent.
+      operationId: createHTTPResponseRuleDefaults
+      parameters:
+        - description: HTTP Response Rule Index
+          in: path
+          name: index
+          required: true
+          type: integer
+        - $ref: '#/parameters/parent_name'
+        - in: body
+          name: data
+          required: true
+          schema:
+            $ref: '#/definitions/http_response_rule'
+        - $ref: '#/parameters/transaction_id'
+        - $ref: '#/parameters/version'
+        - $ref: '#/parameters/force_reload'
+      responses:
+        "201":
+          description: HTTP Response Rule created
+          schema:
+            $ref: '#/definitions/http_response_rule'
+        "202":
+          description: Configuration change accepted and reload requested
+          headers:
+            Reload-ID:
+              description: ID of the requested reload
+              type: string
+          schema:
+            $ref: '#/definitions/http_response_rule'
+        "400":
+          $ref: '#/responses/BadRequest'
+        "409":
+          $ref: '#/responses/AlreadyExists'
+        default:
+          $ref: '#/responses/DefaultError'
+      summary: Add a new HTTP Response Rule
+      tags:
+        - HTTPResponseRule
+    put:
+      description: Replaces a HTTP Response Rule configuration by it's index in the specified parent.
+      operationId: replaceHTTPResponseRuleDefaults
+      parameters:
+        - description: HTTP Response Rule Index
+          in: path
+          name: index
+          required: true
+          type: integer
+        - $ref: '#/parameters/parent_name'
+        - in: body
+          name: data
+          required: true
+          schema:
+            $ref: '#/definitions/http_response_rule'
+        - $ref: '#/parameters/transaction_id'
+        - $ref: '#/parameters/version'
+        - $ref: '#/parameters/force_reload'
+      responses:
+        "200":
+          description: HTTP Response Rule replaced
+          schema:
+            $ref: '#/definitions/http_response_rule'
+        "202":
+          description: Configuration change accepted and reload requested
+          headers:
+            Reload-ID:
+              description: ID of the requested reload
+              type: string
+          schema:
+            $ref: '#/definitions/http_response_rule'
+        "400":
+          $ref: '#/responses/BadRequest'
+        "404":
+          $ref: '#/responses/NotFound'
+        default:
+          $ref: '#/responses/DefaultError'
+      summary: Replace a HTTP Response Rule
+      tags:
+        - HTTPResponseRule
   /services/haproxy/configuration/backends/{parent_name}/http_after_response_rules:
     get:
       description: Returns all HTTP After Response Rules that are configured in specified parent.
@@ -17545,6 +17945,60 @@ paths:
     put:
       description: Replaces a whole list of HTTP After Response Rules with the list given in parameter
       operationId: replaceAllHTTPAfterResponseRuleFrontend
+      parameters:
+        - $ref: '#/parameters/parent_name'
+        - in: body
+          name: data
+          required: true
+          schema:
+            $ref: '#/definitions/http_after_response_rules'
+        - $ref: '#/parameters/transaction_id'
+        - $ref: '#/parameters/version'
+        - $ref: '#/parameters/force_reload'
+      responses:
+        "200":
+          description: All TTP After Response Rules lines replaced
+          schema:
+            $ref: '#/definitions/http_after_response_rules'
+        "202":
+          description: Configuration change accepted and reload requested
+          headers:
+            Reload-ID:
+              description: ID of the requested reload
+              type: string
+          schema:
+            $ref: '#/definitions/http_after_response_rules'
+        "400":
+          $ref: '#/responses/BadRequest'
+        default:
+          $ref: '#/responses/DefaultError'
+      summary: Replace an HTTP After Response Rules list
+      tags:
+        - HTTPAfterResponseRule
+  /services/haproxy/configuration/defaults/{parent_name}/http_after_response_rules:
+    get:
+      description: Returns all HTTP After Response Rules that are configured in specified parent.
+      operationId: getAllHTTPAfterResponseRuleDefaults
+      parameters:
+        - $ref: '#/parameters/parent_name'
+        - $ref: '#/parameters/transaction_id'
+      responses:
+        "200":
+          description: Successful operation
+          headers:
+            Configuration-Version:
+              description: Configuration file version
+              type: string
+          schema:
+            $ref: '#/definitions/http_after_response_rules'
+        default:
+          $ref: '#/responses/DefaultError'
+      summary: Return an array of all HTTP After Response Rules
+      tags:
+        - HTTPAfterResponseRule
+    put:
+      description: Replaces a whole list of HTTP After Response Rules with the list given in parameter
+      operationId: replaceAllHTTPAfterResponseRuleDefaults
       parameters:
         - $ref: '#/parameters/parent_name'
         - in: body
@@ -17812,6 +18266,143 @@ paths:
     put:
       description: Replaces a HTTP After Response Rule configuration by it's index in the specified parent.
       operationId: replaceHTTPAfterResponseRuleFrontend
+      parameters:
+        - description: HTTP After Response Rule Index
+          in: path
+          name: index
+          required: true
+          type: integer
+        - $ref: '#/parameters/parent_name'
+        - in: body
+          name: data
+          required: true
+          schema:
+            $ref: '#/definitions/http_after_response_rule'
+        - $ref: '#/parameters/transaction_id'
+        - $ref: '#/parameters/version'
+        - $ref: '#/parameters/force_reload'
+      responses:
+        "200":
+          description: HTTP After Response Rule replaced
+          schema:
+            $ref: '#/definitions/http_after_response_rule'
+        "202":
+          description: Configuration change accepted and reload requested
+          headers:
+            Reload-ID:
+              description: ID of the requested reload
+              type: string
+          schema:
+            $ref: '#/definitions/http_after_response_rule'
+        "400":
+          $ref: '#/responses/BadRequest'
+        "404":
+          $ref: '#/responses/NotFound'
+        default:
+          $ref: '#/responses/DefaultError'
+      summary: Replace a HTTP After Response Rule
+      tags:
+        - HTTPAfterResponseRule
+  /services/haproxy/configuration/defaults/{parent_name}/http_after_response_rules/{index}:
+    delete:
+      description: Deletes a HTTP After Response Rule configuration by it's index from the specified parent.
+      operationId: deleteHTTPAfterResponseRuleDefaults
+      parameters:
+        - description: HTTP After Response Rule Index
+          in: path
+          name: index
+          required: true
+          type: integer
+        - $ref: '#/parameters/parent_name'
+        - $ref: '#/parameters/transaction_id'
+        - $ref: '#/parameters/version'
+        - $ref: '#/parameters/force_reload'
+      responses:
+        "202":
+          description: Configuration change accepted and reload requested
+          headers:
+            Reload-ID:
+              description: ID of the requested reload
+              type: string
+        "204":
+          description: HTTP After Response Rule deleted
+        "404":
+          $ref: '#/responses/NotFound'
+        default:
+          $ref: '#/responses/DefaultError'
+      summary: Delete a HTTP After Response Rule
+      tags:
+        - HTTPAfterResponseRule
+    get:
+      description: Returns one HTTP After Response Rule configuration by it's index in the specified parent.
+      operationId: getHTTPAfterResponseRuleDefaults
+      parameters:
+        - description: HTTP After Response Rule Index
+          in: path
+          name: index
+          required: true
+          type: integer
+        - $ref: '#/parameters/parent_name'
+        - $ref: '#/parameters/transaction_id'
+      responses:
+        "200":
+          description: Successful operation
+          headers:
+            Configuration-Version:
+              description: Configuration file version
+              type: string
+          schema:
+            $ref: '#/definitions/http_after_response_rule'
+        "404":
+          $ref: '#/responses/NotFound'
+        default:
+          $ref: '#/responses/DefaultError'
+      summary: Return one HTTP After Response Rule
+      tags:
+        - HTTPAfterResponseRule
+    post:
+      description: Adds a new HTTP After Response Rule of the specified type in the specified parent.
+      operationId: createHTTPAfterResponseRuleDefaults
+      parameters:
+        - description: HTTP After Response Rule Index
+          in: path
+          name: index
+          required: true
+          type: integer
+        - $ref: '#/parameters/parent_name'
+        - in: body
+          name: data
+          required: true
+          schema:
+            $ref: '#/definitions/http_after_response_rule'
+        - $ref: '#/parameters/transaction_id'
+        - $ref: '#/parameters/version'
+        - $ref: '#/parameters/force_reload'
+      responses:
+        "201":
+          description: HTTP Response Rule created
+          schema:
+            $ref: '#/definitions/http_after_response_rule'
+        "202":
+          description: Configuration change accepted and reload requested
+          headers:
+            Reload-ID:
+              description: ID of the requested reload
+              type: string
+          schema:
+            $ref: '#/definitions/http_after_response_rule'
+        "400":
+          $ref: '#/responses/BadRequest'
+        "409":
+          $ref: '#/responses/AlreadyExists'
+        default:
+          $ref: '#/responses/DefaultError'
+      summary: Add a new HTTP After Response Rule
+      tags:
+        - HTTPAfterResponseRule
+    put:
+      description: Replaces a HTTP After Response Rule configuration by it's index in the specified parent.
+      operationId: replaceHTTPAfterResponseRuleDefaults
       parameters:
         - description: HTTP After Response Rule Index
           in: path
@@ -19447,6 +20038,60 @@ paths:
       summary: Replace an TCP Request Rule list
       tags:
         - TCPRequestRule
+  /services/haproxy/configuration/defaults/{parent_name}/tcp_request_rules:
+    get:
+      description: Returns all TCP Request Rules that are configured in specified parent and parent type.
+      operationId: getAllTCPRequestRuleDefaults
+      parameters:
+        - $ref: '#/parameters/parent_name'
+        - $ref: '#/parameters/transaction_id'
+      responses:
+        "200":
+          description: Successful operation
+          headers:
+            Configuration-Version:
+              description: Configuration file version
+              type: string
+          schema:
+            $ref: '#/definitions/tcp_request_rules'
+        default:
+          $ref: '#/responses/DefaultError'
+      summary: Return an array of all TCP Request Rules
+      tags:
+        - TCPRequestRule
+    put:
+      description: Replaces a whole list of TCP Request Rules with the list given in parameter
+      operationId: replaceAllTCPRequestRuleDefaults
+      parameters:
+        - $ref: '#/parameters/parent_name'
+        - in: body
+          name: data
+          required: true
+          schema:
+            $ref: '#/definitions/tcp_request_rules'
+        - $ref: '#/parameters/transaction_id'
+        - $ref: '#/parameters/version'
+        - $ref: '#/parameters/force_reload'
+      responses:
+        "200":
+          description: All TCP Request Rule lines replaced
+          schema:
+            $ref: '#/definitions/tcp_request_rules'
+        "202":
+          description: Configuration change accepted and reload requested
+          headers:
+            Reload-ID:
+              description: ID of the requested reload
+              type: string
+          schema:
+            $ref: '#/definitions/tcp_request_rules'
+        "400":
+          $ref: '#/responses/BadRequest'
+        default:
+          $ref: '#/responses/DefaultError'
+      summary: Replace an TCP Request Rule list
+      tags:
+        - TCPRequestRule
   /services/haproxy/configuration/backends/{parent_name}/tcp_request_rules/{index}:
     delete:
       description: Deletes a TCP Request Rule configuration by it's index from the specified parent.
@@ -19721,6 +20366,143 @@ paths:
       summary: Replace a TCP Request Rule
       tags:
         - TCPRequestRule
+  /services/haproxy/configuration/defaults/{parent_name}/tcp_request_rules/{index}:
+    delete:
+      description: Deletes a TCP Request Rule configuration by it's index from the specified parent.
+      operationId: deleteTCPRequestRuleDefaults
+      parameters:
+        - description: TCP Request Rule Index
+          in: path
+          name: index
+          required: true
+          type: integer
+        - $ref: '#/parameters/parent_name'
+        - $ref: '#/parameters/transaction_id'
+        - $ref: '#/parameters/version'
+        - $ref: '#/parameters/force_reload'
+      responses:
+        "202":
+          description: Configuration change accepted and reload requested
+          headers:
+            Reload-ID:
+              description: ID of the requested reload
+              type: string
+        "204":
+          description: TCP Request Rule deleted
+        "404":
+          $ref: '#/responses/NotFound'
+        default:
+          $ref: '#/responses/DefaultError'
+      summary: Delete a TCP Request Rule
+      tags:
+        - TCPRequestRule
+    get:
+      description: Returns one TCP Request Rule configuration by it's index in the specified parent.
+      operationId: getTCPRequestRuleDefaults
+      parameters:
+        - description: TCP Request Rule Index
+          in: path
+          name: index
+          required: true
+          type: integer
+        - $ref: '#/parameters/parent_name'
+        - $ref: '#/parameters/transaction_id'
+      responses:
+        "200":
+          description: Successful operation
+          headers:
+            Configuration-Version:
+              description: Configuration file version
+              type: string
+          schema:
+            $ref: '#/definitions/tcp_request_rule'
+        "404":
+          $ref: '#/responses/NotFound'
+        default:
+          $ref: '#/responses/DefaultError'
+      summary: Return one TCP Request Rule
+      tags:
+        - TCPRequestRule
+    post:
+      description: Adds a new TCP Request Rule of the specified type in the specified parent.
+      operationId: createTCPRequestRuleDefaults
+      parameters:
+        - description: TCP Request Rule Index
+          in: path
+          name: index
+          required: true
+          type: integer
+        - $ref: '#/parameters/parent_name'
+        - in: body
+          name: data
+          required: true
+          schema:
+            $ref: '#/definitions/tcp_request_rule'
+        - $ref: '#/parameters/transaction_id'
+        - $ref: '#/parameters/version'
+        - $ref: '#/parameters/force_reload'
+      responses:
+        "201":
+          description: TCP Request Rule created
+          schema:
+            $ref: '#/definitions/tcp_request_rule'
+        "202":
+          description: Configuration change accepted and reload requested
+          headers:
+            Reload-ID:
+              description: ID of the requested reload
+              type: string
+          schema:
+            $ref: '#/definitions/tcp_request_rule'
+        "400":
+          $ref: '#/responses/BadRequest'
+        "409":
+          $ref: '#/responses/AlreadyExists'
+        default:
+          $ref: '#/responses/DefaultError'
+      summary: Add a new TCP Request Rule
+      tags:
+        - TCPRequestRule
+    put:
+      description: Replaces a TCP Request Rule configuration by it's index in the specified parent.
+      operationId: replaceTCPRequestRuleDefaults
+      parameters:
+        - description: TCP Request Rule Index
+          in: path
+          name: index
+          required: true
+          type: integer
+        - $ref: '#/parameters/parent_name'
+        - in: body
+          name: data
+          required: true
+          schema:
+            $ref: '#/definitions/tcp_request_rule'
+        - $ref: '#/parameters/transaction_id'
+        - $ref: '#/parameters/version'
+        - $ref: '#/parameters/force_reload'
+      responses:
+        "200":
+          description: TCP Request Rule replaced
+          schema:
+            $ref: '#/definitions/tcp_request_rule'
+        "202":
+          description: Configuration change accepted and reload requested
+          headers:
+            Reload-ID:
+              description: ID of the requested reload
+              type: string
+          schema:
+            $ref: '#/definitions/tcp_request_rule'
+        "400":
+          $ref: '#/responses/BadRequest'
+        "404":
+          $ref: '#/responses/NotFound'
+        default:
+          $ref: '#/responses/DefaultError'
+      summary: Replace a TCP Request Rule
+      tags:
+        - TCPRequestRule
   /services/haproxy/configuration/backends/{parent_name}/tcp_response_rules:
     get:
       description: Returns all TCP Response Rules that are configured in specified backend.
@@ -19745,6 +20527,60 @@ paths:
     put:
       description: Replaces a whole list of TCP Response Rules with the list given in parameter
       operationId: replaceAllTCPResponseRuleBackend
+      parameters:
+        - $ref: '#/parameters/parent_name'
+        - in: body
+          name: data
+          required: true
+          schema:
+            $ref: '#/definitions/tcp_response_rules'
+        - $ref: '#/parameters/transaction_id'
+        - $ref: '#/parameters/version'
+        - $ref: '#/parameters/force_reload'
+      responses:
+        "200":
+          description: All TCP Response Rule lines replaced
+          schema:
+            $ref: '#/definitions/tcp_response_rules'
+        "202":
+          description: Configuration change accepted and reload requested
+          headers:
+            Reload-ID:
+              description: ID of the requested reload
+              type: string
+          schema:
+            $ref: '#/definitions/tcp_response_rules'
+        "400":
+          $ref: '#/responses/BadRequest'
+        default:
+          $ref: '#/responses/DefaultError'
+      summary: Replace a TCP Response Rule list
+      tags:
+        - TCPResponseRule
+  /services/haproxy/configuration/defaults/{parent_name}/tcp_response_rules:
+    get:
+      description: Returns all TCP Response Rules that are configured in specified backend.
+      operationId: getAllTCPResponseRuleDefaults
+      parameters:
+        - $ref: '#/parameters/parent_name'
+        - $ref: '#/parameters/transaction_id'
+      responses:
+        "200":
+          description: Successful operation
+          headers:
+            Configuration-Version:
+              description: Configuration file version
+              type: string
+          schema:
+            $ref: '#/definitions/tcp_response_rules'
+        default:
+          $ref: '#/responses/DefaultError'
+      summary: Return an array of all TCP Response Rules
+      tags:
+        - TCPResponseRule
+    put:
+      description: Replaces a whole list of TCP Response Rules with the list given in parameter
+      operationId: replaceAllTCPResponseRuleDefaults
       parameters:
         - $ref: '#/parameters/parent_name'
         - in: body
@@ -19875,6 +20711,143 @@ paths:
     put:
       description: Replaces a TCP Response Rule configuration by it's Index in the specified backend.
       operationId: replaceTCPResponseRuleBackend
+      parameters:
+        - description: TCP Response Rule Index
+          in: path
+          name: index
+          required: true
+          type: integer
+        - $ref: '#/parameters/parent_name'
+        - in: body
+          name: data
+          required: true
+          schema:
+            $ref: '#/definitions/tcp_response_rule'
+        - $ref: '#/parameters/transaction_id'
+        - $ref: '#/parameters/version'
+        - $ref: '#/parameters/force_reload'
+      responses:
+        "200":
+          description: TCP Response Rule replaced
+          schema:
+            $ref: '#/definitions/tcp_response_rule'
+        "202":
+          description: Configuration change accepted and reload requested
+          headers:
+            Reload-ID:
+              description: ID of the requested reload
+              type: string
+          schema:
+            $ref: '#/definitions/tcp_response_rule'
+        "400":
+          $ref: '#/responses/BadRequest'
+        "404":
+          $ref: '#/responses/NotFound'
+        default:
+          $ref: '#/responses/DefaultError'
+      summary: Replace a TCP Response Rule
+      tags:
+        - TCPResponseRule
+  /services/haproxy/configuration/defaults/{parent_name}/tcp_response_rules/{index}:
+    delete:
+      description: Deletes a TCP Response Rule configuration by it's index from the specified backend.
+      operationId: deleteTCPResponseRuleDefaults
+      parameters:
+        - description: TCP Response Rule Index
+          in: path
+          name: index
+          required: true
+          type: integer
+        - $ref: '#/parameters/parent_name'
+        - $ref: '#/parameters/transaction_id'
+        - $ref: '#/parameters/version'
+        - $ref: '#/parameters/force_reload'
+      responses:
+        "202":
+          description: Configuration change accepted and reload requested
+          headers:
+            Reload-ID:
+              description: ID of the requested reload
+              type: string
+        "204":
+          description: TCP Response Rule deleted
+        "404":
+          $ref: '#/responses/NotFound'
+        default:
+          $ref: '#/responses/DefaultError'
+      summary: Delete a TCP Response Rule
+      tags:
+        - TCPResponseRule
+    get:
+      description: Returns one TCP Response Rule configuration by it's index in the specified backend.
+      operationId: getTCPResponseRuleDefaults
+      parameters:
+        - description: TCP Response Rule Index
+          in: path
+          name: index
+          required: true
+          type: integer
+        - $ref: '#/parameters/parent_name'
+        - $ref: '#/parameters/transaction_id'
+      responses:
+        "200":
+          description: Successful operation
+          headers:
+            Configuration-Version:
+              description: Configuration file version
+              type: string
+          schema:
+            $ref: '#/definitions/tcp_response_rule'
+        "404":
+          $ref: '#/responses/NotFound'
+        default:
+          $ref: '#/responses/DefaultError'
+      summary: Return one TCP Response Rule
+      tags:
+        - TCPResponseRule
+    post:
+      description: Adds a new TCP Response Rule of the specified type in the specified backend.
+      operationId: createTCPResponseRuleDefaults
+      parameters:
+        - description: TCP Response Rule Index
+          in: path
+          name: index
+          required: true
+          type: integer
+        - $ref: '#/parameters/parent_name'
+        - in: body
+          name: data
+          required: true
+          schema:
+            $ref: '#/definitions/tcp_response_rule'
+        - $ref: '#/parameters/transaction_id'
+        - $ref: '#/parameters/version'
+        - $ref: '#/parameters/force_reload'
+      responses:
+        "201":
+          description: TCP Response Rule created
+          schema:
+            $ref: '#/definitions/tcp_response_rule'
+        "202":
+          description: Configuration change accepted and reload requested
+          headers:
+            Reload-ID:
+              description: ID of the requested reload
+              type: string
+          schema:
+            $ref: '#/definitions/tcp_response_rule'
+        "400":
+          $ref: '#/responses/BadRequest'
+        "409":
+          $ref: '#/responses/AlreadyExists'
+        default:
+          $ref: '#/responses/DefaultError'
+      summary: Add a new TCP Response Rule
+      tags:
+        - TCPResponseRule
+    put:
+      description: Replaces a TCP Response Rule configuration by it's Index in the specified backend.
+      operationId: replaceTCPResponseRuleDefaults
       parameters:
         - description: TCP Response Rule Index
           in: path
@@ -22181,6 +23154,64 @@ paths:
       summary: Replace an ACL list
       tags:
         - ACL
+  /services/haproxy/configuration/defaults/{parent_name}/acls:
+    get:
+      description: Returns all ACL lines that are configured in specified parent.
+      operationId: getAllAclDefaults
+      parameters:
+        - $ref: '#/parameters/parent_name'
+        - description: ACL name
+          in: query
+          name: acl_name
+          type: string
+        - $ref: '#/parameters/transaction_id'
+      responses:
+        "200":
+          description: Successful operation
+          headers:
+            Configuration-Version:
+              description: Configuration file version
+              type: string
+          schema:
+            $ref: '#/definitions/acls'
+        default:
+          $ref: '#/responses/DefaultError'
+      summary: Return an array of all ACL lines
+      tags:
+        - ACL
+    put:
+      description: Replaces a whole list of ACLs with the list given in parameter
+      operationId: replaceAllAclDefaults
+      parameters:
+        - $ref: '#/parameters/parent_name'
+        - in: body
+          name: data
+          required: true
+          schema:
+            $ref: '#/definitions/acls'
+        - $ref: '#/parameters/transaction_id'
+        - $ref: '#/parameters/version'
+        - $ref: '#/parameters/force_reload'
+      responses:
+        "200":
+          description: All ACL lines replaced
+          schema:
+            $ref: '#/definitions/acls'
+        "202":
+          description: Configuration change accepted and reload requested
+          headers:
+            Reload-ID:
+              description: ID of the requested reload
+              type: string
+          schema:
+            $ref: '#/definitions/acls'
+        "400":
+          $ref: '#/responses/BadRequest'
+        default:
+          $ref: '#/responses/DefaultError'
+      summary: Replace an ACL list
+      tags:
+        - ACL
   /services/haproxy/configuration/backends/{parent_name}/acls/{index}:
     delete:
       description: Deletes a ACL line configuration by it's index from the specified parent.
@@ -22555,6 +23586,143 @@ paths:
     put:
       description: Replaces a ACL line configuration by it's index in the specified parent.
       operationId: replaceAclFCGIApp
+      parameters:
+        - description: ACL line Index
+          in: path
+          name: index
+          required: true
+          type: integer
+        - $ref: '#/parameters/parent_name'
+        - in: body
+          name: data
+          required: true
+          schema:
+            $ref: '#/definitions/acl'
+        - $ref: '#/parameters/transaction_id'
+        - $ref: '#/parameters/version'
+        - $ref: '#/parameters/force_reload'
+      responses:
+        "200":
+          description: ACL line replaced
+          schema:
+            $ref: '#/definitions/acl'
+        "202":
+          description: Configuration change accepted and reload requested
+          headers:
+            Reload-ID:
+              description: ID of the requested reload
+              type: string
+          schema:
+            $ref: '#/definitions/acl'
+        "400":
+          $ref: '#/responses/BadRequest'
+        "404":
+          $ref: '#/responses/NotFound'
+        default:
+          $ref: '#/responses/DefaultError'
+      summary: Replace a ACL line
+      tags:
+        - ACL
+  /services/haproxy/configuration/defaults/{parent_name}/acls/{index}:
+    delete:
+      description: Deletes a ACL line configuration by it's index from the specified parent.
+      operationId: deleteAclDefaults
+      parameters:
+        - description: ACL line Index
+          in: path
+          name: index
+          required: true
+          type: integer
+        - $ref: '#/parameters/parent_name'
+        - $ref: '#/parameters/transaction_id'
+        - $ref: '#/parameters/version'
+        - $ref: '#/parameters/force_reload'
+      responses:
+        "202":
+          description: Configuration change accepted and reload requested
+          headers:
+            Reload-ID:
+              description: ID of the requested reload
+              type: string
+        "204":
+          description: ACL line deleted
+        "404":
+          $ref: '#/responses/NotFound'
+        default:
+          $ref: '#/responses/DefaultError'
+      summary: Delete a ACL line
+      tags:
+        - ACL
+    get:
+      description: Returns one ACL line configuration by it's index in the specified parent.
+      operationId: getAclDefaults
+      parameters:
+        - description: ACL line Index
+          in: path
+          name: index
+          required: true
+          type: integer
+        - $ref: '#/parameters/parent_name'
+        - $ref: '#/parameters/transaction_id'
+      responses:
+        "200":
+          description: Successful operation
+          headers:
+            Configuration-Version:
+              description: Configuration file version
+              type: string
+          schema:
+            $ref: '#/definitions/acl'
+        "404":
+          $ref: '#/responses/NotFound'
+        default:
+          $ref: '#/responses/DefaultError'
+      summary: Return one ACL line
+      tags:
+        - ACL
+    post:
+      description: Adds a new ACL line of the specified type in the specified parent.
+      operationId: createAclDefaults
+      parameters:
+        - description: ACL line Index
+          in: path
+          name: index
+          required: true
+          type: integer
+        - $ref: '#/parameters/parent_name'
+        - in: body
+          name: data
+          required: true
+          schema:
+            $ref: '#/definitions/acl'
+        - $ref: '#/parameters/transaction_id'
+        - $ref: '#/parameters/version'
+        - $ref: '#/parameters/force_reload'
+      responses:
+        "201":
+          description: ACL line created
+          schema:
+            $ref: '#/definitions/acl'
+        "202":
+          description: Configuration change accepted and reload requested
+          headers:
+            Reload-ID:
+              description: ID of the requested reload
+              type: string
+          schema:
+            $ref: '#/definitions/acl'
+        "400":
+          $ref: '#/responses/BadRequest'
+        "409":
+          $ref: '#/responses/AlreadyExists'
+        default:
+          $ref: '#/responses/DefaultError'
+      summary: Add a new ACL line
+      tags:
+        - ACL
+    put:
+      description: Replaces a ACL line configuration by it's index in the specified parent.
+      operationId: replaceAclDefaults
       parameters:
         - description: ACL line Index
           in: path

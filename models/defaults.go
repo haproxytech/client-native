@@ -34,11 +34,23 @@ import (
 type Defaults struct {
 	DefaultsBase `json:",inline"`
 
+	// Acl list
+	ACLList Acls `json:"acl_list,omitempty"`
+
+	// HTTP after response rule list
+	HTTPAfterResponseRuleList HTTPAfterResponseRules `json:"http_after_response_rule_list,omitempty"`
+
 	// HTTP check list
 	HTTPCheckList HTTPChecks `json:"http_check_list,omitempty"`
 
 	// HTTP error rule list
 	HTTPErrorRuleList HTTPErrorRules `json:"http_error_rule_list,omitempty"`
+
+	// HTTP request rule list
+	HTTPRequestRuleList HTTPRequestRules `json:"http_request_rule_list,omitempty"`
+
+	// HTTP response rule list
+	HTTPResponseRuleList HTTPResponseRules `json:"http_response_rule_list,omitempty"`
 
 	// log target list
 	LogTargetList LogTargets `json:"log_target_list,omitempty"`
@@ -48,6 +60,12 @@ type Defaults struct {
 
 	// TCP check rule list
 	TCPCheckRuleList TCPChecks `json:"tcp_check_rule_list,omitempty"`
+
+	// TCP request rule list
+	TCPRequestRuleList TCPRequestRules `json:"tcp_request_rule_list,omitempty"`
+
+	// TCP response rule list
+	TCPResponseRuleList TCPResponseRules `json:"tcp_response_rule_list,omitempty"`
 }
 
 // UnmarshalJSON unmarshals this object from a JSON structure
@@ -61,29 +79,53 @@ func (m *Defaults) UnmarshalJSON(raw []byte) error {
 
 	// AO1
 	var dataAO1 struct {
+		ACLList Acls `json:"acl_list,omitempty"`
+
+		HTTPAfterResponseRuleList HTTPAfterResponseRules `json:"http_after_response_rule_list,omitempty"`
+
 		HTTPCheckList HTTPChecks `json:"http_check_list,omitempty"`
 
 		HTTPErrorRuleList HTTPErrorRules `json:"http_error_rule_list,omitempty"`
+
+		HTTPRequestRuleList HTTPRequestRules `json:"http_request_rule_list,omitempty"`
+
+		HTTPResponseRuleList HTTPResponseRules `json:"http_response_rule_list,omitempty"`
 
 		LogTargetList LogTargets `json:"log_target_list,omitempty"`
 
 		QUICInitialRuleList QUICInitialRules `json:"quic_initial_rule_list,omitempty"`
 
 		TCPCheckRuleList TCPChecks `json:"tcp_check_rule_list,omitempty"`
+
+		TCPRequestRuleList TCPRequestRules `json:"tcp_request_rule_list,omitempty"`
+
+		TCPResponseRuleList TCPResponseRules `json:"tcp_response_rule_list,omitempty"`
 	}
 	if err := swag.ReadJSON(raw, &dataAO1); err != nil {
 		return err
 	}
 
+	m.ACLList = dataAO1.ACLList
+
+	m.HTTPAfterResponseRuleList = dataAO1.HTTPAfterResponseRuleList
+
 	m.HTTPCheckList = dataAO1.HTTPCheckList
 
 	m.HTTPErrorRuleList = dataAO1.HTTPErrorRuleList
+
+	m.HTTPRequestRuleList = dataAO1.HTTPRequestRuleList
+
+	m.HTTPResponseRuleList = dataAO1.HTTPResponseRuleList
 
 	m.LogTargetList = dataAO1.LogTargetList
 
 	m.QUICInitialRuleList = dataAO1.QUICInitialRuleList
 
 	m.TCPCheckRuleList = dataAO1.TCPCheckRuleList
+
+	m.TCPRequestRuleList = dataAO1.TCPRequestRuleList
+
+	m.TCPResponseRuleList = dataAO1.TCPResponseRuleList
 
 	return nil
 }
@@ -98,26 +140,50 @@ func (m Defaults) MarshalJSON() ([]byte, error) {
 	}
 	_parts = append(_parts, aO0)
 	var dataAO1 struct {
+		ACLList Acls `json:"acl_list,omitempty"`
+
+		HTTPAfterResponseRuleList HTTPAfterResponseRules `json:"http_after_response_rule_list,omitempty"`
+
 		HTTPCheckList HTTPChecks `json:"http_check_list,omitempty"`
 
 		HTTPErrorRuleList HTTPErrorRules `json:"http_error_rule_list,omitempty"`
+
+		HTTPRequestRuleList HTTPRequestRules `json:"http_request_rule_list,omitempty"`
+
+		HTTPResponseRuleList HTTPResponseRules `json:"http_response_rule_list,omitempty"`
 
 		LogTargetList LogTargets `json:"log_target_list,omitempty"`
 
 		QUICInitialRuleList QUICInitialRules `json:"quic_initial_rule_list,omitempty"`
 
 		TCPCheckRuleList TCPChecks `json:"tcp_check_rule_list,omitempty"`
+
+		TCPRequestRuleList TCPRequestRules `json:"tcp_request_rule_list,omitempty"`
+
+		TCPResponseRuleList TCPResponseRules `json:"tcp_response_rule_list,omitempty"`
 	}
+
+	dataAO1.ACLList = m.ACLList
+
+	dataAO1.HTTPAfterResponseRuleList = m.HTTPAfterResponseRuleList
 
 	dataAO1.HTTPCheckList = m.HTTPCheckList
 
 	dataAO1.HTTPErrorRuleList = m.HTTPErrorRuleList
+
+	dataAO1.HTTPRequestRuleList = m.HTTPRequestRuleList
+
+	dataAO1.HTTPResponseRuleList = m.HTTPResponseRuleList
 
 	dataAO1.LogTargetList = m.LogTargetList
 
 	dataAO1.QUICInitialRuleList = m.QUICInitialRuleList
 
 	dataAO1.TCPCheckRuleList = m.TCPCheckRuleList
+
+	dataAO1.TCPRequestRuleList = m.TCPRequestRuleList
+
+	dataAO1.TCPResponseRuleList = m.TCPResponseRuleList
 
 	jsonDataAO1, errAO1 := swag.WriteJSON(dataAO1)
 	if errAO1 != nil {
@@ -136,11 +202,27 @@ func (m *Defaults) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
+	if err := m.validateACLList(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateHTTPAfterResponseRuleList(formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.validateHTTPCheckList(formats); err != nil {
 		res = append(res, err)
 	}
 
 	if err := m.validateHTTPErrorRuleList(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateHTTPRequestRuleList(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateHTTPResponseRuleList(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -156,9 +238,53 @@ func (m *Defaults) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
+	if err := m.validateTCPRequestRuleList(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateTCPResponseRuleList(formats); err != nil {
+		res = append(res, err)
+	}
+
 	if len(res) > 0 {
 		return errors.CompositeValidationError(res...)
 	}
+	return nil
+}
+
+func (m *Defaults) validateACLList(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.ACLList) { // not required
+		return nil
+	}
+
+	if err := m.ACLList.Validate(formats); err != nil {
+		if ve, ok := err.(*errors.Validation); ok {
+			return ve.ValidateName("acl_list")
+		} else if ce, ok := err.(*errors.CompositeError); ok {
+			return ce.ValidateName("acl_list")
+		}
+		return err
+	}
+
+	return nil
+}
+
+func (m *Defaults) validateHTTPAfterResponseRuleList(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.HTTPAfterResponseRuleList) { // not required
+		return nil
+	}
+
+	if err := m.HTTPAfterResponseRuleList.Validate(formats); err != nil {
+		if ve, ok := err.(*errors.Validation); ok {
+			return ve.ValidateName("http_after_response_rule_list")
+		} else if ce, ok := err.(*errors.CompositeError); ok {
+			return ce.ValidateName("http_after_response_rule_list")
+		}
+		return err
+	}
+
 	return nil
 }
 
@@ -191,6 +317,42 @@ func (m *Defaults) validateHTTPErrorRuleList(formats strfmt.Registry) error {
 			return ve.ValidateName("http_error_rule_list")
 		} else if ce, ok := err.(*errors.CompositeError); ok {
 			return ce.ValidateName("http_error_rule_list")
+		}
+		return err
+	}
+
+	return nil
+}
+
+func (m *Defaults) validateHTTPRequestRuleList(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.HTTPRequestRuleList) { // not required
+		return nil
+	}
+
+	if err := m.HTTPRequestRuleList.Validate(formats); err != nil {
+		if ve, ok := err.(*errors.Validation); ok {
+			return ve.ValidateName("http_request_rule_list")
+		} else if ce, ok := err.(*errors.CompositeError); ok {
+			return ce.ValidateName("http_request_rule_list")
+		}
+		return err
+	}
+
+	return nil
+}
+
+func (m *Defaults) validateHTTPResponseRuleList(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.HTTPResponseRuleList) { // not required
+		return nil
+	}
+
+	if err := m.HTTPResponseRuleList.Validate(formats); err != nil {
+		if ve, ok := err.(*errors.Validation); ok {
+			return ve.ValidateName("http_response_rule_list")
+		} else if ce, ok := err.(*errors.CompositeError); ok {
+			return ce.ValidateName("http_response_rule_list")
 		}
 		return err
 	}
@@ -252,6 +414,42 @@ func (m *Defaults) validateTCPCheckRuleList(formats strfmt.Registry) error {
 	return nil
 }
 
+func (m *Defaults) validateTCPRequestRuleList(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.TCPRequestRuleList) { // not required
+		return nil
+	}
+
+	if err := m.TCPRequestRuleList.Validate(formats); err != nil {
+		if ve, ok := err.(*errors.Validation); ok {
+			return ve.ValidateName("tcp_request_rule_list")
+		} else if ce, ok := err.(*errors.CompositeError); ok {
+			return ce.ValidateName("tcp_request_rule_list")
+		}
+		return err
+	}
+
+	return nil
+}
+
+func (m *Defaults) validateTCPResponseRuleList(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.TCPResponseRuleList) { // not required
+		return nil
+	}
+
+	if err := m.TCPResponseRuleList.Validate(formats); err != nil {
+		if ve, ok := err.(*errors.Validation); ok {
+			return ve.ValidateName("tcp_response_rule_list")
+		} else if ce, ok := err.(*errors.CompositeError); ok {
+			return ce.ValidateName("tcp_response_rule_list")
+		}
+		return err
+	}
+
+	return nil
+}
+
 // ContextValidate validate this defaults based on the context it is used
 func (m *Defaults) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
 	var res []error
@@ -261,11 +459,27 @@ func (m *Defaults) ContextValidate(ctx context.Context, formats strfmt.Registry)
 		res = append(res, err)
 	}
 
+	if err := m.contextValidateACLList(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.contextValidateHTTPAfterResponseRuleList(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.contextValidateHTTPCheckList(ctx, formats); err != nil {
 		res = append(res, err)
 	}
 
 	if err := m.contextValidateHTTPErrorRuleList(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.contextValidateHTTPRequestRuleList(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.contextValidateHTTPResponseRuleList(ctx, formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -281,9 +495,45 @@ func (m *Defaults) ContextValidate(ctx context.Context, formats strfmt.Registry)
 		res = append(res, err)
 	}
 
+	if err := m.contextValidateTCPRequestRuleList(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.contextValidateTCPResponseRuleList(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
 	if len(res) > 0 {
 		return errors.CompositeValidationError(res...)
 	}
+	return nil
+}
+
+func (m *Defaults) contextValidateACLList(ctx context.Context, formats strfmt.Registry) error {
+
+	if err := m.ACLList.ContextValidate(ctx, formats); err != nil {
+		if ve, ok := err.(*errors.Validation); ok {
+			return ve.ValidateName("acl_list")
+		} else if ce, ok := err.(*errors.CompositeError); ok {
+			return ce.ValidateName("acl_list")
+		}
+		return err
+	}
+
+	return nil
+}
+
+func (m *Defaults) contextValidateHTTPAfterResponseRuleList(ctx context.Context, formats strfmt.Registry) error {
+
+	if err := m.HTTPAfterResponseRuleList.ContextValidate(ctx, formats); err != nil {
+		if ve, ok := err.(*errors.Validation); ok {
+			return ve.ValidateName("http_after_response_rule_list")
+		} else if ce, ok := err.(*errors.CompositeError); ok {
+			return ce.ValidateName("http_after_response_rule_list")
+		}
+		return err
+	}
+
 	return nil
 }
 
@@ -308,6 +558,34 @@ func (m *Defaults) contextValidateHTTPErrorRuleList(ctx context.Context, formats
 			return ve.ValidateName("http_error_rule_list")
 		} else if ce, ok := err.(*errors.CompositeError); ok {
 			return ce.ValidateName("http_error_rule_list")
+		}
+		return err
+	}
+
+	return nil
+}
+
+func (m *Defaults) contextValidateHTTPRequestRuleList(ctx context.Context, formats strfmt.Registry) error {
+
+	if err := m.HTTPRequestRuleList.ContextValidate(ctx, formats); err != nil {
+		if ve, ok := err.(*errors.Validation); ok {
+			return ve.ValidateName("http_request_rule_list")
+		} else if ce, ok := err.(*errors.CompositeError); ok {
+			return ce.ValidateName("http_request_rule_list")
+		}
+		return err
+	}
+
+	return nil
+}
+
+func (m *Defaults) contextValidateHTTPResponseRuleList(ctx context.Context, formats strfmt.Registry) error {
+
+	if err := m.HTTPResponseRuleList.ContextValidate(ctx, formats); err != nil {
+		if ve, ok := err.(*errors.Validation); ok {
+			return ve.ValidateName("http_response_rule_list")
+		} else if ce, ok := err.(*errors.CompositeError); ok {
+			return ce.ValidateName("http_response_rule_list")
 		}
 		return err
 	}
@@ -350,6 +628,34 @@ func (m *Defaults) contextValidateTCPCheckRuleList(ctx context.Context, formats 
 			return ve.ValidateName("tcp_check_rule_list")
 		} else if ce, ok := err.(*errors.CompositeError); ok {
 			return ce.ValidateName("tcp_check_rule_list")
+		}
+		return err
+	}
+
+	return nil
+}
+
+func (m *Defaults) contextValidateTCPRequestRuleList(ctx context.Context, formats strfmt.Registry) error {
+
+	if err := m.TCPRequestRuleList.ContextValidate(ctx, formats); err != nil {
+		if ve, ok := err.(*errors.Validation); ok {
+			return ve.ValidateName("tcp_request_rule_list")
+		} else if ce, ok := err.(*errors.CompositeError); ok {
+			return ce.ValidateName("tcp_request_rule_list")
+		}
+		return err
+	}
+
+	return nil
+}
+
+func (m *Defaults) contextValidateTCPResponseRuleList(ctx context.Context, formats strfmt.Registry) error {
+
+	if err := m.TCPResponseRuleList.ContextValidate(ctx, formats); err != nil {
+		if ve, ok := err.(*errors.Validation); ok {
+			return ve.ValidateName("tcp_response_rule_list")
+		} else if ce, ok := err.(*errors.CompositeError); ok {
+			return ce.ValidateName("tcp_response_rule_list")
 		}
 		return err
 	}
