@@ -149,6 +149,10 @@ func (s *ServiceInitiationSuite) TestLoadExistingBackend() {
 		{Name: "s2", Address: "127.1.1.2", Port: &serverPort},
 		{Name: "s3", Address: "127.1.1.3", Port: &serverPort},
 		{Name: "s4", Address: "127.1.1.4", Port: &serverPort},
+		{Name: "s5", Address: "127.1.1.5"}, // ServiceInstance supports nil port
+		{Name: "s6", Address: "127.1.1.6"},
+		{Name: "s7", Address: "127.1.1.7"},
+		{Name: "s8", Address: "127.1.1.8"},
 	}
 	s.Nil(s.createExistingService(servers))
 
@@ -165,7 +169,11 @@ func (s *ServiceInitiationSuite) TestLoadExistingBackend() {
 		if i < len(servers) {
 			s.Equal(server.Name, servers[i].Name)
 			s.Equal(server.Address, servers[i].Address)
-			s.Equal(*server.Port, *servers[i].Port)
+			if server.Port != nil {
+				s.Equal(*server.Port, *servers[i].Port)
+			} else {
+				s.Nil(servers[i].Port)
+			}
 		} else {
 			s.Equal(server.Address, "127.0.0.1")
 			s.Equal(*server.Port, int64(80))
@@ -240,10 +248,10 @@ func (s *ServiceUpdateSuit) AfterTest(suiteName, testName string) {
 
 func (s *ServiceUpdateSuit) TestFirstUpdate() {
 	servers := []configuration.ServiceServer{
-		{Address: "127.1.1.1", Port: 81},
-		{Address: "127.1.1.2", Port: 82},
-		{Address: "127.1.1.3", Port: 83},
-		{Address: "127.1.1.4", Port: 84},
+		{Address: "127.1.1.1", Port: misc.Int64P(81)},
+		{Address: "127.1.1.2", Port: misc.Int64P(82)},
+		{Address: "127.1.1.3", Port: misc.Int64P(83)},
+		{Address: "127.1.1.4", Port: misc.Int64P(84)},
 	}
 	r, err := s.service.Update(servers)
 	s.True(r)
@@ -257,7 +265,7 @@ func (s *ServiceUpdateSuit) validateUpdateResult(expected []configuration.Servic
 	for i, server := range servers {
 		if i < len(expected) {
 			s.Equal(expected[i].Address, server.Address)
-			s.Equal(expected[i].Port, int(*server.Port))
+			s.Equal(*expected[i].Port, *server.Port)
 			s.NotEqual("enabled", server.Maintenance)
 		} else {
 			s.Equal("127.0.0.1", server.Address)
@@ -269,18 +277,18 @@ func (s *ServiceUpdateSuit) validateUpdateResult(expected []configuration.Servic
 
 func (s *ServiceUpdateSuit) TestSecondUpdateWithDeletedServer() {
 	servers := []configuration.ServiceServer{
-		{Address: "127.1.1.1", Port: 81},
-		{Address: "127.1.1.2", Port: 82},
-		{Address: "127.1.1.3", Port: 83},
-		{Address: "127.1.1.4", Port: 84},
+		{Address: "127.1.1.1", Port: misc.Int64P(81)},
+		{Address: "127.1.1.2", Port: misc.Int64P(82)},
+		{Address: "127.1.1.3", Port: misc.Int64P(83)},
+		{Address: "127.1.1.4", Port: misc.Int64P(84)},
 	}
 	r, err := s.service.Update(servers)
 	s.True(r)
 	s.Nil(err)
 	servers = []configuration.ServiceServer{
-		{Address: "127.1.1.1", Port: 81},
-		{Address: "127.1.1.3", Port: 83},
-		{Address: "127.1.1.4", Port: 84},
+		{Address: "127.1.1.1", Port: misc.Int64P(81)},
+		{Address: "127.1.1.3", Port: misc.Int64P(83)},
+		{Address: "127.1.1.4", Port: misc.Int64P(84)},
 	}
 	r, err = s.service.Update(servers)
 	s.True(r)
@@ -290,30 +298,30 @@ func (s *ServiceUpdateSuit) TestSecondUpdateWithDeletedServer() {
 	// In this case server 127.1.1.2 got removed and the last enabled server from the remaining ones
 	// gets moved into its slot, in this case 127.1.1.4
 	expected := []configuration.ServiceServer{
-		{Address: "127.1.1.1", Port: 81},
-		{Address: "127.1.1.4", Port: 84},
-		{Address: "127.1.1.3", Port: 83},
+		{Address: "127.1.1.1", Port: misc.Int64P(81)},
+		{Address: "127.1.1.4", Port: misc.Int64P(84)},
+		{Address: "127.1.1.3", Port: misc.Int64P(83)},
 	}
 	s.validateUpdateResult(expected)
 }
 
 func (s *ServiceUpdateSuit) TestSecondUpdateWithNewAndRemovedServers() {
 	servers := []configuration.ServiceServer{
-		{Address: "127.1.1.1", Port: 81},
-		{Address: "127.1.1.2", Port: 82},
-		{Address: "127.1.1.3", Port: 83},
-		{Address: "127.1.1.4", Port: 84},
+		{Address: "127.1.1.1", Port: misc.Int64P(81)},
+		{Address: "127.1.1.2", Port: misc.Int64P(82)},
+		{Address: "127.1.1.3", Port: misc.Int64P(83)},
+		{Address: "127.1.1.4", Port: misc.Int64P(84)},
 	}
 	r, err := s.service.Update(servers)
 	s.True(r)
 	s.Nil(err)
 	servers = []configuration.ServiceServer{
-		{Address: "127.1.1.1", Port: 81},
-		{Address: "127.1.1.4", Port: 84},
-		{Address: "127.1.1.5", Port: 85},
-		{Address: "127.1.1.6", Port: 86},
-		{Address: "127.1.1.7", Port: 87},
-		{Address: "127.1.1.2", Port: 82},
+		{Address: "127.1.1.1", Port: misc.Int64P(81)},
+		{Address: "127.1.1.4", Port: misc.Int64P(84)},
+		{Address: "127.1.1.5", Port: misc.Int64P(85)},
+		{Address: "127.1.1.6", Port: misc.Int64P(86)},
+		{Address: "127.1.1.7", Port: misc.Int64P(87)},
+		{Address: "127.1.1.2", Port: misc.Int64P(82)},
 	}
 	r, err = s.service.Update(servers)
 	s.True(r)
@@ -323,22 +331,22 @@ func (s *ServiceUpdateSuit) TestSecondUpdateWithNewAndRemovedServers() {
 	// The first new server will be placed in place of server 127.1.1.3 which is 127.1.1.5.
 	// The remaining new servers will be added to the end.
 	expected := []configuration.ServiceServer{
-		{Address: "127.1.1.1", Port: 81},
-		{Address: "127.1.1.2", Port: 82},
-		{Address: "127.1.1.5", Port: 85},
-		{Address: "127.1.1.4", Port: 84},
-		{Address: "127.1.1.6", Port: 86},
-		{Address: "127.1.1.7", Port: 87},
+		{Address: "127.1.1.1", Port: misc.Int64P(81)},
+		{Address: "127.1.1.2", Port: misc.Int64P(82)},
+		{Address: "127.1.1.5", Port: misc.Int64P(85)},
+		{Address: "127.1.1.4", Port: misc.Int64P(84)},
+		{Address: "127.1.1.6", Port: misc.Int64P(86)},
+		{Address: "127.1.1.7", Port: misc.Int64P(87)},
 	}
 	s.validateUpdateResult(expected)
 }
 
 func (s *ServiceUpdateSuit) TestSecondUpdateWithNoChanges() {
 	servers := []configuration.ServiceServer{
-		{Address: "127.1.1.1", Port: 81},
-		{Address: "127.1.1.2", Port: 82},
-		{Address: "127.1.1.3", Port: 83},
-		{Address: "127.1.1.4", Port: 84},
+		{Address: "127.1.1.1", Port: misc.Int64P(81)},
+		{Address: "127.1.1.2", Port: misc.Int64P(82)},
+		{Address: "127.1.1.3", Port: misc.Int64P(83)},
+		{Address: "127.1.1.4", Port: misc.Int64P(84)},
 	}
 	r, err := s.service.Update(servers)
 	s.True(r)
@@ -378,7 +386,7 @@ func (s *ServiceUpdateSuit) generateServers(count int) []configuration.ServiceSe
 	for i := 0; i < count; i++ {
 		servers = append(servers, configuration.ServiceServer{
 			Address: fmt.Sprintf("127.1.1.%d", i),
-			Port:    80 + i,
+			Port:    misc.Int64P(80 + i),
 		})
 	}
 	return servers

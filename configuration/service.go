@@ -31,13 +31,13 @@ const ServiceGrowthTypeExponential = "exponential"
 // ServiceServer contains information for one server in the service.
 type ServiceServer struct {
 	Address string
-	Port    int
+	Port    *int64
 }
 
 type ServiceNode struct {
 	address  string
 	name     string
-	port     int64
+	port     *int64
 	disabled bool
 	modified bool
 }
@@ -201,7 +201,7 @@ func (s *Service) markRemovedNodes(servers []ServiceServer) {
 			node.modified = true
 			node.disabled = true
 			node.address = "127.0.0.1"
-			node.port = 80
+			node.port = misc.Int64P(80)
 		}
 	}
 }
@@ -299,8 +299,10 @@ func (s *Service) loadNodes() (bool, error) {
 		sNode := &ServiceNode{
 			name:     server.Name,
 			address:  server.Address,
-			port:     *server.Port,
 			modified: false,
+		}
+		if server.Port != nil {
+			sNode.port = misc.Ptr(*server.Port)
 		}
 		if server.Maintenance == "enabled" {
 			sNode.disabled = true
@@ -320,11 +322,15 @@ func (s *Service) updateConfig() (bool, error) {
 			server := &models.Server{
 				Name:    node.name,
 				Address: node.address,
-				Port:    misc.Ptr(node.port),
 				ServerParams: models.ServerParams{
 					Weight: misc.Int64P(128),
 					Check:  "enabled",
 				},
+			}
+			if node.port != nil {
+				server.Port = misc.Ptr(*node.port)
+			} else {
+				server.Port = nil
 			}
 			if node.disabled {
 				server.Maintenance = "enabled"
@@ -350,7 +356,7 @@ func (s *Service) nodeRemoved(node *ServiceNode, servers []ServiceServer) bool {
 }
 
 func (s *Service) nodesMatch(sNode *ServiceNode, servers ServiceServer) bool {
-	return !sNode.disabled && sNode.address == servers.Address && sNode.port == int64(servers.Port)
+	return !sNode.disabled && sNode.address == servers.Address && ((sNode.port != nil && *sNode.port == *servers.Port) || sNode.port == nil && servers.Port == nil)
 }
 
 func (s *Service) serverExists(server ServiceServer) bool {
@@ -368,7 +374,11 @@ func (s *Service) setServer(server ServiceServer) error {
 			sNode.modified = true
 			sNode.disabled = false
 			sNode.address = server.Address
-			sNode.port = int64(server.Port)
+			if server.Port != nil {
+				sNode.port = misc.Ptr(*server.Port)
+			} else {
+				sNode.port = nil
+			}
 			break
 		}
 	}
@@ -393,7 +403,7 @@ func (s *Service) addNode() error {
 	s.nodes = append(s.nodes, &ServiceNode{
 		name:     name,
 		address:  "127.0.0.1",
-		port:     80,
+		port:     misc.Int64P(80),
 		modified: false,
 		disabled: true,
 	})
@@ -423,11 +433,13 @@ func (s *Service) swapDisabledNode(index int) {
 			s.nodes[i].disabled = true
 			s.nodes[i].modified = true
 			s.nodes[index].address = s.nodes[i].address
-			s.nodes[index].port = s.nodes[i].port
+			if s.nodes[i].port != nil {
+				s.nodes[index].port = misc.Ptr(*s.nodes[i].port)
+			}
 			s.nodes[index].disabled = false
 			s.nodes[index].modified = true
 			s.nodes[i].address = "127.0.0.1"
-			s.nodes[i].port = 80
+			s.nodes[i].port = misc.Int64P(80)
 			break
 		}
 	}
