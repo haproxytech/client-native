@@ -34,6 +34,7 @@ type Structured interface {
 	StructuredFCGIApp
 	StructuredMailersSection
 	StructuredTraces
+	StructuredAcmeProvider
 }
 
 type StructuredToParserArgs struct {

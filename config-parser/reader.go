@@ -391,6 +391,17 @@ func (p *configParser) ProcessLine(line string, parts []string, comment string, 
 					if p.Options.Log {
 						p.Options.Logger.Tracef("%slog-profile section %s active", p.Options.LogPrefix, data.Name)
 					}
+				case "acme":
+					parserSectionName := parser.(*extra.Section) //nolint:forcetypeassert
+					rawData, _ := parserSectionName.Get(false)
+					data := rawData.(*types.Section) //nolint:forcetypeassert
+					config.Acme = p.getAcmeParser()
+					config.Acme.Section = *data
+					p.Parsers[Acme][data.Name] = config.Acme
+					config.Active = config.Acme
+					if p.Options.Log {
+						p.Options.Logger.Tracef("%sacme section %s active", p.Options.LogPrefix, data.Name)
+					}
 				case "snippet_beg":
 					config.Previous = config.Active
 					config.Active = &Parsers{

@@ -736,6 +736,14 @@ definitions:
       $ref: "#/definitions/ssl_front_use"
     x-omitempty: true
     x-go-name: SSLFrontUses
+  acme_provider:
+    $ref: "models/configuration/acme.yaml#/acme"
+  acme_providers:
+    description: List of ACME sections.
+    type: array
+    items:
+      $ref: "#/definitions/acme_provider"
+      x-omitempty: true
 responses:
   BadRequest:
     description: Bad request
@@ -911,6 +919,7 @@ tags:
   - name: CrtLoad
   - name: Traces
   - name: LogProfile
+  - name: Acme
 security:
   - basic_auth: []
 paths:
@@ -1298,3 +1307,7 @@ paths:
     $ref: "paths/configuration/ssl_front_use.yaml#/ssl_front_uses"
   /services/haproxy/configuration/frontends/{parent_name}/ssl_front_uses/{index}:
     $ref: "paths/configuration/ssl_front_use.yaml#/ssl_front_uses_one"
+  /services/haproxy/configuration/acme:
+    $ref: "paths/configuration/acme.yaml#/acme_providers"
+  /services/haproxy/configuration/acme/{name}:
+    $ref: "paths/configuration/acme.yaml#/acme_providers_one"

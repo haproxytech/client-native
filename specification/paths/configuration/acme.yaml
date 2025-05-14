@@ -1,0 +1,150 @@
+---
+acme_providers:
+  get:
+    summary: Return all the ACME providers
+    description: Returns an array of all the configured ACME providers
+    operationId: getAcmeProviders
+    parameters:
+      - $ref: "#/parameters/transaction_id"
+    tags:
+      - Acme
+    responses:
+      '200':
+        description: Successful operation
+        headers:
+          Configuration-Version:
+            description: Configuration file version
+            type: string
+        schema:
+          $ref: "#/definitions/acme_providers"
+      'default':
+        $ref: "#/responses/DefaultError"
+  post:
+    summary: Add a new Acme provider
+    description: Creates a new acme section
+    operationId: createAcmeProvider
+    parameters:
+      - name: data
+        required: true
+        in: body
+        schema:
+          $ref: "#/definitions/acme_provider"
+      - $ref: "#/parameters/transaction_id"
+      - $ref: "#/parameters/version"
+      - $ref: "#/parameters/force_reload"
+    tags:
+      - Acme
+    responses:
+      '202':
+        description: Configuration change accepted and reload requested
+        headers:
+          Reload-ID:
+            description: ID of the requested reload
+            type: string
+        schema:
+          $ref: "#/definitions/acme_provider"
+      '201':
+        description: Log Profile created
+        schema:
+          $ref: "#/definitions/acme_provider"
+      '409':
+        $ref: '#/responses/AlreadyExists'
+      '400':
+        $ref: '#/responses/BadRequest'
+      'default':
+        $ref: '#/responses/DefaultError'
+
+acme_providers_one:
+  get:
+    summary: Find an ACME provider
+    description: Find an acme section by its name
+    operationId: getAcmeProvider
+    tags:
+      - Acme
+    parameters:
+      - name: name
+        in: path
+        description: acme section name
+        required: true
+        type: string
+      - $ref: "#/parameters/transaction_id"
+    responses:
+      '200':
+        description: Successful operation
+        headers:
+          Configuration-Version:
+            description: Configuration file version
+            type: string
+        schema:
+          $ref: "#/definitions/acme_provider"
+      '404':
+        $ref: '#/responses/NotFound'
+      'default':
+        $ref: '#/responses/DefaultError'
+  put:
+    summary: Modify an ACME provider
+    description: Modifies a acme_provider's configuration by its name
+    operationId: editAcmeProvider
+    tags:
+      - Acme
+    parameters:
+      - name: name
+        in: path
+        description: acme section name
+        required: true
+        type: string
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/acme_provider'
+      - $ref: "#/parameters/transaction_id"
+      - $ref: "#/parameters/version"
+      - $ref: "#/parameters/force_reload"
+    responses:
+      '202':
+        description: Configuration change accepted and reload requested
+        headers:
+          Reload-ID:
+            description: ID of the requested reload
+            type: string
+        schema:
+          $ref: "#/definitions/acme_provider"
+      '200':
+        description: acme_provider configuration updated
+        schema:
+          $ref: "#/definitions/acme_provider"
+      '400':
+        $ref: '#/responses/BadRequest'
+      '404':
+        $ref: '#/responses/NotFound'
+      'default':
+        $ref: '#/responses/DefaultError'
+  delete:
+    summary: Delete an ACME provider
+    description: Deletes an acme section from the configuration
+    operationId: deleteAcmeProvider
+    tags:
+      - Acme
+    parameters:
+      - name: name
+        in: path
+        description: acme section name
+        required: true
+        type: string
+      - $ref: "#/parameters/transaction_id"
+      - $ref: "#/parameters/version"
+      - $ref: "#/parameters/force_reload"
+    responses:
+      '202':
+        description: Configuration change accepted and reload requested
+        headers:
+          Reload-ID:
+            description: ID of the requested reload
+            type: string
+      '204':
+        description: acme provider deleted
+      '404':
+        $ref: '#/responses/NotFound'
+      'default':
+        $ref: '#/responses/DefaultError'

@@ -50,6 +50,7 @@ const (
 	CrtStoreParentName   = "crt-store"
 	TracesParentName     = "traces"
 	LogProfileParentName = "log-profile"
+	AcmeParentName       = "acme"
 )
 
 // ClientParams is just a placeholder for all client options

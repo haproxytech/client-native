@@ -990,6 +990,14 @@ mailers localmailer1
   mailer smtp2 10.0.10.2:514
   timeout mail 15s
 
+acme test
+  contact me@example.com
+  bits 4096
+  challenge HTTP-01
+  directory https://acme.example.com/directory
+  keytype ECDSA
+  map acme@t
+
 crt-store cert-bunker1
   crt-base /secure/certs
   key-base /secure/keys

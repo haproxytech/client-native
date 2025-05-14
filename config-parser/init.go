@@ -47,6 +47,7 @@ type ConfiguredParsers struct {
 	CrtStore              *Parsers
 	Traces                *Parsers
 	LogProfile            *Parsers
+	Acme                  *Parsers
 	// spoe parsers
 	SPOEAgent   *Parsers
 	SPOEGroup   *Parsers
@@ -99,4 +100,5 @@ func (p *configParser) initParserMaps() {
 	p.Parsers[CrtStore] = map[string]*Parsers{}
 	p.Parsers[Traces] = map[string]*Parsers{}
 	p.Parsers[LogProfile] = map[string]*Parsers{}
+	p.Parsers[Acme] = map[string]*Parsers{}
 }

@@ -1,0 +1,49 @@
+---
+acme:
+  title: ACME Provider
+  description: Define an ACME provider to generate certificates automatically
+  type: object
+  required:
+    - name
+    - directory
+  properties:
+    name:
+      type: string
+      description: ACME provider's name
+      x-nullable: false
+    account_key:
+      type: string
+      description: Path where the the ACME account key is stored
+    bits:
+      type: integer
+      description: Number of bits to generate an RSA certificate
+      minimum: 1024
+      x-omitempty: true
+      x-nullable: true
+    challenge:
+      type: string
+      enum: ['HTTP-01', 'DNS-01']
+      description: ACME challenge type. Only HTTP-01 and DNS-01 are supported.
+    contact:
+      type: string
+      description: Contact email for the ACME account
+    curves:
+      type: string
+      description: Curves used with the ECDSA key type
+    directory:
+      type: string
+      pattern: '^https://[^\s]+$'
+      x-nullable: false
+      description: |
+        URL to the ACME provider's directory. For example:
+        https://acme-staging-v02.api.letsencrypt.org/directory
+    keytype:
+      type: string
+      enum: [RSA, ECDSA]
+      description: Type of key to generate
+    map:
+      type: string
+      description: The map which will be used to store the ACME token (key) and thumbprint
+    metadata:
+      additionalProperties:
+        type: object

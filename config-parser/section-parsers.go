@@ -52,6 +52,7 @@ func (p *configParser) createParsers(parser map[string]ParserInterface, sequence
 	addParser(parser, &sequence, &extra.Section{Name: "crt-store"})
 	addParser(parser, &sequence, &extra.Section{Name: "traces"})
 	addParser(parser, &sequence, &extra.Section{Name: "log-profile"})
+	addParser(parser, &sequence, &extra.Section{Name: "acme"})
 	if !p.Options.DisableUnProcessed {
 		addParser(parser, &sequence, &extra.UnProcessed{})
 	}
@@ -1002,5 +1003,19 @@ func (p *configParser) getLogProfileParser() *Parsers {
 	sequence := []Section{}
 	addParser(parser, &sequence, &simple.Word{Name: "log-tag"})
 	addParser(parser, &sequence, &parsers.OnLogStep{})
+	return p.createParsers(parser, sequence)
+}
+
+func (p *configParser) getAcmeParser() *Parsers {
+	parser := map[string]ParserInterface{}
+	sequence := []Section{}
+	addParser(parser, &sequence, &simple.Word{Name: "account-key"})
+	addParser(parser, &sequence, &simple.Number{Name: "bits"})
+	addParser(parser, &sequence, &simple.Word{Name: "challenge"})
+	addParser(parser, &sequence, &simple.Word{Name: "contact"})
+	addParser(parser, &sequence, &simple.Word{Name: "curves"})
+	addParser(parser, &sequence, &simple.Word{Name: "directory"})
+	addParser(parser, &sequence, &simple.Word{Name: "keytype"})
+	addParser(parser, &sequence, &simple.Word{Name: "map"})
 	return p.createParsers(parser, sequence)
 }

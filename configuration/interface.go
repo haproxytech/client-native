@@ -33,6 +33,7 @@ import (
 type Configuration interface {
 	Parser
 	ACL
+	Acme
 	Backend
 	Bind
 	Cache

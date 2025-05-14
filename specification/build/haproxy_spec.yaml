@@ -11617,6 +11617,64 @@ definitions:
       $ref: "#/definitions/ssl_front_use"
     x-omitempty: true
     x-go-name: SSLFrontUses
+  acme_provider:
+    description: Define an ACME provider to generate certificates automatically
+    properties:
+      account_key:
+        description: Path where the the ACME account key is stored
+        type: string
+      bits:
+        description: Number of bits to generate an RSA certificate
+        minimum: 1024
+        type: integer
+        x-nullable: true
+        x-omitempty: true
+      challenge:
+        description: ACME challenge type. Only HTTP-01 and DNS-01 are supported.
+        enum:
+          - HTTP-01
+          - DNS-01
+        type: string
+      contact:
+        description: Contact email for the ACME account
+        type: string
+      curves:
+        description: Curves used with the ECDSA key type
+        type: string
+      directory:
+        description: |
+          URL to the ACME provider's directory. For example:
+          https://acme-staging-v02.api.letsencrypt.org/directory
+        pattern: ^https://[^\s]+$
+        type: string
+        x-nullable: false
+      keytype:
+        description: Type of key to generate
+        enum:
+          - RSA
+          - ECDSA
+        type: string
+      map:
+        description: The map which will be used to store the ACME token (key) and thumbprint
+        type: string
+      metadata:
+        additionalProperties:
+          type: object
+      name:
+        description: ACME provider's name
+        type: string
+        x-nullable: false
+    required:
+      - name
+      - directory
+    title: ACME Provider
+    type: object
+  acme_providers:
+    description: List of ACME sections.
+    type: array
+    items:
+      $ref: "#/definitions/acme_provider"
+      x-omitempty: true
 responses:
   BadRequest:
     description: Bad request
@@ -11713,6 +11771,7 @@ produces:
   - application/json
 tags:
   - name: ACL
+  - name: Acme
   - name: Backend
     description: Managing backend configurations (advanced mode)
   - name: BackendSwitchingRule
@@ -27864,3 +27923,151 @@ paths:
       summary: Replace an SSLFrontUse
       tags:
         - SSLFrontUse
+  /services/haproxy/configuration/acme:
+    get:
+      description: Returns an array of all the configured ACME providers
+      operationId: getAcmeProviders
+      parameters:
+        - $ref: '#/parameters/transaction_id'
+      responses:
+        "200":
+          description: Successful operation
+          headers:
+            Configuration-Version:
+              description: Configuration file version
+              type: string
+          schema:
+            $ref: '#/definitions/acme_providers'
+        default:
+          $ref: '#/responses/DefaultError'
+      summary: Return all the ACME providers
+      tags:
+        - Acme
+    post:
+      description: Creates a new acme section
+      operationId: createAcmeProvider
+      parameters:
+        - in: body
+          name: data
+          required: true
+          schema:
+            $ref: '#/definitions/acme_provider'
+        - $ref: '#/parameters/transaction_id'
+        - $ref: '#/parameters/version'
+        - $ref: '#/parameters/force_reload'
+      responses:
+        "201":
+          description: Log Profile created
+          schema:
+            $ref: '#/definitions/acme_provider'
+        "202":
+          description: Configuration change accepted and reload requested
+          headers:
+            Reload-ID:
+              description: ID of the requested reload
+              type: string
+          schema:
+            $ref: '#/definitions/acme_provider'
+        "400":
+          $ref: '#/responses/BadRequest'
+        "409":
+          $ref: '#/responses/AlreadyExists'
+        default:
+          $ref: '#/responses/DefaultError'
+      summary: Add a new Acme provider
+      tags:
+        - Acme
+  /services/haproxy/configuration/acme/{name}:
+    delete:
+      description: Deletes an acme section from the configuration
+      operationId: deleteAcmeProvider
+      parameters:
+        - description: acme section name
+          in: path
+          name: name
+          required: true
+          type: string
+        - $ref: '#/parameters/transaction_id'
+        - $ref: '#/parameters/version'
+        - $ref: '#/parameters/force_reload'
+      responses:
+        "202":
+          description: Configuration change accepted and reload requested
+          headers:
+            Reload-ID:
+              description: ID of the requested reload
+              type: string
+        "204":
+          description: acme provider deleted
+        "404":
+          $ref: '#/responses/NotFound'
+        default:
+          $ref: '#/responses/DefaultError'
+      summary: Delete an ACME provider
+      tags:
+        - Acme
+    get:
+      description: Find an acme section by its name
+      operationId: getAcmeProvider
+      parameters:
+        - description: acme section name
+          in: path
+          name: name
+          required: true
+          type: string
+        - $ref: '#/parameters/transaction_id'
+      responses:
+        "200":
+          description: Successful operation
+          headers:
+            Configuration-Version:
+              description: Configuration file version
+              type: string
+          schema:
+            $ref: '#/definitions/acme_provider'
+        "404":
+          $ref: '#/responses/NotFound'
+        default:
+          $ref: '#/responses/DefaultError'
+      summary: Find an ACME provider
+      tags:
+        - Acme
+    put:
+      description: Modifies a acme_provider's configuration by its name
+      operationId: editAcmeProvider
+      parameters:
+        - description: acme section name
+          in: path
+          name: name
+          required: true
+          type: string
+        - in: body
+          name: data
+          required: true
+          schema:
+            $ref: '#/definitions/acme_provider'
+        - $ref: '#/parameters/transaction_id'
+        - $ref: '#/parameters/version'
+        - $ref: '#/parameters/force_reload'
+      responses:
+        "200":
+          description: acme_provider configuration updated
+          schema:
+            $ref: '#/definitions/acme_provider'
+        "202":
+          description: Configuration change accepted and reload requested
+          headers:
+            Reload-ID:
+              description: ID of the requested reload
+              type: string
+          schema:
+            $ref: '#/definitions/acme_provider'
+        "400":
+          $ref: '#/responses/BadRequest'
+        "404":
+          $ref: '#/responses/NotFound'
+        default:
+          $ref: '#/responses/DefaultError'
+      summary: Modify an ACME provider
+      tags:
+        - Acme

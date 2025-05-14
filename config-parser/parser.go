@@ -49,6 +49,7 @@ const (
 	CrtStore   Section = "crt-store"
 	Traces     Section = "traces"
 	LogProfile Section = "log-profile"
+	Acme       Section = "acme"
 	// spoe sections
 	SPOEAgent   Section = "spoe-agent"
 	SPOEGroup   Section = "spoe-group"
