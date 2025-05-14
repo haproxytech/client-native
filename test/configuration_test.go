@@ -286,6 +286,9 @@ defaults test_defaults # testing_defaults
   http-request allow if src 192.168.0.0/16
   tcp-request connection accept if TRUE
   tcp-request connection reject if FALSE
+  tcp-response content accept if TRUE # my comment
+  tcp-response content lua.foo param1 param2 if FALSE
+  tcp-response content set-bandwidth-limit my-limit limit 1m period 10s
   http-response allow if src 192.168.0.0/16
   http-response set-header X-SSL %[ssl_fc]
   http-after-response set-map(map.lst) %[src] %[res.hdr(X-Value)]

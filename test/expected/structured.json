@@ -3155,6 +3155,32 @@
                     "type": "del-acl"
                 }
             ],
+            "tcp_response_rule_list": [
+                {
+                    "action": "accept",
+                    "cond": "if",
+                    "cond_test": "TRUE",
+                    "type": "content",
+                    "metadata": {
+                        "comment": "my comment"
+                    }
+                },
+                {
+                    "action": "lua",
+                    "cond": "if",
+                    "cond_test": "FALSE",
+                    "lua_action": "foo",
+                    "lua_params": "param1 param2",
+                    "type": "content"
+                },
+                {
+                    "action": "set-bandwidth-limit",
+                    "bandwidth_limit_limit": "1m",
+                    "bandwidth_limit_name": "my-limit",
+                    "bandwidth_limit_period": "10s",
+                    "type": "content"
+                }
+            ],
             "quic_initial_rule_list": [
                 {
                     "type": "reject"

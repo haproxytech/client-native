@@ -118,6 +118,21 @@ func TestPushStructuredDefaults(t *testing.T) {
 				Interface: "lo",
 			},
 		},
+		TCPResponseRuleList: models.TCPResponseRules{
+			&models.TCPResponseRule{
+				Type:     "content",
+				Action:   "accept",
+				Cond:     "if",
+				CondTest: "FALSE",
+			},
+		},
+		HTTPRequestRuleList: models.HTTPRequestRules{
+			&models.HTTPRequestRule{
+				Type:     "allow",
+				Cond:     "if",
+				CondTest: "TRUE",
+			},
+		},
 		HTTPCheckList: models.HTTPChecks{
 			&models.HTTPCheck{
 				Type: "send-state",

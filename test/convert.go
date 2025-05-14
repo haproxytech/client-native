@@ -578,6 +578,7 @@ func StructuredToTCPResponseRuleMap() map[string]models.TCPResponseRules {
 	res := make(map[string]models.TCPResponseRules)
 	resources := make(map[string][]models.TCPResponseRule)
 	_ = expectedChildResources[models.Backend](resources, "backends", "name", "tcp_response_rule_list")
+	_ = expectedChildResources[models.Backend](resources, "defaults", "name", "tcp_response_rule_list")
 	for k, v := range resources {
 		res[k] = toSliceOfPtrs(v)
 	}
