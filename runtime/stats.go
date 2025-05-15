@@ -19,7 +19,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/mitchellh/mapstructure"
+	"github.com/go-viper/mapstructure/v2"
 
 	"github.com/haproxytech/client-native/v6/models"
 )
