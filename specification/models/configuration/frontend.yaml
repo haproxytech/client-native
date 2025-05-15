@@ -123,7 +123,7 @@ frontend_base:
           value: http
     http-drop-response-trailers:
       type: string
-      enum: [ enabled, disabled ]
+      enum: [enabled, disabled]
       x-display-name: Drop HTTP Response Trailers
     client_timeout:
       type: integer

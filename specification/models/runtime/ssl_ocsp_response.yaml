@@ -1,3 +1,4 @@
+---
 ssl_ocsp_response:
   title: SSL OCSP Response
   description: SSL OCSP Response

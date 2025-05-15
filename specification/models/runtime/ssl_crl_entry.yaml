@@ -1,3 +1,4 @@
+---
 ssl_crl_entry:
   title: One CRL Entry
   description: A certificate revocation list entry.

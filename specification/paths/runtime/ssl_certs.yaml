@@ -1,3 +1,4 @@
+---
 ssl_certs:
   get:
     tags:

@@ -2,7 +2,7 @@
 ssl_front_use:
   title: SSL Frontend Use certificate
   description: Assign a certificate to the current frontend
-  type: object # sslbindconf
+  type: object  # sslbindconf
   x-go-name: SSLFrontUse
   required:
     - certificate

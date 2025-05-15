@@ -1,3 +1,4 @@
+---
 ssl_ca_files:
   get:
     tags:

@@ -311,7 +311,7 @@ backend_base:
       x-display-name: Checkcache
     http-drop-request-trailers:
       type: string
-      enum: [ enabled, disabled ]
+      enum: [enabled, disabled]
       x-display-name: Drop HTTP Request Trailers
     independent_streams:
       type: string

@@ -130,11 +130,11 @@ defaults_base:
       x-display-name: HTTP bufferrequest
     http-drop-request-trailers:
       type: string
-      enum: [ enabled, disabled ]
+      enum: [enabled, disabled]
       x-display-name: Drop HTTP Request Trailers
     http-drop-response-trailers:
       type: string
-      enum: [ enabled, disabled ]
+      enum: [enabled, disabled]
       x-display-name: Drop HTTP Response Trailers
     httplog:
       type: boolean

@@ -38,7 +38,7 @@ linters:
     - gci
     - goconst
     - recvcheck
-    - tenv #deprecated
+    - tenv  # deprecated
 
 issues:
   exclude-files:

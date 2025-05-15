@@ -1,3 +1,4 @@
+---
 ssl_crt_list_file:
   title: SSL CRT List File
   description: A file referencing one or more certificates with their configuration.
