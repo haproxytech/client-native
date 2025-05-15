@@ -8,6 +8,7 @@ require (
 	github.com/go-openapi/strfmt v0.23.0
 	github.com/go-openapi/swag v0.23.1
 	github.com/go-openapi/validate v0.24.0
+	github.com/go-viper/mapstructure/v2 v2.2.1
 	github.com/gofrs/flock v0.12.1
 	github.com/google/go-cmp v0.7.0
 	github.com/google/renameio v1.0.1
@@ -16,7 +17,6 @@ require (
 	github.com/haproxytech/go-logger v1.1.0
 	github.com/json-iterator/go v1.1.12
 	github.com/kballard/go-shellquote v0.0.0-20180428030007-95032a82bc51
-	github.com/mitchellh/mapstructure v1.5.0
 	github.com/sirkon/dst v0.26.4
 	github.com/stretchr/testify v1.10.0
 	golang.org/x/sync v0.14.0
@@ -35,6 +35,7 @@ require (
 	github.com/go-openapi/spec v0.21.0 // indirect
 	github.com/josharian/intern v1.0.0 // indirect
 	github.com/mailru/easyjson v0.9.0 // indirect
+	github.com/mitchellh/mapstructure v1.5.0 // indirect
 	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
 	github.com/modern-go/reflect2 v1.0.2 // indirect
 	github.com/oklog/ulid v1.3.1 // indirect
