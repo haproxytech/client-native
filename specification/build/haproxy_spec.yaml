@@ -4782,6 +4782,7 @@ definitions:
             required: true
             value:
               - do-resolve
+              - pause
               - set-bc-mark
               - set-bc-tos
               - set-dst
@@ -5248,6 +5249,7 @@ definitions:
           - early-hint
           - lua
           - normalize-uri
+          - pause
           - redirect
           - reject
           - replace-header
@@ -5478,6 +5480,7 @@ definitions:
           type:
             required: true
             value:
+              - pause
               - set-fc-mark
               - set-fc-tos
         x-display-name: Standard HAProxy expression
@@ -5836,6 +5839,7 @@ definitions:
           - del-map
           - deny
           - lua
+          - pause
           - redirect
           - replace-header
           - replace-value

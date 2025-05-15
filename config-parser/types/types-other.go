@@ -356,6 +356,13 @@ type Action interface {
 //test:fail:http-request normalize-uri path-strip-dot full
 //test:fail:http-request normalize-uri if TRUE
 //test:fail:http-request normalize-uri
+//test:ok:http-request pause 20
+//test:ok:http-request pause 20s
+//test:ok:http-request pause res.hdr(X-Pause-Seconds),mul(1000)
+//test:ok:http-request pause 20 if TRUE
+//test:ok:http-request pause 20s if TRUE
+//test:ok:http-request pause %[calc((sc_conn_rate(0) - 30) * 10)] if { sc_conn_rate(0) gt 30 }
+//test:fail:http-request pause
 //test:ok:http-request redirect prefix https://mysite.com
 //test:fail:http-request redirect prefix
 //test:ok:http-request reject
@@ -613,6 +620,12 @@ type HTTPRequests struct{}
 //test:fail:http-response lua.
 //test:fail:http-response lua. if FALSE
 //test:fail:http-response lua. param
+//test:ok:http-response pause 20
+//test:ok:http-response pause 20s
+//test:ok:http-response pause res.hdr(X-Pause-Seconds),mul(1000)
+//test:ok:http-response pause 20 if TRUE
+//test:ok:http-response pause 20s if TRUE
+//test:ok:http-response pause %[calc((sc_conn_rate(0) - 30) * 10)] if { sc_conn_rate(0) gt 30 }
 //test:ok:http-response redirect prefix https://mysite.com
 //test:fail:http-response redirect prefix
 //test:ok:http-response replace-header User-agent curl foo

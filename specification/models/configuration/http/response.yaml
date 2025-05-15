@@ -19,6 +19,7 @@ http_response_rule:
         - del-map
         - deny
         - lua
+        - pause
         - redirect
         - replace-header
         - replace-value
@@ -71,7 +72,7 @@ http_response_rule:
       x-display-name: Standard HAProxy expression
       x-dependency:
         type:
-          value: [set-fc-mark, set-fc-tos]
+          value: [pause, set-fc-mark, set-fc-tos]
           required: true
     redir_type:
       type: string

@@ -491,6 +491,12 @@ backend test
   http-request normalize-uri percent-to-uppercase strict if TRUE
   http-request normalize-uri query-sort-by-name
   http-request normalize-uri query-sort-by-name if TRUE
+  http-request pause 20
+  http-request pause 20s
+  http-request pause res.hdr(X-Pause-Seconds),mul(1000)
+  http-request pause 20 if TRUE
+  http-request pause 20s if TRUE
+  http-request pause %[calc((sc_conn_rate(0) - 30) * 10)] if { sc_conn_rate(0) gt 30 }
   http-request redirect prefix https://mysite.com
   http-request reject
   http-request replace-header User-agent curl foo
@@ -653,6 +659,12 @@ backend test
   http-response lua.foo if FALSE
   http-response lua.foo param
   http-response lua.foo param param2
+  http-response pause 20
+  http-response pause 20s
+  http-response pause res.hdr(X-Pause-Seconds),mul(1000)
+  http-response pause 20 if TRUE
+  http-response pause 20s if TRUE
+  http-response pause %[calc((sc_conn_rate(0) - 30) * 10)] if { sc_conn_rate(0) gt 30 }
   http-response redirect prefix https://mysite.com
   http-response replace-header User-agent curl foo
   http-response replace-value X-Forwarded-For ^192.168.(.*)$ 172.16.1
@@ -1368,6 +1380,12 @@ defaults test
   http-request normalize-uri percent-to-uppercase strict if TRUE
   http-request normalize-uri query-sort-by-name
   http-request normalize-uri query-sort-by-name if TRUE
+  http-request pause 20
+  http-request pause 20s
+  http-request pause res.hdr(X-Pause-Seconds),mul(1000)
+  http-request pause 20 if TRUE
+  http-request pause 20s if TRUE
+  http-request pause %[calc((sc_conn_rate(0) - 30) * 10)] if { sc_conn_rate(0) gt 30 }
   http-request redirect prefix https://mysite.com
   http-request reject
   http-request replace-header User-agent curl foo
@@ -1530,6 +1548,12 @@ defaults test
   http-response lua.foo if FALSE
   http-response lua.foo param
   http-response lua.foo param param2
+  http-response pause 20
+  http-response pause 20s
+  http-response pause res.hdr(X-Pause-Seconds),mul(1000)
+  http-response pause 20 if TRUE
+  http-response pause 20s if TRUE
+  http-response pause %[calc((sc_conn_rate(0) - 30) * 10)] if { sc_conn_rate(0) gt 30 }
   http-response redirect prefix https://mysite.com
   http-response replace-header User-agent curl foo
   http-response replace-value X-Forwarded-For ^192.168.(.*)$ 172.16.1
@@ -2203,6 +2227,12 @@ frontend test
   http-request normalize-uri percent-to-uppercase strict if TRUE
   http-request normalize-uri query-sort-by-name
   http-request normalize-uri query-sort-by-name if TRUE
+  http-request pause 20
+  http-request pause 20s
+  http-request pause res.hdr(X-Pause-Seconds),mul(1000)
+  http-request pause 20 if TRUE
+  http-request pause 20s if TRUE
+  http-request pause %[calc((sc_conn_rate(0) - 30) * 10)] if { sc_conn_rate(0) gt 30 }
   http-request redirect prefix https://mysite.com
   http-request reject
   http-request replace-header User-agent curl foo
@@ -2367,6 +2397,12 @@ frontend test
   http-response lua.foo if FALSE
   http-response lua.foo param
   http-response lua.foo param param2
+  http-response pause 20
+  http-response pause 20s
+  http-response pause res.hdr(X-Pause-Seconds),mul(1000)
+  http-response pause 20 if TRUE
+  http-response pause 20s if TRUE
+  http-response pause %[calc((sc_conn_rate(0) - 30) * 10)] if { sc_conn_rate(0) gt 30 }
   http-response redirect prefix https://mysite.com
   http-response replace-header User-agent curl foo
   http-response replace-value X-Forwarded-For ^192.168.(.*)$ 172.16.1
@@ -4249,6 +4285,18 @@ var configTests = []configTest{{`  command spoa-mirror --runtime 0 --mirror-url 
 `, 3},
 	{`  http-request normalize-uri query-sort-by-name if TRUE
 `, 3},
+	{`  http-request pause 20
+`, 3},
+	{`  http-request pause 20s
+`, 3},
+	{`  http-request pause res.hdr(X-Pause-Seconds),mul(1000)
+`, 3},
+	{`  http-request pause 20 if TRUE
+`, 3},
+	{`  http-request pause 20s if TRUE
+`, 3},
+	{`  http-request pause %[calc((sc_conn_rate(0) - 30) * 10)] if { sc_conn_rate(0) gt 30 }
+`, 3},
 	{`  http-request redirect prefix https://mysite.com
 `, 3},
 	{`  http-request reject
@@ -4550,6 +4598,18 @@ var configTests = []configTest{{`  command spoa-mirror --runtime 0 --mirror-url 
 	{`  http-response lua.foo param
 `, 3},
 	{`  http-response lua.foo param param2
+`, 3},
+	{`  http-response pause 20
+`, 3},
+	{`  http-response pause 20s
+`, 3},
+	{`  http-response pause res.hdr(X-Pause-Seconds),mul(1000)
+`, 3},
+	{`  http-response pause 20 if TRUE
+`, 3},
+	{`  http-response pause 20s if TRUE
+`, 3},
+	{`  http-response pause %[calc((sc_conn_rate(0) - 30) * 10)] if { sc_conn_rate(0) gt 30 }
 `, 3},
 	{`  http-response redirect prefix https://mysite.com
 `, 3},

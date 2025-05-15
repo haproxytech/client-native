@@ -24,6 +24,7 @@ http_request_rule:
         - early-hint
         - lua
         - normalize-uri
+        - pause
         - redirect
         - reject
         - replace-header
@@ -428,6 +429,7 @@ http_request_rule:
         type:
           value:
             - do-resolve
+            - pause
             - set-bc-mark
             - set-bc-tos
             - set-dst

@@ -2157,6 +2157,30 @@ const backend_httprequestnormalizeuriquerysort_ = `
 backend test
   http-request normalize-uri query-sort-by-name if TRUE
 `
+const backend_httprequestpause20 = `
+backend test
+  http-request pause 20
+`
+const backend_httprequestpause20s = `
+backend test
+  http-request pause 20s
+`
+const backend_httprequestpausereshdrXPauseSeco = `
+backend test
+  http-request pause res.hdr(X-Pause-Seconds),mul(1000)
+`
+const backend_httprequestpause20ifTRUE = `
+backend test
+  http-request pause 20 if TRUE
+`
+const backend_httprequestpause20sifTRUE = `
+backend test
+  http-request pause 20s if TRUE
+`
+const backend_httprequestpausecalcscconnrate03 = `
+backend test
+  http-request pause %[calc((sc_conn_rate(0) - 30) * 10)] if { sc_conn_rate(0) gt 30 }
+`
 const backend_httprequestredirectprefixhttpsmy = `
 backend test
   http-request redirect prefix https://mysite.com
@@ -2804,6 +2828,30 @@ backend test
 const backend_httpresponseluafooparamparam2 = `
 backend test
   http-response lua.foo param param2
+`
+const backend_httpresponsepause20 = `
+backend test
+  http-response pause 20
+`
+const backend_httpresponsepause20s = `
+backend test
+  http-response pause 20s
+`
+const backend_httpresponsepausereshdrXPauseSec = `
+backend test
+  http-response pause res.hdr(X-Pause-Seconds),mul(1000)
+`
+const backend_httpresponsepause20ifTRUE = `
+backend test
+  http-response pause 20 if TRUE
+`
+const backend_httpresponsepause20sifTRUE = `
+backend test
+  http-response pause 20s if TRUE
+`
+const backend_httpresponsepausecalcscconnrate0 = `
+backend test
+  http-response pause %[calc((sc_conn_rate(0) - 30) * 10)] if { sc_conn_rate(0) gt 30 }
 `
 const backend_httpresponseredirectprefixhttpsm = `
 backend test

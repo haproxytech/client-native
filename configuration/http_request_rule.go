@@ -406,6 +406,14 @@ func ParseHTTPRequestRule(f types.Action) (*models.HTTPRequestRule, error) { //n
 			CondTest:         v.CondTest,
 			Metadata:         parseMetadata(v.Comment),
 		}
+	case *http_actions.Pause:
+		rule = &models.HTTPRequestRule{
+			Type:     models.HTTPRequestRuleTypePause,
+			Expr:     v.Pause.String(),
+			Cond:     v.Cond,
+			CondTest: v.CondTest,
+			Metadata: parseMetadata(v.Comment),
+		}
 	case *http_actions.Redirect:
 		var codePtr *int64
 		if v.Code != "" {
@@ -1034,6 +1042,13 @@ func SerializeHTTPRequestRule(f models.HTTPRequestRule, opt *options.Configurati
 			Cond:       f.Cond,
 			CondTest:   f.CondTest,
 			Comment:    comment,
+		}
+	case models.HTTPRequestRuleTypePause:
+		rule = &http_actions.Pause{
+			Pause:    common.Expression{Expr: strings.Split(f.Expr, " ")},
+			Cond:     f.Cond,
+			CondTest: f.CondTest,
+			Comment:  comment,
 		}
 	case "redirect":
 		code := ""

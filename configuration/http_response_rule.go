@@ -344,6 +344,14 @@ func ParseHTTPResponseRule(f types.Action) *models.HTTPResponseRule { //nolint:m
 			CondTest:  v.CondTest,
 			Metadata:  parseMetadata(v.Comment),
 		}
+	case *http_actions.Pause:
+		return &models.HTTPResponseRule{
+			Type:     models.HTTPResponseRuleTypePause,
+			Expr:     v.Pause.String(),
+			Cond:     v.Cond,
+			CondTest: v.CondTest,
+			Metadata: parseMetadata(v.Comment),
+		}
 	case *http_actions.Redirect:
 		var codePtr *int64
 		if code, err := strconv.ParseInt(v.Code, 10, 64); err == nil {
@@ -744,6 +752,13 @@ func SerializeHTTPResponseRule(f models.HTTPResponseRule, opt *options.Configura
 		rule = &actions.Lua{
 			Action:   f.LuaAction,
 			Params:   f.LuaParams,
+			Cond:     f.Cond,
+			CondTest: f.CondTest,
+			Comment:  comment,
+		}
+	case models.HTTPResponseRuleTypePause:
+		rule = &http_actions.Pause{
+			Pause:    common.Expression{Expr: strings.Split(f.Expr, " ")},
 			Cond:     f.Cond,
 			CondTest: f.CondTest,
 			Comment:  comment,

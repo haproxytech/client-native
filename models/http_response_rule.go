@@ -252,8 +252,8 @@ type HTTPResponseRule struct {
 
 	// type
 	// Required: true
-	// Enum: ["add-acl","add-header","allow","cache-store","capture","del-acl","del-header","del-map","deny","lua","redirect","replace-header","replace-value","return","sc-add-gpc","sc-inc-gpc","sc-inc-gpc0","sc-inc-gpc1","sc-set-gpt","sc-set-gpt0","send-spoe-group","set-fc-mark","set-fc-tos","set-header","set-log-level","set-map","set-mark","set-nice","set-status","set-timeout","set-tos","set-var","set-var-fmt","silent-drop","strict-mode","track-sc","unset-var","wait-for-body","set-bandwidth-limit","do-log"]
-	// +kubebuilder:validation:Enum=add-acl;add-header;allow;cache-store;capture;del-acl;del-header;del-map;deny;lua;redirect;replace-header;replace-value;return;sc-add-gpc;sc-inc-gpc;sc-inc-gpc0;sc-inc-gpc1;sc-set-gpt;sc-set-gpt0;send-spoe-group;set-fc-mark;set-fc-tos;set-header;set-log-level;set-map;set-mark;set-nice;set-status;set-timeout;set-tos;set-var;set-var-fmt;silent-drop;strict-mode;track-sc;unset-var;wait-for-body;set-bandwidth-limit;do-log;
+	// Enum: ["add-acl","add-header","allow","cache-store","capture","del-acl","del-header","del-map","deny","lua","pause","redirect","replace-header","replace-value","return","sc-add-gpc","sc-inc-gpc","sc-inc-gpc0","sc-inc-gpc1","sc-set-gpt","sc-set-gpt0","send-spoe-group","set-fc-mark","set-fc-tos","set-header","set-log-level","set-map","set-mark","set-nice","set-status","set-timeout","set-tos","set-var","set-var-fmt","silent-drop","strict-mode","track-sc","unset-var","wait-for-body","set-bandwidth-limit","do-log"]
+	// +kubebuilder:validation:Enum=add-acl;add-header;allow;cache-store;capture;del-acl;del-header;del-map;deny;lua;pause;redirect;replace-header;replace-value;return;sc-add-gpc;sc-inc-gpc;sc-inc-gpc0;sc-inc-gpc1;sc-set-gpt;sc-set-gpt0;send-spoe-group;set-fc-mark;set-fc-tos;set-header;set-log-level;set-map;set-mark;set-nice;set-status;set-timeout;set-tos;set-var;set-var-fmt;silent-drop;strict-mode;track-sc;unset-var;wait-for-body;set-bandwidth-limit;do-log;
 	Type string `json:"type"`
 
 	// var expr
@@ -1016,7 +1016,7 @@ var httpResponseRuleTypeTypePropEnum []interface{}
 
 func init() {
 	var res []string
-	if err := json.Unmarshal([]byte(`["add-acl","add-header","allow","cache-store","capture","del-acl","del-header","del-map","deny","lua","redirect","replace-header","replace-value","return","sc-add-gpc","sc-inc-gpc","sc-inc-gpc0","sc-inc-gpc1","sc-set-gpt","sc-set-gpt0","send-spoe-group","set-fc-mark","set-fc-tos","set-header","set-log-level","set-map","set-mark","set-nice","set-status","set-timeout","set-tos","set-var","set-var-fmt","silent-drop","strict-mode","track-sc","unset-var","wait-for-body","set-bandwidth-limit","do-log"]`), &res); err != nil {
+	if err := json.Unmarshal([]byte(`["add-acl","add-header","allow","cache-store","capture","del-acl","del-header","del-map","deny","lua","pause","redirect","replace-header","replace-value","return","sc-add-gpc","sc-inc-gpc","sc-inc-gpc0","sc-inc-gpc1","sc-set-gpt","sc-set-gpt0","send-spoe-group","set-fc-mark","set-fc-tos","set-header","set-log-level","set-map","set-mark","set-nice","set-status","set-timeout","set-tos","set-var","set-var-fmt","silent-drop","strict-mode","track-sc","unset-var","wait-for-body","set-bandwidth-limit","do-log"]`), &res); err != nil {
 		panic(err)
 	}
 	for _, v := range res {
@@ -1055,6 +1055,9 @@ const (
 
 	// HTTPResponseRuleTypeLua captures enum value "lua"
 	HTTPResponseRuleTypeLua string = "lua"
+
+	// HTTPResponseRuleTypePause captures enum value "pause"
+	HTTPResponseRuleTypePause string = "pause"
 
 	// HTTPResponseRuleTypeRedirect captures enum value "redirect"
 	HTTPResponseRuleTypeRedirect string = "redirect"

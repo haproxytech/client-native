@@ -63,6 +63,8 @@ func (h *Responses) Parse(line string, parts []string, comment string) (string, 
 			err = h.ParseHTTPResponse(&httpActions.DelHeader{}, parts, comment)
 		case "deny":
 			err = h.ParseHTTPResponse(&httpActions.Deny{}, parts, comment)
+		case "pause":
+			err = h.ParseHTTPResponse(&httpActions.Pause{}, parts, comment)
 		case "redirect":
 			err = h.ParseHTTPResponse(&httpActions.Redirect{}, parts, comment)
 		case "replace-header":

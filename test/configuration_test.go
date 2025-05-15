@@ -505,6 +505,8 @@ frontend test
   http-request set-retries var(txn.retries) if TRUE
   http-request do-log
   http-request do-log if FALSE
+  http-request pause 20s
+  http-request pause %[calc((sc_conn_rate(0) - 30) * 10)] if { sc_conn_rate(0) gt 30 } # delay according to conn rate
   http-response allow if src 192.168.0.0/16
   http-response set-header X-SSL %[ssl_fc]
   http-response set-var(req.my_var) req.fhdr(user-agent),lower
@@ -543,6 +545,8 @@ frontend test
   http-response sc-set-gpt(1,2) 1234 if FALSE
   http-response do-log
   http-response do-log if FALSE
+  http-response pause 20s
+  http-response pause %[calc((sc_conn_rate(0) - 30) * 10)] if { sc_conn_rate(0) gt 30 } # delay according to conn rate
   http-after-response set-map(map.lst) %[src] %[res.hdr(X-Value)]
   http-after-response del-map(map.lst) %[src] if FALSE
   http-after-response del-acl(map.lst) %[src] if FALSE
@@ -793,6 +797,8 @@ backend test # my comment
   http-request set-dst hdr(x-dst) # my comment
   http-request set-dst-port int(4000)
   http-request set-uri %[url,regsub(^/metrics/,/,)] if { path_beg /metrics }
+  http-request pause 20s
+  http-request pause %[calc((sc_conn_rate(0) - 30) * 10)] if { sc_conn_rate(0) gt 30 } # delay according to conn rate
   http-check connect # my comment
   http-check send meth GET uri / ver HTTP/1.1 hdr host haproxy.1wt.eu
   http-check expect status 200-399
@@ -861,6 +867,8 @@ backend test # my comment
   source 192.168.1.222 usesrc hdr_ip(hdr,occ)
   http-response set-fc-mark 123 # my comment
   http-response set-fc-tos 1 if TRUE
+  http-response pause 20s
+  http-response pause %[calc((sc_conn_rate(0) - 30) * 10)] if { sc_conn_rate(0) gt 30 } # delay according to conn rate
   guid guid-example
 
 peers mycluster

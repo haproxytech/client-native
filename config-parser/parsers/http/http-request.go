@@ -71,6 +71,8 @@ func (h *Requests) Parse(line string, parts []string, comment string) (string, e
 			err = h.ParseHTTPRequest(&httpActions.EarlyHint{}, parts, comment)
 		case "normalize-uri":
 			err = h.ParseHTTPRequest(&httpActions.NormalizeURI{}, parts, comment)
+		case "pause":
+			err = h.ParseHTTPRequest(&httpActions.Pause{}, parts, comment)
 		case "redirect":
 			err = h.ParseHTTPRequest(&httpActions.Redirect{}, parts, comment)
 		case "reject":

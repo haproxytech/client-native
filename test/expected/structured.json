@@ -738,6 +738,17 @@
                     "uri-fmt": "%[url,regsub(^/metrics/,/,)]",
                     "cond": "if",
                     "cond_test": "{ path_beg /metrics }"
+                },
+                {
+                  "type":     "pause",
+                  "expr":     "20s"
+                },
+                {
+                  "type":     "pause",
+                  "expr":     "%[calc((sc_conn_rate(0) - 30) * 10)]",
+                  "cond":     "if",
+                  "cond_test": "{ sc_conn_rate(0) gt 30 }",
+                  "metadata": {"comment": "delay according to conn rate"}
                 }
             ],
             "http_response_rule_list": [
@@ -753,6 +764,17 @@
                     "type": "set-fc-tos",
                     "cond": "if",
                     "cond_test": "TRUE"
+                },
+                {
+                  "type":     "pause",
+                  "expr":     "20s"
+                },
+                {
+                  "type":     "pause",
+                  "expr":     "%[calc((sc_conn_rate(0) - 30) * 10)]",
+                  "cond":     "if",
+                  "cond_test": "{ sc_conn_rate(0) gt 30 }",
+                  "metadata": {"comment": "delay according to conn rate"}
                 }
             ],
             "server_switching_rule_list": [
@@ -2099,6 +2121,17 @@
                     "type": "do-log",
                     "cond": "if",
                     "cond_test": "FALSE"
+                },
+                {
+                  "type":     "pause",
+                  "expr":     "20s"
+                },
+                {
+                    "type":     "pause",
+                    "expr":     "%[calc((sc_conn_rate(0) - 30) * 10)]",
+                    "cond":     "if",
+                    "cond_test": "{ sc_conn_rate(0) gt 30 }",
+                    "metadata": {"comment": "delay according to conn rate"}
                 }
             ],
             "http_response_rule_list": [
@@ -2341,6 +2374,17 @@
                     "type": "do-log",
                     "cond": "if",
                     "cond_test": "FALSE"
+                },
+                {
+                  "type":     "pause",
+                  "expr":     "20s"
+                },
+                {
+                  "type":     "pause",
+                  "expr":     "%[calc((sc_conn_rate(0) - 30) * 10)]",
+                  "cond":     "if",
+                  "cond_test": "{ sc_conn_rate(0) gt 30 }",
+                  "metadata": {"comment": "delay according to conn rate"}
                 }
             ],
             "log_target_list": [

@@ -1401,6 +1401,30 @@ const defaults_httprequestnormalizeuriquerysort_ = `
 defaults test
   http-request normalize-uri query-sort-by-name if TRUE
 `
+const defaults_httprequestpause20 = `
+defaults test
+  http-request pause 20
+`
+const defaults_httprequestpause20s = `
+defaults test
+  http-request pause 20s
+`
+const defaults_httprequestpausereshdrXPauseSeco = `
+defaults test
+  http-request pause res.hdr(X-Pause-Seconds),mul(1000)
+`
+const defaults_httprequestpause20ifTRUE = `
+defaults test
+  http-request pause 20 if TRUE
+`
+const defaults_httprequestpause20sifTRUE = `
+defaults test
+  http-request pause 20s if TRUE
+`
+const defaults_httprequestpausecalcscconnrate03 = `
+defaults test
+  http-request pause %[calc((sc_conn_rate(0) - 30) * 10)] if { sc_conn_rate(0) gt 30 }
+`
 const defaults_httprequestredirectprefixhttpsmy = `
 defaults test
   http-request redirect prefix https://mysite.com
@@ -2048,6 +2072,30 @@ defaults test
 const defaults_httpresponseluafooparamparam2 = `
 defaults test
   http-response lua.foo param param2
+`
+const defaults_httpresponsepause20 = `
+defaults test
+  http-response pause 20
+`
+const defaults_httpresponsepause20s = `
+defaults test
+  http-response pause 20s
+`
+const defaults_httpresponsepausereshdrXPauseSec = `
+defaults test
+  http-response pause res.hdr(X-Pause-Seconds),mul(1000)
+`
+const defaults_httpresponsepause20ifTRUE = `
+defaults test
+  http-response pause 20 if TRUE
+`
+const defaults_httpresponsepause20sifTRUE = `
+defaults test
+  http-response pause 20s if TRUE
+`
+const defaults_httpresponsepausecalcscconnrate0 = `
+defaults test
+  http-response pause %[calc((sc_conn_rate(0) - 30) * 10)] if { sc_conn_rate(0) gt 30 }
 `
 const defaults_httpresponseredirectprefixhttpsm = `
 defaults test
