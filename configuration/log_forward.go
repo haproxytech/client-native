@@ -109,6 +109,15 @@ func ParseLogForward(p parser.Parser, lf *models.LogForward) error {
 		lf.AssumeRfc6587Ntf = true
 	}
 
+	// get option dont-parse-log
+	_, err = p.Get(parser.LogForward, lf.Name, "option dont-parse-log", false)
+	if err != nil && !errors.Is(err, parsererrors.ErrFetch) {
+		return err
+	}
+	if err == nil {
+		lf.DontParseLog = true
+	}
+
 	backlog, err := p.Get(parser.LogForward, lf.Name, "backlog", false)
 	if err != nil && !errors.Is(err, parsererrors.ErrFetch) {
 		return err
@@ -269,6 +278,14 @@ func SerializeLogForwardSection(p parser.Parser, data *models.LogForward, opt *o
 		assumeRfc6587NtfOption = types.SimpleOption{}
 	}
 	if err = p.Set(parser.LogForward, data.Name, "option assume-rfc6587-ntf", assumeRfc6587NtfOption); err != nil {
+		return err
+	}
+
+	var dontParseLogOption common.ParserData
+	if data.DontParseLog {
+		dontParseLogOption = types.SimpleOption{}
+	}
+	if err = p.Set(parser.LogForward, data.Name, "option dont-parse-log", dontParseLogOption); err != nil {
 		return err
 	}
 

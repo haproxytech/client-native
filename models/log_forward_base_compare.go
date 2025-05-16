@@ -43,6 +43,10 @@ func (s LogForwardBase) Equal(t LogForwardBase, opts ...Options) bool {
 		return false
 	}
 
+	if s.DontParseLog != t.DontParseLog {
+		return false
+	}
+
 	if !equalPointers(s.Maxconn, t.Maxconn) {
 		return false
 	}
@@ -91,6 +95,10 @@ func (s LogForwardBase) Diff(t LogForwardBase, opts ...Options) map[string][]int
 
 	if !equalPointers(s.Backlog, t.Backlog) {
 		diff["Backlog"] = []interface{}{ValueOrNil(s.Backlog), ValueOrNil(t.Backlog)}
+	}
+
+	if s.DontParseLog != t.DontParseLog {
+		diff["DontParseLog"] = []interface{}{s.DontParseLog, t.DontParseLog}
 	}
 
 	if !equalPointers(s.Maxconn, t.Maxconn) {

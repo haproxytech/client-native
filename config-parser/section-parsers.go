@@ -977,6 +977,7 @@ func (p *configParser) getLogForwardParser() *Parsers {
 	addParser(parser, &sequence, &parsers.Bind{})
 	addParser(parser, &sequence, &parsers.Log{})
 	addParser(parser, &sequence, &simple.Option{Name: "assume-rfc6587-ntf"})
+	addParser(parser, &sequence, &simple.Option{Name: "dont-parse-log"})
 	addParser(parser, &sequence, &simple.Number{Name: "backlog"})
 	addParser(parser, &sequence, &simple.Number{Name: "maxconn"})
 	addParser(parser, &sequence, &simple.Timeout{Name: "client"})

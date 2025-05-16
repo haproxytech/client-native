@@ -968,6 +968,7 @@ ring myring
 
 log-forward sylog-loadb
   option assume-rfc6587-ntf
+  option dont-parse-log
   dgram-bind 127.0.0.1:1514 transparent name webserv
   bind 127.0.0.1:1514
   backlog 10

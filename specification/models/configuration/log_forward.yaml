@@ -30,6 +30,9 @@ log_forward_base:
     assume-rfc6587-ntf:
       type: boolean
       x-display-name: Assume RFC-6587 Non-Transparent Framing
+    dont-parse-log:
+      type: boolean
+      x-display-name: Don't Parse Log
     backlog:
       type: integer
       x-nullable: true

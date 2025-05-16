@@ -42,6 +42,9 @@ type LogForwardBase struct {
 	// backlog
 	Backlog *int64 `json:"backlog,omitempty"`
 
+	// dont parse log
+	DontParseLog bool `json:"dont-parse-log,omitempty"`
+
 	// maxconn
 	Maxconn *int64 `json:"maxconn,omitempty"`
 

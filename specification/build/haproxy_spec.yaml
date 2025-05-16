@@ -4194,6 +4194,9 @@ definitions:
       backlog:
         type: integer
         x-nullable: true
+      dont-parse-log:
+        type: boolean
+        x-display-name: Don't Parse Log
       maxconn:
         type: integer
         x-nullable: true

@@ -3016,6 +3016,7 @@
     "log_forwards": {
         "sylog-loadb": {
             "assume-rfc6587-ntf": true,
+            "dont-parse-log": true,
             "backlog": 10,
             "maxconn": 1000,
             "name": "sylog-loadb",

@@ -189,6 +189,7 @@ traces
 
 log-forward
   option assume-rfc6587-ntf
+  option dont-parse-log
 
 crt-store tpm2
   crt-base /c

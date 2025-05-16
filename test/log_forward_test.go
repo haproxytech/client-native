@@ -109,6 +109,7 @@ func TestCreateEditDeleteLogForward(t *testing.T) {
 		LogForwardBase: models.LogForwardBase{
 			Name:             "created_log_forward",
 			AssumeRfc6587Ntf: true,
+			DontParseLog:     true,
 			Backlog:          &backlog,
 			Maxconn:          &maxconn,
 			TimeoutClient:    &TimeoutClient,
@@ -136,6 +137,7 @@ func TestCreateEditDeleteLogForward(t *testing.T) {
 	maxconn++
 	TimeoutClient++
 	lf.AssumeRfc6587Ntf = false
+	lf.DontParseLog = false
 	lf.Backlog = &backlog
 	lf.Maxconn = &maxconn
 	lf.TimeoutClient = &TimeoutClient
