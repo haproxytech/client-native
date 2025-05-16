@@ -35,6 +35,10 @@ import "reflect"
 func (s LogForwardBase) Equal(t LogForwardBase, opts ...Options) bool {
 	opt := getOptions(opts...)
 
+	if s.AssumeRfc6587Ntf != t.AssumeRfc6587Ntf {
+		return false
+	}
+
 	if !equalPointers(s.Backlog, t.Backlog) {
 		return false
 	}
@@ -81,6 +85,10 @@ func (s LogForwardBase) Diff(t LogForwardBase, opts ...Options) map[string][]int
 	opt := getOptions(opts...)
 
 	diff := make(map[string][]interface{})
+	if s.AssumeRfc6587Ntf != t.AssumeRfc6587Ntf {
+		diff["AssumeRfc6587Ntf"] = []interface{}{s.AssumeRfc6587Ntf, t.AssumeRfc6587Ntf}
+	}
+
 	if !equalPointers(s.Backlog, t.Backlog) {
 		diff["Backlog"] = []interface{}{ValueOrNil(s.Backlog), ValueOrNil(t.Backlog)}
 	}

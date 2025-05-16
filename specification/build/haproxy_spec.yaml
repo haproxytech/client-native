@@ -4188,6 +4188,9 @@ definitions:
     additionalProperties: false
     description: HAProxy log forward configuration
     properties:
+      assume-rfc6587-ntf:
+        type: boolean
+        x-display-name: Assume RFC-6587 Non-Transparent Framing
       backlog:
         type: integer
         x-nullable: true

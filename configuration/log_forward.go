@@ -19,6 +19,8 @@ import (
 	"errors"
 	"fmt"
 
+	"github.com/haproxytech/client-native/v6/config-parser/common"
+
 	strfmt "github.com/go-openapi/strfmt"
 	parser "github.com/haproxytech/client-native/v6/config-parser"
 	parsererrors "github.com/haproxytech/client-native/v6/config-parser/errors"
@@ -96,6 +98,15 @@ func ParseLogForward(p parser.Parser, lf *models.LogForward) error {
 		if ok {
 			lf.Metadata = parseMetadata(d.Comment)
 		}
+	}
+
+	// get option assume-rfc6587-ntf
+	_, err := p.Get(parser.LogForward, lf.Name, "option assume-rfc6587-ntf", false)
+	if err != nil && !errors.Is(err, parsererrors.ErrFetch) {
+		return err
+	}
+	if err == nil {
+		lf.AssumeRfc6587Ntf = true
 	}
 
 	backlog, err := p.Get(parser.LogForward, lf.Name, "backlog", false)
@@ -251,6 +262,14 @@ func SerializeLogForwardSection(p parser.Parser, data *models.LogForward, opt *o
 		if err = p.Set(parser.LogForward, data.Name, "timeout client", tc); err != nil {
 			return err
 		}
+	}
+
+	var assumeRfc6587NtfOption common.ParserData
+	if data.AssumeRfc6587Ntf {
+		assumeRfc6587NtfOption = types.SimpleOption{}
+	}
+	if err = p.Set(parser.LogForward, data.Name, "option assume-rfc6587-ntf", assumeRfc6587NtfOption); err != nil {
+		return err
 	}
 
 	return err

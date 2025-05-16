@@ -187,6 +187,9 @@ traces
   trace h1 sink buf1 level developer verbosity complete start now
   trace h2 sink buf2 level developer verbosity complete start now
 
+log-forward
+  option assume-rfc6587-ntf
+
 crt-store tpm2
   crt-base /c
   key-base /k

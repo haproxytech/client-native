@@ -27,6 +27,9 @@ log_forward_base:
       type: string
       pattern: '^[A-Za-z0-9-_.:]+$'
       x-nullable: false
+    assume-rfc6587-ntf:
+      type: boolean
+      x-display-name: Assume RFC-6587 Non-Transparent Framing
     backlog:
       type: integer
       x-nullable: true

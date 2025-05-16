@@ -107,10 +107,11 @@ func TestCreateEditDeleteLogForward(t *testing.T) {
 
 	lf := &models.LogForward{
 		LogForwardBase: models.LogForwardBase{
-			Name:          "created_log_forward",
-			Backlog:       &backlog,
-			Maxconn:       &maxconn,
-			TimeoutClient: &TimeoutClient,
+			Name:             "created_log_forward",
+			AssumeRfc6587Ntf: true,
+			Backlog:          &backlog,
+			Maxconn:          &maxconn,
+			TimeoutClient:    &TimeoutClient,
 		},
 	}
 	err := clientTest.CreateLogForward(lf, "", version)
@@ -121,31 +122,32 @@ func TestCreateEditDeleteLogForward(t *testing.T) {
 	}
 
 	v, logForward, err := clientTest.GetLogForward("created_log_forward", "")
-	if err != nil {
-		t.Error(err.Error())
-	}
-
-	if *logForward.Backlog != *lf.Backlog {
-		t.Errorf("backlog expected %v got %v", *logForward.Backlog, *lf.Backlog)
-	}
-
-	if *logForward.Maxconn != *lf.Maxconn {
-		t.Errorf("maxconn expected %v got %v", *logForward.Maxconn, *lf.Maxconn)
-	}
-
-	if *logForward.TimeoutClient != *lf.TimeoutClient {
-		t.Errorf("timeout connect expected %v got %v", *logForward.TimeoutClient, *lf.TimeoutClient)
-	}
-
-	if v != version {
-		t.Errorf("version expected %v got %v", v, version)
-	}
+	require.NoError(t, err, "failed to get log forward")
+	require.Equal(t, lf, logForward)
+	require.Equal(t, version, v, "version not incremented")
 
 	err = clientTest.CreateLogForward(lf, "", version)
 	if err == nil {
 		t.Error("should throw error log forward already exists")
 		version++
 	}
+
+	backlog++
+	maxconn++
+	TimeoutClient++
+	lf.AssumeRfc6587Ntf = false
+	lf.Backlog = &backlog
+	lf.Maxconn = &maxconn
+	lf.TimeoutClient = &TimeoutClient
+	err = clientTest.EditLogForward("created_log_forward", lf, "", version)
+	require.NoError(t, err, "failed to edit log forward")
+	version++
+	if v, _ := clientTest.GetVersion(""); v != version {
+		t.Fatalf("version not incremented")
+	}
+	v, logForward, err = clientTest.GetLogForward("created_log_forward", "")
+	require.NoError(t, err, "failed to get log forward")
+	require.Equal(t, lf, logForward, "log forward has not been updated")
 
 	err = clientTest.DeleteLogForward("created_log_forward", "", version)
 	if err != nil {

@@ -36,6 +36,9 @@ import (
 // swagger:model log_forward_base
 type LogForwardBase struct {
 
+	// assume rfc6587 ntf
+	AssumeRfc6587Ntf bool `json:"assume-rfc6587-ntf,omitempty"`
+
 	// backlog
 	Backlog *int64 `json:"backlog,omitempty"`
 

@@ -86,6 +86,7 @@ func TestLogForwardBaseEqualFalse(t *testing.T) {
 		if err != nil {
 			t.Error(err)
 		}
+		result.AssumeRfc6587Ntf = !sample.AssumeRfc6587Ntf
 		result.Backlog = Ptr(*sample.Backlog + 1)
 		result.Maxconn = Ptr(*sample.Maxconn + 1)
 		result.TimeoutClient = Ptr(*sample.TimeoutClient + 1)
@@ -168,6 +169,7 @@ func TestLogForwardBaseDiffFalse(t *testing.T) {
 		if err != nil {
 			t.Error(err)
 		}
+		result.AssumeRfc6587Ntf = !sample.AssumeRfc6587Ntf
 		result.Backlog = Ptr(*sample.Backlog + 1)
 		result.Maxconn = Ptr(*sample.Maxconn + 1)
 		result.TimeoutClient = Ptr(*sample.TimeoutClient + 1)
@@ -178,7 +180,7 @@ func TestLogForwardBaseDiffFalse(t *testing.T) {
 
 	for _, sample := range samples {
 		result := sample.a.Diff(sample.b)
-		if len(result) != 4 {
+		if len(result) != 5 {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {
@@ -188,7 +190,7 @@ func TestLogForwardBaseDiffFalse(t *testing.T) {
 			if err != nil {
 				t.Error(err)
 			}
-			t.Errorf("Expected LogForwardBase to be different in 4 cases, but it is not (%d) %s %s", len(result), a, b)
+			t.Errorf("Expected LogForwardBase to be different in 5 cases, but it is not (%d) %s %s", len(result), a, b)
 		}
 	}
 }
