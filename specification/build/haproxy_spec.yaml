@@ -2142,6 +2142,23 @@ definitions:
         x-display-name: CPU Maps
         x-go-name: CPUMaps
         x-omitempty: true
+      cpu_policy:
+        enum:
+          - none
+          - efficiency
+          - first-usable-node
+          - group-by-2-ccx
+          - group-by-2-clusters
+          - group-by-3-ccx
+          - group-by-3-clusters
+          - group-by-4-ccx
+          - group-by-4-cluster
+          - group-by-ccx
+          - group-by-cluster
+          - performance
+          - resource
+        type: string
+        x-display-name: CPU Policy
       daemon:
         type: boolean
       debug_options:

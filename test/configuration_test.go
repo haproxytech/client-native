@@ -37,6 +37,7 @@ global
   crt-base /etc/ssl/private
   cluster-secret my_secret
 	stats socket /var/run/haproxy.sock level admin mode 0660
+  cpu-policy none
   lua-prepend-path /usr/share/haproxy-lua/?/init.lua
   lua-prepend-path /usr/share/haproxy-lua/?.lua cpath
 	lua-load /etc/foo.lua

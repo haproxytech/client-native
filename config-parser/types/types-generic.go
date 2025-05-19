@@ -76,7 +76,7 @@ type Int64C struct {
 	Comment string
 }
 
-// String is used by parsers Mode, DefaultBackend, SimpleTimeTwoWords, StatsTimeout, CompressionDirection, CompressionAlgoReq
+// String is used by parsers Mode, DefaultBackend, SimpleTimeTwoWords, StatsTimeout, CompressionDirection, CompressionAlgoReq, CPUPolicy
 //
 //generate:type:Mode
 //name:mode
@@ -107,6 +107,23 @@ type Int64C struct {
 //name:compression algo-req
 //test:ok:compression algo-req gzip
 //test:fail:compression algo-req
+//generate:type:CPUPolicy
+//name:cpu-policy
+//test:ok:cpu-policy none
+//test:ok:cpu-policy efficiency
+//test:ok:cpu-policy first-usable-node
+//test:ok:cpu-policy group-by-2-ccx
+//test:ok:cpu-policy group-by-2-clusters
+//test:ok:cpu-policy group-by-3-ccx
+//test:ok:cpu-policy group-by-3-clusters
+//test:ok:cpu-policy group-by-4-ccx
+//test:ok:cpu-policy group-by-4-cluster
+//test:ok:cpu-policy group-by-ccx
+//test:ok:cpu-policy group-by-cluster
+//test:ok:cpu-policy performance
+//test:ok:cpu-policy resource
+//test:ko:cpu-policy
+//test:ko:cpu-policy notvalid
 type StringC struct {
 	Value   string
 	Comment string

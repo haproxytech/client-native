@@ -69,6 +69,11 @@ type GlobalBase struct {
 	// cluster secret
 	ClusterSecret string `json:"cluster_secret,omitempty"`
 
+	// cpu policy
+	// Enum: ["none","efficiency","first-usable-node","group-by-2-ccx","group-by-2-clusters","group-by-3-ccx","group-by-3-clusters","group-by-4-ccx","group-by-4-cluster","group-by-ccx","group-by-cluster","performance","resource"]
+	// +kubebuilder:validation:Enum=none;efficiency;first-usable-node;group-by-2-ccx;group-by-2-clusters;group-by-3-ccx;group-by-3-clusters;group-by-4-ccx;group-by-4-cluster;group-by-ccx;group-by-cluster;performance;resource;
+	CPUPolicy string `json:"cpu_policy,omitempty"`
+
 	// daemon
 	Daemon bool `json:"daemon,omitempty"`
 
@@ -314,6 +319,10 @@ func (m *GlobalBase) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateCloseSpreadTime(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateCPUPolicy(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -633,6 +642,81 @@ func (m *GlobalBase) validateCloseSpreadTime(formats strfmt.Registry) error {
 	}
 
 	if err := validate.MinimumInt("close_spread_time", "body", *m.CloseSpreadTime, 0, false); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+var globalBaseTypeCPUPolicyPropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["none","efficiency","first-usable-node","group-by-2-ccx","group-by-2-clusters","group-by-3-ccx","group-by-3-clusters","group-by-4-ccx","group-by-4-cluster","group-by-ccx","group-by-cluster","performance","resource"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		globalBaseTypeCPUPolicyPropEnum = append(globalBaseTypeCPUPolicyPropEnum, v)
+	}
+}
+
+const (
+
+	// GlobalBaseCPUPolicyNone captures enum value "none"
+	GlobalBaseCPUPolicyNone string = "none"
+
+	// GlobalBaseCPUPolicyEfficiency captures enum value "efficiency"
+	GlobalBaseCPUPolicyEfficiency string = "efficiency"
+
+	// GlobalBaseCPUPolicyFirstDashUsableDashNode captures enum value "first-usable-node"
+	GlobalBaseCPUPolicyFirstDashUsableDashNode string = "first-usable-node"
+
+	// GlobalBaseCPUPolicyGroupDashByDash2DashCcx captures enum value "group-by-2-ccx"
+	GlobalBaseCPUPolicyGroupDashByDash2DashCcx string = "group-by-2-ccx"
+
+	// GlobalBaseCPUPolicyGroupDashByDash2DashClusters captures enum value "group-by-2-clusters"
+	GlobalBaseCPUPolicyGroupDashByDash2DashClusters string = "group-by-2-clusters"
+
+	// GlobalBaseCPUPolicyGroupDashByDash3DashCcx captures enum value "group-by-3-ccx"
+	GlobalBaseCPUPolicyGroupDashByDash3DashCcx string = "group-by-3-ccx"
+
+	// GlobalBaseCPUPolicyGroupDashByDash3DashClusters captures enum value "group-by-3-clusters"
+	GlobalBaseCPUPolicyGroupDashByDash3DashClusters string = "group-by-3-clusters"
+
+	// GlobalBaseCPUPolicyGroupDashByDash4DashCcx captures enum value "group-by-4-ccx"
+	GlobalBaseCPUPolicyGroupDashByDash4DashCcx string = "group-by-4-ccx"
+
+	// GlobalBaseCPUPolicyGroupDashByDash4DashCluster captures enum value "group-by-4-cluster"
+	GlobalBaseCPUPolicyGroupDashByDash4DashCluster string = "group-by-4-cluster"
+
+	// GlobalBaseCPUPolicyGroupDashByDashCcx captures enum value "group-by-ccx"
+	GlobalBaseCPUPolicyGroupDashByDashCcx string = "group-by-ccx"
+
+	// GlobalBaseCPUPolicyGroupDashByDashCluster captures enum value "group-by-cluster"
+	GlobalBaseCPUPolicyGroupDashByDashCluster string = "group-by-cluster"
+
+	// GlobalBaseCPUPolicyPerformance captures enum value "performance"
+	GlobalBaseCPUPolicyPerformance string = "performance"
+
+	// GlobalBaseCPUPolicyResource captures enum value "resource"
+	GlobalBaseCPUPolicyResource string = "resource"
+)
+
+// prop value enum
+func (m *GlobalBase) validateCPUPolicyEnum(path, location string, value string) error {
+	if err := validate.EnumCase(path, location, value, globalBaseTypeCPUPolicyPropEnum, true); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *GlobalBase) validateCPUPolicy(formats strfmt.Registry) error {
+	if swag.IsZero(m.CPUPolicy) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateCPUPolicyEnum("cpu_policy", "body", m.CPUPolicy); err != nil {
 		return err
 	}
 

@@ -112,6 +112,7 @@ func getGlobalBase() models.GlobalBase {
 				CPUSet:  &v,
 			},
 		},
+		CPUPolicy: models.GlobalBaseCPUPolicyEfficiency,
 		RuntimeAPIs: []*models.RuntimeAPI{
 			{
 				Address: &a,

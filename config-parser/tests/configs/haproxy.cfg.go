@@ -28,6 +28,7 @@ global
   cpu-map 1 3
   cpu-map 2 1
   cpu-map 3 2
+  cpu-policy none
   maxconn 5000
   pidfile /var/run/haproxy.pid
   stats socket /var/run/haproxy-runtime-api.1.sock level admin mode 777 expose-fd listeners process 1

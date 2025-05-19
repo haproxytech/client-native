@@ -172,6 +172,10 @@ global_base:
           cpu_set:
             type: string
             x-display-name: CPU Set
+    cpu_policy:
+      type: string
+      enum: ["none", "efficiency", "first-usable-node", "group-by-2-ccx", "group-by-2-clusters", "group-by-3-ccx", "group-by-3-clusters", "group-by-4-ccx", "group-by-4-cluster", "group-by-ccx", "group-by-cluster", "performance", "resource"]
+      x-display-name: CPU Policy
     runtime_apis:
       type: array
       x-omitempty: true

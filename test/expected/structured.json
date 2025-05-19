@@ -147,6 +147,7 @@
         "chroot": "/var/www",
         "close_spread_time": 1000,
         "cluster_secret": "my_secret",
+        "cpu_policy": "none",
         "daemon": true,
         "default_path": {
             "path": "/some/path",

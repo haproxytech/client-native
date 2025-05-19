@@ -110,6 +110,10 @@ func (s GlobalBase) Equal(t GlobalBase, opts ...Options) bool {
 		return false
 	}
 
+	if s.CPUPolicy != t.CPUPolicy {
+		return false
+	}
+
 	if s.Daemon != t.Daemon {
 		return false
 	}
@@ -868,6 +872,10 @@ func (s GlobalBase) Diff(t GlobalBase, opts ...Options) map[string][]interface{}
 
 	if s.ClusterSecret != t.ClusterSecret {
 		diff["ClusterSecret"] = []interface{}{s.ClusterSecret, t.ClusterSecret}
+	}
+
+	if s.CPUPolicy != t.CPUPolicy {
+		diff["CPUPolicy"] = []interface{}{s.CPUPolicy, t.CPUPolicy}
 	}
 
 	if s.Daemon != t.Daemon {
