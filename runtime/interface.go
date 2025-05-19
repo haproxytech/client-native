@@ -182,6 +182,11 @@ type SSL interface {
 	SetRateLimitSSLSessionGlobal(value uint64) error
 }
 
+type Acme interface {
+	AcmeRenew(certificate string) error
+	AcmeStatus() (models.AcmeStatus, error)
+}
+
 type Runtime interface {
 	Info
 	Frontend
@@ -192,6 +197,7 @@ type Runtime interface {
 	Tables
 	Raw
 	SSL
+	Acme
 	SocketPath() string
 	IsStatsSocket() bool
 }

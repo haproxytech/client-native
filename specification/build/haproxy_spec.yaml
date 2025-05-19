@@ -10148,6 +10148,40 @@ definitions:
         type: array
     title: SSL Providers
     type: object
+  acme_certificate_status:
+    description: Status of a single ACME certificate from runtime.
+    properties:
+      acme_section:
+        description: ACME section which generated the certificate.
+        type: string
+      certificate:
+        description: Certificate name
+        type: string
+      expiries_in:
+        description: Duration until certificate expiry.
+        type: string
+      expiry_date:
+        description: Certificate expiration date.
+        format: date-time
+        type: string
+      renewal_in:
+        description: Duration until the next planned renewal.
+        type: string
+      scheduled_renewal:
+        description: Planned date for certificate renewal.
+        format: date-time
+        type: string
+      state:
+        description: State of the ACME task, either "Running" or "Scheduled".
+        type: string
+    title: ACME certificate status
+    type: object
+  acme_status:
+    title: ACME status
+    description: Status of all the ACME certificates from runtime.
+    type: array
+    items:
+      $ref: "#/definitions/acme_certificate_status"
   acl_file:
     description: ACL File
     properties:

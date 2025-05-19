@@ -1456,3 +1456,26 @@ func (c *client) SetRateLimitSSLSessionGlobal(value uint64) error {
 	}
 	return nil
 }
+
+// AcmeRenew forces the immediate renewal of a certificate.
+func (c *client) AcmeRenew(certificate string) error {
+	if !c.runtime.IsValid() {
+		return errors.New("no valid runtime found")
+	}
+	if err := c.runtime.AcmeRenew(certificate); err != nil {
+		return fmt.Errorf("%s %w", c.runtime.socketPath, err)
+	}
+	return nil
+}
+
+// AcmeStatus returns the status of each certificate managed with ACME.
+func (c *client) AcmeStatus() (models.AcmeStatus, error) {
+	if !c.runtime.IsValid() {
+		return nil, errors.New("no valid runtime found")
+	}
+	status, err := c.runtime.AcmeStatus()
+	if err != nil {
+		return nil, fmt.Errorf("%s %w", c.runtime.socketPath, err)
+	}
+	return status, nil
+}

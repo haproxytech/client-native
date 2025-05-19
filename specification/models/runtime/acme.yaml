@@ -1,0 +1,29 @@
+---
+acme_certificate_status:
+  title: ACME certificate status
+  description: Status of a single ACME certificate from runtime.
+  type: object
+  properties:
+    certificate:
+      type: string
+      description: Certificate name
+    acme_section:
+      type: string
+      description: ACME section which generated the certificate.
+    state:
+      type: string
+      description: State of the ACME task, either "Running" or "Scheduled".
+    expiry_date:
+      type: string
+      format: date-time
+      description: Certificate expiration date.
+    expiries_in:
+      type: string
+      description: Duration until certificate expiry.
+    scheduled_renewal:
+      type: string
+      format: date-time
+      description: Planned date for certificate renewal.
+    renewal_in:
+      type: string
+      description: Duration until the next planned renewal.

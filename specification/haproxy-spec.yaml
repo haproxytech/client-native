@@ -520,6 +520,14 @@ definitions:
     $ref: "models/runtime/ssl_ocsp_update.yaml#/ssl_ocsp_update"
   ssl_providers:
     $ref: "models/runtime/ssl_providers.yaml#/ssl_providers"
+  acme_certificate_status:
+    $ref: "models/runtime/acme.yaml#/acme_certificate_status"
+  acme_status:
+    title: ACME status
+    description: Status of all the ACME certificates from runtime.
+    type: array
+    items:
+      $ref: "#/definitions/acme_certificate_status"
   acl_file:
     $ref: "models/runtime/acl_file.yaml#/acl_file"
   acl_files:
