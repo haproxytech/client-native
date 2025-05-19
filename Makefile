@@ -3,6 +3,7 @@ DOCKER_HAPROXY_VERSION?=3.1
 SWAGGER_VERSION=v0.31.0
 GO_VERSION:=${shell go mod edit -json | jq -r .Go}
 GOLANGCI_LINT_VERSION=1.64.5
+CHECK_COMMIT=5.1.1
 
 .PHONY: test
 test:
@@ -59,3 +60,8 @@ lint-yaml:
 gofumpt:
 	go install mvdan.cc/gofumpt@latest
 	gofumpt -l -w .
+
+.PHONY: check-commit
+check-commit:
+	cd bin;CHECK_COMMIT=${CHECK_COMMIT} sh check-commit.sh
+	bin/check-commit

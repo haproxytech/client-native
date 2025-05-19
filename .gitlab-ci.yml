@@ -126,7 +126,7 @@ lint-commit-msg:
   stage: lint
   needs: ["build"]
   image:
-    name: $CI_REGISTRY_GO/check-commit:v2.1.0
+    name: $CI_REGISTRY_GO/commit-check:5.1.1
     entrypoint: [""]
   tags:
     - go
