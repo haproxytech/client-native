@@ -48,6 +48,16 @@ func (s GlobalBase) Equal(t GlobalBase, opts ...Options) bool {
 		}
 	}
 
+	if !CheckSameNilAndLen(s.CPUSets, t.CPUSets, opt) {
+		return false
+	} else {
+		for i := range s.CPUSets {
+			if !s.CPUSets[i].Equal(*t.CPUSets[i], opt) {
+				return false
+			}
+		}
+	}
+
 	if !CheckSameNilAndLen(s.H1CaseAdjusts, t.H1CaseAdjusts, opt) {
 		return false
 	} else {
@@ -774,6 +784,23 @@ func (s GlobalBase) Diff(t GlobalBase, opts ...Options) map[string][]interface{}
 		}
 		if len(diff2) > 0 {
 			diff["CPUMaps"] = []interface{}{diff2}
+		}
+	}
+
+	if !CheckSameNilAndLen(s.CPUSets, t.CPUSets, opt) {
+		diff["CPUSets"] = []interface{}{s.CPUSets, t.CPUSets}
+	} else {
+		diff2 := make(map[string][]interface{})
+		for i := range s.CPUSets {
+			if !s.CPUSets[i].Equal(*t.CPUSets[i], opt) {
+				diffSub := s.CPUSets[i].Diff(*t.CPUSets[i], opt)
+				if len(diffSub) > 0 {
+					diff2[strconv.Itoa(i)] = []interface{}{diffSub}
+				}
+			}
+		}
+		if len(diff2) > 0 {
+			diff["CPUSets"] = []interface{}{diff2}
 		}
 	}
 
@@ -1553,6 +1580,43 @@ func (s CPUMap) Diff(t CPUMap, opts ...Options) map[string][]interface{} {
 
 	if !equalPointers(s.Process, t.Process) {
 		diff["Process"] = []interface{}{ValueOrNil(s.Process), ValueOrNil(t.Process)}
+	}
+
+	return diff
+}
+
+// Equal checks if two structs of type CPUSet are equal
+//
+//	var a, b CPUSet
+//	equal := a.Equal(b)
+//
+// opts ...Options are ignored in this method
+func (s CPUSet) Equal(t CPUSet, opts ...Options) bool {
+	if !equalPointers(s.Directive, t.Directive) {
+		return false
+	}
+
+	if s.Set != t.Set {
+		return false
+	}
+
+	return true
+}
+
+// Diff checks if two structs of type CPUSet are equal
+//
+//	var a, b CPUSet
+//	diff := a.Diff(b)
+//
+// opts ...Options are ignored in this method
+func (s CPUSet) Diff(t CPUSet, opts ...Options) map[string][]interface{} {
+	diff := make(map[string][]interface{})
+	if !equalPointers(s.Directive, t.Directive) {
+		diff["Directive"] = []interface{}{ValueOrNil(s.Directive), ValueOrNil(t.Directive)}
+	}
+
+	if s.Set != t.Set {
+		diff["Set"] = []interface{}{s.Set, t.Set}
 	}
 
 	return diff

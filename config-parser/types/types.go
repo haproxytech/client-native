@@ -405,6 +405,70 @@ type CPUMap struct {
 	Comment string
 }
 
+//sections:global
+//name:cpu-set
+//is:multiple
+//test:ok:cpu-set reset
+//test:ok:cpu-set reset # some comment
+//test:ko:cpu-set reset 0-3
+//test:ko:cpu-set reset 0,5
+//test:ok:cpu-set drop-cpu 1 # some comment
+//test:ok:cpu-set drop-cpu 1,3
+//test:ok:cpu-set drop-cpu 0-5
+//test:ko:cpu-set drop-cpu
+//test:ko:cpu-set drop-cpu 1,3 6,9
+//test:ok:cpu-set only-cpu 1 # some comment
+//test:ok:cpu-set only-cpu 1,3
+//test:ok:cpu-set only-cpu 0-5
+//test:ko:cpu-set only-cpu
+//test:ko:cpu-set only-cpu 1,3 6,9
+//test:ok:cpu-set drop-node 1 # some comment
+//test:ok:cpu-set drop-node 1,3
+//test:ok:cpu-set drop-node 0-5
+//test:ko:cpu-set drop-node
+//test:ko:cpu-set drop-node 1,3 6,9
+//test:ok:cpu-set only-node 1 # some comment
+//test:ok:cpu-set only-node 1,3
+//test:ok:cpu-set only-node 0-5
+//test:ko:cpu-set only-node
+//test:ko:cpu-set only-node 1,3 6,9
+//test:ok:cpu-set drop-cluster 1 # some comment
+//test:ok:cpu-set drop-cluster 1,3
+//test:ok:cpu-set drop-cluster 0-5
+//test:ko:cpu-set drop-cluster
+//test:ko:cpu-set drop-cluster 1,3 6,9
+//test:ok:cpu-set only-cluster 1 # some comment
+//test:ok:cpu-set only-cluster 1,3
+//test:ok:cpu-set only-cluster 0-5
+//test:ko:cpu-set only-cluster
+//test:ko:cpu-set only-cluster 1,3 6,9
+//test:ok:cpu-set drop-core 1 # some comment
+//test:ok:cpu-set drop-core 1,3
+//test:ok:cpu-set drop-core 0-5
+//test:ko:cpu-set drop-core
+//test:ko:cpu-set drop-core 1,3 6,9
+//test:ok:cpu-set only-core 1 # some comment
+//test:ok:cpu-set only-core 1,3
+//test:ok:cpu-set only-core 0-5
+//test:ko:cpu-set only-core
+//test:ko:cpu-set only-core 1,3 6,9
+//test:ok:cpu-set drop-thread 1 # some comment
+//test:ok:cpu-set drop-thread 1,3
+//test:ok:cpu-set drop-thread 0-5
+//test:ko:cpu-set drop-thread
+//test:ko:cpu-set drop-thread 1,3 6,9
+//test:ok:cpu-set only-thread 1 # some comment
+//test:ok:cpu-set only-thread 1,3
+//test:ok:cpu-set only-thread 0-5
+//test:ko:cpu-set only-thread
+//test:ko:cpu-set only-thread 1,3 6,9
+
+type CPUSet struct {
+	Directive string
+	Set       string
+	Comment   string
+}
+
 //sections:defaults,backend,peers
 //name:default-server
 //is:multiple

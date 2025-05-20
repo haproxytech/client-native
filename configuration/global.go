@@ -20,6 +20,8 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/haproxytech/client-native/v6/config-parser/parsers"
+
 	"github.com/go-openapi/strfmt"
 	parser "github.com/haproxytech/client-native/v6/config-parser"
 	"github.com/haproxytech/client-native/v6/config-parser/common"
@@ -58,6 +60,24 @@ func (c *client) GetGlobalConfiguration(transactionID string) (int64, *models.Gl
 	return v, g, nil
 }
 
+// ValidateGlobalSection performs validation of the Global section that cannot be done by swagger 2.0
+func ValidateGlobalSection(data *models.Global) error {
+	for i, cpuSet := range data.CPUSets {
+		if cpuSet != nil {
+			if cpuSet.Directive == nil {
+				return fmt.Errorf("cpu_set.%d.directive must not be empty", i)
+			}
+			if *cpuSet.Directive == parsers.CPUSetResetDirective && len(cpuSet.Set) > 0 {
+				return fmt.Errorf("cpu_set.%d.set must be empty when directive is %s", i, parsers.CPUSetResetDirective)
+			}
+			if *cpuSet.Directive != parsers.CPUSetResetDirective && len(cpuSet.Set) == 0 {
+				return fmt.Errorf("cpu_set.%d.set must not be empty when directive is %s", i, *cpuSet.Directive)
+			}
+		}
+	}
+	return nil
+}
+
 // PushGlobalConfiguration pushes a Global config struct to global
 // config file
 func (c *client) PushGlobalConfiguration(data *models.Global, transactionID string, version int64) error {
@@ -65,6 +85,10 @@ func (c *client) PushGlobalConfiguration(data *models.Global, transactionID stri
 		validationErr := data.Validate(strfmt.Default)
 		if validationErr != nil {
 			return NewConfError(ErrValidationError, validationErr.Error())
+		}
+
+		if err := ValidateGlobalSection(data); err != nil {
+			return NewConfError(ErrValidationError, err.Error())
 		}
 	}
 
@@ -97,6 +121,25 @@ func parseCPUMaps(p parser.Parser) ([]*models.CPUMap, error) {
 		}
 	}
 	return cpuMaps, nil
+}
+
+func parseCPUSets(p parser.Parser) ([]*models.CPUSet, error) {
+	var cpuSet []*models.CPUSet
+	d, err := p.Get(parser.Global, parser.GlobalSectionName, "cpu-set")
+	if err == nil {
+		cpuSets, ok := d.([]types.CPUSet)
+		if !ok {
+			return nil, misc.CreateTypeAssertError("cpu-set")
+		}
+		for _, c := range cpuSets {
+			directive := c.Directive
+			cpuSet = append(cpuSet, &models.CPUSet{
+				Directive: &directive,
+				Set:       c.Set,
+			})
+		}
+	}
+	return cpuSet, nil
 }
 
 func parseH1CaseAdjusts(p parser.Parser) ([]*models.H1CaseAdjust, error) {
@@ -2130,6 +2173,12 @@ func ParseGlobalSection(p parser.Parser) (*models.Global, error) { //nolint:goco
 	}
 	global.CPUMaps = cpuMaps
 
+	cpuSets, err := parseCPUSets(p)
+	if err != nil {
+		return nil, err
+	}
+	global.GlobalBase.CPUSets = cpuSets
+
 	h1CaseAdjusts, err := parseH1CaseAdjusts(p)
 	if err != nil {
 		return nil, err
@@ -3009,6 +3058,18 @@ func SerializeGlobalSection(p parser.Parser, data *models.Global, opt *options.C
 		cpuMaps = append(cpuMaps, cm)
 	}
 	if err := p.Set(parser.Global, parser.GlobalSectionName, "cpu-map", cpuMaps); err != nil {
+		return err
+	}
+
+	cpuSets := []types.CPUSet{}
+	for _, cpuSet := range data.CPUSets {
+		cs := types.CPUSet{
+			Directive: *cpuSet.Directive,
+			Set:       cpuSet.Set,
+		}
+		cpuSets = append(cpuSets, cs)
+	}
+	if err := p.Set(parser.Global, parser.GlobalSectionName, "cpu-set", cpuSets); err != nil {
 		return err
 	}
 

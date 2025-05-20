@@ -41,6 +41,9 @@ type GlobalBase struct {
 	// CPU maps
 	CPUMaps []*CPUMap `json:"cpu_maps,omitempty"`
 
+	// CPU sets
+	CPUSets []*CPUSet `json:"cpu_set,omitempty"`
+
 	// h1 case adjusts
 	H1CaseAdjusts []*H1CaseAdjust `json:"h1_case_adjust,omitempty"`
 
@@ -294,6 +297,10 @@ func (m *GlobalBase) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
+	if err := m.validateCPUSets(formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.validateH1CaseAdjusts(formats); err != nil {
 		res = append(res, err)
 	}
@@ -484,6 +491,32 @@ func (m *GlobalBase) validateCPUMaps(formats strfmt.Registry) error {
 					return ve.ValidateName("cpu_maps" + "." + strconv.Itoa(i))
 				} else if ce, ok := err.(*errors.CompositeError); ok {
 					return ce.ValidateName("cpu_maps" + "." + strconv.Itoa(i))
+				}
+				return err
+			}
+		}
+
+	}
+
+	return nil
+}
+
+func (m *GlobalBase) validateCPUSets(formats strfmt.Registry) error {
+	if swag.IsZero(m.CPUSets) { // not required
+		return nil
+	}
+
+	for i := 0; i < len(m.CPUSets); i++ {
+		if swag.IsZero(m.CPUSets[i]) { // not required
+			continue
+		}
+
+		if m.CPUSets[i] != nil {
+			if err := m.CPUSets[i].Validate(formats); err != nil {
+				if ve, ok := err.(*errors.Validation); ok {
+					return ve.ValidateName("cpu_set" + "." + strconv.Itoa(i))
+				} else if ce, ok := err.(*errors.CompositeError); ok {
+					return ce.ValidateName("cpu_set" + "." + strconv.Itoa(i))
 				}
 				return err
 			}
@@ -1337,6 +1370,10 @@ func (m *GlobalBase) ContextValidate(ctx context.Context, formats strfmt.Registr
 		res = append(res, err)
 	}
 
+	if err := m.contextValidateCPUSets(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.contextValidateH1CaseAdjusts(ctx, formats); err != nil {
 		res = append(res, err)
 	}
@@ -1466,6 +1503,31 @@ func (m *GlobalBase) contextValidateCPUMaps(ctx context.Context, formats strfmt.
 					return ve.ValidateName("cpu_maps" + "." + strconv.Itoa(i))
 				} else if ce, ok := err.(*errors.CompositeError); ok {
 					return ce.ValidateName("cpu_maps" + "." + strconv.Itoa(i))
+				}
+				return err
+			}
+		}
+
+	}
+
+	return nil
+}
+
+func (m *GlobalBase) contextValidateCPUSets(ctx context.Context, formats strfmt.Registry) error {
+
+	for i := 0; i < len(m.CPUSets); i++ {
+
+		if m.CPUSets[i] != nil {
+
+			if swag.IsZero(m.CPUSets[i]) { // not required
+				return nil
+			}
+
+			if err := m.CPUSets[i].ContextValidate(ctx, formats); err != nil {
+				if ve, ok := err.(*errors.Validation); ok {
+					return ve.ValidateName("cpu_set" + "." + strconv.Itoa(i))
+				} else if ce, ok := err.(*errors.CompositeError); ok {
+					return ce.ValidateName("cpu_set" + "." + strconv.Itoa(i))
 				}
 				return err
 			}
@@ -2155,6 +2217,127 @@ func (m *CPUMap) MarshalBinary() ([]byte, error) {
 // UnmarshalBinary interface implementation
 func (m *CPUMap) UnmarshalBinary(b []byte) error {
 	var res CPUMap
+	if err := swag.ReadJSON(b, &res); err != nil {
+		return err
+	}
+	*m = res
+	return nil
+}
+
+// CPUSet CPU set
+//
+// swagger:model CPUSet
+type CPUSet struct {
+	// directive
+	// Required: true
+	// Enum: ["reset","drop-cpu","only-cpu","drop-node","only-node","drop-cluster","only-cluster","drop-core","only-core","drop-thread","only-thread"]
+	// +kubebuilder:validation:Enum=reset;drop-cpu;only-cpu;drop-node;only-node;drop-cluster;only-cluster;drop-core;only-core;drop-thread;only-thread;
+	Directive *string `json:"directive"`
+
+	// set
+	Set string `json:"set,omitempty"`
+}
+
+// Validate validates this CPU set
+func (m *CPUSet) Validate(formats strfmt.Registry) error {
+	var res []error
+
+	if err := m.validateDirective(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if len(res) > 0 {
+		return errors.CompositeValidationError(res...)
+	}
+	return nil
+}
+
+var cpuSetTypeDirectivePropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["reset","drop-cpu","only-cpu","drop-node","only-node","drop-cluster","only-cluster","drop-core","only-core","drop-thread","only-thread"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		cpuSetTypeDirectivePropEnum = append(cpuSetTypeDirectivePropEnum, v)
+	}
+}
+
+const (
+
+	// CPUSetDirectiveReset captures enum value "reset"
+	CPUSetDirectiveReset string = "reset"
+
+	// CPUSetDirectiveDropDashCPU captures enum value "drop-cpu"
+	CPUSetDirectiveDropDashCPU string = "drop-cpu"
+
+	// CPUSetDirectiveOnlyDashCPU captures enum value "only-cpu"
+	CPUSetDirectiveOnlyDashCPU string = "only-cpu"
+
+	// CPUSetDirectiveDropDashNode captures enum value "drop-node"
+	CPUSetDirectiveDropDashNode string = "drop-node"
+
+	// CPUSetDirectiveOnlyDashNode captures enum value "only-node"
+	CPUSetDirectiveOnlyDashNode string = "only-node"
+
+	// CPUSetDirectiveDropDashCluster captures enum value "drop-cluster"
+	CPUSetDirectiveDropDashCluster string = "drop-cluster"
+
+	// CPUSetDirectiveOnlyDashCluster captures enum value "only-cluster"
+	CPUSetDirectiveOnlyDashCluster string = "only-cluster"
+
+	// CPUSetDirectiveDropDashCore captures enum value "drop-core"
+	CPUSetDirectiveDropDashCore string = "drop-core"
+
+	// CPUSetDirectiveOnlyDashCore captures enum value "only-core"
+	CPUSetDirectiveOnlyDashCore string = "only-core"
+
+	// CPUSetDirectiveDropDashThread captures enum value "drop-thread"
+	CPUSetDirectiveDropDashThread string = "drop-thread"
+
+	// CPUSetDirectiveOnlyDashThread captures enum value "only-thread"
+	CPUSetDirectiveOnlyDashThread string = "only-thread"
+)
+
+// prop value enum
+func (m *CPUSet) validateDirectiveEnum(path, location string, value string) error {
+	if err := validate.EnumCase(path, location, value, cpuSetTypeDirectivePropEnum, true); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *CPUSet) validateDirective(formats strfmt.Registry) error {
+
+	if err := validate.Required("directive", "body", m.Directive); err != nil {
+		return err
+	}
+
+	// value enum
+	if err := m.validateDirectiveEnum("directive", "body", *m.Directive); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+// ContextValidate validates this CPU set based on context it is used
+func (m *CPUSet) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+	return nil
+}
+
+// MarshalBinary interface implementation
+func (m *CPUSet) MarshalBinary() ([]byte, error) {
+	if m == nil {
+		return nil, nil
+	}
+	return swag.WriteJSON(m)
+}
+
+// UnmarshalBinary interface implementation
+func (m *CPUSet) UnmarshalBinary(b []byte) error {
+	var res CPUSet
 	if err := swag.ReadJSON(b, &res); err != nil {
 		return err
 	}

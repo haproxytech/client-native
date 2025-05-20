@@ -2159,6 +2159,33 @@ definitions:
           - resource
         type: string
         x-display-name: CPU Policy
+      cpu_set:
+        items:
+          properties:
+            directive:
+              enum:
+                - reset
+                - drop-cpu
+                - only-cpu
+                - drop-node
+                - only-node
+                - drop-cluster
+                - only-cluster
+                - drop-core
+                - only-core
+                - drop-thread
+                - only-thread
+              type: string
+            set:
+              type: string
+          required:
+            - directive
+          type: object
+          x-go-name: CPUSet
+        type: array
+        x-display-name: CPU Set
+        x-go-name: CPUSets
+        x-omitempty: true
       daemon:
         type: boolean
       debug_options:

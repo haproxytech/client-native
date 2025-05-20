@@ -33,6 +33,134 @@ const global_cpumapauto140123 = `
 global
   cpu-map auto:1-4 0-1 2-3
 `
+const global_cpusetreset = `
+global
+  cpu-set reset
+`
+const global_cpusetresetsomecomment = `
+global
+  cpu-set reset # some comment
+`
+const global_cpusetdropcpu1somecomment = `
+global
+  cpu-set drop-cpu 1 # some comment
+`
+const global_cpusetdropcpu13 = `
+global
+  cpu-set drop-cpu 1,3
+`
+const global_cpusetdropcpu05 = `
+global
+  cpu-set drop-cpu 0-5
+`
+const global_cpusetonlycpu1somecomment = `
+global
+  cpu-set only-cpu 1 # some comment
+`
+const global_cpusetonlycpu13 = `
+global
+  cpu-set only-cpu 1,3
+`
+const global_cpusetonlycpu05 = `
+global
+  cpu-set only-cpu 0-5
+`
+const global_cpusetdropnode1somecomment = `
+global
+  cpu-set drop-node 1 # some comment
+`
+const global_cpusetdropnode13 = `
+global
+  cpu-set drop-node 1,3
+`
+const global_cpusetdropnode05 = `
+global
+  cpu-set drop-node 0-5
+`
+const global_cpusetonlynode1somecomment = `
+global
+  cpu-set only-node 1 # some comment
+`
+const global_cpusetonlynode13 = `
+global
+  cpu-set only-node 1,3
+`
+const global_cpusetonlynode05 = `
+global
+  cpu-set only-node 0-5
+`
+const global_cpusetdropcluster1somecomment = `
+global
+  cpu-set drop-cluster 1 # some comment
+`
+const global_cpusetdropcluster13 = `
+global
+  cpu-set drop-cluster 1,3
+`
+const global_cpusetdropcluster05 = `
+global
+  cpu-set drop-cluster 0-5
+`
+const global_cpusetonlycluster1somecomment = `
+global
+  cpu-set only-cluster 1 # some comment
+`
+const global_cpusetonlycluster13 = `
+global
+  cpu-set only-cluster 1,3
+`
+const global_cpusetonlycluster05 = `
+global
+  cpu-set only-cluster 0-5
+`
+const global_cpusetdropcore1somecomment = `
+global
+  cpu-set drop-core 1 # some comment
+`
+const global_cpusetdropcore13 = `
+global
+  cpu-set drop-core 1,3
+`
+const global_cpusetdropcore05 = `
+global
+  cpu-set drop-core 0-5
+`
+const global_cpusetonlycore1somecomment = `
+global
+  cpu-set only-core 1 # some comment
+`
+const global_cpusetonlycore13 = `
+global
+  cpu-set only-core 1,3
+`
+const global_cpusetonlycore05 = `
+global
+  cpu-set only-core 0-5
+`
+const global_cpusetdropthread1somecomment = `
+global
+  cpu-set drop-thread 1 # some comment
+`
+const global_cpusetdropthread13 = `
+global
+  cpu-set drop-thread 1,3
+`
+const global_cpusetdropthread05 = `
+global
+  cpu-set drop-thread 0-5
+`
+const global_cpusetonlythread1somecomment = `
+global
+  cpu-set only-thread 1 # some comment
+`
+const global_cpusetonlythread13 = `
+global
+  cpu-set only-thread 1,3
+`
+const global_cpusetonlythread05 = `
+global
+  cpu-set only-thread 0-5
+`
 const global_statssocket1270018080 = `
 global
   stats socket 127.0.0.1:8080

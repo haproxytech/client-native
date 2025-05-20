@@ -230,7 +230,7 @@ func TestGlobalBaseDiffFalse(t *testing.T) {
 
 	for _, sample := range samples {
 		result := sample.a.Diff(sample.b)
-		if len(result) != 71 {
+		if len(result) != 72 {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {
@@ -240,7 +240,7 @@ func TestGlobalBaseDiffFalse(t *testing.T) {
 			if err != nil {
 				t.Error(err)
 			}
-			t.Errorf("Expected GlobalBase to be different in 71 cases, but it is not (%d) %s %s", len(result), a, b)
+			t.Errorf("Expected GlobalBase to be different in 72 cases, but it is not (%d) %s %s", len(result), a, b)
 		}
 	}
 }
@@ -399,6 +399,164 @@ func TestCPUMapDiffFalse(t *testing.T) {
 				t.Error(err)
 			}
 			t.Errorf("Expected CPUMap to be different in 2 cases, but it is not (%d) %s %s", len(result), a, b)
+		}
+	}
+}
+
+func TestCPUSetEqual(t *testing.T) {
+	samples := []struct {
+		a, b CPUSet
+	}{}
+	for i := 0; i < 2; i++ {
+		var sample CPUSet
+		var result CPUSet
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
+		if err != nil {
+			t.Error(err)
+		}
+		byteJSON, err := json.Marshal(sample)
+		if err != nil {
+			t.Error(err)
+		}
+		err = json.Unmarshal(byteJSON, &result)
+		if err != nil {
+			t.Error(err)
+		}
+
+		samples = append(samples, struct {
+			a, b CPUSet
+		}{sample, result})
+	}
+
+	for _, sample := range samples {
+		result := sample.a.Equal(sample.b)
+		if !result {
+			json := jsoniter.ConfigCompatibleWithStandardLibrary
+			a, err := json.Marshal(&sample.a)
+			if err != nil {
+				t.Error(err)
+			}
+			b, err := json.Marshal(&sample.b)
+			if err != nil {
+				t.Error(err)
+			}
+			t.Errorf("Expected CPUSet to be equal, but it is not %s %s", a, b)
+		}
+	}
+}
+
+func TestCPUSetEqualFalse(t *testing.T) {
+	samples := []struct {
+		a, b CPUSet
+	}{}
+	for i := 0; i < 2; i++ {
+		var sample CPUSet
+		var result CPUSet
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
+		if err != nil {
+			t.Error(err)
+		}
+		err = faker.FakeData(&result, options.WithIgnoreInterface(true))
+		if err != nil {
+			t.Error(err)
+		}
+		samples = append(samples, struct {
+			a, b CPUSet
+		}{sample, result})
+	}
+
+	for _, sample := range samples {
+		result := sample.a.Equal(sample.b)
+		if result {
+			json := jsoniter.ConfigCompatibleWithStandardLibrary
+			a, err := json.Marshal(&sample.a)
+			if err != nil {
+				t.Error(err)
+			}
+			b, err := json.Marshal(&sample.b)
+			if err != nil {
+				t.Error(err)
+			}
+			t.Errorf("Expected CPUSet to be different, but it is not %s %s", a, b)
+		}
+	}
+}
+
+func TestCPUSetDiff(t *testing.T) {
+	samples := []struct {
+		a, b CPUSet
+	}{}
+	for i := 0; i < 2; i++ {
+		var sample CPUSet
+		var result CPUSet
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
+		if err != nil {
+			t.Error(err)
+		}
+		byteJSON, err := json.Marshal(sample)
+		if err != nil {
+			t.Error(err)
+		}
+		err = json.Unmarshal(byteJSON, &result)
+		if err != nil {
+			t.Error(err)
+		}
+
+		samples = append(samples, struct {
+			a, b CPUSet
+		}{sample, result})
+	}
+
+	for _, sample := range samples {
+		result := sample.a.Diff(sample.b)
+		if len(result) != 0 {
+			json := jsoniter.ConfigCompatibleWithStandardLibrary
+			a, err := json.Marshal(&sample.a)
+			if err != nil {
+				t.Error(err)
+			}
+			b, err := json.Marshal(&sample.b)
+			if err != nil {
+				t.Error(err)
+			}
+			t.Errorf("Expected CPUSet to be equal, but it is not %s %s, %v", a, b, result)
+		}
+	}
+}
+
+func TestCPUSetDiffFalse(t *testing.T) {
+	samples := []struct {
+		a, b CPUSet
+	}{}
+	for i := 0; i < 2; i++ {
+		var sample CPUSet
+		var result CPUSet
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
+		if err != nil {
+			t.Error(err)
+		}
+		err = faker.FakeData(&result, options.WithIgnoreInterface(true))
+		if err != nil {
+			t.Error(err)
+		}
+		samples = append(samples, struct {
+			a, b CPUSet
+		}{sample, result})
+	}
+
+	for _, sample := range samples {
+		result := sample.a.Diff(sample.b)
+		if len(result) != 2 {
+			json := jsoniter.ConfigCompatibleWithStandardLibrary
+			a, err := json.Marshal(&sample.a)
+			if err != nil {
+				t.Error(err)
+			}
+			b, err := json.Marshal(&sample.b)
+			if err != nil {
+				t.Error(err)
+			}
+			t.Errorf("Expected CPUSet to be different in 2 cases, but it is not (%d) %s %s", len(result), a, b)
 		}
 	}
 }

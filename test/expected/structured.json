@@ -148,6 +148,19 @@
         "close_spread_time": 1000,
         "cluster_secret": "my_secret",
         "cpu_policy": "none",
+        "cpu_set": [
+            {
+                "directive": "reset"
+            },
+            {
+                "directive": "only-node",
+                "set": "0"
+            },
+            {
+                "directive": "drop-core",
+                "set": "5-9"
+            }
+        ],
         "daemon": true,
         "default_path": {
             "path": "/some/path",

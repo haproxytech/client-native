@@ -38,6 +38,9 @@ global
   cluster-secret my_secret
 	stats socket /var/run/haproxy.sock level admin mode 0660
   cpu-policy none
+  cpu-set reset
+  cpu-set only-node 0
+  cpu-set drop-core 5-9
   lua-prepend-path /usr/share/haproxy-lua/?/init.lua
   lua-prepend-path /usr/share/haproxy-lua/?.lua cpath
 	lua-load /etc/foo.lua

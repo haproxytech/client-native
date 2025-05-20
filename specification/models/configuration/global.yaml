@@ -176,6 +176,22 @@ global_base:
       type: string
       enum: ["none", "efficiency", "first-usable-node", "group-by-2-ccx", "group-by-2-clusters", "group-by-3-ccx", "group-by-3-clusters", "group-by-4-ccx", "group-by-4-cluster", "group-by-ccx", "group-by-cluster", "performance", "resource"]
       x-display-name: CPU Policy
+    cpu_set:
+      type: array
+      x-go-name: CPUSets
+      x-omitempty: true
+      x-display-name: CPU Set
+      items:
+        type: object
+        x-go-name: CPUSet
+        required:
+          - directive
+        properties:
+          directive:
+            type: string
+            enum: ["reset", "drop-cpu", "only-cpu", "drop-node", "only-node", "drop-cluster", "only-cluster", "drop-core", "only-core", "drop-thread", "only-thread"]
+          set:
+            type: string
     runtime_apis:
       type: array
       x-omitempty: true

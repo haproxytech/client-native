@@ -26,6 +26,38 @@ global test
   cpu-map 1/all 0-3
   cpu-map auto:1-4 0-3
   cpu-map auto:1-4 0-1 2-3
+  cpu-set reset
+  cpu-set reset # some comment
+  cpu-set drop-cpu 1 # some comment
+  cpu-set drop-cpu 1,3
+  cpu-set drop-cpu 0-5
+  cpu-set only-cpu 1 # some comment
+  cpu-set only-cpu 1,3
+  cpu-set only-cpu 0-5
+  cpu-set drop-node 1 # some comment
+  cpu-set drop-node 1,3
+  cpu-set drop-node 0-5
+  cpu-set only-node 1 # some comment
+  cpu-set only-node 1,3
+  cpu-set only-node 0-5
+  cpu-set drop-cluster 1 # some comment
+  cpu-set drop-cluster 1,3
+  cpu-set drop-cluster 0-5
+  cpu-set only-cluster 1 # some comment
+  cpu-set only-cluster 1,3
+  cpu-set only-cluster 0-5
+  cpu-set drop-core 1 # some comment
+  cpu-set drop-core 1,3
+  cpu-set drop-core 0-5
+  cpu-set only-core 1 # some comment
+  cpu-set only-core 1,3
+  cpu-set only-core 0-5
+  cpu-set drop-thread 1 # some comment
+  cpu-set drop-thread 1,3
+  cpu-set drop-thread 0-5
+  cpu-set only-thread 1 # some comment
+  cpu-set only-thread 1,3
+  cpu-set only-thread 0-5
   stats socket 127.0.0.1:8080
   stats socket 127.0.0.1:8080 mode admin
   stats socket /some/path/to/socket
@@ -3315,6 +3347,70 @@ var configTests = []configTest{{`  command spoa-mirror --runtime 0 --mirror-url 
 	{`  cpu-map auto:1-4 0-3
 `, 1},
 	{`  cpu-map auto:1-4 0-1 2-3
+`, 1},
+	{`  cpu-set reset
+`, 1},
+	{`  cpu-set reset # some comment
+`, 1},
+	{`  cpu-set drop-cpu 1 # some comment
+`, 1},
+	{`  cpu-set drop-cpu 1,3
+`, 1},
+	{`  cpu-set drop-cpu 0-5
+`, 1},
+	{`  cpu-set only-cpu 1 # some comment
+`, 1},
+	{`  cpu-set only-cpu 1,3
+`, 1},
+	{`  cpu-set only-cpu 0-5
+`, 1},
+	{`  cpu-set drop-node 1 # some comment
+`, 1},
+	{`  cpu-set drop-node 1,3
+`, 1},
+	{`  cpu-set drop-node 0-5
+`, 1},
+	{`  cpu-set only-node 1 # some comment
+`, 1},
+	{`  cpu-set only-node 1,3
+`, 1},
+	{`  cpu-set only-node 0-5
+`, 1},
+	{`  cpu-set drop-cluster 1 # some comment
+`, 1},
+	{`  cpu-set drop-cluster 1,3
+`, 1},
+	{`  cpu-set drop-cluster 0-5
+`, 1},
+	{`  cpu-set only-cluster 1 # some comment
+`, 1},
+	{`  cpu-set only-cluster 1,3
+`, 1},
+	{`  cpu-set only-cluster 0-5
+`, 1},
+	{`  cpu-set drop-core 1 # some comment
+`, 1},
+	{`  cpu-set drop-core 1,3
+`, 1},
+	{`  cpu-set drop-core 0-5
+`, 1},
+	{`  cpu-set only-core 1 # some comment
+`, 1},
+	{`  cpu-set only-core 1,3
+`, 1},
+	{`  cpu-set only-core 0-5
+`, 1},
+	{`  cpu-set drop-thread 1 # some comment
+`, 1},
+	{`  cpu-set drop-thread 1,3
+`, 1},
+	{`  cpu-set drop-thread 0-5
+`, 1},
+	{`  cpu-set only-thread 1 # some comment
+`, 1},
+	{`  cpu-set only-thread 1,3
+`, 1},
+	{`  cpu-set only-thread 0-5
 `, 1},
 	{`  default-server addr 127.0.0.1
 `, 3},

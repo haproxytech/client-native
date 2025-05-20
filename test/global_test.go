@@ -33,14 +33,8 @@ func globalExpcectation() *models.Global {
 
 func TestGetGlobal(t *testing.T) {
 	v, global, err := clientTest.GetGlobalConfiguration("")
-	if err != nil {
-		t.Error(err.Error())
-	}
-
-	if v != version {
-		t.Errorf("Version %v returned, expected %v", v, version)
-	}
-
+	require.NoError(t, err, "failed to get global configuration")
+	require.Equal(t, version, v, "version mismatch")
 	checkGlobal(t, global)
 }
 
@@ -113,6 +107,19 @@ func getGlobalBase() models.GlobalBase {
 			},
 		},
 		CPUPolicy: models.GlobalBaseCPUPolicyEfficiency,
+		CPUSets: []*models.CPUSet{
+			{
+				Directive: misc.StringP("reset"),
+			},
+			{
+				Directive: misc.StringP("drop-cpu"),
+				Set:       "1,3",
+			},
+			{
+				Directive: misc.StringP("only-thread"),
+				Set:       "4-9",
+			},
+		},
 		RuntimeAPIs: []*models.RuntimeAPI{
 			{
 				Address: &a,

@@ -251,6 +251,7 @@ func (p *configParser) getGlobalParser() *Parsers { //nolint: maintidx
 	addParser(parser, &sequence, &parsers.NbThread{})
 	addParser(parser, &sequence, &parsers.CPUMap{})
 	addParser(parser, &sequence, &parsers.CPUPolicy{})
+	addParser(parser, &sequence, &parsers.CPUSet{})
 	addParser(parser, &sequence, &parsers.Mode{})
 	addParser(parser, &sequence, &parsers.MaxConn{})
 	addParser(parser, &sequence, &simple.Number{Name: "maxconnrate"})
