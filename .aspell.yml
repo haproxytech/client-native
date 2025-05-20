@@ -1,3 +1,4 @@
+---
 mode: commit
 min_length: 3
 allowed:
@@ -28,6 +29,7 @@ allowed:
   - conf
   - config
   - const
+  - cpu
   - crd
   - cronjob
   - cve
