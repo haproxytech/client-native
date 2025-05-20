@@ -19,11 +19,20 @@ package models
 
 // Equal checks if two structs of type TuneOptions are equal
 //
+// By default empty maps and slices are equal to nil:
+//
 //	var a, b TuneOptions
 //	equal := a.Equal(b)
 //
-// opts ...Options are ignored in this method
+// For more advanced use case you can configure these options (default values are shown):
+//
+//	var a, b TuneOptions
+//	equal := a.Equal(b,Options{
+//		NilSameAsEmpty: true,
+//	})
 func (s TuneOptions) Equal(t TuneOptions, opts ...Options) bool {
+	opt := getOptions(opts...)
+
 	if s.AppletZeroCopyForwarding != t.AppletZeroCopyForwarding {
 		return false
 	}
@@ -37,6 +46,10 @@ func (s TuneOptions) Equal(t TuneOptions, opts ...Options) bool {
 	}
 
 	if s.DisableZeroCopyForwarding != t.DisableZeroCopyForwarding {
+		return false
+	}
+
+	if !equalComparableSlice(s.EpollMaskEvents, t.EpollMaskEvents, opt) {
 		return false
 	}
 
@@ -148,6 +161,10 @@ func (s TuneOptions) Equal(t TuneOptions, opts ...Options) bool {
 		return false
 	}
 
+	if !equalPointers(s.MaxRulesAtOnce, t.MaxRulesAtOnce) {
+		return false
+	}
+
 	if s.Maxaccept != t.Maxaccept {
 		return false
 	}
@@ -213,11 +230,20 @@ func (s TuneOptions) Equal(t TuneOptions, opts ...Options) bool {
 
 // Diff checks if two structs of type TuneOptions are equal
 //
+// By default empty maps and slices are equal to nil:
+//
 //	var a, b TuneOptions
 //	diff := a.Diff(b)
 //
-// opts ...Options are ignored in this method
+// For more advanced use case you can configure these options (default values are shown):
+//
+//	var a, b TuneOptions
+//	diff := a.Diff(b,Options{
+//		NilSameAsEmpty: true,
+//	})
 func (s TuneOptions) Diff(t TuneOptions, opts ...Options) map[string][]interface{} {
+	opt := getOptions(opts...)
+
 	diff := make(map[string][]interface{})
 	if s.AppletZeroCopyForwarding != t.AppletZeroCopyForwarding {
 		diff["AppletZeroCopyForwarding"] = []interface{}{s.AppletZeroCopyForwarding, t.AppletZeroCopyForwarding}
@@ -233,6 +259,10 @@ func (s TuneOptions) Diff(t TuneOptions, opts ...Options) map[string][]interface
 
 	if s.DisableZeroCopyForwarding != t.DisableZeroCopyForwarding {
 		diff["DisableZeroCopyForwarding"] = []interface{}{s.DisableZeroCopyForwarding, t.DisableZeroCopyForwarding}
+	}
+
+	if !equalComparableSlice(s.EpollMaskEvents, t.EpollMaskEvents, opt) {
+		diff["EpollMaskEvents"] = []interface{}{s.EpollMaskEvents, t.EpollMaskEvents}
 	}
 
 	if s.EventsMaxEventsAtOnce != t.EventsMaxEventsAtOnce {
@@ -341,6 +371,10 @@ func (s TuneOptions) Diff(t TuneOptions, opts ...Options) map[string][]interface
 
 	if !equalPointers(s.MaxChecksPerThread, t.MaxChecksPerThread) {
 		diff["MaxChecksPerThread"] = []interface{}{ValueOrNil(s.MaxChecksPerThread), ValueOrNil(t.MaxChecksPerThread)}
+	}
+
+	if !equalPointers(s.MaxRulesAtOnce, t.MaxRulesAtOnce) {
+		diff["MaxRulesAtOnce"] = []interface{}{ValueOrNil(s.MaxRulesAtOnce), ValueOrNil(t.MaxRulesAtOnce)}
 	}
 
 	if s.Maxaccept != t.Maxaccept {

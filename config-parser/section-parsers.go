@@ -281,6 +281,7 @@ func (p *configParser) getGlobalParser() *Parsers { //nolint: maintidx
 	addParser(parser, &sequence, &simple.Number{Name: "tune.comp.maxlevel"})
 	addParser(parser, &sequence, &simple.Enabled{Name: "tune.disable-zero-copy-forwarding"})
 	addParser(parser, &sequence, &simple.Enabled{Name: "tune.disable-fast-forward"})
+	addParser(parser, &sequence, &simple.Word{Name: "tune.epoll.mask-events"})
 	addParser(parser, &sequence, &simple.Number{Name: "tune.events.max-events-at-once"})
 	addParser(parser, &sequence, &simple.Enabled{Name: "tune.fail-alloc"})
 	addParser(parser, &sequence, &simple.OnOff{Name: "tune.fd.edge-triggered"})
@@ -316,6 +317,7 @@ func (p *configParser) getGlobalParser() *Parsers { //nolint: maintidx
 	addParser(parser, &sequence, &simple.OnOff{Name: "tune.lua.log.loggers"})
 	addParser(parser, &sequence, &simple.AutoOnOff{Name: "tune.lua.log.stderr"})
 	addParser(parser, &sequence, &simple.Number{Name: "tune.max-checks-per-thread"})
+	addParser(parser, &sequence, &simple.Number{Name: "tune.max-rules-at-once"})
 	addParser(parser, &sequence, &simple.Number{Name: "tune.maxaccept"})
 	addParser(parser, &sequence, &simple.Number{Name: "tune.maxpollevents"})
 	addParser(parser, &sequence, &simple.Number{Name: "tune.maxrewrite"})
@@ -465,6 +467,8 @@ func (p *configParser) getGlobalParser() *Parsers { //nolint: maintidx
 	addParser(parser, &sequence, &simple.Time{Name: "force-cfg-parser-pause"})
 	addParser(parser, &sequence, &simple.Time{Name: "warn-blocked-traffic-after"})
 	addParser(parser, &sequence, &simple.Word{Name: "dns-accept-family"})
+	addParser(parser, &sequence, &simple.Word{Name: "acme.scheduler"})
+	addParser(parser, &sequence, &simple.Number{Name: "stress-level"})
 	// the ConfigSnippet must be at the end to parsers load order to ensure
 	// the overloading of any option has been declared previously
 	addParser(parser, &sequence, &parsers.ConfigSnippet{})

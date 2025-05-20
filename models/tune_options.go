@@ -23,6 +23,7 @@ package models
 import (
 	"context"
 	"encoding/json"
+	"strconv"
 
 	"github.com/go-openapi/errors"
 	"github.com/go-openapi/strfmt"
@@ -47,6 +48,9 @@ type TuneOptions struct {
 
 	// disable zero copy forwarding
 	DisableZeroCopyForwarding bool `json:"disable_zero_copy_forwarding,omitempty"`
+
+	// epoll mask events
+	EpollMaskEvents []string `json:"epoll_mask_events"`
 
 	// events max events at once
 	// Maximum: 10000
@@ -157,6 +161,11 @@ type TuneOptions struct {
 	// max checks per thread
 	MaxChecksPerThread *int64 `json:"max_checks_per_thread,omitempty"`
 
+	// max rules at once
+	// Minimum: 0
+	// +kubebuilder:validation:Minimum=0
+	MaxRulesAtOnce *int64 `json:"max_rules_at_once,omitempty"`
+
 	// maxaccept
 	Maxaccept int64 `json:"maxaccept,omitempty"`
 
@@ -223,6 +232,10 @@ func (m *TuneOptions) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
+	if err := m.validateEpollMaskEvents(formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.validateEventsMaxEventsAtOnce(formats); err != nil {
 		res = append(res, err)
 	}
@@ -264,6 +277,10 @@ func (m *TuneOptions) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateListenerMultiQueue(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateMaxRulesAtOnce(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -326,6 +343,42 @@ func (m *TuneOptions) validateAppletZeroCopyForwarding(formats strfmt.Registry) 
 	// value enum
 	if err := m.validateAppletZeroCopyForwardingEnum("applet_zero_copy_forwarding", "body", m.AppletZeroCopyForwarding); err != nil {
 		return err
+	}
+
+	return nil
+}
+
+var tuneOptionsEpollMaskEventsItemsEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["err","hup","rdhup"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		tuneOptionsEpollMaskEventsItemsEnum = append(tuneOptionsEpollMaskEventsItemsEnum, v)
+	}
+}
+
+func (m *TuneOptions) validateEpollMaskEventsItemsEnum(path, location string, value string) error {
+	if err := validate.EnumCase(path, location, value, tuneOptionsEpollMaskEventsItemsEnum, true); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *TuneOptions) validateEpollMaskEvents(formats strfmt.Registry) error {
+	if swag.IsZero(m.EpollMaskEvents) { // not required
+		return nil
+	}
+
+	for i := 0; i < len(m.EpollMaskEvents); i++ {
+
+		// value enum
+		if err := m.validateEpollMaskEventsItemsEnum("epoll_mask_events"+"."+strconv.Itoa(i), "body", m.EpollMaskEvents[i]); err != nil {
+			return err
+		}
+
 	}
 
 	return nil
@@ -682,6 +735,18 @@ func (m *TuneOptions) validateListenerMultiQueue(formats strfmt.Registry) error 
 
 	// value enum
 	if err := m.validateListenerMultiQueueEnum("listener_multi_queue", "body", m.ListenerMultiQueue); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *TuneOptions) validateMaxRulesAtOnce(formats strfmt.Registry) error {
+	if swag.IsZero(m.MaxRulesAtOnce) { // not required
+		return nil
+	}
+
+	if err := validate.MinimumInt("max_rules_at_once", "body", *m.MaxRulesAtOnce, 0, false); err != nil {
 		return err
 	}
 

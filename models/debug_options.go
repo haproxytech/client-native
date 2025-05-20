@@ -43,6 +43,13 @@ type DebugOptions struct {
 	// quiet
 	Quiet bool `json:"quiet,omitempty"`
 
+	// stress level
+	// Maximum: 9
+	// Minimum: 0
+	// +kubebuilder:validation:Maximum=9
+	// +kubebuilder:validation:Minimum=0
+	StressLevel *int64 `json:"stress_level,omitempty"`
+
 	// zero warning
 	ZeroWarning bool `json:"zero_warning,omitempty"`
 }
@@ -52,6 +59,10 @@ func (m *DebugOptions) Validate(formats strfmt.Registry) error {
 	var res []error
 
 	if err := m.validateAnonkey(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateStressLevel(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -71,6 +82,22 @@ func (m *DebugOptions) validateAnonkey(formats strfmt.Registry) error {
 	}
 
 	if err := validate.MaximumInt("anonkey", "body", *m.Anonkey, 4.294967295e+09, false); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *DebugOptions) validateStressLevel(formats strfmt.Registry) error {
+	if swag.IsZero(m.StressLevel) { // not required
+		return nil
+	}
+
+	if err := validate.MinimumInt("stress_level", "body", *m.StressLevel, 0, false); err != nil {
+		return err
+	}
+
+	if err := validate.MaximumInt("stress_level", "body", *m.StressLevel, 9, false); err != nil {
 		return err
 	}
 

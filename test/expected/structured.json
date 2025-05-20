@@ -57,6 +57,7 @@
                     "name": "third"
                 }
             ],
+            "acme_scheduler": "off",
             "ca_base": "/etc/ssl/certs",
             "crt_base": "/etc/ssl/private",
             "default_bind_ciphers": "ECDH+AESGCM:ECDH+CHACHA20",
@@ -139,6 +140,7 @@
         "debug_options": {
             "anonkey": 25,
             "quiet": true,
+            "stress_level": 5,
             "zero_warning": true
         },
         "anonkey": 25,
@@ -262,6 +264,7 @@
             "comp_maxlevel": 14,
             "disable_fast_forward": true,
             "disable_zero_copy_forwarding": true,
+            "epoll_mask_events": ["err", "hup", "rdhup"],
             "events_max_events_at_once": 10,
             "fail_alloc": true,
             "fd_edge_triggered": "enabled",
@@ -289,6 +292,7 @@
             "listener_default_shards": "by-process",
             "listener_multi_queue": "enabled",
             "max_checks_per_thread": 0,
+            "max_rules_at_once": 60,
             "maxaccept": 28,
             "maxpollevents": 29,
             "maxrewrite": 30,

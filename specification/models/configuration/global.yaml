@@ -449,6 +449,11 @@ tune_options:
     disable_zero_copy_forwarding:
       type: boolean
       x-display-name: Disable zero-copy forwarding
+    epoll_mask_events:
+      type: array
+      items:
+        type: string
+        enum: [err, hup, rdhup]
     events_max_events_at_once:
       type: integer
       minimum: 1
@@ -551,6 +556,11 @@ tune_options:
       type: integer
       x-nullable: true
       x-display-name: Maximum checks per thread
+    max_rules_at_once:
+      type: integer
+      minimum: 0
+      x-nullable: true
+      x-display-name: Maximum rules at once
     maxaccept:
       type: integer
       x-display-name: Maximum Accept Events
@@ -855,6 +865,10 @@ tune_buffer_options:
 ssl_options:
   type: object
   properties:
+    acme_scheduler:
+      type: string
+      enum: [auto, off]
+      x-display-name: ACME Scheduler
     ca_base:
       type: string
       x-display-name: SSL CA Certificates Base Directory
@@ -1005,6 +1019,11 @@ debug_options:
       type: integer
       minimum: 0
       maximum: 4294967295
+      x-nullable: true
+    stress_level:
+      type: integer
+      minimum: 0
+      maximum: 9
       x-nullable: true
     quiet:
       type: boolean

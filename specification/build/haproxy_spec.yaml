@@ -1342,6 +1342,12 @@ definitions:
     type: object
   ssl_options:
     properties:
+      acme_scheduler:
+        enum:
+          - auto
+          - "off"
+        type: string
+        x-display-name: ACME Scheduler
       ca_base:
         type: string
         x-display-name: SSL CA Certificates Base Directory
@@ -1462,6 +1468,14 @@ definitions:
       disable_zero_copy_forwarding:
         type: boolean
         x-display-name: Disable zero-copy forwarding
+      epoll_mask_events:
+        items:
+          enum:
+            - err
+            - hup
+            - rdhup
+          type: string
+        type: array
       events_max_events_at_once:
         maximum: 10000
         minimum: 1
@@ -1582,6 +1596,11 @@ definitions:
       max_checks_per_thread:
         type: integer
         x-display-name: Maximum checks per thread
+        x-nullable: true
+      max_rules_at_once:
+        minimum: 0
+        type: integer
+        x-display-name: Maximum rules at once
         x-nullable: true
       maxaccept:
         type: integer
@@ -1905,6 +1924,11 @@ definitions:
         x-nullable: true
       quiet:
         type: boolean
+      stress_level:
+        maximum: 9
+        minimum: 0
+        type: integer
+        x-nullable: true
       zero_warning:
         type: boolean
     type: object

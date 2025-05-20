@@ -39,6 +39,11 @@ type SslOptions struct {
 	// ssl engines
 	SslEngines []*SslEngine `json:"engines,omitempty"`
 
+	// acme scheduler
+	// Enum: ["auto","off"]
+	// +kubebuilder:validation:Enum=auto;off;
+	AcmeScheduler string `json:"acme_scheduler,omitempty"`
+
 	// ca base
 	CaBase string `json:"ca_base,omitempty"`
 
@@ -134,6 +139,10 @@ func (m *SslOptions) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
+	if err := m.validateAcmeScheduler(formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.validateModeAsync(formats); err != nil {
 		res = append(res, err)
 	}
@@ -173,6 +182,48 @@ func (m *SslOptions) validateSslEngines(formats strfmt.Registry) error {
 			}
 		}
 
+	}
+
+	return nil
+}
+
+var sslOptionsTypeAcmeSchedulerPropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["auto","off"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		sslOptionsTypeAcmeSchedulerPropEnum = append(sslOptionsTypeAcmeSchedulerPropEnum, v)
+	}
+}
+
+const (
+
+	// SslOptionsAcmeSchedulerAuto captures enum value "auto"
+	SslOptionsAcmeSchedulerAuto string = "auto"
+
+	// SslOptionsAcmeSchedulerOff captures enum value "off"
+	SslOptionsAcmeSchedulerOff string = "off"
+)
+
+// prop value enum
+func (m *SslOptions) validateAcmeSchedulerEnum(path, location string, value string) error {
+	if err := validate.EnumCase(path, location, value, sslOptionsTypeAcmeSchedulerPropEnum, true); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *SslOptions) validateAcmeScheduler(formats strfmt.Registry) error {
+	if swag.IsZero(m.AcmeScheduler) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateAcmeSchedulerEnum("acme_scheduler", "body", m.AcmeScheduler); err != nil {
+		return err
 	}
 
 	return nil

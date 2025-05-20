@@ -109,6 +109,7 @@ func TestTuneOptionsEqualFalse(t *testing.T) {
 		result.HTTPMaxhdr = sample.HTTPMaxhdr + 1
 		result.Idletimer = Ptr(*sample.Idletimer + 1)
 		result.MaxChecksPerThread = Ptr(*sample.MaxChecksPerThread + 1)
+		result.MaxRulesAtOnce = Ptr(*sample.MaxRulesAtOnce + 1)
 		result.Maxaccept = sample.Maxaccept + 1
 		result.Maxpollevents = sample.Maxpollevents + 1
 		result.Maxrewrite = sample.Maxrewrite + 1
@@ -224,6 +225,7 @@ func TestTuneOptionsDiffFalse(t *testing.T) {
 		result.HTTPMaxhdr = sample.HTTPMaxhdr + 1
 		result.Idletimer = Ptr(*sample.Idletimer + 1)
 		result.MaxChecksPerThread = Ptr(*sample.MaxChecksPerThread + 1)
+		result.MaxRulesAtOnce = Ptr(*sample.MaxRulesAtOnce + 1)
 		result.Maxaccept = sample.Maxaccept + 1
 		result.Maxpollevents = sample.Maxpollevents + 1
 		result.Maxrewrite = sample.Maxrewrite + 1
@@ -244,7 +246,7 @@ func TestTuneOptionsDiffFalse(t *testing.T) {
 
 	for _, sample := range samples {
 		result := sample.a.Diff(sample.b)
-		if len(result) != 46 {
+		if len(result) != 48 {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {
@@ -254,7 +256,7 @@ func TestTuneOptionsDiffFalse(t *testing.T) {
 			if err != nil {
 				t.Error(err)
 			}
-			t.Errorf("Expected TuneOptions to be different in 46 cases, but it is not (%d) %s %s", len(result), a, b)
+			t.Errorf("Expected TuneOptions to be different in 48 cases, but it is not (%d) %s %s", len(result), a, b)
 		}
 	}
 }

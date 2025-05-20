@@ -562,6 +562,15 @@ func parseSSLOptions(p parser.Parser) (*models.SslOptions, error) { //nolint:goc
 		options.SslEngines = sslEngines
 	}
 
+	sched, err := parseStringOption(p, "acme.scheduler")
+	if err != nil {
+		return nil, err
+	}
+	if sched != "" {
+		isEmpty = false
+		options.AcmeScheduler = sched
+	}
+
 	caBase, err := parseStringOption(p, "ca-base")
 	if err != nil {
 		return nil, err
@@ -810,6 +819,15 @@ func parseDebugOptions(p parser.Parser) (*models.DebugOptions, error) {
 	if anonkey != nil {
 		isEmpty = false
 		options.Anonkey = anonkey
+	}
+
+	stress, err := parseInt64POption(p, "stress-level")
+	if err != nil {
+		return nil, err
+	}
+	if stress != nil {
+		isEmpty = false
+		options.StressLevel = stress
 	}
 
 	quiet, err := parseBoolOption(p, "quiet")
@@ -1215,6 +1233,17 @@ func parseTuneOptions(p parser.Parser) (*models.TuneOptions, error) { //nolint:g
 		options.DisableZeroCopyForwarding = boolOption
 	}
 
+	strOption, err = parseStringOption(p, "tune.epoll.mask-events")
+	if err != nil {
+		return nil, err
+	}
+	if strOption != "" {
+		if words := strings.Split(strOption, ","); len(words) > 0 && words[0] != "" {
+			isEmpty = false
+			options.EpollMaskEvents = words
+		}
+	}
+
 	intOption, err = parseInt64Option(p, "tune.events.max-events-at-once")
 	if err != nil {
 		return nil, err
@@ -1339,6 +1368,15 @@ func parseTuneOptions(p parser.Parser) (*models.TuneOptions, error) { //nolint:g
 	if intPOption != nil {
 		isEmpty = false
 		options.MaxChecksPerThread = intPOption
+	}
+
+	intPOption, err = parseInt64POption(p, "tune.max-rules-at-once")
+	if err != nil {
+		return nil, err
+	}
+	if intPOption != nil {
+		isEmpty = false
+		options.MaxRulesAtOnce = intPOption
 	}
 
 	intOption, err = parseInt64Option(p, "tune.maxaccept")
@@ -2553,6 +2591,9 @@ func serializeDebugOptions(p parser.Parser, options *models.DebugOptions) error 
 	if err := serializeInt64POption(p, "anonkey", options.Anonkey); err != nil {
 		return err
 	}
+	if err := serializeInt64POption(p, "stress-level", options.StressLevel); err != nil {
+		return err
+	}
 	if err := serializeBoolOption(p, "quiet", options.Quiet); err != nil {
 		return err
 	}
@@ -2711,6 +2752,10 @@ func serializeSSLOptions(p parser.Parser, options *models.SslOptions) error { //
 		}
 	}
 	if err := p.Set(parser.Global, parser.GlobalSectionName, "ssl-engine", sslEngines); err != nil {
+		return err
+	}
+
+	if err := serializeStringOption(p, "acme.scheduler", options.AcmeScheduler); err != nil {
 		return err
 	}
 
@@ -3585,7 +3630,7 @@ func serializeTuneZlibOptions(p parser.Parser, options *models.TuneZlibOptions) 
 	return serializeInt64Option(p, "tune.zlib.windowsize", options.Windowsize)
 }
 
-func serializeTuneOptions(p parser.Parser, options *models.TuneOptions, configOptions *options.ConfigurationOptions) error { //nolint:gocognit,gocyclo,cyclop
+func serializeTuneOptions(p parser.Parser, options *models.TuneOptions, configOptions *options.ConfigurationOptions) error { //nolint:gocognit,gocyclo,cyclop,maintidx
 	if options == nil {
 		options = &models.TuneOptions{}
 	}
@@ -3599,6 +3644,9 @@ func serializeTuneOptions(p parser.Parser, options *models.TuneOptions, configOp
 		return err
 	}
 	if err := serializeBoolOption(p, "tune.disable-zero-copy-forwarding", options.DisableZeroCopyForwarding); err != nil {
+		return err
+	}
+	if err := serializeStringOption(p, "tune.epoll.mask-events", strings.Join(options.EpollMaskEvents, ",")); err != nil {
 		return err
 	}
 	if err := serializeInt64Option(p, "tune.events.max-events-at-once", options.EventsMaxEventsAtOnce); err != nil {
@@ -3641,6 +3689,9 @@ func serializeTuneOptions(p parser.Parser, options *models.TuneOptions, configOp
 		return err
 	}
 	if err := serializeInt64POption(p, "tune.max-checks-per-thread", options.MaxChecksPerThread); err != nil {
+		return err
+	}
+	if err := serializeInt64POption(p, "tune.max-rules-at-once", options.MaxRulesAtOnce); err != nil {
 		return err
 	}
 	if err := serializeInt64Option(p, "tune.maxaccept", options.Maxaccept); err != nil {

@@ -47,6 +47,10 @@ func (s SslOptions) Equal(t SslOptions, opts ...Options) bool {
 		}
 	}
 
+	if s.AcmeScheduler != t.AcmeScheduler {
+		return false
+	}
+
 	if s.CaBase != t.CaBase {
 		return false
 	}
@@ -186,6 +190,10 @@ func (s SslOptions) Diff(t SslOptions, opts ...Options) map[string][]interface{}
 		if len(diff2) > 0 {
 			diff["SslEngines"] = []interface{}{diff2}
 		}
+	}
+
+	if s.AcmeScheduler != t.AcmeScheduler {
+		diff["AcmeScheduler"] = []interface{}{s.AcmeScheduler, t.AcmeScheduler}
 	}
 
 	if s.CaBase != t.CaBase {

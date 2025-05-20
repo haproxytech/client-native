@@ -88,6 +88,7 @@ func TestDebugOptionsEqualFalse(t *testing.T) {
 		}
 		result.Anonkey = Ptr(*sample.Anonkey + 1)
 		result.Quiet = !sample.Quiet
+		result.StressLevel = Ptr(*sample.StressLevel + 1)
 		result.ZeroWarning = !sample.ZeroWarning
 		samples = append(samples, struct {
 			a, b DebugOptions
@@ -170,6 +171,7 @@ func TestDebugOptionsDiffFalse(t *testing.T) {
 		}
 		result.Anonkey = Ptr(*sample.Anonkey + 1)
 		result.Quiet = !sample.Quiet
+		result.StressLevel = Ptr(*sample.StressLevel + 1)
 		result.ZeroWarning = !sample.ZeroWarning
 		samples = append(samples, struct {
 			a, b DebugOptions
@@ -178,7 +180,7 @@ func TestDebugOptionsDiffFalse(t *testing.T) {
 
 	for _, sample := range samples {
 		result := sample.a.Diff(sample.b)
-		if len(result) != 3 {
+		if len(result) != 4 {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {
@@ -188,7 +190,7 @@ func TestDebugOptionsDiffFalse(t *testing.T) {
 			if err != nil {
 				t.Error(err)
 			}
-			t.Errorf("Expected DebugOptions to be different in 3 cases, but it is not (%d) %s %s", len(result), a, b)
+			t.Errorf("Expected DebugOptions to be different in 4 cases, but it is not (%d) %s %s", len(result), a, b)
 		}
 	}
 }

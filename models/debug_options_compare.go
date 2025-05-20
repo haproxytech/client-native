@@ -32,6 +32,10 @@ func (s DebugOptions) Equal(t DebugOptions, opts ...Options) bool {
 		return false
 	}
 
+	if !equalPointers(s.StressLevel, t.StressLevel) {
+		return false
+	}
+
 	if s.ZeroWarning != t.ZeroWarning {
 		return false
 	}
@@ -53,6 +57,10 @@ func (s DebugOptions) Diff(t DebugOptions, opts ...Options) map[string][]interfa
 
 	if s.Quiet != t.Quiet {
 		diff["Quiet"] = []interface{}{s.Quiet, t.Quiet}
+	}
+
+	if !equalPointers(s.StressLevel, t.StressLevel) {
+		diff["StressLevel"] = []interface{}{ValueOrNil(s.StressLevel), ValueOrNil(t.StressLevel)}
 	}
 
 	if s.ZeroWarning != t.ZeroWarning {

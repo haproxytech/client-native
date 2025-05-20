@@ -278,6 +278,10 @@ global
   ocsp-update.mode on
   dns-accept-family ipv4,ipv6
   warn-blocked-traffic-after 50ms
+  acme.scheduler off
+  stress-level 5
+  tune.epoll.mask-events err,hup,rdhup
+  tune.max-rules-at-once 60
 
 defaults test_defaults # testing_defaults
   acl invalid_src  src          0.0.0.0/7 224.0.0.0/3
