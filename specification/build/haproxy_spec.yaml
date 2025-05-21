@@ -1615,6 +1615,11 @@ definitions:
         type: integer
         x-display-name: Per-thread Amount of Memory
         x-nullable: true
+      notsent_lowat_client:
+        type: integer
+        x-display-name: Client Not Sent Low Watermark
+        x-nullable: true
+        x-size: true
       pattern_cache_size:
         type: integer
         x-display-name: Pattern Lookup Cache Size

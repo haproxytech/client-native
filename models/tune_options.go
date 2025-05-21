@@ -178,6 +178,9 @@ type TuneOptions struct {
 	// memory hot size
 	MemoryHotSize *int64 `json:"memory_hot_size,omitempty"`
 
+	// notsent lowat client
+	NotsentLowatClient *int64 `json:"notsent_lowat_client,omitempty"`
+
 	// pattern cache size
 	PatternCacheSize *int64 `json:"pattern_cache_size,omitempty"`
 

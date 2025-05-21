@@ -114,6 +114,7 @@ func TestTuneOptionsEqualFalse(t *testing.T) {
 		result.Maxpollevents = sample.Maxpollevents + 1
 		result.Maxrewrite = sample.Maxrewrite + 1
 		result.MemoryHotSize = Ptr(*sample.MemoryHotSize + 1)
+		result.NotsentLowatClient = Ptr(*sample.NotsentLowatClient + 1)
 		result.PatternCacheSize = Ptr(*sample.PatternCacheSize + 1)
 		result.PeersMaxUpdatesAtOnce = sample.PeersMaxUpdatesAtOnce + 1
 		result.PoolHighFdRatio = sample.PoolHighFdRatio + 1
@@ -230,6 +231,7 @@ func TestTuneOptionsDiffFalse(t *testing.T) {
 		result.Maxpollevents = sample.Maxpollevents + 1
 		result.Maxrewrite = sample.Maxrewrite + 1
 		result.MemoryHotSize = Ptr(*sample.MemoryHotSize + 1)
+		result.NotsentLowatClient = Ptr(*sample.NotsentLowatClient + 1)
 		result.PatternCacheSize = Ptr(*sample.PatternCacheSize + 1)
 		result.PeersMaxUpdatesAtOnce = sample.PeersMaxUpdatesAtOnce + 1
 		result.PoolHighFdRatio = sample.PoolHighFdRatio + 1
@@ -246,7 +248,7 @@ func TestTuneOptionsDiffFalse(t *testing.T) {
 
 	for _, sample := range samples {
 		result := sample.a.Diff(sample.b)
-		if len(result) != 48 {
+		if len(result) != 49 {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {
@@ -256,7 +258,7 @@ func TestTuneOptionsDiffFalse(t *testing.T) {
 			if err != nil {
 				t.Error(err)
 			}
-			t.Errorf("Expected TuneOptions to be different in 48 cases, but it is not (%d) %s %s", len(result), a, b)
+			t.Errorf("Expected TuneOptions to be different in 49 cases, but it is not (%d) %s %s", len(result), a, b)
 		}
 	}
 }

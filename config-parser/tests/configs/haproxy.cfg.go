@@ -56,6 +56,7 @@ global
   tune.h2.fe.rxbuf 32k
   tune.h2.zero-copy-fwd-send on
   tune.lua.maxmem 65536
+  tune.notsent-lowat.client 32k
   tune.pt.zero-copy-forwarding on
   tune.renice.runtime -10
   tune.renice.startup 8

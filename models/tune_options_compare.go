@@ -181,6 +181,10 @@ func (s TuneOptions) Equal(t TuneOptions, opts ...Options) bool {
 		return false
 	}
 
+	if !equalPointers(s.NotsentLowatClient, t.NotsentLowatClient) {
+		return false
+	}
+
 	if !equalPointers(s.PatternCacheSize, t.PatternCacheSize) {
 		return false
 	}
@@ -391,6 +395,10 @@ func (s TuneOptions) Diff(t TuneOptions, opts ...Options) map[string][]interface
 
 	if !equalPointers(s.MemoryHotSize, t.MemoryHotSize) {
 		diff["MemoryHotSize"] = []interface{}{ValueOrNil(s.MemoryHotSize), ValueOrNil(t.MemoryHotSize)}
+	}
+
+	if !equalPointers(s.NotsentLowatClient, t.NotsentLowatClient) {
+		diff["NotsentLowatClient"] = []interface{}{ValueOrNil(s.NotsentLowatClient), ValueOrNil(t.NotsentLowatClient)}
 	}
 
 	if !equalPointers(s.PatternCacheSize, t.PatternCacheSize) {

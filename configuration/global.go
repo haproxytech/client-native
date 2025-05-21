@@ -1647,6 +1647,15 @@ func parseTuneOptions(p parser.Parser) (*models.TuneOptions, error) { //nolint:g
 		options.H2ZeroCopyFwdSend = strOption
 	}
 
+	intPOption, err = parseSizeOption(p, "tune.notsent-lowat.client")
+	if err != nil {
+		return nil, err
+	}
+	if intPOption != nil {
+		isEmpty = false
+		options.NotsentLowatClient = intPOption
+	}
+
 	strOption, err = parseOnOffOption(p, "tune.pt.zero-copy-forwarding")
 	if err != nil {
 		return nil, err
@@ -3852,6 +3861,9 @@ func serializeTuneOptions(p parser.Parser, options *models.TuneOptions, configOp
 		return err
 	}
 	if err := serializeOnOffOption(p, "tune.h2.zero-copy-fwd-send", options.H2ZeroCopyFwdSend); err != nil {
+		return err
+	}
+	if err := serializeSizeOption(p, "tune.notsent-lowat.client", options.NotsentLowatClient); err != nil {
 		return err
 	}
 	if err := serializeOnOffOption(p, "tune.pt.zero-copy-forwarding", options.PtZeroCopyForwarding); err != nil {

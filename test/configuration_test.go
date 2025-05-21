@@ -246,6 +246,7 @@ global
   tune.h2.fe.max-total-streams 8192
   tune.h2.fe.rxbuf 8k
   tune.lua.burst-timeout 205
+  tune.notsent-lowat.client 32k
   ssl-default-bind-sigalgs RSA+SHA256
   ssl-default-bind-client-sigalgs ECDSA+SHA256:RSA+SHA256
   ssl-default-server-sigalgs RSA+SHA256
