@@ -43,8 +43,6 @@ global
   cpu-set drop-core 5-9
   lua-prepend-path /usr/share/haproxy-lua/?/init.lua
   lua-prepend-path /usr/share/haproxy-lua/?.lua cpath
-	lua-load /etc/foo.lua
-	lua-load /etc/bar.lua
   h1-case-adjust-file /etc/headers.adjust
   h1-case-adjust host Host
   h1-case-adjust content-type Content-Type
@@ -77,6 +75,7 @@ global
   tune.idletimer 22
   tune.listener.default-shards by-process
   tune.listener.multi-queue on
+  tune.lua.bool-sample-conversion normal
   tune.lua.forced-yield 23
   tune.lua.log.loggers on
   tune.lua.log.stderr auto
@@ -137,6 +136,8 @@ global
   busy-polling
   max-spread-checks 1ms
   close-spread-time 1s
+  lua-load /etc/foo.lua
+	lua-load /etc/bar.lua
   maxconnrate 2
   maxcomprate 3
   maxcompcpuusage 4

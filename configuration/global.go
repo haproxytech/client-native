@@ -1819,9 +1819,20 @@ func parseTuneBufferOptions(p parser.Parser) (*models.TuneBufferOptions, error) 
 func parseTuneLuaOptions(p parser.Parser) (*models.TuneLuaOptions, error) {
 	var intOption int64
 	var intPOption *int64
+	var strOption string
 	var err error
 	options := &models.TuneLuaOptions{}
 	isEmpty := true
+
+	strOption, err = parseStringOption(p, "tune.lua.bool-sample-conversion")
+	if err != nil {
+		return nil, err
+	}
+	if strOption != "" {
+		isEmpty = false
+		options.BoolSampleConversion = strOption
+	}
+
 	intOption, err = parseInt64Option(p, "tune.lua.forced-yield")
 	if err != nil {
 		return nil, err
@@ -1840,7 +1851,7 @@ func parseTuneLuaOptions(p parser.Parser) (*models.TuneLuaOptions, error) {
 		isEmpty = false
 	}
 
-	strOption, err := parseOnOffOption(p, "tune.lua.log.loggers")
+	strOption, err = parseOnOffOption(p, "tune.lua.log.loggers")
 	if err != nil {
 		return nil, err
 	}
@@ -3581,6 +3592,9 @@ func serializeTuneBufferOptions(p parser.Parser, options *models.TuneBufferOptio
 func serializeTuneLuaOptions(p parser.Parser, options *models.TuneLuaOptions, configOptions *options.ConfigurationOptions) error {
 	if options == nil {
 		options = &models.TuneLuaOptions{}
+	}
+	if err := serializeStringOption(p, "tune.lua.bool-sample-conversion", options.BoolSampleConversion); err != nil {
+		return err
 	}
 	if err := serializeTimeoutOption(p, "tune.lua.burst-timeout", options.BurstTimeout, configOptions); err != nil {
 		return err

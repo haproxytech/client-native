@@ -1797,6 +1797,11 @@ definitions:
     type: object
   tune_lua_options:
     properties:
+      bool_sample_conversion:
+        enum:
+          - normal
+          - pre-3.1-bug
+        type: string
       burst_timeout:
         minimum: 0
         type: integer

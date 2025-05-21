@@ -311,6 +311,7 @@ func (p *configParser) getGlobalParser() *Parsers { //nolint: maintidx
 	addParser(parser, &sequence, &simple.Time{Name: "tune.idletimer"})
 	addParser(parser, &sequence, &simple.String{Name: "tune.listener.default-shards"})
 	addParser(parser, &sequence, &simple.OnOff{Name: "tune.listener.multi-queue"})
+	addParser(parser, &sequence, &simple.Word{Name: "tune.lua.bool-sample-conversion"})
 	addParser(parser, &sequence, &simple.Number{Name: "tune.lua.forced-yield"})
 	addParser(parser, &sequence, &simple.Number{Name: "tune.lua.maxmem"})
 	addParser(parser, &sequence, &simple.Time{Name: "tune.lua.session-timeout"})

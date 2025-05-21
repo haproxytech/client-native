@@ -24,6 +24,10 @@ package models
 //
 // opts ...Options are ignored in this method
 func (s TuneLuaOptions) Equal(t TuneLuaOptions, opts ...Options) bool {
+	if s.BoolSampleConversion != t.BoolSampleConversion {
+		return false
+	}
+
 	if !equalPointers(s.BurstTimeout, t.BurstTimeout) {
 		return false
 	}
@@ -67,6 +71,10 @@ func (s TuneLuaOptions) Equal(t TuneLuaOptions, opts ...Options) bool {
 // opts ...Options are ignored in this method
 func (s TuneLuaOptions) Diff(t TuneLuaOptions, opts ...Options) map[string][]interface{} {
 	diff := make(map[string][]interface{})
+	if s.BoolSampleConversion != t.BoolSampleConversion {
+		diff["BoolSampleConversion"] = []interface{}{s.BoolSampleConversion, t.BoolSampleConversion}
+	}
+
 	if !equalPointers(s.BurstTimeout, t.BurstTimeout) {
 		diff["BurstTimeout"] = []interface{}{ValueOrNil(s.BurstTimeout), ValueOrNil(t.BurstTimeout)}
 	}

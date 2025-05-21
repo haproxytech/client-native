@@ -398,6 +398,7 @@
             "bufsize_small": 8192
         },
         "tune_lua_options": {
+            "bool_sample_conversion": "normal",
             "burst_timeout": 205,
             "forced_yield": 23,
             "log_loggers": "enabled",

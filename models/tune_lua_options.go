@@ -34,6 +34,11 @@ import (
 //
 // swagger:model tune_lua_options
 type TuneLuaOptions struct {
+	// bool sample conversion
+	// Enum: ["normal","pre-3.1-bug"]
+	// +kubebuilder:validation:Enum=normal;pre-3.1-bug;
+	BoolSampleConversion string `json:"bool_sample_conversion,omitempty"`
+
 	// burst timeout
 	// Minimum: 0
 	// +kubebuilder:validation:Minimum=0
@@ -75,6 +80,10 @@ type TuneLuaOptions struct {
 func (m *TuneLuaOptions) Validate(formats strfmt.Registry) error {
 	var res []error
 
+	if err := m.validateBoolSampleConversion(formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.validateBurstTimeout(formats); err != nil {
 		res = append(res, err)
 	}
@@ -102,6 +111,48 @@ func (m *TuneLuaOptions) Validate(formats strfmt.Registry) error {
 	if len(res) > 0 {
 		return errors.CompositeValidationError(res...)
 	}
+	return nil
+}
+
+var tuneLuaOptionsTypeBoolSampleConversionPropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["normal","pre-3.1-bug"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		tuneLuaOptionsTypeBoolSampleConversionPropEnum = append(tuneLuaOptionsTypeBoolSampleConversionPropEnum, v)
+	}
+}
+
+const (
+
+	// TuneLuaOptionsBoolSampleConversionNormal captures enum value "normal"
+	TuneLuaOptionsBoolSampleConversionNormal string = "normal"
+
+	// TuneLuaOptionsBoolSampleConversionPreDash3Dot1DashBug captures enum value "pre-3.1-bug"
+	TuneLuaOptionsBoolSampleConversionPreDash3Dot1DashBug string = "pre-3.1-bug"
+)
+
+// prop value enum
+func (m *TuneLuaOptions) validateBoolSampleConversionEnum(path, location string, value string) error {
+	if err := validate.EnumCase(path, location, value, tuneLuaOptionsTypeBoolSampleConversionPropEnum, true); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *TuneLuaOptions) validateBoolSampleConversion(formats strfmt.Registry) error {
+	if swag.IsZero(m.BoolSampleConversion) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateBoolSampleConversionEnum("bool_sample_conversion", "body", m.BoolSampleConversion); err != nil {
+		return err
+	}
+
 	return nil
 }
 

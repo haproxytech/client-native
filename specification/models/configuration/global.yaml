@@ -770,6 +770,9 @@ tune_ssl_options:
 tune_lua_options:
   type: object
   properties:
+    bool_sample_conversion:
+      type: string
+      enum: ["normal", "pre-3.1-bug"]
     forced_yield:
       type: integer
       x-display-name: Lua Forced Yield
