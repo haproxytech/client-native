@@ -211,6 +211,7 @@ func (p *configParser) getDefaultParser() *Parsers {
 	addParser(parser, &sequence, &parsers.Persist{})
 	addParser(parser, &sequence, &simple.Number{Name: "rate-limit sessions"})
 	addParser(parser, &sequence, &simple.Number{Name: "hash-balance-factor"})
+	addParser(parser, &sequence, &parsers.HashPreserveAffinity{})
 	addParser(parser, &sequence, &http.Requests{Mode: "defaults"})
 	addParser(parser, &sequence, &tcp.Requests{Mode: "defaults"})
 	addParser(parser, &sequence, &tcp.Responses{Mode: "defaults"})
@@ -698,6 +699,7 @@ func (p *configParser) getBackendParser() *Parsers {
 	addParser(parser, &sequence, &parsers.Source{})
 	addParser(parser, &sequence, &parsers.Persist{})
 	addParser(parser, &sequence, &simple.Number{Name: "hash-balance-factor"})
+	addParser(parser, &sequence, &parsers.HashPreserveAffinity{})
 	addParser(parser, &sequence, &simple.Word{Name: "guid"})
 	return p.createParsers(parser, sequence)
 }
@@ -789,6 +791,7 @@ func (p *configParser) getListenParser() *Parsers {
 		addParser(parser, &sequence, &parsers.OptionHTTPRestrictReqHdrNames{})
 		addParser(parser, &sequence, &tcp.Checks{})
 		addParser(parser, &sequence, &parsers.OptionHttpchk{})
+		addParser(parser, &sequence, &parsers.HashPreserveAffinity{})
 		if p.Options.UseV2HTTPCheck {
 			addParser(parser, &sequence, &parsers.HTTPCheckV2{})
 		} else {

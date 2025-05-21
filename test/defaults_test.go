@@ -70,6 +70,7 @@ func TestPushDefaults(t *testing.T) {
 			AcceptUnsafeViolationsInHTTPResponse: "disabled",
 			DisableH2Upgrade:                     "disabled",
 			LogHealthChecks:                      "disabled",
+			HashPreserveAffinity:                 "always",
 			ClitcpkaCnt:                          &cpkaCnt,
 			ClitcpkaIdle:                         &cpkaTimeout,
 			ClitcpkaIntvl:                        &cpkaTimeout,

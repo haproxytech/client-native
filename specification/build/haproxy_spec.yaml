@@ -2757,6 +2757,12 @@ definitions:
       hash_balance_factor:
         type: integer
         x-nullable: true
+      hash_preserve_affinity:
+        enum:
+          - always
+          - maxconn
+          - maxqueue
+        type: string
       hash_type:
         $ref: '#/definitions/hash_type'
       http-buffer-request:
@@ -3770,6 +3776,12 @@ definitions:
       hash_balance_factor:
         type: integer
         x-nullable: true
+      hash_preserve_affinity:
+        enum:
+          - always
+          - maxconn
+          - maxqueue
+        type: string
       hash_type:
         $ref: '#/definitions/hash_type'
       http-buffer-request:

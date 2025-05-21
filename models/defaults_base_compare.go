@@ -378,6 +378,10 @@ func (s DefaultsBase) Equal(t DefaultsBase, opts ...Options) bool {
 		return false
 	}
 
+	if s.HashPreserveAffinity != t.HashPreserveAffinity {
+		return false
+	}
+
 	if s.HashType == nil || t.HashType == nil {
 		if s.HashType != nil || t.HashType != nil {
 			if opt.NilSameAsEmpty {
@@ -1200,6 +1204,10 @@ func (s DefaultsBase) Diff(t DefaultsBase, opts ...Options) map[string][]interfa
 
 	if !equalPointers(s.HashBalanceFactor, t.HashBalanceFactor) {
 		diff["HashBalanceFactor"] = []interface{}{ValueOrNil(s.HashBalanceFactor), ValueOrNil(t.HashBalanceFactor)}
+	}
+
+	if s.HashPreserveAffinity != t.HashPreserveAffinity {
+		diff["HashPreserveAffinity"] = []interface{}{s.HashPreserveAffinity, t.HashPreserveAffinity}
 	}
 
 	if s.HashType == nil || t.HashType == nil {

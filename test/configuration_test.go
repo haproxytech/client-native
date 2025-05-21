@@ -317,6 +317,7 @@ defaults test_defaults # testing_defaults
   mode http
   balance roundrobin
   hash-balance-factor 150
+  hash-preserve-affinity maxconn
 
 defaults test_defaults_2 from test_defaults
   option srvtcpka
@@ -739,6 +740,7 @@ backend test # my comment
   balance roundrobin
   hash-type consistent sdbm avalanche
   hash-balance-factor 150
+  hash-preserve-affinity always
   log-tag bla
   option http-keep-alive
   option forwardfor header X-Forwarded-For

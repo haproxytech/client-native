@@ -138,6 +138,7 @@ func TestCreateEditDeleteBackend(t *testing.T) {
 				Method:   "map-based",
 				Function: "crc32",
 			},
+			HashPreserveAffinity: "maxqueue",
 			DefaultServer: &models.DefaultServer{
 				ServerParams: models.ServerParams{
 					Fall:       &tOut,

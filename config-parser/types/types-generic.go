@@ -76,7 +76,7 @@ type Int64C struct {
 	Comment string
 }
 
-// String is used by parsers Mode, DefaultBackend, SimpleTimeTwoWords, StatsTimeout, CompressionDirection, CompressionAlgoReq, CPUPolicy
+// String is used by parsers Mode, DefaultBackend, SimpleTimeTwoWords, StatsTimeout, CompressionDirection, CompressionAlgoReq, CPUPolicy, HashPreserveAffinity
 //
 //generate:type:Mode
 //name:mode
@@ -124,6 +124,13 @@ type Int64C struct {
 //test:ok:cpu-policy resource
 //test:ko:cpu-policy
 //test:ko:cpu-policy notvalid
+//generate:type:HashPreserveAffinity
+//name:hash-preserve-affinity
+//test:ok:hash-preserve-affinity always
+//test:ok:hash-preserve-affinity maxconn # comment
+//test:ok:hash-preserve-affinity maxqueue
+//test:fail:hash-preserve-affinity
+//test:fail:hash-preserve-affinity notvalid
 type StringC struct {
 	Value   string
 	Comment string

@@ -124,6 +124,9 @@ defaults_base:
       type: string
       enum: [enabled, disabled]
       x-display-name: Don't Log Null
+    hash_preserve_affinity:
+      type: string
+      enum: [always, maxconn, maxqueue]
     http-buffer-request:
       type: string
       enum: [enabled, disabled]

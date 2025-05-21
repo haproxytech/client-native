@@ -127,6 +127,7 @@ defaults A
   srvtcpka-intvl 10s
   load-server-state-from-file global
   hash-balance-factor 150
+  hash-preserve-affinity maxconn
 
 # some random userlist L1
 userlist L1
@@ -397,6 +398,7 @@ backend test from A
   tcp-response content accept if TRUE
   tcp-response content reject if FALSE
   hash-balance-factor 150
+  hash-preserve-affinity always
   option httplog
   option contstats
   option contstats
@@ -421,6 +423,7 @@ listen stats from A
   option transparent
   option idle-close-on-response
   option dontlog-normal
+  hash-preserve-affinity maxconn
   stats enable
   stats realm HAProxy\ Statistics
   stats uri /

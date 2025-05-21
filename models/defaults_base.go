@@ -224,6 +224,11 @@ type DefaultsBase struct {
 	// hash balance factor
 	HashBalanceFactor *int64 `json:"hash_balance_factor,omitempty"`
 
+	// hash preserve affinity
+	// Enum: ["always","maxconn","maxqueue"]
+	// +kubebuilder:validation:Enum=always;maxconn;maxqueue;
+	HashPreserveAffinity string `json:"hash_preserve_affinity,omitempty"`
+
 	// hash type
 	HashType *HashType `json:"hash_type,omitempty"`
 
@@ -645,6 +650,10 @@ func (m *DefaultsBase) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateH1CaseAdjustBogusServer(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateHashPreserveAffinity(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -1875,6 +1884,51 @@ func (m *DefaultsBase) validateH1CaseAdjustBogusServer(formats strfmt.Registry) 
 
 	// value enum
 	if err := m.validateH1CaseAdjustBogusServerEnum("h1_case_adjust_bogus_server", "body", m.H1CaseAdjustBogusServer); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+var defaultsBaseTypeHashPreserveAffinityPropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["always","maxconn","maxqueue"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		defaultsBaseTypeHashPreserveAffinityPropEnum = append(defaultsBaseTypeHashPreserveAffinityPropEnum, v)
+	}
+}
+
+const (
+
+	// DefaultsBaseHashPreserveAffinityAlways captures enum value "always"
+	DefaultsBaseHashPreserveAffinityAlways string = "always"
+
+	// DefaultsBaseHashPreserveAffinityMaxconn captures enum value "maxconn"
+	DefaultsBaseHashPreserveAffinityMaxconn string = "maxconn"
+
+	// DefaultsBaseHashPreserveAffinityMaxqueue captures enum value "maxqueue"
+	DefaultsBaseHashPreserveAffinityMaxqueue string = "maxqueue"
+)
+
+// prop value enum
+func (m *DefaultsBase) validateHashPreserveAffinityEnum(path, location string, value string) error {
+	if err := validate.EnumCase(path, location, value, defaultsBaseTypeHashPreserveAffinityPropEnum, true); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *DefaultsBase) validateHashPreserveAffinity(formats strfmt.Registry) error {
+	if swag.IsZero(m.HashPreserveAffinity) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateHashPreserveAffinityEnum("hash_preserve_affinity", "body", m.HashPreserveAffinity); err != nil {
 		return err
 	}
 

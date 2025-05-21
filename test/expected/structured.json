@@ -562,6 +562,7 @@
                 "modifier": "avalanche"
             },
             "hash_balance_factor": 150,
+            "hash_preserve_affinity": "always",
             "http-check": {
                 "type": "connect"
             },
@@ -3298,6 +3299,7 @@
                 "algorithm": "roundrobin"
             },
             "hash_balance_factor": 150,
+            "hash_preserve_affinity": "maxconn",
             "maxconn": 2000,
             "mode": "http",
             "metadata": {

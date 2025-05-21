@@ -82,6 +82,9 @@ backend_base:
       type: string
       enum: [enabled, disabled]
       x-display-name: All Backups
+    hash_preserve_affinity:
+      type: string
+      enum: [always, maxconn, maxqueue]
     http-buffer-request:
       type: string
       enum: [enabled, disabled]
