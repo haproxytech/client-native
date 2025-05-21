@@ -1620,6 +1620,11 @@ definitions:
         x-display-name: Client Not Sent Low Watermark
         x-nullable: true
         x-size: true
+      notsent_lowat_server:
+        type: integer
+        x-display-name: Server Not Sent Low Watermark
+        x-nullable: true
+        x-size: true
       pattern_cache_size:
         type: integer
         x-display-name: Pattern Lookup Cache Size

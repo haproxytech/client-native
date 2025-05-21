@@ -181,6 +181,9 @@ type TuneOptions struct {
 	// notsent lowat client
 	NotsentLowatClient *int64 `json:"notsent_lowat_client,omitempty"`
 
+	// notsent lowat server
+	NotsentLowatServer *int64 `json:"notsent_lowat_server,omitempty"`
+
 	// pattern cache size
 	PatternCacheSize *int64 `json:"pattern_cache_size,omitempty"`
 

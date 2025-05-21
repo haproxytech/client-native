@@ -312,6 +312,7 @@
             "maxrewrite": 30,
             "memory_hot_size": 56,
             "notsent_lowat_client": 32768,
+            "notsent_lowat_server": 16384,
             "pattern_cache_size": 31,
             "peers_max_updates_at_once": 200,
             "pool_high_fd_ratio": 33,

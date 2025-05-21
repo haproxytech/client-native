@@ -190,6 +190,7 @@ func getGlobalBase() models.GlobalBase {
 			H2ZeroCopyFwdSend:         "disabled",
 			MaxChecksPerThread:        misc.Int64P(20),
 			NotsentLowatClient:        misc.Int64P(10),
+			NotsentLowatServer:        misc.Int64P(20),
 			PeersMaxUpdatesAtOnce:     100,
 			PtZeroCopyForwarding:      "disabled",
 			StickCounters:             misc.Int64P(50),
