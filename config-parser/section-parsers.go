@@ -359,6 +359,7 @@ func (p *configParser) getGlobalParser() *Parsers { //nolint: maintidx
 	addParser(parser, &sequence, &simple.Number{Name: "tune.ssl.ocsp-update.maxdelay"})
 	addParser(parser, &sequence, &simple.Number{Name: "tune.ssl.ocsp-update.mindelay"})
 	addParser(parser, &sequence, &simple.Number{Name: "tune.stick-counters"})
+	addParser(parser, &sequence, &simple.Word{Name: "tune.takeover-other-tg-connections"})
 	addParser(parser, &sequence, &simple.Size{Name: "tune.vars.global-max-size"})
 	addParser(parser, &sequence, &simple.Size{Name: "tune.vars.proc-max-size"})
 	addParser(parser, &sequence, &simple.Size{Name: "tune.vars.reqres-max-size"})

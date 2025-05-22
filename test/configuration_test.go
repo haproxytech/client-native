@@ -115,6 +115,7 @@ global
   tune.ssl.ocsp-update.maxdelay 48
   tune.ssl.ocsp-update.mindelay 49
   tune.stick-counters 50
+  tune.takeover-other-tg-connections none
   tune.vars.global-max-size 51
   tune.vars.proc-max-size 52
   tune.vars.reqres-max-size 53

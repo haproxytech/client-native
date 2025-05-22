@@ -250,7 +250,7 @@ func TestTuneOptionsDiffFalse(t *testing.T) {
 
 	for _, sample := range samples {
 		result := sample.a.Diff(sample.b)
-		if len(result) != 50 {
+		if len(result) != 51 {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {
@@ -260,7 +260,7 @@ func TestTuneOptionsDiffFalse(t *testing.T) {
 			if err != nil {
 				t.Error(err)
 			}
-			t.Errorf("Expected TuneOptions to be different in 50 cases, but it is not (%d) %s %s", len(result), a, b)
+			t.Errorf("Expected TuneOptions to be different in 51 cases, but it is not (%d) %s %s", len(result), a, b)
 		}
 	}
 }

@@ -327,7 +327,8 @@
             "ring_queues": 8,
             "runqueue_depth": 38,
             "sched_low_latency": "enabled",
-            "stick_counters": 50
+            "stick_counters": 50,
+            "takeover_other_tg_connections": "none"
         },
         "tune_ssl_default_dh_param": 45,
         "uid": 1,

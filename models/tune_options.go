@@ -228,6 +228,11 @@ type TuneOptions struct {
 
 	// stick counters
 	StickCounters *int64 `json:"stick_counters,omitempty"`
+
+	// takeover other tg connections
+	// Enum: ["none","restricted","full"]
+	// +kubebuilder:validation:Enum=none;restricted;full;
+	TakeoverOtherTgConnections string `json:"takeover_other_tg_connections,omitempty"`
 }
 
 // Validate validates this tune options
@@ -303,6 +308,10 @@ func (m *TuneOptions) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateSchedLowLatency(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateTakeoverOtherTgConnections(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -869,6 +878,51 @@ func (m *TuneOptions) validateSchedLowLatency(formats strfmt.Registry) error {
 
 	// value enum
 	if err := m.validateSchedLowLatencyEnum("sched_low_latency", "body", m.SchedLowLatency); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+var tuneOptionsTypeTakeoverOtherTgConnectionsPropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["none","restricted","full"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		tuneOptionsTypeTakeoverOtherTgConnectionsPropEnum = append(tuneOptionsTypeTakeoverOtherTgConnectionsPropEnum, v)
+	}
+}
+
+const (
+
+	// TuneOptionsTakeoverOtherTgConnectionsNone captures enum value "none"
+	TuneOptionsTakeoverOtherTgConnectionsNone string = "none"
+
+	// TuneOptionsTakeoverOtherTgConnectionsRestricted captures enum value "restricted"
+	TuneOptionsTakeoverOtherTgConnectionsRestricted string = "restricted"
+
+	// TuneOptionsTakeoverOtherTgConnectionsFull captures enum value "full"
+	TuneOptionsTakeoverOtherTgConnectionsFull string = "full"
+)
+
+// prop value enum
+func (m *TuneOptions) validateTakeoverOtherTgConnectionsEnum(path, location string, value string) error {
+	if err := validate.EnumCase(path, location, value, tuneOptionsTypeTakeoverOtherTgConnectionsPropEnum, true); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *TuneOptions) validateTakeoverOtherTgConnections(formats strfmt.Registry) error {
+	if swag.IsZero(m.TakeoverOtherTgConnections) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateTakeoverOtherTgConnectionsEnum("takeover_other_tg_connections", "body", m.TakeoverOtherTgConnections); err != nil {
 		return err
 	}
 

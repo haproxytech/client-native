@@ -1530,6 +1530,15 @@ func parseTuneOptions(p parser.Parser) (*models.TuneOptions, error) { //nolint:g
 		options.StickCounters = intPOption
 	}
 
+	strOption, err = parseStringOption(p, "tune.takeover-other-tg-connections")
+	if err != nil {
+		return nil, err
+	}
+	if strOption != "" {
+		isEmpty = false
+		options.TakeoverOtherTgConnections = strOption
+	}
+
 	strOption, err = parseOnOffOption(p, "tune.fd.edge-triggered")
 	if err != nil {
 		return nil, err
@@ -3831,6 +3840,9 @@ func serializeTuneOptions(p parser.Parser, options *models.TuneOptions, configOp
 		return err
 	}
 	if err := serializeInt64POption(p, "tune.stick-counters", options.StickCounters); err != nil {
+		return err
+	}
+	if err := serializeStringOption(p, "tune.takeover-other-tg-connections", options.TakeoverOtherTgConnections); err != nil {
 		return err
 	}
 	if err := serializeOnOffOption(p, "tune.fd.edge-triggered", options.FdEdgeTriggered); err != nil {

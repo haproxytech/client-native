@@ -1695,6 +1695,12 @@ definitions:
         type: integer
         x-display-name: Number of stick-counters
         x-nullable: true
+      takeover_other_tg_connections:
+        enum:
+          - none
+          - restricted
+          - full
+        type: string
     type: object
   tune_quic_options:
     properties:

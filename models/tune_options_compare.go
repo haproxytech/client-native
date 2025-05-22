@@ -233,6 +233,10 @@ func (s TuneOptions) Equal(t TuneOptions, opts ...Options) bool {
 		return false
 	}
 
+	if s.TakeoverOtherTgConnections != t.TakeoverOtherTgConnections {
+		return false
+	}
+
 	return true
 }
 
@@ -451,6 +455,10 @@ func (s TuneOptions) Diff(t TuneOptions, opts ...Options) map[string][]interface
 
 	if !equalPointers(s.StickCounters, t.StickCounters) {
 		diff["StickCounters"] = []interface{}{ValueOrNil(s.StickCounters), ValueOrNil(t.StickCounters)}
+	}
+
+	if s.TakeoverOtherTgConnections != t.TakeoverOtherTgConnections {
+		diff["TakeoverOtherTgConnections"] = []interface{}{s.TakeoverOtherTgConnections, t.TakeoverOtherTgConnections}
 	}
 
 	return diff

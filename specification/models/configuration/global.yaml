@@ -648,6 +648,9 @@ tune_options:
       type: integer
       x-display-name: Number of stick-counters
       x-nullable: true
+    takeover_other_tg_connections:
+      type: string
+      enum: ["none", "restricted", "full"]
     fd_edge_triggered:
       type: string
       enum: [enabled, disabled]
