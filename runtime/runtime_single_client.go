@@ -39,7 +39,7 @@ type socketType string
 type SingleRuntime struct {
 	socketPath       string
 	masterWorkerMode bool
-	mtx              sync.RWMutex
+	mtx              sync.Mutex
 }
 
 func (s *SingleRuntime) IsValid() bool {
@@ -79,8 +79,14 @@ func (s *SingleRuntime) Init(socketPath string, masterWorkerMode bool, opt ...op
 }
 
 func (s *SingleRuntime) readFromSocket(command string, socket socketType) (string, error) {
+	// While HAProxy's stat socket supports concurrent connections,
+	// we use a mutex here for the following reasons:
+	// - some commands must not be run in parallel, e.g., "set ssl cert" which creates a transaction
+	// - the Master socket is limited to 10 connections
+	// - at least we are sure of never reaching somaxconn
 	s.mtx.Lock()
 	defer s.mtx.Unlock()
+
 	var api net.Conn
 	var err error
 
