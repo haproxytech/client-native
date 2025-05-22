@@ -1761,6 +1761,10 @@ const backend_servername127001checkpoolconnnam = `
 backend test
   server name 127.0.0.1 check-pool-conn-name foo
 `
+const backend_servername127001strictmaxconn = `
+backend test
+  server name 127.0.0.1 strict-maxconn
+`
 const backend_sticktabletypeipsize1mexpire5mst = `
 backend test
   stick-table type ip size 1m expire 5m store gpc0,conn_rate(30s)

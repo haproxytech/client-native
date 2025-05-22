@@ -1043,6 +1043,8 @@ definitions:
           - enabled
           - disabled
         type: string
+      strict-maxconn:
+        type: boolean
       tcp_ut:
         minimum: 0
         type: integer

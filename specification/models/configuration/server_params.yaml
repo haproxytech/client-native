@@ -320,6 +320,8 @@ server_params:
           type: string
         value:
           type: string
+    strict-maxconn:
+      type: boolean
     proxy-v2-options:
       type: array
       x-omitempty: true

@@ -107,6 +107,7 @@ func TestServerParamsEqualFalse(t *testing.T) {
 		result.Rise = Ptr(*sample.Rise + 1)
 		result.Shard = sample.Shard + 1
 		result.Slowstart = Ptr(*sample.Slowstart + 1)
+		result.StrictMaxconn = !sample.StrictMaxconn
 		result.TCPUt = Ptr(*sample.TCPUt + 1)
 		result.Weight = Ptr(*sample.Weight + 1)
 		samples = append(samples, struct {
@@ -209,6 +210,7 @@ func TestServerParamsDiffFalse(t *testing.T) {
 		result.Rise = Ptr(*sample.Rise + 1)
 		result.Shard = sample.Shard + 1
 		result.Slowstart = Ptr(*sample.Slowstart + 1)
+		result.StrictMaxconn = !sample.StrictMaxconn
 		result.TCPUt = Ptr(*sample.TCPUt + 1)
 		result.Weight = Ptr(*sample.Weight + 1)
 		samples = append(samples, struct {
@@ -218,7 +220,7 @@ func TestServerParamsDiffFalse(t *testing.T) {
 
 	for _, sample := range samples {
 		result := sample.a.Diff(sample.b)
-		if len(result) != 102 {
+		if len(result) != 103 {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {
@@ -228,7 +230,7 @@ func TestServerParamsDiffFalse(t *testing.T) {
 			if err != nil {
 				t.Error(err)
 			}
-			t.Errorf("Expected ServerParams to be different in 102 cases, but it is not (%d) %s %s", len(result), a, b)
+			t.Errorf("Expected ServerParams to be different in 103 cases, but it is not (%d) %s %s", len(result), a, b)
 		}
 	}
 }

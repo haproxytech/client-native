@@ -439,6 +439,9 @@ type ServerParams struct {
 	// +kubebuilder:validation:Enum=enabled;disabled;
 	Stick string `json:"stick,omitempty"`
 
+	// strict maxconn
+	StrictMaxconn bool `json:"strict-maxconn,omitempty"`
+
 	// tcp ut
 	// Minimum: 0
 	// +kubebuilder:validation:Minimum=0

@@ -411,6 +411,10 @@ func (s ServerParams) Equal(t ServerParams, opts ...Options) bool {
 		return false
 	}
 
+	if s.StrictMaxconn != t.StrictMaxconn {
+		return false
+	}
+
 	if !equalPointers(s.TCPUt, t.TCPUt) {
 		return false
 	}
@@ -855,6 +859,10 @@ func (s ServerParams) Diff(t ServerParams, opts ...Options) map[string][]interfa
 
 	if s.Stick != t.Stick {
 		diff["Stick"] = []interface{}{s.Stick, t.Stick}
+	}
+
+	if s.StrictMaxconn != t.StrictMaxconn {
+		diff["StrictMaxconn"] = []interface{}{s.StrictMaxconn, t.StrictMaxconn}
 	}
 
 	if !equalPointers(s.TCPUt, t.TCPUt) {

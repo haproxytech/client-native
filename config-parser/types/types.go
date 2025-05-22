@@ -1146,6 +1146,7 @@ type Peer struct {
 //test:ok:server name 127.0.0.1 no-check-reuse-pool
 //test:ok:server name 127.0.0.1 check-pool-conn-name foo
 //test:fail:server name 127.0.0.1 check-pool-conn-name
+//test:ok:server name 127.0.0.1 strict-maxconn
 //test:fail:server
 //test:fail:server name 127.0.0.1 log-bufsize
 type Server struct {

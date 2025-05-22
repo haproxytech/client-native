@@ -1091,7 +1091,8 @@
                     },
                     "init-state": "fully-up",
                     "idle_ping": 10000,
-                    "check-reuse-pool": "enabled"
+                    "check-reuse-pool": "enabled",
+                    "strict-maxconn": true
                 },
                 "webserv2": {
                     "cookie": "BLAH",

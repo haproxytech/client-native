@@ -878,6 +878,7 @@ func TestWholeConfigsSectionsBackend(t *testing.T) {
 		{"backend_servername127001sslminverTLSv13", backend_servername127001sslminverTLSv13},
 		{"backend_servername127001sslreuse", backend_servername127001sslreuse},
 		{"backend_servername127001stick", backend_servername127001stick},
+		{"backend_servername127001strictmaxconn", backend_servername127001strictmaxconn},
 		{"backend_servername127001tcput20ms", backend_servername127001tcput20ms},
 		{"backend_servername127001tfo", backend_servername127001tfo},
 		{"backend_servername127001tlstickets", backend_servername127001tlstickets},

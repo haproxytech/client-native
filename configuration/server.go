@@ -348,6 +348,8 @@ func parseServerParams(serverOptions []params.ServerOption, serverParams *models
 				serverParams.SslReuse = "enabled"
 			case "no-ssl-reuse":
 				serverParams.SslReuse = "disabled"
+			case "strict-maxconn":
+				serverParams.StrictMaxconn = true
 			case "tls-tickets":
 				serverParams.TLSTickets = "enabled"
 			case "no-tls-tickets":
@@ -743,6 +745,9 @@ func SerializeServerParams(s models.ServerParams, opt *options.ConfigurationOpti
 	}
 	if s.Stick == "disabled" {
 		options = append(options, &params.ServerOptionWord{Name: "non-stick"})
+	}
+	if s.StrictMaxconn {
+		options = append(options, &params.ServerOptionWord{Name: "strict-maxconn"})
 	}
 	if s.Tfo == "enabled" {
 		options = append(options, &params.ServerOptionWord{Name: "tfo"})

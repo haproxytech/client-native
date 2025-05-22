@@ -213,6 +213,7 @@ func TestCreateEditDeleteServer(t *testing.T) {
 			TLSTickets:     "disabled",
 			Verify:         "required",
 			Slowstart:      &slowStart,
+			StrictMaxconn:  true,
 		},
 	}
 
