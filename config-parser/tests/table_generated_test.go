@@ -31,8 +31,9 @@ func TestTable(t *testing.T) {
 		"table t1 type": false,
 		"table t1 type string len 1000 size 1m expire 5m something store gpc0,conn_rate(30s)": false,
 		"table t1 type string size 1m write-to":                                               false,
-		"---":                                                                                 false,
-		"--- ---":                                                                             false,
+		"table t1 type string len 1000 size 1m expire 5m write-to t2 recv-only 2:table t1 type string len 1000 size 1m expire 5m write-to t2 recv-only 2": false,
+		"---":     false,
+		"--- ---": false,
 	}
 	testsTable := map[string]string{
 		`table t1 type ip size 1m expire 5m store gpc0,conn_rate(30s)`:                                 `table t1 type ip size 1m expire 5m store gpc0,conn_rate(30s)`,
@@ -42,6 +43,7 @@ func TestTable(t *testing.T) {
 		`table t1 type string len 1000 size 1m expire 5m nopurge store gpc0 store conn_rate(40s)`:      `table t1 type string len 1000 size 1m expire 5m nopurge store gpc0,conn_rate(40s)`,
 		`table t1 type string len 1000 size 1m expire 5m nopurge store gpc0 store gpc1,conn_rate(30s)`: `table t1 type string len 1000 size 1m expire 5m nopurge store gpc0,gpc1,conn_rate(30s)`,
 		`table t1 type string len 1000 size 1m expire 5m write-to t2`:                                  `table t1 type string len 1000 size 1m expire 5m write-to t2`,
+		`table t1 type string len 1000 size 1m expire 5m write-to t2 recv-only`:                        `table t1 type string len 1000 size 1m expire 5m write-to t2 recv-only`,
 	}
 	parser := &parsers.Table{}
 	for command, shouldPass := range tests {

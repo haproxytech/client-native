@@ -87,6 +87,8 @@ func (t *Table) parse(line string, parts []string, comment string) (*types.Table
 				} else {
 					data.Store = fmt.Sprintf("%s,%s", data.Store, parts[index])
 				}
+			case "recv-only":
+				data.RecvOnly = true
 			default:
 				return nil, &errors.ParseError{Parser: "Table", Line: line}
 			}
@@ -131,6 +133,9 @@ func (t *Table) Result() ([]common.ReturnResultLine, error) {
 		if table.Store != "" {
 			data.WriteString(" store ")
 			data.WriteString(table.Store)
+		}
+		if table.RecvOnly {
+			data.WriteString(" recv-only")
 		}
 
 		result[index] = common.ReturnResultLine{

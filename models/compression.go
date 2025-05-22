@@ -51,6 +51,12 @@ type Compression struct {
 	// +kubebuilder:validation:Enum=request;response;both;
 	Direction string `json:"direction,omitempty"`
 
+	// minsize req
+	MinsizeReq int64 `json:"minsize_req,omitempty"`
+
+	// minsize res
+	MinsizeRes int64 `json:"minsize_res,omitempty"`
+
 	// offload
 	Offload bool `json:"offload,omitempty"`
 

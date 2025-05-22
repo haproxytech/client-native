@@ -177,6 +177,7 @@ func getGlobalBase() models.GlobalBase {
 			FrontendConnTxBuffersLimit: nil,
 			FrontendMaxIdleTimeout:     misc.Int64P(5000),
 			SocketOwner:                "listener",
+			FrontendMaxTxMemory:        misc.Int64P(10 * 1024),
 		},
 		TuneSslOptions: &models.TuneSslOptions{
 			OcspUpdateMaxDelay: misc.Int64P(48),

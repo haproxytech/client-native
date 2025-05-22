@@ -643,6 +643,7 @@ func TestWholeConfigsSectionsFrontend(t *testing.T) {
 		{"frontend_statsshownodeEurope1", frontend_statsshownodeEurope1},
 		{"frontend_statsuriadminstats", frontend_statsuriadminstats},
 		{"frontend_sticktabletypeintegersize1msrvke", frontend_sticktabletypeintegersize1msrvke},
+		{"frontend_sticktabletypeintegersize1msrvke_", frontend_sticktabletypeintegersize1msrvke_},
 		{"frontend_sticktabletypeipsize1mexpire5mst", frontend_sticktabletypeipsize1mexpire5mst},
 		{"frontend_sticktabletypeipsize1mexpire5mst_", frontend_sticktabletypeipsize1mexpire5mst_},
 		{"frontend_sticktabletypestringlen1000size1", frontend_sticktabletypestringlen1000size1},

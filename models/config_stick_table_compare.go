@@ -61,6 +61,10 @@ func (s ConfigStickTable) Equal(t ConfigStickTable, opts ...Options) bool {
 		return false
 	}
 
+	if s.RecvOnly != t.RecvOnly {
+		return false
+	}
+
 	if !equalPointers(s.Size, t.Size) {
 		return false
 	}
@@ -125,6 +129,10 @@ func (s ConfigStickTable) Diff(t ConfigStickTable, opts ...Options) map[string][
 
 	if s.Peers != t.Peers {
 		diff["Peers"] = []interface{}{s.Peers, t.Peers}
+	}
+
+	if s.RecvOnly != t.RecvOnly {
+		diff["RecvOnly"] = []interface{}{s.RecvOnly, t.RecvOnly}
 	}
 
 	if !equalPointers(s.Size, t.Size) {

@@ -1163,23 +1163,26 @@ type Server struct {
 //test:ok:stick-table type string len 1000 size 1m expire 5m store gpc0,conn_rate(30s)
 //test:ok:stick-table type string len 1000 size 1m expire 5m nopurge peers aaaaa store gpc0,conn_rate(30s)
 //test:ok:stick-table type integer size 1m srvkey addr write-to t2
+//test:ok:stick-table type integer size 1m srvkey addr write-to t2 recv-only
 //test:fail:stick-table type string len 1000 size 1m expire 5m something peers aaaaa store gpc0,conn_rate(30s)
 //test:fail:stick-table type
 //test:fail:stick-table
 //test:fail:stick-table type ip size 2m srvkey
 //test:fail:stick-table type ip size 2m srvkey lol
+//test:fail:stick-table type integer size 1m srvkey addr write-to t2 recv-only 2
 type StickTable struct {
 	Type   string
 	Length string
 	Size   string
 
-	Expire  string
-	NoPurge bool
-	Peers   string
-	SrvKey  string
-	WriteTo string
-	Store   string
-	Comment string
+	Expire   string
+	NoPurge  bool
+	Peers    string
+	SrvKey   string
+	WriteTo  string
+	Store    string
+	RecvOnly bool
+	Comment  string
 }
 
 //sections:global
@@ -1664,6 +1667,7 @@ type QuicSocketOwner struct {
 //test:fail:table t1 type
 //test:fail:table t1 type string len 1000 size 1m expire 5m something store gpc0,conn_rate(30s)
 //test:fail:table t1 type string size 1m write-to
+//test:fail:table t1 type string len 1000 size 1m expire 5m write-to t2 recv-only 2:table t1 type string len 1000 size 1m expire 5m write-to t2 recv-only 2
 //test:expected-ok:table t1 type ip size 1m expire 5m store gpc0,conn_rate(30s):table t1 type ip size 1m expire 5m store gpc0,conn_rate(30s)
 //test:expected-ok:table t1 type ip size 1m expire 5m store gpc0,conn_rate(30s) # comment:table t1 type ip size 1m expire 5m store gpc0,conn_rate(30s) # comment
 //test:expected-ok:table t1 type string len 1000 size 1m expire 5m store gpc0,conn_rate(30s):table t1 type string len 1000 size 1m expire 5m store gpc0,conn_rate(30s)
@@ -1671,16 +1675,18 @@ type QuicSocketOwner struct {
 //test:expected-ok:table t1 type string len 1000 size 1m expire 5m nopurge store gpc0 store conn_rate(40s):table t1 type string len 1000 size 1m expire 5m nopurge store gpc0,conn_rate(40s)
 //test:expected-ok:table t1 type string len 1000 size 1m expire 5m nopurge store gpc0 store gpc1,conn_rate(30s):table t1 type string len 1000 size 1m expire 5m nopurge store gpc0,gpc1,conn_rate(30s)
 //test:expected-ok:table t1 type string len 1000 size 1m expire 5m write-to t2:table t1 type string len 1000 size 1m expire 5m write-to t2
+//test:expected-ok:table t1 type string len 1000 size 1m expire 5m write-to t2 recv-only:table t1 type string len 1000 size 1m expire 5m write-to t2 recv-only
 type Table struct {
-	Name    string
-	Type    string
-	TypeLen int64
-	Size    string
-	Expire  string
-	WriteTo string
-	NoPurge bool
-	Store   string
-	Comment string
+	Name     string
+	Type     string
+	TypeLen  int64
+	Size     string
+	Expire   string
+	WriteTo  string
+	NoPurge  bool
+	Store    string
+	RecvOnly bool
+	Comment  string
 }
 
 //sections:global

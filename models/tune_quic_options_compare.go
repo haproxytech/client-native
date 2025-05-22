@@ -36,6 +36,10 @@ func (s TuneQuicOptions) Equal(t TuneQuicOptions, opts ...Options) bool {
 		return false
 	}
 
+	if !equalPointers(s.FrontendMaxTxMemory, t.FrontendMaxTxMemory) {
+		return false
+	}
+
 	if !equalPointers(s.MaxFrameLoss, t.MaxFrameLoss) {
 		return false
 	}
@@ -77,6 +81,10 @@ func (s TuneQuicOptions) Diff(t TuneQuicOptions, opts ...Options) map[string][]i
 
 	if !equalPointers(s.FrontendMaxStreamsBidi, t.FrontendMaxStreamsBidi) {
 		diff["FrontendMaxStreamsBidi"] = []interface{}{ValueOrNil(s.FrontendMaxStreamsBidi), ValueOrNil(t.FrontendMaxStreamsBidi)}
+	}
+
+	if !equalPointers(s.FrontendMaxTxMemory, t.FrontendMaxTxMemory) {
+		diff["FrontendMaxTxMemory"] = []interface{}{ValueOrNil(s.FrontendMaxTxMemory), ValueOrNil(t.FrontendMaxTxMemory)}
 	}
 
 	if !equalPointers(s.MaxFrameLoss, t.MaxFrameLoss) {

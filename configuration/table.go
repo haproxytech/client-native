@@ -190,6 +190,9 @@ func ParseTable(t types.Table) *models.Table {
 	if t.NoPurge {
 		table.NoPurge = t.NoPurge
 	}
+	if t.RecvOnly {
+		table.RecvOnly = true
+	}
 	if t.Store != "" {
 		table.Store = t.Store
 	}
@@ -212,10 +215,11 @@ func SerializeTable(t models.Table) types.Table {
 		comment = ""
 	}
 	table := types.Table{
-		Name:    t.Name,
-		Type:    t.Type,
-		Size:    t.Size,
-		Comment: comment,
+		Name:     t.Name,
+		Type:     t.Type,
+		Size:     t.Size,
+		Comment:  comment,
+		RecvOnly: t.RecvOnly,
 	}
 	if t.Expire != nil {
 		table.Expire = *t.Expire

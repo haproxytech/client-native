@@ -49,6 +49,9 @@ type Table struct {
 	// no purge
 	NoPurge bool `json:"no_purge,omitempty"`
 
+	// recv only
+	RecvOnly bool `json:"recv_only,omitempty"`
+
 	// size
 	// Pattern: ^\d+(k|K|m|M|g|G)?$
 	// +kubebuilder:validation:Pattern=`^\d+(k|K|m|M|g|G)?$`

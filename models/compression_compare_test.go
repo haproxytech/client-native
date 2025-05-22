@@ -86,6 +86,8 @@ func TestCompressionEqualFalse(t *testing.T) {
 		if err != nil {
 			t.Error(err)
 		}
+		result.MinsizeReq = sample.MinsizeReq + 1
+		result.MinsizeRes = sample.MinsizeRes + 1
 		result.Offload = !sample.Offload
 		samples = append(samples, struct {
 			a, b Compression
@@ -166,6 +168,8 @@ func TestCompressionDiffFalse(t *testing.T) {
 		if err != nil {
 			t.Error(err)
 		}
+		result.MinsizeReq = sample.MinsizeReq + 1
+		result.MinsizeRes = sample.MinsizeRes + 1
 		result.Offload = !sample.Offload
 		samples = append(samples, struct {
 			a, b Compression
@@ -174,7 +178,7 @@ func TestCompressionDiffFalse(t *testing.T) {
 
 	for _, sample := range samples {
 		result := sample.a.Diff(sample.b)
-		if len(result) != 8 {
+		if len(result) != 10 {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {
@@ -184,7 +188,7 @@ func TestCompressionDiffFalse(t *testing.T) {
 			if err != nil {
 				t.Error(err)
 			}
-			t.Errorf("Expected Compression to be different in 8 cases, but it is not (%d) %s %s", len(result), a, b)
+			t.Errorf("Expected Compression to be different in 10 cases, but it is not (%d) %s %s", len(result), a, b)
 		}
 	}
 }

@@ -806,6 +806,7 @@ func (s *SectionParser) stickTable() interface{} {
 	bst.Store = d.Store
 	bst.Expire = misc.ParseTimeout(d.Expire)
 	bst.Peers = d.Peers
+	bst.RecvOnly = d.RecvOnly
 
 	k, err := strconv.ParseInt(d.Length, 10, 64)
 	if err == nil {
@@ -1230,6 +1231,30 @@ func (s *SectionParser) compression() interface{} { //nolint:gocognit
 		if ok && d != nil {
 			compressionFound = true
 			compression.Direction = d.Value
+		}
+	}
+
+	data, err = s.get("compression minsize-req", false)
+	if err == nil {
+		d, ok := data.(*types.StringC)
+		if ok && d != nil {
+			v := misc.ParseSize(d.Value)
+			if v != nil {
+				compressionFound = true
+				compression.MinsizeReq = *v
+			}
+		}
+	}
+
+	data, err = s.get("compression minsize-res", false)
+	if err == nil {
+		d, ok := data.(*types.StringC)
+		if ok && d != nil {
+			v := misc.ParseSize(d.Value)
+			if v != nil {
+				compressionFound = true
+				compression.MinsizeRes = *v
+			}
 		}
 	}
 
@@ -2159,10 +2184,11 @@ func (s *SectionObject) stickTable(field reflect.Value) error {
 			return misc.CreateTypeAssertError("stick-table")
 		}
 		d := types.StickTable{
-			Type:    st.Type,
-			Store:   st.Store,
-			Peers:   st.Peers,
-			NoPurge: st.Nopurge,
+			Type:     st.Type,
+			Store:    st.Store,
+			Peers:    st.Peers,
+			NoPurge:  st.Nopurge,
+			RecvOnly: st.RecvOnly,
 		}
 
 		if st.Keylen != nil {
@@ -2650,7 +2676,14 @@ func (s *SectionObject) compression(field reflect.Value) error { //nolint:gocogn
 		if err != nil {
 			return err
 		}
-
+		err = s.set("compression minsize-req", nil)
+		if err != nil {
+			return err
+		}
+		err = s.set("compression minsize-res", nil)
+		if err != nil {
+			return err
+		}
 		err = s.set("compression direction", nil)
 		if err != nil {
 			// compression direction does not exist on Frontends
@@ -2714,6 +2747,19 @@ func (s *SectionObject) compression(field reflect.Value) error { //nolint:gocogn
 			return err
 		}
 	}
+	if compression.MinsizeReq > 0 {
+		err = s.set("compression minsize-req", &types.StringC{Value: misc.SerializeSize(compression.MinsizeReq)})
+		if err != nil {
+			return err
+		}
+	}
+	if compression.MinsizeRes > 0 {
+		err = s.set("compression minsize-res", &types.StringC{Value: misc.SerializeSize(compression.MinsizeRes)})
+		if err != nil {
+			return err
+		}
+	}
+
 	return nil
 }
 

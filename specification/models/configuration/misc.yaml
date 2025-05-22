@@ -350,6 +350,14 @@ compression:
       items:
         type: string
         enum: [identity, gzip, deflate, raw-deflate]
+    minsize_req:
+      type: integer
+      x-size: true
+      x-display-name: Minimum Size for Requests
+    minsize_res:
+      type: integer
+      x-size: true
+      x-display-name: Minimum Size for Responses
 stats_http_request:
   type: object
   required:

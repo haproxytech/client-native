@@ -27,6 +27,9 @@ table:
         - string
         - binary
       type: string
+    recv_only:
+      type: boolean
+      x-display-name: Receive Only
     type_len:
       type: integer
       x-display-name: Type

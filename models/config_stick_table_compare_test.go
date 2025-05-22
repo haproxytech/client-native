@@ -89,6 +89,7 @@ func TestConfigStickTableEqualFalse(t *testing.T) {
 		result.Expire = Ptr(*sample.Expire + 1)
 		result.Keylen = Ptr(*sample.Keylen + 1)
 		result.Nopurge = !sample.Nopurge
+		result.RecvOnly = !sample.RecvOnly
 		result.Size = Ptr(*sample.Size + 1)
 		samples = append(samples, struct {
 			a, b ConfigStickTable
@@ -172,6 +173,7 @@ func TestConfigStickTableDiffFalse(t *testing.T) {
 		result.Expire = Ptr(*sample.Expire + 1)
 		result.Keylen = Ptr(*sample.Keylen + 1)
 		result.Nopurge = !sample.Nopurge
+		result.RecvOnly = !sample.RecvOnly
 		result.Size = Ptr(*sample.Size + 1)
 		samples = append(samples, struct {
 			a, b ConfigStickTable
@@ -180,7 +182,7 @@ func TestConfigStickTableDiffFalse(t *testing.T) {
 
 	for _, sample := range samples {
 		result := sample.a.Diff(sample.b)
-		if len(result) != 9 {
+		if len(result) != 10 {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {
@@ -190,7 +192,7 @@ func TestConfigStickTableDiffFalse(t *testing.T) {
 			if err != nil {
 				t.Error(err)
 			}
-			t.Errorf("Expected ConfigStickTable to be different in 9 cases, but it is not (%d) %s %s", len(result), a, b)
+			t.Errorf("Expected ConfigStickTable to be different in 10 cases, but it is not (%d) %s %s", len(result), a, b)
 		}
 	}
 }

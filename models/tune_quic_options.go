@@ -46,6 +46,9 @@ type TuneQuicOptions struct {
 	// frontend max streams bidi
 	FrontendMaxStreamsBidi *int64 `json:"frontend_max_streams_bidi,omitempty"`
 
+	// frontend max tx memory
+	FrontendMaxTxMemory *int64 `json:"frontend_max_tx_memory,omitempty"`
+
 	// max frame loss
 	MaxFrameLoss *int64 `json:"max_frame_loss,omitempty"`
 

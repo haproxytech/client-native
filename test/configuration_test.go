@@ -125,6 +125,7 @@ global
   tune.quic.frontend.conn-tx-buffers.limit 10
   tune.quic.frontend.max-idle-timeout 10000
   tune.quic.frontend.max-streams-bidi 100
+  tune.quic.frontend.max-tx-mem 1k
   tune.quic.max-frame-loss 5
   tune.quic.reorder-ratio 75
   tune.quic.retry-threshold 5
@@ -841,6 +842,8 @@ backend test # my comment
   compression algo-res raw-deflate identity
   compression type-req text/plain application/json
   compression type-res text/plain
+  compression minsize-req 1k
+  compression minsize-res 2048
   srvtcpka-cnt 10
   srvtcpka-idle 10s
   srvtcpka-intvl 10
@@ -893,7 +896,7 @@ peers mycluster
   peer hapee 192.168.1.1:1023 shard 1
   peer aggregator HARDCODEDCLUSTERIP:10023
   shards 3
-  table t1 type string len 1000 size 200k expire 5m nopurge store gpc0,conn_rate(30s)
+  table t1 type string len 1000 size 200k expire 5m nopurge store gpc0,conn_rate(30s) recv-only
   table t2 type string len 1000 size 200k expire 5m nopurge store gpc0 store gpc1,conn_rate(30s)
   table t9 type string len 1000 size 200k expire 5m write-to t2 nopurge store gpc0,conn_rate(30s)
 
@@ -1061,7 +1064,7 @@ backend test_2 from test_defaults_2 # {"comment": "my comment"}
   timeout tunnel 5s
   timeout server 3s
   cookie BLA rewrite httponly nocache
-  stick-table type ip size 100k expire 1h peers mycluster write-to t99 store http_req_rate(10s)
+  stick-table type ip size 100k expire 1h peers mycluster write-to t99 store http_req_rate(10s) recv-only
   http-check expect rstatus some-pattern
   http-error status 200 content-type "text/plain" string "My content" hdr Some-Header value # {"comment": "my comment", "id": 123}
   http-error status 503 content-type application/json string "My content" hdr Additional-Header value1 hdr Some-Header value

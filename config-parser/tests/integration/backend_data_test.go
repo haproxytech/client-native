@@ -1785,6 +1785,10 @@ const backend_sticktabletypeintegersize1msrvke = `
 backend test
   stick-table type integer size 1m srvkey addr write-to t2
 `
+const backend_sticktabletypeintegersize1msrvke_ = `
+backend test
+  stick-table type integer size 1m srvkey addr write-to t2 recv-only
+`
 const backend_stickonsrctablepopiflocalhost = `
 backend test
   stick on src table pop if !localhost

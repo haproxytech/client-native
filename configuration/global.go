@@ -1978,6 +1978,15 @@ func parseTuneQuicOptions(p parser.Parser) (*models.TuneQuicOptions, error) {
 		options.FrontendMaxStreamsBidi = intPOption
 	}
 
+	intPOption, err = parseSizeOption(p, "tune.quic.frontend.max-tx-mem")
+	if err != nil {
+		return nil, err
+	}
+	if intPOption != nil {
+		isEmpty = false
+		options.FrontendMaxTxMemory = intPOption
+	}
+
 	intPOption, err = parseInt64POption(p, "tune.quic.max-frame-loss")
 	if err != nil {
 		return nil, err
@@ -3667,6 +3676,9 @@ func serializeTuneQuicOptions(p parser.Parser, options *models.TuneQuicOptions, 
 		return err
 	}
 	if err := serializeInt64POption(p, "tune.quic.frontend.max-streams-bidi", options.FrontendMaxStreamsBidi); err != nil {
+		return err
+	}
+	if err := serializeSizeOption(p, "tune.quic.frontend.max-tx-mem", options.FrontendMaxTxMemory); err != nil {
 		return err
 	}
 	if err := serializeInt64POption(p, "tune.quic.max-frame-loss", options.MaxFrameLoss); err != nil {

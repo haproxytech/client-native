@@ -49,6 +49,14 @@ func (s Compression) Equal(t Compression, opts ...Options) bool {
 		return false
 	}
 
+	if s.MinsizeReq != t.MinsizeReq {
+		return false
+	}
+
+	if s.MinsizeRes != t.MinsizeRes {
+		return false
+	}
+
 	if s.Offload != t.Offload {
 		return false
 	}
@@ -99,6 +107,14 @@ func (s Compression) Diff(t Compression, opts ...Options) map[string][]interface
 
 	if s.Direction != t.Direction {
 		diff["Direction"] = []interface{}{s.Direction, t.Direction}
+	}
+
+	if s.MinsizeReq != t.MinsizeReq {
+		diff["MinsizeReq"] = []interface{}{s.MinsizeReq, t.MinsizeReq}
+	}
+
+	if s.MinsizeRes != t.MinsizeRes {
+		diff["MinsizeRes"] = []interface{}{s.MinsizeRes, t.MinsizeRes}
 	}
 
 	if s.Offload != t.Offload {

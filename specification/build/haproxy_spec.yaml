@@ -1726,6 +1726,11 @@ definitions:
         type: integer
         x-display-name: QUIC Max Number of Bidirectional Streams
         x-nullable: true
+      frontend_max_tx_memory:
+        type: integer
+        x-display-name: QUIC Frontend Max Tx Memory
+        x-nullable: true
+        x-size: true
       max_frame_loss:
         type: integer
         x-display-name: QUIC Max Limit for Frame Loss
@@ -4773,6 +4778,9 @@ definitions:
       peers:
         pattern: ^[^\s]+$
         type: string
+      recv_only:
+        type: boolean
+        x-display-name: Receive Only
       size:
         minimum: 0
         type: integer
@@ -11325,6 +11333,14 @@ definitions:
           - both
         type: string
         x-omitempty: true
+      minsize_req:
+        type: integer
+        x-display-name: Minimum Size for Requests
+        x-size: true
+      minsize_res:
+        type: integer
+        x-display-name: Minimum Size for Responses
+        x-size: true
       offload:
         type: boolean
       types:
@@ -11479,6 +11495,9 @@ definitions:
       no_purge:
         type: boolean
         x-display-name: No Purge
+      recv_only:
+        type: boolean
+        x-display-name: Receive Only
       size:
         pattern: ^\d+(k|K|m|M|g|G)?$
         type: string

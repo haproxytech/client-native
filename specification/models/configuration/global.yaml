@@ -680,6 +680,11 @@ tune_quic_options:
       type: integer
       x-display-name: QUIC Max Number of Bidirectional Streams
       x-nullable: true
+    frontend_max_tx_memory:
+      type: integer
+      x-size: true
+      x-display-name: QUIC Frontend Max Tx Memory
+      x-nullable: true
     max_frame_loss:
       type: integer
       x-display-name: QUIC Max Limit for Frame Loss

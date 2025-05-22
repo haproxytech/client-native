@@ -174,6 +174,7 @@ func TestCreateEditDeleteBackend(t *testing.T) {
 					"deflate",
 					"gzip",
 				},
+				MinsizeReq: 1024,
 			},
 			LogHealthChecks:    "enabled",
 			Checkcache:         "enabled",
@@ -304,11 +305,12 @@ func TestCreateEditDeleteBackend(t *testing.T) {
 				HTTPConnectionMode: "httpclose",
 				ConnectTimeout:     &tOut,
 				StickTable: &models.ConfigStickTable{
-					Expire: &e,
-					Keylen: &kl,
-					Size:   &s,
-					Store:  "gpc0,http_req_rate(40s)",
-					Type:   "string",
+					Expire:   &e,
+					Keylen:   &kl,
+					Size:     &s,
+					Store:    "gpc0,http_req_rate(40s)",
+					Type:     "string",
+					RecvOnly: true,
 				},
 				AdvCheck: "mysql-check",
 				MysqlCheckParams: &models.MysqlCheckParams{
@@ -325,7 +327,8 @@ func TestCreateEditDeleteBackend(t *testing.T) {
 					Enabled: misc.StringP("enabled"),
 					Except:  "127.0.0.1",
 				},
-			}},
+			},
+		},
 		{
 			BackendBase: models.BackendBase{
 				Name: "created",
@@ -393,7 +396,8 @@ func TestCreateEditDeleteBackend(t *testing.T) {
 					{Cond: misc.StringP("if"), CondTest: misc.StringP("host_www")},
 					{Cond: misc.StringP("unless"), CondTest: misc.StringP("missing_cl")},
 				},
-			}},
+			},
+		},
 	}
 
 	for i, backend := range backends {
@@ -699,7 +703,8 @@ func TestCreateEditDeleteBackendHTTPConnectionMode(t *testing.T) {
 						},
 					},
 					HTTPConnectionMode: "httpclose",
-				}},
+				},
+			},
 			expectedHTTPConnectionMode: "httpclose",
 		},
 		{
@@ -715,7 +720,8 @@ func TestCreateEditDeleteBackendHTTPConnectionMode(t *testing.T) {
 						},
 					},
 					HTTPConnectionMode: "http-keep-alive",
-				}},
+				},
+			},
 			expectedHTTPConnectionMode: "http-keep-alive",
 		},
 		{
@@ -731,7 +737,8 @@ func TestCreateEditDeleteBackendHTTPConnectionMode(t *testing.T) {
 						},
 					},
 					HTTPConnectionMode: "",
-				}},
+				},
+			},
 			expectedHTTPConnectionMode: "",
 		},
 	}

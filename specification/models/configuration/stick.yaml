@@ -70,6 +70,9 @@ stick_table:
       type: string
       enum: [addr, name]
       x-nullable: true
+    recv_only:
+      type: boolean
+      x-display-name: Receive Only
     store:
       type: string
       pattern: '^[^\s]+$'

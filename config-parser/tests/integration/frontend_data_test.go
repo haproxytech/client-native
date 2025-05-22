@@ -809,6 +809,10 @@ const frontend_sticktabletypeintegersize1msrvke = `
 frontend test
   stick-table type integer size 1m srvkey addr write-to t2
 `
+const frontend_sticktabletypeintegersize1msrvke_ = `
+frontend test
+  stick-table type integer size 1m srvkey addr write-to t2 recv-only
+`
 const frontend_usebackendtestifTRUE = `
 frontend test
   use_backend test if TRUE

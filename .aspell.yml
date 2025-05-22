@@ -101,6 +101,7 @@ allowed:
   - mexchanger
   - migrator
   - minimalistic
+  - minsize
   - mixin
   - mkdir
   - multipartsearch
@@ -124,6 +125,7 @@ allowed:
   - rbac
   - readme
   - recursivity
+  - recv
   - redoc
   - reimplement
   - releaser

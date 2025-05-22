@@ -934,6 +934,7 @@ func TestWholeConfigsSectionsBackend(t *testing.T) {
 		{"backend_stickonsrctablepopiflocalhost", backend_stickonsrctablepopiflocalhost},
 		{"backend_stickstorerequestsrctablepopiflo", backend_stickstorerequestsrctablepopiflo},
 		{"backend_sticktabletypeintegersize1msrvke", backend_sticktabletypeintegersize1msrvke},
+		{"backend_sticktabletypeintegersize1msrvke_", backend_sticktabletypeintegersize1msrvke_},
 		{"backend_sticktabletypeipsize1mexpire5mst", backend_sticktabletypeipsize1mexpire5mst},
 		{"backend_sticktabletypeipsize1mexpire5mst_", backend_sticktabletypeipsize1mexpire5mst_},
 		{"backend_sticktabletypestringlen1000size1", backend_sticktabletypestringlen1000size1},

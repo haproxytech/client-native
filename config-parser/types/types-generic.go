@@ -131,6 +131,16 @@ type Int64C struct {
 //test:ok:hash-preserve-affinity maxqueue
 //test:fail:hash-preserve-affinity
 //test:fail:hash-preserve-affinity notvalid
+//generate:type:CompressionMinsizeReq
+//name:compression minsize-req
+//test:ok:compression minsize-req 10k
+//test:ok:compression minsize-req 10
+//test:fail:compression minsize-req
+//generate:type:CompressionMinsizeRes
+//name:compression minsize-res
+//test:ok:compression minsize-res 10k
+//test:ok:compression minsize-res 10
+//test:fail:compression minsize-res
 type StringC struct {
 	Value   string
 	Comment string

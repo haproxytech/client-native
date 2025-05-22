@@ -88,6 +88,8 @@ func (h *StickTable) parse(line string, parts []string, comment string) (*types.
 					return nil, &errors.ParseError{Parser: "StickTable", Line: line}
 				}
 				data.Store = parts[index]
+			case "recv-only":
+				data.RecvOnly = true
 			default:
 				return nil, &errors.ParseError{Parser: "StickTable", Line: line}
 			}
@@ -150,6 +152,9 @@ func (h *StickTable) Result() ([]common.ReturnResultLine, error) {
 	if req.Store != "" {
 		data.WriteString(" store ")
 		data.WriteString(req.Store)
+	}
+	if req.RecvOnly {
+		data.WriteString(" recv-only")
 	}
 	result[0] = common.ReturnResultLine{
 		Data:    data.String(),

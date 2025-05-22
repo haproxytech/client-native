@@ -424,7 +424,8 @@
             "reorder_ratio": 75,
             "retry_threshold": 5,
             "socket_owner": "connection",
-            "zero_copy_fwd_send": "enabled"
+            "zero_copy_fwd_send": "enabled",
+            "frontend_max_tx_memory": 1024
         },
         "tune_ssl_options": {
             "cachesize": 41,
@@ -510,7 +511,9 @@
                 "algos-res": [
                     "raw-deflate",
                     "identity"
-                ]
+                ],
+                "minsize_req": 1024,
+                "minsize_res": 2048
             },
             "cookie": {
                 "httponly": true,
@@ -1230,7 +1233,8 @@
                 "size": 102400,
                 "store": "http_req_rate(10s)",
                 "type": "ip",
-                "write_to": "t99"
+                "write_to": "t99",
+                "recv_only": true
             },
             "tcp_smart_connect": "disabled",
             "tcpka": "enabled",
@@ -3545,7 +3549,8 @@
                     "size": "200k",
                     "store": "gpc0,conn_rate(30s)",
                     "type": "string",
-                    "type_len": 1000
+                    "type_len": 1000,
+                    "recv_only": true
                 },
                 "t2": {
                     "expire": "5m",

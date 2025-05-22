@@ -25,24 +25,15 @@ import (
 	"github.com/haproxytech/client-native/v6/config-parser/parsers"
 )
 
-func TestStickTable(t *testing.T) {
+func TestCompressionMinsizeReq(t *testing.T) {
 	tests := map[string]bool{
-		"stick-table type ip size 1m expire 5m store gpc0,conn_rate(30s)":                                    true,
-		"stick-table type ip size 1m expire 5m store gpc0,conn_rate(30s) # comment":                          true,
-		"stick-table type string len 1000 size 1m expire 5m store gpc0,conn_rate(30s)":                       true,
-		"stick-table type string len 1000 size 1m expire 5m nopurge peers aaaaa store gpc0,conn_rate(30s)":   true,
-		"stick-table type integer size 1m srvkey addr write-to t2":                                           true,
-		"stick-table type integer size 1m srvkey addr write-to t2 recv-only":                                 true,
-		"stick-table type string len 1000 size 1m expire 5m something peers aaaaa store gpc0,conn_rate(30s)": false,
-		"stick-table type":                       false,
-		"stick-table":                            false,
-		"stick-table type ip size 2m srvkey":     false,
-		"stick-table type ip size 2m srvkey lol": false,
-		"stick-table type integer size 1m srvkey addr write-to t2 recv-only 2": false,
-		"---":     false,
-		"--- ---": false,
+		"compression minsize-req 10k": true,
+		"compression minsize-req 10":  true,
+		"compression minsize-req":     false,
+		"---":                         false,
+		"--- ---":                     false,
 	}
-	parser := &parsers.StickTable{}
+	parser := &parsers.CompressionMinsizeReq{}
 	for command, shouldPass := range tests {
 		t.Run(command, func(t *testing.T) {
 			line := strings.TrimSpace(command)

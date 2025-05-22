@@ -54,6 +54,9 @@ type ConfigStickTable struct {
 	// +kubebuilder:validation:Pattern=`^[^\s]+$`
 	Peers string `json:"peers,omitempty"`
 
+	// recv only
+	RecvOnly bool `json:"recv_only,omitempty"`
+
 	// size
 	// Minimum: 0
 	// +kubebuilder:validation:Minimum=0

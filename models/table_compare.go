@@ -57,6 +57,10 @@ func (s Table) Equal(t Table, opts ...Options) bool {
 		return false
 	}
 
+	if s.RecvOnly != t.RecvOnly {
+		return false
+	}
+
 	if s.Size != t.Size {
 		return false
 	}
@@ -117,6 +121,10 @@ func (s Table) Diff(t Table, opts ...Options) map[string][]interface{} {
 
 	if s.NoPurge != t.NoPurge {
 		diff["NoPurge"] = []interface{}{s.NoPurge, t.NoPurge}
+	}
+
+	if s.RecvOnly != t.RecvOnly {
+		diff["RecvOnly"] = []interface{}{s.RecvOnly, t.RecvOnly}
 	}
 
 	if s.Size != t.Size {
