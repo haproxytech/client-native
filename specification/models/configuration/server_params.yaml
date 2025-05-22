@@ -80,6 +80,12 @@ server_params:
     check_via_socks4:
       type: string
       enum: [enabled, disabled]
+    check-pool-conn-name:
+      type: string
+      pattern: '^[^\s]+$'
+    check-reuse-pool:
+      type: string
+      enum: [enabled, disabled]
     ciphers:
       type: string
       x-dependency:

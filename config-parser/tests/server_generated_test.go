@@ -178,12 +178,16 @@ func TestServer(t *testing.T) {
 		"server name 127.0.0.1 guid guid-example":                             true,
 		"server name 127.0.0.1 idle-ping 10s":                                 true,
 		"server name 127.0.0.1 idle-ping 10":                                  true,
-		"server addr":                                                         false,
-		"server name 127.0.0.1 idle-ping":                                     false,
-		"server":                                                              false,
-		"server name 127.0.0.1 log-bufsize":                                   false,
-		"---":                                                                 false,
-		"--- ---":                                                             false,
+		"server name 127.0.0.1 check-reuse-pool":                              true,
+		"server name 127.0.0.1 no-check-reuse-pool":                           true,
+		"server name 127.0.0.1 check-pool-conn-name foo":                      true,
+		"server addr":                                false,
+		"server name 127.0.0.1 idle-ping":            false,
+		"server name 127.0.0.1 check-pool-conn-name": false,
+		"server":                            false,
+		"server name 127.0.0.1 log-bufsize": false,
+		"---":                               false,
+		"--- ---":                           false,
 	}
 	parser := &parsers.Server{}
 	for command, shouldPass := range tests {

@@ -445,6 +445,9 @@ backend test
   server name 127.0.0.1 guid guid-example
   server name 127.0.0.1 idle-ping 10s
   server name 127.0.0.1 idle-ping 10
+  server name 127.0.0.1 check-reuse-pool
+  server name 127.0.0.1 no-check-reuse-pool
+  server name 127.0.0.1 check-pool-conn-name foo
   stick-table type ip size 1m expire 5m store gpc0,conn_rate(30s)
   stick on src table pop if !localhost
   stick match src table pop if !localhost
@@ -4103,6 +4106,12 @@ var configTests = []configTest{{`  command spoa-mirror --runtime 0 --mirror-url 
 	{`  server name 127.0.0.1 idle-ping 10s
 `, 1},
 	{`  server name 127.0.0.1 idle-ping 10
+`, 1},
+	{`  server name 127.0.0.1 check-reuse-pool
+`, 1},
+	{`  server name 127.0.0.1 no-check-reuse-pool
+`, 1},
+	{`  server name 127.0.0.1 check-pool-conn-name foo
 `, 1},
 	{`  stick-table type ip size 1m expire 5m store gpc0,conn_rate(30s)
 `, 2},

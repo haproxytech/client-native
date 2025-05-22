@@ -78,6 +78,16 @@ type ServerParams struct {
 	// +kubebuilder:validation:Enum=enabled;disabled;
 	Check string `json:"check,omitempty"`
 
+	// check pool conn name
+	// Pattern: ^[^\s]+$
+	// +kubebuilder:validation:Pattern=`^[^\s]+$`
+	CheckPoolConnName string `json:"check-pool-conn-name,omitempty"`
+
+	// check reuse pool
+	// Enum: ["enabled","disabled"]
+	// +kubebuilder:validation:Enum=enabled;disabled;
+	CheckReusePool string `json:"check-reuse-pool,omitempty"`
+
 	// check send proxy
 	// Enum: ["enabled","disabled"]
 	// +kubebuilder:validation:Enum=enabled;disabled;
@@ -513,6 +523,14 @@ func (m *ServerParams) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateCheck(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateCheckPoolConnName(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateCheckReusePool(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -962,6 +980,60 @@ func (m *ServerParams) validateCheck(formats strfmt.Registry) error {
 
 	// value enum
 	if err := m.validateCheckEnum("check", "body", m.Check); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *ServerParams) validateCheckPoolConnName(formats strfmt.Registry) error {
+	if swag.IsZero(m.CheckPoolConnName) { // not required
+		return nil
+	}
+
+	if err := validate.Pattern("check-pool-conn-name", "body", m.CheckPoolConnName, `^[^\s]+$`); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+var serverParamsTypeCheckReusePoolPropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		serverParamsTypeCheckReusePoolPropEnum = append(serverParamsTypeCheckReusePoolPropEnum, v)
+	}
+}
+
+const (
+
+	// ServerParamsCheckReusePoolEnabled captures enum value "enabled"
+	ServerParamsCheckReusePoolEnabled string = "enabled"
+
+	// ServerParamsCheckReusePoolDisabled captures enum value "disabled"
+	ServerParamsCheckReusePoolDisabled string = "disabled"
+)
+
+// prop value enum
+func (m *ServerParams) validateCheckReusePoolEnum(path, location string, value string) error {
+	if err := validate.EnumCase(path, location, value, serverParamsTypeCheckReusePoolPropEnum, true); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *ServerParams) validateCheckReusePool(formats strfmt.Registry) error {
+	if swag.IsZero(m.CheckReusePool) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateCheckReusePoolEnum("check-reuse-pool", "body", m.CheckReusePool); err != nil {
 		return err
 	}
 

@@ -24,6 +24,9 @@ func (s *ServerParams) prepareForRuntimeDoNotSendDisabledFields() {
 	if s.Check == "disabled" {
 		s.Check = ""
 	}
+	if s.CheckReusePool == "disabled" {
+		s.CheckReusePool = ""
+	}
 	if s.CheckSendProxy == "disabled" {
 		s.CheckSendProxy = ""
 	}

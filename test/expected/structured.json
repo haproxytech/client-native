@@ -1090,7 +1090,8 @@
                         "comment": "my comment"
                     },
                     "init-state": "fully-up",
-                    "idle_ping": 10000
+                    "idle_ping": 10000,
+                    "check-reuse-pool": "enabled"
                 },
                 "webserv2": {
                     "cookie": "BLAH",
@@ -1113,7 +1114,9 @@
                     "metadata": {
                         "comment": "my structured comment",
                         "id": "my_random_id_for_server"
-                    }
+                    },
+                    "check-reuse-pool": "disabled",
+                    "check-pool-conn-name": "foo"
                 }
             }
         },

@@ -169,7 +169,9 @@ func TestCreateEditDeleteServer(t *testing.T) {
 				ID:    misc.StringP("0x50"),
 				Value: misc.StringP("%[fc_pp_tlv(0x20)]"),
 			},
-			IdlePing: misc.Int64P(10000),
+			IdlePing:          misc.Int64P(10000),
+			CheckReusePool:    "enabled",
+			CheckPoolConnName: "bar",
 		},
 	}
 

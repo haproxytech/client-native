@@ -635,6 +635,14 @@ definitions:
           - enabled
           - disabled
         type: string
+      check-pool-conn-name:
+        pattern: ^[^\s]+$
+        type: string
+      check-reuse-pool:
+        enum:
+          - enabled
+          - disabled
+        type: string
       check-send-proxy:
         enum:
           - enabled

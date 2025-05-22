@@ -279,6 +279,10 @@ func parseServerParams(serverOptions []params.ServerOption, serverParams *models
 				serverParams.CheckSendProxy = "enabled"
 			case "no-check-send-proxy":
 				serverParams.CheckSendProxy = "disabled"
+			case "check-reuse-pool":
+				serverParams.CheckReusePool = "enabled"
+			case "no-check-reuse-pool":
+				serverParams.CheckReusePool = "disabled"
 			case "check-ssl":
 				serverParams.CheckSsl = "enabled"
 			case "no-check-ssl":
@@ -378,6 +382,8 @@ func parseServerParams(serverOptions []params.ServerOption, serverParams *models
 				serverParams.SslCafile = v.Value
 			case "check-alpn":
 				serverParams.CheckAlpn = v.Value
+			case "check-pool-conn-name":
+				serverParams.CheckPoolConnName = v.Value
 			case "check-proto":
 				serverParams.CheckProto = v.Value
 			case "check-sni":
@@ -609,6 +615,15 @@ func SerializeServerParams(s models.ServerParams, opt *options.ConfigurationOpti
 	}
 	if s.CheckSsl == "disabled" {
 		options = append(options, &params.ServerOptionWord{Name: "no-check-ssl"})
+	}
+	if s.CheckPoolConnName != "" {
+		options = append(options, &params.ServerOptionValue{Name: "check-pool-conn-name", Value: s.CheckPoolConnName})
+	}
+	if s.CheckReusePool == "enabled" {
+		options = append(options, &params.ServerOptionWord{Name: "check-reuse-pool"})
+	}
+	if s.CheckReusePool == "disabled" {
+		options = append(options, &params.ServerOptionWord{Name: "no-check-reuse-pool"})
 	}
 	if s.CheckViaSocks4 == "enabled" {
 		options = append(options, &params.ServerOptionWord{Name: "check-via-socks4"})

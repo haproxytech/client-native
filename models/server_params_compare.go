@@ -69,6 +69,14 @@ func (s ServerParams) Equal(t ServerParams, opts ...Options) bool {
 		return false
 	}
 
+	if s.CheckPoolConnName != t.CheckPoolConnName {
+		return false
+	}
+
+	if s.CheckReusePool != t.CheckReusePool {
+		return false
+	}
+
 	if s.CheckSendProxy != t.CheckSendProxy {
 		return false
 	}
@@ -505,6 +513,14 @@ func (s ServerParams) Diff(t ServerParams, opts ...Options) map[string][]interfa
 
 	if s.Check != t.Check {
 		diff["Check"] = []interface{}{s.Check, t.Check}
+	}
+
+	if s.CheckPoolConnName != t.CheckPoolConnName {
+		diff["CheckPoolConnName"] = []interface{}{s.CheckPoolConnName, t.CheckPoolConnName}
+	}
+
+	if s.CheckReusePool != t.CheckReusePool {
+		diff["CheckReusePool"] = []interface{}{s.CheckReusePool, t.CheckReusePool}
 	}
 
 	if s.CheckSendProxy != t.CheckSendProxy {

@@ -16,6 +16,7 @@ var ServerParamsPrepareForRuntimeMap = map[string]string{ //nolint:gochecknoglob
 	"Check":            FuncDoNotSendDisabledFields,
 	"CheckSendProxy":   FuncDoNotSendDisabledFields,
 	"CheckSsl":         FuncDoNotSendDisabledFields,
+	"CheckReusePool":   FuncDoNotSendDisabledFields,
 	"CheckViaSocks4":   FuncDoNotSendDisabledFields,
 	"ForceSslv3":       FuncDoNotSendDisabledFields,
 	"Sslv3":            FuncDoNotSendDisabledFields,
