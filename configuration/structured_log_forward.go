@@ -21,6 +21,7 @@ import (
 
 	"github.com/go-openapi/strfmt"
 	parser "github.com/haproxytech/client-native/v6/config-parser"
+	"github.com/haproxytech/client-native/v6/configuration/options"
 	"github.com/haproxytech/client-native/v6/models"
 )
 
@@ -101,7 +102,7 @@ func (c *client) EditStructuredLogForward(name string, data *models.LogForward, 
 		Parser:      &p,
 		Options:     &c.ConfigurationOptions,
 		HandleError: c.HandleError,
-	}, data); err != nil {
+	}, data, &c.ConfigurationOptions); err != nil {
 		return err
 	}
 	return c.SaveData(p, t, transactionID == "")
@@ -132,7 +133,7 @@ func (c *client) CreateStructuredLogForward(data *models.LogForward, transaction
 		Parser:      &p,
 		Options:     &c.ConfigurationOptions,
 		HandleError: c.HandleError,
-	}, data); err != nil {
+	}, data, &c.ConfigurationOptions); err != nil {
 		return err
 	}
 	return c.SaveData(p, t, transactionID == "")
@@ -191,7 +192,7 @@ func parseLogForwardsSection(name string, p parser.Parser) (*models.LogForward, 
 	return lf, nil
 }
 
-func serializeLogForwardSection(a StructuredToParserArgs, lf *models.LogForward) error {
+func serializeLogForwardSection(a StructuredToParserArgs, lf *models.LogForward, opt *options.ConfigurationOptions) error {
 	p := *a.Parser
 	var err error
 
@@ -208,7 +209,7 @@ func serializeLogForwardSection(a StructuredToParserArgs, lf *models.LogForward)
 		}
 	}
 	for _, bind := range lf.Binds {
-		if err = p.Insert(parser.LogForward, lf.Name, "bind", SerializeBind(bind), -1); err != nil {
+		if err = p.Insert(parser.LogForward, lf.Name, "bind", SerializeBind(bind, opt), -1); err != nil {
 			return a.HandleError(bind.Name, "log-forward", lf.Name, a.TID, a.TID == "", err)
 		}
 	}

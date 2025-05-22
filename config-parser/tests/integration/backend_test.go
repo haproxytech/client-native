@@ -780,6 +780,8 @@ func TestWholeConfigsSectionsBackend(t *testing.T) {
 		{"backend_servername127001forcetlsv12", backend_servername127001forcetlsv12},
 		{"backend_servername127001forcetlsv13", backend_servername127001forcetlsv13},
 		{"backend_servername127001guidguidexample", backend_servername127001guidguidexample},
+		{"backend_servername127001idleping10", backend_servername127001idleping10},
+		{"backend_servername127001idleping10s", backend_servername127001idleping10s},
 		{"backend_servername127001initaddrlastlibc", backend_servername127001initaddrlastlibc},
 		{"backend_servername127001initaddrlastlibc_", backend_servername127001initaddrlastlibc_},
 		{"backend_servername127001initstatedown", backend_servername127001initstatedown},

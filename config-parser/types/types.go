@@ -262,6 +262,9 @@ type ACL struct {
 //test:ok:bind :443 nbconn +2
 //test:ok:bind :443 guid-prefix guid-example
 //test:ok:bind :443 default-crt foobar.pem.rsa default-crt foobar.pem.ecdsa
+//test:ok:bind :443 idle-ping 10s
+//test:ok:bind :443 idle-ping 10
+//test:fail:bind :443 idle-ping
 //test:fail:bind :443 user
 //test:fail:bind :443 user mode 600
 //test:fail:bind :443 user mode 600 accept-proxy
@@ -1136,6 +1139,9 @@ type Peer struct {
 //test:ok:server name 127.0.0.1 ws auto
 //test:ok:server name 127.0.0.1 log-bufsize 10
 //test:ok:server name 127.0.0.1 guid guid-example
+//test:ok:server name 127.0.0.1 idle-ping 10s
+//test:ok:server name 127.0.0.1 idle-ping 10
+//test:fail:server name 127.0.0.1 idle-ping
 //test:fail:server
 //test:fail:server name 127.0.0.1 log-bufsize
 type Server struct {

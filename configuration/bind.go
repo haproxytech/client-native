@@ -26,6 +26,7 @@ import (
 	parser_errors "github.com/haproxytech/client-native/v6/config-parser/errors"
 	"github.com/haproxytech/client-native/v6/config-parser/params"
 	"github.com/haproxytech/client-native/v6/config-parser/types"
+	"github.com/haproxytech/client-native/v6/configuration/options"
 
 	"github.com/haproxytech/client-native/v6/misc"
 	"github.com/haproxytech/client-native/v6/models"
@@ -127,7 +128,7 @@ func (c *client) CreateBind(parentType string, parentName string, data *models.B
 		return c.HandleError(data.Name, parentType, parentName, t, transactionID == "", e)
 	}
 
-	if err := p.Insert(bindSectionType(parentType), parentName, "bind", SerializeBind(*data), -1); err != nil {
+	if err := p.Insert(bindSectionType(parentType), parentName, "bind", SerializeBind(*data, &c.ConfigurationOptions), -1); err != nil {
 		return c.HandleError(data.Name, parentType, parentName, t, transactionID == "", err)
 	}
 
@@ -158,7 +159,7 @@ func (c *client) EditBind(name string, parentType string, parentName string, dat
 		return c.HandleError(data.Name, parentType, parentType, t, transactionID == "", e)
 	}
 
-	if err := p.Set(bindSectionType(parentType), parentName, "bind", SerializeBind(*data), i); err != nil {
+	if err := p.Set(bindSectionType(parentType), parentName, "bind", SerializeBind(*data, &c.ConfigurationOptions), i); err != nil {
 		return c.HandleError(data.Name, parentType, parentName, t, transactionID == "", err)
 	}
 
@@ -350,6 +351,8 @@ func parseBindParams(bindOptions []params.BindOption) models.BindParams { //noli
 				b.Group = v.Value
 			case "id":
 				b.ID = v.Value
+			case "idle-ping":
+				b.IdlePing = misc.ParseTimeout(v.Value)
 			case "guid-prefix":
 				b.GUIDPrefix = v.Value
 			case "interface":
@@ -421,7 +424,7 @@ func parseBindParams(bindOptions []params.BindOption) models.BindParams { //noli
 	return b
 }
 
-func SerializeBind(b models.Bind) types.Bind {
+func SerializeBind(b models.Bind, opt *options.ConfigurationOptions) types.Bind {
 	bind := types.Bind{
 		Params: []params.BindOption{},
 	}
@@ -438,11 +441,11 @@ func SerializeBind(b models.Bind) types.Bind {
 	if err == nil {
 		bind.Comment = comment
 	}
-	bind.Params = serializeBindParams(b.BindParams, bind.Path)
+	bind.Params = serializeBindParams(b.BindParams, bind.Path, opt)
 	return bind
 }
 
-func serializeBindParams(b models.BindParams, path string) []params.BindOption { //nolint:gocognit,gocyclo,cyclop,maintidx
+func serializeBindParams(b models.BindParams, path string, opt *options.ConfigurationOptions) []params.BindOption { //nolint:gocognit,gocyclo,cyclop,maintidx
 	var options []params.BindOption
 	if b.Name != "" {
 		options = append(options, &params.BindOptionValue{Name: "name", Value: b.Name})
@@ -586,6 +589,9 @@ func serializeBindParams(b models.BindParams, path string) []params.BindOption {
 	}
 	if b.ID != "" {
 		options = append(options, &params.BindOptionValue{Name: "id", Value: b.ID})
+	}
+	if b.IdlePing != nil {
+		options = append(options, &params.BindOptionValue{Name: "idle-ping", Value: misc.SerializeTime(*b.IdlePing, opt.PreferredTimeSuffix)})
 	}
 	if b.Interface != "" {
 		options = append(options, &params.BindOptionValue{Name: "interface", Value: b.Interface})

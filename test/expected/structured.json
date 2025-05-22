@@ -278,7 +278,11 @@
             "comp_maxlevel": 14,
             "disable_fast_forward": true,
             "disable_zero_copy_forwarding": true,
-            "epoll_mask_events": ["err", "hup", "rdhup"],
+            "epoll_mask_events": [
+                "err",
+                "hup",
+                "rdhup"
+            ],
             "events_max_events_at_once": 10,
             "fail_alloc": true,
             "fd_edge_triggered": "enabled",
@@ -762,15 +766,17 @@
                     "cond_test": "{ path_beg /metrics }"
                 },
                 {
-                  "type":     "pause",
-                  "expr":     "20s"
+                    "type": "pause",
+                    "expr": "20s"
                 },
                 {
-                  "type":     "pause",
-                  "expr":     "%[calc((sc_conn_rate(0) - 30) * 10)]",
-                  "cond":     "if",
-                  "cond_test": "{ sc_conn_rate(0) gt 30 }",
-                  "metadata": {"comment": "delay according to conn rate"}
+                    "type": "pause",
+                    "expr": "%[calc((sc_conn_rate(0) - 30) * 10)]",
+                    "cond": "if",
+                    "cond_test": "{ sc_conn_rate(0) gt 30 }",
+                    "metadata": {
+                        "comment": "delay according to conn rate"
+                    }
                 }
             ],
             "http_response_rule_list": [
@@ -788,15 +794,17 @@
                     "cond_test": "TRUE"
                 },
                 {
-                  "type":     "pause",
-                  "expr":     "20s"
+                    "type": "pause",
+                    "expr": "20s"
                 },
                 {
-                  "type":     "pause",
-                  "expr":     "%[calc((sc_conn_rate(0) - 30) * 10)]",
-                  "cond":     "if",
-                  "cond_test": "{ sc_conn_rate(0) gt 30 }",
-                  "metadata": {"comment": "delay according to conn rate"}
+                    "type": "pause",
+                    "expr": "%[calc((sc_conn_rate(0) - 30) * 10)]",
+                    "cond": "if",
+                    "cond_test": "{ sc_conn_rate(0) gt 30 }",
+                    "metadata": {
+                        "comment": "delay according to conn rate"
+                    }
                 }
             ],
             "server_switching_rule_list": [
@@ -1081,7 +1089,8 @@
                     "metadata": {
                         "comment": "my comment"
                     },
-                    "init-state": "fully-up"
+                    "init-state": "fully-up",
+                    "idle_ping": 10000
                 },
                 "webserv2": {
                     "cookie": "BLAH",
@@ -2145,15 +2154,17 @@
                     "cond_test": "FALSE"
                 },
                 {
-                  "type":     "pause",
-                  "expr":     "20s"
+                    "type": "pause",
+                    "expr": "20s"
                 },
                 {
-                    "type":     "pause",
-                    "expr":     "%[calc((sc_conn_rate(0) - 30) * 10)]",
-                    "cond":     "if",
+                    "type": "pause",
+                    "expr": "%[calc((sc_conn_rate(0) - 30) * 10)]",
+                    "cond": "if",
                     "cond_test": "{ sc_conn_rate(0) gt 30 }",
-                    "metadata": {"comment": "delay according to conn rate"}
+                    "metadata": {
+                        "comment": "delay according to conn rate"
+                    }
                 }
             ],
             "http_response_rule_list": [
@@ -2398,15 +2409,17 @@
                     "cond_test": "FALSE"
                 },
                 {
-                  "type":     "pause",
-                  "expr":     "20s"
+                    "type": "pause",
+                    "expr": "20s"
                 },
                 {
-                  "type":     "pause",
-                  "expr":     "%[calc((sc_conn_rate(0) - 30) * 10)]",
-                  "cond":     "if",
-                  "cond_test": "{ sc_conn_rate(0) gt 30 }",
-                  "metadata": {"comment": "delay according to conn rate"}
+                    "type": "pause",
+                    "expr": "%[calc((sc_conn_rate(0) - 30) * 10)]",
+                    "cond": "if",
+                    "cond_test": "{ sc_conn_rate(0) gt 30 }",
+                    "metadata": {
+                        "comment": "delay according to conn rate"
+                    }
                 }
             ],
             "log_target_list": [
@@ -2829,7 +2842,8 @@
                     "address": "2a01:c9c0:a3:8::3",
                     "port": 80,
                     "force_sslv3": true,
-                    "sslv3": "enabled"
+                    "sslv3": "enabled",
+                    "idle_ping": 10000
                 },
                 "test-quic": {
                     "name": "test-quic",

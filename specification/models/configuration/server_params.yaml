@@ -186,6 +186,12 @@ server_params:
     hash_key:
       type: string
       pattern: '^[^\s]+$'
+    idle_ping:
+      type: integer
+      minimum: 0
+      x-nullable: true
+      x-duration: true
+      x-default-unit: ms
     init-addr:
       pattern: ^[^\s]+$
       type: string

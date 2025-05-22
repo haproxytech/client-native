@@ -153,6 +153,10 @@ func (s BindParams) Equal(t BindParams, opts ...Options) bool {
 		return false
 	}
 
+	if !equalPointers(s.IdlePing, t.IdlePing) {
+		return false
+	}
+
 	if s.Interface != t.Interface {
 		return false
 	}
@@ -483,6 +487,10 @@ func (s BindParams) Diff(t BindParams, opts ...Options) map[string][]interface{}
 
 	if s.ID != t.ID {
 		diff["ID"] = []interface{}{s.ID, t.ID}
+	}
+
+	if !equalPointers(s.IdlePing, t.IdlePing) {
+		diff["IdlePing"] = []interface{}{ValueOrNil(s.IdlePing), ValueOrNil(t.IdlePing)}
 	}
 
 	if s.Interface != t.Interface {

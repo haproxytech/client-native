@@ -220,6 +220,7 @@ var serverOptionFactoryMethods = map[string]func() ServerOption{ //nolint:gochec
 	"error-limit":             func() ServerOption { return &ServerOptionValue{Name: "error-limit"} },
 	"fall":                    func() ServerOption { return &ServerOptionValue{Name: "fall"} },
 	"id":                      func() ServerOption { return &ServerOptionValue{Name: "id"} },
+	"idle-ping":               func() ServerOption { return &ServerOptionValue{Name: "idle-ping"} },
 	"init-addr":               func() ServerOption { return &ServerOptionValue{Name: "init-addr"} },
 	"init-state":              func() ServerOption { return &ServerOptionValue{Name: "init-state"} },
 	"inter":                   func() ServerOption { return &ServerOptionValue{Name: "inter"} },

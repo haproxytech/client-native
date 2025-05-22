@@ -284,6 +284,7 @@ var bindOptionFactoryMethods = map[string]func() BindOption{ //nolint:gochecknog
 	"gid":                  func() BindOption { return &BindOptionValue{Name: "gid"} },
 	"group":                func() BindOption { return &BindOptionValue{Name: "group"} },
 	"id":                   func() BindOption { return &BindOptionValue{Name: "id"} },
+	"idle-ping":            func() BindOption { return &BindOptionValue{Name: "idle-ping"} },
 	"interface":            func() BindOption { return &BindOptionValue{Name: "interface"} },
 	"level":                func() BindOption { return &BindOptionValue{Name: "level"} },
 	"severity-output":      func() BindOption { return &BindOptionValue{Name: "severity-output"} },

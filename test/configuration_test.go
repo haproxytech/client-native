@@ -422,7 +422,7 @@ frontend test
   bind 192.168.1.1:80 name webserv thread all sigalgs RSA+SHA256 client-sigalgs ECDSA+SHA256:RSA+SHA256 ca-verify-file ca.pem nice 789 guid-prefix guid-example default-crt foobar.pem.rsa default-crt foobar.pem.ecdsa
   bind 192.168.1.1:8080 name webserv2 thread 1/all force-tlsv10
   bind 192.168.1.2:8080 name webserv3 thread 1/1 no-tlsv10
-  bind [2a01:c9c0:a3:8::3]:80 name ipv6 thread 1/1-1 force-sslv3
+  bind [2a01:c9c0:a3:8::3]:80 name ipv6 thread 1/1-1 force-sslv3 idle-ping 10000
   bind 192.168.1.1:80 name test-quic quic-socket connection thread 1/1
   bind 192.168.1.1:80 name testnbcon thread 1/all nbconn 6
   bind 192.168.1.1:80 name test-quic-algo thread 1/1 quic-cc-algo newreno
@@ -805,7 +805,7 @@ backend test # my comment
   external-check command /bin/false
   use-server webserv if TRUE # my comment
   use-server webserv2 unless TRUE
-  server webserv 192.168.1.1:9200 maxconn 1000 ssl weight 10 inter 2s cookie BLAH slowstart 6000 proxy-v2-options authority,crc32c ws h1 pool-low-conn 128 id 1234 pool-purge-delay 10s tcp-ut 2s curves secp384r1 client-sigalgs ECDSA+SHA256:RSA+SHA256 sigalgs ECDSA+SHA256 log-bufsize 10 set-proxy-v2-tlv-fmt(0x20) %[fc_pp_tlv(0x20)] init-state fully-up # my comment
+  server webserv 192.168.1.1:9200 maxconn 1000 ssl weight 10 inter 2s cookie BLAH slowstart 6000 proxy-v2-options authority,crc32c ws h1 pool-low-conn 128 id 1234 pool-purge-delay 10s tcp-ut 2s curves secp384r1 client-sigalgs ECDSA+SHA256:RSA+SHA256 sigalgs ECDSA+SHA256 log-bufsize 10 set-proxy-v2-tlv-fmt(0x20) %[fc_pp_tlv(0x20)] init-state fully-up idle-ping 10s # my comment
   server webserv2 192.168.1.1:9300 maxconn 1000 ssl weight 10 inter 2s cookie BLAH slowstart 6000 proxy-v2-options authority,crc32c ws h1 pool-low-conn 128 hash-key akey pool-conn-name apoolconnname # {"comment": "my structured comment", "id": "my_random_id_for_server"}
   http-request set-dst hdr(x-dst) # my comment
   http-request set-dst-port int(4000)

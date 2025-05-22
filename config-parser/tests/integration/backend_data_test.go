@@ -1741,6 +1741,14 @@ const backend_servername127001guidguidexample = `
 backend test
   server name 127.0.0.1 guid guid-example
 `
+const backend_servername127001idleping10s = `
+backend test
+  server name 127.0.0.1 idle-ping 10s
+`
+const backend_servername127001idleping10 = `
+backend test
+  server name 127.0.0.1 idle-ping 10
+`
 const backend_sticktabletypeipsize1mexpire5mst = `
 backend test
   stick-table type ip size 1m expire 5m store gpc0,conn_rate(30s)

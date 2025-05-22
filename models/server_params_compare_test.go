@@ -94,6 +94,7 @@ func TestServerParamsEqualFalse(t *testing.T) {
 		result.Fall = Ptr(*sample.Fall + 1)
 		result.Fastinter = Ptr(*sample.Fastinter + 1)
 		result.HealthCheckPort = Ptr(*sample.HealthCheckPort + 1)
+		result.IdlePing = Ptr(*sample.IdlePing + 1)
 		result.Inter = Ptr(*sample.Inter + 1)
 		result.LogBufsize = Ptr(*sample.LogBufsize + 1)
 		result.MaxReuse = Ptr(*sample.MaxReuse + 1)
@@ -195,6 +196,7 @@ func TestServerParamsDiffFalse(t *testing.T) {
 		result.Fall = Ptr(*sample.Fall + 1)
 		result.Fastinter = Ptr(*sample.Fastinter + 1)
 		result.HealthCheckPort = Ptr(*sample.HealthCheckPort + 1)
+		result.IdlePing = Ptr(*sample.IdlePing + 1)
 		result.Inter = Ptr(*sample.Inter + 1)
 		result.LogBufsize = Ptr(*sample.LogBufsize + 1)
 		result.MaxReuse = Ptr(*sample.MaxReuse + 1)
@@ -216,7 +218,7 @@ func TestServerParamsDiffFalse(t *testing.T) {
 
 	for _, sample := range samples {
 		result := sample.a.Diff(sample.b)
-		if len(result) != 99 {
+		if len(result) != 100 {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {
@@ -226,7 +228,7 @@ func TestServerParamsDiffFalse(t *testing.T) {
 			if err != nil {
 				t.Error(err)
 			}
-			t.Errorf("Expected ServerParams to be different in 99 cases, but it is not (%d) %s %s", len(result), a, b)
+			t.Errorf("Expected ServerParams to be different in 100 cases, but it is not (%d) %s %s", len(result), a, b)
 		}
 	}
 }

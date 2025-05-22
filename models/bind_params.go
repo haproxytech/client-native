@@ -130,6 +130,11 @@ type BindParams struct {
 	// id
 	ID string `json:"id,omitempty"`
 
+	// idle ping
+	// Minimum: 0
+	// +kubebuilder:validation:Minimum=0
+	IdlePing *int64 `json:"idle_ping,omitempty"`
+
 	// interface
 	Interface string `json:"interface,omitempty"`
 
@@ -335,6 +340,10 @@ func (m *BindParams) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
+	if err := m.validateIdlePing(formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.validateLevel(formats); err != nil {
 		res = append(res, err)
 	}
@@ -443,6 +452,18 @@ func (m *BindParams) validateGUIDPrefix(formats strfmt.Registry) error {
 	}
 
 	if err := validate.Pattern("guid_prefix", "body", m.GUIDPrefix, `^[A-Za-z0-9-_.:]+$`); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *BindParams) validateIdlePing(formats strfmt.Registry) error {
+	if swag.IsZero(m.IdlePing) { // not required
+		return nil
+	}
+
+	if err := validate.MinimumInt("idle_ping", "body", *m.IdlePing, 0, false); err != nil {
 		return err
 	}
 

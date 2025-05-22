@@ -581,6 +581,14 @@ const frontend_bind443defaultcrtfoobarpemrsadef = `
 frontend test
   bind :443 default-crt foobar.pem.rsa default-crt foobar.pem.ecdsa
 `
+const frontend_bind443idleping10s = `
+frontend test
+  bind :443 idle-ping 10s
+`
+const frontend_bind443idleping10 = `
+frontend test
+  bind :443 idle-ping 10
+`
 const frontend_bindprocessall = `
 frontend test
   bind-process all

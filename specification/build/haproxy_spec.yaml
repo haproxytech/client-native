@@ -352,6 +352,12 @@ definitions:
       id:
         type: string
         x-display-name: Socket ID
+      idle_ping:
+        minimum: 0
+        type: integer
+        x-default-unit: ms
+        x-duration: true
+        x-nullable: true
       interface:
         type: string
       level:
@@ -750,6 +756,12 @@ definitions:
         maximum: 65535
         minimum: 1
         type: integer
+        x-nullable: true
+      idle_ping:
+        minimum: 0
+        type: integer
+        x-default-unit: ms
+        x-duration: true
         x-nullable: true
       init-addr:
         pattern: ^[^\s]+$

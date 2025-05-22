@@ -443,6 +443,8 @@ backend test
   server name 127.0.0.1 ws auto
   server name 127.0.0.1 log-bufsize 10
   server name 127.0.0.1 guid guid-example
+  server name 127.0.0.1 idle-ping 10s
+  server name 127.0.0.1 idle-ping 10
   stick-table type ip size 1m expire 5m store gpc0,conn_rate(30s)
   stick on src table pop if !localhost
   stick match src table pop if !localhost
@@ -2152,6 +2154,8 @@ frontend test
   bind :443 nbconn +2
   bind :443 guid-prefix guid-example
   bind :443 default-crt foobar.pem.rsa default-crt foobar.pem.ecdsa
+  bind :443 idle-ping 10s
+  bind :443 idle-ping 10
   bind-process all
   email-alert from admin@example.com
   email-alert to a@z,x@y
@@ -3318,6 +3322,10 @@ var configTests = []configTest{{`  command spoa-mirror --runtime 0 --mirror-url 
 `, 1},
 	{`  bind :443 default-crt foobar.pem.rsa default-crt foobar.pem.ecdsa
 `, 1},
+	{`  bind :443 idle-ping 10s
+`, 1},
+	{`  bind :443 idle-ping 10
+`, 1},
 	{`  dgram-bind :80,:443
 `, 1},
 	{`  dgram-bind 10.0.0.1:10080,10.0.0.1:10443
@@ -4091,6 +4099,10 @@ var configTests = []configTest{{`  command spoa-mirror --runtime 0 --mirror-url 
 	{`  server name 127.0.0.1 log-bufsize 10
 `, 1},
 	{`  server name 127.0.0.1 guid guid-example
+`, 1},
+	{`  server name 127.0.0.1 idle-ping 10s
+`, 1},
+	{`  server name 127.0.0.1 idle-ping 10
 `, 1},
 	{`  stick-table type ip size 1m expire 5m store gpc0,conn_rate(30s)
 `, 2},

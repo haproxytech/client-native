@@ -169,6 +169,10 @@ func (s ServerParams) Equal(t ServerParams, opts ...Options) bool {
 		return false
 	}
 
+	if !equalPointers(s.IdlePing, t.IdlePing) {
+		return false
+	}
+
 	if !equalPointers(s.InitAddr, t.InitAddr) {
 		return false
 	}
@@ -601,6 +605,10 @@ func (s ServerParams) Diff(t ServerParams, opts ...Options) map[string][]interfa
 
 	if !equalPointers(s.HealthCheckPort, t.HealthCheckPort) {
 		diff["HealthCheckPort"] = []interface{}{ValueOrNil(s.HealthCheckPort), ValueOrNil(t.HealthCheckPort)}
+	}
+
+	if !equalPointers(s.IdlePing, t.IdlePing) {
+		diff["IdlePing"] = []interface{}{ValueOrNil(s.IdlePing), ValueOrNil(t.IdlePing)}
 	}
 
 	if !equalPointers(s.InitAddr, t.InitAddr) {

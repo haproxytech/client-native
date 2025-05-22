@@ -191,6 +191,11 @@ type ServerParams struct {
 	// +kubebuilder:validation:Minimum=1
 	HealthCheckPort *int64 `json:"health_check_port,omitempty"`
 
+	// idle ping
+	// Minimum: 0
+	// +kubebuilder:validation:Minimum=0
+	IdlePing *int64 `json:"idle_ping,omitempty"`
+
 	// init addr
 	// Pattern: ^[^\s]+$
 	// +kubebuilder:validation:Pattern=`^[^\s]+$`
@@ -580,6 +585,10 @@ func (m *ServerParams) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateHealthCheckPort(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateIdlePing(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -1413,6 +1422,18 @@ func (m *ServerParams) validateHealthCheckPort(formats strfmt.Registry) error {
 	}
 
 	if err := validate.MaximumInt("health_check_port", "body", *m.HealthCheckPort, 65535, false); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *ServerParams) validateIdlePing(formats strfmt.Registry) error {
+	if swag.IsZero(m.IdlePing) { // not required
+		return nil
+	}
+
+	if err := validate.MinimumInt("idle_ping", "body", *m.IdlePing, 0, false); err != nil {
 		return err
 	}
 

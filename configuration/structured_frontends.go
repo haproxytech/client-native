@@ -22,6 +22,7 @@ import (
 	"github.com/go-openapi/strfmt"
 	parser "github.com/haproxytech/client-native/v6/config-parser"
 	"github.com/haproxytech/client-native/v6/config-parser/types"
+	"github.com/haproxytech/client-native/v6/configuration/options"
 	"github.com/haproxytech/client-native/v6/models"
 )
 
@@ -102,7 +103,7 @@ func (c *client) EditStructuredFrontend(name string, data *models.Frontend, tran
 		Parser:      &p,
 		Options:     &c.ConfigurationOptions,
 		HandleError: c.HandleError,
-	}, data); err != nil {
+	}, data, &c.ConfigurationOptions); err != nil {
 		return err
 	}
 	return c.SaveData(p, t, transactionID == "")
@@ -133,7 +134,7 @@ func (c *client) CreateStructuredFrontend(data *models.Frontend, transactionID s
 		Parser:      &p,
 		Options:     &c.ConfigurationOptions,
 		HandleError: c.HandleError,
-	}, data); err != nil {
+	}, data, &c.ConfigurationOptions); err != nil {
 		return err
 	}
 	return c.SaveData(p, t, transactionID == "")
@@ -259,7 +260,7 @@ func parseFrontendsSection(name string, p parser.Parser) (*models.Frontend, erro
 	return f, nil
 }
 
-func serializeFrontendSection(a StructuredToParserArgs, f *models.Frontend) error { //nolint:gocognit
+func serializeFrontendSection(a StructuredToParserArgs, f *models.Frontend, opt *options.ConfigurationOptions) error { //nolint:gocognit
 	p := *a.Parser
 	var err error
 
@@ -271,7 +272,7 @@ func serializeFrontendSection(a StructuredToParserArgs, f *models.Frontend) erro
 		return a.HandleError(f.Name, "", "", a.TID, a.TID == "", err)
 	}
 	for _, bind := range f.Binds {
-		if err = p.Insert(parser.Frontends, f.Name, "bind", SerializeBind(bind), -1); err != nil {
+		if err = p.Insert(parser.Frontends, f.Name, "bind", SerializeBind(bind, opt), -1); err != nil {
 			return a.HandleError(bind.Name, FrontendParentName, f.Name, a.TID, a.TID == "", err)
 		}
 	}

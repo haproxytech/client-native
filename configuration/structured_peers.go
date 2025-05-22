@@ -21,6 +21,7 @@ import (
 
 	"github.com/go-openapi/strfmt"
 	parser "github.com/haproxytech/client-native/v6/config-parser"
+	"github.com/haproxytech/client-native/v6/configuration/options"
 	"github.com/haproxytech/client-native/v6/models"
 )
 
@@ -101,7 +102,7 @@ func (c *client) EditStructuredPeerSection(data *models.PeerSection, transaction
 		Parser:      &p,
 		Options:     &c.ConfigurationOptions,
 		HandleError: c.HandleError,
-	}, data); err != nil {
+	}, data, &c.ConfigurationOptions); err != nil {
 		return err
 	}
 	return c.SaveData(p, t, transactionID == "")
@@ -132,7 +133,7 @@ func (c *client) CreateStructuredPeerSection(data *models.PeerSection, transacti
 		Parser:      &p,
 		Options:     &c.ConfigurationOptions,
 		HandleError: c.HandleError,
-	}, data); err != nil {
+	}, data, &c.ConfigurationOptions); err != nil {
 		return err
 	}
 	return c.SaveData(p, t, transactionID == "")
@@ -212,7 +213,7 @@ func parsePeerSection(name string, p parser.Parser) (*models.PeerSection, error)
 	return ps, nil
 }
 
-func serializePeerSection(a StructuredToParserArgs, ps *models.PeerSection) error {
+func serializePeerSection(a StructuredToParserArgs, ps *models.PeerSection, opt *options.ConfigurationOptions) error {
 	p := *a.Parser
 	var err error
 	err = p.SectionsCreate(parser.Peers, ps.Name)
@@ -228,7 +229,7 @@ func serializePeerSection(a StructuredToParserArgs, ps *models.PeerSection) erro
 		}
 	}
 	for _, bind := range ps.Binds {
-		if err = p.Insert(parser.Peers, ps.Name, "bind", SerializeBind(bind), -1); err != nil {
+		if err = p.Insert(parser.Peers, ps.Name, "bind", SerializeBind(bind, opt), -1); err != nil {
 			return a.HandleError(bind.Name, PeersParentName, ps.Name, a.TID, a.TID == "", err)
 		}
 	}

@@ -23,6 +23,7 @@ import (
 
 	"github.com/google/go-cmp/cmp"
 	"github.com/haproxytech/client-native/v6/configuration"
+	"github.com/haproxytech/client-native/v6/misc"
 	"github.com/haproxytech/client-native/v6/models"
 	"github.com/stretchr/testify/require"
 )
@@ -177,6 +178,7 @@ func TestCreateEditDeleteBind(t *testing.T) {
 			Thread:         "odd",
 			Sigalgs:        "ECDSA+SHA256",
 			ClientSigalgs:  "ECDSA+SHA256:RSA+SHA256",
+			IdlePing:       misc.Int64P(10000),
 		},
 	}
 

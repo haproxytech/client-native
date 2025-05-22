@@ -192,6 +192,12 @@ bind_params:
     id:
       type: string
       x-display-name: Socket ID
+    idle_ping:
+      type: integer
+      minimum: 0
+      x-nullable: true
+      x-duration: true
+      x-default-unit: ms
     interface:
       type: string
     level:
