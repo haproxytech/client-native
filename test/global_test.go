@@ -185,6 +185,7 @@ func getGlobalBase() models.GlobalBase {
 		TuneOptions: &models.TuneOptions{
 			DisableZeroCopyForwarding:  true,
 			EventsMaxEventsAtOnce:      50,
+			GlitchesKillCPUUsage:       misc.Int64P(25),
 			H1ZeroCopyFwdRecv:          "disabled",
 			H1ZeroCopyFwdSend:          "disabled",
 			H2ZeroCopyFwdSend:          "disabled",

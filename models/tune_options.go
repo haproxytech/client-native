@@ -67,6 +67,13 @@ type TuneOptions struct {
 	// +kubebuilder:validation:Enum=enabled;disabled;
 	FdEdgeTriggered string `json:"fd_edge_triggered,omitempty"`
 
+	// glitches kill cpu usage
+	// Maximum: 100
+	// Minimum: 0
+	// +kubebuilder:validation:Maximum=100
+	// +kubebuilder:validation:Minimum=0
+	GlitchesKillCPUUsage *int64 `json:"glitches_kill_cpu_usage,omitempty"`
+
 	// h1 zero copy fwd recv
 	// Enum: ["enabled","disabled"]
 	// +kubebuilder:validation:Enum=enabled;disabled;
@@ -252,6 +259,10 @@ func (m *TuneOptions) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateFdEdgeTriggered(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateGlitchesKillCPUUsage(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -451,6 +462,22 @@ func (m *TuneOptions) validateFdEdgeTriggered(formats strfmt.Registry) error {
 
 	// value enum
 	if err := m.validateFdEdgeTriggeredEnum("fd_edge_triggered", "body", m.FdEdgeTriggered); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *TuneOptions) validateGlitchesKillCPUUsage(formats strfmt.Registry) error {
+	if swag.IsZero(m.GlitchesKillCPUUsage) { // not required
+		return nil
+	}
+
+	if err := validate.MinimumInt("glitches_kill_cpu_usage", "body", *m.GlitchesKillCPUUsage, 0, false); err != nil {
+		return err
+	}
+
+	if err := validate.MaximumInt("glitches_kill_cpu_usage", "body", *m.GlitchesKillCPUUsage, 100, false); err != nil {
 		return err
 	}
 

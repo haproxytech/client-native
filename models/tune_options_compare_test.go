@@ -91,6 +91,7 @@ func TestTuneOptionsEqualFalse(t *testing.T) {
 		result.DisableZeroCopyForwarding = !sample.DisableZeroCopyForwarding
 		result.EventsMaxEventsAtOnce = sample.EventsMaxEventsAtOnce + 1
 		result.FailAlloc = !sample.FailAlloc
+		result.GlitchesKillCPUUsage = Ptr(*sample.GlitchesKillCPUUsage + 1)
 		result.H2BeGlitchesThreshold = Ptr(*sample.H2BeGlitchesThreshold + 1)
 		result.H2BeInitialWindowSize = sample.H2BeInitialWindowSize + 1
 		result.H2BeMaxConcurrentStreams = sample.H2BeMaxConcurrentStreams + 1
@@ -209,6 +210,7 @@ func TestTuneOptionsDiffFalse(t *testing.T) {
 		result.DisableZeroCopyForwarding = !sample.DisableZeroCopyForwarding
 		result.EventsMaxEventsAtOnce = sample.EventsMaxEventsAtOnce + 1
 		result.FailAlloc = !sample.FailAlloc
+		result.GlitchesKillCPUUsage = Ptr(*sample.GlitchesKillCPUUsage + 1)
 		result.H2BeGlitchesThreshold = Ptr(*sample.H2BeGlitchesThreshold + 1)
 		result.H2BeInitialWindowSize = sample.H2BeInitialWindowSize + 1
 		result.H2BeMaxConcurrentStreams = sample.H2BeMaxConcurrentStreams + 1
@@ -250,7 +252,7 @@ func TestTuneOptionsDiffFalse(t *testing.T) {
 
 	for _, sample := range samples {
 		result := sample.a.Diff(sample.b)
-		if len(result) != 51 {
+		if len(result) != 52 {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {
@@ -260,7 +262,7 @@ func TestTuneOptionsDiffFalse(t *testing.T) {
 			if err != nil {
 				t.Error(err)
 			}
-			t.Errorf("Expected TuneOptions to be different in 51 cases, but it is not (%d) %s %s", len(result), a, b)
+			t.Errorf("Expected TuneOptions to be different in 52 cases, but it is not (%d) %s %s", len(result), a, b)
 		}
 	}
 }

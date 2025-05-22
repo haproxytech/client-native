@@ -287,6 +287,7 @@ func (p *configParser) getGlobalParser() *Parsers { //nolint: maintidx
 	addParser(parser, &sequence, &simple.Word{Name: "tune.epoll.mask-events"})
 	addParser(parser, &sequence, &simple.Number{Name: "tune.events.max-events-at-once"})
 	addParser(parser, &sequence, &simple.Enabled{Name: "tune.fail-alloc"})
+	addParser(parser, &sequence, &simple.Number{Name: "tune.glitches.kill.cpu-usage"})
 	addParser(parser, &sequence, &simple.OnOff{Name: "tune.fd.edge-triggered"})
 	addParser(parser, &sequence, &simple.OnOff{Name: "tune.h1.zero-copy-fwd-recv"})
 	addParser(parser, &sequence, &simple.OnOff{Name: "tune.h1.zero-copy-fwd-send"})

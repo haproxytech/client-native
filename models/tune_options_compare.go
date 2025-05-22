@@ -65,6 +65,10 @@ func (s TuneOptions) Equal(t TuneOptions, opts ...Options) bool {
 		return false
 	}
 
+	if !equalPointers(s.GlitchesKillCPUUsage, t.GlitchesKillCPUUsage) {
+		return false
+	}
+
 	if s.H1ZeroCopyFwdRecv != t.H1ZeroCopyFwdRecv {
 		return false
 	}
@@ -287,6 +291,10 @@ func (s TuneOptions) Diff(t TuneOptions, opts ...Options) map[string][]interface
 
 	if s.FdEdgeTriggered != t.FdEdgeTriggered {
 		diff["FdEdgeTriggered"] = []interface{}{s.FdEdgeTriggered, t.FdEdgeTriggered}
+	}
+
+	if !equalPointers(s.GlitchesKillCPUUsage, t.GlitchesKillCPUUsage) {
+		diff["GlitchesKillCPUUsage"] = []interface{}{ValueOrNil(s.GlitchesKillCPUUsage), ValueOrNil(t.GlitchesKillCPUUsage)}
 	}
 
 	if s.H1ZeroCopyFwdRecv != t.H1ZeroCopyFwdRecv {

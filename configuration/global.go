@@ -1305,6 +1305,15 @@ func parseTuneOptions(p parser.Parser) (*models.TuneOptions, error) { //nolint:g
 		options.FailAlloc = boolOption
 	}
 
+	intPOption, err = parseInt64POption(p, "tune.glitches.kill.cpu-usage")
+	if err != nil {
+		return nil, err
+	}
+	if intOption != 0 {
+		isEmpty = false
+		options.GlitchesKillCPUUsage = intPOption
+	}
+
 	intOption, err = parseInt64Option(p, "tune.h2.header-table-size")
 	if err != nil {
 		return nil, err
@@ -3765,6 +3774,9 @@ func serializeTuneOptions(p parser.Parser, options *models.TuneOptions, configOp
 		return err
 	}
 	if err := serializeBoolOption(p, "tune.fail-alloc", options.FailAlloc); err != nil {
+		return err
+	}
+	if err := serializeInt64POption(p, "tune.glitches.kill.cpu-usage", options.GlitchesKillCPUUsage); err != nil {
 		return err
 	}
 	if err := serializeInt64Option(p, "tune.h2.header-table-size", options.H2HeaderTableSize); err != nil {

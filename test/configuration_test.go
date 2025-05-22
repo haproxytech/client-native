@@ -60,6 +60,7 @@ global
   tune.disable-zero-copy-forwarding
   tune.events.max-events-at-once 10
   tune.fail-alloc
+  tune.glitches.kill.cpu-usage 75
   tune.fd.edge-triggered on
   tune.h1.zero-copy-fwd-recv on
   tune.h1.zero-copy-fwd-send on

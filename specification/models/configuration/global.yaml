@@ -481,6 +481,12 @@ tune_options:
     fail_alloc:
       type: boolean
       x-display-name: Failed Allocation Chance
+    glitches_kill_cpu_usage:
+      type: integer
+      minimum: 0
+      maximum: 100
+      x-nullable: true
+      x-display-name: CPU Usage Kill glitched Connections
     h1_zero_copy_fwd_recv:
       type: string
       enum: [enabled, disabled]
@@ -651,6 +657,7 @@ tune_options:
     takeover_other_tg_connections:
       type: string
       enum: ["none", "restricted", "full"]
+      x-display-name: Takeover Other Thread Groups Connections
     fd_edge_triggered:
       type: string
       enum: [enabled, disabled]

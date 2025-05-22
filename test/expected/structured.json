@@ -285,6 +285,7 @@
             ],
             "events_max_events_at_once": 10,
             "fail_alloc": true,
+            "glitches_kill_cpu_usage": 75,
             "fd_edge_triggered": "enabled",
             "h1_zero_copy_fwd_recv": "enabled",
             "h1_zero_copy_fwd_send": "enabled",

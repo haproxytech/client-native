@@ -1511,6 +1511,12 @@ definitions:
           - disabled
         type: string
         x-display-name: Edge-triggered polling mode
+      glitches_kill_cpu_usage:
+        maximum: 100
+        minimum: 0
+        type: integer
+        x-display-name: CPU Usage Kill glitched Connections
+        x-nullable: true
       h1_zero_copy_fwd_recv:
         enum:
           - enabled
@@ -1701,6 +1707,7 @@ definitions:
           - restricted
           - full
         type: string
+        x-display-name: Takeover Other Thread Groups Connections
     type: object
   tune_quic_options:
     properties:
