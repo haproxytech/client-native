@@ -2890,7 +2890,11 @@
                     "address": "192.168.1.1",
                     "port": 8080,
                     "force_tlsv10": true,
-                    "tlsv10": "enabled"
+                    "ssl": true,
+                    "tlsv10": "enabled",
+                    "no_strict_sni": true,
+                    "force_strict_sni": "disabled",
+                    "tls_tickets": "enabled"
                 },
                 "webserv3": {
                     "name": "webserv3",
@@ -2898,7 +2902,11 @@
                     "address": "192.168.1.2",
                     "port": 8080,
                     "no_tlsv10": true,
-                    "tlsv10": "disabled"
+                    "tlsv10": "disabled",
+                    "strict_sni": true,
+                    "force_strict_sni": "enabled",
+                    "no_tls_tickets": true,
+                    "tls_tickets": "disabled"
                 },
                 "test-quic-algo": {
                     "name": "test-quic-algo",

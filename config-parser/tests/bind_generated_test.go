@@ -155,6 +155,8 @@ func TestBind(t *testing.T) {
 		"bind :443 default-crt foobar.pem.rsa default-crt foobar.pem.ecdsa": true,
 		"bind :443 idle-ping 10s":              true,
 		"bind :443 idle-ping 10":               true,
+		"bind :443 ssl tls-tickets":            true,
+		"bind :443 ssl no-strict-sni":          true,
 		"bind":                                 false,
 		"bind :443 quic-cc-algo something":     false,
 		"bind :443 quic-cc-algo nocc()":        false,

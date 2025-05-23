@@ -101,6 +101,11 @@ type BindParams struct {
 	// This field is deprecated in favor of sslv3, and will be removed in a future release
 	ForceSslv3 bool `json:"force_sslv3,omitempty"`
 
+	// force strict sni
+	// Enum: ["enabled","disabled"]
+	// +kubebuilder:validation:Enum=enabled;disabled;
+	ForceStrictSni string `json:"force_strict_sni,omitempty"`
+
 	// This field is deprecated in favor of tlsv10, and will be removed in a future release
 	ForceTlsv10 bool `json:"force_tlsv10,omitempty"`
 
@@ -179,7 +184,10 @@ type BindParams struct {
 	// This field is deprecated in favor of sslv3, and will be removed in a future release
 	NoSslv3 bool `json:"no_sslv3,omitempty"`
 
-	// no tls tickets
+	// no strict sni
+	NoStrictSni bool `json:"no_strict_sni,omitempty"`
+
+	// This field is deprecated in favor of tls_tickets, and will be removed in a future release
 	NoTLSTickets bool `json:"no_tls_tickets,omitempty"`
 
 	// This field is deprecated in favor of tlsv10, and will be removed in a future release
@@ -282,6 +290,11 @@ type BindParams struct {
 	// tls ticket keys
 	TLSTicketKeys string `json:"tls_ticket_keys,omitempty"`
 
+	// tls tickets
+	// Enum: ["enabled","disabled"]
+	// +kubebuilder:validation:Enum=enabled;disabled;
+	TLSTickets string `json:"tls_tickets,omitempty"`
+
 	// tlsv10
 	// Enum: ["enabled","disabled"]
 	// +kubebuilder:validation:Enum=enabled;disabled;
@@ -333,6 +346,10 @@ func (m *BindParams) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateDefaultCrtList(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateForceStrictSni(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -392,6 +409,10 @@ func (m *BindParams) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
+	if err := m.validateTLSTickets(formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.validateTlsv10(formats); err != nil {
 		res = append(res, err)
 	}
@@ -441,6 +462,48 @@ func (m *BindParams) validateDefaultCrtList(formats strfmt.Registry) error {
 			return err
 		}
 
+	}
+
+	return nil
+}
+
+var bindParamsTypeForceStrictSniPropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		bindParamsTypeForceStrictSniPropEnum = append(bindParamsTypeForceStrictSniPropEnum, v)
+	}
+}
+
+const (
+
+	// BindParamsForceStrictSniEnabled captures enum value "enabled"
+	BindParamsForceStrictSniEnabled string = "enabled"
+
+	// BindParamsForceStrictSniDisabled captures enum value "disabled"
+	BindParamsForceStrictSniDisabled string = "disabled"
+)
+
+// prop value enum
+func (m *BindParams) validateForceStrictSniEnum(path, location string, value string) error {
+	if err := validate.EnumCase(path, location, value, bindParamsTypeForceStrictSniPropEnum, true); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *BindParams) validateForceStrictSni(formats strfmt.Registry) error {
+	if swag.IsZero(m.ForceStrictSni) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateForceStrictSniEnum("force_strict_sni", "body", m.ForceStrictSni); err != nil {
+		return err
 	}
 
 	return nil
@@ -856,6 +919,48 @@ func (m *BindParams) validateSslv3(formats strfmt.Registry) error {
 
 	// value enum
 	if err := m.validateSslv3Enum("sslv3", "body", m.Sslv3); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+var bindParamsTypeTLSTicketsPropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		bindParamsTypeTLSTicketsPropEnum = append(bindParamsTypeTLSTicketsPropEnum, v)
+	}
+}
+
+const (
+
+	// BindParamsTLSTicketsEnabled captures enum value "enabled"
+	BindParamsTLSTicketsEnabled string = "enabled"
+
+	// BindParamsTLSTicketsDisabled captures enum value "disabled"
+	BindParamsTLSTicketsDisabled string = "disabled"
+)
+
+// prop value enum
+func (m *BindParams) validateTLSTicketsEnum(path, location string, value string) error {
+	if err := validate.EnumCase(path, location, value, bindParamsTypeTLSTicketsPropEnum, true); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *BindParams) validateTLSTickets(formats strfmt.Registry) error {
+	if swag.IsZero(m.TLSTickets) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateTLSTicketsEnum("tls_tickets", "body", m.TLSTickets); err != nil {
 		return err
 	}
 

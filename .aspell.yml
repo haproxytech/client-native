@@ -141,6 +141,7 @@ allowed:
   - scrollbar
   - scss
   - searchselect
+  - sni
   - spammy
   - ssl
   - sso

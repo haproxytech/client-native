@@ -105,6 +105,7 @@ func TestBindParamsEqualFalse(t *testing.T) {
 		result.NoAlpn = !sample.NoAlpn
 		result.NoCaNames = !sample.NoCaNames
 		result.NoSslv3 = !sample.NoSslv3
+		result.NoStrictSni = !sample.NoStrictSni
 		result.NoTLSTickets = !sample.NoTLSTickets
 		result.NoTlsv10 = !sample.NoTlsv10
 		result.NoTlsv11 = !sample.NoTlsv11
@@ -219,6 +220,7 @@ func TestBindParamsDiffFalse(t *testing.T) {
 		result.NoAlpn = !sample.NoAlpn
 		result.NoCaNames = !sample.NoCaNames
 		result.NoSslv3 = !sample.NoSslv3
+		result.NoStrictSni = !sample.NoStrictSni
 		result.NoTLSTickets = !sample.NoTLSTickets
 		result.NoTlsv10 = !sample.NoTlsv10
 		result.NoTlsv11 = !sample.NoTlsv11
@@ -242,7 +244,7 @@ func TestBindParamsDiffFalse(t *testing.T) {
 
 	for _, sample := range samples {
 		result := sample.a.Diff(sample.b)
-		if len(result) != 79 {
+		if len(result) != 82 {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {
@@ -252,7 +254,7 @@ func TestBindParamsDiffFalse(t *testing.T) {
 			if err != nil {
 				t.Error(err)
 			}
-			t.Errorf("Expected BindParams to be different in 79 cases, but it is not (%d) %s %s", len(result), a, b)
+			t.Errorf("Expected BindParams to be different in 82 cases, but it is not (%d) %s %s", len(result), a, b)
 		}
 	}
 }

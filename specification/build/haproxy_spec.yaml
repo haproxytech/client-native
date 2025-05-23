@@ -319,6 +319,14 @@ definitions:
         description: This field is deprecated in favor of sslv3, and will be removed in a future release
         type: boolean
         x-deprecated: true
+      force_strict_sni:
+        enum:
+          - enabled
+          - disabled
+        type: string
+        x-dependency:
+          ssl:
+            value: true
       force_tlsv10:
         description: This field is deprecated in favor of tlsv10, and will be removed in a future release
         type: boolean
@@ -404,11 +412,19 @@ definitions:
           ssl:
             value: true
         x-deprecated: true
-      no_tls_tickets:
+      no_strict_sni:
         type: boolean
         x-dependency:
           ssl:
             value: true
+        x-deprecated: true
+      no_tls_tickets:
+        description: This field is deprecated in favor of tls_tickets, and will be removed in a future release
+        type: boolean
+        x-dependency:
+          ssl:
+            value: true
+        x-deprecated: true
       no_tlsv10:
         description: This field is deprecated in favor of tlsv10, and will be removed in a future release
         type: boolean
@@ -531,6 +547,7 @@ definitions:
         x-dependency:
           ssl:
             value: true
+        x-deprecated: true
       tcp_user_timeout:
         type: integer
         x-nullable: true
@@ -540,6 +557,14 @@ definitions:
         type: string
       tls_ticket_keys:
         type: string
+      tls_tickets:
+        enum:
+          - enabled
+          - disabled
+        type: string
+        x-dependency:
+          ssl:
+            value: true
       tlsv10:
         enum:
           - enabled

@@ -279,10 +279,17 @@ func parseBindParams(bindOptions []params.BindOption) models.BindParams { //noli
 				b.NoCaNames = true
 			case "no-tls-tickets":
 				b.NoTLSTickets = true
+				b.TLSTickets = "disabled"
+			case "tls-tickets":
+				b.TLSTickets = "enabled"
 			case "prefer-client-ciphers":
 				b.PreferClientCiphers = true
 			case "strict-sni":
 				b.StrictSni = true
+				b.ForceStrictSni = "enabled"
+			case "no-strict-sni":
+				b.NoStrictSni = true
+				b.ForceStrictSni = "disabled"
 			case "tfo":
 				b.Tfo = true
 			case "v6only":
@@ -575,6 +582,13 @@ func serializeBindParams(b models.BindParams, path string, opt *options.Configur
 		b.NoTlsv13 {
 		options = append(options, &params.BindOptionWord{Name: "no-tlsv13"})
 	}
+	if b.TLSTickets == "disabled" ||
+		b.NoTLSTickets {
+		options = append(options, &params.BindOptionWord{Name: "no-tls-tickets"})
+	}
+	if b.TLSTickets == "disabled" {
+		options = append(options, &params.BindOptionWord{Name: "tls-tickets"})
+	}
 	if b.GenerateCertificates {
 		options = append(options, &params.BindOptionWord{Name: "generate-certificates"})
 	}
@@ -620,9 +634,6 @@ func serializeBindParams(b models.BindParams, path string, opt *options.Configur
 	if b.NoCaNames {
 		options = append(options, &params.BindOptionWord{Name: "no-ca-names"})
 	}
-	if b.NoTLSTickets {
-		options = append(options, &params.BindOptionWord{Name: "no-tls-tickets"})
-	}
 	if b.Npn != "" {
 		options = append(options, &params.BindOptionValue{Name: "npn", Value: b.Npn})
 	}
@@ -641,8 +652,13 @@ func serializeBindParams(b models.BindParams, path string, opt *options.Configur
 	if b.SslMinVer != "" {
 		options = append(options, &params.BindOptionValue{Name: "ssl-min-ver", Value: b.SslMinVer})
 	}
-	if b.StrictSni {
+	if b.ForceStrictSni == "enabled" ||
+		b.StrictSni {
 		options = append(options, &params.BindOptionWord{Name: "strict-sni"})
+	}
+	if b.ForceStrictSni == "disabled" ||
+		b.NoStrictSni {
+		options = append(options, &params.BindOptionWord{Name: "no-strict-sni"})
 	}
 	if b.Tfo {
 		options = append(options, &params.BindOptionWord{Name: "tfo"})

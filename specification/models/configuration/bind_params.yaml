@@ -240,7 +240,15 @@ bind_params:
         ssl:
           value: true
     no_tls_tickets:
+      x-deprecated: true
       type: boolean
+      x-dependency:
+        ssl:
+          value: true
+      description: This field is deprecated in favor of tls_tickets, and will be removed in a future release
+    tls_tickets:
+      type: string
+      enum: [enabled, disabled]
       x-dependency:
         ssl:
           value: true
@@ -279,6 +287,19 @@ bind_params:
       enum: [SSLv3, TLSv1.0, TLSv1.1, TLSv1.2, TLSv1.3]
     strict_sni:
       type: boolean
+      x-deprecated: true
+      x-dependency:
+        ssl:
+          value: true
+    no_strict_sni:
+      type: boolean
+      x-deprecated: true
+      x-dependency:
+        ssl:
+          value: true
+    force_strict_sni:
+      type: string
+      enum: [enabled, disabled]
       x-dependency:
         ssl:
           value: true

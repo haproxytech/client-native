@@ -589,6 +589,14 @@ const frontend_bind443idleping10 = `
 frontend test
   bind :443 idle-ping 10
 `
+const frontend_bind443ssltlstickets = `
+frontend test
+  bind :443 ssl tls-tickets
+`
+const frontend_bind443sslnostrictsni = `
+frontend test
+  bind :443 ssl no-strict-sni
+`
 const frontend_bindprocessall = `
 frontend test
   bind-process all
