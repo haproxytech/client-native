@@ -65,12 +65,12 @@ func parseAcmeStatus(resp string) (models.AcmeStatus, error) {
 			return false
 		}
 
-		exp, e := time.Parse(time.RFC3339, parts[3])
+		exp, e := parseAcmeDate(parts[3])
 		if e != nil {
 			err = fmt.Errorf("failed to parse date in response: '%s': %w", parts[3], e)
 			return false
 		}
-		sched, e := time.Parse(time.RFC3339, parts[5])
+		sched, e := parseAcmeDate(parts[5])
 		if e != nil {
 			err = fmt.Errorf("failed to parse date in response: '%s': %w", parts[5], e)
 			return false
@@ -91,4 +91,11 @@ func parseAcmeStatus(resp string) (models.AcmeStatus, error) {
 	})
 
 	return status, err
+}
+
+func parseAcmeDate(s string) (time.Time, error) {
+	if s == "-" {
+		return time.Time{}, nil
+	}
+	return time.Parse(time.RFC3339, s)
 }
