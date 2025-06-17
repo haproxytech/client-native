@@ -403,13 +403,35 @@ definitions:
   ssl_certificate:
     $ref: "models/storage/ssl_certificate.yaml#/ssl_certificate"
   ssl_certificates:
-    title: SSL Files Array
+    title: SSL Certificate Files Array
     description: Array of ssl certificate files
     type: array
     items:
       $ref: "#/definitions/ssl_certificate"
-  ssl_cert_entry:
-    $ref: "models/runtime/ssl_cert_entry.yaml#/ssl_cert_entry"
+  ssl_ca_file:
+    $ref: "models/storage/ssl_ca_file.yaml#/ssl_ca_file"
+  ssl_ca_files:
+    title: SSL CA Files Array
+    description: Array of SSL CA files
+    type: array
+    items:
+      $ref: "#/definitions/ssl_ca_file"
+  ssl_crt_list:
+    $ref: "models/runtime/ssl_crt_list.yaml#/ssl_crt_list"
+  ssl_crt_lists:
+    title: SSL Crt List Array
+    description: Array of SSL Crt List
+    type: array
+    items:
+      $ref: "#/definitions/ssl_crt_list"
+  ssl_crt_list_entry:
+    $ref: "models/runtime/ssl_crt_list_entry.yaml#/ssl_crt_list_entry"
+  ssl_crt_list_entries:
+    title: SSL Crt List Entry Array
+    description: Array of SSL Crt List Entry
+    type: array
+    items:
+      $ref: "#/definitions/ssl_crt_list_entry"
   acl_file:
     $ref: "models/runtime/acl_file.yaml#/acl_file"
   acl_files:

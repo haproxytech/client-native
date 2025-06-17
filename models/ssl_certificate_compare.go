@@ -37,6 +37,22 @@ import (
 func (s SslCertificate) Equal(t SslCertificate, opts ...Options) bool {
 	opt := getOptions(opts...)
 
+	if s.Algorithm != t.Algorithm {
+		return false
+	}
+
+	if s.AuthorityKeyID != t.AuthorityKeyID {
+		return false
+	}
+
+	if s.ChainIssuer != t.ChainIssuer {
+		return false
+	}
+
+	if s.ChainSubject != t.ChainSubject {
+		return false
+	}
+
 	if s.Description != t.Description {
 		return false
 	}
@@ -101,11 +117,39 @@ func (s SslCertificate) Equal(t SslCertificate, opts ...Options) bool {
 		return false
 	}
 
+	if s.Serial != t.Serial {
+		return false
+	}
+
+	if s.Sha1FingerPrint != t.Sha1FingerPrint {
+		return false
+	}
+
+	if s.Sha256FingerPrint != t.Sha256FingerPrint {
+		return false
+	}
+
 	if !equalPointers(s.Size, t.Size) {
 		return false
 	}
 
+	if s.Status != t.Status {
+		return false
+	}
+
 	if s.StorageName != t.StorageName {
+		return false
+	}
+
+	if s.Subject != t.Subject {
+		return false
+	}
+
+	if s.SubjectAlternativeNames != t.SubjectAlternativeNames {
+		return false
+	}
+
+	if s.SubjectKeyID != t.SubjectKeyID {
 		return false
 	}
 
@@ -129,6 +173,22 @@ func (s SslCertificate) Diff(t SslCertificate, opts ...Options) map[string][]int
 	opt := getOptions(opts...)
 
 	diff := make(map[string][]interface{})
+	if s.Algorithm != t.Algorithm {
+		diff["Algorithm"] = []interface{}{s.Algorithm, t.Algorithm}
+	}
+
+	if s.AuthorityKeyID != t.AuthorityKeyID {
+		diff["AuthorityKeyID"] = []interface{}{s.AuthorityKeyID, t.AuthorityKeyID}
+	}
+
+	if s.ChainIssuer != t.ChainIssuer {
+		diff["ChainIssuer"] = []interface{}{s.ChainIssuer, t.ChainIssuer}
+	}
+
+	if s.ChainSubject != t.ChainSubject {
+		diff["ChainSubject"] = []interface{}{s.ChainSubject, t.ChainSubject}
+	}
+
 	if s.Description != t.Description {
 		diff["Description"] = []interface{}{s.Description, t.Description}
 	}
@@ -193,12 +253,40 @@ func (s SslCertificate) Diff(t SslCertificate, opts ...Options) map[string][]int
 		diff["NotBefore"] = []interface{}{ValueOrNil(s.NotBefore), ValueOrNil(t.NotBefore)}
 	}
 
+	if s.Serial != t.Serial {
+		diff["Serial"] = []interface{}{s.Serial, t.Serial}
+	}
+
+	if s.Sha1FingerPrint != t.Sha1FingerPrint {
+		diff["Sha1FingerPrint"] = []interface{}{s.Sha1FingerPrint, t.Sha1FingerPrint}
+	}
+
+	if s.Sha256FingerPrint != t.Sha256FingerPrint {
+		diff["Sha256FingerPrint"] = []interface{}{s.Sha256FingerPrint, t.Sha256FingerPrint}
+	}
+
 	if !equalPointers(s.Size, t.Size) {
 		diff["Size"] = []interface{}{ValueOrNil(s.Size), ValueOrNil(t.Size)}
 	}
 
+	if s.Status != t.Status {
+		diff["Status"] = []interface{}{s.Status, t.Status}
+	}
+
 	if s.StorageName != t.StorageName {
 		diff["StorageName"] = []interface{}{s.StorageName, t.StorageName}
+	}
+
+	if s.Subject != t.Subject {
+		diff["Subject"] = []interface{}{s.Subject, t.Subject}
+	}
+
+	if s.SubjectAlternativeNames != t.SubjectAlternativeNames {
+		diff["SubjectAlternativeNames"] = []interface{}{s.SubjectAlternativeNames, t.SubjectAlternativeNames}
+	}
+
+	if s.SubjectKeyID != t.SubjectKeyID {
+		diff["SubjectKeyID"] = []interface{}{s.SubjectKeyID, t.SubjectKeyID}
 	}
 
 	return diff

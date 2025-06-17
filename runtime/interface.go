@@ -139,13 +139,28 @@ type Raw interface {
 }
 
 type Cert interface {
+	ShowCAFiles() (models.SslCaFiles, error)
+	GetCAFile(name string) (*models.SslCaFile, error)
+	ShowCAFile(name string, index *int64) (*models.SslCertificate, error)
+	NewCAFile(name string) error
+	SetCAFile(name, payload string) error
+	CommitCAFile(name string) error
+	AbortCAFile(name string) error
+	AddCAFileEntry(name, payload string) error
+	DeleteCAFile(name string) error
+	ShowCerts() (models.SslCertificates, error)
+	GetCert(name string) (*models.SslCertificate, error)
+	ShowCertificate(name string) (*models.SslCertificate, error)
 	NewCertEntry(filename string) error
 	SetCertEntry(filename, payload string) error
 	CommitCertEntry(filename string) error
 	AbortCertEntry(filename string) error
-	AddCrtListEntry(crtList string, entry CrtListEntry) error
-	DeleteCrtListEntry(crtList, filename string, lineNumber *int64) error
 	DeleteCertEntry(filename string) error
+	ShowCrtLists() (models.SslCrtLists, error)
+	GetCrtList(name string) (*models.SslCrtList, error)
+	ShowCrtListEntries(name string) (models.SslCrtListEntries, error)
+	AddCrtListEntry(crtList string, entry models.SslCrtListEntry) error
+	DeleteCrtListEntry(crtList, filename string, lineNumber *int64) error
 }
 
 type Runtime interface {

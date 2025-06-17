@@ -36,6 +36,18 @@ import (
 // swagger:model ssl_certificate
 type SslCertificate struct {
 
+	// algorithm
+	Algorithm string `json:"algorithm,omitempty"`
+
+	// authority key id
+	AuthorityKeyID string `json:"authority_key_id,omitempty"`
+
+	// chain issuer
+	ChainIssuer string `json:"chain_issuer,omitempty"`
+
+	// chain subject
+	ChainSubject string `json:"chain_subject,omitempty"`
+
 	// description
 	Description string `json:"description,omitempty"`
 
@@ -66,12 +78,34 @@ type SslCertificate struct {
 	// +kubebuilder:validation:Format=date-time
 	NotBefore *strfmt.DateTime `json:"not_before,omitempty" gorm:"type:timestamp with time zone"`
 
+	// serial
+	Serial string `json:"serial,omitempty"`
+
+	// sha1 finger print
+	Sha1FingerPrint string `json:"sha1_finger_print,omitempty"`
+
+	// sha256 finger print
+	Sha256FingerPrint string `json:"sha256_finger_print,omitempty"`
+
 	// File size in bytes.
 	// Read Only: true
 	Size *int64 `json:"size,omitempty"`
 
+	// Only set when using the runtime API.
+	// Read Only: true
+	Status string `json:"status,omitempty"`
+
 	// storage name
 	StorageName string `json:"storage_name,omitempty"`
+
+	// subject
+	Subject string `json:"subject,omitempty"`
+
+	// subject alternative names
+	SubjectAlternativeNames string `json:"subject_alternative_names,omitempty"`
+
+	// subject key id
+	SubjectKeyID string `json:"subject_key_id,omitempty"`
 }
 
 // Validate validates this ssl certificate
@@ -144,6 +178,10 @@ func (m *SslCertificate) ContextValidate(ctx context.Context, formats strfmt.Reg
 		res = append(res, err)
 	}
 
+	if err := m.contextValidateStatus(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
 	if len(res) > 0 {
 		return errors.CompositeValidationError(res...)
 	}
@@ -198,6 +236,15 @@ func (m *SslCertificate) contextValidateNotBefore(ctx context.Context, formats s
 func (m *SslCertificate) contextValidateSize(ctx context.Context, formats strfmt.Registry) error {
 
 	if err := validate.ReadOnly(ctx, "size", "body", m.Size); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *SslCertificate) contextValidateStatus(ctx context.Context, formats strfmt.Registry) error {
+
+	if err := validate.ReadOnly(ctx, "status", "body", string(m.Status)); err != nil {
 		return err
 	}
 

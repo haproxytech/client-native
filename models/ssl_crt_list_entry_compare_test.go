@@ -19,23 +19,20 @@ package models
 
 import (
 	"encoding/json"
-	"math/rand"
 	"testing"
-	"time"
 
 	"github.com/go-faker/faker/v4"
-	"github.com/go-openapi/strfmt"
 
 	jsoniter "github.com/json-iterator/go"
 )
 
-func TestSslCertEntryEqual(t *testing.T) {
+func TestSslCrtListEntryEqual(t *testing.T) {
 	samples := []struct {
-		a, b SslCertEntry
+		a, b SslCrtListEntry
 	}{}
 	for i := 0; i < 2; i++ {
-		var sample SslCertEntry
-		var result SslCertEntry
+		var sample SslCrtListEntry
+		var result SslCrtListEntry
 		err := faker.FakeData(&sample)
 		if err != nil {
 			t.Errorf(err.Error())
@@ -50,7 +47,7 @@ func TestSslCertEntryEqual(t *testing.T) {
 		}
 
 		samples = append(samples, struct {
-			a, b SslCertEntry
+			a, b SslCrtListEntry
 		}{sample, result})
 	}
 
@@ -66,18 +63,18 @@ func TestSslCertEntryEqual(t *testing.T) {
 			if err != nil {
 				t.Errorf(err.Error())
 			}
-			t.Errorf("Expected SslCertEntry to be equal, but it is not %s %s", a, b)
+			t.Errorf("Expected SslCrtListEntry to be equal, but it is not %s %s", a, b)
 		}
 	}
 }
 
-func TestSslCertEntryEqualFalse(t *testing.T) {
+func TestSslCrtListEntryEqualFalse(t *testing.T) {
 	samples := []struct {
-		a, b SslCertEntry
+		a, b SslCrtListEntry
 	}{}
 	for i := 0; i < 2; i++ {
-		var sample SslCertEntry
-		var result SslCertEntry
+		var sample SslCrtListEntry
+		var result SslCrtListEntry
 		err := faker.FakeData(&sample)
 		if err != nil {
 			t.Errorf(err.Error())
@@ -86,10 +83,9 @@ func TestSslCertEntryEqualFalse(t *testing.T) {
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		result.NotAfter = strfmt.Date(time.Now().AddDate(rand.Intn(10), rand.Intn(12), rand.Intn(28)))
-		result.NotBefore = strfmt.Date(time.Now().AddDate(rand.Intn(10), rand.Intn(12), rand.Intn(28)))
+		result.LineNumber = sample.LineNumber + 1
 		samples = append(samples, struct {
-			a, b SslCertEntry
+			a, b SslCrtListEntry
 		}{sample, result})
 	}
 
@@ -105,18 +101,18 @@ func TestSslCertEntryEqualFalse(t *testing.T) {
 			if err != nil {
 				t.Errorf(err.Error())
 			}
-			t.Errorf("Expected SslCertEntry to be different, but it is not %s %s", a, b)
+			t.Errorf("Expected SslCrtListEntry to be different, but it is not %s %s", a, b)
 		}
 	}
 }
 
-func TestSslCertEntryDiff(t *testing.T) {
+func TestSslCrtListEntryDiff(t *testing.T) {
 	samples := []struct {
-		a, b SslCertEntry
+		a, b SslCrtListEntry
 	}{}
 	for i := 0; i < 2; i++ {
-		var sample SslCertEntry
-		var result SslCertEntry
+		var sample SslCrtListEntry
+		var result SslCrtListEntry
 		err := faker.FakeData(&sample)
 		if err != nil {
 			t.Errorf(err.Error())
@@ -131,7 +127,7 @@ func TestSslCertEntryDiff(t *testing.T) {
 		}
 
 		samples = append(samples, struct {
-			a, b SslCertEntry
+			a, b SslCrtListEntry
 		}{sample, result})
 	}
 
@@ -147,18 +143,18 @@ func TestSslCertEntryDiff(t *testing.T) {
 			if err != nil {
 				t.Errorf(err.Error())
 			}
-			t.Errorf("Expected SslCertEntry to be equal, but it is not %s %s, %v", a, b, result)
+			t.Errorf("Expected SslCrtListEntry to be equal, but it is not %s %s, %v", a, b, result)
 		}
 	}
 }
 
-func TestSslCertEntryDiffFalse(t *testing.T) {
+func TestSslCrtListEntryDiffFalse(t *testing.T) {
 	samples := []struct {
-		a, b SslCertEntry
+		a, b SslCrtListEntry
 	}{}
 	for i := 0; i < 2; i++ {
-		var sample SslCertEntry
-		var result SslCertEntry
+		var sample SslCrtListEntry
+		var result SslCrtListEntry
 		err := faker.FakeData(&sample)
 		if err != nil {
 			t.Errorf(err.Error())
@@ -167,16 +163,15 @@ func TestSslCertEntryDiffFalse(t *testing.T) {
 		if err != nil {
 			t.Errorf(err.Error())
 		}
-		result.NotAfter = strfmt.Date(time.Now().AddDate(rand.Intn(10), rand.Intn(12), rand.Intn(28)))
-		result.NotBefore = strfmt.Date(time.Now().AddDate(rand.Intn(10), rand.Intn(12), rand.Intn(28)))
+		result.LineNumber = sample.LineNumber + 1
 		samples = append(samples, struct {
-			a, b SslCertEntry
+			a, b SslCrtListEntry
 		}{sample, result})
 	}
 
 	for _, sample := range samples {
 		result := sample.a.Diff(sample.b)
-		if len(result) != 12 {
+		if len(result) != 4 {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {
@@ -186,7 +181,7 @@ func TestSslCertEntryDiffFalse(t *testing.T) {
 			if err != nil {
 				t.Errorf(err.Error())
 			}
-			t.Errorf("Expected SslCertEntry to be different in 12 cases, but it is not (%d) %s %s", len(result), a, b)
+			t.Errorf("Expected SslCrtListEntry to be different in 4 cases, but it is not (%d) %s %s", len(result), a, b)
 		}
 	}
 }

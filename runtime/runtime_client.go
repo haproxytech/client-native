@@ -1228,7 +1228,7 @@ func (c *client) NewCertEntry(filename string) error {
 	}
 	var lastErr error
 	for _, runtime := range c.runtimes {
-		err := runtime.NewCertEntry(filename)
+		err := runtime.NewCertificate(filename)
 		if err != nil {
 			lastErr = err
 		}
@@ -1245,7 +1245,7 @@ func (c *client) SetCertEntry(filename string, payload string) error {
 	}
 	var lastErr error
 	for _, runtime := range c.runtimes {
-		err := runtime.SetCertEntry(filename, payload)
+		err := runtime.SetCertificate(filename, payload)
 		if err != nil {
 			lastErr = err
 		}
@@ -1262,7 +1262,7 @@ func (c *client) CommitCertEntry(filename string) error {
 	}
 	var lastErr error
 	for _, runtime := range c.runtimes {
-		err := runtime.CommitCertEntry(filename)
+		err := runtime.CommitCertificate(filename)
 		if err != nil {
 			lastErr = err
 		}
@@ -1279,7 +1279,7 @@ func (c *client) AbortCertEntry(filename string) error {
 	}
 	var lastErr error
 	for _, runtime := range c.runtimes {
-		err := runtime.AbortCertEntry(filename)
+		err := runtime.AbortCertificate(filename)
 		if err != nil {
 			lastErr = err
 		}
@@ -1290,7 +1290,7 @@ func (c *client) AbortCertEntry(filename string) error {
 	return nil
 }
 
-func (c *client) AddCrtListEntry(crtList string, entry CrtListEntry) error {
+func (c *client) AddCrtListEntry(crtList string, entry models.SslCrtListEntry) error {
 	if len(c.runtimes) == 0 {
 		return fmt.Errorf("no valid runtimes found")
 	}
@@ -1330,7 +1330,7 @@ func (c *client) DeleteCertEntry(filename string) error {
 	}
 	var lastErr error
 	for _, runtime := range c.runtimes {
-		err := runtime.DeleteCertEntry(filename)
+		err := runtime.DeleteCertificate(filename)
 		if err != nil {
 			lastErr = err
 		}
@@ -1339,4 +1339,292 @@ func (c *client) DeleteCertEntry(filename string) error {
 		return lastErr
 	}
 	return nil
+}
+
+// ShowCAFiles returns CA files description from runtime
+func (c *client) ShowCAFiles() (models.SslCaFiles, error) {
+	if len(c.runtimes) == 0 {
+		return nil, fmt.Errorf("no valid runtimes found")
+	}
+	var sslCaFile models.SslCaFiles
+	var lastErr error
+	var err error
+	for _, runtime := range c.runtimes {
+		sslCaFile, err = runtime.ShowCAFiles()
+		if err != nil {
+			lastErr = err
+		}
+	}
+	if lastErr != nil {
+		return nil, lastErr
+	}
+	return sslCaFile, nil
+}
+
+// GetCAFile returns one structured runtime CA file
+func (c *client) GetCAFile(name string) (*models.SslCaFile, error) {
+	if len(c.runtimes) == 0 {
+		return nil, fmt.Errorf("no valid runtimes found")
+	}
+	var sslCaFile *models.SslCaFile
+	var lastErr error
+	var err error
+	for _, runtime := range c.runtimes {
+		sslCaFile, err = runtime.GetCAFile(name)
+		if err != nil {
+			lastErr = err
+		}
+	}
+	if lastErr != nil {
+		return nil, lastErr
+	}
+	return sslCaFile, nil
+}
+
+// ShowCAFile returns one CA runtime file
+func (c *client) ShowCAFile(name string, index *int64) (*models.SslCertificate, error) {
+	if len(c.runtimes) == 0 {
+		return nil, fmt.Errorf("no valid runtimes found")
+	}
+	var sslCertEntry *models.SslCertificate
+	var lastErr error
+	var err error
+	for _, runtime := range c.runtimes {
+		sslCertEntry, err = runtime.ShowCAFile(name, index)
+		if err != nil {
+			lastErr = err
+		}
+	}
+	if lastErr != nil {
+		return nil, lastErr
+	}
+	return sslCertEntry, nil
+}
+
+// NewCAFile creates a new empty CA file
+func (c *client) NewCAFile(name string) error {
+	if len(c.runtimes) == 0 {
+		return fmt.Errorf("no valid runtimes found")
+	}
+	var lastErr error
+	for _, runtime := range c.runtimes {
+		err := runtime.NewCAFile(name)
+		if err != nil {
+			lastErr = err
+		}
+	}
+	if lastErr != nil {
+		return lastErr
+	}
+	return nil
+}
+
+// SetCAFile sets a certificate payload to a CA file
+func (c *client) SetCAFile(name, payload string) error {
+	if len(c.runtimes) == 0 {
+		return fmt.Errorf("no valid runtimes found")
+	}
+	var lastErr error
+	for _, runtime := range c.runtimes {
+		err := runtime.SetCAFile(name, payload)
+		if err != nil {
+			lastErr = err
+		}
+	}
+	if lastErr != nil {
+		return lastErr
+	}
+	return nil
+}
+
+// CommitCAFile commits a CA file
+func (c *client) CommitCAFile(name string) error {
+	if len(c.runtimes) == 0 {
+		return fmt.Errorf("no valid runtimes found")
+	}
+	var lastErr error
+	for _, runtime := range c.runtimes {
+		err := runtime.CommitCAFile(name)
+		if err != nil {
+			lastErr = err
+		}
+	}
+	if lastErr != nil {
+		return lastErr
+	}
+	return nil
+}
+
+// AbortCAFile aborts and destroys a CA file update transaction
+func (c *client) AbortCAFile(name string) error {
+	if len(c.runtimes) == 0 {
+		return fmt.Errorf("no valid runtimes found")
+	}
+	var lastErr error
+	for _, runtime := range c.runtimes {
+		err := runtime.AbortCAFile(name)
+		if err != nil {
+			lastErr = err
+		}
+	}
+	if lastErr != nil {
+		return lastErr
+	}
+	return nil
+}
+
+// AddCAFileEntry adds an entry into the CA file
+func (c *client) AddCAFileEntry(name, payload string) error {
+	if len(c.runtimes) == 0 {
+		return fmt.Errorf("no valid runtimes found")
+	}
+	var lastErr error
+	for _, runtime := range c.runtimes {
+		err := runtime.AddCAFileEntry(name, payload)
+		if err != nil {
+			lastErr = err
+		}
+	}
+	if lastErr != nil {
+		return lastErr
+	}
+	return nil
+}
+
+// DeleteCAFile deletes a CA file
+func (c *client) DeleteCAFile(name string) error {
+	if len(c.runtimes) == 0 {
+		return fmt.Errorf("no valid runtimes found")
+	}
+	var lastErr error
+	for _, runtime := range c.runtimes {
+		err := runtime.DeleteCAFile(name)
+		if err != nil {
+			lastErr = err
+		}
+	}
+	if lastErr != nil {
+		return lastErr
+	}
+	return nil
+}
+
+// ShowCerts returns cert files description from runtime
+func (c *client) ShowCerts() (models.SslCertificates, error) {
+	if len(c.runtimes) == 0 {
+		return nil, fmt.Errorf("no valid runtimes found")
+	}
+	var sslCertificates models.SslCertificates
+	var lastErr error
+	var err error
+	for _, runtime := range c.runtimes {
+		sslCertificates, err = runtime.ShowCerts()
+		if err != nil {
+			lastErr = err
+		}
+	}
+	if lastErr != nil {
+		return nil, lastErr
+	}
+	return sslCertificates, nil
+}
+
+// GetCert returns one certificate file
+func (c *client) GetCert(name string) (*models.SslCertificate, error) {
+	if len(c.runtimes) == 0 {
+		return nil, fmt.Errorf("no valid runtimes found")
+	}
+	var sslCertificate *models.SslCertificate
+	var lastErr error
+	var err error
+	for _, runtime := range c.runtimes {
+		sslCertificate, err = runtime.GetCert(name)
+		if err != nil {
+			lastErr = err
+		}
+	}
+	if lastErr != nil {
+		return nil, lastErr
+	}
+	return sslCertificate, nil
+}
+
+// ShowCertEntry returns a structured certificate
+func (c *client) ShowCertificate(name string) (*models.SslCertificate, error) {
+	if len(c.runtimes) == 0 {
+		return nil, fmt.Errorf("no valid runtimes found")
+	}
+	var sslCertificate *models.SslCertificate
+	var lastErr error
+	var err error
+	for _, runtime := range c.runtimes {
+		sslCertificate, err = runtime.ShowCertificate(name)
+		if err != nil {
+			lastErr = err
+		}
+	}
+	if lastErr != nil {
+		return nil, lastErr
+	}
+	return sslCertificate, nil
+}
+
+// ShowCrtLists returns CrtList files description from runtime
+func (c *client) ShowCrtLists() (models.SslCrtLists, error) {
+	if len(c.runtimes) == 0 {
+		return nil, fmt.Errorf("no valid runtimes found")
+	}
+	var sslCrtLists models.SslCrtLists
+	var lastErr error
+	var err error
+	for _, runtime := range c.runtimes {
+		sslCrtLists, err = runtime.ShowCrtLists()
+		if err != nil {
+			lastErr = err
+		}
+	}
+	if lastErr != nil {
+		return nil, lastErr
+	}
+	return sslCrtLists, nil
+}
+
+// GetCrtList returns one structured runtime CrtList file
+func (c *client) GetCrtList(name string) (*models.SslCrtList, error) {
+	if len(c.runtimes) == 0 {
+		return nil, fmt.Errorf("no valid runtimes found")
+	}
+	var sslCrtList *models.SslCrtList
+	var lastErr error
+	var err error
+	for _, runtime := range c.runtimes {
+		sslCrtList, err = runtime.GetCrtList(name)
+		if err != nil {
+			lastErr = err
+		}
+	}
+	if lastErr != nil {
+		return nil, lastErr
+	}
+	return sslCrtList, nil
+}
+
+// ShowCrtListEntries returns one CrtList runtime entries
+func (c *client) ShowCrtListEntries(name string) (models.SslCrtListEntries, error) {
+	if len(c.runtimes) == 0 {
+		return nil, fmt.Errorf("no valid runtimes found")
+	}
+	var sslCrtListEntries models.SslCrtListEntries
+	var lastErr error
+	var err error
+	for _, runtime := range c.runtimes {
+		sslCrtListEntries, err = runtime.ShowCrtListEntries(name)
+		if err != nil {
+			lastErr = err
+		}
+	}
+	if lastErr != nil {
+		return nil, lastErr
+	}
+	return sslCrtListEntries, nil
 }

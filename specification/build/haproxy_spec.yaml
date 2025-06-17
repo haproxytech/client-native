@@ -8971,6 +8971,16 @@ definitions:
   ssl_certificate:
       description: A file containing one or more SSL/TLS certificates and keys
       properties:
+          algorithm:
+              type: string
+          authority_key_id:
+              type: string
+          chain_issuer:
+              type: string
+              x-omitempty: true
+          chain_subject:
+              type: string
+              x-omitempty: true
           description:
               type: string
           domains:
@@ -8999,55 +9009,94 @@ definitions:
               type: string
               x-go-custom-tag: gorm:"type:timestamp with time zone"
               x-nullable: true
+          serial:
+              type: string
+          sha1_finger_print:
+              type: string
+          sha256_finger_print:
+              type: string
           size:
               description: File size in bytes.
               readOnly: true
               type: integer
               x-nullable: true
-          storage_name:
-              type: string
-      title: SSL File
-      type: object
-  ssl_certificates:
-    title: SSL Files Array
-    description: Array of ssl certificate files
-    type: array
-    items:
-      $ref: "#/definitions/ssl_certificate"
-  ssl_cert_entry:
-      description: One SSL/TLS certificate
-      properties:
-          algorithm:
-              type: string
-          chain_issuer:
-              type: string
-          chain_subject:
-              type: string
-          issuer:
-              type: string
-          not_after:
-              format: date
-              type: string
-          not_before:
-              format: date
-              type: string
-          serial:
-              type: string
-          sha1_finger_print:
-              type: string
           status:
+              description: Only set when using the runtime API.
+              readOnly: true
               type: string
+              x-omitempty: true
           storage_name:
               type: string
           subject:
               type: string
           subject_alternative_names:
+              type: string
+          subject_key_id:
+              type: string
+      title: SSL File
+      type: object
+  ssl_certificates:
+    title: SSL Certificate Files Array
+    description: Array of ssl certificate files
+    type: array
+    items:
+      $ref: "#/definitions/ssl_certificate"
+  ssl_ca_file:
+      description: A file containing one or more SSL/TLS certificates and keys
+      properties:
+          count:
+              type: string
+          file:
+              type: string
+          storage_name:
+              type: string
+      title: SSL File
+      type: object
+  ssl_ca_files:
+    title: SSL CA Files Array
+    description: Array of SSL CA files
+    type: array
+    items:
+      $ref: "#/definitions/ssl_ca_file"
+  ssl_crt_list:
+      description: SSL Crt List file
+      properties:
+          file:
+              type: string
+      title: SSL Crt List
+      type: object
+  ssl_crt_lists:
+    title: SSL Crt List Array
+    description: Array of SSL Crt List
+    type: array
+    items:
+      $ref: "#/definitions/ssl_crt_list"
+  ssl_crt_list_entry:
+      description: SSL Crt List Entry
+      properties:
+          file:
+              type: string
+          line_number:
+              minimum: 0
+              type: integer
+              x-nullable: false
+          sni_filter:
               items:
                   type: string
               type: array
+              x-go-name: SNIFilter
               x-omitempty: true
-      title: One SSL Certificate Entry
+          ssl_bind_config:
+              type: string
+              x-go-name: SSLBindConfig
+      title: SSL Crt List Entry
       type: object
+  ssl_crt_list_entries:
+    title: SSL Crt List Entry Array
+    description: Array of SSL Crt List Entry
+    type: array
+    items:
+      $ref: "#/definitions/ssl_crt_list_entry"
   acl_file:
       description: ACL File
       properties:

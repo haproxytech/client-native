@@ -15,27 +15,54 @@ ssl_certificate:
       readOnly: true
       x-nullable: true
       description: File size in bytes.
-    not_after:
+    status:
       type: string
-      format: date-time
       readOnly: true
-      x-nullable: true
-      x-go-custom-tag: gorm:"type:timestamp with time zone"
+      x-omitempty: true
+      description: Only set when using the runtime API.
+    serial:
+      type: string
     not_before:
       type: string
       format: date-time
       readOnly: true
       x-nullable: true
       x-go-custom-tag: gorm:"type:timestamp with time zone"
-    issuers:
+    not_after:
+      type: string
+      format: date-time
+      readOnly: true
+      x-nullable: true
+      x-go-custom-tag: gorm:"type:timestamp with time zone"
+    algorithm:
+      type: string
+    sha1_finger_print:
+      type: string
+    sha256_finger_print:
+      type: string
+    domains:
       type: string
       readOnly: true
       x-omitempty: true
-    domains:
+    issuers:
       type: string
       readOnly: true
       x-omitempty: true
     ip_addresses:
       type: string
       readOnly: true
+      x-omitempty: true
+    authority_key_id:
+      type: string
+    subject:
+      type: string
+    subject_alternative_names:
+      type: string
+    subject_key_id:
+      type: string
+    chain_subject:
+      type: string
+      x-omitempty: true
+    chain_issuer:
+      type: string
       x-omitempty: true

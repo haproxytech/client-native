@@ -181,7 +181,7 @@ func TestSingleRuntime_ShowCertEntry(t *testing.T) {
 		name           string
 		fields         fields
 		args           args
-		want           *models.SslCertEntry
+		want           *models.SslCertificate
 		wantErr        bool
 		socketResponse map[string]string
 	}{
@@ -191,22 +191,19 @@ func TestSingleRuntime_ShowCertEntry(t *testing.T) {
 			args: args{
 				storageName: "/etc/ssl/cert-0.pem",
 			},
-			want: &models.SslCertEntry{
-				StorageName: "/etc/ssl/cert-0.pem",
-				Status:      "Used",
-				Serial:      "0D933C1B1089BF660AE5253A245BB388",
-				NotBefore:   strfmt.Date(notBefore),
-				NotAfter:    strfmt.Date(notAfter),
-				SubjectAlternativeNames: []string{
-					"DNS:*.platform.domain.com",
-					"DNS:uaa.platform.domain.com",
-				},
-				Algorithm:       "RSA4096",
-				Sha1FingerPrint: "59242F1838BDEF3E7DAFC83FFE4DD6C03B88805C",
-				Subject:         "/C=DE/ST=Baden-Württemberg/L=Walldorf/O=ORG SE/CN=*.platform.domain.com",
-				Issuer:          "/C=US/O=DigiCert Inc/CN=DigiCert SHA2 Secure Server CA",
-				ChainSubject:    "/C=US/O=DigiCert Inc/CN=DigiCert SHA2 Secure Server CA",
-				ChainIssuer:     "/C=US/O=DigiCert Inc/OU=www.digicert.com/CN=DigiCert Global Root CA",
+			want: &models.SslCertificate{
+				StorageName:             "/etc/ssl/cert-0.pem",
+				Status:                  "Used",
+				Serial:                  "0D933C1B1089BF660AE5253A245BB388",
+				NotBefore:               (*strfmt.DateTime)(&notBefore),
+				NotAfter:                (*strfmt.DateTime)(&notAfter),
+				SubjectAlternativeNames: "DNS:*.platform.domain.com, DNS:uaa.platform.domain.com",
+				Algorithm:               "RSA4096",
+				Sha1FingerPrint:         "59242F1838BDEF3E7DAFC83FFE4DD6C03B88805C",
+				Subject:                 "/C=DE/ST=Baden-Württemberg/L=Walldorf/O=ORG SE/CN=*.platform.domain.com",
+				Issuers:                 "/C=US/O=DigiCert Inc/CN=DigiCert SHA2 Secure Server CA",
+				ChainSubject:            "/C=US/O=DigiCert Inc/CN=DigiCert SHA2 Secure Server CA",
+				ChainIssuer:             "/C=US/O=DigiCert Inc/OU=www.digicert.com/CN=DigiCert Global Root CA",
 			},
 			socketResponse: map[string]string{
 				"show ssl cert /etc/ssl/cert-0.pem\n": ` Filename: /etc/ssl/cert-0.pem
@@ -234,7 +231,7 @@ func TestSingleRuntime_ShowCertEntry(t *testing.T) {
 				t.Errorf("SingleRuntime.Init() error = %v", err)
 				return
 			}
-			got, err := s.ShowCertEntry(tt.args.storageName)
+			got, err := s.ShowCertificate(tt.args.storageName)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("SingleRuntime.ShowCertEntries() error = %v, wantErr %v", err, tt.wantErr)
 				return
@@ -309,7 +306,7 @@ func TestSingleRuntime_NewCertEntry(t *testing.T) {
 				t.Errorf("SingleRuntime.Init() error = %v", err)
 				return
 			}
-			if err := s.NewCertEntry(tt.args.storageName); (err != nil) != tt.wantErr {
+			if err := s.NewCertificate(tt.args.storageName); (err != nil) != tt.wantErr {
 				t.Errorf("SingleRuntime.NewCertEntry() error = %v, wantErr %v", err, tt.wantErr)
 			}
 		})
@@ -395,7 +392,7 @@ func TestSingleRuntime_SetCertEntry(t *testing.T) {
 				t.Errorf("SingleRuntime.Init() error = %v", err)
 				return
 			}
-			if err := s.SetCertEntry(tt.args.storageName, tt.args.payload); (err != nil) != tt.wantErr {
+			if err := s.SetCertificate(tt.args.storageName, tt.args.payload); (err != nil) != tt.wantErr {
 				t.Errorf("SingleRuntime.SetCertEntry() error = %v, wantErr %v", err, tt.wantErr)
 			}
 		})
@@ -467,7 +464,7 @@ func TestSingleRuntime_CommitCertEntry(t *testing.T) {
 				t.Errorf("SingleRuntime.Init() error = %v", err)
 				return
 			}
-			if err := s.CommitCertEntry(tt.args.storageName); (err != nil) != tt.wantErr {
+			if err := s.CommitCertificate(tt.args.storageName); (err != nil) != tt.wantErr {
 				t.Errorf("SingleRuntime.CommitCertEntry() error = %v, wantErr %v", err, tt.wantErr)
 			}
 		})
@@ -537,7 +534,7 @@ func TestSingleRuntime_AbortCertEntry(t *testing.T) {
 				t.Errorf("SingleRuntime.Init() error = %v", err)
 				return
 			}
-			if err := s.AbortCertEntry(tt.args.storageName); (err != nil) != tt.wantErr {
+			if err := s.AbortCertificate(tt.args.storageName); (err != nil) != tt.wantErr {
 				t.Errorf("SingleRuntime.AbortCertEntry() error = %v, wantErr %v", err, tt.wantErr)
 			}
 		})
@@ -607,7 +604,7 @@ func TestSingleRuntime_DeleteCertEntry(t *testing.T) {
 				t.Errorf("SingleRuntime.Init() error = %v", err)
 				return
 			}
-			if err := s.DeleteCertEntry(tt.args.storageName); (err != nil) != tt.wantErr {
+			if err := s.DeleteCertificate(tt.args.storageName); (err != nil) != tt.wantErr {
 				t.Errorf("SingleRuntime.DeleteCertEntry() error = %v, wantErr %v", err, tt.wantErr)
 			}
 		})
