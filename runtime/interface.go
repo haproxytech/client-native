@@ -155,6 +155,7 @@ type SSL interface {
 	ShowCerts() (models.SslCertificates, error)
 	GetCert(name string) (*models.SslCertificate, error)
 	ShowCertificate(name string) (*models.SslCertificate, error)
+	DumpCertificate(name string) (string, error)
 	NewCertEntry(name string) error
 	SetCertEntry(name, payload string) error
 	CommitCertEntry(name string) error
