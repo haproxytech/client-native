@@ -1245,6 +1245,18 @@ func (c *client) ShowCertificate(name string) (*models.SslCertificate, error) {
 	return cert, nil
 }
 
+// DumpCertificate returns the contents of a certificate as a PEM file
+func (c *client) DumpCertificate(name string) (string, error) {
+	if !c.runtime.IsValid() {
+		return "", errors.New("no valid runtime found")
+	}
+	pem, err := c.runtime.DumpCertificate(name)
+	if err != nil {
+		return "", fmt.Errorf("%s %w", c.runtime.socketPath, err)
+	}
+	return pem, nil
+}
+
 // ShowCrlFiles returns Crl files description from runtime
 func (c *client) ShowCrlFiles() (models.SslCrls, error) {
 	if !c.runtime.IsValid() {

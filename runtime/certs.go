@@ -242,3 +242,15 @@ func (s *SingleRuntime) DeleteCertificate(storageName string) error {
 	}
 	return nil
 }
+
+func (s *SingleRuntime) DumpCertificate(filename string) (string, error) {
+	if filename == "" {
+		return "", fmt.Errorf("%s %w", "Argument filename empty", native_errors.ErrGeneral)
+	}
+	cmd := "dump ssl cert " + filename
+	response, err := s.ExecuteWithResponse(cmd)
+	if err != nil {
+		return "", fmt.Errorf("%s %w", err.Error(), native_errors.ErrGeneral)
+	}
+	return response, nil
+}
