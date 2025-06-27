@@ -53,6 +53,7 @@ allowed:
   - enum
   - env
   - eol
+  - epoll
   - escaper
   - eslint
   - failsafe
@@ -111,6 +112,7 @@ allowed:
   - namespace
   - namespaces
   - oidc
+  - omitempty
   - openapi
   - optim
   - packagetag
