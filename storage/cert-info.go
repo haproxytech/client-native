@@ -148,6 +148,10 @@ func findLeafCertificate(certs []*x509.Certificate) (*x509.Certificate, error) {
 	if len(certs) == 0 {
 		return nil, errors.New("empty certificate chain")
 	}
+	if len(certs) == 1 {
+		return certs[0], nil
+	}
+
 	// Create a map to check if a certificate is someone else's issuer
 	isIssuer := make(map[string]bool)
 	for _, cert := range certs {
