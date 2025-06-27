@@ -505,6 +505,10 @@ func Test_storage_getCertificatesInfo(t *testing.T) {
 			filename: "OK-int1_key_crt_int2.pem",
 			dirname:  "valid",
 		},
+		{
+			filename: "selfsigned1.pem",
+			dirname:  "valid",
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.filename, func(t *testing.T) {
