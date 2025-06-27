@@ -174,7 +174,22 @@ global_base:
             x-display-name: CPU Set
     cpu_policy:
       type: string
-      enum: ["none", "efficiency", "first-usable-node", "group-by-2-ccx", "group-by-2-clusters", "group-by-3-ccx", "group-by-3-clusters", "group-by-4-ccx", "group-by-4-cluster", "group-by-ccx", "group-by-cluster", "performance", "resource"]
+      enum:
+        [
+          "none",
+          "efficiency",
+          "first-usable-node",
+          "group-by-2-ccx",
+          "group-by-2-clusters",
+          "group-by-3-ccx",
+          "group-by-3-clusters",
+          "group-by-4-ccx",
+          "group-by-4-cluster",
+          "group-by-ccx",
+          "group-by-cluster",
+          "performance",
+          "resource",
+        ]
       x-display-name: CPU Policy
     cpu_set:
       type: array
@@ -189,7 +204,20 @@ global_base:
         properties:
           directive:
             type: string
-            enum: ["reset", "drop-cpu", "only-cpu", "drop-node", "only-node", "drop-cluster", "only-cluster", "drop-core", "only-core", "drop-thread", "only-thread"]
+            enum:
+              [
+                "reset",
+                "drop-cpu",
+                "only-cpu",
+                "drop-node",
+                "only-node",
+                "drop-cluster",
+                "only-cluster",
+                "drop-core",
+                "only-core",
+                "drop-thread",
+                "only-thread",
+              ]
           set:
             type: string
     runtime_apis:
@@ -474,6 +502,7 @@ tune_options:
       items:
         type: string
         enum: [err, hup, rdhup]
+      x-omitempty: true
     events_max_events_at_once:
       type: integer
       minimum: 1

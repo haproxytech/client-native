@@ -1523,6 +1523,7 @@ definitions:
             - rdhup
           type: string
         type: array
+        x-omitempty: true
       events_max_events_at_once:
         maximum: 10000
         minimum: 1

@@ -50,7 +50,7 @@ type TuneOptions struct {
 	DisableZeroCopyForwarding bool `json:"disable_zero_copy_forwarding,omitempty"`
 
 	// epoll mask events
-	EpollMaskEvents []string `json:"epoll_mask_events"`
+	EpollMaskEvents []string `json:"epoll_mask_events,omitempty"`
 
 	// events max events at once
 	// Maximum: 10000
