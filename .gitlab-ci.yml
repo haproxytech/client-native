@@ -11,6 +11,18 @@ stages:
   - lint
   - test
   - e2e
+pipelines-check:
+  stage: bots
+  needs: []
+  image:
+    name: $CI_REGISTRY_GO/docker:$DOCKER_VERSION-go$GO_VERSION
+    entrypoint: [""]
+  rules:
+    - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
+  tags:
+    - go
+  script:
+    - go run cmd/gitlab-mr-pipelines/main.go
 mr-backport-question:
   stage: bots
   needs: []
