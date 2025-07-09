@@ -3,6 +3,7 @@ module github.com/haproxytech/client-native/v6
 go 1.24
 
 require (
+	github.com/Masterminds/semver v1.5.0
 	github.com/go-faker/faker/v4 v4.6.1
 	github.com/go-openapi/errors v0.22.1
 	github.com/go-openapi/strfmt v0.23.0
@@ -15,6 +16,7 @@ require (
 	github.com/google/uuid v1.6.0
 	github.com/haproxytech/client-native/v5 v5.1.15
 	github.com/haproxytech/go-logger v1.1.0
+	github.com/joho/godotenv v1.5.1
 	github.com/json-iterator/go v1.1.12
 	github.com/kballard/go-shellquote v0.0.0-20180428030007-95032a82bc51
 	github.com/sirkon/dst v0.26.4
