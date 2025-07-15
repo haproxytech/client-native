@@ -9,7 +9,7 @@ require (
 	github.com/go-openapi/strfmt v0.23.0
 	github.com/go-openapi/swag v0.23.1
 	github.com/go-openapi/validate v0.24.0
-	github.com/go-viper/mapstructure/v2 v2.3.0
+	github.com/go-viper/mapstructure/v2 v2.4.0
 	github.com/gofrs/flock v0.12.1
 	github.com/google/go-cmp v0.7.0
 	github.com/google/renameio v1.0.1
