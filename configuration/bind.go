@@ -364,6 +364,8 @@ func parseBindParams(bindOptions []params.BindOption) models.BindParams { //noli
 				b.GUIDPrefix = v.Value
 			case "interface":
 				b.Interface = v.Value
+			case "label":
+				b.Label = v.Value
 			case "level":
 				b.Level = v.Value
 			case "severity-output":
@@ -609,6 +611,9 @@ func serializeBindParams(b models.BindParams, path string, opt *options.Configur
 	}
 	if b.Interface != "" {
 		options = append(options, &params.BindOptionValue{Name: "interface", Value: b.Interface})
+	}
+	if b.Label != "" {
+		options = append(options, &params.BindOptionValue{Name: "label", Value: b.Label})
 	}
 	if b.Level != "" {
 		options = append(options, &params.BindOptionValue{Name: "level", Value: b.Level})

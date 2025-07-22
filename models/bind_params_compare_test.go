@@ -244,7 +244,7 @@ func TestBindParamsDiffFalse(t *testing.T) {
 
 	for _, sample := range samples {
 		result := sample.a.Diff(sample.b)
-		if len(result) != 82 {
+		if len(result) != 83 {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {
@@ -254,7 +254,7 @@ func TestBindParamsDiffFalse(t *testing.T) {
 			if err != nil {
 				t.Error(err)
 			}
-			t.Errorf("Expected BindParams to be different in 82 cases, but it is not (%d) %s %s", len(result), a, b)
+			t.Errorf("Expected BindParams to be different in 83 cases, but it is not (%d) %s %s", len(result), a, b)
 		}
 	}
 }

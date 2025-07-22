@@ -143,6 +143,9 @@ type BindParams struct {
 	// interface
 	Interface string `json:"interface,omitempty"`
 
+	// label
+	Label string `json:"label,omitempty"`
+
 	// level
 	// Example: user
 	// Enum: ["user","operator","admin"]

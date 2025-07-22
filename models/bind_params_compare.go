@@ -165,6 +165,10 @@ func (s BindParams) Equal(t BindParams, opts ...Options) bool {
 		return false
 	}
 
+	if s.Label != t.Label {
+		return false
+	}
+
 	if s.Level != t.Level {
 		return false
 	}
@@ -511,6 +515,10 @@ func (s BindParams) Diff(t BindParams, opts ...Options) map[string][]interface{}
 
 	if s.Interface != t.Interface {
 		diff["Interface"] = []interface{}{s.Interface, t.Interface}
+	}
+
+	if s.Label != t.Label {
+		diff["Label"] = []interface{}{s.Label, t.Label}
 	}
 
 	if s.Level != t.Level {

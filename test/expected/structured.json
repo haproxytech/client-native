@@ -2929,7 +2929,8 @@
                     "address": "192.168.1.1",
                     "port": 80,
                     "quic-cc-algo": "nocc",
-                    "quic_cc_algo_burst_size": 12
+                    "quic_cc_algo_burst_size": 12,
+                    "label": "quic3"
                 }
             },
             "ssl_front_use_list": [

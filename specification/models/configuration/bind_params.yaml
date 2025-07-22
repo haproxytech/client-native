@@ -200,6 +200,8 @@ bind_params:
       x-default-unit: ms
     interface:
       type: string
+    label:
+      type: string
     level:
       type: string
       enum: [user, operator, admin]
