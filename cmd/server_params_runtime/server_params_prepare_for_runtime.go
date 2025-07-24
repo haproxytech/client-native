@@ -19,6 +19,7 @@ var ServerParamsPrepareForRuntimeMap = map[string]string{ //nolint:gochecknoglob
 	"CheckReusePool":   FuncDoNotSendDisabledFields,
 	"CheckViaSocks4":   FuncDoNotSendDisabledFields,
 	"ForceSslv3":       FuncDoNotSendDisabledFields,
+	"Renegotiate":      FuncDoNotSendEnabledFields, // This won't be true with AWS-LC.
 	"Sslv3":            FuncDoNotSendDisabledFields,
 	"ForceTlsv10":      FuncDoNotSendDisabledFields,
 	"Tlsv10":           FuncDoNotSendDisabledFields,

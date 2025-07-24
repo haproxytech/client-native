@@ -324,6 +324,10 @@ func parseServerParams(serverOptions []params.ServerOption, serverParams *models
 			case "no-tlsv13":
 				serverParams.Tlsv13 = "disabled"
 				serverParams.ForceTlsv13 = "disabled"
+			case "renegotiate":
+				serverParams.Renegotiate = "enabled"
+			case "no-renegotiate":
+				serverParams.Renegotiate = "disabled"
 			case "send-proxy":
 				serverParams.SendProxy = "enabled"
 			case "no-send-proxy":
@@ -629,6 +633,11 @@ func SerializeServerParams(s models.ServerParams, opt *options.ConfigurationOpti
 	}
 	if s.CheckViaSocks4 == "enabled" {
 		options = append(options, &params.ServerOptionWord{Name: "check-via-socks4"})
+	}
+	if s.Renegotiate == "enabled" {
+		options = append(options, &params.ServerOptionWord{Name: "renegotiate"})
+	} else if s.Renegotiate == "disabled" {
+		options = append(options, &params.ServerOptionWord{Name: "no-renegotiate"})
 	}
 	if s.Sslv3 == "enabled" {
 		options = append(options, &params.ServerOptionWord{Name: "force-sslv3"})

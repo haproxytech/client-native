@@ -947,6 +947,12 @@ definitions:
       redir:
         type: string
         x-display-name: Prefix
+      renegotiate:
+        description: Toggles the secure renegotiation mechanism for an SSL backend.
+        enum:
+          - enabled
+          - disabled
+        type: string
       resolve-net:
         pattern: ^([A-Za-z0-9.:/]+)(,[A-Za-z0-9.:/]+)*$
         type: string

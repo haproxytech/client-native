@@ -185,6 +185,8 @@ var serverOptionFactoryMethods = map[string]func() ServerOption{ //nolint:gochec
 	"no-tlsv12":               func() ServerOption { return &ServerOptionWord{Name: "no-tlsv12"} },
 	"force-tlsv13":            func() ServerOption { return &ServerOptionWord{Name: "force-tlsv13"} },
 	"no-tlsv13":               func() ServerOption { return &ServerOptionWord{Name: "no-tlsv13"} },
+	"renegotiate":             func() ServerOption { return &ServerOptionWord{Name: "renegotiate"} },
+	"no-renegotiate":          func() ServerOption { return &ServerOptionWord{Name: "no-renegotiate"} },
 	"send-proxy":              func() ServerOption { return &ServerOptionWord{Name: "send-proxy"} },
 	"no-send-proxy":           func() ServerOption { return &ServerOptionWord{Name: "no-send-proxy"} },
 	"send-proxy-v2":           func() ServerOption { return &ServerOptionWord{Name: "send-proxy-v2"} },

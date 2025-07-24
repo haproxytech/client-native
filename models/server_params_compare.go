@@ -297,6 +297,10 @@ func (s ServerParams) Equal(t ServerParams, opts ...Options) bool {
 		return false
 	}
 
+	if s.Renegotiate != t.Renegotiate {
+		return false
+	}
+
 	if s.ResolveNet != t.ResolveNet {
 		return false
 	}
@@ -745,6 +749,10 @@ func (s ServerParams) Diff(t ServerParams, opts ...Options) map[string][]interfa
 
 	if s.Redir != t.Redir {
 		diff["Redir"] = []interface{}{s.Redir, t.Redir}
+	}
+
+	if s.Renegotiate != t.Renegotiate {
+		diff["Renegotiate"] = []interface{}{s.Renegotiate, t.Renegotiate}
 	}
 
 	if s.ResolveNet != t.ResolveNet {

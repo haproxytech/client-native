@@ -329,6 +329,11 @@ type ServerParams struct {
 	// redir
 	Redir string `json:"redir,omitempty"`
 
+	// Toggles the secure renegotiation mechanism for an SSL backend.
+	// Enum: ["enabled","disabled"]
+	// +kubebuilder:validation:Enum=enabled;disabled;
+	Renegotiate string `json:"renegotiate,omitempty"`
+
 	// resolve net
 	// Pattern: ^([A-Za-z0-9.:/]+)(,[A-Za-z0-9.:/]+)*$
 	// +kubebuilder:validation:Pattern=`^([A-Za-z0-9.:/]+)(,[A-Za-z0-9.:/]+)*$`
@@ -686,6 +691,10 @@ func (m *ServerParams) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateProxyV2Options(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateRenegotiate(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -2158,6 +2167,48 @@ func (m *ServerParams) validateProxyV2Options(formats strfmt.Registry) error {
 			return err
 		}
 
+	}
+
+	return nil
+}
+
+var serverParamsTypeRenegotiatePropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["enabled","disabled"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		serverParamsTypeRenegotiatePropEnum = append(serverParamsTypeRenegotiatePropEnum, v)
+	}
+}
+
+const (
+
+	// ServerParamsRenegotiateEnabled captures enum value "enabled"
+	ServerParamsRenegotiateEnabled string = "enabled"
+
+	// ServerParamsRenegotiateDisabled captures enum value "disabled"
+	ServerParamsRenegotiateDisabled string = "disabled"
+)
+
+// prop value enum
+func (m *ServerParams) validateRenegotiateEnum(path, location string, value string) error {
+	if err := validate.EnumCase(path, location, value, serverParamsTypeRenegotiatePropEnum, true); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *ServerParams) validateRenegotiate(formats strfmt.Registry) error {
+	if swag.IsZero(m.Renegotiate) { // not required
+		return nil
+	}
+
+	// value enum
+	if err := m.validateRenegotiateEnum("renegotiate", "body", m.Renegotiate); err != nil {
+		return err
 	}
 
 	return nil

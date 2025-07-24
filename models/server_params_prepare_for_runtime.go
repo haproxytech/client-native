@@ -117,4 +117,7 @@ func (s *ServerParams) prepareForRuntimeDoNotSendEnabledFields() {
 	if s.NoVerifyhost == "enabled" {
 		s.NoVerifyhost = ""
 	}
+	if s.Renegotiate == "enabled" {
+		s.Renegotiate = ""
+	}
 }

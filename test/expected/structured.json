@@ -1082,6 +1082,7 @@
                         "value": "%[fc_pp_tlv(0x20)]"
                     },
                     "sigalgs": "ECDSA+SHA256",
+                    "renegotiate": "disabled",
                     "slowstart": 6000,
                     "ssl": "enabled",
                     "tcp_ut": 2000,
@@ -1122,7 +1123,8 @@
                         "id": "my_random_id_for_server"
                     },
                     "check-reuse-pool": "disabled",
-                    "check-pool-conn-name": "foo"
+                    "check-pool-conn-name": "foo",
+                    "renegotiate": "enabled"
                 }
             }
         },

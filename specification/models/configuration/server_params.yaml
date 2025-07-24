@@ -121,6 +121,10 @@ server_params:
       type: integer
       x-display-name: Nr. of consecutive failed checks
       x-nullable: true
+    renegotiate:
+      type: string
+      enum: [enabled, disabled]
+      description: Toggles the secure renegotiation mechanism for an SSL backend.
     sslv3:
       type: string
       enum: [enabled, disabled]
