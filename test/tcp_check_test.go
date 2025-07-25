@@ -17,7 +17,6 @@ package test
 
 import (
 	"fmt"
-	"io/ioutil"
 	"testing"
 
 	"github.com/google/go-cmp/cmp"
@@ -38,18 +37,6 @@ func tcpCheckExpectation() map[string]models.TCPChecks {
 		}
 	}
 	return res
-}
-
-func generateTCPCheckConfig(config string) (string, error) {
-	f, err := ioutil.TempFile("/tmp", "tcp_check")
-	if err != nil {
-		return "", err
-	}
-	err = prepareTestFile(config, f.Name())
-	if err != nil {
-		return "", err
-	}
-	return f.Name(), nil
 }
 
 func (self Counter) current() int64 {

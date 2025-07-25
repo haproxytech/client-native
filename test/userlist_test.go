@@ -16,23 +16,10 @@
 package test
 
 import (
-	"io/ioutil"
 	"testing"
 
 	"github.com/haproxytech/client-native/v6/models"
 )
-
-func generateUserListConfig(config string) (string, error) {
-	f, err := ioutil.TempFile("/tmp", "userlist")
-	if err != nil {
-		return "", err
-	}
-	err = prepareTestFile(config, f.Name())
-	if err != nil {
-		return "", err
-	}
-	return f.Name(), nil
-}
 
 func TestUserList(t *testing.T) {
 	config := `# _version=1

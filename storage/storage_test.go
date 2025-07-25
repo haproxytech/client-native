@@ -18,7 +18,6 @@ package storage
 import (
 	"bytes"
 	"io"
-	"io/ioutil"
 	"path/filepath"
 	"reflect"
 	"testing"
@@ -374,7 +373,7 @@ func Test_storage_Create(t *testing.T) {
 			name:       "Should create file if not exists",
 			dirname:    dirWithoutFile,
 			fileType:   MapsType,
-			readCloser: ioutil.NopCloser(bytes.NewReader([]byte("hello world"))),
+			readCloser: io.NopCloser(bytes.NewReader([]byte("hello world"))),
 			file:       "newfile.map",
 			want:       filepath.Join(dirWithoutFile, "newfile.map"),
 			wantErr:    false,

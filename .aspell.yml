@@ -82,6 +82,7 @@ allowed:
   - httpCLF
   - ineffassign
   - infos
+  - ioutil
   - ipam
   - istanbul
   - jose

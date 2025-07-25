@@ -16,7 +16,7 @@
 package test
 
 import (
-	"io/ioutil"
+	"os"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -24,7 +24,7 @@ import (
 )
 
 func generateConfig(config string) (string, error) {
-	f, err := ioutil.TempFile("/tmp", "version")
+	f, err := os.CreateTemp("/tmp", "version")
 	if err != nil {
 		return "", err
 	}

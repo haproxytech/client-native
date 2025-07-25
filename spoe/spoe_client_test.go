@@ -18,7 +18,6 @@ package spoe
 import (
 	"bytes"
 	"io"
-	"io/ioutil"
 	"os"
 	"path/filepath"
 	"testing"
@@ -54,7 +53,7 @@ func Test_spoeclient_Create(t *testing.T) {
 			name:       "Should create a file with # _version prepended",
 			clients:    make(map[string]*SingleSpoe),
 			fileName:   "spoe.cfg",
-			readCloser: ioutil.NopCloser(bytes.NewReader([]byte("hello world"))),
+			readCloser: io.NopCloser(bytes.NewReader([]byte("hello world"))),
 			initParams: Params{
 				SpoeDir:        "/tmp",
 				TransactionDir: "/tmp",
