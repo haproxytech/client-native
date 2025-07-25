@@ -3442,6 +3442,7 @@ definitions:
           - secure_password
           - password
       title: User
+      type: object
   users:
     title: Users
     description: HAProxy userlist users array

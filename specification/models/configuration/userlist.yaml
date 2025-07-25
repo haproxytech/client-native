@@ -27,6 +27,7 @@ group:
 user:
   title: User
   description: HAProxy userlist user
+  type: object
   required:
     - username
     - secure_password
