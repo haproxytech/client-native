@@ -102,8 +102,12 @@ type LogStdErr struct {
 	Comment     string
 }
 
-//sections:frontend,backend,defaults
+// ACL
+// model:ACL
+//
 //name:acl
+//doc:https://docs.haproxy.org/dev/configuration.html#acl%20(Alphabetically%20sorted%20keywords%20reference)
+//sections:frontend,backend,defaults
 //is:multiple
 //test:ok:acl url_stats path_beg /stats
 //test:ok:acl url_static path_beg -i /static /images /javascript /stylesheets
@@ -122,12 +126,7 @@ type LogStdErr struct {
 //test:ok:acl cookie_set hdr_sub(cookie) SEEN=1
 //test:fail:acl cookie
 //test:fail:acl
-type ACL struct {
-	Name      string
-	Criterion string
-	Value     string
-	Comment   string
-}
+type ACL struct{}
 
 //sections:frontend
 //name:bind

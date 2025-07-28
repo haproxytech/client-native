@@ -282,7 +282,7 @@ func serializeFrontendSection(a StructuredToParserArgs, f *models.Frontend, opt 
 		}
 	}
 	for i, acl := range f.ACLList {
-		if err = p.Insert(parser.Frontends, f.Name, "acl", SerializeACL(*acl), i); err != nil {
+		if err = p.Insert(parser.Frontends, f.Name, "acl", *acl, i); err != nil {
 			return a.HandleError(strconv.FormatInt(int64(i), 10), FrontendParentName, f.Name, a.TID, a.TID == "", err)
 		}
 	}

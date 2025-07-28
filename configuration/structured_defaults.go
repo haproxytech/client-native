@@ -380,11 +380,10 @@ func serializeDefaultsSection(a StructuredToParserArgs, d *models.Defaults) erro
 		}
 	}
 	for i, acl := range d.ACLList {
-		s := SerializeACL(*acl)
 		if err != nil {
 			return err
 		}
-		if err = p.Insert(parser.Defaults, d.Name, "acl", s, i); err != nil {
+		if err = p.Insert(parser.Defaults, d.Name, "acl", *acl, i); err != nil {
 			return a.HandleError(strconv.FormatInt(int64(i), 10), DefaultsParentName, d.Name, a.TID, a.TID == "", err)
 		}
 	}

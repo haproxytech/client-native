@@ -79,10 +79,10 @@ func (c *SingleSpoe) GetMessage(scope, name, transactionID string) (int64, *mode
 	if err != nil {
 		return v, nil, err
 	}
-	if acls, ok := data.([]types.ACL); ok {
+	if acls, ok := data.([]models.ACL); ok {
 		for _, a := range acls {
 			acl := &models.ACL{
-				ACLName:   a.Name,
+				ACLName:   a.ACLName,
 				Value:     a.Value,
 				Criterion: a.Criterion,
 			}
@@ -188,11 +188,11 @@ func (c *SingleSpoe) createEditMessage(scope string, data *models.SpoeMessage, t
 	name := *data.Name
 
 	if len(data.ACL) > 0 {
-		acls := []types.ACL{}
+		acls := []models.ACL{}
 		for _, d := range data.ACL {
-			acl := types.ACL{
+			acl := models.ACL{
 				Criterion: d.Criterion,
-				Name:      d.ACLName,
+				ACLName:   d.ACLName,
 				Value:     d.Value,
 			}
 			acls = append(acls, acl)

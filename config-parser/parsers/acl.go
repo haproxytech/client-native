@@ -21,21 +21,25 @@ import (
 
 	"github.com/haproxytech/client-native/v6/config-parser/common"
 	"github.com/haproxytech/client-native/v6/config-parser/errors"
-	"github.com/haproxytech/client-native/v6/config-parser/types"
+	"github.com/haproxytech/client-native/v6/models"
 )
 
 type ACL struct {
-	data        []types.ACL
+	data        []models.ACL
 	preComments []string // comments that appear before the actual line
 }
 
-func (h *ACL) parse(line string, parts []string, comment string) (*types.ACL, error) {
+func (h *ACL) parse(line string, parts []string, comment string) (*models.ACL, error) {
 	if len(parts) >= 3 {
-		data := &types.ACL{
-			Name:      parts[1],
+		data := &models.ACL{
+			ACLName:   parts[1],
 			Criterion: parts[2],
 			Value:     strings.Join(parts[3:], " "),
-			Comment:   comment,
+			Metadata:  map[string]interface{}{},
+		}
+		if comment != "" {
+			data.Metadata = map[string]interface{}{}
+			data.Metadata["comment"] = comment
 		}
 		return data, nil
 	}
@@ -50,14 +54,14 @@ func (h *ACL) Result() ([]common.ReturnResultLine, error) {
 	for index, req := range h.data {
 		var sb strings.Builder
 		sb.WriteString("acl ")
-		sb.WriteString(req.Name)
+		sb.WriteString(req.ACLName)
 		sb.WriteString(" ")
 		sb.WriteString(req.Criterion)
 		sb.WriteString(" ")
 		sb.WriteString(req.Value)
 		result[index] = common.ReturnResultLine{
 			Data:    sb.String(),
-			Comment: req.Comment,
+			Comment: common.ExtractComment(req.Metadata),
 		}
 	}
 	return result, nil

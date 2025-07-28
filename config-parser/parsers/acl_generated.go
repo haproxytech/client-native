@@ -19,11 +19,13 @@ package parsers
 import (
 	"github.com/haproxytech/client-native/v6/config-parser/common"
 	"github.com/haproxytech/client-native/v6/config-parser/errors"
-	"github.com/haproxytech/client-native/v6/config-parser/types"
+	"github.com/haproxytech/client-native/v6/models"
 )
 
+// https://docs.haproxy.org/dev/configuration.html#acl%20(Alphabetically%20sorted%20keywords%20reference)
+
 func (p *ACL) Init() {
-	p.data = []types.ACL{}
+	p.data = make([]models.ACL, 0)
 	p.preComments = []string{}
 }
 
@@ -58,7 +60,7 @@ func (p *ACL) Delete(index int) error {
 		return errors.ErrFetch
 	}
 	copy(p.data[index:], p.data[index+1:])
-	p.data[len(p.data)-1] = types.ACL{}
+	p.data[len(p.data)-1] = models.ACL{}
 	p.data = p.data[:len(p.data)-1]
 	return nil
 }
@@ -68,25 +70,25 @@ func (p *ACL) Insert(data common.ParserData, index int) error {
 		return errors.ErrInvalidData
 	}
 	switch newValue := data.(type) {
-	case []types.ACL:
+	case []models.ACL:
 		p.data = newValue
-	case *types.ACL:
+	case *models.ACL:
 		if index > -1 {
 			if index > len(p.data) {
 				return errors.ErrIndexOutOfRange
 			}
-			p.data = append(p.data, types.ACL{})
+			p.data = append(p.data, models.ACL{})
 			copy(p.data[index+1:], p.data[index:])
 			p.data[index] = *newValue
 		} else {
 			p.data = append(p.data, *newValue)
 		}
-	case types.ACL:
+	case models.ACL:
 		if index > -1 {
 			if index > len(p.data) {
 				return errors.ErrIndexOutOfRange
 			}
-			p.data = append(p.data, types.ACL{})
+			p.data = append(p.data, models.ACL{})
 			copy(p.data[index+1:], p.data[index:])
 			p.data[index] = newValue
 		} else {
@@ -104,9 +106,9 @@ func (p *ACL) Set(data common.ParserData, index int) error {
 		return nil
 	}
 	switch newValue := data.(type) {
-	case []types.ACL:
+	case []models.ACL:
 		p.data = newValue
-	case *types.ACL:
+	case *models.ACL:
 		if index > -1 && index < len(p.data) {
 			p.data[index] = *newValue
 		} else if index == -1 {
@@ -114,7 +116,7 @@ func (p *ACL) Set(data common.ParserData, index int) error {
 		} else {
 			return errors.ErrIndexOutOfRange
 		}
-	case types.ACL:
+	case models.ACL:
 		if index > -1 && index < len(p.data) {
 			p.data[index] = newValue
 		} else if index == -1 {

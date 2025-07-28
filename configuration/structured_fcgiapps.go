@@ -180,7 +180,7 @@ func serializeFCGIAppSection(a StructuredToParserArgs, f *models.FCGIApp) error 
 		return err
 	}
 	for i, acl := range f.ACLList {
-		if err = p.Insert(parser.FCGIApp, f.Name, "acl", SerializeACL(*acl), i); err != nil {
+		if err = p.Insert(parser.FCGIApp, f.Name, "acl", *acl, i); err != nil {
 			return a.HandleError(strconv.FormatInt(int64(i), 10), "fcgi", f.Name, a.TID, a.TID == "", err)
 		}
 	}

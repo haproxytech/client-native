@@ -300,7 +300,7 @@ func serializeBackendSection(a StructuredToParserArgs, b *models.Backend) error 
 		}
 	}
 	for i, acl := range b.ACLList {
-		if err = p.Insert(parser.Backends, b.Name, "acl", SerializeACL(*acl), i); err != nil {
+		if err = p.Insert(parser.Backends, b.Name, "acl", *acl, i); err != nil {
 			return a.HandleError(strconv.FormatInt(int64(i), 10), BackendParentName, b.Name, a.TID, a.TID == "", err)
 		}
 	}

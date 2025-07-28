@@ -22,7 +22,6 @@ import (
 	"github.com/go-openapi/strfmt"
 	parser "github.com/haproxytech/client-native/v6/config-parser"
 	parser_errors "github.com/haproxytech/client-native/v6/config-parser/errors"
-	"github.com/haproxytech/client-native/v6/config-parser/types"
 
 	"github.com/haproxytech/client-native/v6/models"
 )
@@ -85,9 +84,9 @@ func (c *client) GetACL(id int64, parentType, parentName string, transactionID s
 		return v, nil, c.HandleError(strconv.FormatInt(id, 10), parentType, parentName, "", false, err)
 	}
 
-	acl := ParseACL(data.(types.ACL))
+	acl := data.(models.ACL)
 
-	return v, acl, nil
+	return v, &acl, nil
 }
 
 // DeleteACL deletes a ACL line in configuration. One of version or transactionID is
@@ -130,7 +129,7 @@ func (c *client) CreateACL(id int64, parentType string, parentName string, data 
 		return err
 	}
 
-	if err := p.Insert(section, parentName, "acl", SerializeACL(*data), int(id)); err != nil {
+	if err := p.Insert(section, parentName, "acl", *data, int(id)); err != nil {
 		return c.HandleError(strconv.FormatInt(id, 10), parentType, parentName, t, transactionID == "", err)
 	}
 
@@ -160,7 +159,7 @@ func (c *client) EditACL(id int64, parentType string, parentName string, data *m
 		return c.HandleError(strconv.FormatInt(id, 10), parentType, parentName, t, transactionID == "", err)
 	}
 
-	if err := p.Set(section, parentName, "acl", SerializeACL(*data), int(id)); err != nil {
+	if err := p.Set(section, parentName, "acl", *data, int(id)); err != nil {
 		return c.HandleError(strconv.FormatInt(id, 10), parentType, parentName, t, transactionID == "", err)
 	}
 
@@ -200,7 +199,7 @@ func (c *client) ReplaceAcls(parentType string, parentName string, data models.A
 	}
 
 	for i, newACL := range data {
-		if err := p.Insert(section, parentName, "acl", SerializeACL(*newACL), i); err != nil {
+		if err := p.Insert(section, parentName, "acl", *newACL, i); err != nil {
 			return c.HandleError(strconv.FormatInt(int64(i), 10), parentType, parentName, t, transactionID == "", err)
 		}
 	}
@@ -218,42 +217,17 @@ func ParseACLs(section parser.Section, name string, p parser.Parser, aclName ...
 		return nil, err
 	}
 
-	aclLines, ok := data.([]types.ACL)
+	aclLines, ok := data.([]models.ACL)
 	if !ok {
 		return nil, errors.New("type assert error []types.ACL")
 	}
 	lACL := len(aclName)
-	for _, r := range aclLines {
-		acl := ParseACL(r)
-		if acl != nil {
-			if lACL > 0 && aclName[0] == acl.ACLName {
-				acls = append(acls, acl)
-			} else if lACL == 0 {
-				acls = append(acls, acl)
-			}
+	for _, acl := range aclLines {
+		if lACL > 0 && aclName[0] == acl.ACLName {
+			acls = append(acls, &acl)
+		} else if lACL == 0 {
+			acls = append(acls, &acl)
 		}
 	}
 	return acls, nil
-}
-
-func ParseACL(f types.ACL) *models.ACL {
-	return &models.ACL{
-		ACLName:   f.Name,
-		Criterion: f.Criterion,
-		Value:     f.Value,
-		Metadata:  parseMetadata(f.Comment),
-	}
-}
-
-func SerializeACL(f models.ACL) types.ACL {
-	comment, err := serializeMetadata(f.Metadata)
-	if err != nil {
-		comment = ""
-	}
-	return types.ACL{
-		Name:      f.ACLName,
-		Criterion: f.Criterion,
-		Value:     f.Value,
-		Comment:   comment,
-	}
 }
