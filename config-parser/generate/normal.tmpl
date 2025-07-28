@@ -7,14 +7,26 @@ package parsers
 import (
 	"github.com/haproxytech/client-native/v6/config-parser/common"
 	"github.com/haproxytech/client-native/v6/config-parser/errors"
+	{{- if not (eq .Model "") }}
+	"github.com/haproxytech/client-native/v6/models"
+	{{- else }}
 	"github.com/haproxytech/client-native/v6/config-parser/{{ .DataDir }}types"
+	{{- end }}
 )
+
+{{- if not (eq .Doc "") }}
+// {{ .Doc }}
+{{- end }}
 
 {{- if not .NoInit }}
 
 func (p *{{ .StructName }}) Init() {
 {{- if .ParserMultiple }}
+	{{- if not (eq .Model "") }}
+	p.data = make([]models.{{ .Model }}, 0)
+	{{- else }}
 	p.data = []types.{{ .ParserType }}{}
+	{{- end }}
 {{- else }}
     p.data = nil
 {{- end }}
@@ -52,7 +64,11 @@ func (p *{{ .StructName }}) Get(createIfNotExist bool) (common.ParserData, error
 {{- else }}
 	if p.data == nil {
 		if createIfNotExist {
+		    {{- if not (eq .Model "") }}
+			p.data = &models.{{ .Model }}{}
+		    {{- else }}
 			p.data = &types.{{ .ParserType }}{}
+			{{- end }}
 			return p.data, nil
 		}
 		return nil, errors.ErrFetch
@@ -96,7 +112,11 @@ func (p *{{ .StructName }}) Delete(index int) error {
 {{- if .IsInterface }}
 	p.data[len(p.data)-1] = nil
 {{- else }}
+    {{- if not (eq .Model "") }}
+	p.data[len(p.data)-1] = models.{{ .Model }}{}
+	{{- else }}
 	p.data[len(p.data)-1] = types.{{ .ParserType }}{}
+	{{- end }}
 {{- end }}
 	p.data = p.data[:len(p.data)-1]
 	return nil
@@ -112,9 +132,17 @@ func (p *{{ .StructName }}) Insert(data common.ParserData, index int) error {
 		return errors.ErrInvalidData
 	}
 	switch newValue := data.(type) {
+	{{- if not (eq .Model "") }}
+	case []models.{{ .Model }}:
+	{{- else }}
 	case []types.{{ .ParserType }}:
+	{{- end }}
 		p.data = newValue
+	{{- if not (eq .Model "") }}
+	case *models.{{ .Model }}:
+	{{- else }}
 	case *types.{{ .ParserType }}:
+	{{- end }}
 		if index > -1 {
 			if index > len(p.data) {
 				return errors.ErrIndexOutOfRange
@@ -122,14 +150,22 @@ func (p *{{ .StructName }}) Insert(data common.ParserData, index int) error {
 {{- if .IsInterface }}
 			p.data = append(p.data, nil)
 {{- else }}
+			{{- if not (eq .Model "") }}
+			p.data = append(p.data, models.{{ .Model }}{})
+			{{- else }}
 			p.data = append(p.data, types.{{ .ParserType }}{})
+			{{- end }}
 {{- end }}
 			copy(p.data[index+1:], p.data[index:])
 			p.data[index] = *newValue
 		} else {
 			p.data = append(p.data, *newValue)
 		}
+	{{- if not (eq .Model "") }}
+	case models.{{ .Model }}:
+	{{- else }}
 	case types.{{ .ParserType }}:
+	{{- end }}
 		if index > -1 {
 			if index > len(p.data) {
 				return errors.ErrIndexOutOfRange
@@ -137,7 +173,11 @@ func (p *{{ .StructName }}) Insert(data common.ParserData, index int) error {
 {{- if .IsInterface }}
 			p.data = append(p.data, nil)
 {{- else }}
+            {{- if not (eq .Model "") }}
+			p.data = append(p.data, models.{{ .Model }}{})
+			{{- else }}
 			p.data = append(p.data, types.{{ .ParserType }}{})
+			{{- end }}
 {{- end }}
 			copy(p.data[index+1:], p.data[index:])
 			p.data[index] = newValue
@@ -160,9 +200,17 @@ func (p *{{ .StructName }}) Set(data common.ParserData, index int) error {
 	}
 {{- if .ParserMultiple }}
 	switch newValue := data.(type) {
+	{{- if not (eq .Model "") }}
+	case []models.{{ .Model }}:
+	{{- else }}
 	case []types.{{ .ParserType }}:
+	{{- end }}
 		p.data = newValue
+	{{- if not (eq .Model "") }}
+	case *models.{{ .Model }}:
+	{{- else }}
 	case *types.{{ .ParserType }}:
+	{{- end }}
 		if index > -1 && index < len(p.data) {
 			p.data[index] = *newValue
 		} else if index == -1 {
@@ -170,7 +218,11 @@ func (p *{{ .StructName }}) Set(data common.ParserData, index int) error {
 		} else {
 			return errors.ErrIndexOutOfRange
 		}
+	{{- if not (eq .Model "") }}
+	case models.{{ .Model }}:
+	{{- else }}
 	case types.{{ .ParserType }}:
+	{{- end }}
 		if index > -1 && index < len(p.data) {
 			p.data[index] = newValue
 		} else if index == -1 {
@@ -183,9 +235,17 @@ func (p *{{ .StructName }}) Set(data common.ParserData, index int) error {
 	}
 {{- else }}
 	switch newValue := data.(type) {
+	{{- if not (eq .Model "") }}
+	case *models.{{ .Model }}:
+	{{- else }}
 	case *types.{{ .ParserType }}:
+	{{- end }}
 		p.data = newValue
+	{{- if not (eq .Model "") }}
+	case models.{{ .Model }}:
+	{{- else }}
 	case types.{{ .ParserType }}:
+	{{- end }}
 		p.data = &newValue
 	default:
 		return errors.ErrInvalidData

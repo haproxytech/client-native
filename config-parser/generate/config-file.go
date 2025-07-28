@@ -76,6 +76,8 @@ type Data struct { //nolint:maligned
 	HasAlias           bool
 	HasDefault         bool
 	HasTable           bool
+	Model              string // model name for swagger
+	Doc                string // url to docs
 }
 
 type ConfigFile struct {
