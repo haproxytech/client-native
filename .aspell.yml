@@ -129,6 +129,7 @@ allowed:
   - readme
   - recursivity
   - recv
+  - redispatch
   - redoc
   - reimplement
   - releaser

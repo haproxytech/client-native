@@ -41,7 +41,7 @@ type Redispatch struct {
 	Enabled *string `json:"enabled"`
 
 	// interval
-	Interval int64 `json:"interval,omitempty"`
+	Interval *int64 `json:"interval,omitempty"`
 }
 
 // Validate validates this redispatch
