@@ -9338,7 +9338,7 @@ definitions:
               type: string
           interval:
               type: integer
-              x-nullable: false
+              x-nullable: true
       required:
           - enabled
       type: object

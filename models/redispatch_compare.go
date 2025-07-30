@@ -28,7 +28,7 @@ func (s Redispatch) Equal(t Redispatch, opts ...Options) bool {
 		return false
 	}
 
-	if s.Interval != t.Interval {
+	if !equalPointers(s.Interval, t.Interval) {
 		return false
 	}
 
@@ -47,8 +47,8 @@ func (s Redispatch) Diff(t Redispatch, opts ...Options) map[string][]interface{}
 		diff["Enabled"] = []interface{}{ValueOrNil(s.Enabled), ValueOrNil(t.Enabled)}
 	}
 
-	if s.Interval != t.Interval {
-		diff["Interval"] = []interface{}{s.Interval, t.Interval}
+	if !equalPointers(s.Interval, t.Interval) {
+		diff["Interval"] = []interface{}{ValueOrNil(s.Interval), ValueOrNil(t.Interval)}
 	}
 
 	return diff

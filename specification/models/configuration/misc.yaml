@@ -149,7 +149,7 @@ redispatch:
       enum: [enabled, disabled]
     interval:
       type: integer
-      x-nullable: false
+      x-nullable: true
 errorfile:
   type: object
   x-display-name: Error File
