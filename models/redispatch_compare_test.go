@@ -86,7 +86,7 @@ func TestRedispatchEqualFalse(t *testing.T) {
 		if err != nil {
 			t.Error(err)
 		}
-		result.Interval = sample.Interval + 1
+		result.Interval = Ptr(*sample.Interval + 1)
 		samples = append(samples, struct {
 			a, b Redispatch
 		}{sample, result})
@@ -166,7 +166,7 @@ func TestRedispatchDiffFalse(t *testing.T) {
 		if err != nil {
 			t.Error(err)
 		}
-		result.Interval = sample.Interval + 1
+		result.Interval = Ptr(*sample.Interval + 1)
 		samples = append(samples, struct {
 			a, b Redispatch
 		}{sample, result})

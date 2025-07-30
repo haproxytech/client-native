@@ -981,9 +981,8 @@ func (s *SectionParser) redispatch() interface{} {
 		return nil
 	}
 	d := data.(*types.OptionRedispatch)
-	br := &models.Redispatch{}
-	if d.Interval != nil {
-		br.Interval = *d.Interval
+	br := &models.Redispatch{
+		Interval: d.Interval,
 	}
 	if d.NoOption {
 		d := "disabled"
@@ -2370,7 +2369,7 @@ func (s *SectionObject) redispatch(field reflect.Value) error {
 			return misc.CreateTypeAssertError("option redispatch")
 		}
 		d := &types.OptionRedispatch{
-			Interval: &br.Interval,
+			Interval: br.Interval,
 			NoOption: false,
 		}
 		if *br.Enabled == "disabled" {
