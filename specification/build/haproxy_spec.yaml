@@ -26451,6 +26451,41 @@ paths:
       summary: Replace the value corresponding to each id in a map
       tags:
         - Maps
+  /services/haproxy/runtime/acme:
+    get:
+      description: Returns the status of each managed ACME certificate.
+      operationId: getAcmeStatus
+      responses:
+        "200":
+          description: Successful operation
+          schema:
+            $ref: '#/definitions/acme_status'
+        "404":
+          $ref: '#/responses/NotFound'
+        default:
+          $ref: '#/responses/DefaultError'
+      summary: ACME Status
+      tags:
+        - AcmeRuntime
+    put:
+      description: Force renewal of an ACME certificate.
+      operationId: renewAcmeCertificate
+      parameters:
+        - description: Certificate file name
+          in: query
+          name: certificate
+          required: true
+          type: string
+      responses:
+        "200":
+          description: Operation started
+        "404":
+          $ref: '#/responses/NotFound'
+        default:
+          $ref: '#/responses/DefaultError'
+      summary: Renew ACME certificate
+      tags:
+        - AcmeRuntime
   /services/haproxy/configuration/version:
     get:
       description: Returns configuration version.
