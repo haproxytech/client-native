@@ -1,0 +1,35 @@
+acme:
+  get:  # acme status
+    summary: ACME Status
+    description: Returns the status of each managed ACME certificate.
+    operationId: getAcmeStatus
+    tags:
+      - AcmeRuntime
+    responses:
+      '200':
+        description: Successful operation
+        schema:
+          $ref: "#/definitions/acme_status"
+      '404':
+        $ref: '#/responses/NotFound'
+      'default':
+        $ref: '#/responses/DefaultError'
+  put:  # acme renew
+    summary: Renew ACME certificate
+    description: Force renewal of an ACME certificate.
+    operationId: renewAcmeCertificate
+    tags:
+      - AcmeRuntime
+    parameters:
+      - name: certificate
+        in: query
+        description: Certificate file name
+        required: true
+        type: string
+    responses:
+      '200':
+        description: Operation started
+      '404':
+        $ref: '#/responses/NotFound'
+      'default':
+        $ref: '#/responses/DefaultError'

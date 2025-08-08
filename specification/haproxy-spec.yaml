@@ -1261,6 +1261,8 @@ paths:
     $ref: "paths/runtime/maps_entries.yaml#/maps_entries"
   /services/haproxy/runtime/maps/{parent_name}/entries/{id}:
     $ref: "paths/runtime/maps_entries.yaml#/maps_entries_one"
+  /services/haproxy/runtime/acme:
+    $ref: "paths/runtime/acme.yaml#/acme"
   /services/haproxy/configuration/version:
     $ref: "paths/configuration/version.yaml#/version"
   /services/haproxy/storage:
