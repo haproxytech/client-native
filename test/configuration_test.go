@@ -1013,7 +1013,7 @@ mailers localmailer1
 acme test
   contact me@example.com
   bits 4096
-  challenge HTTP-01
+  challenge http-01
   directory https://acme.example.com/directory
   keytype ECDSA
   map acme@t

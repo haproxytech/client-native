@@ -80,6 +80,7 @@ allowed:
   - http
   - https
   - httpCLF
+  - iana
   - ineffassign
   - infos
   - ipam
@@ -95,6 +96,7 @@ allowed:
   - lifecycle
   - linter
   - linters
+  - lowercased
   - lookups
   - lts
   - makefile
