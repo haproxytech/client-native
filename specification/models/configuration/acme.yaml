@@ -22,8 +22,8 @@ acme:
       x-nullable: true
     challenge:
       type: string
-      enum: ['HTTP-01', 'DNS-01']
-      description: ACME challenge type. Only HTTP-01 and DNS-01 are supported.
+      enum: ['http-01', 'dns-01']
+      description: ACME challenge type. Only http-01 and dns-01 are supported.
     contact:
       type: string
       description: Contact email for the ACME account

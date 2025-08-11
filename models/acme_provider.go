@@ -45,9 +45,9 @@ type AcmeProvider struct {
 	// +kubebuilder:validation:Minimum=1024
 	Bits *int64 `json:"bits,omitempty"`
 
-	// ACME challenge type. Only HTTP-01 and DNS-01 are supported.
-	// Enum: ["HTTP-01","DNS-01"]
-	// +kubebuilder:validation:Enum=HTTP-01;DNS-01;
+	// ACME challenge type. Only http-01 and dns-01 are supported.
+	// Enum: ["http-01","dns-01"]
+	// +kubebuilder:validation:Enum=http-01;dns-01;
 	Challenge string `json:"challenge,omitempty"`
 
 	// Contact email for the ACME account
@@ -127,7 +127,7 @@ var acmeProviderTypeChallengePropEnum []interface{}
 
 func init() {
 	var res []string
-	if err := json.Unmarshal([]byte(`["HTTP-01","DNS-01"]`), &res); err != nil {
+	if err := json.Unmarshal([]byte(`["http-01","dns-01"]`), &res); err != nil {
 		panic(err)
 	}
 	for _, v := range res {
@@ -137,11 +137,11 @@ func init() {
 
 const (
 
-	// AcmeProviderChallengeHTTPDash01 captures enum value "HTTP-01"
-	AcmeProviderChallengeHTTPDash01 string = "HTTP-01"
+	// AcmeProviderChallengeHTTPDash01 captures enum value "http-01"
+	AcmeProviderChallengeHTTPDash01 string = "http-01"
 
-	// AcmeProviderChallengeDNSDash01 captures enum value "DNS-01"
-	AcmeProviderChallengeDNSDash01 string = "DNS-01"
+	// AcmeProviderChallengeDNSDash01 captures enum value "dns-01"
+	AcmeProviderChallengeDNSDash01 string = "dns-01"
 )
 
 // prop value enum

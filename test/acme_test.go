@@ -97,7 +97,7 @@ func TestCreateEditDeleteAcmeProvider(t *testing.T) {
 		Name:       "ninja",
 		AccountKey: "ninja-acme.key",
 		Bits:       misc.Int64P(2048),
-		Challenge:  "HTTP-01",
+		Challenge:  "http-01",
 		Contact:    "me@example.com",
 		Curves:     "dem curves",
 		Directory:  "https://acme.ninja.com/directory",

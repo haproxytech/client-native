@@ -81,6 +81,7 @@ allowed:
   - http
   - https
   - httpCLF
+  - iana
   - ineffassign
   - infos
   - ioutil
@@ -97,6 +98,7 @@ allowed:
   - lifecycle
   - linter
   - linters
+  - lowercased
   - lookups
   - lts
   - makefile
