@@ -160,7 +160,7 @@ func findLeafCertificate(certs []*x509.Certificate) (*x509.Certificate, error) {
 
 	// Find the starting certificate (a certificate whose issuer is not in the list)
 	for _, cert := range certs {
-		if !cert.IsCA && cert.Subject.CommonName != "" && !isIssuer[cert.Subject.String()] {
+		if !cert.IsCA && (cert.Subject.CommonName != "" || len(cert.DNSNames) != 0) && !isIssuer[cert.Subject.String()] {
 			return cert, nil
 		}
 	}
