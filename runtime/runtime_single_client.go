@@ -103,7 +103,7 @@ func (s *SingleRuntime) readFromSocket(command string, socket socketType) (strin
 			fullCommand = fmt.Sprintf("set severity-output number;@%v %s;quit\n", 1, command)
 		}
 	case masterSocket:
-		fullCommand = command + ";quit"
+		fullCommand = command + ";quit\n"
 	}
 
 	_, err = api.Write([]byte(fullCommand))
