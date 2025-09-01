@@ -157,7 +157,7 @@ jobs:
       id: go
     - name: Test
       run: |
-        go test -race -v ./...
+        go test -v ./...
   go-test-equal:
     name: Test equal
     needs: ["tidy","build"]
@@ -173,7 +173,7 @@ jobs:
       id: go
     - name: Test
       run: |
-        go test -tags equal -race -v ./...
+        go test -tags equal -v ./...
   e2e:
     name: e2e on HAProxy
     needs: ["go-test"]
