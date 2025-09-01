@@ -185,3 +185,4 @@ allowed:
   - workdir
   - yaml
   - async
+  - rehaul
