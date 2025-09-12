@@ -139,7 +139,7 @@ func (s *SingleRuntime) parseStickTable(output string) *models.StickTable {
 	return stkTable
 }
 
-func parseStickTableEntry(output string) *models.StickTableEntry { //nolint:gocognit,gocyclo,cyclop
+func parseStickTableEntry(output string) *models.StickTableEntry { //nolint:gocognit,gocyclo,cyclop, maintidx
 	idData := strings.SplitN(output, ":", 2)
 	if len(idData) != 2 {
 		return nil
@@ -153,6 +153,27 @@ func parseStickTableEntry(output string) *models.StickTableEntry { //nolint:goco
 			if err == nil {
 				entry.ServerID = &sID
 			}
+		case strings.HasPrefix(key, "gpc("):
+			gpc, err := strconv.ParseInt(strings.TrimSpace(v), 10, 64)
+			if err == nil {
+				entry.Gpc = &models.StickTableEntryGpc{
+					Value: &gpc,
+				}
+				if index, ok := parseIndex(key); ok {
+					entry.Gpc.Idx = index
+				}
+			}
+		case strings.HasPrefix(key, "gpc_rate(") && strings.Contains(key, ","):
+			gpcRate, err := strconv.ParseInt(strings.TrimSpace(v), 10, 64)
+			if err == nil {
+				entry.GpcRate = &models.StickTableEntryGpcRate{
+					Value: &gpcRate,
+				}
+				if index, ok := parseIndexRate(key); ok {
+					entry.GpcRate.Idx = index
+				}
+			}
+
 		case key == "gpc0":
 			gpc0, err := strconv.ParseInt(strings.TrimSpace(v), 10, 64)
 			if err == nil {
@@ -167,6 +188,21 @@ func parseStickTableEntry(output string) *models.StickTableEntry { //nolint:goco
 			gpc1, err := strconv.ParseInt(strings.TrimSpace(v), 10, 64)
 			if err == nil {
 				entry.Gpc1 = &gpc1
+			}
+		case key == "gpt0":
+			gpt0, err := strconv.ParseInt(strings.TrimSpace(v), 10, 64)
+			if err == nil {
+				entry.Gpt0 = &gpt0
+			}
+		case strings.HasPrefix(key, "gpt("):
+			gpt, err := strconv.ParseInt(strings.TrimSpace(v), 10, 64)
+			if err == nil {
+				entry.Gpt = &models.StickTableEntryGpt{
+					Value: &gpt,
+				}
+				if index, ok := parseIndex(key); ok {
+					entry.Gpt.Idx = index
+				}
 			}
 		case strings.HasPrefix(key, "gpc1_rate("):
 			gpc1Rate, err := strconv.ParseInt(strings.TrimSpace(v), 10, 64)
@@ -198,6 +234,17 @@ func parseStickTableEntry(output string) *models.StickTableEntry { //nolint:goco
 			if err == nil {
 				entry.SessRate = &sessRate
 			}
+		case key == "http_fail_cnt":
+			httpFailCnt, err := strconv.ParseInt(strings.TrimSpace(v), 10, 64)
+			if err == nil {
+				entry.HTTPFailCnt = &httpFailCnt
+			}
+		case strings.HasPrefix(key, "http_fail_rate("):
+			httpFailRate, err := strconv.ParseInt(strings.TrimSpace(v), 10, 64)
+			if err == nil {
+				entry.HTTPFailRate = &httpFailRate
+			}
+
 		case key == "http_req_cnt":
 			httpReqCnt, err := strconv.ParseInt(strings.TrimSpace(v), 10, 64)
 			if err == nil {
@@ -274,4 +321,36 @@ func parseStickTableEntryLine(data string) map[string]string {
 		}
 	}
 	return retData
+}
+
+func parseIndex(key string) (int64, bool) {
+	// Extract content between parentheses
+	indexStr := strings.TrimPrefix(key, "gpc(")
+	indexStr = strings.TrimSuffix(indexStr, ")")
+
+	index, err := strconv.ParseInt(strings.TrimSpace(indexStr), 10, 64)
+	if err != nil {
+		return 0, false
+	}
+
+	return index, true
+}
+
+func parseIndexRate(key string) (int64, bool) {
+	// Extract content between parentheses
+	params := strings.TrimPrefix(key, "gpc_rate(")
+	params = strings.TrimSuffix(params, ")")
+
+	// Split by comma
+	parts := strings.Split(params, ",")
+	if len(parts) != 2 {
+		return 0, false
+	}
+
+	index, err := strconv.ParseInt(strings.TrimSpace(parts[0]), 10, 64)
+	if err != nil {
+		return 0, false
+	}
+
+	return index, true
 }

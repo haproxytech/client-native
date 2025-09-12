@@ -23,6 +23,7 @@ package models
 import (
 	"context"
 
+	"github.com/go-openapi/errors"
 	"github.com/go-openapi/strfmt"
 	"github.com/go-openapi/swag"
 )
@@ -58,6 +59,15 @@ type StickTableEntry struct {
 	// exp
 	Exp *int64 `json:"exp,omitempty"`
 
+	// glitch cnt
+	GlitchCnt *int64 `json:"glitch_cnt,omitempty"`
+
+	// glitch rate
+	GlitchRate *int64 `json:"glitch_rate,omitempty"`
+
+	// gpc
+	Gpc *StickTableEntryGpc `json:"gpc,omitempty"`
+
 	// gpc0
 	Gpc0 *int64 `json:"gpc0,omitempty"`
 
@@ -70,6 +80,12 @@ type StickTableEntry struct {
 	// gpc1 rate
 	Gpc1Rate *int64 `json:"gpc1_rate,omitempty"`
 
+	// gpc rate
+	GpcRate *StickTableEntryGpcRate `json:"gpc_rate,omitempty"`
+
+	// gpt
+	Gpt *StickTableEntryGpt `json:"gpt,omitempty"`
+
 	// gpt0
 	Gpt0 *int64 `json:"gpt0,omitempty"`
 
@@ -78,6 +94,12 @@ type StickTableEntry struct {
 
 	// http err rate
 	HTTPErrRate *int64 `json:"http_err_rate,omitempty"`
+
+	// http fail cnt
+	HTTPFailCnt *int64 `json:"http_fail_cnt,omitempty"`
+
+	// http fail rate
+	HTTPFailRate *int64 `json:"http_fail_rate,omitempty"`
 
 	// http req cnt
 	HTTPReqCnt *int64 `json:"http_req_cnt,omitempty"`
@@ -106,11 +128,165 @@ type StickTableEntry struct {
 
 // Validate validates this stick table entry
 func (m *StickTableEntry) Validate(formats strfmt.Registry) error {
+	var res []error
+
+	if err := m.validateGpc(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateGpcRate(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateGpt(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if len(res) > 0 {
+		return errors.CompositeValidationError(res...)
+	}
 	return nil
 }
 
-// ContextValidate validates this stick table entry based on context it is used
+func (m *StickTableEntry) validateGpc(formats strfmt.Registry) error {
+	if swag.IsZero(m.Gpc) { // not required
+		return nil
+	}
+
+	if m.Gpc != nil {
+		if err := m.Gpc.Validate(formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("gpc")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("gpc")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (m *StickTableEntry) validateGpcRate(formats strfmt.Registry) error {
+	if swag.IsZero(m.GpcRate) { // not required
+		return nil
+	}
+
+	if m.GpcRate != nil {
+		if err := m.GpcRate.Validate(formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("gpc_rate")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("gpc_rate")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (m *StickTableEntry) validateGpt(formats strfmt.Registry) error {
+	if swag.IsZero(m.Gpt) { // not required
+		return nil
+	}
+
+	if m.Gpt != nil {
+		if err := m.Gpt.Validate(formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("gpt")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("gpt")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
+// ContextValidate validate this stick table entry based on the context it is used
 func (m *StickTableEntry) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+	var res []error
+
+	if err := m.contextValidateGpc(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.contextValidateGpcRate(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.contextValidateGpt(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if len(res) > 0 {
+		return errors.CompositeValidationError(res...)
+	}
+	return nil
+}
+
+func (m *StickTableEntry) contextValidateGpc(ctx context.Context, formats strfmt.Registry) error {
+
+	if m.Gpc != nil {
+
+		if swag.IsZero(m.Gpc) { // not required
+			return nil
+		}
+
+		if err := m.Gpc.ContextValidate(ctx, formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("gpc")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("gpc")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (m *StickTableEntry) contextValidateGpcRate(ctx context.Context, formats strfmt.Registry) error {
+
+	if m.GpcRate != nil {
+
+		if swag.IsZero(m.GpcRate) { // not required
+			return nil
+		}
+
+		if err := m.GpcRate.ContextValidate(ctx, formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("gpc_rate")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("gpc_rate")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (m *StickTableEntry) contextValidateGpt(ctx context.Context, formats strfmt.Registry) error {
+
+	if m.Gpt != nil {
+
+		if swag.IsZero(m.Gpt) { // not required
+			return nil
+		}
+
+		if err := m.Gpt.ContextValidate(ctx, formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("gpt")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("gpt")
+			}
+			return err
+		}
+	}
+
 	return nil
 }
 
@@ -125,6 +301,126 @@ func (m *StickTableEntry) MarshalBinary() ([]byte, error) {
 // UnmarshalBinary interface implementation
 func (m *StickTableEntry) UnmarshalBinary(b []byte) error {
 	var res StickTableEntry
+	if err := swag.ReadJSON(b, &res); err != nil {
+		return err
+	}
+	*m = res
+	return nil
+}
+
+// StickTableEntryGpc stick table entry gpc
+//
+// swagger:model StickTableEntryGpc
+type StickTableEntryGpc struct {
+
+	// idx
+	Idx int64 `json:"idx,omitempty"`
+
+	// value
+	Value *int64 `json:"value,omitempty"`
+}
+
+// Validate validates this stick table entry gpc
+func (m *StickTableEntryGpc) Validate(formats strfmt.Registry) error {
+	return nil
+}
+
+// ContextValidate validates this stick table entry gpc based on context it is used
+func (m *StickTableEntryGpc) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+	return nil
+}
+
+// MarshalBinary interface implementation
+func (m *StickTableEntryGpc) MarshalBinary() ([]byte, error) {
+	if m == nil {
+		return nil, nil
+	}
+	return swag.WriteJSON(m)
+}
+
+// UnmarshalBinary interface implementation
+func (m *StickTableEntryGpc) UnmarshalBinary(b []byte) error {
+	var res StickTableEntryGpc
+	if err := swag.ReadJSON(b, &res); err != nil {
+		return err
+	}
+	*m = res
+	return nil
+}
+
+// StickTableEntryGpcRate stick table entry gpc rate
+//
+// swagger:model StickTableEntryGpcRate
+type StickTableEntryGpcRate struct {
+
+	// idx
+	Idx int64 `json:"idx,omitempty"`
+
+	// value
+	Value *int64 `json:"value,omitempty"`
+}
+
+// Validate validates this stick table entry gpc rate
+func (m *StickTableEntryGpcRate) Validate(formats strfmt.Registry) error {
+	return nil
+}
+
+// ContextValidate validates this stick table entry gpc rate based on context it is used
+func (m *StickTableEntryGpcRate) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+	return nil
+}
+
+// MarshalBinary interface implementation
+func (m *StickTableEntryGpcRate) MarshalBinary() ([]byte, error) {
+	if m == nil {
+		return nil, nil
+	}
+	return swag.WriteJSON(m)
+}
+
+// UnmarshalBinary interface implementation
+func (m *StickTableEntryGpcRate) UnmarshalBinary(b []byte) error {
+	var res StickTableEntryGpcRate
+	if err := swag.ReadJSON(b, &res); err != nil {
+		return err
+	}
+	*m = res
+	return nil
+}
+
+// StickTableEntryGpt stick table entry gpt
+//
+// swagger:model StickTableEntryGpt
+type StickTableEntryGpt struct {
+
+	// idx
+	Idx int64 `json:"idx,omitempty"`
+
+	// value
+	Value *int64 `json:"value,omitempty"`
+}
+
+// Validate validates this stick table entry gpt
+func (m *StickTableEntryGpt) Validate(formats strfmt.Registry) error {
+	return nil
+}
+
+// ContextValidate validates this stick table entry gpt based on context it is used
+func (m *StickTableEntryGpt) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+	return nil
+}
+
+// MarshalBinary interface implementation
+func (m *StickTableEntryGpt) MarshalBinary() ([]byte, error) {
+	if m == nil {
+		return nil, nil
+	}
+	return swag.WriteJSON(m)
+}
+
+// UnmarshalBinary interface implementation
+func (m *StickTableEntryGpt) UnmarshalBinary(b []byte) error {
+	var res StickTableEntryGpt
 	if err := swag.ReadJSON(b, &res); err != nil {
 		return err
 	}
