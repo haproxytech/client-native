@@ -43,6 +43,27 @@ models: gentypes spec swagger-check
 	go run cmd/kubebuilder_marker_generator/*.go  ${PROJECT_PATH}/models
 	go run cmd/server_params_runtime/*.go ${PROJECT_PATH}/models
 
+.PHONY: models-with-go-method-gen
+models-with-go-method-gen: gentypes spec go-method-gen-check
+	./bin/swagger generate model --additional-initialism=FCGI -f ${PROJECT_PATH}/specification/build/haproxy_spec.yaml -r ${PROJECT_PATH}/specification/copyright.txt -m models -t ${PROJECT_PATH}
+	rm -rf models/server_params_prepare_for_runtime.go
+	rm -rf models/*_generated*.go
+	./bin/go-method-gen --header-file=specification/copyright.txt --scan=models --debug --overrides=models/funcs/overrides.yaml && find ./generated -name "*.go" -exec cp {} ./models \; && rm -rf generated
+	go run cmd/struct_tags_checker/*.go ${PROJECT_PATH}/models
+	go run cmd/kubebuilder_marker_generator/*.go  ${PROJECT_PATH}/models
+	go run cmd/server_params_runtime/*.go ${PROJECT_PATH}/models
+
+.PHONY: go-method-gen-check
+go-method-gen-check: 
+	@GO_METHOD_GEN_BIN_NAME="go-method-gen"; \
+	GO_METHOD_GEN_GITHUB="github.com/haproxytech/go-method-gen/cmd/go-method-gen@latest"; \
+	if [ -f "$$GO_METHOD_GEN_BIN_NAME" ]; then \
+		echo "✅ $$GO_METHOD_GEN_BIN_NAME already installed"; \
+	else \
+		GOBIN=$(PWD)/bin go install $$GO_METHOD_GEN_GITHUB && \
+		echo "✅ $$GO_METHOD_GEN_BIN_NAME installed"; \
+	fi
+
 .PHONY: swagger-check
 swagger-check:
 	cd bin; SWAGGER_VERSION=${SWAGGER_VERSION} sh swagger-check.sh

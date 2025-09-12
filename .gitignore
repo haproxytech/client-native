@@ -4,3 +4,4 @@ bin/check-commit
 bin/golangci-lint
 bin/swagger
 .envrc
+bin/go-method-gen

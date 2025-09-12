@@ -78,7 +78,7 @@ generate:
   tags:
     - go
   before_script:
-    - rm -rf models/*
+    - find -maxdepth 1 -type f -name "*.go" -exec rm {} \;
     - make models
   script:
     - test -z "$(git diff 2> /dev/null)" || exit "Models are not generated, issue \`make models\` and commit the result"
