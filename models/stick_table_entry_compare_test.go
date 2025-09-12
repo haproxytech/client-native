@@ -103,6 +103,8 @@ func TestStickTableEntryEqualFalse(t *testing.T) {
 		result.Gpt0 = Ptr(*sample.Gpt0 + 1)
 		result.HTTPErrCnt = Ptr(*sample.HTTPErrCnt + 1)
 		result.HTTPErrRate = Ptr(*sample.HTTPErrRate + 1)
+		result.HTTPFailCnt = Ptr(*sample.HTTPFailCnt + 1)
+		result.HTTPFailRate = Ptr(*sample.HTTPFailRate + 1)
 		result.HTTPReqCnt = Ptr(*sample.HTTPReqCnt + 1)
 		result.HTTPReqRate = Ptr(*sample.HTTPReqRate + 1)
 		result.ServerID = Ptr(*sample.ServerID + 1)
@@ -205,6 +207,8 @@ func TestStickTableEntryDiffFalse(t *testing.T) {
 		result.Gpt0 = Ptr(*sample.Gpt0 + 1)
 		result.HTTPErrCnt = Ptr(*sample.HTTPErrCnt + 1)
 		result.HTTPErrRate = Ptr(*sample.HTTPErrRate + 1)
+		result.HTTPFailCnt = Ptr(*sample.HTTPFailCnt + 1)
+		result.HTTPFailRate = Ptr(*sample.HTTPFailRate + 1)
 		result.HTTPReqCnt = Ptr(*sample.HTTPReqCnt + 1)
 		result.HTTPReqRate = Ptr(*sample.HTTPReqRate + 1)
 		result.ServerID = Ptr(*sample.ServerID + 1)
@@ -218,7 +222,7 @@ func TestStickTableEntryDiffFalse(t *testing.T) {
 
 	for _, sample := range samples {
 		result := sample.a.Diff(sample.b)
-		if len(result) != 25 {
+		if len(result) != 30 {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {
@@ -228,7 +232,493 @@ func TestStickTableEntryDiffFalse(t *testing.T) {
 			if err != nil {
 				t.Error(err)
 			}
-			t.Errorf("Expected StickTableEntry to be different in 25 cases, but it is not (%d) %s %s", len(result), a, b)
+			t.Errorf("Expected StickTableEntry to be different in 30 cases, but it is not (%d) %s %s", len(result), a, b)
+		}
+	}
+}
+
+func TestStickTableEntryGpcEqual(t *testing.T) {
+	samples := []struct {
+		a, b StickTableEntryGpc
+	}{}
+	for i := 0; i < 2; i++ {
+		var sample StickTableEntryGpc
+		var result StickTableEntryGpc
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
+		if err != nil {
+			t.Error(err)
+		}
+		byteJSON, err := json.Marshal(sample)
+		if err != nil {
+			t.Error(err)
+		}
+		err = json.Unmarshal(byteJSON, &result)
+		if err != nil {
+			t.Error(err)
+		}
+
+		samples = append(samples, struct {
+			a, b StickTableEntryGpc
+		}{sample, result})
+	}
+
+	for _, sample := range samples {
+		result := sample.a.Equal(sample.b)
+		if !result {
+			json := jsoniter.ConfigCompatibleWithStandardLibrary
+			a, err := json.Marshal(&sample.a)
+			if err != nil {
+				t.Error(err)
+			}
+			b, err := json.Marshal(&sample.b)
+			if err != nil {
+				t.Error(err)
+			}
+			t.Errorf("Expected StickTableEntryGpc to be equal, but it is not %s %s", a, b)
+		}
+	}
+}
+
+func TestStickTableEntryGpcEqualFalse(t *testing.T) {
+	samples := []struct {
+		a, b StickTableEntryGpc
+	}{}
+	for i := 0; i < 2; i++ {
+		var sample StickTableEntryGpc
+		var result StickTableEntryGpc
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
+		if err != nil {
+			t.Error(err)
+		}
+		err = faker.FakeData(&result, options.WithIgnoreInterface(true))
+		if err != nil {
+			t.Error(err)
+		}
+		result.Idx = sample.Idx + 1
+		result.Value = Ptr(*sample.Value + 1)
+		samples = append(samples, struct {
+			a, b StickTableEntryGpc
+		}{sample, result})
+	}
+
+	for _, sample := range samples {
+		result := sample.a.Equal(sample.b)
+		if result {
+			json := jsoniter.ConfigCompatibleWithStandardLibrary
+			a, err := json.Marshal(&sample.a)
+			if err != nil {
+				t.Error(err)
+			}
+			b, err := json.Marshal(&sample.b)
+			if err != nil {
+				t.Error(err)
+			}
+			t.Errorf("Expected StickTableEntryGpc to be different, but it is not %s %s", a, b)
+		}
+	}
+}
+
+func TestStickTableEntryGpcDiff(t *testing.T) {
+	samples := []struct {
+		a, b StickTableEntryGpc
+	}{}
+	for i := 0; i < 2; i++ {
+		var sample StickTableEntryGpc
+		var result StickTableEntryGpc
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
+		if err != nil {
+			t.Error(err)
+		}
+		byteJSON, err := json.Marshal(sample)
+		if err != nil {
+			t.Error(err)
+		}
+		err = json.Unmarshal(byteJSON, &result)
+		if err != nil {
+			t.Error(err)
+		}
+
+		samples = append(samples, struct {
+			a, b StickTableEntryGpc
+		}{sample, result})
+	}
+
+	for _, sample := range samples {
+		result := sample.a.Diff(sample.b)
+		if len(result) != 0 {
+			json := jsoniter.ConfigCompatibleWithStandardLibrary
+			a, err := json.Marshal(&sample.a)
+			if err != nil {
+				t.Error(err)
+			}
+			b, err := json.Marshal(&sample.b)
+			if err != nil {
+				t.Error(err)
+			}
+			t.Errorf("Expected StickTableEntryGpc to be equal, but it is not %s %s, %v", a, b, result)
+		}
+	}
+}
+
+func TestStickTableEntryGpcDiffFalse(t *testing.T) {
+	samples := []struct {
+		a, b StickTableEntryGpc
+	}{}
+	for i := 0; i < 2; i++ {
+		var sample StickTableEntryGpc
+		var result StickTableEntryGpc
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
+		if err != nil {
+			t.Error(err)
+		}
+		err = faker.FakeData(&result, options.WithIgnoreInterface(true))
+		if err != nil {
+			t.Error(err)
+		}
+		result.Idx = sample.Idx + 1
+		result.Value = Ptr(*sample.Value + 1)
+		samples = append(samples, struct {
+			a, b StickTableEntryGpc
+		}{sample, result})
+	}
+
+	for _, sample := range samples {
+		result := sample.a.Diff(sample.b)
+		if len(result) != 2 {
+			json := jsoniter.ConfigCompatibleWithStandardLibrary
+			a, err := json.Marshal(&sample.a)
+			if err != nil {
+				t.Error(err)
+			}
+			b, err := json.Marshal(&sample.b)
+			if err != nil {
+				t.Error(err)
+			}
+			t.Errorf("Expected StickTableEntryGpc to be different in 2 cases, but it is not (%d) %s %s", len(result), a, b)
+		}
+	}
+}
+
+func TestStickTableEntryGpcRateEqual(t *testing.T) {
+	samples := []struct {
+		a, b StickTableEntryGpcRate
+	}{}
+	for i := 0; i < 2; i++ {
+		var sample StickTableEntryGpcRate
+		var result StickTableEntryGpcRate
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
+		if err != nil {
+			t.Error(err)
+		}
+		byteJSON, err := json.Marshal(sample)
+		if err != nil {
+			t.Error(err)
+		}
+		err = json.Unmarshal(byteJSON, &result)
+		if err != nil {
+			t.Error(err)
+		}
+
+		samples = append(samples, struct {
+			a, b StickTableEntryGpcRate
+		}{sample, result})
+	}
+
+	for _, sample := range samples {
+		result := sample.a.Equal(sample.b)
+		if !result {
+			json := jsoniter.ConfigCompatibleWithStandardLibrary
+			a, err := json.Marshal(&sample.a)
+			if err != nil {
+				t.Error(err)
+			}
+			b, err := json.Marshal(&sample.b)
+			if err != nil {
+				t.Error(err)
+			}
+			t.Errorf("Expected StickTableEntryGpcRate to be equal, but it is not %s %s", a, b)
+		}
+	}
+}
+
+func TestStickTableEntryGpcRateEqualFalse(t *testing.T) {
+	samples := []struct {
+		a, b StickTableEntryGpcRate
+	}{}
+	for i := 0; i < 2; i++ {
+		var sample StickTableEntryGpcRate
+		var result StickTableEntryGpcRate
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
+		if err != nil {
+			t.Error(err)
+		}
+		err = faker.FakeData(&result, options.WithIgnoreInterface(true))
+		if err != nil {
+			t.Error(err)
+		}
+		result.Idx = sample.Idx + 1
+		result.Value = Ptr(*sample.Value + 1)
+		samples = append(samples, struct {
+			a, b StickTableEntryGpcRate
+		}{sample, result})
+	}
+
+	for _, sample := range samples {
+		result := sample.a.Equal(sample.b)
+		if result {
+			json := jsoniter.ConfigCompatibleWithStandardLibrary
+			a, err := json.Marshal(&sample.a)
+			if err != nil {
+				t.Error(err)
+			}
+			b, err := json.Marshal(&sample.b)
+			if err != nil {
+				t.Error(err)
+			}
+			t.Errorf("Expected StickTableEntryGpcRate to be different, but it is not %s %s", a, b)
+		}
+	}
+}
+
+func TestStickTableEntryGpcRateDiff(t *testing.T) {
+	samples := []struct {
+		a, b StickTableEntryGpcRate
+	}{}
+	for i := 0; i < 2; i++ {
+		var sample StickTableEntryGpcRate
+		var result StickTableEntryGpcRate
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
+		if err != nil {
+			t.Error(err)
+		}
+		byteJSON, err := json.Marshal(sample)
+		if err != nil {
+			t.Error(err)
+		}
+		err = json.Unmarshal(byteJSON, &result)
+		if err != nil {
+			t.Error(err)
+		}
+
+		samples = append(samples, struct {
+			a, b StickTableEntryGpcRate
+		}{sample, result})
+	}
+
+	for _, sample := range samples {
+		result := sample.a.Diff(sample.b)
+		if len(result) != 0 {
+			json := jsoniter.ConfigCompatibleWithStandardLibrary
+			a, err := json.Marshal(&sample.a)
+			if err != nil {
+				t.Error(err)
+			}
+			b, err := json.Marshal(&sample.b)
+			if err != nil {
+				t.Error(err)
+			}
+			t.Errorf("Expected StickTableEntryGpcRate to be equal, but it is not %s %s, %v", a, b, result)
+		}
+	}
+}
+
+func TestStickTableEntryGpcRateDiffFalse(t *testing.T) {
+	samples := []struct {
+		a, b StickTableEntryGpcRate
+	}{}
+	for i := 0; i < 2; i++ {
+		var sample StickTableEntryGpcRate
+		var result StickTableEntryGpcRate
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
+		if err != nil {
+			t.Error(err)
+		}
+		err = faker.FakeData(&result, options.WithIgnoreInterface(true))
+		if err != nil {
+			t.Error(err)
+		}
+		result.Idx = sample.Idx + 1
+		result.Value = Ptr(*sample.Value + 1)
+		samples = append(samples, struct {
+			a, b StickTableEntryGpcRate
+		}{sample, result})
+	}
+
+	for _, sample := range samples {
+		result := sample.a.Diff(sample.b)
+		if len(result) != 2 {
+			json := jsoniter.ConfigCompatibleWithStandardLibrary
+			a, err := json.Marshal(&sample.a)
+			if err != nil {
+				t.Error(err)
+			}
+			b, err := json.Marshal(&sample.b)
+			if err != nil {
+				t.Error(err)
+			}
+			t.Errorf("Expected StickTableEntryGpcRate to be different in 2 cases, but it is not (%d) %s %s", len(result), a, b)
+		}
+	}
+}
+
+func TestStickTableEntryGptEqual(t *testing.T) {
+	samples := []struct {
+		a, b StickTableEntryGpt
+	}{}
+	for i := 0; i < 2; i++ {
+		var sample StickTableEntryGpt
+		var result StickTableEntryGpt
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
+		if err != nil {
+			t.Error(err)
+		}
+		byteJSON, err := json.Marshal(sample)
+		if err != nil {
+			t.Error(err)
+		}
+		err = json.Unmarshal(byteJSON, &result)
+		if err != nil {
+			t.Error(err)
+		}
+
+		samples = append(samples, struct {
+			a, b StickTableEntryGpt
+		}{sample, result})
+	}
+
+	for _, sample := range samples {
+		result := sample.a.Equal(sample.b)
+		if !result {
+			json := jsoniter.ConfigCompatibleWithStandardLibrary
+			a, err := json.Marshal(&sample.a)
+			if err != nil {
+				t.Error(err)
+			}
+			b, err := json.Marshal(&sample.b)
+			if err != nil {
+				t.Error(err)
+			}
+			t.Errorf("Expected StickTableEntryGpt to be equal, but it is not %s %s", a, b)
+		}
+	}
+}
+
+func TestStickTableEntryGptEqualFalse(t *testing.T) {
+	samples := []struct {
+		a, b StickTableEntryGpt
+	}{}
+	for i := 0; i < 2; i++ {
+		var sample StickTableEntryGpt
+		var result StickTableEntryGpt
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
+		if err != nil {
+			t.Error(err)
+		}
+		err = faker.FakeData(&result, options.WithIgnoreInterface(true))
+		if err != nil {
+			t.Error(err)
+		}
+		result.Idx = sample.Idx + 1
+		result.Value = Ptr(*sample.Value + 1)
+		samples = append(samples, struct {
+			a, b StickTableEntryGpt
+		}{sample, result})
+	}
+
+	for _, sample := range samples {
+		result := sample.a.Equal(sample.b)
+		if result {
+			json := jsoniter.ConfigCompatibleWithStandardLibrary
+			a, err := json.Marshal(&sample.a)
+			if err != nil {
+				t.Error(err)
+			}
+			b, err := json.Marshal(&sample.b)
+			if err != nil {
+				t.Error(err)
+			}
+			t.Errorf("Expected StickTableEntryGpt to be different, but it is not %s %s", a, b)
+		}
+	}
+}
+
+func TestStickTableEntryGptDiff(t *testing.T) {
+	samples := []struct {
+		a, b StickTableEntryGpt
+	}{}
+	for i := 0; i < 2; i++ {
+		var sample StickTableEntryGpt
+		var result StickTableEntryGpt
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
+		if err != nil {
+			t.Error(err)
+		}
+		byteJSON, err := json.Marshal(sample)
+		if err != nil {
+			t.Error(err)
+		}
+		err = json.Unmarshal(byteJSON, &result)
+		if err != nil {
+			t.Error(err)
+		}
+
+		samples = append(samples, struct {
+			a, b StickTableEntryGpt
+		}{sample, result})
+	}
+
+	for _, sample := range samples {
+		result := sample.a.Diff(sample.b)
+		if len(result) != 0 {
+			json := jsoniter.ConfigCompatibleWithStandardLibrary
+			a, err := json.Marshal(&sample.a)
+			if err != nil {
+				t.Error(err)
+			}
+			b, err := json.Marshal(&sample.b)
+			if err != nil {
+				t.Error(err)
+			}
+			t.Errorf("Expected StickTableEntryGpt to be equal, but it is not %s %s, %v", a, b, result)
+		}
+	}
+}
+
+func TestStickTableEntryGptDiffFalse(t *testing.T) {
+	samples := []struct {
+		a, b StickTableEntryGpt
+	}{}
+	for i := 0; i < 2; i++ {
+		var sample StickTableEntryGpt
+		var result StickTableEntryGpt
+		err := faker.FakeData(&sample, options.WithIgnoreInterface(true))
+		if err != nil {
+			t.Error(err)
+		}
+		err = faker.FakeData(&result, options.WithIgnoreInterface(true))
+		if err != nil {
+			t.Error(err)
+		}
+		result.Idx = sample.Idx + 1
+		result.Value = Ptr(*sample.Value + 1)
+		samples = append(samples, struct {
+			a, b StickTableEntryGpt
+		}{sample, result})
+	}
+
+	for _, sample := range samples {
+		result := sample.a.Diff(sample.b)
+		if len(result) != 2 {
+			json := jsoniter.ConfigCompatibleWithStandardLibrary
+			a, err := json.Marshal(&sample.a)
+			if err != nil {
+				t.Error(err)
+			}
+			b, err := json.Marshal(&sample.b)
+			if err != nil {
+				t.Error(err)
+			}
+			t.Errorf("Expected StickTableEntryGpt to be different in 2 cases, but it is not (%d) %s %s", len(result), a, b)
 		}
 	}
 }

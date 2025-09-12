@@ -11,6 +11,28 @@ table_entry:
     server_id:
       type: integer
       x-nullable: true
+    glitch_cnt:
+      type: integer
+      x-nullable: true
+    glitch_rate:
+      type: integer
+      x-nullable: true
+    gpc:
+      type: object
+      properties:
+        value:
+          type: integer
+          x-nullable: true
+        idx:
+          type: integer
+    gpc_rate:
+      type: object
+      properties:
+        value:
+          type: integer
+          x-nullable: true
+        idx:
+          type: integer
     gpc0:
       type: integer
       x-nullable: true
@@ -23,6 +45,14 @@ table_entry:
     gpc1_rate:
       type: integer
       x-nullable: true
+    gpt:
+      type: object
+      properties:
+        value:
+          type: integer
+          x-nullable: true
+        idx:
+          type: integer
     gpt0:
       type: integer
       x-nullable: true
@@ -39,6 +69,12 @@ table_entry:
       type: integer
       x-nullable: true
     sess_rate:
+      type: integer
+      x-nullable: true
+    http_fail_cnt:
+      type: integer
+      x-nullable: true
+    http_fail_rate:
       type: integer
       x-nullable: true
     http_req_cnt:
@@ -70,9 +106,3 @@ table_entry:
       x-nullable: true
     use:
       type: boolean
-    glitch_cnt:
-      type: integer
-      x-nullable: true
-    glitch_rate:
-      type: integer
-      x-nullable: true
