@@ -12,7 +12,7 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/go-openapi/swag"
+	"github.com/go-openapi/swag/mangling"
 	"github.com/haproxytech/client-native/v6/configuration/parents"
 	"gopkg.in/yaml.v3"
 )
@@ -196,7 +196,7 @@ func main() { //nolint:gocognit
 func expandChildren(src string) bytes.Buffer {
 	funcMap := template.FuncMap{
 		"parents":  parents.Parents,
-		"toGoName": swag.ToGoName,
+		"toGoName": mangling.NameMangler.ToGoName,
 	}
 
 	tmpl := template.Must(template.New("").Funcs(funcMap).Parse(src))
