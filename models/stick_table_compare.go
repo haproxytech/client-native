@@ -138,6 +138,10 @@ func (s StickTableField) Equal(t StickTableField, opts ...Options) bool {
 		return false
 	}
 
+	if s.Idx != t.Idx {
+		return false
+	}
+
 	if s.Period != t.Period {
 		return false
 	}
@@ -159,6 +163,10 @@ func (s StickTableField) Diff(t StickTableField, opts ...Options) map[string][]i
 	diff := make(map[string][]interface{})
 	if s.Field != t.Field {
 		diff["Field"] = []interface{}{s.Field, t.Field}
+	}
+
+	if s.Idx != t.Idx {
+		diff["Idx"] = []interface{}{s.Idx, t.Idx}
 	}
 
 	if s.Period != t.Period {

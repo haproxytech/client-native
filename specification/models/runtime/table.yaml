@@ -36,15 +36,22 @@ table:
               - conn_cnt
               - conn_cur
               - conn_rate
+              - glitch_cnt
+              - glitch_rate
+              - gpc
+              - gpc_rate
               - gpc0
               - gpc0_rate
               - gpc1
               - gpc1_rate
               - gpt0
+              - gpt
               - http_req_cnt
               - http_req_rate
               - http_err_cnt
               - http_err_rate
+              - http_fail_cnt
+              - http_fail_rate
               - server_id
               - sess_cnt
               - sess_rate
@@ -56,3 +63,8 @@ table:
             x-dependency:
               type:
                 value: rate
+          idx:
+            type: integer
+            x-dependency:
+              field:
+                value: [gpc, gpc_rate, gpt]
