@@ -248,6 +248,7 @@ func TestStickTableFieldEqualFalse(t *testing.T) {
 		if err != nil {
 			t.Error(err)
 		}
+		result.Idx = sample.Idx + 1
 		result.Period = sample.Period + 1
 		samples = append(samples, struct {
 			a, b StickTableField
@@ -328,6 +329,7 @@ func TestStickTableFieldDiffFalse(t *testing.T) {
 		if err != nil {
 			t.Error(err)
 		}
+		result.Idx = sample.Idx + 1
 		result.Period = sample.Period + 1
 		samples = append(samples, struct {
 			a, b StickTableField
@@ -336,7 +338,7 @@ func TestStickTableFieldDiffFalse(t *testing.T) {
 
 	for _, sample := range samples {
 		result := sample.a.Diff(sample.b)
-		if len(result) != 3 {
+		if len(result) != 4 {
 			json := jsoniter.ConfigCompatibleWithStandardLibrary
 			a, err := json.Marshal(&sample.a)
 			if err != nil {
@@ -346,7 +348,7 @@ func TestStickTableFieldDiffFalse(t *testing.T) {
 			if err != nil {
 				t.Error(err)
 			}
-			t.Errorf("Expected StickTableField to be different in 3 cases, but it is not (%d) %s %s", len(result), a, b)
+			t.Errorf("Expected StickTableField to be different in 4 cases, but it is not (%d) %s %s", len(result), a, b)
 		}
 	}
 }

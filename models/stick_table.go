@@ -213,9 +213,12 @@ func (m *StickTable) UnmarshalBinary(b []byte) error {
 // swagger:model StickTableField
 type StickTableField struct {
 	// field
-	// Enum: ["bytes_in_cnt","bytes_in_rate","bytes_out_cnt","bytes_out_rate","conn_cnt","conn_cur","conn_rate","gpc0","gpc0_rate","gpc1","gpc1_rate","gpt0","http_req_cnt","http_req_rate","http_err_cnt","http_err_rate","server_id","sess_cnt","sess_rate","glitch_rate","glitch_cnt"]
-	// +kubebuilder:validation:Enum=bytes_in_cnt;bytes_in_rate;bytes_out_cnt;bytes_out_rate;conn_cnt;conn_cur;conn_rate;gpc0;gpc0_rate;gpc1;gpc1_rate;gpt0;http_req_cnt;http_req_rate;http_err_cnt;http_err_rate;server_id;sess_cnt;sess_rate;glitch_rate;glitch_cnt;
+	// Enum: ["bytes_in_cnt","bytes_in_rate","bytes_out_cnt","bytes_out_rate","conn_cnt","conn_cur","conn_rate","glitch_cnt","glitch_rate","gpc","gpc_rate","gpc0","gpc0_rate","gpc1","gpc1_rate","gpt0","gpt","http_req_cnt","http_req_rate","http_err_cnt","http_err_rate","http_fail_cnt","http_fail_rate","server_id","sess_cnt","sess_rate"]
+	// +kubebuilder:validation:Enum=bytes_in_cnt;bytes_in_rate;bytes_out_cnt;bytes_out_rate;conn_cnt;conn_cur;conn_rate;glitch_cnt;glitch_rate;gpc;gpc_rate;gpc0;gpc0_rate;gpc1;gpc1_rate;gpt0;gpt;http_req_cnt;http_req_rate;http_err_cnt;http_err_rate;http_fail_cnt;http_fail_rate;server_id;sess_cnt;sess_rate;
 	Field string `json:"field,omitempty"`
+
+	// idx
+	Idx int64 `json:"idx,omitempty"`
 
 	// period
 	Period int64 `json:"period,omitempty"`
@@ -248,7 +251,7 @@ var stickTableFieldTypeFieldPropEnum []interface{}
 
 func init() {
 	var res []string
-	if err := json.Unmarshal([]byte(`["bytes_in_cnt","bytes_in_rate","bytes_out_cnt","bytes_out_rate","conn_cnt","conn_cur","conn_rate","gpc0","gpc0_rate","gpc1","gpc1_rate","gpt0","http_req_cnt","http_req_rate","http_err_cnt","http_err_rate","server_id","sess_cnt","sess_rate","glitch_rate","glitch_cnt"]`), &res); err != nil {
+	if err := json.Unmarshal([]byte(`["bytes_in_cnt","bytes_in_rate","bytes_out_cnt","bytes_out_rate","conn_cnt","conn_cur","conn_rate","glitch_cnt","glitch_rate","gpc","gpc_rate","gpc0","gpc0_rate","gpc1","gpc1_rate","gpt0","gpt","http_req_cnt","http_req_rate","http_err_cnt","http_err_rate","http_fail_cnt","http_fail_rate","server_id","sess_cnt","sess_rate"]`), &res); err != nil {
 		panic(err)
 	}
 	for _, v := range res {
@@ -279,6 +282,18 @@ const (
 	// StickTableFieldFieldConnRate captures enum value "conn_rate"
 	StickTableFieldFieldConnRate string = "conn_rate"
 
+	// StickTableFieldFieldGlitchCnt captures enum value "glitch_cnt"
+	StickTableFieldFieldGlitchCnt string = "glitch_cnt"
+
+	// StickTableFieldFieldGlitchRate captures enum value "glitch_rate"
+	StickTableFieldFieldGlitchRate string = "glitch_rate"
+
+	// StickTableFieldFieldGpc captures enum value "gpc"
+	StickTableFieldFieldGpc string = "gpc"
+
+	// StickTableFieldFieldGpcRate captures enum value "gpc_rate"
+	StickTableFieldFieldGpcRate string = "gpc_rate"
+
 	// StickTableFieldFieldGpc0 captures enum value "gpc0"
 	StickTableFieldFieldGpc0 string = "gpc0"
 
@@ -294,6 +309,9 @@ const (
 	// StickTableFieldFieldGpt0 captures enum value "gpt0"
 	StickTableFieldFieldGpt0 string = "gpt0"
 
+	// StickTableFieldFieldGpt captures enum value "gpt"
+	StickTableFieldFieldGpt string = "gpt"
+
 	// StickTableFieldFieldHTTPReqCnt captures enum value "http_req_cnt"
 	StickTableFieldFieldHTTPReqCnt string = "http_req_cnt"
 
@@ -306,6 +324,12 @@ const (
 	// StickTableFieldFieldHTTPErrRate captures enum value "http_err_rate"
 	StickTableFieldFieldHTTPErrRate string = "http_err_rate"
 
+	// StickTableFieldFieldHTTPFailCnt captures enum value "http_fail_cnt"
+	StickTableFieldFieldHTTPFailCnt string = "http_fail_cnt"
+
+	// StickTableFieldFieldHTTPFailRate captures enum value "http_fail_rate"
+	StickTableFieldFieldHTTPFailRate string = "http_fail_rate"
+
 	// StickTableFieldFieldServerID captures enum value "server_id"
 	StickTableFieldFieldServerID string = "server_id"
 
@@ -314,12 +338,6 @@ const (
 
 	// StickTableFieldFieldSessRate captures enum value "sess_rate"
 	StickTableFieldFieldSessRate string = "sess_rate"
-
-	// StickTableFieldFieldGlitchRate captures enum value "glitch_rate"
-	StickTableFieldFieldGlitchRate string = "glitch_rate"
-
-	// StickTableFieldFieldGlitchCnt captures enum value "glitch_cnt"
-	StickTableFieldFieldGlitchCnt string = "glitch_cnt"
 )
 
 // prop value enum
